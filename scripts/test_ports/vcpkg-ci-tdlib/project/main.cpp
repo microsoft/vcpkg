@@ -1,8 +1,7 @@
-#include <td/telegram/Client.h>
+#include <td/telegram/td_json_client.h>
 #include <memory>
 int main()
 {
-   std::unique_ptr<td::ClientManager> client_manager_;
-   auto response = client_manager_->receive(10);
+   int client_id = td_create_client_id();
    return 0;
 }

@@ -20,11 +20,11 @@ index 3d3fa01d1f69..499b1c86be93 100644
 +    set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l${LIB_NAME}" PARENT_SCOPE)
      return()
    endif()
- 
+
 @@ -31,7 +32,42 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    # message("Generating pkg-config for ${TARGET}")
    get_filename_component(PREFIX "${CMAKE_INSTALL_PREFIX}" REALPATH)
- 
+
 -  get_target_property(LIST "${TARGET}" LINK_LIBRARIES)
 +  get_target_property(LIBRARY_TYPE "${TARGET}" TYPE)
 +  if ("${LIBRARY_TYPE}" STREQUAL "INTERFACE_LIBRARY")
@@ -65,7 +65,17 @@ index 3d3fa01d1f69..499b1c86be93 100644
    set(REQS "")
    set(LIBS "")
    foreach (LIB ${LIST})
-@@ -41,7 +77,7 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -38,3 +74,9 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+     if (TARGET "${LIB}")
++      if ("${LIBRARY_TYPE}" STREQUAL "SHARED_LIBRARY")
++        get_target_property(LIB_TYPE "${LIB}" TYPE)
++        if ("${LIB_TYPE}" STREQUAL "STATIC_LIBRARY")
++          continue()
++        endif()
++      endif()
+       set(HAS_REQS 1)
+       list(APPEND REQS "${LIB}")
+@@ -41,7 +83,7 @@ function(generate_pkgconfig TARGET DESCRIPTION)
      else()
        set(HAS_LIBS 1)
        get_relative_link(LINK "${LIB}")
@@ -74,9 +84,9 @@ index 3d3fa01d1f69..499b1c86be93 100644
          list(APPEND LIBS "${LINK}")
        endif()
      endif()
-@@ -77,6 +113,26 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -77,6 +119,26 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    endif()
- 
+
    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig")
 +
 +  get_target_property(TARGET_OUTPUT_NAME "${TARGET}" OUTPUT_NAME)
@@ -100,15 +110,15 @@ index 3d3fa01d1f69..499b1c86be93 100644
 +
    file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
  "prefix=${PREFIX}
- 
-@@ -85,14 +141,12 @@ Description: ${DESCRIPTION}
+
+@@ -85,14 +147,12 @@ Description: ${DESCRIPTION}
  Version: ${PROJECT_VERSION}
- 
+
  CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
 -Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}
 +${LIBS_LINE}
  ${REQUIRES}${LIBRARIES}")
- 
+
 -  get_target_property(LIBRARY_TYPE "${TARGET}" TYPE)
 -  if (LIBRARY_TYPE STREQUAL "STATIC_LIBRARY" OR LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
 +  if ("${LIBRARY_TYPE}" STREQUAL "STATIC_LIBRARY" OR "${LIBRARY_TYPE}" STREQUAL "SHARED_LIBRARY" OR
