@@ -5,20 +5,19 @@ vcpkg_from_github(
     SHA512 06cd30eda123839e73793f397a9393d975968584ba15773f63eb984650c86bcbd7ceb0d20421a02e8f79a9c7b9a0ffd3c6f4dcc24eec613a3bf1b1e270df4bdd
     HEAD_REF master
     PATCHES
-        subdirs.patch
+        remove-docs-and-examples.patch
         no-undefined.patch
 )
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    DETERMINE_BUILD_TRIPLET
+    AUTORECONF
     OPTIONS
         ac_cv_func_malloc_0_nonnull=yes
         ac_cv_func_realloc_0_nonnull=yes
         ac_cv_func_strtod=yes
         WARNING_CFLAGS=
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
