@@ -260,77 +260,6 @@ source_set("gmock_main") {
 }
 """
 
-RNNOISE_BUILD_GN = """config("rnnoise_config") {
-  include_dirs = [
-    ".",
-    "include",
-    "src",
-    "{include_root}",
-  ]
-}
-
-source_set("rnn_vad") {
-  public_configs = [ ":rnnoise_config" ]
-  configs -= [ "//build/config/compiler:chromium_code" ]
-  configs += [ "//build/config/compiler:no_chromium_code" ]
-  sources = [
-    "src/nnet.c",
-    "src/nnet_default.c",
-    "src/parse_lpcnet_weights.c",
-    "src/rnn.c",
-    "src/rnnoise_data.c",
-  ]
-}
-"""
-
-RNNOISE_OS_SUPPORT_H = """#ifndef OS_SUPPORT_H
-#define OS_SUPPORT_H
-
-#include <opus/opus_defines.h>
-#include <opus/opus_types.h>
-
-#include <stdlib.h>
-#include <string.h>
-
-#ifndef OVERRIDE_OPUS_ALLOC
-static OPUS_INLINE void* opus_alloc(size_t size) {
-  return malloc(size);
-}
-#endif
-
-#ifndef OVERRIDE_OPUS_REALLOC
-static OPUS_INLINE void* opus_realloc(void* ptr, size_t size) {
-  return realloc(ptr, size);
-}
-#endif
-
-#ifndef OVERRIDE_OPUS_ALLOC_SCRATCH
-static OPUS_INLINE void* opus_alloc_scratch(size_t size) {
-  return opus_alloc(size);
-}
-#endif
-
-#ifndef OVERRIDE_OPUS_FREE
-static OPUS_INLINE void opus_free(void* ptr) {
-  free(ptr);
-}
-#endif
-
-#ifndef OVERRIDE_OPUS_COPY
-#define OPUS_COPY(dst, src, n) (memcpy((dst), (src), (n) * sizeof(*(dst)) + 0 * ((dst) - (src))))
-#endif
-
-#ifndef OVERRIDE_OPUS_MOVE
-#define OPUS_MOVE(dst, src, n) (memmove((dst), (src), (n) * sizeof(*(dst)) + 0 * ((dst) - (src))))
-#endif
-
-#ifndef OVERRIDE_OPUS_CLEAR
-#define OPUS_CLEAR(dst, n) (memset((dst), 0, (n) * sizeof(*(dst))))
-#endif
-
-#endif
-"""
-
 NASM_BUILD_GN = ""
 
 GOOGLETEST_GTEST_SPI_H = """#pragma once
@@ -764,15 +693,6 @@ source_set("libsrtp") {
         "files": {
             "BUILD.gn": make_config_only_build_gn("headers",
                                                   ["{include_root}"]),
-        },
-    },
-    "rnnoise": {
-        "relative_root": "third_party/rnnoise",
-        "dirs": [],
-        "preserve_root": True,
-        "files": {
-            "BUILD.gn": RNNOISE_BUILD_GN,
-            "src/os_support.h": RNNOISE_OS_SUPPORT_H,
         },
     },
     "third_party_root": {

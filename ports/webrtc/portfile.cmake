@@ -17,7 +17,6 @@ set(WEBRTC_PATCHES
     webrtc-0001-disable-perfetto-when-off.patch
     webrtc-0002-export-enable-media-with-defaults.patch
     webrtc-0003-fix-rtp-config-optional.patch
-    webrtc-0004-use-upstream-rnnoise.patch
     webrtc-0005-use-external-openssl.patch
     webrtc-0006-make-dav1d-decoder-deps-conditional.patch
     webrtc-0007-fix-rtp-packet-info-eq-for-msvc.patch
@@ -37,14 +36,12 @@ set(BUILD_PATCHES
     build-0008-disable-crel-on-linux-arm64.patch
 )
 
-set(RNNOISE_PATCHES
-    rnnoise-0001-fix-neon-reinterpret-for-msvc.patch
-)
-
 set(WEBRTC_SOURCE_URL "https://webrtc.googlesource.com/src")
 set(WEBRTC_SOURCE_REF "aa217206b9ce8b929dc56d112d670a5931ef8cc1")
 
 include("${CMAKE_CURRENT_LIST_DIR}/webrtc-functions.cmake")
+
+set(WEBRTC_CHROMIUM_THIRD_PARTY_REF "7048751cc7450f6e937418379d2a95551973625f")
 
 declare_webrtc_repo(build
     DESTINATION "build"
@@ -56,12 +53,6 @@ declare_webrtc_repo(buildtools
     DESTINATION "buildtools"
     URL "https://chromium.googlesource.com/chromium/src/buildtools"
     REF "95ed44cf5f06dbb5861030b91c9db9ccb4316762"
-)
-declare_webrtc_repo(rnnoise
-    DESTINATION "third_party/rnnoise"
-    URL "https://github.com/xiph/rnnoise.git"
-    REF "c9137adac37fe21ede831f8a0aa31c17560c01e7"
-    PATCHES_VAR RNNOISE_PATCHES
 )
 
 declare_webrtc_generated_external(third_party_root PHASE pre_absl)
@@ -76,7 +67,6 @@ declare_webrtc_generated_external(jsoncpp LIB_ROOT_VAR JSONCPP_LIB_ROOT)
 declare_webrtc_generated_external(pffft LIB_ROOT_VAR PFFFT_LIB_ROOT)
 declare_webrtc_generated_external(alsa)
 declare_webrtc_generated_external(pulseaudio)
-declare_webrtc_generated_external(rnnoise)
 declare_webrtc_generated_external(dav1d)
 declare_webrtc_generated_external(llvm-libc)
 declare_webrtc_generated_external(protobuf)
@@ -93,6 +83,30 @@ vcpkg_from_git(
 
 fetch_declared_webrtc_repos("${SOURCE_PATH}")
 
+vcpkg_find_acquire_program(PYTHON3)
+
+function(materialize_webrtc_gitiles_text_blob relative_path filename sha512)
+    vcpkg_download_distfile(
+        encoded_blob
+        URLS "https://chromium.googlesource.com/chromium/src/third_party/+/${WEBRTC_CHROMIUM_THIRD_PARTY_REF}/rnnoise/${relative_path}?format=TEXT"
+        FILENAME "webrtc-${filename}.b64"
+        SHA512 "${sha512}"
+    )
+
+    set(output_path "${SOURCE_PATH}/third_party/rnnoise/${relative_path}")
+    get_filename_component(output_dir "${output_path}" DIRECTORY)
+    file(MAKE_DIRECTORY "${output_dir}")
+
+    vcpkg_execute_required_process(
+        COMMAND
+            "${PYTHON3}" "-c"
+            "import base64, pathlib, sys; pathlib.Path(sys.argv[2]).write_bytes(base64.b64decode(pathlib.Path(sys.argv[1]).read_bytes()))"
+            "${encoded_blob}" "${output_path}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME "decode-${TARGET_TRIPLET}-${filename}"
+    )
+endfunction()
+
 if(WEBRTC_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(
         "${SOURCE_PATH}/build/config/win/BUILD.gn"
@@ -103,21 +117,16 @@ endif()
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/testing" "${SOURCE_PATH}/tools")
 
-vcpkg_download_distfile(
-    WEBRTC_RNNOISE_MODEL_PATH
-    URLS https://media.xiph.org/rnnoise/models/rnnoise_data-0a8755f8e2d834eff6a54714ecc7d75f9932e845df35f8b59bc52a7cfe6e8b37.tar.gz
-    FILENAME rnnoise_data-0a8755f8e2d834eff6a54714ecc7d75f9932e845df35f8b59bc52a7cfe6e8b37.tar.gz
-    SHA512 b327d2fc5095be9ed66c5246a86b1a1ce180e9de875c4e5e8778f975560d1f035da40a8686dc1c3fd91c8e709be65d2638eccaa9f866b6f3d85f8d0d16bd2184
-)
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/rnnoise")
+materialize_webrtc_gitiles_text_blob("BUILD.gn" "chromium-third_party-rnnoise-BUILD.gn" "0aed621ae4a861008771ada20909389da61d0ae767ff414374acc4c69edb23b9a391c0f2475186ad478631697e6b2aec91a4d9cbdbe4cfe03ecfb8ba9e3c39e3")
+materialize_webrtc_gitiles_text_blob("COPYING" "chromium-third_party-rnnoise-COPYING" "6f1e6932c4fb632fa2fb214a6e99c9ac2982a6b4da6b1f0bf4e7154f330af0ce27851ce2e01f6f29c6ef8a5c3888c359e3bb711611526f40c2b8cca5ad104e21")
+materialize_webrtc_gitiles_text_blob("DIR_METADATA" "chromium-third_party-rnnoise-DIR_METADATA" "8a53f9899d1440b380b1adffd611c94252e0e00bf8e510c8d8434348257d5aa35222fd0d6fb1b86da43515d3b06f9c0dedc472a17fd9c0eaae4af3df53c67df5")
+materialize_webrtc_gitiles_text_blob("OWNERS" "chromium-third_party-rnnoise-OWNERS" "9e3179c14e2eecaf6b801dfd1208b6c3dacf2ee7ca97c0ce9e8704c30353ad4045cbea8b030a60cd40e0f13f4ca2d1d9ead14fc4b7de15857412f6797a8a9ccc")
+materialize_webrtc_gitiles_text_blob("README.chromium" "chromium-third_party-rnnoise-README.chromium" "bb6c0ec6a36203e4caa573640e90767d57351ddf579fb3074aa43669b8e153c331f8cda91508435636c23dc6094f5ca6754e4fb48d6de571a1cbbb7a57850a1e")
+materialize_webrtc_gitiles_text_blob("src/rnn_activations.h" "chromium-third_party-rnnoise-src-rnn_activations.h" "437d28b756ef771e32b7e1bdc52e148ea731e54f7627c3b4a82c0149666ef9bebebc6d214ef15d75c19c915eb4aa0a1b8b37bf6b782e488216fa9a862c1ce8a3")
+materialize_webrtc_gitiles_text_blob("src/rnn_vad_weights.cc" "chromium-third_party-rnnoise-src-rnn_vad_weights.cc" "b0d863316a0e652d9ee0078c6316bbd2db8d311242d2fb3569b4d8fd56f6c999d65cfa9f47499c368ead8aa7f572824d01837ff4153845bc8d27f334a9c1b2e6")
+materialize_webrtc_gitiles_text_blob("src/rnn_vad_weights.h" "chromium-third_party-rnnoise-src-rnn_vad_weights.h" "1e457ae5918407c0ce689d377f4a9664bc60b8db55798ede871238c69399f8aedf16442b3452adaaa7621fa0aa3bace81dbf8344df8a266813406e66c191e856")
 
-vcpkg_extract_archive(
-    ARCHIVE "${WEBRTC_RNNOISE_MODEL_PATH}"
-    DESTINATION "${SOURCE_PATH}/third_party/rnnoise/modeldata"
-)
-file(COPY "${SOURCE_PATH}/third_party/rnnoise/modeldata/src/rnnoise_data.c" DESTINATION "${SOURCE_PATH}/third_party/rnnoise/src/")
-file(COPY "${SOURCE_PATH}/third_party/rnnoise/modeldata/src/rnnoise_data.h" DESTINATION "${SOURCE_PATH}/third_party/rnnoise/src/")
-
-vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 file(WRITE "${SOURCE_PATH}/build/config/gclient_args.gni" "# Generated for local vcpkg webrtc port\ngenerate_location_tags = true\n")
 if(WEBRTC_TARGET_IS_WINDOWS OR WEBRTC_TARGET_IS_LINUX)
