@@ -73,10 +73,6 @@ if(VCPKG_CROSSCOMPILING)
     unset(_gperf)
 endif()
 
-# The "tools" feature installs the source-generator executables so that
-# cross-compile builds of this port can find them in tools/tdlib/.
-# It is requested via the host:true dependency in vcpkg.json, so vcpkg
-# always builds tdlib[tools]:host-triplet before any cross-compile target.
 if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     set(_tdlib_install_gen ON)
 else()
