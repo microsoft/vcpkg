@@ -8,6 +8,6 @@ add_executable(main main.cpp)
 target_link_libraries(main PRIVATE Td::TdJson)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(tdclient REQUIRED IMPORTED_TARGET tdjson)
+pkg_check_modules(tdjson REQUIRED IMPORTED_TARGET tdjson)
 add_executable(main2 main.cpp)
 target_link_libraries(main2 PRIVATE PkgConfig::tdjson)
