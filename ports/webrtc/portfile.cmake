@@ -111,7 +111,7 @@ if(WEBRTC_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(
         "${SOURCE_PATH}/build/config/win/BUILD.gn"
         "      # Desktop Windows: static CRT.\n      configs = [ \":static_crt\" ]\n"
-        "      # Vcpkg's x64-windows triplet expects the dynamic CRT for consumers.\n      configs = [ \":dynamic_crt\" ]\n"
+        "      # Vcpkg Windows triplets with a dynamic CRT expect this for consumers.\n      configs = [ \":dynamic_crt\" ]\n"
     )
 endif()
 
