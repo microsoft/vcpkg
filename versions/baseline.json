@@ -10533,7 +10533,7 @@
       "port-version": 1
     },
     "vectorclass": {
-      "baseline": "2.02.00",
+      "baseline": "2.02.03",
       "port-version": 0
     },
     "vectorscan": {
