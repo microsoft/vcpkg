@@ -1,5 +1,5 @@
 diff --git a/modules/audio_device/win/audio_device_core_win.cc b/modules/audio_device/win/audio_device_core_win.cc
-index fee76426cb..f2ded83bd8 100644
+index fee76426cb..6e82f3d5df 100644
 --- a/modules/audio_device/win/audio_device_core_win.cc
 +++ b/modules/audio_device/win/audio_device_core_win.cc
 @@ -790,6 +790,7 @@ int32_t AudioDeviceWindowsCore::SpeakerVolumeIsAvailable(bool& available) {
@@ -67,7 +67,7 @@ index fee76426cb..f2ded83bd8 100644
    WAVEFORMATEX Wfx = WAVEFORMATEX();
    WAVEFORMATEX* pWfxClosestMatch = NULL;
 +  UINT bufferFrameCount = 0;
-+  const int freqs[] = {48000, 44100, 16000, 96000, 32000, 8000};
++  constexpr int freqs[] = {48000, 44100, 16000, 96000, 32000, 8000};
 +  REFERENCE_TIME hnsBufferDuration = 0;
  
    // Create COM object with IAudioClient interface.
@@ -102,7 +102,7 @@ index fee76426cb..f2ded83bd8 100644
    WAVEFORMATEXTENSIBLE Wfx = WAVEFORMATEXTENSIBLE();
    WAVEFORMATEX* pWfxClosestMatch = NULL;
 +  UINT bufferFrameCount = 0;
-+  const int freqs[6] = {48000, 44100, 16000, 96000, 32000, 8000};
++  constexpr int freqs[6] = {48000, 44100, 16000, 96000, 32000, 8000};
  
    // Create COM object with IAudioClient interface.
    SAFE_RELEASE(_ptrClientIn);
@@ -241,15 +241,16 @@ index fee76426cb..f2ded83bd8 100644
    RTC_LOG(LS_VERBOSE) << "[CAPT] endpointBufferSizeMS : "
                        << endpointBufferSizeMS;
  
-@@ -3174,7 +3178,6 @@ DWORD AudioDeviceWindowsCore::DoCaptureThread() {
+@@ -3174,7 +3178,7 @@ DWORD AudioDeviceWindowsCore::DoCaptureThread() {
      }
  
      while (keepRecording) {
 -      BYTE* pData = 0;
++      pData = 0;
        UINT32 framesAvailable = 0;
        DWORD flags = 0;
        UINT64 recTime = 0;
-@@ -3951,6 +3954,11 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
+@@ -3951,6 +3955,11 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
    IPropertyStore* pProps = NULL;
    IAudioEndpointVolume* pEndpointVolume = NULL;
    LPWSTR pwszID = NULL;
@@ -261,7 +262,7 @@ index fee76426cb..f2ded83bd8 100644
  
    // Generate a collection of audio endpoint devices in the system.
    // Get states for *all* endpoint devices.
-@@ -3964,7 +3972,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
+@@ -3964,7 +3973,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
  
    // use the IMMDeviceCollection interface...
  
@@ -269,7 +270,7 @@ index fee76426cb..f2ded83bd8 100644
  
    // Retrieve a count of the devices in the device collection.
    hr = pCollection->GetCount(&count);
-@@ -4004,7 +4011,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
+@@ -4004,7 +4012,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
  
      // use the IPropertyStore interface...
  
@@ -277,7 +278,7 @@ index fee76426cb..f2ded83bd8 100644
      // Initialize container for property value.
      PropVariantInit(&varName);
  
-@@ -4015,7 +4021,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
+@@ -4015,7 +4022,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
      RTC_LOG(LS_VERBOSE) << "friendly name: \"" << varName.pwszVal << "\"";
  
      // Get the endpoint's current device state
@@ -285,7 +286,7 @@ index fee76426cb..f2ded83bd8 100644
      hr = pEndpoint->GetState(&dwState);
      CONTINUE_ON_ERROR(hr);
      if (dwState & DEVICE_STATE_ACTIVE)
-@@ -4028,7 +4033,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
+@@ -4028,7 +4034,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
        RTC_LOG(LS_VERBOSE) << "state (0x" << ToHex(dwState) << ")  : UNPLUGGED";
  
      // Check the hardware volume capabilities.
@@ -293,7 +294,7 @@ index fee76426cb..f2ded83bd8 100644
      hr = pEndpoint->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_ALL, NULL,
                               (void**)&pEndpointVolume);
      CONTINUE_ON_ERROR(hr);
-@@ -4049,7 +4053,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
+@@ -4049,7 +4054,6 @@ int32_t AudioDeviceWindowsCore::_EnumerateEndpointDevicesAll(
  
      // Check the channel count (#channels in the audio stream that enters or
      // leaves the audio endpoint device)
