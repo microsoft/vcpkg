@@ -1,6 +1,6 @@
 {
   "name": "numkong",
-  "version": "7.4.4",
+  "version": "7.5.0",
   "description": "NumKong (previously SimSIMD) delivers mixed-precision numerics that are often faster and more accurate than standard BLAS libraries",
   "homepage": "https://github.com/ashvardanian/NumKong",
   "license": "Apache-2.0",
