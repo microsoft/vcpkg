@@ -1,0 +1,20 @@
+{
+  "name": "swaggercpp",
+  "version": "0.2.1",
+  "description": "Professional C++23 library for Swagger/OpenAPI parsing, validation, traversal, and serialization.",
+  "homepage": "https://github.com/stescobedo92/swagger-cpp",
+  "license": "MIT",
+  "dependencies": [
+    "cpp-httplib",
+    "nlohmann-json",
+    "yaml-cpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
