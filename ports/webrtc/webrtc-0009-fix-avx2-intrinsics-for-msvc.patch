@@ -2,7 +2,7 @@ diff --git a/modules/audio_processing/aec3/matched_filter_avx2.cc b/modules/audi
 index eacd6486b1..b5c88d3b57 100644
 --- a/modules/audio_processing/aec3/matched_filter_avx2.cc
 +++ b/modules/audio_processing/aec3/matched_filter_avx2.cc
-@@ -82,14 +82,18 @@ void MatchedFilterCore_AccumulatedError_AVX2(size_t x_start_index,
+@@ -82,14 +82,28 @@ void MatchedFilterCore_AccumulatedError_AVX2(size_t x_start_index,
        s_inst_256_8 = _mm256_mul_ps(h_k_8, x_k_8);
        s_inst_hadd_256 = _mm256_hadd_ps(s_inst_256, s_inst_256_8);
        s_inst_hadd_256 = _mm256_hadd_ps(s_inst_hadd_256, s_inst_hadd_256);
@@ -14,31 +14,44 @@ index eacd6486b1..b5c88d3b57 100644
 -      e_128[2] = s_acum - y[i];
 -      s_acum += s_inst_hadd_256[5];
 -      e_128[3] = s_acum - y[i];
++#ifdef _MSC_VER
 +      alignas(32) float partial_sums[8];
-+      alignas(16) float errors[4];
 +      _mm256_storeu_ps(partial_sums, s_inst_hadd_256);
 +      s_acum += partial_sums[0];
-+      errors[0] = s_acum - y[i];
++      const float e0 = s_acum - y[i];
 +      s_acum += partial_sums[4];
-+      errors[1] = s_acum - y[i];
++      const float e1 = s_acum - y[i];
 +      s_acum += partial_sums[1];
-+      errors[2] = s_acum - y[i];
++      const float e2 = s_acum - y[i];
 +      s_acum += partial_sums[5];
-+      errors[3] = s_acum - y[i];
-+      e_128 = _mm_loadu_ps(errors);
++      const float e3 = s_acum - y[i];
++      e_128 = _mm_setr_ps(e0, e1, e2, e3);
++#else
++      s_acum += s_inst_hadd_256[0];
++      e_128[0] = s_acum - y[i];
++      s_acum += s_inst_hadd_256[4];
++      e_128[1] = s_acum - y[i];
++      s_acum += s_inst_hadd_256[1];
++      e_128[2] = s_acum - y[i];
++      s_acum += s_inst_hadd_256[5];
++      e_128[3] = s_acum - y[i];
++#endif
  
        __m128 acum_error = _mm_loadu_ps(a_p);
        acum_error = _mm_fmadd_ps(e_128, e_128, acum_error);
-@@ -210,8 +214,10 @@ void MatchedFilterCore_AVX2(size_t x_start_index,
+@@ -210,8 +224,13 @@ void MatchedFilterCore_AVX2(size_t x_start_index,
      x2_sum_256 = _mm256_add_ps(x2_sum_256, x2_sum_256_8);
      s_256 = _mm256_add_ps(s_256, s_256_8);
      __m128 sum = hsum_ab(x2_sum_256, s_256);
 -    x2_sum += sum[0];
 -    s += sum[1];
-+    alignas(16) float sum_values[4];
-+    _mm_storeu_ps(sum_values, sum);
-+    x2_sum += sum_values[0];
-+    s += sum_values[1];
++#ifdef _MSC_VER
++    x2_sum += _mm_cvtss_f32(sum);
++    s += _mm_cvtss_f32(_mm_shuffle_ps(sum, sum, _MM_SHUFFLE(1, 1, 1, 1)));
++#else
++    x2_sum += sum[0];
++    s += sum[1];
++#endif
  
      // Compute the matched filter error.
      float e = y[i] - s;
