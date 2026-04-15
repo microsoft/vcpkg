@@ -41,7 +41,7 @@ endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME regocpp CONFIG_PATH share/regocpp/cmake)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
