@@ -16,7 +16,6 @@ endif()
 set(WEBRTC_PATCHES
     webrtc-0001-disable-perfetto-when-off.patch
     webrtc-0002-export-enable-media-with-defaults.patch
-    webrtc-0003-fix-rtp-config-optional.patch
     webrtc-0005-use-external-openssl.patch
     webrtc-0006-make-dav1d-decoder-deps-conditional.patch
     webrtc-0007-fix-rtp-packet-info-eq-for-msvc.patch
