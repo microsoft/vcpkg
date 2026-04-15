@@ -1,0 +1,13 @@
+diff --git a/cmake/onnxruntime.cmake b/cmake/onnxruntime.cmake
+index 010696a610..c8a5a7b3ca 100644
+--- a/cmake/onnxruntime.cmake
++++ b/cmake/onnxruntime.cmake
+@@ -280,7 +280,7 @@ else()
+ endif()
+ 
+ if(WIN32)
+-  target_link_options(onnxruntime PRIVATE ${onnxruntime_DELAYLOAD_FLAGS})
++  target_link_options(onnxruntime INTERFACE ${onnxruntime_DELAYLOAD_FLAGS})
+ endif()
+ #See: https://cmake.org/cmake/help/latest/prop_tgt/SOVERSION.html
+ if(NOT APPLE AND NOT WIN32)

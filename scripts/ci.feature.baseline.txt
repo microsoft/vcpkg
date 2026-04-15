@@ -864,6 +864,7 @@ onnx-optimizer[pybind11]:x64-linux=cascade
 onnx-optimizer[pybind11]:x64-windows-static-md=cascade
 onnx-optimizer[pybind11]:x64-windows-static=cascade
 onnx-optimizer[pybind11]:x86-windows=cascade
+onnxruntime[cuda]((x64 & windows & !static) | (x64 & linux))=feature-fails
 onnxruntime[openvino](!x64 | osx | uwp) = cascade
 onnxruntime[tensorrt](!((x64 & windows & !static) | (x64 & linux)))=cascade
 onnxruntime[tensorrt]((x64 & windows & !static) | (x64 & linux))=feature-fails # requires TensorRT installation

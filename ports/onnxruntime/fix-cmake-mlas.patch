@@ -1,0 +1,32 @@
+diff --git a/cmake/onnxruntime_mlas.cmake b/cmake/onnxruntime_mlas.cmake
+index 3530ab03c8..ed9ede20f8 100644
+--- a/cmake/onnxruntime_mlas.cmake
++++ b/cmake/onnxruntime_mlas.cmake
+@@ -268,23 +268,16 @@ function(setup_mlas_source_for_windows)
+ endfunction()
+ 
+ function(setup_kleidiai)
++  find_package(KleidiAI CONFIG REQUIRED)
+   target_sources(onnxruntime_mlas PRIVATE
+     ${MLAS_SRC_DIR}/kai_ukernel_interface.cpp
+     ${MLAS_SRC_DIR}/kleidiai/sgemm_kleidiai.cpp
+     ${MLAS_SRC_DIR}/kleidiai/convolve_kleidiai.cpp
+     ${MLAS_SRC_DIR}/kleidiai/qgemm_kleidiai.cpp
+   )
+-  target_link_libraries(onnxruntime_mlas PRIVATE kleidiai)
+-  list(APPEND onnxruntime_EXTERNAL_LIBRARIES kleidiai)
+-  set(onnxruntime_EXTERNAL_LIBRARIES ${onnxruntime_EXTERNAL_LIBRARIES} PARENT_SCOPE)
+-
+-  if (NOT onnxruntime_BUILD_SHARED_LIB)
+-    install(TARGETS kleidiai EXPORT ${PROJECT_NAME}Targets
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-    FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
+-  endif()
++  target_link_libraries(onnxruntime_mlas PRIVATE KleidiAI::kleidiai)
++  #list(APPEND onnxruntime_EXTERNAL_LIBRARIES kleidiai)
++  #set(onnxruntime_EXTERNAL_LIBRARIES ${onnxruntime_EXTERNAL_LIBRARIES} PARENT_SCOPE)
+ endfunction()
+ 
+ if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
