@@ -4220,6 +4220,22 @@
       "baseline": "4.3.2",
       "port-version": 0
     },
+    "karchive": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kbreezeicons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kcodecs": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kcoreaddons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
     "kcp": {
       "baseline": "1.7",
       "port-version": 0
@@ -4230,6 +4246,10 @@
     },
     "kdbindings": {
       "baseline": "1.1.0",
+      "port-version": 0
+    },
+    "kdbusaddons": {
+      "baseline": "6.23.0",
       "port-version": 0
     },
     "kddockwidgets": {
@@ -4440,44 +4460,16 @@
       "baseline": "5.116.0",
       "port-version": 0
     },
-    "kf6archive": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfarchive": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfbreezeicons": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfcodecs": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfcoreaddons": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfdbusaddons": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfglobalaccel": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfi18n": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kfitemmodels": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
     "kfr": {
       "baseline": "6.3.1",
+      "port-version": 0
+    },
+    "kglobalaccel": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "ki18n": {
+      "baseline": "6.23.0",
       "port-version": 0
     },
     "kinectsdk1": {
@@ -4494,6 +4486,10 @@
     },
     "kissnet": {
       "baseline": "2024-01-20",
+      "port-version": 0
+    },
+    "kitemmodels": {
+      "baseline": "6.23.0",
       "port-version": 0
     },
     "kleidiai": {

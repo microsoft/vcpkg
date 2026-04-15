@@ -1,9 +1,9 @@
 {
-  "name": "kfcoreaddons",
+  "name": "kcodecs",
   "version": "6.23.0",
-  "description": "Addons to QtCore",
-  "homepage": "https://invent.kde.org/frameworks/kcoreaddons",
-  "documentation": "https://api.kde.org/kcoreaddons-index.html",
+  "description": "String encoding library",
+  "homepage": "https://invent.kde.org/frameworks/kcodecs",
+  "documentation": "https://api.kde.org/kcodecs-index.html",
   "dependencies": [
     "ecm",
     {
@@ -20,15 +20,6 @@
     }
   ],
   "features": {
-    "qml": {
-      "description": "Build the QML plugin",
-      "dependencies": [
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
-    },
     "translations": {
       "description": "Install translations",
       "dependencies": [

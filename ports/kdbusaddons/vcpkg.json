@@ -1,14 +1,18 @@
 {
-  "name": "kfcodecs",
+  "name": "kdbusaddons",
   "version": "6.23.0",
-  "description": "String encoding library",
-  "homepage": "https://invent.kde.org/frameworks/kcodecs",
-  "documentation": "https://api.kde.org/kcodecs-index.html",
+  "description": "Convenience classes for D-Bus",
+  "homepage": "https://invent.kde.org/frameworks/kdbusaddons",
+  "documentation": "https://api.kde.org/kdbusaddons-index.html",
+  "supports": "!android",
   "dependencies": [
     "ecm",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "dbus"
+      ]
     },
     {
       "name": "vcpkg-cmake",
