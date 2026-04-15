@@ -5409,7 +5409,7 @@
       "port-version": 2
     },
     "libpg-query": {
-      "baseline": "17-6.2.1",
+      "baseline": "17-6.2.2",
       "port-version": 0
     },
     "libphonenumber": {
