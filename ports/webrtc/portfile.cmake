@@ -21,7 +21,7 @@ set(WEBRTC_PATCHES
     webrtc-0007-fix-rtp-packet-info-eq-for-msvc.patch
     webrtc-0008-fix-audio-device-core-win-goto-scope.patch
     webrtc-0009-fix-avx2-intrinsics-for-msvc.patch
-    webrtc-0010-disable-arm-denormal-disabler-for-msvc.patch
+    webrtc-0010-fix-denormal-disabler-for-msvc.patch
     webrtc-0011-make-linux-audio-backends-optional.patch
 )
 
