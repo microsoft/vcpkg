@@ -29,7 +29,8 @@
         {
           "name": "pkgconf",
           "host": true
-        }
+        },
+        "libspeechd"
       ]
     }
   }
