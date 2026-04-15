@@ -1,7 +1,6 @@
 {
   "name": "wolfssl",
-  "version": "5.8.4",
-  "port-version": 2,
+  "version": "5.9.1",
   "description": "TLS and Cryptographic library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-3.0-or-later",

@@ -503,7 +503,6 @@ itk(android)=skip  # try_run
 itk(arm & windows)=skip  # try_run
 ixwebsocket[core,mbedtls,openssl,sectransp,ssl]=options # you can only choose one ssl backend or none
 jemalloc(android)=fail
-jemalloc(windows & arm)=fail
 jkqtplotter:arm64-linux=cascade
 jsonnet:arm64-windows=cascade
 juce:arm64-linux=fail
