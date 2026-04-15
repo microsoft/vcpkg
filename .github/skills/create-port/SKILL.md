@@ -305,13 +305,33 @@ vcpkg_cmake_configure(
 ```
 
 **Method 3: Patches (When No Options Exist)**
-When upstream doesn't provide control options, create patches:
+When upstream doesn't provide control options, create a patch that adds an option:
+```cmake
+# Example patch: add BUILD_SAMPLES option to upstream CMakeLists.txt
+# Original:  if(PROJECT_IS_TOP_LEVEL)
+#                add_subdirectory(samples)
+#            endif()
+# Patched:   option(BUILD_SAMPLES "Build sample applications" ON)
+#            ...
+#            if(PROJECT_IS_TOP_LEVEL AND BUILD_SAMPLES)
+#                add_subdirectory(samples)
+#            endif()
+```
+Then disable via `-DBUILD_SAMPLES=OFF` in portfile.cmake. This is preferred over
+`file(REMOVE_RECURSE)` hacks because it produces a clean, reviewable patch and
+avoids CMake errors when the upstream `add_subdirectory()` references a removed directory.
+
 ```cmake
 # In portfile.cmake
 vcpkg_from_github(
     # ... other parameters ...
     PATCHES
-        patches/001-disable-tests-tools-docs.patch
+        disable-samples.patch
+)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_SAMPLES=OFF
 )
 ```
 
@@ -329,7 +349,7 @@ vcpkg_from_github(
 
 **Step 3: Apply Appropriate Method**
 - Use upstream CMake options if available
-- Create patches if no options exist
+- Create patches that add CMake options if none exist (preferred over source deletion)
 - Add features for user-controllable components
 
 ### Common CMake Option Patterns
@@ -461,7 +481,7 @@ Some libraries are incompatible with vcpkg's packaging model:
 ### Build System Integration  
 - **Add required host dependencies** for build system support
 - **Disable non-essential components** by default (tests, tools, documentation)
-- **Handle Windows DLL issues** with `vcpkg_check_linkage(ONLY_STATIC_LIBRARY)`
+- **Handle Windows DLL issues** with conditional `vcpkg_check_linkage(ONLY_STATIC_LIBRARY)` inside `if(VCPKG_TARGET_IS_WINDOWS)` — do not force static globally unless the library cannot build shared on any platform
 - **Set SHA512 to 0 initially** for auto-calculation on first build
 - **Install usage files** with proper CMake integration examples
 - **Use vcpkg features** to allow optional component building when appropriate
@@ -471,6 +491,71 @@ Some libraries are incompatible with vcpkg's packaging model:
 - **Validate CMake integration** works with generated targets
 - **Use post-build validation** checklist for completeness
 - **Update version database** after successful testing
+
+## Static vs Dynamic Linkage
+
+### Windows-Only Static Restriction
+Libraries without `__declspec(dllexport)` annotations produce empty DLLs on Windows,
+but work fine as shared libraries on non-Windows platforms (ELF and Mach-O export all
+symbols by default). Use a **conditional** static linkage check:
+```cmake
+# Only restrict to static on Windows where dllexport is required
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+```
+Do NOT use unconditional `vcpkg_check_linkage(ONLY_STATIC_LIBRARY)` unless the library
+genuinely cannot build as a shared library on any platform.
+
+## Patch Generation Workflow
+
+### Recommended: Use `git format-patch` with File Output
+When creating patches, initialize a git repo in the extracted source, make changes, and
+generate patches to a file. **Do NOT pipe `git format-patch --stdout` through PowerShell**
+as it mangles line endings. Use `-o <directory>` instead:
+
+```powershell
+# Extract clean sources (from buildtrees/ after a vcpkg build attempt)
+cd buildtrees/package-name/src/<hash>.clean
+
+# Initialize git and commit original state
+git init
+git add -A
+git -c user.email="patch@vcpkg" -c user.name="vcpkg" commit -m "original"
+
+# Make your modifications to the source files
+# ... edit CMakeLists.txt, etc. ...
+
+# Commit changes and generate patch directly to port directory
+git add -A
+git -c user.email="patch@vcpkg" -c user.name="vcpkg" commit -m "Descriptive change message"
+git format-patch -1 -o "path/to/ports/package-name"
+
+# Rename to a descriptive name
+Rename-Item "ports/package-name/0001-Descriptive-change-message.patch" "descriptive-name.patch"
+```
+
+**IMPORTANT**: Never use `git format-patch --stdout | Set-Content` on Windows — PowerShell
+corrupts the line endings, producing a single-line file that cannot be applied.
+
+## Version Database Workflow
+
+After creating or updating a port, register it in the version database:
+
+```powershell
+# 1. Format the manifest (required before x-add-version)
+vcpkg format-manifest ports/package-name/vcpkg.json
+
+# 2. Stage port files (x-add-version reads from git index)
+git add ports/package-name
+
+# 3. Add version entry
+vcpkg x-add-version package-name
+
+# 4. Stage the generated version files and commit
+git add versions/
+git commit -m "[package-name] Add new port"
+```
 
 ## Testing and Troubleshooting
 

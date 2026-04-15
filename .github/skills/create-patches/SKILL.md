@@ -147,8 +147,13 @@ git init && git add . && git commit -m "Original source"
 
 # Make your modifications, then generate patches
 git add . && git commit -m "Fix for vcpkg compatibility"
-git format-patch HEAD~1 --output-directory ../../../ports/package-name/patches/
+git format-patch HEAD~1 -o ../../../ports/package-name/
 ```
+
+**IMPORTANT (Windows/PowerShell):** Always use `git format-patch -o <directory>` to write
+patch files directly. Do NOT pipe `git format-patch --stdout` through PowerShell (e.g.,
+`git format-patch --stdout | Set-Content ...`) because PowerShell corrupts line endings,
+producing a single-line file that `git apply` cannot parse.
 
 ### Method 2: Using Fresh Clone (Traditional Method)
 
