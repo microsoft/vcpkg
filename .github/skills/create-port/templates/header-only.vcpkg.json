@@ -1,0 +1,12 @@
+{
+  "name": "{{PACKAGE_NAME}}",
+  "version": "{{VERSION}}",
+  "description": "{{DESCRIPTION}}",
+  "homepage": "{{HOMEPAGE}}",
+  "license": "{{LICENSE}}"{{#if DEPENDENCIES}},
+  "dependencies": [
+    {{#each DEPENDENCIES}}
+    "{{this}}"{{#unless @last}},{{/unless}}
+    {{/each}}
+  ]{{/if}}
+}

@@ -1,0 +1,25 @@
+The package {{PACKAGE_NAME}} provides CMake targets:
+
+    find_package({{CMAKE_PACKAGE_NAME}} CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::{{PACKAGE_NAME}})
+
+{{#if HAS_COMPONENTS}}
+# Use specific components:
+    find_package({{CMAKE_PACKAGE_NAME}} CONFIG REQUIRED COMPONENTS {{COMPONENTS}})
+    target_link_libraries(main PRIVATE unofficial::{{PACKAGE_NAME}})
+
+{{/if}}
+{{#if IS_HEADER_ONLY}}
+# For header-only usage (alternative method using find_path):
+    find_path({{PACKAGE_NAME_UPPER}}_INCLUDE_DIR NAMES {{MAIN_HEADER_FILE}})
+    target_include_directories(main PRIVATE ${{{PACKAGE_NAME_UPPER}}_INCLUDE_DIR})
+
+{{/if}}
+{{#if HAS_PKG_CONFIG}}
+# {{PACKAGE_NAME}} also provides pkg-config integration:
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules({{PKG_CONFIG_NAME}} REQUIRED {{PACKAGE_NAME}})
+    target_link_libraries(main PRIVATE ${{{PKG_CONFIG_NAME}}_LIBRARIES})
+    target_include_directories(main PRIVATE ${{{PKG_CONFIG_NAME}}_INCLUDE_DIRS})
+
+{{/if}}
