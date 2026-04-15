@@ -1,37 +1,33 @@
 diff --git a/tdtl/CMakeLists.txt b/tdtl/CMakeLists.txt
 --- a/tdtl/CMakeLists.txt
 +++ b/tdtl/CMakeLists.txt
-@@ -27,2 +27,6 @@
+@@ -26,3 +26,7 @@
+ 
  add_library(tdtl STATIC ${TDTL_SOURCE})
  target_include_directories(tdtl PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 +
-+if (MSVC)
-+  set_target_properties(tdtl PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++if (MSVC AND CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL")
++  set_target_properties(tdtl PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 +endif()
 diff --git a/td/generate/CMakeLists.txt b/td/generate/CMakeLists.txt
 --- a/td/generate/CMakeLists.txt
 +++ b/td/generate/CMakeLists.txt
-@@ -226,7 +226,19 @@
-     COMMENT "Generate JSON TL source files"
+@@ -227,6 +227,14 @@
      DEPENDS generate_json tl_generate_tlo ${TD_API_TLO_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/scheme/td_api.tl
    )
-+
-+  if (MSVC)
-+    # Force generator executables to use the static CRT so they are
-+    # self-contained and do not need ucrtbased.dll in PATH at runtime.
+ 
++  if (MSVC AND CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL")
++    # Normalize generator executables to the release DLL CRT (/MD) so cmake
++    # can execute them as custom commands without ucrtbased.dll in PATH.
++    # Static-CRT builds (no "DLL" in CMAKE_MSVC_RUNTIME_LIBRARY) are unaffected.
 +    set_target_properties(tl-parser tl_writer_cpp generate_mtproto generate_common generate_c td_generate_java_api generate_json
-+        PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-+    # generate_json links tdutils which is compiled with the DLL CRT; suppress
-+    # the conflicting default lib so the static CRT wins at link time.
-+    target_link_options(generate_json PRIVATE
-+        "$<$<CONFIG:Debug>:/nodefaultlib:msvcrtd>"
-+        "$<$<CONFIG:Debug>:/nodefaultlib:ucrtbased>")
++        PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 +  endif()
-
++
    if (TD_ENABLE_JNI)
      install(TARGETS td_generate_java_api RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
      install(FILES JavadocTlDocumentationGenerator.php TlDocumentationGenerator.php DESTINATION "${CMAKE_INSTALL_BINDIR}/td/generate")
-@@ -249,4 +261,10 @@
+@@ -249,4 +257,10 @@
        DEPENDS td_generate_dotnet_api tl_generate_tlo ${TD_API_TLO_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/scheme/td_api.tl ${CMAKE_CURRENT_SOURCE_DIR}/DotnetTlDocumentationGenerator.php
      )
    endif()
@@ -47,15 +43,16 @@ diff --git a/tdutils/generate/CMakeLists.txt b/tdutils/generate/CMakeLists.txt
 +++ b/tdutils/generate/CMakeLists.txt
 @@ -36,6 +36,9 @@
    set(GPERF_GEN_SOURCE generate_mime_types_gperf.cpp)
-
+ 
    add_executable(generate_mime_types_gperf ${GPERF_GEN_SOURCE})
-+  if (MSVC)
-+    set_target_properties(generate_mime_types_gperf PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++  if (MSVC AND CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL")
++    set_target_properties(generate_mime_types_gperf PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 +  endif()
-
+ 
    add_custom_command(
      OUTPUT ${GPERF_FILES}
-@@ -60,3 +63,9 @@
+@@ -59,4 +62,10 @@
+     COMMAND ${EXTENSION_TO_MIME_TYPE_CMD}
      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/auto/extension_to_mime_type.gperf
    )
 +
