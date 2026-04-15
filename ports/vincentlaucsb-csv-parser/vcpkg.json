@@ -1,13 +1,12 @@
 {
   "name": "vincentlaucsb-csv-parser",
-  "version": "2.5.1",
+  "version": "3.2.0",
   "description": "A modern C++ library for reading, writing, and analyzing CSV (and similar) files.",
   "homepage": "https://github.com/vincentlaucsb/csv-parser",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     "mio",
-    "string-view-lite",
     {
       "name": "vcpkg-cmake",
       "host": true

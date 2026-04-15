@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES 
         003-force-cxx-17.patch
         fix-heterogeneous_lookup_testing-target.patch
+        fix-mingw-dll.patch
 )
 
 

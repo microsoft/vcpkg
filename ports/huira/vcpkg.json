@@ -1,6 +1,6 @@
 {
   "name": "huira",
-  "version": "0.9.1",
+  "version": "0.9.3",
   "description": "A library for space rendering, LiDAR simulation, and solar radiation pressure modeling.",
   "homepage": "https://github.com/huira-render/huira",
   "documentation": "https://docs.huira.space",
@@ -15,8 +15,9 @@
       "default-features": false,
       "features": [
         "geometry-instance",
+        "geometry-point",
         "geometry-triangle",
-        "ray-packets",
+        "ray-mask",
         "tasking-tbb"
       ]
     },
@@ -39,6 +40,12 @@
     }
   ],
   "features": {
+    "tests": {
+      "description": "Build huira tests",
+      "dependencies": [
+        "catch2"
+      ]
+    },
     "tools": {
       "description": "Build huira command line tools",
       "dependencies": [

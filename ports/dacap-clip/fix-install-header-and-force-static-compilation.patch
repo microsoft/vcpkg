@@ -9,5 +9,6 @@ index d9aa76e..cee1d90 100644
 +  target_include_directories(clip PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 +
    install(
-     FILES clip.h
+-    FILES clip.h
++    FILES clip_base.h clip.h clip_common.h
      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
