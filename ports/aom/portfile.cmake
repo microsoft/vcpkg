@@ -9,8 +9,14 @@ vcpkg_from_git(
         aom-fix-nasm.diff # TODO: remove this patch after the next release
 )
 
-vcpkg_find_acquire_program(NASM)
 vcpkg_find_acquire_program(PERL)
+
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)$")
+    # Upstream AOM only uses NASM on x86-family targets. Non-x86 targets such as
+    # Apple Silicon configure with ENABLE_NASM=OFF and should not require nasm.
+    vcpkg_find_acquire_program(NASM)
+    set(aom_nasm_compiler "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+endif()
 
 set(aom_target_cpu "")
 if(VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
@@ -33,7 +39,7 @@ vcpkg_cmake_configure(
         -DENABLE_TESTS=OFF
         -DENABLE_TOOLS=OFF
         -DTHREADS_PREFER_PTHREAD_FLAG=ON
-        "-DCMAKE_ASM_NASM_COMPILER=${NASM}"
+        ${aom_nasm_compiler}
         "-DPERL_EXECUTABLE=${PERL}"
 )
 
