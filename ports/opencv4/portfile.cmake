@@ -30,6 +30,8 @@ vcpkg_from_github(
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
       0023-ffmpeg8-support.patch
+      0024-openvino-const-tensor-data.patch
+      0025-fix-cuda-host-std-flag-forwarding.patch
       "${PATCH1_FILE}"
 )
 # Disallow accidental build of vendored copies
@@ -536,7 +538,7 @@ if("ffmpeg" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
 endif()
 if("freetype" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
+  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz CONFIG)")
 endif()
 if("gdcm" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")

@@ -943,7 +943,6 @@ opencv4[opengl](xbox)=cascade
 opencv4[opengl]=no-separate-feature-test # needs Win32UI, Qt or GTK to enable HAVE_OPENGL
 opencv4[ovis]:arm64-linux=cascade
 opencv4[ovis](android)=feature-fails
-opencv4[python]:arm64-linux=cascade
 opencv4[qt]:arm64-linux=cascade
 opencv4[qt](ios | xbox)=cascade
 opencv4[vtk]:arm64-linux=cascade

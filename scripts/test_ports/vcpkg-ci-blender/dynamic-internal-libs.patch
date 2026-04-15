@@ -1,0 +1,24 @@
+diff --git a/build_files/cmake/macros.cmake b/build_files/cmake/macros.cmake
+--- a/build_files/cmake/macros.cmake
++++ b/build_files/cmake/macros.cmake
+@@ -414,7 +414,7 @@ function(blender_add_lib__impl
+ 
+   # message(STATUS "Configuring library ${name}")
+ 
+-  add_library(${name} ${sources})
++  add_library(${name} STATIC ${sources})
+ 
+   # On windows vcpkg goes out of its way to make its libs the preferred
+   # libs, and needs to be explicitly be told not to do that.
+diff --git a/source/blender/nodes/CMakeLists.txt b/source/blender/nodes/CMakeLists.txt
+--- a/source/blender/nodes/CMakeLists.txt
++++ b/source/blender/nodes/CMakeLists.txt
+@@ -31,7 +31,7 @@ function(add_node_discovery
+       ${DISCOVER_NODES_PATH}
+   )
+   set_source_files_properties(${output_file} PROPERTIES GENERATED TRUE)
+-  add_library(${lib_name} ${output_file})
++  add_library(${lib_name} STATIC ${output_file})
+ endfunction()
+ 
+ add_subdirectory(composite)
