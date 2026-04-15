@@ -4444,31 +4444,35 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6breezeicons": {
+    "kfarchive": {
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6codecs": {
+    "kfbreezeicons": {
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6coreaddons": {
+    "kfcodecs": {
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6dbusaddons": {
+    "kfcoreaddons": {
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6globalaccel": {
+    "kfdbusaddons": {
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6i18n": {
+    "kfglobalaccel": {
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6itemmodels": {
+    "kfi18n": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kfitemmodels": {
       "baseline": "6.23.0",
       "port-version": 0
     },

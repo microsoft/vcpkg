@@ -1,15 +1,18 @@
 {
-  "name": "kf6globalaccel",
+  "name": "kfdbusaddons",
   "version": "6.23.0",
-  "description": "Global desktop keyboard shortcuts",
-  "homepage": "https://invent.kde.org/frameworks/kglobalaccel",
-  "documentation": "https://api.kde.org/kglobalaccel-index.html",
-  "supports": "!windows & !android & !osx",
+  "description": "Convenience classes for D-Bus",
+  "homepage": "https://invent.kde.org/frameworks/kdbusaddons",
+  "documentation": "https://api.kde.org/kdbusaddons-index.html",
+  "supports": "!android",
   "dependencies": [
     "ecm",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "dbus"
+      ]
     },
     {
       "name": "vcpkg-cmake",
