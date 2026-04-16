@@ -4,7 +4,7 @@
   "description": "Intel Video Processing Library (oneVPL) dispatcher",
   "homepage": "https://github.com/intel/libvpl",
   "license": "MIT",
-  "supports": "(windows & !uwp & (x64 | x86)) | linux",
+  "supports": "(windows & !uwp & (x64 | x86)) | (linux & (x64 | x86))",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
