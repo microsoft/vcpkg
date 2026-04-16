@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DINSTALL_DEV=ON
         -DINSTALL_LIB=ON
-        -DVPL_INSTALL_LICENSEDIR=${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright_tmp
+        "-DVPL_INSTALL_LICENSEDIR=${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright_tmp"
 )
 
 vcpkg_cmake_install()
