@@ -140,7 +140,10 @@ Use this as a reference for tone, depth, and structure.
 7. **Transient failures**: Download failures (curl errors, SHA mismatches) and exit-code-127 failures should be flagged as potentially transient
 8. **Version constraints**: Never suggest adding a `<=` version constraint as a fix — vcpkg only supports `>=` constraints. For API-breaking dependency updates, suggest updating the consuming port or patching it instead.
 9. **PR context**: For PR-triggered builds, always include a link to the PR, the PR title, and the author in the report header.
-10. **Priority levels**:
+10. **Portfile anti-patterns**: Never recommend `set(VCPKG_BUILD_TYPE release)` for ports that produce binaries — it is only for header-only libraries. Never recommend adding `VCPKG_POLICY_*` overrides to suppress post-build check warnings — fix the underlying issue instead. Most ports should not set any policy variable.
+11. **Case-sensitivity**: When a file-not-found error occurs only on Linux/Android but the port passes on Windows/macOS, always verify the exact filename casing in the upstream repository before concluding the file is missing.
+12. **`vcpkg_cmake_config_fixup` package name**: The `PACKAGE_NAME` argument must match the upstream CMake export name (what consumers pass to `find_package()`), which may differ from the vcpkg port name.
+13. **Priority levels**:
    - 🔴 **Immediate** — Core/popular ports, failures on 3+ triplets, or CI-environment regressions affecting many ports
    - 🟠 **High** — Failures on 2+ triplets, popular ports, or clear upstream API breaks
    - 🟡 **Medium** — Single-triplet failures with clear fixes

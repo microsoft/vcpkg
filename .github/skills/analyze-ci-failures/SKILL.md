@@ -1,7 +1,7 @@
 ---
 name: analyze-ci-failures
 description: 'Analyze vcpkg Azure DevOps CI build failures. Downloads failure logs, identifies regression root causes, and generates a structured report categorizing build errors by package, triplet, and failure type.'
-argument-hint: 'Azure DevOps build URL (e.g., "https://dev.azure.com/vcpkg/public/_build/results?buildId=129315")'
+argument-hint: 'Azure DevOps build URL or GitHub PR URL (e.g., "https://dev.azure.com/vcpkg/public/_build/results?buildId=129315" or "https://github.com/microsoft/vcpkg/pull/51134")'
 ---
 
 # vcpkg CI Failures Analyzer
@@ -27,7 +27,9 @@ This skill fetches build metadata and failure logs directly from the Azure DevOp
 
 ### Step 1: Parse the Build URL
 
-Given a URL such as:
+The skill accepts either an **Azure DevOps build URL** or a **GitHub PR URL** as input.
+
+**Azure DevOps build URL:**
 ```
 https://dev.azure.com/vcpkg/public/_build/results?buildId=129315&view=results
 ```
@@ -36,6 +38,16 @@ Extract:
 - **organization**: `vcpkg`
 - **project**: `public`
 - **buildId**: `129315`
+
+**GitHub PR URL:**
+```
+https://github.com/microsoft/vcpkg/pull/51134
+```
+
+Extract the PR number, then use the GitHub API to find the associated Azure DevOps build:
+1. Fetch the PR's check runs: `GET /repos/microsoft/vcpkg/pulls/{pr_number}/check-runs` (use `github-mcp-server-pull_request_read` with method `get_check_runs`)
+2. Find the check run named `microsoft.vcpkg.pr` — its `details_url` contains the Azure DevOps build URL with `buildId`
+3. Extract the `buildId` from that URL and proceed with the normal workflow
 
 The REST API base is: `https://dev.azure.com/{organization}/{project}/_apis`
 
@@ -96,6 +108,7 @@ REGRESSION: kf6itemmodels:x64-windows failed with FILE_CONFLICTS. If expected, a
 | Failure type | Also has artifact log? | Notes |
 |---|---|---|
 | `BUILD_FAILED` | ✅ Yes | Full build logs in "failure logs for {triplet}" artifact |
+| `POST_BUILD_CHECKS_FAILED` | ✅ Yes | Build succeeded but vcpkg post-install validation failed (misplaced CMake files, missing usage, etc.) |
 | `FILE_CONFLICTS` | ❌ No | Port installs files that conflict with another port; only in step log |
 | `MISSING_FROM_BASELINE` | ❌ No | Port passed but is listed as `fail` in baseline; no artifact |
 | `CASCADE_BUILD_FAILED` | Sometimes | Dependency failure; root port has artifact, downstream may not |
@@ -488,3 +501,7 @@ Use the `create` tool to write the full report content to this path. The report 
 - `"z azcopy logs"` artifacts are infrastructure logs; skip these unless diagnosing asset cache issues
 - **Android artifact sizes (~115–123 MB) typically share root causes with Linux** — if Linux analysis reveals a systemic issue (e.g., compiler header change, Python version), assume Android is affected too without full re-analysis
 - **Downloaded logs are kept for manual review** in `ci-failure-analysis/` (gitignored). ZIP files are removed after extraction to save space, but the extracted logs and report are preserved. If disk space is a concern, old analysis directories can be deleted manually.
+- **Case-sensitive file paths**: Linux and Android file systems are case-sensitive; Windows and macOS are not. A portfile referencing `${SOURCE_PATH}/LICENSE` will succeed on Windows/macOS even if the upstream file is named `License` or `license`, but will fail with "No such file or directory" on Linux/Android. When a BUILD_FAILED occurs only on Linux/Android with a missing file error, always check for a case mismatch against the actual upstream filename.
+- **Portfile anti-patterns — do NOT recommend these as fixes:**
+  - `set(VCPKG_BUILD_TYPE release)` — this is **only** appropriate for header-only libraries. Ports that produce binary output (`.lib`, `.a`, `.dll`, `.so`) must build both debug and release configurations. Never suggest adding this to fix mismatched-binary warnings.
+  - `set(VCPKG_POLICY_* enabled)` — policy overrides are escape hatches for exceptional cases, not standard practice. Most ports should not set any `VCPKG_POLICY_*` variable. When a post-build check fails, the correct fix is almost always to fix the underlying issue (e.g., correct `vcpkg_cmake_config_fixup()` arguments, install missing files), not to suppress the warning with a policy override.

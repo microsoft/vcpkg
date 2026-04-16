@@ -197,7 +197,7 @@ error: curl: (6) Could not resolve host: example.com
 
 ## Category 7: Post-Build Check Failures
 
-**Symptom**: Build and install succeed, but vcpkg's post-install checks fail.
+**Symptom**: Build and install succeed, but vcpkg's post-install checks fail. Reported as `POST_BUILD_CHECKS_FAILED` in the REGRESSION line.
 
 ```
 error: The following files are not installed:
@@ -209,12 +209,23 @@ error: Found forbidden pattern in installed file:
 error: Usage of deprecated vcpkg function 'vcpkg_apply_patches'
 ```
 
-**Common post-build checks:**
-- Copyright file must exist at `share/{portname}/copyright`
-- No `.pdb` files in release packages (debug-only)
-- Headers must be in `include/`, not `include/{portname}/include/`
-- CMake config files in `share/{portname}/` not `lib/cmake/`
-- No absolute paths in installed CMake files
+**Common post-build checks and their fixes:**
+
+| Check | Warning message | Correct fix |
+|---|---|---|
+| **Misplaced CMake config files** | `This port installs CMake files in places CMake files are not expected` | Fix `vcpkg_cmake_config_fixup()` — use the correct `PACKAGE_NAME` matching the upstream CMake export name (not necessarily the vcpkg port name), and set `CONFIG_PATH` to where the upstream installs its config (e.g., `lib/cmake/pkgname`) |
+| **`lib/cmake` not merged** | `should be merged and moved to share/${PORT}/cmake` | Fixed by correcting `vcpkg_cmake_config_fixup()` as above |
+| **Usage file not installed** | `this port contains a file named "usage" but didn't install it` | Add `file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")` |
+| **Mismatched debug/release binaries** | `mismatching number of debug and release binaries` | Ensure the port builds both debug and release. Do **not** fix by adding `VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES` or `VCPKG_BUILD_TYPE release` (see portfile anti-patterns below) |
+| **Missing copyright** | `share/portname/copyright not found` | Add `vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")` with the correct filename and case |
+| **Absolute paths in CMake files** | `absolute path found in CMake config` | Use `vcpkg_cmake_config_fixup()` which handles path rewriting |
+| **No `.pdb` in release** | `.pdb files in release packages` | Ensure PDB files only install for debug configuration |
+
+**Portfile anti-patterns (do NOT recommend as fixes):**
+- `set(VCPKG_BUILD_TYPE release)` — only appropriate for **header-only** libraries. Ports producing binaries (`.lib`, `.a`, `.dll`, `.so`) must build both debug and release.
+- `set(VCPKG_POLICY_* enabled)` — policy overrides are escape hatches for exceptional cases. The correct fix is to resolve the underlying issue, not suppress the warning.
+
+**Key insight for `vcpkg_cmake_config_fixup()`**: The `PACKAGE_NAME` argument must match the **upstream CMake export name** (what `find_package()` looks for), which is often different from the vcpkg port name. For example, a port named `minecraft-server-status` whose upstream exports `minecraft_api` needs `vcpkg_cmake_config_fixup(PACKAGE_NAME "minecraft_api" CONFIG_PATH "lib/cmake/minecraft_api")`.
 
 ---
 
@@ -333,6 +344,28 @@ portname=pass       # (same as not listed) must succeed
 - `x86-windows`
 
 **Important**: Baseline entries apply to all triplets unless a triplet-specific entry exists (not currently supported; all triplet failures for a port use the same baseline entry).
+
+---
+
+## Category 13: Case-Sensitivity Path Failures (Linux/Android only)
+
+**Symptom**: A file-not-found error occurs on Linux and Android triplets, but the same port builds successfully on Windows and macOS.
+
+```
+CMake Error at scripts/cmake/vcpkg_install_copyright.cmake:21 (file):
+  file INSTALL cannot find ".../src/v1.0.0/LICENSE": No such file or directory.
+```
+
+**Root cause**: The portfile references a filename with different casing than the actual file in the upstream repository. Linux and Android use case-sensitive file systems (`LICENSE` ≠ `License` ≠ `license`), while Windows and macOS are case-insensitive and will resolve any casing variant.
+
+**Common occurrences:**
+- License files: `LICENSE` vs `License` vs `license` vs `COPYING`
+- README files: `README.md` vs `Readme.md` vs `readme.md`
+- Source directories with inconsistent casing
+
+**Diagnostic clue**: If a port fails with BUILD_FAILED on all Linux/Android triplets but succeeds (or fails for a *different* reason like POST_BUILD_CHECKS_FAILED) on Windows/macOS, check for a case mismatch in file paths used in the portfile.
+
+**Fix**: Correct the filename in `portfile.cmake` to match the exact casing in the upstream repository. Verify by checking the upstream repo's file listing.
 
 ---
 
