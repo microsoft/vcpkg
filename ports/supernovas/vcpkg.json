@@ -1,9 +1,9 @@
 {
   "name": "supernovas",
-  "version": "1.6.0-rc4",
+  "version": "1.6.0-rc5",
   "description": "SuperNOVAS C/C++ high-precision astrometry library",
-  "homepage": "https://smithsonian.github.io/SuperNOVAS/",
-  "documentation": "https://smithsonian.github.io/SuperNOVAS/doc/html/",
+  "homepage": "https://sigmyne.github.io/SuperNOVAS/",
+  "documentation": "https://sigmyne.github.io/SuperNOVAS/doc/html/",
   "license": "Unlicense",
   "dependencies": [
     {
