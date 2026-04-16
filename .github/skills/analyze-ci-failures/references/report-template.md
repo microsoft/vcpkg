@@ -15,6 +15,10 @@ Use it as the exact template when generating reports.
 **Duration:** {startTime} → {finishTime} UTC (~{duration})
 **Result:** ❌ **FAILED** — {baseline_summary}
 
+<!-- For PR builds: include a line linking to the PR with its title and author, e.g.:
+**PR:** [#51202](https://github.com/microsoft/vcpkg/pull/51202) — `[ltla-cppirlba] Update to 3.1.0` by @xiaozhuai
+-->
+
 ---
 
 ## Summary
@@ -134,7 +138,9 @@ Use this as a reference for tone, depth, and structure.
 5. **Baseline ports**: Ports that explicitly reject a platform by design (`MSVC is not supported`, environment requirements) go to the Baseline section, not regressions
 6. **Dependency chain**: If port A fails because port B failed, list only port B as the regression with a note "causes N downstream failures: portA, portC, …"
 7. **Transient failures**: Download failures (curl errors, SHA mismatches) and exit-code-127 failures should be flagged as potentially transient
-8. **Priority levels**:
+8. **Version constraints**: Never suggest adding a `<=` version constraint as a fix — vcpkg only supports `>=` constraints. For API-breaking dependency updates, suggest updating the consuming port or patching it instead.
+9. **PR context**: For PR-triggered builds, always include a link to the PR, the PR title, and the author in the report header.
+10. **Priority levels**:
    - 🔴 **Immediate** — Core/popular ports, failures on 3+ triplets, or CI-environment regressions affecting many ports
    - 🟠 **High** — Failures on 2+ triplets, popular ports, or clear upstream API breaks
    - 🟡 **Medium** — Single-triplet failures with clear fixes

@@ -119,6 +119,12 @@ error: 'header.h': No such file or directory
 - **API deprecation**: Uses a function/class removed in a newer version of a dependency
 - **Compiler flag conflict**: vcpkg sets `-Werror` or `/WX`; warning-as-error triggers on upstream code
 
+**Suggested fix guidance for API deprecation failures:**
+When a dependency update removes or renames an API that downstream ports still use:
+1. Update the downstream port to a version compatible with the new API
+2. Patch the downstream port's source to adapt to the new API
+- **Do NOT suggest adding a `<=` version constraint** — vcpkg only supports `>=` version constraints; upper-bound pinning is not possible
+
 ---
 
 ## Category 4: Linker Errors
@@ -321,6 +327,7 @@ portname=pass       # (same as not listed) must succeed
 - `x64-osx`
 - `x64-uwp`
 - `x64-windows`
+- `x64-windows-release`
 - `x64-windows-static`
 - `x64-windows-static-md`
 - `x86-windows`

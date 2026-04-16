@@ -50,10 +50,12 @@ Key fields in the response:
 - `result` — `succeeded`, `failed`, `partiallySucceeded`, `canceled`
 - `reason` — `pullRequest`, `schedule`, `manual`, `individualCI`
 - `requestedFor.displayName` — who triggered the build
-- `sourceBranch` — branch or PR reference
+- `sourceBranch` — branch or PR reference (e.g., `refs/pull/51202/merge` for PR builds)
 - `sourceVersion` — commit SHA
 - `_links.web.href` — canonical link back to the build page
 - `finishTime` — when it completed
+
+**For PR-triggered builds** (`reason == "pullRequest"`): extract the PR number from `sourceBranch` (e.g., `refs/pull/51202/merge` → PR #51202). Use the GitHub API to fetch the PR title and author — include these in the report header for context, and link to the PR with `https://github.com/microsoft/vcpkg/pull/{pr_number}`. The PR is on the `microsoft/vcpkg` repository (not `vicroms/vcpkg`).
 
 **Get the build timeline (all jobs and tasks):**
 ```
@@ -146,21 +148,56 @@ Start with the smallest artifacts (fastest feedback). Android triplets typically
 
 ### Step 4: Download Failure Log Artifacts
 
-**`web_fetch` cannot download binary ZIP files.** Use PowerShell with `Invoke-WebRequest` instead:
+**`web_fetch` cannot download binary ZIP files.** Use PowerShell with `Invoke-WebRequest` instead.
+
+**Output directory:** All downloaded artifacts and the final report are saved in a persistent directory under the repository root for manual review:
+
+```
+ci-failure-analysis/
+├── pr-51196/           ← PR-triggered build (named by PR number)
+│   ├── logs/           ← extracted failure log artifacts
+│   │   ├── x64-linux/
+│   │   │   └── failure logs for x64-linux/
+│   │   │       ├── ffmpeg/
+│   │   │       └── ...
+│   │   ├── x64-windows-static/
+│   │   └── ...
+│   └── report.md       ← the generated analysis report
+├── ci-130500/          ← scheduled/manual build (named by build ID)
+│   ├── logs/
+│   └── report.md
+└── ...
+```
+
+**Naming convention:**
+- **PR-triggered builds** (`reason == "pullRequest"`): `pr-{pr_number}` (e.g., `pr-51196`)
+- **All other builds** (scheduled, manual, individualCI): `ci-{buildId}` (e.g., `ci-130500`)
+
+This directory is listed in `.gitignore` and will not be committed. It allows reviewers to manually inspect the raw logs alongside the report.
 
 ```powershell
-$tmpDir = "$env:TEMP\vcpkg-ci-{buildId}"
-New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
+# Determine the output directory name
+if ($build.reason -eq 'pullRequest') {
+    $prNumber = ($build.sourceBranch -replace 'refs/pull/(\d+)/merge','$1')
+    $analysisDir = "$repoRoot\ci-failure-analysis\pr-$prNumber"
+} else {
+    $analysisDir = "$repoRoot\ci-failure-analysis\ci-$buildId"
+}
+$logsDir = "$analysisDir\logs"
+New-Item -ItemType Directory -Path $logsDir -Force | Out-Null
 
 # Download the artifact ZIP using the downloadUrl from the artifacts API response
 $downloadUrl = "{resource.downloadUrl from artifacts API}"
-Invoke-WebRequest -Uri $downloadUrl -OutFile "$tmpDir\{triplet}.zip" -UseBasicParsing
+Invoke-WebRequest -Uri $downloadUrl -OutFile "$logsDir\{triplet}.zip" -UseBasicParsing
 
 # Extract
-Expand-Archive "$tmpDir\{triplet}.zip" -DestinationPath "$tmpDir\{triplet}" -Force
+Expand-Archive "$logsDir\{triplet}.zip" -DestinationPath "$logsDir\{triplet}" -Force
+
+# Remove the ZIP after extraction to save space
+Remove-Item "$logsDir\{triplet}.zip" -Force
 
 # List failed ports — each is a subdirectory inside "failure logs for {triplet}/"
-$root = "$tmpDir\{triplet}\failure logs for {triplet}"
+$root = "$logsDir\{triplet}\failure logs for {triplet}"
 Get-ChildItem $root -Directory | Select-Object -ExpandProperty Name
 ```
 
@@ -424,16 +461,21 @@ When asked to produce the report, default to the full structured markdown report
 
 ### Saving the Report
 
-After generating the report, **always save it as a markdown file** in the repository root:
+After generating the report, **always save it as `report.md`** inside the analysis output directory:
 
 ```
-ci-report-{buildId}.md
+ci-failure-analysis/{pr-NNN|ci-NNN}/report.md
 ```
 
-Use the `create` tool to write the full report content to this path. This ensures the report is persisted and can be easily reviewed or shared.
+Use the `create` tool to write the full report content to this path. The report lives alongside the downloaded failure logs, making it easy to cross-reference the analysis with the raw log files.
+
+**Examples:**
+- PR #51196 analysis → `ci-failure-analysis/pr-51196/report.md`
+- Scheduled build #129315 → `ci-failure-analysis/ci-129315/report.md`
 
 ## Important Notes
 
+- **vcpkg only supports `>=` version constraints** — there is no way to express `<=` or `<` constraints. Never suggest "add a version constraint to prevent upgrading to version X" as a fix; it is not possible. Instead, recommend updating the consuming port to be compatible with the new version, or patching the port.
 - The vcpkg Azure DevOps project (`vcpkg/public`) is **publicly accessible** — no authentication token is required for artifact downloads or build/artifact API calls
 - **`web_fetch` cannot download binary ZIP files** — use PowerShell `Invoke-WebRequest` for artifact downloads
 - **`resource.type` is `"PipelineArtifact"`**, not `"Container"` — the Container listing API (`/_apis/resources/Containers/{id}`) does not work; use `downloadUrl` directly
@@ -445,4 +487,4 @@ Use the `create` tool to write the full report content to this path. This ensure
 - The `"format.diff"` artifact (if present) indicates formatting or version file issues, not port build failures — report these separately
 - `"z azcopy logs"` artifacts are infrastructure logs; skip these unless diagnosing asset cache issues
 - **Android artifact sizes (~115–123 MB) typically share root causes with Linux** — if Linux analysis reveals a systemic issue (e.g., compiler header change, Python version), assume Android is affected too without full re-analysis
-- **Clean up the temp directory** (`$env:TEMP\vcpkg-ci-{buildId}`) after analysis to avoid disk clutter
+- **Downloaded logs are kept for manual review** in `ci-failure-analysis/` (gitignored). ZIP files are removed after extraction to save space, but the extracted logs and report are preserved. If disk space is a concern, old analysis directories can be deleted manually.
