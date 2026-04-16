@@ -1,7 +1,7 @@
 ---
 name: analyze-ci-failures
 description: 'Analyze vcpkg Azure DevOps CI build failures. Downloads failure logs, identifies regression root causes, and generates a structured report categorizing build errors by package, triplet, and failure type.'
-argument-hint: 'Azure DevOps build URL (e.g., "https://dev.azure.com/vcpkg/public/_build/results?buildId=129315")'
+argument-hint: 'Azure DevOps build URL or GitHub PR URL (e.g., "https://dev.azure.com/vcpkg/public/_build/results?buildId=129315" or "https://github.com/microsoft/vcpkg/pull/51134")'
 ---
 
 # vcpkg CI Failures Analyzer
@@ -27,7 +27,9 @@ This skill fetches build metadata and failure logs directly from the Azure DevOp
 
 ### Step 1: Parse the Build URL
 
-Given a URL such as:
+The skill accepts either an **Azure DevOps build URL** or a **GitHub PR URL** as input.
+
+**Azure DevOps build URL:**
 ```
 https://dev.azure.com/vcpkg/public/_build/results?buildId=129315&view=results
 ```
@@ -36,6 +38,16 @@ Extract:
 - **organization**: `vcpkg`
 - **project**: `public`
 - **buildId**: `129315`
+
+**GitHub PR URL:**
+```
+https://github.com/microsoft/vcpkg/pull/51134
+```
+
+Extract the PR number, then use the GitHub API to find the associated Azure DevOps build:
+1. Fetch the PR's check runs: `GET /repos/microsoft/vcpkg/pulls/{pr_number}/check-runs` (use `github-mcp-server-pull_request_read` with method `get_check_runs`)
+2. Find the check run named `microsoft.vcpkg.pr` — its `details_url` contains the Azure DevOps build URL with `buildId`
+3. Extract the `buildId` from that URL and proceed with the normal workflow
 
 The REST API base is: `https://dev.azure.com/{organization}/{project}/_apis`
 
@@ -50,10 +62,12 @@ Key fields in the response:
 - `result` — `succeeded`, `failed`, `partiallySucceeded`, `canceled`
 - `reason` — `pullRequest`, `schedule`, `manual`, `individualCI`
 - `requestedFor.displayName` — who triggered the build
-- `sourceBranch` — branch or PR reference
+- `sourceBranch` — branch or PR reference (e.g., `refs/pull/51202/merge` for PR builds)
 - `sourceVersion` — commit SHA
 - `_links.web.href` — canonical link back to the build page
 - `finishTime` — when it completed
+
+**For PR-triggered builds** (`reason == "pullRequest"`): extract the PR number from `sourceBranch` (e.g., `refs/pull/51202/merge` → PR #51202). Use the GitHub API to fetch the PR title and author — include these in the report header for context, and link to the PR with `https://github.com/microsoft/vcpkg/pull/{pr_number}`. The PR is on the `microsoft/vcpkg` repository (not `vicroms/vcpkg`).
 
 **Get the build timeline (all jobs and tasks):**
 ```
@@ -94,6 +108,7 @@ REGRESSION: kf6itemmodels:x64-windows failed with FILE_CONFLICTS. If expected, a
 | Failure type | Also has artifact log? | Notes |
 |---|---|---|
 | `BUILD_FAILED` | ✅ Yes | Full build logs in "failure logs for {triplet}" artifact |
+| `POST_BUILD_CHECKS_FAILED` | ✅ Yes | Build succeeded but vcpkg post-install validation failed (misplaced CMake files, missing usage, etc.) |
 | `FILE_CONFLICTS` | ❌ No | Port installs files that conflict with another port; only in step log |
 | `MISSING_FROM_BASELINE` | ❌ No | Port passed but is listed as `fail` in baseline; no artifact |
 | `CASCADE_BUILD_FAILED` | Sometimes | Dependency failure; root port has artifact, downstream may not |
@@ -146,21 +161,56 @@ Start with the smallest artifacts (fastest feedback). Android triplets typically
 
 ### Step 4: Download Failure Log Artifacts
 
-**`web_fetch` cannot download binary ZIP files.** Use PowerShell with `Invoke-WebRequest` instead:
+**`web_fetch` cannot download binary ZIP files.** Use PowerShell with `Invoke-WebRequest` instead.
+
+**Output directory:** All downloaded artifacts and the final report are saved in a persistent directory under the repository root for manual review:
+
+```
+ci-failure-analysis/
+├── pr-51196/           ← PR-triggered build (named by PR number)
+│   ├── logs/           ← extracted failure log artifacts
+│   │   ├── x64-linux/
+│   │   │   └── failure logs for x64-linux/
+│   │   │       ├── ffmpeg/
+│   │   │       └── ...
+│   │   ├── x64-windows-static/
+│   │   └── ...
+│   └── report.md       ← the generated analysis report
+├── ci-130500/          ← scheduled/manual build (named by build ID)
+│   ├── logs/
+│   └── report.md
+└── ...
+```
+
+**Naming convention:**
+- **PR-triggered builds** (`reason == "pullRequest"`): `pr-{pr_number}` (e.g., `pr-51196`)
+- **All other builds** (scheduled, manual, individualCI): `ci-{buildId}` (e.g., `ci-130500`)
+
+This directory is listed in `.gitignore` and will not be committed. It allows reviewers to manually inspect the raw logs alongside the report.
 
 ```powershell
-$tmpDir = "$env:TEMP\vcpkg-ci-{buildId}"
-New-Item -ItemType Directory -Path $tmpDir -Force | Out-Null
+# Determine the output directory name
+if ($build.reason -eq 'pullRequest') {
+    $prNumber = ($build.sourceBranch -replace 'refs/pull/(\d+)/merge','$1')
+    $analysisDir = "$repoRoot\ci-failure-analysis\pr-$prNumber"
+} else {
+    $analysisDir = "$repoRoot\ci-failure-analysis\ci-$buildId"
+}
+$logsDir = "$analysisDir\logs"
+New-Item -ItemType Directory -Path $logsDir -Force | Out-Null
 
 # Download the artifact ZIP using the downloadUrl from the artifacts API response
 $downloadUrl = "{resource.downloadUrl from artifacts API}"
-Invoke-WebRequest -Uri $downloadUrl -OutFile "$tmpDir\{triplet}.zip" -UseBasicParsing
+Invoke-WebRequest -Uri $downloadUrl -OutFile "$logsDir\{triplet}.zip" -UseBasicParsing
 
 # Extract
-Expand-Archive "$tmpDir\{triplet}.zip" -DestinationPath "$tmpDir\{triplet}" -Force
+Expand-Archive "$logsDir\{triplet}.zip" -DestinationPath "$logsDir\{triplet}" -Force
+
+# Remove the ZIP after extraction to save space
+Remove-Item "$logsDir\{triplet}.zip" -Force
 
 # List failed ports — each is a subdirectory inside "failure logs for {triplet}/"
-$root = "$tmpDir\{triplet}\failure logs for {triplet}"
+$root = "$logsDir\{triplet}\failure logs for {triplet}"
 Get-ChildItem $root -Directory | Select-Object -ExpandProperty Name
 ```
 
@@ -424,16 +474,21 @@ When asked to produce the report, default to the full structured markdown report
 
 ### Saving the Report
 
-After generating the report, **always save it as a markdown file** in the repository root:
+After generating the report, **always save it as `report.md`** inside the analysis output directory:
 
 ```
-ci-report-{buildId}.md
+ci-failure-analysis/{pr-NNN|ci-NNN}/report.md
 ```
 
-Use the `create` tool to write the full report content to this path. This ensures the report is persisted and can be easily reviewed or shared.
+Use the `create` tool to write the full report content to this path. The report lives alongside the downloaded failure logs, making it easy to cross-reference the analysis with the raw log files.
+
+**Examples:**
+- PR #51196 analysis → `ci-failure-analysis/pr-51196/report.md`
+- Scheduled build #129315 → `ci-failure-analysis/ci-129315/report.md`
 
 ## Important Notes
 
+- **vcpkg only supports `>=` version constraints** — there is no way to express `<=` or `<` constraints. Never suggest "add a version constraint to prevent upgrading to version X" as a fix; it is not possible. Instead, recommend updating the consuming port to be compatible with the new version, or patching the port.
 - The vcpkg Azure DevOps project (`vcpkg/public`) is **publicly accessible** — no authentication token is required for artifact downloads or build/artifact API calls
 - **`web_fetch` cannot download binary ZIP files** — use PowerShell `Invoke-WebRequest` for artifact downloads
 - **`resource.type` is `"PipelineArtifact"`**, not `"Container"` — the Container listing API (`/_apis/resources/Containers/{id}`) does not work; use `downloadUrl` directly
@@ -445,4 +500,8 @@ Use the `create` tool to write the full report content to this path. This ensure
 - The `"format.diff"` artifact (if present) indicates formatting or version file issues, not port build failures — report these separately
 - `"z azcopy logs"` artifacts are infrastructure logs; skip these unless diagnosing asset cache issues
 - **Android artifact sizes (~115–123 MB) typically share root causes with Linux** — if Linux analysis reveals a systemic issue (e.g., compiler header change, Python version), assume Android is affected too without full re-analysis
-- **Clean up the temp directory** (`$env:TEMP\vcpkg-ci-{buildId}`) after analysis to avoid disk clutter
+- **Downloaded logs are kept for manual review** in `ci-failure-analysis/` (gitignored). ZIP files are removed after extraction to save space, but the extracted logs and report are preserved. If disk space is a concern, old analysis directories can be deleted manually.
+- **Case-sensitive file paths**: Linux and Android file systems are case-sensitive; Windows and macOS are not. A portfile referencing `${SOURCE_PATH}/LICENSE` will succeed on Windows/macOS even if the upstream file is named `License` or `license`, but will fail with "No such file or directory" on Linux/Android. When a BUILD_FAILED occurs only on Linux/Android with a missing file error, always check for a case mismatch against the actual upstream filename.
+- **Portfile anti-patterns — do NOT recommend these as fixes:**
+  - `set(VCPKG_BUILD_TYPE release)` — this is **only** appropriate for header-only libraries. Ports that produce binary output (`.lib`, `.a`, `.dll`, `.so`) must build both debug and release configurations. Never suggest adding this to fix mismatched-binary warnings.
+  - `set(VCPKG_POLICY_* enabled)` — policy overrides are escape hatches for exceptional cases, not standard practice. Most ports should not set any `VCPKG_POLICY_*` variable. When a post-build check fails, the correct fix is almost always to fix the underlying issue (e.g., correct `vcpkg_cmake_config_fixup()` arguments, install missing files), not to suppress the warning with a policy override.

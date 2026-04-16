@@ -1,6 +1,7 @@
 {
   "name": "babl",
   "version": "0.1.126",
+  "port-version": 1,
   "description": "A pixel encoding and color space conversion engine.",
   "homepage": "https://gegl.org/babl/",
   "license": "LGPL-3.0-or-later",
@@ -19,7 +20,6 @@
     },
     "introspection": {
       "description": "Enable introspection",
-      "supports": "!windows | mingw",
       "dependencies": [
         "gobject-introspection"
       ]
