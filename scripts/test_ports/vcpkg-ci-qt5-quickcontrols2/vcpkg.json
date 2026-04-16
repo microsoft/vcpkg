@@ -2,7 +2,6 @@
   "name": "vcpkg-ci-qt5-quickcontrols2",
   "version-string": "ci",
   "description": "Validates qt5-quickcontrols2",
-  "license": null,
   "dependencies": [
     "qt5-base",
     "qt5-declarative",
