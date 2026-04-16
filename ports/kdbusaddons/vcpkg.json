@@ -1,14 +1,18 @@
 {
-  "name": "kf6coreaddons",
+  "name": "kdbusaddons",
   "version": "6.23.0",
-  "description": "Addons to QtCore",
-  "homepage": "https://invent.kde.org/frameworks/kcoreaddons",
-  "documentation": "https://api.kde.org/kcoreaddons-index.html",
+  "description": "Convenience classes for D-Bus",
+  "homepage": "https://invent.kde.org/frameworks/kdbusaddons",
+  "documentation": "https://api.kde.org/kdbusaddons-index.html",
+  "supports": "!android",
   "dependencies": [
     "ecm",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "dbus"
+      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -20,15 +24,6 @@
     }
   ],
   "features": {
-    "qml": {
-      "description": "Build the QML plugin",
-      "dependencies": [
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
-    },
     "translations": {
       "description": "Install translations",
       "dependencies": [
