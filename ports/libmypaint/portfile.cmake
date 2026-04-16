@@ -7,10 +7,15 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix_i18n.diff
+        win_math.patch
+        disable_tests.diff
 )
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
     OPTIONS
         --disable-i18n
         --disable-introspection
