@@ -1,4 +1,0 @@
-swaggercpp provides CMake integration via find_package:
-
-    find_package(swaggercpp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE swaggercpp::swaggercpp)
