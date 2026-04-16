@@ -621,7 +621,7 @@
       "port-version": 2
     },
     "babl": {
-      "baseline": "0.1.124",
+      "baseline": "0.1.126",
       "port-version": 0
     },
     "backward-cpp": {
@@ -2837,7 +2837,7 @@
       "port-version": 3
     },
     "ethindp-prism": {
-      "baseline": "0.7.1",
+      "baseline": "0.11.4",
       "port-version": 0
     },
     "etl": {
@@ -3853,7 +3853,7 @@
       "port-version": 3
     },
     "huira": {
-      "baseline": "0.9.3",
+      "baseline": "0.9.4",
       "port-version": 0
     },
     "hungarian": {
@@ -5489,7 +5489,7 @@
       "port-version": 0
     },
     "librdkafka": {
-      "baseline": "2.14.0",
+      "baseline": "2.14.1",
       "port-version": 0
     },
     "libredwg": {
@@ -6493,7 +6493,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "3.2.8",
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "mimicpp": {
@@ -6981,7 +6981,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.21.0",
+      "baseline": "1.22.1",
       "port-version": 0
     },
     "nifly": {
@@ -7089,7 +7089,7 @@
       "port-version": 0
     },
     "numkong": {
-      "baseline": "7.3.0",
+      "baseline": "7.5.0",
       "port-version": 0
     },
     "nuraft": {
@@ -7190,6 +7190,10 @@
     },
     "octomap": {
       "baseline": "1.10.0",
+      "port-version": 0
+    },
+    "odbccpp": {
+      "baseline": "1.6",
       "port-version": 0
     },
     "ode": {
@@ -8685,7 +8689,7 @@
       "port-version": 0
     },
     "rego-cpp": {
-      "baseline": "1.4.0",
+      "baseline": "1.4.1",
       "port-version": 0
     },
     "rendergraph": {
@@ -9109,7 +9113,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.13.6",
+      "baseline": "0.13.7",
       "port-version": 0
     },
     "septag-dmon": {
@@ -10842,7 +10846,7 @@
     },
     "wolfssl": {
       "baseline": "5.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "3.10.0",
@@ -10869,7 +10873,7 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.13.0",
+      "baseline": "4.13.1",
       "port-version": 0
     },
     "wtl": {
@@ -11217,8 +11221,8 @@
       "port-version": 0
     },
     "zxc": {
-      "baseline": "0.9.1",
-      "port-version": 1
+      "baseline": "0.10.0",
+      "port-version": 0
     },
     "zycore": {
       "baseline": "1.5.2",
