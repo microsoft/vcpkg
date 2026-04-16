@@ -1,6 +1,6 @@
 {
   "name": "supernovas",
-  "version": "1.5.1",
+  "version": "1.6.0-rc4",
   "description": "SuperNOVAS C/C++ high-precision astrometry library",
   "homepage": "https://smithsonian.github.io/SuperNOVAS/",
   "documentation": "https://smithsonian.github.io/SuperNOVAS/doc/html/",
@@ -16,6 +16,9 @@
     }
   ],
   "features": {
+    "cpp": {
+      "description": "C++11 API and runtime"
+    },
     "solsys-calceph": {
       "description": "Solar-system ephemeris support via the CALCEPH library",
       "supports": "!uwp",
