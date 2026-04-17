@@ -1,17 +1,9 @@
-# Windows shared libraries are not supported yet
-# See https://github.com/swift-nav/libsbp/issues/1062
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO swift-nav/libsbp
     REF "v${VERSION}"
-    SHA512 2dc626cc1667da271bca565f499471de0ec0d533694ffee1c72f25f8ba4a8944294cea67b8a35b48da80c66da623e23bc92a0a7478a6882b72485761fca36417
+    SHA512 1c56338e2d8a459becc9acd29470d1d473680c0930b10f1fcc46760cd0b4614613fff76a5b23d0d889be39c3da7219837d9944310f6ed893191c171d050a7a88
     HEAD_REF master
-    PATCHES
-        0000-install-include-directory.patch
 )
 
 vcpkg_from_github(
