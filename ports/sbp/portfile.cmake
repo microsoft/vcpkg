@@ -1,3 +1,10 @@
+# Windows shared libraries are not supported yet
+# PR has been already merged to upstream, but there is still some issue.
+# See https://github.com/swift-nav/libsbp/issues/1062
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO swift-nav/libsbp
