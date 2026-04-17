@@ -4225,19 +4225,19 @@
       "port-version": 0
     },
     "karchive": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "kbreezeicons": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "kcodecs": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "kcoreaddons": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "kcp": {
@@ -4253,7 +4253,7 @@
       "port-version": 0
     },
     "kdbusaddons": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "kddockwidgets": {
@@ -4469,11 +4469,11 @@
       "port-version": 0
     },
     "kglobalaccel": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "ki18n": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "kinectsdk1": {
@@ -4493,7 +4493,7 @@
       "port-version": 0
     },
     "kitemmodels": {
-      "baseline": "6.23.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "kleidiai": {
