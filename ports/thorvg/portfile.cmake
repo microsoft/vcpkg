@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
     REF "v${VERSION}"
-    SHA512 566892fe58e8f8314bc55bfc83a9a8294dfdb82a293313bf8670aa202186b6f0561c1cc5db145d36add50933b689c6a2ea0b62d92d0906409d63e49b189c8791
+    SHA512 2f25b36d5dffa2258a05616ea07fb881407a5d665d80696c8438854cb72ff52f6020c6e44a3eacde135dc0e5301a05aaca8a136204b03f5d3803fc638d2b38b4
     HEAD_REF master
 )
 
@@ -16,7 +16,7 @@ vcpkg_configure_meson(
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
         -Dstatic=true # Use static modules
-        -Dengines=['sw']
+        -Dengines=['cpu']
         -Dloaders=all
         -Dsavers=all
         -Dsimd=true
