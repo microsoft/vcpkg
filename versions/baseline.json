@@ -385,7 +385,7 @@
       "port-version": 4
     },
     "atomic-queue": {
-      "baseline": "1.7.3",
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "attr": {
