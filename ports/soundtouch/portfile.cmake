@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 8bd199c6363104ba6c9af1abbd3c4da3567ccda5fe3a68298917817fc9312ecb0914609afba1abd864307b0a596becf450bc7073eeec17b1de5a7c5086fbc45e
     HEAD_REF master
+    PATCHES
+        fix-install-includes.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,17 +1,15 @@
 # highfive should be updated together with hdf5
 
-string(REPLACE "." "." hdf5_ref "hdf5_${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
-    REF "${hdf5_ref}"
-    SHA512 609e129f78c6777a0e64694de8ec638326a616ff9cbd916f310dc6f78435ef67194c5ab59faedda09c85c045c15ebe2ec4ce04fa905d5f74801600e067c27fcc
+    REF "${VERSION}"
+    SHA512 45844e2f0e89b5a0291c9fecd9b4b663eed1a7a21b38e358fd6f6198fe509c19bcf91651d1ae3b4cf8de7445f7a71854acdb1635b939b6d08fdaf6b6c0e396d1
     HEAD_REF develop
     PATCHES
         default-plugin-dir.diff # avoid absolute path
         libaec-config.diff
         mpi-flags.diff
-        pkgconfig.patch
         win-compile-flags.diff
 )
 
