@@ -1,39 +1,35 @@
 diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index 16c8666..7b4221e 100644
+index 3b90b14..5460157 100644
 --- a/include/internal/basic_csv_parser.hpp
 +++ b/include/internal/basic_csv_parser.hpp
 @@ -12,7 +12,7 @@
- #include <thread>
  #include <vector>
- 
+
+ #if !defined(__EMSCRIPTEN__)
 -#include "../external/mio.hpp"
 +#include "mio/mmap.hpp"
+ #endif
+ #include "basic_csv_parser_simd.hpp"
  #include "col_names.hpp"
- #include "common.hpp"
- #include "csv_format.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index 7f8d737..f0ead1a 100644
+index 62f27d5..fc4a0a6 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -92,7 +92,7 @@ namespace csv {
-       */
-     using string_view = std::string_view;
+@@ -97,7 +97,7 @@
+ #endif
+
+ // Include string_view BEFORE csv namespace to avoid namespace pollution issues
+-#ifdef CSV_HAS_CXX17
++#if 1
+ #include <string_view>
  #else
--#include "../external/string_view.hpp"
-+#include "nonstd/string_view.hpp"
+ #include "../external/string_view.hpp"
+@@ -122,7 +122,7 @@ namespace csv {
+
+ #define STATIC_ASSERT(x) static_assert(x, "Assertion failed")
+
+-#ifdef CSV_HAS_CXX17
++#if 1
       /** @typedef string_view
        *  The string_view class used by this library.
        */
-diff --git a/include/internal/csv_reader.hpp b/include/internal/csv_reader.hpp
-index 02e9164..2e93f12 100644
---- a/include/internal/csv_reader.hpp
-+++ b/include/internal/csv_reader.hpp
-@@ -16,7 +16,7 @@
- #include <string>
- #include <vector>
- 
--#include "../external/mio.hpp"
-+#include "mio/mmap.hpp"
- #include "basic_csv_parser.hpp"
- #include "common.hpp"
- #include "data_type.hpp"

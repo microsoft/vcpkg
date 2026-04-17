@@ -2,16 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 83e8d9c877a7e1c253efb94953758dde141ef23f74c727294c3a9af60db02401e1aef92368908b297bad1fc005d155e6c63bd726ccc48ea831f46cc5c1915633
+    SHA512 fe9197d11e1252829548fb5e015874d72bcd5894f9217b76ab509b9ece44d01efa0bfe5306d5aebd8f7feb97abd32970406ab2cd6f0af866aefa557f762afea4
     HEAD_REF master
     PATCHES
-        embed-debug-info.patch
         pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
-        fix-x86-msvc-amalgamation.patch
-        botan-3.10-illegal-instruction.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -143,6 +140,13 @@ else()
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         vcpkg_list(APPEND configure_arguments --cc=clang)
     endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_list(APPEND configure_arguments --build-targets=shared,cli)
+    else()
+        vcpkg_list(APPEND configure_arguments --build-targets=static,cli)
+    endif()
+
     # botan's install.py doesn't handle DESTDIR on windows host,
     # so we must avoid the standard '--prefix' and 'DESTDIR' install.
     vcpkg_configure_make(

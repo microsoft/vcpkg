@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES 
         003-force-cxx-17.patch
         fix-heterogeneous_lookup_testing-target.patch
+        fix-mingw-dll.patch
 )
 
 
@@ -34,7 +35,6 @@ if(VCPKG_TARGET_IS_MINGW)
 endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DABSL_PROPAGATE_CXX_STD=ON
         -DABSL_BUILD_TESTING=OFF 

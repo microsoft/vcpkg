@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yhirose/cpp-peglib
     REF "v${VERSION}"
-    SHA512 8a9c6add9c65bbbcdd55d2a32c88afb2cb88588839addc7cd42abd352f6c0ef7721d8b86202642d3ad98640a9a5bccf46500eafa105e3e0f44a45174ce7bb1ee
+    SHA512 ec0aa7967cb461942102fba574aa72c936aa84ab3b2efe4f34c77e30d1cdab78fbc6faa52e3dbe15b1308136e45afa31511f62fa1d3a0c7829297899fa6770c8
     HEAD_REF master
 )
 

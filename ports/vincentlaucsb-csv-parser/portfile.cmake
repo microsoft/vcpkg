@@ -4,12 +4,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vincentlaucsb/csv-parser
     REF "${VERSION}"
-    SHA512 908dd610ae3362aac1b3947892583f5aeea55a71b9d66798e4353a17fcb74ccd79de7513d94508a07876685318e2b6ba974af2aed39ea6fda09b306a353fb5a9
+    SHA512 4fa877d9957f4daf4708b5512815dba883d742121672fefacf1cd174d568134f2e349177cffd5a70f60fecde61cba881188ac8d208a1ea71840133d7063ddd5b
     HEAD_REF master
     PATCHES
         001-fix-cmake.patch
         002-fix-include.patch
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/external")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -30,8 +32,7 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-vincentlaucsb-csv-parser/uno
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-vincentlaucsb-csv-parser/unofficial-vincentlaucsb-csv-parser-config.cmake"
 "include(CMakeFindDependencyMacro)
 find_dependency(Threads)
-find_dependency(mio CONFIG)
-find_dependency(string-view-lite CONFIG)
+find_dependency(mio)
 ${cmake_config}
 ")
 
