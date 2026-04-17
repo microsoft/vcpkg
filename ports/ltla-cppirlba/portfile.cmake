@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO LTLA/CppIrlba
+    REPO libscran/irlba
     REF "v${VERSION}"
-    SHA512 17e84cf3d5de06dc9c599695a9d2b5b6d48f9ec1c3f04b6c1f875ab809d42dfddc7a97e400d02e7fd55e88e708df6162ba4e7aadf0a47f8eea6004e3efbb4dd3
+    SHA512 a060c12a6d2c00efb632ab89f14f12fd57598e6e563aa50d4bfd44100c29f3178509e9bd0f3b2cd34c82042caa1b8c2dc6dab3c0f6c3da2c4d169175064605fe
     HEAD_REF master
     PATCHES
         0001-fix-eigen3.patch
