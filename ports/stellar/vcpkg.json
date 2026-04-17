@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "stellar",
+  "version": "0.1.0",
+  "description": "Header-only C++23 toolkit extensions (ste::) — string, collection, async and StringBuilder utilities.",
+  "homepage": "https://github.com/stescobedo92/stellar",
+  "documentation": "https://github.com/stescobedo92/stellar#readme",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
