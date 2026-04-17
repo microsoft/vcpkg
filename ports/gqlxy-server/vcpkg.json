@@ -1,0 +1,32 @@
+{
+  "name": "gqlxy-server",
+  "version-date": "2026-04-10",
+  "description": "An unopinionated C++20 GraphQL server engine",
+  "homepage": "https://github.com/KaSSaaaa/gqlxy-server",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "better-enums",
+    "cppgraphqlgen",
+    "nlohmann-json",
+    "pegtl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "standalone-server": {
+      "description": "Standalone HTTP/WebSocket/SSE GraphQL server using oatpp",
+      "dependencies": [
+        "oatpp",
+        "oatpp-openssl",
+        "oatpp-websocket"
+      ]
+    }
+  }
+}
