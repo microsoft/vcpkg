@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 bda6e8387f1e86eee86357a967ae58d9e87e2cada50317913ee8452e116220c5837643ea62c0b04baf9783daeca76d12ca63a34ce6acd6fb3ea2511bb47696bc
     HEAD_REF main
+    PATCHES
+        fix-pkgconfig-transitive-deps.patch
 )
 
 vcpkg_cmake_configure(
@@ -14,6 +16,8 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DINSTALL_DEV=ON
         -DINSTALL_LIB=ON
+        -DCMAKE_INSTALL_LIBDIR=lib
+        -DCMAKE_INSTALL_BINDIR=bin
         "-DVPL_INSTALL_LICENSEDIR=${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright_tmp"
 )
 
