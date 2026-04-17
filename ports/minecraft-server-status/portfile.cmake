@@ -1,10 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(VCPKG_BUILD_TYPE release)
-
-set(VCPKG_POLICY_SKIP_DEBUG_BUILD enabled)
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Arp1it/Minecraft_Server_Status_CPP
@@ -13,19 +8,25 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "minecraft-server-status")
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME "minecraft-server-status"
+    CONFIG_PATH "share/minecraft-server-status"
+)
 
+# Remove debug headers duplication
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+# Install usage file
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# Fix LICENSE (case-sensitive)
 vcpkg_install_copyright(
-    FILE_LIST "${SOURCE_PATH}/LICENSE"
+    FILE_LIST "${SOURCE_PATH}/License"
 )
