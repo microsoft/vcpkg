@@ -1,10 +1,9 @@
 {
-  "name": "kf6globalaccel",
+  "name": "kcoreaddons",
   "version": "6.23.0",
-  "description": "Global desktop keyboard shortcuts",
-  "homepage": "https://invent.kde.org/frameworks/kglobalaccel",
-  "documentation": "https://api.kde.org/kglobalaccel-index.html",
-  "supports": "!windows & !android & !osx",
+  "description": "Addons to QtCore",
+  "homepage": "https://invent.kde.org/frameworks/kcoreaddons",
+  "documentation": "https://api.kde.org/kcoreaddons-index.html",
   "dependencies": [
     "ecm",
     {
@@ -21,6 +20,15 @@
     }
   ],
   "features": {
+    "qml": {
+      "description": "Build the QML plugin",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
     "translations": {
       "description": "Install translations",
       "dependencies": [

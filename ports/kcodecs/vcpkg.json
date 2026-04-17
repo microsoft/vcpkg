@@ -1,5 +1,5 @@
 {
-  "name": "kf6codecs",
+  "name": "kcodecs",
   "version": "6.23.0",
   "description": "String encoding library",
   "homepage": "https://invent.kde.org/frameworks/kcodecs",
