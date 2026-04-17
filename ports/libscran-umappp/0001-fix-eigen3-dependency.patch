@@ -1,24 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5d1e04b..9c40958 100644
+index 942157c..03a3364 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -24,7 +24,7 @@ if(UMAPPP_FETCH_EXTERN)
+@@ -23,8 +23,8 @@ if(UMAPPP_FETCH_EXTERN)
+     add_subdirectory(extern)
  else()
      find_package(ltla_aarand 1.1.0 CONFIG REQUIRED)
-     find_package(ltla_irlba 3.0.0 CONFIG REQUIRED)
+-    find_package(ltla_irlba 3.0.0 CONFIG REQUIRED)
 -    find_package(Eigen3 5.0.0 CONFIG REQUIRED)
++    find_package(ltla_irlba 3.1.0 CONFIG REQUIRED)
 +    find_package(Eigen3 CONFIG REQUIRED)
      find_package(ltla_subpar 0.5.0 CONFIG REQUIRED)
      find_package(ltla_sanisizer 0.2.0 CONFIG REQUIRED)
      find_package(knncolle_knncolle 3.1.0 CONFIG REQUIRED)
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
-index 8e51dd2..e588153 100644
+index 54ae53d..6ab84d9 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
 @@ -5,7 +5,7 @@ find_dependency(ltla_aarand 1.1.0 CONFIG REQUIRED)
  find_dependency(ltla_sanisizer 0.2.0 CONFIG REQUIRED)
  find_dependency(ltla_subpar 0.5.0 CONFIG REQUIRED)
- find_dependency(ltla_irlba 3.0.0 CONFIG REQUIRED)
+ find_dependency(ltla_irlba 3.1.0 CONFIG REQUIRED)
 -find_dependency(Eigen3 5.0.0 CONFIG REQUIRED)
 +find_dependency(Eigen3 CONFIG REQUIRED)
  find_dependency(knncolle_knncolle 3.1.0 CONFIG REQUIRED)

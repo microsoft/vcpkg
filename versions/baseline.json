@@ -5541,7 +5541,7 @@
       "port-version": 0
     },
     "libscran-umappp": {
-      "baseline": "3.2.1",
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "libsecret": {
