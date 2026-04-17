@@ -6246,7 +6246,7 @@
     },
     "magma": {
       "baseline": "2.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "magnum": {
       "baseline": "2020.06",
@@ -9922,7 +9922,7 @@
     },
     "tensorpipe": {
       "baseline": "2022-03-16",
-      "port-version": 5
+      "port-version": 6
     },
     "termcolor": {
       "baseline": "2.1.0",

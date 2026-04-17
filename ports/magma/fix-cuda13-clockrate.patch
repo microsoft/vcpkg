@@ -1,0 +1,18 @@
+diff --git a/interface_cuda/interface.cpp b/interface_cuda/interface.cpp
+index c4544f9..4800536 100644
+--- a/interface_cuda/interface.cpp
++++ b/interface_cuda/interface.cpp
+@@ -451,10 +451,12 @@ magma_print_environment()
+         check_error( err );
+ 
+         #ifdef MAGMA_HAVE_CUDA
++        int clockRateKHz = 0;
++        cudaDeviceGetAttribute( &clockRateKHz, cudaDevAttrClockRate, dev );        
+         printf( "%% device %d: %s, %.1f MHz clock, %.1f MiB memory, capability %d.%d\n",
+                 dev,
+                 prop.name,
+-                prop.clockRate / 1000.,
++                clockRateKHz / 1000.,
+                 prop.totalGlobalMem / (1024.*1024.),
+                 prop.major,
+                 prop.minor );
