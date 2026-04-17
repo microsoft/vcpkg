@@ -16,17 +16,13 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "minecraft-server-status"
-    CONFIG_PATH "share/minecraft-server-status"
 )
 
-# Remove debug headers duplication
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Install usage file
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-# Fix LICENSE (case-sensitive)
 vcpkg_install_copyright(
     FILE_LIST "${SOURCE_PATH}/License"
 )
