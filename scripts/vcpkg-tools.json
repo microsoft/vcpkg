@@ -31,15 +31,6 @@
       "archive": "python-3.14.3-embed-arm64.zip"
     },
     {
-      "name": "python3_with_venv",
-      "os": "windows",
-      "version": "3.14.3",
-      "executable": "tools/python.exe",
-      "url": "https://www.nuget.org/api/v2/package/python/3.14.3",
-      "sha512": "a97c0031cf35a7fb501488bfb704fd62e985bfb325dcb914e1cb83ef77ae9ae75ab9e8af0563a94c19d66a6934d2e845ad7a8be5ab417273f6b27852ff333960",
-      "archive": "python-3.14.3.nupkg.zip"
-    },
-    {
       "name": "cmake",
       "os": "windows",
       "arch": "amd64",
