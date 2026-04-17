@@ -21,11 +21,12 @@ get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
 vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so it needs to be on PATH
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/glib/")
 
+set(wayland false)
 set(x11 false)
 set(win32 false)
 set(osx false)
 if(VCPKG_TARGET_IS_LINUX)
-    set(OPTIONS -Dwayland-backend=false) # CI missing at least wayland-protocols
+    set(wayland true)
     set(x11 true)
     # Enable the wayland gdk backend (only when building on Unix except for macOS)
 elseif(VCPKG_TARGET_IS_WINDOWS)
@@ -34,6 +35,7 @@ elseif(VCPKG_TARGET_IS_OSX)
     set(osx true)
 endif()
 
+list(APPEND OPTIONS -Dwayland-backend=${wayland}) #Enable the Wayland gdk backend (only when building on Unix)
 list(APPEND OPTIONS -Dx11-backend=${x11}) #Enable the X11 gdk backend (only when building on Unix)
 list(APPEND OPTIONS -Dbroadway-backend=false) #Enable the broadway (HTML5) gdk backend
 list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (only when building on Windows)
