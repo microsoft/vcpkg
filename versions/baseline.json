@@ -3793,7 +3793,7 @@
       "port-version": 0
     },
     "hfsm2": {
-      "baseline": "2.11.0",
+      "baseline": "2.11.1",
       "port-version": 0
     },
     "hidapi": {
