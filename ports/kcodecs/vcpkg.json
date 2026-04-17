@@ -1,0 +1,36 @@
+{
+  "name": "kcodecs",
+  "version": "6.23.0",
+  "description": "String encoding library",
+  "homepage": "https://invent.kde.org/frameworks/kcodecs",
+  "documentation": "https://api.kde.org/kcodecs-index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "translations": {
+      "description": "Install translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
