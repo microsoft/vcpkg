@@ -1,4 +1,0 @@
-hical provides CMake integration targets:
-
-    find_package(hical CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE hical::hical_core)
