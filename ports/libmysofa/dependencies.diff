@@ -9,10 +9,10 @@ index 3c597fa..b09b0b7 100644
 -#Requires.private:
 +Requires.private: zlib
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index cc800b3..2d65c97 100644
+index cc800b3..29e9b5d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -4,23 +4,18 @@ configure_file(config.h.in config.h)
+@@ -4,23 +4,19 @@ configure_file(config.h.in config.h)
  include_directories(${CMAKE_CURRENT_BINARY_DIR})
  
  if(NOT MSVC)
@@ -37,6 +37,7 @@ index cc800b3..2d65c97 100644
 -    ${PROJECT_SOURCE_DIR}/windows/third-party/zlib-1.2.11/include/)
  endif()
 +find_package(ZLIB REQUIRED)
++set(ZLIB_LIBRARIES ZLIB::ZLIB)
  
 -if(NOT MSVC)
 +if(1)
