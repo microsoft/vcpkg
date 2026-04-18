@@ -14,12 +14,16 @@ vcpkg_from_gitlab(
     PATCHES
         build.patch
 ) 
+file(MAKE_DIRECTORY "${SOURCE_PATH}/m4")
 
-vcpkg_configure_meson(
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
+
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
 )
-vcpkg_install_meson()
-vcpkg_copy_pdbs()
+
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
