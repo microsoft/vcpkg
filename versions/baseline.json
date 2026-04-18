@@ -4961,8 +4961,8 @@
       "port-version": 0
     },
     "libfontenc": {
-      "baseline": "1.1.4",
-      "port-version": 1
+      "baseline": "1.1.9",
+      "port-version": 0
     },
     "libfork": {
       "baseline": "3.8.0",
