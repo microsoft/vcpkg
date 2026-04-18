@@ -95,14 +95,17 @@ vcpkg_cmake_configure(
         -DTD_ENABLE_MULTI_PROCESSOR_COMPILATION=${VCPKG_DETECTED_MSVC}
         -DTD_INSTALL_HOST_GENERATORS=${_tdlib_install_gen}
         -DBUILD_TESTING=OFF
-    OPTIONS_RELEASE
-        -DTD_GENERATE_TOOLS=ON
-    OPTIONS_DEBUG
-        -DTD_GENERATE_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
         TD_ENABLE_MULTI_PROCESSOR_COMPILATION
         TD_INSTALL_HOST_GENERATORS
 )
+
+if(NOT VCPKG_CROSSCOMPILING)
+    # generate_json links tdutils which pulls in OpenSSL/zlib as DLLs; ensure
+    # the debug-config DLLs are on PATH so the generator can start when Ninja
+    # builds the Debug configuration.
+    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
+endif()
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()

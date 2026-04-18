@@ -1,33 +1,10 @@
-diff --git a/tdtl/CMakeLists.txt b/tdtl/CMakeLists.txt
---- a/tdtl/CMakeLists.txt
-+++ b/tdtl/CMakeLists.txt
-@@ -26,3 +26,7 @@
-
- add_library(tdtl STATIC ${TDTL_SOURCE})
- target_include_directories(tdtl PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
-+
-+if (NOT TD_GENERATE_TOOLS)
-+  set_target_properties(tdtl PROPERTIES EXCLUDE_FROM_ALL TRUE)
-+endif()
 diff --git a/td/generate/CMakeLists.txt b/td/generate/CMakeLists.txt
 --- a/td/generate/CMakeLists.txt
 +++ b/td/generate/CMakeLists.txt
-@@ -249,4 +249,22 @@
+@@ -249,4 +249,10 @@
        DEPENDS td_generate_dotnet_api tl_generate_tlo ${TD_API_TLO_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/scheme/td_api.tl ${CMAKE_CURRENT_SOURCE_DIR}/DotnetTlDocumentationGenerator.php
      )
    endif()
-+
-+  if (NOT TD_GENERATE_TOOLS)
-+    foreach(_exc IN ITEMS tl_writer_cpp tl-parser generate_mtproto generate_common generate_c td_generate_java_api generate_json)
-+      if (TARGET ${_exc})
-+        set_target_properties(${_exc} PROPERTIES EXCLUDE_FROM_ALL TRUE)
-+      endif()
-+    endforeach()
-+    unset(_exc)
-+    if (TARGET td_generate_dotnet_api)
-+      set_target_properties(td_generate_dotnet_api PROPERTIES EXCLUDE_FROM_ALL TRUE)
-+    endif()
-+  endif()
 +
 +  if (TD_INSTALL_HOST_GENERATORS)
 +    install(TARGETS tl-parser generate_mtproto generate_common generate_json
@@ -38,14 +15,10 @@ diff --git a/td/generate/CMakeLists.txt b/td/generate/CMakeLists.txt
 diff --git a/tdutils/generate/CMakeLists.txt b/tdutils/generate/CMakeLists.txt
 --- a/tdutils/generate/CMakeLists.txt
 +++ b/tdutils/generate/CMakeLists.txt
-@@ -59,4 +59,14 @@
+@@ -59,4 +59,10 @@
      COMMAND ${EXTENSION_TO_MIME_TYPE_CMD}
      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/auto/extension_to_mime_type.gperf
    )
-+
-+  if (NOT TD_GENERATE_TOOLS)
-+    set_target_properties(generate_mime_types_gperf PROPERTIES EXCLUDE_FROM_ALL TRUE)
-+  endif()
 +
 +  if (TD_INSTALL_HOST_GENERATORS)
 +    install(TARGETS generate_mime_types_gperf
