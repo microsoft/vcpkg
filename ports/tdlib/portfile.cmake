@@ -100,12 +100,8 @@ vcpkg_cmake_configure(
         TD_INSTALL_HOST_GENERATORS
 )
 
-if(NOT VCPKG_CROSSCOMPILING)
-    # generate_json links tdutils which pulls in OpenSSL/zlib as DLLs; ensure
-    # the debug-config DLLs are on PATH so the generator can start when Ninja
-    # builds the Debug configuration.
-    vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
-endif()
+vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
+vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
