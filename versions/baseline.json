@@ -3081,7 +3081,7 @@
       "port-version": 0
     },
     "flatcc": {
-      "baseline": "0.6.1",
+      "baseline": "0.6.2-pre-29201734bf2d12713a7a1a035d31e5123aac9c93",
       "port-version": 0
     },
     "flecs": {
@@ -6806,7 +6806,7 @@
     },
     "nanoarrow": {
       "baseline": "0.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "nanobench": {
       "baseline": "4.3.11",
