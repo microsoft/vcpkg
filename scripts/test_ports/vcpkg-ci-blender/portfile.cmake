@@ -17,6 +17,7 @@ vcpkg_from_github(
         gl.patch
         static_md_macros.patch
         static_md_creator.patch
+        find_vulkan.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
