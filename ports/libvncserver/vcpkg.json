@@ -1,0 +1,21 @@
+{
+  "name": "libvncserver",
+  "version": "0.9.15",
+  "description": "Libraries for implementing VNC servers and clients",
+  "homepage": "https://github.com/LibVNC/libvncserver",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "libjpeg-turbo",
+    "libpng",
+    "openssl",
+    "zlib"
+  ]
+}
