@@ -1,0 +1,11 @@
+{
+  "name": "codepy",
+  "version": "1.0.0",
+  "description": "Write Python code in C++ - a header-only library",
+  "homepage": "https://github.com/WangHaipi/codepy",
+  "license": "MIT",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}

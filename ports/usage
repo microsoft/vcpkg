@@ -1,0 +1,11 @@
+codepy provides a header-only library.
+
+To use it:
+   #include <codepy.h>
+
+Then link with:
+   target_link_libraries(your_target PRIVATE codepy)
+
+Example:
+   py << \"print('hello')\";
+   py.run();
