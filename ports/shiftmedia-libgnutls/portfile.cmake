@@ -120,10 +120,16 @@ vcpkg_replace_string(
     "nettled"
     "nettle"
 )
+set(zlib_basename "zlib")
+if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/zs.lib")
+    set(zlib_basename "zs")
+elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/z.lib")
+    set(zlib_basename "z")
+endif()
 vcpkg_replace_string(
     "${VCXPROJ}"
     "libzlib"
-    "zlib"
+    "${zlib_basename}"
 )
 vcpkg_replace_string(
     "${VCXPROJ}"
@@ -152,7 +158,7 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/${WINRT_SUBFOLDER}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
-set(GNUTLS_REQUIRES_PRIVATE "Requires.private: gmp, nettle, hogweed, libtasn1")
+set(GNUTLS_REQUIRES_PRIVATE "Requires.private: gmp, nettle, hogweed, libtasn1, zlib")
 set(GNUTLS_LIBS_PRIVATE "-lcrypt32 -lws2_32 -lkernel32 -lncrypt")
 
 set(prefix "${CURRENT_INSTALLED_DIR}")
