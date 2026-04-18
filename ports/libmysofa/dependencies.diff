@@ -1,0 +1,46 @@
+diff --git a/libmysofa.pc.cmake b/libmysofa.pc.cmake
+index 3c597fa..b09b0b7 100644
+--- a/libmysofa.pc.cmake
++++ b/libmysofa.pc.cmake
+@@ -8,4 +8,4 @@ Libs: -L${libdir} -lmysofa
+ Cflags: -I${includedir}
+ 
+ Libs.private: @PKG_CONFIG_PRIVATELIBS@
+-#Requires.private:
++Requires.private: zlib
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index cc800b3..2d65c97 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -4,23 +4,18 @@ configure_file(config.h.in config.h)
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
+ if(NOT MSVC)
+-  if(NOT WIN32)
+-    find_library(MATH m)
+-  else()
+-    set(MATH "")
+-  endif()
+-  include(FindZLIB)
++  find_library(HAVE_MATH m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
++endif()
++if(HAVE_MATH)
++  set(MATH m)
++  string(APPEND PKG_CONFIG_PRIVATELIBS " -lm")
+ else()
+   set(MATH "")
+-  find_program(NUGET nuget)
+-  if(NUGET)
+-    execute_process(COMMAND ${NUGET} install zlib)
+-  endif()
+-  include_directories(
+-    ${PROJECT_SOURCE_DIR}/windows/third-party/zlib-1.2.11/include/)
+ endif()
++find_package(ZLIB REQUIRED)
+ 
+-if(NOT MSVC)
++if(1)
++elseif(0) # redundant
+   if(NOT WIN32)
+     find_library(MATH m)
+   else()
