@@ -14,5 +14,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "ipc": {
+      "description": "IPC support",
+      "dependencies": [
+        "flatcc"
+      ]
+    }
+  }
 }

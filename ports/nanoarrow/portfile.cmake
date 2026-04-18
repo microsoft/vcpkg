@@ -8,17 +8,25 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES fix-flatccrt-name.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" NANOARROW_INSTALL_SHARED)
 
+if ("ipc" IN_LIST FEATURES)
+    set(FEATURE_OPTIONS "-DNANOARROW_IPC=ON")
+    set(FLATCCRT_OPTIONS "-DNANOARROW_FLATCC_ROOT_DIR=${CURRENT_INSTALLED_DIR}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DNANOARROW_INSTALL_SHARED=${NANOARROW_INSTALL_SHARED}
         -DNANOARROW_DEBUG_EXTRA_WARNINGS=OFF
+        ${FEATURE_OPTIONS}
+        ${FLATCCRT_OPTIONS}
 )
 
 vcpkg_cmake_install()
