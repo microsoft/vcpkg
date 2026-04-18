@@ -13,7 +13,6 @@ vcpkg_from_github(
         fix_dep.patch
         fix_apple.patch
         fix_windows.patch
-        dynamic-internal-libs.patch
         gl.patch
         static_md_macros.patch
         static_md_creator.patch
@@ -40,9 +39,16 @@ endif()
 set(ENV{PKG_CONFIG} "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf")
 set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig${_sep}${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(BLENDER_BUILD_SHARED_LIBS ON)
+else()
+    set(BLENDER_BUILD_SHARED_LIBS OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_SHARED_LIBS=${BLENDER_BUILD_SHARED_LIBS}
         -DPKG_CONFIG_USE_STATIC_LIBS=ON
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         -DENABLE_MSYS2=OFF
