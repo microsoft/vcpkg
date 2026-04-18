@@ -19,7 +19,6 @@ endif()
 set(LIBVNCSERVER_EXAMPLE_BACKEND_FEATURES
     ffmpeg
     gtk
-    libsshtunnel
     qt
     sdl
     xcb
@@ -54,7 +53,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     gtk WITH_GTK
     ipv6 WITH_IPv6
     jpeg WITH_JPEG
-    libsshtunnel WITH_LIBSSHTUNNEL
     lzo WITH_LZO
     png WITH_PNG
     prefer-win32threads PREFER_WIN32THREADS
@@ -88,7 +86,6 @@ vcpkg_cmake_configure(
         -DWITH_GTK=OFF
         -DWITH_QT=OFF
         -DWITH_SDL=OFF
-        -DWITH_LIBSSHTUNNEL=OFF
         -DWITH_THREADS=OFF
         -DPREFER_WIN32THREADS=OFF
         -DWITH_FFMPEG=OFF
