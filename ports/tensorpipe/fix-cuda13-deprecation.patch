@@ -1,0 +1,17 @@
+diff --git a/tensorpipe/channel/cuda_ipc/context_impl.cc b/tensorpipe/channel/cuda_ipc/context_impl.cc
+index 69db487..4ff7e47 100644
+--- a/tensorpipe/channel/cuda_ipc/context_impl.cc
++++ b/tensorpipe/channel/cuda_ipc/context_impl.cc
+@@ -233,7 +233,11 @@ std::shared_ptr<ContextImpl> ContextImpl::create() {
+ 
+     // The other two compute modes are "exclusive" and "prohibited", both of
+     // which prevent access from an other process.
+-    if (props.computeMode != cudaComputeModeDefault) {
++    // computeMode was removed from cudaDeviceProp in CUDA 13.0; use the
++    // attribute API instead.
++    int computeMode;
++    TP_CUDA_CHECK(cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, device.index));
++    if (computeMode != cudaComputeModeDefault) {
+       TP_VLOG(4) << "CUDA IPC channel is not viable because CUDA device "
+                  << device.index << " is not in default compute mode";
+       return nullptr;

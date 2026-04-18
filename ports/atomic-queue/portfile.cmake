@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO max0x7ba/atomic_queue
     REF "v${VERSION}"
-    SHA512 af61f91929d469a11325920815bbd73696f53553272c5d0a5352c3414aacc785a21bb3fc18907eaef59d656785293e8c2b3b48ef359778edf2b6dc191f8673c7
+    SHA512 e729da563d4a8dd373ca17ef180a2bbe9a78bf189ea79afedaba9fb082abfdce1fa817cfb54c4d81fe8c111bdde2e2f1e0240392fa2daf5c4318c78a551d3c14
     HEAD_REF master
 )
 

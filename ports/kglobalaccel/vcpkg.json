@@ -1,0 +1,37 @@
+{
+  "name": "kglobalaccel",
+  "version": "6.23.0",
+  "description": "Global desktop keyboard shortcuts",
+  "homepage": "https://invent.kde.org/frameworks/kglobalaccel",
+  "documentation": "https://api.kde.org/kglobalaccel-index.html",
+  "supports": "!windows & !android & !osx",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "translations": {
+      "description": "Install translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -4,10 +4,14 @@ vcpkg_from_github(
     REPO romanpauk/dingo
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 a302e8e504a9f0a863c729432a479134ade96198af48219064d8f3f1e18ef78541e93048811865cd8cb878e5a0837ed98425e7481fd08726806e6b72aa57f908 
+    SHA512 d40def7e3f28675dd399703f0f5890822503e5b8dcfcd96628010dc9854b61dbac9e3cb863740a40744abca0eae3ad69c21b3c17202c5d68cc17a22faab9830c
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DDINGO_INSTALL=ON
+)
 vcpkg_cmake_install()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 

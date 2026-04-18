@@ -1,0 +1,22 @@
+{
+  "name": "kitemmodels",
+  "version": "6.23.0",
+  "description": "Models for Qt Model/View system",
+  "homepage": "https://invent.kde.org/frameworks/kitemmodels",
+  "documentation": "https://api.kde.org/kitemmodels-index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

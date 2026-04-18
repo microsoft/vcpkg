@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 01a7c60..70f8ce7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -266,7 +266,7 @@ if (MSVC)
+ endif ()
+
+ # Enable Clang C modules for incremental compilation
+-if (CMAKE_C_COMPILER_ID MATCHES "Clang")
++if (FALSE)
+     target_compile_options(
+         numkong INTERFACE $<$<COMPILE_LANGUAGE:C>:-fmodules> $<$<COMPILE_LANGUAGE:C>:-fimplicit-module-maps>
+                           $<$<COMPILE_LANGUAGE:C>:-fmodules-cache-path=${CMAKE_BINARY_DIR}/module-cache>
+@@ -601,7 +601,7 @@ if (NK_BUILD_SHARED)
+         )
+
+         add_executable(nk_shared ${NK_SOURCES} "${CMAKE_BINARY_DIR}/emscripten_stub.c")
+-        target_include_directories(nk_shared PUBLIC "${PROJECT_SOURCE_DIR}/include")
++        target_include_directories(nk_shared PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+
+         if (NK_WASM64_)
+             set_target_properties(
+@@ -647,7 +647,7 @@ if (NK_BUILD_SHARED)
+         endif ()
+     else ()
+         add_library(nk_shared SHARED ${NK_SOURCES})
+-        target_include_directories(nk_shared PUBLIC "${PROJECT_SOURCE_DIR}/include")
++        target_include_directories(nk_shared PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+         set_target_properties(nk_shared PROPERTIES OUTPUT_NAME numkong)
+
+         # Hide all symbols by default; only NK_DYNAMIC-annotated API functions are exported.
+@@ -705,15 +705,21 @@ if (NK_BUILD_SHARED)
+
+     install(
+         TARGETS nk_shared
+-        ARCHIVE
++        EXPORT unofficial-numkong-config
++        ARCHIVE DESTINATION lib
+         BUNDLE
+         FRAMEWORK
+-        LIBRARY
++        LIBRARY DESTINATION lib
+         OBJECTS
+         PRIVATE_HEADER
+         PUBLIC_HEADER
+         RESOURCE
+-        RUNTIME
++        RUNTIME DESTINATION bin
++    )
++    install(EXPORT unofficial-numkong-config
++        FILE unofficial-numkong-config.cmake
++        NAMESPACE unofficial::numkong::
++        DESTINATION share/unofficial-numkong
+     )
+ endif ()
+
+@@ -756,5 +762,4 @@ if (NK_BUILD_SHARED_TEST)
+     add_test(NAME nk_shared_test COMMAND nk_shared_test)
+ endif ()
+
+-install(DIRECTORY include/ DESTINATION include)
+-install(DIRECTORY c/ DESTINATION share/doc/${PROJECT_NAME}/src)
++install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN *.h)
