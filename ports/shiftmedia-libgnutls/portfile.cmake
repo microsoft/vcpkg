@@ -133,6 +133,11 @@ vcpkg_replace_string(
 )
 vcpkg_replace_string(
     "${VCXPROJ}"
+    "zlib"
+    "${zlib_basename}"
+)
+vcpkg_replace_string(
+    "${VCXPROJ}"
     [=[</DisableSpecificWarnings>]=]
     [=[</DisableSpecificWarnings><RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>]=]
 )
