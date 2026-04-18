@@ -43,6 +43,15 @@ file(COPY
 )
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mimalloc)
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL
+        "${SOURCE_PATH}/bin/minject.exe"
+        "${SOURCE_PATH}/bin/minject32.exe"
+        "${SOURCE_PATH}/bin/minject-arm64.exe"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/"
+    )
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/include/mimalloc.h"
