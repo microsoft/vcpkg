@@ -2,38 +2,32 @@ diff --git a/tdtl/CMakeLists.txt b/tdtl/CMakeLists.txt
 --- a/tdtl/CMakeLists.txt
 +++ b/tdtl/CMakeLists.txt
 @@ -26,3 +26,7 @@
- 
+
  add_library(tdtl STATIC ${TDTL_SOURCE})
  target_include_directories(tdtl PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 +
-+if (MSVC AND CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL")
-+  target_compile_options(tdtl PRIVATE "$<$<CONFIG:Debug>:/MD>")
++if (NOT TD_GENERATE_TOOLS)
++  set_target_properties(tdtl PROPERTIES EXCLUDE_FROM_ALL TRUE)
 +endif()
 diff --git a/td/generate/CMakeLists.txt b/td/generate/CMakeLists.txt
 --- a/td/generate/CMakeLists.txt
 +++ b/td/generate/CMakeLists.txt
-@@ -227,6 +227,17 @@
-     DEPENDS generate_json tl_generate_tlo ${TD_API_TLO_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/scheme/td_api.tl
-   )
- 
-+  if (MSVC AND CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL")
-+    # vcpkg injects /MDd into CMAKE_CXX_FLAGS_DEBUG as a raw flag that
-+    # MSVC_RUNTIME_LIBRARY cannot override.  Appending /MD after it forces
-+    # the release DLL CRT (MSVC takes the last /MD* flag, D9025 is harmless)
-+    # so generator executables don't need ucrtbased.dll to run.
-+    foreach(_gen IN ITEMS tl-parser generate_mtproto generate_common generate_c td_generate_java_api generate_json)
-+      target_compile_options(${_gen} PRIVATE "$<$<CONFIG:Debug>:/MD>")
-+    endforeach()
-+    unset(_gen)
-+  endif()
-+
-   if (TD_ENABLE_JNI)
-     install(TARGETS td_generate_java_api RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-     install(FILES JavadocTlDocumentationGenerator.php TlDocumentationGenerator.php DESTINATION "${CMAKE_INSTALL_BINDIR}/td/generate")
-@@ -249,4 +260,10 @@
+@@ -249,4 +249,22 @@
        DEPENDS td_generate_dotnet_api tl_generate_tlo ${TD_API_TLO_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/scheme/td_api.tl ${CMAKE_CURRENT_SOURCE_DIR}/DotnetTlDocumentationGenerator.php
      )
    endif()
++
++  if (NOT TD_GENERATE_TOOLS)
++    foreach(_exc IN ITEMS tl_writer_cpp tl-parser generate_mtproto generate_common generate_c td_generate_java_api generate_json)
++      if (TARGET ${_exc})
++        set_target_properties(${_exc} PROPERTIES EXCLUDE_FROM_ALL TRUE)
++      endif()
++    endforeach()
++    unset(_exc)
++    if (TARGET td_generate_dotnet_api)
++      set_target_properties(td_generate_dotnet_api PROPERTIES EXCLUDE_FROM_ALL TRUE)
++    endif()
++  endif()
 +
 +  if (TD_INSTALL_HOST_GENERATORS)
 +    install(TARGETS tl-parser generate_mtproto generate_common generate_json
@@ -44,20 +38,14 @@ diff --git a/td/generate/CMakeLists.txt b/td/generate/CMakeLists.txt
 diff --git a/tdutils/generate/CMakeLists.txt b/tdutils/generate/CMakeLists.txt
 --- a/tdutils/generate/CMakeLists.txt
 +++ b/tdutils/generate/CMakeLists.txt
-@@ -36,6 +36,9 @@
-   set(GPERF_GEN_SOURCE generate_mime_types_gperf.cpp)
- 
-   add_executable(generate_mime_types_gperf ${GPERF_GEN_SOURCE})
-+  if (MSVC AND CMAKE_MSVC_RUNTIME_LIBRARY MATCHES "DLL")
-+    target_compile_options(generate_mime_types_gperf PRIVATE "$<$<CONFIG:Debug>:/MD>")
-+  endif()
- 
-   add_custom_command(
-     OUTPUT ${GPERF_FILES}
-@@ -59,4 +62,10 @@
+@@ -59,4 +59,14 @@
      COMMAND ${EXTENSION_TO_MIME_TYPE_CMD}
      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/auto/extension_to_mime_type.gperf
    )
++
++  if (NOT TD_GENERATE_TOOLS)
++    set_target_properties(generate_mime_types_gperf PROPERTIES EXCLUDE_FROM_ALL TRUE)
++  endif()
 +
 +  if (TD_INSTALL_HOST_GENERATORS)
 +    install(TARGETS generate_mime_types_gperf
