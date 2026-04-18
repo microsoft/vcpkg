@@ -18,6 +18,10 @@ string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" NANOARROW_INSTALL_SHARED
 if ("ipc" IN_LIST FEATURES)
     set(FEATURE_OPTIONS "-DNANOARROW_IPC=ON")
     set(FLATCCRT_OPTIONS "-DNANOARROW_FLATCC_ROOT_DIR=${CURRENT_INSTALLED_DIR}")
+
+    if (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
+        set(ADDITIONAL_FLAGS "-DCMAKE_C_FLAGS=\"-Wno-implicit-function-declaration\"")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
@@ -27,6 +31,7 @@ vcpkg_cmake_configure(
         -DNANOARROW_DEBUG_EXTRA_WARNINGS=OFF
         ${FEATURE_OPTIONS}
         ${FLATCCRT_OPTIONS}
+        ${ADDITIONAL_FLAGS}
 )
 
 vcpkg_cmake_install()
