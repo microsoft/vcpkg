@@ -75,7 +75,7 @@ endfunction()
 replace_gn_dependency(
     "${CMAKE_CURRENT_LIST_DIR}/zlib.gn"
     "${SOURCE_PATH}/third_party/zlib/BUILD.gn"
-    "z;zlib;zlibd"
+    "z;zlib;zlibd;zd;zsd"
 )
 
 set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
