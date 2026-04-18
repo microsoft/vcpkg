@@ -1,0 +1,20 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,7 +4,15 @@ SET(CMAKE_CXX_STANDARD 11)
+ 
+ INCLUDE(GNUInstallDirs)
+ INCLUDE(CMakePackageConfigHelpers)
+ 
+-FIND_PACKAGE(ODBC REQUIRED)
++IF(ODBCCPP_USE_UNIXODBC)
++    FIND_PACKAGE(unofficial-unixodbc CONFIG REQUIRED)
++    SET(ODBC_TARGET unofficial::unixodbc::unixodbc)
++    ADD_LIBRARY(ODBC::ODBC ALIAS ${ODBC_TARGET})
++ELSE()
++    FIND_PACKAGE(ODBC REQUIRED)
++    SET(ODBC_TARGET ODBC::ODBC)
++ENDIF()
++
+ FIND_PACKAGE(Doxygen)
+ FIND_PACKAGE(GTest)
+ 

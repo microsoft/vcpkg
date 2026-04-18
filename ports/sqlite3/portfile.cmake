@@ -4,7 +4,7 @@ string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
     FILENAME "sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
-    SHA512 0f59037e537543154711fdfa5707592658121e8b0973eb07396a9fb980e6c0c822717d0a787c564ebd6bf7383a3388f128fce6adbbf98b417909855d42ac8710
+    SHA512 75a10065048df3f273f5deffaa6ee9c146bffc8cf7d10867649264e711abff91b7e9fcd0b95e5d8ca42b03e772dcc0d184a30a49d6ed42b932d9ea0092fc1c0c
 )
 
 vcpkg_extract_source_archive(

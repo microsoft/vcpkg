@@ -2,22 +2,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 f31769a7ed52865165e7db4a03e9378b3376012b7aaf0bbc022aa76c3e999e71c3927e6eb8639d8681e04e33362dd73eafa9e7c62a3c71599ff78da09f5cee0a
+    SHA512 1dee3967057619dd7f2f78c63de85bb97af16c974bd9225c2336d42c7c8765c04f77490aac36af2daf953bc52c7faa37750a09265e133708f6a1709028573834
     HEAD_REF master
     PATCHES
-        0001-create-lib-libraries.patch
         0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
         0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0013-define-WINVER.patch
-        0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
-        0044-fix-vulkan-debug-callback-abi.patch
         0045-use-prebuilt-bin2c.patch
         0046-fix-msvc-detection.patch
+        0047-fix-msvc-utf8.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -691,6 +689,18 @@ endif ()
 
 set(OPTIONS_DEBUG "--disable-optimizations --enable-debug")
 set(OPTIONS_RELEASE "--enable-optimizations")
+
+if(VCPKG_DETECTED_MSVC)
+    # Determine base linkage (MT or MD)
+    set(FFMPEG_CRT_PREFIX "-MT")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(FFMPEG_CRT_PREFIX "-MD")
+    endif()
+    # Append Release flags
+    string(APPEND OPTIONS_RELEASE " --extra-cflags=${FFMPEG_CRT_PREFIX} --extra-cxxflags=${FFMPEG_CRT_PREFIX}")
+    # Append Debug flags (adding the 'd' suffix for the debug runtime)
+    string(APPEND OPTIONS_DEBUG " --extra-cflags=${FFMPEG_CRT_PREFIX}d --extra-cxxflags=${FFMPEG_CRT_PREFIX}d")
+endif()
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 

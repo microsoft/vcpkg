@@ -1,6 +1,6 @@
 {
   "name": "huira",
-  "version": "0.8.2",
+  "version": "0.9.4",
   "description": "A library for space rendering, LiDAR simulation, and solar radiation pressure modeling.",
   "homepage": "https://github.com/huira-render/huira",
   "documentation": "https://docs.huira.space",
@@ -10,6 +10,18 @@
     "assimp",
     "cfitsio",
     "cspice",
+    {
+      "name": "embree",
+      "default-features": false,
+      "features": [
+        "geometry-instance",
+        "geometry-point",
+        "geometry-triangle",
+        "ray-mask",
+        "tasking-tbb"
+      ]
+    },
+    "fftw3",
     "glm",
     "libjpeg-turbo",
     "libpng",
@@ -28,6 +40,12 @@
     }
   ],
   "features": {
+    "tests": {
+      "description": "Build huira tests",
+      "dependencies": [
+        "catch2"
+      ]
+    },
     "tools": {
       "description": "Build huira command line tools",
       "dependencies": [

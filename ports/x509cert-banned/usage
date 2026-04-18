@@ -1,0 +1,4 @@
+x509cert-banned is header-only and can be used from CMake via:
+
+  find_path(X509_CERT_BANNED_INCLUDE_DIR "x509cert/banned.h")
+  target_include_directories(main PRIVATE "${X509_CERT_BANNED_INCLUDE_DIR}")

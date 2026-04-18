@@ -1,12 +1,8 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # DLL broken in 1.1.2.0
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO caomengxuan666/libgossip
     REF "v${VERSION}"
-    SHA512 971f51f6583d3246a5696b35a419fd30ce8ebbd7940b63bb9731f7ec2f12e0f6d68b3924c0be81de30d4eb33f24a39be4db72d2cee5f2ca5e52081aa7c568699
+    SHA512 9e1237aa6d354922cc876177788699cb92e1d220afde241e22afcaf4ec5cd91b5a22f5b55f0c350f77585cabb7284b1d978921b9c854dc62a76cb240976317c2
     HEAD_REF main
     PATCHES
         fix-dependencies.patch

@@ -1,0 +1,77 @@
+diff --git a/cmake/icey_build_config.cmake.in b/cmake/icey_build_config.cmake.in
+index aae2c22c..ccf13c38 100644
+--- a/cmake/icey_build_config.cmake.in
++++ b/cmake/icey_build_config.cmake.in
+@@ -44,6 +44,9 @@ if(_icey_have_libdatachannel AND DEFINED icey_FIND_COMPONENTS AND "webrtc" IN_LI
+ endif()
+ 
+ if(@USE_SYSTEM_DEPS@)
++  if("json" IN_LIST _icey_supported_components)
++    find_dependency(nlohmann_json CONFIG)
++  endif()
+   find_package(libuv CONFIG QUIET)
+   if(NOT TARGET libuv::uv_a AND NOT TARGET libuv::uv AND NOT TARGET libuv::libuv AND PkgConfig_FOUND)
+     pkg_check_modules(LIBUV QUIET IMPORTED_TARGET GLOBAL libuv)
+diff --git a/cmake/icey_config.cmake.in b/cmake/icey_config.cmake.in
+index 447929b9..0e14d025 100644
+--- a/cmake/icey_config.cmake.in
++++ b/cmake/icey_config.cmake.in
+@@ -59,6 +59,9 @@ if(NOT TARGET llhttp_static)
+ endif()
+ 
+ if(@USE_SYSTEM_DEPS@)
++  if("json" IN_LIST _icey_supported_components)
++    find_dependency(nlohmann_json CONFIG)
++  endif()
+   find_dependency(ZLIB)
+   if("archo" IN_LIST _icey_supported_components OR "pacm" IN_LIST _icey_supported_components)
+     find_dependency(unofficial-minizip CONFIG QUIET)
+diff --git a/icey.cmake b/icey.cmake
+index f99c4f7f..0d766619 100644
+--- a/icey.cmake
++++ b/icey.cmake
+@@ -210,6 +210,9 @@ else()
+     pkg_check_modules(LIBUV QUIET IMPORTED_TARGET GLOBAL libuv)
+   endif()
+   find_package(llhttp CONFIG QUIET)
++  if(BUILD_MODULES AND (NOT DEFINED BUILD_MODULE_json OR BUILD_MODULE_json))
++    find_package(nlohmann_json CONFIG REQUIRED)
++  endif()
+   find_package(ZLIB REQUIRED)
+   if(NOT TARGET llhttp_static
+      AND NOT TARGET llhttp::llhttp_static
+diff --git a/src/json/CMakeLists.txt b/src/json/CMakeLists.txt
+index 8983ef5c..905c5008 100644
+--- a/src/json/CMakeLists.txt
++++ b/src/json/CMakeLists.txt
+@@ -1,6 +1,20 @@
+-icy_add_module(json
+-  DEPENDS base
+-  PRETTY_NAME JSON
+-)
+-# nlohmann/json.hpp is vendored in include/nlohmann/ (MIT licensed, single-header)
+-# so no external dependency is needed - icy_add_module already adds our include dir.
++if(USE_SYSTEM_DEPS)
++  icy_add_module(json
++    DEPENDS base
++    PACKAGES nlohmann_json::nlohmann_json
++    PRETTY_NAME JSON
++  )
++else()
++  icy_add_module(json
++    DEPENDS base
++    PRETTY_NAME JSON
++  )
++  target_include_directories(json
++    PUBLIC
++      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vendor>
++  )
++  install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/vendor/"
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++    COMPONENT dev
++  )
++endif()
+diff --git a/src/json/include/nlohmann/json.hpp b/src/json/vendor/nlohmann/json.hpp
+similarity index 100%
+rename from src/json/include/nlohmann/json.hpp
+rename to src/json/vendor/nlohmann/json.hpp

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-auth
     REF "v${VERSION}"
-    SHA512 03d39cf5b03a08478cdce9decf33166ada7235b3ff2eb9ea657724dbadacd08bea2bc6322bbf67136270ce9a8be8010f0bb845f1ed650b2b93f492351805ac34
+    SHA512 a11faa06f7bd12751b123e8aff9af5bdca87d916dc2f277b46b9acb2b159fd1ab07de93670b7d64b159aa94448d5d1a8b9f20216a8cad4387fcd0f4bc47c0be5
     HEAD_REF main
 )
 

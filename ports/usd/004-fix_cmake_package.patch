@@ -1,8 +1,8 @@
 diff --git a/pxr/CMakeLists.txt b/pxr/CMakeLists.txt
-index b735c86ea2..d303541145 100644
+index a02287dda6..31878e9a6b 100644
 --- a/pxr/CMakeLists.txt
 +++ b/pxr/CMakeLists.txt
-@@ -23,7 +23,8 @@ endif()
+@@ -27,7 +27,8 @@ endif()
  
  pxr_core_epilogue()
  
@@ -12,7 +12,7 @@ index b735c86ea2..d303541145 100644
  
  # XXX:
  # Libraries specify the TBB::tbb target to link against TBB. This target
-@@ -59,11 +60,28 @@ foreach(property IN ITEMS
+@@ -63,11 +64,28 @@ foreach(property IN ITEMS
      endif()
  endforeach()
  

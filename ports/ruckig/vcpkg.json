@@ -1,6 +1,6 @@
 {
   "name": "ruckig",
-  "version": "0.15.3",
+  "version": "0.17.3",
   "description": "Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input.",
   "homepage": "https://ruckig.com/",
   "license": "MIT",
