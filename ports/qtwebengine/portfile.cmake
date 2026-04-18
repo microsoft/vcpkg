@@ -8,6 +8,7 @@ set(${PORT}_PATCHES
       #"osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"
+      "pdf-system-abseil.diff"
       #"pkg-config.diff"
       "rpath.diff"
       "include-dir-order.diff"
@@ -69,6 +70,10 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" static_runtime)
     list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_static_runtime=${static_runtime}")
+endif()
+
+if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_webengine_system_abseil=ON")
 endif()
 
 # webengine-extensions

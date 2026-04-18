@@ -43,6 +43,10 @@
       "supports": "android | ios | linux | osx | (windows & x64 & !static)",
       "dependencies": [
         {
+          "name": "abseil",
+          "platform": "linux"
+        },
+        {
           "name": "freetype",
           "platform": "!windows"
         },

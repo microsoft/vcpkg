@@ -1,0 +1,97 @@
+﻿diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
+index 0000000..0000000 100644
+--- a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
++++ b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
+@@ -8,9 +8,47 @@
+ import("//build/config/c++/c++.gni")
+ import("//build/config/sanitizers/sanitizers.gni")
+ import("//build/toolchain/toolchain.gni")
++import("//build/config/linux/pkg_config.gni")
+ import("//build_overrides/build.gni")
+ import("//third_party/abseil-cpp/absl.gni")
+ 
++if (use_system_abseil) {
++  # When use_system_abseil=true, provide include and link information for the
++  # system-installed Abseil (e.g. from vcpkg).  Each pkg_config package pulls
++  # in its transitive Requires: entries, so the union of these "hub" packages
++  # covers the full absl_component_deps closure used by Chromium.
++  pkg_config("absl_from_pkgconfig") {
++    packages = [
++      # Base and synchronization (many transitive deps: int128, time, mutex...)
++      "absl_base",
++      "absl_synchronization",
++      # Debugging (stacktrace, symbolize, demangle, failure_signal_handler)
++      "absl_failure_signal_handler",
++      # Logging subsystem
++      "absl_log_initialize",
++      # Hashing
++      "absl_hash",
++      # Strings (cord, str_format, string_view, ...)
++      "absl_cord",
++      "absl_str_format",
++      # Status / error handling
++      "absl_statusor",
++      # Random number generation
++      "absl_random_distributions",
++      # Containers (flat_hash_map pulls in btree, inlined_vector, ...)
++      "absl_flat_hash_map",
++      "absl_node_hash_map",
++    ]
++  }
++
++  group("system_absl") {
++    public_configs = [
++      ":absl_include_config",
++      ":absl_from_pkgconfig",
++    ]
++  }
++}
++
+ config("absl_component_build") {
+   defines = [ "ABSL_CONSUME_DLL" ]
+ }
+diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni b/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
+index 0000000..0000000 100644
+--- a/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
++++ b/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
+@@ -19,11 +19,16 @@ import("//build_overrides/build.gni")
+ 
+ declare_args() {
+   absl_build_tests = build_with_chromium
++  use_system_abseil = false
+ }
+ 
+ template("absl_source_set") {
+   source_set(target_name) {
+-    if (defined(invoker.testonly) && invoker.testonly && !absl_build_tests) {
++    if ((defined(invoker.testonly) && invoker.testonly && !absl_build_tests) ||
++        use_system_abseil) {
+       not_needed(invoker, "*")
++      if (use_system_abseil) {
++        public_deps = [ "//third_party/abseil-cpp:system_absl" ]
++      }
+     } else {
+       forward_variables_from(invoker, "*")
+@@ -85,5 +90,5 @@ template("absl_source_set") {
+ template("absl_test") {
+   source_set(target_name) {
+-    if (!absl_build_tests) {
++    if (!absl_build_tests || use_system_abseil) {
+       not_needed(invoker, "*")
+     } else {
+diff --git a/src/pdf/CMakeLists.txt b/src/pdf/CMakeLists.txt
+index 00621491e..0000000 100644
+--- a/src/pdf/CMakeLists.txt
++++ b/src/pdf/CMakeLists.txt
+@@ -220,7 +220,11 @@ foreach(arch ${archs})
+         extend_gn_list(gnArgArg
+             ARGS use_system_libjpeg
+             CONDITION QT_FEATURE_webengine_system_libjpeg
+         )
++        extend_gn_list(gnArgArg
++            ARGS use_system_abseil
++            CONDITION QT_FEATURE_webengine_system_abseil
++        )
+         extend_gn_list(gnArgArg
+             ARGS use_qt_libjpeg
+             CONDITION QT_FEATURE_webengine_qt_libjpeg
