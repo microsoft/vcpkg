@@ -7,10 +7,9 @@
   "dependencies": [
     "font-util",
     {
-      "name": "vcpkg-make",
+      "name": "vcpkg-tool-meson",
       "host": true
     },
-    "xorg-macros",
     "xproto",
     "zlib"
   ]
