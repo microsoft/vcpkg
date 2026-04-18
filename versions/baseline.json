@@ -8142,7 +8142,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.18",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-charts": {
       "baseline": "5.15.18",

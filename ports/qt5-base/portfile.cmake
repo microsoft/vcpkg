@@ -164,8 +164,7 @@ else()
     list(APPEND CORE_OPTIONS --vulkan=no)
 endif()
 
-find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+x_vcpkg_pkgconfig_get_modules(PREFIX zlib MODULES zlib LIBS)
 find_library(JPEG_RELEASE NAMES jpeg jpeg-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(JPEG_DEBUG NAMES jpeg jpeg-static jpegd jpeg-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(LIBPNG_RELEASE NAMES png16 libpng16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #Depends on zlib
@@ -208,17 +207,17 @@ find_library(EAY_DEBUG libeay32 crypto libcrypto libeay32d cryptod libcryptod PA
 
 set(RELEASE_OPTIONS
             "LIBJPEG_LIBS=${JPEG_RELEASE}"
-            "ZLIB_LIBS=${ZLIB_RELEASE}"
-            "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "ZLIB_LIBS=${zlib_LIBS_RELEASE}"
+            "LIBPNG_LIBS=${LIBPNG_RELEASE} ${zlib_LIBS_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${zlib_LIBS_RELEASE}"
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
-            "ZLIB_LIBS=${ZLIB_DEBUG}"
-            "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "ZLIB_LIBS=${zlib_LIBS_DEBUG}"
+            "LIBPNG_LIBS=${LIBPNG_DEBUG} ${zlib_LIBS_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${zlib_LIBS_DEBUG}"
             )
 
 x_vcpkg_pkgconfig_get_modules(PREFIX freetype MODULES freetype2 LIBS)
@@ -386,8 +385,8 @@ elseif(VCPKG_TARGET_IS_OSX)
 endif()
 
 if (WITH_MYSQL_PLUGIN)
-    list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ZLIB_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}")
-    list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ZLIB_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}")
+    list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${zlib_LIBS_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}")
+    list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${zlib_LIBS_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}")
 endif(WITH_MYSQL_PLUGIN)
 
 ## Do not build tests or examples
