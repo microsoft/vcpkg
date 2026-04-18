@@ -1,3 +1,3 @@
-set(qtquick3d_HASH "9cffa9409b6bcf5939fedcfa3e2780ff5211176ccb883d8c1c3d17629ddd8b787be50ce55fc334156235ce7a0a3337e2f8f0f43f313299cf0ec83b783164baf1")
-set(qtquick3d_URL "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/qtquick3d-everywhere-src-6.10.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.2/submodules/qtquick3d-everywhere-src-6.10.2.tar.xz")
-set(qtquick3d_FILENAME "qtquick3d-everywhere-src-6.10.2.tar.xz")
+set(qtquick3d_HASH "186a2db9430f6dc59b9a25492f924710ac84e1f0a0e1accd5927abdb525c5799e24a3c90d41042868cada1fc653fd533256ad93cac373536b0f0cf16f8876942")
+set(qtquick3d_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtquick3d-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtquick3d-everywhere-src-6.10.3.tar.xz")
+set(qtquick3d_FILENAME "qtquick3d-everywhere-src-6.10.3.tar.xz")
