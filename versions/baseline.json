@@ -11080,6 +11080,10 @@
       "baseline": "1.0.3",
       "port-version": 0
     },
+    "yapi": {
+      "baseline": "2022-08-10",
+      "port-version": 0
+    },
     "yara": {
       "baseline": "4.5.5",
       "port-version": 0
