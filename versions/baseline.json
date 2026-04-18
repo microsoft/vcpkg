@@ -6505,7 +6505,7 @@
       "port-version": 0
     },
     "minecraft-server-status": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "minhook": {
