@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e2f0f5b..61cc8b9 100644
+index b424686..5ef6b7f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -128,6 +128,12 @@ if (NOT DEFINED LAPACK_LIBRARIES)
+@@ -72,6 +72,12 @@ if (NOT DEFINED LAPACK_LIBRARIES)
  endif ()
  list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${LAPACK_LIBRARIES})
  
@@ -15,26 +15,24 @@ index e2f0f5b..61cc8b9 100644
  if (USE_SPECTRA)
    find_package (Spectra 1.0 CONFIG)
  endif ()
-@@ -183,7 +189,8 @@ if (TBB_FOUND)
+@@ -127,6 +133,7 @@ if (TBB_FOUND)
  endif ()
  
  if (USE_MUPARSER)
--  find_package (muParser 2.2.3 QUIET)
-+  find_package (MUPARSER NAMES muparser REQUIRED)
-+  set(MUPARSER_LIBRARIES muparser::muparser)
++  set(CMAKE_REQUIRE_FIND_PACKAGE_muparser ON)
+   find_package (muparser 2.2.3 CONFIG)
+   if (muparser_FOUND)
+     set (MUPARSER_LIBRARIES muparser::muparser)
+@@ -147,6 +154,8 @@ if (muparser_FOUND)
  endif ()
- if (MUPARSER_FOUND)
-   set (OPENTURNS_HAVE_MUPARSER TRUE)
-@@ -194,6 +201,8 @@ if (MUPARSER_FOUND)
-   set (SYMBOLICPARSER_DEFAULT_BACKEND MuParser)
- endif ()
+ 
  if (USE_EXPRTK)
 +  find_path(EXPRTK_INCLUDE_DIRS "exprtk.hpp" REQUIRED)
 +  list(APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${EXPRTK_INCLUDE_DIRS})
    set (OPENTURNS_HAVE_EXPRTK TRUE)
    set (OPENTURNS_HAVE_ANALYTICAL_PARSER TRUE)
    set (SYMBOLICPARSER_DEFAULT_BACKEND ExprTk)
-@@ -262,7 +271,9 @@ if (USE_BOOST)
+@@ -211,7 +220,9 @@ if (USE_BOOST)
        endif ()
      endif ()
      if (USE_MPFR)
@@ -45,18 +43,6 @@ index e2f0f5b..61cc8b9 100644
        if (MPFR_FOUND)
          set (OPENTURNS_HAVE_MPFR TRUE)
          list (APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${MPFR_INCLUDE_DIRS})
-@@ -435,9 +446,8 @@ check_include_file (dlfcn.h       OPENTURNS_HAVE_DLFCN_H      )
- 
- include (CheckFunctionExists)
- if (OPENTURNS_HAVE_DLFCN_H AND UNIX)
--  find_library (LIBDL_LIBRARIES NAMES dl)
--  mark_as_advanced (LIBDL_LIBRARIES)
--  if (LIBDL_LIBRARIES)
-+  set(LIBDL_LIBRARIES "${CMAKE_DL_LIBS}")
-+  if(1)
-     set (CMAKE_REQUIRED_LIBRARIES ${LIBDL_LIBRARIES})
-     check_function_exists (dladdr OPENTURNS_HAVE_DLADDR)
-     set (CMAKE_REQUIRED_LIBRARIES)
 diff --git a/LICENSE b/LICENSE
 index 2bd2cde..3148f78 100644
 --- a/LICENSE
@@ -74,32 +60,99 @@ index 2bd2cde..3148f78 100644
  - Gauss Legendre quadrature from FastGL library (lib/src/Base/Algo/fastgl*) under BSD license, see COPYING.fastGL
 -- Rapidcsv parser library (lib/src/Base/Stat/rapidcsv.h) under BSD license, see COPYING.rapidcsv
 diff --git a/lib/OpenTURNSConfig.cmake.in b/lib/OpenTURNSConfig.cmake.in
-index 096490b..307faaa 100644
+index bce893e..1fd1c65 100644
 --- a/lib/OpenTURNSConfig.cmake.in
 +++ b/lib/OpenTURNSConfig.cmake.in
-@@ -47,7 +47,7 @@ set_and_check ( OPENTURNS_INCLUDE_DIR        "@PACKAGE_OPENTURNS_INCLUDE_DIR@" )
- set ( OPENTURNS_INCLUDE_DIRS "@PACKAGE_OPENTURNS_INCLUDE_DIRS@" )
- set ( OPENTURNS_LIBRARY      "@OPENTURNS_LIBRARY@" )
- set ( OPENTURNS_LIBRARIES    "@OPENTURNS_LIBRARIES@" )
--set ( OPENTURNS_LIBRARY_DIRS "@PACKAGE_OPENTURNS_LIBRARY_DIRS@" )
-+set ( OPENTURNS_LIBRARY_DIRS "" )
- set_and_check ( OPENTURNS_ROOT_DIR   "@PACKAGE_OPENTURNS_ROOT_DIR@" )
+@@ -44,7 +44,7 @@ set_and_check (OPENTURNS_INCLUDE_DIR "@PACKAGE_OPENTURNS_INCLUDE_DIR@")
+ set (OPENTURNS_INCLUDE_DIRS "@PACKAGE_OPENTURNS_INCLUDE_DIRS@")
+ set (OPENTURNS_LIBRARY      "@OPENTURNS_LIBRARY@")
+ set (OPENTURNS_LIBRARIES    "@OPENTURNS_LIBRARIES@")
+-set (OPENTURNS_LIBRARY_DIRS "@PACKAGE_OPENTURNS_LIBRARY_DIRS@")
++set (OPENTURNS_LIBRARY_DIRS "")
+ set_and_check (OPENTURNS_ROOT_DIR "@PACKAGE_OPENTURNS_ROOT_DIR@")
  
- set ( OPENTURNS_VERSION_STRING "@OPENTURNS_VERSION_STRING@" )
-@@ -62,6 +62,11 @@ set (OPENTURNS_PYTHON_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
+ set (OPENTURNS_VERSION_STRING "@OPENTURNS_VERSION_STRING@")
+@@ -59,63 +59,64 @@ set (OPENTURNS_PYTHON_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
  # static libraries dependencies are transitive so imported targets must be defined
  if (NOT @BUILD_SHARED_LIBS@)
-   include(CMakeFindDependencyMacro)
+   include (CMakeFindDependencyMacro)
 +  find_dependency(kissfft CONFIG)
-+  find_dependency(nanoflann CONFIG)
-+  if("@MUPARSER_FOUND@")
-+    find_dependency(muparser CONFIG)
-+  endif()
  
-   if ("1" STREQUAL "@Ceres_FOUND@")
-     find_dependency(Ceres CONFIG)
+-  if ("@Boost_FOUND@")
++  if ("@USE_BOOST@")
+     find_dependency (Boost CONFIG QUIET)
+   endif ()
+ 
+-  if ("@Ceres_FOUND@")
++  if ("@USE_CERES@")
+     find_dependency (Ceres CONFIG QUIET)
+   endif ()
+ 
+-  if ("@CMinpack_FOUND@")
++  if ("@USE_CMINPACK@")
+     find_dependency (CMinpack CONFIG QUIET)
+   endif ()
+ 
+-  if ("@dlib_FOUND@")
++  if ("@USE_DLIB@")
+     find_dependency (dlib CONFIG QUIET)
+   endif ()
+ 
+-  if ("@highs_FOUND@")
++  if ("@USE_HIGHS@")
+     find_dependency (highs CONFIG QUIET)
+   endif ()
+ 
+-  if ("@HMAT_FOUND@")
++  if ("@USE_HMAT@")
+     find_dependency (HMAT CONFIG QUIET)
+   endif ()
+ 
+-  if ("@LibXml2_FOUND@")
++  if ("@USE_LIBXML2@")
+     find_dependency (LibXml2 QUIET)
+   endif ()
+ 
+-  if ("@muparser_FOUND@")
++  if ("@USE_MUPARSER@")
+     find_dependency (muparser CONFIG QUIET)
+   endif ()
+ 
+-  if ("@nanoflann_FOUND@")
++  if ("@USE_NANOFLANN@")
+     find_dependency (nanoflann CONFIG QUIET)
+   endif ()
+ 
+-  if ("@NLopt_FOUND@")
++  if ("@USE_NLOPT@")
+     find_dependency (NLopt CONFIG QUIET)
+   endif ()
+ 
+-  if ("@Pagmo_FOUND@")
++  if ("@USE_PAGMO@")
+     find_dependency (Pagmo CONFIG QUIET)
+   endif ()
+ 
+-  if ("@primesieve_FOUND@")
++  if ("@USE_PRIMESIEVE@")
+     find_dependency (primesieve CONFIG QUIET)
+   endif ()
+ 
+-  if ("@Spectra_FOUND@")
++  if ("@USE_SPECTRA@")
+     find_dependency (Spectra CONFIG QUIET)
+ 
+     # https://github.com/yixuan/spectra/pull/140
+     find_dependency (Eigen3 CONFIG QUIET)
+   endif ()
+ 
+-  if ("@TBB_FOUND@")
++  if ("@USE_TBB@")
+     find_dependency (TBB CONFIG QUIET)
+   endif ()
+ endif ()
 diff --git a/lib/src/Base/Func/SymbolicParserExprTk.cxx b/lib/src/Base/Func/SymbolicParserExprTk.cxx
-index 38e818b..8f926da 100644
+index bb8b95d..19427f6 100644
 --- a/lib/src/Base/Func/SymbolicParserExprTk.cxx
 +++ b/lib/src/Base/Func/SymbolicParserExprTk.cxx
 @@ -27,7 +27,7 @@

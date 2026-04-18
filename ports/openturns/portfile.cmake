@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openturns/openturns
     REF v${VERSION}
-    SHA512 d73c294ce8fafb99da0769791cee09a6da76d3839489dd32227a7569c1fbbfc06c2a918d3951ea5b9d7a7efb1f30d11e04a52bb8d906e37411bc372235a9832b
+    SHA512 4c6c0c5770cdec51e6aad2a463ed5e73c1d17ac234dbc3d746a70c20939de4636e62e03a559fd6a2a2454ffef3cfb4882123018bc563b3c8f468ff5f64c1b543
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -27,7 +27,6 @@ vcpkg_cmake_configure(
       -DBUILD_PYTHON:BOOL=OFF # Requires additional python modules
       -DUSE_BONMIN=OFF
       -DUSE_CUBA:BOOL=OFF
-      -DUSE_DOXYGEN:BOOL=OFF
       -DUSE_HMAT=OFF
       -DUSE_IPOPT=OFF
       -DUSE_OPENMP:BOOL=OFF
