@@ -1,21 +1,10 @@
 {
   "name": "libvncserver",
   "version": "0.9.15",
+  "port-version": 1,
   "description": "Libraries for implementing VNC servers and clients",
   "homepage": "https://github.com/LibVNC/libvncserver",
   "license": "GPL-2.0-or-later",
-  "default-features": [
-    "vncserver",
-    "vncclient",
-    "zlib",
-    "jpeg",
-    "png",
-    "threads",
-    "tightvnc-filetransfer",
-    "allow-24bpp",
-    "ipv6",
-    "websockets"
-  ],
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -26,9 +15,24 @@
       "host": true
     }
   ],
+  "default-features": [
+    "allow-24bpp",
+    "ipv6",
+    "jpeg",
+    "png",
+    "threads",
+    "tightvnc-filetransfer",
+    "vncclient",
+    "vncserver",
+    "websockets",
+    "zlib"
+  ],
   "features": {
     "allow-24bpp": {
       "description": "Allow 24 bpp"
+    },
+    "examples": {
+      "description": "Build examples"
     },
     "ffmpeg": {
       "description": "Build the VNC to MPEG example",
@@ -65,9 +69,6 @@
       "dependencies": [
         "libjpeg-turbo"
       ]
-    },
-    "libsshtunnel": {
-      "description": "Enable libsshtunnel example integration when available"
     },
     "lzo": {
       "description": "Enable LZO support",
@@ -152,9 +153,6 @@
       "dependencies": [
         "zlib"
       ]
-    },
-    "examples": {
-      "description": "Build examples"
     }
   }
 }
