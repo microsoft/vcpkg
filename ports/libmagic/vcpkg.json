@@ -11,7 +11,7 @@
       "platform": "windows"
     },
     {
-      "name": "getopt",
+      "name": "getopt-win32",
       "platform": "windows"
     },
     {
