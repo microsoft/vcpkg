@@ -5,7 +5,6 @@
   "homepage": "https://openturns.github.io/",
   "license": null,
   "dependencies": [
-    "blas",
     "boost-geometry",
     "boost-math",
     "boost-multiprecision",

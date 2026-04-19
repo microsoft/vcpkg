@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b424686..5ef6b7f 100644
+index b424686..d7cd66e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -72,6 +72,12 @@ if (NOT DEFINED LAPACK_LIBRARIES)
@@ -15,15 +15,7 @@ index b424686..5ef6b7f 100644
  if (USE_SPECTRA)
    find_package (Spectra 1.0 CONFIG)
  endif ()
-@@ -127,6 +133,7 @@ if (TBB_FOUND)
- endif ()
- 
- if (USE_MUPARSER)
-+  set(CMAKE_REQUIRE_FIND_PACKAGE_muparser ON)
-   find_package (muparser 2.2.3 CONFIG)
-   if (muparser_FOUND)
-     set (MUPARSER_LIBRARIES muparser::muparser)
-@@ -147,6 +154,8 @@ if (muparser_FOUND)
+@@ -147,6 +153,8 @@ if (muparser_FOUND)
  endif ()
  
  if (USE_EXPRTK)
@@ -32,7 +24,7 @@ index b424686..5ef6b7f 100644
    set (OPENTURNS_HAVE_EXPRTK TRUE)
    set (OPENTURNS_HAVE_ANALYTICAL_PARSER TRUE)
    set (SYMBOLICPARSER_DEFAULT_BACKEND ExprTk)
-@@ -211,7 +220,9 @@ if (USE_BOOST)
+@@ -211,7 +219,9 @@ if (USE_BOOST)
        endif ()
      endif ()
      if (USE_MPFR)
@@ -43,6 +35,43 @@ index b424686..5ef6b7f 100644
        if (MPFR_FOUND)
          set (OPENTURNS_HAVE_MPFR TRUE)
          list (APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${MPFR_INCLUDE_DIRS})
+@@ -547,6 +557,36 @@ set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ 
+ set (OPENTURNS_SWIG_INCLUDE_DIRS ${INCLUDE_PATH}/openturns/swig)
+ 
++# Subdirs and OpenTURNSConfig.cmake.in rely on <Pkg>_FOUND variables.
++# Force strict control of *direct* dependencies via USE_<PKG>
++# *and* catch new USE_<PKG> variables during port updates.
++get_directory_property(vars_to_check CACHE_VARIABLES)
++list(FILTER vars_to_check INCLUDE REGEX "^USE_")
++list(REMOVE_ITEM vars_to_check
++  USE_EXPRTK        # find_path
++  USE_EXTERNAL_LIBS # special
++  USE_MPFR          # pkgconfig
++  USE_SPHINX        # find_program
++  USE_OPENBLAS      # disables OpenBLAS threading when TBB is active and LAPACK uses OpenBLAS 
++)
++foreach(package IN ITEMS Bonmin Boost Ceres CMinpack Cuba dlib Eigen3 HDF5 highs HMAT Ipopt LibXml2
++                         MPC muparser nanoflann NLopt OpenMP Pagmo primesieve Spectra TBB)
++  set(package_found_var "${package}_FOUND")
++  string(TOUPPER "USE_${package}" use_package_var)
++  string(REPLACE "USE_EIGEN3" "USE_SPECTRA" use_package_var "${use_package_var}")
++  if(NOT "${${use_package_var}}")
++    set("${package_found_var}" FALSE) # no accidental use
++  elseif(NOT DEFINED "${package_found_var}")
++    message(SEND_ERROR "${use_package_var} was set to ${${use_package_var}}, but ${package_found_var} is not set.")
++  elseif(NOT "${${package_found_var}}")
++    message(SEND_ERROR "${use_package_var} was set to ${${use_package_var}}, but ${package} was not found.")
++  endif()
++  list(REMOVE_ITEM vars_to_check "${use_package_var}")
++endforeach()
++if(vars_to_check)
++  message(SEND_ERROR "New input variables must be integrated into the check: ${vars_to_check}")
++endif()
++
+ add_subdirectory (lib)
+ 
+ if (Python_FOUND AND SWIG_FOUND)
 diff --git a/LICENSE b/LICENSE
 index 2bd2cde..3148f78 100644
 --- a/LICENSE
@@ -60,7 +89,7 @@ index 2bd2cde..3148f78 100644
  - Gauss Legendre quadrature from FastGL library (lib/src/Base/Algo/fastgl*) under BSD license, see COPYING.fastGL
 -- Rapidcsv parser library (lib/src/Base/Stat/rapidcsv.h) under BSD license, see COPYING.rapidcsv
 diff --git a/lib/OpenTURNSConfig.cmake.in b/lib/OpenTURNSConfig.cmake.in
-index bce893e..1fd1c65 100644
+index bce893e..a74da31 100644
 --- a/lib/OpenTURNSConfig.cmake.in
 +++ b/lib/OpenTURNSConfig.cmake.in
 @@ -44,7 +44,7 @@ set_and_check (OPENTURNS_INCLUDE_DIR "@PACKAGE_OPENTURNS_INCLUDE_DIR@")
@@ -72,85 +101,14 @@ index bce893e..1fd1c65 100644
  set_and_check (OPENTURNS_ROOT_DIR "@PACKAGE_OPENTURNS_ROOT_DIR@")
  
  set (OPENTURNS_VERSION_STRING "@OPENTURNS_VERSION_STRING@")
-@@ -59,63 +59,64 @@ set (OPENTURNS_PYTHON_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
+@@ -59,6 +59,7 @@ set (OPENTURNS_PYTHON_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
  # static libraries dependencies are transitive so imported targets must be defined
  if (NOT @BUILD_SHARED_LIBS@)
    include (CMakeFindDependencyMacro)
 +  find_dependency(kissfft CONFIG)
  
--  if ("@Boost_FOUND@")
-+  if ("@USE_BOOST@")
+   if ("@Boost_FOUND@")
      find_dependency (Boost CONFIG QUIET)
-   endif ()
- 
--  if ("@Ceres_FOUND@")
-+  if ("@USE_CERES@")
-     find_dependency (Ceres CONFIG QUIET)
-   endif ()
- 
--  if ("@CMinpack_FOUND@")
-+  if ("@USE_CMINPACK@")
-     find_dependency (CMinpack CONFIG QUIET)
-   endif ()
- 
--  if ("@dlib_FOUND@")
-+  if ("@USE_DLIB@")
-     find_dependency (dlib CONFIG QUIET)
-   endif ()
- 
--  if ("@highs_FOUND@")
-+  if ("@USE_HIGHS@")
-     find_dependency (highs CONFIG QUIET)
-   endif ()
- 
--  if ("@HMAT_FOUND@")
-+  if ("@USE_HMAT@")
-     find_dependency (HMAT CONFIG QUIET)
-   endif ()
- 
--  if ("@LibXml2_FOUND@")
-+  if ("@USE_LIBXML2@")
-     find_dependency (LibXml2 QUIET)
-   endif ()
- 
--  if ("@muparser_FOUND@")
-+  if ("@USE_MUPARSER@")
-     find_dependency (muparser CONFIG QUIET)
-   endif ()
- 
--  if ("@nanoflann_FOUND@")
-+  if ("@USE_NANOFLANN@")
-     find_dependency (nanoflann CONFIG QUIET)
-   endif ()
- 
--  if ("@NLopt_FOUND@")
-+  if ("@USE_NLOPT@")
-     find_dependency (NLopt CONFIG QUIET)
-   endif ()
- 
--  if ("@Pagmo_FOUND@")
-+  if ("@USE_PAGMO@")
-     find_dependency (Pagmo CONFIG QUIET)
-   endif ()
- 
--  if ("@primesieve_FOUND@")
-+  if ("@USE_PRIMESIEVE@")
-     find_dependency (primesieve CONFIG QUIET)
-   endif ()
- 
--  if ("@Spectra_FOUND@")
-+  if ("@USE_SPECTRA@")
-     find_dependency (Spectra CONFIG QUIET)
- 
-     # https://github.com/yixuan/spectra/pull/140
-     find_dependency (Eigen3 CONFIG QUIET)
-   endif ()
- 
--  if ("@TBB_FOUND@")
-+  if ("@USE_TBB@")
-     find_dependency (TBB CONFIG QUIET)
-   endif ()
- endif ()
 diff --git a/lib/src/Base/Func/SymbolicParserExprTk.cxx b/lib/src/Base/Func/SymbolicParserExprTk.cxx
 index bb8b95d..19427f6 100644
 --- a/lib/src/Base/Func/SymbolicParserExprTk.cxx
