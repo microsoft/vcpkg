@@ -1886,7 +1886,7 @@
     },
     "coin-or-buildtools": {
       "baseline": "2023-02-02",
-      "port-version": 1
+      "port-version": 2
     },
     "coin-or-cbc": {
       "baseline": "2024-06-04",
@@ -5210,7 +5210,7 @@
     },
     "libmagic": {
       "baseline": "5.46",
-      "port-version": 2
+      "port-version": 3
     },
     "libmariadb": {
       "baseline": "3.4.8",
@@ -5830,7 +5830,7 @@
     },
     "libwandio": {
       "baseline": "4.2.6-1",
-      "port-version": 1
+      "port-version": 2
     },
     "libwebm": {
       "baseline": "1.0.0.32",
@@ -5894,7 +5894,7 @@
     },
     "libxfont": {
       "baseline": "2.0.5",
-      "port-version": 2
+      "port-version": 3
     },
     "libxft": {
       "baseline": "2.3.9",
@@ -7222,7 +7222,7 @@
     },
     "omniorb": {
       "baseline": "4.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "ompl": {
       "baseline": "1.7.0",
