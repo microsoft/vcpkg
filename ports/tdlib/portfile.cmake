@@ -17,6 +17,34 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 # therefore sidesteps the Windows ARM64 problem where a cmake subprocess
 # inherits the vcvarsall cross-compiler and produces the wrong architecture.
 if(VCPKG_CROSSCOMPILING)
+    # When updating this port to a new tdlib version, verify the cross-compile
+    # generator invocations below still match what the upstream build does:
+    #
+    #  1. TL-schema list (the foreach over _scheme):
+    #     Compare against the tl_generate_tlo custom target in
+    #     td/generate/CMakeLists.txt — every .tl file passed to tl-parser
+    #     there must be listed here.
+    #
+    #  2. MIME-type step (generate_mime_types_gperf + gperf):
+    #     Driven by tdutils/generate/CMakeLists.txt.  Check that the input
+    #     file (mime_types.txt), the two .gperf output names, and the two
+    #     gperf output .cpp names still match that file.
+    #
+    #  3. Generator executables (the foreach over _gen):
+    #     Must include every add_executable() target defined inside the
+    #     if (NOT CMAKE_CROSSCOMPILING) block in td/generate/CMakeLists.txt
+    #     that is depended upon by the main library's custom commands
+    #     (i.e. those that write files into td/generate/auto/).
+    #     Currently: tl-parser, generate_mime_types_gperf (handled above),
+    #     generate_mtproto, generate_common, generate_json.
+    #     Also sync the install(TARGETS ...) list in fix-cross-compile.patch
+    #     and the vcpkg_copy_tools() list below.
+    #
+    #  4. Output directories pre-created with file(MAKE_DIRECTORY):
+    #     Must cover every directory that generator executables write into.
+    #     Check the WORKING_DIRECTORY and output paths of the custom commands
+    #     in td/generate/CMakeLists.txt and tdutils/generate/CMakeLists.txt.
+
     set(_tools "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
     set(_exe   "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     set(_gperf "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${_exe}")

@@ -1,6 +1,7 @@
 {
   "name": "tdlib",
   "version": "1.8.63",
+  "maintainers": "luadebug <lin@sz.cn.eu.org>",
   "description": "Cross-platform library for building Telegram clients",
   "homepage": "https://github.com/tdlib/td",
   "license": "BSL-1.0",
