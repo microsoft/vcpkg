@@ -84,7 +84,7 @@ index 3d3fa01d1f69..499b1c86be93 100644
          list(APPEND LIBS "${LINK}")
        endif()
      endif()
-@@ -77,6 +119,26 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -77,6 +119,36 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    endif()
 
    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig")
@@ -108,13 +108,24 @@ index 3d3fa01d1f69..499b1c86be93 100644
 +    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET_OUTPUT_NAME}")
 +  endif()
 +
++  get_target_property(_td_iface_defs "${TARGET}" INTERFACE_COMPILE_DEFINITIONS)
++  set(CFLAGS_DEFS "")
++  if (NOT "${_td_iface_defs}" STREQUAL "_td_iface_defs-NOTFOUND")
++    foreach(_def ${_td_iface_defs})
++      string(APPEND CFLAGS_DEFS " -D${_def}")
++    endforeach()
++    unset(_def)
++  endif()
++  unset(_td_iface_defs)
++
    file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
  "prefix=${PREFIX}
 
-@@ -85,14 +147,12 @@ Description: ${DESCRIPTION}
+@@ -85,14 +157,12 @@ Description: ${DESCRIPTION}
  Version: ${PROJECT_VERSION}
 
- CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
+-CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
++CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"${CFLAGS_DEFS}
 -Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}
 +${LIBS_LINE}
  ${REQUIRES}${LIBRARIES}")
