@@ -985,7 +985,6 @@ opensubdiv[glew]:arm64-linux=cascade
 opensubdiv[glfw]:arm64-linux=cascade
 opensubdiv[omp]:arm64-linux=feature-fails
 opensubdiv[opengl]:arm64-linux=feature-fails
-openturns:arm64-linux=cascade
 openvdb[ax]:arm64-linux=cascade
 openvdb[ax]:arm64-osx=feature-fails
 openvdb[ax]:x64-linux=feature-fails

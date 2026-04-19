@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b424686..d7cd66e 100644
+index b424686..cd7fb81 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -72,6 +72,12 @@ if (NOT DEFINED LAPACK_LIBRARIES)
@@ -35,6 +35,17 @@ index b424686..d7cd66e 100644
        if (MPFR_FOUND)
          set (OPENTURNS_HAVE_MPFR TRUE)
          list (APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${MPFR_INCLUDE_DIRS})
+@@ -260,8 +270,8 @@ if (USE_CERES)
+     set (Ceres_FOUND FALSE)
+   endif ()
+   if (Ceres_FOUND AND "SuiteSparse" IN_LIST CERES_COMPILED_COMPONENTS)
+-    message (STATUS "Ceres was built with SuiteSparse GPL components, disabling.")
+-    set (Ceres_FOUND FALSE)
++    # https://github.com/openturns/openturns/issues/3170
++    message (WARNING "Ceres was built with SuiteSparse GPL components.")
+   endif ()
+   if (Ceres_FOUND)
+     set (OPENTURNS_HAVE_CERES TRUE)
 @@ -547,6 +557,36 @@ set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
  
  set (OPENTURNS_SWIG_INCLUDE_DIRS ${INCLUDE_PATH}/openturns/swig)
