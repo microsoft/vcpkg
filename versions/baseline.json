@@ -9909,7 +9909,7 @@
       "port-version": 0
     },
     "telnetpp": {
-      "baseline": "4.0.0",
+      "baseline": "4.0.2",
       "port-version": 0
     },
     "tensorflow": {
