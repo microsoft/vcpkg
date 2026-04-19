@@ -7,7 +7,7 @@ index 34456b3..052e8c8 100644
  endforeach
  
 +if cc.get_id() == 'msvc'
-+  cdata.set(HAVE_GETOPT_H, false, 'MSVC')
++  cdata.set('HAVE_GETOPT_H', false, 'MSVC')
 +endif
  
  decl_checks = [
