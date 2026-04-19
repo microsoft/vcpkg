@@ -385,7 +385,7 @@
       "port-version": 4
     },
     "atomic-queue": {
-      "baseline": "1.7.3",
+      "baseline": "1.8.1",
       "port-version": 0
     },
     "attr": {
@@ -2725,7 +2725,7 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "6.24.0",
+      "baseline": "6.25.0",
       "port-version": 0
     },
     "ecos": {
@@ -2781,8 +2781,8 @@
       "port-version": 1
     },
     "elfutils": {
-      "baseline": "0.193",
-      "port-version": 1
+      "baseline": "0.195",
+      "port-version": 0
     },
     "eljonny-testcpp": {
       "baseline": "0.3.0-beta.4",
@@ -2873,7 +2873,7 @@
       "port-version": 0
     },
     "ezc3d": {
-      "baseline": "1.6.3",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "ezfoundation": {
@@ -2969,7 +2969,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "26.3",
+      "baseline": "26.4",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -3601,7 +3601,7 @@
       "port-version": 2
     },
     "gtk": {
-      "baseline": "4.22.0",
+      "baseline": "4.22.2",
       "port-version": 0
     },
     "gtk3": {
@@ -3793,9 +3793,13 @@
       "port-version": 0
     },
     "hfsm2": {
-      "baseline": "2.11.0",
+      "baseline": "2.11.1",
       "port-version": 0
     },
+	"hical61-hical": {
+	  "baseline": "1.0.1",
+	  "port-version": 0
+	},
     "hidapi": {
       "baseline": "0.15.0",
       "port-version": 1
@@ -4909,8 +4913,8 @@
       "port-version": 2
     },
     "liberasurecode": {
-      "baseline": "1.7.1",
-      "port-version": 1
+      "baseline": "1.8.0",
+      "port-version": 0
     },
     "libev": {
       "baseline": "4.33",
@@ -5541,7 +5545,7 @@
       "port-version": 0
     },
     "libscran-umappp": {
-      "baseline": "3.2.1",
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "libsecret": {
@@ -6133,8 +6137,8 @@
       "port-version": 0
     },
     "ltla-cppirlba": {
-      "baseline": "3.0.1",
-      "port-version": 1
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "ltla-cppkmeans": {
       "baseline": "4.0.6",
@@ -8485,7 +8489,7 @@
       "port-version": 0
     },
     "quantlib": {
-      "baseline": "1.42",
+      "baseline": "1.42.1",
       "port-version": 0
     },
     "quarter": {
@@ -9969,7 +9973,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "1.0.3",
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "threadpool": {
@@ -10413,7 +10417,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.76.0",
+      "baseline": "20.77.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -10573,7 +10577,7 @@
       "port-version": 1
     },
     "vincentlaucsb-csv-parser": {
-      "baseline": "3.2.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "visit-struct": {
@@ -11001,8 +11005,8 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.3.9",
-      "port-version": 1
+      "baseline": "1.3.10",
+      "port-version": 0
     },
     "xnnpack": {
       "baseline": "2024-08-20",
@@ -11101,7 +11105,7 @@
       "port-version": 0
     },
     "yoctolib": {
-      "baseline": "2.1.12672",
+      "baseline": "2.1.12708",
       "port-version": 0
     },
     "yoga": {

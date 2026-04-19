@@ -280,7 +280,6 @@ faad2:arm64-linux=fail
 faiss:arm64-linux=cascade
 faiss:arm64-osx=fail # No openmp on default osx toolchain
 faiss[gpu](!(windows & x64) & !(linux & x64))=cascade
-faudio:arm64-linux=cascade
 fbgemm:arm64-osx=cascade
 fbgemm:arm64-windows=cascade
 fbthrift(android)=cascade
