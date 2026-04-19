@@ -1,0 +1,4 @@
+The package ipgeolocation-cpp-sdk provides CMake targets:
+
+    find_package(ipgeolocation CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE ipgeolocation::ipgeolocation)
