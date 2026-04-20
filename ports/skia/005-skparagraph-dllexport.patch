@@ -1,5 +1,5 @@
 diff --git a/modules/skparagraph/BUILD.gn b/modules/skparagraph/BUILD.gn
-index dedc68fa4a..d748247c19 100644
+index e4b94d06e2..6c31b04b5b 100644
 --- a/modules/skparagraph/BUILD.gn
 +++ b/modules/skparagraph/BUILD.gn
 @@ -20,6 +20,9 @@ if (skia_enable_skparagraph && skia_enable_skshaper && skia_enable_skunicode &&
@@ -21,7 +21,7 @@ index dedc68fa4a..d748247c19 100644
        "../..:skia",
        "../skunicode",
 diff --git a/modules/skparagraph/include/FontCollection.h b/modules/skparagraph/include/FontCollection.h
-index 7611e7e194..9db3407ecd 100644
+index ce297c224f..5707d4a4cd 100644
 --- a/modules/skparagraph/include/FontCollection.h
 +++ b/modules/skparagraph/include/FontCollection.h
 @@ -8,6 +8,7 @@
@@ -32,7 +32,7 @@ index 7611e7e194..9db3407ecd 100644
  #include "modules/skparagraph/include/FontArguments.h"
  #include "modules/skparagraph/include/ParagraphCache.h"
  #include "modules/skparagraph/include/TextStyle.h"
-@@ -18,7 +19,7 @@ namespace textlayout {
+@@ -17,7 +18,7 @@ namespace textlayout {
  
  class TextStyle;
  class Paragraph;
@@ -40,9 +40,9 @@ index 7611e7e194..9db3407ecd 100644
 +class SKPARAGRAPH_API FontCollection : public SkRefCnt {
  public:
      FontCollection();
- 
+     ~FontCollection() override;
 diff --git a/modules/skparagraph/include/ParagraphBuilder.h b/modules/skparagraph/include/ParagraphBuilder.h
-index c8189cc446..5a01557949 100644
+index 983dfc27d3..cb1907781b 100644
 --- a/modules/skparagraph/include/ParagraphBuilder.h
 +++ b/modules/skparagraph/include/ParagraphBuilder.h
 @@ -7,6 +7,7 @@
@@ -63,7 +63,7 @@ index c8189cc446..5a01557949 100644
      ParagraphBuilder() {}
  
 diff --git a/modules/skparagraph/include/ParagraphStyle.h b/modules/skparagraph/include/ParagraphStyle.h
-index 77e17da981..3f46f8e1f4 100644
+index 0c969729b6..932ed33965 100644
 --- a/modules/skparagraph/include/ParagraphStyle.h
 +++ b/modules/skparagraph/include/ParagraphStyle.h
 @@ -5,6 +5,7 @@
@@ -84,7 +84,7 @@ index 77e17da981..3f46f8e1f4 100644
  
      bool operator==(const ParagraphStyle& rhs) const {
 diff --git a/modules/skparagraph/include/TextStyle.h b/modules/skparagraph/include/TextStyle.h
-index 24b1fc679b..d08a9b5142 100644
+index 9a65834b8e..abc44b4c7f 100644
 --- a/modules/skparagraph/include/TextStyle.h
 +++ b/modules/skparagraph/include/TextStyle.h
 @@ -10,6 +10,7 @@
@@ -153,7 +153,7 @@ index 0000000000..a19b83df57
 +    #endif
 +#endif
 diff --git a/modules/skparagraph/src/TextStyle.cpp b/modules/skparagraph/src/TextStyle.cpp
-index 26a7a9eb59..3e6881bde3 100644
+index de2dee3116..8787df30b3 100644
 --- a/modules/skparagraph/src/TextStyle.cpp
 +++ b/modules/skparagraph/src/TextStyle.cpp
 @@ -6,9 +6,13 @@
@@ -172,7 +172,7 @@ index 26a7a9eb59..3e6881bde3 100644
      TextStyle result;
      result.fColor = fColor;
 diff --git a/modules/skparagraph/utils/TestFontCollection.cpp b/modules/skparagraph/utils/TestFontCollection.cpp
-index b74a3b99cf..3fe2b129da 100644
+index 7340c6bcaa..f04f496d43 100644
 --- a/modules/skparagraph/utils/TestFontCollection.cpp
 +++ b/modules/skparagraph/utils/TestFontCollection.cpp
 @@ -57,6 +57,8 @@ bool TestFontCollection::addFontFromFile(const std::string& path, const std::str
