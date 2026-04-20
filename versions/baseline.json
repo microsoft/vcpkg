@@ -3462,7 +3462,7 @@
     },
     "glog": {
       "baseline": "0.7.1",
-      "port-version": 1
+      "port-version": 2
     },
     "gloo": {
       "baseline": "20240626",
@@ -8774,7 +8774,7 @@
     },
     "ripper37-libbase": {
       "baseline": "1.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "rivers": {
       "baseline": "2022-05-16",
