@@ -1,3 +1,16 @@
+diff --git a/include/gpu/ganesh/d3d/GrD3DTypes.h b/include/gpu/ganesh/d3d/GrD3DTypes.h
+index 3e6fbcd719..2759109113 100644
+--- a/include/gpu/ganesh/d3d/GrD3DTypes.h
++++ b/include/gpu/ganesh/d3d/GrD3DTypes.h
+@@ -216,7 +216,7 @@ struct GrD3DTextureResourceInfo {
+             , fSampleQualityPattern(info.fSampleQualityPattern)
+             , fProtected(info.fProtected) {}
+ 
+-#if defined(GPU_TEST_UTILS)
++#if 1
+     bool operator==(const GrD3DTextureResourceInfo& that) const {
+         return fResource == that.fResource && fResourceState == that.fResourceState &&
+                fFormat == that.fFormat && fSampleCount == that.fSampleCount &&
 diff --git a/include/private/gpu/ganesh/GrD3DTypesMinimal.h b/include/private/gpu/ganesh/GrD3DTypesMinimal.h
 index 84db9c1567..2bf9c2755d 100644
 --- a/include/private/gpu/ganesh/GrD3DTypesMinimal.h
