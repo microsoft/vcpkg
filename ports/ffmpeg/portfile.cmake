@@ -688,7 +688,7 @@ if (VCPKG_TARGET_IS_IOS)
 endif ()
 
 set(OPTIONS_DEBUG "--disable-optimizations --enable-debug")
-set(OPTIONS_RELEASE "--enable-optimizations")
+set(OPTIONS_RELEASE "--enable-optimizations --disable-debug")
 
 if(VCPKG_DETECTED_MSVC)
     # Determine base linkage (MT or MD)
