@@ -19,13 +19,16 @@ if ([string]::IsNullOrEmpty($SasToken)) {
 
 # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
 # Intentionally omitted:
+#  ctadvisor_13.2
 #  documentation_13.2
 #  nsight_compute_13.2
 #  nsight_systems_13.2
 #  nsight_vse_13.2
+#  occupancy_calculator_13.2 (this is named like a tool but listed as 'documentation' in the installer)
 #  visual_studio_integration_13.2
 DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
   '-s',
+  'crt_13.2',
   'cublas_13.2',
   'cublas_dev_13.2',
   'cuda_profiler_api_13.2',
@@ -51,12 +54,13 @@ DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
   'nvjpeg_dev_13.2',
   'nvml_dev_13.2',
   'nvprune_13.2',
+  'nvptxcompiler_13.2',
   'nvrtc_13.2',
   'nvrtc_dev_13.2',
   'nvtx_13.2',
-  'occupancy_calculator_13.2',
   'opencl_13.2',
   'sanitizer_13.2',
   'thrust_13.2',
+  'tileiras_13.2',
   '-n'
 )
