@@ -7434,7 +7434,7 @@
     },
     "openvino": {
       "baseline": "2026.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.10",
@@ -10937,7 +10937,7 @@
       "port-version": 1
     },
     "xbyak": {
-      "baseline": "7.28",
+      "baseline": "7.36.2",
       "port-version": 0
     },
     "xcb": {
