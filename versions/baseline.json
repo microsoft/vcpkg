@@ -2617,7 +2617,7 @@
       "port-version": 0
     },
     "duckdb": {
-      "baseline": "1.4.4",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "duckx": {
