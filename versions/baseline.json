@@ -637,7 +637,7 @@
       "port-version": 0
     },
     "barkeep": {
-      "baseline": "0.1.5",
+      "baseline": "0.1.6",
       "port-version": 0
     },
     "basisu": {
@@ -3796,10 +3796,10 @@
       "baseline": "2.11.1",
       "port-version": 0
     },
-	"hical61-hical": {
-	  "baseline": "1.0.1",
-	  "port-version": 0
-	},
+    "hical61-hical": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "hidapi": {
       "baseline": "0.15.0",
       "port-version": 1
