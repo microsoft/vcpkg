@@ -19,6 +19,9 @@ vcpkg_from_github(
         011-skstrendswith-dllexport.patch
         012-dawn.patch
         013-skcms-dllexport.patch
+
+        # Used in src/gpu/ganesh/d3d/GrD3DBackendSurface.cpp:118, next time we update skia port, check if this patch is still needed
+        014-fix-direct3d.patch
 )
 
 # De-vendor
