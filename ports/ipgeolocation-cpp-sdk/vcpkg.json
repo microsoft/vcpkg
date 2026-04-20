@@ -1,6 +1,7 @@
 {
   "name": "ipgeolocation-cpp-sdk",
   "version-semver": "1.0.0",
+  "port-version": 1,
   "description": "Official C++ SDK for the IPGeolocation.io IP Location API.",
   "homepage": "https://github.com/IPGeolocation/ip-geolocation-api-cpp-sdk",
   "license": "MIT",
