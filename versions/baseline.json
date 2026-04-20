@@ -9165,7 +9165,7 @@
       "port-version": 0
     },
     "sfml": {
-      "baseline": "3.0.2",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "sfsexp": {
