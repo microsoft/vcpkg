@@ -567,7 +567,6 @@ kitemmodels:x64-windows-release=skip # conflicts with kf5itemmodels
 kitemmodels:x64-windows=skip # conflicts with kf5itemmodels
 kitemmodels:x86-windows=skip # conflicts with kf5itemmodels
 krb5:arm64-linux=fail
-lapack-reference:arm64-linux=fail
 lapack-reference:arm64-windows=cascade
 lapack-reference[blas-select,cblas,noblas]=options # Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas.
 lapack-reference(android)=fail # no fortran compiler
