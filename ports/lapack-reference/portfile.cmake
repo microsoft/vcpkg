@@ -31,7 +31,6 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
         cblas   CBLAS
-    INVERTED_FEATURES
         cblas   BUILD_INDEX64_EXT_API
 )
 
