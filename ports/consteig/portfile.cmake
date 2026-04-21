@@ -11,7 +11,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCONSTEIG_VERSION="${VERSION}"
+        "-DCONSTEIG_VERSION=${VERSION}"
         -DCONSTEIG_BUILD_TESTS=OFF
         -DCONSTEIG_BUILD_EXAMPLES=OFF
         -DCONSTEIG_BUILD_PROFILING=OFF
@@ -20,7 +20,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/consteig)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
