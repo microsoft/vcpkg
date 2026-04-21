@@ -1,7 +1,6 @@
 {
   "name": "libvncserver",
   "version": "0.9.15",
-  "port-version": 1,
   "description": "Libraries for implementing VNC servers and clients",
   "homepage": "https://github.com/LibVNC/libvncserver",
   "license": "GPL-2.0-or-later",
