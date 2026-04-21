@@ -137,29 +137,3 @@ index bdd98cd..0040b0f 100644
              set(lapack_libraries ${LAPACK_LIBRARIES})
              set(lapack_found 1)
           endif()
-diff --git a/dlib/cmake_utils/test_for_libjpeg/CMakeLists.txt b/dlib/cmake_utils/test_for_libjpeg/CMakeLists.txt
-index 4cb63dd..d990521 100644
---- a/dlib/cmake_utils/test_for_libjpeg/CMakeLists.txt
-+++ b/dlib/cmake_utils/test_for_libjpeg/CMakeLists.txt
-@@ -4,7 +4,7 @@ project(test_if_libjpeg_is_broken)
- 
- find_package(JPEG)
- 
--include_directories(${JPEG_INCLUDE_DIR})
-+include_directories(${JPEG_INCLUDE_DIRS})
- add_executable(libjpeg_test libjpeg_test.cpp)
- target_link_libraries(libjpeg_test ${JPEG_LIBRARY})
- 
-diff --git a/dlib/cmake_utils/test_for_libpng/CMakeLists.txt b/dlib/cmake_utils/test_for_libpng/CMakeLists.txt
-index 46330b6..a8e029f 100644
---- a/dlib/cmake_utils/test_for_libpng/CMakeLists.txt
-+++ b/dlib/cmake_utils/test_for_libpng/CMakeLists.txt
-@@ -4,7 +4,7 @@ project(test_if_libpng_is_broken)
- 
- find_package(PNG)
- 
--include_directories(${PNG_INCLUDE_DIR})
-+include_directories(${PNG_INCLUDE_DIRS})
- add_executable(libpng_test libpng_test.cpp)
- target_link_libraries(libpng_test ${PNG_LIBRARIES})
- 

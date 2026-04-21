@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
 )
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,8 +34,10 @@ vcpkg_cmake_configure(
         ${COMMON_OPTIONS}
         -DDLIB_PNG_SUPPORT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
+        -Dtest_for_libpng_worked=TRUE # try_compile ignores vcpkg setup
         -DDLIB_JPEG_SUPPORT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
+        -Dtest_for_libjpeg_worked=TRUE # try_compile ignores vcpkg setup
         -DDLIB_USE_BLAS=ON
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
