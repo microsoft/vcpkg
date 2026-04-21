@@ -17,7 +17,7 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
     set(ECCODES_REPLACE_TPL_ABSOLUTE_PATHS OFF)
 else()
     set(ECCODES_REPLACE_TPL_ABSOLUTE_PATHS ON)
