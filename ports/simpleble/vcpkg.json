@@ -1,6 +1,7 @@
 {
   "name": "simpleble",
   "version": "0.12.1",
+  "port-version": 1,
   "description": "The ultimate fully-fledged cross-platform library and bindings for Bluetooth Low Energy (BLE).",
   "homepage": "https://github.com/OpenBluetoothToolbox/SimpleBLE",
   "supports": "!android & !uwp",
@@ -10,6 +11,7 @@
       "platform": "linux"
     },
     "fmt",
+    "nanopb",
     {
       "name": "vcpkg-cmake",
       "host": true
