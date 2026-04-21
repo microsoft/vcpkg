@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-clang-dllimport.patch # workaround for https://github.com/microsoft/cpprestsdk/issues/1710
         fix-asio-error.patch
         remove-stdext-checked-array-iterator-1836.patch # https://github.com/microsoft/cpprestsdk/pull/1836
+        fix-incomplete-json-value.patch
 )
 
 vcpkg_check_features(
