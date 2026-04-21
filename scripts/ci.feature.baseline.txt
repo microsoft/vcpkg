@@ -638,7 +638,6 @@ libmikmod:arm64-linux=cascade
 libmodman:x64-windows-static=fail
 libmtp:arm64-linux=cascade
 libmultisense[opencv]:arm64-linux=cascade
-libmysofa:arm64-linux=fail
 libnick:arm64-linux=fail
 libnick:arm64-osx=fail
 libnick:x64-linux=fail
