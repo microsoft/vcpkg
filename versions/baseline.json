@@ -4044,6 +4044,10 @@
       "baseline": "0.1.0",
       "port-version": 0
     },
+    "ipgeolocation-cpp-sdk": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "irrlicht": {
       "baseline": "1.8.5",
       "port-version": 2
