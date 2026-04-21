@@ -8,7 +8,7 @@ index ab19c38..b6203b5 100644
    'install-sh', 'missing',
    install_dir: dir_pgxs / 'config'
 diff --git a/meson.build b/meson.build
-index 052e8c8..510146b 100644
+index 6e1c867..d3dfb76 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -3023,7 +3023,14 @@ if not nlsopt.disabled()
@@ -381,3 +381,16 @@ index fc7b059..3b8cf40 100644
  endforeach
  
  pgport_srv = pgport['_srv']
+diff --git a/src/timezone/meson.build b/src/timezone/meson.build
+index ad9f6f6..9ad6456 100644
+--- a/src/timezone/meson.build
++++ b/src/timezone/meson.build
+@@ -38,7 +38,7 @@ if get_option('system_tzdata') == ''
+ 
+     zic = executable('zic', zic_sources,
+                      dependencies: [frontend_code],
+-                     kwargs: default_bin_args + {'install': false}
++                     kwargs: default_bin_args + {'install': true}
+                     )
+   endif
+ 

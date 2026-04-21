@@ -47,7 +47,17 @@
       ]
     },
     "client": {
-      "description": "Build all client tools and libraries"
+      "description": "Build all client tools and libraries",
+      "dependencies": [
+        {
+          "name": "libpq",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "client"
+          ]
+        }
+      ]
     },
     "icu": {
       "description": "Build with support for the ICU library",

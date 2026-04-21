@@ -48,6 +48,10 @@ if("client" IN_LIST FEATURES)
     list(APPEND MESON_OPTIONS_RELEASE -Dtools=enabled)
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND MESON_OPTIONS "-DZIC=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/zic${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -65,6 +69,9 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES ecpg AUTO_CLEAN)
 if("client" IN_LIST FEATURES)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zic${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        vcpkg_copy_tools(TOOL_NAMES zic AUTO_CLEAN DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    endif()
     vcpkg_copy_tools(
         TOOL_NAMES
             clusterdb createdb createuser
