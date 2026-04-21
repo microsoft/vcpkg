@@ -1,16 +1,24 @@
 {
   "name": "tdlib",
-  "version": "1.8.55",
+  "version": "1.8.63",
+  "maintainers": "luadebug <lin@sz.cn.eu.org>",
   "description": "Cross-platform library for building Telegram clients",
   "homepage": "https://github.com/tdlib/td",
   "license": "BSL-1.0",
-  "supports": "((windows & !uwp & !arm & !arm64 & !xbox) | linux | osx) & static",
   "dependencies": [
     {
       "name": "gperf",
       "host": true
     },
     "openssl",
+    {
+      "name": "tdlib",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,5 +28,10 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Install source-generator executables (tl-parser, generate_mtproto, etc.) required for cross-compilation"
+    }
+  }
 }

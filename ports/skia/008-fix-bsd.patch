@@ -1,7 +1,7 @@
-diff --git a/src/gpu/ganesh/GrAutoLocaleSetter.h b/src/gpu/ganesh/GrAutoLocaleSetter.h
-index 13a2ab37f9..96968f6779 100644
---- a/src/gpu/ganesh/GrAutoLocaleSetter.h
-+++ b/src/gpu/ganesh/GrAutoLocaleSetter.h
+diff --git a/src/base/SkAutoLocaleSetter.h b/src/base/SkAutoLocaleSetter.h
+index 90bcbb32bc..68a0f8a9e3 100644
+--- a/src/base/SkAutoLocaleSetter.h
++++ b/src/base/SkAutoLocaleSetter.h
 @@ -27,7 +27,7 @@
  #define HAVE_XLOCALE 0
  #endif
