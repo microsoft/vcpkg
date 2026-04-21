@@ -6,12 +6,10 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_find_acquire_program(GIT)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DGIT_EXECUTABLE=${GIT}"
+    	"-DCMKR_SKIP_GENERATION=ON"
         "-DSAFETYHOOK_FETCH_ZYDIS=OFF"
 )
 

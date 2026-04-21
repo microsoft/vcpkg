@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 8f326db4049b3241c7a0472aa5db8c715dcfc0a1ce9c5fda492bf84e6c17e27a2298131a58a51e275797259a434e59bfe3f53d85358f903652dca8de753a3376
+    SHA512 5c376d9bf6388f04e5d48375a70682f9d7edcd65809383afc0190c77140b086492abc17a8d3a2aa07e59dde681ab17a919e9b8b7e174a91a2951c30b262c10e4
     HEAD_REF master
     PATCHES
-        cmake-config-glib.diff
+        fix-gcem.patch
+        cxx-linkage-pkgconfig.diff
 )
 # Do not use or install FindSndFileLegacy.cmake and its deps
 file(REMOVE
@@ -16,6 +17,7 @@ file(REMOVE
     "${SOURCE_PATH}/cmake_admin/FindOpus.cmake"
     "${SOURCE_PATH}/cmake_admin/FindSndFileLegacy.cmake"
     "${SOURCE_PATH}/cmake_admin/FindVorbis.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindGCEM.cmake"
 )
 
 vcpkg_check_features(
@@ -53,20 +55,19 @@ endif()
 foreach(_option IN LISTS OPTIONS_TO_ENABLE)
     list(APPEND ENABLED_OPTIONS "-D${_option}:BOOL=ON")
 endforeach()
-    
+
 foreach(_option IN LISTS OPTIONS_TO_DISABLE IGNORED_OPTIONS)
     list(APPEND DISABLED_OPTIONS "-D${_option}:BOOL=OFF")
 endforeach()
 
-vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${ENABLED_OPTIONS}
         ${DISABLED_OPTIONS}
-        "-Dosal=cpp11" 
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-Dosal=cpp11"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
     MAYBE_UNUSED_VARIABLES
         ${OPTIONS_TO_DISABLE}
         enable-coverage
@@ -87,6 +88,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-    
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 

@@ -87,7 +87,10 @@ if(EXISTS "${pcfile}")
     file(WRITE "${pcfile}" "prefix=${CURRENT_INSTALLED_DIR}/debug\n${_contents}")
 endif()
 
-if(NOT USE_OPTIMIZED_BLAS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+if(NOT USE_OPTIMIZED_BLAS AND NOT (
+		VCPKG_TARGET_IS_WINDOWS AND
+		VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND
+		NOT VCPKG_TARGET_IS_MINGW ))
     set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc")
     if(EXISTS "${pcfile}")
         file(READ "${pcfile}" _contents)

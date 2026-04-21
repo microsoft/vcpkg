@@ -1,0 +1,24 @@
+{
+  "name": "zxc",
+  "version": "0.9.1",
+  "port-version": 1,
+  "description": "High-performance asymmetric lossless compression library",
+  "homepage": "https://github.com/hellobertrand/zxc",
+  "license": "BSD-3-Clause AND MIT",
+  "dependencies": [
+    "rapidhash",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "util": {
+      "description": "Build the command-line interface"
+    }
+  }
+}

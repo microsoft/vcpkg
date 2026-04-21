@@ -1,0 +1,4 @@
+qdldl provides CMake targets:
+
+  find_package(qdldl CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:qdldl::qdldl>,qdldl::qdldl,qdldl::qdldlstatic>)

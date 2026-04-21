@@ -17,7 +17,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Coin3D/coin
     REF "v${VERSION}"
-    SHA512 5e9505efda536a6687fd1cfcc4589af9bfbdbd4a8d660335c060e1678f84c5db91415e0a40ee7b4b40e5894d7330172a24f822d38c0ea276badb92fc68efeec8
+    SHA512 7dd92d06f49a237cede0c22adda1306c76ac4f2b77c59f2d3a8386ff366da92a0910ac9e3b1a36eb33eb52d6ae79957628d745bc54fbe89ad83e85544afd07c4
     HEAD_REF master
     PATCHES
         expat.diff

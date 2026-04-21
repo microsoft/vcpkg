@@ -1,0 +1,16 @@
+diff --git a/examples/generic/main.c b/examples/generic/main.c
+index 2984bcc..74d7be7 100644
+--- a/examples/generic/main.c
++++ b/examples/generic/main.c
+@@ -1,7 +1,7 @@
+-#include <kube_config.h>
+-#include <apiClient.h>
+-#include <generic.h>
+-#include <malloc.h>
++#include <kubernetes/config/kube_config.h>
++#include <kubernetes/include/apiClient.h>
++#include <kubernetes/include/generic.h>
++#include <stdlib.h>
+ #include <stdio.h>
+ #include <errno.h>
+ 

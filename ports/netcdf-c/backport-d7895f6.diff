@@ -1,0 +1,237 @@
+diff --git a/libhdf5/H5FDhttp.c b/libhdf5/H5FDhttp.c
+index 917c73a..23e96a1 100644
+--- a/libhdf5/H5FDhttp.c
++++ b/libhdf5/H5FDhttp.c
+@@ -45,18 +45,6 @@
+ #include <unistd.h>
+ #endif
+ 
+-/*
+-Define a simple #ifdef test for the version of H5FD_class_t we are using 
+-*/
+-
+-#if H5_VERS_MAJOR == 1
+-#if H5_VERS_MINOR < 10
+-#define H5FDCLASS1 1
+-#endif
+-#else
+-#error "Cannot determine version of H5FD_class_t"
+-#endif
+-
+ #ifdef H5_HAVE_WIN32_API
+ /* The following two defines must be before any windows headers are included */
+ #define WIN32_LEAN_AND_MEAN    /* Exclude rarely-used stuff from Windows headers */
+@@ -145,33 +133,24 @@ static herr_t H5FD_http_read(H5FD_t *lf, H5FD_mem_t type, hid_t fapl_id, haddr_t
+                 size_t size, void *buf);
+ static herr_t H5FD_http_write(H5FD_t *lf, H5FD_mem_t type, hid_t fapl_id, haddr_t addr,
+                 size_t size, const void *buf);
++static herr_t H5FD_http_term(void);
+ 
+ /* The H5FD_class_t structure has different versions */
+-#ifdef H5FDCLASS1
+-static haddr_t H5FD_http_get_eof(const H5FD_t *_file);
+-static herr_t H5FD_http_flush(H5FD_t *_file, hid_t dxpl_id, unsigned closing);
+-static herr_t H5FD_http_lock(H5FD_t *_file, unsigned char* old, unsigned lock_type, hbool_t last);
+-static herr_t H5FD_http_unlock(H5FD_t *file, unsigned char *oid, hbool_t last);
+-#else
+-static herr_t H5FD_http_term(void);
+ static haddr_t H5FD_http_get_eof(const H5FD_t *_file, H5FD_mem_t type);
+ static herr_t H5FD_http_flush(H5FD_t *_file, hid_t dxpl_id, hbool_t closing);
+ static herr_t H5FD_http_lock(H5FD_t *_file, hbool_t rw);
+ static herr_t H5FD_http_unlock(H5FD_t *_file);
+-#endif
+ 
+ /* Beware, not same as H5FD_HTTP_g */
+ static const H5FD_class_t H5FD_http_g = {
+-#if H5_VERSION_GE(1,13,2)
++#if H5FD_CLASS_VERSION > 0
+     H5FD_CLASS_VERSION,		/* struct version  */
+     H5_VFD_HTTP,		/* value           */
+ #endif
+     "http",			/* name         */
+     MAXADDR,			/* maxaddr      */
+     H5F_CLOSE_WEAK,		/* fc_degree    */
+-#ifndef H5FDCLASS1
+     H5FD_http_term,		/* terminate    */
+-#endif
+     NULL,			/* sb_size      */
+     NULL,			/* sb_encode    */
+     NULL,			/* sb_decode    */
+@@ -195,7 +174,7 @@ static const H5FD_class_t H5FD_http_g = {
+     H5FD_http_get_handle,	/* get_handle   */
+     H5FD_http_read,		/* read         */
+     H5FD_http_write,		/* write        */
+-#if H5_VERSION_GE(1,13,2)
++#if H5FD_CLASS_VERSION > 0
+     NULL,			/* read_vector     */
+     NULL,			/* write_vector    */
+     NULL,			/* read_selection  */
+@@ -205,7 +184,7 @@ static const H5FD_class_t H5FD_http_g = {
+     NULL,			/* truncate     */
+     H5FD_http_lock,		/* lock         */
+     H5FD_http_unlock,		/* unlock       */
+-#if H5_VERSION_GE(1,13,2)
++#if H5FD_CLASS_VERSION > 0
+     NULL,			/* del          */
+     NULL,			/* ctl	        */
+ #endif
+@@ -277,13 +256,11 @@ H5FD_http_finalize(void)
+  *
+  *---------------------------------------------------------------------------
+  */
+-#ifndef H5FDCLASS1
+ static herr_t
+ H5FD_http_term(void)
+ {
+     return 0;
+ } /* end H5FD_http_term() */
+-#endif
+ 
+ 
+ /*-------------------------------------------------------------------------
+@@ -497,7 +474,7 @@ H5FD_http_query(const H5FD_t *_f, unsigned long /*OUT*/ *flags)
+         *flags |= H5FD_FEAT_ACCUMULATE_METADATA;    /* OK to accumulate metadata for faster writes                      */
+         *flags |= H5FD_FEAT_DATA_SIEVE;             /* OK to perform data sieving for faster raw data reads & writes    */
+         *flags |= H5FD_FEAT_AGGREGATE_SMALLDATA;    /* OK to aggregate "small" raw data allocations                     */
+-#ifndef H5FDCLASS1
++#if H5FD_CLASS_VERSION > 0
+         *flags |= H5FD_FEAT_DEFAULT_VFD_COMPATIBLE; /* VFD creates a file which can be opened with the default VFD      */
+ #endif
+     }
+@@ -630,19 +607,10 @@ H5FD_http_set_eoa(H5FD_t *_file, H5FD_mem_t /*UNUSED*/ type, haddr_t addr)
+  */
+ 
+ static haddr_t
+-#ifdef H5FDCLASS1
+-H5FD_http_get_eof(const H5FD_t *_file)
+-#else
+-H5FD_http_get_eof(const H5FD_t *_file, H5FD_mem_t /*UNUSED*/ type)
+-#endif
++H5FD_http_get_eof(const H5FD_t *_file, H5FD_mem_t type)
+ {
+     const H5FD_http_t  *file = (const H5FD_http_t *)_file;
+ 
+-#ifndef H5FDCLASS1
+-    /* Quiet the compiler */
+-    type = type;
+-#endif
+-
+     /* Clear the error stack */
+     H5Eclear2(H5E_DEFAULT);
+ 
+@@ -830,18 +798,9 @@ H5FD_http_write(H5FD_t *_file, H5FD_mem_t /*UNUSED*/ type, hid_t /*UNUSED*/ dxpl
+  *-------------------------------------------------------------------------
+  */
+ static herr_t
+-#ifdef H5FDCLASS1
+-H5FD_http_flush(H5FD_t *_file, hid_t dxpl_id, unsigned closing)
+-#else
+-H5FD_http_flush(H5FD_t *_file, hid_t /*UNUSED*/ dxpl_id, hbool_t closing)
+-#endif
++H5FD_http_flush(H5FD_t *_file, hid_t dxpl_id, hbool_t closing)
+ {
+ 
+-#ifndef H5FDCLASS1
+-    /* Quiet the compiler */
+-    dxpl_id = dxpl_id;
+-#endif
+-
+     /* Clear the error stack */
+     H5Eclear2(H5E_DEFAULT);
+ 
+@@ -865,23 +824,11 @@ H5FD_http_flush(H5FD_t *_file, hid_t /*UNUSED*/ dxpl_id, hbool_t closing)
+  *-------------------------------------------------------------------------
+  */
+ static herr_t
+-#ifdef H5FDCLASS1
+-H5FD_http_lock(H5FD_t *_file, unsigned char* old, unsigned lock_type, hbool_t last)
+-#else
+ H5FD_http_lock(H5FD_t *_file, hbool_t rw)
+-#endif
+ {
+     /* Clear the error stack */
+     H5Eclear2(H5E_DEFAULT);
+ 
+-#ifdef H5FDCLASS1
+-    /* Quiet the compiler */
+-    lock_type = lock_type;
+-    last = last;
+-#else
+-    rw = rw;
+-#endif
+-
+     return 0;
+ } /* end H5FD_http_lock() */
+ 
+@@ -901,21 +848,11 @@ H5FD_http_lock(H5FD_t *_file, hbool_t rw)
+  *-------------------------------------------------------------------------
+  */
+ static herr_t
+-#ifdef H5FDCLASS1
+-H5FD_http_unlock(H5FD_t *file, /*UNUSED*/unsigned char *oid, /*UNUSED*/ hbool_t last)
+-#else
+-H5FD_http_unlock(H5FD_t *_file)
+-#endif
++H5FD_http_unlock(H5FD_t *file)
+ {
+     /* Clear the error stack */
+     H5Eclear2(H5E_DEFAULT);
+ 
+-    /* Quiet the compiler */
+-#ifdef H5FDCLASS1
+-    oid = oid;
+-    last = last;
+-#endif
+-
+     return 0;
+ } /* end H5FD_http_unlock() */
+ 
+diff --git a/libhdf5/H5FDhttp.h b/libhdf5/H5FDhttp.h
+index 376609e..5fd0c9e 100644
+--- a/libhdf5/H5FDhttp.h
++++ b/libhdf5/H5FDhttp.h
+@@ -29,10 +29,26 @@
+ 
+ #include "H5Ipublic.h"
+ 
+-#if H5_VERSION_GE(1,13,2)
++/**
++The big issue to be addressed: H5FD_CLASS_VERSION defined?
++Apparently this first occurs in HDF5 version 1.13.2.
++This affects the H5FD_class_t structure.
++*/
++#if H5_VERSION_GE(1, 13, 2)
++#  ifndef H5FD_CLASS_VERSION
++/* If not defined then fake it */
++#  define H5FD_CLASS_VERSION 0x00
++#  endif
++#endif
++
++/* Class Version field changes. */
++#if H5FD_CLASS_VERSION > 0
++/* see https://support.hdfgroup.org/documentation/hdf5-docs/registered_virtual_file_drivers_vfds.html */
+ #define H5_VFD_HTTP     ((H5FD_class_value_t)(514))
+-#define H5FD_HTTP	(H5FDperform_init(H5FD_http_init))
++#define H5FD_HTTP	(H5FD_http_init())
+ #else
++#define H5_VFD_HTTP     ((H5FD_class_value_t)(514))
++//#define H5FD_HTTP	(H5FDperform_init(H5FD_http_init))
+ #define H5FD_HTTP	(H5FD_http_init())
+ #endif
+ 
+@@ -40,15 +56,9 @@
+ extern "C" {
+ #endif
+ 
+-#if 0
+-H5_DLL hid_t H5FD_http_init(void);
+-H5_DLL hid_t H5FD_http_finalize(void);
+-H5_DLL herr_t H5Pset_fapl_http(hid_t fapl_id);
+-#else
+ EXTERNL hid_t H5FD_http_init(void);
+ EXTERNL hid_t H5FD_http_finalize(void);
+ EXTERNL herr_t H5Pset_fapl_http(hid_t fapl_id);
+-#endif
+ 
+ #ifdef __cplusplus
+ }

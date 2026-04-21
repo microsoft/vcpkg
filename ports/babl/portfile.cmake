@@ -3,19 +3,22 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gimp.org/pub/babl/${VERSION_MAJOR_MINOR}/babl-${VERSION}.tar.xz"
     FILENAME "babl-${VERSION}.tar.xz"
-    SHA512 ff410c9839f4fe4d6afd4dec7e4d02af34b1c8a4edbc05483784ed82f91045b1102414fc1c58357866044b7f1ab499eda24fe744f5dd692af5804020c76b2382
+    SHA512 953037386e1763b28385f0f1802a657e2b918b5db3932cc62e75aa32c36b36b0513258f1b5548dfebedb51fb6de47412503ea8f8aff4ce79c314e33a28d27166
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        support-plugins.patch
+        remove-consistency-check.patch
 )
 
 set(feature_options "")
 if("cmyk-icc" IN_LIST FEATURES)
-    list(APPEND feature_options "-Dwith-lcms=true")
+    list(APPEND feature_options "-Dwith-lcms=enabled")
 else()
-    list(APPEND feature_options "-Dwith-lcms=false")
+    list(APPEND feature_options "-Dwith-lcms=disabled")
 endif()
 
 if("introspection" IN_LIST FEATURES)
@@ -37,6 +40,8 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_tools(TOOL_NAMES babl AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

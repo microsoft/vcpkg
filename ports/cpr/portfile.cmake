@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
     REF ${VERSION}
-    SHA512 577a7ddae24fa85e5ce379468f05f4ddf6c1f48859204e4d53653b59581fcb77662bf63aa8b31a85fb0c19ec8412b8a9bfcd2a047e49f56f6a2ee24c3f1620c9
+    SHA512 9907d2936f814924e82aaaf652149c119e2d9b94677efde0c80c570bc8cb50e4a36aa2520e2efb3f1fc82cba10ef61b9262705cd6e5cb49757b0c37af071ae22
     HEAD_REF master
     PATCHES
         disable_werror.patch

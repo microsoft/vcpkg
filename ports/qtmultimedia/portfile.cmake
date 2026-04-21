@@ -3,11 +3,10 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
     static_find_modules.patch
-    fix_avfoundation_target.patch
     remove-static-ssl-stub.patch
-    ffmpeg-compile-def.patch
+    ffmpeg-compile-def-and-devendor-signalsmith-stretch.patch
     ffmpeg.patch
-    9c33ede.diff
+    ae41d3e-ffmpeg8.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,45 +18,44 @@ INVERTED_FEATURES
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
     "gstreamer"     CMAKE_DISABLE_FIND_PACKAGE_GStreamer
     "ffmpeg"        CMAKE_DISABLE_FIND_PACKAGE_FFmpeg
+    "pipewire"      CMAKE_DISABLE_FIND_PACKAGE_PipeWire
+    "pulseaudio"    CMAKE_DISABLE_FIND_PACKAGE_WrapPulseAudio
     # Features not yet added in the manifest:
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
+    #"mmrenderer"    CMAKE_DISABLE_FIND_PACKAGE_MMRenderer # OS = QNX ?
+    #"mmrenderer"    CMAKE_DISABLE_FIND_PACKAGE_MMRendererCore
 )
+
+list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
+
+# Force all gstreamer extra features to off to not poison the cache
+# since enabling them is done depening on how gstreamer was built
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl_wayland=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl_egl=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl_x11=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_photography=OFF")
 
 set(unused "")
 if("gstreamer" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='yes'")
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
-    list(APPEND unused INPUT_gstreamer_gl INPUT_gstreamer_photography)
 endif()
-list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_gl='no'")
-list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_photography='no'")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=ON")
+if("pipewire" IN_LIST FEATURES)
+    # This also requires QT_FEATURE_library from qtbase but
+    # that is not exposed by vcpkg via a feature
+    list(APPEND FEATURE_OPTIONS "-DINPUT_pipewire='yes'")
 else()
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
+    list(APPEND FEATURE_OPTIONS "-DINPUT_pipewire='no'")
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
-    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
-        list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
-    else()
-        list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='yes'")
-    endif()
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='no'")
-    list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
-endif()
-
-# alsa is not ready
-if(NOT "ffmpeg" IN_LIST FEATURES AND NOT "gstreamer" IN_LIST FEATURES AND VCPKG_TARGET_IS_LINUX)
-  #list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON") # alsa is experimental so don't activate it (also missing the dep on it.)
-  message(FATAL_ERROR "You need to activate at least one backend.")
-else()
-  list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

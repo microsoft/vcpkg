@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://www.scintilla.org/lexilla545.zip"
-  FILENAME "lexilla545.zip"
-  SHA512 03e590a883e31135abc7eccdd089fbe3fe074955db70cbd546b58f32a77109f252c2283519e43f6a6e4c69fae9a99912c2bd828a771ceebeabf67655dde45877
+  URLS "https://www.scintilla.org/lexilla546.zip"
+  FILENAME "lexilla546.zip"
+  SHA512 7290de2acbe9e52cac31aa3bf89dae66faa2040b45e715a2e18d2dd5804b2486dac8ae1cec68d8dc9215fc953628d492dbf57e61751011d17c3d70899a47dec0
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")

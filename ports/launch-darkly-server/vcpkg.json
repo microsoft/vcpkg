@@ -1,12 +1,16 @@
 {
   "name": "launch-darkly-server",
   "version": "2.9.3",
+  "port-version": 1,
   "description": "LaunchDarkly server-side SDK for C/C++",
   "homepage": "https://github.com/launchdarkly/c-server-sdk",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
-    "curl",
+    {
+      "name": "curl",
+      "default-features": false
+    },
     "pcre",
     {
       "name": "vcpkg-cmake",

@@ -1,11 +1,10 @@
 {
   "name": "libpq",
-  "version": "16.9",
-  "port-version": 1,
+  "version": "18.3",
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
-  "supports": "!uwp",
+  "supports": "!uwp & !emscripten",
   "dependencies": [
     {
       "name": "libpq",
@@ -20,7 +19,7 @@
       "host": true
     },
     {
-      "name": "vcpkg-pkgconfig-get-modules",
+      "name": "vcpkg-tool-meson",
       "host": true,
       "platform": "windows & !mingw"
     }

@@ -1,0 +1,13 @@
+{
+  "name": "directfb2",
+  "version-date": "2025-11-25",
+  "description": "A graphics library designed with embedded systems in mind. Clean and drop-in successor to DirectFB",
+  "homepage": "https://github.com/directfb2/DirectFB2",
+  "supports": "linux & !android",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

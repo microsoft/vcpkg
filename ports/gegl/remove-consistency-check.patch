@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index c8ef26f..eecee7a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -660,7 +660,7 @@ subdir('po')
+ subdir('docs')
+ 
+ 
+-if not os_osx and host_cpu_family != 'x86'
++if false
+   nm = find_program('nm', required: false)
+ 
+   # Verify .def files for Windows linking.

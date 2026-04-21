@@ -8,7 +8,6 @@ vcpkg_from_github(
       fix_glog_CMAKE_MODULE_PATH.patch
       glog_disable_debug_postfix.patch
       fix_crosscompile_symbolize.patch
-      fix_cplusplus_macro.patch
 )
 
 vcpkg_check_features(

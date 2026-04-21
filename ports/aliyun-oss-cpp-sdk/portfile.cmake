@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aliyun/aliyun-oss-cpp-sdk
     REF "${VERSION}"
-    SHA512 7773961ad380d28cda96e16ae6491a76e03f0cb5f0c5135b660179dd449d730e1dfffb916489ed60e13815f53566c24cd9cfd8985c468438369341358eeed3bd
+    SHA512 4bcc1f609e77ea514a1f5ba76e63b51acc322d034e2889e3be545c3eb8d5e783ec9eee30745d536c6ad35474029eb921e31ceaa18f03d4678fccddf66d6604fe
     HEAD_REF master
     PATCHES
         0001-dependency-and-targets.patch

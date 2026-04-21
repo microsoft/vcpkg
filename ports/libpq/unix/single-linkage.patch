@@ -42,8 +42,8 @@ index 8abdb09..185461e 100644
 +ifeq ($(LIBPQ_LIBRARY_TYPE), shared)
  libpq-refs-stamp: $(shlib)
  ifneq ($(enable_coverage), yes)
- ifeq (,$(filter aix solaris,$(PORTNAME)))
-@@ -124,6 +125,10 @@ ifeq (,$(filter aix solaris,$(PORTNAME)))
+ ifeq (,$(filter solaris,$(PORTNAME)))
+@@ -124,6 +125,10 @@ ifeq (,$(filter solaris,$(PORTNAME)))
  endif
  endif
  	touch $@

@@ -1,7 +1,8 @@
+# We do not use vcpkg_from_github here, as build-aux and cppp-platform are not part of the repo.
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/cppp-project/cppp-reiconv/releases/download/v${VERSION}/cppp-reiconv-v${VERSION}.zip"
+    URLS "https://github.com/cppp-project/cppp-reiconv/releases/download/v${VERSION}/cppp-reiconv-${VERSION}.zip"
     FILENAME "cppp-reiconv-v${VERSION}.zip"
-    SHA512 56294d63a71818842ec3f4a513bdc022ea3f472b582e16d377ec61282005965e7a08d619b9620cc036feb391e5b2eab3bfb4a1a21dcc860df89234e847048678
+    SHA512 08351752a3a8e6f816146c69e8e26dac450a1f2a8d5cdaf78328e1244bb03b4e9c092ac36928afffa24c7993573b4cd1e12866b43f8f33a764da46697285dfdf
 )
 
 vcpkg_extract_source_archive(
@@ -9,13 +10,10 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-     OPTIONS -DENABLE_TEST=OFF -DENABLE_EXTRA=ON
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
@@ -25,4 +23,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

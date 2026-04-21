@@ -2,8 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-s3
     REF "v${VERSION}"
-    SHA512 d1a7d2d92c43a29e0044afe65fe625fdec2f0ea2182eece5dd8e757a16bd782b7440d3f14fb43c1ad17c59240181d35e2868fb6a20ce71dab53dfaa6259300c9
+    SHA512 3ceb6058e6b382a9539d00b6d87402e46a981f3d439a595ce749f4623940d1a8149d6aa2cf2a47e9529979463be9e66abd627814ccf14346cd1348d7065f0fc3
     HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        endpoint-resolver AWS_ENABLE_S3_ENDPOINT_RESOLVER
 )
 
 vcpkg_cmake_configure(
@@ -11,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
         -DBUILD_TESTING=FALSE
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

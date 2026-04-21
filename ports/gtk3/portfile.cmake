@@ -6,15 +6,21 @@ if(buildtrees_path_length GREATER warning_length AND CMAKE_HOST_WIN32)
     )
 endif()
 
-vcpkg_from_gitlab(
-    OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.gnome.org
-    REPO GNOME/gtk
-    REF "${VERSION}"
-    SHA512 19e5482e4e843aa946ab79c8ce283a7b44aaac43ad99b6913cbc3c91492bf722ebe0238457b75b82be6d6c65a394d32ebc8732832f3f800145e3cf69d5c1e77c
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/gtk/${VERSION_MAJOR_MINOR}/gtk-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/gtk/${VERSION_MAJOR_MINOR}/gtk-${VERSION}.tar.xz"
+    FILENAME "GNOME-gtk-${VERSION}.tar.xz"
+    SHA512 20c119cf1a8c390c9d572729f36215fe034731d9e741a0a30c96671f4606ef8b7cdbe5d5ebe986f6f6c9ac03b3ba5cddd8d63da0ebfc5341d179ec9dea5e82eb
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-build.patch
         cairo-cpp-linkage.patch
+        avoid-multiple-definition.diff
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -32,11 +38,16 @@ else()
     list(APPEND OPTIONS_RELEASE -Dintrospection=false)
 endif()
 
+if("wayland" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dwayland_backend=true)
+else()
+    list(APPEND OPTIONS -Dwayland_backend=false)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -Dwayland_backend=false
         -Ddemos=false
         -Dexamples=false
         -Dtests=false

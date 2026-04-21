@@ -28,7 +28,6 @@ set(PATCHES
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
-    0012-force-disable-modules.patch
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
@@ -62,7 +61,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${VERSION}
-    SHA512 0ca83685fe00d374857ce544eb10037f284a702b14f4cd5c22402b9fbeb557d6d4d23722eae3adbcff1208bf780a50c71146d8d5e3e8a65b84f50bcc5b6968c3
+    SHA512 39298ac5ee6e751264b196710dff998e4ba530f5ed0cb9ec143c138faf00e32356ff387f71287840e7d0acef855cabd75d71d3d636c23807659e79b1643d891c
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -262,14 +261,15 @@ else()
     if(VCPKG_TARGET_IS_ANDROID)
         list(APPEND OPTIONS "--without-static-libpython" )
         list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DANDROID_NO_UNDEFINED=OFF")
-        if(VCPKG_CROSSCOMPILING)
-            # Cannot not run target executables during configure
-            if(NOT PYTHON3_BUGGY_GETADDRINFO)
-                list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
-            endif()
-            if(NOT PYTHON3_NO_PTMX)
-                list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
-            endif()
+    endif()
+
+    if(VCPKG_CROSSCOMPILING)
+        # Cannot not run target executables during configure
+        if(NOT PYTHON3_BUGGY_GETADDRINFO)
+            list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
+        endif()
+        if(NOT PYTHON3_NO_PTMX)
+            list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
         endif()
     endif()
 
@@ -283,8 +283,12 @@ else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTORECONF
+        DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
+            py_cv_module__curses=n/a
+            py_cv_module__curses_panel=n/a
+            py_cv_module__tkinter=n/a
         OPTIONS_DEBUG
             "--with-pydebug"
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"

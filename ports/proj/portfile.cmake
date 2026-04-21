@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 0899fbf37e9a51abd9a4ded90b5fc0500432b497e27e05b21c524935621098399120cf3151e8ee4637b79943bd7ee31cda75f064a7f9ef47de5199d96ca92aa4
+    SHA512 133d01a0667886540630274fc93142b282a034ede9caa53a78e34d3ed888c20d4413af7702e9d255366a0b00d3a6675797813d1b4a4f0abef0c6c97a505aa53a
     HEAD_REF master
     PATCHES
-        fix-proj4-targets-cmake.patch
+        pkgconfig.diff
         remove_toolset_restriction.patch
-        sqlite.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -44,10 +43,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME proj4 CONFIG_PATH lib/cmake/proj4 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proj)
 vcpkg_fixup_pkgconfig()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/proj.pc" " -lproj" " -lproj_d")
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # Enforce consistency with src/lib_proj.cmake build time configuration.

@@ -1,6 +1,6 @@
 {
   "name": "libpqxx",
-  "version": "7.10.1",
+  "version": "8.0.1",
   "description": [
     "The official* C++ client API for PostgreSQL.",
     "*) NB https://pqxx.org/libpqxx/faq/"
@@ -18,6 +18,10 @@
     },
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
       "host": true
     }
   ]

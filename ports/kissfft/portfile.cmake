@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mborgerding/kissfft
     REF "${VERSION}"
-    SHA512 bd715868ce0e93a291a0592fb1f8b960e832fc64efe863755e52b67d5addff9bcb444a1bf2570d1914c52b41dad1023d0d86400f5ea30c9fb84cd6b4f7210708
+    SHA512 5d02802a9e191e7cb77c26e9a34659a5d47c4e85bcfdf86a7cffdda66d8b79261f7fe5795ffabd78644b6094c01b32a84841669fbc0009ac9268ae1ba521af9e
     HEAD_REF master
     PATCHES
         fix-install-dirs.patch

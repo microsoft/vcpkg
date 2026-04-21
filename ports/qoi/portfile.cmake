@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO phoboslab/qoi
-    REF 19b3b4087b66963a3699ee45f05ec9ef205d7c0e # committed on 2023-08-10
-    SHA512 8131031ba4b3b3c50838eb83db44bed0bf2e3fc820f18a9e48202801aebef4179f9b465354487070d7bc1feea79461abe581eecde00d61a21e27fe2b8a52699f
+    REF 4461cc37ef08b24f157a5ab7c3f7d6c9e6caa6c0 # committed on 2025-05-09
+    SHA512 ab3f8e0e6a02e9e481e4d44a1b7809360ad013e25c8c58e84ea0ea03317dd5fc0acc26f7a30ac226714c45cc9dabe45f979dd7a4b0571ae5c6051f4bb0db6d9f
     HEAD_REF master
 )
 

@@ -1,0 +1,88 @@
+diff --git a/GraphEditor.cpp b/GraphEditor.cpp
+index f75fdd9..c7fde15 100644
+--- a/GraphEditor.cpp
++++ b/GraphEditor.cpp
+@@ -837,7 +837,7 @@ void Show(Delegate& delegate, const Options& options, ViewState& viewState, bool
+     captureOffset = viewState.mPosition * viewState.mFactor;
+ 
+     //ImGui::InvisibleButton("GraphEditorButton", canvasSize);
+-    ImGui::BeginChildFrame(71711, canvasSize);
++    ImGui::BeginChild(71711, canvasSize, ImGuiChildFlags_FrameStyle);
+ 
+     ImGui::SetCursorPos(windowPos);
+     ImGui::BeginGroup();
+@@ -1030,7 +1030,7 @@ void Show(Delegate& delegate, const Options& options, ViewState& viewState, bool
+     ImGui::PopStyleColor(1);
+     ImGui::PopStyleVar(2);
+     ImGui::EndGroup();
+-    ImGui::EndChildFrame();
++    ImGui::EndChild();
+ 
+     ImGui::PopStyleVar(3);
+     
+diff --git a/ImCurveEdit.cpp b/ImCurveEdit.cpp
+index f0d5a97..6914af0 100644
+--- a/ImCurveEdit.cpp
++++ b/ImCurveEdit.cpp
+@@ -148,7 +148,7 @@ namespace ImCurveEdit
+       ImGuiIO& io = ImGui::GetIO();
+       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+       ImGui::PushStyleColor(ImGuiCol_Border, 0);
+-      ImGui::BeginChildFrame(id, size);
++      ImGui::BeginChild(id, size, ImGuiChildFlags_FrameStyle);
+       delegate.focused = ImGui::IsWindowFocused();
+       ImDrawList* draw_list = ImGui::GetWindowDrawList();
+       if (clippingRect)
+@@ -441,7 +441,7 @@ namespace ImCurveEdit
+       if (clippingRect)
+          draw_list->PopClipRect();
+ 
+-      ImGui::EndChildFrame();
++      ImGui::EndChild();
+       ImGui::PopStyleVar();
+       ImGui::PopStyleColor(1);
+ 
+diff --git a/ImGradient.cpp b/ImGradient.cpp
+index 734200e..8fce078 100644
+--- a/ImGradient.cpp
++++ b/ImGradient.cpp
+@@ -67,7 +67,7 @@ namespace ImGradient
+       bool ret = false;
+       ImGuiIO& io = ImGui::GetIO();
+       ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+-      ImGui::BeginChildFrame(137, size);
++      ImGui::BeginChild(137, size, ImGuiChildFlags_FrameStyle);
+ 
+       ImDrawList* draw_list = ImGui::GetWindowDrawList();
+       const ImVec2 offset = ImGui::GetCursorScreenPos();
+@@ -107,7 +107,7 @@ namespace ImGradient
+          delegate.AddPoint(delegate.GetPoint(t));
+          ret = true;
+       }
+-      ImGui::EndChildFrame();
++      ImGui::EndChild();
+       ImGui::PopStyleVar();
+ 
+       selection = currentSelection;
+diff --git a/ImSequencer.cpp b/ImSequencer.cpp
+index aff7729..3a0c8e8 100644
+--- a/ImSequencer.cpp
++++ b/ImSequencer.cpp
+@@ -162,7 +162,7 @@ namespace ImSequencer
+          ImVec2 childFramePos = ImGui::GetCursorScreenPos();
+          ImVec2 childFrameSize(canvas_size.x, canvas_size.y - 8.f - headerSize.y - (hasScrollBar ? scrollBarSize.y : 0));
+          ImGui::PushStyleColor(ImGuiCol_FrameBg, 0);
+-         ImGui::BeginChildFrame(889, childFrameSize);
++         ImGui::BeginChild(890, childFrameSize, ImGuiChildFlags_FrameStyle);
+          sequence->focused = ImGui::IsWindowFocused();
+          ImGui::InvisibleButton("contentBar", ImVec2(canvas_size.x, float(controlHeight)));
+          const ImVec2 contentMin = ImGui::GetItemRectMin();
+@@ -511,7 +511,7 @@ namespace ImSequencer
+          }
+          //
+ 
+-         ImGui::EndChildFrame();
++         ImGui::EndChild();
+          ImGui::PopStyleColor();
+          if (hasScrollBar)
+          {

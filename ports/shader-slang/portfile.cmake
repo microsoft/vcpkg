@@ -10,6 +10,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 endif()
 
 set(ARCHIVE NOTFOUND)
+set(DEBUG_INFO_ARCHIVE NOTFOUND)
 # For convenient updates, use 
 # vcpkg install shader-slang --cmake-args=-DVCPKG_SHADER_SLANG_UPDATE=1
 if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -17,7 +18,13 @@ if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64.zip"
-		SHA512 82533b688e100a1aba34be4ae5ef30cda158d7bb7f06f7f6d02a9d3b08b69277f4edc6650ed60967162b812835c9c8b5a85defb21aef0012a00dad5344340111
+		SHA512 405513d2f6f63d39024ffb9545c94c87210f1c9eea2340a9526355d785a628343d8c6ea5e2878ff1e65cde3a697505be3c8002f310e9a6b9d1b1a1af67bcb2fe
+	)
+	vcpkg_download_distfile(
+		DEBUG_INFO_ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64-debug-info.zip"
+		FILENAME "slang-${VERSION}-windows-x86_64-debug-info.zip"
+		SHA512 26f9107701cd62b1a4a1f3b3950579acc7d940014a415bedef5d6762f7c06fa97d74e6a5cec3406a3db55d089e22daf7f605a4c1cfbdda527f44ae7aa627e1ff
 	)
 endif()
 if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -25,7 +32,13 @@ if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64.zip"
-		SHA512 4962ec98bf61bb15296697681d8070a59c916eb583831bfc611684cbbf459b17e197c068862357bb7cf7160d14548a01c206723338c8e576db4103fe7dce6778
+		SHA512 fed6f430e1ebf333c5d37f776139b86f9dca704fcbd82209934fb7377eda60f305680bdc63182cb57cee93c939a5a45ef9660293e0708513ddc734574b166bf6
+	)
+	vcpkg_download_distfile(
+		DEBUG_INFO_ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64-debug-info.zip"
+		FILENAME "slang-${VERSION}-windows-aarch64-debug-info.zip"
+		SHA512 cda710961ddd2a095485e42053c50270536f66da4fa1059dd7bff558a0f72ddd6937dca6538be46231ea4ceb3db66a8c68e619be0d51dbf79e0521ba8ae7c5fd
 	)
 endif()
 if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -33,7 +46,13 @@ if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
-		SHA512 04f23543163bba57e68f130ee67e0de2a405b7d69f2a04c1a115432bd4b18e8ce93d6ae146616e06843bac9bbf6eaec315e05c021faa0dc383a870df1e5649ef
+		SHA512 6cf0b908ecdc97df31382a4c0acb7e556bfdd11a1bd243446f3f59c4bb552ccb4924a357cb495f7d565c725f5c41f46c53ab7ca3a9f92192673a36c52df4523a
+	)
+	vcpkg_download_distfile(
+		DEBUG_INFO_ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64-debug-info.zip"
+		FILENAME "slang-${VERSION}-macos-x86_64-debug-info.zip"
+		SHA512 6ea7b284295092ccf11c9bf35127ad26158b8d7f94543ca0bed7abd3ad842f3e27bf465e3e7a7c0fc81250ceed3e57724dad318bd3c5d499a228405c7e11474b
 	)
 endif()
 if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -41,7 +60,13 @@ if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
-		SHA512 1f62de8a8f8b364c2b45dd1cd4781ebd3823fde4ca81b560a068638ac6662e6ef1143cd9f161bd401185a2b2a3df4b553b14c10e8fd042babbe057456cf17226
+		SHA512 b28841b4fed7d6c3c5f4e0739bf9b84ae1460d3f90cf382d10d1280b4b713c602aac224a2b845bfaea9667e822f278480c049d0ac464e1986a363bf3a87e8835
+	)
+	vcpkg_download_distfile(
+		DEBUG_INFO_ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64-debug-info.zip"
+		FILENAME "slang-${VERSION}-macos-aarch64-debug-info.zip"
+		SHA512 03ebee5caab30f2637b7569903ade3ee0c9e4d2384edf62b13a43f3f3021ecd956f71a524a03a4cda27fe81f6ac135529b977049dab15fa94cc35eb69d9c5d06
 	)
 endif()
 if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -49,7 +74,13 @@ if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64.zip"
-		SHA512 9f13335f5d5599fab5c4ba17ee6003542f41e925e9f4b0c9695910d6012072cd0350a5b5e1e745c97375ece98cd9b3e4ca694c4160a74b0cf33309864186d4f7
+		SHA512 11d3327ced3f18aacd94e062acb23848e5aca4c52f80306133ecf09f4a49a75659266475a19fc5efb81b90889d6c82d18d53367338e714f5c66accbe089f9498
+	)
+	vcpkg_download_distfile(
+		DEBUG_INFO_ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64-debug-info.zip"
+		FILENAME "slang-${VERSION}-linux-x86_64-debug-info.zip"
+		SHA512 d64a157737583e3a49978f44c31e48a56e5730b51a2dacbd3646703d76df52e37b57a2d1c70244e3d94d1858fad3cb892117d014bfb6d0247c983007d09b6f6b
 	)
 endif()
 if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -57,7 +88,13 @@ if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64.zip"
-		SHA512 2b8b42c2ada7dc76e246a5668d01a416a99ebe2bcececabdbc43733ffe30ce743c4607ba84ce5e2682702ffd26f84ef2928c5f5a3a2cef860eaa15c384b7ee47
+		SHA512 e019d73f5a0273863e33ebd9e0d90c90728162f5639177556888d576f162efe9d3b0b897c58a22bc93b53b381646b7725362dceeb89df89fd16c1ea0d23267a0
+	)
+	vcpkg_download_distfile(
+		DEBUG_INFO_ARCHIVE
+		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64-debug-info.zip"
+		FILENAME "slang-${VERSION}-linux-aarch64-debug-info.zip"
+		SHA512 5d690bf3d258e9135191d4e5fffc6d4557419d304215b08f078c4d53e208725d4d5cde1baddb66a5af308be80f5cc41d1c200ab63557a2b3c15e312869b6e229
 	)
 endif()
 if(NOT ARCHIVE)
@@ -70,6 +107,14 @@ vcpkg_extract_source_archive(
 	NO_REMOVE_ONE_LEVEL
 )
 
+if(DEBUG_INFO_ARCHIVE)
+	vcpkg_extract_source_archive(
+		DEBUG_INFO_PATH
+		ARCHIVE "${DEBUG_INFO_ARCHIVE}"
+		NO_REMOVE_ONE_LEVEL
+	)
+endif()
+
 if(VCPKG_SHADER_SLANG_UPDATE)
 	message(STATUS "All downloads are up-to-date.")
 	message(FATAL_ERROR "Stopping due to VCPKG_SHADER_SLANG_UPDATE being enabled.")
@@ -79,6 +124,7 @@ file(GLOB libs
 	"${BINDIST_PATH}/lib/*.lib"
 	"${BINDIST_PATH}/lib/*.dylib"
 	"${BINDIST_PATH}/lib/*.so"
+	"${BINDIST_PATH}/lib/*.so.0.${VERSION}" # On linux, some of the .so files are postfixed by the version.
 )
 file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
@@ -91,6 +137,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
   file(GLOB dlls "${BINDIST_PATH}/bin/*.dll")
   list(APPEND dyn_libs ${dlls})
   file(INSTALL ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+
+  # In windows, the debug symbols are on the root directory of the debug archive
+  if(DEBUG_INFO_PATH)
+    file(GLOB pdb_files "${DEBUG_INFO_PATH}/*.pdb")
+    if(pdb_files)
+      file(INSTALL ${pdb_files} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    endif()
+  endif()
+endif()
+
+# In other platfroms, the debug symbols are structured under lib.
+# There are also debug symbols for the tools under bin but we ignore these
+if(NOT VCPKG_TARGET_IS_WINDOWS AND DEBUG_INFO_PATH)
+  file(GLOB debug_sym_libs "${DEBUG_INFO_PATH}/lib/*")
+  if(debug_sym_libs)
+    file(INSTALL ${debug_sym_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+  endif()
 endif()
 
 if(NOT VCPKG_BUILD_TYPE)
@@ -117,10 +180,17 @@ file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 block(SCOPE_FOR VARIABLES)
 	set(VCPKG_BUILD_TYPE Release) # no debug binaries anyways
-	file(COPY "${BINDIST_PATH}/cmake" DESTINATION "${CURRENT_PACKAGES_DIR}")
-	vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME slang)
+
+	if (VCPKG_TARGET_IS_WINDOWS)
+		file(COPY "${BINDIST_PATH}/cmake" DESTINATION "${CURRENT_PACKAGES_DIR}")
+		vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME slang)
+	else()
+		file(COPY "${BINDIST_PATH}/lib/cmake/slang" DESTINATION "${CURRENT_PACKAGES_DIR}")
+		vcpkg_cmake_config_fixup(CONFIG_PATH slang PACKAGE_NAME slang)
+	endif()
+
 	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfig.cmake"
-		[[HINTS ENV PATH "${PACKAGE_PREFIX_DIR}/bin"]]
+		[[HINTS "${PACKAGE_PREFIX_DIR}/bin" ENV PATH]]
 		[[PATHS "${PACKAGE_PREFIX_DIR}/tools/shader-slang" NO_DEFAULT_PATH REQUIRED]]
 	)
 	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfigVersion.cmake"

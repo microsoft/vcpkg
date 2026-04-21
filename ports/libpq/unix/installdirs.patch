@@ -1,10 +1,7 @@
 diff --git a/src/Makefile.global.in b/src/Makefile.global.in
-index 5dacc4d..a9a797e 100644
 --- a/src/Makefile.global.in
 +++ b/src/Makefile.global.in
-@@ -100,14 +100,14 @@ datarootdir := @datarootdir@
- 
- bindir := @bindir@
+@@ -113,42 +113,42 @@ bindir := @bindir@
  
 -datadir := @datadir@
 +datadir := @datadir@/postgresql
@@ -19,7 +16,8 @@ index 5dacc4d..a9a797e 100644
  ifeq "$(findstring pgsql, $(sysconfdir))" ""
  ifeq "$(findstring postgres, $(sysconfdir))" ""
  override sysconfdir := $(sysconfdir)/postgresql
-@@ -116,7 +116,7 @@ endif
+ endif
+ endif
  
  libdir := @libdir@
  
@@ -28,7 +26,8 @@ index 5dacc4d..a9a797e 100644
  ifeq "$(findstring pgsql, $(pkglibdir))" ""
  ifeq "$(findstring postgres, $(pkglibdir))" ""
  override pkglibdir := $(pkglibdir)/postgresql
-@@ -125,7 +125,7 @@ endif
+ endif
+ endif
  
  includedir := @includedir@
  
@@ -37,7 +36,8 @@ index 5dacc4d..a9a797e 100644
  ifeq "$(findstring pgsql, $(pkgincludedir))" ""
  ifeq "$(findstring postgres, $(pkgincludedir))" ""
  override pkgincludedir := $(pkgincludedir)/postgresql
-@@ -134,7 +134,7 @@ endif
+ endif
+ endif
  
  mandir := @mandir@
  
@@ -46,3 +46,7 @@ index 5dacc4d..a9a797e 100644
  ifeq "$(findstring pgsql, $(docdir))" ""
  ifeq "$(findstring postgres, $(docdir))" ""
  override docdir := $(docdir)/postgresql
+ endif
+ endif
+ 
+ htmldir := @htmldir@
