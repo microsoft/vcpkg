@@ -2,8 +2,12 @@ cmake_minimum_required(VERSION 3.18)
 
 project(Find_LAPACK_external)
 
-# FindLAPACK.cmake results
+# We want to use `FindLAPACK.cmake` despite this setting,
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+
 find_package(LAPACK REQUIRED)
+
+# FindLAPACK.cmake results
 if(NOT TARGET LAPACK::LAPACK)
     message(SEND_ERROR "LAPACK::LAPACK missing after find_package(LAPACK REQUIRED).")
 endif()
