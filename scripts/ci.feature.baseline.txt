@@ -1341,7 +1341,6 @@ simbody:arm64-windows=fail
 simd:arm64-linux=fail
 simd(android)=fail
 simonbrunel-qtpromise:arm64-linux=cascade
-simpleble:arm64-linux=cascade
 skia[dawn]:arm64-linux=cascade
 skia[default-features]:arm64-windows=cascade
 sleef:arm64-linux=fail
