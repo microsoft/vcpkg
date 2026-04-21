@@ -13,7 +13,6 @@ vcpkg_from_github(
         fix_dep.patch
         fix_apple.patch
         fix_windows.patch
-        dynamic-internal-libs.patch
         gl.patch
         static_md_macros.patch
         static_md_creator.patch
