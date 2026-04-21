@@ -1,6 +1,6 @@
 {
   "name": "kdbusaddons",
-  "version": "6.23.0",
+  "version": "6.25.0",
   "description": "Convenience classes for D-Bus",
   "homepage": "https://invent.kde.org/frameworks/kdbusaddons",
   "documentation": "https://api.kde.org/kdbusaddons-index.html",
