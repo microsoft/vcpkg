@@ -10629,8 +10629,8 @@
       "port-version": 2
     },
     "vsg": {
-      "baseline": "1.1.13",
-      "port-version": 1
+      "baseline": "1.1.14",
+      "port-version": 0
     },
     "vsgimgui": {
       "baseline": "0.7.0",
