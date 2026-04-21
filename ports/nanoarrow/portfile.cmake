@@ -20,7 +20,7 @@ if ("ipc" IN_LIST FEATURES)
     set(FLATCCRT_OPTIONS "-DNANOARROW_FLATCC_ROOT_DIR=${CURRENT_INSTALLED_DIR}")
 
     if (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
-        set(ADDITIONAL_FLAGS "-DCMAKE_C_FLAGS=\"-Wno-implicit-function-declaration\"")
+        set(ADDITIONAL_FLAGS "-DCMAKE_C_FLAGS=-Wno-implicit-function-declaration")
     endif()
 endif()
 
