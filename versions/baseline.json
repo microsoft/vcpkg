@@ -3797,11 +3797,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-<<<<<<< HEAD
-      "baseline": "1.0.1",
-=======
       "baseline": "2.0.0",
->>>>>>> origin/master
       "port-version": 0
     },
     "hidapi": {
