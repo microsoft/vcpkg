@@ -88,7 +88,7 @@
       "description": "Build Qt client example",
       "dependencies": [
         {
-          "name": "qt5-base",
+          "name": "qt6-base",
           "platform": "!windows & !uwp"
         }
       ]
