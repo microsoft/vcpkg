@@ -122,13 +122,14 @@ index 06958e3..a25abd1 100644
    kwargs: default_bin_args,
  )
 diff --git a/src/bin/meson.build b/src/bin/meson.build
-index b33cb6c..e69ddb3 100644
+index b33cb6c..b08941f 100644
 --- a/src/bin/meson.build
 +++ b/src/bin/meson.build
-@@ -1,23 +1,11 @@
+@@ -1,24 +1,12 @@
  # Copyright (c) 2022-2025, PostgreSQL Global Development Group
  
 -subdir('initdb')
++# vcpkg: Reduced to documented "Client applications" (and scripts)
  subdir('pg_amcheck')
 -subdir('pg_archivecleanup')
  subdir('pg_basebackup')
@@ -147,8 +148,9 @@ index b33cb6c..e69ddb3 100644
 -subdir('pg_waldump')
 -subdir('pg_walsummary')
  subdir('pgbench')
- subdir('pgevent')
+-subdir('pgevent')
  subdir('psql')
+ subdir('scripts')
 diff --git a/src/bin/pg_combinebackup/meson.build b/src/bin/pg_combinebackup/meson.build
 index bbc4c57..9ea8597 100644
 --- a/src/bin/pg_combinebackup/meson.build
