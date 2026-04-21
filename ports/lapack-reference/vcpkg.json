@@ -37,7 +37,7 @@
       ]
     },
     "cblas": {
-      "description": "Builds CBLAS"
+      "description": "Build CBLAS"
     },
     "noblas": {
       "description": "Use external optimized BLAS",
