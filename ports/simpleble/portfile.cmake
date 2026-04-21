@@ -24,15 +24,19 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/simpleble")
 
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/simpleble")
 file(READ "${CURRENT_PACKAGES_DIR}/share/simpleble/simpleble-config.cmake" simpleble-config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/simpleble/simpleble-config.cmake"
 "include(CMakeFindDependencyMacro)
 find_dependency(nanopb CONFIG)
 ${simpleble-config}"
 )
+
+vcpkg_fixup_pkgconfig()
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/simpleble.pc" " -lsimpleble" " -lsimpleble-debug")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

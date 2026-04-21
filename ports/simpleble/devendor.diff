@@ -1,8 +1,8 @@
 diff --git a/simpleble/CMakeLists.txt b/simpleble/CMakeLists.txt
-index a416c54..1026419 100644
+index a416c54..a78e345 100644
 --- a/simpleble/CMakeLists.txt
 +++ b/simpleble/CMakeLists.txt
-@@ -158,10 +158,6 @@ set(SIMPLEBLE_DONGL_SOURCES
+@@ -158,15 +158,16 @@ set(SIMPLEBLE_DONGL_SOURCES
      ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/serial/ProtocolBase.cpp
      ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/serial/Wire.cpp
  
@@ -13,18 +13,16 @@ index a416c54..1026419 100644
      ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/protocol/d2h.pb.c
      ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/protocol/h2d.pb.c
      ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/protocol/basic.pb.c
-@@ -298,6 +294,11 @@ elseif(SIMPLEBLE_BACKEND_LINUX)
-     target_link_libraries(simpleble PUBLIC pthread)
-     target_link_libraries(simpleble PRIVATE ${DBus1_LIBRARIES})
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/protocol/simpleble.pb.c)
  
-+    find_package(nanopb CONFIG REQUIRED)
-+    target_link_libraries(simpleble PRIVATE nanopb::protobuf-nanopb-static)
-+    find_package(fmt CONFIG REQUIRED)
-+    target_link_libraries(simpleble PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
++find_package(nanopb CONFIG REQUIRED)
++target_link_libraries(simpleble PRIVATE nanopb::protobuf-nanopb-static)
++find_package(fmt CONFIG REQUIRED)
++target_link_libraries(simpleble PRIVATE $<BUILD_INTERFACE:fmt::fmt-header-only>)
 +
-     target_include_directories(simpleble PRIVATE
-         ${CMAKE_CURRENT_SOURCE_DIR}/../simplebluez/include
-         ${CMAKE_CURRENT_SOURCE_DIR}/../simpledbus/include
+ if(SIMPLEBLE_PLAIN)
+     list(APPEND SIMPLEBLE_DONGL_SOURCES
+         ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/usb/UsbHelperNull.cpp)
 diff --git a/simpleble/cmake/simpleble.pc.in b/simpleble/cmake/simpleble.pc.in
 index 538a239..36da3e5 100644
 --- a/simpleble/cmake/simpleble.pc.in
