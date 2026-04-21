@@ -49,7 +49,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_config_fixup(PACKAGE_NAME "SDL3_mixer" CONFIG_PATH "cmake")
 else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME "SDL3_mixer" CONFIG_PATH "lib/cmake/SDL3_mixer")
@@ -58,6 +58,7 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

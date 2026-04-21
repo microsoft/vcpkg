@@ -11,3 +11,13 @@ index 531f4c5..beff998 100644
  find_package(OpenCV)
  
  if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/robdef/group1")
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index b4c8633..f626a78 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -9,4 +9,4 @@ set(RobotRaconteur_STANDARD_ROBDEF_FILES @RR_INSTALLED_ROBDEF@)
+ set(RobotRaconteur_STANDARD_ROBDEF_DIRS @RR_INSTALLED_ROBDEF_DIRS@)
+ 
+ find_package(yaml-cpp REQUIRED)
+-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
++find_package(Eigen3 3.3...5 REQUIRED NO_MODULE)
