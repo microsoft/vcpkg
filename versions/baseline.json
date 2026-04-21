@@ -6498,7 +6498,7 @@
     },
     "mimalloc": {
       "baseline": "3.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "mimicpp": {
       "baseline": "9.3.0",
