@@ -1,0 +1,42 @@
+diff --git a/Release/include/cpprest/json.h b/Release/include/cpprest/json.h
+index 9549f9b8..bf8e1c03 100644
+--- a/Release/include/cpprest/json.h
++++ b/Release/include/cpprest/json.h
+@@ -737,12 +737,13 @@ private:
+     _ASYNCRTIMP void format(std::basic_string<char>& string) const;
+ 
+ #ifdef ENABLE_JSON_VALUE_VISUALIZER
+-    explicit value(std::unique_ptr<details::_Value> v, value_type kind) : m_value(std::move(v)), m_kind(kind)
++    explicit value(std::unique_ptr<details::_Value> v, value_type kind);
+ #else
+-    explicit value(std::unique_ptr<details::_Value> v) : m_value(std::move(v))
++    explicit value(std::unique_ptr<details::_Value> v);
+ #endif
+-    {
+-    }
++public:
++    ~value() noexcept;
++private:
+ 
+     std::unique_ptr<details::_Value> m_value;
+ #ifdef ENABLE_JSON_VALUE_VISUALIZER
+diff --git a/Release/src/json/json.cpp b/Release/src/json/json.cpp
+index 079ccae4..aa4598e9 100644
+--- a/Release/src/json/json.cpp
++++ b/Release/src/json/json.cpp
+@@ -495,3 +495,15 @@ const web::json::details::json_error_category_impl& web::json::details::json_err
+ #endif
+     return instance;
+ }
++
++#ifdef ENABLE_JSON_VALUE_VISUALIZER
++web::json::value::value(std::unique_ptr<details::_Value> v, value_type kind) : m_value(std::move(v)), m_kind(kind)
++#else
++web::json::value::value(std::unique_ptr<details::_Value> v) : m_value(std::move(v))
++#endif
++{
++}
++
++web::json::value::~value() noexcept
++{
++}
