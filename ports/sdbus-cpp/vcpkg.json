@@ -1,6 +1,7 @@
 {
   "name": "sdbus-cpp",
   "version": "2.2.1",
+  "port-version": 1,
   "description": "High-level C++ D-Bus library for Linux designed to provide easy-to-use yet powerful API in modern C++",
   "homepage": "https://github.com/Kistler-Group/sdbus-cpp",
   "license": "LGPL-2.1-only",
@@ -19,7 +20,7 @@
   ],
   "features": {
     "tool": {
-      "description": "build C++ codegen tool",
+      "description": "Build C++ codegen tool",
       "dependencies": [
         "expat"
       ]
