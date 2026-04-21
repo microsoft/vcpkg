@@ -68,12 +68,12 @@ if(SCRIPT_MESON)
         OPTIONS
             -Dauto_features=disabled
             ${MESON_OPTIONS}
+            # cannot use ADDITIONAL_BINARIES for "native" programs
+            "-DBISON=['${BISON}']"
+            "-DFLEX=['${FLEX}']"
+            "-DPERL=${PERL}"
         OPTIONS_RELEASE
             ${MESON_OPTIONS_RELEASE}
-        ADDITIONAL_BINARIES
-            "bison = ['${BISON}']"
-            "flex = ['${FLEX}']"
-            "perl = ['${PERL}']"
     )
     vcpkg_install_meson()
     vcpkg_copy_tools(TOOL_NAMES ecpg AUTO_CLEAN)
