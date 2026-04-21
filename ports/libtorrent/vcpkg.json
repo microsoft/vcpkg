@@ -1,6 +1,6 @@
 {
   "name": "libtorrent",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "maintainers": "Arvid Norberg <arvid.norberg@gmail.com>",
   "description": "An efficient feature complete C++ BitTorrent implementation",
   "homepage": "https://libtorrent.org",
@@ -32,9 +32,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "iconv"
-  ],
   "features": {
     "deprfun": {
       "description": "build with deprecated functions enabled"
@@ -42,14 +39,9 @@
     "examples": {
       "description": "build the examples in the examples directory"
     },
-    "iconv": {
-      "description": "build with libiconv",
-      "dependencies": [
-        "libiconv"
-      ]
-    },
     "python": {
       "description": "build the python bindings in bindings/python directory",
+      "supports": "!windows",
       "dependencies": [
         "boost-python"
       ]
