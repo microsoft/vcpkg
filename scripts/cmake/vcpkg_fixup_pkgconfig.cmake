@@ -16,8 +16,7 @@ function(z_vcpkg_fixup_pkgconfig_process_data arg_variable arg_config arg_prefix
         string(REPLACE "${unix_installed_dir}" [[${prefix}]] contents "${contents}")
     endif()
 
-    string(REGEX REPLACE "\n[\t ]*prefix[\t ]*=[^\n]*" "" contents "${contents}")
-    string(PREPEND contents "prefix=${arg_prefix}\n")
+    string(REGEX REPLACE "\n[\t ]*prefix[\t ]*=[^\n]*" "" contents "prefix=${arg_prefix}${contents}")
     if("${arg_config}" STREQUAL "DEBUG")
         # prefix points at the debug subfolder
         string(REPLACE [[${prefix}/debug]] [[${prefix}]] contents "${contents}")
