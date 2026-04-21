@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a174223..2983cc1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -223,7 +223,12 @@ set_target_properties(sdbus-c++
+                                  VERSION "${SDBUSCPP_VERSION}"
+                                  SOVERSION "${SDBUSCPP_VERSION_MAJOR}"
+                                  OUTPUT_NAME "sdbus-c++")
+-target_link_libraries(sdbus-c++ PRIVATE sdbus-c++-objlib)
++target_link_libraries(sdbus-c++
++    PRIVATE
++        $<BUILD_INTERFACE:sdbus-c++-objlib>
++        $<INSTALL_INTERFACE:Systemd::Libsystemd>
++        $<INSTALL_INTERFACE:Threads::Threads>
++)
+ 
+ #----------------------------------
+ # TESTS
+@@ -287,7 +292,6 @@ configure_file(pkgconfig/sdbus-c++.pc.in pkgconfig/sdbus-c++.pc @ONLY)
+ if(SDBUSCPP_INSTALL)
+     set(EXPORT_SET sdbus-c++)
+     if(NOT BUILD_SHARED_LIBS)
+-        list(APPEND EXPORT_SET "sdbus-c++-objlib")
+     endif()
+     install(TARGETS ${EXPORT_SET}
+             EXPORT sdbus-c++-targets
+diff --git a/cmake/sdbus-c++-config.cmake.in b/cmake/sdbus-c++-config.cmake.in
+index 035dc0f..974ef27 100644
+--- a/cmake/sdbus-c++-config.cmake.in
++++ b/cmake/sdbus-c++-config.cmake.in
+@@ -1,4 +1,11 @@
+ @PACKAGE_INIT@
+ 
++if(NOT "@BUILD_SHARED_LIBS@")
++    include(CMakeFindDependencyMacro)
++    find_dependency(Threads)
++    find_dependency(PkgConfig)
++    pkg_check_modules(Systemd IMPORTED_TARGET)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
+ check_required_components("@PROJECT_NAME@")

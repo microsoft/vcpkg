@@ -9018,7 +9018,7 @@
     },
     "sdbus-cpp": {
       "baseline": "2.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sdflib": {
       "baseline": "2025-11-03",

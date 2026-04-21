@@ -1310,7 +1310,6 @@ salome-medcoupling(arm | !(linux | windows))=cascade
 saucer:arm64-linux=cascade
 saucer:arm64-osx=fail # std::move_only_function is not supported
 saucer:x64-linux=fail # requires gcc14 or later
-sdbus-cpp:arm64-linux=cascade
 sdformat13:x64-windows-static=cascade
 sdl1:arm64-linux=fail
 sdl1-mixer(android)=cascade
