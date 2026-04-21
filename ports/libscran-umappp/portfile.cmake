@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libscran/umappp
     REF "v${VERSION}"
-    SHA512 73f4979a0d8b15fc7bc62de04210fba2a95dd8a30480882c3e88a8e2ea3b48e2e9f37d02f39c09648a79ad27a10906b0b1c26600afe573539070d77696ef44f7
+    SHA512 e1eb144b7b3a28b419d2d8645a3b5c8ff003fb9b67bb566a238c692b3d44580712f3dfb57ac3d4ed1cc5244b3e1fefb90d7449e0dfd41ded9401d5d6fe20ef20
     HEAD_REF master
     PATCHES
         0001-make-find-dependency-not-required.diff # https://github.com/libscran/umappp/pull/35
