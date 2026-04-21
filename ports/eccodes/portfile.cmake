@@ -25,6 +25,8 @@ endif()
 
 set(ECCODES_OPTIONS
     -DBUILD_TESTING=OFF
+    -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+    -DCMAKE_DISABLE_FIND_PACKAGE_Jasper=ON
     -DENABLE_MEMFS=ON
     -DENABLE_INSTALL_ECCODES_DEFINITIONS=OFF
     -DENABLE_INSTALL_ECCODES_SAMPLES=OFF
@@ -41,6 +43,8 @@ set(ECCODES_OPTIONS
 
 if("aec" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS -DENABLE_AEC=ON)
+else()
+    list(APPEND ECCODES_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_libaec=ON)
 endif()
 
 if("fortran" IN_LIST FEATURES)
@@ -55,9 +59,9 @@ if("png" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS -DENABLE_PNG=ON)
 endif()
 
-# ecCodes uses try_run() for IEEE endianness checks. When vcpkg cross-compiles
-# arm64-windows from an x64 Windows host, those probe executables cannot run on
-# the build host, so preseed the cache results for Windows ARM64 (little-endian).
+# ecCodes uses try_run() for IEEE endianness probes. Those cannot execute when
+# vcpkg cross-compiles arm64-windows from an x64 Windows host, so preseed the
+# known little-endian results for that specific case.
 if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND ECCODES_OPTIONS
         -DIEEE_LE_EXITCODE=0
@@ -69,7 +73,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${ECCODES_OPTIONS}
-        -Decbuild_DIR=${CURRENT_HOST_INSTALLED_DIR}/lib/cmake/ecbuild
+        -Decbuild_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/ecbuild
         -DPERL_EXECUTABLE=${PERL}
 )
 

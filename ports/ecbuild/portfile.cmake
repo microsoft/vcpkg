@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ecmwf/ecbuild
@@ -6,37 +8,33 @@ vcpkg_from_github(
     HEAD_REF develop
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_TESTING=OFF
-)
-
-vcpkg_cmake_install()
-
-# ecbuild also needs its helper tree under share/ecbuild at configure time on Windows.
 file(COPY
     "${SOURCE_PATH}/cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-if(EXISTS "${SOURCE_PATH}/check_linker")
+if(EXISTS "${SOURCE_PATH}/share/ecbuild/check_linker")
     file(COPY
-        "${SOURCE_PATH}/check_linker"
+        "${SOURCE_PATH}/share/ecbuild/check_linker"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
 endif()
 
-if(EXISTS "${SOURCE_PATH}/bin/ecbuild")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(COPY
-        "${SOURCE_PATH}/bin/ecbuild"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-    )
-endif()
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/ecbuild-config.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/ecbuild-config.cmake"
+    @ONLY
+)
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/ecbuild-config-version.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/ecbuild-config-version.cmake"
+    @ONLY
+)
+
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
 file(INSTALL
