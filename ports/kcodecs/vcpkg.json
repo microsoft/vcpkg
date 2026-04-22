@@ -1,6 +1,7 @@
 {
   "name": "kcodecs",
   "version": "6.25.0",
+  "port-version": 1,
   "description": "String encoding library",
   "homepage": "https://invent.kde.org/frameworks/kcodecs",
   "documentation": "https://api.kde.org/kcodecs-index.html",
