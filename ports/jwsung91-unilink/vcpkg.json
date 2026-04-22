@@ -1,6 +1,6 @@
 {
   "name": "jwsung91-unilink",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Unified, cross-platform async C++ library for Serial, TCP, UDP, and UDS",
   "homepage": "https://github.com/jwsung91/unilink",
   "license": "Apache-2.0",
