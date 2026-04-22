@@ -10,6 +10,7 @@
       "name": "ecbuild",
       "host": true
     },
+    "openjpeg",
     {
       "name": "python3",
       "host": true
@@ -21,8 +22,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "openjpeg"
+    }
   ],
   "features": {
     "aec": {
@@ -42,14 +42,14 @@
         "netcdf-c"
       ]
     },
+    "openmp-threads": {
+      "description": "Enable OpenMP thread safety support"
+    },
     "png": {
       "description": "Enable PNG decoding and encoding support",
       "dependencies": [
         "libpng"
       ]
-    },
-    "openmp-threads": {
-      "description": "Enable OpenMP thread safety support"
     },
     "threads": {
       "description": "Enable POSIX thread safety support where supported by upstream",
