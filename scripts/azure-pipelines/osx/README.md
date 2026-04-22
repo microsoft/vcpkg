@@ -29,8 +29,8 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     rm macosvm-0.2-2-arm64-darwin21.tar.gz
     exit
     ```
-- [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example: 
-https://updates.cdn-apple.com/2026WinterFCS/fullrestores/122-28781/DCB2FF13-06CB-44C2-BCA2-DFCAF3521D46/UniversalMac_26.4.1_25E253_Restore.ipsw
+- [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example:
+    https://updates.cdn-apple.com/2026WinterFCS/fullrestores/122-28781/DCB2FF13-06CB-44C2-BCA2-DFCAF3521D46/UniversalMac_26.4.1_25E253_Restore.ipsw
 - [ ] Determine the VM name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2026-01-12-arm64".
 - [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2026-01-12-arm64 and UniversalMac_26.4.1_25E253_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
     ```
