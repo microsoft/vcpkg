@@ -1,0 +1,126 @@
+diff --git a/config/meson.build b/config/meson.build
+index ab19c38..b6203b5 100644
+--- a/config/meson.build
++++ b/config/meson.build
+@@ -1,3 +1,4 @@
++subdir_done()
+ install_data(
+   'install-sh', 'missing',
+   install_dir: dir_pgxs / 'config'
+diff --git a/meson.build b/meson.build
+index 4016033..dd7ca47 100644
+--- a/meson.build
++++ b/meson.build
+@@ -3381,6 +3381,10 @@ test_install_libs = []
+ 
+ subdir('src')
+ 
++contrib_data_dir = dir_data_extension
++
++if false # skip for vcpkg port libpq
++
+ subdir('contrib')
+ 
+ subdir('src/test')
+@@ -3924,6 +3928,7 @@ if not meson.is_subproject()
+   endif
+ endif
+ 
++endif # skip for vcpkg port libpq
+ 
+ 
+ ###############################################################
+diff --git a/meson_options.txt b/meson_options.txt
+index 06bf562..5505bfd 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,3 +1,6 @@
++option('tools', type: 'feature', value: 'disabled',
++  description: 'Enable tool executables')
++
+ # Copyright (c) 2022-2025, PostgreSQL Global Development Group
+ 
+ # Data layout influencing options
+diff --git a/src/backend/meson.build b/src/backend/meson.build
+index 2b0db21..75d8f68 100644
+--- a/src/backend/meson.build
++++ b/src/backend/meson.build
+@@ -40,6 +40,8 @@ subdir('po', if_found: libintl)
+ backend_link_args = []
+ backend_link_depends = []
+ 
++subdir_done()
++if false # vcpkg_abi_info
+ 
+ # On windows when compiling with msvc we need to make postgres export all its
+ # symbols so that extension libraries can use them. For that we need to scan
+@@ -140,6 +142,8 @@ postgres = executable('postgres',
+ 
+ backend_targets += postgres
+ 
++endif # vcpkg
++
+ pg_mod_c_args = cflags_mod
+ pg_mod_cpp_args = cxxflags_mod
+ pg_mod_link_args = ldflags_sl + ldflags_mod
+@@ -187,6 +191,7 @@ pg_test_mod_args = pg_mod_args + {
+ }
+ 
+ 
++subdir_done()
+ 
+ # Shared modules that, on some system, link against the server binary. Only
+ # enter these after we defined the server build.
+diff --git a/src/bin/meson.build b/src/bin/meson.build
+index b33cb6c..b08941f 100644
+--- a/src/bin/meson.build
++++ b/src/bin/meson.build
+@@ -1,24 +1,12 @@
+ # Copyright (c) 2022-2025, PostgreSQL Global Development Group
+ 
+-subdir('initdb')
++# vcpkg: Reduced to documented "Client applications" (and scripts)
+ subdir('pg_amcheck')
+-subdir('pg_archivecleanup')
+ subdir('pg_basebackup')
+-subdir('pg_checksums')
+ subdir('pg_combinebackup')
+ subdir('pg_config')
+-subdir('pg_controldata')
+-subdir('pg_ctl')
+ subdir('pg_dump')
+-subdir('pg_resetwal')
+-subdir('pg_rewind')
+-subdir('pg_test_fsync')
+-subdir('pg_test_timing')
+-subdir('pg_upgrade')
+ subdir('pg_verifybackup')
+-subdir('pg_waldump')
+-subdir('pg_walsummary')
+ subdir('pgbench')
+-subdir('pgevent')
+ subdir('psql')
+ subdir('scripts')
+diff --git a/src/meson.build b/src/meson.build
+index f098f9f..28eb09c 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -3,12 +3,18 @@
+ # libraries that other subsystems might depend upon first, in their respective
+ # dependency order
+ 
++subdir('interfaces')
++if not get_option('tools').disabled()
++
+ subdir('timezone')
+ 
+ subdir('backend')
+ 
+ subdir('bin')
+ 
++endif
++subdir_done()
++
+ subdir('pl')
+ 
+ subdir('interfaces')

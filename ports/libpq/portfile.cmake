@@ -9,7 +9,10 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        meson-vcpkg.patch
+        library-linkage.diff
+        libpq-and-client-tools.diff
+        libintl.diff
+        zic.diff
         windows/macro-def.patch
         windows/spin_delay.patch
         windows/getopt.patch
