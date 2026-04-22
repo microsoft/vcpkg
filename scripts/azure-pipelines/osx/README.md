@@ -161,7 +161,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```pwsh
     az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken --output tsv
     ```
-- [ ] Copy the guest deploy script to the host, and run it with a first parameter of your PAT. From a developer machine pwsh:
+- [ ] Copy the guest deploy script to the host, and run it with the access token/OAuth token from the `az account get-access-token` command above as the first parameter. From a developer machine pwsh:
     ```pwsh
     scp register-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg/register-guest.sh
     ssh vcpkg@HOSTMACHINE
