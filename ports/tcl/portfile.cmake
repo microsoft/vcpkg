@@ -1,6 +1,7 @@
 set(PATCHES
     force-shell-install.patch
     enable-woa.diff
+    nmakehlp-native.diff
 )
 
 vcpkg_from_github(
@@ -12,10 +13,67 @@ vcpkg_from_github(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
+    set(TCL_NMAKE_ADDITIONAL_OPTIONS)
+
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         set(TCL_BUILD_MACHINE_STR MACHINE=ARM64)
+
+        if (NOT DEFINED ENV{VCToolsInstallDir})
+            message(FATAL_ERROR "VCToolsInstallDir is not set; cannot build host nmakehlp.exe for arm64 cross-compilation.")
+        endif()
+        if (NOT DEFINED ENV{VCINSTALLDIR})
+            message(FATAL_ERROR "VCINSTALLDIR is not set; cannot initialize host compiler environment for nmakehlp.")
+        endif()
+
+        file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCTOOLS_INSTALL_DIR)
+        if (DEFINED ENV{VSCMD_ARG_HOST_ARCH})
+            string(TOLOWER "$ENV{VSCMD_ARG_HOST_ARCH}" TCL_HOST_ARCH)
+        else()
+            set(TCL_HOST_ARCH "x64")
+        endif()
+        if (NOT TCL_HOST_ARCH STREQUAL "x64" AND NOT TCL_HOST_ARCH STREQUAL "arm64")
+            set(TCL_HOST_ARCH "x64")
+        endif()
+
+        if (TCL_HOST_ARCH STREQUAL "x64")
+            set(HOST_CL "${VCTOOLS_INSTALL_DIR}/bin/Hostx64/x64/cl.exe")
+        else()
+            set(HOST_CL "${VCTOOLS_INSTALL_DIR}/bin/HostARM64/arm64/cl.exe")
+        endif()
+        if (NOT EXISTS "${HOST_CL}")
+            message(FATAL_ERROR "Unable to locate a host cl.exe under ${VCTOOLS_INSTALL_DIR}.")
+        endif()
+        set(VCVARSALL_BAT "$ENV{VCINSTALLDIR}Auxiliary/Build/vcvarsall.bat")
+        if (NOT EXISTS "${VCVARSALL_BAT}")
+            set(VCVARSALL_BAT "$ENV{VCINSTALLDIR}/Auxiliary/Build/vcvarsall.bat")
+        endif()
+        if (NOT EXISTS "${VCVARSALL_BAT}")
+            message(FATAL_ERROR "Unable to locate vcvarsall.bat under $ENV{VCINSTALLDIR}.")
+        endif()
+
+        set(NMAKEHLP_NATIVE_PATH "${CURRENT_BUILDTREES_DIR}/nmakehlp-native.exe")
+        file(TO_NATIVE_PATH "${VCVARSALL_BAT}" VCVARSALL_BAT_NATIVE)
+        file(TO_NATIVE_PATH "${HOST_CL}" HOST_CL_NATIVE)
+        file(TO_NATIVE_PATH "${SOURCE_PATH}/win/nmakehlp.c" NMAKEHLP_SOURCE_NATIVE)
+        file(TO_NATIVE_PATH "${NMAKEHLP_NATIVE_PATH}" NMAKEHLP_OUTPUT_NATIVE)
+
+        set(BUILD_NMAKEHLP_CMD "${CURRENT_BUILDTREES_DIR}/build-nmakehlp-native-${TARGET_TRIPLET}.cmd")
+        file(WRITE "${BUILD_NMAKEHLP_CMD}" "@echo off\n")
+        file(APPEND "${BUILD_NMAKEHLP_CMD}" "call \"${VCVARSALL_BAT_NATIVE}\" ${TCL_HOST_ARCH} >NUL\n")
+        file(APPEND "${BUILD_NMAKEHLP_CMD}" "if errorlevel 1 exit /b 1\n")
+        file(APPEND "${BUILD_NMAKEHLP_CMD}" "\"${HOST_CL_NATIVE}\" /nologo \"${NMAKEHLP_SOURCE_NATIVE}\" /link /subsystem:console /out:\"${NMAKEHLP_OUTPUT_NATIVE}\"\n")
+
+        vcpkg_execute_required_process(
+            COMMAND cmd /d /c "${BUILD_NMAKEHLP_CMD}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME "build-nmakehlp-native-${TARGET_TRIPLET}"
+        )
+
+        # Use a relative path in nmake macros; absolute paths can break output redirection in !if command blocks.
+        set(TCL_NMAKEHLP_NATIVE_REL_PATH "..\\..\\nmakehlp-native.exe")
+        list(APPEND TCL_NMAKE_ADDITIONAL_OPTIONS "NMAKEHLP_NATIVE=${TCL_NMAKEHLP_NATIVE_REL_PATH}")
     else()
         set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
     endif()
@@ -51,6 +109,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             ${TCL_BUILD_MACHINE_STR}
             ${TCL_BUILD_STATS}
             ${TCL_BUILD_CHECKS}
+            ${TCL_NMAKE_ADDITIONAL_OPTIONS}
         OPTIONS_DEBUG
             ${TCL_BUILD_OPTS},symbols
             INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug
