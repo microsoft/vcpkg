@@ -1,11 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 942157c..8b4ee79 100644
+index 078d0d0..9649f3d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -24,7 +24,7 @@ if(UMAPPP_FETCH_EXTERN)
  else()
      find_package(ltla_aarand 1.1.0 CONFIG REQUIRED)
-     find_package(ltla_irlba 3.0.0 CONFIG REQUIRED)
+     find_package(ltla_irlba 3.1.0 CONFIG REQUIRED)
 -    find_package(Eigen3 5.0.0 CONFIG REQUIRED)
 +    find_package(Eigen3 CONFIG REQUIRED)
      find_package(ltla_subpar 0.5.0 CONFIG REQUIRED)

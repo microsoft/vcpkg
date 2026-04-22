@@ -1,6 +1,6 @@
 {
   "name": "hical61-hical",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Modern C++20/C++26 high-performance web framework based on Boost.Asio/Beast",
   "homepage": "https://github.com/Hical61/Hical",
   "license": "MIT",
