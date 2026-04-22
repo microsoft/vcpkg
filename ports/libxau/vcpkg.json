@@ -1,7 +1,7 @@
 {
   "name": "libxau",
   "version": "1.0.12",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Functions for handling Xauthority files and entries.",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxau",
   "license": "MIT-open-group",
