@@ -1,0 +1,13 @@
+diff --git a/cmake/OpusFunctions.cmake b/cmake/OpusFunctions.cmake
+index 2db77d7..2140425 100644
+--- a/cmake/OpusFunctions.cmake
++++ b/cmake/OpusFunctions.cmake
+@@ -134,7 +134,7 @@ function(opus_detect_sse COMPILER_SUPPORT_SIMD)
+ endfunction()
+ 
+ function(opus_detect_neon COMPILER_SUPPORT_NEON)
+-  if(CMAKE_SYSTEM_PROCESSOR MATCHES "(arm|aarch64|ARM)")
++  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+     message(STATUS "Check NEON support by compiler")
+     check_include_file(arm_neon.h HAVE_ARM_NEON_H)
+     if(HAVE_ARM_NEON_H)
