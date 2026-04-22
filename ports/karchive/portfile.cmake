@@ -34,7 +34,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF6Archive)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME kf6archive
+    CONFIG_PATH lib/cmake/KF6Archive
+)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
