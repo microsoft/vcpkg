@@ -10,6 +10,7 @@ vcpkg_from_github(
         metal.patch
         smid.patch
         python.patch
+        fix_dep.patch
         fix_apple.patch
         fix_windows.patch
         dynamic-internal-libs.patch
