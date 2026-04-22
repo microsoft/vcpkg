@@ -347,7 +347,6 @@ libmikmod:arm-neon-android=fail
 libmikmod:arm64-android=fail
 libmikmod:x64-android=fail
 libmodman:x64-windows-static=fail
-libmysofa:arm64-linux=fail
 libmysql:x86-windows=skip
 libnick:arm64-linux=fail
 libnick:arm64-osx=fail # missing system-installed copy of sqlcipher

@@ -249,7 +249,7 @@
       "port-version": 0
     },
     "args": {
-      "baseline": "6.4.8",
+      "baseline": "6.4.9",
       "port-version": 0
     },
     "argtable2": {
@@ -2021,7 +2021,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.43.0",
+      "baseline": "0.43.1",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2837,7 +2837,7 @@
       "port-version": 3
     },
     "ethindp-prism": {
-      "baseline": "0.11.4",
+      "baseline": "0.11.6",
       "port-version": 0
     },
     "etl": {
@@ -3421,7 +3421,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.3.3",
+      "baseline": "7.4.0",
       "port-version": 0
     },
     "glbinding": {
@@ -3797,7 +3797,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "hidapi": {
@@ -4042,6 +4042,10 @@
     },
     "iowa-hills-dsp": {
       "baseline": "0.1.0",
+      "port-version": 0
+    },
+    "ipgeolocation-cpp-sdk": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "irrlicht": {
@@ -4829,8 +4833,8 @@
       "port-version": 0
     },
     "libde265": {
-      "baseline": "1.0.16",
-      "port-version": 1
+      "baseline": "1.0.18",
+      "port-version": 0
     },
     "libdeflate": {
       "baseline": "1.25",
@@ -5302,7 +5306,7 @@
     },
     "libmysofa": {
       "baseline": "1.3.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libmysql": {
       "baseline": "8.0.40",
@@ -5545,7 +5549,7 @@
       "port-version": 0
     },
     "libscran-umappp": {
-      "baseline": "3.3.0",
+      "baseline": "3.3.1",
       "port-version": 0
     },
     "libsecret": {
@@ -5790,7 +5794,7 @@
     },
     "libuuid": {
       "baseline": "1.0.3",
-      "port-version": 16
+      "port-version": 17
     },
     "libuv": {
       "baseline": "1.52.1",
@@ -5921,7 +5925,7 @@
       "port-version": 0
     },
     "libxml2": {
-      "baseline": "2.15.2",
+      "baseline": "2.15.3",
       "port-version": 0
     },
     "libxmlb": {
@@ -6093,7 +6097,7 @@
       "port-version": 5
     },
     "lmdb": {
-      "baseline": "0.9.33",
+      "baseline": "0.9.35",
       "port-version": 0
     },
     "lockpp": {
@@ -6189,7 +6193,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.716",
+      "baseline": "0.717",
       "port-version": 0
     },
     "luminoengine": {
@@ -6497,8 +6501,8 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "3.3.0",
-      "port-version": 1
+      "baseline": "3.3.1",
+      "port-version": 0
     },
     "mimicpp": {
       "baseline": "9.3.0",
@@ -7425,7 +7429,7 @@
       "port-version": 4
     },
     "openturns": {
-      "baseline": "1.25.1",
+      "baseline": "1.26.1",
       "port-version": 0
     },
     "openvdb": {
@@ -9014,7 +9018,7 @@
     },
     "sdbus-cpp": {
       "baseline": "2.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sdflib": {
       "baseline": "2025-11-03",
@@ -9245,7 +9249,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.6.2",
+      "baseline": "4.6.3",
       "port-version": 0
     },
     "simdutf": {
@@ -9266,7 +9270,7 @@
     },
     "simpleble": {
       "baseline": "0.12.1",
-      "port-version": 0
+      "port-version": 1
     },
     "simpleini": {
       "baseline": "4.25",
@@ -10629,8 +10633,8 @@
       "port-version": 2
     },
     "vsg": {
-      "baseline": "1.1.13",
-      "port-version": 1
+      "baseline": "1.1.14",
+      "port-version": 0
     },
     "vsgimgui": {
       "baseline": "0.7.0",
@@ -11081,7 +11085,7 @@
       "port-version": 0
     },
     "yandex-disk-cpp-client": {
-      "baseline": "1.0.3",
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "yara": {
