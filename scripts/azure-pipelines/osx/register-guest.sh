@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ -z "$1" ]; then
-    echo "PAT missing"
+    echo "Token missing"
     exit 1
 fi
 if [ -z "$2" ]; then
