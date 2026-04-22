@@ -19,6 +19,7 @@ vcpkg_add_to_path("${PERL_PATH}")
 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
+get_filename_component(PYTHON3_ROOT "${PYTHON3_PATH}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_PATH}")
 
 set(ECCODES_OPTIONS
@@ -37,30 +38,20 @@ set(ECCODES_OPTIONS
     -DENABLE_NETCDF=OFF
     -DENABLE_PNG=OFF
     -DREPLACE_TPL_ABSOLUTE_PATHS=OFF
-)
-
-if(VCPKG_TARGET_IS_ANDROID)
-    list(APPEND ECCODES_OPTIONS -DDISABLE_OS_CHECK=ON)
-endif()
-
-if("threads" IN_LIST FEATURES AND "openmp-threads" IN_LIST FEATURES)
-    message(FATAL_ERROR "eccodes features 'threads' and 'openmp-threads' are mutually exclusive")
-endif()
-
-list(APPEND ECCODES_OPTIONS
     -DENABLE_ECCODES_THREADS=OFF
     -DENABLE_ECCODES_OMP_THREADS=OFF
 )
 
-if("threads" IN_LIST FEATURES)
-    list(APPEND ECCODES_OPTIONS
-        -DENABLE_ECCODES_THREADS=ON
-    )
-endif()
-
+# vcpkg all-features CI can select both thread features together.
+# ecCodes treats them as alternative implementations, so prefer OpenMP when
+# both are requested instead of hard-failing configuration.
 if("openmp-threads" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS
         -DENABLE_ECCODES_OMP_THREADS=ON
+    )
+elseif("threads" IN_LIST FEATURES)
+    list(APPEND ECCODES_OPTIONS
+        -DENABLE_ECCODES_THREADS=ON
     )
 endif()
 
@@ -77,16 +68,25 @@ if("netcdf" IN_LIST FEATURES)
 
     # ecCodes links grib_to_netcdf against NetCDF::NetCDF_C, but on static builds
     # that target can resolve to libnetcdf without the full HDF5 link closure.
-    # Append the missing HDF5 libraries after the upstream target definition.
-    file(APPEND "${SOURCE_PATH}/tools/CMakeLists.txt" "
-
+    file(READ "${SOURCE_PATH}/tools/CMakeLists.txt" _eccodes_tools_cmake)
+    set(_grib_to_netcdf_line "ecbuild_add_executable( TARGET grib_to_netcdf SOURCES grib_to_netcdf.cc CONDITION HAVE_NETCDF LIBS ecc_tools NetCDF::NetCDF_C )")
+    if(_eccodes_tools_cmake MATCHES [=[ecbuild_add_executable\( TARGET grib_to_netcdf SOURCES grib_to_netcdf\.cc CONDITION HAVE_NETCDF LIBS ecc_tools NetCDF::NetCDF_C \)]=])
+        string(REPLACE
+            "${_grib_to_netcdf_line}"
+            "${_grib_to_netcdf_line}
 if(TARGET grib_to_netcdf AND NOT BUILD_SHARED_LIBS)
   find_package(HDF5 COMPONENTS C HL QUIET)
   if(HDF5_FOUND)
-    target_link_libraries(grib_to_netcdf PRIVATE \\${HDF5_LIBRARIES})
+    target_link_libraries(grib_to_netcdf PRIVATE \${HDF5_LIBRARIES})
   endif()
-endif()
-")
+endif()"
+            _eccodes_tools_cmake
+            "${_eccodes_tools_cmake}"
+        )
+        file(WRITE "${SOURCE_PATH}/tools/CMakeLists.txt" "${_eccodes_tools_cmake}")
+    else()
+        message(FATAL_ERROR "Failed to locate grib_to_netcdf target in tools/CMakeLists.txt")
+    endif()
 endif()
 
 if("png" IN_LIST FEATURES)
@@ -94,8 +94,7 @@ if("png" IN_LIST FEATURES)
 endif()
 
 # ecCodes uses try_run() for IEEE endianness probes. Those cannot execute when
-# vcpkg cross-compiles, so preseed the known little-endian results used by the
-# triplets covered in vcpkg CI for this port.
+# vcpkg cross-compiles, so preseed the known little-endian results.
 if(VCPKG_CROSSCOMPILING)
     list(APPEND ECCODES_OPTIONS
         -DIEEE_LE_EXITCODE=0
@@ -109,8 +108,11 @@ vcpkg_cmake_configure(
         ${ECCODES_OPTIONS}
         -Decbuild_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/ecbuild
         -DPERL_EXECUTABLE=${PERL}
+        -DPYTHON_EXECUTABLE=${PYTHON3}
         -DPython_EXECUTABLE=${PYTHON3}
         -DPython3_EXECUTABLE=${PYTHON3}
+        -DPython_ROOT_DIR=${PYTHON3_ROOT}
+        -DPython3_ROOT_DIR=${PYTHON3_ROOT}
 )
 
 vcpkg_cmake_install()
