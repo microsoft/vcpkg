@@ -1,0 +1,4 @@
+libvpl provides CMake targets:
+
+    find_package(VPL REQUIRED)
+    target_link_libraries(main PRIVATE VPL::dispatcher)

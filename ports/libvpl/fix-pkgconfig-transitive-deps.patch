@@ -1,0 +1,26 @@
+--- a/libvpl/CMakeLists.txt	2026-04-17 10:49:29.600985200 +0100
++++ b/libvpl/CMakeLists.txt	2026-04-17 10:49:41.191416300 +0100
+@@ -185,13 +185,18 @@
+   if(CMAKE_DL_LIBS)
+     set(DL_LIBS "-l${CMAKE_DL_LIBS}")
+   endif()
+-  if(MINGW)
+-    # being conservative by restricting to MinGW, these are probably ok for
+-    # WIN32 in general
+-    set(MINGW_LIBS "-lole32 -lgdi32 -luuid")
++  if(WIN32)
++    if(MINGW)
++      set(WIN32_LIBS "-lole32 -lgdi32 -luuid")
++    else()
++      set(WIN32_LIBS "-ladvapi32 -lole32")
++    endif()
++  endif()
++  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++    set(CXX_LIB "-lstdc++")
+   endif()
+   set(VPL_PKGCONFIG_DEPENDENT_LIBS
+-      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MINGW_LIBS} ${CXX_LIB}")
++      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${WIN32_LIBS} ${CXX_LIB}")
+   configure_file("pkgconfig/vpl.pc.in" "pkgconfig/vpl.pc" @ONLY)
+   install(
+     FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/vpl.pc"
