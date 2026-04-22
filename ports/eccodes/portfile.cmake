@@ -17,11 +17,9 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH "${PERL}" DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
-    set(ECCODES_REPLACE_TPL_ABSOLUTE_PATHS OFF)
-else()
-    set(ECCODES_REPLACE_TPL_ABSOLUTE_PATHS ON)
-endif()
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_PATH}")
 
 set(ECCODES_OPTIONS
     -DBUILD_TESTING=OFF
@@ -38,13 +36,36 @@ set(ECCODES_OPTIONS
     -DENABLE_FORTRAN=OFF
     -DENABLE_NETCDF=OFF
     -DENABLE_PNG=OFF
-    -DREPLACE_TPL_ABSOLUTE_PATHS=${ECCODES_REPLACE_TPL_ABSOLUTE_PATHS}
+    -DREPLACE_TPL_ABSOLUTE_PATHS=OFF
 )
+
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND ECCODES_OPTIONS -DDISABLE_OS_CHECK=ON)
+endif()
+
+if("threads" IN_LIST FEATURES AND "openmp-threads" IN_LIST FEATURES)
+    message(FATAL_ERROR "eccodes features 'threads' and 'openmp-threads' are mutually exclusive")
+endif()
+
+list(APPEND ECCODES_OPTIONS
+    -DENABLE_ECCODES_THREADS=OFF
+    -DENABLE_ECCODES_OMP_THREADS=OFF
+)
+
+if("threads" IN_LIST FEATURES)
+    list(APPEND ECCODES_OPTIONS
+        -DENABLE_ECCODES_THREADS=ON
+    )
+endif()
+
+if("openmp-threads" IN_LIST FEATURES)
+    list(APPEND ECCODES_OPTIONS
+        -DENABLE_ECCODES_OMP_THREADS=ON
+    )
+endif()
 
 if("aec" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS -DENABLE_AEC=ON)
-else()
-    list(APPEND ECCODES_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_libaec=ON)
 endif()
 
 if("fortran" IN_LIST FEATURES)
@@ -53,6 +74,19 @@ endif()
 
 if("netcdf" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS -DENABLE_NETCDF=ON)
+
+    # ecCodes links grib_to_netcdf against NetCDF::NetCDF_C, but on static builds
+    # that target can resolve to libnetcdf without the full HDF5 link closure.
+    # Append the missing HDF5 libraries after the upstream target definition.
+    file(APPEND "${SOURCE_PATH}/tools/CMakeLists.txt" "
+
+if(TARGET grib_to_netcdf AND NOT BUILD_SHARED_LIBS)
+  find_package(HDF5 COMPONENTS C HL QUIET)
+  if(HDF5_FOUND)
+    target_link_libraries(grib_to_netcdf PRIVATE \\${HDF5_LIBRARIES})
+  endif()
+endif()
+")
 endif()
 
 if("png" IN_LIST FEATURES)
@@ -60,9 +94,9 @@ if("png" IN_LIST FEATURES)
 endif()
 
 # ecCodes uses try_run() for IEEE endianness probes. Those cannot execute when
-# vcpkg cross-compiles arm64-windows from an x64 Windows host, so preseed the
-# known little-endian results for that specific case.
-if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+# vcpkg cross-compiles, so preseed the known little-endian results used by the
+# triplets covered in vcpkg CI for this port.
+if(VCPKG_CROSSCOMPILING)
     list(APPEND ECCODES_OPTIONS
         -DIEEE_LE_EXITCODE=0
         -DIEEE_BE_EXITCODE=1
@@ -75,6 +109,8 @@ vcpkg_cmake_configure(
         ${ECCODES_OPTIONS}
         -Decbuild_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/ecbuild
         -DPERL_EXECUTABLE=${PERL}
+        -DPython_EXECUTABLE=${PYTHON3}
+        -DPython3_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_cmake_install()
