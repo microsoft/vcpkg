@@ -32,30 +32,28 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
         cblas   CBLAS
         cblas   BUILD_INDEX64_EXT_API
+        noblas  USE_OPTIMIZED_BLAS
+        noblas  CMAKE_REQUIRE_FIND_PACKAGE_BLAS
 )
 
 set(VCPKG_CRT_LINKAGE_BACKUP ${VCPKG_CRT_LINKAGE})
-vcpkg_find_fortran(FORTRAN_CMAKE)
+vcpkg_find_fortran(FORTRAN_CMAKE) # provides VCPKG_USE_INTERNAL_Fortran
 
-set(USE_OPTIMIZED_BLAS OFF)
 if("noblas" IN_LIST FEATURES)
     if("cblas" IN_LIST FEATURES)
         message(FATAL_ERROR "Feature 'noblas' cannot be used together with feature 'cblas'.")
     elseif(VCPKG_USE_INTERNAL_Fortran AND VCPKG_CRT_LINKAGE_BACKUP STREQUAL "static")
-        # If openblas has been built with static crt linkage we cannot use it with gfortran!
+        # If openblas has been built with static crt linkage we cannot use it with gfortran.
         message(FATAL_ERROR "Feature 'noblas' cannot be used without supplying an external fortran compiler.")
     endif()
-    set(USE_OPTIMIZED_BLAS ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "${OPTIONS}"
-        "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
-        "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=${USE_OPTIMIZED_BLAS}"
-        "-DTEST_FORTRAN_COMPILER=OFF"
+        ${OPTIONS}
         ${FORTRAN_CMAKE}
+        "-DTEST_FORTRAN_COMPILER=OFF"
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_BLAS
 )
