@@ -41,6 +41,8 @@ elseif(NOT compiler_in_path STREQUAL VCPKG_DETECTED_CMAKE_C_COMPILER)
     vcpkg_host_path_list(PREPEND ENV{PATH} "${compiler_path}")
 endif()
 
+set(ENV{CC} ${VCPKG_DETECTED_CMAKE_C_COMPILER})
+
 vcpkg_list(SET MAKEFILE_OPTIONS)
 if(VCPKG_TARGET_IS_ANDROID)
     set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
