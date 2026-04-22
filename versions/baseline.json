@@ -11082,7 +11082,7 @@
     },
     "yaml-cpp": {
       "baseline": "0.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "yandex-disk-cpp-client": {
       "baseline": "1.0.4",
