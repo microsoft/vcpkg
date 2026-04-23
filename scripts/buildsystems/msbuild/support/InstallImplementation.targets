@@ -15,6 +15,7 @@
           UseCommandProcessor="false"
           />
 
+    <Touch Files="$(_ZVcpkgMSBuildStampFile)" AlwaysCreate="true" />
     <CreateProperty Value="false">
       <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />
     </CreateProperty>

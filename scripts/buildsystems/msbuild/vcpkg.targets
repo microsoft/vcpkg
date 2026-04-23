@@ -190,13 +190,12 @@
              Projects="$(MSBuildThisFileDirectory)\support\InstallImplementation.targets"
              Targets="VcpkgInstallImplementation"
              RemoveProperties="$(_ZVcpkgGlobalPropertyNames)"
-             Properties="_ZVcpkgRoot=$(_ZVcpkgRoot);_ZVcpkgHostTripletSuffix=$(_ZVcpkgHostTripletSuffix);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);_ZVcpkgExecutable=$(_ZVcpkgExecutable);_ZVcpkgHostTripletParameter=$(_ZVcpkgHostTripletParameter);VcpkgTriplet=$(VcpkgTriplet);_ZVcpkgManifestRoot=$(_ZVcpkgManifestRoot);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);VcpkgAdditionalInstallOptions=$(VcpkgAdditionalInstallOptions);_ZVcpkgEnvVars=$(_ZVcpkgEnvVars)"
+             Properties="_ZVcpkgMSBuildStampFile=$(_ZVcpkgMSBuildStampFile);_ZVcpkgRoot=$(_ZVcpkgRoot);_ZVcpkgHostTripletSuffix=$(_ZVcpkgHostTripletSuffix);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);_ZVcpkgExecutable=$(_ZVcpkgExecutable);_ZVcpkgHostTripletParameter=$(_ZVcpkgHostTripletParameter);VcpkgTriplet=$(VcpkgTriplet);_ZVcpkgManifestRoot=$(_ZVcpkgManifestRoot);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);VcpkgAdditionalInstallOptions=$(VcpkgAdditionalInstallOptions);_ZVcpkgEnvVars=$(_ZVcpkgEnvVars)"
     />
     <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
                       Lines="@(_ZVcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
                       Encoding="Unicode"
                       Overwrite="true"/>
-    <Touch Files="$(_ZVcpkgMSBuildStampFile)" AlwaysCreate="true" />
 
     <CreateProperty Value="false">
       <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />
