@@ -427,7 +427,7 @@ endif()
 set(VCPKG_INSTALLED_DIR "${Z_VCPKG_INSTALLED_DIR_INITIAL_VALUE}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
-set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
 
