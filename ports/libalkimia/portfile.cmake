@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/alkimia
     REF "v${VERSION}"
-	SHA512 ec7867e439178d6ed104c388c60bfe0bad223a9e35f4d9e05f2a7b3b2b2badac74b9a872f7922f58bb2b7a1127da742c430eff7caca71388085abdd1ad12cb1d
+    SHA512 ec7867e439178d6ed104c388c60bfe0bad223a9e35f4d9e05f2a7b3b2b2badac74b9a872f7922f58bb2b7a1127da742c430eff7caca71388085abdd1ad12cb1d
     HEAD_REF master
 )
 
@@ -35,7 +35,12 @@ if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES onlinequoteseditor5 AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    # Only qmldir file hould be within bin dirs
+    "${CURRENT_PACKAGES_DIR}/bin" 
+    "${CURRENT_PACKAGES_DIR}/debug/bin" 
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LIB")
