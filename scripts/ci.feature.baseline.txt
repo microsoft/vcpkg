@@ -1425,7 +1425,6 @@ vlpp[tools]:arm64-osx=feature-fails # error: use of undeclared identifier 'PATH_
 vlpp[tools](linux)=feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)
 vsgqt:arm64-linux=cascade
 vsgqt(android)=fail # https://github.com/vsg-dev/vsgQt/pull/53
-vsgxchange[gdal]:arm64-linux=cascade
 vst3sdk:arm64-linux=fail
 vtk:arm64-linux=cascade
 vtk[all]:arm64-linux=cascade
