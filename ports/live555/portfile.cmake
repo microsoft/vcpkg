@@ -1,10 +1,8 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 string(REPLACE "-" "." format_version ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.live555.com/live.${format_version}.tar.gz"
     FILENAME "live.${format_version}.tar.gz"
-    SHA512 8372dc0e90a5070600bc50b8d9372c52976056446dc2f8a088613d88f12a520bac571a00deff96f018445ca935c4b094408b2ec6e53855aea93cf5eac9c97320
+    SHA512 153649c7c4a63da6f9c5ec083b7897d70f4778d8872804f4e76f949f3b8ed750efd628d2f2cf38e326a4f6f67fe1eb6cd9153e150318efbf9ccf689bde076394
 )
 
 vcpkg_extract_source_archive(
