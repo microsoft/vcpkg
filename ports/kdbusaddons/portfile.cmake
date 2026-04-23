@@ -23,7 +23,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF6DBusAddons)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME kf6dbusaddons
+    CONFIG_PATH lib/cmake/KF6DBusAddons
+)
 vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
