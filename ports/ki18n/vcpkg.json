@@ -1,6 +1,7 @@
 {
   "name": "ki18n",
   "version": "6.25.0",
+  "port-version": 1,
   "description": "Advanced internationalization framework",
   "homepage": "https://invent.kde.org/frameworks/ki18n",
   "documentation": "https://api.kde.org/ki18n-index.html",

@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
     REF "${release_tag}"
-    SHA512 a13862f4c6278a5719897ec65df5ed31fb01bdb22a29a62f2cd1bf71a1c932eb8d887ce5e7ec2e0492a4a0d7f8b36f6889a708e29bb9d7d0f0bb61ca69a8423a
+    SHA512 23baf617f1bbfe2228ca00df9542a6cc5b4cf9896c448e3154a6e2ef878e6c081e7ee4b74b2101690fd44edbd6e55d3466b86986ca14f11fe556e113434aa33e
     HEAD_REF master
     PATCHES
         pkgconfig_fixes.patch
