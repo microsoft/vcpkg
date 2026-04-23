@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pkgconf/pkgconf
-    REF "pkgconf-${VERSION}"
-    SHA512 53244f372ea21125a1d97c5b89a84299740b55a66165782e807ed23adab3a07408a1547f1f40156e3060359660d07f49846c8b4893beef10ac9440ab7e8611cc
+    REF bb65885f63723a2c97d976529f5e0081d80ce7ce
+    SHA512 bb8d371dd7035829436851c270f637c1e9b030e4a9e300b24d451981e2c6bdead06f5ba8da882a329be1b4c551591389d9147950ae6ee9c13e651f45080606a2
     HEAD_REF master
-    PATCHES
-        001-unveil-fixes.patch # https://github.com/pkgconf/pkgconf/pull/430
 )
 
 vcpkg_configure_meson(
@@ -99,6 +97,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pkgconf/libpkgconf/libpkgconf-api.h" "#if defined(PKGCONFIG_IS_STATIC)" "#if 1")
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf spdxtool AUTO_CLEAN)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
