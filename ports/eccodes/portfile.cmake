@@ -40,6 +40,10 @@ set(ECCODES_OPTIONS
     -DREPLACE_TPL_ABSOLUTE_PATHS=OFF
     -DENABLE_ECCODES_THREADS=OFF
     -DENABLE_ECCODES_OMP_THREADS=OFF
+    -DCMAKE_DISABLE_FIND_PACKAGE_PNG=ON
+    -DCMAKE_DISABLE_FIND_PACKAGE_NetCDF=ON
+    -DCMAKE_DISABLE_FIND_PACKAGE_libaec=ON
+    -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=ON
 )
 
 # vcpkg all-features CI can select both thread features together.
@@ -48,6 +52,7 @@ set(ECCODES_OPTIONS
 if("openmp-threads" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS
         -DENABLE_ECCODES_OMP_THREADS=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=OFF
     )
 elseif("threads" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS
@@ -56,7 +61,10 @@ elseif("threads" IN_LIST FEATURES)
 endif()
 
 if("aec" IN_LIST FEATURES)
-    list(APPEND ECCODES_OPTIONS -DENABLE_AEC=ON)
+    list(APPEND ECCODES_OPTIONS
+        -DENABLE_AEC=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_libaec=OFF
+    )
 endif()
 
 if("fortran" IN_LIST FEATURES)
@@ -64,12 +72,14 @@ if("fortran" IN_LIST FEATURES)
 endif()
 
 if("netcdf" IN_LIST FEATURES)
-    list(APPEND ECCODES_OPTIONS -DENABLE_NETCDF=ON)
+    list(APPEND ECCODES_OPTIONS
+        -DENABLE_NETCDF=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_NetCDF=OFF
+    )
 
-    # ecCodes links grib_to_netcdf against NetCDF::NetCDF_C, but on static builds
-    # that target can miss part of the transitive closure on some triplets.
-    # Append a small post-definition block instead of matching one exact source line,
-    # because upstream formatting can vary across releases.
+    # ecCodes links grib_to_netcdf against NetCDF::NetCDF_C. On static builds,
+    # that does not always carry the full HDF5/cURL closure on all triplets.
+    # Append a small valid CMake block instead of rewriting one exact upstream line.
     file(APPEND "${SOURCE_PATH}/tools/CMakeLists.txt" [=[
 
 if(TARGET grib_to_netcdf AND NOT BUILD_SHARED_LIBS)
@@ -79,17 +89,22 @@ if(TARGET grib_to_netcdf AND NOT BUILD_SHARED_LIBS)
   endif()
 
   find_package(CURL QUIET)
-  if(TARGET CURL::libcurl)
-    target_link_libraries(grib_to_netcdf PRIVATE CURL::libcurl)
-  elseif(CURL_FOUND AND DEFINED CURL_LIBRARIES)
-    target_link_libraries(grib_to_netcdf PRIVATE ${CURL_LIBRARIES})
+  if(CURL_FOUND)
+    if(TARGET CURL::libcurl)
+      target_link_libraries(grib_to_netcdf PRIVATE CURL::libcurl)
+    elseif(DEFINED CURL_LIBRARIES)
+      target_link_libraries(grib_to_netcdf PRIVATE ${CURL_LIBRARIES})
+    endif()
   endif()
 endif()
 ]=])
 endif()
 
 if("png" IN_LIST FEATURES)
-    list(APPEND ECCODES_OPTIONS -DENABLE_PNG=ON)
+    list(APPEND ECCODES_OPTIONS
+        -DENABLE_PNG=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_PNG=OFF
+    )
 endif()
 
 # ecCodes uses try_run() for IEEE endianness probes. Those cannot execute when
