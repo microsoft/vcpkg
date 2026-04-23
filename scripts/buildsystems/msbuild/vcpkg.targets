@@ -171,8 +171,6 @@
   <Import Project="$(MSBuildThisFileDirectory)\support\GetVcpkgEnvVars.task" />
   <Import Project="$(MSBuildThisFileDirectory)\support\GetGlobalProperties.task" />
 
-  <Import Condition="$([System.Version]::new($(MSBuildVersion))) &lt; $([System.Version]::new(160, 5))"
-          Project="$(MSBuildThisFileDirectory)\support\InstallImplementation.targets" />
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
           Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
@@ -189,15 +187,10 @@
       <_ZVcpkgTLogFileLocation>$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).$(_ZVcpkgHostTripletSuffix)read.1u.tlog</_ZVcpkgTLogFileLocation>
     </PropertyGroup>
     <MSBuild BuildInParallel="true"
-             Condition="$([System.Version]::new($(MSBuildVersion))) >= $([System.Version]::new(16, 5))"
              Projects="$(MSBuildThisFileDirectory)\support\InstallImplementation.targets"
              Targets="VcpkgInstallImplementation"
              RemoveProperties="$(_ZVcpkgGlobalPropertyNames)"
              Properties="_ZVcpkgRoot=$(_ZVcpkgRoot);_ZVcpkgHostTripletSuffix=$(_ZVcpkgHostTripletSuffix);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);_ZVcpkgExecutable=$(_ZVcpkgExecutable);_ZVcpkgHostTripletParameter=$(_ZVcpkgHostTripletParameter);VcpkgTriplet=$(VcpkgTriplet);_ZVcpkgManifestRoot=$(_ZVcpkgManifestRoot);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);VcpkgAdditionalInstallOptions=$(VcpkgAdditionalInstallOptions);_ZVcpkgEnvVars=$(_ZVcpkgEnvVars)"
-    />
-    <CallTarget 
-      Condition="$([System.Version]::new($(MSBuildVersion))) &lt; $([System.Version]::new(16, 5))"
-      Targets="VcpkgInstallImplementation"
     />
     <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
                       Lines="@(_ZVcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
