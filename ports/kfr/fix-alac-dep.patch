@@ -1,0 +1,34 @@
+diff --git a/src/audio/CMakeLists.txt b/src/audio/CMakeLists.txt
+index bfa4de1..0039940 100644
+--- a/src/audio/CMakeLists.txt
++++ b/src/audio/CMakeLists.txt
+@@ -1,3 +1,4 @@
++
+ cmake_minimum_required(VERSION 3.16)
+ 
+ add_kfr_library(
+@@ -40,22 +41,8 @@ if (TARGET Ogg::ogg)
+     message(STATUS "Ogg found")
+ endif ()
+ 
+-find_path(
+-    ALAC_INCLUDE_DIRS "alac/ALACDecoder.h"
+-    PATH_SUFFIXES include
+-    CMAKE_FIND_ROOT_PATH_BOTH)
+-find_library(
+-    ALAC_LIBRARY
+-    NAMES libalac alac
+-    PATH_SUFFIXES lib
+-    CMAKE_FIND_ROOT_PATH_BOTH)
+-
+-if (ALAC_INCLUDE_DIRS AND ALAC_LIBRARY)
+-    add_library(ALAC::ALAC UNKNOWN IMPORTED)
+-    set_target_properties(
+-        ALAC::ALAC
+-        PROPERTIES IMPORTED_LOCATION "${ALAC_LIBRARY}"
+-                   INTERFACE_INCLUDE_DIRECTORIES "${ALAC_INCLUDE_DIR}")
++find_package(ALAC CONFIG)
++if (TARGET ALAC::ALAC)
+     message(STATUS "ALAC found, enabling ALAC support in kfr_audio")
+     target_link_libraries(kfr_audio PUBLIC $<BUILD_INTERFACE:ALAC::ALAC>)
+     target_compile_definitions(kfr_audio
