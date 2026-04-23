@@ -67,26 +67,25 @@ if("netcdf" IN_LIST FEATURES)
     list(APPEND ECCODES_OPTIONS -DENABLE_NETCDF=ON)
 
     # ecCodes links grib_to_netcdf against NetCDF::NetCDF_C, but on static builds
-    # that target can resolve to libnetcdf without the full HDF5 link closure.
-    file(READ "${SOURCE_PATH}/tools/CMakeLists.txt" _eccodes_tools_cmake)
-    set(_grib_to_netcdf_line "ecbuild_add_executable( TARGET grib_to_netcdf SOURCES grib_to_netcdf.cc CONDITION HAVE_NETCDF LIBS ecc_tools NetCDF::NetCDF_C )")
-    if(_eccodes_tools_cmake MATCHES [=[ecbuild_add_executable\( TARGET grib_to_netcdf SOURCES grib_to_netcdf\.cc CONDITION HAVE_NETCDF LIBS ecc_tools NetCDF::NetCDF_C \)]=])
-        string(REPLACE
-            "${_grib_to_netcdf_line}"
-            "${_grib_to_netcdf_line}
+    # that target can miss part of the transitive closure on some triplets.
+    # Append a small post-definition block instead of matching one exact source line,
+    # because upstream formatting can vary across releases.
+    file(APPEND "${SOURCE_PATH}/tools/CMakeLists.txt" [=[
+
 if(TARGET grib_to_netcdf AND NOT BUILD_SHARED_LIBS)
   find_package(HDF5 COMPONENTS C HL QUIET)
   if(HDF5_FOUND)
-    target_link_libraries(grib_to_netcdf PRIVATE \${HDF5_LIBRARIES})
+    target_link_libraries(grib_to_netcdf PRIVATE ${HDF5_LIBRARIES})
   endif()
-endif()"
-            _eccodes_tools_cmake
-            "${_eccodes_tools_cmake}"
-        )
-        file(WRITE "${SOURCE_PATH}/tools/CMakeLists.txt" "${_eccodes_tools_cmake}")
-    else()
-        message(FATAL_ERROR "Failed to locate grib_to_netcdf target in tools/CMakeLists.txt")
-    endif()
+
+  find_package(CURL QUIET)
+  if(TARGET CURL::libcurl)
+    target_link_libraries(grib_to_netcdf PRIVATE CURL::libcurl)
+  elseif(CURL_FOUND AND DEFINED CURL_LIBRARIES)
+    target_link_libraries(grib_to_netcdf PRIVATE ${CURL_LIBRARIES})
+  endif()
+endif()
+]=])
 endif()
 
 if("png" IN_LIST FEATURES)

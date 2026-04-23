@@ -38,6 +38,7 @@
     "netcdf": {
       "description": "Enable grib_to_netcdf and NetCDF support",
       "dependencies": [
+        "curl",
         "hdf5",
         "netcdf-c"
       ]
