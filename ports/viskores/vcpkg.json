@@ -1,0 +1,38 @@
+{
+  "name": "viskores",
+  "version-semver": "1.1.0",
+  "description": "A visualization library for many-threaded devices.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cuda": {
+      "description": "Enable CUDA support"
+    },
+    "double": {
+      "description": "Use double precision for floating point calculations"
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support"
+    },
+    "kokkos": {
+      "description": "Enable Kokkos support"
+    },
+    "rendering": {
+      "description": "Enable rendering library"
+    },
+    "tbb": {
+      "description": "Enable TBB support",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
+}
