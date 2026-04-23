@@ -74,6 +74,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         # Use a relative path in nmake macros; absolute paths can break output redirection in !if command blocks.
         set(TCL_NMAKEHLP_NATIVE_REL_PATH "..\\..\\nmakehlp-native.exe")
         list(APPEND TCL_NMAKE_ADDITIONAL_OPTIONS "NMAKEHLP_NATIVE=${TCL_NMAKEHLP_NATIVE_REL_PATH}")
+        # Cross builds require this to be defined even when install steps do not execute Tcl scripts.
+        list(APPEND TCL_NMAKE_ADDITIONAL_OPTIONS "TCLSH_NATIVE=tclsh")
     else()
         set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
     endif()

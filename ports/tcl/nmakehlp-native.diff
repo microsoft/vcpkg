@@ -431,6 +431,25 @@ index 75547fe..9f083e2 100644
  	@$(CPY) "$(OUT_DIR)\tcl.nmake"            "$(LIB_INSTALL_DIR)\nmake\"
  	@echo Installing library opt0.4 directory
  	@$(CPY) "$(ROOT)\library\opt\*.tcl" \
+@@ -955,13 +956,11 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+ install-tzdata:
+ 	@echo Installing time zone data
+-	@set TCL_LIBRARY=$(ROOT:\=/)/library
+-	@$(TCLSH_NATIVE) "$(ROOT:\=/)/tools/installData.tcl" \
+-	    "$(ROOT:\=/)/library/tzdata" "$(SCRIPT_INSTALL_DIR)/tzdata"
++	@if exist "$(SCRIPT_INSTALL_DIR)\tzdata" rmdir /s /q "$(SCRIPT_INSTALL_DIR)\tzdata"
++	@xcopy /E /I /Y "$(ROOT)\library\tzdata" "$(SCRIPT_INSTALL_DIR)\tzdata\" >NUL
+ 
+ install-msgs:
+ 	@echo Installing message catalogs
+-	@set TCL_LIBRARY=$(ROOT:\=/)/library
+-	@$(TCLSH_NATIVE) "$(ROOT:\=/)/tools/installData.tcl" \
+-	    "$(ROOT:\=/)/library/msgs" "$(SCRIPT_INSTALL_DIR)/msgs"
++	@if exist "$(SCRIPT_INSTALL_DIR)\msgs" rmdir /s /q "$(SCRIPT_INSTALL_DIR)\msgs"
++	@xcopy /E /I /Y "$(ROOT)\library\msgs" "$(SCRIPT_INSTALL_DIR)\msgs\" >NUL
+ 
+ install-pdbs:
+ 	@echo Installing debug symbols
 diff --git a/win/find_nmakehlp.tcl b/win/find_nmakehlp.tcl
 new file mode 100644
 index 0000000..1610b0c
@@ -461,4 +480,5 @@ index 0000000..1610b0c
 +    puts stderr "Error: nmakehlp.exe not found at: $nmakehlp_path"
 +    exit 1
 +}
+
 
