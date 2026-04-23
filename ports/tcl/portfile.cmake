@@ -1,14 +1,18 @@
+set(PATCHES force-shell-install.patch enable-woa.diff)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
     REF 0fa6a4e5aad821a5c34fdfa070c37c3f1ffc8c8e
     SHA512 9d7f35309fe8b1a7c116639aaea50cc01699787c7afb432389bee2b9ad56a67034c45d90c9585ef1ccf15bdabf0951cbef86257c0c6aedbd2591bbfae3e93b76
-    PATCHES force-shell-install.patch
+    PATCHES ${PATCHES}
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        set(TCL_BUILD_MACHINE_STR MACHINE=ARM64)
     else()
         set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
     endif()
