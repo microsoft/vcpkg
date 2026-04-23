@@ -1,0 +1,22 @@
+diff --git a/src/s2/s2point_array.h b/src/s2/s2point_array.h
+index 35c495d..64bb522 100644
+--- a/src/s2/s2point_array.h
++++ b/src/s2/s2point_array.h
+@@ -32,7 +32,7 @@ namespace s2internal {
+ 
+ struct S2PointArrayDeleter {
+   void operator()(S2Point* p) const {
+-    ::operator delete(p, std::align_val_t(alignof(*p)));
++    ::operator delete(p, std::align_val_t(alignof(decltype(*p))));
+   }
+ };
+ 
+@@ -46,7 +46,7 @@ inline UniqueS2PointArray MakeS2PointArrayForOverwrite(int32_t size) {
+   // zero-initializes the memory, so we use `::operator new` directly.
+   ABSL_DCHECK_GE(size, 0);
+   S2Point* p = static_cast<S2Point*>(
+-      ::operator new(size * sizeof(*p), std::align_val_t(alignof(*p))));
++      ::operator new(size * sizeof(*p), std::align_val_t(alignof(decltype(*p)))));
+   return UniqueS2PointArray(p);
+ }
+ 
