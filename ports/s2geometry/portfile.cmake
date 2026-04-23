@@ -6,10 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/s2geometry
     REF v${VERSION}
-    SHA512 4ddfff2f44c0e98b2a110da57335fe119788f32e3924c8bdbe9afffbad5e037fdfe64f88f664b025a86134e17f14f6195107035b258fde06f946972f1f0456a8
+    SHA512 345207937b8c1580eb7adc527e29c33b140d9042716425896c121b2661404675faf4e8ac5fdaf804e44a9165de049776897f24b56a90bfab3f8b1c632a34322b
     HEAD_REF main
-    PATCHES
-        fix-msvc-build.patch
 )
 
 vcpkg_cmake_configure(
