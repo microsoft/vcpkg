@@ -1,0 +1,4 @@
+CLUEstering provides CMake targets:
+
+    find_package(CLUEstering CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE CLUEstering::CLUEstering)
