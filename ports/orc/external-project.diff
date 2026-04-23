@@ -1,11 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 341a4c3..1aaff3e 100644
+index d96e559..1123c35 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -112,6 +112,13 @@ SET(CPACK_PACKAGE_CONTACT "Apache ORC <dev@orc.apache.org>")
+@@ -103,6 +103,14 @@ SET(CPACK_SOURCE_GENERATOR "TGZ")
+ SET(CPACK_PACKAGE_VENDOR "Apache ORC")
+ SET(CPACK_PACKAGE_CONTACT "Apache ORC <dev@orc.apache.org>")
  
- INCLUDE(CPack)
- INCLUDE(ExternalProject)
 +function(ExternalProject_Add name)
 +  z_vcpkg_function_arguments(args 1)
 +  if(NOT "${name}" MATCHES "^orc-format")
@@ -13,14 +13,15 @@ index 341a4c3..1aaff3e 100644
 +  endif()
 +  _ExternalProject_Add(${name} "${args}")
 +endfunction()
- 
- if (BUILD_POSITION_INDEPENDENT_LIB)
-   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
++
+ # Compiler specific flags
+ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
-index 851cdc4..a23115e 100644
+index c03afa8..fa7e9bc 100644
 --- a/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cmake_modules/ThirdpartyToolchain.cmake
-@@ -397,7 +397,7 @@ add_library (orc::lz4 ALIAS orc_lz4)
+@@ -588,7 +588,7 @@ add_library (orc::lz4 ALIAS orc_lz4)
  # ----------------------------------------------------------------------
  # IANA - Time Zone Database
  
@@ -28,4 +29,4 @@ index 851cdc4..a23115e 100644
 +if (WIN32 AND BUILD_CPP_TESTS)
    SET(CURRENT_TZDATA_FILE "")
    SET(CURRENT_TZDATA_SHA512 "")
-   File(DOWNLOAD "https://ftp.osuosl.org/pub/cygwin/noarch/release/tzdata/sha512.sum" ${CMAKE_CURRENT_BINARY_DIR}/sha512.sum)
+   File(DOWNLOAD "https://cygwin.osuosl.org/noarch/release/tzdata/tzdata-right/sha512.sum" ${CMAKE_CURRENT_BINARY_DIR}/sha512.sum)
