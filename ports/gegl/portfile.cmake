@@ -11,6 +11,8 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         disable_tests.patch
+        gegl-msvc-upstream.patch
+        use-plugins-dir.patch
         remove_execinfo_support.patch
         remove-consistency-check.patch
 )
@@ -68,6 +70,11 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_tools(
+    TOOL_NAMES gegl gegl-imgcmp
+    AUTO_CLEAN
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
