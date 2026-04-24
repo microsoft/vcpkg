@@ -10,11 +10,11 @@
     "boost-beast",
     "boost-json",
     "boost-system",
-    "openssl",
     {
       "name": "liburing",
       "platform": "linux"
     },
+    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
