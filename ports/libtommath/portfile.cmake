@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 3dbd7053a670afa563a069a9785f1aa4cab14a210bcd05d8fc7db25bd3dcce36b10a3f4f54ca92d75a694f891226f01bdf6ac15bacafeb93a8be6b04c579beb3
     HEAD_REF develop
     PATCHES
+        pkgconfig.diff
         bcrypt.patch
         import-lib.patch
         has-set-double.patch # Remove in next release.
