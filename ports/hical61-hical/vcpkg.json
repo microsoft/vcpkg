@@ -12,6 +12,10 @@
     "boost-system",
     "openssl",
     {
+      "name": "liburing",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
