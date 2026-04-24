@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES fix-flatccrt-name.patch
+    PATCHES fix-flatccrt-warning.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
@@ -18,10 +19,6 @@ string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" NANOARROW_INSTALL_SHARED
 if ("ipc" IN_LIST FEATURES)
     set(FEATURE_OPTIONS "-DNANOARROW_IPC=ON")
     set(FLATCCRT_OPTIONS "-DNANOARROW_FLATCC_ROOT_DIR=${CURRENT_INSTALLED_DIR}")
-
-    if (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
-        set(ADDITIONAL_FLAGS "-DCMAKE_C_FLAGS=-Wno-implicit-function-declaration")
-    endif()
 endif()
 
 vcpkg_cmake_configure(
