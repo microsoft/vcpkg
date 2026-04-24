@@ -17,11 +17,17 @@
     <_ZVcpkgInstalledDir>$(VcpkgInstalledDir)</_ZVcpkgInstalledDir>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(VcpkgEnableManifest)' == 'true'">
+    <_ZVcpkgInstalledDirRoot>$(VcpkgInstalledDirRoot)</_ZVcpkgInstalledDirRoot>
+    <_ZVcpkgInstalledDirRoot Condition="'$(_ZVcpkgInstalledDirRoot)' == ''">$(_ZVcpkgManifestRoot)vcpkg_installed\</_ZVcpkgInstalledDirRoot>
+  </PropertyGroup>
+
   <!-- Add trailing slashes to inputs that must have them to conform with msbuild conventions. -->
   <PropertyGroup>
     <_ZVcpkgRoot Condition="!$(_ZVcpkgRoot.EndsWith('\'))">$(_ZVcpkgRoot)\</_ZVcpkgRoot>
     <_ZVcpkgManifestRoot Condition="'$(_ZVcpkgManifestRoot)' != '' and !$(_ZVcpkgManifestRoot.EndsWith('\'))">$(_ZVcpkgManifestRoot)\</_ZVcpkgManifestRoot>
     <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' != '' and !$(_ZVcpkgInstalledDir.EndsWith('\'))">$(_ZVcpkgInstalledDir)\</_ZVcpkgInstalledDir>
+    <_ZVcpkgInstalledDirRoot Condition="'$(_ZVcpkgInstalledDirRoot)' != '' and !$(_ZVcpkgInstalledDirRoot.EndsWith('\'))">$(_ZVcpkgInstalledDirRoot)\</_ZVcpkgInstalledDirRoot>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -76,7 +82,7 @@
   <Choose>
     <When Condition="'$(VcpkgEnableManifest)' == 'true'">
       <PropertyGroup>
-        <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' == ''">$(_ZVcpkgManifestRoot)vcpkg_installed\$(VcpkgTriplet)\</_ZVcpkgInstalledDir>
+        <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' == ''">$(_ZVcpkgInstalledDirRoot)$(VcpkgTriplet)\</_ZVcpkgInstalledDir>
       </PropertyGroup>
     </When>
     <Otherwise>
