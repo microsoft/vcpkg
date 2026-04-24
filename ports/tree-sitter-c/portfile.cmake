@@ -19,11 +19,9 @@ find_program(NODEJS
         "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
         ENV PATH
     NO_DEFAULT_PATH
+    REQUIRED
 )
-if(NOT NODEJS)
-    message(FATAL_ERROR "node not found! Please install it via your system package manager!")
-endif()
-get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
+get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 
 vcpkg_cmake_configure(
