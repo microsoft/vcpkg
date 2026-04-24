@@ -17,7 +17,7 @@ index 4016033..dd7ca47 100644
  
 +contrib_data_dir = dir_data_extension
 +
-+if false # skip for vcpkg port libpq
++if false # skip for vcpkg port
 +
  subdir('contrib')
  
@@ -50,7 +50,7 @@ index 2b0db21..75d8f68 100644
  backend_link_depends = []
  
 +subdir_done()
-+if false # vcpkg_abi_info
++if false # skip for vcpkg port
  
  # On windows when compiling with msvc we need to make postgres export all its
  # symbols so that extension libraries can use them. For that we need to scan
@@ -58,7 +58,7 @@ index 2b0db21..75d8f68 100644
  
  backend_targets += postgres
  
-+endif # vcpkg
++endif # skip for vcpkg port
 +
  pg_mod_c_args = cflags_mod
  pg_mod_cpp_args = cxxflags_mod
@@ -75,11 +75,12 @@ diff --git a/src/bin/meson.build b/src/bin/meson.build
 index b33cb6c..b08941f 100644
 --- a/src/bin/meson.build
 +++ b/src/bin/meson.build
-@@ -1,24 +1,12 @@
+@@ -1,24 +1,13 @@
  # Copyright (c) 2022-2025, PostgreSQL Global Development Group
  
 -subdir('initdb')
 +# vcpkg: Reduced to documented "Client applications" (and scripts)
++# Cf. https://www.postgresql.org/docs/current/reference-client.html
  subdir('pg_amcheck')
 -subdir('pg_archivecleanup')
  subdir('pg_basebackup')
