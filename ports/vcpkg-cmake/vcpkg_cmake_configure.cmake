@@ -128,12 +128,26 @@ function(vcpkg_cmake_configure)
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     set(build_dir_debug "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    file(REMOVE_RECURSE
-        "${build_dir_release}"
-        "${build_dir_debug}")
-    file(MAKE_DIRECTORY "${build_dir_release}")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY "${build_dir_debug}")
+    # Preserve build directories for incremental builds
+    if(_VCPKG_EDITABLE_SUBTREE)
+        # Editable mode: preserve build directories for incremental builds
+        if(NOT EXISTS "${build_dir_release}")
+            file(MAKE_DIRECTORY "${build_dir_release}")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            if(NOT EXISTS "${build_dir_debug}")
+                file(MAKE_DIRECTORY "${build_dir_debug}")
+            endif()
+        endif()
+    else()
+        # Normal mode: clean slate for reproducible builds
+        file(REMOVE_RECURSE
+            "${build_dir_release}"
+            "${build_dir_debug}")
+        file(MAKE_DIRECTORY "${build_dir_release}")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(MAKE_DIRECTORY "${build_dir_debug}")
+        endif()
     endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
@@ -243,75 +257,111 @@ function(vcpkg_cmake_configure)
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
         ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
 
-    if(NOT arg_DISABLE_PARALLEL_CONFIGURE)
-        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
-
-        vcpkg_find_acquire_program(NINJA)
-
-        #parallelize the configure step
-        set(ninja_configure_contents
-            "rule CreateProcess\n  command = \$process\n\n"
-        )
-
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
-            z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents ".." "rel")
+    # In editable mode, skip configure if CMakeCache.txt already exists
+    # This enables truly incremental builds by letting ninja handle reconfiguration
+    set(_vcpkg_skip_configure OFF)
+    if(_VCPKG_EDITABLE_SUBTREE)
+        set(_vcpkg_has_release_cache OFF)
+        set(_vcpkg_has_debug_cache OFF)
+        if(EXISTS "${build_dir_release}/CMakeCache.txt")
+            set(_vcpkg_has_release_cache ON)
         endif()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
-            z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents "../../${TARGET_TRIPLET}-dbg" "dbg")
+        if(EXISTS "${build_dir_debug}/CMakeCache.txt")
+            set(_vcpkg_has_debug_cache ON)
         endif()
-
-        file(MAKE_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure")
-        file(WRITE
-            "${build_dir_release}/vcpkg-parallel-configure/build.ninja"
-            "${ninja_configure_contents}")
-
-        message(STATUS "${configuring_message}")
-        vcpkg_execute_required_process(
-            COMMAND "${NINJA}" -v
-            WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
-            LOGNAME "${arg_LOGFILE_BASE}"
-            SAVE_LOG_FILES
-                "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
-                "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
-                "../../${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeConfigureLog.yaml" ALIAS "dbg-CMakeConfigureLog.yaml.log"
-                "../CMakeFiles/CMakeConfigureLog.yaml" ALIAS "rel-CMakeConfigureLog.yaml.log"
-                ${parallel_log_args}
-        )
         
-        vcpkg_list(APPEND config_logs
-            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
-            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
-    else()
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
-            message(STATUS "${configuring_message}-dbg")
-            vcpkg_execute_required_process(
-                COMMAND ${dbg_command}
-                WORKING_DIRECTORY "${build_dir_debug}"
-                LOGNAME "${arg_LOGFILE_BASE}-dbg"
-                SAVE_LOG_FILES
-                  "CMakeCache.txt"
-                  "CMakeFiles/CMakeConfigureLog.yaml"
-                  ${log_args}
-            )
-            vcpkg_list(APPEND config_logs
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log")
+        # Skip configure if all required caches exist
+        if(NOT DEFINED VCPKG_BUILD_TYPE)
+            # Both debug and release needed
+            if(_vcpkg_has_release_cache AND _vcpkg_has_debug_cache)
+                set(_vcpkg_skip_configure ON)
+            endif()
+        elseif(VCPKG_BUILD_TYPE STREQUAL "release")
+            if(_vcpkg_has_release_cache)
+                set(_vcpkg_skip_configure ON)
+            endif()
+        elseif(VCPKG_BUILD_TYPE STREQUAL "debug")
+            if(_vcpkg_has_debug_cache)
+                set(_vcpkg_skip_configure ON)
+            endif()
         endif()
+        
+        if(_vcpkg_skip_configure)
+            message(STATUS "${configuring_message} - skipping (CMakeCache.txt exists, ninja will reconfigure if needed)")
+        endif()
+    endif()
 
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
-            message(STATUS "${configuring_message}-rel")
-            vcpkg_execute_required_process(
-                COMMAND ${rel_command}
-                WORKING_DIRECTORY "${build_dir_release}"
-                LOGNAME "${arg_LOGFILE_BASE}-rel"
-                SAVE_LOG_FILES
-                  "CMakeCache.txt"
-                  "CMakeFiles/CMakeConfigureLog.yaml"
-                  ${log_args}
+    if(NOT _vcpkg_skip_configure)
+        if(NOT arg_DISABLE_PARALLEL_CONFIGURE)
+            vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
+
+            vcpkg_find_acquire_program(NINJA)
+
+            #parallelize the configure step
+            set(ninja_configure_contents
+                "rule CreateProcess\n  command = \$process\n\n"
             )
+
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
+                z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents ".." "rel")
+            endif()
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
+                z_vcpkg_configure_cmake_build_cmakecache(ninja_configure_contents "../../${TARGET_TRIPLET}-dbg" "dbg")
+            endif()
+
+            file(MAKE_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure")
+            file(WRITE
+                "${build_dir_release}/vcpkg-parallel-configure/build.ninja"
+                "${ninja_configure_contents}")
+
+            message(STATUS "${configuring_message}")
+            vcpkg_execute_required_process(
+                COMMAND "${NINJA}" -v
+                WORKING_DIRECTORY "${build_dir_release}/vcpkg-parallel-configure"
+                LOGNAME "${arg_LOGFILE_BASE}"
+                SAVE_LOG_FILES
+                    "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
+                    "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
+                    "../../${TARGET_TRIPLET}-dbg/CMakeFiles/CMakeConfigureLog.yaml" ALIAS "dbg-CMakeConfigureLog.yaml.log"
+                    "../CMakeFiles/CMakeConfigureLog.yaml" ALIAS "rel-CMakeConfigureLog.yaml.log"
+                    ${parallel_log_args}
+            )
+            
             vcpkg_list(APPEND config_logs
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"
-                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log")
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
+        else()
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "debug")
+                message(STATUS "${configuring_message}-dbg")
+                vcpkg_execute_required_process(
+                    COMMAND ${dbg_command}
+                    WORKING_DIRECTORY "${build_dir_debug}"
+                    LOGNAME "${arg_LOGFILE_BASE}-dbg"
+                    SAVE_LOG_FILES
+                      "CMakeCache.txt"
+                      "CMakeFiles/CMakeConfigureLog.yaml"
+                      ${log_args}
+                )
+                vcpkg_list(APPEND config_logs
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log")
+            endif()
+
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR "${VCPKG_BUILD_TYPE}" STREQUAL "release")
+                message(STATUS "${configuring_message}-rel")
+                vcpkg_execute_required_process(
+                    COMMAND ${rel_command}
+                    WORKING_DIRECTORY "${build_dir_release}"
+                    LOGNAME "${arg_LOGFILE_BASE}-rel"
+                    SAVE_LOG_FILES
+                      "CMakeCache.txt"
+                      "CMakeFiles/CMakeConfigureLog.yaml"
+                      ${log_args}
+                )
+                vcpkg_list(APPEND config_logs
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"
+                    "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log")
+            endif()
         endif()
     endif()
     
