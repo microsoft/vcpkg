@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libscran/umappp
     REF "v${VERSION}"
-    SHA512 73f4979a0d8b15fc7bc62de04210fba2a95dd8a30480882c3e88a8e2ea3b48e2e9f37d02f39c09648a79ad27a10906b0b1c26600afe573539070d77696ef44f7
+    SHA512 12372dc0462e5f444d3e54eb07c370a3eb8190d7c9b716788fe214d2043b55844fe6e86ebd09120cb66f1b672be9a168a9b34b585eacc291210d4600e55795d6
     HEAD_REF master
     PATCHES
-        0001-make-find-dependency-not-required.diff # https://github.com/libscran/umappp/pull/35
         0002-remove-eigen3-version-constraint.diff
 )
 

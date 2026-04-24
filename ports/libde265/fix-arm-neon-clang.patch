@@ -1,0 +1,24 @@
+diff --git a/libde265/arm/CMakeLists.txt b/libde265/arm/CMakeLists.txt
+--- a/libde265/arm/CMakeLists.txt
++++ b/libde265/arm/CMakeLists.txt
+@@ -3,12 +3,17 @@ add_library(arm OBJECT arm.cc arm.h)
+ if(HAVE_NEON)
+   add_library(arm_neon OBJECT
+     cpudetect.S
+     hevcdsp_qpel_neon.S
+   )
+ 
++  # LLVM's integrated assembler (used by Android NDK's clang) does not
++  # support the .func/.endfunc directives enabled by HAVE_AS_FUNC.
++  if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++    set(AS_FUNC_FLAG -DHAVE_AS_FUNC)
++  endif()
+   target_compile_options(arm_neon PRIVATE
+     -mfpu=neon
+     -DHAVE_NEON
+     -DEXTERN_ASM=
+-    -DHAVE_AS_FUNC
++    ${AS_FUNC_FLAG}
+     -DHAVE_SECTION_DATA_REL_RO
+   )
+ 

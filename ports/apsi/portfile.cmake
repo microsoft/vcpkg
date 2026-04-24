@@ -30,7 +30,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DAPSI_BUILD_TESTS=OFF
         -DAPSI_BUILD_CLI=OFF
         ${FEATURE_OPTIONS}
