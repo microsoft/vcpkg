@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO asmjit/asmtk
-    REF 425b108d3afe510f8b94ca5523cd31ae29381422 # accessed on 2022-11-06
-    SHA512 d825f488c66dca9ca4c3279992e4ea36a4d1b7ad65fa3e0c70b151ce0d2b1f9b5ad053ff1d447da38475bf843fe3b130706e3c9916a64f76560add9c8d796a5b
+    REF f2f268314afa54f28b50b86df5c0954ca71d540a # accessed on 2025-08-06
+    SHA512 864b61cfab1f822d3eaf28c11b89d564b93b4ff3749e74d2285d940ae49621af10716c2851c809d290b1f570e0edd8fd37a33eeabb4efaed516b0708aa14af9a
     HEAD_REF master
     PATCHES
       fix-link-amsjit.patch
