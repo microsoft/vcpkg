@@ -28,7 +28,6 @@ vcpkg_cmake_configure(
         -DNANOARROW_DEBUG_EXTRA_WARNINGS=OFF
         ${FEATURE_OPTIONS}
         ${FLATCCRT_OPTIONS}
-        ${ADDITIONAL_FLAGS}
 )
 
 vcpkg_cmake_install()
