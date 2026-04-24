@@ -25,16 +25,10 @@ set(_webrtc_transitive_archives
     libSRTP::srtp2
     OpenSSL::SSL
 )
-set(_webrtc_link_group_linux
-    "$<LINK_GROUP:RESCAN,unofficial::webrtc::webrtc,${_webrtc_transitive_archives}>"
-)
-set(_webrtc_link_group_other
-    "unofficial::webrtc::webrtc;${_webrtc_transitive_archives}"
-)
 set(_webrtc_imported_location_debug "${_webrtc_prefix}/debug/lib/libwebrtc.a")
 set(_webrtc_imported_location_release "${_webrtc_prefix}/lib/libwebrtc.a")
 set(_webrtc_interface_link_libraries
-    "Threads::Threads;${WEBRTC_ABSL_IMPORTED_TARGETS};$<$<PLATFORM_ID:Linux>:${_webrtc_link_group_linux}>;$<$<NOT:$<PLATFORM_ID:Linux>>:${_webrtc_link_group_other}>"
+    "Threads::Threads;${WEBRTC_ABSL_IMPORTED_TARGETS};unofficial::webrtc::webrtc;${_webrtc_transitive_archives}"
 )
 set(_webrtc_windows_system_libraries
     ws2_32
