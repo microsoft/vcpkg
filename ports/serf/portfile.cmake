@@ -8,8 +8,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-      serf-fix-expat.patch
-      serf-use-debug-libs.patch
+      dependencies.diff
 )
 
 # Note: custom architecture is not supported on Unix.
@@ -37,6 +36,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     "APU=${CURRENT_INSTALLED_DIR}"
     "APR_STATIC=${APR_STATIC}"
   )
+  if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/zs.lib")
+    set(ENV{ZLIB_BASENAME} "zs")
+  elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/z.lib")
+    set(ENV{ZLIB_BASENAME} "z")
+  endif()
 else()
   SET(apr_opts
     "APR=${CURRENT_INSTALLED_DIR}/tools/apr/bin/apr-1-config"
@@ -102,8 +106,8 @@ if(NOT VCPKG_BUILD_TYPE)
           "SOURCE_LAYOUT=no"
           "PREFIX=${CURRENT_PACKAGES_DIR}/debug"
           "LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib"
-          "OPENSSL=${CURRENT_INSTALLED_DIR}"
-          "ZLIB=${CURRENT_INSTALLED_DIR}"
+          "OPENSSL=${CURRENT_INSTALLED_DIR}/debug"
+          "ZLIB=${CURRENT_INSTALLED_DIR}/debug"
           ${apr_opts}
           "${SCONS_ARCH}"
           "DEBUG=yes"
@@ -135,5 +139,6 @@ if(NOT VCPKG_BUILD_TYPE)
   endif()
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_fixup_pkgconfig()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
