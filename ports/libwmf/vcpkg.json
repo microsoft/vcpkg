@@ -1,0 +1,20 @@
+{
+  "name": "libwmf",
+  "version": "0.2.15",
+  "description": "Library for Converting Metafile Images",
+  "homepage": "https://wvWare.sourceforge.io/",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    {
+      "name": "freetype",
+      "default-features": false
+    },
+    "libjpeg-turbo",
+    "libpng",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    "zlib"
+  ]
+}
