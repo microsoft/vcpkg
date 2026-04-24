@@ -1,0 +1,11 @@
+aviadcohen24-lock-free-ring-buffer is a header-only library.
+
+To use it in a CMake project:
+
+    find_path(LOCK_FREE_RING_BUFFER_INCLUDE_DIR NAMES "ring_buffer.h"
+        PATH_SUFFIXES "aviadcohen24-lock-free-ring-buffer")
+    target_include_directories(main PRIVATE "${LOCK_FREE_RING_BUFFER_INCLUDE_DIR}")
+
+Then include in your source:
+
+    #include <ring_buffer.h>
