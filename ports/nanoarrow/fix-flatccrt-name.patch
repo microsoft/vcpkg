@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2d80849..c414865 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -229,8 +229,10 @@ if(NANOARROW_IPC)
+     set(NANOARROW_FLATCC_INCLUDE_DIR "${NANOARROW_FLATCC_ROOT_DIR}/include")
+     add_library(flatccrt STATIC IMPORTED)
+     set_target_properties(flatccrt
+-                          PROPERTIES IMPORTED_LOCATION
+-                                     "${NANOARROW_FLATCC_ROOT_DIR}/lib/libflatccrt.a"
++                          PROPERTIES IMPORTED_LOCATION_DEBUG
++                                     "${NANOARROW_FLATCC_ROOT_DIR}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}flatccrt_d${CMAKE_STATIC_LIBRARY_SUFFIX}"
++                                     IMPORTED_LOCATION_RELEASE
++                                     "${NANOARROW_FLATCC_ROOT_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}flatccrt${CMAKE_STATIC_LIBRARY_SUFFIX}"
+                                      INTERFACE_INCLUDE_DIRECTORIES
+                                      "${NANOARROW_FLATCC_INCLUDE_DIR}")
+   endif()

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2d80849..a8b2296 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -550,6 +550,10 @@ foreach(target
+                                        -Wconversion
+                                        -Wno-sign-conversion>)
+       endif()
++    else()
++      if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
++        target_compile_options(${target} PRIVATE -Wno-error=implicit-function-declaration)
++      endif()
+     endif()
+   endif()
+ endforeach()
