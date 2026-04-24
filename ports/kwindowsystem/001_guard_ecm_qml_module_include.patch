@@ -1,0 +1,23 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,7 +26,10 @@
+ include(ECMDeprecationSettings)
+ include(ECMPoQmTools)
+ include(ECMGeneratePkgConfigFile)
+-include(ECMQmlModule)
++option(KWINDOWSYSTEM_QML "Build QML bindings" ON)
++if(KWINDOWSYSTEM_QML)
++    include(ECMQmlModule)
++endif()
+ include(ECMGenerateQDoc)
+ 
+ set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
+@@ -45,8 +48,6 @@
+     find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+ endif()
+ 
+-option(KWINDOWSYSTEM_QML "Build QML bindings" ON)
+-
+ if (KWINDOWSYSTEM_QML)
+     find_package(Qt6Qml ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+ endif()

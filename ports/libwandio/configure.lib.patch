@@ -36,7 +36,7 @@ index 428e66a..21e39db 100644
  AS_IF([test "x$with_zlib" != "xno"],
  	[
 -	AC_CHECK_LIB(z, deflate, have_zlib=yes, have_zlib=no)
-+	AC_SEARCH_LIBS(deflate, [z zlib zlibd zd], have_zlib=yes, have_zlib=no)
++	AC_SEARCH_LIBS(deflate, [z zs zlib zd zsd zlibd], have_zlib=yes, have_zlib=no)
  	], [have_zlib=no])
  
  AS_IF([test "x$have_zlib" = "xyes"], [
