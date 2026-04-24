@@ -58,6 +58,7 @@ DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
   'nvrtc_13.2',
   'nvrtc_dev_13.2',
   'nvtx_13.2',
+  'nvvm_13.2',
   'opencl_13.2',
   'sanitizer_13.2',
   'thrust_13.2',
