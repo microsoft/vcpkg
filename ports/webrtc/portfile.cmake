@@ -500,6 +500,9 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
             "extra_ldflags=\"${WEBRTC_EXTRA_LDFLAGS}\""
             "extra_arflags=\"${WEBRTC_EXTRA_ARFLAGS}\""
         )
+        if("${BUILD_CONFIG}" STREQUAL "debug")
+            list(APPEND WEBRTC_GN_ARGS "enable_iterator_debugging=true")
+        endif()
     endif()
     string(JOIN " " GN_ARGS ${WEBRTC_GN_ARGS})
 
