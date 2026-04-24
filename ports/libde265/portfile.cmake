@@ -2,10 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strukturag/libde265
     REF "v${VERSION}"
-    SHA512 bda239b4827c81552855dc540724b74c86f6b02bcd0fe556650bc16d665a8eed1ddbde76ac0972d26b3002b14575bb9b6f70b367c39eb7de45c5c9df324e3d05
+    SHA512 111b85ea9f92cc4a93f1022fc8ac17ef436f9c32698842f041b18ccc382306fbcb5102d44966b059a750bf380c3aeba5dc5124716f253340d91cf9713f90552d
     HEAD_REF master
     PATCHES
-        fix-interface-include.patch
+        fix-arm-neon-clang.patch
         pkgconfig-cxx-linkage.diff
 )
 

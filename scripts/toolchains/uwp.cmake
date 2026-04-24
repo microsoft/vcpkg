@@ -82,7 +82,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
 
     set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${CHARSET_FLAG} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
     set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${_vcpkg_winmd_flag} ${CHARSET_FLAG} ${VCPKG_C_FLAGS}" CACHE STRING "")
-    set(CMAKE_RC_FLAGS "-c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
+    set(CMAKE_RC_FLAGS "/c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
 
     unset(CHARSET_FLAG)
     unset(MP_BUILD_FLAG)

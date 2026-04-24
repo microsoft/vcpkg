@@ -1,0 +1,14 @@
+diff --git a/src/cmake/BundleLibraries.cmake b/src/cmake/BundleLibraries.cmake
+index 319d92bb58c..1ea9cfb4ee5 100644
+--- a/src/cmake/BundleLibraries.cmake
++++ b/src/cmake/BundleLibraries.cmake
+@@ -68,9 +68,6 @@ function(bundle_libraries output_target library_type)
+     foreach(dependency IN LISTS interface_link_libraries)
+       if(TARGET ${dependency})
+         get_dependencies(${dependency}) # Recursive call
+-      elseif(NOT "${dependency}" STREQUAL "" AND NOT "${dependency}" STREQUAL "interface_link_libraries-NOTFOUND")
+-        # Collect non-target link dependencies (system/shared libraries, linker flags, etc.)
+-        list(APPEND all_non_target_libs ${dependency})
+       endif()
+     endforeach()
+ 

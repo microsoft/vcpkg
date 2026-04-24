@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 33c8173e6a1bb28b1bd131400b64a618c8984efd9287adb54b5133927bd4268184e7e0fa23a81ada4a8de831ef9f4a35973cc4b795ee885eb927b4c73433b889
+    SHA512 de485dbca636803fce6720dede7d0a6c3315cb209489c94167dd9388ebe56ba8819d3118045308f05b935c954950202d0adb0485bc074bc04ca8c47877f1fe60
     HEAD_REF master
     PATCHES
         fix-buildsystem.patch

@@ -1,0 +1,26 @@
+diff --git a/babl/meson.build b/babl/meson.build
+index f6dd81c..ec42f68 100644
+--- a/babl/meson.build
++++ b/babl/meson.build
+@@ -159,15 +159,19 @@ if build_gir
+   # identity filter, so GIR doesn't choke on the Babl type
+   # (since it has the same name as the Babl namespace)
+   babl_gir = gnome.generate_gir(
+     babl,
+     sources: babl_headers,
+     extra_args: [
+       '--identifier-filter-cmd=@0@ @1@'.format(python.full_path(), 
+       '"' + meson.current_source_dir() / 'identfilter.py' + '"'),
+       '-DBABL_IS_BEING_COMPILED',
++      # Windows DLL resolution for the temporary GIR helper executable is
++      # unreliable in vcpkg builds. Babl does not expose GObject runtime
++      # types, so a header-only scan is sufficient here.
++      platform_win32 ? '--header-only' : '',
+       '--quiet',
+     ],
+     namespace: 'Babl',
+     nsversion: api_version,
+     header: 'babl.h',
+     export_packages: 'babl-0.1',
+     install: true,
+   )

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO reo7sp/tgbot-cpp
     REF "v${VERSION}"
-    SHA512 34eac9aac2cbf6025bde24c1a2bdb79b143a18b8fffd81e51340ee3cbb61338b1747e3d54c2d8b0f99e381231756bf11daa4b6ba4da1fd0a1ef40969dee7c647
+    SHA512 0ee6b7658894697ccc38fbf0f7d0b0ca80d9af2a86cec5c78cd5501e472fed8d2aa351364bb7d5a4860c73df9916a82879d9fdfd90e7accfe180ef679e1dcdfd
     HEAD_REF master
 )
 

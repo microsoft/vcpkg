@@ -1,6 +1,6 @@
 {
   "name": "vectorclass",
-  "version-string": "2.02.00",
+  "version-string": "2.02.03",
   "description": "C++ class library for using the Single Instruction Multiple Data (SIMD) instructions in modern Microprocessors",
   "homepage": "https://github.com/vectorclass/version2",
   "license": "Apache-2.0",

@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
         libsystemd.patch
         remove-path.patch
         remove-var-lib-dbus-creation.patch
+        session-socket-dir.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options

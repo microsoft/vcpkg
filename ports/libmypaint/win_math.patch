@@ -1,0 +1,31 @@
+From a5d28fb2d13fb9cd01fcba9f9a88aaa8ecca0e15 Mon Sep 17 00:00:00 2001
+From: Bruno Lopes <brunvonlope@outlook.com>
+Date: Sun, 12 Apr 2026 21:04:24 -0300
+Subject: [PATCH] configure: Do not check for math library functions on Windows
+
+---
+ configure.ac | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index b6e1e0603ef1351549851425a6386fb46d05f817..b10b1d7e2e1ac0fc8a2572372bb049d1e7d4666c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -218,10 +218,13 @@ AC_SUBST(JSON_LIBS)
+ AC_SUBST(JSON_CFLAGS)
+ 
+ ## Standard maths functions ##
+-AC_SEARCH_LIBS([floorf], [m], [], AC_MSG_ERROR([no floorf]))
+-AC_SEARCH_LIBS([powf], [m], [], AC_MSG_ERROR([no powf]))
+-AC_SEARCH_LIBS([expf], [m], [], AC_MSG_ERROR([no expf]))
+-AC_SEARCH_LIBS([fabsf], [m], [], AC_MSG_ERROR([no fabsf]))
++## On Windows, they are provided by the C library (msvcrt or ucrt) ##
++if test "x$platform_win32" != "xyes"; then
++  AC_SEARCH_LIBS([floorf], [m], [], AC_MSG_ERROR([no floorf]))
++  AC_SEARCH_LIBS([powf], [m], [], AC_MSG_ERROR([no powf]))
++  AC_SEARCH_LIBS([expf], [m], [], AC_MSG_ERROR([no expf]))
++  AC_SEARCH_LIBS([fabsf], [m], [], AC_MSG_ERROR([no fabsf]))
++fi
+ 
+ ## Additional compile flags ##
+ 

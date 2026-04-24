@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
     REF "v${VERSION}"
-    SHA512 d303f0d9f02492e4fe0eb844db4fda563404ba73d1350a5b3ed45745c40022726b27cbd92cd1d0990186d1438ba0d2710fc614028b725f054486741ae30fd490
+    SHA512 fc08c85f66bb10a361b775841fff45976d6c9e0232f6a2949f18963c317c13b66b9aae11bcabbd903dbfc8e02a3638007be1e0542b13ac0a6641b0762f762dff
     HEAD_REF master
     PATCHES
         devendor-palsigslot.patch
