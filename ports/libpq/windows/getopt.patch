@@ -1,21 +1,14 @@
 diff --git a/meson.build b/meson.build
+index 34456b3..052e8c8 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2624,7 +2624,7 @@ header_checks = [
-   'copyfile.h',
-   'crtdefs.h',
-   'execinfo.h',
--  'getopt.h',
-+  # 'getopt.h', # vcpkg: skip to avoid getopt-win32 header pollution
-   'ifaddrs.h',
-   'mbarrier.h',
-   'strings.h',
-@@ -2714,7 +2714,7 @@ endforeach
+@@ -2650,6 +2650,9 @@ foreach header : header_checks
+             description: 'Define to 1 if you have the <@0@> header file.'.format(header))
+ endforeach
  
- if cc.has_type('struct option',
-     args: test_c_args, include_directories: postgres_inc,
--    prefix: '@0@'.format(cdata.get('HAVE_GETOPT_H')) == '1' ? '#include <getopt.h>' : '')
-+    prefix: '@0@'.format(cdata.get('HAVE_GETOPT_H', 0)) == '1' ? '#include <getopt.h>' : '')
-   cdata.set('HAVE_STRUCT_OPTION', 1)
- endif
++if cc.get_id() == 'msvc'
++  cdata.set('HAVE_GETOPT_H', false)
++endif
  
+ decl_checks = [
+   ['F_FULLFSYNC', 'fcntl.h'],

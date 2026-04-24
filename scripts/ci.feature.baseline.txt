@@ -1143,7 +1143,6 @@ qt5-base[icu]:x64-windows-static-md=feature-fails
 qt5-base[icu]:x64-windows-static=feature-fails
 qt5-base[icu]:x64-windows=feature-fails
 qt5-base[icu]:x86-windows=feature-fails
-qt5-base[postgresqlplugin](windows & !static)=feature-fails # https://github.com/microsoft/vcpkg/issues/51102
 qt5-base[vulkan]:arm64-osx=feature-fails # needs MolkenVK
 qt5-base(android)=skip # port doesn't support cross builds
 qt5-base(arm & windows)=fail # qt5-base: no cross builds

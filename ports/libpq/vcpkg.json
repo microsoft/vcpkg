@@ -1,27 +1,19 @@
 {
   "name": "libpq",
   "version": "18.3",
+  "port-version": 1,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
   "supports": "!uwp & !emscripten",
   "dependencies": [
     {
-      "name": "libpq",
-      "default-features": false,
-      "features": [
-        "bonjour"
-      ],
-      "platform": "osx"
-    },
-    {
       "name": "vcpkg-cmake-get-vars",
       "host": true
     },
     {
       "name": "vcpkg-tool-meson",
-      "host": true,
-      "platform": "windows & !mingw"
+      "host": true
     }
   ],
   "default-features": [
@@ -38,24 +30,12 @@
           "features": [
             "client",
             "icu",
-            "xml",
-            "xslt",
+            "lz4",
+            "nls",
+            "openssl",
+            "zlib",
             "zstd"
           ]
-        },
-        {
-          "name": "libpq",
-          "features": [
-            "bonjour"
-          ],
-          "platform": "osx"
-        },
-        {
-          "name": "libpq",
-          "features": [
-            "nls"
-          ],
-          "platform": "!osx"
         },
         {
           "name": "libpq",
@@ -63,29 +43,21 @@
             "readline"
           ],
           "platform": "!windows"
-        },
-        {
-          "name": "libpq",
-          "features": [
-            "python"
-          ],
-          "platform": "!android & !mingw"
-        },
-        {
-          "name": "libpq",
-          "features": [
-            "tcl"
-          ],
-          "platform": "windows & !mingw & !arm"
         }
       ]
     },
-    "bonjour": {
-      "description": "Build with Bonjour support",
-      "supports": "osx"
-    },
     "client": {
-      "description": "Build all client tools and libraries"
+      "description": "Build all client tools and libraries",
+      "dependencies": [
+        {
+          "name": "libpq",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "client"
+          ]
+        }
+      ]
     },
     "icu": {
       "description": "Build with support for the ICU library",
@@ -119,62 +91,11 @@
         "openssl"
       ]
     },
-    "python": {
-      "$supports": "!(windows & (static | mingw))",
-      "description": "build the PL/Python server programming language",
-      "dependencies": [
-        {
-          "name": "libpq",
-          "default-features": false,
-          "features": [
-            "client"
-          ]
-        },
-        "python3"
-      ]
-    },
     "readline": {
       "description": "Use readline",
       "supports": "!windows, mingw",
       "dependencies": [
         "readline"
-      ]
-    },
-    "tcl": {
-      "$supports": "!(windows & (static | mingw))",
-      "description": "build the PL/Tcl procedural language",
-      "supports": "windows & !mingw",
-      "dependencies": [
-        {
-          "name": "libpq",
-          "default-features": false,
-          "features": [
-            "client"
-          ]
-        },
-        "tcl"
-      ]
-    },
-    "xml": {
-      "description": "Build with libxml",
-      "dependencies": [
-        {
-          "name": "libxml2",
-          "default-features": false
-        }
-      ]
-    },
-    "xslt": {
-      "description": "Build with libxslt",
-      "dependencies": [
-        {
-          "name": "libpq",
-          "default-features": false,
-          "features": [
-            "xml"
-          ]
-        },
-        "libxslt"
       ]
     },
     "zlib": {
