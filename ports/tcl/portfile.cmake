@@ -7,6 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        nmake.diff
         wip.diff
 )
 file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.c" "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.h")
@@ -16,9 +17,11 @@ file(REMOVE_RECURSE
     ${sqlite3_sources}
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        set(TCL_BUILD_MACHINE_STR MACHINE=ARM64)
     else()
         set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
     endif()
@@ -48,23 +51,25 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     vcpkg_install_nmake(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH win
         OPTIONS
             ${TCL_BUILD_MACHINE_STR}
             ${TCL_BUILD_STATS}
             ${TCL_BUILD_CHECKS}
+            TOMMATHOBJS=tommath.lib
         OPTIONS_DEBUG
             ${TCL_BUILD_OPTS},symbols
-            INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug
-            SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0
+            "INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug"
+            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
+            ZLIBOBJS=zd.lib
         OPTIONS_RELEASE
             release
             ${TCL_BUILD_OPTS}
-            INSTALLDIR=${CURRENT_PACKAGES_DIR}
-            SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0
+            "INSTALLDIR=${CURRENT_PACKAGES_DIR}"
+            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
+            ZLIBOBJS=zlib
     )
-
 
     # Install
     # Note: tcl shell requires it to be in a folder adjacent to the /lib/ folder, i.e. in a /bin/ folder
