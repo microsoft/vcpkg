@@ -8,11 +8,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
     REF "v${VERSION}"
-    SHA512 6479ece3bb7e641eea82ebe08abbd4192090fafd39926d694c97d5ea798c6c00bec24bdf2e17cc8b04eb12108203da0ffec671c680166a9f0c5c1317aa01685b
+    SHA512 6cd4d14dc45c3e2cdba32d238b00399400b1cedef79ec766b8b5c61de34b0d8329cd091f1d1c7bf98584fddd58a1cfc0ca6802c21d8965503d6d05498c24ad33
     HEAD_REF main
     PATCHES
         shared-zstd.patch
-        fix-hexl.patch
 )
 
 vcpkg_replace_string(
