@@ -84,18 +84,20 @@ jobs:
               format_output += "./vcpkg format-feature-baseline scripts/ci.baseline.txt\n";
               format_output += "./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt\n";
               format_output += "\n";
-              format_output += "It should make the following changes:";
-              format_output += "```diff\n" + format + "\n```";
+              format_output += "It should make the following changes. See the workflow summary for the generated diff.";
               core.error(format_output);
+              core.summary.addHeading('Manifest formatting diff', 3);
+              core.summary.addCodeBlock(format, 'diff');
               approve = false;
             }
             if (add_version_out !== "") {
               var add_version_output = '';
               add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
               add_version_output += "When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.\n";
-              add_version_output += "Making the following changes will fix this problem:";
-              add_version_output += "```diff\n" + add_version_out + "\n```";
+              add_version_output += "Making the following changes will fix this problem. See the workflow summary for the generated diff.";
               core.error(add_version_output);
+              core.summary.addHeading('x-add-version diff', 3);
+              core.summary.addCodeBlock(add_version_out, 'diff');
               approve = false;
             }
             if (version_string_out !== "") {
@@ -124,6 +126,8 @@ jobs:
               update_version_db_output += "./vcpkg x-add-version --all\n"
               update_version_db_output += "```"
               core.error(update_version_db_output);
+              core.summary.addHeading('Version database diff', 3);
+              core.summary.addCodeBlock(add_version, 'diff');
               approve = false;
             }
             
