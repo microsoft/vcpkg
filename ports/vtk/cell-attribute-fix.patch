@@ -1,0 +1,29 @@
+diff --git a/Common/DataModel/vtkCellAttribute.cxx b/Common/DataModel/vtkCellAttribute.cxx
+index 0000000..0000000 100644
+--- a/Common/DataModel/vtkCellAttribute.cxx
++++ b/Common/DataModel/vtkCellAttribute.cxx
+@@ -590,16 +590,13 @@ bool vtkCellAttribute::ConstructSpace(const std::string& space, bool quiet)
+   {
+     tao::pegtl::parse<SpaceGrammar, SpaceAction>(in, base, exp, halfspace);
+   }
+-  catch (tao::pegtl::parse_error& err)
+-  {
+-    if (!quiet)
+-    {
+-      const auto p = err.positions.front();
+-      vtkGenericWarningMacro("Attribute Space: " << err.what() << "\n"
+-                                                 << in.line_at(p) << "\n"
+-                                                 << std::string(p.byte_in_line, ' ') << "^\n");
+-    }
+-    return false;
+-  }
++  catch (tao::pegtl::parse_error& err)
++  {
++    if (!quiet)
++    {
++      vtkGenericWarningMacro("Attribute Space: " << err.what() << "\n");
++    }
++    return false;
++  }
+   return true;
+ }
