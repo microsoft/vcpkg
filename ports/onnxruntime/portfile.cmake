@@ -14,7 +14,12 @@ vcpkg_from_github(
     SHA512 373c51575ada457b8aead5d195a5f3eba62fb747b6370a2a9889fff875c40ea30af8fd49104d58cc86f79247410e829086b0979f37ca8635c6dd34960e9cc424
     PATCHES
         fix-cmake.patch # .framework install, external library workarounds(abseil-cpp, eigen3)
+        fix-cmake-win-interface-link.patch
         fix-cmake-cuda.patch
+        fix-missing-cstdint.patch
+        fix-coremltools.patch
+        fix-dml-flatbuffers.patch
+        fix-cmake-mlas.patch
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
@@ -55,6 +60,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         mimalloc  onnxruntime_USE_MIMALLOC
         valgrind  onnxruntime_USE_VALGRIND
         xnnpack   onnxruntime_USE_XNNPACK
+        kleidiai  onnxruntime_USE_KLEIDIAI
         nnapi     onnxruntime_USE_NNAPI_BUILTIN
         azure     onnxruntime_USE_AZURE
         test      onnxruntime_BUILD_UNIT_TESTS
@@ -66,6 +72,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         cuda      onnxruntime_USE_MEMORY_EFFICIENT_ATTENTION
 )
+
+if ("coreml" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH COREMLTOOLS_SOURCE_PATH
+        REPO apple/coremltools
+        REF "7.1"
+        SHA512 64a8f9f9a47266d58b5c19fb7ad21458a481ea7d11309bd46ffc3390771f70c7ccb958abfdeedad86e7785fe320d532928441cc120d0e3570e96d149ec458b72
+    )
+
+    list(APPEND FEATURE_OPTIONS "-Dcoremltools_SOURCE_DIR=${COREMLTOOLS_SOURCE_PATH}")
+endif()
 
 if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
@@ -139,7 +156,7 @@ vcpkg_fixup_pkgconfig() # pkg_check_modules(libonnxruntime)
 
 # relocates the onnxruntime_providers_* binaries before vcpkg_copy_pdbs()
 function(reolocate_ort_providers)
-    if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
+    if(VCPKG_TARGET_IS_WINDOWS AND ((VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic") OR ("openvino" IN_LIST FEATURES)))
         # the target is expected to be used without the .lib files
         file(GLOB PROVIDE_BINS_DBG  "${CURRENT_PACKAGES_DIR}/debug/lib/onnxruntime_providers_*.dll")
         file(COPY ${PROVIDE_BINS_DBG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")

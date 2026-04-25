@@ -1,0 +1,112 @@
+diff --git a/onnxruntime/core/flatbuffers/schema/ort.fbs.h b/onnxruntime/core/flatbuffers/schema/ort.fbs.h
+index 50fc1db862..aedf89fca3 100644
+--- a/onnxruntime/core/flatbuffers/schema/ort.fbs.h
++++ b/onnxruntime/core/flatbuffers/schema/ort.fbs.h
+@@ -6,12 +6,14 @@
+ 
+ #include "core/common/flatbuffers.h"
+ 
++#if 0
+ // Ensure the included flatbuffers.h is the same version as when this file was
+ // generated, otherwise it may not be compatible.
+ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
+               FLATBUFFERS_VERSION_MINOR == 5 &&
+               FLATBUFFERS_VERSION_REVISION == 26,
+              "Non-compatible flatbuffers version included");
++#endif
+ 
+ namespace onnxruntime {
+ namespace fbs {
+diff --git a/onnxruntime/core/flatbuffers/schema/ort_training_checkpoint.fbs.h b/onnxruntime/core/flatbuffers/schema/ort_training_checkpoint.fbs.h
+index 4b2c950d03..ba4ac87f89 100644
+--- a/onnxruntime/core/flatbuffers/schema/ort_training_checkpoint.fbs.h
++++ b/onnxruntime/core/flatbuffers/schema/ort_training_checkpoint.fbs.h
+@@ -6,12 +6,14 @@
+ 
+ #include "core/common/flatbuffers.h"
+ 
++#if 0
+ // Ensure the included flatbuffers.h is the same version as when this file was
+ // generated, otherwise it may not be compatible.
+ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
+               FLATBUFFERS_VERSION_MINOR == 5 &&
+               FLATBUFFERS_VERSION_REVISION == 26,
+              "Non-compatible flatbuffers version included");
++#endif
+ 
+ #include "ort.fbs.h"
+ 
+diff --git a/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/DmlGraphDesc_generated.h b/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/DmlGraphDesc_generated.h
+index df485396f1..9cc428980d 100644
+--- a/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/DmlGraphDesc_generated.h
++++ b/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/DmlGraphDesc_generated.h
+@@ -8,10 +8,12 @@
+ 
+ // Ensure the included flatbuffers.h is the same version as when this file was
+ // generated, otherwise it may not be compatible.
++#if 0
+ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
+               FLATBUFFERS_VERSION_MINOR == 5 &&
+               FLATBUFFERS_VERSION_REVISION == 26,
+              "Non-compatible flatbuffers version included");
++#endif
+ 
+ #include "OperatorFieldTypes_generated.h"
+ 
+diff --git a/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/OperatorFieldTypes_generated.h b/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/OperatorFieldTypes_generated.h
+index 639c31f0dc..2119ffefed 100644
+--- a/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/OperatorFieldTypes_generated.h
++++ b/onnxruntime/core/providers/dml/DmlExecutionProvider/src/External/DirectMLHelpers/OperatorFieldTypes_generated.h
+@@ -6,12 +6,14 @@
+ 
+ #include "core/common/flatbuffers.h"
+ 
++#if 0
+ // Ensure the included flatbuffers.h is the same version as when this file was
+ // generated, otherwise it may not be compatible.
+ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
+               FLATBUFFERS_VERSION_MINOR == 5 &&
+               FLATBUFFERS_VERSION_REVISION == 26,
+              "Non-compatible flatbuffers version included");
++#endif
+ 
+ namespace dml {
+ namespace ir {
+diff --git a/onnxruntime/lora/adapter_format/adapter_schema.fbs.h b/onnxruntime/lora/adapter_format/adapter_schema.fbs.h
+index c1d5412acb..bf671f9142 100644
+--- a/onnxruntime/lora/adapter_format/adapter_schema.fbs.h
++++ b/onnxruntime/lora/adapter_format/adapter_schema.fbs.h
+@@ -5,12 +5,14 @@
+ 
+ #include "flatbuffers/flatbuffers.h"
+ 
++#if 0
+ // Ensure the included flatbuffers.h is the same version as when this file was
+ // generated, otherwise it may not be compatible.
+ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
+                   FLATBUFFERS_VERSION_MINOR == 5 &&
+                   FLATBUFFERS_VERSION_REVISION == 26,
+               "Non-compatible flatbuffers version included");
++#endif
+ 
+ namespace onnxruntime {
+ namespace adapters {
+diff --git a/onnxruntime/test/flatbuffers/flatbuffers_utils_test.fbs.h b/onnxruntime/test/flatbuffers/flatbuffers_utils_test.fbs.h
+index 0c8e89a80e..b4a448c6ee 100644
+--- a/onnxruntime/test/flatbuffers/flatbuffers_utils_test.fbs.h
++++ b/onnxruntime/test/flatbuffers/flatbuffers_utils_test.fbs.h
+@@ -7,12 +7,14 @@
+ // manual edit to use wrapper in core/common
+ #include "core/common/flatbuffers.h"
+ 
++#if 0
+ // Ensure the included flatbuffers.h is the same version as when this file was
+ // generated, otherwise it may not be compatible.
+ static_assert(FLATBUFFERS_VERSION_MAJOR == 23 &&
+               FLATBUFFERS_VERSION_MINOR == 5 &&
+               FLATBUFFERS_VERSION_REVISION == 26,
+              "Non-compatible flatbuffers version included");
++#endif
+ 
+ // manual edit to set include path for this
+ #include "core/flatbuffers/schema/ort.fbs.h"

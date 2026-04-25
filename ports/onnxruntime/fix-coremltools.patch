@@ -1,0 +1,53 @@
+diff --git a/cmake/external/onnxruntime_external_deps.cmake b/cmake/external/onnxruntime_external_deps.cmake
+index 3189b64349..fe8f858678 100644
+--- a/cmake/external/onnxruntime_external_deps.cmake
++++ b/cmake/external/onnxruntime_external_deps.cmake
+@@ -812,15 +812,15 @@ if(onnxruntime_USE_COREML)
+   set(FP16_BUILD_BENCHMARKS OFF CACHE INTERNAL "")
+   onnxruntime_fetchcontent_makeavailable(fp16)
+ 
+-  onnxruntime_fetchcontent_declare(
+-    coremltools
+-    URL ${DEP_URL_coremltools}
+-    URL_HASH SHA1=${DEP_SHA1_coremltools}
+-    PATCH_COMMAND ${Patch_EXECUTABLE} --binary --ignore-whitespace -p1 < ${PROJECT_SOURCE_DIR}/patches/coremltools/crossplatformbuild.patch
+-    EXCLUDE_FROM_ALL
+-  )
+-  # we don't build directly so use Populate. selected files are built from onnxruntime_providers_coreml.cmake
+-  FetchContent_Populate(coremltools)
++  # onnxruntime_fetchcontent_declare(
++  #   coremltools
++  #   URL ${DEP_URL_coremltools}
++  #   URL_HASH SHA1=${DEP_SHA1_coremltools}
++  #   PATCH_COMMAND ${Patch_EXECUTABLE} --binary --ignore-whitespace -p1 < ${PROJECT_SOURCE_DIR}/patches/coremltools/crossplatformbuild.patch
++  #   EXCLUDE_FROM_ALL
++  # )
++  # # we don't build directly so use Populate. selected files are built from onnxruntime_providers_coreml.cmake
++  # FetchContent_Populate(coremltools)
+ 
+ endif()
+ 
+diff --git a/cmake/onnxruntime_providers_coreml.cmake b/cmake/onnxruntime_providers_coreml.cmake
+index 757198ffb6..de9febe176 100644
+--- a/cmake/onnxruntime_providers_coreml.cmake
++++ b/cmake/onnxruntime_providers_coreml.cmake
+@@ -24,8 +24,8 @@ set(COREML_PROTO_ROOT ${coremltools_SOURCE_DIR}/mlmodel/format)
+ file(GLOB coreml_proto_srcs "${COREML_PROTO_ROOT}/*.proto")
+ 
+ onnxruntime_add_static_library(coreml_proto ${coreml_proto_srcs})
+-target_include_directories(coreml_proto
+-                           PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_INCLUDE_DIRECTORIES>
++target_include_directories(coreml_proto PRIVATE
++                           # PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_INCLUDE_DIRECTORIES>
+                            "${CMAKE_CURRENT_BINARY_DIR}")
+ target_compile_definitions(coreml_proto
+                            PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_COMPILE_DEFINITIONS>)
+@@ -41,7 +41,7 @@ onnxruntime_protobuf_generate(
+ )
+ 
+ if (NOT onnxruntime_BUILD_SHARED_LIB)
+-  install(TARGETS coreml_proto
++  install(TARGETS coreml_proto EXPORT ${PROJECT_NAME}Targets
+           ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
