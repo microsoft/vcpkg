@@ -33,7 +33,6 @@ endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
