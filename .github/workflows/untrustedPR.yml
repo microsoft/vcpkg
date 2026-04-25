@@ -88,6 +88,11 @@ jobs:
               format_output += "It should make the following changes. See the workflow summary for the generated diff.";
               core.error(format_output);
               core.summary.addHeading('Manifest formatting diff', 3);
+              core.summary.addRaw('All vcpkg.json files and baselines must be formatted. To fix this problem, run:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('./vcpkg format-manifest ports/*/vcpkg.json\n./vcpkg format-feature-baseline scripts/ci.baseline.txt\n./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt', 'text');
+              core.summary.addRaw('It should make the following changes:');
+              core.summary.addEOL();
               core.summary.addCodeBlock(format, 'diff');
               approve = false;
             }
@@ -98,11 +103,20 @@ jobs:
               add_version_output += "Making the following changes will fix this problem. See the workflow summary for the generated diff.";
               core.error(add_version_output);
               core.summary.addHeading('x-add-version diff', 3);
+              core.summary.addRaw('PRs must add only one version, and must not modify any published versions.');
+              core.summary.addEOL();
+              core.summary.addRaw('When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.');
+              core.summary.addEOL();
+              core.summary.addRaw('Making the following changes will fix this problem:');
+              core.summary.addEOL();
               core.summary.addCodeBlock(add_version_out, 'diff');
               approve = false;
             }
             if (version_string_out !== "") {
               core.warning(version_string_out);
+              core.summary.addHeading('x-add-version warnings', 3);
+              core.summary.addRaw(version_string_out);
+              core.summary.addEOL();
             }
             if (add_version !== "") {
               var update_version_db_output = '';
@@ -128,6 +142,18 @@ jobs:
               update_version_db_output += "```"
               core.error(update_version_db_output);
               core.summary.addHeading('Version database diff', 3);
+              core.summary.addRaw('After committing all other changes, the version database must be updated.');
+              core.summary.addEOL();
+              core.summary.addRaw('This can be done by running the following commands:');
+              core.summary.addEOL();
+              core.summary.addRaw('PowerShell');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('git fetch https://github.com/microsoft/vcpkg master\n$merge_base = git merge-base HEAD FETCH_HEAD\ngit restore --source=$merge_base --staged --worktree -- versions\ngit clean -fd -- versions\n./vcpkg x-add-version --all', 'powershell');
+              core.summary.addRaw('bash');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('git fetch https://github.com/microsoft/vcpkg master\nmerge_base="$(git merge-base HEAD FETCH_HEAD)"\ngit restore --source="$merge_base" --staged --worktree -- versions\ngit clean -fd -- versions\n./vcpkg x-add-version --all', 'bash');
+              core.summary.addRaw('It should make the following changes:');
+              core.summary.addEOL();
               core.summary.addCodeBlock(add_version, 'diff');
               approve = false;
             }
