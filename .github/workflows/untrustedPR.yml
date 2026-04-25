@@ -59,7 +59,8 @@ jobs:
           git restore --source=$merge_base --staged --worktree -- versions
           git clean -fd -- versions
           ./vcpkg x-add-version --all --skip-formatting-check --skip-version-format-check | tee .github-pr.x-add-version.out || true
-          git diff "$incoming_branch_commit" -- versions > .github-pr.x-add-version.diff
+          git add -A -- versions
+          git diff --cached "$incoming_branch_commit" -- versions > .github-pr.x-add-version.diff
           git reset HEAD~ --hard # remove the "tmp" commit from above
 
       - name: Generate Reply
