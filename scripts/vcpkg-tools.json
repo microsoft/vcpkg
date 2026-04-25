@@ -313,9 +313,9 @@
       "arch": "x64",
       "version": "7.5.4",
       "executable": "pwsh.exe",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/PowerShell-7.6.0-win-x64.zip",
-      "sha512": "ee20d86dc1a080f7e8a0db72cdea69ae195ec078b04b6f6ad7458a9b4f83c165c711de2394c8b92b0c99318e023096bdde0d8eaeb8ac425eeab32fb09ea29ed2",
-      "archive": "PowerShell-7.6.0-win-x64.zip"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1-win-x64.zip",
+      "sha512": "ad3190e3dda022b35e459193c5544583cfd111aa0dd462a76cffc029a61df027164650ccd4133bbe9b5b8db74e99b5e08ca9c930837dacb8e8b7b87f3ed1e20d",
+      "archive": "PowerShell-7.6.1-win-x64.zip"
     },
     {
       "name": "powershell-core",
@@ -323,9 +323,9 @@
       "arch": "arm64",
       "version": "7.5.4",
       "executable": "pwsh.exe",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/PowerShell-7.6.0-win-arm64.zip",
-      "sha512": "2bf2b9eba4d911576e3bb1118fd6743f4ea7ce57bf55880c1761152c794af254903f7e57b162b50b061a57cc8277c857a8686f2ca59ee499f1f73e5aa45a5882",
-      "archive": "PowerShell-7.6.0-win-arm64.zip"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1-win-arm64.zip",
+      "sha512": "c50309e3b48e7c37536429c4a4df746a04b89fed049983d39ae2a2e29cdd32b05e0c63c0de6b130459d41956039c325c5f7e2ae669128c57c0d471bc4805e0fb",
+      "archive": "PowerShell-7.6.1-win-arm64.zip"
     },
     {
       "name": "powershell-core",
@@ -333,9 +333,9 @@
       "arch": "x64",
       "version": "7.5.4",
       "executable": "pwsh",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/powershell-7.6.0-linux-x64.tar.gz",
-      "sha512": "83c09724c799ac14316585e5e7e5971bff68b7a16017296805446cc849c82fd773600eb424453229a893836caac87d6805fdb98bbe234f1ae06c7d017c0bfb39",
-      "archive": "powershell-7.6.0-linux-x64.tar.gz"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/powershell-7.6.1-linux-x64.tar.gz",
+      "sha512": "2a0670a70d02dd1cb0481483a45cebde818afd93970b2a787efd2adbc94c8a54496dc20ab4b2bdb52110eedb4266cf3e44a2b868b132ffc6b98232175a0bec52",
+      "archive": "powershell-7.6.1-linux-x64.tar.gz"
     },
     {
       "name": "powershell-core",
@@ -343,9 +343,9 @@
       "arch": "arm64",
       "version": "7.5.4",
       "executable": "pwsh",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/powershell-7.6.0-linux-arm64.tar.gz",
-      "sha512": "2c34382635571c05d6f1bfd0aa1ca0a359df843fc957769627111e76f7580f85762cb086e95963a1e5a805c200be22f116e826c32477249f98e0d7f70883a75b",
-      "archive": "powershell-7.6.0-linux-arm64.tar.gz"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/powershell-7.6.1-linux-arm64.tar.gz",
+      "sha512": "f165e34db2fe6799583a6847871f30c1096404b3637306a2ec8a1e646569810f5f78eff2bddc37eff36e85755a86cff4b00a147b975a5eb020fb6f8b240223f3",
+      "archive": "powershell-7.6.1-linux-arm64.tar.gz"
     },
     {
       "name": "powershell-core",
@@ -353,9 +353,9 @@
       "arch": "x64",
       "version": "7.5.4",
       "executable": "pwsh",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/powershell-7.6.0-osx-x64.tar.gz",
-      "sha512": "4fc77303444b3f06dd5528977636053edaa5bd2905376f3861205b62d318aa9842935542bd1d846b58d20f849e5b1c7094677f856cad9904ece1a1e1ef13e6d9",
-      "archive": "powershell-7.6.0-osx-x64.tar.gz"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/powershell-7.6.1-osx-x64.tar.gz",
+      "sha512": "6923052c23b1faeba784f9fe440a5319b17ff23170263369ea808eb9df3893031408fdd30986f42206de5cb6c187a6844757a2da457afd5a1d09b1cc90ba01c6",
+      "archive": "powershell-7.6.1-osx-x64.tar.gz"
     },
     {
       "name": "powershell-core",
@@ -363,9 +363,9 @@
       "arch": "arm64",
       "version": "7.5.4",
       "executable": "pwsh",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.0/powershell-7.6.0-osx-arm64.tar.gz",
-      "sha512": "d3d6536563de86297a5c5ea43c67acb1a346196e4ae0dfcc0dc692c0d6c907552b2ba8003c88316917e183d15aa396610f000552f4894dd0a67ff99bb6430ae0",
-      "archive": "powershell-7.6.0-osx-arm64.tar.gz"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/powershell-7.6.1-osx-arm64.tar.gz",
+      "sha512": "5a4daadc9fa85ae55a47a5a701c7c9e14552b09f03f4b709b1d7c83f71e7f89af1a5bfb900718637a3d1ed8e5cb2f829ca14481ff8634ca0b2e44c04a3394061",
+      "archive": "powershell-7.6.1-osx-arm64.tar.gz"
     },
     {
       "name": "node",
