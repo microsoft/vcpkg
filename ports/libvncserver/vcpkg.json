@@ -1,0 +1,157 @@
+{
+  "name": "libvncserver",
+  "version": "0.9.15",
+  "description": "Libraries for implementing VNC servers and clients",
+  "homepage": "https://github.com/LibVNC/libvncserver",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "allow-24bpp",
+    "ipv6",
+    "jpeg",
+    "png",
+    "threads",
+    "tightvnc-filetransfer",
+    "vncclient",
+    "vncserver",
+    "websockets",
+    "zlib"
+  ],
+  "features": {
+    "allow-24bpp": {
+      "description": "Allow 24 bpp"
+    },
+    "examples": {
+      "description": "Build examples"
+    },
+    "ffmpeg": {
+      "description": "Build the VNC to MPEG example",
+      "dependencies": [
+        "ffmpeg"
+      ]
+    },
+    "gcrypt": {
+      "description": "Use Libgcrypt as crypto backend",
+      "dependencies": [
+        "libgcrypt"
+      ]
+    },
+    "gnutls": {
+      "description": "Use GnuTLS for TLS support",
+      "dependencies": [
+        "libgnutls"
+      ]
+    },
+    "gtk": {
+      "description": "Build GTK client example",
+      "dependencies": [
+        {
+          "name": "gtk",
+          "platform": "!windows & !uwp"
+        }
+      ]
+    },
+    "ipv6": {
+      "description": "Enable IPv6 support"
+    },
+    "jpeg": {
+      "description": "Enable JPEG support",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lzo": {
+      "description": "Enable LZO support",
+      "dependencies": [
+        "lzo"
+      ]
+    },
+    "png": {
+      "description": "Enable PNG support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "prefer-win32threads": {
+      "description": "Prefer win32 threads when available"
+    },
+    "qt": {
+      "description": "Build Qt client example",
+      "dependencies": [
+        {
+          "name": "qt6-base",
+          "platform": "!windows & !uwp"
+        }
+      ]
+    },
+    "sasl": {
+      "description": "Enable SASL support",
+      "dependencies": [
+        "cyrus-sasl"
+      ]
+    },
+    "sdl": {
+      "description": "Build SDL client example",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "ssl": {
+      "description": "Enable SSL/TLS support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "systemd": {
+      "description": "Enable systemd socket activation support",
+      "dependencies": [
+        {
+          "name": "libsystemd",
+          "platform": "!windows & !uwp"
+        }
+      ]
+    },
+    "tests": {
+      "description": "Build tests"
+    },
+    "threads": {
+      "description": "Enable multithreading support"
+    },
+    "tightvnc-filetransfer": {
+      "description": "Enable TightVNC file transfer support"
+    },
+    "vncclient": {
+      "description": "Build libvncclient"
+    },
+    "vncserver": {
+      "description": "Build libvncserver"
+    },
+    "websockets": {
+      "description": "Enable websockets support"
+    },
+    "xcb": {
+      "description": "Build XCB example support",
+      "dependencies": [
+        {
+          "name": "xcb",
+          "platform": "!windows & !uwp"
+        }
+      ]
+    },
+    "zlib": {
+      "description": "Enable zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}
