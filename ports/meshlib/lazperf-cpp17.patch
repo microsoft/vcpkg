@@ -1,0 +1,24 @@
+diff --git a/cmake/unix_compiler_options.cmake b/cmake/unix_compiler_options.cmake
+index fa85a8d..0b2078b 100644
+--- a/cmake/unix_compiler_options.cmake
++++ b/cmake/unix_compiler_options.cmake
+@@ -1,5 +1,5 @@
+ function(lazperf_target_compile_settings target)
+-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 11)
++    set_property(TARGET ${target} PROPERTY CXX_STANDARD 17)
+     set_property(TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED TRUE)
+     if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
+         #
+diff --git a/cmake/win32_compiler_options.cmake b/cmake/win32_compiler_options.cmake
+index 497213f..854f8f7 100644
+--- a/cmake/win32_compiler_options.cmake
++++ b/cmake/win32_compiler_options.cmake
+@@ -3,7 +3,7 @@
+ #
+ 
+ function(lazperf_target_compile_settings target)
+-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 11)
++    set_property(TARGET ${target} PROPERTY CXX_STANDARD 17)
+     set_property(TARGET ${target} PROPERTY CXX_STANDARD_REQUIRED TRUE)
+     target_compile_definitions(${target} PRIVATE
+         -DWIN32_LEAN_AND_MEAN)

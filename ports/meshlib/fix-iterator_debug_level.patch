@@ -1,0 +1,28 @@
+diff --git a/cmake/Modules/CompilerOptions.cmake b/cmake/Modules/CompilerOptions.cmake
+index 0817b2b..d1137e4 100644
+--- a/cmake/Modules/CompilerOptions.cmake
++++ b/cmake/Modules/CompilerOptions.cmake
+@@ -114,7 +114,7 @@ ENDIF()
+
+ IF(MSVC)
+   add_definitions(-DUNICODE -D_UNICODE)
+-  add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
++  add_definitions(-DMR_ITERATOR_DEBUG_LEVEL=$<IF:$<CONFIG:Debug>,2,0>)
+ ENDIF()
+
+ IF(NOT MSVC)
+
+diff --git a/source/MRMesh/MRMeshFwd.h b/source/MRMesh/MRMeshFwd.h
+index a0f4ff3..6a4b794 100644
+--- a/source/MRMesh/MRMeshFwd.h
++++ b/source/MRMesh/MRMeshFwd.h
+@@ -18,7 +18,7 @@
+ // additionally MR_ITERATOR_DEBUG_LEVEL with the same value to indicate that it is done intentionally
+ // (and you are ok with up to 100x slowdown).
+ //
+-#if defined _MSC_VER
++#if 0
+     #if !defined _ITERATOR_DEBUG_LEVEL
+         #define _ITERATOR_DEBUG_LEVEL 0
+     #endif
+/tmp/bbb.patch
