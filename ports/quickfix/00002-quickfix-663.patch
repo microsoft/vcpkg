@@ -1,0 +1,16 @@
+diff --git a/src/C++/SSLSocketInitiator.cpp b/src/C++/SSLSocketInitiator.cpp
+index 0855529a..6fa53d25 100644
+--- a/src/C++/SSLSocketInitiator.cpp
++++ b/src/C++/SSLSocketInitiator.cpp
+@@ -292,9 +292,9 @@ void SSLSocketInitiator::doConnect(const SessionID &sessionID, const Dictionary
+     Log *log = session->getLog();
+
+     HostDetails host = m_hostDetailsProvider.getHost(sessionID, dictionary);
+-    if (d.has(RECONNECT_INTERVAL)) // ReconnectInterval in [SESSION]
++    if (dictionary.has(RECONNECT_INTERVAL)) // ReconnectInterval in [SESSION]
+     {
+-      m_reconnectInterval = d.getInt(RECONNECT_INTERVAL);
++      m_reconnectInterval = dictionary.getInt(RECONNECT_INTERVAL);
+     }
+
+     log->onEvent(
