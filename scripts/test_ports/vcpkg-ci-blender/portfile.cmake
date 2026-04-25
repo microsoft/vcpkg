@@ -31,14 +31,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY_FILE "${PYTHON3_DIR}/python.exe" "${BLENDER_PY_DIR}/python.exe")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  set(_sep ";")
-else()
-  set(_sep ":")
-endif()
-
-set(ENV{PKG_CONFIG} "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf")
-set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig${_sep}${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -244,5 +239,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# License and man
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
