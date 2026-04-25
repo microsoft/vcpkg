@@ -1,14 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2ea15f..ffa61d9 100644
+index 7814724..89fc69b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -191,9 +191,6 @@ if (${SANITIZER_THREAD} EQUAL -1)
+@@ -178,7 +178,7 @@ endif()
+ string(FIND ${CMAKE_CXX_FLAGS} "-fsanitize=thread" SANITIZER_THREAD)
+ if (${SANITIZER_THREAD} EQUAL -1)
      message(STATUS "Setting warnings as errors...")
-     if(MSVC OR MSVC_IDE)
-         add_compile_options(/WX)
--    else()
--        set(CMAKE_CXX_FLAGS
--            "${CMAKE_CXX_FLAGS} -Werror")
-     endif()
+-    set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
++    set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
  endif()
  
+ ###############################################################################

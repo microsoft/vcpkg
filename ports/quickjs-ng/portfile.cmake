@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quickjs-ng/quickjs
     REF v${VERSION}
-    SHA512 39870b7dbe82ffe4cf9ae25b9aa653af536c83460302126b3e868a29cf657d0f1206fd66eebbc37dd46c5bb991c8b00230f6850bf743561bc1f48233c45c327b
+    SHA512 a6679a61da1ad232afb59e6c997106f9909084b853c3c615b2410681c4272071a69fcad213374bec60fa3187569de874daa6d6bfcc2cd6e47ca5a0d978d63392
     HEAD_REF master
     PATCHES
         pdb_name_conflict.patch

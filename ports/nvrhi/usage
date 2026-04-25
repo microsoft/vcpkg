@@ -1,0 +1,12 @@
+The package exports CMake targets from `find_package(nvrhi CONFIG REQUIRED)`.
+
+Static builds install one interface/common target plus backend libraries:
+
+    target_link_libraries(main PRIVATE nvrhi nvrhi_d3d11 nvrhi_d3d12 nvrhi_vk)
+
+Link only the backend targets you actually use on the current platform. On Linux,
+only `nvrhi` and `nvrhi_vk` are relevant.
+
+Shared builds install a single `nvrhi` target with the enabled backends compiled in:
+
+    target_link_libraries(main PRIVATE nvrhi)

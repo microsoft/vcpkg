@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kernelwernel/VMAware
     REF v${VERSION}
-    SHA512 ff6bdb4c34a08df59ccedb1714ce2ade7656c3f664ed4e11b2e05f9ed4d94f608a566a93aa16784000ed0fd2cca6f34c624db27f2e3fe2f06cb48df6ec161ac3
+    SHA512 585e2918b48da4c9a01c46e35440b19b9a4b6544aeb10fb6e4439d8071a4f9da033c8f33941749480dcaa54c6d1bf4129ef0649eeef6df5a97a73fb61ea0185b
     HEAD_REF master
 )
 

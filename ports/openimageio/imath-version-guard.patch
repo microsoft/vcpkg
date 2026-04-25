@@ -1,8 +1,8 @@
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 816ba08..7fe6a14 100644
+index 6f786ab..5af9c2e 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -133,6 +133,11 @@ if (NOT OPENCOLORIO_INCLUDES)
+@@ -146,6 +146,11 @@ if (NOT OPENCOLORIO_INCLUDES)
      get_target_property(OPENCOLORIO_INCLUDES OpenColorIO::OpenColorIO INTERFACE_INCLUDE_DIRECTORIES)
  endif ()
  include_directories(BEFORE ${OPENCOLORIO_INCLUDES})
@@ -11,6 +11,6 @@ index 816ba08..7fe6a14 100644
 +        "OpenColorIO and OpenEXR use incompatible versions of Imath. "
 +        "You cannot use openimageio[opencolorio] for this configuration.")
 +endif()
-
+ 
  set(OPENCV_INCLUDES "")
  set(OPENCV_LIBRARIES opencv_core)

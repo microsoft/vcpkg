@@ -1,7 +1,6 @@
 {
   "name": "zxc",
-  "version": "0.9.1",
-  "port-version": 1,
+  "version": "0.10.0",
   "description": "High-performance asymmetric lossless compression library",
   "homepage": "https://github.com/hellobertrand/zxc",
   "license": "BSD-3-Clause AND MIT",

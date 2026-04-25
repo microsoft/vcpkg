@@ -81,16 +81,33 @@ index 1242bba..eba5242 100644
        USE_PKGCONFIG(UNZIP minizip)
      ENDIF()
    ENDIF ()
+@@ -717,9 +715,8 @@ ELSE()
+     SET(DRACO_TESTS OFF CACHE BOOL "" FORCE)
+ 
+-    IF(ASSIMP_HUNTER_ENABLED)
+-      hunter_add_package(draco)
+-      find_package(draco CONFIG REQUIRED)
+-      SET(draco_LIBRARIES draco::draco)
+-    ELSE()
++    IF(1)
++      find_package(draco CONFIG REQUIRED)
++      SET(draco_LIBRARIES draco::draco)
++    ELSE()
+       # Draco 1.4.1 has many warnings and will not build with /WX or -Werror
+       # See https://github.com/google/draco/issues/672
 diff --git a/cmake-modules/assimp-plain-config.cmake.in b/cmake-modules/assimp-plain-config.cmake.in
 index 6551dcb..dd65b0b 100644
 --- a/cmake-modules/assimp-plain-config.cmake.in
 +++ b/cmake-modules/assimp-plain-config.cmake.in
-@@ -1,5 +1,17 @@
+@@ -1,5 +1,20 @@
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
  
 +if(NOT "@BUILD_SHARED_LIBS@")
 +    find_dependency(zip CONFIG)
++    if(@ASSIMP_BUILD_DRACO@)
++        find_dependency(draco CONFIG)
++    endif()
 +    find_dependency(unofficial-minizip CONFIG)
 +    find_dependency(pugixml CONFIG)
 +    find_dependency(poly2tri CONFIG)
