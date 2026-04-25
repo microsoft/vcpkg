@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-test-port",
   "version": "1.0.0",
-  "port-version": 1,
-  "description": "A test port for vcpkg"
+  "description": "A test port for vcpkg with bad formatting",
+  "port-version": 2
 }
