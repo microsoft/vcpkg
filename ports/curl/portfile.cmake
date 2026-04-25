@@ -15,27 +15,28 @@ vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[LIBCURL_TIMESTAMP
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        http2       USE_NGHTTP2
-        http3       USE_NGTCP2
-        wolfssl     CURL_USE_WOLFSSL
-        openssl     CURL_USE_OPENSSL
-        openssl     CURL_CA_FALLBACK
-        mbedtls     CURL_USE_MBEDTLS
-        ssh         CURL_USE_LIBSSH2
-        tool        BUILD_CURL_EXE
-        c-ares      ENABLE_ARES
-        sspi        CURL_WINDOWS_SSPI
-        brotli      CURL_BROTLI
-        idn2        USE_LIBIDN2
-        winidn      USE_WIN32_IDN
-        zstd        CURL_ZSTD
-        psl         CURL_USE_LIBPSL
-        gssapi      CURL_USE_GSSAPI
-        gsasl       CURL_USE_GSASL
-        gnutls      CURL_USE_GNUTLS
-        rtmp        USE_LIBRTMP
-        httpsrr     USE_HTTPSRR
-        ssls-export USE_SSLS_EXPORT
+        apple-sectrust USE_APPLE_SECTRUST
+        http2          USE_NGHTTP2
+        http3          USE_NGTCP2
+        wolfssl        CURL_USE_WOLFSSL
+        openssl        CURL_USE_OPENSSL
+        openssl        CURL_CA_FALLBACK
+        mbedtls        CURL_USE_MBEDTLS
+        ssh            CURL_USE_LIBSSH2
+        tool           BUILD_CURL_EXE
+        c-ares         ENABLE_ARES
+        sspi           CURL_WINDOWS_SSPI
+        brotli         CURL_BROTLI
+        idn2           USE_LIBIDN2
+        winidn         USE_WIN32_IDN
+        zstd           CURL_ZSTD
+        psl            CURL_USE_LIBPSL
+        gssapi         CURL_USE_GSSAPI
+        gsasl          CURL_USE_GSASL
+        gnutls         CURL_USE_GNUTLS
+        rtmp           USE_LIBRTMP
+        httpsrr        USE_HTTPSRR
+        ssls-export    USE_SSLS_EXPORT
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
@@ -48,6 +49,25 @@ if("ssl" IN_LIST FEATURES AND
     # (windows & !uwp) | mingw to match curl[ssl]'s "platform"
     ((VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP) OR VCPKG_TARGET_IS_MINGW))
     list(APPEND FEATURE_OPTIONS -DCURL_USE_SCHANNEL=ON)
+endif()
+
+if("apple-sectrust" IN_LIST FEATURES)
+    set(apple_sectrust_has_compatible_backend OFF)
+    if("ssl" IN_LIST FEATURES OR "openssl" IN_LIST FEATURES OR "gnutls" IN_LIST FEATURES)
+        set(apple_sectrust_has_compatible_backend ON)
+    endif()
+
+    if(NOT apple_sectrust_has_compatible_backend AND
+        ("mbedtls" IN_LIST FEATURES OR "wolfssl" IN_LIST FEATURES))
+        message(FATAL_ERROR "apple-sectrust requires curl[ssl], curl[openssl], or curl[gnutls].")
+    endif()
+
+    if(NOT apple_sectrust_has_compatible_backend)
+        list(APPEND FEATURE_OPTIONS
+            -DCURL_USE_OPENSSL=ON
+            -DCURL_CA_FALLBACK=ON
+        )
+    endif()
 endif()
 
 if("http3" IN_LIST FEATURES AND
