@@ -1,4 +1,3 @@
-
 set(opts "")
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(opts
@@ -23,6 +22,7 @@ vcpkg_extract_source_archive(
     clang-cuda.patch
     fix-cmake4.patch
     fix-cuda13-clockrate.patch
+    fix-cuda13-preprocessor.patch
 )
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
@@ -37,6 +37,7 @@ vcpkg_cmake_configure(
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     ${opts}
 )
+
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 
