@@ -6986,7 +6986,7 @@
     },
     "nghttp2": {
       "baseline": "1.69.0",
-      "port-version": 0
+"port-version": 0
     },
     "nghttp2-asio": {
       "baseline": "2022-08-11",
@@ -10523,6 +10523,10 @@
     "vcpkg-qmake": {
       "baseline": "2025-05-19",
       "port-version": 0
+    },
+    "vcpkg-test-port": {
+      "baseline": "1.0.0",
+      "port-version": 2
     },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
