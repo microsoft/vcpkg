@@ -4,7 +4,7 @@
   "description": "CMake integration for Valve's Steamworks SDK",
   "homepage": "https://github.com/Waffle0823/SteamworksSDK",
   "license": "MIT",
-  "supports": "windows | linux | osx | android",
+  "supports": "(windows & !arm64) | linux | osx | android",
   "dependencies": [
     "vcpkg-cmake",
     "vcpkg-cmake-config"
