@@ -1,6 +1,6 @@
 {
   "name": "md4c",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "MD4C is a C library providing a Markdown parser.",
   "homepage": "https://github.com/mity/md4c",
   "license": "MIT",

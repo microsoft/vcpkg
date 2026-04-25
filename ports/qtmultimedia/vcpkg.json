@@ -21,7 +21,10 @@
     }
   ],
   "default-features": [
-    "ffmpeg",
+    {
+      "name": "ffmpeg",
+      "platform": "!emscripten"
+    },
     {
       "name": "pipewire",
       "platform": "linux"
@@ -35,6 +38,7 @@
   "features": {
     "ffmpeg": {
       "description": "Build with ffmpeg",
+      "supports": "!emscripten",
       "dependencies": [
         {
           "name": "ffmpeg",

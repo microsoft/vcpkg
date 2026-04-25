@@ -1,6 +1,6 @@
 {
   "name": "telnetpp",
-  "version": "4.0.0",
+  "version": "4.0.2",
   "description": "A C++ library for interacting with Telnet streams",
   "homepage": "https://github.com/KazDragon/telnetpp",
   "documentation": "https://kazdragon.github.io/telnetpp/",

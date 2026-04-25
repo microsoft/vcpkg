@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ashvardanian/NumKong
     REF "v${VERSION}"
-    SHA512 fdb0d0190890fdf802c5ec9b3164d52b5721efcdff98e33eb1cf06558b6e3c00ecfba44d22492dd9619749b77237e0d94ba366c39ee543f9ae744552faf6e2bc
+    SHA512 0454cc0168d3cd3a3d176cdfc879bfa2b4752b036248f7a7445a22dd1bd0c1f1c78a68e50fd15c8d0f0c10d234de28cc3cea906c37d01850e8939aecddd86b91
     HEAD_REF main
     PATCHES
         export-target.patch

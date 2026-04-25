@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO unum-cloud/usearch
     REF "v${VERSION}"
-    SHA512 d2ba01c86a102b23aa2827392bc4759d33cf6bcd7e7a1baa35cff9c2100721726c7bff854d8d06065095d480dc2a8c2245fe7afe404d53b577b7a9c9446fb8c0
+    SHA512 bbddcc500032c71e8e7563454baddf798cb8eb7bb96f4c6cab1137c86a8e0849701eb70d6e3b1329575d90faffa91656844a2a0205132f447ac9c2ffabc87e3c
     HEAD_REF main
     PATCHES
         use-vcpkg-ports.patch
@@ -12,7 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         fp16     USEARCH_USE_FP16LIB
         jemalloc USEARCH_USE_JEMALLOC
-        simsimd  USEARCH_USE_SIMSIMD
+        numkong  USEARCH_USE_NUMKONG
 )
 
 vcpkg_cmake_configure(
