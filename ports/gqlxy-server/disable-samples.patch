@@ -1,0 +1,33 @@
+From e5fb85d54eb0e4dc61642c1f3f72ccb879798b85 Mon Sep 17 00:00:00 2001
+From: vcpkg <patch@vcpkg>
+Date: Wed, 15 Apr 2026 14:53:07 -0700
+Subject: [PATCH] Add BUILD_SAMPLES option to disable sample builds
+
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c14faf1..6a6c98b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10.0)
+ option(ENABLE_VCPKG_BOOTSTRAP "Bootstrap vcpkg in the build dir and install manifest deps" OFF)
+ option(BUILD_STANDALONE_SERVER "Build the standalone HTTP/WebSocket/SSE GraphQL server (requires oatpp)" OFF)
+ option(ENABLE_COVERAGE "Instrument binaries for gcov/lcov code coverage" OFF)
++option(BUILD_SAMPLES "Build sample applications" ON)
+ 
+ if(ENABLE_COVERAGE)
+     add_compile_options(--coverage)
+@@ -66,7 +67,7 @@ if(ENABLE_COVERAGE)
+     include(cmake/coverage.cmake)
+ endif()
+ 
+-if(PROJECT_IS_TOP_LEVEL)
++if(PROJECT_IS_TOP_LEVEL AND BUILD_SAMPLES)
+     add_subdirectory(samples)
+ endif()
+ 
+-- 
+2.53.0.windows.2
+
