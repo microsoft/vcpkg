@@ -7848,6 +7848,14 @@
       "baseline": "2021-09-26",
       "port-version": 0
     },
+    "polkit": {
+      "baseline": "124",
+      "port-version": 0
+    },
+    "polkit-qt-1": {
+      "baseline": "0.201.1",
+      "port-version": 0
+    },
     "polyclipping": {
       "baseline": "6.4.2",
       "port-version": 13
