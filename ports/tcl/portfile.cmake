@@ -1,14 +1,27 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO tcltk/tcl
-    REF 0fa6a4e5aad821a5c34fdfa070c37c3f1ffc8c8e
-    SHA512 9d7f35309fe8b1a7c116639aaea50cc01699787c7afb432389bee2b9ad56a67034c45d90c9585ef1ccf15bdabf0951cbef86257c0c6aedbd2591bbfae3e93b76
-    PATCHES force-shell-install.patch
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://sourceforge.net/projects/tcl/files/Tcl/${VERSION}/tcl${VERSION}-src.tar.gz/download"
+    FILENAME "tcl${VERSION}-src.tar.gz"
+    SHA512 a899333fd96f139d92ad74ee42cc402428677ab2cab8ed3eb1e6e7cb35c7ca7d39aac89b7755b2fb1786512c857c79486d71f49a7821470f669fb9e544dba532
+
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        nmake.diff
+        wip.diff
+)
+file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.c" "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.h")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/compat/zlib"
+    "${SOURCE_PATH}/libtommath"
+    ${sqlite3_sources}
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        set(TCL_BUILD_MACHINE_STR MACHINE=ARM64)
     else()
         set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
     endif()
@@ -38,7 +51,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     vcpkg_install_nmake(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH win
         OPTIONS
             ${TCL_BUILD_MACHINE_STR}
@@ -46,15 +59,18 @@ if (VCPKG_TARGET_IS_WINDOWS)
             ${TCL_BUILD_CHECKS}
         OPTIONS_DEBUG
             ${TCL_BUILD_OPTS},symbols
-            INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug
-            SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0
+            "INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug"
+            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
+            "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/zd.lib"
         OPTIONS_RELEASE
             release
             ${TCL_BUILD_OPTS}
-            INSTALLDIR=${CURRENT_PACKAGES_DIR}
-            SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0
+            "INSTALLDIR=${CURRENT_PACKAGES_DIR}"
+            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
+            "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/z.lib"
     )
-
 
     # Install
     # Note: tcl shell requires it to be in a folder adjacent to the /lib/ folder, i.e. in a /bin/ folder
@@ -135,21 +151,28 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 else()
-    file(REMOVE "${SOURCE_PATH}/unix/configure")
-    vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH unix
+    set(options "")
+    if(VCPKG_CROSSCOMPILING)
+        vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin")
+        set(ENV{HOST_TCLSH} "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/tclsh9.0")
+    endif()
+    vcpkg_make_configure(
+        SOURCE_PATH "${SOURCE_PATH}/unix"
+        AUTORECONF
+        DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
+        OPTIONS
+            "CFLAGS=-I${CURRENT_INSTALLED_DIR}/include \$CFLAGS"
+            ${options}
+            --with-system-libtommath
+            --with-system-sqlite
     )
-    
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
     
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(GLOB_RECURSE config_scripts "${CURRENT_PACKAGES_DIR}/lib/*Config.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/*Config.sh")
+    file(REMOVE ${config_scripts})
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
     
-file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/tclConfig.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/tclConfig.sh")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.terms")

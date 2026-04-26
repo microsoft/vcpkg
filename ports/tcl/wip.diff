@@ -1,0 +1,86 @@
+diff --git a/generic/tclStubInit.c b/generic/tclStubInit.c
+index d3f6969..2c7ad8d 100644
+--- a/generic/tclStubInit.c
++++ b/generic/tclStubInit.c
+@@ -10,7 +10,7 @@
+  */
+ 
+ #include "tclInt.h"
+-#include "tommath_private.h"
++#define MP_MIN(x, y) (((x) < (y)) ? (x) : (y))
+ #include "tclTomMath.h"
+ 
+ #ifdef __CYGWIN__
+diff --git a/generic/tclZipfs.c b/generic/tclZipfs.c
+index aa43e3d..31dbafc 100644
+--- a/generic/tclZipfs.c
++++ b/generic/tclZipfs.c
+@@ -76,10 +76,8 @@
+ 	}								\
+     } while (0)
+ 
+-#include "zlib.h"
+-#include "crypt.h"
+-#include "zutil.h"
+-#include "crc32.h"
++#include <zlib.h>
++#include <minizip/crypt.h>
+ 
+ static const z_crc_t* crc32tab;
+ 
+diff --git a/pkgs/sqlite3.51.0/Makefile.in b/pkgs/sqlite3.51.0/Makefile.in
+index 20ab0fd..3f650e4 100644
+--- a/pkgs/sqlite3.51.0/Makefile.in
++++ b/pkgs/sqlite3.51.0/Makefile.in
+@@ -148,7 +148,7 @@ SHARED_BUILD	= @SHARED_BUILD@
+ INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ -I. -I$(srcdir)/..
+ #INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
+ 
+-PKG_CFLAGS	= @PKG_CFLAGS@ -DSQLITE_EXTERN=
++PKG_CFLAGS	= @PKG_CFLAGS@
+ 
+ # TCL_DEFS is not strictly need here, but if you remove it, then you
+ # must make sure that configure.ac checks for the necessary components
+diff --git a/pkgs/thread3.0.4/Makefile.in b/pkgs/thread3.0.4/Makefile.in
+index 5bdae04..33f6536 100644
+--- a/pkgs/thread3.0.4/Makefile.in
++++ b/pkgs/thread3.0.4/Makefile.in
+@@ -152,7 +152,7 @@ PKG_ENV		= TCL_THREAD_LIBRARY=`@CYGPATH@ $(srcdir)/lib` \
+ 		  TCLLIBPATH="$(TCLLIBPATH) $(top_builddir)/../lib"
+ 
+ TCLSH_PROG	= @TCLSH_PROG@
+-TCLSH		= $(TCLSH_ENV) $(PKG_ENV) $(TCLSH_PROG)
++TCLSH		= $(TCLSH_ENV) $(PKG_ENV) $${HOST_TCLSH:-$(TCLSH_PROG)}
+ 
+ #WISH_ENV	= TK_LIBRARY=`@CYGPATH@ $(TK_SRC_DIR)/library`
+ #WISH_PROG	= @WISH_PROG@
+diff --git a/unix/configure.ac b/unix/configure.ac
+index 80d676d..dfba53c 100644
+--- a/unix/configure.ac
++++ b/unix/configure.ac
+@@ -158,10 +158,11 @@ AC_CHECK_HEADER([zlib.h],[
+   AC_CHECK_TYPE([gz_header],[],[zlib_ok=no],[#include <zlib.h>])],[
+   zlib_ok=no])
+ AS_IF([test $zlib_ok = yes], [
+-  AC_SEARCH_LIBS([deflateSetHeader],[z],[],[
++  AC_SEARCH_LIBS([deflateSetHeader],[z zs zlib zd zsd zlibd],[],[
+     zlib_ok=no
+   ])])
+ AS_IF([test $zlib_ok = no], [
++  AC_MSG_ERROR([zlib not found])
+   AC_SUBST(ZLIB_OBJS,[\${ZLIB_OBJS}])
+   AC_SUBST(ZLIB_SRCS,[\${ZLIB_SRCS}])
+   AC_SUBST(ZLIB_INCLUDE,[-I\${ZLIB_DIR}])
+@@ -185,10 +186,11 @@ if test x"${libtommath_ok}" = x -o x"${libtommath_ok}" != xno; then
+     libtommath_ok=no])])
+ fi
+ AS_IF([test $libtommath_ok = yes], [
+-  AC_SUBST(TCL_PC_REQUIRES_PRIVATE, ['libtommath >= 1.2.0,'])
++  AC_SUBST(TCL_PC_REQUIRES_PRIVATE, ['']) # -ltommath in Libs
+   AC_SUBST(TCL_PC_CFLAGS, ['-DTCL_WITH_EXTERNAL_TOMMATH'])
+   AC_DEFINE(TCL_WITH_EXTERNAL_TOMMATH, 1, [Tcl with external libtommath])
+ ], [
++  AC_MSG_ERROR([libtommath not found])
+   AC_SUBST(TOMMATH_OBJS,[\${TOMMATH_OBJS}])
+   AC_SUBST(TOMMATH_SRCS,[\${TOMMATH_SRCS}])
+   AC_SUBST(TOMMATH_INCLUDE,[-I\${TOMMATH_DIR}])

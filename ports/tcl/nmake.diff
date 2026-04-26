@@ -1,0 +1,12 @@
+diff --git a/win/makefile.vc b/win/makefile.vc
+index 491eff8..5bf954f 100644
+--- a/win/makefile.vc
++++ b/win/makefile.vc
+@@ -476,7 +476,6 @@ PRJ_INCLUDES	= -I"$(TOMMATHDIR)"
+ PRJ_DEFINES	= /DMP_PREC=4 /Dinline=__inline /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DMP_FIXED_CUTOFFS
+ 
+ !if $(STATIC_BUILD)
+-PRJ_DEFINES = $(PRJ_DEFINES) /DTCL_WITH_INTERNAL_ZLIB
+ !endif
+ 
+ # Additional Link libraries needed beyond those in rules.vc
