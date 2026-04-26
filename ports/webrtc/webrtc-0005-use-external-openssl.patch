@@ -1,0 +1,28 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 376fdb4baf..f4978f3258 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -484,6 +484,9 @@ if (!rtc_build_ssl) {
+   config("external_ssl_library") {
+     if (rtc_ssl_root != "") {
+       include_dirs = [ rtc_ssl_root ]
++    }
++    if (rtc_ssl_lib_path != "") {
++      lib_dirs = [ rtc_ssl_lib_path ]
+     }
+     libs = [
+       "crypto",
+diff --git a/webrtc.gni b/webrtc.gni
+index 6be4fd36ff..b7343376a0 100644
+--- a/webrtc.gni
++++ b/webrtc.gni
+@@ -103,6 +103,9 @@ declare_args() {
+   # library that comes with WebRTC (i.e. rtc_build_ssl == 0).
+   rtc_ssl_root = ""
+ 
++  # Used to specify an external OpenSSL library path when rtc_build_ssl == 0.
++  rtc_ssl_lib_path = ""
++
+   # Selects whether debug dumps for the audio processing module
+   # should be generated.
+   apm_debug_dump = false

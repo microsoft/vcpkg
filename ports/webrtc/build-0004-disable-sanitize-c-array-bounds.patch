@@ -1,0 +1,26 @@
+--- a/config/compiler/BUILD.gn
++++ b/config/compiler/BUILD.gn
+@@ -1901,22 +1901,7 @@
+ # See also: https://crbug.com/40891132#comment10
+ config("sanitize_c_array_bounds") {
+   if (!is_ubsan && is_clang && !(is_asan && target_cpu == "x86")) {
+-    cflags = [
+-      "-fsanitize=array-bounds",
+-      "-fsanitize-trap=array-bounds",
+-
+-      # Some code users feature detection to determine if UBSAN (or any
+-      # sanitizer) is enabled, they then do expensive debug like operations. We
+-      # want to suppress this behaviour since we want to keep performance costs
+-      # as low as possible while having these checks.
+-      "-fsanitize-ignore-for-ubsan-feature=array-bounds",
+-
+-      # Because we've enabled array-bounds sanitizing we also want to suppress
+-      # the related warning about "unsafe-buffer-usage-in-static-sized-array",
+-      # since we know that the array bounds sanitizing will catch any out-of-
+-      # bounds accesses.
+-      "-Wno-unsafe-buffer-usage-in-static-sized-array",
+-    ]
++    cflags = []
+   }
+ }
+ 
