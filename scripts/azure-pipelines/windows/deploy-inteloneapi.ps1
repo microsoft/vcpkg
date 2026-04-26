@@ -11,16 +11,16 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 [string]$oneAPIBaseUrl
 if ([string]::IsNullOrEmpty($SasToken)) {
   Write-Host 'Downloading from the Internet'
-  $oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/3bbdaf75-6728-492e-a18c-be654dae9ee2/intel-oneapi-hpc-toolkit-2025.2.0.576_offline.exe'
+  $oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/36f868e9-84b3-4b4f-90ef-ca84092cae6a/intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
 } else {
   Write-Host 'Downloading from vcpkgimageminting using SAS token'
   $SasToken = $SasToken.Replace('"', '')
-  $oneAPIBaseUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/intel-oneapi-hpc-toolkit-2025.2.0.576_offline.exe?$SasToken"
+  $oneAPIBaseUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe?$SasToken"
 }
 
 $oneAPIHPCComponents = 'intel.oneapi.win.ifort-compiler'
 
-$LocalName = 'intel-oneapi-hpc-toolkit-2025.2.0.576_offline.exe'
+$LocalName = 'intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
 
 try {
   [bool]$doRemove = $false

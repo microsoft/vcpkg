@@ -10,6 +10,7 @@ vcpkg_from_github(
         relax-link-options.diff
         vulkan-shaders-gen.diff
         fix-dequant_funcs.diff
+        cuda-13-2.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
