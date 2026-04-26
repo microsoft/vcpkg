@@ -1,26 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2864467..bcf44a2 100644
+index 20cf576..ecf5070 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -168,7 +168,7 @@ check_function_exists(symlink HAVE_SYMLINK)
- # Check for fseeko readlink
+ # Check for readlink support
  check_function_exists(readlink HAVE_READLINK)
  
--configure_file(mz_config.h.cmakein ${CMAKE_CURRENT_SOURCE_DIR}/mz_config.h @ONLY NEWLINE_STYLE UNIX)
+-configure_file(mz_config.h.cmakein ${CMAKE_CURRENT_BINARY_DIR}/mz_config.h @ONLY NEWLINE_STYLE UNIX)
 +configure_file(mz_config.h.cmakein mz_config.h @ONLY NEWLINE_STYLE UNIX)
+ list(APPEND MINIZIP_HDR ${CMAKE_CURRENT_BINARY_DIR}/mz_config.h)
  
  if(MZ_LIBCOMP)
-     if(APPLE)
-@@ -272,7 +272,7 @@ if(MZ_BZIP2)
-         list(APPEND MINIZIP_LIB ${BZIP2_LIBRARIES})
-         list(APPEND MINIZIP_LBD ${BZIP2_LIBRARY_DIRS})
- 
--        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -lbz2")
-+        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} bzip2")
-     elseif(MZ_FETCH_LIBS)
-         clone_repo(bzip2 https://sourceware.org/git/bzip2.git master)
- 
-@@ -316,7 +316,6 @@ if(MZ_LZMA)
+@@ -317,7 +317,6 @@ if(MZ_LZMA)
      if(NOT MZ_FORCE_FETCH_LIBS)
          find_package(PkgConfig QUIET)
          if(PKGCONFIG_FOUND)
@@ -28,16 +19,7 @@ index 2864467..bcf44a2 100644
          endif()
          if(NOT LIBLZMA_FOUND)
              find_package(LibLZMA QUIET)
-@@ -331,7 +330,7 @@ if(MZ_LZMA)
-         list(APPEND MINIZIP_LIB ${LIBLZMA_LIBRARIES})
-         list(APPEND MINIZIP_LBD ${LIBLZMA_LIBRARY_DIRS})
- 
--        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -llzma")
-+        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} liblzma")
-     elseif(MZ_FETCH_LIBS)
-         set(BUILD_TESTING OFF CACHE BOOL "Build lzma tests" FORCE)
- 
-@@ -356,7 +355,7 @@ endif()
+@@ -357,7 +356,7 @@ endif()
  
  if(MZ_PPMD)
      message(STATUS "Using PPMD")
@@ -46,7 +28,7 @@ index 2864467..bcf44a2 100644
      clone_repo(ppmd https://github.com/ip7z/7zip "26.00")
  
      # get the 7zip/PPMd version number
-@@ -364,7 +363,7 @@ if(MZ_PPMD)
+@@ -365,7 +364,7 @@ if(MZ_PPMD)
      string(REGEX MATCH "MY_VERSION_NUMBERS \"([0-9]*\.[0-9]*)\"" _ ${version})
      set(7ZIP_VERSION_NUMBER ${CMAKE_MATCH_1})
      message(STATUS "  Found 7Zip/PPMd ${7ZIP_VERSION_NUMBER}")
@@ -55,7 +37,7 @@ index 2864467..bcf44a2 100644
      # The PPMd repository does not support cmake so we have to create
      # a PPMd library ourselves
      set(PPMD_SRC
-@@ -397,10 +396,9 @@ if(MZ_ZSTD)
+@@ -398,10 +397,9 @@ if(MZ_ZSTD)
      if(NOT MZ_FORCE_FETCH_LIBS)
          find_package(PkgConfig QUIET)
          if(PKGCONFIG_FOUND)
@@ -67,16 +49,7 @@ index 2864467..bcf44a2 100644
              if(ZSTD_FOUND)
                  if(TARGET zstd::libzstd_static)
                      list(APPEND ZSTD_LIBRARIES zstd::libzstd_static)
-@@ -418,7 +416,7 @@ if(MZ_ZSTD)
-         list(APPEND MINIZIP_LIB ${ZSTD_LIBRARIES})
-         list(APPEND MINIZIP_LBD ${ZSTD_LIBRARY_DIRS})
- 
--        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -lzstd")
-+        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} libzstd")
-     elseif(MZ_FETCH_LIBS)
-         set(ZSTD_BUILD_PROGRAMS OFF CACHE BOOL "Build zstd programs")
- 
-@@ -455,7 +453,6 @@ if(MZ_OPENSSL)
+@@ -456,7 +454,6 @@ if(MZ_OPENSSL)
      # Check to see if openssl installation is present
      find_package(PkgConfig)
      if(PKGCONFIG_FOUND)
@@ -84,7 +57,7 @@ index 2864467..bcf44a2 100644
      endif()
      if(NOT OPENSSL_FOUND)
          find_package(OpenSSL)
-@@ -476,8 +473,8 @@ if(MZ_OPENSSL)
+@@ -477,8 +474,8 @@ if(MZ_OPENSSL)
          endif()
  
          foreach(i ${OPENSSL_LIBRARIES})
