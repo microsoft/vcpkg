@@ -1,13 +1,13 @@
 {
   "name": "ecal",
-  "version-semver": "5.13.4",
-  "port-version": 1,
+  "version-semver": "6.0.1",
   "description": "eCAL - enhanced Communication Abstraction Layer",
   "homepage": "https://eclipse-ecal.github.io/ecal/",
   "license": "Apache-2.0",
-  "supports": "!emscripten",
+  "supports": "!emscripten & !uwp & !android & !(windows & !static)",
   "dependencies": [
     "asio",
+    "ecaludp",
     {
       "name": "hdf5",
       "default-features": false
@@ -16,7 +16,8 @@
       "name": "protobuf",
       "default-features": false
     },
-    "simpleini",
+    "recycle",
+    "spdlog",
     "tclap",
     "tcp-pubsub",
     {
@@ -26,6 +27,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "yaml-cpp"
   ]
 }
