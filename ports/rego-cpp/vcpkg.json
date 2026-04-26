@@ -1,6 +1,6 @@
 {
   "name": "rego-cpp",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A C++ interpreter for the OPA Rego policy language",
   "homepage": "https://github.com/microsoft/rego-cpp",
   "license": "MIT",
@@ -10,7 +10,8 @@
       "name": "trieste",
       "features": [
         "parsers"
-      ]
+      ],
+      "version>=": "1.1.0"
     },
     {
       "name": "vcpkg-cmake",

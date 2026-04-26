@@ -1,0 +1,44 @@
+{
+  "name": "kguiaddons",
+  "version": "6.25.0",
+  "port-version": 1,
+  "description": "Addons to QtGui",
+  "homepage": "https://invent.kde.org/frameworks/kguiaddons",
+  "documentation": "https://api.kde.org/kguiaddons-index.html",
+  "supports": "!android",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "plasma-wayland-protocols",
+      "platform": "linux"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    },
+    {
+      "name": "qtwayland",
+      "default-features": false,
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build with QML support",
+      "dependencies": [
+        "qtdeclarative"
+      ]
+    }
+  }
+}

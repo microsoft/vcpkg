@@ -1,11 +1,10 @@
 {
   "name": "openturns",
-  "version": "1.25.1",
+  "version": "1.26.1",
   "description": "OpenTURNS is a scientific C++ and Python library featuring an internal data model and algorithms dedicated to the treatment of uncertainties.",
   "homepage": "https://openturns.github.io/",
   "license": null,
   "dependencies": [
-    "blas",
     "boost-geometry",
     "boost-math",
     "boost-multiprecision",

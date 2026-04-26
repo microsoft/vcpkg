@@ -22,6 +22,7 @@ vcpkg_extract_source_archive(
     no-tests.patch
     clang-cuda.patch
     fix-cmake4.patch
+    fix-cuda13-clockrate.patch
 )
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 

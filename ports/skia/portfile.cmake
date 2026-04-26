@@ -3,23 +3,25 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "50841da4a7b7064b3cea8a851e60ef921c87a103"
-    SHA512 ea9ebab3baf3f50277bd1406b6b5cd28df75fe9fa6586f6022cb08f229fc86bedd84192564f0d3b9a6013cda8e92874c070bf1fef9f3ed2d6a7433a0d713d6af
+    REF e7c90ecca9444fe09598f1630ab7cee2c0ee027a
+    SHA512 f52286fcac1d1b2b45046d7df72cee384b664f0b512c4b4a76bca743747f2113fef6991059b4e71ad804d0209103003ba0f01aa90afac786de20a52e8484018d
     PATCHES
-        # disable-dev-test.patch
-        bentleyottmann-build.patch
-        graphite.patch
-        vulkan-headers.patch
-        pdfsubsetfont-uwp.diff
-        skparagraph-dllexport.patch
-        use-pkgconfig-to-find-gl.patch
-        dont-use-response-file.patch
-        fix-bsd.patch
-        allow-disabling-lib-dl.patch
-        always-build-pathops.patch
-        skstrendswith-dllexport.patch
-        dawn.patch
-        skcms-dllexport.patch
+        001-bentleyottmann-build.patch
+        002-graphite.patch
+        003-vulkan-headers.patch
+        004-pdfsubsetfont-uwp.patch
+        005-skparagraph-dllexport.patch
+        006-use-pkgconfig-to-find-gl.patch
+        007-dont-use-response-file.patch
+        008-fix-bsd.patch
+        009-allow-disabling-lib-dl.patch
+        010-always-build-pathops.patch
+        011-skstrendswith-dllexport.patch
+        012-dawn.patch
+        013-skcms-dllexport.patch
+
+        # Used in src/gpu/ganesh/d3d/GrD3DBackendSurface.cpp:118, next time we update skia port, check if this patch is still needed
+        014-fix-direct3d.patch
 )
 
 # De-vendor
@@ -50,7 +52,7 @@ declare_external_from_git(markupsafe
 )
 declare_external_from_git(partition_alloc
     URL "https://chromium.googlesource.com/chromium/src/base/allocator/partition_allocator.git"
-    REF "ce13777cb731e0a60c606d1741091fd11a0574d7"
+    REF "b8c0688f577c1bbce6c2c1ce4753cd685ca0f634"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(piex
@@ -65,12 +67,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "f31ca173eff866369e54d35e53375fadbabd58f4"
+    REF "6dd7ba990830f7c15ac1345ff3b43ef6ffdad216"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "f139c64525c7c449c83d299a9fda4e1657bf37ab"
+    REF "2d14d2e76aa7de72404b17078eda15c20a6a0389"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs

@@ -1,6 +1,6 @@
 {
   "name": "harfbuzz",
-  "version": "13.0.1",
+  "version": "14.2.0",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
@@ -85,6 +85,18 @@
             "glib"
           ]
         }
+      ]
+    },
+    "png": {
+      "description": "Use PNG library",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "zlib": {
+      "description": "Use zlib library",
+      "dependencies": [
+        "zlib"
       ]
     }
   }

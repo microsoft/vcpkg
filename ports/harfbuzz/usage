@@ -8,8 +8,17 @@ harfbuzz provides CMake targets:
 
 harfbuzz provides pkg-config modules:
 
+  # HarfBuzz GPU rasterization library
+  harfbuzz-gpu
+
+  # HarfBuzz CPU rasterizer
+  harfbuzz-raster
+
   # HarfBuzz font subsetter
   harfbuzz-subset
+
+  # HarfBuzz vector converter
+  harfbuzz-vector
 
   # HarfBuzz text shaping library
   harfbuzz

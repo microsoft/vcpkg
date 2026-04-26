@@ -87,6 +87,15 @@ if (@BUILD_PLAYFAB_SERVICES@ AND (EXISTS "${_msgdk_root}/lib/PlayFabCore.lib"))
 
     target_link_libraries(Xbox::PlayFabServices INTERFACE Xbox::PlayFabCore Xbox::XCurl)
 
+    # PlayFab Game Save
+    add_library(Xbox::PlayFabGameSave SHARED IMPORTED)
+    set_target_properties(Xbox::PlayFabGameSave PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/PlayFabGameSave.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/PlayFabGameSave.lib"
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
+
     # PlayFab Party
     add_library(Xbox::PlayFabParty SHARED IMPORTED)
     set_target_properties(Xbox::PlayFabParty PROPERTIES
