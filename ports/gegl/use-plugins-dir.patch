@@ -1,0 +1,372 @@
+diff --git a/gegl/gegl-init.c b/gegl/gegl-init.c
+index 9f47f886..4c2d531c 100644
+--- a/gegl/gegl-init.c
++++ b/gegl/gegl-init.c
+@@ -745,7 +745,7 @@ gegl_get_default_module_paths(void)
+     }
+ #elif defined(G_OS_WIN32)
+   prefix      = g_win32_get_package_installation_directory_of_module (hLibGeglModule);
+-  module_path = g_build_filename (prefix, "lib", GEGL_LIBRARY, NULL);
++  module_path = g_build_filename (prefix, "plugins", GEGL_LIBRARY, NULL);
+   g_free(prefix);
+ #else
+ #if defined(ENABLE_RELOCATABLE)
+diff --git a/meson.build b/meson.build
+index c11242eb..1335533b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -249,6 +249,8 @@ if cc.get_id() == 'msvc'
+   cflags_common += ['/D__restrict__=__restrict']
+ endif
+ 
++gegl_plugins_dir = 'plugins' / api_name
++
+ if buildtype == 'debugoptimized' or buildtype == 'release'
+   cflags_common += cc.get_supported_arguments(['-ftree-vectorize'])
+ endif
+@@ -635,7 +640,7 @@ pkgconfig.generate(gegl_lib,
+   name: 'GEGL',
+   description: 'Generic Graphics Library',
+   version: meson.project_version(),
+-  variables: 'pluginsdir=' + '${prefix}' / get_option('libdir') / api_name,
++  variables: 'pluginsdir=' + '${prefix}' / gegl_plugins_dir,
+   # gegl_npd_lib API is actually used by software, such as GIMP. It must
+   # not be removed, even though adding it like this is not so proper. If
+   # one wants to clean up this dependency, a proper port must be done
+diff --git a/operations/common-cxx/meson.build b/operations/common-cxx/meson.build
+index 146967fa..0b7db2b7 100644
+--- a/operations/common-cxx/meson.build
++++ b/operations/common-cxx/meson.build
+@@ -35,7 +35,7 @@ gegl_common_cxx = shared_library('gegl-common-cxx',
+   cpp_args: [ '-DGEGL_OP_BUNDLE', ],
+   name_prefix: '',
+   install: true,
+-  install_dir: get_option('libdir') / api_name,
++  install_dir: gegl_plugins_dir,
+ )
+ 
+ gegl_operations += gegl_common_cxx
+@@ -58,7 +58,7 @@ if host_cpu_family == 'x86_64'
+     cpp_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v2_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_cxx_x86_64_v2
+   
+@@ -78,7 +78,7 @@ if host_cpu_family == 'x86_64'
+     cpp_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v3_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_cxx_x86_64_v3
+ 
+@@ -100,7 +100,7 @@ elif host_cpu_family == 'arm'
+     cpp_args: [ '-DGEGL_OP_BUNDLE' ] + arm_neon_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_cxx_arm_neon
+ 
+diff --git a/operations/common-gpl3+/meson.build b/operations/common-gpl3+/meson.build
+index 0513fb44..18956e16 100644
+--- a/operations/common-gpl3+/meson.build
++++ b/operations/common-gpl3+/meson.build
+@@ -78,7 +78,7 @@ gegl_common_gpl3 = shared_library('gegl-common-gpl3',
+   ],
+   name_prefix: '',
+   install: true,
+-  install_dir: get_option('libdir') / api_name,
++  install_dir: gegl_plugins_dir,
+ )
+ 
+ gegl_operations += gegl_common_gpl3
+@@ -101,7 +101,7 @@ if host_cpu_family == 'x86_64'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v2_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_gpl3_x86_64_v2
+   
+@@ -121,7 +121,7 @@ if host_cpu_family == 'x86_64'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v3_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_gpl3_x86_64_v3
+ 
+@@ -143,7 +143,7 @@ elif host_cpu_family == 'arm'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + arm_neon_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_gpl3_arm_neon
+ 
+diff --git a/operations/common/meson.build b/operations/common/meson.build
+index 29249844..82df99e6 100644
+--- a/operations/common/meson.build
++++ b/operations/common/meson.build
+@@ -152,7 +152,7 @@ gegl_common = shared_library('gegl-common',
+   ],
+   name_prefix: '',
+   install: true,
+-  install_dir: get_option('libdir') / api_name,
++  install_dir: gegl_plugins_dir,
+ )
+ 
+ gegl_operations += gegl_common
+@@ -167,7 +167,7 @@ if host_cpu_family == 'x86_64'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v2_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_x86_64_v2
+ 
+@@ -179,7 +179,7 @@ if host_cpu_family == 'x86_64'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v3_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   
+   gegl_operations += gegl_common_x86_64_v3
+@@ -193,7 +193,7 @@ elif host_cpu_family == 'arm'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + arm_neon_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_common_arm_neon
+ endif
+diff --git a/operations/core/meson.build b/operations/core/meson.build
+index ca9e72cc..0729f24b 100644
+--- a/operations/core/meson.build
++++ b/operations/core/meson.build
+@@ -37,7 +37,7 @@ gegl_core = shared_library('gegl-core',
+   ],
+   name_prefix: '',
+   install: true,
+-  install_dir: get_option('libdir') / api_name,
++  install_dir: gegl_plugins_dir,
+ )
+ 
+ gegl_operations += gegl_core
+diff --git a/operations/external/meson.build b/operations/external/meson.build
+index 64c84e45..f9e7c435 100644
+--- a/operations/external/meson.build
++++ b/operations/external/meson.build
+@@ -128,6 +128,6 @@ foreach operation : operations
+     link_with: [ gegl_lib, ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endforeach
+diff --git a/operations/generated/meson.build b/operations/generated/meson.build
+index b2d0e82d..66f73501 100644
+--- a/operations/generated/meson.build
++++ b/operations/generated/meson.build
+@@ -52,7 +52,7 @@ gegl_generated = shared_library('gegl-generated',
+   ],
+   name_prefix: '',
+   install: true,
+-  install_dir: get_option('libdir') / api_name,
++  install_dir: gegl_plugins_dir,
+ )
+ 
+ gegl_operations += gegl_generated
+@@ -67,7 +67,7 @@ if host_cpu_family == 'x86_64'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v2_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_generated_x86_64_v2
+   
+@@ -79,7 +79,7 @@ if host_cpu_family == 'x86_64'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + x86_64_v3_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_generated_x86_64_v3
+ 
+@@ -93,7 +93,7 @@ elif host_cpu_family == 'arm'
+     c_args: [ '-DGEGL_OP_BUNDLE' ] + arm_neon_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_generated_arm_neon
+ 
+diff --git a/operations/json/meson.build b/operations/json/meson.build
+index feab852b..ccccb956 100644
+--- a/operations/json/meson.build
++++ b/operations/json/meson.build
+@@ -11,6 +11,6 @@ foreach _file : json_operations
+     output: _file,
+     copy: true,
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endforeach
+diff --git a/operations/seamless-clone/meson.build b/operations/seamless-clone/meson.build
+index 47562a2e..708ad1e2 100644
+--- a/operations/seamless-clone/meson.build
++++ b/operations/seamless-clone/meson.build
+@@ -21,6 +21,6 @@ foreach lib : seamless_clone_libs
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endforeach
+diff --git a/operations/transform/meson.build b/operations/transform/meson.build
+index 110b2896..33e2c0a6 100644
+--- a/operations/transform/meson.build
++++ b/operations/transform/meson.build
+@@ -29,7 +29,7 @@ gegl_transformops = shared_library('transformops',
+   ],
+   name_prefix: '',
+   install: true,
+-  install_dir: get_option('libdir') / api_name,
++  install_dir: gegl_plugins_dir,
+ )
+ 
+ gegl_operations += gegl_transformops
+@@ -44,7 +44,7 @@ if host_cpu_family == 'x86_64'
+     c_args: x86_64_v2_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_transformops_x86_64_v2
+   
+@@ -56,7 +56,7 @@ if host_cpu_family == 'x86_64'
+     c_args: x86_64_v3_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_transformops_x86_64_v3
+ 
+@@ -70,7 +70,7 @@ elif host_cpu_family == 'arm'
+     c_args: arm_neon_flags,
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+   gegl_operations += gegl_transformops_arm_neon
+ 
+diff --git a/operations/workshop/external/meson.build b/operations/workshop/external/meson.build
+index 24a9cf44..61c78cb7 100644
+--- a/operations/workshop/external/meson.build
++++ b/operations/workshop/external/meson.build
+@@ -14,7 +14,7 @@ gegl_operations += shared_library('voroni_diagram',
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+ )
+ 
+ 
+@@ -34,7 +34,7 @@ if lua.found()
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endif
+ 
+@@ -54,7 +54,7 @@ if lensfun.found()
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endif
+ 
+@@ -74,7 +74,7 @@ if cairo.found()
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endif
+ 
+@@ -94,7 +94,7 @@ if libv4l2.found()
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endif
+ 
+@@ -114,7 +114,7 @@ if maxflow.found()
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endif
+ 
+@@ -124,5 +124,5 @@ gegl_operations+=shared_library('ctx-script',
+    link_with:[gegl_lib],
+    name_prefix:'',
+    install:true,
+-   install_dir: get_option('libdir') / api_name,
++   install_dir: gegl_plugins_dir,
+ )
+diff --git a/operations/workshop/generated/meson.build b/operations/workshop/generated/meson.build
+index 318931d4..ffb3e942 100644
+--- a/operations/workshop/generated/meson.build
++++ b/operations/workshop/generated/meson.build
+@@ -22,6 +22,6 @@ foreach lib : libraries
+     ],
+     name_prefix: '',
+     install: true,
+-    install_dir: get_option('libdir') / api_name,
++    install_dir: gegl_plugins_dir,
+   )
+ endforeach
+diff --git a/operations/workshop/meson.build b/operations/workshop/meson.build
+index 6bb3046f..9c8594dc 100644
+--- a/operations/workshop/meson.build
++++ b/operations/workshop/meson.build
+@@ -46,5 +46,5 @@ gegl_workshop = shared_library('gegl-workshop',
+   ],
+   name_prefix: '',
+   install: true,
+-  install_dir: get_option('libdir') / api_name,
++  install_dir: gegl_plugins_dir,
+ )

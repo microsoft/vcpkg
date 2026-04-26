@@ -1,0 +1,614 @@
+diff --git a/gegl/graph/gegl-node.h b/gegl/graph/gegl-node.h
+index a9d76e53f..9cd94c57ed 100644
+--- a/gegl/graph/gegl-node.h
++++ b/gegl/graph/gegl-node.h
+@@ -112,27 +112,27 @@ GeglNode    * gegl_node_new_child        (GeglNode      *parent,
+  * Returns TRUE if the connection was successfully made.
+  */
+ 
+-gboolean      gegl_node_connect_from     (GeglNode      *sink,
++G_DEPRECATED_FOR (gegl_node_connect or gegl_node_link if pads are "input" and "output")
++gboolean      gegl_node_connect_from     (GeglNode      *sink,
+                                           const gchar   *input_pad_name,
+                                           GeglNode      *source,
+-                                          const gchar   *output_pad_name)
+-G_DEPRECATED_FOR (gegl_node_connect or gegl_node_link if pads are "input" and "output");
++                                          const gchar   *output_pad_name);
+ 
+ /**
+  * gegl_node_connect_to:
+  * @source: the node producing data we want to connect.
+  * @output_pad_name: the output pad we want to use on the source.
+  * @sink: the node we're connecting an input to
+  * @input_pad_name: the name of the input pad we are connecting to
+  *
+  * Makes a connection between the pads of two nodes.
+  *
+  * Returns TRUE if the connection was successfully made.
+  */
+-gboolean      gegl_node_connect_to       (GeglNode      *source,
++G_DEPRECATED_FOR (gegl_node_connect or gegl_node_link if pads are "output" and "input")
++gboolean      gegl_node_connect_to       (GeglNode      *source,
+                                           const gchar   *output_pad_name,
+                                           GeglNode      *sink,
+-                                          const gchar   *input_pad_name)
+-G_DEPRECATED_FOR (gegl_node_connect or gegl_node_link if pads are "output" and "input");
++                                          const gchar   *input_pad_name);
+ 
+ /**
+  * gegl_node_connect:
+
+diff --git a/gegl/buffer/gegl-algorithms-bilinear.inc b/gegl/buffer/gegl-algorithms-bilinear.inc
+index 1beb569..7a139c0 100644
+--- a/gegl/buffer/gegl-algorithms-bilinear.inc
++++ b/gegl/buffer/gegl-algorithms-bilinear.inc
+@@ -12,8 +12,8 @@ BILINEAR_FUNCNAME (guchar                    *dest_buf,
+   const gint ver  = s_rowstride/(bpp/components);
+   const gint diag = ver + components;
+ 
+-  gfloat dx[dst_rect->width];
+-  gint   jj[dst_rect->width];
++  gfloat *dx = g_newa (gfloat, dst_rect->width);
++  gint   *jj = g_newa (gint, dst_rect->width);
+ 
+   for (gint x = 0; x < dst_rect->width; x++)
+   {
+diff --git a/gegl/buffer/gegl-algorithms-boxfilter.inc b/gegl/buffer/gegl-algorithms-boxfilter.inc
+index fd67dce..cda1141 100644
+--- a/gegl/buffer/gegl-algorithms-boxfilter.inc
++++ b/gegl/buffer/gegl-algorithms-boxfilter.inc
+@@ -13,11 +13,11 @@ BOXFILTER_FUNCNAME (guchar                    *dest_buf,
+   const BOXFILTER_TYPE *src[9];
+   gint  components = bpp / sizeof(BOXFILTER_TYPE);
+ 
+-  gfloat left_weight[dst_rect->width];
+-  gfloat center_weight[dst_rect->width];
+-  gfloat right_weight[dst_rect->width];
++  gfloat *left_weight = g_newa (gfloat, dst_rect->width);
++  gfloat *center_weight = g_newa (gfloat, dst_rect->width);
++  gfloat *right_weight = g_newa (gfloat, dst_rect->width);
+ 
+-  gint   jj[dst_rect->width];
++  gint   *jj = g_newa (gint, dst_rect->width);
+ 
+   for (gint x = 0; x < dst_rect->width; x++)
+   {
+diff --git a/gegl/buffer/gegl-algorithms.c b/gegl/buffer/gegl-algorithms.c
+index 176ba29..dd03994 100644
+--- a/gegl/buffer/gegl-algorithms.c
++++ b/gegl/buffer/gegl-algorithms.c
+@@ -75,10 +75,10 @@ gegl_boxfilter_u8_nl (guchar              *dest_buf,
+   const uint8_t *src[9];
+   gint  components = bpp / sizeof(uint8_t);
+ 
+-  gfloat left_weight[dst_rect->width];
+-  gfloat right_weight[dst_rect->width];
++  gfloat *left_weight = g_newa (gfloat, dst_rect->width);
++  gfloat *right_weight = g_newa (gfloat, dst_rect->width);
+ 
+-  gint   jj[dst_rect->width];
++  gint   *jj = g_newa (gint, dst_rect->width);
+ 
+   for (gint x = 0; x < dst_rect->width; x++)
+   {
+@@ -238,10 +238,10 @@ gegl_boxfilter_u8_nl_alpha (guchar              *dest_buf,
+   const uint8_t *src[9];
+   gint  components = bpp / sizeof(uint8_t);
+ 
+-  gfloat left_weight[dst_rect->width];
+-  gfloat right_weight[dst_rect->width];
++  gfloat *left_weight = g_newa (gfloat, dst_rect->width);
++  gfloat *right_weight = g_newa (gfloat, dst_rect->width);
+ 
+-  gint   jj[dst_rect->width];
++  gint   *jj = g_newa (gint, dst_rect->width);
+ 
+   for (gint x = 0; x < dst_rect->width; x++)
+   {
+@@ -363,8 +363,8 @@ gegl_bilinear_u8_nl (guchar              *dest_buf,
+   const gint src_y = src_rect->y;
+   const gint dst_width = dst_rect->width;
+   const gint dst_height = dst_rect->height;
+-  gfloat dx[dst_rect->width];
+-  gint   jj[dst_rect->width];
++  gfloat *dx = g_newa (gfloat, dst_rect->width);
++  gint   *jj = g_newa (gint, dst_rect->width);
+ 
+   for (gint x = 0; x < dst_rect->width; x++)
+   {
+@@ -501,8 +501,8 @@ gegl_bilinear_u8_nl_alpha (guchar              *dest_buf,
+   const gint src_y = src_rect->y;
+   const gint dst_width = dst_rect->width;
+   const gint dst_height = dst_rect->height;
+-  gfloat dx[dst_rect->width];
+-  gint   jj[dst_rect->width];
++  gfloat *dx = g_newa (gfloat, dst_rect->width);
++  gint   *jj = g_newa (gint, dst_rect->width);
+ 
+   for (gint x = 0; x < dst_rect->width; x++)
+   {
+@@ -889,8 +889,8 @@ GEGL_SIMD_SUFFIX(gegl_resample_nearest) (guchar              *dst,
+                                          const gdouble        scale,
+                                          const gint           bpp,
+                                          const gint           dst_stride)
+ {
+-  gint jj[dst_rect->width];
++  gint *jj = g_newa (gint, dst_rect->width);
+   gint x, y;
+   for (x = 0; x < dst_rect->width; x++)
+   {
+
+diff --git a/gegl/buffer/gegl-buffer-access.c b/gegl/buffer/gegl-buffer-access.c
+index c1cfb9f6c9..3a8f9b9d89 100644
+--- a/gegl/buffer/gegl-buffer-access.c
++++ b/gegl/buffer/gegl-buffer-access.c
+@@ -1972,9 +1972,9 @@ gegl_buffer_set (GeglBuffer          *buffer,
+                rowstride == babl_format_get_bytes_per_pixel (format))
+         {
+           int     bpp = babl_format_get_bytes_per_pixel (buffer->soft_format);
+-          uint8_t tmp[rect->height * bpp];
++          uint8_t *tmp = g_newa (uint8_t, rect->height * bpp);
+           babl_process (babl_fish (format, buffer->soft_format),
+-                        src, &tmp[0], rect->height);
++                        src, tmp, rect->height);
+           _gegl_buffer_set_with_flags (buffer, rect, level, buffer->soft_format, tmp, bpp,
+                                        GEGL_BUFFER_SET_FLAG_LOCK|
+                                        GEGL_BUFFER_SET_FLAG_NOTIFY);
+@@ -2071,12 +2071,12 @@ _gegl_buffer_get_unlocked (GeglBuffer          *buffer,
+         {
+           /* first fetch all pixels to a temporary buffer */
+           gint    bpp = babl_format_get_bytes_per_pixel (buffer->soft_format);
+-          uint8_t tmp[rect->height * bpp];
+-          gegl_buffer_iterate_read_dispatch (buffer, rect, &tmp[0],
++          uint8_t *tmp = g_newa (uint8_t, rect->height * bpp);
++          gegl_buffer_iterate_read_dispatch (buffer, rect, tmp,
+                                              bpp, buffer->soft_format, 0, repeat_mode);
+           /* then convert in a single shot */
+           babl_process (babl_fish (buffer->soft_format, format),
+-                        &tmp[0], dest_buf, rect->height);
++                        tmp, dest_buf, rect->height);
+         }
+       }
+     return;
+diff --git a/gegl/buffer/gegl-sampler-linear.c b/gegl/buffer/gegl-sampler-linear.c
+index f8a6df8ab6..820b7edb63 100644
+--- a/gegl/buffer/gegl-sampler-linear.c
++++ b/gegl/buffer/gegl-sampler-linear.c
+@@ -127,8 +127,8 @@ gegl_sampler_linear_interpolate (      GeglSampler       *self,
+   /*
+    * Load top row:
+    */
+-  gfloat top_left[nc];
+-  gfloat top_rite[nc];
++  gfloat *top_left = g_newa (gfloat, nc);
++  gfloat *top_rite = g_newa (gfloat, nc);
+ 
+   for (gint c = 0; c < nc; c++)
+     top_left[c] = *in_bptr++;
+
+diff --git a/gegl/buffer/gegl-sampler-lohalo.c b/gegl/buffer/gegl-sampler-lohalo.c
+index 0d0ebb41e1..3f5fc1250e 100644
+--- a/gegl/buffer/gegl-sampler-lohalo.c
++++ b/gegl/buffer/gegl-sampler-lohalo.c
+@@ -504,7 +504,7 @@ gegl_sampler_lohalo_get (      GeglSampler*    restrict  self,
+    * The newval array will contain one computed resampled value per
+    * channel:
+    */
+-  gfloat newval[channels];
++  gfloat *newval = g_newa (gfloat, channels);
+   for (c = 0; c < channels-1; c++)
+    newval[c] =
+     extended_sigmoidal (
+@@ -954,11 +954,9 @@ gegl_sampler_lohalo_get (      GeglSampler*    restrict  self,
+         /*
+          * Storage for the EWA contribution:
+          */
+-        gfloat ewa_newval[channels];
+-        ewa_newval[0] = (gfloat) 0;
+-        ewa_newval[1] = (gfloat) 0;
+-        ewa_newval[2] = (gfloat) 0;
+-        ewa_newval[3] = (gfloat) 0;
++        gfloat *ewa_newval = g_newa (gfloat, channels);
++        for (gint c = 0; c < channels; c++)
++          ewa_newval[c] = (gfloat) 0;
+ 
+         {
+           gint i = out_top_0;
+
+diff --git a/gegl/buffer/gegl-sampler-nohalo.c b/gegl/buffer/gegl-sampler-nohalo.c
+index cab2390e2d..3a0d1ffd60 100644
+--- a/gegl/buffer/gegl-sampler-nohalo.c
++++ b/gegl/buffer/gegl-sampler-nohalo.c
+@@ -1316,7 +1316,7 @@ gegl_sampler_nohalo_get (      GeglSampler*    restrict  self,
+    * The newval array will contain one computed resampled value per
+    * channel:
+    */
+-  gfloat newval[channels];
++  gfloat *newval = g_newa (gfloat, channels);
+ 
+   {
+     /*
+@@ -1878,7 +1878,7 @@ gegl_sampler_nohalo_get (      GeglSampler*    restrict  self,
+           /*
+            * Storage for the EWA contribution:
+            */
+-          gfloat ewa_newval[channels];
++          gfloat *ewa_newval = g_newa (gfloat, channels);
+           for (gint c = 0; c < channels; c++)
+             ewa_newval[c] = (gfloat) 0;
+ 
+
+diff --git a/gegl/buffer/gegl-sampler.h b/gegl/buffer/gegl-sampler.h
+index 39cd7a93f7..d807b0e257 100644
+--- a/gegl/buffer/gegl-sampler.h
++++ b/gegl/buffer/gegl-sampler.h
+@@ -276,7 +276,7 @@ _gegl_sampler_box_get (GeglSampler*    restrict  self,
+ 
+       if (u_norm2 >= 4.0 || v_norm2 >= 4.0)
+         {
+-          gfloat  result[channels];
++          gfloat *result = g_newa (gfloat, channels);
+           gdouble uv_samples_inv;
+ 
+           for (gint c = 0; c < channels; c++)
+@@ -355,7 +355,7 @@ _gegl_sampler_box_get (GeglSampler*    restrict  self,
+                   for (u = 0; u < u_samples; u++)
+                     {
+                       int c;
+-                      gfloat input[channels];
++                      gfloat *input = g_newa (gfloat, channels);
+                       self->interpolate (self, x, y, input, repeat_mode);
+                       for (c = 0; c < channels; c++)
+                         result[c] += input[c];
+
+diff --git a/gegl/opencl/gegl-cl-color.c b/gegl/opencl/gegl-cl-color.c
+index ce0244c9df..2916b5a855 100644
+--- a/gegl/opencl/gegl-cl-color.c
++++ b/gegl/opencl/gegl-cl-color.c
+@@ -70,7 +70,7 @@ gegl_cl_color_load_conversion_set (ColorConversionInfo  *conversions,
+                                    GeglClRunData       **kernels,
+                                    const gchar          *source)
+ {
+-  const char *kernel_names[num_conversions + 1];
++  const char **kernel_names = g_newa (const char *, num_conversions + 1);
+ 
+   for (int i = 0; i < num_conversions; ++i)
+     {
+
+diff --git a/gegl/buffer/gegl-buffer-load.c b/gegl/buffer/gegl-buffer-load.c
+index 0fcb72aa26..ca6c813796 100644
+--- a/gegl/buffer/gegl-buffer-load.c
++++ b/gegl/buffer/gegl-buffer-load.c
+@@ -42,7 +42,7 @@
+ 
+ #ifdef _WIN32
+ #define BINARY_FLAG O_BINARY
+-#ifdef _WIN64
++#ifdef _WIN32
+ #include <basetsd.h>
+ typedef SSIZE_T ssize_t;
+ #endif
+
+diff --git a/gegl/buffer/gegl-buffer-save.c b/gegl/buffer/gegl-buffer-save.c
+index f09015b1af..c3dd61939f 100644
+--- a/gegl/buffer/gegl-buffer-save.c
++++ b/gegl/buffer/gegl-buffer-save.c
+@@ -44,7 +44,7 @@
+ 
+ #ifdef _WIN32
+ #define BINARY_FLAG O_BINARY
+-#ifdef _WIN64
++#ifdef _WIN32
+ #include <basetsd.h>
+ typedef SSIZE_T ssize_t;
+ #endif
+
+diff --git a/operations/common/gblur-1d.c b/operations/common/gblur-1d.c
+index 1b67cb9dd4..164a9950a0 100644
+--- a/operations/common/gblur-1d.c
++++ b/operations/common/gblur-1d.c
+@@ -330,7 +330,7 @@ fix_right_boundary_generic (gdouble        *buf,
+                             const gfloat   *uplus,
+                             const gint      nc)
+ {
+-  gdouble u[nc*3];
++  gdouble *u = g_newa (gdouble, nc * 3);
+   gint    i, k, c;
+ 
+   for (k = 0; k < 3; k++)
+@@ -339,7 +339,7 @@ fix_right_boundary_generic (gdouble        *buf,
+ 
+   for (i = 0; i < 3; i++)
+     {
+-      gdouble tmp[nc];
++      gdouble *tmp = g_newa (gdouble, nc);
+       for (c = 0; c < nc ; c++)
+         tmp[c] = m[i][0] * u[0 * nc + c];
+ 
+
+diff --git a/operations/common/watershed-transform.c b/operations/common/watershed-transform.c
+index 8546abc9ce..810f9cf7f1 100644
+--- a/operations/common/watershed-transform.c
++++ b/operations/common/watershed-transform.c
+@@ -363,7 +363,7 @@ process (GeglOperation       *operation,
+   while (!HQ_is_empty (&hq))
+     {
+       PixelCoords *p = (PixelCoords *) HQ_pop (&hq);
+-      guint8       label[bpp];
++      guint8      *label = g_newa (guint8, bpp);
+ 
+       GeglRectangle square_rect = {p->x - 1, p->y - 1, 3, 3};
+ 
+
+diff --git a/operations/common/map-common.h b/operations/common/map-common.h
+index 6ede486cb7..2efb861135 100644
+--- a/operations/common/map-common.h
++++ b/operations/common/map-common.h
+@@ -184,10 +184,10 @@ process (GeglOperation       *operation,
+           else
+             {
+               gint   stride = 2 * roi->width;
+-              gfloat coords_top[2 * roi->width];
+-              gfloat coords_bottom[2 * roi->width];
+-              gfloat coords_left[2 * roi->height];
+-              gfloat coords_right[2 * roi->height];
++              gfloat *coords_top = g_newa (gfloat, 2 * roi->width);
++              gfloat *coords_bottom = g_newa (gfloat, 2 * roi->width);
++              gfloat *coords_left = g_newa (gfloat, 2 * roi->height);
++              gfloat *coords_right = g_newa (gfloat, 2 * roi->height);
+ 
+               gegl_buffer_get (aux,
+                                GEGL_RECTANGLE (roi->x, roi->y - 1,
+
+diff --git a/operations/common/normal-map.c b/operations/common/normal-map.c
+index f14cbf4c7c..3002fb6dfc 100644
+--- a/operations/common/normal-map.c
++++ b/operations/common/normal-map.c
+@@ -145,10 +145,10 @@ process (GeglOperation       *operation,
+       gfloat              *out    = iter->items[0].data;
+       const GeglRectangle *roi    = &iter->items[0].roi;
+       gint                 stride = 2 * roi->width;
+-      gfloat               top[2 * roi->width];
+-      gfloat               bottom[2 * roi->width];
+-      gfloat               left[2 * roi->height];
+-      gfloat               right[2 * roi->height];
++      gfloat              *top    = g_newa (gfloat, 2 * roi->width);
++      gfloat              *bottom = g_newa (gfloat, 2 * roi->width);
++      gfloat              *left   = g_newa (gfloat, 2 * roi->height);
++      gfloat              *right  = g_newa (gfloat, 2 * roi->height);
+       gint                 x;
+       gint                 y;
+ 
+
+
+diff --git a/gegl/property-types/gegl-color.c b/gegl/property-types/gegl-color.c
+index 193ec597e5..8972b855a8 100644
+--- a/gegl/property-types/gegl-color.c
++++ b/gegl/property-types/gegl-color.c
+@@ -45,7 +45,11 @@ struct _GeglColorPrivate
+      * be 16-byte aligned and would crash otherwise.
+      * See: https://gitlab.gnome.org/GNOME/gegl/-/merge_requests/142
+      */
++#ifdef _MSC_VER
++    __declspec(align(16)) guint8 pixel[48];
++#else
+     guint8  pixel[48] __attribute__((aligned(16)));
++#endif
+     gdouble alignment;
+   };
+ };
+
+diff --git a/gegl/gegl.h b/gegl/gegl.h
+index 6bd3324d61..536c835be0 100644
+--- a/gegl/gegl.h
++++ b/gegl/gegl.h
+@@ -71,7 +71,11 @@ G_BEGIN_DECLS
+  * determine the smallest buffers needed at each stage of processing.
+  */
+ 
++#ifdef _MSC_VER
++#define GEGL_ALIGNED __restrict__
++#else
+ #define GEGL_ALIGNED __restrict__ __attribute__((__aligned__ (16)))
++#endif
+ 
+ G_END_DECLS
+ #endif  /* __GEGL_H__ */
+
+
+diff --git a/meson.build b/meson.build
+index 52817cdcb0..6bd0a93280 100644
+--- a/meson.build
++++ b/meson.build
+@@ -245,6 +245,12 @@ if os_win32
+   endif
+ endif #if os_win32
+ 
++build_ctx = cc.get_id() != 'msvc'
++
++if cc.get_id() == 'msvc'
++  cflags_common += ['/D__restrict__=__restrict']
++endif
++
+ if buildtype == 'debugoptimized' or buildtype == 'release'
+   cflags_common += cc.get_supported_arguments(['-ftree-vectorize'])
+ endif
+@@ -614,7 +616,11 @@ subdir('libs/rgbe')
+ subdir('opencl')
+ subdir('gegl')
+ subdir('libs/npd')
+-subdir('libs/ctx')
++if build_ctx
++  subdir('libs/ctx')
++else
++  libgegl_ctx = declare_dependency()
++endif
+ 
+ # pkg-config file
+ gegl_pub_deps = [
+@@ -640,7 +646,12 @@ pkgconfig.generate(gegl_lib,
+   subdirs: api_name,
+ )
+ 
+-gegl_dep = declare_dependency(link_with: [gegl_lib, gegl_ctx_lib],
++gegl_link_with = [gegl_lib]
++if build_ctx
++  gegl_link_with += [gegl_ctx_lib]
++endif
++
++gegl_dep = declare_dependency(link_with: gegl_link_with,
+   include_directories: geglInclude,
+   dependencies: [gegl_pub_deps, libnpd],
+   sources: g_ir.found() ? gegl_gir : [],
+
+diff --git a/operations/external/meson.build b/operations/external/meson.build
+index 64c84e45b6..806bbd5fae 100644
+--- a/operations/external/meson.build
++++ b/operations/external/meson.build
+@@ -3,12 +3,15 @@ operations = [
+   { 'name': 'ppm-load' },
+   { 'name': 'ppm-save' },
+   { 'name': 'npy-save' },
+-  { 'name': 'vector-fill', 'deps': libgegl_ctx },
+   { 'name': 'rgbe-load', 'deps': librgbe },
+   { 'name': 'rgbe-save', 'deps': librgbe },
+   { 'name': 'gif-load',  'deps': libnsgif },
+ ]
+ 
++if build_ctx
++  operations += { 'name': 'vector-fill', 'deps': libgegl_ctx }
++endif
++
+ 
+ if pangocairo.found()
+   operations += { 'name': 'text', 'deps': pangocairo }
+
+diff --git a/operations/workshop/external/meson.build b/operations/workshop/external/meson.build
+index 24a9cf4432..572a33d6e7 100644
+--- a/operations/workshop/external/meson.build
++++ b/operations/workshop/external/meson.build
+@@ -118,11 +118,13 @@ if maxflow.found()
+   )
+ endif
+ 
+-gegl_operations+=shared_library('ctx-script',
+-   'ctx-script.c', include_directories: [rootInclude, geglInclude],
+-   dependencies:[babl,glib,gobject,math,libgegl_ctx],
+-   link_with:[gegl_lib],
+-   name_prefix:'',
+-   install:true,
+-   install_dir: get_option('libdir') / api_name,
+-)
++if build_ctx
++  gegl_operations+=shared_library('ctx-script',
++     'ctx-script.c', include_directories: [rootInclude, geglInclude],
++     dependencies:[babl,glib,gobject,math,libgegl_ctx],
++     link_with:[gegl_lib],
++     name_prefix:'',
++     install:true,
++     install_dir: get_option('libdir') / api_name,
++  )
++endif
+
+
+diff --git a/operations/common/long-shadow.c b/operations/common/long-shadow.c
+index 6f98a90bd2..5171bb05c1 100644
+--- a/operations/common/long-shadow.c
++++ b/operations/common/long-shadow.c
+@@ -41,6 +41,12 @@ enum_start (gegl_long_shadow_composition)
+   enum_value (GEGL_LONG_SHADOW_COMPOSITION_SHADOW_MINUS_IMAGE, "shadow-minus-image", N_("Shadow minus image"))
+ enum_end (GeglLongShadowComposition)
+ 
++#ifdef WITH_FADING_FIXED_RATE
++#define GEGL_LONG_SHADOW_FIXED_RATE_SUFFIX ",fading-fixed-rate"
++#else
++#define GEGL_LONG_SHADOW_FIXED_RATE_SUFFIX ""
++#endif
++
+ property_enum (style, _("Style"),
+                GeglLongShadowStyle, gegl_long_shadow_style,
+                GEGL_LONG_SHADOW_STYLE_FINITE)
+@@ -56,12 +62,10 @@ property_double (length, _("Length"), 100.0)
+   description (_("Shadow length"))
+   value_range (0.0, G_MAXDOUBLE)
+   ui_range    (0.0, 1000.0)
+-  ui_meta     ("visible", "style {finite,            "
+-                          "       fading-fixed-length"
+-#ifdef WITH_FADING_FIXED_RATE
+-                          "       , fading-fixed-rate"
+-#endif
+-                          "      }")
++  ui_meta     ("visible", "style {finite,            "
++                          "       fading-fixed-length"
++                          GEGL_LONG_SHADOW_FIXED_RATE_SUFFIX
++                          "      }")
+ 
+ property_double (midpoint, _("Midpoint"), 100.0)
+   description (_("Shadow fade midpoint"))
+@@ -72,11 +76,9 @@ property_double (midpoint, _("Midpoint"), 100.0)
+ property_double (midpoint_rel, _("Midpoint (relative)"), 0.5)
+   description (_("Shadow fade midpoint, as a factor of the shadow length"))
+   value_range (0.0, 1.0)
+-  ui_meta     ("visible", "style {fading-fixed-length"
+-#ifdef WITH_FADING_FIXED_RATE
+-                          "       , fading-fixed-rate"
+-#endif
+-                          "      }")
++  ui_meta     ("visible", "style {fading-fixed-length"
++                          GEGL_LONG_SHADOW_FIXED_RATE_SUFFIX
++                          "      }")
+   ui_meta     ("label", "alt-label")
+   ui_meta     ("alt-label", _("Midpoint"))
+ 
+
+
+diff --git a/operations/external/png-load.c b/operations/external/png-load.c
+index a5e63ed3e2..9a364736ba 100644
+--- a/operations/external/png-load.c
++++ b/operations/external/png-load.c
+@@ -19,6 +19,11 @@
+  */
+ 
+ #include "config.h"
++
++#ifndef __PRETTY_FUNCTION__
++#define __PRETTY_FUNCTION__ __FUNCTION__
++#endif
++
+ #ifdef HAVE_STRPTIME
+ #define _XOPEN_SOURCE
+ #include <time.h>
+
+diff --git a/operations/external/png-save.c b/operations/external/png-save.c
+index 4cf914deda..ee6a7185ac 100644
+--- a/operations/external/png-save.c
++++ b/operations/external/png-save.c
+@@ -18,6 +18,11 @@
+  */
+ 
+ #include "config.h"
++
++#ifndef __PRETTY_FUNCTION__
++#define __PRETTY_FUNCTION__ __FUNCTION__
++#endif
++
+ #include <glib/gi18n-lib.h>
+ #include <gegl-metadata.h>
+ 
+
+diff --git a/operations/external/jpg-load.c b/operations/external/jpg-load.c
+index 71db03e69d..de0374aa7b 100644
+--- a/operations/external/jpg-load.c
++++ b/operations/external/jpg-load.c
+@@ -17,6 +17,11 @@
+  */
+ 
+ #include "config.h"
++
++#ifndef __PRETTY_FUNCTION__
++#define __PRETTY_FUNCTION__ __FUNCTION__
++#endif
++
+ #include <glib/gi18n-lib.h>
+ 
+ #ifdef GEGL_PROPERTIES
