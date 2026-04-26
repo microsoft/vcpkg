@@ -7,40 +7,37 @@ vcpkg_from_github(
     OUT_SOURCE_PATH QUIC_SOURCE_PATH
     REPO microsoft/msquic
     REF "v${VERSION}"
-    SHA512 1dca477f62484988c4f74d80a671560a48e8ed60602189a4066f337b13786528f38a86437881538089bf47b5db3d228cb006cae298f27b574850612181ee00d9
+    SHA512 49f063091052c7150ca20cd3f0b1a49739f810f97dd79487b5404873a3bf206253fa266fd74a3678ba58968a1a42c39f77fbeb9a3780cffcf9e8944adb82e8e5
     HEAD_REF master
     PATCHES
-        fix-install.patch # Adjust install path of build outputs
         fix-uwp-crt.patch # https://github.com/microsoft/msquic/pull/4373
-        fix-comparing-system-processor-with-win32.patch # https://github.com/microsoft/msquic/pull/4374
         uwp-link-libs.diff
         exports-for-msh3.diff
         no-werror.patch
-        avoid-w-invalid-unevaluated-string.patch
         cmake4.patch
 )
 
 set(QUIC_TLS "schannel")
 if("0-rtt" IN_LIST FEATURES)
-    set(QUIC_TLS "openssl3")
+    set(QUIC_TLS "quictls")
     vcpkg_from_github(
         OUT_SOURCE_PATH OPENSSL_SOURCE_PATH
         REPO quictls/openssl
-        REF openssl-3.1.7-quic1
-        SHA512 230f48a4ef20bfd492b512bd53816a7129d70849afc1426e9ce813273c01884d5474552ecaede05231ca354403f25e2325c972c9c7950ae66dae310800bd19e7
+        REF ff36838bb69801cad56823159a036977bcbe5c75
+        SHA512 9cf52fbb0c6d88048a875569427c0982dffd2b861bf2299e64a4a088e17188b2b4a3d46472997a45e62acd5d3bb210ab8c0f1e84a3425de9b0ecba9bf96c4652
         HEAD_REF openssl-3.1.7+quic
     )
     if(NOT EXISTS "${QUIC_SOURCE_PATH}/submodules/openssl3/Configure")
-        file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/openssl3")
-        file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/openssl3")
+        file(REMOVE_RECURSE "${QUIC_SOURCE_PATH}/submodules/quictls")
+        file(RENAME "${OPENSSL_SOURCE_PATH}" "${QUIC_SOURCE_PATH}/submodules/quictls")
     endif()
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH XDP_WINDOWS
     REPO microsoft/xdp-for-windows
-    REF  v1.0.2
-    SHA512 1b26487fa79c8796d4b0d5e09f4fc9acb003d8e079189ec57a36ff03c9c2620829106fdbc4780e298872826f3a97f034d40e04d00a77ded97122874d13bfb145
+    REF  793dc2a0d7e6f8a86dae06c84de7d8fd6eacd205
+    SHA512 28a6ab43602998991dcf0485f34100ae5f031ec5219ba7d78fc2bc652730697a829fc12bd7ed2281b42ff8f91c006b4f947d3b0cc69c8caabc030ecc1ce9a00c
     HEAD_REF main
 )
 if(NOT EXISTS "${QUIC_SOURCE_PATH}/submodules/xdp-for-windows/published/external")
@@ -76,7 +73,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${QUIC_SOURCE_PATH}"
     OPTIONS
         -DQUIC_SOURCE_LINK=OFF
-        -DQUIC_TLS=${QUIC_TLS}
+        -DQUIC_TLS_LIB=${QUIC_TLS}
         -DQUIC_USE_SYSTEM_LIBCRYPTO=OFF
         -DQUIC_BUILD_PERF=OFF
         -DQUIC_BUILD_TEST=OFF
@@ -89,6 +86,17 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
+
+# Convert absolute paths to relative paths
+file(GLOB MSQUIC_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/share/msquic/*.cmake")
+foreach(MSQUIC_CMAKE_FILE ${MSQUIC_CMAKE_FILES})
+    file(READ "${MSQUIC_CMAKE_FILE}" MSQUIC_CMAKE_CONTENT)
+    string(REGEX REPLACE
+        "/[^;\"]*buildtrees/msquic/([^;\"]*)"
+        "\${_IMPORT_PREFIX}/../../buildtrees/msquic/\\1"
+        MSQUIC_CMAKE_CONTENT "${MSQUIC_CMAKE_CONTENT}")
+    file(WRITE "${MSQUIC_CMAKE_FILE}" "${MSQUIC_CMAKE_CONTENT}")
+endforeach()
 
 set(platform "")
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
