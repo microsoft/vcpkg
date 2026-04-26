@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/minizip-ng
     REF "${VERSION}"
-    SHA512 9ea5dde14acd2f7d1efd0e38b11017b679d3aaabac61552f9c5f4c7f45f2563543e0fbb2d74429c6b1b9c37d8728ebc4f1cf0efad5f71807c11bb8a2a681a556
+    SHA512 ece2b2d0ff00eaad7a7b8901689e3ce934ce2210550de4d879a57789e991eda7e3c040ac4fbecfe93c4adcda8c0a7b0a7998e7b348be313ec93bf00edd88ac4a
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -22,7 +22,19 @@ vcpkg_check_features(
         lzma    MZ_LZMA
         zlib    MZ_ZLIB
         zstd    MZ_ZSTD
+        ppmd    MZ_PPMD
 )
+
+if("ppmd" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH PPMD_SOURCE_PATH
+        REPO ip7z/7zip
+        REF 26.00
+        SHA512 5f4922efd94e12776e531f77053981978a0d9f8c6da50f51bdb750a54436b07ddccafa6a1180fd234a7fcaf4d2a5b0ab7c2a9267da2ea8e68407bf432ff0f76c
+        HEAD_REF master
+    )
+    set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DPPMD_SOURCE_DIR=${PPMD_SOURCE_PATH})
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
