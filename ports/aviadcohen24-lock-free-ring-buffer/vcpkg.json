@@ -1,0 +1,8 @@
+{
+    "name": "aviadcohen24-lock-free-ring-buffer",
+    "version": "1.0.1",
+    "description": "Lock-free MPMC ring buffer, header-only, C11. Uses fetch_add + per-slot sequence numbers, cache-line padding, and exponential backoff.",
+    "license": "MIT",
+    "homepage": "https://github.com/AviadCohen24/LockFreeRingBuffer",
+    "supports": "!uwp"
+}
