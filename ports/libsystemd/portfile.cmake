@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO systemd/systemd
   REF "v${VERSION}"
-  SHA512 30331df5eb7a1556da8c017a0e6c07b8b99f0cb31da055c1b86c9b9e6fd7074f7c6746efa3e69711b73af48a15d61a84f35ad6e554d32a23441ba910398f7f65
+  SHA512 9f975dce6861853a817a7ceab18a24449a85d1bda6939b3a5173430c02a4d8a9a2b34ebb8cce1c51db9b0ff9078fcc65da7b0f44e3bdcbbe013b9e04bb6f0ff9
   PATCHES
     disable-warning-nonnull.patch
     only-libsystemd.patch
@@ -47,9 +47,7 @@ vcpkg_configure_meson(
     -Dlibcurl=disabled
     -Dlibcryptsetup=disabled
     -Dlibfido2=disabled
-    -Dlibidn=disabled
     -Dlibidn2=disabled
-    -Dlibiptc=disabled
     -Dmicrohttpd=disabled
     -Dopenssl=disabled
     -Dp11kit=disabled
@@ -68,6 +66,7 @@ vcpkg_configure_meson(
     -Dlz4=enabled
     -Dxz=enabled
     -Dzstd=enabled
+    -Dinstall-sysconfdir=false
   ADDITIONAL_BINARIES
     "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${HOST_EXECUTABLE_SUFFIX}']"
 )
@@ -75,10 +74,20 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/factory")
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/README.md" "${SOURCE_PATH}/LICENSE.LGPL2.1"
+vcpkg_install_copyright(
+  FILE_LIST
+    "${SOURCE_PATH}/LICENSES/README.md"
+    "${SOURCE_PATH}/LICENSE.LGPL2.1"
+    # Used in src/libsystemd sources:
+    "${SOURCE_PATH}/LICENSES/lookup3-public-domain.txt" # lookup3.h
+    "${SOURCE_PATH}/LICENSES/murmurhash2-public-domain.txt" # MurmurHash2.h
+    "${SOURCE_PATH}/LICENSES/CC0-1.0.txt" # siphash24.h
+    "${SOURCE_PATH}/LICENSES/MIT.txt" # sparse-endian.h
   COMMENT [[
 This port provides libsystemd.so/.a, which is based on sources in
 src/basic, src/fundamental, src/systemd and src/libsystemd.
