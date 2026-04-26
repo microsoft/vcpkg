@@ -11000,6 +11000,10 @@
       "baseline": "0.4.2",
       "port-version": 2
     },
+    "xchange": {
+      "baseline": "1.1.2-rc2",
+      "port-version": 0
+    },
     "xdigest": {
       "baseline": "0.5.0",
       "port-version": 0
