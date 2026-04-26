@@ -9664,6 +9664,10 @@
       "baseline": "4.8.1",
       "port-version": 0
     },
+    "steamworks-sdk": {
+      "baseline": "1.64.0",
+      "port-version": 0
+    },
     "stella-cv-fbow": {
       "baseline": "0.0.1",
       "port-version": 1
