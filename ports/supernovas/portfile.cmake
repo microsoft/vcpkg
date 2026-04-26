@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Smithsonian/SuperNOVAS
     REF "v${VERSION}"
-    SHA512 e1557fbe8e4550fc4c669e4cb7219069bce874942b47ae48edd769badcd548b6f9210f9243766ba3ae41b9cd3a3f33673e90c687d916a8934491ad3d380e9dad
+    SHA512 7faddf2162c7ab0a4f4518d2508683b1d1210283f977f369d30a397f0bfe779fe05d397b2a7d6c9a313fd29417d0a139caaa79728a331c6f443471d1a6de62e0
     HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        cpp              ENABLE_CPP
         solsys-calceph   ENABLE_CALCEPH
 )
 
