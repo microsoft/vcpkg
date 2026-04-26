@@ -1,0 +1,8 @@
+The package provides the ecCodes CMake package config.
+
+    find_package(eccodes CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE eccodes)
+
+Command-line tools are installed under:
+
+    ${CURRENT_INSTALLED_DIR}/tools/eccodes

@@ -1,0 +1,60 @@
+{
+  "name": "eccodes",
+  "version": "2.46.0",
+  "description": "ECMWF GRIB, BUFR and GTS decoding and encoding library and tools",
+  "homepage": "https://github.com/ecmwf/eccodes",
+  "license": "Apache-2.0",
+  "supports": "!x86 & !android",
+  "dependencies": [
+    {
+      "name": "ecbuild",
+      "host": true
+    },
+    "openjpeg",
+    {
+      "name": "python3",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "aec": {
+      "description": "Enable Adaptive Entropy Coding support via libaec",
+      "dependencies": [
+        "libaec"
+      ]
+    },
+    "fortran": {
+      "description": "Build the Fortran 90 interface",
+      "supports": "!windows & !android"
+    },
+    "netcdf": {
+      "description": "Enable grib_to_netcdf and NetCDF support",
+      "dependencies": [
+        "curl",
+        "hdf5",
+        "netcdf-c"
+      ]
+    },
+    "openmp-threads": {
+      "description": "Enable OpenMP thread safety support"
+    },
+    "png": {
+      "description": "Enable PNG decoding and encoding support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "threads": {
+      "description": "Enable POSIX thread safety support where supported by upstream",
+      "supports": "!windows & !android"
+    }
+  }
+}
