@@ -1,0 +1,8 @@
+{
+  "name": "yapi",
+  "version-date": "2022-08-10",
+  "description": "A header-only fusion injector that reduces differences between x64, wow64 and x86 processes.",
+  "homepage": "https://github.com/ez8-co/yapi",
+  "license": "MIT",
+  "supports": "windows & !uwp"
+}
