@@ -2304,6 +2304,30 @@
       "baseline": "4.3.0",
       "port-version": 0
     },
+    "curve-eraser": {
+      "baseline": "2.3.0",
+      "port-version": 0
+    },
+    "curve-ereignis": {
+      "baseline": "4.3",
+      "port-version": 0
+    },
+    "curve-flagpp": {
+      "baseline": "3.1.0",
+      "port-version": 0
+    },
+    "curve-lockpp": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
+    "curve-poolparty": {
+      "baseline": "3.0.1",
+      "port-version": 0
+    },
+    "curve-rebind": {
+      "baseline": "5.3.1",
+      "port-version": 0
+    },
     "cute-headers": {
       "baseline": "2019-09-20",
       "port-version": 2
@@ -2821,11 +2845,11 @@
       "port-version": 0
     },
     "eraser": {
-      "baseline": "2.3.0",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "ereignis": {
-      "baseline": "4.3",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "esaxx": {
@@ -3049,7 +3073,7 @@
       "port-version": 1
     },
     "flagpp": {
-      "baseline": "3.1.0",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "flann": {
@@ -6113,7 +6137,7 @@
       "port-version": 0
     },
     "lockpp": {
-      "baseline": "3.2.0",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "lodepng": {
@@ -7865,7 +7889,7 @@
       "port-version": 5
     },
     "poolparty": {
-      "baseline": "3.0.1",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "poolstl": {
@@ -8677,7 +8701,7 @@
       "port-version": 0
     },
     "rebind": {
-      "baseline": "5.3.1",
+      "baseline": "deprecated",
       "port-version": 0
     },
     "recastnavigation": {
@@ -8982,7 +9006,7 @@
     },
     "saucer": {
       "baseline": "6.0.1",
-      "port-version": 6
+      "port-version": 7
     },
     "sbgecom": {
       "baseline": "5.3.2276",

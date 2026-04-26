@@ -1,6 +1,6 @@
 {
-  "name": "flagpp",
-  "version-string": "deprecated",
+  "name": "curve-flagpp",
+  "version": "3.1.0",
   "description": "A C++20 library that provides (opt-in) bit-wise operations for arbitrary `enum class`es",
   "homepage": "https://github.com/Curve/flagpp",
   "dependencies": [
