@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 08af371..df60595 100644
+index b8462b8..4a794ba 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -216,11 +216,11 @@ if(MSVC AND LUAU_BUILD_CLI)
+@@ -222,11 +222,11 @@ if(MSVC AND LUAU_BUILD_CLI)
      # the default stack size that MSVC linker uses is 1 MB; we need more stack space in Debug because stack frames are larger
      set_target_properties(Luau.Analyze.CLI PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
      set_target_properties(Luau.Repl.CLI PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
