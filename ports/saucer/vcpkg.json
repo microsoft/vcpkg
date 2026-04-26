@@ -1,7 +1,7 @@
 {
   "name": "saucer",
   "version": "6.0.1",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
@@ -9,18 +9,18 @@
   "dependencies": [
     "boost-callable-traits",
     "boost-preprocessor",
-    "eraser",
-    "ereignis",
-    "flagpp",
+    "curve-eraser",
+    "curve-ereignis",
+    "curve-flagpp",
+    "curve-lockpp",
+    "curve-poolparty",
+    "curve-rebind",
     "fmt",
     "glaze",
     {
       "name": "gtk",
       "platform": "linux"
     },
-    "lockpp",
-    "poolparty",
-    "rebind",
     {
       "name": "vcpkg-cmake",
       "host": true

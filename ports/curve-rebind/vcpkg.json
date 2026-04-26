@@ -1,6 +1,6 @@
 {
-  "name": "rebind",
-  "version-string": "deprecated",
+  "name": "curve-rebind",
+  "version": "5.3.1",
   "description": "A C++23 reflection library for aggregates and enums",
   "homepage": "https://github.com/Curve/rebind",
   "license": "MIT",
