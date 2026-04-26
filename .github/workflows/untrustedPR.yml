@@ -8,7 +8,7 @@ on:
 
 jobs:
   Check:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -28,6 +28,10 @@ jobs:
           git --version
 
           unset VCPKG_ROOT
+
+          target_branch_commit=$(git rev-parse HEAD^1)
+          incoming_branch_commit=$(git rev-parse HEAD^2)
+          merge_base=$(git merge-base "$target_branch_commit" "$incoming_branch_commit")
 
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
           if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
@@ -49,14 +53,15 @@ jobs:
           git diff > .github-pr.format-manifest
           git add -u
           git commit -m "tmp" --allow-empty
-          # HEAD^^ refers to the "main" commit that was merged into
-          git checkout HEAD^^ -- versions
-          git restore --staged versions
-          ./vcpkg x-add-version --all --skip-formatting-check | grep 'instead of "version-string"' | tee .github-pr.version-string.out || true
-          git checkout -- versions
+          git restore --source=$merge_base --staged --worktree -- versions
+          git clean -fd -- versions
+          ./vcpkg x-add-version --all --skip-formatting-check | grep -E '^warning:|instead of "version-string"' | tee .github-pr.version-string.out || true
+          git restore --source=$merge_base --staged --worktree -- versions
+          git clean -fd -- versions
           ./vcpkg x-add-version --all --skip-formatting-check --skip-version-format-check | tee .github-pr.x-add-version.out || true
-          git diff > .github-pr.x-add-version.diff
-          git reset HEAD~ --mixed
+          git add -A -- versions
+          git diff --cached "$incoming_branch_commit" -- versions > .github-pr.x-add-version.diff
+          git reset HEAD~ --hard # remove the "tmp" commit from above
 
       - name: Generate Reply
         uses: actions/github-script@v8
@@ -80,32 +85,76 @@ jobs:
               format_output += "./vcpkg format-feature-baseline scripts/ci.baseline.txt\n";
               format_output += "./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt\n";
               format_output += "\n";
-              format_output += "It should make the following changes:";
-              format_output += "```diff\n" + format + "\n```";
+              format_output += "It should make the following changes. See the workflow summary for the generated diff.";
               core.error(format_output);
+              core.summary.addHeading('Manifest formatting diff', 3);
+              core.summary.addRaw('All vcpkg.json files and baselines must be formatted. To fix this problem, run:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('./vcpkg format-manifest ports/*/vcpkg.json\n./vcpkg format-feature-baseline scripts/ci.baseline.txt\n./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt', 'text');
+              core.summary.addRaw('It should make the following changes:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(format, 'diff');
               approve = false;
             }
             if (add_version_out !== "") {
               var add_version_output = '';
               add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
               add_version_output += "When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.\n";
-              add_version_output += "Making the following changes will fix this problem:";
-              add_version_output += "```diff\n" + add_version_out + "\n```";
+              add_version_output += "Making the following changes will fix this problem. See the workflow summary for the generated diff.";
               core.error(add_version_output);
+              core.summary.addHeading('x-add-version diff', 3);
+              core.summary.addRaw('PRs must add only one version, and must not modify any published versions.');
+              core.summary.addEOL();
+              core.summary.addRaw('When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.');
+              core.summary.addEOL();
+              core.summary.addRaw('Making the following changes will fix this problem:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(add_version, 'diff');
               approve = false;
             }
             if (version_string_out !== "") {
               core.warning(version_string_out);
+              core.summary.addHeading('x-add-version warnings', 3);
+              core.summary.addRaw(version_string_out);
+              core.summary.addEOL();
             }
             if (add_version !== "") {
               var update_version_db_output = '';
               update_version_db_output += "After committing all other changes, the version database must be updated.\n";
-              update_version_db_output += "This can be done by running the following commands after committing your changes:\n"
+              update_version_db_output += "This can be done by running the following commands:\n"
               update_version_db_output += "\n"
-              update_version_db_output += "git add -u && git commit\n"
-              update_version_db_output += "git checkout ${{ github.event.pull_request.base.sha }} -- versions\n"
-              update_version_db_output += "./vcpkg x-add-version --all"
+              update_version_db_output += "PowerShell\n"
+              update_version_db_output += "```powershell\n"
+              update_version_db_output += "git fetch https://github.com/microsoft/vcpkg master\n"
+              update_version_db_output += "$merge_base = git merge-base HEAD FETCH_HEAD\n"
+              update_version_db_output += "git restore --source=$merge_base --staged --worktree -- versions\n"
+              update_version_db_output += "git clean -fd -- versions\n"
+              update_version_db_output += "./vcpkg x-add-version --all\n"
+              update_version_db_output += "```\n"
+              update_version_db_output += "\n"
+              update_version_db_output += "bash\n"
+              update_version_db_output += "```bash\n"
+              update_version_db_output += "git fetch https://github.com/microsoft/vcpkg master\n"
+              update_version_db_output += "merge_base=\"$(git merge-base HEAD FETCH_HEAD)\"\n"
+              update_version_db_output += "git restore --source=\"$merge_base\" --staged --worktree -- versions\n"
+              update_version_db_output += "git clean -fd -- versions\n"
+              update_version_db_output += "./vcpkg x-add-version --all\n"
+              update_version_db_output += "```"
               core.error(update_version_db_output);
+              core.summary.addHeading('Version database diff', 3);
+              core.summary.addRaw('After committing all other changes, the version database must be updated.');
+              core.summary.addEOL();
+              core.summary.addRaw('This can be done by running the following commands:');
+              core.summary.addEOL();
+              core.summary.addRaw('PowerShell');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('git fetch https://github.com/microsoft/vcpkg master\n$merge_base = git merge-base HEAD FETCH_HEAD\ngit restore --source=$merge_base --staged --worktree -- versions\ngit clean -fd -- versions\n./vcpkg x-add-version --all', 'powershell');
+              core.summary.addRaw('bash');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('git fetch https://github.com/microsoft/vcpkg master\nmerge_base="$(git merge-base HEAD FETCH_HEAD)"\ngit restore --source="$merge_base" --staged --worktree -- versions\ngit clean -fd -- versions\n./vcpkg x-add-version --all', 'bash');
+              core.summary.addRaw('It should make the following changes:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(add_version, 'diff');
               approve = false;
             }
             
