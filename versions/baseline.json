@@ -4232,6 +4232,10 @@
       "baseline": "6.25.0",
       "port-version": 1
     },
+    "kauth": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kbreezeicons": {
       "baseline": "6.25.0",
       "port-version": 1
@@ -7846,6 +7850,14 @@
     },
     "poissonrecon": {
       "baseline": "2021-09-26",
+      "port-version": 0
+    },
+    "polkit": {
+      "baseline": "124",
+      "port-version": 0
+    },
+    "polkit-qt-1": {
+      "baseline": "0.201.1",
       "port-version": 0
     },
     "polyclipping": {
