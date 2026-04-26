@@ -5,13 +5,14 @@ set(${PORT}_PATCHES
       "clang-cl.patch"
       "cross-build.diff"
       "disable-host-pkgconfig.diff"
-      "osx-sdk-info.diff"
+      #"osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"
-      "pkg-config.diff"
+      "pdf-system-abseil.diff"
+      #"pkg-config.diff"
       "rpath.diff"
       "include-dir-order.diff"
-      "allow-msvc-145.diff"
+      #"allow-msvc-145.diff"
 )
 
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")
@@ -69,6 +70,10 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" static_runtime)
     list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_static_runtime=${static_runtime}")
+endif()
+
+if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_webengine_system_abseil=ON")
 endif()
 
 # webengine-extensions

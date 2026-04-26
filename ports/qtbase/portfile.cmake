@@ -24,9 +24,11 @@ set(${PORT}_PATCHES
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
         moltenvk.patch
-        xcodebuild-not-installed.patch
+        fix-ioring-32bit.patch
+        fix-wayland-opengl-guard.patch
+        #xcodebuild-not-installed.patch
         fix-libresolv-test.patch
-        framework.patch
+        #framework.patch
         use_inotify_on_freebsd.patch
 )
  
@@ -98,6 +100,7 @@ FEATURES
     "network"             FEATURE_network
     "sql"                 FEATURE_sql
     "widgets"             FEATURE_widgets
+    "windeployqt"         FEATURE_windeployqt
     #"xml"                 FEATURE_xml  # Required to build moc
     "testlib"             FEATURE_testlib
     "zstd"                CMAKE_REQUIRE_FIND_PACKAGE_zstd
@@ -326,6 +329,8 @@ set(TOOL_NAMES
         syncqt
         tracepointgen
         qtwaylandscanner
+        wasmdeployqt
+        wasmdeployqt6
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -515,13 +520,6 @@ if(EXISTS "${target_qt_conf}")
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6AndroidMacros.cmake"
-        [[ set(cmake_dir "${prefix_path}/${${export_namespace_upper}_INSTALL_LIBS}/cmake")]]
-        [[ set(cmake_dir "${prefix_path}/share")]]
-    )
-endif()
-
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
 endif()
@@ -572,12 +570,11 @@ if(VCPKG_CROSSCOMPILING)
     set(dep_file "${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake")
     file(READ "${dep_file}" dep_contents)
     string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}" dep_contents "${dep_contents}")
-    
-    file(WRITE "${dep_file}"
-      "set(QT_HOST_PATH \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
-set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
-${dep_contents} \
-    ")
+    string(REPLACE
+        "    set(__qt_platform_requires_host_info_package FALSE)"
+        "    set(__qt_platform_requires_host_info_package TRUE)"
+        dep_contents "${dep_contents}")
+    file(WRITE "${dep_file}" "${dep_contents}")
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Config.cmake" "{Qt6HostInfo_DIR}/.." "{Qt6HostInfo_DIR}/../..")
 
@@ -601,15 +598,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # this is required to avoid ownership troubles in downstream qt modules
   set(qtbase_owned_dlls
         double-conversion.dll
-        icudt74.dll
-        icuin74.dll
-        icuuc74.dll
+        md4c.dll
         libcrypto-3-${VCPKG_TARGET_ARCHITECTURE}.dll
         libcrypto-3.dll # for x86
         pcre2-16.dll
         zlib1.dll
         zstd.dll
   )
+  # Dynamically find ICU DLLs (the version number tracks the ICU dependency, e.g. icudt78.dll for ICU 78)
+  file(GLOB _qt_icu_dt_dlls "${CURRENT_INSTALLED_DIR}/bin/icudt*.dll")
+  foreach(_icu_dll IN LISTS _qt_icu_dt_dlls)
+    get_filename_component(_icu_name "${_icu_dll}" NAME)
+    string(REGEX REPLACE "^icudt([0-9]+)\\.dll$" "\\1" _icu_ver "${_icu_name}")
+    list(APPEND qtbase_owned_dlls "icudt${_icu_ver}.dll" "icuin${_icu_ver}.dll" "icuuc${_icu_ver}.dll")
+  endforeach()
   if("dbus" IN_LIST FEATURES)
     list(APPEND qtbase_owned_dlls dbus-1-3.dll)
   endif()

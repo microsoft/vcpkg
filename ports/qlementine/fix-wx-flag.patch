@@ -1,0 +1,16 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 1234567..abcdef0 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -148,10 +148,10 @@ set_target_properties(${PROJECT_NAME}
+     CMAKE_AUTOUIC ON
+ )
+ 
+ target_compile_options(${PROJECT_NAME}
+   PRIVATE
+-    $<$<CXX_COMPILER_ID:MSVC>:/MP /WX /W4>
++    $<$<CXX_COMPILER_ID:MSVC>:/MP /W4>
+     $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Werror>
+ )
+ 
+ # Create source groups.
