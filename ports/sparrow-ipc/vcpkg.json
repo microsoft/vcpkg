@@ -1,0 +1,22 @@
+{
+  "name": "sparrow-ipc",
+  "version": "1.0.2",
+  "description": "C++20 idiomatic APIs for the Apache Arrow Serialization and Interprocess Communication (IPC)",
+  "homepage": "https://github.com/sparrow-org/sparrow-ipc",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "arcticdb-sparrow",
+    "flatbuffers",
+    "lz4",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zstd"
+  ]
+}
