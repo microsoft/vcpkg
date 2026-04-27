@@ -45,8 +45,10 @@ if(APPLE)
     endif()
 endif()
 
-find_dependency(freetype CONFIG)
-target_link_libraries(harfbuzz INTERFACE freetype)
+if ("freetype" IN_LIST HARFBUZZ_FEATURES)
+    find_dependency(freetype CONFIG)
+    target_link_libraries(harfbuzz INTERFACE freetype)
+endif()
 
 if ("graphite2" IN_LIST HARFBUZZ_FEATURES)
     find_library(GRAPHITE2_LIBRARY_DEBUG NAMES graphite2 PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
@@ -66,11 +68,6 @@ if ("glib" IN_LIST HARFBUZZ_FEATURES)
     else()
         target_link_libraries(harfbuzz INTERFACE "$<$<NOT:$<CONFIG:DEBUG>>:${GLIB_LIBRARY_RELEASE}>$<$<CONFIG:DEBUG>:${GLIB_LIBRARY_DEBUG}>")
     endif()
-endif()
-
-if ("icu" IN_LIST HARFBUZZ_FEATURES)
-    find_dependency(ICU 61 COMPONENTS uc)
-    target_link_libraries(harfbuzz INTERFACE ICU::uc)
 endif()
 
 add_library(harfbuzz::harfbuzz-gpu UNKNOWN IMPORTED)
@@ -100,6 +97,39 @@ else()
 endif()
 
 target_link_libraries(harfbuzz::harfbuzz-gpu INTERFACE harfbuzz)
+
+if ("icu" IN_LIST HARFBUZZ_FEATURES)
+    find_dependency(ICU 61 COMPONENTS uc)
+    target_link_libraries(harfbuzz INTERFACE ICU::uc)
+
+    add_library(harfbuzz::harfbuzz-icu UNKNOWN IMPORTED)
+
+    find_library(HARFBUZZ_ICU_LIBRARY_DEBUG
+        NAMES harfbuzz-icu
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
+        PATH_SUFFIXES lib NO_DEFAULT_PATH)
+    find_library(HARFBUZZ_ICU_LIBRARY_RELEASE
+        NAMES harfbuzz-icu
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+        PATH_SUFFIXES lib NO_DEFAULT_PATH)
+
+    if(NOT HARFBUZZ_LIBRARY_DEBUG)
+        set_target_properties(harfbuzz::harfbuzz-icu PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+            IMPORTED_CONFIGURATIONS "RELEASE"
+            IMPORTED_LOCATION_RELEASE "${HARFBUZZ_ICU_LIBRARY_RELEASE}"
+        )
+    else()
+        set_target_properties(harfbuzz::harfbuzz-icu PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+            IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+            IMPORTED_LOCATION_RELEASE "${HARFBUZZ_ICU_LIBRARY_RELEASE}"
+            IMPORTED_LOCATION_DEBUG "${HARFBUZZ_ICU_LIBRARY_DEBUG}"
+        )
+    endif()
+
+    target_link_libraries(harfbuzz::harfbuzz-icu INTERFACE harfbuzz)
+endif()
 
 add_library(harfbuzz::harfbuzz-raster UNKNOWN IMPORTED)
 
