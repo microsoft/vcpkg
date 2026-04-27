@@ -3601,7 +3601,7 @@
       "port-version": 2
     },
     "gtk": {
-      "baseline": "4.22.2",
+      "baseline": "4.22.3",
       "port-version": 0
     },
     "gtk3": {
