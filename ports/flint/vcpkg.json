@@ -1,6 +1,6 @@
 {
   "name": "flint",
-  "version-semver": "3.4.0",
+  "version-semver": "3.5.0",
   "description": "Fast Library for Number Theory",
   "homepage": "https://www.flintlib.org/",
   "license": "GPL-3.0-only",

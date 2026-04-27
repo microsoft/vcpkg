@@ -2,14 +2,12 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://flintlib.org/download/flint-${VERSION}.zip"
     FILENAME "flint-${VERSION}.zip"
-    SHA512 a4180c4a8ce889d552e207f699d1243bb9af3001aee5f084bc0f67d04cb788268a31725ba23ffa750b1726cd7756ad4efa9f38b5242960fe962bebe96600e7d8
+    SHA512 e6eca3e9055dd11b02d6d6234ac31605380fe5d7ac959c4ef1192661e282df7457a5be3e6a54aa1c8a4d82d0027dd2186002362c66b0bb5e984604ccf4a657af
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        fix-static.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
