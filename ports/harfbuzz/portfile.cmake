@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 649521b69d5d7328245cabca8b769448f695b0b7e3bf16208ddb1635b29165dfd363a06b1b2831229f6ff722d0e8212fd82054e6b64992552a6a21af238c5cb3
     HEAD_REF master
     PATCHES
-        fix-win32-build.patch
         ${ANDROID_LOCALECONV_L_PATCH}
 )
 
