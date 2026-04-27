@@ -87,10 +87,7 @@
         "libmysql",
         "onnxruntime",
         "openjpeg",
-        {
-          "name":"openslide",
-          "version": "3.4.1"
-        },
+        "openslide",
         "openvdb",
         "openxr-loader",
         "pdal",
