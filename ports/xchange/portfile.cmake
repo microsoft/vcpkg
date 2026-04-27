@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Sigmyne/xchange
     REF "v${VERSION}"
-    SHA512 aa0a08dff1ae89eed737ccbf724f2d5ad79eb96b18619e50dd1c8df5bdb72a26d79e20bc76b1bdbb538bd450372a347d666e868a7fc08a07f9f2f4bee9b34626
+    SHA512 1de2e387b6f0efbbc0fbfc9e23619fc15d55943b28b6d628c06eaf0787d2d6c36d52069ffa1b5d55f59bba74a7c304bde928aa1acb6315fd0cbc0ac051ee51c6
     HEAD_REF main
 )
 
