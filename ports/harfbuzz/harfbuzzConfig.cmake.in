@@ -42,7 +42,7 @@ if(APPLE)
     find_library(APPLICATIONSERVICES_LIBRARY ApplicationServices)
     if(APPLICATIONSERVICES_LIBRARY)
         target_link_libraries(harfbuzz INTERFACE ${APPLICATIONSERVICES_LIBRARY})
-    endif()    
+    endif()
 endif()
 
 find_dependency(freetype CONFIG)
@@ -73,17 +73,73 @@ if ("icu" IN_LIST HARFBUZZ_FEATURES)
     target_link_libraries(harfbuzz INTERFACE ICU::uc)
 endif()
 
+add_library(harfbuzz::harfbuzz-gpu UNKNOWN IMPORTED)
+
+find_library(HARFBUZZ_GPU_LIBRARY_DEBUG
+    NAMES harfbuzz-gpu
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+find_library(HARFBUZZ_GPU_LIBRARY_RELEASE
+    NAMES harfbuzz-gpu
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+
+if(NOT HARFBUZZ_LIBRARY_DEBUG)
+    set_target_properties(harfbuzz::harfbuzz-gpu PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_GPU_LIBRARY_RELEASE}"
+    )
+else()
+    set_target_properties(harfbuzz::harfbuzz-gpu PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_GPU_LIBRARY_RELEASE}"
+        IMPORTED_LOCATION_DEBUG "${HARFBUZZ_GPU_LIBRARY_DEBUG}"
+    )
+endif()
+
+target_link_libraries(harfbuzz::harfbuzz-gpu INTERFACE harfbuzz)
+
+add_library(harfbuzz::harfbuzz-raster UNKNOWN IMPORTED)
+
+find_library(HARFBUZZ_RASTER_LIBRARY_DEBUG
+    NAMES harfbuzz-raster
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+find_library(HARFBUZZ_RASTER_LIBRARY_RELEASE
+    NAMES harfbuzz-raster
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+
+if(NOT HARFBUZZ_LIBRARY_DEBUG)
+    set_target_properties(harfbuzz::harfbuzz-raster PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_RASTER_LIBRARY_RELEASE}"
+    )
+else()
+    set_target_properties(harfbuzz::harfbuzz-raster PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_RASTER_LIBRARY_RELEASE}"
+        IMPORTED_LOCATION_DEBUG "${HARFBUZZ_RASTER_LIBRARY_DEBUG}"
+    )
+endif()
+
+target_link_libraries(harfbuzz::harfbuzz-raster INTERFACE harfbuzz)
+
 add_library(harfbuzz::harfbuzz-subset UNKNOWN IMPORTED)
 
-find_library(HARFBUZZ_SUBSET_LIBRARY_DEBUG 
-    NAMES harfbuzz-subset 
-    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" 
+find_library(HARFBUZZ_SUBSET_LIBRARY_DEBUG
+    NAMES harfbuzz-subset
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
     PATH_SUFFIXES lib NO_DEFAULT_PATH)
-find_library(HARFBUZZ_SUBSET_LIBRARY_RELEASE 
-    NAMES harfbuzz-subset 
-    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" 
+find_library(HARFBUZZ_SUBSET_LIBRARY_RELEASE
+    NAMES harfbuzz-subset
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
     PATH_SUFFIXES lib NO_DEFAULT_PATH)
-    
+
 if(NOT HARFBUZZ_LIBRARY_DEBUG)
     set_target_properties(harfbuzz::harfbuzz-subset PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
@@ -100,3 +156,31 @@ else()
 endif()
 
 target_link_libraries(harfbuzz::harfbuzz-subset INTERFACE harfbuzz)
+
+add_library(harfbuzz::harfbuzz-vector UNKNOWN IMPORTED)
+
+find_library(HARFBUZZ_VECTOR_LIBRARY_DEBUG
+    NAMES harfbuzz-vector
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+find_library(HARFBUZZ_VECTOR_LIBRARY_RELEASE
+    NAMES harfbuzz-vector
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+    PATH_SUFFIXES lib NO_DEFAULT_PATH)
+
+if(NOT HARFBUZZ_LIBRARY_DEBUG)
+    set_target_properties(harfbuzz::harfbuzz-vector PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_VECTOR_LIBRARY_RELEASE}"
+    )
+else()
+    set_target_properties(harfbuzz::harfbuzz-vector PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"
+        IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+        IMPORTED_LOCATION_RELEASE "${HARFBUZZ_VECTOR_LIBRARY_RELEASE}"
+        IMPORTED_LOCATION_DEBUG "${HARFBUZZ_VECTOR_LIBRARY_DEBUG}"
+    )
+endif()
+
+target_link_libraries(harfbuzz::harfbuzz-vector INTERFACE harfbuzz)
