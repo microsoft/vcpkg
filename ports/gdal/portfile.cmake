@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
-        fix-gdal-target-interfaces.patch
         iconv.diff
         libkml.patch
         sqlite3.diff
@@ -162,7 +161,14 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/bin/gdal-config"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config"
+    # GDAL needs some variables from their own custom FindSQLite3 module, but injecting that
+    # module into downstream consumers breaks their attempts to use features in newer versions
+    # of CMake.
+    "${CURRENT_PACKAGES_DIR}/share/gdal/packages/FindSQLite3.cmake"
+)
 
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
 if(NOT bin_files)
