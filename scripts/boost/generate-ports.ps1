@@ -9,7 +9,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = '1.90.0',
+    $version = '1.91.0',
 # This script treats support statements as platform expressions. This is incorrect
 # in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
 # boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
@@ -35,7 +35,7 @@ if ($null -eq $vcpkg) {
 $semverVersion = ($version -replace '(\d+(\.\d+){1,3}).*', '$1')
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
+$defaultPortVersion = 0
 $portVersions = @{
 }
 
@@ -709,6 +709,11 @@ foreach ($library in $libraries) {
 
         # Remove optional dependencies
         $deps = @($deps `
+            | Where-Object {
+                # Boost.SmartPtr is not linked by default
+                # See https://github.com/apolukhin/Boost.DLL/blob/develop/CMakeLists.txt
+                -not ($library -eq 'dll' -and $_ -eq 'smart_ptr')
+            } `
             | Where-Object {
                 # Boost.Filesystem only used for tests or examples
                 # See https://github.com/boostorg/gil#requirements
