@@ -144,6 +144,10 @@
       "version>=": "1.91.0"
     },
     {
+      "name": "boost-decimal",
+      "version>=": "1.91.0"
+    },
+    {
       "name": "boost-describe",
       "version>=": "1.91.0"
     },
