@@ -127,7 +127,8 @@ else()
     )
 endif()
 
-target_link_libraries(harfbuzz::harfbuzz-raster INTERFACE harfbuzz)
+find_dependency(PNG)
+target_link_libraries(harfbuzz::harfbuzz-raster INTERFACE harfbuzz PNG::PNG)
 
 add_library(harfbuzz::harfbuzz-subset UNKNOWN IMPORTED)
 
@@ -183,4 +184,5 @@ else()
     )
 endif()
 
-target_link_libraries(harfbuzz::harfbuzz-vector INTERFACE harfbuzz)
+find_dependency(ZLIB)
+target_link_libraries(harfbuzz::harfbuzz-vector INTERFACE harfbuzz ZLIB::ZLIB)
