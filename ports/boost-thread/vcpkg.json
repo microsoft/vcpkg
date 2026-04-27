@@ -88,10 +88,6 @@
       "version>=": "1.91.0"
     },
     {
-      "name": "boost-static-assert",
-      "version>=": "1.91.0"
-    },
-    {
       "name": "boost-system",
       "version>=": "1.91.0"
     },

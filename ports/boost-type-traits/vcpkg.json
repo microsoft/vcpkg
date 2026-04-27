@@ -18,10 +18,6 @@
     {
       "name": "boost-headers",
       "version>=": "1.91.0"
-    },
-    {
-      "name": "boost-static-assert",
-      "version>=": "1.91.0"
     }
   ]
 }

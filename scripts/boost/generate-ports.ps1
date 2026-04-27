@@ -665,7 +665,7 @@ foreach ($library in $libraries) {
             elseif ($_ -match 'is_placeholder.hpp|mem_fn.hpp') { 'bind' }
             elseif ($_ -eq 'circular_buffer_fwd.hpp') { 'circular_buffer' }
             elseif ($_ -match '^concept$|concept_archetype.hpp') { 'concept_check' }
-            elseif ($_ -match 'cstdint.hpp|cxx11_char_types.hpp|limits.hpp|version.hpp') { 'config' }
+            elseif ($_ -match 'cstdint.hpp|cxx11_char_types.hpp|limits.hpp|version.hpp|static_assert.hpp') { 'config' }
             elseif ($_ -eq 'contract_macro.hpp') { 'contract' }
             elseif ($_ -match 'implicit_cast.hpp|polymorphic_cast.hpp|polymorphic_pointer_cast.hpp') { 'conversion' }
             elseif ($_ -eq 'make_default.hpp') { 'convert' }
