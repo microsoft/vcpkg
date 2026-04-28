@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
         -DINSTALL_LIB=ON
         -DCMAKE_INSTALL_LIBDIR=lib
         -DCMAKE_INSTALL_BINDIR=bin
+        "-DVPL_INSTALL_LICENSEDIR=${CURRENT_PACKAGES_DIR}/share/copyright_tmp"
 )
 
 vcpkg_cmake_install()
@@ -32,7 +33,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/vpl/licensing")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/copyright_tmp")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
