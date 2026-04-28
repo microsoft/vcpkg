@@ -168,8 +168,12 @@
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgConfigurationFileLocation)" Condition="Exists('$(_ZVcpkgConfigurationFileLocation)')"/>
   </ItemGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task" />
-  <Import Project="$(MSBuildThisFileDirectory)support\GetGlobalProperties.task" />
+  <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task" 
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+  />
+  <Import Project="$(MSBuildThisFileDirectory)support\GetGlobalProperties.task"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+  />
 
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
