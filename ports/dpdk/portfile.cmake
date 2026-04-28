@@ -30,11 +30,13 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
   endif()
 endif()
 
+# Add a leading zero to the minor version if it consists of only one digit, otherwise the regex does nothing
+string(REGEX REPLACE "^([0-9]+)\\.([0-9])(\\..*)$" "\\1.0\\2\\3" VERSION_REF "${VERSION}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
-  REF "v${VERSION}"
-  SHA512 21b1fd1b87797a61c3480e9b049a38ea5be2fb174b8d1d397db25a0d6c04281f1951e402276299fd605763ef6aa867f1285b2321f03214aa6122553cfb53771e
+  REF "v${VERSION_REF}"
+  SHA512 37b49b5b5481036e0d563794222fc37c358f3c81b449e4252adb3bb1365e5dde14d7310a1ace810ee2443902a1cc7b177dca76666dd324241142062532a7509d
   HEAD_REF main
   PATCHES
       0001-enable-either-static-or-shared-build.patch
