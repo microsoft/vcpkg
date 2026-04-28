@@ -1,15 +1,10 @@
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://flintlib.org/download/flint-${VERSION}.zip"
-    FILENAME "flint-${VERSION}.zip"
-    SHA512 a4180c4a8ce889d552e207f699d1243bb9af3001aee5f084bc0f67d04cb788268a31725ba23ffa750b1726cd7756ad4efa9f38b5242960fe962bebe96600e7d8
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO flintlib/flint
+    REF v${VERSION}
+    SHA512 fbb6f0945b589e237d707c3b6963f7bb7fc1b9e5b511f5f8ed805f14f85b317c79a9eedc7ae28d34837f7126eac86dd4a9c8e7258560da3413c599eb64d367f7
+    HEAD_REF master
     PATCHES
-        fix-static.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -27,6 +22,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        AUTORECONF
         OPTIONS
             --with-ntl=no
             --with-blas=no

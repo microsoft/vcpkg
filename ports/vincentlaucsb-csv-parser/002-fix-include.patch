@@ -1,10 +1,10 @@
 diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index 1fd844c..ee53291 100644
+index 341a154..2d1e70a 100644
 --- a/include/internal/basic_csv_parser.hpp
 +++ b/include/internal/basic_csv_parser.hpp
 @@ -12,7 +12,7 @@
  #include <vector>
- 
+
  #if !defined(__EMSCRIPTEN__)
 -#include "../external/mio.hpp"
 +#include "mio/mmap.hpp"
@@ -12,22 +12,22 @@ index 1fd844c..ee53291 100644
  #include "basic_csv_parser_simd.hpp"
  #include "col_names.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index 72c70b8..9ad1dca 100644
+index 97824fd..aa5b484 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -97,7 +97,7 @@
+@@ -105,7 +105,7 @@
  #endif
- 
+
  // Include string_view BEFORE csv namespace to avoid namespace pollution issues
 -#ifdef CSV_HAS_CXX17
 +#if 1
  #include <string_view>
  #else
  #include "../external/string_view.hpp"
-@@ -123,7 +123,7 @@ namespace csv {
- // Allows static assertions without specifying a message
- #define STATIC_ASSERT(x) static_assert(x, "Assertion failed")
- 
+@@ -141,7 +141,7 @@ namespace csv {
+     #define CSV_DEBUG_ASSERT(x) assert(x)
+ #endif
+
 -#ifdef CSV_HAS_CXX17
 +#if 1
       /** @typedef string_view
