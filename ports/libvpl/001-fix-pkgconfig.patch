@@ -1,0 +1,52 @@
+diff --git a/cmake/CompileOptions.cmake b/cmake/CompileOptions.cmake
+index 02926c4..1e789b8 100644
+--- a/cmake/CompileOptions.cmake
++++ b/cmake/CompileOptions.cmake
+@@ -69,8 +69,6 @@ endif()
+ 
+ # Define RelWithDebRT Build Mode
+ if(MSVC)
+-  set(CMAKE_DEBUG_POSTFIX "d")
+-  set(CMAKE_RELWITHDEBRT_POSTFIX "d")
+   set(CMAKE_CXX_FLAGS_RELWITHDEBRT
+       "${CMAKE_CXX_FLAGS_RELEASE}"
+       CACHE STRING "Flags used by the C++ compiler during RelWithDebRT builds."
+diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
+index 0419980..fe7bedb 100644
+--- a/libvpl/CMakeLists.txt
++++ b/libvpl/CMakeLists.txt
+@@ -185,13 +185,15 @@ if(INSTALL_DEV)
+   if(CMAKE_DL_LIBS)
+     set(DL_LIBS "-l${CMAKE_DL_LIBS}")
+   endif()
+-  if(MINGW)
+-    # being conservative by restricting to MinGW, these are probably ok for
+-    # WIN32 in general
+-    set(MINGW_LIBS "-lole32 -lgdi32 -luuid")
++  if(WIN32)
++    if(MINGW)
++      set(WIN32_LIBS "-lole32 -lgdi32 -luuid")
++    else()
++      set(WIN32_LIBS "-ladvapi32 -lole32")
++    endif()
+   endif()
+   set(VPL_PKGCONFIG_DEPENDENT_LIBS
+-      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MINGW_LIBS} ${CXX_LIB}")
++      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${WIN32_LIBS} ${CXX_LIB}")
+   configure_file("pkgconfig/vpl.pc.in" "pkgconfig/vpl.pc" @ONLY)
+   install(
+     FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/vpl.pc"
+diff --git a/libvpl/pkgconfig/vpl.pc.in b/libvpl/pkgconfig/vpl.pc.in
+index aa9b158..46b2c38 100644
+--- a/libvpl/pkgconfig/vpl.pc.in
++++ b/libvpl/pkgconfig/vpl.pc.in
+@@ -1,6 +1,6 @@
+-prefix=@pc_rel_prefix@
+-libdir=@pc_rel_libdir@
+-includedir=@pc_rel_incdir@
++prefix=${pcfiledir}/../..
++libdir=${prefix}/lib
++includedir=${prefix}/include
+ 
+ Name: Intel(R) Video Processing Library
+ Description: Accelerated video decode, encode, and frame processing capabilities on Intel(R) GPUs
