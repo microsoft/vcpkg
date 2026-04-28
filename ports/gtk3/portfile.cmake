@@ -38,8 +38,13 @@ else()
     list(APPEND OPTIONS_RELEASE -Dintrospection=false)
 endif()
 
+set(BINARIES "")
+
 if("wayland" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dwayland_backend=true)
+    if(X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES)
+        list(APPEND BINARIES "wayland-scanner='${CURRENT_HOST_INSTALLED_DIR}/tools/wayland/wayland-scanner${VCPKG_HOST_EXECUTABLE_SUFFIX}'")
+    endif()
 else()
     list(APPEND OPTIONS -Dwayland_backend=false)
 endif()
@@ -70,6 +75,7 @@ vcpkg_configure_meson(
         "glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
         "g-ir-compiler='${GIR_COMPILER}'"
         "g-ir-scanner='${GIR_SCANNER}'"
+        ${BINARIES}
 )
 
 # Reduce command line lengths, in particular for static windows builds.
