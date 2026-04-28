@@ -73,7 +73,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_webengine_system_abseil=ON")
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_abseil=ON")
 endif()
 
 # webengine-extensions

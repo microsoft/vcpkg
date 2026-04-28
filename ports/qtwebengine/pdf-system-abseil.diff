@@ -1,4 +1,29 @@
-﻿diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
+﻿diff --git a/configure.cmake b/configure.cmake
+index 0000000..0000000 100644
+--- a/configure.cmake
++++ b/configure.cmake
+@@ -660,6 +660,11 @@ qt_feature("webengine-qt-libjpeg" PRIVATE
+     CONDITION QT_FEATURE_static
+         AND TARGET Qt::Gui
+         AND QT_FEATURE_jpeg
+         AND NOT QT_FEATURE_system_jpeg
+ )
++qt_feature("webengine-system-abseil" PRIVATE
++    LABEL "abseil"
++    AUTODETECT FALSE
++    CONDITION UNIX
++)
+ qt_feature("webengine-system-harfbuzz" PRIVATE
+     LABEL "harfbuzz"
+     CONDITION UNIX AND TARGET Qt::Gui AND HARFBUZZ_FOUND AND QT_FEATURE_system_harfbuzz
+ )
+@@ -830,6 +835,7 @@ if(UNIX)
+     qt_configure_add_summary_entry(ARGS "webengine-system-libtiff")
+     qt_configure_add_summary_entry(ARGS "webengine-system-libjpeg")
++    qt_configure_add_summary_entry(ARGS "webengine-system-abseil")
+     qt_configure_add_summary_entry(ARGS "webengine-system-libopenjpeg2")
+     qt_configure_add_summary_entry(ARGS "webengine-system-harfbuzz")
+diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
 index 0000000..0000000 100644
 --- a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
 +++ b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
