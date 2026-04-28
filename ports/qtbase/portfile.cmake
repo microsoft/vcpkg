@@ -602,6 +602,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         libcrypto-3-${VCPKG_TARGET_ARCHITECTURE}.dll
         libcrypto-3.dll # for x86
         pcre2-16.dll
+        z.dll
         zlib1.dll
         zstd.dll
   )
