@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/xchange")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/xchange" PACKAGE_NAME "xchange")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
