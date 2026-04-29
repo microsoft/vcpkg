@@ -11,6 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(PYTHON3)
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_PARALLEL_CONFIGURE # see configure_file(${CMAKE_CURRENT_SOURCE_DIR} ...
         OPTIONS
             "-DPython_EXECUTABLE=${PYTHON3}"
             -DVCPKG_LOCK_FIND_PACKAGE_CBLAS=OFF
