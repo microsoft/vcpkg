@@ -197,18 +197,6 @@ if("cuda" IN_LIST FEATURES)
   )
 endif()
 
-vcpkg_download_distfile(CONTRIB_CUDA_NAMESPACE_FIX
-  URLS "https://github.com/opencv/opencv_contrib/commit/f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff?full_index=1"
-  FILENAME "opencv4-contrib-cuda13-namespace-fix-f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff"
-  SHA512 1065406fef35ffdfa4d27e991cd96df915e61b1ff4d17df391658a5eb069755b437a6546aaf05eac7b04b616882eb52b121ebe36c7f0af63e3040bda574ca3ed
-)
-
-vcpkg_download_distfile(CONTRIB_CUDA_NOT1_FIX
-  URLS "https://github.com/opencv/opencv_contrib/commit/f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff?full_index=1"
-  FILENAME "opencv4-contrib-cuda13-not1-fix-f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff"
-  SHA512 b1e46be570417a26aec4b2a6e1824008f92c404fb67f307218fdf386074b51ca3ea063516517449631a8dd2ca487b0736c1978a3a5e38f88686c25802af4f300
-)
-
 if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/0.5.0/kleidicv-0.5.0.tar.gz"
@@ -218,6 +206,18 @@ if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
 endif()
 
 if("contrib" IN_LIST FEATURES)
+  vcpkg_download_distfile(CONTRIB_CUDA_NAMESPACE_FIX
+    URLS "https://github.com/opencv/opencv_contrib/commit/f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff?full_index=1"
+    FILENAME "opencv4-contrib-cuda13-namespace-fix-f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff"
+    SHA512 1065406fef35ffdfa4d27e991cd96df915e61b1ff4d17df391658a5eb069755b437a6546aaf05eac7b04b616882eb52b121ebe36c7f0af63e3040bda574ca3ed
+  )
+
+  vcpkg_download_distfile(CONTRIB_CUDA_NOT1_FIX
+    URLS "https://github.com/opencv/opencv_contrib/commit/f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff?full_index=1"
+    FILENAME "opencv4-contrib-cuda13-not1-fix-f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff"
+    SHA512 b1e46be570417a26aec4b2a6e1824008f92c404fb67f307218fdf386074b51ca3ea063516517449631a8dd2ca487b0736c1978a3a5e38f88686c25802af4f300
+  )
+
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
