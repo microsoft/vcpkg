@@ -289,7 +289,7 @@
       "port-version": 0
     },
     "arrow-adbc": {
-      "baseline": "16",
+      "baseline": "22",
       "port-version": 0
     },
     "arsenalgear": {
@@ -2288,6 +2288,30 @@
       "baseline": "4.3.0",
       "port-version": 0
     },
+    "curve-eraser": {
+      "baseline": "2.3.0",
+      "port-version": 0
+    },
+    "curve-ereignis": {
+      "baseline": "4.3",
+      "port-version": 0
+    },
+    "curve-flagpp": {
+      "baseline": "3.1.0",
+      "port-version": 0
+    },
+    "curve-lockpp": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
+    "curve-poolparty": {
+      "baseline": "3.0.1",
+      "port-version": 0
+    },
+    "curve-rebind": {
+      "baseline": "5.3.1",
+      "port-version": 0
+    },
     "cute-headers": {
       "baseline": "2019-09-20",
       "port-version": 2
@@ -2804,14 +2828,6 @@
       "baseline": "0.0.20240608",
       "port-version": 0
     },
-    "eraser": {
-      "baseline": "2.3.0",
-      "port-version": 0
-    },
-    "ereignis": {
-      "baseline": "4.3",
-      "port-version": 0
-    },
     "esaxx": {
       "baseline": "ca7cb332011ec37",
       "port-version": 1
@@ -3027,10 +3043,6 @@
     "fkyaml": {
       "baseline": "0.4.2",
       "port-version": 1
-    },
-    "flagpp": {
-      "baseline": "3.1.0",
-      "port-version": 0
     },
     "flann": {
       "baseline": "2022-10-28",
@@ -3710,7 +3722,7 @@
     },
     "harfbuzz": {
       "baseline": "14.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hash-library": {
       "baseline": "8",
@@ -6084,10 +6096,6 @@
       "baseline": "0.9.35",
       "port-version": 0
     },
-    "lockpp": {
-      "baseline": "3.2.0",
-      "port-version": 0
-    },
     "lodepng": {
       "baseline": "2021-12-04",
       "port-version": 1
@@ -7230,7 +7238,7 @@
     },
     "onnxruntime": {
       "baseline": "1.23.2",
-      "port-version": 0
+      "port-version": 1
     },
     "onnxruntime-gpu": {
       "baseline": "1.23.2",
@@ -7302,7 +7310,7 @@
     },
     "opencv4": {
       "baseline": "4.12.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.2",
@@ -7812,6 +7820,10 @@
       "baseline": "2021-09-26",
       "port-version": 0
     },
+    "polkit": {
+      "baseline": "124",
+      "port-version": 0
+    },
     "polyclipping": {
       "baseline": "6.4.2",
       "port-version": 13
@@ -7827,10 +7839,6 @@
     "ponder": {
       "baseline": "3.0.0",
       "port-version": 5
-    },
-    "poolparty": {
-      "baseline": "3.0.1",
-      "port-version": 0
     },
     "poolstl": {
       "baseline": "0.3.5",
@@ -8636,10 +8644,6 @@
       "baseline": "2.56.5",
       "port-version": 0
     },
-    "rebind": {
-      "baseline": "5.3.1",
-      "port-version": 0
-    },
     "recastnavigation": {
       "baseline": "1.6.0",
       "port-version": 1
@@ -8942,7 +8946,7 @@
     },
     "saucer": {
       "baseline": "6.0.1",
-      "port-version": 6
+      "port-version": 7
     },
     "sbgecom": {
       "baseline": "5.3.2276",

@@ -1,5 +1,5 @@
 {
-  "name": "ereignis",
+  "name": "curve-ereignis",
   "version": "4.3",
   "description": "A thread-safe C++17 Event Library",
   "homepage": "https://github.com/Curve/ereignis",

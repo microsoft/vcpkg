@@ -37,7 +37,9 @@ vcpkg_from_github(
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
       0023-ffmpeg8-support.patch
-      0024-cuda-msvc-preprocessor.patch
+      0024-openvino-const-tensor-data.patch
+      0025-fix-cuda-host-std-flag-forwarding.patch
+      0026-cuda-msvc-preprocessor.patch
       "${PATCH1_FILE}"
       "${CUDA_13_SUPPORT_PATCH}"
 )
@@ -560,7 +562,7 @@ if("ffmpeg" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
 endif()
 if("freetype" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
+  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz CONFIG)")
 endif()
 if("gdcm" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
