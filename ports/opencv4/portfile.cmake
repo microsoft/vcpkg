@@ -195,19 +195,19 @@ if("cuda" IN_LIST FEATURES)
     FILENAME "opencv-cache/nvidia_optical_flow/a73cd48b18dcc0cc8933b30796074191-edb50da3cf849840d680249aa6dbef248ebce2ca.zip"
     SHA512 12d655ac9fcfc6df0186daa62f7185dadd489f0eeea25567d78c2b47a9840dcce2bd03a3e9b3b42f125dbaf3150f52590ea7597dc1dc8acee852dc0aed56651e
   )
-
-  vcpkg_download_distfile(CONTRIB_CUDA_NAMESPACE_FIX
-    URLS "https://github.com/opencv/opencv_contrib/commit/f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff?full_index=1"
-    FILENAME "opencv4-contrib-cuda13-namespace-fix-f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff"
-    SHA512 1065406fef35ffdfa4d27e991cd96df915e61b1ff4d17df391658a5eb069755b437a6546aaf05eac7b04b616882eb52b121ebe36c7f0af63e3040bda574ca3ed
-  )
-
-  vcpkg_download_distfile(CONTRIB_CUDA_NOT1_FIX
-    URLS "https://github.com/opencv/opencv_contrib/commit/f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff?full_index=1"
-    FILENAME "opencv4-contrib-cuda13-not1-fix-f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff"
-    SHA512 b1e46be570417a26aec4b2a6e1824008f92c404fb67f307218fdf386074b51ca3ea063516517449631a8dd2ca487b0736c1978a3a5e38f88686c25802af4f300
-  )
 endif()
+
+vcpkg_download_distfile(CONTRIB_CUDA_NAMESPACE_FIX
+  URLS "https://github.com/opencv/opencv_contrib/commit/f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff?full_index=1"
+  FILENAME "opencv4-contrib-cuda13-namespace-fix-f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff"
+  SHA512 1065406fef35ffdfa4d27e991cd96df915e61b1ff4d17df391658a5eb069755b437a6546aaf05eac7b04b616882eb52b121ebe36c7f0af63e3040bda574ca3ed
+)
+
+vcpkg_download_distfile(CONTRIB_CUDA_NOT1_FIX
+  URLS "https://github.com/opencv/opencv_contrib/commit/f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff?full_index=1"
+  FILENAME "opencv4-contrib-cuda13-not1-fix-f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff"
+  SHA512 b1e46be570417a26aec4b2a6e1824008f92c404fb67f307218fdf386074b51ca3ea063516517449631a8dd2ca487b0736c1978a3a5e38f88686c25802af4f300
+)
 
 if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
   vcpkg_download_distfile(OCV_DOWNLOAD
