@@ -14,10 +14,7 @@ index 0000000..0000000 100644
 +    CONDITION UNIX
 +)
  qt_feature("webengine-system-harfbuzz" PRIVATE
-     LABEL "harfbuzz"
-     CONDITION UNIX AND TARGET Qt::Gui AND HARFBUZZ_FOUND AND QT_FEATURE_system_harfbuzz
- )
-@@ -830,6 +835,7 @@ if(UNIX)
+@@ -830,4 +835,5 @@ if(UNIX)
      qt_configure_add_summary_entry(ARGS "webengine-system-libtiff")
      qt_configure_add_summary_entry(ARGS "webengine-system-libjpeg")
 +    qt_configure_add_summary_entry(ARGS "webengine-system-abseil")
