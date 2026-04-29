@@ -1,6 +1,6 @@
 {
   "name": "msolve",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Computer algebra algorithms for solving polynomial systems",
   "homepage": "https://msolve.lip6.fr/",
   "license": "GPL-2.0-only",
