@@ -21,7 +21,6 @@
     },
     "solsys-calceph": {
       "description": "Solar-system ephemeris support via the CALCEPH library",
-      "supports": "!uwp & !(linux & arm64)",
       "dependencies": [
         "calceph"
       ]
