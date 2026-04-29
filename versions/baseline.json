@@ -5893,8 +5893,8 @@
       "port-version": 1
     },
     "libxfont": {
-      "baseline": "2.0.5",
-      "port-version": 3
+      "baseline": "2.0.7",
+      "port-version": 0
     },
     "libxft": {
       "baseline": "2.3.9",
