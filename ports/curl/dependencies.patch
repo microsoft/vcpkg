@@ -382,6 +382,27 @@ index baf6148f0d..c75cfdf47e 100644
  else()
    find_path(ZSTD_INCLUDE_DIR NAMES "zstd.h")
    if(ZSTD_USE_STATIC_LIBS)
+diff --git a/CMake/Macros.cmake b/CMake/Macros.cmake
+index 5e26c38469..de6e221163 100644
+--- a/CMake/Macros.cmake
++++ b/CMake/Macros.cmake
+@@ -258,7 +258,15 @@ macro(curl_collect_target_link_options _target)
+     # Explicitly skip this query to avoid CMake v3.18 and older erroring out.
+     get_target_property(_val ${_target} TYPE)
+     if(NOT "${_val}" STREQUAL "INTERFACE_LIBRARY")
+-      get_target_property(_val ${_target} LOCATION)
++      set(_val "")
++      if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
++        get_target_property(_val ${_target} LOCATION_DEBUG)
++      else()
++        get_target_property(_val ${_target} LOCATION_RELEASE)
++      endif()
++      if(NOT EXISTS "${_val}")
++        get_target_property(_val ${_target} LOCATION)
++      endif()
+       if(_val)
+         list(APPEND _libs ${_val})
+       endif()
 diff --git a/CMake/curl-config.in.cmake b/CMake/curl-config.in.cmake
 index f4e17d29b3..45947ec6c9 100644
 --- a/CMake/curl-config.in.cmake
@@ -481,16 +502,17 @@ index 154ba5ef8f..316ad603a9 100644
  if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")  # MSVC but exclude clang-cl
    set_property(DIRECTORY APPEND PROPERTY COMPILE_OPTIONS "-MP")  # Parallel compilation
  endif()
-@@ -2156,7 +2194,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2156,7 +2194,8 @@ if(NOT CURL_DISABLE_INSTALL)
    set(_explicit_libdirs "")
    set(LIBCURL_PC_REQUIRES_PRIVATE "")
    set(LIBCURL_PC_LIBS_PRIVATE_LIST "")
 -  foreach(_lib IN LISTS CURL_LIBS _custom_libs _implicit_libs)
 +  foreach(_lib IN LISTS CURL_LIBS_RAW _custom_libs _implicit_libs)
++    string(REGEX REPLACE "^[\$]<LINK_ONLY:(.*)>\$" "\\1" _lib "${_lib}")
      if(TARGET "${_lib}")
        set(_explicit_libs "")
        get_target_property(_imported "${_lib}" IMPORTED)
-@@ -2182,8 +2220,25 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2182,8 +2221,25 @@ if(NOT CURL_DISABLE_INSTALL)
        endif()
        if(_modules)
          list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "${_modules}")
@@ -516,7 +538,7 @@ index 154ba5ef8f..316ad603a9 100644
        foreach(_lib IN LISTS _explicit_libs)
          if(_lib MATCHES "/")
            # This gets a bit more complex, because we want to specify the
-@@ -2202,23 +2257,44 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2202,23 +2258,44 @@ if(NOT CURL_DISABLE_INSTALL)
              if(NOT _libdir IN_LIST _sys_libdirs)
                list(APPEND _ldflags "-L${_libdir}")
              endif()
@@ -561,7 +583,7 @@ index 154ba5ef8f..316ad603a9 100644
        list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
      endif()
    endforeach()
-@@ -2241,6 +2317,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2241,6 +2318,7 @@ if(NOT CURL_DISABLE_INSTALL)
    if(LIBCURL_PC_LIBS_PRIVATE)
      string(REPLACE ";" " " LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE}")
    endif()
