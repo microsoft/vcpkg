@@ -1,3 +1,13 @@
+if(VCPKG_TARGET_IS_OHOS)
+    # OHOS provides libz.so in its SDK sysroot. find_package(ZLIB) locates
+    # it via CMAKE_SYSROOT, so vcpkg must not build its own: a vcpkg-built
+    # libz.so carries GNU symbol versioning that the OHOS musl dynamic
+    # linker cannot resolve, while the SDK's libz.so is unversioned.
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    return()
+endif()
+
 # When this port is updated, the minizip port should be updated at the same time
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
