@@ -1,8 +1,8 @@
 {
-  "name": "lockpp",
-  "version": "3.2.0",
-  "description": "A C++17 Library that provides mutex protected objects",
-  "homepage": "https://github.com/Curve/lockpp",
+  "name": "curve-rebind",
+  "version": "5.3.1",
+  "description": "A C++23 reflection library for aggregates and enums",
+  "homepage": "https://github.com/Curve/rebind",
   "license": "MIT",
   "dependencies": [
     {

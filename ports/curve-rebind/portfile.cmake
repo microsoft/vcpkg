@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Curve/eraser
+    REPO Curve/rebind
     REF "v${VERSION}"
-    SHA512 5c43cb2af7a42f4eb6c1b5f76ce36315f093cd8d2e3aa7873da7d1a1d188df3515e0e63b9ba8fd7418d9b62c3bc80fa1ec7548535fb69e3f36873eede682af4b
+    SHA512 3b0fba09f8bd6257c055a6619094646c70e90fbb55967165dd94eb1914c1477443a86e5745c08a4dd722656ab124fffcbaabbd9d2b8ec82be30d741799eff93d
     HEAD_REF master
     PATCHES
         remove-cpm.patch # Note: Removed also the ALIAS library as packageProject creates it
@@ -20,7 +20,7 @@ file(RENAME "${PACKAGE_PROJECT_PATH}" "${SOURCE_PATH}/cmake/packageproject.cmake
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/${PORT}-${VERSION}")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "rebind" CONFIG_PATH "share/cmake/rebind-${VERSION}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

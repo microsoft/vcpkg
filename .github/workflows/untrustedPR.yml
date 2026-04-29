@@ -61,11 +61,13 @@ jobs:
           # reset the version database to the state of the merge base, so that we can check that the PR only adds one version and doesn't modify any existing versions
           git restore --source=$merge_base --staged --worktree -- versions
           git clean -fd -- versions
+          echo '{"default": {}}' > versions/baseline.json # to allow deindexing, let x-add-version completely regenerate the baseline json
           # check for version format errors separately by running x-add-version --all, recording problems it generates
           ./vcpkg x-add-version --all | grep -E '^warning:|instead of "version-string"' | tee .github-pr.version-string.out || true
           # reset the version database again
           git restore --source=$merge_base --staged --worktree -- versions
           git clean -fd -- versions
+          echo '{"default": {}}' > versions/baseline.json
           # check that the PR only adds one version and doesn't modify any existing versions, ignoring any of the warnings recorded into .github-pr.version-string.out
           ./vcpkg x-add-version --all --skip-version-format-check | tee .github-pr.x-add-version.out || true
           git add -A -- versions

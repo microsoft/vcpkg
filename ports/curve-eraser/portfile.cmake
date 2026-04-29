@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Curve/flagpp
+    REPO Curve/eraser
     REF "v${VERSION}"
-    SHA512 92e324b1cd773ae256c50d389fe1b30ac71237dfb299bae1e413e97b8057433dccb8a6c93ce16f05edc0de624893165491ac621e1b9da9f512df531bd69b504b
+    SHA512 5c43cb2af7a42f4eb6c1b5f76ce36315f093cd8d2e3aa7873da7d1a1d188df3515e0e63b9ba8fd7418d9b62c3bc80fa1ec7548535fb69e3f36873eede682af4b
     HEAD_REF master
     PATCHES
         remove-cpm.patch # Note: Removed also the ALIAS library as packageProject creates it
@@ -20,7 +20,7 @@ file(RENAME "${PACKAGE_PROJECT_PATH}" "${SOURCE_PATH}/cmake/packageproject.cmake
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/${PORT}-${VERSION}")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "eraser" CONFIG_PATH "share/cmake/eraser-${VERSION}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
