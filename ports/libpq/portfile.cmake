@@ -69,13 +69,6 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpq.pc" " -lp" "-llibp")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpq.pc" " -lp" "-llibp")
-    endif()
-endif()
-
 vcpkg_copy_tools(TOOL_NAMES ecpg AUTO_CLEAN)
 if("client" IN_LIST FEATURES)
     if(NOT VCPKG_CROSSCOMPILING)
