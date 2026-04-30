@@ -11,6 +11,7 @@ vcpkg_from_github(
         sqlite3.diff
         target-is-valid.patch
 )
+
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -164,10 +165,6 @@ file(REMOVE_RECURSE
 file(REMOVE
     "${CURRENT_PACKAGES_DIR}/bin/gdal-config"
     "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config"
-    # GDAL needs some variables from their own custom FindSQLite3 module, but injecting that
-    # module into downstream consumers breaks their attempts to use features in newer versions
-    # of CMake.
-    "${CURRENT_PACKAGES_DIR}/share/gdal/packages/FindSQLite3.cmake"
 )
 
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")

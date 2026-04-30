@@ -1,5 +1,5 @@
 diff --git a/cmake/modules/packages/FindSQLite3.cmake b/cmake/modules/packages/FindSQLite3.cmake
-index a99d5b8..3d339a9 100644
+index a99d5b8..c94a2df 100644
 --- a/cmake/modules/packages/FindSQLite3.cmake
 +++ b/cmake/modules/packages/FindSQLite3.cmake
 @@ -79,7 +79,7 @@ if(SQLite3_INCLUDE_DIR AND SQLite3_LIBRARY)
@@ -37,7 +37,7 @@ index a99d5b8..3d339a9 100644
      if(SQLite3_HAS_COLUMN_METADATA)
          set_property(TARGET SQLite::SQLite3 APPEND PROPERTY
                       INTERFACE_COMPILE_DEFINITIONS "SQLite3_HAS_COLUMN_METADATA")
-@@ -189,5 +185,9 @@ if(SQLite3_FOUND)
+@@ -189,5 +185,14 @@ if(SQLite3_FOUND)
          set_property(TARGET SQLite::SQLite3 APPEND PROPERTY
                       INTERFACE_COMPILE_DEFINITIONS "SQLite3_HAS_RTREE")
      endif()
@@ -45,5 +45,10 @@ index a99d5b8..3d339a9 100644
 +  if(definitions)
 +    list(REMOVE_DUPLICATES definitions)
 +    set_target_properties(SQLite::SQLite3 PROPERTIES INTERFACE_COMPILE_DEFINITIONS "${definitions}")
++  endif()
++
++  # as suggested by https://cmake.org/cmake/help/latest/module/FindSQLite3.html
++  if(NOT TARGET SQLite3::SQLite3)
++    add_library(SQLite3::SQLite3 ALIAS SQLite::SQLite3)
    endif()
  endif()
