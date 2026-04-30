@@ -11,6 +11,7 @@ vcpkg_from_github(
         smid.patch
         python.patch
         fix_dep.patch
+        fix_openexr.patch
         fix_apple.patch
         fix_windows.patch
         dynamic-internal-libs.patch
