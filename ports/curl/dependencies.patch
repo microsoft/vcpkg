@@ -403,6 +403,14 @@ index 5e26c38469..de6e221163 100644
        if(_val)
          list(APPEND _libs ${_val})
        endif()
+@@ -267,6 +275,7 @@ macro(curl_collect_target_link_options _target)
+   get_target_property(_val ${_target} INTERFACE_LINK_LIBRARIES)
+   if(_val)
+     foreach(_lib IN LISTS _val)
++      string(REGEX REPLACE "^[\$]<LINK_ONLY:(.*)>\$" "\\1" _lib "${_lib}")
+       if(TARGET "${_lib}")
+         curl_collect_target_link_options(${_lib})
+       else()
 diff --git a/CMake/curl-config.in.cmake b/CMake/curl-config.in.cmake
 index f4e17d29b3..45947ec6c9 100644
 --- a/CMake/curl-config.in.cmake
@@ -525,9 +533,9 @@ index 154ba5ef8f..316ad603a9 100644
 +      # deduplication and workaround for pkgconf 2.5.1 bug
 +      if("${_explicit_libs};" MATCHES "/libcrypto.a;")
 +        list(REMOVE_ITEM _modules "libcrypto")
-+        list(APPEND _modules "libcrypto;")
++        list(APPEND _modules "libcrypto")
 +      endif()
-+      if("${_explicit_libs};" MATCHES "/libz.a")
++      if("${_explicit_libs};" MATCHES "/libzs?d?.a;")
 +        list(REMOVE_ITEM _modules "zlib")
 +        list(APPEND _modules "zlib")
 +      endif()
