@@ -3,16 +3,16 @@ set(USE_QT_VERSION "6")
 # fix to get version from eigen after v3.4.0
 vcpkg_download_distfile(
     PATCH1_FILE
-    URLS https://github.com/opencv/opencv/commit/468de9b36740b3355f0d5cd8be2ce28b340df120.patch?full_index=1
+    URLS "https://github.com/opencv/opencv/commit/468de9b36740b3355f0d5cd8be2ce28b340df120.patch?full_index=1"
     SHA512 09ee552fcd9a96359230104d7bf8610a63e05d743a3b51d58c6469331729a6440444e05c616464380dbebaefdd7ee6fb06cac5fc70694af85f9c8d40201aad10
-    FILENAME 468de9b36740b3355f0d5cd8be2ce28b340df120.patch
+    FILENAME "468de9b36740b3355f0d5cd8be2ce28b340df120.patch"
 )
 
 vcpkg_download_distfile(
     CUDA_13_SUPPORT_PATCH
-    URLS https://github.com/opencv/opencv/commit/f0888a10e8266b2202d930c6974433a421e6f9a7.diff?full_index=1
+    URLS "https://github.com/opencv/opencv/commit/f0888a10e8266b2202d930c6974433a421e6f9a7.diff?full_index=1"
     SHA512 6efbc9f7e4ad158e648632060bac6ecb542239f1f656774378e6a2beaa42f094784c3b2755b44d599fe4eed69dd9f1f461e0be1ebcd57f9ebc261ead739ed7d5
-    FILENAME opencv4-support-cuda-13-f0888a10e8266b2202d930c6974433a421e6f9a7.diff
+    FILENAME "opencv4-support-cuda-13-f0888a10e8266b2202d930c6974433a421e6f9a7.diff"
 )
 
 vcpkg_from_github(
