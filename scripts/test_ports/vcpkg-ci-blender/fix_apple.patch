@@ -42,7 +42,7 @@ index 763d32e9..6b957da8 100644
  endif()
  
 -set(EPOXY_ROOT_DIR ${LIBDIR}/epoxy)
-+set(EPOXY_ROOT_DIR ${CURRENT_INSTALLED_DIR})
++# set(EPOXY_ROOT_DIR ${LIBDIR}/epoxy)
  find_package(Epoxy REQUIRED)
  
 -set(PNG_ROOT ${LIBDIR}/png)
