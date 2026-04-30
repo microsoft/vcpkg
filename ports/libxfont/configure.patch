@@ -7,7 +7,7 @@ index f507c285a..a821e7311 100644
  X_GZIP_FONT_COMPRESSION=1
  AC_SUBST(X_GZIP_FONT_COMPRESSION)
 -AC_CHECK_LIB(z, gzopen, [Z_LIBS=-lz], AC_MSG_ERROR([*** zlib is required]))
-+AC_SEARCH_LIBS(gzopen, [z zlib zlibd] , [Z_LIBS="$ac_cv_search_gzopen"], AC_MSG_ERROR([*** zlib is required]))
++AC_SEARCH_LIBS(gzopen, [z zs zlib zd zsd zlibd] , [Z_LIBS="$ac_cv_search_gzopen"], AC_MSG_ERROR([*** zlib is required]))
  
  AC_ARG_WITH(bzip2,
  	AS_HELP_STRING([--with-bzip2],

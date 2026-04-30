@@ -1,13 +1,13 @@
 diff --git a/meson.build b/meson.build
-index e5f9523..f974871 100644
+index 08332a0571..bd4e31c55f 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -574,7 +574,7 @@ if build_docs
+@@ -580,7 +580,7 @@ if build_docs
  endif
  subdir('bin')
  
 -if not platform_osx and host_cpu_family != 'x86'
 +if false
+   nm = find_program('nm', required: false)
+ 
    # Verify .def files for Windows linking.
-   # We check this on non-Windows platform  on CI, and on Windows itself.
-   custom_target('check-def-files',
