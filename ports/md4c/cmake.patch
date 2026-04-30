@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aec8293..600d51b 100644
+index 3f271ef..5324940 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -51,16 +51,6 @@ elseif(MSVC)
+@@ -40,16 +40,6 @@ elseif(MSVC)
      # Disable warnings about the so-called unsecured functions:
-     add_definitions(/D_CRT_SECURE_NO_WARNINGS)
+     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
      add_compile_options(/W3)
 -
 -    # Specify proper C runtime library:

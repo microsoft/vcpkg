@@ -1,6 +1,6 @@
 {
   "name": "raylib-cpp",
-  "version": "5.5.1",
+  "version": "6.0.0",
   "description": "C++ Object Oriented Wrapper for raylib",
   "homepage": "https://github.com/RobLoach/raylib-cpp",
   "license": "Zlib",

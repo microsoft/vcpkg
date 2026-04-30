@@ -1,6 +1,6 @@
 {
   "name": "ethindp-prism",
-  "version": "0.11.4",
+  "version": "0.11.6",
   "description": "The Platform-agnostic Reader Interface for Speech and Messages",
   "license": "MPL-2.0",
   "supports": "!uwp",

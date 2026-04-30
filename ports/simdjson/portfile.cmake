@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO simdjson/simdjson
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 69612610cb91854c8e7160470ee268f7de3b3513b5e4097d260d3e87860be111c0b3ac4ccc6dcfd8b81801305d88db09def3ab933ed977bfccc46ff60dbe4d54
+    SHA512 71109dd3d1b2a1f36377e883ef3cd2960c71f075732ab763f353d1c953bab257172fa5cf98bee08510140ca3e6e5fabcab2727beed50bce11fa46ef73995bb7d
 )
 
 vcpkg_check_features(

@@ -30,7 +30,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF6I18n)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME kf6i18n
+    CONFIG_PATH lib/cmake/KF6I18n
+)
 vcpkg_copy_pdbs()
 
 # KF6I18nMacros.cmake embeds the Python executable path used at build time as a
