@@ -2986,7 +2986,7 @@
     },
     "fdk-aac": {
       "baseline": "2.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "fdlibm": {
       "baseline": "5.3",
