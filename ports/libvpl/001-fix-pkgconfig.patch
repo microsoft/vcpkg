@@ -1,38 +1,26 @@
-diff --git a/cmake/CompileOptions.cmake b/cmake/CompileOptions.cmake
-index 02926c4..1e789b8 100644
---- a/cmake/CompileOptions.cmake
-+++ b/cmake/CompileOptions.cmake
-@@ -69,8 +69,6 @@ endif()
- 
- # Define RelWithDebRT Build Mode
- if(MSVC)
--  set(CMAKE_DEBUG_POSTFIX "d")
--  set(CMAKE_RELWITHDEBRT_POSTFIX "d")
-   set(CMAKE_CXX_FLAGS_RELWITHDEBRT
-       "${CMAKE_CXX_FLAGS_RELEASE}"
-       CACHE STRING "Flags used by the C++ compiler during RelWithDebRT builds."
 diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
-index 0419980..69308e2 100644
+index 0419980..42a765a 100644
 --- a/libvpl/CMakeLists.txt
 +++ b/libvpl/CMakeLists.txt
-@@ -185,13 +185,18 @@ if(INSTALL_DEV)
-   if(CMAKE_DL_LIBS)
-     set(DL_LIBS "-l${CMAKE_DL_LIBS}")
-   endif()
--  if(MINGW)
--    # being conservative by restricting to MinGW, these are probably ok for
--    # WIN32 in general
+@@ -188,10 +188,22 @@ if(INSTALL_DEV)
+   if(MINGW)
+     # being conservative by restricting to MinGW, these are probably ok for
+     # WIN32 in general
 -    set(MINGW_LIBS "-lole32 -lgdi32 -luuid")
-+  if(WIN32)
-+    if(MINGW)
-+      set(WIN32_LIBS "-lole32 -lgdi32 -luuid")
-+    else()
-+      set(WIN32_LIBS "-ladvapi32 -lole32")
-+    endif()
-+  endif()
-+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-+    set(CXX_LIB "-lstdc++")
++    set(WIN32_LIBS "-lole32 -lgdi32 -luuid")
++  elseif(WIN32)
++    set(WIN32_LIBS "-ladvapi32 -lole32")
    endif()
++  set(CXX_LIB "")
++  foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++        continue()
++    elseif(EXISTS "${lib}")
++        string(APPEND CXX_LIB " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++    else()
++        string(APPEND CXX_LIB " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++    endif()
++  endforeach()
    set(VPL_PKGCONFIG_DEPENDENT_LIBS
 -      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MINGW_LIBS} ${CXX_LIB}")
 +      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${WIN32_LIBS} ${CXX_LIB}")

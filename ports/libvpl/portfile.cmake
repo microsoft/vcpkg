@@ -29,6 +29,12 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/vpl" PACKAGE_NAME VPL)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+if(VCPKG_TARGET_IS_WINDOWS
+    AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpl.pc"
+    AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/vpld.lib")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/vpl.pc" " -lvpl" " -lvpld")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
@@ -36,4 +42,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/copyright_tmp")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
