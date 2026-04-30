@@ -1,6 +1,6 @@
 {
   "name": "kglobalaccel",
-  "version": "6.23.0",
+  "version": "6.25.0",
   "description": "Global desktop keyboard shortcuts",
   "homepage": "https://invent.kde.org/frameworks/kglobalaccel",
   "documentation": "https://api.kde.org/kglobalaccel-index.html",

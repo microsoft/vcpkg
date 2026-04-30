@@ -1,5 +1,5 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index aaadf42aa1..37cfe09694 100644
+index 0c14a659a2..a5bf3bf31e 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
 @@ -908,6 +908,7 @@ optional("gpu_shared") {
@@ -11,7 +11,7 @@ index aaadf42aa1..37cfe09694 100644
      sources += skia_shared_vk_sources
      configs += [ ":use_skia_vulkan_headers" ]
 diff --git a/include/private/gpu/vk/SkiaVulkan.h b/include/private/gpu/vk/SkiaVulkan.h
-index 1e962ad60a..535ac6b88f 100644
+index aa7329fa9e..6910d12c97 100644
 --- a/include/private/gpu/vk/SkiaVulkan.h
 +++ b/include/private/gpu/vk/SkiaVulkan.h
 @@ -12,6 +12,10 @@
@@ -26,7 +26,7 @@ index 1e962ad60a..535ac6b88f 100644
  #include "include/third_party/vulkan/vulkan/vulkan_core.h"
  #else
 diff --git a/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h b/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
-index 4f7120200f..067c1dc154 100644
+index bfcb8950a6..f82e7b5d03 100644
 --- a/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
 +++ b/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
 @@ -45,7 +45,11 @@

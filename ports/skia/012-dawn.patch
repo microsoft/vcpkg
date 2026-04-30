@@ -1,5 +1,5 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index 4250e045d0..e26e7be3a7 100644
+index 9ed770cd94..5abbd2a7e3 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
 @@ -15,7 +15,6 @@ if (defined(skia_settings)) {
@@ -11,7 +11,7 @@ index 4250e045d0..e26e7be3a7 100644
  # Skia public API, generally provided by :skia.
  config("skia_public") {
 diff --git a/tools/window/BUILD.gn b/tools/window/BUILD.gn
-index b532490b97..06f397a28c 100644
+index 917715dd05..1a96a0a646 100644
 --- a/tools/window/BUILD.gn
 +++ b/tools/window/BUILD.gn
 @@ -4,7 +4,6 @@

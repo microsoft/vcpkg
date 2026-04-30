@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
     REF "v${VERSION}"
-    SHA512 5df716edcd00be1c9ca6debb55cb3acbac92140d8550d78bc0e0bcc738ffffc058986c3c96a8899b9f7e2b98d7f4e8974f9c1c6fad26292eccef1c4bd9466d0a
+    SHA512 7915cd009526909c3c71fe09994874eab97e02a2bf7bfe23694c10f46b7c915c21d3efe1317c4d4eb7cfc387e15c135d6a65668b9a180f5b7095f9bd2de7cfd4
     HEAD_REF master
 )
 

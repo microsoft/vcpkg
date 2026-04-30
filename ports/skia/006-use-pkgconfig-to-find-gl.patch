@@ -1,5 +1,5 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index 37cfe09694..def43b13f1 100644
+index a5bf3bf31e..11eb26aa93 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
 @@ -993,7 +993,9 @@ optional("gpu") {
