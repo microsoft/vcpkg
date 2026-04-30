@@ -69,6 +69,13 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+    foreach(file IN LISTS pc_files)
+        vcpkg_replace_string("${file}" " -l(pq|pg|ecpg)" " -llib\\1" REGEX)
+    endforeach()
+endif()
+
 vcpkg_copy_tools(TOOL_NAMES ecpg AUTO_CLEAN)
 if("client" IN_LIST FEATURES)
     if(NOT VCPKG_CROSSCOMPILING)
