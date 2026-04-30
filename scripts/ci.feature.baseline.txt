@@ -288,7 +288,6 @@ fcl:arm64-linux=cascade
 ffmpeg[all](android | (linux & arm64))=feature-fails
 ffmpeg[all-gpl](android | (linux & arm64))=feature-fails
 ffmpeg[all-nonfree](android | (linux & arm64))=feature-fails
-ffmpeg[all-nonfree](android)=cascade
 ffmpeg[alsa](!linux & !android)=cascade # alsa supports
 ffmpeg[amf]:arm64-osx=cascade
 ffmpeg[avisynthplus]:arm64-windows=cascade
