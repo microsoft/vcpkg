@@ -1,17 +1,13 @@
 {
   "name": "ripper37-libbase",
   "version": "1.1.2",
+  "port-version": 1,
   "description": "Standalone reimplementation of //base module from Chromium",
   "homepage": "https://github.com/RippeR37/libbase",
   "documentation": "https://ripper37.github.io/libbase",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "glog",
-      "features": [
-        "customprefix"
-      ]
-    },
+    "glog",
     {
       "name": "vcpkg-cmake",
       "host": true

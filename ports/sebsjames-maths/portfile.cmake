@@ -13,6 +13,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_HDF5=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Armadillo=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Eigen3=OFF
 )
 
 vcpkg_cmake_install()
