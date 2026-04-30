@@ -1384,7 +1384,6 @@ suitesparse[cuda]:arm64-linux=cascade
 suitesparse-cholmod[cuda]:arm64-linux=cascade
 suitesparse-graphblas:x86-windows=fail  # no InterlockedExchange64 with MSVC
 suitesparse-graphblas[openmp]:arm64-osx=feature-fails # No openmp on default osx toolchain
-supernovas:arm64-linux=fail
 supernovas[solsys-calceph]:arm64-linux=cascade
 symengine[llvm]:arm64-linux=cascade
 symengine[llvm]:arm64-windows=cascade
