@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    message(FATAL_ERROR "minecraft-server-status does not support x86 architecture")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Arp1it/Minecraft_Server_Status_CPP
