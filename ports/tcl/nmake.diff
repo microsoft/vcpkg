@@ -1,5 +1,5 @@
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..5bf954f 100644
+index 491eff8..1360935 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -476,7 +476,6 @@ PRJ_INCLUDES	= -I"$(TOMMATHDIR)"
@@ -10,3 +10,32 @@ index 491eff8..5bf954f 100644
  !endif
  
  # Additional Link libraries needed beyond those in rules.vc
+@@ -535,7 +534,7 @@ shell:      libtclzip
+ 	@$(COPY) /b "$(TCLSHRAW)"+"$(TCLSCRIPTZIP)" "$(TCLSH)"
+ !endif
+ 
+-dlls:	    setup $(TCLREGLIB) $(TCLDDELIB) $(OUT_DIR)\zlib1.dll $(OUT_DIR)\libtommath.dll
++dlls:	    setup $(TCLREGLIB) $(TCLDDELIB)
+ libtclzip:  $(TCLSCRIPTZIP)
+ 
+ tcltest:    setup core $(TCLTEST) dlls
+@@ -1049,11 +1048,7 @@ install-binaries:
+ 	@$(CPY) "$(TCLLIB)" "$(BIN_INSTALL_DIR)\"
+ !endif
+ 	@$(CPY) "$(TCLIMPLIB)" "$(LIB_INSTALL_DIR)\"
+-	@$(CPY) "$(OUT_DIR)\zlib1.dll" "$(BIN_INSTALL_DIR)\"
+-	@$(CPY) "$(OUT_DIR)\libtommath.dll" "$(BIN_INSTALL_DIR)\"
+ !if !$(STATIC_BUILD)
+-	@$(CPY) "$(OUT_DIR)\zdll.lib" "$(LIB_INSTALL_DIR)\"
+-	@$(CPY) "$(OUT_DIR)\tommath.lib" "$(LIB_INSTALL_DIR)\"
+ !endif
+ !if exist($(TCLSH))
+ 	@echo Installing $(TCLSHNAME)
+@@ -1073,7 +1068,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+ 	@$(CPY) "$(GENERICDIR)\tclPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)\"
+ 	@$(CPY) "$(GENERICDIR)\tclTomMath.h"      "$(INCLUDE_INSTALL_DIR)\"
+ 	@$(CPY) "$(GENERICDIR)\tclTomMathDecls.h" "$(INCLUDE_INSTALL_DIR)\"
+-	@$(CPY) "$(TOMMATHDIR)\tommath.h"         "$(INCLUDE_INSTALL_DIR)\"
+ !if !$(TCL_EMBED_SCRIPTS)
+ 	@echo Installing library files to $(SCRIPT_INSTALL_DIR)
+ 	@if not exist "$(SCRIPT_INSTALL_DIR)" \
