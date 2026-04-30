@@ -292,7 +292,6 @@ ffmpeg[alsa](!linux & !android)=cascade # alsa supports
 ffmpeg[amf]:arm64-osx=cascade
 ffmpeg[avisynthplus]:arm64-windows=cascade
 ffmpeg[dav1d]:x86-windows=cascade
-ffmpeg[fdk-aac](android)=cascade
 ffmpeg[nvcodec,ffplay,opengl](android)=feature-fails
 ffmpeg[opengl](android | (linux & arm64))=feature-fails
 ffmpeg[rubberband]:arm64-linux=cascade
