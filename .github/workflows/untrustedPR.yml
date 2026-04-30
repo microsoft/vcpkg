@@ -29,6 +29,8 @@ jobs:
 
           unset VCPKG_ROOT
 
+          synthetic_merge_ref=$(git branch --show-current || true)
+          synthetic_merge_commit=$(git rev-parse HEAD)
           target_branch_commit=$(git rev-parse HEAD^1)
           incoming_branch_commit=$(git rev-parse HEAD^2)
           merge_base=$(git merge-base "$target_branch_commit" "$incoming_branch_commit")
@@ -47,21 +49,32 @@ jobs:
               echo "$location$id"; \
             done || true; \
           done > .github-pr.deprecated-license
+          # check for formatting mistakes by rerunning format-manifest and format-feature-baseline as appropriate
+          git switch --detach "$incoming_branch_commit"
           ./vcpkg format-manifest --all --convert-control
           ./vcpkg format-feature-baseline scripts/ci.baseline.txt
           ./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt
           git diff > .github-pr.format-manifest
+          # commit those formatting changes to a temporary commit so they don't affect further validations below
           git add -u
           git commit -m "tmp" --allow-empty
+          # reset the version database to the state of the merge base, so that we can check that the PR only adds one version and doesn't modify any existing versions
           git restore --source=$merge_base --staged --worktree -- versions
           git clean -fd -- versions
-          ./vcpkg x-add-version --all --skip-formatting-check | grep -E '^warning:|instead of "version-string"' | tee .github-pr.version-string.out || true
+          echo '{"default": {}}' > versions/baseline.json # to allow deindexing, let x-add-version completely regenerate the baseline json
+          # check for version format errors separately by running x-add-version --all, recording problems it generates
+          ./vcpkg x-add-version --all | grep -E '^warning:|instead of "version-string"' | tee .github-pr.version-string.out || true
+          # reset the version database again
           git restore --source=$merge_base --staged --worktree -- versions
           git clean -fd -- versions
-          ./vcpkg x-add-version --all --skip-formatting-check --skip-version-format-check | tee .github-pr.x-add-version.out || true
+          echo '{"default": {}}' > versions/baseline.json
+          # check that the PR only adds one version and doesn't modify any existing versions, ignoring any of the warnings recorded into .github-pr.version-string.out
+          ./vcpkg x-add-version --all --skip-version-format-check | tee .github-pr.x-add-version.out || true
           git add -A -- versions
           git diff --cached "$incoming_branch_commit" -- versions > .github-pr.x-add-version.diff
-          git reset HEAD~ --hard # remove the "tmp" commit from above
+          # reset to the original state of the PR so that the rest of the checks run on the original changes of the PR, not including any of the formatting changes we made or any changes to the version database
+          if [ -n "$synthetic_merge_ref" ]; then git switch "$synthetic_merge_ref"; else git switch --detach "$synthetic_merge_commit"; fi
+          git reset --hard "$synthetic_merge_commit"
 
       - name: Generate Reply
         uses: actions/github-script@v8

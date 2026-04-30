@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fc61af7..a3c9606 100644
+index 0d5d83d..fd463c5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -654,7 +654,7 @@ endif()
+@@ -661,7 +661,7 @@ endif()
  
  
  set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${SPARSE_TEST_DIR}" )

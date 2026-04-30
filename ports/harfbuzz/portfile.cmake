@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 649521b69d5d7328245cabca8b769448f695b0b7e3bf16208ddb1635b29165dfd363a06b1b2831229f6ff722d0e8212fd82054e6b64992552a6a21af238c5cb3
     HEAD_REF master
     PATCHES
-        fix-win32-build.patch
+        fix-eol-mismatch.diff # https://github.com/harfbuzz/harfbuzz/commit/ab6aa4f449457be45e8e0218f7a8de271fb19967.diff?full_index=1
         ${ANDROID_LOCALECONV_L_PATCH}
 )
 
@@ -88,8 +88,14 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endblock()
 endif()
 
+set(LANGUAGES C CXX)
+if(VCPKG_TARGET_IS_APPLE)
+    list(APPEND LANGUAGES OBJC OBJCXX)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    LANGUAGES ${LANGUAGES}
     OPTIONS
         ${FEATURE_OPTIONS}
         -Ddocs=disabled          # Generate documentation with gtk-doc
@@ -162,5 +168,3 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
