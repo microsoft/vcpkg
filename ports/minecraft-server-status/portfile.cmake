@@ -7,9 +7,8 @@ vcpkg_from_github(
 )
 
 file(INSTALL
-    "${SOURCE_PATH}/"
+    "${SOURCE_PATH}/include/"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-    FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
 )
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

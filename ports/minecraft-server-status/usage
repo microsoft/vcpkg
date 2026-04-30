@@ -2,4 +2,4 @@ minecraft-server-status is a header-only library.
 
 Usage:
 
-    #include <minecraft_server_status.hpp>
+    #include <minecraft_server_status/minecraft_server_status.hpp>
