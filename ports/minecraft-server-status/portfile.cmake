@@ -1,7 +1,3 @@
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    message(FATAL_ERROR "minecraft-server-status does not support x86 architecture")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Arp1it/Minecraft_Server_Status_CPP
@@ -10,15 +6,13 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+file(INSTALL
+    "${SOURCE_PATH}/"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+    FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
 )
 
-vcpkg_cmake_install()
-
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

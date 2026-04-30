@@ -1,2 +1,5 @@
-find_package(minecraft-server-status CONFIG REQUIRED)
-target_link_libraries(main PRIVATE minecraft-server-status::minecraft-server-status)
+minecraft-server-status is a header-only library.
+
+Usage:
+
+    #include <minecraft_server_status.hpp>
