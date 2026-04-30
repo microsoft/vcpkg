@@ -101,6 +101,7 @@ vcpkg_configure_meson(
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
         -Dbenchmark=disabled
+        -Dgpu_demo=disabled
         ${OPTIONS}
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
