@@ -1,8 +1,8 @@
 diff --git a/src/ggml-vulkan/CMakeLists.txt b/src/ggml-vulkan/CMakeLists.txt
-index b97e7bf9..0ba5fcdd 100644
+index 3f9524c..556e39e 100644
 --- a/src/ggml-vulkan/CMakeLists.txt
 +++ b/src/ggml-vulkan/CMakeLists.txt
-@@ -110,6 +110,12 @@ if (Vulkan_FOUND)
+@@ -125,6 +125,12 @@ if (Vulkan_FOUND)
          add_compile_definitions(GGML_VULKAN_RUN_TESTS)
      endif()
  
@@ -15,7 +15,7 @@ index b97e7bf9..0ba5fcdd 100644
      # Set up toolchain for host compilation whether cross-compiling or not
      if (CMAKE_CROSSCOMPILING)
          if (GGML_VULKAN_SHADERS_GEN_TOOLCHAIN)
-@@ -159,6 +165,8 @@ if (Vulkan_FOUND)
+@@ -174,6 +180,8 @@ if (Vulkan_FOUND)
      set (_ggml_vk_host_suffix $<IF:$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>,.exe,>)
      set (_ggml_vk_genshaders_dir "${CMAKE_BINARY_DIR}/$<CONFIG>")
      set (_ggml_vk_genshaders_cmd "${_ggml_vk_genshaders_dir}/vulkan-shaders-gen${_ggml_vk_host_suffix}")

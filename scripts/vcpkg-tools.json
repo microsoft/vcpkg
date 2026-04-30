@@ -43,50 +43,50 @@
       "name": "cmake",
       "os": "windows",
       "arch": "amd64",
-      "version": "3.31.10",
-      "executable": "cmake-3.31.10-windows-x86_64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-windows-x86_64.zip",
-      "sha512": "50c71aa15a05eaf8d7592d9648efb986df74ab716dc1f1a03795351284c6212b70ad439a1d9f3575d60cf49b0a5579cad551cc6a3fe2911ae8ecb08add60fc60",
-      "archive": "cmake-3.31.10-windows-x86_64.zip"
+      "version": "4.2.3",
+      "executable": "cmake-4.2.3-windows-x86_64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-windows-x86_64.zip",
+      "sha512": "bff327a8a9e81e48b61e1d22661cb547ffe0337ed201f438307ef058445867f7dd7417b7f2749760e391d138742c7dba6f5346c97f0bbe3a718783205543581f",
+      "archive": "cmake-4.2.3-windows-x86_64.zip"
     },
     {
       "name": "cmake",
       "os": "windows",
       "arch": "arm64",
-      "version": "3.31.10",
-      "executable": "cmake-3.31.10-windows-arm64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-windows-arm64.zip",
-      "sha512": "a894518004b1e99c008e2554fd7a0b2f714ad6bf12e9c0bd34f62d808546e5773845e3f4c2a44f03cae30fa52bb604760aec6a452327ef38c5cf94e593eb8587",
-      "archive": "cmake-3.31.10-windows-arm64.zip"
+      "version": "4.2.3",
+      "executable": "cmake-4.2.3-windows-arm64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-windows-arm64.zip",
+      "sha512": "ae50dceeb410c6d4473a637ff5e86da0add370239f91de8252b1e2f715933ea63151c082db5db5dadb86ced03cf5d35303bd0c03ce7746430283043c1c4c0d18",
+      "archive": "cmake-4.2.3-windows-arm64.zip"
     },
     {
       "name": "cmake",
       "os": "osx",
-      "version": "3.31.10",
-      "executable": "cmake-3.31.10-macos-universal/CMake.app/Contents/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-macos-universal.tar.gz",
-      "sha512": "5960326dee8227bf27cdd2d94c336835b7bf1b11c443c35ecf2b50a811c7874fcc3400a3b793e4720ef6505d66aed597ecdaf6c77b12db69abafcccd0659182d",
-      "archive": "cmake-3.31.10-macos-universal.tar.gz"
+      "version": "4.2.3",
+      "executable": "cmake-4.2.3-macos-universal/CMake.app/Contents/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-macos-universal.tar.gz",
+      "sha512": "b3c5358f404ae4a98f5d51595b444f8f21a87135752bd4f0b20987db783f12c78a26fa9c201963b58eb65e11490d75e651e88b7fee7832ca4476c6927fd42f65",
+      "archive": "cmake-4.2.3-macos-universal.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
       "arch": "arm64",
-      "version": "3.31.10",
-      "executable": "cmake-3.31.10-linux-aarch64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-aarch64.tar.gz",
-      "sha512": "e45c23cd756a9b4699a54d52bd196e3c1c2e63fab893846eeb8a0e1eabb2caa54629bd857518ab5ce5701d9179bb308bf6b4866d07bb8d7b87e04d895d10289d",
-      "archive": "cmake-3.31.10-linux-aarch64.tar.gz"
+      "version": "4.2.3",
+      "executable": "cmake-4.2.3-linux-aarch64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-aarch64.tar.gz",
+      "sha512": "ee38f6c1fb56957e3f77fa9c083945c3021b50da7e7c057d7c586858ec0fe6fd8383a27b23fab1aa9015982ffb989f06ba08dfda73e713364c1a481bf1ce6316",
+      "archive": "cmake-4.2.3-linux-aarch64.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
-      "version": "3.31.10",
       "arch": "amd64",
-      "executable": "cmake-3.31.10-linux-x86_64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-x86_64.tar.gz",
-      "sha512": "2555ae413b19a2acfc8d3c4520f0ecc87811ac1e121bec718b679006d03083dfe7218a68e0af0263a80bd8fbb2d23b5975f4533638b71ef9ad62272640f62356",
-      "archive": "cmake-3.31.10-linux-x86_64.tar.gz"
+      "version": "4.2.3",
+      "executable": "cmake-4.2.3-linux-x86_64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-linux-x86_64.tar.gz",
+      "sha512": "2f7e2b48bfa1c93b6e77050e48f940b19abb4885726af4dd9dcb5e280835a766dc4d3e96411f86b6fca2c6dca667d1a4c6654871b482524f52cdb5ebf47c76ad",
+      "archive": "cmake-4.2.3-linux-x86_64.tar.gz"
     },
     {
       "name": "git",
@@ -240,22 +240,24 @@
       "sha512": "9b025da7830a875195c3f7232497b76adb78650fb5c9c7cd279d0938e3c496ed699cd763501c8f28ba5b9fcfe689aa21bea098f801204c5cbdbfd38dbd27b72f"
     },
     {
-      "name": "7zip_msi",
+      "name": "7zip",
       "os": "windows",
+      "arch": "amd64",
       "version": "26.00",
-      "executable": "Files/7-Zip/7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-x64.msi",
-      "sha512": "a8556706f2ab18953c4f22497d593a4c85f73d49c450c3dafbf827ce313219c7d247ffa6c5b3764075f6cac096490935e9c6ed8449f50c935d396353b84358db",
-      "archive": "7z2600-x64.msi"
+      "executable": "7z.exe",
+      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-x64.exe",
+      "sha512": "d50e76ca3299fa131156d758ba54079ee347fea30708d0dbcba40d72f307f4d16446ea13041549cb78aabd032fb5dd048d3bbf192821ad9ce89eea5d96581001",
+      "archive": "7z2600-x64.7z.exe"
     },
     {
       "name": "7zip",
       "os": "windows",
+      "arch": "arm64",
       "version": "26.00",
       "executable": "7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600.exe",
-      "sha512": "9dcbb5d370f6270e0f4a383b5ee7452024f5283e52f838938a7bcca110b5647ffdb2c549677a70b23fea21a349ea4ad1898e6bc976afc3e7e49b4755b6b27150",
-      "archive": "7z2600.7z.exe"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-arm64.exe",
+      "sha512": "1d691c8350ba55ced6f5f5ddbb90895593d083d5609a7b8932d1ae12db8a7eb7581c3705a35d562d94068622dc6a8a3d4034f0757da5abc51d162efc9101b2f8",
+      "archive": "7z2600-arm64.7z.exe"
     },
     {
       "name": "7zr",
