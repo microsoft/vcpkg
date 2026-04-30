@@ -12,9 +12,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME "minecraft-server-status"
-)
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
