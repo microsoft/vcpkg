@@ -27,7 +27,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF6CoreAddons)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME kf6coreaddons
+    CONFIG_PATH lib/cmake/KF6CoreAddons
+)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig(SKIP_CHECK)
 

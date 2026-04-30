@@ -1,6 +1,7 @@
 {
   "name": "kbreezeicons",
   "version": "6.25.0",
+  "port-version": 1,
   "description": "Breeze icon theme for KDE Frameworks 6",
   "homepage": "https://invent.kde.org/frameworks/breeze-icons",
   "documentation": "https://api.kde.org/breeze-icons-index.html",
