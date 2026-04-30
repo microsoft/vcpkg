@@ -1115,7 +1115,6 @@ spscqueue:arm-neon-android=fail
 spscqueue:arm64-android=fail
 spscqueue:x64-android=fail
 suitesparse-graphblas:x86-windows=fail # _Interlocked* intrinsic functions are not available on x86
-supernovas:arm64-linux=fail
 tdscpp:arm64-linux=fail
 telnetpp:arm-neon-android=fail
 telnetpp:arm64-android=fail
