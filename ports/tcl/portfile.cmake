@@ -63,6 +63,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/zd.lib"
+            "VCPKG_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}/debug/bin"
         OPTIONS_RELEASE
             release
             ${TCL_BUILD_OPTS}
@@ -70,6 +71,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/z.lib"
+            "VCPKG_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
     )
 
     # Install

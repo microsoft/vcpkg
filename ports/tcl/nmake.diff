@@ -1,8 +1,13 @@
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..1360935 100644
+index 491eff8..ae57c51 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
-@@ -476,7 +476,6 @@ PRJ_INCLUDES	= -I"$(TOMMATHDIR)"
+@@ -1,3 +1,4 @@
++PATH=$(PATH);$(VCPKG_DLL_PATH)
+ #------------------------------------------------------------- -*- makefile -*-
+ #
+ #	Microsoft Visual C++ makefile for building Tcl with nmake
+@@ -476,7 +477,6 @@ PRJ_INCLUDES	= -I"$(TOMMATHDIR)"
  PRJ_DEFINES	= /DMP_PREC=4 /Dinline=__inline /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DMP_FIXED_CUTOFFS
  
  !if $(STATIC_BUILD)
@@ -10,7 +15,7 @@ index 491eff8..1360935 100644
  !endif
  
  # Additional Link libraries needed beyond those in rules.vc
-@@ -535,7 +534,7 @@ shell:      libtclzip
+@@ -535,7 +535,7 @@ shell:      libtclzip
  	@$(COPY) /b "$(TCLSHRAW)"+"$(TCLSCRIPTZIP)" "$(TCLSH)"
  !endif
  
@@ -19,7 +24,7 @@ index 491eff8..1360935 100644
  libtclzip:  $(TCLSCRIPTZIP)
  
  tcltest:    setup core $(TCLTEST) dlls
-@@ -1049,11 +1048,7 @@ install-binaries:
+@@ -1049,11 +1049,7 @@ install-binaries:
  	@$(CPY) "$(TCLLIB)" "$(BIN_INSTALL_DIR)\"
  !endif
  	@$(CPY) "$(TCLIMPLIB)" "$(LIB_INSTALL_DIR)\"
@@ -31,7 +36,7 @@ index 491eff8..1360935 100644
  !endif
  !if exist($(TCLSH))
  	@echo Installing $(TCLSHNAME)
-@@ -1073,7 +1068,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1073,7 +1069,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(GENERICDIR)\tclPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMath.h"      "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMathDecls.h" "$(INCLUDE_INSTALL_DIR)\"
