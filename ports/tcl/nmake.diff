@@ -1,9 +1,9 @@
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..ae57c51 100644
+index 491eff8..de69970 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
-+PATH=$(PATH);$(VCPKG_DLL_PATH)
++PATH=$(PATH);$(HOST_DLL_DIR:/=\)
  #------------------------------------------------------------- -*- makefile -*-
  #
  #	Microsoft Visual C++ makefile for building Tcl with nmake
@@ -24,7 +24,17 @@ index 491eff8..ae57c51 100644
  libtclzip:  $(TCLSCRIPTZIP)
  
  tcltest:    setup core $(TCLTEST) dlls
-@@ -1049,11 +1049,7 @@ install-binaries:
+@@ -670,7 +670,8 @@ $(TCLSCRIPTZIP): $(TCLLIB) $(TCLSH) dlls
+ 	@echo cd {$(OUT_DIR)} > "$(OUT_DIR)\zipper.tcl"
+ 	@echo file delete -force {$(@F)} >> "$(OUT_DIR)\zipper.tcl"
+ 	@echo zipfs mkzip {$(@F)} {$(LIBTCLVFSSUBDIR)} {$(LIBTCLVFSSUBDIR)} >> "$(OUT_DIR)\zipper.tcl"
+-	@$(TCLSH_NATIVE) "$(OUT_DIR)/zipper.tcl"
++	PATH
++	$(TCLSH_NATIVE) "$(OUT_DIR)/zipper.tcl"
+ 
+ pkgs:
+ 	@for /d %d in ($(PKGSDIR)\*) do \
+@@ -1049,11 +1050,7 @@ install-binaries:
  	@$(CPY) "$(TCLLIB)" "$(BIN_INSTALL_DIR)\"
  !endif
  	@$(CPY) "$(TCLIMPLIB)" "$(LIB_INSTALL_DIR)\"
@@ -36,7 +46,7 @@ index 491eff8..ae57c51 100644
  !endif
  !if exist($(TCLSH))
  	@echo Installing $(TCLSHNAME)
-@@ -1073,7 +1069,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1073,7 +1070,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(GENERICDIR)\tclPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMath.h"      "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMathDecls.h" "$(INCLUDE_INSTALL_DIR)\"
