@@ -1,7 +1,6 @@
 {
   "name": "logme",
-  "version": "2.4.15",
-  "port-version": 1,
+  "version": "2.4.16",
   "description": "Cross-platform C/C++ logging framework: channels and routing, multiple backends, colored output, and runtime dynamic control.",
   "homepage": "https://github.com/efmsoft/logme",
   "documentation": "https://github.com/efmsoft/logme/wiki",
