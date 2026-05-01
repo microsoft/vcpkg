@@ -1,4 +1,4 @@
-﻿diff --git a/configure.cmake b/configure.cmake
+diff --git a/configure.cmake b/configure.cmake
 index 0000000..0000000 100644
 --- a/configure.cmake
 +++ b/configure.cmake
@@ -24,7 +24,7 @@ diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn b/src/3rdpart
 index 0000000..0000000 100644
 --- a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
 +++ b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
-@@ -8,9 +8,47 @@
+@@ -8,9 +8,46 @@
  import("//build/config/c++/c++.gni")
  import("//build/config/sanitizers/sanitizers.gni")
  import("//build/toolchain/toolchain.gni")
@@ -63,7 +63,6 @@ index 0000000..0000000 100644
 +
 +  group("system_absl") {
 +    public_configs = [
-+      ":absl_include_config",
 +      ":absl_from_pkgconfig",
 +    ]
 +  }
