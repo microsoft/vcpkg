@@ -1,0 +1,8 @@
+{
+  "name": "steamhelper",
+  "version": "1.0.0",
+  "description": "A C++ library for Steam path discovery and ID conversion (32-bit to 64-bit).",
+  "homepage": "https://github.com/tomh500/SteamHelper",
+  "license": "MIT",
+  "supports": "windows"
+}
