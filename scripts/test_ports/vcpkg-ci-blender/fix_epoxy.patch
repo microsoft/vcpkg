@@ -5,14 +5,14 @@ diff --git a/build_files/cmake/Modules/FindEpoxy.cmake b/build_files/cmake/Modul
  #                     This can also be an environment variable.
  #  Epoxy_FOUND, If false, do not try to use epoxy.
  
-+if(APPLE AND DEFINED CURRENT_INSTALLED_DIR)
++if(APPLE AND DEFINED VCPKG_CURRENT_INSTALLED_DIR)
 +  set(PKG_CONFIG_EXECUTABLE "$ENV{PKG_CONFIG}")
 +  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 +    set(ENV{PKG_CONFIG_PATH}
-+      "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig:${CURRENT_INSTALLED_DIR}/lib/pkgconfig:${CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++      "${VCPKG_CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig:${VCPKG_CURRENT_INSTALLED_DIR}/lib/pkgconfig:${VCPKG_CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 +  else()
 +    set(ENV{PKG_CONFIG_PATH}
-+      "${CURRENT_INSTALLED_DIR}/lib/pkgconfig:${CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
++      "${VCPKG_CURRENT_INSTALLED_DIR}/lib/pkgconfig:${VCPKG_CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 +  endif()
 +  find_package(PkgConfig QUIET)
 +  if(PkgConfig_FOUND)

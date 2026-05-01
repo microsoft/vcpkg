@@ -4,7 +4,7 @@ index 763d32e9..6b957da8 100644
 +++ b/build_files/cmake/platform/platform_apple.cmake
 @@ -26,7 +26,6 @@ endfunction()
  # Find system provided libraries.
- 
+
  # Find system ZLIB, not the pre-compiled one supplied with OpenCollada.
 -set(ZLIB_ROOT /usr)
  find_package(ZLIB REQUIRED)
@@ -23,6 +23,14 @@ index 763d32e9..6b957da8 100644
  # Avoid searching for headers since this would otherwise override our lib
  # directory as well as PYTHON_ROOT_DIR.
  set(CMAKE_FIND_FRAMEWORK NEVER)
+@@ -79,6 +81,5 @@ endif()
+ # Prefer lib directory paths
+ file(GLOB LIB_SUBDIRS ${LIBDIR}/*)
+-set(CMAKE_PREFIX_PATH ${LIB_SUBDIRS})
+-
++list(APPEND CMAKE_PREFIX_PATH ${LIB_SUBDIRS})
+ # -------------------------------------------------------------------------
+ # Find precompiled libraries, and avoid system or user-installed ones.
 @@ -146,10 +148,13 @@ endif()
  
  # FreeType compiled with Brotli compression for woff2.
@@ -62,7 +70,7 @@ index 763d32e9..6b957da8 100644
    find_package(PugiXML REQUIRED)
  endif()
  
-+set(OPENCOLORIO_ROOT_DIR ${CURRENT_INSTALLED_DIR})
++set(OPENCOLORIO_ROOT_DIR ${VCPKG_CURRENT_INSTALLED_DIR})
  find_package(OpenImageIO REQUIRED)
  add_bundled_libraries(openimageio/lib)
  
@@ -71,7 +79,7 @@ index 763d32e9..6b957da8 100644
  endif()
  
 -set(ZSTD_ROOT_DIR ${LIBDIR}/zstd)
-+set(ZSTD_ROOT_DIR ${CURRENT_INSTALLED_DIR})
++set(ZSTD_ROOT_DIR ${VCPKG_CURRENT_INSTALLED_DIR})
  find_package(Zstd REQUIRED)
  
  if(EXISTS ${LIBDIR})
