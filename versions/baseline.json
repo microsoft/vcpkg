@@ -3494,7 +3494,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.37.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gperf": {
       "baseline": "3.3",
