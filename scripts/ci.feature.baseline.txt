@@ -151,7 +151,6 @@ boost:arm64-linux=pass
 boost[mpi]:arm64-windows=cascade
 boost-graph-parallel:arm64-linux=pass
 boost-graph-parallel:arm64-windows=cascade
-boost-math[legacy]:x64-android=feature-fails
 boost-mpi:arm64-windows=cascade
 boost-odeint[mpi]:arm64-windows=cascade
 boost-parameter-python:arm64-linux=pass
