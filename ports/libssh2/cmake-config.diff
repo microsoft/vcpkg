@@ -2,7 +2,23 @@ diff --git a/cmake/libssh2-config.cmake.in b/cmake/libssh2-config.cmake.in
 index edc86d7..fd53d55 100644
 --- a/cmake/libssh2-config.cmake.in
 +++ b/cmake/libssh2-config.cmake.in
-@@ -22,10 +22,22 @@ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
+@@ -2,6 +2,7 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ 
+ include(CMakeFindDependencyMacro)
++set(_libssh2_cmake_module_path_save "${CMAKE_MODULE_PATH}")
+ list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+ 
+ if("@CRYPTO_BACKEND@" STREQUAL "OpenSSL")
+@@ -13,6 +14,7 @@ elseif("@CRYPTO_BACKEND@" STREQUAL "Libgcrypt")
+ elseif("@CRYPTO_BACKEND@" STREQUAL "mbedTLS")
+   find_dependency(MbedTLS)
+ endif()
++set(CMAKE_MODULE_PATH ${_libssh2_cmake_module_path_save})
+ 
+ if(@ZLIB_FOUND@)
+   find_dependency(ZLIB)
+@@ -22,10 +24,22 @@ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
  
  # Alias for either shared or static library
  if(NOT TARGET @PROJECT_NAME@::@LIB_NAME@)
