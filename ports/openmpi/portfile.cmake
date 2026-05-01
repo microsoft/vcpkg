@@ -5,14 +5,12 @@ string(REGEX REPLACE [[^([0-9]+[.][0-9]+).*$]] [[\1]] OpenMPI_SHORT_VERSION "${V
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.open-mpi.org/release/open-mpi/v${OpenMPI_SHORT_VERSION}/openmpi-${VERSION}.tar.gz"
     FILENAME "openmpi-${VERSION}.tar.gz"
-    SHA512 25eb96116126641cd1c8fdccbd3c4b40cbdd7b1e8709ff629c6fca9ee58b566983e00e829c724952fca685a8d321b4dddf8691df08693a2ffee5f05b30e08058
+    SHA512 a174b6ac6d286f378ccc7a1ac3500cdff3c7368eaa00c1b672f0a71452c2cbe7812e030796e62ebb09a3fffb0cb9d89fbc6798a80609079038e68c7b0d318923
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        keep_isystem.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -36,7 +34,7 @@ vcpkg_make_configure(
         --with-hwloc=internal
         --with-libevent=internal
         --with-pmix=internal
-        --disable-mpi-fortran
+        --enable-mpi-fortran=no
     OPTIONS_DEBUG
         --enable-debug
 )
