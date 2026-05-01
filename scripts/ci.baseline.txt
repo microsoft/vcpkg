@@ -873,7 +873,6 @@ libva:arm64-linux=fail
 libxt:x64-windows-release=fail # Appears to have broken races
 libxt:x64-windows=fail
 liquid-dsp:arm64-linux=fail
-llfio:x64-android=fail
 llgl:arm-neon-android=fail
 llgl:arm64-android=fail
 llgl:x64-android=fail

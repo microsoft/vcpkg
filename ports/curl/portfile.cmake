@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 1ce097d400da48e038f64e637ed338ab5873b2a961b1837b615ef890e530fd711fe44d47527eecbc3652e67e09bed2bb81bb2045b8e0f5b5137236e74b458f96
+    SHA512 452a76a238b6fa63d579eea37551cab9a02003fd542895905cf5ddc6b01b845697d30ebf5bf7b74db2c73113da3dcaf88d09093c9e2bdf8b4958690625d8800c
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -33,7 +33,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gssapi      CURL_USE_GSSAPI
         gsasl       CURL_USE_GSASL
         gnutls      CURL_USE_GNUTLS
-        rtmp        USE_LIBRTMP
         httpsrr     USE_HTTPSRR
         ssls-export USE_SSLS_EXPORT
     INVERTED_FEATURES
@@ -85,6 +84,7 @@ vcpkg_cmake_configure(
         -DENABLE_CURL_MANUAL=OFF
         -DIMPORT_LIB_SUFFIX=   # empty
         -DSHARE_LIB_OBJECT=OFF
+        -DCURL_USE_CMAKECONFIG=ON
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     MAYBE_UNUSED_VARIABLES

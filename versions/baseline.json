@@ -797,7 +797,7 @@
       "port-version": 0
     },
     "boinc": {
-      "baseline": "8.2.9",
+      "baseline": "8.2.12",
       "port-version": 0
     },
     "boolinq": {
@@ -2134,7 +2134,7 @@
     },
     "cppwinrt": {
       "baseline": "2.0.250303.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cppxaml": {
       "baseline": "0.0.16",
@@ -2273,7 +2273,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.19.0",
+      "baseline": "8.20.0",
       "port-version": 0
     },
     "curlcpp": {
@@ -3294,7 +3294,7 @@
     },
     "gdal": {
       "baseline": "3.12.4",
-      "port-version": 0
+      "port-version": 1
     },
     "gdbm": {
       "baseline": "1.24",
@@ -5654,7 +5654,7 @@
     },
     "libssh2": {
       "baseline": "1.11.1",
-      "port-version": 2
+      "port-version": 3
     },
     "libstemmer": {
       "baseline": "2025.3.0.1",
@@ -5897,8 +5897,8 @@
       "port-version": 1
     },
     "libxfont": {
-      "baseline": "2.0.5",
-      "port-version": 3
+      "baseline": "2.0.7",
+      "port-version": 0
     },
     "libxft": {
       "baseline": "2.3.9",
@@ -5977,7 +5977,7 @@
       "port-version": 0
     },
     "libxt": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.1",
       "port-version": 0
     },
     "libxtst": {
@@ -6069,7 +6069,7 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2025-01-13",
+      "baseline": "2026-04-29",
       "port-version": 0
     },
     "llgi": {
@@ -6893,7 +6893,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "2025-12-16",
+      "baseline": "2026-04-29",
       "port-version": 0
     },
     "neko-event": {
@@ -7314,14 +7314,14 @@
     },
     "opencv4": {
       "baseline": "4.12.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.2",
       "port-version": 0
     },
     "openexr": {
-      "baseline": "3.4.10",
+      "baseline": "3.4.11",
       "port-version": 0
     },
     "openfbx": {
@@ -7525,7 +7525,7 @@
       "port-version": 0
     },
     "outcome": {
-      "baseline": "2.2.14",
+      "baseline": "2.2.15",
       "port-version": 0
     },
     "p-ranav-csv": {
@@ -9261,7 +9261,7 @@
       "port-version": 1
     },
     "sintra": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "sjpeg": {
@@ -9293,7 +9293,7 @@
       "port-version": 0
     },
     "slick-net": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "slick-object-pool": {
@@ -9601,7 +9601,7 @@
       "port-version": 0
     },
     "status-code": {
-      "baseline": "2025-05-21",
+      "baseline": "2026-04-29",
       "port-version": 0
     },
     "status-value-lite": {
