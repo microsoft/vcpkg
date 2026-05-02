@@ -1,5 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1bd0ce4..e5021d5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -324,6 +324,9 @@ if (USE_PYTHON)
+     if(Python3_LIBRARIES AND (WIN32 OR NOT BUILD_FOR_CONDA))
+         target_link_libraries(netgen_python INTERFACE ${Python3_LIBRARIES})
+     endif()
++    if (WIN32)
++        target_compile_definitions(netgen_python INTERFACE Py_NO_LINK_LIB)
++    endif()
+ 
+     if(NG_INSTALL_PYBIND)
+       install(DIRECTORY ${pybind11_INCLUDE_DIR}/pybind11 DESTINATION ${NG_INSTALL_DIR_INCLUDE} COMPONENT netgen_devel)
 diff --git a/libsrc/core/CMakeLists.txt b/libsrc/core/CMakeLists.txt
-index d91a1bbec2..0d10cc2e85 100644
+index d91a1bb..0d10cc2 100644
 --- a/libsrc/core/CMakeLists.txt
 +++ b/libsrc/core/CMakeLists.txt
 @@ -35,7 +35,7 @@ endif(USE_PYTHON)
@@ -10,4 +24,4 @@ index d91a1bbec2..0d10cc2e85 100644
 +  target_compile_definitions(ngcore PUBLIC _WIN32_WINNT=${ver} WNT WNT_WINDOW NOMINMAX MSVC_EXPRESS _CRT_SECURE_NO_WARNINGS HAVE_STRUCT_TIMESPEC WIN32 Py_NO_LINK_LIB)
    target_link_options(ngcore PUBLIC /ignore:4273 /ignore:4217 /ignore:4049)
  endif(WIN32)
-
+ 

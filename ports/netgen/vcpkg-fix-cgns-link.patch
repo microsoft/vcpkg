@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bf92061..933505d 100644
+index e5021d5..47cbae1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -500,7 +500,7 @@ endif(ENABLE_CPP_CORE_GUIDELINES_CHECK)
+@@ -511,7 +511,7 @@ endif(ENABLE_CPP_CORE_GUIDELINES_CHECK)
  
  add_library(netgen_cgns INTERFACE)
  if(USE_CGNS)
