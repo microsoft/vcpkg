@@ -40,38 +40,50 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if("time64bit" IN_LIST FEATURES)
         set(OPTS ${OPTS},time64bit)
     endif()
-    
+
+    set(MAYBE_NMAKEHLPC "")
+    if(VCPKG_CROSSCOMPILING)
+        set(MAYBE_NMAKEHLPC "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/nmakehlp.exe")
+    endif()
+
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH win
         OPTIONS
             STATS=none
             CHECKS=none
+            ${MAYBE_NMAKEHLPC}
         OPTIONS_DEBUG
             OPTS=${OPTS},symbols
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/zd.lib"
-            "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}/debug/bin"
+            "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/debug/bin"
         OPTIONS_RELEASE
             OPTS=${OPTS}
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/z.lib"
-            "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
+            "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
     )
 
     if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_copy_tools(TOOL_NAMES tclsh90.exe
+        vcpkg_copy_tools(TOOL_NAMES tclsh90
             SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin"
             AUTO_CLEAN
         )
     endif()
-    vcpkg_copy_tools(TOOL_NAMES tclsh90.exe
+    vcpkg_copy_tools(TOOL_NAMES tclsh90
         DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         AUTO_CLEAN
     )
+    if(NOT VCPKG_CROSSCOMPILING)
+        vcpkg_copy_tools(TOOL_NAMES nmakehlp
+            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
+        )
+    endif()
 
     if(0)
         file(GLOB_RECURSE TOOLS

@@ -1,9 +1,22 @@
+diff --git a/pkgs/itcl4.3.5/win/rules.vc b/pkgs/itcl4.3.5/win/rules.vc
+index b95e8c8..a8290c1 100644
+--- a/pkgs/itcl4.3.5/win/rules.vc
++++ b/pkgs/itcl4.3.5/win/rules.vc
+@@ -551,7 +551,7 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ 
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+-!if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
++!if "$(NMAKEHLPC)" == "nmakehlp.c"
+ !if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..429304e 100644
+index 491eff8..5a703e1 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
-+PATH=$(PATH);$(HOST_DLL_DIR:/=\);$(MAKEDIR)
++PATH=$(PATH);$(HOST_TOOLS_DIR:/=\);$(MAKEDIR)
  #------------------------------------------------------------- -*- makefile -*-
  #
  #	Microsoft Visual C++ makefile for building Tcl with nmake
