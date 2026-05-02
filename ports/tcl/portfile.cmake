@@ -14,81 +14,75 @@ file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.c" "${SOURC
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/compat/zlib"
     "${SOURCE_PATH}/libtommath"
+    "${SOURCE_PATH}/win/x86_64-w64-mingw32-nmakehlp.exe"
     ${sqlite3_sources}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # Cf. https://core.tcl-lang.org/tips/doc/main/tip/477.md
+
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-        set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
+        set(MACHINE AMD64)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
-        set(TCL_BUILD_MACHINE_STR MACHINE=ARM64)
+        set(MACHINE ARM64)
     else()
-        set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
+        set(MACHINE IX86)
     endif()
     
-    # Handle features
-    set(TCL_BUILD_OPTS OPTS=pdbs)
-    set(TCL_BUILD_STATS STATS=none)
-    set(TCL_BUILD_CHECKS CHECKS=none)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},static,staticpkg)
+    set(OPTS pdbs)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(OPTS ${OPTS},static,staticpkg)
     endif()
-    if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},msvcrt)
+    if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(OPTS ${OPTS},msvcrt)
     endif()
     
     if ("thrdalloc" IN_LIST FEATURES)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},thrdalloc)
+        set(OPTS ${OPTS},thrdalloc)
     endif()
     if ("profile" IN_LIST FEATURES)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},profile)
+        set(OPTS ${OPTS},profile)
     endif()
     if ("unchecked" IN_LIST FEATURES)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},unchecked)
+        set(OPTS ${OPTS},unchecked)
     endif()
     if ("utfmax" IN_LIST FEATURES)
-        set(TCL_BUILD_OPTS ${TCL_BUILD_OPTS},time64bit)
+        set(OPTS ${OPTS},time64bit)
     endif()
     
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH win
         OPTIONS
-            ${TCL_BUILD_MACHINE_STR}
-            ${TCL_BUILD_STATS}
-            ${TCL_BUILD_CHECKS}
+            MACHINE=${MACHINE}
+            STATS=none
+            CHECKS=none
         OPTIONS_DEBUG
-            ${TCL_BUILD_OPTS},symbols
-            "INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug"
+            OPTS=${OPTS},symbols
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/zd.lib"
             "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}/debug/bin"
         OPTIONS_RELEASE
             release
-            ${TCL_BUILD_OPTS}
-            "INSTALLDIR=${CURRENT_PACKAGES_DIR}"
+            OPTS=${OPTS}
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/z.lib"
             "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
     )
 
-    # Install
-    # Note: tcl shell requires it to be in a folder adjacent to the /lib/ folder, i.e. in a /bin/ folder
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-        file(GLOB_RECURSE TOOL_BIN
-                "${CURRENT_PACKAGES_DIR}/bin/*.exe"
-                "${CURRENT_PACKAGES_DIR}/bin/*.dll"
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_copy_tools(TOOL_NAMES tclsh90.exe  AUTO_CLEAN
+            SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin"
         )
-        file(COPY ${TOOL_BIN} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/tcl/bin/")
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES tclsh90.exe  AUTO_CLEAN
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
+    )
 
-        # Remove .exes only after copying
-        file(GLOB_RECURSE TOOL_EXES
-                ${CURRENT_PACKAGES_DIR}/bin/*.exe
-        )
-        file(REMOVE ${TOOL_EXES})
-
+    if(0)
         file(GLOB_RECURSE TOOLS
                 "${CURRENT_PACKAGES_DIR}/lib/dde1.4/*"
                 "${CURRENT_PACKAGES_DIR}/lib/nmake/*"
@@ -116,7 +110,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 GROUP_READ GROUP_WRITE
                 WORLD_READ WORLD_WRITE
         )
-    endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         file(GLOB_RECURSE TOOL_BIN
             "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
@@ -146,10 +139,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 WORLD_READ WORLD_WRITE
         )
     endif()
-    
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
+    endif(0)
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 else()
