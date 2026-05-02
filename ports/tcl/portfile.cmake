@@ -68,6 +68,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
     )
 
+    if(0)
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_copy_tools(TOOL_NAMES tclsh90
             SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
@@ -86,7 +87,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         )
     endif()
 
-    if(0)
         file(GLOB_RECURSE TOOLS
                 "${CURRENT_PACKAGES_DIR}/lib/dde1.4/*"
                 "${CURRENT_PACKAGES_DIR}/lib/nmake/*"
