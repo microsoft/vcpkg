@@ -62,9 +62,7 @@ index 0000000..0000000 100644
 +  }
 +
 +  group("system_absl") {
-+    public_configs = [
-+      ":absl_from_pkgconfig",
-+    ]
++    public_configs = [ ":absl_from_pkgconfig" ]
 +  }
 +}
 +

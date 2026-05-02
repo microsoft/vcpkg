@@ -210,6 +210,19 @@ if(QT_UPDATE_VERSION)
     return()
 endif()
 
+if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
+    # Replace the bundled abseil headers with a symlink to the system-installed copy.
+    # This guarantees that every #include path — both explicit
+    # "third_party/abseil-cpp/absl/..." (via -I <chromium_root>) and the
+    # internal "absl/..." (via -isystem <prefix>/include) — resolves to the
+    # same version, preventing API mismatches (e.g., lts_20260107 vs older
+    # bundled headers).
+    set(_chromium_absl "${SOURCE_PATH}/src/3rdparty/chromium/third_party/abseil-cpp")
+    file(REMOVE_RECURSE "${_chromium_absl}/absl")
+    file(CREATE_LINK "${CURRENT_INSTALLED_DIR}/include/absl" "${_chromium_absl}/absl" SYMBOLIC)
+    unset(_chromium_absl)
+endif()
+
 qt_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE # due to in-source changes.
     OPTIONS
