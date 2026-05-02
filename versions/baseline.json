@@ -9073,7 +9073,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.3.0",
+      "baseline": "4.3.2",
       "port-version": 0
     },
     "seasocks": {

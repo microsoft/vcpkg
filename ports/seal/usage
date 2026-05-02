@@ -1,0 +1,4 @@
+seal provides CMake targets:
+
+  find_package(SEAL CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE SEAL::seal)
