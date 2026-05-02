@@ -9053,7 +9053,7 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.6",
+      "baseline": "3.4.8",
       "port-version": 0
     },
     "sdl3-image": {
