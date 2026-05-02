@@ -2986,7 +2986,7 @@
     },
     "fdk-aac": {
       "baseline": "2.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "fdlibm": {
       "baseline": "5.3",
@@ -2998,7 +2998,7 @@
     },
     "ffmpeg": {
       "baseline": "8.1",
-      "port-version": 3
+      "port-version": 4
     },
     "ffmpeg-bin2c": {
       "baseline": "8.1",
@@ -5823,6 +5823,10 @@
     "libvorbis": {
       "baseline": "1.3.7",
       "port-version": 4
+    },
+    "libvpl": {
+      "baseline": "2.16.0",
+      "port-version": 0
     },
     "libvpx": {
       "baseline": "1.16.0",
@@ -9057,7 +9061,7 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.6",
+      "baseline": "3.4.8",
       "port-version": 0
     },
     "sdl3-image": {
