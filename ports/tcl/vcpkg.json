@@ -21,16 +21,13 @@
   ],
   "features": {
     "profile": {
-      "description": "Adds profiling hooks.  Map file is assumed."
+      "description": "Produce an image that can be used with the Windows Performance Tools profiler."
     },
     "thrdalloc": {
       "description": "Use the thread allocator (shared global free pool)."
     },
-    "unchecked": {
-      "description": "Allows a symbols build to not use the debug enabled runtime (msvcrt.dll not msvcrtd.dll or libcmt.lib not libcmtd.lib)."
-    },
-    "utfmax": {
-      "description": "Forces Tcl_UniChar to be a 32-bit quantity in stead of 16-bits"
+    "time64bit": {
+      "description": "Force 64-bit time_t."
     }
   }
 }

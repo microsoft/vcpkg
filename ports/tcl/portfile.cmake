@@ -21,32 +21,23 @@ file(REMOVE_RECURSE
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # Cf. https://core.tcl-lang.org/tips/doc/main/tip/477.md
 
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-        set(MACHINE AMD64)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
-        set(MACHINE ARM64)
-    else()
-        set(MACHINE IX86)
-    endif()
-    
     set(OPTS pdbs)
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(OPTS ${OPTS},static,staticpkg)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(OPTS ${OPTS},static)
     endif()
-    if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(OPTS ${OPTS},msvcrt)
+    else()
         set(OPTS ${OPTS},msvcrt)
     endif()
     
-    if ("thrdalloc" IN_LIST FEATURES)
-        set(OPTS ${OPTS},thrdalloc)
-    endif()
-    if ("profile" IN_LIST FEATURES)
+    if("profile" IN_LIST FEATURES)
         set(OPTS ${OPTS},profile)
     endif()
-    if ("unchecked" IN_LIST FEATURES)
-        set(OPTS ${OPTS},unchecked)
+    if("thrdalloc" IN_LIST FEATURES)
+        set(OPTS ${OPTS},thrdalloc)
     endif()
-    if ("utfmax" IN_LIST FEATURES)
+    if("time64bit" IN_LIST FEATURES)
         set(OPTS ${OPTS},time64bit)
     endif()
     
@@ -54,7 +45,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH win
         OPTIONS
-            MACHINE=${MACHINE}
             STATS=none
             CHECKS=none
         OPTIONS_DEBUG
@@ -64,7 +54,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/zd.lib"
             "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}/debug/bin"
         OPTIONS_RELEASE
-            release
             OPTS=${OPTS}
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
@@ -73,13 +62,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
 
     if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_copy_tools(TOOL_NAMES tclsh90.exe  AUTO_CLEAN
+        vcpkg_copy_tools(TOOL_NAMES tclsh90.exe
             SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin"
+            AUTO_CLEAN
         )
     endif()
-    vcpkg_copy_tools(TOOL_NAMES tclsh90.exe  AUTO_CLEAN
+    vcpkg_copy_tools(TOOL_NAMES tclsh90.exe
         DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
+        AUTO_CLEAN
     )
 
     if(0)
