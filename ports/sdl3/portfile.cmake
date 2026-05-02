@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 aba2caa42db3f7e423e3d0b584bd446e273394b37b3595565a374fbe2fbdee4f9cb74b4585e8577c707ea01dab2ccb09861e61b263be56b5012b20abf045c826
+    SHA512 0ef3b561bef20b6b442fd0d7ed6c295f47f76787dfe3cfb6eb978ecb85ea285bcbbd8cbd70a85d52431be0d03e8e8632d8ee2413395e1bd944dd6feeb0c3c6d3
     HEAD_REF main
     PATCHES
         fix-freebsd.patch
