@@ -9,8 +9,7 @@
     "sqlite3",
     {
       "name": "tcl",
-      "host": true,
-      "platform": "!windows"
+      "host": true
     },
     {
       "name": "vcpkg-make",

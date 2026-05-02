@@ -1,16 +1,3 @@
-diff --git a/pkgs/itcl4.3.5/win/rules.vc b/pkgs/itcl4.3.5/win/rules.vc
-index b95e8c8..a8290c1 100644
---- a/pkgs/itcl4.3.5/win/rules.vc
-+++ b/pkgs/itcl4.3.5/win/rules.vc
-@@ -551,7 +551,7 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
- 
- # We always build nmakehlp even if it exists since we do not know
- # what source it was built from.
--!if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
-+!if "$(NMAKEHLPC)" == "nmakehlp.c"
- !if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
- !endif
- !else
 diff --git a/win/makefile.vc b/win/makefile.vc
 index 491eff8..5a703e1 100644
 --- a/win/makefile.vc
@@ -57,3 +44,20 @@ index 491eff8..5a703e1 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing library files to $(SCRIPT_INSTALL_DIR)
  	@if not exist "$(SCRIPT_INSTALL_DIR)" \
+diff --git a/win/rules.vc b/win/rules.vc
+index f709fd8..cde0f27 100644
+--- a/win/rules.vc
++++ b/win/rules.vc
+@@ -551,8 +551,11 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ 
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+-!if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
++!if "$(NMAKEHLPC)" == "nmakehlp.c"
+ !if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
++# Avoid patching rules in pkgs
++!if [copy nmakehlp.exe x86_64-w64-mingw32-nmakehlp.exe >NUL]
++!endif
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
