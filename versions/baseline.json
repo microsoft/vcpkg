@@ -213,7 +213,7 @@
       "port-version": 1
     },
     "aravis": {
-      "baseline": "0.8.35",
+      "baseline": "0.8.36",
       "port-version": 0
     },
     "arcticdb-sparrow": {
@@ -489,7 +489,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.38.5",
+      "baseline": "0.38.6",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -497,7 +497,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.790",
+      "baseline": "1.11.800",
       "port-version": 0
     },
     "ayush272002-dotenv": {
@@ -1582,7 +1582,7 @@
     },
     "calceph": {
       "baseline": "4.0.5",
-      "port-version": 1
+      "port-version": 2
     },
     "camport3": {
       "baseline": "1.6.75",
@@ -1665,7 +1665,7 @@
       "port-version": 6
     },
     "cfitsio": {
-      "baseline": "4.6.3",
+      "baseline": "4.6.4",
       "port-version": 0
     },
     "cgal": {
@@ -1709,7 +1709,7 @@
       "port-version": 5
     },
     "chenjunfu2-nbt-cpp": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "chipmunk": {
@@ -1737,7 +1737,7 @@
       "port-version": 0
     },
     "cinatra": {
-      "baseline": "0.9.9",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "cista": {
@@ -2134,7 +2134,7 @@
     },
     "cppwinrt": {
       "baseline": "2.0.250303.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cppxaml": {
       "baseline": "0.0.16",
@@ -3205,7 +3205,7 @@
       "port-version": 0
     },
     "frugally-deep": {
-      "baseline": "0.19.2",
+      "baseline": "0.19.5",
       "port-version": 0
     },
     "fruit": {
@@ -3722,7 +3722,7 @@
     },
     "harfbuzz": {
       "baseline": "14.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "hash-library": {
       "baseline": "8",
@@ -4837,8 +4837,8 @@
       "port-version": 0
     },
     "libdicom": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.1",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -5446,7 +5446,7 @@
     },
     "libpq": {
       "baseline": "18.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libpqxx": {
       "baseline": "8.0.1",
@@ -5856,6 +5856,10 @@
       "baseline": "1.0.13",
       "port-version": 2
     },
+    "libxchange": {
+      "baseline": "1.1.2",
+      "port-version": 0
+    },
     "libxcomposite": {
       "baseline": "0.4.7",
       "port-version": 1
@@ -5893,8 +5897,8 @@
       "port-version": 1
     },
     "libxfont": {
-      "baseline": "2.0.5",
-      "port-version": 3
+      "baseline": "2.0.7",
+      "port-version": 0
     },
     "libxft": {
       "baseline": "2.3.9",
@@ -5909,7 +5913,7 @@
       "port-version": 1
     },
     "libxkbcommon": {
-      "baseline": "1.7.0",
+      "baseline": "1.13.1",
       "port-version": 0
     },
     "libxkbfile": {
@@ -6489,7 +6493,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "3.3.1",
+      "baseline": "3.3.2",
       "port-version": 0
     },
     "mimicpp": {
@@ -7270,7 +7274,7 @@
     },
     "opencascade": {
       "baseline": "7.9.3",
-      "port-version": 0
+      "port-version": 1
     },
     "opencc": {
       "baseline": "1.1.9",
@@ -7310,14 +7314,14 @@
     },
     "opencv4": {
       "baseline": "4.12.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opendnp3": {
       "baseline": "3.1.2",
       "port-version": 0
     },
     "openexr": {
-      "baseline": "3.4.10",
+      "baseline": "3.4.11",
       "port-version": 0
     },
     "openfbx": {
@@ -8130,7 +8134,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.18",
-      "port-version": 3
+      "port-version": 4
     },
     "qt5-charts": {
       "baseline": "5.15.18",
@@ -9049,7 +9053,7 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.4",
+      "baseline": "3.4.6",
       "port-version": 0
     },
     "sdl3-image": {
@@ -11017,7 +11021,7 @@
       "port-version": 5
     },
     "xsimd": {
-      "baseline": "14.1.0",
+      "baseline": "14.2.0",
       "port-version": 0
     },
     "xtensor": {
@@ -11053,7 +11057,7 @@
       "port-version": 5
     },
     "yalantinglibs": {
-      "baseline": "0.5.8",
+      "baseline": "0.6.1",
       "port-version": 0
     },
     "yaml-cpp": {
