@@ -11,11 +11,12 @@ vcpkg_extract_source_archive(SOURCE_PATH
         wip.diff
 )
 file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.c" "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.h")
+file(GLOB precompiled_tools "${SOURCE_PATH}/win/*.exe" "${SOURCE_PATH}/pkgs/*/win/*.exe")
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/compat/zlib"
     "${SOURCE_PATH}/libtommath"
-    "${SOURCE_PATH}/win/x86_64-w64-mingw32-nmakehlp.exe"
     ${sqlite3_sources}
+    ${precompiled_tools}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
