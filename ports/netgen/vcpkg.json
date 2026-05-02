@@ -54,6 +54,11 @@
       "description": "build with OpenCascade geometry kernel interface",
       "dependencies": [
         {
+          "name": "fontconfig",
+          "default-features": false,
+          "platform": "!windows & !osx"
+        },
+        {
           "name": "opencascade",
           "default-features": false
         }
