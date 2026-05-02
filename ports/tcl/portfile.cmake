@@ -68,7 +68,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
     )
 
-    if(0)
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_copy_tools(TOOL_NAMES tclsh90
             SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
@@ -87,64 +86,23 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         )
     endif()
 
-        file(GLOB_RECURSE TOOLS
-                "${CURRENT_PACKAGES_DIR}/lib/dde1.4/*"
-                "${CURRENT_PACKAGES_DIR}/lib/nmake/*"
-                "${CURRENT_PACKAGES_DIR}/lib/reg1.3/*"
-                "${CURRENT_PACKAGES_DIR}/lib/tcl8/*"
-                "${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*"
-                "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*"
-        )
-        
-        foreach(TOOL ${TOOLS})
-            get_filename_component(DST_DIR ${TOOL} PATH)
-            file(COPY "${TOOL}" DESTINATION ${DST_DIR})
-        endforeach()
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/dde1.4"
-                            "${CURRENT_PACKAGES_DIR}/lib/nmake"
-                            "${CURRENT_PACKAGES_DIR}/lib/reg1.3"
-                            "${CURRENT_PACKAGES_DIR}/lib/tcl8"
-                            "${CURRENT_PACKAGES_DIR}/lib/tcl8.6"
-                            "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0"
-        )
-        file(CHMOD_RECURSE
-                "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/tzdata"
-            PERMISSIONS
-                OWNER_READ OWNER_WRITE
-                GROUP_READ GROUP_WRITE
-                WORLD_READ WORLD_WRITE
-        )
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
-        file(GLOB_RECURSE TOOL_BIN
-            "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
-            "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
-        )
-        file(COPY ${TOOL_BIN} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/bin/")
-
-        # Remove .exes only after copying
-        file(GLOB_RECURSE EXES
-                "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe"
-        )
-        file(REMOVE ${EXES})
-    
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4"
-                            "${CURRENT_PACKAGES_DIR}/debug/lib/nmake"
-                            "${CURRENT_PACKAGES_DIR}/debug/lib/reg1.3"
-                            "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8"
-                            "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6"
-                            "${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0"
-        )
-
-        file(CHMOD_RECURSE
-                "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/tzdata"
-            PERMISSIONS
-                OWNER_READ OWNER_WRITE
-                GROUP_READ GROUP_WRITE
-                WORLD_READ WORLD_WRITE
-        )
+    file(GLOB_RECURSE extensions "${CURRENT_PACKAGES_DIR}/lib/*/*.dll")
+    if(extensions)
+        file(COPY ${extensions} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
+        if(NOT VCPKG_BUID_TYPE)
+            file(GLOB_RECURSE extensions "${CURRENT_PACKAGES_DIR}/debug/lib/*/*.dll")
+            file(COPY ${extensions} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
+        endif()
     endif()
-    endif(0)
     
+    file(GLOB_RECURSE tclconfigs "${CURRENT_PACKAGES_DIR}/lib/*Config.sh")
+    foreach(file IN LISTS tclconfigs)
+        cmake_path(GET file FILENAME filename)
+        file(COPY_FILE "${file}" "${CURRENT_PACKAGES_DIR}/aaa-${TARGET_TRIPLET}-${filename}.log")
+    endforeach()
+    file(GLOB_RECURSE tclconfigs "${CURRENT_PACKAGES_DIR}/lib/*Config.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/*Config.sh")
+    file(REMOVE ${tclconfigs} PLACEHOLDER)
+
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 else()
     set(options "")
