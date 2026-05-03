@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
+        -DSDLMIXER_STRICT=ON
         -DSDLMIXER_TESTS=OFF
         -DSDLMIXER_VENDORED=OFF
         -DSDLMIXER_DEPS_SHARED=OFF
