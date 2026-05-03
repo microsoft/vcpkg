@@ -1,0 +1,4 @@
+The package kcenon-common-system provides CMake targets:
+
+    find_package(common_system CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE kcenon::common_system)
