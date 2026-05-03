@@ -80,7 +80,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     if(NOT VCPKG_CROSSCOMPILING)
         vcpkg_copy_tools(TOOL_NAMES nmakehlp
-            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+            SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/win"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         )
     endif()

@@ -1,5 +1,5 @@
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..4c29a0a 100644
+index 491eff8..2a5dc81 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
@@ -74,12 +74,11 @@ index 491eff8..4c29a0a 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing library files to $(SCRIPT_INSTALL_DIR)
  	@if not exist "$(SCRIPT_INSTALL_DIR)" \
-@@ -1087,7 +1086,7 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1087,7 +1086,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(WIN_DIR)\rules.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\targets.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\nmakehlp.c"            "$(LIB_INSTALL_DIR)\nmake\"
 -	@$(CPY) "$(WIN_DIR)\x86_64-w64-mingw32-nmakehlp.exe" "$(LIB_INSTALL_DIR)\nmake\"
-+	@$(CPY) "$(WIN_DIR)\nmakehlp.exe"          "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(OUT_DIR)\tcl.nmake"            "$(LIB_INSTALL_DIR)\nmake\"
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing package cookiejar $(PKG_COOKIEJAR_VER)
