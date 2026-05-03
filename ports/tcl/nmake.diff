@@ -1,5 +1,101 @@
+diff --git a/pkgs/itcl4.3.5/win/rules.vc b/pkgs/itcl4.3.5/win/rules.vc
+index b95e8c8..6b931a7 100644
+--- a/pkgs/itcl4.3.5/win/rules.vc
++++ b/pkgs/itcl4.3.5/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/sqlite3.51.0/win/rules.vc b/pkgs/sqlite3.51.0/win/rules.vc
+index b95e8c8..6b931a7 100644
+--- a/pkgs/sqlite3.51.0/win/rules.vc
++++ b/pkgs/sqlite3.51.0/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbc1.1.13/win/rules.vc b/pkgs/tdbc1.1.13/win/rules.vc
+index b95e8c8..6b931a7 100644
+--- a/pkgs/tdbc1.1.13/win/rules.vc
++++ b/pkgs/tdbc1.1.13/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcmysql1.1.13/win/rules.vc b/pkgs/tdbcmysql1.1.13/win/rules.vc
+index 8ecce0e..c789020 100644
+--- a/pkgs/tdbcmysql1.1.13/win/rules.vc
++++ b/pkgs/tdbcmysql1.1.13/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcodbc1.1.13/win/rules.vc b/pkgs/tdbcodbc1.1.13/win/rules.vc
+index 8ecce0e..c789020 100644
+--- a/pkgs/tdbcodbc1.1.13/win/rules.vc
++++ b/pkgs/tdbcodbc1.1.13/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcpostgres1.1.13/win/rules.vc b/pkgs/tdbcpostgres1.1.13/win/rules.vc
+index 8ecce0e..c789020 100644
+--- a/pkgs/tdbcpostgres1.1.13/win/rules.vc
++++ b/pkgs/tdbcpostgres1.1.13/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcsqlite3-1.1.13/win/rules.vc b/pkgs/tdbcsqlite3-1.1.13/win/rules.vc
+index 8ecce0e..c789020 100644
+--- a/pkgs/tdbcsqlite3-1.1.13/win/rules.vc
++++ b/pkgs/tdbcsqlite3-1.1.13/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/thread3.0.4/win/rules.vc b/pkgs/thread3.0.4/win/rules.vc
+index b95e8c8..6b931a7 100644
+--- a/pkgs/thread3.0.4/win/rules.vc
++++ b/pkgs/thread3.0.4/win/rules.vc
+@@ -552,7 +552,6 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+ # We always build nmakehlp even if it exists since we do not know
+ # what source it was built from.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..92c697f 100644
+index 491eff8..227027b 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
@@ -7,15 +103,16 @@ index 491eff8..92c697f 100644
  #------------------------------------------------------------- -*- makefile -*-
  #
  #	Microsoft Visual C++ makefile for building Tcl with nmake
-@@ -476,7 +477,6 @@ PRJ_INCLUDES	= -I"$(TOMMATHDIR)"
+@@ -476,7 +477,7 @@ PRJ_INCLUDES	= -I"$(TOMMATHDIR)"
  PRJ_DEFINES	= /DMP_PREC=4 /Dinline=__inline /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE /DMP_FIXED_CUTOFFS
  
  !if $(STATIC_BUILD)
 -PRJ_DEFINES = $(PRJ_DEFINES) /DTCL_WITH_INTERNAL_ZLIB
++PRJ_DEFINES = $(PRJ_DEFINES) /DTCL_WITH_EXTERNAL_TOMMATH
  !endif
  
  # Additional Link libraries needed beyond those in rules.vc
-@@ -535,7 +535,7 @@ shell:      libtclzip
+@@ -535,7 +536,7 @@ shell:      libtclzip
  	@$(COPY) /b "$(TCLSHRAW)"+"$(TCLSCRIPTZIP)" "$(TCLSH)"
  !endif
  
@@ -24,7 +121,7 @@ index 491eff8..92c697f 100644
  libtclzip:  $(TCLSCRIPTZIP)
  
  tcltest:    setup core $(TCLTEST) dlls
-@@ -544,9 +544,11 @@ tcltest:      libtclzip
+@@ -544,9 +545,11 @@ tcltest:      libtclzip
  	@$(COPY) /b "$(TCLTESTRAW)"+"$(TCLSCRIPTZIP)" "$(TCLTEST)"
  !endif
  
@@ -38,7 +135,7 @@ index 491eff8..92c697f 100644
  !endif
  setup:      default-setup
  
-@@ -676,6 +678,7 @@ pkgs:
+@@ -676,6 +679,7 @@ pkgs:
  	@for /d %d in ($(PKGSDIR)\*) do \
  	  @if exist "%~fd\win\makefile.vc" ( \
  	    pushd "%~fd\win" & \
@@ -46,7 +143,7 @@ index 491eff8..92c697f 100644
  	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) &\
  	    popd \
  	  )
-@@ -692,6 +695,7 @@ install-pkgs:
+@@ -692,6 +696,7 @@ install-pkgs:
  	@for /d %d in ($(PKGSDIR)\*) do \
  	  @if exist "%~fd\win\makefile.vc" ( \
  	    pushd "%~fd\win" & \
@@ -54,7 +151,7 @@ index 491eff8..92c697f 100644
  	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) install &\
  	    popd \
  	  )
-@@ -1049,11 +1053,7 @@ install-binaries:
+@@ -1049,11 +1054,7 @@ install-binaries:
  	@$(CPY) "$(TCLLIB)" "$(BIN_INSTALL_DIR)\"
  !endif
  	@$(CPY) "$(TCLIMPLIB)" "$(LIB_INSTALL_DIR)\"
@@ -66,7 +163,7 @@ index 491eff8..92c697f 100644
  !endif
  !if exist($(TCLSH))
  	@echo Installing $(TCLSHNAME)
-@@ -1073,7 +1073,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1073,7 +1074,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(GENERICDIR)\tclPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMath.h"      "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMathDecls.h" "$(INCLUDE_INSTALL_DIR)\"
@@ -74,7 +171,7 @@ index 491eff8..92c697f 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing library files to $(SCRIPT_INSTALL_DIR)
  	@if not exist "$(SCRIPT_INSTALL_DIR)" \
-@@ -1087,7 +1086,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1087,7 +1087,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(WIN_DIR)\rules.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\targets.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\nmakehlp.c"            "$(LIB_INSTALL_DIR)\nmake\"
