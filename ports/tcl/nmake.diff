@@ -1,5 +1,5 @@
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..2a5dc81 100644
+index 491eff8..92c697f 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
@@ -29,7 +29,7 @@ index 491eff8..2a5dc81 100644
  !endif
  
 -install:    install-binaries install-libraries install-docs install-pkgs
-+# Run in submake in order to delay expansion if "!if exist()"
++# Run in submake in order to delay expansion of "!if exist()"
 +install:
 +	$(MAKE) -$(MAKEFLAGS) -f makefile.vc install-binaries install-libraries install-docs install-pkgs
  !if $(SYMBOLS)
@@ -83,15 +83,26 @@ index 491eff8..2a5dc81 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing package cookiejar $(PKG_COOKIEJAR_VER)
 diff --git a/win/rules.vc b/win/rules.vc
-index f709fd8..16b5943 100644
+index f709fd8..c5459e7 100644
 --- a/win/rules.vc
 +++ b/win/rules.vc
-@@ -551,7 +551,7 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+@@ -551,12 +551,17 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
  
  # We always build nmakehlp even if it exists since we do not know
  # what source it was built from.
 -!if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
 +!if "$(NMAKEHLPC)" == "nmakehlp.c"
++!message Building nmakehlp.exe
  !if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
  !endif
  !else
+-!if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
++!message Copying nmakehlp.exe
++!if [copy $(NMAKEHLPC:/=\) $(MAKEDIR)\nmakehlp.exe >NUL]
++!endif
+ !endif
++!if !exist("$(MAKEDIR)\nmakehlp.exe")
++!error "Failed to provide $(MAKEDIR)\nmakehlp.exe"
+ !endif
+ 
+ ################################################################
