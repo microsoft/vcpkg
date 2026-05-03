@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index db58b4e..0fb61a0 100644
+index 31a4083..ced7a68 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -15,6 +15,9 @@ if(NOT USE_BLAS_WRAP)
+@@ -17,6 +17,9 @@ if(NOT USE_BLAS_WRAP)
  # _zrotg_ seems to be missing in the wrap header
    add_definitions(-DNO_BLAS_WRAP)
  endif()
@@ -11,17 +11,17 @@ index db58b4e..0fb61a0 100644
 +endif()
  include_directories(${CLAPACK_SOURCE_DIR}/INCLUDE)
  add_subdirectory(F2CLIBS)
- add_subdirectory(SRC)
+ find_package(BLAS REQUIRED)
 diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt
-index 094614a..e5b40ab 100644
+index 0e988d1..23d2451 100644
 --- a/F2CLIBS/libf2c/CMakeLists.txt
 +++ b/F2CLIBS/libf2c/CMakeLists.txt
-@@ -44,12 +44,19 @@ if(UNIX)
+@@ -44,11 +44,19 @@ if(UNIX)
  endif()
  set_target_properties(arithchk PROPERTIES COMPILE_DEFINITIONS 
    "NO_FPINIT;NO_LONG_LONG")
-+  
-+if (ARITH_PATH)
++
++if(ARITH_PATH)
 +configure_file(
 +   "${ARITH_PATH}"
 +   "${CMAKE_CURRENT_BINARY_DIR}/arith.h"
@@ -32,11 +32,10 @@ index 094614a..e5b40ab 100644
     COMMAND arithchk > ${CMAKE_CURRENT_BINARY_DIR}/arith.h
     DEPENDS arithchk
     )
--
 +endif()
  
+ 
  set(OFILES  ${MISC} ${POW} ${CX} ${DCX} ${REAL} ${DBL} ${INT} 
-   ${HALF} ${CMP} ${EFL} ${CHAR} ${I77} ${TIME})
 diff --git a/F2CLIBS/libf2c/inquire.c b/F2CLIBS/libf2c/inquire.c
 index 5936a67..4846d41 100644
 --- a/F2CLIBS/libf2c/inquire.c

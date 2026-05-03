@@ -1,22 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sapdragon/syscalls-cpp
-    REF "v${VERSION}"             
-    SHA512 47709c046b1b8ce629c8aa879164b49c918150fe5c1f6e3349b12ba1ffceb99557ee2357ec324e67e66c4afb80e11067eb73e7c4aa96776515f63cf7cef2aa94
+    REF "${VERSION}"            
+    SHA512 758edab3e4d691b06398e26f568cf4ee5c2ea35921fd77ba2375f3c31502890075f635cf60493ac0fb118ddb954902143500bddfbf0fac6020c5433e55e05a43
     HEAD_REF main                
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_INSTALL_INCLUDEDIR=include/syscalls-cpp
+        -DSYSCALL_CPP_BUILD_EXAMPLES=OFF
+        -DSYSCALL_CPP_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME syscalls-cpp)
-
-vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

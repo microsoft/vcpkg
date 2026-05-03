@@ -1,7 +1,8 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -13,20 +14,23 @@ if(VCPKG_CROSSCOMPILING)
     set(PATCHES cc_for_build.patch)
 endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxt
-    REF "libXt-${VERSION}"
-    SHA512 7cb22be9706bd7d089e84c09a99597f730ca858a9f8134d2741916b28cd4786e236beaad568c8b7ab8cdcfdea1c49140cefac528244bab8c94d48dc4729267e8
-    HEAD_REF master
+vcpkg_download_distfile(
+    LIBXT_ARCHIVE
+    URLS "https://www.x.org/archive/individual/lib/libXt-${VERSION}.tar.xz"
+    FILENAME "libXt-${VERSION}.tar.xz"
+    SHA512 c220292f60b0f53134cf9364831a32bbaa9fa6bbb3a7143e917920957b7a48c616e946042747089f29ea9d8a18ecd64de620bcaf56d82462e7107de906f5db38
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXT_ARCHIVE}"
     PATCHES
         windows_build.patch
         globals.patch
         getcwd.patch
         add-missing-process-h.patch
         ${PATCHES}
-) 
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -81,7 +85,7 @@ if(VCPKG_CROSSCOMPILING)
     endif()
 endif()
 
-vcpkg_install_make()
+vcpkg_install_make(DISABLE_PARALLEL)
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
@@ -100,7 +104,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(NOT VCPKG_CROSSCOMPILING)
@@ -108,6 +111,4 @@ if(NOT VCPKG_CROSSCOMPILING)
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

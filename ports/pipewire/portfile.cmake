@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pipewire/pipewire
     REF "${VERSION}"
-    SHA512 aa5a01fe812bfb439147885fdef89edfcd9f97943eb3fb209b698896d0092a9bdba02de3df4c39d14f5c1792b69927c36eb7af134e9a85e7a794bcbf9def3986
+    SHA512 d6221e985081f0f33fc613ff1c5b3a55cb854f5edb43787c22bfb8aed4ea7af5f4fbfe0ff0a294c2cb17573256557d8756708731c9fd1d667417cbade6103fd3
     HEAD_REF master
 )
 
@@ -58,7 +58,6 @@ vcpkg_configure_meson(
         -Dsystemd-system-unit-dir=disabled
         -Dsystemd-user-service=disabled
         -Dsystemd-user-unit-dir=disabled
-        -Dsystemd=disabled
         -Dtest=disabled
         -Dtests=disabled
         -Dudev=disabled

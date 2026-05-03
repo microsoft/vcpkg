@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lexbor/lexbor
     REF v${VERSION}
-    SHA512 ad2b333e2802b9e05fea461c017fecaec1619c67d4e165da7fb9c6d24a77584b8e1ff0348330a61a169e19025d215e7a0a6356ce1424daf14cf3caf2b2c2dbef
+    SHA512 076ff831e89717f07ad0f846cf2ea46fe4dfd0c7fbf37b5705f0eacaa4baa418116ce1e020fde44bd7ed75ddf5931cac74947e37fcf1330d68389b39cc392f6a
 )
 
 vcpkg_check_features(
@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/lexbor)
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"

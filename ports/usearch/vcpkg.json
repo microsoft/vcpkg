@@ -1,6 +1,6 @@
 {
   "name": "usearch",
-  "version": "2.24.0",
+  "version": "2.25.1",
   "description": "Fastest Search & Clustering engine × for Vectors & Strings",
   "homepage": "https://github.com/unum-cloud/usearch",
   "license": "Apache-2.0",
@@ -27,10 +27,10 @@
         "jemalloc"
       ]
     },
-    "simsimd": {
-      "description": "Use SimSIMD hardware-accelerated metrics",
+    "numkong": {
+      "description": "Use NumKong hardware-accelerated metrics",
       "dependencies": [
-        "simsimd"
+        "numkong"
       ]
     }
   }
