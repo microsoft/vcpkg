@@ -210,7 +210,7 @@
     },
     "apsi": {
       "baseline": "0.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "aravis": {
       "baseline": "0.8.36",
@@ -4545,7 +4545,7 @@
       "port-version": 1
     },
     "kuku": {
-      "baseline": "2.1.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "kvasir-mpl": {
