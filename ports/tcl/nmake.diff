@@ -191,7 +191,7 @@ index b95e8c8..6b931a7 100644
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..227027b 100644
+index 491eff8..65eed7f 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
@@ -224,30 +224,32 @@ index 491eff8..227027b 100644
 -install:    install-binaries install-libraries install-docs install-pkgs
 +# Run in submake in order to delay expansion of "!if exist()"
 +install:
-+	$(MAKE) -$(MAKEFLAGS) -f makefile.vc install-binaries install-libraries install-docs install-pkgs
++	$(MAKE) -$(MAKEFLAGS) NMAKEHLPC=$(ROOT)\nmakehlp.exe -f makefile.vc install-binaries install-libraries install-docs install-pkgs
  !if $(SYMBOLS)
 -install:    install-pdbs
-+	$(MAKE) -$(MAKEFLAGS) -f makefile.vc install-pdbs
++	$(MAKE) -$(MAKEFLAGS) NMAKEHLPC=$(ROOT)\nmakehlp.exe -f makefile.vc install-pdbs
  !endif
  setup:      default-setup
  
-@@ -676,6 +679,7 @@ pkgs:
+@@ -676,7 +679,7 @@ pkgs:
  	@for /d %d in ($(PKGSDIR)\*) do \
  	  @if exist "%~fd\win\makefile.vc" ( \
  	    pushd "%~fd\win" & \
-+	    set NMAKEHLPC=$(ROOT)\nmakehlp.exe &\
- 	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) &\
+-	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) &\
++	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) NMAKEHLPC=$(ROOT)\nmakehlp.exe &\
  	    popd \
  	  )
-@@ -692,6 +696,7 @@ install-pkgs:
+ 
+@@ -692,7 +695,7 @@ install-pkgs:
  	@for /d %d in ($(PKGSDIR)\*) do \
  	  @if exist "%~fd\win\makefile.vc" ( \
  	    pushd "%~fd\win" & \
-+	    set NMAKEHLPC=$(ROOT)\nmakehlp.exe &\
- 	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) install &\
+-	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) install &\
++	    $(MAKE) -$(MAKEFLAGS) -f makefile.vc TCLDIR=$(ROOT) NMAKEHLPC=$(ROOT)\nmakehlp.exe install &\
  	    popd \
  	  )
-@@ -1049,11 +1054,7 @@ install-binaries:
+ 
+@@ -1049,11 +1052,7 @@ install-binaries:
  	@$(CPY) "$(TCLLIB)" "$(BIN_INSTALL_DIR)\"
  !endif
  	@$(CPY) "$(TCLIMPLIB)" "$(LIB_INSTALL_DIR)\"
@@ -259,7 +261,7 @@ index 491eff8..227027b 100644
  !endif
  !if exist($(TCLSH))
  	@echo Installing $(TCLSHNAME)
-@@ -1073,7 +1074,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1073,7 +1072,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(GENERICDIR)\tclPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMath.h"      "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMathDecls.h" "$(INCLUDE_INSTALL_DIR)\"
@@ -267,7 +269,7 @@ index 491eff8..227027b 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing library files to $(SCRIPT_INSTALL_DIR)
  	@if not exist "$(SCRIPT_INSTALL_DIR)" \
-@@ -1087,7 +1087,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1087,7 +1085,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(WIN_DIR)\rules.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\targets.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\nmakehlp.c"            "$(LIB_INSTALL_DIR)\nmake\"
@@ -276,26 +278,24 @@ index 491eff8..227027b 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing package cookiejar $(PKG_COOKIEJAR_VER)
 diff --git a/win/rules.vc b/win/rules.vc
-index f709fd8..c5459e7 100644
+index f709fd8..acb5712 100644
 --- a/win/rules.vc
 +++ b/win/rules.vc
-@@ -551,12 +551,17 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
+@@ -551,11 +551,15 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
  
  # We always build nmakehlp even if it exists since we do not know
  # what source it was built from.
 -!if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
-+!if "$(NMAKEHLPC)" == "nmakehlp.c"
++!if exist("$(MAKEDIR)\nmakehlp.exe")
++!message Reusing $(MAKEDIR)\nmakehlp.exe
++!elseif "$(NMAKEHLPC)" == "nmakehlp.c"
 +!message Building nmakehlp.exe
  !if [$(cc32) -nologo "$(NMAKEHLPC)" -link -subsystem:console > nul]
  !endif
  !else
 -!if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
-+!message Copying nmakehlp.exe
++!message Copying $(NMAKEHLPC:/=\) to $(MAKEDIR)
 +!if [copy $(NMAKEHLPC:/=\) $(MAKEDIR)\nmakehlp.exe >NUL]
-+!endif
  !endif
-+!if !exist("$(MAKEDIR)\nmakehlp.exe")
-+!error "Failed to provide $(MAKEDIR)\nmakehlp.exe"
  !endif
  
- ################################################################
