@@ -23,8 +23,7 @@
   ],
   "features": {
     "asm": {
-      "description": "Enable assembly optimizations",
-      "supports": "x86 | x64 | arm64"
+      "description": "Enable assembly optimizations"
     }
   }
 }

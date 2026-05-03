@@ -20,20 +20,28 @@ list(APPEND options
     -Dtest=disabled
 )
 
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_LINUX)
+    list(APPEND options -Drequire-system-font-provider=false)
+endif()
+
+set(asm_option disabled)
 set(additional_binaries "")
 if("asm" IN_LIST FEATURES)
-    list(APPEND options -Dasm=enabled)
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)$")
-        vcpkg_find_acquire_program(NASM)
-        get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
-        vcpkg_add_to_path("${NASM_EXE_PATH}")
-    elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        vcpkg_find_acquire_program(CLANG)
-        list(APPEND additional_binaries "clang = ['${CLANG}']")
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64|arm64)$")
+        set(asm_option enabled)
+        if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)$")
+            vcpkg_find_acquire_program(NASM)
+            get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+            vcpkg_add_to_path("${NASM_EXE_PATH}")
+        elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            vcpkg_find_acquire_program(CLANG)
+            list(APPEND additional_binaries "clang = ['${CLANG}']")
+        endif()
+    else()
+        message(WARNING "Feature 'asm' is not supported on ${VCPKG_TARGET_ARCHITECTURE}; disabling assembly optimizations.")
     endif()
-else()
-    list(APPEND options -Dasm=disabled)
 endif()
+list(APPEND options -Dasm=${asm_option})
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
