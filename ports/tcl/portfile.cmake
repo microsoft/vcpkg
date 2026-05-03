@@ -29,7 +29,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(OPTS ${OPTS},msvcrt)
     else()
-        set(OPTS ${OPTS},msvcrt)
+        set(OPTS ${OPTS},nomsvcrt)
     endif()
     
     if("profile" IN_LIST FEATURES)
@@ -46,7 +46,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_CROSSCOMPILING)
         vcpkg_list(APPEND OPTIONS
             "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/nmakehlp.exe"
-            "TCLSH_NATIVE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/tclsh90.exe"
+            "TCLSH_NATIVE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/debug/bin/tclsh90.exe"
         )
     endif()
 
