@@ -66,13 +66,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             OPTS=${OPTS},symbols
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
-            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/${ZLIB_BASENAME}d.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/${ZLIB_BASENAME}d.lib ${CURRENT_INSTALLED_DIR}/debug/lib/minizip.lib"
             "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/debug/bin"
         OPTIONS_RELEASE
             OPTS=${OPTS}
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
-            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/${ZLIB_BASENAME}.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/${ZLIB_BASENAME}.lib ${CURRENT_INSTALLED_DIR}/lib/minizip.lib"
             "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
     )
 
