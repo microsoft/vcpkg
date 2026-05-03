@@ -26,6 +26,13 @@
         "fluidsynth",
         {
           "$comment": "WIP",
+          "name": "fluidsynth",
+          "features": [
+            "sndfile"
+          ]
+        },
+        {
+          "$comment": "WIP",
           "name": "libsndfile",
           "features": [
             "mpeg"
