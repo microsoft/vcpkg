@@ -1,6 +1,7 @@
 {
   "name": "libass",
   "version": "0.17.4",
+  "port-version": 1,
   "description": "libass is a portable subtitle renderer for the ASS/SSA (Advanced Substation Alpha/Substation Alpha) subtitle format",
   "homepage": "https://github.com/libass/libass",
   "license": "ISC",
@@ -13,8 +14,16 @@
     "fribidi",
     "harfbuzz",
     {
-      "name": "vcpkg-cmake",
+      "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "asm"
+  ],
+  "features": {
+    "asm": {
+      "description": "Enable assembly optimizations"
+    }
+  }
 }

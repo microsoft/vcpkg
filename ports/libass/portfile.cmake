@@ -4,29 +4,48 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 08762623dd09e3034699ba9d11b70d1f6cc6b2e3b38aa897b07efef1364e76141df484e70ed27888cf3595b77d072cdb5e8abbbfa560e33ca21f87872e24df8d
     HEAD_REF master
+    PATCHES
+        arm64-windows-asm.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/libass.def DESTINATION ${SOURCE_PATH})
-
-# Since libass uses automake, make and configure, we use a custom CMake file
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-file(COPY ${SOURCE_PATH}/libass/ass.h ${SOURCE_PATH}/libass/ass_types.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ass)
 
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_EXE_PATH ${PKGCONFIG} DIRECTORY)
 vcpkg_add_to_path(${PKGCONFIG_EXE_PATH})
 
-vcpkg_cmake_configure(
-    OPTIONS -DLIBASS_VERSION=${VERSION}
-    SOURCE_PATH ${SOURCE_PATH}
+list(APPEND options
+    -Dcheckasm=disabled
+    -Dcompare=disabled
+    -Dfuzz=disabled
+    -Dprofile=disabled
+    -Dtest=disabled
 )
 
-vcpkg_cmake_install()
+set(additional_binaries "")
+if("asm" IN_LIST FEATURES)
+    list(APPEND options -Dasm=enabled)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)$")
+        vcpkg_find_acquire_program(NASM)
+        get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
+        vcpkg_add_to_path("${NASM_EXE_PATH}")
+    elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        vcpkg_find_acquire_program(CLANG)
+        list(APPEND additional_binaries "clang = ['${CLANG}']")
+    endif()
+else()
+    list(APPEND options -Dasm=disabled)
+endif()
+
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${options}
+    ADDITIONAL_BINARIES
+        ${additional_binaries}
+)
+
+vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
