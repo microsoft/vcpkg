@@ -817,6 +817,7 @@ netcdf-c[tools]:arm64-linux=feature-fails
 netcdf-c[zstd]:arm64-linux=cascade
 netcdf-cxx4:arm64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
+netgen[core,cgns,jpeg,mpeg,occ,python]:arm64-linux=combination-fails
 nethost:arm64-linux=fail
 ngspice:x64-windows-static=fail
 ngtcp2[gnutls]:arm64-windows-static-md=cascade
