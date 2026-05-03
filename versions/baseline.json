@@ -8608,6 +8608,10 @@
       "baseline": "3.3.1",
       "port-version": 0
     },
+    "rdma-core": {
+      "baseline": "62.0",
+      "port-version": 0
+    },
     "re2": {
       "baseline": "2025-11-05",
       "port-version": 0
