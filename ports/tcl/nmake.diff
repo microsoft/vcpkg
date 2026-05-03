@@ -1,3 +1,15 @@
+diff --git a/pkgs/itcl4.3.5/win/rules-ext.vc b/pkgs/itcl4.3.5/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/itcl4.3.5/win/rules-ext.vc
++++ b/pkgs/itcl4.3.5/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/itcl4.3.5/win/rules.vc b/pkgs/itcl4.3.5/win/rules.vc
 index b95e8c8..6b931a7 100644
 --- a/pkgs/itcl4.3.5/win/rules.vc
@@ -10,6 +22,18 @@ index b95e8c8..6b931a7 100644
  !endif
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/sqlite3.51.0/win/rules-ext.vc b/pkgs/sqlite3.51.0/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/sqlite3.51.0/win/rules-ext.vc
++++ b/pkgs/sqlite3.51.0/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/sqlite3.51.0/win/rules.vc b/pkgs/sqlite3.51.0/win/rules.vc
 index b95e8c8..6b931a7 100644
 --- a/pkgs/sqlite3.51.0/win/rules.vc
@@ -22,6 +46,18 @@ index b95e8c8..6b931a7 100644
  !endif
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbc1.1.13/win/rules-ext.vc b/pkgs/tdbc1.1.13/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/tdbc1.1.13/win/rules-ext.vc
++++ b/pkgs/tdbc1.1.13/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/tdbc1.1.13/win/rules.vc b/pkgs/tdbc1.1.13/win/rules.vc
 index b95e8c8..6b931a7 100644
 --- a/pkgs/tdbc1.1.13/win/rules.vc
@@ -34,6 +70,18 @@ index b95e8c8..6b931a7 100644
  !endif
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcmysql1.1.13/win/rules-ext.vc b/pkgs/tdbcmysql1.1.13/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/tdbcmysql1.1.13/win/rules-ext.vc
++++ b/pkgs/tdbcmysql1.1.13/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/tdbcmysql1.1.13/win/rules.vc b/pkgs/tdbcmysql1.1.13/win/rules.vc
 index 8ecce0e..c789020 100644
 --- a/pkgs/tdbcmysql1.1.13/win/rules.vc
@@ -46,6 +94,18 @@ index 8ecce0e..c789020 100644
  !endif
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcodbc1.1.13/win/rules-ext.vc b/pkgs/tdbcodbc1.1.13/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/tdbcodbc1.1.13/win/rules-ext.vc
++++ b/pkgs/tdbcodbc1.1.13/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/tdbcodbc1.1.13/win/rules.vc b/pkgs/tdbcodbc1.1.13/win/rules.vc
 index 8ecce0e..c789020 100644
 --- a/pkgs/tdbcodbc1.1.13/win/rules.vc
@@ -58,6 +118,18 @@ index 8ecce0e..c789020 100644
  !endif
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcpostgres1.1.13/win/rules-ext.vc b/pkgs/tdbcpostgres1.1.13/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/tdbcpostgres1.1.13/win/rules-ext.vc
++++ b/pkgs/tdbcpostgres1.1.13/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/tdbcpostgres1.1.13/win/rules.vc b/pkgs/tdbcpostgres1.1.13/win/rules.vc
 index 8ecce0e..c789020 100644
 --- a/pkgs/tdbcpostgres1.1.13/win/rules.vc
@@ -70,6 +142,18 @@ index 8ecce0e..c789020 100644
  !endif
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/tdbcsqlite3-1.1.13/win/rules-ext.vc b/pkgs/tdbcsqlite3-1.1.13/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/tdbcsqlite3-1.1.13/win/rules-ext.vc
++++ b/pkgs/tdbcsqlite3-1.1.13/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/tdbcsqlite3-1.1.13/win/rules.vc b/pkgs/tdbcsqlite3-1.1.13/win/rules.vc
 index 8ecce0e..c789020 100644
 --- a/pkgs/tdbcsqlite3-1.1.13/win/rules.vc
@@ -82,6 +166,18 @@ index 8ecce0e..c789020 100644
  !endif
  !else
  !if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
+diff --git a/pkgs/thread3.0.4/win/rules-ext.vc b/pkgs/thread3.0.4/win/rules-ext.vc
+index 479720a..1ac6668 100644
+--- a/pkgs/thread3.0.4/win/rules-ext.vc
++++ b/pkgs/thread3.0.4/win/rules-ext.vc
+@@ -32,7 +32,6 @@ macro to the name of the project makefile.
+ # the local copy of nmakehlp. Once we locate Tcl, we will use that
+ # one if it is newer.
+ !if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "$(NATIVE_ARCH)"
+-!if [$(CC) -nologo -DNDEBUG "nmakehlp.c" -link -subsystem:console > nul]
+ !endif
+ !else
+ !if [copy x86_64-w64-mingw32-nmakehlp.exe nmakehlp.exe >NUL]
 diff --git a/pkgs/thread3.0.4/win/rules.vc b/pkgs/thread3.0.4/win/rules.vc
 index b95e8c8..6b931a7 100644
 --- a/pkgs/thread3.0.4/win/rules.vc
