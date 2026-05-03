@@ -360,6 +360,5 @@ vcpkg_acquire_msys(msys_root
     Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_fortran_msys_declare_packages"
     PACKAGES
         mingw-w64-x86_64-gcc-fortran
-        mingw-w64-i686-gcc-fortran
 )
 analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_fortran.cmake")
