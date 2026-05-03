@@ -7,8 +7,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        dependencies.diff
         nmake.diff
-        wip.diff
 )
 file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.c" "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.h")
 file(GLOB precompiled_tools "${SOURCE_PATH}/win/*.exe" "${SOURCE_PATH}/pkgs/*/win/*.exe")
@@ -42,9 +42,17 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(OPTS ${OPTS},time64bit)
     endif()
 
-    set(MAYBE_NMAKEHLPC "")
+    vcpkg_list(SET OPTIONS)
     if(VCPKG_CROSSCOMPILING)
-        set(MAYBE_NMAKEHLPC "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/nmakehlp.exe")
+        vcpkg_list(APPEND OPTIONS
+            "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/nmakehlp.exe"
+            "TCLSH_NATIVE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/tclsh90.exe"
+        )
+    endif()
+
+    set(ZLIB_BASENAME "z")
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/zs.lib")
+        set(ZLIB_BASENAME "zs")
     endif()
 
     vcpkg_install_nmake(
@@ -53,18 +61,18 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         OPTIONS
             STATS=none
             CHECKS=none
-            ${MAYBE_NMAKEHLPC}
+            ${OPTIONS}
         OPTIONS_DEBUG
             OPTS=${OPTS},symbols
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
-            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/zd.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/${ZLIB_BASENAME}d.lib"
             "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/debug/bin"
         OPTIONS_RELEASE
             OPTS=${OPTS}
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
-            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/z.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/${ZLIB_BASENAME}.lib"
             "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR}/bin"
     )
 
@@ -106,7 +114,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 else()
-    set(options "")
     if(VCPKG_CROSSCOMPILING)
         vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin")
         set(ENV{HOST_TCLSH} "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/tclsh9.0")
@@ -117,7 +124,6 @@ else()
         DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             "CFLAGS=-I${CURRENT_INSTALLED_DIR}/include \$CFLAGS"
-            ${options}
             --with-system-libtommath
             --with-system-sqlite
     )
