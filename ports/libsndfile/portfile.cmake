@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-avoid-installing-find-modules.patch
-        mp3lame-static.diff
+        mp3lame.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
