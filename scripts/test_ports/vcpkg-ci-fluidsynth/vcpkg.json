@@ -40,6 +40,13 @@
           "features": [
             "libinstpatch"
           ]
+        },
+        {
+          "name": "libsndfile",
+          "features": [
+            "mpeg"
+          ],
+          "platform": "x64"
         }
       ]
     }
