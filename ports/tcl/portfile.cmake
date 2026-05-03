@@ -72,7 +72,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_copy_tools(TOOL_NAMES tclsh90
             SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin"
-            AUTO_CLEAN
         )
     endif()
     vcpkg_copy_tools(TOOL_NAMES tclsh90
