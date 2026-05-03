@@ -23,21 +23,7 @@
     "fluidsynth": {
       "description": "Use FluidSynth to play MIDI audio format.",
       "dependencies": [
-        "fluidsynth",
-        {
-          "$comment": "WIP",
-          "name": "fluidsynth",
-          "features": [
-            "sndfile"
-          ]
-        },
-        {
-          "$comment": "WIP",
-          "name": "libsndfile",
-          "features": [
-            "mpeg"
-          ]
-        }
+        "fluidsynth"
       ]
     },
     "libflac": {
