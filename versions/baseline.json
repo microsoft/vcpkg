@@ -5090,7 +5090,7 @@
     },
     "libiconv": {
       "baseline": "1.18",
-      "port-version": 3
+      "port-version": 4
     },
     "libics": {
       "baseline": "1.7.0",
@@ -8306,7 +8306,7 @@
     },
     "qtbase": {
       "baseline": "6.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.10.2",
