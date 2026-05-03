@@ -9066,7 +9066,7 @@
     },
     "sdl3-mixer": {
       "baseline": "3.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl3-shadercross": {
       "baseline": "3.0.0-preview2",
