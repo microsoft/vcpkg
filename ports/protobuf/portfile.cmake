@@ -25,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 if(VCPKG_TARGET_IS_UWP)
     set(protobuf_BUILD_LIBPROTOC OFF)
 else()
-    set(protobuf_BUILD_LIBPROTOC ON)
+    set(protobuf_BUILD_LIBPROTOC ${protobuf_BUILD_PROTOC_BINARIES})
 endif()
 
 if (VCPKG_DOWNLOAD_MODE)
