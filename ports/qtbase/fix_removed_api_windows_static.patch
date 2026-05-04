@@ -1,0 +1,14 @@
+diff --git a/cmake/modulecppexports.h.in b/cmake/modulecppexports.h.in
+--- a/cmake/modulecppexports.h.in
++++ b/cmake/modulecppexports.h.in
+@@ -33,6 +32,10 @@ endif
+ #  define QT_@module_define_infix@_CONSTEXPR_INLINE_SINCE(major, minor) \
+     QT_IF_DEPRECATED_SINCE(major, minor, constexpr, /* not inline */)
+ #  define QT_@module_define_infix@_INLINE_IMPL_SINCE(major, minor) 1
++#elif !defined(QT_BUILD_@module_define_infix@_LIB) && !defined(QT_BOOTSTRAPPED)
++#  define QT_@module_define_infix@_INLINE_SINCE(major, minor)
++#  define QT_@module_define_infix@_CONSTEXPR_INLINE_SINCE(major, minor)
++#  define QT_@module_define_infix@_INLINE_IMPL_SINCE(major, minor) 0
+ #else
+ /* inside library, outside removed_api.cpp:
+  * keep deprecated API -> non-inline decl, no defi;
