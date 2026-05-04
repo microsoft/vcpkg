@@ -7377,7 +7377,7 @@
       "port-version": 0
     },
     "openmpi": {
-      "baseline": "4.1.8",
+      "baseline": "5.0.10",
       "port-version": 0
     },
     "openmvg": {
