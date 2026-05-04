@@ -22,7 +22,7 @@
     },
     "hooking": {
       "description": "Add interface for automatic hooking of DirectX",
-      "supports": "(windows | linux) & !arm & !uwp",
+      "supports": "windows & !arm & !uwp",
       "dependencies": [
         "safetyhook"
       ]
