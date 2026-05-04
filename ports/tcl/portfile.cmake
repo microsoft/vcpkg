@@ -42,16 +42,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(OPTS ${OPTS},time64bit)
     endif()
 
-    vcpkg_list(SET OPTIONS_DEBUG)
-    vcpkg_list(SET OPTIONS_RELEASE)
+    cmake_path(NATIVE_PATH CURRENT_HOST_INSTALLED_DIR CURRENT_HOST_INSTALLED_DIR_NATIVE)
+    vcpkg_list(SET OPTIONS)
     if(VCPKG_CROSSCOMPILING)
-        cmake_path(NATIVE_PATH CURRENT_HOST_INSTALLED_DIR CURRENT_HOST_INSTALLED_DIR_NATIVE)
-        vcpkg_list(APPEND OPTIONS_DEBUG
-            "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\manual-tools\\${PORT}\\nmakehlp.exe"
-            "TCLSH_NATIVE=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\tools\\${PORT}\\debug\\bin\\tclsh90.exe"
-        )
-        vcpkg_list(APPEND OPTIONS_RELEASE
-            "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\manual-tools\\${PORT}\\nmakehlp.exe"
+        vcpkg_list(APPEND OPTIONS
+            "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\tools\\${PORT}\\bin\\nmakehlp.exe"
             "TCLSH_NATIVE=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\tools\\${PORT}\\bin\\tclsh90.exe"
         )
     endif()
@@ -67,22 +62,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         OPTIONS
             STATS=none
             CHECKS=none
+            ${OPTIONS}
         OPTIONS_DEBUG
             OPTS=${OPTS},symbols
-            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0"
+            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}\\tools\\${PORT}\\debug\\lib\\tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/${ZLIB_BASENAME}d.lib ${CURRENT_INSTALLED_DIR}/debug/lib/minizip.lib"
             "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\debug\\bin"
-            "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\tools\\${PORT}\\debug\\bin"
-            ${OPTIONS_DEBUG}
         OPTIONS_RELEASE
             OPTS=${OPTS}
-            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0"
+            "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}\\tools\\${PORT}\\lib\\tcl9.0"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
             "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/${ZLIB_BASENAME}.lib ${CURRENT_INSTALLED_DIR}/lib/minizip.lib"
             "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}\\bin"
-            "HOST_TOOLS_DIR=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\tools\\${PORT}\\bin"
-            ${OPTIONS_RELEASE}
     )
 
     if(NOT VCPKG_BUILD_TYPE)
@@ -98,7 +90,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT VCPKG_CROSSCOMPILING)
         vcpkg_copy_tools(TOOL_NAMES nmakehlp
             SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/win"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         )
     endif()
 
