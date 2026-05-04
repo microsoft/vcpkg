@@ -223,7 +223,7 @@ index b95e8c8..058d694 100644
  !endif
  !else
 diff --git a/win/makefile.vc b/win/makefile.vc
-index 491eff8..1870e97 100644
+index 491eff8..5ddaa22 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
@@ -263,15 +263,7 @@ index 491eff8..1870e97 100644
  !endif
  setup:      default-setup
  
-@@ -670,13 +673,14 @@ $(TCLSCRIPTZIP): $(TCLLIB) $(TCLSH) dlls
- 	@echo cd {$(OUT_DIR)} > "$(OUT_DIR)\zipper.tcl"
- 	@echo file delete -force {$(@F)} >> "$(OUT_DIR)\zipper.tcl"
- 	@echo zipfs mkzip {$(@F)} {$(LIBTCLVFSSUBDIR)} {$(LIBTCLVFSSUBDIR)} >> "$(OUT_DIR)\zipper.tcl"
--	@$(TCLSH_NATIVE) "$(OUT_DIR)/zipper.tcl"
-+	$(TCLSH_NATIVE) "$(OUT_DIR)/zipper.tcl"
-+	@dir $(OUT_DIR)
- 
- pkgs:
+@@ -676,7 +679,7 @@ pkgs:
  	@for /d %d in ($(PKGSDIR)\*) do \
  	  @if exist "%~fd\win\makefile.vc" ( \
  	    pushd "%~fd\win" & \
@@ -280,7 +272,7 @@ index 491eff8..1870e97 100644
  	    popd \
  	  )
  
-@@ -692,7 +696,7 @@ install-pkgs:
+@@ -692,7 +695,7 @@ install-pkgs:
  	@for /d %d in ($(PKGSDIR)\*) do \
  	  @if exist "%~fd\win\makefile.vc" ( \
  	    pushd "%~fd\win" & \
@@ -289,7 +281,7 @@ index 491eff8..1870e97 100644
  	    popd \
  	  )
  
-@@ -1049,11 +1053,7 @@ install-binaries:
+@@ -1049,11 +1052,7 @@ install-binaries:
  	@$(CPY) "$(TCLLIB)" "$(BIN_INSTALL_DIR)\"
  !endif
  	@$(CPY) "$(TCLIMPLIB)" "$(LIB_INSTALL_DIR)\"
@@ -301,7 +293,7 @@ index 491eff8..1870e97 100644
  !endif
  !if exist($(TCLSH))
  	@echo Installing $(TCLSHNAME)
-@@ -1073,7 +1073,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1073,7 +1072,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(GENERICDIR)\tclPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMath.h"      "$(INCLUDE_INSTALL_DIR)\"
  	@$(CPY) "$(GENERICDIR)\tclTomMathDecls.h" "$(INCLUDE_INSTALL_DIR)\"
@@ -309,7 +301,7 @@ index 491eff8..1870e97 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing library files to $(SCRIPT_INSTALL_DIR)
  	@if not exist "$(SCRIPT_INSTALL_DIR)" \
-@@ -1087,7 +1086,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
+@@ -1087,7 +1085,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
  	@$(CPY) "$(WIN_DIR)\rules.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\targets.vc"              "$(LIB_INSTALL_DIR)\nmake\"
  	@$(CPY) "$(WIN_DIR)\nmakehlp.c"            "$(LIB_INSTALL_DIR)\nmake\"

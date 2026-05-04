@@ -23,13 +23,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # Cf. https://core.tcl-lang.org/tips/doc/main/tip/477.md
 
     set(OPTS pdbs)
+    set(TCLSH_SUFFIX "")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(OPTS ${OPTS},static)
+        string(APPEND TCLSH_SUFFIX "s")
     endif()
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(OPTS ${OPTS},msvcrt)
     else()
         set(OPTS ${OPTS},nomsvcrt)
+        string(APPEND TCLSH_SUFFIX "x")
     endif()
     
     if("profile" IN_LIST FEATURES)
@@ -45,9 +48,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     cmake_path(NATIVE_PATH CURRENT_HOST_INSTALLED_DIR CURRENT_HOST_INSTALLED_DIR_NATIVE)
     vcpkg_list(SET OPTIONS)
     if(VCPKG_CROSSCOMPILING)
+        file(GLOB HOST_TCLSH "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/bin/tcls90*.exe")
+        cmake_path(NATIVE_PATH HOST_TCLSH HOST_TCLSH_NATIVE)
         vcpkg_list(APPEND OPTIONS
             "NMAKEHLPC=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\tools\\${PORT}\\bin\\nmakehlp.exe"
-            "TCLSH_NATIVE=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\tools\\${PORT}\\bin\\tclsh90.exe"
+            "TCLSH_NATIVE=${HOST_TCLSH_NATIVE}"
         )
     endif()
 
@@ -78,12 +83,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
 
     if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_copy_tools(TOOL_NAMES tclsh90
+        vcpkg_copy_tools(TOOL_NAMES tclsh90${TCLSH_SUFFIX}
             SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin"
         )
     endif()
-    vcpkg_copy_tools(TOOL_NAMES tclsh90
+    vcpkg_copy_tools(TOOL_NAMES tclsh90${TCLSH_SUFFIX}
         DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         AUTO_CLEAN
     )
