@@ -3193,7 +3193,7 @@
       "port-version": 2
     },
     "frei0r": {
-      "baseline": "2.5.4",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "fribidi": {
