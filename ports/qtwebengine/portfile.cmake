@@ -12,6 +12,7 @@ set(${PORT}_PATCHES
       "rpath.diff"
       "include-dir-order.diff"
       "allow-msvc-145.diff"
+      "ctypes-fix.patch"
 )
 
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")

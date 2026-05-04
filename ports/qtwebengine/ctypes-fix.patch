@@ -1,0 +1,34 @@
+--- a/src/3rdparty/chromium/components/resources/protobufs/binary_proto_generator.py	2026-04-14 04:40:38.000000000 +0000
++++ b/src/3rdparty/chromium/components/resources/protobufs/binary_proto_generator.py	2026-04-14 12:35:58.359518761 +0000
+@@ -17,6 +17,31 @@
+ import sys
+ import traceback
+ 
++# Fix: when a virtualenv is created from an embeddable Python distribution and
++# a different Python version is installed system-wide, running with -S (skip
++# site) can put the system Python's DLLs/ directory on sys.path. Loading
++# extension modules (e.g. _ctypes.pyd) from a different Python version causes
++# "DLL load failed" errors. Remove any Python DLLs/ directories from sys.path
++# that do not belong to the current interpreter's home.
++if os.name == 'nt':
++    _exe_dir = os.path.normcase(os.path.dirname(os.path.abspath(sys.executable)))
++    _home_dir = _exe_dir
++    _cfg = os.path.join(_exe_dir, '..', 'pyvenv.cfg')
++    if os.path.isfile(_cfg):
++        for _line in open(_cfg):
++            if _line.startswith('home = '):
++                _home_dir = os.path.normcase(_line.split('=', 1)[1].strip())
++                break
++    _orig_path = sys.path[:]
++    sys.path = [p for p in sys.path
++                if not (os.path.normcase(p).rstrip('\\/ ').endswith('dlls')
++                        and os.path.isabs(p)
++                        and not os.path.normcase(p).startswith(_exe_dir)
++                        and not os.path.normcase(p).startswith(_home_dir))]
++    if sys.path != _orig_path:
++        import importlib
++        importlib.invalidate_caches()
++
+ 
+ class GoogleProtobufModuleImporter:
+   """A custom module importer for importing google.protobuf.
