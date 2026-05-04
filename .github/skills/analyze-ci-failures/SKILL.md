@@ -35,22 +35,43 @@ Fetches build metadata and failure logs via Azure DevOps REST API, cross-referen
 
 ## Workflow
 
-1. **Parse input** — Extract `buildId` or resolve PR URL. See [references/azure-devops-api.md](references/azure-devops-api.md).
-2. **Fetch metadata** — Build info and timeline; find failed jobs.
-3. **Scan step logs (critical)** — For each failed job, find the `"*** Test Modified Ports"` task (`type == "Task"`) and fetch its log via `log.url`. REGRESSION lines are at the **end** after `REGRESSIONS:`. Use this exact PowerShell — do not modify the regex:
+> **OUTPUT RULE**: Write `report.md` as SOON as step-log analysis (Phase 1) completes. Do not wait for artifact downloads. You can update the file later. Your response MUST also contain the complete report content — not a summary.
+
+### Phase 1: Extract failures from step logs (REQUIRED — do first)
+
+1. **Parse input** — Extract `buildId` from Azure DevOps URL. For PR URLs:
+   ```powershell
+   $prNumber = 51515
+   $builds = (Invoke-RestMethod "https://dev.azure.com/vcpkg/public/_apis/build/builds?reasonFilter=pullRequest&repositoryType=GitHub&repositoryId=microsoft/vcpkg&branchName=refs/pull/$prNumber/merge&api-version=7.0").value
+   $buildId = ($builds | Sort-Object -Property id -Descending | Select-Object -First 1).id
+   ```
+   See [references/azure-devops-api.md](references/azure-devops-api.md).
+2. **Fetch metadata** — Build info, timeline, and artifacts list (parallelize these API calls).
+3. **Scan step logs** — For each failed job, find `"*** Test Modified Ports"` task and fetch its log:
    ```powershell
    $logText = Invoke-RestMethod "$($task.log.url)?api-version=7.0"
    $regressions = $logText -split "`n" | Where-Object { $_ -match 'REGRESSION:' }
    ```
-   This captures **all** regression types including:
-   - `failed with BUILD_FAILED` / `FILE_CONFLICTS` / `POST_BUILD_CHECKS_FAILED`
-   - `is marked as fail but one dependency is not supported` (these are baseline-configuration regressions — the baseline entry is stale because a dependency dropped support for that triplet; they must be reported with a recommendation to update the baseline)
-   
-   `FILE_CONFLICTS` only appear in step logs, never in artifacts. **Report every REGRESSION line in the output** — do not filter or skip any.
-4. **Download logs** — `Invoke-WebRequest` for artifact ZIPs (not `web_fetch`). Focus on artifacts named `"failure logs for {triplet}"`. Start with smallest artifacts. Extract ZIPs into `ci-failure-analysis/{scope}/logs/{triplet}/` where `{scope}` is `ci-{buildId}` for scheduled/manual builds or `pr-{prNumber}` for PR builds. Remove ZIPs after extraction.
-5. **Analyze** — For each failing port, read `stdout-{triplet}.log` last lines first. Classify per [references/vcpkg-failure-patterns.md](references/vcpkg-failure-patterns.md).
-6. **Baselines** — Check both `ci.baseline.txt` and `ci.feature.baseline.txt`.
-7. **Report** — Your response **must be the complete report** (not a summary). Save the same content to `ci-failure-analysis/{scope}/report.md`. Format per [references/report-template.md](references/report-template.md). For each port, list every affected triplet individually and use exact failure type from REGRESSION lines (e.g. `BUILD_FAILED`, `FILE_CONFLICTS`).
+   Captures all types: `BUILD_FAILED`, `FILE_CONFLICTS`, `POST_BUILD_CHECKS_FAILED`, `is marked as fail but dependency not supported`. **Report every REGRESSION line.** Also capture 2-3 lines around each error for root cause context.
+4. **PR feature-test logs** — PR builds may NOT have `REGRESSION:` lines. Instead scan for `FAIL:` or `failed with` lines showing per-feature failures. Report each feature failure individually. Dependency ports that fail get their own entry.
+5. **Version validation** — Check `"Validate version files"` task. If failed, scan for `"was not found in versions database"`. Fix: `vcpkg x-add-version`.
+6. **Write report immediately** — Generate and save `report.md` using all step-log data. This ensures output exists even if later steps time out.
+
+### Phase 2: Download logs and enhance (time permitting)
+
+7. **Download logs** — `Invoke-WebRequest` for artifact ZIPs (not `web_fetch`). Only download `"failure logs for {triplet}"` — skip `"file lists"`, `"z azcopy logs"`. Extract into `ci-failure-analysis/{scope}/logs/{triplet}/`. If download fails, still create the directory with a placeholder noting the URL.
+8. **Analyze** — Read `stdout-{triplet}.log` last lines. Classify per [references/vcpkg-failure-patterns.md](references/vcpkg-failure-patterns.md). Update report with additional root cause detail.
+9. **Baselines** — Check both `ci.baseline.txt` and `ci.feature.baseline.txt`.
+
+### Report Requirements
+
+Format per [references/report-template.md](references/report-template.md):
+- Full build URL: `[{buildNumber}](https://dev.azure.com/vcpkg/public/_build/results?buildId={buildId})`
+- For PRs: `[#{prNumber}](https://github.com/microsoft/vcpkg/pull/{prNumber})`
+- List **every** triplet by full name — never "N triplets"
+- Use **exact** failure type keywords, not paraphrases
+- Include error messages verbatim (e.g. `unistd.h`, `${CURRENT_PACKAGES_DIR}/debug/include`)
+- Dependency ports' failures as separate entries
 
 ## Output Structure
 
@@ -73,4 +94,4 @@ ci-failure-analysis/
 - Scan step logs first — `FILE_CONFLICTS` only appear there
 - Check **both** baseline files
 - Never suggest `<=` version constraints or `VCPKG_BUILD_TYPE release`
-- Include full build URL in report header: `[{buildNumber}](https://dev.azure.com/vcpkg/public/_build/results?buildId={buildId})`
+- If artifact download fails, still create `logs/{triplet}/` directory with a placeholder noting the download URL
