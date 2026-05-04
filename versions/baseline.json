@@ -2620,6 +2620,10 @@
       "baseline": "1.3.0",
       "port-version": 0
     },
+    "dtc": {
+      "baseline": "1.7.2",
+      "port-version": 0
+    },
     "dtl": {
       "baseline": "1.21",
       "port-version": 0
