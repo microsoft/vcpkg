@@ -149,6 +149,26 @@ ld: symbol(s) not found for architecture arm64
 - **Static vs. dynamic mismatch**: Port links against static lib but needs dynamic (or vice versa)
 - **Missing dependency in vcpkg.json**: Library calls into another library not declared as a dependency
 - **Symbol visibility**: On Linux/macOS, symbols not exported with `__attribute__((visibility("default")))`
+- **Debug/release runtime mismatch (MSVC-only)**: `error LNK2038: mismatch detected for 'RuntimeLibrary'` or `'_ITERATOR_DEBUG_LEVEL'` — objects compiled with debug CRT (`MDd`/`MTd`) are linked against objects compiled with release CRT (`MD`/`MT`). Common when a port builds host tools (code generators) as part of the main build and mixes configurations. Fix by restricting tool builds to release via `OPTIONS_RELEASE` in `vcpkg_cmake_configure()`.
+
+### Debug/Release CRT Mismatch (MSVC-only)
+```
+tl_writer_cpp.lib(tl_writer_td.cpp.obj) : error LNK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL': value '2' doesn't match value '0' in generate_mtproto.cpp.obj
+tl_writer_cpp.lib(tl_writer_td.cpp.obj) : error LNK2038: mismatch detected for 'RuntimeLibrary': value 'MDd_DynamicDebug' doesn't match value 'MD_DynamicRelease' in generate_mtproto.cpp.obj
+```
+
+**Diagnostic clue**: Fails on all Windows triplets **except** release-only (`x64-windows-release`). Passes on Linux/macOS/Android because GCC/Clang don't enforce debug/release ABI checks at link time.
+
+**Fix**: Use `OPTIONS_RELEASE` / `OPTIONS_DEBUG` in `vcpkg_cmake_configure()` to build host tools only in release configuration:
+```cmake
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS_RELEASE
+        -DBUILD_TOOLS=ON
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
+)
+```
 
 ---
 
@@ -309,22 +329,44 @@ error: File conflicts:
 
 ## Category 12: Missing From Baseline (Unexpected Pass)
 
-**Symptom**: A port that is listed as `fail` in `ci.baseline.txt` now passes. This is reported as a regression only in the step log:
+**Symptom**: A port that is listed as `fail` in `ci.baseline.txt` or `ci.feature.baseline.txt` now passes. There are two variants:
 
+### 12a: `ci.baseline.txt` unexpected pass
+
+Reported as a regression in the step log:
 ```
 REGRESSION: portname:x64-windows failed with MISSING_FROM_BASELINE.
 ```
 
 **Triage action**: Remove the `portname=fail` entry from `scripts/ci.baseline.txt` — the port is fixed.
 
-The file `scripts/ci.baseline.txt` in the repository root controls which ports are expected to fail.
+### 12b: `ci.feature.baseline.txt` unexpected pass
 
-**Format:**
+**Not** reported as a REGRESSION line. Instead, the job fails with exit code 1 and the step log contains:
+```
+ci.feature.baseline.txt:NNN:1: error: portname[core]:triplet passed but was marked expected to fail
+note: consider adding `portname=fail`, `portname:triplet=fail`, ... or equivalent skips
+```
+
+**Key diagnostic clue**: A job fails with exit code 1, no REGRESSION lines are found, no failure log artifact exists for the modified port, but the step log shows "passed but was marked expected to fail".
+
+**Triage action**: Remove the stale entry from `scripts/ci.feature.baseline.txt`.
+
+### Baseline files
+
+**`scripts/ci.baseline.txt`** — per-port expected failures:
 ```
 # Comment lines start with #
 portname=fail       # will skip in PR CI, attempt in scheduled
 portname=skip       # never built in CI
 portname=pass       # (same as not listed) must succeed
+```
+
+**`scripts/ci.feature.baseline.txt`** — per-feature/triplet expected failures:
+```
+portname(condition)=fail     # e.g., dimcli(windows & static)=fail
+portname[feature]:triplet=feature-fails
+portname[core,feat1,feat2]:triplet=combination-fails
 ```
 
 **Triplets covered by CI baseline:**
@@ -369,6 +411,67 @@ CMake Error at scripts/cmake/vcpkg_install_copyright.cmake:21 (file):
 
 ---
 
+## Category 14: Android NDK Macro Collisions
+
+**Symptom**: A port fails to compile only on Android triplets with cryptic syntax errors like `error: expected ')'` or `error: expected ';'` in code that looks syntactically correct.
+
+```
+include/mylib.h:324:17: error: expected ')'
+  324 |   Scalar(double si_value);
+      |                 ^
+/android-ndk-r29/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/asm-generic/siginfo.h:101:27:
+note: expanded from macro 'si_value'
+  101 | #define si_value _sifields._rt._sigval
+```
+
+**Root cause**: The Android NDK's kernel headers (`<asm-generic/siginfo.h>`) define POSIX signal-related names as preprocessor macros. When library code uses these names as parameter names, member names, or variable names, the macro expansion causes syntax errors.
+
+**Known problematic macros** (from Android NDK `<siginfo.h>` / `<asm-generic/siginfo.h>`):
+- `si_value` → `_sifields._rt._sigval`
+- `si_pid` → `_sifields._kill._pid`
+- `si_uid` → `_sifields._kill._uid`
+- `si_addr` → `_sifields._sigfault._addr`
+- `si_band` → `_sifields._sigpoll._band`
+
+**Diagnostic clue**: Fails on all Android triplets (x64-android, arm64-android, arm-neon-android) but passes on Linux, Windows, and macOS. The error message contains a `note: expanded from macro` pointing to an NDK system header.
+
+**Fixes:**
+1. **Upstream (preferred)**: Rename the conflicting identifier in the library source
+2. **Patch**: Add `#undef si_value` (or equivalent) before the affected code
+3. **Baseline**: Add `portname:x64-android=fail` etc. if waiting for upstream fix
+
+---
+
+## Category 15: C++26/libc++ Transitive Include Breakage
+
+**Symptom**: A port fails to compile on macOS (Apple Clang) and Android (NDK Clang) with `error: no member named 'X' in namespace 'std'` for a well-known standard library function, but passes on Windows (MSVC) and Linux (GCC).
+
+```
+libs/mylib/header.h:1264:18: error: no member named 'upper_bound' in namespace 'std';
+    did you mean 'std::ranges::upper_bound'?
+```
+
+**Root cause**: The library compiles with `-std=c++2c` (C++26) or `-std=c++23`. In these modes, Clang/libc++ has removed transitive standard library includes that were previously available. A header that uses `std::upper_bound` without `#include <algorithm>` may have worked in C++20 through transitive inclusion but breaks in C++23/C++26.
+
+**Diagnostic clue**:
+- Compile command shows `-std=c++2c` or `-std=c++23`
+- Fails on Clang/libc++ platforms (macOS, Android) but passes on MSVC and GCC/libstdc++
+- The suggested replacement often shows a `std::ranges::` version of the function
+- Error is "no member named" for a common standard library function
+
+**Common missing includes:**
+- `std::upper_bound`, `std::lower_bound`, `std::sort` → `#include <algorithm>`
+- `std::string` → `#include <string>`
+- `std::vector` → `#include <vector>`
+- `std::unique_ptr` → `#include <memory>`
+- `std::cout` → `#include <iostream>`
+
+**Fixes:**
+1. **Upstream (preferred)**: Add the missing `#include` directive — this is always the correct fix
+2. **Patch**: Add a vcpkg patch that inserts the missing include
+
+---
+
 ## Regression Severity Levels
 
 Use these levels when reporting failures:
@@ -380,6 +483,77 @@ Use these levels when reporting failures:
 | 🟡 **Medium** | Single port fails on 1–2 triplets | Fix or add to baseline |
 | 🟢 **Low** | Port already in baseline, or transient failure | No immediate action |
 | ℹ️ **Info** | Formatting/version file issues | Easy to fix with automated tools |
+
+---
+
+## Category 16: Version Validation Failures
+
+**Symptom**: The "Validate version files" task fails (not a port build failure). This can cause the x86-windows job (or whichever runs validation first) to fail before any ports are tested.
+
+```
+ports/arrow-adbc/vcpkg.json: error: arrow-adbc@22 was not found in versions database
+versions/baseline.json: error: arrow-adbc is assigned 16, but the local port is 22
+note: run 'vcpkg x-add-version arrow-adbc' to add the new port version
+```
+
+**Root cause**: The PR updated the port version in `vcpkg.json` but didn't regenerate the version database files (`versions/{initial}/{portname}.json` and `versions/baseline.json`).
+
+**Diagnostic clue**: The failed task is "Validate version files" (not "Test Modified Ports"). The GitHub Actions "Check" job also fails for the same reason. No failure log artifacts are produced for this type of failure.
+
+**Fix**: Run `vcpkg x-add-version {portname}` and commit the updated version files.
+
+---
+
+## Category 17: Missing Build Tool in CI Environment
+
+**Symptom**: A port or feature requires an external tool (Go, Rust, Java, etc.) that isn't installed or isn't properly configured on the CI agent.
+
+### Go not found (macOS, Android)
+```
+Could not find GO_BIN using the following names: go
+```
+
+### Go permission denied (Linux)
+```
+go: could not create module cache: mkdir /go: permission denied
+```
+
+### Java not found
+```
+Could not find a Java Runtime Environment (JRE)
+```
+
+**Diagnostic clue**: Core port builds pass on all triplets, but specific features requiring the external tool fail. The failure may appear different on different platforms (tool not found vs. permission denied) but the root cause is the same: the tool isn't usable in CI.
+
+**Common occurrences:**
+- Go-based features (e.g., `arrow-adbc[flightsql]`, `arrow-adbc[snowflake]`, `arrow-adbc[bigquery]`)
+- Java-based features (e.g., `zookeeper`)
+- Rust components (requires `cargo` in PATH)
+
+**Fix**: Mark the affected features as expected failures in `scripts/ci.feature.baseline.txt` for all triplets where the tool isn't available. Use platform-wide entries when possible:
+```
+portname[feature]=feature-fails  # Go/Java/Rust required but not available in CI
+```
+
+---
+
+## Category 18: Feature Baseline Coverage Gaps
+
+**Symptom**: Feature tests fail on multiple triplets, but `ci.feature.baseline.txt` only has entries for a subset of them. The uncovered triplets cause the job to fail with exit code 1.
+
+**Example**: A feature baseline has:
+```
+arrow-adbc[bigquery]:arm64-linux=feature-fails
+arrow-adbc[flightsql]:arm64-linux=feature-fails
+```
+But the same features also fail on `x64-linux`, `arm64-osx`, and Android triplets — which have no baseline entries.
+
+**Diagnostic clue**: Multiple jobs fail with no REGRESSION lines. The step logs show feature test BUILD_FAILEDs on triplets not covered by `ci.feature.baseline.txt`. Compare the set of failing triplets against the baseline entries.
+
+**Fix**: Expand the feature baseline entries to cover all affected triplets. If the failure is platform-wide (e.g., tool not available on any non-Windows CI agent), use entries without triplet qualifiers:
+```
+portname[feature]=feature-fails  # Applies to all triplets
+```
 
 ---
 
