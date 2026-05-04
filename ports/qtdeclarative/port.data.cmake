@@ -1,3 +1,3 @@
-set(qtdeclarative_HASH "93b76ea0c9a804042335e6c476fc1b9a987ea29b3c5c18fbda2266cba14c7c9c7f0c91ac5de23eeb06748dfa3009d91ea72e7b7df7c0940273cdcf3ca7638d98")
-set(qtdeclarative_URL "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/qtdeclarative-everywhere-src-6.10.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.2/submodules/qtdeclarative-everywhere-src-6.10.2.tar.xz")
-set(qtdeclarative_FILENAME "qtdeclarative-everywhere-src-6.10.2.tar.xz")
+set(qtdeclarative_HASH "187a525b73595e7c4d89c98be657df4f480114957649813aa9ecd3fba23f56f20c8804f2ab507d83a5fb6120a2c6c36751fe5c80f43f9feb6c3479a733fb6684")
+set(qtdeclarative_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtdeclarative-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtdeclarative-everywhere-src-6.10.3.tar.xz")
+set(qtdeclarative_FILENAME "qtdeclarative-everywhere-src-6.10.3.tar.xz")
