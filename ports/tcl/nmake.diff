@@ -227,7 +227,7 @@ index 491eff8..1870e97 100644
 --- a/win/makefile.vc
 +++ b/win/makefile.vc
 @@ -1,3 +1,4 @@
-+PATH=$(PATH);$(HOST_TOOLS_DIR:/=\);$(MAKEDIR)
++PATH=$(PATH);$(HOST_DLL_DIR);$(MAKEDIR)
  #------------------------------------------------------------- -*- makefile -*-
  #
  #	Microsoft Visual C++ makefile for building Tcl with nmake
