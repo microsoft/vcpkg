@@ -1185,7 +1185,6 @@ qt5compat:arm64-linux=cascade
 qt5compat[iconv](!(linux&arm64))=feature-fails # requires qtbase without icu
 qtapplicationmanager:arm64-linux=cascade
 qtbase[cups](linux)=feature-fails  # requires CUPS system libs
-qtbase[dbus]:arm64-linux=cascade
 qtbase[dbus](android)=cascade
 qtbase[egl]:arm64-linux=feature-fails
 qtbase[gles2]:arm64-linux=feature-fails
