@@ -11,7 +11,7 @@ index b501f08..0932ad5 100644
 +			set (EXTERNAL_MPEG_LIBS "-lmp3lame-static -lmpghip-static")
 +		endif()
 +		if(CMAKE_STATIC_LIBRARY_PREFIX STREQUAL "")
-+			string (REPLACE "-lmp3lame" "-llibmp3lame" EXTERNAL_MPEG_LIBS "${EXTERNAL_MPEG_LIBS}")
++			string (REPLACE "-lmp" "-llibmp" EXTERNAL_MPEG_LIBS "${EXTERNAL_MPEG_LIBS}")
 +		endif()
  	endif ()
  
