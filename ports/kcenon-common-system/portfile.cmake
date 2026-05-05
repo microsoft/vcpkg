@@ -1,5 +1,4 @@
-# kcenon-common-system portfile
-# High-performance C++20 foundation library (header-only)
+set(VCPKG_BUILD_TYPE release) # header only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -32,10 +31,6 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/common_system
 )
 
-# Header-only library - remove all debug content and empty lib directories
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib") # empty directory
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
