@@ -2009,7 +2009,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.43.1",
+      "baseline": "0.43.2",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2594,7 +2594,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 0
+      "port-version": 1
     },
     "dpp": {
       "baseline": "10.1.4",
@@ -2997,11 +2997,11 @@
       "port-version": 0
     },
     "ffmpeg": {
-      "baseline": "8.1",
-      "port-version": 4
+      "baseline": "8.1.1",
+      "port-version": 0
     },
     "ffmpeg-bin2c": {
-      "baseline": "8.1",
+      "baseline": "8.1.1",
       "port-version": 0
     },
     "ffnvcodec": {
@@ -4513,7 +4513,7 @@
       "port-version": 0
     },
     "knncolle-hnsw": {
-      "baseline": "0.3.0",
+      "baseline": "0.3.1",
       "port-version": 0
     },
     "knncolle-kmknn": {
@@ -5173,7 +5173,7 @@
       "port-version": 0
     },
     "liblo": {
-      "baseline": "0.34",
+      "baseline": "0.35",
       "port-version": 0
     },
     "liblrc": {
@@ -5594,7 +5594,7 @@
     },
     "libsndfile": {
       "baseline": "1.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
@@ -6638,7 +6638,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 16
+      "port-version": 17
     },
     "mpark-patterns": {
       "baseline": "2019-10-03",
@@ -7693,7 +7693,7 @@
       "port-version": 1
     },
     "picobench": {
-      "baseline": "2.8.0",
+      "baseline": "2.9.0",
       "port-version": 0
     },
     "picojson": {
@@ -9033,8 +9033,8 @@
       "port-version": 11
     },
     "sdl2-image": {
-      "baseline": "2.8.8",
-      "port-version": 2
+      "baseline": "2.8.12",
+      "port-version": 0
     },
     "sdl2-mixer": {
       "baseline": "2.8.1",
@@ -9066,7 +9066,7 @@
     },
     "sdl3-mixer": {
       "baseline": "3.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl3-shadercross": {
       "baseline": "3.0.0-preview2",
@@ -9105,7 +9105,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.13.8",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9297,7 +9297,7 @@
       "port-version": 0
     },
     "slick-net": {
-      "baseline": "2.0.1",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "slick-object-pool": {
