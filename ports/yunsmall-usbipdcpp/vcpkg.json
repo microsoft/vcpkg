@@ -1,6 +1,6 @@
 {
-  "name": "usbipdcpp",
-  "version": "1.0.1",
+  "name": "yunsmall-usbipdcpp",
+  "version": "1.0.2",
   "description": "A C++ library for creating usbip servers",
   "homepage": "https://github.com/yunsmall/usbipdcpp",
   "license": "Apache-2.0",
@@ -20,8 +20,8 @@
     "busywait": {
       "description": "Enable busy-wait mode for lower latency"
     },
-    "libusb": {
-      "description": "Build libusb-based server components for physical USB device forwarding",
+    "physical-usb-forwarding": {
+      "description": "Build components for forwarding physical USB devices",
       "dependencies": [
         "libusb"
       ]
