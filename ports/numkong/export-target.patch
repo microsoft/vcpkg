@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dfbc4a2..92c84aa 100644
+index b7c15176..24bfe6c3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -225,7 +225,7 @@ target_sources(numkong INTERFACE ${NK_SOURCES})
- target_include_directories(numkong INTERFACE "${PROJECT_SOURCE_DIR}/include")
+@@ -290,7 +290,7 @@ if (MSVC)
+ endif ()
  
  # Enable Clang C modules for incremental compilation
 -if (CMAKE_C_COMPILER_ID MATCHES "Clang")
@@ -11,8 +11,17 @@ index dfbc4a2..92c84aa 100644
      target_compile_options(
          numkong INTERFACE $<$<COMPILE_LANGUAGE:C>:-fmodules> $<$<COMPILE_LANGUAGE:C>:-fimplicit-module-maps>
                            $<$<COMPILE_LANGUAGE:C>:-fmodules-cache-path=${CMAKE_BINARY_DIR}/module-cache>
-@@ -606,7 +606,7 @@ if (NK_BUILD_SHARED)
-         endif ()
+@@ -625,7 +625,7 @@ if (NK_BUILD_SHARED)
+         )
+ 
+         add_executable(nk_shared ${NK_SOURCES} "${CMAKE_BINARY_DIR}/emscripten_stub.c")
+-        target_include_directories(nk_shared PUBLIC "${PROJECT_SOURCE_DIR}/include")
++        target_include_directories(nk_shared PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+ 
+         if (NK_WASM64_)
+             set_target_properties(
+@@ -677,7 +677,7 @@ if (NK_BUILD_SHARED)
+         set_target_properties(nk_shared PROPERTIES ENABLE_EXPORTS ON)
      else ()
          add_library(nk_shared SHARED ${NK_SOURCES})
 -        target_include_directories(nk_shared PUBLIC "${PROJECT_SOURCE_DIR}/include")
@@ -20,7 +29,7 @@ index dfbc4a2..92c84aa 100644
          set_target_properties(nk_shared PROPERTIES OUTPUT_NAME numkong)
  
          # Hide all symbols by default; only NK_DYNAMIC-annotated API functions are exported.
-@@ -658,15 +658,21 @@ if (NK_BUILD_SHARED)
+@@ -735,15 +735,21 @@ if (NK_BUILD_SHARED)
  
      install(
          TARGETS nk_shared
@@ -45,8 +54,8 @@ index dfbc4a2..92c84aa 100644
      )
  endif ()
  
-@@ -692,5 +698,4 @@ if (NK_BUILD_SHARED_TEST)
-     add_test(NAME nk_shared_test COMMAND nk_shared_test)
+@@ -827,5 +833,4 @@ if (NK_BUILD_CUDA_TEST)
+     add_test(NAME nk_cuda_test COMMAND nk_cuda_test)
  endif ()
  
 -install(DIRECTORY include/ DESTINATION include)

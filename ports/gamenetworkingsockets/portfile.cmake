@@ -3,12 +3,9 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/GameNetworkingSockets
-    REF 505c697d0abef5da2ff3be35aa4ea3687597c3e9 # v1.4.1
-    SHA512 3e4b4da138f2b356169e6504aa899c9eca4fba5b5fcaed2a0ae8a2f5828976dd00af9f3262c75bd6d820300da87ebe32da152fecddc278a651f3b33eb59142df
+    REF fa489fd2cb0fc86ef2503e330935d3eb03a6a064 # v1.5.1
+    SHA512 7a69444b1951c46c0f74fce1566279257260ee3d382bbec4f43d68818ed467639af32235bb06b3779b4f8b3ce1ef451e449e136d1a9e9493688149eac88e07c9
     HEAD_REF master
-    PATCHES
-        fix-depend-protobuf.patch
-        protobuf-6.patch
 )
 
 set(CRYPTO_BACKEND OpenSSL)

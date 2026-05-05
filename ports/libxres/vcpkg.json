@@ -1,12 +1,10 @@
 {
   "name": "libxres",
-  "version": "1.2.1",
-  "port-version": 1,
+  "version": "1.2.3",
   "description": "Xlib-based X-Resource extension client library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxres",
   "license": null,
   "dependencies": [
-    "bzip2",
     "libx11",
     "libxext",
     {

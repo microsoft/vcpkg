@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 8e5380ad9772eb28bd8767703bfee05ca60ef77b491c7f695b666d0fbda626365084cca4b48cabc15225088ad2ce88f45d58dff8ee80c102d3e4847f1532a851
+    SHA512 81630bb287adfd200ee7845a9d0c304def6612aa357dd5b5ca7286ff7b3022b1d24c511fc1d88109cba0747c33693e72f687d4665f1a674652c87b5323509b4b
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -19,6 +19,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        av1         WITH_GFX_AV1
         client      WITH_CLIENT
         ffmpeg      WITH_DSP_FFMPEG
         ffmpeg      WITH_FFMPEG

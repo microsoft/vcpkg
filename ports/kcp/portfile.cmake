@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skywind3000/kcp
-    REF 38e0c9366e4a72c749ff0bcdf911d1fe9bdfe9f5
-    SHA512 1a05a692719f7f7bfa2e20df81c68af991bd01fe7236ab637a10644abfed425b9f46fd9ad399b8edca152d7bb617c37533b183bda2cf4a0cc1c3ce47031ba37f
+    REF 8004f7eba5d1bf33f0691eef5f887f2cd3140cb5
+    SHA512 5170c1febc09482e1d032cf5aac5bd5cce706e19b58c6a7eddd1c0082895d8b932f5bdf04d47af1994408c4e8cfc37652e11c7d3f7e5addac88afc42764b06cf
     HEAD_REF master
 )
 

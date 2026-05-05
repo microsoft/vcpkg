@@ -1,0 +1,41 @@
+{
+  "name": "kdbusaddons",
+  "version": "6.25.0",
+  "port-version": 1,
+  "description": "Convenience classes for D-Bus",
+  "homepage": "https://invent.kde.org/frameworks/kdbusaddons",
+  "documentation": "https://api.kde.org/kdbusaddons-index.html",
+  "supports": "!android",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "translations": {
+      "description": "Install translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
