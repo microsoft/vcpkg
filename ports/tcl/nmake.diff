@@ -310,7 +310,7 @@ index 491eff8..5ddaa22 100644
  !if !$(TCL_EMBED_SCRIPTS)
  	@echo Installing package cookiejar $(PKG_COOKIEJAR_VER)
 diff --git a/win/rules.vc b/win/rules.vc
-index f709fd8..acb5712 100644
+index f709fd8..49482d0 100644
 --- a/win/rules.vc
 +++ b/win/rules.vc
 @@ -551,11 +551,15 @@ NMAKEHLPC = $(_TCLDIR)\win\nmakehlp.c
@@ -326,8 +326,8 @@ index f709fd8..acb5712 100644
  !endif
  !else
 -!if [copy $(NMAKEHLPC:nmakehlp.c=x86_64-w64-mingw32-nmakehlp.exe) nmakehlp.exe >NUL]
-+!message Copying $(NMAKEHLPC:/=\) to $(MAKEDIR)
-+!if [copy $(NMAKEHLPC:/=\) $(MAKEDIR)\nmakehlp.exe >NUL]
++!message Copying $(NMAKEHLPC) to $(MAKEDIR)
++!if [copy $(NMAKEHLPC) $(MAKEDIR)\nmakehlp.exe >NUL]
  !endif
  !endif
  

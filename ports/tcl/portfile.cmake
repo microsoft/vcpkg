@@ -10,7 +10,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         dependencies.diff
         nmake.diff
 )
-file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.c" "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/*.h")
+file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/sqlite3/*.c" "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/sqlite3/*.h")
 file(GLOB precompiled_tools "${SOURCE_PATH}/win/*.exe" "${SOURCE_PATH}/pkgs/*/win/*.exe")
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/compat/zlib"
@@ -71,14 +71,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         OPTIONS_DEBUG
             OPTS=${OPTS},symbols
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}\\tools\\${PORT}\\debug\\lib\\tcl9.0"
+            "SQLITE3_LIBS=${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/tommath.lib"
-            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/${ZLIB_BASENAME}d.lib ${CURRENT_INSTALLED_DIR}/debug/lib/minizip.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/debug/lib/${ZLIB_BASENAME}d.lib"
             "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR_NATIVE}\\debug\\bin"
         OPTIONS_RELEASE
             OPTS=${OPTS}
             "SCRIPT_INSTALL_DIR=${CURRENT_PACKAGES_DIR}\\tools\\${PORT}\\lib\\tcl9.0"
+            "SQLITE3_LIBS=${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib"
             "TOMMATHOBJS=${CURRENT_INSTALLED_DIR}/lib/tommath.lib"
-            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/${ZLIB_BASENAME}.lib ${CURRENT_INSTALLED_DIR}/lib/minizip.lib"
+            "ZLIBOBJS=${CURRENT_INSTALLED_DIR}/lib/${ZLIB_BASENAME}.lib"
             "HOST_DLL_DIR=${CURRENT_HOST_INSTALLED_DIR}\\bin"
     )
 
@@ -139,7 +141,18 @@ else()
     file(GLOB_RECURSE config_scripts "${CURRENT_PACKAGES_DIR}/lib/*Config.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/*Config.sh")
     file(REMOVE ${config_scripts})
 
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/debug/share"
+        "${CURRENT_PACKAGES_DIR}/share/man1"
+        "${CURRENT_PACKAGES_DIR}/share/man3"
+        "${CURRENT_PACKAGES_DIR}/share/mann"
+    )
 endif()
-    
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.terms")
+
+file(GLOB pkgs_license_files RELATIVE "${SOURCE_PATH}/pkgs" "${SOURCE_PATH}/pkgs/*/license.terms")
+foreach(path IN LISTS pkgs_license_files)
+    string(REPLACE "/" " " filename "${path}")
+    file(COPY_FILE "${SOURCE_PATH}/pkgs/${path}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${filename}")
+    string(REPLACE "${path}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${filename}" pkgs_license_files "${pkgs_license_files}")
+endforeach()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.terms" ${pkgs_license_files})
