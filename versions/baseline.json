@@ -10573,7 +10573,7 @@
       "port-version": 0
     },
     "vincentlaucsb-csv-parser": {
-      "baseline": "4.0.0",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "visit-struct": {
