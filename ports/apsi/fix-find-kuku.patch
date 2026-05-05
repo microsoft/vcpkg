@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 55e2d77..8fd7e41 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -133,7 +133,7 @@ if(NOT APSI_USE_CXX17 AND SEAL_USE_CXX17)
+ endif()
+ 
+ # Microsoft Kuku
+-find_package(Kuku 2.1 QUIET REQUIRED)
++find_package(Kuku QUIET REQUIRED)
+ if(NOT Kuku_FOUND)
+     message(FATAL_ERROR "Microsoft Kuku: not found")
+ else()

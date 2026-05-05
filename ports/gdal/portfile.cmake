@@ -1,24 +1,17 @@
-vcpkg_download_distfile(FIX_UPSTREAM_0ad9529
-    URLS https://github.com/OSGeo/gdal/commit/0ad9529d5fd5e03880147221d56bfee08383d7dc.patch?full_index=1
-    SHA512 0a022e350d9a1a4f0a218bbfbc09dca2e521e42e0af57f8e4797c74b9d96d777f73807b86fa04606c7d2d67e5a75fc0975d9948e2d5e0fdb1ce5a9ea587119c3
-    FILENAME gdal-0ad9529d5fd5e03880147221d56bfee08383d7dc.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 48b74e9446e48e3a16e0c5cdf6ee137aeb343fe431951fc635debe45ed6ac575d25ed453e50832ff7ced00d1c2f6fb716f55272fe347f53647aae4a721cf02f1
+    SHA512 3b915c38cc7c9eb139df9335a90a2f6fd123c54e19ecb1f22670400eac76e317c5334f95dff5875c9c3fde8a0ef0f7aea86fa58ad42afaee823a46c6616e9c17
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
-        fix-gdal-target-interfaces.patch
-        "${FIX_UPSTREAM_0ad9529}"
         iconv.diff
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
 )
+
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -169,7 +162,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/bin/gdal-config"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config"
+)
 
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
 if(NOT bin_files)

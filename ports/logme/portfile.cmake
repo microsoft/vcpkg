@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO efmsoft/logme
   REF "v${VERSION}"
-  SHA512 f3bfead1357d917d03a23b7eae318f49a65ff401e7cdb971adee7938c2dae0ab6fabea66bbf71a6832aacd057f5abd56868e30a4c0333ccf78a4d67aefbca050
+  SHA512 4debf121f997bddbd62e749b7cbc237142d9fd052cb7b2099d359cfb563cd43458ad452135dbe9eba1d37b8b139cf2f793ab61b379382b7e54a1a651fb50e793
   HEAD_REF master
 )
 

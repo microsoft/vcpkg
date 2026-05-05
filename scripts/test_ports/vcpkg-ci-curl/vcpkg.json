@@ -52,7 +52,6 @@
             "http2",
             "httpsrr",
             "idn",
-            "rtmp",
             "ssh",
             "ssls-export"
           ]

@@ -1,3 +1,5 @@
+string(REGEX REPLACE "^([0-9]+\\.[0-9]+)\\..*$" "\\1" VERSION_MAJOR_MINOR "${VERSION}")
+
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
@@ -6,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
     REF "v${VERSION}"
-    SHA512 8e97e8106ae2eeceee743634b0db1936b3a3a1381ceceb5646f6de8008d2147cdc9b847219dafd7d8b8f7457e63c7463f155694e8a192d13531171b468e8f365
+    SHA512 6479ece3bb7e641eea82ebe08abbd4192090fafd39926d694c97d5ea798c6c00bec24bdf2e17cc8b04eb12108203da0ffec671c680166a9f0c5c1317aa01685b
     HEAD_REF main
     PATCHES
         shared-zstd.patch
@@ -41,7 +43,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-4.1)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-${VERSION_MAJOR_MINOR})
 
 # provides pkgconfig files only on UNIX
 if(NOT VCPKG_TARGET_IS_WINDOWS)
