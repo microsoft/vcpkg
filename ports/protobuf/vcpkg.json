@@ -21,12 +21,10 @@
       "host": true
     }
   ],
-  "default-features": [
-    "libprotoc"
-  ],
   "features": {
     "libprotoc": {
-      "description": "Build the libprotoc compiler library for target builds."
+      "description": "Build the libprotoc compiler library for target builds.",
+      "supports": "!uwp"
     },
     "zlib": {
       "description": "ZLib based features like Gzip streams",
