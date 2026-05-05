@@ -17,13 +17,5 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ],
-  "default-features": [
-    "asm"
-  ],
-  "features": {
-    "asm": {
-      "description": "Enable assembly optimizations"
-    }
-  }
+  ]
 }
