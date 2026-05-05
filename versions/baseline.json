@@ -1709,7 +1709,7 @@
       "port-version": 5
     },
     "chenjunfu2-nbt-cpp": {
-      "baseline": "2.1.0",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "chipmunk": {
