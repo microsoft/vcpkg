@@ -1,0 +1,59 @@
+diff --git a/libass/meson.build b/libass/meson.build
+index 5251c2f..a3429bb 100644
+--- a/libass/meson.build
++++ b/libass/meson.build
+@@ -70,6 +70,28 @@ if enable_asm
+ 
+     if asm_is_nasm
+         libass_src += asm_sources
++    elif asm_is_clang
++        clang = find_program('clang')
++        foreach asm_source : asm_sources
++            asm_output = fs.stem(asm_source.full_path()) + '.obj'
++            libass_src += custom_target(
++                asm_output,
++                input: asm_source,
++                output: asm_output,
++                depends: config_h,
++                command: [
++                    clang,
++                ] + asm_clang_args + [
++                    '-I' + meson.project_build_root(),
++                    '-I' + meson.current_source_dir(),
++                ] + asm_args + [
++                    '-c',
++                    '@INPUT@',
++                    '-o',
++                    '@OUTPUT@',
++                ],
++            )
++        endforeach
+     else
+         asm_lib = static_library(
+             'libass_asm',
+diff --git a/meson.build b/meson.build
+index 4b1c24e..b82233e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -207,7 +207,9 @@ endif
+ enable_asm = false
+ # used in libass/meson.build
+ asm_is_nasm = false
++asm_is_clang = false
+ asm_args = []
++asm_clang_args = []
+ 
+ # ASM architecture variables
+ asm_option = get_option('asm')
+@@ -276,6 +278,10 @@ if not asm_option.disabled()
+         enable_asm = true
+         conf.set('ARCH_AARCH64', 1)
+         if host_system == 'darwin'
+             asm_args += '-DPREFIX'
++        elif host_system == 'windows' and cc.get_argument_syntax() == 'msvc' and cc.get_id() != 'clang-cl'
++            # MSVC cannot compile GNU-style AArch64 .S sources.
++            asm_is_clang = true
++            asm_clang_args += '--target=arm64-pc-windows-msvc'
+         endif
+     else
+         warning(
