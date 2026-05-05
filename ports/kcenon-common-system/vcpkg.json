@@ -4,7 +4,7 @@
   "description": "High-performance C++20 foundation library providing Result<T> pattern, interfaces, and common utilities",
   "homepage": "https://github.com/kcenon/common_system",
   "license": "BSD-3-Clause",
-  "supports": "!(uwp | xbox)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
