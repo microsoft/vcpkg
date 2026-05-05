@@ -1,4 +1,0 @@
-minecraft-server-status is header-only and can be used from CMake via:
-
-  find_path(MINECRAFT_SERVER_STATUS_INCLUDE_DIR "minecraft_server_status/minecraft_server_status.hpp")
-  target_include_directories(main PRIVATE "${MINECRAFT_SERVER_STATUS_INCLUDE_DIR}")
