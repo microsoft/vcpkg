@@ -1,6 +1,6 @@
 {
   "name": "usearch",
-  "version": "2.25.1",
+  "version": "2.25.2",
   "description": "Fastest Search & Clustering engine × for Vectors & Strings",
   "homepage": "https://github.com/unum-cloud/usearch",
   "license": "Apache-2.0",

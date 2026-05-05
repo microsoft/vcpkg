@@ -11,7 +11,9 @@ vcpkg_from_github(
         smid.patch
         python.patch
         fix_dep.patch
+        fix_openexr.patch
         fix_apple.patch
+        fix_epoxy.patch
         fix_windows.patch
         dynamic-internal-libs.patch
         gl.patch
@@ -37,6 +39,7 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DVCPKG_CURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}"
         -DPKG_CONFIG_USE_STATIC_LIBS=ON
         -DENABLE_MSYS2=OFF
         -DMSYS2_USE_UPSTREAM_PACKAGES=OFF
