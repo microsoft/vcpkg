@@ -1,9 +1,10 @@
 {
   "name": "kf5texteditor",
-  "version": "5.98.0",
-  "port-version": 2,
+  "version": "5.116.0",
+  "port-version": 1,
   "description": "Full text editor component",
-  "homepage": "https://api.kde.org/frameworks/ktexteditor/html/",
+  "homepage": "https://invent.kde.org/frameworks/ktexteditor",
+  "documentation": "https://api.kde.org/ktexteditor-index.html",
   "dependencies": [
     "ecm",
     {
@@ -22,6 +23,10 @@
     "kf5parts",
     "kf5sonnet",
     "kf5syntaxhighlighting",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

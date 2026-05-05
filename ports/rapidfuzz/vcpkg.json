@@ -1,17 +1,10 @@
 {
   "name": "rapidfuzz",
-  "version": "3.3.3",
+  "version-string": "deprecated",
   "description": "Rapid fuzzy string matching library for C++ using the Levenshtein Distance.",
   "homepage": "https://github.com/maxbachmann/rapidfuzz-cpp",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
+    "rapidfuzz-cpp"
   ]
 }

@@ -52,7 +52,6 @@
             "http2",
             "httpsrr",
             "idn",
-            "rtmp",
             "ssh",
             "ssls-export"
           ]
@@ -72,7 +71,7 @@
             "ldap",
             "tool"
           ],
-          "platform": "!android & !uwp"
+          "platform": "!android & !uwp & !arm"
         }
       ]
     },
@@ -97,7 +96,7 @@
           "features": [
             "gssapi"
           ],
-          "platform": "linux | osx"
+          "platform": "(linux | osx) & !arm"
         },
         {
           "name": "curl",

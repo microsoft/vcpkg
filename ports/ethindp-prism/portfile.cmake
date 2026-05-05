@@ -1,0 +1,35 @@
+if(EMSCRIPTEN)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO ethindp/prism
+  REF v0.11.6
+  SHA512 c374371352081bc25ca908bf93ec2f217223b5471f94b997c6ac00ac6820be1dfe691ada41faf605e90a8e9213abbd79758aa8f7a0a178954c4663c3b4c5aada
+  HEAD_REF master
+)
+vcpkg_check_features(
+  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    orca PRISM_VCPKG_WANTS_ORCA_BACKEND
+    speech-dispatcher PRISM_VCPKG_WANTS_SPEECH_DISPATCHER_BACKEND
+)
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -DPRISM_ENABLE_TESTS=OFF
+    -DPRISM_ENABLE_DEMOS=OFF
+    -DPRISM_ENABLE_LINTING=OFF
+    -DPRISM_ENABLE_GDEXTENSION=OFF
+    -DPRISM_ENABLE_VCPKG_SPECIFIC_OPTIONS=ON
+    ${FEATURE_OPTIONS}
+)
+vcpkg_cmake_install()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME prism CONFIG_PATH share/prism)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
     REF "release-${VERSION}"
-    SHA512 9d7548e6d992cde412e331fc6253960d37897cc4b55cafdc07f7d0a14a70d5ec8534b33f3bb537c797306035cb80aa1b3abf2656ed9d4a6e43e375f5f6e1e2a4
+    SHA512 df3f3617e174636a59995a2260846381929f1131d5bca600b83c3cb92f1f5a04fe4ab86b8d7b305110e9234de3f5319e26a278faa219fadc6741553a4a63bd27
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch

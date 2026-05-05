@@ -1,0 +1,13 @@
+diff --git a/src/tint/lang/null/writer/common/options.h b/src/tint/lang/null/writer/common/options.h
+index b3d9f0deac..d20b7715bb 100644
+--- a/src/tint/lang/null/writer/common/options.h
++++ b/src/tint/lang/null/writer/common/options.h
+@@ -30,6 +30,8 @@
+ 
+ #include <string>
+ 
++#include "src/tint/api/common/binding_point.h"
++#include "src/tint/api/common/bindings.h"
+ #include "src/tint/api/common/substitute_overrides_config.h"
+ #include "src/tint/utils/reflection.h"
+ 

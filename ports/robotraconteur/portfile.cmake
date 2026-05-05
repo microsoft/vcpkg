@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO robotraconteur/robotraconteur
     REF "v${VERSION}"
-    SHA512 ce66b853e8beab53f10b9df310446ac97d4ba61c616f9ced560eb1d26c3d1c44bbeadf33ab109fd64295d5f6521a39eddbd14c03d847a99cdcb2d0d0511d6a87
+    SHA512 68c85993014df880cbc5b5c5a8656f64f95ca0dba4ace9a3a4239a4bdc6e65b29c73489a2b56142890629f040bd994f54e40d01f928c1cfd5b6dd40dc9a2b14a
     HEAD_REF master
 )
 

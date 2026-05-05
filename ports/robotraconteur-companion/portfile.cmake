@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 8bee3f71f6f1cedc6af9b30d32ed16515c2c117a4d43c3b6304c799fe90447056c5e447f573c96018c57112d9c174de422c16eba3a27b5c1343e88377d7e4117
     HEAD_REF master
+    PATCHES
+        0001-support-eigen3-5.patch
 )
 
 vcpkg_from_github(

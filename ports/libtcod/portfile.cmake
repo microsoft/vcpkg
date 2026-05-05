@@ -2,18 +2,22 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
     REF ${VERSION}
-    SHA512 09e98f26ccc65afa6f739a90d64ca0be93a768cb01bf87932a18a07132fb8a5895a5b5194c80698e08d0fcbbaca926df6f0d9797901ecc82bd36a1cbe076464f
+    SHA512 e10d6d83e6057336efcc3f2a45dd7d2e287217c3c42f99f594a357668bac89dd8a235d8498d879168418c3b5fc1a3cb5ae2c9e0acadf4e3f95e247da3ab4de40
     HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    INVERTED_FEATURES
-        "png" CMAKE_DISABLE_FIND_PACKAGE_lodepng-c
-        "sdl" CMAKE_DISABLE_FIND_PACKAGE_SDL3
-        "threads" CMAKE_DISABLE_FIND_PACKAGE_Threads
-        "unicode" CMAKE_DISABLE_FIND_PACKAGE_utf8proc
-        "unicode" CMAKE_DISABLE_FIND_PACKAGE_unofficial-utf8proc
-        "zlib" CMAKE_DISABLE_FIND_PACKAGE_ZLIB
+    FEATURES
+        "png" LIBTCOD_LODEPNG
+        "png" VCPKG_LOCK_FIND_PACKAGE_lodepng-c
+        "sdl" LIBTCOD_SDL3
+        "sdl" VCPKG_LOCK_FIND_PACKAGE_SDL3
+        "threads" LIBTCOD_THREADS
+        "threads" VCPKG_LOCK_FIND_PACKAGE_Threads
+        "unicode" LIBTCOD_UTF8PROC
+        "unicode" VCPKG_LOCK_FIND_PACKAGE_utf8proc
+        "zlib" LIBTCOD_ZLIB
+        "zlib" VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_configure(
@@ -21,11 +25,14 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCMAKE_INSTALL_INCLUDEDIR=${CURRENT_PACKAGES_DIR}/include
-        -DLIBTCOD_SDL3=find_package
-        -DLIBTCOD_ZLIB=find_package
-        -DLIBTCOD_LODEPNG=find_package
-        -DLIBTCOD_UTF8PROC=vcpkg
-        -DLIBTCOD_STB=find_package
+        -DFETCHCONTENT_FULLY_DISCONNECTED=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Stb=ON
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_SDL3
+        VCPKG_LOCK_FIND_PACKAGE_Threads
+        VCPKG_LOCK_FIND_PACKAGE_ZLIB
+        VCPKG_LOCK_FIND_PACKAGE_lodepng-c
+        VCPKG_LOCK_FIND_PACKAGE_utf8proc
 )
 
 vcpkg_cmake_install()

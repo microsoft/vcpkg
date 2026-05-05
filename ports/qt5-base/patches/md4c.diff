@@ -1,0 +1,13 @@
+diff --git a/src/gui/text/qtextmarkdownimporter.cpp b/src/gui/text/qtextmarkdownimporter.cpp
+index 7296a6f..d62a195 100644
+--- a/src/gui/text/qtextmarkdownimporter.cpp
++++ b/src/gui/text/qtextmarkdownimporter.cpp
+@@ -48,7 +48,7 @@
+ #include <QTextDocumentFragment>
+ #include <QTextList>
+ #include <QTextTable>
+-#include "../../3rdparty/md4c/md4c.h"
++#include <md4c.h>
+ 
+ QT_BEGIN_NAMESPACE
+ 

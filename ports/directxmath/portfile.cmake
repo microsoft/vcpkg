@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         MinGW-fix.patch
         Linux-SHMath-SAL.patch
+        powerpc64le.patch
 )
 
 vcpkg_check_features(

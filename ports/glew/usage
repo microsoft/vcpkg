@@ -1,4 +1,14 @@
-The package glew is compatible with built-in CMake targets:
+glew provides CMake targets:
 
-    find_package(GLEW REQUIRED)
-    target_link_libraries(main PRIVATE GLEW::GLEW)
+  # Legacy CMake find module
+  find_package(GLEW REQUIRED)
+  target_link_libraries(main PRIVATE GLEW::GLEW)
+
+  # Modern CMake config package
+  find_package(GLEW CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE GLEW::GLEW)
+
+glew provides pkg-config modules:
+
+  # The OpenGL Extension Wrangler library
+  glew

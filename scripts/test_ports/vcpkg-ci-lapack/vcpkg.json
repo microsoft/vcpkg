@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-lapack",
+  "version-string": "ci",
+  "description": "Validate metapackage which provides LAPACK",
+  "license": null,
+  "dependencies": [
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

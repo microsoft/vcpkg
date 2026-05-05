@@ -1,6 +1,7 @@
 {
   "name": "libmtp",
   "version-semver": "1.1.22",
+  "port-version": 1,
   "description": "A library to access MTP (Media Transfer Protocol) devices",
   "homepage": "https://sourceforge.net/projects/libmtp/",
   "license": "LGPL-2.1-or-later",
@@ -15,6 +16,10 @@
       "host": true,
       "platform": "android"
     },
-    "libusb"
+    "libusb",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ]
 }

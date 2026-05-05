@@ -1,14 +1,14 @@
 diff --git a/cmake/modules/FindAOM.cmake b/cmake/modules/FindAOM.cmake
-index 61c5961..1ecf364 100644
+index a357cf7..970630b 100644
 --- a/cmake/modules/FindAOM.cmake
 +++ b/cmake/modules/FindAOM.cmake
-@@ -15,6 +15,7 @@ unset(CMAKE_REQUIRED_INCLUDES)
+@@ -17,6 +17,7 @@ else()
  
- find_library(AOM_LIBRARY
-     NAMES libaom aom
-+    NAMES_PER_DIR
-     HINTS ${AOM_PKGCONF_LIBRARY_DIRS} ${AOM_PKGCONF_LIBDIR}
- )
+   find_library(AOM_LIBRARY
+       NAMES libaom aom
++      NAMES_PER_DIR
+       HINTS ${AOM_PKGCONF_LIBRARY_DIRS} ${AOM_PKGCONF_LIBDIR}
+   )
  
 diff --git a/cmake/modules/FindLIBDE265.cmake b/cmake/modules/FindLIBDE265.cmake
 index c9a7fcb..95fc5bf 100644

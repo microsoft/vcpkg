@@ -1,0 +1,13 @@
+diff --git a/configure.cmake b/configure.cmake
+index 6b3b5f770..70a867bdb 100644
+--- a/configure.cmake
++++ b/configure.cmake
+@@ -473,7 +473,7 @@ qt_webengine_configure_check("compiler"
+ )
+ qt_webengine_configure_check("visual-studio"
+     MODULES QtWebEngine QtPdf
+-    CONDITION NOT WIN32 OR NOT MSVC OR MSVC_TOOLSET_VERSION EQUAL 142 OR MSVC_TOOLSET_VERSION EQUAL 143
++    CONDITION NOT WIN32 OR NOT MSVC OR MSVC_TOOLSET_VERSION EQUAL 142 OR MSVC_TOOLSET_VERSION EQUAL 143 OR MSVC_TOOLSET_VERSION EQUAL 145
+     MESSAGE "Build requires Visual Studio 2019 or higher."
+     DOCUMENTATION "Visual Studio 2019 or higher."
+     TAGS WINDOWS_PLATFORM

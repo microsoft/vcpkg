@@ -1,0 +1,49 @@
+{
+  "name": "vcpkg-ci-lua",
+  "version-string": "ci",
+  "description": "Validate port lua",
+  "dependencies": [
+    {
+      "name": "lua",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "cpp",
+    {
+      "$comment": "The platform expression is tuned for vcpkg CI.",
+      "name": "run-programs",
+      "platform": "native | (!android & !uwp & !arm64)"
+    }
+  ],
+  "features": {
+    "cpp": {
+      "description": "Test the C++ library",
+      "dependencies": [
+        {
+          "name": "lua",
+          "default-features": false,
+          "features": [
+            "cpp"
+          ]
+        }
+      ]
+    },
+    "run-programs": {
+      "description": "Run lua and user program",
+      "dependencies": [
+        {
+          "name": "lua",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
+}

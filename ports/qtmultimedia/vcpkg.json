@@ -1,6 +1,7 @@
 {
   "name": "qtmultimedia",
-  "version": "6.9.3",
+  "version": "6.10.2",
+  "port-version": 1,
   "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -21,7 +22,15 @@
   ],
   "default-features": [
     {
-      "name": "gstreamer",
+      "name": "ffmpeg",
+      "platform": "!emscripten"
+    },
+    {
+      "name": "pipewire",
+      "platform": "linux"
+    },
+    {
+      "name": "pulseaudio",
       "platform": "linux"
     },
     "widgets"
@@ -29,6 +38,7 @@
   "features": {
     "ffmpeg": {
       "description": "Build with ffmpeg",
+      "supports": "!emscripten",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -42,8 +52,11 @@
           ]
         },
         {
-          "name": "pulseaudio",
-          "platform": "linux"
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
         },
         {
           "name": "qtdeclarative",
@@ -53,10 +66,12 @@
           "name": "qtmultimedia",
           "default-features": false,
           "features": [
+            "pulseaudio",
             "qml"
           ],
           "platform": "linux"
-        }
+        },
+        "signalsmith-stretch"
       ]
     },
     "gstreamer": {
@@ -71,7 +86,33 @@
             "plugins-bad",
             "plugins-base"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
         }
+      ]
+    },
+    "pipewire": {
+      "description": "Build with pipewire",
+      "dependencies": [
+        "pipewire",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
+    },
+    "pulseaudio": {
+      "description": "Build with pulseaudio",
+      "dependencies": [
+        "pulseaudio"
       ]
     },
     "qml": {

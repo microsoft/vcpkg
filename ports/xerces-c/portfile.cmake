@@ -1,10 +1,13 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/xerces-c
-    REF "v${VERSION}"
-    SHA512 228f7b35ca219a2d5202b853983fd2941325413724f9cfbb8d0056bb81669c4530a792323f60736e4f6bf2c4f289fab21d6e2107e9ba65438437ae19b374b4a8
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/xerces/c/3/sources/xerces-c-${VERSION}.tar.gz"
+    FILENAME "xerces-c-${VERSION}.tar.gz"
+    SHA512 b93110d2ac2f2198b3afb8854a1999376ac687c2be1e6c1b75c7d848c946c81c78f735f71eb2f824e11a493a58c67b7855c74b422a393d3ecc7c2bda103e5b27
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         dependencies.patch
         disable-tests.patch

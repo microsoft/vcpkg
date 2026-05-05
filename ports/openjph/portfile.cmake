@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aous72/OpenJPH
     REF "${VERSION}"
-    SHA512 9563eecfb5eb1fd3c4cc3f9b0c2cbcc44340b5d76b636ee9076113722ce326ba8b337d5058b43ed84be3fbb3d18f1202aa885ec1e87a5d193f817662bc4fbf53
+    SHA512 65134ddd870b275d5cab8bae704aa0781978b49e85b6b645a90e93fb6d482ee17d494a8f05e7e3dddf803532da631b898e75cb90b99b2db048c6111e84d4a1e1
     HEAD_REF master
+    PATCHES
+        xsi-strerror_r.patch
 )
 
 vcpkg_check_features(

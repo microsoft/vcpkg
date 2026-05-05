@@ -1,0 +1,5 @@
+libe57 provides CMake integration:
+
+  find_package(E57RefImpl CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE ${E57RefImpl_LIBRARIES})
+  target_include_directories(main PRIVATE ${E57RefImpl_INCLUDE_DIRS})

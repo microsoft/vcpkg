@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 77df6c1..2391b20 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,7 @@ if(MSVC)
+ 	target_compile_options(${build_target} PRIVATE /bigobj /fp:fast)
+ else()
+ 	target_compile_options(${build_target} PRIVATE
+-		-O3 -Wall -Werror -fPIC -Wno-sign-compare -Wfatal-errors)
++		-O3 -Wall -fPIC -Wno-sign-compare)
+ 	if(MARCH_NATIVE)
+ 		target_compile_options(${build_target} PRIVATE -march=native)
+ 	endif()

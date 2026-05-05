@@ -1,6 +1,6 @@
 {
   "name": "neko-threadpool",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An easy-to-use and efficient C++ 20 thread pool that supports task priorities and task submission to specific threads.",
   "homepage": "https://github.com/moehoshio/NekoThreadPool",
   "license": "MIT OR Apache-2.0",

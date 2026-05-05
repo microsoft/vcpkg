@@ -1,6 +1,6 @@
 {
   "name": "clap-cleveraudio",
-  "version-semver": "1.2.3",
+  "version-semver": "1.2.7",
   "description": "CLAP is an audio plugin ABI which defines a standard for Digital Audio Workstations and audio plugins to work together",
   "homepage": "https://cleveraudio.org/",
   "license": "MIT",

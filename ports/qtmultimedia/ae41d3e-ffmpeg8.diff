@@ -1,0 +1,55 @@
+From ae41d3e860087177b1c3413f60c653cb161b2c5f Mon Sep 17 00:00:00 2001
+From: Tim Blechmann <tim.blechmann@qt.io>
+Date: Fri, 30 Jan 2026 09:46:53 +0800
+Subject: [PATCH] FFmpeg: migrate to new AV_PROFILE_ macros
+
+FF_PROFILE_ macros were deprecated and have eventually been removed.
+Migrating to their replacement AV_PROFILE_ and adding a compatibility
+layer for older FFmpeg.
+
+compare:
+https://git.ffmpeg.org/gitweb/ffmpeg.git/commit/822432769868da325ba03774df1084aa78b9a5a0
+
+Fixes: QTBUG-143747
+Pick-to: 6.11 6.10 6.8 6.5
+Change-Id: Icbb1afb570a05f5f0b98e6f49e6096aa61d205be
+---
+
+diff --git a/src/plugins/multimedia/ffmpeg/qffmpegdefs_p.h b/src/plugins/multimedia/ffmpeg/qffmpegdefs_p.h
+index b523074..02880a9 100644
+--- a/src/plugins/multimedia/ffmpeg/qffmpegdefs_p.h
++++ b/src/plugins/multimedia/ffmpeg/qffmpegdefs_p.h
+@@ -78,4 +78,11 @@
+ 
+ QT_END_NAMESPACE
+ 
++#ifndef AV_PROFILE_H264_HIGH
++#  define AV_PROFILE_H264_HIGH FF_PROFILE_H264_HIGH
++#endif
++#ifndef AV_PROFILE_HEVC_MAIN
++#  define AV_PROFILE_HEVC_MAIN FF_PROFILE_HEVC_MAIN
++#endif
++
+ #endif // QFFMPEGDEFS_P_H
+diff --git a/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp b/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
+index 05f853c..d7184ae 100644
+--- a/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
++++ b/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
+@@ -314,7 +314,7 @@
+     case QMediaFormat::VideoCodec::H264: {
+         const char *levels[] = { "2.2", "3.2", "4.2", "5.2", "6.2" };
+         av_dict_set(opts, "level", levels[settings.quality()], 1);
+-        codec->profile = FF_PROFILE_H264_HIGH;
++        codec->profile = AV_PROFILE_H264_HIGH;
+         break;
+     }
+     case QMediaFormat::VideoCodec::H265: {
+@@ -326,7 +326,7 @@
+             av_dict_set(opts, "level", levels[settings.quality()], 1);
+         }
+ 
+-        codec->profile = FF_PROFILE_HEVC_MAIN;
++        codec->profile = AV_PROFILE_HEVC_MAIN;
+         break;
+     }
+     default:

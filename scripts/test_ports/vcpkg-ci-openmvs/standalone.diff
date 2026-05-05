@@ -1,0 +1,44 @@
+diff --git a/apps/Tests/CMakeLists.txt b/apps/Tests/CMakeLists.txt
+index 192178b..d8356be 100644
+--- a/apps/Tests/CMakeLists.txt
++++ b/apps/Tests/CMakeLists.txt
+@@ -1,3 +1,5 @@
++cmake_minimum_required(VERSION 3.30)
++project(OpenMVS-Test)
+ if(MSVC)
+ 	FILE(GLOB LIBRARY_FILES_C "*.cpp" "*.rc")
+ else()
+@@ -7,6 +9,18 @@ FILE(GLOB LIBRARY_FILES_H "*.h" "*.inl")
+ 
+ ADD_DEFINITIONS(-D_DATA_PATH="${CMAKE_CURRENT_SOURCE_DIR}/data/")
+ 
++find_package(OpenMVS CONFIG REQUIRED)
++
++add_executable(OpenMVS-Test-Target ${LIBRARY_FILES_C})
++target_link_libraries(OpenMVS-Test-Target PRIVATE OpenMVS::MVS)
++
++add_executable(OpenMVS-Test-Vars ${LIBRARY_FILES_C})
++target_compile_definitions(OpenMVS-Test-Vars PRIVATE ${OpenMVS_DEFINITIONS})
++target_include_directories(OpenMVS-Test-Vars PRIVATE ${OpenMVS_INCLUDE_DIRS})
++target_link_libraries(OpenMVS-Test-Vars PRIVATE ${OpenMVS_LIBRARIES})
++
++return()
++
+ cxx_executable_with_flags(Tests "Apps" "${cxx_default}" "MVS;${OpenMVS_EXTRA_LIBS}" ${LIBRARY_FILES_C} ${LIBRARY_FILES_H})
+ 
+ # Install
+diff --git a/apps/Tests/Tests.cpp b/apps/Tests/Tests.cpp
+index f0f8365..97255ab 100644
+--- a/apps/Tests/Tests.cpp
++++ b/apps/Tests/Tests.cpp
+@@ -29,8 +29,8 @@
+  *      containing it.
+  */
+ 
+-#include "../../libs/MVS/Common.h"
+-#include "../../libs/MVS/Scene.h"
++#include <MVS/Common.h>
++#include <MVS/Scene.h>
+ 
+ using namespace MVS;
+ 

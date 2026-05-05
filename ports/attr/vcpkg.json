@@ -1,10 +1,17 @@
 {
   "name": "attr",
   "version-semver": "2.5.2",
+  "port-version": 1,
   "description": "Commands for Manipulating Filesystem Extended Attributes",
   "homepage": "http://savannah.nongnu.org/projects/attr",
   "license": "LGPL-2.1-or-later",
   "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ],
   "features": {
     "nls": {
       "description": "Enable native language support",

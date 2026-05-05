@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF ba662b119d64f9ab700bb2cd7b2781f9044f5565
     SHA512 682d785b582379914d525985de3a0bc04932b4ed715607127b1803ffba4d9b85165255dca1c18d2fd0934bab43de5d6c9c2d9909ac84d0ddaea12dad1871bcf8
     HEAD_REF master
+    PATCHES
+        fix-imgui-1.92.5.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

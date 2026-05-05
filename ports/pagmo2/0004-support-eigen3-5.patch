@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e422554..984ae24 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -163,7 +163,7 @@ endif()
+ 
+ # Eigen3
+ if(PAGMO_WITH_EIGEN3)
+-    find_package(Eigen3 3.3 REQUIRED NO_MODULE)
++    find_package(Eigen3 3.3...5 REQUIRED NO_MODULE)
+ endif()
+ 
+ # NLopt
+@@ -456,7 +456,7 @@ install(TARGETS pagmo
+ # Setup of the optional deps.
+ set(_PAGMO_CONFIG_OPTIONAL_DEPS)
+ if(PAGMO_WITH_EIGEN3)
+-    set(_PAGMO_CONFIG_OPTIONAL_DEPS "${_PAGMO_CONFIG_OPTIONAL_DEPS}find_package(Eigen3 3.3 REQUIRED NO_MODULE)\n")
++    set(_PAGMO_CONFIG_OPTIONAL_DEPS "${_PAGMO_CONFIG_OPTIONAL_DEPS}find_package(Eigen3 3.3...5 REQUIRED NO_MODULE)\n")
+ endif()
+ if(PAGMO_WITH_NLOPT)
+     set(_PAGMO_CONFIG_OPTIONAL_DEPS "${_PAGMO_CONFIG_OPTIONAL_DEPS}find_package(NLopt 2.6 REQUIRED NO_MODULE)\n")

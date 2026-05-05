@@ -1,5 +1,5 @@
 diff --git a/cachelib/cachebench/util/JSONConfig.h b/cachelib/cachebench/util/JSONConfig.h
-index 97cbe3fe..7e9bbdda 100644
+index 97cbe3f..7e9bbdd 100644
 --- a/cachelib/cachebench/util/JSONConfig.h
 +++ b/cachelib/cachebench/util/JSONConfig.h
 @@ -146,10 +146,6 @@ struct Options {};
@@ -14,21 +14,22 @@ index 97cbe3fe..7e9bbdda 100644
  } // namespace cachebench
  } // namespace cachelib
 diff --git a/cachelib/common/CMakeLists.txt b/cachelib/common/CMakeLists.txt
-index 927f2fa3..fcf6a5a9 100644
+index 308f526..d7f7345 100644
 --- a/cachelib/common/CMakeLists.txt
 +++ b/cachelib/common/CMakeLists.txt
-@@ -37,9 +37,6 @@ target_link_libraries(cachelib_common PUBLIC
-   FBThrift::thriftprotocol
+@@ -43,10 +43,6 @@ target_link_libraries(cachelib_common PUBLIC
+   FBThrift::thrift_dynamic_value
    Folly::folly
    Folly::follybenchmark
--  Folly::folly_exception_tracer
--  Folly::folly_exception_tracer_base
--  Folly::folly_exception_counter
+-  Folly::folly_debugging_exception_tracer_exception_tracer
+-  Folly::folly_debugging_exception_tracer_exception_tracer_base
+-  Folly::folly_debugging_exception_tracer_exception_counter
+-  GTest::gtest
+   magic_enum::magic_enum
+   ${XXHASH_LIBRARY}
  )
- 
- install(TARGETS cachelib_common
 diff --git a/cachelib/common/Utils.cpp b/cachelib/common/Utils.cpp
-index 57a1beb9..204a432b 100644
+index 12c1e4a..7aa8a42 100644
 --- a/cachelib/common/Utils.cpp
 +++ b/cachelib/common/Utils.cpp
 @@ -15,7 +15,6 @@
@@ -39,7 +40,7 @@ index 57a1beb9..204a432b 100644
  #include <sys/mman.h>
  #include <sys/resource.h>
  #include <sys/stat.h>
-@@ -428,10 +427,6 @@ size_t getMemAvailable() {
+@@ -442,10 +441,6 @@ void setCgroupMemoryAdvising(CgroupMemAvailableFn provider) {
  }
  
  void printExceptionStackTraces() {

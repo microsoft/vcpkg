@@ -1,7 +1,6 @@
 {
   "name": "secp256k1",
-  "version-date": "2022-07-11",
-  "port-version": 1,
+  "version": "0.7.1",
   "description": "Optimized C library for EC operations on curve",
   "homepage": "https://github.com/bitcoin-core/secp256k1",
   "license": "MIT",
@@ -14,13 +13,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "examples": {
-      "description": "Build examples"
-    },
-    "tools": {
-      "description": "Build tools"
-    }
-  }
+  ]
 }

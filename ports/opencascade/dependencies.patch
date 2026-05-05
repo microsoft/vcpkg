@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 34300d41ad..263b4bcbd3 100644
+index f8d62e06..1cf4a902 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -518,8 +518,8 @@ endif()
+@@ -521,8 +521,8 @@ endif()
  if (CAN_USE_FREETYPE AND USE_FREETYPE)
    message (STATUS "Info: FreeType is used by OCCT")
    add_definitions (-DHAVE_FREETYPE)
@@ -13,7 +13,7 @@ index 34300d41ad..263b4bcbd3 100644
  else()
    if (NOT CAN_USE_FREETYPE)
      OCCT_CHECK_AND_UNSET ("USE_FREETYPE")
-@@ -534,9 +534,10 @@ endif()
+@@ -537,9 +537,10 @@ endif()
  # VTK
  if (USE_VTK)
    add_definitions (-DHAVE_VTK)
@@ -26,7 +26,7 @@ index 34300d41ad..263b4bcbd3 100644
  else()
    OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_VTK")
    OCCT_UNSET_VCPKG_FEATURE ("vtk")
-@@ -551,8 +552,8 @@ endif()
+@@ -554,8 +555,8 @@ endif()
  # FREEIMAGE
  if (CAN_USE_FREEIMAGE AND USE_FREEIMAGE)
    add_definitions (-DHAVE_FREEIMAGE)
@@ -37,7 +37,7 @@ index 34300d41ad..263b4bcbd3 100644
  elseif (NOT CAN_USE_FREEIMAGE)
    OCCT_CHECK_AND_UNSET ("USE_FREEIMAGE")
    OCCT_UNSET_VCPKG_FEATURE ("freeimage")
-@@ -647,8 +648,8 @@ endif()
+@@ -650,8 +651,8 @@ endif()
  # TBB
  if (CAN_USE_TBB AND USE_TBB)
    add_definitions (-DHAVE_TBB)
@@ -48,7 +48,7 @@ index 34300d41ad..263b4bcbd3 100644
  elseif (NOT CAN_USE_TBB)
    OCCT_CHECK_AND_UNSET ("USE_TBB")
    OCCT_UNSET_VCPKG_FEATURE ("tbb")
-@@ -664,8 +665,8 @@ endif()
+@@ -667,8 +668,8 @@ endif()
  OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
  if (CAN_USE_RAPIDJSON AND USE_RAPIDJSON)
    add_definitions (-DHAVE_RAPIDJSON)
@@ -59,11 +59,26 @@ index 34300d41ad..263b4bcbd3 100644
  elseif (NOT CAN_USE_RAPIDJSON)
    OCCT_CHECK_AND_UNSET ("USE_RAPIDJSON")
    OCCT_UNSET_VCPKG_FEATURE ("rapidjson")
+diff --git a/adm/cmake/occt_csf.cmake b/adm/cmake/occt_csf.cmake
+index 49e35d44..124eb4d6 100644
+--- a/adm/cmake/occt_csf.cmake
++++ b/adm/cmake/occt_csf.cmake
+@@ -163,7 +163,9 @@ else()
+     set (CSF_OpenGlesLibs "EGL GLESv2")
+     set (CSF_dl          "dl")
+     if (USE_FREETYPE)
+-      set (CSF_fontconfig "fontconfig")
++      find_package(Fontconfig REQUIRED)
++      set(USE_FONTCONFIG "ON" CACHE INTERNAL "")
++      set (CSF_fontconfig "Fontconfig::Fontconfig")
+     endif()
+   endif()
+ endif()
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index add6a678c7..312930343e 100644
+index 5079ba63..137206bb 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
-@@ -71,6 +71,23 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
+@@ -70,6 +70,26 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
  @SET_OpenCASCADE_WITH_D3D@
  @SET_OpenCASCADE_WITH_GLX@
  
@@ -73,22 +88,25 @@ index add6a678c7..312930343e 100644
 +endif()
 +if("@USE_FREETYPE@")
 +  find_dependency(Freetype MODULE)
++  if("@USE_FONTCONFIG@")
++    find_dependency(Fontconfig)
++  endif()
 +endif()
 +if("@USE_RAPIDJSON@")
-+  find_package(RapidJSON CONFIG REQUIRED)
++  find_dependency(RapidJSON CONFIG)
 +endif()
 +if("@USE_TBB@")
 +  find_dependency(TBB CONFIG)
 +endif()
 +if("@USE_VTK@")
-+  find_dependency(VTK REQUIRED)
++  find_dependency(VTK)
 +endif()
 +
  # Import OpenCASCADE compile definitions, C and C++ flags for each installed configuration.
  file(GLOB CONFIG_FILES "${CMAKE_CURRENT_LIST_DIR}/OpenCASCADECompileDefinitionsAndFlags-*.cmake")
  foreach(f ${CONFIG_FILES})
 diff --git a/src/Image/Image_AlienPixMap.cxx b/src/Image/Image_AlienPixMap.cxx
-index 81289d953b..5ee49e9ff2 100644
+index 7e14e9e6..e6c23d78 100644
 --- a/src/Image/Image_AlienPixMap.cxx
 +++ b/src/Image/Image_AlienPixMap.cxx
 @@ -19,10 +19,6 @@

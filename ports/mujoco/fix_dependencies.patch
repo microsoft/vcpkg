@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aaac4e38..58bafedb 100644
+index 6e06fde4..e9c97475 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -95,7 +95,7 @@ add_subdirectory(src/render)
- add_subdirectory(src/thread)
- add_subdirectory(src/ui)
+@@ -151,7 +151,7 @@ if(EMSCRIPTEN)
+ endif()
+ 
  
 -target_compile_definitions(mujoco PRIVATE _GNU_SOURCE CCD_STATIC_DEFINE MUJOCO_DLL_EXPORTS -DMC_IMPLEM_ENABLE)
 +target_compile_definitions(mujoco PRIVATE _GNU_SOURCE MUJOCO_DLL_EXPORTS -DMC_IMPLEM_ENABLE)
  if(MUJOCO_ENABLE_AVX_INTRINSICS)
    target_compile_definitions(mujoco PUBLIC mjUSEPLATFORMSIMD)
  endif()
-@@ -118,9 +118,9 @@ target_link_libraries(
+@@ -174,9 +174,9 @@ target_link_libraries(
    mujoco
    PRIVATE ccd
            lodepng
@@ -25,7 +25,7 @@ index aaac4e38..58bafedb 100644
  
  set_target_properties(
 diff --git a/cmake/MujocoDependencies.cmake b/cmake/MujocoDependencies.cmake
-index 23e4e71e..e4cfad28 100644
+index 34be423f..1106d7ed 100644
 --- a/cmake/MujocoDependencies.cmake
 +++ b/cmake/MujocoDependencies.cmake
 @@ -90,7 +90,7 @@ set(BUILD_SHARED_LIBS
@@ -37,7 +37,7 @@ index 23e4e71e..e4cfad28 100644
    FetchContent_Declare(
      lodepng
      GIT_REPOSITORY https://github.com/lvandeve/lodepng.git
-@@ -110,6 +110,7 @@ if(NOT TARGET lodepng)
+@@ -114,6 +114,7 @@ if(NOT TARGET lodepng)
    endif()
  endif()
  
@@ -45,7 +45,7 @@ index 23e4e71e..e4cfad28 100644
  if(NOT TARGET marchingcubecpp)
    FetchContent_Declare(
      marchingcubecpp
-@@ -123,36 +124,60 @@ if(NOT TARGET marchingcubecpp)
+@@ -127,6 +128,23 @@ if(NOT TARGET marchingcubecpp)
      include_directories(${marchingcubecpp_SOURCE_DIR})
    endif()
  endif()
@@ -68,6 +68,8 @@ index 23e4e71e..e4cfad28 100644
 +)
  
  set(QHULL_ENABLE_TESTING OFF)
+ # Patch changes in https://github.com/qhull/qhull/pull/173.patch
+@@ -136,32 +154,40 @@ set(QHULL_PATCH_COMMAND
  
  findorfetch(
    USE_SYSTEM_PACKAGE
@@ -87,6 +89,7 @@ index 23e4e71e..e4cfad28 100644
 -  qhull
 +  Qhull
    EXCLUDE_FROM_ALL
+   PATCH_COMMAND ${QHULL_PATCH_COMMAND}
  )
  # MuJoCo includes a file from libqhull_r which is not exported by the qhull include directories.
  # Add it to the target.
@@ -99,6 +102,7 @@ index 23e4e71e..e4cfad28 100644
 +endif()
 +
 +include_directories(
++  ${Qhull_DIR}/../../include
 +  ${Qhull_DIR}/../../include/libqhull_r
 +  ${Qhull_DIR}/../../include/marchingcubecpp
 +)
@@ -111,7 +115,7 @@ index 23e4e71e..e4cfad28 100644
    PACKAGE_NAME
    tinyxml2
    LIBRARY_NAME
-@@ -165,12 +190,14 @@ findorfetch(
+@@ -174,8 +200,10 @@ findorfetch(
    tinyxml2
    EXCLUDE_FROM_ALL
  )
@@ -120,6 +124,10 @@ index 23e4e71e..e4cfad28 100644
  target_link_options(tinyxml2 PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
 +endif()
  
+ # update cmake_minimum_required version for compatibility with newer version of cmake
+ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+@@ -184,7 +212,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+ endif()
  findorfetch(
    USE_SYSTEM_PACKAGE
 -  OFF
@@ -127,32 +135,36 @@ index 23e4e71e..e4cfad28 100644
    PACKAGE_NAME
    tinyobjloader
    LIBRARY_NAME
-@@ -189,9 +216,9 @@ option(SDFLIB_USE_OPENMP OFF)
- option(SDFLIB_USE_ENOKI OFF)
- findorfetch(
-   USE_SYSTEM_PACKAGE
--  OFF
-+  ON
-   PACKAGE_NAME
--  sdflib
-+  SdfLib
-   LIBRARY_NAME
-   sdflib
-   GIT_REPO
-@@ -202,14 +229,19 @@ findorfetch(
-   SdfLib
-   EXCLUDE_FROM_ALL
- )
-+
-+add_library(SdfLib ALIAS SdfLib::SdfLib)
-+
-+if(0)
- target_compile_options(SdfLib PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
- target_link_options(SdfLib PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
-+endif()
+@@ -202,7 +230,7 @@ if(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
+   unset(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
+ endif()
  
+-if(NOT TARGET trianglemeshdistance)
++if(0)
+   FetchContent_Declare(
+     trianglemeshdistance
+     GIT_REPOSITORY https://github.com/InteractiveComputerGraphics/TriangleMeshDistance.git
+@@ -226,6 +254,18 @@ if(NOT TARGET trianglemeshdistance)
+   endif()
+ endif()
+ 
++findorfetch(
++  USE_SYSTEM_PACKAGE
++  ON
++  PACKAGE_NAME
++  trianglemeshdistance
++  LIBRARY_NAME
++  trianglemeshdistance
++  TARGETS
++  trianglemeshdistance
++  EXCLUDE_FROM_ALL
++)
++
  set(ENABLE_DOUBLE_PRECISION ON)
  set(CCD_HIDE_ALL_SYMBOLS ON)
+ 
+@@ -241,7 +281,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+ endif()
  findorfetch(
    USE_SYSTEM_PACKAGE
 -  OFF
@@ -160,10 +172,10 @@ index 23e4e71e..e4cfad28 100644
    PACKAGE_NAME
    ccd
    LIBRARY_NAME
-@@ -222,11 +254,14 @@ findorfetch(
-   ccd
-   EXCLUDE_FROM_ALL
- )
+@@ -259,11 +299,14 @@ if(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
+   unset(CMAKE_POLICY_VERSION_MINIMUM)
+   unset(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
+ endif()
 +if(0)
  target_compile_options(ccd PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
  target_link_options(ccd PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
@@ -175,16 +187,16 @@ index 23e4e71e..e4cfad28 100644
  if(WIN32)
    if(MSVC)
      # C4005 is the MSVC equivalent of -Wmacro-redefined.
-@@ -235,6 +270,7 @@ if(WIN32)
+@@ -272,6 +315,7 @@ if(WIN32)
      target_compile_options(ccd PRIVATE -Wno-macro-redefined)
    endif()
  endif()
 +endif()
  
- if(MUJOCO_BUILD_TESTS)
+ if(MUJOCO_BUILD_TESTS OR MUJOCO_BUILD_STUDIO OR MUJOCO_USE_FILAMENT)
    set(ABSL_PROPAGATE_CXX_STD ON)
 diff --git a/simulate/cmake/SimulateDependencies.cmake b/simulate/cmake/SimulateDependencies.cmake
-index 5141406c..41f399b7 100644
+index 7885f5f9..01db1dbc 100644
 --- a/simulate/cmake/SimulateDependencies.cmake
 +++ b/simulate/cmake/SimulateDependencies.cmake
 @@ -86,7 +86,7 @@ findorfetch(
@@ -200,8 +212,21 @@ index 5141406c..41f399b7 100644
    unset(BUILD_SHARED_LIBS_OLD)
  endif()
  
--if(NOT SIMULATE_STANDALONE)
+-if(NOT SIMULATE_STANDALONE AND NOT MUJOCO_SIMULATE_USE_SYSTEM_GLFW)
 +if(0)
    target_compile_options(glfw PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
    target_link_options(glfw PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
  endif()
+diff --git a/src/user/user_mesh.cc b/src/user/user_mesh.cc
+index 8c46840b..27711d66 100644
+--- a/src/user/user_mesh.cc
++++ b/src/user/user_mesh.cc
+@@ -34,7 +34,7 @@
+ 
+ #include <mujoco/mjspec.h>
+ #include "user/user_api.h"
+-#include <TriangleMeshDistance/include/tmd/TriangleMeshDistance.h>
++#include <tmd/TriangleMeshDistance.h>
+ 
+ #ifdef MUJOCO_TINYOBJLOADER_IMPL
+ #define TINYOBJLOADER_IMPLEMENTATION

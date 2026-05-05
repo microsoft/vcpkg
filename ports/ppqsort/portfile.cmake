@@ -4,12 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GabTux/PPQSort
     REF "v${VERSION}"
-    SHA512 404621a489cc530170196dca317cabf35ecb2f93e10465474a5af1a4e79352433ca57711236f1cc08a359ae40294d9dd62feed42ec1f6890fa5139473997c29c
+    SHA512 df1fe69dab0e3218c27227b510b0727dcd28a7f5bbdb90cdc906dc2c7d4176cc4b908300ee4353dfaa1809dddeff255a47a99b56128a21ff0b9b5633dd88a66f
     HEAD_REF master
     PATCHES
         remove-cpm.patch
 )
 
+# Replace CPM and download PackageProject directly to avoid issues with FETCHCONTENT_FULLY_DISCONNECTED
 vcpkg_from_github(
     OUT_SOURCE_PATH PACKAGE_PROJECT_PATH
     REPO TheLartians/PackageProject.cmake

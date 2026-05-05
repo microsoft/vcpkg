@@ -26,10 +26,8 @@ function(vcpkg_copy_tool_dependencies tool_dir)
     endif()
 
     if(VCPKG_TARGET_IS_WINDOWS)
-        find_program(Z_VCPKG_POWERSHELL_CORE pwsh)
-        if (NOT Z_VCPKG_POWERSHELL_CORE)
-            message(FATAL_ERROR "Could not find PowerShell Core; please open an issue to report this.")
-        endif()
+        vcpkg_find_acquire_program(PWSH)
+        set(Z_VCPKG_POWERSHELL_CORE "${PWSH}")
         cmake_path(RELATIVE_PATH tool_dir
             BASE_DIRECTORY "${CURRENT_PACKAGES_DIR}"
             OUTPUT_VARIABLE relative_tool_dir

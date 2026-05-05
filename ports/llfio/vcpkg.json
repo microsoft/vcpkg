@@ -1,6 +1,6 @@
 {
   "name": "llfio",
-  "version-date": "2025-01-13",
+  "version-date": "2026-04-29",
   "maintainers": [
     "Niall Douglas <s_github@nedprod.com>",
     "Henrik Gaßmann <henrik@gassmann.onl>"
@@ -21,34 +21,9 @@
     }
   ],
   "features": {
-    "polyfill-cxx17": {
-      "description": "Polyfill C++17 entities",
-      "dependencies": [
-        {
-          "name": "llfio",
-          "default-features": false,
-          "features": [
-            "polyfill-cxx20"
-          ]
-        },
-        {
-          "name": "ned14-internal-quickcpplib",
-          "default-features": false,
-          "features": [
-            "polyfill-cxx17"
-          ]
-        },
-        {
-          "name": "outcome",
-          "default-features": false,
-          "features": [
-            "polyfill-cxx17"
-          ]
-        }
-      ]
-    },
     "polyfill-cxx20": {
       "description": "Polyfill C++20 entities",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "ned14-internal-quickcpplib",

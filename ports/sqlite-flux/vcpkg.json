@@ -1,10 +1,10 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "sqlite-flux",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Modern C++20 type-safe, thread-safe SQLite query builder with fluent API and compile-time validation",
-  "homepage": "https://github.com/a-alomran/sqlite-flux",
+  "homepage": "https://github.com/a-alomran/sqlite_flux",
   "license": "MIT",
-  "supports": "!uwp",
   "dependencies": [
     "sqlite3",
     {

@@ -1,0 +1,37 @@
+diff --git a/cmake/onnxruntime_framework.cmake b/cmake/onnxruntime_framework.cmake
+index 15f3105..af6609b 100644
+--- a/cmake/onnxruntime_framework.cmake
++++ b/cmake/onnxruntime_framework.cmake
+@@ -122,5 +122,5 @@ else()
+             ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
+-            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
+diff --git a/cmake/external/abseil-cpp.cmake b/cmake/external/abseil-cpp.cmake
+index eede60a..07f5f77 100644
+--- a/cmake/external/abseil-cpp.cmake
++++ b/cmake/external/abseil-cpp.cmake
+@@ -122,7 +122,7 @@ absl::absl_check
+ absl::hash_function_defaults
+ absl::function_ref
+ absl::city
+-absl::low_level_hash
++# absl::low_level_hash # abseil 20250814.1+
+ absl::fixed_array
+ absl::variant
+ absl::meta
+diff --git a/cmake/onnxruntime_webassembly.cmake b/cmake/onnxruntime_webassembly.cmake
+index ffe8661..a3e9b4f 100644
+--- a/cmake/onnxruntime_webassembly.cmake
++++ b/cmake/onnxruntime_webassembly.cmake
+@@ -94,7 +94,7 @@ if (NOT onnxruntime_ENABLE_WEBASSEMBLY_THREADS)
+   )
+ 
+   # Override re2 compiler options to remove -pthread
+-  set_property(TARGET re2 PROPERTY COMPILE_OPTIONS )
++  # set_property(TARGET re2 PROPERTY COMPILE_OPTIONS )
+ endif()
+ 
+ if (NOT onnxruntime_USE_VCPKG)

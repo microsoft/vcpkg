@@ -3,7 +3,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip"
     FILENAME "rerun_cpp_sdk_${VERSION}.zip"
-    SHA512 4777cdec47fe0511061471743fb0ce6e738d4ebbf4fba6b4ce76001be93e1825256e27571ec626b01c6a86929a659aa94078723860a4797fbcd81a556b7fefa1
+    SHA512 8d0994e08babf90ec588a3911d8e35cde461f7870deca71f09f9f6cf14aa6207f4b900efd4ff2a6f6aea4d0b9addeac526422a6dd3af12c34cdbdaf0be8d2f2a
 )
 
 # Workaround: The distributed SDK contains a prebuilt rerun_c that is built in Release mode.  On Windows, this means

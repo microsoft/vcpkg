@@ -1,20 +1,14 @@
-set(UNRAR_VERSION "7.0.7")
-set(UNRAR_SHA512 7151a42742d4c34a8f03c58dae471f80788b76adbb52188759b7fc7357757f88fa9d980de006ce48732c40f326b92b79fb069e807c2b66d4387ee60433a8accb)
-set(UNRAR_FILENAME unrarsrc-${UNRAR_VERSION}.tar.gz)
-set(UNRAR_URL https://www.rarlab.com/rar/${UNRAR_FILENAME})
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-#SRC
 vcpkg_download_distfile(ARCHIVE
-    URLS ${UNRAR_URL}
-    FILENAME ${UNRAR_FILENAME}
-    SHA512 ${UNRAR_SHA512}
+    URLS "https://www.rarlab.com/rar/unrarsrc-${VERSION}.tar.gz"
+    FILENAME "unrarsrc-${VERSION}.tar.gz"
+    SHA512 8e2b7e801e1e1f8861657e7e613b4540c46938af377e43383ec2b509db1a59073d1e970fa20ee923db73a6c93777d677e7488ca6696177625cc1020922504346
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    SOURCE_BASE ${UNRAR_VERSION}
+    SOURCE_BASE ${VERSION}
 )
 
 vcpkg_msbuild_install(

@@ -1,6 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.91.9",
+  "version": "1.92.7",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -91,7 +91,7 @@
     },
     "opengl2-binding": {
       "description": "Make available OpenGL (legacy) binding",
-      "supports": "!uwp"
+      "supports": "!(uwp | android)"
     },
     "opengl3-binding": {
       "description": "Make available OpenGL3/ES/ES2 (modern) binding"
@@ -140,6 +140,12 @@
     },
     "wchar32": {
       "description": "Use WCHAR32 instead of WCHAR16"
+    },
+    "webgpu-binding": {
+      "description": "Make available WebGPU binding",
+      "dependencies": [
+        "dawn"
+      ]
     },
     "win32-binding": {
       "description": "Make available Win32 binding",

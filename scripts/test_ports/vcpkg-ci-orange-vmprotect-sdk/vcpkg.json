@@ -1,0 +1,13 @@
+{
+    "name": "vcpkg-ci-orange-vmprotect-sdk",
+    "version-string": "ci",
+    "description": "Testing packages which provide orange-vvmprotect-sdk",
+    "license": null,
+    "dependencies": [
+    "orange-vmprotect-sdk",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

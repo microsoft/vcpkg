@@ -1,0 +1,15 @@
+diff --git a/modules/dnn/src/dnn.cpp b/modules/dnn/src/dnn.cpp
+index b4fa8933c3..224debea7a 100644
+--- a/modules/dnn/src/dnn.cpp
++++ b/modules/dnn/src/dnn.cpp
+@@ -60,6 +60,10 @@
+ #include <opencv2/core/utils/configuration.private.hpp>
+ #include <opencv2/core/utils/logger.hpp>
+ 
++#ifdef HAVE_HALIDE
++#include <thread>
++#endif
++
+ namespace cv {
+ namespace dnn {
+ CV__DNN_EXPERIMENTAL_NS_BEGIN

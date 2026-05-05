@@ -6,6 +6,8 @@ vcpkg_from_github(
     REPO ${LIBCZI_REPO_NAME}
     REF ${LIBCZI_REPO_REF}
     SHA512 58b841406fa1478499db6cbae935d1b31ebfe8ba8276e92224a08ee828f617f9f51300b128728bc96ff032889cc24be1b9e9ecc033fc663acd613e2c2c93ffa5
+    PATCHES
+        0001-support-eigen3-5.patch
 )
 
 # Translate enabled vcpkg features into CMake -D flags:

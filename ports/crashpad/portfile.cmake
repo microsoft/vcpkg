@@ -7,6 +7,7 @@ vcpkg_from_git(
     PATCHES
         fix-linux.patch
         fix-lib-name-conflict.patch
+        crashpad-memset-errors-5758170.diff # https://chromium-review.googlesource.com/c/crashpad/crashpad/+/7270947
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -58,7 +59,7 @@ function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
         NO_DEFAULT_PATH)
 
     if(_LIBRARY_REL MATCHES "-NOTFOUND")
-        message(FATAL_ERROR "Could not find library with names: ${LIBRARY_NAMES}")
+        message(FATAL_ERROR "Could not find release library with names: ${LIBRARY_NAMES}")
     endif()
 
     if(VCPKG_BUILD_TYPE STREQUAL "release")
@@ -74,7 +75,7 @@ endfunction()
 replace_gn_dependency(
     "${CMAKE_CURRENT_LIST_DIR}/zlib.gn"
     "${SOURCE_PATH}/third_party/zlib/BUILD.gn"
-    "z;zlib;zlibd"
+    "z;zs;zlib;zd;zsd;zlibd"
 )
 
 set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")

@@ -11,6 +11,7 @@ vcpkg_from_github(
         context_syntax.patch
         useragent.patch
         set_version.patch
+        cstdint.patch
 )
 
 file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vsg-dev/vsgXchange
     REF "v${VERSION}"
-    SHA512 674a5ab3429009b99e465b5f063714b410d4cfc47e83117d0ea7304ca23f850ec135155b2cfb50055745e5e6a58d3eb3e1849f021c499c49e59558deac5b2526
+    SHA512 d95d827aa1b359e32180d805551fc112fc584a50f1c9a7e40bc5bb481ca1f68c69c15025cbbf14735e273ba6fb4ec94c8e8c85f7bddc562a1ee5d6b24348083e
     HEAD_REF master
 )
 
@@ -18,6 +18,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gdal     VCPKG_LOCK_FIND_PACKAGE_GDAL
         openexr  vsgXchange_openexr
         openexr  VCPKG_LOCK_FIND_PACKAGE_OpenEXR
+        ktx      vsgXchange_ktx
+        ktx      VCPKG_LOCK_FIND_PACKAGE_Ktx
 )
 
 vcpkg_cmake_configure(

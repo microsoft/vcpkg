@@ -1,0 +1,110 @@
+diff --git a/src/osgEarthImGui/CMakeLists.txt b/src/osgEarthImGui/CMakeLists.txt
+index c8a2b4061..b75ced6c2 100644
+--- a/src/osgEarthImGui/CMakeLists.txt
++++ b/src/osgEarthImGui/CMakeLists.txt
+@@ -10,8 +10,11 @@ set(LIB_NAME osgEarthImGui)
+ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ 
+ # embedded ImGui source code:
+-set(IMGUI_HEADERS imgui.h imgui_internal.h imgui_impl_opengl3.h imconfig.h imnodes.h)
+-set(IMGUI_SOURCES imgui.cpp imgui_demo.cpp imgui_draw.cpp imgui_tables.cpp imgui_widgets.cpp imgui_impl_opengl3.cpp imnodes.cpp)
++find_package(imgui CONFIG REQUIRED)
++set(IMGUI_HEADERS imnodes.h)
++set(IMGUI_SOURCES imnodes.cpp)
++file(REMOVE imgui.h imgui_internal.h imgui_impl_opengl3.h imconfig.h)
++file(REMOVE imgui.cpp imgui_demo.cpp imgui_draw.cpp imgui_tables.cpp imgui_widgets.cpp imgui_impl_opengl3.cpp)
+ 
+ set(STOCK_PANELS
+     AnnotationsGUI
+@@ -62,5 +65,5 @@ add_osgearth_library(
+     TARGET ${LIB_NAME}
+     SOURCES ${LIB_SOURCES} ${IMGUI_SOURCES}
+     PUBLIC_HEADERS ${LIB_HEADERS} ${IMGUI_HEADERS} ${STOCK_PANELS}
+-    LIBRARIES PUBLIC OpenGL::GL
++    LIBRARIES PUBLIC OpenGL::GL imgui::imgui
+     FOLDER "NodeKits")
+diff --git a/src/osgEarthImGui/Common b/src/osgEarthImGui/Common
+index 6e3ee948e..d236a325a 100644
+--- a/src/osgEarthImGui/Common
++++ b/src/osgEarthImGui/Common
+@@ -17,6 +17,6 @@
+ // note: No Windows declspec's here because we are using CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS
+ 
+ #ifndef IMGUI_VERSION
+-#include <osgEarthImGui/imgui.h>
++#include <imgui.h>
+ #include <osgEarthImGui/imnodes.h>
+ #endif
+diff --git a/src/osgEarthImGui/ImGuiEventHandler.cpp b/src/osgEarthImGui/ImGuiEventHandler.cpp
+index 183963a9e..372c5af32 100644
+--- a/src/osgEarthImGui/ImGuiEventHandler.cpp
++++ b/src/osgEarthImGui/ImGuiEventHandler.cpp
+@@ -144,7 +144,7 @@ void ImGuiEventHandler::render(osg::RenderInfo& ri)
+         constexpr ImGuiDockNodeFlags dockspace_flags =
+             ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode;
+ 
+-        auto dockSpaceId = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockspace_flags);
++        auto dockSpaceId = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), dockspace_flags);
+ 
+         glDisable(GL_MULTISAMPLE);
+ 
+diff --git a/src/osgEarthImGui/ImGuiPanel b/src/osgEarthImGui/ImGuiPanel
+index 2751d0e8d..aaefcecf6 100644
+--- a/src/osgEarthImGui/ImGuiPanel
++++ b/src/osgEarthImGui/ImGuiPanel
+@@ -424,7 +424,7 @@ namespace ImGuiEx
+         if (textureObject)
+         {
+             bool flip = (texture->getImage() && texture->getImage()->getOrigin() == osg::Image::TOP_LEFT);
+-            ImGui::Image((void*)(intptr_t)textureObject->_id, ImVec2(w, h), ImVec2(0, flip ? 0 : 1), ImVec2(1, flip ? 1 : 0), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 0, 1));
++            ImGui::Image(textureObject->_id, ImVec2(w, h), ImVec2(0, flip ? 0 : 1), ImVec2(1, flip ? 1 : 0), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 0, 1));
+         }
+     }
+ 
+@@ -436,7 +436,7 @@ namespace ImGuiEx
+         }
+         else
+         {
+-            ImGui::Image((void*)(std::intptr_t)id, ImVec2((float)width, (float)height), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 0, 1));
++            ImGui::Image(id, ImVec2((float)width, (float)height), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 0, 1));
+         }
+     }
+ 
+diff --git a/src/osgEarthImGui/ResourceLibraryGUI b/src/osgEarthImGui/ResourceLibraryGUI
+index cdc8c28c4..e92de02b8 100644
+--- a/src/osgEarthImGui/ResourceLibraryGUI
++++ b/src/osgEarthImGui/ResourceLibraryGUI
+@@ -207,7 +207,7 @@ namespace osgEarth
+                     // Make the entire row selectable
+                     ImGui::TableSetColumnIndex(0);
+                     bool selected = (_selectedSkin.get() == skin.get());
+-                    ImGuiSelectableFlags selectable_flags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap;
++                    ImGuiSelectableFlags selectable_flags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowOverlap;
+                     if (ImGui::Selectable("##row", selected, selectable_flags, ImVec2(0, 0)))
+                     {
+                         setSelectedSkin(skin.get(), ri);
+@@ -318,7 +318,7 @@ namespace osgEarth
+                     // Make the entire row selectable
+                     ImGui::TableSetColumnIndex(0);
+                     bool selected = (_selectedModel.get() == model.get());
+-                    ImGuiSelectableFlags selectable_flags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap;
++                    ImGuiSelectableFlags selectable_flags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowOverlap;
+                     if (ImGui::Selectable("##row", selected, selectable_flags, ImVec2(0, 0)))
+                     {
+                         setSelectedModel(model.get());
+diff --git a/src/osgEarthImGui/imnodes.cpp b/src/osgEarthImGui/imnodes.cpp
+index a77c0a9ed..e2d9e5e94 100644
+--- a/src/osgEarthImGui/imnodes.cpp
++++ b/src/osgEarthImGui/imnodes.cpp
+@@ -350,7 +350,11 @@ void ImDrawListGrowChannels(ImDrawList* draw_list, const int num_channels)
+         {
+             ImDrawCmd draw_cmd;
+             draw_cmd.ClipRect = draw_list->_ClipRectStack.back();
++#if IMGUI_VERSION_NUM < 19200
+             draw_cmd.TextureId = draw_list->_TextureIdStack.back();
++#else
++            draw_cmd.TexRef = draw_list->_TextureStack.back();
++#endif
+             channel._CmdBuffer.push_back(draw_cmd);
+         }
+     }
