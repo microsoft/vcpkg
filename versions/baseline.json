@@ -1709,7 +1709,7 @@
       "port-version": 5
     },
     "chenjunfu2-nbt-cpp": {
-      "baseline": "2.1.0",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "chipmunk": {
@@ -2009,7 +2009,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.43.2",
+      "baseline": "0.43.3",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2029,7 +2029,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.10.2",
+      "baseline": "1.10.3",
       "port-version": 0
     },
     "cpp-pinyin": {
@@ -2262,7 +2262,7 @@
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 16
+      "port-version": 17
     },
     "cudnn-frontend": {
       "baseline": "1.15.0",
@@ -2618,6 +2618,10 @@
     },
     "dstorage": {
       "baseline": "1.3.0",
+      "port-version": 0
+    },
+    "dtc": {
+      "baseline": "1.7.2",
       "port-version": 0
     },
     "dtl": {
@@ -3205,7 +3209,7 @@
       "port-version": 0
     },
     "frugally-deep": {
-      "baseline": "0.19.5",
+      "baseline": "0.20.0",
       "port-version": 0
     },
     "fruit": {
@@ -3494,7 +3498,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.37.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gperf": {
       "baseline": "3.3",
@@ -3713,7 +3717,7 @@
       "port-version": 0
     },
     "happly": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "hareflow": {
@@ -3781,7 +3785,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.4.0",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "hidapi": {
@@ -3953,8 +3957,8 @@
       "port-version": 3
     },
     "imguizmo": {
-      "baseline": "2024-05-29",
-      "port-version": 2
+      "baseline": "1.9",
+      "port-version": 0
     },
     "immer": {
       "baseline": "0.9.1",
@@ -4193,7 +4197,7 @@
       "port-version": 0
     },
     "jwsung91-unilink": {
-      "baseline": "0.6.0",
+      "baseline": "0.6.1",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -4513,7 +4517,7 @@
       "port-version": 0
     },
     "knncolle-hnsw": {
-      "baseline": "0.3.0",
+      "baseline": "0.3.1",
       "port-version": 0
     },
     "knncolle-kmknn": {
@@ -4573,7 +4577,7 @@
       "port-version": 3
     },
     "lastools": {
-      "baseline": "2.0.4",
+      "baseline": "2.0.5",
       "port-version": 0
     },
     "laszip": {
@@ -4694,7 +4698,7 @@
     },
     "libass": {
       "baseline": "0.17.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libassert": {
       "baseline": "2.2.1",
@@ -5594,7 +5598,7 @@
     },
     "libsndfile": {
       "baseline": "1.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
@@ -5982,7 +5986,7 @@
     },
     "libxt": {
       "baseline": "1.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libxtst": {
       "baseline": "1.2.5",
@@ -6249,8 +6253,8 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.9.7",
-      "port-version": 1
+      "baseline": "0.9.8",
+      "port-version": 0
     },
     "magma": {
       "baseline": "2.9.0",
@@ -6638,7 +6642,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 16
+      "port-version": 17
     },
     "mpark-patterns": {
       "baseline": "2019-10-03",
@@ -6801,7 +6805,7 @@
       "port-version": 0
     },
     "nameof": {
-      "baseline": "0.10.4",
+      "baseline": "0.10.5",
       "port-version": 0
     },
     "nana": {
@@ -7386,7 +7390,7 @@
     },
     "openmvs": {
       "baseline": "2.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openni2": {
       "baseline": "2.2.0.33",
@@ -8861,7 +8865,7 @@
       "port-version": 1
     },
     "rtc-benchmarksuite": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "rtlsdr": {
@@ -9066,7 +9070,7 @@
     },
     "sdl3-mixer": {
       "baseline": "3.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl3-shadercross": {
       "baseline": "3.0.0-preview2",
@@ -9081,7 +9085,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.3.0",
+      "baseline": "4.3.2",
       "port-version": 0
     },
     "seasocks": {
@@ -9225,7 +9229,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "7.0.160",
+      "baseline": "7.1.161",
       "port-version": 0
     },
     "simde": {
@@ -9550,7 +9554,7 @@
     },
     "sqlite3": {
       "baseline": "3.53.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.3.3",
@@ -10564,8 +10568,12 @@
       "baseline": "1.0.0+20221123",
       "port-version": 1
     },
+    "vincentlaucsb-classify-scalar": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "vincentlaucsb-csv-parser": {
-      "baseline": "4.0.0",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "visit-struct": {
@@ -10742,6 +10750,10 @@
     },
     "webcraft": {
       "baseline": "1.0.5",
+      "port-version": 0
+    },
+    "webrtc": {
+      "baseline": "2026-03-17",
       "port-version": 0
     },
     "webthing-cpp": {
