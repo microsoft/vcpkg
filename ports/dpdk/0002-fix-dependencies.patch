@@ -1,8 +1,22 @@
+diff --git a/buildtools/pkg-config/meson.build b/buildtools/pkg-config/meson.build
+index b36add1..a0a265a 100644
+--- a/buildtools/pkg-config/meson.build
++++ b/buildtools/pkg-config/meson.build
+@@ -47,8 +47,7 @@ pkg.generate(name: 'DPDK', # main DPDK pkgconfig file
+         description: '''The Data Plane Development Kit (DPDK).
+ Note that CFLAGS might contain an -march flag higher than typical baseline.
+ This is required for a number of static inline functions in the public headers.''',
+-        requires: ['libdpdk-libs', libbsd], # may need libbsd for string funcs
+-                      # if libbsd is not enabled, then this is blank
++        requires: ['libdpdk-libs'],
+         libraries_private: ['-Wl,--whole-archive'] +
+             dpdk_drivers + dpdk_static_libraries +
+             ['-Wl,--no-whole-archive'] + platform_flags
 diff --git a/config/meson.build b/config/meson.build
-index 34b85f10b5..5ed4625d9e 100644
+index bbdad71..a9c63b5 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -238,12 +238,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
+@@ -238,17 +238,15 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
      find_libnuma = false
  endif
  if find_libnuma
@@ -17,11 +31,51 @@ index 34b85f10b5..5ed4625d9e 100644
      endif
  endif
  
+ has_libfdt = false
+-fdt_dep = cc.find_library('fdt', required: false)
++fdt_dep = disabler()
+ if fdt_dep.found() and cc.has_header('fdt.h') and cc.links(min_c_code, dependencies: fdt_dep)
+     dpdk_conf.set10('RTE_HAS_LIBFDT', true)
+     has_libfdt = true
+@@ -269,28 +267,28 @@ if libarchive.found()
+ endif
+ 
+ # check for libbsd
+-libbsd = dependency('libbsd', required: false, method: 'pkg-config')
++libbsd = disabler()
+ if libbsd.found()
+     dpdk_conf.set('RTE_USE_LIBBSD', 1)
+ endif
+ 
+-jansson_dep = dependency('jansson', required: false, method: 'pkg-config')
++jansson_dep = disabler()
+ if jansson_dep.found()
+     dpdk_conf.set('RTE_HAS_JANSSON', 1)
+ endif
+ 
+ # check for OpenSSL
+-openssl_dep = dependency('openssl', required: false, method: 'pkg-config')
++openssl_dep = disabler()
+ if openssl_dep.found()
+     dpdk_conf.set('RTE_HAS_OPENSSL', 1)
+ endif
+ 
+ # check for pcap
+-pcap_dep = dependency('libpcap', required: false, method: 'pkg-config')
++pcap_dep = disabler()
+ pcap_lib = is_windows ? 'wpcap' : 'pcap'
+ if not pcap_dep.found()
+     # pcap got a pkg-config file only in 1.9.0
+-    pcap_dep = cc.find_library(pcap_lib, required: false)
++    pcap_dep = disabler()
+ endif
+ if (pcap_dep.found() and cc.has_header('pcap.h', dependencies: pcap_dep)
+         and cc.links(min_c_code, dependencies: pcap_dep))
 diff --git a/lib/eal/linux/meson.build b/lib/eal/linux/meson.build
-index e99ebed256..672c70547b 100644
+index 29ba313..5a173c4 100644
 --- a/lib/eal/linux/meson.build
 +++ b/lib/eal/linux/meson.build
-@@ -21,5 +21,6 @@ sources += files(
+@@ -25,5 +25,6 @@ endif
  
  deps += ['kvargs', 'telemetry']
  if has_libnuma
@@ -29,7 +83,7 @@ index e99ebed256..672c70547b 100644
      dpdk_conf.set10('RTE_EAL_NUMA_AWARE_HUGEPAGES', true)
  endif
 diff --git a/lib/vhost/meson.build b/lib/vhost/meson.build
-index 51bcf17244..1099a0232f 100644
+index 6a24981..5283e79 100644
 --- a/lib/vhost/meson.build
 +++ b/lib/vhost/meson.build
 @@ -6,6 +6,7 @@ if not is_linux

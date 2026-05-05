@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 1dee3967057619dd7f2f78c63de85bb97af16c974bd9225c2336d42c7c8765c04f77490aac36af2daf953bc52c7faa37750a09265e133708f6a1709028573834
+    SHA512 e858e92e5eb08d562302cde371af55917df6e1fe53994e18462a3c929a40ede1828c2bd53c2a7d65a2cfd791782ead3cd94efb2def904f49cb5dd8ab5cd4256f
     HEAD_REF master
     PATCHES
         0002-fix-msvc-link.patch
@@ -567,11 +567,11 @@ else()
 endif()
 
 if ("qsv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
-    set(WITH_MFX ON)
+    set(OPTIONS "${OPTIONS} --enable-libvpl --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
+    set(WITH_VPL ON)
 else()
-    set(OPTIONS "${OPTIONS} --disable-libmfx")
-    set(WITH_MFX OFF)
+    set(OPTIONS "${OPTIONS} --disable-libvpl")
+    set(WITH_VPL OFF)
 endif()
 
 if ("vaapi" IN_LIST FEATURES)

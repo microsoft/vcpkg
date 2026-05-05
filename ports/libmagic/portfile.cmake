@@ -17,11 +17,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 endif()
 
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)$" "FILE\\1_\\2" FILE_REF "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
-    REF FILE5_46
-    SHA512 fb8157ee8065feaf57412ccdeee57cd8fc853b54ac49b0ddc818eeb1ca3555a7cfd25dea08996503f7c565dcba8c57fd7e4dc5fe3452872c617f5612a94a8f0e
+    REF "${FILE_REF}"
+    SHA512 9ef8d1efd744115b0f28a7bef1a6b3e25c6feb71f6e37590bc18fe49e77d55adddb712527fd3c4080e0b70f13c5f33cdce3ce932e99a751e6de6a0e8b381c30a
     HEAD_REF master
     PATCHES
         0002-Change-zlib-lib-name-to-match-CMake-output.patch
