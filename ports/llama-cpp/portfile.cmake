@@ -7,12 +7,19 @@ vcpkg_from_github(
     PATCHES
         cmake-config.diff
         pkgconfig.diff
+        unvendor.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/ggml/include" "${SOURCE_PATH}/ggml/src")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/vendor/cpp-httplib"
+    "${SOURCE_PATH}/vendor/miniaudio"
+    "${SOURCE_PATH}/vendor/nlohmann"
+    "${SOURCE_PATH}/vendor/stb")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
         download    LLAMA_CURL
+        server      LLAMA_BUILD_SERVER
         tools       LLAMA_BUILD_TOOLS
 )
 
@@ -24,7 +31,6 @@ vcpkg_cmake_configure(
         -DLLAMA_ALL_WARNINGS=OFF
         -DLLAMA_BUILD_TESTS=OFF
         -DLLAMA_BUILD_EXAMPLES=OFF
-        -DLLAMA_BUILD_SERVER=OFF
         -DLLAMA_USE_SYSTEM_GGML=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Git=OFF
 )
@@ -39,21 +45,28 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/bin/convert_hf_to_gguf.py" "${CURRENT_PACKA
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/convert_hf_to_gguf.py")
 
 if("tools" IN_LIST FEATURES)
+    set(tool_names
+        llama-batched-bench
+        llama-bench
+        llama-completion
+        llama-cvector-generator
+        llama-export-lora
+        llama-fit-params
+        llama-gguf-split
+        llama-imatrix
+        llama-mtmd-cli
+        llama-perplexity
+        llama-quantize
+        llama-results
+        llama-template-analysis
+        llama-tokenize
+        llama-tts
+    )
+    if("server" IN_LIST FEATURES)
+        list(APPEND tool_names llama-cli llama-server)
+    endif()
     vcpkg_copy_tools(
-        TOOL_NAMES
-            llama-batched-bench
-            llama-bench
-            llama-cli
-            llama-cvector-generator
-            llama-export-lora
-            llama-gguf-split
-            llama-imatrix
-            llama-mtmd-cli
-            llama-perplexity
-            llama-quantize
-            llama-run
-            llama-tokenize
-            llama-tts
+        TOOL_NAMES ${tool_names}
         AUTO_CLEAN
     )
 endif()
