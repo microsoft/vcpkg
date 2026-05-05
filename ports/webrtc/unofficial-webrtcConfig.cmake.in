@@ -28,7 +28,7 @@ set(_webrtc_transitive_archives
 set(_webrtc_imported_location_debug "${_webrtc_prefix}/debug/lib/libwebrtc.a")
 set(_webrtc_imported_location_release "${_webrtc_prefix}/lib/libwebrtc.a")
 set(_webrtc_interface_link_libraries
-    "Threads::Threads;${WEBRTC_ABSL_IMPORTED_TARGETS};unofficial::webrtc::webrtc;${_webrtc_transitive_archives}"
+    "Threads::Threads;${WEBRTC_ABSL_IMPORTED_TARGETS};${_webrtc_transitive_archives}"
 )
 set(_webrtc_windows_system_libraries
     ws2_32
