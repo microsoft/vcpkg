@@ -50,7 +50,6 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         FLTK_MSVC_RUNTIME_DLL
 )
-message(FATAL_ERROR STOP)
 
 vcpkg_cmake_install()
 
@@ -111,3 +110,6 @@ if("opengl" IN_LIST FEATURES)
     list(APPEND copyright_files "${CURRENT_BUILDTREES_DIR}/Original teapot code copyright")
 endif()
 vcpkg_install_copyright(FILE_LIST ${copyright_files})
+
+file(COPY_FILE "${CURRENT_PACKAGES_DIR}/share/fltk/FLTK-Targets.cmake" "${CURRENT_BUILDTREES_DIR}/aaa-FLTK-Targets-${TARGET_TRIPLET}.cmake.log")
+message(FATAL_ERROR STOP)
