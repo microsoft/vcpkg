@@ -6365,8 +6365,8 @@
       "port-version": 3
     },
     "mathgl": {
-      "baseline": "8.0.1",
-      "port-version": 7
+      "baseline": "8.0.3",
+      "port-version": 0
     },
     "mathter": {
       "baseline": "2.0.1",

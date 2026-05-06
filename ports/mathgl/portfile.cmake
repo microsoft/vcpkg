@@ -3,7 +3,7 @@ vcpkg_from_sourceforge(
     REPO mathgl/mathgl
     REF "mathgl%208.0"
     FILENAME "mathgl-${VERSION}.tar.gz"
-    SHA512 1ff3023f1bbd7bfd84202777a0166a8d4255a020a07f3650b9858929345bc8a2ceea4db155d2c93ba32b762d2304474276290a9edac99fda70fb4b5bc12982c2
+    SHA512 825fd0e3ec1d4bf11ca55387031082d2346517f3d2b4697ab68b57fd600bed4cbfba87547fde5a49630bdaa45d8e5f4638ff496154cecbf50a2360604a6f6652
     PATCHES
         cmake-config.patch
         dependencies.patch
