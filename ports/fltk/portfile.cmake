@@ -46,10 +46,11 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         ${fluid_path_param}
         -DFLTK_MSVC_RUNTIME_DLL=${FLTK_MSVC_RUNTIME_DLL}
-        -DVCPKG_TRACE_FIND_PACKAGE=1
+--trace-expand
     MAYBE_UNUSED_VARIABLES
         FLTK_MSVC_RUNTIME_DLL
 )
+message(FATAL_ERROR STOP)
 
 vcpkg_cmake_install()
 
