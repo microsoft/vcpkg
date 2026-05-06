@@ -1378,6 +1378,7 @@ suitesparse-graphblas:x86-windows=fail  # no InterlockedExchange64 with MSVC
 suitesparse-graphblas[openmp]:arm64-osx=feature-fails # No openmp on default osx toolchain
 symengine[llvm]:arm64-linux=cascade
 symengine[llvm]:arm64-windows=cascade
+tcl:arm64-linux=fail # sqlite3.pc needs -lm
 tdscpp:arm64-linux=fail
 telnetpp(android)=fail
 tensorflow-cc(windows)=fail # tensorflow does not support VS2022

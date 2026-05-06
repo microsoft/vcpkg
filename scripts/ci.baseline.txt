@@ -1115,6 +1115,7 @@ spscqueue:x64-android=fail
 sqlcipher:arm64-windows-static-md=fail # vendored host tool
 sqlcipher:arm64-windows=fail # vendored host tool
 suitesparse-graphblas:x86-windows=fail # _Interlocked* intrinsic functions are not available on x86
+tcl:arm64-linux=fail # sqlite3.pc needs -lm
 tdscpp:arm64-linux=fail
 telnetpp:arm-neon-android=fail
 telnetpp:arm64-android=fail
