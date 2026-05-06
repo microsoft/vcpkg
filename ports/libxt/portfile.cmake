@@ -85,7 +85,7 @@ if(VCPKG_CROSSCOMPILING)
     endif()
 endif()
 
-vcpkg_install_make(DISABLE_PARALLEL)
+vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)

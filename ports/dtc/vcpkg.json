@@ -1,0 +1,13 @@
+{
+  "name": "dtc",
+  "version": "1.7.2",
+  "description": "Device Tree Compiler (dtc) toolchain for working with device tree source and binary files and also libfdt, a utility library for reading and manipulating the binary format.",
+  "homepage": "https://github.com/dgibson/dtc",
+  "license": "GPL-2.0-or-later OR BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

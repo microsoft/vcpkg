@@ -1,3 +1,3 @@
-set(qtremoteobjects_HASH "cebd7474112e6bbdbbc65a534be3bd9a0c6bdb054c35ff15c2ee413d7c89e9d3280a38dc14a9e82a7ac8c18f1bb1e4477a08f38cf4fe9d3e51f6ac8f0088d532")
-set(qtremoteobjects_URL "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/qtremoteobjects-everywhere-src-6.10.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.2/submodules/qtremoteobjects-everywhere-src-6.10.2.tar.xz")
-set(qtremoteobjects_FILENAME "qtremoteobjects-everywhere-src-6.10.2.tar.xz")
+set(qtremoteobjects_HASH "cb9a94eb3fcfd31535afcf3648f54ac9a408a57028605e5a7e8563b2842baebad4abd5ef4be5ecca9d1f16c0f1c04b50b4fa81ebf820cb2178439ad1a69b4531")
+set(qtremoteobjects_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtremoteobjects-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtremoteobjects-everywhere-src-6.10.3.tar.xz")
+set(qtremoteobjects_FILENAME "qtremoteobjects-everywhere-src-6.10.3.tar.xz")
