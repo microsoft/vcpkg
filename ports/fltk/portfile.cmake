@@ -30,10 +30,7 @@ if(VCPKG_CROSSCOMPILING)
     set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
-set(runtime_dll "ON")
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(runtime_dll "OFF")
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FLTK_MSVC_RUNTIME_DLL)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -47,11 +44,11 @@ vcpkg_cmake_configure(
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
-        "-DCocoa:STRING=-framework Cocoa" # avoid absolute path
         ${fluid_path_param}
-        -DFLTK_MSVC_RUNTIME_DLL=${runtime_dll}
+        -DFLTK_MSVC_RUNTIME_DLL=${FLTK_MSVC_RUNTIME_DLL}
+        -DVCPKG_TRACE_FIND_PACKAGE=1
     MAYBE_UNUSED_VARIABLES
-        Cocoa
+        FLTK_MSVC_RUNTIME_DLL
 )
 
 vcpkg_cmake_install()
