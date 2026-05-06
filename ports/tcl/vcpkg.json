@@ -37,13 +37,16 @@
   ],
   "features": {
     "profile": {
-      "description": "Produce an image that can be used with the Windows Performance Tools profiler."
+      "description": "Produce an image that can be used with the Windows Performance Tools profiler.",
+      "supports": "windows & !mingw"
     },
     "thrdalloc": {
-      "description": "Use the thread allocator (shared global free pool)."
+      "description": "Use the thread allocator (shared global free pool).",
+      "supports": "windows & !mingw"
     },
     "time64bit": {
-      "description": "Force 64-bit time_t."
+      "description": "Force 64-bit time_t.",
+      "supports": "windows & !mingw"
     }
   }
 }

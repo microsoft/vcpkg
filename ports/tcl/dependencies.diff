@@ -42,26 +42,22 @@ index 20ab0fd..3f650e4 100644
  # TCL_DEFS is not strictly need here, but if you remove it, then you
  # must make sure that configure.ac checks for the necessary components
 diff --git a/pkgs/sqlite3.51.0/configure b/pkgs/sqlite3.51.0/configure
-index e8bf713..2f0fd06 100755
+index e8bf713..c8299a6 100755
 --- a/pkgs/sqlite3.51.0/configure
 +++ b/pkgs/sqlite3.51.0/configure
-@@ -598,11 +598,13 @@ subdirs=
- MFLAGS=
- MAKEFLAGS=
- 
-+
+@@ -601,8 +601,9 @@ MAKEFLAGS=
  # Identity of this package.
  PACKAGE_NAME='sqlite'
  PACKAGE_TARNAME='sqlite'
 -PACKAGE_VERSION='3.51.0'
 -PACKAGE_STRING='sqlite 3.51.0'
-+printf %s "Using ${PKG_CONFIG}.\n" >&6
++printf "%s\n" "Using ${PKG_CONFIG} for sqlite3" >&6
 +PACKAGE_VERSION="$(${PKG_CONFIG} --modversion sqlite3)"
 +PACKAGE_STRING="sqlite $PACKAGE_VERSION"
  PACKAGE_BUGREPORT=''
  PACKAGE_URL=''
  
-@@ -5736,6 +5738,7 @@ else case e in #(
+@@ -5736,6 +5737,7 @@ else case e in #(
  esac
  fi
  
@@ -69,7 +65,7 @@ index e8bf713..2f0fd06 100755
  if test x$with_system_sqlite != xno; then
   ac_fn_c_check_header_compile "$LINENO" "sqlite3.h" "ac_cv_header_sqlite3_h" "$ac_includes_default"
  if test "x$ac_cv_header_sqlite3_h" = xyes
-@@ -5747,7 +5750,7 @@ then :
+@@ -5747,7 +5749,7 @@ then :
    printf %s "(cached) " >&6
  else case e in #(
    e) ac_check_lib_save_LIBS=$LIBS
@@ -78,7 +74,7 @@ index e8bf713..2f0fd06 100755
  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
-@@ -5787,7 +5790,7 @@ if test "x$ac_cv_lib_sqlite3_sqlite3_initialize" = xyes
+@@ -5787,7 +5789,7 @@ if test "x$ac_cv_lib_sqlite3_sqlite3_initialize" = xyes
  then :
    printf "%s\n" "#define USE_SYSTEM_SQLITE 1" >>confdefs.h
  
