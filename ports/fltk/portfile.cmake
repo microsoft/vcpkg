@@ -46,16 +46,13 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         ${fluid_path_param}
         -DFLTK_MSVC_RUNTIME_DLL=${FLTK_MSVC_RUNTIME_DLL}
---trace-expand
     MAYBE_UNUSED_VARIABLES
         FLTK_MSVC_RUNTIME_DLL
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup()
-
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fltk-config")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
@@ -110,6 +107,3 @@ if("opengl" IN_LIST FEATURES)
     list(APPEND copyright_files "${CURRENT_BUILDTREES_DIR}/Original teapot code copyright")
 endif()
 vcpkg_install_copyright(FILE_LIST ${copyright_files})
-
-file(COPY_FILE "${CURRENT_PACKAGES_DIR}/share/fltk/FLTK-Targets.cmake" "${CURRENT_BUILDTREES_DIR}/aaa-FLTK-Targets-${TARGET_TRIPLET}.cmake.log")
-message(FATAL_ERROR STOP)
