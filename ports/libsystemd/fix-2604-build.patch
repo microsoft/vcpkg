@@ -1,0 +1,12 @@
+diff --git a/meson.build b/meson.build
+index a4730f0570..57af84f147 100644
+--- a/meson.build
++++ b/meson.build
+@@ -363,6 +363,7 @@ basic_disabled_warnings = [
+         '-Wno-unknown-warning-option',
+         '-Wno-unused-parameter',
+         '-Wno-nonnull-compare',
++        '-Wno-override-init'
+ ]
+ 
+ possible_common_cc_flags = [
