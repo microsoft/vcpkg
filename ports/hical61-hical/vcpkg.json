@@ -1,6 +1,6 @@
 {
   "name": "hical61-hical",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Modern C++20/C++26 high-performance web framework based on Boost.Asio/Beast",
   "homepage": "https://github.com/Hical61/Hical",
   "license": "MIT",
@@ -23,5 +23,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "database": {
+      "description": "Database middleware with MySQL support (requires Boost.MySQL)",
+      "dependencies": [
+        "boost-charconv",
+        "boost-mysql"
+      ]
+    }
+  }
 }

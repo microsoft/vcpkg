@@ -1,7 +1,7 @@
 {
   "name": "karchive",
   "version": "6.25.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "File compression",
   "homepage": "https://invent.kde.org/frameworks/karchive",
   "documentation": "https://api.kde.org/karchive-index.html",
@@ -34,6 +34,12 @@
       "description": "Support for xz compressed files and data streams",
       "dependencies": [
         "liblzma"
+      ]
+    },
+    "openssl": {
+      "description": "Support for encrypted archives",
+      "dependencies": [
+        "openssl"
       ]
     },
     "translations": {
