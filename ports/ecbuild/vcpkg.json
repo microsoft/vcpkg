@@ -1,6 +1,6 @@
 {
   "name": "ecbuild",
-  "version": "3.12.0",
+  "version": "3.14.0",
   "description": "ECMWF CMake build system and CMake macro collection",
   "homepage": "https://github.com/ecmwf/ecbuild",
   "license": null

@@ -2741,11 +2741,11 @@
       "port-version": 0
     },
     "ecbuild": {
-      "baseline": "3.12.0",
+      "baseline": "3.14.0",
       "port-version": 0
     },
     "eccodes": {
-      "baseline": "2.46.0",
+      "baseline": "2.47.0",
       "port-version": 0
     },
     "ecm": {
