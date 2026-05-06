@@ -9,11 +9,18 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
+if(NOT "qml" IN_LIST FEATURES)
+  list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_Qt6Qml=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
+        -DKDE_INSTALL_QMLDIR=qml
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

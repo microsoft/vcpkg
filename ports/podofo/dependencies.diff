@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0441083c..ff19fe8e 100644
+index 54a90f1..e40c529 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -246,6 +246,7 @@ if(JPEG_FOUND)
+@@ -301,6 +301,7 @@ if(JPEG_FOUND)
      string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " libjpeg")
  endif()
  list(APPEND PODOFO_LIB_DEPENDS ZLIB::ZLIB)
 +string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " libutf8proc")
  string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " zlib")
- list(APPEND PODOFO_LIB_DEPENDS ${PLATFORM_SYSTEM_LIBRARIES})
- 
-@@ -276,6 +277,25 @@ add_subdirectory(3rdparty)
+ if (PODOFO_DEVENDOR_TCBSPAN)
+     list(APPEND PODOFO_LIB_DEPENDS $<COMPILE_ONLY:tcbspan::tcbspan>)
+@@ -354,6 +355,25 @@ add_subdirectory(3rdparty)
  add_subdirectory(src/podofo)
  include_directories(${PODOFO_INCLUDE_DIRS})
  
@@ -37,7 +37,7 @@ index 0441083c..ff19fe8e 100644
      enable_testing()
      add_subdirectory(test)
 diff --git a/src/podofo/podofo-config.cmake.in b/src/podofo/podofo-config.cmake.in
-index 700619bb..3ab4afce 100644
+index 700619b..b2d75f6 100644
 --- a/src/podofo/podofo-config.cmake.in
 +++ b/src/podofo/podofo-config.cmake.in
 @@ -2,6 +2,7 @@
@@ -48,29 +48,3 @@ index 700619bb..3ab4afce 100644
      if("@Fontconfig_FOUND@")
          find_dependency(Fontconfig)
      endif()
-diff --git a/src/podofo/private/SASLprep.cpp b/src/podofo/private/SASLprep.cpp
-index a9c8a672..6899b9f0 100644
---- a/src/podofo/private/SASLprep.cpp
-+++ b/src/podofo/private/SASLprep.cpp
-@@ -8,7 +8,7 @@
- #include <cassert>
- #include <vector>
- 
--#include <utf8proc/utf8proc.h>
-+#include <utf8proc.h>
- #include <utf8cpp/utf8.h>
- 
- #include "SASLprepPrivate.h"
-diff --git a/src/podofo/private/charconv_compat.h b/src/podofo/private/charconv_compat.h
-index 1f72d9d9..b20c860b 100644
---- a/src/podofo/private/charconv_compat.h
-+++ b/src/podofo/private/charconv_compat.h
-@@ -15,7 +15,7 @@
- #endif
- 
- #if defined(WANT_CHARS_FORMAT) || defined(WANT_FROM_CHARS)
--#include <fast_float.h>
-+#include <fast_float/fast_float.h>
- #endif
- 
- #ifdef WANT_TO_CHARS
