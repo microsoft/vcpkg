@@ -61,14 +61,83 @@ index 0000000..0000000 100644
 +    ]
 +  }
 +
++  config("absl_bundled_headers") { include_dirs = [ "." ] }
++
 +  group("system_absl") {
-+    public_configs = [ ":absl_from_pkgconfig" ]
++    public_configs = [ ":absl_bundled_headers", ":absl_from_pkgconfig" ]
 +  }
 +}
 +
  config("absl_component_build") {
    defines = [ "ABSL_CONSUME_DLL" ]
  }
+@@ -19,3 +56,7 @@
+ component("absl") {
+-  public_deps = [ ":absl_component_deps" ]
++  if (use_system_abseil) {
++    public_deps = [ ":system_absl" ]
++  } else {
++    public_deps = [ ":absl_component_deps" ]
++  }
+   if (is_component_build) {
+@@ -54,3 +95,4 @@
+ group("absl_component_deps") {
++  if (!use_system_abseil) {
+   public_deps = [
+     "//third_party/abseil-cpp/absl/algorithm",
+@@ -128,4 +170,5 @@
+     public_deps += [ ":absl_full_deps" ]
+   }
+ 
++  }
+   visibility = [ ":absl" ]
+@@ -147,3 +190,3 @@
+-  if (!is_component_build) {
++  if (!is_component_build && !use_system_abseil) {
+     public_deps += [ ":absl_full_deps" ]
+   }
+@@ -163,30 +206,32 @@
+   }
+ }
+ 
++if (!use_system_abseil) {
+ group("absl_full_deps") {
+   public_deps = [
+     # Banned because each flag registration generates a static initializer, and
+     # the flag registration mechanism is problematic in component builds.
+     "//third_party/abseil-cpp/absl/flags:config",
+     "//third_party/abseil-cpp/absl/flags:flag",
+     "//third_party/abseil-cpp/absl/flags:marshalling",
+     "//third_party/abseil-cpp/absl/flags:parse",
+     "//third_party/abseil-cpp/absl/flags:reflection",
+     "//third_party/abseil-cpp/absl/flags:usage",
+ 
+     # Banned because the LOG and CHECK macros conflict with Chrome's version of
+     # those macros.
+     "//third_party/abseil-cpp/absl/log",
+     "//third_party/abseil-cpp/absl/log:check",
+   ]
+ 
+   visibility = [
+     ":absl_component_deps",
+     ":absl_full",
+   ]
+ 
+   public_configs = [ "//third_party/abseil-cpp/absl/flags:absl_flags_config" ]
+ }
++}
+ 
+ config("absl_include_config") {
+   include_dirs = [ "." ]
+@@ -238,7 +283,7 @@
+   }
+ }
+ 
+-if (absl_build_tests) {
++if (absl_build_tests && !use_system_abseil) {
+   import("//testing/test.gni")
+ 
+   if (!is_component_build) {
 diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni b/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
 index 0000000..0000000 100644
 --- a/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
