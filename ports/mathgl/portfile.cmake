@@ -17,6 +17,7 @@ vcpkg_from_sourceforge(
         include_functional.patch
         fix-include-property.patch
         fix_link_gsl.patch
+        wip.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/addons/getopt")
 

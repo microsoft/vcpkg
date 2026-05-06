@@ -1,0 +1,25 @@
+diff --git a/include/mgl2/data.h b/include/mgl2/data.h
+index 606a4ac..2e0dc43 100644
+--- a/include/mgl2/data.h
++++ b/include/mgl2/data.h
+@@ -715,6 +715,7 @@ inline mreal mglGSpline(const mglDataA &coef, mreal dx, mreal *d1=0, mreal *d2=0
+ /** NOTE: you need to delete returned data array!*/
+ HMDT MGL_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &vars);
+ //-----------------------------------------------------------------------------
++MGL_EXPORT
+ extern long mgl_omp_thr;	// threshold for use OpenMP in CalcV(). NOTE: default value is 10000 for 8...12 cores CPU
+ /// Wrapper class for expression evaluating
+ class MGL_EXPORT mglExpr
+diff --git a/udav/CMakeLists.txt b/udav/CMakeLists.txt
+index 393bca2..02dcf54 100644
+--- a/udav/CMakeLists.txt
++++ b/udav/CMakeLists.txt
+@@ -30,7 +30,7 @@ if(${mgl_qt_major} STREQUAL "6")
+ endif(${mgl_qt_major} STREQUAL "6")
+ 
+ add_executable(udav ${udav_src} ${udav_moc_hdr} ${udav_rc_src})
+-target_link_libraries(udav mgl-qt ${MGL_QT_LIBS})
++target_link_libraries(udav mgl-qt${link_tye} ${MGL_QT_LIBS})
+ #set_target_properties(udav PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+ mgl_po_src(${udav_src} ${udav_hdr})
+ 
