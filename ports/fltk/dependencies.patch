@@ -1,5 +1,5 @@
 diff --git a/CMake/options.cmake b/CMake/options.cmake
-index d1e299f..cce3d18 100644
+index d1e299f..e830efb 100644
 --- a/CMake/options.cmake
 +++ b/CMake/options.cmake
 @@ -101,11 +101,14 @@ endif ()
@@ -65,11 +65,14 @@ index d1e299f..cce3d18 100644
      list (APPEND FLTK_CFLAGS -D_THREAD_SAFE -D_REENTRANT)
      set (FLTK_PTHREADS_FOUND TRUE)
    else()
-@@ -511,7 +515,7 @@ if (X11_Xft_FOUND)
+@@ -511,7 +515,10 @@ if (X11_Xft_FOUND)
  endif (X11_Xft_FOUND)
  
  if (OPTION_USE_XFT)
 -  set (USE_XFT X11_Xft_FOUND)
++  if (NOT X11_Xft_FOUND)
++    message(FATAL_ERROR "OPTION_USE_XFT is ON, but X11_Xft_FOUND is false.")
++  endif()
 +  set (USE_XFT ${X11_Xft_FOUND})
    list (APPEND FLTK_LDLIBS -lXft)
    set (FLTK_XFT_FOUND TRUE)
