@@ -18,6 +18,8 @@ vcpkg_check_features(
         bzip2           VCPKG_LOCK_FIND_PACKAGE_BZip2
         lzma            WITH_LIBLZMA
         lzma            VCPKG_LOCK_FIND_PACKAGE_LibLZMA
+        openssl         WITH_OPENSSL
+        openssl         VCPKG_LOCK_FIND_PACKAGE_OpenSSL
         zstd            WITH_LIBZSTD
         zstd            VCPKG_LOCK_FIND_PACKAGE_LibZstd
     INVERTED_FEATURES
