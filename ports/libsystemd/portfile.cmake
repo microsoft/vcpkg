@@ -7,6 +7,7 @@ vcpkg_from_github(
     disable-warning-nonnull.patch
     only-libsystemd.patch
     pkgconfig.patch
+    fix-2604-build.patch
 )
 
 set(static false)

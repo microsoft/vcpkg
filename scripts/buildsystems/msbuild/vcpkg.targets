@@ -168,31 +168,38 @@
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgConfigurationFileLocation)" Condition="Exists('$(_ZVcpkgConfigurationFileLocation)')"/>
   </ItemGroup>
 
+  <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task" 
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+  />
+  <Import Project="$(MSBuildThisFileDirectory)support\GetGlobalProperties.task"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+  />
+
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
           Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
           Outputs="$(_ZVcpkgMSBuildStampFile)">
+    <GetGlobalProperties>
+      <Output TaskParameter="GlobalPropertyNames" PropertyName="_ZVcpkgGlobalPropertyNames" />
+    </GetGlobalProperties>
+    <GetVcpkgEnvVars>
+      <Output TaskParameter="VcpkgEnvVars" PropertyName="_ZVcpkgEnvVars" />
+    </GetVcpkgEnvVars>
+
     <!-- This is set inside the target because $(TLogLocation) may not be set yet when parsing the .targets on VS2015 -->
     <PropertyGroup>
       <_ZVcpkgTLogFileLocation>$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).$(_ZVcpkgHostTripletSuffix)read.1u.tlog</_ZVcpkgTLogFileLocation>
     </PropertyGroup>
-    <Message Text="Installing vcpkg dependencies to $(_ZVcpkgInstalledDir)" Importance="High" />
-    <MakeDir Directories="$(_ZVcpkgInstalledDir)" />
-    <Message Text="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
-          Importance="High" />
-    <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(_ZVcpkgRoot)\%22 %22--x-manifest-root=$(_ZVcpkgManifestRoot)\%22 %22--x-install-root=$(_ZVcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
-          StandardOutputImportance="High"
-          StandardErrorImportance="High"
-          UseUtf8Encoding="Always"
-          StdOutEncoding="utf-8"
-          StdErrEncoding="utf-8"
-          UseCommandProcessor="false"
-          />
+    <MSBuild BuildInParallel="true"
+             Projects="$(MSBuildThisFileDirectory)\support\InstallImplementation.targets"
+             Targets="VcpkgInstallImplementation"
+             RemoveProperties="$(_ZVcpkgGlobalPropertyNames)"
+             Properties="_ZVcpkgMSBuildStampFile=$(_ZVcpkgMSBuildStampFile);_ZVcpkgRoot=$(_ZVcpkgRoot);_ZVcpkgHostTripletSuffix=$(_ZVcpkgHostTripletSuffix);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);_ZVcpkgExecutable=$(_ZVcpkgExecutable);_ZVcpkgHostTripletParameter=$(_ZVcpkgHostTripletParameter);VcpkgTriplet=$(VcpkgTriplet);_ZVcpkgManifestRoot=$(_ZVcpkgManifestRoot);VcpkgAdditionalInstallOptions=$([MSBuild]::Escape($(VcpkgAdditionalInstallOptions)));_ZVcpkgEnvVars=$(_ZVcpkgEnvVars)"
+    />
     <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
                       Lines="@(_ZVcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
                       Encoding="Unicode"
                       Overwrite="true"/>
-    <Touch Files="$(_ZVcpkgMSBuildStampFile)" AlwaysCreate="true" />
 
     <CreateProperty Value="false">
       <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />
