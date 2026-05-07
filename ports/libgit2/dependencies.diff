@@ -1,5 +1,5 @@
 diff --git a/cmake/SelectRegex.cmake b/cmake/SelectRegex.cmake
-index 840ec7f..9533202 100644
+index 840ec7f..d12ef50 100644
 --- a/cmake/SelectRegex.cmake
 +++ b/cmake/SelectRegex.cmake
 @@ -22,7 +22,9 @@ if(REGEX_BACKEND STREQUAL "regcomp_l")
@@ -13,16 +13,25 @@ index 840ec7f..9533202 100644
  
  	if(NOT PCRE2_FOUND)
  		MESSAGE(FATAL_ERROR "PCRE2 support was requested but not found")
-@@ -31,6 +33,9 @@ elseif(REGEX_BACKEND STREQUAL "pcre2")
+@@ -30,7 +32,7 @@ elseif(REGEX_BACKEND STREQUAL "pcre2")
+ 
  	add_feature_info(regex ON "using system PCRE2")
  	set(GIT_REGEX_PCRE2 1)
+-
++	set(PCRE2_LIBRARIES "${PCRE2_LINK_LIBRARIES}")
+ 	list(APPEND LIBGIT2_SYSTEM_INCLUDES ${PCRE2_INCLUDE_DIRS})
+ 	list(APPEND LIBGIT2_SYSTEM_LIBS ${PCRE2_LIBRARIES})
+ 	list(APPEND LIBGIT2_PC_REQUIRES "libpcre2-8")
+@@ -38,6 +40,9 @@ elseif(REGEX_BACKEND STREQUAL "pcre")
+ 	add_feature_info(regex ON "using system PCRE")
+ 	set(GIT_REGEX_PCRE 1)
  
 +	find_package(PkgConfig REQUIRED)
 +	pkg_check_modules(PCRE REQUIRED libpcre)
 +	set(PCRE_LIBRARIES "${PCRE_LINK_LIBRARIES}")
- 	list(APPEND LIBGIT2_SYSTEM_INCLUDES ${PCRE2_INCLUDE_DIRS})
- 	list(APPEND LIBGIT2_SYSTEM_LIBS ${PCRE2_LIBRARIES})
- 	list(APPEND LIBGIT2_PC_REQUIRES "libpcre2-8")
+ 	list(APPEND LIBGIT2_SYSTEM_INCLUDES ${PCRE_INCLUDE_DIRS})
+ 	list(APPEND LIBGIT2_SYSTEM_LIBS ${PCRE_LIBRARIES})
+ 	list(APPEND LIBGIT2_PC_REQUIRES "libpcre")
 diff --git a/cmake/SelectSSH.cmake b/cmake/SelectSSH.cmake
 index a925579..5a2a677 100644
 --- a/cmake/SelectSSH.cmake
