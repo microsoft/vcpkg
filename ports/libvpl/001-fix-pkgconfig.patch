@@ -1,0 +1,43 @@
+diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
+index 0419980..42a765a 100644
+--- a/libvpl/CMakeLists.txt
++++ b/libvpl/CMakeLists.txt
+@@ -188,10 +188,22 @@ if(INSTALL_DEV)
+   if(MINGW)
+     # being conservative by restricting to MinGW, these are probably ok for
+     # WIN32 in general
+-    set(MINGW_LIBS "-lole32 -lgdi32 -luuid")
++    set(WIN32_LIBS "-lole32 -lgdi32 -luuid")
++  elseif(WIN32)
++    set(WIN32_LIBS "-ladvapi32 -lole32")
+   endif()
++  set(CXX_LIB "")
++  foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++        continue()
++    elseif(EXISTS "${lib}")
++        string(APPEND CXX_LIB " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++    else()
++        string(APPEND CXX_LIB " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++    endif()
++  endforeach()
+   set(VPL_PKGCONFIG_DEPENDENT_LIBS
+-      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${MINGW_LIBS} ${CXX_LIB}")
++      "${DL_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${WIN32_LIBS} ${CXX_LIB}")
+   configure_file("pkgconfig/vpl.pc.in" "pkgconfig/vpl.pc" @ONLY)
+   install(
+     FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/vpl.pc"
+diff --git a/libvpl/pkgconfig/vpl.pc.in b/libvpl/pkgconfig/vpl.pc.in
+index aa9b158..46b2c38 100644
+--- a/libvpl/pkgconfig/vpl.pc.in
++++ b/libvpl/pkgconfig/vpl.pc.in
+@@ -1,6 +1,6 @@
+-prefix=@pc_rel_prefix@
+-libdir=@pc_rel_libdir@
+-includedir=@pc_rel_incdir@
++prefix=${pcfiledir}/../..
++libdir=${prefix}/lib
++includedir=${prefix}/include
+ 
+ Name: Intel(R) Video Processing Library
+ Description: Accelerated video decode, encode, and frame processing capabilities on Intel(R) GPUs

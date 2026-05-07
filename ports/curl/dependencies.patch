@@ -2,21 +2,25 @@ diff --git a/CMake/FindBrotli.cmake b/CMake/FindBrotli.cmake
 index b5437e7525..14dbbb9d3f 100644
 --- a/CMake/FindBrotli.cmake
 +++ b/CMake/FindBrotli.cmake
-@@ -57,6 +57,17 @@ if(_brotli_FOUND)
+@@ -43,7 +43,6 @@ if(CURL_USE_PKGCONFIG AND
+    NOT DEFINED BROTLICOMMON_LIBRARY AND
+    NOT DEFINED BROTLIDEC_LIBRARY)
+   find_package(PkgConfig QUIET)
+-  pkg_check_modules(_brotli ${_brotli_pc_requires})
+ endif()
+ 
+ if(_brotli_FOUND)
+@@ -57,6 +56,13 @@ if(_brotli_FOUND)
      set(_brotli_LIBRARIES    "${_brotli_STATIC_LIBRARIES}")
    endif()
    message(STATUS "Found Brotli (via pkg-config): ${_brotli_INCLUDE_DIRS} (found version \"${BROTLI_VERSION}\")")
-+  find_package(_brotli_cmake NAMES unofficial-brotli)
-+  if(TARGET unofficial::brotli::brotlidec AND NOT TARGET CURL::brotli)
-+    add_library(CURL::brotli INTERFACE IMPORTED)
-+    set_target_properties(CURL::brotli PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_brotli_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_brotli_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES unofficial::brotli::brotlidec)
-+  endif()
 +elseif(1)
-+  set(Brotli_FOUND FALSE)
-+  set(BROTLI_FOUND FALSE)
++  find_package(BROTLI NAMES unofficial-brotli)
++  set(Brotli_FOUND "${BROTLI_FOUND}")
++  set(_brotli_CFLAGS       "")
++  set(_brotli_INCLUDE_DIRS "")
++  set(_brotli_LIBRARY_DIRS "")
++  set(_brotli_LIBRARIES    "unofficial::brotli::brotlidec")
  else()
    find_path(BROTLI_INCLUDE_DIR "brotli/decode.h")
    if(BROTLI_USE_STATIC_LIBS)
@@ -24,18 +28,22 @@ diff --git a/CMake/FindCares.cmake b/CMake/FindCares.cmake
 index 3c05c3b2eb..b9f022cdd4 100644
 --- a/CMake/FindCares.cmake
 +++ b/CMake/FindCares.cmake
-@@ -55,6 +55,17 @@ if(_cares_FOUND)
-     set(_cares_LIBRARIES    "${_cares_STATIC_LIBRARIES}")
+@@ -39,9 +39,10 @@ set(_cares_pc_requires "libcares")
+ 
+ if(NOT DEFINED CARES_INCLUDE_DIR AND
+    NOT DEFINED CARES_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_cares ${_cares_pc_requires})
    endif()
-   message(STATUS "Found Cares (via pkg-config): ${_cares_INCLUDE_DIRS} (found version \"${CARES_VERSION}\")")
-+  find_package(_cares_cmake NAMES c-ares)
-+  if(TARGET c-ares::cares AND NOT TARGET CURL::cares)
-+    add_library(CURL::cares INTERFACE IMPORTED)
-+    set_target_properties(CURL::cares PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_cares_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_cares_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES c-ares::cares)
-+  endif()
+   if(NOT _cares_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(c-ares CONFIG QUIET)
+@@ -69,6 +70,9 @@ elseif(c-ares_CONFIG)
+     set(_cares_LIBRARIES c-ares::cares)
+   endif()
+   message(STATUS "Found Cares (via CMake Config): ${c-ares_CONFIG} (found version \"${CARES_VERSION}\")")
 +elseif(1)
 +  set(Cares_FOUND FALSE)
 +  set(CARES_FOUND FALSE)
@@ -46,7 +54,15 @@ diff --git a/CMake/FindGSS.cmake b/CMake/FindGSS.cmake
 index e36f75bf9c..c4c7c4ad81 100644
 --- a/CMake/FindGSS.cmake
 +++ b/CMake/FindGSS.cmake
-@@ -269,7 +269,6 @@ if(GSS_FOUND)
+@@ -61,6 +61,7 @@ if(NOT GSS_ROOT_DIR AND NOT "$ENV{GSS_ROOT_DIR}")
+ endif()
+ 
+ if(NOT _gss_FOUND)  # Not found by pkg-config. Let us take more traditional approach.
++elseif(0)
+   find_file(_gss_configure_script NAMES "krb5-config" PATH_SUFFIXES "bin" HINTS ${_gss_root_hints}
+     NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH)
+   # If not found in user-supplied directories, maybe system knows better
+@@ -265,7 +266,6 @@ if(GSS_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_gss_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_gss_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_gss_INCLUDE_DIRS}"
@@ -67,7 +83,17 @@ index fff57b2c29..7d81acd99a 100644
  if(CURL_USE_PKGCONFIG AND
     NOT DEFINED GNUTLS_INCLUDE_DIR AND
     NOT DEFINED GNUTLS_LIBRARY)
-@@ -90,7 +91,6 @@ if(GNUTLS_FOUND)
+@@ -48,6 +49,9 @@ if(_gnutls_FOUND)
+   set(GNUTLS_FOUND TRUE)
+   set(GNUTLS_VERSION ${_gnutls_VERSION})
+   message(STATUS "Found GnuTLS (via pkg-config): ${_gnutls_INCLUDE_DIRS} (found version \"${GNUTLS_VERSION}\")")
++elseif(1)
++  set(GnuTLS_FOUND FALSE)
++  set(GNUTLS_FOUND FALSE)
+ else()
+   find_path(GNUTLS_INCLUDE_DIR NAMES "gnutls/gnutls.h")
+   find_library(GNUTLS_LIBRARY NAMES "gnutls" "libgnutls")
+@@ -86,7 +90,6 @@ if(GNUTLS_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_gnutls_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_gnutls_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_gnutls_INCLUDE_DIRS}"
@@ -80,7 +106,16 @@ diff --git a/CMake/FindLDAP.cmake b/CMake/FindLDAP.cmake
 index 2f5cc713c7..63c1b0800f 100644
 --- a/CMake/FindLDAP.cmake
 +++ b/CMake/FindLDAP.cmake
-@@ -113,7 +113,6 @@ if(LDAP_FOUND)
+@@ -49,6 +49,8 @@ if(_ldap_FOUND)
+   set(LDAP_FOUND TRUE)
+   set(LDAP_VERSION ${_ldap_ldap_VERSION})
+   message(STATUS "Found LDAP (via pkg-config): ${_ldap_INCLUDE_DIRS} (found version \"${LDAP_VERSION}\")")
++elseif(1)
++  set(LDAP_FOUND FALSE)
+ else()
+   set(_ldap_pc_requires "")  # Depend on pkg-config only when found via pkg-config
+ 
+@@ -109,7 +111,6 @@ if(LDAP_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_ldap_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_ldap_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_ldap_INCLUDE_DIRS}"
@@ -93,7 +128,17 @@ diff --git a/CMake/FindLibgsasl.cmake b/CMake/FindLibgsasl.cmake
 index 5ddf957d72..db462466e4 100644
 --- a/CMake/FindLibgsasl.cmake
 +++ b/CMake/FindLibgsasl.cmake
-@@ -89,7 +89,6 @@ if(LIBGSASL_FOUND)
+@@ -47,6 +47,9 @@ if(_libgsasl_FOUND)
+   set(Libgsasl_FOUND TRUE)
+   set(LIBGSASL_FOUND TRUE)
+   message(STATUS "Found Libgsasl (via pkg-config): ${_libgsasl_INCLUDE_DIRS} (found version \"${LIBGSASL_VERSION}\")")
++elseif(1)
++  set(Libgsasl_FOUND FALSE)
++  set(LIBGSASL_FOUND FALSE)
+ else()
+   find_path(LIBGSASL_INCLUDE_DIR NAMES "gsasl.h")
+   find_library(LIBGSASL_LIBRARY NAMES "gsasl" "libgsasl")
+@@ -85,7 +88,6 @@ if(LIBGSASL_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_libgsasl_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_libgsasl_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_libgsasl_INCLUDE_DIRS}"
@@ -106,7 +151,17 @@ diff --git a/CMake/FindLibidn2.cmake b/CMake/FindLibidn2.cmake
 index 336a7f7b40..b2f3eaf534 100644
 --- a/CMake/FindLibidn2.cmake
 +++ b/CMake/FindLibidn2.cmake
-@@ -90,7 +90,6 @@ if(LIBIDN2_FOUND)
+@@ -48,6 +48,9 @@ if(_libidn2_FOUND)
+   set(LIBIDN2_FOUND TRUE)
+   set(LIBIDN2_VERSION ${_libidn2_VERSION})
+   message(STATUS "Found Libidn2 (via pkg-config): ${_libidn2_INCLUDE_DIRS} (found version \"${LIBIDN2_VERSION}\")")
++elseif(1)
++  set(Libidn2_FOUND FALSE)
++  set(LIBIDN2_FOUND FALSE)
+ else()
+   find_path(LIBIDN2_INCLUDE_DIR NAMES "idn2.h")
+   find_library(LIBIDN2_LIBRARY NAMES "idn2" "libidn2")
+@@ -86,7 +89,6 @@ if(LIBIDN2_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_libidn2_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_libidn2_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_libidn2_INCLUDE_DIRS}"
@@ -119,7 +174,17 @@ diff --git a/CMake/FindLibpsl.cmake b/CMake/FindLibpsl.cmake
 index 9b1a0cdd97..a7fe288883 100644
 --- a/CMake/FindLibpsl.cmake
 +++ b/CMake/FindLibpsl.cmake
-@@ -90,7 +90,6 @@ if(LIBPSL_FOUND)
+@@ -48,6 +48,9 @@ if(_libpsl_FOUND AND _libpsl_INCLUDE_DIRS)
+   set(LIBPSL_FOUND TRUE)
+   set(LIBPSL_VERSION ${_libpsl_VERSION})
+   message(STATUS "Found Libpsl (via pkg-config): ${_libpsl_INCLUDE_DIRS} (found version \"${LIBPSL_VERSION}\")")
++elseif(1)
++  set(Libpsl_FOUND FALSE)
++  set(LIBPSL_FOUND FALSE)
+ else()
+   find_path(LIBPSL_INCLUDE_DIR NAMES "libpsl.h")
+   find_library(LIBPSL_LIBRARY NAMES "psl" "libpsl")
+@@ -86,7 +89,6 @@ if(LIBPSL_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_libpsl_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_libpsl_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_libpsl_INCLUDE_DIRS}"
@@ -128,35 +193,26 @@ index 9b1a0cdd97..a7fe288883 100644
 +      INTERFACE_LINK_LIBRARIES "${_libpsl_LINK_LIBRARIES}")
    endif()
  endif()
-diff --git a/CMake/FindLibrtmp.cmake b/CMake/FindLibrtmp.cmake
-index 853ba63ad0..a9d24d9b3a 100644
---- a/CMake/FindLibrtmp.cmake
-+++ b/CMake/FindLibrtmp.cmake
-@@ -110,7 +110,6 @@ if(LIBRTMP_FOUND)
-       INTERFACE_LIBCURL_PC_MODULES "${_librtmp_pc_requires}"
-       INTERFACE_COMPILE_OPTIONS "${_librtmp_CFLAGS}"
-       INTERFACE_INCLUDE_DIRECTORIES "${_librtmp_INCLUDE_DIRS}"
--      INTERFACE_LINK_DIRECTORIES "${_librtmp_LIBRARY_DIRS}"
--      INTERFACE_LINK_LIBRARIES "${_librtmp_LIBRARIES}")
-+      INTERFACE_LINK_LIBRARIES "${_librtmp_LINK_LIBRARIES}")
-   endif()
- endif()
 diff --git a/CMake/FindLibssh2.cmake b/CMake/FindLibssh2.cmake
 index abed471eb2..f07bb0226b 100644
 --- a/CMake/FindLibssh2.cmake
 +++ b/CMake/FindLibssh2.cmake
-@@ -55,6 +55,17 @@ if(_libssh2_FOUND AND _libssh2_INCLUDE_DIRS)
-     set(_libssh2_LIBRARIES    "${_libssh2_STATIC_LIBRARIES}")
+@@ -39,9 +39,10 @@ set(_libssh2_pc_requires "libssh2")
+ 
+ if(NOT DEFINED LIBSSH2_INCLUDE_DIR AND
+    NOT DEFINED LIBSSH2_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_libssh2 ${_libssh2_pc_requires})
    endif()
-   message(STATUS "Found Libssh2 (via pkg-config): ${_libssh2_INCLUDE_DIRS} (found version \"${LIBSSH2_VERSION}\")")
-+  find_package(_libssh2_cmake NAMES libssh2)
-+  if(TARGET libssh2::libssh2 AND NOT TARGET CURL::libssh2)
-+    add_library(CURL::libssh2 INTERFACE IMPORTED)
-+    set_target_properties(CURL::libssh2 PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_libssh2_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_libssh2_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES libssh2::libssh2)
-+  endif()
+   if(NOT _libssh2_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(libssh2 CONFIG QUIET)
+@@ -69,6 +70,9 @@ elseif(libssh2_CONFIG)
+     set(_libssh2_LIBRARIES libssh2::libssh2)
+   endif()
+   message(STATUS "Found Libssh2 (via CMake Config): ${libssh2_CONFIG} (found version \"${LIBSSH2_VERSION}\")")
 +elseif(1)
 +  set(Libssh2_FOUND FALSE)
 +  set(LIBSSH2_FOUND FALSE)
@@ -167,18 +223,22 @@ diff --git a/CMake/FindMbedTLS.cmake b/CMake/FindMbedTLS.cmake
 index 8b67ce9acf..f3c984079a 100644
 --- a/CMake/FindMbedTLS.cmake
 +++ b/CMake/FindMbedTLS.cmake
-@@ -65,6 +65,17 @@ if(_mbedtls_FOUND)
-     set(_mbedtls_LIBRARIES    "${_mbedtls_STATIC_LIBRARIES}")
+@@ -49,9 +49,10 @@ if(NOT DEFINED MBEDTLS_INCLUDE_DIR AND
+    NOT DEFINED MBEDTLS_LIBRARY AND
+    NOT DEFINED MBEDX509_LIBRARY AND
+    NOT DEFINED MBEDCRYPTO_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_mbedtls ${_mbedtls_pc_requires})
    endif()
-   message(STATUS "Found MbedTLS (via pkg-config): ${_mbedtls_INCLUDE_DIRS} (found version \"${MBEDTLS_VERSION}\")")
-+  find_package(_mbedtls_cmake NAMES MbedTLS)
-+  if(TARGET MbedTLS::mbedtls AND NOT TARGET CURL::mbedtls)
-+    add_library(CURL::mbedtls INTERFACE IMPORTED)
-+    set_target_properties(CURL::mbedtls PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_mbedtls_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_mbedtls_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES MbedTLS::mbedtls MbedTLS::mbedx509 MbedTLS::mbedcrypto)
-+  endif()
+   if(NOT _mbedtls_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(MbedTLS CONFIG QUIET)
+@@ -80,6 +81,9 @@ elseif(MbedTLS_CONFIG)
+   endif()
+   list(APPEND _mbedtls_LIBRARIES MbedTLS::mbedx509 MbedTLS::mbedtls)
+   message(STATUS "Found MbedTLS (via CMake Config): ${MbedTLS_CONFIG} (found version \"${MBEDTLS_VERSION}\")")
 +elseif(1)
 +  set(MbedTLS_FOUND FALSE)
 +  set(MBEDTLS_FOUND FALSE)
@@ -189,31 +249,54 @@ diff --git a/CMake/FindNGHTTP2.cmake b/CMake/FindNGHTTP2.cmake
 index b2a8c97ccd..8b3a1c72d3 100644
 --- a/CMake/FindNGHTTP2.cmake
 +++ b/CMake/FindNGHTTP2.cmake
-@@ -101,7 +101,6 @@ if(NGHTTP2_FOUND)
-       INTERFACE_LIBCURL_PC_MODULES "${_nghttp2_pc_requires}"
-       INTERFACE_COMPILE_OPTIONS "${_nghttp2_CFLAGS}"
-       INTERFACE_INCLUDE_DIRECTORIES "${_nghttp2_INCLUDE_DIRS}"
--      INTERFACE_LINK_DIRECTORIES "${_nghttp2_LIBRARY_DIRS}"
--      INTERFACE_LINK_LIBRARIES "${_nghttp2_LIBRARIES}")
-+      INTERFACE_LINK_LIBRARIES "${_nghttp2_LINK_LIBRARIES}")
+@@ -39,9 +39,10 @@ set(_nghttp2_pc_requires "libnghttp2")
+ 
+ if(NOT DEFINED NGHTTP2_INCLUDE_DIR AND
+    NOT DEFINED NGHTTP2_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_nghttp2 ${_nghttp2_pc_requires})
    endif()
- endif()
+   if(NOT _nghttp2_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(nghttp2 CONFIG QUIET)
+@@ -67,6 +68,8 @@ elseif(nghttp2_CONFIG)
+     set(_nghttp2_LIBRARIES nghttp2::nghttp2)
+   endif()
+   message(STATUS "Found NGHTTP2 (via CMake Config): ${nghttp2_CONFIG} (found version \"${NGHTTP2_VERSION}\")")
++elseif(1)
++  set(NGHTTP2_FOUND FALSE)
+ else()
+   find_path(NGHTTP2_INCLUDE_DIR NAMES "nghttp2/nghttp2.h")
+   if(NGHTTP2_USE_STATIC_LIBS)
 diff --git a/CMake/FindNGHTTP3.cmake b/CMake/FindNGHTTP3.cmake
 index 57550bffaf..b9bd85e43b 100644
 --- a/CMake/FindNGHTTP3.cmake
 +++ b/CMake/FindNGHTTP3.cmake
-@@ -54,6 +54,16 @@ if(_nghttp3_FOUND)
-     set(_nghttp3_LIBRARIES    "${_nghttp3_STATIC_LIBRARIES}")
+@@ -39,9 +39,10 @@ set(_nghttp3_pc_requires "libnghttp3")
+ 
+ if(NOT DEFINED NGHTTP3_INCLUDE_DIR AND
+    NOT DEFINED NGHTTP3_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_nghttp3 ${_nghttp3_pc_requires})
    endif()
-   message(STATUS "Found NGHTTP3 (via pkg-config): ${_nghttp3_INCLUDE_DIRS} (found version \"${NGHTTP3_VERSION}\")")
-+  find_package(_nghttp3_cmake NAMES nghttp3)
-+  if((TARGET nghttp3::nghttp3 OR TARGET nghttp3::nghttp3_static) AND NOT TARGET CURL::nghttp3)
-+    add_library(CURL::nghttp3 INTERFACE IMPORTED)
-+    set_target_properties(CURL::nghttp3 PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_nghttp3_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_nghttp3_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES $<IF:$<TARGET_EXISTS:nghttp3::nghttp3>,nghttp3::nghttp3,nghttp3::nghttp3_static>)
-+  endif()
+   if(NOT _nghttp3_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(nghttp3 CONFIG QUIET)
+@@ -61,12 +62,14 @@ if(_nghttp3_FOUND)
+ elseif(nghttp3_CONFIG)
+   set(NGHTTP3_FOUND TRUE)
+   set(NGHTTP3_VERSION ${nghttp3_VERSION})
+-  if(NGHTTP3_USE_STATIC_LIBS)
++  if(NGHTTP3_USE_STATIC_LIBS OR NOT TARGET nghttp3::nghttp3)
+     set(_nghttp3_LIBRARIES nghttp3::nghttp3_static)
+   else()
+     set(_nghttp3_LIBRARIES nghttp3::nghttp3)
+   endif()
+   message(STATUS "Found NGHTTP3 (via CMake Config): ${nghttp3_CONFIG} (found version \"${NGHTTP3_VERSION}\")")
 +elseif(1)
 +  set(NGHTTP3_FOUND FALSE)
  else()
@@ -223,27 +306,31 @@ diff --git a/CMake/FindNGTCP2.cmake b/CMake/FindNGTCP2.cmake
 index 615ee4a3c2..c2b0fd2e4d 100644
 --- a/CMake/FindNGTCP2.cmake
 +++ b/CMake/FindNGTCP2.cmake
-@@ -92,6 +92,24 @@ if(_ngtcp2_FOUND)
-     set(_ngtcp2_LIBRARIES    "${_ngtcp2_STATIC_LIBRARIES}")
+@@ -76,10 +76,10 @@ endif()
+ set(_tried_pkgconfig FALSE)
+ if(NOT DEFINED NGTCP2_INCLUDE_DIR AND
+    NOT DEFINED NGTCP2_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_ngtcp2 ${_ngtcp2_pc_requires})
+-    set(_tried_pkgconfig TRUE)
    endif()
-   message(STATUS "Found NGTCP2 (via pkg-config): ${_ngtcp2_INCLUDE_DIRS} (found version \"${NGTCP2_VERSION}\")")
-+  find_package(_ngtcp2_cmake NAMES ngtcp2)
-+  set(_ngtcp2_cmake_target ngtcp2::ngtcp2)
-+  if(_ngtcp2_crypto_backend)
-+    # ngtcp2::ngtcp2 is a public link library of the crypto backend.
-+    set(_ngtcp2_cmake_target ngtcp2::ngtcp2_crypto_${_ngtcp2_crypto_backend})
-+  endif()
-+  if(TARGET ${_ngtcp2_cmake_target}_static)
-+    string(APPEND _ngtcp2_cmake_target "_static")
-+  endif()
-+  if(TARGET ${_ngtcp2_cmake_target} AND NOT TARGET CURL::ngtcp2)
-+    add_library(CURL::ngtcp2 INTERFACE IMPORTED)
-+    set_target_properties(CURL::ngtcp2 PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_ngtcp2_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_ngtcp2_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES ${_ngtcp2_cmake_target})
-+  endif()
-+elseif(0)
+   if(NOT _ngtcp2_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(ngtcp2 CONFIG QUIET)
+@@ -105,12 +105,14 @@ if(_ngtcp2_FOUND)
+ elseif(ngtcp2_CONFIG)
+   set(NGTCP2_FOUND TRUE)
+   set(NGTCP2_VERSION ${ngtcp2_VERSION})
+-  if(NGTCP2_USE_STATIC_LIBS)
++  if(NGTCP2_USE_STATIC_LIBS OR NOT TARGET ngtcp2::ngtcp2)
+     set(_ngtcp2_LIBRARIES ngtcp2::ngtcp2_static ngtcp2::${_crypto_library_lower}_static)
+   else()
+     set(_ngtcp2_LIBRARIES ngtcp2::ngtcp2 ngtcp2::${_crypto_library_lower})
+   endif()
+   message(STATUS "Found NGTCP2 (via CMake Config): ${ngtcp2_CONFIG} (found version \"${NGTCP2_VERSION}\")")
++elseif(1)
 +  set(NGTCP2_FOUND FALSE)
  else()
    find_path(NGTCP2_INCLUDE_DIR NAMES "ngtcp2/ngtcp2.h")
@@ -252,7 +339,17 @@ diff --git a/CMake/FindNettle.cmake b/CMake/FindNettle.cmake
 index d22865ffad..049265bc8b 100644
 --- a/CMake/FindNettle.cmake
 +++ b/CMake/FindNettle.cmake
-@@ -95,7 +95,6 @@ if(NETTLE_FOUND)
+@@ -48,6 +48,9 @@ if(_nettle_FOUND)
+   set(NETTLE_FOUND TRUE)
+   set(NETTLE_VERSION ${_nettle_VERSION})
+   message(STATUS "Found Nettle (via pkg-config): ${_nettle_INCLUDE_DIRS} (found version \"${NETTLE_VERSION}\")")
++elseif(1)
++  set(Nettle_FOUND FALSE)
++  set(NETTLE_FOUND FALSE)
+ else()
+   find_path(NETTLE_INCLUDE_DIR NAMES "nettle/sha2.h")
+   find_library(NETTLE_LIBRARY NAMES "nettle")
+@@ -91,7 +94,6 @@ if(NETTLE_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_nettle_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_nettle_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_nettle_INCLUDE_DIRS}"
@@ -265,18 +362,22 @@ diff --git a/CMake/FindWolfSSL.cmake b/CMake/FindWolfSSL.cmake
 index 3a3c05f0fd..4c1b832898 100644
 --- a/CMake/FindWolfSSL.cmake
 +++ b/CMake/FindWolfSSL.cmake
-@@ -57,6 +57,17 @@ if(_wolfssl_FOUND)
-   set(WOLFSSL_FOUND TRUE)
-   set(WOLFSSL_VERSION ${_wolfssl_VERSION})
-   message(STATUS "Found WolfSSL (via pkg-config): ${_wolfssl_INCLUDE_DIRS} (found version \"${WOLFSSL_VERSION}\")")
-+  find_package(_wolfssl_cmake NAMES wolfssl)
-+  if(TARGET wolfssl::wolfssl AND NOT TARGET CURL::wolfssl)
-+    add_library(CURL::wolfssl INTERFACE IMPORTED)
-+    set_target_properties(CURL::wolfssl PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_wolfssl_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_wolfssl_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES wolfssl::wolfssl)
-+  endif()
+@@ -47,9 +47,10 @@ set(_wolfssl_pc_requires "wolfssl")
+ 
+ if(NOT DEFINED WOLFSSL_INCLUDE_DIR AND
+    NOT DEFINED WOLFSSL_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_wolfssl ${_wolfssl_pc_requires})
+   endif()
+   if(NOT _wolfssl_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(wolfssl CONFIG QUIET)
+@@ -67,6 +68,9 @@ elseif(wolfssl_CONFIG)
+   set(WOLFSSL_VERSION ${wolfssl_VERSION})
+   set(_wolfssl_LIBRARIES wolfssl::wolfssl)
+   message(STATUS "Found WolfSSL (via CMake Config): ${wolfssl_CONFIG} (found version \"${WOLFSSL_VERSION}\")")
 +elseif(1)
 +  set(WolfSSL_FOUND FALSE)
 +  set(WOLFSSL_FOUND FALSE)
@@ -287,134 +388,104 @@ diff --git a/CMake/FindZstd.cmake b/CMake/FindZstd.cmake
 index baf6148f0d..c75cfdf47e 100644
 --- a/CMake/FindZstd.cmake
 +++ b/CMake/FindZstd.cmake
-@@ -64,6 +64,17 @@ if(_zstd_FOUND)
-     set(_zstd_LIBRARIES    "${_zstd_STATIC_LIBRARIES}")
+@@ -48,9 +48,10 @@ set(_zstd_pc_requires "libzstd")
+ 
+ if(NOT DEFINED ZSTD_INCLUDE_DIR AND
+    NOT DEFINED ZSTD_LIBRARY)
++endif()
++if(1)
+   if(CURL_USE_PKGCONFIG)
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(_zstd ${_zstd_pc_requires})
    endif()
-   message(STATUS "Found Zstd (via pkg-config): ${_zstd_INCLUDE_DIRS} (found version \"${ZSTD_VERSION}\")")
-+  find_package(_zstd_cmake NAMES zstd)
-+  if(TARGET zstd::libzstd AND NOT TARGET CURL::zstd)
-+    add_library(CURL::zstd INTERFACE IMPORTED)
-+    set_target_properties(CURL::zstd PROPERTIES
-+      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_zstd_LINK_LIBRARIES}"
-+      INTERFACE_LIBCURL_PC_MODULES "${_zstd_pc_requires}"
-+      INTERFACE_LINK_LIBRARIES zstd::libzstd)
-+  endif()
+   if(NOT _zstd_FOUND AND CURL_USE_CMAKECONFIG)
+     find_package(Zstd CONFIG QUIET)
+@@ -85,6 +86,9 @@ elseif(Zstd_CONFIG)
+     set(_zstd_LIBRARIES zstd::libzstd_shared)
+   endif()
+   message(STATUS "Found Zstd (via CMake Config): ${Zstd_CONFIG} (found version \"${ZSTD_VERSION}\")")
 +elseif(1)
-+  set(Zstd_FOUND TRUE)
-+  set(ZSTD_FOUND TRUE)
++  set(Zstd_FOUND FALSE)
++  set(ZSTD_FOUND FALSE)
  else()
    find_path(ZSTD_INCLUDE_DIR NAMES "zstd.h")
    if(ZSTD_USE_STATIC_LIBS)
+diff --git a/CMake/Macros.cmake b/CMake/Macros.cmake
+index 5e26c38469..de6e221163 100644
+--- a/CMake/Macros.cmake
++++ b/CMake/Macros.cmake
+@@ -258,7 +258,15 @@ macro(curl_collect_target_link_options _target)
+     # Explicitly skip this query to avoid CMake v3.18 and older erroring out.
+     get_target_property(_val ${_target} TYPE)
+     if(NOT "${_val}" STREQUAL "INTERFACE_LIBRARY")
+-      get_target_property(_val ${_target} LOCATION)
++      set(_val "")
++      if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
++        get_target_property(_val ${_target} LOCATION_DEBUG)
++      else()
++        get_target_property(_val ${_target} LOCATION_RELEASE)
++      endif()
++      if(NOT EXISTS "${_val}")
++        get_target_property(_val ${_target} LOCATION)
++      endif()
+       if(_val)
+         list(APPEND _libs ${_val})
+       endif()
+@@ -267,6 +275,7 @@ macro(curl_collect_target_link_options _target)
+   get_target_property(_val ${_target} INTERFACE_LINK_LIBRARIES)
+   if(_val)
+     foreach(_lib IN LISTS _val)
++      string(REGEX REPLACE "^[\$]<LINK_ONLY:(.*)>\$" "\\1" _lib "${_lib}")
+       if(TARGET "${_lib}")
+         curl_collect_target_link_options(${_lib})
+       else()
 diff --git a/CMake/curl-config.in.cmake b/CMake/curl-config.in.cmake
 index f4e17d29b3..45947ec6c9 100644
 --- a/CMake/curl-config.in.cmake
 +++ b/CMake/curl-config.in.cmake
-@@ -62,74 +62,50 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_MODULE_PATH})
- set(_curl_libs "")
- 
- if("@HAVE_BROTLI@")
--  find_dependency(Brotli MODULE)
--  list(APPEND _curl_libs CURL::brotli)
-+  find_dependency(unofficial-brotli CONFIG)
- endif()
- if("@USE_ARES@")
--  find_dependency(Cares MODULE)
--  list(APPEND _curl_libs CURL::cares)
-+  find_dependency(c-ares CONFIG)
+@@ -74,7 +74,6 @@ if("@USE_ARES@")
+   list(APPEND _curl_libs CURL::cares)
  endif()
  if("@HAVE_GSSAPI@")
 -  find_dependency(GSS MODULE)
--  list(APPEND _curl_libs CURL::gss)
+   list(APPEND _curl_libs CURL::gss)
  endif()
  if("@USE_BACKTRACE@")
-   find_dependency(Libbacktrace MODULE)
+@@ -82,19 +81,15 @@ if("@USE_BACKTRACE@")
    list(APPEND _curl_libs CURL::libbacktrace)
  endif()
  if("@USE_GSASL@")
 -  find_dependency(Libgsasl MODULE)
--  list(APPEND _curl_libs CURL::libgsasl)
+   list(APPEND _curl_libs CURL::libgsasl)
  endif()
  if(NOT "@USE_WIN32_LDAP@" AND NOT "@CURL_DISABLE_LDAP@")
 -  find_dependency(LDAP MODULE)
--  list(APPEND _curl_libs CURL::ldap)
+   list(APPEND _curl_libs CURL::ldap)
  endif()
  if("@HAVE_LIBIDN2@")
 -  find_dependency(Libidn2 MODULE)
--  list(APPEND _curl_libs CURL::libidn2)
+   list(APPEND _curl_libs CURL::libidn2)
  endif()
  if("@USE_LIBPSL@")
 -  find_dependency(Libpsl MODULE)
--  list(APPEND _curl_libs CURL::libpsl)
- endif()
- if("@USE_LIBRTMP@")
--  find_dependency(Librtmp MODULE)
--  list(APPEND _curl_libs CURL::librtmp)
+   list(APPEND _curl_libs CURL::libpsl)
  endif()
  if("@USE_LIBSSH@")
-   find_dependency(Libssh MODULE)
-   list(APPEND _curl_libs CURL::libssh)
- endif()
- if("@USE_LIBSSH2@")
--  find_dependency(Libssh2 MODULE)
--  list(APPEND _curl_libs CURL::libssh2)
-+  find_dependency(libssh2 CONFIG)
- endif()
- if("@USE_LIBUV@")
-   find_dependency(Libuv MODULE)
-   list(APPEND _curl_libs CURL::libuv)
- endif()
- if("@USE_MBEDTLS@")
--  find_dependency(MbedTLS MODULE)
--  list(APPEND _curl_libs CURL::mbedtls)
-+  find_dependency(MbedTLS CONFIG)
- endif()
- if("@USE_NGHTTP2@")
--  find_dependency(NGHTTP2 MODULE)
--  list(APPEND _curl_libs CURL::nghttp2)
- endif()
- if("@USE_NGHTTP3@")
--  find_dependency(NGHTTP3 MODULE)
--  list(APPEND _curl_libs CURL::nghttp3)
-+  find_dependency(nghttp3 CONFIG)
- endif()
- if("@USE_NGTCP2@")
--  find_dependency(NGTCP2 MODULE)
--  list(APPEND _curl_libs CURL::ngtcp2)
-+  find_dependency(ngtcp2 CONFIG)
+@@ -126,9 +121,7 @@ if("@USE_NGTCP2@")
+   list(APPEND _curl_libs CURL::ngtcp2)
  endif()
  if("@USE_GNUTLS@")
 -  find_dependency(GnuTLS MODULE)
--  list(APPEND _curl_libs CURL::gnutls)
+   list(APPEND _curl_libs CURL::gnutls)
 -  find_dependency(Nettle MODULE)
--  list(APPEND _curl_libs CURL::nettle)
+   list(APPEND _curl_libs CURL::nettle)
  endif()
  if("@USE_QUICHE@")
-   find_dependency(Quiche MODULE)
-@@ -140,12 +116,10 @@ if("@USE_RUSTLS@")
-   list(APPEND _curl_libs CURL::rustls)
- endif()
- if("@USE_WOLFSSL@")
--  find_dependency(WolfSSL MODULE)
--  list(APPEND _curl_libs CURL::wolfssl)
-+  find_dependency(wolfssl CONFIG)
- endif()
- if("@HAVE_ZSTD@")
--  find_dependency(Zstd MODULE)
--  list(APPEND _curl_libs CURL::zstd)
-+  find_dependency(zstd CONFIG)
- endif()
- 
- set(CMAKE_MODULE_PATH ${_curl_cmake_module_path_save})
-@@ -192,7 +166,11 @@ endif()
- # For compatibility with CMake's FindCURL.cmake
+@@ -167,6 +160,7 @@ endif()
  set(CURL_VERSION_STRING "@CURLVERSION@")
  set(CURL_LIBRARIES @PROJECT_NAME@::@LIB_NAME@)
--set(CURL_LIBRARIES_PRIVATE "@LIBCURL_PC_LIBS_PRIVATE_LIST@")
+ set(CURL_LIBRARIES_PRIVATE "@LIBCURL_PC_LIBS_PRIVATE_LIST@")
 +set(CURL_LIBRARIES_PRIVATE "")
-+# @CMAKE_BUILD_TYPE@ usage requirements
-+set(_z_vcpkg_CURL_CONFIG_LIBS             "@CURL_CONFIG_LIBS@")
-+set(_z_vcpkg_LIBCURL_PC_LDFLAGS_PRIVATE   "@LIBCURL_PC_LDFLAGS_PRIVATE@")
-+set(_z_vcpkg_LIBCURL_PC_LIBS_PRIVATE_LIST "@LIBCURL_PC_LIBS_PRIVATE_LIST@")
  set_and_check(CURL_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
  
  set(CURL_SUPPORTED_PROTOCOLS "@CURL_SUPPORTED_PROTOCOLS_LIST@")
@@ -422,7 +493,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 154ba5ef8f..316ad603a9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1853,6 +1853,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+@@ -1880,6 +1880,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
    endif()
  endif()
  
@@ -467,16 +538,17 @@ index 154ba5ef8f..316ad603a9 100644
  if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")  # MSVC but exclude clang-cl
    set_property(DIRECTORY APPEND PROPERTY COMPILE_OPTIONS "-MP")  # Parallel compilation
  endif()
-@@ -2144,7 +2182,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2156,7 +2194,8 @@ if(NOT CURL_DISABLE_INSTALL)
    set(_explicit_libdirs "")
    set(LIBCURL_PC_REQUIRES_PRIVATE "")
    set(LIBCURL_PC_LIBS_PRIVATE_LIST "")
 -  foreach(_lib IN LISTS CURL_LIBS _custom_libs _implicit_libs)
 +  foreach(_lib IN LISTS CURL_LIBS_RAW _custom_libs _implicit_libs)
++    string(REGEX REPLACE "^[\$]<LINK_ONLY:(.*)>\$" "\\1" _lib "${_lib}")
      if(TARGET "${_lib}")
        set(_explicit_libs "")
        get_target_property(_imported "${_lib}" IMPORTED)
-@@ -2184,8 +2222,25 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2182,8 +2221,25 @@ if(NOT CURL_DISABLE_INSTALL)
        endif()
        if(_modules)
          list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "${_modules}")
@@ -489,9 +561,9 @@ index 154ba5ef8f..316ad603a9 100644
 +      # deduplication and workaround for pkgconf 2.5.1 bug
 +      if("${_explicit_libs};" MATCHES "/libcrypto.a;")
 +        list(REMOVE_ITEM _modules "libcrypto")
-+        list(APPEND _modules "libcrypto;")
++        list(APPEND _modules "libcrypto")
 +      endif()
-+      if("${_explicit_libs};" MATCHES "/libz.a")
++      if("${_explicit_libs};" MATCHES "/libzs?d?.a;")
 +        list(REMOVE_ITEM _modules "zlib")
 +        list(APPEND _modules "zlib")
 +      endif()
@@ -502,7 +574,7 @@ index 154ba5ef8f..316ad603a9 100644
        foreach(_lib IN LISTS _explicit_libs)
          if(_lib MATCHES "/")
            # This gets a bit more complex, because we want to specify the
-@@ -2204,23 +2259,44 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2202,23 +2258,47 @@ if(NOT CURL_DISABLE_INSTALL)
              if(NOT _libdir IN_LIST _sys_libdirs)
                list(APPEND _ldflags "-L${_libdir}")
              endif()
@@ -510,10 +582,12 @@ index 154ba5ef8f..316ad603a9 100644
              string(REGEX REPLACE "^lib" "" _libname "${_libname}")
 +            endif()
 +            list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_libname}")
++            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE "-l${_libname}")
              list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_libname}")
 +            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
              list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
            else()
++            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE "${_lib}")
              list(APPEND LIBCURL_PC_LIBS_PRIVATE "${_lib}")
 +            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
              list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
@@ -524,6 +598,7 @@ index 154ba5ef8f..316ad603a9 100644
 +          list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
          else()
 +          list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_lib}")
++          list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE "-l${_lib}")
            list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_lib}")
 +          list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
            list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
@@ -547,7 +622,7 @@ index 154ba5ef8f..316ad603a9 100644
        list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
      endif()
    endforeach()
-@@ -2243,6 +2319,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2241,6 +2321,7 @@ if(NOT CURL_DISABLE_INSTALL)
    if(LIBCURL_PC_LIBS_PRIVATE)
      string(REPLACE ";" " " LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE}")
    endif()

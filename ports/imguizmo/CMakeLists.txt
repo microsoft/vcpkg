@@ -22,11 +22,11 @@ target_include_directories(
 target_sources(
     ${PROJECT_NAME}
     PRIVATE
-        GraphEditor.cpp
-        ImCurveEdit.cpp
-        ImGradient.cpp
-        ImGuizmo.cpp
-        ImSequencer.cpp
+        src/GraphEditor.cpp
+        src/ImCurveEdit.cpp
+        src/ImGradient.cpp
+        src/ImGuizmo.cpp
+        src/ImSequencer.cpp
 )
 
 install(
@@ -40,12 +40,12 @@ install(
 if (NOT IMGUIZMO_SKIP_HEADERS)
     install(
         FILES
-            GraphEditor.h
-            ImCurveEdit.h
-            ImGradient.h
-            ImGuizmo.h
-            ImSequencer.h
-            ImZoomSlider.h
+            src/GraphEditor.h
+            src/ImCurveEdit.h
+            src/ImGradient.h
+            src/ImGuizmo.h
+            src/ImSequencer.h
+            src/ImZoomSlider.h
         DESTINATION include
     )
 endif()

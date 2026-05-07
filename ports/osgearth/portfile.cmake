@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF c980ad2ad6e9fb25c5a7f5b8c94b1cbf0e98a617
     SHA512 4e3fe4f7c11d3fb3962cefb98400c6a0c0a491a3d57642da2040b6e0fd8f2cd27a4f58074b077a61151fde2d0b41ce97aa7fd0cf9901ddb6677f8f31392711e0
     HEAD_REF master
+    PATCHES devendor-imgui.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)

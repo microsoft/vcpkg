@@ -10,6 +10,8 @@ vcpkg_from_github(
         support-find-package.patch
         use-vcpkg.patch
         support-test.patch
+        fix-missing-cstdint.patch
+        fix-cuda13-deprecation.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

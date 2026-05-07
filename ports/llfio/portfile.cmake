@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF 52560148e7e199675a38ab5669d172a3db6a5c94
-    SHA512 a13c8c3340b871f492b1a9eab087ff0ff16d7bee2e3fb3b6539d34efdc3e286920f89283f4df48a79f716803b58abf389ab379bc08838b65d6f5f05455505492
+    REF b3c9308f143e27161c40f6d52a8fd18e8f05761b
+    SHA512 eb1b629b00fc28da939b0766ce567896da098401d71bd65b895f34ccd805d5ac99c0e45cc1733e63ce985c22b6d2118e576fb49a8e3a6f02170b9fe378e801bd
     HEAD_REF develop
 )
 
@@ -38,10 +38,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPK
 endif()
 # setting CMAKE_CXX_STANDARD here to prevent llfio from messing with compiler flags
 # the cmake package config requires said C++ standard target transitively via quickcpplib
-if ("cxx20" IN_LIST FEATURES)
-    list(APPEND extra_config -DCMAKE_CXX_STANDARD=20)
-elseif("cxx17" IN_LIST FEATURES)
+if ("polyfill-cxx20" IN_LIST FEATURES)
     list(APPEND extra_config -DCMAKE_CXX_STANDARD=17)
+endif()
+if (VCPKG_CROSSCOMPILING)
+    # try_run() is not supported when cross-compiling
+    list(APPEND extra_config -DCXX_HAS_CXX17_FILESYSTEM=ON)
 endif()
 
 # quickcpplib parses CMAKE_MSVC_RUNTIME_LIBRARY and cannot support the default crt linkage generator expression from vcpkg
@@ -59,12 +61,10 @@ vcpkg_cmake_configure(
         -Dllfio_IS_DEPENDENCY=On
         "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}"
         ${LLFIO_FEATURE_OPTIONS}
-        -DLLFIO_FORCE_OPENSSL_OFF=ON
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCXX_CONCEPTS_FLAGS=
         -DCXX_COROUTINES_FLAGS=
-        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW # MSVC <filesystem> detection fails without this
         ${extra_config}
 )
 
