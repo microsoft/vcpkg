@@ -42,7 +42,6 @@
                     Log.LogError("Unable to retrieve GlobalProperties");
                     return false;
                 }
-
                 this.GlobalPropertyNames = string.Join(";", globalProperties.Keys);
                 return true;
             }

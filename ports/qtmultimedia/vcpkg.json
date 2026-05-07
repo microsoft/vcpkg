@@ -1,6 +1,6 @@
 {
   "name": "qtmultimedia",
-  "version": "6.10.2",
+  "version": "6.10.3",
   "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -20,7 +20,10 @@
     }
   ],
   "default-features": [
-    "ffmpeg",
+    {
+      "name": "ffmpeg",
+      "platform": "!emscripten"
+    },
     {
       "name": "pipewire",
       "platform": "linux"
@@ -34,6 +37,7 @@
   "features": {
     "ffmpeg": {
       "description": "Build with ffmpeg",
+      "supports": "!emscripten",
       "dependencies": [
         {
           "name": "ffmpeg",

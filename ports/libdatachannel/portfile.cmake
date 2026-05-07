@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
     REF "v${VERSION}"
-    SHA512 8731997a8923c96f80553fffa208204568ed7b7ed8a73d1c7dcc56ec8514809e2dafecde9c297668337efbe08e570c40d9f484d6fe3b784129ba86883efbb277
+    SHA512 49be0df0705e9623ac2fee34201f3f61bc9cb5ac4804581295d82a0c216aeca2224f3105bf0e55060233a206354996af3f9b12f012a7868d2d4dc0dfa9178ac5
     HEAD_REF master
     PATCHES
         dependencies.diff

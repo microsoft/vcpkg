@@ -9,8 +9,17 @@ vcpkg_from_github(
         001-disable-werror.patch
 )
 
+set(feature_options)
+if("spdlog" IN_LIST FEATURES)
+    list(APPEND feature_options "-DUSE_SPDLOG=ON")
+else()
+    list(APPEND feature_options "-DUSE_SPDLOG=OFF")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${feature_options}
 )
 
 vcpkg_cmake_install()

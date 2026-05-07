@@ -2,19 +2,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hellobertrand/zxc
     REF v${VERSION}
-    SHA512 284d9c1f1f23bf0a78c91bf074ed61a6c163422b857e4e40e32035be9e3a365149333b6650621270ec12245c70fe486b1bcb2f8c0bd2489e3b1f44773fae115e
+    SHA512 528d7c1101039eac3214dc67fa7f758a2c4bb1d47a2ed2d69072ada7d920cbcf6d986673fa94b9f60fe3f91a89c24a545d72ad1654e4826cd100cacb2ae95497
     HEAD_REF main
 )
 
 # Remove vendored rapidhash to use the rapidhash port instead
 file(REMOVE "${SOURCE_PATH}/src/lib/vendors/rapidhash.h")
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        util ZXC_BUILD_CLI
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DZXC_NATIVE_ARCH=OFF
         -DZXC_ENABLE_LTO=OFF
-        -DZXC_BUILD_CLI=OFF
         -DZXC_BUILD_TESTS=OFF
 )
 
@@ -27,5 +33,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if ("util" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            zxc
+        AUTO_CLEAN
+    )
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: MIT
 #
 
+set -eux
+
 export DEBIAN_FRONTEND=noninteractive
 
 # Add apt repos
@@ -10,15 +12,31 @@ export DEBIAN_FRONTEND=noninteractive
 # Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "24.04") and format to "2404"
 UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
 NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
+DEBIAN_ARCHITECTURE=$(dpkg --print-architecture)
+
+case "$DEBIAN_ARCHITECTURE" in
+amd64)
+  NVIDIA_REPO_ARCHITECTURE=x86_64
+  ;;
+arm64)
+  NVIDIA_REPO_ARCHITECTURE=sbsa
+  ;;
+*)
+  echo "Unsupported CUDA repository architecture: $DEBIAN_ARCHITECTURE" >&2
+  exit 1
+  ;;
+esac
+
+POWERSHELL_VERSION=7.6.0
 
 # Apt dependencies; needed for add-apt-repository and curl downloads to work
 apt-get -y update
 apt-get --no-install-recommends -y install ca-certificates curl apt-transport-https lsb-release gnupg software-properties-common
 
 ## CUDA
-curl -L -o /etc/apt/preferences.d/cuda-repository-pin-600 "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
-apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/3bf863cc.pub"
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/ /"
+curl -L -o /etc/apt/preferences.d/cuda-repository-pin-600 "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
+apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/3bf863cc.pub"
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/ /"
 
 ## PowerShell
 curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
@@ -34,7 +52,7 @@ curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
 chmod go+r /etc/apt/keyrings/microsoft.gpg
 
 AZ_DIST=$(lsb_release -cs)
-echo "deb [arch=`dpkg --print-architecture` signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" |
+echo "deb [arch=${DEBIAN_ARCHITECTURE} signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" |
     tee /etc/apt/sources.list.d/azure-cli.list
 
 apt-get -y update
@@ -146,25 +164,40 @@ APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 
 ## CUDA
 # The intent is to install everything that does not require an actual GPU, driver, or GUI.
-# Intentionally omitted: cuda-demo-suite-12-9 cuda-documentation-12-9 cuda-driver-*
-#                        cuda-gdb-12-9 cuda-gdb-src-12-9 cuda-nsight-* cuda-nvdisasm
+# Intentionally omitted: cuda-demo-suite-13-2 cuda-documentation-13-2 cuda-driver-*
+#                        cuda-gdb-13-2 cuda-gdb-src-13-2 cuda-nsight-* cuda-nvdisasm
 #                        cuda-nvprof cuda-nvprune cuda-profiler-api* cuda-sandbox-*
-#                        cuda-visual-tools-12-9 nvidia-gds-12-9 cuda-nvvp-12-9
-#                        cuda-toolkit-12-9 cuda-tools-12-9 cuda-command-line-tools-12-9
-#                        cuda-runtime-12-9
+#                        cuda-visual-tools-13-2 nvidia-gds-13-2 cuda-nvvp-13-2
+#                        cuda-toolkit-13-2 cuda-tools-13-2 cuda-command-line-tools-13-2
+#                        cuda-runtime-13-2
 #                        All libraries for which there is a -dev suffix included here
-# cudnn9-jit-cuda-12-9 : Depends: libcudnn9-jit-dev-cuda-12 (= 9.12.0.46-1) but it is not installable
-APT_PACKAGES="$APT_PACKAGES cuda-cccl-12-9 cuda-compat-12-9 cuda-compiler-12-9 cuda-crt-12-9 \
-  cuda-cudart-dev-12-9 cuda-cuobjdump-12-9 cuda-cupti-dev-12-9 cuda-cuxxfilt-12-9 \
-  cuda-driver-dev-12-9 cuda-libraries-dev-12-9 cuda-minimal-build-12-9 cuda-nvcc-12-9 \
-  cuda-nvml-dev-12-9 cuda-nvrtc-dev-12-9 cuda-nvtx-12-9 cuda-nvvm-12-9 cuda-opencl-dev-12-9 \
-  cuda-sanitizer-12-9 cuda-toolkit-12-9-config-common cudnn9-cuda-12-9 gds-tools-12-9 \
-  libcublas-12-9 libcudnn9-dev-cuda-12 libcufft-dev-12-9 libcurand-dev-12-9 libcusolver-dev-12-9 \
-  libcusparse-dev-12-9 libnccl-dev libnpp-dev-12-9 libnvfatbin-dev-12-9 libnvjitlink-dev-12-9 \
-  libnvjpeg-dev-12-9"
+# cudnn9-jit-cuda-13 : cudnn9-jit appears to conflict with cudnn9-dev packages:
+# root@c47a4cc2ea72:/# apt install cudnn9-jit-cuda-13
+# The following additional packages will be installed:
+#   cudnn9-jit-cuda-13-2 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+# The following packages will be REMOVED:
+#   cudnn9-cuda-13 cudnn9-cuda-13-2 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
+# The following NEW packages will be installed:
+#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-2 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+APT_PACKAGES="$APT_PACKAGES cuda-cccl-13-2 cuda-compat-13-2 cuda-compiler-13-2 cuda-crt-13-2 \
+  cuda-cudart-dev-13-2 cuda-cuobjdump-13-2 cuda-cupti-dev-13-2 cuda-cuxxfilt-13-2 \
+  cuda-driver-dev-13-2 cuda-libraries-dev-13-2 cuda-minimal-build-13-2 cuda-nvcc-13-2 \
+  cuda-nvml-dev-13-2 cuda-nvrtc-dev-13-2 cuda-nvtx-13-2 libnvvm-13-2 \
+  cuda-sanitizer-13-2 cuda-toolkit-13-2-config-common cudnn9-cuda-13 gds-tools-13-2 \
+  libcublas-13-2 libcudnn9-dev-cuda-13 libcufft-dev-13-2 libcurand-dev-13-2 libcusolver-dev-13-2 \
+  libcusparse-dev-13-2 libnccl-dev libnpp-dev-13-2 libnvfatbin-dev-13-2 libnvjitlink-dev-13-2 \
+  libnvjpeg-dev-13-2"
+
+if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
+  APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-2"
+fi
 
 ## PowerShell + Azure
-APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"
+APT_PACKAGES="$APT_PACKAGES azcopy azure-cli"
+
+if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
+  APT_PACKAGES="$APT_PACKAGES powershell"
+fi
 
 ## Required for speech-dispatcher feature for ethindp-prism
 APT_PACKAGES="$APT_PACKAGES libspeechd-dev"
@@ -177,5 +210,16 @@ APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu74 debsums liblttng-ust1"
 fi
 
 apt-get --no-install-recommends -y install $APT_PACKAGES
+
+if [[ "$DEBIAN_ARCHITECTURE" == "arm64" ]]; then
+  curl -L -o /tmp/powershell-linux-arm64.tar.gz "https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-arm64.tar.gz"
+  mkdir -p /opt/microsoft/powershell/7
+  tar zxf /tmp/powershell-linux-arm64.tar.gz -C /opt/microsoft/powershell/7
+  chmod +x /opt/microsoft/powershell/7/pwsh
+  ln -sf /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+  rm -f /tmp/powershell-linux-arm64.tar.gz
+fi
+
+rm -rf /var/lib/apt/lists/*
 
 az --version

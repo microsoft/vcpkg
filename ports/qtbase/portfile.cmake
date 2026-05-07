@@ -24,12 +24,11 @@ set(${PORT}_PATCHES
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
         moltenvk.patch
-        xcodebuild-not-installed.patch
         fix-libresolv-test.patch
-        framework.patch
         use_inotify_on_freebsd.patch
+        QTBUG-145239.patch # https://github.com/qt/qtbase/commit/a76004f16fdc43e1b7af83bfdf3f1a613491b234
 )
- 
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
 endif()
@@ -347,12 +346,16 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DFEATURE_force_debug_info:BOOL=ON
                         -DFEATURE_relocatable:BOOL=ON
                         -DQT_AUTODETECT_ANDROID:BOOL=ON # Use vcpkg toolchain as is
+                        -DQT_NO_XCODE_MIN_VERSION_CHECK:BOOL=ON # The cmd line tools are missing xcodebuild
+                        -DQT_FIND_APPLE_SYSTEM_FRAMEWORKS_MODE:STRING=ONLY
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DFEATURE_debug:BOOL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
                         FEATURE_appstore_compliant # only used for android/ios
                         QT_AUTODETECT_ANDROID
+                        QT_NO_XCODE_MIN_VERSION_CHECK
+                        QT_FIND_APPLE_SYSTEM_FRAMEWORKS_MODE
                     )
 
 # Install CMake helper scripts

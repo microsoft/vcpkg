@@ -1,0 +1,15 @@
+diff --git a/src/gen-gpu-shader-artifacts.py b/src/gen-gpu-shader-artifacts.py
+index 6a7f7f903217ac7cd5d8937cc3a9dd48bee31c29..2f6999ef30ca9c86f73479d69edbaf960cf752a4 100755
+--- a/src/gen-gpu-shader-artifacts.py
++++ b/src/gen-gpu-shader-artifacts.py
+@@ -38,6 +38,7 @@
+ try:
+     shutil.copyfile(OUTPUT, src_copy)
+ except OSError:
+-    import filecmp
+-    if not filecmp.cmp(OUTPUT, src_copy, shallow=False):
+-        sys.exit(f'{src_copy} is out of date; regenerate with a writable source tree')
++    # Read as text to ignore line-ending changes
++    with open(OUTPUT, 'r') as f1, open(src_copy, 'r') as f2:
++        if f1.read() != f2.read():
++            sys.exit(f'{src_copy} is out of date; regenerate with a writable source tree')

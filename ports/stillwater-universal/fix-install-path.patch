@@ -1,6 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index de28c31..599ddc5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -559,19 +559,10 @@
+@@ -697,19 +697,10 @@ set(namespace "${PACKAGE_NAME}::")
  
  # Set up install directories. INCLUDE_INSTALL_DIR and
  # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
@@ -10,8 +12,8 @@
 -    set(config_install_dir CMake)
 -elseif(UNIX)
 -    set(include_install_dir include)
--    set(include_install_dir_postfix "${project_library_target_name}")
--    set(include_install_dir_full    "${include_install_dir}/${include_install_dir_postfix}")
+-    set(include_install_dir_postfix "")
+-    set(include_install_dir_full    "${include_install_dir}")
 -
 -    set(config_install_dir share/${PACKAGE_NAME})
 -else()
@@ -24,14 +26,3 @@
  
  #####  Gather git repo related information
  # Get the current working branch
-@@ -658,7 +649,8 @@
-     DESTINATION ${config_install_dir} COMPONENT cmake)
- 
- # Install headers
--install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/${project_library_target_name}
--        DESTINATION ${include_install_dir})
-+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/sw/universal
-+        DESTINATION ${include_install_dir}
-+        FILES_MATCHING PATTERN "*.hpp")
- 
- if(UNIVERSAL_BUILD_ALL)

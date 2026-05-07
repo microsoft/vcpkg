@@ -1,8 +1,18 @@
 diff --git a/spine-cpp/CMakeLists.txt b/spine-cpp/CMakeLists.txt
-index 9829b42cd..372d58d15 100644
+index 9829b42cd..fd666c663 100644
 --- a/spine-cpp/CMakeLists.txt
 +++ b/spine-cpp/CMakeLists.txt
-@@ -14,8 +14,8 @@ add_library(spine-cpp-lite STATIC ${SOURCES} ${INCLUDES} spine-cpp-lite/spine-cp
+@@ -8,17 +8,21 @@ file(GLOB INCLUDES "spine-cpp/include/**/*.h")
+ file(GLOB SOURCES "spine-cpp/src/**/*.cpp")
+ 
+ add_library(spine-cpp STATIC ${SOURCES} ${INCLUDES})
+-target_include_directories(spine-cpp PUBLIC spine-cpp/include)
++target_include_directories(spine-cpp PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/spine-cpp/include>
++    $<INSTALL_INTERFACE:include/spine-cpp>
++)
+ 
+ add_library(spine-cpp-lite STATIC ${SOURCES} ${INCLUDES} spine-cpp-lite/spine-cpp-lite.cpp)
  target_include_directories(spine-cpp-lite PUBLIC spine-cpp/include spine-cpp-lite)
  
  # Install target
@@ -12,4 +22,11 @@ index 9829b42cd..372d58d15 100644
 +install(FILES ${INCLUDES} DESTINATION include/spine-cpp/spine)
  
  # Export target
- export(
+-export(
++install(
+ 	EXPORT spine-cpp_TARGETS
+-	FILE ${CMAKE_CURRENT_BINARY_DIR}/spine-cppTargets.cmake
++	FILE spine-cppConfig.cmake
++	DESTINATION share/spine-cpp
+ 	NAMESPACE "Spine::")
+\ No newline at end of file
