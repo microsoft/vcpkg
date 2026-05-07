@@ -100,7 +100,7 @@ ci-failure-analysis/
 
 ## Critical Rules
 
-- Use `Invoke-WebRequest` for ZIPs — `web_fetch` can't download binaries
+- Use `Invoke-WebRequest` or curl shell commands for ZIPs — `web_fetch` can't download binaries
 - Artifact type is `PipelineArtifact` — Container API won't work
 - Scan step logs first — `FILE_CONFLICTS` only appear there
 - Check **both** baseline files
