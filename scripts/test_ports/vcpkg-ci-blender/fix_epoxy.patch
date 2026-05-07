@@ -1,30 +1,14 @@
 diff --git a/build_files/cmake/Modules/FindEpoxy.cmake b/build_files/cmake/Modules/FindEpoxy.cmake
 --- a/build_files/cmake/Modules/FindEpoxy.cmake
 +++ b/build_files/cmake/Modules/FindEpoxy.cmake
-@@ -9,6 +9,27 @@
+@@ -9,6 +9,11 @@
  #                     This can also be an environment variable.
  #  Epoxy_FOUND, If false, do not try to use epoxy.
  
-+if(APPLE AND DEFINED VCPKG_CURRENT_INSTALLED_DIR)
-+  set(PKG_CONFIG_EXECUTABLE "$ENV{PKG_CONFIG}")
-+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-+    set(ENV{PKG_CONFIG_PATH}
-+      "${VCPKG_CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig:${VCPKG_CURRENT_INSTALLED_DIR}/lib/pkgconfig:${VCPKG_CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
-+  else()
-+    set(ENV{PKG_CONFIG_PATH}
-+      "${VCPKG_CURRENT_INSTALLED_DIR}/lib/pkgconfig:${VCPKG_CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
-+  endif()
-+  find_package(PkgConfig QUIET)
-+  if(PkgConfig_FOUND)
-+    pkg_check_modules(epoxy QUIET IMPORTED_TARGET epoxy)
-+    if(epoxy_FOUND)
-+      set(Epoxy_LIBRARY PkgConfig::epoxy)
-+      set(Epoxy_LIBRARIES PkgConfig::epoxy)
-+      set(Epoxy_INCLUDE_DIRS ${epoxy_INCLUDE_DIRS})
-+      list(GET epoxy_INCLUDE_DIRS 0 Epoxy_INCLUDE_DIR)
-+    endif()
-+  endif()
-+endif()
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(epoxy QUIET IMPORTED_TARGET epoxy)
++set(Epoxy_INCLUDE_DIR "${epoxy_INCLUDE_DIRS}" CACHE INTERNAL "vcpkg")
++set(Epoxy_LIBRARY "PkgConfig::epoxy" CACHE INTERNAL "vcpkg")
 +
  # If `EPOXY_ROOT_DIR` was defined in the environment, use it.
  if(DEFINED EPOXY_ROOT_DIR)
