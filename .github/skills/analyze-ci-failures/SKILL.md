@@ -1,5 +1,7 @@
 ---
 name: analyze-ci-failures
+metadata:
+   version: 2025-05-07
 description: >
   Analyze vcpkg Azure DevOps CI failures. Downloads logs, identifies regression root causes,
   generates a report by package and triplet.
@@ -69,7 +71,7 @@ Fetches build metadata and failure logs via Azure DevOps REST API, cross-referen
 
 ### Phase 2: Download logs and enhance (time permitting)
 
-7. **Download logs** — `Invoke-WebRequest` for artifact ZIPs (not `web_fetch`). Only download `"failure logs for {triplet}"` — skip `"file lists"`, `"z azcopy logs"`. Extract into `ci-failure-analysis/{scope}/logs/{triplet}/`. If download fails, still create the directory with a placeholder noting the URL.
+7. **Download logs** — `Invoke-WebRequest` or curl shell commands for artifact ZIPs (not `web_fetch`). Only download `"failure logs for {triplet}"` — skip `"file lists"`, `"z azcopy logs"`. Extract into `ci-failure-analysis/{scope}/logs/{triplet}/`. If download fails, still create the directory with a placeholder noting the URL.
 8. **Analyze** — Read `stdout-{triplet}.log` last lines. Classify per [references/vcpkg-failure-patterns.md](references/vcpkg-failure-patterns.md). Update report with additional root cause detail.
 9. **Baselines** — Check both `ci.baseline.txt` and `ci.feature.baseline.txt`.
 
