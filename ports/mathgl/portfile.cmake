@@ -57,7 +57,6 @@ vcpkg_cmake_configure(
         -DCMAKE_CXX_STANDARD=11 # minimum for armadillo on osx
         -DCMAKE_DISABLE_FIND_PACKAGE_Intl=1
         -DCMAKE_POLICY_DEFAULT_CMP0127=NEW # cmake_dependent_option condition syntax
---trace-expand
 )
 
 vcpkg_cmake_install()

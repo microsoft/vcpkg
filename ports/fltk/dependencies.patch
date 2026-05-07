@@ -1,5 +1,5 @@
 diff --git a/CMake/options.cmake b/CMake/options.cmake
-index d1e299f..e830efb 100644
+index d1e299f..3c996f8 100644
 --- a/CMake/options.cmake
 +++ b/CMake/options.cmake
 @@ -101,11 +101,14 @@ endif ()
@@ -56,12 +56,15 @@ index d1e299f..e830efb 100644
  
    if (CMAKE_HAVE_THREADS_LIBRARY)
      add_definitions ("-D_THREAD_SAFE -D_REENTRANT")
-@@ -434,7 +438,7 @@ if (OPTION_USE_THREADS)
+@@ -432,9 +436,9 @@ if (OPTION_USE_THREADS)
+   if (CMAKE_USE_PTHREADS_INIT AND NOT WIN32)
+     set (HAVE_PTHREAD 1)
      if (NOT APPLE)
-       set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+-      set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
++      set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
      endif (NOT APPLE)
 -    list (APPEND FLTK_LDLIBS -lpthread)
-+    list (APPEND FLTK_LDLIBS -pthread)
++    list (APPEND FLTK_LDLIBS "${CMAKE_THREAD_LIBS_INIT}")
      list (APPEND FLTK_CFLAGS -D_THREAD_SAFE -D_REENTRANT)
      set (FLTK_PTHREADS_FOUND TRUE)
    else()
@@ -73,7 +76,7 @@ index d1e299f..e830efb 100644
 +  if (NOT X11_Xft_FOUND)
 +    message(FATAL_ERROR "OPTION_USE_XFT is ON, but X11_Xft_FOUND is false.")
 +  endif()
-+  set (USE_XFT ${X11_Xft_FOUND})
++  set (USE_XFT TRUE)
    list (APPEND FLTK_LDLIBS -lXft)
    set (FLTK_XFT_FOUND TRUE)
  else()
