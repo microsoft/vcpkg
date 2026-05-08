@@ -62,6 +62,10 @@ if("tools" IN_LIST FEATURES)
         llama-tokenize
         llama-tts
     )
+    # https://github.com/ggml-org/llama.cpp/blob/master/tools/parser/CMakeLists.txt#L1
+    if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND tool_names llama-debug-template-parser)
+    endif()
     if("server" IN_LIST FEATURES)
         list(APPEND tool_names llama-cli llama-server)
     endif()
