@@ -1,0 +1,32 @@
+diff --git a/libfdt/meson.build b/libfdt/meson.build
+index bf8343f..c2f4bd6 100644
+--- a/libfdt/meson.build
++++ b/libfdt/meson.build
+@@ -26,7 +26,7 @@ else
+ endif
+ 
+ link_args += version_script
+-libfdt = both_libraries(
++libfdt = library(
+   'fdt', sources,
+   version: meson.project_version(),
+   link_args: link_args,
+@@ -34,17 +34,11 @@ libfdt = both_libraries(
+   install: true,
+ )
+ 
+-if static_build
+-  link_with = libfdt.get_static_lib()
+-else
+-  link_with = libfdt.get_shared_lib()
+-endif
+-
+ libfdt_inc = include_directories('.')
+ 
+ libfdt_dep = declare_dependency(
+   include_directories: libfdt_inc,
+-  link_with: link_with,
++  link_with: libfdt,
+ )
+ 
+ install_headers(

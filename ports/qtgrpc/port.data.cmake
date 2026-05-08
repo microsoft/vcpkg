@@ -1,3 +1,3 @@
-set(qtgrpc_HASH "fd42c9792b9de98d038a748e03eb66a578a28b68c7151d912bb274d2e5223f0f2aa213b1f824b201cd622f21e62cf15f6ce030a7deed05cbd3a47b78fc41694e")
-set(qtgrpc_URL "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/qtgrpc-everywhere-src-6.10.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.2/submodules/qtgrpc-everywhere-src-6.10.2.tar.xz")
-set(qtgrpc_FILENAME "qtgrpc-everywhere-src-6.10.2.tar.xz")
+set(qtgrpc_HASH "dbdac26e6814cd95c03631ade98706e0d807f16eb4ef6317352f933f2613f5f18337540a091422d815f02e263cff15fad01451c73d56883b516dd2be6f48b5c7")
+set(qtgrpc_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtgrpc-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtgrpc-everywhere-src-6.10.3.tar.xz")
+set(qtgrpc_FILENAME "qtgrpc-everywhere-src-6.10.3.tar.xz")
