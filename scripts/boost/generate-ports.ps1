@@ -211,6 +211,24 @@ $suppressPlatformForDependency = @{
     'boost-wave'                  = @('boost-filesystem');
 }
 
+# boost/static_assert.hpp is provided by Boost.Config in 1.91.0.
+# However, these Boost libraries still link the CMake target
+# Boost::static_assert in their upstream CMakeLists.txt, so they still need
+# boost-static-assert to provide boost_static_assertConfig.cmake.
+$staticAssertCMakeTargetUsers = @(
+    'contract',
+    'date_time',
+    'geometry',
+    'graph',
+    'icl',
+    'program_options',
+    'python',
+    'serialization',
+    'spirit',
+    'variant',
+    'wave'
+)
+
 function GeneratePortName() {
     param (
         [string]$Library
@@ -756,6 +774,10 @@ foreach ($library in $libraries) {
                 }
             }
             $boostPortDependencies += @(GeneratePortDependency $library)
+        }
+
+        if ($staticAssertCMakeTargetUsers -contains $library) {
+            $deps += 'static_assert'
         }
 
         $deps = $deps | Select-Object -Unique

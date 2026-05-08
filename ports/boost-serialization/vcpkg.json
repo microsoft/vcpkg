@@ -84,6 +84,10 @@
       "version>=": "1.91.0"
     },
     {
+      "name": "boost-static-assert",
+      "version>=": "1.91.0"
+    },
+    {
       "name": "boost-throw-exception",
       "version>=": "1.91.0"
     },
