@@ -7,7 +7,7 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.10.2)
+set(QT_VERSION 6.10.3)
 set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
@@ -153,7 +153,8 @@ if(QT_UPDATE_VERSION)
         string(REGEX REPLACE "\"version(-(string|semver))?\": [^\n]+\n" "\"version\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
         string(REGEX REPLACE "\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
         file(WRITE "${port_json}" "${_control_contents}")
-        
+        configure_file("${port_json}" "${port_json}" @ONLY NEWLINE_STYLE LF)
+
         set(port_data "")
         if(qt_port STREQUAL "qt")
             continue()
@@ -182,6 +183,7 @@ if(QT_UPDATE_VERSION)
             string(APPEND port_data "set(${qt_port}_FILENAME \"${filename}\")\n")
         endif()
         file(WRITE "${CMAKE_CURRENT_LIST_DIR}/../../${qt_port}/port.data.cmake" "${port_data}")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/../../${qt_port}/port.data.cmake" "${CMAKE_CURRENT_LIST_DIR}/../../${qt_port}/port.data.cmake" @ONLY NEWLINE_STYLE LF)
     endforeach()
     message("${msg}")
     file(WRITE "${CMAKE_CURRENT_LIST_DIR}/qt_port_data_new.cmake" "${msg}")
