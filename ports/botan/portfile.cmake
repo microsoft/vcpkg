@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 fe9197d11e1252829548fb5e015874d72bcd5894f9217b76ab509b9ece44d01efa0bfe5306d5aebd8f7feb97abd32970406ab2cd6f0af866aefa557f762afea4
+    SHA512 33a47e5733aedc29704652bf16704a2cd080cdcebd01c95879b5db3af3186debbef711c53ef131a9cb7defe3dd8ffae49d6efe7e75aef9107473b92dc6b3f101
     HEAD_REF master
     PATCHES
-        pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
