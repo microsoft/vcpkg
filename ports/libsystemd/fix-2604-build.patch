@@ -1,0 +1,46 @@
+diff --git a/meson.build b/meson.build
+index a4730f0570..1034ce5fbc 100644
+--- a/meson.build
++++ b/meson.build
+@@ -370,21 +370,6 @@ possible_common_cc_flags = [
+         '-Warray-bounds=2',
+         '-Wdate-time',
+         '-Wendif-labels',
+-        '-Werror=format=2',
+-        '-Werror=format-signedness',
+-        '-Werror=implicit-function-declaration',
+-        '-Werror=implicit-int',
+-        '-Werror=incompatible-pointer-types',
+-        '-Werror=int-conversion',
+-        '-Werror=missing-declarations',
+-        '-Werror=missing-prototypes',
+-        '-Werror=overflow',
+-        '-Werror=override-init',
+-        '-Werror=return-type',
+-        '-Werror=shift-count-overflow',
+-        '-Werror=shift-overflow=2',
+-        '-Werror=strict-flex-arrays',
+-        '-Werror=undef',
+         '-Wfloat-equal',
+         # gperf prevents us from enabling this because it does not emit fallthrough
+         # attribute with clang.
+@@ -511,19 +496,6 @@ userspace_c_ld_args += cc.get_supported_link_arguments(possible_link_flags)
+ have = cc.has_argument('-Wzero-length-bounds')
+ conf.set10('HAVE_ZERO_LENGTH_BOUNDS', have)
+ 
+-if cc.compiles('''
+-   #include <time.h>
+-   #include <inttypes.h>
+-   typedef uint64_t usec_t;
+-   usec_t now(clockid_t clock);
+-   int main(void) {
+-           struct timespec now;
+-           return 0;
+-   }
+-''', args: '-Werror=shadow', name : '-Werror=shadow with local shadowing')
+-        add_project_arguments('-Werror=shadow', language : 'c')
+-endif
+-
+ if cxx_cmd != ''
+         add_project_arguments(cxx.get_supported_arguments(basic_disabled_warnings), language : 'cpp')
+ endif
