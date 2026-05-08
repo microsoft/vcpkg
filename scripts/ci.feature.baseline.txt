@@ -324,6 +324,7 @@ flashlight-sequence[cuda]:x86-windows=cascade
 flashlight-sequence[openmp]:arm64-osx=feature-fails # No openmp on osx
 flashlight-text[kenlm]:arm64-windows=cascade
 fltk:arm64-linux=fail
+fltk(android)=fail # needs X
 fluidsynth[pulseaudio](android | osx | windows)=cascade
 forge:arm64-linux=cascade
 forge:x86-windows=fail
