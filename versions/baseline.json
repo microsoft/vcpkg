@@ -8929,7 +8929,7 @@
       "port-version": 2
     },
     "ryml": {
-      "baseline": "0.11.1",
+      "baseline": "0.12.1",
       "port-version": 0
     },
     "ryu": {

@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/rapidyaml
     REF "v${VERSION}"
-    SHA512 6e40de2eb1b65ec68db199e52bfcbef334aad485be804ae1afe12038fb03c163412959044c4d38f323d1f6dbd76598d19a303cd2711e31b022b65bee23c8951f
+    SHA512 e4a66a13b68808048ba3354c19556fd9df567be94325f9ee4010cf722cc6c637fb5296a08bdc584bd8dc1a362ee5fe1697efcf2e979227e622d0b1c1b60265a3
     HEAD_REF master
     PATCHES
         cmake-fix.patch
