@@ -270,6 +270,15 @@ index b2a8c97ccd..8b3a1c72d3 100644
  elseif(nghttp2_CONFIG)
    set(NGHTTP2_FOUND TRUE)
    set(NGHTTP2_VERSION ${nghttp2_VERSION})
+@@ -110,7 +115,6 @@ if(NGHTTP2_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_nghttp2_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_nghttp2_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_nghttp2_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_nghttp2_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_nghttp2_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_nghttp2_LINK_LIBRARIES}")
+   endif()
+ endif()
 diff --git a/CMake/FindNGHTTP3.cmake b/CMake/FindNGHTTP3.cmake
 index 57550bffaf..b9bd85e43b 100644
 --- a/CMake/FindNGHTTP3.cmake
@@ -477,7 +486,15 @@ index f4e17d29b3..45947ec6c9 100644
    list(APPEND _curl_libs CURL::libpsl)
  endif()
  if("@USE_LIBSSH@")
-@@ -126,9 +121,7 @@ if("@USE_NGTCP2@")
+@@ -114,7 +109,6 @@ if("@USE_MBEDTLS@")
+   list(APPEND _curl_libs CURL::mbedtls)
+ endif()
+ if("@USE_NGHTTP2@")
+-  find_dependency(NGHTTP2 MODULE)
+   list(APPEND _curl_libs CURL::nghttp2)
+ endif()
+ if("@USE_NGHTTP3@")
+@@ -126,9 +120,7 @@ if("@USE_NGTCP2@")
    list(APPEND _curl_libs CURL::ngtcp2)
  endif()
  if("@USE_GNUTLS@")
@@ -487,7 +504,7 @@ index f4e17d29b3..45947ec6c9 100644
    list(APPEND _curl_libs CURL::nettle)
  endif()
  if("@USE_QUICHE@")
-@@ -167,6 +160,7 @@ endif()
+@@ -167,6 +159,7 @@ endif()
  set(CURL_VERSION_STRING "@CURLVERSION@")
  set(CURL_LIBRARIES @PROJECT_NAME@::@LIB_NAME@)
  set(CURL_LIBRARIES_PRIVATE "@LIBCURL_PC_LIBS_PRIVATE_LIST@")
