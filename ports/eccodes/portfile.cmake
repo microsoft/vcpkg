@@ -85,6 +85,17 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/eccodes)
+
+# vcpkg_cmake_config_fixup moves upstream's config files from lib/cmake/eccodes
+# to share/eccodes. The upstream config still validates eccodes_CMAKE_DIR
+# against the original lib/cmake/eccodes path, which no longer exists after
+# fixup. Keep it pointing at the moved vcpkg config directory.
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/eccodes-config.cmake"
+    [[${PACKAGE_PREFIX_DIR}/lib/cmake/eccodes]]
+    [[${PACKAGE_PREFIX_DIR}/share/eccodes]]
+)
+
 vcpkg_fixup_pkgconfig()
 
 set(_eccodes_tool_names
