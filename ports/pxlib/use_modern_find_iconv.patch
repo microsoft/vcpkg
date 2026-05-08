@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0b2af5c..f9484ad 100644
+index 0b2af5c..9214e66 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -36,23 +36,10 @@ check_include_file("gsf/gsf-input-stdio.h" HAVE_GSF_GSFINPUTSTDIO_H)
+@@ -36,22 +36,11 @@ check_include_file("gsf/gsf-input-stdio.h" HAVE_GSF_GSFINPUTSTDIO_H)
  include(CheckFunctionExists)
  include(CheckLibraryExists)
  
@@ -22,11 +22,11 @@ index 0b2af5c..f9484ad 100644
 -    if(ICONV_IN_LIBC OR HAVE_ICONV_LIB)
 -        set(HAVE_ICONV 1)
 -    endif()
--endif()
 +# Check for iconv via CMake's modern Iconv module (CMake 3.11+)
-+find_package(Iconv REQUIRED)
-+set(HAVE_ICONV 1)
-+set(ICONV_LIBRARIES Iconv::Iconv)
++find_package(Iconv)
++if(Iconv_FOUND)
++    set(HAVE_ICONV 1)
++    set(ICONV_LIBRARIES Iconv::Iconv)
+ endif()
  
  # Endianess
- include(TestBigEndian)
