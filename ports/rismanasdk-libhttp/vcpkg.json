@@ -1,5 +1,5 @@
 {
-  "name": "libhttp-cpp",
+  "name": "rismanasdk-libhttp",
   "version": "2.0.0",
   "description": "A header-only C++ HTTP/1.1 client library supporting http and https requests, inspired by Python's requests library",
   "homepage": "https://github.com/rismanasdk/libhttp",
