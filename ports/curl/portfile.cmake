@@ -16,6 +16,8 @@ vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[LIBCURL_TIMESTAMP
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         http2       USE_NGHTTP2
+        http2       VCPKG_LOCK_FIND_PACKAGE_NGHTTP2
+        http2       CMAKE_REQUIRE_FIND_PACKAGE_NGHTTP2
         http3       USE_NGTCP2
         wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
@@ -24,6 +26,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ssh         CURL_USE_LIBSSH2
         tool        BUILD_CURL_EXE
         c-ares      ENABLE_ARES
+        c-ares      CMAKE_REQUIRE_FIND_PACKAGE_c-ares
         sspi        CURL_WINDOWS_SSPI
         brotli      CURL_BROTLI
         idn2        USE_LIBIDN2
@@ -72,12 +75,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
         -DBUILD_TESTING=OFF
@@ -87,8 +90,6 @@ vcpkg_cmake_configure(
         -DCURL_USE_CMAKECONFIG=ON
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-    MAYBE_UNUSED_VARIABLES
-        PKG_CONFIG_EXECUTABLE
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
