@@ -6,7 +6,6 @@ vcpkg_download_distfile(BOOST_MATH_ANDROID_PATCH
     SHA512 19b6cf82f2e10b0154227e8e31eb892f3ca8899dd3946b909088be13b322a8881ff91b8aec2e2d099140f170f1d76547034e4def56ece347b6b52dbabeb1cf51
 )
 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
