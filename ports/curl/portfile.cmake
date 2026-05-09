@@ -48,8 +48,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("ssl" IN_LIST FEATURES AND
     NOT "http3" IN_LIST FEATURES AND
-    # (windows & !uwp) | mingw to match curl[ssl]'s "platform"
-    ((VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP) OR VCPKG_TARGET_IS_MINGW))
+    # Match curl[ssl]'s "platform": "windows & !uwp"
+    (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
     list(APPEND FEATURE_OPTIONS -DCURL_USE_SCHANNEL=ON)
 endif()
 
