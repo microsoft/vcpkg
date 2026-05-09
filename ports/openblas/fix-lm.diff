@@ -1,0 +1,11 @@
+diff --git a/cmake/openblas.pc.in b/cmake/openblas.pc.in
+index 374221b..714a49c 100644
+--- a/cmake/openblas.pc.in
++++ b/cmake/openblas.pc.in
+@@ -9,5 +9,5 @@ Name: OpenBLAS
+ Description: OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version
+ Version: @OpenBLAS_VERSION@
+ URL: https://github.com/OpenMathLib/OpenBLAS
+-Libs: -L${libdir} -l${libnameprefix}openblas${libnamesuffix}${libsuffix} 
++Libs: -L${libdir} -l${libnameprefix}openblas${libnamesuffix}${libsuffix} @OPENBLAS_PC_LIBS@
+ Cflags: -I${includedir} @OpenMP_C_FLAGS@ 

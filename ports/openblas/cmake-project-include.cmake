@@ -72,3 +72,7 @@ elseif(need_target)
     set(NUM_THREADS "${num_threads_default}" CACHE STRING "")
     message(STATUS "NUM_THREADS: ${NUM_THREADS}")
 endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "AIX|Android|Linux|FreeBSD|OpenBSD|NetBSD|DragonFly|Darwin")
+    set(OPENBLAS_PC_LIBS "-lm")
+endif()
