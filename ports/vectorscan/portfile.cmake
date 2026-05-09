@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         remove-Werror.patch
         enable-chimera.patch
+        fix-libch-pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
