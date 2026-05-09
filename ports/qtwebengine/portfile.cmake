@@ -210,29 +210,27 @@ if(QT_UPDATE_VERSION)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
-    # Replace the bundled abseil headers with the system-installed copy.
-    # This guarantees that every #include path — both explicit
-    # "third_party/abseil-cpp/absl/..." (via -I <chromium_root>) and the
-    # internal "absl/..." (via -isystem <prefix>/include) — resolves to the
-    # same version, preventing API mismatches (e.g., lts_20260107 vs older
-    # bundled headers).
+    # Devendor bundled abseil: replace the bundled absl/ directory with a
+    # symlink to the system-installed headers.  This guarantees that every
+    # #include path — both explicit "third_party/abseil-cpp/absl/..."
+    # (via -I <chromium_root>) and internal "absl/..." (via -isystem
+    # <prefix>/include) — resolves to the same installed files, preventing
+    # API mismatches between the old bundled and new system version.
     set(_chromium_absl "${SOURCE_PATH}/src/3rdparty/chromium/third_party/abseil-cpp")
     file(REMOVE_RECURSE "${_chromium_absl}/absl")
-    # Copy (not symlink) so we can patch specific headers without touching the
-    # system-installed abseil files.
-    file(COPY "${CURRENT_INSTALLED_DIR}/include/absl" DESTINATION "${_chromium_absl}/")
+    file(CREATE_LINK "${CURRENT_INSTALLED_DIR}/include/absl" "${_chromium_absl}/absl" SYMBOLIC)
+    unset(_chromium_absl)
     # GCC < 14 rejects comparing a function pointer to nullptr in a constexpr
     # context (GCC bug #88449, fixed in GCC 14).  abseil lts_20260107 triggers
-    # this in hash_policy_traits.h.  Work around it by removing constexpr from
-    # the wrapper and relaxing the dependent PolicyFunctions initialiser from
-    # constexpr to const so it may call a non-constexpr function.
-    vcpkg_replace_string("${_chromium_absl}/absl/container/internal/hash_policy_traits.h"
+    # this in hash_policy_traits.h.  Patch the installed headers directly —
+    # the symlink above makes the bundled path an alias for them, so patching
+    # once covers all include paths.
+    vcpkg_replace_string("${CURRENT_INSTALLED_DIR}/include/absl/container/internal/hash_policy_traits.h"
         "  static constexpr HashSlotFn get_hash_slot_fn() {"
         "  static HashSlotFn get_hash_slot_fn() {")
-    vcpkg_replace_string("${_chromium_absl}/absl/container/internal/raw_hash_set.h"
+    vcpkg_replace_string("${CURRENT_INSTALLED_DIR}/include/absl/container/internal/raw_hash_set.h"
         "    static constexpr PolicyFunctions value = {"
         "    static const PolicyFunctions value = {")
-    unset(_chromium_absl)
 endif()
 
 qt_cmake_configure(
