@@ -8,6 +8,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+      vs_2026.diff
       dependencies.diff
 )
 
