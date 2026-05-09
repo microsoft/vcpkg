@@ -516,15 +516,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 154ba5ef8f..316ad603a9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1120,7 +1120,7 @@ endif()
- 
- option(USE_NGHTTP2 "Use nghttp2 library" ON)
- if(USE_NGHTTP2)
--  find_package(NGHTTP2 MODULE)
-+  find_package(NGHTTP2 MODULE REQUIRED)
-   if(NGHTTP2_FOUND)
-     list(APPEND CURL_LIBS CURL::nghttp2)
-   else()
 @@ -1880,6 +1880,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
    endif()
  endif()

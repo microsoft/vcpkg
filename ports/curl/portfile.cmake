@@ -22,6 +22,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gssapi      CURL_USE_GSSAPI
         gssapi      VCPKG_LOCK_FIND_PACKAGE_GSS
         http2       USE_NGHTTP2
+        http2       VCPKG_LOCK_FIND_PACKAGE_NGHTTP2
         http3       USE_NGTCP2
         httpsrr     USE_HTTPSRR
         idn2        USE_LIBIDN2
@@ -96,6 +97,7 @@ vcpkg_cmake_configure(
         VCPKG_LOCK_FIND_PACKAGE_LDAP
         VCPKG_LOCK_FIND_PACKAGE_Libidn2
         VCPKG_LOCK_FIND_PACKAGE_Libssh2
+        VCPKG_LOCK_FIND_PACKAGE_NGHTTP2
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
