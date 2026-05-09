@@ -1,12 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb9d6d7..27685de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -300,6 +300,11 @@ include(CheckCXXSourceCompiles)
+ 
+ cmake_host_system_information(RESULT mgl_sys_var QUERY HAS_SSE2)
+ if(${mgl_sys_var})
++	if(MSVC)
++		set(mgl_sse FALSE CACHE BOOL "unknown options, SSE2 is default")
++	elseif(CMAKE_CROSSCOMPILING)
++		set(mgl_sse FALSE CACHE BOOL "ignoring cmake_host_system_information")
++	endif()
+ 	set(CMAKE_REQUIRED_FLAGS -msse2 -mfpmath=sse)
+ 	CHECK_CXX_SOURCE_COMPILES("
+ 		int main(void){}" mgl_sse)
 diff --git a/include/mgl2/data.h b/include/mgl2/data.h
-index 606a4ac..2e0dc43 100644
+index 606a4ac..16edef7 100644
 --- a/include/mgl2/data.h
 +++ b/include/mgl2/data.h
-@@ -715,6 +715,7 @@ inline mreal mglGSpline(const mglDataA &coef, mreal dx, mreal *d1=0, mreal *d2=0
+@@ -715,6 +715,11 @@ inline mreal mglGSpline(const mglDataA &coef, mreal dx, mreal *d1=0, mreal *d2=0
  /** NOTE: you need to delete returned data array!*/
  HMDT MGL_EXPORT mglFormulaCalc(const char *str, const std::vector<mglDataA*> &vars);
  //-----------------------------------------------------------------------------
++#if defined(MGL_WIDGETS_DLL) && defined(MGL_LIB_MSVC)
++__declspec(dllimport)
++#else
 +MGL_EXPORT
++#endif
  extern long mgl_omp_thr;	// threshold for use OpenMP in CalcV(). NOTE: default value is 10000 for 8...12 cores CPU
  /// Wrapper class for expression evaluating
  class MGL_EXPORT mglExpr
