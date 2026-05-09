@@ -52,6 +52,14 @@ endif()
 # This shouldn't be set too low for generic packages. But it comes with a
 # memory footprint.
 
+# Android: AVX-512 inline assembly exceeds NDK Clang register availability,
+# and ARMV9SME kernel references missing SVE source files.
+if(ANDROID)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^x64")
+        set(NO_AVX512 ON CACHE BOOL "")
+    endif()
+endif()
+
 if(DEFINED NUM_THREADS)
     message(STATUS "NUM_THREADS: ${NUM_THREADS} (user-defined)")
 elseif(EMSCRIPTEN)

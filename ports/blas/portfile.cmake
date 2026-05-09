@@ -53,7 +53,7 @@ else()
     set(BLA_VENDOR OpenBLAS)
     set(BLA_PREFER_PKGCONFIG ON)
     set(requires openblas)
-    set(libs "-lm")
+    set(libs "")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" @ONLY)
