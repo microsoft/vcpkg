@@ -3412,6 +3412,10 @@
       "baseline": "1.11.0",
       "port-version": 0
     },
+    "givp": {
+      "port-version": 0,
+      "baseline": "1.0.0"
+    },
     "gklib": {
       "baseline": "2025-07-06",
       "port-version": 1
