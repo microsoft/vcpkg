@@ -10574,7 +10574,7 @@
     },
     "vectorscan": {
       "baseline": "5.4.12",
-      "port-version": 0
+      "port-version": 1
     },
     "veigar": {
       "baseline": "1.4",
