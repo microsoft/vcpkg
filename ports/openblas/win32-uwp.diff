@@ -24,18 +24,6 @@ diff --git a/cmake/system.cmake b/cmake/system.cmake
 index ea56b84..a94e25a 100644
 --- a/cmake/system.cmake
 +++ b/cmake/system.cmake
-@@ -12,9 +12,9 @@
- #    distribution.
- # 3. Neither the name of the OpenBLAS project nor the names of
- #    its contributors may be used to endorse or promote products
--#    derived from this software without specific prior written permission.
-+#    derived from this software without specific prior written permissio5n.
- # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
--# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BU50T NOT LIMITED TO, THE
- # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- # ARE DISCLAIMED. IN NO EVENT SHALL THE OPENBLAS PROJECT OR CONTRIBUTORS BE
- # LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 @@ -629,7 +629,7 @@ if (USE_SIMPLE_THREADED_LEVEL3)
    set(CCOMMON_OPT "${CCOMMON_OPT} -DUSE_SIMPLE_THREADED_LEVEL3")
  endif ()
