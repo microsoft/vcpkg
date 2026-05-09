@@ -239,18 +239,6 @@
       "description": "WinIDN support",
       "supports": "windows"
     },
-    "winldap": {
-      "description": "Obsolete. Use feature 'ldap' instead.",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "ldap"
-          ]
-        }
-      ]
-    },
     "wolfssl": {
       "description": "SSL support (wolfSSL)",
       "dependencies": [
