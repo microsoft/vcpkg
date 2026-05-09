@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -283,7 +283,7 @@ endif()
+ # Android needs to explicitly link against libm
+ if (${CMAKE_SYSTEM_NAME} MATCHES "AIX|Android|Linux|FreeBSD|OpenBSD|NetBSD|DragonFly|Darwin")
+   if(BUILD_STATIC_LIBS)
+-    target_link_libraries(${OpenBLAS_LIBNAME}_static m)
++    target_link_libraries(${OpenBLAS_LIBNAME}_static PUBLIC m)
+   endif()
+   if(BUILD_SHARED_LIBS)
+     target_link_libraries(${OpenBLAS_LIBNAME}_shared m)
