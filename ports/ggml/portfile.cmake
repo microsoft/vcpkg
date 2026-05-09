@@ -11,6 +11,7 @@ vcpkg_from_github(
         vulkan-shaders-gen.diff
         fix-dequant_funcs.diff
         fix-vulkan-spv-shadowing.diff
+        fix-vk-32bit.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
