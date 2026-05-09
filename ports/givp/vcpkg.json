@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "givp",
+  "version": "1.0.0",
+  "description": "GRASP-ILS-VND with Path Relinking optimizer for continuous and mixed-integer black-box optimization",
+  "homepage": "https://github.com/Arnime/grasp_ils_vnd_pr",
+  "documentation": "https://arnime.github.io/grasp_ils_vnd_pr/",
+  "license": "MIT",
+  "dependencies": [],
+  "features": {},
+  "supports": "(windows & !arm) | linux | osx | freebsd"
+}

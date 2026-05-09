@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "kind": "port",
+  "port": {
+    "homepage": "https://github.com/Arnime/grasp_ils_vnd_pr",
+    "description": [
+      "GRASP-ILS-VND with Path Relinking optimizer for continuous and mixed-integer black-box optimization.",
+      "Header-only C++17 library implementing a metaheuristic combining GRASP construction, Iterated Local Search,",
+      "Variable Neighborhood Descent, and Path Relinking with elite pool and adaptive alpha refinement."
+    ],
+    "documentation": "https://arnime.github.io/grasp_ils_vnd_pr/",
+    "vcpkg-docs-url": "https://learn.microsoft.com/en-us/vcpkg/",
+    "license": "MIT",
+    "maintainers": [
+      "Arnaldo Mendes Pires Junior <arnaldo.mpires@gmail.com>"
+    ]
+  }
+}
