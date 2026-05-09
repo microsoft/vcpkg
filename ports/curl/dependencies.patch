@@ -316,7 +316,15 @@ diff --git a/CMake/FindNGTCP2.cmake b/CMake/FindNGTCP2.cmake
 index 615ee4a3c2..c2b0fd2e4d 100644
 --- a/CMake/FindNGTCP2.cmake
 +++ b/CMake/FindNGTCP2.cmake
-@@ -76,10 +76,10 @@ endif()
+@@ -65,6 +65,7 @@ if(NGTCP2_FIND_COMPONENTS)
+   if(_ngtcp2_crypto_backend)
+     string(TOLOWER "ngtcp2_crypto_${_ngtcp2_crypto_backend}" _crypto_library_lower)
+     string(TOUPPER "ngtcp2_crypto_${_ngtcp2_crypto_backend}" _crypto_library_upper)
++    set(NGTCP2_CRYPTO_BACKEND "${_ngtcp2_crypto_backend}")
+   endif()
+ endif()
+ 
+@@ -76,10 +77,10 @@ endif()
  set(_tried_pkgconfig FALSE)
  if(NOT DEFINED NGTCP2_INCLUDE_DIR AND
     NOT DEFINED NGTCP2_LIBRARY)
@@ -494,7 +502,12 @@ index f4e17d29b3..45947ec6c9 100644
    list(APPEND _curl_libs CURL::nghttp2)
  endif()
  if("@USE_NGHTTP3@")
-@@ -126,9 +120,7 @@ if("@USE_NGTCP2@")
+@@ -122,13 +116,11 @@ if("@USE_NGHTTP3@")
+   list(APPEND _curl_libs CURL::nghttp3)
+ endif()
+ if("@USE_NGTCP2@")
+-  find_dependency(NGTCP2 MODULE)
++  find_dependency(NGTCP2 MODULE COMPONENTS @NGTCP2_CRYPTO_BACKEND@)
    list(APPEND _curl_libs CURL::ngtcp2)
  endif()
  if("@USE_GNUTLS@")
