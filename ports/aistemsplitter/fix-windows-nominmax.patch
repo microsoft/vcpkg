@@ -1,0 +1,14 @@
+diff --git a/src/client.cpp b/src/client.cpp
+index 8cf7f4d..72871dd 100644
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -1,5 +1,9 @@
+ #include "aistemsplitter/client.hpp"
+ 
++#ifdef _WIN32
++#define NOMINMAX
++#endif
++
+ #include <curl/curl.h>
+ 
+ #include <algorithm>

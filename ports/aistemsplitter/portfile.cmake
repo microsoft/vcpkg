@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.1.0
     SHA512 17279384bd6b993b669778b3034d2fb7266d718e62e053f372e5c326ee02bccde8c3c011ef0755b92eb74005822ef64742121893fc5440a46d116d05dcc1c5c9
     HEAD_REF main
+    PATCHES
+        fix-windows-nominmax.patch
 )
 
 vcpkg_cmake_configure(
