@@ -10,3 +10,21 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
    endif()
    if(BUILD_SHARED_LIBS)
      target_link_libraries(${OpenBLAS_LIBNAME}_shared m)
+@@ -383,9 +383,9 @@ endif()
+ if (USE_THREAD)
+   find_package(Threads)
+   if (THREADS_HAVE_PTHREAD_ARG)
+     set_target_properties(${OpenBLAS_LIBS} PROPERTIES
+       COMPILE_OPTIONS "-pthread"
+       INTERFACE_COMPILE_OPTIONS "-pthread"
+     )
+   endif()
+   if(BUILD_STATIC_LIBS)
+-    target_link_libraries(${OpenBLAS_LIBNAME}_static ${CMAKE_THREAD_LIBS_INIT})
++    target_link_libraries(${OpenBLAS_LIBNAME}_static PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+   endif()
+   if(BUILD_SHARED_LIBS)
+-    target_link_libraries(${OpenBLAS_LIBNAME}_shared ${CMAKE_THREAD_LIBS_INIT})
++    target_link_libraries(${OpenBLAS_LIBNAME}_shared PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+   endif()
+ endif()
