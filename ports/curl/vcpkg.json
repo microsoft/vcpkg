@@ -224,7 +224,16 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support"
+      "description": "WebSocket support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        }
+      ]
     },
     "winidn": {
       "description": "WinIDN support",
