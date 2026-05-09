@@ -10,7 +10,6 @@ vcpkg_from_github(
         system-check-msvc.diff
         win32-uwp.diff
         android-exclude-sme.diff
-        link-m-public.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
