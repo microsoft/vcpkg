@@ -758,7 +758,7 @@
     },
     "blas": {
       "baseline": "2023-04-14",
-      "port-version": 5
+      "port-version": 6
     },
     "blaze": {
       "baseline": "3.8.2",
@@ -7301,7 +7301,7 @@
       "port-version": 0
     },
     "openblas": {
-      "baseline": "0.3.29",
+      "baseline": "0.3.33",
       "port-version": 0
     },
     "opencascade": {
