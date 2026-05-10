@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 57100575..65b5b775 100644
+index 9991d67..ba8a982 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -200,7 +200,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
- set(REQUIRES_PRIVATE "")
+@@ -192,7 +192,7 @@ set(PC_LIBS_PRIVATE)
+ set(PC_REQUIRES_PRIVATE)
  
  #Clang support, required to build static with LTO
 -if(CMAKE_C_COMPILER_ID MATCHES "Clang" AND UNIX AND NOT APPLE)
