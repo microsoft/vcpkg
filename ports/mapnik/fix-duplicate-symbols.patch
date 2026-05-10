@@ -1,0 +1,18 @@
+diff --git a/src/vector_tile_compression.cpp b/src/vector_tile_compression.cpp
+index a156984..71a8dbb 100644
+--- a/src/vector_tile_compression.cpp
++++ b/src/vector_tile_compression.cpp
+@@ -1,2 +1 @@
+ #include "vector_tile_compression.hpp"
+-#include "vector_tile_compression.ipp"
+\ No newline at end of file
+diff --git a/src/vector_tile_geometry_decoder.cpp b/src/vector_tile_geometry_decoder.cpp
+index 528f6f5..214282b 100644
+--- a/src/vector_tile_geometry_decoder.cpp
++++ b/src/vector_tile_geometry_decoder.cpp
+@@ -1,5 +1,4 @@
+ #include "vector_tile_geometry_decoder.hpp"
+-#include "vector_tile_geometry_decoder.ipp"
+ 
+ namespace mapnik
+ {
