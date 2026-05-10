@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
   "name": "givp",
   "version": "1.0.0",
   "description": "GRASP-ILS-VND with Path Relinking optimizer for continuous and mixed-integer black-box optimization",
@@ -8,7 +7,13 @@
   "license": "MIT",
   "supports": "(windows & !arm) | linux | osx | freebsd",
   "dependencies": [
-    "vcpkg-cmake",
-    "vcpkg-cmake-config"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
