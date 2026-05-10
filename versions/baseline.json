@@ -3805,7 +3805,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.5.0",
+      "baseline": "2.5.2",
       "port-version": 0
     },
     "hidapi": {
