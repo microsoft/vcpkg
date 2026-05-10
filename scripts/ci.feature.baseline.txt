@@ -866,7 +866,6 @@ onnxruntime[tensorrt]((x64 & windows & !static) | (x64 & linux))=feature-fails #
 onnxruntime-gpu=skip
 openal-soft[pipewire](!(linux&x64))=cascade
 openal-soft[pulseaudio](!(linux&x64))=cascade
-openblas[dynamic-arch]:arm64-linux=feature-fails
 opencascade[vtk]:arm64-linux=cascade
 opencc:arm64-windows=fail # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 opencc:x64-android=fail
