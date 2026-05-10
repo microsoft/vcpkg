@@ -1,9 +1,10 @@
 {
   "name": "libid3tag",
-  "version": "0.16.3",
+  "version": "0.16.4",
   "description": "ID3 tag manipulation library",
   "homepage": "https://codeberg.org/tenacityteam/libid3tag",
   "dependencies": [
+    "gperf",
     {
       "name": "vcpkg-cmake",
       "host": true
