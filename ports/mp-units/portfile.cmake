@@ -1,5 +1,9 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("Note: `mp-units` requires Clang16+ or GCC11+")
+    message("Note: `mp-units` requires Clang16+ or GCC11+ on Linux")
+endif()
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    message("Note: `mp-units` requires MSVC 2022 (17.10, v194+) or later on Windows")
 endif()
 
 vcpkg_from_github(

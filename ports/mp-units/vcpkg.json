@@ -1,12 +1,20 @@
 {
   "name": "mp-units",
   "version": "2.5.0",
-  "description": "The quantities and units library for C++",
+  "port-version": 1,
+  "description": "The Domain-Correct Quantities and Units Library for C++ — full quantity kind safety, ISO 80000 compliant, C++29 standardization candidate.",
   "homepage": "https://mpusz.github.io/mp-units",
+  "documentation": "https://mpusz.github.io/mp-units/latest/",
   "license": "MIT",
   "dependencies": [
-    "fmt",
-    "gsl-lite",
+    {
+      "name": "fmt",
+      "version>=": "12.1.0"
+    },
+    {
+      "name": "gsl-lite",
+      "version>=": "1.0.1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
