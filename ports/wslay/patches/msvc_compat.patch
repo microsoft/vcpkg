@@ -1,0 +1,13 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 4af972e..92e8091 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -8,8 +8,6 @@ set(PACKAGE_VERSION "1.0.1-DEV")
+ set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+ set(GEN_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/includes)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -pedantic-errors -Wno-long-long")
+-
+ include(CheckIncludeFile)
+ include(TestBigEndian)
+ check_include_file("arpa/inet.h" HAVE_ARPA_INET_H)
