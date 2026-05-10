@@ -1,0 +1,12 @@
+{
+  "name": "intelliversex-cpp",
+  "version": "1.5.0",
+  "description": "IntelliVerseX C/C++ SDK — Auth, Backend (Nakama), Analytics, Social, Monetization for game development",
+  "homepage": "https://github.com/Intelli-verse-X/Intelli-verse-X-Unity-SDK",
+  "documentation": "https://intelli-verse-x.github.io/Intelli-verse-X-Unity-SDK/platforms/cpp/",
+  "license": "MIT",
+  "supports": "!(uwp | arm)",
+  "dependencies": [
+    "nakama-sdk"
+  ]
+}
