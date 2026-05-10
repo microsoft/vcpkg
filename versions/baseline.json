@@ -8053,7 +8053,7 @@
       "port-version": 1
     },
     "pybind11": {
-      "baseline": "3.0.1",
+      "baseline": "3.0.4",
       "port-version": 0
     },
     "pystring": {
