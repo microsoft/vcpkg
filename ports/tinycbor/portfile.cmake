@@ -1,20 +1,45 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/tinycbor
     REF "v${VERSION}"
-    SHA512 7c7fff9c1e9a2f04a3bb0247b79723526685b2821df720d0211c8e86b1a516c955926b3668fa6dcdaaf6cb811aff238db39a9add1bc12a4d32f8a51741f3f2ce
+    SHA512 193f995ecf1098accd04add3271aae834fd08aba94b7360ed0c22f8cc52d212cfe9c708c3cd89accaa27448078e95ae847ae91da661ca2cc4a1029e73b250b57
     HEAD_REF master
+    PATCHES
+        import-target-cjson.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+vcpkg_check_features(OUT_FEATURE_OPTIONS feature_options
+    FEATURES
+        tools           BUILD_TOOLS
+)
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
-
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${feature_options}
+        -DBUILD_EXAMPLES=OFF
+)
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/tinycbor")
+vcpkg_fixup_pkgconfig()
 
 # Remove duplicated include headers
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            json2cbor
+        AUTO_CLEAN
+    )
+    if (NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_copy_tools(
+            TOOL_NAMES
+                cbordump
+            AUTO_CLEAN
+        )
+    endif()
+endif ()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
