@@ -1,0 +1,63 @@
+diff --git a/src/libstatgrab/disk_stats.c b/src/libstatgrab/disk_stats.c
+index 62c0fde..d4ce894 100644
+--- a/src/libstatgrab/disk_stats.c
++++ b/src/libstatgrab/disk_stats.c
+@@ -34,7 +34,7 @@
+ 
+ #ifdef SOLARIS
+ #define VALID_FS_TYPES {"ufs", "tmpfs", "vxfs", "nfs", "zfs", "lofs"}
+-#elif defined(LINUX)
++#elif defined(LINUX) || defined(__ANDROID__)
+ #define VALID_FS_TYPES {"adfs", "affs", "befs", "bfs", "btrfs", "cifs", \
+ 			"efs", "ext2", "ext3", "ext4", "vxfs", "hfs", \
+ 			"hfsplus", "hpfs", "jffs", "jffs2", "jfs", "minix", \
+@@ -459,7 +459,7 @@
+ #define CUR_VALID_FS sys_fs_types[i]
+ #define CAN_SHRINK_VALID_FS
+ 
+-#elif defined(LINUX)
++#elif defined(LINUX) || defined(__ANDROID__)
+ 
+ #undef FILL_VALID_FS
+ 
+@@ -1034,7 +1034,7 @@ sg_get_fs_list_int(sg_vector **fs_stats_vector_ptr) {
+ 		    ( ( upderr = sg_update_string( &fs_ptr[num_fs].mnt_point, SG_FS_MOUNTP ) ) != SG_ERROR_NONE ) ) {
+ 			RETURN_FROM_PREVIOUS_ERROR( "disk", upderr );
+ 		}
+-
++#ifndef WIN32
+ 		while( ( -1 != lstat(fs_ptr[num_fs].device_canonical, &statbuf) ) && S_ISLNK(statbuf.st_mode) ) {
+ 			char lnktgt[PATH_MAX+1], *p;
+ 			TRACE_LOG_FMT("disk", "\"%s\" is symlink - resolving ...", fs_ptr[num_fs].device_canonical);
+@@ -1048,6 +1048,7 @@ sg_get_fs_list_int(sg_vector **fs_stats_vector_ptr) {
+ 				RETURN_FROM_PREVIOUS_ERROR( "disk", upderr );
+ 			}
+ 		}
++#endif
+ 		TRACE_LOG_FMT("disk", "\"%s\" is not a symlink", fs_ptr[num_fs].device_canonical);
+ 		/* avoid fs. bail out when last entry is no link */
+ 		errno = 0;
+@@ -1223,10 +1224,12 @@ sg_get_fs_stats_int(sg_vector **fs_stats_vector_ptr){
+ 	sg_error err = sg_get_fs_list_int(&tmp);
+ 	size_t i, j, n = 0;
+ 	sg_fs_stats *items, *item = VECTOR_DATA(tmp);
+-	unsigned valid[(VECTOR_ITEM_COUNT(tmp) / (8 * sizeof(unsigned))) + 1];
++/*
++    unsigned valid[(VECTOR_ITEM_COUNT(tmp) / (8 * sizeof(unsigned))) + 1];
+ 
+ 	memset( valid, 0, sizeof(valid) );
+-
++*/
++    unsigned* valid = (unsigned*)calloc((VECTOR_ITEM_COUNT(tmp) / (8 * sizeof(unsigned))) + 1, sizeof(unsigned));
+ 	if( ( SG_ERROR_NONE == err ) && (NULL != tmp) ) {
+ 
+ 		i = VECTOR_ITEM_COUNT(tmp);
+@@ -1261,7 +1264,7 @@ sg_get_fs_stats_int(sg_vector **fs_stats_vector_ptr){
+ 	assert( j == n );
+ 
+ 	sg_vector_free(tmp);
+-
++    free(valid);
+ 	return err;
+ }
+ 

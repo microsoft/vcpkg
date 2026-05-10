@@ -1,0 +1,21 @@
+diff --git a/src/libstatgrab/os_info.c b/src/libstatgrab/os_info.c
+index 8b36218..97ad65e 100644
+--- a/src/libstatgrab/os_info.c
++++ b/src/libstatgrab/os_info.c
+@@ -189,6 +189,7 @@ sg_get_host_info_int(sg_host_info *host_info_buf) {
+ 	char *name;
+ 	long long result;
+ 	OSVERSIONINFOEX osinfo;
++	LPOSVERSIONINFO pOsInfo = (LPOSVERSIONINFO)&osinfo;
+ 	SYSTEM_INFO sysinfo;
+ 	char *tmp_name;
+ 	char tmp[10];
+@@ -267,7 +268,7 @@ sg_get_host_info_int(sg_host_info *host_info_buf) {
+ 	/* get OS name, version and build */
+ 	ZeroMemory(&osinfo, sizeof(OSVERSIONINFOEX));
+ 	osinfo.dwOSVersionInfoSize = sizeof(osinfo);
+-	if(!GetVersionEx(&osinfo)) {
++	if(!GetVersionEx(pOsInfo)) {
+ 		RETURN_WITH_SET_ERROR("os", SG_ERROR_HOST, "GetVersionEx");
+ 	}
+ 	GetSystemInfo(&sysinfo);

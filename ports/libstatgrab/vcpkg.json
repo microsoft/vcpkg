@@ -1,0 +1,8 @@
+{
+  "name": "libstatgrab",
+  "version": "0.92.1",
+  "description": "A cross platform library for accessing system statistics",
+  "homepage": "https://libstatgrab.org/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp"
+}
