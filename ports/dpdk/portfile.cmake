@@ -78,10 +78,18 @@ if(PYTHON_PACKAGES)
   x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3 PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
 endif()
 
+set(DISABLE_DRIVERS "regex/cn9k")
+if(NOT "rawdev-ifpga" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",raw/ifpga")
+endif()
+if(NOT "pmd-ipn3ke" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/intel/ipn3ke")
+endif()
+
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -Ddeveloper_mode=disabled
-    -Ddisable_drivers=regex/cn9k
+    "-Ddisable_drivers=${DISABLE_DRIVERS}"
     ${DPDK_OPTIONS}
   OPTIONS_RELEASE
     ${DPDK_OPTIONS_RELEASE}

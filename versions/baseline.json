@@ -389,7 +389,7 @@
       "port-version": 4
     },
     "atomic-queue": {
-      "baseline": "1.9.0",
+      "baseline": "1.9.1",
       "port-version": 0
     },
     "attr": {
@@ -2249,7 +2249,7 @@
       "port-version": 2
     },
     "ctre": {
-      "baseline": "3.10.0",
+      "baseline": "3.11.0",
       "port-version": 0
     },
     "ctstraffic": {
@@ -2513,7 +2513,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2026-03-31",
+      "baseline": "2026-05-07",
       "port-version": 0
     },
     "directxsdk": {
@@ -2521,15 +2521,15 @@
       "port-version": 8
     },
     "directxtex": {
-      "baseline": "2026-03-31",
+      "baseline": "2026-05-07",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2026-03-31",
+      "baseline": "2026-05-07",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2026-03-31",
+      "baseline": "2026-05-07",
       "port-version": 0
     },
     "dirent": {
@@ -2602,7 +2602,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 1
+      "port-version": 2
     },
     "dpp": {
       "baseline": "10.1.4",
@@ -2781,7 +2781,7 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "1.6.1",
+      "baseline": "1.6.2",
       "port-version": 0
     },
     "egl": {
@@ -3805,7 +3805,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.5.0",
+      "baseline": "2.5.2",
       "port-version": 0
     },
     "hidapi": {
@@ -4217,7 +4217,7 @@
       "port-version": 0
     },
     "jwsung91-unilink": {
-      "baseline": "0.6.1",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -4845,7 +4845,7 @@
       "port-version": 1
     },
     "libdatachannel": {
-      "baseline": "0.24.2",
+      "baseline": "0.24.3",
       "port-version": 0
     },
     "libdatrie": {
@@ -6221,7 +6221,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.719",
+      "baseline": "0.720",
       "port-version": 0
     },
     "luminoengine": {
@@ -7477,7 +7477,7 @@
       "port-version": 0
     },
     "openzl": {
-      "baseline": "0.1.0",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "optimus-cpp": {
@@ -7850,7 +7850,7 @@
     },
     "podofo": {
       "baseline": "1.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "poissonrecon": {
       "baseline": "2021-09-26",
@@ -8050,7 +8050,7 @@
     },
     "pxlib": {
       "baseline": "2025-12-16",
-      "port-version": 1
+      "port-version": 2
     },
     "pybind11": {
       "baseline": "3.0.1",
@@ -8533,8 +8533,8 @@
       "port-version": 0
     },
     "quickfix": {
-      "baseline": "1.15.1",
-      "port-version": 9
+      "baseline": "1.16.0",
+      "port-version": 0
     },
     "quickjs-ng": {
       "baseline": "0.14.0",
@@ -9913,8 +9913,8 @@
       "port-version": 0
     },
     "tcl": {
-      "baseline": "core-9-0-a1",
-      "port-version": 8
+      "baseline": "9.0.3",
+      "port-version": 0
     },
     "tclap": {
       "baseline": "1.2.5",
@@ -10574,7 +10574,7 @@
     },
     "vectorscan": {
       "baseline": "5.4.12",
-      "port-version": 0
+      "port-version": 1
     },
     "veigar": {
       "baseline": "1.4",
@@ -10601,7 +10601,7 @@
       "port-version": 0
     },
     "vincentlaucsb-csv-parser": {
-      "baseline": "4.1.0",
+      "baseline": "5.1.0",
       "port-version": 0
     },
     "visit-struct": {
@@ -10862,7 +10862,7 @@
     },
     "winsparkle": {
       "baseline": "0.9.2",
-      "port-version": 0
+      "port-version": 1
     },
     "wintoast": {
       "baseline": "1.3.2",
@@ -10913,7 +10913,7 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.13.1",
+      "baseline": "4.13.2",
       "port-version": 0
     },
     "wtl": {
@@ -11217,7 +11217,7 @@
       "port-version": 4
     },
     "zpp-bits": {
-      "baseline": "4.7",
+      "baseline": "4.7.1",
       "port-version": 0
     },
     "zserge-webview": {

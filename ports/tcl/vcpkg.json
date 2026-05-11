@@ -1,25 +1,52 @@
 {
   "name": "tcl",
-  "version-string": "core-9-0-a1",
-  "port-version": 8,
+  "version": "9.0.3",
   "description": "Tcl provides a powerful platform for creating integration applications that tie together diverse applications, protocols, devices, and frameworks. When paired with the Tk toolkit, Tcl provides the fastest and most powerful way to create GUI applications that run on PCs, Unix, and Mac OS X. Tcl can also be used for a variety of web-related tasks and for creating powerful command languages for applications.",
   "homepage": "https://github.com/tcltk/tcl",
-  "supports": "!android & !(windows & arm) & !uwp",
+  "license": null,
   "dependencies": [
+    "libtommath",
+    "minizip",
+    {
+      "$comment": "cf. pkgs/sqlite3.51.0/win/makefile.vc",
+      "name": "sqlite3",
+      "features": [
+        "dbpage-vtab",
+        "dbstat",
+        "fts3",
+        "fts4",
+        "fts5",
+        "geopoly",
+        "json1",
+        "limit",
+        "math",
+        "rtree",
+        "soundex"
+      ]
+    },
+    {
+      "name": "tcl",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
+    },
     "zlib"
   ],
   "features": {
     "profile": {
-      "description": "Adds profiling hooks.  Map file is assumed."
+      "description": "Produce an image that can be used with the Windows Performance Tools profiler.",
+      "supports": "windows & !mingw"
     },
     "thrdalloc": {
-      "description": "Use the thread allocator (shared global free pool)."
+      "description": "Use the thread allocator (shared global free pool).",
+      "supports": "windows & !mingw"
     },
-    "unchecked": {
-      "description": "Allows a symbols build to not use the debug enabled runtime (msvcrt.dll not msvcrtd.dll or libcmt.lib not libcmtd.lib)."
-    },
-    "utfmax": {
-      "description": "Forces Tcl_UniChar to be a 32-bit quantity in stead of 16-bits"
+    "time64bit": {
+      "description": "Force 64-bit time_t.",
+      "supports": "windows & !mingw"
     }
   }
 }
