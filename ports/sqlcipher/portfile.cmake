@@ -10,9 +10,20 @@ vcpkg_from_github(
 find_program(NMAKE nmake REQUIRED)
 
 # Find tclsh Executable needed for Amalgamation of SQLite
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    set(TCL_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/tcl/bin")
+else()
+    set(TCL_TOOLS_DIR "${CURRENT_INSTALLED_DIR}/tools/tcl/bin")
+endif()
+
 file(GLOB TCLSH_CMD
-    ${CURRENT_INSTALLED_DIR}/tools/tcl/bin/tclsh*${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    "${TCL_TOOLS_DIR}/tclsh*${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
+if(TCLSH_CMD STREQUAL "")
+    message(FATAL_ERROR "Unable to find tclsh in ${TCL_TOOLS_DIR}")
+endif()
+list(SORT TCLSH_CMD)
+list(GET TCLSH_CMD 0 TCLSH_CMD)
 file(TO_NATIVE_PATH "${TCLSH_CMD}" TCLSH_CMD)
 
 # Determine TCL version (e.g. [path]tclsh90sx.exe -> 90)
@@ -24,6 +35,14 @@ list(APPEND NMAKE_OPTIONS
     TCLVERSION=${TCLVERSION}
     EXT_FEATURE_FLAGS=-DSQLITE_TEMP_STORE=2\ -DSQLITE_HAS_CODEC
 )
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    # Ask upstream Makefile.msc to build helper tools (for example lemon.exe)
+    # using host compiler/linker settings during cross-compilation.
+    list(APPEND NMAKE_OPTIONS
+        XCOMPILE=1
+        USE_NATIVE_LIBPATHS=1
+    )
+endif()
 
 set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 
