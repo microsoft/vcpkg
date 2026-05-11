@@ -2017,7 +2017,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.43.3",
+      "baseline": "0.44.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2488,6 +2488,10 @@
       "baseline": "7.3.0",
       "port-version": 0
     },
+    "dime": {
+      "baseline": "2025-04-01",
+      "port-version": 0
+    },
     "dingo": {
       "baseline": "0.2.0",
       "port-version": 0
@@ -2602,7 +2606,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 2
+      "port-version": 3
     },
     "dpp": {
       "baseline": "10.1.4",
@@ -3429,7 +3433,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.5.0",
+      "baseline": "7.6.0",
       "port-version": 0
     },
     "glbinding": {
@@ -3731,6 +3735,10 @@
     "halide": {
       "baseline": "18.0.0",
       "port-version": 1
+    },
+    "hamlib": {
+      "baseline": "4.7.1",
+      "port-version": 0
     },
     "hanjingo-high-jump": {
       "baseline": "1.0.6",
@@ -4841,8 +4849,8 @@
       "port-version": 0
     },
     "libczi": {
-      "baseline": "0.67.2",
-      "port-version": 1
+      "baseline": "0.67.6",
+      "port-version": 0
     },
     "libdatachannel": {
       "baseline": "0.24.3",
@@ -4906,7 +4914,7 @@
     },
     "libdvdread": {
       "baseline": "6.1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libdwarf": {
       "baseline": "2.3.1",
@@ -6037,7 +6045,7 @@
       "port-version": 0
     },
     "libzim": {
-      "baseline": "9.6.0",
+      "baseline": "9.7.0",
       "port-version": 0
     },
     "libzip": {
@@ -7389,7 +7397,7 @@
       "port-version": 0
     },
     "openjph": {
-      "baseline": "0.27.1",
+      "baseline": "0.27.2",
       "port-version": 0
     },
     "openldap": {
@@ -8638,6 +8646,10 @@
     },
     "rbdl": {
       "baseline": "3.3.1",
+      "port-version": 0
+    },
+    "rdma-core": {
+      "baseline": "62.0",
       "port-version": 0
     },
     "re2": {
@@ -10390,7 +10402,7 @@
     },
     "usearch": {
       "baseline": "2.25.2",
-      "port-version": 0
+      "port-version": 1
     },
     "usockets": {
       "baseline": "0.8.8",
