@@ -1,0 +1,26 @@
+diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
+index 0722d35863..7689dfdae6 100644
+--- a/adm/cmake/occt_toolkit.cmake
++++ b/adm/cmake/occt_toolkit.cmake
+@@ -122,7 +122,7 @@ if (EXECUTABLE_PROJECT)
+ 
+   if (LAYOUT_IS_VCPKG)
+     install (TARGETS ${PROJECT_NAME}
+-             DESTINATION "$<IF:$<CONFIG:Debug>,debug/${INSTALL_DIR_BIN},${INSTALL_DIR_BIN}>")
++             DESTINATION "${INSTALL_DIR_BIN}")
+   else()
+     install (TARGETS ${PROJECT_NAME}
+              DESTINATION "${INSTALL_DIR_BIN}\${OCCT_INSTALL_BIN_LETTER}")
+@@ -159,9 +159,9 @@ else()
+   if (LAYOUT_IS_VCPKG)
+     install (TARGETS ${PROJECT_NAME}
+              EXPORT OpenCASCADE${CURRENT_MODULE}Targets
+-             RUNTIME DESTINATION "$<IF:$<CONFIG:Debug>,debug/${INSTALL_DIR_BIN},${INSTALL_DIR_BIN}>"
+-             ARCHIVE DESTINATION "$<IF:$<CONFIG:Debug>,debug/${INSTALL_DIR_LIB},${INSTALL_DIR_LIB}>"
+-             LIBRARY DESTINATION "$<IF:$<CONFIG:Debug>,debug/${INSTALL_DIR_LIB},${INSTALL_DIR_LIB}>"
++             RUNTIME DESTINATION "${INSTALL_DIR_BIN}"
++             ARCHIVE DESTINATION "${INSTALL_DIR_LIB}"
++             LIBRARY DESTINATION "${INSTALL_DIR_LIB}"
+              INCLUDES DESTINATION ${INSTALL_DIR_INCLUDE})
+   else()
+     install (TARGETS ${PROJECT_NAME}
