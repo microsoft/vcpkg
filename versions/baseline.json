@@ -4906,7 +4906,7 @@
     },
     "libdvdread": {
       "baseline": "6.1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libdwarf": {
       "baseline": "2.3.1",
