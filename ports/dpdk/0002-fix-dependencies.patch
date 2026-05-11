@@ -1,5 +1,5 @@
 diff --git a/buildtools/pkg-config/meson.build b/buildtools/pkg-config/meson.build
-index b36add1..a0a265a 100644
+index b36add17e3..a0a265ad92 100644
 --- a/buildtools/pkg-config/meson.build
 +++ b/buildtools/pkg-config/meson.build
 @@ -47,8 +47,7 @@ pkg.generate(name: 'DPDK', # main DPDK pkgconfig file
@@ -13,10 +13,10 @@ index b36add1..a0a265a 100644
              dpdk_drivers + dpdk_static_libraries +
              ['-Wl,--no-whole-archive'] + platform_flags
 diff --git a/config/meson.build b/config/meson.build
-index bbdad71..a9c63b5 100644
+index bbdad71ffc..e0a3ecc5f9 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -238,17 +238,15 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
+@@ -238,12 +238,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
      find_libnuma = false
  endif
  if find_libnuma
@@ -31,12 +31,6 @@ index bbdad71..a9c63b5 100644
      endif
  endif
  
- has_libfdt = false
--fdt_dep = cc.find_library('fdt', required: false)
-+fdt_dep = disabler()
- if fdt_dep.found() and cc.has_header('fdt.h') and cc.links(min_c_code, dependencies: fdt_dep)
-     dpdk_conf.set10('RTE_HAS_LIBFDT', true)
-     has_libfdt = true
 @@ -269,28 +267,28 @@ if libarchive.found()
  endif
  
@@ -71,8 +65,49 @@ index bbdad71..a9c63b5 100644
  endif
  if (pcap_dep.found() and cc.has_header('pcap.h', dependencies: pcap_dep)
          and cc.links(min_c_code, dependencies: pcap_dep))
+diff --git a/drivers/net/intel/ipn3ke/meson.build b/drivers/net/intel/ipn3ke/meson.build
+index 23c4d36b4f..a29abb1f77 100644
+--- a/drivers/net/intel/ipn3ke/meson.build
++++ b/drivers/net/intel/ipn3ke/meson.build
+@@ -16,9 +16,7 @@ endif
+ #
+ 
+ if not has_libfdt
+-    build = false
+-    reason = 'missing dependency, "libfdt"'
+-    subdir_done()
++    error('missing dependency: "libfdt"')
+ endif
+ 
+ includes += include_directories('../../../raw/ifpga')
+diff --git a/drivers/raw/ifpga/meson.build b/drivers/raw/ifpga/meson.build
+index 8d5f41fd5d..84c8c875b3 100644
+--- a/drivers/raw/ifpga/meson.build
++++ b/drivers/raw/ifpga/meson.build
+@@ -2,9 +2,7 @@
+ # Copyright(c) 2018 Intel Corporation
+ 
+ if not has_libfdt
+-    build = false
+-    reason = 'missing dependency, "libfdt"'
+-    subdir_done()
++    error('missing dependency: "libfdt"')
+ endif
+ 
+ rtdep = dependency('librt', required: false)
+@@ -12,9 +10,7 @@ if not rtdep.found()
+     rtdep = cc.find_library('rt', required: false)
+ endif
+ if not rtdep.found() or not cc.links(min_c_code, dependencies: rtdep)
+-    build = false
+-    reason = 'missing dependency, "librt"'
+-    subdir_done()
++    error('missing dependency: "librt"')
+ endif
+ 
+ ext_deps += rtdep
 diff --git a/lib/eal/linux/meson.build b/lib/eal/linux/meson.build
-index 29ba313..5a173c4 100644
+index 29ba313218..5a173c43d6 100644
 --- a/lib/eal/linux/meson.build
 +++ b/lib/eal/linux/meson.build
 @@ -25,5 +25,6 @@ endif
@@ -83,7 +118,7 @@ index 29ba313..5a173c4 100644
      dpdk_conf.set10('RTE_EAL_NUMA_AWARE_HUGEPAGES', true)
  endif
 diff --git a/lib/vhost/meson.build b/lib/vhost/meson.build
-index 6a24981..5283e79 100644
+index 6a24981d10..5283e7904f 100644
 --- a/lib/vhost/meson.build
 +++ b/lib/vhost/meson.build
 @@ -6,6 +6,7 @@ if not is_linux

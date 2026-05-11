@@ -1,43 +1,21 @@
-diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index d662817..4861734 100644
---- a/include/internal/basic_csv_parser.hpp
-+++ b/include/internal/basic_csv_parser.hpp
-@@ -12,7 +12,7 @@
- #include <vector>
- 
- #if !defined(__EMSCRIPTEN__)
--#include "../external/mio.hpp"
-+#include "mio/mmap.hpp"
- #endif
- #include "basic_csv_parser_simd.hpp"
- #include "col_names.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index d96b982..4e632e3 100644
+index 82e1404..c95cb98 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -109,7 +109,7 @@
+@@ -125,7 +125,7 @@
  #endif
- 
+
  // Include string_view BEFORE csv namespace to avoid namespace pollution issues
 -#ifdef CSV_HAS_CXX17
 +#if 1
  #include <string_view>
  #else
  #include "../external/string_view.hpp"
-@@ -145,7 +145,7 @@ namespace csv {
-     #define CSV_DEBUG_ASSERT(x) assert(x)
- #endif
- 
--#ifdef CSV_HAS_CXX17
-+#if 1
-      /** @typedef string_view
-       *  The string_view class used by this library.
-       */
 diff --git a/include/internal/csv_row.hpp b/include/internal/csv_row.hpp
-index 85c0444..43411a4 100644
+index 7651f86..000f645 100644
 --- a/include/internal/csv_row.hpp
 +++ b/include/internal/csv_row.hpp
-@@ -36,7 +36,7 @@
+@@ -33,7 +33,7 @@
  #include <ranges>
  #endif
  #include "data_type.hpp"
@@ -45,17 +23,30 @@ index 85c0444..43411a4 100644
 +#include "classify_scalar.hpp"
  #include "json_converter.hpp"
  #include "raw_csv_data.hpp"
- 
+
 diff --git a/include/internal/data_type.hpp b/include/internal/data_type.hpp
 index b3f85d4..5a8be67 100644
 --- a/include/internal/data_type.hpp
 +++ b/include/internal/data_type.hpp
 @@ -7,7 +7,7 @@
  #include <cstdint>
- 
+
  #include "common.hpp"
 -#include "../external/classify_scalar.hpp"
 +#include "classify_scalar.hpp"
- 
+
  namespace csv {
      /** Enumerates the different CSV field types recognized by this library. */
+diff --git a/include/internal/parser/driver.hpp b/include/internal/parser/driver.hpp
+index 357a785..64b3c12 100644
+--- a/include/internal/parser/driver.hpp
++++ b/include/internal/parser/driver.hpp
+@@ -16,7 +16,7 @@
+ #include <vector>
+
+ #if !defined(__EMSCRIPTEN__)
+-#include "../../external/mio.hpp"
++#include "mio/mmap.hpp"
+ #endif
+ #include "../basic_csv_parser_simd.hpp"
+ #include "../col_names.hpp"

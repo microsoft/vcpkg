@@ -1,50 +1,44 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 54a90f1..e40c529 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -301,6 +301,7 @@ if(JPEG_FOUND)
-     string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " libjpeg")
- endif()
- list(APPEND PODOFO_LIB_DEPENDS ZLIB::ZLIB)
-+string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " libutf8proc")
- string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " zlib")
- if (PODOFO_DEVENDOR_TCBSPAN)
-     list(APPEND PODOFO_LIB_DEPENDS $<COMPILE_ONLY:tcbspan::tcbspan>)
-@@ -354,6 +355,25 @@ add_subdirectory(3rdparty)
- add_subdirectory(src/podofo)
- include_directories(${PODOFO_INCLUDE_DIRS})
+diff --git a/3rdparty/CMakeLists.txt b/3rdparty/CMakeLists.txt
+index a539c776..7cc32371 100644
+--- a/3rdparty/CMakeLists.txt
++++ b/3rdparty/CMakeLists.txt
+@@ -22,7 +22,11 @@ endif()
+ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/adobe/afdko/resource")
+ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/adobe/afdko/include")
+ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/chromium")
+-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/tcbspan")
  
-+find_package(date CONFIG REQUIRED)
-+find_package(FastFloat CONFIG REQUIRED)
-+find_package(fmt CONFIG REQUIRED)
-+find_package(utf8cpp CONFIG REQUIRED)
-+find_package(utf8proc CONFIG REQUIRED)
-+
-+target_link_libraries(podofo_private PRIVATE
-+    $<COMPILE_ONLY:date::date>
-+    $<COMPILE_ONLY:FastFloat::fast_float>
-+    $<COMPILE_ONLY:fmt::fmt-header-only>
-+    $<COMPILE_ONLY:utf8cpp::utf8cpp>
-+    utf8proc::utf8proc
-+)
-+if(PODOFO_BUILD_STATIC)
-+    target_link_libraries(podofo_static $<COMPILE_ONLY:utf8cpp::utf8cpp>)
+ add_library(podofo_3rdparty STATIC ${SOURCE_FILES})
+ target_link_libraries(podofo_3rdparty LibXml2::LibXml2)
++if (PODOFO_DEVENDOR_TCBSPAN)
++    target_link_libraries(podofo_3rdparty "$<COMPILE_ONLY:tcbspan::tcbspan>")
 +else()
-+    target_link_libraries(podofo_shared PRIVATE $<COMPILE_ONLY:utf8cpp::utf8cpp>)
++    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/tcbspan")
 +endif()
-+
- if(PODOFO_BUILD_TEST)
-     enable_testing()
-     add_subdirectory(test)
+diff --git a/src/podofo/auxiliary/span.h b/src/podofo/auxiliary/span.h
+index d484b775..3a307747 100644
+--- a/src/podofo/auxiliary/span.h
++++ b/src/podofo/auxiliary/span.h
+@@ -2,7 +2,7 @@
+ #define AUX_SPAN_H
+ #pragma once
+ 
+-#include <podofo/3rdparty/span.hpp>
++#include <tcb/span.hpp>
+ 
+ namespace PoDoFo
+ {
 diff --git a/src/podofo/podofo-config.cmake.in b/src/podofo/podofo-config.cmake.in
-index 700619b..b2d75f6 100644
+index 700619bb..87529246 100644
 --- a/src/podofo/podofo-config.cmake.in
 +++ b/src/podofo/podofo-config.cmake.in
-@@ -2,6 +2,7 @@
+@@ -2,6 +2,9 @@
  
  if("@PODOFO_BUILD_STATIC@")
      include(CMakeFindDependencyMacro)
-+    find_dependency(utf8proc CONFIG)
++    if("@PODOFO_DEVENDOR_UTF8PROC@")
++        find_dependency(utf8proc CONFIG)
++    endif()
      if("@Fontconfig_FOUND@")
          find_dependency(Fontconfig)
      endif()

@@ -1,7 +1,7 @@
 {
   "name": "dpdk",
   "version": "26.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
   "documentation": "https://doc.dpdk.org/guides/",
@@ -28,6 +28,20 @@
   "features": {
     "docs": {
       "description": "Build and install docs"
+    },
+    "pmd-ipn3ke": {
+      "description": "Build the IPN3KE Poll Mode Driver",
+      "supports": "!windows",
+      "dependencies": [
+        "dtc"
+      ]
+    },
+    "rawdev-ifpga": {
+      "description": "Build the IFPGA Rawdev Driver",
+      "supports": "!windows",
+      "dependencies": [
+        "dtc"
+      ]
     },
     "tests": {
       "description": "Build and install tests"
