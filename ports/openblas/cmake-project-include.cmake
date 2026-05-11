@@ -72,7 +72,3 @@ if(ANDROID)
         set(NO_AVX512 ON CACHE BOOL "")
     endif()
 endif()
-
-if(CMAKE_SYSTEM_NAME MATCHES "AIX|Android|Linux|FreeBSD|OpenBSD|NetBSD|DragonFly|Darwin")
-    set(OPENBLAS_PC_LIBS "-lm")
-endif()
