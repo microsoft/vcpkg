@@ -1,6 +1,7 @@
 {
   "name": "cppcoro",
   "version-date": "2022-10-25",
+  "port-version": 1,
   "description": "A library of C++ coroutine abstractions for the Coroutines TS",
   "homepage": "https://github.com/lewissbaker/cppcoro",
   "license": "MIT",
