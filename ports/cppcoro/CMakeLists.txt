@@ -72,13 +72,17 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     else()
         target_compile_options(cppcoro
         PUBLIC
-            -std=c++1z
             -stdlib=libc++
         )
         if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 17)
             target_compile_options(cppcoro
             PUBLIC
-                -fcoroutines-ts
+                -std=c++1z -fcoroutines-ts
+            )
+        else()
+            target_compile_options(cppcoro
+            PUBLIC
+                -std=c++20
             )
         endif()
         target_link_libraries(cppcoro
