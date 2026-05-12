@@ -24,7 +24,7 @@ $WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 21
+$TotalProgress = 22
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -198,6 +198,9 @@ if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
 Invoke-ScriptWithPrefix -ScriptName 'deploy-tlssettings.ps1' -SkipSas
 Write-Host 'Waiting 1 minute for VM to reboot...'
 Start-Sleep -Seconds 60
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-sevenzip.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'

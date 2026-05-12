@@ -14,7 +14,7 @@ $CudnnUrl = Get-AssetUrl `
 
 [System.IO.DirectoryInfo]$CudnnInstallDir = "$env:ProgramFiles\NVIDIA GPU Computing Toolkit\CUDA\v13.2"
 
-DownloadAndUnzip -Url $CudnnUrl -Destination $CudnnInstallDir
+DownloadAndUnzip -Url $CudnnUrl -Destination $CudnnInstallDir -StripRootDirectory
 
 $CudnnHeaderPath = Join-Path $CudnnInstallDir "include\cudnn.h"
 if (Test-Path -LiteralPath $CudnnHeaderPath) {

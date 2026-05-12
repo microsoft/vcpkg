@@ -205,6 +205,7 @@ Function DownloadAndUnzip {
   Param(
     [Parameter(Mandatory)][String]$Url,
     [Parameter(Mandatory)][System.IO.DirectoryInfo]$Destination,
+    [switch]$StripRootDirectory,
     [String]$LocalName = $null
   )
 
@@ -213,7 +214,12 @@ Function DownloadAndUnzip {
     $zipName = Split-Path -Path $zip.Path -Leaf
 
     Write-Host "Installing $zipName to $Destination..."
-    & tar.exe -xvf $zip.Path --strip 1 --directory $Destination
+    if ($StripRootDirectory) {
+      & tar.exe -xvf $zip.Path --strip 1 --directory $Destination
+    } else {
+      & tar.exe -xvf $zip.Path --directory $Destination
+    }
+
     if ($LASTEXITCODE -eq 0) {
       Write-Host 'Installation successful!'
     } else {

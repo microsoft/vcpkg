@@ -13,4 +13,4 @@ $AzCopyUrl = Get-AssetUrl `
   -BlobAssetName 'azcopy_windows_amd64_10.32.3.zip'
 
 mkdir -Force "C:\AzCopy10"
-DownloadAndUnzip -Url $AzCopyUrl -Destination "C:\AzCopy10"
+DownloadAndUnzip -Url $AzCopyUrl -Destination "C:\AzCopy10" -StripRootDirectory
