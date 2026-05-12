@@ -60,10 +60,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
-vcpkg_fixup_pkgconfig()
 
-# Add -lm to the pkgconfig files, as OpenBLAS may require it on some platforms.
-if(UNIX AND NOT APPLE)
+if(UNIX AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
     foreach(PCFILE IN ITEMS
         "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc"
         "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
@@ -72,6 +70,8 @@ if(UNIX AND NOT APPLE)
         endif()
     endforeach()
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 # Required from native builds, optional from cross builds.
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
