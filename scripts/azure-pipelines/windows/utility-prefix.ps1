@@ -27,6 +27,39 @@ Function Get-TempFilePath {
 
 <#
 .SYNOPSIS
+Describes where installation content will be sourced from.
+
+.DESCRIPTION
+Get-ContentSourceDescription returns $null for a local copy, or a short string
+describing the remote source when the content must be downloaded.
+
+.PARAMETER LocalPath
+The path to a local copy of the content, if present.
+
+.PARAMETER Url
+The URL to download when no local copy is available.
+#>
+Function Get-ContentSourceDescription {
+  [CmdletBinding(PositionalBinding=$false)]
+  Param(
+    [Parameter(Mandatory)][String]$LocalPath,
+    [Parameter(Mandatory)][String]$Url
+  )
+
+  if (Test-Path $LocalPath) {
+    return $null
+  }
+
+  $uri = [uri]::new($Url)
+  if ($uri.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
+    return 'vcpkgimageminting using SAS token'
+  }
+
+  return 'the internet'
+}
+
+<#
+.SYNOPSIS
 Download and install a component.
 
 .DESCRIPTION
@@ -57,10 +90,9 @@ Function DownloadAndInstall {
 
     [bool]$doRemove = $false
     [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
-    if (Test-Path $LocalPath) {
-      Write-Host "Using local $Name..."
-    } else {
-      Write-Host "Downloading $Name..."
+    $contentSource = Get-ContentSourceDescription -LocalPath $LocalPath -Url $Url
+    if ($contentSource) {
+      Write-Host "Downloading $Name from $contentSource..."
       $tempPath = Get-TempFilePath
       New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
       $LocalPath = Join-Path $tempPath $LocalName
@@ -69,6 +101,8 @@ Function DownloadAndInstall {
         Write-Error 'Download failed!'
       }
       $doRemove = $true
+    } else {
+      Write-Host "Using local copy of $Name..."
     }
 
     Write-Host "Installing $Name..."
@@ -124,19 +158,20 @@ Function DownloadAndUnzip {
     [string]$zipPath
     [bool]$doRemove = $false
     [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
-    if (Test-Path $LocalPath) {
-      Write-Host "Using local $Name..."
-      $zipPath = $LocalPath
-    } else {
+    $contentSource = Get-ContentSourceDescription -LocalPath $LocalPath -Url $Url
+    if ($contentSource) {
       $tempPath = Get-TempFilePath
       New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
       $zipPath = Join-Path $tempPath $LocalName
-      Write-Host "Downloading $Name ( $Url -> $zipPath )..."
+      Write-Host "Downloading $Name from $contentSource ( $Url -> $zipPath )..."
       curl.exe --fail -L -o $zipPath $Url
       if (-Not $?) {
         Write-Error 'Download failed!'
       }
       $doRemove = $true
+    } else {
+      Write-Host "Using local copy of $Name..."
+      $zipPath = $LocalPath
     }
 
     Write-Host "Installing $Name to $Destination..."
