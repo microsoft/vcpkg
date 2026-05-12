@@ -9,8 +9,8 @@ vcpkg_from_github(
     SHA512 84b7c7d7da75c3c76b2bd68fbdf877831c45bc99f0ba306a1c7270867073b27f53595a5c6d845c5a628f72aa05f54525e02fd8000794c650e13af8e88a946550
     HEAD_REF master
     PATCHES
-        "${FIX_UPSTREAM_PR_252}"
-        install-dlls-to-bin.diff
+        001-fix-defs.patch
+        002-install-dlls-to-bin.patch
 )
 
 vcpkg_check_features(
