@@ -5,13 +5,7 @@
 set(BLA_VENDOR @BLA_VENDOR@)
 set(BLA_STATIC @BLA_STATIC@)
 set(BLA_PREFER_PKGCONFIG ON)
-
 _find_package(${ARGS})
-
-if(UNIX AND NOT APPLE AND TARGET BLAS::BLAS)
-    target_link_libraries(BLAS::BLAS INTERFACE m)
-endif()
-
 unset(BLA_VENDOR)
 unset(BLA_STATIC)
 unset(BLA_PREFER_PKGCONFIG)
