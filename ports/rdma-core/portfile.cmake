@@ -17,6 +17,8 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
+vcpkg_get_vcpkg_installed_python(PYTHON3)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -30,6 +32,7 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_cython=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_pandoc=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_rst2man=OFF
+        -DPython_EXECUTABLE=${PYTHON3}
     MAYBE_UNUSED_VARIABLES
         VCPKG_LOCK_FIND_PACKAGE_PythonLibs
         VCPKG_LOCK_FIND_PACKAGE_cython

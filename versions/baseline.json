@@ -2857,7 +2857,7 @@
       "port-version": 1
     },
     "ethindp-prism": {
-      "baseline": "0.11.6",
+      "baseline": "0.14.4",
       "port-version": 0
     },
     "etl": {
@@ -2881,7 +2881,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.8.0",
+      "baseline": "2.8.1",
       "port-version": 0
     },
     "expected-lite": {
@@ -8650,7 +8650,7 @@
     },
     "rdma-core": {
       "baseline": "62.0",
-      "port-version": 0
+      "port-version": 1
     },
     "re2": {
       "baseline": "2025-11-05",
@@ -10562,7 +10562,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "1.9.0",
-      "port-version": 5
+      "port-version": 6
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",

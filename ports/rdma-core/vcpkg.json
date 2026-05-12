@@ -1,6 +1,7 @@
 {
   "name": "rdma-core",
   "version": "62.0",
+  "port-version": 1,
   "description": "The userspace components for the Linux Kernel's drivers/infiniband subsystem.",
   "homepage": "https://github.com/linux-rdma/rdma-core",
   "license": "(GPL-2.0-only OR Linux-OpenIB) AND (GPL-2.0-only OR BSD-3-Clause) AND (GPL-2.0-only OR BSD-2-Clause) AND CC0-1.0 AND MIT",
