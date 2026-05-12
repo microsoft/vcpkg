@@ -3,7 +3,7 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
@@ -43,7 +43,7 @@ try {
   }
 
   if ($installer.Temporary) {
-    Remove-Item -Path $LocalPath -Force
+    Remove-Item -LiteralPath $LocalPath -Force
   }
 } catch {
   Write-Error "Installation failed! Exception: $($_.Exception.Message)"

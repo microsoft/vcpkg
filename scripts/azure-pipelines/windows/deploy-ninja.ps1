@@ -3,7 +3,7 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
@@ -13,15 +13,15 @@ $NinjaUrl = Get-AssetUrl `
   -BlobAssetName 'ninja-win-1.13.2.zip'
 
 $CMakeBinPath = Join-Path $env:ProgramFiles 'CMake\bin'
-if (-not (Test-Path $CMakeBinPath)) {
+if (-not (Test-Path -LiteralPath $CMakeBinPath)) {
   Write-Error "CMake bin directory not found at $CMakeBinPath."
   throw
 }
 
-DownloadAndUnzip -Name 'Ninja' -Url $NinjaUrl -LocalName 'ninja-win-1.13.2.zip' -Destination $CMakeBinPath
+DownloadAndUnzip -Url $NinjaUrl -LocalName 'ninja-win-1.13.2.zip' -Destination $CMakeBinPath
 
 $ninjaExePath = Join-Path $CMakeBinPath 'ninja.exe'
-if (Test-Path $ninjaExePath) {
+if (Test-Path -LiteralPath $ninjaExePath) {
   Write-Host 'Ninja appears correctly installed.'
 } else {
   Write-Error "Ninja appears broken! Missing $ninjaExePath."

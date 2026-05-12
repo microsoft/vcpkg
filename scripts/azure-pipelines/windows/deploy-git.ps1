@@ -3,7 +3,7 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
@@ -40,7 +40,7 @@ EnableFSMonitor=Disabled
 try {
   $installer = Get-LocalOrDownloadedFile -Url $GitUrl
   $gitInfPath = Join-Path (Split-Path -Parent $installer.Path) 'git.inf'
-  [System.IO.File]::WriteAllText($gitInfPath, $gitInfContent, [System.Text.UTF8Encoding]::new($false))
+  Set-Content -LiteralPath $gitInfPath -Value $gitInfContent -Encoding utf8NoBOM
 
   Write-Host 'Installing Git for Windows...'
   $proc = Start-Process -FilePath $installer.Path -ArgumentList @(
@@ -61,11 +61,11 @@ try {
 } catch {
   Write-Error "Installation failed! Exception: $($_.Exception.Message)"
 } finally {
-  if ($null -ne $gitInfPath -and (Test-Path $gitInfPath)) {
-    Remove-Item -Path $gitInfPath -Force
+  if ($null -ne $gitInfPath) {
+    Remove-Item -LiteralPath $gitInfPath -Force -ErrorAction SilentlyContinue
   }
 
   if ($null -ne $installer -and $installer.Temporary) {
-    Remove-Item -Path $installer.Path -Force
+    Remove-Item -LiteralPath $installer.Path -Force
   }
 }

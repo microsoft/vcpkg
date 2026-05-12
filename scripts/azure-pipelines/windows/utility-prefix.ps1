@@ -75,11 +75,11 @@ The URL to download when no local copy is available.
 Function Get-ContentSourceDescription {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [Parameter(Mandatory)][String]$LocalPath,
+    [Parameter(Mandatory)][System.IO.FileInfo]$LocalPath,
     [Parameter(Mandatory)][String]$Url
   )
 
-  if (Test-Path $LocalPath) {
+  if (Test-Path -LiteralPath $LocalPath) {
     return $null
   }
 
@@ -180,7 +180,7 @@ Function DownloadAndInstall {
     }
 
     if ($installer.Temporary) {
-      Remove-Item -Path $installer.Path -Force
+      Remove-Item -LiteralPath $installer.Path -Force
     }
   } catch {
     Write-Error "Installation failed! Exception: $($_.Exception.Message)"
@@ -194,9 +194,6 @@ Download and install a zip file component.
 .DESCRIPTION
 DownloadAndUnzip downloads a zip from the given URL, and extracts it to the indicated path.
 
-.PARAMETER Name
-The name of the component, to be displayed in logging messages.
-
 .PARAMETER Url
 The URL of the zip to download.
 
@@ -206,16 +203,16 @@ The location to which the zip should be extracted
 Function DownloadAndUnzip {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [Parameter(Mandatory)][String]$Name,
     [Parameter(Mandatory)][String]$Url,
-    [Parameter(Mandatory)][String]$Destination,
+    [Parameter(Mandatory)][System.IO.DirectoryInfo]$Destination,
     [String]$LocalName = $null
   )
 
   try {
     $zip = Get-LocalOrDownloadedFile -Url $Url -LocalName $LocalName
+    $zipName = Split-Path -Path $zip.Path -Leaf
 
-    Write-Host "Installing $Name to $Destination..."
+    Write-Host "Installing $zipName to $Destination..."
     & tar.exe -xvf $zip.Path --strip 1 --directory $Destination
     if ($LASTEXITCODE -eq 0) {
       Write-Host 'Installation successful!'
@@ -224,7 +221,7 @@ Function DownloadAndUnzip {
     }
 
     if ($zip.Temporary) {
-      Remove-Item -Path $zip.Path -Force
+      Remove-Item -LiteralPath $zip.Path -Force
     }
   } catch {
     Write-Error "Installation failed! Exception: $($_.Exception.Message)"

@@ -3,7 +3,7 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
@@ -13,4 +13,4 @@ $AzCopyUrl = Get-AssetUrl `
   -BlobAssetName 'azcopy_windows_amd64_10.32.3.zip'
 
 mkdir -Force "C:\AzCopy10"
-DownloadAndUnzip -Name 'azcopy' -Url $AzCopyUrl -Destination "C:\AzCopy10"
+DownloadAndUnzip -Url $AzCopyUrl -Destination "C:\AzCopy10"

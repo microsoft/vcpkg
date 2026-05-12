@@ -163,18 +163,18 @@ function Invoke-ScriptWithPrefix {
     -Status "Running provisioning script $ScriptName in VM" `
     -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-  $UtilityPrefixContent = Get-Content "$Root\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
 
-  $tempScriptFilename = "$env:TEMP\temp-script.txt"
+  [System.IO.FileInfo]$tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
-    $script = Get-Content "$Root\$ScriptName" -Encoding utf8NoBOM -Raw
+    $script = Get-Content -LiteralPath "$Root\$ScriptName" -Encoding utf8NoBOM -Raw
 $replacement = @"
-if (Test-Path "`$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
   . "`$PSScriptRoot/utility-prefix.ps1"
 }
 "@
     $script = $script.Replace($replacement, $UtilityPrefixContent);
-    Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
+    Set-Content -LiteralPath $tempScriptFilename -Value $script -Encoding utf8NoBOM
 
     $parameter = $null
     if (-not $SkipSas) {
@@ -190,7 +190,7 @@ if (Test-Path "`$PSScriptRoot/utility-prefix.ps1") {
 
     Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
   } finally {
-    Remove-Item $tempScriptFilename -Force
+    Remove-Item -LiteralPath $tempScriptFilename -Force
   }
 }
 

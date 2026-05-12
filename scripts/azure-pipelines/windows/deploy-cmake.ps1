@@ -3,7 +3,7 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
@@ -15,7 +15,7 @@ $CMakeUrl = Get-AssetUrl `
 DownloadAndInstall -Url $CMakeUrl -Args @('/quiet', '/norestart', 'ADD_CMAKE_TO_PATH=System')
 
 $cmakeExePath = Join-Path $env:ProgramFiles 'CMake\bin\cmake.exe'
-if (Test-Path $cmakeExePath) {
+if (Test-Path -LiteralPath $cmakeExePath) {
   Write-Host 'CMake appears correctly installed.'
 } else {
   Write-Error "CMake appears broken! Missing $cmakeExePath."
