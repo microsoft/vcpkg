@@ -1,5 +1,5 @@
 diff --git a/cmake/ggml-config.cmake.in b/cmake/ggml-config.cmake.in
-index 91c9d5c..0e0ef78 100644
+index 91c9d5cd..0e0ef782 100644
 --- a/cmake/ggml-config.cmake.in
 +++ b/cmake/ggml-config.cmake.in
 @@ -98,7 +98,6 @@ if (NOT GGML_SHARED_LIB)

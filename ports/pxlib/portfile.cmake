@@ -8,6 +8,7 @@ vcpkg_from_github(
         add_cmake_config.patch
         add_extern_c.patch
         use_modern_find_iconv.patch
+        fix_iconv_handle_check.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,6 +1,6 @@
 {
   "name": "jwsung91-unilink",
-  "version": "0.6.1",
+  "version": "0.7.1",
   "description": "Unified, cross-platform async C++ library for Serial, TCP, UDP, and UDS",
   "homepage": "https://github.com/jwsung91/unilink",
   "license": "Apache-2.0",
@@ -9,6 +9,7 @@
     "boost-asio",
     "boost-system",
     "boost-thread",
+    "spdlog",
     {
       "name": "vcpkg-cmake",
       "host": true
