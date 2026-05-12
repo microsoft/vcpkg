@@ -163,18 +163,18 @@ function Invoke-ScriptWithPrefix {
     -Status "Running provisioning script $ScriptName in VM" `
     -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-  $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding ascii -Raw
 
   [System.IO.FileInfo]$tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
-    $script = Get-Content -LiteralPath "$Root\$ScriptName" -Encoding utf8NoBOM -Raw
+    $script = Get-Content -LiteralPath "$Root\$ScriptName" -Encoding ascii -Raw
 $replacement = @"
 if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
   . "`$PSScriptRoot/utility-prefix.ps1"
 }
 "@
     $script = $script.Replace($replacement, $UtilityPrefixContent);
-    Set-Content -LiteralPath $tempScriptFilename -Value $script -Encoding utf8NoBOM
+    Set-Content -LiteralPath $tempScriptFilename -Value $script -Encoding ascii
 
     $parameter = $null
     if (-not $SkipSas) {

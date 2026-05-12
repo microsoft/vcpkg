@@ -40,7 +40,7 @@ EnableFSMonitor=Disabled
 try {
   $installer = Get-LocalOrDownloadedFile -Url $GitUrl
   $gitInfPath = Join-Path (Split-Path -Parent $installer.Path) 'git.inf'
-  Set-Content -LiteralPath $gitInfPath -Value $gitInfContent -Encoding utf8NoBOM
+  Set-Content -LiteralPath $gitInfPath -Value $gitInfContent -Encoding ascii
 
   Write-Host 'Installing Git for Windows...'
   $proc = Start-Process -FilePath $installer.Path -ArgumentList @(
