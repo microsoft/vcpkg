@@ -7,14 +7,13 @@ if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
+$LocalName = 'intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
 $oneAPIBaseUrl = Get-AssetUrl `
   -SasToken $SasToken `
-  -InternetUrl 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/36f868e9-84b3-4b4f-90ef-ca84092cae6a/intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe' `
-  -BlobAssetName 'intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
+  -InternetUrl "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/36f868e9-84b3-4b4f-90ef-ca84092cae6a/$LocalName" `
+  -BlobAssetName $LocalName
 
 $oneAPIHPCComponents = 'intel.oneapi.win.ifort-compiler'
-
-$LocalName = 'intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
 
 try {
   $installer = Get-LocalOrDownloadedFile -Url $oneAPIBaseUrl -LocalName $LocalName
