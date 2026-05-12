@@ -7997,7 +7997,7 @@
       "port-version": 0
     },
     "proxsuite": {
-      "baseline": "0.7.2",
+      "baseline": "0.7.3",
       "port-version": 0
     },
     "proxy": {
