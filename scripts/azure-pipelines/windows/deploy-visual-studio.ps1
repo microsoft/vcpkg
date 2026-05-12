@@ -36,4 +36,4 @@ foreach ($workload in $Workloads) {
   $vsArgs += $workload
 }
 
-DownloadAndInstall -Name 'Visual Studio' -Url $VisualStudioBootstrapperUrl -Args $vsArgs
+DownloadAndInstall -Url $VisualStudioBootstrapperUrl -Args $vsArgs

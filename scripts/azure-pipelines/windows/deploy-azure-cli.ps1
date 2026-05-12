@@ -12,4 +12,4 @@ $AzCliUrl = Get-AssetUrl `
   -InternetUrl 'https://azcliprod.blob.core.windows.net/msi/azure-cli-2.85.0-x64.msi' `
   -BlobAssetName 'azure-cli-2.85.0-x64.msi'
 
-DownloadAndInstall -Url $AzCliUrl -Name 'Azure CLI' -Args @('/quiet', '/norestart')
+DownloadAndInstall -Url $AzCliUrl -Args @('/quiet', '/norestart')

@@ -93,13 +93,61 @@ Function Get-ContentSourceDescription {
 
 <#
 .SYNOPSIS
+Gets a local file path for an asset, downloading it if necessary.
+
+.DESCRIPTION
+Get-LocalOrDownloadedFile returns a local file when it exists next to the
+script, or downloads the content to a temporary location and returns that
+path instead.
+
+.PARAMETER Url
+The URL of the asset to acquire.
+
+.PARAMETER LocalName
+The optional local file name to look for next to the script.
+#>
+Function Get-LocalOrDownloadedFile {
+  [CmdletBinding(PositionalBinding=$false)]
+  Param(
+    [Parameter(Mandatory)][String]$Url,
+    [String]$LocalName = $null
+  )
+
+  if ([string]::IsNullOrWhiteSpace($LocalName)) {
+    $LocalName = [uri]::new($Url).Segments[-1]
+  }
+
+  [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
+  $contentSource = Get-ContentSourceDescription -LocalPath $LocalPath -Url $Url
+  if ($contentSource) {
+    Write-Host "Downloading $LocalName from $contentSource..."
+    $tempPath = Get-TempFilePath
+    New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
+    $downloadPath = Join-Path $tempPath $LocalName
+    curl.exe --fail -L -o $downloadPath $Url
+    if (-Not $?) {
+      Write-Error 'Download failed!'
+    }
+
+    return [pscustomobject]@{
+      Path = $downloadPath
+      Temporary = $true
+    }
+  }
+
+  Write-Host "Using local copy of $LocalName..."
+  return [pscustomobject]@{
+    Path = $LocalPath
+    Temporary = $false
+  }
+}
+
+<#
+.SYNOPSIS
 Download and install a component.
 
 .DESCRIPTION
 DownloadAndInstall downloads an executable from the given URL, and runs it with the given command-line arguments.
-
-.PARAMETER Name
-The name of the component, to be displayed in logging messages.
 
 .PARAMETER Url
 The URL of the installer.
@@ -110,36 +158,17 @@ The command-line arguments to pass to the installer.
 Function DownloadAndInstall {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [Parameter(Mandatory)][String]$Name,
     [Parameter(Mandatory)][String]$Url,
     [Parameter(Mandatory)][String[]]$Args,
     [String]$LocalName = $null
   )
 
   try {
-    if ([string]::IsNullOrWhiteSpace($LocalName)) {
-      $LocalName = [uri]::new($Url).Segments[-1]
-    }
+    $installer = Get-LocalOrDownloadedFile -Url $Url -LocalName $LocalName
+    $installerName = Split-Path -Path $installer.Path -Leaf
 
-    [bool]$doRemove = $false
-    [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
-    $contentSource = Get-ContentSourceDescription -LocalPath $LocalPath -Url $Url
-    if ($contentSource) {
-      Write-Host "Downloading $Name from $contentSource..."
-      $tempPath = Get-TempFilePath
-      New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
-      $LocalPath = Join-Path $tempPath $LocalName
-      curl.exe --fail -L -o $LocalPath $Url
-      if (-Not $?) {
-        Write-Error 'Download failed!'
-      }
-      $doRemove = $true
-    } else {
-      Write-Host "Using local copy of $Name..."
-    }
-
-    Write-Host "Installing $Name..."
-    $proc = Start-Process -FilePath $LocalPath -ArgumentList $Args -Wait -PassThru
+    Write-Host "Installing $installerName..."
+    $proc = Start-Process -FilePath $installer.Path -ArgumentList $Args -Wait -PassThru
     $exitCode = $proc.ExitCode
 
     if ($exitCode -eq 0) {
@@ -150,8 +179,8 @@ Function DownloadAndInstall {
       Write-Error "Installation failed! Exited with $exitCode."
     }
 
-    if ($doRemove) {
-      Remove-Item -Path $LocalPath -Force
+    if ($installer.Temporary) {
+      Remove-Item -Path $installer.Path -Force
     }
   } catch {
     Write-Error "Installation failed! Exception: $($_.Exception.Message)"
@@ -179,44 +208,23 @@ Function DownloadAndUnzip {
   Param(
     [Parameter(Mandatory)][String]$Name,
     [Parameter(Mandatory)][String]$Url,
-    [Parameter(Mandatory)][String]$Destination
+    [Parameter(Mandatory)][String]$Destination,
+    [String]$LocalName = $null
   )
 
   try {
-    $fileName = [uri]::new($Url).Segments[-1]
-    if ([string]::IsNullOrWhiteSpace($LocalName)) {
-      $LocalName = $fileName
-    }
-
-    [string]$zipPath
-    [bool]$doRemove = $false
-    [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
-    $contentSource = Get-ContentSourceDescription -LocalPath $LocalPath -Url $Url
-    if ($contentSource) {
-      $tempPath = Get-TempFilePath
-      New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
-      $zipPath = Join-Path $tempPath $LocalName
-      Write-Host "Downloading $Name from $contentSource ( $Url -> $zipPath )..."
-      curl.exe --fail -L -o $zipPath $Url
-      if (-Not $?) {
-        Write-Error 'Download failed!'
-      }
-      $doRemove = $true
-    } else {
-      Write-Host "Using local copy of $Name..."
-      $zipPath = $LocalPath
-    }
+    $zip = Get-LocalOrDownloadedFile -Url $Url -LocalName $LocalName
 
     Write-Host "Installing $Name to $Destination..."
-    & tar.exe -xvf $zipPath --strip 1 --directory $Destination
+    & tar.exe -xvf $zip.Path --strip 1 --directory $Destination
     if ($LASTEXITCODE -eq 0) {
       Write-Host 'Installation successful!'
     } else {
       Write-Error "Installation failed! Exited with $LASTEXITCODE."
     }
 
-    if ($doRemove) {
-      Remove-Item -Path $zipPath -Force
+    if ($zip.Temporary) {
+      Remove-Item -Path $zip.Path -Force
     }
   } catch {
     Write-Error "Installation failed! Exception: $($_.Exception.Message)"

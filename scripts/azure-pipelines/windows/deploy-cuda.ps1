@@ -21,7 +21,7 @@ $CudaUrl = Get-AssetUrl `
 #  nsight_vse_13.2
 #  occupancy_calculator_13.2 (this is named like a tool but listed as 'documentation' in the installer)
 #  visual_studio_integration_13.2
-DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
+DownloadAndInstall -Url $CudaUrl -Args @(
   '-s',
   'crt_13.2',
   'cublas_13.2',

@@ -12,4 +12,4 @@ $MpiUrl = Get-AssetUrl `
   -InternetUrl 'https://download.microsoft.com/download/7/2/7/72731ebb-b63c-4170-ade7-836966263a8f/msmpisetup.exe' `
   -BlobAssetName 'msmpisetup-10.1.12498.52.exe'
 
-DownloadAndInstall -Name 'MSMPI' -LocalName 'msmpisetup.exe' -Url $MpiUrl -Args @('-force', '-unattend')
+DownloadAndInstall -LocalName 'msmpisetup.exe' -Url $MpiUrl -Args @('-force', '-unattend')

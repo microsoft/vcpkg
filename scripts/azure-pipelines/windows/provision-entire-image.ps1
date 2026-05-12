@@ -6,6 +6,9 @@
 
 . "$PSScriptRoot\deploy-tlssettings.ps1" -RebootIfRequired 0
 . "$PSScriptRoot\deploy-visual-studio.ps1"
+. "$PSScriptRoot\deploy-git.ps1"
+. "$PSScriptRoot\deploy-cmake.ps1"
+. "$PSScriptRoot\deploy-ninja.ps1"
 . "$PSScriptRoot\deploy-mpi.ps1"
 . "$PSScriptRoot\deploy-cuda.ps1"
 . "$PSScriptRoot\deploy-cudnn.ps1"

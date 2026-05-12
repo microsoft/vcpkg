@@ -7,7 +7,6 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-
 $oneAPIBaseUrl = Get-AssetUrl `
   -SasToken $SasToken `
   -InternetUrl 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/36f868e9-84b3-4b4f-90ef-ca84092cae6a/intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe' `
@@ -18,19 +17,8 @@ $oneAPIHPCComponents = 'intel.oneapi.win.ifort-compiler'
 $LocalName = 'intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
 
 try {
-  [bool]$doRemove = $false
-  [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
-  $contentSource = Get-ContentSourceDescription -LocalPath $LocalPath -Url $oneAPIBaseUrl
-  if ($contentSource) {
-    Write-Host "Downloading Intel oneAPI from $contentSource..."
-    $tempPath = Get-TempFilePath
-    New-Item -ItemType Directory -Path $tempPath -Force
-    $LocalPath = Join-Path $tempPath $LocalName
-    curl.exe -L -o $LocalPath $oneAPIBaseUrl
-    $doRemove = $true
-  } else {
-    Write-Host 'Using local copy of Intel oneAPI...'
-  }
+  $installer = Get-LocalOrDownloadedFile -Url $oneAPIBaseUrl -LocalName $LocalName
+  [string]$LocalPath = $installer.Path
 
   [string]$extractionPath = Get-TempFilePath
   Write-Host 'Extracting Intel oneAPI...to folder: ' $extractionPath
@@ -54,7 +42,7 @@ try {
     Write-Error "Installation failed! Exited with $exitCode."
   }
 
-  if ($doRemove) {
+  if ($installer.Temporary) {
     Remove-Item -Path $LocalPath -Force
   }
 } catch {

@@ -12,4 +12,4 @@ $PwshUrl = Get-AssetUrl `
   -InternetUrl 'https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1-win-x64.msi' `
   -BlobAssetName 'PowerShell-7.6.1-win-x64.msi'
 
-DownloadAndInstall -Url $PwshUrl -Name 'PowerShell Core' -Args @('/quiet', '/norestart')
+DownloadAndInstall -Url $PwshUrl -Args @('/quiet', '/norestart')

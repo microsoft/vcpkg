@@ -24,7 +24,7 @@ $WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
+$TotalProgress = 21
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -201,6 +201,15 @@ Start-Sleep -Seconds 60
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-git.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cmake.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-ninja.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1'
