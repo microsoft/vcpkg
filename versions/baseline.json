@@ -7665,7 +7665,7 @@
       "port-version": 0
     },
     "pdal": {
-      "baseline": "2.9.3",
+      "baseline": "2.10.1",
       "port-version": 0
     },
     "pdal-c": {
@@ -7673,7 +7673,7 @@
       "port-version": 0
     },
     "pdal-dimbuilder": {
-      "baseline": "2.9.3",
+      "baseline": "2.10.1",
       "port-version": 0
     },
     "pdcurses": {
