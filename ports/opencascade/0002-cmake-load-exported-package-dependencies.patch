@@ -1,3 +1,144 @@
+diff --git a/adm/cmake/draco.cmake b/adm/cmake/draco.cmake
+index e84863109e..7b6081a463 100644
+--- a/adm/cmake/draco.cmake
++++ b/adm/cmake/draco.cmake
+@@ -36,7 +36,7 @@ macro (SEARCH_DRACO_LIB)
+ endmacro()
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   find_package (draco CONFIG REQUIRED)
+   set(CSF_Draco draco::draco)
+   return()
+diff --git a/adm/cmake/ffmpeg.cmake b/adm/cmake/ffmpeg.cmake
+index 6499a5e017..8373d14858 100644
+--- a/adm/cmake/ffmpeg.cmake
++++ b/adm/cmake/ffmpeg.cmake
+@@ -1,5 +1,5 @@
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   find_package(FFMPEG REQUIRED)
+   set(CSF_FFmpeg ${FFMPEG_LIBRARIES})
+   if (WIN32)
+diff --git a/adm/cmake/freeimage.cmake b/adm/cmake/freeimage.cmake
+index f7bc965397..dc08687ee1 100644
+--- a/adm/cmake/freeimage.cmake
++++ b/adm/cmake/freeimage.cmake
+@@ -1,7 +1,7 @@
+ #freeimage
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+ find_package(freeimage CONFIG REQUIRED)
+   set(CSF_FreeImagePlus freeimage::FreeImagePlus)
+   if (WIN32)
+diff --git a/adm/cmake/freetype.cmake b/adm/cmake/freetype.cmake
+index c51d37c7d4..f29cc90ca1 100644
+--- a/adm/cmake/freetype.cmake
++++ b/adm/cmake/freetype.cmake
+@@ -1,7 +1,7 @@
+ # freetype
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   find_package (Freetype MODULE REQUIRED)
+   set (CSF_FREETYPE Freetype::Freetype)
+   if (WIN32)
+diff --git a/adm/cmake/jemalloc.cmake b/adm/cmake/jemalloc.cmake
+index 3ae078a1fc..be0204eb40 100644
+--- a/adm/cmake/jemalloc.cmake
++++ b/adm/cmake/jemalloc.cmake
+@@ -98,7 +98,7 @@ endmacro()
+ set (CSF_MMGR "")
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   set (3RDPARTY_JEMALLOC_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+   OCCT_CHECK_AND_UNSET_GROUP (3RDPARTY_JEMALLOC_LIBRARY_SHARED)
+   OCCT_CHECK_AND_UNSET_GROUP (3RDPARTY_JEMALLOC_LIBRARY_STATIC)
+diff --git a/adm/cmake/openvr.cmake b/adm/cmake/openvr.cmake
+index 53f476d266..875b626294 100644
+--- a/adm/cmake/openvr.cmake
++++ b/adm/cmake/openvr.cmake
+@@ -3,7 +3,7 @@
+ # https://github.com/ValveSoftware/openvr
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   set (USED_3RDPARTY_OPENVR_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
+   set (CMAKE_FIND_LIBRARY_SUFFIXES .lib .so .dylib .a)
+   find_library (FIND_OPENVR_LIB NAMES "${CSF_OpenVR}"
+diff --git a/adm/cmake/rapidjson.cmake b/adm/cmake/rapidjson.cmake
+index 6b9816727d..e8493f06d9 100644
+--- a/adm/cmake/rapidjson.cmake
++++ b/adm/cmake/rapidjson.cmake
+@@ -1,7 +1,7 @@
+ # RapidJSON
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   find_package(RapidJSON CONFIG REQUIRED)
+   set(CSF_RapidJSON rapidjson)
+   list (APPEND 3RDPARTY_INCLUDE_DIRS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/rapidjson")
+diff --git a/adm/cmake/tbb.cmake b/adm/cmake/tbb.cmake
+index 088189017f..1afce226c8 100644
+--- a/adm/cmake/tbb.cmake
++++ b/adm/cmake/tbb.cmake
+@@ -1,7 +1,7 @@
+ # tbb
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   find_package(TBB CONFIG REQUIRED)
+   set(CSF_TBB TBB::tbb TBB::tbbmalloc)
+   if (WIN32)
+diff --git a/adm/cmake/tcl.cmake b/adm/cmake/tcl.cmake
+index 842223861b..df29ec236b 100644
+--- a/adm/cmake/tcl.cmake
++++ b/adm/cmake/tcl.cmake
+@@ -14,7 +14,7 @@ if (NOT DEFINED 3RDPARTY_TCL_INCLUDE_DIR)
+   set (3RDPARTY_TCL_INCLUDE_DIR "" CACHE FILEPATH "The directory containing headers of tcl")
+ endif()
+ 
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   set (3RDPARTY_TCL_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" CACHE PATH "The directory containing tcl" FORCE)
+   set (3RDPARTY_TCL_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE FILEPATH "The directory containing headers of tcl" FORCE)
+   set (3RDPARTY_TCL_LIBRARY_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" CACHE FILEPATH "The directory containing tcl library" FORCE)
+diff --git a/adm/cmake/tk.cmake b/adm/cmake/tk.cmake
+index 297fe1d9a8..8e03155181 100644
+--- a/adm/cmake/tk.cmake
++++ b/adm/cmake/tk.cmake
+@@ -18,7 +18,7 @@ if (NOT DEFINED 3RDPARTY_TK_INCLUDE_DIR)
+   set (3RDPARTY_TK_INCLUDE_DIR "" CACHE FILEPATH "The directory containing headers of tk")
+ endif()
+ 
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   set (3RDPARTY_TK_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" CACHE PATH "The directory containing tk" FORCE)
+   set (3RDPARTY_TCLTK_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" CACHE PATH "The directory containing tcltk" FORCE)
+   set (3RDPARTY_TK_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE FILEPATH "The directory containing headers of tk" FORCE)
+diff --git a/adm/cmake/vtk.cmake b/adm/cmake/vtk.cmake
+index a563febb63..3aec0d718c 100644
+--- a/adm/cmake/vtk.cmake
++++ b/adm/cmake/vtk.cmake
+@@ -1,7 +1,7 @@
+ # vtk
+ 
+ # vcpkg processing
+-if (BUILD_USE_VCPKG)
++if (TRUE)
+   find_package(VTK REQUIRED
+     COMPONENTS
+       CommonCore
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
 index a4796b2dc1..678e44c7d1 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
