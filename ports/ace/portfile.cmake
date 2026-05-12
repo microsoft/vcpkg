@@ -22,6 +22,8 @@ endif()
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        zlib.patch
 )
 
 set(ACE_ROOT "${SOURCE_PATH}")
