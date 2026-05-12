@@ -8650,7 +8650,7 @@
     },
     "rdma-core": {
       "baseline": "62.0",
-      "port-version": 0
+      "port-version": 1
     },
     "re2": {
       "baseline": "2025-11-05",
