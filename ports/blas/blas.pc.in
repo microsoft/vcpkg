@@ -5,5 +5,4 @@ Description: Implementation of BLAS
 Version: 
 Requires: @requires@
 Libs: @libs@
-Libs.private: @libs_private@
 Cflags: @cflags@

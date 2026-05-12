@@ -51,7 +51,6 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
 else()
     set(BLA_VENDOR OpenBLAS)
     set(requires openblas)
-    set(libs_private "-lm")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" @ONLY)
