@@ -168,6 +168,14 @@
     <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgConfigurationFileLocation)" Condition="Exists('$(_ZVcpkgConfigurationFileLocation)')"/>
   </ItemGroup>
 
+  <!-- Import 'support\Bootstrap.targets' to bootstrap Vcpkg if we can. Only import if:
+    1. If VcpkgEnableManifest is true - Vcpkg needs to be bootstrapped only in manifest mode.
+    2. If VcpkgAutoBootstrap is true - VcpkgAutoBootstrap allows consumers to opt-out.
+    3. The OS is Windows.
+    4. The 'bootstrap'-script is present in the Vcpkg root directory - When 'vcpkg' is redistributed through mechanisms that don't need bootstrapping, the script isn't present so we shouldn't attempt to run it.
+  -->
+  <Import Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgAutoBootstrap)' == 'true' and $([MSBuild]::IsOSPlatform('Windows')) and Exists('$(_ZVcpkgRoot)bootstrap-vcpkg.bat')"
+          Project="$(MSBuildThisFileDirectory)\support\Bootstrap.targets" />
   <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task" 
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
   />

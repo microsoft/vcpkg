@@ -1,6 +1,7 @@
 {
   "name": "vectorscan",
   "version": "5.4.12",
+  "port-version": 1,
   "description": "A portable fork of the high-performance regular expression matching library",
   "homepage": "https://vectorcamp.gr/project/vectorscan/",
   "license": "BSD-3-Clause",
@@ -34,6 +35,12 @@
     }
   ],
   "features": {
+    "chimera": {
+      "description": "PCRE-compatible API",
+      "dependencies": [
+        "pcre"
+      ]
+    },
     "dump": {
       "description": "Dump code support"
     }
