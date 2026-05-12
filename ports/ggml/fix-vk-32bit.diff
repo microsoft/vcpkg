@@ -1,0 +1,71 @@
+diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
+index 423e01d..3cd5488 100644
+--- a/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -2036,7 +2036,7 @@ void vk_memory_logger::log_allocation(vk_buffer_ref buf_ref, size_t size) {
+     allocations[buf->buffer] = size;
+     total_device += device ? size : 0;
+     total_host += device ? 0 : size;
+-    VK_LOG_MEMORY(buf->device->name << ": +" << format_size(size) << " " << type << " at " << buf->buffer << ". Total device: " << format_size(total_device) << ", total host: " << format_size(total_host));
++    VK_LOG_MEMORY(buf->device->name << ": +" << format_size(size) << " " << type << " at " << static_cast<VkBuffer>(buf->buffer) << ". Total device: " << format_size(total_device) << ", total host: " << format_size(total_host));
+ }
+ 
+ void vk_memory_logger::log_deallocation(vk_buffer_ref buf_ref) {
+@@ -2052,10 +2052,10 @@ void vk_memory_logger::log_deallocation(vk_buffer_ref buf_ref) {
+     total_device -= device ? it->second : 0;
+     total_host -= device ? 0 : it->second;
+     if (it != allocations.end()) {
+-        VK_LOG_MEMORY(buf->device->name << ": -" << format_size(it->second) << " " << type << " at " << buf->buffer << ". Total device: " << format_size(total_device) << ", total host: " << format_size(total_host));
++        VK_LOG_MEMORY(buf->device->name << ": -" << format_size(it->second) << " " << type << " at " << static_cast<VkBuffer>(buf->buffer) << ". Total device: " << format_size(total_device) << ", total host: " << format_size(total_host));
+         allocations.erase(it);
+     } else {
+-        VK_LOG_MEMORY("ERROR " << buf->device->name << ": Attempted to deallocate unknown " << type << " memory at " << buf->buffer);
++        VK_LOG_MEMORY("ERROR " << buf->device->name << ": Attempted to deallocate unknown " << type << " memory at " << static_cast<VkBuffer>(buf->buffer));
+     }
+ }
+ 
+@@ -6951,7 +6951,7 @@ static bool ggml_vk_buffer_write_2d_async(vk_context subctx, vk_buffer& dst, siz
+     }
+ 
+     ggml_vk_sync_buffers(nullptr, subctx);
+-    subctx->s->buffer->buf.copyBuffer((VkBuffer)staging_buffer->buffer, (VkBuffer)dst->buffer, slices);
++    subctx->s->buffer->buf.copyBuffer(staging_buffer->buffer, dst->buffer, slices);
+ 
+     if (width == spitch) {
+         deferred_memcpy((uint8_t *)staging_buffer->ptr, src, staging_size, &subctx->in_memcpys);
+@@ -7086,7 +7086,7 @@ static bool ggml_vk_buffer_read_async(vk_context subctx, vk_buffer& src, size_t
+ }
+ 
+ static void ggml_vk_buffer_read_2d(vk_buffer& src, size_t offset, void * dst, size_t spitch, size_t dpitch, size_t width, size_t height) {
+-    VK_LOG_DEBUG("ggml_vk_buffer_read_2d(" << src->buffer << ", " << offset << ", " << width << ", " << height << ")");
++    VK_LOG_DEBUG("ggml_vk_buffer_read_2d(" << static_cast<VkBuffer>(src->buffer) << ", " << offset << ", " << width << ", " << height << ")");
+ 
+     // If the device is not an UMA device the memory is host-accessible through rebar. While writing
+     // through PCIe is sufficient fast reading back data from PCIe is slower than going through
+@@ -7118,7 +7118,7 @@ static void ggml_vk_buffer_read_2d(vk_buffer& src, size_t offset, void * dst, si
+ }
+ 
+ static void ggml_vk_buffer_read(vk_buffer& src, size_t offset, void * dst, size_t size) {
+-    VK_LOG_DEBUG("ggml_vk_buffer_read(" << src->buffer << ", " << offset << ", " << size << ")");
++    VK_LOG_DEBUG("ggml_vk_buffer_read(" << static_cast<VkBuffer>(src->buffer) << ", " << offset << ", " << size << ")");
+     ggml_vk_buffer_read_2d(src, offset, dst, size, size, size, 1);
+ }
+ 
+@@ -7286,7 +7286,7 @@ static void ggml_vk_matmul(
+         uint32_t batch_stride_a, uint32_t batch_stride_b, uint32_t batch_stride_d,
+         uint32_t split_k, uint32_t batch, uint32_t ne02, uint32_t ne12, uint32_t broadcast2, uint32_t broadcast3,
+         uint32_t padded_n) {
+-        VK_LOG_DEBUG("ggml_vk_matmul(a: (" << a.buffer->buffer << ", " << a.offset << ", " << a.size << "), b: (" << b.buffer->buffer << ", " << b.offset << ", " << b.size << "), d: (" << d.buffer->buffer << ", " << d.offset << ", " << d.size << "), split_k: (" << (split_k_buffer.buffer != nullptr ? split_k_buffer.buffer->buffer : VK_NULL_HANDLE) << ", " << split_k_buffer.offset << ", " << split_k_buffer.size << "), m: " << m << ", n: " << n << ", k: " << k << ", stride_a: " << stride_a << ", stride_b: " << stride_b << ", stride_d: " << stride_d << ", batch_stride_a: " << batch_stride_a << ", batch_stride_b: " << batch_stride_b << ", batch_stride_d: " << batch_stride_d << ", split_k: " << split_k << ", batch: " << batch << ", ne02: " << ne02 << ", ne12: " << ne12 << ", broadcast2: " << broadcast2 << ", broadcast3: " << broadcast3 << ", padded_n: " << padded_n << ")");
++        VK_LOG_DEBUG("ggml_vk_matmul(a: (" << static_cast<VkBuffer>(a.buffer->buffer) << ", " << a.offset << ", " << a.size << "), b: (" << static_cast<VkBuffer>(b.buffer->buffer) << ", " << b.offset << ", " << b.size << "), d: (" << static_cast<VkBuffer>(d.buffer->buffer) << ", " << d.offset << ", " << d.size << "), split_k: (" << (split_k_buffer.buffer != nullptr ? static_cast<VkBuffer>(split_k_buffer.buffer->buffer) : VkBuffer{}) << ", " << split_k_buffer.offset << ", " << split_k_buffer.size << "), m: " << m << ", n: " << n << ", k: " << k << ", stride_a: " << stride_a << ", stride_b: " << stride_b << ", stride_d: " << stride_d << ", batch_stride_a: " << batch_stride_a << ", batch_stride_b: " << batch_stride_b << ", batch_stride_d: " << batch_stride_d << ", split_k: " << split_k << ", batch: " << batch << ", ne02: " << ne02 << ", ne12: " << ne12 << ", broadcast2: " << broadcast2 << ", broadcast3: " << broadcast3 << ", padded_n: " << padded_n << ")");
+     if (split_k == 1) {
+         ggml_pipeline_request_descriptor_sets(ctx, pipeline, CEIL_DIV(batch, ctx->device->properties.limits.maxComputeWorkGroupCount[2]));
+ 
+@@ -7366,7 +7366,7 @@ static void ggml_vk_matmul_id(
+         uint32_t batch_stride_a, uint32_t batch_stride_b, uint32_t batch_stride_d,
+         uint32_t n_as, uint32_t nei0, uint32_t nei1, uint32_t nbi1, uint32_t ne11,
+         uint32_t padded_n) {
+-    VK_LOG_DEBUG("ggml_vk_matmul_id(a: (" << a.buffer->buffer << ", " << a.offset << ", " << a.size << "), b: (" << b.buffer->buffer << ", " << b.offset << ", " << b.size << "), d: (" << d.buffer->buffer << ", " << d.offset << ", " << d.size << "), ids: (" << ids.buffer->buffer << ", " << ids.offset << ", " << ids.size << "), expert_count: (" << expert_count_buf.buffer->buffer << ", " << expert_count_buf.offset << ", " << expert_count_buf.size << "), " <<
++    VK_LOG_DEBUG("ggml_vk_matmul_id(a: (" << static_cast<VkBuffer>(a.buffer->buffer) << ", " << a.offset << ", " << a.size << "), b: (" << static_cast<VkBuffer>(b.buffer->buffer) << ", " << b.offset << ", " << b.size << "), d: (" << static_cast<VkBuffer>(d.buffer->buffer) << ", " << d.offset << ", " << d.size << "), ids: (" << static_cast<VkBuffer>(ids.buffer->buffer) << ", " << ids.offset << ", " << ids.size << "), expert_count: (" << static_cast<VkBuffer>(expert_count_buf.buffer->buffer) << ", " << expert_count_buf.offset << ", " << expert_count_buf.size << "), " <<
+         "m: " << m << ", n: " << n << ", k: " << k << ", stride_a: " << stride_a << ", stride_b: " << stride_b << ", stride_d: " << stride_d << ", " <<
+         "batch_stride_a: " << batch_stride_a << ", batch_stride_b: " << batch_stride_b << ", batch_stride_d: " << batch_stride_d << ", " <<
+         "n_as: " << n_as << ", nei0: " << nei0 << ", nei1: " << nei1 << ", nbi1: " << nbi1 << ", ne11: " << ne11 << ")");

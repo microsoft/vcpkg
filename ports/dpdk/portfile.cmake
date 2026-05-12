@@ -79,11 +79,21 @@ if(PYTHON_PACKAGES)
 endif()
 
 set(DISABLE_DRIVERS "regex/cn9k")
-if(NOT "rawdev-ifpga" IN_LIST FEATURES)
-  string(APPEND DISABLE_DRIVERS ",raw/ifpga")
+
+IF(NOT "mlx5" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",common/mlx5,compress/mlx5,crypto/mlx5,net/mlx5,regex/mlx5,vdpa/mlx5")
 endif()
 if(NOT "pmd-ipn3ke" IN_LIST FEATURES)
   string(APPEND DISABLE_DRIVERS ",net/intel/ipn3ke")
+endif()
+if(NOT "pmd-mana" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mana")
+endif()
+if(NOT "pmd-mlx4" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mlx4")
+endif()
+if(NOT "rawdev-ifpga" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",raw/ifpga")
 endif()
 
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"

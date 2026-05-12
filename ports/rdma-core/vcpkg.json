@@ -1,0 +1,23 @@
+{
+  "name": "rdma-core",
+  "version": "62.0",
+  "description": "The userspace components for the Linux Kernel's drivers/infiniband subsystem.",
+  "homepage": "https://github.com/linux-rdma/rdma-core",
+  "license": "(GPL-2.0-only OR Linux-OpenIB) AND (GPL-2.0-only OR BSD-3-Clause) AND (GPL-2.0-only OR BSD-2-Clause) AND CC0-1.0 AND MIT",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "python3",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
