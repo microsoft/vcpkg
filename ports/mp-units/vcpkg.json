@@ -7,14 +7,8 @@
   "documentation": "https://mpusz.github.io/mp-units/latest/",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "fmt",
-      "version>=": "12.1.0"
-    },
-    {
-      "name": "gsl-lite",
-      "version>=": "1.0.1"
-    },
+    "fmt",
+    "gsl-lite",
     {
       "name": "vcpkg-cmake",
       "host": true
