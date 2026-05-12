@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 2287ff1af67808e495ca4da527bd54e9c9f2044ed1bb4749cdaeee7993a7b0edca73cccd476a607442a4bf313b43e2358bf6ca28035e2dbe52b16847f6e5b30a
+        SHA512 c7fabf6e4e0ccf3d1f9bc750c23def714ebe460e82e8c0e06ac157f50c245224807fd717751de65fb51e6203db4e30adb5c7500fb4524696d96d1efab34fb395
         HEAD_REF main
     PATCHES
         library-linkage.diff
@@ -41,8 +41,8 @@ if("httpfs" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
         REPO duckdb/duckdb_httpfs
-        REF 8ff2283fb14b443e673c58e2e9621e3c3215d794
-        SHA512 df2a61667b1fcf0e7a1d455a1805231c61362a135e7a93079b47032246b502b48aafcbae4aeee7b29145c25e3b98afa5ef6e3076ffcb71562acfbae6e2fbc087
+        REF 74f954001f3a740c909181b02259de6c7b942632
+        SHA512 50035a92f87ef4b52cf3c44514923d8e63f2baadbc600ced44bdf3fb50d5ff217e6574bf42b5ff4ef1e6339c721c81e3a1fa305c0f50d9190763bf1151d38ffd
         HEAD_REF main
         PATCHES
             library-linkage-httpfs.diff
@@ -60,8 +60,8 @@ if("iceberg" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_ICEBERG_SOURCE_PATH
         REPO duckdb/duckdb-iceberg
-        REF 6cec0127c340bc7e83c7e6b2390e27cb555a9d0a
-        SHA512 d49f7e9f0492111ac81f0c34db84ca675c6a39fb66f257d080953a53922243d6cff09ee1c1dbb0f5fefc911b936ed8b03df2b30431cd6e2319c4cbefcf8690b6
+        REF 23c7cc52d84f63e9af47d0831862cfe7da3fb40f
+        SHA512 cec39b3f87d246f76841b65fe2d73016cc82c752a06aec0c8cb282aa8cc7070693ab00e699e1d147a3b1c9356a844d67e8a7c89fea0f1f720addb1f1f3f62075
         HEAD_REF main
     )
     list(APPEND extension_dirs "${DUCKDB_ICEBERG_SOURCE_PATH}")
