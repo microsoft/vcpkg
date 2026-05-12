@@ -127,18 +127,33 @@ index 297fe1d9a8..8e03155181 100644
    set (3RDPARTY_TCLTK_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" CACHE PATH "The directory containing tcltk" FORCE)
    set (3RDPARTY_TK_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE FILEPATH "The directory containing headers of tk" FORCE)
 diff --git a/adm/cmake/vtk.cmake b/adm/cmake/vtk.cmake
-index a563febb63..3aec0d718c 100644
+index a563febb63..32ee06536f 100644
 --- a/adm/cmake/vtk.cmake
 +++ b/adm/cmake/vtk.cmake
-@@ -1,7 +1,7 @@
+@@ -1,21 +1,8 @@
  # vtk
  
  # vcpkg processing
 -if (BUILD_USE_VCPKG)
+-  find_package(VTK REQUIRED
+-    COMPONENTS
+-      CommonCore
+-      RenderingUI
+-      RenderingOpenGL2
+-    OPTIONAL_COMPONENTS
+-      mpi
+-      utf8
+-      eigen
+-      doubleconversion
+-      lz4
+-      lzma
+-      expat
+-  )
 +if (TRUE)
-   find_package(VTK REQUIRED
-     COMPONENTS
-       CommonCore
++  find_dependency(VTK)
+   set(IS_VTK_9XX 1)
+   if (WIN32)
+     set (USED_3RDPARTY_VTK_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin")
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
 index a4796b2dc1..678e44c7d1 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
