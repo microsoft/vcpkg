@@ -6,11 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dyne/frei0r
     REF "v${VERSION}"
-    SHA512 cd4eebf1fa77e24e5ea1cec98b0eddab0e6d0ecca5daf5b06cf293c8ac17b4f57bfb320f49ed209835062d4faed6b119c732a7ff5d114dda68eba36f4ecd144e
+    SHA512 84b7c7d7da75c3c76b2bd68fbdf877831c45bc99f0ba306a1c7270867073b27f53595a5c6d845c5a628f72aa05f54525e02fd8000794c650e13af8e88a946550
     HEAD_REF master
     PATCHES
-        "${FIX_UPSTREAM_PR_252}"
-        install-dlls-to-bin.diff
+        001-fix-defs.patch
+        002-install-dlls-to-bin.patch
 )
 
 vcpkg_check_features(
