@@ -4,6 +4,7 @@ param(
     [Parameter(Mandatory=$False)][switch]$win64 = $false,
     [Parameter(Mandatory=$False)][string]$withVSPath = "",
     [Parameter(Mandatory=$False)][string]$withWinSDK = "",
+    [Parameter(Mandatory=$False)][string]$toolDir = "",
     [Parameter(Mandatory=$False)][switch]$disableMetrics = $false
 )
 Set-StrictMode -Version Latest
@@ -49,10 +50,15 @@ Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 $Config = ConvertFrom-StringData (Get-Content "$PSScriptRoot\vcpkg-tool-metadata.txt" -Raw)
 $versionDate = $Config.VCPKG_TOOL_RELEASE_TAG
 
+# Use the repository root for the tool if not specified
+if ([string]::IsNullOrWhiteSpace($toolDir)) {
+    $toolDir=$vcpkgRootDir
+}
+
 if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {
-    & "$scriptsDir/tls12-download-arm64.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" "$vcpkgRootDir\vcpkg.exe"
+    & "$scriptsDir/tls12-download-arm64.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" "$toolDir\vcpkg.exe"
 } else {
-    & "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
+    & "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" "$toolDir\vcpkg.exe"
 }
 
 Write-Host ""
@@ -63,13 +69,13 @@ if ($LASTEXITCODE -ne 0)
     throw
 }
 
-& "$vcpkgRootDir\vcpkg.exe" version --disable-metrics
+& "$toolDir\vcpkg.exe" version --disable-metrics
 
 if ($disableMetrics)
 {
-    Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.disable-metrics" -Force
+    Set-Content -Value "" -Path "$toolDir\vcpkg.disable-metrics" -Force
 }
-elseif (-Not (Test-Path "$vcpkgRootDir\vcpkg.disable-metrics"))
+elseif (-Not (Test-Path "$toolDir\vcpkg.disable-metrics"))
 {
     # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
     # opted out they should stay opted out.
