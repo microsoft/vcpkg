@@ -1,7 +1,7 @@
 {
   "name": "dpdk",
   "version": "26.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
   "documentation": "https://doc.dpdk.org/guides/",
@@ -29,11 +29,32 @@
     "docs": {
       "description": "Build and install docs"
     },
+    "mlx5": {
+      "description": "Build NVIDIA MLX5 drivers",
+      "supports": "linux",
+      "dependencies": [
+        "rdma-core"
+      ]
+    },
     "pmd-ipn3ke": {
       "description": "Build the IPN3KE Poll Mode Driver",
       "supports": "!windows",
       "dependencies": [
         "dtc"
+      ]
+    },
+    "pmd-mana": {
+      "description": "Build MANA Poll Mode Driver",
+      "supports": "linux",
+      "dependencies": [
+        "rdma-core"
+      ]
+    },
+    "pmd-mlx4": {
+      "description": "Build NVIDIA MLX4 Poll Mode Driver",
+      "supports": "linux",
+      "dependencies": [
+        "rdma-core"
       ]
     },
     "rawdev-ifpga": {
