@@ -8,6 +8,7 @@ vcpkg_from_github(
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
         0005-dont-expect-gnu-diff.patch
+        0006-gen-vcxproj-ignore-unknown-flags.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -68,14 +69,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
+    # --enable-external-build: skip toolchain probing (MSVC 19.44+ deprecated -o, breaking the configure link test).
+    # MSVC builds use MSBuild anyway.
+    set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic --enable-external-build)
 
     if("realtime" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+        list(APPEND OPTIONS --enable-realtime-only)
     endif()
 
     if("highbitdepth" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+        list(APPEND OPTIONS --enable-vp9-highbitdepth)
     endif()
 
     message(STATUS "Generating makefile")
@@ -103,13 +106,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_SUBPATH vpx.vcxproj
     )
 
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
-    else()
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
+    # The dist dir name includes infixes that depend on which features are enabled/disabled (e.g. -nopost-, -nomt-, -nodocs-).
+    # GLOB for the actual directory instead of guessing the exact infix combination.
+    file(GLOB LIBVPX_INCLUDE_DIR_CANDIDATES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*-v${VERSION}/include/vpx")
+    list(LENGTH LIBVPX_INCLUDE_DIR_CANDIDATES _vpx_n)
+    if(_vpx_n EQUAL 0)
+        message(FATAL_ERROR "libvpx: no dist include directory found under ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
     endif()
+    list(GET LIBVPX_INCLUDE_DIR_CANDIDATES 0 LIBVPX_INCLUDE_DIR)
     file(
         INSTALL
             "${LIBVPX_INCLUDE_DIR}"
