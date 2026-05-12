@@ -1,6 +1,7 @@
 {
   "name": "podofo",
   "version": "1.1.0",
+  "port-version": 1,
   "description": "PoDoFo is a library to work with the PDF file format",
   "homepage": "https://github.com/podofo/podofo",
   "license": "LGPL-2.0-or-later OR MPL-2.0",
@@ -9,7 +10,10 @@
     "date",
     "fast-float",
     "fmt",
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     "libjpeg-turbo",
     "libpng",
     {
@@ -17,6 +21,7 @@
       "default-features": false
     },
     "openssl",
+    "tcb-span",
     {
       "name": "tiff",
       "default-features": false
@@ -40,7 +45,10 @@
     "fontconfig": {
       "description": "Use Fontconfig",
       "dependencies": [
-        "fontconfig"
+        {
+          "name": "fontconfig",
+          "default-features": false
+        }
       ]
     },
     "fontmanager": {

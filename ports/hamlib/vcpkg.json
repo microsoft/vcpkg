@@ -1,0 +1,29 @@
+{
+  "name": "hamlib",
+  "version": "4.7.1",
+  "description": "Ham radio control library for rigs (radios), rotators, and amplifiers.",
+  "homepage": "https://hamlib.github.io/",
+  "documentation": "https://github.com/Hamlib/Hamlib/wiki/Documentation",
+  "license": null,
+  "supports": "(!windows | mingw) & !android",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ],
+  "features": {
+    "usb": {
+      "description": "USB backend support",
+      "dependencies": [
+        "libusb"
+      ]
+    },
+    "xml": {
+      "description": "Rigmem XML support",
+      "dependencies": [
+        "libxml2"
+      ]
+    }
+  }
+}
