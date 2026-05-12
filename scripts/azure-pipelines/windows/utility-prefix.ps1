@@ -27,6 +27,39 @@ Function Get-TempFilePath {
 
 <#
 .SYNOPSIS
+Gets the download URL for an image asset.
+
+.DESCRIPTION
+Get-AssetUrl returns the upstream URL when no SAS token is provided, or the
+vcpkgimageminting asset URL when a SAS token is available.
+
+.PARAMETER SasToken
+The optional SAS token for accessing vcpkgimageminting assets.
+
+.PARAMETER InternetUrl
+The upstream download URL.
+
+.PARAMETER BlobAssetName
+The asset file name in the vcpkgimageminting blob container.
+#>
+Function Get-AssetUrl {
+  [CmdletBinding(PositionalBinding=$false)]
+  Param(
+    [String]$SasToken,
+    [Parameter(Mandatory)][String]$InternetUrl,
+    [Parameter(Mandatory)][String]$BlobAssetName
+  )
+
+  if ([string]::IsNullOrEmpty($SasToken)) {
+    return $InternetUrl
+  }
+
+  $SasToken = $SasToken.Replace('"', '')
+  return "https://vcpkgimageminting.blob.core.windows.net/assets/$BlobAssetName?$SasToken"
+}
+
+<#
+.SYNOPSIS
 Describes where installation content will be sourced from.
 
 .DESCRIPTION

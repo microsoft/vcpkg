@@ -8,13 +8,10 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 }
 
 
-[string]$oneAPIBaseUrl
-if ([string]::IsNullOrEmpty($SasToken)) {
-  $oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/36f868e9-84b3-4b4f-90ef-ca84092cae6a/intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
-} else {
-  $SasToken = $SasToken.Replace('"', '')
-  $oneAPIBaseUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe?$SasToken"
-}
+$oneAPIBaseUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://registrationcenter-download.intel.com/akdlm/IRC_NAS/36f868e9-84b3-4b4f-90ef-ca84092cae6a/intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe' `
+  -BlobAssetName 'intel-oneapi-hpc-toolkit-2025.3.1.54_offline.exe'
 
 $oneAPIHPCComponents = 'intel.oneapi.win.ifort-compiler'
 

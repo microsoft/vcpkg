@@ -7,12 +7,9 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-[string]$PwshUrl
-if ([string]::IsNullOrEmpty($SasToken)) {
-  $PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1-win-x64.msi'
-} else {
-  $SasToken = $SasToken.Replace('"', '')
-  $PwshUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/PowerShell-7.6.1-win-x64.msi?$SasToken"
-}
+$PwshUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1-win-x64.msi' `
+  -BlobAssetName 'PowerShell-7.6.1-win-x64.msi'
 
 DownloadAndInstall -Url $PwshUrl -Name 'PowerShell Core' -Args @('/quiet', '/norestart')

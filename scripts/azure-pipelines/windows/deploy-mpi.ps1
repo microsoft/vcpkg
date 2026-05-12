@@ -7,12 +7,9 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-[string]$MpiUrl
-if ([string]::IsNullOrEmpty($SasToken)) {
-  $MpiUrl = 'https://download.microsoft.com/download/7/2/7/72731ebb-b63c-4170-ade7-836966263a8f/msmpisetup.exe'
-} else {
-  $SasToken = $SasToken.Replace('"', '')
-  $MpiUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/msmpisetup-10.1.12498.52.exe?$SasToken"
-}
+$MpiUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://download.microsoft.com/download/7/2/7/72731ebb-b63c-4170-ade7-836966263a8f/msmpisetup.exe' `
+  -BlobAssetName 'msmpisetup-10.1.12498.52.exe'
 
 DownloadAndInstall -Name 'MSMPI' -LocalName 'msmpisetup.exe' -Url $MpiUrl -Args @('-force', '-unattend')

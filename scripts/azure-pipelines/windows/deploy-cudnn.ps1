@@ -7,13 +7,10 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-[string]$CudnnUrl
-if ([string]::IsNullOrEmpty($SasToken)) {
-  $CudnnUrl = 'https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-9.20.0.48_cuda13-archive.zip'
-} else {
-  $SasToken = $SasToken.Replace('"', '')
-  $CudnnUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-9.20.0.48_cuda13-archive.zip?$SasToken"
-}
+$CudnnUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-9.20.0.48_cuda13-archive.zip' `
+  -BlobAssetName 'cudnn-windows-x86_64-9.20.0.48_cuda13-archive.zip'
 
 DownloadAndUnzip -Name 'CUDNN' -Url $CudnnUrl -Destination "$env:ProgramFiles\NVIDIA GPU Computing Toolkit\CUDA\v13.2"
 
