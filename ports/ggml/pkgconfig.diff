@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c97f681..64a456b 100644
+index 672b37df..c6f16c7c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -352,7 +352,7 @@ if (GGML_STANDALONE)
@@ -20,7 +20,7 @@ index c97f681..64a456b 100644
      if(variable_name MATCHES "^GGML_")
          string(REPLACE ";" "\\;"
 diff --git a/ggml.pc.in b/ggml.pc.in
-index 3e0291e..a762733 100644
+index 3e0291e0..a7627339 100644
 --- a/ggml.pc.in
 +++ b/ggml.pc.in
 @@ -6,5 +6,7 @@ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
@@ -34,7 +34,7 @@ index 3e0291e..a762733 100644
 +Libs.private: @GGML_PKGCONFIG_LIBS_PRIVATE@
 +Requires.private: @GGML_PKGCONFIG_REQUIRES_PRIVATE@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3e48860..1ec27e8 100644
+index 3e48860b..1ec27e83 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -185,6 +185,10 @@ endif()
@@ -105,7 +105,7 @@ index 3e48860..1ec27e8 100644
 +set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}" PARENT_SCOPE)
 +set(GGML_PKGCONFIG_REQUIRES_PRIVATE "${GGML_PKGCONFIG_REQUIRES_PRIVATE}" PARENT_SCOPE)
 diff --git a/src/ggml-blas/CMakeLists.txt b/src/ggml-blas/CMakeLists.txt
-index c27dc17..ce1ab21 100644
+index c27dc174..ce1ab21d 100644
 --- a/src/ggml-blas/CMakeLists.txt
 +++ b/src/ggml-blas/CMakeLists.txt
 @@ -93,6 +93,7 @@ if (BLAS_FOUND)
@@ -117,7 +117,7 @@ index c27dc17..ce1ab21 100644
  else()
      message(FATAL_ERROR "BLAS not found, please refer to "
 diff --git a/src/ggml-cpu/CMakeLists.txt b/src/ggml-cpu/CMakeLists.txt
-index c1c225f..39ef457 100644
+index 869c7b23..53a90f73 100644
 --- a/src/ggml-cpu/CMakeLists.txt
 +++ b/src/ggml-cpu/CMakeLists.txt
 @@ -57,6 +57,9 @@ function(ggml_add_cpu_backend_variant_impl tag_name)
@@ -171,7 +171,7 @@ index c1c225f..39ef457 100644
          message(STATUS "ARM detected")
          list(APPEND GGML_CPU_SOURCES
 diff --git a/src/ggml-metal/CMakeLists.txt b/src/ggml-metal/CMakeLists.txt
-index 42054d8..d780361 100644
+index 42054d84..d780361e 100644
 --- a/src/ggml-metal/CMakeLists.txt
 +++ b/src/ggml-metal/CMakeLists.txt
 @@ -19,6 +19,11 @@ target_link_libraries(ggml-metal PRIVATE
@@ -187,7 +187,7 @@ index 42054d8..d780361 100644
      add_compile_definitions(GGML_METAL_NDEBUG)
  endif()
 diff --git a/src/ggml-opencl/CMakeLists.txt b/src/ggml-opencl/CMakeLists.txt
-index 5ed83ee..bb06a50 100644
+index ffde6a4f..9a7f9526 100644
 --- a/src/ggml-opencl/CMakeLists.txt
 +++ b/src/ggml-opencl/CMakeLists.txt
 @@ -7,6 +7,7 @@ ggml_add_backend_library(${TARGET_NAME}
@@ -199,7 +199,7 @@ index 5ed83ee..bb06a50 100644
  
  if (GGML_OPENCL_PROFILING)
 diff --git a/src/ggml-vulkan/CMakeLists.txt b/src/ggml-vulkan/CMakeLists.txt
-index 715a263..04c142c 100644
+index 715a263a..04c142c2 100644
 --- a/src/ggml-vulkan/CMakeLists.txt
 +++ b/src/ggml-vulkan/CMakeLists.txt
 @@ -87,6 +87,11 @@ if (Vulkan_FOUND)
