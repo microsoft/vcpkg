@@ -1311,7 +1311,6 @@ sdl1-net:arm64-linux=cascade
 sdl1-net(android | osx)=cascade
 sdl2[dbus]:arm64-linux=cascade
 sdl2-gfx:arm64-linux=cascade
-sdl2-mixer:arm64-linux=cascade
 sdl2-mixer-ext:arm64-linux=cascade
 sdl2-net:arm64-linux=cascade
 sdl2-ttf:arm64-linux=cascade
