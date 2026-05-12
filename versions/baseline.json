@@ -4549,7 +4549,7 @@
       "port-version": 0
     },
     "knncolle-hnsw": {
-      "baseline": "0.3.1",
+      "baseline": "0.3.2",
       "port-version": 0
     },
     "knncolle-kmknn": {
