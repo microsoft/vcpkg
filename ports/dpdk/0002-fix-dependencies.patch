@@ -65,6 +65,44 @@ index bbdad71ffc..e0a3ecc5f9 100644
  endif
  if (pcap_dep.found() and cc.has_header('pcap.h', dependencies: pcap_dep)
          and cc.links(min_c_code, dependencies: pcap_dep))
+diff --git a/drivers/common/mlx5/linux/meson.build b/drivers/common/mlx5/linux/meson.build
+index 3767e7a69b..9127dad034 100644
+--- a/drivers/common/mlx5/linux/meson.build
++++ b/drivers/common/mlx5/linux/meson.build
+@@ -29,9 +29,7 @@ foreach libname:libnames
+             ext_deps += lib
+         endif
+     else
+-        build = false
+-        reason = 'missing dependency, "' + libname + '"'
+-        subdir_done()
++        error('missing dependency: "' + libname + '"')
+     endif
+ endforeach
+ if static_ibverbs or dlopen_ibverbs
+diff --git a/drivers/common/mlx5/windows/meson.build b/drivers/common/mlx5/windows/meson.build
+index f454788a9f..78dfd12d5c 100644
+--- a/drivers/common/mlx5/windows/meson.build
++++ b/drivers/common/mlx5/windows/meson.build
+@@ -2,16 +2,12 @@
+ # Copyright 2019 Mellanox Technologies, Ltd
+ 
+ if not cc.has_header('mlx5devx.h')
+-    build = false
+-    reason = 'missing dependency, "mlx5devx.h"'
+-    subdir_done()
++    error('missing dependency: "mlx5devx.h"')
+ endif
+ 
+ devxlib = cc.find_library('mlx5devx', required: false)
+ if not devxlib.found() or not cc.links(min_c_code, dependencies: devxlib)
+-    build = false
+-    reason = 'missing dependency, "mlx5devx"'
+-    subdir_done()
++    error('missing dependency: "mlx5devx"')
+ endif
+ ext_deps += devxlib
+ 
 diff --git a/drivers/net/intel/ipn3ke/meson.build b/drivers/net/intel/ipn3ke/meson.build
 index 23c4d36b4f..a29abb1f77 100644
 --- a/drivers/net/intel/ipn3ke/meson.build
@@ -80,6 +118,36 @@ index 23c4d36b4f..a29abb1f77 100644
  endif
  
  includes += include_directories('../../../raw/ifpga')
+diff --git a/drivers/net/mana/meson.build b/drivers/net/mana/meson.build
+index 19d4b3695e..56323879d7 100644
+--- a/drivers/net/mana/meson.build
++++ b/drivers/net/mana/meson.build
+@@ -31,9 +31,7 @@ foreach libname:libnames
+         libs += lib
+         ext_deps += lib
+     else
+-        build = false
+-        reason = 'missing dependency, "' + libname + '"'
+-        subdir_done()
++        error('missing dependency: "' + libname + '"')
+     endif
+ endforeach
+ 
+diff --git a/drivers/net/mlx4/meson.build b/drivers/net/mlx4/meson.build
+index 1eb67f3c47..427e6e9f89 100644
+--- a/drivers/net/mlx4/meson.build
++++ b/drivers/net/mlx4/meson.build
+@@ -37,9 +37,7 @@ foreach libname:libnames
+             ext_deps += lib
+         endif
+     else
+-        build = false
+-        reason = 'missing dependency, "' + libname + '"'
+-        subdir_done()
++        error('missing dependency: "' + libname + '"')
+     endif
+ endforeach
+ if static_ibverbs or dlopen_ibverbs
 diff --git a/drivers/raw/ifpga/meson.build b/drivers/raw/ifpga/meson.build
 index 8d5f41fd5d..84c8c875b3 100644
 --- a/drivers/raw/ifpga/meson.build
