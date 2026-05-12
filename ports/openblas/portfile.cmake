@@ -61,7 +61,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
 
-if(UNIX AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
+#fix for libm linking on non-windows platforms
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     foreach(PCFILE IN ITEMS
         "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc"
         "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
