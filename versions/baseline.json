@@ -126,7 +126,7 @@
     },
     "ampl-mp": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "amqpcpp": {
       "baseline": "4.3.27",
