@@ -46,7 +46,7 @@ Function Get-AssetUrl {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
     [String]$SasToken,
-    [Parameter(Mandatory)][String]$InternetUrl,
+    [Parameter(Mandatory)][uri]$InternetUrl,
     [Parameter(Mandatory)][String]$BlobAssetName
   )
 
@@ -55,7 +55,7 @@ Function Get-AssetUrl {
   }
 
   $SasToken = $SasToken.Replace('"', '')
-  return "https://vcpkgimageminting.blob.core.windows.net/assets/$BlobAssetName?$SasToken"
+  return [uri]"https://vcpkgimageminting.blob.core.windows.net/assets/$($BlobAssetName)?$($SasToken)"
 }
 
 <#
@@ -76,14 +76,13 @@ Function Get-ContentSourceDescription {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
     [Parameter(Mandatory)][System.IO.FileInfo]$LocalPath,
-    [Parameter(Mandatory)][String]$Url
+    [Parameter(Mandatory)][uri]$Url
   )
 
   if (Test-Path -LiteralPath $LocalPath) {
     return $null
   }
 
-  $uri = [uri]::new($Url)
   if ($uri.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
     return 'vcpkgimageminting using SAS token'
   }
@@ -109,12 +108,12 @@ The optional local file name to look for next to the script.
 Function Get-LocalOrDownloadedFile {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [Parameter(Mandatory)][String]$Url,
+    [Parameter(Mandatory)][uri]$Url,
     [String]$LocalName = $null
   )
 
   if ([string]::IsNullOrWhiteSpace($LocalName)) {
-    $LocalName = Split-Path -Leaf ([uri]::new($Url).LocalPath)
+    $LocalName = Split-Path -Leaf ($Url.LocalPath)
   }
 
   [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
@@ -158,7 +157,7 @@ The command-line arguments to pass to the installer.
 Function DownloadAndInstall {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [Parameter(Mandatory)][String]$Url,
+    [Parameter(Mandatory)][uri]$Url,
     [Parameter(Mandatory)][String[]]$Args,
     [String]$LocalName = $null
   )
@@ -203,7 +202,7 @@ The location to which the zip should be extracted
 Function DownloadAndUnzip {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [Parameter(Mandatory)][String]$Url,
+    [Parameter(Mandatory)][uri]$Url,
     [Parameter(Mandatory)][System.IO.DirectoryInfo]$Destination,
     [switch]$StripRootDirectory,
     [String]$LocalName = $null
