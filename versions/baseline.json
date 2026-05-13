@@ -3289,7 +3289,7 @@
       "port-version": 0
     },
     "gameinput": {
-      "baseline": "3.1.26100.6879",
+      "baseline": "3.2.138",
       "port-version": 0
     },
     "gamenetworkingsockets": {
