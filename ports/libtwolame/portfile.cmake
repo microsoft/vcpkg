@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         patches/001-fix-tl-api-export.patch
         patches/002-disable-doc-subdir.patch
+        patches/003-fix-kr-declaration.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -38,29 +39,9 @@ else()
     )
 
     vcpkg_install_make()
-
-    if("tool" IN_LIST FEATURES)
-        # twolame binary is installed in tools/libtwolame/bin by vcpkg_configure_make's custom bindir
-        vcpkg_copy_tools(TOOL_NAMES twolame AUTO_CLEAN SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/libtwolame/bin")
-    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()
-
-# For static builds, autotools puts -lm in Libs.Private which is only used with pkg-config --static.
-# Consumers like FFmpeg use plain --libs, so the link test fails on math symbols (pow, cos, lrintf...).
-# Move -lm into Libs.
-if(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    foreach(_pc_suffix IN ITEMS "lib/pkgconfig/twolame.pc" "debug/lib/pkgconfig/twolame.pc")
-        set(_pc_file "${CURRENT_PACKAGES_DIR}/${_pc_suffix}")
-        if(EXISTS "${_pc_file}")
-            file(READ "${_pc_file}" _pc_content)
-            string(REPLACE "-ltwolame" "-ltwolame -lm" _pc_content "${_pc_content}")
-            string(REGEX REPLACE "Libs\\.Private:[^\n]*" "Libs.Private:" _pc_content "${_pc_content}")
-            file(WRITE "${_pc_file}" "${_pc_content}")
-        endif()
-    endforeach()
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
