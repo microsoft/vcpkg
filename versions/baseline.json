@@ -10609,7 +10609,7 @@
       "port-version": 1
     },
     "vincentlaucsb-classify-scalar": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "vincentlaucsb-csv-parser": {
