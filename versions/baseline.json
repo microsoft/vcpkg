@@ -6708,6 +6708,10 @@
       "baseline": "2021-12-01",
       "port-version": 0
     },
+    "mpss": {
+      "baseline": "1.2.1",
+      "port-version": 0
+    },
     "mqtt-cpp": {
       "baseline": "13.2.3",
       "port-version": 0
