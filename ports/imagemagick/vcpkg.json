@@ -1,0 +1,243 @@
+{
+  "name": "imagemagick",
+  "version": "7.1.2-18",
+  "description": "ImageMagick is a software suite to create, edit, compose, or convert digital images",
+  "homepage": "https://imagemagick.org",
+  "license": "ImageMagick",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "bzip2",
+    "hdri",
+    "jpeg",
+    "lcms",
+    "lzma",
+    "png",
+    "q16",
+    "tiff",
+    "webp",
+    "xml2",
+    "zstd"
+  ],
+  "features": {
+    "bzip2": {
+      "description": "BZip2 compression support",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "fftw": {
+      "description": "Discrete Fourier Transform support",
+      "dependencies": [
+        "fftw3"
+      ]
+    },
+    "fontconfig": {
+      "description": "Font configuration and discovery",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "freetype": {
+      "description": "FreeType font rendering support",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "gvc": {
+      "description": "Graphviz support",
+      "dependencies": [
+        "graphviz"
+      ]
+    },
+    "hdri": {
+      "description": "High Dynamic Range Imaging (HDRI) internal pixel calculations"
+    },
+    "heif": {
+      "description": "HEIF/HEIC/AVIF image format support (iOS photo)",
+      "dependencies": [
+        "libheif"
+      ]
+    },
+    "jbig": {
+      "description": "JBIG lossless image compression",
+      "dependencies": [
+        "jbigkit"
+      ]
+    },
+    "jpeg": {
+      "description": "JPEG image format support",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "jxl": {
+      "description": "JPEG XL image format support",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
+    "lcms": {
+      "description": "Little CMS color management support",
+      "dependencies": [
+        "lcms"
+      ]
+    },
+    "lzma": {
+      "description": "LZMA compression support",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "modern-formats": {
+      "description": "Enable modern image formats",
+      "dependencies": [
+        {
+          "name": "imagemagick",
+          "default-features": false,
+          "features": [
+            "heif",
+            "jxl",
+            "webp"
+          ]
+        }
+      ]
+    },
+    "openexr": {
+      "description": "OpenEXR HDR image format support",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "openjp2": {
+      "description": "JPEG2000 image format support",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },
+    "openmp": {
+      "description": "OpenMP parallel processing (MSVC, GCC; not clang-cl)"
+    },
+    "pango": {
+      "description": "Complex text layout (Pango)",
+      "dependencies": [
+        {
+          "name": "imagemagick",
+          "default-features": false,
+          "features": [
+            "fontconfig",
+            "freetype"
+          ]
+        },
+        "pango"
+      ]
+    },
+    "png": {
+      "description": "PNG image format support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "professional-formats": {
+      "description": "Enable professional and archival image formats",
+      "dependencies": [
+        {
+          "name": "imagemagick",
+          "default-features": false,
+          "features": [
+            "openexr",
+            "openjp2",
+            "raw"
+          ]
+        }
+      ]
+    },
+    "q16": {
+      "description": "16-bit quantum depth (default, good balance of precision and memory)"
+    },
+    "q32": {
+      "description": "32-bit quantum depth (highest precision, largest memory footprint)"
+    },
+    "q8": {
+      "description": "8-bit quantum depth (smallest memory footprint, less precision)"
+    },
+    "raqm": {
+      "description": "Complex text layout (libraqm)",
+      "dependencies": [
+        {
+          "name": "imagemagick",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
+        "libraqm"
+      ]
+    },
+    "raw": {
+      "description": "RAW photo format support",
+      "dependencies": [
+        "libraw"
+      ]
+    },
+    "rsvg": {
+      "description": "SVG rendering via librsvg",
+      "dependencies": [
+        "librsvg"
+      ]
+    },
+    "tiff": {
+      "description": "TIFF image format support",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "uhdr": {
+      "description": "Ultra HDR image support (Android photo, requires libultrahdr — not yet in vcpkg)"
+    },
+    "webp": {
+      "description": "WebP image format support",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "x11": {
+      "description": "X Window System support",
+      "supports": "!windows",
+      "dependencies": [
+        "libx11"
+      ]
+    },
+    "xml2": {
+      "description": "XML support (SVG reader, metadata)",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "zero-configuration": {
+      "description": "Embed configuration in the binary (no external XML files needed at runtime)"
+    },
+    "zip": {
+      "description": "Zip archive support",
+      "dependencies": [
+        "libzip"
+      ]
+    },
+    "zstd": {
+      "description": "Zstandard compression support",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}
