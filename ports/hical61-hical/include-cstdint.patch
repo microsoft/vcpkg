@@ -1,0 +1,12 @@
+diff --git a/src/core/WsDeflate.cpp b/src/core/WsDeflate.cpp
+index df8bef1..ded30a6 100644
+--- a/src/core/WsDeflate.cpp
++++ b/src/core/WsDeflate.cpp
+@@ -1,6 +1,7 @@
+ #include "WsDeflate.h"
+ #include <cstring>
+ #include <stdexcept>
++#include <cstdint>
+ #include <zlib.h>
+ 
+ namespace hical

@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Hical61/Hical
     REF "v${VERSION}"
-    SHA512 51d22669034176e977f3ab0747f835162727870211668d53a8f9464031eae92f26c771438f1cdeb0a742af1f1007d8579499c62e94220f4af0913d52ff2070fd
+    SHA512 6bffc33be3be6e8147a2e64f1cece0e669a4b31f7fab830d35cc149a7936600d3330699660fd7c24b3b4a5ff252d86cf2cd3361b9e6bf42285d2c20f1bf8aede
     HEAD_REF main
+    PATCHES
+        include-cstdint.patch
 )
 
 vcpkg_check_features(
