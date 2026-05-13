@@ -12,29 +12,40 @@ including the SVE / arm_sve.h detection - and leaves SVE enabled by default on M
 
 --- a/build/make/configure.sh	2026-05-13 08:17:31.764191365 +0200
 +++ b/build/make/configure.sh	2026-05-13 08:18:26.744873378 +0200
-@@ -298,37 +298,60 @@
+@@ -298,37 +298,71 @@
    "$@" >>${logfile} 2>&1
  }
  
-+# Emit the compiler/linker output flag for the given file. cl.exe (and
-+# clang-cl when driven in cl mode) require -Fo<obj> / -Fe<exe> with no
-+# separating space; every other compiler uses the GCC-style -o <file>.
++# Emit the compiler/linker output flag for the given file.
++# cl.exe (and clang-cl when driven in cl mode) require -Fo<obj> / -Fe<exe> with no separating space;
++# every other compiler uses the GCC-style -o <file>.
 +_cc_basename() {
 +  local _cc="${1##*/}"
 +  _cc="${_cc##*\\}"
 +  echo "${_cc%.exe}"
 +}
 +
++# Convert a path to native Windows form when the compiler is MSVC.
++# MSYS2 temporary paths like /tmp/vpx-conf-1234.o get translated by the MSYS layer to D:\tmp\... which does not exist.
++# cygpath -w produces the real Windows path (e.g. C:\msys64\tmp\...).
++_native_output_path() {
++  case "$(_cc_basename "${1}")" in
++    cl|clang-cl|link) cygpath -w "$2" ;;
++    *)                echo "$2" ;;
++  esac
++}
++
 +cc_obj_flag() {
 +  case "$(_cc_basename "${CC}")" in
-+    cl|clang-cl) echo "-Fo$1" ;;
++    cl|clang-cl) echo "-Fo$(_native_output_path "${CC}" "$1")" ;;
 +    *)           echo "-o $1" ;;
 +  esac
 +}
 +
 +cc_exe_flag() {
 +  case "$(_cc_basename "${LD:-${CC}}")" in
-+    cl|clang-cl) echo "-Fe$1" ;;
++    cl|clang-cl) echo "-Fe$(_native_output_path "${LD:-${CC}}" "$1")" ;;
++    link)        echo "/OUT:$(_native_output_path "${LD:-${CC}}" "$1")" ;;
 +    *)           echo "-o $1" ;;
 +  esac
 +}

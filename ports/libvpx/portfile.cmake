@@ -72,23 +72,27 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
-    set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic)
+    set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic --disable-dependency-tracking)
 
-# alternate solution - to cleanup if all the CI build with patch 0007
-#    # --enable-external-build: skip toolchain probing (MSVC 19.44+ deprecated -o, breaking the configure link test).
-#    # MSVC builds use MSBuild anyway.
-#    list(APPEND OPTIONS --enable-external-build)
-#
-#    # On ARM64 Windows, --enable-external-build also skips the SVE/SVE2 compiler probe (check_neon_sve_bridge_compiles in build/make/configure.sh).
-#    # SVE/SVE2 stay enabled by default and generated sources include <arm_sve.h>, which MSVC (cl.exe) does not ship.
-#    # clang-cl does ship arm_sve.h, so only disable SVE for the pure-MSVC case.
-#    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-#        vcpkg_cmake_get_vars(_libvpx_cmake_vars_file)
-#        include("${_libvpx_cmake_vars_file}")
-#        if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-#            list(APPEND OPTIONS --disable-sve --disable-sve2)
-#        endif()
-#    endif()
+    # --enable-external-build is required on MSVC because we only need make to generate the VS projects, not to compile objects/libraries.
+    # Without it, make dist enters Unix-style build rules that are not suitable for the Windows MSVC flow:
+    #   - compile/link probes and compile rules still emit deprecated GCC-style -o usage under cl.exe,
+    #   - dependency generation uses -M (ignored by cl), which can create unusable .d files,
+    #   - archive steps rely on Unix ar semantics (e.g. "ar crs"), which fail in this environment.
+    # With --enable-external-build, configure/make stay in project-generation mode and vcpkg_msbuild_install performs the actual build.
+    # patch 0007 is mostly dormant in this mode, but kept as a safety net if we ever remove --enable-external-build.
+    list(APPEND OPTIONS --enable-external-build)
+
+    # On ARM64 Windows, --enable-external-build also skips the SVE/SVE2 compiler probe (check_neon_sve_bridge_compiles in build/make/configure.sh).
+    # SVE/SVE2 stay enabled by default and generated sources include <arm_sve.h>, which MSVC (cl.exe) does not ship.
+    # clang-cl does ship arm_sve.h, so only disable SVE for the pure-MSVC case.
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        vcpkg_cmake_get_vars(_libvpx_cmake_vars_file)
+        include("${_libvpx_cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            list(APPEND OPTIONS --disable-sve --disable-sve2)
+        endif()
+    endif()
 
     if("realtime" IN_LIST FEATURES)
         list(APPEND OPTIONS --enable-realtime-only)
@@ -123,12 +127,20 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_SUBPATH vpx.vcxproj
     )
 
-    # The dist dir name includes infixes that depend on which features are enabled/disabled (e.g. -nopost-, -nomt-, -nodocs-).
-    # GLOB for the actual directory instead of guessing the exact infix combination.
-    file(GLOB LIBVPX_INCLUDE_DIR_CANDIDATES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*-v${VERSION}/include/vpx")
+    # libvpx's make dist creates a directory with the pattern:
+    #   vpx-[CODEC_FEATURES]-[ARCH][CRT]-[VS]-v[VERSION]
+    # where [CODEC_FEATURES] is always "vp8-vp9" (this port always enables both).
+    # Port-level features (highbitdepth, realtime) do not affect the dist directory name.
+    # Build-option infixes (-nomt-, -nodocs-, etc.) also don't apply here since the port also control these configure flags.
+    # GLOB to find the actual directory (handles any unforeseen naming edge cases).
+    file(GLOB LIBVPX_INCLUDE_DIR_CANDIDATES
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
     list(LENGTH LIBVPX_INCLUDE_DIR_CANDIDATES _vpx_n)
     if(_vpx_n EQUAL 0)
         message(FATAL_ERROR "libvpx: no dist include directory found under ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+    elseif(_vpx_n GREATER 1)
+        # this should never happen unless the port adds more options - better warn than fail
+        message(WARNING "libvpx: found ${_vpx_n} candidate dist directories; using first")
     endif()
     list(GET LIBVPX_INCLUDE_DIR_CANDIDATES 0 LIBVPX_INCLUDE_DIR)
     file(
