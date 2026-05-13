@@ -114,7 +114,7 @@ Function Get-LocalOrDownloadedFile {
   )
 
   if ([string]::IsNullOrWhiteSpace($LocalName)) {
-    $LocalName = [uri]::new($Url).Segments[-1]
+    $LocalName = [System.IO.Path]::GetFileName([uri]::new($Url).AbsolutePath)
   }
 
   [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
