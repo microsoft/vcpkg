@@ -9,6 +9,9 @@ vcpkg_from_github(
         0004-remove-library-suffixes.patch
         0005-dont-expect-gnu-diff.patch
         0006-gen-vcxproj-ignore-unknown-flags.patch
+        # Candidate upstream fix: makes configure-time toolchain probes use -Fo/-Fe when CC/LD is cl.exe or clang-cl.
+        # Once upstream picks this up (or once we drop --enable-external-build), the MSVC arm64 SVE workaround below can also be removed.
+        0007-msvc-use-Fo-in-toolchain-probe.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -69,9 +72,23 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
-    # --enable-external-build: skip toolchain probing (MSVC 19.44+ deprecated -o, breaking the configure link test).
-    # MSVC builds use MSBuild anyway.
-    set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic --enable-external-build)
+    set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic)
+
+# alternate solution - to cleanup if all the CI build with patch 0007
+#    # --enable-external-build: skip toolchain probing (MSVC 19.44+ deprecated -o, breaking the configure link test).
+#    # MSVC builds use MSBuild anyway.
+#    list(APPEND OPTIONS --enable-external-build)
+#
+#    # On ARM64 Windows, --enable-external-build also skips the SVE/SVE2 compiler probe (check_neon_sve_bridge_compiles in build/make/configure.sh).
+#    # SVE/SVE2 stay enabled by default and generated sources include <arm_sve.h>, which MSVC (cl.exe) does not ship.
+#    # clang-cl does ship arm_sve.h, so only disable SVE for the pure-MSVC case.
+#    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+#        vcpkg_cmake_get_vars(_libvpx_cmake_vars_file)
+#        include("${_libvpx_cmake_vars_file}")
+#        if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+#            list(APPEND OPTIONS --disable-sve --disable-sve2)
+#        endif()
+#    endif()
 
     if("realtime" IN_LIST FEATURES)
         list(APPEND OPTIONS --enable-realtime-only)

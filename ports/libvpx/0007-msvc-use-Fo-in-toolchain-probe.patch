@@ -1,0 +1,80 @@
+MSVC's cl.exe (19.44+) deprecated/removed support for the GCC-style `-o <file>` output flag in favour of `-Fo<file>` (object) and `-Fe<file>` (executable).
+This breaks the configure-time toolchain probes (check_cc, check_cxx, check_cpp, check_ld, check_lib) which hard-code `-o ${TMP_O}` / `-o ${TMP_X}`.
+
+Switch the output flag at runtime based on the compiler basename:
+  * cl, cl.exe, clang-cl, clang-cl.exe -> -Fo / -Fe
+  * everything else                    -> -o (unchanged)
+
+clang-cl in MSVC mode accepts both syntaxes, so it is grouped with cl.exe to keep behaviour consistent on Windows.
+
+Without this patch, building libvpx with a real cl.exe currently requires --enable-external-build, which short-circuits *all* compiler probes,
+including the SVE / arm_sve.h detection - and leaves SVE enabled by default on MSVC ARM64 targets that ship no arm_sve.h header.
+
+--- a/build/make/configure.sh	2026-05-13 08:17:31.764191365 +0200
++++ b/build/make/configure.sh	2026-05-13 08:18:26.744873378 +0200
+@@ -298,37 +298,60 @@
+   "$@" >>${logfile} 2>&1
+ }
+ 
++# Emit the compiler/linker output flag for the given file. cl.exe (and
++# clang-cl when driven in cl mode) require -Fo<obj> / -Fe<exe> with no
++# separating space; every other compiler uses the GCC-style -o <file>.
++_cc_basename() {
++  local _cc="${1##*/}"
++  _cc="${_cc##*\\}"
++  echo "${_cc%.exe}"
++}
++
++cc_obj_flag() {
++  case "$(_cc_basename "${CC}")" in
++    cl|clang-cl) echo "-Fo$1" ;;
++    *)           echo "-o $1" ;;
++  esac
++}
++
++cc_exe_flag() {
++  case "$(_cc_basename "${LD:-${CC}}")" in
++    cl|clang-cl) echo "-Fe$1" ;;
++    *)           echo "-o $1" ;;
++  esac
++}
++
+ check_cc() {
+   log check_cc "$@"
+   cat >${TMP_C}
+   log_file ${TMP_C}
+-  check_cmd ${CC} ${CFLAGS} "$@" -c -o ${TMP_O} ${TMP_C}
++  check_cmd ${CC} ${CFLAGS} "$@" -c $(cc_obj_flag ${TMP_O}) ${TMP_C}
+ }
+ 
+ check_cxx() {
+   log check_cxx "$@"
+   cat >${TMP_CC}
+   log_file ${TMP_CC}
+-  check_cmd ${CXX} ${CXXFLAGS} "$@" -c -o ${TMP_O} ${TMP_CC}
++  check_cmd ${CXX} ${CXXFLAGS} "$@" -c $(cc_obj_flag ${TMP_O}) ${TMP_CC}
+ }
+ 
+ check_cpp() {
+   log check_cpp "$@"
+   cat > ${TMP_C}
+   log_file ${TMP_C}
+-  check_cmd ${CC} ${CFLAGS} "$@" -E -o ${TMP_O} ${TMP_C}
++  check_cmd ${CC} ${CFLAGS} "$@" -E $(cc_obj_flag ${TMP_O}) ${TMP_C}
+ }
+ 
+ check_ld() {
+   log check_ld "$@"
+   check_cc $@ \
+-    && check_cmd ${LD} ${LDFLAGS} "$@" -o ${TMP_X} ${TMP_O} ${extralibs}
++    && check_cmd ${LD} ${LDFLAGS} "$@" $(cc_exe_flag ${TMP_X}) ${TMP_O} ${extralibs}
+ }
+ 
+ check_lib() {
+   log check_lib "$@"
+   check_cc $@ \
+-    && check_cmd ${LD} ${LDFLAGS} -o ${TMP_X} ${TMP_O} "$@" ${extralibs}
++    && check_cmd ${LD} ${LDFLAGS} $(cc_exe_flag ${TMP_X}) ${TMP_O} "$@" ${extralibs}
+ }
+ 
+ check_header(){
