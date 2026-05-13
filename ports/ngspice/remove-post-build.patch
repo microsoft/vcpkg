@@ -1,15 +1,5 @@
-From 363737b9e0e5c2f9de85a0caf641204e638115e3 Mon Sep 17 00:00:00 2001
-From: Marek Roszko <mark.roszko@gmail.com>
-Date: Thu, 12 Aug 2021 22:09:34 -0400
-Subject: [PATCH] Remove post build events that copy files out of the tree
-
----
- visualc/vngspice-fftw.vcxproj | 24 ------------------------
- visualc/vngspice.vcxproj      | 17 +++++------------
- 2 files changed, 5 insertions(+), 36 deletions(-)
-
 diff --git a/visualc/vngspice-fftw.vcxproj b/visualc/vngspice-fftw.vcxproj
-index 14773c8..178aa73 100644
+index fb9c4ea..3b094e7 100644
 --- a/visualc/vngspice-fftw.vcxproj
 +++ b/visualc/vngspice-fftw.vcxproj
 @@ -238,8 +238,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
@@ -30,7 +20,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -337,8 +333,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -339,8 +335,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -39,7 +29,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -393,8 +387,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -397,8 +391,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -48,7 +38,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -438,8 +430,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -443,8 +435,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -57,7 +47,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -489,8 +479,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -495,8 +485,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -66,7 +56,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -537,8 +525,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -545,8 +533,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -75,7 +65,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -591,8 +577,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -601,8 +587,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -84,7 +74,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -643,8 +627,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -654,8 +638,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -93,7 +83,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -700,8 +682,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -714,8 +696,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -102,7 +92,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -752,8 +732,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -766,8 +746,6 @@ lib /machine:x86 /def:..\..\fftw-3.3-dll32\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -111,7 +101,7 @@ index 14773c8..178aa73 100644
        </Command>
      </PostBuildEvent>
    </ItemDefinitionGroup>
-@@ -807,8 +785,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
+@@ -824,8 +802,6 @@ lib /machine:x64 /def:..\..\fftw-3.3-dll64\libfftw3-3.def /out:$(IntDir)libfftw3
      </Link>
      <PostBuildEvent>
        <Command>
@@ -121,19 +111,18 @@ index 14773c8..178aa73 100644
      </PostBuildEvent>
    </ItemDefinitionGroup>
 diff --git a/visualc/vngspice.vcxproj b/visualc/vngspice.vcxproj
-index 7b6ac0b..7190c1e 100644
+index 0321228..b4fe958 100644
 --- a/visualc/vngspice.vcxproj
 +++ b/visualc/vngspice.vcxproj
-@@ -242,7 +242,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -244,7 +244,6 @@
+       <AdditionalLibraryDirectories>KLU/Debug/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspiced.bat $(OutDir)</Command>
-+      <Command></Command>
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -293,7 +293,6 @@
+@@ -297,7 +296,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -141,7 +130,7 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -342,7 +341,6 @@
+@@ -348,7 +346,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -149,7 +138,7 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -399,7 +397,6 @@
+@@ -407,7 +404,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -157,25 +146,23 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -444,7 +441,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -454,7 +450,6 @@
+       <AdditionalLibraryDirectories>KLU/Debug/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspiced.bat $(OutDir)</Command>
-+      <Command></Command>
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -494,7 +491,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -506,7 +501,6 @@
+       <AdditionalLibraryDirectories>KLU/Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspice.bat $(OutDir)</Command>
-+      <Command></Command>
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -542,7 +539,6 @@
+@@ -556,7 +550,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -183,7 +170,7 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -597,7 +593,6 @@
+@@ -613,7 +606,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -191,16 +178,15 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -649,7 +644,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -666,7 +658,6 @@
+       <AdditionalLibraryDirectories>KLU/Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspice.bat $(OutDir)</Command>
-+      <Command></Command>
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -706,7 +701,6 @@
+@@ -726,7 +717,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -208,16 +194,15 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -758,7 +752,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -779,7 +769,6 @@
+       <AdditionalLibraryDirectories>KLU/Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspice.bat $(OutDir)</Command>
-+      <Command></Command>
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -813,7 +807,6 @@
+@@ -837,7 +826,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -225,6 +210,3 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
--- 
-2.32.0.windows.2
-
