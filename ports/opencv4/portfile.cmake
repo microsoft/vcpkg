@@ -201,6 +201,8 @@ if("cuda" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_BUILD_FLAGS
       "-DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}"
     )
+  else()
+    message(STATUS "CUDA_ARCHITECTURES is not set. Choice is made by OpenCV.")
   endif()
 endif()
 
