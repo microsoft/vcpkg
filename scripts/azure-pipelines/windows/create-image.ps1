@@ -165,7 +165,7 @@ function Invoke-ScriptWithPrefix {
 
   $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding ascii -Raw
 
-  [System.IO.FileInfo]$tempScriptFilename = "$env:TEMP\temp-script.txt"
+  $tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
     $script = Get-Content -LiteralPath "$Root\$ScriptName" -Encoding ascii -Raw
 $replacement = @"
