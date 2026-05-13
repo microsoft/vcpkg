@@ -385,7 +385,6 @@ glpk[odbc]:arm64-linux=cascade
 glpk[odbc](!windows | uwp)=cascade
 glui:arm64-linux=cascade
 gmmlib:arm64-linux=fail
-gmsh[mpi]:arm64-linux=cascade
 gmsh[mpi]:arm64-windows=cascade
 gmsh[mpi]:x64-windows-static-md=cascade
 gmsh[mpi]:x64-windows-static=cascade
