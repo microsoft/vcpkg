@@ -16,8 +16,15 @@
   ],
   "default-features": [
     "compression",
+    {
+      "name": "http3",
+      "platform": "arm & linux"
+    },
     "misc",
-    "security"
+    {
+      "name": "security",
+      "platform": "!(arm & linux)"
+    }
   ],
   "features": {
     "compression": {
@@ -38,6 +45,18 @@
             "brotli"
           ],
           "platform": "!osx"
+        }
+      ]
+    },
+    "http3": {
+      "description": "HTTP3 (needs single-backend security)",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "http3"
+          ]
         }
       ]
     },
