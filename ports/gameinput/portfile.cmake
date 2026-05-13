@@ -63,7 +63,7 @@ else()
     if(VCPKG_TARGET_IS_MINGW)
         # "Thick" GameInput.lib is not compatible with MinGW
 
-        file(COPY "${PACKAGE_PATH}/native/lib/x64/GameInput.cpp" DESTINATION "${CURRENT_BUILDTREES_DIR}/fixlib")
+        file(COPY "${PACKAGE_PATH}/native/src/GameInput.cpp" DESTINATION "${CURRENT_BUILDTREES_DIR}/fixlib")
 
         configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in"
             "${CURRENT_BUILDTREES_DIR}/fixlib/CMakeLists.txt"
