@@ -1,8 +1,8 @@
 diff --git a/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl b/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl
-index 09676a6..021bc66 100644
+index 88d07d2d..a142d330 100644
 --- a/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl
 +++ b/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl
-@@ -454,8 +454,12 @@ vec2 get_dm(uint ib, uint a_offset) {
+@@ -477,8 +477,12 @@ vec2 get_dm(uint ib, uint a_offset) {
  
  #if defined(DATA_A_IQ1_M)
  vec2 get_dm(uint ib, uint a_offset) {

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 68b00bb3c84e5ecfa1ca2ba50bf1bd3e9fe6e04ffb09fbfbd54274e9eea5c3aa5ea8d229fcd834f92d6dd11c52c77264ceb80b8461591eb4b062bf87aa7f0619
+    SHA512 6e2142da6c5ccb54906395bf1ef6576a017d88c394bf11e66604946f3d8ad1d6c4e7d253ceab79c935b03db6e3bbb109f6e2053bc4bce1373166aa505957cea4
     HEAD_REF master
 )
 
