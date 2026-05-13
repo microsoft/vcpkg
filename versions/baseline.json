@@ -3033,8 +3033,8 @@
       "port-version": 0
     },
     "fftw3": {
-      "baseline": "3.3.10",
-      "port-version": 10
+      "baseline": "3.3.11",
+      "port-version": 0
     },
     "fftwpp": {
       "baseline": "2019-12-19",
