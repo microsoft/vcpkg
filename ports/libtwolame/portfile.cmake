@@ -40,7 +40,8 @@ else()
     vcpkg_install_make()
 
     if("tool" IN_LIST FEATURES)
-        vcpkg_copy_tools(TOOL_NAMES twolame AUTO_CLEAN)
+        # twolame binary is installed in tools/libtwolame/bin by vcpkg_configure_make's custom bindir
+        vcpkg_copy_tools(TOOL_NAMES twolame AUTO_CLEAN SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/libtwolame/bin")
     endif()
 endif()
 
