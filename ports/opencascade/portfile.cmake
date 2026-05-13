@@ -38,14 +38,11 @@ vcpkg_cmake_configure(
         -DBUILD_LIBRARY_TYPE=${BUILD_TYPE}
         -DBUILD_MODULE_Draw=OFF
         -DBUILD_DOC_Overview=OFF
-        -DBUILD_MODULE_DETools=OFF
         -DINSTALL_DIR_LAYOUT=Unix
         -DINSTALL_DIR_DOC=share/trash
         -DINSTALL_DIR_SCRIPT=share/trash # not relocatable
         -DINSTALL_TEST_CASES=OFF
         -DUSE_TK=OFF
-    OPTIONS_DEBUG
-        -DINSTALL_SAMPLES=OFF
 )
 
 vcpkg_cmake_install()
