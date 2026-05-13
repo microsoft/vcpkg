@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fftw3_arch_fix.patch
+        fix-avx2-fma-flags.patch
         aligned_malloc.patch
         fix-openmp.patch
         install-subtargets.patch
