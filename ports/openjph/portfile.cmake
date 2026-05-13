@@ -23,6 +23,10 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DOJPH_BUILD_EXECUTABLES=OFF
+        # OpenJPH sets CMAKE_DEBUG_POSTFIX "_d" for non-MSVC (vs "d" for MSVC).
+        # Override it to empty: vcpkg convention is same lib name in separate dirs (lib/ vs debug/lib/), no postfix.
+        # This also keeps pkg-config consumers working without manual .pc patching.
+        -DCMAKE_DEBUG_POSTFIX=""
 )
 
 vcpkg_cmake_install()
