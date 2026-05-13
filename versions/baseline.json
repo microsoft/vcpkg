@@ -4797,7 +4797,7 @@
       "port-version": 1
     },
     "libcoap": {
-      "baseline": "4.3.5a",
+      "baseline": "4.3.5b",
       "port-version": 0
     },
     "libconfig": {
