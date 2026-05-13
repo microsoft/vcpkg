@@ -49,6 +49,30 @@ else()
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
+
+# Some locale trees can be created without .mo files, leaving empty LC_MESSAGES
+# directories which fail vcpkg post-build validation.
+foreach(_locale_root IN ITEMS
+    "${CURRENT_PACKAGES_DIR}/share/libzvbi/locale"
+    "${CURRENT_PACKAGES_DIR}/debug/share/libzvbi/locale")
+    if(EXISTS "${_locale_root}")
+        file(GLOB_RECURSE _locale_dirs LIST_DIRECTORIES true "${_locale_root}/*")
+        list(REVERSE _locale_dirs)
+        foreach(_dir IN LISTS _locale_dirs)
+            if(IS_DIRECTORY "${_dir}")
+                file(GLOB _children "${_dir}/*")
+                if(_children STREQUAL "")
+                    file(REMOVE_RECURSE "${_dir}")
+                endif()
+            endif()
+        endforeach()
+        file(GLOB _root_children "${_locale_root}/*")
+        if(_root_children STREQUAL "")
+            file(REMOVE_RECURSE "${_locale_root}")
+        endif()
+    endif()
+endforeach()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.md")
