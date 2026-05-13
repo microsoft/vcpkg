@@ -1,8 +1,8 @@
 diff --git a/cmake/SFMLConfig.cmake.in b/cmake/SFMLConfig.cmake.in
-index 855f8a273..ea473f4f8 100644
+index 477bb32..da98136 100644
 --- a/cmake/SFMLConfig.cmake.in
 +++ b/cmake/SFMLConfig.cmake.in
-@@ -81,6 +81,11 @@ foreach(component ${SFML_FIND_COMPONENTS})
+@@ -79,6 +79,11 @@ foreach(component ${SFML_FIND_COMPONENTS})
      endif()
  endforeach()
  
@@ -15,7 +15,7 @@ index 855f8a273..ea473f4f8 100644
      "${CMAKE_CURRENT_LIST_DIR}/../../.."
      ~/Library/Frameworks
 diff --git a/src/SFML/Graphics/CMakeLists.txt b/src/SFML/Graphics/CMakeLists.txt
-index 4886ac71f..8018937ee 100644
+index bba99cd..cfc8712 100644
 --- a/src/SFML/Graphics/CMakeLists.txt
 +++ b/src/SFML/Graphics/CMakeLists.txt
 @@ -93,7 +93,8 @@ sfml_add_library(Graphics
@@ -28,3 +28,50 @@ index 4886ac71f..8018937ee 100644
  
  # glad sources
  target_include_directories(sfml-graphics SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/glad/include")
+@@ -236,43 +237,19 @@ endif()
+ 
+ target_link_libraries(sfml-graphics PRIVATE Freetype::Freetype HarfBuzz::HarfBuzz)
+ 
+-# we have to build SheenBidi ourselves in both cases since there is no system package for it
+-# use a block to scope option variables we have to set
+-block()
+-    include(FetchContent)
+-
+-    set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+-    set(BUILD_SHARED_LIBS OFF)
+-
+-    FetchContent_Declare(SheenBidi
+-        GIT_REPOSITORY https://github.com/Tehreer/SheenBidi.git
+-        GIT_TAG v3.0.0
+-        GIT_SHALLOW ON
+-        # patch out parts we don't want of the SheenBidi CMake configuration
+-        # - disable installation
+-        # - turn the library into an object library so we can merge it into sfml-graphics
+-        PATCH_COMMAND ${CMAKE_COMMAND} -DSHEENBIDI_DIR=${FETCHCONTENT_BASE_DIR}/sheenbidi-src -P ${PROJECT_SOURCE_DIR}/tools/sheenbidi/PatchSheenBidi.cmake)
+-    FetchContent_MakeAvailable(SheenBidi)
+-endblock()
+-
+-set_target_properties(SheenBidi PROPERTIES FOLDER "Dependencies")
+-
+-# disable building SheenBidi as part of our unity build, it has its own internal unity build system
+-set_target_properties(SheenBidi PROPERTIES UNITY_BUILD OFF)
++find_package(SheenBidi CONFIG REQUIRED)
+ 
+ sfml_set_stdlib(SheenBidi)
+ 
+ # add SheenBidi object library and headers to our own target
+-target_sources(sfml-graphics PRIVATE $<TARGET_OBJECTS:SheenBidi>)
+-target_include_directories(sfml-graphics SYSTEM PRIVATE "${SheenBidi_SOURCE_DIR}/Headers")
++target_link_libraries(sfml-graphics PRIVATE SheenBidi::SheenBidi)
+ 
+ # Disable all warnings
+-target_compile_options(SheenBidi PRIVATE -w)
+ 
+ # if building SFML as a shared library or on android (where exes are shared libs) and linking our dependencies in
+ # as static libraries we need to build them with -fPIC
+ if(BUILD_SHARED_LIBS OR SFML_OS_ANDROID)
+-    set_target_properties(SheenBidi PROPERTIES POSITION_INDEPENDENT_CODE ON)
++    set_target_properties(SheenBidi::SheenBidi PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ endif()
+ 
+ # add preprocessor symbols
