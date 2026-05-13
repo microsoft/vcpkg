@@ -9,6 +9,7 @@ vcpkg_from_github(
         onednn_gpu_includes.patch
         protobuf-6.patch
         npu_deps.patch
+        follow-xbyak-7.29.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
