@@ -6056,6 +6056,10 @@
       "baseline": "7.1-1.10.1",
       "port-version": 0
     },
+    "libzvbi": {
+      "baseline": "0.2.44",
+      "port-version": 0
+    },
     "licensepp": {
       "baseline": "1.2.0",
       "port-version": 0
