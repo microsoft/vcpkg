@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO carnegierobotics/LibMultiSense
     REF ${VERSION}
-    SHA512 71c779cc0f23818aaab4cbba0a5aa5b3ad979180247a3d76b0f8fd5a3b7ced106520fa5df69946cd84510211b6508f5df80b09aecbbabb6601fee5f38ec79bc7
+    SHA512 9c4cb8c1e0cf10fc4cc773015a0f55fadae1c7c10c52708b5d7f2b72a8fcecedfbe400fadbc981492bbe70107f51cfd0eb5878bf7ae5f1f320d56d9038bd4f9b
     HEAD_REF master
     PATCHES
         0000-disable-error-on-warning.patch
