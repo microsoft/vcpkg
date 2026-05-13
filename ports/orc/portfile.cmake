@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/orc/orc-${VERSION}/orc-${VERSION}.tar.gz"
     FILENAME "orc-${VERSION}.tar.gz"
-    SHA512 6be97bf80ca89765bfecdb7d24b7f2967af79f2cbf659ce835ab9345e2a356400942143f4c6b3c25e6ded1f5df811bd6be6d1005e8b99716d842b43072f61786
+    SHA512 88dce434497806b3239e8310ce8c3a21bc858f3ac20130c68c682b4c457bcdb039b399ed367be5feae81ca32bb8db673839d52cd0918c6d8e00fe1ab1b0c7f68
 )
 
 vcpkg_extract_source_archive(
