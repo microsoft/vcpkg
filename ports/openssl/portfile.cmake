@@ -25,8 +25,6 @@ vcpkg_from_github(
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS
-    enable-static-engine
-    enable-capieng
     no-tests
     no-docs
 )
