@@ -9,7 +9,8 @@ vcpkg_from_github(
         0001-cmake-keep-build-use-vcpkg-explicit.patch
         0002-cmake-load-exported-package-dependencies.patch
         0003-image-remove-freeimage-msvc-autolink.patch
-        0004-cmake-fix-vcpkg-debug-install-paths.patch
+        0004-cmake-add-additional-path-extraction-for-OpenCASCADE.patch
+        0005-drop-bin-letter.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -23,7 +24,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         freeimage   USE_FREEIMAGE
         freetype    USE_FREETYPE
         rapidjson   USE_RAPIDJSON
-        samples     INSTALL_SAMPLES
         tbb         USE_TBB
         vtk         USE_VTK
 )
