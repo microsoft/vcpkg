@@ -20,6 +20,8 @@ vcpkg_cmake_configure(
         -DLIBREMIDI_NO_BOOST=ON
         -DLIBREMIDI_NO_JACK=ON
         -DLIBREMIDI_NO_PIPEWIRE=ON
+        -DLIBREMIDI_NO_ANDROID=ON
+        -DLIBREMIDI_NO_WINMIDI=ON
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
