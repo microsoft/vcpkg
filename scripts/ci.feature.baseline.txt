@@ -1399,6 +1399,7 @@ usd=skip # USD has set official policy that they will not update to be compatibl
 usockets[network]:arm64-osx=cascade
 v8(windows)=fail # the version of v8 we have in the repo doesn't support VS2022
 vcpkg-ci-box2d:arm64-linux=fail
+vcpkg-ci-eval-a[feature-a,feature-b,feature-c,feature-d]=combination-fails
 vcpkg-ci-lua:arm64-linux=fail
 vcpkg-ci-podofo:arm64-linux=fail
 vectorclass:arm64-windows=fail
