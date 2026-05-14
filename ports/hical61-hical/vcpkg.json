@@ -1,13 +1,12 @@
 {
   "name": "hical61-hical",
-  "version": "2.5.2",
-  "description": "Modern C++20/C++26 high-performance web framework based on Boost.Asio/Beast",
+  "version": "2.6.1",
+  "description": "Modern C++20/C++26 high-performance web framework based on Boost.Asio with native HTTP/WebSocket stack",
   "homepage": "https://github.com/Hical61/Hical",
   "license": "MIT",
   "supports": "!uwp & !xbox & !android & !emscripten",
   "dependencies": [
     "boost-asio",
-    "boost-beast",
     "boost-json",
     "boost-system",
     {
@@ -15,6 +14,7 @@
       "platform": "linux"
     },
     "openssl",
+    "picohttpparser",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -22,7 +22,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "features": {
     "database": {

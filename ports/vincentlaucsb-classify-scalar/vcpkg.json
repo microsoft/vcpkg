@@ -1,6 +1,6 @@
 {
   "name": "vincentlaucsb-classify-scalar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "High performance policy-driven scalar classification for C++",
   "homepage": "https://github.com/vincentlaucsb/classify_scalar",
   "license": "MIT"

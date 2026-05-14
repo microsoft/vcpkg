@@ -472,20 +472,6 @@ libs/mylib/header.h:1264:18: error: no member named 'upper_bound' in namespace '
 
 ---
 
-## Regression Severity Levels
-
-Use these levels when reporting failures:
-
-| Level | Criteria | Action |
-|---|---|---|
-| 🔴 **Critical** | Core port (boost, openssl, curl, zlib, cmake) or many dependents fail | Immediate fix required |
-| 🟠 **High** | Popular port fails on multiple triplets | Fix before merge |
-| 🟡 **Medium** | Single port fails on 1–2 triplets | Fix or add to baseline |
-| 🟢 **Low** | Port already in baseline, or transient failure | No immediate action |
-| ℹ️ **Info** | Formatting/version file issues | Easy to fix with automated tools |
-
----
-
 ## Category 16: Version Validation Failures
 
 **Symptom**: The "Validate version files" task fails (not a port build failure). This can cause the x86-windows job (or whichever runs validation first) to fail before any ports are tested.
@@ -554,6 +540,20 @@ But the same features also fail on `x64-linux`, `arm64-osx`, and Android triplet
 ```
 portname[feature]=feature-fails  # Applies to all triplets
 ```
+
+---
+
+## Regression Severity Levels
+
+Use these levels when reporting failures:
+
+| Level | Criteria | Action |
+|---|---|---|
+| 🔴 **Critical** | Core port (boost, openssl, curl, zlib, cmake) or many dependents fail | Immediate fix required |
+| 🟠 **High** | Popular port fails on multiple triplets | Fix before merge |
+| 🟡 **Medium** | Single port fails on 1–2 triplets | Fix or add to baseline |
+| 🟢 **Low** | Port already in baseline, or transient failure | No immediate action |
+| ℹ️ **Info** | Formatting/version file issues | Easy to fix with automated tools |
 
 ---
 
