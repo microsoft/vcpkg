@@ -39,6 +39,11 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+# LibMultiSense installs additional CMake helper modules alongside `MultiSenseConfig.cmake`.
+# `vcpkg_cmake_config_fixup()` only removes debug-side `*Config`/`*Targets` files, which leaves
+# `${CURRENT_PACKAGES_DIR}/debug/share/MultiSense` populated and triggers a post-build policy error.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 if ("utilities" IN_LIST FEATURES)
     set(_tool_names
         ChangeIpUtility
