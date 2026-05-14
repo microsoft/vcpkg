@@ -8062,7 +8062,7 @@
     },
     "pxlib": {
       "baseline": "2025-12-16",
-      "port-version": 2
+      "port-version": 3
     },
     "pybind11": {
       "baseline": "3.0.1",
