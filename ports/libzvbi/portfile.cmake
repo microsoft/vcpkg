@@ -13,16 +13,19 @@ vcpkg_from_github(
         patches/001-msvc-compat.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    # autopoint (gettext) is not available in vcpkg's msys2 environment, but the NLS support is disabled anyway, so skip the autopoint step.
+# autopoint (gettext) is not available in vcpkg's msys2 environment (Windows)
+# nor on the Android CI hosts; since NLS is disabled anyway, skip it.
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_ANDROID)
     set(ENV{AUTOPOINT} true)
-else(VCPKG_TARGET_IS_WINDOWS)
+endif()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     # The MSVC-compat patch creates Windows-only shim headers that shadow POSIX equivalents.
     # Remove them so the autotools build uses the real system headers on Unix/macOS.
     file(REMOVE "${SOURCE_PATH}/src/unistd.h")
     file(REMOVE "${SOURCE_PATH}/src/strings.h")
     file(REMOVE_RECURSE "${SOURCE_PATH}/src/sys")
-endif(VCPKG_TARGET_IS_WINDOWS)
+endif()
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
