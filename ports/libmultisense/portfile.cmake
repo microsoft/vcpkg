@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0000-disable-error-on-warning.patch
+        0001-have-opencv-odr-fix.patch
 )
 
 vcpkg_check_features(
