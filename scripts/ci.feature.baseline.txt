@@ -357,6 +357,7 @@ gdbm[readline]:arm64-linux=feature-fails
 gdk-pixbuf[introspection]:arm64-windows=skip # needs arm64 host
 gegl:arm64-osx=fail # meson bug on osx. See https://github.com/microsoft/vcpkg/issues/44411
 geogram:arm64-linux=fail # Could NOT find Threads (missing: Threads_FOUND)
+geogram[graphics]:arm64-linux=cascade
 geogram[graphics](!(arm64&linux) & !android)=feature-fails # imgui not found. See https://github.com/microsoft/vcpkg/issues/32421
 geogram[graphics](android)=cascade
 geotrans=skip # Port geotrans source ftp://ftp.nga.mil server extremely slow may take several hours to download
