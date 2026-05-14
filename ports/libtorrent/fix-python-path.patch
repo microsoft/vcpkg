@@ -1,0 +1,13 @@
+diff --git a/bindings/python/CMakeLists.txt b/bindings/python/CMakeLists.txt
+index 4e8ee81..9ff3753 100644
+--- a/bindings/python/CMakeLists.txt
++++ b/bindings/python/CMakeLists.txt
+@@ -96,7 +96,7 @@ else()
+ 	execute_process(
+ 		COMMAND "${Python3_EXECUTABLE}" -c [=[
+ import sysconfig
+-print(sysconfig.get_path('platlib', vars={'platbase': '', 'base': ''}))
++print(sysconfig.get_path('platlib', vars={'platbase': '.', 'base': ''}))
+ ]=]
+ 		OUTPUT_VARIABLE _PYTHON3_SITE_ARCH
+ 		OUTPUT_STRIP_TRAILING_WHITESPACE
