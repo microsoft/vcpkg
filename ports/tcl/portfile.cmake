@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         dependencies.diff
         nmake.diff
+        fix-uuid-ctrl-z.diff
 )
 file(GLOB sqlite3_sources "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/sqlite3/*.c" "${SOURCE_PATH}/pkgs/sqlite3.51.0/compat/sqlite3/*.h")
 file(GLOB precompiled_tools "${SOURCE_PATH}/win/*.exe" "${SOURCE_PATH}/pkgs/*/win/*.exe")

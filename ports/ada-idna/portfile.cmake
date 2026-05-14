@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ada-url/idna
     REF "${VERSION}"
-    SHA512 5e2ab8f36ec5171a0fdf185308ec752351b367ac28b21cb8ca5f4838e9f75db488180cee43c3c4ab2927f1ac796484b79978f9e38a54127bfc8d1e1db9db5a5b
+    SHA512 55ddf9799c81ee8a50be591db9858dca3db507a12c7b9c9387e8171ccb38e61416344da9abe86979a35158b196ea8980cbba798720ae8ab630e4efce612a8e38
     HEAD_REF main
     PATCHES
         install.patch
