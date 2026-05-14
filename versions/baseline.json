@@ -4150,7 +4150,7 @@
     },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
-      "port-version": 3
+      "port-version": 4
     },
     "jkqtplotter": {
       "baseline": "2023-10-24",
