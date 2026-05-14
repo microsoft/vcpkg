@@ -53,6 +53,9 @@ if ("utilities" IN_LIST FEATURES)
     if ("json-serialization" IN_LIST FEATURES)
         list(APPEND _tool_names DeviceInfoUtility)
     endif ()
+    if ("opencv" IN_LIST FEATURES)
+        list(APPEND _tool_names FeatureDetectorUtility)
+    endif ()
     vcpkg_copy_tools(
         TOOL_NAMES ${_tool_names}
         AUTO_CLEAN
