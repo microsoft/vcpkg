@@ -47,20 +47,21 @@ index 73335a6..17b7e9d 100644
  
          /**
 diff --git a/src/lib/geogram/third_party/PoissonRecon/Geometry.h b/src/lib/geogram/third_party/PoissonRecon/Geometry.h
-index 746d480..678a0cf 100644
+index 746d480..0661846 100644
 --- a/src/lib/geogram/third_party/PoissonRecon/Geometry.h
 +++ b/src/lib/geogram/third_party/PoissonRecon/Geometry.h
-@@ -31,8 +31,8 @@ DAMAGE.
+@@ -31,8 +31,9 @@ DAMAGE.
  
  #include <math.h>
  #include <vector>
 +#include <unordered_map>
  #include <stdlib.h>
 -#include "Hash.h"
++#include <stdio.h>
  
  template<class Real>
  Real Random(void);
-@@ -280,7 +280,7 @@ public:
+@@ -280,7 +281,7 @@ public:
          int addTriangle( int p1 , int p2 , int p3 );
  
  protected:
