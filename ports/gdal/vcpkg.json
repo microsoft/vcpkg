@@ -1,7 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.12.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -45,7 +45,10 @@
       "platform": "!uwp"
     },
     "iconv",
-    "libkml",
+    {
+      "name": "libkml",
+      "platform": "!(arm32 | x86) | mingw"
+    },
     {
       "name": "libspatialite",
       "platform": "!uwp"
