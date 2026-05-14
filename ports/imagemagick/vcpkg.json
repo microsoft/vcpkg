@@ -38,6 +38,7 @@
     },
     "fftw": {
       "description": "Discrete Fourier Transform support",
+      "supports": "!windows",
       "dependencies": [
         "fftw3"
       ]
