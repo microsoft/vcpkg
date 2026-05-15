@@ -4261,39 +4261,39 @@
       "port-version": 0
     },
     "karchive": {
-      "baseline": "6.25.0",
-      "port-version": 2
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kauth": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "kbreezeicons": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kcenon-common-system": {
       "baseline": "0.2.0",
       "port-version": 0
     },
     "kcodecs": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kconfig": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "kcoreaddons": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kcp": {
       "baseline": "2.1.1",
       "port-version": 0
     },
     "kcrash": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "kdalgorithms": {
@@ -4305,8 +4305,8 @@
       "port-version": 0
     },
     "kdbusaddons": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kddockwidgets": {
       "baseline": "2.4.0",
@@ -4517,7 +4517,7 @@
       "port-version": 0
     },
     "kf6-solid": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "kfr": {
@@ -4525,16 +4525,16 @@
       "port-version": 0
     },
     "kglobalaccel": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kguiaddons": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "ki18n": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kinectsdk1": {
       "baseline": "1.8",
@@ -4557,11 +4557,11 @@
       "port-version": 0
     },
     "kitemmodels": {
-      "baseline": "6.25.0",
-      "port-version": 1
+      "baseline": "6.26.0",
+      "port-version": 0
     },
     "kitemviews": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "kleidiai": {
@@ -4625,11 +4625,11 @@
       "port-version": 3
     },
     "kwidgetsaddons": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "kwindowsystem": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "kwsys": {
@@ -9949,7 +9949,7 @@
       "port-version": 1
     },
     "syntax-highlighting": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "syscalls-cpp": {
@@ -10101,7 +10101,7 @@
       "port-version": 4
     },
     "threadweaver": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "thrift": {

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/threadweaver
     REF "v${VERSION}"
-    SHA512 177f1e9c71fe0b7008a916388fcc95f1da86b7f72a7954ee072d361d336233ea8d9cfb2e78442d985dc8b0f3f7e8dd2f3cc1a51f120cb43c20806e72166c14b9
+    SHA512 0d39898fd1fe061ea83e1f526c0b29ccfac3a22bacee706bcb35cc75e5c6df5efb06d9ab4af1ed6ecab31b980af9972eb77fded3eb14299563649e3db8a7ed76
     HEAD_REF master
 )
 
