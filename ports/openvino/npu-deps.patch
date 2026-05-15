@@ -1,5 +1,5 @@
 diff --git a/cmake/features.cmake b/cmake/features.cmake
-index 8badc2e5cb..f8791b4c4e 100644
+index 8badc2e5..f8791b4c 100644
 --- a/cmake/features.cmake
 +++ b/cmake/features.cmake
 @@ -196,7 +196,7 @@ ov_dependent_option (ENABLE_SYSTEM_TBB  "Enables use of system TBB" ${ENABLE_SYS
@@ -21,7 +21,7 @@ index 8badc2e5cb..f8791b4c4e 100644
  ov_dependent_option(ENABLE_JS "Enables JS API building" ${ENABLE_JS_DEFAULT} "NOT ANDROID;NOT EMSCRIPTEN" OFF)
  
 diff --git a/src/plugins/intel_npu/cmake/download_compiler_libs.cmake b/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
-index 3f34a73e45..e561d5703d 100644
+index 3f34a73e..e561d570 100644
 --- a/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
 +++ b/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
 @@ -115,7 +115,7 @@ if(ENABLE_INTEL_NPU_COMPILER)

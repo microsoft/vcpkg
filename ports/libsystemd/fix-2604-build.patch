@@ -1,32 +1,28 @@
 diff --git a/meson.build b/meson.build
-index a4730f0570..1034ce5fbc 100644
+index 3d50c83..802de14 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -370,21 +370,6 @@ possible_common_cc_flags = [
+@@ -371,6 +371,8 @@ possible_common_cc_flags = [
          '-Warray-bounds=2',
          '-Wdate-time',
          '-Wendif-labels',
--        '-Werror=format=2',
--        '-Werror=format-signedness',
--        '-Werror=implicit-function-declaration',
--        '-Werror=implicit-int',
--        '-Werror=incompatible-pointer-types',
--        '-Werror=int-conversion',
--        '-Werror=missing-declarations',
--        '-Werror=missing-prototypes',
--        '-Werror=overflow',
--        '-Werror=override-init',
--        '-Werror=return-type',
--        '-Werror=shift-count-overflow',
--        '-Werror=shift-overflow=2',
--        '-Werror=strict-flex-arrays',
--        '-Werror=undef',
++]
++vcpkg_omit_werror = [
+         '-Werror=bool-compare',
+         '-Werror=discarded-qualifiers',
+         '-Werror=flex-array-member-not-at-end',
+@@ -392,6 +394,8 @@ possible_common_cc_flags = [
+         '-Werror=shift-overflow=2',
+         '-Werror=strict-flex-arrays',
+         '-Werror=undef',
++]
++possible_common_cc_flags += [
          '-Wfloat-equal',
          # gperf prevents us from enabling this because it does not emit fallthrough
          # attribute with clang.
-@@ -511,19 +496,6 @@ userspace_c_ld_args += cc.get_supported_link_arguments(possible_link_flags)
- have = cc.has_argument('-Wzero-length-bounds')
- conf.set10('HAVE_ZERO_LENGTH_BOUNDS', have)
+@@ -511,19 +515,6 @@ add_project_link_arguments(
+ userspace_c_args += cc.get_supported_arguments(possible_cc_flags)
+ userspace_c_ld_args += cc.get_supported_link_arguments(possible_link_flags)
  
 -if cc.compiles('''
 -   #include <time.h>

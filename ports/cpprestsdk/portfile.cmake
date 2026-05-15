@@ -6,11 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-find-openssl.patch
-        fix_narrowing.patch
+        fix-narrowing.patch
         fix-uwp.patch
         fix-clang-dllimport.patch # workaround for https://github.com/microsoft/cpprestsdk/issues/1710
-        silence-stdext-checked-array-iterators-warning.patch
         fix-asio-error.patch
+        remove-stdext-checked-array-iterator-1836.patch # https://github.com/microsoft/cpprestsdk/pull/1836
 )
 
 vcpkg_check_features(

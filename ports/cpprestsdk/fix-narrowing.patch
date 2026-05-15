@@ -1,5 +1,5 @@
 diff --git a/Release/src/CMakeLists.txt b/Release/src/CMakeLists.txt
-index e15aeb7fc..128f6d6af 100644
+index e15aeb7..128f6d6 100644
 --- a/Release/src/CMakeLists.txt
 +++ b/Release/src/CMakeLists.txt
 @@ -185,12 +185,12 @@ endif()
@@ -18,7 +18,7 @@ index e15aeb7fc..128f6d6af 100644
      target_compile_options(cpprest PRIVATE /WX ${WARNINGS})
    endif()
 diff --git a/Release/src/streams/fileio_win32.cpp b/Release/src/streams/fileio_win32.cpp
-index 057dd9b67..a65439cb7 100644
+index 057dd9b..a65439c 100644
 --- a/Release/src/streams/fileio_win32.cpp
 +++ b/Release/src/streams/fileio_win32.cpp
 @@ -616,7 +616,7 @@ size_t _fill_buffer_fsb(_In_ _file_info_impl* fInfo,

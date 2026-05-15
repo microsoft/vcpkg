@@ -1,5 +1,5 @@
 diff --git a/src/plugins/intel_gpu/src/graph/CMakeLists.txt b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
-index 380159c387..ded4303aff 100644
+index 380159c3..ded4303a 100644
 --- a/src/plugins/intel_gpu/src/graph/CMakeLists.txt
 +++ b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
 @@ -81,7 +81,7 @@ macro(ov_gpu_add_backend_target)
@@ -12,7 +12,7 @@ index 380159c387..ded4303aff 100644
      endif()
      # Onednn headers use OCL/L0 headers
 diff --git a/src/plugins/intel_gpu/src/runtime/CMakeLists.txt b/src/plugins/intel_gpu/src/runtime/CMakeLists.txt
-index c8c872071e..6565ad7632 100644
+index c8c87207..6565ad76 100644
 --- a/src/plugins/intel_gpu/src/runtime/CMakeLists.txt
 +++ b/src/plugins/intel_gpu/src/runtime/CMakeLists.txt
 @@ -66,7 +66,7 @@ if(OV_COMPILER_IS_INTEL_LLVM)
@@ -25,7 +25,7 @@ index c8c872071e..6565ad7632 100644
  
  ov_set_threading_interface_for(${TARGET_NAME})
 diff --git a/src/plugins/intel_gpu/thirdparty/CMakeLists.txt b/src/plugins/intel_gpu/thirdparty/CMakeLists.txt
-index 2bf709fc20..edf6cf8110 100644
+index 2bf709fc..edf6cf81 100644
 --- a/src/plugins/intel_gpu/thirdparty/CMakeLists.txt
 +++ b/src/plugins/intel_gpu/thirdparty/CMakeLists.txt
 @@ -178,7 +178,6 @@ if(ENABLE_ONEDNN_FOR_GPU)
