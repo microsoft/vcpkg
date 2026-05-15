@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBUILD_TESTS:BOOL=OFF
+    -DUPDATE_DEPS:BOOL=OFF
 )
 vcpkg_cmake_install()
 
