@@ -25,10 +25,10 @@ index 7dc6650..a928571 100644
    daemon/Makefile
    daemon/zvbid.init
 diff --git a/src/export.c b/src/export.c
-index 443e1f1..d664213 100644
+index c2b61a9..e6fa743 100644
 --- a/src/export.c
 +++ b/src/export.c
-@@ -40,6 +40,24 @@
+@@ -46,6 +46,27 @@
  #include <io.h>
  #endif
  
@@ -45,6 +45,9 @@ index 443e1f1..d664213 100644
 +#    define S_IROTH 0
 +#    define S_IWOTH 0
 +#  endif
++#  ifndef S_ISREG
++#    define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
++#  endif
 +#  ifndef __PRETTY_FUNCTION__
 +#    define __PRETTY_FUNCTION__ __FUNCSIG__
 +#  endif
@@ -54,10 +57,10 @@ index 443e1f1..d664213 100644
  #include "conv.h"
  #include "vbi.h" /* asprintf */
 diff --git a/src/inout.c b/src/inout.c
-index d27bb5d..4b7becd 100644
+index f31bd81..96d4e55 100644
 --- a/src/inout.c
 +++ b/src/inout.c
-@@ -456,7 +456,7 @@ vbi_capture_delete(vbi_capture *capture)
+@@ -462,7 +462,7 @@ vbi_capture_delete(vbi_capture *capture)
  		capture->_delete(capture);
  }
  
@@ -80,75 +83,11 @@ index 45c05a6..38f5780 100644
  #include <math.h>		/* sin(), log() */
  #include <errno.h>
  #include <ctype.h>		/* isspace() */
-diff --git a/src/lang.c b/src/lang.c
-index 7bedeba..ac2226a 100644
---- a/src/lang.c
-+++ b/src/lang.c
-@@ -43,8 +43,8 @@ vbi_font_descriptors[88] = {
- 	{ LATIN_G0, LATIN_G2, GERMAN,		"Deutsch" },
- 	{ LATIN_G0, LATIN_G2, SWE_FIN_HUN,	"Svenska / Suomi / Magyar" },
- 	{ LATIN_G0, LATIN_G2, ITALIAN,		"Italiano" },
--	{ LATIN_G0, LATIN_G2, FRENCH,		"Français" },
--	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"Português / Español" },
-+	{ LATIN_G0, LATIN_G2, FRENCH,		"FranÃ§ais" },
-+	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"PortuguÃªs / EspaÃ±ol" },
- 	{ LATIN_G0, LATIN_G2, CZECH_SLOVAK,	"Cesky / Slovencina" },
- 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
- 
-@@ -53,7 +53,7 @@ vbi_font_descriptors[88] = {
- 	{ LATIN_G0, LATIN_G2, GERMAN,		"Deutsch" },
- 	{ LATIN_G0, LATIN_G2, SWE_FIN_HUN,	"Svenska / Suomi / Magyar" },
- 	{ LATIN_G0, LATIN_G2, ITALIAN,		"Italiano" },
--	{ LATIN_G0, LATIN_G2, FRENCH,		"Français" },
-+	{ LATIN_G0, LATIN_G2, FRENCH,		"FranÃ§ais" },
- 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
- 	{ LATIN_G0, LATIN_G2, CZECH_SLOVAK,	"Cesky / Slovencina" },
- 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
-@@ -63,9 +63,9 @@ vbi_font_descriptors[88] = {
- 	{ LATIN_G0, LATIN_G2, GERMAN,		"Deutsch" },
- 	{ LATIN_G0, LATIN_G2, SWE_FIN_HUN,	"Svenska / Suomi / Magyar" },
- 	{ LATIN_G0, LATIN_G2, ITALIAN,		"Italiano" },
--	{ LATIN_G0, LATIN_G2, FRENCH,		"Français" },
--	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"Português / Español" },
--	{ LATIN_G0, LATIN_G2, TURKISH,		"Türkçe" },
-+	{ LATIN_G0, LATIN_G2, FRENCH,		"FranÃ§ais" },
-+	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"PortuguÃªs / EspaÃ±ol" },
-+	{ LATIN_G0, LATIN_G2, TURKISH,		"TÃ¼rkÃ§e" },
- 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
- 
- 	/* 24 - Central and Southeast Europe */
-@@ -76,7 +76,7 @@ vbi_font_descriptors[88] = {
- 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
- 	{ LATIN_G0, LATIN_G2, SERB_CRO_SLO,	"Srbski / Hrvatski / Slovenscina" },
- 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
--	{ LATIN_G0, LATIN_G2, RUMANIAN,		"Româna" },
-+	{ LATIN_G0, LATIN_G2, RUMANIAN,		"RomÃ¢na" },
- 
- 	/* 32 - Cyrillic */
- 	{ CYRILLIC_1_G0, CYRILLIC_G2, NO_SUBSET, "Srpski / Hrvatski" },
-@@ -104,7 +104,7 @@ vbi_font_descriptors[88] = {
- 	{ 0, 0, NO_SUBSET,			0 },
- 	{ 0, 0, NO_SUBSET,			0 },
- 	{ 0, 0, NO_SUBSET,			0 },
--	{ LATIN_G0, LATIN_G2, TURKISH,		"Türkçe" },
-+	{ LATIN_G0, LATIN_G2, TURKISH,		"TÃ¼rkÃ§e" },
- 	{ GREEK_G0, GREEK_G2, NO_SUBSET,	"Ellinika'" },
- 
- 	{ 0, 0, NO_SUBSET,			0 },
-@@ -121,7 +121,7 @@ vbi_font_descriptors[88] = {
- 	{ 0, 0, NO_SUBSET,			0 },
- 	{ 0, 0, NO_SUBSET,			0 },
- 	{ 0, 0, NO_SUBSET,			0 },
--	{ LATIN_G0, ARABIC_G2, FRENCH,		"Alarabia / Français" },
-+	{ LATIN_G0, ARABIC_G2, FRENCH,		"Alarabia / FranÃ§ais" },
- 	{ 0, 0, NO_SUBSET,			0 },
- 	{ 0, 0, NO_SUBSET,			0 },
- 	{ ARABIC_G0, ARABIC_G2, NO_SUBSET,	"Alarabia" },
 diff --git a/src/teletext.c b/src/teletext.c
-index 1b43b90..41d86e0 100644
+index 8d342b0..dedb038 100644
 --- a/src/teletext.c
 +++ b/src/teletext.c
-@@ -240,7 +240,7 @@ top_label(vbi_decoder *vbi, vbi_page *pg, struct vbi_font_descr *font,
+@@ -246,7 +246,7 @@ top_label(vbi_decoder *vbi, vbi_page *pg, struct vbi_font_descr *font,
  	return FALSE;
  }
  

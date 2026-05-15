@@ -1,8 +1,20 @@
-diff --git a/a/configure.ac b/b/configure.ac
-index 0288c88..7dc6650 100644
+diff --git a/Makefile.am b/Makefile.am
+index 04928d1..69c876d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -31,7 +31,6 @@ SUBDIRS += test
+ endif
+ 
+ SUBDIRS += \
+-	po \
+ 	doc
+ 
+ ACLOCAL_AMFLAGS = -I m4
+diff --git a/configure.ac b/configure.ac
+index 0288c88..212ca97 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -33,14 +33,16 @@ AC_PROG_CXX
+@@ -33,14 +33,23 @@ AC_PROG_CXX
  AC_PROG_CPP
  
  
@@ -24,10 +36,26 @@ index 0288c88..7dc6650 100644
 +  [AC_CHECK_LIB([m], [cos], [], [
 +    AC_MSG_ERROR([Unable to link math functions])
 +  ])])
++
++dnl sincos is a GNU extension in libm.  The AC_CHECK_FUNCS test runs
++dnl before -lm is necessarily in LIBS, so the link check can fail even
++dnl when the function is available.  Use AC_SEARCH_LIBS which tries -lm.
++AC_SEARCH_LIBS([sincos], [m])
++AS_IF([test "$ac_cv_search_sincos" != no],
++      [AC_DEFINE([HAVE_SINCOS], [1], [Define to 1 if you have the sincos function.])])
  
  
  dnl Checks for header files.
-@@ -231,19 +233,24 @@ CHECK_CXX_OPTION([-std=c++98], HAVE_GXX_CXX98_SUPPORT)
+@@ -89,7 +98,7 @@ AC_CHECK_FUNCS([alarm dup2 gethostbyaddr gethostbyname getopt_long gettimeofday
+ 		inet_ntoa localtime_r memmove memset mkdir modf munmap
+ 		nl_langinfo putenv select setenv setlocale socket strcasecmp
+ 		strchr strdup strerror strncasecmp strndup strrchr strstr
+-		strtol strtoul tzset strptime getaddrinfo ffs __builtin_ffs sincos])
++		strtol strtoul tzset strptime getaddrinfo ffs __builtin_ffs])
+ 
+ AM_CONDITIONAL(HAVE_STRPTIME, [test "x$HAVE_STRPTIME" = xyes])
+ 
+@@ -231,19 +240,24 @@ CHECK_CXX_OPTION([-std=c++98], HAVE_GXX_CXX98_SUPPORT)
  
  dnl
  dnl Check how to link pthreads functions.
@@ -59,7 +87,7 @@ index 0288c88..7dc6650 100644
        ])
      ])
    ])
-@@ -303,9 +310,14 @@ dnl
+@@ -303,9 +317,14 @@ dnl
  dnl Check for iconv() in libc or libiconv.
  dnl (Unicode conversions)
  dnl
@@ -77,7 +105,7 @@ index 0288c88..7dc6650 100644
  if test "x$am_cv_func_iconv" != xyes; then
    AC_MSG_ERROR([iconv() not found])
  fi
-@@ -496,23 +508,6 @@ AM_CONDITIONAL(ENABLE_PROXY, [test "x$enable_proxy" = xyes])
+@@ -496,23 +515,6 @@ AM_CONDITIONAL(ENABLE_PROXY, [test "x$enable_proxy" = xyes])
  
  AM_CONDITIONAL(RUN_CHECK_SCRIPTS, [test "x$run_check_scripts" = xyes])
  
@@ -101,7 +129,7 @@ index 0288c88..7dc6650 100644
  dnl
  dnl Build docs from the sources if Doxygen is installed.
  dnl
-@@ -554,7 +549,6 @@ AC_CONFIG_FILES([
+@@ -554,7 +556,6 @@ AC_CONFIG_FILES([
    src/Makefile
    src/dvb/Makefile
    test/Makefile
@@ -109,15 +137,3 @@ index 0288c88..7dc6650 100644
    zvbi.spec
    zvbi-0.2.pc
  ])
-diff --git a/a/Makefile.am b/b/Makefile.am
-index 04928d1..69c876d 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -31,7 +31,6 @@ SUBDIRS += test
- endif
- 
- SUBDIRS += \
--	po \
- 	doc
- 
- ACLOCAL_AMFLAGS = -I m4
