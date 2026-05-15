@@ -5656,6 +5656,10 @@
       "baseline": "3.6.6",
       "port-version": 0
     },
+    "libspatialaudio": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
     "libspatialindex": {
       "baseline": "2.1.0",
       "port-version": 0
