@@ -68,7 +68,7 @@ index a079c20..2657610 100644
    get_property(_compile_flags TARGET ConfigurationAdminObjs PROPERTY COMPILE_FLAGS)
    set_property(TARGET ConfigurationAdminObjs PROPERTY COMPILE_FLAGS "${_compile_flags} -fPIC")
 diff --git a/compendium/DeclarativeServices/CMakeLists.txt b/compendium/DeclarativeServices/CMakeLists.txt
-index 2920189..810b00b 100755
+index 2920189..810b00b 100644
 --- a/compendium/DeclarativeServices/CMakeLists.txt
 +++ b/compendium/DeclarativeServices/CMakeLists.txt
 @@ -37,14 +37,14 @@ endif()
@@ -137,7 +137,7 @@ index c4483a9..84d4217 100644
  #include "states/CCUnsatisfiedReferenceState.hpp"
  #include "states/ComponentConfigurationState.hpp"
 diff --git a/tools/rc/CMakeLists.txt b/tools/rc/CMakeLists.txt
-index c4a36f8..8844292 100755
+index c4a36f8..8844292 100644
 --- a/tools/rc/CMakeLists.txt
 +++ b/tools/rc/CMakeLists.txt
 @@ -20,8 +20,8 @@ if(WIN32)
@@ -152,7 +152,7 @@ index c4a36f8..8844292 100755
  set_property(TARGET ${US_RCC_EXECUTABLE_TARGET} APPEND PROPERTY
               COMPILE_DEFINITIONS "MINIZ_NO_ARCHIVE_READING_API;MINIZ_NO_ZLIB_COMPATIBLE_NAMES")
 diff --git a/tools/rc/ResourceCompiler.cpp b/tools/rc/ResourceCompiler.cpp
-index a5b81d3..4e92db4 100755
+index a5b81d3..4e92db4 100644
 --- a/tools/rc/ResourceCompiler.cpp
 +++ b/tools/rc/ResourceCompiler.cpp
 @@ -37,9 +37,12 @@

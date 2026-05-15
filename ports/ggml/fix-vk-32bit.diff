@@ -1,5 +1,5 @@
 diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
-index 423e01d..3cd5488 100644
+index 0a793100..a754ce42 100644
 --- a/src/ggml-vulkan/ggml-vulkan.cpp
 +++ b/src/ggml-vulkan/ggml-vulkan.cpp
 @@ -2036,7 +2036,7 @@ void vk_memory_logger::log_allocation(vk_buffer_ref buf_ref, size_t size) {

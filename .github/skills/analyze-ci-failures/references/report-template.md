@@ -14,10 +14,8 @@ Use it as the exact template when generating reports.
 **Triggered by:** {reason} on `{sourceBranch}` @ `{sourceVersion[:8]}`
 **Duration:** {startTime} → {finishTime} UTC (~{duration})
 **Result:** ❌ **FAILED** — {baseline_summary}
-
-<!-- For PR builds: include a line linking to the PR with its title and author, e.g.:
-**PR:** [#51202](https://github.com/microsoft/vcpkg/pull/51202) — `[ltla-cppirlba] Update to 3.1.0` by @xiaozhuai
--->
+**PR:** [#{prNumber}](https://github.com/microsoft/vcpkg/pull/{prNumber}) — `{pr_title}` by @{author}
+<!-- Include the PR line above for PR-triggered builds. Omit for scheduled/manual builds. -->
 
 ---
 
@@ -35,7 +33,7 @@ Use it as the exact template when generating reports.
 
 ---
 
-## 🔴 Cross-Platform Regressions (Windows + Linux)
+## 🔴 Cross-Platform Regressions
 
 ### N. `port-name` — Short Root Cause Title
 
@@ -67,6 +65,17 @@ Use it as the exact template when generating reports.
 ### N. `port-name` — Short Root Cause Title
 
 - **Triplet:** x64-linux
+- **Error:** `exact error message`
+- **Root cause:** ...
+- **Suggested fix:** ...
+
+---
+
+## 🔴 MacOS-Only Regressions
+
+### N. `port-name` — Short Root Cause Title
+
+- **Triplet:** arm64-osx
 - **Error:** `exact error message`
 - **Root cause:** ...
 - **Suggested fix:** ...
@@ -196,3 +205,43 @@ When analyzing a new build, scan for these high-frequency patterns before deep-d
 | `Could not find GO_BIN` or `mkdir /go: permission denied` | Go-dependent features | Go not available/writable in CI — mark features as `feature-fails` |
 | Feature tests fail on triplets not in `ci.feature.baseline.txt` | Job exit code 1, no REGRESSION lines | Feature baseline entries only cover some triplets — expand them |
 | `LNK2038: mismatch detected for 'RuntimeLibrary'` or `'_ITERATOR_DEBUG_LEVEL'` | MSVC debug build, passes on release-only triplet | Debug/release CRT mismatch in host tools — use `OPTIONS_RELEASE` to build tools only in release |
+
+---
+
+## Minimum Viable Report (use when time-constrained)
+
+If you only have step-log data and no artifact details, write this minimal format:
+
+```markdown
+# vcpkg CI Failure Report — Build #{buildId}
+
+**Build:** [{buildNumber}]({build_url})
+**PR:** [#{prNumber}](https://github.com/microsoft/vcpkg/pull/{prNumber})
+
+## Summary
+
+| Triplet | Failures |
+|---------|----------|
+| {triplet} | N |
+
+## Regressions
+
+### {triplet}
+
+| Port | Failure Type | Error |
+|------|-------------|-------|
+| port | BUILD_FAILED | `error message from log` |
+| port | FILE_CONFLICTS | conflicts with port-b |
+| port | POST_BUILD_CHECKS_FAILED | `warning text from log` |
+| port | CASCADED_DUE_TO_MISSING_DEPENDENCIES | dependency port-b failed |
+
+## Version Validation Issues
+
+- `portname@N was not found in versions database` — run `vcpkg x-add-version portname`
+
+## Recommendations
+
+| Port | Action |
+|------|--------|
+| port | Fix description |
+```

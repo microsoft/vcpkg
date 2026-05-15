@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca5a692..e0651b4 100644
+index 1ab7ea7..2219211 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -161,12 +161,9 @@ if (WITH_TESTS)
@@ -31,16 +31,17 @@ index ca5a692..e0651b4 100644
  target_include_directories(${PDAL_LIB_NAME}
      PRIVATE
          ${ROOT_DIR}
-@@ -269,6 +267,8 @@ target_link_libraries(${PDAL_LIB_NAME}
-         ${PDAL_LIBDIR}
+@@ -270,6 +268,9 @@ target_link_libraries(${PDAL_LIB_NAME}
          ${WINSOCK_LIBRARY}
  )
+ 
 +find_package(nanoflann CONFIG REQUIRED)
 +target_link_libraries(${PDAL_LIB_NAME} PRIVATE nanoflann::nanoflann)
- 
++
  if (ZSTD_FOUND)
      target_link_libraries(${PDAL_LIB_NAME}
-@@ -304,9 +304,6 @@ target_include_directories(${PDAL_LIB_NAME}
+         PRIVATE
+@@ -304,9 +305,6 @@ target_include_directories(${PDAL_LIB_NAME}
      INTERFACE
          $<INSTALL_INTERFACE:include>)
  
@@ -96,8 +97,38 @@ index 507c456..6b502d0 100644
  #ifndef INCLUDE_NLOHMANN_JSON_FWD_HPP_
  #define INCLUDE_NLOHMANN_JSON_FWD_HPP_
  
+diff --git a/pdal/KDIndex.hpp b/pdal/KDIndex.hpp
+index 8cfcf50..7c1a7ba 100644
+--- a/pdal/KDIndex.hpp
++++ b/pdal/KDIndex.hpp
+@@ -35,6 +35,7 @@
+ #pragma once
+ 
+ #include <pdal/PointView.hpp>
++#include <nanoflann.hpp>
+ 
+ namespace pdal
+ {
+@@ -46,7 +47,7 @@ class KDFlexImpl;
+ class PDAL_EXPORT KD2Index
+ {
+ public:
+-    using RadiusResult = std::pair<size_t, double>;
++    using RadiusResult = nanoflann::ResultItem<size_t, double>;
+     using RadiusResults = std::vector<RadiusResult>;
+ 
+     KD2Index(const PointView& buf);
+@@ -79,7 +80,7 @@ private:
+ class PDAL_EXPORT KD3Index
+ {
+ public:
+-    using RadiusResult = std::pair<size_t, double>;
++    using RadiusResult = nanoflann::ResultItem<size_t, double>;
+     using RadiusResults = std::vector<RadiusResult>;
+ 
+     KD3Index(const PointView& buf);
 diff --git a/pdal/private/KDImpl.hpp b/pdal/private/KDImpl.hpp
-index 473ffba..a69431f 100644
+index a328f34..bedb367 100644
 --- a/pdal/private/KDImpl.hpp
 +++ b/pdal/private/KDImpl.hpp
 @@ -34,7 +34,8 @@
@@ -110,8 +141,17 @@ index 473ffba..a69431f 100644
  
  namespace pdal
  {
-@@ -116,7 +117,7 @@ public:
-     PointIdList radius(double const& x, double const& y, double const& r) const
+@@ -42,7 +43,7 @@ namespace pdal
+ class KD2Impl
+ {
+ public:
+-    using RadiusResults = std::vector<std::pair<size_t, double>>;
++    using RadiusResults = std::vector<nanoflann::ResultItem<std::size_t, double>>;
+ 
+     KD2Impl(const PointView& buf) : m_buf(buf),
+         m_index(2, *this, nanoflann::KDTreeSingleIndexAdaptorParams(100))
+@@ -118,7 +119,7 @@ public:
+     PointIdList radius(double x, double y, double r) const
      {
          PointIdList output;
 -        std::vector<std::pair<std::size_t, double>> ret_matches;
@@ -119,7 +159,16 @@ index 473ffba..a69431f 100644
          nanoflann::SearchParams params;
          params.sorted = true;
  
-@@ -247,7 +248,7 @@ public:
+@@ -157,7 +158,7 @@ private:
+ class KD3Impl
+ {
+ public:
+-    using RadiusResults = std::vector<std::pair<size_t, double>>;
++    using RadiusResults = std::vector<nanoflann::ResultItem<std::size_t, double>>;
+ 
+     KD3Impl(const PointView& buf) : m_buf(buf),
+         m_index(3, *this, nanoflann::KDTreeSingleIndexAdaptorParams(100))
+@@ -262,7 +263,7 @@ public:
      PointIdList radius(double x, double y, double z, double r) const
      {
          PointIdList output;
@@ -128,7 +177,7 @@ index 473ffba..a69431f 100644
          nanoflann::SearchParams params;
          params.sorted = true;
  
-@@ -330,7 +331,7 @@ public:
+@@ -356,7 +357,7 @@ public:
      PointIdList radius(PointId idx, double r) const
      {
          PointIdList output;
@@ -138,12 +187,12 @@ index 473ffba..a69431f 100644
          params.sorted = true;
  
 diff --git a/tools/lasdump/CMakeLists.txt b/tools/lasdump/CMakeLists.txt
-index d0d4d64..595d724 100644
+index fa842d1..a9f4e7a 100644
 --- a/tools/lasdump/CMakeLists.txt
 +++ b/tools/lasdump/CMakeLists.txt
-@@ -11,6 +11,7 @@ add_executable(lasdump
- )
+@@ -15,6 +15,7 @@ add_executable(lasdump
  
+ # Explicitly link and tell CMake to link libstdc++
  target_link_libraries(lasdump PRIVATE
 +    ${UTFCPP_LIB_NAME}
      ${PDAL_LAZPERF_LIB_NAME}

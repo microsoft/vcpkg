@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_mixer
     REF "release-${VERSION}"
-    SHA512 653ec1f0af0b749b9ed0acd3bfcaa40e1e1ecf34af3127eb74019502ef42a551de226daef4cc89e6a51715f013e0ba0b1e48ae17d6aeee931271f2d10e82058a
+    SHA512 4c2ba587a89721e060472b65e8a846ed3012121b4de7a2952704dab5df5f9e5d828a4105a7eb9b2fd65158ea9264e8b53eb689b87cb7f098452c2ab959a25a06
     PATCHES 
         fix-pkg-prefix.patch
 )
