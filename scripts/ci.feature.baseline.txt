@@ -1281,7 +1281,6 @@ ripper37-libbase[wx]:arm64-linux=cascade
 ripper37-libbase[wx](android)=cascade
 robotraconteur:arm64-linux=cascade
 robotraconteur-companion:arm64-linux=cascade
-rpclib:arm64-windows=fail
 rsocket:arm64-linux=cascade
 rsocket:arm64-windows=cascade
 rsocket:x86-windows=cascade
