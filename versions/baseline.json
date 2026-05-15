@@ -10685,7 +10685,7 @@
       "port-version": 1
     },
     "vsgxchange": {
-      "baseline": "1.1.11",
+      "baseline": "1.1.13",
       "port-version": 0
     },
     "vst3sdk": {
