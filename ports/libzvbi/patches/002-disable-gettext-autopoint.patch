@@ -1,0 +1,123 @@
+diff --git a/a/configure.ac b/b/configure.ac
+index 0288c88..7dc6650 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -33,14 +33,16 @@ AC_PROG_CXX
+ AC_PROG_CPP
+ 
+ 
+-dnl math.h functions used in io-sim.c, must link -lm. The default
+-dnl 'action if found' is to add "-lm" to $LIBS, so leave that
+-dnl argument blank. Suggested by autoscan as an alternative to
+-dnl manipulating the LIBS variable directly.
+-dnl 	LIBS="$LIBS -lm"
+-AC_CHECK_LIB([m], [cos],,[
+-      AC_MSG_ERROR([Unable to link math functions])
+-])
++dnl math.h functions used in io-sim.c, must link -lm on Unix.
++dnl On MSVC the math functions live in the C runtime.  AC_CHECK_FUNC
++dnl uses a fake "char cos(void)" declaration which clashes with MSVC
++dnl intrinsics in optimised builds, so use a real link test instead.
++AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <math.h>]],
++               [[volatile double x = cos(1.0); (void)x;]])],
++  [],
++  [AC_CHECK_LIB([m], [cos], [], [
++    AC_MSG_ERROR([Unable to link math functions])
++  ])])
+ 
+ 
+ dnl Checks for header files.
+@@ -231,19 +233,24 @@ CHECK_CXX_OPTION([-std=c++98], HAVE_GXX_CXX98_SUPPORT)
+ 
+ dnl
+ dnl Check how to link pthreads functions.
+-dnl (-lpthread on Linux, -lpthreadGC2 [from the pthreads-win32.
+-dnl  package] on MinGW, -pthread on FreeBSD).
++dnl (-lpthread on Linux, -lpthreadGC2 [from the pthreads-win32
++dnl  package] on MinGW, -lpthreadVC3/-lpthreadVC3d on MSVC,
++dnl  -pthread on FreeBSD).
+ dnl
+ dnl When upgrading to autoconf 2.71, AC_TRY_LINK deprecated and replaced
+ dnl with AC_LINK_IFELSE.
+ dnl
+ AC_CHECK_LIB(pthread, pthread_create,,[
+   AC_CHECK_LIB(pthreadGC2, pthread_create,,[
+-    AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[pthread_create();]])],[],[
+-      # same as previous, but use '-pthread' instead of '-lpthread'
+-      LDFLAGS="$LDFLAGS -pthread"
+-      AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[pthread_create();]])],[],[
+-	AC_MSG_ERROR([Unable to link pthread functions])
++    AC_CHECK_LIB(pthreadVC3, pthread_create,,[
++      AC_CHECK_LIB(pthreadVC3d, pthread_create,,[
++        AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[pthread_create();]])],[],[
++          # same as previous, but use '-pthread' instead of '-lpthread'
++          LDFLAGS="$LDFLAGS -pthread"
++          AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[pthread_create();]])],[],[
++	    AC_MSG_ERROR([Unable to link pthread functions])
++          ])
++        ])
+       ])
+     ])
+   ])
+@@ -303,9 +310,14 @@ dnl
+ dnl Check for iconv() in libc or libiconv.
+ dnl (Unicode conversions)
+ dnl
+-dnl Using m4/iconv.m4 from the gettext package.
+-dnl
+-AM_ICONV_LINK
++am_cv_func_iconv=no
++LIBICONV=
++AC_CHECK_FUNC([iconv], [am_cv_func_iconv=yes], [
++  AC_CHECK_LIB([iconv], [iconv], [am_cv_func_iconv=yes; LIBICONV="-liconv"], [
++    AC_CHECK_LIB([iconv], [libiconv], [am_cv_func_iconv=yes; LIBICONV="-liconv"])
++  ])
++])
++AC_SUBST([LIBICONV])
+ if test "x$am_cv_func_iconv" != xyes; then
+   AC_MSG_ERROR([iconv() not found])
+ fi
+@@ -496,23 +508,6 @@ AM_CONDITIONAL(ENABLE_PROXY, [test "x$enable_proxy" = xyes])
+ 
+ AM_CONDITIONAL(RUN_CHECK_SCRIPTS, [test "x$run_check_scripts" = xyes])
+ 
+-dnl
+-dnl Native language support.
+-dnl
+-# If issues found with using a different gettext version than below and
+-# performing a crossbuild, update AM_GNU_GETTEXT_VERSION to match and
+-# run autogen.sh to update necessary files.
+-AM_GNU_GETTEXT_VERSION([0.21])
+-AM_GNU_GETTEXT([external], [need-ngettext])
+-LIBS="$LTLIBINTL $LIBS"
+-if test "x${prefix}" = xNONE; then
+-  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,
+-    "${ac_default_prefix}/share/locale", [ld])
+-else
+-  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,
+-    "${prefix}/share/locale", [ld])
+-fi
+-
+ dnl
+ dnl Build docs from the sources if Doxygen is installed.
+ dnl
+@@ -554,7 +549,6 @@ AC_CONFIG_FILES([
+   src/Makefile
+   src/dvb/Makefile
+   test/Makefile
+-  po/Makefile.in
+   zvbi.spec
+   zvbi-0.2.pc
+ ])
+diff --git a/a/Makefile.am b/b/Makefile.am
+index 04928d1..69c876d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -31,7 +31,6 @@ SUBDIRS += test
+ endif
+ 
+ SUBDIRS += \
+-	po \
+ 	doc
+ 
+ ACLOCAL_AMFLAGS = -I m4
