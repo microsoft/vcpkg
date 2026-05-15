@@ -1,0 +1,64 @@
+diff --git a/src/lang.c b/src/lang.c
+index 7bedeba..8356b95 100644
+--- a/src/lang.c
++++ b/src/lang.c
+@@ -43,8 +43,8 @@ vbi_font_descriptors[88] = {
+ 	{ LATIN_G0, LATIN_G2, GERMAN,		"Deutsch" },
+ 	{ LATIN_G0, LATIN_G2, SWE_FIN_HUN,	"Svenska / Suomi / Magyar" },
+ 	{ LATIN_G0, LATIN_G2, ITALIAN,		"Italiano" },
+-	{ LATIN_G0, LATIN_G2, FRENCH,		"Français" },
+-	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"Português / Español" },
++	{ LATIN_G0, LATIN_G2, FRENCH,		"Fran\347ais" },
++	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"Portugu\352s / Espa\361ol" },
+ 	{ LATIN_G0, LATIN_G2, CZECH_SLOVAK,	"Cesky / Slovencina" },
+ 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
+ 
+@@ -53,7 +53,7 @@ vbi_font_descriptors[88] = {
+ 	{ LATIN_G0, LATIN_G2, GERMAN,		"Deutsch" },
+ 	{ LATIN_G0, LATIN_G2, SWE_FIN_HUN,	"Svenska / Suomi / Magyar" },
+ 	{ LATIN_G0, LATIN_G2, ITALIAN,		"Italiano" },
+-	{ LATIN_G0, LATIN_G2, FRENCH,		"Français" },
++	{ LATIN_G0, LATIN_G2, FRENCH,		"Fran\347ais" },
+ 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
+ 	{ LATIN_G0, LATIN_G2, CZECH_SLOVAK,	"Cesky / Slovencina" },
+ 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
+@@ -63,9 +63,9 @@ vbi_font_descriptors[88] = {
+ 	{ LATIN_G0, LATIN_G2, GERMAN,		"Deutsch" },
+ 	{ LATIN_G0, LATIN_G2, SWE_FIN_HUN,	"Svenska / Suomi / Magyar" },
+ 	{ LATIN_G0, LATIN_G2, ITALIAN,		"Italiano" },
+-	{ LATIN_G0, LATIN_G2, FRENCH,		"Français" },
+-	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"Português / Español" },
+-	{ LATIN_G0, LATIN_G2, TURKISH,		"Türkçe" },
++	{ LATIN_G0, LATIN_G2, FRENCH,		"Fran\347ais" },
++	{ LATIN_G0, LATIN_G2, PORTUG_SPANISH,	"Portugu\352s / Espa\361ol" },
++	{ LATIN_G0, LATIN_G2, TURKISH,		"T\374rk\347e" },
+ 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
+ 
+ 	/* 24 - Central and Southeast Europe */
+@@ -76,7 +76,7 @@ vbi_font_descriptors[88] = {
+ 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
+ 	{ LATIN_G0, LATIN_G2, SERB_CRO_SLO,	"Srbski / Hrvatski / Slovenscina" },
+ 	{ LATIN_G0, LATIN_G2, NO_SUBSET,	0 },
+-	{ LATIN_G0, LATIN_G2, RUMANIAN,		"Româna" },
++	{ LATIN_G0, LATIN_G2, RUMANIAN,		"Rom\342na" },
+ 
+ 	/* 32 - Cyrillic */
+ 	{ CYRILLIC_1_G0, CYRILLIC_G2, NO_SUBSET, "Srpski / Hrvatski" },
+@@ -104,7 +104,7 @@ vbi_font_descriptors[88] = {
+ 	{ 0, 0, NO_SUBSET,			0 },
+ 	{ 0, 0, NO_SUBSET,			0 },
+ 	{ 0, 0, NO_SUBSET,			0 },
+-	{ LATIN_G0, LATIN_G2, TURKISH,		"Türkçe" },
++	{ LATIN_G0, LATIN_G2, TURKISH,		"T\374rk\347e" },
+ 	{ GREEK_G0, GREEK_G2, NO_SUBSET,	"Ellinika'" },
+ 
+ 	{ 0, 0, NO_SUBSET,			0 },
+@@ -121,7 +121,7 @@ vbi_font_descriptors[88] = {
+ 	{ 0, 0, NO_SUBSET,			0 },
+ 	{ 0, 0, NO_SUBSET,			0 },
+ 	{ 0, 0, NO_SUBSET,			0 },
+-	{ LATIN_G0, ARABIC_G2, FRENCH,		"Alarabia / Français" },
++	{ LATIN_G0, ARABIC_G2, FRENCH,		"Alarabia / Fran\347ais" },
+ 	{ 0, 0, NO_SUBSET,			0 },
+ 	{ 0, 0, NO_SUBSET,			0 },
+ 	{ ARABIC_G0, ARABIC_G2, NO_SUBSET,	"Alarabia" },

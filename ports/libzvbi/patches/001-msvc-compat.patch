@@ -1,24 +1,73 @@
+diff --git a/contrib/sys/time.h b/contrib/sys/time.h
+new file mode 100644
+index 0000000..8361373
+--- /dev/null
++++ b/contrib/sys/time.h
+@@ -0,0 +1,26 @@
++/* sys/time.h - MSVC compatibility shim for zvbi internal sources
++ * Provides struct timeval (from winsock2) and gettimeofday().
++ */
++#ifndef _ZVBI_COMPAT_SYS_TIME_H
++#define _ZVBI_COMPAT_SYS_TIME_H
++
++#include <winsock2.h>
++#include <windows.h>
++
++static __inline int zvbi_gettimeofday_(struct timeval *tv, void *tz)
++{
++    FILETIME ft;
++    unsigned __int64 t;
++    (void)tz;
++    if (!tv) return -1;
++    GetSystemTimeAsFileTime(&ft);
++    t = ((unsigned __int64)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
++    /* Convert from 100-ns intervals since 1601 to microseconds since 1970 */
++    t -= 116444736000000000ULL;
++    tv->tv_sec  = (long)(t / 10000000ULL);
++    tv->tv_usec = (long)((t % 10000000ULL) / 10);
++    return 0;
++}
++#define gettimeofday zvbi_gettimeofday_
++
++#endif /* _ZVBI_COMPAT_SYS_TIME_H */
+\ No newline at end of file
 diff --git a/src/caption.c b/src/caption.c
-index 004280c..9ae6dc3 100644
+index 004280c..32d2286 100644
 --- a/src/caption.c
 +++ b/src/caption.c
-@@ -83,7 +83,14 @@ language[8] = {
+@@ -25,7 +25,13 @@
+ #  include "config.h"
+ #endif
+ 
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ 
+ #include "misc.h"
+ #include "trigger.h"
+@@ -83,7 +89,15 @@ language[8] = {
  
  static uint32_t hcrc[128];
  
 -static void init_hcrc(void) __attribute__ ((constructor));
++#if defined(_MSC_VER)
 +static void init_hcrc(void);
-+
-+#ifdef _MSC_VER
 +/* MSVC: .CRT$XCU section provides C startup initializers (like GCC __attribute__((constructor))). */
 +#pragma section(".CRT$XCU", read)
 +static void __cdecl init_hcrc_crt_init(void) { init_hcrc(); }
 +__declspec(allocate(".CRT$XCU")) static void (__cdecl *init_hcrc_crt_init_fn)(void) = init_hcrc_crt_init;
++#else
++static void init_hcrc(void) __attribute__ ((constructor));
 +#endif
  
  
  /*
-@@ -453,7 +460,7 @@ xds_decoder(vbi_decoder *vbi, int _class, int type,
+@@ -453,7 +473,7 @@ xds_decoder(vbi_decoder *vbi, int _class, int type,
  			break;
  		}
  
@@ -27,7 +76,7 @@ index 004280c..9ae6dc3 100644
  		{
  			int line = type & 7;
  
-@@ -607,7 +614,8 @@ xds_separator(vbi_decoder *vbi, uint8_t *buf)
+@@ -607,7 +627,8 @@ xds_separator(vbi_decoder *vbi, uint8_t *buf)
  	}
  
  	switch (c1) {
@@ -37,7 +86,7 @@ index 004280c..9ae6dc3 100644
  		class = (c1 - 1) >> 1;
  
  		if (class >= elements(cc->sub_packet)
-@@ -660,7 +668,18 @@ xds_separator(vbi_decoder *vbi, uint8_t *buf)
+@@ -660,7 +681,18 @@ xds_separator(vbi_decoder *vbi, uint8_t *buf)
  
  		return;
  
@@ -57,7 +106,7 @@ index 004280c..9ae6dc3 100644
  		if (!sp)
  			return;
  
-@@ -1206,7 +1225,7 @@ caption_command(vbi_decoder *vbi, struct caption *cc,
+@@ -1206,7 +1238,7 @@ caption_command(vbi_decoder *vbi, struct caption *cc,
  			return;
  
  		switch (c2) {
@@ -66,7 +115,7 @@ index 004280c..9ae6dc3 100644
  // not verified
  			col = ch->col;
  
-@@ -1319,12 +1338,14 @@ vbi_decode_caption(vbi_decoder *vbi, int line, uint8_t *buf)
+@@ -1319,12 +1351,14 @@ vbi_decode_caption(vbi_decoder *vbi, int line, uint8_t *buf)
  		cc_channel *ch;
  		vbi_char c;
  
@@ -83,6 +132,36 @@ index 004280c..9ae6dc3 100644
  		if (vbi_unpar8 (buf[1]) >= 0) {
  			if (!field2
  			    && buf[0] == cc->last[0]
+@@ -1628,3 +1662,5 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
++
+diff --git a/src/chains.c b/src/chains.c
+index 3440ef2..f27e922 100644
+--- a/src/chains.c
++++ b/src/chains.c
+@@ -32,7 +32,13 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <string.h>
+ #include <stdarg.h>
+ #include <sys/types.h>
+@@ -614,3 +620,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/conv.c b/src/conv.c
 index aa8fb8d..8a8f243 100644
 --- a/src/conv.c
@@ -135,15 +214,35 @@ index 96ced98..e24cf30 100644
  			"data_identifier=%u (ok).",
  			data_identifier);
 diff --git a/src/exp-gfx.c b/src/exp-gfx.c
-index 569d3ec..a092ea5 100644
+index 569d3ec..7979bc4 100644
 --- a/src/exp-gfx.c
 +++ b/src/exp-gfx.c
-@@ -55,7 +55,14 @@
+@@ -31,7 +31,13 @@
+ #include <assert.h>
+ #include <errno.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ 
+ #include "lang.h"
+ #include "export.h"
+@@ -55,7 +61,21 @@
  
  #define CCPL (ccfont2_width / CCW * ccfont2_height / CCH)
  
 -static void init_gfx(void) __attribute__ ((constructor));
-+static void init_gfx(void);
++#if defined(_MSC_VER)
++#  define ZVBI_CONSTRUCTOR
++#else
++#  define ZVBI_CONSTRUCTOR __attribute__ ((constructor))
++#endif
++static void init_gfx(void) ZVBI_CONSTRUCTOR;
 +
 +#ifdef _MSC_VER
 +/* MSVC: .CRT$XCU section provides C startup initializers (like GCC __attribute__((constructor))). */
@@ -151,14 +250,37 @@ index 569d3ec..a092ea5 100644
 +static void __cdecl init_gfx_crt_init(void) { init_gfx(); }
 +__declspec(allocate(".CRT$XCU")) static void (__cdecl *init_gfx_crt_init_fn)(void) = init_gfx_crt_init;
 +#endif
++
++#undef ZVBI_CONSTRUCTOR
  
  static void
  init_gfx(void)
+@@ -1902,3 +1922,5 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
++
 diff --git a/src/exp-html.c b/src/exp-html.c
-index a1ea21f..b80e865 100644
+index a1ea21f..97722ad 100644
 --- a/src/exp-html.c
 +++ b/src/exp-html.c
-@@ -200,8 +200,8 @@ option_set(vbi_export *e, const char *keyword, va_list args)
+@@ -29,7 +29,13 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <iconv.h>
+ 
+ #include "lang.h"
+@@ -200,8 +206,8 @@ option_set(vbi_export *e, const char *keyword, va_list args)
  #undef putc
  #define putc(c) vbi_export_putc (&html->export, c)
  #define puts(s) vbi_export_puts (&html->export, s)
@@ -169,11 +291,55 @@ index a1ea21f..b80e865 100644
  
  static void
  hash_color(html_instance *html, vbi_rgba color)
+@@ -792,3 +798,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
+diff --git a/src/exp-vtx.c b/src/exp-vtx.c
+index 18d9d3f..e0f0fd5 100644
+--- a/src/exp-vtx.c
++++ b/src/exp-vtx.c
+@@ -52,7 +52,13 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ 
+ #include "vbi.h"	/* cache, vt.h */
+ #include "hamm.h"	/* bit_reverse */
+@@ -165,3 +171,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/export.c b/src/export.c
-index 26ae63a..443e1f1 100644
+index 26ae63a..c2b61a9 100644
 --- a/src/export.c
 +++ b/src/export.c
-@@ -729,7 +729,7 @@ vbi_export_option_get(vbi_export *export, const char *keyword,
+@@ -32,7 +32,13 @@
+ #include <errno.h>
+ #include <ctype.h>
+ #include <fcntl.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <sys/stat.h>
+ #include <iconv.h>
+ 
+@@ -729,7 +735,7 @@ vbi_export_option_get(vbi_export *export, const char *keyword,
  		value->num = export->reveal;
  	} else if (strcmp(keyword, "network") == 0) {
  		if (!(value->str = vbi_export_strdup(export, NULL,
@@ -182,8 +348,37 @@ index 26ae63a..443e1f1 100644
  			return FALSE;
  	} else if (strcmp(keyword, "creator") == 0) {
  		if (!(value->str = vbi_export_strdup(export, NULL, export->creator)))
+@@ -2094,3 +2100,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
+diff --git a/src/inout.c b/src/inout.c
+index d27bb5d..f31bd81 100644
+--- a/src/inout.c
++++ b/src/inout.c
+@@ -27,7 +27,13 @@
+ #endif
+ 
+ #include <fcntl.h>		/* open() */
+-#include <unistd.h>		/* close(), mmap(), munmap(), gettimeofday() */
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif		/* close(), mmap(), munmap(), gettimeofday() */
+ #ifdef HAVE_SYS_IOCTL_H
+ #include <sys/ioctl.h>		/* ioctl() */
+ #endif
+@@ -875,3 +881,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/io-bktr.c b/src/io-bktr.c
-index bcbc61d..54b8088 100644
+index bcbc61d..e5082fe 100644
 --- a/src/io-bktr.c
 +++ b/src/io-bktr.c
 @@ -29,10 +29,10 @@ static const char rcsid [] =
@@ -199,11 +394,46 @@ index bcbc61d..54b8088 100644
  		fflush(stderr);						\
  	}								\
  } while (0)
+@@ -44,7 +44,13 @@ do {									\
+ #include <string.h>
+ #include <math.h>
+ #include <errno.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <assert.h>
+ #include <sys/time.h>		/* timeval */
+ #include <sys/select.h>		/* fd_set */
+@@ -401,3 +407,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/io-dvb.c b/src/io-dvb.c
-index d1f447a..80e4653 100644
+index d1f447a..3960957 100644
 --- a/src/io-dvb.c
 +++ b/src/io-dvb.c
-@@ -67,10 +67,10 @@ typedef struct {
+@@ -25,7 +25,13 @@
+ 
+ #ifdef ENABLE_DVB
+ 
+-#include <unistd.h>		/* read() */
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif		/* read() */
+ #include <errno.h>
+ #include <sys/select.h>
+ #ifdef HAVE_SYS_IOCTL_H
+@@ -67,10 +73,10 @@ typedef struct {
  	vbi_bool		bug_compatible;
  } vbi_capture_dvb;
  
@@ -216,6 +446,11 @@ index d1f447a..80e4653 100644
  		fflush (stderr);					\
  	}								\
  } while (0)
+@@ -733,3 +739,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/io-sim.c b/src/io-sim.c
 index f5a48eb..45c05a6 100644
 --- a/src/io-sim.c
@@ -237,10 +472,25 @@ index f5a48eb..45c05a6 100644
  
  #define PI 3.1415926535897932384626433832795029
 diff --git a/src/io-v4l.c b/src/io-v4l.c
-index be00a98..73a93a4 100644
+index be00a98..d335b30 100644
 --- a/src/io-v4l.c
 +++ b/src/io-v4l.c
-@@ -75,10 +75,10 @@ static __inline__ void IOCTL_ARG_TYPE_CHECK_BTTV_VBISIZE
+@@ -38,7 +38,13 @@ static const char rcsid [] =
+ #include <string.h>
+ #include <math.h>
+ #include <errno.h>
+-#include <unistd.h>		/* read(), dup2(), getuid() */
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif		/* read(), dup2(), getuid() */
+ #include <assert.h>
+ #include <sys/time.h>		/* timeval */
+ #include <sys/types.h>		/* fd_set, uid_t */
+@@ -75,10 +81,10 @@ static __inline__ void IOCTL_ARG_TYPE_CHECK_BTTV_VBISIZE
  
  #define FLUSH_FRAME_COUNT       2
  
@@ -253,6 +503,11 @@ index be00a98..73a93a4 100644
  		fflush(stderr);						\
  	}								\
  } while (0)
+@@ -1449,3 +1455,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/io-v4l2.c b/src/io-v4l2.c
 index e8b2fee..69d28dc 100644
 --- a/src/io-v4l2.c
@@ -270,6 +525,30 @@ index e8b2fee..69d28dc 100644
  		fflush (stderr);					\
  	}								\
  } while (0)
+diff --git a/src/io-v4l2k.c b/src/io-v4l2k.c
+index 087493b..351f872 100644
+--- a/src/io-v4l2k.c
++++ b/src/io-v4l2k.c
+@@ -46,7 +46,13 @@ static const char rcsid [] =
+ #include <string.h>
+ #include <math.h>
+ #include <errno.h>
+-#include <unistd.h>		/* read(), dup2() */
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif		/* read(), dup2() */
+ #include <assert.h>
+ #include <sys/time.h>		/* timeval */
+ #include <sys/types.h>		/* fd_set */
+@@ -1566,3 +1572,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/libzvbi.h b/src/libzvbi.h
 index 6f00c77..0a4729d 100644
 --- a/src/libzvbi.h
@@ -321,18 +600,27 @@ index 6f00c77..0a4729d 100644
  typedef struct vbi_proxy_client vbi_proxy_client;
  
 diff --git a/src/misc.h b/src/misc.h
-index dbe91b8..eebdd2c 100644
+index dbe91b8..a6e670d 100644
 --- a/src/misc.h
 +++ b/src/misc.h
-@@ -30,6 +30,7 @@
+@@ -30,6 +30,16 @@
  #include <stddef.h>
  #include <stdarg.h>
  #include <string.h>
-+#include <strings.h>		/* strcasecmp, strncasecmp (shim on MSVC) */
++#ifdef _MSC_VER
++#  ifndef strcasecmp
++#    define strcasecmp _stricmp
++#  endif
++#  ifndef strncasecmp
++#    define strncasecmp _strnicmp
++#  endif
++#else
++#  include <strings.h>		/* strcasecmp, strncasecmp */
++#endif
  #include <inttypes.h>		/* (u)intXX_t */
  #include <sys/types.h>		/* (s)size_t */
  #include <float.h>		/* DBL_MAX */
-@@ -333,7 +334,7 @@ _vbi_log_printf		(vbi_log_fn *		log_fn,
+@@ -333,7 +343,7 @@ _vbi_log_printf		(vbi_log_fn *		log_fn,
  				 ...)
    _vbi_nonnull ((1, 4, 5, 6)) _vbi_format ((printf, 6, 7));
  
@@ -341,7 +629,7 @@ index dbe91b8..eebdd2c 100644
  do {									\
  	_vbi_log_hook *_h = hook;					\
  									\
-@@ -341,7 +342,7 @@ do {									\
+@@ -341,7 +351,7 @@ do {									\
  	    || (_h = &_vbi_global_log, 0 != (_h->mask & level)))	\
  		_vbi_log_printf (_h->fn, _h->user_data,		\
  				  level, __FILE__, __FUNCTION__,	\
@@ -350,7 +638,7 @@ index dbe91b8..eebdd2c 100644
  } while (0)
  
  #define _vbi_vlog(hook, level, templ, ap)				\
-@@ -355,20 +356,20 @@ do {									\
+@@ -355,20 +365,20 @@ do {									\
  				  templ, ap);				\
  } while (0)
  
@@ -385,11 +673,31 @@ index dbe91b8..eebdd2c 100644
  
  /* Portability stuff. */
  
+@@ -487,3 +497,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/packet.c b/src/packet.c
-index b779544..bf160d7 100644
+index b779544..c2fce11 100644
 --- a/src/packet.c
 +++ b/src/packet.c
-@@ -166,7 +166,7 @@ unham_page_link(struct ttx_page_link *p, const uint8_t *raw, int magazine)
+@@ -27,7 +27,13 @@
+ #  include "config.h"
+ #endif
+ 
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <limits.h>
+ #include <fcntl.h>
+ #include <time.h>
+@@ -166,7 +172,7 @@ unham_page_link(struct ttx_page_link *p, const uint8_t *raw, int magazine)
  
  	m = ((b3 >> 5) & 6) + (b2 >> 7);
  
@@ -398,7 +706,7 @@ index b779544..bf160d7 100644
  	p->subno = (b3 * 256 + b2) & 0x3f7f;
  
  	return TRUE;
-@@ -178,7 +178,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
+@@ -178,7 +184,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
  	int err, i, j;
  
  	switch (packet) {
@@ -407,7 +715,7 @@ index b779544..bf160d7 100644
  	{
  		int index = (packet - 1) << 5;
  		int n0, n1;
-@@ -200,7 +200,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
+@@ -200,7 +206,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
  		return TRUE;
  	}
  
@@ -416,7 +724,7 @@ index b779544..bf160d7 100644
  	{
  		int index = (packet - 9) * 0x30 + 10;
  
-@@ -227,13 +227,13 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
+@@ -227,13 +233,13 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
  		return TRUE;
  	}
  
@@ -433,7 +741,7 @@ index b779544..bf160d7 100644
  	{
  		struct ttx_pop_link *pop;
  
-@@ -248,7 +248,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
+@@ -248,7 +254,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
  			if (err < 0) /* XXX unused bytes poss. not hammed (^ N3) */
  				continue;
  
@@ -442,7 +750,7 @@ index b779544..bf160d7 100644
  
  			/* n[3] number of subpages ignored */
  
-@@ -290,7 +290,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
+@@ -290,7 +296,7 @@ parse_mot(struct ttx_magazine *mag, uint8_t *raw, int packet)
  			if (err < 0)
  				continue;
  
@@ -451,7 +759,7 @@ index b779544..bf160d7 100644
  
  			/* n[3] number of subpages ignored */
  		}
-@@ -319,11 +319,11 @@ parse_pop(cache_page *vtp, uint8_t *raw, int packet)
+@@ -319,11 +325,11 @@ parse_pop(cache_page *vtp, uint8_t *raw, int packet)
  		packet += designation;
  
  	switch (packet) {
@@ -465,7 +773,7 @@ index b779544..bf160d7 100644
  		if (designation & 1) {
  			int index = (packet - 1) * 26;
  
-@@ -338,7 +338,11 @@ parse_pop(cache_page *vtp, uint8_t *raw, int packet)
+@@ -338,7 +344,11 @@ parse_pop(cache_page *vtp, uint8_t *raw, int packet)
  
  		/* fall through */
  
@@ -478,7 +786,7 @@ index b779544..bf160d7 100644
  		trip = vtp->data.pop.triplet + (packet - 3) * 13;
  
  		for (i = 0; i < 13; trip++, i++)
-@@ -525,20 +529,42 @@ parse_mip_page(vbi_decoder *vbi, cache_page *vtp,
+@@ -525,20 +535,42 @@ parse_mip_page(vbi_decoder *vbi, cache_page *vtp,
  	ps = cache_network_page_stat (vbi->cn, pgno);
  
  	switch (code) {
@@ -527,7 +835,7 @@ index b779544..bf160d7 100644
  	{
  		cache_page *cp;
  
-@@ -557,9 +583,9 @@ parse_mip_page(vbi_decoder *vbi, cache_page *vtp,
+@@ -557,9 +589,9 @@ parse_mip_page(vbi_decoder *vbi, cache_page *vtp,
  		break;
  	}
  
@@ -540,7 +848,7 @@ index b779544..bf160d7 100644
  	case 0x7B: /* current program */
  	case 0xF8: /* keyword search list */
  		if (*subp_index > 10 * 13)
-@@ -743,7 +769,9 @@ static inline vbi_bool
+@@ -743,7 +775,9 @@ static inline vbi_bool
  parse_btt(vbi_decoder *vbi, uint8_t *raw, int packet)
  {
  	switch (packet) {
@@ -551,7 +859,7 @@ index b779544..bf160d7 100644
  	{
  		int i, j, code, index = dec2bcdp[packet - 1];
  
-@@ -797,7 +825,7 @@ parse_btt(vbi_decoder *vbi, uint8_t *raw, int packet)
+@@ -797,7 +831,7 @@ parse_btt(vbi_decoder *vbi, uint8_t *raw, int packet)
  					ps->page_type = VBI_TOP_GROUP;
  					break;
  
@@ -560,7 +868,7 @@ index b779544..bf160d7 100644
  					ps->page_type = VBI_NORMAL_PAGE;
  					break;
  
-@@ -826,7 +854,7 @@ parse_btt(vbi_decoder *vbi, uint8_t *raw, int packet)
+@@ -826,7 +860,7 @@ parse_btt(vbi_decoder *vbi, uint8_t *raw, int packet)
  		break;
  	}
  
@@ -569,7 +877,7 @@ index b779544..bf160d7 100644
  	    {
  		struct ttx_page_link *pl;
  		int i;
-@@ -903,7 +931,9 @@ parse_mpt(cache_network *cn, uint8_t *raw, int packet)
+@@ -903,7 +937,9 @@ parse_mpt(cache_network *cn, uint8_t *raw, int packet)
  	int n;
  
  	switch (packet) {
@@ -580,7 +888,7 @@ index b779544..bf160d7 100644
  		index = dec2bcdp[packet - 1];
  
  		for (i = 0; i < 4; i++) {
-@@ -939,7 +969,9 @@ parse_mpt_ex(cache_network *cn, uint8_t *raw, int packet)
+@@ -939,7 +975,9 @@ parse_mpt_ex(cache_network *cn, uint8_t *raw, int packet)
  	struct ttx_page_link p;
  
  	switch (packet) {
@@ -591,7 +899,7 @@ index b779544..bf160d7 100644
  		for (i = 0; i < 5; raw += 8, i++) {
  			struct ttx_page_stat *ps;
  
-@@ -1700,7 +1732,8 @@ lop_parity_check		(cache_page *		cvtp,
+@@ -1700,7 +1738,8 @@ lop_parity_check		(cache_page *		cvtp,
  				case 0x09: /* G0 character */
  				case 0x0D: /* drcs character invocation */
  				case 0x0F: /* G2 character */
@@ -601,7 +909,7 @@ index b779544..bf160d7 100644
  				{
  					unsigned int column = trip->address;
  					unsigned int c = rvtp->lop_raw[row][column];
-@@ -1831,7 +1864,7 @@ parse_27(vbi_decoder *vbi, uint8_t *p,
+@@ -1831,7 +1870,7 @@ parse_27(vbi_decoder *vbi, uint8_t *p,
  
  			cvtp->data.unknown.link[designation * 6 + i].function = t1 & 3;
  			cvtp->data.unknown.link[designation * 6 + i].pgno =
@@ -610,7 +918,7 @@ index b779544..bf160d7 100644
  				+ ((t1 >> 11) & 0x0F0) + ((t1 >> 7) & 0x00F);
  			cvtp->data.unknown.link[designation * 6 + i].subno =
  				(t2 >> 3) & 0xFFFF;
-@@ -2203,7 +2236,7 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
+@@ -2203,7 +2242,7 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
  		return FALSE;
  
  	mag0 = pmag & 7;
@@ -619,7 +927,7 @@ index b779544..bf160d7 100644
  	packet = pmag >> 3;
  
  	if (packet < 30
-@@ -2436,10 +2469,31 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
+@@ -2436,10 +2475,31 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
  			ps = cache_network_page_stat (vbi->cn, cvtp->pgno);
  
  			switch (ps->page_type) {
@@ -655,7 +963,7 @@ index b779544..bf160d7 100644
  			case VBI_TOP_BLOCK:
  			case VBI_TOP_GROUP:
  				function = PAGE_FUNCTION_LOP;
-@@ -2472,12 +2526,12 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
+@@ -2472,12 +2532,12 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
  				break;
  
  			case 0xE5:
@@ -670,7 +978,7 @@ index b779544..bf160d7 100644
  				function = PAGE_FUNCTION_POP;
  				break;
  
-@@ -2493,13 +2547,17 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
+@@ -2493,13 +2553,17 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
  
  				/* fall through */
  
@@ -692,7 +1000,7 @@ index b779544..bf160d7 100644
  				function = PAGE_FUNCTION_DISCARD;
  				break;
  
-@@ -2522,7 +2580,10 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
+@@ -2522,7 +2586,10 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *buffer)
  		return TRUE;
  	}
  
@@ -704,6 +1012,11 @@ index b779544..bf160d7 100644
  	{
  		int n;
  		int i;
+@@ -2932,3 +2999,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/pdc.c b/src/pdc.c
 index 31eb1c6..d16752b 100644
 --- a/src/pdc.c
@@ -733,10 +1046,25 @@ index 31eb1c6..d16752b 100644
  #endif
  
 diff --git a/src/proxy-client.c b/src/proxy-client.c
-index e607621..0229ad5 100644
+index e607621..a150f16 100644
 --- a/src/proxy-client.c
 +++ b/src/proxy-client.c
-@@ -845,6 +845,7 @@ vbi_proxy_process_callbacks( vbi_proxy_client * vpc )
+@@ -34,7 +34,13 @@ static const char rcsid[] =
+ #include <math.h>
+ #include <errno.h>
+ #include <fcntl.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <assert.h>
+ #include <sys/time.h>
+ #include <sys/types.h>
+@@ -845,6 +851,7 @@ vbi_proxy_process_callbacks( vbi_proxy_client * vpc )
        {
           if (ev_mask & VBI_PROXY_EV_CHN_RECLAIMED)
           {
@@ -744,6 +1072,35 @@ index e607621..0229ad5 100644
           }
        }
     }
+@@ -1928,3 +1935,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
+diff --git a/src/proxy-msg.c b/src/proxy-msg.c
+index a9abdbd..f27fa29 100644
+--- a/src/proxy-msg.c
++++ b/src/proxy-msg.c
+@@ -113,7 +113,13 @@
+ #include <stdio.h>
+ #include <stdarg.h>
+ #include <string.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <time.h>
+@@ -1481,3 +1487,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/proxy-msg.h b/src/proxy-msg.h
 index e739207..1fe1b8c 100644
 --- a/src/proxy-msg.h
@@ -831,67 +1188,49 @@ index c0812c5..74cd477 100644
  		break;
  
  	case 26: /* page enhancement packet */
-diff --git a/src/strings.h b/src/strings.h
-new file mode 100644
-index 0000000..853778a
---- /dev/null
-+++ b/src/strings.h
-@@ -0,0 +1,16 @@
-+/* strings.h — POSIX shim for MSVC (zvbi internal sources)
-+ * Maps strcasecmp/strncasecmp to MSVC equivalents.
-+ */
-+#ifndef _ZVBI_COMPAT_STRINGS_H
-+#define _ZVBI_COMPAT_STRINGS_H
-+
-+#include <string.h>
-+
-+#ifndef strcasecmp
-+#  define strcasecmp _stricmp
+diff --git a/src/strptime.c b/src/strptime.c
+index eecb055..1f197f3 100644
+--- a/src/strptime.c
++++ b/src/strptime.c
+@@ -19,6 +19,13 @@
+ #include <ctype.h>
+ #include <limits.h>
+ #include <string.h>
++#ifdef _MSC_VER
++#  ifndef strncasecmp
++#    define strncasecmp _strnicmp
++#  endif
++#else
++#  include <strings.h>          /* strncasecmp */
 +#endif
-+#ifndef strncasecmp
-+#  define strncasecmp _strnicmp
-+#endif
+ #include <time.h>
+ 
+ #include "strptime.h"
+@@ -148,3 +155,4 @@ char *strptime(const char *p, const char *fmt, struct tm *dt)
+ 
+     return (char*)p;
+ }
 +
-+#endif /* _ZVBI_COMPAT_STRINGS_H */
-\ No newline at end of file
-diff --git a/src/sys/time.h b/src/sys/time.h
-new file mode 100644
-index 0000000..3c2ce67
---- /dev/null
-+++ b/src/sys/time.h
-@@ -0,0 +1,26 @@
-+/* sys/time.h — MSVC compatibility shim for zvbi internal sources
-+ * Provides struct timeval (from winsock2) and gettimeofday().
-+ */
-+#ifndef _ZVBI_COMPAT_SYS_TIME_H
-+#define _ZVBI_COMPAT_SYS_TIME_H
-+
-+#include <winsock2.h>
-+#include <windows.h>
-+
-+static __inline int zvbi_gettimeofday_(struct timeval *tv, void *tz)
-+{
-+    FILETIME ft;
-+    unsigned __int64 t;
-+    (void)tz;
-+    if (!tv) return -1;
-+    GetSystemTimeAsFileTime(&ft);
-+    t = ((unsigned __int64)ft.dwHighDateTime << 32) | ft.dwLowDateTime;
-+    /* Convert from 100-ns intervals since 1601 to microseconds since 1970 */
-+    t -= 116444736000000000ULL;
-+    tv->tv_sec  = (long)(t / 10000000ULL);
-+    tv->tv_usec = (long)((t % 10000000ULL) / 10);
-+    return 0;
-+}
-+#define gettimeofday zvbi_gettimeofday_
-+
-+#endif /* _ZVBI_COMPAT_SYS_TIME_H */
-\ No newline at end of file
 diff --git a/src/teletext.c b/src/teletext.c
-index e6145e8..1b43b90 100644
+index e6145e8..8d342b0 100644
 --- a/src/teletext.c
 +++ b/src/teletext.c
-@@ -51,10 +51,10 @@ extern const char _zvbi_intl_domainname[];
+@@ -31,7 +31,13 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <strings.h> /* strncasecmp */
++#ifdef _MSC_VER
++#  ifndef strncasecmp
++#    define strncasecmp _strnicmp
++#  endif
++#else
++#  include <strings.h> /* strncasecmp */
++#endif
+ #include <ctype.h>
+ #include <assert.h>
+ 
+@@ -51,10 +57,10 @@ extern const char _zvbi_intl_domainname[];
  #  define TELETEXT_DEBUG 0
  #endif
  
@@ -904,7 +1243,7 @@ index e6145e8..1b43b90 100644
  } while (0)
  
  #define ROWS			25
-@@ -1340,8 +1340,8 @@ enhance_flush(struct enhance_state *es, int column)
+@@ -1340,8 +1346,8 @@ enhance_flush(struct enhance_state *es, int column)
  			/* set-after spacing attributes cancelling non-spacing */
  
  			switch (raw) {
@@ -915,7 +1254,7 @@ index e6145e8..1b43b90 100644
  				printv("... fg term %d %02x\n", i, raw);
  				es->mac.foreground = 0;
  				es->mac.conceal = 0;
-@@ -1505,7 +1505,7 @@ enhance(vbi_decoder *vbi,
+@@ -1505,7 +1511,7 @@ enhance(vbi_decoder *vbi,
  			 *  Row address triplets
  			 */
  			int s = p->data >> 5;
@@ -924,7 +1263,7 @@ index e6145e8..1b43b90 100644
  			int column = 0;
  
  			if (pdc_hr)
-@@ -1653,7 +1653,7 @@ enhance(vbi_decoder *vbi,
+@@ -1653,7 +1659,7 @@ enhance(vbi_decoder *vbi,
  
  				break;
  
@@ -933,7 +1272,7 @@ index e6145e8..1b43b90 100644
  			{
  				int source = (p->address >> 3) & 3;
  				enum ttx_object_type new_type = p->mode & 3;
-@@ -1767,7 +1767,7 @@ enhance(vbi_decoder *vbi,
+@@ -1767,7 +1773,7 @@ enhance(vbi_decoder *vbi,
  			case 0x14:		/* reserved */
  				break;
  
@@ -942,7 +1281,7 @@ index e6145e8..1b43b90 100644
  				enhance_flush_row (&es);
  				printv("enh obj definition 0x%02x 0x%02x\n", p->mode, p->data);
  				printv("enh terminated\n");
-@@ -1778,7 +1778,7 @@ enhance(vbi_decoder *vbi,
+@@ -1778,7 +1784,7 @@ enhance(vbi_decoder *vbi,
  				drcs_s1[p->data >> 6] = p->data & 15;
  				break;
  
@@ -951,7 +1290,7 @@ index e6145e8..1b43b90 100644
  				break;
  
  			case 0x1F:		/* termination marker */
-@@ -2144,7 +2144,8 @@ enhance(vbi_decoder *vbi,
+@@ -2144,7 +2150,8 @@ enhance(vbi_decoder *vbi,
  
  				break;
  
@@ -961,7 +1300,7 @@ index e6145e8..1b43b90 100644
  				if (p->data >= 0x20) {
  					if (column > es.active_column)
  						enhance_flush (&es, column);
-@@ -2632,7 +2633,7 @@ vbi_format_vt_page(vbi_decoder *vbi,
+@@ -2632,7 +2639,7 @@ vbi_format_vt_page(vbi_decoder *vbi,
  			/* set-after spacing attributes */
  
  			switch (raw) {
@@ -970,7 +1309,7 @@ index e6145e8..1b43b90 100644
  				ac.foreground = ext->foreground_clut + (raw & 7);
  				ac.conceal = FALSE;
  				mosaic = FALSE;
-@@ -2676,7 +2677,7 @@ vbi_format_vt_page(vbi_decoder *vbi,
+@@ -2676,7 +2683,7 @@ vbi_format_vt_page(vbi_decoder *vbi,
  
  				break;
  
@@ -979,20 +1318,59 @@ index e6145e8..1b43b90 100644
  				ac.foreground = ext->foreground_clut + (raw & 7);
  				ac.conceal = FALSE;
  				mosaic = TRUE;
-diff --git a/src/unistd.h b/src/unistd.h
-new file mode 100644
-index 0000000..fe20636
---- /dev/null
-+++ b/src/unistd.h
-@@ -0,0 +1,7 @@
-+/* unistd.h — MSVC compatibility shim for zvbi internal sources */
-+#ifndef _ZVBI_COMPAT_UNISTD_H
-+#define _ZVBI_COMPAT_UNISTD_H
-+#include <io.h>
-+#include <process.h>
-+#include <direct.h>
+@@ -2903,3 +2910,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
+diff --git a/src/ure.c b/src/ure.c
+index d58386e..78548f2 100644
+--- a/src/ure.c
++++ b/src/ure.c
+@@ -36,7 +36,13 @@
+ #endif
+ 
+ #include <stdlib.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
 +#endif
-\ No newline at end of file
+ #include <string.h>
+ 
+ #if defined(HAVE_GLIBC21)
+@@ -2371,3 +2377,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
+diff --git a/src/vbi.c b/src/vbi.c
+index e016b00..ec6a6c4 100644
+--- a/src/vbi.c
++++ b/src/vbi.c
+@@ -35,7 +35,13 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stdarg.h>
+-#include <unistd.h>
++#ifdef _MSC_VER
++#  include <io.h>
++#  include <process.h>
++#  include <direct.h>
++#else
++#  include <unistd.h>
++#endif
+ #include <fcntl.h>
+ #include <time.h>
+ #include <errno.h>
+@@ -994,3 +1000,4 @@ c-set-style: K&R
+ c-basic-offset: 8
+ End:
+ */
++
 diff --git a/src/xds_demux.c b/src/xds_demux.c
 index 04411af..1f42886 100644
 --- a/src/xds_demux.c
@@ -1061,15 +1439,3 @@ index 04411af..1f42886 100644
  		/* Packet contents. */
  
  		if (!sp) {
-diff --git a/src/strptime.c b/src/strptime.c
-index 1234567..abcdef0 100644
---- a/src/strptime.c
-+++ b/src/strptime.c
-@@ -19,6 +19,7 @@
- #include <ctype.h>
- #include <limits.h>
- #include <string.h>
-+#include <strings.h>		/* strncasecmp (shim on MSVC) */
- #include <time.h>
- 
- #include "strptime.h"

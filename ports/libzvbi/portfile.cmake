@@ -13,23 +13,23 @@ vcpkg_from_github(
         patches/001-msvc-compat.patch
         patches/002-disable-gettext-autopoint.patch
         patches/003-msvc-compat-additional.patch
+        patches/004-lang-escapes.patch
 )
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    # The MSVC-compat patch creates Windows-only shim headers that shadow POSIX equivalents.
-    # Remove them so the autotools build uses the real system headers on Unix/macOS.
-    file(REMOVE "${SOURCE_PATH}/src/unistd.h")
-    file(REMOVE "${SOURCE_PATH}/src/strings.h")
-    file(REMOVE_RECURSE "${SOURCE_PATH}/src/sys")
-endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # zvbi uses GCC's __inline__ extension everywhere; map it to C99 inline for MSVC.
     string(APPEND VCPKG_C_FLAGS " -D__inline__=inline")
     string(APPEND VCPKG_CXX_FLAGS " -D__inline__=inline")
-    # contrib/ntsc-cc.c uses POSIX-only headers (unistd.h, etc.) that are not available with MSVC.
-    # Remove the contrib directory so autotools skips it (there is no configure flag to disable it).
-    file(REMOVE_RECURSE "${SOURCE_PATH}/contrib")
+    # Provide the Windows-only sys/time.h shim from contrib/sys when building with MSVC.
+    string(APPEND VCPKG_C_FLAGS " -I${SOURCE_PATH}/contrib")
+    string(APPEND VCPKG_CXX_FLAGS " -I${SOURCE_PATH}/contrib")
+endif()
+
+# pthreads-win32 provides pid_t via sched.h; bypass autoconf's AC_TYPE_PID_T which adds '#define pid_t int' to config.h and clashes with the typedef in sched.h.
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(_zvbi_platform_opts ac_cv_type_pid_t=yes)
+else()
+    set(_zvbi_platform_opts)
 endif()
 
 vcpkg_make_configure(
@@ -39,10 +39,8 @@ vcpkg_make_configure(
         --disable-nls
         --disable-examples
         --disable-tests
-    OPTIONS_WINDOWS
-        # pthreads-win32 provides pid_t via sched.h; bypass autoconf's AC_TYPE_PID_T which
-        # adds '#define pid_t int' to config.h and clashes with the typedef in sched.h
-        ac_cv_type_pid_t=yes
+        --disable-proxy
+        ${_zvbi_platform_opts}
 )
 
 # Fix libtool quoting: configure writes lt_ar_flags=-machine:x64 -nologo cr
@@ -78,8 +76,6 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-# Remove tools (not needed; avoids RPATH/headerpad issues on macOS).
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
