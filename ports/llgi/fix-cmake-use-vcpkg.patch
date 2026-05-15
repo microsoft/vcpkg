@@ -36,7 +36,7 @@ index bf34437..1c565fc 100644
  
  endif()
 +target_link_libraries(ShaderTranspilerCore PUBLIC
-+  glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV glslang::SPVRemapper spirv-cross-cpp spirv-cross-glsl spirv-cross-msl spirv-cross-hlsl
++  glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV spirv-cross-cpp spirv-cross-glsl spirv-cross-msl spirv-cross-hlsl
 +)
  
  if(USE_THIRDPARTY_DIRECTORY)
