@@ -1745,7 +1745,7 @@
       "port-version": 0
     },
     "cimg": {
-      "baseline": "3.7.5",
+      "baseline": "3.7.6",
       "port-version": 0
     },
     "cinatra": {
@@ -3486,7 +3486,7 @@
     },
     "glslang": {
       "baseline": "16.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -3505,7 +3505,7 @@
       "port-version": 3
     },
     "gmsh": {
-      "baseline": "4.15.1",
+      "baseline": "4.15.2",
       "port-version": 0
     },
     "gobject-introspection": {
@@ -3613,7 +3613,7 @@
       "port-version": 2
     },
     "gtk": {
-      "baseline": "4.22.3",
+      "baseline": "4.22.4",
       "port-version": 0
     },
     "gtk3": {
@@ -4150,7 +4150,7 @@
     },
     "jinja2cpplight": {
       "baseline": "2018-05-08",
-      "port-version": 3
+      "port-version": 4
     },
     "jkqtplotter": {
       "baseline": "2023-10-24",
@@ -5709,8 +5709,8 @@
       "port-version": 0
     },
     "libsystemd": {
-      "baseline": "257.8",
-      "port-version": 2
+      "baseline": "260.1",
+      "port-version": 0
     },
     "libtar": {
       "baseline": "1.2.20",
@@ -5981,8 +5981,8 @@
       "port-version": 4
     },
     "libxmlpp": {
-      "baseline": "5.4.0",
-      "port-version": 1
+      "baseline": "5.6.1",
+      "port-version": 0
     },
     "libxmp": {
       "baseline": "4.6.0",
@@ -6118,7 +6118,7 @@
     },
     "llgi": {
       "baseline": "2023-12-19",
-      "port-version": 1
+      "port-version": 2
     },
     "llgl": {
       "baseline": "2023-03-05",
@@ -6238,7 +6238,7 @@
     },
     "luminoengine": {
       "baseline": "0.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "lunarg-vulkantools": {
       "baseline": "1.4.341.0",
@@ -7333,7 +7333,7 @@
       "port-version": 1
     },
     "opencolorio": {
-      "baseline": "2.5.1",
+      "baseline": "2.5.2",
       "port-version": 0
     },
     "opencsg": {
@@ -7449,7 +7449,7 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.26.0",
+      "baseline": "1.27.0",
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
@@ -9697,7 +9697,7 @@
       "port-version": 0
     },
     "stillwater-universal": {
-      "baseline": "4.6.15",
+      "baseline": "4.6.16",
       "port-version": 0
     },
     "stlab": {
@@ -10621,7 +10621,7 @@
       "port-version": 0
     },
     "vincentlaucsb-csv-parser": {
-      "baseline": "5.1.0",
+      "baseline": "5.2.0",
       "port-version": 0
     },
     "visit-struct": {
@@ -10685,7 +10685,7 @@
       "port-version": 1
     },
     "vsgxchange": {
-      "baseline": "1.1.11",
+      "baseline": "1.1.13",
       "port-version": 0
     },
     "vst3sdk": {

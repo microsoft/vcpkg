@@ -1,7 +1,7 @@
 {
   "name": "luminoengine",
   "version": "0.10.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++17 games and visualization toolkit.",
   "homepage": "https://github.com/LuminoEngine/Lumino",
   "license": "MIT",
