@@ -77,9 +77,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # Force VS generation to avoids Unix-style rules that break with cl/ar semantics
     list(APPEND OPTIONS --enable-external-build)
 
-    # On ARM64 Windows, --enable-external-build also skips the SVE/SVE2 compiler probe (check_neon_sve_bridge_compiles in build/make/configure.sh).
-    # SVE/SVE2 stay enabled by default and generated sources include <arm_sve.h>, which MSVC (cl.exe) does not ship.
-    # clang-cl does ship arm_sve.h, so only disable SVE for the pure-MSVC case.
+   # Disable SVE/SVE2 probe to avoids missing `<arm_sve.h>` in pure-MSVC.
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
         vcpkg_cmake_get_vars(_libvpx_cmake_vars_file)
         include("${_libvpx_cmake_vars_file}")
