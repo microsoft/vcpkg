@@ -74,13 +74,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic --disable-dependency-tracking)
 
-    # --enable-external-build is required on MSVC because we only need make to generate the VS projects, not to compile objects/libraries.
-    # Without it, make dist enters Unix-style build rules that are not suitable for the Windows MSVC flow:
-    #   - compile/link probes and compile rules still emit deprecated GCC-style -o usage under cl.exe,
-    #   - dependency generation uses -M (ignored by cl), which can create unusable .d files,
-    #   - archive steps rely on Unix ar semantics (e.g. "ar crs"), which fail in this environment.
-    # With --enable-external-build, configure/make stay in project-generation mode and vcpkg_msbuild_install performs the actual build.
-    # patch 0007 is mostly dormant in this mode, but kept as a safety net if we ever remove --enable-external-build.
+    # Force VS generation to avoids Unix-style rules that break with cl/ar semantics
     list(APPEND OPTIONS --enable-external-build)
 
     # On ARM64 Windows, --enable-external-build also skips the SVE/SVE2 compiler probe (check_neon_sve_bridge_compiles in build/make/configure.sh).
