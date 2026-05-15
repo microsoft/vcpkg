@@ -6236,10 +6236,6 @@
       "baseline": "0.720",
       "port-version": 0
     },
-    "luminoengine": {
-      "baseline": "0.10.1",
-      "port-version": 2
-    },
     "lunarg-vulkantools": {
       "baseline": "1.4.341.0",
       "port-version": 0
