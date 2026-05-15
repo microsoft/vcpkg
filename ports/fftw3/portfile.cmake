@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.fftw.org/fftw-3.3.10.tar.gz"
-    FILENAME "fftw-3.3.10.tar.gz"
-    SHA512 2d34b5ccac7b08740dbdacc6ebe451d8a34cf9d9bfec85a5e776e87adf94abfd803c222412d8e10fbaa4ed46f504aa87180396af1b108666cde4314a55610b40
+    URLS "https://www.fftw.org/fftw-${VERSION}.tar.gz"
+    FILENAME "fftw-${VERSION}.tar.gz"
+    SHA512 ca1bf80490dc6955a0ab49b1af05d6658c2ecc0968b3bde5b4af22271e47d30cd38f6f8347e8e6124091b6a17717447942bee95f94ca29574ba71c4d167af351
 )
 
 vcpkg_extract_source_archive(
@@ -9,11 +9,10 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fftw3_arch_fix.patch
+        fix-avx2-fma-flags.patch
         aligned_malloc.patch
-        bigobj.patch
         fix-openmp.patch
         install-subtargets.patch
-        fix-wrong-version.patch # https://github.com/FFTW/fftw3/commit/0842f00ae6b6e1f3aade155bc0edd17a7313fa6a
         neon.patch # https://github.com/FFTW/fftw3/pull/275/commits/262f5cfe23af54930b119bd3653bc25bf2d881da
 )
 

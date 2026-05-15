@@ -1,5 +1,5 @@
 diff --git a/cmake/developer_package/compile_flags/os_flags.cmake b/cmake/developer_package/compile_flags/os_flags.cmake
-index 3ce87023ad..a2c5b2dda1 100644
+index 3ce87023..1f023280 100644
 --- a/cmake/developer_package/compile_flags/os_flags.cmake
 +++ b/cmake/developer_package/compile_flags/os_flags.cmake
 @@ -134,6 +134,11 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
