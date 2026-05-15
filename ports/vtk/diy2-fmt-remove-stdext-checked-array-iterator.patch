@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Oleg Odalovic <olegodalovic@gmail.com>
+Date: Fri, 15 May 2026 12:00:00 +0200
+Subject: [PATCH] [diy2/fmt] Remove uses of `stdext::checked_array_iterator`
+
+`stdext::checked_array_iterator` is a long-deprecated MSVC extension
+that has been removed from the standard library in MSVC 14.51 (VS 2026
+Preview).  The bundled (pre-7.0) copy of fmtlib shipped inside VTK's
+ThirdParty/diy2 still references it under `#ifdef _SECURE_SCL`, which
+breaks the build under that toolchain with:
+
+    error C2653: 'stdext': is not a class or namespace name
+    error C2061: syntax error: identifier 'checked_array_iterator'
+
+Drop the `_SECURE_SCL` branch and keep only the raw-pointer fallback.
+This matches the resolution adopted in vcpkg for cpprestsdk (PR #51750),
+breakpad (PR #51774), duckdb (PR #51749), ampl-mp (PR #51753) and
+luminoengine (PR #51785).
+
+Fixes microsoft/vcpkg#51766.
+---
+ .../diy2/vtkdiy2/include/vtkdiy2/fmt/format.h        | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/fmt/format.h b/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/fmt/format.h
+index dcf4a39..20908c0 100644
+--- a/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/fmt/format.h
++++ b/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/fmt/format.h
+@@ -265,16 +265,8 @@ inline typename Container::value_type* get_data(Container& c) {
+   return c.data();
+ }
+
+-#ifdef _SECURE_SCL
+-// Make a checked iterator to avoid MSVC warnings.
+-template <typename T> using checked_ptr = stdext::checked_array_iterator<T*>;
+-template <typename T> checked_ptr<T> make_checked(T* p, std::size_t size) {
+-  return {p, size};
+-}
+-#else
+ template <typename T> using checked_ptr = T*;
+ template <typename T> inline T* make_checked(T* p, std::size_t) { return p; }
+-#endif
+
+ template <typename Container, FMT_ENABLE_IF(is_contiguous<Container>::value)>
+ inline checked_ptr<typename Container::value_type> reserve(

@@ -49,6 +49,7 @@ vcpkg_from_github(
         zspace.diff # https://gitlab.kitware.com/vtk/vtk/-/commit/01a8bd7a917d33892f67a8d76ce7fc4b524d56b4
         mpi-language.diff
         fix-eigen3.patch
+        diy2-fmt-remove-stdext-checked-array-iterator.patch # https://github.com/microsoft/vcpkg/issues/51766
 )
 
 # =============================================================================
