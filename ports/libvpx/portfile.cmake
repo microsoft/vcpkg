@@ -34,6 +34,12 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp")
+    # Remove stale vpx-* dist directories from previous builds to avoid picking old artifacts.
+    file(GLOB _vpx_stale_dirs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*")
+    if(_vpx_stale_dirs)
+        file(REMOVE_RECURSE ${_vpx_stale_dirs})
+    endif()
+
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
@@ -121,18 +127,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     # libvpx's make dist creates a directory with the pattern:
     #   vpx-[CODEC_FEATURES]-[ARCH][CRT]-[VS]-v[VERSION]
-    # where [CODEC_FEATURES] is always "vp8-vp9" (this port always enables both).
-    # Port-level features (highbitdepth, realtime) do not affect the dist directory name.
-    # Build-option infixes (-nomt-, -nodocs-, etc.) also don't apply here since the port also control these configure flags.
-    # GLOB to find the actual directory (handles any unforeseen naming edge cases).
+    # GLOB to find the actual directory.
     file(GLOB LIBVPX_INCLUDE_DIR_CANDIDATES
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
     list(LENGTH LIBVPX_INCLUDE_DIR_CANDIDATES _vpx_n)
     if(_vpx_n EQUAL 0)
         message(FATAL_ERROR "libvpx: no dist include directory found under ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
     elseif(_vpx_n GREATER 1)
-        # this should never happen unless the port adds more options - better warn than fail
-        message(WARNING "libvpx: found ${_vpx_n} candidate dist directories; using first")
+        message(FATAL_ERROR "libvpx: found ${_vpx_n} candidate dist directories; expected exactly one")
     endif()
     list(GET LIBVPX_INCLUDE_DIR_CANDIDATES 0 LIBVPX_INCLUDE_DIR)
     file(
