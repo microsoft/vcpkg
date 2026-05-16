@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         pkgconfig.patch
         install-tools.diff
+        unofficial-iowin32.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -61,6 +62,10 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if("unoffical-iowin32" IN_LIST FEATURES)
+    file(COPY "${SOURCE_PATH}/contrib/minizip/iowin32.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/minizip")
+endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-minizip")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

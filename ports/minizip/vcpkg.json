@@ -30,6 +30,13 @@
     "tools": {
       "description": "Install tools",
       "supports": "!ios"
+    },
+    "unofficial-iowin32": {
+      "description": [
+        "Install unofficial iowin32 header.",
+        "Deprecated. This feature only exists to support devendoring minizip in vcpkg ports."
+      ],
+      "supports": "windows"
     }
   }
 }

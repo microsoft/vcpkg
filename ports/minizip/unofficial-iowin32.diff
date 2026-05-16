@@ -1,0 +1,19 @@
+diff --git a/contrib/minizip/iowin32.h b/contrib/minizip/iowin32.h
+index 65be627..79242df 100644
+--- a/contrib/minizip/iowin32.h
++++ b/contrib/minizip/iowin32.h
+@@ -17,10 +17,10 @@
+ extern "C" {
+ #endif
+ 
+-void fill_win32_filefunc(zlib_filefunc_def* pzlib_filefunc_def);
+-void fill_win32_filefunc64(zlib_filefunc64_def* pzlib_filefunc_def);
+-void fill_win32_filefunc64A(zlib_filefunc64_def* pzlib_filefunc_def);
+-void fill_win32_filefunc64W(zlib_filefunc64_def* pzlib_filefunc_def);
++void ZEXPORT fill_win32_filefunc(zlib_filefunc_def* pzlib_filefunc_def);
++void ZEXPORT fill_win32_filefunc64(zlib_filefunc64_def* pzlib_filefunc_def);
++void ZEXPORT fill_win32_filefunc64A(zlib_filefunc64_def* pzlib_filefunc_def);
++void ZEXPORT fill_win32_filefunc64W(zlib_filefunc64_def* pzlib_filefunc_def);
+ 
+ #ifdef __cplusplus
+ }

@@ -1910,7 +1910,7 @@
     },
     "collada-dom": {
       "baseline": "2.5.0",
-      "port-version": 11
+      "port-version": 12
     },
     "colmap": {
       "baseline": "3.12.6",
@@ -3142,7 +3142,7 @@
     },
     "fmilib": {
       "baseline": "2.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "fmt": {
       "baseline": "12.1.0",
@@ -5962,7 +5962,7 @@
     },
     "libxlsxwriter": {
       "baseline": "1.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libxml2": {
       "baseline": "2.15.3",
