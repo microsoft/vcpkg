@@ -1439,7 +1439,6 @@ vtk-m[cuda]:arm64-osx=cascade
 vtk-m[cuda]:x64-linux=skip
 vtk-m[cuda](arm64 & windows)=cascade # vtk-* cuda[core] only supports (windows & x64 & !xbox) | (linux & x64) | (linux & arm64)
 vtk-m[cuda](windows & !arm64)=feature-fails
-vtk-m[mpi]:arm64-linux=cascade
 vtk-m[omp]:arm64-osx=feature-fails # no openmp on default osx toolchain
 vtk-m[omp](windows)=feature-fails # needs openmp 4.0, msvc has openmp 2.0
 vulkan[tools]:arm64-osx=cascade
