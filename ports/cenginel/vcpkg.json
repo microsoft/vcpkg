@@ -1,0 +1,21 @@
+{
+  "name": "cenginel",
+  "version-semver": "0.1.0",
+  "description": "Modern C++20 header-only library for Markov chain analysis, Hidden Markov Models, and MCMC sampling",
+  "homepage": "https://github.com/Morgaxo/mchain",
+  "license": "Unlicense",
+  "dependencies": [
+    {
+      "name": "eigen3",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
