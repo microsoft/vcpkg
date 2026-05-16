@@ -1,0 +1,20 @@
+Default vcpkg installation:
+
+    vcpkg install toomanycooks
+
+Install with features enabled, for example TMC_TRIVIAL_TASK and TMC_NODISCARD_AWAIT:
+
+    vcpkg install "toomanycooks[trivial-task,nodiscard-await]"
+
+The hwloc dependency feature is enabled by default. To disable this dependency, add `core` to the features list.
+
+Usage from CMake after installation:
+
+    find_package(TooManyCooks CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE TooManyCooks::TooManyCooks)
+
+In addition to the features exposed to vcpkg, TooManyCooks also supports an optional package-wide configuration TMC_PRIORITY_COUNT.
+Since vcpkg doesn't support integer configurations, to use this, set it manually before find_package() in your CMake file:
+
+    set(TMC_PRIORITY_COUNT 8) # integer from 1 to 16
+    find_package(TooManyCooks CONFIG REQUIRED)
