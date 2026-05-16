@@ -63,15 +63,11 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if("unoffical-iowin32" IN_LIST FEATURES)
+if("unofficial-iowin32" IN_LIST FEATURES)
     file(COPY "${SOURCE_PATH}/contrib/minizip/iowin32.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/minizip")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-minizip")
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/contrib/minizip/MiniZip64_info.txt")
-
-if(GENERATE_SYMBOLS)
-    include("${CMAKE_CURRENT_LIST_DIR}/lib-to-def.cmake")
-    lib_to_def(BASENAME minizip REGEX "(call|fill|unz|win32|zip)")
-endif()
