@@ -27,6 +27,7 @@ set(${PORT}_PATCHES
         fix-libresolv-test.patch
         use_inotify_on_freebsd.patch
         QTBUG-145239.patch # https://github.com/qt/qtbase/commit/a76004f16fdc43e1b7af83bfdf3f1a613491b234
+        silence-winrtbase-coroutine-warnings.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
