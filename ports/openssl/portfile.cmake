@@ -11,11 +11,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 29002ce50cb95a4f4f1d0e9d3f684401fbd4eac34203dc2eef3b6334af5d44aa46bf788b63a6f5c139c383eafb7269ae87a58a9a3ad5912903b9773e545ccc0a
+    SHA512 e50bcb288436dc9fe35feff7fe3ce293a67cd168aa5c3a66cb24acd94f55c3dc3bc0be5be402432daf58605d2fb42805105d0e601519ca6e696f2b74b9f06911
     PATCHES
         cmake-config.patch
         command-line-length.patch
-        script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
         windows/install-programs.diff # https://github.com/openssl/openssl/issues/28744
@@ -26,8 +25,6 @@ vcpkg_from_github(
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS
-    enable-static-engine
-    enable-capieng
     no-tests
     no-docs
 )
