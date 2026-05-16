@@ -7,11 +7,13 @@
   "documentation": "https://libxlsxwriter.github.io",
   "license": "BSD-2-Clause",
   "dependencies": [
+    "minizip",
     {
       "name": "minizip",
       "features": [
         "unofficial-iowin32"
-      ]
+      ],
+      "platform": "windows"
     },
     {
       "name": "vcpkg-cmake",

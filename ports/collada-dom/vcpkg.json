@@ -9,11 +9,13 @@
     "boost-filesystem",
     "boost-system",
     "libxml2",
+    "minizip",
     {
       "name": "minizip",
       "features": [
         "unofficial-iowin32"
-      ]
+      ],
+      "platform": "windows"
     },
     "uriparser",
     {

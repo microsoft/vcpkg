@@ -8,11 +8,13 @@
   "supports": "!uwp",
   "dependencies": [
     "expat",
+    "minizip",
     {
       "name": "minizip",
       "features": [
         "unofficial-iowin32"
-      ]
+      ],
+      "platform": "windows"
     },
     {
       "name": "vcpkg-cmake",
