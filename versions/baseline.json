@@ -3964,6 +3964,10 @@
       "baseline": "2026-03-19",
       "port-version": 0
     },
+    "imagemagick": {
+      "baseline": "7.1.2-18",
+      "port-version": 0
+    },
     "imath": {
       "baseline": "3.2.2",
       "port-version": 0
