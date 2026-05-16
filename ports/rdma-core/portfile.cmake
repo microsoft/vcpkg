@@ -32,7 +32,7 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_cython=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_pandoc=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_rst2man=OFF
-        -DPython_EXECUTABLE=${PYTHON3}
+        -DPYTHON_EXECUTABLE=${PYTHON3}
     MAYBE_UNUSED_VARIABLES
         VCPKG_LOCK_FIND_PACKAGE_PythonLibs
         VCPKG_LOCK_FIND_PACKAGE_cython
