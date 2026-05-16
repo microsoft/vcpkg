@@ -54,7 +54,7 @@ Function Get-AssetUrl {
     return $InternetUrl
   }
 
-  $SasToken = $SasToken.Replace('"', '')
+  $SasToken = $SasToken.Replace('"', '').TrimStart('?')
   return [uri]"https://vcpkgimageminting.blob.core.windows.net/assets/$($BlobAssetName)?$($SasToken)"
 }
 
