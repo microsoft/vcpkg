@@ -12,20 +12,18 @@ vcpkg_from_github(
         fix-emscripten.patch
         fix-compatibility-with-boost-1.85.patch
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/dom/external-libs")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -DCMAKE_CXX_STANDARD=11
 )
-
 vcpkg_cmake_install()
-
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/collada_dom-2.5)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/licenses/license_e.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/licenses/license_e.txt")
 
-vcpkg_fixup_pkgconfig()
