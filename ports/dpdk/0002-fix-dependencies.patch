@@ -1,3 +1,17 @@
+diff --git a/app/dumpcap/meson.build b/app/dumpcap/meson.build
+index 69c016c780..57f3f1ace4 100644
+--- a/app/dumpcap/meson.build
++++ b/app/dumpcap/meson.build
+@@ -2,8 +2,7 @@
+ # Copyright(c) 2019 Microsoft Corporation
+ 
+ if not dpdk_conf.has('RTE_HAS_LIBPCAP')
+-    build = false
+-    reason = 'missing dependency, "libpcap"'
++    error('missing dependency: "libpcap"')
+ endif
+ 
+ if is_windows
 diff --git a/buildtools/pkg-config/meson.build b/buildtools/pkg-config/meson.build
 index b36add17e3..a0a265ad92 100644
 --- a/buildtools/pkg-config/meson.build
@@ -13,7 +27,7 @@ index b36add17e3..a0a265ad92 100644
              dpdk_drivers + dpdk_static_libraries +
              ['-Wl,--no-whole-archive'] + platform_flags
 diff --git a/config/meson.build b/config/meson.build
-index bbdad71ffc..e0a3ecc5f9 100644
+index bbdad71ffc..0ef6422cd3 100644
 --- a/config/meson.build
 +++ b/config/meson.build
 @@ -238,12 +238,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
@@ -31,7 +45,7 @@ index bbdad71ffc..e0a3ecc5f9 100644
      endif
  endif
  
-@@ -269,28 +267,28 @@ if libarchive.found()
+@@ -269,18 +267,18 @@ if libarchive.found()
  endif
  
  # check for libbsd
@@ -53,18 +67,6 @@ index bbdad71ffc..e0a3ecc5f9 100644
  if openssl_dep.found()
      dpdk_conf.set('RTE_HAS_OPENSSL', 1)
  endif
- 
- # check for pcap
--pcap_dep = dependency('libpcap', required: false, method: 'pkg-config')
-+pcap_dep = disabler()
- pcap_lib = is_windows ? 'wpcap' : 'pcap'
- if not pcap_dep.found()
-     # pcap got a pkg-config file only in 1.9.0
--    pcap_dep = cc.find_library(pcap_lib, required: false)
-+    pcap_dep = disabler()
- endif
- if (pcap_dep.found() and cc.has_header('pcap.h', dependencies: pcap_dep)
-         and cc.links(min_c_code, dependencies: pcap_dep))
 diff --git a/drivers/common/mlx5/linux/meson.build b/drivers/common/mlx5/linux/meson.build
 index 3767e7a69b..9127dad034 100644
 --- a/drivers/common/mlx5/linux/meson.build
@@ -103,6 +105,134 @@ index f454788a9f..78dfd12d5c 100644
  endif
  ext_deps += devxlib
  
+diff --git a/drivers/common/qat/meson.build b/drivers/common/qat/meson.build
+index 31e06f4376..ad2968cb2b 100644
+--- a/drivers/common/qat/meson.build
++++ b/drivers/common/qat/meson.build
+@@ -28,48 +28,11 @@ if disable_drivers.contains(qat_compress_path)
+ endif
+ 
+ libcrypto = dependency('libcrypto', required: false, method: 'pkg-config')
+-
+-if arch_subdir == 'arm'
+-    if libcrypto.found()
+-        ext_deps += libcrypto
+-        dpdk_conf.set('RTE_QAT_OPENSSL', true)
+-    else
+-        qat_crypto = false
+-        dpdk_drvs_disabled += qat_crypto_path
+-        set_variable('drv_' + qat_crypto_path.underscorify() + '_disable_reason',
+-        'missing dependency for Arm, libcrypto')
+-    endif
+-else
+-    IMB_required_ver = '1.4.0'
+-    IMB_header = '#include<intel-ipsec-mb.h>'
+-    libipsecmb = cc.find_library('IPSec_MB', required: false)
+-    if libipsecmb.found() and cc.links(
+-            'int main(void) {return 0;}', dependencies: libipsecmb)
+-        # version comes with quotes, so we split based on " and take the middle
+-        imb_ver = cc.get_define('IMB_VERSION_STR',
+-            prefix : IMB_header).split('"')[1]
+-
+-        if (imb_ver.version_compare('>=' + IMB_required_ver))
+-            ext_deps += libipsecmb
+-        elif libcrypto.found()
+-            ext_deps += libcrypto
+-            dpdk_conf.set('RTE_QAT_OPENSSL', true)
+-        else
+-            qat_crypto = false
+-            dpdk_drvs_disabled += qat_crypto_path
+-            set_variable('drv_' + qat_crypto_path.underscorify() + '_disable_reason',
+-                'missing dependency, libipsecmb or libcrypto')
+-        endif
+-    elif libcrypto.found()
+-        ext_deps += libcrypto
+-        dpdk_conf.set('RTE_QAT_OPENSSL', true)
+-    else
+-        qat_crypto = false
+-        dpdk_drvs_disabled += qat_crypto_path
+-        set_variable('drv_' + qat_crypto_path.underscorify() + '_disable_reason',
+-            'missing dependency, libipsecmb or libcrypto')
+-    endif
++if not libcrypto.found()
++    error('missing dependency: "libcrypto"')
+ endif
++ext_deps += libcrypto
++dpdk_conf.set('RTE_QAT_OPENSSL', true)
+ 
+ deps += ['bus_pci', 'cryptodev', 'net', 'compressdev']
+ sources += files(
+diff --git a/drivers/compress/isal/meson.build b/drivers/compress/isal/meson.build
+index 4b3eaa2274..55b76113fc 100644
+--- a/drivers/compress/isal/meson.build
++++ b/drivers/compress/isal/meson.build
+@@ -3,8 +3,7 @@
+ 
+ dep = dependency('libisal', required: false, method: 'pkg-config')
+ if not dep.found()
+-    build = false
+-    reason = 'missing dependency, "libisal"'
++    error('missing dependency: "libisal"')
+ endif
+ 
+ deps += 'bus_vdev'
+diff --git a/drivers/compress/zlib/meson.build b/drivers/compress/zlib/meson.build
+index f8937cad3e..c5272c0d87 100644
+--- a/drivers/compress/zlib/meson.build
++++ b/drivers/compress/zlib/meson.build
+@@ -3,8 +3,7 @@
+ 
+ dep = dependency('zlib', required: false, method: 'pkg-config')
+ if not dep.found()
+-    build = false
+-    reason = 'missing dependency, "zlib"'
++    error('missing dependency: "zlib"')
+ endif
+ 
+ deps += 'bus_vdev'
+diff --git a/drivers/crypto/ccp/meson.build b/drivers/crypto/ccp/meson.build
+index a19c77a8d1..1d12469941 100644
+--- a/drivers/crypto/ccp/meson.build
++++ b/drivers/crypto/ccp/meson.build
+@@ -8,8 +8,7 @@ if not is_linux
+ endif
+ dep = dependency('libcrypto', required: false, method: 'pkg-config')
+ if not dep.found()
+-    build = false
+-    reason = 'missing dependency, "libcrypto"'
++    error('missing dependency: "libcrypto"')
+ endif
+ deps += 'bus_vdev'
+ deps += 'bus_pci'
+diff --git a/drivers/crypto/openssl/meson.build b/drivers/crypto/openssl/meson.build
+index af469a9827..bc5d0a9143 100644
+--- a/drivers/crypto/openssl/meson.build
++++ b/drivers/crypto/openssl/meson.build
+@@ -9,8 +9,7 @@ endif
+ 
+ dep = dependency('libcrypto', required: false, method: 'pkg-config')
+ if not dep.found()
+-    build = false
+-    reason = 'missing dependency, "libcrypto"'
++    error('missing dependency: "libcrypto"')
+ endif
+ deps += 'bus_vdev'
+ sources = files('rte_openssl_pmd.c', 'rte_openssl_pmd_ops.c')
+diff --git a/drivers/net/bnx2x/meson.build b/drivers/net/bnx2x/meson.build
+index bc66ab8032..263e983aad 100644
+--- a/drivers/net/bnx2x/meson.build
++++ b/drivers/net/bnx2x/meson.build
+@@ -9,7 +9,9 @@ endif
+ 
+ dep = dependency('zlib', required: false, method: 'pkg-config')
+ build = dep.found()
+-reason = 'missing dependency, "zlib"'
++if not build
++    error('missing dependency: "zlib"')
++endif
+ ext_deps += dep
+ cflags += '-DZLIB_CONST'
+ sources = files(
 diff --git a/drivers/net/intel/ipn3ke/meson.build b/drivers/net/intel/ipn3ke/meson.build
 index 23c4d36b4f..a29abb1f77 100644
 --- a/drivers/net/intel/ipn3ke/meson.build
@@ -148,6 +278,20 @@ index 1eb67f3c47..427e6e9f89 100644
      endif
  endforeach
  if static_ibverbs or dlopen_ibverbs
+diff --git a/drivers/net/pcap/meson.build b/drivers/net/pcap/meson.build
+index f30fc8338b..ceb42bbd90 100644
+--- a/drivers/net/pcap/meson.build
++++ b/drivers/net/pcap/meson.build
+@@ -2,8 +2,7 @@
+ # Copyright(c) 2017 Intel Corporation
+ 
+ if not dpdk_conf.has('RTE_HAS_LIBPCAP')
+-    build = false
+-    reason = 'missing dependency, "libpcap"'
++    error('missing dependency: "libpcap"')
+ endif
+ 
+ sources = files(
 diff --git a/drivers/raw/ifpga/meson.build b/drivers/raw/ifpga/meson.build
 index 8d5f41fd5d..84c8c875b3 100644
 --- a/drivers/raw/ifpga/meson.build
