@@ -43,6 +43,7 @@ vcpkg_cmake_configure(
         -DASSIMP_IGNORE_GIT_HASH=ON
         -DASSIMP_INSTALL_PDB=OFF
         ${FEATURE_OPTIONS}
+-DVCPKG_TRACE_FIND_PACKAGE=1
 )
 
 vcpkg_cmake_install()

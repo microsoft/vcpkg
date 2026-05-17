@@ -108,7 +108,7 @@ index 6551dcb..dd65b0b 100644
 +    if(@ASSIMP_BUILD_DRACO@)
 +        find_dependency(draco CONFIG)
 +    endif()
-+    find_dependency(unofficial-minizip CONFIG)
++    find_dependency(minizip CONFIG)
 +    find_dependency(pugixml CONFIG)
 +    find_dependency(poly2tri CONFIG)
 +    find_dependency(polyclipping CONFIG)
@@ -390,7 +390,7 @@ index de2f650..e605bf8 100644
 +      polyclipping::polyclipping
 +      ${OPENDDL_PARSER_LIBRARIES}
 +      poly2tri::poly2tri
-+      unofficial::minizip::minizip
++      $<IF:$<TARGET_EXISTS:MINIZIP::minizip>,MINIZIP::minizip,MINIZIP::minizipstatic>
 +      ZLIB::ZLIB
 +      rapidjson
 +      utf8cpp::utf8cpp
