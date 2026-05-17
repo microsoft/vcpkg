@@ -1,0 +1,67 @@
+{
+  "name": "toomanycooks",
+  "version": "1.5.0",
+  "description": "The C++20 coroutine framework with no compromises. Excellent performance, simple syntax, and powerful features.",
+  "homepage": "https://github.com/tzcnt/TooManyCooks",
+  "documentation": "https://fleetcode.com/oss/tmc/docs",
+  "license": "BSL-1.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "hwloc"
+  ],
+  "features": {
+    "boost-asio": {
+      "description": "Use Boost.Asio instead of standalone Asio for the tmc/asio headers.",
+      "dependencies": [
+        "boost-asio"
+      ]
+    },
+    "debug-task-alloc-count": {
+      "description": "Enable TMC_DEBUG_TASK_ALLOC_COUNT."
+    },
+    "debug-thread-creation": {
+      "description": "Enable TMC_DEBUG_THREAD_CREATION."
+    },
+    "funcoro": {
+      "description": "Set TMC_WORK_ITEM=FUNCORO."
+    },
+    "hwloc": {
+      "description": "Enable hwloc topology-aware thread placement.",
+      "dependencies": [
+        "hwloc"
+      ]
+    },
+    "more-threads": {
+      "description": "Enable TMC_MORE_THREADS."
+    },
+    "nodiscard-await": {
+      "description": "Enable TMC_NODISCARD_AWAIT."
+    },
+    "standalone-asio": {
+      "description": "Install standalone Asio for use with the tmc/asio headers.",
+      "dependencies": [
+        "asio"
+      ]
+    },
+    "standalone-compilation": {
+      "description": "Enable TMC_STANDALONE_COMPILATION."
+    },
+    "trivial-task": {
+      "description": "Enable TMC_TRIVIAL_TASK."
+    },
+    "windows-dll": {
+      "description": "Enable TMC_WINDOWS_DLL and TMC_STANDALONE_COMPILATION.",
+      "supports": "windows"
+    }
+  }
+}
