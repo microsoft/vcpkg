@@ -9,6 +9,7 @@ set(${PORT}_PATCHES
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"
       "pdf-system-abseil.diff"
+      "pkg-config-sorted-libs.diff"
       #"pkg-config.diff"
       "rpath.diff"
       "include-dir-order.diff"
@@ -211,26 +212,15 @@ endif()
 
 if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
     # Devendor bundled abseil: replace the bundled absl/ directory with a
-    # symlink to the system-installed headers.  This guarantees that every
+    # symlink to the vcpkg-installed headers.  This guarantees that every
     # #include path — both explicit "third_party/abseil-cpp/absl/..."
     # (via -I <chromium_root>) and internal "absl/..." (via -isystem
     # <prefix>/include) — resolves to the same installed files, preventing
-    # API mismatches between the old bundled and new system version.
+    # API mismatches between the old bundled and new vcpkg-installed version.
     set(_chromium_absl "${SOURCE_PATH}/src/3rdparty/chromium/third_party/abseil-cpp")
     file(REMOVE_RECURSE "${_chromium_absl}/absl")
     file(CREATE_LINK "${CURRENT_INSTALLED_DIR}/include/absl" "${_chromium_absl}/absl" SYMBOLIC)
     unset(_chromium_absl)
-    # GCC < 14 rejects comparing a function pointer to nullptr in a constexpr
-    # context (GCC bug #88449, fixed in GCC 14).  abseil lts_20260107 triggers
-    # this in hash_policy_traits.h.  Patch the installed headers directly —
-    # the symlink above makes the bundled path an alias for them, so patching
-    # once covers all include paths.
-    vcpkg_replace_string("${CURRENT_INSTALLED_DIR}/include/absl/container/internal/hash_policy_traits.h"
-        "  static constexpr HashSlotFn get_hash_slot_fn() {"
-        "  static HashSlotFn get_hash_slot_fn() {")
-    vcpkg_replace_string("${CURRENT_INSTALLED_DIR}/include/absl/container/internal/raw_hash_set.h"
-        "    static constexpr PolicyFunctions value = {"
-        "    static const PolicyFunctions value = {")
 endif()
 
 qt_cmake_configure(
