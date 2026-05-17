@@ -8513,7 +8513,7 @@
       "port-version": 0
     },
     "qtwebengine": {
-      "baseline": "6.10.3",
+      "baseline": "6.11.0",
       "port-version": 0
     },
     "qtwebsockets": {
