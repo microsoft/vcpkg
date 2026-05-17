@@ -1,0 +1,146 @@
+diff --git a/README.md b/README.md
+index ad0a76f..5a3c324 100644
+--- a/README.md
++++ b/README.md
+@@ -677,7 +677,6 @@ if __name__ == "__main__":
+ 
+ #include <opencv2/opencv.hpp>
+ 
+-#define HAVE_OPENCV 1
+ #include <MultiSense/MultiSenseChannel.hh>
+ #include <MultiSense/MultiSenseUtilities.hh>
+ 
+@@ -772,7 +771,6 @@ if __name__ == "__main__":
+ 
+ #include <opencv2/opencv.hpp>
+ 
+-#define HAVE_OPENCV 1
+ #include <MultiSense/MultiSenseChannel.hh>
+ #include <MultiSense/MultiSenseUtilities.hh>
+ 
+@@ -1259,7 +1257,6 @@ if __name__ == "__main__":
+ #include <iostream>
+ #include <opencv2/opencv.hpp>
+ 
+-#define HAVE_OPENCV 1
+ #include <MultiSense/MultiSenseChannel.hh>
+ #include <MultiSense/MultiSenseUtilities.hh>
+ 
+diff --git a/source/LibMultiSense/CMakeLists.txt b/source/LibMultiSense/CMakeLists.txt
+index f868142..a6efa0f 100644
+--- a/source/LibMultiSense/CMakeLists.txt
++++ b/source/LibMultiSense/CMakeLists.txt
+@@ -37,7 +37,7 @@ target_include_directories(MultiSense
+ 
+ if (BUILD_OPENCV)
+   if(OpenCV_FOUND)
+-    target_compile_definitions(MultiSense PRIVATE HAVE_OPENCV)
++    target_compile_definitions(MultiSense PUBLIC MULTISENSE_HAVE_OPENCV)
+ 
+     target_include_directories(MultiSense PUBLIC ${OpenCV_INCLUDE_DIRS})
+ 
+diff --git a/source/LibMultiSense/details/utilities.cc b/source/LibMultiSense/details/utilities.cc
+index b1ea135..199015b 100644
+--- a/source/LibMultiSense/details/utilities.cc
++++ b/source/LibMultiSense/details/utilities.cc
+@@ -53,7 +53,7 @@
+ #include <iostream>
+ #include <stdexcept>
+ 
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+ #include <opencv2/imgcodecs.hpp>
+ #include <opencv2/features2d.hpp>
+ #endif
+@@ -64,7 +64,7 @@
+ namespace multisense {
+ namespace {
+ 
+-#ifndef HAVE_OPENCV
++#ifndef MULTISENSE_HAVE_OPENCV
+ bool write_binary_image(const Image &image, const std::filesystem::path &path)
+ {
+     std::ofstream output(path, std::ios::binary | std::ios::out);
+@@ -193,7 +193,7 @@ std::string to_string(const DataSource &source)
+ }
+ 
+ 
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+ cv::Mat Image::cv_mat() const
+ {
+     int cv_type = 0;
+@@ -243,7 +243,7 @@ cv::Mat FeatureMessage::cv_descriptors() const
+ 
+ bool write_image(const Image &image, const std::filesystem::path &path)
+ {
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+     return cv::imwrite(path.string(), image.cv_mat());
+ #else
+     const auto extension = path.extension();
+diff --git a/source/LibMultiSense/include/MultiSense/MultiSenseTypes.hh b/source/LibMultiSense/include/MultiSense/MultiSenseTypes.hh
+index 3d4590c..4ba56b6 100644
+--- a/source/LibMultiSense/include/MultiSense/MultiSenseTypes.hh
++++ b/source/LibMultiSense/include/MultiSense/MultiSenseTypes.hh
+@@ -47,7 +47,7 @@
+ #include <tuple>
+ #include <vector>
+ 
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+ #include <opencv2/core/mat.hpp>
+ #endif
+ 
+@@ -289,7 +289,7 @@ struct Image
+         return std::nullopt;
+     }
+ 
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+     ///
+     /// @brief Transform a image into a cv::Mat object if the user wants to build OpenCV utilities
+     ///        The cv::Mat returned here wraps the underlying image data pointer associated with
+@@ -392,7 +392,7 @@ struct FeatureMessage
+     ///
+     std::vector<uint8_t> descriptors{};
+ 
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+     ///
+     /// @brief Convert keypoints to native OpenCV keypoints
+     ///
+diff --git a/source/LibMultiSense/test/feature_test.cc b/source/LibMultiSense/test/feature_test.cc
+index 1124393..22fe563 100644
+--- a/source/LibMultiSense/test/feature_test.cc
++++ b/source/LibMultiSense/test/feature_test.cc
+@@ -40,7 +40,7 @@
+ #include <MultiSense/wire/FeatureMessage.hh>
+ #include <MultiSense/wire/FeatureMetaMessage.hh>
+ 
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+ #include <opencv2/core.hpp>
+ #include <opencv2/features2d.hpp>
+ #endif
+@@ -90,7 +90,7 @@ TEST(ImageFrame, Features)
+     EXPECT_EQ(frame.frame_id, 1234);
+ }
+ 
+-#ifdef HAVE_OPENCV
++#ifdef MULTISENSE_HAVE_OPENCV
+ TEST(FeatureMessage, OpenCVConversion)
+ {
+     FeatureMessage msg;
+diff --git a/source/Utilities/LibMultiSense/FeatureDetectorUtility/FeatureDetectorUtility.cc b/source/Utilities/LibMultiSense/FeatureDetectorUtility/FeatureDetectorUtility.cc
+index e371757..6bc5575 100644
+--- a/source/Utilities/LibMultiSense/FeatureDetectorUtility/FeatureDetectorUtility.cc
++++ b/source/Utilities/LibMultiSense/FeatureDetectorUtility/FeatureDetectorUtility.cc
+@@ -49,7 +49,6 @@
+ #include <iostream>
+ #include <thread>
+ 
+-#define HAVE_OPENCV 1
+ #include <opencv2/features2d.hpp>
+ #include <opencv2/highgui.hpp>
+ #include <opencv2/imgproc.hpp>
