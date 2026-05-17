@@ -1,3 +1,43 @@
+diff --git a/contrib/minizip/iowin32.c b/contrib/minizip/iowin32.c
+index 810ab2c..11f2a4b 100644
+--- a/contrib/minizip/iowin32.c
++++ b/contrib/minizip/iowin32.c
+@@ -400,7 +400,7 @@ int ZCALLBACK win32_error_file_func(voidpf opaque, voidpf stream) {
+     return ret;
+ }
+ 
+-void fill_win32_filefunc(zlib_filefunc_def* pzlib_filefunc_def) {
++void ZEXPORT fill_win32_filefunc(zlib_filefunc_def* pzlib_filefunc_def) {
+     pzlib_filefunc_def->zopen_file = win32_open_file_func;
+     pzlib_filefunc_def->zread_file = win32_read_file_func;
+     pzlib_filefunc_def->zwrite_file = win32_write_file_func;
+@@ -411,7 +411,7 @@ void fill_win32_filefunc(zlib_filefunc_def* pzlib_filefunc_def) {
+     pzlib_filefunc_def->opaque = NULL;
+ }
+ 
+-void fill_win32_filefunc64(zlib_filefunc64_def* pzlib_filefunc_def) {
++void ZEXPORT fill_win32_filefunc64(zlib_filefunc64_def* pzlib_filefunc_def) {
+     pzlib_filefunc_def->zopen64_file = win32_open64_file_func;
+     pzlib_filefunc_def->zread_file = win32_read_file_func;
+     pzlib_filefunc_def->zwrite_file = win32_write_file_func;
+@@ -423,7 +423,7 @@ void fill_win32_filefunc64(zlib_filefunc64_def* pzlib_filefunc_def) {
+ }
+ 
+ 
+-void fill_win32_filefunc64A(zlib_filefunc64_def* pzlib_filefunc_def) {
++void ZEXPORT fill_win32_filefunc64A(zlib_filefunc64_def* pzlib_filefunc_def) {
+     pzlib_filefunc_def->zopen64_file = win32_open64_file_funcA;
+     pzlib_filefunc_def->zread_file = win32_read_file_func;
+     pzlib_filefunc_def->zwrite_file = win32_write_file_func;
+@@ -435,7 +435,7 @@ void fill_win32_filefunc64A(zlib_filefunc64_def* pzlib_filefunc_def) {
+ }
+ 
+ 
+-void fill_win32_filefunc64W(zlib_filefunc64_def* pzlib_filefunc_def) {
++void ZEXPORT fill_win32_filefunc64W(zlib_filefunc64_def* pzlib_filefunc_def) {
+     pzlib_filefunc_def->zopen64_file = win32_open64_file_funcW;
+     pzlib_filefunc_def->zread_file = win32_read_file_func;
+     pzlib_filefunc_def->zwrite_file = win32_write_file_func;
 diff --git a/contrib/minizip/iowin32.h b/contrib/minizip/iowin32.h
 index 65be627..79242df 100644
 --- a/contrib/minizip/iowin32.h
