@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tzcnt/TooManyCooks
@@ -5,8 +7,6 @@ vcpkg_from_github(
     SHA512 17e0aff92c848009793f4712202764e3d0ec2ed388a8b807cc31e12977b1dc2bdf9f2ac67177c9dc1bfac2691c721eecbef8bfffeb79539d0d48464697da539d
     HEAD_REF main
 )
-
-set(VCPKG_BUILD_TYPE release) # header-only port
 
 if("standalone-asio" IN_LIST FEATURES AND "boost-asio" IN_LIST FEATURES)
     message(FATAL_ERROR "toomanycooks features 'standalone-asio' and 'boost-asio' are mutually exclusive")
