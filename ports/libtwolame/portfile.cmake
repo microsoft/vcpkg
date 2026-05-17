@@ -12,21 +12,21 @@ vcpkg_from_github(
         patches/005-fix-pc-in-case.patch
 )
 
+set(options "")
 if("tool" IN_LIST FEATURES)
-    set(_sndfile_opt "--enable-sndfile")
+    list(APPEND options "--enable-sndfile")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        set(_getopt_libs "LIBS=-lgetopt")
+        list(APPEND options "LIBS=\$LIBS -lgetopt")
     endif()
 else()
-    set(_sndfile_opt "--disable-sndfile")
+    list(APPEND options "--disable-sndfile")
 endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-        ${_sndfile_opt}
-        ${_getopt_libs}
+        ${options}
 )
 
 vcpkg_install_make()
