@@ -33,6 +33,14 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/json-glib-1.0/json-glib/json-version-macros.h"
+        "#include \"json-version.h\"\n\n#if (defined(_WIN32) || defined(__CYGWIN__)) && !defined(JSON_STATIC_BUILD)"
+        "#include \"json-version.h\"\n\n#define JSON_STATIC_BUILD 1\n\n#if (defined(_WIN32) || defined(__CYGWIN__)) && !defined(JSON_STATIC_BUILD)"
+    )
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt" "${SOURCE_PATH}/LICENSES/CC0-1.0.txt" "${SOURCE_PATH}/LICENSES/MIT.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
