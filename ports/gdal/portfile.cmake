@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         iconv.diff
+        libarchive.diff
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
