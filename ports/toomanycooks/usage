@@ -1,13 +1,3 @@
-Default vcpkg installation:
-
-    vcpkg install toomanycooks
-
-Install with features enabled, for example TMC_TRIVIAL_TASK and TMC_NODISCARD_AWAIT:
-
-    vcpkg install "toomanycooks[trivial-task,nodiscard-await]"
-
-The hwloc dependency feature is enabled by default. To disable this dependency, add `core` to the features list.
-
 Usage from CMake after installation:
 
     find_package(TooManyCooks CONFIG REQUIRED)
