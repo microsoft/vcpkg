@@ -1,10 +1,5 @@
-Usage from CMake after installation:
+toomanycooks provides CMake targets:
 
-    find_package(TooManyCooks CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE TooManyCooks::TooManyCooks)
-
-In addition to the features exposed to vcpkg, TooManyCooks also supports an optional package-wide configuration TMC_PRIORITY_COUNT.
-Since vcpkg doesn't support integer configurations, to use this, set it manually before find_package() in your CMake file:
-
-    set(TMC_PRIORITY_COUNT 8) # integer from 1 to 16
-    find_package(TooManyCooks CONFIG REQUIRED)
+  set(TMC_PRIORITY_COUNT 8) # integer from 1 to 16, optional
+  find_package(TooManyCooks CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE TooManyCooks::TooManyCooks)
