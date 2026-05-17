@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "8.20.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -183,22 +184,22 @@
       "description": "Default SSL / TLS implementation.",
       "dependencies": [
         {
-          "$comment": "Defaults to schannel on Windows, unless http3 is also enabled",
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "sspi"
-          ],
-          "platform": "(windows & !uwp) | mingw"
-        },
-        {
           "$comment": "Otherwise, defaults to OpenSSL.",
           "name": "curl",
           "default-features": false,
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !mingw"
+          "platform": "uwp | !windows"
+        },
+        {
+          "$comment": "Defaults to schannel on Windows, unless http3 is also enabled",
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "sspi"
+          ],
+          "platform": "windows & !uwp"
         }
       ]
     },
@@ -216,30 +217,27 @@
     },
     "sspi": {
       "description": "SSPI support",
-      "supports": "(windows & !uwp) | mingw"
+      "supports": "windows & !uwp"
     },
     "tool": {
       "description": "Builds curl executable",
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support"
-    },
-    "winidn": {
-      "description": "WinIDN support",
-      "supports": "windows"
-    },
-    "winldap": {
-      "description": "Obsolete. Use feature 'ldap' instead.",
+      "description": "WebSocket support",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "ldap"
+            "non-http"
           ]
         }
       ]
+    },
+    "winidn": {
+      "description": "WinIDN support",
+      "supports": "windows"
     },
     "wolfssl": {
       "description": "SSL support (wolfSSL)",

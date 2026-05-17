@@ -1,0 +1,12 @@
+diff --git a/win/makefile.vc b/win/makefile.vc
+--- a/win/makefile.vc
++++ b/win/makefile.vc
+@@ -886,7 +886,7 @@ $(ROOT)\manifest.uuid:
+ 	git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\tclUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\tclUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tclUuid.h
++	copy /b $(WIN_DIR)\tclUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tclUuid.h
+ 
+ $(TMP_DIR)\tclEvent.obj: $(GENERICDIR)\tclEvent.c $(TMP_DIR)\tclUuid.h
+ 	$(cc32) $(pkgcflags) -I$(COMPATDIR)\zlib -I$(TMP_DIR) \

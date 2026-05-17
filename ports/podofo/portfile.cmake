@@ -8,8 +8,10 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/3rdparty/date"
-    "${SOURCE_PATH}/3rdparty/fast_float.h"
-    "${SOURCE_PATH}/3rdparty/fmt"
+    "${SOURCE_PATH}/3rdparty/fastfloat"
+    "${SOURCE_PATH}/3rdparty/fmtlib"
+    "${SOURCE_PATH}/3rdparty/tcbspan"
+    "${SOURCE_PATH}/3rdparty/tclap"
     "${SOURCE_PATH}/3rdparty/utf8cpp"
     "${SOURCE_PATH}/3rdparty/utf8proc"
 )
@@ -28,6 +30,13 @@ vcpkg_cmake_configure(
         -DPKG_CONFIG_FOUND=true # enable pc file for shared linkage
         -DPODOFO_BUILD_LIB_ONLY=1
         -DPODOFO_BUILD_STATIC=${PODOFO_BUILD_STATIC}
+        -DPODOFO_DEVENDOR_DATE=1
+        -DPODOFO_DEVENDOR_FASTFLOAT=1
+        -DPODOFO_DEVENDOR_FMT=1
+        -DPODOFO_DEVENDOR_FMT_HEADER_ONLY=1
+        -DPODOFO_DEVENDOR_TCBSPAN=1
+        -DPODOFO_DEVENDOR_UTF8CPP=1
+        -DPODOFO_DEVENDOR_UTF8PROC=1
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

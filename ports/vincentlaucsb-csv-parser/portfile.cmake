@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vincentlaucsb/csv-parser
     REF "${VERSION}"
-    SHA512 0b6656749296af9a3ea640414f60f1c13d261280a09ca6a899d6e07430ed5d28564aea636011cb235bf031a4cf0f0e4789b5bc8aadc0941c3d19007678feaa25
+    SHA512 bd97f9366afcc882b095c8a51ff3b67af71ebf33268f41353fa3fcd2e81a1cf8609b00f11e1b916f0b3283eacb2f606fb3e86289e6640ab4bc6a4d6566fbc526
     HEAD_REF master
     PATCHES
         001-fix-cmake.patch
