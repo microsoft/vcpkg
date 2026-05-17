@@ -33,7 +33,7 @@
     },
     "unofficial-iowin32": {
       "description": [
-        "Install unofficial iowin32 header.",
+        "Include iowin32 API in minizip library.",
         "Deprecated. This feature only exists to support devendoring minizip in vcpkg ports."
       ],
       "supports": "windows"

@@ -13,9 +13,10 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        bzip2   MINIZIP_ENABLE_BZIP2
+        bzip2               MINIZIP_ENABLE_BZIP2
+        unofficial-iowin32  WITH_UNOFFICIAL_IOWIN32
     INVERTED_FEATURES
-        tools   DISABLE_INSTALL_TOOLS
+        tools               DISABLE_INSTALL_TOOLS
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MINIZIP_BUILD_SHARED)
@@ -25,10 +26,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/contrib/minizip"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DMINIZIP_BUILD_TESTING=OFF
+        -DCMAKE_INSTALL_INCLUDEDIR=include/minizip # legacy and avoiding conflicts (crypt.h)
         -DMINIZIP_BUILD_SHARED=${MINIZIP_BUILD_SHARED}
         -DMINIZIP_BUILD_STATIC=${MINIZIP_BUILD_STATIC}
-        -DCMAKE_INSTALL_INCLUDEDIR=include/minizip # legacy and avoiding conflicts (crypt.h)
+        -DMINIZIP_BUILD_TESTING=OFF
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_TOOLS=ON
 )
@@ -62,10 +63,6 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if("unofficial-iowin32" IN_LIST FEATURES)
-    file(COPY "${SOURCE_PATH}/contrib/minizip/iowin32.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/minizip")
-endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-minizip")
 
