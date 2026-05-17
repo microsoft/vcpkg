@@ -18,6 +18,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -DCMAKE_CXX_STANDARD=11
+      -DVCPKG_LOCK_FIND_PACKAGE_Boost=ON
+      -DVCPKG_LOCK_FIND_PACKAGE_LibXml2=ON
+      -DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=OFF
+      -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=ON
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
