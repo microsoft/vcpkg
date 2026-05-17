@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         001-devendor-nlohmann-json.patch
+        fix-minizip-config.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,6 +27,7 @@ vcpkg_cmake_configure(
         -DBUILD_ALPHA=OFF
         -DWITH_LIBDATACHANNEL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
+        -DVCPKG_LOCK_FIND_PACKAGE_minizip=ON
         -DENABLE_NATIVE_ARCH=OFF
         ${FEATURE_OPTIONS}
 )
