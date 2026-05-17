@@ -14,6 +14,7 @@ vcpkg_from_github(
         patches/002-disable-gettext-autopoint.patch
         patches/003-msvc-compat-additional.patch
         patches/004-lang-escapes.patch
+        patches/005-fix-pthread-detection.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
