@@ -1,13 +1,15 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://git.lysator.liu.se/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO nettle/nettle
-    REF nettle_3.10_release_20240616
-    SHA512 8767e4f0c34ce76ead5d66f06f97e6b184d439fa94f848ee440196fafde3da2ea7cfc54f9bd8f9ab6a99929b0d14b3d5a28857e05d954551e94b619598c17659
-    HEAD_REF master
-    PATCHES 
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://ftpmirror.gnu.org/gnu/nettle/nettle-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/pub/gnu/nettle/nettle-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/nettle/nettle-${VERSION}.tar.gz"
+    FILENAME "nettle-${VERSION}.tar.gz"
+    SHA512 833303d94f5a67094011ad4dd931fffdb9adf679b4df241a544a08194a66e6e449398b704ba5b29d52c1c3b5ada6f6dc18b24d1adb3382a68470a11645bf13cd
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
         subdirs.patch
-        fix-libdir.patch
+        #fix-libdir.patch
         compile.patch
         host-tools.patch
         ccas.patch
@@ -19,7 +21,7 @@ include("${cmake_vars_file}")
 
 # Maintainer switch: Temporarily set this to 1 to re-generate the lists
 # of exported symbols. This is needed when the version is bumped.
-set(GENERATE_SYMBOLS 0)
+set(GENERATE_SYMBOLS 1)
 if(GENERATE_SYMBOLS)
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
         vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
