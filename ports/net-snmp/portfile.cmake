@@ -1,13 +1,8 @@
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/net-snmp/net-snmp/archive/refs/tags/v${VERSION}.tar.gz"
-    FILENAME "v${VERSION}.tar.gz"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO net-snmp/net-snmp
+    REF "v${VERSION}"
     SHA512 0a62a1d263437409cf50e20da7f82132cc3df9a7ecf9e1d57ac00285199617b168636e4a042cd564fcb1b8417883e618238ca252066b9e6e77c4c9030026ff30
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
 )
 
 # Acquire Perl and add it to PATH (for execution of Configure)
@@ -16,11 +11,11 @@ get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
 set(NET_SNMP_FEATURE_LIST "")
-list(APPEND NET_SNMP_FEATURE_LIST "--with-sdk")    
+list(APPEND NET_SNMP_FEATURE_LIST "--with-sdk")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    list(APPEND NET_SNMP_FEATURE_LIST "--linktype=static")    
+    list(APPEND NET_SNMP_FEATURE_LIST "--linktype=static")
 else()
-    list(APPEND NET_SNMP_FEATURE_LIST "--linktype=dynamic")    
+    list(APPEND NET_SNMP_FEATURE_LIST "--linktype=dynamic")
 endif()
 
 set(TARGET_DIR "${CURRENT_PACKAGES_DIR}")
@@ -34,18 +29,17 @@ if("ssl" IN_LIST FEATURES)
     set(APPEND NET_SNMP_SSL_DEBUG "--with-ssl" "--with-sslincdir=${CURRENT_INSTALLED_DIR}/include" "--with-ssllibdir=${CURRENT_INSTALLED_DIR}/debug/lib")
 endif()
 
-set(TARGETS "")
-if ("tools" IN_LIST FEATURES) 
+if ("tools" IN_LIST FEATURES)
     set(TARGETS all)
 else()
-    set(TARGETS libs) 
+    set(TARGETS libs)
 endif()
 
 
 vcpkg_build_nmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH win32
-    PRERUN_SHELL_RELEASE "${PERL}" Configure 
+    PRERUN_SHELL_RELEASE "${PERL}" Configure
         ${NET_SNMP_FEATURE_LIST}
         ${NET_SNMP_SSL}
         --config=release
@@ -111,19 +105,14 @@ if(LIB_FILES_DEBUG)
     file(COPY ${LIB_FILES_DEBUG} DESTINATION "${TARGET_DIR_DEBUG}/lib")
 endif()
 
-# Path to the generated header
-set(GENERATED_HEADER "${TARGET_DIR}/include/net-snmp/net-snmp-config.h")
-
 # Replace INSTALL_BASE with a relative path
-file(READ "${GENERATED_HEADER}" HEADER_CONTENTS)
-string(REPLACE "#define INSTALL_BASE \"${TARGET_DIR}\"" "#define INSTALL_BASE \"/../../\"" HEADER_CONTENTS "${HEADER_CONTENTS}")
-file(WRITE "${GENERATED_HEADER}" "${HEADER_CONTENTS}")
+vcpkg_replace_string("${TARGET_DIR}/include/net-snmp/net-snmp-config.h" "#define INSTALL_BASE \"${TARGET_DIR}\"" "#define INSTALL_BASE \"/../../\"")
 
 file(REMOVE
     "${TARGET_DIR}/lib/netsnmp.exp"
 )
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${TARGET_DIR_DEBUG}/include"
     "${TARGET_DIR_DEBUG}/share"
 )
@@ -144,7 +133,7 @@ if(VCPKG_BUILD_TYPE STREQUAL "release")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
-if ("tools" IN_LIST FEATURES) 
+if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
         SEARCH_DIR "${TARGET_DIR}/bin"
