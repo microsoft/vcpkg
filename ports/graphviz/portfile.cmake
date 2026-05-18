@@ -3,14 +3,13 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 c486175bbdb62f6d8123ba9623921eb8948a472a2fa31c99f22775b383e6a6380a29224ae8e959617de8960c2a2ad346bb34b20dbf5bc780e5590f4f29930e23
+    SHA512 3f58d94750b80b527fdbdf3e745af514a80d5d1a6479768bae7ccfb94fe458dcca939a18c53de2ddc15bd464028efa473c777b5265ac787231526849a2232d56
     HEAD_REF main
     PATCHES
         build.diff
         dependencies.diff
         install.diff
         no-absolute-paths.patch
-        official-include-dir.diff  # https://gitlab.com/graphviz/graphviz/-/issues/2798
         skip-configure-plugins.diff
         version.diff
 )
@@ -77,9 +76,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKA
         "include(CMakeFindDependencyMacro)\nfind_dependency(getopt CONFIG)\n${cmake-config}"
     )
 endif()
-# Resolve cyclic dependency for static cmake targets. Hide from usage heuristics.
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[if(DEFINED ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE_targets)]] "if(0)")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[add_library(]] "add_library(#[[skip-usage-heuristics]] ")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/graphviz/*.h")

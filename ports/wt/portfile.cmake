@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
     REF "${VERSION}"
-    SHA512 5e0f8f5a7ca88822fbfd142571fb5a6482ed8e75d8c962819feff0d3441ef2dcfaa17b78865c4200de5c8da584b79da37f4b6e6a488e0d65735a2069ccb9de2c
+    SHA512 618fd4fce51eea0d6abacf86a1a395793ff535e4d17a4fb84fd792261a599f6cbe79ff47c4a3a9f160ac1a1f44f3e27a62cb15782f25251d029c777c91d82352
     HEAD_REF master
     PATCHES
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
+        0007-fix-haru.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)

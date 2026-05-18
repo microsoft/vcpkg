@@ -1,3 +1,3 @@
-set(qtquickeffectmaker_HASH "57ddfff364ca611a3fd8ccfbdbf3bfbfdc696c4e449a491149f315c9814c336f8e80d18bb543251f0942edc60dbc447fe72b336c8bfe7cecd17b81fd80bf4791")
-set(qtquickeffectmaker_URL "https://download.qt.io/archive/qt/6.10/6.10.0/submodules/qtquickeffectmaker-everywhere-src-6.10.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.0/submodules/qtquickeffectmaker-everywhere-src-6.10.0.tar.xz")
-set(qtquickeffectmaker_FILENAME "qtquickeffectmaker-everywhere-src-6.10.0.tar.xz")
+set(qtquickeffectmaker_HASH "71ff37589969cba21f70f039bf103c3422fb7066f7798f7a84313306c032c3b14ddd532d31ab967ad880c99bde5f9bc1dc26cdcff4359936d20290ace3d53217")
+set(qtquickeffectmaker_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtquickeffectmaker-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtquickeffectmaker-everywhere-src-6.10.3.tar.xz")
+set(qtquickeffectmaker_FILENAME "qtquickeffectmaker-everywhere-src-6.10.3.tar.xz")

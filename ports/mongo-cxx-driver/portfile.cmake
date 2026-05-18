@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 7b6564cb5087b03886f3c99aa5da9e87a898b1bd1098393a7668e39d673d6203a39f7fa95e5bef995f5e53c18654ef1806823cf643a994a8c19a1df75b9eb306
+    SHA512 21592fd610bb1e75b6a2c0bcf476044aa84a651d301d035f4e36e99ca0ada5b4609411e90569a913a685d2cdb7d669e702e9bdabdbdfeb99a19b0cf168637a12
     HEAD_REF master
     PATCHES
         fix-dependencies.patch

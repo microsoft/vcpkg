@@ -100,7 +100,7 @@ diff --git a/bgfx/tools/shaderc/shaderc_metal.cpp b/bgfx/tools/shaderc/shaderc_m
 index 9f073b9..e8fd208 100644
 --- a/bgfx/tools/shaderc/shaderc_metal.cpp
 +++ b/bgfx/tools/shaderc/shaderc_metal.cpp
-@@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
+@@ -20,11 +20,10 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
  #include <spirv_reflect.hpp>
  
  #define ENABLE_OPT 1
@@ -112,7 +112,6 @@ index 9f073b9..e8fd208 100644
 +#include <glslang/Public/ShaderLang.h>
 +#include <glslang/Include/ResourceLimits.h>
 +#include <glslang/SPIRV/GlslangToSpv.h>
-+#include <glslang/SPIRV/SPVRemapper.h>
 +#include <glslang/SPIRV/SpvTools.h>
  #include <spirv-tools/optimizer.hpp>
  BX_PRAGMA_DIAGNOSTIC_POP()
@@ -121,7 +120,7 @@ diff --git a/bgfx/tools/shaderc/shaderc_spirv.cpp b/bgfx/tools/shaderc/shaderc_s
 index f7910de..a844cc0 100644
 --- a/bgfx/tools/shaderc/shaderc_spirv.cpp
 +++ b/bgfx/tools/shaderc/shaderc_spirv.cpp
-@@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
+@@ -20,11 +20,10 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
  #include <spirv_reflect.hpp>
  
  #define ENABLE_OPT 1
@@ -132,7 +131,6 @@ index f7910de..a844cc0 100644
 -#include <SPIRV/SpvTools.h>
 +#include <glslang/Public/ShaderLang.h>
 +#include <glslang/Include/ResourceLimits.h>
-+#include <glslang/SPIRV/SPVRemapper.h>
 +#include <glslang/SPIRV/GlslangToSpv.h>
 +#include <glslang/SPIRV/SpvTools.h>
  #include <spirv-tools/optimizer.hpp>
@@ -335,7 +333,7 @@ index 0f50eab..8b13b28 100644
 -			bgfx-vertexlayout
 -			fcpp
 -			glslang
-+			glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV glslang::SPVRemapper
++			glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV
  			glsl-optimizer
 -			spirv-opt
 -			spirv-cross

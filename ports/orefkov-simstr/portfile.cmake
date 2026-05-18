@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orefkov/simstr
-	SHA512 faae3caf8bf342d26b0ff6c4ddf6b3f69279d04dcf1cde1c4dbf78057870833fdc85a4bec072fa0ca617e6b60eace72f898cb831b7b9506341d593b3edc99a98
+    SHA512 8361e677ff64b59c1f4d1fe02f1106a5fda56e7e7713085d40d7ea83b4036c66bcad293e4c6dc2b4768b0217cbdb585758378e4c650b8d7787ea03ac57fa3e90
     REF "rel${VERSION}"
     HEAD_REF main
 )
@@ -11,7 +11,8 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DSIMSTR_BUILD_TESTS=OFF
         -DSIMSTR_BENCHMARKS=OFF
-		-DSIMSTR_LINK_NATVIS=OFF
+        -DSIMSTR_LINK_NATVIS=OFF
+        -DUSE_SYSTEM_DEPS=ON
 )
 
 vcpkg_cmake_install()

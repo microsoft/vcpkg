@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/brpc
     REF "${VERSION}"
-    SHA512 93366c2b073de8a1af5ededa9ef5a6803ccd393bbb5fe1f9872c230e4997995759517fa4dd1a51ffd120a5c9040dcb00b1c580c5ccf032dd70561c0c3283f990
+    SHA512 ffcd624550c060fdff01fad0fb752b4aa113dd1dea5ad6d688cb3d3964ded5a120df07f01bbc4a9b15aee226634fc6a851ab4c24fbed6ea07f31c305f6fef71f
     HEAD_REF master
     PATCHES
         fix-build.patch

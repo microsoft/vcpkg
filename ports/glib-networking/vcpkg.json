@@ -1,7 +1,6 @@
 {
   "name": "glib-networking",
-  "version": "2.78.0",
-  "port-version": 1,
+  "version": "2.80.1",
   "description": "Network extensions for GLib",
   "homepage": "https://gitlab.gnome.org/GNOME/glib-networking",
   "license": "LGPL-2.1-only",

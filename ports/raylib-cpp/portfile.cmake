@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RobLoach/raylib-cpp
     REF "v${VERSION}"
-    SHA512 12da247a1c1a3e0bc2d9f8c361024983b4cbcefe17c0d288e29593c8d49d44e8d319acda91c13fb181a933de9535d61ee75f3a2bf8549dcb3986f21c5d8a7e44
+    SHA512 7627e84e56b234f9ada28d0b7c7d39c6a6289d3c2cdbd0e87e71743c2897dfb1e80bb32c60d92fdb5a89e4f09a827fa9919c7f983aa00e9ad0d8e9c03ba49cd5
     HEAD_REF master
 )
 

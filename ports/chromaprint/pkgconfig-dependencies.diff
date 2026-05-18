@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 01b7df7..d7af33f 100644
+index 01b7df7..319bd3d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,6 +23,9 @@ include(CheckSymbolExists)
@@ -16,12 +16,12 @@ index 01b7df7..d7af33f 100644
  if(NOT FFT_LIB)
    if(APPLE AND ACCELERATE_LIBRARIES)
      set(FFT_LIB "vdsp")
-+	string(APPEND PC_LIBS_PRIVATE " -framework Accelerate")
++    string(APPEND PC_LIBS_PRIVATE " -framework Accelerate")
    elseif(FFMPEG_LIBAVUTIL_TX_FOUND)
      set(FFT_LIB "avtx")
    elseif(FFMPEG_LIBAVCODEC_FFT_FOUND)
      set(FFT_LIB "avfft")
-+	string(APPEND PC_REQUIRES_PRIVATE " libavcodec")
++    string(APPEND PC_REQUIRES_PRIVATE " libavcodec")
    elseif(FFTW3_LIBRARIES)
      set(FFT_LIB "fftw3")
    elseif(FFTW3_FFTWF_LIBRARY)
@@ -29,20 +29,20 @@ index 01b7df7..d7af33f 100644
      set(USE_SWRESAMPLE ON)
      set(AUDIO_PROCESSOR_LIBRARIES ${FFMPEG_LIBSWRESAMPLE_LIBRARIES})
      set(AUDIO_PROCESSOR_INCLUDE_DIRS ${FFMPEG_LIBSWRESAMPLE_INCLUDE_DIRS})
-+	string(APPEND PC_REQUIRES_PRIVATE " libswresample")
++    string(APPEND PC_REQUIRES_PRIVATE " libswresample")
    else()
      message(FATAL_ERROR "Selected ${AUDIO_PROCESSOR_LIB} for audio processing, but the library is not found")
    endif()
 diff --git a/libchromaprint.pc.cmake b/libchromaprint.pc.cmake
-index dbe8f98..c3059be 100644
+index dbe8f98..b38f8d8 100644
 --- a/libchromaprint.pc.cmake
 +++ b/libchromaprint.pc.cmake
 @@ -7,6 +7,8 @@ Name: @PROJECT_NAME@
  Description: Audio fingerprint library
  URL: http://acoustid.org/chromaprint
  Version: @PROJECT_VERSION@
-+Requires.private: ${PC_REQUIRES_PRIVATE}
++Requires.private: @PC_REQUIRES_PRIVATE@
  Libs: -L${libdir} -lchromaprint
-+Libs.private: ${PC_LIBS_PRIVATE}
++Libs.private: @PC_LIBS_PRIVATE@
  Cflags: -I${includedir}
  

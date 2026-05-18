@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-abcmake",
+  "version": "1.0.0",
+  "description": "Test port for abcmake",
+  "dependencies": [
+    "abcmake",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

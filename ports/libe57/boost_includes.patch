@@ -1,0 +1,15 @@
+diff --git a/src/refimpl/E57SimpleImpl.cpp b/src/refimpl/E57SimpleImpl.cpp
+index db71548..981c8e5 100644
+--- a/src/refimpl/E57SimpleImpl.cpp
++++ b/src/refimpl/E57SimpleImpl.cpp
+@@ -51,10 +51,6 @@
+ #    include <sys\stat.h>
+ #    include <windows.h>
+ //#include <stdint.h>  //if you need this then remove <boost/cstdint.hpp> in E57Foundation.h line 48
+-#pragma warning(disable:4996)
+-#  include <boost/uuid/uuid.hpp>
+-#  include <boost/uuid/uuid_generators.hpp>
+-#  include <boost/uuid/uuid_io.hpp>
+ #  elif defined(__GNUC__)
+ #  define _LARGEFILE64_SOURCE
+ #  define __LARGE64_FILES

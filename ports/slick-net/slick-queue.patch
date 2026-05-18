@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6bd7e39..f5dab2f 100644
+index cd0e9ea..1e226f0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,7 +22,7 @@ if (LINK_STATICALLY)
+@@ -28,7 +28,7 @@ if (slick-shm_FOUND)
+     message(STATUS "slick-shm: ${slick-shm_VERSION}")
  endif()
- find_package(Boost CONFIG REQUIRED COMPONENTS beast context)
- find_package(OpenSSL CONFIG REQUIRED)
+ 
 -find_package(slick-queue 1.2.2 CONFIG QUIET)
 +find_package(slick-queue 1.2.2 CONFIG REQUIRED)
- 
  if (NOT slick-queue_FOUND)
      message(STATUS "Fetching slick-queue...")
+ 

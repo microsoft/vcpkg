@@ -1,0 +1,13 @@
+diff --git a/src/braft/replicator.cpp b/src/braft/replicator.cpp
+index 2e0d1e1..c58b181 100644
+--- a/src/braft/replicator.cpp
++++ b/src/braft/replicator.cpp
+@@ -418,7 +418,7 @@ void Replicator::_on_rpc_returned(ReplicatorId id, brpc::Controller* cntl,
+             r->_notify_on_caught_up(EPERM, true);
+             butil::Status status;
+             status.set_error(EHIGHERTERMRESPONSE, "Leader receives higher term "
+-                    "%s from peer:%s", response->GetTypeName().c_str(), r->_options.peer_id.to_string().c_str());
++                    "%s from peer:%s", response->GetTypeName().data(), r->_options.peer_id.to_string().c_str());
+             r->_destroy();
+             node_impl->increase_term_to(response->term(), status);
+             node_impl->Release();

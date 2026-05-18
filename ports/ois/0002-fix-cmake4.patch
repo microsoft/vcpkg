@@ -1,12 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f65b86000d..c06b1dd64d 100644
+index e7f8716..45ef818 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -188,8 +188,7 @@ endif()
+@@ -218,7 +218,7 @@ endif()
  if(UNIX)
  
      if (NOT APPLE)
--        add_dependencies(OIS X11)
 -        target_link_libraries(OIS X11)
 +        target_link_libraries(OIS X11::X11)
      endif()

@@ -7,7 +7,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/nigels-com/glew/releases/download/glew-${VERSION}/glew-${VERSION}.tgz"
     FILENAME "glew-${VERSION}.tgz"
-    SHA512 a452874b7e7e5a359593fcd93475cf2c7a484f649947308f8611461df58772e060fe5a305434c22cc2411e34a20775379fcae735477f6ef056b31730ae87426e
+    SHA512 cb4caecf32ec0f180c2691dc7769ffc99571c64f259a2663a2b80e788f1c2fd5362c59e0caaeefed6fb78a4070366d244666a657358049b09071b59fae2377e0
 )
 
 vcpkg_extract_source_archive(

@@ -1,27 +1,18 @@
-vcpkg_download_distfile(
-    gdal_3_11_diff
-    URLS "https://github.com/gwaldron/osgearth/commit/f17898acd34656144936ea7d00e980a89a2c5215.diff?full_index=1"
-    FILENAME "gwaldron-osgearth-3.7.2-gdal-3.11-f17898acd34656144936ea7d00e980a89a2c5215.diff"
-    SHA512 9c316a951cb2ba506221d3c07a7a31d2f95e7ceef20a94c555ce0f399882cabe547e99eb404d43187328085b57de48f737694da808cad71ccc5f7274f89df8a8
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gwaldron/osgearth
-    REF "osgearth-${VERSION}"
-    SHA512 4a2b80c907ebf2b56966598f9e134ad910d3271757496fb1d906cc413eb2ad09da366a96635f0195696efe16ef1a649e13b6ec1d901a39ced0465be797f14221
+    REPO pelicanmapping/osgearth
+    REF c980ad2ad6e9fb25c5a7f5b8c94b1cbf0e98a617
+    SHA512 4e3fe4f7c11d3fb3962cefb98400c6a0c0a491a3d57642da2040b6e0fd8f2cd27a4f58074b077a61151fde2d0b41ce97aa7fd0cf9901ddb6677f8f31392711e0
     HEAD_REF master
-    PATCHES
-        "${gdal_3_11_diff}"
-        namespace-gdal.diff
+    PATCHES devendor-imgui.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        controls    OSGEARTH_BUILD_LEGACY_CONTROLS_API
-        tools       OSGEARTH_BUILD_TOOLS
+        controls OSGEARTH_BUILD_LEGACY_CONTROLS_API
+        tools    OSGEARTH_BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -60,7 +51,7 @@ if("tools" IN_LIST FEATURES)
         endif()
     endif()
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_bakefeaturetiles osgearth_boundarygen
-        osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_version osgearth_viewer
+        osgearth_clamp osgearth_tfs osgearth_server osgearth_conv osgearth_imgui osgearth_version osgearth_viewer
         AUTO_CLEAN
     )
     if(OSGEARTH_BUILD_LEGACY_CONTROLS_API)

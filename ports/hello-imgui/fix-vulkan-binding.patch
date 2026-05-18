@@ -1,0 +1,23 @@
+diff --git a/src/hello_imgui/internal/image_vulkan.h b/src/hello_imgui/internal/image_vulkan.h
+index ee165d0..aa0e445 100644
+--- a/src/hello_imgui/internal/image_vulkan.h
++++ b/src/hello_imgui/internal/image_vulkan.h
+@@ -18,12 +18,12 @@ namespace HelloImGui
+         // Specific to Vulkan
+         VkDescriptorSet DS;
+         static constexpr int Channels = 4; // We intentionally only support RGBA for now
+-        VkImageView     ImageView = nullptr;
+-        VkImage         Image = nullptr;
+-        VkDeviceMemory  ImageMemory = nullptr;
+-        VkSampler       Sampler = nullptr;
+-        VkBuffer        UploadBuffer = nullptr;
+-        VkDeviceMemory  UploadBufferMemory = nullptr;
++        VkImageView     ImageView;
++        VkImage         Image;
++        VkDeviceMemory  ImageMemory;
++        VkSampler       Sampler;
++        VkBuffer        UploadBuffer;
++        VkDeviceMemory  UploadBufferMemory;
+     };
+ }
+ 
