@@ -10648,6 +10648,10 @@
       "baseline": "2.7.0",
       "port-version": 0
     },
+    "void-numerics": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "volk": {
       "baseline": "1.4.341.0",
       "port-version": 0
