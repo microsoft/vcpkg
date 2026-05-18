@@ -75,10 +75,10 @@ index 0795158ae7..a5a118e0ea 100644
    endif()
  endif()
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index a4796b2dc1..ccc189c787 100644
+index a4796b2dc1..fef12e3163 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
-@@ -74,6 +74,23 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
+@@ -74,6 +74,26 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
  @SET_OpenCASCADE_WITH_D3D@
  @SET_OpenCASCADE_WITH_GLX@
  
@@ -88,6 +88,9 @@ index a4796b2dc1..ccc189c787 100644
 +endif()
 +if("@USE_FREETYPE@")
 +  find_dependency(Freetype MODULE)
++  if("@USE_FONTCONFIG@")
++    find_dependency(Fontconfig)
++  endif()
 +endif()
 +if("@USE_RAPIDJSON@")
 +  find_dependency(RapidJSON CONFIG)
