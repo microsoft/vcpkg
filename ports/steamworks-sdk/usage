@@ -1,0 +1,6 @@
+steamworks-sdk provides CMake targets:
+
+    find_package(SteamworksSDK CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Steamworks::API)
+    # Optional: encrypted app ticket library
+    # target_link_libraries(main PRIVATE Steamworks::EncryptedAppTicket)
