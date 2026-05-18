@@ -2,7 +2,7 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
-    silence-qtconnectivitiy-coroutine-warnings.diff
+    silence-qtconnectivity-coroutine-warnings.diff
 )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
