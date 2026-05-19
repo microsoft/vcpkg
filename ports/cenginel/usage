@@ -1,0 +1,4 @@
+cenginel provides CMake targets:
+
+    find_package(cenginel CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cenginel::cenginel)

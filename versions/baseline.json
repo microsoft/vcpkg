@@ -1668,6 +1668,10 @@
       "baseline": "2019-07-23",
       "port-version": 4
     },
+    "cenginel": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "cereal": {
       "baseline": "1.3.2",
       "port-version": 1
