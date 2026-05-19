@@ -10794,7 +10794,7 @@
     },
     "webrtc": {
       "baseline": "2026-03-17",
-      "port-version": 0
+      "port-version": 1
     },
     "webthing-cpp": {
       "baseline": "1.2.0",
