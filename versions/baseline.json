@@ -8537,8 +8537,8 @@
       "port-version": 1
     },
     "quaternions": {
-      "baseline": "1.0.0",
-      "port-version": 2
+      "baseline": "2024-12-10",
+      "port-version": 0
     },
     "quazip": {
       "baseline": "1.5",
