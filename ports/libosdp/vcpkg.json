@@ -1,6 +1,6 @@
 {
   "name": "libosdp",
-  "version": "3.0.5",
+  "version": "3.2.1",
   "description": "An cross-platform open source implementation of IEC 60839-11-5 Open Supervised Device Protocol (OSDP)",
   "homepage": "https://github.com/goToMain/libosdp",
   "documentation": "https://libosdp.sidcha.dev",

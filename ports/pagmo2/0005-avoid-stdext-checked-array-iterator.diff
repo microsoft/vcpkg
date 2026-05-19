@@ -1,0 +1,46 @@
+diff --git a/src/batch_evaluators/thread_bfe.cpp b/src/batch_evaluators/thread_bfe.cpp
+index db31882..6ad7ae8 100644
+--- a/src/batch_evaluators/thread_bfe.cpp
++++ b/src/batch_evaluators/thread_bfe.cpp
+@@ -103,21 +103,12 @@ vector_double thread_bfe::operator()(problem p, const vector_double &dvs) const
+             auto in_ptr = dvs.data() + begin * n_dim;
+             auto out_ptr = retval.data() + begin * f_dim;
+             std::copy(
+-#if defined(_MSC_VER)
+-                stdext::make_checked_array_iterator(in_ptr, n_dim),
+-                stdext::make_checked_array_iterator(in_ptr, n_dim, n_dim), tmp_dv.begin()
+-#else
+                 in_ptr, in_ptr + n_dim, tmp_dv.begin()
+-#endif
+             );
+             const auto fv = prob.fitness(tmp_dv);
+             assert(fv.size() == f_dim);
+             std::copy(
+-#if defined(_MSC_VER)
+-                fv.begin(), fv.end(), stdext::make_checked_array_iterator(out_ptr, f_dim)
+-#else
+                 fv.begin(), fv.end(), out_ptr
+-#endif
+             );
+         }
+     };
+diff --git a/src/problems/translate.cpp b/src/problems/translate.cpp
+index 2760872..9650708 100644
+--- a/src/problems/translate.cpp
++++ b/src/problems/translate.cpp
+@@ -129,15 +129,8 @@ vector_double translate::batch_fitness(const vector_double &xs) const
+     using range_t = tbb::blocked_range<decltype(xs.size())>;
+     tbb::parallel_for(range_t(0, n_dvs), [&xs, &xs_deshifted, nx, this](const range_t &range) {
+         for (auto i = range.begin(); i != range.end(); ++i) {
+-#if defined(_MSC_VER)
+-            std::transform(stdext::make_unchecked_array_iterator(xs.data() + i * nx),
+-                           stdext::make_unchecked_array_iterator(xs.data() + (i + 1u) * nx),
+-                           stdext::make_unchecked_array_iterator(m_translation.data()),
+-                           stdext::make_unchecked_array_iterator(xs_deshifted.data() + i * nx), std::minus<double>{});
+-#else
+                 std::transform(xs.data() + i * nx, xs.data() + (i + 1u) * nx, m_translation.data(),
+                                xs_deshifted.data() + i * nx, std::minus<double>{});
+-#endif
+         }
+     });
+ 
