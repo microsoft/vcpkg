@@ -290,7 +290,7 @@
     },
     "arrow": {
       "baseline": "24.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "arrow-adbc": {
       "baseline": "22",
@@ -453,7 +453,7 @@
       "port-version": 2
     },
     "aws-c-auth": {
-      "baseline": "0.10.1",
+      "baseline": "0.10.2",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -461,7 +461,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.12.6",
+      "baseline": "0.13.0",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -485,7 +485,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.12.3",
+      "baseline": "0.12.4",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -521,8 +521,8 @@
       "port-version": 0
     },
     "azure-core-amqp-cpp": {
-      "baseline": "1.0.0-beta.11",
-      "port-version": 3
+      "baseline": "1.0.0-beta.12",
+      "port-version": 0
     },
     "azure-core-cpp": {
       "baseline": "1.16.3",
@@ -557,12 +557,12 @@
       "port-version": 1
     },
     "azure-messaging-eventhubs-checkpointstore-blob-cpp": {
-      "baseline": "1.0.0-beta.1",
-      "port-version": 6
+      "baseline": "1.0.0-beta.2",
+      "port-version": 0
     },
     "azure-messaging-eventhubs-cpp": {
-      "baseline": "1.0.0-beta.10",
-      "port-version": 2
+      "baseline": "1.0.0-beta.11",
+      "port-version": 0
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
@@ -741,7 +741,7 @@
       "port-version": 3
     },
     "bit7z": {
-      "baseline": "4.0.11",
+      "baseline": "4.0.12",
       "port-version": 0
     },
     "bitmagic": {
@@ -1721,7 +1721,7 @@
       "port-version": 5
     },
     "chenjunfu2-nbt-cpp": {
-      "baseline": "2.1.2",
+      "baseline": "2.1.3",
       "port-version": 0
     },
     "chipmunk": {
@@ -2021,7 +2021,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.44.0",
+      "baseline": "0.45.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2606,7 +2606,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 3
+      "port-version": 4
     },
     "dpp": {
       "baseline": "10.1.4",
@@ -2857,7 +2857,7 @@
       "port-version": 1
     },
     "ethindp-prism": {
-      "baseline": "0.15.0",
+      "baseline": "0.16.1",
       "port-version": 0
     },
     "etl": {
@@ -3318,7 +3318,7 @@
     },
     "gdal": {
       "baseline": "3.12.4",
-      "port-version": 1
+      "port-version": 2
     },
     "gdbm": {
       "baseline": "1.24",
@@ -4225,7 +4225,7 @@
       "port-version": 0
     },
     "jwsung91-unilink": {
-      "baseline": "0.7.2",
+      "baseline": "0.7.3",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -4269,7 +4269,7 @@
       "port-version": 1
     },
     "kcp": {
-      "baseline": "1.7.1",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "kcrash": {
@@ -5321,7 +5321,7 @@
       "port-version": 0
     },
     "libmt32emu": {
-      "baseline": "2.7.3",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "libmtp": {
@@ -6237,7 +6237,7 @@
       "port-version": 0
     },
     "lunarg-vulkantools": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "lunasvg": {
@@ -8350,7 +8350,7 @@
     },
     "qtbase": {
       "baseline": "6.10.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.10.3",
@@ -8362,7 +8362,7 @@
     },
     "qtconnectivity": {
       "baseline": "6.10.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtdatavis3d": {
       "baseline": "6.10.3",
@@ -8486,7 +8486,7 @@
     },
     "qtspeech": {
       "baseline": "6.10.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtsvg": {
       "baseline": "6.10.3",
@@ -8537,8 +8537,8 @@
       "port-version": 1
     },
     "quaternions": {
-      "baseline": "1.0.0",
-      "port-version": 2
+      "baseline": "2024-12-10",
+      "port-version": 0
     },
     "quazip": {
       "baseline": "1.5",
@@ -8589,7 +8589,7 @@
       "port-version": 0
     },
     "rang": {
-      "baseline": "3.2",
+      "baseline": "3.3",
       "port-version": 0
     },
     "range-v3": {
@@ -8721,7 +8721,7 @@
       "port-version": 0
     },
     "reflectcpp": {
-      "baseline": "0.24.0",
+      "baseline": "0.25.0",
       "port-version": 0
     },
     "refprop-headers": {
@@ -8978,7 +8978,7 @@
     },
     "sail": {
       "baseline": "0.9.10",
-      "port-version": 0
+      "port-version": 1
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -9533,19 +9533,19 @@
       "port-version": 4
     },
     "spirv-cross": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "spix": {
@@ -10005,7 +10005,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "threadpool": {
@@ -10425,7 +10425,7 @@
       "port-version": 0
     },
     "utfcpp": {
-      "baseline": "4.0.9",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "utfz": {
@@ -10625,7 +10625,7 @@
       "port-version": 0
     },
     "vk-bootstrap": {
-      "baseline": "1.4.341",
+      "baseline": "1.4.350",
       "port-version": 0
     },
     "vkfft": {
@@ -10649,7 +10649,7 @@
       "port-version": 0
     },
     "volk": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "voro": {
@@ -10705,11 +10705,11 @@
       "port-version": 0
     },
     "vulkan-extensionlayer": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "vulkan-hpp": {
@@ -10717,7 +10717,7 @@
       "port-version": 0
     },
     "vulkan-loader": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
@@ -10729,19 +10729,19 @@
       "port-version": 0
     },
     "vulkan-sdk-components": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "vulkan-tools": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "vulkan-utility-libraries": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "vulkan-validationlayers": {
-      "baseline": "1.4.341.0",
+      "baseline": "1.4.350.0",
       "port-version": 0
     },
     "vvenc": {
@@ -10781,8 +10781,8 @@
       "port-version": 0
     },
     "wayland-protocols": {
-      "baseline": "1.43",
-      "port-version": 0
+      "baseline": "1.48",
+      "port-version": 1
     },
     "wcslib": {
       "baseline": "8.5",
@@ -10794,7 +10794,7 @@
     },
     "webrtc": {
       "baseline": "2026-03-17",
-      "port-version": 0
+      "port-version": 1
     },
     "webthing-cpp": {
       "baseline": "1.2.0",
