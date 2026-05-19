@@ -6213,7 +6213,7 @@
       "port-version": 0
     },
     "luabridge3": {
-      "baseline": "3.0-rc3",
+      "baseline": "3.0-rc11",
       "port-version": 0
     },
     "luafilesystem": {
