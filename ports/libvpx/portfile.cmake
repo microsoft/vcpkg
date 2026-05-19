@@ -8,6 +8,10 @@ vcpkg_from_github(
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
         0005-dont-expect-gnu-diff.patch
+        0006-gen-vcxproj-ignore-unknown-flags.patch
+        # Candidate upstream fix: makes configure-time toolchain probes use -Fo/-Fe when CC/LD is cl.exe or clang-cl.
+        # Once upstream picks this up (or once we drop --enable-external-build), the MSVC arm64 SVE workaround below can also be removed.
+        0007-msvc-use-Fo-in-toolchain-probe.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -30,6 +34,12 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp")
+    # Remove stale vpx-* dist directories from previous builds to avoid picking old artifacts.
+    file(GLOB _vpx_stale_dirs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*")
+    if(_vpx_stale_dirs)
+        file(REMOVE_RECURSE ${_vpx_stale_dirs})
+    endif()
+
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
@@ -68,14 +78,26 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
+    set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic --disable-dependency-tracking)
+
+    # Force VS generation to avoids Unix-style rules that break with cl/ar semantics
+    list(APPEND OPTIONS --enable-external-build)
+
+   # Disable SVE/SVE2 probe to avoids missing `<arm_sve.h>` in pure-MSVC.
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        vcpkg_cmake_get_vars(_libvpx_cmake_vars_file)
+        include("${_libvpx_cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            list(APPEND OPTIONS --disable-sve --disable-sve2)
+        endif()
+    endif()
 
     if("realtime" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+        list(APPEND OPTIONS --enable-realtime-only)
     endif()
 
     if("highbitdepth" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+        list(APPEND OPTIONS --enable-vp9-highbitdepth)
     endif()
 
     message(STATUS "Generating makefile")
@@ -103,13 +125,18 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_SUBPATH vpx.vcxproj
     )
 
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
-    else()
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
+    # libvpx's make dist creates a directory with the pattern:
+    #   vpx-[CODEC_FEATURES]-[ARCH][CRT]-[VS]-v[VERSION]
+    # GLOB to find the actual directory.
+    file(GLOB LIBVPX_INCLUDE_DIR_CANDIDATES
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
+    list(LENGTH LIBVPX_INCLUDE_DIR_CANDIDATES _vpx_n)
+    if(_vpx_n EQUAL 0)
+        message(FATAL_ERROR "libvpx: no dist include directory found under ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+    elseif(_vpx_n GREATER 1)
+        message(FATAL_ERROR "libvpx: found ${_vpx_n} candidate dist directories; expected exactly one")
     endif()
+    list(GET LIBVPX_INCLUDE_DIR_CANDIDATES 0 LIBVPX_INCLUDE_DIR)
     file(
         INSTALL
             "${LIBVPX_INCLUDE_DIR}"

@@ -1,0 +1,96 @@
+From c3fb37eb8e2fde7db55c045a5b690065b6569d98 Mon Sep 17 00:00:00 2001
+From: "A. Jiang" <de34@live.cn>
+Date: Mon, 3 Nov 2025 00:30:31 +0800
+Subject: [PATCH] Remove uses of `stdext::checked_array_iterator`
+
+This extension is deprecated long time ago and being removed now.
+It was suggested by at least one maintainer that we should just remove
+its uses instead of creating a non-deprecated copy.
+
+The removal should also fix build errors due to deprecation/removal of
+`stdext::checked_array_iterator`.
+---
+ Release/include/cpprest/containerstream.h        |  5 -----
+ Release/include/cpprest/producerconsumerstream.h | 10 ----------
+ Release/include/cpprest/rawptrstream.h           | 12 +-----------
+ 3 files changed, 1 insertion(+), 26 deletions(-)
+
+diff --git a/Release/include/cpprest/containerstream.h b/Release/include/cpprest/containerstream.h
+index 6e949a75e0..02fe55459e 100644
+--- a/Release/include/cpprest/containerstream.h
++++ b/Release/include/cpprest/containerstream.h
+@@ -399,12 +399,7 @@ class basic_container_buffer : public streams::details::streambuf_state_manager<
+         auto readBegin = std::begin(m_data) + m_current_position;
+         auto readEnd = std::begin(m_data) + newPos;
+ 
+-#if defined(_ITERATOR_DEBUG_LEVEL) && _ITERATOR_DEBUG_LEVEL != 0
+-        // Avoid warning C4996: Use checked iterators under SECURE_SCL
+-        std::copy(readBegin, readEnd, stdext::checked_array_iterator<_CharType*>(ptr, count));
+-#else
+         std::copy(readBegin, readEnd, ptr);
+-#endif // _WIN32
+ 
+         if (advance)
+         {
+diff --git a/Release/include/cpprest/producerconsumerstream.h b/Release/include/cpprest/producerconsumerstream.h
+index 3487c4606f..c33a4af2a8 100644
+--- a/Release/include/cpprest/producerconsumerstream.h
++++ b/Release/include/cpprest/producerconsumerstream.h
+@@ -439,12 +439,7 @@ class basic_producer_consumer_buffer : public streams::details::streambuf_state_
+             _CharType* beg = rbegin();
+             _CharType* end = rbegin() + countRead;
+ 
+-#if defined(_ITERATOR_DEBUG_LEVEL) && _ITERATOR_DEBUG_LEVEL != 0
+-            // Avoid warning C4996: Use checked iterators under SECURE_SCL
+-            std::copy(beg, end, stdext::checked_array_iterator<_CharType*>(dest, count));
+-#else
+             std::copy(beg, end, dest);
+-#endif // _WIN32
+ 
+             if (advance)
+             {
+@@ -462,12 +457,7 @@ class basic_producer_consumer_buffer : public streams::details::streambuf_state_
+ 
+             const _CharType* srcEnd = src + countWritten;
+ 
+-#if defined(_ITERATOR_DEBUG_LEVEL) && _ITERATOR_DEBUG_LEVEL != 0
+-            // Avoid warning C4996: Use checked iterators under SECURE_SCL
+-            std::copy(src, srcEnd, stdext::checked_array_iterator<_CharType*>(wbegin(), static_cast<size_t>(avail)));
+-#else
+             std::copy(src, srcEnd, wbegin());
+-#endif // _WIN32
+ 
+             update_write_head(countWritten);
+             return countWritten;
+diff --git a/Release/include/cpprest/rawptrstream.h b/Release/include/cpprest/rawptrstream.h
+index 1f15ecbe77..40842a5597 100644
+--- a/Release/include/cpprest/rawptrstream.h
++++ b/Release/include/cpprest/rawptrstream.h
+@@ -439,12 +439,7 @@ class basic_rawptr_buffer : public streams::details::streambuf_state_manager<_Ch
+         auto readBegin = m_data + m_current_position;
+         auto readEnd = m_data + newPos;
+ 
+-#if defined(_ITERATOR_DEBUG_LEVEL) && _ITERATOR_DEBUG_LEVEL != 0
+-        // Avoid warning C4996: Use checked iterators under SECURE_SCL
+-        std::copy(readBegin, readEnd, stdext::checked_array_iterator<_CharType*>(ptr, count));
+-#else
+         std::copy(readBegin, readEnd, ptr);
+-#endif // _WIN32
+ 
+         if (advance)
+         {
+@@ -465,13 +460,8 @@ class basic_rawptr_buffer : public streams::details::streambuf_state_manager<_Ch
+ 
+         if (newSize > m_size) throw std::runtime_error("Writing past the end of the buffer");
+ 
+-            // Copy the data
+-#if defined(_ITERATOR_DEBUG_LEVEL) && _ITERATOR_DEBUG_LEVEL != 0
+-        // Avoid warning C4996: Use checked iterators under SECURE_SCL
+-        std::copy(ptr, ptr + count, stdext::checked_array_iterator<_CharType*>(m_data, m_size, m_current_position));
+-#else
++        // Copy the data
+         std::copy(ptr, ptr + count, m_data + m_current_position);
+-#endif // _WIN32
+ 
+         // Update write head and satisfy pending reads if any
+         update_current_position(newSize);
