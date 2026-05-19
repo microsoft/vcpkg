@@ -28,6 +28,18 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openjph)
+
+# OpenJPH sets CMAKE_DEBUG_POSTFIX ("d" for MSVC, "_d" for others) but the
+# generated .pc file always references -lopenjph. Fix the debug .pc to match
+# the actual library name on disk.
+if(NOT VCPKG_BUILD_TYPE)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openjph.pc" "-lopenjph" "-lopenjphd")
+    else()
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openjph.pc" "-lopenjph" "-lopenjph_d")
+    endif()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
