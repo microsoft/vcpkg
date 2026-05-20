@@ -1,7 +1,7 @@
 {
   "name": "dpdk",
   "version": "26.3",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
   "documentation": "https://doc.dpdk.org/guides/",
@@ -36,8 +36,42 @@
         "rdma-core"
       ]
     },
+    "pmd-bnx2x": {
+      "description": "Build BNX2X Poll Mode Driver",
+      "supports": "!windows",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "pmd-compress-isal": {
+      "description": "Build ISA-L Compression Poll Mode Driver",
+      "supports": "!uwp & (x64 | (arm64 & linux))",
+      "dependencies": [
+        "isal"
+      ]
+    },
+    "pmd-compress-zlib": {
+      "description": "Build ZLIB Compression Poll Mode Driver",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "pmd-crypto-ccp": {
+      "description": "Build AMD CCP Crypto Poll Mode Driver",
+      "supports": "linux",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "pmd-crypto-openssl": {
+      "description": "Build OpenSSL Crypto Poll Mode Driver",
+      "supports": "!windows",
+      "dependencies": [
+        "openssl"
+      ]
+    },
     "pmd-ipn3ke": {
-      "description": "Build the IPN3KE Poll Mode Driver",
+      "description": "Build IPN3KE Poll Mode Driver",
       "supports": "!windows",
       "dependencies": [
         "dtc"
@@ -57,8 +91,22 @@
         "rdma-core"
       ]
     },
+    "pmd-pcap": {
+      "description": "Build PCAP Poll Mode Driver",
+      "supports": "!windows",
+      "dependencies": [
+        "libpcap"
+      ]
+    },
+    "qat": {
+      "description": "Build Intel QuickAssist drivers",
+      "supports": "!windows",
+      "dependencies": [
+        "openssl"
+      ]
+    },
     "rawdev-ifpga": {
-      "description": "Build the IFPGA Rawdev Driver",
+      "description": "Build IFPGA Rawdev Driver",
       "supports": "!windows",
       "dependencies": [
         "dtc"

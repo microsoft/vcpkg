@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ac81279..cfc2f3b 100644
+index df970d3..7c4df5c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -299,7 +299,7 @@ endif()
+@@ -298,7 +298,7 @@ endif()
  # Common configuration file
  #
  configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${PROJECT_BINARY_DIR}/include/sail-common/config.h" @ONLY)
@@ -12,10 +12,10 @@ index ac81279..cfc2f3b 100644
  # Print configuration statistics
  #
 diff --git a/src/bindings/sail-c++/CMakeLists.txt b/src/bindings/sail-c++/CMakeLists.txt
-index 4b69ad4..f4bac29 100644
+index a4ad915..6806f2f 100644
 --- a/src/bindings/sail-c++/CMakeLists.txt
 +++ b/src/bindings/sail-c++/CMakeLists.txt
-@@ -131,7 +131,7 @@ install(TARGETS sail-c++
+@@ -134,7 +134,7 @@ install(TARGETS sail-c++
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -25,7 +25,7 @@ index 4b69ad4..f4bac29 100644
  # Install development packages
  #
 diff --git a/src/sail-common/CMakeLists.txt b/src/sail-common/CMakeLists.txt
-index 06ce246..c8576e5 100644
+index 5193f90..0e689f7 100644
 --- a/src/sail-common/CMakeLists.txt
 +++ b/src/sail-common/CMakeLists.txt
 @@ -114,7 +114,7 @@ endif()
@@ -47,10 +47,10 @@ index 06ce246..c8576e5 100644
  # Install development packages
  #
 diff --git a/src/sail-manip/CMakeLists.txt b/src/sail-manip/CMakeLists.txt
-index 5740764..47b81bb 100644
+index 334a423..4ad54b2 100644
 --- a/src/sail-manip/CMakeLists.txt
 +++ b/src/sail-manip/CMakeLists.txt
-@@ -59,7 +59,7 @@ install(TARGETS sail-manip
+@@ -67,7 +67,7 @@ install(TARGETS sail-manip
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -60,10 +60,10 @@ index 5740764..47b81bb 100644
  # Install development packages
  #
 diff --git a/src/sail/CMakeLists.txt b/src/sail/CMakeLists.txt
-index 85590af..2303f63 100644
+index 9fd7119..ec4be36 100644
 --- a/src/sail/CMakeLists.txt
 +++ b/src/sail/CMakeLists.txt
-@@ -118,11 +118,11 @@ install(TARGETS sail
+@@ -125,11 +125,11 @@ install(TARGETS sail
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
