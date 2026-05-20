@@ -34,7 +34,7 @@ index e81444eceb..4baddeb719 100644
  set(opencascade_missing_targets)
  foreach (opencascade_req_target IN LISTS opencascade_req_targets)
    if (NOT TARGET "${opencascade_req_target}")
-@@ -35,8 +48,7 @@ vtk_module_link(VTK::IOOCCT
+@@ -34,8 +47,7 @@ vtk_module_link(VTK::IOOCCT
      ${opencascade_req_targets})
  
  # OpenCASCADE started putting include directory usage requirements in 7.7.0.
