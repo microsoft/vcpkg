@@ -3,3 +3,6 @@ toomanycooks provides CMake targets:
   set(TMC_PRIORITY_COUNT 8) # integer from 1 to 16, optional
   find_package(TooManyCooks CONFIG REQUIRED)
   target_link_libraries(main PRIVATE TooManyCooks::TooManyCooks)
+
+The boost-asio backend can be replaced with standalone asio via the the overlay port located in the library repo:
+https://github.com/tzcnt/TooManyCooks/tree/main/ports/toomanycooks

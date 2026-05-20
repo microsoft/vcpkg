@@ -8,10 +8,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-if("standalone-asio" IN_LIST FEATURES AND "boost-asio" IN_LIST FEATURES)
-    message(FATAL_ERROR "toomanycooks features 'standalone-asio' and 'boost-asio' are mutually exclusive")
-endif()
-
 if("windows-dll" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(FATAL_ERROR "toomanycooks feature 'windows-dll' is only supported for Windows targets")
 endif()
@@ -19,7 +15,6 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         hwloc                    TMC_USE_HWLOC
-        boost-asio               TMC_USE_BOOST_ASIO
         trivial-task             TMC_TRIVIAL_TASK
         nodiscard-await          TMC_NODISCARD_AWAIT
         more-threads             TMC_MORE_THREADS
@@ -45,6 +40,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DTMC_USE_BOOST_ASIO # Switching the Asio backend is not supported in the vcpkg registry.
         -DTMC_WORK_ITEM=${TMC_WORK_ITEM}
 )
 

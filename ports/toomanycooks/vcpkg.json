@@ -7,6 +7,7 @@
   "license": "BSL-1.0",
   "supports": "!uwp",
   "dependencies": [
+    "boost-asio",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,12 +21,6 @@
     "hwloc"
   ],
   "features": {
-    "boost-asio": {
-      "description": "Use Boost.Asio instead of standalone Asio for the tmc/asio headers.",
-      "dependencies": [
-        "boost-asio"
-      ]
-    },
     "debug-task-alloc-count": {
       "description": "Enable TMC_DEBUG_TASK_ALLOC_COUNT."
     },
@@ -46,12 +41,6 @@
     },
     "nodiscard-await": {
       "description": "Enable TMC_NODISCARD_AWAIT."
-    },
-    "standalone-asio": {
-      "description": "Install standalone Asio for use with the tmc/asio headers.",
-      "dependencies": [
-        "asio"
-      ]
     },
     "standalone-compilation": {
       "description": "Enable TMC_STANDALONE_COMPILATION."
