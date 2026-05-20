@@ -4701,7 +4701,7 @@
       "port-version": 0
     },
     "libaec": {
-      "baseline": "1.1.6",
+      "baseline": "1.1.7",
       "port-version": 0
     },
     "libaes-siv": {
