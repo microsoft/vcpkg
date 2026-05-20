@@ -1,9 +1,11 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+set(filename octave-${VERSION}.tar.xz)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftpmirror.gnu.org/octave/octave-${VERSION}.tar.xz"
-         "https://ftp.gnu.org/gnu/octave/octave-${VERSION}.tar.xz"
-    FILENAME "octave-${VERSION}.tar.xz"
+    URLS "https://ftpmirror.gnu.org/octave/${filename}"
+         "https://ftp.gnu.org/gnu/octave/${filename}"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/octave/${filename}"
+    FILENAME "${filename}"
     SHA512 4ba4d65e326ab85ffcf8864b073910b8ec5ecaba96d18cffa2b13e8f38e5382e7a200bd9bc8838c47b947edcf8388ad3dd749e2d4f529f1f110946d99adf188f
 )
 

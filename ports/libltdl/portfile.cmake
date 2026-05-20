@@ -1,7 +1,9 @@
+set(filename libtool-${VERSION}.tar.xz)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftpmirror.gnu.org/libtool/libtool-${VERSION}.tar.xz"
-         "https://ftp.gnu.org/pub/gnu/libtool/libtool-${VERSION}.tar.xz"
-    FILENAME "gnu-libtool-${VERSION}.tar.xz"
+    URLS "https://ftpmirror.gnu.org/libtool/${filename}"
+         "https://ftp.gnu.org/pub/gnu/libtool/${filename}"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libtool/${filename}"
+    FILENAME "gnu-${filename}"
     SHA512 eed207094bcc444f4bfbb13710e395e062e3f1d312ca8b186ab0cbd22dc92ddef176a0b3ecd43e02676e37bd9e328791c59a38ef15846d4eae15da4f20315724
 )
 

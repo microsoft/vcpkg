@@ -1,8 +1,10 @@
+set(filename mpc-${VERSION}.tar.gz)
 vcpkg_download_distfile(ARCHIVE
     URLS
-        "https://ftpmirror.gnu.org/gnu/mpc/mpc-${VERSION}.tar.gz"
-        "https://ftp.gnu.org/gnu/mpc/mpc-${VERSION}.tar.gz"
-    FILENAME "mpc-${VERSION}.tar.gz"
+        "https://ftpmirror.gnu.org/gnu/mpc/${filename}"
+        "https://ftp.gnu.org/gnu/mpc/${filename}"
+        "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/mpc/${filename}"
+    FILENAME "${filename}"
     SHA512 4bab4ef6076f8c5dfdc99d810b51108ced61ea2942ba0c1c932d624360a5473df20d32b300fc76f2ba4aa2a97e1f275c9fd494a1ba9f07c4cb2ad7ceaeb1ae97
 )
 

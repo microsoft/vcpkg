@@ -1,8 +1,10 @@
-vcpkg_download_distfile(ARCHIVE 
+set(filename guile-${VERSION}.tar.gz)
+vcpkg_download_distfile(ARCHIVE
     URLS
-        "https://ftpmirror.gnu.org/guile/guile-${VERSION}.tar.gz"    
-        "https://ftp.gnu.org/gnu/guile/guile-${VERSION}.tar.gz"
-    FILENAME "guile-${VERSION}.tar.gz"
+        "https://ftpmirror.gnu.org/guile/${filename}"
+        "https://ftp.gnu.org/gnu/guile/${filename}"
+        "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/guile/${filename}"
+    FILENAME "${filename}"
     SHA512 bf81eca9554d22dcfcff4797739dee18758c257bd2c848fdf508e3fd6e58ffd9754b08a57d8ba31c80a69b0444fff3b045e22ec88fc34ef787cd71f5466fafe8
 )
 

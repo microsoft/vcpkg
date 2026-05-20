@@ -1,8 +1,11 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
+set(filename mpfr-${VERSION}.tar.xz)
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.mpfr.org/mpfr-${VERSION}/mpfr-${VERSION}.tar.xz" "https://ftp.gnu.org/gnu/mpfr/mpfr-${VERSION}.tar.xz"
-    FILENAME "mpfr-${VERSION}.tar.xz"
+    URLS "https://www.mpfr.org/mpfr-${VERSION}/${filename}"
+         "https://ftp.gnu.org/gnu/mpfr/${filename}"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/mpfr/${filename}"
+    FILENAME "${filename}"
     SHA512 eb9e7f51b5385fb349cc4fba3a45ffdf0dd53be6dfc74932dc01258158a10514667960c530c47dd9dfc5aa18be2bd94859d80499844c5713710581e6ac6259a9
 )
 

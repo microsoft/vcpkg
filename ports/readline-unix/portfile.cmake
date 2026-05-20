@@ -4,6 +4,7 @@ vcpkg_download_distfile(
     URLS
         "https://ftpmirror.gnu.org/gnu/readline/${filename}"
         "https://ftp.gnu.org/gnu/readline/${filename}"
+        "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/readline/${filename}"
     FILENAME "${filename}"
     SHA512 513002753dcf5db9213dbbb61d51217245f6a40d33b1dd45238e8062dfa8eef0c890b87a5548e11db959e842724fb572c4d3d7fb433773762a63c30efe808344
 )

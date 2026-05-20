@@ -1,6 +1,7 @@
 {
   "name": "libltdl",
   "version": "2.5.4",
+  "port-version": 1,
   "description": "A system independent dlopen wrapper for GNU libtool",
   "homepage": "https://www.gnu.org/software/libtool/",
   "license": "LGPL-2.1-or-later",

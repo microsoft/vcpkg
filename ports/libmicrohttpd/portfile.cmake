@@ -1,8 +1,10 @@
+set(filename libmicrohttpd-${VERSION}.tar.gz)
 vcpkg_download_distfile(ARCHIVE
     URLS
-        "https://ftpmirror.gnu.org/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
-        "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
-    FILENAME "libmicrohttpd-${VERSION}.tar.gz"
+        "https://ftpmirror.gnu.org/libmicrohttpd/${filename}"
+        "https://ftp.gnu.org/gnu/libmicrohttpd/${filename}"
+        "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libmicrohttpd/${filename}"
+    FILENAME "${filename}"
     SHA512 7ed3e81f0c4253a409f5e825446c8d2d8b975c0eb6f381b6867796bbdcf4890004a24659e95b8ec8c39e8df0a9885cc08a0ba75f953893ee1455ae180dc89391
 )
 
@@ -25,7 +27,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         RELEASE_CONFIGURATION "Release-${CFG_SUFFIX}"
         DEBUG_CONFIGURATION "Debug-${CFG_SUFFIX}"
     )
-    
+
     file(GLOB MICROHTTPD_HEADERS "${SOURCE_PATH}/src/include/microhttpd.h")
     file(COPY ${MICROHTTPD_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 else()
@@ -54,7 +56,7 @@ else()
 
     vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
-    
+
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 

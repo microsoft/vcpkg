@@ -3,7 +3,9 @@ set(DISTFILE_SHA512_HASH 4e92195fa058c707146f2690f3a38b46c33add948c852f67659ca00
 vcpkg_download_distfile(
     DISTFILE
     FILENAME "glpk.tar.gz"
-    URLS "https://ftpmirror.gnu.org/gnu/glpk/glpk-${VERSION}.tar.gz" "https://ftp.gnu.org/gnu/glpk/glpk-${VERSION}.tar.gz"
+    URLS "https://ftpmirror.gnu.org/gnu/glpk/glpk-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/gnu/glpk/glpk-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/glpk/glpk-${VERSION}.tar.gz"
     SHA512 ${DISTFILE_SHA512_HASH}
 )
 
