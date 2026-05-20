@@ -83,8 +83,12 @@ Function Get-ContentSourceDescription {
     return $null
   }
 
-  if ($uri.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
-    return 'vcpkgimageminting using SAS token'
+  if ($Url.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
+    if ($Url.Query -match '(^\?|&)sig=') {
+      return 'vcpkgimageminting using SAS token'
+    }
+
+    return 'vcpkgimageminting'
   }
 
   return 'the internet'
