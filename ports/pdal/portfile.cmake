@@ -21,6 +21,7 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake"
     "${SOURCE_PATH}/cmake/modules/FindICONV.cmake"
     "${SOURCE_PATH}/cmake/modules/FindZSTD.cmake"
+    "${SOURCE_PATH}/plugins/e57/libE57Format"
     "${SOURCE_PATH}/vendor/eigen"
     "${SOURCE_PATH}/vendor/h3"
     "${SOURCE_PATH}/vendor/nanoflann"
