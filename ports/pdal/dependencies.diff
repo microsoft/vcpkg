@@ -186,6 +186,35 @@ index a328f34..bedb367 100644
          nanoflann::SearchParams params;
          params.sorted = true;
  
+diff --git a/plugins/e57/CMakeLists.txt b/plugins/e57/CMakeLists.txt
+index a94ab26..1d15330 100644
+--- a/plugins/e57/CMakeLists.txt
++++ b/plugins/e57/CMakeLists.txt
+@@ -7,7 +7,7 @@ if (STANDALONE)
+ endif(STANDALONE)
+ 
+ 
+-add_subdirectory(libE57Format)
++find_package(e57format CONFIG REQUIRED)
+ 
+ PDAL_ADD_PLUGIN(e57plugin_reader reader e57
+     FILES
+@@ -21,7 +21,6 @@ PDAL_ADD_PLUGIN(e57plugin_reader reader e57
+         E57Format
+         ${PDAL_LIBRARIES}
+     INCLUDES
+-        libE57Format/include
+ )
+ target_compile_definitions(${e57plugin_reader}
+     PRIVATE
+@@ -38,7 +37,6 @@ PDAL_ADD_PLUGIN(e57plugin_writer writer e57
+         E57Format
+         ${PDAL_LIBRARIES}
+     INCLUDES
+-        libE57Format/include
+ )
+ 
+ if (WITH_TESTS)
 diff --git a/tools/lasdump/CMakeLists.txt b/tools/lasdump/CMakeLists.txt
 index fa842d1..a9f4e7a 100644
 --- a/tools/lasdump/CMakeLists.txt

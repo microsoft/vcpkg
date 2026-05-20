@@ -1,6 +1,7 @@
 {
   "name": "pdal",
   "version": "2.10.1",
+  "port-version": 1,
   "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
   "homepage": "https://pdal.org/",
   "license": null,
@@ -53,7 +54,11 @@
     "e57": {
       "description": "Build the E57 plugin",
       "dependencies": [
-        "xerces-c"
+        "libe57format",
+        {
+          "name": "xerces-c",
+          "default-features": false
+        }
       ]
     },
     "hdf": {
