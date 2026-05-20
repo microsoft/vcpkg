@@ -14,7 +14,7 @@
     {
       "name": "gdal",
       "features": [
-        "freesql"
+        "freexl"
       ],
       "platform": "!(arm32 | x86) | mingw"
     },
