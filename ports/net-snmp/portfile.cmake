@@ -43,41 +43,21 @@ vcpkg_build_nmake(
         ${NET_SNMP_FEATURE_LIST}
         ${NET_SNMP_SSL}
         --config=release
-        "--prefix=${CURRENT_PACKAGES_DIR}"
+        "--prefix=${TARGET_DIR}"
     PRERUN_SHELL_DEBUG "${PERL}" Configure
         ${NET_SNMP_FEATURE_LIST}
         ${NET_SNMP_SSL_DEBUG}
         --config=debug
-        "--prefix=${CURRENT_PACKAGES_DIR}/debug"
+        "--prefix=${TARGET_DIR_DEBUG}"
     PROJECT_NAME "Makefile"
     TARGET ${TARGETS} install install_devel
     LOGFILE_ROOT build-net-snmp
 )
 
-
-# remove not needed files
-file(REMOVE
-    "${TARGET_DIR}/bin/mib2c"
-    "${TARGET_DIR}/bin/mib2c.bat"
-    "${TARGET_DIR}/bin/snmpconf"
-    "${TARGET_DIR}/bin/snmpconf.bat"
-    "${TARGET_DIR}/bin/traptoemail"
-    "${TARGET_DIR}/bin/traptoemail.bat"
-    "${TARGET_DIR_DEBUG}/bin/mib2c"
-    "${TARGET_DIR_DEBUG}/bin/mib2c.bat"
-    "${TARGET_DIR_DEBUG}/bin/snmpconf"
-    "${TARGET_DIR_DEBUG}/bin/snmpconf.bat"
-    "${TARGET_DIR_DEBUG}/bin/traptoemail"
-    "${TARGET_DIR_DEBUG}/bin/traptoemail.bat"
-    )
-
 file(REMOVE_RECURSE
     "${TARGET_DIR}/etc"
     "${TARGET_DIR}/temp"
     "${TARGET_DIR}/snmp"
-    "${TARGET_DIR_DEBUG}/etc"
-    "${TARGET_DIR_DEBUG}/temp"
-    "${TARGET_DIR_DEBUG}/snmp"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -112,32 +92,41 @@ file(REMOVE
     "${TARGET_DIR}/lib/netsnmp.exp"
 )
 
-file(REMOVE_RECURSE
-    "${TARGET_DIR_DEBUG}/include"
-    "${TARGET_DIR_DEBUG}/share"
-)
-
-file(INSTALL
-    "${TARGET_DIR}/"
-    DESTINATION
-    "${CURRENT_PACKAGES_DIR}"
-)
-
-file(INSTALL
-    "${TARGET_DIR_DEBUG}/"
-    DESTINATION
-    "${CURRENT_PACKAGES_DIR}/debug"
-)
-
 if(VCPKG_BUILD_TYPE STREQUAL "release")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(REMOVE
+        "${TARGET_DIR_DEBUG}/bin/mib2c"
+        "${TARGET_DIR_DEBUG}/bin/mib2c.bat"
+        "${TARGET_DIR_DEBUG}/bin/snmpconf"
+        "${TARGET_DIR_DEBUG}/bin/snmpconf.bat"
+        "${TARGET_DIR_DEBUG}/bin/traptoemail"
+        "${TARGET_DIR_DEBUG}/bin/traptoemail.bat"
+    )
+    file(REMOVE_RECURSE
+        "${TARGET_DIR_DEBUG}/include"
+        "${TARGET_DIR_DEBUG}/share"
+        "${TARGET_DIR_DEBUG}/temp"
+        "${TARGET_DIR_DEBUG}/snmp"
+        "${TARGET_DIR_DEBUG}/etc"
+    )
+endif()
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/net-snmp")
+
+foreach(_tool IN ITEMS mib2c mib2c.bat snmpconf snmpconf.bat traptoemail traptoemail.bat)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_tool}" "${CURRENT_PACKAGES_DIR}/tools/net-snmp/${_tool}")
+    endif()
+endforeach()
+
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
-        SEARCH_DIR "${TARGET_DIR}/bin"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools"
+        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/net-snmp"
         AUTO_CLEAN
     )
 endif()
