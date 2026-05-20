@@ -8654,7 +8654,7 @@
     },
     "rdma-core": {
       "baseline": "62.0",
-      "port-version": 1
+      "port-version": 2
     },
     "re2": {
       "baseline": "2025-11-05",
@@ -9818,7 +9818,7 @@
     },
     "suitesparse-paru": {
       "baseline": "1.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "suitesparse-rbio": {
       "baseline": "4.3.5",
@@ -10826,7 +10826,7 @@
     },
     "whisper-cpp": {
       "baseline": "1.8.4",
-      "port-version": 0
+      "port-version": 1
     },
     "wiiuse": {
       "baseline": "0.15.7",
