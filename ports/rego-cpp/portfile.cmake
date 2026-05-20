@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 a9e7b6202fdc7b7168433227c7bc67492d52bdf10c5d9b2c0954aa66a9eb5a16a9b4de7eb7385a335c6685111393aad6840c171ab12b3e6b2fd493b5bffea21c
     HEAD_REF main
+    PATCHES
+      add-bigobj.diff # src\rego_to_bundle.cc : fatal error C1128: number of sections exceeded object file format limit: compile with /bigobj
 )
 
 # NOTE: The CI overlay port (see .github/workflows/pr_gate.yml,
