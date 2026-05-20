@@ -12,7 +12,10 @@
       ]
     },
     {
-      "name": "freexl",
+      "name": "gdal",
+      "features": [
+        "freesql"
+      ],
       "platform": "!(arm32 | x86) | mingw"
     },
     {
