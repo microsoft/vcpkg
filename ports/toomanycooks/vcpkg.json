@@ -5,7 +5,7 @@
   "homepage": "https://github.com/tzcnt/TooManyCooks",
   "documentation": "https://fleetcode.com/oss/tmc/docs",
   "license": "BSL-1.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !android",
   "dependencies": [
     "boost-asio",
     {
