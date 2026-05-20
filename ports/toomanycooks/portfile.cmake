@@ -40,7 +40,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DTMC_USE_BOOST_ASIO # Switching the Asio backend is not supported in the vcpkg registry.
+        -DTMC_USE_BOOST_ASIO=ON # Switching the Asio backend is not supported in the vcpkg registry.
         -DTMC_WORK_ITEM=${TMC_WORK_ITEM}
 )
 
