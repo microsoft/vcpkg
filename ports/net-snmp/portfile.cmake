@@ -114,95 +114,97 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     )
 endif()
 
-set(NET_SNMP_TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/net-snmp")
-file(MAKE_DIRECTORY "${NET_SNMP_TOOL_DIR}")
+if(EXISTS "${TARGET_DIR}/bin/traptoemail" OR EXISTS "${TARGET_DIR}/bin/encode_keychange")
+    set(NET_SNMP_TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/net-snmp")
+    file(MAKE_DIRECTORY "${NET_SNMP_TOOL_DIR}")
 
-foreach(_tool IN ITEMS mib2c mib2c.bat snmpconf snmpconf.bat traptoemail traptoemail.bat)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_tool}" "${NET_SNMP_TOOL_DIR}/${_tool}")
+    foreach(_tool IN ITEMS mib2c mib2c.bat snmpconf snmpconf.bat traptoemail traptoemail.bat)
+        if(EXISTS "${TARGET_DIR}/bin/${_tool}")
+            file(RENAME "${TARGET_DIR}/bin/${_tool}" "${NET_SNMP_TOOL_DIR}/${_tool}")
+        endif()
+    endforeach()
+
+
+    if(EXISTS "${NET_SNMP_TOOL_DIR}/mib2c")
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/mib2c"
+            "${TARGET_DIR}/share/snmp/"
+            "../../share/snmp/"
+            IGNORE_UNCHANGED
+        )
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/mib2c"
+            "${TARGET_DIR}/share/snmp/mib2c-data"
+            "../../share/snmp/mib2c-data"
+            IGNORE_UNCHANGED
+        )
     endif()
-endforeach()
 
+    if(EXISTS "${NET_SNMP_TOOL_DIR}/mib2c.bat")
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/mib2c.bat"
+            "set MYPERLPROGRAM=c:\\usr\\bin\\mib2c"
+            "set MYPERLPROGRAM=mib2c"
+            IGNORE_UNCHANGED
+        )
+    endif()
 
-if(EXISTS "${NET_SNMP_TOOL_DIR}/mib2c")
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/mib2c"
-        "${TARGET_DIR}/share/snmp/"
-        "../../share/snmp/"
-        IGNORE_UNCHANGED
-    )
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/mib2c"
-        "${TARGET_DIR}/share/snmp/mib2c-data"
-        "../../share/snmp/mib2c-data"
-        IGNORE_UNCHANGED
-    )
-endif()
+    if(EXISTS "${NET_SNMP_TOOL_DIR}/snmpconf")
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/snmpconf"
+            "${TARGET_DIR}/share/snmp/snmpconf-data"
+            "../../share/snmp/snmpconf-data"
+            IGNORE_UNCHANGED
+        )
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/snmpconf"
+            "${TARGET_DIR}/share/snmp"
+            "../../share/snmp"
+            IGNORE_UNCHANGED
+        )
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/snmpconf"
+            "${TARGET_DIR}/etc/snmp"
+            "../../share/snmp"
+            IGNORE_UNCHANGED
+        )
+    endif()
 
-if(EXISTS "${NET_SNMP_TOOL_DIR}/mib2c.bat")
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/mib2c.bat"
-        "set MYPERLPROGRAM=c:\\usr\\bin\\mib2c"
-        "set MYPERLPROGRAM=mib2c"
-        IGNORE_UNCHANGED
-    )
-endif()
+    if(EXISTS "${NET_SNMP_TOOL_DIR}/snmpconf.bat")
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/snmpconf.bat"
+            "set MYPERLPROGRAM=c:\\usr\\bin\\snmpconf"
+            "set MYPERLPROGRAM=snmpconf"
+            IGNORE_UNCHANGED
+        )
+    endif()
 
-if(EXISTS "${NET_SNMP_TOOL_DIR}/snmpconf")
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/snmpconf"
-        "${TARGET_DIR}/share/snmp/snmpconf-data"
-        "../../share/snmp/snmpconf-data"
-        IGNORE_UNCHANGED
-    )
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/snmpconf"
-        "${TARGET_DIR}/share/snmp"
-        "../../share/snmp"
-        IGNORE_UNCHANGED
-    )
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/snmpconf"
-        "${TARGET_DIR}/etc/snmp"
-        "../../share/snmp"
-        IGNORE_UNCHANGED
-    )
-endif()
+    if(EXISTS "${NET_SNMP_TOOL_DIR}/traptoemail")
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/traptoemail"
+            "${TARGET_DIR}/bin/traptoemail"
+            "traptoemail"
+            IGNORE_UNCHANGED
+        )
+    endif()
 
-if(EXISTS "${NET_SNMP_TOOL_DIR}/snmpconf.bat")
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/snmpconf.bat"
-        "set MYPERLPROGRAM=c:\\usr\\bin\\snmpconf"
-        "set MYPERLPROGRAM=snmpconf"
-        IGNORE_UNCHANGED
-    )
-endif()
+    if(EXISTS "${NET_SNMP_TOOL_DIR}/traptoemail.bat")
+        vcpkg_replace_string(
+            "${NET_SNMP_TOOL_DIR}/traptoemail.bat"
+            "set MYPERLPROGRAM=c:\\usr\\bin\\traptoemail"
+            "set MYPERLPROGRAM=traptoemail"
+            IGNORE_UNCHANGED
+        )
+    endif()
 
-if(EXISTS "${NET_SNMP_TOOL_DIR}/traptoemail")
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/traptoemail"
-        "${TARGET_DIR}/bin/traptoemail"
-        "traptoemail"
-        IGNORE_UNCHANGED
-    )
-endif()
-
-if(EXISTS "${NET_SNMP_TOOL_DIR}/traptoemail.bat")
-    vcpkg_replace_string(
-        "${NET_SNMP_TOOL_DIR}/traptoemail.bat"
-        "set MYPERLPROGRAM=c:\\usr\\bin\\traptoemail"
-        "set MYPERLPROGRAM=traptoemail"
-        IGNORE_UNCHANGED
-    )
-endif()
-
-if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
-        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin"
-        DESTINATION "${NET_SNMP_TOOL_DIR}"
-        AUTO_CLEAN
-    )
+    if ("tools" IN_LIST FEATURES)
+        vcpkg_copy_tools(
+            TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
+            SEARCH_DIR "${TARGET_DIR}/bin"
+            DESTINATION "${NET_SNMP_TOOL_DIR}"
+            AUTO_CLEAN
+        )
+    endif()
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
