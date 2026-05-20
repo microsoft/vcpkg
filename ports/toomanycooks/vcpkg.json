@@ -22,34 +22,34 @@
   ],
   "features": {
     "debug-task-alloc-count": {
-      "description": "Enable TMC_DEBUG_TASK_ALLOC_COUNT."
+      "description": "Enable TMC_DEBUG_TASK_ALLOC_COUNT. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#tmc-debug-task-alloc-count"
     },
     "debug-thread-creation": {
-      "description": "Enable TMC_DEBUG_THREAD_CREATION."
+      "description": "Enable TMC_DEBUG_THREAD_CREATION. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#tmc-debug-thread-creation"
     },
     "funcoro": {
-      "description": "Set TMC_WORK_ITEM=FUNCORO."
+      "description": "Set TMC_WORK_ITEM=FUNCORO. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#tmc-work-item"
     },
     "hwloc": {
-      "description": "Enable hwloc topology-aware thread placement.",
+      "description": "Enable hwloc topology-aware thread placement. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#tmc-use-hwloc",
       "dependencies": [
         "hwloc"
       ]
     },
     "more-threads": {
-      "description": "Enable TMC_MORE_THREADS."
+      "description": "Enable TMC_MORE_THREADS. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#tmc-more-threads"
     },
     "nodiscard-await": {
-      "description": "Enable TMC_NODISCARD_AWAIT."
+      "description": "Enable TMC_NODISCARD_AWAIT. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#tmc-nodiscard-await"
     },
     "standalone-compilation": {
-      "description": "Enable TMC_STANDALONE_COMPILATION."
+      "description": "Enable TMC_STANDALONE_COMPILATION. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#build-modes"
     },
     "trivial-task": {
-      "description": "Enable TMC_TRIVIAL_TASK."
+      "description": "Enable TMC_TRIVIAL_TASK. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#tmc-trivial-task"
     },
     "windows-dll": {
-      "description": "Enable TMC_WINDOWS_DLL and TMC_STANDALONE_COMPILATION.",
+      "description": "Enable TMC_WINDOWS_DLL and TMC_STANDALONE_COMPILATION. See documentation at https://fleetcode.com/oss/tmc/docs/v1.5/build_flags.html#build-modes",
       "supports": "windows"
     }
   }
