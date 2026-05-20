@@ -6713,8 +6713,8 @@
       "port-version": 0
     },
     "ms-gdk": {
-      "baseline": "2510.2.6247",
-      "port-version": 1
+      "baseline": "2604.1.7839",
+      "port-version": 0
     },
     "ms-gdkx": {
       "baseline": "1.0.0",
