@@ -89,6 +89,10 @@ vcpkgCheckRepoTool()
             echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
             echo "On Solaris and illumos distributions:"
             echo "  pkg install web/curl compress/zip compress/unzip"
+            echo "On FreeBSD:"
+            echo "  pkg install curl zip unzip tar"
+            echo "On OpenBSD:"
+            echo "  pkg_add curl zip unzip tar"
             exit 1
         fi
     fi
