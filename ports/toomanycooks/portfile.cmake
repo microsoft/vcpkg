@@ -8,40 +8,11 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-if("windows-dll" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "toomanycooks feature 'windows-dll' is only supported for Windows targets")
-endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        hwloc                    TMC_USE_HWLOC
-        trivial-task             TMC_TRIVIAL_TASK
-        nodiscard-await          TMC_NODISCARD_AWAIT
-        more-threads             TMC_MORE_THREADS
-        debug-task-alloc-count   TMC_DEBUG_TASK_ALLOC_COUNT
-        debug-thread-creation    TMC_DEBUG_THREAD_CREATION
-        standalone-compilation   TMC_STANDALONE_COMPILATION
-        windows-dll              TMC_WINDOWS_DLL
-)
-
-# TMC_PRIORITY_COUNT feature can't be exposed as a vcpkg feature, since vcpkg doesn't support integer configurations.
-# Instead, users must specify it manually before find_package(TooManyCooks).
-
-set(TMC_WORK_ITEM CORO)
-if("funcoro" IN_LIST FEATURES)
-    set(TMC_WORK_ITEM FUNCORO)
-endif()
-
-if("windows-dll" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DTMC_STANDALONE_COMPILATION=ON)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
-        -DTMC_USE_BOOST_ASIO=ON # Switching the Asio backend is not supported in the vcpkg registry.
-        -DTMC_WORK_ITEM=${TMC_WORK_ITEM}
+    -DTMC_USE_HWLOC=ON
+    -DTMC_USE_BOOST_ASIO=ON
 )
 
 vcpkg_cmake_install()
