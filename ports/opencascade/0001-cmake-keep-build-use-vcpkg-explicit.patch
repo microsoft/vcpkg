@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a06f8a8c88..de45605c62 100644
+index 9b21fedd66..25f31712c7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -2,9 +2,6 @@ cmake_minimum_required (VERSION 3.10 FATAL_ERROR)
+@@ -5,9 +5,6 @@ set(OCCT_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Root directory of OCCT
  
  if (NOT DEFINED BUILD_USE_VCPKG)
    set (BUILD_USE_VCPKG OFF CACHE BOOL "Use vcpkg for 3rdparty libraries.")
