@@ -11,7 +11,7 @@ set(QT_VERSION 6.11.1)
 
 set(QT_DEV_BRANCH 0)
 
-set(QT_UPDATE_VERSION 1)
+set(QT_UPDATE_VERSION 0)
 
 if(PORT MATCHES "(qtquickcontrols2)")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
