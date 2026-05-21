@@ -8873,7 +8873,7 @@
       "port-version": 3
     },
     "rsig": {
-      "baseline": "0.2.0",
+      "baseline": "0.2.1",
       "port-version": 0
     },
     "rsm-binary-io": {
