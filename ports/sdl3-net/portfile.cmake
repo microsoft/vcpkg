@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=OFF
+        -DSDLNET_SAMPLES=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
