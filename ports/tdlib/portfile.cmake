@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         fix-pc.patch
         fix-cross-compile.patch
+        "${FIX_TDCORE_PATCH}"
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
