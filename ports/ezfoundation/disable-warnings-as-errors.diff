@@ -1,0 +1,111 @@
+diff --git a/Code/BuildSystem/CMake/ezUtilsCppFlags.cmake b/Code/BuildSystem/CMake/ezUtilsCppFlags.cmake
+index 07ae85f..760d300 100644
+--- a/Code/BuildSystem/CMake/ezUtilsCppFlags.cmake
++++ b/Code/BuildSystem/CMake/ezUtilsCppFlags.cmake
+@@ -46,7 +46,6 @@ function(ez_set_build_flags_msvc TARGET_NAME)
+ 
+ 	# /WX: treat warnings as errors
+ 	if (NOT ${ARG_NO_WARNINGS_AS_ERRORS} AND NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+-		target_compile_options(${TARGET_NAME} PRIVATE "/WX")
+ 	endif()
+ 	
+ 	if ((CMAKE_SIZEOF_VOID_P EQUAL 4) AND EZ_CMAKE_ARCHITECTURE_X86)
+@@ -168,7 +167,6 @@ function(ez_set_build_flags_clang TARGET_NAME)
+ 	endif()
+ 	
+ 	if(NOT (CMAKE_CURRENT_SOURCE_DIR MATCHES "Code/ThirdParty"))
+-		target_compile_options(${TARGET_NAME} PRIVATE -Werror=inconsistent-missing-override -Werror=switch -Werror=uninitialized)
+ 	else()
+ 		# Ignore all warnings in third party code.
+ 		target_compile_options(${TARGET_NAME} PRIVATE -Wno-everything)
+diff --git a/Code/Engine/Core/CMakeLists.txt b/Code/Engine/Core/CMakeLists.txt
+index 291d494..54eb04d 100644
+--- a/Code/Engine/Core/CMakeLists.txt
++++ b/Code/Engine/Core/CMakeLists.txt
+@@ -8,7 +8,7 @@ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+ ez_create_target(LIBRARY ${PROJECT_NAME})
+ 
+ if(MSVC)
+-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
++  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+ endif()
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/Code/Engine/Foundation/CMakeLists.txt b/Code/Engine/Foundation/CMakeLists.txt
+index 2cb3ece..695f510 100644
+--- a/Code/Engine/Foundation/CMakeLists.txt
++++ b/Code/Engine/Foundation/CMakeLists.txt
+@@ -14,7 +14,7 @@ if(EZ_CMAKE_PLATFORM_WINDOWS)
+ endif()
+ 
+ if (MSVC)
+-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
++  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+ endif()
+ 
+ if (EZ_CMAKE_PLATFORM_LINUX)
+diff --git a/Code/Engine/RendererDX11/CMakeLists.txt b/Code/Engine/RendererDX11/CMakeLists.txt
+index adcfc2e..d53d3c1 100644
+--- a/Code/Engine/RendererDX11/CMakeLists.txt
++++ b/Code/Engine/RendererDX11/CMakeLists.txt
+@@ -11,7 +11,7 @@ ez_create_target(LIBRARY ${PROJECT_NAME})
+ ez_link_target_dx11(${PROJECT_NAME})
+ 
+ if(MSVC)
+-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
++  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+ endif()
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/Code/Engine/RendererFoundation/CMakeLists.txt b/Code/Engine/RendererFoundation/CMakeLists.txt
+index 5e6376f..073e97e 100644
+--- a/Code/Engine/RendererFoundation/CMakeLists.txt
++++ b/Code/Engine/RendererFoundation/CMakeLists.txt
+@@ -8,7 +8,7 @@ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+ ez_create_target(LIBRARY ${PROJECT_NAME})
+ 
+ if(MSVC)
+-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
++  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+ endif()
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/Code/Engine/Texture/CMakeLists.txt b/Code/Engine/Texture/CMakeLists.txt
+index a26558c..9bd433c 100644
+--- a/Code/Engine/Texture/CMakeLists.txt
++++ b/Code/Engine/Texture/CMakeLists.txt
+@@ -6,7 +6,7 @@ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+ ez_create_target(LIBRARY ${PROJECT_NAME} EXCLUDE_FOLDER_FOR_UNITY DirectXTex)
+ 
+ if(MSVC)
+-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
++  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+ endif()
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/Code/Engine/Texture/DirectXTex/Shaders/CompileShaders.cmd b/Code/Engine/Texture/DirectXTex/Shaders/CompileShaders.cmd
+index d1d977c..a8bad33 100644
+--- a/Code/Engine/Texture/DirectXTex/Shaders/CompileShaders.cmd
++++ b/Code/Engine/Texture/DirectXTex/Shaders/CompileShaders.cmd
+@@ -5,7 +5,7 @@ rem Licensed under the MIT License.
+ setlocal
+ set error=0
+ 
+-set FXCOPTS=/nologo /WX /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug
++set FXCOPTS=/nologo /Ges /Zi /Zpc /Qstrip_reflect /Qstrip_debug
+ 
+ set PCFXC="%WindowsSdkVerBinPath%x86\fxc.exe"
+ if exist %PCFXC% goto continue
+diff --git a/Code/Engine/Utilities/CMakeLists.txt b/Code/Engine/Utilities/CMakeLists.txt
+index 4109c31..43cd139 100644
+--- a/Code/Engine/Utilities/CMakeLists.txt
++++ b/Code/Engine/Utilities/CMakeLists.txt
+@@ -8,7 +8,7 @@ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+ ez_create_target(LIBRARY ${PROJECT_NAME})
+ 
+ if(MSVC)
+-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
++  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
+ endif()
+ 
+ target_link_libraries(${PROJECT_NAME}

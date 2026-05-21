@@ -1,4 +1,4 @@
-set(GDK_EDITION_NUMBER 251002)
+set(GDK_EDITION_NUMBER 260401)
 
 # The GDK contains a combination of static C++ libraries and DLL-based extension libraries.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -6,13 +6,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE_CORE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.Core/${VERSION}"
     FILENAME "ms-gdk-core.${VERSION}.zip"
-    SHA512 f2d11d52d929852864ecf3fbf8103073bef88c314213fabb8c1aa7abe0a6ce82dd0b803aa145e6767dcfe4dcf9bd75d0264830b17ec5985e0adb0066c210e3b9
+    SHA512 a9137a7973430818088448e48a4906cf069ce1bd51ad8fdd9cd82e2a5bd13274e3d4380f6b6f3aeacdcedcd5d2a23619cc88f9a8cd8c240d8aa8af4cc08aeba3
 )
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.Windows/${VERSION}"
     FILENAME "ms-gdk-windows.${VERSION}.zip"
-    SHA512 f0691df92289a78fad64f604e0eb46a29527419320525c3a875880b78f115697cd77a6b4115eb4f40766f548d5a482ed5d3b5af46aa4cd7e1141f0ea7ec816c3
+    SHA512 368266a719783ebcff721483860cf02f9122d85c430288c19b21f0834ab81649a585630dfedfef1acde9f0a0665c94331e3c3b970bed73a68ea059bf3fa854d6
 )
 
 vcpkg_extract_source_archive(
@@ -51,9 +51,9 @@ file(REMOVE_RECURSE "${WINDOWS_PATH}/include/cpprest")
 file(REMOVE_RECURSE "${WINDOWS_PATH}/include/pplx")
 
 # Install core content
-set(CORE_BINS xgameruntime.dll xgameruntime.pdb)
-set(CORE_INCLUDES grdk.h)
-set(CORE_LIBS xgameruntime.lib)
+set(CORE_BINS xgameruntime.dll xgameruntime.thunks.dll GameChat2.dll libHttpClient.dll XCurl.dll)
+set(CORE_INCLUDES grdk.h cpprestsdk_impl.h XCurl.h GameChat2.h GameChat2Impl.h GameChat2_c.h)
+set(CORE_LIBS xgameruntime.lib GameChat2.lib libHttpClient.lib XCurl.lib xgameruntime.thunks.lib)
 
 file(GLOB HEADERS "${WINDOWS_PATH}/include/X*.*")
 foreach(t IN LISTS HEADERS)
@@ -61,26 +61,17 @@ foreach(t IN LISTS HEADERS)
     list(APPEND CORE_INCLUDES ${h})
 endforeach()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    list(APPEND CORE_BINS xgameruntime.thunks.dll GameChat2.dll GameChat2.pdb libHttpClient.dll libHttpClient.pdb XCurl.dll XCurl.pdb)
-    list(APPEND CORE_LIBS GameChat2.lib libHttpClient.lib XCurl.lib xgameruntime.thunks.lib)
+set(INCLUDE_DIRS httpClient Xal xsapi-c xsapi-cpp)
 
-    file(INSTALL "${WINDOWS_PATH}/bin/x64/Microsoft.Xbox.Services.C.Thunks.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL "${WINDOWS_PATH}/bin/x64/Microsoft.Xbox.Services.C.Thunks.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL "${WINDOWS_PATH}/lib/x64/Microsoft.Xbox.Services.C.Thunks.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${WINDOWS_PATH}/lib/x64/Microsoft.Xbox.Services.142.C.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${WINDOWS_PATH}/lib/x64/Microsoft.Xbox.Services.142.C.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${WINDOWS_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.C.Thunks.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.C.Thunks.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.143.C.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.143.C.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
-    file(INSTALL "${WINDOWS_PATH}/bin/x64/Microsoft.Xbox.Services.C.Thunks.Debug.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(INSTALL "${WINDOWS_PATH}/bin/x64/Microsoft.Xbox.Services.C.Thunks.Debug.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(INSTALL "${WINDOWS_PATH}/lib/x64/Microsoft.Xbox.Services.C.Thunks.Debug.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${WINDOWS_PATH}/lib/x64/Microsoft.Xbox.Services.142.C.Debug.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${WINDOWS_PATH}/lib/x64/Microsoft.Xbox.Services.142.C.Debug.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-
-    list(APPEND CORE_INCLUDES cpprestsdk_impl.h XCurl.h GameChat2.h GameChat2Impl.h GameChat2_c.h)
-
-    set(INCLUDE_DIRS httpClient Xal xsapi-c xsapi-cpp)
-endif()
+file(INSTALL "${WINDOWS_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.C.Thunks.Debug.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.C.Thunks.Debug.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.143.C.Debug.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.143.C.Debug.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 foreach(t IN LISTS CORE_BINS)
     file(INSTALL "${WINDOWS_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/${t}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
@@ -115,18 +106,16 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 # Optional PlayFab components
 if("playfab" IN_LIST FEATURES)
 
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(PF_BINS
-            PlayFabCore.dll PlayFabCore.pdb PlayFabServices.dll PlayFabServices.pdb PlayFabMultiplayer.dll PlayFabMultiplayer.pdb
-            Party.dll Party.pdb PartyXboxLive.dll PartyXboxLive.pdb PlayFabGameSave.dll PlayFabGameSave.pdb)
+    set(PF_BINS
+        PlayFabCore.dll PlayFabServices.dll PlayFabMultiplayer.dll
+        Party.dll PartyXboxLive.dll PlayFabGameSave.dll)
 
-        set(PF_LIBS
-            PlayFabCore.lib PlayFabServices.lib PlayFabMultiplayer.lib
-            Party.lib PartyXboxLive.lib PlayFabGameSave.lib)
+    set(PF_LIBS
+        PlayFabCore.lib PlayFabServices.lib PlayFabMultiplayer.lib
+        Party.lib PartyXboxLive.lib PlayFabGameSave.lib)
 
-        file(INSTALL "${WINDOWS_PATH}/include/playfab" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-        file(INSTALL "${WINDOWS_PATH}/include/PFXGameSave.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    endif()
+    file(INSTALL "${WINDOWS_PATH}/include/playfab" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    file(INSTALL "${WINDOWS_PATH}/include/PFXGameSave.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
     foreach(t IN LISTS PF_BINS)
         file(INSTALL "${WINDOWS_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/${t}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
@@ -145,7 +134,7 @@ if("playfab" IN_LIST FEATURES)
 
 endif()
 
-set(EXT_TOOLSET 142)
+set(EXT_TOOLSET 143)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/gdk-config.cmake.in"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
     @ONLY)
