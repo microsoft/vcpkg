@@ -10,6 +10,8 @@ vcpkg_from_github(
     REF 20260506
     SHA512 d565298a7709a34482977406a7290cf109d44a428eb96c1ab788ceb8529ee4aa5736a8db9f51b0aeedb90c54bea00615038d24d0b26336aa6959fc11b8835ff6
     HEAD_REF develop
+    PATCHES
+        fix-status-code-system-code.patch # https://github.com/ned14/llfio/pull/175
 )
 
 vcpkg_from_github(
