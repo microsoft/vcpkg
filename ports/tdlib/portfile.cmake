@@ -1,3 +1,9 @@
+vcpkg_download_distfile(FIX_TDCORE_PATCH
+    URLS https://github.com/tdlib/td/commit/49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4.diff?full_index=1
+    FILENAME tdlib-fix-tdcore-49b3bcbb6bfebf2ed44dd9f25102d2e1a94a58c4.diff
+    SHA512 ef8b69e68830474a9af0b9f3d2d13eaf8c0383d1d74bc123e4b6f68c398d400b73f1154b0c1264c8ce99eb20a0ee392336306e5de12fed759a5bac184a6cca74
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tdlib/td
