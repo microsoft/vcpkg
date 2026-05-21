@@ -114,7 +114,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     )
 endif()
 
-if(EXISTS "${TARGET_DIR}/bin/traptoemail" OR EXISTS "${TARGET_DIR}/bin/encode_keychange")
+if(EXISTS "${TARGET_DIR}/bin/mib2c.bat" OR EXISTS "${TARGET_DIR}/bin/encode_keychange")
     set(NET_SNMP_TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/net-snmp")
     file(MAKE_DIRECTORY "${NET_SNMP_TOOL_DIR}")
 
