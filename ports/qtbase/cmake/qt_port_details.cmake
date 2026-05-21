@@ -7,11 +7,11 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.11.0)
+set(QT_VERSION 6.11.1)
 
 set(QT_DEV_BRANCH 0)
 
-set(QT_UPDATE_VERSION 0)
+set(QT_UPDATE_VERSION 1)
 
 if(PORT MATCHES "(qtquickcontrols2)")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
