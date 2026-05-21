@@ -5,10 +5,12 @@ set(${PORT}_PATCHES
       "clang-cl.patch"
       "cross-build.diff"
       "disable-host-pkgconfig.diff"
-      "osx-sdk-info.diff"
+      #"osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"
-      "pkg-config.diff"
+      "pdf-system-abseil.diff"
+      "pkg-config-sorted-libs.diff"
+      #"pkg-config.diff"
       "rpath.diff"
       "include-dir-order.diff"
 )
@@ -68,6 +70,10 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" static_runtime)
     list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_static_runtime=${static_runtime}")
+endif()
+
+if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_abseil=ON")
 endif()
 
 # webengine-extensions
@@ -202,6 +208,19 @@ set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
 if(QT_UPDATE_VERSION)
     return()
+endif()
+
+if(VCPKG_TARGET_IS_LINUX AND "pdf" IN_LIST FEATURES)
+    # Devendor bundled abseil: replace the bundled absl/ directory with a
+    # symlink to the vcpkg-installed headers.  This guarantees that every
+    # #include path — both explicit "third_party/abseil-cpp/absl/..."
+    # (via -I <chromium_root>) and internal "absl/..." (via -isystem
+    # <prefix>/include) — resolves to the same installed files, preventing
+    # API mismatches between the old bundled and new vcpkg-installed version.
+    set(_chromium_absl "${SOURCE_PATH}/src/3rdparty/chromium/third_party/abseil-cpp")
+    file(REMOVE_RECURSE "${_chromium_absl}/absl")
+    file(CREATE_LINK "${CURRENT_INSTALLED_DIR}/include/absl" "${_chromium_absl}/absl" SYMBOLIC)
+    unset(_chromium_absl)
 endif()
 
 qt_cmake_configure(
