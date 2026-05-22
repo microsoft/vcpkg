@@ -16,24 +16,27 @@ vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/glib/")
 file(STRINGS "${SOURCE_PATH}/meson_options.txt" _meson_option_lines)
 
 set(MESON_FEATURE_OPTIONS)
-set(BOOLEAN_MESON_ENABLE_ONLY)
+set(MESON_BOOLEAN_OPTIONS)
 set(_current_option_name "")
+set(_current_option_type "")
 
 foreach(_line IN LISTS _meson_option_lines)
     string(STRIP "${_line}" _line)
 
     if(_line MATCHES "^option\\('([^']+)'")
         set(_current_option_name "${CMAKE_MATCH_1}")
+        set(_current_option_type "")
     elseif(NOT _current_option_name STREQUAL "" AND _line MATCHES "^type:[ ]*'([^']+)'")
         set(_current_option_type "${CMAKE_MATCH_1}")
 
         if(_current_option_type STREQUAL "feature")
             list(APPEND MESON_FEATURE_OPTIONS "${_current_option_name}")
         elseif(_current_option_type STREQUAL "boolean")
-            list(APPEND BOOLEAN_MESON_ENABLE_ONLY "${_current_option_name}")
+            list(APPEND MESON_BOOLEAN_OPTIONS "${_current_option_name}")
         endif()
-
+    elseif(NOT _current_option_name STREQUAL "" AND _line STREQUAL ")")
         set(_current_option_name "")
+        set(_current_option_type "")
     endif()
 endforeach()
 
@@ -41,14 +44,14 @@ if(MESON_FEATURE_OPTIONS STREQUAL "")
     message(FATAL_ERROR "Failed to parse Meson feature options from ${SOURCE_PATH}/meson_options.txt")
 endif()
 
-file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/meson_options.snapshot.txt" _meson_option_snapshot)
+file(STRINGS "${CURRENT_PORT_DIR}/meson_options.snapshot.txt" _meson_option_snapshot)
 set(_meson_option_snapshot_actual)
 
 foreach(_feature_option IN LISTS MESON_FEATURE_OPTIONS)
     list(APPEND _meson_option_snapshot_actual "feature:${_feature_option}")
 endforeach()
 
-foreach(_boolean_option IN LISTS BOOLEAN_MESON_ENABLE_ONLY)
+foreach(_boolean_option IN LISTS MESON_BOOLEAN_OPTIONS)
     list(APPEND _meson_option_snapshot_actual "boolean:${_boolean_option}")
 endforeach()
 
@@ -59,7 +62,7 @@ string(JOIN "\n" _meson_option_snapshot_text ${_meson_option_snapshot})
 string(JOIN "\n" _meson_option_snapshot_actual_text ${_meson_option_snapshot_actual})
 
 if(NOT _meson_option_snapshot_text STREQUAL _meson_option_snapshot_actual_text)
-    message(FATAL_ERROR "Meson option snapshot drift detected in ${CMAKE_CURRENT_LIST_DIR}/meson_options.snapshot.txt. Update the snapshot if upstream meson_options.txt changed.")
+    message(FATAL_ERROR "Meson option snapshot drift detected in ${CURRENT_PORT_DIR}/meson_options.snapshot.txt. Update the snapshot if upstream meson_options.txt changed.")
 endif()
 
 set(OPTIONS)
@@ -71,11 +74,11 @@ foreach(meson_option IN LISTS MESON_FEATURE_OPTIONS)
     endif()
 endforeach()
 
-# Expose Meson boolean options as opt-in toggles.
-# Keep Meson defaults when a feature is not selected.
-foreach(boolean_option IN LISTS BOOLEAN_MESON_ENABLE_ONLY)
+foreach(boolean_option IN LISTS MESON_BOOLEAN_OPTIONS)
     if("${boolean_option}" IN_LIST FEATURES)
         list(APPEND OPTIONS -D${boolean_option}=true)
+    else()
+        list(APPEND OPTIONS -D${boolean_option}=false)
     endif()
 endforeach()
 
