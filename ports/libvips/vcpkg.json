@@ -1,6 +1,6 @@
 {
   "name": "libvips",
-  "version": "8.18.0",
+  "version": "8.18.2",
   "description": "libvips is a demand-driven, horizontally threaded image processing library.",
   "homepage": "https://github.com/libvips/libvips",
   "license": "LGPL-2.1-or-later",
@@ -13,10 +13,67 @@
     }
   ],
   "features": {
+    "archive": {
+      "description": "Build with libarchive support.",
+      "dependencies": [
+        "libarchive"
+      ]
+    },
+    "cfitsio": {
+      "description": "Build with cfitsio support.",
+      "dependencies": [
+        "cfitsio"
+      ]
+    },
+    "heif": {
+      "description": "Build with libheif support.",
+      "dependencies": [
+        "libheif"
+      ]
+    },
+    "heif-module": {
+      "description": "Build libheif as a module.",
+      "dependencies": [
+        "heif"
+      ]
+    },
+    "highway": {
+      "description": "Build with highway support.",
+      "dependencies": [
+        "highway"
+      ]
+    },
+    "introspection": {
+      "description": "Build GObject introspection data.",
+      "dependencies": [
+        {
+          "name": "gobject-introspection",
+          "host": true
+        }
+      ]
+    },
+    "jpeg-xl": {
+      "description": "Build with JPEG XL support.",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
+    "jpeg-xl-module": {
+      "description": "Build JPEG XL as a module.",
+      "dependencies": [
+        "jpeg-xl"
+      ]
+    },
     "exif": {
       "description": "Build with exif support.",
       "dependencies": [
         "libexif"
+      ]
+    },
+    "fftw": {
+      "description": "Build with FFTW support.",
+      "dependencies": [
+        "fftw3"
       ]
     },
     "fontconfig": {
@@ -37,6 +94,51 @@
         "lcms"
       ]
     },
+    "matio": {
+      "description": "Build with matio support.",
+      "dependencies": [
+        "matio"
+      ]
+    },
+    "modules": {
+      "description": "Build dynamic modules."
+    },
+    "nifti": {
+      "description": "Build with NIfTI support.",
+      "dependencies": [
+        "nifticlib"
+      ]
+    },
+    "openexr": {
+      "description": "Build with OpenEXR support.",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "openjpeg": {
+      "description": "Build with OpenJPEG support.",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },
+    "openslide": {
+      "description": "Build with OpenSlide support.",
+      "dependencies": [
+        "openslide"
+      ]
+    },
+    "openslide-module": {
+      "description": "Build OpenSlide as a module.",
+      "dependencies": [
+        "openslide"
+      ]
+    },
+    "orc": {
+      "description": "Build with ORC support.",
+      "dependencies": [
+        "orc"
+      ]
+    },
     "pangocairo": {
       "description": "Build with pangocairo support.",
       "dependencies": [
@@ -50,10 +152,34 @@
         "libpng"
       ]
     },
+    "poppler": {
+      "description": "Build with Poppler support.",
+      "dependencies": [
+        "poppler"
+      ]
+    },
+    "poppler-module": {
+      "description": "Build Poppler as a module.",
+      "dependencies": [
+        "poppler"
+      ]
+    },
+    "raw": {
+      "description": "Build with libraw support.",
+      "dependencies": [
+        "libraw"
+      ]
+    },
     "rsvg": {
       "description": "Build with rsvg support.",
       "dependencies": [
         "librsvg"
+      ]
+    },
+    "spng": {
+      "description": "Build with spng support.",
+      "dependencies": [
+        "libspng"
       ]
     },
     "tiff": {
@@ -62,11 +188,102 @@
         "tiff"
       ]
     },
+    "webp": {
+      "description": "Build with WebP support.",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
     "zlib": {
       "description": "Build with zlib support.",
       "dependencies": [
         "zlib-ng"
       ]
+    },
+    "analyze": {
+      "description": "Build with analyze format support."
+    },
+    "cplusplus": {
+      "description": "Build C++ API."
+    },
+    "deprecated": {
+      "description": "Build deprecated components."
+    },
+    "examples": {
+      "description": "Build example programs."
+    },
+    "nsgif": {
+      "description": "Build with nsgif support."
+    },
+    "ppm": {
+      "description": "Build with ppm support."
+    },
+    "radiance": {
+      "description": "Build with radiance support."
+    },
+    "fuzzing-libfuzzer": {
+      "description": "Set Meson fuzzing_engine to libfuzzer."
+    },
+    "fuzzing-oss-fuzz": {
+      "description": "Set Meson fuzzing_engine to oss-fuzz."
+    },
+    "magick-package-graphicsmagick": {
+      "description": "Set Meson magick-package to GraphicsMagick.",
+      "dependencies": [
+        "magick",
+        "graphicsmagick"
+      ]
+    },
+    "magick-features-load-only": {
+      "description": "Set Meson magick-features to load only.",
+      "dependencies": [
+        "magick"
+      ]
+    },
+    "magick-features-save-only": {
+      "description": "Set Meson magick-features to save only.",
+      "dependencies": [
+        "magick"
+      ]
+    },
+    "nifti-prefix-installed": {
+      "description": "Set Meson nifti-prefix-dir to the current installed prefix.",
+      "dependencies": [
+        "nifti"
+      ]
+    },
+    "cgif": {
+      "description": "Placeholder: build with cgif support when cgif port is available."
+    },
+    "imagequant": {
+      "description": "Placeholder: build with imagequant support when dependency port is available."
+    },
+    "magick": {
+      "description": "Placeholder: build with MagickCore support when dependency mapping is finalized."
+    },
+    "magick-module": {
+      "description": "Placeholder: build MagickCore as a module when magick backend is enabled.",
+      "dependencies": [
+        "magick"
+      ]
+    },
+    "pdfium": {
+      "description": "Placeholder: build with PDFium support when pdfium port is available."
+    },
+    "quantizr": {
+      "description": "Placeholder: build with quantizr support when quantizr port is available."
+    },
+    "uhdr": {
+      "description": "Placeholder: build with UltraHDR support when libuhdr port is available."
+    },
+    "cpp-docs": {
+      "description": "Placeholder: build C++ documentation when doxygen is available in the toolchain."
+    },
+    "docs": {
+      "description": "Placeholder: build API reference and tools documentation when gi-docgen is available."
+    },
+    "vapi": {
+      "description": "Placeholder: build VAPI support when vala is available in the toolchain."
     }
   }
 }
