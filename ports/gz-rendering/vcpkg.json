@@ -1,6 +1,7 @@
 {
   "name": "gz-rendering",
   "version": "9.5.0",
+  "port-version": 1,
   "description": "Gazebo Rendering is a C++ library designed to provide an abstraction for different rendering engines. It offers unified APIs for creating 3D graphics applications.",
   "homepage": "https://gazebosim.org/libs/rendering",
   "license": "Apache-2.0",

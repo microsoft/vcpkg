@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vsg-dev/VulkanSceneGraph
     REF "v${VERSION}"
-    SHA512 d74d5cc889fc9faaac54992e482898fedd2f13a0f136b0ec2b2044ab7b5d3e7f6a26a81dc875fd1cd3eb926031ddf3f428008429bcc8d5cb22cd16f4eb21a5a9
+    SHA512 95a15e44171f44fa0fbefea790f4f8b2aa606dbf599b6ebf4acf34b65e00e61ad0099de98d3a96dfcc6132500b7062b33cbf2c16de9478dab79984776f617c52
     HEAD_REF master
 )
 

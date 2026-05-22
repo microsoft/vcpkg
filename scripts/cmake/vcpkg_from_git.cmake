@@ -55,7 +55,7 @@ function(vcpkg_from_git)
 
         if(DEFINED arg_FETCH_REF)
             set(ref_to_fetch "${arg_FETCH_REF}")
-            vcpkg_list(SET git_fetch_shallow_param --unshallow)
+            vcpkg_list(SET git_fetch_shallow_param)
         else()
             set(ref_to_fetch "${arg_REF}")
         endif()
@@ -104,7 +104,7 @@ function(vcpkg_from_git)
 
             vcpkg_execute_required_process(
                 ALLOW_IN_DOWNLOAD_MODE
-                COMMAND "${GIT}" lfs install --local --force
+                COMMAND "${GIT}" lfs install --local --force --skip-repo
                 WORKING_DIRECTORY "${git_working_directory}"
                 LOGNAME "git-lfs-install-${TARGET_TRIPLET}"
             )

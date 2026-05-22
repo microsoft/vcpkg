@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO snitch-org/snitch
     REF "v${VERSION}"
-    SHA512 bb51c7ec51ab934ccd05b8e653ba3da8f321702307fa28b11b8a7ec31e170e337c2ccbe8f4895a25e4fdec1358f90d11a51c489511af95a65311c57e4a4164ef
+    SHA512 c94f04967ed94fb697c72eb87c29f6c34fed3538704d21855d6617a44ca96c1ea3b59a739e545a3f7cb60b58e930486929f551c5db09ae47fbdd45dcd5bf9455
 )
 
 vcpkg_cmake_configure(

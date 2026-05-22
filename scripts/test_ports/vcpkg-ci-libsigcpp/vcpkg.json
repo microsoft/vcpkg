@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-libsigcpp",
+  "version-date": "2026-03-31",
+  "description": "Validates libsigcpp",
+  "license": null,
+  "dependencies": [
+    "libsigcpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

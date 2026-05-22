@@ -1,6 +1,7 @@
 {
   "name": "kedixa-coke",
   "version": "0.7.0",
+  "port-version": 1,
   "description": "Coroutine Workflow based on C++ 20",
   "homepage": "https://github.com/kedixa/coke",
   "license": "Apache-2.0",
@@ -15,6 +16,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "workflow"
+    {
+      "name": "workflow",
+      "platform": "!windows | mingw"
+    },
+    {
+      "name": "workflow-win",
+      "platform": "windows & !mingw"
+    }
   ]
 }

@@ -1,5 +1,5 @@
 diff --git a/build/make/configure.sh b/build/make/configure.sh
-index cc5bf6ce4..9380e87a7 100644
+index ebaec96a5..c80c14984 100644
 --- a/build/make/configure.sh
 +++ b/build/make/configure.sh
 @@ -1092,7 +1092,7 @@ EOF
@@ -11,7 +11,7 @@ index cc5bf6ce4..9380e87a7 100644
              asm_conversion_cmd="${source_path_mk}/build/make/ads2armasm_ms.pl"
              AS_SFX=.S
              msvs_arch_dir=arm-msvs
-@@ -1366,6 +1366,9 @@ EOF
+@@ -1368,6 +1368,9 @@ EOF
          android)
            soft_enable realtime_only
            ;;
@@ -21,7 +21,7 @@ index cc5bf6ce4..9380e87a7 100644
          win*)
            enabled gcc && add_cflags -fno-common
            ;;
-@@ -1484,14 +1487,26 @@ EOF
+@@ -1490,14 +1493,26 @@ EOF
        fi
        AS_SFX=.asm
        case  ${tgt_os} in
@@ -50,7 +50,7 @@ index cc5bf6ce4..9380e87a7 100644
            EXE_SFX=.exe
            ;;
          linux*|solaris*|android*)
-@@ -1622,6 +1637,8 @@ EOF
+@@ -1625,6 +1640,8 @@ EOF
    # Almost every platform uses pthreads.
    if enabled multithread; then
      case ${toolchain} in
@@ -97,19 +97,19 @@ index 1e1db05bb..543eb37b2 100755
                  fi
              fi
 diff --git a/configure b/configure
-index 457bd6b38..fa4bce71b 100755
+index f7225f061..a372a9ae5 100755
 --- a/configure
 +++ b/configure
-@@ -105,6 +105,8 @@ all_platforms="${all_platforms} arm64-darwin22-gcc"
- all_platforms="${all_platforms} arm64-darwin23-gcc"
+@@ -106,6 +106,8 @@ all_platforms="${all_platforms} arm64-darwin23-gcc"
  all_platforms="${all_platforms} arm64-darwin24-gcc"
+ all_platforms="${all_platforms} arm64-darwin25-gcc"
  all_platforms="${all_platforms} arm64-linux-gcc"
 +all_platforms="${all_platforms} arm64-uwp-vs16"
 +all_platforms="${all_platforms} arm64-uwp-vs17"
  all_platforms="${all_platforms} arm64-win64-gcc"
  all_platforms="${all_platforms} arm64-win64-vs15"
  all_platforms="${all_platforms} arm64-win64-vs16"
-@@ -116,6 +118,8 @@ all_platforms="${all_platforms} armv7-darwin-gcc"    #neon Cortex-A8
+@@ -117,6 +119,8 @@ all_platforms="${all_platforms} armv7-darwin-gcc"    #neon Cortex-A8
  all_platforms="${all_platforms} armv7-linux-rvct"    #neon Cortex-A8
  all_platforms="${all_platforms} armv7-linux-gcc"     #neon Cortex-A8
  all_platforms="${all_platforms} armv7-none-rvct"     #neon Cortex-A8
@@ -118,7 +118,7 @@ index 457bd6b38..fa4bce71b 100755
  all_platforms="${all_platforms} armv7-win32-gcc"
  all_platforms="${all_platforms} armv7-win32-vs14"
  all_platforms="${all_platforms} armv7-win32-vs15"
-@@ -147,6 +151,8 @@ all_platforms="${all_platforms} x86-linux-gcc"
+@@ -148,6 +152,8 @@ all_platforms="${all_platforms} x86-linux-gcc"
  all_platforms="${all_platforms} x86-linux-icc"
  all_platforms="${all_platforms} x86-os2-gcc"
  all_platforms="${all_platforms} x86-solaris-gcc"
@@ -127,7 +127,7 @@ index 457bd6b38..fa4bce71b 100755
  all_platforms="${all_platforms} x86-win32-gcc"
  all_platforms="${all_platforms} x86-win32-vs14"
  all_platforms="${all_platforms} x86-win32-vs15"
-@@ -173,6 +179,8 @@ all_platforms="${all_platforms} x86_64-iphonesimulator-gcc"
+@@ -175,6 +181,8 @@ all_platforms="${all_platforms} x86_64-iphonesimulator-gcc"
  all_platforms="${all_platforms} x86_64-linux-gcc"
  all_platforms="${all_platforms} x86_64-linux-icc"
  all_platforms="${all_platforms} x86_64-solaris-gcc"
@@ -136,7 +136,7 @@ index 457bd6b38..fa4bce71b 100755
  all_platforms="${all_platforms} x86_64-win64-gcc"
  all_platforms="${all_platforms} x86_64-win64-vs14"
  all_platforms="${all_platforms} x86_64-win64-vs15"
-@@ -507,11 +515,10 @@ process_targets() {
+@@ -510,11 +518,10 @@ process_targets() {
      ! enabled multithread && DIST_DIR="${DIST_DIR}-nomt"
      ! enabled install_docs && DIST_DIR="${DIST_DIR}-nodocs"
      DIST_DIR="${DIST_DIR}-${tgt_isa}-${tgt_os}"
@@ -152,7 +152,7 @@ index 457bd6b38..fa4bce71b 100755
      if [ -f "${source_path}/build/make/version.sh" ]; then
          ver=`"$source_path/build/make/version.sh" --bare "$source_path"`
          DIST_DIR="${DIST_DIR}-${ver}"
-@@ -600,6 +607,10 @@ process_detect() {
+@@ -603,6 +610,10 @@ process_detect() {
  
              # Specialize windows and POSIX environments.
              case $toolchain in

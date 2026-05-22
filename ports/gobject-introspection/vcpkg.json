@@ -1,7 +1,7 @@
 {
   "name": "gobject-introspection",
   "version": "1.86.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "A middleware layer between C libraries (using GObject) and language bindings.",
     "Building (with) gobject-introspection is based on dynamic library linkage. Static builds of the core feature set are supported only for CI purposes.",

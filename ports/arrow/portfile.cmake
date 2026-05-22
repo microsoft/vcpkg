@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 ddaaf31e7f3f8246ce3aa6e77c812c55a7993d037aaebc8ca9d79d54c701717a135eebfede731a3239becfaed2fa2395fcb3d68b14c32b9de72b3f5598d9df4a
+    SHA512 ffbac0c198c74f26b2ac173aa2b054cfd3902927ca3db36fbbae25353e8696c32b744e805c25801ced22641af71a5a8ea441202d8d3494aa803b797995d9d408
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -63,6 +63,7 @@ vcpkg_cmake_configure(
         -DARROW_WITH_BZ2=ON
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
+        -DARROW_WITH_UTF8PROC=ON
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
         -DBUILD_WARNING_LEVEL=PRODUCTION

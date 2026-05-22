@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO carnegierobotics/LibMultiSense
     REF ${VERSION}
-    SHA512 ccb865c6bfaed6a415cd7acf22ca24921ef53e8ac71f2f213f89fe2cdd24893d60507cba6ea60f2d690b834d3eb3631fc80da657936738028ee5ffac986f0ae8
+    SHA512 71c779cc0f23818aaab4cbba0a5aa5b3ad979180247a3d76b0f8fd5a3b7ced106520fa5df69946cd84510211b6508f5df80b09aecbbabb6601fee5f38ec79bc7
     HEAD_REF master
     PATCHES
-        0000-platform-specific-links.patch
-        0001-find-public-api-dependencies.patch
-        0002-disable-error-on-warning.patch
+        0000-disable-error-on-warning.patch
 )
 
 vcpkg_check_features(
@@ -47,6 +45,7 @@ if ("utilities" IN_LIST FEATURES)
         ImageCalUtility
         MultiChannelUtility
         PointCloudUtility
+        PtpUtility
         RectifiedFocalLengthUtility
         SaveImageUtility
         VersionInfoUtility
@@ -58,27 +57,6 @@ if ("utilities" IN_LIST FEATURES)
         TOOL_NAMES ${_tool_names}
         AUTO_CLEAN
     )
-
-    # Python equivalents of the above tools are also installed into bin.  These tools are duplicates and require that
-    # the Python bindings be built, which we are not doing.  Since they provide no additional functionality, remove
-    # them.
-    set(_python_tool_names
-        change_ip_utility.py
-        device_info_utility.py
-        image_cal_utility.py
-        multi_channel_utility.py
-        point_cloud_utility.py
-        rectified_focal_length_utility.py
-        save_image_utility.py
-        version_info_utility.py
-    )
-    foreach (_python_tool_name IN LISTS _python_tool_names)
-        file(
-            REMOVE
-                "${CURRENT_PACKAGES_DIR}/debug/bin/${_python_tool_name}"
-                "${CURRENT_PACKAGES_DIR}/bin/${_python_tool_name}"
-        )
-    endforeach ()
 
     # Remove the bin directory if its empty (anticipated on non-Windows platforms).
     foreach (_directory IN ITEMS

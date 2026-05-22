@@ -1,13 +1,25 @@
-set(VCPKG_BUILD_TYPE release) # header-only
-
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/stdexec
-    REF 089c4613385f808c3b39c4f4915f658157013a36
-    SHA512 a9c1d4009b71bfc280801814272319312b8edcd3106c5fd8fdab6fc2eb2c64be4a01374026de02129389e4d2280599b14a3c037566a1bbefcd6b48c5052d583b
+    REF 7d704575019a1405b2067c5e47265245c55ca66e
+    SHA512 13a3ba3d66d8cf9726633823c3933fa421dd9d98885b8ae15d1701abded9a73df5f5a678b0f76b5a9c55bca0ae54d3e7b4a27c3b7cdc997326bb2b45291ca1c1
     HEAD_REF main
     PATCHES
         fix-version.patch
+        fix-clangd-helper-file-basedir.patch
+        fix-boost-asio-dependency.patch
+        fix-tbb-dependency.patch
+        fix-taskflow-dependency.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        asio     STDEXEC_ENABLE_ASIO
+        tbb      STDEXEC_ENABLE_TBB
+        taskflow STDEXEC_ENABLE_TASKFLOW
 )
 
 vcpkg_from_github(
@@ -50,6 +62,7 @@ vcpkg_from_github(
     REPO iboB/icm
     REF v1.5.0 # from stdexec CMakeLists.txt
     SHA512 0d5173d7640e2b411dddfc67e1ee19c921817e58de36ea8325430ee79408edc0a23e17159e22dc4a05f169596ee866effa69e7cd0000b08f47bd090d5003ba1c
+    
     HEAD_REF master
     PATCHES
         "${SOURCE_PATH}/cmake/cpm/patches/icm/regex-build-error.diff"
@@ -66,12 +79,14 @@ vcpkg_cmake_configure(
         "-DCPM_SOURCE_CACHE=${CURRENT_BUILDTREES_DIR}/cpm"
         "-DCPM_icm_SOURCE=${SOURCE_PATH_ICM}"
         "-DGIT_EXECUTABLE=${GIT}"
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/stdexec)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

@@ -13,11 +13,11 @@ vcpkg_extract_source_archive(
         android-builtin-iconv.diff
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freexl.pc" " -lm" " -liconv -lcharset")

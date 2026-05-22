@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-ValidationLayers
     REF "vulkan-sdk-${VERSION}"
-    SHA512 5088bfb212595d5c1bd052f3e2e7d52ffa1c329625576116876a248daba51c9ba86297ebf8ffb6bd1e8f78bf161409a603aa4d145032664623292d53ed541514
+    SHA512 7005b696069d5580ffd1942f115b32a7b3fd2aa24bf9666222174e2d6f4d8471e5df7433b49c08360f9126dbd02cd4009dfcee4a6642948b8e36d658aad4d72b
     HEAD_REF main
     PATCHES
         disable_vendored_phmap.diff
@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBUILD_TESTS:BOOL=OFF
+    -DUPDATE_DEPS:BOOL=OFF
 )
 vcpkg_cmake_install()
 

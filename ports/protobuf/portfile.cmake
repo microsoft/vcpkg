@@ -19,12 +19,12 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIM
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        zlib protobuf_WITH_ZLIB
+        libprotoc protobuf_BUILD_TARGET_LIBPROTOC
+        zlib      protobuf_WITH_ZLIB
 )
 
-if(VCPKG_TARGET_IS_UWP)
-    set(protobuf_BUILD_LIBPROTOC OFF)
-else()
+set(protobuf_BUILD_LIBPROTOC OFF)
+if(NOT VCPKG_TARGET_IS_UWP AND (protobuf_BUILD_PROTOC_BINARIES OR protobuf_BUILD_TARGET_LIBPROTOC))
     set(protobuf_BUILD_LIBPROTOC ON)
 endif()
 
@@ -51,6 +51,7 @@ file(REMOVE_RECURSE
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_CXX_STANDARD=17
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
         -Dprotobuf_BUILD_TESTS=OFF

@@ -1,8 +1,9 @@
 {
   "name": "orange-math",
-  "version": "4.7.0",
+  "version": "5.2.0",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
+  "documentation": "https://libomath.org",
   "license": "Zlib",
   "dependencies": [
     {
@@ -19,6 +20,13 @@
       "description": "Omath will use AVX2 to boost performance",
       "supports": "!arm"
     },
+    "hooking": {
+      "description": "Add interface for automatic hooking of DirectX",
+      "supports": "windows & !arm & !uwp",
+      "dependencies": [
+        "safetyhook"
+      ]
+    },
     "imgui": {
       "description": "Omath will define method to convert omath types to imgui types",
       "dependencies": [
@@ -27,6 +35,13 @@
     },
     "inline": {
       "description": "Omath will define some methods as inline"
+    },
+    "lua": {
+      "description": "omath will enable lua bindings",
+      "dependencies": [
+        "lua",
+        "sol2"
+      ]
     }
   }
 }

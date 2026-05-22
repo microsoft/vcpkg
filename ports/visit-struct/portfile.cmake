@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cbeck88/visit_struct
-    REF "v${VERSION}"
-    SHA512 8d1f93344ef13320bc7967cbe2696bf49d6773fe3c89ba10bcf8ee9c33be165f14086828f6195bad742fbe75fee9c0995827c455c777950df583ff8f13c21338
+    REF "${VERSION}"
+    SHA512 c71eddae7e887c9cb055fc559bbbb44a755be1358b428e467e55c331e5ac1acadf8bbbb0d8e6f54ba30ff80abde788f4d5cb22551c3bb3bce5f6a2fe6e12b592
     HEAD_REF master
 )
 

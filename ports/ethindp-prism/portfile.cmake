@@ -1,13 +1,11 @@
-if(NOT EMSCRIPTEN)
-  vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-else()
+if(EMSCRIPTEN)
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ethindp/prism
-  REF v0.5.0
-  SHA512 a0c6b774ab4e87c2c2f2c556d78a40a45eaf52d7ddaab4cb7dbc50947e6919958977abdbfc37185263dbe6d3f3cce3a651d7927202596713e2de75c4a42d92a4
+  REF v0.16.1
+  SHA512 201ce4218543823b3a36aef6200032bfda816f8dcde495cca43de101415cc643da67a0eb347e5f90eec3d6ca1dcb298d8c1f544933ce2c5edbd44a32e92bd8d2
   HEAD_REF master
 )
 vcpkg_check_features(
@@ -21,11 +19,16 @@ vcpkg_cmake_configure(
   OPTIONS
     -DPRISM_ENABLE_TESTS=OFF
     -DPRISM_ENABLE_DEMOS=OFF
-    -DPRISM_ENABLE_CLANG_TIDY=OFF
+    -DPRISM_ENABLE_LINTING=OFF
+    -DPRISM_ENABLE_GDEXTENSION=OFF
     -DPRISM_ENABLE_VCPKG_SPECIFIC_OPTIONS=ON
+    -DPRISM_ENABLE_LEGACY_BACKENDS=ON
     ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME prism CONFIG_PATH share/prism)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
