@@ -1,0 +1,6 @@
+The package libtwolame can be imported via CMake FindPkgConfig module:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(libtwolame REQUIRED IMPORTED_TARGET libtwolame)
+    target_link_libraries(main PkgConfig::libtwolame)
+    
