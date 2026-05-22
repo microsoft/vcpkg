@@ -858,6 +858,7 @@ libtar:arm64-android=fail
 libtar:arm64-linux=fail
 libtomcrypt:arm64-windows-static-md=fail
 libtomcrypt:arm64-windows=fail
+libtorch:x86-windows=fail
 libusb:arm64-linux=fail
 libva:arm64-linux=fail
 libxt:x64-windows-release=fail # Appears to have broken races
