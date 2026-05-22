@@ -264,6 +264,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
 
     if(NOT build_cpu_fam MATCHES "${host_cpu_fam}"
        OR VCPKG_TARGET_IS_ANDROID
+       OR VCPKG_TARGET_IS_OHOS
        OR (VCPKG_TARGET_IS_APPLE AND NOT VCPKG_TARGET_IS_OSX)
        OR VCPKG_TARGET_IS_UWP
        OR (VCPKG_TARGET_IS_MINGW AND NOT CMAKE_HOST_WIN32))
