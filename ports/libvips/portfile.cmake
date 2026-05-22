@@ -62,7 +62,42 @@ string(JOIN "\n" _meson_option_snapshot_text ${_meson_option_snapshot})
 string(JOIN "\n" _meson_option_snapshot_actual_text ${_meson_option_snapshot_actual})
 
 if(NOT _meson_option_snapshot_text STREQUAL _meson_option_snapshot_actual_text)
-    message(FATAL_ERROR "Meson option snapshot drift detected in ${CURRENT_PORT_DIR}/meson_options.snapshot.txt. Update the snapshot if upstream meson_options.txt changed.")
+    set(_snapshot_only)
+    foreach(_entry IN LISTS _meson_option_snapshot)
+        if(NOT _entry IN_LIST _meson_option_snapshot_actual)
+            list(APPEND _snapshot_only "${_entry}")
+        endif()
+    endforeach()
+
+    set(_actual_only)
+    foreach(_entry IN LISTS _meson_option_snapshot_actual)
+        if(NOT _entry IN_LIST _meson_option_snapshot)
+            list(APPEND _actual_only "${_entry}")
+        endif()
+    endforeach()
+
+    if(_snapshot_only STREQUAL "")
+        set(_snapshot_only_text "<none>")
+    else()
+        string(JOIN "\n  " _snapshot_only_text ${_snapshot_only})
+    endif()
+
+    if(_actual_only STREQUAL "")
+        set(_actual_only_text "<none>")
+    else()
+        string(JOIN "\n  " _actual_only_text ${_actual_only})
+    endif()
+
+    message(FATAL_ERROR
+        "Meson option snapshot drift detected in ${CURRENT_PORT_DIR}/meson_options.snapshot.txt.\n"
+        "Update the snapshot if upstream meson_options.txt changed.\n"
+        "\n"
+        "Removed since snapshot (present in snapshot only):\n"
+        "  ${_snapshot_only_text}\n"
+        "\n"
+        "Added since snapshot (present in upstream meson_options.txt only):\n"
+        "  ${_actual_only_text}"
+    )
 endif()
 
 set(OPTIONS)
