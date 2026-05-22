@@ -101,7 +101,7 @@
       ]
     },
     "modules": {
-      "description": "Build dynamic modules."
+      "description": "Build optional loadable modules support."
     },
     "nifti": {
       "description": "Build with NIfTI support.",
@@ -201,25 +201,25 @@
       ]
     },
     "analyze": {
-      "description": "Build with analyze format support."
+      "description": "Enable Meson analyze option."
     },
     "cplusplus": {
-      "description": "Build C++ API."
+      "description": "Enable Meson cplusplus option."
     },
     "deprecated": {
-      "description": "Build deprecated components."
+      "description": "Enable Meson deprecated option."
     },
     "examples": {
-      "description": "Build example programs."
+      "description": "Enable Meson examples option."
     },
     "nsgif": {
-      "description": "Build with nsgif support."
+      "description": "Enable Meson nsgif option."
     },
     "ppm": {
-      "description": "Build with ppm support."
+      "description": "Enable Meson ppm option."
     },
     "radiance": {
-      "description": "Build with radiance support."
+      "description": "Enable Meson radiance option."
     },
     "fuzzing-libfuzzer": {
       "description": "Set Meson fuzzing_engine to libfuzzer."
