@@ -24,6 +24,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
 )
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND options "-DRUNSTATEDIR=/run")
+endif()
+
 unset(ENV{DBUSDIR})
 
 vcpkg_cmake_configure(
