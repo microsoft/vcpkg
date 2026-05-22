@@ -35,7 +35,7 @@
   "default-features": [
     {
       "name": "freexl",
-      "platform": "!(arm32 | x86) | mingw"
+      "platform": "arm64 | x64 | mingw"
     }
   ],
   "features": {

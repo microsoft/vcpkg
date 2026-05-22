@@ -47,7 +47,7 @@
     "iconv",
     {
       "name": "libkml",
-      "platform": "!(arm32 | x86) | mingw"
+      "platform": "arm64 | x64 | mingw"
     },
     {
       "name": "libspatialite",
