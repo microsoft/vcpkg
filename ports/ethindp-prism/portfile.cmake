@@ -4,8 +4,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ethindp/prism
-  REF v0.7.1
-  SHA512 7a412110cd0d5da23eafc78a979cfd7fdcfddef6d8ecc6a370afbf93914d41bf8b7a87cd8e0d44cd84b6b2c1d9de0621c0214892cef057c8f6c3c3424ecfb7b5
+  REF v0.16.1
+  SHA512 201ce4218543823b3a36aef6200032bfda816f8dcde495cca43de101415cc643da67a0eb347e5f90eec3d6ca1dcb298d8c1f544933ce2c5edbd44a32e92bd8d2
   HEAD_REF master
 )
 vcpkg_check_features(
@@ -20,7 +20,9 @@ vcpkg_cmake_configure(
     -DPRISM_ENABLE_TESTS=OFF
     -DPRISM_ENABLE_DEMOS=OFF
     -DPRISM_ENABLE_LINTING=OFF
+    -DPRISM_ENABLE_GDEXTENSION=OFF
     -DPRISM_ENABLE_VCPKG_SPECIFIC_OPTIONS=ON
+    -DPRISM_ENABLE_LEGACY_BACKENDS=ON
     ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()

@@ -28,15 +28,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     endif()
 else()
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         COPY_SOURCE
-        AUTOCONFIG
+        AUTORECONF
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --with-oracle-import=runtime
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")

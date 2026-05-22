@@ -30,11 +30,14 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
   endif()
 endif()
 
+# Add a leading zero to the minor version if it consists of only one digit, otherwise the regex does nothing
+# Match both `X.Y` and `X.Y.Z...` forms (optional remainder).
+string(REGEX REPLACE "^([0-9]+)\\.([0-9])(\\..*)?$" "\\1.0\\2\\3" VERSION_REF "${VERSION}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
-  REF "v${VERSION}"
-  SHA512 21b1fd1b87797a61c3480e9b049a38ea5be2fb174b8d1d397db25a0d6c04281f1951e402276299fd605763ef6aa867f1285b2321f03214aa6122553cfb53771e
+  REF "v${VERSION_REF}"
+  SHA512 37b49b5b5481036e0d563794222fc37c358f3c81b449e4252adb3bb1365e5dde14d7310a1ace810ee2443902a1cc7b177dca76666dd324241142062532a7509d
   HEAD_REF main
   PATCHES
       0001-enable-either-static-or-shared-build.patch
@@ -75,10 +78,49 @@ if(PYTHON_PACKAGES)
   x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3 PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
 endif()
 
+set(DISABLE_DRIVERS "regex/cn9k")
+
+if(NOT "mlx5" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",common/mlx5,compress/mlx5,crypto/mlx5,net/mlx5,regex/mlx5,vdpa/mlx5")
+endif()
+if(NOT "pmd-bnx2x" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/bnx2x")
+endif()
+if(NOT "pmd-compress-isal" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",compress/isal")
+endif()
+if(NOT "pmd-compress-zlib" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",compress/zlib")
+endif()
+if(NOT "pmd-crypto-ccp" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",crypto/ccp")
+endif()
+if(NOT "pmd-crypto-openssl" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",crypto/openssl")
+endif()
+if(NOT "pmd-ipn3ke" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/intel/ipn3ke")
+endif()
+if(NOT "pmd-mana" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mana")
+endif()
+if(NOT "pmd-mlx4" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mlx4")
+endif()
+if(NOT "pmd-pcap" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/pcap")
+endif()
+if(NOT "qat" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",common/qat")
+endif()
+if(NOT "rawdev-ifpga" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",raw/ifpga")
+endif()
+
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -Ddeveloper_mode=disabled
-    -Ddisable_drivers=regex/cn9k
+    "-Ddisable_drivers=${DISABLE_DRIVERS}"
     ${DPDK_OPTIONS}
   OPTIONS_RELEASE
     ${DPDK_OPTIONS_RELEASE}

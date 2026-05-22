@@ -1,0 +1,35 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<UsingTask TaskName="GetVcpkgEnvVars" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <VcpkgEnvVars Output="true" ParameterType="System.String" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.Text" />
+      <Using Namespace="System.Collections" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            var sb = new StringBuilder();
+            foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+            {
+                string key = de.Key.ToString();
+                // Filter for both prefixes
+                if (key.StartsWith("VCPKG_", StringComparison.OrdinalIgnoreCase) || 
+                    key.StartsWith("X_VCPKG_", StringComparison.OrdinalIgnoreCase))
+                {
+                    string val = de.Value.ToString();
+                    
+                    // To handle semicolons inside the value, we escape them 
+                    // so MSBuild doesn't split the value into a new property.
+                    val = val.Replace(";", "%3B");
+
+                    if (sb.Length > 0) sb.Append("____");
+                    sb.Append(key + "=" + val);
+                }
+            }
+            VcpkgEnvVars = sb.ToString();
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>

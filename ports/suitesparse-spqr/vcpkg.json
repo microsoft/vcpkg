@@ -1,7 +1,7 @@
 {
   "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-spqr",
-  "version-semver": "4.3.4",
+  "version-semver": "4.3.6",
   "description": "SPQR: Multithreaded, multifrontal, rank-revealing sparse QR factorization method in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "GPL-2.0-or-later",

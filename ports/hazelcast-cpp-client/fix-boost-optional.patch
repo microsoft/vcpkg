@@ -1,0 +1,13 @@
+diff --git a/hazelcast/src/hazelcast/client/spi.cpp b/hazelcast/src/hazelcast/client/spi.cpp
+index 0d659f9..9df6553 100644
+--- a/hazelcast/src/hazelcast/client/spi.cpp
++++ b/hazelcast/src/hazelcast/client/spi.cpp
+@@ -941,7 +941,7 @@ ClientClusterServiceImpl::get_member(boost::uuids::uuid uuid) const
+     if (it == members_view_ptr->members.end()) {
+         return boost::none;
+     }
+-    return { it->second };
++    return boost::optional<member>(it->second);
+ }
+
+ std::vector<member>

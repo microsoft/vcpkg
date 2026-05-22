@@ -1,0 +1,12 @@
+diff --git a/CodeGen/src/OptimizeDeadStore.cpp b/CodeGen/src/OptimizeDeadStore.cpp
+index 79ee3fc..d1414a4 100644
+--- a/CodeGen/src/OptimizeDeadStore.cpp
++++ b/CodeGen/src/OptimizeDeadStore.cpp
+@@ -6,6 +6,7 @@
+ #include "Luau/IrUtils.h"
+ 
+ #include <array>
++#include <algorithm>
+ 
+ #include "lobject.h"
+ 

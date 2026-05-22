@@ -9,6 +9,10 @@ parameters:
     default: 'use default'
   - name: jobName
     type: string
+  - name: linuxDockerImage
+    displayName: 'Linux Docker Image to use for the build'
+    type: string
+    default: ''
   - name: tripletPattern
     displayName: 'Enable the triplets which contain this substring'
     type: string
@@ -28,7 +32,7 @@ jobs:
   - name: ANDROID_DOCKER_IMAGE
     value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-02-10'
   - name: LINUX_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20'
+    value: ${{ parameters.linuxDockerImage }}
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -105,12 +109,6 @@ jobs:
       targetPath: '$(WORKING_ROOT)/failure-logs'
       artifact: "failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
-  - task: PublishPipelineArtifact@1
-    displayName: "Publish Artifact: azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
-    inputs:
-      targetPath: '$(WORKING_ROOT)/azcopy-logs'
-      artifactName: "z azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
-    condition: ne(variables['AZCOPY_LOGS_EMPTY'], 'True')
   - task: UseNode@1
     displayName: 'Ensure Node.js is available'
     condition: always()

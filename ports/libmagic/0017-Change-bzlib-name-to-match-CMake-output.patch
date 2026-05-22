@@ -3,7 +3,7 @@ index 8b54efda..d043fb06 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -191,7 +191,7 @@ if test "$enable_zlib" != "no"; then
-   AC_SEARCH_LIBS(gzopen, [z zlib zlibd], have_zlib="yes", have_zlib="no")
+   AC_SEARCH_LIBS(gzopen, [z zs zlib zd zsd zlibd], have_zlib="yes", have_zlib="no")
  fi
  if test "$enable_bzlib" != "no"; then
 -  AC_CHECK_LIB(bz2, BZ2_bzCompressInit)
