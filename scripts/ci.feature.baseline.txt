@@ -1294,7 +1294,6 @@ rubberband:arm64-linux=cascade
 ryml:arm64-windows=cascade
 s2n=skip # builds too slow
 sail[jpegxl]:arm-neon-android=cascade
-salome-med-fichier:arm64-linux=fail
 salome-medcoupling(arm | !(linux | windows))=cascade
 saucer:arm64-linux=cascade
 saucer:arm64-osx=fail # std::move_only_function is not supported
