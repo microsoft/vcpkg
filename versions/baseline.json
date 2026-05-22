@@ -8986,7 +8986,7 @@
     },
     "salome-med-fichier": {
       "baseline": "4.1.1",
-      "port-version": 3
+      "port-version": 4
     },
     "salome-medcoupling": {
       "baseline": "9.10.0",

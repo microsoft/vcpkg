@@ -1072,7 +1072,6 @@ rmqcpp:x86-windows=fail
 rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
-salome-med-fichier:arm64-linux=fail
 salome-medcoupling:x64-linux=fail
 saucer:arm64-osx=fail # std::move_only_function is not supported
 saucer:x64-linux=fail # requires gcc14 or later
