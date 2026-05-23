@@ -8,7 +8,6 @@ set(${PORT}_PATCHES
 vcpkg_check_features(OUT_FEATURE_OPTIONS feature_options
     FEATURES
         bluez FEATURE_bluez
-        bluez CMAKE_REQUIRE_FIND_PACKAGE_BlueZ
     INVERTED_FEATURES
         bluez CMAKE_DISABLE_FIND_PACKAGE_BlueZ
 )
