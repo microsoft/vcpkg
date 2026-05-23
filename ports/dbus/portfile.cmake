@@ -25,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND options "-DRUNSTATEDIR=/run")
+    list(APPEND options "-DDBUS_RUNSTATEDIR=/run")
 endif()
 
 unset(ENV{DBUSDIR})
