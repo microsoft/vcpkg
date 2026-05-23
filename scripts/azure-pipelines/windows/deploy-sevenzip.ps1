@@ -7,9 +7,9 @@ if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-$AzCliUrl = Get-AssetUrl `
+$SevenZipUrl = Get-AssetUrl `
   -SasToken $SasToken `
-  -InternetUrl 'https://azcliprod.blob.core.windows.net/msi/azure-cli-2.86.0-x64.msi' `
-  -BlobAssetName 'azure-cli-2.86.0-x64.msi'
+  -InternetUrl 'https://github.com/ip7z/7zip/releases/download/26.01/7z2601-x64.exe' `
+  -BlobAssetName '7z2601-x64.exe'
 
-DownloadAndInstall -Url $AzCliUrl -Args @('/quiet', '/norestart')
+DownloadAndInstall -Url $SevenZipUrl -Args @('/S')
