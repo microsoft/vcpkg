@@ -9,6 +9,7 @@ vcpkg_from_github(
         find-modules.diff
         gdk-pixbuf.patch
         symbol-exports.diff
+        fix-openjpeg-link-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
