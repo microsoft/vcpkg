@@ -11,6 +11,7 @@ vcpkg_from_github(
         libaec-config.diff
         mpi-flags.diff
         win-compile-flags.diff
+        arm64-msvc-ice.diff
 )
 
 set(HDF5_ALLOW_UNSUPPORTED OFF)
