@@ -1,0 +1,13 @@
+{
+  "name": "musdk",
+  "version": "11.22.12",
+  "description": "Marvell User-Space SDK",
+  "license": "BSD-3-Clause",
+  "supports": "linux & arm64",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}
