@@ -6084,6 +6084,10 @@
       "baseline": "2022-07-30",
       "port-version": 0
     },
+    "linux-dfl-uapi-headers": {
+      "baseline": "intel-1.12.0-3",
+      "port-version": 0
+    },
     "lionkor-commandline": {
       "baseline": "2.4.2",
       "port-version": 0
