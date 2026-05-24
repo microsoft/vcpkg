@@ -33,10 +33,7 @@
     "zlib"
   ],
   "default-features": [
-    {
-      "name": "freexl",
-      "platform": "arm64 | x64 | mingw"
-    }
+    "freexl"
   ],
   "features": {
     "freexl": {

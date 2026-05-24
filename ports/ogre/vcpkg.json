@@ -1,7 +1,6 @@
 {
   "name": "ogre",
   "version": "14.5.2",
-  "port-version": 1,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
@@ -28,10 +27,7 @@
     "zlib"
   ],
   "default-features": [
-    {
-      "name": "assimp",
-      "platform": "arm64 | x64 | mingw"
-    },
+    "assimp",
     "freeimage",
     "overlay",
     "zip"

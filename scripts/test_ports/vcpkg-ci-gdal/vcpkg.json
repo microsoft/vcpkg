@@ -8,15 +8,9 @@
     {
       "name": "gdal",
       "features": [
-        "archive"
-      ]
-    },
-    {
-      "name": "gdal",
-      "features": [
+        "archive",
         "freexl"
-      ],
-      "platform": "arm64 | x64 | mingw"
+      ]
     },
     {
       "name": "gdal",

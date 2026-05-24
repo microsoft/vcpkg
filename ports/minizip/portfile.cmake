@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         pkgconfig.patch
         install-tools.diff
+        restore-32bit.diff
         unofficial-iowin32.diff
 )
 
