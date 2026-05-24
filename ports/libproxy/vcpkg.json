@@ -28,6 +28,7 @@
     },
     "introspection": {
       "description": "Build introspection support",
+      "supports": "!static",
       "dependencies": [
         "gobject-introspection"
       ]
@@ -37,14 +38,15 @@
     },
     "vala": {
       "description": "Build Vala vapi support",
+      "supports": "!static",
       "dependencies": [
+        "gobject-introspection",
         {
           "name": "libproxy",
           "features": [
             "introspection"
           ]
-        },
-        "vala"
+        }
       ]
     }
   }

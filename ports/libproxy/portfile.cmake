@@ -2,10 +2,23 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libproxy/libproxy
     REF "${VERSION}"
-    SHA512 
-    19ffd1755e9ebfc645555e248020f9025ae81e93e73cbbb2583bff4495f7794b02ab1ef8ce944fa28e7604f5abf3e7e327c4966d21789648bd38f3d1c2cccecd
+    SHA512 19ffd1755e9ebfc645555e248020f9025ae81e93e73cbbb2583bff4495f7794b02ab1ef8ce944fa28e7604f5abf3e7e327c4966d21789648bd38f3d1c2cccecd
     HEAD_REF master
+    PATCHES
+        remove-gsettings-schema-check.patch
 )
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_apply_patches(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PATCHES
+            "${CMAKE_CURRENT_LIST_DIR}/fix-msvc.patch"
+    )
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/msvc_support.h" DESTINATION "${SOURCE_PATH}")
+endif()
+
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATICCRT)
 
@@ -18,6 +31,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tests         tests
 )
 
+set(ADDITIONAL_BINARIES "")
+if("introspection" IN_LIST FEATURES)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
+    list(APPEND ADDITIONAL_BINARIES
+        "python='${PYTHON3}'"
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
+    )
+endif()
+
 # Convert FEATURE_OPTIONS from "feature=ON/OFF" to "feature=true/false"
 vcpkg_list(SET FINAL_OPTIONS)
 foreach(_option IN LISTS FEATURE_OPTIONS)
@@ -25,6 +48,7 @@ foreach(_option IN LISTS FEATURE_OPTIONS)
     string(REPLACE "=OFF" "=false" _option "${_option}")
     vcpkg_list(APPEND FINAL_OPTIONS "${_option}")
 endforeach()
+
 
 macro(set_bool_val VAR COND)
     if(${COND})
@@ -50,7 +74,12 @@ vcpkg_configure_meson(
         -Dconfig-kde=${CONF_LIN}
         -Dconfig-xdp=${CONF_LIN}
         -Dconfig-env=true
-        -Dconfig-sysconfig=true
+        -Dconfig-sysconfig=${CONF_LIN}
+    OPTIONS_DEBUG
+        -Dintrospection=false
+        -Dvapi=false
+    ADDITIONAL_BINARIES
+        ${ADDITIONAL_BINARIES}
 )
 
 vcpkg_install_meson()
