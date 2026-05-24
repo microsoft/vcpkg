@@ -1,3 +1,19 @@
+diff --git a/libraries/liblmdb/mdb_drop.c b/libraries/liblmdb/mdb_drop.c
+index 93f3d35..e835f31 100644
+--- a/libraries/liblmdb/mdb_drop.c
++++ b/libraries/liblmdb/mdb_drop.c
+@@ -16,7 +16,11 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <ctype.h>
++#ifdef _MSC_VER
++#include <getopt.h>
++#else
+ #include <unistd.h>
++#endif
+ #include <signal.h>
+ #include "lmdb.h"
+ 
 diff --git a/libraries/liblmdb/mdb_dump.c b/libraries/liblmdb/mdb_dump.c
 index a31797f..7ae582b 100644
 --- a/libraries/liblmdb/mdb_dump.c
