@@ -5317,7 +5317,7 @@
       "port-version": 0
     },
     "libmt32emu": {
-      "baseline": "2.8.0",
+      "baseline": "2.8.2",
       "port-version": 0
     },
     "libmtp": {
