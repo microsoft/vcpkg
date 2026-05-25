@@ -6821,8 +6821,8 @@
       "port-version": 0
     },
     "mysql-connector-cpp": {
-      "baseline": "9.1.0",
-      "port-version": 4
+      "baseline": "9.7.0",
+      "port-version": 0
     },
     "mysvac-jsonlib": {
       "baseline": "3.0.0",
