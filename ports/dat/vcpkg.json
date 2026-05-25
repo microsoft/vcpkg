@@ -1,0 +1,19 @@
+{
+  "name": "dat",
+  "version": "4.0.0",
+  "description": "DAT - Distributed Access Token",
+  "homepage": "https://dat.saro.me/",
+  "documentation": "https://dat.saro.me/--/libs/vcpkg-dat",
+  "license": "MIT",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
