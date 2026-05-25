@@ -116,6 +116,14 @@ jobs:
       version: '22.x'
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci
+echo "--- DEBUG: node/npx info ---"
+command -v node || true
+node --version || true
+command -v npm || true
+npm --version || true
+command -v npx || true
+npx --version || true
+set -x
       # Construct the blob base url using the secret SAS token set earlier
       blob="https://vcpkgbinarycachewus.blob.core.windows.net/cache?${BCACHE_SAS_TOKEN}"
       if [ "$(Build.Reason)" = "PullRequest" ]; then

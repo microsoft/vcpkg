@@ -101,6 +101,14 @@ jobs:
       targetType: inline
       script: |
         cd scripts/azure-pipelines/owners-db
+echo "--- DEBUG: node/npx info ---"
+command -v node || true
+node --version || true
+command -v npm || true
+npm --version || true
+command -v npx || true
+npx --version || true
+set -x
         npm ci -s
         if ($env:BUILD_REASON -eq 'PullRequest') {
           Write-Host 'Running file_script_from_cache for PR'
