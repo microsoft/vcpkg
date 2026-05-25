@@ -7144,6 +7144,10 @@
       "baseline": "2.1.2",
       "port-version": 9
     },
+    "nwau-c-abi": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "nyan-lang": {
       "baseline": "0.3.1",
       "port-version": 0

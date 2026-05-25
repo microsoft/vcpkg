@@ -1,0 +1,8 @@
+{
+  "name": "nwau-c-abi",
+  "version": "0.1.0",
+  "description": "C ABI scaffold for MCHS/NWAU interoperability.",
+  "homepage": "https://github.com/edithatogo/mchs",
+  "license": "Apache-2.0",
+  "supports": "!uwp"
+}
