@@ -1,0 +1,17 @@
+{
+  "name": "xdp-tools",
+  "version": "1.6.3",
+  "description": "Library for working with the eXpress Data Path facility of the Linux kernel",
+  "supports": "linux",
+  "dependencies": [
+    "libbpf",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

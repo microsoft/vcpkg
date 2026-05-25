@@ -11032,6 +11032,10 @@
       "baseline": "0.5.0",
       "port-version": 0
     },
+    "xdp-tools": {
+      "baseline": "1.6.3",
+      "port-version": 0
+    },
     "xerces-c": {
       "baseline": "3.3.0",
       "port-version": 1

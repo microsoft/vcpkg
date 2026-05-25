@@ -1,0 +1,20 @@
+diff --git a/configure b/configure
+index d57b2ae..f6230ef 100755
+--- a/configure
++++ b/configure
+@@ -395,15 +395,6 @@ EOF
+     echo 'LDLIBS += -l:libbpf.a' >>$CONFIG
+     echo "OBJECT_LIBBPF = ${OBJECT_LIBBPF}" >>$CONFIG
+ 
+-    echo -n "zlib support: "
+-    check_zlib || exit 1
+-
+-    echo -n "ELF support: "
+-    check_elf || exit 1
+-
+-    echo -n "pcap support: "
+-    check_pcap || exit 1
+-
+ }
+ 
+ check_secure_getenv()

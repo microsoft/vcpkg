@@ -1,0 +1,21 @@
+diff --git a/lib/libxdp/Makefile b/lib/libxdp/Makefile
+index 4208f23..40975ad 100644
+--- a/lib/libxdp/Makefile
++++ b/lib/libxdp/Makefile
+@@ -41,7 +41,7 @@ VERSION_SCRIPT := libxdp.map
+ CHECK_RULES := check_abi
+ endif
+ 
+-all: $(STATIC_LIBS) $(SHARED_LIBS) $(XDP_OBJS) $(PC_FILE) check man build_tests
++all: $(STATIC_LIBS) $(SHARED_LIBS) $(XDP_OBJS) $(PC_FILE) check man
+ 
+ .PHONY: clean
+ clean:
+@@ -60,7 +60,6 @@ install: all
+ 	$(Q)cp -fpR $(SHARED_LIBS) $(STATIC_LIBS) $(DESTDIR)$(LIBDIR)
+ 	$(if $(MAN_FILES),$(Q)install -m 0755 -d $(DESTDIR)$(MANDIR)/man3)
+ 	$(if $(MAN_FILES),$(Q)install -m 0644 $(MAN_FILES) $(DESTDIR)$(MANDIR)/man3)
+-	$(Q)$(MAKE) -C $(TEST_DIR) install
+ 
+ 
+ $(OBJDIR)/libxdp.a: $(STATIC_OBJS)
