@@ -56,3 +56,6 @@ EXPORTS
    mdb_dcmp
    mdb_reader_list
    mdb_reader_check
+   mdb_modload
+   mdb_modunload
+   mdb_modsetup
