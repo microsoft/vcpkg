@@ -1,0 +1,4 @@
+The package NeuralFramework provides CMake targets:
+
+    find_package(NeuralFramework CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE NeuralFramework::neuralframework)

@@ -1,0 +1,6 @@
+{
+  "name": "neuralframework",
+  "version": "0.1.1",
+  "description": "Minimal C++ neural network framework for dense models.",
+  "license": "MIT"
+}
