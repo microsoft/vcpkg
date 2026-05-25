@@ -1,0 +1,20 @@
+{
+  "name": "stescobedo92-azdash",
+  "version": "0.1.0",
+  "description": "azdash is an Azure-focused C++23 CLI for Azure spending, six-month cost trends, and waste signals, rendered with FTXUI tables, JSON, CSV, or PDF reports.",
+  "homepage": "https://github.com/stescobedo92/az-dashboard",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "ftxui",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
