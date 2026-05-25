@@ -37,8 +37,10 @@
           "name": "bzip2"
         },
         {
+          "$comment": "CMake 3.17 for non-global ALIAS target",
           "$package": "CURL",
           "name": "curl",
+          "$since": "3.18",
           "default-features": false
         },
         {

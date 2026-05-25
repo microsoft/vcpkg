@@ -1,12 +1,12 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF d772e334cc724105040382a977ebb10dfd393293
+    REF 92d4c37fbdd08944a0e721bbaeb13318f10aebb0
+	FETCH_REF "v${VERSION}"
     HEAD_REF main
     PATCHES
         aom-rename-static.diff
         aom-uninitialized-pointer.diff
-        aom-fix-nasm.diff # TODO: remove this patch after the next release
 )
 
 vcpkg_find_acquire_program(PERL)

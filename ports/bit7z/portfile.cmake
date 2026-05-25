@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rikyoz/bit7z
     REF "v${VERSION}"
-    SHA512 63683be54d3c8b4b328501f55de49584ad7913f41f9b5f20cfc825bac45fe079efac4aaedb16a0fecc21d045e3a33dbc9a9b53a1ce43da541a2ae8042c91095f
+    SHA512 57727b2f4906802e1b5b07b8e8741da8e162d4491fa1ba59b9e7ec61f8b405654872c46184e7c83660cb9dbb61bbebc88787715fbcac1251de799ad157738358
     HEAD_REF master
     PATCHES
       fix_install.patch
