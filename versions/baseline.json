@@ -2872,6 +2872,10 @@
       "baseline": "0.0.3",
       "port-version": 0
     },
+    "ez8-co-yapi": {
+      "baseline": "2022-08-10",
+      "port-version": 0
+    },
     "ezc3d": {
       "baseline": "1.7.0",
       "port-version": 0
@@ -11078,10 +11082,6 @@
     },
     "yandex-disk-cpp-client": {
       "baseline": "1.0.3",
-      "port-version": 0
-    },
-    "ez8-co-yapi": {
-      "baseline": "2022-08-10",
       "port-version": 0
     },
     "yara": {
