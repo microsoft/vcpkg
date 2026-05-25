@@ -1,14 +1,11 @@
 nwau-c-abi provides the C ABI header and native library for MCHS/NWAU interop.
 
-This draft port does not yet install a generated CMake package config. Consume it
-with explicit include and library lookup from the vcpkg installation prefix:
+Consume it from CMake with:
 
-  find_path(NWAU_C_ABI_INCLUDE_DIR nwau_abi.h REQUIRED)
-  find_library(NWAU_C_ABI_LIBRARY NAMES nwau_c_abi libnwau_c_abi REQUIRED)
+  find_package(nwau-c-abi CONFIG REQUIRED)
 
   add_executable(app main.c)
-  target_include_directories(app PRIVATE "${NWAU_C_ABI_INCLUDE_DIR}")
-  target_link_libraries(app PRIVATE "${NWAU_C_ABI_LIBRARY}")
+  target_link_libraries(app PRIVATE nwau-c-abi::nwau-c-abi)
 
 C consumers include the stable ABI header:
 
