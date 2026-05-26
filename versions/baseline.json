@@ -4205,7 +4205,7 @@
       "port-version": 0
     },
     "jsoncpp": {
-      "baseline": "1.9.6",
+      "baseline": "1.9.7",
       "port-version": 0
     },
     "jsonfusion": {
