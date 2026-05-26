@@ -1,0 +1,14 @@
+cxxmcp provides CMake targets:
+
+  find_package(cxxmcp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE cxxmcp::sdk)
+
+Narrow targets are also available:
+
+  cxxmcp::protocol
+  cxxmcp::transport
+  cxxmcp::handler
+  cxxmcp::peer
+  cxxmcp::service
+  cxxmcp::client
+  cxxmcp::server

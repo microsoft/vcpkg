@@ -2340,6 +2340,10 @@
       "baseline": "4.1.0",
       "port-version": 0
     },
+    "cxxmcp": {
+      "baseline": "2.0.2",
+      "port-version": 0
+    },
     "cxxopts": {
       "baseline": "3.3.1",
       "port-version": 1
