@@ -1,5 +1,12 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# [ADT] Add <cstdint> to SmallVector #101761
+vcpkg_download_distfile(PATCH_101761
+    URLS https://github.com/llvm/llvm-project/commit/7e44305041d96b064c197216b931ae3917a34ac1.diff?full_index=1
+    SHA512 cf65b28bd40418d713a8f5a7fe97fc22d96e6031523dbf060b49e7bac1a6f86e597ca66c03d2435ed3e8a2f8eadb5c800804cc20a2b8f16c2b0070684952053d
+    FILENAME llvm_101761.patch 
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
@@ -18,6 +25,7 @@ vcpkg_from_github(
         82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
         add-include-chrono.patch # https://github.com/llvm/llvm-project/pull/118059
         cmake4.patch
+        "${PATCH_101761}"
 )
 
 vcpkg_check_features(
