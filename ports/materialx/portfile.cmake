@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/MaterialX
     REF "v${VERSION}"
-    SHA512 ca743e619f51bddd67419c79a31e9fb92dd7883e8c182897c1d8cea2e5dc51cddf13ac8cc798cfa0f022dacf4fd77881aefc24f3184f8b7273651ba55c7df400
+    SHA512 a9af568dd2918a2679de1727295178a3155cb63a1b1a58eec0ff2bf804031e716918c036546916cfdab2ef1fcbe3cc2edc34037a082f7a50f0c6852236b8e449
     HEAD_REF main
 )
 
