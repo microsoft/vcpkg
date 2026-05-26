@@ -8,7 +8,7 @@ on:
 
 jobs:
   Check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
 
     steps:
       - name: Checkout
