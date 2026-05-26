@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DMZ_PPMD=OFF
         -DMZ_FETCH_LIBS=OFF
         -DMZ_LIB_SUFFIX=-ng
         -DMZ_ICONV=OFF
