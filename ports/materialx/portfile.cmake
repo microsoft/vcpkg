@@ -13,7 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         osl-generator  MATERIALX_BUILD_GEN_OSL
         render         MATERIALX_BUILD_RENDER
 )
-if ((VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_LINUX) AND MATERIALX_BUILD_RENDER)
+if (VCPKG_TARGET_IS_LINUX AND MATERIALX_BUILD_RENDER)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev.")
 endif()
 

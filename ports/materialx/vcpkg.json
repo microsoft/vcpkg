@@ -26,7 +26,8 @@
       "description": "Build the OSL shader generator back-end."
     },
     "render": {
-      "description": "Build the MaterialX Render library."
+      "description": "Build the MaterialX Render library.",
+      "supports": "!android"
     }
   }
 }
