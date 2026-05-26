@@ -5,6 +5,8 @@ vcpkg_from_github(
     REPO oclero/qlementine
     REF "v${VERSION}"
     SHA512 7c80b11f938b3e2ea23083e8394470b8cfa95bbe07d5bc89720c46e5ec0a004839860094044eecfe830a080d5e8b2e62cafc883c66ceeae84a2e8aadf8acbaed
+    PATCHES
+        fix-wx-flag.patch
 )
 
 vcpkg_cmake_configure(

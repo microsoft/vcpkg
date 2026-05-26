@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CedricGuillemet/ImGuizmo
-    REF ${VERSION}
-    SHA512 1838cf6d9116aea7c2aa6c3ee978ffdab47a6714a564723b1c4f62d8a68081a56ebc65a389f5b7fb0c7e37ec5fc1cda6db0190826da055fbfb10133d06a88878
+    REF "${VERSION}"
+    SHA512 c707e22d3caffcf06c5aab33201ebc4fe352d07e893ee8623db374a7e848bc18d031fb1904e7ddae5573443783bd70ccf787cd7029074a1de2c7e9fe12a54733
     HEAD_REF master
 )
 

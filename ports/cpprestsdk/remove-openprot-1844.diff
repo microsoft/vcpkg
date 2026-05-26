@@ -1,0 +1,70 @@
+diff --git a/Release/include/cpprest/filestream.h b/Release/include/cpprest/filestream.h
+index 1e4a0f278e2b6ac162c9d191a6d9912eeac8e575..511519a7de820d3308f364557a135d23caf03dd1 100644
+--- a/Release/include/cpprest/filestream.h
++++ b/Release/include/cpprest/filestream.h
+@@ -715,7 +715,7 @@ class basic_file_buffer : public details::streambuf_state_manager<_CharType>
+         const utility::string_t& _Filename,
+         std::ios_base::openmode _Mode = std::ios_base::out,
+ #ifdef _WIN32
+-        int _Prot = (int)std::ios_base::_Openprot
++        int _Prot = _SH_DENYNO
+ #else
+         int _Prot = 0                                         // unsupported on Linux, for now
+ #endif
+@@ -1012,7 +1012,7 @@ class file_stream
+     static pplx::task<streams::basic_istream<_CharType>> open_istream(const utility::string_t& file_name,
+                                                                       std::ios_base::openmode mode = std::ios_base::in,
+ #ifdef _WIN32
+-                                                                      int prot = (int)std::ios_base::_Openprot
++                                                                      int prot = _SH_DENYNO
+ #else
+                                                                       int prot = 0
+ #endif
+@@ -1037,7 +1037,7 @@ class file_stream
+     static pplx::task<streams::basic_ostream<_CharType>> open_ostream(const utility::string_t& file_name,
+                                                                       std::ios_base::openmode mode = std::ios_base::out,
+ #ifdef _WIN32
+-                                                                      int prot = (int)std::ios_base::_Openprot
++                                                                      int prot = _SH_DENYNO
+ #else
+                                                                       int prot = 0
+ #endif
+diff --git a/Release/tests/functional/streams/fstreambuf_tests.cpp b/Release/tests/functional/streams/fstreambuf_tests.cpp
+index 190eb66b0cbf40b3ac1bc207ed5804ab80f20060..bd63633091c24ee99bfd8fcc6c01810759431ecb 100644
+--- a/Release/tests/functional/streams/fstreambuf_tests.cpp
++++ b/Release/tests/functional/streams/fstreambuf_tests.cpp
+@@ -19,7 +19,7 @@ using namespace Windows::Storage;
+ #endif
+ 
+ #ifdef _WIN32
+-#define DEFAULT_PROT (int)std::ios_base::_Openprot
++#define DEFAULT_PROT _SH_DENYNO
+ #else
+ #define DEFAULT_PROT 0
+ #define _SH_DENYRW 0x20
+diff --git a/Release/tests/functional/streams/istream_tests.cpp b/Release/tests/functional/streams/istream_tests.cpp
+index 32cb545aa266cea0217a1acaac1e99aed8ba219e..9feed549ead29426b3300e376295266386055bcd 100644
+--- a/Release/tests/functional/streams/istream_tests.cpp
++++ b/Release/tests/functional/streams/istream_tests.cpp
+@@ -22,7 +22,7 @@ using namespace Windows::Storage;
+ #endif
+ 
+ #ifdef _WIN32
+-#define DEFAULT_PROT (int)std::ios_base::_Openprot
++#define DEFAULT_PROT _SH_DENYNO
+ #else
+ #define DEFAULT_PROT 0
+ #endif
+diff --git a/Release/tests/functional/streams/stdstream_tests.cpp b/Release/tests/functional/streams/stdstream_tests.cpp
+index 34b9b3af1291b8fd53f65ea1eac7babdfffdb74e..4072224e05b79ba3cde46fd14348058b44496502 100644
+--- a/Release/tests/functional/streams/stdstream_tests.cpp
++++ b/Release/tests/functional/streams/stdstream_tests.cpp
+@@ -23,7 +23,7 @@ using namespace Windows::Storage;
+ #endif
+ 
+ #ifdef _WIN32
+-#define DEFAULT_PROT (int)std::ios_base::_Openprot
++#define DEFAULT_PROT _SH_DENYNO
+ #else
+ #define DEFAULT_PROT 0
+ #endif

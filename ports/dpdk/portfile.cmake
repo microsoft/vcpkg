@@ -78,10 +78,49 @@ if(PYTHON_PACKAGES)
   x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3 PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
 endif()
 
+set(DISABLE_DRIVERS "regex/cn9k")
+
+if(NOT "mlx5" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",common/mlx5,compress/mlx5,crypto/mlx5,net/mlx5,regex/mlx5,vdpa/mlx5")
+endif()
+if(NOT "pmd-bnx2x" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/bnx2x")
+endif()
+if(NOT "pmd-compress-isal" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",compress/isal")
+endif()
+if(NOT "pmd-compress-zlib" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",compress/zlib")
+endif()
+if(NOT "pmd-crypto-ccp" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",crypto/ccp")
+endif()
+if(NOT "pmd-crypto-openssl" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",crypto/openssl")
+endif()
+if(NOT "pmd-ipn3ke" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/intel/ipn3ke")
+endif()
+if(NOT "pmd-mana" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mana")
+endif()
+if(NOT "pmd-mlx4" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mlx4")
+endif()
+if(NOT "pmd-pcap" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/pcap")
+endif()
+if(NOT "qat" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",common/qat")
+endif()
+if(NOT "rawdev-ifpga" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",raw/ifpga")
+endif()
+
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -Ddeveloper_mode=disabled
-    -Ddisable_drivers=regex/cn9k
+    "-Ddisable_drivers=${DISABLE_DRIVERS}"
     ${DPDK_OPTIONS}
   OPTIONS_RELEASE
     ${DPDK_OPTIONS_RELEASE}
