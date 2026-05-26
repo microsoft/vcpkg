@@ -7,14 +7,18 @@
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "blas",
+    "cpp-httplib",
     "cpuinfo",
     "eigen3",
+    "flatbuffers",
     {
       "name": "flatbuffers",
       "host": true
     },
     "fmt",
     "fp16",
+    "nlohmann-json",
+    "pocketfft",
     "lapack",
     "onnx",
     "opencl",
