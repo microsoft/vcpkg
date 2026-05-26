@@ -60,7 +60,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${cross_options}
-        -DMYSQLCLIENT_ERNAME_PREBUILT=${CURRENT_PORT_DIR}/mysqlclient_ername.h
         -DINSTALL_INCLUDEDIR=include/mysql
         -DINSTALL_DOCDIR=share/${PORT}/doc
         -DINSTALL_MANDIR=share/${PORT}/doc
