@@ -8905,7 +8905,7 @@
       "port-version": 1
     },
     "rtc-benchmarksuite": {
-      "baseline": "1.0.2",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "rtlsdr": {
