@@ -9,6 +9,7 @@ vcpkg_from_github(
         pkgconfig.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/ggml")
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,6 +21,9 @@ vcpkg_cmake_configure(
         -DWHISPER_BUILD_TESTS=OFF
         -DWHISPER_CCACHE=OFF
         -DWHISPER_USE_SYSTEM_GGML=ON
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
