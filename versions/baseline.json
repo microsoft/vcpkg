@@ -9108,6 +9108,10 @@
       "baseline": "3.2.2",
       "port-version": 0
     },
+    "sdl3-net": {
+      "baseline": "prerelease-3.1.0",
+      "port-version": 0
+    },
     "sdl3-shadercross": {
       "baseline": "3.0.0-preview2",
       "port-version": 0
