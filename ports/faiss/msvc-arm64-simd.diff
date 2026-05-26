@@ -1,0 +1,13 @@
+diff --git a/faiss/impl/simdlib/simdlib_dispatch.h b/faiss/impl/simdlib/simdlib_dispatch.h
+index 374a365..934a47f 100644
+--- a/faiss/impl/simdlib/simdlib_dispatch.h
++++ b/faiss/impl/simdlib/simdlib_dispatch.h
+@@ -32,7 +32,7 @@
+ 
+ #include <faiss/impl/simdlib/simdlib_avx2.h>
+ 
+-#elif defined(COMPILE_SIMD_ARM_NEON) && defined(__aarch64__)
++#elif defined(COMPILE_SIMD_ARM_NEON) && (defined(__aarch64__) || defined(_M_ARM64))
+ 
+ #include <faiss/impl/simdlib/simdlib_neon.h>
+ 

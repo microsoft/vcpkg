@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         msvc-template.diff
         undef-small.diff
+        msvc-arm64-simd.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -20,6 +21,9 @@ if ("gpu" IN_LIST FEATURES)
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     )
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND FEATURE_OPTIONS "-DCMAKE_CUDA_FLAGS=-Xcompiler=/Zc:preprocessor")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
