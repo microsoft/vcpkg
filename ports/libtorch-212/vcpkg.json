@@ -7,33 +7,18 @@
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "blas",
-    "cpp-httplib",
     "cpuinfo",
     "eigen3",
-    {
-      "name": "fbgemm",
-      "platform": "x64"
-    },
-    "flatbuffers",
     {
       "name": "flatbuffers",
       "host": true
     },
     "fmt",
-    "foxi",
     "fp16",
-    "unofficial-kineto",
-    "gemmlowp",
     "lapack",
-    "lmdb",
-    "mimalloc",
-    "nlohmann-json",
     "onnx",
-    "onnx-optimizer",
     "opencl",
-    "pocketfft",
     "protobuf",
-    "kineto",
     {
       "name": "protobuf",
       "host": true
@@ -112,6 +97,16 @@
         {
           "name": "tensorpipe",
           "platform": "linux"
+        }
+      ]
+    },
+    "fbgemm": {
+      "description": "Build with FBGEMM (x64 quantization acceleration)",
+      "supports": "x64",
+      "dependencies": [
+        {
+          "name": "fbgemm",
+          "platform": "x64"
         }
       ]
     },
