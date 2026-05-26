@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 aeffb9c058c2b2ba515f9e055b6d311bba77bf21be81f7f2ea4fac02463e1983abccfdb0ea74181676c9f5b2033a003be52559de1d70830096acfb2f6fe36499
+    SHA512 95c8822b44916e7b8e77eedaeda2a537e0cfde71c89e1e3a4b9b2e612e51ab81bddd620fea30f22cfa8169b49c53943602aa297861ef2d48a5bd3ca60ca64d48
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff
         find-modules.diff
         gdk-pixbuf.patch
         symbol-exports.diff
-        fix-openjpeg-link-error.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
