@@ -81,6 +81,7 @@ find_library(NCCL_LIBRARIES
   $ENV{CUDA_TOOLKIT_ROOT_DIR}
   $ENV{NCCL}
   /usr/lib/x86_64-linux-gnu/
+  /usr/
   PATH_SUFFIXES
   lib
   lib64

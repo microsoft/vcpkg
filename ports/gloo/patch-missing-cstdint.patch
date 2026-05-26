@@ -1,0 +1,20 @@
+diff --git a/gloo/types.h b/gloo/types.h
+index cd38c8a..4eac7ff 100644
+--- a/gloo/types.h
++++ b/gloo/types.h
+@@ -5,6 +5,7 @@
+ #pragma once
+ 
+ #include <iostream>
++#include <cstdint>
+ 
+ #ifdef __CUDA_ARCH__
+ #include <cuda.h>
+@@ -28,7 +29,6 @@
+ #endif
+ 
+ #include "gloo/common/common.h"
+-
+ #ifdef _WIN32
+ #include <BaseTsd.h>
+ typedef SSIZE_T ssize_t;

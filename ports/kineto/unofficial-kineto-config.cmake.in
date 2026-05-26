@@ -1,0 +1,5 @@
+if(NOT TARGET unofficial::kineto::headers)
+    add_library(unofficial::kineto::headers INTERFACE IMPORTED)
+    target_include_directories(unofficial::kineto::headers
+        INTERFACE "${CMAKE_CURRENT_LIST_DIR}/../../include")
+endif()
