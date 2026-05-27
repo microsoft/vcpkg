@@ -1,0 +1,18 @@
+diff --git a/libs/dimcli/cli.h b/libs/dimcli/cli.h
+index 5fe5f5b..a95240f 100644
+--- a/libs/dimcli/cli.h
++++ b/libs/dimcli/cli.h
+@@ -1264,10 +1264,10 @@ void Cli::addAction(
+     auto where = std::upper_bound(
+         actions.begin(),
+         actions.end(),
+-        priority,
+-        [](int priority, auto && iter) {
++        std::pair<std::function<Fn>, int>{{}, priority},
++        [](auto && priority, auto && iter) {
+             // stable sort, numerically highest priority first
+-            return priority > iter.second;
++            return priority.second > iter.second;
+         }
+     );
+     actions.insert(where, std::make_pair(std::move(fn), priority));
