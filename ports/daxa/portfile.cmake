@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 527cd71e682cda0dc49ca3958f28d5007423778066d2f0adefd899555ffc2b5d9ba8a0d7b3390033c7863a74fe2e9525eaa36c4f8717f5bda2020659682700ba
     HEAD_REF master
-    PATCHES
-        daxa_swp_current_cpu_timeline_value.patch # fix std::max(long long int, long int), as int64_t is long int on some platforms
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
