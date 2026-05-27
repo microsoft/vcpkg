@@ -61,16 +61,13 @@ message(STATUS "Using Python3: ${PYTHON3}")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
-    zstd    USE_ZSTD        # cmake ignores USE_ZSTD; ensures zstd is installed for auto-detection
     fbgemm  USE_FBGEMM
-    opencv  USE_OPENCV      # cmake ignores USE_OPENCV; ensures opencv is installed for auto-detection
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
     cuda    USE_SYSTEM_NCCL
     cuda    USE_NVRTC
     cuda    AT_CUDA_ENABLED
-    cuda    AT_CUDNN_ENABLED  # not a cmake variable; in MAYBE_UNUSED_VARIABLES
     vulkan  USE_VULKAN        # cmake_dependent_option forces OFF on non-Android; kept for future
     vulkan  USE_VULKAN_RELAXED_PRECISION
     rocm    USE_ROCM  # alternative to cuda, not a vcpkg feature; always disabled
@@ -176,11 +173,8 @@ vcpkg_cmake_configure(
     # OPTIONS_DEBUG
     #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python311_d.lib
     MAYBE_UNUSED_VARIABLES
-        USE_NUMA           # cmake_dependent_option forces OFF on non-Linux
-        AT_CUDNN_ENABLED   # not a cmake variable in 2.12
-        USE_OPENCV         # not a cmake variable in 2.12
-        USE_ZSTD           # not a cmake variable in 2.12
-        USE_VULKAN         # cmake_dependent_option forces OFF on non-Android
+        USE_NUMA    # cmake_dependent_option forces OFF on non-Linux
+        USE_VULKAN  # cmake_dependent_option forces OFF on non-Android
 )
 
 # cmake_install.cmake has an install rule for FindCUDAToolkit.cmake but we deleted
