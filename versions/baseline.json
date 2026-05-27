@@ -5801,7 +5801,7 @@
       "port-version": 1
     },
     "libupnp": {
-      "baseline": "1.18.2",
+      "baseline": "1.18.5",
       "port-version": 0
     },
     "liburcu": {
