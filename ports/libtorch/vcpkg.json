@@ -1,6 +1,6 @@
 {
-  "name": "libtorch",
-  "version": "2.7.1",
+  "name": "libtorch-212",
+  "version": "2.12.0",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -10,28 +10,20 @@
     "cpp-httplib",
     "cpuinfo",
     "eigen3",
-    {
-      "name": "fbgemm",
-      "platform": "x64"
-    },
     "flatbuffers",
     {
       "name": "flatbuffers",
       "host": true
     },
     "fmt",
-    "foxi",
     "fp16",
-    "gemmlowp",
-    "lapack",
-    "lmdb",
-    "mimalloc",
     "nlohmann-json",
-    "onnx",
-    "onnx-optimizer",
-    "opencl",
     "pocketfft",
+    "lapack",
+    "onnx",
+    "opencl",
     "protobuf",
+
     {
       "name": "protobuf",
       "host": true
@@ -51,12 +43,12 @@
       "name": "vcpkg-get-python-packages",
       "host": true
     },
-    "xnnpack"
+    "xnnpack",
+    "kineto"
   ],
   "default-features": [
     "gflags",
     "glog",
-    "opencv",
     "zstd"
   ],
   "features": {
@@ -66,6 +58,7 @@
       "dependencies": [
         "cuda",
         "cudnn",
+        "cudnn-frontend",
         {
           "name": "gloo",
           "features": [
@@ -97,7 +90,7 @@
           "platform": "linux"
         },
         {
-          "name": "libtorch",
+          "name": "libtorch-212",
           "default-features": false,
           "features": [
             "mpi"
@@ -111,6 +104,16 @@
         {
           "name": "tensorpipe",
           "platform": "linux"
+        }
+      ]
+    },
+    "fbgemm": {
+      "description": "Build with FBGEMM (x64 quantization acceleration)",
+      "supports": "x64",
+      "dependencies": [
+        {
+          "name": "fbgemm",
+          "platform": "x64"
         }
       ]
     },
@@ -146,9 +149,13 @@
       ]
     },
     "opencv": {
-      "description": "Build with OpenCV",
+      "description": "Build with OpenCV (no GUI)",
       "dependencies": [
-        "opencv"
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": ["calib3d", "dnn", "fs", "gapi", "intrinsics", "jpeg", "png", "quirc", "thread", "tiff", "webp"]
+        }
       ]
     },
     "vulkan": {
