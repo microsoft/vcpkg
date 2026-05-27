@@ -8,7 +8,6 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/NeuralFramework"
-    PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
 )
