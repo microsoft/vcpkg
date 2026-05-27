@@ -1,11 +1,13 @@
 {
   "name": "llama-cpp",
-  "version": "7146",
+  "version": "9030",
   "description": "LLM inference in C/C++",
   "homepage": "https://github.com/ggml-org/llama.cpp",
   "license": "MIT",
   "dependencies": [
+    "cpp-httplib",
     "ggml",
+    "nlohmann-json",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,8 +27,15 @@
         }
       ]
     },
+    "server": {
+      "description": "Build llama-server and llama-cli"
+    },
     "tools": {
-      "description": "Build tools"
+      "description": "Build tools",
+      "dependencies": [
+        "miniaudio",
+        "stb"
+      ]
     }
   }
 }

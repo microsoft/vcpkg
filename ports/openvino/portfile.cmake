@@ -5,10 +5,11 @@ vcpkg_from_github(
     SHA512 c8f222cf278017da610a8d0f0c5bd5c6c54c0324bfcfdf9352063df2706732eaa54b7b01408aec1ca266a3f02bd2bffa671d2415121d8f3675f46d8114355de6
     HEAD_REF master
     PATCHES
-        msvc_debug_info_only_in_pdb.patch
-        onednn_gpu_includes.patch
+        msvc-debug-info-only-in-pdb.patch
+        onednn-gpu-includes.patch
         protobuf-6.patch
-        npu_deps.patch
+        npu-deps.patch
+        remove-stdext-on-new-msvc.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO deepmind/mujoco
     REF ${VERSION}
-    SHA512 08ee155459069dcebcbf833256238461fbcc99c973740484d3d140038c294fcf24674eda32e3cbb9f2e6a8c93e1887fd25518c4adc8b7a8d3850cd9ef5fa9bbf
+    SHA512 42931b3ab2c0058f7429dd70c1dd6f82d5a256b28ddd19beb9a74617231d9f735f496bff5e51c2bf2290de11435201e966ea834ff1cb22fa603835aac11f88e0
     PATCHES
         fix_dependencies.patch
         disable-werror.patch

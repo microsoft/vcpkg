@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.rarlab.com/rar/unrarsrc-${VERSION}.tar.gz"
     FILENAME "unrarsrc-${VERSION}.tar.gz"
-    SHA512 8e2b7e801e1e1f8861657e7e613b4540c46938af377e43383ec2b509db1a59073d1e970fa20ee923db73a6c93777d677e7488ca6696177625cc1020922504346
+    SHA512 e0a317418fa9c853295f69f0fbb53d1caae493405b8785ab04ac612c87b9e294f4331108ca3650a75bca91acfb5f6907d00360a9579425b2f2eae12dcae40f96
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

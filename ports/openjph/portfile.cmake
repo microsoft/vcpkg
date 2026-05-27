@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aous72/OpenJPH
     REF "${VERSION}"
-    SHA512 65134ddd870b275d5cab8bae704aa0781978b49e85b6b645a90e93fb6d482ee17d494a8f05e7e3dddf803532da631b898e75cb90b99b2db048c6111e84d4a1e1
+    SHA512 2bf9cd0a605f31d4961a7f65a11af8c04a9e263fe43909cdf34918795c7bfdebbff87a0613f6b76f1ac4ad2ef78b34363c3d850d08bb188093796986f36d0d6c
     HEAD_REF master
     PATCHES
         xsi-strerror_r.patch
@@ -28,6 +28,18 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openjph)
+
+# OpenJPH sets CMAKE_DEBUG_POSTFIX ("d" for MSVC, "_d" for others) but the
+# generated .pc file always references -lopenjph. Fix the debug .pc to match
+# the actual library name on disk.
+if(NOT VCPKG_BUILD_TYPE)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openjph.pc" "-lopenjph" "-lopenjphd")
+    else()
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openjph.pc" "-lopenjph" "-lopenjph_d")
+    endif()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

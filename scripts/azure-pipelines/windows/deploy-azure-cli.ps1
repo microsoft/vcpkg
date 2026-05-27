@@ -3,18 +3,13 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-[string]$AzCliUrl
-if ([string]::IsNullOrEmpty($SasToken)) {
-  Write-Host 'Downloading from the Internet'
-  $AzCliUrl = 'https://azcliprod.blob.core.windows.net/msi/azure-cli-2.83.0-x64.msi'
-} else {
-  Write-Host 'Downloading from vcpkgimageminting using SAS token'
-  $SasToken = $SasToken.Replace('"', '')
-  $AzCliUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/azure-cli-2.83.0-x64.msi?$SasToken"
-}
+$AzCliUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://azcliprod.blob.core.windows.net/msi/azure-cli-2.86.0-x64.msi' `
+  -BlobAssetName 'azure-cli-2.86.0-x64.msi'
 
-DownloadAndInstall -Url $AzCliUrl -Name 'Azure CLI' -Args @('/quiet', '/norestart')
+DownloadAndInstall -Url $AzCliUrl -Args @('/quiet', '/norestart')

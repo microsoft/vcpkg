@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/whisper.cpp
     REF "v${VERSION}"
-    SHA512 be5b02e4d48a92d632e5f2385c42c0c74b176021fb2a68fb6961ef3c83e85fe4930d168b6436667f62c4637315a321c5825644c6f459f6b6ed0660306a1bb4e0
+    SHA512 3b41035f9aaad31f0360b2d54d01c9c238628dec7b24a2a012afa6c5f82be998e002c8d3a98d6d4187198ac1fba6dea894b2e9307e2aa07cd5f28d8da17b27be
     HEAD_REF master
     PATCHES
         cmake-config.diff
         pkgconfig.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/ggml")
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,6 +21,9 @@ vcpkg_cmake_configure(
         -DWHISPER_BUILD_TESTS=OFF
         -DWHISPER_CCACHE=OFF
         -DWHISPER_USE_SYSTEM_GGML=ON
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
