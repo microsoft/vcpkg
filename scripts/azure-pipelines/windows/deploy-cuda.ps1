@@ -3,19 +3,14 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-[string]$CudaUrl
-if ([string]::IsNullOrEmpty($SasToken)) {
-  Write-Host 'Downloading from the Internet'
-  $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda_13.2.0_windows.exe'
-} else {
-  Write-Host 'Downloading from vcpkgimageminting using SAS token'
-  $SasToken = $SasToken.Replace('"', '')
-  $CudaUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cuda_13.2.0_windows.exe?$SasToken"
-}
+$CudaUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda_13.2.0_windows.exe' `
+  -BlobAssetName 'cuda_13.2.0_windows.exe'
 
 # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
 # Intentionally omitted:
@@ -26,7 +21,7 @@ if ([string]::IsNullOrEmpty($SasToken)) {
 #  nsight_vse_13.2
 #  occupancy_calculator_13.2 (this is named like a tool but listed as 'documentation' in the installer)
 #  visual_studio_integration_13.2
-DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
+DownloadAndInstall -Url $CudaUrl -Args @(
   '-s',
   'crt_13.2',
   'cublas_13.2',
