@@ -6998,7 +6998,7 @@
     },
     "neuralframework": {
       "baseline": "0.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ng-log": {
       "baseline": "0.8.2",

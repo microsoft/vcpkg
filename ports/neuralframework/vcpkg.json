@@ -1,6 +1,17 @@
 {
   "name": "neuralframework",
   "version": "0.1.1",
+  "port-version": 1,
   "description": "Minimal C++ neural network framework for dense models.",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
