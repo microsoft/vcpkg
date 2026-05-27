@@ -20,6 +20,7 @@
     "boost-smart-ptr",
     "boost-thread",
     "boost-uuid",
+    "loguru",
     "pugixml",
     {
       "name": "vcpkg-cmake",
