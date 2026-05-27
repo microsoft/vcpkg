@@ -4897,8 +4897,8 @@
       "port-version": 1
     },
     "libdmtx": {
-      "baseline": "0.7.7",
-      "port-version": 1
+      "baseline": "0.7.8",
+      "port-version": 0
     },
     "libdmx": {
       "baseline": "1.1.5",
