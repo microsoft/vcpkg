@@ -1,6 +1,6 @@
 {
   "name": "capstone",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "Multi-architecture disassembly framework",
   "homepage": "https://github.com/capstone-engine/capstone",
   "license": "BSD-3-Clause",

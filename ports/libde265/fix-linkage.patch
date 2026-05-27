@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1c2ef054..14fa2e08 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,21 +134,20 @@ endif()
+ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+ find_package(Threads REQUIRED)
+ 
+-include(CheckCXXSymbolExists)
+-check_cxx_symbol_exists(_LIBCPP_VERSION cstdlib HAVE_LIBCPP)
+-
+-# Build Libs.private contents for libde265.pc.
+-set(_libs_private "")
+-if(NOT MSVC)
+-  if(HAVE_LIBCPP)
+-    list(APPEND _libs_private "-lc++")
++set(LIBS_PRIVATE "")
++foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++  if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++    continue()
++  elseif(EXISTS "${lib}")
++    string(APPEND LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
+   else()
+-    list(APPEND _libs_private "-lstdc++")
++    string(APPEND LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
+   endif()
+-endif()
++endforeach()
++
+ # Emit '-lpthread' rather than '-pthread' so consumers using
+ # `pkg-config --libs --static` get an unambiguous linker flag (see #453).
+-if(CMAKE_USE_PTHREADS_INIT)
++if(CMAKE_USE_PTHREADS_INIT AND NOT ANDROID)
+   list(APPEND _libs_private "-lpthread")
+ endif()
+ if(UNIX)
