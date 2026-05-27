@@ -1,5 +1,5 @@
 {
-  "name": "libtorch-212",
+  "name": "libtorch",
   "version": "2.12.0",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",

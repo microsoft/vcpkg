@@ -97,38 +97,6 @@ if("dist" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
 endif()
 
-# if("cuda" IN_LIST FEATURES)
-#   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
-#     # CUDAFLAGS env var is picked up during CMake compiler detection (unlike CMAKE_CUDA_FLAGS).
-#     # -allow-unsupported-compiler: CUDA 13.2 caps at GCC 15; we have GCC 16.
-#     # -std=c++20: GCC 16's <type_traits> uses char8_t/concepts which require C++20.
-#     set(ENV{CUDAFLAGS} "-allow-unsupported-compiler -std=c++20")
-
-#     # GCC 16 unconditionally activates C++23 features in libstdc++ headers
-#     # (_GLIBCXX_EXPLICIT_THIS_PARAMETER, _GLIBCXX_USE_BUILTIN_TRAIT) that
-#     # nvcc 13.x cannot parse.  Force-preinclude a shim that neutralizes them
-#     # via bits/c++config.h include-guards (so the overrides survive transitive
-#     # re-includes).
-#     set(nvcc_compat_h "${CURRENT_BUILDTREES_DIR}/nvcc_compat.h")
-#     file(WRITE "${nvcc_compat_h}" [=[
-# #pragma once
-# #ifdef __NVCC__
-# #  include <bits/c++config.h>
-# #  undef  _GLIBCXX_EXPLICIT_THIS_PARAMETER
-# #  define _GLIBCXX_EXPLICIT_THIS_PARAMETER 0
-# #  undef  _GLIBCXX_USE_BUILTIN_TRAIT
-# #  define _GLIBCXX_USE_BUILTIN_TRAIT(BT) 0
-# #endif
-# ]=])
-
-#     list(APPEND FEATURE_OPTIONS
-#         "-DCMAKE_CUDA_COMPILER=${NVCC}"
-#         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
-#         "-DCMAKE_CUDA_STANDARD=20"
-#         "-DCMAKE_CUDA_FLAGS=-allow-unsupported-compiler -std=c++20 -include ${nvcc_compat_h}"
-#     )
-# endif()
-
 if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
     find_program(GLSLC NAMES glslc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc" REQUIRED)
     message(STATUS "Using glslc: ${GLSLC}")
@@ -173,11 +141,6 @@ vcpkg_cmake_configure(
         -DAT_MKLDNN_ENABLED=OFF
         -DUSE_OPENCL=ON          # opencl is a base dep, always on
         -DCUDNN_FRONTEND_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
-    # Should be enabled in-future along with the "python" feature (currently disabled)
-    # OPTIONS_RELEASE
-    #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python311.lib
-    # OPTIONS_DEBUG
-    #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python311_d.lib
     MAYBE_UNUSED_VARIABLES
         USE_NUMA    # cmake_dependent_option forces OFF on non-Linux
         USE_VULKAN  # cmake_dependent_option forces OFF on non-Android
