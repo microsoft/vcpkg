@@ -22,17 +22,5 @@
       ],
       "platform": "!(windows & static) & !android & !ios"
     }
-  ],
-  "default-features": [
-    {
-      "name": "bluez",
-      "platform": "linux"
-    }
-  ],
-  "features": {
-    "bluez": {
-      "description": "Enable BlueZ, the sole Bluetooth backend for Qt on Linux. Requires system BlueZ development headers. On Debian/Ubuntu: sudo apt install libbluetooth-dev.",
-      "supports": "linux"
-    }
-  }
+  ]
 }
