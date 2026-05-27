@@ -1,0 +1,12 @@
+diff --git a/libs/dimcli/cli.h b/libs/dimcli/cli.h
+index 5fe5f5b..47b499c 100644
+--- a/libs/dimcli/cli.h
++++ b/libs/dimcli/cli.h
+@@ -135,6 +135,7 @@
+ #include <unordered_map>
+ #include <utility>
+ #include <vector>
++#include <algorithm>
+ 
+ #ifndef DIMCLI_LIB_NO_FILESYSTEM
+ #if defined(_MSC_VER) && _MSC_VER < 1914
