@@ -6816,6 +6816,10 @@
       "baseline": "2016-01-09",
       "port-version": 7
     },
+    "musdk": {
+      "baseline": "11.22.12",
+      "port-version": 0
+    },
     "mvfst": {
       "baseline": "2026.02.23.00",
       "port-version": 0
