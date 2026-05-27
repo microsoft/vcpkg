@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DLSL_BUILD_STATIC=${LSL_BUILD_STATIC}
         -DLSL_BUNDLED_BOOST=OFF # we use the boost vcpkg packages instead
-        -DLSL_BUNDLED_PUGIXML=OFF # we use the pugixml vcpkg package instead
+        -DLSL_FETCH_PUGIXML=OFF # we use the pugixml vcpkg package instead
         -DLSL_FRAMEWORK=OFF
         -Dlslgitrevision=v${VERSION}
         -Dlslgitbranch=master
