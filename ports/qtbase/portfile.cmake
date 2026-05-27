@@ -141,17 +141,16 @@ INVERTED_FEATURES
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
 
-if(LINUX)
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
-FEATURES
-  "ioring" FEATURE_liburing
-)
-endif()
-if(WINDOWS)
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
-FEATURES
-  "ioring" FEATURE_windows_ioring
-)
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
+        FEATURES
+            "ioring" FEATURE_liburing
+    )
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
+        FEATURES
+            "ioring" FEATURE_windows_ioring
+    )
 endif()
 
 list(APPEND FEATURE_CORE_OPTIONS ${FEATURE_OS_CORE_OPTIONS})

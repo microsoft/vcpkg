@@ -387,6 +387,7 @@
     },
     "ioring": {
       "description": "qioring for async-io",
+      "supports": "linux | windows",
       "dependencies": [
         {
           "name": "qtbase",
