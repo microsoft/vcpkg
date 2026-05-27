@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 365ba4d875a5af318b8534165bd14d174619c335f18bbfce814b17c9d0c7405a593f77451699fbc65a46d3ea693c06731edc47a89a248aa752281f0335e1bb46
     PATCHES
         vcpkg_lightgbm_use_vcpkg_libs.patch
+        fix-win32-linkage.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

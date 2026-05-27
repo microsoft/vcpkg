@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e8d9671b..bad8d524 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -601,6 +601,9 @@ endif()
+ 
+ if(USE_GPU)
+   target_link_libraries(lightgbm_objs PUBLIC ${OpenCL_LIBRARY} ${Boost_LIBRARIES})
++  if(WIN32)
++    target_link_libraries(lightgbm_objs PUBLIC cfgmgr32)
++  endif()
+ endif()
+ 
+ if(USE_CUDA)
