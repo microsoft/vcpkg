@@ -3,30 +3,28 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-# See https://learn.microsoft.com/visualstudio/releases/2022/release-history
-# 17.14.30
-$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/e8db5368-d542-4208-ab91-ea2ac11f00b8/b6341ef1f07ba0f857a18c59665065929348609b1d924787f8f104bed65a51a3/vs_Enterprise.exe'
+# See https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history
+# 18.6.0
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/c40d2503-2e56-4f54-96c2-d886056cfedb/44f811a46b7556514b4fadc906ccc9685f96b63eeb8a36333425b3b315999c22/vs_BuildTools.exe'
 $Workloads = @(
-  'Microsoft.VisualStudio.Workload.NativeDesktop',
-  'Microsoft.VisualStudio.Workload.Universal',
+  'Microsoft.VisualStudio.Workload.VCTools',
+  'Microsoft.VisualStudio.Workload.MSBuildTools',
   'Microsoft.VisualStudio.Component.VC.Tools.x86.x64',
   'Microsoft.VisualStudio.Component.VC.Tools.ARM64',
+  'Microsoft.VisualStudio.Component.VC.Tools.ARM64EC',
   'Microsoft.VisualStudio.Component.VC.ASAN',
   'Microsoft.VisualStudio.Component.VC.ATL',
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
   'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
-  'Microsoft.VisualStudio.Component.Windows11SDK.26100',
-  # These .NET parts are needed for easyhook, openni2
-  'Microsoft.Net.Component.4.8.SDK',
-  'Microsoft.Net.Component.4.7.2.TargetingPack',
-  'Microsoft.Component.NetFX.Native',
-  'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
+  'Microsoft.VisualStudio.Component.Windows11SDK.28000',
+  'Microsoft.VisualStudio.Component.VC.CLI.Support', # .NET parts are needed for easyhook, openni2
   'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
+  'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
   'Microsoft.VisualStudio.Component.VC.CMake.Project'
 )
 
@@ -36,4 +34,4 @@ foreach ($workload in $Workloads) {
   $vsArgs += $workload
 }
 
-DownloadAndInstall -Name 'Visual Studio' -Url $VisualStudioBootstrapperUrl -Args $vsArgs
+DownloadAndInstall -Url $VisualStudioBootstrapperUrl -Args $vsArgs
