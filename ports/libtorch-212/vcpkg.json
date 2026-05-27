@@ -23,6 +23,7 @@
     "onnx",
     "opencl",
     "protobuf",
+
     {
       "name": "protobuf",
       "host": true
@@ -42,7 +43,8 @@
       "name": "vcpkg-get-python-packages",
       "host": true
     },
-    "xnnpack"
+    "xnnpack",
+    "kineto"
   ],
   "default-features": [
     "gflags",
@@ -64,7 +66,7 @@
           ],
           "platform": "linux"
         },
-
+        "magma",
         {
           "name": "nccl",
           "platform": "linux"

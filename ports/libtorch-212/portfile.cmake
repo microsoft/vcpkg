@@ -7,7 +7,12 @@ vcpkg_from_github(
     SHA512 f5ab0f6933d88271f772b416f8c9b3b0d3e1ffaf8d00838b455206266b40d7c805e34003d84b01cddc7f1ad917dd72d6f79a05063b0962cbf223d9042cff3206
     HEAD_REF master
     PATCHES
-        fix-cmake.patch
+        fix-system-fp16.patch
+        fix-system-tensorpipe.patch
+        fix-system-fmt.patch
+        fix-system-fxdiv.patch
+        fix-system-kineto.patch
+        fix-torch-includes.patch
         fix-glog.patch
         fix-system-flatbuffers.patch
         fix-system-httplib.patch
@@ -68,6 +73,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda    USE_SYSTEM_NCCL
     cuda    USE_NVRTC
     cuda    AT_CUDA_ENABLED
+    cuda    USE_MAGMA
     vulkan  USE_VULKAN        # cmake_dependent_option forces OFF on non-Android; kept for future
     vulkan  USE_VULKAN_RELAXED_PRECISION
     rocm    USE_ROCM  # alternative to cuda, not a vcpkg feature; always disabled
@@ -91,37 +97,37 @@ if("dist" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
 endif()
 
-if("cuda" IN_LIST FEATURES)
-  vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
-    # CUDAFLAGS env var is picked up during CMake compiler detection (unlike CMAKE_CUDA_FLAGS).
-    # -allow-unsupported-compiler: CUDA 13.2 caps at GCC 15; we have GCC 16.
-    # -std=c++20: GCC 16's <type_traits> uses char8_t/concepts which require C++20.
-    set(ENV{CUDAFLAGS} "-allow-unsupported-compiler -std=c++20")
+# if("cuda" IN_LIST FEATURES)
+#   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+#     # CUDAFLAGS env var is picked up during CMake compiler detection (unlike CMAKE_CUDA_FLAGS).
+#     # -allow-unsupported-compiler: CUDA 13.2 caps at GCC 15; we have GCC 16.
+#     # -std=c++20: GCC 16's <type_traits> uses char8_t/concepts which require C++20.
+#     set(ENV{CUDAFLAGS} "-allow-unsupported-compiler -std=c++20")
 
-    # GCC 16 unconditionally activates C++23 features in libstdc++ headers
-    # (_GLIBCXX_EXPLICIT_THIS_PARAMETER, _GLIBCXX_USE_BUILTIN_TRAIT) that
-    # nvcc 13.x cannot parse.  Force-preinclude a shim that neutralizes them
-    # via bits/c++config.h include-guards (so the overrides survive transitive
-    # re-includes).
-    set(nvcc_compat_h "${CURRENT_BUILDTREES_DIR}/nvcc_compat.h")
-    file(WRITE "${nvcc_compat_h}" [=[
-#pragma once
-#ifdef __NVCC__
-#  include <bits/c++config.h>
-#  undef  _GLIBCXX_EXPLICIT_THIS_PARAMETER
-#  define _GLIBCXX_EXPLICIT_THIS_PARAMETER 0
-#  undef  _GLIBCXX_USE_BUILTIN_TRAIT
-#  define _GLIBCXX_USE_BUILTIN_TRAIT(BT) 0
-#endif
-]=])
+#     # GCC 16 unconditionally activates C++23 features in libstdc++ headers
+#     # (_GLIBCXX_EXPLICIT_THIS_PARAMETER, _GLIBCXX_USE_BUILTIN_TRAIT) that
+#     # nvcc 13.x cannot parse.  Force-preinclude a shim that neutralizes them
+#     # via bits/c++config.h include-guards (so the overrides survive transitive
+#     # re-includes).
+#     set(nvcc_compat_h "${CURRENT_BUILDTREES_DIR}/nvcc_compat.h")
+#     file(WRITE "${nvcc_compat_h}" [=[
+# #pragma once
+# #ifdef __NVCC__
+# #  include <bits/c++config.h>
+# #  undef  _GLIBCXX_EXPLICIT_THIS_PARAMETER
+# #  define _GLIBCXX_EXPLICIT_THIS_PARAMETER 0
+# #  undef  _GLIBCXX_USE_BUILTIN_TRAIT
+# #  define _GLIBCXX_USE_BUILTIN_TRAIT(BT) 0
+# #endif
+# ]=])
 
-    list(APPEND FEATURE_OPTIONS
-        "-DCMAKE_CUDA_COMPILER=${NVCC}"
-        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
-        "-DCMAKE_CUDA_STANDARD=20"
-        "-DCMAKE_CUDA_FLAGS=-allow-unsupported-compiler -std=c++20 -include ${nvcc_compat_h}"
-    )
-endif()
+#     list(APPEND FEATURE_OPTIONS
+#         "-DCMAKE_CUDA_COMPILER=${NVCC}"
+#         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+#         "-DCMAKE_CUDA_STANDARD=20"
+#         "-DCMAKE_CUDA_FLAGS=-allow-unsupported-compiler -std=c++20 -include ${nvcc_compat_h}"
+#     )
+# endif()
 
 if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
     find_program(GLSLC NAMES glslc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc" REQUIRED)
