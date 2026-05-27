@@ -131,6 +131,7 @@ FEATURES
     "glib"                FEATURE_glib
     "icu"                 FEATURE_icu
     "pcre2"               FEATURE_pcre2
+    "async-io"            FEATURE_async_io
     #"icu"                 CMAKE_REQUIRE_FIND_PACKAGE_ICU
     #"glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
 INVERTED_FEATURES
@@ -139,6 +140,21 @@ INVERTED_FEATURES
     "icu"                  CMAKE_DISABLE_FIND_PACKAGE_ICU
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
+
+if(LINUX)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
+FEATURES
+  "ioring" FEATURE_liburing
+)
+endif()
+if(WINDOWS)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
+FEATURES
+  "ioring" FEATURE_windows_ioring
+)
+endif()
+
+list(APPEND FEATURE_CORE_OPTIONS ${FEATURE_OS_CORE_OPTIONS})
 
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)

@@ -68,6 +68,7 @@
       "name": "appstore-compliant",
       "platform": "uwp"
     },
+    "async-io",
     "brotli",
     "concurrent",
     {
@@ -140,6 +141,18 @@
   "features": {
     "appstore-compliant": {
       "description": "Disable code that is not allowed in platform app stores. This is on by default for platforms which require distribution through an app store by default, in particular Android, iOS, tvOS, and watchOS."
+    },
+    "async-io": {
+      "description": "Provides support for asynchronous file I/O",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
     },
     "brotli": {
       "description": "Support for downloading and decompressing resources compressed with Brotli through QNetworkAccessManager.",
@@ -370,6 +383,18 @@
       "description": "Enable ICU support",
       "dependencies": [
         "icu"
+      ]
+    },
+    "ioring": {
+      "description": "qioring for async-io",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "async-io"
+          ]
+        }
       ]
     },
     "jpeg": {
