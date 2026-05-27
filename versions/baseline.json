@@ -3725,7 +3725,7 @@
       "port-version": 0
     },
     "h5py-lzf": {
-      "baseline": "3.15.1",
+      "baseline": "3.16.0",
       "port-version": 0
     },
     "half": {
