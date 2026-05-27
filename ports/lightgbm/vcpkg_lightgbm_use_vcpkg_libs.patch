@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3492289b..6284b6e0 100644
+index 4489e60d..e8d9671b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -115,18 +115,17 @@ if(USE_SWIG)
-   endif()
+@@ -110,18 +110,17 @@ if(USE_SWIG)
+   file(MAKE_DIRECTORY "${LGBM_SWIG_DESTINATION_DIR}")
  endif()
  
 -set(EIGEN_DIR "${PROJECT_SOURCE_DIR}/external_libs/eigen")
@@ -16,17 +16,17 @@ index 3492289b..6284b6e0 100644
  
 -set(FAST_DOUBLE_PARSER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fast_double_parser/include")
 -include_directories(${FAST_DOUBLE_PARSER_INCLUDE_DIR})
++find_path(FAST_DOUBLE_PARSER_INCLUDE_DIR fast_double_parser.h)
+ 
+-set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
+-include_directories(${FMT_INCLUDE_DIR})
 +find_package(fmt CONFIG REQUIRED)
 +get_target_property(VCPKG_INCLUDE_DIR fmt::fmt INTERFACE_INCLUDE_DIRECTORIES)
 +set(FMT_INCLUDE_DIR ${VCPKG_INCLUDE_DIR}/fmt)
  
--set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
--include_directories(${FMT_INCLUDE_DIR})
-+find_path(FAST_DOUBLE_PARSER_INCLUDE_DIR fast_double_parser.h)
- 
  if(__BUILD_FOR_R)
      find_package(LibR REQUIRED)
-@@ -181,15 +180,13 @@ if(USE_OPENMP)
+@@ -184,15 +183,13 @@ if(USE_OPENMP)
  endif()
  
  if(USE_GPU)
@@ -43,12 +43,12 @@ index 3492289b..6284b6e0 100644
      if(WIN32)
          # disable autolinking in boost
          add_definitions(-DBOOST_ALL_NO_LIB)
-@@ -458,9 +455,11 @@ endif()
+@@ -492,10 +489,11 @@ if(USE_ROCM)
+ endif()
  
- add_library(lightgbm_objs OBJECT ${SOURCES})
- 
+ add_library(lightgbm_objs OBJECT ${LGBM_SOURCES})
 +target_link_libraries(lightgbm_objs PUBLIC Eigen3::Eigen fmt::fmt)
-+
+ 
  if(BUILD_CLI)
      add_executable(lightgbm src/main.cpp src/application/application.cpp)
 -    target_link_libraries(lightgbm PRIVATE lightgbm_objs)
@@ -56,7 +56,7 @@ index 3492289b..6284b6e0 100644
  endif()
  
  set(API_SOURCES "src/c_api.cpp")
-@@ -471,6 +470,7 @@ if(__BUILD_FOR_R)
+@@ -506,6 +504,7 @@ if(__BUILD_FOR_R)
  endif()
  
  add_library(lightgbm_capi_objs OBJECT ${API_SOURCES})
