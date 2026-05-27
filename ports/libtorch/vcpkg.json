@@ -90,7 +90,7 @@
           "platform": "linux"
         },
         {
-          "name": "libtorch-212",
+          "name": "libtorch",
           "default-features": false,
           "features": [
             "mpi"

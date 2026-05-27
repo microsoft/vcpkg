@@ -5,7 +5,6 @@ vcpkg_from_github(
   SHA512 32a45ed9fe1f28cce3ca95640bd87b638c122c1a33cbb29f6761feb6ae0bd10db53de6f4abe79991e08797551b783b7244446f11a094c1707cc54ce4ecb29ad6
   HEAD_REF master
   PATCHES
-    fix-nvcc-gcc16-compat.patch
 )
 
 # Determine which backend to build via specified feature
