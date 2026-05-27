@@ -5329,7 +5329,7 @@
       "port-version": 1
     },
     "libmultisense": {
-      "baseline": "7.6.0",
+      "baseline": "7.8.0",
       "port-version": 0
     },
     "libmupdf": {
