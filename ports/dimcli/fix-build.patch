@@ -1,8 +1,16 @@
 diff --git a/libs/dimcli/cli.h b/libs/dimcli/cli.h
-index 5fe5f5b..a95240f 100644
+index 5fe5f5b..b5c649d 100644
 --- a/libs/dimcli/cli.h
 +++ b/libs/dimcli/cli.h
-@@ -1264,10 +1264,10 @@ void Cli::addAction(
+@@ -29,6 +29,7 @@
+ #include "cppconf/dimcli_userconfig.h"
+ #endif
+ #endif
++#include <algorithm>
+ 
+ //---------------------------------------------------------------------------
+ // Configuration of this installation, these are options that must be the
+@@ -1264,10 +1265,10 @@ void Cli::addAction(
      auto where = std::upper_bound(
          actions.begin(),
          actions.end(),
