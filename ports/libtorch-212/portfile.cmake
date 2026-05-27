@@ -12,6 +12,12 @@ vcpkg_from_github(
         fix-system-flatbuffers.patch
         fix-system-httplib.patch
         fix-system-nlohmann.patch
+        fix-system-pthreadpool.patch
+        fix-system-cpuinfo.patch
+        fix-system-xnnpack.patch
+        fix-system-onnx.patch
+        fix-system-cutlass.patch
+        fix-sleef.patch
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
