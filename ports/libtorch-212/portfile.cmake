@@ -61,21 +61,19 @@ message(STATUS "Using Python3: ${PYTHON3}")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
-    zstd    USE_ZSTD
+    zstd    USE_ZSTD        # cmake ignores USE_ZSTD; ensures zstd is installed for auto-detection
     fbgemm  USE_FBGEMM
-    opencv  USE_OPENCV
-    opencl  USE_OPENCL
-    mkldnn  USE_MKLDNN
+    opencv  USE_OPENCV      # cmake ignores USE_OPENCV; ensures opencv is installed for auto-detection
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
     cuda    USE_SYSTEM_NCCL
     cuda    USE_NVRTC
     cuda    AT_CUDA_ENABLED
-    cuda    AT_CUDNN_ENABLED
-    vulkan  USE_VULKAN
+    cuda    AT_CUDNN_ENABLED  # not a cmake variable; in MAYBE_UNUSED_VARIABLES
+    vulkan  USE_VULKAN        # cmake_dependent_option forces OFF on non-Android; kept for future
     vulkan  USE_VULKAN_RELAXED_PRECISION
-    rocm    USE_ROCM  # This is an alternative to cuda not a feature! (Not in vcpkg.json!) -> disabled
+    rocm    USE_ROCM  # alternative to cuda, not a vcpkg feature; always disabled
     llvm    USE_LLVM
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
@@ -134,16 +132,6 @@ if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
     list(APPEND FEATURE_OPTIONS "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}")
 endif()
 
-set(TARGET_IS_MOBILE OFF)
-if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
-    set(TARGET_IS_MOBILE ON)
-endif()
-
-set(TARGET_IS_APPLE OFF)
-if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
-    set(TARGET_IS_APPLE ON)
-endif()
-
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -159,12 +147,10 @@ vcpkg_cmake_configure(
         -DCAFFE2_STATIC_LINK_CUDA=ON
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DBUILD_CUSTOM_PROTOBUF=OFF
-        -DBUILD_PYTHON=OFF
         -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF
         -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
-        -DUSE_METAL=OFF
         -DUSE_FLASH_ATTENTION=OFF
         -DUSE_MEM_EFF_ATTENTION=OFF
         -DUSE_XPU=OFF
@@ -173,23 +159,16 @@ vcpkg_cmake_configure(
         -DUSE_PYTORCH_METAL_EXPORT=OFF
         -DUSE_PYTORCH_QNNPACK:BOOL=OFF
         -DUSE_ITT=OFF
-        -DUSE_ROCKSDB=ON
         -DUSE_OBSERVERS=OFF
         -DUSE_KINETO=OFF
         -DUSE_ROCM=OFF
         -DUSE_NUMA=OFF
-        -DUSE_SYSTEM_LIBS=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
-        ${BLAS_OPTIONS}
-        # BLAS=MKL not supported in this port
-        -DUSE_MKLDNN=OFF
+        -DUSE_MKLDNN=OFF         # no mkldnn feature; hardcoded off
         -DUSE_MKLDNN_CBLAS=OFF
-        #-DCAFFE2_USE_MKL=ON
-        #-DAT_MKL_ENABLED=ON
         -DAT_MKLDNN_ENABLED=OFF
-        -DUSE_OPENCL=ON
-        -DUSE_KINETO=OFF #
+        -DUSE_OPENCL=ON          # opencl is a base dep, always on
         -DCUDNN_FRONTEND_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     # Should be enabled in-future along with the "python" feature (currently disabled)
     # OPTIONS_RELEASE
@@ -197,14 +176,11 @@ vcpkg_cmake_configure(
     # OPTIONS_DEBUG
     #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python311_d.lib
     MAYBE_UNUSED_VARIABLES
-        USE_NUMA
-        USE_SYSTEM_BIND11
-        MKLDNN_CPU_RUNTIME
-        PYTHON_LIBRARY
-        USE_METAL
-        USE_OPENCV
-        USE_ROCKSDB
-        USE_ZSTD
+        USE_NUMA           # cmake_dependent_option forces OFF on non-Linux
+        AT_CUDNN_ENABLED   # not a cmake variable in 2.12
+        USE_OPENCV         # not a cmake variable in 2.12
+        USE_ZSTD           # not a cmake variable in 2.12
+        USE_VULKAN         # cmake_dependent_option forces OFF on non-Android
 )
 
 # cmake_install.cmake has an install rule for FindCUDAToolkit.cmake but we deleted
