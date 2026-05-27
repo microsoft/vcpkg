@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ipotrick/Daxa
     REF ${VERSION}
-    SHA512 2cdb653be68e9c70fd023d1d3c450830b9fb9fcd3d7257e85715390f422501ae17633b01fdc1b9da7b9563ace1c4b524f8b69e5a24636b387b7960b52906ed94
+    SHA512 527cd71e682cda0dc49ca3958f28d5007423778066d2f0adefd899555ffc2b5d9ba8a0d7b3390033c7863a74fe2e9525eaa36c4f8717f5bda2020659682700ba
     HEAD_REF master
     PATCHES
         daxa_swp_current_cpu_timeline_value.patch # fix std::max(long long int, long int), as int64_t is long int on some platforms
