@@ -1,0 +1,11 @@
+jsonrpcpp is a header-only library. You can use it by including the headers:
+
+    #include <jsonrpcpp/jsonrpcpp.hpp>
+
+Since jsonrpcpp depends on nlohmann-json, you need to link against it:
+
+    find_package(nlohmann_json CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE nlohmann_json::nlohmann_json)
+
+For more information, see the documentation at:
+    https://github.com/badaix/jsonrpcpp
