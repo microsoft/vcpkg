@@ -6353,7 +6353,7 @@
       "port-version": 0
     },
     "mapnik": {
-      "baseline": "4.0.7",
+      "baseline": "4.2.2",
       "port-version": 0
     },
     "marble": {

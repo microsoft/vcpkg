@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
     REF v${VERSION}
-    SHA512 ac3cda35240eca404fedc77e6c36d9b3d0596a077857fb7c41e8d4d5dce2a292f425ce0c134ac6e8577b50c6a126ba56e5de1103e63c752ebe9f6fa3db62dd3d
+    SHA512 f4c8c6df211cb9a3a5b79b65b657c9f1b3d424c33172daf955a6cec3eeaf26b8f11f22f9a811c6b006217acf770dd3cd158a39b362634e171a62646c76d01bd3
     HEAD_REF master
 )
 
