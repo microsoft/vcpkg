@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 bbf19fa15e1286bc47a55ea883faa11187bf148284908e15bc30543b553de666702f41ae9e4606b77505c3facdd72483c01de7fc8e84ca5c04c43b3563177650
     HEAD_REF master
     PATCHES
-        use-find-package-asio.patch
+        use-vcpkg-libs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LSL_BUILD_STATIC)
