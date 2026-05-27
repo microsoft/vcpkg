@@ -8,4 +8,5 @@ vcpkg_from_github(
 )
 
 file(INSTALL "${SOURCE_PATH}/yapi.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
