@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-system-onnx.patch
         fix-system-cutlass.patch
         fix-sleef.patch
+        fix-cudnn-frontend.patch
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -26,15 +27,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generat
 file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/pocketfft")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/pocketfft_hdronly.h"
      DESTINATION "${SOURCE_PATH}/third_party/pocketfft/")
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH src_cudnn
-    REPO NVIDIA/cudnn-frontend # new port ?
-    REF 2533f5e5c1877fd76266133c1479ef1643ce3a8b #  1.6.1 
-    SHA512 8caacdf9f7dbd6ce55507f5f7165db8640b681e2a7dfd6a841de8eaa3489cff5ba41d11758cc464320b2ff9a491f8234e1749580cf43cac702f07cf82611e084
-    HEAD_REF main
-)
-file(COPY "${src_cudnn}/" DESTINATION "${SOURCE_PATH}/third_party/cudnn_frontend")
 
 
 file(REMOVE
@@ -198,6 +190,7 @@ vcpkg_cmake_configure(
         -DAT_MKLDNN_ENABLED=OFF
         -DUSE_OPENCL=ON
         -DUSE_KINETO=OFF #
+        -DCUDNN_FRONTEND_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     # Should be enabled in-future along with the "python" feature (currently disabled)
     # OPTIONS_RELEASE
     #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python311.lib
