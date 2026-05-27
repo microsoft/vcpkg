@@ -10,6 +10,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        "avif"                      USE_AVIF
         "jpeg"                      USE_JPEG
         "png"                       USE_PNG
         "tiff"                      USE_TIFF
@@ -49,7 +50,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS   
+    OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_SHARED_CRT=${BUILD_SHARED_CRT}
         -DINSTALL_DEPENDENCIES=OFF
