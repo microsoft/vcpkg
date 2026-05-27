@@ -40,12 +40,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# nvcc_compat.h was added by our patch but gloo's CMakeLists doesn't know to install it
-if ("cuda" IN_LIST FEATURES)
-  file(INSTALL "${SOURCE_PATH}/gloo/nvcc_compat.h"
-       DESTINATION "${CURRENT_PACKAGES_DIR}/include/gloo")
-endif()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Gloo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

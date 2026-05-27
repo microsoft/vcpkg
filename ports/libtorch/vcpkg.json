@@ -17,13 +17,13 @@
     },
     "fmt",
     "fp16",
-    "nlohmann-json",
-    "pocketfft",
+    "kineto",
     "lapack",
+    "nlohmann-json",
     "onnx",
     "opencl",
+    "pocketfft",
     "protobuf",
-
     {
       "name": "protobuf",
       "host": true
@@ -43,8 +43,7 @@
       "name": "vcpkg-get-python-packages",
       "host": true
     },
-    "xnnpack",
-    "kineto"
+    "xnnpack"
   ],
   "default-features": [
     "gflags",
@@ -154,7 +153,19 @@
         {
           "name": "opencv",
           "default-features": false,
-          "features": ["calib3d", "dnn", "fs", "gapi", "intrinsics", "jpeg", "png", "quirc", "thread", "tiff", "webp"]
+          "features": [
+            "calib3d",
+            "dnn",
+            "fs",
+            "gapi",
+            "intrinsics",
+            "jpeg",
+            "png",
+            "quirc",
+            "thread",
+            "tiff",
+            "webp"
+          ]
         }
       ]
     },
