@@ -2485,7 +2485,7 @@
       "port-version": 13
     },
     "dimcli": {
-      "baseline": "7.3.0",
+      "baseline": "7.6.0",
       "port-version": 0
     },
     "dime": {
