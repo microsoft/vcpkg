@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Trieste
     REF "v${VERSION}"
-    SHA512 cd92ef15181c7adc4e777342b9e5ae60ec1b12356d3742044d98e54d3f9a44012c377eafbc02f92afc7f80e963b32a22e5230f765a2f63345139050512bc3af0
+    SHA512 5499e461e92c2d86853e9666c003e755c6d77f2dde0bd44f12a09a4fc7a2446e871d34fcc769b18f5ee87f8ceea79476284620d50c61ef1593e7126d273f79fc
     HEAD_REF main
-    PATCHES
-      artifact-names.diff
 )
 
 # NOTE: The CI overlay port (see .github/workflows/buildtest.yml,
@@ -14,15 +12,16 @@ vcpkg_from_github(
 # this line, update the sed pattern there.
 if("parsers" IN_LIST FEATURES)
   set(BUILD_PARSERS ON)
-  # The parser libraries lack __declspec(dllexport) annotations,
-  # so they must be built as static libraries on Windows.
-  if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-  endif()
 else()
   set(BUILD_PARSERS OFF)
   # Without parsers, this is a header-only library.
   set(VCPKG_BUILD_TYPE release)
+endif()
+
+if("snmalloc" IN_LIST FEATURES)
+  set(USE_SNMALLOC ON)
+else()
+  set(USE_SNMALLOC OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -33,7 +32,7 @@ vcpkg_cmake_configure(
         -DTRIESTE_BUILD_SAMPLES=OFF
         -DTRIESTE_BUILD_PARSERS=${BUILD_PARSERS}
         -DTRIESTE_ENABLE_TESTING=OFF
-        -DTRIESTE_USE_SNMALLOC=OFF
+        -DTRIESTE_USE_SNMALLOC=${USE_SNMALLOC}
 )
 
 vcpkg_cmake_install()

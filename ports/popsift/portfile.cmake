@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 374a00542ff46ac8a8cf31b7a62c834e4e148c5f9ddd5f6a128e4284e637242c0ce55bf3ee6524e6555c8402332ec8863ca921cef36c0bacd9a1ada6c8e09b55
     HEAD_REF develop
+    PATCHES
+        pr-183-add-zcpreprocessor-for-cuda-13-2.diff # https://github.com/alicevision/popsift/pull/183
 )
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)

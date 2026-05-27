@@ -1,6 +1,6 @@
 {
   "name": "typecast-ai",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Text-to-Speech API client library for Typecast AI. Pure C with optional C++ wrapper.",
   "homepage": "https://github.com/neosapience/typecast-sdk",
   "license": "MIT",

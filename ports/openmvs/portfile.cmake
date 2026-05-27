@@ -16,7 +16,9 @@ vcpkg_from_github(
         interface-metashape.diff
         missing-include.diff
         no-absolute-paths.patch
+        cuda-13.diff
 )
+
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEigen3.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

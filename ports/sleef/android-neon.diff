@@ -1,8 +1,8 @@
 diff --git a/Configure.cmake b/Configure.cmake
-index c7b5023..178ea44 100644
+index e23f577..23225ab 100644
 --- a/Configure.cmake
 +++ b/Configure.cmake
-@@ -253,6 +253,9 @@ set(CLANG_FLAGS_ENABLE_AVX2128 "-mavx2;-mfma")
+@@ -247,6 +247,9 @@ set(CLANG_FLAGS_ENABLE_AVX2128 "-mavx2;-mfma")
  set(CLANG_FLAGS_ENABLE_AVX512F "-mavx512f")
  set(CLANG_FLAGS_ENABLE_AVX512FNOFMA "-mavx512f")
  set(CLANG_FLAGS_ENABLE_NEON32 "--target=arm-linux-gnueabihf;-mcpu=cortex-a8")
@@ -13,7 +13,7 @@ index c7b5023..178ea44 100644
  # Arm AArch64 vector extensions.
  set(CLANG_FLAGS_ENABLE_SVE "-march=armv8-a+sve")
 diff --git a/src/dft/CMakeLists.txt b/src/dft/CMakeLists.txt
-index 526c4f8..d57c3b8 100644
+index 15bee24..57a4a80 100644
 --- a/src/dft/CMakeLists.txt
 +++ b/src/dft/CMakeLists.txt
 @@ -173,7 +173,9 @@ if (COMPILER_SUPPORTS_SVE)

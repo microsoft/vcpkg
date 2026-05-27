@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/rego-cpp
     REF "v${VERSION}"
-    SHA512 d600bc65b9bc142944a56a63c09a3124978799463046d0f048ae1ce7b7652f0c1469a16387c2495070cf3ffd6eca1ea5ed667eb5e2c236f989d49ec748f9a519
+    SHA512 a9e7b6202fdc7b7168433227c7bc67492d52bdf10c5d9b2c0954aa66a9eb5a16a9b4de7eb7385a335c6685111393aad6840c171ab12b3e6b2fd493b5bffea21c
     HEAD_REF main
+    PATCHES
+      add-bigobj.diff # src\rego_to_bundle.cc : fatal error C1128: number of sections exceeded object file format limit: compile with /bigobj
 )
 
 # NOTE: The CI overlay port (see .github/workflows/pr_gate.yml,
@@ -29,7 +31,6 @@ vcpkg_cmake_configure(
         -DREGOCPP_BUILD_TOOLS=${BUILD_TOOLS}
         -DREGOCPP_BUILD_TESTS=OFF
         -DREGOCPP_BUILD_DOCS=OFF
-        -DREGOCPP_USE_SNMALLOC=OFF
         -DREGOCPP_CRYPTO_BACKEND=${CRYPTO_BACKEND}
 )
 
@@ -41,6 +42,7 @@ endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME regocpp CONFIG_PATH share/regocpp/cmake)
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

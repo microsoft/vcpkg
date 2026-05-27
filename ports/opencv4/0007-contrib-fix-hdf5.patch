@@ -1,3 +1,5 @@
+diff --git a/modules/hdf/CMakeLists.txt b/modules/hdf/CMakeLists.txt
+index 2a1ae68..e302cf7 100644
 --- a/modules/hdf/CMakeLists.txt
 +++ b/modules/hdf/CMakeLists.txt
 @@ -1,25 +1,7 @@
@@ -21,9 +23,9 @@
 -else()
 -  if(NOT CMAKE_CROSSCOMPILING) # iOS build should not reuse OSX package
      find_package(HDF5)
-+    set(HDF5_INCLUDE_DIRS "${HDF5_INCLUDE_DIR}")
 -  endif()
 -endif()
++    set(HDF5_INCLUDE_DIRS "${HDF5_INCLUDE_DIR}")
  
  if(NOT HDF5_FOUND)
      ocv_module_disable(hdf) # no return
