@@ -166,6 +166,7 @@ vcpkg_cmake_configure(
         -DUSE_OPENCL=ON          # opencl is a base dep, always on
         -DCUDNN_FRONTEND_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     MAYBE_UNUSED_VARIABLES
+        CUDNN_FRONTEND_INCLUDE_DIR
         USE_NUMA    # cmake_dependent_option forces OFF on non-Linux
         USE_VULKAN  # cmake_dependent_option forces OFF on non-Android
 )
