@@ -18,6 +18,10 @@
     "fmt",
     "fp16",
     "kineto",
+    {
+      "name": "kleidiai",
+      "platform": "arm64"
+    },
     "lapack",
     {
       "name": "mimalloc",

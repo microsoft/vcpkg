@@ -27,6 +27,7 @@ vcpkg_from_github(
         fix-system-cutlass.patch
         fix-system-fbgemm.patch
         fix-system-nnpack.patch
+        fix-system-kleidiai.patch
         fix-sleef.patch
         fix-cudnn-frontend.patch
         )
