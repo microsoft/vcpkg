@@ -54,10 +54,12 @@
  IF(NOT TARGET fxdiv)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
-@@ -1163,13 +1170,26 @@
+@@ -1162,14 +1169,27 @@
+ ENDIF()
  
  IF(XNNPACK_BUILD_LIBRARY)
-   INSTALL(TARGETS XNNPACK microkernels-prod
+-  INSTALL(TARGETS XNNPACK microkernels-prod
++  INSTALL(TARGETS XNNPACK microkernels-prod xnnpack-base allocator cache hardware-config indirection memory microkernel-utils microparams-init mutex normalization  operators operator-run operator-utils packing subgraph datatype reference-ukernels logging      
 +  EXPORT unofficial-xnnpack-config-targets
 +      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
