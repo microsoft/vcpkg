@@ -34,7 +34,7 @@
     "heif-module": {
       "description": "Build libheif as a module.",
       "dependencies": [
-        "heif"
+        "libheif"
       ]
     },
     "highway": {
