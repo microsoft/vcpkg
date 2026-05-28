@@ -30,7 +30,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/quickfix)
 
 set(quickfix_config "${CURRENT_PACKAGES_DIR}/share/${PORT}/quickfix-config.cmake")
 file(READ "${quickfix_config}" quickfix_config_contents)
-file(WRITE "${quickfix_config}" "include(CMakeFindDependencyMacro)\nfind_dependency(double-conversion CONFIG)\n${quickfix_config_contents}")
+file(WRITE "${quickfix_config}"
+    "include(CMakeFindDependencyMacro)\n"
+    "find_dependency(double-conversion CONFIG)\n"
+    "${quickfix_config_contents}"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
