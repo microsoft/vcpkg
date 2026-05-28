@@ -4,7 +4,6 @@
   "description": "Minizip zip file manipulation library",
   "homepage": "https://github.com/madler/zlib",
   "license": "Zlib",
-  "supports": "!(arm32 | x86) | mingw",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
