@@ -10,8 +10,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 787e2052f0cee61abc71d34b9a317f9c6241b449a338efe6ef37b3c17a00f52168e8c55fac941c70de49b4efa3e7306a64b85c609a57ccc98132730010fc319f
     HEAD_REF master
-    PATCHES
-        0000-install-include-directory.patch
 )
 
 vcpkg_from_github(
