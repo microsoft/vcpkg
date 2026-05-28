@@ -31,7 +31,6 @@ vcpkg_from_github(
         fix-system-mkl.patch
         fix-system-mkldnn.patch
         fix-system-pocketfft.patch
-        fix-mkl-int-type.patch
         fix-sleef.patch
         fix-cudnn-frontend.patch
         )
@@ -122,7 +121,13 @@ if("mkl" IN_LIST FEATURES)
     # which calls find_package(MKL) -> our replacement FindMKL.cmake -> vcpkg intel-mkl.
     # The sentinel makes the FindMKL replacement fail hard if MKL is missing;
     # without it (the default-BLAS=MKL case) the replacement silently falls back.
-    list(APPEND FEATURE_OPTIONS -DBLAS=MKL -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON)
+    # MKL_INTERFACE=lp64 picks the LP64 variant of MKL — PyTorch assumes LP64 in
+    # vml.h and BatchLinearAlgebra.cpp (magma_int_t = int); ILP64 would force
+    # local PyTorch source patches we'd have to maintain across upgrades.
+    list(APPEND FEATURE_OPTIONS
+        -DBLAS=MKL
+        -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON
+        -DMKL_INTERFACE=lp64)
 endif()
 
 if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
