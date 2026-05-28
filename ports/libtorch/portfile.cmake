@@ -140,6 +140,17 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND FEATURE_OPTIONS -DUSE_PRIORITIZED_TEXT_FOR_LD=OFF)
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    # PyTorch ends up reporting "USE_XNNPACK: OFF" on x86-windows anyway (some
+    # later guard flips it), but fix-system-xnnpack.patch fires at Dependencies.cmake:530
+    # while USE_XNNPACK is still ON and appends XNNPACK + microkernels-prod to
+    # Caffe2_DEPENDENCY_LIBS. That list never gets cleaned up, and the x86-windows
+    # imported targets fail the generate-time IMPORTED_IMPLIB check (x64-windows
+    # tolerates the same shape). Force the option off from the start so our patch
+    # branch is skipped entirely.
+    list(APPEND FEATURE_OPTIONS -DUSE_XNNPACK=OFF)
+endif()
+
 set(TARGET_IS_MOBILE OFF)
 if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
     set(TARGET_IS_MOBILE ON)
