@@ -1,0 +1,50 @@
+--- a/cmake/Modules/FindMKL.cmake
++++ b/cmake/Modules/FindMKL.cmake
+@@ -1,3 +1,47 @@
++# vcpkg replacement: route through Intel's MKLConfig.cmake shipped by the intel-mkl
++# port. PyTorch defaults BLAS=MKL and calls find_package(MKL) unconditionally, so
++# this file is hit whether or not the user opted into the libtorch[mkl] feature.
++#
++# Behaviour:
++#   * [mkl] off (default) -> MKL absent is fine; we return silently and PyTorch
++#     falls back to OpenBLAS via its general BLAS search.
++#   * [mkl] on -> portfile sets VCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON; missing
++#     MKL is a hard error.
++find_package(MKL CONFIG QUIET)
++
++if(NOT MKL_FOUND OR NOT TARGET MKL::MKL)
++  if(VCPKG_LIBTORCH_MKL_FEATURE_ENABLED)
++    message(FATAL_ERROR
++      "libtorch[mkl] is enabled but the intel-mkl port did not provide MKLConfig.cmake. "
++      "Check that the intel-mkl dependency installed successfully.")
++  endif()
++  set(MKL_FOUND FALSE)
++  return()
++endif()
++
++set(MKL_LIBRARIES MKL::MKL)
++set(MKL_LAPACK_LIBRARIES MKL::MKL)
++set(MKL_OPENMP_TYPE "Intel")
++set(MKL_OPENMP_LIBRARY "")
++set(MKL_VERSION "vcpkg-intel-mkl")
++
++get_target_property(_mkl_inc MKL::MKL INTERFACE_INCLUDE_DIRECTORIES)
++if(_mkl_inc)
++  set(MKL_INCLUDE_DIR ${_mkl_inc})
++endif()
++
++# cmake/public/mkl.cmake appends ${MKL_ROOT}/lib /lib/intel64 etc. to caffe2::mkl's
++# INTERFACE_LINK_DIRECTORIES; give it the vcpkg install prefix so those resolve sanely.
++if(NOT DEFINED MKL_ROOT OR NOT IS_DIRECTORY "${MKL_ROOT}")
++  if(MKL_INCLUDE_DIR)
++    list(GET MKL_INCLUDE_DIR 0 _mkl_first_inc)
++    get_filename_component(MKL_ROOT "${_mkl_first_inc}" DIRECTORY)
++  endif()
++endif()
++
++message(STATUS "MKL: using vcpkg intel-mkl (MKL::MKL); MKL_ROOT=${MKL_ROOT}")
++return()
++
+ # - Find INTEL MKL library
+ #
+ # This module sets the following variables:

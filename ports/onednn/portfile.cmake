@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DDNNL_BUILD_DOC=OFF
         -DDNNL_BUILD_EXAMPLES=OFF
         -DDNNL_BUILD_TESTS=OFF
+        -DDNNL_EXPERIMENTAL_UKERNEL=ON  # required by PyTorch CPUBlas (dnnl::ukernel::brgemm/transform)
         ${DNNL_OPTIONS}
 )
 vcpkg_cmake_install()

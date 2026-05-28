@@ -28,6 +28,9 @@ vcpkg_from_github(
         fix-system-fbgemm.patch
         fix-system-nnpack.patch
         fix-system-kleidiai.patch
+        fix-system-mkl.patch
+        fix-system-mkldnn.patch
+        fix-mkl-int-type.patch
         fix-sleef.patch
         fix-cudnn-frontend.patch
         )
@@ -84,6 +87,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     vulkan  USE_VULKAN_RELAXED_PRECISION
     rocm    USE_ROCM  # alternative to cuda, not a vcpkg feature; always disabled
     llvm    USE_LLVM
+    mkldnn  USE_MKLDNN
+    mkldnn  AT_MKLDNN_ENABLED
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
@@ -115,6 +120,14 @@ if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
     find_program(GLSLC NAMES glslc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc" REQUIRED)
     message(STATUS "Using glslc: ${GLSLC}")
     list(APPEND FEATURE_OPTIONS "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}")
+endif()
+
+if("mkl" IN_LIST FEATURES)
+    # Route PyTorch's BLAS chooser at cmake/Dependencies.cmake through the MKL branch,
+    # which calls find_package(MKL) -> our replacement FindMKL.cmake -> vcpkg intel-mkl.
+    # The sentinel makes the FindMKL replacement fail hard if MKL is missing;
+    # without it (the default-BLAS=MKL case) the replacement silently falls back.
+    list(APPEND FEATURE_OPTIONS -DBLAS=MKL -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON)
 endif()
 
 set(TARGET_IS_MOBILE OFF)
@@ -160,15 +173,14 @@ vcpkg_cmake_configure(
         -DUSE_NUMA=OFF
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
-        -DUSE_MKLDNN=OFF         # no mkldnn feature; hardcoded off
-        -DUSE_MKLDNN_CBLAS=OFF
-        -DAT_MKLDNN_ENABLED=OFF
+        -DUSE_MKLDNN_CBLAS=OFF   # the CBLAS-via-MKLDNN sub-path stays off
         -DUSE_OPENCL=ON          # opencl is a base dep, always on
         -DCUDNN_FRONTEND_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     MAYBE_UNUSED_VARIABLES
         CUDNN_FRONTEND_INCLUDE_DIR
         USE_NUMA    # cmake_dependent_option forces OFF on non-Linux
         USE_VULKAN  # cmake_dependent_option forces OFF on non-Android
+        VCPKG_LIBTORCH_MKL_FEATURE_ENABLED  # consumed by patched FindMKL.cmake, not the top-level CMakeLists
 )
 
 # cmake_install.cmake has an install rule for FindCUDAToolkit.cmake but we deleted

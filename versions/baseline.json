@@ -3920,6 +3920,10 @@
       "baseline": "78.3",
       "port-version": 0
     },
+    "ideep": {
+      "baseline": "3.11.2.4",
+      "port-version": 0
+    },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
       "port-version": 0

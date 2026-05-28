@@ -6,7 +6,6 @@
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
-    "blas",
     "cpp-httplib",
     "cpuinfo",
     "eigen3",
@@ -22,7 +21,6 @@
       "name": "kleidiai",
       "platform": "arm64"
     },
-    "lapack",
     {
       "name": "mimalloc",
       "platform": "windows | (arm64 & !osx)"
@@ -54,11 +52,19 @@
     "xnnpack"
   ],
   "default-features": [
+    "blas",
     "gflags",
     "glog",
     "zstd"
   ],
   "features": {
+    "blas": {
+      "description": "BLAS/LAPACK backend (openblas on linux/windows, Accelerate on macOS). On by default; disable with [core,...] when using [mkl] instead.",
+      "dependencies": [
+        "blas",
+        "lapack"
+      ]
+    },
     "cuda": {
       "description": "Build with CUDA GPU backend",
       "supports": "(windows & x64 & !staticcrt) | (linux & x64)",
@@ -140,6 +146,21 @@
       "description": "Build with LLVM",
       "dependencies": [
         "llvm"
+      ]
+    },
+    "mkl": {
+      "description": "Use Intel oneMKL for BLAS/LAPACK; also activates MKL-backed kernels in ideep when [mkldnn] is enabled. Mutually exclusive with [blas] (the openblas default-feature) — install as libtorch[core,mkl,...] to skip the openblas backend, otherwise both backends get built and only MKL is linked.",
+      "supports": "(windows | linux) & x64",
+      "dependencies": [
+        "intel-mkl"
+      ]
+    },
+    "mkldnn": {
+      "description": "Build with oneDNN (MKLDNN) CPU acceleration via Intel ideep",
+      "supports": "x64 & !uwp",
+      "dependencies": [
+        "ideep",
+        "onednn"
       ]
     },
     "mpi": {
