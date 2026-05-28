@@ -41,8 +41,6 @@ EXPORTS
    mdb_txn_abort
    mdb_txn_reset
    mdb_txn_renew
-   mdb_open
-   mdb_close
    mdb_dbi_open
    mdb_stat
    mdb_dbi_flags
