@@ -125,6 +125,16 @@ if("mkl" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DBLAS=MKL -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON)
 endif()
 
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    # Upstream auto-enables USE_PRIORITIZED_TEXT_FOR_LD on Linux+AArch64
+    # (CMakeLists.txt:408-410), which runs tools/setup_helpers/generate_linker_script.py.
+    # That script calls $LD -verbose to capture the default linker script — but on
+    # vcpkg cross-compile CI hosts $LD is the x86-64 ld, producing a script with
+    # OUTPUT_FORMAT(elf64-x86-64). The aarch64 cross-linker then rejects it with
+    # "cannot represent machine i386:x86-64". Disable the optimization here.
+    list(APPEND FEATURE_OPTIONS -DUSE_PRIORITIZED_TEXT_FOR_LD=OFF)
+endif()
+
 set(TARGET_IS_MOBILE OFF)
 if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
     set(TARGET_IS_MOBILE ON)
