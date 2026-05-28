@@ -1,3 +1,3 @@
-set(qtpositioning_HASH "52d6ebca4e2921776402895fed6c8cc81c50d274215c783bf499cdd37935c29b6027e203d717cffcc30c5be3d79081285112509b4dbe81355d8d02acb4a35c25")
-set(qtpositioning_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtpositioning-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtpositioning-everywhere-src-6.10.3.tar.xz")
-set(qtpositioning_FILENAME "qtpositioning-everywhere-src-6.10.3.tar.xz")
+set(qtpositioning_HASH "de31a3c09f0db36ba643a102bffcd197e14c1c872a8caef66f7650dd98d7eab8ace142dc3801f870e8b7454ea95639f96b692cb763e2eff2ff27691bd52c7948")
+set(qtpositioning_URL "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtpositioning-everywhere-src-6.11.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.0/submodules/qtpositioning-everywhere-src-6.11.0.tar.xz")
+set(qtpositioning_FILENAME "qtpositioning-everywhere-src-6.11.0.tar.xz")

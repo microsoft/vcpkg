@@ -1,10 +1,10 @@
 diff --git a/meson.build b/meson.build
-index b9a32c8..1810ed0 100644
+index 414e759..4577953 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1,6 +1,6 @@
  project('wayland-protocols',
- 	version: '1.43',
+ 	version: '1.48',
 -	meson_version: '>= 0.58.0',
 +	meson_version: '>= 0.62.0',
  	license: 'MIT/Expat',
@@ -24,10 +24,10 @@ index b9a32c8..1810ed0 100644
  
  stable_protocols = {
  	'linux-dmabuf': ['v1'],
-@@ -123,7 +118,7 @@ foreach protocol_file : protocol_files
- endforeach
+@@ -157,7 +152,7 @@ endforeach
  
  include_dirs = []
+ headers = []
 -if dep_scanner.version().version_compare('>=1.22.90')
 +if true
  	subdir('include/wayland-protocols')

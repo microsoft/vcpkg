@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libfuse/libfuse
     REF "fuse-${VERSION}"
-    SHA512 a39bb630f8e57a635980e153b9209a4b804569656feddb46fe8bef02c053533a6037fcc767d03efd5f8bebffed1ff55eb5f49b323ab71e8913008f994cffca77
+    SHA512 b870e13d97d62546aab2e29855c775a7492b2b4ad0115bfd0ab68aa5505d6baa071e29e93ed67f7cff16ab71704bb8f9ffe8253c3edc0f9fd396186b1deef6fb
     HEAD_REF master
 )
 
