@@ -8558,7 +8558,7 @@
     },
     "quickfix": {
       "baseline": "1.16.0",
-      "port-version": 0
+      "port-version": 1
     },
     "quickjs-ng": {
       "baseline": "0.15.0",
