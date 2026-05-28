@@ -7,6 +7,9 @@ vcpkg_from_github(
     SHA512 f5ab0f6933d88271f772b416f8c9b3b0d3e1ffaf8d00838b455206266b40d7c805e34003d84b01cddc7f1ad917dd72d6f79a05063b0962cbf223d9042cff3206
     HEAD_REF master
     PATCHES
+        fix-osx-protobuf.patch
+        fix-vulkan-vma.patch
+        fix-system-mimalloc.patch
         fix-system-fp16.patch
         fix-system-tensorpipe.patch
         fix-system-fmt.patch
@@ -22,6 +25,8 @@ vcpkg_from_github(
         fix-system-xnnpack.patch
         fix-system-onnx.patch
         fix-system-cutlass.patch
+        fix-system-fbgemm.patch
+        fix-system-nnpack.patch
         fix-sleef.patch
         fix-cudnn-frontend.patch
         )
