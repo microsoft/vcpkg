@@ -30,18 +30,13 @@ vcpkg_from_github(
         fix-system-kleidiai.patch
         fix-system-mkl.patch
         fix-system-mkldnn.patch
+        fix-system-pocketfft.patch
         fix-mkl-int-type.patch
         fix-sleef.patch
         fix-cudnn-frontend.patch
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
-
-# cmake/Dependencies.cmake hardcodes third_party/pocketfft — copy the vcpkg header there
-file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/pocketfft")
-file(COPY "${CURRENT_INSTALLED_DIR}/include/pocketfft_hdronly.h"
-     DESTINATION "${SOURCE_PATH}/third_party/pocketfft/")
-
 
 file(REMOVE
   "${SOURCE_PATH}/cmake/Modules/FindBLAS.cmake"
