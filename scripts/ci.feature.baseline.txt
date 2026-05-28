@@ -1337,7 +1337,6 @@ simd(android)=fail
 simonbrunel-qtpromise:arm64-linux=cascade
 skia[dawn]:arm64-linux=cascade
 skia[default-features]:arm64-windows=cascade
-sleef:arm64-linux=fail
 sleef:x86-windows=fail
 sleef[dft]:arm64-osx=feature-fails # openmp setup needed
 sleepy-discord[voice]:arm64-linux=cascade
