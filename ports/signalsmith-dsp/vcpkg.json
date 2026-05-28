@@ -1,6 +1,6 @@
 {
   "name": "signalsmith-dsp",
-  "version-semver": "1.6.2",
+  "version-semver": "1.7.1",
   "description": "Signalsmith Audio's C++ DSP support library ",
   "homepage": "https://signalsmith-audio.co.uk/code/dsp/",
   "license": "MIT"
