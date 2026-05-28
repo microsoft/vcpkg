@@ -677,7 +677,6 @@ libtcod[sdl]:arm64-linux=cascade
 libtomcrypt(arm & windows)=fail
 libtorch:arm64-linux=cascade
 libtorch:x86-windows=cascade
-libtorch[cuda]=feature-fails # broken on CUDA 13
 libtorch[dist](!x64 | !linux) = cascade
 libtorch(arm & windows)=cascade
 libtorrent[python]:arm64-linux=cascade
