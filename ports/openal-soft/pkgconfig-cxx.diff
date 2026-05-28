@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c0f59f2..b65e924 100644
+index 470697bec..340f32bc3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1493,6 +1493,15 @@ if(LIBTYPE STREQUAL "STATIC")
+@@ -1560,6 +1560,15 @@ if(LIBTYPE STREQUAL "STATIC")
              set(PKG_CONFIG_PRIVATE_LIBS "${PKG_CONFIG_PRIVATE_LIBS} -l${FLAG}")
          endif()
      endforeach()

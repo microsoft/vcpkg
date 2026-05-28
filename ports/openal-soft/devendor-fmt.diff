@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b65e924..814d59e 100644
+index c925aa870..470697bec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -256,7 +256,8 @@ if(ALSOFT_ENABLE_MODULES)
+@@ -258,7 +258,8 @@ if(ALSOFT_ENABLE_MODULES)
  endif()
  
  
@@ -12,17 +12,17 @@ index b65e924..814d59e 100644
  
  
  set(CPP_DEFS ) # C pre-processor, not C++
-@@ -1614,7 +1615,7 @@ if(LIBTYPE STREQUAL "STATIC")
+@@ -1720,7 +1721,7 @@ if(LIBTYPE STREQUAL "STATIC")
      target_compile_definitions(${IMPL_TARGET} PUBLIC AL_LIBTYPE_STATIC)
      target_include_directories(${IMPL_TARGET} PRIVATE ${OpenAL_SOURCE_DIR}/gsl/include)
-     target_link_libraries(${IMPL_TARGET} PRIVATE ${LINKER_FLAGS} ${EXTRA_LIBS} ${MATH_LIB}
--        $<BUILD_LOCAL_INTERFACE:alsoft::fmt>)
-+        alsoft::fmt)
+     target_link_libraries(${IMPL_TARGET} PRIVATE Threads::Threads ${LINKER_FLAGS} ${EXTRA_LIBS}
+-        ${MATH_LIB} $<BUILD_LOCAL_INTERFACE:alsoft::fmt>)
++        ${MATH_LIB} alsoft::fmt)
  
      if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET
          AND CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.13")
 diff --git a/OpenALConfig.cmake.in b/OpenALConfig.cmake.in
-index 4c1ad05..f462df5 100644
+index 4c1ad05d5..f462df59c 100644
 --- a/OpenALConfig.cmake.in
 +++ b/OpenALConfig.cmake.in
 @@ -2,6 +2,9 @@ if((NOT DEFINED CMAKE_VERSION) OR (CMAKE_VERSION VERSION_LESS "3.1"))
@@ -36,7 +36,7 @@ index 4c1ad05..f462df5 100644
  
  set(OPENAL_FOUND ON)
 diff --git a/openal.pc.in b/openal.pc.in
-index dfa6f57..e04e807 100644
+index dfa6f5738..e04e80720 100644
 --- a/openal.pc.in
 +++ b/openal.pc.in
 @@ -6,6 +6,7 @@ includedir=@includedir@
