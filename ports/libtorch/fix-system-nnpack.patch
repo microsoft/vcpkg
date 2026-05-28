@@ -9,3 +9,5 @@
 +  add_library(nnpack ALIAS unofficial::nnpack::nnpack)
 +  set(NNPACK_FOUND TRUE)
    if(NNPACK_FOUND)
+     if(TARGET nnpack)
+       # ---[ NNPACK is being built together with Caffe2: explicitly specify dependency
