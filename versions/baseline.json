@@ -5713,7 +5713,7 @@
       "port-version": 0
     },
     "libsystemd": {
-      "baseline": "260.1",
+      "baseline": "260.2",
       "port-version": 0
     },
     "libtar": {
@@ -8369,8 +8369,8 @@
       "port-version": 0
     },
     "qtconnectivity": {
-      "baseline": "6.11.1",
-      "port-version": 0
+      "baseline": "6.11.0",
+      "port-version": 1
     },
     "qtdatavis3d": {
       "baseline": "6.11.1",
@@ -8554,7 +8554,7 @@
     },
     "quickfix": {
       "baseline": "1.16.0",
-      "port-version": 0
+      "port-version": 1
     },
     "quickjs-ng": {
       "baseline": "0.15.0",
