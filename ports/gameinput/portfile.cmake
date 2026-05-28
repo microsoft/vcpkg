@@ -28,7 +28,7 @@ if(VCPKG_TARGET_IS_XBOX)
 
     # Output user-friendly status message for installed edition.
     if(${GAMEINPUT_H} MATCHES ".*/([0-9][0-9])([0-9][0-9])([0-9][0-9])/.*")
-        set(GDKEditionNumber ${CMAKE_MATCH_0})
+        set(GDKEditionNumber ${CMAKE_MATCH_1}${CMAKE_MATCH_2}${CMAKE_MATCH_3})
         set(_months "null" "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December")
         list(GET _months ${CMAKE_MATCH_2} month)
         set(update "")
