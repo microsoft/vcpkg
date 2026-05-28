@@ -4537,7 +4537,7 @@
       "port-version": 1
     },
     "kleidiai": {
-      "baseline": "1.19.0",
+      "baseline": "1.25.0",
       "port-version": 0
     },
     "klein": {
