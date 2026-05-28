@@ -61,7 +61,7 @@
     "jpeg-xl-module": {
       "description": "Build JPEG XL as a module.",
       "dependencies": [
-        "jpeg-xl"
+        "libjxl"
       ]
     },
     "exif": {
