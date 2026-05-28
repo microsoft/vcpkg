@@ -5,7 +5,7 @@ set(${PORT}_PATCHES
     silence-qtconnectivity-coroutine-warnings.diff
 )
 
-set(ADDITIONAL_OPTIONS)
+set(ADDITIONAL_OPTIONS "")
 if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "qtconnectivity requires the BlueZ development headers from the system package manager. "
     "They can be installed on Debian/Ubuntu systems via sudo apt install libbluetooth-dev.")
