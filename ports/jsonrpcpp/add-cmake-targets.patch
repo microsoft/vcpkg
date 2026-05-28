@@ -1,19 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1234567..abcdefg 100644
+index a682679..bdcf1b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -28,11 +28,35 @@ if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
- 	SET(CMAKE_INSTALL_INCLUDEDIR include CACHE
+@@ -29,11 +29,37 @@ if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
  		PATH "Output directory for header files")
  endif()
-
+ 
 -include_directories(
 -	"include"
--)
 +find_package(nlohmann_json CONFIG REQUIRED)
-
--install(FILES include/jsonrpcpp.hpp include/json.hpp
--    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsonrpcpp")
++
 +add_library(jsonrpcpp INTERFACE)
 +target_include_directories(jsonrpcpp INTERFACE
 +    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -40,9 +36,10 @@ index 1234567..abcdefg 100644
 +    FILE unofficial-jsonrpcpp-targets.cmake
 +    NAMESPACE unofficial::jsonrpcpp::
 +    DESTINATION share/unofficial-jsonrpcpp
-+)
-+
+ )
+ 
+-install(FILES include/jsonrpcpp.hpp include/json.hpp
 +install(FILES include/jsonrpcpp.hpp
-+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsonrpcpp")
-
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsonrpcpp")
+ 
  if(MSVC)
