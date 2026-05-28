@@ -13,13 +13,40 @@ vcpkg_replace_string(
     [[#include <nlohmann/json.hpp>]]
 )
 
-# Remove bundled json.hpp from install command and delete the file
+# Remove bundled json.hpp
+file(REMOVE "${SOURCE_PATH}/include/json.hpp")
+
+# Patch CMakeLists.txt: add CMake targets and remove bundled json.hpp from install
 vcpkg_replace_string(
     "${SOURCE_PATH}/CMakeLists.txt"
-    "install(FILES include/jsonrpcpp.hpp include/json.hpp"
-    "install(FILES include/jsonrpcpp.hpp"
+    [[include_directories(
+	"include"
 )
-file(REMOVE "${SOURCE_PATH}/include/json.hpp")
+
+install(FILES include/jsonrpcpp.hpp include/json.hpp
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsonrpcpp")]]
+    [[find_package(nlohmann_json CONFIG REQUIRED)
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+target_link_libraries(${PROJECT_NAME} INTERFACE nlohmann_json::nlohmann_json)
+
+install(TARGETS ${PROJECT_NAME}
+    EXPORT jsonrpcpp-targets
+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+)
+install(EXPORT jsonrpcpp-targets
+    NAMESPACE jsonrpcpp::
+    FILE jsonrpcpp-config.cmake
+    DESTINATION share/jsonrpcpp
+)
+
+install(FILES include/jsonrpcpp.hpp
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsonrpcpp")]]
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -29,6 +56,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME jsonrpcpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
