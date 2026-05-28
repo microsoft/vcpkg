@@ -19,6 +19,10 @@
     "fp16",
     "kineto",
     "lapack",
+    {
+      "name": "mimalloc",
+      "platform": "windows"
+    },
     "nlohmann-json",
     "onnx",
     "opencl",
