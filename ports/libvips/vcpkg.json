@@ -230,20 +230,19 @@
     "magick-package-graphicsmagick": {
       "description": "Set Meson magick-package to GraphicsMagick.",
       "dependencies": [
-        "magick",
         "graphicsmagick"
       ]
     },
     "magick-features-load-only": {
       "description": "Set Meson magick-features to load only.",
       "dependencies": [
-        "magick"
+        "graphicsmagick"
       ]
     },
     "magick-features-save-only": {
       "description": "Set Meson magick-features to save only.",
       "dependencies": [
-        "magick"
+        "graphicsmagick"
       ]
     },
     "nifti-prefix-installed": {
@@ -264,7 +263,7 @@
     "magick-module": {
       "description": "Placeholder: build MagickCore as a module when magick backend is enabled.",
       "dependencies": [
-        "magick"
+        "graphicsmagick"
       ]
     },
     "pdfium": {
