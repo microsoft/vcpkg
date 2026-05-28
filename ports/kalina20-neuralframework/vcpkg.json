@@ -1,7 +1,6 @@
 {
-  "name": "neuralframework",
+  "name": "kalina20-neuralframework",
   "version": "0.1.1",
-  "port-version": 1,
   "description": "Minimal C++ neural network framework for dense models.",
   "license": "MIT",
   "dependencies": [
