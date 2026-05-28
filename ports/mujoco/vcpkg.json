@@ -15,6 +15,7 @@
     "glfw3",
     "lodepng",
     "marchingcubecpp",
+    "miniz",
     "qhull",
     "tinyobjloader",
     "tinyxml2",
