@@ -1,18 +1,17 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1321,9 +1321,8 @@ if(USE_MIMALLOC)
+@@ -1322,7 +1322,7 @@ if(USE_MIMALLOC)
    set(MI_BUILD_OBJECT OFF)
    set(MI_BUILD_TESTS OFF)
    add_definitions(-DUSE_MIMALLOC)
 -  add_subdirectory(third_party/mimalloc)
--  include_directories(third_party/mimalloc/include)
-+  find_package(mimalloc CONFIG REQUIRED)
++  find_package(mimalloc CONFIG QUIET)
+   include_directories(third_party/mimalloc/include)
  endif()
 
- if(USE_MIMALLOC AND USE_MIMALLOC_ON_MKL)
 --- a/c10/CMakeLists.txt
 +++ b/c10/CMakeLists.txt
-@@ -121,8 +121,7 @@ if(NOT BUILD_LIBTORCHLESS)
+@@ -120,8 +120,7 @@ if(NOT BUILD_LIBTORCHLESS)
    endif()
 
    if(USE_MIMALLOC)
