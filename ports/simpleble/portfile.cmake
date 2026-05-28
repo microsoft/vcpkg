@@ -7,7 +7,9 @@ vcpkg_from_github(
     PATCHES
         devendor.diff
         use-std-localtime.patch
+        use-cpp20-on-windows.diff
 )
+
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/find/Findfmt.cmake"
     "${SOURCE_PATH}/dependencies/internal/include/fmt"

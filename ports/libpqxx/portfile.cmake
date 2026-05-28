@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DPython3_EXECUTABLE=${PYTHON3}"
         -DSKIP_BUILD_TEST=ON
+        -DBUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

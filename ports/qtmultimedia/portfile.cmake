@@ -4,6 +4,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES
     static_find_modules.patch
     remove-static-ssl-stub.patch
+    fix-msvc-x86-propvariant.patch
     ffmpeg-devendor-signalsmith-stretch.patch
     ffmpeg.patch
 )

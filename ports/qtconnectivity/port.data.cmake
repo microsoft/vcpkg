@@ -1,3 +1,3 @@
-set(qtconnectivity_HASH "d9aabaf72a3e3af845129f45eeb9df855ac525f038d3240aaac66fe6ad37b83931cc1206ba3b92bf7192ef855e0c3d088335dffe7ee785c0e4680d53c38c2e31")
-set(qtconnectivity_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtconnectivity-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtconnectivity-everywhere-src-6.10.3.tar.xz")
-set(qtconnectivity_FILENAME "qtconnectivity-everywhere-src-6.10.3.tar.xz")
+set(qtconnectivity_HASH "a0d85d324c503d7ed24631581da14fdd4c71e2b23ae66078149ac736c7131407712a93f901b9caf254f2beb7c698b9d935a9d6f41696757c7a0bd21701c85aee")
+set(qtconnectivity_URL "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtconnectivity-everywhere-src-6.11.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.0/submodules/qtconnectivity-everywhere-src-6.11.0.tar.xz")
+set(qtconnectivity_FILENAME "qtconnectivity-everywhere-src-6.11.0.tar.xz")
