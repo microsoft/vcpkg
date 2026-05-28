@@ -92,7 +92,7 @@ FEATURES
     "zstd"                FEATURE_zstd
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
-    "concurrent"          FEATURE_future
+    "future"              FEATURE_future
     "dbus"                FEATURE_dbus
     "gui"                 FEATURE_gui
     "thread"              FEATURE_thread

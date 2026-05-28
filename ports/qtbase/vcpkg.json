@@ -149,6 +149,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "future",
             "thread"
           ]
         }
@@ -174,7 +175,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "thread"
+            "future"
           ]
         }
       ]
@@ -283,6 +284,9 @@
           ]
         }
       ]
+    },
+    "future": {
+      "description": "Qt Future (QFuture) support"
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
