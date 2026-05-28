@@ -113,22 +113,32 @@ endif()
 if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
     find_program(GLSLC NAMES glslc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc" REQUIRED)
     message(STATUS "Using glslc: ${GLSLC}")
-    list(APPEND FEATURE_OPTIONS "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}")
+    # Vulkan_GLSLC_EXECUTABLE is the variable FindVulkan honours; GLSLC_PATH is the
+    # one cmake/VulkanCodegen.cmake does its own find_program for, which under
+    # cross-compile (CMAKE_FIND_ROOT_PATH_MODE_PROGRAM=ONLY) won't see host tools.
+    # Set both so the codegen step accepts the host glslc binary.
+    list(APPEND FEATURE_OPTIONS
+        "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}"
+        "-DGLSLC_PATH:FILEPATH=${GLSLC}")
 endif()
 
 if("mkl" IN_LIST FEATURES)
     # Route PyTorch's BLAS chooser at cmake/Dependencies.cmake through the MKL branch,
     # which calls find_package(MKL) -> our replacement FindMKL.cmake -> vcpkg intel-mkl.
-    # The sentinel makes the FindMKL replacement fail hard if MKL is missing;
-    # without it (the default-BLAS=MKL case) the replacement silently falls back.
-    # MKL_INTERFACE=lp64 picks the LP64 variant of MKL — PyTorch assumes LP64 in
-    # vml.h and BatchLinearAlgebra.cpp (magma_int_t = int); ILP64 would force
-    # local PyTorch source patches we'd have to maintain across upgrades.
+    # VCPKG_LIBTORCH_MKL_FEATURE_ENABLED gates the FindMKL replacement: when the
+    # feature is off, the replacement returns MKL_FOUND=FALSE without calling
+    # find_package, so a transitively-staged intel-mkl can't silently turn on
+    # BLAS=MKL with ILP64 defaults and trip vml.h's `is_same_v<MKL_INT, int64_t>`.
     list(APPEND FEATURE_OPTIONS
         -DBLAS=MKL
-        -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON
-        -DMKL_INTERFACE=lp64)
+        -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON)
 endif()
+
+# Always force LP64. Even when libtorch[mkl] is off, mkldnn / fbgemm and other
+# subprojects can independently call find_package(MKL CONFIG); without this they
+# default to ILP64 and PyTorch's vml.h static_assert fails on Linux x86_64
+# (int64_t = long, but ILP64 MKL_INT = long long — same width, distinct types).
+list(APPEND FEATURE_OPTIONS -DMKL_INTERFACE=lp64)
 
 if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     # Upstream auto-enables USE_PRIORITIZED_TEXT_FOR_LD on Linux+AArch64

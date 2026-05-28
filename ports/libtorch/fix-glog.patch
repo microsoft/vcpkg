@@ -1,3 +1,14 @@
+--- a/c10/util/logging_is_google_glog.h
++++ b/c10/util/logging_is_google_glog.h
+@@ -52,7 +52,7 @@
+
+ namespace c10 {
+
+-[[noreturn]] void ThrowEnforceNotMet(
++[[noreturn]] C10_API void ThrowEnforceNotMet(
+     const char* file,
+     const int line,
+     const char* condition,
 --- a/c10/util/Logging.cpp
 +++ b/c10/util/Logging.cpp
 @@ -327,23 +327,13 @@
