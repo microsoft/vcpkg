@@ -7282,7 +7282,7 @@
     },
     "onednn": {
       "baseline": "3.12",
-      "port-version": 0
+      "port-version": 1
     },
     "oniguruma": {
       "baseline": "6.9.10",
