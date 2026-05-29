@@ -8,7 +8,10 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-file(GLOB_RECURSE SIGNALSMITH_DSP_HEADERS "${SOURCE_PATH}/*.h")
-file(INSTALL ${SIGNALSMITH_DSP_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/signalsmith-dsp")
+file(
+    INSTALL "${SOURCE_PATH}/include/signalsmith-dsp"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+    FILES_MATCHING PATTERN "*.h"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
