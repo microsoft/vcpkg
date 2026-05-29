@@ -8374,7 +8374,7 @@
     },
     "qtconnectivity": {
       "baseline": "6.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtdatavis3d": {
       "baseline": "6.11.0",
