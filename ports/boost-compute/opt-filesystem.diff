@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9afee7ff90..44f0c20256 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -23,7 +23,7 @@ target_link_libraries(boost_compute
+     Boost::chrono
+     Boost::config
+     Boost::core
+-    Boost::filesystem
++    $<TARGET_NAME_IF_EXISTS:Boost::filesystem>
+     Boost::function
+     Boost::function_types
+     Boost::fusion

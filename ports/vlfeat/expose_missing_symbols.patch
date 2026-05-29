@@ -1,0 +1,81 @@
+diff --git a/vl/generic.c b/vl/generic.c
+index c6f84a9..8617ed2 100644
+--- a/vl/generic.c
++++ b/vl/generic.c
+@@ -1513,13 +1513,13 @@ vl_thread_specific_state_delete (VlThreadState * self)
+  */
+ 
+ #if (defined(VL_OS_LINUX) || defined(VL_OS_MACOSX)) && defined(VL_COMPILER_GNUC)
+-static void vl_constructor () __attribute__ ((constructor)) ;
+-static void vl_destructor () __attribute__ ((destructor))  ;
++//static void vl_constructor () __attribute__ ((constructor)) ;
++//static void vl_destructor () __attribute__ ((destructor))  ;
+ #endif
+ 
+ #if defined(VL_OS_WIN)
+-static void vl_constructor () ;
+-static void vl_destructor () ;
++//static void vl_constructor () ;
++//static void vl_destructor () ;
+ 
+ BOOL WINAPI DllMain(
+     HINSTANCE hinstDLL,  // handle to DLL module
+@@ -1563,7 +1563,7 @@ BOOL WINAPI DllMain(
+ /* ---------------------------------------------------------------- */
+ 
+ /** @internal @brief Initialize VLFeat state */
+-static void
++void
+ vl_constructor (void)
+ {
+   VlState * state ;
+@@ -1637,7 +1637,7 @@ vl_constructor (void)
+ }
+ 
+ /** @internal @brief Destruct VLFeat */
+-static void
++void
+ vl_destructor ()
+ {
+   VlState * state ;
+diff --git a/vl/generic.h b/vl/generic.h
+index 4ef87f2..30a974e 100644
+--- a/vl/generic.h
++++ b/vl/generic.h
+@@ -206,5 +206,7 @@ VL_EXPORT double vl_toc (void) ;
+ VL_EXPORT double vl_get_cpu_time (void) ;
+ /** @} */
+ 
++VL_EXPORT void vl_constructor();
++VL_EXPORT void vl_destructor();
+ /* VL_GENERIC_H */
+ #endif
+diff --git a/vl/sift.c b/vl/sift.c
+index 03963fe..6477a81 100644
+--- a/vl/sift.c
++++ b/vl/sift.c
+@@ -1443,7 +1443,7 @@ vl_sift_detect (VlSiftFilt * f)
+  ** @remark The minimum octave size is 2x2xS.
+  **/
+ 
+-static void
++void
+ update_gradient (VlSiftFilt *f)
+ {
+   int       s_min = f->s_min ;
+diff --git a/vl/sift.h b/vl/sift.h
+index 50e03f4..f9558ad 100644
+--- a/vl/sift.h
++++ b/vl/sift.h
+@@ -139,6 +139,11 @@ void  vl_sift_keypoint_init              (VlSiftFilt const *f,
+                                           double sigma) ;
+ /** @} */
+ 
++VL_EXPORT
++void vl_sift_update_gradient(VlSiftFilt* f);
++
++#define update_gradient vl_sift_update_gradient
++
+ /** @name Retrieve data and parameters
+  ** @{
+  **/

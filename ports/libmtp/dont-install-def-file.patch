@@ -1,0 +1,13 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 088050e..c28ddbb 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -66,7 +66,7 @@ LT_CURRENT_MINUS_AGE=`expr $(CURRENT) - $(AGE)`
+ if COMPILE_MINGW32
+ W32_LIBS=-lws2_32
+ W32_LDFLAGS=-export-dynamic
+-if MS_LIB_EXE
++if FALSE
+ noinst_DATA=libmtp.lib
+ libmtp.def: $(srcdir)/libmtp.sym
+ 	echo "LIBRARY \"@PACKAGE@\"" > libmtp.def

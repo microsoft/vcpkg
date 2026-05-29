@@ -1,0 +1,46 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)\$" "v\\1_\\2_\\3" git_ref "${VERSION}")
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO BinomialLLC/basis_universal
+    REF "${git_ref}"
+    SHA512 fefe1562ad62ea5d32437f8c1e02a88fa680bd1d1ee8cafe366d7824de99c9111a4103e03f138f3e9794f4adc7e53674f4d728d1f0b70fc7c586b5990ec8e09e
+    HEAD_REF master
+    PATCHES
+        export-cmake-config.diff
+        devendor-zstd.diff
+)
+file(REMOVE_RECURSE "${SOURCE_PATH}/zstd")
+
+set(SSE_FLAG OFF)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(SSE_FLAG ON)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=17
+        -DBASISU_SYSTEM_ZSTD=ON
+        -DBASISU_EXAMPLES=OFF
+        -DBASISU_SSE=${SSE_FLAG}
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/basisu)
+
+vcpkg_copy_tools(TOOL_NAMES "basisu" AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(COMMENT [[
+basis_universal is provided under Apache-2.0 license terms.
+But it includes third-party components with different licenses.]]
+    FILE_LIST
+        "${SOURCE_PATH}/.reuse/dep5"
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSES/BSD-3-clause.txt"
+        "${SOURCE_PATH}/LICENSES/MIT.txt"
+)

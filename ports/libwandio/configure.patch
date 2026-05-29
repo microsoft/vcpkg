@@ -1,0 +1,14 @@
+diff --git a/configure.ac b/configure.ac
+index e250c0c31..0465120ba 100644
+--- a/configure.ac	
++++ b/configure.ac
+@@ -83,7 +83,7 @@ ADD_INCLS=""
+ ADD_LDFLAGS="$ADD_LDFLAGS -L\$(abs_top_srcdir)/lib"
+ LIBWANDIO_LIBS=""
+ 
+-CFLAGS="$CFLAGS -Wall -Wmissing-prototypes -Wextra -DLT_BUILDING_DLL=1"
++CFLAGS="$CFLAGS -Wall -DLT_BUILDING_DLL=1 -DNOMINMAX"
+-CXXFLAGS="$CXXFLAGS -Wall -DLT_BUILDING_DLL=1"
++CXXFLAGS="$CXXFLAGS -Wall -DLT_BUILDING_DLL=1 -DNOMINMAX"
+ 
+ # Check for -fvisibility

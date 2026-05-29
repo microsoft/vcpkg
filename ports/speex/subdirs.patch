@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index dc90415..3b3c16d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -14,7 +14,7 @@ pkgconfig_DATA = speex.pc
+ EXTRA_DIST = Speex.spec Speex.spec.in Speex.kdevelop speex.m4 speex.pc.in README.blackfin README.symbian README.TI-DSP
+ 
+ #Fools KDevelop into including all files
+-SUBDIRS = libspeex include doc win32 symbian ti
++SUBDIRS = libspeex include
+ 
+ if BUILD_BINARIES
+ SUBDIRS += src

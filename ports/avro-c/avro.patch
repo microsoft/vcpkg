@@ -1,0 +1,377 @@
+diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
+index 123676b..d5797b4 100644
+--- a/lang/c/CMakeLists.txt
++++ b/lang/c/CMakeLists.txt
+@@ -22,6 +22,9 @@ enable_testing()
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
+ 
++option(BUILD_EXAMPLES "Build examples." OFF)
++option(BUILD_TESTS "Build tests." OFF)
++option(BUILD_DOCS "Build docs." OFF)
+ # Eliminates warning about linker paths when linking both zlib and
+ # liblzma.
+ cmake_policy(SET CMP0003 NEW)
+@@ -149,20 +152,25 @@ else (ZLIB_FOUND)
+     message("Disabled deflate codec. zlib not found.")
+ endif (ZLIB_FOUND)
+ 
+-find_package(Snappy)
+-if (SNAPPY_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
++find_package(Snappy CONFIG REQUIRED)
++if (Snappy_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
+     set(SNAPPY_PKG snappy)
+     add_definitions(-DSNAPPY_CODEC)
++    set(SNAPPY_LIBRARIES Snappy::snappy)
++    if (UNIX)
++        set(SNAPPY_LIBRARIES ${SNAPPY_LIBRARIES} -lstdc++)
++    endif ()
+     include_directories(${SNAPPY_INCLUDE_DIRS})
+     message("Enabled snappy codec")
+-else (SNAPPY_FOUND AND ZLIB_FOUND)
++else (Snappy_FOUND AND ZLIB_FOUND)
+     set(SNAPPY_PKG "")
+     set(SNAPPY_LIBRARIES "")
+     message("Disabled snappy codec. libsnappy not found or zlib not found.")
+-endif (SNAPPY_FOUND AND ZLIB_FOUND)
++endif (Snappy_FOUND AND ZLIB_FOUND)
+ 
+-find_package(PkgConfig)
+-pkg_check_modules(LZMA liblzma)
++find_package(LibLZMA REQUIRED)
++set(LZMA_FOUND 1)
++set(LZMA_LIBRARIES LibLZMA::LibLZMA)
+ if (LZMA_FOUND)
+     set(LZMA_PKG liblzma)
+     add_definitions(-DLZMA_CODEC)
+@@ -179,20 +187,26 @@ set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
+ set(CODEC_PKG "${ZLIB_PKG} ${LZMA_PKG} ${SNAPPY_PKG}")
+ 
+ # Jansson JSON library
+-pkg_check_modules(JANSSON jansson>=2.3)
+-if (JANSSON_FOUND)
++find_package(jansson CONFIG REQUIRED)
++if (jansson_FOUND)
+     set(JANSSON_PKG libjansson)
++    set(JANSSON_LIBRARIES jansson::jansson)
+     include_directories(${JANSSON_INCLUDE_DIRS})
+     link_directories(${JANSSON_LIBRARY_DIRS})
+-else (JANSSON_FOUND)
++else (jansson_FOUND)
+     message(FATAL_ERROR "libjansson >=2.3 not found")
+-endif (JANSSON_FOUND)
++endif (jansson_FOUND)
+ 
+ 
+ add_subdirectory(src)
++if(BUILD_EXAMPLES)
+ add_subdirectory(examples)
++endif()
++if(BUILD_TESTS)
+ add_subdirectory(tests)
++endif()
++if(BUILD_DOCS)
+ add_subdirectory(docs)
+-
++endif()
+ add_custom_target(pretty
+     "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake_pretty.cmake")
+diff --git a/lang/c/src/avro/msinttypes.h b/lang/c/src/avro/msinttypes.h
+index 29be14b..020346d 100644
+--- a/lang/c/src/avro/msinttypes.h
++++ b/lang/c/src/avro/msinttypes.h
+@@ -54,6 +54,10 @@
+ 
+ // 7.8 Format conversion of integer types
+ 
++#if (_MSC_VER >= 1900)
++#   include <inttypes.h>
++#else
++    
+ typedef struct {
+    intmax_t quot;
+    intmax_t rem;
+@@ -311,5 +315,6 @@ imaxdiv_t __cdecl imaxdiv(intmax_t numer, intmax_t denom)
+ #define wcstoimax _wcstoi64
+ #define wcstoumax _wcstoui64
+ 
++#endif // (_MSC_VER >= 1900)
+ 
+ #endif // _MSC_INTTYPES_H_ ]
+diff --git a/lang/c/src/avro/msstdint.h b/lang/c/src/avro/msstdint.h
+index d02608a..54e8972 100644
+--- a/lang/c/src/avro/msstdint.h
++++ b/lang/c/src/avro/msstdint.h
+@@ -42,6 +42,10 @@
+ 
+ #include <limits.h>
+ 
++#if (_MSC_VER >= 1900)
++#   include <stdint.h>
++#else
++
+ // For Visual Studio 6 in C++ mode and for many Visual Studio versions when
+ // compiling for ARM we should wrap <wchar.h> include with 'extern "C++" {}'
+ // or compiler give many errors like this:
+@@ -243,5 +247,6 @@ typedef uint64_t  uintmax_t;
+ 
+ #endif // __STDC_CONSTANT_MACROS ]
+ 
++#endif // (_MSC_VER >= 1900)
+ 
+ #endif // _MSC_STDINT_H_ ]
+diff --git a/lang/c/src/avro/platform.h b/lang/c/src/avro/platform.h
+index 9293055..edfe1e0 100644
+--- a/lang/c/src/avro/platform.h
++++ b/lang/c/src/avro/platform.h
+@@ -35,8 +35,10 @@ extern "C" {
+ // Defines for printing size_t.
+ #if defined(_WIN64)
+   #define PRIsz PRIu64
++  typedef __int64  ssize_t;
+ #elif defined(_WIN32)
+   #define PRIsz PRIu32
++  typedef long   ssize_t;
+ #else // GCC
+   #define PRIsz "zu"
+ #endif
+diff --git a/lang/c/src/avro_private.h b/lang/c/src/avro_private.h
+index f97ef6b..9c47d26 100644
+--- a/lang/c/src/avro_private.h
++++ b/lang/c/src/avro_private.h
+@@ -34,7 +34,7 @@ extern "C" {
+ #endif
+ 
+ #ifdef _WIN32
+-#define snprintf _snprintf
++// #define snprintf _snprintf
+ #endif
+ 
+ /* Note that AVRO_PLATFORM_IS_BIG_ENDIAN is *always* defined. It is
+diff --git a/lang/c/src/avroappend.c b/lang/c/src/avroappend.c
+index 7243c60..39656ff 100644
+--- a/lang/c/src/avroappend.c
++++ b/lang/c/src/avroappend.c
+@@ -20,7 +20,7 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #ifdef _WIN32
+-#include <unistd.h>
++#include <io.h>
+ #endif
+ 
+ #include "avro.h"
+diff --git a/lang/c/src/codec.c b/lang/c/src/codec.c
+index 613a914..8092326 100644
+--- a/lang/c/src/codec.c
++++ b/lang/c/src/codec.c
+@@ -272,7 +272,7 @@ static int encode_deflate(avro_codec_t c, void * data, int64_t len)
+ 	s->next_in = (Bytef*)data;
+ 	s->avail_in = (uInt)len;
+ 
+-	s->next_out = c->block_data;
++	s->next_out = (Bytef*)c->block_data;
+ 	s->avail_out = (uInt)c->block_size;
+ 
+ 	s->total_out = 0;
+@@ -316,10 +316,10 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
+ 
+ 	c->used_size = 0;
+ 
+-	s->next_in = data;
++	s->next_in = (Bytef*)data;
+ 	s->avail_in = len;
+ 
+-	s->next_out = c->block_data;
++	s->next_out = (Bytef*)c->block_data;
+ 	s->avail_out = c->block_size;
+ 
+ 	s->total_out = 0;
+@@ -340,7 +340,7 @@ static int decode_deflate(avro_codec_t c, void * data, int64_t len)
+ 		if (err == Z_BUF_ERROR)
+ 		{
+ 			c->block_data = avro_realloc(c->block_data, c->block_size, c->block_size * 2);
+-			s->next_out = c->block_data + s->total_out;
++			s->next_out = (Bytef*)c->block_data + s->total_out;
+ 			s->avail_out += c->block_size;
+ 			c->block_size = c->block_size * 2;
+ 		}
+@@ -443,7 +443,7 @@ static int encode_lzma(avro_codec_t codec, void * data, int64_t len)
+ 		return 1;
+ 	}
+ 
+-	ret = lzma_raw_buffer_encode(filters, NULL, data, len, codec->block_data, &written, codec->block_size);
++	ret = lzma_raw_buffer_encode(filters, NULL, (const uint8_t*)data, len, (uint8_t*)codec->block_data, &written, codec->block_size);
+ 
+ 	codec->used_size = written;
+ 
+@@ -474,8 +474,8 @@ static int decode_lzma(avro_codec_t codec, void * data, int64_t len)
+ 
+ 	do
+ 	{
+-		ret = lzma_raw_buffer_decode(filters, NULL, data,
+-			&read_pos, len, codec->block_data, &write_pos,
++		ret = lzma_raw_buffer_decode(filters, NULL, (const uint8_t*)data,
++			&read_pos, len, (uint8_t*)codec->block_data, &write_pos,
+ 			codec->block_size);
+ 
+ 		codec->used_size = write_pos;
+diff --git a/lang/c/src/schema.c b/lang/c/src/schema.c
+index 7b38900..e3794d5 100644
+--- a/lang/c/src/schema.c
++++ b/lang/c/src/schema.c
+@@ -74,7 +74,7 @@ static int is_avro_id(const char *name)
+  * namespace (as a newly allocated buffer using Avro's allocator). */
+ static char *split_namespace_name(const char *fullname, const char **name_out)
+ {
+-	char *last_dot = strrchr(fullname, '.');
++	const char *last_dot = strrchr(fullname, '.');
+ 	if (last_dot == NULL) {
+ 		*name_out = fullname;
+ 		return NULL;
+@@ -770,12 +770,12 @@ avro_schema_t avro_schema_link_target(avro_schema_t schema)
+ }
+ 
+ static const char *
+-qualify_name(const char *name, const char *namespace)
++qualify_name(const char *name, const char *namespaceX)
+ {
+ 	char *full_name;
+-	if (namespace != NULL && strchr(name, '.') == NULL) {
+-		full_name = avro_str_alloc(strlen(name) + strlen(namespace) + 2);
+-		sprintf(full_name, "%s.%s", namespace, name);
++	if (namespaceX != NULL && strchr(name, '.') == NULL) {
++		full_name = avro_str_alloc(strlen(name) + strlen(namespaceX) + 2);
++		sprintf(full_name, "%s.%s", namespaceX, name);
+ 	} else {
+ 		full_name = avro_strdup(name);
+ 	}
+@@ -786,20 +786,20 @@ static int
+ save_named_schemas(const avro_schema_t schema, st_table *st)
+ {
+ 	const char *name = avro_schema_name(schema);
+-	const char *namespace = avro_schema_namespace(schema);
+-	const char *full_name = qualify_name(name, namespace);
++	const char *namespaceX = avro_schema_namespace(schema);
++	const char *full_name = qualify_name(name, namespaceX);
+ 	int rval = st_insert(st, (st_data_t) full_name, (st_data_t) schema);
+ 	return rval;
+ }
+ 
+ static avro_schema_t
+-find_named_schemas(const char *name, const char *namespace, st_table *st)
++find_named_schemas(const char *name, const char *namespaceX, st_table *st)
+ {
+ 	union {
+ 		avro_schema_t schema;
+ 		st_data_t data;
+ 	} val;
+-	const char *full_name = qualify_name(name, namespace);
++	const char *full_name = qualify_name(name, namespaceX);
+ 	int rval = st_lookup(st, (st_data_t) full_name, &(val.data));
+ 	avro_str_free((char *)full_name);
+ 	if (rval) {
+@@ -812,7 +812,7 @@ find_named_schemas(const char *name, const char *namespace, st_table *st)
+ static int
+ avro_type_from_json_t(json_t *json, avro_type_t *type,
+ 		      st_table *named_schemas, avro_schema_t *named_type,
+-		      const char *namespace)
++		      const char *namespaceX)
+ {
+ 	json_t *json_type;
+ 	const char *type_str;
+@@ -863,7 +863,7 @@ avro_type_from_json_t(json_t *json, avro_type_t *type,
+ 		*type = AVRO_MAP;
+ 	} else if (strcmp(type_str, "fixed") == 0) {
+ 		*type = AVRO_FIXED;
+-	} else if ((*named_type = find_named_schemas(type_str, namespace, named_schemas))) {
++	} else if ((*named_type = find_named_schemas(type_str, namespaceX, named_schemas))) {
+ 		*type = AVRO_LINK;
+ 	} else {
+ 		avro_set_error("Unknown Avro \"type\": %s", type_str);
+@@ -954,15 +954,15 @@ avro_schema_from_json_t(json_t *json, avro_schema_t *schema,
+ 			}
+ 
+ 			if (strchr(fullname, '.')) {
+-				char *namespace = split_namespace_name(fullname, &name);
+-				*schema = avro_schema_record(name, namespace);
+-				avro_str_free(namespace);
++				char *namespaceX = split_namespace_name(fullname, &name);
++				*schema = avro_schema_record(name, namespaceX);
++				avro_str_free(namespaceX);
+ 			} else if (json_is_string(json_namespace)) {
+-				const char *namespace = json_string_value(json_namespace);
+-				if (strlen(namespace) == 0) {
+-					namespace = NULL;
++				const char *namespaceX = json_string_value(json_namespace);
++				if (strlen(namespaceX) == 0) {
++					namespaceX = NULL;
+ 				}
+-				*schema = avro_schema_record(fullname, namespace);
++				*schema = avro_schema_record(fullname, namespaceX);
+ 			} else {
+ 				*schema = avro_schema_record(fullname, parent_namespace);
+ 			}
+@@ -1053,16 +1053,16 @@ avro_schema_from_json_t(json_t *json, avro_schema_t *schema,
+ 			}
+ 
+ 			if (strchr(fullname, '.')) {
+-				char *namespace;
+-				namespace = split_namespace_name(fullname, &name);
+-				*schema = avro_schema_enum_ns(name, namespace);
+-				avro_str_free(namespace);
++				char *namespaceX;
++				namespaceX = split_namespace_name(fullname, &name);
++				*schema = avro_schema_enum_ns(name, namespaceX);
++				avro_str_free(namespaceX);
+ 			} else if (json_is_string(json_namespace)) {
+-				const char *namespace = json_string_value(json_namespace);
+-				if (strlen(namespace) == 0) {
+-					namespace = NULL;
++				const char *namespaceX = json_string_value(json_namespace);
++				if (strlen(namespaceX) == 0) {
++					namespaceX = NULL;
+ 				}
+-				*schema = avro_schema_enum_ns(fullname, namespace);
++				*schema = avro_schema_enum_ns(fullname, namespaceX);
+ 			} else {
+ 				*schema = avro_schema_enum_ns(fullname, parent_namespace);
+ 			}
+@@ -1190,16 +1190,16 @@ avro_schema_from_json_t(json_t *json, avro_schema_t *schema,
+ 			fullname = json_string_value(json_name);
+ 
+ 			if (strchr(fullname, '.')) {
+-				char *namespace;
+-				namespace = split_namespace_name(fullname, &name);
+-				*schema = avro_schema_fixed_ns(name, namespace, (int64_t) size);
+-				avro_str_free(namespace);
++				char *namespaceX;
++				namespaceX = split_namespace_name(fullname, &name);
++				*schema = avro_schema_fixed_ns(name, namespaceX, (int64_t) size);
++				avro_str_free(namespaceX);
+ 			} else if (json_is_string(json_namespace)) {
+-				const char *namespace = json_string_value(json_namespace);
+-				if (strlen(namespace) == 0) {
+-					namespace = NULL;
++				const char *namespaceX = json_string_value(json_namespace);
++				if (strlen(namespaceX) == 0) {
++					namespaceX = NULL;
+ 				}
+-				*schema = avro_schema_fixed_ns(fullname, namespace, (int64_t) size);
++				*schema = avro_schema_fixed_ns(fullname, namespaceX, (int64_t) size);
+ 			} else {
+ 				*schema = avro_schema_fixed_ns(fullname, parent_namespace, (int64_t) size);
+ 			}
+@@ -1821,9 +1821,9 @@ static int write_link(avro_writer_t out, const struct avro_link_schema_t *link,
+ {
+ 	int rval;
+ 	check(rval, avro_write_str(out, "\""));
+-	const char *namespace = avro_schema_namespace(link->to);
+-	if (namespace && nullstrcmp(namespace, parent_namespace)) {
+-		check(rval, avro_write_str(out, namespace));
++	const char *namespaceX = avro_schema_namespace(link->to);
++	if (namespaceX && nullstrcmp(namespaceX, parent_namespace)) {
++		check(rval, avro_write_str(out, namespaceX));
+ 		check(rval, avro_write_str(out, "."));
+ 	}
+ 	check(rval, avro_write_str(out, avro_schema_name(link->to)));

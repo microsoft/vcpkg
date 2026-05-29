@@ -1,0 +1,4 @@
+libinterpolate provides CMake targets:
+
+  find_package(libInterpolate CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE libInterpolate::Interpolate)

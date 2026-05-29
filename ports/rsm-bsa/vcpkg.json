@@ -1,0 +1,34 @@
+{
+  "name": "rsm-bsa",
+  "version-semver": "4.1.0",
+  "port-version": 1,
+  "description": "A C++ library for working with the Bethesda archive file format",
+  "homepage": "https://github.com/Ryan-rsm-McKenzie/bsa",
+  "documentation": "https://ryan-rsm-mckenzie.github.io/bsa/",
+  "license": "MIT",
+  "supports": "!x86 & !osx & !uwp",
+  "dependencies": [
+    "directxtex",
+    "lz4",
+    "rsm-binary-io",
+    "rsm-mmio",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "xmem": {
+      "description": "Compression support for the xmem codec",
+      "supports": "windows",
+      "dependencies": [
+        "reproc"
+      ]
+    }
+  }
+}

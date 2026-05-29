@@ -1,0 +1,98 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 00aa8b6..d49889b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,6 +39,12 @@ FetchContent_Declare(ztd.cmake
+ 	GIT_TAG main)
+ FetchContent_MakeAvailable(ztd.cmake)
+ set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
++include(FetchContent)
++FetchContent_Declare(ztd.cmake
++	GIT_REPOSITORY https://github.com/soasis/cmake
++	GIT_TAG main)
++FetchContent_MakeAvailable(ztd.cmake)
++set(CMAKE_PROJECT_INCLUDE ${ZTD_CMAKE_PROJECT_PRELUDE})
+ 
+ # # Project declaration
+ # informs about the project, gives a description, version and MOST IMPORTANTLY
+@@ -49,6 +55,8 @@ project(ztd.cuneicode
+ 	HOMEPAGE_URL "https://ztdcuneicode.readthedocs.io/en/latest/"
+ 	LANGUAGES C CXX)
+ 
++include(CMakePackageConfigHelpers)
++include(GNUInstallDirs)
+ if(ZTD_CUNEICODE_READTHEDOCS)
+ 	# ReadTheDocs seems unable to handle the include at the project level: something must be going wrong?
+ 	include(CheckCXXCompilerFlag)
+@@ -132,15 +140,7 @@ option(ZTD_CUNEICODE_SIMDUTF_SHARED "Enable the simdutf shared target for cuneic
+ 
+ # # Dependencies
+ # ztd.idk
+-FetchContent_Declare(ztd.idk
+-	GIT_REPOSITORY https://github.com/soasis/idk.git
+-	GIT_TAG main)
+-FetchContent_MakeAvailable(ztd.idk)
+-# ztd.encoding_tables
+-FetchContent_Declare(ztd.encoding_tables
+-	GIT_REPOSITORY https://github.com/soasis/encoding_tables.git
+-	GIT_TAG main)
+-FetchContent_MakeAvailable(ztd.encoding_tables)
++find_package(ztd.encoding_tables CONFIG REQUIRED)
+ 
+ # # Main Library
+ file(GLOB ztd.cuneicode.includes CONFIGURE_DEPENDS include/*.hpp)
+@@ -187,15 +187,12 @@ target_compile_options(ztd.cuneicode PUBLIC
+ 	${--enable-conforming-preprocessor}
+ )
+ 
++install(TARGETS ztd.cuneicode
++        EXPORT ztd.cuneicode-targets
++        DESTINATION lib)
+ install(DIRECTORY include/
+ 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
+-install(TARGETS ztd.cuneicode
+-	PUBLIC_HEADER
+-	RUNTIME
+-	ARCHIVE
+-	LIBRARY
+-)
+ 
+ # # Config / Version packaging
+ # Version configurations
+@@ -213,6 +210,15 @@ export(TARGETS ztd.cuneicode
+ 	FILE
+ 	"${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.cuneicode/ztd.cuneicode-targets.cmake")
+ 
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.cuneicode/ztd.cuneicode-config.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/cmake/ztd.cuneicode/ztd.cuneicode-config-version.cmake
++  DESTINATION share/ztd.cuneicode
++  )
++install(EXPORT ztd.cuneicode-targets
++  FILE ztd.cuneicode-targets.cmake
++  DESTINATION share/ztd.cuneicode
++)
+ if(ZTD_CUNEICODE_GENERATE_SINGLE)
+ 	add_subdirectory(single)
+ endif()
+diff --git a/cmake/ztd.cuneicode-config.cmake.in b/cmake/ztd.cuneicode-config.cmake.in
+index 4bfb041..1b28918 100644
+--- a/cmake/ztd.cuneicode-config.cmake.in
++++ b/cmake/ztd.cuneicode-config.cmake.in
+@@ -1,8 +1,13 @@
+ @PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++find_dependency(ztd.encoding_tables CONFIG)
+ 
+-if (TARGET ztd::cuneicode)
++include(${CMAKE_CURRENT_LIST_DIR}/ztd.cuneicode-targets.cmake)
++
++if (TARGET ztd.cuneicode)
++	add_library(ztd::cuneicode ALIAS ztd.cuneicode)
+ 	get_target_property(ZTD_CUNEICODE_INCLUDE_DIRS
+-		ztd.cuneicode.single INTERFACE_INCLUDE_DIRECTORIES)
++		ztd.cuneicode INTERFACE_INCLUDE_DIRECTORIES)
+ 	set_and_check(ZTD_CUNEICODE_INCLUDE_DIRS "${ZTD_CUNEICODE_INCLUDE_DIRS}")
+ endif()
+ 

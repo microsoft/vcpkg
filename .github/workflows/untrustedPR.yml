@@ -1,0 +1,256 @@
+name: Check For Common Mistakes
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+
+jobs:
+  Check:
+    runs-on: ubuntu-slim
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # fetch-depth 50 tries to ensure we capture the whole history of the branch
+          fetch-depth: 50
+
+      - name: Bootstrap
+        run: ./bootstrap-vcpkg.sh
+
+      - name: Formatting
+        run: |
+          git config user.email github-actions
+          git config user.name github-actions@github.com
+
+          git --version
+
+          unset VCPKG_ROOT
+
+          synthetic_merge_ref=$(git branch --show-current || true)
+          synthetic_merge_commit=$(git rev-parse HEAD)
+          target_branch_commit=$(git rev-parse HEAD^1)
+          incoming_branch_commit=$(git rev-parse HEAD^2)
+          merge_base=$(git merge-base "$target_branch_commit" "$incoming_branch_commit")
+
+          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
+          if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
+          if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-cmake; else touch .github-pr.deprecated-cmake; fi
+          git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*vcpkg.json' | sed 's/[MAR]\t*//' > .github-pr.changed-manifest-files
+          cat .github-pr.changed-manifest-files | while read filename; do grep -q -E '"license": ' "$filename" || echo "$filename" || true; done > .github-pr.missing-license
+          cat .github-pr.changed-manifest-files | while read filename; do grep -n -H '"license": "' "$filename" || true; done > .github-pr.all-licenses
+          cat .github-pr.all-licenses | while read license; do \
+            location=$(echo $license | grep -oP '^.*?:[0-9]+:'); \
+            echo $license | \
+            grep -oiP '(AGPL-1\.0|AGPL-3\.0|BSD-2-Clause-FreeBSD|BSD-2-Clause-NetBSD|bzip2-1\.0\.5|eCos-2\.0|GFDL-1\.1|GFDL-1\.2|GFDL-1\.3|GPL-1\.0|GPL-1\.0\+|GPL-2\.0|GPL-2\.0\+|GPL-2\.0-with-autoconf-exception|GPL-2\.0-with-bison-exception|GPL-2\.0-with-classpath-exception|GPL-2\.0-with-font-exception|GPL-2\.0-with-GCC-exception|GPL-3\.0|GPL-3\.0\+|GPL-3\.0-with-autoconf-exception|GPL-3\.0-with-GCC-exception|LGPL-2\.0|LGPL-2\.0\+|LGPL-2\.1|LGPL-2\.1\+|LGPL-3\.0|LGPL-3\.0\+|Nunit|StandardML-NJ|wxWindows)(?=[ ")&|,])' | \
+            while read id; do \
+              echo "$location$id"; \
+            done || true; \
+          done > .github-pr.deprecated-license
+          # check for formatting mistakes by rerunning format-manifest and format-feature-baseline as appropriate
+          git switch --detach "$incoming_branch_commit"
+          ./vcpkg format-manifest --all --convert-control
+          ./vcpkg format-feature-baseline scripts/ci.baseline.txt
+          ./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt
+          git diff > .github-pr.format-manifest
+          # commit those formatting changes to a temporary commit so they don't affect further validations below
+          git add -u
+          git commit -m "tmp" --allow-empty
+          # reset the version database to the state of the merge base, so that we can check that the PR only adds one version and doesn't modify any existing versions
+          git restore --source=$merge_base --staged --worktree -- versions
+          git clean -fd -- versions
+          echo '{"default": {}}' > versions/baseline.json # to allow deindexing, let x-add-version completely regenerate the baseline json
+          # check for version format errors separately by running x-add-version --all, recording problems it generates
+          ./vcpkg x-add-version --all | grep -E '^warning:|instead of "version-string"' | tee .github-pr.version-string.out || true
+          # reset the version database again
+          git restore --source=$merge_base --staged --worktree -- versions
+          git clean -fd -- versions
+          echo '{"default": {}}' > versions/baseline.json
+          # check that the PR only adds one version and doesn't modify any existing versions, ignoring any of the warnings recorded into .github-pr.version-string.out
+          ./vcpkg x-add-version --all --skip-version-format-check | tee .github-pr.x-add-version.out || true
+          git add -A -- versions
+          git diff --cached "$incoming_branch_commit" -- versions > .github-pr.x-add-version.diff
+          # reset to the original state of the PR so that the rest of the checks run on the original changes of the PR, not including any of the formatting changes we made or any changes to the version database
+          if [ -n "$synthetic_merge_ref" ]; then git switch "$synthetic_merge_ref"; else git switch --detach "$synthetic_merge_commit"; fi
+          git reset --hard "$synthetic_merge_commit"
+
+      - name: Generate Reply
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { promises: fs } = require('fs')
+            const add_version = (await fs.readFile('.github-pr.x-add-version.diff', 'utf8')).trim()
+            const add_version_out = (await fs.readFile('.github-pr.x-add-version.out', 'utf8')).trim()
+            const version_string_out = (await fs.readFile('.github-pr.version-string.out', 'utf8')).trim()
+            const format = (await fs.readFile('.github-pr.format-manifest', 'utf8')).trim()
+            const deprecated_function = (await fs.readFile('.github-pr.deprecated-function', 'utf8')).split('\n').filter(s => s.length > 0)
+            const deprecated_cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).split('\n').filter(s => s.length > 0)
+            const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
+            const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).split('\n').filter(s => s.length > 0)
+
+            let approve = true;
+            if (format !== "") {
+              var format_output = '';
+              format_output += "All vcpkg.json files and baselines must be formatted. To fix this problem, run:\n";
+              format_output += "./vcpkg format-manifest ports/*/vcpkg.json\n";
+              format_output += "./vcpkg format-feature-baseline scripts/ci.baseline.txt\n";
+              format_output += "./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt\n";
+              format_output += "\n";
+              format_output += "It should make the following changes. See the workflow summary for the generated diff.";
+              core.error(format_output);
+              core.summary.addHeading('Manifest formatting diff', 3);
+              core.summary.addRaw('All vcpkg.json files and baselines must be formatted. To fix this problem, run:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('./vcpkg format-manifest ports/*/vcpkg.json\n./vcpkg format-feature-baseline scripts/ci.baseline.txt\n./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt', 'text');
+              core.summary.addRaw('It should make the following changes:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(format, 'diff');
+              approve = false;
+            }
+            if (add_version_out !== "") {
+              var add_version_output = '';
+              add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
+              add_version_output += "When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.\n";
+              add_version_output += "Making the following changes will fix this problem. See the workflow summary for the generated diff.";
+              core.error(add_version_output);
+              core.summary.addHeading('x-add-version diff', 3);
+              core.summary.addRaw('PRs must add only one version, and must not modify any published versions.');
+              core.summary.addEOL();
+              core.summary.addRaw('When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.');
+              core.summary.addEOL();
+              core.summary.addRaw('Making the following changes will fix this problem:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(add_version, 'diff');
+              approve = false;
+            }
+            if (version_string_out !== "") {
+              core.warning(version_string_out);
+              core.summary.addHeading('x-add-version warnings', 3);
+              core.summary.addRaw(version_string_out);
+              core.summary.addEOL();
+            }
+            if (add_version !== "") {
+              var update_version_db_output = '';
+              update_version_db_output += "After committing all other changes, the version database must be updated.\n";
+              update_version_db_output += "This can be done by running the following commands:\n"
+              update_version_db_output += "\n"
+              update_version_db_output += "PowerShell\n"
+              update_version_db_output += "```powershell\n"
+              update_version_db_output += "git fetch https://github.com/microsoft/vcpkg master\n"
+              update_version_db_output += "$merge_base = git merge-base HEAD FETCH_HEAD\n"
+              update_version_db_output += "git restore --source=$merge_base --staged --worktree -- versions\n"
+              update_version_db_output += "git clean -fd -- versions\n"
+              update_version_db_output += "./vcpkg x-add-version --all\n"
+              update_version_db_output += "```\n"
+              update_version_db_output += "\n"
+              update_version_db_output += "bash\n"
+              update_version_db_output += "```bash\n"
+              update_version_db_output += "git fetch https://github.com/microsoft/vcpkg master\n"
+              update_version_db_output += "merge_base=\"$(git merge-base HEAD FETCH_HEAD)\"\n"
+              update_version_db_output += "git restore --source=\"$merge_base\" --staged --worktree -- versions\n"
+              update_version_db_output += "git clean -fd -- versions\n"
+              update_version_db_output += "./vcpkg x-add-version --all\n"
+              update_version_db_output += "```"
+              core.error(update_version_db_output);
+              core.summary.addHeading('Version database diff', 3);
+              core.summary.addRaw('After committing all other changes, the version database must be updated.');
+              core.summary.addEOL();
+              core.summary.addRaw('This can be done by running the following commands:');
+              core.summary.addEOL();
+              core.summary.addRaw('PowerShell');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('git fetch https://github.com/microsoft/vcpkg master\n$merge_base = git merge-base HEAD FETCH_HEAD\ngit restore --source=$merge_base --staged --worktree -- versions\ngit clean -fd -- versions\n./vcpkg x-add-version --all', 'powershell');
+              core.summary.addRaw('bash');
+              core.summary.addEOL();
+              core.summary.addCodeBlock('git fetch https://github.com/microsoft/vcpkg master\nmerge_base="$(git merge-base HEAD FETCH_HEAD)"\ngit restore --source="$merge_base" --staged --worktree -- versions\ngit clean -fd -- versions\n./vcpkg x-add-version --all', 'bash');
+              core.summary.addRaw('It should make the following changes:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(add_version, 'diff');
+              approve = false;
+            }
+            
+            if (deprecated_function.length > 0) {
+              var deprecated_output = '';
+              deprecated_output += "**You have modified or added at least one portfile where deprecated functions are used**\n"
+              deprecated_output += "If you feel able to do so, please consider migrating them to the new functions.\n";
+              core.warning(deprecated_output);
+
+              let deprecated_functions = {
+                  vcpkg_extract_source_archive_ex: 'vcpkg_extract_source_archive https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_extract_source_archive',
+                  vcpkg_build_msbuild: 'vcpkg_install_msbuild https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_install_msbuild',
+                  vcpkg_apply_patches: 'the PATCHES arguments to the \"extract\" helpers (for example, vcpkg_from_github() (https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_from_github))',
+              };
+              for (let line of deprecated_function) {
+                // line has the format: <path>:<line_number>:<matched_string
+                // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+                [file, line_number, match] = line.split(':');
+                for (deprecated_func in deprecated_functions) {
+                  if (match.indexOf(deprecated_func) !== -1) {
+                    core.warning(`The function ${deprecated_func} is deprecated. Please use ${deprecated_functions[deprecated_func]}`, {file, startLine: line_number});
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (deprecated_cmake.length > 0) {
+              var deprecated_output = '';
+              deprecated_output += "You have modified or added at least one portfile where deprecated functions are used.\n"
+              deprecated_output += "These functions have been forbidden in vcpkg, please migrating them to the new functions.\n";
+              deprecated_output += "In the ports that use the new function vcpkg_cmake_configure, vcpkg_cmake_install, vcpkg_cmake_build or vcpkg_cmake_config_fixup, you have to add the corresponding dependencies:\n";
+              deprecated_output += "```json\n";
+              deprecated_output += '{\n  "name": "vcpkg-cmake",\n  "host": true\n},\n'
+              deprecated_output += '{\n  "name": "vcpkg-cmake-config",\n  "host": true\n}\n';
+              deprecated_output += "```\n";
+              core.error(deprecated_output);
+
+              let deprecated_functions = {
+                  vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
+                  vcpkg_install_cmake: 'vcpkg_cmake_install (from port vcpkg-cmake)',
+                  vcpkg_build_cmake: 'vcpkg_cmake_build (from port vcpkg-cmake)',
+                  vcpkg_configure_cmake: 'vcpkg_cmake_configure (Please remove the option PREFER_NINJA) (from port vcpkg-cmake)',
+                  vcpkg_fixup_cmake_targets: 'vcpkg_cmake_config_fixup (from port vcpkg-cmake-config)',
+              };
+              for (let line of deprecated_cmake) {
+                // line has the format: <path>:<line_number>:<matched_string
+                // For example: ports/rtlsdr/portfile.cmake:42:    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+                [file, line_number, match] = line.split(':');
+                for (deprecated_cmake_function in deprecated_functions) {
+                  if (match.indexOf(deprecated_cmake_function) !== -1) {
+                    core.warning(`The function ${deprecated_cmake_function} is deprecated. Please use ${deprecated_functions[deprecated_cmake_function]}`, {file, startLine: line_number});
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (missing_license !== "" || deprecated_license.length > 0) {
+              core.summary.addRaw('You have modified or added at least one vcpkg.json where you should check the \"license\" field.');
+              core.summary.addEOL();
+            }
+
+            if (missing_license !== "") {
+              license_output = 'If you feel able to do so, please consider adding a "license" field to the following files:\n'
+              license_output += missing_license
+              license_output += "\n\nValid values for the license field can be found at https://learn.microsoft.com/vcpkg/reference/vcpkg-json#license\n\n"
+
+              core.warning(license_output);
+            }
+
+            for (let line of deprecated_license) {
+              [file, line_number, match] = line.split(':');
+              var license_output = `SPDX deprecated license identifier ${match}.`;
+              license_output += "\nIf you feel able to do so, please consider replacing it."
+              license_output += "\nUpdated license identifiers can be found at https://spdx.org/licenses/."
+
+
+              core.notice(license_output, {file, startLine: line_number});
+            }
+
+            core.summary.write();
+
+            if (!approve) {
+              process.exitCode = 1;
+            }

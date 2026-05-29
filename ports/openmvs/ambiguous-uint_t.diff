@@ -1,0 +1,13 @@
+diff --git a/libs/Common/EventQueue.cpp b/libs/Common/EventQueue.cpp
+index 82f835b..fccfa41 100644
+--- a/libs/Common/EventQueue.cpp
++++ b/libs/Common/EventQueue.cpp
+@@ -80,7 +80,7 @@ bool EventQueue::IsEmpty() const
+ 	return m_events.IsEmpty();
+ }
+ 
+-uint_t EventQueue::GetSize() const
++SEACAVE::uint_t EventQueue::GetSize() const
+ {
+ 	Lock l(m_cs);
+ 	return m_events.GetSize();

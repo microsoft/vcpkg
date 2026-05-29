@@ -1,0 +1,4 @@
+The package gsl is compatible with built-in CMake targets:
+
+    find_package(GSL REQUIRED)
+    target_link_libraries(main PRIVATE GSL::gsl GSL::gslcblas)

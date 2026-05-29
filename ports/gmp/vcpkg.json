@@ -1,0 +1,25 @@
+{
+  "name": "gmp",
+  "version": "6.3.0",
+  "port-version": 3,
+  "description": "The GNU Multiple Precision Arithmetic Library",
+  "homepage": "https://gmplib.org",
+  "license": "LGPL-3.0-only OR GPL-2.0-only",
+  "supports": "!xbox",
+  "dependencies": [
+    {
+      "name": "gmp",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ],
+  "features": {
+    "fat": {
+      "description": "Enable runtime selection of optimized low level routines",
+      "supports": "!windows | mingw"
+    }
+  }
+}

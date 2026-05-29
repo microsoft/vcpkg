@@ -1,0 +1,13 @@
+{
+  "name": "gz-cmake",
+  "version": "4.2.1",
+  "description": "CMake helper functions for building robotic applications",
+  "homepage": "https://gazebosim.org/libs/cmake/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "ignition-modularscripts",
+      "host": true
+    }
+  ]
+}

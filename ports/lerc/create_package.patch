@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ab733f5..a52dc59 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,11 +38,18 @@ endif()
+ 
+ install(
+     TARGETS Lerc
++    EXPORT LercTargets
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
++target_include_directories(Lerc PUBLIC "$<INSTALL_INTERFACE:include>")
++install(EXPORT LercTargets
++  FILE unofficial-lerc-config.cmake
++  NAMESPACE unofficial::Lerc::
++  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-lerc"
++)
+ 
+ # Handle both absolute paths (e.g. NixOS) and relative for a relocatable package
+ if(IS_ABSOLUTE "${CMAKE_INSTALL_INCLUDEDIR}")

@@ -1,0 +1,6 @@
+{
+  "name": "safeint",
+  "version": "3.0.28",
+  "description": "SafeInt is a class library for C++ that manages integer overflows",
+  "homepage": "https://github.com/dcleblanc/SafeInt"
+}

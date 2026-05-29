@@ -1,0 +1,37 @@
+diff --git a/cachelib/CMakeLists.txt b/cachelib/CMakeLists.txt
+index 8d17d64..bfe055f 100644
+--- a/cachelib/CMakeLists.txt
++++ b/cachelib/CMakeLists.txt
+@@ -108,8 +108,8 @@ find_package(Threads REQUIRED)
+ 
+ find_package(Boost REQUIRED COMPONENTS
+              system filesystem regex context program_options thread)
+-find_package(Gflags REQUIRED)
+-find_package(Glog REQUIRED)
++find_package(gflags CONFIG REQUIRED)
++find_package(glog CONFIG REQUIRED)
+ find_package(GTest REQUIRED)
+ include(GoogleTest)
+ enable_testing()
+diff --git a/cachelib/cachebench/CMakeLists.txt b/cachelib/cachebench/CMakeLists.txt
+index df1cb18..157975a 100644
+--- a/cachelib/cachebench/CMakeLists.txt
++++ b/cachelib/cachebench/CMakeLists.txt
+@@ -46,7 +46,7 @@ add_dependencies(cachelib_cachebench thrift_generated_files)
+ target_link_libraries(cachelib_cachebench PUBLIC
+   cachelib_datatype
+   cachelib_allocator
+-  gflags
++  gflags::gflags
+ )
+ 
+ add_library (cachelib_binary_trace_gen
+@@ -65,7 +65,7 @@ add_dependencies(cachelib_binary_trace_gen thrift_generated_files)
+ target_link_libraries(cachelib_binary_trace_gen PUBLIC
+   cachelib_datatype
+   cachelib_allocator
+-  gflags
++  gflags::gflags
+ )
+ 
+ if ((CMAKE_SYSTEM_NAME STREQUAL Linux) AND

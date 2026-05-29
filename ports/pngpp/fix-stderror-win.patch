@@ -1,0 +1,13 @@
+diff --git a/error.hpp b/error.hpp
+index 31e1801..d4b4655 100644
+--- a/error.hpp
++++ b/error.hpp
+@@ -32,7 +32,7 @@
+ #define PNGPP_ERROR_HPP_INCLUDED
+ 
+ /* check if we have strerror_s or strerror_r, prefer the former which is C11 std */
+-#ifdef __STDC_LIB_EXT1__
++#if defined(__STDC_LIB_EXT1__) || defined(_WIN32)
+ #define __STDC_WANT_LIB_EXT1__ 1
+ #include <string.h>
+ 

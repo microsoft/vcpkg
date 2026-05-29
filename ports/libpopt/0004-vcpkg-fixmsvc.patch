@@ -1,0 +1,62 @@
+diff -Naur a/poptconfig.c b/poptconfig.c
+--- a/poptconfig.c	2009-05-20 16:18:07.000000000 +0300
++++ b/poptconfig.c	2017-01-21 03:10:17.116120500 +0300
+@@ -141,17 +141,23 @@
+ int poptSaneFile(const char * fn)
+ {
+     struct stat sb;
+-    uid_t uid = getuid();
++#ifndef  _MSC_VER
++	uid_t uid = getuid();
++#endif // ! _MSC_VER
+ 
+     if (stat(fn, &sb) == -1)
+ 	return 1;
++#ifndef  _MSC_VER
+     if ((uid_t)sb.st_uid != uid)
+ 	return 0;
++#endif // ! _MSC_VER
+     if (!S_ISREG(sb.st_mode))
+ 	return 0;
+ /*@-bitwisesigned@*/
+-    if (sb.st_mode & (S_IWGRP|S_IWOTH))
+-	return 0;
++#ifndef  _MSC_VER
++	if (sb.st_mode & (S_IWGRP | S_IWOTH))
++	return 0;
++#endif // ! _MSC_VER
+ /*@=bitwisesigned@*/
+     return 1;
+ }
+diff -Naur a/popthelp.c b/popthelp.c
+--- a/popthelp.c	2009-08-28 03:06:33.000000000 +0300
++++ b/popthelp.c	2017-01-21 02:59:26.665695800 +0300
+@@ -10,7 +10,10 @@
+ 
+ #include "system.h"
+ 
+-#define        POPT_USE_TIOCGWINSZ
++#ifndef  _MSC_VER
++#define        POPT_USE_TIOCGWINSZ
++#endif
++
+ #ifdef POPT_USE_TIOCGWINSZ
+ #include <sys/ioctl.h>
+ #endif
+diff -Naur a/system.h b/system.h
+--- a/system.h	2008-12-18 19:09:49.000000000 +0200
++++ b/system.h	2017-01-21 03:10:59.195367500 +0300
+@@ -100,4 +100,13 @@
+ #endif
+ #define UNUSED(x) x __attribute__((__unused__))
+ 
++#if defined(_MSC_VER)
++#define X_OK 0
++
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++
++#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
++#endif
++
+ #include "popt.h"

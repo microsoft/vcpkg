@@ -1,0 +1,69 @@
+diff --git a/build.vc/postbuild.bat b/build.vc/postbuild.bat
+index de1ed08..e4ecceb 100644
+--- a/build.vc/postbuild.bat
++++ b/build.vc/postbuild.bat
+@@ -37,12 +37,10 @@ set bin_dir="..\%extn%\%plat%\%conf%\"
+ set hdr_dir="..\%extn%\%plat%\%conf%\"
+ 
+ rem output parametrers for the MPIR tests
+-if /i "%filename%" EQU "mpirxx" goto skip 
+ echo (set ldir=%loc%)   > output_params.bat
+ echo (set libr=%extn%) >> output_params.bat
+ echo (set plat=%plat%) >> output_params.bat
+ echo (set conf=%conf%) >> output_params.bat
+-:skip
+ 
+ echo copying outputs from %tgt_dir% to %bin_dir%
+ if not exist %bin_dir% md %bin_dir%
+diff --git a/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj b/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj
+index 3a23f01..1f44b22 100644
+--- a/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj
++++ b/build.vc15/lib_mpir_cxx/lib_mpir_cxx.vcxproj
+@@ -70,6 +70,11 @@
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">mpirxx</TargetName>
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
++    <PreBuildEvent>
++      <Command>cd ..\..\build.vc
++prebuild gc Win32 15
++      </Command>
++    </PreBuildEvent>
+     <ClCompile>
+       <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+@@ -82,6 +87,11 @@ postbuild "$(TargetPath)" 15
+     </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
++    <PreBuildEvent>
++      <Command>cd ..\..\build.vc
++prebuild gc Win32 15
++      </Command>
++    </PreBuildEvent>
+     <ClCompile>
+       <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+@@ -94,6 +104,11 @@ postbuild "$(TargetPath)" 15
+     </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
++    <PreBuildEvent>
++      <Command>cd ..\..\build.vc
++prebuild gc Win32 15
++      </Command>
++    </PreBuildEvent>
+     <ClCompile>
+       <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>NDEBUG;WIN32;_LIB;HAVE_CONFIG_H;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+@@ -106,6 +121,11 @@ postbuild "$(TargetPath)" 15
+     </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
++    <PreBuildEvent>
++      <Command>cd ..\..\build.vc
++prebuild gc Win32 15
++      </Command>
++    </PreBuildEvent>
+     <ClCompile>
+       <AdditionalIncludeDirectories>..\..\</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_DEBUG;WIN32;_LIB;HAVE_CONFIG_H;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>

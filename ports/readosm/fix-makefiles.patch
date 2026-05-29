@@ -1,0 +1,38 @@
+diff --git a/makefile.vc b/makefile.vc
+index 8edb536..0132067 100644
+--- a/makefile.vc
++++ b/makefile.vc
+@@ -12,7 +12,8 @@ CFLAGS	=	/nologo -I. -Iheaders -IC:\OSGeo4W\include $(OPTFLAGS)
+ 
+ default:	all
+ 
+-all: readosm.lib readosm_i.lib
++WANT_LIB = readosm.lib
++all: $(WANT_LIB)
+ 
+ readosm.lib:	$(LIBOBJ)
+ 	if exist readosm.lib del readosm.lib
+@@ -23,7 +24,7 @@ $(READOSM_DLL):	readosm_i.lib
+ readosm_i.lib:	$(LIBOBJ)
+ 	link /dll /out:$(READOSM_DLL) \
+ 		/implib:readosm_i.lib $(LIBOBJ) \
+-		C:\OSGeo4w\lib\libexpat.lib C:\OSGeo4w\lib\zlib.lib
++		$(LIBS)
+ 	if exist $(READOSM_DLL).manifest mt -manifest \
+ 		$(READOSM_DLL).manifest -outputresource:$(READOSM_DLL);2 
+ 		
+@@ -40,10 +41,12 @@ clean:
+ 
+ install: all
+ 	-mkdir $(INSTDIR)
+-	-mkdir $(INSTDIR)\bin
+ 	-mkdir $(INSTDIR)\lib
+ 	-mkdir $(INSTDIR)\include
++!IF "$(WANT_LIB)" == "readosm_i.lib"
++	-mkdir $(INSTDIR)\bin
+ 	copy *.dll $(INSTDIR)\bin
+-	copy *.lib $(INSTDIR)\lib
++!ENDIF
++	copy /Y $(WANT_LIB) $(INSTDIR)\lib\readosm.lib
+ 	copy headers\readosm.h $(INSTDIR)\include	
+ 

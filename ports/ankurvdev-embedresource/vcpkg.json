@@ -1,0 +1,17 @@
+{
+  "name": "ankurvdev-embedresource",
+  "version": "0.0.12",
+  "description": "Cross Platform Resource Embedding",
+  "homepage": "https://github.com/ankurvdev/embedresource",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "ankurvdev-embedresource",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "libassuan",
+  "version": "3.0.2",
+  "description": "A library implementing the so-called Assuan protocol",
+  "homepage": "https://gnupg.org/software/libassuan/index.html",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    {
+      "name": "libassuan",
+      "host": true
+    },
+    "libgpg-error",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

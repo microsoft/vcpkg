@@ -1,0 +1,13 @@
+diff --git a/thrift/lib/cpp2/security/SSLUtil.cpp b/thrift/lib/cpp2/security/SSLUtil.cpp
+index 571ffef..8803f37 100644
+--- a/thrift/lib/cpp2/security/SSLUtil.cpp
++++ b/thrift/lib/cpp2/security/SSLUtil.cpp
+@@ -144,7 +144,7 @@ folly::AsyncSocketTransport::UniquePtr toFDSocket(
+ 
+   auto sock = fizzSock->template getUnderlyingTransport<folly::AsyncSocket>();
+   folly::AsyncSocketTransport::UniquePtr ret;
+-#if defined(__linux__) && __has_include(<liburing.h>)
++#if defined(__linux__) && FOLLY_HAS_LIBURING
+   if (!sock &&
+       fizzSock->template getUnderlyingTransport<folly::AsyncIoUringSocket>()) {
+     // `AsyncFdSocket` currently lacks uring support, so hardcode `AsyncSocket`

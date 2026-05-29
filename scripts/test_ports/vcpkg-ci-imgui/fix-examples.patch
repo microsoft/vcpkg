@@ -1,0 +1,34 @@
+diff --git a/examples/example_glfw_wgpu/CMakeLists.txt b/examples/example_glfw_wgpu/CMakeLists.txt
+index 11248df..f34d704 100644
+--- a/examples/example_glfw_wgpu/CMakeLists.txt
++++ b/examples/example_glfw_wgpu/CMakeLists.txt
+@@ -35,20 +35,11 @@ endif()
+ set(CMAKE_CXX_STANDARD 17) # Dawn requires C++17
+ 
+ # Dear ImGui
+-set(IMGUI_DIR ../../)
++find_package(imgui CONFIG REQUIRED)
+ 
+ set(IMGUI_EXAMPLE_SOURCE_FILES
+         # Example code
+         main.cpp
+-        # Dear ImGui Backend files
+-        ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+-        ${IMGUI_DIR}/backends/imgui_impl_wgpu.cpp
+-        # Dear ImGui files
+-        ${IMGUI_DIR}/imgui.cpp
+-        ${IMGUI_DIR}/imgui_draw.cpp
+-        ${IMGUI_DIR}/imgui_demo.cpp
+-        ${IMGUI_DIR}/imgui_tables.cpp
+-        ${IMGUI_DIR}/imgui_widgets.cpp
+ )
+ 
+ if(EMSCRIPTEN)
+@@ -147,6 +138,7 @@ else() # Native/Desktop build
+ endif()
+ 
+ add_executable(${IMGUI_EXECUTABLE} ${IMGUI_EXAMPLE_SOURCE_FILES})
++target_link_libraries(${IMGUI_EXECUTABLE} PRIVATE imgui::imgui)
+ 
+ target_include_directories(${IMGUI_EXECUTABLE} PUBLIC
+         ${IMGUI_DIR}

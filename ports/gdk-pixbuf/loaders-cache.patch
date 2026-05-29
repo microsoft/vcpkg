@@ -1,0 +1,20 @@
+diff --git a/gdk-pixbuf/meson.build b/gdk-pixbuf/meson.build
+index 54ff9dd..27f8512 100644
+--- a/gdk-pixbuf/meson.build
++++ b/gdk-pixbuf/meson.build
+@@ -348,7 +348,14 @@ foreach bin: gdkpixbuf_bin
+   set_variable(bin_name.underscorify(), bin)
+ endforeach
+ 
+-if not meson.is_cross_build()
++if dynamic_loaders.length() == 0
++  # skip tool invocation
++  cmake = find_program('cmake', required : true)
++  loaders_cache = custom_target('loaders.cache', output: 'loaders.cache', capture: true,
++                                command: [ cmake, '-E', 'echo', '# No dynamic loaders enabled at build time' ],
++                                build_by_default: true)
++  loaders_dep = declare_dependency(sources: [ loaders_cache ])
++elif not meson.is_cross_build()
+   # The 'loaders.cache' used for testing, so we don't accidentally
+   # load the installed cache; we always build it by default
+   loaders_cache = custom_target('loaders.cache',

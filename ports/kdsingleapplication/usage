@@ -1,0 +1,4 @@
+kdsingleapplication provides CMake targets:
+
+  find_package(KDSingleApplication-qt6 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE KDAB::kdsingleapplication)

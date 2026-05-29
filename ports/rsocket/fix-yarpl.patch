@@ -1,0 +1,47 @@
+diff --git a/rsocket/transports/tcp/TcpConnectionFactory.cpp b/rsocket/transports/tcp/TcpConnectionFactory.cpp
+index b970cd7..cba4405 100644
+--- a/rsocket/transports/tcp/TcpConnectionFactory.cpp
++++ b/rsocket/transports/tcp/TcpConnectionFactory.cpp
+@@ -41,7 +41,7 @@ class ConnectCallback : public folly::AsyncSocket::ConnectCallback {
+     DCHECK(evb);
+ 
+     if (sslContext) {
+-#if !FOLLY_OPENSSL_HAS_ALPN
++#if 0
+       // setAdvertisedNextProtocols() is unavailable
+ #error ALPN is required for rsockets. \
+       Your version of OpenSSL is likely too old.
+diff --git a/yarpl/CMakeLists.txt b/yarpl/CMakeLists.txt
+index 65974e3..9392738 100644
+--- a/yarpl/CMakeLists.txt
++++ b/yarpl/CMakeLists.txt
+@@ -9,14 +9,14 @@ set(CMAKE_MODULE_PATH
+   ${CMAKE_MODULE_PATH}
+ )
+ 
+-add_definitions(-std=c++14)
++add_definitions(-std=c++17)
+ 
+ # Generate compilation database
+ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+ 
+ # Common configuration for all build modes.
+ if (NOT MSVC)
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-weak-vtables -Wno-padded")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-omit-frame-pointer")
+diff --git a/yarpl/flowable/Flowable_FromObservable.h b/yarpl/flowable/Flowable_FromObservable.h
+index e191ad7..ce8565c 100644
+--- a/yarpl/flowable/Flowable_FromObservable.h
++++ b/yarpl/flowable/Flowable_FromObservable.h
+@@ -180,7 +180,7 @@ class BufferBackpressureStrategy : public BackpressureStrategyBase<T> {
+   static constexpr size_t kNoLimit = 0;
+ 
+   explicit BufferBackpressureStrategy(size_t bufferSizeLimit = kNoLimit)
+-      : buffer_(folly::in_place, bufferSizeLimit) {}
++      : buffer_(std::in_place, bufferSizeLimit) {}
+ 
+  private:
+   using Super = BackpressureStrategyBase<T>;

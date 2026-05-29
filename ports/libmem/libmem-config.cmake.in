@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+
+find_dependency(capstone CONFIG)
+
+find_dependency(PkgConfig)
+pkg_check_modules(keystone REQUIRED IMPORTED_TARGET keystone)
+
+find_dependency(LLVM CONFIG)
+
+include("${CMAKE_CURRENT_LIST_DIR}/libmem-targets.cmake")

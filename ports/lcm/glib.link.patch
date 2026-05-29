@@ -1,0 +1,23 @@
+diff --git a/cmake/FindGLib2.cmake b/cmake/FindGLib2.cmake
+index f94f74e..2823fcf 100644
+--- a/cmake/FindGLib2.cmake
++++ b/cmake/FindGLib2.cmake
+@@ -74,15 +74,11 @@ find_package(PkgConfig)
+ 
+ if(${PkgConfig_FOUND})
+ 
+-  pkg_check_modules(GLIB glib-2.0)
++  pkg_check_modules(GLIB IMPORTED_TARGET glib-2.0)
+ 
+   if(${GLIB_FOUND})
+-    add_library(GLib2::glib UNKNOWN IMPORTED)
+-    set_target_properties(GLib2::glib PROPERTIES
+-      IMPORTED_LOCATION "${pkgcfg_lib_GLIB_glib-2.0}"
+-      INTERFACE_COMPILE_OPTIONS "${GLIB_CFLAGS_OTHER}"
+-      INTERFACE_INCLUDE_DIRECTORIES "${GLIB_INCLUDE_DIRS}"
+-    )
++    add_library(GLib2::glib INTERFACE IMPORTED)
++    target_link_libraries(GLib2::glib INTERFACE PkgConfig::GLIB)
+     return()
+   endif()
+ 

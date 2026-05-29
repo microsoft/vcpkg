@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 595378b..516f26e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -118,6 +118,7 @@ dnl
+ dnl This should be after all checks
+ dnl ---------------------------------------------
+ AS_CASE([$host_os],
++  [*mingw32*], LDFLAGS="-no-undefined $LDFLAGS",
+   [os2*], [LDFLAGS="$LDFLAGS -no-undefined"])
+ 
+ dnl ---------------------------------------------

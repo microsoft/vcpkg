@@ -1,0 +1,28 @@
+diff --git "a/lib/csa/nan.h" "b/lib/csa/nan.h"
+index 29fd3d2f..7f16e8c8 100644
+--- "a/lib/csa/nan.h"
++++ "b/lib/csa/nan.h"
+@@ -19,6 +19,16 @@
+ #if !defined ( _NAN_H )
+ #define _NAN_H
+
++// Try to use the implementation-provided NAN constant:
++
++#include <math.h>
++
++#if defined(NAN)
++
++#define NaN ((double)NAN)
++
++#else // ^^^ implementation provides NAN // implementation does not provide NAN vvv
++
+ #if ( defined ( __GNUC__ ) && !defined ( __ICC ) ) || defined ( __BORLANDC__ )
+
+ static const double NaN = 0.0 / 0.0;
+@@ -63,4 +73,6 @@ static const long long lNaN = ( (unsigned long long) 1 << 63 ) - 1;
+
+ #endif
+
++#endif // defined(NAN)
++
+ #endif

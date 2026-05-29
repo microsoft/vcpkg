@@ -1,0 +1,52 @@
+diff --git a/win32/Scintilla.vcxproj b/win32/Scintilla.vcxproj
+index 82aa9b7..6b6f340 100644
+--- a/win32/Scintilla.vcxproj
++++ b/win32/Scintilla.vcxproj
+@@ -102,6 +102,7 @@
+     <ClCompile>
+       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <LanguageStandard>stdcpp17</LanguageStandard>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+@@ -112,6 +113,7 @@
+     <ClCompile>
+       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <LanguageStandard>stdcpp17</LanguageStandard>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+@@ -122,6 +124,7 @@
+     <ClCompile>
+       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <LanguageStandard>stdcpp17</LanguageStandard>
++      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+@@ -133,6 +136,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <LanguageStandard>stdcpp17</LanguageStandard>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -146,6 +150,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <LanguageStandard>stdcpp17</LanguageStandard>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+@@ -159,6 +164,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <LanguageStandard>stdcpp17</LanguageStandard>
++      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+     </ClCompile>
+     <Link>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>

@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d80b395..8f1699e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,10 +27,7 @@ option(RYML_INSTALL "Enable install target" ON)
+ 
+ #-------------------------------------------------------
+ 
+-c4_require_subproject(c4core INCORPORATE
+-    SUBDIRECTORY ${RYML_EXT_DIR}/c4core
+-    OVERRIDE C4CORE_INSTALL ${RYML_INSTALL}
+-)
++find_package(c4core CONFIG REQUIRED)
+ 
+ c4_add_library(ryml
+     SOURCES
+@@ -77,10 +74,10 @@ c4_add_library(ryml
+         ryml.natvis
+     SOURCE_ROOT ${RYML_SRC_DIR}
+     INC_DIRS
++        $<BUILD_INTERFACE:${C4CORE_INCLUDE_DIR}>
+         $<BUILD_INTERFACE:${RYML_SRC_DIR}>
+         $<INSTALL_INTERFACE:include>
+-    LIBS c4core
+-    INCORPORATE c4core
++    LIBS c4core::c4core
+     )
+ 
+ if(RYML_WITH_TAB_TOKENS)

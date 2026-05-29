@@ -1,0 +1,22 @@
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e88e5612a..23b4c992f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -459,12 +459,12 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/ActiveRecord/Compiler AND ENABLE_ACTIVERECORD_CO
+ 	list(APPEND Poco_COMPONENTS "ActiveRecordCompiler")
+ endif()
+ 
+-if(EXISTS ${PROJECT_SOURCE_DIR}/SevenZip AND ENABLE_SEVENZIP AND ENABLE_XML)
++if(EXISTS ${PROJECT_SOURCE_DIR}/SevenZip AND ENABLE_SEVENZIP)
+ 	add_subdirectory(SevenZip)
+ 	list(APPEND Poco_COMPONENTS "SevenZip")
+ endif()
+ 
+-if(EXISTS ${PROJECT_SOURCE_DIR}/Zip AND ENABLE_ZIP AND ENABLE_XML)
++if(EXISTS ${PROJECT_SOURCE_DIR}/Zip AND ENABLE_ZIP)
+ 	add_subdirectory(Zip)
+ 	list(APPEND Poco_COMPONENTS "Zip")
+ endif()

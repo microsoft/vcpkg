@@ -1,0 +1,98 @@
+diff --git a/cmake/modules/YasmMacros.cmake b/cmake/modules/YasmMacros.cmake
+index ab1be00..0bd347f 100644
+--- a/cmake/modules/YasmMacros.cmake
++++ b/cmake/modules/YasmMacros.cmake
+@@ -58,7 +58,9 @@ macro (YASM_ADD_MODULE _module_NAME)
+ endmacro (YASM_ADD_MODULE)
+ 
+ macro (YASM_GENPERF _in_NAME _out_NAME)
+-    get_target_property(_tmp_GENPERF_EXE genperf LOCATION)
++    if (NOT _tmp_GENPERF_EXE)
++        set(_tmp_GENPERF_EXE genperf)
++    endif()
+     add_custom_command(
+         OUTPUT ${_out_NAME}
+         COMMAND ${_tmp_GENPERF_EXE} ${_in_NAME} ${_out_NAME}
+@@ -68,7 +70,9 @@ macro (YASM_GENPERF _in_NAME _out_NAME)
+ endmacro (YASM_GENPERF)
+ 
+ macro (YASM_RE2C _in_NAME _out_NAME)
+-    get_target_property(_tmp_RE2C_EXE re2c LOCATION)
++    if (NOT _tmp_RE2C_EXE)
++        set(_tmp_RE2C_EXE re2c)
++    endif()
+     add_custom_command(
+         OUTPUT ${_out_NAME}
+         COMMAND ${_tmp_RE2C_EXE} ${ARGN} -o ${_out_NAME} ${_in_NAME}
+@@ -78,7 +82,9 @@ macro (YASM_RE2C _in_NAME _out_NAME)
+ endmacro (YASM_RE2C)
+ 
+ macro (YASM_GENMACRO _in_NAME _out_NAME _var_NAME)
+-    get_target_property(_tmp_GENMACRO_EXE genmacro LOCATION)
++    if (NOT _tmp_GENMACRO_EXE)
++        set(_tmp_GENMACRO_EXE genmacro)
++    endif()
+     add_custom_command(
+         OUTPUT ${_out_NAME}
+         COMMAND ${_tmp_GENMACRO_EXE} ${_out_NAME} ${_var_NAME} ${_in_NAME}
+diff --git a/modules/preprocs/nasm/CMakeLists.txt b/modules/preprocs/nasm/CMakeLists.txt
+index e10a9dd..4d1bf15 100644
+--- a/modules/preprocs/nasm/CMakeLists.txt
++++ b/modules/preprocs/nasm/CMakeLists.txt
+@@ -1,5 +1,8 @@
++if (NOT _tmp_GENVERSION_EXE)
+ add_executable(genversion preprocs/nasm/genversion.c)
+-get_target_property(_tmp_GENVERSION_EXE genversion LOCATION)
++install(TARGETS genversion RUNTIME DESTINATION bin)
++set(_tmp_GENVERSION_EXE genversion)
++endif()
+ add_custom_command(
+     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/version.mac
+     COMMAND ${_tmp_GENVERSION_EXE} ${CMAKE_CURRENT_BINARY_DIR}/version.mac
+diff --git a/tools/genmacro/CMakeLists.txt b/tools/genmacro/CMakeLists.txt
+index 27ba599..0168494 100644
+--- a/tools/genmacro/CMakeLists.txt
++++ b/tools/genmacro/CMakeLists.txt
+@@ -1,3 +1,7 @@
++if (NOT _tmp_GENMACRO_EXE)
+ add_executable(genmacro
+     genmacro.c
+     )
++
++install(TARGETS genmacro RUNTIME DESTINATION bin)
++endif()
+\ No newline at end of file
+diff --git a/tools/genperf/CMakeLists.txt b/tools/genperf/CMakeLists.txt
+index 6f50989..87d19bc 100644
+--- a/tools/genperf/CMakeLists.txt
++++ b/tools/genperf/CMakeLists.txt
+@@ -1,3 +1,4 @@
++if (NOT _tmp_GENPERF_EXE)
+ add_executable(genperf
+     genperf.c
+     perfect.c
+@@ -6,3 +7,6 @@ add_executable(genperf
+     ../../libyasm/xstrdup.c
+     )
+ set_target_properties(genperf PROPERTIES COMPILE_FLAGS -DYASM_LIB_DECL=)
++
++install(TARGETS genperf RUNTIME DESTINATION bin)
++endif()
+\ No newline at end of file
+diff --git a/tools/re2c/CMakeLists.txt b/tools/re2c/CMakeLists.txt
+index 7125d49..f2f1a40 100644
+--- a/tools/re2c/CMakeLists.txt
++++ b/tools/re2c/CMakeLists.txt
+@@ -1,3 +1,4 @@
++if (NOT _tmp_RE2C_EXE)
+ add_executable(re2c
+     main.c
+     code.c
+@@ -9,3 +10,6 @@ add_executable(re2c
+     substr.c
+     translate.c
+     )
++
++install(TARGETS re2c RUNTIME DESTINATION bin)
++endif()
+\ No newline at end of file

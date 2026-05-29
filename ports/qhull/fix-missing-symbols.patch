@@ -1,0 +1,29 @@
+From 02ba907908ccf5ed0d40a2251272b67cb05c23ea Mon Sep 17 00:00:00 2001
+From: Francisco Facioni <fran6co@gmail.com>
+Date: Sat, 31 Jul 2021 22:30:45 +0100
+Subject: [PATCH] Missing symbols in the export
+
+---
+ src/libqhull_r/qhull_r-exports.def | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/libqhull_r/qhull_r-exports.def b/src/libqhull_r/qhull_r-exports.def
+index 4c5e17c..b789673 100644
+--- a/src/libqhull_r/qhull_r-exports.def
++++ b/src/libqhull_r/qhull_r-exports.def
+@@ -183,6 +183,7 @@ qh_maxouter
+ qh_maxsimplex
+ qh_maydropneighbor
+ qh_memalloc
++qh_memcheck
+ qh_memfree
+ qh_memfreeshort
+ qh_meminit
+@@ -351,6 +352,7 @@ qh_setdelnth
+ qh_setdelnthsorted
+ qh_setdelsorted
+ qh_setduplicate
++qh_setendpointer
+ qh_setequal
+ qh_setequal_except
+ qh_setequal_skip

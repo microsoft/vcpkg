@@ -1,0 +1,40 @@
+diff --git a/src/Magnum/Math/Vector.h b/src/Magnum/Math/Vector.h
+index 861a496..2d0436b 100644
+--- a/src/Magnum/Math/Vector.h
++++ b/src/Magnum/Math/Vector.h
+@@ -29,6 +29,8 @@
+  * @brief Class @ref Magnum::Math::Vector, function @ref Magnum::Math::dot(), @ref Magnum::Math::angle()
+  */
+ 
++#include <cstddef>
++#include <vector>
+ #include <utility>
+ #include <Corrade/Utility/Assert.h>
+ #ifndef CORRADE_NO_DEBUG
+diff --git a/src/Magnum/MeshTools/CompressIndices.h b/src/Magnum/MeshTools/CompressIndices.h
+index 7223bd7..aae88c6 100644
+--- a/src/Magnum/MeshTools/CompressIndices.h
++++ b/src/Magnum/MeshTools/CompressIndices.h
+@@ -29,6 +29,8 @@
+  * @brief Function @ref Magnum::MeshTools::compressIndices()
+  */
+ 
++#include <cstddef>
++#include <vector>
+ #include <utility>
+ #include <Corrade/Containers/Containers.h>
+ 
+diff --git a/src/Magnum/MeshTools/GenerateNormals.h b/src/Magnum/MeshTools/GenerateNormals.h
+index 3dbf88b..71eadd0 100644
+--- a/src/Magnum/MeshTools/GenerateNormals.h
++++ b/src/Magnum/MeshTools/GenerateNormals.h
+@@ -29,6 +29,9 @@
+  * @brief Function @ref Magnum::MeshTools::generateFlatNormals(), @ref Magnum::MeshTools::generateFlatNormalsInto(), @ref Magnum::MeshTools::generateSmoothNormals(), @ref Magnum::MeshTools::generateSmoothNormalsInto()
+  */
+ 
++#include <cstddef>
++#include <utility>
++#include <vector>
+ #include "Magnum/Magnum.h"
+ #include "Magnum/MeshTools/visibility.h"
+ 

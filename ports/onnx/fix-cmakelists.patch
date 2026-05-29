@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8b5af30..6836651 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -668,6 +668,10 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/onnx
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+         FILES_MATCHING
+         PATTERN "*.h")
++install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/onnx DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++        FILES_MATCHING PATTERN "*.proto")
++install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/onnx DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++        FILES_MATCHING PATTERN "*.proto3")
+ 
+ configure_file(
+   ${PROJECT_SOURCE_DIR}/cmake/ONNXConfigVersion.cmake.in

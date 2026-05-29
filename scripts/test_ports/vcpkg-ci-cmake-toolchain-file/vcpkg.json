@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-ci-cmake-toolchain-file",
+  "version-string": "ci",
+  "description": "Validate vcpkg.cmake toolchain file",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "unit-test-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

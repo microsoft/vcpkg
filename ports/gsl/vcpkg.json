@@ -1,0 +1,14 @@
+{
+  "name": "gsl",
+  "version": "2.8",
+  "port-version": 2,
+  "description": "The GNU Scientific Library is a numerical library for C and C++ programmers",
+  "homepage": "https://www.gnu.org/software/gsl/",
+  "license": "GPL-3.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

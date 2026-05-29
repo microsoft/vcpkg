@@ -1,0 +1,14 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 5caf5de5..d8124818 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -130,9 +130,6 @@ if(NOT WIN32)
+     install(TARGETS dbus-uuidgen ${INSTALL_TARGETS_DEFAULT_ARGS})
+ endif()
+ 
+-# create the /var/lib/dbus directory for dbus-uuidgen
+-install(DIRECTORY DESTINATION ${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/dbus)
+-
+ set(EXAMPLES_SCRIPTS
+     GetAllMatchRules.py
+ )

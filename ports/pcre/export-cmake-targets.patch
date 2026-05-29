@@ -1,0 +1,23 @@
+--- a/CMakeLists.txt	2021-06-14 10:33:38.000000000 +0200
++++ b/CMakeLists.txt	2021-06-18 18:08:24.162881000 +0200
+@@ -934,10 +934,19 @@
+ # Installation
+ SET(CMAKE_INSTALL_ALWAYS 1)
+ 
+-INSTALL(TARGETS ${targets}
++foreach(target ${targets})
++    INSTALL(TARGETS ${target}
++        EXPORT pcre-targets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    target_include_directories(${target} PUBLIC $<INSTALL_INTERFACE:include>)
++endforeach()
++
++INSTALL(EXPORT pcre-targets
++    NAMESPACE unofficial::pcre::
++    FILE unofficial-pcre-targets.cmake
++    DESTINATION "share/unofficial-pcre")
+ 
+ INSTALL(FILES ${PCRE_HEADERS} ${PCREPOSIX_HEADERS} DESTINATION include)
+ 

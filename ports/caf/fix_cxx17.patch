@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0622702..f44e0f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -158,7 +158,6 @@ install(TARGETS caf_internal EXPORT CAFTargets)
+ 
+ # -- create the libcaf_test target ahead of time for caf_core ------------------
+ 
+-add_library(libcaf_test)
+ 
+ # -- add uninstall target if it does not exist yet -----------------------------
+ 
+@@ -351,7 +350,6 @@ endfunction()
+ 
+ add_subdirectory(libcaf_core)
+ 
+-add_subdirectory(libcaf_test)
+ 
+ if(CAF_ENABLE_NET_MODULE)
+   add_subdirectory(libcaf_net)

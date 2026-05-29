@@ -1,0 +1,62 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+
+param([string]$SasToken)
+
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
+
+$CudaUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda_13.2.0_windows.exe' `
+  -BlobAssetName 'cuda_13.2.0_windows.exe'
+
+# https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
+# Intentionally omitted:
+#  ctadvisor_13.2
+#  documentation_13.2
+#  nsight_compute_13.2
+#  nsight_systems_13.2
+#  nsight_vse_13.2
+#  occupancy_calculator_13.2 (this is named like a tool but listed as 'documentation' in the installer)
+#  visual_studio_integration_13.2
+DownloadAndInstall -Url $CudaUrl -Args @(
+  '-s',
+  'crt_13.2',
+  'cublas_13.2',
+  'cublas_dev_13.2',
+  'cuda_profiler_api_13.2',
+  'cudart_13.2',
+  'cufft_13.2',
+  'cufft_dev_13.2',
+  'cuobjdump_13.2',
+  'cupti_13.2',
+  'curand_13.2',
+  'curand_dev_13.2',
+  'cusolver_13.2',
+  'cusolver_dev_13.2',
+  'cusparse_13.2',
+  'cusparse_dev_13.2',
+  'cuxxfilt_13.2',
+  'npp_13.2',
+  'npp_dev_13.2',
+  'nvcc_13.2',
+  'nvdisasm_13.2',
+  'nvfatbin_13.2',
+  'nvjitlink_13.2',
+  'nvjpeg_13.2',
+  'nvjpeg_dev_13.2',
+  'nvml_dev_13.2',
+  'nvprune_13.2',
+  'nvptxcompiler_13.2',
+  'nvrtc_13.2',
+  'nvrtc_dev_13.2',
+  'nvtx_13.2',
+  'nvvm_13.2',
+  'opencl_13.2',
+  'sanitizer_13.2',
+  'thrust_13.2',
+  'tileiras_13.2',
+  '-n'
+)

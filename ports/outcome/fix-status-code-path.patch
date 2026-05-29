@@ -1,0 +1,23 @@
+diff --git a/include/outcome/experimental/result.h b/include/outcome/experimental/result.h
+index b912a55..1370e9e 100644
+--- a/include/outcome/experimental/result.h
++++ b/include/outcome/experimental/result.h
+@@ -278,14 +278,14 @@ extern "C"
+ }
+ 
+ #include "../config.hpp"
+-#include "status-code/include/status-code/config.hpp"
+-#include "status-code/include/status-code/system_code.hpp"
++#include <status-code/config.hpp>
++#include <status-code/system_code.hpp>
+ #include "status_result.hpp"
+ 
+ 
+-#include "status-code/include/status-code/posix_code.hpp"
++#include <status-code/posix_code.hpp>
+ #ifdef _WIN32
+-#include "status-code/include/status-code/win32_code.hpp"
++#include <status-code/win32_code.hpp>
+ #endif
+ 
+ #include <algorithm>

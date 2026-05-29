@@ -1,0 +1,5 @@
+* -text
+ports/** -linguist-detectable
+
+# Declare files that will always have LF line endings on checkout.
+scripts/ci.baseline.txt text eol=lf

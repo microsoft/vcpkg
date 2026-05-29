@@ -1,0 +1,26 @@
+{
+  "name": "kf5auth",
+  "version": "5.116.0",
+  "port-version": 1,
+  "description": "Execute actions as privileged user",
+  "homepage": "https://invent.kde.org/frameworks/kauth",
+  "documentation": "https://api.kde.org/kauth-index.html ",
+  "supports": "!windows",
+  "dependencies": [
+    "ecm",
+    "kf5coreaddons",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

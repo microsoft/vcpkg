@@ -1,0 +1,12 @@
+diff --git a/autogen.sh b/autogen.sh
+index 3e89ebe..8dade84 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -44,6 +44,7 @@ while :; do
+     *) break ;;
+   esac
+ done
++skip_gnulib=true
+ 
+ TEXINFO_VERSION=6.5
+ 

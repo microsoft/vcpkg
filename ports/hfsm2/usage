@@ -1,0 +1,4 @@
+The package hfsm2 is header only and can be used from CMake via:
+
+    find_package(hfsm2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE hfsm2::hfsm2)

@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d059e89..fb0fb46 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -234,7 +234,6 @@ add_subdirectory(DOC)
+ # file(WRITE "make.defs" "# can be exposed to users"
+ #  ${CMAKE_C_COMPILER}  )
+ # configure_file(${CMAKE_SOURCE_DIR}/make.inc.in ${CMAKE_SOURCE_DIR}/make.inc)
+-configure_file(${SuperLU_SOURCE_DIR}/make.inc.in ${SuperLU_SOURCE_DIR}/make.inc)
+ 
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/superlu.pc.in ${CMAKE_CURRENT_BINARY_DIR}/superlu.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/superlu.pc

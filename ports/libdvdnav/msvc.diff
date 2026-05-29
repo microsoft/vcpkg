@@ -1,0 +1,73 @@
+diff --git a/msvc/config.h b/msvc/config.h
+index 25f68fb..c3f00f1 100644
+--- a/msvc/config.h
++++ b/msvc/config.h
+@@ -28,7 +28,8 @@
+ #define inline __inline
+ /* #undef size_t */
+ 
+-#define ssize_t __int64
++#include <windows.h>
++typedef SSIZE_T ssize_t;
+ 
+ #ifndef PATH_MAX
+ #define PATH_MAX MAX_PATH
+@@ -43,14 +44,6 @@
+ #define S_ISCHR(m) 0
+ 
+ /* Fallback types (very x86-centric, sorry) */
+-typedef unsigned char       uint8_t;
+-typedef signed char         int8_t;
+-typedef unsigned short      uint16_t;
+-typedef signed short        int16_t;
+-typedef unsigned int        uint32_t;
+-typedef signed int          int32_t;
+-typedef unsigned __int64    uint64_t;
+-typedef signed __int64      int64_t;
+-typedef unsigned int        uintptr_t;
++#include <stdint.h>
+ 
+ #endif /* LIBDVNAV_CONFIG_H */
+diff --git a/msvc/include/sys/time.h b/msvc/include/sys/time.h
+index 843e252..8014739 100644
+--- a/msvc/include/sys/time.h
++++ b/msvc/include/sys/time.h
+@@ -26,3 +26,4 @@
+  */
+ 
+ #include <time.h>
++#include <winsock2.h>
+diff --git a/src/dvdnav_internal.h b/src/dvdnav_internal.h
+index 495f032..a0aaeaf 100644
+--- a/src/dvdnav_internal.h
++++ b/src/dvdnav_internal.h
+@@ -39,6 +39,7 @@ typedef CRITICAL_SECTION pthread_mutex_t;
+ #ifndef HAVE_GETTIMEOFDAY
+ /* replacement gettimeofday implementation */
+ #include <sys/timeb.h>
++#include <winsock2.h>
+ static inline int _private_gettimeofday( struct timeval *tv, void *tz )
+ {
+   struct timeb t;
+@@ -232,7 +233,7 @@ int64_t dvdnav_convert_time(dvd_time_t *time);
+ #define printerrf(format, args...) \
+     do { if (this) snprintf(this->err_str, MAX_ERR_LEN, format, ## args); } while (0)
+ #else
+-#ifdef _MSC_VER
++#if 0
+ #define printerrf(str) \
+     do { if (this) snprintf(this->err_str, MAX_ERR_LEN, str); } while (0)
+ #else
+diff --git a/src/read_cache.c b/src/read_cache.c
+index 1b2862d..abc786a 100644
+--- a/src/read_cache.c
++++ b/src/read_cache.c
+@@ -87,7 +87,7 @@ struct read_cache_s {
+ # if READ_CACHE_TRACE
+ #  define dprintf(fmt, ...) fprintf(MSG_OUT, "libdvdnav: %s: "fmt,  __func__ , __VA_ARGS__)
+ # else
+-#ifdef _MSC_VER
++#if 0
+ #  define dprintf(fmt, str) /* Nowt */
+ #else
+ #  define dprintf(fmt, ...) /* Nowt */

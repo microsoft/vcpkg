@@ -1,0 +1,16 @@
+{
+  "name": "mdnsresponder",
+  "version": "1557.140.5.0.1",
+  "port-version": 1,
+  "description": "The mDNSResponder project is a component of Bonjour, Apple's ease-of-use IP networking initiative.",
+  "homepage": "https://github.com/apple-oss-distributions/mDNSResponder",
+  "license": "Apache-2.0",
+  "supports": "windows & !uwp & !arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "libsrt",
+  "version": "1.5.4",
+  "description": "Secure Reliable Transport (SRT) is an open source transport technology that optimizes streaming performance across unpredictable networks, such as the Internet.",
+  "homepage": "https://github.com/Haivision/srt",
+  "license": "MPL-2.0",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "bonding": {
+      "description": "Enables the Connection Bonding feature"
+    },
+    "tool": {
+      "description": "Builds libsrt executable"
+    }
+  }
+}

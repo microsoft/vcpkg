@@ -1,0 +1,13 @@
+diff --git a/src/Magnum/Platform/CMakeLists.txt b/src/Magnum/Platform/CMakeLists.txt
+index f1b404f..19babf4 100644
+--- a/src/Magnum/Platform/CMakeLists.txt
++++ b/src/Magnum/Platform/CMakeLists.txt
+@@ -292,7 +292,7 @@ endif()
+ 
+ # SDL2 application
+ if(WITH_SDL2APPLICATION)
+-    find_package(SDL2)
++    find_package(SDL2 CONFIG REQUIRED)
+     if(NOT SDL2_FOUND)
+         message(FATAL_ERROR "SDL2 library, required by Sdl2Application, was not found. Set WITH_SDL2APPLICATION to OFF to skip building it.")
+     endif()

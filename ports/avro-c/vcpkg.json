@@ -1,0 +1,19 @@
+{
+  "name": "avro-c",
+  "version": "1.12.1",
+  "port-version": 1,
+  "description": "Apache Avro is a data serialization system",
+  "homepage": "https://github.com/apache/avro",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "jansson",
+    "liblzma",
+    "snappy",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

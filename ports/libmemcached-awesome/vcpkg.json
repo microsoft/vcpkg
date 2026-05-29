@@ -1,0 +1,18 @@
+{
+  "name": "libmemcached-awesome",
+  "version": "1.1.4",
+  "description": "Open source C/C++ client library and tools for the memcached server",
+  "homepage": "https://awesomized.github.io/libmemcached/",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-gn",
+  "version-date": "2025-08-05",
+  "description": "GN is a meta-build system that generates build files for Ninja (GN is the build system for Chromium, Fuchsia, and related projects)",
+  "documentation": "https://gn.googlesource.com/gn/+/main/docs/reference.md",
+  "license": "MIT",
+  "supports": "native",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-gn",
+      "host": true
+    }
+  ]
+}

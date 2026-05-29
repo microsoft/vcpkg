@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7757916..14d12d0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -242,8 +242,6 @@ else()
+     if (NOT RELEASE_BUILD)
+         # -Werror is most useful during development, don't potentially break
+         # release builds
+-        set(EXTRA_C_FLAGS "${EXTRA_C_FLAGS} -Werror")
+-        set(EXTRA_CXX_FLAGS "${EXTRA_CXX_FLAGS} -Werror")
+     endif()
+ 
+     if (DISABLE_ASSERTS)

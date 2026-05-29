@@ -1,0 +1,14 @@
+diff --git a/include/curl_easy.h b/include/curl_easy.h
+index 66f8f51..8004957 100644
+--- a/include/curl_easy.h
++++ b/include/curl_easy.h
+@@ -358,7 +358,9 @@ namespace curl  {
+ 
+         /* Renamed / obsoleted since 7.37 */
+ #if defined(LIBCURL_VERSION_NUM) && LIBCURL_VERSION_NUM > 0x072500
++# if LIBCURL_VERSION_NUM < 0x080a00
+         CURLCPP_DEFINE_OPTION(CURLOPT_OBSOLETE72, long); /* OBSOLETE, do not use! */
++# endif
+ #else
+         CURLCPP_DEFINE_OPTION(CURLOPT_CLOSEPOLICY, long);
+ #endif

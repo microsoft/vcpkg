@@ -1,0 +1,13 @@
+diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
+index 47bb0bd72f..ea76b75425 100644
+--- a/src/libbson/CMakeLists.txt
++++ b/src/libbson/CMakeLists.txt
+@@ -300,7 +300,7 @@ endif () # ENABLE_EXAMPLES
+ 
+ # Infix directory for all libbson headers.
+ if(NOT DEFINED BSON_INSTALL_INCLUDEDIR)
+-   set(BSON_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/bson-${PROJECT_VERSION}")
++   set(BSON_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}")
+ endif()
+ # Infix directory for all libbson CMake package files
+ if(NOT DEFINED BSON_INSTALL_CMAKEDIR)

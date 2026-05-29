@@ -1,0 +1,12 @@
+{
+  "name": "json11",
+  "version-date": "2017-06-20",
+  "port-version": 7,
+  "description": "json11 is a tiny JSON library for C++11, providing JSON parsing and serialization.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

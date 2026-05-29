@@ -1,0 +1,16 @@
+{
+  "name": "libcerf",
+  "version": "2.4",
+  "description": "A self-contained numeric library that provides an efficient and accurate implementation of complex error functions, along with Dawson, Faddeeva, and Voigt functions.",
+  "homepage": "https://jugit.fz-juelich.de/mlz/libcerf",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

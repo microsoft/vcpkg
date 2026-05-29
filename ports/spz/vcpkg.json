@@ -1,0 +1,23 @@
+{
+  "name": "spz",
+  "version": "2.1.0",
+  "description": "File format for 3D Gaussian splats.",
+  "homepage": "https://scaniverse.com/spz",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
+}

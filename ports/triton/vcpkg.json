@@ -1,0 +1,46 @@
+{
+  "name": "triton",
+  "version-date": "2025-02-15",
+  "description": "Triton is a Dynamic Binary Analysis (DBA) framework. It provides internal components like a Dynamic Symbolic Execution (DSE) engine, a dynamic taint engine, AST representations of the x86, x86-64, ARM32 and AArch64 Instructions Set Architecture (ISA), SMT simplification passes, an SMT solver interface and, the last but not least, Python bindings.",
+  "homepage": "https://github.com/JonathanSalwan/Triton",
+  "license": "Apache-2.0",
+  "supports": "!arm",
+  "dependencies": [
+    {
+      "name": "capstone",
+      "default-features": false,
+      "features": [
+        "arm",
+        "arm64",
+        "x86"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "z3"
+  ],
+  "features": {
+    "boost": {
+      "description": "Use Boost as multiprecision library",
+      "dependencies": [
+        "boost-multiprecision",
+        "boost-numeric-conversion"
+      ]
+    },
+    "python": {
+      "description": "Build Triton with Python bindings",
+      "dependencies": [
+        {
+          "name": "python3",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

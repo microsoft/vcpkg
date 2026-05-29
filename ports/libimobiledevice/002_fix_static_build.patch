@@ -1,0 +1,22 @@
+diff --git a/src/idevice.c b/src/idevice.c
+index 719cd28..0ae8a1c 100644
+--- a/src/idevice.c
++++ b/src/idevice.c
+@@ -124,6 +124,8 @@ static void id_function(CRYPTO_THREADID *thread)
+ #endif
+ #endif /* HAVE_OPENSSL */
+ 
++#ifndef LIBIMOBILEDEVICE_STATIC  // disable dll constructor
++
+ static void internal_idevice_init(void)
+ {
+ #if defined(HAVE_OPENSSL)
+@@ -219,6 +221,8 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
+ #warning No compiler support for constructor/destructor attributes, some features might not be available.
+ #endif
+ 
++#endif  // disable dll constructor
++
+ struct idevice_subscription_context {
+ 	idevice_event_cb_t callback;
+ 	void *user_data;

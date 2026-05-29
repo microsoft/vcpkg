@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0000000..0000001 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -251,7 +251,7 @@ if(SEAL_USE_ZSTD)
+                     message(FATAL_ERROR "Zstandard: must be static")
+                 endif()
+             elseif(TARGET zstd::libzstd_shared)
+-                message(FATAL_ERROR "Zstandard: must be static")
++                set(zstd_static "zstd::libzstd_shared")
+             else()
+                 message(FATAL_ERROR "Zstandard: not found")
+             endif()

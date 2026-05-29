@@ -1,0 +1,367 @@
+diff --git a/Release/include/pplx/threadpool.h b/Release/include/pplx/threadpool.h
+index b297ff6..56ea475 100644
+--- a/Release/include/pplx/threadpool.h
++++ b/Release/include/pplx/threadpool.h
+@@ -69,15 +69,15 @@ public:
+     CASABLANCA_DEPRECATED("Use `.service().post(task)` directly.")
+     void schedule(T task)
+     {
+-        service().post(task);
++        boost::asio::post(service(), task);
+     }
+ 
+-    boost::asio::io_service& service() { return m_service; }
++    boost::asio::io_context& service() { return m_service; }
+ 
+ protected:
+     threadpool(size_t num_threads) : m_service(static_cast<int>(num_threads)) {}
+ 
+-    boost::asio::io_service m_service;
++    boost::asio::io_context m_service;
+ };
+ 
+ } // namespace crossplat
+diff --git a/Release/src/http/client/http_client_asio.cpp b/Release/src/http/client/http_client_asio.cpp
+index 07bb488..f9c7c51 100644
+--- a/Release/src/http/client/http_client_asio.cpp
++++ b/Release/src/http/client/http_client_asio.cpp
+@@ -146,9 +146,9 @@ class asio_connection
+     friend class asio_client;
+ 
+ public:
+-    asio_connection(boost::asio::io_service& io_service)
++    asio_connection(boost::asio::io_context& io_context)
+         : m_socket_lock()
+-        , m_socket(io_service)
++        , m_socket(io_context)
+         , m_ssl_stream()
+         , m_cn_hostname()
+         , m_is_reused(false)
+@@ -429,7 +429,7 @@ private:
+         auto& self = *pool;
+         std::weak_ptr<asio_connection_pool> weak_pool = pool;
+ 
+-        self.m_pool_epoch_timer.expires_from_now(boost::posix_time::seconds(30));
++        self.m_pool_epoch_timer.expires_after(std::chrono::seconds(30));
+         self.m_pool_epoch_timer.async_wait([weak_pool](const boost::system::error_code& ec) {
+             if (ec)
+             {
+@@ -467,7 +467,7 @@ private:
+     std::mutex m_lock;
+     std::map<std::string, connection_pool_stack<asio_connection>> m_connections;
+     bool m_is_timer_running;
+-    boost::asio::deadline_timer m_pool_epoch_timer;
++    boost::asio::system_timer m_pool_epoch_timer;
+ };
+ 
+ class asio_client final : public _http_client_communicator
+@@ -581,18 +581,16 @@ public:
+ 
+             m_context->m_timer.start();
+ 
+-            tcp::resolver::query query(utility::conversions::to_utf8string(proxy_host), to_string(proxy_port));
+-
+             auto client = std::static_pointer_cast<asio_client>(m_context->m_http_client);
+-            m_context->m_resolver.async_resolve(query,
+-                                                boost::bind(&ssl_proxy_tunnel::handle_resolve,
+-                                                            shared_from_this(),
+-                                                            boost::asio::placeholders::error,
+-                                                            boost::asio::placeholders::iterator));
++            m_context->m_resolver.async_resolve(utility::conversions::to_utf8string(proxy_host), to_string(proxy_port),
++                [self = shared_from_this()](const boost::system::error_code& error, tcp::resolver::results_type results){
++                    self->handle_resolve(error, results.begin());
++                }
++            );
+         }
+ 
+     private:
+-        void handle_resolve(const boost::system::error_code& ec, tcp::resolver::iterator endpoints)
++        void handle_resolve(const boost::system::error_code& ec, tcp::resolver::results_type::iterator endpoints)
+         {
+             if (ec)
+             {
+@@ -610,7 +608,7 @@ public:
+             }
+         }
+ 
+-        void handle_tcp_connect(const boost::system::error_code& ec, tcp::resolver::iterator endpoints)
++        void handle_tcp_connect(const boost::system::error_code& ec, tcp::resolver::results_type::iterator endpoints)
+         {
+             if (!ec)
+             {
+@@ -621,7 +619,7 @@ public:
+                                                                  shared_from_this(),
+                                                                  boost::asio::placeholders::error));
+             }
+-            else if (endpoints == tcp::resolver::iterator())
++            else if (endpoints == tcp::resolver::results_type::iterator())
+             {
+                 m_context->report_error(
+                     "Failed to connect to any resolved proxy endpoint", ec, httpclient_errorcode_context::connect);
+@@ -885,12 +883,11 @@ public:
+                 auto tcp_host = proxy_type == http_proxy_type::http ? proxy_host : host;
+                 auto tcp_port = proxy_type == http_proxy_type::http ? proxy_port : port;
+ 
+-                tcp::resolver::query query(tcp_host, to_string(tcp_port));
+-                ctx->m_resolver.async_resolve(query,
+-                                              boost::bind(&asio_context::handle_resolve,
+-                                                          ctx,
+-                                                          boost::asio::placeholders::error,
+-                                                          boost::asio::placeholders::iterator));
++                ctx->m_resolver.async_resolve(tcp_host, to_string(tcp_port),
++                    [ctx](const boost::system::error_code& error, tcp::resolver::results_type results){
++                        ctx->handle_resolve(error, results.begin());
++                    }
++                );
+             }
+ 
+             // Register for notification on cancellation to abort this request.
+@@ -1006,7 +1003,7 @@ private:
+         request_context::report_error(errorcodeValue, message);
+     }
+ 
+-    void handle_connect(const boost::system::error_code& ec, tcp::resolver::iterator endpoints)
++    void handle_connect(const boost::system::error_code& ec, tcp::resolver::results_type::iterator endpoints)
+     {
+         m_timer.reset();
+         if (!ec)
+@@ -1019,7 +1016,7 @@ private:
+         {
+             report_error("Request canceled by user.", ec, httpclient_errorcode_context::connect);
+         }
+-        else if (endpoints == tcp::resolver::iterator())
++        else if (endpoints == tcp::resolver::results_type::iterator())
+         {
+             report_error("Failed to connect to any resolved endpoint", ec, httpclient_errorcode_context::connect);
+         }
+@@ -1045,13 +1042,13 @@ private:
+         }
+     }
+ 
+-    void handle_resolve(const boost::system::error_code& ec, tcp::resolver::iterator endpoints)
++    void handle_resolve(const boost::system::error_code& ec, tcp::resolver::results_type::iterator endpoints)
+     {
+         if (ec)
+         {
+             report_error("Error resolving address", ec, httpclient_errorcode_context::connect);
+         }
+-        else if (endpoints == tcp::resolver::iterator())
++        else if (endpoints == tcp::resolver::results_type::iterator())
+         {
+             report_error("Failed to resolve address", ec, httpclient_errorcode_context::connect);
+         }
+@@ -1134,7 +1131,7 @@ private:
+         }
+ #endif // CPPREST_PLATFORM_ASIO_CERT_VERIFICATION_AVAILABLE
+ 
+-        boost::asio::ssl::rfc2818_verification rfc2818(m_connection->cn_hostname());
++        boost::asio::ssl::host_name_verification rfc2818(m_connection->cn_hostname());
+         return rfc2818(preverified, verifyCtx);
+     }
+ 
+@@ -1182,8 +1179,8 @@ private:
+ 
+         const auto& chunkSize = m_http_client->client_config().chunksize();
+         auto readbuf = _get_readbuffer();
+-        uint8_t* buf = boost::asio::buffer_cast<uint8_t*>(
+-            m_body_buf.prepare(chunkSize + http::details::chunked_encoding::additional_encoding_space));
++        uint8_t* buf = static_cast<uint8_t*>(
++            m_body_buf.prepare(chunkSize + http::details::chunked_encoding::additional_encoding_space).data());
+         const auto this_request = shared_from_this();
+         readbuf.getn(buf + http::details::chunked_encoding::data_offset, chunkSize)
+             .then([this_request, buf, chunkSize AND_CAPTURE_MEMBER_FUNCTION_POINTERS](pplx::task<size_t> op) {
+@@ -1247,7 +1244,7 @@ private:
+         const auto readSize = static_cast<size_t>((std::min)(
+             static_cast<uint64_t>(m_http_client->client_config().chunksize()), m_content_length - m_uploaded));
+         auto readbuf = _get_readbuffer();
+-        readbuf.getn(boost::asio::buffer_cast<uint8_t*>(m_body_buf.prepare(readSize)), readSize)
++        readbuf.getn(static_cast<uint8_t*>(m_body_buf.prepare(readSize).data()), readSize)
+             .then([this_request AND_CAPTURE_MEMBER_FUNCTION_POINTERS](pplx::task<size_t> op) {
+                 try
+                 {
+@@ -1639,7 +1636,7 @@ private:
+                     std::vector<uint8_t> decompressed;
+ 
+                     bool boo =
+-                        decompress(boost::asio::buffer_cast<const uint8_t*>(m_body_buf.data()), to_read, decompressed);
++                        decompress(static_cast<const uint8_t*>(m_body_buf.data().data()), to_read, decompressed);
+                     if (!boo)
+                     {
+                         report_exception(std::runtime_error("Failed to decompress the response body"));
+@@ -1687,7 +1684,7 @@ private:
+                 }
+                 else
+                 {
+-                    writeBuffer.putn_nocopy(boost::asio::buffer_cast<const uint8_t*>(m_body_buf.data()), to_read)
++                    writeBuffer.putn_nocopy(static_cast<const uint8_t*>(m_body_buf.data().data()), to_read)
+                         .then([this_request, to_read AND_CAPTURE_MEMBER_FUNCTION_POINTERS](pplx::task<size_t> op) {
+                             try
+                             {
+@@ -1759,7 +1756,7 @@ private:
+                 std::vector<uint8_t> decompressed;
+ 
+                 bool boo =
+-                    decompress(boost::asio::buffer_cast<const uint8_t*>(m_body_buf.data()), read_size, decompressed);
++                    decompress(static_cast<const uint8_t*>(m_body_buf.data().data()), read_size, decompressed);
+                 if (!boo)
+                 {
+                     this_request->report_exception(std::runtime_error("Failed to decompress the response body"));
+@@ -1821,7 +1818,7 @@ private:
+             }
+             else
+             {
+-                writeBuffer.putn_nocopy(boost::asio::buffer_cast<const uint8_t*>(m_body_buf.data()), read_size)
++                writeBuffer.putn_nocopy(static_cast<const uint8_t*>(m_body_buf.data().data()), read_size)
+                     .then([this_request AND_CAPTURE_MEMBER_FUNCTION_POINTERS](pplx::task<size_t> op) {
+                         size_t writtenSize = 0;
+                         try
+@@ -1870,7 +1867,7 @@ private:
+             assert(!m_ctx.expired());
+             m_state = started;
+ 
+-            m_timer.expires_from_now(m_duration);
++            m_timer.expires_after(m_duration);
+             auto ctx = m_ctx;
+             m_timer.async_wait([ctx AND_CAPTURE_MEMBER_FUNCTION_POINTERS](const boost::system::error_code& ec) {
+                 handle_timeout(ec, ctx);
+@@ -1881,7 +1878,7 @@ private:
+         {
+             assert(m_state == started || m_state == timedout);
+             assert(!m_ctx.expired());
+-            if (m_timer.expires_from_now(m_duration) > 0)
++            if (m_timer.expires_after(m_duration) > 0)
+             {
+                 // The existing handler was canceled so schedule a new one.
+                 assert(m_state == started);
+diff --git a/Release/src/http/client/x509_cert_utilities.cpp b/Release/src/http/client/x509_cert_utilities.cpp
+index 67fc5ac..7239f97 100644
+--- a/Release/src/http/client/x509_cert_utilities.cpp
++++ b/Release/src/http/client/x509_cert_utilities.cpp
+@@ -95,7 +95,7 @@ bool verify_cert_chain_platform_specific(boost::asio::ssl::verify_context& verif
+ #if defined(_WIN32)
+     if (verify_result)
+     {
+-        boost::asio::ssl::rfc2818_verification rfc2818(hostName);
++        boost::asio::ssl::host_name_verification rfc2818(hostName);
+         verify_result = rfc2818(verify_result, verifyCtx);
+     }
+ #endif
+diff --git a/Release/src/http/listener/http_server_asio.cpp b/Release/src/http/listener/http_server_asio.cpp
+index e83b9ff..14aadfb 100644
+--- a/Release/src/http/listener/http_server_asio.cpp
++++ b/Release/src/http/listener/http_server_asio.cpp
+@@ -520,17 +520,14 @@ void hostport_listener::start()
+     auto& service = crossplat::threadpool::shared_instance().service();
+     tcp::resolver resolver(service);
+     // #446: boost resolver does not recognize "+" as a host wildchar
+-    tcp::resolver::query query =
+-        ("+" == m_host) ? tcp::resolver::query(m_port, boost::asio::ip::resolver_query_base::flags())
+-                        : tcp::resolver::query(m_host, m_port, boost::asio::ip::resolver_query_base::flags());
+-
+-    tcp::endpoint endpoint = *resolver.resolve(query);
+-
++    auto host = ("+" == m_host) ? "" : m_host;
++    auto results = resolver.resolve(host, m_port, boost::asio::ip::resolver_query_base::flags());
++    tcp::endpoint endpoint = *results.begin();
+     m_acceptor.reset(new tcp::acceptor(service));
+     m_acceptor->open(endpoint.protocol());
+     m_acceptor->set_option(socket_base::reuse_address(true));
+     m_acceptor->bind(endpoint);
+-    m_acceptor->listen(0 != m_backlog ? m_backlog : socket_base::max_connections);
++    m_acceptor->listen(0 != m_backlog ? m_backlog : socket_base::max_listen_connections);
+ 
+     auto socket = new ip::tcp::socket(service);
+     std::unique_ptr<ip::tcp::socket> usocket(socket);
+@@ -881,7 +878,7 @@ will_deref_t asio_server_connection::handle_chunked_body(const boost::system::er
+     else
+     {
+         auto writebuf = requestImpl->outstream().streambuf();
+-        writebuf.putn_nocopy(buffer_cast<const uint8_t*>(m_request_buf.data()), toWrite)
++        writebuf.putn_nocopy(static_cast<const uint8_t*>(m_request_buf.data().data()), toWrite)
+             .then([=](pplx::task<size_t> writeChunkTask) -> will_deref_t {
+                 try
+                 {
+@@ -913,7 +910,7 @@ will_deref_t asio_server_connection::handle_body(const boost::system::error_code
+     {
+         auto writebuf = requestImpl->outstream().streambuf();
+         writebuf
+-            .putn_nocopy(boost::asio::buffer_cast<const uint8_t*>(m_request_buf.data()),
++            .putn_nocopy(static_cast<const uint8_t*>(m_request_buf.data().data()),
+                          (std::min)(m_request_buf.size(), m_read_size - m_read))
+             .then([this](pplx::task<size_t> writtenSizeTask) -> will_deref_t {
+                 size_t writtenSize = 0;
+@@ -1134,7 +1131,7 @@ will_deref_and_erase_t asio_server_connection::handle_write_chunked_response(con
+     }
+     auto membuf = m_response_buf.prepare(ChunkSize + chunked_encoding::additional_encoding_space);
+ 
+-    readbuf.getn(buffer_cast<uint8_t*>(membuf) + chunked_encoding::data_offset, ChunkSize)
++    readbuf.getn(static_cast<uint8_t*>(membuf.data()) + chunked_encoding::data_offset, ChunkSize)
+         .then([=](pplx::task<size_t> actualSizeTask) -> will_deref_and_erase_t {
+             size_t actualSize = 0;
+             try
+@@ -1146,7 +1143,7 @@ will_deref_and_erase_t asio_server_connection::handle_write_chunked_response(con
+                 return cancel_sending_response_with_error(response, std::current_exception());
+             }
+             size_t offset = chunked_encoding::add_chunked_delimiters(
+-                buffer_cast<uint8_t*>(membuf), ChunkSize + chunked_encoding::additional_encoding_space, actualSize);
++                static_cast<uint8_t*>(membuf.data()), ChunkSize + chunked_encoding::additional_encoding_space, actualSize);
+             m_response_buf.commit(actualSize + chunked_encoding::additional_encoding_space);
+             m_response_buf.consume(offset);
+             if (actualSize == 0)
+@@ -1167,7 +1164,7 @@ will_deref_and_erase_t asio_server_connection::handle_write_large_response(const
+         return cancel_sending_response_with_error(
+             response, std::make_exception_ptr(http_exception("Response stream close early!")));
+     size_t readBytes = (std::min)(ChunkSize, m_write_size - m_write);
+-    readbuf.getn(buffer_cast<uint8_t*>(m_response_buf.prepare(readBytes)), readBytes)
++    readbuf.getn(static_cast<uint8_t*>(m_response_buf.prepare(readBytes).data()), readBytes)
+         .then([=](pplx::task<size_t> actualSizeTask) -> will_deref_and_erase_t {
+             size_t actualSize = 0;
+             try
+diff --git a/Release/src/pplx/pplxlinux.cpp b/Release/src/pplx/pplxlinux.cpp
+index 630a9e4..65625b6 100644
+--- a/Release/src/pplx/pplxlinux.cpp
++++ b/Release/src/pplx/pplxlinux.cpp
+@@ -35,7 +35,7 @@ _PPLXIMP void YieldExecution() { std::this_thread::yield(); }
+ 
+ _PPLXIMP void linux_scheduler::schedule(TaskProc_t proc, void* param)
+ {
+-    crossplat::threadpool::shared_instance().service().post(boost::bind(proc, param));
++    boost::asio::post(crossplat::threadpool::shared_instance().service(), boost::bind(proc, param));
+ }
+ 
+ } // namespace details
+diff --git a/Release/src/pplx/threadpool.cpp b/Release/src/pplx/threadpool.cpp
+index ba38a1a..e12e48d 100644
+--- a/Release/src/pplx/threadpool.cpp
++++ b/Release/src/pplx/threadpool.cpp
+@@ -37,7 +37,7 @@ static void abort_if_no_jvm()
+ 
+ struct threadpool_impl final : crossplat::threadpool
+ {
+-    threadpool_impl(size_t n) : crossplat::threadpool(n), m_work(m_service)
++    threadpool_impl(size_t n) : crossplat::threadpool(n), m_work(m_service.get_executor())
+     {
+         for (size_t i = 0; i < n; i++)
+             add_thread();
+@@ -84,7 +84,7 @@ private:
+     }
+ 
+     std::vector<std::unique_ptr<boost::asio::detail::thread>> m_threads;
+-    boost::asio::io_service::work m_work;
++    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> m_work;
+ };
+ 
+ #if defined(_WIN32)
+diff --git a/Release/src/websockets/client/ws_client_wspp.cpp b/Release/src/websockets/client/ws_client_wspp.cpp
+index d7c31c4..8dfa815 100644
+--- a/Release/src/websockets/client/ws_client_wspp.cpp
++++ b/Release/src/websockets/client/ws_client_wspp.cpp
+@@ -225,7 +225,7 @@ public:
+                             verifyCtx, utility::conversions::to_utf8string(m_uri.host()));
+                     }
+ #endif
+-                    boost::asio::ssl::rfc2818_verification rfc2818(utility::conversions::to_utf8string(m_uri.host()));
++                    boost::asio::ssl::host_name_verification rfc2818(utility::conversions::to_utf8string(m_uri.host()));
+                     return rfc2818(preverified, verifyCtx);
+                 });
+ 

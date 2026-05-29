@@ -1,0 +1,33 @@
+commit 93c479edf1b12accd3291ad7cddd064f85c3a522
+Author: Benjamin Gilbert <bgilbert@cs.cmu.edu>
+Date:   Fri Jul 4 06:58:21 2025 -0700
+
+    tools: open output files using Unicode paths on Windows
+    
+    We receive filename arguments in Unicode.  Don't open them in the ANSI
+    code page, mangling the filenames.
+    
+    Signed-off-by: Benjamin Gilbert <bgilbert@cs.cmu.edu>
+
+diff --git a/tools/slidetool-util.c b/tools/slidetool-util.c
+index 7a0de731245f..041df9c29163 100644
+--- a/tools/slidetool-util.c
++++ b/tools/slidetool-util.c
+@@ -33,7 +33,17 @@
+ struct output open_output(const char *filename) {
+   struct output out;
+   if (filename) {
++#ifdef _WIN32
++    GError *tmp_err = NULL;
++    g_autofree wchar_t *filename16 =
++      (wchar_t *) g_utf8_to_utf16(filename, -1, NULL, NULL, &tmp_err);
++    if (filename16 == NULL) {
++      common_fail("Couldn't open %s: %s", filename, tmp_err->message);
++    }
++    FILE *fp = _wfopen(filename16, L"wb");
++#else
+     FILE *fp = fopen(filename, "wb");
++#endif
+     if (!fp) {
+       common_fail("Can't open %s for writing: %s", filename, strerror(errno));
+     }

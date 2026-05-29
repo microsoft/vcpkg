@@ -1,0 +1,23 @@
+diff --git a/cmake/FindGObject.cmake b/cmake/FindGObject.cmake
+index 19a8a67..09e95d1 100644
+--- a/cmake/FindGObject.cmake
++++ b/cmake/FindGObject.cmake
+@@ -13,8 +13,8 @@
+ # ``GObject::GObject``
+ #     The gobject-2.0 library
+ 
+-include(CMakeFindDependencyMacro)
+-find_dependency(GLIB2)
++find_package(GLIB2)
++find_package(libffi)
+ qt_internal_disable_find_package_global_promotion(GLIB2::GLIB2)
+ 
+ if(NOT TARGET GObject::GObject)
+@@ -40,6 +40,7 @@ if(NOT TARGET GObject::GObject)
+             target_link_libraries(GObject::GObject INTERFACE
+                                 ${GObject_LIBRARY}
+                                 GLIB2::GLIB2
++                                libffi
+             )
+         endif()
+         include(FindPackageHandleStandardArgs)

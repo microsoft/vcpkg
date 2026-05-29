@@ -1,0 +1,24 @@
+{
+  "name": "mfl",
+  "version": "0.0.1",
+  "port-version": 3,
+  "description": "Computes the layout information for mathematical formulas provided in TeX-like syntax.",
+  "homepage": "https://github.com/cpp-niel/mfl",
+  "license": "MIT",
+  "dependencies": [
+    "cairo",
+    "doctest",
+    "fmt",
+    "freetype",
+    "harfbuzz",
+    "range-v3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

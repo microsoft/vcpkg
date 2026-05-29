@@ -1,0 +1,33 @@
+diff --git a/shell.c b/shell.c
+index 10d8cc1..99f37a5 100644
+--- a/shell.c
++++ b/shell.c
+@@ -316,7 +316,11 @@ static int hasTimer(void){
+     */
+     hProcess = GetCurrentProcess();
+     if( hProcess ){
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+       HINSTANCE hinstLib = LoadLibrary(TEXT("Kernel32.dll"));
++#else
++      HINSTANCE hinstLib = LoadPackagedLibrary(TEXT("Kernel32.dll"), 0);
++#endif
+       if( NULL != hinstLib ){
+         getProcessTimesAddr =
+             (GETPROCTIMES) GetProcAddress(hinstLib, "GetProcessTimes");
+@@ -2437,10 +2441,16 @@ static int writeFile(
+     if( zUnicodeName==0 ){
+       return 1;
+     }
++#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+     hFile = CreateFileW(
+       zUnicodeName, FILE_WRITE_ATTRIBUTES, 0, NULL, OPEN_EXISTING,
+       FILE_FLAG_BACKUP_SEMANTICS, NULL
+     );
++#else
++    hFile = CreateFile2(
++      zUnicodeName, FILE_WRITE_ATTRIBUTES, 0, OPEN_EXISTING, NULL
++    );
++#endif
+     sqlite3_free(zUnicodeName);
+     if( hFile!=INVALID_HANDLE_VALUE ){
+       BOOL bResult = SetFileTime(hFile, NULL, &lastAccess, &lastWrite);

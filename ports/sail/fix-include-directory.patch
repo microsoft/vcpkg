@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df970d3..7c4df5c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -298,7 +298,7 @@ endif()
+ # Common configuration file
+ #
+ configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${PROJECT_BINARY_DIR}/include/sail-common/config.h" @ONLY)
+-install(FILES "${PROJECT_BINARY_DIR}/include/sail-common/config.h" DESTINATION include/sail/sail-common)
++install(FILES "${PROJECT_BINARY_DIR}/include/sail-common/config.h" DESTINATION include/sail-common)
+ 
+ # Print configuration statistics
+ #
+diff --git a/src/bindings/sail-c++/CMakeLists.txt b/src/bindings/sail-c++/CMakeLists.txt
+index a4ad915..6806f2f 100644
+--- a/src/bindings/sail-c++/CMakeLists.txt
++++ b/src/bindings/sail-c++/CMakeLists.txt
+@@ -134,7 +134,7 @@ install(TARGETS sail-c++
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail/sail-c++")
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail-c++")
+ 
+ # Install development packages
+ #
+diff --git a/src/sail-common/CMakeLists.txt b/src/sail-common/CMakeLists.txt
+index 5193f90..0e689f7 100644
+--- a/src/sail-common/CMakeLists.txt
++++ b/src/sail-common/CMakeLists.txt
+@@ -114,7 +114,7 @@ endif()
+ 
+ target_include_directories(sail-common
+                             PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+-                                   $<INSTALL_INTERFACE:include/sail>)
++                                   $<INSTALL_INTERFACE:include>)
+ 
+ # pkg-config integration
+ #
+@@ -129,7 +129,7 @@ install(TARGETS sail-common
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail/sail-common")
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail-common")
+ 
+ # Install development packages
+ #
+diff --git a/src/sail-manip/CMakeLists.txt b/src/sail-manip/CMakeLists.txt
+index 334a423..4ad54b2 100644
+--- a/src/sail-manip/CMakeLists.txt
++++ b/src/sail-manip/CMakeLists.txt
+@@ -67,7 +67,7 @@ install(TARGETS sail-manip
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail/sail-manip")
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail-manip")
+ 
+ # Install development packages
+ #
+diff --git a/src/sail/CMakeLists.txt b/src/sail/CMakeLists.txt
+index 9fd7119..ec4be36 100644
+--- a/src/sail/CMakeLists.txt
++++ b/src/sail/CMakeLists.txt
+@@ -125,11 +125,11 @@ install(TARGETS sail
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail/sail")
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail")
+ 
+ # Install layouts for debugging codecs
+ #
+-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/layout/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail/sail/layout")
++install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/layout/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/sail/layout")
+ 
+ # Install development packages
+ #

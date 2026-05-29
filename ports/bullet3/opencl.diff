@@ -1,0 +1,13 @@
+diff --git a/src/Bullet3OpenCL/CMakeLists.txt b/src/Bullet3OpenCL/CMakeLists.txt
+index b93b80b..c9c985c 100644
+--- a/src/Bullet3OpenCL/CMakeLists.txt
++++ b/src/Bullet3OpenCL/CMakeLists.txt
+@@ -1,3 +1,8 @@
++option(BUILD_OPENCL "Build Bullet3OpenCL_clew")
++if(NOT BUILD_OPENCL)
++	return()
++endif()
++
+ INCLUDE_DIRECTORIES( ${BULLET_PHYSICS_SOURCE_DIR}/src  )
+ 
+ ADD_DEFINITIONS(-DB3_USE_CLEW)

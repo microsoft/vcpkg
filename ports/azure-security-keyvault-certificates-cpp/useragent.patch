@@ -1,0 +1,13 @@
+diff --git a/sdk/keyvault/azure-security-keyvault-certificates/CMakeLists.txt b/sdk/keyvault/azure-security-keyvault-certificates/CMakeLists.txt
+index 084e41fb6..bae592cb0 100644
+--- a/sdk/keyvault/azure-security-keyvault-certificates/CMakeLists.txt
++++ b/sdk/keyvault/azure-security-keyvault-certificates/CMakeLists.txt
+@@ -94,6 +94,8 @@ target_include_directories(
+ 
+ target_link_libraries(azure-security-keyvault-certificates PUBLIC Azure::azure-core)
+ 
++target_compile_definitions(azure-security-keyvault-certificates PRIVATE _azure_BUILDING_SDK)
++
+ # coverage. Has no effect if BUILD_CODE_COVERAGE is OFF
+ create_code_coverage(keyvault azure-security-keyvault-certificates azure-security-keyvault-certificates-test "tests?/*;samples?/*")
+ 

@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2bc2531..07047ac 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -367,7 +367,7 @@ if ( WIN32 )
+   endif  ( MINGW )
+ endif ( WIN32 )
+ 
+-find_package ( GCEM REQUIRED )
++find_package ( gcem CONFIG REQUIRED )
+ 
+ find_library ( HAS_LIBM NAMES "m" )
+ if ( HAS_LIBM )
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 388e848..48d5377 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -299,7 +299,7 @@ target_include_directories ( libfluidsynth-OBJ PRIVATE
+     ${FluidSynth_SOURCE_DIR}/src/sfloader
+     ${FluidSynth_SOURCE_DIR}/src/bindings
+     ${FluidSynth_SOURCE_DIR}/include
+-    ${GCEM_INCLUDE_DIR}
++    ${gcem_INCLUDE_DIRS}
+ )
+ 
+ if ( LIBFLUID_CPPFLAGS )

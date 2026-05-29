@@ -1,0 +1,153 @@
+diff --git a/rsocket/RSocketServer.cpp b/rsocket/RSocketServer.cpp
+index 1e20281..3a9f6b2 100644
+--- a/rsocket/RSocketServer.cpp
++++ b/rsocket/RSocketServer.cpp
+@@ -125,7 +125,7 @@ void RSocketServer::acceptConnection(
+        weakConSet = std::weak_ptr<ConnectionSet>(connectionSet_),
+        scheduledResponder = useScheduledResponder_](
+           std::unique_ptr<DuplexConnection> conn,
+-          SetupParameters params) mutable {
++          SetupParameters params) mutable noexcept{
+         if (auto connectionSet = weakConSet.lock()) {
+           RSocketServer::onRSocketSetup(
+               serviceHandler,
+@@ -135,12 +135,15 @@ void RSocketServer::acceptConnection(
+               std::move(params));
+         }
+       },
+-      std::bind(
+-          &RSocketServer::onRSocketResume,
+-          this,
+-          serviceHandler,
+-          std::placeholders::_1,
+-          std::placeholders::_2));
++      [this, serviceHandler=serviceHandler](
++          std::unique_ptr<DuplexConnection> connection,
++          ResumeParameters resumeParameters) mutable noexcept{
++              this->onRSocketResume(
++                  serviceHandler,
++                  std::move(connection),
++                  resumeParameters
++              );
++        });
+ }
+ 
+ void RSocketServer::onRSocketSetup(
+@@ -206,7 +209,7 @@ void RSocketServer::onRSocketSetup(
+ void RSocketServer::onRSocketResume(
+     std::shared_ptr<RSocketServiceHandler> serviceHandler,
+     std::unique_ptr<DuplexConnection> connection,
+-    ResumeParameters resumeParams) {
++    ResumeParameters resumeParams) noexcept{
+   auto result = serviceHandler->onResume(resumeParams.token);
+   if (result.hasError()) {
+     stats_->resumeFailedNoState();
+diff --git a/rsocket/RSocketServer.h b/rsocket/RSocketServer.h
+index 39dae66..e2346ef 100644
+--- a/rsocket/RSocketServer.h
++++ b/rsocket/RSocketServer.h
+@@ -118,7 +118,7 @@ class RSocketServer {
+   void onRSocketResume(
+       std::shared_ptr<RSocketServiceHandler> serviceHandler,
+       std::unique_ptr<DuplexConnection> connection,
+-      rsocket::ResumeParameters setupPayload);
++      rsocket::ResumeParameters setupPayload)noexcept;
+ 
+   const std::unique_ptr<ConnectionAcceptor> duplexConnectionAcceptor_;
+   bool started{false};
+diff --git a/yarpl/flowable/AsyncGeneratorShim.h b/yarpl/flowable/AsyncGeneratorShim.h
+index 72d212c..79a09f1 100644
+--- a/yarpl/flowable/AsyncGeneratorShim.h
++++ b/yarpl/flowable/AsyncGeneratorShim.h
+@@ -96,7 +96,7 @@ class AsyncGeneratorShim {
+                     value.emplace(std::move(*item));
+                   }
+                 } catch (const std::exception& ex) {
+-                  value.emplaceException(std::current_exception(), ex);
++                  value.emplaceException(std::current_exception());
+                 } catch (...) {
+                   value.emplaceException(std::current_exception());
+                 }
+diff --git a/yarpl/flowable/Flowable.h b/yarpl/flowable/Flowable.h
+index 9dff78b..bccd70d 100644
+--- a/yarpl/flowable/Flowable.h
++++ b/yarpl/flowable/Flowable.h
+@@ -494,7 +494,7 @@ std::shared_ptr<Flowable<T>> Flowable<T>::fromGenerator(
+       }
+     } catch (const std::exception& ex) {
+       subscriber.onError(
+-          folly::exception_wrapper(std::current_exception(), ex));
++          folly::exception_wrapper(std::current_exception()));
+     } catch (...) {
+       subscriber.onError(std::runtime_error(
+           "Flowable::fromGenerator() threw from Subscriber:onNext()"));
+diff --git a/yarpl/flowable/FlowableOperator.h b/yarpl/flowable/FlowableOperator.h
+index 314ba7f..fe63504 100644
+--- a/yarpl/flowable/FlowableOperator.h
++++ b/yarpl/flowable/FlowableOperator.h
+@@ -178,7 +178,7 @@ class MapOperator : public FlowableOperator<U, D> {
+           this->subscriberOnNext(flowable->function_(std::move(value)));
+         }
+       } catch (const std::exception& exn) {
+-        folly::exception_wrapper ew{std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
+         this->terminateErr(std::move(ew));
+       }
+     }
+@@ -190,7 +190,7 @@ class MapOperator : public FlowableOperator<U, D> {
+         }
+       } catch (const std::exception& exn) {
+         this->terminateErr(
+-            folly::exception_wrapper{std::current_exception(), exn});
++            folly::exception_wrapper{std::current_exception()});
+       }
+     }
+ 
+@@ -570,7 +570,7 @@ class FlatMapOperator : public FlowableOperator<T, R> {
+       try {
+         mappedStream = flowable_->function_(std::move(value));
+       } catch (const std::exception& exn) {
+-        folly::exception_wrapper ew{std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
+         {
+           std::lock_guard<std::mutex> g(onErrorExGuard_);
+           onErrorEx_ = ew;
+diff --git a/yarpl/flowable/Subscriber.h b/yarpl/flowable/Subscriber.h
+index d1dc3b5..582f9c4 100644
+--- a/yarpl/flowable/Subscriber.h
++++ b/yarpl/flowable/Subscriber.h
+@@ -301,7 +301,7 @@ class Base : public LambdaSubscriber<T> {
+       next_(std::move(value));
+     } catch (const std::exception& exn) {
+       this->cancel();
+-      auto ew = folly::exception_wrapper{std::current_exception(), exn};
++      auto ew = folly::exception_wrapper{std::current_exception()};
+       LOG(ERROR) << "'next' method should not throw: " << ew.what();
+       onErrorImpl(ew);
+       return;
+diff --git a/yarpl/observable/ObservableOperator.h b/yarpl/observable/ObservableOperator.h
+index 451c6bd..0e60b48 100644
+--- a/yarpl/observable/ObservableOperator.h
++++ b/yarpl/observable/ObservableOperator.h
+@@ -196,7 +196,7 @@ class MapOperator : public ObservableOperator<U, D> {
+       try {
+         this->observerOnNext(observable_->function_(std::move(value)));
+       } catch (const std::exception& exn) {
+-        folly::exception_wrapper ew{std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
+         this->terminateErr(std::move(ew));
+       }
+     }
+diff --git a/yarpl/single/SingleOperator.h b/yarpl/single/SingleOperator.h
+index 0b3e739..4defd64 100644
+--- a/yarpl/single/SingleOperator.h
++++ b/yarpl/single/SingleOperator.h
+@@ -197,7 +197,7 @@ class MapOperator : public SingleOperator<U, D> {
+         auto map_operator = this->getOperator();
+         this->observerOnSuccess(map_operator->function_(std::move(value)));
+       } catch (const std::exception& exn) {
+-        folly::exception_wrapper ew{std::current_exception(), exn};
++        folly::exception_wrapper ew{std::current_exception()};
+         this->observerOnError(std::move(ew));
+       }
+     }

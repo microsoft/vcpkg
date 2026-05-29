@@ -1,0 +1,78 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ec7b4d2d7..16c136958 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -298,7 +298,17 @@ include (cmake/clang-dev-tools.cmake)
+ set(ARCH_SUFFIX "unknown")
+ 
+ if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+-    set(ARCH_SUFFIX "x86_64")
++    if(APPLE)
++        if(${ARCH} STREQUAL not_set OR ${ARCH} STREQUAL x86_64)
++            set(ARCH_SUFFIX "x86_64")
++        elseif(${ARCH} STREQUAL arm64)
++            set(ARCH_SUFFIX "arm64")
++        else()
++            message(FATAL_ERROR "Invalid ARCH_SUFFIX: ARCH=${ARCH}.")
++        endif()
++    else()
++        set(ARCH_SUFFIX "x86_64")
++    endif()
+ else()
+     set(ARCH_SUFFIX "x86_32")
+ endif()
+diff --git a/cmake/apple.cmake b/cmake/apple.cmake
+index c413cfa7e..cef762cf1 100644
+--- a/cmake/apple.cmake
++++ b/cmake/apple.cmake
+@@ -1,4 +1,13 @@
+-set(CMAKE_OSX_ARCHITECTURES "x86_64")
++if(${ARCH} STREQUAL not_set)
++    message(STATUS "macOS Architecture not set, using x86_64 as default.")
++    SET(CMAKE_OSX_ARCHITECTURES "x86_64")
++else()
++    if(${ARCH} STREQUAL x86_64 OR ${ARCH} STREQUAL arm64)
++        set(CMAKE_OSX_ARCHITECTURES "${ARCH}")
++    else()
++        message(FATAL_ERROR "Invalid CMAKE_OSX_ARCHITECTURES: ARCH=${ARCH}.")
++    endif()
++endif()
+ 
+ set(CMAKE_SKIP_BUILD_RPATH TRUE)
+ set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+diff --git a/cmake/nrf-ble-driver.cmake b/cmake/nrf-ble-driver.cmake
+index d81608c72..467afd0e9 100644
+--- a/cmake/nrf-ble-driver.cmake
++++ b/cmake/nrf-ble-driver.cmake
+@@ -8,7 +8,7 @@ math(EXPR COMPILER_ARCH_BITS "8*${CMAKE_SIZEOF_VOID_P}")
+ # Default to compiler architecture
+ set(ARCH_BITS ${COMPILER_ARCH_BITS})
+ 
+-SET(ARCH not_set CACHE STRING "Architecture (x86_32 or x86_64)")
++SET(ARCH not_set CACHE STRING "Architecture (x86_32, x86_64, arm or arm64)")
+ string(TOLOWER "${ARCH}" ARCH)
+ 
+ if(${ARCH} STREQUAL not_set)
+@@ -16,17 +16,19 @@ if(${ARCH} STREQUAL not_set)
+ else()
+     if(MSVC)
+         message(FATAL_ERROR "ARCH not available with MSVC. Use  -G \"Visual Studio XX <Win64>\" instead.")
+-    elseif(APPLE)
+-        message(FATAL_ERROR "ARCH not available on macOS / OS X. Universal 32 and 64-bit binaries will be built.")
+     endif()
+     if(${ARCH} STREQUAL x86_32)
+         set(ARCH_BITS 32)
+     elseif(${ARCH} STREQUAL x86_64)
+         set(ARCH_BITS 64)
++    elseif(${ARCH} STREQUAL arm)
++        set(ARCH_BITS 32)
++    elseif(${ARCH} STREQUAL arm64)
++        set(ARCH_BITS 64)
+     else()
+         message(FATAL_ERROR "Invalid architecture: ARCH=${ARCH}.")
+     endif()
+-    message(STATUS "Building ${ARCH_BITS}-bit targets with ${COMPILER_ARCH_BITS}-bit toolchain.")
++    message(STATUS "Building ${ARCH} ${ARCH_BITS}-bit targets with ${COMPILER_ARCH_BITS}-bit toolchain.")
+ endif()
+ 
+ if(NOT MSVC)

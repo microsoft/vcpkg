@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a93267d..3a3ccf7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -85,6 +85,9 @@ draco_set_cxx_flags()
+ draco_set_exe_linker_flags()
+ draco_generate_features_h()
+ 
++if (MSVC)
++  add_compile_options(/wd4996)
++endif()
+ # Draco source file listing variables.
+ list(
+   APPEND draco_attributes_sources
+diff --git a/src/draco/io/parser_utils.cc b/src/draco/io/parser_utils.cc
+index 378de73..be7e032 100644
+--- a/src/draco/io/parser_utils.cc
++++ b/src/draco/io/parser_utils.cc
+@@ -152,7 +152,9 @@ bool ParseSignedInt(DecoderBuffer *buffer, int32_t *value) {
+   if (!ParseUnsignedInt(buffer, &v)) {
+     return false;
+   }
+-  *value = (sign < 0) ? -v : v;
++  if (sign < 0)
++    v *= -1;
++  *value = v;
+   return true;
+ }
+ 

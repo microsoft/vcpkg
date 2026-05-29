@@ -1,0 +1,15 @@
+{
+  "name": "pistache",
+  "version-date": "2021-03-31",
+  "port-version": 4,
+  "description": "Pistache is a modern and elegant HTTP and REST framework for C++. It is entirely written in pure-C++11 and provides a clear and pleasant API",
+  "homepage": "https://github.com/oktal/pistache",
+  "supports": "linux",
+  "dependencies": [
+    "rapidjson",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

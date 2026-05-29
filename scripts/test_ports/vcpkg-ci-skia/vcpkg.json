@@ -1,0 +1,48 @@
+{
+  "name": "vcpkg-ci-skia",
+  "version-date": "2023-04-03",
+  "description": "Builds an app in order to validate the skia port.",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "skia",
+      "default-features": false
+    },
+    {
+      "name": "skia",
+      "default-features": false,
+      "features": [
+        "metal"
+      ],
+      "platform": "osx"
+    },
+    {
+      "name": "skia",
+      "default-features": false,
+      "features": [
+        "graphite"
+      ],
+      "platform": "windows & !uwp"
+    },
+    {
+      "name": "skia",
+      "default-features": false,
+      "features": [
+        "dawn"
+      ],
+      "platform": "!android & !uwp"
+    },
+    {
+      "name": "skia",
+      "default-features": false,
+      "features": [
+        "vulkan"
+      ],
+      "platform": "linux | osx | (windows & !uwp)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

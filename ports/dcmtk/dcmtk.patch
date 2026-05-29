@@ -1,0 +1,16 @@
+diff --git a/CMake/dcmtkPrepare.cmake b/CMake/dcmtkPrepare.cmake
+index 23a9278..15e9391 100644
+--- a/CMake/dcmtkPrepare.cmake
++++ b/CMake/dcmtkPrepare.cmake
+@@ -210,9 +210,9 @@ include(GNUInstallDirs)
+ # CMake's files (DCMTKTarget.cmake, DCMTKConfigVersion.cmake and DCMTKConfig.cmake) are installed
+ # to different installation paths under Unix- and Windows-based systems
+ if(UNIX)
+-  set(DCMTK_INSTALL_CMKDIR "${CMAKE_INSTALL_LIBDIR}/cmake/dcmtk")
++  set(DCMTK_INSTALL_CMKDIR "share/dcmtk")
+ elseif(WIN32)
+-  set(DCMTK_INSTALL_CMKDIR "cmake")
++  set(DCMTK_INSTALL_CMKDIR "share/dcmtk")
+ endif()
+ 
+ #-----------------------------------------------------------------------------

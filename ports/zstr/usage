@@ -1,0 +1,7 @@
+The package zstr is header only and can be used from CMake via:
+
+    find_package(ZLIB REQUIRED)
+    target_link_libraries(main PRIVATE ZLIB::ZLIB)
+
+    find_path(ZSTR_INCLUDE_DIRS "zstr.hpp")
+    target_include_directories(main PRIVATE ${ZSTR_INCLUDE_DIRS})

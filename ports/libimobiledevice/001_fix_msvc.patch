@@ -1,0 +1,166 @@
+diff --git a/common/userpref.c b/common/userpref.c
+index b64c703..7ff325c 100644
+--- a/common/userpref.c
++++ b/common/userpref.c
+@@ -35,7 +35,9 @@
+ #ifndef WIN32
+ #include <pwd.h>
+ #endif
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <usbmuxd.h>
+ #if defined(HAVE_OPENSSL)
+ #include <openssl/bn.h>
+@@ -65,7 +67,9 @@
+ #endif
+ 
+ #include <dirent.h>
++#ifndef _MSC_VER
+ #include <libgen.h>
++#endif
+ #include <sys/stat.h>
+ #include <errno.h>
+ 
+diff --git a/include/libimobiledevice/libimobiledevice.h b/include/libimobiledevice/libimobiledevice.h
+index 6851145..55ef753 100644
+--- a/include/libimobiledevice/libimobiledevice.h
++++ b/include/libimobiledevice/libimobiledevice.h
+@@ -30,6 +30,11 @@
+ extern "C" {
+ #endif
+ 
++#if defined(_MSC_VER)
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
++
+ #include <stdint.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+diff --git a/src/afc.c b/src/afc.c
+index d8c3db0..ab2c4ff 100644
+--- a/src/afc.c
++++ b/src/afc.c
+@@ -26,7 +26,9 @@
+ #endif
+ #include <stdio.h>
+ #include <stdlib.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <string.h>
+ 
+ #include "afc.h"
+diff --git a/src/house_arrest.c b/src/house_arrest.c
+index ac92130..e12bde5 100644
+--- a/src/house_arrest.c
++++ b/src/house_arrest.c
+@@ -24,7 +24,9 @@
+ #endif
+ #include <string.h>
+ #include <stdlib.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ 
+ #include "house_arrest.h"
+diff --git a/src/installation_proxy.c b/src/installation_proxy.c
+index 9602876..2f02514 100644
+--- a/src/installation_proxy.c
++++ b/src/installation_proxy.c
+@@ -26,7 +26,9 @@
+ #include <string.h>
+ #include <stdlib.h>
+ #include <inttypes.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ 
+ #include "installation_proxy.h"
+diff --git a/src/lockdown-cu.c b/src/lockdown-cu.c
+index d8d7f42..eb11afa 100644
+--- a/src/lockdown-cu.c
++++ b/src/lockdown-cu.c
+@@ -29,7 +29,9 @@
+ #define __USE_GNU 1
+ #include <stdio.h>
+ #include <ctype.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ 
+ #include "idevice.h"
+diff --git a/src/lockdown.c b/src/lockdown.c
+index 92af186..a9b9b88 100644
+--- a/src/lockdown.c
++++ b/src/lockdown.c
+@@ -32,7 +32,9 @@
+ #define __USE_GNU 1
+ #include <stdio.h>
+ #include <ctype.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ #include <libimobiledevice-glue/utils.h>
+ 
+diff --git a/src/misagent.c b/src/misagent.c
+index af925f9..5fe618e 100644
+--- a/src/misagent.c
++++ b/src/misagent.c
+@@ -24,7 +24,9 @@
+ #endif
+ #include <string.h>
+ #include <stdlib.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ #include <stdio.h>
+ 
+diff --git a/src/mobile_image_mounter.c b/src/mobile_image_mounter.c
+index 9ccfd85..c4f540c 100644
+--- a/src/mobile_image_mounter.c
++++ b/src/mobile_image_mounter.c
+@@ -24,7 +24,9 @@
+ #endif
+ #include <string.h>
+ #include <stdlib.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ 
+ #include "mobile_image_mounter.h"
+diff --git a/src/notification_proxy.c b/src/notification_proxy.c
+index e17e2fe..679739c 100644
+--- a/src/notification_proxy.c
++++ b/src/notification_proxy.c
+@@ -24,7 +24,9 @@
+ #endif
+ #include <string.h>
+ #include <stdlib.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ 
+ #include "notification_proxy.h"
+diff --git a/src/sbservices.c b/src/sbservices.c
+index ccb7c4b..f0b832e 100644
+--- a/src/sbservices.c
++++ b/src/sbservices.c
+@@ -24,7 +24,9 @@
+ #endif
+ #include <string.h>
+ #include <stdlib.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <plist/plist.h>
+ 
+ #include "sbservices.h"

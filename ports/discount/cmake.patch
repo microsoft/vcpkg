@@ -1,0 +1,27 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 3895fdb..a183836 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -182,7 +182,10 @@ if(${PROJECT_NAME}_MAKE_INSTALL)
+     target_include_directories(libmarkdown INTERFACE
+       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+     )
+-    set(_TARGETS libmarkdown markdown)
++    set(_TARGETS libmarkdown)
++    if(NOT ${PROJECT_NAME}_ONLY_LIBRARY)
++        set(_TARGETS ${_TARGETS} markdown)
++    endif()
+     if(${PROJECT_NAME}_INSTALL_SAMPLES)
+         list(APPEND _TARGETS mkd2html makepage)
+     endif()
+diff --git a/cmake/config.h.in b/cmake/config.h.in
+index e08220d..e630934 100644
+--- a/cmake/config.h.in
++++ b/cmake/config.h.in
+@@ -74,4 +74,6 @@
+ 
+ #define TABSTOP @TABSTOP@
+ 
++#define DESTRUCTOR
++
+ #endif /* _CONFIG_D */

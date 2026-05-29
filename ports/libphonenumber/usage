@@ -1,0 +1,4 @@
+libphonenumber provides CMake targets:
+
+    find_package(libphonenumber CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libphonenumber::phonenumber)

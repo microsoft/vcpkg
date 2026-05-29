@@ -1,0 +1,16 @@
+{
+  "name": "valijson",
+  "version": "1.1.0",
+  "description": "Header-only C++ library for JSON Schema validation",
+  "homepage": "https://github.com/tristanpenman/valijson",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

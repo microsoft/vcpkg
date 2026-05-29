@@ -1,0 +1,13 @@
+diff --git a/src/chm_lib.c b/src/chm_lib.c
+index 6c6736c..4a3f167 100644
+--- a/src/chm_lib.c
++++ b/src/chm_lib.c
+@@ -62,7 +62,7 @@
+ #include <stdio.h>
+ #endif
+ 
+-#if __sun || __sgi
++#ifdef CHMLIB_HAVE_STRINGS_H
+ #include <strings.h>
+ #endif
+ 

@@ -1,0 +1,9 @@
+{
+  "name": "vcpkg-find-acquire-program",
+  "version-string": "ci",
+  "description": "Test port to exercise vcpkg_find_acquire_program",
+  "supports": "native",
+  "dependencies": [
+    "unit-test-cmake"
+  ]
+}

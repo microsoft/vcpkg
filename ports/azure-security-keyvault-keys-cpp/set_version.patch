@@ -1,0 +1,12 @@
+diff --git a/sdk/keyvault/azure-security-keyvault-keys/CMakeLists.txt b/sdk/keyvault/azure-security-keyvault-keys/CMakeLists.txt
+index 6217fd13f..d5b6db60a 100644
+--- a/sdk/keyvault/azure-security-keyvault-keys/CMakeLists.txt
++++ b/sdk/keyvault/azure-security-keyvault-keys/CMakeLists.txt
+@@ -138,6 +138,7 @@ target_compile_definitions(azure-security-keyvault-keys PRIVATE _azure_BUILDING_
+ create_code_coverage(keyvault azure-security-keyvault-keys azure-security-keyvault-keys-test "tests?/*;samples?/*")
+ 
+ get_az_version("${CMAKE_CURRENT_SOURCE_DIR}/src/private/package_version.hpp")
++set_target_properties(azure-security-keyvault-keys PROPERTIES VERSION ${AZ_LIBRARY_VERSION})
+ generate_documentation(azure-security-keyvault-keys ${AZ_LIBRARY_VERSION})
+ 
+ if(BUILD_TESTING)

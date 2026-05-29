@@ -1,0 +1,25 @@
+diff --git a/src/openMVG/features/fast/fast_detector.cpp b/src/openMVG/features/fast/fast_detector.cpp
+index 7223149..0daa5db 100644
+--- a/src/openMVG/features/fast/fast_detector.cpp
++++ b/src/openMVG/features/fast/fast_detector.cpp
+@@ -9,7 +9,9 @@
+ #include "openMVG/features/fast/fast_detector.hpp"
+ 
+ #include "openMVG/image/image_container.hpp"
++extern "C" {
+ #include "third_party/fast/fast.h"
++}
+ 
+ #include <iostream>
+ //
+diff --git a/src/third_party/fast/CMakeLists.txt b/src/third_party/fast/CMakeLists.txt
+index dc0aba6..7361dc0 100644
+--- a/src/third_party/fast/CMakeLists.txt
++++ b/src/third_party/fast/CMakeLists.txt
+@@ -1,6 +1,5 @@
+ 
+ file(GLOB_RECURSE C_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.c)
+-set_source_files_properties(${C_FILES} PROPERTIES LANGUAGE CXX)
+ add_library(openMVG_fast STATIC ${C_FILES})
+ set_property(TARGET openMVG_fast PROPERTY FOLDER OpenMVG/3rdParty)
+ 

@@ -1,0 +1,48 @@
+diff --git a/tools/k4aviewer/k4aaudiochanneldatagraph.h b/tools/k4aviewer/k4aaudiochanneldatagraph.h
+index 9aede89..56d2c77 100644
+--- a/tools/k4aviewer/k4aaudiochanneldatagraph.h
++++ b/tools/k4aviewer/k4aaudiochanneldatagraph.h
+@@ -7,6 +7,7 @@
+ // System headers
+ //
+ #include <array>
++#include <string>
+ 
+ // Library headers
+ //
+diff --git a/tools/k4aviewer/k4aaudiowindow.h b/tools/k4aviewer/k4aaudiowindow.h
+index 87b63b3..fcfc86e 100644
+--- a/tools/k4aviewer/k4aaudiowindow.h
++++ b/tools/k4aviewer/k4aaudiowindow.h
+@@ -8,6 +8,7 @@
+ //
+ #include <array>
+ #include <memory>
++#include <string>
+ 
+ // Library headers
+ //
+diff --git a/tools/k4aviewer/k4amicrophonelistener.cpp b/tools/k4aviewer/k4amicrophonelistener.cpp
+index db7b546..8baa05c 100644
+--- a/tools/k4aviewer/k4amicrophonelistener.cpp
++++ b/tools/k4aviewer/k4amicrophonelistener.cpp
+@@ -8,6 +8,7 @@
+ // System headers
+ //
+ #include <regex>
++#include <string>
+ 
+ // Library headers
+ //
+diff --git a/tools/k4aviewer/perfcounter.h b/tools/k4aviewer/perfcounter.h
+index b39e721..c3e28d2 100644
+--- a/tools/k4aviewer/perfcounter.h
++++ b/tools/k4aviewer/perfcounter.h
+@@ -13,6 +13,7 @@
+ #include <mutex>
+ #include <numeric>
+ #include <ratio>
++#include <string>
+ 
+ // Library headers
+ //

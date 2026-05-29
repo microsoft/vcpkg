@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c4c0814..f400566 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,9 +36,6 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ 
+ if (WIN32)
+-    # Statically link the OS included part of the runtime.
+-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+-    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libucrt.lib /DEFAULTLIB:ucrt.lib")
+ 
+     add_compile_definitions(WIN32_LEAN_AND_MEAN)
+     if(HAS_SPECTRE)
+@@ -76,6 +73,7 @@ endif()
+ option(MSH3_USE_EXTERNAL_MSQUIC "Use an external msquic installation")
+ if(MSH3_USE_EXTERNAL_MSQUIC)
+     find_package(msquic CONFIG REQUIRED)
++    add_library(msquic_platform ALIAS msquic) # with ports/msquic/exports-for-msh3.diff
+ else()
+     # Configure and build
+     if (WIN32)

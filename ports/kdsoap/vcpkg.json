@@ -1,0 +1,25 @@
+{
+  "name": "kdsoap",
+  "version": "2.2.0",
+  "port-version": 1,
+  "description": "A Qt-based client-side and server-side SOAP component",
+  "homepage": "https://www.kdab.com/products/kd-soap",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

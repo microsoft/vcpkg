@@ -1,0 +1,18 @@
+diff --git a/src/anari/CMakeLists.txt b/src/anari/CMakeLists.txt
+index 6a34153..ee572a1 100644
+--- a/src/anari/CMakeLists.txt
++++ b/src/anari/CMakeLists.txt
+@@ -51,7 +51,12 @@ project_compile_definitions(PRIVATE -Danari_EXPORTS)
+ ## Create main shared + static library targets ##
+ 
+ project(anari)
+-add_anari_frontend_library_target(SHARED)
++if(BUILD_SHARED_LIBS)
++  add_anari_frontend_library_target(SHARED)
++else()
++  add_anari_frontend_library_target(STATIC)
++  project_compile_definitions(PUBLIC -DANARI_STATIC_DEFINE)
++endif()
+ 
+ project(anari_static)
+ add_anari_frontend_library_target(STATIC)

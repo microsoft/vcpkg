@@ -1,0 +1,11 @@
+diff --git a/contrib/minizip/minizip.pc.in b/contrib/minizip/minizip.pc.in
+index 69b5b7f..9e43084 100644
+--- a/contrib/minizip/minizip.pc.in
++++ b/contrib/minizip/minizip.pc.in
+@@ -8,5 +8,5 @@ Description: Minizip zip file manipulation library
+ Requires:
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -lminizip
+-Libs.private: -lz
++Requires.private: @MINIZIP_REQUIRES@
+ Cflags: -I${includedir}

@@ -1,0 +1,13 @@
+diff --git a/Asm/x86/Sort.asm b/Asm/x86/Sort.asm
+index 517c615..85e167e 100644
+--- a/Asm/x86/Sort.asm
++++ b/Asm/x86/Sort.asm
+@@ -1,7 +1,7 @@
+ ; SortTest.asm -- ASM version of HeapSort() function
+ ; Igor Pavlov : Public domain
+ 
+-include ../../../../Asm/x86/7zAsm.asm
++include 7zAsm.asm
+ 
+ MY_ASM_START
+ 

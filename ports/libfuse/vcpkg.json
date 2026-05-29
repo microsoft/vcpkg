@@ -1,0 +1,19 @@
+{
+  "name": "libfuse",
+  "version": "3.18.2",
+  "port-version": 1,
+  "description": "The reference implementation of the Linux FUSE (Filesystem in Userspace) interface",
+  "homepage": "https://github.com/libfuse/libfuse",
+  "license": "LGPL-2.1-only AND GPL-2.0-only",
+  "supports": "linux | freebsd",
+  "dependencies": [
+    {
+      "name": "numactl",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

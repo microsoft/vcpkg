@@ -1,0 +1,22 @@
+diff --git a/include/X11/Xw32defs.h b/include/X11/Xw32defs.h
+index 683b588..db1eabd 100644
+--- a/include/X11/Xw32defs.h
++++ b/include/X11/Xw32defs.h
+@@ -27,7 +27,6 @@ typedef char *caddr_t;
+ #  define execve	 _execve
+ #  define execvp	 _execvp
+ #  define execvpe  _execvpe
+-#  define fdopen	  _fdopen
+ #  define fileno	  _fileno
+ #  define fstat	 _fstat
+ #  define getcwd	_getcwd
+@@ -72,8 +71,8 @@ typedef char *caddr_t;
+ #  define S_IEXEC  _S_IEXEC
+ 
+ #  define	F_OK	0
+-#  define	X_OK	1
+ #  define	W_OK	2
+ #  define	R_OK	4
++#  define	X_OK	R_OK
+ # endif /* __GNUC__ */
+ #endif

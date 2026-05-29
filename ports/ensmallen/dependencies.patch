@@ -1,0 +1,43 @@
+diff --git a/CMake/ensmallen-config.cmake.in b/CMake/ensmallen-config.cmake.in
+index 3a9a93c..7bed7fd 100644
+--- a/CMake/ensmallen-config.cmake.in
++++ b/CMake/ensmallen-config.cmake.in
+@@ -1,4 +1,9 @@
+ @PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++if(@USE_OPENMP@)
++find_dependency(OpenMP)
++endif()
++find_dependency(Armadillo CONFIG)
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake)
+ check_required_components(ensmallen)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 551c538..0b20af1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,21 +47,13 @@ endif()
+ 
+ # Find OpenMP and link it.
+ if(USE_OPENMP)
+-  if(NOT TARGET OpenMP::OpenMP_CXX)
+-    find_package(Threads REQUIRED)
+-    add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
+-    set_property(TARGET OpenMP::OpenMP_CXX
+-        PROPERTY INTERFACE_COMPILE_OPTIONS ${OpenMP_CXX_FLAGS})
+-    # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang).
+-    set_property(TARGET OpenMP::OpenMP_CXX
+-        PROPERTY INTERFACE_LINK_LIBRARIES ${OpenMP_CXX_FLAGS} Threads::Threads)
+-  endif()
++  find_package(OpenMP REQUIRED)
+   target_link_libraries(ensmallen INTERFACE OpenMP::OpenMP_CXX)
+ endif()
+ 
+ # Find Armadillo and link it.
+-find_package(Armadillo 9.800.0 REQUIRED)
+-target_link_libraries(ensmallen INTERFACE Armadillo::Armadillo)
++find_package(Armadillo CONFIG REQUIRED)
++target_link_libraries(ensmallen INTERFACE armadillo)
+ 
+ # Set helper variables for creating the version, config and target files.
+ include(CMakePackageConfigHelpers)

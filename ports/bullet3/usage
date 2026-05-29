@@ -1,0 +1,13 @@
+bullet3 provides CMake targets:
+
+  find_package(Bullet CONFIG REQUIRED)
+  # specific set: BulletSoftBody, BulletDynamics, BulletInverseDynamics,
+  #               BulletCollision, Bullet3Common, LinearMath
+  target_link_libraries(main PRIVATE ${BULLET_LIBRARIES})
+  # individual imported targets, e.g. for Bullet 3 libs
+  target_link_libraries(main PRIVATE Bullet3Dynamics)
+
+bullet3 provides pkg-config modules:
+
+  # specific set: BulletSoftBody, BulletDynamics, BulletCollision, LinearMath
+  bullet

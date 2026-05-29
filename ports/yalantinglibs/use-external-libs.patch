@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 448a80d..c7028a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,6 +16,12 @@ project(yaLanTingLibs
+         HOMEPAGE_URL "https://github.com/alibaba/yalantinglibs"
+         LANGUAGES ${PROJECT_LANGUAGES}
+         )
++
++find_path(IGUANA_INCLUDE_DIRS "iguana/common.hpp")
++include_directories(${IGUANA_INCLUDE_DIRS})
++find_path(CINATRA_INCLUDE_DIRS "cinatra.hpp")
++include_directories(${CINATRA_INCLUDE_DIRS})
++
+ # load pack finder
+ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Find/)
+
+diff --git a/cmake/install.cmake b/cmake/install.cmake
+index 956195f..ad9df4e 100644
+--- a/cmake/install.cmake
++++ b/cmake/install.cmake
+@@ -24,7 +24,6 @@ target_include_directories(yalantinglibs INTERFACE
+         $<INSTALL_INTERFACE:include>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include/ylt/thirdparty>
+-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/../include/ylt/standalone>
+ )
+ install(TARGETS yalantinglibs
+        EXPORT yalantinglibsTargets

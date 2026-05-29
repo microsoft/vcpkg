@@ -1,0 +1,7 @@
+{
+  "name": "guilite",
+  "version-date": "2022-05-05",
+  "description": "The smallest header-only GUI library (4 KLOC) for all platforms.",
+  "homepage": "https://github.com/idea4good/GuiLite",
+  "license": "Apache-2.0"
+}

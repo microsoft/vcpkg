@@ -1,0 +1,17 @@
+{
+  "name": "rapidcheck",
+  "version-date": "2023-12-14",
+  "description": "A property-based testing library for C++ (a la QuickCheck) with the goal of being simple to use with as little boilerplate as possible.",
+  "homepage": "https://github.com/emil-e/rapidcheck",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

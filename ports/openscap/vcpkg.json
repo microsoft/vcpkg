@@ -1,0 +1,84 @@
+{
+  "name": "openscap",
+  "version": "1.4.2",
+  "description": "OpenSCAP represents both a library and a command line tool which can be used to parse and evaluate each component of the SCAP standard.",
+  "homepage": "https://www.open-scap.org/tools/openscap-base/",
+  "license": "LGPL-2.1-or-later",
+  "supports": "(linux | windows) & !(static & staticcrt)",
+  "dependencies": [
+    {
+      "name": "acl",
+      "platform": "linux"
+    },
+    {
+      "name": "curl",
+      "default-features": false
+    },
+    "glib",
+    "libpopt",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
+    {
+      "name": "libxslt",
+      "default-features": false
+    },
+    "libyaml",
+    "libzip",
+    "openssl",
+    "pcre",
+    "pthreads",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "xmlsec",
+    {
+      "name": "zlib",
+      "platform": "windows"
+    }
+  ],
+  "features": {
+    "crypto": {
+      "description": "Build with crypto support",
+      "dependencies": [
+        {
+          "name": "libgcrypt",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgcrypt",
+          "platform": "windows & !mingw"
+        }
+      ]
+    },
+    "python": {
+      "description": "Build Python SWIG bindings",
+      "dependencies": [
+        {
+          "name": "openscap",
+          "features": [
+            "crypto"
+          ]
+        },
+        "python3"
+      ]
+    },
+    "util": {
+      "description": "Build the oscap utility",
+      "dependencies": [
+        {
+          "name": "getopt-win32",
+          "platform": "windows"
+        },
+        {
+          "name": "openscap",
+          "features": [
+            "crypto"
+          ]
+        }
+      ]
+    }
+  }
+}

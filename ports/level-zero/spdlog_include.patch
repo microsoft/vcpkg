@@ -1,0 +1,13 @@
+diff --git a/source/utils/CMakeLists.txt b/source/utils/CMakeLists.txt
+index b77f264..de3f74d 100644
+--- a/source/utils/CMakeLists.txt
++++ b/source/utils/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(logging_files logging.h logging.cpp)
+ add_library(level_zero_utils STATIC ${logging_files})
+ 
+ if(SYSTEM_SPDLOG)
+-       target_link_libraries(level_zero_utils PUBLIC spdlog::spdlog)
++       target_link_libraries(level_zero_utils PUBLIC spdlog::spdlog_header_only)
+ else()
+        target_include_directories(level_zero_utils PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/spdlog_headers>)
+ endif()

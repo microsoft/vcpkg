@@ -1,0 +1,19 @@
+{
+  "name": "xframe",
+  "version": "0.3.0",
+  "port-version": 3,
+  "description": "xframe is a dataframe for C++, based on xtensor and xtl.",
+  "homepage": "https://github.com/xtensor-stack/xframe",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "xtensor",
+    "xtl"
+  ]
+}

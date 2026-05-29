@@ -1,0 +1,80 @@
+From 19d3b3fca689fb87e819b0b27bc74d1f52fcd2c8 Mon Sep 17 00:00:00 2001
+From: Billy Robert O'Neal III <bion@microsoft.com>
+Date: Wed, 12 Jan 2022 12:40:30 +0000
+Subject: [PATCH] lib: generate PDB in release build on Windows
+
+PDBs are necessary for postmortem debugging and for teams to get reports
+from Watson, so they should be built for released software too. This
+change always passes /DEBUG to the MSVC linker. That switch controls
+whether a PDB is generated (as in "generate debugging information") not
+a statement that the resulting files are the debug specific version of
+your library.
+
+/DEBUG changes the default values of /INCREMENTAL (to on) and /OPT:REF
+and /OPT:ICF to off, so those are changed back to incremental off and
+linker optimizations on in debug builds.
+
+This missing PDB issue was discovered in fixing intel-ipsec's port in
+vcpkg to build on Windows (https://github.com/microsoft/vcpkg/pull/22269).
+
+intel-ipsec-mb vcpkg PR link is https://github.com/microsoft/vcpkg/pull/5586
+---
+ lib/win_x64.mak | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/lib/win_x64.mak b/lib/win_x64.mak
+index 89162feb..bb62b2ea 100644
+--- a/lib/win_x64.mak
++++ b/lib/win_x64.mak
+@@ -12,7 +12,7 @@
+ #     * Neither the name of Intel Corporation nor the names of its contributors
+ #       may be used to endorse or promote products derived from this software
+ #       without specific prior written permission.
+-# 
++#
+ # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+@@ -71,14 +71,14 @@ LIB_DIR = .\
+ 
+ !ifdef DEBUG
+ OPT = $(DEBUG_OPT)
+-DCFLAGS = /DDEBUG /Z7
++DCFLAGS = /DDEBUG
+ DAFLAGS = -gcv8
+-DLFLAGS = /DEBUG
++DLFLAGS = /DEBUG /INCREMENTAL:NO
+ !else
+ OPT = /O2 /Oi
+ DCFLAGS =
+ DAFLAGS =
+-DLFLAGS = /RELEASE
++DLFLAGS = /RELEASE /DEBUG /OPT:REF /OPT:ICF /INCREMENTAL:NO
+ !endif
+ 
+ !if "$(SAFE_DATA)" != "n"
+@@ -98,7 +98,7 @@ DAFLAGS = $(DAFLAGS) -DSAFE_LOOKUP
+ 
+ CC = cl
+ CFLAGS_ALL = $(EXTRA_CFLAGS) /DNO_COMPAT_IMB_API_053 /I. /Iinclude /Ino-aesni \
+-	/nologo /Y- /W3 /WX- /Gm- /fp:precise /EHsc
++	/nologo /Y- /W3 /WX- /Gm- /fp:precise /EHsc /Z7
+ 
+ CFLAGS = $(CFLAGS_ALL) $(OPT) $(DCFLAGS)
+ CFLAGS_NO_SIMD = $(CFLAGS_ALL) /Od $(DCFLAGS)
+@@ -633,6 +633,7 @@ install:
+ 	-copy /Y /V /B $(LIBBASE).lib "$(INSTDIR)"
+ 	-copy /Y /V /A intel-ipsec-mb.h "$(INSTDIR)"
+ !if "$(SHARED)" == "y"
++	-copy /Y /V /B $(LIB_DIR)\$(LIBBASE).pdb "$(INSTDIR)"
+ 	-copy /Y /V /B $(LIB_DIR)\$(LIBBASE).dll "$(INSTDIR)"
+ 	-copy /Y /V /B $(LIB_DIR)\$(LIBBASE).dll "%windir%\system32"
+ !endif
+@@ -641,6 +642,7 @@ uninstall:
+ !if "$(SHARED)" == "y"
+ 	-del /Q "%windir%\system32\$(LIBBASE).dll"
+ 	-del /Q "$(INSTDIR)\$(LIBBASE).dll"
++	-del /Q "$(INSTDIR)\$(LIBBASE).pdb"
+ !endif
+ 	-del /Q "$(INSTDIR)\$(LIBBASE).def"
+ 	-del /Q "$(INSTDIR)\$(LIBBASE).exp"

@@ -1,0 +1,12 @@
+diff --git a/include/lcms2.h b/include/lcms2.h
+index 7c72047..6306027 100644
+--- a/include/lcms2.h
++++ b/include/lcms2.h
+@@ -230,6 +230,7 @@ typedef int                  cmsBool;
+ 
+ 
+ // Calling convention -- this is hardly platform and compiler dependent
++#define CMS_DLL
+ #if defined(CMS_IS_WINDOWS_) && !defined(__GNUC__)
+ #  if defined(CMS_DLL) || defined(CMS_DLL_BUILD)
+ #     ifdef __BORLANDC__

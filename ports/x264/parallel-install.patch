@@ -1,0 +1,14 @@
+diff --git a/configure b/configure
+index 6f95e23..30924ba 100755
+--- a/configure
++++ b/configure
+@@ -1565,7 +1565,8 @@ fi
+ 
+ if [ "$cli" = "yes" ]; then
+     echo 'default: cli' >> config.mak
+-    echo 'install: install-cli' >> config.mak
++    echo 'install:' >> config.mak
++    echo '	$(MAKE) install-cli' >> config.mak
+ fi
+ 
+ if [ "$shared" = "yes" ]; then

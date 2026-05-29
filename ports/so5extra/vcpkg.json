@@ -1,0 +1,18 @@
+{
+  "name": "so5extra",
+  "version": "1.6.2",
+  "description": "A set of additional tools for SObjectizer framework.",
+  "homepage": "https://github.com/Stiffstream/so5extra",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "sobjectizer",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

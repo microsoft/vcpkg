@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d51cba0..301679d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -484,7 +484,9 @@ if (CZMQ_BUILD_STATIC)
+   target_compile_definitions(czmq-static
+     PUBLIC CZMQ_STATIC
+   )
+-
++  if(ANDROID)
++    target_link_libraries(czmq-static PRIVATE log)
++  endif()
+ endif()
+ 
+ 

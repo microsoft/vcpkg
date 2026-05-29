@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 76725b0..70f7ad3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -303,9 +303,6 @@ if (ZYRE_BUILD_STATIC)
+ 
+ endif()
+ 
+-
+-include(${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists-local.txt) # Optional project-local hook
+-
+ ########################################################################
+ # pkgconfig
+ ########################################################################
+@@ -501,7 +498,7 @@ target_link_libraries(
+     ${OPTIONAL_LIBRARIES_STATIC}
+ )
+ endif()
+-
++if(0)
+ ########################################################################
+ # tests
+ ########################################################################
+@@ -570,7 +567,7 @@ foreach(TEST_CLASS ${TEST_CLASSES})
+ endforeach(TEST_CLASS)
+ 
+ include(CTest)
+-
++endif()
+ ########################################################################
+ # cleanup
+ ########################################################################

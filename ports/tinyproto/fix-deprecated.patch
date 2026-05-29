@@ -1,0 +1,19 @@
+diff --git a/src/proto/hdlc/low_level/hdlc.h b/src/proto/hdlc/low_level/hdlc.h
+index d8e85d7..5e3f574 100644
+--- a/src/proto/hdlc/low_level/hdlc.h
++++ b/src/proto/hdlc/low_level/hdlc.h
+@@ -218,8 +218,13 @@ extern "C"
+      * @note TINY_ERR_BUSY and TINY_ERR_INVALID_DATA refer to putting new frame to TX
+      *       hdlc queue.
+      */
++#if defined(__GNUC__) || defined(__clang__)
+     int hdlc_ll_put(hdlc_ll_handle_t handle, const void *data, int len) __attribute__((deprecated));
+-
++#elif defined(_MSC_VER)
++    __declspec(deprecated) int hdlc_ll_put(hdlc_ll_handle_t handle, const void *data, int len);
++#else
++    int hdlc_ll_put(hdlc_ll_handle_t handle, const void *data, int len);
++#endif
+     /**
+      * Puts next frame for sending.
+      *

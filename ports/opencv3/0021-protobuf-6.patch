@@ -1,0 +1,52 @@
+diff --git a/modules/dnn/src/caffe/caffe_importer.cpp b/modules/dnn/src/caffe/caffe_importer.cpp
+index 03dff96464..ffd35ec7fc 100644
+--- a/modules/dnn/src/caffe/caffe_importer.cpp
++++ b/modules/dnn/src/caffe/caffe_importer.cpp
+@@ -125,8 +125,8 @@ public:
+         {
+             const google::protobuf::UnknownField& field = unknownFields.field(i);
+             CV_Assert(field.type() == google::protobuf::UnknownField::TYPE_GROUP);
+-            std::string fieldName = field.group().field(0).length_delimited();
+-            std::string fieldValue = field.group().field(1).length_delimited();
++            std::string fieldName(field.group().field(0).length_delimited());
++            std::string fieldValue(field.group().field(1).length_delimited());
+             params.set(fieldName, fieldValue);
+         }
+     }
+@@ -136,7 +136,7 @@ public:
+         const Reflection *refl = msg.GetReflection();
+         int type = field->cpp_type();
+         bool isRepeated = field->is_repeated();
+-        const std::string &name = field->name();
++        const std::string name(field->name());
+ 
+         #define SET_UP_FILED(getter, arrayConstr, gtype)                                    \
+             if (isRepeated) {                                                               \
+@@ -184,15 +184,15 @@ public:
+                 int size = refl->FieldSize(msg, field);
+                 std::vector<cv::String> buf(size);
+                 for (int i = 0; i < size; i++)
+-                    buf[i] = refl->GetRepeatedEnum(msg, field, i)->name();
++                    buf[i] = std::string(refl->GetRepeatedEnum(msg, field, i)->name());
+                 params.set(name, DictValue::arrayString(buf.begin(), size));
+             }
+             else {
+-                params.set(name, refl->GetEnum(msg, field)->name());
++                params.set(name, std::string(refl->GetEnum(msg, field)->name()));
+             }
+             break;
+         default:
+-            CV_Error(Error::StsError, "Unknown type \"" + String(field->type_name()) + "\" in prototxt");
++            CV_Error(Error::StsError, "Unknown type \"" + String(std::string(field->type_name())) + "\" in prototxt");
+             break;
+         }
+     }
+@@ -212,7 +212,7 @@ public:
+         {
+             const FieldDescriptor *fd = msgDesc->field(fieldId);
+ 
+-            if (!isInternal && !ends_with_param(fd->name()))
++            if (!isInternal && !ends_with_param(std::string(fd->name())))
+                 continue;
+ 
+             const google::protobuf::UnknownFieldSet& unknownFields = msgRefl->GetUnknownFields(msg);

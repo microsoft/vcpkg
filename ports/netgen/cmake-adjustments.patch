@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1bd0ce4..eec03de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,7 +87,9 @@ set(NG_INSTALL_SUFFIX netgen CACHE STRING "Suffix appended to install directorie
+ if(USE_PYTHON)
+   if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.18)
+       find_package(Python3 REQUIRED COMPONENTS Development.Module)
+-      find_package(Python3 COMPONENTS Interpreter Development.Embed)
++      if(NOT CMAKE_CROSSCOMPILING)
++        find_package(Python3 COMPONENTS Interpreter Development.Embed)
++      endif()
+   else()
+     find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+   endif()
+@@ -312,6 +314,8 @@ else()
+ endif()
+ 
+ if (USE_PYTHON)
++    set(PYBIND11_FINDPYTHON ON)
++    set(PYBIND11_USE_CROSSCOMPILING ON)
+     if (PREFER_SYSTEM_PYBIND11)
+       set(NG_INSTALL_PYBIND OFF)
+       find_package(pybind11 CONFIG REQUIRED)
+@@ -324,6 +327,9 @@ if (USE_PYTHON)
+     if(Python3_LIBRARIES AND (WIN32 OR NOT BUILD_FOR_CONDA))
+         target_link_libraries(netgen_python INTERFACE ${Python3_LIBRARIES})
+     endif()
++    if (WIN32)
++        target_compile_definitions(netgen_python INTERFACE Py_NO_LINK_LIB)
++    endif()
+ 
+     if(NG_INSTALL_PYBIND)
+       install(DIRECTORY ${pybind11_INCLUDE_DIR}/pybind11 DESTINATION ${NG_INSTALL_DIR_INCLUDE} COMPONENT netgen_devel)
+diff --git a/libsrc/core/CMakeLists.txt b/libsrc/core/CMakeLists.txt
+index d91a1bb..f492089 100644
+--- a/libsrc/core/CMakeLists.txt
++++ b/libsrc/core/CMakeLists.txt
+@@ -34,8 +34,7 @@ endif(USE_PYTHON)
+ 
+ if(WIN32)
+   target_compile_options(ngcore PUBLIC /bigobj /MP /W1 /wd4068)
+-  get_WIN32_WINNT(ver)
+-  target_compile_definitions(ngcore PUBLIC _WIN32_WINNT=${ver} WNT WNT_WINDOW NOMINMAX MSVC_EXPRESS _CRT_SECURE_NO_WARNINGS HAVE_STRUCT_TIMESPEC WIN32)
++  target_compile_definitions(ngcore PUBLIC WNT WNT_WINDOW NOMINMAX MSVC_EXPRESS _CRT_SECURE_NO_WARNINGS HAVE_STRUCT_TIMESPEC WIN32)
+   target_link_options(ngcore PUBLIC /ignore:4273 /ignore:4217 /ignore:4049)
+ endif(WIN32)
+ 

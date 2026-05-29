@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b3e5b3..bab784a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -182,6 +182,21 @@ else (USE_EXT_GD)
+ 
+ 	SET(ENABLE_GD_FORMATS ${ENABLE_GD_FORMATS})
+ 
++	# The remaining code uses <Pkg>_FOUND, but this could be set as side effect.
++	# Restore explicit control. <Pkg>_FOUND is implied by <Pkg>_REQUIRED.
++	set(FONTCONFIG_FOUND ${ENABLE_FONTCONFIG})
++	set(FREETYPE_FOUND ${ENABLE_FREETYPE})
++	set(HEIF_FOUND ${ENABLE_HEIF})
++	set(ICONV_FOUND ${ENABLE_ICONV})
++	set(JPEG_FOUND ${ENABLE_JPEG})
++	set(LIQ_FOUND ${ENABLE_LIQ})
++	set(PNG_FOUND ${ENABLE_PNG})
++	set(RAQM_FOUND ${ENABLE_RAQM})
++	set(TIFF_FOUND ${ENABLE_TIFF})
++	set(WEBP_FOUND ${ENABLE_WEBP})
++	set(XPM_FOUND ${ENABLE_XPM})
++	set(ZLIB_FOUND ${ENABLE_GD_FORMATS})
++
+ 	if (FREETYPE_FOUND)
+ 		INCLUDE_DIRECTORIES(${FREETYPE_INCLUDE_DIRS})
+ 		SET(HAVE_FT2BUILD_H 1)
+@@ -299,8 +299,6 @@ else (USE_EXT_GD)
+ endif (USE_EXT_GD)
+ 
+ add_subdirectory(tests)
+-add_subdirectory(examples)
+-add_subdirectory(docs)
+ 
+ add_custom_target(distclean ${GD_SOURCE_DIR}/cmake/distclean.sh)
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 3839bc7..4cb56eb 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -150,6 +150,9 @@ if (ZLIB_FOUND)
+ 	set(GD_PROGRAMS ${GD_PROGRAMS} gd2copypal gd2togif giftogd2)
+ endif()
+ 
++if(NOT ENABLE_TOOLS)
++	set(GD_PROGRAMS "")
++endif()
+ foreach(program ${GD_PROGRAMS})
+     add_executable(${program} ${program}.c)
+ 	if (WIN32)
+@@ -180,7 +183,9 @@ install(TARGETS ${GD_INSTALL_TARGETS}
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++if(ENABLE_TOOLS)
+ install(PROGRAMS bdftogd DESTINATION bin)
++endif()
+ install(FILES
+ 	gd.h
+ 	gd_color_map.h

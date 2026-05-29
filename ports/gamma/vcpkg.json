@@ -1,0 +1,22 @@
+{
+  "name": "gamma",
+  "version-string": "gamma-2018-01-27",
+  "port-version": 6,
+  "description": "Gamma is a cross-platform, C++ library for doing generic synthesis and filtering of signals. It is oriented towards real-time sound and graphics applications, but is equally useful for non-real-time tasks. Gamma is designed to be \"light-footed\" in terms of memory and processing making it highly suitable for plug-in development or embedding in other C++ projects.",
+  "homepage": "https://github.com/LancePutnam/Gamma",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "libsndfile",
+      "default-features": false,
+      "features": [
+        "external-libs"
+      ]
+    },
+    "portaudio",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

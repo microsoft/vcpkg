@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e5021d5..9d2909e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -510,15 +510,10 @@ endif(ENABLE_CPP_CORE_GUIDELINES_CHECK)
+ 
+ add_library(netgen_cgns INTERFACE)
+ if(USE_CGNS)
+-    find_library( CGNS_LIBRARY NAMES cgns cgnsdll )
+-    find_path( CGNS_INCLUDE_DIR cgnslib.h )
++    find_package(cgns CONFIG REQUIRED)
+     target_compile_definitions(netgen_cgns INTERFACE NG_CGNS)
+-    target_include_directories(netgen_cgns INTERFACE ${CGNS_INCLUDE_DIR})
+-    target_link_libraries(netgen_cgns INTERFACE ${CGNS_LIBRARY})
+-    if(NOT WIN32 AND NOT APPLE) # hdf5 is statically linked into cgns in Windows amd MacOS binaries
+-        find_library(HDF5_LIBRARY NAMES hdf5 hdf5_serial)
+-        target_link_libraries(netgen_cgns INTERFACE ${HDF5_LIBRARY})
+-    endif(NOT WIN32 AND NOT APPLE)
++    target_link_libraries(netgen_cgns INTERFACE
++        $<IF:$<TARGET_EXISTS:CGNS::cgns_shared>,CGNS::cgns_shared,CGNS::cgns_static>)
+ endif(USE_CGNS)
+ 
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/netgen_version.hpp ${CMAKE_CURRENT_BINARY_DIR}/netgen_config.hpp DESTINATION ${NG_INSTALL_DIR_INCLUDE}/include COMPONENT netgen_devel)
+diff --git a/cmake/NetgenConfig.cmake.in b/cmake/NetgenConfig.cmake.in
+index 477ed214..05630cac 100644
+--- a/cmake/NetgenConfig.cmake.in
++++ b/cmake/NetgenConfig.cmake.in
+@@ -70,6 +70,11 @@ set(NETGEN_USE_NUMA @USE_NUMA@)
+ set(NETGEN_PYTHON_RPATH "@NETGEN_PYTHON_RPATH@")
+ set(NETGEN_RPATH_TOKEN "@NG_RPATH_TOKEN@")
+ 
++if(NETGEN_USE_CGNS)
++  include(CMakeFindDependencyMacro)
++  find_dependency(cgns CONFIG)
++endif()
++
+ set(NETGEN_INSTALL_DIR_PYTHON @NG_INSTALL_DIR_PYTHON@)
+ set(NETGEN_INSTALL_DIR_BIN @NG_INSTALL_DIR_BIN@)
+ set(NETGEN_INSTALL_DIR_LIB @NG_INSTALL_DIR_LIB@)

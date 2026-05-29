@@ -1,0 +1,119 @@
+diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
+index f6abe8c..e3aa831 100644
+--- a/cmake/igl/modules/copyleft/cgal.cmake
++++ b/cmake/igl/modules/copyleft/cgal.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
+ igl_target_sources(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(cgal)
++find_package(CGAL CONFIG REQUIRED COMPONENTS Core)
+ igl_include(copyleft core)
+ target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
+     igl::core
+diff --git a/cmake/igl/modules/core.cmake b/cmake/igl/modules/core.cmake
+index 2aefcd6..137d30b 100644
+--- a/cmake/igl/modules/core.cmake
++++ b/cmake/igl/modules/core.cmake
+@@ -20,7 +20,7 @@ igl_target_sources(igl_core ${INC_FILES} ${SRC_FILES})
+ igl_install(igl_core ${INC_FILES} ${SRC_FILES})
+ 
+ # 5. Dependencies
+-include(eigen)
++find_package(Eigen3 CONFIG REQUIRED)
+ find_package(Threads REQUIRED)
+ target_link_libraries(igl_core ${IGL_SCOPE}
+     Eigen3::Eigen
+diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
+index 6f22319..7f333b0 100644
+--- a/cmake/igl/modules/embree.cmake
++++ b/cmake/igl/modules/embree.cmake
+@@ -14,7 +14,8 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/embree/*.cpp")
+ igl_target_sources(igl_embree ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(embree)
++find_package(embree CONFIG REQUIRED)
++add_library(embree::embree ALIAS embree)
+ target_link_libraries(igl_embree ${IGL_SCOPE}
+     igl::core
+     embree::embree
+diff --git a/cmake/igl/modules/glfw.cmake b/cmake/igl/modules/glfw.cmake
+index 79c2126..2da8b0a 100644
+--- a/cmake/igl/modules/glfw.cmake
++++ b/cmake/igl/modules/glfw.cmake
+@@ -14,7 +14,8 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/*.cpp")
+ igl_target_sources(igl_glfw ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(glfw)
++find_package(glfw3 CONFIG REQUIRED)
++add_library(glfw::glfw ALIAS glfw)
+ igl_include(opengl)
+ target_link_libraries(igl_glfw ${IGL_SCOPE}
+     igl::core
+diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
+index d7ffb9d..f331854 100644
+--- a/cmake/igl/modules/imgui.cmake
++++ b/cmake/igl/modules/imgui.cmake
+@@ -14,14 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/imgui/*.cpp")
+ igl_target_sources(igl_imgui ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(imgui)
+-include(imguizmo)
+-include(libigl_imgui_fonts)
++find_package(imgui CONFIG REQUIRED)
++find_package(imguizmo CONFIG REQUIRED)
+ igl_include(glfw)
+ target_link_libraries(igl_imgui ${IGL_SCOPE}
+     igl::core
+     igl::glfw
+     imgui::imgui
+     imguizmo::imguizmo
+-    igl::imgui_fonts
+ )
+diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
+index 4580c03..dfadb38 100644
+--- a/cmake/igl/modules/opengl.cmake
++++ b/cmake/igl/modules/opengl.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/*.cpp")
+ igl_target_sources(igl_opengl ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(glad)
++find_package(glad CONFIG REQUIRED)
+ find_package(OpenGL REQUIRED OPTIONAL_COMPONENTS OpenGL)
+ target_link_libraries(igl_opengl ${IGL_SCOPE}
+     igl::core
+diff --git a/cmake/igl/modules/stb.cmake b/cmake/igl/modules/stb.cmake
+index 20607ec..14db8cf 100644
+--- a/cmake/igl/modules/stb.cmake
++++ b/cmake/igl/modules/stb.cmake
+@@ -21,11 +21,11 @@ endif()
+ igl_target_sources(igl_stb ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(stb)
++find_package(Stb REQUIRED)
+ target_link_libraries(igl_stb ${IGL_SCOPE}
+     igl::core
+-    stb::stb
+ )
++target_include_directories(igl_stb ${IGL_SCOPE} ${Stb_INCLUDE_DIR})
+ 
+ if(LIBIGL_OPENGL)
+   igl_include(opengl)
+diff --git a/cmake/igl/modules/xml.cmake b/cmake/igl/modules/xml.cmake
+index 3763b77..31ab979 100644
+--- a/cmake/igl/modules/xml.cmake
++++ b/cmake/igl/modules/xml.cmake
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/xml/*.cpp")
+ igl_target_sources(igl_xml ${INC_FILES} ${SRC_FILES})
+ 
+ # 4. Dependencies
+-include(tinyxml2)
++find_package(tinyxml2 CONFIG REQUIRED)
+ target_link_libraries(igl_xml ${IGL_SCOPE}
+     igl::core
+     tinyxml2::tinyxml2

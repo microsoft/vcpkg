@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5b9ecf5..4ffea49 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,7 @@ endif()
+ 
+ if(SDL2PP_WITH_IMAGE)
+ 	find_package(SDL2_image REQUIRED)
+-	set(SDL2_ALL_LIBRARIES ${SDL2_ALL_LIBRARIES} SDL2_image::SDL2_image)
++	set(SDL2_ALL_LIBRARIES ${SDL2_ALL_LIBRARIES} $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>)
+ 	set(SDL2_ALL_PKGCONFIG_MODULES "${SDL2_ALL_PKGCONFIG_MODULES} SDL2_image")
+ else()
+ 	message(STATUS "SDL2_image support disabled")
+@@ -47,7 +47,7 @@ endif()
+ 
+ if(SDL2PP_WITH_TTF)
+ 	find_package(SDL2_ttf REQUIRED)
+-	set(SDL2_ALL_LIBRARIES ${SDL2_ALL_LIBRARIES} SDL2_ttf::SDL2_ttf)
++	set(SDL2_ALL_LIBRARIES ${SDL2_ALL_LIBRARIES} $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>)
+ 	set(SDL2_ALL_PKGCONFIG_MODULES "${SDL2_ALL_PKGCONFIG_MODULES} SDL2_ttf")
+ else()
+ 	message(STATUS "SDL2_ttf support disabled")
+@@ -55,7 +55,7 @@ endif()
+ 
+ if(SDL2PP_WITH_MIXER)
+ 	find_package(SDL2_mixer REQUIRED)
+-	set(SDL2_ALL_LIBRARIES ${SDL2_ALL_LIBRARIES} SDL2_mixer::SDL2_mixer)
++	set(SDL2_ALL_LIBRARIES ${SDL2_ALL_LIBRARIES} $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)
+ 	set(SDL2_ALL_PKGCONFIG_MODULES "${SDL2_ALL_PKGCONFIG_MODULES} SDL2_mixer")
+ else()
+ 	message(STATUS "SDL2_mixer support disabled")

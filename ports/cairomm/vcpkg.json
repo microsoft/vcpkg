@@ -1,0 +1,16 @@
+{
+  "name": "cairomm",
+  "version": "1.18.0",
+  "description": "A C++ wrapper for the cairo graphics library",
+  "homepage": "https://www.cairographics.org",
+  "license": "LGPL-2.0-only",
+  "supports": "!xbox",
+  "dependencies": [
+    "cairo",
+    "libsigcpp",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

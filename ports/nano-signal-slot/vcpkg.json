@@ -1,0 +1,8 @@
+{
+  "name": "nano-signal-slot",
+  "version": "2.0.1",
+  "port-version": 2,
+  "description": "Pure C++17 Signals and Slots",
+  "homepage": "https://github.com/NoAvailableAlias/nano-signal-slot",
+  "supports": "!uwp"
+}

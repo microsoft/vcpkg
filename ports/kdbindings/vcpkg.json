@@ -1,0 +1,17 @@
+{
+  "name": "kdbindings",
+  "version": "1.1.0",
+  "description": "Reactive programming & data binding in C++",
+  "homepage": "https://github.com/KDAB/KDBindings",
+  "license": "MIT OR BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

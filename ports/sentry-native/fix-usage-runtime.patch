@@ -1,0 +1,13 @@
+diff --git a/external/crashpad/handler/CMakeLists.txt b/external/crashpad/handler/CMakeLists.txt
+index b89c570..2e0aaa1 100644
+--- a/external/crashpad/handler/CMakeLists.txt
++++ b/external/crashpad/handler/CMakeLists.txt
+@@ -88,7 +88,7 @@ if(NOT IOS)
+             $<$<COMPILE_LANGUAGE:CXX>:-Wno-ignored-attributes>
+         )
+     endif()
+-    if(LINUX)
++    if(LINUX AND BUILD_SHARED_LIBS)
+         target_sources(crashpad_handler PRIVATE
+             ../client/pthread_create_linux.cc
+         )

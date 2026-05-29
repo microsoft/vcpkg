@@ -1,0 +1,114 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 17b0a1c..7a054b3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,30 @@ set(CMAKE_CXX_STANDARD 14)
+ 
+ project (safe-evpp C CXX)
+ 
++macro(install_shared_or_static_targets)
++    get_directory_property(shared_targets BUILDSYSTEM_TARGETS)
++    list(FILTER shared_targets EXCLUDE REGEX "_static")
++    get_directory_property(static_targets BUILDSYSTEM_TARGETS)
++    list(FILTER static_targets INCLUDE REGEX "_static")
++    if(SHARED)
++        set_target_properties(${static_targets} PROPERTIES EXCLUDE_FROM_ALL 1)
++        install (
++            TARGETS ${shared_targets}
++            EXPORT evpp-targets
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib)
++    else()
++        set_target_properties(${shared_targets} PROPERTIES EXCLUDE_FROM_ALL 1)
++        install (
++            TARGETS ${static_targets}
++            EXPORT evpp-targets
++            RUNTIME DESTINATION bin
++            LIBRARY DESTINATION lib
++            ARCHIVE DESTINATION lib)
++    endif()
++endmacro()
++
+ if (UNIX)
+     if(NOT CMAKE_BUILD_TYPE)
+         set(CMAKE_BUILD_TYPE "Release")
+diff --git a/apps/evmc/CMakeLists.txt b/apps/evmc/CMakeLists.txt
+index 888c672..e1ee45e 100644
+--- a/apps/evmc/CMakeLists.txt
++++ b/apps/evmc/CMakeLists.txt
+@@ -20,18 +20,9 @@ if (UNIX)
+         VERSION     "${PACKAGE_VERSION}"
+         SOVERSION   "${PACKAGE_SOVERSION}"
+     )
+-
+-    install (
+-      TARGETS evmc
+-      LIBRARY DESTINATION lib
+-      ARCHIVE DESTINATION lib)
+ endif (UNIX)
+ 
+-install (
+-  TARGETS evmc_static
+-  LIBRARY DESTINATION lib
+-  ARCHIVE DESTINATION lib)
+-install (FILES ${evmc_PUBLIC_HEADERS} DESTINATION "include/evmc")
++install_shared_or_static_targets()
+ 
+ 
+ if (NOT EVPP_VCPKG_BUILD)
+diff --git a/apps/evnsq/CMakeLists.txt b/apps/evnsq/CMakeLists.txt
+index a4d4113..aa3b800 100644
+--- a/apps/evnsq/CMakeLists.txt
++++ b/apps/evnsq/CMakeLists.txt
+@@ -16,18 +16,9 @@ if (UNIX)
+         VERSION     "${PACKAGE_VERSION}"
+         SOVERSION   "${PACKAGE_SOVERSION}"
+     )
+-
+-    install (
+-      TARGETS evnsq
+-      LIBRARY DESTINATION lib
+-      ARCHIVE DESTINATION lib)
+ endif (UNIX)
+ 
+-install (
+-  TARGETS evnsq_static
+-  LIBRARY DESTINATION lib
+-  ARCHIVE DESTINATION lib)
+-install (FILES ${evnsq_PUBLIC_HEADERS} DESTINATION "include/evnsq")
++install_shared_or_static_targets()
+ 
+ if (NOT EVPP_VCPKG_BUILD)
+     add_subdirectory(evnsqtail)
+diff --git a/evpp/CMakeLists.txt b/evpp/CMakeLists.txt
+index 73ee071..bb97c38 100644
+--- a/evpp/CMakeLists.txt
++++ b/evpp/CMakeLists.txt
+@@ -50,24 +50,10 @@ if (UNIX)
+         VERSION     "${PACKAGE_VERSION}"
+         SOVERSION   "${PACKAGE_SOVERSION}"
+     )
+-
+-    install (
+-      TARGETS evpp evpp_static evpp_lite_static evpp_boost evpp_boost_static evpp_concurrentqueue evpp_concurrentqueue_static
+-      EXPORT ${PACKAGE_NAME}
+-      RUNTIME DESTINATION bin
+-      LIBRARY DESTINATION lib
+-      ARCHIVE DESTINATION lib)
+-
+-else (UNIX)
+-    install (
+-      TARGETS evpp_static evpp_lite_static
+-      EXPORT ${PACKAGE_NAME}
+-      RUNTIME DESTINATION bin
+-      LIBRARY DESTINATION lib
+-      ARCHIVE DESTINATION lib)
+-
+ endif (UNIX)
+ 
++install_shared_or_static_targets()
++
+ install (FILES ${evpp_PUBLIC_HEADERS} DESTINATION "include/evpp")
+ install (FILES ${evpp_HTTP_PUBLIC_HEADERS} DESTINATION "include/evpp/http")
+ install (FILES ${evpp_HTTPC_PUBLIC_HEADERS} DESTINATION "include/evpp/httpc")

@@ -1,0 +1,16 @@
+diff --git a/thrift/lib/cpp2/CMakeLists.txt b/thrift/lib/cpp2/CMakeLists.txt
+index 439f0814..3374dd34 100644
+--- a/thrift/lib/cpp2/CMakeLists.txt
++++ b/thrift/lib/cpp2/CMakeLists.txt
+@@ -15,11 +15,6 @@
+ # Set the cpp2 directory
+ set(LIB_CPP2_HOME ${CMAKE_CURRENT_SOURCE_DIR})
+ 
+-if (enable_tests)
+-  add_subdirectory(protocol/test)
+-endif ()
+-add_subdirectory(test)
+-
+ #######
+ # CMAKE variables only have local/subdirectory scope
+ # So even though this is defined in ../thrift/CMakeLists.txt as a variable

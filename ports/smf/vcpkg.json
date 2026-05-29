@@ -1,0 +1,33 @@
+{
+  "name": "smf",
+  "version": "0.2.3",
+  "description": "State machine framework",
+  "homepage": "https://github.com/vpetrigo/smf",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "hierarchical": {
+      "description": "Enable hierarchical state machine support"
+    },
+    "init-transition": {
+      "description": "Enable state machine initial transition feature",
+      "dependencies": [
+        {
+          "name": "smf",
+          "features": [
+            "hierarchical"
+          ]
+        }
+      ]
+    }
+  }
+}

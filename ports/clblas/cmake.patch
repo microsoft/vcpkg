@@ -1,0 +1,36 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 6a88c41..05b8029 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -276,6 +276,9 @@ endif()
+ 
+ # This will define OPENCL_FOUND
+ find_package( OpenCL ${OPENCL_VERSION} )
++set( OPENCL_FOUND ${OpenCL_FOUND})
++set( OPENCL_LIBRARIES ${OpenCL_LIBRARIES} )
++set( OPENCL_INCLUDE_DIRS ${OpenCL_INCLUDE_DIRS} )
+ 
+ # Find Boost on the system, and configure the type of boost build we want
+ set( Boost_USE_MULTITHREADED ON )
+diff --git a/src/clBLASConfig.cmake.in b/src/clBLASConfig.cmake.in
+index f52d1d6..464feca 100644
+--- a/src/clBLASConfig.cmake.in
++++ b/src/clBLASConfig.cmake.in
+@@ -1,3 +1,3 @@
+ include(${CMAKE_CURRENT_LIST_DIR}/clBLASTargets.cmake)
+-get_filename_component(CLBLAS_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/@reldir@/include ABSOLUTE)
++get_filename_component(CLBLAS_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/@reldir@/../include ABSOLUTE)
+ set(CLBLAS_LIBRARIES clBLAS)
+diff --git a/src/library/CMakeLists.txt b/src/library/CMakeLists.txt
+index 5164898..f2d5a88 100644
+--- a/src/library/CMakeLists.txt
++++ b/src/library/CMakeLists.txt
+@@ -894,7 +894,7 @@ install( TARGETS clBLAS
+          EXPORT Library
+          RUNTIME DESTINATION bin${SUFFIX_BIN}
+          LIBRARY DESTINATION lib${SUFFIX_LIB}
+-		 ARCHIVE DESTINATION lib${SUFFIX_LIB}/import
++		 ARCHIVE DESTINATION lib${SUFFIX_LIB}
+ 		)
+ 
+ # For debug builds, include the debug runtimes into the package for testing on non-developer machines

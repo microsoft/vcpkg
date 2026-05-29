@@ -1,0 +1,82 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 310a3dc..1f1495b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -197,8 +197,9 @@ add_subdirectory(src)
+ #
+
+ if (LLAMA_BUILD_COMMON)
++    find_package(httplib CONFIG REQUIRED)
++    add_library(cpp-httplib ALIAS httplib::httplib)
+     add_subdirectory(common)
+-    add_subdirectory(vendor/cpp-httplib)
+ endif()
+
+ if (LLAMA_BUILD_COMMON AND LLAMA_BUILD_TESTS AND NOT CMAKE_JS_VERSION)
+diff --git a/common/http.h b/common/http.h
+index d3daccd..be18264 100644
+--- a/common/http.h
++++ b/common/http.h
+@@ -1,6 +1,6 @@
+ #pragma once
+
+-#include <cpp-httplib/httplib.h>
++#include <httplib.h>
+
+ struct common_http_url {
+     std::string scheme;
+diff --git a/tools/mtmd/CMakeLists.txt b/tools/mtmd/CMakeLists.txt
+index 35d721d..18eabc4 100644
+--- a/tools/mtmd/CMakeLists.txt
++++ b/tools/mtmd/CMakeLists.txt
+@@ -53,7 +53,6 @@ target_link_libraries     (mtmd PUBLIC ggml llama)
+ target_link_libraries     (mtmd PRIVATE Threads::Threads)
+ target_include_directories(mtmd PUBLIC  .)
+ target_include_directories(mtmd PRIVATE ../..)
+-target_include_directories(mtmd PRIVATE ../../vendor)
+ target_compile_features   (mtmd PRIVATE cxx_std_17)
+
+ if (BUILD_SHARED_LIBS)
+diff --git a/tools/mtmd/mtmd-helper.cpp b/tools/mtmd/mtmd-helper.cpp
+index 4094074..d40ae74 100644
+--- a/tools/mtmd/mtmd-helper.cpp
++++ b/tools/mtmd/mtmd-helper.cpp
+@@ -27,10 +27,10 @@
+ #define MA_NO_ENGINE
+ #define MA_NO_GENERATION
+ #define MA_API static
+-#include "miniaudio/miniaudio.h"
++#include "miniaudio.h"
+
+ #define STB_IMAGE_IMPLEMENTATION
+-#include "stb/stb_image.h"
++#include "stb_image.h"
+
+ #ifdef MTMD_INTERNAL_HEADER
+ #error "mtmd-helper is a public library outside of mtmd. it must not include internal headers"
+diff --git a/tools/server/server-http.cpp b/tools/server/server-http.cpp
+index 6f24f83..40a5c85 100644
+--- a/tools/server/server-http.cpp
++++ b/tools/server/server-http.cpp
+@@ -2,7 +2,7 @@
+ #include "server-http.h"
+ #include "server-common.h"
+
+-#include <cpp-httplib/httplib.h>
++#include <httplib.h>
+
+ #include <functional>
+ #include <string>
+diff --git a/tools/server/server-models.cpp b/tools/server/server-models.cpp
+index 5a05ca2..3b7aef9 100644
+--- a/tools/server/server-models.cpp
++++ b/tools/server/server-models.cpp
+@@ -5,7 +5,7 @@
+ #include "preset.h"
+ #include "download.h"
+
+-#include <cpp-httplib/httplib.h> // TODO: remove this once we use HTTP client from download.h
++#include <httplib.h> // TODO: remove this once we use HTTP client from download.h
+ #include <sheredom/subprocess.h>
+
+ #include <functional>

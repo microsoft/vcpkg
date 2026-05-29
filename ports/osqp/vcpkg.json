@@ -1,0 +1,22 @@
+{
+  "name": "osqp",
+  "version": "1.0.0",
+  "port-version": 1,
+  "description": "The Operator Splitting QP Solver",
+  "homepage": "https://osqp.org/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "qdldl",
+      "version>=": "0.1.9"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

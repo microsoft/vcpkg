@@ -1,0 +1,10 @@
+diff --git a/cmake/CLI11GeneratePkgConfig.cmake b/cmake/CLI11GeneratePkgConfig.cmake
+index 7ed87f077..a9c5eb885 100644
+--- a/cmake/CLI11GeneratePkgConfig.cmake
++++ b/cmake/CLI11GeneratePkgConfig.cmake
+@@ -4,4 +4,4 @@ else()
+   configure_file("cmake/CLI11.pc.in" "CLI11.pc" @ONLY)
+ endif()
+ 
+-install(FILES "${PROJECT_BINARY_DIR}/CLI11.pc" DESTINATION "${CMAKE_INSTALL_DATADIR}/pkgconfig")
++install(FILES "${PROJECT_BINARY_DIR}/CLI11.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

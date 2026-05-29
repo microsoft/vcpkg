@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index fc3ad34..bef4944 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -697,6 +697,8 @@ endif()
+ 
+ set (install_targets cgns_static)
+ if(CGNS_BUILD_SHARED)
++  set_target_properties(${install_targets} PROPERTIES EXCLUDE_FROM_ALL 1)
++  set(install_targets "")
+   set(install_targets ${install_targets} cgns_shared)
+ endif ()
+ # Set the install path of the static and shared library

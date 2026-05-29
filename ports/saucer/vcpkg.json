@@ -1,0 +1,33 @@
+{
+  "name": "saucer",
+  "version": "6.0.1",
+  "port-version": 7,
+  "description": "Next-gen desktop apps with web-frontend in C++",
+  "homepage": "https://saucer.github.io/",
+  "license": "MIT",
+  "supports": "!android & !uwp",
+  "dependencies": [
+    "boost-callable-traits",
+    "boost-preprocessor",
+    "curve-eraser",
+    "curve-ereignis",
+    "curve-flagpp",
+    "curve-lockpp",
+    "curve-poolparty",
+    "curve-rebind",
+    "fmt",
+    "glaze",
+    {
+      "name": "gtk",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "webview2",
+      "platform": "windows"
+    }
+  ]
+}

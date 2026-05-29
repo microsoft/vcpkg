@@ -1,0 +1,4 @@
+gsl-lite provides CMake targets:
+
+  find_package(gsl-lite CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE gsl-lite::gsl-lite)

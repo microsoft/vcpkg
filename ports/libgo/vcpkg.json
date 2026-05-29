@@ -1,0 +1,19 @@
+{
+  "name": "libgo",
+  "version": "3.1",
+  "port-version": 6,
+  "description": "The best stackful coroutine by c++11.",
+  "homepage": "https://github.com/yyzybb537/libgo",
+  "license": "MIT",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

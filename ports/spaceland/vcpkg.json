@@ -1,0 +1,13 @@
+{
+  "name": "spaceland",
+  "version": "7.8.2",
+  "port-version": 11,
+  "description": "Spaceland Lib (sl) is a suite for geometric computation, specifically adapted to OpenGL.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

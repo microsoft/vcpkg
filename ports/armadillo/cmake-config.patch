@@ -1,0 +1,13 @@
+diff --git a/cmake_aux/InstallFiles/ArmadilloConfig.cmake.in b/cmake_aux/InstallFiles/ArmadilloConfig.cmake.in
+index bfe74ac..9caf2c8 100644
+--- a/cmake_aux/InstallFiles/ArmadilloConfig.cmake.in
++++ b/cmake_aux/InstallFiles/ArmadilloConfig.cmake.in
+@@ -9,7 +9,7 @@ set(ARMADILLO_INCLUDE_DIRS "@ARMADILLO_INCLUDE_DIRS@")
+ set(ARMADILLO_LIBRARY_DIRS "@ARMADILLO_LIB_DIR@")
+ 
+ # Our library dependencies (contains definitions for IMPORTED targets)
+-include("@ARMADILLO_CMAKE_DIR@/ArmadilloLibraryDepends.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake")
+ 
+ # These are IMPORTED targets created by ArmadilloLibraryDepends.cmake
+ set(ARMADILLO_LIBRARIES armadillo)

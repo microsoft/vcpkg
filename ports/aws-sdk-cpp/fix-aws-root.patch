@@ -1,0 +1,22 @@
+diff --git a/cmake/AWSSDKConfig.cmake b/cmake/AWSSDKConfig.cmake
+--- a/cmake/AWSSDKConfig.cmake	(revision 2f90f9fd6c56460bd382243aa215fcddcb5883c8)
++++ b/cmake/AWSSDKConfig.cmake	(date 1636913220527)
+@@ -54,18 +54,14 @@
+ string(REPLACE ";" "${AWS_MODULE_DIR};" SYSTEM_MODULE_PATH "${CMAKE_SYSTEM_PREFIX_PATH}${AWS_MODULE_DIR}")
+ list(APPEND CMAKE_MODULE_PATH ${AWS_MODULE_PATH} ${SYSTEM_MODULE_PATH})
+ 
+-# On Windows, dlls are treated as runtime target and installed in bindir
+ if (WIN32 AND AWSSDK_INSTALL_AS_SHARED_LIBS)
+-    set(AWSSDK_INSTALL_LIBDIR "${AWSSDK_INSTALL_BINDIR}")
+     # If installed CMake scripts are associated with dll library, define USE_IMPORT_EXPORT for customers
+     add_definitions(-DUSE_IMPORT_EXPORT)
+ endif()
+ 
+ 
+ # Compute the default installation root relative to this file.
+-# from prefix/lib/cmake/AWSSDK/xx.cmake to prefix
+ get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${AWSSDK_DEFAULT_ROOT_DIR}" PATH)
+ get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${AWSSDK_DEFAULT_ROOT_DIR}" PATH)
+ get_filename_component(AWSSDK_DEFAULT_ROOT_DIR "${AWSSDK_DEFAULT_ROOT_DIR}" PATH)
+ get_filename_component(AWS_NATIVE_SDK_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)

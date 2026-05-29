@@ -1,0 +1,16 @@
+{
+  "name": "cppad",
+  "version": "20250000.3",
+  "port-version": 2,
+  "description": "CppAD: A Package for Differentiation of C++ Algorithms",
+  "homepage": "https://github.com/coin-or/CppAD",
+  "license": "EPL-2.0 OR GPL-2.0-or-later",
+  "dependencies": [
+    "boost-thread",
+    "eigen3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

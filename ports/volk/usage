@@ -1,0 +1,4 @@
+volk provides CMake targets:
+
+    find_package(volk CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE volk::volk volk::volk_headers)

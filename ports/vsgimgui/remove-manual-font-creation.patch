@@ -1,0 +1,44 @@
+diff --git a/include/vsgImGui/RenderImGui.h b/include/vsgImGui/RenderImGui.h
+index 656d0b1..73c661d 100644
+--- a/include/vsgImGui/RenderImGui.h
++++ b/include/vsgImGui/RenderImGui.h
+@@ -86,7 +86,6 @@ namespace vsgImGui
+                    vsg::ref_ptr<vsg::RenderPass> renderPass,
+                    uint32_t minImageCount, uint32_t imageCount,
+                    VkExtent2D imageSize, bool useClearAttachments);
+-        void _uploadFonts();
+     };
+ 
+     // temporary workaround for Dear ImGui's nonexistent sRGB awareness
+diff --git a/src/vsgImGui/RenderImGui.cpp b/src/vsgImGui/RenderImGui.cpp
+index fd70a6f..c8b6e7b 100644
+--- a/src/vsgImGui/RenderImGui.cpp
++++ b/src/vsgImGui/RenderImGui.cpp
+@@ -71,7 +71,6 @@ namespace vsgImGui
+ RenderImGui::RenderImGui(const vsg::ref_ptr<vsg::Window>& window, bool useClearAttachments)
+ {
+     _init(window, useClearAttachments);
+-    _uploadFonts();
+ }
+ 
+ RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
+@@ -80,7 +79,6 @@ RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
+                          VkExtent2D imageSize, bool useClearAttachments)
+ {
+     _init(device, queueFamily, renderPass, minImageCount, imageCount, imageSize, useClearAttachments);
+-    _uploadFonts();
+ }
+ 
+ RenderImGui::~RenderImGui()
+@@ -217,11 +215,6 @@ void RenderImGui::_init(
+     }
+ }
+ 
+-void RenderImGui::_uploadFonts()
+-{
+-    ImGui_ImplVulkan_CreateFontsTexture();
+-}
+-
+ void RenderImGui::accept(vsg::RecordTraversal& rt) const
+ {
+     auto& commandBuffer = *(rt.getState()->_commandBuffer);

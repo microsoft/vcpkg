@@ -1,0 +1,21 @@
+diff --git a/cmake/helpers/CheckDependentLibrariesCommon.cmake b/cmake/helpers/CheckDependentLibrariesCommon.cmake
+index ebb3538..a4a6d69 100644
+--- a/cmake/helpers/CheckDependentLibrariesCommon.cmake
++++ b/cmake/helpers/CheckDependentLibrariesCommon.cmake
+@@ -41,6 +41,7 @@ endif()
+ # https://github.com/OSGeo/gdal/issues/5324
+ function (gdal_check_target_is_valid target res_var)
+   get_target_property(_interface_include_directories ${target} "INTERFACE_INCLUDE_DIRECTORIES")
++  get_target_property(_type ${target} "TYPE")
+   if(_interface_include_directories)
+     foreach(_dir IN LISTS _interface_include_directories)
+       if(NOT EXISTS "${_dir}")
+@@ -54,7 +55,7 @@ function (gdal_check_target_is_valid target res_var)
+     # property, but a GeoTIFF_INCLUDE_DIRS variable.
+     set_target_properties(${target} PROPERTIES
+                           INTERFACE_INCLUDE_DIRECTORIES "${GeoTIFF_INCLUDE_DIRS}")
+-  else()
++  elseif(NOT _type STREQUAL "INTERFACE" AND _type STREQUAL "ALIAS")
+      message(WARNING "Target ${target} has no INTERFACE_INCLUDE_DIRECTORIES property. Ignoring that target.")
+      set(${res_var} FALSE PARENT_SCOPE)
+      return()

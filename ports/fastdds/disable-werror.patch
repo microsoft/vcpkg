@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7814724..89fc69b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -178,7 +178,7 @@ endif()
+ string(FIND ${CMAKE_CXX_FLAGS} "-fsanitize=thread" SANITIZER_THREAD)
+ if (${SANITIZER_THREAD} EQUAL -1)
+     message(STATUS "Setting warnings as errors...")
+-    set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
++    set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
+ endif()
+ 
+ ###############################################################################

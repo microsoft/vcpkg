@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4ceee1d..9354718 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -810,7 +810,7 @@ if(SDL2IMAGE_WEBP)
+         set_target_properties(webp PROPERTIES EXPORT_NAME "external_libwebp")
+         add_library(SDL2_image::external_libwebp ALIAS webp)
+     else()
+-        find_package(webp ${required})
++        find_package(webp NAMES WebP CONFIG ${required})
+         if(webp_FOUND)
+             set(SDL2IMAGE_WEBP_ENABLED TRUE)
+             message(STATUS "${PROJECT_NAME}: Using system libwebp")
+diff --git a/SDL2_imageConfig.cmake.in b/SDL2_imageConfig.cmake.in
+index 7c7efab..925bbc4 100644
+--- a/SDL2_imageConfig.cmake.in
++++ b/SDL2_imageConfig.cmake.in
+@@ -74,7 +74,7 @@ endif()
+ 
+ if(SDL2IMAGE_WEBP AND NOT SDL2IMAGE_VENDORED AND NOT TARGET WebP::webp)
+     list(APPEND webp_ROOT "${CMAKE_CURRENT_LIST_DIR}")
+-    find_dependency(webp)
++    find_dependency(webp NAMES WebP CONFIG)
+ endif()
+ 
+ #FIXME: can't add SDL2IMAGE_SDL2_REQUIRED_VERSION since not all SDL2 installs ship SDL2ConfigVersion.cmake

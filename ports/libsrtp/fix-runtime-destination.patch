@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d548e78..4a839e2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -262,6 +262,7 @@ endif()
+ 
+ install(TARGETS srtp2 DESTINATION lib
+   EXPORT libSRTPTargets
++  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+ )
+ 
+ install(FILES include/srtp.h crypto/include/auth.h

@@ -1,0 +1,26 @@
+{
+  "name": "libmodman",
+  "version": "2.0.1",
+  "port-version": 5,
+  "description": "a simple library for managing modules",
+  "homepage": "https://code.google.com/p/libmodman",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tests": {
+      "description": "Build libmodman tests",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}
