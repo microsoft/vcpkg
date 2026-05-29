@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cryptopp-modern/cryptopp-modern
     REF "${VERSION}"
-    SHA512 d52b866fc26dc127c797fbf02a78b788af1b129a2c10b5492a1ba8a995d2967ca357b7cdc8ad0b5d1e001148f5e10a274523602e54aa84bf724a00aa08e7a3c7
+    SHA512 d95c12459c0fe5c808ef6678297183ff2f66acbb0673b3142c8f55ecac5f722c4a94dd84afcd92ee9ea73016c49ba56df4924693df2eaea11d5d5efb478b48f9
     HEAD_REF main
 )
 
