@@ -7522,7 +7522,7 @@
     },
     "orc": {
       "baseline": "2.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "orefkov-simstr": {
       "baseline": "1.8.1",
