@@ -9145,8 +9145,8 @@
       "port-version": 0
     },
     "sebsjames-maths": {
-      "baseline": "2.0",
-      "port-version": 1
+      "baseline": "3.0",
+      "port-version": 0
     },
     "secp256k1": {
       "baseline": "0.7.1",
