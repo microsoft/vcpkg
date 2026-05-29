@@ -105,9 +105,13 @@ endif()
 
 if("cuda" IN_LIST FEATURES)
   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    # PyTorch's default TORCH_CUDA_ARCH_LIST still includes Maxwell (5.0). CUDA 13
+    # dropped Maxwell/Pascal/Volta (sm_50/60/70), so nvcc aborts with
+    # "Unsupported gpu architecture 'compute_50'". Pin to Turing->Hopper.
     list(APPEND FEATURE_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+        "-DTORCH_CUDA_ARCH_LIST=7.5;8.0;8.6;8.9;9.0"
     )
 endif()
 
