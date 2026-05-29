@@ -4,7 +4,6 @@
   "description": "Modern C++ cryptography library with improved CMake support and code organization",
   "homepage": "https://github.com/cryptopp-modern/cryptopp-modern",
   "license": "BSL-1.0",
-  "supports": "!android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
