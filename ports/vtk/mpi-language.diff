@@ -1,0 +1,14 @@
+diff --git a/CMake/vtkModule.cmake b/CMake/vtkModule.cmake
+index 28d09e98..654c93f6 100644
+--- a/CMake/vtkModule.cmake
++++ b/CMake/vtkModule.cmake
+@@ -5424,6 +5424,9 @@ if (_vtk_module_find_package_enabled)
+       \"Failed to find the ${_vtk_export_package} package.\")
+   endif ()\n")
+ 
++      if(_vtk_export_package STREQUAL "MPI")
++        string(PREPEND _vtk_export_module_content "  enable_language(C)\n  enable_language(CXX)\n")
++      endif()
+       string(APPEND _vtk_export_module_build_content "${_vtk_export_module_content}")
+       # Private usages should be guarded by `$<BUILD_INTERFACE>` and can be
+       # skipped for the install tree regardless of the build mode.

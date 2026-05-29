@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c4f3185..5147fa4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,7 +49,7 @@ endif()
+ # example defined by a parent project including Sophus via `add_subdirectory`.)
+ 
+ if(NOT TARGET Eigen3::Eigen)
+-  find_package(Eigen3 3.4.0 REQUIRED)
++  find_package(Eigen3 REQUIRED)
+ endif()
+ 
+ # Define interface library target

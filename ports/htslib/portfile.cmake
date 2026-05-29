@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO samtools/htslib
     REF "${VERSION}"
-    SHA512 3537149d4118bf27424845a44fdfdb5ffce2376bf956ba15cd61686b84efa320c66fed76eab2fc381f344d61607f7e63494fdd6ef8cf4e40cdb3ac6fe29f86ad
+    SHA512 4fefb02ded13808afdb04b343d84bf78127338a8110ef7b11417cc1b62763ae4aafce65c35d711f713475e86df9e44c4082d64ee9d445dd6ff61b083de2af77e
     HEAD_REF develop
     PATCHES
         0001-set-linkage.patch

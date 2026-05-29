@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO man-group/sparrow
-    REF "${VERSION}"
-    SHA512 0ba6e9400f63a8fbe6b0a8e4866e0e12c7a447b89184b43fa7120b3582652d975d4a0cc16af92351fd70cfb243fafe9d5636dded43f27ab898aba23ed4b5170b
+    REF 7c521929ca10afeea29b8500e57e54842f8fc837 # this is 2.4.0 + an MSVC build break fix https://github.com/man-group/sparrow/pull/672
+    SHA512 747da0b989207640fc14ea3406da4fb7e77e3c88a24d998db3c1d45a96e28a43dd1fdd40c320e5e373d6bfb74a1a71f499c714e2dedb3870f564db5945197047
     HEAD_REF main
 )
 
@@ -28,9 +28,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSPARROW_BUILD_SHARED=${SPARROW_BUILD_SHARED}
-        -DBUILD_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
         -DCREATE_JSON_READER_TARGET=${BUILD_JSON_READER}
+        -DUSE_DATE_POLYFILL=ON
 )
 
 vcpkg_cmake_install()

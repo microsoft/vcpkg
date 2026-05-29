@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 d1d87553db94bf54da1373016a847476e6cd608db6d427ed72532658e2272501daf45d7c9976efdde2f26ab3810ba9dbfec2518d46dee5a76ecaa369bfee2e4a
     HEAD_REF master
+    PATCHES
+        dbus-emscripten.patch
 )
 
 if(VCPKG_CROSSCOMPILING)

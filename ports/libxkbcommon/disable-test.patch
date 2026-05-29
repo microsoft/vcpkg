@@ -1,8 +1,8 @@
 diff --git a/meson.build b/meson.build
-index 2de4ee9..bb53561 100644
+index 92483c54..26230102 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -601,6 +601,7 @@ configure_file(input: 'test/xkeyboard-config-test.py.in',
+@@ -853,6 +853,7 @@ configure_file(input: 'test/xkeyboard-config-test.py.in',
                 configuration: xkct_config)
  
  # Tests
@@ -10,7 +10,7 @@ index 2de4ee9..bb53561 100644
  test_env = environment()
  test_env.set('XKB_LOG_LEVEL', 'debug')
  test_env.set('XKB_LOG_VERBOSITY', '10')
-@@ -873,6 +874,7 @@ if get_option('enable-x11')
+@@ -1372,6 +1373,7 @@ if get_option('enable-x11')
        env: bench_env,
    )
  endif
@@ -18,3 +18,13 @@ index 2de4ee9..bb53561 100644
  
  
  # Documentation.
+@@ -1505,7 +1507,9 @@ if meson.version().version_compare('>=0.62.0')
+       'rules': get_option('default-rules'),
+       'variant': get_option('default-variant'),
+     }, section: 'Defaults')
++if false
+     summary({
+       'merge-modes': has_merge_modes_tests,
+     }, section: 'Tests')
+ endif
++endif

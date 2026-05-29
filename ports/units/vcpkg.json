@@ -1,6 +1,6 @@
 {
   "name": "units",
-  "version": "3.1.1",
+  "version": "3.3.0",
   "description": "A compile-time, header-only, dimensional analysis and unit conversion library built on c++14 with no dependencies.",
   "homepage": "https://github.com/nholthaus/units",
   "license": "MIT",

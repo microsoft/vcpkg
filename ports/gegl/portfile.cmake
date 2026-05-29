@@ -3,7 +3,7 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS https://download.gimp.org/pub/gegl/${VERSION_MAJOR_MINOR}/gegl-${VERSION}.tar.xz
     FILENAME "gegl-${VERSION}.tar.xz"
-    SHA512 bf4801588abe8b568ae3d1daafa97af28516bbbdd44d2a0798c87412b49301f621db3cf1c7a3ec33f19d96ab4dbd37d80824f04460116a896dd7415aa0d5229d
+    SHA512 9f47480dc2fad58c052aa3df3ac914d500614e7acb0dc46677bea4228350a00a0fe38b5b0572303251210e3e544b5b7cb51415476586630df4da8f4b7c6486d8
 )
 
 vcpkg_extract_source_archive(
@@ -12,13 +12,27 @@ vcpkg_extract_source_archive(
     PATCHES
         disable_tests.patch
         remove_execinfo_support.patch
+        remove-consistency-check.patch
 )
+
+if("introspection" IN_LIST FEATURES)
+    list(APPEND feature_options "-Dintrospection=true")
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
+else()
+    list(APPEND feature_options "-Dintrospection=false")
+endif()
+
+if("cairo" IN_LIST FEATURES)
+    list(APPEND feature_options "-Dcairo=enabled")
+else()
+    list(APPEND feature_options "-Dcairo=disabled")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${feature_options}
         -Ddocs=false
-        -Dintrospection=false
         -Dgdk-pixbuf=disabled
         -Dgexiv2=disabled
         -Dgraphviz=disabled
@@ -37,7 +51,6 @@ vcpkg_configure_meson(
         -Dmaxflow=disabled
         -Dopenexr=disabled
         -Dopenmp=disabled
-        -Dcairo=disabled
         -Dpango=disabled
         -Dpangocairo=disabled
         -Dpoppler=disabled
@@ -45,6 +58,9 @@ vcpkg_configure_meson(
         -Dsdl2=disabled
         -Dumfpack=disabled
         -Dwebp=disabled
+    ADDITIONAL_BINARIES
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 
 vcpkg_install_meson()

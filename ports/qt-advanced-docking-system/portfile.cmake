@@ -2,8 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
     REF "${VERSION}"
-    SHA512 c5a7ddeb18e86cbda32829d0fc1e8fa7f14fdc7057dff1d1fb416a29f394ca676bcc611c3d537ebf496929ea4090ca9c1b2c9d1273117022de863565cdc3a1a6
+    SHA512 ae9345e0876a80e2f2dfa393d12176215cdcf17ed1985d2e46527d12a3abf4ea2b7796217871b562aaab9c7c876bef226de661d5e9cbdc862c8f49d57e9e8173
     HEAD_REF master
+    PATCHES
+        set_cmake_module_path.patch
+        fix_windows_version_resources_generation.patch
 )
 
 if(VCPKG_CROSSCOMPILING)

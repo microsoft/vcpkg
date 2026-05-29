@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
     REF "v${VERSION}"
-    SHA512 3bec01704ad1acdb4f7e9454101c2a205b7e288a4dffaa5e1afc2b1f849fa3a42b961c532bed2669841925ab8f84fb35bb82a2df8039b1caf76c5779665032d9
+    SHA512 85036ade3aca33c5283605ae9de21a7948ec5952bc8cd468aa024ca873851a56ab0ebe62f95c0da109df9163875e9687a377d3df69728d434cc258b3f845ef0c
     HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
@@ -71,6 +71,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
     FEATURES
         tools   BUILD_CLI
+        sha256  EXPERIMENTAL_SHA256
 )
 
 vcpkg_cmake_configure(
@@ -96,6 +97,11 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 if("tools" IN_LIST FEATURES)
+    # Since SHA256 is considered an "experimental" feature, it renames the executable. This renames it back.
+    if("sha256" IN_LIST FEATURES)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/git2-experimental${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/bin/git2${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    endif()
+
     vcpkg_copy_tools(TOOL_NAMES git2 AUTO_CLEAN)
 endif()
 

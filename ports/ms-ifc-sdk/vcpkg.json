@@ -1,7 +1,6 @@
 {
   "name": "ms-ifc-sdk",
-  "version": "0.43.1",
-  "port-version": 1,
+  "version": "0.43.5",
   "description": "SDK for the IFC specification at https://github.com/microsoft/ifc-spec",
   "homepage": "https://github.com/microsoft/ifc",
   "license": "Apache-2.0 WITH LLVM-exception",

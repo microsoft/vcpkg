@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 016cd45720a466740c95bea1bb4eb97d218404536c7498a604d718b9301caf0aa88efef839b2b67823c8b65ae22a335a597580b6ba0dc1602e82287ee3eeb5c1
+    SHA512 649521b69d5d7328245cabca8b769448f695b0b7e3bf16208ddb1635b29165dfd363a06b1b2831229f6ff722d0e8212fd82054e6b64992552a6a21af238c5cb3
     HEAD_REF master
     PATCHES
-        fix-win32-build.patch
+        fix-eol-mismatch.diff # https://github.com/harfbuzz/harfbuzz/commit/ab6aa4f449457be45e8e0218f7a8de271fb19967.diff?full_index=1
+        ${ANDROID_LOCALECONV_L_PATCH}
 )
 
 if("icu" IN_LIST FEATURES)
@@ -53,6 +54,18 @@ else()
 endif()
 if("gdi" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # enable gdi helpers and uniscribe shaper backend (windows only)
+else()
+    list(APPEND FEATURE_OPTIONS -Dgdi=disabled)
+endif()
+if("png" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dpng=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dpng=disabled)
+endif()
+if("zlib" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dzlib=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dzlib=disabled)
 endif()
 
 if("introspection" IN_LIST FEATURES)
@@ -75,13 +88,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endblock()
 endif()
 
+set(LANGUAGES C CXX)
+if(VCPKG_TARGET_IS_APPLE)
+    list(APPEND LANGUAGES OBJC OBJCXX)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    LANGUAGES ${LANGUAGES}
     OPTIONS
         ${FEATURE_OPTIONS}
         -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
         -Dbenchmark=disabled
+        -Dgpu_demo=disabled
         ${OPTIONS}
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
@@ -114,13 +134,13 @@ if(cxx_link_libraries)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB pc_files 
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
+    file(GLOB pc_files
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc"
         "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"
     )
     foreach(pc_file IN LISTS pc_files)
         vcpkg_replace_string("${pc_file}"
-            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
+            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib"
             "-l\\1"
             REGEX
             IGNORE_UNCHANGED
@@ -135,7 +155,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info hb-vector hb-raster)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()
@@ -149,5 +169,3 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

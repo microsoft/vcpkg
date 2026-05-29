@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EABase
-    REF 123363eb82e132c0181ac53e43226d8ee76dea12
-    SHA512 8df5279d1b303047e832b8b0ddb6cdf51cca753efaeb2a36f7fa5ebc015c2f37cc6a68184b919deb45f09dfd89f9f8f79f18c487817d231f1b049102ceae610f
+    REF 0699a15efdfd20b6cecf02153bfa5663decb653c
+    SHA512 6852fcef08002c503d7ca23a22ef25d4b3136787c505d9b7ad55e821a6369d1dcc1773ff8042d7a9c306a52f33dd8da35b2f3fdbd8ea0ff1ca0f765fbe7ac240
     HEAD_REF master
     PATCHES
     fix_cmake_install.patch

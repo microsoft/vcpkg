@@ -3,24 +3,29 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uber/h3
-    REF v${VERSION}
-    SHA512 7b9a18ff1714465d8c980607cf62b4e73e2be199f02f24d85004760b48d523686cb9e7f8891d821545b4ef8a2d547c6eb9880e419d0799a4f549323b7f8e9f94
+    REF "v${VERSION}"
+    SHA512 8b74989632e2f23ecd26098d1accf6289ab0aac025ed695eafc0919e450090f935990518d26cb5b2f01df180e60f1bf3896607bc39771808b63ffc87a18921e4
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_FUZZERS=OFF
         -DBUILD_FILTERS=OFF
         -DBUILD_GENERATORS=OFF
         -DBUILD_TESTING=OFF
+
+        -DENABLE_DOCS=OFF
+        -DENABLE_FORMAT=OFF
+        -DENABLE_LINTING=OFF
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 

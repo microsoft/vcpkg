@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/dll
     REF boost-${VERSION}
-    SHA512 e5a7430dbd15bf5687f8b00ff28ae1dc770eea96d4ade2ce1026bb179a5a550e0b63222e026e27d199090b5d4a8137db053ce706d4379bb3e855c323728180a8
+    SHA512 9aa7ecdb6357bb93b8f80abbe765135e226e4cce582cdecc50b47480057f8dc73c1b970e88ca5fc75e18cd46e38255083cee6b27b04be4fc6ed2a7660840b5e1
     HEAD_REF master
-    PATCHES
-        0001-fix-build.patch
 )
 
 set(FEATURE_OPTIONS "")

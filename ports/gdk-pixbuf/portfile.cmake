@@ -1,10 +1,15 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/gdk-pixbuf
-    REF "${VERSION}"
-    SHA512 f95c92974ed6efac9845790ef5c4ed74dd6e28b182ea3732013c46b016166e92f8bc10c1994358d79ff53e988c615c43cb1a2130c6ef531ef9d84c2fdcc87e52
-    HEAD_REF master
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 45ad815dda5d7b86fafe4a14300a676130f1c404299989616e41fa84e872516304bc6c3ebee9e1153bce01245333b1f8dfedee4bcde27a323e27d7e70fcb597f
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix_build_error_windows.patch
         loaders-cache.patch
@@ -49,6 +54,14 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -Drelocatable=true)          
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_SYSTEM_VERSION VERSION_LESS "31")
+        list(APPEND OPTIONS -Dandroid=disabled)
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND OPTIONS -Dnative_windows_loaders=true) # Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option
 endif()
@@ -56,10 +69,10 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
-        -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
-        -Ddocs=false
+        -Ddocumentation=false       # Whether to generate the API reference (requires GTK-Doc)
         -Dtests=false
         -Dinstalled_tests=false
+        -Dglycin=disabled
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
         -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located;
                                     # Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf

@@ -1,17 +1,18 @@
-diff --git a/MvgMvsPipeline.py b/MvgMvsPipeline.py.in
-index 53a4a5cc..97735396 100644
---- a/MvgMvsPipeline.py
-+++ b/MvgMvsPipeline.py.in
-@@ -109,14 +109,14 @@ def find(afile):
-             return d
+diff --git a/scripts/python/MvgMvsPipeline.py b/scripts/python/MvgMvsPipeline.py
+index fd380eb..1b8fcbc 100644
+--- a/scripts/python/MvgMvsPipeline.py
++++ b/scripts/python/MvgMvsPipeline.py
+@@ -118,14 +118,15 @@ def find(afile):
      return None
  
--
+ 
 +current_dir = os.path.dirname(os.path.abspath(__file__))
- # Try to find openMVG and openMVS binaries in PATH
+ # Try to find openMVG, COLMAP, and openMVS binaries in PATH
 -OPENMVG_BIN = whereis("openMVG_main_SfMInit_ImageListing")
+-COLMAP_BIN = whereis("colmap")
 -OPENMVS_BIN = whereis("ReconstructMesh")
 +OPENMVG_BIN = os.path.join(current_dir, '..', 'openmvg')
++COLMAP_BIN = os.path.join(current_dir, '..', 'colmap')
 +OPENMVS_BIN = current_dir
  
  # Try to find openMVG camera sensor database
@@ -20,13 +21,12 @@ index 53a4a5cc..97735396 100644
 +CAMERA_SENSOR_DB_FILE = os.path.join(OPENMVG_BIN, 'sensor_width_camera_database.txt')
 +CAMERA_SENSOR_DB_DIRECTORY = OPENMVS_BIN
  
- # Ask user for openMVG and openMVS directories if not found
+ # Ask user for openMVG, COLMAP, and openMVS directories if not found
  if not OPENMVG_BIN:
-
-diff --git a/MvgOptimizeSfM.py b/MvgOptimizeSfM.py.in
-index 930d6805..6eb672c1 100644
---- a/MvgOptimizeSfM.py
-+++ b/MvgOptimizeSfM.py.in
+diff --git a/scripts/python/MvgOptimizeSfM.py b/scripts/python/MvgOptimizeSfM.py
+index 930d680..6eb672c 100644
+--- a/scripts/python/MvgOptimizeSfM.py
++++ b/scripts/python/MvgOptimizeSfM.py
 @@ -56,9 +56,10 @@ def launch(cmdline):
          sys.exit('\r\nProcess canceled by user, all files remains')
  

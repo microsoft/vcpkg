@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f9b1d7f..6a2f7b7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,12 +4,13 @@ if (POLICY CMP0091)
+   cmake_policy(SET CMP0091 NEW)
+ endif (POLICY CMP0091)
+ 
++set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
++
+ # By default, the version information is extracted from the git index. However,
+ # we can override this behavior by explicitly setting ADS_VERSION and
+ # skipping the git checks. This is useful for cases where this project is being
+ # used independently of its original git repo (e.g. vendored in another project)
+ if(NOT ADS_VERSION)
+-    set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
+     include(GetGitRevisionDescription)
+     git_describe(GitTagVersion --tags)
+     string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${GitTagVersion}")

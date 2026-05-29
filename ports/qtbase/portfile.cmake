@@ -23,12 +23,16 @@ set(${PORT}_PATCHES
         fix_deploy_windows.patch
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
-        fix-missing-include.patch
         moltenvk.patch
-        xcodebuild-not-installed.patch
+        fix-ioring-32bit.patch
+        fix-wayland-opengl-guard.patch
         fix-libresolv-test.patch
+        use_inotify_on_freebsd.patch
+        QTBUG-145239.patch # https://github.com/qt/qtbase/commit/a76004f16fdc43e1b7af83bfdf3f1a613491b234
+        silence-winrtbase-coroutine-warnings.diff
+        QTBUG-145703.patch # https://github.com/qt/qtbase/commit/239c54452fa60157c90901c8be8685048a65ad0a
 )
- 
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
 endif()
@@ -62,10 +66,10 @@ endif()
 # (using QT_FEATURE_X overrides Qts condition check for the feature.)
 # Theoretically there is a feature for every widget to enable/disable it but that is way to much for vcpkg
 
-set(input_vars doubleconversion freetype harfbuzz libb2 jpeg libmd4c png sql-sqlite)
-set(INPUT_OPTIONS)
+set(input_vars doubleconversion freetype harfbuzz libb2 jpeg md4c png sql-sqlite)
+set(INPUT_OPTIONS "")
 foreach(_input IN LISTS input_vars)
-    if(_input MATCHES "(png|jpeg)" )
+    if(_input MATCHES "(png|jpeg|md4c)" )
         list(APPEND INPUT_OPTIONS -DINPUT_lib${_input}:STRING=)
     elseif(_input MATCHES "(sql-sqlite)") # Not yet used by the cmake build
     else()
@@ -75,8 +79,8 @@ foreach(_input IN LISTS input_vars)
         string(APPEND INPUT_OPTIONS system)
     elseif(_input STREQUAL "libb2" AND NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND INPUT_OPTIONS system)
-    elseif(_input STREQUAL "libmd4c")
-        string(APPEND INPUT_OPTIONS qt) # libmd4c is not yet in VCPKG (but required by qtdeclarative)
+    elseif(_input STREQUAL "md4c") # required by qtdeclarative
+        string(APPEND INPUT_OPTIONS system)
     else()
         string(APPEND INPUT_OPTIONS no)
     endif()
@@ -97,6 +101,7 @@ FEATURES
     "network"             FEATURE_network
     "sql"                 FEATURE_sql
     "widgets"             FEATURE_widgets
+    "windeployqt"         FEATURE_windeployqt
     #"xml"                 FEATURE_xml  # Required to build moc
     "testlib"             FEATURE_testlib
     "zstd"                CMAKE_REQUIRE_FIND_PACKAGE_zstd
@@ -324,12 +329,14 @@ set(TOOL_NAMES
         androiddeployqt6
         syncqt
         tracepointgen
+        qtwaylandscanner
+        wasmdeployqt
+        wasmdeployqt6
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
-                        #--trace-expand
                         ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}
@@ -346,12 +353,16 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DFEATURE_force_debug_info:BOOL=ON
                         -DFEATURE_relocatable:BOOL=ON
                         -DQT_AUTODETECT_ANDROID:BOOL=ON # Use vcpkg toolchain as is
+                        -DQT_NO_XCODE_MIN_VERSION_CHECK:BOOL=ON # The cmd line tools are missing xcodebuild
+                        -DQT_FIND_APPLE_SYSTEM_FRAMEWORKS_MODE:STRING=ONLY
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DFEATURE_debug:BOOL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
                         FEATURE_appstore_compliant # only used for android/ios
                         QT_AUTODETECT_ANDROID
+                        QT_NO_XCODE_MIN_VERSION_CHECK
+                        QT_FIND_APPLE_SYSTEM_FRAMEWORKS_MODE
                     )
 
 # Install CMake helper scripts
@@ -391,6 +402,7 @@ list(APPEND other_files
                 ensure_pro_file.cmake
                 qt-android-runner.py
                 qt-cmake-private-install.cmake
+                qt_cyclonedx_generator.py
                 qt-testrunner.py
                 qt-wasmtestrunner.py
                 sanitizer-testrunner.py
@@ -431,7 +443,7 @@ endforeach()
 set(qttoolchain "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
 file(READ "${qttoolchain}" toolchain_contents)
 string(REGEX REPLACE "set\\\(__qt_initially_configured_toolchain_file [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
-string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\n\")" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\")\n" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(VCPKG_CHAINLOAD_TOOLCHAIN_FILE [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_c_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_cxx_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
@@ -513,13 +525,6 @@ if(EXISTS "${target_qt_conf}")
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6AndroidMacros.cmake"
-        [[ set(cmake_dir "${prefix_path}/${${export_namespace_upper}_INSTALL_LIBS}/cmake")]]
-        [[ set(cmake_dir "${prefix_path}/share")]]
-    )
-endif()
-
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
 endif()
@@ -567,8 +572,16 @@ if(EXISTS "${configfile}")
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+    set(dep_file "${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake")
+    file(READ "${dep_file}" dep_contents)
+    string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}" dep_contents "${dep_contents}")
+    string(REPLACE
+        "    set(__qt_platform_requires_host_info_package FALSE)"
+        "    set(__qt_platform_requires_host_info_package TRUE)"
+        dep_contents "${dep_contents}")
+    file(WRITE "${dep_file}" "${dep_contents}")
 endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Config.cmake" "{Qt6HostInfo_DIR}/.." "{Qt6HostInfo_DIR}/../..")
 
 function(remove_original_cmake_path file)
     file(READ "${file}" _contents)
@@ -590,15 +603,21 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # this is required to avoid ownership troubles in downstream qt modules
   set(qtbase_owned_dlls
         double-conversion.dll
-        icudt74.dll
-        icuin74.dll
-        icuuc74.dll
+        md4c.dll
         libcrypto-3-${VCPKG_TARGET_ARCHITECTURE}.dll
         libcrypto-3.dll # for x86
         pcre2-16.dll
+        z.dll
         zlib1.dll
         zstd.dll
   )
+  # Dynamically find ICU DLLs (the version number tracks the ICU dependency, e.g. icudt78.dll for ICU 78)
+  file(GLOB _qt_icu_dt_dlls "${CURRENT_INSTALLED_DIR}/bin/icudt*.dll")
+  foreach(_icu_dll IN LISTS _qt_icu_dt_dlls)
+    get_filename_component(_icu_name "${_icu_dll}" NAME)
+    string(REGEX REPLACE "^icudt([0-9]+)\\.dll$" "\\1" _icu_ver "${_icu_name}")
+    list(APPEND qtbase_owned_dlls "icudt${_icu_ver}.dll" "icuin${_icu_ver}.dll" "icuuc${_icu_ver}.dll")
+  endforeach()
   if("dbus" IN_LIST FEATURES)
     list(APPEND qtbase_owned_dlls dbus-1-3.dll)
   endif()

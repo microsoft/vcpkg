@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 02fa284..609bbc0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -920,6 +920,16 @@ else ()
+   set ( implibname "fluidsynth" )
+ endif ()
+ 
++set(FAKE_CXX_LINKAGE "")
++foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++        continue()
++    elseif(EXISTS "${lib}")
++        string(APPEND FAKE_CXX_LINKAGE " ${lib}")
++    else()
++        string(APPEND FAKE_CXX_LINKAGE " -l${lib}")
++    endif()
++endforeach()
+ generate_pkgconfig_spec(fluidsynth.pc.in ${FluidSynth_BINARY_DIR}/fluidsynth.pc libfluidsynth-OBJ)
+ install ( FILES ${FluidSynth_BINARY_DIR}/fluidsynth.pc
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+diff --git a/fluidsynth.pc.in b/fluidsynth.pc.in
+index b7a9afa..b74728e 100644
+--- a/fluidsynth.pc.in
++++ b/fluidsynth.pc.in
+@@ -8,5 +8,5 @@ Description: Software SoundFont synth
+ Version: @VERSION@
+ Requires.private: @PC_REQUIRES_PRIV_JOINED@
+ Libs: -L${libdir} -l@implibname@
+-Libs.private: @LIBS_PRIVATE_JOINED@ @LIBS_PRIVATE_WITH_PATH_JOINED@
++Libs.private: @LIBS_PRIVATE_JOINED@ @LIBS_PRIVATE_WITH_PATH_JOINED@ @FAKE_CXX_LINKAGE@
+ Cflags: -I${includedir}

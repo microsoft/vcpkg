@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project(imguizmo)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(imgui CONFIG REQUIRED)
 get_target_property(IMGUI_INCLUDE_DIRS imgui::imgui
@@ -22,11 +22,12 @@ target_include_directories(
 target_sources(
     ${PROJECT_NAME}
     PRIVATE
-        GraphEditor.cpp
-        ImCurveEdit.cpp
-        ImGradient.cpp
-        ImGuizmo.cpp
-        ImSequencer.cpp
+        src/GraphEditor.cpp
+        src/ImCurveEdit.cpp
+        src/ImGradient.cpp
+        src/ImGuizmo.cpp
+        src/ImSequencer.cpp
+        src/ImVectorEditor.cpp
 )
 
 install(
@@ -40,12 +41,14 @@ install(
 if (NOT IMGUIZMO_SKIP_HEADERS)
     install(
         FILES
-            GraphEditor.h
-            ImCurveEdit.h
-            ImGradient.h
-            ImGuizmo.h
-            ImSequencer.h
-            ImZoomSlider.h
+            src/GraphEditor.h
+            src/ImCurveEdit.h
+            src/ImGradient.h
+            src/ImGuizmo.h
+            src/ImLightRig.h
+            src/ImSequencer.h
+            src/ImVectorEditor.h
+            src/ImZoomSlider.h
         DESTINATION include
     )
 endif()

@@ -15,12 +15,6 @@
 # the exact copy of those third party libraries known to
 # have passed Outcome's CI process.
 
-vcpkg_download_distfile(MISSING_HEADER_FIX
-    URLS https://github.com/ned14/outcome/commit/d4d38266a0c889be00069600bdbc339456f8f5bd.patch?full_index=1
-    FILENAME outcome-missing-swap-d4d38266a0c889be00069600bdbc339456f8f5bd.patch
-    SHA512 bcc6c050001776b998ff8146b7937ab86811288a0e611b911fad5031b654b0839c41a57196f70ec314c322124e1cb6473a7c5e91472e18b5bb6d35780eaf65f8
-)
-
 if ("polyfill-cxx20" IN_LIST FEATURES)
     message(WARNING [=[
     Outcome depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byte-lite, rather than the versions tested by QuickCppLib's and Outcome's CI. It is not guaranteed to work with other versions, with failures experienced in the past up-to-and-including runtime crashes. See the warning message from QuickCppLib for how you can pin the versions of those dependencies in your manifest file to those with which QuickCppLib was tested. Do not report issues to upstream without first pinning the versions as QuickCppLib was tested against.
@@ -31,11 +25,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/outcome
     REF v${VERSION}
-    SHA512 faa92dbee1f5c74389bc181721e12cd87ad616bdcd2e5845b19233f63cd366270eb806b88ac057ea9a3147e3df49210b7219e9b98a0a0299f00c98eaf2ab8903
+    SHA512 049c5052dd3bd25d7455a9a9c68a39096a2b877f64e21308520005b00411aaa47304505f68502c693aabdc271d12afd533d77245ed6c6c5249002844d403e684
     HEAD_REF develop
     PATCHES
         fix-status-code-path.patch
-        "${MISSING_HEADER_FIX}"
         files-do-not-exist.patch
 )
 

@@ -7,11 +7,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LunarG/VulkanTools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 c4d44f94e93234a5b5a98f3a76072d43b1c08b44dcf68a0bbbdc711e487b9e3b1be0fc8ab084b8d19662ac7394f25ec3ad2430fb2c79497d6e3e715c93d4f306
+    SHA512 7ebe78a639cab8490cc93a5a5e682ff4e343532f37ad81deaaed7cf92d60a7f11ce42c3ee9186e882cf5cba2db5ed0f09229d3d81f8d36ecd873caa2f2600d61
     HEAD_REF main
     PATCHES
         disable-qtdeploy.patch
-        jsoncpp.diff
+        static-linkage.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES jsonschema OUT_PYTHON_VAR PYTHON3)
@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-vcpkg_copy_tools(TOOL_NAMES vkvia vkconfig vkconfig-gui AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES vkconfig vkconfig-gui AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

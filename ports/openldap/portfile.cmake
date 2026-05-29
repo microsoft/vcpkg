@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${VERSION}.tgz"
          "https://mirror.eu.oneandone.net/software/openldap/openldap-release/openldap-${VERSION}.tgz"
     FILENAME "openldap-${VERSION}.tgz"
-    SHA512 18129ad9a385457941e3203de5f130fe2571701abf24592c5beffb01361aae3182c196b2cd48ffeecb792b9b0e5f82c8d92445a7ec63819084757bdedba63b20
+    SHA512 951b510393433114939f386d43e202a62803724f395e4e400a556ca451f90ff1e179fe580b3db51f275859257b32814e66a13145d46f68bded4ff61c1fa37f36
 )
 
 vcpkg_extract_source_archive(
@@ -28,6 +28,8 @@ endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND FEATURE_OPTIONS -with-yielding_select=yes)
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND FEATURE_OPTIONS --with-yielding_select=no)
 endif()
 
 # Disable build environment details in binaries

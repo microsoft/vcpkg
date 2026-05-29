@@ -1,0 +1,600 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 75894c35..7a29d141 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,12 +52,15 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.6.2...3.11 )
+ 
+ # Get PROJECT_VERSION property from 'avs_core/core/version.h.in'
+ file(READ "avs_core/core/version.h.in" versioning)
+-string(REGEX MATCH "AVS_MAJOR_VER     ([0-9]*)" _ ${versioning})
++
++string(REGEX MATCH "AVS_MAJOR_VER[ \\t]+([0-9]*)" _ ${versioning})
+ set(version_major ${CMAKE_MATCH_1})
+-string(REGEX MATCH "AVS_MINOR_VER     ([0-9]*)" _ ${versioning})
++string(REGEX MATCH "AVS_MINOR_VER[ \\t]+([0-9]*)" _ ${versioning})
+ set(version_minor ${CMAKE_MATCH_1})
+-string(REGEX MATCH "AVS_BUGFIX_VER    ([0-9]*)" _ ${versioning})
++string(REGEX MATCH "AVS_BUGFIX_VER[ \\t]+([0-9]*)" _ ${versioning})
+ set(version_bugfix ${CMAKE_MATCH_1})
++# Combine version variables for use in the project command
++set(PROJECT_VERSION_STRING "${version_major}.${version_minor}.${version_bugfix}")
+ 
+ # Get AVISYNTH_INTERFACE_VERSION from avs_core/include/avisynth.h
+ file(READ "avs_core/include/avisynth.h" versioning)
+@@ -76,7 +79,7 @@ endif()
+ 
+ if(NOT HEADERS_ONLY)
+ 
+-  project("AviSynth+" VERSION ${version_major}.${version_minor}.${version_bugfix} LANGUAGES CXX)
++  project("AviSynth+" VERSION ${PROJECT_VERSION_STRING} LANGUAGES CXX)
+ 
+   # message("Compiler ID: ${CMAKE_CXX_COMPILER_ID} ") 
+ 
+@@ -88,72 +91,132 @@ if(NOT HEADERS_ONLY)
+   set(CMAKE_CXX_STANDARD_LIBRARIES "" CACHE STRING "" FORCE)
+ 
+   # We require C++17 or higher.
+-if(CMAKE_VERSION VERSION_GREATER 3.7)
+-  set(CMAKE_CXX_STANDARD 17)
+-  set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+-  set(CMAKE_CXX_EXTENSIONS FALSE)
+-endif()
++  if(CMAKE_VERSION VERSION_GREATER 3.7)
++    set(CMAKE_CXX_STANDARD 17)
++    set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
++    set(CMAKE_CXX_EXTENSIONS FALSE)
++  endif()
+ 
+   # Detect Intel processors and turn Intel SIMD on or off automatically.
+-  message("-- Detected target processor as: ${CMAKE_SYSTEM_PROCESSOR}")
+-  string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" ARCHID)
+-  if( ("${ARCHID}" STREQUAL "x86") OR
+-      ("${ARCHID}" STREQUAL "x64") OR
+-      ("${ARCHID}" STREQUAL "i686") OR
+-      ("${ARCHID}" STREQUAL "amd64") OR
+-      ("${ARCHID}" STREQUAL "x86_64") )
+-    set(INTEL_SIMD "ON")
++  # Old logic relied on the host processor: ${CMAKE_SYSTEM_PROCESSOR}
++
++  set(INTEL_SIMD "OFF")
++  # Use a list of known Intel-compatible architecture names for the default ON state.
++  set(INTEL_ARCH_NAMES "win32" "x64" "x86" "i386" "amd64" "x86_64" "i686")
++
++  # Check the TARGET architecture using the most reliable variables (CMAKE_GENERATOR_PLATFORM and PLATFORMID_LOWER)
++  string(TOLOWER "${PLATFORMID}" PLATFORMID_LOWER)
++  string(TOLOWER "${CMAKE_GENERATOR_PLATFORM}" GEN_PLATFORM_LOWER) # Often holds x64, ARM64, etc.
++  string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" HOST_ARCH_LOWER)
++
++  # --- DEBUG OUTPUT START ---
++  # message(STATUS "--- SIMD Detection Variables ---")
++  # message(STATUS "CMAKE_SYSTEM_PROCESSOR (Host Arch): ${CMAKE_SYSTEM_PROCESSOR}")
++  # message(STATUS "Host Arch Lower: ${HOST_ARCH_LOWER}")
++  # message(STATUS "PLATFORMID_LOWER (VS Target Platform): ${PLATFORMID_LOWER}")
++  # message(STATUS "CMAKE_GENERATOR_PLATFORM (Generator Target): ${CMAKE_GENERATOR_PLATFORM}")
++  # message(STATUS "INTEL_ARCH_NAMES: ${INTEL_ARCH_NAMES}")
++  # message(STATUS "------------------------------------")
++  # --- DEBUG OUTPUT END ---
++  # e.g. ARM64 cross-compile on x64 machine:
++  # CMAKE_SYSTEM_PROCESSOR (Host Arch): AMD64
++  # Host Arch Lower: amd64
++  # PLATFORMID_LOWER (VS Target Platform): 
++  # CMAKE_GENERATOR_PLATFORM (Generator Target): ARM64  
++
++  list(FIND INTEL_ARCH_NAMES "${HOST_ARCH_LOWER}" _found_arch)
++  list(FIND INTEL_ARCH_NAMES "${PLATFORMID_LOWER}" _found_target_platform_id)
++  list(FIND INTEL_ARCH_NAMES "${GEN_PLATFORM_LOWER}" _found_target_gen)
++
++  # 1. Check if the target platform is explicitly known non-Intel (ARM64, AARCH64)
++  if("${PLATFORMID_LOWER}" STREQUAL "arm64" OR "${GEN_PLATFORM_LOWER}" STREQUAL "arm64")
++      set(INTEL_SIMD "OFF")
++      message(STATUS "Target is ARM64/AARCH64, INTEL_SIMD forced OFF.")
+   else()
+-    set(INTEL_SIMD "OFF")
++      # 2. Inclusion Check: We are NOT targeting ARM64. 
++      
++      # Define a boolean check: Did we find a match in the explicit target variables OR the host architecture?
++      if(_found_target_gen GREATER -1 OR _found_target_platform_id GREATER -1)
++          # Found a match in a generator-set variable (e.g., Win32, x64 when explicitly chosen)
++          set(INTEL_SIMD "ON")
++          message(STATUS "Target architecture is explicitly set and Intel-compatible, INTEL_SIMD set ON.")
++      elseif(_found_arch GREATER -1 AND "${GEN_PLATFORM_LOWER}" STREQUAL "")
++          # FALLBACK: Target platform is NOT set (Default Configuration), but the Host is Intel-compatible.
++          # The default target platform for a multi-config generator on a bare x64 host is x64.
++          set(INTEL_SIMD "ON")
++          message(STATUS "Target platform not specified; defaulting to Host (${CMAKE_SYSTEM_PROCESSOR}), INTEL_SIMD set ON.")
++      endif()
+   endif()
++  # message(STATUS "Final INTEL_SIMD initial assumption: ${INTEL_SIMD}")
++  option(ENABLE_INTEL_SIMD "Enable SIMD intrinsics for Intel processors" "${INTEL_SIMD}")
+ 
+   option(ENABLE_PLUGINS "Build set of default external plugins" ON)
+-  option(ENABLE_INTEL_SIMD "Enable SIMD intrinsics for Intel processors" "${INTEL_SIMD}")
+   set(USER_AVS_PLUGINDIR_LOCATION ".local/lib/avisynth" CACHE STRING "Override path for user-local plugins, with $HOME omitted (default: .local/lib/avisynth)")
+   option(ENABLE_CUDA "Enable CUDA support" OFF)
+   set(CORE_PLUGIN_INSTALL_PATH "${CMAKE_INSTALL_FULL_LIBDIR}" CACHE STRING "Set system plugin install parent directory (default: value of CMAKE_INSTALL_FULL_LIBDIR)")
+ 
+-if(CMAKE_VERSION VERSION_GREATER 3.9)
+-  get_cmake_property(MULTI_CONFIG GENERATOR_IS_MULTI_CONFIG)
+-  if(MULTI_CONFIG)
+-    if(CMAKE_CONFIGURATION_TYPES)
+-      set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo)
+-      set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "Reset the configurations to what we need" FORCE)
+-    endif()
+-    message("-- Build type: Multi-configuration (${CMAKE_CONFIGURATION_TYPES})")
+-  else()
+-    # When CMAKE_BUILD_TYPE is not defined, CMake defaults to a simple -O0 configuration, no compiler optimizations
+-    # and no debug symbols.  For single-configuration generators (Makefiles, Ninja, etc.) we can make Release the
+-    # assumed default if it isn't explicitly set by the user.  Multi-config generators like Visual Studio ignore
+-    # CMAKE_BUILD_TYPE.
+-
+-    # Unfortunately, this is not visible in CMakeCache, but it can be seen to take effect in build.ninja or running
+-    # make with VERBOSE=1 adding the appropriate Release flags.
+-    if(NOT CMAKE_BUILD_TYPE)
+-      set(CMAKE_BUILD_TYPE "Release")
++  if(CMAKE_VERSION VERSION_GREATER 3.9)
++    get_cmake_property(MULTI_CONFIG GENERATOR_IS_MULTI_CONFIG)
++    if(MULTI_CONFIG)
++      if(CMAKE_CONFIGURATION_TYPES)
++        set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo)
++        set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "Reset the configurations to what we need" FORCE)
++      endif()
++      message("-- Build type: Multi-configuration (${CMAKE_CONFIGURATION_TYPES})")
++    else()
++      # When CMAKE_BUILD_TYPE is not defined, CMake defaults to a simple -O0 configuration, no compiler optimizations
++      # and no debug symbols. For single-configuration generators (Makefiles, Ninja, etc.) we can make Release the
++      # assumed default if it isn't explicitly set by the user. Multi-config generators like Visual Studio ignore
++      # CMAKE_BUILD_TYPE.
++
++      # Unfortunately, this is not visible in CMakeCache, but it can be seen to take effect in build.ninja or running
++      # make with VERBOSE=1 adding the appropriate Release flags.
++      if(NOT CMAKE_BUILD_TYPE)
++        set(CMAKE_BUILD_TYPE "Release")
++      endif()
++      message("-- Build type: ${CMAKE_BUILD_TYPE}")
+     endif()
+-    message("-- Build type: ${CMAKE_BUILD_TYPE}")
+   endif()
+-endif()
+ 
+-  IF( MSVC )  # Check for Visual Studio
++  # Use this one to be safe:
++  # Check for the Visual Studio generator, not the MSVC compiler ID, as this 
++  # block configures VS project structure (platforms/toolsets), which fails for Ninja/MSVC.
++  if( CMAKE_GENERATOR MATCHES "Visual Studio" )
++  ## IF( MSVC ) # Check for Visual Studio
+ 
+     #1910-1919 = VS 15.0 (v141 toolset) Visual Studio 2017
+     #1920-1929 = VS 16.0 (v142 toolset) Visual Studio 2019
+-    #1930-1939 = VS 17.0 (v143 toolset) Visual Studio 2022
+-
++    #1930-1949 = VS 17.x (v143 toolset) Visual Studio 2022
++    #  ( 1940-1949 = VS v17.10+: Toolset v143 (Still!) | Compiler 19.4x)
++    #1950-1959 = VS 18.0 (v145 toolset) Visual Studio 2026
++    
+     # detect if the target is for x86
+-    string(TOLOWER "${CMAKE_VS_PLATFORM_NAME}" PLATFORMID)
+-    if(("${PLATFORMID}" STREQUAL "win32") OR
+-       ("${PLATFORMID}" STREQUAL "x64"  ))
+-        set(NON_X86_PLATFORM "OFF")
++    # PLATFORMID_LOWER is just a lowercase copy of CMAKE_VS_PLATFORM_NAME
++    string(TOLOWER "${CMAKE_VS_PLATFORM_NAME}" PLATFORMID_LOWER)
++
++    # message("-- PLATFORMID_LOWER: ${PLATFORMID_LOWER}")
++ 
++    if(("${PLATFORMID_LOWER}" STREQUAL "win32") OR
++       ("${PLATFORMID_LOWER}" STREQUAL "x64") OR
++       ("${PLATFORMID_LOWER}" STREQUAL "arm64"))   # allow arm64 targets
++        set(SUPPORTED_MSVC_PLATFORM "ON")
+     else()
+-        set(NON_X86_PLATFORM "ON")
++        set(SUPPORTED_MSVC_PLATFORM "OFF")
++    endif()
++    
++    if(SUPPORTED_MSVC_PLATFORM STREQUAL "OFF")
++        message(FATAL_ERROR "MSVC/ClangCL only supported on Win32, x64, or ARM64 targets. Use MinGW (llvm-mingw or gcc). Unsupported target: ${CMAKE_VS_PLATFORM_NAME}.")
+     endif()
+ 
+-    if(NON_X86_PLATFORM)
+-        message(FATAL_ERROR "MSVC/ClangCL only supported on x86(-64). Use MinGW (llvm-mingw or gcc).")
++#[[
++    # check to disable ARM64 by default
++    # PF: re-allowed; VS2026 can build ARM64 even with LLVM
++    if(("${PLATFORMID_LOWER}" STREQUAL "arm64") AND (NOT DEFINED ENABLE_ARM64_WITH_MSVC_TESTING))
++        # This FATAL_ERROR can be commented out or protected by the ENABLE_ARM64_TESTING cache variable.
++        # To enable the build, define -DENABLE_ARM64_TESTING=ON when running cmake.
++        message(FATAL_ERROR "MSVC ARM64 platform is currently disabled by default. Define ENABLE_ARM64_WITH_MSVC_TESTING=ON to proceed or use MinGW (llvm-mingw or gcc).")
+     endif()
++#]]
+ 
+     IF( MSVC_VERSION VERSION_LESS 1910 )
+       MESSAGE(FATAL_ERROR "Visual C++ 2017 or newer required.")
+@@ -163,10 +226,6 @@ endif()
+     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Output/system")
+     file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Output/c_api")
+ 
+-    # Needed to properly handle __has_include(<filesystem>) in avs_core/filesystem.h
+-    # See note in filesystem/README.md
+-    add_definitions("/Zc:__cplusplus")
+-
+     IF(MSVC_IDE)
+       message("MSVC_IDE support found, reported CMAKE_GENERATOR_TOOLSET is: ${CMAKE_GENERATOR_TOOLSET}")
+       string( TOLOWER "${CMAKE_GENERATOR_TOOLSET}" cmake_gentoolset_lower)
+@@ -195,7 +254,7 @@ endif()
+         endif()
+         set(CLANG_IN_VS "1")
+       ELSEIF(cmake_gentoolset_lower STREQUAL "v141_clang_c2")
+-         #1900 is reported
++          #1900 is reported
+         message("v141_clang_c2 toolset was specified via -T. Reported MSVC_VERSION is: ${MSVC_VERSION}")
+         message("May not work, try clangcl or LLVM")
+         set(CLANG_IN_VS "1")
+@@ -207,25 +266,15 @@ endif()
+       if(WINXP_SUPPORT)
+         # We want our project to also run on Windows XP
+         # Not for LLVM: Clang stopped XP support in 2016
+-        # 1900 (VS2015) is not supported but we leave here
+-        IF(MSVC_VERSION VERSION_LESS 1910 )
+-          IF(NOT CLANG_IN_VS STREQUAL "1")
+-            set(CMAKE_GENERATOR_TOOLSET "v140_xp" CACHE STRING "The compiler toolset to use for Visual Studio." FORCE) # VS2015
+-            # https://connect.microsoft.com/VisualStudio/feedback/details/1789709/visual-c-2015-runtime-broken-on-windows-server-2003-c-11-magic-statics
+-            message("CMAKE_GENERATOR_TOOLSET is forced to: ${CMAKE_GENERATOR_TOOLSET}")
+-            add_definitions("/Zc:threadSafeInit-")
+-          ENDIF()
+-        ELSE()
+-          IF(NOT CLANG_IN_VS STREQUAL "1")
+-            # Setting CMAKE_GENERATOR_TOOLSET here has no effect, only when passed (-T option) or set directly, so we just check it
+-            IF(CMAKE_GENERATOR_TOOLSET STREQUAL "v141_xp")
+-              # v141_xp is still available in Visual Studio 2022
++        IF(NOT CLANG_IN_VS STREQUAL "1")
++          # Setting CMAKE_GENERATOR_TOOLSET here has no effect, only when passed (-T option) or set directly, so we just check it
++          IF(CMAKE_GENERATOR_TOOLSET STREQUAL "v141_xp")
++              # v141_xp is still available in Visual Studio 2022 and 2026.
+               message("CMAKE_GENERATOR_TOOLSET is XP compatible: ${CMAKE_GENERATOR_TOOLSET}, extra XP options added")
+               # https://connect.microsoft.com/VisualStudio/feedback/details/1789709/visual-c-2015-runtime-broken-on-windows-server-2003-c-11-magic-statics
+-              add_definitions("/Zc:threadSafeInit-")
+-            ELSE()
++              # later done: add_definitions("/Zc:threadSafeInit-")
++          ELSE()
+               message(FATAL_ERROR "For XP you must specify v141_xp toolset with -T option (or 'Optional toolset to use' in CMake GUI)!")
+-            ENDIF()
+           ENDIF()
+         ENDIF()
+       endif()
+@@ -239,18 +288,7 @@ endif()
+         set(IntelClassic_IN_VS "1")
+     endif()
+ 
+-    IF(CLANG_IN_VS STREQUAL "1")
+-        #these are unknown
+-        #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fexceptions")
+-        #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions")
+-        add_compile_options(${CMAKE_CXX_FLAGS} /EHa -Wno-inconsistent-missing-override)
+-    ELSEIF(IntelLLVM_IN_VS STREQUAL "1")
+-        # The CXX compiler identification is IntelLLVM 2021.4.0 or 2023.0.0 with MSVC-like command-line
+-        message("IntelLLVM in VS environment chosen, setting additional flags")
+-        # contrary to MSVC-like commandline interface, these are not set - /EHa
+-        # from 2021.2 default fp is fast for /O2
+-        add_compile_options(${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override /EHa /fp:precise)
+-    ELSEIF(IntelClassic_IN_VS STREQUAL "1")
++    IF(IntelClassic_IN_VS STREQUAL "1")
+         # Intel C++ Compiler 19.2
+         message("Intel Classic chosen, setting additional flags")
+         set(DELETE_THIS "/std:c++17") # if it would co-exist with /Qstd=c++17
+@@ -279,26 +317,8 @@ endif()
+             message("MSVC flags: ${CompilerFlag}:${${CompilerFlag}}")
+         endforeach()    
+     ELSE()
+-        # MSVC
+-        # Enable C++ with SEH exceptions
+-        # Avoid an obnoxious 'overriding /EHsc with /EHa' warning when
+-        # using something other than MSBuild
+-        add_compile_options(${CMAKE_CXX_FLAGS} /EHa)
+-        # Behavior is new in Visual Studio 2022:
+-        # Floating-point contractions (mul+add to fma) aren't generated by default under /fp:precise
+-        # Enable it manually
+-        if (NOT (MSVC_VERSION LESS 1930)) # at least VS2022
+-          add_compile_options(${CMAKE_CXX_FLAGS} /fp:contract)
+-        endif()
++        # Plain MSVC branch continues; per-target options are applied later
+     ENDIF()
+-    # Prevent VC++ from complaining about not using MS-specific functions
+-    add_definitions("/D _CRT_SECURE_NO_WARNINGS /D _SECURE_SCL=0")
+-
+-    # Enable CRT heap debugging - only effective in debug builds
+-    add_definitions("/D _CRTDBG_MAP_ALLOC")
+-
+-    # if missing, some modules inhibit source containing assembler/simd parts
+-    add_definitions("/D __SSE2__") # fixme: does it really need anymore?
+ 
+     # CPU_ARCH can be overridden with the corresponding values when using MSVC:
+     # IA32 (disabled),
+@@ -308,52 +328,14 @@ endif()
+     # AVX2 (Haswell and higher, 2013)
+     if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+         set(MSVC_CPU_ARCH "SSE2" CACHE STRING "Set MSVC architecture optimization level (default: SSE2)")
+-        add_compile_options(/arch:${MSVC_CPU_ARCH})
+-    endif()
+-
+-    IF(CLANG_IN_VS STREQUAL "1" OR IntelLLVM_IN_VS STREQUAL "1")
+-      # suppress other frequent but harmless/unavoidable warnings
+-      add_compile_options(-Wno-unused-function -Wno-reorder -Wno-unused-value)
+-      # allow per-function attributes like __attribute__((__target__("sse4.1")))
+-      add_compile_options(-Wno-gcc-compat)
+-    ENDIF()
+-
+-    # Enable standards-conformance mode for MSVC compilers that support this
+-    # flag (Visual C++ 2017 and later). Default. DirectShowSource will remove if needed.
+-    # The headers in the XP-side SDK also have errors if built in conformance mode,
+-    # so if we're building for XP, don't turn that on.
+-    if (NOT WINXP_SUPPORT)
+-      if (NOT (MSVC_VERSION LESS 1910))
+-        add_compile_options(/permissive-)
+-      endif()
+-    endif()
+-
+-    if(ENABLE_INTEL_SIMD)
+-      add_definitions("/D INTEL_INTRINSICS")
++        # /arch: applied later per-target
+     endif()
+ 
+   ELSE()
+     # not MS Visual Studio IDE
+-
+-    # CMAKE_CXX_STANDARD doesn't cover the use-case of pre-final C++17 support,
+-    # but I'd assume most setups with a new enough version of CMake to use
+-    # CMAKE_CXX_STANDARD 17 would also be running a version of GCC/Clang new enough
+-    # to not need this.  So this will most likely only ever be used by setups running
+-    # older versions of CMake; regardless, it shouldn't be necessary to force a
+-    # CMAKE_VERSION check on this part unless the mere presence of CMAKE_CXX_STANDARD 17
+-    # ends up causing problems for the older compilers here.
+-    if( ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")   AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8)) OR
+-        ((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5)) )
+-      add_compile_options(${CMAKE_CXX_FLAGS} -std=c++1z)
+-    endif()
+-
+-    if(ENABLE_INTEL_SIMD)
+-      add_compile_options(-msse2 -DINTEL_INTRINSICS)
+-    endif()
+-
+     if(WIN32)
+       SET( CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-stdcall-fixup" )
+-      add_compile_options(-D__CRT__NO_INLINE=1)
++      # __CRT__NO_INLINE: moved to per-target definitions
+     elseif(APPLE)
+       # macOS uses Clang's linker, doesn't like --no-undefined
+       SET( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,error" )
+@@ -365,13 +347,149 @@ endif()
+   ENDIF()
+ 
+   add_subdirectory("avs_core")
++
++  # Start tracking targets before the plugins subdirectory is processed
++  get_property(_targets_before_plugins GLOBAL PROPERTY BUILT_TARGETS) 
++  
+   if(ENABLE_PLUGINS)
+     add_subdirectory("plugins")
+   endif()
++  
++  # End tracking targets and apply fixes here
++  get_property(_targets_after_plugins GLOBAL PROPERTY BUILT_TARGETS)
++  
++  # Calculate targets added in the plugins subdirectory
++  list(REMOVE_ITEM _targets_after_plugins ${_targets_before_plugins})
++  set(NEW_PLUGIN_TARGETS ${_targets_after_plugins})
++  
++  # Combine AvsCore and the newly discovered plugins into one list for fixing
++  set(ALL_AFFECTED_TARGETS)
++  if(TARGET AvsCore)
++      list(APPEND ALL_AFFECTED_TARGETS AvsCore)
++  endif()
++  list(APPEND ALL_AFFECTED_TARGETS ${NEW_PLUGIN_TARGETS})
++  
++  # -----------------------------------------------------------------------
++  # Per-target, modern & safe application of options/defines (CORE and PLUGINS)
++  # -----------------------------------------------------------------------
++  foreach(AFFECTED_TARGET ${ALL_AFFECTED_TARGETS})
++    if(TARGET ${AFFECTED_TARGET})
++      message(STATUS "Applying Intel/Clang compiler fixes to target: ${AFFECTED_TARGET}")
++
++      # Check if the target is a library or executable (exclude INTERFACE targets)
++      get_target_property(_target_type ${AFFECTED_TARGET} TYPE)
++      if(NOT (
++          ${_target_type} STREQUAL "SHARED_LIBRARY" OR 
++          ${_target_type} STREQUAL "STATIC_LIBRARY" OR
++          ${_target_type} STREQUAL "MODULE_LIBRARY"
++      ))
++        # Skip if it's not a compileable target (e.g., if it was an interface target)
++        continue()
++      endif()
+ 
+-else()
++      # Use a compound check: If the generator is Visual Studio, or the compiler ID 
++      # is MSVC AND we are on Windows, run the MSVC-specific logic.
++      if( CMAKE_GENERATOR MATCHES "Visual Studio" OR (MSVC AND WIN32) ) 
++      # Using only if(MSVC) will fail with MinGW if the compiler ID is MSVC but the generator is not VS.
++      # This robust check ensures that the MSVC block only runs in an MSVC environment.
+ 
+-  project(AviSynth-Headers VERSION ${version_major}.${version_minor}.${version_bugfix} LANGUAGES CXX)
++        # Handle ARM64 soft intrinsics if requested (for AvsCore logic)
++        if("${PLATFORMID}" STREQUAL "ARM64" AND ENABLE_INTEL_SIMD)
++          target_compile_definitions(${AFFECTED_TARGET} PRIVATE USE_SOFT_INTRINSICS)
++        endif()
++        
++        # Needed to properly handle __has_include(<filesystem>) in avs_core/filesystem.h
++        # See note in filesystem/README.md
++        target_compile_options(${AFFECTED_TARGET} PRIVATE /Zc:__cplusplus)
++        
++        # Prevent VC++ secure CRT warnings, and add __SSE2__ flag. (Why?)
++        target_compile_definitions(${AFFECTED_TARGET} PRIVATE
++          _CRT_SECURE_NO_WARNINGS
++          _SECURE_SCL=0
++          _CRTDBG_MAP_ALLOC
++          __SSE2__
++        )
++
++        # INTEL intrinsics master switch (if enabled)
++        if(ENABLE_INTEL_SIMD)
++          target_compile_definitions(${AFFECTED_TARGET} PRIVATE INTEL_INTRINSICS)
++        endif()
++        
++        # Compiler-specific options for IntelLLVM / Clang
++        if(CLANG_IN_VS STREQUAL "1")
++          target_compile_options(${AFFECTED_TARGET} PRIVATE /EHa -Wno-inconsistent-missing-override)
++          target_compile_options(${AFFECTED_TARGET} PRIVATE -Wno-unused-function -Wno-reorder -Wno-unused-value -Wno-gcc-compat)
++        elseif(IntelLLVM_IN_VS STREQUAL "1")
++          target_compile_options(${AFFECTED_TARGET} PRIVATE -Wno-inconsistent-missing-override /EHa /fp:precise)
++          target_compile_options(${AFFECTED_TARGET} PRIVATE -Wno-unused-function -Wno-reorder -Wno-unused-value -Wno-gcc-compat)
++        elseif(IntelClassic_IN_VS STREQUAL "1")
++          target_compile_options(${AFFECTED_TARGET} PRIVATE /EHa)
++        else()
++          # Plain MSVC
++          target_compile_options(${AFFECTED_TARGET} PRIVATE /EHa)
++          if (NOT (MSVC_VERSION LESS 1930)) # VS2022+
++            target_compile_options(${AFFECTED_TARGET} PRIVATE /fp:contract)
++          endif()
++        endif()
++        
++        # Enable standards-conformance mode for MSVC compilers that support this
++        # flag (Visual C++ 2017 and later). Default. DirectShowSource will remove if needed.
++        # The headers in the XP-side SDK also have errors if built in conformance mode,
++        # so if we're building for XP, don't turn that on.
++        
++        # Plus check: Skip /permissive- if the target (e.g. DirectShowSource) requests it.
++        # Filled in plugin's CMakeLists.txt
++        get_target_property(_skip_permissive ${AFFECTED_TARGET} SKIP_PERMISSIVE_FLAG)
++
++        if(NOT _skip_permissive) # old DirectShowSource
++          if (NOT WINXP_SUPPORT)
++            if (NOT (MSVC_VERSION LESS 1910))
++              target_compile_options(${AFFECTED_TARGET} PRIVATE /permissive-)
++            endif()
++          endif()
++        endif()
++
++        # Check if XP support is enabled AND if the XP toolset is used (v141_xp)
++        if (WINXP_SUPPORT)
++          if (CMAKE_GENERATOR_TOOLSET STREQUAL "v141_xp")
++            # C++11 static initialization fix for XP/Server 2003
++            target_compile_options(${AFFECTED_TARGET} PRIVATE "/Zc:threadSafeInit-")
++          endif()
++        endif()
++        
++        # 32-bit arch tuning
++        if(CMAKE_SIZEOF_VOID_P EQUAL 4)
++          target_compile_options(${AFFECTED_TARGET} PRIVATE /arch:${MSVC_CPU_ARCH})
++        endif()
++      else()
++        # CMAKE_CXX_STANDARD doesn't cover the use-case of pre-final C++17 support,
++        # but I'd assume most setups with a new enough version of CMake to use
++        # CMAKE_CXX_STANDARD 17 would also be running a version of GCC/Clang new enough
++        # to not need this. So this will most likely only ever be used by setups running
++        # older versions of CMake; regardless, it shouldn't be necessary to force a
++        # CMAKE_VERSION check on this part unless the mere presence of CMAKE_CXX_STANDARD 17
++        # ends up causing problems for the older compilers here.
++        # Legacy C++17 support for older GCC/Clang
++        if( ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")  AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8)) OR
++            ((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5)) )
++            target_compile_options(${AFFECTED_TARGET} PRIVATE -std=c++1z)
++        endif()
++    
++        if(ENABLE_INTEL_SIMD)
++          target_compile_options(${AFFECTED_TARGET} PRIVATE -msse2)
++          target_compile_definitions(${AFFECTED_TARGET} PRIVATE INTEL_INTRINSICS)
++        endif()
++        if(WIN32)
++          target_compile_definitions(${AFFECTED_TARGET} PRIVATE __CRT__NO_INLINE=1)
++        endif()
++      endif()
++    endif()
++  endforeach()
++  
++
++else()
++  # HEADERS_ONLY is ON
++  project(AviSynth-Headers VERSION ${PROJECT_VERSION_STRING} LANGUAGES CXX)
+   message(STATUS "Install Only Headers: ON")
+ 
+   add_library(${PROJECT_NAME} INTERFACE)
+@@ -388,31 +506,31 @@ else()
+   FIND_PACKAGE(Git)
+   INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+   ADD_CUSTOM_TARGET(
+-      VersionGen
+-      ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/avs_core/core/version.h.in
+-                       -D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
+-                       -D GIT=${GIT_EXECUTABLE}
+-                       -D REPO=${CMAKE_SOURCE_DIR}
+-                       -P ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/Version.cmake
++    VersionGen
++    ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/avs_core/core/version.h.in
++                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
++                      -D GIT=${GIT_EXECUTABLE}
++                      -D REPO=${CMAKE_SOURCE_DIR}
++                      -P ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/Version.cmake
+   )
+ 
+   include(GNUInstallDirs)
+ 
+   install(
+-          FILES ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/include/avisynth.h
+-                ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/include/avisynth_c.h
+-          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/avisynth
++    FILES ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/include/avisynth.h
++          ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/include/avisynth_c.h
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/avisynth
+   )
+ 
+   install(
+-          DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/include/avs
+-          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/avisynth
++    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/avs_core/include/avs
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/avisynth
+   )
+ 
+   install(
+-          FILES "${CMAKE_CURRENT_BINARY_DIR}/version.h"
+-                "${CMAKE_CURRENT_BINARY_DIR}/arch.h"
+-          DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/avisynth/avs"
++    FILES "${CMAKE_CURRENT_BINARY_DIR}/version.h"
++          "${CMAKE_CURRENT_BINARY_DIR}/arch.h"
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/avisynth/avs"
+   )
+ 
+ 
+@@ -420,9 +538,9 @@ endif()
+ 
+ # uninstall target
+ configure_file(
+-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+-    IMMEDIATE @ONLY)
++  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
++  IMMEDIATE @ONLY)
+ 
+ add_custom_target(uninstall
+-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
++  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+\ No newline at end of file
+diff --git a/plugins/DirectShowSource/CMakeLists.txt b/plugins/DirectShowSource/CMakeLists.txt
+index 668dc68b..220ed28a 100644
+--- a/plugins/DirectShowSource/CMakeLists.txt
++++ b/plugins/DirectShowSource/CMakeLists.txt
+@@ -34,12 +34,12 @@ target_link_libraries(${ProjectName} "Winmm.lib" "Quartz.lib" "Ole32.lib" "User3
+ # Include directories
+ target_include_directories(${ProjectName} PRIVATE ${AvsCore_SOURCE_DIR} ${DSHOWSRC_BASECLASSES_PATH})
+ 
+-if (MSVC_IDE)
+-  # Old v7 SDK code won't compile otherwise
+-  set(DELETE_THIS "/permissive-")
+-  STRING( REPLACE "${DELETE_THIS}" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+-  STRING( REPLACE "${DELETE_THIS}" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
++# Mark this target for skipping /permissive- 
++# Old v7 SDK code won't compile otherwise, DirectShow Base Classes use non-conformant C++.
++# High-level CMakeLists.txt checks this property and won't inject the flag.
++set_target_properties(${ProjectName} PROPERTIES SKIP_PERMISSIVE_FLAG ON)
+ 
++if (MSVC_IDE)
+   # Copy output to a common folder for easy deployment
+   add_custom_command(
+     TARGET ${ProjectName}

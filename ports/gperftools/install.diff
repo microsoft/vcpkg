@@ -20,28 +20,26 @@ index e9647d5..092f40d 100644
      src/stacktrace.cc
      src/base/elf_mem_image.cc
      src/base/vdso_support.cc)
-@@ -926,4 +926,66 @@ if(MSVC)
+@@ -926,4 +926,53 @@ if(MSVC)
      add_subdirectory(src/windows)
  endif()
  
 +foreach(lib IN ITEMS
-+  common stacktrace
 +  tcmalloc_minimal tcmalloc tcmalloc_minimal_debug tcmalloc_debug
 +  profiler
 +)
 +  if(TARGET "${lib}")
 +    install(TARGETS "${lib}")
-+    if(lib MATCHES "tcmalloc|profiler")
-+      set(pc_file "${CMAKE_CURRENT_BINARY_DIR}/lib${lib}.pc")
-+      set(pc_libs_private "${CMAKE_THREAD_LIBS_INIT}")
-+      if("execinfo" IN_LIST unwind_libs AND lib MATCHES "tcmalloc")
-+        string(APPEND pc_libs_private " -lexecinfo")
-+      endif()
-+      set(pc_requires_private "")
-+      if(gperftools_enable_libunwind AND lib MATCHES "tcmalloc")
-+        string(APPEND pc_requires_private " libunwind")
-+      endif()
-+      file(CONFIGURE OUTPUT "${pc_file}" CONTENT [[
++    set(pc_file "${CMAKE_CURRENT_BINARY_DIR}/lib${lib}.pc")
++    set(pc_libs_private "${CMAKE_THREAD_LIBS_INIT}")
++    if("execinfo" IN_LIST unwind_libs AND lib MATCHES "tcmalloc")
++      string(APPEND pc_libs_private " -lexecinfo")
++    endif()
++    set(pc_requires_private "")
++    if(gperftools_enable_libunwind AND lib MATCHES "tcmalloc")
++      string(APPEND pc_requires_private " libunwind")
++    endif()
++    file(CONFIGURE OUTPUT "${pc_file}" CONTENT [[
 +prefix=
 +exec_prefix=${prefix}
 +libdir=${prefix}/lib
@@ -56,18 +54,7 @@ index e9647d5..092f40d 100644
 +Libs.private: @pc_libs_private@
 +Requires.private: @pc_requires_private@
 +]] @ONLY)
-+      install(FILES "${pc_file}" DESTINATION "lib/pkgconfig")
-+    endif()
-+  endif()
-+endforeach()
-+
-+foreach(exe IN ITEMS addr2line-pdb nm-pdb)
-+  if(NOT TARGET "${exe}")
-+    continue()
-+  elseif(GPERFTOOLS_BUILD_TOOLS)
-+    install(TARGETS "${exe}")
-+  else()
-+    set_target_properties("${exe}" PROPERTIES EXCLUDE_FROM_ALL 1)
++    install(FILES "${pc_file}" DESTINATION "lib/pkgconfig")
 +  endif()
 +endforeach()
 +
@@ -82,7 +69,7 @@ index e9647d5..092f40d 100644
 +    src/gperftools/nallocx.h
 +    src/gperftools/profiler.h
 +    src/gperftools/stacktrace.h
-+    "${CMAKE_CURRENT_BINARY_DIR}/gperftools/tcmalloc.h"
++    src/gperftools/tcmalloc.h
 +  DESTINATION include/gperftools
 +)
 +

@@ -1,7 +1,7 @@
 {
   "name": "libsystemd",
-  "version": "257.8",
-  "description": "Libsystemd",
+  "version": "260.2",
+  "description": "System and Service Manager",
   "homepage": "https://github.com/systemd/systemd",
   "license": null,
   "supports": "linux",
@@ -15,6 +15,10 @@
     "libmount",
     "libxcrypt",
     "lz4",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

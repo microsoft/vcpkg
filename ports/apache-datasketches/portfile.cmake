@@ -1,9 +1,12 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/datasketches-cpp
-    REF "${VERSION}"
-    SHA512 3be2480390bff9ec62d92885174dc5cb7e86c9e5f8215ee57e77626151002d614d41254d532e53c7e1d509b420ee0024edfcea6043caa1b9863d100f492096cd
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/datasketches/cpp/${VERSION}/apache-datasketches-cpp-${VERSION}-src.zip"
+    FILENAME "apache-datasketches-cpp-${VERSION}-src.zip"
+    SHA512 98ce350e63fff02ac1ab39005a808ad0ab0b308f0807464db235fe9e6cb6dd8f5081494bd0aca85eeec5216f6a6a23280b732e714da9ad6f53690dd9da9c430c
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

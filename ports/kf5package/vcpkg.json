@@ -1,8 +1,8 @@
 {
   "name": "kf5package",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Installation and loading of additional content (ex: scripts, images...) as packages",
-  "homepage": "https://api.kde.org/frameworks/kpackage/html/index.html",
+  "homepage": "https://api.kde.org/kpackage-index.html",
   "dependencies": [
     "ecm",
     {

@@ -1,7 +1,6 @@
 {
   "name": "dcmtk",
-  "version": "3.6.9",
-  "port-version": 2,
+  "version": "3.7.0",
   "description": "This DICOM ToolKit (DCMTK) package consists of source code, documentation and installation instructions for a set of software libraries and applications implementing part of the DICOM/MEDICOM Standard.",
   "homepage": "https://github.com/DCMTK/dcmtk",
   "license": null,

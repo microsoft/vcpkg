@@ -1,8 +1,10 @@
+string(REPLACE "." "_" VERSION "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO munt/munt
-    REF libmt32emu_2_7_1
-    SHA512 369d1c5f16b37f3d8544ad30a30c3aa9d0796f67fcf5988e789958bff14bba119f7c5fd4c43816eb369a14b56f22f0c7eb3016ff838cd36d1d6f22ed84a2e8b9
+    REF libmt32emu_${VERSION}
+    SHA512 29974bc97c15ae6c7824ee2525cebe0dc213b35f2cb45ffc1290cfe1b759ac3df556973a467716f8b395092ed1e7b94c2fa58f8a46b5660e6cf807fead9b5fad
     HEAD_REF master
 )
 

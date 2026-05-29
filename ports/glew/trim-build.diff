@@ -1,0 +1,23 @@
+diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
+index c5c1fb8..b1f41bf 100644
+--- a/build/cmake/CMakeLists.txt
++++ b/build/cmake/CMakeLists.txt
+@@ -162,8 +162,10 @@ endforeach()
+ set(targets_to_install "")
+ if(BUILD_SHARED_LIBS)
+   list(APPEND targets_to_install glew)
++  set_target_properties(glew_s PROPERTIES EXCLUDE_FROM_ALL 1)
+ else ()
+   list(APPEND targets_to_install glew_s)
++  set_target_properties(glew PROPERTIES EXCLUDE_FROM_ALL 1)
+ endif()
+ 
+ install ( TARGETS ${targets_to_install}
+@@ -235,6 +237,7 @@ if(WIN32 AND MSVC AND (NOT MSVC_VERSION LESS 1600))
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         CONFIGURATIONS Debug RelWithDebInfo
+         COMPONENT Runtime
++        OPTIONAL  # subject to BUILD_SHARED_LIBS
+     )
+ endif()
+ 

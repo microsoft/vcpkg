@@ -14,7 +14,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
     REF "v${VERSION}"
-    SHA512 637dfa427c2094688fda850a46746734dafb29eaee4d28c7f294db9ccfc2b53eb05f4d34460926807658db3c8cb614b7669d3fb190e7c8a9ee9bd1d68adf0a64
+    SHA512 74c83cd4248bce7c8ee603845e753acde0fe2efaa8edb5f3f0205bc43534d9334acd3e16c0f3836888aa77fc0ed43f739184181548509c59389aac494dac722b
     HEAD_REF master
     PATCHES
         fix-dependencies.patch

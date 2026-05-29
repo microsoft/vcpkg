@@ -1,0 +1,24 @@
+diff --git a/tensorpipe/common/allocator.h b/tensorpipe/common/allocator.h
+index b7c9c27..49c24f7 100644
+--- a/tensorpipe/common/allocator.h
++++ b/tensorpipe/common/allocator.h
+@@ -9,6 +9,7 @@
+ #pragma once
+ 
+ #include <cstddef>
++#include <cstdint>
+ #include <deque>
+ #include <functional>
+ #include <memory>
+diff --git a/tensorpipe/common/defs.h b/tensorpipe/common/defs.h
+index f4f9736..7afa53a 100644
+--- a/tensorpipe/common/defs.h
++++ b/tensorpipe/common/defs.h
+@@ -13,6 +13,7 @@
+ #include <unistd.h>
+ 
+ #include <cstring>
++#include <cstdint>
+ #include <ctime>
+ #include <functional>
+ #include <iomanip>

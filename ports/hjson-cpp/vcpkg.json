@@ -1,6 +1,6 @@
 {
   "name": "hjson-cpp",
-  "version": "2.4.1",
+  "version": "2.6",
   "description": "Hjson for C++",
   "homepage": "https://hjson.github.io",
   "license": "MIT",

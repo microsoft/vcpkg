@@ -1,6 +1,6 @@
 {
   "name": "neko-network",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Neko Network is a modern, easy-to-use, and efficient C++20 network library built on top of libcurl.",
   "homepage": "https://github.com/moehoshio/NekoNetwork",
   "license": "MIT OR Apache-2.0",

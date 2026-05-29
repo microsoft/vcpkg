@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kiconthemes
-    REF v5.98.0
-    SHA512 822deb6e4469e69541e057b72f2ce27258f5cdb893f1cc8d37d900bb5aa4694706de051a905a939ac2f6fa474f69f4e05f24c87053699b205e6a58e18d56aaf1
+    REF "v${VERSION}"
+    SHA512 fa5a6e1b1483578d0892a99bddf2fc966c37614c49d9a9eb19feddb01e1378871495578dc19a33def06c2e71f9a245a7b00eddbadda80b32275e61539d4110a4
     HEAD_REF master
 )
 
@@ -25,7 +25,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5IconThemes CONFIG_PATH lib/cmake/KF5IconThemes)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5IconThemes)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
@@ -46,4 +46,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

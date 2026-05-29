@@ -1,3 +1,3 @@
-set(qtdeviceutilities_HASH "d5ba3a06d31dffcba84ee5fe09037ed962dca1e79821dba667800d25a942d06bcc95271f4ce1c95d4248ad000c864166b677b2d8cc05685f8d7f81999e477921")
-set(qtdeviceutilities_URL "https://github.com/qt/qtdeviceutilities/archive/6.9.3.tar.gz")
-set(qtdeviceutilities_FILENAME "qt-qtdeviceutilities-6.9.3.tar.gz")
+set(qtdeviceutilities_HASH "f1ffc439e7bc8e8429cd32ff3f0cd211f98ea5c889d251d844fc88fce6f27a3999a5bf65af9ee61e18a9b7816c8b9fe70408242b4d3304eee71d6deb9f6befb4")
+set(qtdeviceutilities_URL "https://github.com/qt/qtdeviceutilities/archive/6.11.0.tar.gz")
+set(qtdeviceutilities_FILENAME "qt-qtdeviceutilities-6.11.0.tar.gz")

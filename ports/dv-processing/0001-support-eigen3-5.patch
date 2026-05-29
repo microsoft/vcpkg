@@ -1,0 +1,99 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b67acfc1..1c51931f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -156,7 +156,10 @@ IF(OS_WINDOWS)
+ ENDIF()
+ 
+ # Eigen support.
+-FIND_PACKAGE(Eigen3 3.4.0 REQUIRED)
++FIND_PACKAGE(Eigen3 REQUIRED)
++IF(Eigen3_VERSION VERSION_LESS "3.4.0")
++	MESSAGE(FATAL_ERROR "Cannot find Eigen3 3.4.0 or newer.")
++ENDIF()
+ 
+ # OpenCV support.
+ FIND_PACKAGE(OpenCV REQUIRED)
+diff --git a/benchmarks/cluster/mean-shift-alternatives.hpp b/benchmarks/cluster/mean-shift-alternatives.hpp
+index a7c572ff..e2aab920 100644
+--- a/benchmarks/cluster/mean-shift-alternatives.hpp
++++ b/benchmarks/cluster/mean-shift-alternatives.hpp
+@@ -40,12 +40,6 @@ public:
+ 	using VectorOfVectors = std::vector<Vector, Eigen::aligned_allocator<Vector>>;
+ 
+ private:
+-	static_assert(EIGEN_IMPLIES(ROWS == 1 && COLUMNS != 1, STORAGE_ORDER == Eigen::RowMajor)
+-				  && "Eigen doesn't allow row-vectors to be stored in column-major storage");
+-
+-	static_assert(EIGEN_IMPLIES(COLUMNS == 1 && ROWS != 1, STORAGE_ORDER == Eigen::ColMajor)
+-				  && "Eigen doesn't allow column-vectors to be stored in row-major storage");
+-
+ 	const uint64_t mNumSamples;
+ 
+ 	const uint16_t mNumDimensions;
+@@ -322,12 +316,6 @@ public:
+ 	using VectorOfVectors = std::vector<Vector, Eigen::aligned_allocator<Vector>>;
+ 
+ private:
+-	static_assert(EIGEN_IMPLIES(ROWS == 1 && COLUMNS != 1, STORAGE_ORDER == Eigen::RowMajor)
+-				  && "Eigen doesn't allow row-vectors to be stored in column-major storage");
+-
+-	static_assert(EIGEN_IMPLIES(COLUMNS == 1 && ROWS != 1, STORAGE_ORDER == Eigen::ColMajor)
+-				  && "Eigen doesn't allow column-vectors to be stored in row-major storage");
+-
+ 	using RTree = boost::geometry::index::rtree<Mat, boost::geometry::index::linear<16>>;
+ 
+ 	const uint64_t mNumSamples;
+diff --git a/cmake/dv-processing-config.cmake.in b/cmake/dv-processing-config.cmake.in
+index 9692b181..03e00602 100644
+--- a/cmake/dv-processing-config.cmake.in
++++ b/cmake/dv-processing-config.cmake.in
+@@ -35,7 +35,10 @@ FIND_PACKAGE(Boost 1.80 REQUIRED COMPONENTS nowide)
+ FIND_PACKAGE(OpenSSL REQUIRED)
+ 
+ # Eigen support.
+-FIND_PACKAGE(Eigen3 3.4.0 REQUIRED)
++FIND_PACKAGE(Eigen3 REQUIRED)
++IF (Eigen3_VERSION VERSION_LESS "3.4.0")
++    MESSAGE(FATAL_ERROR "Cannot find Eigen3 3.4.0 or newer.")
++ENDIF ()
+ 
+ # OpenCV support.
+ FIND_PACKAGE(OpenCV REQUIRED)
+diff --git a/include/dv-processing/containers/kd_tree/eigen_matrix_adaptor.hpp b/include/dv-processing/containers/kd_tree/eigen_matrix_adaptor.hpp
+index c23c2aeb..d0b180d7 100644
+--- a/include/dv-processing/containers/kd_tree/eigen_matrix_adaptor.hpp
++++ b/include/dv-processing/containers/kd_tree/eigen_matrix_adaptor.hpp
+@@ -103,14 +103,7 @@ private:
+ 	using Tree     = nanoflann::KDTreeEigenMatrixAdaptor<Matrix, SAMPLE_ORDER == Eigen::ColMajor ? ROWS : COLUMNS,
+ 			nanoflann::metric_L2_Simple, SAMPLE_ORDER == Eigen::RowMajor>;
+ 
+-	static_assert(EIGEN_IMPLIES(ROWS == 1 && COLUMNS != 1, STORAGE_ORDER == Eigen::RowMajor)
+-				  && "Eigen doesn't allow row-vectors to be stored in column-major storage");
+-
+-	static_assert(EIGEN_IMPLIES(COLUMNS == 1 && ROWS != 1, STORAGE_ORDER == Eigen::ColMajor)
+-				  && "Eigen doesn't allow column-vectors to be stored in row-major storage");
+-
+ 	const uint32_t mNumSamples;
+-
+ 	const uint32_t mNumDimensions;
+ 
+ 	std::unique_ptr<Tree> mTree;
+diff --git a/include/dv-processing/visualization/pose_visualizer.hpp b/include/dv-processing/visualization/pose_visualizer.hpp
+index 11b18ba9..2fa6b398 100644
+--- a/include/dv-processing/visualization/pose_visualizer.hpp
++++ b/include/dv-processing/visualization/pose_visualizer.hpp
+@@ -456,8 +456,12 @@ public:
+ 	 */
+ 	template<concepts::Coordinate3DConstructible Output = Eigen::Vector3f>
+ 	[[nodiscard]] Output getCameraOrientation() const {
++#if EIGEN_MAJOR_VERSION < 5
+ 		Eigen::Vector3f eulerAngles = mT_C_W.inverse().getRotationMatrix().eulerAngles(0, 1, 2);
+-		eulerAngles                 = eulerAngles * RAD_TO_DEG;
++#else
++		Eigen::Vector3f eulerAngles = mT_C_W.inverse().getRotationMatrix().canonicalEulerAngles(0, 1, 2);
++#endif
++		eulerAngles = eulerAngles * RAD_TO_DEG;
+ 		return Output(eulerAngles.x(), eulerAngles.y(), eulerAngles.z());
+ 	}
+ 

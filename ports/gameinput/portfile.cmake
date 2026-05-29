@@ -46,7 +46,7 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://www.nuget.org/api/v2/package/Microsoft.GameInput/${VERSION}"
         FILENAME "gameinput.${VERSION}.zip"
-        SHA512 7377a8cf9291318b99db4f94b6e2db6d8bd2a5afdac0b35bd38b3f51c75948a247e74dab155f2ba67d4ece78899e87c3e0e35510f1547bbc9b7c8202573a8ff6
+        SHA512 e91aef50dc929a9446772525a59e832050979b81c460314a9e42f45359cd533b196a0218adad70099a4b06863c4b640325c36bcd2445bad741eabf982cec5bf2
     )
 
     vcpkg_extract_source_archive(
@@ -63,7 +63,7 @@ else()
     if(VCPKG_TARGET_IS_MINGW)
         # "Thick" GameInput.lib is not compatible with MinGW
 
-        file(COPY "${PACKAGE_PATH}/native/lib/x64/GameInput.cpp" DESTINATION "${CURRENT_BUILDTREES_DIR}/fixlib")
+        file(COPY "${PACKAGE_PATH}/native/src/GameInput.cpp" DESTINATION "${CURRENT_BUILDTREES_DIR}/fixlib")
 
         configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in"
             "${CURRENT_BUILDTREES_DIR}/fixlib/CMakeLists.txt"

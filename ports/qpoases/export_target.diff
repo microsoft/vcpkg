@@ -1,0 +1,113 @@
+Index: qpOASESConfig.cmake.in
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/qpOASESConfig.cmake.in b/qpOASESConfig.cmake.in
+--- a/qpOASESConfig.cmake.in	(revision 35b762ba3fee2e009d9e99650c68514da05585c5)
++++ b/qpOASESConfig.cmake.in	(date 1766737135519)
+@@ -5,25 +5,54 @@
+ # qpOASES_INCLUDE_DIR  - The qpOASES include directory
+ # qpOASES_LIBRARY_DIR  - The qpOASES library directory
+ # qpOASES_LIBRARY     - The qpOASES library
+-# qpOASES_VERSION       - The qpOASES version in the form <major>.<minor>
+-
+-
++# qpOASES_VERSION      - The qpOASES version in the form <major>.<minor>
++#
++# It also provides the following imported target:
++#
++#   qpOASES::qpOASES
+
+ @PACKAGE_INIT@
+
+ set(qpOASES_VERSION @PACKAGE_VERSION@)
+
++# ------------------------------------------------------------
++# Load exported targets (modern CMake)
++# ------------------------------------------------------------
++include("${CMAKE_CURRENT_LIST_DIR}/qpOASESTargets.cmake")
+
+-set_and_check(qpOASES_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
++# ------------------------------------------------------------
++# Backward compatibility variables (derived from target)
++# ------------------------------------------------------------
+
++# Include directory
++get_target_property(_qpOASES_INCLUDE_DIR qpOASES::qpOASES INTERFACE_INCLUDE_DIRECTORIES)
++
++# Handle generator expressions and lists
++list(GET _qpOASES_INCLUDE_DIR 0 qpOASES_INCLUDE_DIR)
+
+ set(qpOASES_INCLUDE_DIR "${qpOASES_INCLUDE_DIR}" CACHE STRING "Include path for qpOASES and its dependencies")
+-set_and_check(qpOASES_LIBRARY_DIR @PACKAGE_LIB_INSTALL_DIR@)
++
++# Library file (configuration-aware)
++get_target_property(_qpOASES_LIB_LOCATION qpOASES::qpOASES IMPORTED_LOCATION)
++
++if(NOT _qpOASES_LIB_LOCATION)
++    if(CMAKE_BUILD_TYPE STREQUAL Debug)
++        get_target_property(_qpOASES_LIB_LOCATION qpOASES::qpOASES IMPORTED_LOCATION_DEBUG)
++    else()
++        get_target_property(_qpOASES_LIB_LOCATION qpOASES::qpOASES IMPORTED_LOCATION_RELEASE)
++    endif()
++endif()
++
++set(qpOASES_LIBRARY "${_qpOASES_LIB_LOCATION}")
++
++# Library directory
++get_filename_component(qpOASES_LIBRARY_DIR "${qpOASES_LIBRARY}" DIRECTORY)
++
+ set(qpOASES_LIBRARY_DIR "${qpOASES_LIBRARY_DIR}" CACHE STRING "Library path for qpOASES and its dependencies")
+
+-find_library(qpOASES_LIBRARY NAMES qpOASES
+-    PATHS ${qpOASES_LIBRARY_DIR} NO_DEFAULT_PATH)
+-
+-
++# ------------------------------------------------------------
++# Standard find_package result handling
++# ------------------------------------------------------------
+ include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(qpOASES DEFAULT_MSG qpOASES_INCLUDE_DIR qpOASES_LIBRARY_DIR qpOASES_LIBRARY qpOASES_VERSION)
+\ No newline at end of file
++
++find_package_handle_standard_args(qpOASES REQUIRED_VARS qpOASES_LIBRARY qpOASES_INCLUDE_DIR VERSION_VAR qpOASES_VERSION)
+\ No newline at end of file
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision 35b762ba3fee2e009d9e99650c68514da05585c5)
++++ b/CMakeLists.txt	(date 1766735663415)
+@@ -125,7 +125,17 @@
+
+ # library
+ ADD_LIBRARY(qpOASES ${SRC})
++
++add_library(qpOASES::qpOASES ALIAS qpOASES)
++
++target_include_directories(qpOASES
++        PUBLIC
++        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++)
++
+ INSTALL(TARGETS qpOASES
++  EXPORT qpOASESTargets
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+@@ -164,6 +174,11 @@
+     VERSION ${PACKAGE_VERSION}
+     COMPATIBILITY SameMajorVersion)
+
++install(EXPORT qpOASESTargets
++        NAMESPACE qpOASES::
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qpOASES
++)
++
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qpOASESConfig.cmake
+     ${CMAKE_CURRENT_BINARY_DIR}/qpOASESConfigVersion.cmake
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/qpOASES

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/cobalt
     REF boost-${VERSION}
-    SHA512 c4d9040e8dbcaf8ab5e014b82995fb1487abc87edd27166c2baca4ce888f0680f798c7bbb24bc7c3ee808654007d55dbea73c314a2eb4224b8bf5aecfab264a4
+    SHA512 fa280b607729f6f0cb9af77bbf9d5aae9add62474ff7916f0a9738a1ada527fecf050f85dd193912373133c813e4421e571e12ecde1085be1824fb25f3512073
     HEAD_REF master
     PATCHES
         fail-on-compiler-not-supported.patch

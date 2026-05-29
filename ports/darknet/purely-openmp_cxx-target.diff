@@ -1,0 +1,29 @@
+diff --git a/CM_dependencies.cmake b/CM_dependencies.cmake
+index 1462d195..e26dc7d1 100644
+--- a/CM_dependencies.cmake
++++ b/CM_dependencies.cmake
+@@ -239,6 +239,7 @@ LIST (APPEND DARKNET_LINK_LIBS ${OpenCV_LIBS})
+ # ============
+ # == OpenMP ==
+ # ============
++set(OpenMP_RUNTIME_MSVC experimental)
+ FIND_PACKAGE (OpenMP QUIET) # optional
+ IF (NOT OPENMP_FOUND)
+ 	MESSAGE (WARNING "OpenMP not found. Building Darknet without support for OpenMP.")
+@@ -248,15 +249,7 @@ ELSEIF (DARKNET_USE_ROCM)
+ ELSE ()
+ 	MESSAGE (STATUS "Found OpenMP ${OpenMP_VERSION}")
+ 	ADD_COMPILE_DEFINITIONS (DARKNET_OPENMP)
+-	LIST (APPEND DARKNET_LINK_LIBS OpenMP::OpenMP_CXX OpenMP::OpenMP_C)
+-	IF (WIN32)
+-		ADD_COMPILE_OPTIONS (/openmp:experimental)
+-	ELSE ()
+-		ADD_COMPILE_DEFINITIONS (_GLIBCXX_PARALLEL)
+-		ADD_COMPILE_OPTIONS (-fopenmp)
+-		ADD_COMPILE_OPTIONS (${OpenMP_C_FLAGS})
+-		ADD_COMPILE_OPTIONS (${OpenMP_CXX_FLAGS})
+-	ENDIF()
++	LIST (APPEND DARKNET_LINK_LIBS OpenMP::OpenMP_CXX)
+ ENDIF ()
+ 
+ 

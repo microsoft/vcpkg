@@ -1,6 +1,6 @@
 {
   "name": "kleidiai",
-  "version-semver": "1.8.0",
+  "version-semver": "1.19.0",
   "description": "Arm's KleidiAI library for efficient neural network inference.",
   "homepage": "https://github.com/ARM-software/kleidiai",
   "license": "Apache-2.0 OR BSD-3-Clause",

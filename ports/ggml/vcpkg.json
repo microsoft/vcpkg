@@ -1,6 +1,6 @@
 {
   "name": "ggml",
-  "version-date": "2025-11-17",
+  "version": "0.11.1",
   "description": "Tensor library for machine learning",
   "homepage": "https://github.com/ggml-org/ggml",
   "license": "MIT",
@@ -60,6 +60,7 @@
           "name": "shaderc",
           "host": true
         },
+        "spirv-headers",
         "vulkan"
       ]
     }

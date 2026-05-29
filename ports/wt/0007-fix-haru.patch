@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5826718..06cfe04 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -275,8 +275,8 @@ find_package(GLEW)
+ 
+ find_package(Asciidoctor)
+ 
+-set(HPDF_ROOT ${HARU_PREFIX})
+-find_package(HPDF)
++find_package(HPDF NAMES unofficial-libharu CONFIG REQUIRED)
++add_library(HPDF::HPDF ALIAS unofficial::libharu::hpdf)
+ 
+ set(OPENSSL_ROOT_DIR ${SSL_PREFIX})
+ find_package(OpenSSL)
+diff --git a/wt-config.cmake.in b/wt-config.cmake.in
+index a3693d3..4df41c2 100644
+--- a/wt-config.cmake.in
++++ b/wt-config.cmake.in
+@@ -5,7 +5,9 @@ if(@_WTCONFIG_CMAKE_FIND_BOOST@)
+   find_package(Boost QUIET
+     COMPONENTS @Boost_COMPONENTS@)
+ endif()
+-
++if(@ENABLE_HARU@)
++  find_package(unofficial-libharu QUIET)
++endif()
+ # Required target
+ include(${CMAKE_CURRENT_LIST_DIR}/wt-target-wt.cmake)
+ # Optional targets

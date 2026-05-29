@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO highfive-devs/highfive
     REF "v${VERSION}"
-    SHA512 0f72eadfff9b0dd8bcf70654ae5ac526565df58be47d432e5f44fbc5b36b47989061308629ea34d403b9b96362abc2e42e9cbd6eaa78d1ba0326737493468d05
+    SHA512 b7c4eeec0670ba7d8c3b6c69e85abaae1a9b1237eea4f5fb873d8730633c5e785a73d80ee29e64e57afea83e4c52e8a0779c8564edd484069127965a8d3bddb3
     HEAD_REF master
 )
 

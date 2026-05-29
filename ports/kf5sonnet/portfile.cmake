@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/sonnet
-    REF v5.98.0
-    SHA512 7bd4dc164e049e9b5be2f29a81444f4545bb0c70db8ede0cc4303292d983e21c6701ac9ab02f4b4b3b2793ec7e6a078601e8c7cf083b1a799d10dc9f1d5a57c0
+    REF "v${VERSION}"
+    SHA512 1bb5043b45e31009d89253179fde0ec677d73a125c4a2db39fff212d10c311d9c12748fd3d8d555b1b078fe307ab7de0cf46841a26645256f112445270c0c9e6
     HEAD_REF master
 )
 
@@ -15,6 +15,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
     "hunspell"    CMAKE_DISABLE_FIND_PACKAGE_HUNSPELL
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -35,7 +38,7 @@ vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Sonnet CONFIG_PATH lib/cmake/KF5Sonnet)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Sonnet)
 
 vcpkg_copy_tools(
     TOOL_NAMES gentrigrams parsetrigrams
@@ -57,4 +60,3 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/parsetrigrams${VCPKG_HOST_EXECUTA
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

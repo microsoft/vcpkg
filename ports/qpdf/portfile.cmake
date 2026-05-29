@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qpdf/qpdf
-    REF v${VERSION}
-    SHA512 22395160ff16556fe3544790dff1ade63489cfc494c46ae84e7db4b41e0592b7b6ee4d80e4d3862491f09db91ab13868abcfc22b7918a74fe2966669d619469b
+    REF "v${VERSION}"
+    SHA512 1aa9f11dc561e2ddf95a3052f6224269ab73cf1dddc5fefcc4e021351da3472819ed5979fe2073501a04f25a2fcbb126726437dbe8793d89d3f27739d599e6f6
     PATCHES
         cmake-library-only.patch
 )
@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -28,9 +29,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/qpdf)
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/qpdf)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

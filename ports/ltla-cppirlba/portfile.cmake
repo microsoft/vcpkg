@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LTLA/CppIrlba
     REF "v${VERSION}"
-    SHA512 7ddeccfe0a0810e32fb4385cf5a6545831764acb0ea2c96373228beceee897b20251391421b85b08e51baf8d5dca7c4b88347145a784ec6d7c3e11ff05a1c5ad
+    SHA512 a060c12a6d2c00efb632ab89f14f12fd57598e6e563aa50d4bfd44100c29f3178509e9bd0f3b2cd34c82042caa1b8c2dc6dab3c0f6c3da2c4d169175064605fe
     HEAD_REF master
+    PATCHES
+        0001-fix-eigen3.patch
 )
 
 set(VCPKG_BUILD_TYPE "release") # header-only port
