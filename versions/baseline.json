@@ -5666,7 +5666,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 6
+      "port-version": 7
     },
     "libspeechd": {
       "baseline": "0.12.1",
