@@ -15,7 +15,7 @@ diff --git a/include/xlsxwriter/packager.h b/include/xlsxwriter/packager.h
 index 8c465ad..ef95888 100644
 --- a/include/xlsxwriter/packager.h
 +++ b/include/xlsxwriter/packager.h
-@@ -12,11 +12,11 @@
+@@ -12,7 +12,7 @@
  
  #include <stdint.h>
  
@@ -23,9 +23,4 @@ index 8c465ad..ef95888 100644
 +#if 1
  #ifdef __GNUC__
  #pragma GCC system_header
- #endif
--#include "minizip/zip.h"
-+#include "../minizip/zip.h"
- #else
- #include "third_party/zip.h"
  #endif
