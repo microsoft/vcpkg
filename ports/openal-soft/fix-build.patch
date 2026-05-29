@@ -1,0 +1,129 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c925aa870..1536a94d7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -258,7 +258,7 @@ if(ALSOFT_ENABLE_MODULES)
+ endif()
+ 
+ 
+-add_subdirectory(fmt-11.2.0 EXCLUDE_FROM_ALL)
++find_package(fmt CONFIG REQUIRED)
+ 
+ 
+ set(CPP_DEFS ) # C pre-processor, not C++
+@@ -269,13 +269,15 @@ set(LINKER_FLAGS_DEBUG )
+ set(LINKER_FLAGS_RELEASE )
+ set(EXTRA_LIBS )
+ 
+-if((CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"
+-        AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 17.0)
+-    OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
+-        AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 20.0))
+-    check_cxx_compiler_flag(-Wfunction-effects HAVE_WFUNCTION_EFFECTS)
+-    if(HAVE_WFUNCTION_EFFECTS)
+-        list(APPEND C_FLAGS $<$<COMPILE_LANGUAGE:CXX>:-Wfunction-effects>)
++if(HAVE_LIBCXX)
++    if((CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"
++            AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 17.0)
++        OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
++            AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 20.0))
++        check_cxx_compiler_flag(-Wfunction-effects HAVE_WFUNCTION_EFFECTS)
++        if(HAVE_WFUNCTION_EFFECTS)
++            list(APPEND C_FLAGS $<$<COMPILE_LANGUAGE:CXX>:-Wfunction-effects>)
++        endif()
+     endif()
+ endif()
+ 
+@@ -407,9 +409,6 @@ else()
+         list(APPEND C_FLAGS -Werror=undef -Werror=format-security
+             $<$<COMPILE_LANGUAGE:C>:-Werror=implicit -Werror=incompatible-pointer-types
+                 -Werror=int-conversion>)
+-        if(HAVE_WFUNCTION_EFFECTS)
+-            list(APPEND C_FLAGS $<$<COMPILE_LANGUAGE:CXX>:-Werror=function-effects>)
+-        endif()
+     endif()
+ 
+     # NOTE: This essentially provides the equivalent of the C++26 feature to
+@@ -1559,6 +1558,15 @@ if(LIBTYPE STREQUAL "STATIC")
+             set(PKG_CONFIG_PRIVATE_LIBS "${PKG_CONFIG_PRIVATE_LIBS} -l${FLAG}")
+         endif()
+     endforeach()
++    foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++        if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++            continue()
++        elseif(EXISTS "${lib}")
++            string(APPEND PKG_CONFIG_PRIVATE_LIBS " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++        else()
++            string(APPEND PKG_CONFIG_PRIVATE_LIBS " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++        endif()
++    endforeach()
+ endif()
+ 
+ if(UNIX_ELF)
+@@ -1649,7 +1657,7 @@ target_include_directories(alsoft.common
+     PUBLIC ${OpenAL_BINARY_DIR} ${OpenAL_SOURCE_DIR}/common ${OpenAL_SOURCE_DIR}/gsl/include)
+ target_compile_definitions(alsoft.common PUBLIC ${CPP_DEFS})
+ target_compile_options(alsoft.common PUBLIC ${C_FLAGS})
+-target_link_libraries(alsoft.common PUBLIC Threads::Threads ${LINKER_FLAGS} alsoft::fmt)
++target_link_libraries(alsoft.common PUBLIC Threads::Threads ${LINKER_FLAGS} fmt::fmt)
+ set_target_properties(alsoft.common PROPERTIES ${ALSOFT_STD_VERSION_PROPS}
+     POSITION_INDEPENDENT_CODE TRUE)
+ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET
+@@ -1720,7 +1728,7 @@ if(LIBTYPE STREQUAL "STATIC")
+     target_compile_definitions(${IMPL_TARGET} PUBLIC AL_LIBTYPE_STATIC)
+     target_include_directories(${IMPL_TARGET} PRIVATE ${OpenAL_SOURCE_DIR}/gsl/include)
+     target_link_libraries(${IMPL_TARGET} PRIVATE Threads::Threads ${LINKER_FLAGS} ${EXTRA_LIBS}
+-        ${MATH_LIB} $<BUILD_LOCAL_INTERFACE:alsoft::fmt>)
++        ${MATH_LIB} fmt::fmt)
+ 
+     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET
+         AND CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.13")
+@@ -1749,7 +1757,7 @@ else()
+             target_compile_definitions(alsoft.router-modules PRIVATE AL_ALEXT_PROTOTYPES
+                 "ALC_API=${EXPORT_DECL}" "AL_API=${EXPORT_DECL}" ${CPP_DEFS})
+             target_compile_options(alsoft.router-modules PRIVATE ${C_FLAGS})
+-            target_link_libraries(alsoft.router-modules PRIVATE Threads::Threads alsoft::fmt
++            target_link_libraries(alsoft.router-modules PRIVATE Threads::Threads fmt::fmt
+                 PUBLIC alsoft::buildapi-modules)
+             set_target_properties(alsoft.router-modules PROPERTIES ${ALSOFT_STD_VERSION_PROPS}
+                 POSITION_INDEPENDENT_CODE TRUE)
+diff --git a/OpenALConfig.cmake.in b/OpenALConfig.cmake.in
+index 4c1ad05d5..419428ae1 100644
+--- a/OpenALConfig.cmake.in
++++ b/OpenALConfig.cmake.in
+@@ -2,6 +2,10 @@ if((NOT DEFINED CMAKE_VERSION) OR (CMAKE_VERSION VERSION_LESS "3.1"))
+    message(FATAL_ERROR "CMake >= 3.1 required")
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(fmt CONFIG)
++find_dependency(Threads)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/OpenALTargets.cmake")
+ 
+ set(OPENAL_FOUND ON)
+diff --git a/common/opthelpers.h b/common/opthelpers.h
+index 247090489..41c0edcad 100644
+--- a/common/opthelpers.h
++++ b/common/opthelpers.h
+@@ -62,7 +62,7 @@
+ #define LIFETIMEBOUND
+ #endif
+ 
+-#if HAS_ATTRIBUTE(clang::nonblocking)
++#if HAS_ATTRIBUTE(clang::nonblocking) && !defined(_MSVC_STL_UPDATE)
+ #define NONBLOCKING [[clang::nonblocking]]
+ #else
+ #define NONBLOCKING
+diff --git a/openal.pc.in b/openal.pc.in
+index dfa6f5738..e04e80720 100644
+--- a/openal.pc.in
++++ b/openal.pc.in
+@@ -6,6 +6,7 @@ includedir=@includedir@
+ Name: OpenAL
+ Description: OpenAL is a cross-platform 3D audio API
+ Requires: @PKG_CONFIG_REQUIRES@
++Requires.private: fmt
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -l@LIBNAME@ @PKG_CONFIG_LIBS@
+ Libs.private:@PKG_CONFIG_PRIVATE_LIBS@

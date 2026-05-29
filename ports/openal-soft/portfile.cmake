@@ -5,8 +5,7 @@ vcpkg_from_github(
     SHA512 d3790aedce0bdb0b348b35f917dec0626de2486f5967c9160cf2d50d5c2a00ff264ff73133ac6a0aa9207e8e5042e5d4fcc663c1e733df8e733647e843c39b25
     HEAD_REF master
     PATCHES
-        pkgconfig-cxx.diff
-        devendor-fmt.diff
+        fix-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
