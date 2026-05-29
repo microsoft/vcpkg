@@ -6,10 +6,11 @@ vcpkg_from_github(
     SHA512 16fea4df307a68cf0035858abe2fd550250618a97590e202037acd18a666f57afc10f8836cbbd472d54a0e76539d0e558cb26f059d53de52ff90634bbf4f47d4
     HEAD_REF master
     PATCHES
-        pkgconfig.patch
+        pkgconfig.patch          # https://github.com/madler/zlib/pull/1242
         install-tools.diff
-        restore-32bit.diff
-        unofficial-iowin32.diff
+        restore-32bit.diff       # somewhere in https://github.com/madler/zlib/pull/1233
+        unofficial-iowin32.diff  # https://github.com/madler/zlib/pull/1243
+        header-destination.diff  # for https://github.com/madler/zlib/issues/1252
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,7 +28,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/contrib/minizip"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_INSTALL_INCLUDEDIR=include/minizip # legacy and avoiding conflicts (crypt.h)
         -DMINIZIP_BUILD_SHARED=${MINIZIP_BUILD_SHARED}
         -DMINIZIP_BUILD_STATIC=${MINIZIP_BUILD_STATIC}
         -DMINIZIP_BUILD_TESTING=OFF
