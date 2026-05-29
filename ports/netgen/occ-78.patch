@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 47cbae1..d277630 100644
+index e6b3d07..f90e126 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -375,25 +375,20 @@ if (USE_OCC)
+@@ -379,25 +379,20 @@ if (USE_OCC)
        TKGeomAlgo
        TKGeomBase
        TKHLR
@@ -31,6 +31,124 @@ index 47cbae1..d277630 100644
        TKXSBase
        TKernel
      )
+diff --git a/libsrc/occ/Partition_Inter2d.cxx b/libsrc/occ/Partition_Inter2d.cxx
+index 88b6f7d..9dc4e13 100644
+--- a/libsrc/occ/Partition_Inter2d.cxx
++++ b/libsrc/occ/Partition_Inter2d.cxx
+@@ -46,10 +46,9 @@
+ #include <TopOpeBRepDS_Transition.hxx>
+ #include <TopOpeBRep_EdgesIntersector.hxx>
+ #include <TopOpeBRep_Point2d.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
+ #include <TopTools_ListOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
+ #include <TopTools_MapOfShape.hxx>
++#include <TopTools_IndexedMapOfShape.hxx>
+ #include <TopoDS.hxx>
+ #include <TopoDS_Edge.hxx>
+ #include <TopoDS_Vertex.hxx>
+diff --git a/libsrc/occ/Partition_Inter2d.hxx b/libsrc/occ/Partition_Inter2d.hxx
+index c018bac..afbdfd2 100644
+--- a/libsrc/occ/Partition_Inter2d.hxx
++++ b/libsrc/occ/Partition_Inter2d.hxx
+@@ -38,6 +38,7 @@
+ #else
+    #include <BRepAlgo_AsDes.hxx>
+    #include <TopTools_MapOfShape.hxx>
++   #include <TopTools_ListOfShape.hxx>
+ #endif
+ 
+ #ifndef _Standard_Real_HeaderFile
+diff --git a/libsrc/occ/Partition_Inter3d.cxx b/libsrc/occ/Partition_Inter3d.cxx
+index 3fc97b4..4b7db82 100644
+--- a/libsrc/occ/Partition_Inter3d.cxx
++++ b/libsrc/occ/Partition_Inter3d.cxx
+@@ -46,9 +46,9 @@
+ #include <TopExp_Explorer.hxx>
+ 
+ #include <TopOpeBRepTool_BoxSort.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_DataMapOfShapeListOfShape.hxx>
+ #include <TopTools_ListOfShape.hxx>
++#include <TopTools_IndexedMapOfShape.hxx>
+ #include <TopoDS.hxx>
+ #include <TopoDS_Compound.hxx>
+ #include <TopoDS_Edge.hxx>
+@@ -74,6 +74,7 @@
+ #include <Geom_TrimmedCurve.hxx>
+ #include <Precision.hxx>
+ #include <TColStd_MapOfInteger.hxx>
++#include <TColStd_ListOfInteger.hxx>
+ #include <TopOpeBRepBuild_Builder.hxx>
+ #include <TopOpeBRepDS_BuildTool.hxx>
+ #include <TopOpeBRepDS_CurveExplorer.hxx>
+@@ -85,7 +86,7 @@
+ #include <TopOpeBRepTool_GeomTool.hxx>
+ #include <TopOpeBRepTool_OutCurveType.hxx>
+ #include <TopOpeBRep_DSFiller.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeShape.hxx>
++#include <TopTools_DataMapOfShapeShape.hxx>
+ #include <stdio.h>
+ 
+ //=======================================================================
+diff --git a/libsrc/occ/Partition_Loop.cxx b/libsrc/occ/Partition_Loop.cxx
+index efaf77f..483a5ae 100644
+--- a/libsrc/occ/Partition_Loop.cxx
++++ b/libsrc/occ/Partition_Loop.cxx
+@@ -44,12 +44,11 @@
+ #include <Geom_Surface.hxx>
+ 
+ #include <TopTools_SequenceOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_ListOfShape.hxx>
+ #include <TopTools_MapOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
+ #include <TopTools_MapOfOrientedShape.hxx>
+ #include <TopTools_DataMapOfShapeShape.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
++#include <TopTools_DataMapOfShapeListOfShape.hxx>
+ 
+ #include <gp_Pnt.hxx>
+ #include <gp_Pnt2d.hxx>
+diff --git a/libsrc/occ/Partition_Loop2d.cxx b/libsrc/occ/Partition_Loop2d.cxx
+index 1c3d795..81f106a 100644
+--- a/libsrc/occ/Partition_Loop2d.cxx
++++ b/libsrc/occ/Partition_Loop2d.cxx
+@@ -34,14 +34,12 @@
+ #include <TColStd_SequenceOfReal.hxx>
+ #include <TopExp.hxx>
+ #include <TopExp_Explorer.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeShape.hxx>
++#include <TopTools_DataMapOfShapeListOfShape.hxx>
+ #include <TopTools_DataMapOfShapeInteger.hxx>
+ #include <TopTools_DataMapOfShapeReal.hxx>    // V6.5
+ #include <TopTools_DataMapOfShapeShape.hxx>
+ #include <TopTools_IndexedMapOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
++#include <TopTools_ListOfShape.hxx>
+ #include <TopTools_MapOfOrientedShape.hxx>
+ #include <TopTools_MapOfShape.hxx>
+ #include <TopTools_SequenceOfShape.hxx>
+diff --git a/libsrc/occ/Partition_Loop3d.cxx b/libsrc/occ/Partition_Loop3d.cxx
+index 3e9acc3..d975ee4 100644
+--- a/libsrc/occ/Partition_Loop3d.cxx
++++ b/libsrc/occ/Partition_Loop3d.cxx
+@@ -17,11 +17,10 @@
+ #include <TopExp.hxx>
+ #include <BRep_Builder.hxx>
+ #include <TopTools_MapOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
++#include <TopTools_ListOfShape.hxx>
+ #include <TopoDS_Shell.hxx>
+ #include <TopoDS_Iterator.hxx>
+ #include <TopoDS.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
+ #include <gp_Vec.hxx>
+ #include <gp_Pnt.hxx>
+ #include <Geom2d_Curve.hxx>
 diff --git a/libsrc/occ/Partition_Loop3d.hxx b/libsrc/occ/Partition_Loop3d.hxx
 index e171669..fe77b90 100644
 --- a/libsrc/occ/Partition_Loop3d.hxx
@@ -76,8 +194,27 @@ index e171669..fe77b90 100644
  #endif
  
  class TopoDS_Edge;
+diff --git a/libsrc/occ/Partition_Spliter.cxx b/libsrc/occ/Partition_Spliter.cxx
+index 7a1d913..7a0a87c 100644
+--- a/libsrc/occ/Partition_Spliter.cxx
++++ b/libsrc/occ/Partition_Spliter.cxx
+@@ -43,13 +43,11 @@
+ #include <TopExp.hxx>
+ #include <TopExp_Explorer.hxx>
+ 
+-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
+ #include <TopTools_DataMapOfShapeListOfShape.hxx>
+ #include <TopTools_IndexedDataMapOfShapeListOfShape.hxx>
+ #include <TopTools_IndexedMapOfShape.hxx>
+-#include <TopTools_ListIteratorOfListOfShape.hxx>
+ #include <TopTools_ListOfShape.hxx>
+-#include <TopTools_MapIteratorOfMapOfShape.hxx>
++#include <TopTools_MapOfShape.hxx>
+ #include <TopTools_SequenceOfShape.hxx>
+ 
+ #include <Geom2d_Curve.hxx>
 diff --git a/libsrc/occ/occ_edge.cpp b/libsrc/occ/occ_edge.cpp
-index 4805bb1..bb2b98e 100644
+index 4805bb1..e8b272f 100644
 --- a/libsrc/occ/occ_edge.cpp
 +++ b/libsrc/occ/occ_edge.cpp
 @@ -55,7 +55,11 @@ namespace netgen
@@ -87,13 +224,13 @@ index 4805bb1..bb2b98e 100644
 +#if OCC_VERSION_HEX < 0x070800
        return edge.HashCode(std::numeric_limits<Standard_Integer>::max());
 +#else
-+      return std::hash<TopoDS_Shape>{}(edge); 
++      return std::hash<TopoDS_Shape>{}(edge);
 +#endif
      }
  
      void OCCEdge::ProjectPoint(Point<3>& p, EdgePointGeomInfo* gi) const
 diff --git a/libsrc/occ/occ_face.cpp b/libsrc/occ/occ_face.cpp
-index 239982a..ea4dd15 100644
+index 239982a..ec6dee3 100644
 --- a/libsrc/occ/occ_face.cpp
 +++ b/libsrc/occ/occ_face.cpp
 @@ -32,7 +32,11 @@ namespace netgen
@@ -103,7 +240,7 @@ index 239982a..ea4dd15 100644
 +#if OCC_VERSION_HEX < 0x070800
        return face.HashCode(std::numeric_limits<Standard_Integer>::max());
 +#else
-+      return std::hash<TopoDS_Shape>{}(face); 
++      return std::hash<TopoDS_Shape>{}(face);
 +#endif
      }
  
@@ -125,7 +262,7 @@ index d598de4..416c1eb 100644
  }
  
 diff --git a/libsrc/occ/occ_vertex.cpp b/libsrc/occ/occ_vertex.cpp
-index 6e83c89..be8e387 100644
+index 6e83c89..982992a 100644
 --- a/libsrc/occ/occ_vertex.cpp
 +++ b/libsrc/occ/occ_vertex.cpp
 @@ -19,6 +19,10 @@ namespace netgen
@@ -135,15 +272,31 @@ index 6e83c89..be8e387 100644
 +#if OCC_VERSION_HEX < 0x070800
        return vertex.HashCode(std::numeric_limits<Standard_Integer>::max());
 +#else
-+      return std::hash<TopoDS_Shape>{}(vertex); 
++      return std::hash<TopoDS_Shape>{}(vertex);
 +#endif
      }
  }
 diff --git a/libsrc/occ/occgeom.cpp b/libsrc/occ/occgeom.cpp
-index 00ed0d0..ad58ae6 100644
+index 00ed0d0..dbbe921 100644
 --- a/libsrc/occ/occgeom.cpp
 +++ b/libsrc/occ/occgeom.cpp
-@@ -1717,8 +1717,12 @@ namespace netgen
+@@ -46,6 +46,7 @@
+ #include <StepRepr_RepresentationItem.hxx>
+ #include <StlAPI_Writer.hxx>
+ #include <TopoDS_Shape.hxx>
++#include <TDF_LabelSequence.hxx>
+ #include <TransferBRep.hxx>
+ #include <Transfer_FinderProcess.hxx>
+ #include <Transfer_TransientProcess.hxx>
+@@ -54,6 +55,7 @@
+ #include <XCAFDoc_DocumentTool.hxx>
+ #include <XCAFDoc_ShapeTool.hxx>
+ #include <XCAFPrs.hxx>
++#include <XCAFPrs_IndexedDataMapOfShapeStyle.hxx>
+ #include <XCAFPrs_Style.hxx>
+ #include <XSControl_TransferReader.hxx>
+ #include <XSControl_WorkSession.hxx>
+@@ -1717,8 +1719,12 @@ namespace netgen
      /*
      // enumerate shapes and archive only integers
      auto my_hash = [](const TopoDS_Shape & key) {
@@ -156,3 +309,160 @@ index 00ed0d0..ad58ae6 100644
      };
      */
      TopTools_IndexedMapOfShape shape_map;
+diff --git a/libsrc/occ/occgeom.hpp b/libsrc/occ/occgeom.hpp
+index c7118ce..e098f14 100644
+--- a/libsrc/occ/occgeom.hpp
++++ b/libsrc/occ/occgeom.hpp
+@@ -24,11 +24,13 @@
+ #include <StepBasic_MeasureValueMember.hxx>
+ #include <StepRepr_CompoundRepresentationItem.hxx>
+ #include <StepRepr_IntegerRepresentationItem.hxx>
++#include <StepRepr_HArray1OfRepresentationItem.hxx>
+ #include <StepRepr_ValueRepresentationItem.hxx>
+ #include <TCollection_HAsciiString.hxx>
+ #include <TDocStd_Document.hxx>
+ #include <TopoDS.hxx>
+ #include <TopoDS_Shape.hxx>
++#include <TopTools_MapOfShape.hxx>
+ #include <Transfer_FinderProcess.hxx>
+ 
+ #if OCC_VERSION_MAJOR>=7 && OCC_VERSION_MINOR>=4
+diff --git a/libsrc/occ/python_occ.cpp b/libsrc/occ/python_occ.cpp
+index 4808957..3f93834 100644
+--- a/libsrc/occ/python_occ.cpp
++++ b/libsrc/occ/python_occ.cpp
+@@ -70,10 +70,9 @@ DLL_HEADER void ExportNgOCC(py::module &m)
+ 
+   // suppress info messages from occ (like statistics on Transfer)
+   Message_Gravity aGravity = Message_Alarm;
+-  for (Message_SequenceOfPrinters::Iterator aPrinterIter (Message::DefaultMessenger()->Printers());
+-       aPrinterIter.More(); aPrinterIter.Next())
++  for (const auto& aPrinter : Message::DefaultMessenger()->Printers())
+   {
+-    aPrinterIter.Value()->SetTraceLevel (aGravity);
++    aPrinter->SetTraceLevel (aGravity);
+   }
+ 
+   ExportNgOCCBasic(m);
+@@ -85,7 +84,11 @@ DLL_HEADER void ExportNgOCC(py::module &m)
+     try {
+       if(p) std::rethrow_exception(p);
+     } catch (const Standard_Failure& e) {
++#if OCC_VERSION_HEX < 0x080000
+       exc((string(e.DynamicType()->Name()) + ": " + e.GetMessageString()).c_str());
++#else
++      exc((string(e.ExceptionType()) + ": " + e.what()).c_str());
++#endif
+     }
+   });
+   
+diff --git a/libsrc/occ/python_occ_shapes.cpp b/libsrc/occ/python_occ_shapes.cpp
+index bd265ca..07040a9 100644
+--- a/libsrc/occ/python_occ_shapes.cpp
++++ b/libsrc/occ/python_occ_shapes.cpp
+@@ -13,6 +13,16 @@
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ 
++#include <TColgp_Array1OfPnt2d.hxx>
++#include <TColgp_Array1OfVec2d.hxx>
++#include <TColgp_HArray1OfPnt2d.hxx>
++#include <TColStd_HArray1OfBoolean.hxx>
++#include <TColStd_Array1OfReal.hxx>
++#include <TColStd_Array1OfInteger.hxx>
++#include <TColgp_HArray1OfPnt.hxx>
++#include <TColgp_Array2OfPnt.hxx>
++#include <TColgp_Array1OfVec.hxx>
++#include <TColgp_Array1OfPnt.hxx>
+ #include <BOPAlgo_Builder.hxx>
+ #include <BOPTools_AlgoTools.hxx>
+ #include <BRepAlgoAPI_Common.hxx>
+@@ -76,6 +86,8 @@
+ #include <gp_Ax2d.hxx>
+ #include <gp_Pln.hxx>
+ #include <gp_Trsf.hxx>
++#include <TopTools_HSequenceOfShape.hxx>
++#include <TopTools_ListOfShape.hxx>
+ 
+ #pragma clang diagnostic pop
+ 
+@@ -2000,7 +2012,7 @@ DLL_HEADER void ExportNgOCCShapes(py::module &m)
+   m.def("SplineApproximation", [](const std::vector<gp_Pnt2d> &points, Approx_ParametrizationType approx_type, int deg_min,
+                                     int deg_max, GeomAbs_Shape continuity, double tol) -> Handle(Geom2d_Curve) {
+       TColgp_Array1OfPnt2d hpoints(0, 0);
+-      hpoints.Resize(0, points.size() - 1, true);
++      hpoints.Resize(0, static_cast<Standard_Integer>(points.size()) - 1, true);
+       for (int i = 0; i < points.size(); i++)
+           hpoints.SetValue(i, points[i]);
+ 
+@@ -2040,7 +2052,7 @@ tol : float
+ )delimiter");
+ 
+   m.def("SplineInterpolation", [](const std::vector<gp_Pnt2d> &points, bool periodic, double tol, const std::map<int, gp_Vec2d> &tangents) -> Handle(Geom2d_Curve) {
+-      Handle(TColgp_HArray1OfPnt2d) hpoints = new TColgp_HArray1OfPnt2d(1, points.size());
++      Handle(TColgp_HArray1OfPnt2d) hpoints = new TColgp_HArray1OfPnt2d(1, static_cast<Standard_Integer>(points.size()));
+       for (int i = 0; i < points.size(); i++)
+           hpoints->SetValue(i+1, points[i]);
+       Geom2dAPI_Interpolate builder(hpoints, periodic, tol);
+@@ -2048,8 +2060,8 @@ tol : float
+       if (tangents.size() > 0)
+       {
+         const gp_Vec2d dummy_vec = tangents.begin()->second;
+-        TColgp_Array1OfVec2d tangent_vecs(1, points.size());
+-        Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, points.size());
++        TColgp_Array1OfVec2d tangent_vecs(1, static_cast<Standard_Integer>(points.size()));
++        Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, static_cast<Standard_Integer>(points.size()));
+         for (int i : Range(points.size()))
+         {
+           if (tangents.count(i) > 0)
+@@ -2221,9 +2233,9 @@ tangents : Dict[int, gp_Vec2d]
+ 
+   m.def("BSplineCurve", [](std::vector<gp_Pnt> vpoles, int degree) {
+       // not yet working ????
+-      TColgp_Array1OfPnt poles(0, vpoles.size()-1);
+-      TColStd_Array1OfReal knots(0, vpoles.size()+degree);
+-      TColStd_Array1OfInteger mult(0, vpoles.size()+degree);
++      TColgp_Array1OfPnt poles(0, static_cast<Standard_Integer>(vpoles.size())-1);
++      TColStd_Array1OfReal knots(0, static_cast<Standard_Integer>(vpoles.size())+degree);
++      TColStd_Array1OfInteger mult(0, static_cast<Standard_Integer>(vpoles.size())+degree);
+       // int cnt = 0;
+ 
+       for (int i = 0; i < vpoles.size(); i++)
+@@ -2243,7 +2255,7 @@ tangents : Dict[int, gp_Vec2d]
+     });
+   
+   m.def("BezierCurve", [](std::vector<gp_Pnt> vpoles) {
+-      TColgp_Array1OfPnt poles(0, vpoles.size()-1);
++      TColgp_Array1OfPnt poles(0, static_cast<Standard_Integer>(vpoles.size())-1);
+ 
+       for (int i = 0; i < vpoles.size(); i++)
+         poles.SetValue(i, vpoles[i]);
+@@ -2256,7 +2268,7 @@ tangents : Dict[int, gp_Vec2d]
+   m.def("SplineApproximation", [](const std::vector<gp_Pnt> &points, Approx_ParametrizationType approx_type, int deg_min,
+           int deg_max, GeomAbs_Shape continuity, double tol) {
+       TColgp_Array1OfPnt hpoints(0, 0);
+-      hpoints.Resize(0, points.size() - 1, true);
++      hpoints.Resize(0, static_cast<Standard_Integer>(points.size()) - 1, true);
+       for (int i = 0; i < points.size(); i++)
+         hpoints.SetValue(i, points[i]);
+ 
+@@ -2296,7 +2308,7 @@ tol : float
+ )delimiter");
+ 
+     m.def("SplineInterpolation", [](const std::vector<gp_Pnt> &points, bool periodic, double tol, const std::map<int, gp_Vec> &tangents) {
+-        Handle(TColgp_HArray1OfPnt) hpoints = new TColgp_HArray1OfPnt(1, points.size());
++        Handle(TColgp_HArray1OfPnt) hpoints = new TColgp_HArray1OfPnt(1, static_cast<Standard_Integer>(points.size()));
+         for (int i = 0; i < points.size(); i++)
+           hpoints->SetValue(i+1, points[i]);
+ 
+@@ -2305,8 +2317,8 @@ tol : float
+         if (tangents.size() > 0)
+         {
+           const gp_Vec dummy_vec = tangents.begin()->second;
+-          TColgp_Array1OfVec tangent_vecs(1, points.size());
+-          Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, points.size());
++          TColgp_Array1OfVec tangent_vecs(1, static_cast<Standard_Integer>(points.size()));
++          Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, static_cast<Standard_Integer>(points.size()));
+           for (int i : Range(points.size()))
+           {
+             if (tangents.count(i) > 0)
