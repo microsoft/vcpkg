@@ -4753,7 +4753,7 @@
       "port-version": 1
     },
     "libavif": {
-      "baseline": "1.4.1",
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "libb2": {
