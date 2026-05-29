@@ -5269,7 +5269,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "26.1",
+      "baseline": "26.5",
       "port-version": 0
     },
     "libmem": {
