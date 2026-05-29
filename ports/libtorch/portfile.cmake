@@ -209,6 +209,7 @@ vcpkg_cmake_configure(
         -DCUDNN_FRONTEND_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     MAYBE_UNUSED_VARIABLES
         CUDNN_FRONTEND_INCLUDE_DIR
+        MKL_INTERFACE
         USE_NUMA    # cmake_dependent_option forces OFF on non-Linux
         USE_VULKAN  # cmake_dependent_option forces OFF on non-Android
         VCPKG_LIBTORCH_MKL_FEATURE_ENABLED  # consumed by patched FindMKL.cmake, not the top-level CMakeLists
