@@ -218,7 +218,6 @@ cppmicroservices:x64-android=fail
 cpprealm:arm-neon-android=cascade # https://github.com/realm/realm-core/issues/8093
 cpprealm:arm64-android=cascade
 cpprealm:x64-android=cascade
-cpprestsdk(android)=skip # this should be fail but is skip due to a bug in feature-test: https://github.com/microsoft/vcpkg-tool/pull/2017
 crashpad:arm64-linux=fail #Compliation failed due to the lack of Clang++ compiler.
 crashpad:x64-linux=fail
 crashrpt(windows)=cascade
