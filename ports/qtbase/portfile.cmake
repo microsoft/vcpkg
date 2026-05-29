@@ -25,6 +25,7 @@ set(${PORT}_PATCHES
         macdeployqt-symlinks.patch
         moltenvk.patch
         fix-ioring-32bit.patch
+        fix-liburing-config-test.patch
         fix-libresolv-test.patch
         use_inotify_on_freebsd.patch
         silence-winrtbase-coroutine-warnings.diff

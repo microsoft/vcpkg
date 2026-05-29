@@ -394,6 +394,10 @@
       "supports": "linux | windows",
       "dependencies": [
         {
+          "name": "liburing",
+          "platform": "linux"
+        },
+        {
           "name": "qtbase",
           "default-features": false,
           "features": [
