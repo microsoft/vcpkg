@@ -132,3 +132,45 @@ endif()
 if(TARGET ICU::uc)
     target_compile_features(ICU::uc INTERFACE cxx_std_17)
 endif()
+
+if("windowssystem" IN_LIST FEATURES)
+    # 1. Clear out any cached variables to prevent accidental lookups
+    unset(ICU_FOUND CACHE)
+    
+    # 2. Leverage Windows SDK environment paths
+    if(DEFINED ENV{WindowsSDKDir} AND DEFINED ENV{WindowsSDKVersion})
+        set(WindowsSDK_UM_Include "$ENV{WindowsSDKDir}Include/$ENV{WindowsSDKVersion}um")
+    else()
+        # Fallback if environment variables are missing from the current shell context
+        set(WindowsSDK_UM_Include "C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um")
+    endif()
+
+    # 3. Explicitly map targets to system library binaries
+    set(ICU_INCLUDE_DIRS "${WindowsSDK_UM_Include}" CACHE PATH "Windows SDK ICU Include Dir" FORCE)
+    set(ICU_INCLUDE_DIR "${WindowsSDK_UM_Include}" CACHE PATH "Windows SDK ICU Include Dir" FORCE)
+    
+    # Windows native ICU exports a unified icu.lib import library for icu.dll
+    find_library(ICU_SYSTEM_LIB NAMES icu PATHS "$ENV{WindowsSDKDir}Lib/$ENV{WindowsSDKVersion}um/$ENV{VCPKG_TARGET_ARCHITECTURE}" REQUIRED)
+    
+    set(ICU_LIBRARIES "${ICU_SYSTEM_LIB}" CACHE STRING "Windows Native ICU Lib" FORCE)
+    set(ICU_FOUND TRUE CACHE BOOL "Windows Native ICU Found" FORCE)
+    
+    # 4. Generate the standard modern CMake imported targets expected by downstream ports
+    if(NOT TARGET ICU::icu)
+        add_library(ICU::icu INTERFACE IMPORTED)
+        set_target_properties(ICU::icu PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${ICU_INCLUDE_DIRS}"
+            INTERFACE_LINK_LIBRARIES "${ICU_LIBRARIES}"
+        )
+        # Map common aliases that downstream CMake scripts look for
+        add_library(ICU::uc ALIAS ICU::icu)
+        add_library(ICU::i18n ALIAS ICU::icu)
+        add_library(ICU::data ALIAS ICU::icu)
+    endif()
+
+    # Skip running standard find_package logic
+    set(ICU_FIND_QUIETLY TRUE)
+else()
+    # Call the original underlying find path for a compiled ICU port
+    _find_package(${ARGS})
+endif()

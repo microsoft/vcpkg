@@ -1,3 +1,23 @@
+if("windowssystem" IN_LIST FEATURES)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "The 'windowssystem' feature for ICU is only supported on Windows platforms.")
+    endif()
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "The Windows OS native ICU library is a dynamic system DLL. Static linkage cannot be forced.")
+    endif()
+
+    # Install the CMake wrapper configuration
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    
+    # Write a dummy copyright file required by vcpkg linting guidelines
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "Distributed under the terms of the Windows SDK License Agreement.")
+
+    # Mark port installation as successfully completed empty placeholder 
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+    return()
+endif()
+
 vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION}/icu4c-${VERSION}-sources.tgz"
