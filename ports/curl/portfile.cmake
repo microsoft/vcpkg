@@ -15,36 +15,37 @@ vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[LIBCURL_TIMESTAMP
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        brotli      CURL_BROTLI
-        c-ares      ENABLE_ARES
-        gnutls      CURL_USE_GNUTLS
-        gsasl       CURL_USE_GSASL
-        gssapi      CURL_USE_GSSAPI
-        gssapi      VCPKG_LOCK_FIND_PACKAGE_GSS
-        http2       USE_NGHTTP2
-        http2       VCPKG_LOCK_FIND_PACKAGE_NGHTTP2
-        http3       USE_NGTCP2
-        httpsrr     USE_HTTPSRR
-        idn2        USE_LIBIDN2
-        idn2        VCPKG_LOCK_FIND_PACKAGE_Libidn2
-        ldap        VCPKG_LOCK_FIND_PACKAGE_LDAP
-        mbedtls     CURL_USE_MBEDTLS
-        openssl     CURL_CA_FALLBACK
-        openssl     CURL_USE_OPENSSL
-        psl         CURL_USE_LIBPSL
-        ssh         CURL_USE_LIBSSH2
-        ssh         VCPKG_LOCK_FIND_PACKAGE_Libssh2
-        ssls-export USE_SSLS_EXPORT
-        sspi        CURL_WINDOWS_SSPI
-        tool        BUILD_CURL_EXE
-        winidn      USE_WIN32_IDN
-        wolfssl     CURL_USE_WOLFSSL
-        zstd        CURL_ZSTD
+        apple-sectrust USE_APPLE_SECTRUST
+        brotli         CURL_BROTLI
+        c-ares         ENABLE_ARES
+        gnutls         CURL_USE_GNUTLS
+        gsasl          CURL_USE_GSASL
+        gssapi         CURL_USE_GSSAPI
+        gssapi         VCPKG_LOCK_FIND_PACKAGE_GSS
+        http2          USE_NGHTTP2
+        http2          VCPKG_LOCK_FIND_PACKAGE_NGHTTP2
+        http3          USE_NGTCP2
+        httpsrr        USE_HTTPSRR
+        idn2           USE_LIBIDN2
+        idn2           VCPKG_LOCK_FIND_PACKAGE_Libidn2
+        ldap           VCPKG_LOCK_FIND_PACKAGE_LDAP
+        mbedtls        CURL_USE_MBEDTLS
+        openssl        CURL_CA_FALLBACK
+        openssl        CURL_USE_OPENSSL
+        psl            CURL_USE_LIBPSL
+        ssh            CURL_USE_LIBSSH2
+        ssh            VCPKG_LOCK_FIND_PACKAGE_Libssh2
+        ssls-export    USE_SSLS_EXPORT
+        sspi           CURL_WINDOWS_SSPI
+        tool           BUILD_CURL_EXE
+        winidn         USE_WIN32_IDN
+        wolfssl        CURL_USE_WOLFSSL
+        zstd           CURL_ZSTD
     INVERTED_FEATURES
-        ldap        CURL_DISABLE_LDAP
-        ldap        CURL_DISABLE_LDAPS
-        non-http    HTTP_ONLY
-        websockets  CURL_DISABLE_WEBSOCKETS
+        ldap           CURL_DISABLE_LDAP
+        ldap           CURL_DISABLE_LDAPS
+        non-http       HTTP_ONLY
+        websockets     CURL_DISABLE_WEBSOCKETS
 )
 
 if("ssl" IN_LIST FEATURES AND

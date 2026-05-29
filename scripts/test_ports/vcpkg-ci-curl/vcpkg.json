@@ -91,6 +91,14 @@
             "tool"
           ],
           "platform": "!android & !uwp & !arm"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "apple-sectrust"
+          ],
+          "platform": "osx | ios"
         }
       ]
     },

@@ -1,7 +1,7 @@
 {
   "name": "curl",
   "version": "8.20.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -21,6 +21,19 @@
     "ssl"
   ],
   "features": {
+    "apple-sectrust": {
+      "description": "Apple SecTrust support",
+      "supports": "osx | ios",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
+      ]
+    },
     "brotli": {
       "description": "brotli support (brotli)",
       "dependencies": [
