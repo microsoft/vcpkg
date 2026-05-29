@@ -1,0 +1,17 @@
+{
+  "name": "dichotomia",
+  "version": "1.0.1",
+  "description": "C++23 mathematical library",
+  "homepage": "https://github.com/zem-invictus/dichotomia",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
