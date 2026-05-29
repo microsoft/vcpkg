@@ -3573,7 +3573,7 @@
       "port-version": 4
     },
     "graphviz": {
-      "baseline": "14.1.2",
+      "baseline": "15.0.0",
       "port-version": 0
     },
     "greatest": {
