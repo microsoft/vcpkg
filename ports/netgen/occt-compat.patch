@@ -357,7 +357,7 @@ index 4808957..3f93834 100644
    });
    
 diff --git a/libsrc/occ/python_occ_shapes.cpp b/libsrc/occ/python_occ_shapes.cpp
-index bd265ca..07040a9 100644
+index bd265ca..4c64735 100644
 --- a/libsrc/occ/python_occ_shapes.cpp
 +++ b/libsrc/occ/python_occ_shapes.cpp
 @@ -13,6 +13,16 @@
@@ -386,83 +386,27 @@ index bd265ca..07040a9 100644
  
  #pragma clang diagnostic pop
  
-@@ -2000,7 +2012,7 @@ DLL_HEADER void ExportNgOCCShapes(py::module &m)
-   m.def("SplineApproximation", [](const std::vector<gp_Pnt2d> &points, Approx_ParametrizationType approx_type, int deg_min,
-                                     int deg_max, GeomAbs_Shape continuity, double tol) -> Handle(Geom2d_Curve) {
-       TColgp_Array1OfPnt2d hpoints(0, 0);
--      hpoints.Resize(0, points.size() - 1, true);
-+      hpoints.Resize(0, static_cast<Standard_Integer>(points.size()) - 1, true);
-       for (int i = 0; i < points.size(); i++)
-           hpoints.SetValue(i, points[i]);
- 
-@@ -2040,7 +2052,7 @@ tol : float
- )delimiter");
- 
-   m.def("SplineInterpolation", [](const std::vector<gp_Pnt2d> &points, bool periodic, double tol, const std::map<int, gp_Vec2d> &tangents) -> Handle(Geom2d_Curve) {
--      Handle(TColgp_HArray1OfPnt2d) hpoints = new TColgp_HArray1OfPnt2d(1, points.size());
-+      Handle(TColgp_HArray1OfPnt2d) hpoints = new TColgp_HArray1OfPnt2d(1, static_cast<Standard_Integer>(points.size()));
-       for (int i = 0; i < points.size(); i++)
-           hpoints->SetValue(i+1, points[i]);
-       Geom2dAPI_Interpolate builder(hpoints, periodic, tol);
-@@ -2048,8 +2060,8 @@ tol : float
-       if (tangents.size() > 0)
-       {
-         const gp_Vec2d dummy_vec = tangents.begin()->second;
--        TColgp_Array1OfVec2d tangent_vecs(1, points.size());
--        Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, points.size());
-+        TColgp_Array1OfVec2d tangent_vecs(1, static_cast<Standard_Integer>(points.size()));
-+        Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, static_cast<Standard_Integer>(points.size()));
-         for (int i : Range(points.size()))
-         {
-           if (tangents.count(i) > 0)
-@@ -2221,9 +2233,9 @@ tangents : Dict[int, gp_Vec2d]
+@@ -2221,9 +2233,10 @@ tangents : Dict[int, gp_Vec2d]
  
    m.def("BSplineCurve", [](std::vector<gp_Pnt> vpoles, int degree) {
        // not yet working ????
 -      TColgp_Array1OfPnt poles(0, vpoles.size()-1);
 -      TColStd_Array1OfReal knots(0, vpoles.size()+degree);
 -      TColStd_Array1OfInteger mult(0, vpoles.size()+degree);
++      // Avoid C2666 overload ambiguity in OCCT collection constructors.
 +      TColgp_Array1OfPnt poles(0, static_cast<Standard_Integer>(vpoles.size())-1);
 +      TColStd_Array1OfReal knots(0, static_cast<Standard_Integer>(vpoles.size())+degree);
 +      TColStd_Array1OfInteger mult(0, static_cast<Standard_Integer>(vpoles.size())+degree);
        // int cnt = 0;
  
        for (int i = 0; i < vpoles.size(); i++)
-@@ -2243,7 +2255,7 @@ tangents : Dict[int, gp_Vec2d]
+@@ -2243,7 +2256,8 @@ tangents : Dict[int, gp_Vec2d]
      });
    
    m.def("BezierCurve", [](std::vector<gp_Pnt> vpoles) {
 -      TColgp_Array1OfPnt poles(0, vpoles.size()-1);
++      // Avoid C2666 overload ambiguity in OCCT collection constructors.
 +      TColgp_Array1OfPnt poles(0, static_cast<Standard_Integer>(vpoles.size())-1);
  
        for (int i = 0; i < vpoles.size(); i++)
          poles.SetValue(i, vpoles[i]);
-@@ -2256,7 +2268,7 @@ tangents : Dict[int, gp_Vec2d]
-   m.def("SplineApproximation", [](const std::vector<gp_Pnt> &points, Approx_ParametrizationType approx_type, int deg_min,
-           int deg_max, GeomAbs_Shape continuity, double tol) {
-       TColgp_Array1OfPnt hpoints(0, 0);
--      hpoints.Resize(0, points.size() - 1, true);
-+      hpoints.Resize(0, static_cast<Standard_Integer>(points.size()) - 1, true);
-       for (int i = 0; i < points.size(); i++)
-         hpoints.SetValue(i, points[i]);
- 
-@@ -2296,7 +2308,7 @@ tol : float
- )delimiter");
- 
-     m.def("SplineInterpolation", [](const std::vector<gp_Pnt> &points, bool periodic, double tol, const std::map<int, gp_Vec> &tangents) {
--        Handle(TColgp_HArray1OfPnt) hpoints = new TColgp_HArray1OfPnt(1, points.size());
-+        Handle(TColgp_HArray1OfPnt) hpoints = new TColgp_HArray1OfPnt(1, static_cast<Standard_Integer>(points.size()));
-         for (int i = 0; i < points.size(); i++)
-           hpoints->SetValue(i+1, points[i]);
- 
-@@ -2305,8 +2317,8 @@ tol : float
-         if (tangents.size() > 0)
-         {
-           const gp_Vec dummy_vec = tangents.begin()->second;
--          TColgp_Array1OfVec tangent_vecs(1, points.size());
--          Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, points.size());
-+          TColgp_Array1OfVec tangent_vecs(1, static_cast<Standard_Integer>(points.size()));
-+          Handle(TColStd_HArray1OfBoolean) tangent_flags = new TColStd_HArray1OfBoolean(1, static_cast<Standard_Integer>(points.size()));
-           for (int i : Range(points.size()))
-           {
-             if (tangents.count(i) > 0)
