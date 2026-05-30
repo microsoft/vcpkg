@@ -1,0 +1,23 @@
+diff --git a/lib/libxdp/Makefile b/lib/libxdp/Makefile
+index 7ea7e7e..3f1eab6 100644
+--- a/lib/libxdp/Makefile
++++ b/lib/libxdp/Makefile
+@@ -13,7 +13,9 @@ XDP_OBJS := xdp-dispatcher.o xsk_def_xdp_prog.o xsk_def_xdp_prog_5.3.o
+ EMBEDDED_XDP_OBJS := $(addsuffix .embed.o,$(basename $(XDP_OBJS)))
+ SHARED_OBJS := $(addprefix $(SHARED_OBJDIR)/,$(OBJS))
+ STATIC_OBJS := $(addprefix $(STATIC_OBJDIR)/,$(OBJS)) $(EMBEDDED_XDP_OBJS)
++ifdef BUILD_STATIC
+ STATIC_LIBS := $(OBJDIR)/libxdp.a
++endif
+ MAN_PAGE := libxdp.3
+ MAN_OBJ := ${MAN_PAGE:.3=.man}
+ MAN_FILES := $(MAN_PAGE)
+@@ -31,7 +33,7 @@ CFLAGS += -I$(HEADER_DIR)
+ BPF_CFLAGS += -I$(HEADER_DIR) $(ARCH_INCLUDES)
+ 
+ 
+-ifndef BUILD_STATIC_ONLY
++ifdef BUILD_SHARED
+ SHARED_LIBS := $(OBJDIR)/libxdp.so \
+ 	       $(OBJDIR)/libxdp.so.$(LIBXDP_MAJOR_VERSION) \
+ 	       $(OBJDIR)/libxdp.so.$(LIBXDP_VERSION)
