@@ -8,6 +8,9 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 345207937b8c1580eb7adc527e29c33b140d9042716425896c121b2661404675faf4e8ac5fdaf804e44a9165de049776897f24b56a90bfab3f8b1c632a34322b
     HEAD_REF main
+    PATCHES
+        # backport https://github.com/google/s2geometry/commit/1a58cb4e484ec6dd3c7ce24aff112243f1c030d3
+        1a58cb4.patch
 )
 
 vcpkg_cmake_configure(
