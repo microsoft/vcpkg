@@ -7409,7 +7409,7 @@
       "port-version": 1
     },
     "openldap": {
-      "baseline": "2.6.12",
+      "baseline": "2.6.13",
       "port-version": 0
     },
     "openmama": {
