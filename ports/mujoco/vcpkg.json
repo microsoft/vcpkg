@@ -1,6 +1,6 @@
 {
   "name": "mujoco",
-  "version": "3.8.1",
+  "version": "3.9.0",
   "description": "Multi-Joint dynamics with Contact.",
   "homepage": "https://mujoco.org",
   "license": "Apache-2.0",
@@ -15,6 +15,7 @@
     "glfw3",
     "lodepng",
     "marchingcubecpp",
+    "miniz",
     "qhull",
     "tinyobjloader",
     "tinyxml2",
