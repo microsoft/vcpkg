@@ -9117,8 +9117,8 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.8",
-      "port-version": 1
+      "baseline": "3.4.10",
+      "port-version": 0
     },
     "sdl3-image": {
       "baseline": "3.4.4",
