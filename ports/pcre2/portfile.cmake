@@ -21,9 +21,9 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/deps/sljit")
 file(MAKE_DIRECTORY "${SOURCE_PATH}/deps")
 file(RENAME "${SLJIT_SOURCE_PATH}" "${SOURCE_PATH}/deps/sljit")
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_PDB)
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_STATIC_CRT)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_MSVC_PDB)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" PCRE2_STATIC_RUNTIME)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -39,8 +39,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
-        -DPCRE2_STATIC_RUNTIME=${BUILD_STATIC_CRT}
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        -DPCRE2_STATIC_RUNTIME=${PCRE2_STATIC_RUNTIME}
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
@@ -51,11 +51,15 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
-        -DINSTALL_MSVC_PDB=${INSTALL_PDB}
-    )
+        -DINSTALL_MSVC_PDB=${INSTALL_MSVC_PDB}
+    MAYBE_UNUSED_VARIABLES
+        PCRE2_STATIC_RUNTIME
+)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/pcre2.h" PCRE2_H)
 if(BUILD_STATIC)
@@ -64,9 +68,6 @@ else()
     string(REPLACE "defined(PCRE2_STATIC)" "0" PCRE2_H "${PCRE2_H}")
 endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
-
-vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/man"
