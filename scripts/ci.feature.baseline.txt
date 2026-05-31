@@ -675,6 +675,7 @@ libtcod[sdl]:arm64-linux=cascade
 libtomcrypt(arm & windows)=fail
 libtorch:x86-windows=fail
 libtorch[cuda]:arm64-linux=cascade # cuda:arm64-linux fails; nccl/gloo/magma unavailable on arm64
+libtorch[cuda]:x64-windows=feature-fails # CUDA 13.2 nvcc/cicc ICE in debug device code (Loss.cu); release-only triplet builds fine
 libtorch[dist]:arm64-linux=cascade # gloo only supports x64 & linux
 libtorch[dist]((arm & windows) | uwp | arm32)=cascade # sleef/xnnpack are unavailable on arm-windows, uwp and arm32
 libtorch[fbgemm]:arm64-linux=cascade # fbgemm supports !arm
