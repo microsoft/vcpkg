@@ -9,6 +9,10 @@
     "cpp-httplib",
     "cpuinfo",
     "eigen3",
+    {
+      "name": "fbgemm",
+      "platform": "x64 & !uwp"
+    },
     "flatbuffers",
     {
       "name": "flatbuffers",
@@ -26,6 +30,10 @@
       "platform": "windows | (arm64 & !osx)"
     },
     "nlohmann-json",
+    {
+      "name": "nnpack",
+      "platform": "linux | osx"
+    },
     "onnx",
     "opencl",
     "pocketfft",
@@ -52,10 +60,7 @@
     "xnnpack"
   ],
   "default-features": [
-    "blas",
-    "gflags",
-    "glog",
-    "zstd"
+    "blas"
   ],
   "features": {
     "blas": {
@@ -95,19 +100,11 @@
       ]
     },
     "dist": {
-      "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
-      "supports": "linux | windows",
+      "description": "Use distributed training/inference (Gloo, MPI, libuv, TensorPipe)",
+      "supports": "(linux & x64) | windows",
       "dependencies": [
         {
           "name": "gloo",
-          "platform": "linux"
-        },
-        {
-          "name": "libtorch",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ],
           "platform": "linux"
         },
         {
@@ -115,18 +112,12 @@
           "platform": "windows | osx"
         },
         {
+          "name": "mpi",
+          "platform": "linux"
+        },
+        {
           "name": "tensorpipe",
           "platform": "linux"
-        }
-      ]
-    },
-    "fbgemm": {
-      "description": "Build with FBGEMM (x64 quantization acceleration)",
-      "supports": "x64",
-      "dependencies": [
-        {
-          "name": "fbgemm",
-          "platform": "x64"
         }
       ]
     },
@@ -149,53 +140,12 @@
       ]
     },
     "mkl": {
-      "description": "Use Intel oneMKL for BLAS/LAPACK; also activates MKL-backed kernels in ideep when [mkldnn] is enabled. Mutually exclusive with [blas] (the openblas default-feature) — install as libtorch[core,mkl,...] to skip the openblas backend, otherwise both backends get built and only MKL is linked.",
-      "supports": "(windows | linux) & x64",
-      "dependencies": [
-        "intel-mkl"
-      ]
-    },
-    "mkldnn": {
-      "description": "Build with oneDNN (MKLDNN) CPU acceleration via Intel ideep",
-      "supports": "x64 & !uwp",
+      "description": "Intel performance backend: use oneMKL for BLAS/LAPACK and enable oneDNN (MKLDNN) CPU acceleration via ideep. Mutually exclusive with [blas] (the openblas default-feature) — install as libtorch[core,mkl,...] to skip the openblas backend, otherwise both backends get built and only MKL is linked.",
+      "supports": "(windows | linux) & x64 & !uwp",
       "dependencies": [
         "ideep",
+        "intel-mkl",
         "onednn"
-      ]
-    },
-    "mpi": {
-      "description": "Build with MPI",
-      "dependencies": [
-        "mpi"
-      ]
-    },
-    "nnpack": {
-      "description": "Build with NNPack",
-      "supports": "linux | osx",
-      "dependencies": [
-        "nnpack"
-      ]
-    },
-    "opencv": {
-      "description": "Build with OpenCV (no GUI)",
-      "dependencies": [
-        {
-          "name": "opencv",
-          "default-features": false,
-          "features": [
-            "calib3d",
-            "dnn",
-            "fs",
-            "gapi",
-            "intrinsics",
-            "jpeg",
-            "png",
-            "quirc",
-            "thread",
-            "tiff",
-            "webp"
-          ]
-        }
       ]
     },
     "vulkan": {
@@ -208,12 +158,6 @@
         "vulkan",
         "vulkan-loader",
         "vulkan-memory-allocator"
-      ]
-    },
-    "zstd": {
-      "description": "Build with ZSTD",
-      "dependencies": [
-        "zstd"
       ]
     }
   }

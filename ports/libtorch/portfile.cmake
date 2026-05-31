@@ -69,8 +69,7 @@ message(STATUS "Using Python3: ${PYTHON3}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
-    fbgemm  USE_FBGEMM
+    dist    USE_DISTRIBUTED # Gloo, MPI, TensorPipe
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
@@ -82,16 +81,26 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     vulkan  USE_VULKAN_RELAXED_PRECISION
     rocm    USE_ROCM  # alternative to cuda, not a vcpkg feature; always disabled
     llvm    USE_LLVM
-    mkldnn  USE_MKLDNN
-    mkldnn  AT_MKLDNN_ENABLED
-    mpi     USE_MPI
-    nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
     python  USE_NUMPY
     glog    USE_GLOG
     gflags  USE_GFLAGS
 )
+
+# FBGEMM and NNPACK are ON by default in upstream PyTorch, so they are core (not
+# optional features). Enable each wherever its vcpkg dependency is available for
+# the target arch; the matching core dependency in vcpkg.json is platform-gated.
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    list(APPEND FEATURE_OPTIONS -DUSE_FBGEMM=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DUSE_FBGEMM=OFF)
+endif()
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS -DUSE_NNPACK=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DUSE_NNPACK=OFF)
+endif()
 
 if("dist" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
@@ -101,6 +110,8 @@ if("dist" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS -DUSE_LIBUV=ON)
     endif()
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
+    # MPI was folded into [dist]; the mpi dependency is linux-only (see vcpkg.json).
+    list(APPEND FEATURE_OPTIONS -DUSE_MPI=${VCPKG_TARGET_IS_LINUX})
 endif()
 
 if("cuda" IN_LIST FEATURES)
@@ -128,15 +139,23 @@ if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
 endif()
 
 if("mkl" IN_LIST FEATURES)
-    # Route PyTorch's BLAS chooser at cmake/Dependencies.cmake through the MKL branch,
-    # which calls find_package(MKL) -> our replacement FindMKL.cmake -> vcpkg intel-mkl.
-    # VCPKG_LIBTORCH_MKL_FEATURE_ENABLED gates the FindMKL replacement: when the
-    # feature is off, the replacement returns MKL_FOUND=FALSE without calling
-    # find_package, so a transitively-staged intel-mkl can't silently turn on
-    # BLAS=MKL with ILP64 defaults and trip vml.h's `is_same_v<MKL_INT, int64_t>`.
+    # The mkl feature is the "Intel performance" bundle: it routes PyTorch's BLAS
+    # chooser at cmake/Dependencies.cmake through the MKL branch, which calls
+    # find_package(MKL) -> our replacement FindMKL.cmake -> vcpkg intel-mkl, and it
+    # also turns on oneDNN (MKLDNN) via ideep. VCPKG_LIBTORCH_MKL_FEATURE_ENABLED
+    # gates the FindMKL replacement: when the feature is off, the replacement
+    # returns MKL_FOUND=FALSE without calling find_package, so a transitively-staged
+    # intel-mkl can't silently turn on BLAS=MKL with ILP64 defaults and trip vml.h's
+    # `is_same_v<MKL_INT, int64_t>`.
     list(APPEND FEATURE_OPTIONS
         -DBLAS=MKL
-        -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON)
+        -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON
+        -DUSE_MKLDNN=ON
+        -DAT_MKLDNN_ENABLED=ON)
+else()
+    # oneDNN/ideep are only pulled in by [mkl]; without the feature, force MKLDNN
+    # off so PyTorch's default-ON USE_MKLDNN doesn't look for an absent dependency.
+    list(APPEND FEATURE_OPTIONS -DUSE_MKLDNN=OFF)
 endif()
 
 # Always force LP64. Even when libtorch[mkl] is off, mkldnn / fbgemm and other
