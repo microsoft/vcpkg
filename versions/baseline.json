@@ -461,7 +461,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.13.1",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -721,7 +721,7 @@
       "port-version": 0
     },
     "bfgroup-lyra": {
-      "baseline": "1.7.0",
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "bgfx": {
@@ -1609,7 +1609,7 @@
       "port-version": 0
     },
     "capstone": {
-      "baseline": "5.0.8",
+      "baseline": "5.0.9",
       "port-version": 0
     },
     "cargs": {
@@ -1675,6 +1675,10 @@
     "ceres": {
       "baseline": "2.2.0",
       "port-version": 6
+    },
+    "cesnet-ndk-sw": {
+      "baseline": "6.30.3",
+      "port-version": 0
     },
     "cfitsio": {
       "baseline": "4.6.4",
@@ -2610,7 +2614,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 4
+      "port-version": 5
     },
     "dpp": {
       "baseline": "10.1.5",
@@ -3297,7 +3301,7 @@
       "port-version": 0
     },
     "gameinput": {
-      "baseline": "3.3.195",
+      "baseline": "3.4.218",
       "port-version": 0
     },
     "gamenetworkingsockets": {
@@ -3441,7 +3445,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.7.0",
+      "baseline": "7.7.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3661,7 +3665,7 @@
       "port-version": 0
     },
     "gul17": {
-      "baseline": "26.2.0",
+      "baseline": "26.5.0",
       "port-version": 0
     },
     "gumbo": {
@@ -3821,7 +3825,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.6.3",
+      "baseline": "2.6.4",
       "port-version": 0
     },
     "hidapi": {
@@ -3921,8 +3925,8 @@
       "port-version": 1
     },
     "icey": {
-      "baseline": "2.4.2",
-      "port-version": 1
+      "baseline": "2.4.11",
+      "port-version": 0
     },
     "icu": {
       "baseline": "78.3",
@@ -4045,7 +4049,7 @@
       "port-version": 1
     },
     "intel-ipsec": {
-      "baseline": "1.1",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "intel-mkl": {
@@ -5117,7 +5121,7 @@
       "port-version": 6
     },
     "libheif": {
-      "baseline": "1.22.2",
+      "baseline": "1.23.0",
       "port-version": 0
     },
     "libhsplasma": {
@@ -5674,7 +5678,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 6
+      "port-version": 7
     },
     "libspeechd": {
       "baseline": "0.12.1",
@@ -6001,8 +6005,8 @@
       "port-version": 0
     },
     "libxmp": {
-      "baseline": "4.6.0",
-      "port-version": 1
+      "baseline": "4.7.0",
+      "port-version": 0
     },
     "libxmu": {
       "baseline": "1.1.3",
@@ -6253,7 +6257,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.722",
+      "baseline": "0.723",
       "port-version": 0
     },
     "lunarg-vulkantools": {
@@ -6761,7 +6765,7 @@
       "port-version": 0
     },
     "msgpack-c": {
-      "baseline": "6.1.0",
+      "baseline": "7.0.0",
       "port-version": 0
     },
     "msgpack11": {
@@ -7029,7 +7033,7 @@
       "port-version": 0
     },
     "nghttp3": {
-      "baseline": "1.15.0",
+      "baseline": "1.16.0",
       "port-version": 0
     },
     "ngspice": {
@@ -7037,7 +7041,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.22.1",
+      "baseline": "1.23.0",
       "port-version": 0
     },
     "nifly": {
@@ -7421,7 +7425,7 @@
       "port-version": 1
     },
     "openldap": {
-      "baseline": "2.6.12",
+      "baseline": "2.6.13",
       "port-version": 0
     },
     "openmama": {
@@ -7534,7 +7538,7 @@
     },
     "orc": {
       "baseline": "2.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "orefkov-simstr": {
       "baseline": "1.8.1",
@@ -9121,8 +9125,8 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.8",
-      "port-version": 1
+      "baseline": "3.4.10",
+      "port-version": 0
     },
     "sdl3-image": {
       "baseline": "3.4.4",
@@ -9133,7 +9137,7 @@
       "port-version": 0
     },
     "sdl3-net": {
-      "baseline": "prerelease-3.1.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "sdl3-shadercross": {
@@ -9149,7 +9153,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.3.2",
+      "baseline": "4.3.3",
       "port-version": 0
     },
     "seasocks": {
@@ -10477,7 +10481,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.77.0",
+      "baseline": "20.78.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -10857,8 +10861,8 @@
       "port-version": 0
     },
     "whisper-cpp": {
-      "baseline": "1.8.4",
-      "port-version": 1
+      "baseline": "1.8.5",
+      "port-version": 0
     },
     "wiiuse": {
       "baseline": "0.15.7",
@@ -11190,6 +11194,10 @@
     },
     "yubico-piv-tool": {
       "baseline": "2.7.3",
+      "port-version": 0
+    },
+    "yunsmall-usbipdcpp": {
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "yyjson": {
