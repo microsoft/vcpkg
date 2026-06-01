@@ -13,10 +13,17 @@
     }
   ],
   "features": {
+    "exif": {
+      "description": "Build with exif support.",
+      "dependencies": [
+        "libexif"
+      ]
+    },
     "fontconfig": {
       "description": "Build with fontconfig support.",
       "dependencies": [
-        "fontconfig"
+        "fontconfig",
+		"pango"
       ]
     },
     "jpeg": {
@@ -44,12 +51,6 @@
         "libpng"
       ]
     },
-    "poppler": {
-      "description": "Build with Poppler support.",
-      "dependencies": [
-        "poppler"
-      ]
-    },
     "rsvg": {
       "description": "Build with rsvg support.",
       "dependencies": [
@@ -75,10 +76,13 @@
       ]
     },
     "cplusplus": {
-      "description": "Enable Meson cplusplus option."
+      "description": "Build C++ API."
     },
     "deprecated": {
-      "description": "Enable Meson deprecated option."
+      "description": "Build deprecated components."
+    },
+	"tools": {
+      "description": "Build tools."
     }
   }
 }
