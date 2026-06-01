@@ -1,21 +1,8 @@
-diff --git a/libsrc/core/exception.cpp b/libsrc/core/exception.cpp
-index 9c99a138..2d5a1ede 100644
---- a/libsrc/core/exception.cpp
-+++ b/libsrc/core/exception.cpp
-@@ -36,7 +36,7 @@ namespace ngcore
- 
- 
- // ********* STUFF FOR GETBACKTRACE ***************************
--#if defined __GNUC__ && !defined __EMSCRIPTEN__
-+#if defined __GNUC__ && !defined __EMSCRIPTEN__ && !defined __ANDROID__
- 
- #include <execinfo.h>
- #include <string.h>
 diff --git a/libsrc/core/simd.hpp b/libsrc/core/simd.hpp
-index d5a6341f..5f07a6d3 100644
+index a7000cbc..02b6399e 100644
 --- a/libsrc/core/simd.hpp
 +++ b/libsrc/core/simd.hpp
-@@ -28,7 +28,7 @@
+@@ -30,7 +30,7 @@
  #include "simd_avx512.hpp"
  #endif
  
@@ -25,11 +12,11 @@ index d5a6341f..5f07a6d3 100644
  #endif
  
 diff --git a/libsrc/core/utils.hpp b/libsrc/core/utils.hpp
-index 79d919c0..1318debf 100644
+index 3b2bd03a..8976137e 100644
 --- a/libsrc/core/utils.hpp
 +++ b/libsrc/core/utils.hpp
-@@ -74,7 +74,7 @@ namespace ngcore
- #elif defined(__EMSCRIPTEN__)
+@@ -72,7 +72,7 @@ namespace ngcore
+ #elif defined(__EMSCRIPTEN__) || (defined(_MSC_VER) && defined(_M_ARM64))
      return std::chrono::high_resolution_clock::now().time_since_epoch().count();
  #else
 -#warning "Unsupported CPU architecture"
@@ -38,10 +25,10 @@ index 79d919c0..1318debf 100644
  #endif
    }
 diff --git a/rules/CMakeLists.txt b/rules/CMakeLists.txt
-index 2c281ca3..e2982f28 100644
+index 355644e0..1744584f 100644
 --- a/rules/CMakeLists.txt
 +++ b/rules/CMakeLists.txt
-@@ -1,14 +1,14 @@
+@@ -1,17 +1,17 @@
  # this file is included from the parent directory (otherwise generated source files are not recognized properly by cmake)
  
  # generate .cpp files containing the string of the .rls meshing rule files
@@ -57,6 +44,9 @@ index 2c281ca3..e2982f28 100644
 +  set(rules_command makerls)
 +else()
    add_executable(makerls rules/makerlsfile.cpp)
+   if(USE_CCACHE)
+     set_target_properties(makerls PROPERTIES RULE_LAUNCH_COMPILE "")
+   endif(USE_CCACHE)
    set(rules_command makerls)
 +  install(TARGETS makerls DESTINATION ${NG_INSTALL_DIR} COMPONENT netgen)
  endif()

@@ -1,12 +1,12 @@
 diff --git a/libsrc/interface/rw_cgns.cpp b/libsrc/interface/rw_cgns.cpp
-index 096fbfdca..edf199cfd 100644
+index 458036e9..cde40f35 100644
 --- a/libsrc/interface/rw_cgns.cpp
 +++ b/libsrc/interface/rw_cgns.cpp
 @@ -6,6 +6,37 @@
  
  #include <cgnslib.h>
  
-+//vcpkg builds cgns with scoped enumes. So the associcated types and values need to be correctly scoped.
++// vcpkg builds cgns with scoped enums. So the associated types and values need to be correctly scoped.
 +#define ElementType_t CGNS_ENUMT(ElementType_t)
 +#define GridLocation_t CGNS_ENUMT(GridLocation_t)
 +#define PointSetType_t CGNS_ENUMT(PointSetType_t)
@@ -39,7 +39,7 @@ index 096fbfdca..edf199cfd 100644
 +
  namespace netgen::cg
  {
-   typedef ngcore::ClosedHashTable<ngcore::INT<3,size_t>, size_t> PointTable;
+   typedef ngcore::ClosedHashTable<ngcore::IVec<3,size_t>, size_t> PointTable;
 @@ -215,7 +246,7 @@ namespace netgen::cg
      if(codim==2) name += mesh.GetCD2Name(index);
  

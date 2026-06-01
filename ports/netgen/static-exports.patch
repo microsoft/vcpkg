@@ -16,6 +16,19 @@ index e66e9b8..4ecaa05 100644
  #else
          #define NGCORE_API_EXPORT __attribute__((visibility("default")))
          #define NGCORE_API_IMPORT __attribute__((visibility("default")))
+diff --git a/libsrc/core/bitarray.hpp b/libsrc/core/bitarray.hpp
+index 6520f85..de92cc7 100644
+--- a/libsrc/core/bitarray.hpp
++++ b/libsrc/core/bitarray.hpp
+@@ -226,7 +226,7 @@ namespace ngcore
+     
+     bool operator[] (IndexType i) const { return Test(i); } 
+     T_Range<IndexType> Range() const { return { IndexBASE<IndexType>(), IndexBASE<IndexType>()+Size() }; }
+-    NGCORE_API TBitArray & Or (const TBitArray & ba2)
++    TBitArray & Or (const TBitArray & ba2)
+     {
+       BitArray::Or(ba2);
+       return *this;
 diff --git a/nglib/nglib.h b/nglib/nglib.h
 index 0e7c59e..971d2d9 100644
 --- a/nglib/nglib.h

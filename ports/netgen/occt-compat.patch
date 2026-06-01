@@ -1,0 +1,28 @@
+diff --git a/libsrc/occ/python_occ_shapes.cpp b/libsrc/occ/python_occ_shapes.cpp
+index 45c7a9ff..462650fc 100644
+--- a/libsrc/occ/python_occ_shapes.cpp
++++ b/libsrc/occ/python_occ_shapes.cpp
+@@ -2560,9 +2560,10 @@ TopoDS_Shape
+ 
+   m.def("BSplineCurve", [](std::vector<gp_Pnt> vpoles, int degree) {
+       // not yet working ????
+-      TColgp_Array1OfPnt poles(0, vpoles.size()-1);
+-      TColStd_Array1OfReal knots(0, vpoles.size()+degree);
+-      TColStd_Array1OfInteger mult(0, vpoles.size()+degree);
++      // Avoid C2666 overload ambiguity in OCCT collection constructors.
++      TColgp_Array1OfPnt poles(0, static_cast<Standard_Integer>(vpoles.size())-1);
++      TColStd_Array1OfReal knots(0, static_cast<Standard_Integer>(vpoles.size())+degree);
++      TColStd_Array1OfInteger mult(0, static_cast<Standard_Integer>(vpoles.size())+degree);
+       // int cnt = 0;
+ 
+       for (int i = 0; i < vpoles.size(); i++)
+@@ -2583,7 +2584,8 @@ TopoDS_Shape
+     "Create a B-spline edge from control points and degree (experimental).");
+   
+   m.def("BezierCurve", [](std::vector<gp_Pnt> vpoles) {
+-      TColgp_Array1OfPnt poles(0, vpoles.size()-1);
++      // Avoid C2666 overload ambiguity in OCCT collection constructors.
++      TColgp_Array1OfPnt poles(0, static_cast<Standard_Integer>(vpoles.size())-1);
+ 
+       for (int i = 0; i < vpoles.size(); i++)
+         poles.SetValue(i, vpoles[i]);
