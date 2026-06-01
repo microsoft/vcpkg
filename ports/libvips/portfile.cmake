@@ -12,7 +12,7 @@ vcpkg_from_github(
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/glib/")
 
 # Derive Meson feature/boolean options directly from upstream meson_options.txt
-# so this port tracks new/removed options automatically.
+# so we can disable any default features, as vcpkg is opt-in as default.
 file(STRINGS "${SOURCE_PATH}/meson_options.txt" _meson_option_lines)
 
 set(MESON_FEATURE_OPTIONS)
@@ -40,7 +40,7 @@ foreach(_line IN LISTS _meson_option_lines)
     endif()
 endforeach()
 
-if(MESON_FEATURE_OPTIONS STREQUAL "")
+if(MESON_FEATURE_OPTIONS STREQUAL "" AND MESON_BOOLEAN_OPTIONS STREQUAL "")
     message(FATAL_ERROR "Failed to parse Meson feature options from ${SOURCE_PATH}/meson_options.txt")
 endif()
 
