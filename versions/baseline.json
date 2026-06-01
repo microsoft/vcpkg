@@ -1676,6 +1676,10 @@
       "baseline": "2.2.0",
       "port-version": 6
     },
+    "cesnet-ndk-sw": {
+      "baseline": "6.30.3",
+      "port-version": 0
+    },
     "cfitsio": {
       "baseline": "4.6.4",
       "port-version": 0
