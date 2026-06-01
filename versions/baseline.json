@@ -9133,7 +9133,7 @@
       "port-version": 0
     },
     "sdl3-net": {
-      "baseline": "prerelease-3.1.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "sdl3-shadercross": {
