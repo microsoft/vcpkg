@@ -13,69 +13,6 @@
     }
   ],
   "features": {
-    "archive": {
-      "description": "Build with libarchive support.",
-      "dependencies": [
-        "libarchive"
-      ]
-    },
-    "cfitsio": {
-      "description": "Build with cfitsio support.",
-      "dependencies": [
-        "cfitsio"
-      ]
-    },
-    "heif": {
-      "description": "Build with libheif support.",
-      "dependencies": [
-        "libheif"
-      ]
-    },
-    "heif-module": {
-      "description": "Build libheif as a module.",
-      "dependencies": [
-        "libheif"
-      ]
-    },
-    "highway": {
-      "description": "Build with highway support.",
-      "dependencies": [
-        "highway"
-      ]
-    },
-    "introspection": {
-      "description": "Build GObject introspection data.",
-      "dependencies": [
-        {
-          "name": "gobject-introspection",
-          "host": true
-        }
-      ]
-    },
-    "jpeg-xl": {
-      "description": "Build with JPEG XL support.",
-      "dependencies": [
-        "libjxl"
-      ]
-    },
-    "jpeg-xl-module": {
-      "description": "Build JPEG XL as a module.",
-      "dependencies": [
-        "libjxl"
-      ]
-    },
-    "exif": {
-      "description": "Build with exif support.",
-      "dependencies": [
-        "libexif"
-      ]
-    },
-    "fftw": {
-      "description": "Build with FFTW support.",
-      "dependencies": [
-        "fftw3"
-      ]
-    },
     "fontconfig": {
       "description": "Build with fontconfig support.",
       "dependencies": [
@@ -92,51 +29,6 @@
       "description": "Build with lcms support.",
       "dependencies": [
         "lcms"
-      ]
-    },
-    "matio": {
-      "description": "Build with matio support.",
-      "dependencies": [
-        "matio"
-      ]
-    },
-    "modules": {
-      "description": "Build optional loadable modules support."
-    },
-    "nifti": {
-      "description": "Build with NIfTI support.",
-      "dependencies": [
-        "nifticlib"
-      ]
-    },
-    "openexr": {
-      "description": "Build with OpenEXR support.",
-      "dependencies": [
-        "openexr"
-      ]
-    },
-    "openjpeg": {
-      "description": "Build with OpenJPEG support.",
-      "dependencies": [
-        "openjpeg"
-      ]
-    },
-    "openslide": {
-      "description": "Build with OpenSlide support.",
-      "dependencies": [
-        "openslide"
-      ]
-    },
-    "openslide-module": {
-      "description": "Build OpenSlide as a module.",
-      "dependencies": [
-        "openslide"
-      ]
-    },
-    "orc": {
-      "description": "Build with ORC support.",
-      "dependencies": [
-        "orc"
       ]
     },
     "pangocairo": {
@@ -158,28 +50,10 @@
         "poppler"
       ]
     },
-    "poppler-module": {
-      "description": "Build Poppler as a module.",
-      "dependencies": [
-        "poppler"
-      ]
-    },
-    "raw": {
-      "description": "Build with libraw support.",
-      "dependencies": [
-        "libraw"
-      ]
-    },
     "rsvg": {
       "description": "Build with rsvg support.",
       "dependencies": [
         "librsvg"
-      ]
-    },
-    "spng": {
-      "description": "Build with spng support.",
-      "dependencies": [
-        "libspng"
       ]
     },
     "tiff": {
@@ -200,89 +74,11 @@
         "zlib-ng"
       ]
     },
-    "analyze": {
-      "description": "Enable Meson analyze option."
-    },
     "cplusplus": {
       "description": "Enable Meson cplusplus option."
     },
     "deprecated": {
       "description": "Enable Meson deprecated option."
     },
-    "examples": {
-      "description": "Enable Meson examples option."
-    },
-    "nsgif": {
-      "description": "Enable Meson nsgif option."
-    },
-    "ppm": {
-      "description": "Enable Meson ppm option."
-    },
-    "radiance": {
-      "description": "Enable Meson radiance option."
-    },
-    "fuzzing-libfuzzer": {
-      "description": "Set Meson fuzzing_engine to libfuzzer."
-    },
-    "fuzzing-oss-fuzz": {
-      "description": "Set Meson fuzzing_engine to oss-fuzz."
-    },
-    "magick-package-graphicsmagick": {
-      "description": "Set Meson magick-package to GraphicsMagick.",
-      "dependencies": [
-        "graphicsmagick"
-      ]
-    },
-    "magick-features-load-only": {
-      "description": "Set Meson magick-features to load only.",
-      "dependencies": [
-        "graphicsmagick"
-      ]
-    },
-    "magick-features-save-only": {
-      "description": "Set Meson magick-features to save only.",
-      "dependencies": [
-        "graphicsmagick"
-      ]
-    },
-    "nifti-prefix-installed": {
-      "description": "Set Meson nifti-prefix-dir to the current installed prefix.",
-      "dependencies": [
-        "nifticlib"
-      ]
-    },
-    "cgif": {
-      "description": "Placeholder: build with cgif support when cgif port is available."
-    },
-    "imagequant": {
-      "description": "Placeholder: build with imagequant support when dependency port is available."
-    },
-    "magick": {
-      "description": "Placeholder: build with MagickCore support when dependency mapping is finalized."
-    },
-    "magick-module": {
-      "description": "Placeholder: build MagickCore as a module when magick backend is enabled.",
-      "dependencies": [
-        "graphicsmagick"
-      ]
-    },
-    "pdfium": {
-      "description": "Placeholder: build with PDFium support when pdfium port is available."
-    },
-    "quantizr": {
-      "description": "Placeholder: build with quantizr support when quantizr port is available."
-    },
-    "uhdr": {
-      "description": "Placeholder: build with UltraHDR support when libuhdr port is available."
-    },
-    "cpp-docs": {
-      "description": "Placeholder: build C++ documentation when doxygen is available in the toolchain."
-    },
-    "docs": {
-      "description": "Placeholder: build API reference and tools documentation when gi-docgen is available."
-    },
-    "vapi": {
-      "description": "Placeholder: build VAPI support when vala is available in the toolchain."
-    }
   }
 }
