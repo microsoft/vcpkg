@@ -61,11 +61,6 @@ foreach(boolean_option IN LISTS MESON_BOOLEAN_OPTIONS)
     endif()
 endforeach()
 
-unset(_meson_option_lines)
-unset(_current_option_name)
-unset(_current_option_type)
-unset(_line)
-
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
