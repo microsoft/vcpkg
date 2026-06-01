@@ -248,7 +248,7 @@
     "nifti-prefix-installed": {
       "description": "Set Meson nifti-prefix-dir to the current installed prefix.",
       "dependencies": [
-        "nifti"
+        "nifticlib"
       ]
     },
     "cgif": {
