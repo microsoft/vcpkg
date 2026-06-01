@@ -633,7 +633,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "4.8.0",
+      "baseline": "4.8.1",
       "port-version": 0
     },
     "bark": {
@@ -793,7 +793,7 @@
       "port-version": 0
     },
     "blosc2": {
-      "baseline": "3.1.0",
+      "baseline": "3.1.2",
       "port-version": 0
     },
     "blpapi": {
@@ -2277,7 +2277,7 @@
       "port-version": 17
     },
     "cudnn-frontend": {
-      "baseline": "1.15.0",
+      "baseline": "1.24.0",
       "port-version": 0
     },
     "cunit": {
@@ -2513,7 +2513,7 @@
       "port-version": 0
     },
     "directx12-agility": {
-      "baseline": "1.619.1",
+      "baseline": "1.619.3",
       "port-version": 0
     },
     "directxmath": {
@@ -2637,7 +2637,7 @@
       "port-version": 0
     },
     "dtc": {
-      "baseline": "1.7.2",
+      "baseline": "1.8.1",
       "port-version": 0
     },
     "dtl": {
@@ -4228,6 +4228,10 @@
       "baseline": "0.21.0",
       "port-version": 1
     },
+    "jsonrpcpp": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "juce": {
       "baseline": "8.0.7",
       "port-version": 0
@@ -4541,7 +4545,7 @@
       "port-version": 1
     },
     "kleidiai": {
-      "baseline": "1.19.0",
+      "baseline": "1.25.0",
       "port-version": 0
     },
     "klein": {
@@ -4757,7 +4761,7 @@
       "port-version": 1
     },
     "libavif": {
-      "baseline": "1.4.1",
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "libb2": {
@@ -5185,7 +5189,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "1.7.1",
+      "baseline": "1.7.2",
       "port-version": 0
     },
     "libjxl": {
@@ -5229,7 +5233,7 @@
       "port-version": 0
     },
     "liblsl": {
-      "baseline": "1.17.5",
+      "baseline": "1.17.7",
       "port-version": 0
     },
     "liblsquic": {
@@ -5273,7 +5277,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "26.1",
+      "baseline": "26.5",
       "port-version": 0
     },
     "libmem": {
@@ -5330,7 +5334,7 @@
     },
     "libmt32emu": {
       "baseline": "2.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libmtp": {
       "baseline": "1.1.22",
@@ -5353,8 +5357,8 @@
       "port-version": 1
     },
     "libmysql": {
-      "baseline": "8.0.40",
-      "port-version": 1
+      "baseline": "8.0.46",
+      "port-version": 0
     },
     "libnice": {
       "baseline": "0.1.22",
@@ -5770,6 +5774,10 @@
     },
     "libtracepoint-decode": {
       "baseline": "1.4.0",
+      "port-version": 0
+    },
+    "libtwolame": {
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "libu2f-server": {
@@ -6573,7 +6581,7 @@
       "port-version": 0
     },
     "minio-cpp": {
-      "baseline": "0.3.0",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "miniply": {
@@ -6797,7 +6805,7 @@
       "port-version": 0
     },
     "mujoco": {
-      "baseline": "3.8.1",
+      "baseline": "3.9.0",
       "port-version": 0
     },
     "mujs": {
@@ -7761,7 +7769,7 @@
       "port-version": 2
     },
     "pipewire": {
-      "baseline": "1.6.3",
+      "baseline": "1.6.6",
       "port-version": 0
     },
     "pistache": {
@@ -8165,7 +8173,7 @@
       "port-version": 1
     },
     "qt": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qt-advanced-docking-system": {
@@ -8173,7 +8181,7 @@
       "port-version": 0
     },
     "qt3d": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qt5": {
@@ -8349,67 +8357,67 @@
       "port-version": 0
     },
     "qt5compat": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtactiveqt": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtapplicationmanager": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtbase": {
-      "baseline": "6.11.0",
-      "port-version": 1
+      "baseline": "6.11.1",
+      "port-version": 0
     },
     "qtcharts": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtcoap": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtconnectivity": {
-      "baseline": "6.11.0",
-      "port-version": 1
+      "baseline": "6.11.1",
+      "port-version": 0
     },
     "qtdatavis3d": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtdeclarative": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtdeviceutilities": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtdoc": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtgraphs": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtgrpc": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qthttpserver": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtimageformats": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtinterfaceframework": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtkeychain": {
@@ -8421,43 +8429,43 @@
       "port-version": 1
     },
     "qtlanguageserver": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtlocation": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtlottie": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtmqtt": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtmultimedia": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtnetworkauth": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtopcua": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtpositioning": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtquick3d": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtquick3dphysics": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtquickcontrols2": {
@@ -8465,75 +8473,75 @@
       "port-version": 1
     },
     "qtquickeffectmaker": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtquicktimeline": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtremoteobjects": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtscxml": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtsensors": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtserialbus": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtserialport": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtshadertools": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtspeech": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtsvg": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qttools": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qttranslations": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtvirtualkeyboard": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtwayland": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtwebchannel": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtwebengine": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtwebsockets": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "qtwebview": {
-      "baseline": "6.11.0",
+      "baseline": "6.11.1",
       "port-version": 0
     },
     "quadtree": {
@@ -9021,7 +9029,7 @@
       "port-version": 0
     },
     "sbp": {
-      "baseline": "6.3.2",
+      "baseline": "6.5.0",
       "port-version": 0
     },
     "scenepic": {
@@ -9705,7 +9713,7 @@
       "port-version": 0
     },
     "stillwater-universal": {
-      "baseline": "4.7.0",
+      "baseline": "4.7.1",
       "port-version": 0
     },
     "stlab": {
@@ -10633,7 +10641,7 @@
       "port-version": 0
     },
     "vincentlaucsb-csv-parser": {
-      "baseline": "5.2.0",
+      "baseline": "5.3.0",
       "port-version": 0
     },
     "visit-struct": {
