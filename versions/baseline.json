@@ -5870,7 +5870,7 @@
     },
     "libvpl": {
       "baseline": "2.16.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libvpx": {
       "baseline": "1.16.0",

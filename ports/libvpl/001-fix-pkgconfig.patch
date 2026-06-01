@@ -2,7 +2,7 @@ diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
 index 0419980..42a765a 100644
 --- a/libvpl/CMakeLists.txt
 +++ b/libvpl/CMakeLists.txt
-@@ -188,10 +188,22 @@ if(INSTALL_DEV)
+@@ -188,10 +188,25 @@ if(INSTALL_DEV)
    if(MINGW)
      # being conservative by restricting to MinGW, these are probably ok for
      # WIN32 in general
@@ -16,7 +16,10 @@ index 0419980..42a765a 100644
 +    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
 +        continue()
 +    elseif(EXISTS "${lib}")
-+        string(APPEND CXX_LIB " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++        # vcpkg: emit -l<name>; a bare absolute archive path breaks consumers
++        get_filename_component(_vpl_cxx_lib "${lib}" NAME_WE)
++        string(REGEX REPLACE "^lib" "" _vpl_cxx_lib "${_vpl_cxx_lib}")
++        string(APPEND CXX_LIB " -l${_vpl_cxx_lib}")
 +    else()
 +        string(APPEND CXX_LIB " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
 +    endif()
@@ -38,6 +41,6 @@ index aa9b158..46b2c38 100644
 +prefix=${pcfiledir}/../..
 +libdir=${prefix}/lib
 +includedir=${prefix}/include
- 
+
  Name: Intel(R) Video Processing Library
  Description: Accelerated video decode, encode, and frame processing capabilities on Intel(R) GPUs
