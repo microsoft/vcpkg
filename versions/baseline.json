@@ -9988,6 +9988,10 @@
       "baseline": "5.5.2",
       "port-version": 0
     },
+    "tesults-cpp": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "tevclient": {
       "baseline": "2023-12-04",
       "port-version": 0
