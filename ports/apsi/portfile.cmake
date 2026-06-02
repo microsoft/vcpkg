@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-find-seal.patch
         fix-c2398.patch
+        fix-find-kuku.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

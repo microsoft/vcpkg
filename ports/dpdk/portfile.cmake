@@ -31,7 +31,8 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
 endif()
 
 # Add a leading zero to the minor version if it consists of only one digit, otherwise the regex does nothing
-string(REGEX REPLACE "^([0-9]+)\\.([0-9])(\\..*)$" "\\1.0\\2\\3" VERSION_REF "${VERSION}")
+# Match both `X.Y` and `X.Y.Z...` forms (optional remainder).
+string(REGEX REPLACE "^([0-9]+)\\.([0-9])(\\..*)?$" "\\1.0\\2\\3" VERSION_REF "${VERSION}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk

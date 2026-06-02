@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO podofo/podofo
     REF "${VERSION}"
-    SHA512 ddc33e1265eac4650c1cd4f8c04dabae206bd8ca3eadefa310cd87066ce5e262ee1a5dbf395797e01cb4de05e390db2f1d54dffa26e8659b084a57fac97de03b
+    SHA512 cb5608f7496974c0d546c73000d2551913e18a13319b991a7532a46dd04ee7305e0df4a1233156d0171cd965d0af1cf99a27b2400fcc6117a5d1f04c0ad8b364
     PATCHES
         dependencies.diff
 )
@@ -41,4 +41,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LGPL" "${SOURCE_PATH}/COPYING.MPL")

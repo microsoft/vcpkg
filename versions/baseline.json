@@ -210,7 +210,7 @@
     },
     "apsi": {
       "baseline": "0.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "aravis": {
       "baseline": "0.8.36",
@@ -1733,7 +1733,7 @@
       "port-version": 0
     },
     "cimg": {
-      "baseline": "3.7.4",
+      "baseline": "3.7.5",
       "port-version": 0
     },
     "cinatra": {
@@ -2009,7 +2009,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.43.1",
+      "baseline": "0.43.2",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2594,7 +2594,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 0
+      "port-version": 1
     },
     "dpp": {
       "baseline": "10.1.4",
@@ -2986,7 +2986,7 @@
     },
     "fdk-aac": {
       "baseline": "2.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "fdlibm": {
       "baseline": "5.3",
@@ -2997,11 +2997,11 @@
       "port-version": 0
     },
     "ffmpeg": {
-      "baseline": "8.1",
-      "port-version": 3
+      "baseline": "8.1.1",
+      "port-version": 0
     },
     "ffmpeg-bin2c": {
-      "baseline": "8.1",
+      "baseline": "8.1.1",
       "port-version": 0
     },
     "ffnvcodec": {
@@ -3193,7 +3193,7 @@
       "port-version": 2
     },
     "frei0r": {
-      "baseline": "2.5.4",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "fribidi": {
@@ -3269,7 +3269,7 @@
       "port-version": 0
     },
     "gamenetworkingsockets": {
-      "baseline": "1.5.0",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "gamma": {
@@ -3781,7 +3781,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.2.0",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "hidapi": {
@@ -4229,7 +4229,7 @@
       "port-version": 1
     },
     "kcp": {
-      "baseline": "1.7",
+      "baseline": "1.7.1",
       "port-version": 0
     },
     "kcrash": {
@@ -4545,7 +4545,7 @@
       "port-version": 1
     },
     "kuku": {
-      "baseline": "2.1.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "kvasir-mpl": {
@@ -5090,7 +5090,7 @@
     },
     "libiconv": {
       "baseline": "1.18",
-      "port-version": 3
+      "port-version": 4
     },
     "libics": {
       "baseline": "1.7.0",
@@ -5173,7 +5173,7 @@
       "port-version": 0
     },
     "liblo": {
-      "baseline": "0.34",
+      "baseline": "0.35",
       "port-version": 0
     },
     "liblrc": {
@@ -5824,6 +5824,10 @@
       "baseline": "1.3.7",
       "port-version": 4
     },
+    "libvpl": {
+      "baseline": "2.16.0",
+      "port-version": 0
+    },
     "libvpx": {
       "baseline": "1.16.0",
       "port-version": 1
@@ -6189,7 +6193,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.718",
+      "baseline": "0.719",
       "port-version": 0
     },
     "luminoengine": {
@@ -6946,7 +6950,7 @@
     },
     "netgen": {
       "baseline": "6.2.2401",
-      "port-version": 2
+      "port-version": 3
     },
     "nethost": {
       "baseline": "8.0.3",
@@ -7374,7 +7378,7 @@
     },
     "openmpi": {
       "baseline": "4.1.8",
-      "port-version": 0
+      "port-version": 1
     },
     "openmvg": {
       "baseline": "2.1",
@@ -7465,7 +7469,7 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "5.1.2",
+      "baseline": "5.2.0",
       "port-version": 0
     },
     "orange-vmprotect-sdk": {
@@ -7689,7 +7693,7 @@
       "port-version": 1
     },
     "picobench": {
-      "baseline": "2.8.0",
+      "baseline": "2.9.0",
       "port-version": 0
     },
     "picojson": {
@@ -7817,7 +7821,7 @@
       "port-version": 2
     },
     "podofo": {
-      "baseline": "1.0.3",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "poissonrecon": {
@@ -8302,7 +8306,7 @@
     },
     "qtbase": {
       "baseline": "6.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.10.2",
@@ -9029,8 +9033,8 @@
       "port-version": 11
     },
     "sdl2-image": {
-      "baseline": "2.8.8",
-      "port-version": 2
+      "baseline": "2.8.12",
+      "port-version": 0
     },
     "sdl2-mixer": {
       "baseline": "2.8.1",
@@ -9053,12 +9057,12 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.6",
+      "baseline": "3.4.8",
       "port-version": 0
     },
     "sdl3-image": {
-      "baseline": "3.4.2",
-      "port-version": 1
+      "baseline": "3.4.4",
+      "port-version": 0
     },
     "sdl3-mixer": {
       "baseline": "3.2.0",
@@ -9101,7 +9105,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.13.8",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9249,8 +9253,8 @@
       "port-version": 0
     },
     "simpleble": {
-      "baseline": "0.12.1",
-      "port-version": 1
+      "baseline": "0.14.0",
+      "port-version": 0
     },
     "simpleini": {
       "baseline": "4.25",
@@ -9293,7 +9297,7 @@
       "port-version": 0
     },
     "slick-net": {
-      "baseline": "2.0.1",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "slick-object-pool": {
@@ -10321,7 +10325,7 @@
       "port-version": 0
     },
     "unqlite": {
-      "baseline": "2025-04-29",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "unrar": {
@@ -10353,7 +10357,7 @@
       "port-version": 0
     },
     "usearch": {
-      "baseline": "2.25.1",
+      "baseline": "2.25.2",
       "port-version": 0
     },
     "usockets": {
@@ -10698,7 +10702,7 @@
     },
     "vxl": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wabt": {
       "baseline": "1.0.40",
