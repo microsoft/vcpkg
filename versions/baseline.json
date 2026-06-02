@@ -6749,7 +6749,7 @@
       "port-version": 0
     },
     "msgpack": {
-      "baseline": "7.0.0",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "msgpack-c": {
