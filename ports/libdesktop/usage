@@ -1,0 +1,8 @@
+libdesktop provides CMake targets:
+
+    find_package(libdesktop CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libdesktop::libdesktop)
+
+libdesktop provides pkg-config modules:
+
+    libdesktop
