@@ -1,3 +1,3 @@
-set(qtserialport_HASH "2136bf94e398593abfa4703a5a2234acf92439b36023549c8d85999e9cb154d0fdc1a6b3eb1167613edff32712ae547a217818ba309b928250a88a65f6253377")
-set(qtserialport_URL "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtserialport-everywhere-src-6.11.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.0/submodules/qtserialport-everywhere-src-6.11.0.tar.xz")
-set(qtserialport_FILENAME "qtserialport-everywhere-src-6.11.0.tar.xz")
+set(qtserialport_HASH "6fcac1e82932a94b4a43c22268ea64f6d277507e08bbba89c803c8e7c16408d621e5c8ee11aaa829a4aaeae7ec1006a32b04980e7571098b3a8155a38d02d17a")
+set(qtserialport_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtserialport-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtserialport-everywhere-src-6.11.1.tar.xz")
+set(qtserialport_FILENAME "qtserialport-everywhere-src-6.11.1.tar.xz")

@@ -39,6 +39,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_CPP_TESTS=OFF
         -DBUILD_JAVA=OFF
+        -DCMAKE_IGNORE_PATH=/usr/local/include;/usr/local/lib;/opt/homebrew/include;/opt/homebrew/lib
         -DINSTALL_VENDORED_LIBS=OFF
         -DORC_PACKAGE_KIND=vcpkg
         -DSTOP_BUILD_ON_WARNING=OFF

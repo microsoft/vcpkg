@@ -3,7 +3,7 @@ index 6032bbe..a7d10d4 100644
 --- a/src/plugins/tts/winrt/qtexttospeech_winrt.cpp
 +++ b/src/plugins/tts/winrt/qtexttospeech_winrt.cpp
 @@ -14,6 +14,7 @@
- #include <QtCore/QElapsedTimer>
+ #include <QtCore/qset.h>
  #include <QtCore/private/qfunctions_winrt_p.h>
  
 +#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS

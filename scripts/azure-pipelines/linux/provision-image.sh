@@ -156,7 +156,7 @@ APT_PACKAGES="$APT_PACKAGES golang-go"
 ## required by libdecor and mesa
 APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 
-## required by robotraconteur
+## required by robotraconteur and qtconnectivity
 APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 
 ## required by libmysql

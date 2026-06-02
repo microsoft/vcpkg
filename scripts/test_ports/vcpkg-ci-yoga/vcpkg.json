@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-yoga",
+  "version-string": "ci",
+  "description": "Validates yoga",
+  "dependencies": [
+    {
+      "name": "yoga"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
