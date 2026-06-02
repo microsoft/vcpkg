@@ -1,6 +1,6 @@
 {
   "name": "sdl3",
-  "version": "3.4.8",
+  "version": "3.4.10",
   "port-version": 1,
   "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
   "homepage": "https://www.libsdl.org",
@@ -56,7 +56,16 @@
     },
     "ibus": {
       "description": "Build with ibus IME support",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "sdl3",
+          "default-features": false,
+          "features": [
+            "dbus"
+          ]
+        }
+      ]
     },
     "libusb": {
       "description": "Use libusb for joystick support",

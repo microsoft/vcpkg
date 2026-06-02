@@ -1,7 +1,6 @@
 {
   "name": "whisper-cpp",
-  "version": "1.8.4",
-  "port-version": 1,
+  "version": "1.8.5",
   "description": "Port of OpenAI's Whisper model in C/C++",
   "homepage": "https://github.com/ggml-org/whisper.cpp",
   "license": "MIT",
