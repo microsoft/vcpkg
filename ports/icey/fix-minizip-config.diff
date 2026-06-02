@@ -1,8 +1,8 @@
 diff --git a/cmake/icey_config.cmake.in b/cmake/icey_config.cmake.in
-index 30823d9..b3125c1 100644
+index e4d8173..4845f9d 100644
 --- a/cmake/icey_config.cmake.in
 +++ b/cmake/icey_config.cmake.in
-@@ -53,13 +53,14 @@ if(@USE_SYSTEM_DEPS@)
+@@ -65,13 +65,14 @@ if(@USE_SYSTEM_DEPS@)
    endif()
    find_dependency(ZLIB)
    if("archo" IN_LIST _icey_supported_components OR "pacm" IN_LIST _icey_supported_components)
@@ -22,10 +22,10 @@ index 30823d9..b3125c1 100644
      if(NOT TARGET minizip)
        message(FATAL_ERROR "icey archo/pacm components require minizip via a CMake package config or pkg-config")
 diff --git a/icey.cmake b/icey.cmake
-index f5ec7cb..78ec210 100644
+index 1cee0dd..dc01579 100644
 --- a/icey.cmake
 +++ b/icey.cmake
-@@ -236,10 +236,12 @@ else()
+@@ -254,10 +254,12 @@ else()
    # minizip: try packaged targets first, fall back to building from source
    find_package(unofficial-minizip CONFIG QUIET)
    find_package(minizip CONFIG QUIET)
