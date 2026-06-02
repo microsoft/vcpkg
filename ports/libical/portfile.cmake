@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libical/libical
     REF "v${VERSION}"
-    SHA512 c0cb6793a8a745252df33348d8e7476ad8ff85ac84a9fef75a8b694a488a944856d56e564ec8e75c0da547eb3ed29d78a6d79fc0a449ab57c7ef6f1f3d82a3c0
+    SHA512 406a0712a595b62a431b35eb72a984140848a8cdbe38cd5e371e96c37d7c2a4122df487e013146634855edca409dfad345d2370d1f37849aff80dddfb6aa832d
 )
 
 vcpkg_find_acquire_program(PERL)
