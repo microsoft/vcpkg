@@ -17,6 +17,7 @@ vcpkg_from_github(
         0046-fix-msvc-detection.patch
         0047-fix-msvc-utf8.patch
         0048-backport-23039.patch
+        0049-fix-twolame-pkgconfig.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -497,6 +498,14 @@ if("theora" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-libtheora")
     set(WITH_THEORA OFF)
+endif()
+
+if("twolame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtwolame")
+    set(WITH_TWOLAME ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtwolame")
+    set(WITH_TWOLAME OFF)
 endif()
 
 if("vorbis" IN_LIST FEATURES)
