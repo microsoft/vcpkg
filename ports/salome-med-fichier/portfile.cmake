@@ -35,6 +35,11 @@ endforeach()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  MEDFILE_BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"  MEDFILE_BUILD_SHARED_LIBS)
 
+# Ensure a host-compatible pkg-config is used. During cross-compilation, the target
+# triplet's pkgconf (e.g. arm64) cannot execute on the host. Without this, CMake may
+# cache the wrong PKG_CONFIG_EXECUTABLE, breaking find_dependency(MPI) from hdf5-config.
+vcpkg_find_acquire_program(PKGCONFIG)
+
 # If there are problems with the cmake build try switching to autotools for !windows
 vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE # Writes into the source dir
@@ -45,6 +50,7 @@ vcpkg_cmake_configure(
       -DMEDFILE_INSTALL_DOC=OFF
       -DMEDFILE_BUILD_TESTS=OFF
       -DCMAKE_Fortran_COMPILER=NOTFOUND # Disable Fortran
+      "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     )
 
 vcpkg_cmake_install()

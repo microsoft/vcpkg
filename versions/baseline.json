@@ -592,10 +592,6 @@
       "baseline": "12.13.0",
       "port-version": 1
     },
-    "azure-storage-cpp": {
-      "baseline": "7.5.0",
-      "port-version": 8
-    },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.15.0",
       "port-version": 1
@@ -2116,10 +2112,6 @@
       "baseline": "2.2.0",
       "port-version": 1
     },
-    "cpprestsdk": {
-      "baseline": "2.10.19",
-      "port-version": 6
-    },
     "cppslippi": {
       "baseline": "1.4.3.18",
       "port-version": 0
@@ -2630,7 +2622,7 @@
     },
     "drogon": {
       "baseline": "1.9.13",
-      "port-version": 0
+      "port-version": 1
     },
     "dstorage": {
       "baseline": "1.3.0",
@@ -3030,7 +3022,7 @@
     },
     "ffmpeg": {
       "baseline": "8.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "ffmpeg-bin2c": {
       "baseline": "8.1.1",
@@ -3926,7 +3918,7 @@
     },
     "icu": {
       "baseline": "78.3",
-      "port-version": 0
+      "port-version": 1
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
@@ -6734,7 +6726,7 @@
     },
     "ms-gdk": {
       "baseline": "2604.1.7839",
-      "port-version": 0
+      "port-version": 1
     },
     "ms-gdkx": {
       "baseline": "1.0.0",
@@ -7006,7 +6998,7 @@
     },
     "netgen": {
       "baseline": "6.2.2401",
-      "port-version": 3
+      "port-version": 4
     },
     "nethost": {
       "baseline": "8.0.3",
@@ -7581,7 +7573,7 @@
       "port-version": 1
     },
     "otl": {
-      "baseline": "4.0.500",
+      "baseline": "4.0.502",
       "port-version": 0
     },
     "outcome": {
@@ -9010,7 +9002,7 @@
     },
     "salome-med-fichier": {
       "baseline": "4.1.1",
-      "port-version": 4
+      "port-version": 5
     },
     "salome-medcoupling": {
       "baseline": "9.10.0",
@@ -9122,7 +9114,7 @@
     },
     "sdl3": {
       "baseline": "3.4.10",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl3-image": {
       "baseline": "3.4.4",
