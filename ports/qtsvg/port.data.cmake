@@ -1,3 +1,3 @@
-set(qtsvg_HASH "b2cf14dc00e033f0f2361b84f8b954379b67d03fc1bdb9f0f3d191218677d98fb3827484a69540297157ac4ca47a6ef50b233ec347d0a814f054ffb029670e9e")
-set(qtsvg_URL "https://download.qt.io/archive/qt/6.11/6.11.0/submodules/qtsvg-everywhere-src-6.11.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.0/submodules/qtsvg-everywhere-src-6.11.0.tar.xz")
-set(qtsvg_FILENAME "qtsvg-everywhere-src-6.11.0.tar.xz")
+set(qtsvg_HASH "6cbadc333d3616a361360043da9a6809d03ee131cfb0661c9d01901c4bcf1d074c19f04b959616a1d35b712f2f50c66b5c40ea7bf204e680d054d538aabcf3e7")
+set(qtsvg_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtsvg-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtsvg-everywhere-src-6.11.1.tar.xz")
+set(qtsvg_FILENAME "qtsvg-everywhere-src-6.11.1.tar.xz")
