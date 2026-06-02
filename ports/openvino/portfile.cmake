@@ -2,13 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 c8f222cf278017da610a8d0f0c5bd5c6c54c0324bfcfdf9352063df2706732eaa54b7b01408aec1ca266a3f02bd2bffa671d2415121d8f3675f46d8114355de6
+    SHA512 12a9793d104e51672e03233308d89a5caddba5e4dda46724d60fc6a8a83630fea3a6c9b130ac18dde1f2002fffb2671b71937394f101e9b96c975f391c53d111
     HEAD_REF master
     PATCHES
         msvc-debug-info-only-in-pdb.patch
-        onednn-gpu-includes.patch
         protobuf-6.patch
-        npu-deps.patch
         remove-stdext-on-new-msvc.diff
 )
 
@@ -38,8 +36,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF 470e87eb07bdc805937a9f6d45d5c3a0fe4d27e7
-        SHA512 ab5c303e415e88b83bf9a20b65c097827cb7b3ca8af196568fadb62f15c49af879dccb1c9130eadd40df7eb170521d02d7a48d021446ecd31fdaa56d31dba416
+        REF v3.12
+        SHA512 d3227e571a286435628e74b88ad64b0a5481e38d08a72247e605a0d2d00a506b2c64eb87d3bef3b9c1c358d36b2b260eab3c2af4b79bc126f563f552793b36c6
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
@@ -52,8 +50,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF 6b6492b1ea9ef5ca9ff3c5c59ed71dcca683a446
-        SHA512 767aa34ea4b423d951a91bc7c33e737485f24679cebc15536d5d9b4a993a25daaa788ebd7809c942267d8c27009d968f46118fc71302f06c8851824ab2284493
+        REF 87f65fdd1927b1d0cbdf0ea37728146abfbffb52
+        SHA512 dc6652d4786a893f779a8161412f1730aec5dee1004ceed438a4a0fa086240a16c65c1d232cb3af9698fc087d9d784d5d811ef36f420a89d0aa13a10a3814992
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -81,8 +79,8 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v52.8.0
-            SHA512 bf1cc17fce1bd1a2aded7af8427a4ce9eedd8dc8d97329a9a533c40347fac1c620aa03af9f33e1e7e029060fd1ff235c82348d7d6fb33b260a7466adda430482
+            REF v53.0.0
+            SHA512 ac41e66892fb61f882fb5eb4dc4f9ba57da434bcc408b3dcaf4bf4b60ee31eb97021f18e460cdac1657c8b3766743156b0a3fb3d761eb48d5b9146510dd38759
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
 
@@ -106,8 +104,8 @@ if(ENABLE_INTEL_NPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF 42768cc73e74f6d371bd9dd51b1860b07774e7ec
-        SHA512 f5b45e5e210722f6b2d7b50a89a234089c6f141bfc63eaaab7fc7d8dc4275961bc823046f4f367f6ad8d90a1a5e0c329721a134996fb7aad0e577d94eb49e1c1
+        REF f9ad3bf89c2418d714aef2e6b96a5aafb12a1971
+        SHA512 ab450badbf3aa39ca9b753b0b3019c0d3fb6d267c4689cffca3c9a36163aaaebcba327f11991d5bc0798b6d5f530331e4456abdaec520e5ad486bfca9f6404ff
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()
