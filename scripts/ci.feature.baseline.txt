@@ -193,7 +193,6 @@ clipboardxx:arm64-linux=fail
 clockutils:arm-neon-android=fail # gnustl_shared is no longer supported. Please switch to either c++_shared or c++_static.
 clockutils:arm64-android=fail
 clockutils:x64-android=fail
-cnats[sodium]:arm64-linux=cascade
 coin:arm64-linux=fail
 coin[openal]:arm64-linux=feature-fails
 coin-or-cbc:arm64-linux=cascade
