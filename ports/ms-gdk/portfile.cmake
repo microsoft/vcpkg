@@ -46,10 +46,6 @@ file(REMOVE "${WINDOWS_PATH}/include/GameInput.h")
 file(REMOVE "${WINDOWS_PATH}/lib/arm64/GameInput.lib")
 file(REMOVE "${WINDOWS_PATH}/lib/x64/GameInput.lib")
 
-# We use the cpprestsdk port instead
-file(REMOVE_RECURSE "${WINDOWS_PATH}/include/cpprest")
-file(REMOVE_RECURSE "${WINDOWS_PATH}/include/pplx")
-
 # Install core content
 set(CORE_BINS xgameruntime.dll xgameruntime.thunks.dll GameChat2.dll libHttpClient.dll XCurl.dll)
 set(CORE_INCLUDES grdk.h cpprestsdk_impl.h XCurl.h GameChat2.h GameChat2Impl.h GameChat2_c.h)

@@ -592,10 +592,6 @@
       "baseline": "12.13.0",
       "port-version": 1
     },
-    "azure-storage-cpp": {
-      "baseline": "7.5.0",
-      "port-version": 8
-    },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.15.0",
       "port-version": 1
@@ -2115,10 +2111,6 @@
     "cpprealm": {
       "baseline": "2.2.0",
       "port-version": 1
-    },
-    "cpprestsdk": {
-      "baseline": "2.10.19",
-      "port-version": 6
     },
     "cppslippi": {
       "baseline": "1.4.3.18",
@@ -6734,7 +6726,7 @@
     },
     "ms-gdk": {
       "baseline": "2604.1.7839",
-      "port-version": 0
+      "port-version": 1
     },
     "ms-gdkx": {
       "baseline": "1.0.0",
