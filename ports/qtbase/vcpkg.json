@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.11.0",
-  "port-version": 1,
+  "version": "6.11.1",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -69,6 +68,7 @@
       "name": "appstore-compliant",
       "platform": "uwp"
     },
+    "async-io",
     "brotli",
     "concurrent",
     {
@@ -142,6 +142,19 @@
     "appstore-compliant": {
       "description": "Disable code that is not allowed in platform app stores. This is on by default for platforms which require distribution through an app store by default, in particular Android, iOS, tvOS, and watchOS."
     },
+    "async-io": {
+      "description": "Provides support for asynchronous file I/O",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "future",
+            "thread"
+          ]
+        }
+      ]
+    },
     "brotli": {
       "description": "Support for downloading and decompressing resources compressed with Brotli through QNetworkAccessManager.",
       "dependencies": [
@@ -162,7 +175,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "thread"
+            "future"
           ]
         }
       ]
@@ -272,6 +285,9 @@
         }
       ]
     },
+    "future": {
+      "description": "Qt Future (QFuture) support"
+    },
     "gles2": {
       "description": "OpenGL ES 2.0",
       "supports": "!windows & !osx",
@@ -371,6 +387,23 @@
       "description": "Enable ICU support",
       "dependencies": [
         "icu"
+      ]
+    },
+    "ioring": {
+      "description": "qioring for async-io",
+      "supports": "linux | (windows & !x86)",
+      "dependencies": [
+        {
+          "name": "liburing",
+          "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "async-io"
+          ]
+        }
       ]
     },
     "jpeg": {

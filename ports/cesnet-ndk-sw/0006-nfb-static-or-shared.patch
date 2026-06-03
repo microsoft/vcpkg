@@ -1,0 +1,59 @@
+diff --git a/libnfb/CMakeLists.txt b/libnfb/CMakeLists.txt
+index d37bb70..3c64d30 100644
+--- a/libnfb/CMakeLists.txt
++++ b/libnfb/CMakeLists.txt
+@@ -19,7 +19,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/../functions.cmake)
+ find_package(PkgConfig)
+ 
+ nfb_cmake_env()
+-get_git_version()
+ 
+ set(CMAKE_REQUIRED_LIBRARIES "numa")
+ 
+@@ -47,27 +46,26 @@ set(LIBNFB_SOURCES
+ 	src/boot/mtd.c src/boot/boot.c src/boot/filetype_mcs.c src/boot/filetype_bit.c src/boot/filetype_rpd.c src/boot/bit_reverse_table.c
+ )
+ 
+-add_library(nfb SHARED ${LIBNFB_SOURCES})
+-add_library(nfb_static STATIC ${LIBNFB_SOURCES})
+-foreach(NFB IN ITEMS nfb nfb_static)
+-	target_link_libraries(${NFB}
+-		PRIVATE ${FDT_LIBRARIES} ${NUMA_LIBRARIES} dl
+-	)
+-	target_include_directories(${NFB}
+-		PUBLIC include
+-		PRIVATE src ${NFB_DRIVER_INCLUDE_DIRS}/../..
+-	)
+-	set_target_properties(${NFB} PROPERTIES
+-		OUTPUT_NAME nfb
+-		VERSION ${GIT_VERSION}
+-		SOVERSION ${GIT_VERSION_MAJOR}
+-	)
+-	if (${CONFIG_HAVE_MAVX2})
+-		set_source_files_properties(src/bus/mi.c PROPERTIES COMPILE_FLAGS -mavx2)
+-	endif()
+-endforeach()
++add_library(nfb ${LIBNFB_SOURCES})
++target_link_libraries(nfb
++	PRIVATE ${FDT_LIBRARIES} ${NUMA_LIBRARIES} dl
++)
++target_include_directories(nfb
++	PUBLIC include
++	PRIVATE src ${NFB_DRIVER_INCLUDE_DIRS}/../..
++		${FDT_INCLUDE_DIRS}
++		${NUMA_INCLUDE_DIRS}
++)
++set_target_properties(nfb PROPERTIES
++	OUTPUT_NAME nfb
++	VERSION "${VERSION}"
++	SOVERSION "${VERSION_MAJOR}"
++)
++if (${CONFIG_HAVE_MAVX2})
++	set_source_files_properties(src/bus/mi.c PROPERTIES COMPILE_FLAGS -mavx2)
++endif()
+ 
+-install(TARGETS nfb nfb_static
++install(TARGETS nfb
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )

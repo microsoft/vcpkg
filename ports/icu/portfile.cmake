@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
         fix_bsd_and_solaris.patch
         fix_parallel_build_on_windows.patch
+        fix-python-path-with-spaces.patch
         mh-darwin.patch
         mh-mingw.patch
         mh-msys-msvc.patch
