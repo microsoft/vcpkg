@@ -9,6 +9,7 @@ vcpkg_from_github(
          0002-drogon-config.patch
          0003-deps-redis.patch
          0004-drogon-ctl.patch
+         0005-fix-1.9.13-chunked-encoding-close-connection.patch
 )
 
 vcpkg_check_features(

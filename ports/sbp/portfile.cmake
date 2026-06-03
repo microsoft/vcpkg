@@ -8,10 +8,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO swift-nav/libsbp
     REF "v${VERSION}"
-    SHA512 2dc626cc1667da271bca565f499471de0ec0d533694ffee1c72f25f8ba4a8944294cea67b8a35b48da80c66da623e23bc92a0a7478a6882b72485761fca36417
+    SHA512 787e2052f0cee61abc71d34b9a317f9c6241b449a338efe6ef37b3c17a00f52168e8c55fac941c70de49b4efa3e7306a64b85c609a57ccc98132730010fc319f
     HEAD_REF master
-    PATCHES
-        0000-install-include-directory.patch
 )
 
 vcpkg_from_github(

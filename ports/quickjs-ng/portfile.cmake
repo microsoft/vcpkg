@@ -6,10 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quickjs-ng/quickjs
     REF v${VERSION}
-    SHA512 a6679a61da1ad232afb59e6c997106f9909084b853c3c615b2410681c4272071a69fcad213374bec60fa3187569de874daa6d6bfcc2cd6e47ca5a0d978d63392
+    SHA512 60df4b3ecc4192e77736bfa7dfc0d6f8d8ccddc4311a37c8defa181cf29e71b9c994a59efb0c29807dfd439ed5a33ca0469fcec5b8abe949d319801d04c702f0
     HEAD_REF master
-    PATCHES
-        pdb_name_conflict.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -25,7 +23,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/quickjs PACKAGE_NAME qjs)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/qjs PACKAGE_NAME qjs)
 
 vcpkg_copy_tools(
     TOOL_NAMES qjs qjsc
