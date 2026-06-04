@@ -84,16 +84,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         include("${cmake_vars_file}")
         list(REMOVE_ITEM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_LINK_LIBRARIES})
         # Some toolchains (e.g. mingw-w64 cross gcc) report C++ implicit link
-        # libraries as resolved absolute archive paths. Prepending "-l" to those
-        # produces a malformed "-l/abs/path/libfoo.a" token that downstream `ld`
-        # rejects, so convert absolute paths to "-lfoo" instead.
+        # libraries as resolved absolute archive paths. Those are already valid
+        # linker input and must be passed through verbatim; only bare library
+        # names get the "-l" prefix. Prepending "-l" to an absolute path produces
+        # a malformed "-l/abs/path/libfoo.a" token that downstream `ld` rejects.
         set(cxx_link_flags "")
         foreach(lib IN LISTS VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
             if(IS_ABSOLUTE "${lib}")
-                get_filename_component(lib "${lib}" NAME_WE)
-                string(REGEX REPLACE "^lib" "" lib "${lib}")
+                list(APPEND cxx_link_flags "${lib}")
+            else()
+                list(APPEND cxx_link_flags "-l${lib}")
             endif()
-            list(APPEND cxx_link_flags "-l${lib}")
         endforeach()
         string(JOIN " " cxx_link_libraries ${cxx_link_flags})
     endblock()
