@@ -29,6 +29,9 @@ Parse these from the user's request.
    - `examples`: include example applications, but do not generate patches
    - `examples-and-patches`: include example applications and allow focused patches when warranted
 7. If `report root\pr-<number>\report.md` already exists and is newer than or equal to the PR's `updated_at` timestamp, you may skip re-reviewing that PR and reuse the existing result.
+8. If you use subagents or otherwise review multiple PRs in parallel, give each worker its own writable checkout. Do **not** let multiple workers share the same mutable repository directory.
+9. When parallelizing, prefer one detached `git worktree` (or separate clone) per worker under `investigation root` when it is provided. If `investigation root` is omitted, create isolated temporary workspaces elsewhere rather than reusing the current working tree.
+10. Workers may share `report root`, but each worker should write only the deliverables for the PRs assigned to it.
 
 ### Example invocations
 
@@ -50,6 +53,13 @@ Parse these from the user's request.
 4. Treat the competing-PR relationship as port-specific. Group PRs together only for the particular shared port or ports they both modify.
 5. Keep PRs that do not modify a port in a separate index section instead of mixing them into port-competition groups.
 
+## Parallel execution safety
+
+1. A worker that checks out a PR, switches branches, runs `gh pr checkout`, edits files, or creates build trees must do so only inside its own isolated workspace.
+2. Never point multiple workers at the same writable repository path, even if they are reviewing different PRs.
+3. Do not use the shared current working tree for concurrent PR reviews unless exactly one worker is active.
+4. If you need a clean baseline for multiple workers, create the isolated workspaces first and then launch the workers against those paths.
+
 ## Output layout
 
 Write all deliverables under `report root`:
@@ -65,7 +75,7 @@ report root\
     └── results.json
 ```
 
-Write each per-PR report as you complete it. Write `index.md` last, after aggregating all per-PR results.
+Write each per-PR report as you complete it. Write `index.md` last, after aggregating the final on-disk `results.json` files from every reviewed PR directory.
 
 ## Batch review depth
 
