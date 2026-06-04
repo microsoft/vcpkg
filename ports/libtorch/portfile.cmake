@@ -34,6 +34,7 @@ vcpkg_from_github(
         fix-sleef.patch
         fix-cudnn-frontend.patch
         fix-windows-install-dirs.patch
+        fix-async-mm-cutlass.patch
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
