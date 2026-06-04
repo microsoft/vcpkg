@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e32b69b..f16831b8 100644
+index 7e32b69b..50bcc27d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -143,25 +143,25 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
@@ -21,10 +21,10 @@ index 7e32b69b..f16831b8 100644
 +  if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
 +    continue()
 +  elseif(EXISTS "${lib}")
-+    string(APPEND _libs_private " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++    list(APPEND _libs_private "${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
    else()
 -    list(APPEND _libs_private "-lstdc++")
-+    string(APPEND _libs_private " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++    list(APPEND _libs_private "${CMAKE_LINK_LIBRARY_FLAG}${lib}")
    endif()
 -endif()
 +endforeach()

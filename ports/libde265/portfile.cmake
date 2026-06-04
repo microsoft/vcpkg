@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-linkage.patch
+        fix-api-visibility.patch
 )
 
 vcpkg_cmake_configure(
