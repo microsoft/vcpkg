@@ -505,7 +505,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.820",
+      "baseline": "1.11.821",
       "port-version": 0
     },
     "ayush272002-dotenv": {
