@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 5fd1c1d29c6657ae9e33a0fe27e27e7fd0147591e43e506d00bcc5d75c70327b3e020c777c71b3421e0c7afc245b2807b247cbf59ea581083c47ac2b60b80d3e
+        SHA512 42784f70b67197c614322f9fabb0f1dc64228a0de10e88f99941fa9d29bee9ad6683f4651d4eefd5a7a9fbd1f976eb522b190b683219ed1793e9b531c602ffa6
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -36,7 +36,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 59c398e3a218d3776dc258582d90f7ba0e95181fe049c2afdfc734d6c9edf3ba489b283db93a79e04fa3cf0a934a2c9cfbf3cb330b16fee08b343bc45d0a568d
+    SHA512 da4057fc5f92d451a008a22f5089256ec1f021953aa979b224e3ccc8ac68ce468b54226378dea8a6dbff2d62ca2ab80074410ddd3ded50740cda6c1428987121
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
@@ -52,8 +52,6 @@ vcpkg_from_github(
         009-fix-tint-install.patch
         010-fix-glslang.patch
         011-fix-dxc.patch
-        # https://github.com/google/dawn/commit/d0a283a7a5e6320ca919f9580590371086f41dd6
-        012-fix-non-target-leaking.patch
 )
 
 function(checkout_in_path PATH URL REF)
@@ -92,13 +90,13 @@ checkout_in_path(
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
     "https://github.com/KhronosGroup/SPIRV-Headers"
-    "ce9dfb01496073a02d74581ae909384763b41ff8"
+    "ad9184e76a66b1001c29db9b0a3e87f646c64de0"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-tools/src"
     "https://github.com/KhronosGroup/SPIRV-Tools"
-    "34bc8ea6f3f84d5ed7739daa66b01e7273aed458"
+    "ff5c50339cc1e9f34f04cb440a3e5fe89db0161d"
     PATCHES
         # Dawn sets SPIRV_WERROR to OFF when building SPIRV-Tools, but https://github.com/KhronosGroup/SPIRV-Tools/commit/337fdb6a284fe7f7e374a14271f8e20e579f3263 ignores that CMake variable and forces /WX
         006-msvc-spirv-tools-disable-warnaserror.patch
@@ -107,7 +105,7 @@ checkout_in_path(
 checkout_in_path(
     "${SOURCE_PATH}/third_party/webgpu-headers/src"
     "https://github.com/webgpu-native/webgpu-headers"
-    "7d3186c3dd2c708703524027b46b8703534ab3cc"
+    "dc16b3e531cf4f31be54236d1a3e988ba5f295a2"
 )
 
 vcpkg_find_acquire_program(PYTHON3)

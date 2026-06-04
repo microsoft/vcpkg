@@ -28,7 +28,7 @@ index b4ac61004d..cbc5c7b8b5 100644
  #define DAWN_PLATFORM_IS_LINUX 1
  #define DAWN_PLATFORM_IS_POSIX 1
 diff --git a/src/dawn/native/vulkan/BackendVk.cpp b/src/dawn/native/vulkan/BackendVk.cpp
-index 783a15ab55..29405d2003 100644
+index c34bd57693..4fd060e5bf 100644
 --- a/src/dawn/native/vulkan/BackendVk.cpp
 +++ b/src/dawn/native/vulkan/BackendVk.cpp
 @@ -57,7 +57,7 @@ constexpr char kSwiftshaderLibName[] = "libvk_swiftshader.dylib";
