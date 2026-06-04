@@ -38,6 +38,7 @@ $semverVersion = ($version -replace '(\d+(\.\d+){1,3}).*', '$1')
 $defaultPortVersion = 0
 $portVersions = @{
     'boost-cobalt' = 1
+    'boost-hana' = 1
 }
 
 function Get-PortVersion {
@@ -132,6 +133,13 @@ $portData = @{
                 'dependencies' = @('zstd');
             };
         };
+    };
+    'boost-hana'             = @{
+        'features' = @{
+            'large-struct-macros' = @{
+                'description' = 'Regenerate Boost.Hana struct macros for up to 125 members';
+            }
+        }
     };
     'boost-locale'           = @{
         'dependencies' = @(@{ 'name' = 'libiconv'; 'platform' = '!uwp & !windows & !mingw' });
