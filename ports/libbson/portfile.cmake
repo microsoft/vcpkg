@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 68120e46868d04c194baacd73946aa20c239313eb8aa81afbcfed7482fc33e58e42df36ff14477969911da343cb74a73d554f595cca8b1af0db479ffcc6e53b6
+    SHA512 b182ca5f15578255cca177c5177bd9c7599ef829e8fb1c8cb381a56a90f8548ae3ab76a9d9c40931fb36815ba0d98d2d6c4c7270b94079a1a08c63688901f324
     HEAD_REF master
     PATCHES
         fix-include-directory.patch # vcpkg legacy decision
