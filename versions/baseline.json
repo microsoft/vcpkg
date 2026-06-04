@@ -338,7 +338,7 @@
     },
     "assimp": {
       "baseline": "6.0.4",
-      "port-version": 2
+      "port-version": 3
     },
     "astr": {
       "baseline": "0.3.1",
@@ -1914,7 +1914,7 @@
     },
     "collada-dom": {
       "baseline": "2.5.0",
-      "port-version": 11
+      "port-version": 12
     },
     "colmap": {
       "baseline": "3.12.6",
@@ -3142,7 +3142,7 @@
     },
     "fmilib": {
       "baseline": "2.4.1",
-      "port-version": 2
+      "port-version": 3
     },
     "fmt": {
       "baseline": "12.1.0",
@@ -3914,7 +3914,7 @@
     },
     "icey": {
       "baseline": "2.4.11",
-      "port-version": 0
+      "port-version": 1
     },
     "icu": {
       "baseline": "78.3",
@@ -5974,7 +5974,7 @@
     },
     "libxlsxwriter": {
       "baseline": "1.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libxml2": {
       "baseline": "2.15.3",
@@ -6597,8 +6597,8 @@
       "port-version": 0
     },
     "minizip": {
-      "baseline": "1.3.1",
-      "port-version": 1
+      "baseline": "1.3.2",
+      "port-version": 0
     },
     "minizip-ng": {
       "baseline": "4.1.0",
