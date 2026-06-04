@@ -4,7 +4,7 @@
    if(MSVC)
      message(WARNING "Tensorpipe cannot be used on Windows.")
    else()
-+    if(FALSE) # vcpkg: system tensorpipe
++    if(FALSE)
      if(USE_CUDA)
        set(TP_USE_CUDA ON CACHE BOOL "" FORCE)
        set(TP_ENABLE_CUDA_IPC ON CACHE BOOL "" FORCE)
@@ -27,7 +27,7 @@
        target_compile_options_if_supported(tensorpipe_uv -mno-outline-atomics)
      endif()
  
-+    endif() # if(FALSE)
++    endif()
 +    find_package(unofficial-tensorpipe CONFIG REQUIRED)
 +    add_library(tensorpipe ALIAS unofficial::tensorpipe::tensorpipe)
      list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)

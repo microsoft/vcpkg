@@ -1,12 +1,11 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1104,7 +1104,8 @@ if(NOT MSVC)
+@@ -1104,7 +1104,7 @@ if(NOT MSVC)
  else()
    # Define export functions for AOTI.
    add_compile_definitions(EXPORT_AOTI_FUNCTIONS)
 -
-+  # needed for vulkan compile
-+  add_compile_definitions(_USE_MATH_DEFINES) # math.h macros like M_PI, M_SQRT2, M_2_SQRTPI, etc.
++  add_compile_definitions(_USE_MATH_DEFINES)
    # skip unwanted includes from windows.h
    add_compile_definitions(WIN32_LEAN_AND_MEAN)
    # Windows SDK broke compatibility since version 25131, but introduced this

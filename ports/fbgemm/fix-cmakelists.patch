@@ -1,33 +1,21 @@
-Use vcpkg-provided asmjit and cpuinfo instead of submodule fetch, and propagate
-them through fbgemm's PUBLIC link interface so the installed fbgemmLibraryConfig
-records them for downstream consumers. Also split the cpp_library install rule
-so RUNTIME (the .dll on Windows) lands in CMAKE_INSTALL_BINDIR (bin/), satisfying
-vcpkg's post-build check and giving downstream find_package(fbgemm) consumers
-a correct IMPORTED_LOCATION.
-
 --- a/cmake/modules/CppLibrary.cmake
 +++ b/cmake/modules/CppLibrary.cmake
 @@ -206,8 +206,8 @@
          EXPORT fbgemmLibraryConfig
          ARCHIVE DESTINATION ${lib_install_destination}
          LIBRARY DESTINATION ${lib_install_destination}
--        # For Windows
+         # For Windows
 -        RUNTIME DESTINATION ${lib_install_destination})
-+        # For Windows: vcpkg post-build check requires DLLs in bin/, not lib/
 +        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
  
      ############################################################################
      # Set the Output Variable(s)
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -126,6 +126,19 @@
+@@ -126,6 +126,15 @@
  # Setup OpenMP Flags
  ################################################################################
  
-+# vcpkg: use the system asmjit/cpuinfo ports. Aliasing the system targets to the
-+# bare names that the fbgemm CMakeLists `if(NOT TARGET asmjit)` checks bypasses
-+# the submodule-fetch blocks at the bottom of this file. cpp_library DEPS pass
-+# the bare names, which resolve through the aliases.
 +find_package(asmjit CONFIG REQUIRED)
 +find_package(cpuinfo CONFIG REQUIRED)
 +if(NOT TARGET asmjit)
@@ -40,7 +28,7 @@ a correct IMPORTED_LOCATION.
  find_package(OpenMP)
  
  if(OpenMP_FOUND)
-@@ -430,6 +443,8 @@
+@@ -430,6 +439,8 @@
    DEPS
      fbgemm_generic
      ${fbgemm_targets}

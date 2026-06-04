@@ -27,9 +27,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# Upstream installs only an EXPORT targets file at share/cmake/fbgemm/fbgemmLibraryConfig.cmake.
-# Move it to share/fbgemmLibrary/, rename it to a targets file, and write a wrapper Config.cmake
-# that performs find_dependency for asmjit and cpuinfo before pulling the targets in.
 vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary CONFIG_PATH share/cmake/fbgemm)
 
 file(RENAME
