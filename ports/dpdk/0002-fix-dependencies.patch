@@ -165,6 +165,25 @@ index af469a9827..de45a4a694 100644
  if not dep.found()
      build = false
      reason = 'missing dependency, "libcrypto"'
+diff --git a/drivers/gpu/cuda/meson.build b/drivers/gpu/cuda/meson.build
+index d54473f148..1b5a01ce1f 100644
+--- a/drivers/gpu/cuda/meson.build
++++ b/drivers/gpu/cuda/meson.build
+@@ -6,12 +6,12 @@ if not is_linux
+         reason = 'only supported on Linux'
+         subdir_done()
+ endif
+-if not cc.has_header('cuda.h')
++if not cc.has_header('cuda.h', required: true)
+         build = false
+         reason = 'missing dependency, "cuda.h"'
+         subdir_done()
+ endif
+-if not cc.has_header('cudaTypedefs.h')
++if not cc.has_header('cudaTypedefs.h', required: true)
+         build = false
+         reason = 'missing dependency, "cudaTypedefs.h"'
+         subdir_done()
 diff --git a/drivers/net/bnx2x/meson.build b/drivers/net/bnx2x/meson.build
 index bc66ab8032..21ff1276c3 100644
 --- a/drivers/net/bnx2x/meson.build
