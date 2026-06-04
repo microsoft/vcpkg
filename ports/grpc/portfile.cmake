@@ -48,7 +48,8 @@ vcpkg_check_features(
 
 # Add big object support for MinGW
 if(VCPKG_TARGET_IS_MINGW)
-    list(APPEND FEATURE_OPTIONS "-DCMAKE_CXX_FLAGS=-Wa,-mbig-obj")
+    string(APPEND VCPKG_C_FLAGS " -Wa,-mbig-obj")
+    string(APPEND VCPKG_CXX_FLAGS " -Wa,-mbig-obj")
 endif()
 
 vcpkg_cmake_configure(
