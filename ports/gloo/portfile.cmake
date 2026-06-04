@@ -18,8 +18,6 @@ vcpkg_check_features(
 
 if ("cuda" IN_LIST FEATURES)
   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
-  # CUDA 13.2 caps at GCC 15; allow GCC 16 and require C++20 for char8_t/concepts
-  set(ENV{CUDAFLAGS} "-allow-unsupported-compiler -std=c++20")
   list(APPEND GLOO_FEATURE_OPTIONS
     "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}"
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
