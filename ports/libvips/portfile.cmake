@@ -1,5 +1,5 @@
-#temporarily enabling head because windows fails to build with 8.18.2
-set(VCPKG_USE_HEAD_VERSION TRUE)
+## uncomment this to temporarily enabling head fetch
+#set(VCPKG_USE_HEAD_VERSION TRUE)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -61,6 +61,13 @@ foreach(boolean_option IN LISTS MESON_BOOLEAN_OPTIONS)
     endif()
 endforeach()
 
+## until we get libvips v8.19 where fuzz has an option for being disabled,
+## we have to avoid fuzz directory from meson.build in order for windows to build
+## because MSVC does not support `__attribute__((weak))`
+file(READ ${SOURCE_PATH}/meson.build FILE_CONTENTS)
+string(REPLACE "subdir('fuzz')" "" FILE_CONTENTS "${FILE_CONTENTS}")
+file(WRITE ${SOURCE_PATH}/meson.build "${FILE_CONTENTS}")
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
@@ -70,7 +77,9 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if("tools" IN_LIST FEATURES)
+## tools are built by default, uncomment this for next libvips version where 
+## there's a tools option in the FEATURES and MESON OPTIONS file.
+#if("tools" IN_LIST FEATURES)
 	vcpkg_copy_tools(
 		TOOL_NAMES
 			vips
@@ -79,7 +88,7 @@ if("tools" IN_LIST FEATURES)
 			vipsthumbnail
 		AUTO_CLEAN
 	)
-endif()
+#endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
