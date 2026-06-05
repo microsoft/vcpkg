@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO libsdl-org/SDL_mixer
     REF "release-${VERSION}"
     HEAD_REF main
-    SHA512 9c66e0157c6a8e8d2269a7979da099618bcff760a641ed8949c42e806f4ffe07df908f3b62caf40a24cfba10f918a86ec21c4ecef2a1e9611a80935440035783
+    SHA512 f173ff0346c1645f665fc17c78021b0487fcb2742a6228663872afc0ff926c1f19e3e3c150f352020b7523bb5de924390980dd8978c4b223cde83a16048f0d2d
     PATCHES
         fluidsynth.diff
 )
