@@ -1,6 +1,7 @@
 {
   "name": "cpr",
   "version-semver": "1.14.2",
+  "port-version": 1,
   "description": "C++ Requests is a simple wrapper around libcurl inspired by the excellent Python Requests project.",
   "homepage": "https://github.com/libcpr/cpr",
   "license": "MIT",
@@ -22,8 +23,34 @@
     "ssl"
   ],
   "features": {
+    "mbedtls": {
+      "description": "Use the Mbed TLS SSL backend.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "mbedtls"
+          ]
+        },
+        "mbedtls"
+      ]
+    },
+    "openssl": {
+      "description": "Use the OpenSSL SSL backend.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        },
+        "openssl"
+      ]
+    },
     "ssl": {
-      "description": "Enable SSL support",
+      "description": "Enable SSL support, letting cpr auto-detect the backend.",
       "dependencies": [
         {
           "name": "curl",
@@ -35,6 +62,19 @@
         {
           "name": "openssl",
           "platform": "linux"
+        }
+      ]
+    },
+    "winssl": {
+      "description": "Use the Windows native Schannel (WinSSL) backend.",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
         }
       ]
     }

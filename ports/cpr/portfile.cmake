@@ -10,14 +10,24 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        ssl CPR_ENABLE_SSL
+        openssl CPR_FORCE_OPENSSL_BACKEND
+        mbedtls CPR_FORCE_MBEDTLS_BACKEND
+        winssl  CPR_FORCE_WINSSL_BACKEND
 )
+
+# The generic "ssl" feature enables SSL with auto-detection; any forced backend
+# implies SSL too. With none selected cpr builds without SSL.
+set(CPR_ENABLE_SSL OFF)
+if("ssl" IN_LIST FEATURES OR "openssl" IN_LIST FEATURES OR "mbedtls" IN_LIST FEATURES OR "winssl" IN_LIST FEATURES)
+    set(CPR_ENABLE_SSL ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCPR_BUILD_TESTS=OFF
         -DCPR_USE_SYSTEM_CURL=ON
+        -DCPR_ENABLE_SSL=${CPR_ENABLE_SSL}
         ${FEATURE_OPTIONS}
         # skip test for unused sanitizer flags
         -DTHREAD_SANITIZER_AVAILABLE=OFF
