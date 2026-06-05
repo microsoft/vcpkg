@@ -2174,7 +2174,7 @@
     },
     "crashpad": {
       "baseline": "2024-04-11",
-      "port-version": 12
+      "port-version": 13
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -2413,7 +2413,7 @@
       "port-version": 0
     },
     "dawn": {
-      "baseline": "20260410.140140",
+      "baseline": "20260423.175430",
       "port-version": 0
     },
     "daxa": {
@@ -2497,7 +2497,7 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2026-02-20",
+      "baseline": "2026-05-27",
       "port-version": 0
     },
     "directx-headers": {
@@ -3753,8 +3753,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "14.2.0",
-      "port-version": 3
+      "baseline": "14.2.1",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
@@ -4877,7 +4877,7 @@
       "port-version": 0
     },
     "libde265": {
-      "baseline": "1.1.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "libdeflate": {
@@ -9017,7 +9017,7 @@
       "port-version": 7
     },
     "sbgecom": {
-      "baseline": "5.3.2276",
+      "baseline": "5.6.2730",
       "port-version": 0
     },
     "sbp": {
@@ -9357,7 +9357,7 @@
       "port-version": 0
     },
     "slick-net": {
-      "baseline": "2.0.3",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "slick-object-pool": {
