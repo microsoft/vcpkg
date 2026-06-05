@@ -10,6 +10,7 @@
     "boost-asio",
     "boost-chrono",
     "boost-format",
+    "boost-lockfree",
     "boost-multiprecision",
     "boost-optional",
     "boost-property-tree",
