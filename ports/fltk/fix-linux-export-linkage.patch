@@ -1,0 +1,135 @@
+diff --git a/CMake/FLTKConfig.cmake.in b/CMake/FLTKConfig.cmake.in
+index 22e165a..df9e5c7 100644
+--- a/CMake/FLTKConfig.cmake.in
++++ b/CMake/FLTKConfig.cmake.in
+@@ -28,6 +28,14 @@
+ 
+ set(FLTK_VERSION @FLTK_VERSION@)
+ 
++include(CMakeFindDependencyMacro)
++
++if(@USE_X11@)
++  find_dependency(X11)
++endif()
++if(@OPENGL_FOUND@)
++  find_dependency(OpenGL)
++endif()
+ include(${CMAKE_CURRENT_LIST_DIR}/FLTK-Targets.cmake)
+ 
+ set(FLTK_INCLUDE_DIRS "@INCLUDE_DIRS@")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d153b1c..e347d9b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -269,7 +269,22 @@ if (USE_THREADS)
+ endif (USE_THREADS)
+ 
+ if (USE_X11)
+-  list (APPEND OPTIONAL_LIBS ${X11_LIBRARIES})
++  if (TARGET X11::SM)
++    list (APPEND OPTIONAL_LIBS X11::SM)
++  endif ()
++  if (TARGET X11::ICE)
++    list (APPEND OPTIONAL_LIBS X11::ICE)
++  endif ()
++  if (TARGET X11::X11)
++    list (APPEND OPTIONAL_LIBS X11::X11)
++  else()
++    list (APPEND OPTIONAL_LIBS ${X11_X11_LIB})
++  endif ()
++  if (TARGET X11::Xext)
++    list (APPEND OPTIONAL_LIBS X11::Xext)
++  elseif (X11_Xext_FOUND)
++    list (APPEND OPTIONAL_LIBS ${X11_Xext_LIB})
++  endif ()
+ endif (USE_X11)
+ 
+ if (WIN32)
+@@ -281,23 +296,43 @@ if (FLTK_HAVE_CAIRO)
+ endif (FLTK_HAVE_CAIRO)
+ 
+ if (HAVE_XINERAMA)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xinerama_LIB})
++  if (TARGET X11::Xinerama)
++    list (APPEND OPTIONAL_LIBS X11::Xinerama)
++  else()
++    list (APPEND OPTIONAL_LIBS ${X11_Xinerama_LIB})
++  endif ()
+ endif (HAVE_XINERAMA)
+ 
+ if (HAVE_XFIXES)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xfixes_LIB})
++  if (TARGET X11::Xfixes)
++    list (APPEND OPTIONAL_LIBS X11::Xfixes)
++  else()
++    list (APPEND OPTIONAL_LIBS ${X11_Xfixes_LIB})
++  endif ()
+ endif (HAVE_XFIXES)
+ 
+ if (HAVE_XCURSOR)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xcursor_LIB})
++  if (TARGET X11::Xcursor)
++    list (APPEND OPTIONAL_LIBS X11::Xcursor)
++  else()
++    list (APPEND OPTIONAL_LIBS ${X11_Xcursor_LIB})
++  endif ()
+ endif (HAVE_XCURSOR)
+ 
+ if (HAVE_XRENDER)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xrender_LIB})
++  if (TARGET X11::Xrender)
++    list (APPEND OPTIONAL_LIBS X11::Xrender)
++  else()
++    list (APPEND OPTIONAL_LIBS ${X11_Xrender_LIB})
++  endif ()
+ endif (HAVE_XRENDER)
+ 
+ if (USE_XFT)
+-  list (APPEND OPTIONAL_LIBS ${X11_Xft_LIB})
++  if (TARGET X11::Xft)
++    list (APPEND OPTIONAL_LIBS X11::Xft)
++  else()
++    list (APPEND OPTIONAL_LIBS ${X11_Xft_LIB})
++  endif ()
+   if (LIB_fontconfig)
+     list (APPEND OPTIONAL_LIBS ${LIB_fontconfig})
+   endif (LIB_fontconfig)
+@@ -340,7 +375,11 @@ endif (OPTION_USE_SYSTEM_LIBPNG)
+ 
+ if (OPENGL_FOUND)
+   FL_ADD_LIBRARY (fltk_gl STATIC "${GLCPPFILES}")
+-  target_link_libraries (fltk_gl fltk ${OPENGL_LIBRARIES})
++  if (TARGET OpenGL::GLU AND TARGET OpenGL::GL)
++    target_link_libraries (fltk_gl fltk OpenGL::GLU OpenGL::GL)
++  else()
++    target_link_libraries (fltk_gl fltk ${OPENGL_LIBRARIES})
++  endif ()
+ endif (OPENGL_FOUND)
+ 
+ #######################################################################
+@@ -386,7 +425,11 @@ if (OPTION_BUILD_SHARED_LIBS AND NOT MSVC)
+ 
+   if (OPENGL_FOUND)
+     FL_ADD_LIBRARY (fltk_gl SHARED "${GLCPPFILES};${GL_HEADER_FILES};${GL_DRIVER_HEADER_FILES}")
+-    target_link_libraries (fltk_gl_SHARED fltk_SHARED ${OPENGL_LIBRARIES})
++    if (TARGET OpenGL::GLU AND TARGET OpenGL::GL)
++      target_link_libraries (fltk_gl_SHARED fltk_SHARED OpenGL::GLU OpenGL::GL)
++    else()
++      target_link_libraries (fltk_gl_SHARED fltk_SHARED ${OPENGL_LIBRARIES})
++    endif ()
+   endif (OPENGL_FOUND)
+ 
+ endif (OPTION_BUILD_SHARED_LIBS AND NOT MSVC)
+@@ -429,7 +472,11 @@ if (OPTION_BUILD_SHARED_LIBS AND MSVC)
+   endif (OPTION_USE_SYSTEM_ZLIB)
+ 
+   if (OPENGL_FOUND)
+-    target_link_libraries (fltk_SHARED ${OPENGL_LIBRARIES})
++    if (TARGET OpenGL::GLU AND TARGET OpenGL::GL)
++      target_link_libraries (fltk_SHARED OpenGL::GLU OpenGL::GL)
++    else()
++      target_link_libraries (fltk_SHARED ${OPENGL_LIBRARIES})
++    endif ()
+   endif (OPENGL_FOUND)
+ 
+ endif (OPTION_BUILD_SHARED_LIBS AND MSVC)
