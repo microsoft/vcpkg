@@ -10,6 +10,7 @@ vcpkg_from_github(
         no-docs.diff
         test-shared.diff
 )
+
 file(REMOVE
     "${SOURCE_PATH}/CMakeModules/FindBZ2.cmake"
     "${SOURCE_PATH}/CMakeModules/FindEXPAT.cmake"
