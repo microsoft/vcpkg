@@ -1,0 +1,22 @@
+diff --git a/thirdparty/dill/dill/CMakeLists.txt b/thirdparty/dill/dill/CMakeLists.txt
+index c43e0508c..1d8c42670 100644
+--- a/thirdparty/dill/dill/CMakeLists.txt
++++ b/thirdparty/dill/dill/CMakeLists.txt
+@@ -45,7 +45,7 @@ if(WIN32)
+ 
+   if(CMAKE_C_COMPILER_ID MATCHES "MSVC" OR
+      CMAKE_C_SIMULATE_ID MATCHES "MSVC")
+-    set (MSVC_PERL_FLAGS "-msvc-long")
++    set (MSVC_PERL_FLAGS "--msvc-long")
+   endif()
+ endif()
+ 
+@@ -110,7 +110,7 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "i.86|x86_64|AMD64|amd64")
+     set(ARCH_FILE x86)
+   endif()
+   if(NOT (CMAKE_SIZEOF_VOID_P EQUAL SIZEOF_LONG))
+-    set(BASE_OPS_ARG "-msvc_long")
++    set(BASE_OPS_ARG "--msvc_long")
+   endif()
+   if(BUILD_SHARED_LIBS)
+     set(BASE_OPS_ARG "${BASE_OPS_ARG} -build_shared")

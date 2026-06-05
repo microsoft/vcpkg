@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 6df68e07aad54181ea16f35bc2c86a08467f1e123c546f5284ed8c5fb00a1e1943bb0eb47949391cac96c0d52542c26cfac47ac50e38af5059bf63f39c6de81d
     HEAD_REF master
+    PATCHES
+        fix-dill-msvc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

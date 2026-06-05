@@ -75,7 +75,6 @@ adios2[cuda]:arm64-osx=cascade
 adios2[cuda]:x64-windows-static=feature-fails # try_run() invoked in cross-compiling mode
 adios2[cuda]:x86-windows=cascade
 adios2[mpi]:x86-windows=feature-fails
-adios2[python](!(arm64&linux))=feature-fails # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
 adios2[zfp](android | (arm & windows))=feature-fails # try_run() invoked in cross-compiling mode
 aeron[archive]=skip # archive feature requires Java for SBE code generation
 aliyun-oss-c-sdk:arm64-windows=cascade
