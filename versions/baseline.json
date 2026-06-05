@@ -9121,7 +9121,7 @@
       "port-version": 0
     },
     "sdl3-mixer": {
-      "baseline": "3.2.2",
+      "baseline": "3.2.4",
       "port-version": 0
     },
     "sdl3-net": {
