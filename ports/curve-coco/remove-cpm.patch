@@ -1,18 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3a2434c..ae2b342 100644
+index 51e0708..0694004 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -13,7 +13,6 @@ option(coco_exceptions "Enable exception support (Respects -fno-exceptions even
+@@ -14,7 +14,6 @@ option(coco_exceptions "Enable exception support (Respects -fno-exceptions even
  # +-------------------------------------------------------------------------------------------------------+
  
- add_library(${PROJECT_NAME} STATIC "src/latch.cpp" "src/stray.cpp")
+ add_library(${PROJECT_NAME} STATIC "src/latch.cpp" "src/stray.cpp" "src/courier.cpp")
 -add_library(cr::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
  
  target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
  set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20 CXX_EXTENSIONS OFF CXX_STANDARD_REQUIRED ON)
-@@ -50,13 +49,7 @@ endif()
- # | Package Config                                                                                        |
- # +-------------------------------------------------------------------------------------------------------+
+@@ -55,13 +54,7 @@ if (NOT coco_install)
+   return()
+ endif()
  
 -include("cmake/cpm.cmake")
 -
