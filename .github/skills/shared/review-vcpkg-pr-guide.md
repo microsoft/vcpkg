@@ -42,7 +42,7 @@ Use this schema for `results.json`:
   "schemaVersion": 1,
   "pr": 12345,
   "status": "completed",
-  "verdict": "approve | request-changes | unknown",
+  "verdict": "approve | approve-with-notes | request-changes | unknown",
   "summary": "one or two sentence summary",
   "issues": [
     {
@@ -65,7 +65,9 @@ Use this schema for `results.json`:
 }
 ```
 
-Use exactly one of these verdict values: `approve`, `request-changes`, or `unknown`.
+Use exactly one of these verdict values: `approve`, `approve-with-notes`, `request-changes`, or `unknown`.
+
+Use `approve-with-notes` when the PR is acceptable to merge but you still want to call out non-blocking concerns, caveats, or pre-existing package problems. Keep those notes in the report text and model them in `issues` using `non-blocking` or `informational` severities as appropriate.
 
 If patches are out of scope for the wrapper skill, leave `patches` empty and set each issue's `patch` field to `null`.
 
@@ -92,6 +94,7 @@ If a matrix check's `details_url` contains a job id and you need to narrow the s
 `report.md` should include these sections when they are applicable to the review depth selected by the wrapper skill:
 
 - Brief Summary + Conclusion with `#{pr}` and `https://github.com/microsoft/vcpkg/pull/{pr}/files`
+- Paste-ready review comment
 - Scope reviewed
 - Findings
 - New Port
@@ -102,6 +105,17 @@ If a matrix check's `details_url` contains a job id and you need to narrow the s
 - Unusual Aspects and Prior Art
 
 Add any other sections needed to make the review clear and evidence-based.
+
+The "Paste-ready review comment" section should be short enough to paste into a PR review comment with little or no editing. Attribute the note to the language model used for the review, for example `AI review note (GPT-5.4): ...` or equivalent wording that clearly signals the comment came from the model rather than a human maintainer.
+
+## Pre-existing issues vs. regressions
+
+Distinguish carefully between defects introduced by the PR and defects that were already present in the previous packaged version.
+
+- For a simple version bump or similarly narrow update, pre-existing package issues are usually not blocking on their own.
+- In those cases, prefer a conclusion such as **approve with notes**, use the machine-readable `verdict` value `approve-with-notes`, and describe the known issues as pre-existing in the report.
+- Only use `request-changes` for issues that are regressions, issues directly caused by the PR, or pre-existing issues that the PR changes in a way that makes the package materially less safe or less consumable than before.
+- If you mention a pre-existing issue in a version-bump review, say explicitly that it predates the PR and is being called out for maintainer awareness rather than as a merge blocker.
 
 ## Critical rules
 

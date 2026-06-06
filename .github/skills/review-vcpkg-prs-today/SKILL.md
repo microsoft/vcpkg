@@ -95,15 +95,18 @@ Apply the shared review guide to each PR, then adjust depth according to `review
 & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -PrNumber <pr>
 ```
 
+For simple version-bump PRs, do not treat pre-existing package problems as blocking unless the PR introduces a regression or otherwise makes the existing problem materially worse. In the per-PR report, use human wording such as "approve with notes" when appropriate, but continue to map that outcome into the shared machine-readable verdict scheme.
+
 ## Required index sections
 
 `index.md` must include:
 
 1. Coverage summary, including how many PRs were reviewed, skipped, or failed.
 2. PRs grouped by recommended action:
-   - `request-changes`
-   - `unknown`
    - `approve`
+   - `approve with notes`
+   - `request changes`
+   - `unknown`
 3. Competing PRs grouped by shared modified port.
 4. PRs with no touched `ports/<portname>/` entries.
 5. PRs that failed to review, with a short reason instead of silently omitting them.
