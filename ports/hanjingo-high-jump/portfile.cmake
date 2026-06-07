@@ -7,24 +7,35 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        ai        HJ_ENABLE_AI
-        algo      HJ_ENABLE_ALGO
-        compress  HJ_ENABLE_COMPRESS
-        crypto    HJ_ENABLE_CRYPTO
-        db        HJ_ENABLE_DB
-        encoding  HJ_ENABLE_ENCODING
-        hardware  HJ_ENABLE_HARDWARE
-        io        HJ_ENABLE_IO
-        log       HJ_ENABLE_LOG
-        math      HJ_ENABLE_MATH
-        misc      HJ_ENABLE_MISC
-        net       HJ_ENABLE_NET
-        os        HJ_ENABLE_OS
-        sync      HJ_ENABLE_SYNC
-        testing   HJ_ENABLE_TESTING
-        time      HJ_ENABLE_TIME
-        types     HJ_ENABLE_TYPES
-        util      HJ_ENABLE_UTIL
+        grpc            HJ_ENABLE_GRPC
+        lic             HJ_ENABLE_LIC
+        singleton       HJ_ENABLE_SINGLETON
+        timer           HJ_ENABLE_TIMER
+        http            HJ_ENABLE_HTTP
+        zmq             HJ_ENABLE_ZMQ
+        test            HJ_ENABLE_UNIT_TEST
+        bench           HJ_ENABLE_BENCHMARK
+        crash           HJ_ENABLE_CRASH
+        telemetry       HJ_ENABLE_TELEMETRY
+        sync            HJ_ENABLE_SYNC
+        options         HJ_ENABLE_OPTIONS
+        pdf             HJ_ENABLE_PDF
+        fix             HJ_ENABLE_FIX
+        math            HJ_ENABLE_MATH
+        log             HJ_ENABLE_LOG
+        usb-bt          HJ_ENABLE_USB_BT
+        gpu             HJ_ENABLE_GPU
+        xml             HJ_ENABLE_XML
+        protobuf        HJ_ENABLE_PROTOBUF
+        yaml            HJ_ENABLE_YAML
+        flatbuffer      HJ_ENABLE_FLATBUFFER
+        sqlite          HJ_ENABLE_SQLITE
+        redis           HJ_ENABLE_REDIS
+        ck              HJ_ENABLE_CK
+        crypto          HJ_ENABLE_CRYPTO
+        gzip            HJ_ENABLE_GZIP
+        behavior-tree   HJ_ENABLE_BEHAVIOR_TREE
+        qrcode          HJ_ENABLE_QRCODE
 )
 
 vcpkg_cmake_configure(
@@ -32,7 +43,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_LIB=OFF
-        -DBUILD_EXAMPLE=OFF
         -DBUILD_TEST=OFF
         -DBUILD_BENCH=OFF
 )
