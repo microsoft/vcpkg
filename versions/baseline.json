@@ -2753,7 +2753,7 @@
       "port-version": 1
     },
     "ecm": {
-      "baseline": "6.25.0",
+      "baseline": "6.26.0",
       "port-version": 0
     },
     "ecos": {
