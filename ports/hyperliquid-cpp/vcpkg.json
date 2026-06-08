@@ -8,6 +8,14 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "nlohmann-json",
+      "version>=": "3.11.2"
+    },
+    {
+      "name": "openssl",
+      "version>=": "3.0.2"
+    },
+    {
       "name": "slick-net",
       "version>=": "2.1.0"
     },
