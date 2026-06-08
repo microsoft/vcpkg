@@ -14,6 +14,7 @@ find_path(BOOST_BEAST_INCLUDE_DIR boost/beast/core/detail/base64.hpp REQUIRED)
 add_executable(main main.cpp)
 target_include_directories(main PRIVATE "${BOOST_BEAST_INCLUDE_DIR}")
 target_link_libraries(main PRIVATE alibabacloud_oss_v2::oss tinyxml2::tinyxml2)
+install(TARGETS main RUNTIME DESTINATION "bin/vcpkg-ci-alibabacloud-oss-cpp-sdk-v2")
 
 if(NOT WIN32)
     find_package(unofficial-aliyun-oss-cpp-sdk CONFIG REQUIRED)
