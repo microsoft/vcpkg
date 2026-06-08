@@ -99,6 +99,8 @@ Common examples:
 
 If the install succeeds, continue.
 
+If the install hit a binary cache and you need to rerun the port to force a local rebuild for inspection, remove and reinstall the affected port directly rather than running `x-ci-clean` followed by `install --no-binarycaching`. That preserves cache hits for unedited dependencies while still rebuilding the port under review.
+
 ### Step 4: Determine the Installed Triplet Directory
 
 Find the installed package directory under:
