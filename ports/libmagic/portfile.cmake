@@ -57,6 +57,11 @@ enable_feature("zlib" "zlib")
 enable_feature("lzma" "xzlib")
 enable_feature("zstd" "zstdlib")
 
+vcpkg_list(SET extra_options)
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_list(APPEND extra_options "cross_compiling=yes")
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
@@ -64,6 +69,7 @@ vcpkg_configure_make(
         ${FEATURE_OPTIONS}
         "--disable-lzlib"
         "--disable-libseccomp"
+        ${extra_options}
 )
 
 if(VCPKG_CROSSCOMPILING)
