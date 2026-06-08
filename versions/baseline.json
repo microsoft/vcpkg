@@ -2041,7 +2041,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.10.3",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "cpp-pinyin": {
