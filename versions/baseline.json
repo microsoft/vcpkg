@@ -497,7 +497,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.39.1",
+      "baseline": "0.40.0",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -1734,7 +1734,7 @@
     },
     "chromaprint": {
       "baseline": "1.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "chronoengine": {
       "baseline": "8.0.0",
@@ -2357,7 +2357,7 @@
       "port-version": 5
     },
     "d3d12-memory-allocator": {
-      "baseline": "3.1.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "d3dx12": {
@@ -2702,7 +2702,7 @@
     },
     "earcut-hpp": {
       "baseline": "2.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "eastl": {
       "baseline": "3.27.1",
@@ -3010,7 +3010,7 @@
     },
     "fdk-aac": {
       "baseline": "2.0.3",
-      "port-version": 1
+      "port-version": 2
     },
     "fdlibm": {
       "baseline": "5.3",
@@ -3293,7 +3293,7 @@
       "port-version": 0
     },
     "gamenetworkingsockets": {
-      "baseline": "1.5.1",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "gamma": {
@@ -3325,7 +3325,7 @@
       "port-version": 1
     },
     "gdcm": {
-      "baseline": "3.2.5",
+      "baseline": "3.2.7",
       "port-version": 0
     },
     "gdk-pixbuf": {
@@ -3769,8 +3769,8 @@
       "port-version": 4
     },
     "hazelcast-cpp-client": {
-      "baseline": "5.6.0",
-      "port-version": 1
+      "baseline": "5.7.0",
+      "port-version": 0
     },
     "hdf5": {
       "baseline": "2.1.1",
@@ -4821,7 +4821,7 @@
       "port-version": 1
     },
     "libcopp": {
-      "baseline": "2.3.1",
+      "baseline": "2.3.2",
       "port-version": 0
     },
     "libcoro": {
@@ -5110,7 +5110,7 @@
     },
     "libheif": {
       "baseline": "1.23.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libhsplasma": {
       "baseline": "2025-11-04",
@@ -5133,8 +5133,8 @@
       "port-version": 2
     },
     "libiconv": {
-      "baseline": "1.18",
-      "port-version": 4
+      "baseline": "1.19",
+      "port-version": 0
     },
     "libics": {
       "baseline": "1.7.0",
@@ -5306,7 +5306,7 @@
     },
     "libmodplug": {
       "baseline": "0.8.9.0",
-      "port-version": 15
+      "port-version": 16
     },
     "libmorton": {
       "baseline": "0.2.12",
@@ -5410,7 +5410,7 @@
     },
     "libopenmpt": {
       "baseline": "0.8.7",
-      "port-version": 0
+      "port-version": 1
     },
     "libopensp": {
       "baseline": "1.5.2",
@@ -5465,7 +5465,7 @@
       "port-version": 0
     },
     "libphonenumber": {
-      "baseline": "9.0.31",
+      "baseline": "9.0.32",
       "port-version": 0
     },
     "libplist": {
@@ -5582,7 +5582,7 @@
     },
     "libsbml": {
       "baseline": "5.20.4",
-      "port-version": 0
+      "port-version": 1
     },
     "libsbsms": {
       "baseline": "2.3.0",
@@ -6225,7 +6225,7 @@
       "port-version": 0
     },
     "luabridge3": {
-      "baseline": "3.0-rc11",
+      "baseline": "3.0-rc12",
       "port-version": 0
     },
     "luafilesystem": {
@@ -6333,7 +6333,7 @@
       "port-version": 1
     },
     "manifold": {
-      "baseline": "3.5.0",
+      "baseline": "3.5.1",
       "port-version": 0
     },
     "mapbox-geojson-cpp": {
@@ -6637,7 +6637,7 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "2.3.0",
+      "baseline": "2.3.1",
       "port-version": 0
     },
     "mongo-cxx-driver": {
@@ -7318,7 +7318,7 @@
     },
     "openal-soft": {
       "baseline": "1.25.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openblas": {
       "baseline": "0.3.33",
@@ -7401,7 +7401,7 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "3.1.12.0",
+      "baseline": "3.1.14.0",
       "port-version": 0
     },
     "openjpeg": {
@@ -8561,7 +8561,7 @@
       "port-version": 1
     },
     "quickjs-ng": {
-      "baseline": "0.15.0",
+      "baseline": "0.15.1",
       "port-version": 0
     },
     "quill": {
@@ -8646,7 +8646,7 @@
     },
     "rappture": {
       "baseline": "1.9",
-      "port-version": 4
+      "port-version": 5
     },
     "raygui": {
       "baseline": "4.0",
@@ -9082,7 +9082,7 @@
     },
     "sdl2": {
       "baseline": "2.32.10",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -9121,7 +9121,7 @@
       "port-version": 0
     },
     "sdl3-mixer": {
-      "baseline": "3.2.2",
+      "baseline": "3.2.4",
       "port-version": 0
     },
     "sdl3-net": {
@@ -9402,7 +9402,7 @@
     },
     "snappy": {
       "baseline": "1.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "snitch": {
       "baseline": "1.3.2",
@@ -9609,8 +9609,8 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.53.1",
-      "port-version": 2
+      "baseline": "3.53.2",
+      "port-version": 0
     },
     "sqlitecpp": {
       "baseline": "3.3.3",
@@ -10029,7 +10029,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "1.0.5",
+      "baseline": "1.0.6",
       "port-version": 0
     },
     "threadpool": {
@@ -10757,7 +10757,7 @@
       "port-version": 0
     },
     "vulkan-memory-allocator": {
-      "baseline": "3.3.0",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "vulkan-memory-allocator-hpp": {
