@@ -3892,6 +3892,10 @@
       "baseline": "2.11.2",
       "port-version": 0
     },
+    "hyperliquid-cpp": {
+      "baseline": "0.1.1",
+      "port-version": 0
+    },
     "hyperscan": {
       "baseline": "5.4.2",
       "port-version": 3

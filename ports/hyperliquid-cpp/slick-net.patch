@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6654a1d..a720476 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,7 +14,7 @@ endif()
+ find_package(nlohmann_json CONFIG REQUIRED)
+ find_package(OpenSSL REQUIRED)
+ 
+-find_package(slick-net 2.1.0 CONFIG QUIET)
++find_package(slick-net 2.1.0 CONFIG REQUIRED)
+ if (NOT slick-net_FOUND)
+     message(STATUS "Fetching slick-net...")
+     include(FetchContent)
