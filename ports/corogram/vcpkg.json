@@ -6,22 +6,24 @@
   "license": "MIT",
   "dependencies": [
     "drogon",
-    {
-      "name": "hiredis",
-      "default-features": false
-    },
     "nlohmann-json",
-    "openssl"
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
-    "ed25519": {
-      "description": "Enable Ed25519 Mini App auth (requires OpenSSL)"
-    },
     "redis": {
       "description": "Enable RedisStorage support via hiredis",
-      "dependencies": [
-        "hiredis"
-      ]
+      "dependencies": ["hiredis"]
+    },
+    "ed25519": {
+      "description": "Enable Ed25519 Mini App auth (requires OpenSSL)"
     }
   }
 }
