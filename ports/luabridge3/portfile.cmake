@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kunitoki/LuaBridge3
-    REF b892ce066217601928fbc3f37a6a8706faf410da # 3.0-rc11
-    SHA512 2574c804b18581cc5ac0966690135b4ff8145bf821c6d682279af10ede5a4d2a58a0f20fa3f1485bd16b33ebfca38937e9aabad8198f0bf3c8070dcf31372af0
+    REF 53e031b7df6a14d43f92a54fd792b76dbadcc970 # 3.0-rc12
+    SHA512 0e07beddf2c48e4ad48733ca8d0d6dded6b23bc670ccf887cf21e468ccdc06e78fae1966c07cfee06fd4d8452c0abc91a9df6542cc4837fe0d11d1cd73e9b1a8
     HEAD_REF master
 )
 
