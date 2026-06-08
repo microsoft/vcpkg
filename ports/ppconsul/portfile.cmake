@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oliora/ppconsul
-    REF 1a889ce54cc10be4186daa48ccf7003588ceaade
-    SHA512 e583eee7f0f88a2d1c1daa4b5e8b6e66c46d6abaea2fdb558b5931241ff85bf327f758f38a524e0af1a023b09a4a503da50cd4e25af791b36a376048cd0d1ca1
+    REF v${VERSION}
+    SHA512 217bb0f29291973cba8a87830028050a986ff06461f491d1bfe28f1eeb8d02939a8e8037188e2bb20fa1d592be4a21257ed5f995f61da0510cd1c46ffd0d5c68
     HEAD_REF master
     PATCHES 
         cmake_build.patch
