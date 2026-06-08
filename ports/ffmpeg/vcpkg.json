@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "8.1",
+  "version": "8.1.1",
   "port-version": 2,
   "description": [
     "A library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -64,6 +64,7 @@
             "swresample",
             "swscale",
             "theora",
+            "twolame",
             "vorbis",
             "vpx",
             "vulkan",
@@ -198,7 +199,7 @@
           "features": [
             "qsv"
           ],
-          "platform": "linux | (!osx & !uwp & !(arm & windows))"
+          "platform": "(x64 | x86) & (windows | linux) & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -553,9 +554,9 @@
       ]
     },
     "qsv": {
-      "description": "Intel QSV Codec",
+      "description": "Intel QSV Codec via oneVPL",
       "dependencies": [
-        "mfx-dispatch"
+        "libvpl"
       ]
     },
     "rubberband": {
@@ -650,6 +651,12 @@
       "description": "Theora encoding via libtheora",
       "dependencies": [
         "libtheora"
+      ]
+    },
+    "twolame": {
+      "description": "MP2 encoding via libtwolame",
+      "dependencies": [
+        "libtwolame"
       ]
     },
     "vaapi": {

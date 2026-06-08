@@ -12,6 +12,7 @@ vcpkg_from_github(
         003-force-cxx-17.patch
         fix-heterogeneous_lookup_testing-target.patch
         fix-mingw-dll.patch
+        fix-gcc13-constexpr-function-pointer.patch
 )
 
 

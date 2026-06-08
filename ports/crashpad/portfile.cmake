@@ -26,8 +26,10 @@ if(NOT EXISTS "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/BUILD.gn")
         PATCHES
             fix-std-20.patch
             ndk-toolchain.diff
+            support-build-tools-sku.diff
             fix-lib-name-conflict-1.patch
     )
+
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
     file(RENAME "${mini_chromium}" "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
 endif()
@@ -59,7 +61,7 @@ function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
         NO_DEFAULT_PATH)
 
     if(_LIBRARY_REL MATCHES "-NOTFOUND")
-        message(FATAL_ERROR "Could not find library with names: ${LIBRARY_NAMES}")
+        message(FATAL_ERROR "Could not find release library with names: ${LIBRARY_NAMES}")
     endif()
 
     if(VCPKG_BUILD_TYPE STREQUAL "release")
@@ -75,7 +77,7 @@ endfunction()
 replace_gn_dependency(
     "${CMAKE_CURRENT_LIST_DIR}/zlib.gn"
     "${SOURCE_PATH}/third_party/zlib/BUILD.gn"
-    "z;zlib;zlibd"
+    "z;zs;zlib;zd;zsd;zlibd"
 )
 
 set(OPTIONS "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\"")
@@ -99,6 +101,14 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     # Load toolchains
     vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
+
+    cmake_path(CONVERT "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}" TO_CMAKE_PATH_LIST CRASHPAD_CXX_COMPILER_PATH NORMALIZE)
+    string(REGEX REPLACE "/VC/Tools/.*" "" CRASHPAD_VISUAL_STUDIO_PATH "${CRASHPAD_CXX_COMPILER_PATH}")
+    if(NOT CRASHPAD_VISUAL_STUDIO_PATH STREQUAL CRASHPAD_CXX_COMPILER_PATH
+       AND EXISTS "${CRASHPAD_VISUAL_STUDIO_PATH}/VC/Auxiliary/Build/vcvarsall.bat")
+        # mini_chromium checks VSINSTALLDIR before it falls back to vswhere.
+        set(ENV{VSINSTALLDIR} "${CRASHPAD_VISUAL_STUDIO_PATH}")
+    endif()
 
     set(OPTIONS_DBG "${OPTIONS_DBG} \
         extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_DEBUG}\" \

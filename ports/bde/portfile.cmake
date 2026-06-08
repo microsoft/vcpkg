@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
     REF "${BDE_TOOLS_VER}"
-    SHA512 c1ec488c6cd4e4859e916aab52d809a3cb292e933dbf3e8cf662d60617956c44eceec1853b2d310d587dcb0fe70eba74271ca2d2a2d06e06393852acae9311ab
+    SHA512 209a6803b6b769263e7ec496a122dcd200c3b073665e5fe5ff5fd4c1690df080f00020dfe131ad35305e967bcba9a0a75c224ca5b4804a0349a60d939d1b0060
     HEAD_REF main
 )
 
@@ -23,9 +23,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 f9d7433fc3a7ebf1e2a1fddab850b6f10f7ced78aec0e1f1e86c152187fcf2434846102cfb95621e95a22d8977f5d8af46deeef0400b8debba3511c6e6552882
+    SHA512 b65936ea36f5bdeb6a099b05bf2757f1c9de8fc0df7fa912454761f795031bc192b776b5a177df16dd2b08899369bd4f06edd864ad06a5d2f1ac203f866029cd
     HEAD_REF main
-    PATCHES fix-bdlar-target.patch use-vcpkg-pcre2.patch
+    PATCHES
+        fix-bdlar-target.patch
+        use-vcpkg-pcre2.patch
 )
 
 vcpkg_cmake_configure(
@@ -38,10 +40,6 @@ vcpkg_cmake_configure(
         -DBBS_BUILD_SYSTEM=1
         -DBDE_USE_EXTERNAL_PCRE2=1
         "-DBdeBuildSystem_DIR:PATH=${TOOLS_PATH}/BdeBuildSystem"
-    OPTIONS_RELEASE
-        -DBDE_BUILD_TARGET_OPT=1
-    OPTIONS_DEBUG
-        -DBDE_BUILD_TARGET_DBG=1
 )
 
 # Build release

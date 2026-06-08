@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARM-software/kleidiai
     REF "v${VERSION}"
-    SHA512 46de1f0cdd04ce1e8de5d1bdb2499d07eb377e616eb3a8596fbcd296b7887e413be5470f383b5790cef73dc370bead3db36ef2ed116513b95924ae71d87ef123
+    SHA512 280bab1c123dec04d85da6a5fe4d1fc6a6698a6f1f664df635771e80de3de37cb837e7a970cc24b6478c6fb95dafb550b1e70033a7edf2ad28aa4fdbc82c918b
     HEAD_REF main
 )
 

@@ -1,31 +1,35 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO ezEngine/ezEngine
-  REF 1448308ab99bae0d8d2a292ad345ff3a757f3124 #21.10
-  SHA512 20da87772366d1612795f534b31600123c0d04beba252d27d895c3c3cff7dae65952bd890629d79a7a691c2f3444601552c4b4eca99e8f8a99dc935ce2ebd284
-  PATCHES
-    ezFoundation_vcpkg.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ezEngine/ezEngine
+    REF 1448308ab99bae0d8d2a292ad345ff3a757f3124 #21.10
+    SHA512 20da87772366d1612795f534b31600123c0d04beba252d27d895c3c3cff7dae65952bd890629d79a7a691c2f3444601552c4b4eca99e8f8a99dc935ce2ebd284
+    PATCHES
+        ezfoundation-vcpkg.diff
+        # when making changes to this patch, use vim rather than VS Code or other editors that will
+        # normalize line endings because upstream's line endings are inconsistent which makes the
+        # patch get much larger than necessary
+        disable-warnings-as-errors.diff
 )
 
 vcpkg_cmake_configure(
-  SOURCE_PATH "${SOURCE_PATH}"
-  OPTIONS
-    -DEZ_3RDPARTY_ENET_SUPPORT=OFF
-    -DEZ_3RDPARTY_ZSTD_SUPPORT=OFF
-    -DEZ_3RDPARTY_ZLIB_SUPPORT=OFF
-    -DEZ_BUILD_FILTER=FoundationOnly
-    -DEZ_BUILD_UNITTESTS=OFF
-    -DEZ_ENABLE_FOLDER_UNITY_FILES=OFF
-    -DEZ_ENABLE_QT_SUPPORT=OFF
-    -DEZ_USE_PCH=OFF
-  OPTIONS_DEBUG
-    -DEZ_OUTPUT_DIRECTORY_LIB=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Output/Lib
-    -DEZ_OUTPUT_DIRECTORY_DLL=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Output/Bin
-  OPTIONS_RELEASE
-    -DEZ_OUTPUT_DIRECTORY_LIB=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Output/Lib
-    -DEZ_OUTPUT_DIRECTORY_DLL=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Output/Bin
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DEZ_3RDPARTY_ENET_SUPPORT=OFF
+        -DEZ_3RDPARTY_ZSTD_SUPPORT=OFF
+        -DEZ_3RDPARTY_ZLIB_SUPPORT=OFF
+        -DEZ_BUILD_FILTER=FoundationOnly
+        -DEZ_BUILD_UNITTESTS=OFF
+        -DEZ_ENABLE_FOLDER_UNITY_FILES=OFF
+        -DEZ_ENABLE_QT_SUPPORT=OFF
+        -DEZ_USE_PCH=OFF
+    OPTIONS_DEBUG
+        -DEZ_OUTPUT_DIRECTORY_LIB=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Output/Lib
+        -DEZ_OUTPUT_DIRECTORY_DLL=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Output/Bin
+    OPTIONS_RELEASE
+        -DEZ_OUTPUT_DIRECTORY_LIB=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Output/Lib
+        -DEZ_OUTPUT_DIRECTORY_DLL=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Output/Bin
 )
 
 vcpkg_cmake_build(TARGET Foundation)

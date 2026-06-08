@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-remove-Werror.patch
         0002-fix-threads.patch
+        0003-disable-tests.patch # also avoids old vendored gtest that fails on MSVC 19.51+ due to removed std::tr1
 )
 
 vcpkg_find_acquire_program(PYTHON3)

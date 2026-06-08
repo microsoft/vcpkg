@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
     REF "${VERSION}"
-    SHA512 eacc040cf59c9dd9f0f108e9b12978e661fb403d0e6efc24dada05737e2aae1913e343922fafe66044d45744b2088ecb138b088969c4514e47d5fa936a113609
+    SHA512 976cf53e9b15d555656474de8d58429b17bd8083ace1003f2f056fdc21732f6fd0a309ff6b3498b5f3675d011e447575387f1e00a05a0ae3487d8f7ad26e5bba
     PATCHES
         fix-aws-root.patch
         lock-curl-http-and-tls-settings.patch
