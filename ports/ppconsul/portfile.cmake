@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCMAKE_CXX_STANDARD=17
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
