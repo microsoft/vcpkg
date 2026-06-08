@@ -13,6 +13,8 @@ Read this file before doing Azure-specific work in any vcpkg skill.
 7. Do **not** force `?api-version=7.0` onto log-body URLs, because that can return HTTP 500 even when the anonymous log is available.
 8. `FILE_CONFLICTS` failures may exist only in the failed step logs, so scan those before relying on artifacts.
 9. Artifact type is `PipelineArtifact`, not `Container`. Use the artifact `downloadUrl` directly for ZIP downloads.
+10. Do **not** treat a raw `BUILD_FAILED` line by itself as a meaningful regression signal. Some build failures are expected and filtered by `ci.baseline.txt` or `ci.feature.baseline.txt`.
+11. For matrix CI interpretation, prefer the filtered `REGRESSION:` lines and any feature-test `error:` lines as the meaningful summary of what actually failed review expectations.
 
 ## Shared helper script
 
@@ -24,7 +26,7 @@ Prefer the shared helper script when you need raw failed step logs:
 & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -PrNumber <pr> -JobId <job-id>
 ```
 
-The helper prints the matching build URL, selected failed records, and their raw logs.
+The helper prints the matching build URL, selected failed records, and their raw logs. When writing review conclusions, summarize the meaningful `REGRESSION:` or feature-test `error:` lines rather than quoting raw package `BUILD_FAILED` lines out of context.
 
 ### Invocation rule
 
