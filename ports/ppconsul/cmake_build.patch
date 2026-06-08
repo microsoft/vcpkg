@@ -56,7 +56,7 @@ index 199395a..abeb1dc 100644
  Version: @Ppconsul_VERSION@
 +Requires.private: libcurl
  Libs: -L${libdir} @ppconsul_libs@
-+Libs.prvate: -lb64
++Libs.private: -lb64
  Cflags: -I${includedir}
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 1318433..fd134e0 100644
