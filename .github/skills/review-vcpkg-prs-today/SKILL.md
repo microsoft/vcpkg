@@ -14,7 +14,7 @@ Parse these from the user's request.
 | Input | Required | Meaning |
 |---|---|---|
 | `report root` | No | Directory for final deliverables. Default to `reviews` under the current working directory. |
-| `investigation root` | No | Preferred directory for large temporary work such as checkouts, extracted archives, build trees, installs, caches, and other investigation artifacts. Only constrain locations when this input is present. |
+| `investigation root` | No | Preferred directory for large temporary work such as detached worktrees, extracted archives, build trees, installs, caches, and other investigation artifacts. When omitted, infer a short same-drive investigations location if that is clear; otherwise ask the user. |
 | `review depth` | No | One of `no-examples`, `examples`, or `examples-and-patches`. Default to `no-examples`. |
 
 ### Input handling rules
@@ -22,16 +22,17 @@ Parse these from the user's request.
 1. Review open PRs in `microsoft/vcpkg` that are not draft and have been updated in the last 30 days.
 2. If `report root` is omitted, resolve it to `.\reviews` from the current working directory.
 3. If `investigation root` is provided, strongly prefer it for heavy temporary work.
-4. If `investigation root` is omitted, do **not** constrain which locations are used for the investigation.
-5. If `review depth` is omitted, default to `no-examples`.
-6. Interpret `review depth` as:
+4. If `investigation root` is omitted, prefer a short investigations path on the same drive as the initial repository instead of the Copilot session directory or an arbitrary long temp path.
+5. If no suitable investigations location is clear, ask the user before creating worktrees or other heavy investigation artifacts.
+6. If `review depth` is omitted, default to `no-examples`.
+7. Interpret `review depth` as:
    - `no-examples`: triage review only, no example applications, no patches
    - `examples`: include example applications, but do not generate patches
    - `examples-and-patches`: include example applications and allow focused patches when warranted
-7. If `report root\pr-<number>\report.md` already exists and is newer than or equal to the PR's `updated_at` timestamp, you may skip re-reviewing that PR and reuse the existing result.
-8. If you use subagents or otherwise review multiple PRs in parallel, give each worker its own writable checkout. Do **not** let multiple workers share the same mutable repository directory.
-9. When parallelizing, prefer one detached `git worktree` (or separate clone) per worker under `investigation root` when it is provided. If `investigation root` is omitted, create isolated temporary workspaces elsewhere rather than reusing the current working tree.
-10. Workers may share `report root`, but each worker should write only the deliverables for the PRs assigned to it.
+8. If `report root\pr-<number>\report.md` already exists and is newer than or equal to the PR's `updated_at` timestamp, you may skip re-reviewing that PR and reuse the existing result.
+9. If you use subagents or otherwise review multiple PRs in parallel, give each worker its own writable checkout. Do **not** let multiple workers share the same mutable repository directory.
+10. When parallelizing, prefer one detached `git worktree` (or separate clone) per worker under `investigation root` when it is provided. If `investigation root` is omitted, create isolated same-drive workspaces at a short inferred path rather than reusing the current working tree.
+11. Workers may share `report root`, but each worker should write only the deliverables for the PRs assigned to it.
 
 ### Example invocations
 
@@ -55,10 +56,11 @@ Parse these from the user's request.
 
 ## Parallel execution safety
 
-1. A worker that checks out a PR, switches branches, runs `gh pr checkout`, edits files, or creates build trees must do so only inside its own isolated workspace.
+1. A worker that checks out a PR, uses `gh pr checkout`, edits files, or creates build trees must do so only inside its own isolated workspace, not in the calling repository.
 2. Never point multiple workers at the same writable repository path, even if they are reviewing different PRs.
-3. Do not use the shared current working tree for concurrent PR reviews unless exactly one worker is active.
-4. If you need a clean baseline for multiple workers, create the isolated workspaces first and then launch the workers against those paths.
+3. Use detached worktrees or equivalent detached-HEAD checkouts for workers so that review activity does not change the caller's branch state.
+4. Do not use the shared current working tree for concurrent PR reviews unless exactly one worker is active and the user explicitly allows it.
+5. If you need a clean baseline for multiple workers, create the isolated workspaces first and then launch the workers against those paths.
 
 ## Output layout
 
@@ -89,7 +91,8 @@ Apply the shared review guide to each PR, then adjust depth according to `review
    - "MSBuild Style": include only `<triplet>\include` and link all `*.lib` files, with no extra macro defines. Any needed configuration should already be baked into the installed headers.
 4. If `review depth` is `examples-and-patches`, you may generate focused patches when warranted. Otherwise leave patches out of scope and set issue `patch` fields to `null`.
 5. If `review depth` includes examples and `investigation root` is provided, keep example apps and other heavy temporary artifacts under `investigation root`.
-6. If Azure CI is relevant, use the shared helper script:
+6. If `review depth` includes examples and `investigation root` is omitted, keep those artifacts under the inferred same-drive investigation workspace rather than the Copilot session directory.
+7. If Azure CI is relevant, use the shared helper script:
 
 ```powershell
 & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -PrNumber <pr>

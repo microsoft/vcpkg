@@ -24,6 +24,15 @@ For each PR under review:
 
 Work autonomously. Use web and repository tooling as needed. Prefer concrete evidence and cite relevant files, checklist items, commands, and build or integration results in the report.
 
+## Workspace and branch safety
+
+1. Do **not** change branches in the calling repository or otherwise repurpose the caller's current working tree during the review. Treat that repository state as an anchor for inputs and final deliverables, not as the mutable investigation checkout.
+2. Perform PR checkouts, builds, edits, patch generation, and other mutable investigation steps inside isolated investigation workspaces.
+3. Prefer detached investigation checkouts such as `git worktree add --detach <path> <start-point>` or an equivalent detached-HEAD workflow. Avoid attaching investigation state to the caller's active branch.
+4. Prefer investigation workspaces on the same drive as the initial repository and choose short paths to reduce Windows path-length risk.
+5. Avoid placing worktrees or other heavy investigation directories under Copilot session-state directories when a suitable same-drive location is available.
+6. If the appropriate investigations directory is not clear from the user's request or obvious repository-local conventions, ask the user before creating the workspaces.
+
 ## Standard deliverables per PR
 
 Unless the wrapper skill narrows the scope, write these files for each reviewed PR:
