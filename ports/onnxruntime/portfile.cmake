@@ -15,6 +15,8 @@ vcpkg_from_github(
     PATCHES
         fix-cmake.patch # .framework install, external library workarounds(abseil-cpp, eigen3)
         fix-cmake-cuda.patch
+        fix-missing-cstdint.patch
+        fix-cmake-mlas.patch
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
@@ -55,6 +57,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         mimalloc  onnxruntime_USE_MIMALLOC
         valgrind  onnxruntime_USE_VALGRIND
         xnnpack   onnxruntime_USE_XNNPACK
+        kleidiai  onnxruntime_USE_KLEIDIAI
         nnapi     onnxruntime_USE_NNAPI_BUILTIN
         azure     onnxruntime_USE_AZURE
         test      onnxruntime_BUILD_UNIT_TESTS

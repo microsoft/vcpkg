@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
     REF "${VERSION}"
-    SHA512 2c2b746a8253d2a27efed18d908fa8e41ad1014c369b54a7cbe26f6a8a5dbd43902eb2aba99410ee63b858a8c752239f0f1a5d90bfb166e77796e7b6fc0aa960
+    SHA512 618fd4fce51eea0d6abacf86a1a395793ff535e4d17a4fb84fd792261a599f6cbe79ff47c4a3a9f160ac1a1f44f3e27a62cb15782f25251d029c777c91d82352
     HEAD_REF master
     PATCHES
         0005-XML_file_path.patch

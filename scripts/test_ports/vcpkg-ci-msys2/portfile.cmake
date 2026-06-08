@@ -14,6 +14,8 @@ vcpkg_list(SET ignored_updates
 # (Packages to be removed from vcpkg scripts ASAP.)
 vcpkg_list(SET known_delisted
     libcrypt
+    mingw-w64-i686-gcc-fortran
+    mingw-w64-i686-gcc-libgfortran
 )
 
 # Ignore these dependencies (e.g. interactive or effectively optional)

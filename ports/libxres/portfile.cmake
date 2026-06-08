@@ -1,16 +1,22 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxres
-    REF c05c6d918b0e2011d4bfa370c321482e34630b17 # 1.2.1
-    SHA512  c2eabf65b03393991b56b84bea4d770e9c0295d685e8b22bb7dabbd37dd6c7c6f5e519cefa790b05c0f124bb739a5abe03249b89e2ce6d5276014e9752c11251
-    HEAD_REF master
-    PATCHES build.patch
-) 
+    return()
+endif()
+
+vcpkg_download_distfile(
+    LIBXRES_ARCHIVE
+    URLS "https://www.x.org/archive/individual/lib/libXres-${VERSION}.tar.xz"
+    FILENAME "libXres-${VERSION}.tar.xz"
+    SHA512 385dbc87bd4e0d306a1cad6b317d8431494cd2a381766bc3f9e6b7f488ff41ee1f4f25e756421f6a2b5681976d7da0108cea6305f7a34f7105d861cb6c1ae854
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXRES_ARCHIVE}"
+    PATCHES
+        build.patch
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -27,9 +33,6 @@ vcpkg_make_configure(
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
