@@ -1,0 +1,27 @@
+{
+  "name": "corogram",
+  "version": "0.1.0",
+  "description": "A C++20 coroutine-based Telegram Bot framework built on top of Drogon",
+  "homepage": "https://github.com/corogram/corogram",
+  "license": "MIT",
+  "dependencies": [
+    "drogon",
+    {
+      "name": "hiredis",
+      "default-features": false
+    },
+    "nlohmann-json",
+    "openssl"
+  ],
+  "features": {
+    "ed25519": {
+      "description": "Enable Ed25519 Mini App auth (requires OpenSSL)"
+    },
+    "redis": {
+      "description": "Enable RedisStorage support via hiredis",
+      "dependencies": [
+        "hiredis"
+      ]
+    }
+  }
+}

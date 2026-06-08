@@ -1,0 +1,8 @@
+corogram provides CMake targets:
+
+    find_package(corogram CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE corogram::corogram)
+
+Optional features:
+  - redis   : vcpkg install corogram[redis]
+  - ed25519 : vcpkg install corogram[ed25519]
