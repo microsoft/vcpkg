@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 649521b69d5d7328245cabca8b769448f695b0b7e3bf16208ddb1635b29165dfd363a06b1b2831229f6ff722d0e8212fd82054e6b64992552a6a21af238c5cb3
+    SHA512 b7642a81eb021bf96cf8c91c5ebdde7f4fdfd40c76db722f00cf001125f4b81b954d08485774d2b23318d49b1e954fa0189ba8f10db56d148f33f9d90891d0cb
     HEAD_REF master
     PATCHES
-        fix-eol-mismatch.diff # https://github.com/harfbuzz/harfbuzz/commit/ab6aa4f449457be45e8e0218f7a8de271fb19967.diff?full_index=1
         ${ANDROID_LOCALECONV_L_PATCH}
 )
 

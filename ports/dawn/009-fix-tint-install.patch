@@ -1,8 +1,8 @@
 diff --git a/src/tint/CMakeLists.txt b/src/tint/CMakeLists.txt
-index 446c0d8b29..573c615799 100644
+index ed9c73d9f4..a4fa0b4a92 100644
 --- a/src/tint/CMakeLists.txt
 +++ b/src/tint/CMakeLists.txt
-@@ -415,7 +415,9 @@ function(tint_add_target TARGET KIND)
+@@ -420,7 +420,9 @@ function(tint_add_target TARGET KIND)
    elseif(${KIND} STREQUAL cmd)
      add_executable(${TARGET})
      tint_default_compile_options(${TARGET})
@@ -12,7 +12,7 @@ index 446c0d8b29..573c615799 100644
    elseif(${KIND} STREQUAL test_cmd)
      add_executable(${TARGET})
      tint_test_cmd_compile_options(${TARGET})
-@@ -744,3 +746,9 @@ if (TINT_ENABLE_INSTALL)
+@@ -761,3 +763,9 @@ if (TINT_ENABLE_INSTALL)
        install(FILES ${TINT_ROOT_SOURCE_DIR}/${TINT_HEADER_FILE}  DESTINATION  ${CMAKE_INSTALL_INCLUDEDIR}/src/tint/${TINT_HEADER_DIR})
    endforeach ()
  endif()
