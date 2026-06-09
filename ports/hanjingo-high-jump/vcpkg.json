@@ -1,6 +1,6 @@
 {
   "name": "hanjingo-high-jump",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -12,8 +12,19 @@
   "dependencies": [
     "abseil",
     "bext-sml",
+    "boost-algorithm",
+    "boost-any",
+    "boost-asio",
+    "boost-beast",
+    "boost-circular-buffer",
     "boost-filesystem",
+    "boost-leaf",
+    "boost-multi-index",
+    "boost-optional",
+    "boost-property-tree",
     "boost-stacktrace",
+    "boost-uuid",
+    "boost-variant",
     "concurrentqueue",
     "fmt",
     "libiconv",
@@ -29,104 +40,138 @@
     }
   ],
   "features": {
-    "ai": {
-      "description": "Enable ai module support",
+    "behavior-tree": {
+      "description": "Enable behavior tree support",
       "dependencies": [
-        "libqrencode",
-        "quirc"
+        "behaviortree-cpp"
       ]
     },
-    "algo": {
-      "description": "Enable algo module support",
+    "bench": {
+      "description": "Enable benchmark support",
       "dependencies": [
-        "behaviortree-cpp",
-        "boost-algorithm",
-        "boost-multi-index",
-        "boost-uuid"
+        "benchmark"
       ]
     },
-    "compress": {
-      "description": "Enable compress module support",
+    "ck": {
+      "description": "Enable clickhouse database support",
+      "dependencies": [
+        "clickhouse-cpp"
+      ]
+    },
+    "crash": {
+      "description": "Enable crash support",
+      "dependencies": [
+        "breakpad"
+      ]
+    },
+    "crypto": {
+      "description": "Enable cryption/decryption support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "fix": {
+      "description": "Enable fix protocol support",
+      "dependencies": [
+        "hffix"
+      ]
+    },
+    "flatbuffer": {
+      "description": "Enable flatbuffer support",
+      "dependencies": [
+        "flatbuffers"
+      ]
+    },
+    "gpu": {
+      "description": "Enable GPU support",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "grpc": {
+      "description": "Enable grpc support",
+      "dependencies": [
+        "grpc"
+      ]
+    },
+    "gzip": {
+      "description": "Enable gzip compression support",
       "dependencies": [
         "zlib",
         "zstd"
       ]
     },
-    "crypto": {
-      "description": "Enable crypto module support",
+    "http": {
+      "description": "Enable HTTP support",
       "dependencies": [
-        "openssl"
+        "cpp-httplib"
       ]
     },
-    "db": {
-      "description": "Enable db module support",
+    "lic": {
+      "description": "Enable license support",
       "dependencies": [
-        "clickhouse-cpp",
-        "hiredis",
-        "libpqxx",
-        "sqlite3"
-      ]
-    },
-    "encoding": {
-      "description": "Enable encoding module support",
-      "dependencies": [
-        "boost-property-tree",
-        "flatbuffers",
-        "protobuf",
-        "pugixml",
-        "yaml-cpp"
-      ]
-    },
-    "hardware": {
-      "description": "Enable hardware module support",
-      "dependencies": [
-        "hidapi",
-        "opencl"
-      ]
-    },
-    "io": {
-      "description": "Enable I/O module support",
-      "dependencies": [
-        "boost-circular-buffer"
+        "jwt-cpp",
+        "quirc"
       ]
     },
     "log": {
-      "description": "Enable log module support",
+      "description": "Enable log support",
       "dependencies": [
         "spdlog"
       ]
     },
     "math": {
-      "description": "Enable math module support",
+      "description": "Enable math support",
       "dependencies": [
         "boost-math",
         "eigen3"
       ]
     },
-    "misc": {
-      "description": "Enable misc module support",
-      "dependencies": [
-        "hffix",
-        "libharu"
-      ]
-    },
-    "net": {
-      "description": "Enable net module support",
-      "dependencies": [
-        "boost-asio",
-        "boost-beast",
-        "cpp-httplib",
-        "zeromq"
-      ]
-    },
-    "os": {
-      "description": "Enable os module support",
+    "options": {
+      "description": "Enable program options parse support",
       "dependencies": [
         "boost-program-options"
       ]
     },
+    "pdf": {
+      "description": "Enable PDF support",
+      "dependencies": [
+        "libharu"
+      ]
+    },
+    "protobuf": {
+      "description": "Enable protobuf support",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
+    "qrcode": {
+      "description": "Enable QR code support",
+      "dependencies": [
+        "libqrencode",
+        "quirc"
+      ]
+    },
+    "redis": {
+      "description": "Enable Redis support",
+      "dependencies": [
+        "hiredis"
+      ]
+    },
+    "singleton": {
+      "description": "Enable singleton support",
+      "dependencies": [
+        "boost-serialization"
+      ]
+    },
+    "sqlite": {
+      "description": "Enable SQLite support",
+      "dependencies": [
+        "sqlite3"
+      ]
+    },
     "sync": {
-      "description": "Enable sync module support",
+      "description": "Enable sync support",
       "dependencies": [
         "boost-interprocess",
         "boost-process",
@@ -134,12 +179,9 @@
         "tbb"
       ]
     },
-    "testing": {
-      "description": "Enable testing module support",
+    "telemetry": {
+      "description": "Enable telemetry support",
       "dependencies": [
-        "benchmark",
-        "breakpad",
-        "gtest",
         {
           "name": "opentelemetry-cpp",
           "default-features": false,
@@ -150,26 +192,40 @@
         }
       ]
     },
-    "time": {
-      "description": "Enable time module support",
+    "test": {
+      "description": "Enable unit test support",
+      "dependencies": [
+        "gtest"
+      ]
+    },
+    "timer": {
+      "description": "Enable timer support",
       "dependencies": [
         "boost-timer"
       ]
     },
-    "types": {
-      "description": "Enable types module support",
+    "usb-bt": {
+      "description": "Enable USB and Bluetooth support",
       "dependencies": [
-        "boost-any",
-        "boost-leaf",
-        "boost-optional",
-        "boost-serialization",
-        "boost-variant"
+        "hidapi"
       ]
     },
-    "util": {
-      "description": "Enable util module support",
+    "xml": {
+      "description": "Enable XML support",
       "dependencies": [
-        "jwt-cpp"
+        "pugixml"
+      ]
+    },
+    "yaml": {
+      "description": "Enable YAML support",
+      "dependencies": [
+        "yaml-cpp"
+      ]
+    },
+    "zmq": {
+      "description": "Enable ZeroMQ support",
+      "dependencies": [
+        "zeromq"
       ]
     }
   }
