@@ -1,0 +1,36 @@
+diff --git a/cmake/library_setup.cmake b/cmake/library_setup.cmake
+index 5fda73e..99bd288 100644
+--- a/cmake/library_setup.cmake
++++ b/cmake/library_setup.cmake
+@@ -3,6 +3,7 @@
+ # (license text unchanged)
+ # cmake/library_setup.cmake
+ 
++if(0)
+ option(VN_ASAN  "Enable AddressSanitizer"            OFF)
+ option(VN_UBSAN "Enable UndefinedBehaviorSanitizer"  OFF)
+ 
+@@ -64,6 +65,7 @@ if(APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+             "VN_HOMEBREW_GCC_LIBDIR manually if needed.")
+     endif()
+ endif()
++endif()
+ 
+ add_library(${PROJECT_NAME} INTERFACE)
+ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+@@ -74,6 +76,7 @@ target_include_directories(${PROJECT_NAME}
+         $<INSTALL_INTERFACE:include>
+ )
+ 
++if(0)
+ set(VN_CLANG_COMPILE_OPTIONS
+     $<$<AND:$<CONFIG:Release>,$<NOT:$<BOOL:${VN_ASAN_EFFECTIVE}>>>:
+         -O3
+@@ -192,4 +195,5 @@ target_compile_definitions(${PROJECT_NAME}
+         VN_ARCH_ARM64=$<IF:$<OR:$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},aarch64>,$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},ARM64>,$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},arm64>>,1,0>
+         VN_ARCH_X64=$<IF:$<OR:$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},x86_64>,$<STREQUAL:${CMAKE_SYSTEM_PROCESSOR},AMD64>>,1,0>
+         VN_EXTENSION=$<IF:$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:AppleClang>>,__extension__,>
+-)
+\ No newline at end of file
++)
++endif()

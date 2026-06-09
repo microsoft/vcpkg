@@ -1,0 +1,35 @@
+diff --git a/cmake/installation_setup.cmake b/cmake/installation_setup.cmake
+index 6a1d5cd..f2bc089 100644
+--- a/cmake/installation_setup.cmake
++++ b/cmake/installation_setup.cmake
+@@ -6,15 +6,12 @@
+ set(CONFIG_FILE_NAME ${PROJECT_NAME}Config.cmake)
+ set(EXPORTED_TARGETS_NAME ${PROJECT_NAME}Targets)
+ set(EXPORTED_TARGETS_FILE_NAME ${EXPORTED_TARGETS_NAME}.cmake)
+-set(EXPORTED_TARGETS_FILE_PATH share/nihilus/${EXPORTED_TARGETS_FILE_NAME})
+ 
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+ 	${CMAKE_CURRENT_SOURCE_DIR}/cmake/${CONFIG_FILE_NAME}.in
+ 	${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_NAME}
+ 	INSTALL_DESTINATION share/nihilus
+-	PATH_VARS
+-	EXPORTED_TARGETS_FILE_PATH
+ )
+ 
+ set(VERSION_FILE_NAME ${PROJECT_NAME}ConfigVersion.cmake)
+diff --git a/cmake/void-numericsConfig.cmake.in b/cmake/void-numericsConfig.cmake.in
+index c4d8888..20982f6 100644
+--- a/cmake/void-numericsConfig.cmake.in
++++ b/cmake/void-numericsConfig.cmake.in
+@@ -5,8 +5,4 @@
+ 
+ @PACKAGE_INIT@
+ 
+-set_and_check(EXPORT_TARGETS_FILE_NEW "@PACKAGE_EXPORTED_TARGETS_FILE_PATH@")	
+-
+-include("${EXPORT_TARGETS_FILE_NEW}")
+-
+-check_required_components("@PROJECT_NAME@")
+\ No newline at end of file
++include("${CMAKE_CURRENT_LIST_DIR}/void-numericsTargets.cmake")
