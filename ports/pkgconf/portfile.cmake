@@ -1,16 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pkgconf/pkgconf
-    REF bb65885f63723a2c97d976529f5e0081d80ce7ce
-    SHA512 bb8d371dd7035829436851c270f637c1e9b030e4a9e300b24d451981e2c6bdead06f5ba8da882a329be1b4c551591389d9147950ae6ee9c13e651f45080606a2
+    REF 6819cb831445f022704323e727430aafc527acde
+    SHA512 7dfa729699cb9ff7c88ddb829750670cfed14dbc50f946e1c99c6985269fac5e4e3af6b00b4c7472072e4a343e44bc851ad4105a0509228fd48956dfb9d43c36
     HEAD_REF master
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_PKG_CONFIG
-    OPTIONS
-        -Dtests=disabled
 )
 
 set(systemsuffix "")
