@@ -3,12 +3,6 @@
 ```markdown
 # Port Audit Report — `{port-name}`
 
-## Port Summary
-
-- **Port:** `{port-name}`
-- **Triplet:** `{target-triplet}` / `Unsupported on current platform`
-- **Result:** `Installed` / `Unsupported` / `Install failed`
-
 ## Declared Metadata
 
 - **License:** `{license-from-vcpkg-json}`

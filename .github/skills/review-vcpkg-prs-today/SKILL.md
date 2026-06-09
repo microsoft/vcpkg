@@ -84,15 +84,16 @@ Write each per-PR report as you complete it. Write `index.md` last, after aggreg
 Apply the shared review guide to each PR, then adjust depth according to `review depth`:
 
 1. Always produce `report.md` and `results.json` for each PR using the shared formats.
-2. If `review depth` is `no-examples`, do **not** build example applications and do **not** generate focused patches.
-3. If `review depth` is `examples` or `examples-and-patches`, create an example application per PR that demonstrates:
+2. If a PR adds one or more new ports, run the `evaluate-new-port` skill for each new port and include those audit results in that PR's `report.md` and `results.json`.
+3. If `review depth` is `no-examples`, do **not** build example applications and do **not** generate focused patches.
+4. If `review depth` is `examples` or `examples-and-patches`, create an example application per PR that demonstrates:
    - `find_package`
    - `pkg-config`
    - "MSBuild Style": include only `<triplet>\include` and link all `*.lib` files, with no extra macro defines. Any needed configuration should already be baked into the installed headers.
-4. If `review depth` is `examples-and-patches`, you may generate focused patches when warranted. Otherwise leave patches out of scope and set issue `patch` fields to `null`.
-5. If `review depth` includes examples and `investigation root` is provided, keep example apps and other heavy temporary artifacts under `investigation root`.
-6. If `review depth` includes examples and `investigation root` is omitted, keep those artifacts under the inferred same-drive investigation workspace rather than the Copilot session directory.
-7. If Azure CI is relevant, use the shared helper script:
+5. If `review depth` is `examples-and-patches`, you may generate focused patches when warranted. Otherwise leave patches out of scope and set issue `patch` fields to `null`.
+6. If `review depth` includes examples and `investigation root` is provided, keep example apps and other heavy temporary artifacts under `investigation root`.
+7. If `review depth` includes examples and `investigation root` is omitted, keep those artifacts under the inferred same-drive investigation workspace rather than the Copilot session directory.
+8. If Azure CI is relevant, use the shared helper script:
 
 ```powershell
 & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -PrNumber <pr>

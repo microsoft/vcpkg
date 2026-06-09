@@ -21,6 +21,7 @@ For each PR under review:
    - whether the repository or project is the primary association for the name
    - whether the package name could confuse users in a package manager
 4. Highlight unusual aspects of the portfile and find similar prior art in other vcpkg ports.
+5. If the PR adds one or more new ports, run the `evaluate-new-port` skill for each newly added port from the PR checkout and incorporate those audit results into the PR review instead of treating them as a separate standalone deliverable.
 
 Work autonomously. Use web and repository tooling as needed. Prefer concrete evidence and cite relevant files, checklist items, commands, and build or integration results in the report.
 
@@ -64,6 +65,14 @@ Use this schema for `results.json`:
       "validation": "commands or checks run"
     }
   ],
+  "newPortEvaluations": [
+    {
+      "port": "port-name",
+      "status": "completed | unsupported | failed",
+      "summary": "one or two sentence audit summary",
+      "report": "path to any saved supporting audit notes or null"
+    }
+  ],
   "patches": [
     {
       "path": "patches/0001-focused-fix.patch",
@@ -80,6 +89,8 @@ Use exactly one of these verdict values: `approve`, `approve-with-notes`, `reque
 Use `approve-with-notes` when the PR is acceptable to merge but you still want to call out non-blocking concerns, caveats, or pre-existing package problems. Keep those notes in the report text and model them in `issues` using `non-blocking` or `informational` severities as appropriate.
 
 If patches are out of scope for the wrapper skill, leave `patches` empty and set each issue's `patch` field to `null`.
+
+If the PR does not add a new port, set `newPortEvaluations` to an empty array. If it does add a new port, include one entry per evaluated new port and also flow any material findings into `summary`, `issues`, and the final verdict rather than isolating them in that array.
 
 ## Azure CI failure handling
 
@@ -112,11 +123,14 @@ If a matrix check's `details_url` contains a job id and you need to narrow the s
   - Naming
   - Maturity
   - Optional Dependencies
+  - `evaluate-new-port` Audit Summary
 - Unusual Aspects and Prior Art
 
 Add any other sections needed to make the review clear and evidence-based.
 
 The "Paste-ready review comment" section should be short enough to paste into a PR review comment with little or no editing. Attribute the note to the language model used for the review in the third person, for example `GPT-5.4 observes that ...`, and focus on the substantive findings rather than repeating the overall review status.
+
+When a PR adds multiple new ports, give each port its own subsection under "New Port" and summarize the corresponding `evaluate-new-port` findings there.
 
 ## Pre-existing issues vs. regressions
 
