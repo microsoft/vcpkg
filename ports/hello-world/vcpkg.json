@@ -1,0 +1,6 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "A do-nothing demonstration port used to exercise the check-for-common-mistakes workflow.",
+  "license": "MIT"
+}

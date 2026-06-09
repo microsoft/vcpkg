@@ -3792,6 +3792,10 @@
       "baseline": "1.92.5",
       "port-version": 0
     },
+    "hello-world": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "hesphoros-uniconv": {
       "baseline": "3.3.2",
       "port-version": 0
