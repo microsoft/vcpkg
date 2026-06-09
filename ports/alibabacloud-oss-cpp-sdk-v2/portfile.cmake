@@ -33,4 +33,11 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME alibabacloud_oss_v2 CONFIG_PATH lib/cmake/
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
+    COMMENT [[Consult sdk/src/thirdparty/* in the original source tree for authoritative third-party notices.
+
+As of 2026-06-09, vendored code under sdk/src/thirdparty includes:
+- tinyxml2
+- base64]]
+)
