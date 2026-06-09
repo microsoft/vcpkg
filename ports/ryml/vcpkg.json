@@ -1,6 +1,6 @@
 {
   "name": "ryml",
-  "version": "0.13.0",
+  "version": "0.15.1",
   "description": "Rapid YAML library",
   "homepage": "https://github.com/biojppm/rapidyaml",
   "license": "MIT",
