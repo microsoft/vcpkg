@@ -1,8 +1,7 @@
 diff --git a/cmake/headers.cmake b/cmake/headers.cmake
-index 734e7d0..5d0f646 100644
 --- a/cmake/headers.cmake
 +++ b/cmake/headers.cmake
-@@ -25,32 +25,6 @@ set(outcome_HEADERS
+@@ -25,47 +25,10 @@ set(outcome_HEADERS
    "include/outcome/detail/version.hpp"
    "include/outcome/experimental/coroutine_support.hpp"
    "include/outcome/experimental/result.h"
@@ -31,7 +30,22 @@ index 734e7d0..5d0f646 100644
 -  "include/outcome/experimental/status-code/include/status-code/system_code_from_exception.hpp"
 -  "include/outcome/experimental/status-code/include/status-code/system_error2.hpp"
 -  "include/outcome/experimental/status-code/include/status-code/win32_code.hpp"
--  "include/outcome/experimental/status-code/single-header/system_error2.hpp"
+   "include/outcome/experimental/status-code/single-header/system_error2-nowindows.hpp"
+   "include/outcome/experimental/status-code/single-header/system_error2.hpp"
    "include/outcome/experimental/status_outcome.hpp"
    "include/outcome/experimental/status_result.hpp"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/all.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/all.hpp"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/config.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/result.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/status_code.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/status_code_domain.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/status_code_generic.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/status_code_posix.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/status_code_system.h"
+-  "include/outcome/experimental/wg14_result/include/wg14_result/try.h"
+-  "include/outcome/experimental/wg14_result/test/test_common.h"
+-  "include/outcome/experimental/wg14_result/test/ticks_clock.h"
    "include/outcome/iostream_support.hpp"
+   "include/outcome/iostream_support_result.hpp"
+   "include/outcome/outcome.hpp"

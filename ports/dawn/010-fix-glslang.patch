@@ -1,5 +1,5 @@
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index 68644c04f6..c1ca58b3e2 100644
+index 0799d87a5e..78cc35d582 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
 @@ -122,6 +122,12 @@ if (EMSCRIPTEN)
