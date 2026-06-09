@@ -179,7 +179,7 @@
           "features": [
             "qsv"
           ],
-          "platform": "!arm & (android | linux | windows) & !uwp"
+          "platform": "(x64 | x86) & (windows | linux) & !uwp"
         },
         {
           "name": "ffmpeg",

@@ -1,0 +1,22 @@
+--- a/CMakeLists.txt	2025-06-03 13:56:49.000000000 +0200
++++ b/CMakeLists.txt	2026-04-29 09:30:06.043411072 +0200
+@@ -232,15 +232,10 @@
+ #  detect the libraries
+ #####################################################################
+ # the math library is not required with microsoft compilers or MinGW
+-if (WIN32)
+- set(LIBM_LIBRARIES "")
+-else(WIN32)
+-    if (MINGW)
+-     set(LIBM_LIBRARIES "")
+-    else(MINGW)
+-     find_library(LIBM_LIBRARIES m)
+-    endif(MINGW)
+-endif(WIN32)
++check_library_exists(m exp "" HAS_MATHLIB)
++if(HAS_MATHLIB)
++    set(LIBM_LIBRARIES m)
++endif()
+ 
+ #####################################################################
+ #  detect the functions

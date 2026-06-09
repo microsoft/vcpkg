@@ -5,7 +5,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 68f9e5bec3aa6686fd3319cc9c88a5cc44e2a75144049fc9de5fb55fef2241b4e16996af4be5dd48308abbee8cfaed6c862903f6bb89aff5dfa5410075bd7386
+    SHA512 332a8e5200461517c7f08515e3aaab0bec6222747422e33e9e7d25d35613e3d0695a803fce226bd6a83f723054f551328bd99dcf0573e142be777dcf358e1a3b
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"

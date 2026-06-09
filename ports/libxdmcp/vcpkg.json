@@ -1,11 +1,16 @@
 {
   "name": "libxdmcp",
   "version": "1.1.5",
+  "port-version": 1,
   "description": "X Display Manager Control Protocol library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxdmcp",
   "license": "MIT-open-group",
   "dependencies": [
     "liblzma",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xorg-macros",
     "xproto"
   ]

@@ -3,9 +3,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.dkrz.de
     REPO k202009/libaec
     REF "v${VERSION}"
-    SHA512 09f6fde3e767fe67865a86d8802eaf63b313ef6f2aaf6bf5e7edef5f405e58d40f2a01132bb290ee176741f3924a6ee2e9a2641cf5e80c3d036d4f5c69142c4f
-    PATCHES
-        fix_export_target.patch
+    SHA512 c1023328895b5dfdd1831d9edeeaaafe2b3083cdf42a1b76358319b7afd552e1eeb389e8d2668eb2d5f43a07542ade1914a4db1b9095b3d901559826a9c91eba
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

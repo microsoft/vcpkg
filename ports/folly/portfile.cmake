@@ -6,13 +6,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 6d377c48cf1c0796da6fad34b930e9608f3cd765a675414eaad45ff46e9d0b9bb5f027b187ec135e88bb60a83cb91c07d266a6673621caf3f9961942b55276e2
+    SHA512 8ee08591724fb1f6183cc0456c13cd00474e425d41824add2751fd3823e23b95ea69ec1b246bc85c95d30add854ee53dafd2bc1b824d0b555917dcbaf6943a6f
     HEAD_REF main
     PATCHES
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
-        fix-absolute-dir.patch
+        fix-perf_scoped-target.patch
 )
 file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
@@ -41,6 +41,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "zstd"       VCPKG_LOCK_FIND_PACKAGE_ZSTD
 )
 
+set(CROSSCOMP_OPTIONS "")
+if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_LINUX)
+    # Seed try_run results for cross-compiling; binaries cannot execute on the build host.
+    set(CROSSCOMP_OPTIONS
+        -DFOLLY_HAVE_UNALIGNED_ACCESS_EXITCODE=0
+        -DFOLLY_HAVE_WEAK_SYMBOLS_EXITCODE=0
+        -DFOLLY_HAVE_LINUX_VDSO_EXITCODE=0
+        -DFOLLY_HAVE_WCHAR_SUPPORT_EXITCODE=0
+        -DHAVE_VSNPRINTF_ERRORS_EXITCODE=0
+    )
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -53,6 +64,7 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_LibUnwind=${VCPKG_TARGET_IS_LINUX}
         -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
+        ${CROSSCOMP_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_RUNTIME
 )

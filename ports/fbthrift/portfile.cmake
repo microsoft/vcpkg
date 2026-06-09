@@ -2,12 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 957b58b32b7cd7cbf58ebe1e65f8c9befbe5d48d8fa33ea36ff40a04f6c34f362d88c03d0060fa6681cd7fc8b5aa7063fbd9c16ded23df0fb091031bcb0668c1
+    SHA512 32f2a648496a321b6aaf55197c2dc1412d030ca82f8d8a5ca0516379379a0f71dc17e2edcb2be3972f76603935c7dcae29769c067caa1ec8a33e7f4efb251581
     HEAD_REF main
     PATCHES
         fix-deps.patch
-        fix-test.patch
         folly-has-liburing.diff
+        fix-fmt-include.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-Dthriftpy=OFF"
+        "-Denable_tests=OFF"
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fbthrift)
@@ -32,6 +33,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # There should be no empty directories in vcpkg/packages/fbthrift_x64-linux
 file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/include/thrift/common/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/transport/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp/util/test"
@@ -60,6 +62,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/inmemory/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/client/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/compression/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/core/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/framing/parser/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/payload/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/transport/rocket/server/test"
@@ -73,12 +76,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/capi/benchmark"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/conformance"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/conformance/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/server/interceptor/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/server/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/adapters"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/cpp_conversion"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/python/test/request_context_extractor"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/thrift/annotation"
 )
-
 vcpkg_copy_tools(TOOL_NAMES thrift1 AUTO_CLEAN)
 vcpkg_copy_pdbs()
 

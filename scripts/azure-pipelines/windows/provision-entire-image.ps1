@@ -5,7 +5,11 @@
 # and assumes it is being run as an admin user.
 
 . "$PSScriptRoot\deploy-tlssettings.ps1" -RebootIfRequired 0
+. "$PSScriptRoot\deploy-sevenzip.ps1"
 . "$PSScriptRoot\deploy-visual-studio.ps1"
+. "$PSScriptRoot\deploy-git.ps1"
+. "$PSScriptRoot\deploy-cmake.ps1"
+. "$PSScriptRoot\deploy-ninja.ps1"
 . "$PSScriptRoot\deploy-mpi.ps1"
 . "$PSScriptRoot\deploy-cuda.ps1"
 . "$PSScriptRoot\deploy-cudnn.ps1"
@@ -14,8 +18,8 @@
 . "$PSScriptRoot\deploy-azure-cli.ps1"
 . "$PSScriptRoot\deploy-azcopy.ps1"
 try {
-    Copy-Item "$PSScriptRoot\deploy-settings.txt" "$PSScriptRoot\deploy-settings.ps1"
+    Copy-Item -LiteralPath "$PSScriptRoot\deploy-settings.txt" -Destination "$PSScriptRoot\deploy-settings.ps1"
     . "$PSScriptRoot\deploy-settings.ps1"
 } finally {
-    Remove-Item "$PSScriptRoot\deploy-settings.ps1"
+    Remove-Item -LiteralPath "$PSScriptRoot\deploy-settings.ps1"
 }
