@@ -1,6 +1,7 @@
 {
   "name": "hanjingo-high-jump",
   "version": "1.0.7",
+  "port-version": 1,
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
