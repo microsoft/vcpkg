@@ -1,0 +1,57 @@
+{
+  "name": "alibabacloud-oss-cpp-sdk-v2",
+  "version": "0.1.0",
+  "description": "Alibaba Cloud OSS SDK for C++ v2",
+  "homepage": "https://github.com/aliyun/alibabacloud-oss-cpp-sdk-v2",
+  "license": "Apache-2.0 AND Zlib AND BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "curl": {
+      "description": "Libcurl HTTP transport",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    },
+    "encryption": {
+      "description": "Enable client-side encryption",
+      "dependencies": [
+        {
+          "name": "alibabacloud-oss-cpp-sdk-v2",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
+    "openssl": {
+      "description": "Use OpenSSL for hash",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "rtti": {
+      "description": "Build with run-time type information"
+    },
+    "winhttp": {
+      "description": "WinHTTP transport (Windows only)",
+      "supports": "windows"
+    }
+  }
+}
