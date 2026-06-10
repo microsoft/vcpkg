@@ -26,7 +26,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO arvidn/libtorrent
         REF "v${VERSION}"
-        SHA512 5d737dbc25f335f5dc207647155289177ded51051f6338629680efc766825a52ec952092a1b0297121bfc201d4508be3cb427e24b18a18649435377dcfeb086b
+        SHA512 1cfb1c2066cbc1f6f95163269fcd9fdfe629b3a0be0eacce534d86a6a0aac9f797f950abb95956a643ae45f3abd93820ee28960d3fb5629c334222a882e1ed44
         HEAD_REF RC_2_0
         PATCHES
             fix-python-path.patch
