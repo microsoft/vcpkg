@@ -61,6 +61,11 @@
       "port-version": 0
     },
     {
+      "git-tree": "f56e1c6908998decbe94c47f6bfcc438e70ec35e",
+      "version": "2410.5.1966",
+      "port-version": 0
+    },
+    {
       "git-tree": "9ded534836ec266c7a5c301b2727a837a5cecc00",
       "version": "2410.4.1946",
       "port-version": 0
