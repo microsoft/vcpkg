@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-  "name": "hyperliquid-cpp",
+  "name": "slickquant-hyperliquid-cpp",
   "version": "0.1.1",
   "description": "SDK for Hyperliquid API trading with C++",
   "homepage": "https://github.com/SlickQuant/hyperliquid-cpp",
