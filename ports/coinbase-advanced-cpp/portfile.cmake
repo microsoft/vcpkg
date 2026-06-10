@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.3.0
     SHA512 984d96a9358839738bb7a1753ce7f1f748a0e6a0d0dbf0f6e6d8ae1c163012de84571f3ecf65ec8e49b120103baca0d7a2091761c84ff3aa7f95837da9cbca10
     HEAD_REF main
+    PATCHES
+        disable-config-fetchcontent-fallback.patch # also https://github.com/SlickQuant/coinbase-advanced-cpp/pull/1
 )
 
 vcpkg_cmake_configure(
