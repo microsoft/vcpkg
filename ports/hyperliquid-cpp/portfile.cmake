@@ -1,4 +1,4 @@
-set(VCPKG_LIBRARY_LINKAGE static)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,5 +23,4 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME hyperliquid-cpp CONFIG_PATH share/hyperliq
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
