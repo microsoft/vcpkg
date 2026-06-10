@@ -1912,6 +1912,10 @@
       "baseline": "2024-04-16",
       "port-version": 1
     },
+    "coinbase-advanced-cpp": {
+      "baseline": "0.3.0",
+      "port-version": 0
+    },
     "coinutils": {
       "baseline": "2024-04-08",
       "port-version": 1
