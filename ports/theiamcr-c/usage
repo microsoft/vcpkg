@@ -1,0 +1,4 @@
+theiamcr-c provides CMake targets:
+
+    find_package(TheiaMCR_C CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE TheiaMCR_C::TheiaMCR_C)
