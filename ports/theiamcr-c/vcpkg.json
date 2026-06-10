@@ -21,7 +21,8 @@
       "description": "Build pybind11 Python module",
       "supports": "!static",
       "dependencies": [
-        "pybind11"
+        "pybind11",
+        "python3"
       ]
     }
   }
