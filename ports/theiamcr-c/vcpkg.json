@@ -19,7 +19,7 @@
   "features": {
     "python": {
       "description": "Build pybind11 Python module",
-      "supports": "!static",
+      "supports": "!static & !(windows & arm64)",
       "dependencies": [
         "pybind11",
         "python3"
