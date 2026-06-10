@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cliquot22/TheiaMCR_C
     REF "v${VERSION}"
-    SHA512 <your-current-hash>
+    SHA512 97d8730d51a09ba9a22ab86f5e541624e022b319e2731c23c9370994ac95dd69901bbfd69a987b1c20d0a2d634536b61fb4eda047bb19384f5773f87baa280ae
     HEAD_REF main
 )
 
