@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/plasma-wayland-protocols
     REF "v${VERSION}"
-    SHA512 3cb5ea1c5c69384181005520c9999b0f1548ec91f2894204ab9a103dd6d76621932f4d6c536664797ab2d24df4e1f182a353bd9be802565ec48dec657cc59276
+    SHA512 bd5c5de9980ce1af5e330adbb360a4389f1f40f85431407e2fa46eb113f527d48e1fe932f42c5a28b3e8e5e8b3499a6193d3b0e5711f9a95880e15d889c8cbfb
     HEAD_REF master
 )
 
@@ -11,6 +11,8 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

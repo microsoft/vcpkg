@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ClickHouse/clickhouse-cpp
     REF "v${VERSION}"
-    SHA512 4199ac2848b0544a2a9c4e03ca62f9a14e13652b09df62b2c95eda59c567cb8227099b9cb027f18d7bdb3a25ee41f01301a551f1bf98727bf89766f5e1cac3f5
+    SHA512 626cce4d6037cbeb86c5720ece7ac95c9ff0e561825e7907934669709091886d209f3128798db41a89ef3585d0639e40a5c4f96a0e724b6bee25291710ad391e
     HEAD_REF master
     PATCHES
         fix-deps-and-build-type.patch

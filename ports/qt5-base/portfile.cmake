@@ -14,11 +14,6 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-set(WITH_PGSQL_PLUGIN OFF)
-if("postgresqlplugin" IN_LIST FEATURES)
-    set(WITH_PGSQL_PLUGIN ON)
-endif()
-
 set(WITH_MYSQL_PLUGIN OFF)
 if ("mysqlplugin" IN_LIST FEATURES)
     set(WITH_MYSQL_PLUGIN  ON)
@@ -134,11 +129,6 @@ else()
     list(APPEND CORE_OPTIONS -dbus-runtime)
 endif()
 
-if(WITH_PGSQL_PLUGIN)
-    list(APPEND CORE_OPTIONS -sql-psql)
-else()
-    list(APPEND CORE_OPTIONS -no-sql-psql)
-endif()
 if(WITH_MYSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-mysql)
 else()
@@ -164,8 +154,7 @@ else()
     list(APPEND CORE_OPTIONS --vulkan=no)
 endif()
 
-find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+x_vcpkg_pkgconfig_get_modules(PREFIX zlib MODULES zlib LIBS)
 find_library(JPEG_RELEASE NAMES jpeg jpeg-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(JPEG_DEBUG NAMES jpeg jpeg-static jpegd jpeg-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(LIBPNG_RELEASE NAMES png16 libpng16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #Depends on zlib
@@ -208,17 +197,17 @@ find_library(EAY_DEBUG libeay32 crypto libcrypto libeay32d cryptod libcryptod PA
 
 set(RELEASE_OPTIONS
             "LIBJPEG_LIBS=${JPEG_RELEASE}"
-            "ZLIB_LIBS=${ZLIB_RELEASE}"
-            "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "ZLIB_LIBS=${zlib_LIBS_RELEASE}"
+            "LIBPNG_LIBS=${LIBPNG_RELEASE} ${zlib_LIBS_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${zlib_LIBS_RELEASE}"
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
-            "ZLIB_LIBS=${ZLIB_DEBUG}"
-            "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "ZLIB_LIBS=${zlib_LIBS_DEBUG}"
+            "LIBPNG_LIBS=${LIBPNG_DEBUG} ${zlib_LIBS_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${zlib_LIBS_DEBUG}"
             )
 
 x_vcpkg_pkgconfig_get_modules(PREFIX freetype MODULES freetype2 LIBS)
@@ -240,6 +229,15 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     x_vcpkg_pkgconfig_get_modules(PREFIX fontconfig MODULES fontconfig LIBS)
     list(APPEND RELEASE_OPTIONS "FONTCONFIG_LIBS=${fontconfig_LIBS_RELEASE}")
     list(APPEND DEBUG_OPTIONS "FONTCONFIG_LIBS=${fontconfig_LIBS_DEBUG}")
+endif()
+
+if("postgresqlplugin" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -sql-psql)
+    x_vcpkg_pkgconfig_get_modules(PREFIX libpq MODULES libpq LIBS)
+    list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${libpq_LIBS_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${libpq_LIBS_DEBUG}")
+else()
+    list(APPEND CORE_OPTIONS -no-sql-psql)
 endif()
 
 if("sqlite3plugin" IN_LIST FEATURES)
@@ -297,22 +295,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         list(APPEND CORE_OPTIONS -schannel)
     endif()
-
-    if(WITH_PGSQL_PLUGIN)
-        list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ADDITIONAL_WINDOWS_LIBS} -lwldap32")
-        list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ADDITIONAL_WINDOWS_LIBS} -lwldap32")
-    endif()
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -xcb-xlib -xcb -linuxfb)
 
     if(WITH_OPENSSL)
         list(APPEND RELEASE_OPTIONS "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")
         list(APPEND DEBUG_OPTIONS "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
-    endif()
-
-    if(WITH_PGSQL_PLUGIN)
-        list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_TYPES_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")
-        list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -378,16 +366,11 @@ elseif(VCPKG_TARGET_IS_OSX)
         list(APPEND RELEASE_OPTIONS "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")
         list(APPEND DEBUG_OPTIONS "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
-
-    if(WITH_PGSQL_PLUGIN)
-        list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_TYPES_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")
-        list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
-    endif()
 endif()
 
 if (WITH_MYSQL_PLUGIN)
-    list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${ZLIB_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}")
-    list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ZLIB_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}")
+    list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ${zlib_LIBS_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}")
+    list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${zlib_LIBS_DEBUG} ${ADDITIONAL_WINDOWS_LIBS}")
 endif(WITH_MYSQL_PLUGIN)
 
 ## Do not build tests or examples

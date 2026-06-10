@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 533860ed6..fa1a57b4f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -777,8 +777,6 @@ endif()
+ if (NOT NL_KIND EQUAL 0)
+   add_subdirectory(iwpmd)
+ endif()
+-add_subdirectory(libibverbs/examples)
+-add_subdirectory(librdmacm/examples)
+ if (UDEV_FOUND)
+   add_subdirectory(rdma-ndd)
+ endif()

@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 d39565e6f42c601d8d84b14f678b44b52cd8712d2ee23f02aca56c345ae5407dcebbdbcd484ef54ed0e85faec9bfd3c3f0f80ac490af9d9a54ebaf503534add7
+    SHA512 218233098965ba78a93f33dd3fa357e4821b7dee6e137df19e3757dd3745ccbfc05b2c31d071f5dda23d120269642c2721d45e3ef1124ef514335a5a0c318cd4
     HEAD_REF main
     PATCHES
         fix-target_link.patch

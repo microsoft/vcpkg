@@ -41,6 +41,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "zstd"       VCPKG_LOCK_FIND_PACKAGE_ZSTD
 )
 
+set(CROSSCOMP_OPTIONS "")
+if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_LINUX)
+    # Seed try_run results for cross-compiling; binaries cannot execute on the build host.
+    set(CROSSCOMP_OPTIONS
+        -DFOLLY_HAVE_UNALIGNED_ACCESS_EXITCODE=0
+        -DFOLLY_HAVE_WEAK_SYMBOLS_EXITCODE=0
+        -DFOLLY_HAVE_LINUX_VDSO_EXITCODE=0
+        -DFOLLY_HAVE_WCHAR_SUPPORT_EXITCODE=0
+        -DHAVE_VSNPRINTF_ERRORS_EXITCODE=0
+    )
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -53,6 +64,7 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_LibUnwind=${VCPKG_TARGET_IS_LINUX}
         -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
+        ${CROSSCOMP_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_RUNTIME
 )

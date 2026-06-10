@@ -1,6 +1,6 @@
 {
   "name": "microlog",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "description": "Extensible and configurable logging library for embedded and desktop applications with multi-output and logging topics",
   "homepage": "https://github.com/an-dr/microlog",
   "license": "MIT",

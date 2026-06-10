@@ -1,7 +1,16 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL "${CURRENT_INSTALLED_DIR}/share/msmpi/mpi-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME vcpkg-cmake-wrapper.cmake)
 else()
     file(INSTALL "${CURRENT_INSTALLED_DIR}/share/openmpi/mpi-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME vcpkg-cmake-wrapper.cmake)
+    # FindMPI.cmake wants mpi pc modules without the 'o' prefix.
+    foreach(module IN ITEMS mpi-c.pc mpi-cxx.pc mpi-fort.pc)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        file(COPY_FILE "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/o${module}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${module}")
+        if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/o${module}")
+            file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+            file(COPY_FILE "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/o${module}" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${module}")
+        endif()
+    endforeach()
 endif()

@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ofiwg/libfabric
     REF v${VERSION}
-    SHA512 8242d1eec22a066b65cb99f5b96da44ce19c1dcb3db15238495b28147e8bcee70f6c0eaf5f72e1dc9e004809114a5f96ee696b9e5fc8bd9c07177b9916e35d05
+    SHA512 a59e149e567bb34715145d9974fd4d3da49e3ba25cbf5a568388b9724ad942bf3dcbbdde530522ef1dc5094987b6e3a350a5debec34bb5880f6a096c504f4770
     HEAD_REF master
 )
 
@@ -22,13 +22,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/libfabric")
 
 else()
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             --with-uring=no
     )
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()

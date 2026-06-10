@@ -1,3 +1,3 @@
-set(qtsensors_HASH "3092de25b664203fd223be13e1e93abd0897e76ab456e167549f3716979540fca8192daeedbf98d1ea598cc7741988f707a3467cf9b4a4cd3c244a32b4f8a587")
-set(qtsensors_URL "https://download.qt.io/archive/qt/6.10/6.10.1/submodules/qtsensors-everywhere-src-6.10.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.1/submodules/qtsensors-everywhere-src-6.10.1.tar.xz")
-set(qtsensors_FILENAME "qtsensors-everywhere-src-6.10.1.tar.xz")
+set(qtsensors_HASH "f6d9157cc807e0007a5f174cd9082f0f4759a7a34684d768fed74bbdc14ae5773bef359c03536427d4e16dfce9289bca9aec3e936b229ae8e680f41e815990ed")
+set(qtsensors_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtsensors-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtsensors-everywhere-src-6.11.1.tar.xz")
+set(qtsensors_FILENAME "qtsensors-everywhere-src-6.11.1.tar.xz")
