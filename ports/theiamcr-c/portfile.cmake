@@ -28,7 +28,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                         "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/license"
+file(INSTALL "${SOURCE_PATH}/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
