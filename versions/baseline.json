@@ -9509,7 +9509,7 @@
       "port-version": 0
     },
     "sparrow-ipc": {
-      "baseline": "1.0.2",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "sparsehash": {
