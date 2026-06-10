@@ -3,12 +3,16 @@
   "version": "3.5.0",
   "description": "C++ Motor Control Board Interface - C-linkage shared library and native C++ library for Theia MCR IQ 400 motor control board",
   "homepage": "https://github.com/cliquot22/TheiaMCR_C",
-  "documentation": "https://github.com/cliquot22/TheiaMCR_C/wiki",
   "license": "MIT",
   "dependencies": [
+    "spdlog",
     {
-      "name": "spdlog",
-      "version>=": "1.11.0"
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "features": {
