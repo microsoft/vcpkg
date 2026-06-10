@@ -6640,6 +6640,10 @@
       "baseline": "4.1.0",
       "port-version": 0
     },
+    "minmea": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "mio": {
       "baseline": "2023-03-03",
       "port-version": 0
