@@ -6097,7 +6097,7 @@
       "port-version": 0
     },
     "lilv": {
-      "baseline": "0.26.4",
+      "baseline": "0.28.0",
       "port-version": 0
     },
     "linalg": {
