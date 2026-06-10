@@ -16,7 +16,7 @@ file(REMOVE_RECURSE
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fontconfig  VCPKG_LOCK_FIND_PACKAGE_Fontconfig
+        fontconfig  PODOFO_WITH_FONTMANAGER
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PODOFO_BUILD_STATIC)
