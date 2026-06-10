@@ -1,0 +1,4 @@
+cpp-client-telemetry provides CMake targets:
+
+    find_package(MSTelemetry CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE MSTelemetry::mat)
