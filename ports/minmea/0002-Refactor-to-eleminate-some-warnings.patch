@@ -1,0 +1,47 @@
+From 3ec43b407c9fd03b58995a5b54a222891fc32062 Mon Sep 17 00:00:00 2001
+From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+Date: Mon, 8 Jun 2026 23:23:19 +0800
+Subject: [PATCH 2/2] Refactor to eleminate some warnings
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This will fix the following warnings:
+
+- minmea.h:65:10: error: ISO C++ prohibits anonymous structs [-Werror=pedantic]
+- minmea.h:303:52: error: conversion from ‘int’ to ‘float’ may change value [-Werror=conversion]
+---
+ minmea.h | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/minmea.h b/minmea.h
+index da2ab4f..c39695a 100644
+--- a/minmea.h
++++ b/minmea.h
+@@ -62,11 +62,9 @@ struct minmea_time {
+ // instead of a struct
+ union minmea_type {
+   char buf[6];
+-  struct {
+-    char talker_id[2];
+-    char sentence_id[3];
+-    char null_terminator;
+-  };
++  char talker_id[2];
++  char sentence_id[3];
++  char null_terminator;
+ };
+ 
+ struct minmea_sentence_gbs {
+@@ -300,7 +298,7 @@ static inline float minmea_tocoord(const struct minmea_float *f)
+         return NAN;
+     int_least32_t degrees = f->value / (f->scale * 100);
+     int_least32_t minutes = f->value % (f->scale * 100);
+-    return (float) degrees + (float) minutes / (60 * f->scale);
++    return (float) degrees + (float) minutes / (60 * (float) f->scale);
+ }
+ 
+ /**
+-- 
+2.47.3
+
