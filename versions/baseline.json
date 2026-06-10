@@ -2029,7 +2029,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.46.1",
+      "baseline": "0.47.0",
       "port-version": 0
     },
     "cpp-ipc": {
