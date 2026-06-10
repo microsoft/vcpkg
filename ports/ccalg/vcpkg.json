@@ -1,0 +1,15 @@
+{
+  "name": "ccalg",
+  "version": "0.1.0",
+  "description": "Header-only high-performance data-structure library for C/C++ (intrusive RB-tree, hashmap, treap, heap, vector, flatmap, lists)",
+  "homepage": "https://ccalg.dev",
+  "documentation": "https://ccalg.dev",
+  "license": "BSD-3-Clause",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
