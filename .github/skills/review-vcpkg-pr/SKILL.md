@@ -54,6 +54,7 @@ In addition to the shared guide:
 4. When you find an issue that a vcpkg maintainer could reasonably apply directly, prepare a focused validated patch for it. Create patches as real files under `report root\patches` using `git format-patch` from commits based on the PR head. Each patch must address one issue, avoid scope creep, avoid unrelated formatting churn, and be validated against the PR head with at least `git apply --check` plus targeted build and test commands when practical. Record that validation in `results.json`.
 5. It is acceptable to leave the patch directory empty when no safe focused patch is warranted. Do not fabricate patches.
 6. If the PR is a simple version bump and the only material problems you find were already present in the previous packaged version, do not block solely on that basis. Report those items as notes, use the separate `approve-with-notes` outcome when appropriate, and rely on the shared guide for the exact report, results, and paste-ready comment requirements.
+7. When reviewing portfiles, flag direct `set(VCPKG_LIBRARY_LINKAGE ...)` mutations and prefer `vcpkg_check_linkage(...)` instead.
 
 ## Shared helper
 
