@@ -2069,8 +2069,8 @@
       "port-version": 0
     },
     "cppad": {
-      "baseline": "20250000.3",
-      "port-version": 2
+      "baseline": "20260000.0",
+      "port-version": 0
     },
     "cppadcodegen": {
       "baseline": "2.5.0",
