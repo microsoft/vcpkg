@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index abc1234..def5678 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,8 @@
+ cmake_minimum_required(VERSION 3.10)
+ project(ccalg LANGUAGES C CXX)
+
++# Allow vcpkg (and others) to skip test/bench targets
++option(BUILD_TESTING "Build tests and benchmarks" ON)
++
+ # ── include directory ────────────────────────────────────────────────────
+ set(CCALG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
+
+@@ -14,6 +17,7 @@ else()
+   add_compile_options(-Wall -Wextra -Wno-missing-field-initializers)
+ endif()
+
++if(BUILD_TESTING)
+ # ── ctest integration ────────────────────────────────────────────────────
+ enable_testing()
+
+@@ -97,6 +101,7 @@ add_custom_target(bench
+   USES_TERMINAL
+   COMMENT "Running all benchmarks"
+ )
++endif()
+
+ # ── docs → HTML ──────────────────────────────────────────────────────────
+ find_program(PYTHON3 python3)

@@ -14,25 +14,33 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CandyMi/ccalg
     REF "v${VERSION}"
-    SHA512 19e8815902f1aef659155fb71863c6f95cf6f408195aacf057398b63d157dcff62904f34c199c57b1f482478f7a6e80944311e01add19529ca02eeddcfe663a5
+    SHA512 78f7112a81099fcce8f8ac03a4947be1e378c0e744e257a0b310ee6ae4dc3178f047e9f945199aa11b44949f25de08dd228e706e3e3b32d5af8300a9e78ec8e6
     HEAD_REF master
     PATCHES
+        disable-testing.patch
 )
 
 # ccalg is header-only — CMake installs headers to include/ccalg/
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
 
-# Install usage file
+# Strip files installed by upstream CMakeLists.txt that vcpkg doesn't expect:
+# - share/doc/ccalg/{LICENSE,README.md} (we handle license below)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/lib"
+)
+
+# License
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-# Remove debug (header-only, nothing to debug)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-
-# Usage header
+# Usage
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "\
 ccalg is header-only. Include the relevant header(s) in your source:\n\
   #include <ccalg/ccmap.h>\n\
@@ -44,5 +52,3 @@ ccalg is header-only. Include the relevant header(s) in your source:\n\
   #include <ccalg/ccflatmap.h>\n\
   #include <ccalg/cctreap.h>\n\
 ")
-
-vcpkg_copy_pdbs()
