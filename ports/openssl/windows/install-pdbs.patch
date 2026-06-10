@@ -12,14 +12,6 @@ index 5946c89..f71f3bf 100644
  	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(CMAKECONFIGDIR)"
  	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_EXPORTERS_CMAKE) "$(CMAKECONFIGDIR)"
  
-@@ -569,6 +570,7 @@ install_engines: _install_modules_deps
- 	@if not "$(INSTALL_ENGINES)"=="" \
- 	 "$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_ENGINES) "$(ENGINESDIR)"
- 	@if not "$(INSTALL_ENGINES)"=="" \
-+	 @if "$(INSTALL_PDBS)"=="ON" \
- 	 "$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_ENGINEPDBS) "$(ENGINESDIR)"
- 
- uninstall_engines:
 @@ -580,6 +582,7 @@ install_modules: _install_modules_deps
  	@if not "$(INSTALL_MODULES)"=="" \
  	 "$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_MODULES) "$(MODULESDIR)"
@@ -39,8 +31,8 @@ index 5946c89..f71f3bf 100644
 @@ -605,6 +609,7 @@ install_programs: install_runtime_libs build_programs
  	 "$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_PROGRAMS) \
                                          "$(INSTALLTOP)\bin"
- 	@if not "$(INSTALL_PROGRAMS)"=="" \
+ 	@if not "$(INSTALL_PROGRAMPDBS)"=="" \
 +	 @if "$(INSTALL_PDBS)"=="ON" \
  	 "$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_PROGRAMPDBS) \
                                          "$(INSTALLTOP)\bin"
- 	@if not "$(INSTALL_PROGRAMS)"=="" \
+ 	@if not "$(BIN_SCRIPTS)"=="" \
