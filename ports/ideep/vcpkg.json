@@ -1,0 +1,11 @@
+{
+  "name": "ideep",
+  "version-date": "2026-03-31",
+  "description": "Intel Extension for Deep Engine (ideep): header-only C++ wrapper for oneDNN.",
+  "homepage": "https://github.com/intel/ideep",
+  "license": "MIT",
+  "supports": "x64 & !uwp",
+  "dependencies": [
+    "onednn"
+  ]
+}

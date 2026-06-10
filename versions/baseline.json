@@ -3001,8 +3001,8 @@
       "port-version": 0
     },
     "fbgemm": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "1.5.0",
+      "port-version": 0
     },
     "fbthrift": {
       "baseline": "2026.02.23.00",
@@ -3481,8 +3481,8 @@
       "port-version": 2
     },
     "gloo": {
-      "baseline": "20240626",
-      "port-version": 1
+      "baseline": "20251202",
+      "port-version": 0
     },
     "glpk": {
       "baseline": "5.0",
@@ -3923,6 +3923,10 @@
     "icu": {
       "baseline": "78.3",
       "port-version": 1
+    },
+    "ideep": {
+      "baseline": "2026-03-31",
+      "port-version": 0
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
@@ -4527,6 +4531,10 @@
     "kinectsdk2": {
       "baseline": "2.0",
       "port-version": 7
+    },
+    "kineto": {
+      "baseline": "2026-04-10",
+      "port-version": 0
     },
     "kissfft": {
       "baseline": "131.2.0",
@@ -5753,7 +5761,7 @@
       "port-version": 3
     },
     "libtorch": {
-      "baseline": "2.7.1",
+      "baseline": "2.12.0",
       "port-version": 0
     },
     "libtorrent": {
@@ -7282,7 +7290,7 @@
     },
     "onednn": {
       "baseline": "3.12",
-      "port-version": 0
+      "port-version": 1
     },
     "oniguruma": {
       "baseline": "6.9.10",
@@ -9350,7 +9358,7 @@
     },
     "sleef": {
       "baseline": "3.9.0",
-      "port-version": 2
+      "port-version": 3
     },
     "sleepy-discord": {
       "baseline": "2025-12-18",
@@ -11090,7 +11098,7 @@
     },
     "xnnpack": {
       "baseline": "2024-08-20",
-      "port-version": 0
+      "port-version": 1
     },
     "xorg-macros": {
       "baseline": "1.20.2",
