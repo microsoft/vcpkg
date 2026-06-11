@@ -2,7 +2,7 @@ diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
 index 0419980..42a765a 100644
 --- a/libvpl/CMakeLists.txt
 +++ b/libvpl/CMakeLists.txt
-@@ -188,10 +188,25 @@ if(INSTALL_DEV)
+@@ -188,10 +188,24 @@ if(INSTALL_DEV)
    if(MINGW)
      # being conservative by restricting to MinGW, these are probably ok for
      # WIN32 in general
@@ -15,13 +15,12 @@ index 0419980..42a765a 100644
 +  foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
 +    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
 +        continue()
-+    elseif(EXISTS "${lib}")
-+        # vcpkg: emit -l<name>; a bare absolute archive path breaks consumers
-+        get_filename_component(_vpl_cxx_lib "${lib}" NAME_WE)
-+        string(REGEX REPLACE "^lib" "" _vpl_cxx_lib "${_vpl_cxx_lib}")
-+        string(APPEND CXX_LIB " -l${_vpl_cxx_lib}")
++    elseif(IS_ABSOLUTE "${lib}")
++        # An absolute archive path is already valid linker input; pass it
++        # through verbatim. Only bare library names get the "-l" prefix.
++        string(APPEND CXX_LIB " ${lib}")
 +    else()
-+        string(APPEND CXX_LIB " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++        string(APPEND CXX_LIB " -l${lib}")
 +    endif()
 +  endforeach()
    set(VPL_PKGCONFIG_DEPENDENT_LIBS
