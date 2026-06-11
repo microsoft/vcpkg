@@ -101,7 +101,7 @@ Apply the shared review guide to each PR, then adjust depth according to `review
 
 When reviewing portfiles, flag direct `set(VCPKG_LIBRARY_LINKAGE ...)` mutations and prefer `vcpkg_check_linkage(...)` instead.
 
-For simple version-bump PRs, do not treat pre-existing package problems as blocking unless the PR introduces a regression or otherwise makes the existing problem materially worse. In the per-PR report, use human wording such as "approve with notes" when appropriate, but continue to map that outcome into the shared machine-readable verdict scheme.
+For simple version-bump PRs, do not treat pre-existing package problems as blocking unless the PR introduces a regression or otherwise makes the existing problem materially worse. In the per-PR report, use human wording such as "approve with notes" when appropriate, but continue to map that outcome into the shared machine-readable verdict scheme. Keep the paste-ready review comment directly postable: avoid hypothetical phrasing like `I would merge`, say instead that the note is not blocking because it predates the PR or is otherwise non-blocking, and avoid spending that short comment on PR-page-visible facts like green checks unless they are needed to interpret the finding.
 
 ## Required index sections
 

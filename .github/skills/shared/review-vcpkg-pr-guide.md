@@ -130,6 +130,10 @@ Add any other sections needed to make the review clear and evidence-based.
 
 The "Paste-ready review comment" section should be short enough to paste into a PR review comment with little or no editing. Attribute the note to the language model used for the review in the third person, for example `GPT-5.4 observes that ...`, and focus on the substantive findings rather than repeating the overall review status.
 
+State the current recommendation directly rather than as hypothetical reviewer intent. Do **not** write phrases such as `I would merge`, `I would approve`, or `I would request changes`; instead, say explicitly whether the cited issue is blocking or not blocking and why, so the pasted comment already reads like the final maintainer-facing note.
+
+Do not spend the paste-ready comment on facts that are already obvious from the PR page or GitHub UI, such as the PR title, author, open state, or that checks are green. Mention Azure or GitHub check status there only when it is necessary to explain why a finding is or is not blocking, or why the visible signal cannot be trusted.
+
 When a PR adds multiple new ports, give each port its own subsection under "New Port" and summarize the corresponding `evaluate-new-port` findings there.
 
 ## Pre-existing issues vs. regressions
