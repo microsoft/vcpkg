@@ -1809,7 +1809,7 @@
       "port-version": 0
     },
     "cleishm-thermo-cpp": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "clfft": {
