@@ -10129,7 +10129,7 @@
       "port-version": 2
     },
     "tinyexr": {
-      "baseline": "1.0.13",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "tinyfiledialogs": {
