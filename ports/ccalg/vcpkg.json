@@ -5,7 +5,6 @@
   "homepage": "https://ccalg.dev",
   "documentation": "https://ccalg.dev",
   "license": "BSD-3-Clause",
-  "supports": "!(arm | uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
