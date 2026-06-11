@@ -3,7 +3,8 @@
   "version": "6.25.0",
   "description": "Configuration system",
   "homepage": "https://invent.kde.org/frameworks/kconfig",
-  "documentation": "https://api.kde.org/kconfig-index.html ",
+  "documentation": "https://api.kde.org/kconfig-index.html",
+  "license": null,
   "dependencies": [
     "ecm",
     {
