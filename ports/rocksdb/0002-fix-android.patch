@@ -1,11 +1,8 @@
- env/io_posix.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/env/io_posix.h b/env/io_posix.h
-index 60788df9b..8ddfb3456 100644
+index 729e2d893..da3e0ac78 100644
 --- a/env/io_posix.h
 +++ b/env/io_posix.h
-@@ -30,7 +30,7 @@
+@@ -46,7 +46,7 @@
  // For non linux platform, the following macros are used only as place
  // holder.
  #if !(defined OS_LINUX) && !(defined OS_FREEBSD) && !(defined CYGWIN) && \
