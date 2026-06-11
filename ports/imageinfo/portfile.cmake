@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiaozhuai/imageinfo
-    REF "v${VERSION}" # committed on 2026-03-19
+    REF "v${VERSION}"
     SHA512 ab19e5d9e2add87f435a9cf73601cb90d5dac1ebdaca60f631a6bdb41dd5568d3aa057106273bbd1c5eda2fc5643548e275def7165498bcb69652eb0ee3db978
     HEAD_REF master
 )
