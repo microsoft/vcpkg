@@ -4,6 +4,7 @@
   "description": "Desktop hardware abstraction",
   "homepage": "https://invent.kde.org/frameworks/solid",
   "documentation": "https://api.kde.org/solid-index.html",
+  "license": null,
   "dependencies": [
     "ecm",
     {
