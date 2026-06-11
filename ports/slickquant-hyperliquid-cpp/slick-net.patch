@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6654a1d..748f702 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,8 +14,8 @@ endif()
+ find_package(nlohmann_json CONFIG REQUIRED)
+ find_package(OpenSSL REQUIRED)
+ 
+-find_package(slick-net 2.1.0 CONFIG QUIET)
+-if (NOT slick-net_FOUND)
++find_package(slick-net CONFIG REQUIRED)
++if (FALSE)
+     message(STATUS "Fetching slick-net...")
+     include(FetchContent)
+     FetchContent_Declare(
+@@ -24,8 +24,6 @@ if (NOT slick-net_FOUND)
+         GIT_TAG v2.1.0
+     )
+     FetchContent_MakeAvailable(slick-net)
+-else()
+-    message(STATUS "Found slick-net: ${slick-net_DIR}")
+ endif()
+ 
+ add_library(hyperliquid
