@@ -33,7 +33,15 @@ jobs:
           synthetic_merge_commit=$(git rev-parse HEAD)
           target_branch_commit=$(git rev-parse HEAD^1)
           incoming_branch_commit=$(git rev-parse HEAD^2)
-          merge_base=$(git merge-base "$target_branch_commit" "$incoming_branch_commit")
+          merge_base=$(git merge-base "$target_branch_commit" "$incoming_branch_commit" || true)
+          if [ -z "$merge_base" ]; then
+            # The two tips can exist in a shallow repository without enough
+            # ancestry to discover their merge-base.
+            if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+              git fetch --no-tags --unshallow origin
+            fi
+            merge_base=$(git merge-base "$target_branch_commit" "$incoming_branch_commit")
+          fi
 
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
           if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
@@ -59,16 +67,33 @@ jobs:
           git add -u
           git commit -m "tmp" --allow-empty
           # reset the version database to the state of the merge base, so that we can check that the PR only adds one version and doesn't modify any existing versions
-          git restore --source=$merge_base --staged --worktree -- versions
-          git clean -fd -- versions
-          echo '{"default": {}}' > versions/baseline.json # to allow deindexing, let x-add-version completely regenerate the baseline json
+          #
+          # This "compare against upstream" behavior only makes sense when the PR targets the
+          # canonical microsoft/vcpkg repository. When a PR is opened against another PR (for
+          # example, a PR targeting a branch in a fork rather than microsoft/vcpkg), the merge
+          # base already contains the parent PR's in-progress version-database changes, so
+          # comparing against it would incorrectly flag the expected mutation of those
+          # not-yet-published versions. There is no reliable way to discover the ultimate
+          # upstream merge base in that situation, so instead we validate the version database
+          # against the incoming changes as-is: we still confirm the database is internally
+          # consistent (and updated) but we don't attempt the upstream comparison.
+          if [ "${{ github.event.pull_request.base.repo.full_name }}" = "microsoft/vcpkg" ]; then
+            version_db_reset_ref="$merge_base"
+          else
+            version_db_reset_ref="$incoming_branch_commit"
+          fi
+          reset_version_db() {
+            git restore --source="$version_db_reset_ref" --staged --worktree -- versions
+            git clean -fd -- versions
+            echo '{"default": {}}' > versions/baseline.json # to allow deindexing, let x-add-version completely regenerate the baseline json
+          }
+          reset_version_db
           # check for version format errors separately by running x-add-version --all, recording problems it generates
           ./vcpkg x-add-version --all | grep -E '^warning:|instead of "version-string"' | tee .github-pr.version-string.out || true
           # reset the version database again
-          git restore --source=$merge_base --staged --worktree -- versions
-          git clean -fd -- versions
-          echo '{"default": {}}' > versions/baseline.json
-          # check that the PR only adds one version and doesn't modify any existing versions, ignoring any of the warnings recorded into .github-pr.version-string.out
+          reset_version_db
+          # check that the version database is valid, ignoring any of the warnings recorded into .github-pr.version-string.out
+          # When targeting microsoft/vcpkg this additionally checks that the PR only adds one version and doesn't modify any existing versions.
           ./vcpkg x-add-version --all --skip-version-format-check | tee .github-pr.x-add-version.out || true
           git add -A -- versions
           git diff --cached "$incoming_branch_commit" -- versions > .github-pr.x-add-version.diff
