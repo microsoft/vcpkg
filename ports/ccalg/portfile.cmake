@@ -18,6 +18,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
 # CMake config for find_package(ccalg REQUIRED CONFIG)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/ccalg-config.cmake" [[
 if(NOT TARGET ccalg::ccalg)
