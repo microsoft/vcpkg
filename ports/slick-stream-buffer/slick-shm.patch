@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f94323..73ebb6b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,9 +10,9 @@ set(CMAKE_CXX_STANDARD 20)
+ # Options:
+ option(BUILD_SLICK_STREAM_BUFFER_TESTS "Build tests" ${PROJECT_IS_TOP_LEVEL})
+ 
+-find_package(slick-shm CONFIG QUIET)
++find_package(slick-shm CONFIG REQUIRED)
+ 
+-if (NOT slick-shm_FOUND)
++if (FALSE)
+     include(FetchContent)
+ 
+     # Disable slick-shm tests and examples, but allow installation

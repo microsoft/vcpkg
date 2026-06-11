@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "slick-stream-buffer",
+  "version": "1.0.1",
+  "description": "A C++ lock-free SPMC byte stream buffer with a Boost.Asio DynamicBuffer adapter",
+  "homepage": "https://github.com/SlickQuant/slick-stream-buffer",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "slick-shm",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
