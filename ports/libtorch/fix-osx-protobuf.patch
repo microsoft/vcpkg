@@ -1,10 +1,8 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 463788e..1ca26e3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -796,7 +796,10 @@ if(NOT CMAKE_BUILD_TYPE)
  endif()
- 
+
  # The below means we are cross compiling for arm64 or x86_64 on MacOSX
 -if(NOT IOS
 +if(TRUE)
