@@ -7469,7 +7469,7 @@
       "port-version": 0
     },
     "openssl": {
-      "baseline": "3.6.2",
+      "baseline": "3.6.3",
       "port-version": 0
     },
     "opensubdiv": {
@@ -7694,7 +7694,7 @@
     },
     "pcre2": {
       "baseline": "10.47",
-      "port-version": 0
+      "port-version": 1
     },
     "pdal": {
       "baseline": "2.10.1",
