@@ -128,6 +128,13 @@ If a matrix check's `details_url` contains a job id and you need to narrow the s
 
 Add any other sections needed to make the review clear and evidence-based.
 
+For the `New Port` subsection meanings:
+
+- `Provenance` should explain where the source comes from and how confidently it maps to the packaged project.
+- `Naming` should explain whether the chosen port name is clear and appropriate for package-manager users.
+- `Maturity` should follow the maintainer-guide requirement that packaged projects should be mature. In practice, describe the upstream library's age, release history, maintenance signals, stability, and whether it appears established enough for broad package-manager distribution. Do **not** use `Maturity` to discuss whether the port installed locally, whether its CMake/package config works, or other packaging-surface details; those belong in `Findings` or the `evaluate-new-port` audit summary.
+- `Optional Dependencies` should focus on upstream optional integrations and whether the port models them reproducibly.
+
 The "Paste-ready review comment" section should be short enough to paste into a PR review comment with little or no editing. Attribute the note to the language model used for the review in the third person, for example `GPT-5.4 observes that ...`, and focus on the substantive findings rather than repeating the overall review status.
 
 State the current recommendation directly rather than as hypothetical reviewer intent. Do **not** write phrases such as `I would merge`, `I would approve`, or `I would request changes`; instead, say explicitly whether the cited issue is blocking or not blocking and why, so the pasted comment already reads like the final maintainer-facing note.
