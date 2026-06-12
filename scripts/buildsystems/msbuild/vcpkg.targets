@@ -180,7 +180,7 @@
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
   />
   <Import Project="$(MSBuildThisFileDirectory)support\GetGlobalProperties.task"
-          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true' and '$(_ZVcpkgGetGlobalPropertiesImported)' != 'true'"
   />
 
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
