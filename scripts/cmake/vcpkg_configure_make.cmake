@@ -305,7 +305,7 @@ function(vcpkg_configure_make)
     # LIBS -> pass -l flags
 
     # Used by gcc/linux
-    vcpkg_backup_env_variables(VARS C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH EMMAKEN_JUST_CONFIGURE)
+    vcpkg_backup_env_variables(VARS C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     # Used by cl
     vcpkg_backup_env_variables(VARS INCLUDE LIB LIBPATH)
@@ -404,22 +404,6 @@ function(vcpkg_configure_make)
             endif()
             debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
         endif()
-    endif()
-
-    # Emscripten - cross-compiling support
-    if(VCPKG_TARGET_IS_EMSCRIPTEN)
-        if(NOT arg_BUILD_TRIPLET)
-            set(arg_BUILD_TRIPLET "--host=${VCPKG_TARGET_ARCHITECTURE}-unknown-emscripten")
-            if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-                string(APPEND arg_BUILD_TRIPLET " --build=aarch64-apple-darwin")
-            elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-                string(APPEND arg_BUILD_TRIPLET " --build=x86_64-pc-mingw32")
-            else()
-                string(APPEND arg_BUILD_TRIPLET " --build=x86_64-pc-linux-gnu")
-            endif()
-            debug_message("Using make triplet: ${arg_BUILD_TRIPLET}")
-        endif()
-        set(ENV{EMMAKEN_JUST_CONFIGURE} 1)
     endif()
 
     # Pre-processing windows configure requirements
@@ -929,7 +913,7 @@ function(vcpkg_configure_make)
     endif()
 
     # Restore environment
-    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH EMMAKEN_JUST_CONFIGURE)
+    vcpkg_restore_env_variables(VARS ${cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     set(_VCPKG_PROJECT_SOURCE_PATH ${arg_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${arg_PROJECT_SUBPATH} PARENT_SCOPE)

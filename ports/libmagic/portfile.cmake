@@ -57,19 +57,13 @@ enable_feature("zlib" "zlib")
 enable_feature("lzma" "xzlib")
 enable_feature("zstd" "zstdlib")
 
-vcpkg_list(SET extra_options)
-if(VCPKG_CROSSCOMPILING)
-    vcpkg_list(APPEND extra_options "cross_compiling=yes")
-endif()
-
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         "--disable-lzlib"
         "--disable-libseccomp"
-        ${extra_options}
 )
 
 if(VCPKG_CROSSCOMPILING)
@@ -78,7 +72,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(EXTRA_ARGS "ADD_BIN_TO_PATH")
 endif()
 
-vcpkg_install_make(${EXTRA_ARGS})
+vcpkg_make_install(${EXTRA_ARGS})
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 vcpkg_fixup_pkgconfig()
