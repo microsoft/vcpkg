@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # header only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-stream-buffer
@@ -20,9 +22,6 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME slick-stream-buffer
     CONFIG_PATH lib/cmake/slick-stream-buffer
 )
-
-# Header-only library - remove lib directory
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
