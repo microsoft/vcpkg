@@ -102,6 +102,14 @@ elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
 
+    cmake_path(CONVERT "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}" TO_CMAKE_PATH_LIST CRASHPAD_CXX_COMPILER_PATH NORMALIZE)
+    string(REGEX REPLACE "/VC/Tools/.*" "" CRASHPAD_VISUAL_STUDIO_PATH "${CRASHPAD_CXX_COMPILER_PATH}")
+    if(NOT CRASHPAD_VISUAL_STUDIO_PATH STREQUAL CRASHPAD_CXX_COMPILER_PATH
+       AND EXISTS "${CRASHPAD_VISUAL_STUDIO_PATH}/VC/Auxiliary/Build/vcvarsall.bat")
+        # mini_chromium checks VSINSTALLDIR before it falls back to vswhere.
+        set(ENV{VSINSTALLDIR} "${CRASHPAD_VISUAL_STUDIO_PATH}")
+    endif()
+
     set(OPTIONS_DBG "${OPTIONS_DBG} \
         extra_cflags_c=\"${VCPKG_COMBINED_C_FLAGS_DEBUG}\" \
         extra_cflags_cc=\"${VCPKG_COMBINED_CXX_FLAGS_DEBUG}\" \

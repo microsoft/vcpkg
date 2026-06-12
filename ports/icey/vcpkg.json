@@ -1,6 +1,6 @@
 {
   "name": "icey",
-  "version": "2.4.2",
+  "version": "2.4.11",
   "port-version": 1,
   "maintainers": "0state OSS <oss@0state.com>",
   "description": "C++20 media stack and libwebrtc alternative for real-time video, signalling, TURN, and media servers",

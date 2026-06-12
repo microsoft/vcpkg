@@ -1,6 +1,6 @@
 {
   "name": "obfuscxx",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "Header-only compile-time variables obfuscation library for C++20",
   "homepage": "https://github.com/nevergiveupcpp/obfuscxx",
   "license": "Apache-2.0",

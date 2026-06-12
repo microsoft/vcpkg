@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 3f58d94750b80b527fdbdf3e745af514a80d5d1a6479768bae7ccfb94fe458dcca939a18c53de2ddc15bd464028efa473c777b5265ac787231526849a2232d56
+    SHA512 d69e2dd7b5127650b6e09de92508a84886d52d5dfd1eacf9e6abb797ca231db3c1b12546c7b8561e311150cd62be8dfea689021b7d139ffcdb3d4e16da670352
     HEAD_REF main
     PATCHES
         build.diff
@@ -115,7 +115,6 @@ if("tools" IN_LIST FEATURES)
             ccomps
             circo
             cluster
-            diffimg
             dijkstra
             dot
             edgepaint
