@@ -5,6 +5,8 @@ vcpkg_from_gitlab(
     REF "v${VERSION}"
     SHA512 8b629df31cef1b3b5538eb5a00b51be9553595ad52857030298dbb08bba2997d25a91f579f5a3a9168563f3833f18065fec5089f59cd8994abe99e4cfd421f25
     HEAD_REF master
+    # From [merge-request !736:_CGAL 6.2 compatibility_](https://gitlab.com/sfcgal/SFCGAL/-/merge_requests/736.patch)"
+    PATCHES sfcgal-mr-736.patch
     )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SFCGAL_USE_STATIC_LIBS)
