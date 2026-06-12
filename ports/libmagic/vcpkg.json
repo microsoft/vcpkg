@@ -21,6 +21,10 @@
     {
       "name": "tre",
       "platform": "windows | mingw"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
     }
   ],
   "features": {
