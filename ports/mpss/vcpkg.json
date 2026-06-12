@@ -1,0 +1,40 @@
+{
+  "name": "mpss",
+  "version": "1.2.1",
+  "description": "A multi-platform C++ library for hardware-backed digital signature key storage and signing.",
+  "homepage": "https://github.com/microsoft/mpss",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "mpss",
+      "features": [
+        "yubikey"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openssl": {
+      "description": "Build the OpenSSL 3.x provider (mpss-openssl).",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "yubikey": {
+      "description": "Enable the YubiKey PIV backend. Required on Linux (no OS-native backend available).",
+      "supports": "!ios & !android",
+      "dependencies": [
+        "openssl",
+        "yubico-piv-tool"
+      ]
+    }
+  }
+}
