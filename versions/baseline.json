@@ -593,24 +593,24 @@
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.18.0",
+      "baseline": "12.19.0-beta.1",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.14.0",
+      "baseline": "12.15.0-beta.1",
       "port-version": 0
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.16.0",
+      "baseline": "12.17.0-beta.1",
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.18.0",
+      "baseline": "12.19.0-beta.1",
       "port-version": 0
     },
     "azure-storage-queues-cpp": {
-      "baseline": "12.7.0",
-      "port-version": 1
+      "baseline": "12.8.0-beta.1",
+      "port-version": 0
     },
     "azure-uamqp-c": {
       "baseline": "2025-03-31",
