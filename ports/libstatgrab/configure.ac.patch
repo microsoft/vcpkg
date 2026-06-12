@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 9516870..f8345c6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -127,7 +127,7 @@ AS_IF([test "x$ac_cv_need_minus_d_hpux_source" = "xyes"],
+       [CPPFLAGS="$CPPFLAGS -D_HPUX_SOURCE"])
+ 
+ dnl check language / compatibility environment
+-AX_CHECK_XOPEN_SOURCE
++AX_WIN32([],[AX_CHECK_XOPEN_SOURCE])
+ AS_IF([test -n "$XOPEN_SOURCE_CPPFLAGS"], [CPPFLAGS="$CPPFLAGS $XOPEN_SOURCE_CPPFLAGS"])
+ 
+ dnl Checks for inet libraries:
