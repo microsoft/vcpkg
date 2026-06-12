@@ -4552,6 +4552,10 @@
       "baseline": "6.25.0",
       "port-version": 1
     },
+    "kitemviews": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kleidiai": {
       "baseline": "1.25.0",
       "port-version": 0
