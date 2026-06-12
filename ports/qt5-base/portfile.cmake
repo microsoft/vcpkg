@@ -45,11 +45,6 @@ endif()
 ## Downloading Qt5-Base
 
 set(PATCHES
-    # CVE fixes from https://download.qt.io/archive/qt/5.15/
-    patches/CVE-2025-4211-qtbase-5.15.diff
-    patches/CVE-2025-5455-qtbase-5.15.patch
-    patches/CVE-2025-30348-qtbase-5.15.diff
-
     patches/winmain_pro.patch          #Moves qtmain to manual-link
     patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
     patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.

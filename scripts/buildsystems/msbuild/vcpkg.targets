@@ -180,7 +180,7 @@
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
   />
   <Import Project="$(MSBuildThisFileDirectory)support\GetGlobalProperties.task"
-          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true' and '$(_ZVcpkgGetGlobalPropertiesImported)' != 'true'"
   />
 
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
@@ -269,6 +269,14 @@
     <Message Text="@(VcpkgAppLocalDLLs,'%0A')" Importance="Normal" Condition="$(_ZVcpkgAppLocalExitCode) == 0" />
     <ItemGroup Condition="$(_ZVcpkgAppLocalExitCode) == 0">
       <ReferenceCopyLocalPaths Include="@(VcpkgAppLocalDLLs)" />
+      <!-- Register the deployed DLLs as file writes so MSBuild's IncrementalClean
+           doesn't treat them as orphan outputs and delete them. Without this, any
+           clean-file entries recorded by AppLocalFromInstalledPreserve on a previous
+           link-skipped build cause IncrementalClean to delete the DLLs on the next
+           build where the link runs, immediately after they were deployed. The paths
+           are re-based to $(OutDir) because z-applocal logs source paths while
+           applocal.ps1 logs destination paths. -->
+      <FileWrites Include="@(VcpkgAppLocalDLLs -> '$(OutDir)%(Filename)%(Extension)')" />
     </ItemGroup>
   </Target>
 
