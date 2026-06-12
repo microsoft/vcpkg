@@ -5,7 +5,7 @@
 
 ## Declared Metadata
 
-- **License:** `{license-from-vcpkg-json}`
+- **License metadata:** `{top-level-and-feature-license-summary-from-vcpkg-json}`
 - **Homepage:** `{homepage}`
 - **Supports:** `{supports-expression or "not specified"}`
 - **Dependencies:** `{high-level summary}`
@@ -53,7 +53,7 @@ or
 or
 
 - **Finding:** `...`
-  - **Declared license:** `...`
+  - **Declared license metadata:** `...`
   - **Observed installed content:** `packages/{port-name}_{target-triplet}/...`
   - **Evidence:** `...`
   - **Assessment:** `...`

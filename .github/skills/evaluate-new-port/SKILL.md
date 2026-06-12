@@ -9,7 +9,7 @@ argument-hint: 'Port name (e.g. "libpng")'
 ## When to Use
 
 - Reviewing a newly added or substantially updated port
-- Auditing whether a port's declared license matches what it installs
+- Auditing whether a port's declared license metadata matches what it installs
 - Checking for vendored third-party code or optional dependencies that are not modeled in `vcpkg.json`
 - Looking for packaging or review issues after a real local install
 
@@ -17,7 +17,7 @@ argument-hint: 'Port name (e.g. "libpng")'
 
 This skill takes a single port name, reads the port's metadata and build recipe, performs a clean local install, and writes a structured audit report. The audit focuses on:
 
-- **Declared license** from `ports/{port-name}/vcpkg.json`
+- **Declared license metadata** from `ports/{port-name}/vcpkg.json`, including feature-scoped declarations
 - **Build invocation** and feature toggles from `ports/{port-name}/portfile.cmake`
 - **Real build output** after `vcpkg x-ci-clean` and `vcpkg install {port-name}`
 - **Extracted source tree** under `buildtrees/{port-name}/src`
@@ -42,7 +42,8 @@ Open these files first:
 Extract at least the following:
 
 **From `vcpkg.json`:**
-- `license`
+- top-level `license`, if present
+- any feature-scoped `license` declarations, including explicit `null`
 - `homepage`
 - `features`
 - `dependencies`
@@ -157,7 +158,7 @@ Flag an issue when an optional dependency:
 
 The point is to find dependencies that may be auto-detected from the host environment, leading to non-reproducible builds.
 
-### Step 6: Audit Installed Content Against the Declared License
+### Step 6: Audit Installed Content Against the Declared License Metadata
 
 Inspect the package contents under `packages/{port-name}_{target-triplet}`. Focus on:
 
@@ -166,9 +167,11 @@ Inspect the package contents under `packages/{port-name}_{target-triplet}`. Focu
 - headers, sources, examples, tools, or assets originating from bundled third-party code
 - any embedded notices for code under additional licenses
 
+Treat explicit `"license": null` as intentional metadata meaning "no SPDX expression is provided here; inspect the installed copyright file." Do not report that case as missing metadata by itself.
+
 Flag content when:
 
-- the installed files include third-party components under licenses not covered by the declared `license` field,
+- the installed files include third-party components under licenses not covered by the declared license metadata,
 - multiple upstream licenses appear to require a more precise SPDX expression,
 - or the package installs bundled code whose license is absent from the declared metadata and copyright file
 
@@ -184,7 +187,7 @@ While auditing `ports/{port-name}/portfile.cmake`, look for common review items 
 - install steps that might ship unnecessary files
 - missing cleanup of debug-only or duplicate artifacts
 - support restrictions that should move into `supports` in `vcpkg.json`
-- license metadata that is too broad or incomplete
+- license metadata that is too broad or incomplete after considering top-level and feature-scoped declarations
 
 Only report suggestions supported by evidence from the files or the install result.
 
