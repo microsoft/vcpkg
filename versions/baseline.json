@@ -8968,6 +8968,10 @@
       "baseline": "0.17.3",
       "port-version": 0
     },
+    "ruvia": {
+      "baseline": "0.0.4",
+      "port-version": 0
+    },
     "rxcpp": {
       "baseline": "4.1.1",
       "port-version": 1

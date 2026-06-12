@@ -1,0 +1,48 @@
+{
+  "name": "ruvia",
+  "version": "0.0.4",
+  "description": "Small C++23 HTTP/1.1 web framework with built-in TLS, routing, middleware, streaming, WebSocket, and PMR-oriented runtime.",
+  "homepage": "https://github.com/hyird/Ruvia",
+  "license": "MIT",
+  "dependencies": [
+    "asio",
+    {
+      "name": "mimalloc",
+      "platform": "windows & static"
+    },
+    {
+      "name": "mimalloc",
+      "features": [
+        "override"
+      ],
+      "platform": "!windows | !static"
+    },
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "jwt": {
+      "description": "Build HMAC JWT helper APIs."
+    },
+    "mariadb": {
+      "description": "Build MariaDB-compatible database APIs.",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "redis": {
+      "description": "Build Redis client APIs.",
+      "dependencies": [
+        "hiredis"
+      ]
+    }
+  }
+}
