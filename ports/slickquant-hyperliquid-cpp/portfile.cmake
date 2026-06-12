@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/hyperliquid-cpp
     REF "v${VERSION}"
-    SHA512 9fa2bb555b8701483c56238adeebb984c7efc1b7bcdee821b55a6d41820401d2f8297b583810639519fc5c24eb01ddc3bcdfff67e0c785d218d08c29e1bc830b
+    SHA512 afa9b2b1a9879658c96632f1ae1f5c3e0b963d39cda88b4e86447f534ed809d11c1be69caf1d22ff12344e0f40a15cbcc2cd4c84bd1f0a3480a610bb6be892f1
     HEAD_REF main
     PATCHES
         slick-net.patch
