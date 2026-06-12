@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8f50f2f..1893229 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD 23)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+-if(MSVC)
++if(MSVC AND NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
+     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ endif()
+ 
+@@ -87,7 +87,7 @@ if(RUVIA_ENABLE_JWT)
+     list(APPEND RUVIA_SOURCES src/auth/Jwt.cpp)
+ endif()
+ 
+-add_library(ruvia ${RUVIA_SOURCES})
++add_library(ruvia STATIC ${RUVIA_SOURCES})
+ 
+ add_library(ruvia::ruvia ALIAS ruvia)
+ 
