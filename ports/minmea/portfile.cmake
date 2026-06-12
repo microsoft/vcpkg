@@ -30,5 +30,9 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(
-    FILE_LIST "${SOURCE_PATH}/LICENSE.MIT"
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.grants"
+        "${SOURCE_PATH}/LICENSE.MIT"
+        "${SOURCE_PATH}/LICENSE.LGPL-3.0"
+        "${SOURCE_PATH}/COPYING"
 )
