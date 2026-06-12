@@ -39,9 +39,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 set(disable_assembly OFF)
-if(VCPKG_TARGET_IS_EMSCRIPTEN)
-    set(disable_assembly ON)
-endif()
 set(ccas "")
 set(asmflags "-c")
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -88,13 +85,9 @@ if(VCPKG_HOST_IS_WINDOWS)
     # dumpbin detection fails with autoconf 2.72
     set(ENV{WANT_AUTOCONF} 2.71)
 endif()
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    ADDITIONAL_MSYS_PACKAGES
-        DIRECT_PACKAGES
-            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
-            dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
+    AUTORECONF
     OPTIONS
         ${OPTIONS}
         --enable-cxx
@@ -102,7 +95,7 @@ vcpkg_configure_make(
         --with-readline=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
