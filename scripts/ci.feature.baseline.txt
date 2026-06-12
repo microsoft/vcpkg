@@ -771,7 +771,6 @@ metrohash:arm64-linux=fail
 minc:arm64-linux=cascade
 minc[minc1](android)=feature-fails
 minisat-master-keying:arm64-linux=fail
-mlpack:arm64-linux=cascade
 mnn[cuda]:x64-windows-static-md=cascade
 mnn[cuda]:x64-windows-static=cascade
 mnn[cuda]:x64-windows=cascade

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6654a1d..748f702 100644
+index 55c3e5f..5005920 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -14,8 +14,8 @@ endif()
@@ -21,4 +21,4 @@ index 6654a1d..748f702 100644
 -    message(STATUS "Found slick-net: ${slick-net_DIR}")
  endif()
  
- add_library(hyperliquid
+ add_library(hyperliquid STATIC

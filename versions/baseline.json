@@ -1685,7 +1685,7 @@
       "port-version": 0
     },
     "cgal": {
-      "baseline": "6.1.1",
+      "baseline": "6.1.2",
       "port-version": 0
     },
     "cgicc": {
@@ -1805,11 +1805,11 @@
       "port-version": 2
     },
     "cleishm-frequency-cpp": {
-      "baseline": "1.1.2",
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "cleishm-thermo-cpp": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "clfft": {
@@ -2281,7 +2281,7 @@
       "port-version": 17
     },
     "cudnn-frontend": {
-      "baseline": "1.24.1",
+      "baseline": "1.25.0",
       "port-version": 0
     },
     "cunit": {
@@ -2329,8 +2329,8 @@
       "port-version": 0
     },
     "cute-headers": {
-      "baseline": "2019-09-20",
-      "port-version": 2
+      "baseline": "2026-06-11",
+      "port-version": 0
     },
     "cutelyst2": {
       "baseline": "2.12.0",
@@ -3445,7 +3445,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.8.0",
+      "baseline": "7.8.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3766,7 +3766,7 @@
     },
     "harfbuzz": {
       "baseline": "14.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "hash-library": {
       "baseline": "8",
@@ -3821,7 +3821,7 @@
       "port-version": 0
     },
     "hfsm2": {
-      "baseline": "2.11.1",
+      "baseline": "2.12.1",
       "port-version": 0
     },
     "hical61-hical": {
@@ -3977,7 +3977,7 @@
       "port-version": 0
     },
     "imageinfo": {
-      "baseline": "2026-03-19",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "imath": {
@@ -5453,7 +5453,7 @@
       "port-version": 0
     },
     "libosdp": {
-      "baseline": "3.2.1",
+      "baseline": "3.2.2",
       "port-version": 0
     },
     "libosip2": {
@@ -5894,7 +5894,7 @@
     },
     "libvpl": {
       "baseline": "2.16.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libvpx": {
       "baseline": "1.16.0",
@@ -6629,7 +6629,7 @@
       "port-version": 0
     },
     "mlpack": {
-      "baseline": "4.7.0",
+      "baseline": "4.8.0",
       "port-version": 0
     },
     "mman": {
@@ -7537,7 +7537,7 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "5.2.1",
+      "baseline": "5.3.0",
       "port-version": 0
     },
     "orange-vmprotect-sdk": {
@@ -8089,7 +8089,7 @@
       "port-version": 3
     },
     "pulzed-mini": {
-      "baseline": "0.9.18",
+      "baseline": "0.9.20",
       "port-version": 0
     },
     "pxlib": {
@@ -8869,7 +8869,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.7.0",
+      "baseline": "4.7.1",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -9057,7 +9057,7 @@
       "port-version": 1
     },
     "sciter-js": {
-      "baseline": "6.0.3.7",
+      "baseline": "6.0.4.4",
       "port-version": 0
     },
     "scnlib": {
@@ -9185,7 +9185,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.14.2",
+      "baseline": "0.15.0",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9373,7 +9373,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "1.0.8",
+      "baseline": "1.0.9",
       "port-version": 0
     },
     "slick-net": {
@@ -9397,7 +9397,7 @@
       "port-version": 0
     },
     "slickquant-hyperliquid-cpp": {
-      "baseline": "0.1.1",
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "slikenet": {
@@ -10133,7 +10133,7 @@
       "port-version": 2
     },
     "tinyexr": {
-      "baseline": "1.0.13",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "tinyfiledialogs": {
