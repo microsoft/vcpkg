@@ -18,12 +18,14 @@
     }
   ],
   "features": {
-    "redis": {
-      "description": "Enable RedisStorage support via hiredis",
-      "dependencies": ["hiredis"]
-    },
     "ed25519": {
       "description": "Enable Ed25519 Mini App auth (requires OpenSSL)"
+    },
+    "redis": {
+      "description": "Enable RedisStorage support via hiredis",
+      "dependencies": [
+        "hiredis"
+      ]
     }
   }
 }
