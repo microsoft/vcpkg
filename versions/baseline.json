@@ -2000,10 +2000,7 @@
       "baseline": "0.3.0",
       "port-version": 0
     },
-    "corogram": {
-      "baseline": "0.1.0",
-      "port-version": 0
-    },
+    "corogram": { "baseline": "0.1.0", "port-version": 0 },
     "coroutine": {
       "baseline": "1.5.0",
       "port-version": 5
