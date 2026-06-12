@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-Update-CMake-configuration-to-version-3.10-and-enhan.patch
-        0002-Refactor-to-eleminate-some-warnings.patch
 )
 
 vcpkg_cmake_configure(
