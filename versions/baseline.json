@@ -5052,6 +5052,10 @@
       "baseline": "3.18.2",
       "port-version": 1
     },
+    "libfyaml": {
+      "baseline": "0.9.3",
+      "port-version": 0
+    },
     "libgcrypt": {
       "baseline": "1.12.2",
       "port-version": 0
