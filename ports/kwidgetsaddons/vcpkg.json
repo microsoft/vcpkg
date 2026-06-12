@@ -4,6 +4,7 @@
   "description": "Addons to QtWidgets",
   "homepage": "https://invent.kde.org/frameworks/kwidgetsaddons",
   "documentation": "https://api.kde.org/kwidgetsaddons-index.html",
+  "license": null,
   "dependencies": [
     "ecm",
     {
