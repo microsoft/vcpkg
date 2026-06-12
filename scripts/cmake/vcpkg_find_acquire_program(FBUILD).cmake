@@ -1,0 +1,18 @@
+set(program_name FBuildx)
+set(program_version 1.18)
+if(CMAKE_HOST_WIN32)
+    set(download_urls "https://www.fastbuild.org/downloads/v${program_version}/FASTBuild-Windows-x64-v${program_version}.zip")
+    set(download_filename "${program_name}-Windows-x64-v${program_version}.zip")
+    set(download_sha512 10c422b11c912411aa841a7fecea0034d93a47062e2aaf42ed199007669134398417a3a6d9d4f38608d807968876ec6f7af0b25dc5fb6d762b7efbd2adc9589b)
+elseif(CMAKE_HOST_LINUX)
+    set(download_urls "https://www.fastbuild.org/downloads/v${program_version}/FASTBuild-Linux-x64-v${program_version}.zip")
+    set(download_filename "${program_name}-Linux-x64-v${program_version}.zip")
+    set(download_sha512 1015d4cfb5d017d9ddf211eff63369e9cf06c782908b31665e80430c2d541f37872b5ae6e6b23242258d92ebd1360b8e715734f163bf6de5f2aafda0a2c1bdc0)
+else() # OSX
+    set(download_urls "https://www.fastbuild.org/downloads/v${program_version}/FASTBuild-OSX-x64+ARM-v${program_version}.zip")
+    set(download_filename "${program_name}-OSX-x64+ARM-x64-v${program_version}.zip")
+    set(download_sha512 5d5c5ffd6f0e665df6411abc7409d4eab29638c245da1a2f9b78e65e0e42a0244431e344f88048b86f1321131b3e83b49dccc8e5da21e691bd4a8da6d1595496)
+endif()
+
+set(tool_subdirectory "${program_version}")
+set(paths_to_search "${DOWNLOADS}/tools/FBuild/${CMAKE_HOST_SYSTEM_NAME}/${CMAKE_HOST_SYSTEM_PROCESSOR}/${program_version}")

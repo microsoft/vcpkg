@@ -96,7 +96,20 @@ function(vcpkg_cmake_configure)
     elseif(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
     elseif(ninja_host)
-        set(generator "Ninja")
+        #set(generator "Ninja")
+        vcpkg_find_acquire_program(FBUILD)
+        cmake_path(GET FBUILD PARENT_PATH FBUILD_PATH)
+        vcpkg_add_to_path("${FBUILD_PATH}")
+        set(generator "FASTBuild")
+        file(MAKE_DIRECTORY "${FBUILD_PATH}/fastbuild-cache")
+        vcpkg_list(APPEND arg_OPTIONS 
+          "-DCMAKE_FASTBUILD_CACHE_PATH=${FBUILD_PATH}/fastbuild-cache"# should probably be moved
+          # Experimental stuff
+          # "-DCMAKE_FASTBUILD_USE_LIGHTCACHE=ON" # only MSVC
+          "-DCMAKE_FASTBUILD_USE_RELATIVE_PATHS=ON"
+          #"-DCMAKE_FASTBUILD_USE_DETERMINISTIC_PATHS=ON"
+        )
+          
     elseif(NOT VCPKG_HOST_IS_WINDOWS)
         set(generator "Unix Makefiles")
     endif()
