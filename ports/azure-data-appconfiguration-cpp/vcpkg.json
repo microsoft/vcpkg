@@ -3,24 +3,20 @@
     "NOTE: All changes made to this file will get overwritten by the next port release.",
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
-  "name": "azure-core-amqp-cpp",
-  "version-semver": "1.0.0-beta.13",
+  "name": "azure-data-appconfiguration-cpp",
+  "version-semver": "1.0.0-beta.1",
   "description": [
-    "Microsoft Azure AMQP SDK for C++",
-    "This library provides AMQP functionality to Azure SDK services."
+    "Microsoft Azure App Configuration SDK for C++",
+    "This library provides API access to the Azure App Configuration service."
   ],
-  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/core/azure-core-amqp",
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/appconfiguration/azure-data-appconfiguration",
   "license": "MIT",
-  "supports": "!uwp",
   "dependencies": [
-    "azure-c-shared-utility",
     {
       "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "1.11.3"
+      "version>=": "1.14.1"
     },
-    "azure-macro-utils-c",
-    "umock-c",
     {
       "name": "vcpkg-cmake",
       "host": true
