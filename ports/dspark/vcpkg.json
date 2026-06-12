@@ -1,0 +1,17 @@
+{
+  "name": "dspark",
+  "version": "1.4.1",
+  "description": "Header-only audio DSP framework in pure C++20 with zero external dependencies: filters, dynamics, reverbs, physical analog models, pitch tools, EBU R128 metering and more.",
+  "homepage": "https://github.com/CristianMoresi/DSPark",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
