@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-stream-buffer
     REF "v${VERSION}"
-    SHA512 d99d247993e23ead39f36806fdff91e085b5fcfbfe793ba59fa80e2b05f5879d19a9cfcf8849cf9621ea68be5fcb6b8e6b3b8d9db88fd5031c0b371d348c960a
+    SHA512 756201be1df980c7281a15684fbef96bb7caaf1412aa5b1e4e353fc06e2f7ea99ae383216275bcd33fbfc24d190c3a2bc25bcbe122a174da21099e5b1dec46ba
     HEAD_REF main
     PATCHES
         slick-shm.patch
@@ -22,6 +22,8 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME slick-stream-buffer
     CONFIG_PATH lib/cmake/slick-stream-buffer
 )
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
