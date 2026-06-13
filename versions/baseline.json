@@ -10556,6 +10556,14 @@
       "baseline": "2025-03-29",
       "port-version": 0
     },
+    "vcpkg-ci-eval-a": {
+      "baseline": "2026-05-03",
+      "port-version": 0
+    },
+    "vcpkg-ci-eval-b": {
+      "baseline": "2026-05-03",
+      "port-version": 0
+    },
     "vcpkg-cmake": {
       "baseline": "2024-04-23",
       "port-version": 0
