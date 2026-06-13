@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qicosmos/rest_rpc
     REF "v${VERSION}"
-    SHA512 1d88085acc6c4f913901631725acd08a688a079878677d064d441c3c89167275c5eed371d24e370feb88879ac06270e9316b91c67ea41e350523fe670406ecc1
+    SHA512 59c9ca70ae53809b2710cc83c7a338a05d9bc76840def7786ee940f9a3cc03c88040a7b721980114d231042608dab23d6061cbc5ebe4dcda984989beec056eda
     HEAD_REF master
 )
 
@@ -12,8 +12,8 @@ file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/incl
 
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/include/rest_rpc.hpp"
-    "#include \"rest_rpc/rpc_server.h\""
-    "#define ASIO_STANDALONE\n#include \"rest_rpc/rpc_server.h\""
+    "#include \"rest_rpc/rpc_server.hpp\""
+    "#define ASIO_STANDALONE\n#include \"rest_rpc/rpc_server.hpp\""
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-rest-rpc-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-rest-rpc-config")
