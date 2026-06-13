@@ -9380,6 +9380,10 @@
       "baseline": "2025-12-18",
       "port-version": 0
     },
+    "slick-dynamic-buffer": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "slick-logger": {
       "baseline": "1.0.9",
       "port-version": 0
