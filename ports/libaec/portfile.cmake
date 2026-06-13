@@ -1,7 +1,7 @@
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.dkrz.de
-    REPO k202009/libaec
+    REPO dkrz-sw/libaec
     REF "v${VERSION}"
     SHA512 c1023328895b5dfdd1831d9edeeaaafe2b3083cdf42a1b76358319b7afd552e1eeb389e8d2668eb2d5f43a07542ade1914a4db1b9095b3d901559826a9c91eba
 )
