@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-msvc-loose-includes.patch
+        fix-ctx-msvc.patch
 )
 
 file(COPY
