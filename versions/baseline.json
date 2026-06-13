@@ -5884,6 +5884,10 @@
       "baseline": "20251119",
       "port-version": 0
     },
+    "libvips": {
+      "baseline": "8.18.2",
+      "port-version": 0
+    },
     "libvmaf": {
       "baseline": "3.1.0",
       "port-version": 0
