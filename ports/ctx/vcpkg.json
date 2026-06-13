@@ -1,6 +1,6 @@
 {
   "name": "ctx",
-  "version": "0.1.14",
+  "version": "0.1.18",
   "description": "Compact 2D vector graphics context and rasterizer.",
   "homepage": "https://ctx.graphics/",
   "license": "ISC",

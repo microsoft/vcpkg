@@ -1,14 +1,14 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ctx.graphics/ctx-${VERSION}.tar.bz2"
     FILENAME "ctx-${VERSION}.tar.bz2"
-    SHA512 490a77da7178fe17121f614e04db8183a3191045b8ea03365416c5bacdfd4befebf048ab7b52692c857b47d05d3bfdc7904757a23668968722ff910a8fc2b7f2
+    SHA512 4c66ae3287d8e889fd625a39df53f51514e4df1a60ccbb63e6508759e8ba9fa58cca4f4a437475f5b3ffcc0ffe4e4dcd72ac981463f8c3629d5c1f90390a9c24
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        fix-ctx-msvc.patch
+        fix-msvc-loose-includes.patch
 )
 
 file(COPY
