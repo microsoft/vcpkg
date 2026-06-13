@@ -1,0 +1,4 @@
+lttb provides CMake targets:
+
+  find_package(lttb CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE lttb::lttb)
