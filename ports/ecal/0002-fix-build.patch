@@ -1,166 +1,177 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e82e353e0..19d8f2a93 100644
+index 8bc05ee..bd3b2b8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,7 +26,8 @@ endif (POLICY CMP0077)
+@@ -26,13 +26,16 @@ endif (POLICY CMP0077)
  
  list(APPEND CMAKE_MODULE_PATH
    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
 -  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+-  
 +  # Removed project specific Module overrides
 +)
-   
  set(eCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
  
-@@ -221,6 +222,8 @@ set(possible_subprojects
- set(ECAL_THIRDPARTY_BUILD_CMAKEFUNCTIONS ${ECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS})
+ project(eCAL)
+ set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
  
- # if a package does need to be build, include the cmake file with build instructions
-+# Disable all submodules, except CMakeFunctions which isn't a submodule and required
-+set(possible_subprojects "CMakeFunctions")
- foreach (dep IN LISTS possible_subprojects)
-   string(TOUPPER ${dep} dep_upper)
-   string(TOLOWER ${dep} dep_lower)
-@@ -336,7 +339,9 @@ add_subdirectory(ecal/core)
- # custom libs
++include(${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmakefunctions/build-cmakefunctions.cmake)
++
++find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
  # --------------------------------------------------------
- add_subdirectory(lib/ThreadingUtils)
--add_subdirectory(lib/CustomTclap)
-+# Removed due to only being used by the apps, which are disabled, and for
-+# publicly linking tclap::tclap which doesn't exist outside of eCAL
-+# add_subdirectory(lib/CustomTclap)
- add_subdirectory(lib/ecal_utils)
- 
- if(HAS_QT)
-@@ -559,7 +564,9 @@ endif()
+ # set msvc specific options
  # --------------------------------------------------------
- # create package
- # --------------------------------------------------------
-+if(CPACK_PACK_WITH_INNOSETUP)
- include(cpack/cpack_variables.cmake)
-+endif()
+@@ -289,8 +292,6 @@ if(MSVC)
+   endif()
+ endif()
  
- message(STATUS "Build Options:")
- message(STATUS "--------------------------------------------------------------------------------")
-diff --git a/contrib/ecalhdf5/CMakeLists.txt b/contrib/ecalhdf5/CMakeLists.txt
-index d5285101c..3b7eb705a 100644
---- a/contrib/ecalhdf5/CMakeLists.txt
-+++ b/contrib/ecalhdf5/CMakeLists.txt
-@@ -55,7 +55,12 @@ set(ecalhdf5_header_base
-     include/ecalhdf5/eh5_types.h
- )
- 
-+if (WIN32)
-+# This library, ecal::hdf5 does not export any symbols on Windows. Must be static
-+ecal_add_static_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
-+else()
- ecal_add_library(${PROJECT_NAME} ${ecalhdf5_src} ${ecalhdf5_header_base})
-+endif()
- add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
- 
- target_include_directories(${PROJECT_NAME}
-diff --git a/contrib/ecalproto/CMakeLists.txt b/contrib/ecalproto/CMakeLists.txt
-index 04f1a1b9a..58df32705 100644
---- a/contrib/ecalproto/CMakeLists.txt
-+++ b/contrib/ecalproto/CMakeLists.txt
-@@ -37,7 +37,12 @@ set(ecal_protobuf_header
-     include/ecal/protobuf/ecal_proto_visitor.h
- )
- 
-+if (WIN32)
-+# This library, ecal::proto does not export any symbols on Windows. Must be static
-+ecal_add_static_library(${PROJECT_NAME} ${ecal_protobuf_src} ${ecal_protobuf_header})
-+else()
- ecal_add_library(${PROJECT_NAME} ${ecal_protobuf_src} ${ecal_protobuf_header})
-+endif()
- add_library(eCAL::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
- target_include_directories(${PROJECT_NAME} PUBLIC 
-   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-find_package(CMakeFunctions REQUIRED)
+-
+ git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
+ set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
+ set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
+@@ -321,7 +322,7 @@ set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
+ set(eCAL_install_archive_dyn_dir   ${CMAKE_INSTALL_LIBDIR})
+ set(eCAL_install_bin_dir           ${CMAKE_INSTALL_BINDIR})
+ set(eCAL_install_config_dir        ${CMAKE_INSTALL_SYSCONFDIR}/ecal)
+-set(eCAL_install_cmake_dir         ${CMAKE_INSTALL_LIBDIR}/cmake/eCAL)
++set(eCAL_install_cmake_dir         share/eCAL)
+ set(eCAL_install_doc_dir           ${CMAKE_INSTALL_DOCDIR})
+ set(eCAL_install_include_dir       ${CMAKE_INSTALL_INCLUDEDIR})
+ set(eCAL_install_lib_dir           ${CMAKE_INSTALL_LIBDIR})
 diff --git a/ecal/core/CMakeLists.txt b/ecal/core/CMakeLists.txt
-index f18dd6291..8655d134a 100644
+index 17c32c6..d9b9e0e 100644
 --- a/ecal/core/CMakeLists.txt
 +++ b/ecal/core/CMakeLists.txt
-@@ -20,8 +20,6 @@ project(core VERSION ${eCAL_VERSION_STRING})
+@@ -49,7 +49,7 @@ if (ECAL_CORE_CONFIGURATION)
+ endif()
  
- find_package(Threads      REQUIRED)
- find_package(asio         REQUIRED)
--find_package(tclap        REQUIRED)
--find_package(simpleini    REQUIRED)
- find_package(tcp_pubsub   REQUIRED)
- if (ECAL_NPCAP_SUPPORT)
-   find_package(udpcap REQUIRED)
-@@ -549,8 +547,6 @@ target_link_libraries(${PROJECT_NAME}
-     $<$<BOOL:${WIN32}>:wsock32>
-     $<$<BOOL:${QNXNTO}>:socket>
-     asio::asio
--    tclap::tclap
--    simpleini::simpleini
-     eCAL::core_pb
-     Threads::Threads
-     eCAL::ecal-utils
-@@ -558,6 +554,14 @@ target_link_libraries(${PROJECT_NAME}
-     ecal_service
+ if (ECAL_CORE_COMMAND_LINE)
+-  find_package(tclap          REQUIRED)
++  # find_package(tclap          REQUIRED)
+ endif()
+ 
+ if (ECAL_CORE_TRANSPORT_TCP)
+@@ -622,7 +622,7 @@ set(ecal_generated_sources
+     ${CMAKE_CURRENT_BINARY_DIR}/src/git_version.h
  )
  
-+# tclap is header only and only used for implementation
-+find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
-+target_include_directories(${PROJECT_NAME}  PRIVATE ${TCLAP_INCLUDE_DIRS})
-+
-+# simpleini is header only and only used for implementation
-+find_path(SIMPLEINI_INCLUDE_DIRS "ConvertUTF.c")
-+target_include_directories(${PROJECT_NAME} PRIVATE ${SIMPLEINI_INCLUDE_DIRS})
-+
- set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
- set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
- 
-diff --git a/ecal/service/ecal_service/CMakeLists.txt b/ecal/service/ecal_service/CMakeLists.txt
-index 0ac70a214..6a565c726 100644
---- a/ecal/service/ecal_service/CMakeLists.txt
-+++ b/ecal/service/ecal_service/CMakeLists.txt
-@@ -99,6 +99,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
-     FOLDER ecal/service
+-ecal_add_shared_library(${TARGET_NAME}
++ecal_add_library(${TARGET_NAME}
+     ${ecal_sources}
+     ${ecal_generated_sources}
+ )
+@@ -642,13 +642,13 @@ target_compile_definitions(${TARGET_NAME}
+     ASIO_STANDALONE
+     ASIO_DISABLE_VISIBILITY
+   PRIVATE
+-    ECAL_CORE_EXPORTS
++    $<$<BOOL:${BUILD_SHARED_LIBS}>:ECAL_CORE_EXPORTS>
+     $<$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>:ECAL_HAS_CLOCKLOCK_MUTEX>
+     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
+     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>
+     ECAL_NO_DEPRECATION_WARNINGS
+   INTERFACE
+-    ECAL_CORE_IMPORTS
++    $<$<BOOL:${BUILD_SHARED_LIBS}>:ECAL_CORE_IMPORTS>
  )
  
-+ecal_install_library(${PROJECT_NAME})
-+
- ##################################
+ set_target_properties(${TARGET_NAME}
+@@ -692,15 +692,15 @@ endif()
+ if(ECAL_CORE_COMMAND_LINE)
+   target_link_libraries(${TARGET_NAME}
+     PRIVATE
+-      tclap::tclap
++      #tclap::tclap
+   )
++  target_include_directories(${TARGET_NAME} PRIVATE ${TCLAP_INCLUDE_DIRS})
+ endif()
  
- source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+ if(ECAL_CORE_SERVICE)
+-  target_link_libraries(${TARGET_NAME}
+-    PRIVATE
+-      ecal_service
+-  )
++  # fix install(EXPORT "eCALCoreTargets" ...) includes target "core" which requires target "ecal_service" that is not in any export set
++  target_sources(${TARGET_NAME} PRIVATE $<TARGET_OBJECTS:ecal_service>)
++  target_include_directories(${TARGET_NAME} PRIVATE $<TARGET_PROPERTY:ecal_service,INTERFACE_INCLUDE_DIRECTORIES>)
+ endif()
+ 
+ if(ECAL_CORE_TRANSPORT_TCP)
+@@ -748,7 +748,7 @@ target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
+ 
+ set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
+ 
+-ecal_install_shared_library(${TARGET_NAME})
++ecal_install_library(${TARGET_NAME})
+ 
+ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
+   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
+diff --git a/ecal/core/src/defs.h.in b/ecal/core/src/defs.h.in
+index 5753014..31cdef8 100644
+--- a/ecal/core/src/defs.h.in
++++ b/ecal/core/src/defs.h.in
+@@ -37,6 +37,6 @@
+ #define ECAL_INSTALL_LIB_DIR     "@eCAL_install_lib_dir@"
+ #define ECAL_INSTALL_CONFIG_DIR  "@eCAL_install_config_dir@"
+ #define ECAL_INSTALL_INCLUDE_DIR "@eCAL_install_include_dir@"
+-#define ECAL_INSTALL_PREFIX      "@CMAKE_INSTALL_PREFIX@"
++#define ECAL_INSTALL_PREFIX      ""
+ 
+ #endif // defs_h_included
+diff --git a/lang/c/core/CMakeLists.txt b/lang/c/core/CMakeLists.txt
+index 2559348..c586711 100644
+--- a/lang/c/core/CMakeLists.txt
++++ b/lang/c/core/CMakeLists.txt
+@@ -102,7 +102,7 @@ set(ecal_c_sources
+     ${ecal_header_cimpl}
+ )
+ 
+-ecal_add_shared_library(${PROJECT_NAME}
++ecal_add_library(${PROJECT_NAME}
+     ${ecal_c_sources}
+ )
+ 
+diff --git a/lib/CustomTclap/CMakeLists.txt b/lib/CustomTclap/CMakeLists.txt
+index daaae09..e0938f8 100644
+--- a/lib/CustomTclap/CMakeLists.txt
++++ b/lib/CustomTclap/CMakeLists.txt
+@@ -20,7 +20,7 @@ project(CustomTclap)
+ 
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+-find_package(tclap REQUIRED)
++# find_package(tclap REQUIRED)
+ 
+ set(include_files
+   include/custom_tclap/advanced_tclap_output.h
+@@ -46,9 +46,9 @@ ecal_add_static_library(${PROJECT_NAME}
+ 
+ target_link_libraries(${PROJECT_NAME}
+ 	PUBLIC 
+-	    tclap::tclap
++	    # tclap::tclap
+ )
+-
++target_include_directories(${PROJECT_NAME} PUBLIC ${TCLAP_INCLUDE_DIRS})
+ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+ 
+ target_include_directories(${PROJECT_NAME}
 diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
-index 8d13b791c..6ed0d1a14 100644
+index 4d44da2..90127b2 100644
 --- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
 +++ b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
-@@ -40,4 +40,6 @@ foreach (f ${file_list})
-   install( FILES ${f} DESTINATION "${cmake_functions_install_cmake_dir}/${dir}" )
- endforeach()
+@@ -5,12 +5,7 @@ include(cmake_functions.cmake)
+ project(CMakeFunctions VERSION 0.4.1)
  
-+if(CPACK_PACK_WITH_INNOSETUP)
- include(cmake/cpack_variables.cmake)
-+endif()
-diff --git a/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake b/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake
-index a053b06e6..127eb14e6 100644
---- a/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake
-+++ b/thirdparty/cmakefunctions/cmake_functions/cmake_functions.cmake
-@@ -5,22 +5,12 @@ set (file_list_include
-   target_definitions/targets_protobuf.cmake
- )
+ include(GNUInstallDirs)
+-if (MSVC)
+-# Variable definitions
+-set(cmake_functions_install_cmake_dir   cmake)
+-else (MSVC)
+-set(cmake_functions_install_cmake_dir   "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION}")
+-endif (MSVC)
++set(cmake_functions_install_cmake_dir "share/${PROJECT_NAME}")
+ set(cmake_functions_config              ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake)
+ set(cmake_functions_config_version      ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake)
  
--if(WIN32)
--  list(APPEND file_list_include
--    qt/qt_windeployqt.cmake
--  )
--endif()
- 
- set(file_list_no_include
-   protoc_functions/protoc_generate_cpp.cmake
-   protoc_functions/protoc_generate_python.cmake
- )
- 
--if(WIN32)
--  list(APPEND file_list_no_include
--    qt/qt_windeployqt_threadsafe_cmake.bat.in
--  )
--endif()
- 
- # Set list of all files to be installed by CMake Script.
- set(file_list
