@@ -53,10 +53,14 @@ function(vcpkg_insert_msys_into_path msys_out)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "" 
         "PATH_OUT"
-        "PACKAGES"
+        "PACKAGES;DIRECT_PACKAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_PACKAGES})
+    if(DEFINED arg_DIRECT_PACKAGES)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_PACKAGES} DIRECT_PACKAGES ${arg_DIRECT_PACKAGES})
+    else()
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_PACKAGES})
+    endif()
     cmake_path(CONVERT "$ENV{SystemRoot}" TO_CMAKE_PATH_LIST system_root NORMALIZE)
     cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
     file(REAL_PATH "${system_root}" system_root)
