@@ -37,6 +37,7 @@ $semverVersion = ($version -replace '(\d+(\.\d+){1,3}).*', '$1')
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
+    'boost-hana' = 1
 }
 
 function Get-PortVersion {
@@ -131,6 +132,13 @@ $portData = @{
             'icu' = @{
                 'description'  = 'ICU backend for Boost.Locale';
                 'dependencies' = @('icu');
+            }
+        }
+    };
+    'boost-hana'             = @{
+        'features' = @{
+            'large-struct-macros' = @{
+                'description' = 'Regenerate Boost.Hana struct macros for up to 125 members';
             }
         }
     };
