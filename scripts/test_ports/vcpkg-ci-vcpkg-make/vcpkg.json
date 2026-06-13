@@ -28,7 +28,8 @@
     "z-vcpkg-make-determine-target-triplet",
     "z-vcpkg-make-get-configure-triplets",
     "z-vcpkg-make-prepare-compile-flags",
-    "z-vcpkg-make-z-adapt-lib-link-names"
+    "z-vcpkg-make-z-adapt-lib-link-names",
+    "z-vcpkg-make-additional-msys-packages"
   ],
   "features": {
     "scripts-cl-cpp-wrapper": {
@@ -60,6 +61,9 @@
     },
     "z-vcpkg-make-z-adapt-lib-link-names": {
       "description": "Test the z_vcpkg_make_z_adapt_lib_link_names function"
+    },
+    "z-vcpkg-make-additional-msys-packages": {
+      "description": "Test additional MSYS packages support in vcpkg-make"
     }
   }
 }
