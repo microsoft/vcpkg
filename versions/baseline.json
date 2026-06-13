@@ -193,8 +193,8 @@
       "port-version": 0
     },
     "appstream": {
-      "baseline": "1.0.6",
-      "port-version": 1
+      "baseline": "1.1.2",
+      "port-version": 0
     },
     "appstream-glib": {
       "baseline": "0.8.3",
@@ -5055,6 +5055,10 @@
     "libfuse": {
       "baseline": "3.18.2",
       "port-version": 1
+    },
+    "libfyaml": {
+      "baseline": "0.9.6",
+      "port-version": 0
     },
     "libgcrypt": {
       "baseline": "1.12.2",
