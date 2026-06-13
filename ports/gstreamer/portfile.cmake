@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 2870d76fffd68bb5c702766a5dd3aa95f864c56a1d19444a3ad0a0e38fa1c66b25d61d5eb31046a3c53b875499ce7b784277cc9bf0bcbf698f35df0fb6a7b3f1
+    SHA512 010a5528cb789844e36a540b0a17c6cf342a89ac124e362aefbc5650b332a2617a74e66f9b3186672fa14a66fdd74a542e7c959e3237e70a4b00c17216ae5b5b
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -11,6 +11,7 @@ vcpkg_from_gitlab(
         fix-multiple-def.patch
         x264-api-imports.diff
         duplicate-unused.diff
+        fix-no-docs.diff  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/work_items/5152
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -161,7 +162,6 @@ vcpkg_configure_meson(
         -Ddevtools=disabled
         -Drtsp_server=disabled
         -Drs=disabled
-        -Dvaapi=disabled
         -Dgst-examples=disabled
         # Bindings
         -Dpython=disabled

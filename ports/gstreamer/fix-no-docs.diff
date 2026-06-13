@@ -1,0 +1,186 @@
+diff --git a/subprojects/gst-editing-services/docs/meson.build b/subprojects/gst-editing-services/docs/meson.build
+index adcf884bec..8fa3375d9f 100644
+--- a/subprojects/gst-editing-services/docs/meson.build
++++ b/subprojects/gst-editing-services/docs/meson.build
+@@ -27,6 +27,10 @@ if not build_gir
+     subdir_done()
+ endif
+ 
++if get_option('doc').disabled()
++  subdir_done()
++endif
++
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+     plugins_cache_generator = gst_proj.get_variable('plugins_cache_generator')
+@@ -49,10 +53,6 @@ else
+     warning('GStreamer plugin inspector for documentation not found, can\'t update the cache')
+ endif
+ 
+-if get_option('doc').disabled()
+-  subdir_done()
+-endif
+-
+ build_hotdoc = true
+ ges_excludes = []
+ foreach f: ['gesmarshal.*',
+diff --git a/subprojects/gst-libav/docs/meson.build b/subprojects/gst-libav/docs/meson.build
+index 8812572118..11581865d3 100644
+--- a/subprojects/gst-libav/docs/meson.build
++++ b/subprojects/gst-libav/docs/meson.build
+@@ -18,6 +18,10 @@ if static_build
+     subdir_done()
+ endif
+ 
++if get_option('doc').disabled()
++  subdir_done()
++endif
++
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+     plugins_cache_generator = gst_proj.get_variable('plugins_cache_generator')
+@@ -39,10 +43,6 @@ else
+     warning('GStreamer plugin inspector for documentation not found, can\'t update the cache')
+ endif
+ 
+-if get_option('doc').disabled()
+-  subdir_done()
+-endif
+-
+ build_hotdoc = true
+ 
+ doc_source_file = configure_file(output: 'doc_sources.json', configuration: plugin_sources, output_format: 'json')
+@@ -82,4 +82,3 @@ plugin_hotdoc_configs = custom_target(
+   input: plugins_cache,
+   output: 'hotdoc-configs.json',
+ )
+-
+diff --git a/subprojects/gst-plugins-bad/docs/meson.build b/subprojects/gst-plugins-bad/docs/meson.build
+index ab387cfabc..e43cd1c503 100644
+--- a/subprojects/gst-plugins-bad/docs/meson.build
++++ b/subprojects/gst-plugins-bad/docs/meson.build
+@@ -26,6 +26,10 @@ if not build_gir
+     message('Introspection not built, won\'t build documentation requiring it')
+ endif
+ 
++if get_option('doc').disabled()
++  subdir_done()
++endif
++
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+     plugins_cache_generator = gst_proj.get_variable('plugins_cache_generator')
+@@ -50,10 +54,6 @@ else
+     warning('GStreamer plugin inspector for documentation not found, can\'t update the cache')
+ endif
+ 
+-if get_option('doc').disabled()
+-  subdir_done()
+-endif
+-
+ build_hotdoc = true
+ 
+ docconf = configuration_data()
+diff --git a/subprojects/gst-plugins-base/docs/meson.build b/subprojects/gst-plugins-base/docs/meson.build
+index 93665027da..7a6b2248d1 100644
+--- a/subprojects/gst-plugins-base/docs/meson.build
++++ b/subprojects/gst-plugins-base/docs/meson.build
+@@ -27,6 +27,9 @@ if not build_gir
+     subdir_done()
+ endif
+ 
++if get_option('doc').disabled()
++  subdir_done()
++endif
+ 
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+@@ -52,10 +55,6 @@ else
+     warning('GStreamer plugin inspector for documentation not found, can\'t update the cache')
+ endif
+ 
+-if get_option('doc').disabled()
+-  subdir_done()
+-endif
+-
+ build_hotdoc = true
+ 
+ docconf = configuration_data()
+diff --git a/subprojects/gst-plugins-good/docs/meson.build b/subprojects/gst-plugins-good/docs/meson.build
+index c8ac9c483e..7af86f1f67 100644
+--- a/subprojects/gst-plugins-good/docs/meson.build
++++ b/subprojects/gst-plugins-good/docs/meson.build
+@@ -18,6 +18,10 @@ if meson.is_cross_build()
+     subdir_done()
+ endif
+ 
++if get_option('doc').disabled()
++    subdir_done()
++endif
++
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+     plugins_cache_generator = gst_proj.get_variable('plugins_cache_generator')
+@@ -41,10 +45,6 @@ else
+     warning('GStreamer plugin inspector for documentation not found, can\'t update the cache')
+ endif
+ 
+-if get_option('doc').disabled()
+-  subdir_done()
+-endif
+-
+ docconf = configuration_data()
+ docconf.set('GST_API_VERSION', api_version)
+ configure_file(input : 'gst_api_version.in',
+diff --git a/subprojects/gst-plugins-ugly/docs/meson.build b/subprojects/gst-plugins-ugly/docs/meson.build
+index 2d206dde38..3b017dfa24 100644
+--- a/subprojects/gst-plugins-ugly/docs/meson.build
++++ b/subprojects/gst-plugins-ugly/docs/meson.build
+@@ -18,6 +18,10 @@ if static_build
+     subdir_done()
+ endif
+ 
++if get_option('doc').disabled()
++  subdir_done()
++endif
++
+ plugins_cache = join_paths(meson.current_source_dir(), 'gst_plugins_cache.json')
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+@@ -41,10 +45,6 @@ else
+     warning('GStreamer plugin inspector for documentation not found, can\'t update the cache')
+ endif
+ 
+-if get_option('doc').disabled()
+-  subdir_done()
+-endif
+-
+ build_hotdoc = true
+ docconf = configuration_data()
+ docconf.set('GST_API_VERSION', api_version)
+diff --git a/subprojects/gst-rtsp-server/docs/meson.build b/subprojects/gst-rtsp-server/docs/meson.build
+index 7d0caf68ed..937ef250f7 100644
+--- a/subprojects/gst-rtsp-server/docs/meson.build
++++ b/subprojects/gst-rtsp-server/docs/meson.build
+@@ -27,6 +27,10 @@ if not build_gir
+     subdir_done()
+ endif
+ 
++if get_option('doc').disabled()
++  subdir_done()
++endif
++
+ if gst_dep.type_name() == 'internal'
+     gst_proj = subproject('gstreamer')
+     plugins_cache_generator = gst_proj.get_variable('plugins_cache_generator')
+@@ -49,10 +53,6 @@ else
+     warning('GStreamer plugin inspector for documentation not found, can\'t update the cache')
+ endif
+ 
+-if get_option('doc').disabled()
+-  subdir_done()
+-endif
+-
+ build_hotdoc = true
+ 
+ cdir = meson.current_source_dir()
