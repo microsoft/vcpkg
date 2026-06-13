@@ -41,4 +41,8 @@ if("z-vcpkg-make-get-crosscompiling" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_make_get_crosscompiling.cmake")
 endif()
 
+if("z-vcpkg-make-additional-msys-packages" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg-make-additional-msys-packages.cmake")
+endif()
+
 unit_test_report_result()

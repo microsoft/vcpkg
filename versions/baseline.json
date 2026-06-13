@@ -3514,7 +3514,7 @@
     },
     "gmp": {
       "baseline": "6.3.0",
-      "port-version": 3
+      "port-version": 4
     },
     "gmsh": {
       "baseline": "4.15.2",
@@ -5274,7 +5274,7 @@
     },
     "libmagic": {
       "baseline": "5.47",
-      "port-version": 0
+      "port-version": 1
     },
     "libmariadb": {
       "baseline": "3.4.8",
@@ -10586,7 +10586,7 @@
     },
     "vcpkg-make": {
       "baseline": "2026-01-01",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",

@@ -1,6 +1,7 @@
 {
   "name": "libmagic",
   "version": "5.47",
+  "port-version": 1,
   "description": "This library can be used to classify files according to magic number tests.",
   "homepage": "https://github.com/file/file",
   "license": "BSD-2-Clause",
@@ -20,6 +21,10 @@
     {
       "name": "tre",
       "platform": "windows | mingw"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
     }
   ],
   "features": {

@@ -85,9 +85,9 @@ if(VCPKG_HOST_IS_WINDOWS)
     # dumpbin detection fails with autoconf 2.72
     set(ENV{WANT_AUTOCONF} 2.71)
 endif()
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     ADDITIONAL_MSYS_PACKAGES
         DIRECT_PACKAGES
             "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
@@ -99,7 +99,7 @@ vcpkg_configure_make(
         --with-readline=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
