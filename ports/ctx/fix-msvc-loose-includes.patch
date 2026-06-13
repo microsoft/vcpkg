@@ -1,0 +1,53 @@
+diff --git a/ctx.c b/ctx.c
+index 0a814f2a00..7d00ece3b5 100644
+--- a/ctx.c
++++ b/ctx.c
+@@ -4,11 +4,13 @@
+ 
+ #include <stdint.h>
+ #include <stdlib.h>
++#ifndef _WIN32
+ #include <termios.h>
+ #include <unistd.h>
++#endif
+ 
+ 
+ #define CTX_WANT_FONT 1
+ #include "ctx_config.h"
+ 
+ #if CTX_BABL
+diff --git a/ctx.h b/ctx.h
+index 1c0b864735..6a1e7afc1a 100644
+--- a/ctx.h
++++ b/ctx.h
+@@ -46,12 +46,13 @@ extern "C" {
+ #endif
+ 
+ #include <stdint.h>
+ #include <stdbool.h>
+ #include <string.h>
++#include <sys/types.h>
+ #ifndef _WIN32
+ #include <strings.h>
+ #include <alloca.h>
+ #else
+ #include <malloc.h>
+ #endif
+ #include <stdio.h>
+diff --git a/bin/ctx-img.c b/bin/ctx-img.c
+index 35bf83f758..559e12b018 100644
+--- a/bin/ctx-img.c
++++ b/bin/ctx-img.c
+@@ -5,11 +5,12 @@
+ #endif
+ 
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <unistd.h>
++#include <limits.h>
+ #include <math.h>
+ #include "ctx.h"
+ 
+ //#define STBI_NO_STDIO
+ #include "stb_image.h"
