@@ -1,0 +1,625 @@
+diff --git a/meson.build b/meson.build
+index 2cbe4cb..450c6b2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,7 +1,7 @@
+-project('libproxy', 'c',
++project('libproxy', 'c', 'cpp',
+           version: '0.5.12',
+     meson_version: '>= 0.59.0',
+-  default_options: [ 'warning_level=2', 'werror=false', 'c_std=gnu11', ],
++  default_options: [ 'warning_level=2', 'werror=false', 'cpp_std=c++17', ],
+ )
+ 
+ version_arr = meson.project_version().split('-')[0].split('.')
+@@ -23,6 +23,9 @@ add_project_arguments(['-I' + meson.project_build_root()], language: 'c')
+ api_version = '1.0'
+ package_api_name = '@0@-@1@'.format(meson.project_name(), api_version)
+ 
++if meson.get_compiler('c').get_id() == 'msvc'
++  add_project_arguments('/TP', '/FI', meson.project_source_root() / 'msvc_support.h', language: 'c')
++endif
+ cc = meson.get_compiler('c')
+ 
+ project_c_args = []
+diff --git a/src/backend/meson.build b/src/backend/meson.build
+index fcc0962..b847b46 100644
+--- a/src/backend/meson.build
++++ b/src/backend/meson.build
+@@ -34,14 +34,14 @@ px_backend_inc = include_directories('.')
+ 
+ subdir('plugins')
+ 
+-px_backend = shared_library(
++px_backend = library(
+   'pxbackend-@0@'.format(api_version),
+   px_backend_sources,
+   dependencies: px_backend_deps,
+   c_args: px_backend_c_args,
+   install: true,
+   install_dir: pkglibdir,
+-  install_rpath: pkglibdir
++  install_rpath: pkglibdir, name_prefix: '', name_suffix: 'lib'
+ )
+ 
+ px_backend_dep = declare_dependency(
+diff --git a/src/backend/plugins/config-env/config-env.c b/src/backend/plugins/config-env/config-env.c
+index deb80ec..f7589ab 100644
+--- a/src/backend/plugins/config-env/config-env.c
++++ b/src/backend/plugins/config-env/config-env.c
+@@ -103,7 +103,7 @@ px_config_env_get_config (PxConfig     *config,
+     proxy = g_getenv ("NO_PROXY");
+ 
+   if (proxy) {
+-    g_auto (GStrv) no_proxy = g_strsplit (proxy, ",", -1);
++    GStrv no_proxy = g_strsplit (proxy, ",", -1); PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_no_proxy(&no_proxy);
+ 
+     if (px_manager_is_ignore (uri, no_proxy))
+       return;
+diff --git a/src/backend/plugins/config-gnome/config-gnome.c b/src/backend/plugins/config-gnome/config-gnome.c
+index d4cea85..90693dd 100644
+--- a/src/backend/plugins/config-gnome/config-gnome.c
++++ b/src/backend/plugins/config-gnome/config-gnome.c
+@@ -58,7 +58,7 @@ static void
+ px_config_gnome_init (PxConfigGnome *self)
+ {
+   GSettingsSchemaSource *source;
+-  g_autoptr (GSettingsSchema) proxy_schema = NULL;
++  GSettingsSchema *proxy_schema = NULL; PxCleanup<GSettingsSchema*, glib_autoptr_cleanup_GSettingsSchema> _px_cl_proxy_schema(&proxy_schema);
+   const char *desktops;
+ 
+   self->available = FALSE;
+@@ -146,7 +146,7 @@ store_response (GStrvBuilder *builder,
+                 char         *password)
+ {
+   if (type && host && strlen (type) > 0 && strlen (host) > 0 && port != 0) {
+-    g_autoptr (GString) tmp = g_string_new (type);
++    GString *tmp = g_string_new (type); PxCleanup<GString*, glib_autoptr_cleanup_GString> _px_cl_tmp(&tmp);
+ 
+     g_string_append (tmp, "://");
+     if (auth)
+@@ -164,7 +164,7 @@ px_config_gnome_get_config (PxConfig     *config,
+                             GStrvBuilder *builder)
+ {
+   PxConfigGnome *self = PX_CONFIG_GNOME (config);
+-  g_autofree char *proxy = NULL;
++  char *proxy = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_proxy(&proxy);
+   GnomeProxyMode mode;
+ 
+   if (!self->available)
+@@ -187,13 +187,13 @@ px_config_gnome_get_config (PxConfig     *config,
+ 
+     px_strv_builder_add_proxy (builder, proxy);
+   } else if (mode == GNOME_PROXY_MODE_MANUAL) {
+-    g_autofree char *username = g_settings_get_string (self->http_proxy_settings, "authentication-user");
+-    g_autofree char *password = g_settings_get_string (self->http_proxy_settings, "authentication-password");
++    char *username = g_settings_get_string (self->http_proxy_settings, "authentication-user"); PxCleanup<char*, px_g_free_cleanup> _px_cl_username(&username);
++    char *password = g_settings_get_string (self->http_proxy_settings, "authentication-password"); PxCleanup<char*, px_g_free_cleanup> _px_cl_password(&password);
+     const char *scheme = g_uri_get_scheme (uri);
+     gboolean auth = g_settings_get_boolean (self->http_proxy_settings, "use-authentication");
+ 
+     if (g_strcmp0 (scheme, "http") == 0) {
+-      g_autofree char *host = g_settings_get_string (self->http_proxy_settings, "host");
++      char *host = g_settings_get_string (self->http_proxy_settings, "host"); PxCleanup<char*, px_g_free_cleanup> _px_cl_host(&host);
+       store_response (builder,
+                       "http",
+                       host,
+@@ -202,7 +202,7 @@ px_config_gnome_get_config (PxConfig     *config,
+                       username,
+                       password);
+     } else if (g_strcmp0 (scheme, "https") == 0) {
+-      g_autofree char *host = g_settings_get_string (self->https_proxy_settings, "host");
++      char *host = g_settings_get_string (self->https_proxy_settings, "host"); PxCleanup<char*, px_g_free_cleanup> _px_cl_host(&host);
+       store_response (builder,
+                       "http",
+                       host,
+@@ -211,7 +211,7 @@ px_config_gnome_get_config (PxConfig     *config,
+                       username,
+                       password);
+     } else if (g_strcmp0 (scheme, "ftp") == 0) {
+-      g_autofree char *host = g_settings_get_string (self->ftp_proxy_settings, "host");
++      char *host = g_settings_get_string (self->ftp_proxy_settings, "host"); PxCleanup<char*, px_g_free_cleanup> _px_cl_host(&host);
+       store_response (builder,
+                       "http",
+                       host,
+@@ -220,7 +220,7 @@ px_config_gnome_get_config (PxConfig     *config,
+                       username,
+                       password);
+     } else {
+-      g_autofree char *host = g_settings_get_string (self->socks_proxy_settings, "host");
++      char *host = g_settings_get_string (self->socks_proxy_settings, "host"); PxCleanup<char*, px_g_free_cleanup> _px_cl_host(&host);
+       store_response (builder,
+                       "socks",
+                       host,
+diff --git a/src/backend/plugins/config-kde/config-kde.c b/src/backend/plugins/config-kde/config-kde.c
+index a65f2c7..45808bc 100644
+--- a/src/backend/plugins/config-kde/config-kde.c
++++ b/src/backend/plugins/config-kde/config-kde.c
+@@ -83,11 +83,11 @@ static void
+ px_config_kde_set_config_file (PxConfigKde *self,
+                                char        *proxy_file)
+ {
+-  g_autoptr (GError) error = NULL;
+-  g_autofree char *line = NULL;
+-  g_autoptr (GFile) file = NULL;
+-  g_autoptr (GFileInputStream) istr = NULL;
+-  g_autoptr (GDataInputStream) dstr = NULL;
++  GError *error = NULL; PxCleanup<GError*, glib_autoptr_cleanup_GError> _px_cl_error(&error);
++  char *line = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_line(&line);
++  GFile *file = NULL; PxCleanup<GFile*, glib_autoptr_cleanup_GFile> _px_cl_file(&file);
++  GFileInputStream *istr = NULL; PxCleanup<GFileInputStream*, glib_autoptr_cleanup_GFileInputStream> _px_cl_istr(&istr);
++  GDataInputStream *dstr = NULL; PxCleanup<GDataInputStream*, glib_autoptr_cleanup_GDataInputStream> _px_cl_dstr(&dstr);
+   const char *desktops;
+ 
+   self->available = FALSE;
+@@ -124,8 +124,8 @@ px_config_kde_set_config_file (PxConfigKde *self,
+ 
+     line = g_data_input_stream_read_line (dstr, NULL, NULL, &error);
+     if (line) {
+-      g_auto (GStrv) kv = NULL;
+-      g_autoptr (GString) value = NULL;
++      GStrv kv = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_kv(&kv);
++      GString *value = NULL; PxCleanup<GString*, glib_autoptr_cleanup_GString> _px_cl_value(&value);
+       kv = g_strsplit (line, "=", 2);
+ 
+       if (g_strv_length (kv) != 2)
+@@ -243,7 +243,7 @@ px_config_kde_get_config (PxConfig     *config,
+ {
+   PxConfigKde *self = PX_CONFIG_KDE (config);
+   const char *scheme;
+-  g_autofree char *proxy = NULL;
++  char *proxy = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_proxy(&proxy);
+ 
+   if (!self->available)
+     return;
+diff --git a/src/backend/plugins/config-osx/config-osx.c b/src/backend/plugins/config-osx/config-osx.c
+index 224f8a4..c7a7753 100644
+--- a/src/backend/plugins/config-osx/config-osx.c
++++ b/src/backend/plugins/config-osx/config-osx.c
+@@ -208,9 +208,9 @@ static char *
+ protocol_url (CFDictionaryRef  settings,
+               char            *protocol)
+ {
+-  g_autofree char *tmp = NULL;
+-  g_autoptr (GString) ret = NULL;
+-  g_autofree char *host = NULL;
++  char *tmp = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_tmp(&tmp);
++  GString *ret = NULL; PxCleanup<GString*, glib_autoptr_cleanup_GString> _px_cl_ret(&ret);
++  char *host = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_host(&host);
+   int64_t port;
+   CFStringRef ref;
+ 
+@@ -258,7 +258,7 @@ static GStrv
+ get_ignore_list (CFDictionaryRef proxies)
+ {
+   CFArrayRef ref = getobj_array (proxies, "ExceptionsList");
+-  g_autoptr (GStrvBuilder) ret = g_strv_builder_new ();
++  GStrvBuilder *ret = g_strv_builder_new (); PxCleanup<GStrvBuilder*, glib_autoptr_cleanup_GStrvBuilder> _px_cl_ret(&ret);
+ 
+   if (!ref)
+     return g_strv_builder_end (ret);
+@@ -282,7 +282,7 @@ px_config_osx_get_config (PxConfig     *self,
+ {
+   const char *proxy = NULL;
+   CFDictionaryRef proxies = SCDynamicStoreCopyProxies (NULL);
+-  g_auto (GStrv) ignore_list = NULL;
++  GStrv ignore_list = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_ignore_list(&ignore_list);
+ 
+   if (!proxies) {
+     g_warning ("Unable to fetch proxy configuration");
+@@ -302,18 +302,18 @@ px_config_osx_get_config (PxConfig     *self,
+ 
+   if (getbool (proxies, "ProxyAutoConfigEnable")) {
+     CFStringRef ref = getobj_str (proxies, "ProxyAutoConfigURLString");
+-    g_autofree char *tmp = str (ref);
++    char *tmp = str (ref); PxCleanup<char*, px_g_free_cleanup> _px_cl_tmp(&tmp);
+     GUri *tmp_uri = g_uri_parse (tmp, G_URI_FLAGS_NONE, NULL);
+ 
+     if (tmp_uri) {
+-      g_autofree char *ret = g_strdup_printf ("pac+%s", g_uri_to_string (tmp_uri));
++      char *ret = g_strdup_printf ("pac+%s", g_uri_to_string (tmp_uri)); PxCleanup<char*, px_g_free_cleanup> _px_cl_ret(&ret);
+       CFRelease (proxies);
+       px_strv_builder_add_proxy (builder, ret);
+       return;
+     }
+   } else {
+     const char *scheme = g_uri_get_scheme (uri);
+-    g_autofree char *capital_scheme = str_to_upper (scheme);
++    char *capital_scheme = str_to_upper (scheme); PxCleanup<char*, px_g_free_cleanup> _px_cl_capital_scheme(&capital_scheme);
+ 
+     proxy = protocol_url (proxies, capital_scheme);
+ 
+diff --git a/src/backend/plugins/config-sysconfig/config-sysconfig.c b/src/backend/plugins/config-sysconfig/config-sysconfig.c
+index 42aa901..bce2530 100644
+--- a/src/backend/plugins/config-sysconfig/config-sysconfig.c
++++ b/src/backend/plugins/config-sysconfig/config-sysconfig.c
+@@ -73,10 +73,10 @@ void
+ px_config_sysconfig_set_config_file (PxConfigSysConfig *self,
+                                      const char        *config_file)
+ {
+-  g_autoptr (GFile) file = NULL;
+-  g_autoptr (GError) error = NULL;
+-  g_autoptr (GFileInputStream) istr = NULL;
+-  g_autoptr (GDataInputStream) dstr = NULL;
++  GFile *file = NULL; PxCleanup<GFile*, glib_autoptr_cleanup_GFile> _px_cl_file(&file);
++  GError *error = NULL; PxCleanup<GError*, glib_autoptr_cleanup_GError> _px_cl_error(&error);
++  GFileInputStream *istr = NULL; PxCleanup<GFileInputStream*, glib_autoptr_cleanup_GFileInputStream> _px_cl_istr(&istr);
++  GDataInputStream *dstr = NULL; PxCleanup<GDataInputStream*, glib_autoptr_cleanup_GDataInputStream> _px_cl_dstr(&dstr);
+   char *line = NULL;
+ 
+   g_clear_pointer (&self->config_file, g_free);
+@@ -104,8 +104,8 @@ px_config_sysconfig_set_config_file (PxConfigSysConfig *self,
+ 
+     line = g_data_input_stream_read_line (dstr, NULL, NULL, &error);
+     if (line) {
+-      g_auto (GStrv) kv = NULL;
+-      g_autoptr (GString) value = NULL;
++      GStrv kv = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_kv(&kv);
++      GString *value = NULL; PxCleanup<GString*, glib_autoptr_cleanup_GString> _px_cl_value(&value);
+       kv = g_strsplit (line, "=", -1);
+ 
+       if (g_strv_length (kv) != 2)
+@@ -125,7 +125,7 @@ px_config_sysconfig_set_config_file (PxConfigSysConfig *self,
+       } else if (strcmp (kv[0], "FTP_PROXY") == 0) {
+         self->ftp_proxy = g_strdup (value->str);
+       } else if (strcmp (kv[0], "NO_PROXY") == 0) {
+-        g_autofree char *tmp = g_strdup (value->str);
++        char *tmp = g_strdup (value->str); PxCleanup<char*, px_g_free_cleanup> _px_cl_tmp(&tmp);
+         self->no_proxy = g_strsplit (tmp, ",", -1);
+       }
+     }
+@@ -208,7 +208,7 @@ px_config_sysconfig_get_config (PxConfig     *config,
+ {
+   PxConfigSysConfig *self = PX_CONFIG_SYSCONFIG (config);
+   const char *scheme = g_uri_get_scheme (uri);
+-  g_autofree char *proxy = NULL;
++  char *proxy = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_proxy(&proxy);
+ 
+   if (!self->proxy_enabled)
+     return;
+diff --git a/src/backend/plugins/config-windows/config-windows.c b/src/backend/plugins/config-windows/config-windows.c
+index 5e48e9b..a01f1f0 100644
+--- a/src/backend/plugins/config-windows/config-windows.c
++++ b/src/backend/plugins/config-windows/config-windows.c
+@@ -156,7 +156,7 @@ build_proxy_uri (const char *uri)
+ static GHashTable *
+ parse_manual (char *manual)
+ {
+-  g_auto (GStrv) split = NULL;
++  GStrv split = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_split(&split);
+   GHashTable *ret = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+ 
+   /* We have to check for two formats:
+@@ -174,7 +174,7 @@ parse_manual (char *manual)
+       /* it should be used for all schemes that do not have an explicit entry */
+       g_hash_table_insert (ret, g_strdup ("default"), proxy_uri);
+     } else {
+-      g_auto (GStrv) split_kv = g_strsplit (split[idx], "=", -1);
++      GStrv split_kv = g_strsplit (split[idx], "=", -1); PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_split_kv(&split_kv);
+ 
+       if (g_strv_length (split_kv) == 2) {
+         char *proxy_uri = build_proxy_uri (split_kv[1]);
+@@ -189,7 +189,7 @@ parse_manual (char *manual)
+ static gboolean
+ is_enabled (char type)
+ {
+-  g_autofree char *data = NULL;
++  char *data = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_data(&data);
+   guint32 dlen = 0;
+   gboolean result = FALSE;
+ 
+@@ -207,13 +207,13 @@ px_config_windows_get_config (PxConfig     *self,
+                               GUri         *uri,
+                               GStrvBuilder *builder)
+ {
+-  g_autofree char *tmp1 = NULL;
+-  g_autofree char *tmp2 = NULL;
+-  g_autofree char *tmp3 = NULL;
++  char *tmp1 = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_tmp1(&tmp1);
++  char *tmp2 = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_tmp2(&tmp2);
++  char *tmp3 = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_tmp3(&tmp3);
+   guint32 enabled = 0;
+ 
+   if (get_registry (W32REG_BASEKEY, "ProxyOverride", &tmp1, NULL, NULL)) {
+-    g_auto (GStrv) no_proxy = g_strsplit (tmp1, ";", -1);
++    GStrv no_proxy = g_strsplit (tmp1, "; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_no_proxy(&no_proxy);", -1);
+ 
+     if (px_manager_is_ignore (uri, no_proxy))
+       return;
+@@ -226,7 +226,7 @@ px_config_windows_get_config (PxConfig     *self,
+ 
+   /* PAC */
+   if (is_enabled (W32REG_OFFSET_PAC) && get_registry (W32REG_BASEKEY, "AutoConfigURL", &tmp2, NULL, NULL)) {
+-    g_autofree char *pac_uri = g_strconcat ("pac+", tmp2, NULL);
++    char *pac_uri = g_strconcat ("pac+", tmp2, NULL); PxCleanup<char*, px_g_free_cleanup> _px_cl_pac_uri(&pac_uri);
+     GUri *ac_uri = g_uri_parse (tmp2, G_URI_FLAGS_NONE, NULL);
+ 
+     if (ac_uri) {
+@@ -236,7 +236,7 @@ px_config_windows_get_config (PxConfig     *self,
+ 
+   /* Manual proxy */
+   if (get_registry (W32REG_BASEKEY, "ProxyEnable", NULL, NULL, &enabled) && enabled && get_registry (W32REG_BASEKEY, "ProxyServer", &tmp3, NULL, NULL)) {
+-    g_autoptr (GHashTable) table = parse_manual (tmp3);
++    GHashTable *table = parse_manual (tmp3); PxCleanup<GHashTable*, glib_autoptr_cleanup_GHashTable> _px_cl_table(&table);
+     const char *scheme = g_uri_get_scheme (uri);
+ 
+     if (table) {
+diff --git a/src/backend/plugins/config-xdp/config-xdp.c b/src/backend/plugins/config-xdp/config-xdp.c
+index 7a4b112..3fd6879 100644
+--- a/src/backend/plugins/config-xdp/config-xdp.c
++++ b/src/backend/plugins/config-xdp/config-xdp.c
+@@ -47,9 +47,9 @@ enum {
+ static void
+ px_config_xdp_init (PxConfigXdp *self)
+ {
+-  g_autoptr (GDBusConnection) connection = NULL;
+-  g_autoptr (GError) error = NULL;
+-  g_autofree char *path = g_build_filename (g_get_user_runtime_dir (), "flatpak-info", NULL);
++  GDBusConnection *connection = NULL; PxCleanup<GDBusConnection*, glib_autoptr_cleanup_GDBusConnection> _px_cl_connection(&connection);
++  GError *error = NULL; PxCleanup<GError*, glib_autoptr_cleanup_GError> _px_cl_error(&error);
++  char *path = g_build_filename (g_get_user_runtime_dir (), "flatpak-info", NULL); PxCleanup<char*, px_g_free_cleanup> _px_cl_path(&path);
+ 
+   self->available = FALSE;
+ 
+@@ -131,11 +131,11 @@ px_config_xdp_get_config (PxConfig     *config,
+                           GUri         *uri,
+                           GStrvBuilder *builder)
+ {
+-  g_autoptr (GVariant) var = NULL;
+-  g_autoptr (GError) error = NULL;
+-  g_autoptr (GVariantIter) iter = NULL;
++  GVariant *var = NULL; PxCleanup<GVariant*, glib_autoptr_cleanup_GVariant> _px_cl_var(&var);
++  GError *error = NULL; PxCleanup<GError*, glib_autoptr_cleanup_GError> _px_cl_error(&error);
++  GVariantIter *iter = NULL; PxCleanup<GVariantIter*, glib_autoptr_cleanup_GVariantIter> _px_cl_iter(&iter);
+   PxConfigXdp *self = PX_CONFIG_XDP (config);
+-  g_autofree char *uri_str = NULL;
++  char *uri_str = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_uri_str(&uri_str);
+   const char *str;
+ 
+   if (!self->available)
+diff --git a/src/backend/plugins/pacrunner-duktape/pacrunner-duktape.c b/src/backend/plugins/pacrunner-duktape/pacrunner-duktape.c
+index 40137ca..99791a3 100644
+--- a/src/backend/plugins/pacrunner-duktape/pacrunner-duktape.c
++++ b/src/backend/plugins/pacrunner-duktape/pacrunner-duktape.c
+@@ -21,10 +21,10 @@
+ 
+ #include <gio/gio.h>
+ 
+-#include <unistd.h>
+-#ifdef __WIN32__
++#ifdef _WIN32
+ #include <ws2tcpip.h>
+ #else
++#include <unistd.h>
+ #include <netdb.h>
+ #include <netinet/in.h>
+ #endif
+@@ -174,7 +174,7 @@ px_pacrunner_duktape_set_pac (PxPacRunner *pacrunner,
+   gsize len;
+   gconstpointer content = g_bytes_get_data (pac_data, &len);
+ 
+-  duk_push_lstring (self->ctx, content, len);
++  duk_push_lstring (self->ctx, (const char *) content, len);
+ 
+   if (duk_peval_noresult (self->ctx)) {
+     return FALSE;
+diff --git a/src/backend/px-manager.c b/src/backend/px-manager.c
+index 96022eb..58c8725 100644
+--- a/src/backend/px-manager.c
++++ b/src/backend/px-manager.c
+@@ -141,7 +141,7 @@ static void
+ px_manager_add_config_plugin (PxManager *self,
+                               GType      type)
+ {
+-  g_autoptr (PxConfig) config = g_object_new (type, "config-option", self->config_option, NULL);
++  PxConfig *config = g_object_new (type, "config-option", self->config_option, NULL); PxCleanup<PxConfig*, glib_autoptr_cleanup_PxConfig> _px_cl_config(&config);
+   PxConfigInterface *ifc = PX_CONFIG_GET_IFACE (config);
+   const char *env = g_getenv ("PX_FORCE_CONFIG");
+   const char *force_config = self->config_plugin ? self->config_plugin : env;
+@@ -172,7 +172,7 @@ px_manager_constructed (GObject *object)
+     if (!g_messages_debug) {
+       g_setenv ("G_MESSAGES_DEBUG", G_LOG_DOMAIN, TRUE);
+     } else {
+-      g_autofree char *new_g_messages_debug = NULL;
++      char *new_g_messages_debug = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_new_g_messages_debug(&new_g_messages_debug);
+ 
+       new_g_messages_debug = g_strconcat (g_messages_debug, " ", G_LOG_DOMAIN, NULL);
+       if (new_g_messages_debug)
+@@ -203,8 +203,8 @@ px_manager_constructed (GObject *object)
+ #endif
+ 
+   g_debug ("Active config plugins:");
+-  for (GList *list = self->config_plugins; list && list->data; list = list->next) {
+-    PxConfig *config = list->data;
++  for (GList *list = self->config_plugins; list && (PxCastHelper(list->data)); list = list->next) {
++    PxConfig *config = (PxCastHelper(list->data));
+     PxConfigInterface *ifc = PX_CONFIG_GET_IFACE (config);
+ 
+     g_debug (" - %s", ifc->name);
+@@ -363,10 +363,10 @@ store_data (void   *contents,
+             size_t  nmemb,
+             void   *user_pointer)
+ {
+-  GByteArray *byte_array = user_pointer;
++  GByteArray *byte_array = (GByteArray *) user_pointer;
+   size_t real_size = size * nmemb;
+ 
+-  g_byte_array_append (byte_array, contents, real_size);
++  g_byte_array_append (byte_array, (const guint8 *) contents, real_size);
+ 
+   return real_size;
+ }
+@@ -456,10 +456,10 @@ char **
+ px_manager_get_configuration (PxManager *self,
+                               GUri      *uri)
+ {
+-  g_autoptr (GStrvBuilder) builder = g_strv_builder_new ();
++  GStrvBuilder *builder = g_strv_builder_new (); PxCleanup<GStrvBuilder*, glib_autoptr_cleanup_GStrvBuilder> _px_cl_builder(&builder);
+ 
+-  for (GList *list = self->config_plugins; list && list->data; list = list->next) {
+-    PxConfig *config = PX_CONFIG (list->data);
++  for (GList *list = self->config_plugins; list && (PxCastHelper(list->data)); list = list->next) {
++    PxConfig *config = PX_CONFIG ((PxCastHelper(list->data)));
+     PxConfigInterface *ifc = PX_CONFIG_GET_IFACE (config);
+ 
+     ifc->get_config (config, uri, builder);
+@@ -475,7 +475,7 @@ px_manager_run_pac (PxPacRunner  *pacrunner,
+                     GStrvBuilder *builder)
+ {
+   PxPacRunnerInterface *ifc = PX_PAC_RUNNER_GET_IFACE (pacrunner);
+-  g_auto (GStrv) proxies_split = NULL;
++  GStrv proxies_split = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_proxies_split(&proxies_split);
+   char *pac_response;
+ 
+   pac_response = ifc->run (PX_PAC_RUNNER (pacrunner), uri);
+@@ -485,14 +485,14 @@ px_manager_run_pac (PxPacRunner  *pacrunner,
+ 
+   for (int idx = 0; idx < g_strv_length (proxies_split); idx++) {
+     char *line = g_strstrip (proxies_split[idx]);
+-    g_auto (GStrv) word_split = g_strsplit (line, " ", -1);
++    GStrv word_split = g_strsplit (line, " ", -1); PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_word_split(&word_split);
+ 
+     /* Check for syntax "METHOD SERVER" */
+     if (g_strv_length (word_split) == 2) {
+-      g_autoptr (GUri) proxy_uri = NULL;
+-      g_autofree char *uri_string = NULL;
+-      g_autofree char *proxy_string = NULL;
+-      g_autoptr (GUri) test_uri = NULL;
++      GUri *proxy_uri = NULL; PxCleanup<GUri*, glib_autoptr_cleanup_GUri> _px_cl_proxy_uri(&proxy_uri);
++      char *uri_string = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_uri_string(&uri_string);
++      char *proxy_string = NULL; PxCleanup<char*, px_g_free_cleanup> _px_cl_proxy_string(&proxy_string);
++      GUri *test_uri = NULL; PxCleanup<GUri*, glib_autoptr_cleanup_GUri> _px_cl_test_uri(&test_uri);
+       char *method;
+       char *server;
+ 
+@@ -533,8 +533,8 @@ px_manager_set_pac (PxManager *self)
+ {
+   GList *list;
+ 
+-  for (list = self->pacrunner_plugins; list && list->data; list = list->next) {
+-    PxPacRunner *pacrunner = PX_PAC_RUNNER (list->data);
++  for (list = self->pacrunner_plugins; list && (PxCastHelper(list->data)); list = list->next) {
++    PxPacRunner *pacrunner = PX_PAC_RUNNER ((PxCastHelper(list->data)));
+     PxPacRunnerInterface *ifc = PX_PAC_RUNNER_GET_IFACE (pacrunner);
+ 
+     if (!ifc->set_pac (PX_PAC_RUNNER (pacrunner), self->pac_data))
+@@ -598,7 +598,7 @@ px_manager_expand_pac (PxManager *self,
+       self->wpad = FALSE;
+ 
+     if (self->pac_data) {
+-      g_autofree char *uri_str = g_uri_to_string (uri);
++      char *uri_str = g_uri_to_string (uri); PxCleanup<char*, px_g_free_cleanup> _px_cl_uri_str(&uri_str);
+ 
+       if (g_strcmp0 (self->pac_url, uri_str) != 0) {
+         g_clear_pointer (&self->pac_url, g_free);
+@@ -642,10 +642,10 @@ char **
+ px_manager_get_proxies_sync (PxManager  *self,
+                              const char *url)
+ {
+-  g_autoptr (GStrvBuilder) builder = NULL;
+-  g_autoptr (GUri) uri = NULL;
+-  g_auto (GStrv) config = NULL;
+-  g_autoptr (GError) error = NULL;
++  GStrvBuilder *builder = NULL; PxCleanup<GStrvBuilder*, glib_autoptr_cleanup_GStrvBuilder> _px_cl_builder(&builder);
++  GUri *uri = NULL; PxCleanup<GUri*, glib_autoptr_cleanup_GUri> _px_cl_uri(&uri);
++  GStrv config = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_config(&config);
++  GError *error = NULL; PxCleanup<GError*, glib_autoptr_cleanup_GError> _px_cl_error(&error);
+ 
+   g_mutex_lock (&self->mutex);
+ 
+@@ -673,8 +673,8 @@ px_manager_get_proxies_sync (PxManager  *self,
+     if (px_manager_expand_wpad (self, conf_url) || px_manager_expand_pac (self, conf_url)) {
+       GList *list;
+ 
+-      for (list = self->pacrunner_plugins; list && list->data; list = list->next) {
+-        PxPacRunner *pacrunner = PX_PAC_RUNNER (list->data);
++      for (list = self->pacrunner_plugins; list && (PxCastHelper(list->data)); list = list->next) {
++        PxPacRunner *pacrunner = PX_PAC_RUNNER ((PxCastHelper(list->data)));
+ 
+         px_manager_run_pac (pacrunner, self->pac_data, uri, builder);
+       }
+@@ -684,11 +684,11 @@ px_manager_get_proxies_sync (PxManager  *self,
+   }
+ 
+   /* In case no proxy could be found, assume direct connection */
+-  if (((GPtrArray *)builder)->len == 0)
++  if (((GPtrArray *)(PxCastHelper)builder)->len == 0)
+     px_strv_builder_add_proxy (builder, "direct://");
+ 
+-  for (int idx = 0; idx < ((GPtrArray *)builder)->len; idx++)
+-    g_debug ("%s: Proxy[%d] = %s", __FUNCTION__, idx, (char *)((GPtrArray *)builder)->pdata[idx]);
++  for (int idx = 0; idx < ((GPtrArray *)(PxCastHelper)builder)->len; idx++)
++    g_debug ("%s: Proxy[%d] = %s", __FUNCTION__, idx, (char *)((GPtrArray *)(PxCastHelper)builder)->pdata[idx]);
+ 
+   g_mutex_unlock (&self->mutex);
+   return g_strv_builder_end (builder);
+@@ -698,8 +698,8 @@ void
+ px_strv_builder_add_proxy (GStrvBuilder *builder,
+                            const char   *value)
+ {
+-  for (int idx = 0; idx < ((GPtrArray *)builder)->len; idx++) {
+-    if (g_strcmp0 ((char *)((GPtrArray *)builder)->pdata[idx], value) == 0)
++  for (int idx = 0; idx < ((GPtrArray *)(PxCastHelper)builder)->len; idx++) {
++    if (g_strcmp0 ((char *)((GPtrArray *)(PxCastHelper)builder)->pdata[idx], value) == 0)
+       return;
+   }
+ 
+@@ -710,7 +710,7 @@ static gboolean
+ ignore_domain (GUri *uri,
+                char *ignore)
+ {
+-  g_auto (GStrv) ignore_split = NULL;
++  GStrv ignore_split = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_ignore_split(&ignore_split);
+   const char *host = g_uri_get_host (uri);
+   char *ignore_host;
+   int ignore_port = -1;
+@@ -774,10 +774,10 @@ static gboolean
+ ignore_ip (GUri *uri,
+            char *ignore)
+ {
+-  g_autoptr (GInetAddress) uri_address = NULL;
+-  g_autoptr (GInetAddress) ignore_address = NULL;
+-  g_auto (GStrv) ignore_split = NULL;
+-  g_autoptr (GError) error = NULL;
++  GInetAddress *uri_address = NULL; PxCleanup<GInetAddress*, glib_autoptr_cleanup_GInetAddress> _px_cl_uri_address(&uri_address);
++  GInetAddress *ignore_address = NULL; PxCleanup<GInetAddress*, glib_autoptr_cleanup_GInetAddress> _px_cl_ignore_address(&ignore_address);
++  GStrv ignore_split = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_ignore_split(&ignore_split);
++  GError *error = NULL; PxCleanup<GError*, glib_autoptr_cleanup_GError> _px_cl_error(&error);
+   const char *uri_host = g_uri_get_host (uri);
+   int port = g_uri_get_port (uri);
+   int ignore_port = 0;
+diff --git a/src/libproxy/meson.build b/src/libproxy/meson.build
+index ff8d80e..c09d831 100644
+--- a/src/libproxy/meson.build
++++ b/src/libproxy/meson.build
+@@ -42,7 +42,7 @@ libproxy = shared_library(
+   soversion: '1',
+   version: meson.project_version(),
+   install: true,
+-  install_rpath: pkglibdir,
++  install_rpath: pkglibdir, name_prefix: '', name_suffix: 'lib',
+ )
+ 
+ libproxy_static = static_library(
+@@ -53,7 +53,7 @@ libproxy_static = static_library(
+   link_args : vflag,
+   link_depends : mapfile,
+   install: true,
+-  install_rpath: pkglibdir,
++  install_rpath: pkglibdir, name_prefix: '', name_suffix: 'lib',
+ )
+ 
+ libproxy_dep = declare_dependency (
+diff --git a/src/libproxy/proxy.c b/src/libproxy/proxy.c
+index c9d402f..21da95c 100644
+--- a/src/libproxy/proxy.c
++++ b/src/libproxy/proxy.c
+@@ -56,7 +56,7 @@ char **
+ px_proxy_factory_get_proxies (pxProxyFactory *self,
+                               const char     *url)
+ {
+-  g_auto (GStrv) result = NULL;
++  GStrv result = NULL; PxCleanup<GStrv, glib_auto_cleanup_GStrv> _px_cl_result(&result);
+ 
+   result = px_manager_get_proxies_sync (self->manager, url);
+   return g_steal_pointer (&result);
