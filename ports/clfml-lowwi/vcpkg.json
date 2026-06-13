@@ -1,0 +1,13 @@
+{
+  "name": "clfml-lowwi",
+  "version": "3.0",
+  "description": "C++ implementation of openwakeword",
+  "homepage": "https://github.com/CLFML/lowwi",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "fmt",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config",
+    "onnxruntime"
+  ]
+}
