@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index abcdef..123456 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -253,15 +253,27 @@ endif()
+ 
+ if(CC_TARGET_OS_LINUX OR CC_TARGET_OS_ANDROID)
+     if(SYSTEM_ICU OR (NOT ICU_INCLUDE_PATH AND NOT NO_ICU))
+-        set(ICU_LIBRARIES "icuuc")
+-        if(INTL_ICU)
+-            add_definitions(-DINTL_ICU=1)
+-            set(ICU_LIBRARIES
+-                ${ICU_LIBRARIES}
+-                icui18n
+-            )
++        set(_ICU_COMPONENTS uc)
++        if(INTL_ICU)
++            list(APPEND _ICU_COMPONENTS i18n)
++        endif()
++        find_package(ICU COMPONENTS ${_ICU_COMPONENTS})
++        if(ICU_FOUND)
++            set(ICU_INCLUDE_PATH ${ICU_INCLUDE_DIRS})
++            # ICU_LIBRARIES is already set by FindICU
++        else()
++            set(ICU_LIBRARIES "icuuc")
++            if(INTL_ICU)
++                set(ICU_LIBRARIES
++                    ${ICU_LIBRARIES}
++                    icui18n
++                )
++            endif()
+         endif()
+         add_definitions(-DHAS_REAL_ICU=1)
+         add_definitions(-DHAS_ICU)
++        if(INTL_ICU)
++            add_definitions(-DINTL_ICU=1)
++        endif()
+     endif()
+ elseif(CC_TARGET_OS_OSX)
+     # in case ICU path was given but it doesn't exist, build script will fail.
