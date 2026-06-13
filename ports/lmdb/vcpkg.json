@@ -1,8 +1,9 @@
 {
   "name": "lmdb",
-  "version": "0.9.35",
-  "description": "LMDB is an extraordinarily fast, memory-efficient database",
-  "homepage": "https://github.com/LMDB/lmdb",
+  "version": "1.0.0",
+  "description": "LMDB is an extraordinarily fast, memory-efficient database.",
+  "homepage": "https://www.symas.com/mdb",
+  "documentation": "http://www.lmdb.tech/doc/",
   "license": "OLDAP-2.8",
   "dependencies": [
     {
