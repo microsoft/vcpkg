@@ -1,6 +1,7 @@
 {
   "name": "kf5globalaccel",
   "version": "5.116.0",
+  "port-version": 1,
   "description": "lobal desktop keyboard shortcuts",
   "homepage": "https://api.kde.org/kglobalaccel-index.html",
   "supports": "!windows",
@@ -11,6 +12,10 @@
     "kf5crash",
     "kf5dbusaddons",
     "kf5windowsystem",
+    {
+      "name": "libxcb",
+      "platform": "linux"
+    },
     {
       "name": "qt5-base",
       "default-features": false
@@ -27,10 +32,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "xcb",
-      "platform": "linux"
     }
   ]
 }
