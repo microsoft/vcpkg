@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -552,8 +552,9 @@
+         warnings += glib_warning
+     endif
+ endif
+ 
++glib_networking_works=true
+ if not glib_networking_works
+   error('Test for glib-networking failed. This is required.')
+ endif
+ 
