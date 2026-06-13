@@ -9,6 +9,7 @@ project(
 )
 
 pkg = import('pkgconfig')
+cc = meson.get_compiler('c')
 
 is_windows = host_machine.system() == 'windows'
 cpu_family = host_machine.cpu_family()
@@ -27,9 +28,10 @@ harfbuzz_dep = dependency('harfbuzz', required : get_option('harfbuzz'))
 curl_dep = dependency('libcurl', required : get_option('libcurl'))
 sdl_dep = dependency('sdl2', required : get_option('sdl'))
 thread_dep = dependency('threads')
+math_dep = cc.find_library('m', required : not is_windows)
 
 ctx_deps = [thread_dep]
-foreach dep : [babl_dep, harfbuzz_dep, curl_dep, sdl_dep]
+foreach dep : [babl_dep, harfbuzz_dep, curl_dep, sdl_dep, math_dep]
   if dep.found()
     ctx_deps += dep
   endif
@@ -41,6 +43,7 @@ ctx_conf.set10('CTX_BABL', babl_dep.found())
 ctx_conf.set10('CTX_ENABLE_CM', babl_dep.found())
 ctx_conf.set10('CTX_AUDIO', false)
 ctx_conf.set10('CTX_VT', build_cli)
+ctx_conf.set10('CTX_TERMINAL_EVENTS', build_cli)
 ctx_conf.set10('CTX_SCREENSHOT', build_cli)
 ctx_conf.set10('CTX_BRAILLE_TEXT', build_cli)
 ctx_conf.set10('CTX_ENABLE_CMYK', true)
@@ -90,6 +93,8 @@ endif
 if is_windows
   ctx_c_args += ['-D_USE_MATH_DEFINES']
   ctx_c_args += ['-D__restrict__=__restrict']
+else
+  ctx_c_args += ['-D_DEFAULT_SOURCE', '-D_XOPEN_SOURCE=700']
 endif
 
 ctx_inc = include_directories(
