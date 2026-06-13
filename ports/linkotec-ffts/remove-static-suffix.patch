@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8ab733f..e12dba0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -527,10 +527,7 @@ if(ENABLE_STATIC)
+     ${FFTS_SOURCES}
+   )
+ 
+-  if(UNIX)
+-    # On unix-like platforms the library is called "libffts.a"
+-    set_target_properties(ffts_static PROPERTIES OUTPUT_NAME ffts)
+-  endif(UNIX)
++  set_target_properties(ffts_static PROPERTIES OUTPUT_NAME ffts)
+ 
+   install( TARGETS ffts_static DESTINATION 
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
