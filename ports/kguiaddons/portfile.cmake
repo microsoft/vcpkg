@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kguiaddons
     REF "v${VERSION}"
-    SHA512 ad221061698fea27e354ce2be0ec565fd70850add9964c306d415c4cc95b68d09c0c217fde1e45f0ad668a13e93b2a5e2d0059a6bfb514b1cea6f37d4ac01a0f
+    SHA512 3a8edb74bc30c2228495aa4fd2c5adb6a3b7f50a7c68d67ec473cb7ce1748ae73a8ceb8997eff7825a52cbcb513a71db35f812aff5ec5140bc53870d42d61cc3
     HEAD_REF master
 )
 
