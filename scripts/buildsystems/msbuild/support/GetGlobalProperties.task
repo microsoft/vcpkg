@@ -1,4 +1,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Include-guard sentinel so this file can be imported from multiple places without triggering MSB4011. -->
+  <PropertyGroup>
+    <_ZVcpkgGetGlobalPropertiesImported>true</_ZVcpkgGetGlobalPropertiesImported>
+  </PropertyGroup>
+
   <!-- Define the GetGlobalProperties task for retrieving the Global Properties from the current MSBuild engine.
 
   The task has a single output parameter - GlobalPropertyNames - which is a semi-colon delimited list of the global
