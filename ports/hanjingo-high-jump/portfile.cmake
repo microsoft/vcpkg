@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanjingo/high-jump
     REF v${VERSION}
-    SHA512 e39c8acc98a9b3530603fa94781a99b627f52491b982be10ec67be9b9b6ab2dbf5268cf391b3b11a861d3100abcd5d94ea3bc9adc003dce4986b208a887d6bf2
+    SHA512 183766cf0d3c1fe571d68b220d712569f30cf1c53ed7d18598fb70cadbad4b8434baadbb926041c906e26e9f53c12c6704cda116af216096d45fd95dd08439a6
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         grpc            HJ_ENABLE_GRPC
+        jwt             HJ_ENABLE_JWT
         lic             HJ_ENABLE_LIC
         singleton       HJ_ENABLE_SINGLETON
         timer           HJ_ENABLE_TIMER
@@ -36,6 +37,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gzip            HJ_ENABLE_GZIP
         behavior-tree   HJ_ENABLE_BEHAVIOR_TREE
         qrcode          HJ_ENABLE_QRCODE
+        vector_index    HJ_ENABLE_VECTOR_INDEX
+        llama           HJ_ENABLE_LLAMA
 )
 
 vcpkg_cmake_configure(
