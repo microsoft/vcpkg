@@ -411,7 +411,6 @@ gstreamer[faad]:arm64-linux=cascade
 gstreamer[gl]:arm64-linux=feature-fails
 gstreamer[gl-graphene]:arm64-linux=feature-fails # ERROR: Problem encountered: Could not find requested OpenGL library
 gstreamer[nvcodec](windows)=feature-fails
-gstreamer[openal]:arm64-linux=cascade
 gstreamer[vulkan]:arm64-linux=feature-fails
 gstreamer[vulkan](android | windows)=feature-fails
 gstreamer[wayland](osx | windows)=cascade
