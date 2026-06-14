@@ -11265,7 +11265,7 @@
       "port-version": 0
     },
     "zix": {
-      "baseline": "0.8.0",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "zkpp": {
