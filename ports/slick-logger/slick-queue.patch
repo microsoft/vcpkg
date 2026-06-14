@@ -1,13 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 991f6af..bb6221c 100644
+index 5048309..114e054 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -7,7 +7,7 @@ project(slick-logger
+@@ -7,9 +7,9 @@ project(slick-logger
  set(CMAKE_CXX_STANDARD 20)
  set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
 -find_package(slick-queue 1.2.2 CONFIG QUIET)
-+find_package(slick-queue 1.2.2 CONFIG REQUIRED)
++find_package(slick-queue CONFIG REQUIRED)
  
- if (NOT slick-queue_FOUND)
+-if (NOT slick-queue_FOUND)
++if (FALSE)
      message(STATUS "Fetching slick-queue...")
+     include(FetchContent)
+ 
