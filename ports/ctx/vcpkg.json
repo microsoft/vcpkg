@@ -1,0 +1,40 @@
+{
+  "name": "ctx",
+  "version": "0.1.18",
+  "description": "Compact 2D vector graphics context and rasterizer.",
+  "homepage": "https://ctx.graphics/",
+  "license": "ISC",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "babl": {
+      "description": "Enable babl color-management integration.",
+      "dependencies": [
+        "babl"
+      ]
+    },
+    "harfbuzz": {
+      "description": "Enable HarfBuzz font shaping support.",
+      "dependencies": [
+        "harfbuzz"
+      ]
+    },
+    "libcurl": {
+      "description": "Enable libcurl-based network helpers.",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "sdl": {
+      "description": "Enable the SDL backend.",
+      "dependencies": [
+        "sdl2"
+      ]
+    }
+  }
+}

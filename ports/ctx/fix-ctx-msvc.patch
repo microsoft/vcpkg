@@ -1,0 +1,68 @@
+diff --git a/ctx.h b/ctx.h
+index 6a1e7afc1a..1d6bcab2a9 100644
+--- a/ctx.h
++++ b/ctx.h
+@@ -54,9 +54,27 @@ extern "C" {
+ #include <alloca.h>
+ #else
+ #include <malloc.h>
++#ifdef _MSC_VER
++#include <io.h>
++#ifndef access
++#define access _access
++#endif
++#ifndef F_OK
++#define F_OK 0
++#endif
++#ifndef R_OK
++#define R_OK 4
++#endif
++#ifndef strcasecmp
++#define strcasecmp _stricmp
++#endif
++#ifndef strncasecmp
++#define strncasecmp _strnicmp
++#endif
++#endif
+ #endif
+ #include <stdio.h>
+ 
+ #ifdef _MSC_VER
+ #define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
+@@ -22980,6 +22998,6 @@ CTX_SIMD_SUFFIX (ctx_composite_fill_rect) (CtxRasterizer *rasterizer,
+   {
+      uint8_t *dst = ( (uint8_t *) rasterizer->buf);
+-     uint8_t coverage[width+2];
++     uint8_t *coverage = (uint8_t *) alloca (sizeof (uint8_t) * (size_t) (width + 2));
+      uint32_t x0i = (int)x0+has_left;
+      uint32_t x1i = (int)x1-has_right;
+      uint32_t y0i = (int)y0+has_top;
+diff --git a/ctx_config.h b/ctx_config.h
+index 8f720f0836..71ea0ee85d 100644
+--- a/ctx_config.h
++++ b/ctx_config.h
+@@ -3,8 +3,14 @@
+ 
+ #include "local.conf"
+ 
+ #define CTX_MIPMAP               1
++#ifdef _WIN32
++#ifndef CTX_SHARE
++#define CTX_SHARE                CTX_SOCKETS
++#endif
++#else
+ #define CTX_SHARE                1
++#endif
+ 
+ 
+ #define CTX_CURRENT_PATH         1
+@@ -45,6 +51,8 @@
+ #define CTX_GET_CONTENTS         1
+ #define CTX_MAGIC                1
+ #define CTX_PROTOCOL_U8_COLOR    1
++#ifndef CTX_NET
+ #define CTX_NET                  1
++#endif
+ 
+ #ifdef CTX_WANT_FONT
