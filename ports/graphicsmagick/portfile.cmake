@@ -4,11 +4,11 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://foss.heptapod.net/
     REPO graphicsmagick/graphicsmagick
-    REF ${graphicsmagick_version}
-    SHA512 e64842dbbe2026e7d75b4004f615f32b4e2d57ce8dbd9bc90f87ee6e180d7e2feb61da6c25d404c43ac8d7661f94f7be3bd2882928dbd0e276b5c9040690f6f4
+    REF 06e642b17f41efb70019eda2242de2f2b49eed40
+    SHA512 9eca5df208aabaafaa40c48bcb978a3dec4f106aa1cdce770cf342a13ea9038cbc5c4df0e87db903a34e691056c02483d713e521e537a32e56232e67e186cfdf
     PATCHES
-        dependencies.diff
-        magick-types.diff
+        # dependencies.diff
+        # magick-types.diff
 )
 
 set(options "")
@@ -47,6 +47,10 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gm${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/")
+else()
+
 set(config_scripts
     "GraphicsMagick++-config"
     "GraphicsMagick-config"
@@ -63,6 +67,7 @@ foreach(filename IN LISTS config_scripts)
         vcpkg_replace_string("${debug_file}" "while test" "prefix=$(CDPATH= cd -- \"$(dirname -- \"$0\")/../../../..\" && pwd -P)\n\nwhile test")
     endif()
 endforeach()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
