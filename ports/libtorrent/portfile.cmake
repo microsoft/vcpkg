@@ -1,8 +1,4 @@
 if(VCPKG_TARGET_IS_WINDOWS)
-    # Building python bindings is currently broken on Windows
-    if("python" IN_LIST FEATURES)
-        message(FATAL_ERROR "The python feature is currently broken on Windows")
-    endif()
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
         set(_static_runtime ON)
     endif()
@@ -13,7 +9,6 @@ vcpkg_check_features(
     FEATURES
         deprfun     deprecated-functions
         examples    build_examples
-        iconv       iconv
         python      python-bindings
         test        build_tests
         tools       build_tools
@@ -31,8 +26,10 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO arvidn/libtorrent
         REF "v${VERSION}"
-        SHA512 375fb12754ce73b34b215c1ca077b0ec58a8c91f6a6e4a48e2ae55251be38f647405d135ebeae38f8b0dfb478bcea8d5f0d6509e97f1baddbc2cd2e788948f2a
+        SHA512 1cfb1c2066cbc1f6f95163269fcd9fdfe629b3a0be0eacce534d86a6a0aac9f797f950abb95956a643ae45f3abd93820ee28960d3fb5629c334222a882e1ed44
         HEAD_REF RC_2_0
+        PATCHES
+            fix-python-path.patch
 )
 
 vcpkg_from_github(
