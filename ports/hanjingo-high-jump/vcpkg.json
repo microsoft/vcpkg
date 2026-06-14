@@ -1,6 +1,7 @@
 {
   "name": "hanjingo-high-jump",
   "version": "1.0.8",
+  "port-version": 1,
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -107,17 +108,17 @@
         "cpp-httplib"
       ]
     },
-    "llama": {
-      "description": "Enable llama support",
-      "dependencies": [
-        "llama-cpp"
-      ]
-    },
     "lic": {
       "description": "Enable license support",
       "dependencies": [
         "jwt-cpp",
         "quirc"
+      ]
+    },
+    "llama": {
+      "description": "Enable llama support",
+      "dependencies": [
+        "llama-cpp"
       ]
     },
     "log": {
@@ -216,8 +217,8 @@
         "hidapi"
       ]
     },
-    "vector_index": {
-      "description": "Enable FAISS support",
+    "vector-index": {
+      "description": "Enable vector database support",
       "dependencies": [
         "faiss"
       ]

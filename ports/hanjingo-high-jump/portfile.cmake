@@ -37,7 +37,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gzip            HJ_ENABLE_GZIP
         behavior-tree   HJ_ENABLE_BEHAVIOR_TREE
         qrcode          HJ_ENABLE_QRCODE
-        vector_index    HJ_ENABLE_VECTOR_INDEX
+        vector-index    HJ_ENABLE_VECTOR_INDEX
         llama           HJ_ENABLE_LLAMA
 )
 
