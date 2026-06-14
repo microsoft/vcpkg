@@ -1,8 +1,8 @@
 diff --git a/db/blob/blob_file_meta.h b/db/blob/blob_file_meta.h
-index d7c8a12..d688825 100644
+index 2e47726f8..fbbf54cf4 100644
 --- a/db/blob/blob_file_meta.h
 +++ b/db/blob/blob_file_meta.h
-@@ -10,6 +10,7 @@
+@@ -11,6 +11,7 @@
  #include <memory>
  #include <string>
  #include <unordered_set>

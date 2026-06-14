@@ -1125,7 +1125,6 @@ qt3d[extras]=options # is a requirement, see https://github.com/microsoft/vcpkg/
 qt5:arm64-linux=cascade
 qt5:arm64-windows=cascade
 qt5[all,wayland,webengine]:x86-windows=cascade
-qt5[doc](!native) = cascade
 qt5[wayland]:arm64-osx=cascade
 qt5[wayland,webengine]:x64-windows-static-md=cascade
 qt5[wayland,webengine]:x64-windows-static=cascade
