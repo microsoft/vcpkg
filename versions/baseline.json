@@ -2957,7 +2957,7 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "8.2.9",
+      "baseline": "8.2.10",
       "port-version": 0
     },
     "fast-obj": {
