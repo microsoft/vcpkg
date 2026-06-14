@@ -10404,6 +10404,10 @@
       "baseline": "2022-01-24",
       "port-version": 2
     },
+    "unimail-cpp-sdk": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "units": {
       "baseline": "3.3.0",
       "port-version": 0
