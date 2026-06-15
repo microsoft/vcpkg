@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-generation.patch
         Install-tools.patch
+        opengl.patch
         sdl2-static.patch
         fix-tools-lnk2005.patch
 )
