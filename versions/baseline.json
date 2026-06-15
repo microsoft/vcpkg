@@ -5121,7 +5121,7 @@
       "port-version": 0
     },
     "libhat": {
-      "baseline": "0.9.0",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "libhdfs3": {
