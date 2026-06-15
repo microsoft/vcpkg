@@ -12,14 +12,12 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        avif    SDLIMAGE_AVIF
         jpeg    SDLIMAGE_JPG
+        jxl     SDLIMAGE_JXL
         png     SDLIMAGE_PNG
         tiff    SDLIMAGE_TIF
         webp    SDLIMAGE_WEBP
-    INVERTED_FEATURES
-        # Disabled capabilities: Needing dependencies.
-        core    SDLIMAGE_AVIF
-        core    SDLIMAGE_JXL
 )
 
 vcpkg_cmake_configure(
