@@ -8,6 +8,7 @@ vcpkg_from_github(
         msvc-debug-info-only-in-pdb.patch
         protobuf-6.patch
         remove-stdext-on-new-msvc.diff
+        fix_npu_deps.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
