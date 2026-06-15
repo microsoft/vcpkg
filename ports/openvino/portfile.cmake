@@ -10,6 +10,7 @@ vcpkg_from_github(
         remove-stdext-on-new-msvc.diff
         fix_npu_deps.patch
         fix_gpu_includes.patch
+        android_remove_onetbb_warning.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
