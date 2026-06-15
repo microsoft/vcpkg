@@ -1,0 +1,16 @@
+
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "webrtc-audio-processing",
+    "version": "2.1",
+    "description": "Extracted AudioProcessing module from WebRTC for easy reuse",
+    "homepage": "https://www.freedesktop.org/software/pulseaudio/webrtc-audio-processing/",
+    "license": "BSD-3-Clause",
+    "dependencies": [
+        "abseil",
+        {
+            "name": "vcpkg-tool-meson",
+            "host": true
+        }
+    ]
+}

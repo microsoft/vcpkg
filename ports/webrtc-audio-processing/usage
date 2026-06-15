@@ -1,0 +1,5 @@
+webrtc-audio-processing provides pkg-config integration (no CMake config package):
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(WEBRTC_APM REQUIRED IMPORTED_TARGET webrtc-audio-processing-2)
+    target_link_libraries(main PRIVATE PkgConfig::WEBRTC_APM)
