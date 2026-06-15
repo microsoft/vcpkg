@@ -1,14 +1,14 @@
 {
   "name": "redisx",
-  "version": "1.0.4-rc5",
-  "description": "A free and independent Redix / Valkey client library for C/C++",
+  "version": "1.0.4",
+  "description": "A free and independent Redis / Valkey client library for C/C++",
   "homepage": "https://sigmyne.github.io/redisx/",
   "documentation": "https://sigmyne.github.io/redisx/doc/html/",
   "license": "Unlicense",
   "dependencies": [
     {
       "name": "libxchange",
-      "version>=": "1.2.0"
+      "version>=": "1.2.0#1"
     },
     {
       "name": "vcpkg-cmake",
