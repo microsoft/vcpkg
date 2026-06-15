@@ -68,7 +68,7 @@ function Get-GhPrList {
         [string]$CutoffDate
     )
 
-    $searchQuery = "is:pr updated:<$CutoffDate -label:$NoStaleLabel"
+    $searchQuery = "is:pr updated:<$CutoffDate -label:$NoStaleLabel sort:updated-asc"
     $command = @('pr', 'list', '--repo', $Repo, '--state', 'open', '--limit', $Limit.ToString(), '--search', $searchQuery, '--json', 'number,title,url,updatedAt,labels,author')
     $result = Invoke-GhCommand -Arguments $command
 
