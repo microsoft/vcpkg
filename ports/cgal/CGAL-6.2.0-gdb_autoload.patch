@@ -1,21 +1,14 @@
-From eb2257df4da4c52c75fe384e803d9a6376057b8a Mon Sep 17 00:00:00 2001
-From: Laurent Rineau <laurent.rineau@cgal.org>
-Date: Mon, 15 Jun 2026 10:56:34 +0200
-Subject: [PATCH] fix <CGAL/gdb_autoload.h>: end the section with a null byte
-
----
- Installation/include/CGAL/gdb_autoload.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
 diff --git a/Installation/include/CGAL/gdb_autoload.h b/Installation/include/CGAL/gdb_autoload.h
-index fa676fda69b6..85a04073b3f1 100644
+index fa676fda69b..6acf832c8ba 100644
 --- a/Installation/include/CGAL/gdb_autoload.h
 +++ b/Installation/include/CGAL/gdb_autoload.h
-@@ -26,10 +26,12 @@
+@@ -25,11 +25,13 @@
+ 
  // Use inline assembly to embed the .debug_gdb_scripts section
  __asm__(
-     ".pushsection \".debug_gdb_scripts\", \"MS\",@progbits,1\n"
+-    ".pushsection \".debug_gdb_scripts\", \"MS\",@progbits,1\n"
 -    ".ascii \"\\4gdb.inlined-script.CGAL\\n\"\n"
++    ".pushsection \".debug_gdb_scripts\", \"MS\",%progbits,1\n"
 +    ".byte 4\n"
 +    ".ascii \"gdb.inlined-script.CGAL\\n\"\n"
      ".ascii \"import gdb\\n\"\n"

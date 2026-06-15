@@ -10,7 +10,7 @@ vcpkg_from_github(
         # upstream commit from the 6.2.x-branch (planned for CGAL version 6.2.1):
         # https://github.com/CGAL/cgal/commit/eb2257df4da4c52c75fe384e803d9a6376057b8a
         # > fix <CGAL/gdb_autoload.h>: end the section with a null byte
-        eb2257df4da4c52c75fe384e803d9a6376057b8a.patch
+        CGAL-6.2.0-gdb_autoload.patch
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
