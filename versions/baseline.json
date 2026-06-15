@@ -10860,6 +10860,10 @@
       "baseline": "2026-03-17",
       "port-version": 1
     },
+    "webrtc-audio-processing": {
+      "baseline": "2.1",
+      "port-version": 0
+    },
     "webthing-cpp": {
       "baseline": "1.2.0",
       "port-version": 0
