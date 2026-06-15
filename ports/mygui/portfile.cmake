@@ -1,24 +1,14 @@
-vcpkg_download_distfile(
-    basic_string_patch
-    URLS "https://github.com/MyGUI/mygui/commit/0731785d83431bd17a0854f19bea9a7d687de5a7.diff?full_index=1"
-    FILENAME "MyGUI-mygui-basic-string-0731785.diff"
-    SHA512 4ca252b8d37d9b98b9a1295c181325a33c30534757f8adbbcceceafacd97ff6987fb7a5d1f087b960519c923007e6adff2e8b1d873d75e7faff05b9a20b9cd79
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MyGUI/mygui
     REF MyGUI${VERSION}
-    SHA512 88c69ca2e706af364b72d425f95013eb285501881d8094f8d67e31a54c45ca11b0eb5b62c382af0d4c43f69aa8197648259ac306b72efa7ef3e25eecb9b039cb
+    SHA512 9b11cf5100b341962c07ec94f5076edb2f2d3a8d3649365261eda4945cd452069a9ced1db9083223873da9bf441b98a3dbbd65e7986de605a82c9a99f7ddc87f
     HEAD_REF master
     PATCHES
         fix-generation.patch
         Install-tools.patch
-        opengl.patch
         sdl2-static.patch
         fix-tools-lnk2005.patch
-        platform-lib-static.patch
-        ${basic_string_patch}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
