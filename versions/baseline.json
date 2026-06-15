@@ -9005,7 +9005,7 @@
       "port-version": 0
     },
     "safetyhook": {
-      "baseline": "0.6.10",
+      "baseline": "0.7.0",
       "port-version": 0
     },
     "sail": {
