@@ -9,6 +9,7 @@ vcpkg_from_github(
         protobuf-6.patch
         remove-stdext-on-new-msvc.diff
         fix_npu_deps.patch
+        fix_gpu_includes.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
