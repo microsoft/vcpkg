@@ -55,6 +55,8 @@ In addition to the shared guide:
 5. It is acceptable to leave the patch directory empty when no safe focused patch is warranted. Do not fabricate patches.
 6. If the PR is a simple version bump and the only material problems you find were already present in the previous packaged version, do not block solely on that basis. Report those items as notes, use the separate `approve-with-notes` outcome when appropriate, and rely on the shared guide for the exact report, results, and paste-ready comment requirements. In particular, keep the paste-ready comment directly postable: avoid hypothetical phrasing like `I would merge`, say instead that the issue is not blocking because it predates the PR, and avoid spending that short comment on PR-page-visible facts like green checks unless they are needed to interpret the finding.
 7. When reviewing portfiles, flag direct `set(VCPKG_LIBRARY_LINKAGE ...)` mutations and prefer `vcpkg_check_linkage(...)` instead.
+8. In the paste-ready review comment, identify the reviewing model correctly: use the exact runtime model name for the current review, and if that is not confidently available, use a generic attribution such as `The review model observes...` instead of guessing.
+9. Missing published downstream C++ standard metadata is acceptable by default and should not by itself prevent an `approve` outcome. Only flag C++ standard metadata when the port explicitly publishes contradictory consumer-facing requirements, such as advertising `cxx_std_17` even though the package actually requires C++20.
 
 ## Shared helper
 

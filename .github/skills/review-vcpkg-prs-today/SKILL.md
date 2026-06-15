@@ -102,6 +102,8 @@ Apply the shared review guide to each PR, then adjust depth according to `review
 When reviewing portfiles, flag direct `set(VCPKG_LIBRARY_LINKAGE ...)` mutations and prefer `vcpkg_check_linkage(...)` instead.
 
 For simple version-bump PRs, do not treat pre-existing package problems as blocking unless the PR introduces a regression or otherwise makes the existing problem materially worse. In the per-PR report, use human wording such as "approve with notes" when appropriate, but continue to map that outcome into the shared machine-readable verdict scheme. Keep the paste-ready review comment directly postable: avoid hypothetical phrasing like `I would merge`, say instead that the note is not blocking because it predates the PR or is otherwise non-blocking, and avoid spending that short comment on PR-page-visible facts like green checks unless they are needed to interpret the finding.
+For that paste-ready review comment, identify the reviewing model correctly: use the exact runtime model name for the current review, and if that is not confidently available, use a generic attribution such as `The review model observes...` instead of guessing.
+Missing published downstream C++ standard metadata is acceptable by default and should not by itself prevent an `approve` outcome. Only flag C++ standard metadata when the port explicitly publishes contradictory consumer-facing requirements, such as advertising `cxx_std_17` even though the package actually requires C++20.
 
 ## Required index sections
 
