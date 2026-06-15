@@ -4,8 +4,9 @@ vcpkg_from_gitlab(
     REPO "pulseaudio/webrtc-audio-processing"
     REF "v2.1"
     SHA512 6851bf40b62a8f642eaa5e3e108a8331f43c0d6eb5e6d351e3252d6869066c991bd9eca6ba3a7f762bdb44251a253da05cf15a76fc1c55ca815f5a4e39cf5d4a
+    PATCHES
+        fix-abseil-nullability-compat.patch
 )
-# TODO: patches
 
 set(MESON_OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)

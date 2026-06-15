@@ -1,0 +1,27 @@
+diff --git a/webrtc/api/scoped_refptr.h b/webrtc/api/scoped_refptr.h
+--- a/webrtc/api/scoped_refptr.h
++++ b/webrtc/api/scoped_refptr.h
+@@ -67,7 +67,22 @@
+ #include <utility>
+ 
+ #include "absl/base/nullability.h"
+-
++// abseil >= 20250814 removed the Nullable<T>/Nonnull<T> type aliases, replacing
++// them with absl_nullable/absl_nonnull macros. ABSL_POINTERS_DEFAULT_NONNULL is
++// defined only in the new-style headers. Re-add the aliases as identity templates
++// so the webrtc source compiles against either abseil generation. Remove this
++// patch once webrtc-audio-processing is updated to use the new macro forms.
++#ifdef ABSL_POINTERS_DEFAULT_NONNULL
++namespace absl {
++template <typename T>
++using Nullable = T;
++template <typename T>
++using Nonnull = T;
++template <typename T>
++using NullabilityUnknown = T;
++}  // namespace absl
++#endif
++
+ namespace webrtc {
+ 
+ template <class T>
