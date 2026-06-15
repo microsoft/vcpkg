@@ -5,7 +5,7 @@
     "version": "2.1",
     "description": "Extracted AudioProcessing module from WebRTC for easy reuse",
     "homepage": "https://www.freedesktop.org/software/pulseaudio/webrtc-audio-processing/",
-    "license": "BSD-3-Clause",
+    "license": "BSD-3-Clause AND Apache-2.0",
     "dependencies": [
         "abseil",
         {
