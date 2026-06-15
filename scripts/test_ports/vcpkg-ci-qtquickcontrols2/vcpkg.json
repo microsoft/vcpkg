@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-qtquickcontrols2",
+  "version-string": "ci",
+  "description": "Validates qtquickcontrols2",
+  "dependencies": [
+    "qtbase",
+    "qtdeclarative",
+    "qtquickcontrols2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildThisFileDirectory)\GetGlobalProperties.task" />
+  <Import Project="$(MSBuildThisFileDirectory)\GetGlobalProperties.task" Condition="'$(_ZVcpkgGetGlobalPropertiesImported)' != 'true'" />
 
   <!-- The VcpkgBootstrap target runs before VcpkgInstallManifestDependencies target and - if $(_ZVcpkgExecutable) is
   out-of-date with respect to $(_ZVcpkgRoot)\scripts\vcpkg-tool-metadata.txt - it invokes the
