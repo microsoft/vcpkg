@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index be8c306..c6edba3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,7 +41,7 @@ install(TARGETS pystring
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
+ 
+-
++if(0)
+ # --- Header-only target: pystring::pystring_header_only ---
+ add_library(pystring_header_only INTERFACE)
+ 
+@@ -55,7 +55,7 @@ target_include_directories(pystring_header_only INTERFACE
+ install(TARGETS pystring_header_only
+     EXPORT pystringTargets
+ )
+-
++endif()
+ install(FILES pystring.h pystring_impl.h
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+ )
+@@ -86,7 +86,7 @@ install(FILES
+     ${CMAKE_CURRENT_BINARY_DIR}/pystringConfigVersion.cmake
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pystring
+ )
+-
++if(0)
+ # --- Tests ---
+ add_executable(pystring_test test.cpp)
+ target_link_libraries(pystring_test pystring)
+@@ -101,3 +101,4 @@ target_link_libraries(pystring_test_header_only_define pystring_header_only)
+ enable_testing()
+ add_test(NAME PyStringTest COMMAND pystring_test)
+ add_test(NAME PyStringTestHeaderOnly COMMAND pystring_test_header_only)
++endif()
+\ No newline at end of file
