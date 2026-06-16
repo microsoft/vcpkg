@@ -1,6 +1,7 @@
 {
   "name": "redisx",
   "version": "1.0.4",
+  "port-version": 1,
   "description": "A free and independent Redis / Valkey client library for C/C++",
   "homepage": "https://sigmyne.github.io/redisx/",
   "documentation": "https://sigmyne.github.io/redisx/doc/html/",
