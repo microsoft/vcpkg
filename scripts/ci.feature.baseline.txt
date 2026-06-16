@@ -802,7 +802,6 @@ msquic(android)=fail
 muda:arm64-linux=cascade
 mujoco:arm64-linux=cascade
 mvfst:arm64-linux=cascade
-mygui[tools]:arm64-osx=feature-fails # Linker errors undefined symbols. See https://github.com/microsoft/vcpkg/issues/34416
 mysql-connector-cpp:arm64-linux=fail
 nana:arm64-linux=fail
 nana:x64-linux=fail
@@ -1507,4 +1506,3 @@ zookeeper:x64-windows-static-md=fail
 zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
-

@@ -24,9 +24,12 @@
     "plugins": {
       "description": "Build MyGUI plugins."
     },
+    "msdf": {
+      "description": "Enable msdf support"
+    },
     "tools": {
       "description": "Install MyGUI tools.",
-      "supports": "!android"
+      "supports": "!android & !osx"
     }
   }
 }
