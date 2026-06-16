@@ -18,6 +18,7 @@ vcpkg_from_github(
         0047-fix-msvc-utf8.patch
         0048-backport-23039.patch
         0049-fix-twolame-pkgconfig.patch
+        0050-fix-test-ld-absolute-lib-paths.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
