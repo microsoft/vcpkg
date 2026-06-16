@@ -1,5 +1,5 @@
 diff --git a/webrtc/system_wrappers/source/denormal_disabler.cc b/webrtc/system_wrappers/source/denormal_disabler.cc
-index bb9c056..82e65ee 100644
+index bb9c056..dbd4a3b 100644
 --- a/webrtc/system_wrappers/source/denormal_disabler.cc
 +++ b/webrtc/system_wrappers/source/denormal_disabler.cc
 @@ -41,11 +41,12 @@ constexpr int kDenormalBitMask = 1 << 24;
@@ -18,3 +18,15 @@ index bb9c056..82e65ee 100644
    asm volatile("mrs %x[result], FPCR" : [result] "=r"(result));
  #endif
    return result;
+@@ -56,9 +57,9 @@ int ReadStatusWord() {
+ void SetStatusWord(int status_word) {
+ #if defined(WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED)
+   asm volatile("ldmxcsr %0" : : "m"(status_word));
+-#elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_32_BITS)
++#elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_32_BITS) && (defined(__GNUC__) || defined(__clang__))
+   asm volatile("vmsr FPSCR, %[src]" : : [src] "r"(status_word));
+-#elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_64_BITS)
++#elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_64_BITS) && (defined(__GNUC__) || defined(__clang__))
+   asm volatile("msr FPCR, %x[src]" : : [src] "r"(status_word));
+ #endif
+ }
