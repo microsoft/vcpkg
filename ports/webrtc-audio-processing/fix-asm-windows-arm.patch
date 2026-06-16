@@ -1,13 +1,10 @@
 diff --git a/webrtc/system_wrappers/source/denormal_disabler.cc b/webrtc/system_wrappers/source/denormal_disabler.cc
-index bb9c056..dbd4a3b 100644
+index bb9c056..dd22439 100644
 --- a/webrtc/system_wrappers/source/denormal_disabler.cc
 +++ b/webrtc/system_wrappers/source/denormal_disabler.cc
-@@ -41,11 +41,12 @@ constexpr int kDenormalBitMask = 1 << 24;
- // architectures and compilers. Otherwise returns `kUnspecifiedStatusWord`.
- int ReadStatusWord() {
+@@ -43,9 +43,10 @@ int ReadStatusWord() {
    int result = kUnspecifiedStatusWord;
--#if defined(WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED)
-+  #if defined(WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED)
+ #if defined(WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED)
    asm volatile("stmxcsr %0" : "=m"(result));
 -#elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_32_BITS)
 +// Vcpkg uses MSVC on Windows, which doesn't support asm; manually disable it on Windows builds to match x86 behavior.
