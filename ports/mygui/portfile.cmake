@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         fix-generation.patch
         Install-tools.patch
-        opengl.patch
         sdl2-static.patch
         fix-tools-lnk2005.patch
 )
@@ -15,8 +14,6 @@ vcpkg_from_github(
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     message(STATUS "Setting MYGUI_RENDERSYSTEM to 8 (GLES) - officially supported MyGUI render system for wasm32")
     set(MYGUI_RENDERSYSTEM 8)
-elseif("opengl" IN_LIST FEATURES)
-    set(MYGUI_RENDERSYSTEM 4)
 else()
     set(MYGUI_RENDERSYSTEM 1)
 endif()
