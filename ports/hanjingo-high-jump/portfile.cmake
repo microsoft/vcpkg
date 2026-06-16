@@ -8,7 +8,6 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         grpc            HJ_ENABLE_GRPC
-        jwt             HJ_ENABLE_JWT
         lic             HJ_ENABLE_LIC
         singleton       HJ_ENABLE_SINGLETON
         timer           HJ_ENABLE_TIMER
