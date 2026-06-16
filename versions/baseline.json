@@ -6473,8 +6473,8 @@
       "port-version": 0
     },
     "mdl-sdk": {
-      "baseline": "2025.0.5",
-      "port-version": 1
+      "baseline": "2026.0.0",
+      "port-version": 0
     },
     "mdns": {
       "baseline": "1.4.3",
