@@ -126,20 +126,6 @@ function Write-ReportLine {
     [Console]::WriteLine($Text)
 }
 
-function Save-Report {
-    param(
-        [Parameter(Mandatory)][string]$Path,
-        [Parameter(Mandatory)][AllowEmptyString()][string[]]$Lines
-    )
-
-    $directory = Split-Path -Path $Path -Parent
-    if ($directory -and -not (Test-Path -LiteralPath $directory -PathType Container)) {
-        New-Item -ItemType Directory -Path $directory -Force | Out-Null
-    }
-
-    Set-Content -LiteralPath $Path -Value $Lines -Encoding utf8NoBOM
-}
-
 function Test-GhAuthentication {
     $result = Invoke-GhCommand -Arguments @('auth', 'status')
 
@@ -182,22 +168,22 @@ function Main {
         return 1
     }
 
-    try {
-        Test-GhAuthentication
-        $cutoffDate = (Get-Date).ToUniversalTime().AddDays(-$Age).ToString('yyyy-MM-dd', [System.Globalization.CultureInfo]::InvariantCulture)
-        $prs = Get-GhPrList -Repo $resolvedRepo -Limit $Limit -CutoffDate $cutoffDate
-    }
-    catch {
-        Write-Error $_.Exception.Message
-        return 1
-    }
+    Test-GhAuthentication
+    $cutoffDate = (Get-Date).ToUniversalTime().AddDays(-$Age).ToString('yyyy-MM-dd', [System.Globalization.CultureInfo]::InvariantCulture)
+    $prs = Get-GhPrList -Repo $resolvedRepo -Limit $Limit -CutoffDate $cutoffDate
 
     $stalePrs = @($prs | Sort-Object { [datetime]::Parse($_.updatedAt, [System.Globalization.CultureInfo]::InvariantCulture, [System.Globalization.DateTimeStyles]::AssumeUniversal -bor [System.Globalization.DateTimeStyles]::AdjustToUniversal) })
 
     if ($stalePrs.Count -eq 0) {
         Write-ReportLine -Text "No open PRs with no activity for $Age days or more found in $resolvedRepo." -ReportLines $reportLines
+        
         if ($OutputFile) {
-            Save-Report -Path $OutputFile -Lines @($reportLines)
+            $directory = Split-Path -Path $OutputFile -Parent
+            if ($directory -and -not (Test-Path -LiteralPath $directory -PathType Container)) {
+                New-Item -ItemType Directory -Path $directory -Force | Out-Null
+            }
+
+            Set-Content -LiteralPath $OutputFile -Value $reportLines -Encoding utf8NoBOM
         }
         return
     }
@@ -211,15 +197,8 @@ function Main {
         Write-ReportLine -Text '' -ReportLines $reportLines
 
         if ($CloseWithComment) {
-            try {
-                Close-PullRequest -Pr $pr -Repo $resolvedRepo -CommentFile $CloseWithComment | Out-Null
-                Write-ReportLine -Text "  closed PR #$($pr.number) via gh pr close" -ReportLines $reportLines
-            }
-            catch {
-                $message = $_.Exception.Message
-                Write-Error "Error closing PR #$($pr.number): $message"
-                return 1
-            }
+            Close-PullRequest -Pr $pr -Repo $resolvedRepo -CommentFile $CloseWithComment | Out-Null
+            Write-ReportLine -Text "  closed PR #$($pr.number) via gh pr close" -ReportLines $reportLines
         }
         else {
             Write-ReportLine -Text "  would close PR #$($pr.number); pass -CloseWithComment to close it" -ReportLines $reportLines
@@ -227,7 +206,12 @@ function Main {
     }
 
     if ($OutputFile) {
-        Save-Report -Path $OutputFile -Lines @($reportLines)
+        $directory = Split-Path -Path $OutputFile -Parent
+        if ($directory -and -not (Test-Path -LiteralPath $directory -PathType Container)) {
+            New-Item -ItemType Directory -Path $directory -Force | Out-Null
+        }
+
+        Set-Content -LiteralPath $OutputFile -Value $reportLines -Encoding utf8NoBOM
     }
 }
 
