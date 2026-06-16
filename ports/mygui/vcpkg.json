@@ -18,14 +18,14 @@
     }
   ],
   "features": {
+    "msdf": {
+      "description": "Enable msdf support"
+    },
     "obsolete": {
       "description": "Keep obsolete functions."
     },
     "plugins": {
       "description": "Build MyGUI plugins."
-    },
-    "msdf": {
-      "description": "Enable msdf support"
     },
     "tools": {
       "description": "Install MyGUI tools.",
