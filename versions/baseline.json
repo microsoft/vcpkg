@@ -2750,7 +2750,7 @@
     },
     "ecal": {
       "baseline": "5.13.4",
-      "port-version": 1
+      "port-version": 2
     },
     "ecaludp": {
       "baseline": "0.1.2",
@@ -9349,7 +9349,7 @@
       "port-version": 1
     },
     "simpleini": {
-      "baseline": "4.25",
+      "baseline": "4.26",
       "port-version": 0
     },
     "simsimd": {
