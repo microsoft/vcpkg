@@ -1,0 +1,30 @@
+diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+index a0ef573..b77566e 100644
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
+@@ -5,7 +5,7 @@
+ #############################################################
+ 
+ if(WIN32)
+-	set(MYGUI_CMAKE_DIR "CMake")
++	set(MYGUI_CMAKE_DIR "share")
+ else(WIN32)
+ 	set(MYGUI_CMAKE_DIR "lib/MYGUI/cmake")
+ endif(WIN32)
+diff --git a/CMake/Utils/MyGUIConfigTargets.cmake b/CMake/Utils/MyGUIConfigTargets.cmake
+index 8fb1ce4..6483339 100644
+--- a/CMake/Utils/MyGUIConfigTargets.cmake
++++ b/CMake/Utils/MyGUIConfigTargets.cmake
+@@ -7,10 +7,10 @@ if (WIN32)
+ 	set(MYGUI_RELWDBG_PATH "/RelWithDebInfo")
+ 	set(MYGUI_MINSIZE_PATH "/MinSizeRel")
+ 	set(MYGUI_DEBUG_PATH "/Debug")
+-	set(MYGUI_LIB_RELEASE_PATH "/Release")
++	set(MYGUI_LIB_RELEASE_PATH "")
+ 	set(MYGUI_LIB_RELWDBG_PATH "/RelWithDebInfo")
+ 	set(MYGUI_LIB_MINSIZE_PATH "/MinSizeRel")
+-	set(MYGUI_LIB_DEBUG_PATH "/Debug")
++	set(MYGUI_LIB_DEBUG_PATH "")
+ 	set(MYGUI_PLUGIN_PATH "/opt")
+ elseif (UNIX)
+ 	set(MYGUI_RELEASE_PATH "")

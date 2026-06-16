@@ -4,6 +4,10 @@ vcpkg_from_github(
     REF MyGUI${VERSION}
     SHA512 9b11cf5100b341962c07ec94f5076edb2f2d3a8d3649365261eda4945cd452069a9ced1db9083223873da9bf441b98a3dbbd65e7986de605a82c9a99f7ddc87f
     HEAD_REF master
+    PATCHES
+        fix-generation.patch
+        Install-tools.patch
+        sdl2-static.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -24,7 +28,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MYGUI_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MSDFGEN_DYNAMIC_RUNTIME)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" MSDFGEN_DYNAMIC_RUNTIME)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
