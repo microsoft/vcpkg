@@ -1,0 +1,24 @@
+diff --git a/webrtc/modules/audio_processing/aec3/multi_channel_content_detector.h b/webrtc/modules/audio_processing/aec3/multi_channel_content_detector.h
+index 2b2f3b8..feb29fd 100644
+--- a/webrtc/modules/audio_processing/aec3/multi_channel_content_detector.h
++++ b/webrtc/modules/audio_processing/aec3/multi_channel_content_detector.h
+@@ -12,6 +12,7 @@
+ #define MODULES_AUDIO_PROCESSING_AEC3_MULTI_CHANNEL_CONTENT_DETECTOR_H_
+ 
+ #include <stddef.h>
++#include <cstdint>
+ 
+ #include <memory>
+ #include <optional>
+diff --git a/webrtc/rtc_base/trace_event.h b/webrtc/rtc_base/trace_event.h
+index 2aee713..f88a68e 100644
+--- a/webrtc/rtc_base/trace_event.h
++++ b/webrtc/rtc_base/trace_event.h
+@@ -28,6 +28,7 @@
+ 
+ #if !defined(RTC_USE_PERFETTO)
+ #include <string>
++#include <cstdint>
+ 
+ #include "rtc_base/event_tracer.h"
+ 
