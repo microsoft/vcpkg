@@ -556,6 +556,76 @@
       "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.32.3/azcopy_windows_arm64_10.32.3.zip",
       "sha512": "9f794442fb632959ff840ef1ab183e155f1079c004912f21aad80229a9033e1e2f1d4a60f31cc8780542e2a4c2fe08b6f651ed14906f5d62369afc4601328d4c",
       "archive": "azcopy_windows_arm64_10.32.3.zip"
+    },
+    {
+      "name": "lief-patchelf",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "0.17.6",
+      "executable": "bin/lief-patchelf.exe",
+      "url": "https://github.com/lief-project/LIEF/releases/download/0.17.6/lief-tools-x86_64-pc-windows-msvc.zip",
+      "sha512": "a5daff8baa0768969975931279bccc79f425cd44f1fd4aaf70b8ace83bb17c34070d9469da02222e36895567034536002b12077207b37320402d0e595ab1e458",
+      "archive": "lief-tools-x86_64-pc-windows-msvc.zip"
+    },
+    {
+      "name": "lief-patchelf",
+      "os": "windows",
+      "arch": "arm64",
+      "version": "0.17.6",
+      "executable": "bin/lief-patchelf.exe",
+      "url": "https://github.com/lief-project/LIEF/releases/download/0.17.6/lief-tools-aarch64-pc-windows-msvc.zip",
+      "sha512": "1680b566347cb158981662b81dc91e6e247835ac3bc0ad0c191afb71016e7e9514cb87de0f91e9a5397daf39ab930f694da21c4e78fd639a1e87bb039cb234e2",
+      "archive": "lief-tools-aarch64-pc-windows-msvc.zip"
+    },
+    {
+      "name": "lief-patchelf",
+      "os": "osx",
+      "arch": "amd64",
+      "version": "0.17.6",
+      "executable": "bin/lief-patchelf",
+      "url": "https://github.com/lief-project/LIEF/releases/download/0.17.6/lief-tools-x86_64-apple-darwin.zip",
+      "sha512": "f6d1604dcbd8733bc435de5f2b20cb82f38ed5ece0f37769c895b48d29be8faab5f38ca6bba9354221b5f950b523edad68727d332a74f07b45a3647a9edd4636",
+      "archive": "lief-tools-x86_64-apple-darwin.zip"
+    },
+    {
+      "name": "lief-patchelf",
+      "os": "osx",
+      "arch": "arm64",
+      "version": "0.17.6",
+      "executable": "bin/lief-patchelf",
+      "url": "https://github.com/lief-project/LIEF/releases/download/0.17.6/lief-tools-aarch64-apple-darwin.zip",
+      "sha512": "c0db16e4662f0bdd641ec44f182182daa53b02cad93c47b9749cd52e5713aea0ac27a1d8e75f7cf22a4d2bad042ae120b06cb4ae355811a45a33ad51e5e8e226",
+      "archive": "lief-tools-aarch64-apple-darwin.zip"
+    },
+    {
+      "name": "lief-patchelf",
+      "os": "linux",
+      "arch": "amd64",
+      "version": "0.17.6",
+      "executable": "bin/lief-patchelf",
+      "url": "https://github.com/lief-project/LIEF/releases/download/0.17.6/lief-tools-x86_64-unknown-linux-musl.zip",
+      "sha512": "fb3adfd1f7652d2771b49bd8117f6609fddb4fa9f9968815763d23c5a4f0867dd2e7e8e1031ea7db122eff6c92588529ddc0ca45b3b15dd60faafc061b39608e",
+      "archive": "lief-tools-x86_64-unknown-linux-musl.zip"
+    },
+    {
+      "name": "lief-patchelf",
+      "os": "linux",
+      "arch": "arm64",
+      "version": "0.17.6",
+      "executable": "bin/lief-patchelf",
+      "url": "https://github.com/lief-project/LIEF/releases/download/0.17.6/lief-tools-aarch64-unknown-linux-musl.zip",
+      "sha512": "4365fc2ed5f60776ab012af177850adb50b39e52fb1b9af0c6a9b15bb83a5dac0a7b33a22721a2a874b28cc1f1a6057de727b98be2593ba79d803b22a13f4b6f",
+      "archive": "lief-tools-aarch64-unknown-linux-musl.zip"
+    },
+    {
+      "name": "lief-patchelf",
+      "os": "linux",
+      "arch": "x86",
+      "version": "0.17.6",
+      "executable": "bin/lief-patchelf",
+      "url": "https://github.com/lief-project/LIEF/releases/download/0.17.6/lief-tools-i686-unknown-linux-musl.zip",
+      "sha512": "c4528494f84bf1975cd375196ea3c898e56335ddd4c8a6efb1eaa6cf3844017f98406093ef74cb60c4feed4b555036482554da315786ae041951ec8a04273c78",
+      "archive": "lief-tools-i686-unknown-linux-musl.zip"
     }
   ]
 }

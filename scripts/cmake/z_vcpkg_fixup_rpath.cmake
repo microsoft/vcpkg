@@ -71,7 +71,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
     # In download mode, we don't know if we're going to need PATCHELF, so be pessimistic and fetch
     # it so it ends up in the downloads directory.
     if(VCPKG_DOWNLOAD_MODE)
-        vcpkg_find_acquire_program(PATCHELF)
+        vcpkg_find_acquire_program(LIEFPATCHELF)
     endif()
 
     foreach(folder IN LISTS root_entries)
@@ -93,16 +93,19 @@ function(z_vcpkg_fixup_rpath_in_dir)
                 continue()
             endif()
 
-            vcpkg_find_acquire_program(PATCHELF) # Note that this relies on vcpkg_find_acquire_program short
-                                                 # circuiting after the first run
+            # Note that this relies on vcpkg_find_acquire_program short
+            # circuiting after the first run
+            vcpkg_find_acquire_program(LIEFPATCHELF)
+
             # If this fails, the file is not an elf
             execute_process(
-                COMMAND "${PATCHELF}" --print-rpath "${elf_file}"
+                COMMAND "${LIEFPATCHELF}" --print-rpath "${elf_file}"
+                RESULT_VARIABLE readelf_result
                 OUTPUT_VARIABLE readelf_output
                 ERROR_VARIABLE read_rpath_error
             )
             string(REPLACE "\n" "" readelf_output "${readelf_output}")
-            if(NOT "${read_rpath_error}" STREQUAL "")
+            if(NOT "${readelf_result}" STREQUAL 0 OR NOT "${read_rpath_error}" STREQUAL "")
                 continue()
             endif()
 
@@ -115,7 +118,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
             )
 
             execute_process(
-                COMMAND "${PATCHELF}" --set-rpath "${new_rpath}" "${elf_file}"
+                COMMAND "${LIEFPATCHELF}" --set-rpath "${new_rpath}" "${elf_file}"
                 OUTPUT_QUIET
                 ERROR_VARIABLE set_rpath_error
             )
