@@ -653,7 +653,7 @@
       "port-version": 0
     },
     "bbstrader": {
-      "baseline": "2.0.8",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "bcg729": {
@@ -2521,7 +2521,7 @@
       "port-version": 0
     },
     "directxmath": {
-      "baseline": "2026-05-15",
+      "baseline": "2026-06-12",
       "port-version": 0
     },
     "directxmesh": {
@@ -3034,7 +3034,7 @@
     },
     "ffmpeg": {
       "baseline": "8.1.1",
-      "port-version": 2
+      "port-version": 3
     },
     "ffmpeg-bin2c": {
       "baseline": "8.1.1",
@@ -4245,7 +4245,7 @@
       "port-version": 0
     },
     "jwsung91-unilink": {
-      "baseline": "0.8.0",
+      "baseline": "0.8.1",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -5373,11 +5373,11 @@
       "port-version": 0
     },
     "libnice": {
-      "baseline": "0.1.22",
+      "baseline": "0.1.23",
       "port-version": 0
     },
     "libnice-gst": {
-      "baseline": "0.1.22",
+      "baseline": "0.1.23",
       "port-version": 0
     },
     "libnick": {
@@ -5901,8 +5901,8 @@
       "port-version": 2
     },
     "libwandio": {
-      "baseline": "4.2.6-1",
-      "port-version": 2
+      "baseline": "4.2.7-1",
+      "port-version": 0
     },
     "libwebm": {
       "baseline": "1.0.0.32",
@@ -7433,8 +7433,8 @@
       "port-version": 0
     },
     "openjph": {
-      "baseline": "0.27.2",
-      "port-version": 1
+      "baseline": "0.28.1",
+      "port-version": 0
     },
     "openldap": {
       "baseline": "2.6.13",
@@ -8897,8 +8897,8 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "11.0.4",
-      "port-version": 1
+      "baseline": "11.1.1",
+      "port-version": 0
     },
     "rp-ntuples": {
       "baseline": "0.1.4",
@@ -8949,7 +8949,7 @@
       "port-version": 1
     },
     "rtc-benchmarksuite": {
-      "baseline": "1.0.3",
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "rtlsdr": {
@@ -9537,8 +9537,8 @@
       "port-version": 2
     },
     "sparsepp": {
-      "baseline": "1.22",
-      "port-version": 4
+      "baseline": "1.23",
+      "port-version": 0
     },
     "spatial-hash": {
       "baseline": "1.0.0",

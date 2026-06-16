@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d1c4c27a0..681438814 100644
+index 9523fe3e7..ad90f6ef5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -111,7 +111,7 @@ endif()
+@@ -106,7 +106,7 @@ endif()
  
  include(CMakeDependentOption)
  
@@ -11,7 +11,7 @@ index d1c4c27a0..681438814 100644
    option(WITH_GFLAGS "build with GFlags" OFF)
    option(WITH_XPRESS "build with windows built in compression" OFF)
    option(ROCKSDB_SKIP_THIRDPARTY "skip thirdparty.inc" OFF)
-@@ -165,10 +165,7 @@ else()
+@@ -160,10 +160,7 @@ else()
    endif()
  
    if(WITH_SNAPPY)
@@ -23,7 +23,7 @@ index d1c4c27a0..681438814 100644
      add_definitions(-DSNAPPY)
      list(APPEND THIRDPARTY_LIBS Snappy::snappy)
    endif()
-@@ -192,16 +189,19 @@ else()
+@@ -187,16 +184,19 @@ else()
    endif()
  
    if(WITH_LZ4)
@@ -47,7 +47,7 @@ index d1c4c27a0..681438814 100644
    endif()
  endif()
  
-@@ -352,11 +352,10 @@ int main() {
+@@ -347,11 +347,10 @@ int main() {
  endif()
  
  if (WITH_LIBURING)
@@ -63,7 +63,7 @@ index d1c4c27a0..681438814 100644
  endif()
  
  # Reset the required flags
-@@ -414,17 +413,16 @@ endif()
+@@ -409,17 +408,16 @@ endif()
  
  option(WITH_NUMA "build with NUMA policy support" OFF)
  if(WITH_NUMA)
@@ -85,7 +85,7 @@ index d1c4c27a0..681438814 100644
  endif()
  
  # Stall notifications eat some performance from inserts
-@@ -1388,8 +1386,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
+@@ -1289,8 +1287,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
      endforeach()
    endforeach()
  
