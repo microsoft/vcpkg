@@ -8754,7 +8754,7 @@
     },
     "redisx": {
       "baseline": "1.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "refl-cpp": {
       "baseline": "0.12.4",
