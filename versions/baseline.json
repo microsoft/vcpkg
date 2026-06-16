@@ -3162,7 +3162,7 @@
     },
     "folly": {
       "baseline": "2026.02.23.00",
-      "port-version": 1
+      "port-version": 2
     },
     "font-chef": {
       "baseline": "1.1.0",
