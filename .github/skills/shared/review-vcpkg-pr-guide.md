@@ -1,25 +1,12 @@
-# Shared vcpkg PR Review Guide
+## Review procedure
 
-Read this file before performing either a single-PR review or a batch PR triage.
-
-## Core review standard
-
-Review vcpkg PRs according to:
-
-- <https://learn.microsoft.com/en-us/vcpkg/contributing/maintainer-guide>
-- <https://learn.microsoft.com/en-us/vcpkg/contributing/pr-review-checklist>
-
-Always read the PR description and the full conversation history before concluding.
-
-## Shared review scope
-
-For each PR under review:
-
-1. Review the PR against the maintainer guide and PR review checklist.
+1. Read the PR description and full conversation history before concluding.
+1. Review the PR against the maintainer guide <https://learn.microsoft.com/vcpkg/contributing/maintainer-guide> and PR review checklist <https://learn.microsoft.com/vcpkg/contributing/pr-review-checklist>.
 2. Review the upstream source for optional dependencies and verify the portfile controls them correctly.
 3. Research the library's provenance and naming:
    - whether the repository or project is the primary association for the name
    - whether the package name could confuse users in a package manager
+   - whether the package name for this library matches the library indicated by https://repology.org/project/<port name>/versions
 4. Highlight unusual aspects of the portfile and find similar prior art in other vcpkg ports.
 5. If the PR adds one or more new ports, run the `evaluate-new-port` skill for each newly added port from the PR checkout and incorporate those audit results into the PR review instead of treating them as a separate standalone deliverable.
 
@@ -33,7 +20,7 @@ Work autonomously. Use web and repository tooling as needed. Prefer concrete evi
 4. Prefer investigation workspaces on the same drive as the initial repository and choose short paths to reduce Windows path-length risk.
 5. Avoid placing worktrees or other heavy investigation directories under Copilot session-state directories when a suitable same-drive location is available.
 6. If the appropriate investigations directory is not clear from the user's request or obvious repository-local conventions, ask the user before creating the workspaces.
-7. On Windows, after creating a worktree, copy the repository-local `vcpkg.exe` from the starting repository into that worktree instead of rerunning bootstrap. For example, after `git worktree add D:\vcpkg2 origin/master`, copy `.\vcpkg.exe` to `D:\vcpkg2`.
+7. On Windows, after creating a worktree, copy the repository-local `vcpkg.exe` from the starting repository into that worktree instead of rerunning bootstrap. 
 
 ## Standard deliverables per PR
 
