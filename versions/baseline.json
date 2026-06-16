@@ -5373,11 +5373,11 @@
       "port-version": 0
     },
     "libnice": {
-      "baseline": "0.1.22",
+      "baseline": "0.1.23",
       "port-version": 0
     },
     "libnice-gst": {
-      "baseline": "0.1.22",
+      "baseline": "0.1.23",
       "port-version": 0
     },
     "libnick": {
