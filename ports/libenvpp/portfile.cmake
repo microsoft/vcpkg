@@ -13,6 +13,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+        fix-fmt-header.patch
 )
 
 vcpkg_cmake_configure(
