@@ -1,0 +1,72 @@
+diff --git a/src/c99/iers.c b/src/c99/iers.c
+index 02c6095e..f4fb5d6c 100644
+--- a/src/c99/iers.c
++++ b/src/c99/iers.c
+@@ -16,11 +16,11 @@
+  *  @sa \ref earth
+  */
+ 
+-/// \cond PRIVATE
+ #if !defined(_MSC_VER) && !defined(WITHOUT_LIBC)
+-#  define _GNU_SOURCE                 ///< fmemopen() (before glibc 2.10)
++/// \cond PRIVATE
++#  define _GNU_SOURCE         ///< fmemopen() (before glibc 2.10)
++ /// \endcond
+ #endif
+-/// \endcond
+ 
+ #include <errno.h>
+ #include <string.h>
+@@ -63,6 +63,7 @@
+ #  define NTP_UNIX_EPOCH              2208988800LL  ///< [s] NTP timestamp of UNIX epoch (1970 Jan 1)
+ 
+ #ifdef _MSC_VER
++#  define TMP_FILE        "C:\\Temp\\supernovas.tmp"
+ #  define gmtime_r        gmtime_s    ///< MSC equivalent
+ #endif
+ 
+@@ -186,6 +187,32 @@ static int eop_mutex_initialized;  ///< Whether EOP mutex was initialized
+ // ===========================================================================
+ #ifndef WITHOUT_LIBC
+ 
++#ifdef _MSC_VER
++FILE *fmemopen(void *buf, size_t size, const char *mode) {
++  static const char *fn = "fmemopen";
++
++  FILE *fp = fopen(TMP_FILE, "rw");
++  (void) mode; // unused
++
++  if(!fp) {
++    novas_set_errno(-1, errno, fn, "Could not create temporary file.");
++    return NULL;
++  }
++
++  if(fwrite(buf, size, 1, fp) <= 0) {
++    novas_set_errno(-1, errno, fn, "Could not write to temporary file.");
++    return NULL;
++  }
++
++  if(fseek(fp, 0, SEEK_SET) < 0) {
++    novas_set_errno(-1, errno, fn, "Could not rewind temporary file.");
++    return NULL;
++  }
++
++  return fp;
++}
++#endif
++
+ static void lock_leap() {
+   if(!leap_mutex_initialized) {
+     novas_init_lock(&leap_mutex);
+@@ -363,6 +390,11 @@ static iers_leap_entry *fetch_leaps_async(long long *expiration) {
+   list = parse_leap_file(fp, expiration);
+   fclose(fp);
+ 
++#ifdef _MSC_VER
++  // delete the temporary file
++  unlink(TMP_FILE);
++#endif
++
+   if(!list)
+     novas_trace_invalid(fn);
+ 

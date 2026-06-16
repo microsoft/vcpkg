@@ -1081,7 +1081,6 @@ simd:arm-neon-android=fail
 simd:arm64-android=fail
 simd:arm64-linux=fail
 simd:x64-android=fail
-sleef:arm64-linux=fail
 sleepy-discord:arm-neon-android=fail # std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
 sleepy-discord:arm64-android=fail
 sleepy-discord:x64-android=fail

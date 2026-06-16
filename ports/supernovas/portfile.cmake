@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 d45c26ec24b74a0565304f7d8bd254fea66e2ea31e39a7e3e32554e4e06a725592258dcf1b5c630eb9a196b568fe5f079302773c1989e089a18cb1a5aca76e60
     HEAD_REF main
+    PATCHES fmem.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

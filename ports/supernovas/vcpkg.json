@@ -6,6 +6,7 @@
   "documentation": "https://sigmyne.github.io/SuperNOVAS/doc/html/",
   "license": "Unlicense",
   "dependencies": [
+    "curl",
     {
       "name": "vcpkg-cmake",
       "host": true
