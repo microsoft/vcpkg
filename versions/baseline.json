@@ -6345,7 +6345,7 @@
       "port-version": 13
     },
     "mailio": {
-      "baseline": "0.25.3",
+      "baseline": "0.26.0",
       "port-version": 0
     },
     "makeid": {
