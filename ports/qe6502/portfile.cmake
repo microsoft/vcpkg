@@ -32,6 +32,20 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/qe6502/qe6502_version.h"
+        "#endif /* QE6502_VERSION_H */"
+        "#ifndef QE6502_SHARED\n#   define QE6502_SHARED 1\n#endif\n\n#ifndef QE6502_CPP_SHARED\n#   define QE6502_CPP_SHARED 1\n#endif\n\n#endif /* QE6502_VERSION_H */"
+    )
+else()
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/qe6502/qe6502_version.h"
+        "#endif /* QE6502_VERSION_H */"
+        "#ifndef QE6502_STATIC\n#   define QE6502_STATIC 1\n#endif\n\n#endif /* QE6502_VERSION_H */"
+    )
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
