@@ -1,6 +1,6 @@
 {
   "name": "ruvia",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Small C++23 HTTP/1.1 web framework with built-in TLS, routing, middleware, streaming, WebSocket, and PMR-oriented runtime.",
   "homepage": "https://github.com/hyird/Ruvia",
   "license": "MIT",

@@ -8973,7 +8973,7 @@
       "port-version": 0
     },
     "ruvia": {
-      "baseline": "0.0.4",
+      "baseline": "0.0.5",
       "port-version": 0
     },
     "rxcpp": {
