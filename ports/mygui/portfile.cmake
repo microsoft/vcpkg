@@ -1,3 +1,12 @@
+set(PATCHES
+    fix-generation.patch
+    sdl2-static.patch
+)
+
+if("tools" IN_LIST FEATURES)
+  list(APPEND PATCHES Install-tools.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MyGUI/mygui
@@ -5,9 +14,7 @@ vcpkg_from_github(
     SHA512 9b11cf5100b341962c07ec94f5076edb2f2d3a8d3649365261eda4945cd452069a9ced1db9083223873da9bf441b98a3dbbd65e7986de605a82c9a99f7ddc87f
     HEAD_REF master
     PATCHES
-        fix-generation.patch
-        Install-tools.patch
-        sdl2-static.patch
+        ${PATCHES}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")

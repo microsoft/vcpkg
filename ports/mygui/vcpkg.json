@@ -29,7 +29,7 @@
     },
     "tools": {
       "description": "Install MyGUI tools.",
-      "supports": "!android"
+      "supports": "!android & !osx"
     }
   }
 }
