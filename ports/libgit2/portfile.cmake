@@ -9,6 +9,7 @@ vcpkg_from_github(
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
+        no-static-whole-program-optimization.diff # don't /GL a static lib; it forces /LTCG on consumers
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"

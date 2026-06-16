@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO munt/munt
     REF libmt32emu_${VERSION}
-    SHA512 29974bc97c15ae6c7824ee2525cebe0dc213b35f2cb45ffc1290cfe1b759ac3df556973a467716f8b395092ed1e7b94c2fa58f8a46b5660e6cf807fead9b5fad
+    SHA512 380f564dfe1e9754c40d1ba8f9ebe409bedd813accc166dce3783944d3c172e1afd68bdf536e3cc476d1362710eddea44b3457d26ba9aeb7f0cb5ed70efd3c3d
     HEAD_REF master
 )
 

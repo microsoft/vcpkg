@@ -12,6 +12,11 @@ vcpkg_from_github(
 file(INSTALL "${SOURCE_PATH}/libkineto/include/"
      DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
+# Avoid taking extremely common name "Config.h" which breaks many projects that assume it is their
+# internal config.h header.
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/Config.h" "${CURRENT_PACKAGES_DIR}/include/KinetoConfig.h")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/IActivityProfiler.h" "#include \"Config.h\"" "#include \"KinetoConfig.h\"")
+
 # Provide cmake config
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/unofficial-kineto-config.cmake.in"
