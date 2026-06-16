@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-dynamic-buffer
     REF "v${VERSION}"
-    SHA512 28a29f9279317e28a0eaec41968cf521ebabef5cc995e07f796be8205b2f9648d3a73ca0f103003d0dfb440ba35b17bc78622e6012bd36e635fab8479d6b4463
+    SHA512 0467d934857e7eb159998adcadad6210d4e483ca974d8d75d928eb38e11312c35f364115f159a5c8f7962e24aa2536be855e97de72bf15350e915135861d7e47
     HEAD_REF main
 )
 
@@ -12,7 +12,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_SLICK_DYNAMIC_BUFFER_TESTS=OFF
-        -DCMAKE_REQUIRE_FIND_PACKAGE_slick-stream-buffer=ON
 )
 
 vcpkg_cmake_install()
