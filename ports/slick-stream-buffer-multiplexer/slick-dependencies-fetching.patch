@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 11cb8e4..0a04799 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,9 +10,9 @@ set(CMAKE_CXX_STANDARD 20)
+ # Options:
+ option(BUILD_SLICK_STREAM_BUFFER_MULTIPLEXER_TESTS "Build tests" ${PROJECT_IS_TOP_LEVEL})
+ 
+-find_package(slick-stream-buffer 1.0.4 CONFIG QUIET)
++find_package(slick-stream-buffer CONFIG REQUIRED)
+ 
+-if (NOT slick-stream-buffer_FOUND)
++if (FALSE)
+     include(FetchContent)
+ 
+     # Disable slick-stream-buffer tests and examples, but allow installation
+@@ -27,9 +27,9 @@ else()
+     message(STATUS "slick-stream-buffer: ${slick-stream-buffer_VERSION}")
+ endif()
+ 
+-find_package(slick-queue 1.5.0 CONFIG QUIET)
++find_package(slick-queue CONFIG REQUIRED)
+ 
+-if (NOT slick-queue_FOUND)
++if (FALSE)
+     include(FetchContent)
+ 
+     # Disable slick-queue tests and examples, but allow installation
