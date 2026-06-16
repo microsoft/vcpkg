@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
     REF "v${VERSION}"
-    SHA512 87616de2e889d0129baed2f7311a3371ab08de2777a58a66294dbb48ba878f8527c79d0a13d1238f6d32b1faf6edcc23eebc51c3e6e6634e6a504f5b7c42b003
+    SHA512 789f7a876acd2187b1363c1d863bf3a2726a9f1ffe08a2e2e4a2d8b41fb054fb7b65cd078619205faed7b59f61c3af78b08ac778a37390e21603646a800cb093
     HEAD_REF master
     PATCHES
         fix_generateqmltypes.patch # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/201
