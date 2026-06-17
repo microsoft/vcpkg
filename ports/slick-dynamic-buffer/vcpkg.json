@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slick-dynamic-buffer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Header-only Boost.Asio DynamicBuffer adapter for slick buffer backends (stream_buffer, producer_buffer) - zero-copy fan-out of received network bytes to lock-free consumers",
   "homepage": "https://github.com/SlickQuant/slick-dynamic-buffer",
   "license": "MIT",
