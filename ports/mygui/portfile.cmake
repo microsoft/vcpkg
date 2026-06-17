@@ -1,17 +1,3 @@
-vcpkg_list(SET PATCHES)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_list(APPEND PATCHES fix-generation.patch)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  vcpkg_list(APPEND PATCHES sdl2-static.patch)
-endif()
-
-if("tools" IN_LIST FEATURES)
-  vcpkg_list(APPEND PATCHES Install-tools.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MyGUI/mygui
@@ -19,7 +5,9 @@ vcpkg_from_github(
     SHA512 9b11cf5100b341962c07ec94f5076edb2f2d3a8d3649365261eda4945cd452069a9ced1db9083223873da9bf441b98a3dbbd65e7986de605a82c9a99f7ddc87f
     HEAD_REF master
     PATCHES
-        ${PATCHES}
+       fix-generation.patch
+       Install-tools.patch
+       sdl2-static.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -60,6 +48,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
