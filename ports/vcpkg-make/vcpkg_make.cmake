@@ -269,6 +269,9 @@ function(z_vcpkg_make_prepare_env config)
         ""
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
+    if(arg_ADD_BIN_TO_PATH)
+        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${path_suffix_${config}}/bin")
+    endif()
     # Used by CL 
     vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # Used by GCC
@@ -347,6 +350,9 @@ function(vcpkg_make_run_configure)
     vcpkg_prepare_pkgconfig("${arg_CONFIG}")
 
     set(prepare_env_opts "")
+    if(arg_ADD_BIN_TO_PATH)
+        list(APPEND prepare_env_opts "ADD_BIN_TO_PATH")
+    endif()
 
     z_vcpkg_make_prepare_env("${arg_CONFIG}" ${prepare_env_opts})
 
