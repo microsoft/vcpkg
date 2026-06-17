@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 4100f3677f7b4e9930f4f051ea16015facac16f22522ef2a1ad56ae410f4d816e07b66591105354e14f20c14641bbeab6b85eaf036d8bf43843fc70b1e9d0b3b
     HEAD_REF main
     PATCHES
-      slick-dependencies-fetching.patch
+        slick-dependencies-fetching.patch
 )
 
 vcpkg_cmake_configure(

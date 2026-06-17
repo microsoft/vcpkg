@@ -26,3 +26,29 @@ index 11cb8e4..0a04799 100644
      include(FetchContent)
  
      # Disable slick-queue tests and examples, but allow installation
+diff --git a/cmake/slick-stream-buffer-multiplexerConfig.cmake.in b/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
+index b9cb86e..8eb750f 100644
+--- a/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
++++ b/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
+@@ -3,8 +3,8 @@
+ # Find dependencies
+ include(CMakeFindDependencyMacro)
+ 
+-find_dependency(slick-stream-buffer 1.0.4 QUIET)
+-if (NOT slick-stream-buffer_FOUND)
++find_dependency(slick-stream-buffer CONFIG)
++if (FALSE)
+     include(FetchContent)
+ 
+     set(BUILD_SLICK_STREAM_BUFFER_TESTS OFF CACHE BOOL "" FORCE)
+@@ -16,8 +16,8 @@ if (NOT slick-stream-buffer_FOUND)
+     FetchContent_MakeAvailable(slick-stream-buffer)
+ endif()
+ 
+-find_dependency(slick-queue 1.5.0 QUIET)
+-if (NOT slick-queue_FOUND)
++find_dependency(slick-queue CONFIG)
++if (FALSE)
+     include(FetchContent)
+ 
+     set(BUILD_SLICK_QUEUE_TESTS OFF CACHE BOOL "" FORCE)
