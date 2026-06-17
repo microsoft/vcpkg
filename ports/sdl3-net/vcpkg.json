@@ -1,0 +1,21 @@
+{
+  "name": "sdl3-net",
+  "version": "3.2.0",
+  "description": "A simple, cross-platform wrapper over TCP/IP sockets.",
+  "homepage": "https://github.com/libsdl-org/SDL_net",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "sdl3",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

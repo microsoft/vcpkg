@@ -1,6 +1,7 @@
 {
   "name": "ezfoundation",
   "version": "21.10",
+  "port-version": 1,
   "description": "Foundation library out of ezEngine",
   "homepage": "https://ezengine.net/",
   "license": "MIT",

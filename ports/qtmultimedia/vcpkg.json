@@ -1,19 +1,10 @@
 {
   "name": "qtmultimedia",
-  "version": "6.10.0",
-  "port-version": 3,
+  "version": "6.11.1",
   "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
-    {
-      "name": "pipewire",
-      "platform": "linux"
-    },
-    {
-      "name": "pulseaudio",
-      "platform": "linux"
-    },
     {
       "name": "qtbase",
       "default-features": false,
@@ -30,12 +21,24 @@
     }
   ],
   "default-features": [
-    "ffmpeg",
+    {
+      "name": "ffmpeg",
+      "platform": "!emscripten"
+    },
+    {
+      "name": "pipewire",
+      "platform": "linux"
+    },
+    {
+      "name": "pulseaudio",
+      "platform": "linux"
+    },
     "widgets"
   ],
   "features": {
     "ffmpeg": {
       "description": "Build with ffmpeg",
+      "supports": "!emscripten",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -49,6 +52,13 @@
           ]
         },
         {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        },
+        {
           "name": "qtdeclarative",
           "default-features": false
         },
@@ -56,6 +66,7 @@
           "name": "qtmultimedia",
           "default-features": false,
           "features": [
+            "pulseaudio",
             "qml"
           ],
           "platform": "linux"
@@ -75,7 +86,33 @@
             "plugins-bad",
             "plugins-base"
           ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
         }
+      ]
+    },
+    "pipewire": {
+      "description": "Build with pipewire",
+      "dependencies": [
+        "pipewire",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        }
+      ]
+    },
+    "pulseaudio": {
+      "description": "Build with pulseaudio",
+      "dependencies": [
+        "pulseaudio"
       ]
     },
     "qml": {

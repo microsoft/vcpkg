@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
     REF "release-${VERSION}"
-    SHA512 3e98854f92b2fbb3489408b413ce2e0cfbb3e3eea58fa6e7037948a9fa7bf6bf5af38c4087285d4b7340b1115699c2c4b9626ce65a3e3b449bd5d4ec2078c957
+    SHA512 a20269e064e68dd892084d8d6d6f3d5d44a6a75994808a1579ed7deeedc22c4230ec982d1166a0b85aca0b9a3625ac84e6fe9093dccebb78bf0b7cc01bc6c711
     HEAD_REF main
     PATCHES
         dependencies.diff
@@ -12,20 +12,19 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        avif    SDLIMAGE_AVIF
         jpeg    SDLIMAGE_JPG
+        jxl     SDLIMAGE_JXL
         png     SDLIMAGE_PNG
         tiff    SDLIMAGE_TIF
         webp    SDLIMAGE_WEBP
-    INVERTED_FEATURES
-        # Disabled capabilities: Needing dependencies.
-        core    SDLIMAGE_AVIF
-        core    SDLIMAGE_JXL
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=OFF
         -DSDLIMAGE_BACKEND_IMAGEIO=OFF
         -DSDLIMAGE_BACKEND_STB=OFF
         -DSDLIMAGE_DEPS_SHARED=OFF

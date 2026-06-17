@@ -1,0 +1,21 @@
+diff --git a/build_files/cmake/Modules/FindVulkan.cmake b/build_files/cmake/Modules/FindVulkan.cmake
+index 26ef6d5..26fd4fe 100644
+--- a/build_files/cmake/Modules/FindVulkan.cmake
++++ b/build_files/cmake/Modules/FindVulkan.cmake
+@@ -35,14 +35,8 @@ find_path(VULKAN_INCLUDE_DIR
+     include
+ )
+ 
+-find_library(VULKAN_LIBRARY
+-  NAMES
+-    vulkan
+-  HINTS
+-    ${_vulkan_SEARCH_DIRS}
+-  PATH_SUFFIXES
+-    lib
+-)
++include("${CMAKE_ROOT}/Modules/FindVulkan.cmake")
++set(VULKAN_LIBRARY ${Vulkan_LIBRARY})
+ 
+ # handle the QUIETLY and REQUIRED arguments and set VULKAN_FOUND to TRUE if
+ # all listed variables are TRUE

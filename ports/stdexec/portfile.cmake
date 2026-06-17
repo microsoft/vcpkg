@@ -4,12 +4,22 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/stdexec
-    REF 8cfc3f1983d3521b341864074123281011f998c1
-    SHA512 6f06efe9f5d8178980982d984e1d4f386a702dd55e1b745d34cee614d323b6b16386106b9c7d88cf71432ac72f46dec2dec70ca29e1098e4806f5e7982e16018
+    REF fee4d651494014610a277540f209cae56011e47f
+    SHA512 8b7cbd5e8254e54e374cb06cb031935cdbc9a2a466d4cb612cf2981ea0fc4d4228a8736cdbe95835e027b8d6eb071efc2aff4b09e791ed08d14e5af227105b7c
     HEAD_REF main
     PATCHES
         fix-version.patch
         fix-clangd-helper-file-basedir.patch
+        fix-boost-asio-dependency.patch
+        fix-tbb-dependency.patch
+        fix-taskflow-dependency.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        asio     STDEXEC_ENABLE_ASIO
+        tbb      STDEXEC_ENABLE_TBB
+        taskflow STDEXEC_ENABLE_TASKFLOW
 )
 
 vcpkg_from_github(
@@ -52,6 +62,7 @@ vcpkg_from_github(
     REPO iboB/icm
     REF v1.5.0 # from stdexec CMakeLists.txt
     SHA512 0d5173d7640e2b411dddfc67e1ee19c921817e58de36ea8325430ee79408edc0a23e17159e22dc4a05f169596ee866effa69e7cd0000b08f47bd090d5003ba1c
+    
     HEAD_REF master
     PATCHES
         "${SOURCE_PATH}/cmake/cpm/patches/icm/regex-build-error.diff"
@@ -68,6 +79,8 @@ vcpkg_cmake_configure(
         "-DCPM_SOURCE_CACHE=${CURRENT_BUILDTREES_DIR}/cpm"
         "-DCPM_icm_SOURCE=${SOURCE_PATH_ICM}"
         "-DGIT_EXECUTABLE=${GIT}"
+        -DSTDEXEC_BUILD_PARALLEL_SCHEDULER=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LTLA/subpar
     REF "v${VERSION}"
-    SHA512 5f939ab3112e381b50a4a837a05dede987f2a385a471a7fac8120f472d50aa228dcb2e5101c9d6d9a4f38e14fb0b76b03d77a021b85ec56fbf7b07edabbc5524
+    SHA512 00630123dc805d6be7626a8ee7ef87f8e54e37245a6eebc9e5b7af72a50a0d2df130c218e6f77216a169ea6933ba75cd7b87b55673063d3698886aa4c120a143
     HEAD_REF master
 )
 
@@ -11,6 +11,7 @@ set(VCPKG_BUILD_TYPE "release") # header-only port
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSUBPAR_FETCH_EXTERN=OFF
         -DSUBPAR_TESTS=OFF
 )
 
