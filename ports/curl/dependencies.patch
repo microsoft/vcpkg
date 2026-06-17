@@ -295,14 +295,7 @@ index 57550bffaf..b9bd85e43b 100644
    endif()
    if(NOT _nghttp3_FOUND AND CURL_USE_CMAKECONFIG)
      find_package(nghttp3 CONFIG QUIET)
-@@ -61,12 +62,15 @@ if(_nghttp3_FOUND)
- elseif(nghttp3_CONFIG)
-   set(NGHTTP3_FOUND TRUE)
-   set(NGHTTP3_VERSION ${nghttp3_VERSION})
--  if(NGHTTP3_USE_STATIC_LIBS)
-+  if(NGHTTP3_USE_STATIC_LIBS OR NOT TARGET nghttp3::nghttp3)
-     set(_nghttp3_LIBRARIES nghttp3::nghttp3_static)
-   else()
+@@ -67,6 +68,9 @@ elseif(nghttp3_CONFIG)
      set(_nghttp3_LIBRARIES nghttp3::nghttp3)
    endif()
    message(STATUS "Found NGHTTP3 (via CMake Config): ${nghttp3_CONFIG} (found version \"${NGHTTP3_VERSION}\")")
@@ -316,15 +309,7 @@ diff --git a/CMake/FindNGTCP2.cmake b/CMake/FindNGTCP2.cmake
 index 615ee4a3c2..c2b0fd2e4d 100644
 --- a/CMake/FindNGTCP2.cmake
 +++ b/CMake/FindNGTCP2.cmake
-@@ -65,6 +65,7 @@ if(NGTCP2_FIND_COMPONENTS)
-   if(_ngtcp2_crypto_backend)
-     string(TOLOWER "ngtcp2_crypto_${_ngtcp2_crypto_backend}" _crypto_library_lower)
-     string(TOUPPER "ngtcp2_crypto_${_ngtcp2_crypto_backend}" _crypto_library_upper)
-+    set(NGTCP2_CRYPTO_BACKEND "${_ngtcp2_crypto_backend}")
-   endif()
- endif()
- 
-@@ -76,10 +77,10 @@ endif()
+@@ -77,10 +77,10 @@ endif()
  set(_tried_pkgconfig FALSE)
  if(NOT DEFINED NGTCP2_INCLUDE_DIR AND
     NOT DEFINED NGTCP2_LIBRARY)
@@ -335,16 +320,9 @@ index 615ee4a3c2..c2b0fd2e4d 100644
 -    pkg_check_modules(_ngtcp2 ${_ngtcp2_pc_requires})
 -    set(_tried_pkgconfig TRUE)
    endif()
-   if(NOT _ngtcp2_FOUND AND CURL_USE_CMAKECONFIG)
+   if(NOT _ngtcp2_FOUND AND CURL_USE_CMAKECONFIG AND NGTCP2_CRYPTO_BACKEND)
      find_package(ngtcp2 CONFIG QUIET)
-@@ -105,12 +105,15 @@ if(_ngtcp2_FOUND)
- elseif(ngtcp2_CONFIG)
-   set(NGTCP2_FOUND TRUE)
-   set(NGTCP2_VERSION ${ngtcp2_VERSION})
--  if(NGTCP2_USE_STATIC_LIBS)
-+  if(NGTCP2_USE_STATIC_LIBS OR NOT TARGET ngtcp2::ngtcp2)
-     set(_ngtcp2_LIBRARIES ngtcp2::ngtcp2_static ngtcp2::${_crypto_library_lower}_static)
-   else()
+@@ -112,6 +112,9 @@ elseif(ngtcp2_CONFIG)
      set(_ngtcp2_LIBRARIES ngtcp2::ngtcp2 ngtcp2::${_crypto_library_lower})
    endif()
    message(STATUS "Found NGTCP2 (via CMake Config): ${ngtcp2_CONFIG} (found version \"${NGTCP2_VERSION}\")")
@@ -407,7 +385,7 @@ diff --git a/CMake/FindZstd.cmake b/CMake/FindZstd.cmake
 index baf6148f0d..c75cfdf47e 100644
 --- a/CMake/FindZstd.cmake
 +++ b/CMake/FindZstd.cmake
-@@ -48,12 +48,13 @@ set(_zstd_pc_requires "libzstd")
+@@ -48,9 +48,10 @@ set(_zstd_pc_requires "libzstd")
  
  if(NOT DEFINED ZSTD_INCLUDE_DIR AND
     NOT DEFINED ZSTD_LIBRARY)
@@ -418,18 +396,14 @@ index baf6148f0d..c75cfdf47e 100644
 -    pkg_check_modules(_zstd ${_zstd_pc_requires})
    endif()
    if(NOT _zstd_FOUND AND CURL_USE_CMAKECONFIG)
--    find_package(Zstd CONFIG QUIET)
-+    find_package(Zstd NAMES zstd CONFIG QUIET)
-     # Skip using if older than v1.4.5
-     if(Zstd_CONFIG AND
-        NOT TARGET zstd::libzstd_static AND
-@@ -85,6 +86,9 @@ elseif(Zstd_CONFIG)
+     find_package(zstd CONFIG QUIET)
+@@ -86,6 +87,9 @@ elseif(zstd_CONFIG)
      set(_zstd_LIBRARIES zstd::libzstd_shared)
    endif()
-   message(STATUS "Found Zstd (via CMake Config): ${Zstd_CONFIG} (found version \"${ZSTD_VERSION}\")")
+   message(STATUS "Found Zstd (via CMake Config): ${zstd_CONFIG} (found version \"${ZSTD_VERSION}\")")
 +elseif(1)
 +  include(FindPackageHandleStandardArgs)
-+  find_package_handle_standard_args(Zstd REQUIRED_VARS Zstd_CONFIG)
++  find_package_handle_standard_args(Zstd REQUIRED_VARS zstd_CONFIG)
  else()
    find_path(ZSTD_INCLUDE_DIR NAMES "zstd.h")
    if(ZSTD_USE_STATIC_LIBS)
@@ -454,10 +428,13 @@ index 5e26c38469..de6e221163 100644
        if(_val)
          list(APPEND _libs ${_val})
        endif()
-@@ -267,6 +275,7 @@ macro(curl_collect_target_link_options _target)
-   get_target_property(_val ${_target} INTERFACE_LINK_LIBRARIES)
+@@ -268,9 +276,7 @@ macro(curl_collect_target_link_options _target)
    if(_val)
      foreach(_lib IN LISTS _val)
+       # E.g. via libssh2: "$<LINK_ONLY:OpenSSL::Crypto>"
+-      if(_lib MATCHES "LINK_ONLY:")
+-        string(REGEX MATCH "([A-Za-z0-9_-]+::[A-Za-z0-9_-]+)" _lib "${_lib}")  # Extract imported target name
+-      endif()
 +      string(REGEX REPLACE "^[\$]<LINK_ONLY:(.*)>\$" "\\1" _lib "${_lib}")
        if(TARGET "${_lib}")
          curl_collect_target_link_options(${_lib})
@@ -502,12 +479,7 @@ index f4e17d29b3..45947ec6c9 100644
    list(APPEND _curl_libs CURL::nghttp2)
  endif()
  if("@USE_NGHTTP3@")
-@@ -122,13 +116,11 @@ if("@USE_NGHTTP3@")
-   list(APPEND _curl_libs CURL::nghttp3)
- endif()
- if("@USE_NGTCP2@")
--  find_dependency(NGTCP2 MODULE)
-+  find_dependency(NGTCP2 MODULE COMPONENTS @NGTCP2_CRYPTO_BACKEND@)
+@@ -126,9 +120,7 @@ if("@USE_NGTCP2@")
    list(APPEND _curl_libs CURL::ngtcp2)
  endif()
  if("@USE_GNUTLS@")
@@ -529,7 +501,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 154ba5ef8f..316ad603a9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1880,6 +1880,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+@@ -1899,6 +1899,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
    endif()
  endif()
  
@@ -574,7 +546,7 @@ index 154ba5ef8f..316ad603a9 100644
  if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")  # MSVC but exclude clang-cl
    set_property(DIRECTORY APPEND PROPERTY COMPILE_OPTIONS "-MP")  # Parallel compilation
  endif()
-@@ -2156,7 +2194,8 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2176,7 +2214,8 @@ if(NOT CURL_DISABLE_INSTALL)
    set(_explicit_libdirs "")
    set(LIBCURL_PC_REQUIRES_PRIVATE "")
    set(LIBCURL_PC_LIBS_PRIVATE_LIST "")
@@ -584,7 +556,7 @@ index 154ba5ef8f..316ad603a9 100644
      if(TARGET "${_lib}")
        set(_explicit_libs "")
        get_target_property(_imported "${_lib}" IMPORTED)
-@@ -2182,8 +2221,25 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2202,8 +2241,25 @@ if(NOT CURL_DISABLE_INSTALL)
        endif()
        if(_modules)
          list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "${_modules}")
@@ -610,7 +582,7 @@ index 154ba5ef8f..316ad603a9 100644
        foreach(_lib IN LISTS _explicit_libs)
          if(_lib MATCHES "/")
            # This gets a bit more complex, because we want to specify the
-@@ -2202,23 +2258,47 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2222,26 +2278,47 @@ if(NOT CURL_DISABLE_INSTALL)
              if(NOT _libdir IN_LIST _sys_libdirs)
                list(APPEND _ldflags "-L${_libdir}")
              endif()
@@ -628,10 +600,10 @@ index 154ba5ef8f..316ad603a9 100644
 +            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
              list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
            endif()
-+        elseif(_lib MATCHES "^-")  # '-framework <name>'
-+          list(APPEND _ldflags "${_lib}")
+         elseif(_lib MATCHES "^-")  # '-option'
+           list(APPEND _ldflags "${_lib}")
 +          list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
-+          list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+           list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
          else()
 +          list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_lib}")
 +          list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE "-l${_lib}")
@@ -658,8 +630,8 @@ index 154ba5ef8f..316ad603a9 100644
        list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
      endif()
    endforeach()
-@@ -2241,6 +2321,7 @@ if(NOT CURL_DISABLE_INSTALL)
-   if(LIBCURL_PC_LIBS_PRIVATE)
+@@ -2275,6 +2352,7 @@ if(NOT CURL_DISABLE_INSTALL)
+ 
      string(REPLACE ";" " " LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE}")
    endif()
 +  string(REPLACE ";" " " CURL_CONFIG_LIBS "${CURL_CONFIG_LIBS}")
