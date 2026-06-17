@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTORECONF;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_TRANSFORMATIONS"
+        "AUTORECONF;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_TRANSFORMATIONS;ADD_BIN_TO_PATH"
         "SOURCE_PATH;DEFAULT_OPTIONS_EXCLUDE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES;ADDITIONAL_MSYS_PACKAGES;DIRECT_PACKAGES"
     )
@@ -97,6 +97,11 @@ function(vcpkg_make_configure)
     z_vcpkg_make_set_common_vars()
     if(VCPKG_TARGET_IS_EMSCRIPTEN)
         set(EMMAKEN_JUST_CONFIGURE 1) # as in emconfigure
+    endif()
+
+    set(extra_configure_opts "")
+    if(arg_ADD_BIN_TO_PATH)
+        list(APPEND extra_configure_opts "ADD_BIN_TO_PATH")
     endif()
 
     foreach(config IN LISTS buildtypes)

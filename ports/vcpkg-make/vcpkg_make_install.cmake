@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_install)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "DISABLE_PARALLEL"
+        "DISABLE_PARALLEL;ADD_BIN_TO_PATH"
         "LOGFILE_ROOT;MAKEFILE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;TARGETS;ADDITIONAL_MSYS_PACKAGES;DIRECT_PACKAGES"
     )
@@ -77,6 +77,9 @@ function(vcpkg_make_install)
     z_vcpkg_make_prepare_flags(${prepare_flags_opts})
 
     set(prepare_env_opts "")
+    if(arg_ADD_BIN_TO_PATH)
+        list(APPEND prepare_env_opts "ADD_BIN_TO_PATH")
+    endif()
 
     set(trace_opts "")
     if(DEFINED VCPKG_MAKE_TRACE_OPTIONS)
