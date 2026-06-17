@@ -9409,7 +9409,7 @@
       "port-version": 0
     },
     "slick-stream-buffer": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "slickquant-hyperliquid-cpp": {
