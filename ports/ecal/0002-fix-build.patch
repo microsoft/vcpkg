@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e82e353e0..19d8f2a93 100644
+index b256fe571..8c4b8d526 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -26,7 +26,8 @@ endif (POLICY CMP0077)
@@ -77,38 +77,36 @@ index 04f1a1b9a..58df32705 100644
  target_include_directories(${PROJECT_NAME} PUBLIC 
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 diff --git a/ecal/core/CMakeLists.txt b/ecal/core/CMakeLists.txt
-index f18dd6291..8655d134a 100644
+index f18dd6291..58289c09b 100644
 --- a/ecal/core/CMakeLists.txt
 +++ b/ecal/core/CMakeLists.txt
-@@ -20,8 +20,6 @@ project(core VERSION ${eCAL_VERSION_STRING})
+@@ -20,8 +20,7 @@ project(core VERSION ${eCAL_VERSION_STRING})
  
  find_package(Threads      REQUIRED)
  find_package(asio         REQUIRED)
 -find_package(tclap        REQUIRED)
 -find_package(simpleini    REQUIRED)
++find_package(SimpleIni CONFIG REQUIRED)
  find_package(tcp_pubsub   REQUIRED)
  if (ECAL_NPCAP_SUPPORT)
    find_package(udpcap REQUIRED)
-@@ -549,8 +547,6 @@ target_link_libraries(${PROJECT_NAME}
+@@ -549,8 +548,7 @@ target_link_libraries(${PROJECT_NAME}
      $<$<BOOL:${WIN32}>:wsock32>
      $<$<BOOL:${QNXNTO}>:socket>
      asio::asio
 -    tclap::tclap
 -    simpleini::simpleini
++    SimpleIni::SimpleIni
      eCAL::core_pb
      Threads::Threads
      eCAL::ecal-utils
-@@ -558,6 +554,14 @@ target_link_libraries(${PROJECT_NAME}
+@@ -558,6 +556,10 @@ target_link_libraries(${PROJECT_NAME}
      ecal_service
  )
  
 +# tclap is header only and only used for implementation
 +find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
 +target_include_directories(${PROJECT_NAME}  PRIVATE ${TCLAP_INCLUDE_DIRS})
-+
-+# simpleini is header only and only used for implementation
-+find_path(SIMPLEINI_INCLUDE_DIRS "ConvertUTF.c")
-+target_include_directories(${PROJECT_NAME} PRIVATE ${SIMPLEINI_INCLUDE_DIRS})
 +
  set_property(TARGET ${PROJECT_NAME}   PROPERTY FOLDER ecal/core)
  set_property(TARGET ${PROJECT_NAME}_c PROPERTY FOLDER ecal/core)
