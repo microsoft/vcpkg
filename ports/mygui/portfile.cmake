@@ -45,6 +45,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSDFGEN_DYNAMIC_RUNTIME
+        MSDFGEN_INSTALL
 )
 
 vcpkg_cmake_install()
