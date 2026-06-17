@@ -1,10 +1,15 @@
-set(PATCHES
-    fix-generation.patch
-    sdl2-static.patch
-)
+vcpkg_list(SET PATCHES)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_list(APPEND PATCHES fix-generation.patch)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  vcpkg_list(APPEND PATCHES sdl2-static.patch)
+endif()
 
 if("tools" IN_LIST FEATURES)
-  list(APPEND PATCHES Install-tools.patch)
+  vcpkg_list(APPEND PATCHES Install-tools.patch)
 endif()
 
 vcpkg_from_github(
