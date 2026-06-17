@@ -1,6 +1,6 @@
 {
   "name": "hareflow",
-  "version-semver": "0.2.0",
+  "version-semver": "0.3.0",
   "description": "Hareflow: A RabbitMQ C++ stream client.",
   "homepage": "https://github.com/coveooss/hareflow",
   "license": "Apache-2.0",
