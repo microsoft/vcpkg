@@ -10490,7 +10490,7 @@
     },
     "usd": {
       "baseline": "26.5",
-      "port-version": 0
+      "port-version": 1
     },
     "usearch": {
       "baseline": "2.25.3",
