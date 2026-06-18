@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 12a9793d104e51672e03233308d89a5caddba5e4dda46724d60fc6a8a83630fea3a6c9b130ac18dde1f2002fffb2671b71937394f101e9b96c975f391c53d111
+    SHA512 c5655a50ac454cf231298c510a433b9bee3df55ea13a10a9ec9ce9b26b298ad7b59fdf63ef67cf1d7b33aade1f3042a61e742440b2f4fa7310a47b9c70785241
     HEAD_REF master
     PATCHES
         msvc-debug-info-only-in-pdb.patch
@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix_npu_deps.patch
         fix_gpu_includes.patch
         android_remove_onetbb_warning.patch
+        fix_arm64_windows_include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
