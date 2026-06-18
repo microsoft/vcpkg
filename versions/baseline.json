@@ -2458,7 +2458,7 @@
     },
     "dcmtk": {
       "baseline": "3.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ddtdanilo-lmdb-wrapper": {
       "baseline": "1.0.1",
