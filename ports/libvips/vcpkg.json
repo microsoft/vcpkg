@@ -13,6 +13,12 @@
     }
   ],
   "features": {
+    "cplusplus": {
+      "description": "Build C++ API."
+    },
+    "deprecated": {
+      "description": "Build deprecated components."
+    },
     "exif": {
       "description": "Build with exif support.",
       "dependencies": [
@@ -23,7 +29,7 @@
       "description": "Build with fontconfig support.",
       "dependencies": [
         "fontconfig",
-		"pango"
+        "pango"
       ]
     },
     "jpeg": {
@@ -63,6 +69,9 @@
         "tiff"
       ]
     },
+    "tools": {
+      "description": "Build tools."
+    },
     "webp": {
       "description": "Build with WebP support.",
       "dependencies": [
@@ -74,15 +83,6 @@
       "dependencies": [
         "zlib-ng"
       ]
-    },
-    "cplusplus": {
-      "description": "Build C++ API."
-    },
-    "deprecated": {
-      "description": "Build deprecated components."
-    },
-	"tools": {
-      "description": "Build tools."
     }
   }
 }
