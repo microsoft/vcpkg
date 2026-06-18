@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 641cd23496e92c45505772303287ae840652545b67de7e0751662e012b6ca7017ce951d699bcf451256cb8c5d0952dc118684b99cdf9ed3fe5726e08e2ed1dc6
     HEAD_REF master
+    PATCHES
+        fix-version.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
 
