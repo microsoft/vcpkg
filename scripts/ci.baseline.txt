@@ -155,6 +155,7 @@ ecal:arm64-android=fail
 ecal:x64-android=fail
 faad2:arm64-linux=fail
 faiss:arm64-osx=fail # No openmp on default osx toolchain
+ffmpeg:arm64-linux=fail
 fizz:arm64-linux=fail
 fltk:arm-neon-android=fail
 fltk:arm64-android=fail
