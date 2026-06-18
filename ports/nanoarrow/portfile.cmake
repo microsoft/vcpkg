@@ -1,27 +1,32 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/arrow-nanoarrow
-    REF "apache-arrow-nanoarrow-${VERSION}"
-    SHA512 6d2bb68e4f35b42f543cf33aa5acf585690da5ffafe9d144da03473dc1e0a0834944abea719ba9b88296832bd3cc2e09a97f69552dec61a8d4a95fb78f0df405
-    HEAD_REF main
-    PATCHES
-        fix_install_dir.patch
-        no_werror.patch
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/arrow/apache-arrow-nanoarrow-${VERSION}/apache-arrow-nanoarrow-${VERSION}.tar.gz"
+    FILENAME "apache-arrow-nanoarrow-${VERSION}.tar.gz"
+    SHA512 98f9f4c8dada0175e39e02d2baa01d0f63ad94636925cd289cbffa423de26bf0ede437aaa1ec10ff91e7d375e72cfddd950d040602520ab7891ab4c6337ce4f7
 )
 
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES fix-flatccrt-name.patch
+)
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" NANOARROW_ARROW_STATIC)
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" NANOARROW_INSTALL_SHARED)
+
+if ("ipc" IN_LIST FEATURES)
+    set(FEATURE_OPTIONS "-DNANOARROW_IPC=ON")
+    set(FLATCCRT_OPTIONS "-DNANOARROW_FLATCC_ROOT_DIR=${CURRENT_INSTALLED_DIR}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DNANOARROW_ARROW_STATIC=${NANOARROW_ARROW_STATIC}
+        -DNANOARROW_INSTALL_SHARED=${NANOARROW_INSTALL_SHARED}
+        -DNANOARROW_DEBUG_EXTRA_WARNINGS=OFF
+        ${FEATURE_OPTIONS}
+        ${FLATCCRT_OPTIONS}
 )
 
 vcpkg_cmake_install()

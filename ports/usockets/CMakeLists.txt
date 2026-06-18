@@ -27,14 +27,16 @@ else()
     target_compile_definitions(uSockets PRIVATE -DLIBUS_NO_SSL)
 endif()
 
-if(WIN32)
+if(WIN32 OR ANDROID)
     # https://github.com/uNetworking/uSockets/blob/8606de6414a102c55bef8e8ef3391932d7e8df6a/src/libusockets.h#L339-L348
     find_package(libuv CONFIG REQUIRED)
     target_link_libraries(uSockets PRIVATE $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>)
     target_compile_definitions(uSockets PRIVATE -DLIBUS_USE_LIBUV)
 
-    # https://github.com/uNetworking/uSockets/blob/8606de6414a102c55bef8e8ef3391932d7e8df6a/src/libusockets.h#L35
-    target_link_libraries(uSockets PRIVATE ws2_32)
+    if(WIN32)
+        # https://github.com/uNetworking/uSockets/blob/8606de6414a102c55bef8e8ef3391932d7e8df6a/src/libusockets.h#L35
+        target_link_libraries(uSockets PRIVATE ws2_32)
+    endif()
 endif()
 
 

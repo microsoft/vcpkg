@@ -65,7 +65,7 @@ index 5363c02..045cde5 100644
 +++ b/libdw/Makefile.am
 @@ -110,7 +110,7 @@ libdw_so_LIBS = ../libebl/libebl_pic.a ../backends/libebl_backends_pic.a \
  		../libcpu/libcpu_pic.a libdw_pic.a ../libdwelf/libdwelf_pic.a \
- 		../libdwfl/libdwfl_pic.a
+ 		../libdwfl/libdwfl_pic.a ../libdwfl_stacktrace/libdwfl_stacktrace_pic.a
  libdw_so_DEPS = ../lib/libeu.a ../libelf/libelf.so
 -libdw_so_LDLIBS = $(libdw_so_DEPS) -ldl -lz $(argp_LDADD) $(fts_LIBS) $(obstack_LIBS) $(zip_LIBS) -pthread
 +libdw_so_LDLIBS = $(libdw_so_DEPS) -ldl $(ZLIB_LIBS) $(argp_LDADD) $(fts_LIBS) $(obstack_LIBS) $(zip_LIBS) -pthread
@@ -89,7 +89,7 @@ diff --git a/src/Makefile.am b/src/Makefile.am
 index 6bdf2df..2fd5b42 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -47,8 +47,8 @@ CLEANFILES += make-debug-archive
+@@ -54,8 +54,8 @@ CLEANFILES = $(bin_SCRIPTS) $(EXTRA_libar_a_DEPENDENCIES)
  
  if BUILD_STATIC
  libasm = ../libasm/libasm.a

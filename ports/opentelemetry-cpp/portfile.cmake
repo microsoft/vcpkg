@@ -6,10 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 db9745be96907431c32a69230b29a5bddba0654f3f379f6cd0827f44895ef39c9612381303ec239d6ad98920bcc4006a90e25b715ade9ddf30aff843d1931416
+    SHA512 218233098965ba78a93f33dd3fa357e4821b7dee6e137df19e3757dd3745ccbfc05b2c31d071f5dda23d120269642c2721d45e3ef1124ef514335a5a0c318cd4
     HEAD_REF main
     PATCHES
-        cmake-quirks.diff
         fix-target_link.patch
 )
 
@@ -19,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
+        otlp-file WITH_OTLP_FILE
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
         geneva WITH_GENEVA
@@ -29,12 +29,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
-    set(OTEL_PROTO_VERSION "1.5.0")
+if(WITH_OTLP_FILE OR WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
+    set(OTEL_PROTO_VERSION "1.8.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 8a3f95543c6093300f0c54f31bf050137d0c6f1d867a7cda7af066b83572643e636b33a9b53e297f8c309bc262dde63cf7c10f515e0fe0cbbce1d12fafbe2482
+        SHA512 43e320c365f73e1302951cf69e4f395c8dec9fe3efba802dea10637b61721a64868fb0a45c33d2ac15f99a7ba0b865c268d268a543a4efeff10f5c59407e7ba9
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
@@ -42,17 +42,17 @@ if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
     file(COPY "${src}/." DESTINATION "${SOURCE_PATH}/third_party/opentelemetry-proto")
     # Create empty .git directory to prevent opentelemetry from cloning it during build time
     file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/opentelemetry-proto/.git")
-    list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
     list(APPEND FEATURE_OPTIONS "-DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
+list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
 
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 
 if(WITH_GENEVA OR WITH_USER_EVENTS)
-    # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
+    # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo,
     # so they should be ported as a feature under opentelemetry-cpp.
     clone_opentelemetry_cpp_contrib(CONTRIB_SOURCE_PATH)
-    
+
     if(WITH_GENEVA)
         set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
         if(VCPKG_TARGET_IS_WINDOWS)
@@ -77,7 +77,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
         -DOPENTELEMETRY_INSTALL=ON
-        -DWITH_ABSEIL=ON
         -DWITH_BENCHMARK=OFF
         -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
@@ -85,12 +84,14 @@ vcpkg_cmake_configure(
         WITH_GENEVA
         WITH_USER_EVENTS
         BUILD_TRACEPOINTS
+        gRPC_CPP_PLUGIN_EXECUTABLE
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/opentelemetry/sdk/configuration")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

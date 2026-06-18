@@ -2,21 +2,12 @@ if(VCPKG_TARGET_IS_LINUX)
     MESSAGE(WARNING "${PORT} requires libbluetooth-dev from the system package manager.\nTry: 'sudo yum install libbluetooth-dev ' (or sudo apt-get install libbluetooth-dev)")
 endif()
 
-vcpkg_download_distfile(REMOVE_OPENSSL_DEPENDENCIES_PATCH
-    URLS https://github.com/robotraconteur/robotraconteur/commit/0fe6efd8c448f68ae6c33c261b9df734b372ee47.patch?full_index=1
-    FILENAME robotraconteur-openssl-dependencies-0fe6efd8c448f68ae6c33c261b9df734b372ee47.patch
-    SHA512 38769c15dfe98ee71f6cefd643f104d653cd38e1a590202d942e6a781bc5080f063b3e50e927089fa0aed85fe8345541fd7424ccf2f353e245a27f200b8cf024
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO robotraconteur/robotraconteur
     REF "v${VERSION}"
-    SHA512 d73621ff888ae8cfc9d6ac5a71b75920552948fb15ffe2fa13fb31a238fc92f6a271ea1653eed855ba04f371686dff6fdf46285f24a471a3147d7744563b4d0b
+    SHA512 f6876d36dbc030e638afdeb58d704f7b50aa7b7a93b46292d83558665cb871a761a1741f19c6fb7208ddc1863ece2b49279477d76f357db45aa8c47082486aec
     HEAD_REF master
-    PATCHES
-        rr_boost_1_87_patch.diff
-        "${REMOVE_OPENSSL_DEPENDENCIES_PATCH}"
 )
 
 vcpkg_cmake_configure(

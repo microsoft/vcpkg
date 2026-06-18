@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9f7a02666..91609a491 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -244,8 +244,8 @@ if(NOT BUILD_SHARED_LIBS)
+ endif()
+
+ eprosima_find_package(fastcdr 2 REQUIRED)
+-eprosima_find_thirdparty(Asio asio VERSION 1.13.0)
+-eprosima_find_thirdparty(TinyXML2 tinyxml2)
++find_package(asio CONFIG REQUIRED)
++find_package(tinyxml2 CONFIG REQUIRED)
+
+ find_package(foonathan_memory REQUIRED)
+ message(STATUS "Found foonathan_memory: ${foonathan_memory_DIR}")
+@@ -257,7 +257,7 @@ if(ANDROID)
+     endif()
+ endif()
+
+-include_directories(thirdparty/nlohmann-json)
++find_package(nlohmann_json CONFIG REQUIRED)
+ include_directories(thirdparty/filewatch)
+
+ ###############################################################################
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index 070597df6..c0b2d6b64 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -169,11 +169,12 @@ target_link_libraries(${PROJECT_NAME}
+     PUBLIC
+     fastcdr
+     foonathan_memory
+-
++    nlohmann_json::nlohmann_json
++
+     PRIVATE
+     eProsima_atomic
+     ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS}
+-    ${TINYXML2_LIBRARY}
++    tinyxml2::tinyxml2
+     $<$<BOOL:${LINK_SSL}>:OpenSSL::SSL$<SEMICOLON>OpenSSL::Crypto$<$<BOOL:${WIN32}>:$<SEMICOLON>crypt32.lib>>
+     $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
+     ${THIRDPARTY_BOOST_LINK_LIBS}

@@ -1,14 +1,14 @@
 {
   "name": "usockets",
   "version": "0.8.8",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Miniscule cross-platform eventing, networking & crypto for async applications",
   "homepage": "https://github.com/uNetworking/uSockets",
   "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "libuv",
-      "platform": "windows"
+      "platform": "windows | android"
     },
     {
       "name": "vcpkg-cmake",

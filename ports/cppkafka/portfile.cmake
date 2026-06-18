@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mfontanini/cppkafka
-    REF "${VERSION}"
-    SHA512 86ac1500bdf6746a5e44e9ca4a4063eabcacec68b26c6846f7e7d47fe947309fc98a47986ab060d793096665d1cdc24044334267eb579cdb191f539bf96a3294
+    REF "v${VERSION}"
+    SHA512 dce4da452cb98d854714a0ab7ab5e85a078d5e1c023c05344ea1a63d08112c25d32a6209bc29cfbaefc2b26abfab02e72081baa68528a23ec610c208f4d34d9f
     HEAD_REF master
-    PATCHES
-        0001-Fix-static-lib.patch
-        0002-Remove-min-max-macros.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")

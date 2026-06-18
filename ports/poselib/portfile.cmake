@@ -6,8 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PoseLib/PoseLib
     REF "v${VERSION}"
-    SHA512 adc43c4f0fd8544d2c7ef05538696a8ae614837f5e90c31b8b9c8f4b5a11eb773229c22444e01482de697a0f5b3137d4a63a24ba9fcc72b366a347252d3c16b1
+    SHA512 ed56d8cd6a3073776edbfe9d11e2ebf8e2bed4065f7f53a02541323c1631632bf6c161d305fc09674175351b024bf019211dfa9d7a48e74e3c5563941099f1ef
     HEAD_REF master
+    PATCHES
+        fatal-errors.patch
 )
 
 vcpkg_cmake_configure(

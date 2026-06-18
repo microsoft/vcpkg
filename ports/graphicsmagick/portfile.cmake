@@ -1,46 +1,69 @@
-set(GM_VERSION 1.3.41)
+string(REPLACE "." "_" graphicsmagick_version "GraphicsMagick-${VERSION}")
 
-vcpkg_from_sourceforge(
+vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL https://foss.heptapod.net/
     REPO graphicsmagick/graphicsmagick
-    REF ${GM_VERSION}
-    FILENAME "GraphicsMagick-${GM_VERSION}-windows.7z"
-    SHA512 4790081136af67bf406b94e3de88feff295cc98fd3b125776e014436b12dbb31331af4ee4f8497ccc39d4afda08145b5e4bfeb45b3210a50e17b14e4dc2a220d
+    REF ${graphicsmagick_version}
+    SHA512 e64842dbbe2026e7d75b4004f615f32b4e2d57ce8dbd9bc90f87ee6e180d7e2feb61da6c25d404c43ac8d7661f94f7be3bd2882928dbd0e276b5c9040690f6f4
     PATCHES
-        # GM always requires a dynamic BZIP2. This patch makes this dependent if _DLL is defined
-        dynamic_bzip2.patch
-
-        # Bake GM's own modules into the .dll itself.  This fixes a bug whereby
-        # 'vcpkg install graphicsmagick' did not lead to a copy of GM that could
-        # load either PNG or JPEG files (due to missing GM Modules, with names
-        # matching "IM_*.DLL").
-        disable_graphicsmagick_modules.patch
+        dependencies.diff
+        magick-types.diff
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/magick_types.h" DESTINATION "${SOURCE_PATH}/magick")
+set(options "")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(options ac_cv_header_dirent_dirent_h=no)
+endif()
 
-vcpkg_cmake_configure(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
+    AUTORECONF
+    OPTIONS
+        ${options}
+        # Before enabling another lib, make sure that the build does not
+        # hard-code the library name and dependencies (cf. dependencies.diff).
+        --with-heif=no
+        --with-fpx=no  ###
+        --with-gs=no
+        --with-jbig=no
+        --with-jp2=no
+        --with-jxl=no
+        --with-lcms2=no
+        --with-libzip=no
+        --with-lzma=no
+        --with-modules=no
+        --with-mpeg2=no
+        --with-trio=no
+        --with-x=no
+        --with-xml=no
+        --with-wmf=no
+        --with-zstd=no
 )
-
-vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-graphicsmagick)
-
-# copy license
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-# copy config
-file(COPY "${SOURCE_PATH}/config/colors.mgk" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/config")
-file(COPY "${SOURCE_PATH}/config/log.mgk" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/config")
-file(COPY "${SOURCE_PATH}/config/modules.mgk" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/config")
-
-file(READ "${SOURCE_PATH}/config/type-windows.mgk.in" TYPE_MGK)
-string(REPLACE "@windows_font_dir@" "$ENV{SYSTEMROOT}/Fonts/" TYPE_MGK "${TYPE_MGK}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config/type.mgk" "${TYPE_MGK}")
-
-configure_file("${SOURCE_PATH}/config/delegates.mgk.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/config/delegates.mgk" @ONLY)
+vcpkg_make_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gm${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+
+set(config_scripts
+    "GraphicsMagick++-config"
+    "GraphicsMagick-config"
+    "GraphicsMagickWand-config"
+)
+string(REGEX REPLACE "^([A-Za-z]):/" "/\\1/" literal_prefix "${CURRENT_INSTALLED_DIR}")
+foreach(filename IN LISTS config_scripts)
+    set(file "${CURRENT_PACKAGES_DIR}/tools/graphicsmagick/bin/${filename}")
+    vcpkg_replace_string("${file}" "${literal_prefix}" "'\"\${prefix}\"'")
+    vcpkg_replace_string("${file}" "while test" "prefix=$(CDPATH= cd -- \"$(dirname -- \"$0\")/../../..\" && pwd -P)\n\nwhile test")
+    if(NOT VCPKG_BUILD_TYPE)
+        set(debug_file "${CURRENT_PACKAGES_DIR}/tools/graphicsmagick/debug/bin/${filename}")
+        vcpkg_replace_string("${debug_file}" "${literal_prefix}" "'\"\${prefix}\"'")
+        vcpkg_replace_string("${debug_file}" "while test" "prefix=$(CDPATH= cd -- \"$(dirname -- \"$0\")/../../../..\" && pwd -P)\n\nwhile test")
+    endif()
+endforeach()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")

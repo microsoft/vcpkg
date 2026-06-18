@@ -1,0 +1,18 @@
+libupnp provides pkg-config modules:
+
+  # Linux SDK for UPnP Devices
+  libupnp
+
+libupnp provides CMake targets:
+
+  find_package(UPNP CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE UPNP::Shared)
+  -- or --
+  target_link_libraries(main PRIVATE UPNP::Static)
+
+libixml provides CMake targets:
+
+  find_package(IXML CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE IXML::Shared)
+  -- or --
+  target_link_libraries(main PRIVATE IXML::Static)

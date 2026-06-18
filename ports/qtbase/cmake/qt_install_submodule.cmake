@@ -8,8 +8,15 @@ if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID AND NOT ANDROID_SDK_ROOT)
-    message(FATAL_ERROR "${PORT} requires ANDROID_SDK_ROOT to be set. Consider adding it to the triplet." )
+if(VCPKG_TARGET_IS_ANDROID)
+    # ANDROID_HOME: canonical SDK environment variable
+    # ANDROID_SDK_ROOT: legacy qtbase triplet variable
+    if(NOT ANDROID_SDK_ROOT)
+        if("$ENV{ANDROID_HOME}" STREQUAL "")
+            message(FATAL_ERROR "${PORT} requires environment variable ANDROID_HOME to be set.")
+        endif()
+        set(ANDROID_SDK_ROOT "$ENV{ANDROID_HOME}")
+    endif()
 endif()
 
 function(qt_download_submodule_impl)
@@ -19,7 +26,7 @@ function(qt_download_submodule_impl)
         # qtinterfaceframework is not available in the release, so we fall back to a `git clone`.
         vcpkg_from_git(
             OUT_SOURCE_PATH SOURCE_PATH
-            URL "https://code.qt.io/qt/${_qarg_SUBMODULE}.git"
+            URL "${${_qarg_SUBMODULE}_URL}"
             REF "${${_qarg_SUBMODULE}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
@@ -63,10 +70,9 @@ function(qt_download_submodule_impl)
             set(sha512 SHA512 "${${_qarg_SUBMODULE}_HASH}")
         endif()
 
-        qt_get_url_filename("${_qarg_SUBMODULE}" urls filename)
         vcpkg_download_distfile(archive
-            URLS ${urls}
-            FILENAME "${filename}"
+            URLS ${${_qarg_SUBMODULE}_URL}
+            FILENAME ${${_qarg_SUBMODULE}_FILENAME}
             ${sha512}
         )
         vcpkg_extract_source_archive(
@@ -170,6 +176,7 @@ function(qt_cmake_configure)
             -DINSTALL_PLUGINSDIR:STRING=${qt_plugindir}
             -DINSTALL_QMLDIR:STRING=${qt_qmldir}
             ${_qarg_OPTIONS}
+            "-DQT_TOOLCHAIN_RELOCATABLE_INSTALL_PREFIX:STRING=${CURRENT_INSTALLED_DIR}"
         OPTIONS_RELEASE
             ${_qarg_OPTIONS_RELEASE}
             -DINSTALL_DOCDIR:STRING=doc/${QT6_DIRECTORY_PREFIX}
@@ -177,6 +184,7 @@ function(qt_cmake_configure)
             -DINSTALL_DESCRIPTIONSDIR:STRING=share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=share/Qt6/mkspecs
             -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_CMAKEDIR:STRING=share
         OPTIONS_DEBUG
             # -DFEATURE_debug:BOOL=ON only needed by qtbase and auto detected?
             -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
@@ -184,6 +192,7 @@ function(qt_cmake_configure)
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_DESCRIPTIONSDIR:STRING=../share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
+            -DINSTALL_CMAKEDIR:STRING=share
             ${_qarg_OPTIONS_DEBUG}
         MAYBE_UNUSED_VARIABLES
             INSTALL_BINDIR
@@ -198,6 +207,7 @@ function(qt_cmake_configure)
             QT_SYNCQT
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             QT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK
+            QT_TOOLCHAIN_RELOCATABLE_INSTALL_PREFIX
             ${_qarg_OPTIONS_MAYBE_UNUSED}
             INPUT_bundled_xcb_xinput
             INPUT_freetype
@@ -210,7 +220,14 @@ function(qt_cmake_configure)
             INPUT_xcb
             INPUT_xkbcommon
     )
-    set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
+    foreach(suffix IN ITEMS dbg rel)
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix}/config.summary")
+            file(COPY_FILE
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix}/config.summary"
+                "${CURRENT_BUILDTREES_DIR}/config.summary-${TARGET_TRIPLET}-${suffix}.log"
+            )
+        endif()
+    endforeach()
 endfunction()
 
 function(qt_fix_prl_files)
@@ -255,11 +272,11 @@ function(qt_fixup_and_cleanup)
     foreach(_comp IN LISTS COMPONENTS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
             vcpkg_cmake_config_fixup(PACKAGE_NAME "Qt6${_comp}" CONFIG_PATH "share/Qt6${_comp}" TOOLS_PATH "tools/Qt6/bin")
-            # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_cmake_config_fixup is working against that.
         else()
             message(STATUS "WARNING: Qt component ${_comp} not found/built!")
         endif()
     endforeach()
+
     #fix debug plugin paths (should probably be fixed in vcpkg_cmake_config_fixup)
     file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
     debug_message("DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
@@ -313,9 +330,8 @@ function(qt_fixup_and_cleanup)
             endif()
         endforeach()
     endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
+    file(REMOVE_RECURSE
                         "${CURRENT_PACKAGES_DIR}/debug/share"
-                        "${CURRENT_PACKAGES_DIR}/lib/cmake/"
                         "${CURRENT_PACKAGES_DIR}/debug/include"
                         )
 
@@ -340,6 +356,14 @@ function(qt_install_submodule)
     set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
     qt_download_submodule(PATCHES ${_qis_PATCHES})
+
+    if(VCPKG_TARGET_IS_ANDROID)
+        # Qt only supports dynamic linkage on Android,
+        # https://bugreports.qt.io/browse/QTBUG-32618.
+        # It requires libc++_shared, cf. <qtbase>/cmake/QtPlatformAndroid.cmake
+        # and https://developer.android.com/ndk/guides/cpp-support#sr
+        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    endif()
 
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)

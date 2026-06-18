@@ -1,0 +1,7 @@
+{
+  "name": "libpopcnt",
+  "version": "3.1",
+  "description": "Fast C/C++ bit population count library",
+  "homepage": "https://github.com/kimwalisch/libpopcnt",
+  "license": "BSD-2-Clause"
+}

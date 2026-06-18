@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cfa8524..5b76180 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -420,7 +420,7 @@ install(FILES ${VTKm_BINARY_DIR}/config/vtkm_config.mk
+ configure_file(${VTKm_SOURCE_DIR}/config/vtkm.pc.in
+   ${VTKm_BINARY_DIR}/config/vtkm.pc @ONLY)
+ install(FILES ${VTKm_BINARY_DIR}/config/vtkm.pc
+-  DESTINATION ${VTKm_INSTALL_SHARE_DIR}
++  DESTINATION ${VTKm_INSTALL_LIB_DIR}/pkgconfig
+   )
+ 
+ include(VTKmInstallCMakePackage)

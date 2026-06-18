@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/property_map_parallel
     REF boost-${VERSION}
-    SHA512 4082d95e7a4ab616339ca77557a6e7fcb7627b996f53433eccde4b4a69fc7094938a078e7b28913c9d5e489a2eea4efc714e88c72d16892441a47747b1cfcb02
+    SHA512 e6c065a8ddae4a47300cc3f3bde388731069cdf30db23caf8cd9d65264baa95e7017f11ba2ed03280fb5083525d80c018e1d51b3d1ee7fa71db8e96213ff0735
     HEAD_REF master
 )
 

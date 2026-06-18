@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2308d5721..d14f02b66 100644
+index 06ce07e..48fc755 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -237,8 +237,6 @@ if(FUZZ)
+@@ -253,8 +253,6 @@ if(FUZZ)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,fuzzer-no-link -fsanitize-coverage=edge,indirect-calls")
  endif()
  
@@ -11,7 +11,7 @@ index 2308d5721..d14f02b66 100644
  if(BUILD_SHARED_LIBS)
    add_definitions(-DBORINGSSL_SHARED_LIBRARY)
    # Enable position-independent code globally. This is needed because
-@@ -579,6 +577,7 @@ target_include_directories(crypto PUBLIC
+@@ -618,6 +616,7 @@ target_include_directories(crypto PUBLIC
    $<INSTALL_INTERFACE:include>
  )
  set_property(TARGET crypto PROPERTY EXPORT_NAME Crypto)
@@ -19,19 +19,19 @@ index 2308d5721..d14f02b66 100644
  
  if(FIPS_SHARED)
    # Rewrite libcrypto.so to inject the correct module hash value. This assumes
-@@ -624,6 +623,7 @@ add_library(ssl ${SSL_SOURCES})
+@@ -663,6 +662,7 @@ add_library(ssl ${SSL_SOURCES})
  # here.
  set_property(TARGET ssl PROPERTY EXPORT_NAME SSL)
  target_link_libraries(ssl crypto)
 +target_compile_definitions(ssl PRIVATE BORINGSSL_IMPLEMENTATION)
  
  add_library(decrepit ${DECREPIT_SOURCES})
- target_link_libraries(decrepit crypto ssl)
-@@ -665,6 +665,7 @@ endif()
- 
+ target_link_libraries(decrepit ssl crypto)
+@@ -672,6 +672,7 @@ if(APPLE)
+ endif()
  add_library(pki ${PKI_SOURCES})
  target_link_libraries(pki crypto)
 +target_compile_definitions(pki PRIVATE BORINGSSL_IMPLEMENTATION)
+ target_compile_options(pki PRIVATE ${PKI_CXX_FLAGS})
  
- add_executable(pki_test ${PKI_TEST_SOURCES})
- target_link_libraries(pki_test test_support_lib boringssl_gtest pki crypto)
+ if(BUILD_TESTING)

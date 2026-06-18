@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cycfi/elements
-    REF 663dcdb82dffa9e70cf6643b50ed56a39c8015ed
-    SHA512 4fc579df6dd471c69996a991e4b2c4c204e7f02d1d247de7a962fcd97d472cb63b58faa2ab7a0cfb47cc004a03483d4ef9123cbd8f562ba7007d779ba03221ca
+    REF 28ede99e37597d743979b127191df45ace11f58b
+    SHA512 4ab2952d64a6c19de15b24db9bf4523ba26c274847dedf7f1d36b09e5fda0656d0b83d9aa310cc0a81b23c894a8ad00c6a88afc9b0b6c1e76b6469f8bb01603c
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -13,8 +13,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH INFRA_SOURCE_PATH
     REPO cycfi/infra
-    REF 965ecdb953c8c1187b327cff12655f9a92352acc
-    SHA512 37d990ec70aa37dded3d464cadc28cedd320986ea5816669698de43376bb77d0f32951f0f8a03af65a472a46886ddf628e7acfd0314dd5ebfa49a3e98984054f
+    REF 2dff97a4b107eced78e426152f5001a2331cb1cf
+    SHA512 a679e70fe1751e0a6be7b7449d7f4bf36e59ea355e44ddef4902b784f521e264bfc009ec0792ef7fb04ffbc187f0e99116a615e8bdf7932abd34cafc0d7cdfff
     HEAD_REF master
 )
 if(NOT EXISTS "${SOURCE_PATH}/lib/infra/CMakeLists.txt")

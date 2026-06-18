@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 8ba7e5f73746b221ff39387282e2d929d1142c60d1c79019f4c21c84b105fb59253e88f2f649a25e9bb7ab01094e455f002c7412aeea882548fac4a426eee809
+    SHA512 6e2142da6c5ccb54906395bf1ef6576a017d88c394bf11e66604946f3d8ad1d6c4e7d253ceab79c935b03db6e3bbb109f6e2053bc4bce1373166aa505957cea4
     HEAD_REF master
 )
 
@@ -46,7 +46,7 @@ endif()
 vcpkg_copy_pdbs()
 
 if(ENABLE_GLSLANG_BINARIES)
-    vcpkg_copy_tools(TOOL_NAMES glslang glslangValidator spirv-remap AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES glslang glslangValidator AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -17,6 +17,7 @@ vcpkg_from_github(
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
         0003-Define-NOMINMAX-for-botan-plugin-with-MSVC.patch
+        0004-fix-cmake4.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)

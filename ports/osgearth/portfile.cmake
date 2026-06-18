@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gwaldron/osgearth
-    REF "osgearth-${VERSION}"
-    SHA512 4a2b80c907ebf2b56966598f9e134ad910d3271757496fb1d906cc413eb2ad09da366a96635f0195696efe16ef1a649e13b6ec1d901a39ced0465be797f14221
+    REPO pelicanmapping/osgearth
+    REF c980ad2ad6e9fb25c5a7f5b8c94b1cbf0e98a617
+    SHA512 4e3fe4f7c11d3fb3962cefb98400c6a0c0a491a3d57642da2040b6e0fd8f2cd27a4f58074b077a61151fde2d0b41ce97aa7fd0cf9901ddb6677f8f31392711e0
     HEAD_REF master
+    PATCHES devendor-imgui.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -11,7 +12,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         controls OSGEARTH_BUILD_LEGACY_CONTROLS_API
-        tools OSGEARTH_BUILD_TOOLS
+        tools    OSGEARTH_BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -50,9 +51,12 @@ if("tools" IN_LIST FEATURES)
         endif()
     endif()
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_bakefeaturetiles osgearth_boundarygen
-        osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_version osgearth_viewer
+        osgearth_clamp osgearth_tfs osgearth_server osgearth_conv osgearth_imgui osgearth_version osgearth_viewer
         AUTO_CLEAN
     )
+    if(OSGEARTH_BUILD_LEGACY_CONTROLS_API)
+        vcpkg_copy_tools(TOOL_NAMES osgearth_createtile AUTO_CLEAN)
+    endif()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
 

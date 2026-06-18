@@ -1,13 +1,13 @@
 diff --git a/mesonbuild/cmake/toolchain.py b/mesonbuild/cmake/toolchain.py
-index 7d73a7c..564e6de 100644
+index 11a00be5d..89ae490ff 100644
 --- a/mesonbuild/cmake/toolchain.py
 +++ b/mesonbuild/cmake/toolchain.py
-@@ -196,7 +196,7 @@ class CMakeToolchain:
+@@ -202,7 +202,7 @@ class CMakeToolchain:
      @staticmethod
      def is_cmdline_option(compiler: 'Compiler', arg: str) -> bool:
          if compiler.get_argument_syntax() == 'msvc':
 -            return arg.startswith('/')
 +            return arg.startswith(('/','-'))
          else:
-             if compiler.exelist[0] == 'zig' and arg in {'ar', 'cc', 'c++', 'dlltool', 'lib', 'ranlib', 'objcopy', 'rc'}:
+             if os.path.basename(compiler.get_exe()) == 'zig' and arg in {'ar', 'cc', 'c++', 'dlltool', 'lib', 'ranlib', 'objcopy', 'rc'}:
                  return True

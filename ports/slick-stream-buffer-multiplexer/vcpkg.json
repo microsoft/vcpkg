@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "slick-stream-buffer-multiplexer",
+  "version": "1.0.1",
+  "description": "A C++ lock-free MPMC byte stream buffer multiplexer",
+  "homepage": "https://github.com/SlickQuant/slick-stream-buffer-multiplexer",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "slick-queue",
+      "version>=": "1.5.0"
+    },
+    {
+      "name": "slick-stream-buffer",
+      "version>=": "1.0.5"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

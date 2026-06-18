@@ -10,12 +10,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${VERSION}
-    SHA512 7bb5792992f8b72cf93edc2a532e008962ada08f90176c2fc896f82e3fcb4de138c21089a81a7ccb362dfb67da3494d87b6f052748cb2842a2bc6b70168857c0
+    SHA512 e2d6bc4e1c45a420e343981d05139d3fce89d9facefa9affef0f1450e2e668517bb122552548e5c5fe046a35eb571fecf345ffdef5f24de1c20d1959aeb49280
     HEAD_REF master
     PATCHES
-        0002-fix-get-version.patch
-        0003-fix-emscripten.patch
-        0004-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
+        0001-fix-get-version.patch
+        0002-fix-emscripten.patch
+        0003-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
 )
 
 # This fixes the lib path to use desktop libs instead of uwp -- TODO: improve this with better "host" compilation

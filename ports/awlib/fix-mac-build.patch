@@ -1,5 +1,5 @@
 diff --git a/io/include/aw/io/mmap_file.h b/io/include/aw/io/mmap_file.h
-index 98469732..65e82aac 100644
+index 9846973..65e82aa 100644
 --- a/io/include/aw/io/mmap_file.h
 +++ b/io/include/aw/io/mmap_file.h
 @@ -83,18 +83,18 @@ using win32::file_mapping;
@@ -30,8 +30,26 @@ index 98469732..65e82aac 100644
  		return file_mode::read|file_mode::write;
  	}
  
+diff --git a/types/include/aw/types/bits/variant_dispatch.h b/types/include/aw/types/bits/variant_dispatch.h
+index 9d5dc3b..95a9394 100644
+--- a/types/include/aw/types/bits/variant_dispatch.h
++++ b/types/include/aw/types/bits/variant_dispatch.h
+@@ -71,11 +71,11 @@ struct vh_recursive {
+ 		if constexpr (Length_left > 0)
+ 		{
+ 			if (index < Mid)
+-				return vh_recursive<Start,Mid,Ts...>::template dispatch(index, storage, f);
++				return vh_recursive<Start,Mid,Ts...>::dispatch(index, storage, f);
+ 		}
+ 
+ 		if constexpr (Length_right > 1)
+-			return vh_recursive<Mid+1,End,Ts...>::template dispatch(index, storage, f);
++			return vh_recursive<Mid+1,End,Ts...>::dispatch(index, storage, f);
+ 
+ 		_unreachable();
+ 	}
 diff --git a/types/include/aw/types/byte_buffer.h b/types/include/aw/types/byte_buffer.h
-index 82f46934..b38c46a9 100644
+index 82f4693..b38c46a 100644
 --- a/types/include/aw/types/byte_buffer.h
 +++ b/types/include/aw/types/byte_buffer.h
 @@ -8,6 +8,7 @@
@@ -42,3 +60,16 @@ index 82f46934..b38c46a9 100644
  #include <memory>
  namespace aw {
  /**
+diff --git a/types/include/aw/types/containers/queue.h b/types/include/aw/types/containers/queue.h
+index af8f13b..8398e8c 100644
+--- a/types/include/aw/types/containers/queue.h
++++ b/types/include/aw/types/containers/queue.h
+@@ -96,7 +96,7 @@ protected:
+ 	queue_base(queue_base&& other, Allocator const& alloc) noexcept
+ 		: impl(alloc)
+ 	{
+-		if (alloc == other.alloc)
++		if (alloc == static_cast<Allocator&>(other.impl))
+ 			impl.swap(other.impl);
+ 		else
+ 			create_storage(other.allocated_size());

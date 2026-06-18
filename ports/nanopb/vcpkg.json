@@ -1,7 +1,6 @@
 {
   "name": "nanopb",
-  "version-semver": "0.4.9",
-  "port-version": 1,
+  "version": "0.4.9.1",
   "description": "A small code-size Protocol Buffers implementation in ANSI C.",
   "homepage": "https://jpa.kapsi.fi/nanopb/",
   "license": "Zlib",

@@ -1,10 +1,11 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.36.0",
+  "version": "2.37.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !android",
   "dependencies": [
     "abseil",
     {
@@ -335,6 +336,18 @@
         }
       ]
     },
+    "chronicle": {
+      "description": "Chronicle API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "cloudbuild": {
       "description": "Cloud Build API C++ Client Library",
       "dependencies": [
@@ -602,6 +615,18 @@
         }
       ]
     },
+    "devicestreaming": {
+      "description": "Device Streaming API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dialogflow-cx": {
       "description": "Cloud Dialogflow CX API C++ Client Library",
       "dependencies": [
@@ -724,6 +749,18 @@
     },
     "filestore": {
       "description": "Cloud Filestore API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "financialservices": {
+      "description": "Financial Services API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1533,6 +1570,18 @@
             "grpc-common",
             "opentelemetry",
             "storage"
+          ]
+        }
+      ]
+    },
+    "storagebatchoperations": {
+      "description": "Cloud Storage Batch Operations API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
           ]
         }
       ]

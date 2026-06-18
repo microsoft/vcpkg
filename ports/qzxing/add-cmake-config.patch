@@ -1,0 +1,58 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8af58db..40406f2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -130,5 +130,38 @@ target_include_directories(qzxing
+         zxing/bigint
+     PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
+ 
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-qzxing-version.cmake"
++    VERSION ${VERSION}
++    COMPATIBILITY SameMajorVersion
++)
++configure_package_config_file(
++    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/unofficial-qzxing-config.cmake.in"
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-qzxing-config.cmake"
++    INSTALL_DESTINATION share/unofficial-qzxing
++)
++install(TARGETS qzxing
++    EXPORT QzxingTargets
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++install(EXPORT QzxingTargets
++    FILE unofficial-qzxing-targets.cmake
++    NAMESPACE unofficial::qzxing::
++    DESTINATION share/unofficial-qzxing
++)
++install(FILES
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-qzxing-config.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-qzxing-version.cmake"
++    DESTINATION share/unofficial-qzxing
++)
++install(FILES
++    QZXing.h
++    QZXing_global.h
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++)
+diff --git a/src/cmake/unofficial-qzxing-config.cmake.in b/src/cmake/unofficial-qzxing-config.cmake.in
+new file mode 100644
+index 0000000..2563ca8
+--- /dev/null
++++ b/src/cmake/unofficial-qzxing-config.cmake.in
+@@ -0,0 +1,8 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++find_dependency(Qt6 COMPONENTS Core Gui)
++
++include(${CMAKE_CURRENT_LIST_DIR}/unofficial-qzxing-targets.cmake)
++
++check_required_components(unofficial-qzxing)
+\ No newline at end of file

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1267606..1e4946f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,7 +51,7 @@ if(BUILD_STATIC_LIBS)
+             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+     )
+     set_target_properties(getopt_static PROPERTIES
+-            OUTPUT_NAME getopt_static
++            OUTPUT_NAME getopt
+             PUBLIC_HEADER ${GETOPT_HDR}
+             VERSION ${PROJECT_VERSION}
+     )

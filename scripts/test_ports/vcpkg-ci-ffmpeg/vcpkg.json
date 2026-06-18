@@ -41,7 +41,6 @@
             "openmpt",
             "openssl",
             "opus",
-            "postproc",
             "snappy",
             "soxr",
             "speex",
@@ -180,7 +179,7 @@
           "features": [
             "qsv"
           ],
-          "platform": "!arm & (android | linux | windows) & !uwp"
+          "platform": "(x64 | x86) & (windows | linux) & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -189,6 +188,14 @@
             "nvcodec"
           ],
           "platform": "!android & !osx & !uwp & !(arm64 & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ],
+          "platform": "(linux | windows) & !arm & !uwp"
         }
       ]
     }

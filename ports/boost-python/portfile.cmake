@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/python
     REF boost-${VERSION}
-    SHA512 899f6ddbbd5d409d37792a7cf46836ce43e54e44815d68124ea218e715c8450ce306c7fb5f5c5d16a58255eebe0a4b5d9559f74aed126c11f088303541fb9f5d
+    SHA512 4bbc29a460d5937331b05cbcd96c1614868b8ad224080c8fb5ec1cc7fbc3834715d9bfa9872a56dbfb6789ee18cbe51417f1f02d416cd52dc68ae1b1c785665f
     HEAD_REF master
     PATCHES
         remove_undef.diff

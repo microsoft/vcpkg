@@ -1,9 +1,10 @@
 {
   "name": "keystone",
   "version-semver": "0.9.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "A Lightweight multi-platform, multi-architecture assembler framework.",
   "homepage": "https://github.com/keystone-engine/keystone",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {

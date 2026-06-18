@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uWebSockets
     REF "v${VERSION}"
-    SHA512 a2a46ae4f92eb31c43bd717d75003db5930462a10eb7a48b80b662f77a53af4fc24cf3209857ba01a7317784469a63386731271df4edf7ab99fe748ad709387c
+    SHA512 4b7e952a49649c7dcff4d9eeb2f1b11dc52ac531963e63164b12a553d30b3dab6207a6198f0f8db992c6da67a1b696724d818db5096a4c45cce6e15da1cdd3e0
     HEAD_REF master
 )
 
@@ -17,6 +17,10 @@ endif()
 set(UWS_NO_ZLIB 1)
 if("zlib" IN_LIST FEATURES)
     set(UWS_NO_ZLIB 0)
+endif()
+set(UWS_NO_SIMDUTF 1)
+if("simdutf" IN_LIST FEATURES)
+    set(UWS_NO_SIMDUTF 0)
 endif()
 configure_file("${CURRENT_PORT_DIR}/unofficial-uwebsockets-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-uwebsockets/unofficial-uwebsockets-config.cmake" @ONLY)
 

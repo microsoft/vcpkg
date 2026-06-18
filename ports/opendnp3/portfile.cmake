@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dnp3/opendnp3
-    REF 3.1.1
-    SHA512 2d7b26753fa03596ab73944236e5f1d82656f38248cc23fd00f7a2cdac27f481e5fe51e68b5896b6740db1a6d9560f0262e473648e001601125f4af8b4a652c2
+    REF "${VERSION}"
+    SHA512 b0fe4774f8a2eea73eacbc98033a5dff673d29500ee585350aa550557242d71ac4d4f6acc1a2b378f6292edabd31c58e0b3b18938f3c1bb2efa39b33ffaa556f
 )
 
 file(READ "${SOURCE_PATH}/deps/ser4cpp.cmake" ser4cpp_cmake)

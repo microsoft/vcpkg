@@ -1,7 +1,6 @@
 {
   "name": "nsync",
-  "version": "1.29.2",
-  "port-version": 1,
+  "version": "1.30.0",
   "description": "nsync is a C library that exports various synchronization primitives, such as mutexes",
   "homepage": "https://github.com/google/nsync",
   "license": "Apache-2.0",

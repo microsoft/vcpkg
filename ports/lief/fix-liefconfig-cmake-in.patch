@@ -1,8 +1,8 @@
 diff --git a/cmake/LIEFConfig.cmake.in b/cmake/LIEFConfig.cmake.in
-index dba7363..7f88f98 100644
+index 562fda16..220208c7 100644
 --- a/cmake/LIEFConfig.cmake.in
 +++ b/cmake/LIEFConfig.cmake.in
-@@ -69,7 +69,7 @@ macro(LIEF_load_targets lib_type)
+@@ -76,7 +76,7 @@ macro(LIEF_load_targets lib_type)
      return()
    endif ()
  
@@ -11,12 +11,10 @@ index dba7363..7f88f98 100644
      # Need to find all dependencies even if they're private when LIEF is
      # compiled statically
      include(CMakeFindDependencyMacro)
-@@ -93,6 +93,10 @@ macro(LIEF_load_targets lib_type)
-     if(NOT @LIEF_DISABLE_FROZEN@ AND @LIEF_OPT_FROZEN_EXTERNAL@)
-       find_dependency(frozen)
+@@ -105,6 +105,8 @@ macro(LIEF_load_targets lib_type)
+       find_dependency(tl-expected)
      endif()
-+
-+    find_dependency(tl-expected)
+ 
 +    find_dependency(fmt)
 +    check_required_components(lief)
    endif()

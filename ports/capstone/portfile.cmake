@@ -2,13 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "capstone-engine/capstone"
     REF "${VERSION}"
-    SHA512 2fd3194dd37065e6091d208c7670b12c0ca6872931eef794bd6b2dd624601c843e8ee6c5714eae0372e394e91a9bc1e4de7dfea6b1087542dd461226569101de
+    SHA512 e4fe24002aed02cdbc0626dafee5211646e5da6a208c8ef99cd2d4f08beb0022999684af55cd80214aea4067fad427abb5ed5b1f5433b42a1f9047092481c039
     HEAD_REF next
     PATCHES
         001-silence-windows-crt-secure-warnings.patch
+        002-force-exportname-capstone.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CAPSTONE_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -39,7 +41,13 @@ vcpkg_cmake_configure(
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
         -DCAPSTONE_BUILD_STATIC_RUNTIME=${STATIC_CRT}
+        -DBUILD_STATIC_RUNTIME=${STATIC_CRT}
+        -DBUILD_STATIC_LIBS=${CAPSTONE_STATIC}
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CAPSTONE_BUILD_STATIC_RUNTIME
+        BUILD_STATIC_RUNTIME
+        BUILD_STATIC_LIBS
 )
 
 vcpkg_cmake_install()
@@ -49,4 +57,6 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE.TXT"
+)

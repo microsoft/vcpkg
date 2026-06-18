@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LASzip/LASzip
     REF ${VERSION}
-    SHA512 163204a4d0bb4b4371a1a63eb8ba9477dc504d7e171ec3d75c3120ace7ab682df517b4583efd951c8c7ac1be03bde8c8c327586e36c8884cbf7e98ec1e1c27bf
+    SHA512 6cdc38249ace8191dae454817fe5f5a3cd22b24c7065daa0e4a3eaaca4d698540c56affa06e15de88aea2912a82033d1dc93f5d3904190a896edf1204af865f5
     HEAD_REF master
     PATCHES
         compiler-options.diff
-        format-string.diff
+        include-cstdint.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LASZIP_BUILD_STATIC)
@@ -24,4 +24,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/laszip_api3.dll")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/laszip_api3.dll")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")

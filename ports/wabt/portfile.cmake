@@ -1,10 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
-    OUT_SOURCE_PATH source_path
+    OUT_SOURCE_PATH SOURCE_PATH
     REPO WebAssembly/wabt
     REF "${VERSION}"
-    SHA512 446622858458553f56187cf17e9435168837ac093f81f81852f12b0aeb7e6e542c5ac1fbce1dde1265107add52cc3f2cacf0c2cf25154d168080b8bece15e21b
+    SHA512 afa21608c20e42b009ef4685b04a42bdaf087ffec7e5e6bc2d91a8ffd801cb54f5c67a06ad2ec4398dd190543146c79d41a444b0aa21112685d81fd192d8ffd5
     HEAD_REF main
 )
 
@@ -17,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS feature_options
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${source_path}"
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${feature_options}
         -DBUILD_LIBWASM=OFF
@@ -56,4 +56,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/man")
 
-vcpkg_install_copyright(FILE_LIST "${source_path}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

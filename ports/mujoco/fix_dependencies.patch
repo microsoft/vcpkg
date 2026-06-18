@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aaac4e38..58bafedb 100644
+index e01c662..e3afbf8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -95,7 +95,7 @@ add_subdirectory(src/render)
- add_subdirectory(src/thread)
- add_subdirectory(src/ui)
+@@ -175,7 +175,7 @@ if(EMSCRIPTEN)
+ endif()
+ 
  
 -target_compile_definitions(mujoco PRIVATE _GNU_SOURCE CCD_STATIC_DEFINE MUJOCO_DLL_EXPORTS -DMC_IMPLEM_ENABLE)
 +target_compile_definitions(mujoco PRIVATE _GNU_SOURCE MUJOCO_DLL_EXPORTS -DMC_IMPLEM_ENABLE)
  if(MUJOCO_ENABLE_AVX_INTRINSICS)
    target_compile_definitions(mujoco PUBLIC mjUSEPLATFORMSIMD)
  endif()
-@@ -118,9 +118,9 @@ target_link_libraries(
+@@ -198,9 +198,9 @@ target_link_libraries(
    mujoco
    PRIVATE ccd
            lodepng
@@ -25,10 +25,10 @@ index aaac4e38..58bafedb 100644
  
  set_target_properties(
 diff --git a/cmake/MujocoDependencies.cmake b/cmake/MujocoDependencies.cmake
-index 23e4e71e..e4cfad28 100644
+index 664fc31..07ad2eb 100644
 --- a/cmake/MujocoDependencies.cmake
 +++ b/cmake/MujocoDependencies.cmake
-@@ -90,7 +90,7 @@ set(BUILD_SHARED_LIBS
+@@ -88,7 +88,7 @@ set(BUILD_SHARED_LIBS
      CACHE INTERNAL "Build SHARED libraries"
  )
  
@@ -37,20 +37,19 @@ index 23e4e71e..e4cfad28 100644
    FetchContent_Declare(
      lodepng
      GIT_REPOSITORY https://github.com/lvandeve/lodepng.git
-@@ -110,6 +110,7 @@ if(NOT TARGET lodepng)
+@@ -112,7 +112,7 @@ if(NOT TARGET lodepng)
    endif()
  endif()
  
+-if(NOT TARGET marchingcubecpp)
 +if(0)
- if(NOT TARGET marchingcubecpp)
    FetchContent_Declare(
      marchingcubecpp
-@@ -123,36 +124,60 @@ if(NOT TARGET marchingcubecpp)
-     include_directories(${marchingcubecpp_SOURCE_DIR})
+     GIT_REPOSITORY https://github.com/aparis69/MarchingCubeCpp.git
+@@ -126,6 +126,22 @@ if(NOT TARGET marchingcubecpp)
    endif()
  endif()
-+endif()
-+
+ 
 +findorfetch(
 +  USE_SYSTEM_PACKAGE
 +  ON
@@ -66,8 +65,11 @@ index 23e4e71e..e4cfad28 100644
 +  lodepng
 +  EXCLUDE_FROM_ALL
 +)
- 
++
  set(QHULL_ENABLE_TESTING OFF)
+ # Patch changes in https://github.com/qhull/qhull/pull/173.patch
+ set(QHULL_PATCH_COMMAND
+@@ -134,32 +150,39 @@ set(QHULL_PATCH_COMMAND
  
  findorfetch(
    USE_SYSTEM_PACKAGE
@@ -87,6 +89,7 @@ index 23e4e71e..e4cfad28 100644
 -  qhull
 +  Qhull
    EXCLUDE_FROM_ALL
+   PATCH_COMMAND ${QHULL_PATCH_COMMAND}
  )
  # MuJoCo includes a file from libqhull_r which is not exported by the qhull include directories.
  # Add it to the target.
@@ -97,12 +100,12 @@ index 23e4e71e..e4cfad28 100644
  target_compile_options(qhullstatic_r PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
  target_link_options(qhullstatic_r PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
 +endif()
-+
+ 
 +include_directories(
++  ${Qhull_DIR}/../../include
 +  ${Qhull_DIR}/../../include/libqhull_r
 +  ${Qhull_DIR}/../../include/marchingcubecpp
 +)
- 
  set(tinyxml2_BUILD_TESTING OFF)
  findorfetch(
    USE_SYSTEM_PACKAGE
@@ -111,15 +114,20 @@ index 23e4e71e..e4cfad28 100644
    PACKAGE_NAME
    tinyxml2
    LIBRARY_NAME
-@@ -165,12 +190,14 @@ findorfetch(
+@@ -172,9 +195,10 @@ findorfetch(
    tinyxml2
    EXCLUDE_FROM_ALL
  )
 +if(0)
  target_compile_options(tinyxml2 PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
  target_link_options(tinyxml2 PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
+-
 +endif()
- 
+ # update cmake_minimum_required version for compatibility with newer version of cmake
+ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+   set(CMAKE_POLICY_VERSION_MINIMUM ${MUJOCO_CMAKE_MIN_REQ})
+@@ -182,7 +206,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+ endif()
  findorfetch(
    USE_SYSTEM_PACKAGE
 -  OFF
@@ -127,32 +135,8 @@ index 23e4e71e..e4cfad28 100644
    PACKAGE_NAME
    tinyobjloader
    LIBRARY_NAME
-@@ -189,9 +216,9 @@ option(SDFLIB_USE_OPENMP OFF)
- option(SDFLIB_USE_ENOKI OFF)
- findorfetch(
-   USE_SYSTEM_PACKAGE
--  OFF
-+  ON
-   PACKAGE_NAME
--  sdflib
-+  SdfLib
-   LIBRARY_NAME
-   sdflib
-   GIT_REPO
-@@ -202,14 +229,19 @@ findorfetch(
-   SdfLib
-   EXCLUDE_FROM_ALL
- )
-+
-+add_library(SdfLib ALIAS SdfLib::SdfLib)
-+
-+if(0)
- target_compile_options(SdfLib PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
- target_link_options(SdfLib PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
-+endif()
- 
- set(ENABLE_DOUBLE_PRECISION ON)
- set(CCD_HIDE_ALL_SYMBOLS ON)
+@@ -215,7 +239,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+ endif()
  findorfetch(
    USE_SYSTEM_PACKAGE
 -  OFF
@@ -160,48 +144,75 @@ index 23e4e71e..e4cfad28 100644
    PACKAGE_NAME
    ccd
    LIBRARY_NAME
-@@ -222,11 +254,14 @@ findorfetch(
-   ccd
-   EXCLUDE_FROM_ALL
- )
+@@ -233,12 +257,13 @@ if(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
+   unset(CMAKE_POLICY_VERSION_MINIMUM)
+   unset(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
+ endif()
 +if(0)
  target_compile_options(ccd PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
  target_link_options(ccd PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
+-
 +endif()
- 
  # libCCD has an unconditional `#define _CRT_SECURE_NO_WARNINGS` on Windows.
  # TODO(stunya): Remove this after https://github.com/danfis/libccd/pull/77 is merged.
+-if(WIN32)
 +if(0)
- if(WIN32)
    if(MSVC)
      # C4005 is the MSVC equivalent of -Wmacro-redefined.
-@@ -235,6 +270,7 @@ if(WIN32)
-     target_compile_options(ccd PRIVATE -Wno-macro-redefined)
-   endif()
+     target_compile_options(ccd PRIVATE /wd4005)
+@@ -254,12 +279,7 @@ else()
+   set(_BUILD_TESTS_WAS_DEFINED FALSE)
  endif()
-+endif()
- 
- if(MUJOCO_BUILD_TESTS)
-   set(ABSL_PROPAGATE_CXX_STD ON)
-diff --git a/simulate/cmake/SimulateDependencies.cmake b/simulate/cmake/SimulateDependencies.cmake
-index 5141406c..41f399b7 100644
---- a/simulate/cmake/SimulateDependencies.cmake
-+++ b/simulate/cmake/SimulateDependencies.cmake
-@@ -86,7 +86,7 @@ findorfetch(
-   GIT_TAG
-   ${MUJOCO_DEP_VERSION_glfw3}
-   TARGETS
--  glfw
-+  glfw3
-   EXCLUDE_FROM_ALL
+ set(BUILD_TESTS OFF)
+-fetchpackage(
+-  PACKAGE_NAME  miniz
+-  GIT_REPO      https://github.com/richgel999/miniz.git
+-  GIT_TAG       ${MUJOCO_DEP_VERSION_miniz}
+-  TARGETS       miniz
+-)
++find_package(miniz CONFIG REQUIRED)
+ if(_BUILD_TESTS_WAS_DEFINED)
+   set(BUILD_TESTS "${_OLD_BUILD_TESTS}")
+ else()
+@@ -281,7 +301,7 @@ if(MUJOCO_BUILD_TESTS OR MUJOCO_BUILD_STUDIO OR MUJOCO_USE_FILAMENT)
+   set(ABSL_BUILD_TESTING OFF)
+   findorfetch(
+     USE_SYSTEM_PACKAGE
+-    OFF
++    ON
+     PACKAGE_NAME
+     absl
+     LIBRARY_NAME
+diff --git a/plugin/obj_decoder/CMakeLists.txt b/plugin/obj_decoder/CMakeLists.txt
+index 689dfc5..9f86232 100644
+--- a/plugin/obj_decoder/CMakeLists.txt
++++ b/plugin/obj_decoder/CMakeLists.txt
+@@ -17,4 +17,4 @@ target_sources(mujoco PRIVATE
+   obj_decoder.cc
  )
  
+-target_link_libraries(mujoco PRIVATE tinyobjloader)
++target_link_libraries(mujoco PRIVATE tinyobjloader::tinyobjloader)
+diff --git a/simulate/cmake/SimulateDependencies.cmake b/simulate/cmake/SimulateDependencies.cmake
+index 7885f5f..1da1be2 100644
+--- a/simulate/cmake/SimulateDependencies.cmake
++++ b/simulate/cmake/SimulateDependencies.cmake
 @@ -98,7 +98,7 @@ if(MUJOCO_EXTRAS_STATIC_GLFW)
    unset(BUILD_SHARED_LIBS_OLD)
  endif()
  
--if(NOT SIMULATE_STANDALONE)
+-if(NOT SIMULATE_STANDALONE AND NOT MUJOCO_SIMULATE_USE_SYSTEM_GLFW)
 +if(0)
    target_compile_options(glfw PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
    target_link_options(glfw PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
  endif()
+diff --git a/src/xml/mjz/CMakeLists.txt b/src/xml/mjz/CMakeLists.txt
+index ab92623..4ec37e9 100644
+--- a/src/xml/mjz/CMakeLists.txt
++++ b/src/xml/mjz/CMakeLists.txt
+@@ -18,4 +18,4 @@ set(MUJOCO_MJZ_SRCS
+ )
+ 
+ target_sources(mujoco PRIVATE ${MUJOCO_MJZ_SRCS})
+-target_link_libraries(mujoco PRIVATE miniz)
++target_link_libraries(mujoco PRIVATE miniz::miniz)

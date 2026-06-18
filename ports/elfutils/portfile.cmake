@@ -2,12 +2,13 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceware.org/pub/elfutils/${VERSION}/elfutils-${VERSION}.tar.bz2"
          "https://www.mirrorservice.org/sites/sourceware.org/pub/elfutils/${VERSION}/elfutils-${VERSION}.tar.bz2"
     FILENAME "elfutils-${VERSION}.tar.bz2"
-    SHA512 543188f5f2cfe5bc7955a878416c5f252edff9926754e5de0c6c57b132f21d9285c9b29e41281e93baad11d4ae7efbbf93580c114579c182103565fe99bd3909
+    SHA512 e1e1fdf4f7f72bf520deb0103bb8fd208dc247bab14af100c6fb56d38c0ef6c6d54ff5bd15b84e4f70e2b2ea481e5999fea2842360f8932a861122df79b5fc8f
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        crc32.diff
         disable-werror.diff
         link-libs.diff
         rpath-link.diff
@@ -23,7 +24,9 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 set(options "")
 
-if(NOT "libdebuginfod" IN_LIST FEATURES)
+if("libdebuginfod" IN_LIST FEATURES)
+    list(APPEND options "--enable-libdebuginfod=yes")
+else()
     list(APPEND options "--enable-libdebuginfod=no")
 endif()
 
@@ -34,9 +37,9 @@ else()
     list(APPEND options "--enable-nls=no")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${options}
         --enable-debuginfod=no
@@ -46,7 +49,7 @@ vcpkg_configure_make(
         --with-zstd
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE

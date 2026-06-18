@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nholthaus/units
-    REF v2.3.3
-    SHA512 40d803e6bb17f4bb46a0136c7753ae25a0d3ce352dbff3843b0c231e94eb8bade1de65d5b988589607fb12b11e4bfa762708a68839f2d7dccb45440672d09031
+    REF v${VERSION}
+    SHA512 9cedc52e0405140b9a8014195f59f4deb2edd155fe78df76005eb721974c2a640975d9b959777be48f41c24f6a0a7047536649958da847e2aa8b0c3b9a6d139a
 )
 
 set(VCPKG_BUILD_TYPE "release")
@@ -10,10 +10,11 @@ set(VCPKG_BUILD_TYPE "release")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTS=OFF
+        -DUNITS_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/units/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/units)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")  # from CMake config
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

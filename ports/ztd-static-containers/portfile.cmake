@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO soasis/static_containers
     REF e1a21217b6dba3028e6cc6bf0f9562972ea1c43d
-    SHA512 ec5b98e2282e72eb09617006afaf2522a471b6eb3928c90fb878c46b7453bb94ddafb19cb4738c5561905003d299bb23d15ebf71c555259b5e500594fbadd97f
+    SHA512 b108b1e206854ddb4ceed9780c89c8db717c87bd010ee5ff1f176b79a26192dcc46a68b3d9b254b469f3869ec46738c0aabb0ccf0621444bb50bee306bdbe2fc
     HEAD_REF main
     PATCHES fix-cmake.patch
 )

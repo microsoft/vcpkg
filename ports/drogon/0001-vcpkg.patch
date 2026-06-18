@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fbe2288..d7218a6 100755
+index 9cbc6d73..30a88c1a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -367,11 +367,10 @@ endif (NOT WIN32)
+@@ -361,11 +361,10 @@ endif()
  
  if (BUILD_POSTGRESQL)
      # find postgres
@@ -18,7 +18,7 @@ index fbe2288..d7218a6 100755
          set(DROGON_SOURCES
              ${DROGON_SOURCES}
              orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc
-@@ -401,7 +400,7 @@ if (BUILD_POSTGRESQL)
+@@ -395,7 +394,7 @@ if (BUILD_POSTGRESQL)
                  ${private_headers}
                  orm_lib/src/postgresql_impl/PgConnection.h)
          endif (libpq_supports_batch)
@@ -27,3 +27,14 @@ index fbe2288..d7218a6 100755
  endif (BUILD_POSTGRESQL)
  
  if (BUILD_MYSQL)
+@@ -420,7 +419,9 @@ if (BUILD_MYSQL)
+             message(STATUS "Mariadb support mysql_optionsv")
+             add_definitions(-DHAS_MYSQL_OPTIONSV)
+         endif(HAS_MYSQL_OPTIONSV)
+-
++        if (NOT BUILD_SHARED_LIBS AND WIN32)
++            target_link_libraries(${PROJECT_NAME} PUBLIC bcrypt)
++        endif()
+         set(DROGON_SOURCES
+             ${DROGON_SOURCES}
+             orm_lib/src/mysql_impl/MysqlConnection.cc

@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         configure.diff
+        fix-gcc14-time-includes.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -84,16 +85,16 @@ else()
     vcpkg_find_acquire_program(PKGCONFIG)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             --enable-sample=no
             --with-dblib=lmdb
             --with-gss_impl=mit
             --disable-macos-framework
     )
-    vcpkg_install_make()
+    vcpkg_make_install()
 endif()
 
 vcpkg_fixup_pkgconfig()

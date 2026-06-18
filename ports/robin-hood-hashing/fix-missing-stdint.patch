@@ -1,0 +1,12 @@
+diff --git a/src/include/robin_hood.h b/src/include/robin_hood.h
+index b4e0fbc..405e67d 100644
+--- a/src/include/robin_hood.h
++++ b/src/include/robin_hood.h
+@@ -40,6 +40,7 @@
+ 
+ #include <algorithm>
+ #include <cstdlib>
++#include <cstdint>
+ #include <cstring>
+ #include <functional>
+ #include <limits>

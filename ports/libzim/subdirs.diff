@@ -1,16 +1,16 @@
 diff --git a/meson.build b/meson.build
-index d946c49..eded01d 100644
+index 1f085d5..f360501 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -90,6 +90,7 @@ subdir('include')
- subdir('scripts')
- subdir('static')
+@@ -102,6 +102,7 @@ subdir('static')
  subdir('src')
+ # The example project demonstrates writer usage
+ # so only include it if the writer is also present
 +if false
- if get_option('examples')
+ if get_option('examples') and not get_option('without_writer')
    subdir('examples')
  endif
-@@ -97,6 +98,7 @@ subdir('test')
+@@ -111,6 +112,7 @@ endif
  if get_option('doc')
    subdir('docs')
  endif

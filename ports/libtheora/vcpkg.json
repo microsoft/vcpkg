@@ -1,7 +1,6 @@
 {
   "name": "libtheora",
-  "version-string": "1.2.0alpha1-20170719",
-  "port-version": 8,
+  "version": "1.2.0",
   "description": "Theora is a free and open video compression format from the Xiph.org Foundation.",
   "homepage": "https://github.com/xiph/theora",
   "license": null,

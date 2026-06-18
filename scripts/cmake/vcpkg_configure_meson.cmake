@@ -152,6 +152,14 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
             OUTPUT_STRIP_TRAILING_WHITESPACE
             COMMAND_ERROR_IS_FATAL ANY)
 
+        if(CMAKE_HOST_SOLARIS)
+            execute_process(
+                COMMAND isainfo -k
+                OUTPUT_VARIABLE MACHINE
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                COMMAND_ERROR_IS_FATAL ANY)
+        endif()
+
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
@@ -193,6 +201,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         string(APPEND build "system = 'windows'\n")
     elseif(CMAKE_HOST_APPLE)
         string(APPEND build "system = 'darwin'\n")
+        string(APPEND build "subsystem = 'macos'\n")
     elseif(VCPKG_HOST_IS_CYGWIN)
         string(APPEND build "system = 'cygwin'\n")
     elseif(CMAKE_HOST_UNIX)
@@ -218,6 +227,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
         set(host_cpu_fam x86)
         set(host_cpu i686)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64(EC|ec)$")
+        set(host_cpu_fam aarch64)
+        set(host_cpu arm64ec)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
         set(host_cpu_fam aarch64)
         set(host_cpu armv8)
@@ -237,7 +249,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         set(host_unkown TRUE)
     endif()
 
-    set(host "[host_machine]\n") # host=target in vcpkg. 
+    set(host "[host_machine]\n") # host=target in vcpkg.
     string(APPEND host "endian = 'little'\n")
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
         set(meson_system_name "windows")
@@ -245,6 +257,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" meson_system_name)
     endif()
     string(APPEND host "system = '${meson_system_name}'\n")
+    if(meson_system_name STREQUAL "darwin")
+        string(APPEND host "subsystem = 'macos'\n")
+    endif()
     string(APPEND host "cpu_family = '${host_cpu_fam}'\n")
     string(APPEND host "cpu = '${host_cpu}'")
     if(NOT host_unkown)
@@ -252,7 +267,10 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     endif()
 
     if(NOT build_cpu_fam MATCHES "${host_cpu_fam}"
-       OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP
+       OR VCPKG_TARGET_IS_ANDROID
+       OR VCPKG_TARGET_IS_OHOS
+       OR (VCPKG_TARGET_IS_APPLE AND NOT VCPKG_TARGET_IS_OSX)
+       OR VCPKG_TARGET_IS_UWP
        OR (VCPKG_TARGET_IS_MINGW AND NOT CMAKE_HOST_WIN32))
         set(${is_cross} TRUE PARENT_SCOPE)
     endif()

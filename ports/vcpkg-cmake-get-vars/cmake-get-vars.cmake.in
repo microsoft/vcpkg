@@ -1,0 +1,14 @@
+# Set VCPKG_TRACE_CMAKE_GET_VARS to trace file path and call stack on every load.
+if(VCPKG_TRACE_CMAKE_GET_VARS)
+    message(WARNING "Loading CMake variables from ${CMAKE_CURRENT_LIST_FILE}")
+elseif(NOT Z_VCPKG_CMAKE_GET_VARS_FILE_LAST_LOADED STREQUAL "${CMAKE_CURRENT_LIST_FILE}")
+    set(Z_VCPKG_CMAKE_GET_VARS_FILE_LAST_LOADED "${CMAKE_CURRENT_LIST_FILE}" CACHE INTERNAL "")
+    message(STATUS "Loading CMake variables from ${CMAKE_CURRENT_LIST_FILE}")
+endif()
+
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "release")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake-get-vars@configuration_suffix@-@TARGET_TRIPLET@-rel.cmake.log")
+endif()
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "debug")
+    include("${CMAKE_CURRENT_LIST_DIR}/cmake-get-vars@configuration_suffix@-@TARGET_TRIPLET@-dbg.cmake.log")
+endif()

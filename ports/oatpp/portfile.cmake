@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp
-    REF ${OATPP_VERSION}
-    SHA512 4fe8587efe1b4ecae14554ec8edb209e5558a3e4a4e6ff49bbfaaf06d2cc12f2cc306c5edc43b8dafc465aff53098ad4bebb9971694761b91a553730d5acb59a
+    REF "1.3.1"
+    SHA512 2d6aec0a7f298fef19ce77517643388af4f127abe710b619aa17301b1c869b05f05758323370abdcc2eca9c675045f86b185af00b1689e469fc8aa4e02971f92
     HEAD_REF master
     PATCHES
         fix-target.patch

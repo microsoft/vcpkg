@@ -8,19 +8,14 @@ vcpkg_from_github(
         pkgconfig.diff
 )
 
-message(
-"numactl currently requires the following libraries from the system package manager:
-    autoconf libtool
-These can be installed on Ubuntu systems via
-    sudo apt install autoconf libtool"
-)
-
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-numa-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-numa")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

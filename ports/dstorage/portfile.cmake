@@ -5,7 +5,7 @@ set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}"
     FILENAME "directstorage.${VERSION}.zip"
-    SHA512 0bae992933ff6d3a04e1af287ac96bc4516aaaf7f36d21249b1ab8147ccd5aa913f7151b36c628def5a733c24b7d35900574e845243a4cb4ee65f710e06ae9da
+    SHA512 589a83194e9e05654523b9ca10401982d235dbaa991c8535807d5b9f851d877281417d79a0210f77b46c0f65114f805f4a12f04b7bdb3de8a00fe20c78def791
 )
 
 vcpkg_extract_source_archive(

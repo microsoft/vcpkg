@@ -13,6 +13,8 @@ vcpkg_from_gitlab(
         getpeereid.patch # missing check from configure.ac
         libsystemd.patch
         remove-path.patch
+        remove-var-lib-dbus-creation.patch
+        session-socket-dir.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
@@ -21,6 +23,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         x11     DBUS_BUILD_X11
         x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
 )
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    # Without this change, the library hardcodes vcpkg's package staging directory.
+    # Change to the expected system location.
+    list(APPEND options "-DDBUS_RUNSTATEDIR=/run")
+endif()
 
 unset(ENV{DBUSDIR})
 

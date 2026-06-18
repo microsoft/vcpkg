@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DALLOW_FLEXIBLAS_LINUX=OFF
         "-DREQUIRES_PRIVATE=${REQUIRES_PRIVATE}"
+        -DBUILD_SMOKE_TEST=OFF
 )
 
 vcpkg_cmake_install()

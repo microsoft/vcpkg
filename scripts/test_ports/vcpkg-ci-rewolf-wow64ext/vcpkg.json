@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-rewolf-wow64ext",
+  "version-string": "ci",
+  "description": "Validates rewolf-wow64ext",
+  "dependencies": [
+    "rewolf-wow64ext",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

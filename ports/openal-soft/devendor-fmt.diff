@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b65e924..814d59e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -256,7 +256,8 @@ if(ALSOFT_ENABLE_MODULES)
+ endif()
+ 
+ 
+-add_subdirectory(fmt-11.2.0 EXCLUDE_FROM_ALL)
++find_package(fmt CONFIG REQUIRED)
++add_library(alsoft::fmt ALIAS fmt::fmt)
+ 
+ 
+ set(CPP_DEFS ) # C pre-processor, not C++
+@@ -1614,7 +1615,7 @@ if(LIBTYPE STREQUAL "STATIC")
+     target_compile_definitions(${IMPL_TARGET} PUBLIC AL_LIBTYPE_STATIC)
+     target_include_directories(${IMPL_TARGET} PRIVATE ${OpenAL_SOURCE_DIR}/gsl/include)
+     target_link_libraries(${IMPL_TARGET} PRIVATE ${LINKER_FLAGS} ${EXTRA_LIBS} ${MATH_LIB}
+-        $<BUILD_LOCAL_INTERFACE:alsoft::fmt>)
++        alsoft::fmt)
+ 
+     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_OSX_DEPLOYMENT_TARGET
+         AND CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.13")
+diff --git a/OpenALConfig.cmake.in b/OpenALConfig.cmake.in
+index 4c1ad05..f462df5 100644
+--- a/OpenALConfig.cmake.in
++++ b/OpenALConfig.cmake.in
+@@ -2,6 +2,9 @@ if((NOT DEFINED CMAKE_VERSION) OR (CMAKE_VERSION VERSION_LESS "3.1"))
+    message(FATAL_ERROR "CMake >= 3.1 required")
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(fmt CONFIG)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/OpenALTargets.cmake")
+ 
+ set(OPENAL_FOUND ON)
+diff --git a/openal.pc.in b/openal.pc.in
+index dfa6f57..e04e807 100644
+--- a/openal.pc.in
++++ b/openal.pc.in
+@@ -6,6 +6,7 @@ includedir=@includedir@
+ Name: OpenAL
+ Description: OpenAL is a cross-platform 3D audio API
+ Requires: @PKG_CONFIG_REQUIRES@
++Requires.private: fmt
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -l@LIBNAME@ @PKG_CONFIG_LIBS@
+ Libs.private:@PKG_CONFIG_PRIVATE_LIBS@

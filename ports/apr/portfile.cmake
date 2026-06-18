@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://archive.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
+    URLS "https://downloads.apache.org/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
-    SHA512 d8a7553642da0c81261ac3992536efd9d43ecb9154934ef1a10ae808d6a3ce8198b40433091d3a6d04f61e67c59426fb5276193a37e810ae4bc74a8a10fb651b
+    SHA512 629b60680d1244641828019db903a1b199e8a19c8f27a5132b93faacb381ce561f88463345ab019258f1f1e8cfdf8aa986ac815153a8e7e04a22b3932f9fedd2
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -70,7 +70,7 @@ else()
         message(STATUS "Configuring apr")
     endif()
     set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             "--prefix=${CURRENT_INSTALLED_DIR}"
@@ -79,7 +79,7 @@ else()
             "${CONFIGURE_PARAMETER_3}"
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
 
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/apr-1.pc"

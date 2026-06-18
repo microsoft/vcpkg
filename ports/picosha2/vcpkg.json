@@ -1,6 +1,6 @@
 {
   "name": "picosha2",
-  "version-date": "2022-08-08",
+  "version": "1.0.1",
   "description": "PicoSHA2 - a header-file-only C++ SHA256 hash generator",
   "homepage": "https://github.com/okdshin/PicoSHA2",
   "license": "MIT"

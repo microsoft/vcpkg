@@ -4,13 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
     REF "v${VERSION}"
-    SHA512 548f15fcd345a56b6e7a0a568fa7c694beeeda3b863492f59bdaa0b0e6d48b21d6705e2ac56a06f349aa26b0e9b79aa0a437870940170772b5b30cf35841cbb4
+    SHA512 5104f12395a48ad2a9c196faab1b92d8ed5aaa026fff67f9a915ffd9a3c132ee2f68ce8b50a3c0bd3138ac4b42435bf6c0c5aa641bfabac47cde39ca465fe2f4
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-        find_blas.patch
 )
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,14 +34,17 @@ vcpkg_cmake_configure(
         ${COMMON_OPTIONS}
         -DDLIB_PNG_SUPPORT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
+        -Dtest_for_libpng_worked=TRUE # try_compile ignores vcpkg setup
         -DDLIB_JPEG_SUPPORT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
+        -Dtest_for_libjpeg_worked=TRUE # try_compile ignores vcpkg setup
         -DDLIB_USE_BLAS=ON
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DDLIB_USE_FFMPEG=OFF
+        -DDLIB_NO_GUI_SUPPORT=ON
     OPTIONS_DEBUG
         ${dbg_opts}
         #-DDLIB_ENABLE_STACK_TRACE=ON

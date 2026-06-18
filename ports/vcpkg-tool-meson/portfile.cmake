@@ -8,7 +8,8 @@ set(patches
   meson-intl.patch
   adjust-python-dep.patch
   adjust-args.patch
-  remove-freebsd-pcfile-specialization.patch
+  remove-pkgconfig-specialization.patch
+  meson-56879d5.diff  # Remove with 1.9.1
 )
 set(scripts
   vcpkg-port-config.cmake

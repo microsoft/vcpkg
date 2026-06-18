@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/chrono
     REF boost-${VERSION}
-    SHA512 22f757ebe6ca4a61e14dd148ec495cd457817b27eef66c4fbea2cfa0cd062956997c45b082dc47dea20691ec34452f5a123de3c5436cd366f99d0e01d3774c39
+    SHA512 381ea4a321362d80d03ecc719702e14058d7eb6c5915d62b3c08a8cbcdcd2020da9eabe8a4c5dacc6fdb172e3b1e8136b6dc7df9c22a110bf9fb3c43583ff215
     HEAD_REF master
 )
 

@@ -1,6 +1,6 @@
 {
   "name": "audioengine",
-  "version": "1.2",
+  "version": "1.3",
   "description": "AudioEngine created using C++, FFMPEG and OpenAL for a student",
   "homepage": "https://github.com/Darkx32/AudioEngine",
   "license": "MIT",

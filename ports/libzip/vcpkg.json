@@ -1,7 +1,6 @@
 {
   "name": "libzip",
-  "version": "1.11.3",
-  "port-version": 1,
+  "version": "1.11.4",
   "description": "A C library for reading, creating, and modifying zip archives.",
   "homepage": "https://github.com/nih-at/libzip",
   "license": "BSD-3-Clause",
@@ -27,28 +26,9 @@
         "bzip2"
       ]
     },
-    "commoncrypto": {
-      "description": "AES (encryption) support using Apple's Common Crypto API"
-    },
     "default-aes": {
-      "description": "Use default AES",
+      "description": "AES (encryption) support using a default backend",
       "dependencies": [
-        {
-          "name": "libzip",
-          "default-features": false,
-          "features": [
-            "commoncrypto"
-          ],
-          "platform": "osx"
-        },
-        {
-          "name": "libzip",
-          "default-features": false,
-          "features": [
-            "wincrypto"
-          ],
-          "platform": "windows"
-        },
         {
           "name": "libzip",
           "default-features": false,
@@ -76,9 +56,6 @@
       "dependencies": [
         "openssl"
       ]
-    },
-    "wincrypto": {
-      "description": "AES (encryption) support using Windows Crypto API"
     },
     "zstd": {
       "description": "Support Zstandard-compressed zip archives",

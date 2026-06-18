@@ -1,21 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO an-tao/drogon
+    REPO drogonframework/drogon
     REF "v${VERSION}"
-    SHA512 8e050a2545067492ab037acda6cbc628806617ef2494397d6940241556afaa2555b5cb5e2baa6790c5a20172bd5d61e0454f2a52f85b3d875b23774aac8bb36a
+    SHA512 b76455116d453711052fae418b7a95934fa0822b1db9a85c567a9cf5d1fdf8c59df852bef0a481515d9eb4ce8267d1882e080c1bd003e4102234f4a7b51f77b5
     HEAD_REF master
     PATCHES
          0001-vcpkg.patch
          0002-drogon-config.patch
          0003-deps-redis.patch
          0004-drogon-ctl.patch
-         0005-drogon-cross-compile.patch
+         0005-fix-1.9.13-chunked-encoding-close-connection.patch
 )
-
-set(DROGON_CTL_TOOL "")
-if(VCPKG_CROSSCOMPILING)
-    set(DROGON_CTL_TOOL "${CURRENT_HOST_INSTALLED_DIR}/tools/drogon/drogon_ctl${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -30,20 +25,13 @@ vcpkg_check_features(
         yaml     BUILD_YAML_CONFIG
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DROGON_SHARED)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_DROGON_SHARED}
         -DBUILD_EXAMPLES=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
         -DUSE_SUBMODULE=OFF
-        "-DDROGON_CTL_TOOL=${DROGON_CTL_TOOL}"
         ${FEATURE_OPTIONS}
-    MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -55,18 +43,15 @@ vcpkg_fixup_pkgconfig()
 
 # Copy drogon_ctl
 if("ctl" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES drogon_ctl AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES _drogon_ctl drogon_ctl AUTO_CLEAN)
 endif()
 
 # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 # Copy pdb files
 vcpkg_copy_pdbs()

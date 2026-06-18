@@ -1,29 +1,26 @@
 {
   "name": "saucer",
-  "version": "2.3.0",
-  "port-version": 1,
+  "version": "6.0.1",
+  "port-version": 7,
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!android & !uwp",
   "dependencies": [
     "boost-callable-traits",
     "boost-preprocessor",
-    "ereignis",
-    "flagpp",
+    "curve-eraser",
+    "curve-ereignis",
+    "curve-flagpp",
+    "curve-lockpp",
+    "curve-poolparty",
+    "curve-rebind",
     "fmt",
     "glaze",
-    "lockpp",
-    "nlohmann-json",
     {
-      "name": "qtwebchannel",
-      "platform": "!windows"
+      "name": "gtk",
+      "platform": "linux"
     },
-    {
-      "name": "qtwebengine",
-      "platform": "!windows"
-    },
-    "tl-expected",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -57,7 +57,7 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$AllowUnexpectedPassing = $false
+    [switch]$ForceAllowUnexpectedPassing = $false
 )
 
 function Add-ToolchainToTestCMake {
@@ -85,6 +85,18 @@ $buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'p'
 
+$env:AZCOPY_LOG_LOCATION = Join-Path $WorkingRoot 'azcopy-logs'
+$env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $WorkingRoot 'azcopy-plans'
+if ($Triplet -eq 'x64-osx') {
+    $env:AZCOPY_BUFFER_GB = 2
+    $env:AZCOPY_CONCURRENCY_VALUE = 8
+}
+if (!(Test-Path $env:AZCOPY_LOG_LOCATION))
+{
+    New-Item -ItemType Directory -Path $env:AZCOPY_LOG_LOCATION | Out-Null
+}
+Write-Host "AzCopy logs location: $env:AZCOPY_LOG_LOCATION"
+
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
@@ -107,6 +119,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, testing features, skipping failures.'
         $skipFailuresArgs = @('--skip-failures')
         $testFeatures = $true
+        $ForceAllowUnexpectedPassing = $true
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
@@ -131,6 +144,7 @@ if ($Triplet -eq 'x64-windows-release') {
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $failureLogsArg = "--failure-logs=$failureLogs"
 $knownFailuresFromArgs = @()
+$featureTestExitCode = 0
 if ($testFeatures) {
     & $vcpkgExe x-ci-clean @commonArgs
     $lastLastExitCode = $LASTEXITCODE
@@ -149,11 +163,15 @@ if ($testFeatures) {
     if ($lastLastExitCode -ne 0)
     {
         Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$false"
-        Write-Error "vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. Check for failure logs attached to the run in Azure Pipelines."
-        exit $lastLastExitCode
+        Write-Host "##vso[task.logissue type=error]vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. See https://github.com/microsoft/vcpkg/discussions/31357 for how to access AZP failure logs."
+        # Do not exit early: continue so that 'vcpkg ci' still runs and writes pr-hashes.json,
+        # which is required for the 'Build a file list' step to succeed.
+        $featureTestExitCode = $lastLastExitCode
     }
-
-    $knownFailuresFromArgs += "--known-failures-from=$knownFailingAbisFile"
+    else
+    {
+        $knownFailuresFromArgs += "--known-failures-from=$knownFailingAbisFile"
+    }
 }
 
 $ciBaselineFile = "$PSScriptRoot/../ci.baseline.txt"
@@ -166,6 +184,13 @@ if ($lastLastExitCode -ne 0)
 {
     Write-Error "vcpkg x-ci-clean failed. This is usually an infrastructure problem; trying again may help."
     exit $lastLastExitCode
+}
+
+if ($IsMacOS)
+{
+    Write-Host "macOS disk space report:"
+    & df -h | Where-Object { $_ -match "Avail|/System/Volumes/Data$" }
+    & du -sh $WorkingRoot
 }
 
 $parentHashesArgs = @()
@@ -215,14 +240,26 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 }
 
 $allowUnexpectedPassingArgs = @()
-if ($AllowUnexpectedPassing) {
+if ($ForceAllowUnexpectedPassing) {
     $allowUnexpectedPassingArgs = @('--allow-unexpected-passing')
 }
 
 Add-ToolchainToTestCMake
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 $xunitArg = "--x-xunit=$xunitFile"
-& $vcpkgExe ci $tripletArg $failureLogsArg $xunitArg $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs @knownFailuresFromArgs @allowUnexpectedPassingArgs
+$prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
+& $vcpkgExe ci `
+    $tripletArg `
+    $failureLogsArg `
+    "--output-hashes=$prHashesFile" `
+    $xunitArg `
+    $ciBaselineArg `
+    @commonArgs `
+    @cachingArgs `
+    @parentHashesArgs `
+    @skipFailuresArgs `
+    @knownFailuresFromArgs `
+    @allowUnexpectedPassingArgs
 $lastLastExitCode = $LASTEXITCODE
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
@@ -230,7 +267,18 @@ Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
 
 if ($lastLastExitCode -ne 0)
 {
-    Write-Error "vcpkg ci testing failed; this is usually a bug in a port. Check for failure logs attached to the run in Azure Pipelines."
+    if (-Not $failureLogsEmpty)
+    {
+        Write-Host "##vso[task.logissue type=error]vcpkg ci testing failed; this is usually a bug in a port. See https://github.com/microsoft/vcpkg/discussions/31357 for how to access AZP failure logs."
+    }
+    else
+    {
+        Write-Host "##vso[task.logissue type=error]vcpkg ci testing failed, but no build failure logs were created for this error."
+    }
 }
 
+# If x-test-features failed earlier, make sure we exit non-zero even if vcpkg ci succeeded.
+if ($featureTestExitCode -ne 0) {
+    exit $featureTestExitCode
+}
 exit $lastLastExitCode

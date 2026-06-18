@@ -1,7 +1,7 @@
 {
   "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-ccolamd",
-  "version-semver": "3.3.4",
+  "version-semver": "3.3.5",
   "description": "CCOLAMD: Routines for constrained column approximate minimum degree ordering algorithm in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "BSD-3-Clause",

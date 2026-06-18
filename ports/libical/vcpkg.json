@@ -1,6 +1,6 @@
 {
   "name": "libical",
-  "version": "3.0.19",
+  "version": "3.0.20",
   "description": "Reference implementation of the iCalendar data type and serialization format",
   "homepage": "https://github.com/libical/libical",
   "license": "MPL-2.0",

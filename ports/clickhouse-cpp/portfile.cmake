@@ -6,11 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ClickHouse/clickhouse-cpp
     REF "v${VERSION}"
-    SHA512 6e6632084906699d3702bbe4c59d8db0c81934b60d2bb6bb427b25004fa36f4e2955a0d4a6cd45a48721f992a3d162d6569fb4c0a3d6787a98356e5d5319d9d4
+    SHA512 3b6d76a541d75e3565b3d196193ac04baa7e99c54fd175deeb5bb143f9192243966c7d82a5c3159760d8b77f9e3d6b88254bce9ee58af53505dc0c5dc6e429a6
     HEAD_REF master
     PATCHES
         fix-deps-and-build-type.patch
-        fix-timeval.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -25,6 +24,7 @@ vcpkg_cmake_configure(
         -DWITH_SYSTEM_ABSEIL=ON
         -DWITH_SYSTEM_LZ4=ON
         -DWITH_SYSTEM_CITYHASH=ON
+        -DWITH_SYSTEM_ZSTD=ON
         -DDEBUG_DEPENDENCIES=OFF
 )
 

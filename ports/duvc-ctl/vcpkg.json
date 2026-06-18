@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "duvc-ctl",
+  "version": "2.0.1",
+  "description": "Windows DirectShow UVC camera control library",
+  "homepage": "https://github.com/allanhanan/duvc-ctl",
+  "license": "MIT",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

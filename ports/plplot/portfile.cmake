@@ -36,6 +36,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_CXX_STANDARD=11
         -DDEFAULT_NO_BINDINGS=ON
         -DDEFAULT_NO_QT_DEVICES=ON
         -DENABLE_cxx=ON

@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.8)
 project(angle CXX C)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(WebKitCommon-minimal)
 
 set(ANGLE_FRAMEWORK_HEADERS_DIR "${CMAKE_BINARY_DIR}/ANGLE/headers")
 
 set(USE_ANGLE_EGL ON)
-if (NOT WINDOWS_STORE)
+if (NOT WINDOWS_STORE AND NOT USE_METAL)
     set(USE_OPENGL ON)
 endif()
 
@@ -106,9 +106,6 @@ elseif (WIN32)
     set(angle_enable_d3d11 TRUE)
 elseif (UNIX)
     set(is_linux TRUE)
-    if(LINUX)
-        set(angle_use_x11 TRUE)
-    endif()
 endif ()
 # VCPKG EDIT: end vcpkg modified block
 
@@ -235,13 +232,6 @@ set(angle_gl_enum_utils # VCPKG EDIT: Update paths
     "src/common/gl_enum_utils_autogen.h"
 )
 
-set(angle_glslang_wrapper
-    "src/libANGLE/renderer/ShaderInterfaceVariableInfoMap.cpp"
-    "src/libANGLE/renderer/ShaderInterfaceVariableInfoMap.h"
-    "src/libANGLE/renderer/glslang_wrapper_utils.cpp"
-    "src/libANGLE/renderer/glslang_wrapper_utils.h"
-)
-
 WEBKIT_INCLUDE_CONFIG_FILES_IF_EXISTS()
 
 add_subdirectory(include)
@@ -271,6 +261,7 @@ if (USE_ANGLE_EGL OR ENABLE_WEBGL)
     target_compile_definitions(ANGLEFramework INTERFACE ${gl_prototypes})
 
     add_library(GLESv2 ${GLESv2_LIBRARY_TYPE}
+        ${libglesv2_entry_point_sources}
         ${libglesv2_sources}
     )
     target_include_directories(GLESv2 PRIVATE ${ANGLE_PRIVATE_INCLUDE_DIRECTORIES})
@@ -391,16 +382,6 @@ add_library(ANGLE::ANGLE ALIAS ANGLEFramework)
 #### VCPKG EDIT:
 #### various vcpkg additions and install commands
 
-# X11 support
-if (angle_use_x11)
-    find_package(X11 COMPONENTS Xext Xi REQUIRED)
-    target_include_directories(ANGLE PRIVATE ${X11_INCLUDE_DIR})
-    target_sources(ANGLE PRIVATE ${libangle_gpu_info_util_x11_sources})
-    target_sources(ANGLE PRIVATE "src/gpu_info_util/SystemInfo_x11.cpp")
-    target_compile_definitions(ANGLE PRIVATE ANGLE_USE_X11 GPU_INFO_USE_X11)
-    target_link_libraries(ANGLE PRIVATE ${X11_LIBRARIES} X11::X11 X11::Xi X11::Xext)
-endif()
-
 # set export names of some targets to match prior vcpkg port buildsystem
 if(TARGET EGL)
     set_target_properties(EGL PROPERTIES EXPORT_NAME libEGL)
@@ -414,7 +395,6 @@ set(_possibleTargets EGL GLESv2 ANGLE)
 foreach(_target IN LISTS _possibleTargets)
     if(TARGET ${_target})
         list(APPEND _installableTargets "${_target}")
-        target_include_directories(${_target} INTERFACE $<INSTALL_INTERFACE:include>)
     endif()
 endforeach()
 

@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davea42/libdwarf-code
     REF "v${VERSION}"
-    SHA512 f6e72c7dc1430d9f5bbd324632a9825cafcab9c9aad1302ac1b413cae674b6180ece957672b16e52bd2976fd3e7203e732db7d8a395aa0606dce159188988c2e
+    SHA512 e8eb74c622cedb512d82dff313ce9c5ac2064a7a7a0691c776213b384c1c64d0f549aaab1ef732dcba8c72d52048cea641d9909d3b2503cf96760ad8e81ae77c
     HEAD_REF main
     PATCHES
         include-dir.diff # avoid dwarf.h conflict with elfutils
         dependencies.diff
         msvc-runtime.diff
-        off_t.diff
         dwarfdump-conf.diff # no absolute paths
 )
 
@@ -43,7 +42,7 @@ file(REMOVE_RECURSE
 file(COPY_FILE "${SOURCE_PATH}/src/lib/libdwarf/COPYING" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libdwarf COPYING")
 file(COPY_FILE "${SOURCE_PATH}/src/bin/dwarfdump/COPYING" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dwarfdump COPYING")
 file(COPY_FILE "${SOURCE_PATH}/src/bin/dwarfgen/COPYING" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dwarfgen COPYING")
-vcpkg_install_copyright(FILE_LIST 
+vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/COPYING"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libdwarf COPYING"
     "${SOURCE_PATH}/src/lib/libdwarf/LIBDWARFCOPYRIGHT"

@@ -1,5 +1,5 @@
 diff --git a/gz-msgs-extras.cmake.in b/gz-msgs-extras.cmake.in
-index b70c04a..537a54e 100644
+index 7c322b1..78cf807 100644
 --- a/gz-msgs-extras.cmake.in
 +++ b/gz-msgs-extras.cmake.in
 @@ -33,7 +33,7 @@ set(FACTORY_SCRIPT_NAME "@PROJECT_NAME@_generate_factory.py")
@@ -21,4 +21,4 @@ index b70c04a..537a54e 100644
 +set(@PROJECT_NAME@_FACTORY_GENERATOR_SCRIPT ${VCPKG_IMPORT_PREFIX}/tools/@PROJECT_NAME@/${FACTORY_SCRIPT_NAME})
  
  ##################################################
- # A function to generate a target mesage library from a group of protobuf files .
+ # A function to generate a target message library from a group of protobuf files .

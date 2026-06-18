@@ -1,18 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ERGO-Code/HiGHS
-    REF "v${VERSION}"
-    SHA512 b6155859fda446725406fb062c7e89ea90b254767c680f31e1581eca6cdb3e68f6cf74abefac9c095a54a6dde6d6b14bec5e2429c79506acff9d5b0586e53a57
+    REF "v1.14.0"
+    SHA512 d4c2d09bf41384a58a04528ffaac223eee40dea4a1cadaea369791f6e8d1aa61ff3fce57e7c97cb5f4bef0f1305681066e8ef7483f4471770295f95b9ec337f7
     HEAD_REF master
-    PATCHES
-        fix-hconfig-path.patch
-        fix-uwp.patch
-        fix-cuda.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
@@ -27,3 +23,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/highs")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -2,10 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ada-url/idna
     REF "${VERSION}"
-    SHA512 cc113fc1ea4602ea262658d17f57ca0ef1a7ce2ee0d02de5379e9c58a5ac6a3afa59d3d43336505d13e75a764da431a3db809962d077a9dc27b9e0fa672ee82e
+    SHA512 2ac71b37b71a3335fe11fd24b3e734447ff939d9c3ec502580e089b6b604f64f0744da1d059f1ee205bbdbccaf0756df3bd4f345dbe95908f6e4c54ce09b234c
     HEAD_REF main
     PATCHES
         install.patch
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        simdutf         ADA_USE_SIMDUTF
 )
 
 vcpkg_cmake_configure(
@@ -13,6 +19,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DADA_IDNA_BENCHMARKS=OFF
         -DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

@@ -1,11 +1,11 @@
 {
   "name": "nanoarrow",
-  "version": "0.6.0",
+  "version": "0.8.0",
+  "port-version": 2,
   "description": "Helpers for Arrow C Data & Arrow C Stream interfaces",
   "homepage": "https://arrow.apache.org/nanoarrow",
   "license": "Apache-2.0",
   "dependencies": [
-    "flatcc",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,7 +13,14 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zlib"
-  ]
+    }
+  ],
+  "features": {
+    "ipc": {
+      "description": "IPC support",
+      "dependencies": [
+        "flatcc"
+      ]
+    }
+  }
 }

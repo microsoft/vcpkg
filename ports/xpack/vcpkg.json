@@ -1,6 +1,6 @@
 {
   "name": "xpack",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Convert C++ struct from/to json/xml",
   "homepage": "https://github.com/xyz347/xpack",
   "license": "Apache-2.0",

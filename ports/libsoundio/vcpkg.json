@@ -1,6 +1,6 @@
 {
   "name": "libsoundio",
-  "version": "2.0.1-7",
+  "version": "2.0.1.7",
   "description": "libsoundio is C library providing cross-platform audio input and output.",
   "homepage": "http://libsound.io/",
   "supports": "!uwp & !(arm64 & windows)",

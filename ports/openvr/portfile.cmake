@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/openvr
-    REF v2.5.1
-    SHA512 e224737e75f21ec074ca8450a1f1d81764aafeec924cc92a3f5571efc466d74280cb59b0ddfcd251431165ffbfae8aa0c8afe94144fe1c9106a3aa4c2761f3dc
+    REF "v${VERSION}"
+    SHA512 add58746e4ee55ca78c0132bfc1b8d649dc0ea49d57bbffd3707bf6cbca66f387980e3f4508ae027b25bc560ec54e02269f245e8c41b85c2f03226670048833e
     HEAD_REF master
 )
 
@@ -21,8 +21,10 @@ elseif(VCPKG_TARGET_IS_LINUX)
         set(ARCH_PATH "linux64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         set(ARCH_PATH "linux32")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(ARCH_PATH "linuxarm64")
     else()
-        message(FATAL_ERROR "Package only supports x64 and x86 Linux.")
+        message(FATAL_ERROR "Package only supports x64, x86 and arm64 Linux.")
     endif()
 else()
     message(FATAL_ERROR "Package only supports Windows and Linux.")

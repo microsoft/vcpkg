@@ -40,10 +40,38 @@ index 135c1d3..f644a32 100644
    set(ITKDoubleConversion_INCLUDE_DIRS
      ${ITKDoubleConversion_SOURCE_DIR}/src
 diff --git a/Modules/ThirdParty/Eigen3/CMakeLists.txt b/Modules/ThirdParty/Eigen3/CMakeLists.txt
-index 8dbbb86..428d335 100644
+index 8dbbb86..a3d2efe 100644
 --- a/Modules/ThirdParty/Eigen3/CMakeLists.txt
 +++ b/Modules/ThirdParty/Eigen3/CMakeLists.txt
-@@ -88,7 +88,7 @@ find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFI
+@@ -52,12 +52,12 @@ set(_Eigen3_min_version 3.3)
+ 
+ if(ITK_USE_SYSTEM_EIGEN)
+   set(_Eigen3_SYSTEM_OR_INTERNAL "Eigen3")
+-  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+   set(Eigen3_DIR_INSTALL ${Eigen3_DIR})
+   set(Eigen3_DIR_BUILD ${Eigen3_DIR})
+ else()
+   set(_Eigen3_SYSTEM_OR_INTERNAL "ITKInternalEigen3")
+-  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+   set(Eigen3_DIR_INSTALL "\${ITK_MODULES_DIR}")
+   set(_eigen3_build_dir "${ITK_BINARY_DIR}/ITKInternalEigen3-build")
+   set(Eigen3_DIR_BUILD "${_eigen3_build_dir}")
+@@ -77,18 +77,18 @@ set(ITKEigen3_INCLUDE_DIRS
+ set(ITKEigen3_EXPORT_CODE_INSTALL "
+ set(ITK_USE_SYSTEM_EIGEN \"${ITK_USE_SYSTEM_EIGEN}\")
+ set(${_Eigen3_SYSTEM_OR_INTERNAL}_DIR \"${Eigen3_DIR_INSTALL}\")
+-find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+ ")
+ set(ITKEigen3_EXPORT_CODE_BUILD "
+ set(ITK_USE_SYSTEM_EIGEN \"${ITK_USE_SYSTEM_EIGEN}\")
+ set(${_Eigen3_SYSTEM_OR_INTERNAL}_DIR \"${Eigen3_DIR_BUILD}\")
+-find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+ ")
+ 
  # Eigen3 targets are not installed if ITK_USE_SYSTEM_EIGEN==True
  itk_module_impl()
  
@@ -52,6 +80,19 @@ index 8dbbb86..428d335 100644
  install(FILES ${ITKEigen3_BINARY_DIR}/src/itk_eigen.h
    DESTINATION ${ITKEigen3_INSTALL_INCLUDE_DIR}
    COMPONENT Development
+diff --git a/Modules/ThirdParty/MINC/CMakeLists.txt b/Modules/ThirdParty/MINC/CMakeLists.txt
+index 5644257..9744d7c 100644
+--- a/Modules/ThirdParty/MINC/CMakeLists.txt
++++ b/Modules/ThirdParty/MINC/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(ITKMINC_THIRD_PARTY 1)
+ set(ITKMINC_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/src)
+ if(ITK_USE_SYSTEM_MINC)
+ 
+-  find_package(LIBMINC REQUIRED)
++  find_package(LIBMINC REQUIRED GLOBAL)
+ 
+   set(ITKMINC_SYSTEM_INCLUDE_DIRS  ${LIBMINC_INCLUDE_DIRS} )
+   set(ITKMINC_SYSTEM_LIBRARY_DIRS  ${LIBMINC_LIBRARY_DIRS} )
 diff --git a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt b/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
 index 103eaa9..b59eb81 100644
 --- a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
@@ -77,7 +118,7 @@ index 103eaa9..b59eb81 100644
  itk_module_impl()
  
 diff --git a/Modules/ThirdParty/VNL/CMakeLists.txt b/Modules/ThirdParty/VNL/CMakeLists.txt
-index c379a24..6a15432 100644
+index c379a24..25fdb8d 100644
 --- a/Modules/ThirdParty/VNL/CMakeLists.txt
 +++ b/Modules/ThirdParty/VNL/CMakeLists.txt
 @@ -5,7 +5,7 @@ option(ITK_USE_SYSTEM_VXL "Use an outside build of VXL." OFF)

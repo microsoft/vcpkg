@@ -14,31 +14,37 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
     REF "${VERSION}"
-    SHA512 503483a5436e189ad67533dc6c90be592283b84fbd57c86ab457dd1507b1dd11c897767ea9efa83affaf236f2711ec59e56658cf6fcad582a790a5fdc01b5ace
+    SHA512 dfdb2578859e28d424b6f318669579ab2361c35c4d45e0fee5a80b4c1d7d487a0e084ec2bafffad149b3dd96d34d092586fc3d30c8de6a211b0a2a038a959c07
     HEAD_REF master
     PATCHES
         android.diff
-        fix-link-path.patch
+        # Once the next version of cgltf is released, this patch will no longer be necessary.
+        fix-cgltf.patch
 )
 file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/cgltf.h"
     # Do not use dirent from vcpkg: It is a different implementation which has
     # 'include <windows.h>', leading to duplicate and conflicting definitions.
     #"${SOURCE_PATH}/src/external/dirent.h"
-    "${SOURCE_PATH}/src/external/dr_*.h"  # from drlibs
-    "${SOURCE_PATH}/src/external/miniaudio.h"
     "${SOURCE_PATH}/src/external/nanosvg*.h"
     "${SOURCE_PATH}/src/external/qoi.h"
     "${SOURCE_PATH}/src/external/s*fl.h"  # from mmx
     "${SOURCE_PATH}/src/external/stb_*"
 )
+file(GLOB vendored_audio_headers RELATIVE "${SOURCE_PATH}/src/external"
+    "${SOURCE_PATH}/src/external/dr_*.h"
+    "${SOURCE_PATH}/src/external/miniaudio.h"
+)
 set(optional_vendored_headers
     "stb_image_resize2.h"  # not yet in vcpkg
 )
-foreach(header IN LISTS vendored_headers)
+foreach(header IN LISTS vendored_headers vendored_audio_headers)
     unset(vcpkg_file)
     find_file(vcpkg_file NAMES "${header}" PATHS "${CURRENT_INSTALLED_DIR}/include" PATH_SUFFIXES mmx nanosvg NO_DEFAULT_PATH NO_CACHE)
-    if(vcpkg_file)
+    if(header IN_LIST vendored_audio_headers AND NOT "audio" IN_LIST FEATURES)
+        message(STATUS "Emptying '${header}' (audio disabled)")
+        file(WRITE "${SOURCE_PATH}/src/external/${vcpkg_file}" "# audio disabled")
+    elseif(vcpkg_file)
         message(STATUS "De-vendoring '${header}'")
         file(COPY "${vcpkg_file}" DESTINATION "${SOURCE_PATH}/src/external")
     elseif(header IN_LIST optional_vendored_headers)
@@ -59,7 +65,8 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        use-audio USE_AUDIO
+        audio SUPPORT_MODULE_RAUDIO
+        audio USE_AUDIO
 )
 
 vcpkg_cmake_configure(
@@ -67,14 +74,13 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_POLICY_DEFAULT_CMP0072=NEW # Prefer GLVND
+        -DCUSTOMIZE_BUILD=ON
         ${PLATFORM_OPTIONS}
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 

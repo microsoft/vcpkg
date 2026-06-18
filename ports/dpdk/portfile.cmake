@@ -1,4 +1,10 @@
-if(VCPKG_TARGET_IS_LINUX)
+# Some dll doesn't export any symbols.
+# https://doc.dpdk.org/guides-25.07/windows_gsg/intro.html#limitations
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
   execute_process(
     COMMAND uname --kernel-release
     OUTPUT_VARIABLE KERNEL_VERSION
@@ -24,18 +30,22 @@ if(VCPKG_TARGET_IS_LINUX)
   endif()
 endif()
 
+# Add a leading zero to the minor version if it consists of only one digit, otherwise the regex does nothing
+# Match both `X.Y` and `X.Y.Z...` forms (optional remainder).
+string(REGEX REPLACE "^([0-9]+)\\.([0-9])(\\..*)?$" "\\1.0\\2\\3" VERSION_REF "${VERSION}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
-  REF "v${VERSION}"
-  SHA512 1599ae78228307f612776e43160e8002c71024940813bc655b3e2631bfe3de9a93b09f2d5caae48d3d83e07c48e953838ba45f4965d2eb21d1e7955edbaa7d0d
+  REF "v${VERSION_REF}"
+  SHA512 37b49b5b5481036e0d563794222fc37c358f3c81b449e4252adb3bb1365e5dde14d7310a1ace810ee2443902a1cc7b177dca76666dd324241142062532a7509d
   HEAD_REF main
   PATCHES
-      enable-either-static-or-shared-build.patch
-      fix-dependencies.patch
-      remove-examples-src-from-datadir.patch
-      stop-building-apps.patch
-      no-absolute-driver-path.patch
+      0001-enable-either-static-or-shared-build.patch
+      0002-fix-dependencies.patch
+      0003-remove-examples-src-from-datadir.patch
+      0004-stop-building-apps.patch
+      0005-no-absolute-driver-path.patch
+      0006-rename-sched.h.patch
 )
 
 macro(append_bool_option feature_name option_name)
@@ -47,40 +57,135 @@ macro(append_bool_option feature_name option_name)
 endmacro()
 
 set(DPDK_OPTIONS "")
+set(DPDK_OPTIONS_RELEASE "")
 append_bool_option("docs" "enable_docs")
-append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
-string(REPLACE "-Denable_docs=true" "-Denable_docs=false" DPDK_OPTIONS_DEBUG "${DPDK_OPTIONS}")
 
-list(APPEND PYTHON_PACKAGES pyelftools)
+set(PYTHON_PACKAGES "")
+if(VCPKG_TARGET_IS_WINDOWS)
+  # https://doc.dpdk.org/guides/windows_gsg/build_dpdk.html#option-3-native-build-on-windows-using-msvc
+  list(APPEND DPDK_OPTIONS "-Denable_stdatomic=true")
+else()
+  list(APPEND PYTHON_PACKAGES pyelftools)
+endif()
 if("docs" IN_LIST FEATURES)
+  list(APPEND DPDK_OPTIONS_RELEASE "-Denable_docs=true")
+  vcpkg_find_acquire_program(DOXYGEN)
   list(APPEND PYTHON_PACKAGES packaging sphinx)
 endif()
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
+if(PYTHON_PACKAGES)
+  x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3 PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
+endif()
+
+set(DISABLE_DRIVERS "regex/cn9k")
+
+if("gpu-cuda" IN_LIST FEATURES)
+  vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
+  set(ENV{CFLAGS} "$ENV{CFLAGS} -I${CUDA_TOOLKIT_ROOT}/include")
+else()
+  string(APPEND DISABLE_DRIVERS ",gpu/cuda")
+endif()
+if(NOT "mlx5" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",common/mlx5,compress/mlx5,crypto/mlx5,net/mlx5,regex/mlx5,vdpa/mlx5")
+endif()
+if(NOT "pmd-bnx2x" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/bnx2x")
+endif()
+if(NOT "pmd-compress-isal" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",compress/isal")
+endif()
+if(NOT "pmd-compress-zlib" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",compress/zlib")
+endif()
+if(NOT "pmd-crypto-ccp" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",crypto/ccp")
+endif()
+if(NOT "pmd-crypto-openssl" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",crypto/openssl")
+endif()
+if(NOT "pmd-ipn3ke" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/intel/ipn3ke")
+endif()
+if(NOT "pmd-mana" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mana")
+endif()
+if(NOT "pmd-mlx4" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/mlx4")
+endif()
+if(NOT "pmd-pcap" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",net/pcap")
+endif()
+if(NOT "qat" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",common/qat")
+endif()
+if(NOT "rawdev-ifpga" IN_LIST FEATURES)
+  string(APPEND DISABLE_DRIVERS ",raw/ifpga")
+endif()
 
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -Ddisable_drivers=regex/cn9k
-    -Dexamples=
-  OPTIONS_RELEASE
+    -Ddeveloper_mode=disabled
+    "-Ddisable_drivers=${DISABLE_DRIVERS}"
     ${DPDK_OPTIONS}
-  OPTIONS_DEBUG
-    ${DPDK_OPTIONS_DEBUG}
+  OPTIONS_RELEASE
+    ${DPDK_OPTIONS_RELEASE}
+  ADDITIONAL_BINARIES
+    "doxygen = ['${DOXYGEN}']"
 )
 vcpkg_install_meson()
-
-set(tools dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py dpdk-hugepages.py)
-vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
-
 vcpkg_fixup_pkgconfig()
 
+file(GLOB scripts "${CURRENT_PACKAGES_DIR}/bin/*.py")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+foreach(script IN LISTS scripts)
+  cmake_path(GET script FILENAME filename)
+  file(RENAME "${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${filename}")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${filename}")
+endforeach()
+vcpkg_clean_executables_in_bin(FILE_NAMES none)
+
 if("docs" IN_LIST FEATURES)
-  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/dpdk")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/dpdk" "${CURRENT_PACKAGES_DIR}/share/dpdk/doc")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/dpdk" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/doc")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license/README")
+
+# Move dll driver to bin directory.
+file(GLOB PMD_DIRS "${CURRENT_PACKAGES_DIR}/lib/dpdk/pmds-*")
+foreach(PMD_DIR ${PMD_DIRS})
+  get_filename_component(DIR_NAME ${PMD_DIR} NAME)
+  file(GLOB DLLS "${PMD_DIR}/*.dll")
+  if(DLLS)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin/dpdk/${DIR_NAME}")
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/dpdk/${DIR_NAME}")
+    file(REMOVE ${DLLS})
+  endif()
+endforeach()
+if(NOT VCPKG_BUILD_TYPE)
+  file(GLOB PMD_DIRS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/dpdk/pmds-*")
+  foreach(PMD_DIR ${PMD_DIRS_DEBUG})
+    get_filename_component(DIR_NAME ${PMD_DIR} NAME)
+    file(GLOB DLLS "${PMD_DIR}/*.dll" "${PMD_DIR}/*.pdb")
+    if(DLLS)
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin/dpdk/${DIR_NAME}")
+      file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/dpdk/${DIR_NAME}")
+      file(REMOVE ${DLLS})
+    endif()
+  endforeach()
+endif()
+
+# pkg_check_modules doesn't support -l:lib syntax
+# https://gitlab.kitware.com/cmake/cmake/-/issues/27452
+if (VCPKG_TARGET_IS_WINDOWS)
+  set(PREFIX_LIB "")
+else()
+  set(PREFIX_LIB "lib")
+endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdpdk.pc" "-l:lib" "-l${PREFIX_LIB}")
+if(NOT VCPKG_BUILD_TYPE)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdpdk.pc" "-l:lib" "-l${PREFIX_LIB}")
+endif()

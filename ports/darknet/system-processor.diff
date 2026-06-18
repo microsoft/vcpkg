@@ -1,0 +1,35 @@
+diff --git a/CM_dependencies.cmake b/CM_dependencies.cmake
+index 53699a9b..1462d195 100644
+--- a/CM_dependencies.cmake
++++ b/CM_dependencies.cmake
+@@ -151,15 +151,15 @@ ENDIF ()
+ # ========================
+ # == Intel/AMD Hardware ==
+ # ========================
+-IF (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86" OR
+-	CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_32" OR
+-	CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "x86_64" OR
+-	CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "AMD64")
++IF (CMAKE_SYSTEM_PROCESSOR MATCHES "x86" OR
++	CMAKE_SYSTEM_PROCESSOR MATCHES "x86_32" OR
++	CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64" OR
++	CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+ 	SET (HARDWARE_IS_X86 TRUE)
+-	MESSAGE (STATUS "Hardware is 32-bit or 64-bit, and seems to be Intel or AMD:  ${CMAKE_HOST_SYSTEM_PROCESSOR}")
++	MESSAGE (STATUS "Hardware is 32-bit or 64-bit, and seems to be Intel or AMD:  ${CMAKE_SYSTEM_PROCESSOR}")
+ ELSE ()
+ 	SET (HARDWARE_IS_X86 FALSE)
+-	MESSAGE (STATUS "Hardware does not appear to be 32-bit or 64-bit, Intel or AMD:  ${CMAKE_HOST_SYSTEM_PROCESSOR}")
++	MESSAGE (STATUS "Hardware does not appear to be 32-bit or 64-bit, Intel or AMD:  ${CMAKE_SYSTEM_PROCESSOR}")
+ ENDIF ()
+ 
+ 
+@@ -277,7 +277,7 @@ ELSE ()
+ 		ADD_COMPILE_OPTIONS(-msse4.2)
+ 		ADD_COMPILE_OPTIONS(-msse4a)
+ 	ELSE ()
+-		LIST (APPEND CMAKE_CXX_FLAGS /arch:AVX2)
++		STRING (APPEND CMAKE_CXX_FLAGS " /arch:AVX2")
+ 	ENDIF()
+ ENDIF ()
+ 

@@ -13,7 +13,8 @@
         "tiff",
         "tools",
         "xml2",
-        "zlib"
+        "zlib",
+        "openjpeg"
       ]
     },
     {

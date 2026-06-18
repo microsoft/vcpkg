@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c41de28..2c5b0f3 100644
+index 0f8aa8b..1f5e651 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -168,7 +168,13 @@ if(UNIX)
+@@ -170,7 +170,13 @@ if(UNIX)
  endif()
  
  
@@ -17,15 +17,16 @@ index c41de28..2c5b0f3 100644
  	if((NOT CBOR_INCLUDE_DIRS) OR (NOT CBOR_LIBRARY_DIRS) OR
  	   (NOT CRYPTO_INCLUDE_DIRS) OR (NOT CRYPTO_LIBRARY_DIRS) OR
  	   (NOT ZLIB_INCLUDE_DIRS) OR (NOT ZLIB_LIBRARY_DIRS))
-@@ -191,6 +197,7 @@ if(MSVC)
- 		set(CRYPTO_LIBRARIES crypto)
+@@ -195,7 +201,7 @@ if(MSVC)
+ 	if(NOT CRYPTO_DLL)
+ 		set(CRYPTO_DLL crypto)
  	endif()
- 
+-
 +elseif(MSVC)
  	set(MSVC_DISABLED_WARNINGS_LIST
  		"C4152" # nonstandard extension used: function/data pointer
  			# conversion in expression;
-@@ -216,7 +223,7 @@ if(MSVC)
+@@ -221,7 +227,7 @@ if(MSVC)
  		add_definitions(-DUSE_WINHELLO)
  	endif()
  	set(NFC_LINUX OFF)
@@ -34,10 +35,11 @@ index c41de28..2c5b0f3 100644
  	include(FindPkgConfig)
  	pkg_search_module(CBOR libcbor)
  	pkg_search_module(CRYPTO libcrypto)
-@@ -239,6 +246,7 @@ else()
+@@ -243,7 +249,7 @@ else()
+ 	if(NOT CRYPTO_LIBRARIES)
  		set(CRYPTO_LIBRARIES "crypto")
  	endif()
- 
+-
 +elseif(1)
  	if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
  		pkg_search_module(UDEV libudev REQUIRED)

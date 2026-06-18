@@ -1,6 +1,6 @@
 {
   "name": "robin-map",
-  "version-semver": "1.4.0",
+  "version-semver": "1.4.1",
   "description": "A C++ implementation of a fast hash map and hash set using robin hood hashing",
   "homepage": "https://github.com/Tessil/robin-map",
   "license": "MIT",

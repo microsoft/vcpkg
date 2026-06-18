@@ -1,0 +1,298 @@
+diff --git a/app/dumpcap/meson.build b/app/dumpcap/meson.build
+index 69c016c780..57f3f1ace4 100644
+--- a/app/dumpcap/meson.build
++++ b/app/dumpcap/meson.build
+@@ -2,8 +2,7 @@
+ # Copyright(c) 2019 Microsoft Corporation
+ 
+ if not dpdk_conf.has('RTE_HAS_LIBPCAP')
+-    build = false
+-    reason = 'missing dependency, "libpcap"'
++    error('missing dependency: "libpcap"')
+ endif
+ 
+ if is_windows
+diff --git a/buildtools/pkg-config/meson.build b/buildtools/pkg-config/meson.build
+index b36add17e3..a0a265ad92 100644
+--- a/buildtools/pkg-config/meson.build
++++ b/buildtools/pkg-config/meson.build
+@@ -47,8 +47,7 @@ pkg.generate(name: 'DPDK', # main DPDK pkgconfig file
+         description: '''The Data Plane Development Kit (DPDK).
+ Note that CFLAGS might contain an -march flag higher than typical baseline.
+ This is required for a number of static inline functions in the public headers.''',
+-        requires: ['libdpdk-libs', libbsd], # may need libbsd for string funcs
+-                      # if libbsd is not enabled, then this is blank
++        requires: ['libdpdk-libs'],
+         libraries_private: ['-Wl,--whole-archive'] +
+             dpdk_drivers + dpdk_static_libraries +
+             ['-Wl,--no-whole-archive'] + platform_flags
+diff --git a/config/meson.build b/config/meson.build
+index bbdad71ffc..0ef6422cd3 100644
+--- a/config/meson.build
++++ b/config/meson.build
+@@ -238,12 +238,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
+     find_libnuma = false
+ endif
+ if find_libnuma
+-    numa_dep = cc.find_library('numa', required: false)
+-    if numa_dep.found() and cc.has_header('numaif.h') and cc.links(min_c_code, dependencies: numa_dep)
++    numa_dep = dependency('numa', method: 'pkg-config', required: false)
++    if numa_dep.found()
+         dpdk_conf.set10('RTE_HAS_LIBNUMA', true)
+         has_libnuma = true
+-        add_project_link_arguments('-lnuma', language: 'c')
+-        dpdk_extra_ldflags += '-lnuma'
+     endif
+ endif
+ 
+@@ -269,18 +267,18 @@ if libarchive.found()
+ endif
+ 
+ # check for libbsd
+-libbsd = dependency('libbsd', required: false, method: 'pkg-config')
++libbsd = disabler()
+ if libbsd.found()
+     dpdk_conf.set('RTE_USE_LIBBSD', 1)
+ endif
+ 
+-jansson_dep = dependency('jansson', required: false, method: 'pkg-config')
++jansson_dep = disabler()
+ if jansson_dep.found()
+     dpdk_conf.set('RTE_HAS_JANSSON', 1)
+ endif
+ 
+ # check for OpenSSL
+-openssl_dep = dependency('openssl', required: false, method: 'pkg-config')
++openssl_dep = disabler()
+ if openssl_dep.found()
+     dpdk_conf.set('RTE_HAS_OPENSSL', 1)
+ endif
+diff --git a/drivers/common/mlx5/linux/meson.build b/drivers/common/mlx5/linux/meson.build
+index 3767e7a69b..69e869e1ce 100644
+--- a/drivers/common/mlx5/linux/meson.build
++++ b/drivers/common/mlx5/linux/meson.build
+@@ -19,7 +19,7 @@ endif
+ libnames = [ 'mlx5', 'ibverbs' ]
+ libs = []
+ foreach libname:libnames
+-    lib = dependency('lib' + libname, static:static_ibverbs, required:false, method: 'pkg-config')
++    lib = dependency('lib' + libname, static:static_ibverbs, required:true, method: 'pkg-config')
+     if not lib.found() and not static_ibverbs
+         lib = cc.find_library(libname, required:false)
+     endif
+diff --git a/drivers/common/mlx5/windows/meson.build b/drivers/common/mlx5/windows/meson.build
+index f454788a9f..56715526e9 100644
+--- a/drivers/common/mlx5/windows/meson.build
++++ b/drivers/common/mlx5/windows/meson.build
+@@ -1,13 +1,13 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # Copyright 2019 Mellanox Technologies, Ltd
+ 
+-if not cc.has_header('mlx5devx.h')
++if not cc.has_header('mlx5devx.h', required: true)
+     build = false
+     reason = 'missing dependency, "mlx5devx.h"'
+     subdir_done()
+ endif
+ 
+-devxlib = cc.find_library('mlx5devx', required: false)
++devxlib = cc.find_library('mlx5devx', required: true)
+ if not devxlib.found() or not cc.links(min_c_code, dependencies: devxlib)
+     build = false
+     reason = 'missing dependency, "mlx5devx"'
+diff --git a/drivers/common/qat/meson.build b/drivers/common/qat/meson.build
+index 31e06f4376..f67e9c5ef5 100644
+--- a/drivers/common/qat/meson.build
++++ b/drivers/common/qat/meson.build
+@@ -27,7 +27,7 @@ if disable_drivers.contains(qat_compress_path)
+             'Explicitly disabled via build config')
+ endif
+ 
+-libcrypto = dependency('libcrypto', required: false, method: 'pkg-config')
++libcrypto = dependency('libcrypto', required: true, method: 'pkg-config')
+ 
+ if arch_subdir == 'arm'
+     if libcrypto.found()
+diff --git a/drivers/compress/isal/meson.build b/drivers/compress/isal/meson.build
+index 4b3eaa2274..e6a139f308 100644
+--- a/drivers/compress/isal/meson.build
++++ b/drivers/compress/isal/meson.build
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # Copyright 2018 Intel Corporation
+ 
+-dep = dependency('libisal', required: false, method: 'pkg-config')
++dep = dependency('libisal', required: true, method: 'pkg-config')
+ if not dep.found()
+     build = false
+     reason = 'missing dependency, "libisal"'
+diff --git a/drivers/compress/zlib/meson.build b/drivers/compress/zlib/meson.build
+index f8937cad3e..3fedd9db75 100644
+--- a/drivers/compress/zlib/meson.build
++++ b/drivers/compress/zlib/meson.build
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # Copyright(c) 2018 Cavium Networks
+ 
+-dep = dependency('zlib', required: false, method: 'pkg-config')
++dep = dependency('zlib', required: true, method: 'pkg-config')
+ if not dep.found()
+     build = false
+     reason = 'missing dependency, "zlib"'
+diff --git a/drivers/crypto/ccp/meson.build b/drivers/crypto/ccp/meson.build
+index a19c77a8d1..c3ccf59794 100644
+--- a/drivers/crypto/ccp/meson.build
++++ b/drivers/crypto/ccp/meson.build
+@@ -6,7 +6,7 @@ if not is_linux
+     reason = 'only supported on Linux'
+     subdir_done()
+ endif
+-dep = dependency('libcrypto', required: false, method: 'pkg-config')
++dep = dependency('libcrypto', required: true, method: 'pkg-config')
+ if not dep.found()
+     build = false
+     reason = 'missing dependency, "libcrypto"'
+diff --git a/drivers/crypto/openssl/meson.build b/drivers/crypto/openssl/meson.build
+index af469a9827..de45a4a694 100644
+--- a/drivers/crypto/openssl/meson.build
++++ b/drivers/crypto/openssl/meson.build
+@@ -7,7 +7,7 @@ if is_windows
+     subdir_done()
+ endif
+ 
+-dep = dependency('libcrypto', required: false, method: 'pkg-config')
++dep = dependency('libcrypto', required: true, method: 'pkg-config')
+ if not dep.found()
+     build = false
+     reason = 'missing dependency, "libcrypto"'
+diff --git a/drivers/gpu/cuda/meson.build b/drivers/gpu/cuda/meson.build
+index d54473f148..1b5a01ce1f 100644
+--- a/drivers/gpu/cuda/meson.build
++++ b/drivers/gpu/cuda/meson.build
+@@ -6,12 +6,12 @@ if not is_linux
+         reason = 'only supported on Linux'
+         subdir_done()
+ endif
+-if not cc.has_header('cuda.h')
++if not cc.has_header('cuda.h', required: true)
+         build = false
+         reason = 'missing dependency, "cuda.h"'
+         subdir_done()
+ endif
+-if not cc.has_header('cudaTypedefs.h')
++if not cc.has_header('cudaTypedefs.h', required: true)
+         build = false
+         reason = 'missing dependency, "cudaTypedefs.h"'
+         subdir_done()
+diff --git a/drivers/net/bnx2x/meson.build b/drivers/net/bnx2x/meson.build
+index bc66ab8032..21ff1276c3 100644
+--- a/drivers/net/bnx2x/meson.build
++++ b/drivers/net/bnx2x/meson.build
+@@ -7,7 +7,7 @@ if is_windows
+     subdir_done()
+ endif
+ 
+-dep = dependency('zlib', required: false, method: 'pkg-config')
++dep = dependency('zlib', required: true, method: 'pkg-config')
+ build = dep.found()
+ reason = 'missing dependency, "zlib"'
+ ext_deps += dep
+diff --git a/drivers/net/intel/ipn3ke/meson.build b/drivers/net/intel/ipn3ke/meson.build
+index 23c4d36b4f..a29abb1f77 100644
+--- a/drivers/net/intel/ipn3ke/meson.build
++++ b/drivers/net/intel/ipn3ke/meson.build
+@@ -16,9 +16,7 @@ endif
+ #
+ 
+ if not has_libfdt
+-    build = false
+-    reason = 'missing dependency, "libfdt"'
+-    subdir_done()
++    error('missing dependency: "libfdt"')
+ endif
+ 
+ includes += include_directories('../../../raw/ifpga')
+diff --git a/drivers/net/mana/meson.build b/drivers/net/mana/meson.build
+index 19d4b3695e..646b35523d 100644
+--- a/drivers/net/mana/meson.build
++++ b/drivers/net/mana/meson.build
+@@ -23,7 +23,7 @@ cflags += no_wvla_cflag
+ libnames = ['ibverbs', 'mana']
+ libs = []
+ foreach libname:libnames
+-    lib = dependency('lib' + libname, required:false)
++    lib = dependency('lib' + libname, required:true)
+     if not lib.found()
+         lib = cc.find_library(libname, required:false)
+     endif
+diff --git a/drivers/net/mlx4/meson.build b/drivers/net/mlx4/meson.build
+index 1eb67f3c47..d75b004435 100644
+--- a/drivers/net/mlx4/meson.build
++++ b/drivers/net/mlx4/meson.build
+@@ -27,7 +27,7 @@ libnames = [ 'mlx4', 'ibverbs' ]
+ libs = []
+ foreach libname:libnames
+     lib = dependency('lib' + libname, static:static_ibverbs,
+-            required:false, method: 'pkg-config')
++            required:true, method: 'pkg-config')
+     if not lib.found() and not static_ibverbs
+         lib = cc.find_library(libname, required:false)
+     endif
+diff --git a/drivers/net/pcap/meson.build b/drivers/net/pcap/meson.build
+index f30fc8338b..ceb42bbd90 100644
+--- a/drivers/net/pcap/meson.build
++++ b/drivers/net/pcap/meson.build
+@@ -2,8 +2,7 @@
+ # Copyright(c) 2017 Intel Corporation
+ 
+ if not dpdk_conf.has('RTE_HAS_LIBPCAP')
+-    build = false
+-    reason = 'missing dependency, "libpcap"'
++    error('missing dependency: "libpcap"')
+ endif
+ 
+ sources = files(
+diff --git a/drivers/raw/ifpga/meson.build b/drivers/raw/ifpga/meson.build
+index 8d5f41fd5d..e312c0dfd4 100644
+--- a/drivers/raw/ifpga/meson.build
++++ b/drivers/raw/ifpga/meson.build
+@@ -2,14 +2,12 @@
+ # Copyright(c) 2018 Intel Corporation
+ 
+ if not has_libfdt
+-    build = false
+-    reason = 'missing dependency, "libfdt"'
+-    subdir_done()
++    error('missing dependency: "libfdt"')
+ endif
+ 
+ rtdep = dependency('librt', required: false)
+ if not rtdep.found()
+-    rtdep = cc.find_library('rt', required: false)
++    rtdep = cc.find_library('rt', required: true)
+ endif
+ if not rtdep.found() or not cc.links(min_c_code, dependencies: rtdep)
+     build = false
+diff --git a/lib/eal/linux/meson.build b/lib/eal/linux/meson.build
+index 29ba313218..5a173c43d6 100644
+--- a/lib/eal/linux/meson.build
++++ b/lib/eal/linux/meson.build
+@@ -25,5 +25,6 @@ endif
+ 
+ deps += ['kvargs', 'telemetry']
+ if has_libnuma
++    ext_deps += numa_dep
+     dpdk_conf.set10('RTE_EAL_NUMA_AWARE_HUGEPAGES', true)
+ endif
+diff --git a/lib/vhost/meson.build b/lib/vhost/meson.build
+index 6a24981d10..5283e7904f 100644
+--- a/lib/vhost/meson.build
++++ b/lib/vhost/meson.build
+@@ -6,6 +6,7 @@ if not is_linux
+     reason = 'only supported on Linux'
+ endif
+ if has_libnuma
++    ext_deps += numa_dep
+     dpdk_conf.set10('RTE_LIBRTE_VHOST_NUMA', true)
+ endif
+ dpdk_conf.set('RTE_LIBRTE_VHOST_POSTCOPY', cc.has_header('linux/userfaultfd.h'))

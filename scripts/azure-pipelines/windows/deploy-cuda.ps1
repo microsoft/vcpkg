@@ -3,65 +3,60 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
-[string]$CudaUrl
-if ([string]::IsNullOrEmpty($SasToken)) {
-  Write-Host 'Downloading from the Internet'
-  $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda_12.8.1_572.61_windows.exe'
-} else {
-  Write-Host 'Downloading from vcpkgimageminting using SAS token'
-  $SasToken = $SasToken.Replace('"', '')
-  $CudaUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cuda_12.8.1_572.61_windows.exe?$SasToken"
-}
+$CudaUrl = Get-AssetUrl `
+  -SasToken $SasToken `
+  -InternetUrl 'https://developer.download.nvidia.com/compute/cuda/13.2.0/local_installers/cuda_13.2.0_windows.exe' `
+  -BlobAssetName 'cuda_13.2.0_windows.exe'
 
 # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
 # Intentionally omitted:
-#  demo_suite_12.8
-#  documentation_12.8
-#  nsight_compute_12.8
-#  nsight_systems_12.8
-#  nsight_vse_12.8
-#  nvvm_samples_12.8
-#  visual_studio_integration_12.8
-#  visual_profiler_12.8
-#  Display.Driver
-DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
+#  ctadvisor_13.2
+#  documentation_13.2
+#  nsight_compute_13.2
+#  nsight_systems_13.2
+#  nsight_vse_13.2
+#  occupancy_calculator_13.2 (this is named like a tool but listed as 'documentation' in the installer)
+#  visual_studio_integration_13.2
+DownloadAndInstall -Url $CudaUrl -Args @(
   '-s',
-  'cublas_12.8',
-  'cublas_dev_12.8',
-  'cuda_profiler_api_12.8',
-  'cudart_12.8',
-  'cufft_12.8',
-  'cufft_dev_12.8',
-  'cuobjdump_12.8',
-  'cupti_12.8',
-  'curand_12.8',
-  'curand_dev_12.8',
-  'cusolver_12.8',
-  'cusolver_dev_12.8',
-  'cusparse_12.8',
-  'cusparse_dev_12.8',
-  'cuxxfilt_12.8',
-  'npp_12.8',
-  'npp_dev_12.8',
-  'nvcc_12.8',
-  'nvdisasm_12.8',
-  'nvfatbin_12.8',
-  'nvjitlink_12.8',
-  'nvjpeg_12.8',
-  'nvjpeg_dev_12.8',
-  'nvml_dev_12.8',
-  'nvprof_12.8',
-  'nvprune_12.8',
-  'nvrtc_12.8',
-  'nvrtc_dev_12.8',
-  'nvtx_12.8',
-  'occupancy_calculator_12.8',
-  'opencl_12.8',
-  'sanitizer_12.8',
-  'thrust_12.8',
+  'crt_13.2',
+  'cublas_13.2',
+  'cublas_dev_13.2',
+  'cuda_profiler_api_13.2',
+  'cudart_13.2',
+  'cufft_13.2',
+  'cufft_dev_13.2',
+  'cuobjdump_13.2',
+  'cupti_13.2',
+  'curand_13.2',
+  'curand_dev_13.2',
+  'cusolver_13.2',
+  'cusolver_dev_13.2',
+  'cusparse_13.2',
+  'cusparse_dev_13.2',
+  'cuxxfilt_13.2',
+  'npp_13.2',
+  'npp_dev_13.2',
+  'nvcc_13.2',
+  'nvdisasm_13.2',
+  'nvfatbin_13.2',
+  'nvjitlink_13.2',
+  'nvjpeg_13.2',
+  'nvjpeg_dev_13.2',
+  'nvml_dev_13.2',
+  'nvprune_13.2',
+  'nvptxcompiler_13.2',
+  'nvrtc_13.2',
+  'nvrtc_dev_13.2',
+  'nvtx_13.2',
+  'nvvm_13.2',
+  'opencl_13.2',
+  'sanitizer_13.2',
+  'thrust_13.2',
+  'tileiras_13.2',
   '-n'
 )

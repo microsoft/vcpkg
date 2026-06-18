@@ -1,5 +1,10 @@
-The package fluidsynth provides CMake targets:
+fluidsynth provides CMake targets:
 
-    find_package(FluidSynth CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE FluidSynth::libfluidsynth)
-    add_custom_command(OUTPUT result COMMAND FluidSynth::fluidsynth ARGS ...)
+  find_package(FluidSynth CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE FluidSynth::libfluidsynth)
+  add_custom_command(OUTPUT result COMMAND FluidSynth::q ARGS ...)
+
+fluidsynth provides pkg-config modules:
+
+  # Software SoundFont synth
+  fluidsynth

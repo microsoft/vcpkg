@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 206e7da2d28a6271217ff384b482aa45a50beee0c53327aa4fd3da7082dce83386c8b7600194cbc30282134013b6182a1bed9d128ed6378f2957d0b8d1770b2d
+    SHA512 e9103c68ba186821aedd38de4d9949cd6732da93a2d0764de18aaaac70eb9c305384a6eb1fe656a8a269bee833178a583a91dd72027ae26d27c8329ed722f4a9
     PATCHES
         fix_static_link_icu.patch
         fix-link-include-path.patch
@@ -44,6 +44,9 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cm
 find_dependency(CURL)
 find_dependency(Leptonica)
 find_dependency(LibArchive)
+if(ANDROID)
+    find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()
 ]]
 )
 

@@ -1,6 +1,6 @@
 {
   "name": "ltla-aarand",
-  "version-date": "2023-03-19",
+  "version": "1.1.0",
   "description": "Aaron's random distributions for C++",
   "homepage": "https://github.com/LTLA/aarand",
   "license": "MIT",

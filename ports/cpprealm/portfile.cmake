@@ -4,6 +4,10 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 "cf975741b5a4a68a40845c53d8584d871acff03c7a212e71a67799801979e0514de2a449aa5d78137f2d7f42e113c5df7c97e9f8c5fb6371e95c46f29ab2b246"
     HEAD_REF "main"
+    PATCHES
+        missing-cstdint.diff # https://github.com/realm/realm-cpp/pull/247
+        disable-werror.diff
+        remove-overzealous-template.diff # https://github.com/realm/realm-cpp/pull/248
 )
 
 if(NOT VCPKG_BUILD_TYPE)

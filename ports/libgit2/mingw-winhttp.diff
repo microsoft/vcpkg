@@ -1,13 +1,13 @@
 diff --git a/cmake/SelectHTTPSBackend.cmake b/cmake/SelectHTTPSBackend.cmake
-index d293001f5..108b8767c 100644
+index 0316b3a..a70f6b6 100644
 --- a/cmake/SelectHTTPSBackend.cmake
 +++ b/cmake/SelectHTTPSBackend.cmake
-@@ -120,7 +120,7 @@ if(USE_HTTPS)
+@@ -125,7 +125,7 @@ if(USE_HTTPS)
  
- 	# Since MinGW does not come with headers or an import library for winhttp,
- 	# we have to include a private header and generate our own import library
--	if(MINGW)
-+	if(0)
- 		add_subdirectory("${PROJECT_SOURCE_DIR}/deps/winhttp" "${PROJECT_BINARY_DIR}/deps/winhttp")
- 		list(APPEND LIBGIT2_SYSTEM_LIBS winhttp)
- 		list(APPEND LIBGIT2_DEPENDENCY_INCLUDES "${PROJECT_SOURCE_DIR}/deps/winhttp")
+ 		# Since MinGW does not come with headers or an import library for winhttp,
+ 		# we have to include a private header and generate our own import library
+-		if(MINGW)
++		if(0)
+ 			add_subdirectory("${PROJECT_SOURCE_DIR}/deps/winhttp" "${PROJECT_BINARY_DIR}/deps/winhttp")
+ 			list(APPEND LIBGIT2_SYSTEM_LIBS winhttp)
+ 			list(APPEND LIBGIT2_DEPENDENCY_INCLUDES "${PROJECT_SOURCE_DIR}/deps/winhttp")

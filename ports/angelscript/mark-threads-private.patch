@@ -1,8 +1,8 @@
 diff --git a/angelscript/projects/cmake/CMakeLists.txt b/angelscript/projects/cmake/CMakeLists.txt
-index 7c800c5..982ad8b 100644
+index 6f9d540..5d39f9b 100644
 --- a/angelscript/projects/cmake/CMakeLists.txt
 +++ b/angelscript/projects/cmake/CMakeLists.txt
-@@ -145,7 +145,7 @@ endif()
+@@ -192,7 +192,7 @@ endif()
  
  # Don't override the default library output path to avoid conflicts when building for multiple target platforms
  #set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../lib)

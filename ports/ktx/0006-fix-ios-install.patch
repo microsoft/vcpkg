@@ -1,21 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e99fb143..072ea889 100644
+index 3b928ca..f4ba0d7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -489,7 +489,7 @@ macro(common_libktx_settings target enable_write library_type)
-         CXX_STANDARD_REQUIRED YES
- 
+@@ -548,7 +548,7 @@ macro(common_libktx_settings target enable_write library_type)
+         SOVERSION ${PROJECT_VERSION_MAJOR}
+         XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME "YES"
      )
--    if(IOS)
+-    if(APPLE_LOCKED_OS)
 +    if(0)
          set_target_properties(${target} PROPERTIES
              FRAMEWORK TRUE
          )
-@@ -1145,7 +1145,7 @@ endif()
+@@ -1389,7 +1389,7 @@ endif()
  # Use of this to install KHR/khr_df.h is due to CMake's failure to
  # preserve the include source folder hierarchy.
  # See https://gitlab.kitware.com/cmake/cmake/-/issues/16739.
--if (IOS)
+-if (APPLE_LOCKED_OS)
 +if (0)
      set_source_files_properties(
            include/KHR/khr_df.h

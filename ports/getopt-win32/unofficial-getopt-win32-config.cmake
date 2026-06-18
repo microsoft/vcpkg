@@ -1,0 +1,12 @@
+file(READ "${CMAKE_CURRENT_LIST_DIR}/../getopt-win32/usage" usage)
+message(WARNING "find_package(unofficial-getopt-win32) is deprecated.\n${usage}")
+
+include(CMakeFindDependencyMacro)
+find_dependency(getopt CONFIG)
+if(NOT TARGET unofficial::getopt-win32::getopt)
+    if(TARGET getopt::getopt_static)
+        add_library(unofficial::getopt-win32::getopt ALIAS getopt::getopt_static)
+    else()
+        add_library(unofficial::getopt-win32::getopt ALIAS getopt::getopt_shared)
+    endif()
+endif()

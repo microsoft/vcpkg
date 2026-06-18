@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tessil/hopscotch-map
     REF "v${VERSION}"
-    SHA512 e2f215d93c84606e8dc71c3403f60a589bd7f78922b5b90afcd0c9d7cbea7ff2e9c6fdb17a6444d4f4b8c9b42a47066995640cd093d8a32a4dabc8c03262e7d5
+    SHA512 22a2ea5089ef6ef7afb872f6785a1f1d063660a7cb22ccfd4ccbecf95fd0a71ffc72fbb814ac51be8ed7445e75d0d8b79e619d08d7ddf063968fe6e7bf995932
 )
 
 vcpkg_cmake_configure(
@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

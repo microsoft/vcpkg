@@ -1,2 +1,0 @@
-component("libxml_utils") {}
-component("xml_reader") {}

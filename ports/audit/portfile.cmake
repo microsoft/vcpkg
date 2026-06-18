@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO linux-audit/audit-userspace
-    SHA512 558b9211a5dc1062eee98aa7bcd292797f06109a8ee735da1d704bc18d97b0bee93487ef9303404016df2e08cff32d90f1dd056797ac05beaabe3cccb5db5af2
+    SHA512 e5493f434dddbded65f33bfd56981036af6975c192289a05378d773ce914ab3ffe6b7071cae03e8f69da4e33246a38608d848f64d01647f2572a7eb6651f3ba0
     REF "v${VERSION}"
     HEAD_REF master
-    PATCHES
-        fix-multiple-def.patch
 )
 
 message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n"
@@ -17,9 +15,9 @@ message(STATUS "${PORT} currently requires the following libraries from the syst
 
 file(TOUCH "${SOURCE_PATH}/README")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         --with-python3=no
         --with-golang=no
@@ -28,7 +26,7 @@ vcpkg_configure_make(
         --disable-zos-remote
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

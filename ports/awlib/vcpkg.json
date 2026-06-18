@@ -1,7 +1,7 @@
 {
   "name": "awlib",
   "version-date": "2024-04-06",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Cross-platform utility library",
   "homepage": "https://github.com/absurdworlds/awlib",
   "license": "LGPL-3.0-or-later",
@@ -21,6 +21,13 @@
       "description": "Build graphics library",
       "supports": "!uwp",
       "dependencies": [
+        {
+          "name": "awlib",
+          "default-features": false,
+          "features": [
+            "hudf"
+          ]
+        },
         "glfw3",
         "libpng"
       ]

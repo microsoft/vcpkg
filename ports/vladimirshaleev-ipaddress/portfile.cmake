@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vladimirshaleev/ipaddress
     REF "v${VERSION}"
-    SHA512 a8ab2dc8563ff08a5afbe6d2157502b26a5d13f29d00ab3354b812ad4cb9e35cdc89cb26e4920929ced7d063ae2ad5aa79d30a4623409f65c76971ecbbcd5bfc
+    SHA512 5f6bff9ae836b7a4f7689fff05b9443c034a32fddc455c99e8e911a07a7e26078eb424e57df82a46da6af51bd62169e7e174dde6c6bfb7064e3369e81ad1365f
     HEAD_REF main
 )
 

@@ -2,8 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
     REF "${VERSION}"
-    SHA512 57ffa7280741744edeb5c808589b9724c6b074d0e9031ae2e2ae6ccc404f11a35a2201baf16c4bfc9ee04d0c971e0c60d00bf7712bd7335aa41e1da5b97d272a
+    SHA512 ae9345e0876a80e2f2dfa393d12176215cdcf17ed1985d2e46527d12a3abf4ea2b7796217871b562aaab9c7c876bef226de661d5e9cbdc862c8f49d57e9e8173
     HEAD_REF master
+    PATCHES
+        set_cmake_module_path.patch
+        fix_windows_version_resources_generation.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
@@ -32,6 +35,7 @@ find_dependency(Qt6 COMPONENTS Core Gui Widgets)]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/license")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/license")
 
 file(INSTALL "${SOURCE_PATH}/gnu-lgpl-v2.1.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

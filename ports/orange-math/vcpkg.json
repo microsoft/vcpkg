@@ -1,10 +1,10 @@
 {
   "name": "orange-math",
-  "version": "1.0.1",
+  "version": "5.3.0",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
-  "license": "MIT",
-  "supports": "windows",
+  "documentation": "https://libomath.org",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -14,5 +14,34 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "avx2": {
+      "description": "Omath will use AVX2 to boost performance",
+      "supports": "!arm"
+    },
+    "hooking": {
+      "description": "Add interface for automatic hooking of DirectX",
+      "supports": "windows & !arm & !uwp",
+      "dependencies": [
+        "safetyhook"
+      ]
+    },
+    "imgui": {
+      "description": "Omath will define method to convert omath types to imgui types",
+      "dependencies": [
+        "imgui"
+      ]
+    },
+    "inline": {
+      "description": "Omath will define some methods as inline"
+    },
+    "lua": {
+      "description": "omath will enable lua bindings",
+      "dependencies": [
+        "lua",
+        "sol2"
+      ]
+    }
+  }
 }
