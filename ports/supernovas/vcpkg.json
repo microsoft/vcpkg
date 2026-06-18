@@ -1,11 +1,12 @@
 {
   "name": "supernovas",
-  "version": "1.6.0",
+  "version": "1.7.1",
   "description": "SuperNOVAS C/C++ high-precision astrometry library",
   "homepage": "https://sigmyne.github.io/SuperNOVAS/",
   "documentation": "https://sigmyne.github.io/SuperNOVAS/doc/html/",
   "license": "Unlicense",
   "dependencies": [
+    "curl",
     {
       "name": "vcpkg-cmake",
       "host": true
