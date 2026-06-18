@@ -408,11 +408,18 @@ if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
 
+set(OCV_CONFIG_VERIFICATION ON)
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    # Emscripten auto-enables unix back-ends that have no browser equivalent (e.g. V4L);
+    # let opencv silently disable what it can't find instead of failing verification.
+    set(OCV_CONFIG_VERIFICATION OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ###### Verify that required components and only those are enabled
-        -DENABLE_CONFIG_VERIFICATION=ON
+        -DENABLE_CONFIG_VERIFICATION=${OCV_CONFIG_VERIFICATION}
         ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
         -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE
         -DAARCH64=${TARGET_IS_AARCH64}
