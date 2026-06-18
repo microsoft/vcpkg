@@ -1,0 +1,50 @@
+{
+  "name": "kwidgetsaddons",
+  "version": "6.25.0",
+  "description": "Addons to QtWidgets",
+  "homepage": "https://invent.kde.org/frameworks/kwidgetsaddons",
+  "documentation": "https://api.kde.org/kwidgetsaddons-index.html",
+  "license": null,
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "designerplugin": {
+      "description": "Build Qt Designer plugin",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false,
+          "features": [
+            "designer"
+          ]
+        }
+      ]
+    },
+    "translations": {
+      "description": "Build and install translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}

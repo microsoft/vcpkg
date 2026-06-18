@@ -633,7 +633,7 @@
       "port-version": 1
     },
     "baresip-libre": {
-      "baseline": "4.8.1",
+      "baseline": "4.9.0",
       "port-version": 0
     },
     "bark": {
@@ -3445,7 +3445,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.8.1",
+      "baseline": "7.8.2",
       "port-version": 0
     },
     "glbinding": {
@@ -3761,7 +3761,7 @@
       "port-version": 0
     },
     "hareflow": {
-      "baseline": "0.2.0",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "harfbuzz": {
@@ -4284,6 +4284,10 @@
       "baseline": "6.25.0",
       "port-version": 1
     },
+    "kconfig": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kcoreaddons": {
       "baseline": "6.25.0",
       "port-version": 1
@@ -4556,6 +4560,10 @@
       "baseline": "6.25.0",
       "port-version": 1
     },
+    "kitemviews": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kleidiai": {
       "baseline": "1.25.0",
       "port-version": 0
@@ -4615,6 +4623,10 @@
     "kvasir-mpl": {
       "baseline": "2019-08-06",
       "port-version": 3
+    },
+    "kwidgetsaddons": {
+      "baseline": "6.25.0",
+      "port-version": 0
     },
     "kwindowsystem": {
       "baseline": "6.25.0",
@@ -8085,7 +8097,7 @@
       "port-version": 0
     },
     "pulsar-client-cpp": {
-      "baseline": "4.1.0",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "pulseaudio": {
@@ -9384,6 +9396,10 @@
       "baseline": "2025-12-18",
       "port-version": 0
     },
+    "slick-dynamic-buffer": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "slick-logger": {
       "baseline": "1.0.9",
       "port-version": 0
@@ -9410,6 +9426,10 @@
     },
     "slick-stream-buffer": {
       "baseline": "1.0.5",
+      "port-version": 0
+    },
+    "slick-stream-buffer-multiplexer": {
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "slickquant-hyperliquid-cpp": {
@@ -9917,7 +9937,7 @@
       "port-version": 0
     },
     "swaggercpp": {
-      "baseline": "0.2.1",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "swenson-sort": {
@@ -10381,7 +10401,7 @@
       "port-version": 0
     },
     "typecast-ai": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "uchardet": {
@@ -10417,7 +10437,7 @@
       "port-version": 2
     },
     "unimail-cpp-sdk": {
-      "baseline": "0.3.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "units": {
@@ -11001,7 +11021,7 @@
       "port-version": 0
     },
     "wt": {
-      "baseline": "4.13.2",
+      "baseline": "4.13.3",
       "port-version": 0
     },
     "wtl": {
