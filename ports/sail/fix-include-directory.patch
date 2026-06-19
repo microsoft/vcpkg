@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index df970d3..7c4df5c 100644
+index 9341dc8..33bf2c3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -298,7 +298,7 @@ endif()
+@@ -267,7 +267,7 @@ endif()
  # Common configuration file
  #
  configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${PROJECT_BINARY_DIR}/include/sail-common/config.h" @ONLY)
@@ -12,10 +12,10 @@ index df970d3..7c4df5c 100644
  # Print configuration statistics
  #
 diff --git a/src/bindings/sail-c++/CMakeLists.txt b/src/bindings/sail-c++/CMakeLists.txt
-index a4ad915..6806f2f 100644
+index 2deca45..aecdbc1 100644
 --- a/src/bindings/sail-c++/CMakeLists.txt
 +++ b/src/bindings/sail-c++/CMakeLists.txt
-@@ -134,7 +134,7 @@ install(TARGETS sail-c++
+@@ -130,7 +130,7 @@ install(TARGETS sail-c++
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -25,19 +25,19 @@ index a4ad915..6806f2f 100644
  # Install development packages
  #
 diff --git a/src/sail-common/CMakeLists.txt b/src/sail-common/CMakeLists.txt
-index 5193f90..0e689f7 100644
+index a5ede02..933580f 100644
 --- a/src/sail-common/CMakeLists.txt
 +++ b/src/sail-common/CMakeLists.txt
-@@ -114,7 +114,7 @@ endif()
- 
+@@ -115,7 +115,7 @@ endif()
  target_include_directories(sail-common
                              PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+                                    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
 -                                   $<INSTALL_INTERFACE:include/sail>)
 +                                   $<INSTALL_INTERFACE:include>)
  
  # pkg-config integration
  #
-@@ -129,7 +129,7 @@ install(TARGETS sail-common
+@@ -130,7 +130,7 @@ install(TARGETS sail-common
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -47,10 +47,10 @@ index 5193f90..0e689f7 100644
  # Install development packages
  #
 diff --git a/src/sail-manip/CMakeLists.txt b/src/sail-manip/CMakeLists.txt
-index 334a423..4ad54b2 100644
+index d986c44..6774feb 100644
 --- a/src/sail-manip/CMakeLists.txt
 +++ b/src/sail-manip/CMakeLists.txt
-@@ -67,7 +67,7 @@ install(TARGETS sail-manip
+@@ -86,7 +86,7 @@ install(TARGETS sail-manip
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -60,7 +60,7 @@ index 334a423..4ad54b2 100644
  # Install development packages
  #
 diff --git a/src/sail/CMakeLists.txt b/src/sail/CMakeLists.txt
-index 9fd7119..ec4be36 100644
+index 130313a..7a137c9 100644
 --- a/src/sail/CMakeLists.txt
 +++ b/src/sail/CMakeLists.txt
 @@ -125,11 +125,11 @@ install(TARGETS sail

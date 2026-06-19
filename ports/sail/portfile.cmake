@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 0e6bd4fb7910eda29e0cd6d96e31ff9a476d5836055e4653d6401ab72209eccd3624b8c1e92b7cd0d22ecdaa8ffde44b155da36da61c99ec0c06e1d388bd1d67
+    SHA512 767707fa9e13d4696f5a18cde9cadc986c7273b82a86cabab8ab9cd53e81825754bf1a5e114fd58ec796e7d22824616882e06262d3a3db974bb7f8c7c3b95b19
     HEAD_REF master
     PATCHES
         fix-heif.patch
         fix-include-directory.patch
-        no-binary-dependencies-install.diff
 )
 
 # Enable selected codecs
@@ -16,9 +15,9 @@ set(ONLY_CODECS "")
 # List of codecs copy-pased from SAIL
 set(HIGHEST_PRIORITY_CODECS gif jpeg png svg webp)
 set(HIGH_PRIORITY_CODECS    avif ico)
-set(MEDIUM_PRIORITY_CODECS  heif openexr psd tiff)
+set(MEDIUM_PRIORITY_CODECS  heif openexr psd raw tiff video)
 set(LOW_PRIORITY_CODECS     bmp hdr jpeg2000 jpegxl pnm qoi tga)
-set(LOWEST_PRIORITY_CODECS  jbig pcx wal xbm xpm xwd)
+set(LOWEST_PRIORITY_CODECS  fli jbig pcx wal xbm xpm xwd)
 
 foreach(CODEC ${HIGHEST_PRIORITY_CODECS} ${HIGH_PRIORITY_CODECS} ${MEDIUM_PRIORITY_CODECS} ${LOW_PRIORITY_CODECS} ${LOWEST_PRIORITY_CODECS})
     if (CODEC IN_LIST FEATURES)
