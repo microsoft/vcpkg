@@ -6,8 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/ls-qpack
     REF "v${VERSION}"
-    SHA512 9b38ba1b4b12d921385a285e8c833a0ae9cdcc153cff4f1857f88ceb82174304decb5fccbdf9267d08a21c5a26c71fdd884dcacd12afd19256a347a8306b9b90
+    SHA512 641cd23496e92c45505772303287ae840652545b67de7e0751662e012b6ca7017ce951d699bcf451256cb8c5d0952dc118684b99cdf9ed3fe5726e08e2ed1dc6
     HEAD_REF master
+    PATCHES
+        fix-version.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
 
