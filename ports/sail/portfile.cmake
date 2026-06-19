@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-ffmpeg-link-order.patch
         fix-heif.patch
         fix-include-directory.patch
+        fix-macos-ffmpeg-frameworks.patch
         fix-swscale.patch
         fix-windows-test-wdir.patch
 )
