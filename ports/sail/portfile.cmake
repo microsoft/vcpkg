@@ -66,7 +66,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if (BUILD_TESTING)
+if (BUILD_TESTING AND NOT VCPKG_CROSSCOMPILING)
     vcpkg_cmake_build(
         TARGET test
         LOGFILE_BASE test
