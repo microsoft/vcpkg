@@ -1,15 +1,17 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.linuxsampler.org/packages/libgig-${VERSION}.tar.bz2"
     FILENAME "libgig-${VERSION}.tar.bz2"
-    SHA512 7844d31acba4bd2f2a499511c3f45ec0a883336193a1422d6d0cd1a8d0c2e97f9f89230176969e5a80b483890914d424eb778338afd583197fdea8bee3c08627
+    SHA512 df7b1146c7326306c052113dd69fe7731127104340818cf939da04eff10a42c88b629121fd15519d5efa211e73a61fb318754bff6d02175ea2b28df2567b59c3
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        replace_cpp23warning.patch
 )
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} dynamic LIBGIG_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBGIG_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -22,6 +24,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLIBGIG_BUILD_SHARED=${LIBGIG_BUILD_SHARED}
+        -DLIBGIG_ENABLE_TESTING=OFF
 )
 
 vcpkg_cmake_install()

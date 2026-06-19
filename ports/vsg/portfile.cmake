@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vsg-dev/VulkanSceneGraph
     REF "v${VERSION}"
-    SHA512 997ba97c4860c2b9e79589358b1471df5ec14e64329bc8c5e23b1db2e855e63433cc5141f5fe34f785f88c9b3bcfc27f6aa8e9f5fc5d11cfdd1dab43f0e448cc
+    SHA512 95a15e44171f44fa0fbefea790f4f8b2aa606dbf599b6ebf4acf34b65e00e61ad0099de98d3a96dfcc6132500b7062b33cbf2c16de9478dab79984776f617c52
     HEAD_REF master
-    PATCHES
-        cmakedefine01.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options

@@ -2,13 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
     REF v${VERSION}
-    SHA512 e2c47e5bcdf3eda66757e63b93f4adf56e7894edeed0d39f182c850cae4dddb49f3cf82ac9e8546dfcd48abf02b7bf0a64d22bacba4360b2f7ef2cb09855eadb
+    SHA512 9559545fea9606a5d9cd87fdd7ef1352ade4695305dfe27327abdc6cf598a8f159875f05992864cfd55405589b58ea3598181b64b3600bd5aa287a320c14d0b3
     HEAD_REF master
     PATCHES
         cmake-config.diff
         pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
+        fix-dequant_funcs.diff
+        fix-vk-32bit.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

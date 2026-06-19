@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jedisct1/libsodium
     REF "${VERSION}-RELEASE"
-    SHA512 477b9dc10d87ae3c83db3fc207b50b9fe39593684a59f164986cce32bdaba95db0df7dee32149bf9a23c5794354fce8241d88a9a4bd4bbf2630483cbbc378c2f
+    SHA512 f8e11ad193037b7b885a40b832da331105f4e5943b74c0297fe07e02a313786016c777aebb094ad1fcf16398e54af545c2d55404c28b371eae5922d1e164ba00
     HEAD_REF master
     PATCHES
         001-mingw-i386.patch
@@ -56,12 +56,12 @@ else()
         list(APPEND OPTIONS --disable-pie)
     endif()
 
-    vcpkg_configure_make(
-        AUTOCONFIG
+    vcpkg_make_configure(
+        AUTORECONF
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
     )
-    vcpkg_install_make()
+    vcpkg_make_install()
 
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -1,0 +1,13 @@
+diff --git a/config/win/visual_studio_version.gni b/config/win/visual_studio_version.gni
+index bd41166..003a6ac 100644
+--- a/config/win/visual_studio_version.gni
++++ b/config/win/visual_studio_version.gni
+@@ -40,7 +40,7 @@ if (visual_studio_path == "") {
+          "You must set the windows_sdk_version if you set the path")
+   assert(wdk_path != "",
+          "You must set the wdk_path if you set the visual studio path")
+-  visual_studio_runtime_dirs = []
++  visual_studio_runtime_dirs = "None"
+ }
+ 
+ visual_studio_version_logs = [ "windows_sdk_version=${windows_sdk_version}" ]

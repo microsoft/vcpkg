@@ -1,6 +1,6 @@
 {
   "name": "tiny-optional",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Drop-in replacement for std::optional that does not waste memory unnecessarily",
   "homepage": "https://github.com/Sedeniono/tiny-optional",
   "license": "BSL-1.0",

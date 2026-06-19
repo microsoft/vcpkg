@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 4497d1afbccc15806cc11c22653e83d7900a009ad584a8d6b1ada6fac1ace9a70d834eb32653da567f0ddabc23ec641c5d69503282e303bf1bf2def72544b1b5
+    SHA512 31a2ef2810a6fd4c057e3b52eff4a68d6f650eaa561e44a3adfdb8d1d6bb257419a2f34d1deb8a80a8ce5cec4d18c4d9e3683357cf1cda46def83a597bde3850
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff
@@ -27,6 +27,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+        h264        WITH_X264
+        openh264    WITH_OpenH264_DECODER
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -66,9 +68,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libheif")
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_export.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
 else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_export.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

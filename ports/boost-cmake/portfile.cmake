@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/cmake
     REF boost-${VERSION}
-    SHA512 dd17731fb03d634aa4751e5f36acd124d04eb71341c000df2a0f0b49d5bea0db50e54d1bf820e066a07a22fcaecc97dbe8caaf2883b6a2c1eb2b941938c67d25
+    SHA512 ad642f211916c51365fd2ca9bf6c40d940a57390b6da1eb3932cd945aeaa984a42e31a9297ecc0a302ed1c42a48945867ecd3f4a18a327dfe1e1765bfd7dbcb5
     HEAD_REF master
     PATCHES
         0001-vcpkg-build.patch

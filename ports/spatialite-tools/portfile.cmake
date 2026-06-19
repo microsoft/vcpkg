@@ -1,4 +1,6 @@
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # only executables
+# only executables
+set(VCPKG_BUILD_TYPE release)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 string(REPLACE "-" "" SPATIALITE_TOOLS_VERSION_STR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
@@ -23,19 +25,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         LIBS
     )
 
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
-
-    vcpkg_install_nmake(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PREFER_JOM
-        CL_LANGUAGE C
-        OPTIONS_RELEASE
-            "INSTDIR=${INST_DIR}"
-            "LIBS_ALL=/link ${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib user32.lib"
-        OPTIONS_DEBUG
-            "INSTDIR=${INST_DIR}\\debug"
-            "LIBS_ALL=/link ${PKGCONFIG_LIBS_DEBUG} iconv.lib charset.lib user32.lib"
-        )
+    # cherry-picked from makefile.vc (CFLAGS) and nmake.opt (OPTFLAGS)
+    set(CFLAGS "/fp:precise /W3 /D_CRT_SECURE_NO_WARNINGS /D_LARGE_FILE=1 /D_FILE_OFFSET_BITS=64 /D_LARGEFILE_SOURCE=1")
 
     set(TOOL_EXES
         shp_sanitize
@@ -50,11 +41,24 @@ if (VCPKG_TARGET_IS_WINDOWS)
         shp_doctor
         spatialite
     )
-    vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
+    list(TRANSFORM TOOL_EXES APPEND ".exe" OUTPUT_VARIABLE TARGETS)
 
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
+
+    vcpkg_install_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        CL_LANGUAGE C
+        # Use this explicit sequence of targets to mitigate linker race.
+        TARGET ${TARGETS} install
+        OPTIONS_RELEASE
+            "CFLAGS=${CFLAGS} ${PKGCONFIG_CFLAGS_RELEASE}"
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib user32.lib"
+            "INSTDIR=${INST_DIR}"
+        OPTIONS_DEBUG
+            --DISABLED--
+    )
+
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
 
 else()
     vcpkg_make_configure(

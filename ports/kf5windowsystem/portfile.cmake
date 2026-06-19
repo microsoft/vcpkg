@@ -1,8 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
-    REF v5.98.0
-    SHA512 839d9fcd805fe14aa13cf0cc39f12aa412f19309698c062c14a7d35db4e6fd3af6f46908c13d76a8234ba9f2067b9a67e0426b265d334be3e805daf5a6cd0afb
+    REF "v${VERSION}"
+    SHA512 adc7c9ea1f0cc20ccd009179c2989b9d03a1de067898769f2f1d364acdc599e7558a449f46f6c7306d00de4adda0d153e4b71395f28aaeef968591d9b96a950f
+    HEAD_REF master
 )
 
 if (VCPKG_TARGET_IS_LINUX)
@@ -20,7 +21,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5WindowSystem CONFIG_PATH lib/cmake/KF5WindowSystem)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5WindowSystem)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -34,4 +35,3 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/KF5/KWindowSystem/config-k
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

@@ -2,16 +2,22 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jmcnamara/libxlsxwriter
     REF "v${VERSION}"
-    SHA512 5934521b0ef913a304dee282ed6914387fb9f330368eec29fa6dadb320e9d44b87840266399e4685df70f3e63de404a4acc01369fd26930e81e8f62ff6993a9d
+    SHA512 a961a6d8094cc9f9996c9cf6c143e0382422eb4b63ec68d4ee1cce76afef562656855ed08c630974b67d33a4af9706df602c4ababad0767466b43a3e0563f2cf
     HEAD_REF main
+    PATCHES
+        minizip.diff
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/minizip")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/include/third_party/ioapi.h"
+    "${SOURCE_PATH}/include/third_party/zip.h"
+    "${SOURCE_PATH}/third_party/minizip"
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    "dtoa"        USE_DTOA_LIBRARY
-    "openssl-md5" USE_OPENSSL_MD5
-    "mem-file"    USE_MEM_FILE
+        "dtoa"        USE_DTOA_LIBRARY
+        "openssl-md5" USE_OPENSSL_MD5
+        "mem-file"    USE_MEM_FILE
 )
 
 set(USE_WINDOWSSTORE OFF)
@@ -32,5 +38,6 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/xlsxwriter/third_party")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")

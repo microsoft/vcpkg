@@ -1,7 +1,6 @@
 {
   "name": "wavpack",
-  "version": "5.8.1",
-  "port-version": 2,
+  "version": "5.9.0",
   "description": "WavPack encode/decode library, command-line programs, and several plugins",
   "homepage": "https://github.com/dbry/WavPack",
   "license": "BSD-3-Clause",

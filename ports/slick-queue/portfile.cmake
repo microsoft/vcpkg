@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO SlickQuant/slick_queue
+    REPO SlickQuant/slick-queue
     REF "v${VERSION}"
-    SHA512 52254f1e271e39ccaa9ca52bad7c53c261ee271803ed89e718798d93f9c78d8303eb3916f88933191595ed278b540d24afe351c5a55ee1f09cbdf09631c32dd3
+    SHA512 d0dc83f489f45d913f1b4021c3f7b1a863d2c62b33284c38d2e14ba892743dfef9529a1d549ba721f558fe209ff4070ae8af3ac401cbd3fd2940c57ca864fc48
     HEAD_REF main
+    PATCHES
+        slick-shm.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,12 +17,28 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME slick_queue
-    CONFIG_PATH lib/cmake/slick_queue
+    PACKAGE_NAME slick-queue
+    CONFIG_PATH lib/cmake/slick-queue
 )
+
+# Temporary fix for legacy package name compatibility
+set(slick_queue_share "${CURRENT_PACKAGES_DIR}/share/slick_queue")
+file(MAKE_DIRECTORY "${slick_queue_share}")
+
+file(WRITE "${slick_queue_share}/slick_queueConfig.cmake" [=[
+include("${CMAKE_CURRENT_LIST_DIR}/../slick-queue/slick-queueConfig.cmake")
+]=])
+
+file(COPY "${CURRENT_PACKAGES_DIR}/share/slick-queue/slick-queueConfigVersion.cmake"
+     DESTINATION "${slick_queue_share}")
+file(RENAME
+     "${slick_queue_share}/slick-queueConfigVersion.cmake"
+     "${slick_queue_share}/slick_queueConfigVersion.cmake")
 
 # Header-only library - remove lib directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

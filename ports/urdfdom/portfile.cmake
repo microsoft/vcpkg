@@ -1,5 +1,12 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+vcpkg_download_distfile(
+    CSTDINT_PATCH
+    URLS https://github.com/ros/urdfdom/commit/4061dfa3c8b56a7affe042002aca9945441d1e93.patch?full_index=1
+    SHA512 e04f5e8a400927a678282573ebe35752309ea1db32389744a91d5385f7540a4cacd4b00561380f5ce5130df3e155146965e4a4aa0e86442ee7eee045511fad0c
+    FILENAME 4061dfa3c8b56a7affe042002aca9945441d1e93.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/urdfdom
@@ -10,6 +17,7 @@ vcpkg_from_github(
         0001_use_math_defines.patch
         0005-fix-config-and-install.patch
         0006-pc_file_for_windows.patch
+        "${CSTDINT_PATCH}"
 )
 
 vcpkg_cmake_configure(

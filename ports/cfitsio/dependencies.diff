@@ -1,0 +1,128 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8cfb85b..7dd1253 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,14 +76,19 @@ ENDIF(BUILD_SHARED_LIBS)
+ 
+ # Find curl library, for HTTPS support:
+ IF(USE_CURL)
+-   FIND_PACKAGE(CURL)
++   FIND_PACKAGE(CURL REQUIRED)
+    IF(CURL_FOUND)
+       ADD_DEFINITIONS(-DCFITSIO_HAVE_CURL)
+    ENDIF()
+ ENDIF()
+ 
+ IF(USE_PTHREADS)
+-   FIND_PACKAGE(Threads REQUIRED)
++   IF(WIN32 AND NOT MINGW)
++      FIND_PACKAGE(PThreads4W REQUIRED)
++      ADD_DEFINITIONS(-Dstrtok_r=strtok_s)
++   ELSE()
++      FIND_PACKAGE(Threads REQUIRED)
++   ENDIF()
+    ADD_DEFINITIONS(-D_REENTRANT)
+ ENDIF(USE_PTHREADS)
+ 
+@@ -96,7 +101,8 @@ ENDIF(USE_BZIP2)
+ IF(MSVC OR MINGW)
+    SET(M_LIB "")
+ ELSE()
+-   FIND_LIBRARY(M_LIB m)
++   SET(M_LIB m)
++   SET(PKG_CONFIG_LIBS "${PKG_CONFIG_LIBS} -lm")
+ ENDIF()
+ 
+ # Support for remote file drivers is not implemented for native Windows:
+@@ -255,31 +261,29 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
+ ADD_LIBRARY(${LIB_NAME} ${LIB_TYPE} ${H_FILES} ${SRC_FILES})
+ 
+ # Math:
+-TARGET_LINK_LIBRARIES(${LIB_NAME} ${M_LIB})
++TARGET_LINK_LIBRARIES(${LIB_NAME} PRIVATE ${M_LIB})
+ # zlib:
+ IF (ZLIB_FOUND)
+-    TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC ${ZLIB_INCLUDE_DIR})
+-    TARGET_LINK_LIBRARIES(${LIB_NAME} ${ZLIB_LIBRARIES})
+-    # For cfitsio.pc.cmake:
+-    SET (PKG_CONFIG_LIBS "${PKG_CONFIG_LIBS} -lz")
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PRIVATE ZLIB::ZLIB)
++    STRING(APPEND PKG_CONFIG_REQUIRES_PRIVATE " zlib")
+ ENDIF(ZLIB_FOUND)
+ # cURL:
+ IF (CURL_FOUND)
+-    TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC ${CURL_INCLUDE_DIRS})
+-    TARGET_LINK_LIBRARIES(${LIB_NAME} ${CURL_LIBRARIES})
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PRIVATE CURL::libcurl)
+     # For cfitsio.pc.cmake:
+-    SET (PKG_CONFIG_LIBS "${PKG_CONFIG_LIBS} -lcurl")
++    STRING(APPEND PKG_CONFIG_REQUIRES_PRIVATE " libcurl")
+ ENDIF(CURL_FOUND)
+ # PThreads:
+-IF (THREADS_FOUND)
+-    TARGET_LINK_LIBRARIES(${LIB_NAME} Threads::Threads)
++IF (PThreads4W_FOUND)
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PUBLIC PThreads4W::PThreads4W)
++ELSEIF (THREADS_FOUND)
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PUBLIC Threads::Threads)
+ ENDIF(THREADS_FOUND)
+ # BZip2:
+-IF (BZIP2_FOUND)
+-    TARGET_INCLUDE_DIRECTORIES(${LIB_NAME} PUBLIC ${BZIP2_INCLUDE_DIRS})
+-    TARGET_LINK_LIBRARIES(${LIB_NAME} ${BZIP2_LIBRARIES})
+-    SET (PKG_CONFIG_LIBS "${PKG_CONFIG_LIBS} -lbz2")
+-ENDIF(BZIP2_FOUND)
++IF (BZip2_FOUND)
++    TARGET_LINK_LIBRARIES(${LIB_NAME} PRIVATE BZip2::BZip2)
++    string(APPEND PKG_CONFIG_REQUIRES_PRIVATE " bzip2")
++ENDIF(BZip2_FOUND)
+ 
+ #==============================================================================
+ 
+@@ -326,9 +330,10 @@ install(EXPORT cfitsioTargets
+   DESTINATION
+     ${ConfigPackageLocation}
+ )
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cfitsioConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/cfitsioConfig.cmake" @ONLY)
+ install(
+   FILES
+-    cmake/cfitsioConfig.cmake
++    "${CMAKE_CURRENT_BINARY_DIR}/cfitsioConfig.cmake"
+     "${CMAKE_CURRENT_BINARY_DIR}/cfitsio/cfitsioConfigVersion.cmake"
+   DESTINATION
+     ${ConfigPackageLocation}
+diff --git a/cfitsio.pc.cmake b/cfitsio.pc.cmake
+index 949b80e..3dce033 100644
+--- a/cfitsio.pc.cmake
++++ b/cfitsio.pc.cmake
+@@ -8,5 +8,6 @@ Description: FITS File Subroutine Library
+ URL: https://heasarc.gsfc.nasa.gov/fitsio/
+ Version: @CFITSIO_MAJOR@.@CFITSIO_MINOR@.@CFITSIO_MICRO@
+ Libs: -L${libdir} -lcfitsio
+-Libs.private: @PKG_CONFIG_LIBS@ -lm
++Libs.private: @PKG_CONFIG_LIBS@
++Requires.private: @PKG_CONFIG_REQUIRES_PRIVATE@
+ Cflags: -I${includedir}
+diff --git a/cmake/cfitsioConfig.cmake b/cmake/cfitsioConfig.cmake
+index b3c3aa3..9479ffc 100644
+--- a/cmake/cfitsioConfig.cmake
++++ b/cmake/cfitsioConfig.cmake
+@@ -1 +1,18 @@
++include(CMakeFindDependencyMacro)
++if("@USE_PTHREADS@")
++    if(WIN32 AND NOT MINGW)
++        find_dependency(PThreads4W)
++    else()
++        find_dependency(Threads)
++    endif()
++endif()
++if(NOT "@BUILD_SHARED_LIBS@")
++    find_dependency(ZLIB)
++    if("@USE_CURL@")
++        find_dependency(CURL)
++    endif()
++    if("@USE_BZIP2@")
++        find_dependency(BZip2)
++    endif()
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/cfitsioTargets.cmake")

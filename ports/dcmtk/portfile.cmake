@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
     REF "DCMTK-${VERSION}"
-    SHA512 fcb222182ea653304a1c49db31899a8b08d881916f90d3d35bfab2896aa11473232ac0c0f2195e4d478a6188d3b2c5f54d5172f29c42688c5d05f9bf738ca775
+    SHA512 6c7699d222b3a26f2bf52fddbf3278946429f9b4b5cdd0607fb3c3fa82f5a13c6289c831d7a584700c9f59ae4244d94ea678a22a34aee988399056436f600a95
     HEAD_REF master
     PATCHES
         dcmtk.patch
@@ -11,7 +11,9 @@ vcpkg_from_github(
         disable-test-setup.diff
         pkgconfig-lib-order.diff
         msvc.diff
+        emscripten-ofwhere.diff
 )
+
 file(REMOVE
     "${SOURCE_PATH}/CMake/FindICONV.cmake"
     "${SOURCE_PATH}/CMake/FindJPEG.cmake"
@@ -99,11 +101,13 @@ if ("tools" IN_LIST FEATURES)
         dcmcjpls
         dcmconv
         dcmcrle
+        dcmdecap
         dcmdjpeg
         dcmdjpls
         dcmdrle
         dcmdspfn
         dcmdump
+        dcmencap
         dcmftest
         dcmgpdir
         dcmicmp
@@ -140,6 +144,7 @@ if ("tools" IN_LIST FEATURES)
         findscu
         getscu
         img2dcm
+        json2dcm
         mkcsmapper
         mkesdb
         movescu

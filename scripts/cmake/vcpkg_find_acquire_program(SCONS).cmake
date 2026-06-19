@@ -1,9 +1,9 @@
 set(program_name scons)
-set(program_version 4.8.1)
+set(program_version 4.10.1)
 set(interpreter PYTHON3)
 set(search_names "scons.py")
 
 set(download_urls "https://sourceforge.net/projects/scons/files/scons-local-${program_version}.zip/download")
 set(download_filename "scons-local-${program_version}.zip")
-set(download_sha512 7ce428ccb3279359f916417f0eaca93d36a101b0760156ce53e3aa2c9c3f0a14869aadf49f21a9eb27ba366a27e3f5deab61669e5bf0b43f1547668da940c3b7)
+set(download_sha512 9309b78782a24149da1cb1e9437c23673570378fcbe2f2228266d3ba4d8781cf95c2b90d5d76415582a82e668b5a0ef7c348c4d1206d0f1db2dc050e98f78aba)
 set(tool_subdirectory "${program_version}")

@@ -1,0 +1,114 @@
+diff --git a/cmake_integration_test/common/test_app.cpp b/cmake_integration_test/common/test_app.cpp
+index 12fdd4b..ff3e626 100644
+--- a/cmake_integration_test/common/test_app.cpp
++++ b/cmake_integration_test/common/test_app.cpp
+@@ -1,6 +1,6 @@
+ #include <libenvpp/env.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ int main()
+ {
+diff --git a/include/libenvpp/detail/check.hpp b/include/libenvpp/detail/check.hpp
+index 5e3fb60..fc3d499 100644
+--- a/include/libenvpp/detail/check.hpp
++++ b/include/libenvpp/detail/check.hpp
+@@ -4,7 +4,7 @@
+ #include <string>
+ #include <string_view>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #ifndef LIBENVPP_STRINGIFY
+ #define LIBENVPP_STRINGIFY_HELPER(expression) #expression
+diff --git a/include/libenvpp/detail/parser.hpp b/include/libenvpp/detail/parser.hpp
+index ad3784c..1383e63 100644
+--- a/include/libenvpp/detail/parser.hpp
++++ b/include/libenvpp/detail/parser.hpp
+@@ -10,7 +10,7 @@
+ #include <type_traits>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <libenvpp/detail/errors.hpp>
+ #include <libenvpp/detail/expected.hpp>
+diff --git a/include/libenvpp/env.hpp b/include/libenvpp/env.hpp
+index e5a72dc..a255d58 100644
+--- a/include/libenvpp/env.hpp
++++ b/include/libenvpp/env.hpp
+@@ -13,7 +13,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ #include <libenvpp/detail/edit_distance.hpp>
+diff --git a/source/libenvpp_errors.cpp b/source/libenvpp_errors.cpp
+index ea509db..4aafadd 100644
+--- a/source/libenvpp_errors.cpp
++++ b/source/libenvpp_errors.cpp
+@@ -1,6 +1,6 @@
+ #include <libenvpp/detail/errors.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <libenvpp/detail/environment.hpp>
+ 
+diff --git a/source/libenvpp_testing.cpp b/source/libenvpp_testing.cpp
+index f37282e..0b69579 100644
+--- a/source/libenvpp_testing.cpp
++++ b/source/libenvpp_testing.cpp
+@@ -1,6 +1,6 @@
+ #include <libenvpp/detail/testing.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <libenvpp/detail/errors.hpp>
+ 
+diff --git a/test/libenvpp_parser_test.cpp b/test/libenvpp_parser_test.cpp
+index 4c61425..1d4c42a 100644
+--- a/test/libenvpp_parser_test.cpp
++++ b/test/libenvpp_parser_test.cpp
+@@ -5,7 +5,7 @@
+ 
+ #include <catch2/catch_test_macros.hpp>
+ #include <catch2/matchers/catch_matchers_string.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <libenvpp/detail/parser.hpp>
+ 
+diff --git a/test/libenvpp_test.cpp b/test/libenvpp_test.cpp
+index a3e56be..920f9c8 100644
+--- a/test/libenvpp_test.cpp
++++ b/test/libenvpp_test.cpp
+@@ -5,7 +5,7 @@
+ #include <catch2/catch_test_macros.hpp>
+ #include <catch2/generators/catch_generators.hpp>
+ #include <catch2/matchers/catch_matchers_all.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <libenvpp/detail/environment.hpp>
+ #include <libenvpp/env.hpp>
+diff --git a/test/libenvpp_testing_test.cpp b/test/libenvpp_testing_test.cpp
+index bfad658..4928dda 100644
+--- a/test/libenvpp_testing_test.cpp
++++ b/test/libenvpp_testing_test.cpp
+@@ -5,7 +5,7 @@
+ 
+ #include <catch2/catch_test_macros.hpp>
+ #include <catch2/matchers/catch_matchers_all.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <libenvpp/detail/environment.hpp>
+ #include <libenvpp/env.hpp>

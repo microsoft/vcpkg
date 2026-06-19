@@ -3,6 +3,9 @@ else(WIN32)
   message(FATAL_ERROR "Findasiosdk.cmake: Unsupported platform ${CMAKE_SYSTEM_NAME}" )
 endif(WIN32)
 
+file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
+message(WARNING "find_package(asiosdk) is deprecated.\n${usage}")
+
 # if this script is invoked multiple times, we end up adding
 # "asiosdk" to the directory multiple times, leading to incorrect
 # include paths
@@ -32,7 +35,7 @@ if (NOT "${ASIOSDK_ROOT_DIR}" STREQUAL "")
 	set (ASIOSDK_INCLUDE_DIR
 		${ASIOSDK_ROOT_DIR}/common
 		${ASIOSDK_ROOT_DIR}/host
-		${ASIOSDK_ROOT_DIR}/hostpc
+		${ASIOSDK_ROOT_DIR}/host/pc
 	)
 endif()
 

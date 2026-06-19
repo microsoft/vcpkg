@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 644a22f011fd31f2d91e73e26f0b4cfc1e9f8cf862440b08a9a81a5a94e921aeeb1dde2be24d6a9395e355d0ccbe89fd369b0cf7bb45582c2eb6f741036da775
+    SHA512 8ac48097de3b976e830e6f613de1b91f3003997856538742350ec6aee29156d0ec926fffd5c2fb2453904a889ada51dbaa7ce87c5f289606eaa20a2158c55005
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -19,6 +19,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        av1         WITH_GFX_AV1
         client      WITH_CLIENT
         ffmpeg      WITH_DSP_FFMPEG
         ffmpeg      WITH_FFMPEG
@@ -67,11 +68,11 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
-        -DCMAKE_REQUIRE_FIND_PACKAGE_cJSON=ON
         -DUSE_VERSION_FROM_GIT_TAG=OFF
         -DWITH_ABSOLUTE_PLUGIN_LOAD_PATHS=OFF
         -DWITH_AAD=ON
         -DWITH_CCACHE=OFF
+        -DWITH_CJSON_REQUIRED=ON
         -DWITH_CLANG_FORMAT=OFF
         -DWITH_MANPAGES=OFF
         -DWITH_OPENSSL=ON
@@ -103,6 +104,8 @@ vcpkg_cmake_configure(
         -DWITH_VERBOSE_WINPR_ASSERT=OFF
     MAYBE_UNUSED_VARIABLES
         MSVC_RUNTIME
+        USE_UNWIND
+        VCPKG_LOCK_FIND_PACKAGE_X11
         WITH_CLIENT_WINDOWS
 )
 
@@ -122,7 +125,6 @@ if("server" IN_LIST FEATURES)
         vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
         list(APPEND tools freerdp-shadow-cli)
     endif()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdtk0 PACKAGE_NAME rdtk0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 if("winpr-tools" IN_LIST FEATURES)
     list(APPEND tools winpr-hash winpr-makecert)
@@ -140,9 +142,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/winpr3/winpr/build-config.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # They build static with dllexport, so it must be used with dllexport. Proper fix needs invasive patching.
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
-    if(WITH_SERVER)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rdtk0/rdtk/api.h" "#ifdef RDTK_EXPORTS" "#if 1")
-    endif()
 endif()
 
 file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")

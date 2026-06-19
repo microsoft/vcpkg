@@ -1,9 +1,8 @@
 {
   "name": "cpptoml",
-  "version": "0.1.1",
-  "port-version": 4,
+  "version": "0.1.2",
   "description": "A header-only library for parsing TOML configuration files.",
-  "homepage": "https://github.com/skystrife/cpptoml",
+  "homepage": "https://github.com/chadaustin/cpptoml",
   "license": "MIT",
   "dependencies": [
     {

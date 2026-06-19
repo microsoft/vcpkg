@@ -1,0 +1,12 @@
+diff --git a/src-lib/darkunistd.hpp b/src-lib/darkunistd.hpp
+index 6c06aef..5f9c970 100644
+--- a/src-lib/darkunistd.hpp
++++ b/src-lib/darkunistd.hpp
+@@ -9,7 +9,6 @@
+ 
+ #include <winsock2.h>
+ #include <direct.h> /* for _getcwd() and _chdir() */
+-#include "getopt.h"
+ #include <io.h>
+ #include <process.h> /* for getpid() and the exec..() family */
+ #include <stdlib.h>

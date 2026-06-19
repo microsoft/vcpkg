@@ -76,6 +76,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
 	CONFIG_PATH lib/cmake/ldserverapi
+	PACKAGE_NAME ldserverapi
 )
 
 file(REMOVE_RECURSE
@@ -85,8 +86,8 @@ file(REMOVE_RECURSE
 vcpkg_copy_pdbs()
 
 set(shareDir "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# legacy vcpkg, unofficial
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/launch-darkly-server-config.cmake DESTINATION ${shareDir})
-file(RENAME ${shareDir}/ldserverapiTargets.cmake ${shareDir}/ldserverapi-targets.cmake)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

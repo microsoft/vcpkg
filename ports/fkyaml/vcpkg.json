@@ -1,6 +1,7 @@
 {
   "name": "fkyaml",
   "version": "0.4.2",
+  "port-version": 1,
   "description": "A C++ header-only YAML library",
   "homepage": "https://github.com/fktn-k/fkYAML",
   "license": "MIT",

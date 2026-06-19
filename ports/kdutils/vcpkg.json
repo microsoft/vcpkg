@@ -1,0 +1,54 @@
+{
+  "name": "kdutils",
+  "version": "0.1.13",
+  "description": "KD Utilities Library - Core utilities and helper functions",
+  "homepage": "https://github.com/KDAB/kdutils",
+  "license": "MIT",
+  "supports": "!uwp & (windows | linux | android | osx) & (arm | x86 | x64)",
+  "dependencies": [
+    {
+      "name": "kdbindings",
+      "version>=": "1.1.0"
+    },
+    {
+      "name": "mio",
+      "version>=": "2023-03-03"
+    },
+    {
+      "name": "spdlog",
+      "version>=": "1.15.3"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "whereami",
+      "version>=": "2024-08-26"
+    }
+  ],
+  "features": {
+    "mqtt": {
+      "description": "Enable mqtt support",
+      "dependencies": [
+        {
+          "name": "mosquitto",
+          "version>=": "2.0.20"
+        }
+      ]
+    },
+    "testing": {
+      "description": "Enable testing support",
+      "dependencies": [
+        {
+          "name": "doctest",
+          "version>=": "2.4.12"
+        }
+      ]
+    }
+  }
+}

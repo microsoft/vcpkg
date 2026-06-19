@@ -1,9 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slick-object-pool",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A high-performance, lock-free object pool for C++20 with multi-threading support",
-  "homepage": "https://github.com/SlickQuant/slick_object_pool",
+  "homepage": "https://github.com/SlickQuant/slick-object-pool",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [

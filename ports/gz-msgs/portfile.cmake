@@ -12,9 +12,9 @@ endif()
 vcpkg_find_acquire_program(PYTHON3)
 
 ignition_modular_library(
-   NAME ${PACKAGE_NAME}
-   REF ${PORT}${VERSION_MAJOR}_${VERSION}
-   VERSION ${VERSION}
+   NAME "${PACKAGE_NAME}"
+   REF "${PORT}${VERSION_MAJOR}_${VERSION}"
+   VERSION "${VERSION}"
    SHA512 43c75eb30f00708c54f3de54737a4f1bda4a77a1d1ca3ba1354270beb01db078e73b909fdebb33b938a45a9808d4d2f2c164efe01c98aaec7a88003c85fab6f9
    OPTIONS
       ${options}

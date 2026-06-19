@@ -1,8 +1,8 @@
 diff --git a/include/BoostRoot.cmake b/include/BoostRoot.cmake
-index 98a19df..5054d6c 100644
+index 25bcbc4..3f58622 100644
 --- a/include/BoostRoot.cmake
 +++ b/include/BoostRoot.cmake
-@@ -21,7 +21,7 @@ set(__boost_incompatible_libraries "")
+@@ -26,7 +26,7 @@ set(__boost_incompatible_libraries "")
  
  # Define cache variables if root project
  
@@ -11,55 +11,71 @@ index 98a19df..5054d6c 100644
  
    # --with-<library>
    set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING
-@@ -200,6 +200,8 @@ endfunction()
- function(__boost_scan_dependencies lib var)
- 
+@@ -217,6 +217,9 @@ function(__boost_scan_dependencies lib var sub_folder)
+   # Libraries that define at least one library with a name like "<prefix>_"
+   set(prefix_names "asio" "dll" "fiber" "log" "regex" "stacktrace")
    set(result "")
 +  set(required_components "")
 +  set(optional_components "")
++  set(exclude_components "")
  
-   if(EXISTS "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${lib}/CMakeLists.txt")
+   set(cml_files "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${lib}")
+   if(sub_folder)
+@@ -245,6 +248,11 @@ function(__boost_scan_dependencies lib var sub_folder)
  
-@@ -209,6 +211,13 @@ function(__boost_scan_dependencies lib var)
- 
-       if(line MATCHES "^[ ]*Boost::([A-Za-z0-9_]+)[ ]*$")
- 
-+        list(APPEND required_components ${CMAKE_MATCH_1})
-+        string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
-+        list(APPEND result ${dep})
+         foreach(dep IN LISTS libs)
+           string(REGEX REPLACE "^Boost::" "" dep ${dep})
++          # Check if this dependency is optional in the original line
++          set(_is_optional OFF)
++          if(line MATCHES "\\$<TARGET_NAME_IF_EXISTS:Boost::${dep}>")
++            set(_is_optional ON)
++          endif()
+           if(dep STREQUAL "headers" OR dep STREQUAL "boost" OR dep MATCHES "linking")
+             continue()
+           endif()
+@@ -263,11 +271,21 @@ function(__boost_scan_dependencies lib var sub_folder)
+               endif()
+             endforeach()
+           endif()
 +
-+      elseif(line MATCHES "^[ ]*\\$<TARGET_NAME_IF_EXISTS:Boost::([A-Za-z0-9_]+)>[ ]*$")
++          set(component_name ${dep})
++          string(REGEX REPLACE "^numeric/" "numeric_" component_name ${component_name})
++          
+           if(NOT dep STREQUAL lib)
+             if(type STREQUAL "Exclude")
+               list(APPEND libs_to_exclude ${dep})
++              list(APPEND exclude_components ${component_name})
+             else()
+               list(APPEND result ${dep})
++              if(_is_optional)
++                list(APPEND optional_components ${component_name})
++              else()
++                list(APPEND required_components ${component_name})
++              endif()
+             endif()
+           endif()
+         endforeach()
+@@ -280,7 +298,19 @@ function(__boost_scan_dependencies lib var sub_folder)
+ 
+   if(libs_to_exclude)
+     list(REMOVE_ITEM result ${libs_to_exclude})
++    list(REMOVE_ITEM optional_components ${exclude_components})
++    list(REMOVE_ITEM required_components ${exclude_components})
++  endif()
 +
-+        list(APPEND optional_components ${CMAKE_MATCH_1})
-         string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
-         list(APPEND result ${dep})
- 
-@@ -218,6 +227,12 @@ function(__boost_scan_dependencies lib var)
- 
-   endif()
- 
 +  list(REMOVE_DUPLICATES required_components)
 +  list(REMOVE_DUPLICATES optional_components)
-+  list(REMOVE_ITEM required_components boost ${lib}) # due to property_tree and python
++  list(REMOVE_ITEM required_components boost ${lib})
 +  if(required_components OR optional_components)
++    message(STATUS "boost required: " ${required_components})
++    message(STATUS "boost optional: " ${optional_components})
 +    find_package(Boost COMPONENTS ${required_components} OPTIONAL_COMPONENTS ${optional_components} REQUIRED CONFIG)
-+  endif()
+   endif()
++
+   list(REMOVE_DUPLICATES result)
    set(${var} ${result} PARENT_SCOPE)
  
- endfunction()
-@@ -280,10 +295,10 @@ while(__boost_libs_to_scan)
- 
-   list(REMOVE_DUPLICATES __boost_dependencies)
- 
--  set(__boost_libs_to_scan ${__boost_dependencies})
- 
-   if(__boost_libs_to_scan)
-     list(REMOVE_ITEM __boost_libs_to_scan ${__boost_include_libraries})
-+    list(REMOVE_ITEM __boost_libs_to_scan ${__boost_lib})
-   endif()
- 
-   list(APPEND __boost_include_libraries ${__boost_libs_to_scan})
-@@ -429,33 +444,3 @@ if(CMAKE_SKIP_INSTALL_RULES)
+@@ -552,33 +582,3 @@ if(CMAKE_SKIP_INSTALL_RULES)
    return()
  
  endif()

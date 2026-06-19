@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 337e403..87228c2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,7 +13,7 @@ project(ls-qpack
+ 	LANGUAGES C
+         HOMEPAGE_URL "https://github.com/litespeedtech/ls-qpack"
+         DESCRIPTION "QPACK compression library for use with HTTP/3" 
+-        VERSION 2.6.2)
++        VERSION 2.6.3)
+ 
+ option(LSQPACK_TESTS "Build tests")
+ option(LSQPACK_BIN "Build binaries" ON)

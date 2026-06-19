@@ -1,3 +1,3 @@
-set(qtgraphs_HASH "bba07dbda24a9a6e591ee6060a1eb3ea46295afe7af89c390805c1254522f93098b37628671e257327194733fad99d69df3bdbecedac1bbfc7b0083a9466f41b")
-set(qtgraphs_URL "https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtgraphs-everywhere-src-6.9.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.9/6.9.2/submodules/qtgraphs-everywhere-src-6.9.2.tar.xz")
-set(qtgraphs_FILENAME "qtgraphs-everywhere-src-6.9.2.tar.xz")
+set(qtgraphs_HASH "e9fef9b7f65c51ee3076e269fc5b8ed139ecf01295dd7e8d763e380ded1935f6224d3e7957a2ca705877aac83647a49c74573dd69ab067b49535454148fa313b")
+set(qtgraphs_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtgraphs-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtgraphs-everywhere-src-6.11.1.tar.xz")
+set(qtgraphs_FILENAME "qtgraphs-everywhere-src-6.11.1.tar.xz")

@@ -1,3 +1,3 @@
-set(qtwebview_HASH "7806e93b32787529c6149784a75d956218734a9768cd32fda058351cb5d77e590d48f5c5beae23d81e1eef85e8f96b86fde31056a988e5932b38800609cea6ae")
-set(qtwebview_URL "https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtwebview-everywhere-src-6.9.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.9/6.9.2/submodules/qtwebview-everywhere-src-6.9.2.tar.xz")
-set(qtwebview_FILENAME "qtwebview-everywhere-src-6.9.2.tar.xz")
+set(qtwebview_HASH "52d9c76172bdabae52678073a5cca1423b4267369f3793a6cd146474fae0482b0f4d9834fb4fa491c6b81e829776a15bed10e58425ca5426fc225586a316e4c6")
+set(qtwebview_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtwebview-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtwebview-everywhere-src-6.11.1.tar.xz")
+set(qtwebview_FILENAME "qtwebview-everywhere-src-6.11.1.tar.xz")

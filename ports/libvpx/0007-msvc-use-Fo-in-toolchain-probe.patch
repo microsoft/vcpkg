@@ -1,0 +1,79 @@
+--- a/build/make/configure.sh	2026-05-13 08:17:31.764191365 +0200
++++ b/build/make/configure.sh	2026-05-13 08:18:26.744873378 +0200
+@@ -298,37 +298,71 @@
+   "$@" >>${logfile} 2>&1
+ }
+ 
++# Emit the compiler/linker output flag for the given file.
++# cl.exe (and clang-cl when driven in cl mode) require -Fo<obj> / -Fe<exe> with no separating space;
++# every other compiler uses the GCC-style -o <file>.
++_cc_basename() {
++  local _cc="${1##*/}"
++  _cc="${_cc##*\\}"
++  echo "${_cc%.exe}"
++}
++
++# Convert a path to native Windows form when the compiler is MSVC.
++# MSYS2 temporary paths like /tmp/vpx-conf-1234.o get translated by the MSYS layer to D:\tmp\... which does not exist.
++# cygpath -w produces the real Windows path (e.g. C:\msys64\tmp\...).
++_native_output_path() {
++  case "$(_cc_basename "${1}")" in
++    cl|clang-cl|link) cygpath -w "$2" ;;
++    *)                echo "$2" ;;
++  esac
++}
++
++cc_obj_flag() {
++  case "$(_cc_basename "${CC}")" in
++    cl|clang-cl) echo "-Fo$(_native_output_path "${CC}" "$1")" ;;
++    *)           echo "-o $1" ;;
++  esac
++}
++
++cc_exe_flag() {
++  case "$(_cc_basename "${LD:-${CC}}")" in
++    cl|clang-cl) echo "-Fe$(_native_output_path "${LD:-${CC}}" "$1")" ;;
++    link)        echo "/OUT:$(_native_output_path "${LD:-${CC}}" "$1")" ;;
++    *)           echo "-o $1" ;;
++  esac
++}
++
+ check_cc() {
+   log check_cc "$@"
+   cat >${TMP_C}
+   log_file ${TMP_C}
+-  check_cmd ${CC} ${CFLAGS} "$@" -c -o ${TMP_O} ${TMP_C}
++  check_cmd ${CC} ${CFLAGS} "$@" -c $(cc_obj_flag ${TMP_O}) ${TMP_C}
+ }
+ 
+ check_cxx() {
+   log check_cxx "$@"
+   cat >${TMP_CC}
+   log_file ${TMP_CC}
+-  check_cmd ${CXX} ${CXXFLAGS} "$@" -c -o ${TMP_O} ${TMP_CC}
++  check_cmd ${CXX} ${CXXFLAGS} "$@" -c $(cc_obj_flag ${TMP_O}) ${TMP_CC}
+ }
+ 
+ check_cpp() {
+   log check_cpp "$@"
+   cat > ${TMP_C}
+   log_file ${TMP_C}
+-  check_cmd ${CC} ${CFLAGS} "$@" -E -o ${TMP_O} ${TMP_C}
++  check_cmd ${CC} ${CFLAGS} "$@" -E $(cc_obj_flag ${TMP_O}) ${TMP_C}
+ }
+ 
+ check_ld() {
+   log check_ld "$@"
+   check_cc $@ \
+-    && check_cmd ${LD} ${LDFLAGS} "$@" -o ${TMP_X} ${TMP_O} ${extralibs}
++    && check_cmd ${LD} ${LDFLAGS} "$@" $(cc_exe_flag ${TMP_X}) ${TMP_O} ${extralibs}
+ }
+ 
+ check_lib() {
+   log check_lib "$@"
+   check_cc $@ \
+-    && check_cmd ${LD} ${LDFLAGS} -o ${TMP_X} ${TMP_O} "$@" ${extralibs}
++    && check_cmd ${LD} ${LDFLAGS} $(cc_exe_flag ${TMP_X}) ${TMP_O} "$@" ${extralibs}
+ }
+ 
+ check_header(){

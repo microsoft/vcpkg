@@ -1,0 +1,13 @@
+diff --git a/src/3rdparty/chromium/build/config/linux/pkg-config.py b/src/3rdparty/chromium/build/config/linux/pkg-config.py
+index 0000000..0000000 100755
+--- a/src/3rdparty/chromium/build/config/linux/pkg-config.py
++++ b/src/3rdparty/chromium/build/config/linux/pkg-config.py
+@@ -248,7 +248,7 @@
+       json.dumps(
+           [sorted(includes),
+            sorted(cflags),
+-           sorted(libs),
++           libs,
+            sorted(lib_dirs)]))
+   return 0
+ 

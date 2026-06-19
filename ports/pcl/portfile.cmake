@@ -3,7 +3,11 @@ vcpkg_download_distfile(BOOST_1_89_0_COMPAT_PATCH
     FILENAME PointCloudLibrary-pcl-boost-1-89-0-compat.patch
     SHA512 2fefaeaeda9fe423b481cddf4de85eff58418286f24f065be8610216e87d8faeb869406b72b3a7158abd22d17e25742b54f6b9eb3c81f82a1718f938bb8e0d26
 )
-
+vcpkg_download_distfile(EIGEN3_5_0_0_COMPAT_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/commit/2d6929bdcd98beaa28fa8ee3a105beb566f16347.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-eigen3-5-0-0-compat.patch
+    SHA512 993a1f29d8dd62cee526a92f0c2bf62dca566428523166abfb74337da137d47dcf97febb9d98b2a17ee6cea331045350bfb37b221403c08214beaebb7120bf41
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
@@ -17,6 +21,7 @@ vcpkg_from_github(
         install-examples.patch
         fix-clang-cl.patch
         "${BOOST_1_89_0_COMPAT_PATCH}"
+        "${EIGEN3_5_0_0_COMPAT_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)

@@ -2,13 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO carnegierobotics/LibMultiSense
     REF ${VERSION}
-    SHA512 69472f288de46c0ecdbbbcb8c280610c1c80778d660098e3b639ab653b108096c3fb4cd92a21afd4745b959a0c80812c5bf2d42053760bbceeafd90e67c20388
+    SHA512 3f1278a2996517a6ca3c1baed765499365ab1bfd7a15e229e3d5babc7ee41c99b804a69d9e1f9ee9f3e075e01fd9624c04e98e3fad2f7b6b10c8986bd2bbe5a3
     HEAD_REF master
     PATCHES
-        0000-platform-specific-links.patch
-        0001-find-public-api-dependencies.patch
-        0002-disable-error-on-warning.patch
-        0003-utilities-cc-unreachable-code.patch
+        0000-disable-error-on-warning.patch
 )
 
 vcpkg_check_features(
@@ -42,11 +39,18 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+# LibMultiSense installs additional CMake helper modules alongside `MultiSenseConfig.cmake`.
+# `vcpkg_cmake_config_fixup()` only removes debug-side `*Config`/`*Targets` files, which leaves
+# `${CURRENT_PACKAGES_DIR}/debug/share/MultiSense` populated and triggers a post-build policy error.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 if ("utilities" IN_LIST FEATURES)
     set(_tool_names
         ChangeIpUtility
         ImageCalUtility
+        MultiChannelUtility
         PointCloudUtility
+        PtpUtility
         RectifiedFocalLengthUtility
         SaveImageUtility
         VersionInfoUtility
@@ -54,30 +58,13 @@ if ("utilities" IN_LIST FEATURES)
     if ("json-serialization" IN_LIST FEATURES)
         list(APPEND _tool_names DeviceInfoUtility)
     endif ()
+    if ("opencv" IN_LIST FEATURES)
+        list(APPEND _tool_names FeatureDetectorUtility)
+    endif ()
     vcpkg_copy_tools(
         TOOL_NAMES ${_tool_names}
         AUTO_CLEAN
     )
-
-    # Python equivalents of the above tools are also installed into bin.  These tools are duplicates and require that
-    # the Python bindings be built, which we are not doing.  Since they provide no additional functionality, remove
-    # them.
-    set(_python_tool_names
-        change_ip_utility.py
-        device_info_utility.py
-        image_cal_utility.py
-        point_cloud_utility.py
-        rectified_focal_length_utility.py
-        save_image_utility.py
-        version_info_utility.py
-    )
-    foreach (_python_tool_name IN LISTS _python_tool_names)
-        file(
-            REMOVE
-                "${CURRENT_PACKAGES_DIR}/debug/bin/${_python_tool_name}"
-                "${CURRENT_PACKAGES_DIR}/bin/${_python_tool_name}"
-        )
-    endforeach ()
 
     # Remove the bin directory if its empty (anticipated on non-Windows platforms).
     foreach (_directory IN ITEMS

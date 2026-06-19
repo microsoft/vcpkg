@@ -1,6 +1,7 @@
 {
   "name": "sproto",
   "version-date": "2024-07-08",
+  "port-version": 1,
   "description": "Yet another protocol library like google protocol buffers, but simple and fast",
   "homepage": "https://github.com/cloudwu/sproto",
   "license": "MIT",
