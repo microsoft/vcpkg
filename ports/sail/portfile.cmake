@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-heif.patch
         fix-include-directory.patch
+        fix-swscale.patch
 )
 
 # Enable selected codecs
