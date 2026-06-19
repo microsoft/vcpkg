@@ -40,6 +40,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         test BUILD_TESTING
+        test SAIL_ASAN
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
