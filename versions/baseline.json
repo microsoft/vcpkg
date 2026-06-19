@@ -9934,7 +9934,7 @@
     },
     "svt-av1": {
       "baseline": "3.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "swaggercpp": {
       "baseline": "0.3.0",
