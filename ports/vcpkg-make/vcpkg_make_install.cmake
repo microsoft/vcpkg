@@ -5,22 +5,9 @@ function(vcpkg_make_install)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "DISABLE_PARALLEL;ADD_BIN_TO_PATH"
         "LOGFILE_ROOT;MAKEFILE"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;TARGETS;ADDITIONAL_MSYS_PACKAGES;DIRECT_PACKAGES"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;TARGETS"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-
-    if(DEFINED arg_ADDITIONAL_MSYS_PACKAGES)
-        z_vcpkg_get_global_property(existing_additional_msys_packages "make_additional_msys_packages")
-        list(APPEND existing_additional_msys_packages ${arg_ADDITIONAL_MSYS_PACKAGES})
-        list(REMOVE_DUPLICATES existing_additional_msys_packages)
-        z_vcpkg_set_global_property(make_additional_msys_packages "${existing_additional_msys_packages}")
-    endif()
-
-    if(DEFINED arg_DIRECT_PACKAGES)
-        z_vcpkg_get_global_property(existing_direct_msys_packages "make_direct_msys_packages")
-        list(APPEND existing_direct_msys_packages ${arg_DIRECT_PACKAGES})
-        z_vcpkg_set_global_property(make_direct_msys_packages "${existing_direct_msys_packages}")
-    endif()
 
     if(NOT DEFINED arg_LOGFILE_ROOT)
         set(arg_LOGFILE_ROOT "make")
