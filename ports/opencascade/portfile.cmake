@@ -1,9 +1,10 @@
-string(REPLACE "." "_" VERSION_STR "V${VERSION}")
+# hot patch for 8.0.0 version is tag "V8_0_0_p1"
+set(VERSION_STR "V8_0_0_p1")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
     REF "${VERSION_STR}"
-    SHA512 fc5a57a25677f73b1adff8e94a901a11ff62109f16f447f2c8e8effe490ba501a705d8149a42f6c05f8a1524a5e9071df0566b48497cd58b0898a7e69b2c676b
+    SHA512 f150f73a5b0cfd202838465d4fffabfc1177b1edbf175a1fa375bcec575896a35b22422bee711d5ae948c4fc242a0a89ed68f1a45a693c2b54b9b8326eabf669
     HEAD_REF master
     PATCHES
         0001-cmake-keep-build-use-vcpkg-explicit.patch

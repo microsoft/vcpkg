@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-stream-buffer
     REF "v${VERSION}"
-    SHA512 73f49896f355e92eb2e1583befdfb6a8f3b9f64e6b8acd3aa6c83ad324cabfe5193b5f973d4c4d19d6feaa814e7fbc78db3caee6b665ec5b80bfc29b6042560f
+    SHA512 89a381c9e8a848400291a2c27b266c09a35a158ac4194d7af25fb5a333f3bcb044277117685ff00afbc733a10c6d76ab7eeb23d60ef4a818516086fe2f6487ab
     HEAD_REF main
 )
 

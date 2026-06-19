@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-use-local-packages.patch
         0002-fix-glaze-opts.patch
+        0003-fix-fmt-header.patch
 )
 
 vcpkg_cmake_configure(

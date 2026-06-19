@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slick-stream-buffer",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A C++ lock-free SPMC byte stream buffer",
   "homepage": "https://github.com/SlickQuant/slick-stream-buffer",
   "license": "MIT",

@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57ee0c23..e886352c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -111,7 +111,8 @@ if(HAS_MATHLIB)
+ endif()
+ 
+ if(NOT WITHOUT_CURL)
+-   find_package(CURL)
++   find_package(CURL REQUIRED)
++   
+    set(LIBCURL CURL::libcurl)
+    
+    # [.pc] Link applications against curl lib...
+diff --git a/cmake/supernovasConfig.cmake.in b/cmake/supernovasConfig.cmake.in
+index 99a0f18d..7c33ad0b 100644
+--- a/cmake/supernovasConfig.cmake.in
++++ b/cmake/supernovasConfig.cmake.in
+@@ -10,6 +10,10 @@ include("${CMAKE_CURRENT_LIST_DIR}/supernovasTargets.cmake")
+ # Get include directories from target properties
+ get_target_property(supernovas_INCLUDE_DIRS supernovas::core INTERFACE_INCLUDE_DIRECTORIES)
+ 
++if(NOT @WITHOUT_CURL@)
++    find_dependency(CURL)
++endif()
++
+ # Check if optional components are available
+ if(TARGET supernovas::cpp)
+     set(supernovas_cpp_FOUND TRUE)
