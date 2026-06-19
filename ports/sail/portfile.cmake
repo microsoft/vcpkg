@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 767707fa9e13d4696f5a18cde9cadc986c7273b82a86cabab8ab9cd53e81825754bf1a5e114fd58ec796e7d22824616882e06262d3a3db974bb7f8c7c3b95b19
     HEAD_REF master
     PATCHES
+        fix-android-ffmpeg-ndk.patch
         fix-ffmpeg-link-order.patch
         fix-heif.patch
         fix-include-directory.patch
