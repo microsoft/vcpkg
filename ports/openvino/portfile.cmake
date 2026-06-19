@@ -10,6 +10,7 @@ vcpkg_from_github(
         remove-stdext-on-new-msvc.diff
         fix_npu_deps.patch
         fix_gpu_includes.patch
+        fix_npu_compiler_download_location.patch
         android_remove_onetbb_warning.patch
         fix_arm64_windows_include.patch
 )
