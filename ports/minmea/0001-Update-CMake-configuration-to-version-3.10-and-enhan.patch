@@ -1,7 +1,7 @@
-From b7ae9f88f3066a42a3fe7fba60b2eae6e4c9d8cd Mon Sep 17 00:00:00 2001
+From 53ecd12879543a1934908d1026fb5bbf1f64d58a Mon Sep 17 00:00:00 2001
 From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
 Date: Mon, 8 Jun 2026 22:03:42 +0800
-Subject: [PATCH 1/2] Update CMake configuration to version 3.10 and enhance
+Subject: [PATCH] Update CMake configuration to version 3.10 and enhance
  project structure
 
 ---
@@ -11,7 +11,7 @@ Subject: [PATCH 1/2] Update CMake configuration to version 3.10 and enhance
  create mode 100644 cmake/minmeaConfig.cmake.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ce1865f..6bff10d 100644
+index ce1865f..e7ba636 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,48 +1,138 @@
@@ -46,7 +46,7 @@ index ce1865f..6bff10d 100644
  
 -set(minmea_SRCS minmea.c minmea.h)
 -add_library(minmea ${minmea_SRCS})
-+target_compile_features(minmea PUBLIC c_std_99)
++target_compile_features(minmea PRIVATE c_std_99)
 +
 +if(MSVC)
 +    target_compile_options(minmea PRIVATE /W4)
@@ -55,7 +55,7 @@ index ce1865f..6bff10d 100644
 +endif()
 +
 +if(NOT WIN32)
-+    target_compile_definitions(minmea PUBLIC
++    target_compile_definitions(minmea PRIVATE
 +        _POSIX_C_SOURCE=199309L
 +        _BSD_SOURCE
 +        _DEFAULT_SOURCE
