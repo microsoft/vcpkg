@@ -21,7 +21,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland-protocols
     REF "${VERSION}"
-    SHA512 f259a42d95cacfa66fbd080aa807af7d4aece3ce32f4cff791f9d550131a2427af4e8d80117dfbd2588d1f003fdd92b23219e6307c163d8ade05093a551cf95a
+    SHA512 f1095a667305dce9490b7fc2dddd263e50d90f505c7b2a281ff3a9f77f211589ec45c5124c07805f9d577484c80bf13f71b2dff6e0ae677fbb1bffdde60aec48
     HEAD_REF main
     PATCHES
         cross-build.diff
