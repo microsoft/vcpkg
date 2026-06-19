@@ -84,14 +84,18 @@ endif()
 if(VCPKG_HOST_IS_WINDOWS)
     # dumpbin detection fails with autoconf 2.72
     set(ENV{WANT_AUTOCONF} 2.71)
+    vcpkg_acquire_msys(MSYS_ROOT
+        PACKAGES autoconf-wrapper automake-wrapper autoconf-archive binutils libtool make which
+        DIRECT_PACKAGES
+            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
+            dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
+    )
+    vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+    set(VCPKG_MAKE_ACQUIRE_MSYS FALSE)
 endif()
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
-    ADDITIONAL_MSYS_PACKAGES
-        DIRECT_PACKAGES
-            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
-            dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
     OPTIONS
         ${OPTIONS}
         --enable-cxx

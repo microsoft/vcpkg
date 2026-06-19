@@ -5,23 +5,10 @@ function(vcpkg_make_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTORECONF;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_TRANSFORMATIONS;ADD_BIN_TO_PATH"
         "SOURCE_PATH;DEFAULT_OPTIONS_EXCLUDE"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES;ADDITIONAL_MSYS_PACKAGES;DIRECT_PACKAGES"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
-
-    if(DEFINED arg_ADDITIONAL_MSYS_PACKAGES)
-        z_vcpkg_get_global_property(existing_additional_msys_packages "make_additional_msys_packages")
-        list(APPEND existing_additional_msys_packages ${arg_ADDITIONAL_MSYS_PACKAGES})
-        list(REMOVE_DUPLICATES existing_additional_msys_packages)
-        z_vcpkg_set_global_property(make_additional_msys_packages "${existing_additional_msys_packages}")
-    endif()
-
-    if(DEFINED arg_DIRECT_PACKAGES)
-        z_vcpkg_get_global_property(existing_direct_msys_packages "make_direct_msys_packages")
-        list(APPEND existing_direct_msys_packages ${arg_DIRECT_PACKAGES})
-        z_vcpkg_set_global_property(make_direct_msys_packages "${existing_direct_msys_packages}")
-    endif()
 
     if(arg_DISABLE_DEFAULT_OPTIONS AND arg_DEFAULT_OPTIONS_EXCLUDE)
         message(FATAL_ERROR "DISABLE_DEFAULT_OPTIONS cannot be used together with DEFAULT_OPTIONS_EXCLUDE.")
