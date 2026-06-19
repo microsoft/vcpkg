@@ -61,7 +61,6 @@ vcpkg_cmake_configure(
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
-        -DSAIL_ASAN=OFF
         ${SAIL_WINDOWS_STATIC_CRT_FLAG}
 )
 
