@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 767707fa9e13d4696f5a18cde9cadc986c7273b82a86cabab8ab9cd53e81825754bf1a5e114fd58ec796e7d22824616882e06262d3a3db974bb7f8c7c3b95b19
     HEAD_REF master
     PATCHES
+        fix-ffmpeg-link-order.patch
         fix-heif.patch
         fix-include-directory.patch
         fix-swscale.patch
@@ -33,6 +34,11 @@ if ("openmp" IN_LIST FEATURES)
     set(SAIL_ENABLE_OPENMP ON)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        test BUILD_TESTING
+)
+
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -46,7 +52,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTING=OFF
+        ${FEATURE_OPTIONS}
         -DSAIL_COMBINE_CODECS=ON
         -DSAIL_ENABLE_OPENMP=${SAIL_ENABLE_OPENMP}
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
@@ -56,6 +62,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+if (BUILD_TESTING)
+    vcpkg_cmake_build(
+        TARGET test
+        LOGFILE_BASE test
+        ADD_BIN_TO_PATH
+    )
+endif()
 
 vcpkg_copy_pdbs()
 

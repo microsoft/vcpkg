@@ -37,7 +37,12 @@
     "avif": {
       "description": "Enable AVIF codec",
       "dependencies": [
-        "libavif"
+        {
+          "name": "libavif",
+          "features": [
+            "aom"
+          ]
+        }
       ]
     },
     "bmp": {
@@ -202,6 +207,17 @@
       "description": "Enable SVG codec",
       "dependencies": [
         "nanosvg"
+      ]
+    },
+    "test": {
+      "description": "Build and run tests",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "all"
+          ]
+        }
       ]
     },
     "tga": {
