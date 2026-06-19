@@ -11,7 +11,7 @@ vcpkg_from_gitlab(
         fix-multiple-def.patch
         x264-api-imports.diff
         duplicate-unused.diff
-        fix-no-docs.diff  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/work_items/5152
+        11894.diff  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/11894
 )
 
 vcpkg_find_acquire_program(FLEX)
