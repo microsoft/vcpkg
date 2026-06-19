@@ -1,8 +1,8 @@
 diff --git a/src/sail-codecs-archive/CMakeLists.txt b/src/sail-codecs-archive/CMakeLists.txt
-index 1111111..2222222 100644
+index 0a68aee..d58bd85 100644
 --- a/src/sail-codecs-archive/CMakeLists.txt
 +++ b/src/sail-codecs-archive/CMakeLists.txt
-@@ -69,6 +69,18 @@ if (WIN32 AND NOT BUILD_SHARED_LIBS AND "video" IN_LIST ENABLED_CODECS)
+@@ -69,6 +69,24 @@ if (WIN32 AND NOT BUILD_SHARED_LIBS AND "video" IN_LIST ENABLED_CODECS)
      target_link_libraries(sail-codecs INTERFACE secur32 ncrypt crypt32 bcrypt mfuuid strmiids)
  endif()
  
@@ -16,6 +16,12 @@ index 1111111..2222222 100644
 +        "-framework CoreVideo"
 +        "-framework CoreFoundation"
 +    )
++endif()
++
++# For static Android builds, FFmpeg requires additional NDK libraries
++#
++if (ANDROID AND NOT BUILD_SHARED_LIBS AND "video" IN_LIST ENABLED_CODECS)
++    target_link_libraries(sail-codecs INTERFACE mediandk android)
 +endif()
 +
  target_include_directories(sail-codecs PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../sail)

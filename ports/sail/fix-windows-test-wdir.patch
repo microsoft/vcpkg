@@ -1,5 +1,5 @@
 diff --git a/cmake/sail_test.cmake b/cmake/sail_test.cmake
-index 1111111..2222222 100644
+index 8e6383d..767013e 100644
 --- a/cmake/sail_test.cmake
 +++ b/cmake/sail_test.cmake
 @@ -9,7 +9,7 @@ macro(sail_test)

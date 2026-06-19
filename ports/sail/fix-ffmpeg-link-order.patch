@@ -1,5 +1,5 @@
 diff --git a/src/sail-codecs/video/CMakeLists.txt b/src/sail-codecs/video/CMakeLists.txt
-index 1111111..2222222 100644
+index 1dace3b..c077d4a 100644
 --- a/src/sail-codecs/video/CMakeLists.txt
 +++ b/src/sail-codecs/video/CMakeLists.txt
 @@ -21,11 +21,11 @@ endif()
