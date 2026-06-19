@@ -19,6 +19,7 @@ vcpkg_from_github(
         0048-backport-23039.patch
         0049-fix-twolame-pkgconfig.patch
         0050-fix-test-ld-absolute-lib-paths.patch
+        0051-create-resource-output-directories.patch
 )
 
 if(SOURCE_PATH MATCHES " ")

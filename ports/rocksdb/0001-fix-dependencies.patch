@@ -98,7 +98,7 @@ diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
 index 0bd14be11..ccc69ba72 100644
 --- a/cmake/RocksDBConfig.cmake.in
 +++ b/cmake/RocksDBConfig.cmake.in
-@@ -33,19 +33,24 @@ if(@WITH_BZ2@)
+@@ -33,19 +33,27 @@ if(@WITH_BZ2@)
  endif()
  
  if(@WITH_LZ4@)
@@ -121,9 +121,12 @@ index 0bd14be11..ccc69ba72 100644
 +  find_dependency(TBB CONFIG)
 +endif()
 +
-+if(@WITH_LIBURING@)
-+  find_dependency(PkgConfig)
-+  pkg_check_modules(liburing REQUIRED IMPORTED_TARGET GLOBAL liburing>=2.0)
++if(@WITH_LIBURING@ AND NOT TARGET PkgConfig::liburing)
++  find_library(liburing_LIBRARY_RELEASE NAMES uring REQUIRED)
++  add_library(PkgConfig::liburing UNKNOWN IMPORTED)
++  set_target_properties(PkgConfig::liburing PROPERTIES
++    IMPORTED_LOCATION "${liburing_LIBRARY_RELEASE}"
++  )
  endif()
  
  find_dependency(Threads)
