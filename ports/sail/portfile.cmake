@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-ffmpeg-link-order.patch
         fix-heif.patch
         fix-include-directory.patch
+        fix-jpegxl-android-log.patch
         fix-static-ffmpeg-link.patch
         fix-swscale.patch
         fix-windows-test-wdir.patch
