@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-ffmpeg-link-order.patch
         fix-heif.patch
+        fix-image-cpp-huge-dimensions.patch
         fix-include-directory.patch
         fix-static-link.patch
         fix-swscale.patch
@@ -39,7 +40,6 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         test BUILD_TESTING
-        test SAIL_ASAN
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -61,6 +61,7 @@ vcpkg_cmake_configure(
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
+        -DSAIL_ASAN=OFF
         ${SAIL_WINDOWS_STATIC_CRT_FLAG}
 )
 

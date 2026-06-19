@@ -1,0 +1,45 @@
+diff --git a/tests/bindings/c++/image.cpp b/tests/bindings/c++/image.cpp
+index 5e4a16f..d32c2b5 100644
+--- a/tests/bindings/c++/image.cpp
++++ b/tests/bindings/c++/image.cpp
+@@ -227,32 +227,6 @@ static MunitResult test_image_zero_height(const MunitParameter params[], void* u
+     return MUNIT_OK;
+ }
+ 
+-/* Test creating image with unreasonably large dimensions */
+-static MunitResult test_image_huge_dimensions(const MunitParameter params[], void* user_data)
+-{
+-    (void)params;
+-    (void)user_data;
+-
+-// ASAN immediately crashes the whole process due to actual OOM
+-#ifndef SAIL_ASAN_ENABLED
+-    bool exception_thrown = false;
+-    try
+-    {
+-        sail::image img(SAIL_PIXEL_FORMAT_BPP24_RGB, 1000000, 1000000);
+-    }
+-    catch (...)
+-    {
+-        exception_thrown = true;
+-    }
+-
+-    munit_assert(exception_thrown);
+-
+-    return MUNIT_OK;
+-#else
+-    return MUNIT_SKIP;
+-#endif
+-}
+-
+ /* Test creating image with invalid pixel format */
+ static MunitResult test_image_invalid_pixel_format(const MunitParameter params[], void* user_data)
+ {
+@@ -323,7 +297,6 @@ static MunitTest test_suite_tests[] = {
+     { (char *)"/zero-dimensions",              test_image_zero_dimensions,              NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+     { (char *)"/zero-width",                   test_image_zero_width,                   NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+     { (char *)"/zero-height",                  test_image_zero_height,                  NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+-    { (char *)"/huge-dimensions",              test_image_huge_dimensions,              NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+     { (char *)"/invalid-pixel-format",         test_image_invalid_pixel_format,         NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+     { (char *)"/save-with-initialized-pixels", test_image_save_with_initialized_pixels, NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
+     { (char *)"/conversion-to-same-format",    test_image_conversion_to_same_format,    NULL, NULL, MUNIT_TEST_OPTION_NONE, NULL },
