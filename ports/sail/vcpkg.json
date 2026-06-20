@@ -235,7 +235,15 @@
     "video": {
       "description": "Enable VIDEO codec",
       "dependencies": [
-        "ffmpeg"
+        {
+          "name": "ffmpeg",
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        }
       ]
     },
     "wal": {
