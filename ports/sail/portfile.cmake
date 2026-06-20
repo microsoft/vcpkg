@@ -2,16 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 767707fa9e13d4696f5a18cde9cadc986c7273b82a86cabab8ab9cd53e81825754bf1a5e114fd58ec796e7d22824616882e06262d3a3db974bb7f8c7c3b95b19
+    SHA512 0
     HEAD_REF master
     PATCHES
-        fix-ffmpeg-link-order.patch
         fix-heif.patch
-        fix-image-cpp-huge-dimensions.patch
         fix-include-directory.patch
-        fix-static-link.patch
-        fix-swscale.patch
-        fix-windows-test-wdir.patch
 )
 
 # Enable selected codecs
