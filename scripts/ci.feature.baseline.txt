@@ -1335,7 +1335,6 @@ sleepy-discord[voice]:arm64-linux=cascade
 sleepy-discord(android)=fail
 slikenet:arm64-linux=fail
 smpeg2:arm64-linux=cascade
-soci[mysql]:x86-windows=cascade
 soci[odbc]:arm64-linux=feature-fails # Could NOT find ODBC
 soem:arm64-windows=cascade
 soem:x64-windows-static-md=cascade
