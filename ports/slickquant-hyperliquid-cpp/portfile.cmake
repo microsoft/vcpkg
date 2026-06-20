@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME hyperliquid-cpp CONFIG_PATH share/hyperliquid)
+vcpkg_cmake_config_fixup(PACKAGE_NAME hyperliquid CONFIG_PATH share/hyperliquid)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
