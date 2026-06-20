@@ -1,0 +1,12 @@
+diff --git a/src/format_webm.c b/src/format_webm.c
+--- a/src/format_webm.c
++++ b/src/format_webm.c
+@@ -437,7 +437,7 @@ static size_t copy_possible(const void *src_base,
+ 
+     if (target_space < to_copy) to_copy = target_space;
+ 
+-    memcpy(target_base + *target_position, src_base + *src_position, to_copy);
++    memcpy((char *)target_base + *target_position, (const char *)src_base + *src_position, to_copy);
+ 
+     *src_position += to_copy;
+     *target_position += to_copy;

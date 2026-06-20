@@ -1,0 +1,29 @@
+diff --git a/src/connection.c b/src/connection.c
+--- a/src/connection.c
++++ b/src/connection.c
+@@ -208,10 +208,13 @@ static shout_connection_return_state_t shout_connection_iter__socket(shout_conne
+                 return SHOUT_RS_ERROR;
+             }
+         break;
++        case SHOUT_SOCKSTATE_TLS_VERIFIED:
++            return SHOUT_RS_DONE;
+ #else
+         case SHOUT_SOCKSTATE_CONNECTED:
+         case SHOUT_SOCKSTATE_TLS_CONNECTING:
+         case SHOUT_SOCKSTATE_TLS_CONNECTED:
++        case SHOUT_SOCKSTATE_TLS_VERIFIED:
+             shout_connection_set_error(con, SHOUTERR_UNSUPPORTED);
+             return SHOUT_RS_ERROR;
+         break;
+@@ -443,6 +446,8 @@ static shout_connection_return_state_t shout_connection_iter__protocol(shout_con
+         case SHOUT_RS_TIMEOUT:
+             shout_connection_set_error(con, SHOUTERR_RETRY);
+         break;
++        case SHOUT_RS_DONE:
++        	return SHOUT_RS_DONE;
+     }
+ 
+     return ret;
+-- 
+2.25.1
+

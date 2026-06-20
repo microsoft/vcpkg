@@ -1,0 +1,62 @@
+diff --git a/httpp/encoding.c b/httpp/encoding.c
+--- a/httpp/encoding.c
++++ b/httpp/encoding.c
+@@ -48,16 +48,16 @@ struct httpp_encoding_tag {
+     httpp_meta_t *meta_read;
+     httpp_meta_t *meta_write;
+ 
+-    void *buf_read_raw; /* input buffer */
++    char *buf_read_raw; /* input buffer */
+     size_t buf_read_raw_offset, buf_read_raw_len;
+ 
+-    void *buf_read_decoded; /* decoded stuff */
++    char *buf_read_decoded; /* decoded stuff */
+     size_t buf_read_decoded_offset, buf_read_decoded_len;
+ 
+-    void *buf_write_raw; /* input buffer */
++    char *buf_write_raw; /* input buffer */
+     size_t buf_write_raw_offset, buf_write_raw_len;
+ 
+-    void *buf_write_encoded; /* encoded output */
++    char *buf_write_encoded; /* encoded output */
+     size_t buf_write_encoded_offset, buf_write_encoded_len;
+ 
+     /* backend specific stuff */
+@@ -73,9 +73,9 @@ static ssize_t __enc_chunked_read(httpp_encoding_t *self, void *buf, size_t len,
+ static ssize_t __enc_chunked_write(httpp_encoding_t *self, const void *buf, size_t len, ssize_t (*cb)(void*, const void*, size_t), void *userdata);
+ 
+ /* function to move some data out of our buffers */
+-ssize_t __copy_buffer(void *dst, void **src, size_t *boffset, size_t *blen, size_t len)
++ssize_t __copy_buffer(void *dst, char **src, size_t *boffset, size_t *blen, size_t len)
+ {
+-    void *p;
++    char *p;
+     size_t have_len;
+     size_t todo;
+ 
+@@ -260,7 +260,7 @@ ssize_t           httpp_encoding_read(httpp_encoding_t *self, void *buf, size_t
+ 
+     if (ret > 0) {
+         done += ret;
+-        buf  += ret;
++        buf  = (char*)buf + ret;
+         len  -= ret;
+     }
+ 
+@@ -271,14 +271,14 @@ ssize_t           httpp_encoding_read(httpp_encoding_t *self, void *buf, size_t
+         return -1;
+ 
+     done += ret;
+-    buf  += ret;
++    buf  = (char*)buf + ret;
+     len  -= ret;
+ 
+     if (len) {
+         ret = __copy_buffer(buf, &(self->buf_read_decoded), &(self->buf_read_decoded_offset), &(self->buf_read_decoded_len), len);
+         if (ret > 0) {
+             done += ret;
+-            buf  += ret;
++            buf  = (char*)buf + ret;
+             len  -= ret;
+         }
+     }

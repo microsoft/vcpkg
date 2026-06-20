@@ -1,0 +1,18 @@
+diff --git a/include/shout/shout.h.in b/include/shout/shout.h.in
+--- a/include/shout/shout.h.in
++++ b/include/shout/shout.h.in
+@@ -23,8 +23,12 @@
+ #define __LIBSHOUT_SHOUT_H__
+ 
+ #include <sys/types.h>
+-#if defined(WIN32) && !defined(__MINGW64__) && !defined(__MINGW32__)
+-#include <os.h>
++#if defined(_WIN32) && !defined(__MINGW64__) && !defined(__MINGW32__)
++#ifndef _SSIZE_T_DEFINED
++#define _SSIZE_T_DEFINED
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
+ #endif
+ 
+ #include <stdarg.h>

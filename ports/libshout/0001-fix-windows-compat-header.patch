@@ -1,0 +1,20 @@
+diff --git a/net/sock.h b/net/sock.h
+--- a/net/sock.h
++++ b/net/sock.h
+@@ -35,8 +35,14 @@
+ 
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+-#elif _WIN32
+-#include <compat.h>
++#elif defined(_WIN32)
++#include <io.h>
++#include <direct.h>
++#ifndef _SSIZE_T_DEFINED
++#define _SSIZE_T_DEFINED
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
+ #endif
+ 
+ #ifdef HAVE_SYS_UIO_H

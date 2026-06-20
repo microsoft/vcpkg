@@ -1,0 +1,16 @@
+diff --git a/httpp/encoding.c b/httpp/encoding.c
+--- a/httpp/encoding.c
++++ b/httpp/encoding.c
+@@ -27,7 +27,12 @@
+ #endif
+ 
+ #include <sys/types.h>
++#ifndef _WIN32
+ #include <strings.h>
++#else
++#define strcasecmp _stricmp
++#define strncasecmp _strnicmp
++#endif
+ #include <string.h>
+ #include <stdlib.h>
+ #include <stdio.h>

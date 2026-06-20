@@ -1,0 +1,17 @@
+diff --git a/httpp/encoding.h b/httpp/encoding.h
+--- a/httpp/encoding.h
++++ b/httpp/encoding.h
+@@ -26,6 +26,13 @@
+ #define __ENCODING_H
+ 
+ #include <sys/types.h>
++#ifdef _WIN32
++#ifndef _SSIZE_T_DEFINED
++#define _SSIZE_T_DEFINED
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
++#endif
+ 
+ /* known encodings */
+ #define HTTPP_ENCODING_IDENTITY "identity" /* RFC2616 */
