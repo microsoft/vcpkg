@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-	REPO SOCI/soci
-	REF "v${VERSION}"
+    REPO SOCI/soci
+    REF "v${VERSION}"
     SHA512 0553fb7856c77158b229c33fb7a14402f9d740825db5b0c0c4cbbbc2596faa56b099f7e13bece5af506311c393e6fcb4e8b448522d15bba57c6dd0d23e6467c1
     HEAD_REF master
 )
@@ -51,7 +51,7 @@ This SOCI build doesn't include any backend and may not be useful.
 ")
 else()
     string(APPEND usage "
-	# This version of SOCI was built with support for these components:
+    # This version of SOCI was built with support for these components:
     # - core
 ")
 endif()
