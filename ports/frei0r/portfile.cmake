@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dyne/frei0r
     REF "v${VERSION}"
-    SHA512 bbc894cad88c1927dfe8968f9708ad6c2715cefff7da949fb35db8dcde76ab7289907ad5181894dd4da5b57ec7a4f11923c5d8882de6578ea94c4d5d57f50153
+    SHA512 46276108c252c2e10f290fe3854575e642968138e13ab3630ca3d0f2ec2af8af01b6fc579b73a904542bfd9e4fbfa1c6eb4fd643e82b7e475b992b6baa002fa6
     HEAD_REF master
     PATCHES
         001-fix-defs.patch
