@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 0e6bd4fb7910eda29e0cd6d96e31ff9a476d5836055e4653d6401ab72209eccd3624b8c1e92b7cd0d22ecdaa8ffde44b155da36da61c99ec0c06e1d388bd1d67
+    SHA512 191b6715d6a2050064c7d157c113f60db5fd729106aa2be778fcb9acb91e5f8d9fa6143419d686642c21de42a7f5b3faa4a0bf0d86e0efa93624f70fb606d670
     HEAD_REF master
     PATCHES
         fix-heif.patch
         fix-include-directory.patch
-        no-binary-dependencies-install.diff
 )
 
 # Enable selected codecs
