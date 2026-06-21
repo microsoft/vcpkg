@@ -5646,7 +5646,7 @@
     },
     "libshout": {
       "baseline": "2.4.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libsigcpp": {
       "baseline": "3.8.1",
