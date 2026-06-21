@@ -1,6 +1,7 @@
 {
   "name": "hanjingo-high-jump",
   "version": "1.0.9",
+  "port-version": 1,
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -114,6 +115,12 @@
         "quirc"
       ]
     },
+    "llama": {
+      "description": "Enable llama support",
+      "dependencies": [
+        "llama-cpp"
+      ]
+    },
     "log": {
       "description": "Enable log support",
       "dependencies": [
@@ -208,6 +215,12 @@
       "description": "Enable USB and Bluetooth support",
       "dependencies": [
         "hidapi"
+      ]
+    },
+    "vector-index": {
+      "description": "Enable vector database support",
+      "dependencies": [
+        "faiss"
       ]
     },
     "xml": {
