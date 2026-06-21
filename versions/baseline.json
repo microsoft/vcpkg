@@ -3581,7 +3581,7 @@
       "port-version": 4
     },
     "graphviz": {
-      "baseline": "15.0.0",
+      "baseline": "15.1.0",
       "port-version": 0
     },
     "greatest": {
