@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.12.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://opencv.org/",
   "documentation": "https://docs.opencv.org/4.12.0/",
@@ -56,6 +56,10 @@
     "quirc",
     "thread",
     "tiff",
+    {
+      "name": "v4l",
+      "platform": "linux"
+    },
     "webp",
     {
       "name": "win32ui",
@@ -487,6 +491,10 @@
           "default-features": false
         }
       ]
+    },
+    "v4l": {
+      "description": "Video4Linux support for opencv",
+      "supports": "linux"
     },
     "vtk": {
       "description": "vtk support for opencv",

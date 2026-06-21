@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 7e8e555901ea8c60d0bbd69933b284b88930c8bff771363d83228302832f43e3ae560f9666b1410ce388e60285c4a41b297a2d99fa465cbe23b406afd0647612
     PATCHES
         disable-autosubscribe.diff
+        fix-missing-header.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" VANILLAPDF_USE_STATIC_CRT)

@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/pulsar/pulsar-client-cpp-${VERSION}/apache-pulsar-client-cpp-${VERSION}.tar.gz"
     FILENAME "apache-pulsar-client-cpp-${VERSION}.tar.gz"
-    SHA512 cedb1bbc688b5e18a42b301e69d541f732bac01dce5b3ace4e031ab51488be9543fe03a77efefc8d67811d036920923d47c0c48e8c36f71c3c4d50237c0ffb6c
+    SHA512 575df2ae2b86abb21e58fbbbb0de962bc95f4e83963251d4d4f79b5bac29c3394e8efcb346a2f7922ef7d4cabf7b1a15fe6d3ee50794b0e0b3115d9910b7b0b4
 )
 
 vcpkg_extract_source_archive(

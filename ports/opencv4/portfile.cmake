@@ -140,6 +140,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "text"       BUILD_opencv_text
  "text"       WITH_TESSERACT
  "tiff"       WITH_TIFF
+ "v4l"        WITH_V4L
  "vtk"        WITH_VTK
  "vulkan"     WITH_VULKAN
  "webp"       WITH_WEBP
