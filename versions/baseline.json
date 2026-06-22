@@ -1937,7 +1937,7 @@
       "port-version": 0
     },
     "comms": {
-      "baseline": "5.5.1",
+      "baseline": "5.5.2",
       "port-version": 0
     },
     "comms-ublox": {
