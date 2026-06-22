@@ -3749,7 +3749,7 @@
       "port-version": 1
     },
     "hamlib": {
-      "baseline": "4.7.1",
+      "baseline": "4.7.2",
       "port-version": 0
     },
     "hanjingo-high-jump": {
