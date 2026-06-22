@@ -6,6 +6,7 @@
   "license": "LGPL-2.1-or-later",
   "dependencies": [
     "expat",
+	"glib",
     {
       "name": "glib",
       "host": true
