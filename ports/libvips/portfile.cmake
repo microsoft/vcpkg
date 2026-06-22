@@ -62,7 +62,7 @@ endforeach()
 ## until we get libvips v8.19 where fuzz has an option for being disabled,
 ## we have to avoid fuzz directory from meson.build in order for windows to build
 ## because MSVC does not support `__attribute__((weak))`
-vcpkg_replace_string("${SOURCE_PATH}/meson.build " "subdir('fuzz')" "")
+vcpkg_replace_string("${SOURCE_PATH}/meson.build" "subdir('fuzz')" "")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
