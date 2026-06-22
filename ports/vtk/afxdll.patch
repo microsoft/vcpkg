@@ -1,8 +1,17 @@
+From 9c2ba3f2032e46c6e071805b00ae5006b5b3e80d Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 16:39:02 +0200
+Subject: [PATCH 11/22] afx
+
+---
+ GUISupport/MFC/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/GUISupport/MFC/CMakeLists.txt b/GUISupport/MFC/CMakeLists.txt
-index b59b5309..c0818ad3 100644
+index bac44ab0..799faefb 100644
 --- a/GUISupport/MFC/CMakeLists.txt
 +++ b/GUISupport/MFC/CMakeLists.txt
-@@ -10,7 +10,7 @@ endif ()
+@@ -16,7 +16,7 @@ endif ()
  # Determine whether the shared or static MFC implementation to use.
  if (use_policy_0091) # XXX(cmake-3.15)
    if (NOT CMAKE_MSVC_RUNTIME_LIBRARY OR # The default uses `DLL`.
@@ -11,3 +20,6 @@ index b59b5309..c0818ad3 100644
      set(vtk_mfc_static 0)
    else ()
      set(vtk_mfc_static 1)
+-- 
+2.47.3
+

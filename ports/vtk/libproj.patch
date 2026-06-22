@@ -1,8 +1,19 @@
+From b6872f8bea1d5ed17332f641dc521fea8e81ad37 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 15:19:16 +0200
+Subject: [PATCH 04/22] proj
+
+---
+ CMakeLists.txt                    | 1 -
+ ThirdParty/libproj/CMakeLists.txt | 8 +++++---
+ ThirdParty/libproj/vtk.module     | 4 ----
+ 3 files changed, 5 insertions(+), 8 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7c97ed2a..8df64eb1 100644
+index 4d38a1c9..3b6cf1d0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -435,7 +435,6 @@ endif ()
+@@ -544,7 +544,6 @@ endif ()
  # Handle the requirement of `sqlitebin` for `proj`.
  set(vtk_sqlite_build_binary 0)
  if ("VTK::libproj" IN_LIST vtk_modules)
@@ -31,10 +42,10 @@ index cea568e1..05f85fbd 100644
  if (NOT VTK_MODULE_USE_EXTERNAL_VTK_libproj)
    set(LibPROJ_MAJOR_VERSION "8")
 diff --git a/ThirdParty/libproj/vtk.module b/ThirdParty/libproj/vtk.module
-index e49d988f..bb2d22e7 100644
+index 1f913cd2..c3fe44c5 100644
 --- a/ThirdParty/libproj/vtk.module
 +++ b/ThirdParty/libproj/vtk.module
-@@ -6,8 +6,4 @@ SPDX_LICENSE_IDENTIFIER
+@@ -6,10 +6,6 @@ SPDX_LICENSE_IDENTIFIER
    BSD-3-Clause
  SPDX_COPYRIGHT_TEXT
    Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
@@ -42,4 +53,9 @@ index e49d988f..bb2d22e7 100644
 -  VTK::nlohmannjson
 -PRIVATE_DEPENDS
 -  VTK::sqlite
+ TEST_DEPENDS
+   VTK::TestingCore
  THIRD_PARTY
+-- 
+2.47.3
+

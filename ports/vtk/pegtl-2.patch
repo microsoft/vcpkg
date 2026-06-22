@@ -1,0 +1,42 @@
+From b62025cc1047633475623d863058b50c11f8d537 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Mon, 22 Jun 2026 21:11:42 +0200
+Subject: [PATCH 22/22] pegtl
+
+---
+ CMake/vtkInstallCMakePackage.cmake | 1 -
+ ThirdParty/pegtl/CMakeLists.txt    | 6 +++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/CMake/vtkInstallCMakePackage.cmake b/CMake/vtkInstallCMakePackage.cmake
+index 0b06886a..4076f527 100644
+--- a/CMake/vtkInstallCMakePackage.cmake
++++ b/CMake/vtkInstallCMakePackage.cmake
+@@ -123,7 +123,6 @@ set(vtk_cmake_module_files
+   FindOpenVR.cmake
+   FindOpenXRRemoting.cmake
+   FindOSMesa.cmake
+-  FindPEGTL.cmake
+   FindTBB.cmake
+   FindTHEORA.cmake
+   Findutf8cpp.cmake
+diff --git a/ThirdParty/pegtl/CMakeLists.txt b/ThirdParty/pegtl/CMakeLists.txt
+index 27c89427..5fef0f58 100644
+--- a/ThirdParty/pegtl/CMakeLists.txt
++++ b/ThirdParty/pegtl/CMakeLists.txt
+@@ -12,9 +12,9 @@ vtk_module_third_party(
+     VERSION
+       "2.8.3"
+   EXTERNAL
+-    PACKAGE PEGTL
+-    VERSION 2.0.0
+-    TARGETS PEGTL::PEGTL
++    PACKAGE pegtl-2
++    TARGETS taocpp::pegtl
++    CONFIG_MODE
+     STANDARD_INCLUDE_DIRS)
+ 
+ configure_file(
+-- 
+2.47.3
+

@@ -1,6 +1,18 @@
+From 0a00f0b6bbf4e1e41d24e690393eb5a97cd10466 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 17:02:23 +0200
+Subject: [PATCH 18/22] eigen
+
+---
+ CMake/FindEigen3.cmake             | 33 ------------------------------
+ CMake/vtkInstallCMakePackage.cmake |  1 -
+ ThirdParty/eigen/CMakeLists.txt    |  3 ++-
+ 3 files changed, 2 insertions(+), 35 deletions(-)
+ delete mode 100644 CMake/FindEigen3.cmake
+
 diff --git a/CMake/FindEigen3.cmake b/CMake/FindEigen3.cmake
 deleted file mode 100644
-index 103690ed5a..0000000000
+index 103690ed..00000000
 --- a/CMake/FindEigen3.cmake
 +++ /dev/null
 @@ -1,33 +0,0 @@
@@ -38,19 +50,19 @@ index 103690ed5a..0000000000
 -  endif ()
 -endif ()
 diff --git a/CMake/vtkInstallCMakePackage.cmake b/CMake/vtkInstallCMakePackage.cmake
-index 7dbd33024c..343910c144 100644
+index 2cca3608..5f3cb83e 100644
 --- a/CMake/vtkInstallCMakePackage.cmake
 +++ b/CMake/vtkInstallCMakePackage.cmake
-@@ -93,7 +93,6 @@ configure_file(
+@@ -101,7 +101,6 @@ configure_file(
+ 
  set(vtk_cmake_module_files
-   Finddouble-conversion.cmake
    FindDirectX.cmake
 -  FindEigen3.cmake
    FindEXPAT.cmake
    FindExprTk.cmake
    FindFFMPEG.cmake
 diff --git a/ThirdParty/eigen/CMakeLists.txt b/ThirdParty/eigen/CMakeLists.txt
-index 38e1bdc3b1..f9ce623c44 100644
+index 6a786a26..855c4008 100644
 --- a/ThirdParty/eigen/CMakeLists.txt
 +++ b/ThirdParty/eigen/CMakeLists.txt
 @@ -14,7 +14,8 @@ vtk_module_third_party(
@@ -63,3 +75,6 @@ index 38e1bdc3b1..f9ce623c44 100644
      STANDARD_INCLUDE_DIRS)
  
  configure_file(
+-- 
+2.47.3
+

@@ -1,0 +1,31 @@
+diff --git a/Common/DataModel/vtkCellAttribute.cxx b/Common/DataModel/vtkCellAttribute.cxx
+index 3c022efc..1ed1f663 100644
+--- a/Common/DataModel/vtkCellAttribute.cxx
++++ b/Common/DataModel/vtkCellAttribute.cxx
+@@ -595,10 +595,10 @@ bool vtkCellAttribute::DecodeSpace(
+   {
+     if (!quiet)
+     {
+-      const auto p = err.positions.front();
++      const auto p = err.positions().front();
+       vtkGenericWarningMacro("Attribute Space: " << err.what() << "\n"
+-                                                 << in.line_at(p) << "\n"
+-                                                 << std::string(p.byte_in_line, ' ') << "^\n");
++                                                 << std::string(in.line_at(p)) << "\n"
++                                                 << std::string(p.column, ' ') << "^\n");
+     }
+     return false;
+   }
+diff --git a/IO/IOSS/vtkIOSSModel.cxx b/IO/IOSS/vtkIOSSModel.cxx
+index 30c10862..9b775648 100644
+--- a/IO/IOSS/vtkIOSSModel.cxx
++++ b/IO/IOSS/vtkIOSSModel.cxx
+@@ -1278,7 +1278,7 @@ struct vtkEntityBlock : public vtkGroupingEntity
+       if (this->Writer->GetPreserveOriginalIds())
+       {
+         entityBlock->property_add(
+-          Ioss::Property("original_id", this->BlockId, Ioss::Property::ATTRIBUTE));
++          Ioss::Property("original_id", this->BlockId, Ioss::Property::Origin::ATTRIBUTE));
+       }
+       this->AddEntity(region, entityBlock);
+     }
