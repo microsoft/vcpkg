@@ -1,5 +1,3 @@
-## uncomment this to temporarily enabling head fetch
-#set(VCPKG_USE_HEAD_VERSION TRUE)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -64,9 +62,7 @@ endforeach()
 ## until we get libvips v8.19 where fuzz has an option for being disabled,
 ## we have to avoid fuzz directory from meson.build in order for windows to build
 ## because MSVC does not support `__attribute__((weak))`
-file(READ ${SOURCE_PATH}/meson.build FILE_CONTENTS)
-string(REPLACE "subdir('fuzz')" "" FILE_CONTENTS "${FILE_CONTENTS}")
-file(WRITE ${SOURCE_PATH}/meson.build "${FILE_CONTENTS}")
+vcpkg_replace_string("${SOURCE_PATH}/meson.build " "subdir('fuzz')" "")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
