@@ -2197,7 +2197,7 @@
       "port-version": 2
     },
     "crcpp": {
-      "baseline": "1.2.1.0",
+      "baseline": "1.2.2.0",
       "port-version": 0
     },
     "crfsuite": {
