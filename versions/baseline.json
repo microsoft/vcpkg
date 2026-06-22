@@ -5249,7 +5249,7 @@
       "port-version": 0
     },
     "liblo": {
-      "baseline": "0.35",
+      "baseline": "0.36",
       "port-version": 0
     },
     "liblrc": {
