@@ -36,6 +36,10 @@
       "version>=": "1.5.0"
     },
     {
+      "name": "slick-stream-buffer",
+      "version>=": "1.0.5"
+    },
+    {
       "name": "slick-stream-buffer-multiplexer",
       "version>=": "1.0.1"
     },
