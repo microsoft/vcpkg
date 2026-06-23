@@ -1913,7 +1913,7 @@
       "port-version": 1
     },
     "coinbase-advanced-cpp": {
-      "baseline": "0.3.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "coinutils": {
@@ -9409,7 +9409,7 @@
       "port-version": 0
     },
     "slick-net": {
-      "baseline": "2.1.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "slick-object-pool": {
@@ -9437,7 +9437,7 @@
       "port-version": 0
     },
     "slickquant-hyperliquid-cpp": {
-      "baseline": "0.1.2",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "slikenet": {
