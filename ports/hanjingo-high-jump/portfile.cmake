@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanjingo/high-jump
     REF v${VERSION}
-    SHA512 e39c8acc98a9b3530603fa94781a99b627f52491b982be10ec67be9b9b6ab2dbf5268cf391b3b11a861d3100abcd5d94ea3bc9adc003dce4986b208a887d6bf2
+    SHA512 768d17fe0dbd4c1aec90c2b3b61984937f0afaa210749b34be5e4d85e830191e70e40d2aacfa8a1f317ebefeb56ef796f3e1da633c21e49148f60e900cb69b67
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,6 +36,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gzip            HJ_ENABLE_GZIP
         behavior-tree   HJ_ENABLE_BEHAVIOR_TREE
         qrcode          HJ_ENABLE_QRCODE
+        vector-index    HJ_ENABLE_VECTOR_INDEX
+        llama           HJ_ENABLE_LLAMA
 )
 
 vcpkg_cmake_configure(
@@ -50,7 +52,5 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
