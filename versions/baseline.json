@@ -5029,7 +5029,7 @@
       "port-version": 0
     },
     "libffi": {
-      "baseline": "3.5.2",
+      "baseline": "3.6.0",
       "port-version": 0
     },
     "libfido2": {
