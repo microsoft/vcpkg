@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix_build_with_boost_1_88_0.diff
+        fix-fmt-header.patch
 )
 
 vcpkg_cmake_configure(
