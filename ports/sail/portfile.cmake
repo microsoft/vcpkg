@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 191b6715d6a2050064c7d157c113f60db5fd729106aa2be778fcb9acb91e5f8d9fa6143419d686642c21de42a7f5b3faa4a0bf0d86e0efa93624f70fb606d670
     HEAD_REF master
     PATCHES
+        fix-always-nanosvg.diff
         fix-heif.patch
         fix-include-directory.patch
 )
