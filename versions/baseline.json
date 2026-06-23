@@ -4229,7 +4229,7 @@
       "port-version": 0
     },
     "jsonifier": {
-      "baseline": "0.9.98",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "jsonnet": {
@@ -8969,7 +8969,7 @@
       "port-version": 1
     },
     "rtc-benchmarksuite": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "rtlsdr": {
