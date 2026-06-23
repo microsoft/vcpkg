@@ -807,7 +807,6 @@ mygui[tools]:arm64-osx=feature-fails # Linker errors undefined symbols. See http
 mysql-connector-cpp:arm64-linux=fail
 nana:arm64-linux=fail
 nana:x64-linux=fail
-nanobind:arm64-linux=cascade
 nanogui:arm64-linux=cascade
 nativefiledialog-extended:arm64-linux=cascade
 neko-network[nlog]:arm64-linux=feature-fails
