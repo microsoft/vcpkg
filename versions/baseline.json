@@ -4628,6 +4628,10 @@
       "baseline": "2019-08-06",
       "port-version": 3
     },
+    "kwallet": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kwidgetsaddons": {
       "baseline": "6.25.0",
       "port-version": 0
