@@ -9952,6 +9952,10 @@
       "baseline": "0.14.0",
       "port-version": 1
     },
+    "syntax-highlighting": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "syscalls-cpp": {
       "baseline": "1.2.1",
       "port-version": 0
