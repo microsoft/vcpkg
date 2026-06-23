@@ -12,7 +12,7 @@ vcpkg_from_github(
 # Enable selected codecs
 set(ONLY_CODECS "")
 
-# List of codecs copy-pased from SAIL
+# List of codecs copy-pasted from SAIL
 set(HIGHEST_PRIORITY_CODECS gif jpeg png svg webp)
 set(HIGH_PRIORITY_CODECS    avif ico)
 set(MEDIUM_PRIORITY_CODECS  heif openexr psd raw tiff video)

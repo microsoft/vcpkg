@@ -155,7 +155,7 @@
       ]
     },
     "medium-priority-codecs": {
-      "description": "Enable medium priority codecs such as AVIF",
+      "description": "Enable medium priority codecs such as TIFF",
       "dependencies": [
         {
           "name": "sail",
