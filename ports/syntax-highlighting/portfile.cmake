@@ -23,6 +23,12 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DBUILD_codeeditor=OFF
+        -DBUILD_codepdfprinter=OFF
+        -DBUILD_minimaltest=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Quick=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_XercesC=ON
         -DKDE_INSTALL_QMLDIR=qml
         ${FEATURE_OPTIONS}
 )
