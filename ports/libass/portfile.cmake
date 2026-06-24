@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libass/libass
     REF ${VERSION}
-    SHA512 08762623dd09e3034699ba9d11b70d1f6cc6b2e3b38aa897b07efef1364e76141df484e70ed27888cf3595b77d072cdb5e8abbbfa560e33ca21f87872e24df8d
+    SHA512 8dfea8ef3043ace28efa8a6ae4d6a443fd19d49ad19a521a642e7ec3a7c6f97284cda16d479e168ce30bd560f7e05a0675c9f3fde872bb92ed650343499a57b1
     HEAD_REF master
     PATCHES
         arm64-windows-asm.patch
