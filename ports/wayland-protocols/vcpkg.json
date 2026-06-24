@@ -12,6 +12,21 @@
     }
   ],
   "features": {
+    "force-build": {
+      "description": [
+        "Generate protocol helper headers.",
+        "Use the wayland-scanner host tool from vcpkg."
+      ],
+      "dependencies": [
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "scanner"
+          ]
+        }
+      ]
+    },
     "generated-headers": {
       "description": [
         "Generate protocol helper headers.",

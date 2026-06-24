@@ -2,12 +2,18 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        "force-build" FORCE_BUILD
         "generated-headers" GENERATED_HEADERS
 )
 
 set(GENERATED_HEADERS_OPTION false)
-if(GENERATED_HEADERS)
+set(BINARIES "")
+if(FORCE_BUILD OR GENERATED_HEADERS)
     set(GENERATED_HEADERS_OPTION true)
+endif()
+if(FORCE_BUILD)
+    list(APPEND BINARIES "wayland_scanner = ['${CURRENT_HOST_INSTALLED_DIR}/tools/wayland/wayland-scanner${VCPKG_HOST_EXECUTABLE_SUFFIX}']")
+elseif(GENERATED_HEADERS)
     if(VCPKG_HOST_IS_WINDOWS OR VCPKG_HOST_IS_OSX)
         message(WARNING "${PORT}[generated-headers] requires a host wayland-scanner provided outside vcpkg on this platform.")
     endif()
@@ -29,6 +35,8 @@ vcpkg_configure_meson(
     OPTIONS
         -Dgenerated_headers=${GENERATED_HEADERS_OPTION}
         -Dtests=false
+    ADDITIONAL_BINARIES
+        ${BINARIES}
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
