@@ -1,0 +1,34 @@
+diff --git a/meson.build b/meson.build
+index 25d42ce..d144283 100644
+--- a/meson.build
++++ b/meson.build
+@@ -10,7 +10,7 @@ fs = import('fs')
+ 
+ dep_scanner = dependency('wayland-scanner',
+     version: get_option('tests') ? '>=1.25.0' : '>=1.22.90',
+-    required: get_option('tests'),
++    required: get_option('tests') or get_option('generated_headers'),
+     native: true,
+     fallback: 'wayland'
+ )
+@@ -178,7 +178,7 @@ endforeach
+ 
+ include_dirs = []
+ headers = []
+-if dep_scanner.found()
++if get_option('generated_headers')
+ 	subdir('include/wayland-protocols')
+ 	include_dirs = ['include']
+ endif
+diff --git a/meson_options.txt b/meson_options.txt
+index 6f2f158..4c7d39e 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -2,3 +2,7 @@ option('tests',
+        type: 'boolean',
+        value: true,
+        description: 'Build the tests')
++option('generated_headers',
++       type: 'boolean',
++       value: false,
++       description: 'Generate protocol helper headers with wayland-scanner')
