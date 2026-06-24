@@ -1,10 +1,10 @@
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "force-build" FORCE_BUILD
-        "scanner" SCANNER
+        "scanner" BUILD_SCANNER
 )
 
-if(NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT SCANNER)
+if(NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT BUILD_SCANNER)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     return()
@@ -14,7 +14,7 @@ endif()
 if(FORCE_BUILD AND NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES)
     message(FATAL_ERROR "To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")
 endif()
-if(X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT SCANNER)
+if(X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT BUILD_SCANNER)
     message(FATAL_ERROR "To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")
 endif()
 
@@ -29,22 +29,13 @@ vcpkg_from_gitlab(
         cross-build.diff
 )
 
-set(BUILD_LIBRARIES false)
-if(FORCE_BUILD)
-    set(BUILD_LIBRARIES true)
-endif()
-
-set(BUILD_SCANNER false)
-if(SCANNER)
-    set(BUILD_SCANNER true)
-endif()
 if(FORCE_BUILD AND NOT VCPKG_CROSSCOMPILING)
     set(BUILD_SCANNER true)
 endif()
 
 set(BINARIES "")
 set(OPTIONS
-    -Dlibraries=${BUILD_LIBRARIES}
+    -Dlibraries=${FORCE_BUILD}
     -Dscanner=${BUILD_SCANNER}
 )
 if(FORCE_BUILD AND VCPKG_CROSSCOMPILING)
