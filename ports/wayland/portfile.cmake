@@ -4,7 +4,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "scanner" SCANNER
 )
 
-if(NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT FORCE_BUILD AND NOT SCANNER)
+if(NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT SCANNER)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     return()
