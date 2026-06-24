@@ -24,6 +24,12 @@
           "features": [
             "scanner"
           ]
+        },
+        {
+          "name": "wayland-protocols",
+          "features": [
+            "generated-headers"
+          ]
         }
       ]
     },
