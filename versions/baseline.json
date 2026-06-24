@@ -1725,7 +1725,7 @@
       "port-version": 5
     },
     "chenjunfu2-nbt-cpp": {
-      "baseline": "2.1.3",
+      "baseline": "2.1.4",
       "port-version": 0
     },
     "chipmunk": {
@@ -1913,7 +1913,7 @@
       "port-version": 1
     },
     "coinbase-advanced-cpp": {
-      "baseline": "0.3.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "coinutils": {
@@ -2033,7 +2033,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.47.0",
+      "baseline": "0.48.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2789,7 +2789,7 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "1.6.2",
+      "baseline": "1.6.3",
       "port-version": 0
     },
     "egl": {
@@ -3749,7 +3749,7 @@
       "port-version": 0
     },
     "hanjingo-high-jump": {
-      "baseline": "1.0.7",
+      "baseline": "1.0.9",
       "port-version": 0
     },
     "happly": {
@@ -4061,7 +4061,7 @@
       "port-version": 7
     },
     "intrusive-shared-ptr": {
-      "baseline": "1.12",
+      "baseline": "1.13",
       "port-version": 0
     },
     "intx": {
@@ -4593,7 +4593,7 @@
       "port-version": 0
     },
     "komihash": {
-      "baseline": "5.28",
+      "baseline": "5.29",
       "port-version": 0
     },
     "krabsetw": {
@@ -4609,7 +4609,7 @@
       "port-version": 0
     },
     "kubazip": {
-      "baseline": "0.3.7",
+      "baseline": "0.3.14",
       "port-version": 0
     },
     "kubernetes": {
@@ -5569,7 +5569,7 @@
       "port-version": 0
     },
     "librdkafka": {
-      "baseline": "2.14.1",
+      "baseline": "2.14.2",
       "port-version": 0
     },
     "libredwg": {
@@ -6217,7 +6217,7 @@
       "port-version": 1
     },
     "ls-qpack": {
-      "baseline": "2.6.3",
+      "baseline": "2.6.4",
       "port-version": 0
     },
     "ltla-aarand": {
@@ -6281,7 +6281,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.725",
+      "baseline": "0.726",
       "port-version": 0
     },
     "lunarg-vulkantools": {
@@ -6309,7 +6309,7 @@
       "port-version": 0
     },
     "lzav": {
-      "baseline": "5.8",
+      "baseline": "5.9",
       "port-version": 0
     },
     "lzfse": {
@@ -7185,7 +7185,7 @@
       "port-version": 0
     },
     "nvidia-cutlass": {
-      "baseline": "4.5.1",
+      "baseline": "4.5.2",
       "port-version": 0
     },
     "nvrhi": {
@@ -7553,7 +7553,7 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "5.3.0",
+      "baseline": "5.4.0",
       "port-version": 0
     },
     "orange-vmprotect-sdk": {
@@ -9033,8 +9033,8 @@
       "port-version": 0
     },
     "sail": {
-      "baseline": "0.9.10",
-      "port-version": 1
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -9061,7 +9061,7 @@
       "port-version": 8
     },
     "sbgecom": {
-      "baseline": "5.6.2730",
+      "baseline": "5.7.626",
       "port-version": 0
     },
     "sbp": {
@@ -9405,7 +9405,7 @@
       "port-version": 0
     },
     "slick-net": {
-      "baseline": "2.1.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "slick-object-pool": {
@@ -9433,7 +9433,7 @@
       "port-version": 0
     },
     "slickquant-hyperliquid-cpp": {
-      "baseline": "0.1.2",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "slikenet": {
@@ -9948,6 +9948,10 @@
       "baseline": "0.14.0",
       "port-version": 1
     },
+    "syntax-highlighting": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "syscalls-cpp": {
       "baseline": "1.2.1",
       "port-version": 0
@@ -10401,7 +10405,7 @@
       "port-version": 0
     },
     "typecast-ai": {
-      "baseline": "1.2.2",
+      "baseline": "1.2.6",
       "port-version": 0
     },
     "uchardet": {
@@ -11141,7 +11145,7 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.3.11",
+      "baseline": "1.3.12",
       "port-version": 0
     },
     "xnnpack": {

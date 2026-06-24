@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index df970d3..7c4df5c 100644
+index c253a564..cfe323a5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -298,7 +298,7 @@ endif()
+@@ -269,7 +269,7 @@ endif()
  # Common configuration file
  #
  configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${PROJECT_BINARY_DIR}/include/sail-common/config.h" @ONLY)
@@ -12,10 +12,10 @@ index df970d3..7c4df5c 100644
  # Print configuration statistics
  #
 diff --git a/src/bindings/sail-c++/CMakeLists.txt b/src/bindings/sail-c++/CMakeLists.txt
-index a4ad915..6806f2f 100644
+index 2deca45f..aecdbc18 100644
 --- a/src/bindings/sail-c++/CMakeLists.txt
 +++ b/src/bindings/sail-c++/CMakeLists.txt
-@@ -134,7 +134,7 @@ install(TARGETS sail-c++
+@@ -130,7 +130,7 @@ install(TARGETS sail-c++
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -24,20 +24,33 @@ index a4ad915..6806f2f 100644
  
  # Install development packages
  #
+diff --git a/src/bindings/sail-c++/pkgconfig/sail-c++.pc.in b/src/bindings/sail-c++/pkgconfig/sail-c++.pc.in
+index c8c0fa3b..f78f8a8e 100644
+--- a/src/bindings/sail-c++/pkgconfig/sail-c++.pc.in
++++ b/src/bindings/sail-c++/pkgconfig/sail-c++.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=@CMAKE_INSTALL_PREFIX@
+ libdir=@SAIL_LIBDIR_FOR_PKG_CONFIG@
+-includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@/sail
++includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@
+ 
+ Name: sail-c++
+ Description: SAIL C++ client library
 diff --git a/src/sail-common/CMakeLists.txt b/src/sail-common/CMakeLists.txt
-index 5193f90..0e689f7 100644
+index a5ede021..933580fd 100644
 --- a/src/sail-common/CMakeLists.txt
 +++ b/src/sail-common/CMakeLists.txt
-@@ -114,7 +114,7 @@ endif()
- 
+@@ -115,7 +115,7 @@ endif()
  target_include_directories(sail-common
                              PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+                                    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
 -                                   $<INSTALL_INTERFACE:include/sail>)
 +                                   $<INSTALL_INTERFACE:include>)
  
  # pkg-config integration
  #
-@@ -129,7 +129,7 @@ install(TARGETS sail-common
+@@ -130,7 +130,7 @@ install(TARGETS sail-common
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -46,11 +59,24 @@ index 5193f90..0e689f7 100644
  
  # Install development packages
  #
+diff --git a/src/sail-common/pkgconfig/sail-common.pc.in b/src/sail-common/pkgconfig/sail-common.pc.in
+index ac60dc84..94d1ab4a 100644
+--- a/src/sail-common/pkgconfig/sail-common.pc.in
++++ b/src/sail-common/pkgconfig/sail-common.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=@CMAKE_INSTALL_PREFIX@
+ libdir=@SAIL_LIBDIR_FOR_PKG_CONFIG@
+-includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@/sail
++includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@
+ 
+ Name: sail-common
+ Description: SAIL common client library
 diff --git a/src/sail-manip/CMakeLists.txt b/src/sail-manip/CMakeLists.txt
-index 334a423..4ad54b2 100644
+index dd7a9f3f..6a81fb11 100644
 --- a/src/sail-manip/CMakeLists.txt
 +++ b/src/sail-manip/CMakeLists.txt
-@@ -67,7 +67,7 @@ install(TARGETS sail-manip
+@@ -89,7 +89,7 @@ install(TARGETS sail-manip
          ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -59,8 +85,21 @@ index 334a423..4ad54b2 100644
  
  # Install development packages
  #
+diff --git a/src/sail-manip/pkgconfig/sail-manip.pc.in b/src/sail-manip/pkgconfig/sail-manip.pc.in
+index 6cf8dad7..115698d6 100644
+--- a/src/sail-manip/pkgconfig/sail-manip.pc.in
++++ b/src/sail-manip/pkgconfig/sail-manip.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=@CMAKE_INSTALL_PREFIX@
+ libdir=@SAIL_LIBDIR_FOR_PKG_CONFIG@
+-includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@/sail
++includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@
+ 
+ Name: sail-manip
+ Description: SAIL image manipulation library
 diff --git a/src/sail/CMakeLists.txt b/src/sail/CMakeLists.txt
-index 9fd7119..ec4be36 100644
+index 130313aa..7a137c9d 100644
 --- a/src/sail/CMakeLists.txt
 +++ b/src/sail/CMakeLists.txt
 @@ -125,11 +125,11 @@ install(TARGETS sail
@@ -77,3 +116,16 @@ index 9fd7119..ec4be36 100644
  
  # Install development packages
  #
+diff --git a/src/sail/pkgconfig/sail.pc.in b/src/sail/pkgconfig/sail.pc.in
+index f5ee49b9..de321204 100644
+--- a/src/sail/pkgconfig/sail.pc.in
++++ b/src/sail/pkgconfig/sail.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=@CMAKE_INSTALL_PREFIX@
+ libdir=@SAIL_LIBDIR_FOR_PKG_CONFIG@
+-includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@/sail
++includedir=@SAIL_INCLUDEDIR_FOR_PKG_CONFIG@
+ 
+ Name: sail
+ Description: SAIL client library

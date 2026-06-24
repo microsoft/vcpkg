@@ -1,19 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 804df5e..d45ef96 100644
+index 7409000..d89ef41 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -47,8 +47,9 @@ endif()
+@@ -52,9 +52,9 @@ endif()
  
  target_include_directories(${PROJECT_NAME} PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 -  $<INSTALL_INTERFACE:include>
 +  $<INSTALL_INTERFACE:include/kubazip>
  )
+-
 +set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME kubazip)
- 
- # test
- if (NOT CMAKE_DISABLE_TESTING)
-@@ -85,7 +86,7 @@ endif()
+ if(NOT ZIP_ENABLE_INFLATE)
+     target_compile_definitions(${PROJECT_NAME} PUBLIC ZIP_ENABLE_INFLATE=0)
+ endif()
+@@ -116,7 +116,7 @@ endif()
  ###
  
  set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
