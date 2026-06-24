@@ -1941,7 +1941,7 @@
       "port-version": 0
     },
     "comms-ublox": {
-      "baseline": "1.0.0",
+      "baseline": "3.0.7",
       "port-version": 0
     },
     "commsdsl": {
