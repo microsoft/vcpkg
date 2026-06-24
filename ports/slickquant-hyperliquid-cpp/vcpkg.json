@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slickquant-hyperliquid-cpp",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "SDK for Hyperliquid API trading with C++",
   "homepage": "https://github.com/SlickQuant/hyperliquid-cpp",
   "license": "MIT",
@@ -17,7 +17,7 @@
     },
     {
       "name": "slick-net",
-      "version>=": "2.1.0"
+      "version>=": "3.0.0"
     },
     {
       "name": "vcpkg-cmake",

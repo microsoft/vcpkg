@@ -1,6 +1,6 @@
 {
   "name": "coinbase-advanced-cpp",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "C++20 SDK for the Coinbase Advanced API (REST + WebSocket).",
   "homepage": "https://github.com/SlickQuant/coinbase-advanced-cpp",
   "license": "MIT",
@@ -19,7 +19,7 @@
     },
     {
       "name": "slick-net",
-      "version>=": "2.1.0"
+      "version>=": "3.0.0"
     },
     {
       "name": "vcpkg-cmake",
