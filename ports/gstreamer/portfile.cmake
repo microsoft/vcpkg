@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
         x264-api-imports.diff
         duplicate-unused.diff
         11894.diff  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/11894
+        no-moltenvk-download.diff
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -136,6 +137,11 @@ else()
     set(PLUGIN_BASE_GL_API opengl)
     set(PLUGIN_BASE_WINDOW_SYSTEM auto)
     set(PLUGIN_BASE_GL_PLATFORM auto)
+endif()
+
+# Darwin platforms require MoltenVK for Vulkan support
+if(VCPKG_TARGET_IS_APPLE AND "vulkan" IN_LIST FEATURES)
+    message(WARNING "You will need to install MoltenVK dependencies to use feature vulkan\n")
 endif()
 
 #
