@@ -2025,7 +2025,7 @@
       "port-version": 0
     },
     "cpp-client-telemetry": {
-      "baseline": "3.10.161.1",
+      "baseline": "3.10.173.1",
       "port-version": 0
     },
     "cpp-exiftool": {
