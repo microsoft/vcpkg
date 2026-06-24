@@ -29,19 +29,27 @@ vcpkg_from_gitlab(
         cross-build.diff
 )
 
-if(FORCE_BUILD AND NOT VCPKG_CROSSCOMPILING)
-    set(BUILD_SCANNER true)
+set(BINARIES "")
+
+# vcpkg feature variables are CMake booleans (ON/OFF), but Meson boolean options
+# require true/false. Translate them here before passing them to meson setup.
+set(MESON_BUILD_LIBRARIES false)
+if(FORCE_BUILD)
+    set(MESON_BUILD_LIBRARIES true)
 endif()
 
-set(BINARIES "")
-set(OPTIONS
-    -Dlibraries=${FORCE_BUILD}
-    -Dscanner=${BUILD_SCANNER}
-)
+set(MESON_BUILD_SCANNER false)
+if(BUILD_SCANNER OR (FORCE_BUILD AND NOT VCPKG_CROSSCOMPILING))
+    set(MESON_BUILD_SCANNER true)
+endif()
 if(FORCE_BUILD AND VCPKG_CROSSCOMPILING)
     list(APPEND BINARIES "wayland_scanner = ['${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/wayland-scanner${VCPKG_HOST_EXECUTABLE_SUFFIX}']")
-    list(APPEND OPTIONS -Dscanner=false)
+    set(MESON_BUILD_SCANNER false)
 endif()
+set(OPTIONS
+    -Dlibraries=${MESON_BUILD_LIBRARIES}
+    -Dscanner=${MESON_BUILD_SCANNER}
+)
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -56,7 +64,7 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-if(BUILD_SCANNER)
+if(MESON_BUILD_SCANNER)
     vcpkg_copy_tools(TOOL_NAMES wayland-scanner AUTO_CLEAN)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wayland-scanner.pc" "bindir=\${prefix}/bin" "bindir=\${prefix}/tools/${PORT}")
     if(NOT VCPKG_BUILD_TYPE)
