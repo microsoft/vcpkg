@@ -17,6 +17,10 @@ endif()
 if(X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT BUILD_SCANNER)
     message(FATAL_ERROR "To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")
 endif()
+if(BUILD_SCANNER AND NOT FORCE_BUILD)
+    # wayland[scanner] is a tool-only build; headers are installed only with the libraries.
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
