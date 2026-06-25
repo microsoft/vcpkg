@@ -1,17 +1,24 @@
 diff --git a/meson.build b/meson.build
-index 25d42ce..d144283 100644
+index 25d42ce..d1b7369 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -10,7 +10,7 @@ fs = import('fs')
+@@ -10,12 +10,14 @@ fs = import('fs')
  
  dep_scanner = dependency('wayland-scanner',
      version: get_option('tests') ? '>=1.25.0' : '>=1.22.90',
 -    required: get_option('tests'),
-+    required: get_option('tests') or get_option('generated_headers'),
++    required: get_option('tests'),
      native: true,
      fallback: 'wayland'
  )
-@@ -178,7 +178,7 @@ endforeach
+ if dep_scanner.found()
+ 	prog_scanner = find_program(dep_scanner.get_variable(pkgconfig: 'wayland_scanner', internal: 'wayland_scanner'))
++elif get_option('generated_headers')
++	prog_scanner = find_program('wayland_scanner', 'wayland-scanner')
+ endif
+ 
+ stable_protocols = {
+@@ -178,7 +180,7 @@ foreach protocol_file : installed_protocol_files
  
  include_dirs = []
  headers = []

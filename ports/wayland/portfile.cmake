@@ -12,7 +12,7 @@ endif()
 
 
 if(FORCE_BUILD AND NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES)
-    message(FATAL_ERROR "To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")
+    message(FATAL_ERROR "To build wayland libraries with the `force-build` feature, the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")
 endif()
 if(X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT BUILD_SCANNER)
     message(FATAL_ERROR "To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")

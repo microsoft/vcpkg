@@ -10878,11 +10878,11 @@
     },
     "wayland": {
       "baseline": "1.25.0",
-      "port-version": 1
+      "port-version": 2
     },
     "wayland-protocols": {
       "baseline": "1.49",
-      "port-version": 1
+      "port-version": 2
     },
     "wcslib": {
       "baseline": "8.5",
