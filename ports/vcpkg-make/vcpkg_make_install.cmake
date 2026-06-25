@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_install)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "DISABLE_PARALLEL;ADD_BIN_TO_PATH"
+        "DISABLE_PARALLEL"
         "LOGFILE_ROOT;MAKEFILE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;TARGETS"
     )
