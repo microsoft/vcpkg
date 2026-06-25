@@ -294,6 +294,7 @@ vcpkg_cmake_configure(
 -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=NO  # needs viskore port
 -DVTK_MODULE_ENABLE_VTK_h5hut=NO                 # needs h5hut port and/or fixes
 -DVTK_MODULE_ENABLE_VTK_IOMotionFX=NO            # needs pegtl 2.8.3 or patches
+-DVTK_MODULE_ENABLE_VTK_scn=NO                   # needs scn(lib?)
     MAYBE_UNUSED_VARIABLES
         VTK_ENABLE_OSPRAY
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
