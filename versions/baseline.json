@@ -493,7 +493,7 @@
       "port-version": 0
     },
     "aws-c-sdkutils": {
-      "baseline": "0.2.5",
+      "baseline": "0.2.6",
       "port-version": 0
     },
     "aws-checksums": {
@@ -2425,7 +2425,7 @@
       "port-version": 0
     },
     "dawn": {
-      "baseline": "20260423.175430",
+      "baseline": "20260623.191042",
       "port-version": 0
     },
     "daxa": {
@@ -8053,7 +8053,7 @@
       "port-version": 0
     },
     "proxy": {
-      "baseline": "4.0.2",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "proxygen": {
@@ -8913,8 +8913,8 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "11.1.1",
-      "port-version": 1
+      "baseline": "11.1.2",
+      "port-version": 0
     },
     "rp-ntuples": {
       "baseline": "0.1.4",
