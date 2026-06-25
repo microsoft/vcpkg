@@ -64,9 +64,6 @@ function(vcpkg_make_install)
     z_vcpkg_make_prepare_flags(${prepare_flags_opts})
 
     set(prepare_env_opts "")
-    if(arg_ADD_BIN_TO_PATH)
-        list(APPEND prepare_env_opts "ADD_BIN_TO_PATH")
-    endif()
 
     set(trace_opts "")
     if(DEFINED VCPKG_MAKE_TRACE_OPTIONS)

@@ -86,11 +86,6 @@ function(vcpkg_make_configure)
         set(EMMAKEN_JUST_CONFIGURE 1) # as in emconfigure
     endif()
 
-    set(extra_configure_opts "")
-    if(arg_ADD_BIN_TO_PATH)
-        list(APPEND extra_configure_opts "ADD_BIN_TO_PATH")
-    endif()
-
     foreach(config IN LISTS buildtypes)
         string(TOUPPER "${config}" configup)
         set(target_dir "${workdir_${configup}}")
