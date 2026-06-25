@@ -9558,7 +9558,7 @@
     },
     "sparsehash": {
       "baseline": "2.0.4",
-      "port-version": 2
+      "port-version": 3
     },
     "sparsepp": {
       "baseline": "1.23",
