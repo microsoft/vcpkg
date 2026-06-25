@@ -1,20 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14a2f91..3c8b1da 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -4,7 +4,15 @@ SET(CMAKE_CXX_STANDARD 11)
- 
+@@ -7,7 +7,12 @@ PROJECT(odbccpp)
  INCLUDE(GNUInstallDirs)
  INCLUDE(CMakePackageConfigHelpers)
  
--FIND_PACKAGE(ODBC REQUIRED)
-+IF(ODBCCPP_USE_UNIXODBC)
-+    FIND_PACKAGE(unofficial-unixodbc CONFIG REQUIRED)
-+    SET(ODBC_TARGET unofficial::unixodbc::unixodbc)
-+    ADD_LIBRARY(ODBC::ODBC ALIAS ${ODBC_TARGET})
-+ELSE()
-+    FIND_PACKAGE(ODBC REQUIRED)
-+    SET(ODBC_TARGET ODBC::ODBC)
-+ENDIF()
-+
++if(ODBCCPP_USE_UNIXODBC)
++    find_package(ODBC NAMES unofficial-unixodbc REQUIRED)
++    add_library(ODBC::ODBC ALIAS unofficial::unixodbc::unixodbc)
++else()
+ FIND_PACKAGE(ODBC REQUIRED)
++endif()
  FIND_PACKAGE(Doxygen)
  FIND_PACKAGE(GTest)
+ 
+diff --git a/cmake/odbccppConfig.cmake.in b/cmake/odbccppConfig.cmake.in
+index 2ac429a..4736820 100644
+--- a/cmake/odbccppConfig.cmake.in
++++ b/cmake/odbccppConfig.cmake.in
+@@ -1,7 +1,11 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
++if("@ODBCCPP_USE_UNIXODBC@")
++    find_dependency(unofficial-unixodbc CONFIG)
++else()
+ find_dependency(ODBC)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/odbccppTargets.cmake")
  

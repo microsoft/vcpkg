@@ -1,3 +1,3 @@
-set(qtmqtt_HASH "f3be86dfe244608f80b647337109a4d780bc3d8e5fab433bf7bb10df6b73427de1ebcf7b2b6f8e728b242c23e3dcbe26fc8f6c032e5462845e234ff16c866810")
-set(qtmqtt_URL "https://github.com/qt/qtmqtt/archive/v6.10.2.tar.gz")
-set(qtmqtt_FILENAME "qt-qtmqtt-v6.10.2.tar.gz")
+set(qtmqtt_HASH "7dd26982574ff8b9210b47d3764c5a3429020c126ad30450ffb8511fa1062f4b76ba9cdfbf564e2a5d8b279066c9011efaba34887875fdc58221b815e69948c7")
+set(qtmqtt_URL "https://github.com/qt/qtmqtt/archive/v6.11.1.tar.gz")
+set(qtmqtt_FILENAME "qt-qtmqtt-v6.11.1.tar.gz")

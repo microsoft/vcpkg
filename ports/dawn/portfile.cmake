@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 67f64ae3263e2111ca5d71b0ea69f0fbf42a0a7cd40ada66c3975e031f9af07411e1390a8b52fec08d563a99612ca6a3b3f75115191253d41fca18b8f3494f9c
+        SHA512 f3649765536fa308cac31e36aaf819c1ce9a9f9f16e055f4419b8ac8617516b44bdd701461d25018a87cc1b7e7b8be860db338fdb7da9cd859d0019070667cdd
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -36,12 +36,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 c4d0f19b6ebffd1dd2ac46397ccbffeb60970c3aeb98063aed79fd51de1577c83d3c50e54c86b6ec3bb3cf429629deedebfbafac12d57eda41d6592114b6172a
+    SHA512 47fa49d9fe5d3adec694a07709c6f1a515a4f1f850b5ca602205aa2080695e0228752879182ddaad2bd8f9bc40fe87aa39755e9e4e034dc5b45289bb5a57b7e5
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
         002-fix-uwp.patch
-        003-fix-d3d11.patch
+        003-force-disable-cxx-module.patch
         004-deps.patch
         005-bsd-support.patch
         # https://github.com/google/dawn/commit/fa4a364b9ff215f9fe95823ec89ccc922cf7b254 added a tint writer for the null backend.
@@ -51,17 +51,8 @@ vcpkg_from_github(
         008-wrong-dxcapi-include.patch
         009-fix-tint-install.patch
         010-fix-glslang.patch
-		011-fix-dxc.patch
+        011-fix-dxc.patch
 )
-
-# vcpkg_find_acquire_program(PYTHON3)
-# vcpkg_execute_in_download_mode(
-#     COMMAND "${PYTHON3}" tools/fetch_dawn_dependencies.py
-#     WORKING_DIRECTORY "${SOURCE_PATH}"
-# )
-#
-# get_dawn_deps_commit() { curl -s "https://dawn.googlesource.com/dawn/+/refs/heads/chromium/7371/$1" | htmlq .gitlink-detail --text; }
-#
 
 function(checkout_in_path PATH URL REF)
     cmake_parse_arguments(EXTERNAL "" "" "PATCHES" ${ARGN})
@@ -98,23 +89,23 @@ checkout_in_path(
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers"
-    "f88a2d766840fc825af1fc065977953ba1fa4a91"
+    "https://github.com/KhronosGroup/SPIRV-Headers"
+    "c63848ecf2200425511319fd8bf2c17b751e501e"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-tools/src"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools"
-    "4972c69eb50255b314fc0925ca757c4417e6b6c0"
+    "https://github.com/KhronosGroup/SPIRV-Tools"
+    "58fe144fdc8847b303be51d4f8fcc9e7da17056e"
     PATCHES
         # Dawn sets SPIRV_WERROR to OFF when building SPIRV-Tools, but https://github.com/KhronosGroup/SPIRV-Tools/commit/337fdb6a284fe7f7e374a14271f8e20e579f3263 ignores that CMake variable and forces /WX
-        006-msvc-spirv-tools-disable-warnaserror.patch
+        800-msvc-spirv-tools-disable-warnaserror.patch
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/webgpu-headers/src"
-    "https://chromium.googlesource.com/external/github.com/webgpu-native/webgpu-headers"
-    "b2b04dde36a941434c88ccff7a730d7e464d638c"
+    "https://github.com/webgpu-native/webgpu-headers"
+    "bf8ddb91dc38ea11ec1b727dae1fa965c4207d22"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -128,20 +119,20 @@ endif()
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        d3d11   DAWN_ENABLE_D3D11
-        d3d12   DAWN_ENABLE_D3D12
-        gl      DAWN_ENABLE_DESKTOP_GL
-        gles    DAWN_ENABLE_OPENGLES
-        metal   DAWN_ENABLE_METAL
-        vulkan  DAWN_ENABLE_VULKAN
-        wayland DAWN_USE_WAYLAND
-        x11     DAWN_USE_X11
-        tint    TINT_BUILD_CMD_TOOLS
+        d3d11       DAWN_ENABLE_D3D11
+        d3d12       DAWN_ENABLE_D3D12
+        gl          DAWN_ENABLE_DESKTOP_GL
+        gles        DAWN_ENABLE_OPENGLES
+        metal       DAWN_ENABLE_METAL
+        vulkan      DAWN_ENABLE_VULKAN
+        wayland     DAWN_USE_WAYLAND
+        x11         DAWN_USE_X11
+        tint-tools  TINT_BUILD_CMD_TOOLS
 )
 
 set(DAWN_USE_BUILT_DXC OFF)
 if(DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
-	set(DAWN_USE_BUILT_DXC ON)
+    set(DAWN_USE_BUILT_DXC ON)
 endif()
 set(DAWN_USE_TINT_SPV OFF)
 if(DAWN_ENABLE_VULKAN)
@@ -156,7 +147,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPython3_EXECUTABLE="${PYTHON3}"
+        "-DPython3_EXECUTABLE=${PYTHON3}"
         -DDAWN_BUILD_MONOLITHIC_LIBRARY=${DAWN_BUILD_MONOLITHIC_LIBRARY}
         -DDAWN_ENABLE_INSTALL=ON
         -DDAWN_USE_GLFW=OFF
@@ -165,12 +156,12 @@ vcpkg_cmake_configure(
         -DDAWN_BUILD_TESTS=OFF
         -DTINT_BUILD_TESTS=OFF
         -DTINT_ENABLE_INSTALL=OFF
-		-DTINT_BUILD_WGSL_READER=ON
-		-DTINT_BUILD_WGSL_WRITER=ON
+        -DTINT_BUILD_WGSL_READER=ON
+        -DTINT_BUILD_WGSL_WRITER=ON
         -DTINT_BUILD_SPV_READER=${DAWN_USE_TINT_SPV}
         -DTINT_BUILD_SPV_WRITER=${DAWN_USE_TINT_SPV}
         -DDAWN_ENABLE_NULL=ON
-		-DDAWN_USE_BUILT_DXC=${DAWN_USE_BUILT_DXC}
+        -DDAWN_USE_BUILT_DXC=${DAWN_USE_BUILT_DXC}
 )
 
 vcpkg_cmake_install()

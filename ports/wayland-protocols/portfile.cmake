@@ -20,9 +20,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland-protocols
-    REF ${VERSION}
-    SHA512 bcc938a5bac59020ded9c653a4d65cafc42eed7d72518125b6d3d710b468ab3db71d514437cbe80d24821fb65eb2b078cd906c18f35245b0c99ad892b0ba50d0
-    HEAD_REF master
+    REF "${VERSION}"
+    SHA512 f1095a667305dce9490b7fc2dddd263e50d90f505c7b2a281ff3a9f77f211589ec45c5124c07805f9d577484c80bf13f71b2dff6e0ae677fbb1bffdde60aec48
+    HEAD_REF main
     PATCHES
         cross-build.diff
 )

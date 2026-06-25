@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 1dee3967057619dd7f2f78c63de85bb97af16c974bd9225c2336d42c7c8765c04f77490aac36af2daf953bc52c7faa37750a09265e133708f6a1709028573834
+    SHA512 c72f4062aecc16d8b2b1e8678d5efe3af4cfaa0cc7c0997052248f9e499e60c2463acf07877cf3b78b246ce3e8078cb043e8d97e90a6b50d06af32ff7369a788
     HEAD_REF master
     PATCHES
         0002-fix-msvc-link.patch
@@ -16,6 +16,9 @@ vcpkg_from_github(
         0045-use-prebuilt-bin2c.patch
         0046-fix-msvc-detection.patch
         0047-fix-msvc-utf8.patch
+        0048-backport-23039.patch
+        0049-fix-twolame-pkgconfig.patch
+        0050-fix-test-ld-absolute-lib-paths.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -498,6 +501,14 @@ else()
     set(WITH_THEORA OFF)
 endif()
 
+if("twolame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtwolame")
+    set(WITH_TWOLAME ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtwolame")
+    set(WITH_TWOLAME OFF)
+endif()
+
 if("vorbis" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvorbis")
     set(WITH_VORBIS ON)
@@ -567,11 +578,11 @@ else()
 endif()
 
 if ("qsv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
-    set(WITH_MFX ON)
+    set(OPTIONS "${OPTIONS} --enable-libvpl --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
+    set(WITH_VPL ON)
 else()
-    set(OPTIONS "${OPTIONS} --disable-libmfx")
-    set(WITH_MFX OFF)
+    set(OPTIONS "${OPTIONS} --disable-libvpl")
+    set(WITH_VPL OFF)
 endif()
 
 if ("vaapi" IN_LIST FEATURES)

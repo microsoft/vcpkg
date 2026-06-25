@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libxmp/libxmp
     REF libxmp-${VERSION}
-    SHA512 5f7690e274f3857bd6889cd2ba637473f4a85359a6ef87c76313f87d0c725e3880ba6e428b542dbbf0c8a7725a87b5019289b3f19d2c5bb49527b380f1b4f7e4
+    SHA512 ab7ed467a5fc968769ca8debbc648c1b86fcbfc95c5f9813cf6a47b35bc731009c1cbf09ecf4878f66c0903e70e68bc99eece37ee5da1a787d9c4fb711e9f790
     PATCHES
         fix-cmake-config-dir.patch
 )
@@ -39,4 +39,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/COPYING.LIB")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/COPYING")

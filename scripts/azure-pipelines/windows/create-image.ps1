@@ -24,7 +24,7 @@ $WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
+$TotalProgress = 22
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -163,18 +163,18 @@ function Invoke-ScriptWithPrefix {
     -Status "Running provisioning script $ScriptName in VM" `
     -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-  $UtilityPrefixContent = Get-Content "$Root\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding ascii -Raw
 
   $tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
-    $script = Get-Content "$Root\$ScriptName" -Encoding utf8NoBOM -Raw
+    $script = Get-Content -LiteralPath "$Root\$ScriptName" -Encoding ascii -Raw
 $replacement = @"
-if (Test-Path "`$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
   . "`$PSScriptRoot/utility-prefix.ps1"
 }
 "@
     $script = $script.Replace($replacement, $UtilityPrefixContent);
-    Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
+    Set-Content -LiteralPath $tempScriptFilename -Value $script -Encoding ascii
 
     $parameter = $null
     if (-not $SkipSas) {
@@ -190,7 +190,7 @@ if (Test-Path "`$PSScriptRoot/utility-prefix.ps1") {
 
     Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
   } finally {
-    Remove-Item $tempScriptFilename -Force
+    Remove-Item -LiteralPath $tempScriptFilename -Force
   }
 }
 
@@ -200,7 +200,19 @@ Write-Host 'Waiting 1 minute for VM to reboot...'
 Start-Sleep -Seconds 60
 
 ####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-sevenzip.ps1'
+
+####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-git.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cmake.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-ninja.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1'

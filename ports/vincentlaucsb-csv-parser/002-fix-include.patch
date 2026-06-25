@@ -1,21 +1,8 @@
-diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index 3b90b14..5460157 100644
---- a/include/internal/basic_csv_parser.hpp
-+++ b/include/internal/basic_csv_parser.hpp
-@@ -12,7 +12,7 @@
- #include <vector>
-
- #if !defined(__EMSCRIPTEN__)
--#include "../external/mio.hpp"
-+#include "mio/mmap.hpp"
- #endif
- #include "basic_csv_parser_simd.hpp"
- #include "col_names.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index 62f27d5..fc4a0a6 100644
+index 82e1404..c95cb98 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -97,7 +97,7 @@
+@@ -125,7 +125,7 @@
  #endif
 
  // Include string_view BEFORE csv namespace to avoid namespace pollution issues
@@ -24,12 +11,42 @@ index 62f27d5..fc4a0a6 100644
  #include <string_view>
  #else
  #include "../external/string_view.hpp"
-@@ -122,7 +122,7 @@ namespace csv {
+diff --git a/include/internal/csv_row.hpp b/include/internal/csv_row.hpp
+index 7651f86..000f645 100644
+--- a/include/internal/csv_row.hpp
++++ b/include/internal/csv_row.hpp
+@@ -33,7 +33,7 @@
+ #include <ranges>
+ #endif
+ #include "data_type.hpp"
+-#include "../external/classify_scalar.hpp"
++#include "classify_scalar.hpp"
+ #include "json_converter.hpp"
+ #include "raw_csv_data.hpp"
 
- #define STATIC_ASSERT(x) static_assert(x, "Assertion failed")
+diff --git a/include/internal/data_type.hpp b/include/internal/data_type.hpp
+index b3f85d4..5a8be67 100644
+--- a/include/internal/data_type.hpp
++++ b/include/internal/data_type.hpp
+@@ -7,7 +7,7 @@
+ #include <cstdint>
 
--#ifdef CSV_HAS_CXX17
-+#if 1
-      /** @typedef string_view
-       *  The string_view class used by this library.
-       */
+ #include "common.hpp"
+-#include "../external/classify_scalar.hpp"
++#include "classify_scalar.hpp"
+
+ namespace csv {
+     /** Enumerates the different CSV field types recognized by this library. */
+diff --git a/include/internal/parser/driver.hpp b/include/internal/parser/driver.hpp
+index 357a785..64b3c12 100644
+--- a/include/internal/parser/driver.hpp
++++ b/include/internal/parser/driver.hpp
+@@ -16,7 +16,7 @@
+ #include <vector>
+
+ #if !defined(__EMSCRIPTEN__)
+-#include "../../external/mio.hpp"
++#include "mio/mmap.hpp"
+ #endif
+ #include "../basic_csv_parser_simd.hpp"
+ #include "../col_names.hpp"

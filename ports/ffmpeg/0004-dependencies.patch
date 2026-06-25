@@ -4,9 +4,11 @@ index 1759694..fcbae49 100644
 +++ b/configure
 @@ -7184,7 +7184,7 @@ fi
  
- enabled  zlib && { check_pkg_config zlib zlib "zlib.h" zlibVersion ||
-                    check_lib zlib   zlib.h      zlibVersion    -lz; }
+-enabled  zlib && { check_pkg_config zlib zlib "zlib.h" zlibVersion ||
+-                   check_lib zlib   zlib.h      zlibVersion    -lz; }
 -enabled bzlib && check_lib bzlib bzlib.h BZ2_bzlibVersion    -lbz2
++
++enabled  zlib && require_pkg_config zlib zlib   zlib.h  zlibVersion
 +enabled bzlib && require_pkg_config bzlib bzip2 bzlib.h BZ2_bzlibVersion
  enabled  lzma && check_lib lzma   lzma.h lzma_version_number -llzma
  

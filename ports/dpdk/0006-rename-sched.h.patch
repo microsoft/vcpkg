@@ -1,5 +1,5 @@
 diff --git a/lib/eal/common/eal_common_thread.c b/lib/eal/common/eal_common_thread.c
-index a53bc63..087ec80 100644
+index dcd81f9..4daa244 100644
 --- a/lib/eal/common/eal_common_thread.c
 +++ b/lib/eal/common/eal_common_thread.c
 @@ -6,7 +6,11 @@
@@ -39,10 +39,10 @@ index e1c3101..f28b37d 100644
  /**
   * This file is required to support the common code in eal_common_proc.c,
 diff --git a/lib/eal/windows/include/rte_os.h b/lib/eal/windows/include/rte_os.h
-index 9d69467..4df82dd 100644
+index 2a43cb1..440fa30 100644
 --- a/lib/eal/windows/include/rte_os.h
 +++ b/lib/eal/windows/include/rte_os.h
-@@ -14,7 +14,7 @@
+@@ -15,7 +15,7 @@
  #include <string.h>
  #include <malloc.h>
  
