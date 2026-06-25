@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 15b0903..56d371a 100644
+index eb3abad..57786da 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -14,8 +14,8 @@ endif()
@@ -14,7 +14,7 @@ index 15b0903..56d371a 100644
      include(FetchContent)
      set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)
 diff --git a/cmake/hyperliquid-config.cmake.in b/cmake/hyperliquid-config.cmake.in
-index 6799c2d..ad664b7 100644
+index 1dcbf98..ad664b7 100644
 --- a/cmake/hyperliquid-config.cmake.in
 +++ b/cmake/hyperliquid-config.cmake.in
 @@ -1,11 +1,11 @@
@@ -26,7 +26,7 @@ index 6799c2d..ad664b7 100644
 +find_dependency(nlohmann_json CONFIG)
 +find_dependency(OpenSSL CONFIG)
  
--find_package(slick-net 3.0.0 CONFIG QUIET)
+-find_dependency(slick-net 3.0.0 CONFIG QUIET)
 -if (NOT slick-net_FOUND)
 +find_package(slick-net CONFIG)
 +if (FALSE)
