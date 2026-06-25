@@ -1,20 +1,3 @@
-diff --git a/cmake/TPLs/FindTPLCGNS.cmake b/cmake/TPLs/FindTPLCGNS.cmake
-index a4decc9..e27eb10 100644
---- a/cmake/TPLs/FindTPLCGNS.cmake
-+++ b/cmake/TPLs/FindTPLCGNS.cmake
-@@ -53,7 +53,8 @@
- # ************************************************************************
- # @HEADER
- 
--find_package(CGNS REQUIRED)
--TRIBITS_TPL_FIND_INCLUDE_DIRS_AND_LIBRARIES( CGNS
--  REQUIRED_HEADERS cgnslib.h
--  REQUIRED_LIBS_NAMES "cgns")
-+find_package(cgns REQUIRED)
-+tribits_extpkg_create_imported_all_libs_target_and_config_file(
-+  CGNS
-+  INNER_FIND_PACKAGE_NAME  cgns
-+  IMPORTED_TARGETS_FOR_ALL_LIBS   $<IF:$<TARGET_EXISTS:CGNS::cgns_shared>,CGNS::cgns_shared,CGNS::cgns_static>)
 diff --git a/cmake/TPLs/FindTPLMETIS.cmake b/cmake/TPLs/FindTPLMETIS.cmake
 index 90911a3..bde1e25 100644
 --- a/cmake/TPLs/FindTPLMETIS.cmake
@@ -140,6 +123,19 @@ index 576abc8..94a59af 100644
 +endif()
  
  TRIBITS_SUBPACKAGE_POSTPROCESS()
+diff --git a/packages/seacas/libraries/exodus/include/exodusII.h b/packages/seacas/libraries/exodus/include/exodusII.h
+index 5c5149e..cc97e28 100644
+--- a/packages/seacas/libraries/exodus/include/exodusII.h
++++ b/packages/seacas/libraries/exodus/include/exodusII.h
+@@ -571,6 +571,8 @@ typedef struct ex_var_params
+ #ifndef EXODUS_EXPORT
+ #if defined(_WIN32) && defined(exodus_shared_EXPORTS)
+ #define EXODUS_EXPORT __declspec(dllexport)
++#elif defined(_WIN32) && defined(exodus_EXPORTS)
++#define EXODUS_EXPORT __declspec(dllexport)
+ #endif
+ #endif /* EXODUS_EXPORT */
+ 
 diff --git a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.C b/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.C
 index 6393bf3..8e4b904 100644
 --- a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.C
