@@ -136,23 +136,6 @@ index 5c5149e..cc97e28 100644
  #endif
  #endif /* EXODUS_EXPORT */
  
-diff --git a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.C b/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.C
-index 6393bf3..8e4b904 100644
---- a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.C
-+++ b/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.C
-@@ -124,12 +124,6 @@ namespace Iotm {
-     initialize();
-   }
- 
--  TextMesh::TextMesh()
--  {
--    m_errorHandler = [](const std::ostringstream &errmsg) { error_handler(errmsg); };
--    initialize();
--  }
--
-   unsigned TextMesh::spatial_dimension() const { return m_data.spatialDim; }
- 
-   void TextMesh::initialize()
 diff --git a/packages/seacas/libraries/nemesis/CMakeLists.txt b/packages/seacas/libraries/nemesis/CMakeLists.txt
 index b03a9e9..4ab0952 100644
 --- a/packages/seacas/libraries/nemesis/CMakeLists.txt
