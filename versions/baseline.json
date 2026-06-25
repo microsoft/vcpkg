@@ -10882,7 +10882,7 @@
     },
     "wayland-protocols": {
       "baseline": "1.49",
-      "port-version": 2
+      "port-version": 3
     },
     "wcslib": {
       "baseline": "8.5",

@@ -1,7 +1,7 @@
 {
   "name": "wayland-protocols",
   "version": "1.49",
-  "port-version": 2,
+  "port-version": 3,
   "description": "wayland-protocols contains Wayland protocols that add functionality not available in the Wayland core protocol.",
   "homepage": "https://wayland.freedesktop.org",
   "license": "MIT",
@@ -37,6 +37,16 @@
       "description": [
         "Generate protocol helper headers.",
         "Requires the wayland-scanner host tool."
+      ],
+      "dependencies": [
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "scanner"
+          ],
+          "platform": "!windows & !osx & !android"
+        }
       ]
     }
   }
