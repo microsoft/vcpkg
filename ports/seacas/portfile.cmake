@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         deps-and-shared.patch
         fix-mpi.patch
+        termios.diff
 )
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
