@@ -81,7 +81,7 @@ if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-if(VCPKG_HOST_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS AND (NOT DEFINED VCPKG_MAKE_ACQUIRE_MSYS OR VCPKG_MAKE_ACQUIRE_MSYS))
     # dumpbin detection fails with autoconf 2.72
     set(ENV{WANT_AUTOCONF} 2.71)
     vcpkg_acquire_msys(MSYS_ROOT
