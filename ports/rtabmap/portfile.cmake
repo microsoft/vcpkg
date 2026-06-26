@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
     REF ${VERSION}
-    SHA512 9bcd0f359e0ee8060cf7088761544a3f7d38aadb37df820958f0811aa7b8edbfaf00f00d9472a8bf46261d4e5d868f9c10785263aaabaf374b6e5aa5237d70b0
+    SHA512 92c7709b189886e8de772bcf68b0e04ad79a411f0886c2bf8319d001a6015f197b6fb04ae1b3e9e90a2fbc83f5ecf4e607a631644dfa9453073315344c23ee73
     HEAD_REF master
     PATCHES
         0001-cmakelists-fixes.patch
