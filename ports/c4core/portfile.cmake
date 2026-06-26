@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
     REF "v${VERSION}"
-    SHA512 b2e9a77d5d7a1c4b4bc8b316e258582e849a6a387bcb75e8d472da58f5a24ab348b202c3d94b067fcd920ca80feddb58faa0a2c1509309664dc59137d3c1bc63
+    SHA512 dd98740e9c970297c04ad8386ce8e53469b57ae827485a102fd6648575e15234c93ead24e7fdfcada7c2e94d7512524b49ddd60d0017c5959d258f4df89150b0
     HEAD_REF master
     PATCHES
         disable-cpack.patch
@@ -40,7 +40,7 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    SOURCE_PATH_DEBUGBREAK  
+    SOURCE_PATH_DEBUGBREAK
     ARCHIVE ${DEBUGBREAK_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
@@ -58,7 +58,7 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    SOURCE_PATH_FAST_FLOAT 
+    SOURCE_PATH_FAST_FLOAT
     ARCHIVE ${FAST_FLOAT_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )

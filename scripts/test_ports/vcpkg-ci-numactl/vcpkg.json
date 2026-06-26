@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-numactl",
+  "version-string": "ci",
+  "description": "Validates numactl",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "numactl"
+  ]
+}

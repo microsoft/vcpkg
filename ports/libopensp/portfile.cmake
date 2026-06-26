@@ -34,15 +34,15 @@ else()
         set(EXTRA_LIBS "-framework CoreFoundation -lintl -liconv") 
     endif()
 
-    vcpkg_configure_make(
-        AUTOCONFIG
+    vcpkg_make_configure(
+        AUTORECONF
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --disable-doc-build
             "LDFLAGS=${EXTRA_LIBS} \$LDFLAGS"
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/opensp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opensp.pc" @ONLY)

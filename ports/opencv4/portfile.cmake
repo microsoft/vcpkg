@@ -3,9 +3,16 @@ set(USE_QT_VERSION "6")
 # fix to get version from eigen after v3.4.0
 vcpkg_download_distfile(
     PATCH1_FILE
-    URLS https://github.com/opencv/opencv/commit/468de9b36740b3355f0d5cd8be2ce28b340df120.patch?full_index=1
+    URLS "https://github.com/opencv/opencv/commit/468de9b36740b3355f0d5cd8be2ce28b340df120.patch?full_index=1"
     SHA512 09ee552fcd9a96359230104d7bf8610a63e05d743a3b51d58c6469331729a6440444e05c616464380dbebaefdd7ee6fb06cac5fc70694af85f9c8d40201aad10
-    FILENAME 468de9b36740b3355f0d5cd8be2ce28b340df120.patch
+    FILENAME "468de9b36740b3355f0d5cd8be2ce28b340df120.patch"
+)
+
+vcpkg_download_distfile(
+    CUDA_13_SUPPORT_PATCH
+    URLS "https://github.com/opencv/opencv/commit/f0888a10e8266b2202d930c6974433a421e6f9a7.diff?full_index=1"
+    SHA512 6efbc9f7e4ad158e648632060bac6ecb542239f1f656774378e6a2beaa42f094784c3b2755b44d599fe4eed69dd9f1f461e0be1ebcd57f9ebc261ead739ed7d5
+    FILENAME "opencv4-support-cuda-13-f0888a10e8266b2202d930c6974433a421e6f9a7.diff"
 )
 
 vcpkg_from_github(
@@ -30,8 +37,13 @@ vcpkg_from_github(
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
       0023-ffmpeg8-support.patch
+      0024-openvino-const-tensor-data.patch
+      0025-fix-cuda-host-std-flag-forwarding.patch
+      0026-cuda-msvc-preprocessor.patch
       "${PATCH1_FILE}"
+      "${CUDA_13_SUPPORT_PATCH}"
 )
+
 # Disallow accidental build of vendored copies
 file(GLOB third_party "${SOURCE_PATH}/3rdparty/*")
 list(FILTER third_party EXCLUDE REGEX "/ippicv\$")
@@ -51,6 +63,10 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(TARGET_IS_ARM 1)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   set(TARGET_IS_X86_64 1)
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # wasm32 is not x86: leaving every TARGET_IS_* unset keeps OpenCV off the x86 SSE baseline,
+  # whose runtime guard aborts on wasm. SIMD comes from the wasm HAL configured below.
+  set(TARGET_IS_WASM 1)
 else()
   set(TARGET_IS_X86 1)
 endif()
@@ -128,6 +144,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "text"       BUILD_opencv_text
  "text"       WITH_TESSERACT
  "tiff"       WITH_TIFF
+ "v4l"        WITH_V4L
  "vtk"        WITH_VTK
  "vulkan"     WITH_VULKAN
  "webp"       WITH_WEBP
@@ -196,6 +213,18 @@ if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
 endif()
 
 if("contrib" IN_LIST FEATURES)
+  vcpkg_download_distfile(CONTRIB_CUDA_NAMESPACE_FIX
+    URLS "https://github.com/opencv/opencv_contrib/commit/f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff?full_index=1"
+    FILENAME "opencv4-contrib-cuda13-namespace-fix-f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff"
+    SHA512 1065406fef35ffdfa4d27e991cd96df915e61b1ff4d17df391658a5eb069755b437a6546aaf05eac7b04b616882eb52b121ebe36c7f0af63e3040bda574ca3ed
+  )
+
+  vcpkg_download_distfile(CONTRIB_CUDA_NOT1_FIX
+    URLS "https://github.com/opencv/opencv_contrib/commit/f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff?full_index=1"
+    FILENAME "opencv4-contrib-cuda13-not1-fix-f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff"
+    SHA512 b1e46be570417a26aec4b2a6e1824008f92c404fb67f307218fdf386074b51ca3ea063516517449631a8dd2ca487b0736c1978a3a5e38f88686c25802af4f300
+  )
+
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
@@ -207,6 +236,8 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      "${CONTRIB_CUDA_NAMESPACE_FIX}"
+      "${CONTRIB_CUDA_NOT1_FIX}"
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
@@ -382,6 +413,20 @@ if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
 
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # OpenCV's CPU-optimization machinery assumes a native (x86/ARM) target. On wasm the baseline
+  # and dispatch lists must be empty, otherwise it bakes an x86 SSE baseline whose runtime guard
+  # aborts at startup. Mirrors OpenCV's own platforms/js/build_js.py.
+  list(APPEND ADDITIONAL_BUILD_FLAGS -DCPU_BASELINE= -DCPU_DISPATCH=)
+  if("intrinsics" IN_LIST FEATURES)
+    # SIMD via OpenCV's wasm HAL (intrin_wasm.hpp); -msimd128 makes its builtins available.
+    # CV_ENABLE_INTRINSICS itself is turned on by the "intrinsics" feature.
+    list(APPEND ADDITIONAL_BUILD_FLAGS
+      -DOPENCV_EXTRA_C_FLAGS=-msimd128
+      -DOPENCV_EXTRA_CXX_FLAGS=-msimd128)
+  endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -536,7 +581,7 @@ if("ffmpeg" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
 endif()
 if("freetype" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
+  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz CONFIG)")
 endif()
 if("gdcm" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")

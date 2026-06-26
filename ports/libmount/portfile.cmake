@@ -27,8 +27,8 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     vcpkg_list(APPEND options "--disable-year2038")
 endif()
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${options}
@@ -40,7 +40,7 @@ vcpkg_configure_make(
         "--mandir=${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 

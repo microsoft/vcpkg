@@ -1,7 +1,7 @@
 {
   "name": "libopensp",
   "version": "1.5.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": "SGML parser algorithm",
   "homepage": "https://openjade.sourceforge.net",
   "license": "MIT",
@@ -19,6 +19,11 @@
       "name": "vcpkg-cmake-config",
       "host": true,
       "platform": "windows"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
     }
   ]
 }

@@ -2,15 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 088bff580287dca4ce9a1d97c11008e30394fab42a7ec697a79a02214837c4b8a1dc4541bf47d1fe7a987db4369a8894eab4e76a7cd82b371db54d71b678881e
+    SHA512 3b915c38cc7c9eb139df9335a90a2f6fd123c54e19ecb1f22670400eac76e317c5334f95dff5875c9c3fde8a0ef0f7aea86fa58ad42afaee823a46c6616e9c17
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
-        fix-gdal-target-interfaces.patch
+        iconv.diff
+        libarchive.diff
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindZSTD.cmake")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
@@ -160,7 +163,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/bin/gdal-config"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config"
+)
 
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
 if(NOT bin_files)

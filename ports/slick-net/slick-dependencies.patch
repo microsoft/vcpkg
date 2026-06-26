@@ -1,0 +1,101 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b8fc933..d331402 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,8 +41,8 @@ if (slick-shm_FOUND)
+     message(STATUS "slick-shm: ${slick-shm_VERSION}")
+ endif()
+ 
+-find_package(slick-queue 1.5.0 CONFIG QUIET)
+-if (NOT slick-queue_FOUND)
++find_package(slick-queue CONFIG REQUIRED)
++if (FALSE)
+     message(STATUS "Fetching slick-queue...")
+     include(FetchContent)
+     # Disable tests for slick-queue
+@@ -57,8 +57,8 @@ else()
+     message(STATUS "Found slick-queue: ${slick-queue_VERSION}")
+ endif()
+ 
+-find_package(slick-stream-buffer 1.0.5 CONFIG QUIET)
+-if (NOT slick-stream-buffer_FOUND)
++find_package(slick-stream-buffer CONFIG REQUIRED)
++if (FALSE)
+     message(STATUS "Fetching slick-stream-buffer...")
+     include(FetchContent)
+     set(BUILD_SLICK_STREAM_BUFFER_TESTS OFF CACHE BOOL "" FORCE)
+@@ -72,8 +72,8 @@ else()
+     message(STATUS "Found slick-stream-buffer: ${slick-stream-buffer_VERSION}")
+ endif()
+ 
+-find_package(slick-stream-buffer-multiplexer 1.0.1 CONFIG QUIET)
+-if (NOT slick-stream-buffer-multiplexer_FOUND)
++find_package(slick-stream-buffer-multiplexer CONFIG REQUIRED)
++if (FALSE)
+     message(STATUS "Fetching slick-stream-buffer-multiplexer...")
+     include(FetchContent)
+     set(BUILD_SLICK_STREAM_BUFFER_MULTIPLEXER_TESTS OFF CACHE BOOL "" FORCE)
+@@ -87,8 +87,8 @@ else()
+     message(STATUS "Found slick-stream-buffer-multiplexer: ${slick-stream-buffer-multiplexer_VERSION}")
+ endif()
+ 
+-find_package(slick-dynamic-buffer 1.0.1 CONFIG QUIET)
+-if (NOT slick-dynamic-buffer_FOUND)
++find_package(slick-dynamic-buffer CONFIG REQUIRED)
++if (FALSE)
+     message(STATUS "Fetching slick-dynamic-buffer...")
+     include(FetchContent)
+     set(BUILD_SLICK_DYNAMIC_BUFFER_TESTS OFF CACHE BOOL "" FORCE)
+diff --git a/cmake/slick-net-config.cmake.in b/cmake/slick-net-config.cmake.in
+index 8735d0b..fa9ec15 100644
+--- a/cmake/slick-net-config.cmake.in
++++ b/cmake/slick-net-config.cmake.in
+@@ -3,11 +3,11 @@
+ include(CMakeFindDependencyMacro)
+ 
+ # Find required dependencies
+-find_dependency(Boost CONFIG REQUIRED COMPONENTS beast context)
+-find_dependency(OpenSSL CONFIG REQUIRED)
++find_dependency(Boost CONFIG COMPONENTS beast context)
++find_dependency(OpenSSL CONFIG)
+ 
+-find_dependency(slick-queue 1.5.0 CONFIG QUIET)
+-if(NOT slick-queue_FOUND)
++find_dependency(slick-queue CONFIG)
++if(FALSE)
+     message(STATUS "Fetching slick-queue...")
+     include(FetchContent)
+     # Disable slick-queue tests
+@@ -20,8 +20,8 @@ if(NOT slick-queue_FOUND)
+     FetchContent_MakeAvailable(slick-queue)
+ endif()
+ 
+-find_dependency(slick-stream-buffer 1.0.5 CONFIG QUIET)
+-if (NOT slick-stream-buffer_FOUND)
++find_dependency(slick-stream-buffer CONFIG)
++if (FALSE)
+     message(STATUS "Fetching slick-stream-buffer...")
+     include(FetchContent)
+     set(BUILD_SLICK_STREAM_BUFFER_TESTS OFF CACHE BOOL "" FORCE)
+@@ -33,8 +33,8 @@ if (NOT slick-stream-buffer_FOUND)
+     FetchContent_MakeAvailable(slick-stream-buffer)
+ endif()
+ 
+-find_dependency(slick-stream-buffer-multiplexer 1.0.1 CONFIG QUIET)
+-if (NOT slick-stream-buffer-multiplexer_FOUND)
++find_dependency(slick-stream-buffer-multiplexer CONFIG)
++if (FALSE)
+     message(STATUS "Fetching slick-stream-buffer-multiplexer...")
+     include(FetchContent)
+     set(BUILD_SLICK_STREAM_BUFFER_MULTIPLEXER_TESTS OFF CACHE BOOL "" FORCE)
+@@ -46,8 +46,8 @@ if (NOT slick-stream-buffer-multiplexer_FOUND)
+     FetchContent_MakeAvailable(slick-stream-buffer-multiplexer)
+ endif()
+ 
+-find_dependency(slick-dynamic-buffer 1.0.1 CONFIG QUIET)
+-if (NOT slick-dynamic-buffer_FOUND)
++find_dependency(slick-dynamic-buffer CONFIG)
++if (FALSE)
+     message(STATUS "Fetching slick-dynamic-buffer...")
+     include(FetchContent)
+     set(BUILD_SLICK_DYNAMIC_BUFFER_TESTS OFF CACHE BOOL "" FORCE)
