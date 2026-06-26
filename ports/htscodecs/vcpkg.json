@@ -3,7 +3,7 @@
   "version": "1.6.7",
   "description": "Custom compression for CRAM and others.",
   "homepage": "https://github.com/samtools/htscodecs",
-  "license": "MIT",
+  "license": null,
   "supports": "!windows",
   "dependencies": [
     {
