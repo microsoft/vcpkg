@@ -51,9 +51,9 @@ endfunction()
 
 function(vcpkg_insert_msys_into_path msys_out)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-         "" 
-         "PATH_OUT"
-         "PACKAGES"
+        "" 
+        "PATH_OUT"
+        "PACKAGES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${arg_PACKAGES})
