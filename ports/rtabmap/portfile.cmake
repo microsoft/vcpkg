@@ -126,6 +126,7 @@ if("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(
     TOOL_NAMES
         rtabmap-camera
+        rtabmap-cidsims_dataset
         rtabmap-console
         rtabmap-detectMoreLoopClosures
         rtabmap-export
@@ -139,6 +140,7 @@ if("tools" IN_LIST FEATURES)
         rtabmap-euroc_dataset
         rtabmap-cleanupLocalGrids
         rtabmap-globalBundleAdjustment
+        rtabmap-reduceGraph
     AUTO_CLEAN
   )
   if("gui" IN_LIST FEATURES)
