@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-fix-link.patch
         0003-multi-definition.patch
         0004-remove-apple-sys-path.patch
+        0005-fix-report-without-qt.patch
 )
 # Will use vcpkg to find these packages
 file(REMOVE_RECURSE
