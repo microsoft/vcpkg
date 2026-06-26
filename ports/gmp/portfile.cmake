@@ -64,6 +64,9 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     vcpkg_list(APPEND OPTIONS "ABI=32")
     string(APPEND asmflags " -m32")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    # Let vcpkg-make set CCAS/AS so Android --target/--sysroot flags are preserved.
+    set(ccas "")
 else()
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
@@ -74,8 +77,8 @@ elseif(ccas)
     cmake_path(GET ccas PARENT_PATH ccas_dir)
     vcpkg_add_to_path("${ccas_dir}")
     cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 endif()
-vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
@@ -96,6 +99,7 @@ endif()
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
+    LANGUAGES ASM C CXX
     OPTIONS
         ${OPTIONS}
         --enable-cxx
