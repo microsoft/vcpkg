@@ -33,6 +33,7 @@ vcpkg_cmake_configure(
         -DFAISS_ENABLE_MKL=OFF
         -DFAISS_ENABLE_PYTHON=OFF  # Requires SWIG
         -DBUILD_TESTING=OFF
+        --trace-expand
 )
 
 vcpkg_cmake_install()
