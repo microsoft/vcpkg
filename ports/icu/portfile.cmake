@@ -19,6 +19,8 @@ vcpkg_extract_source_archive(SOURCE_PATH
         vcpkg-cross-data.patch
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/source/icudefs.mk.in" "INSTALL = @INSTALL@" "INSTALL = \$(top_srcdir)/install-sh -c")
+
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
 
