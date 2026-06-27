@@ -1285,7 +1285,6 @@ rsocket:arm64-linux=cascade
 rsocket:arm64-windows=cascade
 rsocket:x86-windows=cascade
 rtabmap:arm64-linux=cascade
-rtabmap:arm64-windows=cascade
 rtabmap[k4w2,openni2](arm | !windows)=cascade
 rtabmap[opencv-cuda](!x64 | android | osx)=cascade
 rtabmap[openmp]:arm64-osx=feature-fails # No openmp on default osx toolchain
