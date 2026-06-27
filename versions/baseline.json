@@ -3926,7 +3926,7 @@
     },
     "icu": {
       "baseline": "78.3",
-      "port-version": 1
+      "port-version": 2
     },
     "ideep": {
       "baseline": "2026-03-31",
