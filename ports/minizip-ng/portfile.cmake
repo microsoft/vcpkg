@@ -20,18 +20,28 @@ vcpkg_check_features(
         openssl MZ_OPENSSL
         bzip2   MZ_BZIP2
         lzma    MZ_LZMA
-        zlib    MZ_ZLIB
         zstd    MZ_ZSTD
 )
+
+# Select the zlib flavor explicitly. minizip-ng's "auto" mode searches for
+# zlib-ng first and then falls back to zlib; pinning MZ_ZLIB_FLAVOR ensures we
+# build against whichever library the selected feature pulled in.
+if("zlib-ng" IN_LIST FEATURES)
+    set(ZLIB_OPTIONS -DMZ_ZLIB=ON -DMZ_ZLIB_FLAVOR=zlib-ng)
+elseif("zlib" IN_LIST FEATURES)
+    set(ZLIB_OPTIONS -DMZ_ZLIB=ON -DMZ_ZLIB_FLAVOR=zlib)
+else()
+    set(ZLIB_OPTIONS -DMZ_ZLIB=OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${ZLIB_OPTIONS}
         -DMZ_FETCH_LIBS=OFF
         -DMZ_LIB_SUFFIX=-ng
         -DMZ_ICONV=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIBNG=ON # minizip-ng 4.0.10 searches for zlib-ng first before zlib - we provide zlib
 )
 
 vcpkg_cmake_install()

@@ -1,6 +1,7 @@
 {
   "name": "minizip-ng",
   "version": "4.1.0",
+  "port-version": 1,
   "description": "minizip-ng is a zip manipulation library written in C that is supported on Windows, macOS, and Linux.",
   "homepage": "https://github.com/zlib-ng/minizip-ng",
   "license": "Zlib",
@@ -62,6 +63,12 @@
       "description": "Enables ZLIB compression",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "zlib-ng": {
+      "description": "Enables ZLIB compression using zlib-ng instead of zlib",
+      "dependencies": [
+        "zlib-ng"
       ]
     },
     "zstd": {
