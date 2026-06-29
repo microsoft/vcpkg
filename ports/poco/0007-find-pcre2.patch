@@ -1,5 +1,5 @@
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index d8df9dc..fe2b000 100644
+index a2da1c4..8817bb2 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
 @@ -27,9 +27,12 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
@@ -9,7 +9,7 @@ index d8df9dc..fe2b000 100644
 -	find_package(PCRE2 REQUIRED)
  	find_package(ZLIB REQUIRED)
 -	find_package(Utf8Proc REQUIRED)
-+	find_package(unofficial-utf8proc CONFIG REQUIRED)
++	find_package(utf8proc CONFIG REQUIRED)
 +	include(SelectLibraryConfigurations)
 +	find_library(PCRE2_LIBRARY_DEBUG NAMES pcre2-8d pcre2-8-staticd HINTS ${INSTALLED_LIB_PATH})
 +	find_library(PCRE2_LIBRARY_RELEASE NAMES pcre2-8 pcre2-8-static HINTS ${INSTALLED_LIB_PATH})
@@ -22,7 +22,7 @@ index d8df9dc..fe2b000 100644
  
  if(POCO_UNBUNDLED)
 -	target_link_libraries(Foundation PUBLIC Pcre2::Pcre2 ZLIB::ZLIB Utf8Proc::Utf8Proc)
-+	target_link_libraries(Foundation PUBLIC ${PCRE2_LIBRARY} ZLIB::ZLIB utf8proc)
++	target_link_libraries(Foundation PUBLIC ${PCRE2_LIBRARY} ZLIB::ZLIB utf8proc::utf8proc)
  	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
  	add_definitions(
  		-D_pcre2_utf8_table1=_poco_pcre2_utf8_table1
