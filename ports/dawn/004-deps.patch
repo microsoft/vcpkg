@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dc6146148e..390c84d4ca 100644
+index 9a90f5b74b..6ca0175556 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -481,6 +481,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+@@ -484,6 +484,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
  ################################################################################
  # Run on all subdirectories
  ################################################################################
@@ -60,10 +60,10 @@ index 8bfeda55bc..a0f9858530 100644
 +
  include ("${CMAKE_CURRENT_LIST_DIR}/DawnTargets.cmake")
 diff --git a/src/dawn/native/CMakeLists.txt b/src/dawn/native/CMakeLists.txt
-index 4fa7334557..ca48521325 100644
+index 9332ff3c71..5f8da13fe0 100644
 --- a/src/dawn/native/CMakeLists.txt
 +++ b/src/dawn/native/CMakeLists.txt
-@@ -661,11 +661,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
+@@ -668,11 +668,17 @@ if (DAWN_ENABLE_SPIRV_VALIDATION)
  endif()
  
  if (DAWN_ENABLE_OPENGL)
@@ -83,7 +83,7 @@ index 4fa7334557..ca48521325 100644
               "${Dawn_SOURCE_DIR}/src/dawn/native/opengl/supported_extensions.json"
          OUTPUT_HEADERS DAWN_NATIVE_OPENGL_AUTOGEN_HEADERS
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index 5f22fcc049..0799d87a5e 100644
+index 8ff1eb05f7..d8ebe7c3e1 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
 @@ -41,6 +41,7 @@ if (DAWN_FETCH_DEPENDENCIES)
@@ -102,7 +102,7 @@ index 5f22fcc049..0799d87a5e 100644
  
  if (DAWN_BUILD_PROTOBUF AND EXISTS "${DAWN_PROTOBUF_DIR}/cmake")
      if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND WIN32)
-@@ -183,10 +185,12 @@ endif()
+@@ -182,10 +184,12 @@ endif()
  if (DAWN_ENABLE_DESKTOP_GL OR DAWN_ENABLE_OPENGLES)
      # Header-only library for khrplatform.h
      add_library(dawn_khronos_platform INTERFACE)
@@ -117,7 +117,7 @@ index 5f22fcc049..0799d87a5e 100644
  if (NOT TARGET Vulkan::Headers AND DAWN_ENABLE_VULKAN)
      message(STATUS "Dawn: using Vulkan::Headers at ${DAWN_VULKAN_HEADERS_DIR}")
  
-@@ -203,6 +207,7 @@ if (NOT TARGET Vulkan::UtilityHeaders AND DAWN_ENABLE_VULKAN)
+@@ -202,6 +206,7 @@ if (NOT TARGET Vulkan::UtilityHeaders AND DAWN_ENABLE_VULKAN)
      message(STATUS "Dawn: using VulkanUtilityLibraries at ${DAWN_VULKAN_UTILITY_LIBRARIES_DIR}")
      add_subdirectory(${DAWN_VULKAN_UTILITY_LIBRARIES_DIR} "${CMAKE_CURRENT_BINARY_DIR}/vulkan-utility-libraries/src")
  endif()

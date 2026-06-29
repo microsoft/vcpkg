@@ -1,7 +1,6 @@
 {
   "name": "sail",
-  "version-semver": "0.9.10",
-  "port-version": 1,
+  "version-semver": "1.0.3",
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/HappySeaFox/sail",
   "license": "MIT",
@@ -38,11 +37,19 @@
     "avif": {
       "description": "Enable AVIF codec",
       "dependencies": [
-        "libavif"
+        {
+          "name": "libavif",
+          "features": [
+            "aom"
+          ]
+        }
       ]
     },
     "bmp": {
       "description": "Enable BMP codec"
+    },
+    "fli": {
+      "description": "Enable FLI codec"
     },
     "gif": {
       "description": "Enable GIF codec",
@@ -136,6 +143,7 @@
         {
           "name": "sail",
           "features": [
+            "fli",
             "jbig",
             "pcx",
             "wal",
@@ -147,7 +155,7 @@
       ]
     },
     "medium-priority-codecs": {
-      "description": "Enable medium priority codecs such as AVIF",
+      "description": "Enable medium priority codecs such as TIFF",
       "dependencies": [
         {
           "name": "sail",
@@ -155,7 +163,9 @@
             "heif",
             "openexr",
             "psd",
-            "tiff"
+            "raw",
+            "tiff",
+            "video"
           ]
         }
       ]
@@ -187,10 +197,27 @@
     "qoi": {
       "description": "Enable QOI codec"
     },
+    "raw": {
+      "description": "Enable RAW codec",
+      "dependencies": [
+        "libraw"
+      ]
+    },
     "svg": {
       "description": "Enable SVG codec",
       "dependencies": [
         "nanosvg"
+      ]
+    },
+    "test": {
+      "description": "Build and run tests",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "all"
+          ]
+        }
       ]
     },
     "tga": {
@@ -202,6 +229,20 @@
         {
           "name": "tiff",
           "default-features": false
+        }
+      ]
+    },
+    "video": {
+      "description": "Enable VIDEO codec",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
         }
       ]
     },
