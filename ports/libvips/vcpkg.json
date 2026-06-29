@@ -73,9 +73,6 @@
         "tiff"
       ]
     },
-    "tools": {
-      "description": "Build tools."
-    },
     "webp": {
       "description": "Build with WebP support.",
       "dependencies": [

@@ -73,8 +73,14 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-# copy tools when feature is enabled
-if("tools" IN_LIST FEATURES)
+## tools are built by default, uncomment this for next libvips version where 
+## there's a tools option in the FEATURES and MESON OPTIONS file.
+## Also, the tools feature should be added in the vcpkg.json file:
+##   ,
+##   "tools": {
+##      "description": "Build tools."
+##   },
+#if("tools" IN_LIST FEATURES)
 	vcpkg_copy_tools(
 		TOOL_NAMES
 			vips
@@ -83,7 +89,7 @@ if("tools" IN_LIST FEATURES)
 			vipsthumbnail
 		AUTO_CLEAN
 	)
-endif()
+#endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
