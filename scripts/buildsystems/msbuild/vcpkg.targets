@@ -22,6 +22,7 @@
     <_ZVcpkgRoot Condition="!$(_ZVcpkgRoot.EndsWith('\'))">$(_ZVcpkgRoot)\</_ZVcpkgRoot>
     <_ZVcpkgManifestRoot Condition="'$(_ZVcpkgManifestRoot)' != '' and !$(_ZVcpkgManifestRoot.EndsWith('\'))">$(_ZVcpkgManifestRoot)\</_ZVcpkgManifestRoot>
     <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' != '' and !$(_ZVcpkgInstalledDir.EndsWith('\'))">$(_ZVcpkgInstalledDir)\</_ZVcpkgInstalledDir>
+    <_ZVcpkgManifestInstalledBaseDir Condition="'$(VcpkgManifestInstalledBaseDir)' != '' and !$(VcpkgManifestInstalledBaseDir.EndsWith('\'))">$(VcpkgManifestInstalledBaseDir)\</_ZVcpkgManifestInstalledBaseDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -76,6 +77,7 @@
   <Choose>
     <When Condition="'$(VcpkgEnableManifest)' == 'true'">
       <PropertyGroup>
+        <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgManifestInstalledBaseDir)' != ''">$(_ZVcpkgManifestInstalledBaseDir)$(VcpkgTriplet)\</_ZVcpkgInstalledDir>
         <_ZVcpkgInstalledDir Condition="'$(_ZVcpkgInstalledDir)' == ''">$(_ZVcpkgManifestRoot)vcpkg_installed\$(VcpkgTriplet)\</_ZVcpkgInstalledDir>
       </PropertyGroup>
     </When>
