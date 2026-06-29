@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_ALLOW_EXES_IN_BIN enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrtulka23/scinumtools3
