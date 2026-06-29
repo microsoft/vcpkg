@@ -89,7 +89,7 @@
       "port-version": 0
     },
     "alibabacloud-oss-cpp-sdk-v2": {
-      "baseline": "0.1.0",
+      "baseline": "0.1.1",
       "port-version": 0
     },
     "aliyun-oss-c-sdk": {
@@ -466,7 +466,7 @@
     },
     "aws-c-common": {
       "baseline": "0.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-compression": {
       "baseline": "0.3.2",
@@ -3869,8 +3869,8 @@
       "port-version": 0
     },
     "htscodecs": {
-      "baseline": "1.6.6",
-      "port-version": 1
+      "baseline": "1.6.7",
+      "port-version": 0
     },
     "htslib": {
       "baseline": "1.23.1",
@@ -4117,7 +4117,7 @@
       "port-version": 0
     },
     "ixwebsocket": {
-      "baseline": "12.0.0",
+      "baseline": "12.0.1",
       "port-version": 0
     },
     "jack2": {
@@ -6677,7 +6677,7 @@
       "port-version": 0
     },
     "mongo-cxx-driver": {
-      "baseline": "4.3.1",
+      "baseline": "4.4.0",
       "port-version": 0
     },
     "mongoose": {
@@ -10997,8 +10997,8 @@
       "port-version": 0
     },
     "wolfssl": {
-      "baseline": "5.9.1",
-      "port-version": 1
+      "baseline": "5.9.2",
+      "port-version": 0
     },
     "wolftpm": {
       "baseline": "4.0.0",
@@ -11009,7 +11009,7 @@
       "port-version": 3
     },
     "workflow": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "workflow-win": {
