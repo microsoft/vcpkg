@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 f3649765536fa308cac31e36aaf819c1ce9a9f9f16e055f4419b8ac8617516b44bdd701461d25018a87cc1b7e7b8be860db338fdb7da9cd859d0019070667cdd
+        SHA512 615257384ad7df17174c5733c17d8ac0473dfdcddeac69e334d7109501954dc42e77ed54deb666bf44581fcf8e69c2365311626786cd267e52a3d48d7a9441c5
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -36,18 +36,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 47fa49d9fe5d3adec694a07709c6f1a515a4f1f850b5ca602205aa2080695e0228752879182ddaad2bd8f9bc40fe87aa39755e9e4e034dc5b45289bb5a57b7e5
+    SHA512 d26d95efd20006f1949804e27c766c31a88183daf7d1c3f42022d856042ea523e1253adb8c90a365bad10a7c3e80acefbae5a3ed6d761f9754573a678283c674
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
-        002-fix-uwp.patch
         003-force-disable-cxx-module.patch
         004-deps.patch
         005-bsd-support.patch
-        # https://github.com/google/dawn/commit/fa4a364b9ff215f9fe95823ec89ccc922cf7b254 added a tint writer for the null backend.
-        # When building dawn[core] which only enables dawns null backend and tints null writer, src/dawn/native/ShaderModule.cpp failed to compile
-        # as it was expecting a transitive include of tint::Bindings from a shader language writer.
-        007-fix-tint-null-only-writer.patch
         008-wrong-dxcapi-include.patch
         009-fix-tint-install.patch
         010-fix-glslang.patch
@@ -105,7 +100,7 @@ checkout_in_path(
 checkout_in_path(
     "${SOURCE_PATH}/third_party/webgpu-headers/src"
     "https://github.com/webgpu-native/webgpu-headers"
-    "bf8ddb91dc38ea11ec1b727dae1fa965c4207d22"
+    "a11ef4462405c4506ad7284e5b1edeff2750bb54"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
