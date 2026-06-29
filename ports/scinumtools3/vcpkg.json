@@ -1,6 +1,6 @@
 {
   "name": "scinumtools3",
-  "version-string": "0.5.6",
+  "version": "0.5.6",
   "description": "SciNumTools3: C++ toolkit for unit-aware scientific computation with runtime expressions and validated parameters.",
   "homepage": "https://github.com/vrtulka23/scinumtools3",
   "dependencies": [
