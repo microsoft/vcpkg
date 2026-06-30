@@ -10317,7 +10317,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.26.9",
+      "baseline": "0.26.10",
       "port-version": 0
     },
     "tree-sitter-c": {
