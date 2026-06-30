@@ -6369,7 +6369,7 @@
       "port-version": 1
     },
     "manifold": {
-      "baseline": "3.5.1",
+      "baseline": "3.5.2",
       "port-version": 0
     },
     "mapbox-geojson-cpp": {
