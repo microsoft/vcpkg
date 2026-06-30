@@ -6569,7 +6569,7 @@
       "port-version": 0
     },
     "microlog": {
-      "baseline": "7.0.3",
+      "baseline": "7.1.0",
       "port-version": 0
     },
     "microsoft-windows-devices-midi2": {
