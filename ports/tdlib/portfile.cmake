@@ -5,9 +5,7 @@ vcpkg_from_github(
     HEAD_REF master
     SHA512 8aaa918c9049d6af580b1ec7953204ccd816648e70169cd1b18f36d5f4d85e523acb30963a134fa5a056f61e9df46b8e36b1f336ea0de08548764becb3b9dd71
     PATCHES
-        fix-pc.patch
         fix-cross-compile.patch
-        "${FIX_TDCORE_PATCH}"
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
