@@ -43,6 +43,7 @@
     "nlohmann-json",
     "pegtl",
     "pugixml",
+    "scnlib",
     {
       "name": "tiff",
       "default-features": false
