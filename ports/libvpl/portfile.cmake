@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         001-fix-pkgconfig.patch
+        002-fix-cmake-config.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_MSVC_STATIC_RUNTIME)

@@ -1,6 +1,7 @@
 {
   "name": "libvpl",
   "version": "2.17.0",
+  "port-version": 1,
   "description": "Intel Video Processing Library (oneVPL) dispatcher",
   "homepage": "https://github.com/intel/libvpl",
   "license": "MIT",
