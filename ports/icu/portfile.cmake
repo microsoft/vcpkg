@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
+        fix-install-sh-relative-path.patch
         fix_bsd_and_solaris.patch
         fix_parallel_build_on_windows.patch
         fix-python-path-with-spaces.patch
@@ -18,8 +19,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         vcpkg-cross-data.patch
 )
-
-vcpkg_replace_string("${SOURCE_PATH}/source/icudefs.mk.in" "INSTALL = @INSTALL@" "INSTALL = \$(top_srcdir)/install-sh -c")
 
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
