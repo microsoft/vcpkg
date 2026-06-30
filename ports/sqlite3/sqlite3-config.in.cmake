@@ -3,7 +3,7 @@ include(CMakeFindDependencyMacro)
 if(NOT WIN32)
     find_dependency(Threads)
 endif()
-if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+if("@SQLITE_ENABLE_ICU@" AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     find_package(ICU COMPONENTS uc i18n)
 endif()
 
