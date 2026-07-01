@@ -31,7 +31,7 @@ index 27c89427..5fef0f58 100644
 -    PACKAGE PEGTL
 -    VERSION 2.0.0
 -    TARGETS PEGTL::PEGTL
-+    PACKAGE pegtl-2
++    PACKAGE pegtl
 +    TARGETS taocpp::pegtl
 +    CONFIG_MODE
      STANDARD_INCLUDE_DIRS)
