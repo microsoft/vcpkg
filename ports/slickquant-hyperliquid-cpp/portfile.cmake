@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/hyperliquid-cpp
     REF "v${VERSION}"
-    SHA512 afa9b2b1a9879658c96632f1ae1f5c3e0b963d39cda88b4e86447f534ed809d11c1be69caf1d22ff12344e0f40a15cbcc2cd4c84bd1f0a3480a610bb6be892f1
+    SHA512 8455c8669812d6292117c70dcfb886645a165c8aab957af59d5a068e40959847dc2bd7c893557bb7e228e489f34be7748dea16b24c5632eda8992c0e214cfa4b
     HEAD_REF main
     PATCHES
         slick-net.patch
@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME hyperliquid-cpp CONFIG_PATH share/hyperliquid)
+vcpkg_cmake_config_fixup(PACKAGE_NAME hyperliquid CONFIG_PATH share/hyperliquid)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

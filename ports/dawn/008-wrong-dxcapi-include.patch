@@ -1,5 +1,5 @@
 diff --git a/src/tint/lang/hlsl/validate/validate.cc b/src/tint/lang/hlsl/validate/validate.cc
-index 1a50bfacf0..2203921385 100644
+index ef69931d97..0f96aae51a 100644
 --- a/src/tint/lang/hlsl/validate/validate.cc
 +++ b/src/tint/lang/hlsl/validate/validate.cc
 @@ -51,7 +51,7 @@ TINT_BEGIN_DISABLE_ALL_WARNINGS();
