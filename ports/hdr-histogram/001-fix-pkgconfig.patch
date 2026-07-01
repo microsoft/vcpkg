@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 152273d..b90ede6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -113,6 +113,29 @@ if(${ZLIB_FOUND})
+@@ -113,6 +113,31 @@ if(${ZLIB_FOUND})
  else()
      set(PC_REQUIRES_PRIVATE_ZLIB "")
  endif()
@@ -14,7 +14,9 @@ index 152273d..b90ede6 100644
 +endif()
 +
 +set(PKGCONFIG_LIBS_PRIVATE)
-+if(NOT WIN32)
++if(WIN32)
++    string(APPEND PKGCONFIG_LIBS_PRIVATE " -lws2_32")
++else()
 +    find_package(Threads REQUIRED)
 +    string(APPEND PKGCONFIG_LIBS_PRIVATE " -pthread")
 +
