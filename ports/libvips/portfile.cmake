@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libvips/libvips
@@ -81,14 +80,14 @@ vcpkg_fixup_pkgconfig()
 ##      "description": "Build tools."
 ##   },
 #if("tools" IN_LIST FEATURES)
-	vcpkg_copy_tools(
-		TOOL_NAMES
-			vips
-			vipsedit
-			vipsheader
-			vipsthumbnail
-		AUTO_CLEAN
-	)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            vips
+            vipsedit
+            vipsheader
+            vipsthumbnail
+        AUTO_CLEAN
+    )
 #endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
