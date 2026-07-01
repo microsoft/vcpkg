@@ -1,0 +1,15 @@
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index 8ff1eb05f..4d367e8db 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -164,8 +164,8 @@ if (NOT TARGET glfw AND DAWN_USE_GLFW)
+     set(GLFW_BUILD_WAYLAND ${DAWN_USE_WAYLAND} CACHE BOOL "" FORCE)
+     set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+ 
+-    message(STATUS "Dawn: using GLFW at ${DAWN_GLFW_DIR}")
+-    add_subdirectory(${DAWN_GLFW_DIR} "${CMAKE_CURRENT_BINARY_DIR}/glfw3/src")
++    message(STATUS "Using GLFW3 from VCPKG")
++    find_package(glfw3 CONFIG REQUIRED)
+ endif()
+ 
+ if (DAWN_BUILD_PROTOBUF AND NOT TARGET libprotobuf-mutator)

@@ -47,6 +47,7 @@ vcpkg_from_github(
         009-fix-tint-install.patch
         010-fix-glslang.patch
         011-fix-dxc.patch
+        012-use-vcpkg-glfw.patch
 )
 
 function(checkout_in_path PATH URL REF)
@@ -122,6 +123,7 @@ vcpkg_check_features(
         vulkan      DAWN_ENABLE_VULKAN
         wayland     DAWN_USE_WAYLAND
         x11         DAWN_USE_X11
+        glfw        DAWN_USE_GLFW
         tint-tools  TINT_BUILD_CMD_TOOLS
 )
 
