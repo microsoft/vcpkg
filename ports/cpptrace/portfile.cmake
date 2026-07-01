@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 e88edddbcdd423d49ed3adb02cf70580ee3a56065db4d81ca69d3f9f6d9b64ac27734842ca3b6d8ff45a548c25900a88f979e39d777af422a153e586d26ac5b5
     HEAD_REF main
     PATCHES
-        emscripten-platform.diff # treat emscripten as a linux-like platform; inert on other targets
+        emscripten-platform.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
