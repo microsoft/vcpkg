@@ -1449,8 +1449,8 @@ wangle:x86-windows=cascade
 wasmedge[aot]:arm64-linux=cascade
 wayland[force-build](!native)=cascade    # needs wayland[force-build](native)
 wayland[force-build](native)=feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
-wayland-protocols[force-build]=cascade   # needs wayland[force-build](native)
-wayland-protocols(windows | osx)=cascade # needs wayland
+wayland-protocols[force-build](windows | osx)=cascade # needs wayland[scanner](native)
+wayland-protocols[generated-headers](android | windows | osx)=feature-fails # requires system wayland-scanner
 whisper-cpp[cuda]:arm64-linux=cascade
 wiiuse:arm64-linux=fail
 winpcap=skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215
@@ -1497,4 +1497,3 @@ zookeeper:x64-windows-static-md=fail
 zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
-
