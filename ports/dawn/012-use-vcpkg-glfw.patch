@@ -1,5 +1,18 @@
+diff --git a/src/dawn/glfw/CMakeLists.txt b/src/dawn/glfw/CMakeLists.txt
+index f3bca8c5a1..c85d68f08d 100644
+--- a/src/dawn/glfw/CMakeLists.txt
++++ b/src/dawn/glfw/CMakeLists.txt
+@@ -62,4 +62,8 @@ if(BUILD_SHARED_LIBS)
+     target_compile_definitions(dawn_glfw PUBLIC "WGPU_GLFW_SHARED_LIBRARY")
+ endif()
+ 
++if (DAWN_ENABLE_INSTALL)
++    dawn_install_target(dawn_glfw HEADERS ${headers})
++endif()
++
+ add_library(webgpu_glfw ALIAS dawn_glfw)
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index 8ff1eb05f..4d367e8db 100644
+index 8ff1eb05f7..4d367e8db5 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
 @@ -164,8 +164,8 @@ if (NOT TARGET glfw AND DAWN_USE_GLFW)
