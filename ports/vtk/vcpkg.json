@@ -18,7 +18,6 @@
         "zlib"
       ]
     },
-    "gl2ps",
     "glew",
     {
       "name": "hdf5",
@@ -166,6 +165,19 @@
     },
     "geojson": {
       "description": "Convert Geo JSON format to vtkPolyData"
+    },
+    "gl2ps": {
+      "description": "GL2PS functionality for VTK",
+      "dependencies": [
+        "gl2ps",
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
     },
     "ioocct": {
       "description": "Build with IOOCCT module",

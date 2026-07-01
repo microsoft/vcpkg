@@ -69,6 +69,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "cuda"        VTK_USE_CUDA
         "debugleaks"  VTK_DEBUG_LEAKS
         "fontconfig"  VTK_MODULE_ENABLE_VTK_RenderingFreeTypeFontConfig
+        "gl2ps"       VTK_MODULE_ENABLE_VTK_gl2ps
+        "gl2ps"       VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
         "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
         "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
         "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
@@ -129,10 +131,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_IOPIO
         "mpi"         VTK_GROUP_ENABLE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
-        "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2
-        "opengl"      VTK_MODULE_ENABLE_VTK_opengl
         "openvr"      VTK_MODULE_ENABLE_VTK_RenderingOpenVR
         "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
         "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
