@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-paraview",
-  "version-date": "2022-12-01",
+  "version-string": "ci",
   "description": "Port to force features of certain ports within CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
@@ -19,7 +19,7 @@
         "mpi",
         "python"
       ],
-      "platform": "!(windows & static) & !x86"
+      "platform": "!android & !(windows & static) & !x86"
     },
     {
       "name": "vtk",

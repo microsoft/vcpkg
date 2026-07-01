@@ -29,3 +29,16 @@ index 30c10862..9b775648 100644
        }
        this->AddEntity(region, entityBlock);
      }
+diff --git a/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp b/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp
+index a89a1eb5..76d4a7d8 100644
+--- a/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp
++++ b/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp
+@@ -77,7 +77,7 @@ class Factory
+ 
+ template <class Base, class... Args>
+ template <class T>
+-volatile bool Factory<Base, Args...>::Registrar<T>::registered = Factory<Base, Args...>::Registrar<T>::registerT();
++volatile bool Factory<Base, Args...>::Registrar<T>::registered = Factory<Base, Args...>::template Registrar<T>::registerT();
+ 
+ }
+ 
