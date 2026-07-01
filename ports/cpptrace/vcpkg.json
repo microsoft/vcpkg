@@ -9,7 +9,7 @@
   "dependencies": [
     {
       "name": "libdwarf",
-      "platform": "!windows | mingw"
+      "platform": "(!windows | mingw) & !emscripten"
     },
     {
       "name": "vcpkg-cmake",
