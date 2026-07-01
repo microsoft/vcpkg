@@ -42,6 +42,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/soci-${VERSION})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # Needed to be consumable without CMake (which sets the macro automatically)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/soci/soci-platform.h" "ifdef SOCI_DLL" "if 1")
+endif()
+
 file(READ "${CURRENT_PORT_DIR}/usage" usage)
 set(backends ${FEATURES})
 list(REMOVE_ITEM backends core boost)
