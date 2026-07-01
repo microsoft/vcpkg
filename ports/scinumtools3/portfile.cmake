@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrtulka23/scinumtools3
-    REF v0.5.7
-    SHA512 2a5fbc8e9435bcce897b8e2a49fc9c80729127155a7513d5692af508afbdb4d22c0aa1720fe0114ba744bea850e13f6d1763b0f2a9ea1625b0b859fca377545a
+    REF v0.5.9
+    SHA512 b5164dbb80517e9827a3588556357dd2dbf9b952ad4131379408c070b21bfcef6b7c2cecf5504aa6d3a4f2d35c7064abe0601fb31ae7512b231cadd2a579c9ec
 )
-message(STATUS "vcpkg github: ${SOURCE_PATH}")
-
-#set(SOURCE_PATH "/path/to/scinumtools3")
-#message(STATUS "vcpkg source path: ${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
