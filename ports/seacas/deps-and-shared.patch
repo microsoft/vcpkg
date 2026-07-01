@@ -14,7 +14,7 @@ index 90911a3..bde1e25 100644
 +find_package(metis REQUIRED)
 +tribits_extpkg_create_imported_all_libs_target_and_config_file(
 +  METIS
-+  INNER_FIND_PACKAGE_NAME metis
++  INNER_FIND_PACKAGE_NAME "metis CONFIG"
 +  IMPORTED_TARGETS_FOR_ALL_LIBS metis )
 diff --git a/cmake/TPLs/FindTPLMatio.cmake b/cmake/TPLs/FindTPLMatio.cmake
 index c76713a..e57b5be 100644
@@ -31,7 +31,7 @@ index c76713a..e57b5be 100644
 +find_package(matio REQUIRED)
 +tribits_extpkg_create_imported_all_libs_target_and_config_file(
 +  Matio
-+  INNER_FIND_PACKAGE_NAME matio
++  INNER_FIND_PACKAGE_NAME "matio CONFIG"
 +  IMPORTED_TARGETS_FOR_ALL_LIBS matio::matio )
 +
 diff --git a/cmake/TPLs/FindTPLParMETIS.cmake b/cmake/TPLs/FindTPLParMETIS.cmake
@@ -49,7 +49,7 @@ index 2dc2c14..9bc04ae 100644
 +find_package(parmetis REQUIRED)
 +tribits_extpkg_create_imported_all_libs_target_and_config_file(
 +  ParMETIS
-+  INNER_FIND_PACKAGE_NAME parmetis
++  INNER_FIND_PACKAGE_NAME "parmetis CONFIG"
 +  IMPORTED_TARGETS_FOR_ALL_LIBS parmetis )
 diff --git a/cmake/TPLs/FindTPLZlib.cmake b/cmake/TPLs/FindTPLZlib.cmake
 index cc607e9..069a37c 100644
@@ -78,7 +78,7 @@ index 649ab49..f9a4a5d 100644
      tribits_extpkg_create_imported_all_libs_target_and_config_file(
        CGNS
 -      INNER_FIND_PACKAGE_NAME  CGNS
-+      INNER_FIND_PACKAGE_NAME  cgns
++      INNER_FIND_PACKAGE_NAME  "cgns CONFIG"
        IMPORTED_TARGETS_FOR_ALL_LIBS  ${CGNS_TARGET})
      set(TPL_CGNS_NOT_FOUND FALSE)
    endif()
