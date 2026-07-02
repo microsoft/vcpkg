@@ -94,6 +94,24 @@ set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
 add_library(xmlsec1 ${SOURCESXMLSEC})
 add_library(xmlsec1-openssl ${SOURCESXMLSECOPENSSL})
 
+if(WIN32 AND BUILD_SHARED_LIBS)
+    set_property(SOURCE win32/version.rc APPEND PROPERTY COMPILE_DEFINITIONS
+        RC_VERSION_MAJOR=${XMLSEC_VERSION_MAJOR}
+        RC_VERSION_MINOR=${XMLSEC_VERSION_MINOR}
+        RC_VERSION_MICRO=${XMLSEC_VERSION_SUBMINOR}
+    )
+    target_sources(xmlsec1 PRIVATE win32/version.rc)
+    target_compile_definitions(xmlsec1 PRIVATE
+        "RC_FILENAME=\"libxmlsec1.dll\""
+        "RC_DESCRIPTION=\"XML Security Library\""
+    )
+    target_sources(xmlsec1-openssl PRIVATE win32/version.rc)
+    target_compile_definitions(xmlsec1-openssl PRIVATE
+        "RC_FILENAME=\"libxmlsec1-openssl.dll\""
+        "RC_DESCRIPTION=\"XML Security Library - OpenSSL\""
+    )
+endif()
+
 target_include_directories(xmlsec1 PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
