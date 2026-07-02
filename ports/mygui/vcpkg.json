@@ -1,7 +1,6 @@
 {
   "name": "mygui",
-  "version": "3.4.3",
-  "port-version": 4,
+  "version": "3.4.4",
   "description": "Fast, flexible and simple GUI",
   "homepage": "http://mygui.info",
   "license": "MIT",
@@ -19,15 +18,11 @@
     }
   ],
   "features": {
+    "msdf": {
+      "description": "Enable msdf support"
+    },
     "obsolete": {
       "description": "Keep obsolete functions."
-    },
-    "opengl": {
-      "description": "Use OpenGL render system.",
-      "supports": "!android",
-      "dependencies": [
-        "opengl"
-      ]
     },
     "plugins": {
       "description": "Build MyGUI plugins."
