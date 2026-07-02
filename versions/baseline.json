@@ -9097,8 +9097,8 @@
       "port-version": 0
     },
     "scotch": {
-      "baseline": "7.0.5",
-      "port-version": 1
+      "baseline": "7.0.12",
+      "port-version": 0
     },
     "scottt-debugbreak": {
       "baseline": "1.0",
