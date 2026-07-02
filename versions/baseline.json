@@ -10177,7 +10177,7 @@
       "port-version": 2
     },
     "tinyexr": {
-      "baseline": "3.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "tinyfiledialogs": {
