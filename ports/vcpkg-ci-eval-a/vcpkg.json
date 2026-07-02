@@ -1,0 +1,37 @@
+{
+  "name": "vcpkg-ci-eval-a",
+  "version-date": "2026-05-04",
+  "description": "CI evaluation test port A.",
+  "supports": "(x86 & windows) | (x64 & linux)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "feature-a": {
+      "description": "Test scenario A."
+    },
+    "feature-b": {
+      "description": "Test scenario B."
+    },
+    "feature-c": {
+      "description": "Test scenario C.",
+      "dependencies": [
+        "vcpkg-ci-eval-b"
+      ]
+    },
+    "feature-d": {
+      "description": "Test scenario D.",
+      "dependencies": [
+        {
+          "name": "vcpkg-ci-eval-b",
+          "features": [
+            "feature-a"
+          ]
+        }
+      ]
+    }
+  }
+}

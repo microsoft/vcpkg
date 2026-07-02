@@ -1,0 +1,11 @@
+{
+  "name": "vcpkg-ci-eval-b",
+  "version-date": "2026-05-03",
+  "description": "CI evaluation test port B.",
+  "supports": "(x86 & windows) | (x64 & linux)",
+  "features": {
+    "feature-a": {
+      "description": "Test scenario A."
+    }
+  }
+}
