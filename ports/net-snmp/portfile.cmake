@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 0a62a1d263437409cf50e20da7f82132cc3df9a7ecf9e1d57ac00285199617b168636e4a042cd564fcb1b8417883e618238ca252066b9e6e77c4c9030026ff30
     PATCHES
         msvc-openssl-autolink.patch
+        no-system32-install.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -73,26 +74,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endif()
 endif()
 
-file(GLOB LIB_FILES
-    LIST_DIRECTORIES false
-    "${TARGET_DIR}/lib/release/*")
-
-if(LIB_FILES)
-    file(MAKE_DIRECTORY "${TARGET_DIR}/lib")
-    file(COPY ${LIB_FILES} DESTINATION "${TARGET_DIR}/lib")
-    file(REMOVE_RECURSE "${TARGET_DIR}/lib/release")
-endif()
-
-file(GLOB LIB_FILES_DEBUG
-     LIST_DIRECTORIES false
-     "${TARGET_DIR_DEBUG}/lib/debug/*")
-
-if(LIB_FILES_DEBUG)
-    file(MAKE_DIRECTORY "${TARGET_DIR_DEBUG}/lib")
-    file(COPY ${LIB_FILES_DEBUG} DESTINATION "${TARGET_DIR_DEBUG}/lib")
-    file(REMOVE_RECURSE "${TARGET_DIR_DEBUG}/lib/debug")
-endif()
-
 # INSTALL_BASE is the compile-time default root for runtime search paths
 # (MIBDIRS, SNMPCONFPATH, persistent storage, ...). Configure bakes the
 # absolute buildtree path into it, which is not relocatable and trips the
@@ -104,10 +85,6 @@ vcpkg_replace_string(
     "#define INSTALL_BASE \"${TARGET_DIR}\""
     "#define INSTALL_BASE \"c:/usr\""
     IGNORE_UNCHANGED
-)
-
-file(REMOVE
-    "${TARGET_DIR}/lib/netsnmp.exp"
 )
 
 if(VCPKG_BUILD_TYPE STREQUAL "release")
