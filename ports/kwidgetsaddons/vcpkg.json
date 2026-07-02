@@ -1,6 +1,6 @@
 {
   "name": "kwidgetsaddons",
-  "version": "6.25.0",
+  "version": "6.26.0",
   "description": "Addons to QtWidgets",
   "homepage": "https://invent.kde.org/frameworks/kwidgetsaddons",
   "documentation": "https://api.kde.org/kwidgetsaddons-index.html",
