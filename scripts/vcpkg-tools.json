@@ -85,9 +85,9 @@
       "arch": "arm64",
       "version": "2.7.4",
       "executable": "clangarm64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-arm64.7z.exe",
-      "sha512": "ba335e5f2334aad4bcef17837486505b2d79346057d18b54b669c0e07e3bbeaa194cf5ea20232fb578fbb1fe6a822a427c2db42b5e0a099dbc4003e9c1af4954",
-      "archive": "PortableGit-2.54.0-arm64.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.2/PortableGit-2.55.0.2-arm64.7z.exe",
+      "sha512": "2624f3593031f258e075e4c7b8f3cc3ac0cdc5a7a6bd1dbc19b93862d7a34cca4d30205a6154690c440d3bb98601887247229d3bd3ae4d5e75b38623573acfda",
+      "archive": "PortableGit-2.55.0.2-arm64.7z.exe"
     },
     {
       "name": "git",
@@ -95,9 +95,9 @@
       "arch": "amd64",
       "version": "2.7.4",
       "executable": "mingw64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-64-bit.7z.exe",
-      "sha512": "0783e36b8809b55c2786d68af1e8de732d9121ad7e55b50a24c4779b2431adce0e4234d79db1ec83b4d8b300924b2b325459fb11da53ef9b114239340ccb4a9e",
-      "archive": "PortableGit-2.54.0-64-bit.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.2/PortableGit-2.55.0.2-64-bit.7z.exe",
+      "sha512": "e41062cb9486996bf158f6ea320091be26ff462fdda1ddd5dd625effc99d1d5e3114389f0bac2ab13592d6c33753f0c08686ef4eae2599a6d447a91b81c8faaa",
+      "archive": "PortableGit-2.55.0.2-64-bit.7z.exe"
     },
     {
       "name": "git",
@@ -234,29 +234,29 @@
       "name": "7zip",
       "os": "windows",
       "arch": "amd64",
-      "version": "26.01",
+      "version": "26.02",
       "executable": "7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.01/7z2601-x64.exe",
-      "sha512": "e52d5050c8fe4c0a09bd482d36eb1377cf342c4739060d94094c4acb5aab1e53fa3842f64dec7b5df3b3bdc7394a8bc9a9cd7a88808342c1136dd9ce9fe5a0a2",
-      "archive": "7z2601-x64.7z.exe"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7z2602-x64.exe",
+      "sha512": "85389eaef377aa9fef3155d2e3375c1fff77fc10e39d9312cab229f202f3aff78f6e807460cf6b04bc2a32f72f7853afbf475cf0dce6232a40c0a6f8ddcbe4da",
+      "archive": "7z2602-x64.7z.exe"
     },
     {
       "name": "7zip",
       "os": "windows",
       "arch": "arm64",
-      "version": "26.01",
+      "version": "26.02",
       "executable": "7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.01/7z2601-arm64.exe",
-      "sha512": "57d2fb50a28952daf31407ce3f4b05356309f7dd93f24752f9ee56b57642dbdde93a5e3577e4c8833383ced699ab514ea7c1bc12f626a686b3f266c018223bdd",
-      "archive": "7z2601-arm64.7z.exe"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7z2602-arm64.exe",
+      "sha512": "17d438ee775e4587156d88400390fa5fe59425474c125d0ad0760644373a86547eebd0670501f313c845f7a7cf148ff142eea8980e840d1f077f623539e5615d",
+      "archive": "7z2602-arm64.7z.exe"
     },
     {
       "name": "7zr",
       "os": "windows",
-      "version": "26.01",
+      "version": "26.02",
       "executable": "7zr.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.01/7zr.exe",
-      "sha512": "f798fab87c2bcdeeb43c1ec2f1976fcc6213f1cecb88d7da6410c6a0f4db3ffda4794f462af3525cb4c86ade0bf6ba410cd4c6a96299c4e695dfeb3b05d06baa"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7zr.exe",
+      "sha512": "dfdcf16edb65baddd43181c9481a2c9453b0c678a6825108c2ab4cb30de34497c5fda5639721b3ced9cb4b98744fb6dab7314bd49685385c365425b721b19279"
     },
     {
       "name": "ninja",
@@ -371,61 +371,61 @@
       "name": "node",
       "os": "windows",
       "arch": "x64",
-      "version": "24.17.0",
-      "executable": "node-v24.17.0-win-x64/node.exe",
-      "url": "https://nodejs.org/dist/v24.17.0/node-v24.17.0-win-x64.7z",
-      "sha512": "13a679a90b0e75c6cef9ecd9b53b712fcddf3de81d35d05781ca97acf9b3702692406e695e304749ab187fafc7ff9d9b64a5e25df78b0e4da00f33a548799d7a",
-      "archive": "node-v24.17.0-win-x64.7z"
+      "version": "24.18.0",
+      "executable": "node-v24.18.0-win-x64/node.exe",
+      "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-win-x64.7z",
+      "sha512": "56679140652df51fb91796097e88ad87f0c03a442bdb5e31b34e2aeb39d9890094b2a6aad6881c2617991f86880816d2d355eb2d99d1ae45c2c1557048b4f4cf",
+      "archive": "node-v24.18.0-win-x64.7z"
     },
     {
       "name": "node",
       "os": "windows",
       "arch": "arm64",
-      "version": "24.17.0",
-      "executable": "node-v24.17.0-win-arm64/node.exe",
-      "url": "https://nodejs.org/dist/v24.17.0/node-v24.17.0-win-arm64.7z",
-      "sha512": "673052fa516aa1e6a34e391cb3a31739f86e6c08e602112e1f16535aece8eb80bae3798f4f8e6febe19f042c4c57ff46ec8a2c6ae3310040634c95742f489d09",
-      "archive": "node-v24.17.0-win-arm64.7z"
+      "version": "24.18.0",
+      "executable": "node-v24.18.0-win-arm64/node.exe",
+      "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-win-arm64.7z",
+      "sha512": "3f78b15bdd3436fe60eac991a2bbfafa2b70c38e3389c006d2d1907b8b8bbf08748b3342ded2e3785efd5d65aa946fca1bb416b1a6edaf93c98c3b027dda5508",
+      "archive": "node-v24.18.0-win-arm64.7z"
     },
     {
       "name": "node",
       "os": "linux",
       "arch": "x64",
-      "version": "24.17.0",
-      "executable": "node-v24.17.0-linux-x64/bin/node",
-      "url": "https://nodejs.org/dist/v24.17.0/node-v24.17.0-linux-x64.tar.gz",
-      "sha512": "1f278339cc3c1be49766bf10d9e28b8dfead1134ed6f3a12182bdafddf33ef5c5e8b5655d52101d5d83eff246acb841b78bb1a4815f18bed65450e1a1ebdff3e",
-      "archive": "node-v24.17.0-linux-x64.tar.gz"
+      "version": "24.18.0",
+      "executable": "node-v24.18.0-linux-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-linux-x64.tar.gz",
+      "sha512": "51dfd9d0debbba35b4c2dc0beb831556fd02a364e10a751ccc7d24e32f58bcddd8fc1273bb9001816cce1877fc83759a3deb56a9b1946f6d2e4d190d1fee2b5c",
+      "archive": "node-v24.18.0-linux-x64.tar.gz"
     },
     {
       "name": "node",
       "os": "linux",
       "arch": "arm64",
-      "version": "24.17.0",
-      "executable": "node-v24.17.0-linux-arm64/bin/node",
-      "url": "https://nodejs.org/dist/v24.17.0/node-v24.17.0-linux-arm64.tar.gz",
-      "sha512": "5faf7716900f68e54883a32c1b2956d782de4c112be8e33bc4e95f11f2be3096fb294eb29e12a49d1d0c4ec77282cc9d5f4c33fc860436b2722a95cbe7524815",
-      "archive": "node-v24.17.0-linux-arm64.tar.gz"
+      "version": "24.18.0",
+      "executable": "node-v24.18.0-linux-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-linux-arm64.tar.gz",
+      "sha512": "910f2ef39d570b5c285be1c0cccb8990f75f0a5097d83a0fe46b791ea878d942eb48f37f929e6abd86f812c27d373d49cd528b4869b465dec02d85fa3701db95",
+      "archive": "node-v24.18.0-linux-arm64.tar.gz"
     },
     {
       "name": "node",
       "os": "osx",
       "arch": "x64",
-      "version": "24.17.0",
-      "executable": "node-v24.17.0-darwin-x64/bin/node",
-      "url": "https://nodejs.org/dist/v24.17.0/node-v24.17.0-darwin-x64.tar.gz",
-      "sha512": "d360558a63e73423d92c9db815170657c00f280d0319290630dd5e2ce73cb0105f5d9c734dcc343d338a34d784c823e05201b5c4249cee00e75f1e390b7a9bd4",
-      "archive": "node-v24.17.0-darwin-x64.tar.gz"
+      "version": "24.18.0",
+      "executable": "node-v24.18.0-darwin-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-darwin-x64.tar.gz",
+      "sha512": "8802d3d85dfd7ce61093445d8db67ceaa91e019f4f3326c41086277eaef155e6b33d0d9ee170dff7f065cb8417b8bd0656a83e4ffc53bbd725e9609ec8469ca8",
+      "archive": "node-v24.18.0-darwin-x64.tar.gz"
     },
     {
       "name": "node",
       "os": "osx",
       "arch": "arm64",
-      "version": "24.17.0",
-      "executable": "node-v24.17.0-darwin-arm64/bin/node",
-      "url": "https://nodejs.org/dist/v24.17.0/node-v24.17.0-darwin-arm64.tar.gz",
-      "sha512": "29e5b73cca8257922a85e5372c373f8edbc46a98c0b3f7416c223cc03938a8e291b6751820638a87fb12424fcb221631264192a2aade9ae004a6979527dbd75d",
-      "archive": "node-v24.17.0-darwin-arm64.tar.gz"
+      "version": "24.18.0",
+      "executable": "node-v24.18.0-darwin-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-darwin-arm64.tar.gz",
+      "sha512": "264846983f819831f520d750919d43ebada851e7f8f301894670bdd44165d32a47e0a7f09562986c41a7c8f4134cc6154e3b342ec3b9ef5c0f9b12841c57cd4d",
+      "archive": "node-v24.18.0-darwin-arm64.tar.gz"
     },
     {
       "name": "dotnet",
