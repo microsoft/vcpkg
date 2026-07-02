@@ -5573,7 +5573,7 @@
       "port-version": 0
     },
     "libredwg": {
-      "baseline": "0.13.4",
+      "baseline": "0.13.4.8230",
       "port-version": 0
     },
     "libremidi": {
