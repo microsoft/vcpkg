@@ -4,8 +4,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF e5c3d98613067fa6b4c04759e825a9777f34ff48
-    SHA512 ea3d1a0c867ec7f5d8b387398f71ba4e8be903682337c012f393e7ddbfb30843245363c1b94b53f085a26f8893646c6fb141833fcabf68211b7fade6c783fd50
+    REF b92f4d91cf8c77d63bab6d5f924c82998eee3505
+    SHA512 3e6265f9944f03c01e69b0ec6ba659b21caa36fc0f9b78ece29cfacf4b230a2b3a399cd19b40c86ec301d50545a80d82f43ec716cfb496cb7e5a4ae98618ffc6
     HEAD_REF main
 )
 
@@ -18,13 +18,13 @@ file(REMOVE_RECURSE ${unused})
 file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")
 file(REMOVE_RECURSE ${unused})
 
-if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-queues")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/storage/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/storage/azure-storage-queues" "${SOURCE_PATH}/sdk/storage/_")
-  file(RENAME "${SOURCE_PATH}/sdk/storage" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
