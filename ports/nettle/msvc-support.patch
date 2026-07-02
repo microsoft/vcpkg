@@ -1,9 +1,9 @@
 diff --git a/Makefile.in b/Makefile.in
-index 3194735..669bdfe 100644
+index 17d205d..a8a7aa0 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -29,8 +29,9 @@ include config.make
- PRE_CPPFLAGS = -I.
+@@ -30,8 +30,9 @@ include config.make
+ PRE_CPPFLAGS = -I. -I$(srcdir)
  EXTRA_CFLAGS = $(CCPIC)
  
 -LIBTARGETS = @IF_STATIC@ libnettle.a @IF_HOGWEED@ libhogweed.a
@@ -11,9 +11,9 @@ index 3194735..669bdfe 100644
  SHLIBTARGETS = @IF_SHARED@ $(LIBNETTLE_FORLINK) @IF_HOGWEED@ $(LIBHOGWEED_FORLINK)
 +MSVC_TARGET = @MSVC_TARGET@
  
- getopt_SOURCES = getopt.c getopt1.c
- getopt_TARGETS = $(getopt_SOURCES:.c=.$(OBJEXT))
-@@ -288,13 +289,13 @@ nettle_OBJS = $(nettle_SOURCES:.c=.$(OBJEXT)) \
+ gnulib_FILES = lib/getopt-core.h lib/getopt-ext.h \
+ 	       lib/getopt.c lib/getopt1.c lib/getopt_int.h
+@@ -305,13 +306,13 @@ nettle_OBJS = $(nettle_SOURCES:.c=.$(OBJEXT)) \
  hogweed_OBJS = $(hogweed_SOURCES:.c=.$(OBJEXT)) \
  	       $(OPT_HOGWEED_OBJS) @IF_MINI_GMP@ mini-gmp.$(OBJEXT)
  
@@ -29,7 +29,7 @@ index 3194735..669bdfe 100644
  	-rm -f $@
  	$(AR) $(ARFLAGS) $@ $(hogweed_OBJS)
  	$(RANLIB) $@
-@@ -500,8 +501,8 @@ install-static: $(LIBTARGETS)
+@@ -517,8 +518,8 @@ install-static: $(LIBTARGETS)
  	done
  
  install-dll-nettle:
@@ -40,7 +40,7 @@ index 3194735..669bdfe 100644
  
  install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
  	$(MKDIR_P) $(DESTDIR)$(libdir)
-@@ -513,8 +514,8 @@ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
+@@ -530,8 +531,8 @@ install-shared-nettle: $(LIBNETTLE_FORLINK) @IF_DLL@ install-dll-nettle
  		&& $(LN_S) $(LIBNETTLE_FILE) $(LIBNETTLE_FORLINK))
  
  install-dll-hogweed:
@@ -52,10 +52,10 @@ index 3194735..669bdfe 100644
  install-shared-hogweed: $(LIBHOGWEED_FORLINK) @IF_DLL@ install-dll-hogweed
  	$(MKDIR_P) $(DESTDIR)$(libdir)
 diff --git a/configure.ac b/configure.ac
-index 7a17853..c854679 100644
+index ce91204..6f0b39e 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -907,6 +907,27 @@ case "$host_os" in
+@@ -835,6 +835,27 @@ case "$host_os" in
      LIBHOGWEED_LIBS='libnettle.so $(LIBS)'
      ;;
  esac
@@ -83,11 +83,11 @@ index 7a17853..c854679 100644
  
  ASM_SYMBOL_PREFIX=''
  ASM_ELF_STYLE='no'
-diff --git a/getopt.c b/getopt.c
-index 9d29de7..42df5a6 100644
---- a/getopt.c
-+++ b/getopt.c
-@@ -32,7 +32,9 @@
+diff --git a/lib/getopt.c b/lib/getopt.c
+index 3fc7626..e439f29 100644
+--- a/lib/getopt.c
++++ b/lib/getopt.c
+@@ -26,7 +26,9 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -95,5 +95,5 @@ index 9d29de7..42df5a6 100644
  #include <unistd.h>
 +#endif
  
- 
- /* Comment out all this code if we are using the GNU C Library, and are not
+ #ifdef _LIBC
+ /* When used as part of glibc, error printing must be done differently
