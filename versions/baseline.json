@@ -4237,7 +4237,7 @@
       "port-version": 0
     },
     "juce": {
-      "baseline": "8.0.7",
+      "baseline": "8.0.14",
       "port-version": 0
     },
     "jwsung91-unilink": {
