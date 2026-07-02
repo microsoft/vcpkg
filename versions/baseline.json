@@ -6605,7 +6605,7 @@
       "port-version": 0
     },
     "minifb": {
-      "baseline": "2023-09-21",
+      "baseline": "0.10.1",
       "port-version": 0
     },
     "minimp3": {
