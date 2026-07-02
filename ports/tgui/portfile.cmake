@@ -19,10 +19,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO texus/TGUI
     REF "v${VERSION}"
-    SHA512 54d46e3604ebe3f3f2ff845da9348152e780a2e67eddc9d6476f5b66b24a3930ced34ac097f4006c9475d7d963d87076dd4ee4cc47aad23b501f14663be5745e
+    SHA512 0b692bd77bcedb4a3c61334c3a7481a70dcfdcf95e86df8bb2997f466ba04f8e5723b30093b534efc83b0c13a723d90eb909f01995ea36cb99f0227c8499aeab
     HEAD_REF 1.x
-    PATCHES
-        devendor-stb.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/Backends/SDL/cmake_modules") # Config available
@@ -56,6 +54,7 @@ vcpkg_cmake_configure(
         -DTGUI_BUILD_DOC=OFF
         -DTGUI_BUILD_FRAMEWORK=OFF
         -DTGUI_INSTALL_PKGCONFIG_FILES=OFF
+        -DTGUI_USE_SYSTEM_STB=ON
     OPTIONS_DEBUG
         -DTGUI_BUILD_GUI_BUILDER=OFF
     MAYBE_UNUSED_VARIABLES
