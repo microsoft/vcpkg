@@ -3,4 +3,4 @@ net-snmp provides no CMake targets. It can be used from CMake via:
     find_path(NETSNMP_INCLUDE_DIR net-snmp/net-snmp-config.h)
     find_library(NETSNMP_LIBRARY NAMES netsnmp)
     target_include_directories(main PRIVATE ${NETSNMP_INCLUDE_DIR})
-    target_link_libraries(main PRIVATE ${NETSNMP_LIBRARY})
+    target_link_libraries(main PRIVATE ${NETSNMP_LIBRARY} ws2_32)
