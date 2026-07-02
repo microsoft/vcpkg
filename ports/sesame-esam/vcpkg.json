@@ -1,0 +1,18 @@
+{
+  "name": "sesame-esam",
+  "version": "0.1.1",
+  "description": "Native C++ implementation of SESAME, the proposed SCTE 130-9 security layer for the ESAM interface (HMAC auth, channel-scoped authorization, AES-256-GCM payload encryption). Imported as find_package(sesame).",
+  "homepage": "https://github.com/bokelleher/sesame-sdk",
+  "license": "MIT OR Apache-2.0",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
