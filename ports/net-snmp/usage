@@ -1,21 +1,6 @@
-net-snmp provides the SNMP client/manager library and tools, and (with the
-"ssl" feature, enabled by default) SNMPv3 (USM auth/privacy) backed by OpenSSL.
-
-Installed layout (standard vcpkg):
-
-    include/net-snmp/net-snmp-config.h
-    include/net-snmp/net-snmp-includes.h
-    lib/netsnmp.lib
-
-net-snmp does not ship a CMake config package, so link it manually:
+net-snmp provides no CMake targets. It can be used from CMake via:
 
     find_path(NETSNMP_INCLUDE_DIR net-snmp/net-snmp-config.h)
     find_library(NETSNMP_LIBRARY NAMES netsnmp)
-    target_include_directories(YourTarget PRIVATE ${NETSNMP_INCLUDE_DIR})
-    target_link_libraries(YourTarget PRIVATE ${NETSNMP_LIBRARY} ws2_32)
-
-With the "ssl" feature, OpenSSL is linked transitively; if you call the library
-directly you may also need OpenSSL::SSL and OpenSSL::Crypto on the link line.
-
-This port targets Windows (MSVC). On other platforms, use the system net-snmp
-package (e.g. libsnmp-dev on Debian/Ubuntu, net-snmp via Homebrew).
+    target_include_directories(main PRIVATE ${NETSNMP_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${NETSNMP_LIBRARY})
