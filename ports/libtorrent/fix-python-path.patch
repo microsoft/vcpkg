@@ -1,0 +1,13 @@
+diff --git a/bindings/python/CMakeLists.txt b/bindings/python/CMakeLists.txt
+index b7725c5..f0e9a26 100644
+--- a/bindings/python/CMakeLists.txt
++++ b/bindings/python/CMakeLists.txt
+@@ -97,7 +97,7 @@ else()
+ 		COMMAND "${Python3_EXECUTABLE}" -c [=[
+ import sysconfig
+ # Strip leading separator - cmake would otherwise treat this as an absolute path.
+-print(sysconfig.get_path('platlib', vars={'platbase': '', 'base': ''}).lstrip('/\\'))
++print(sysconfig.get_path('platlib', vars={'platbase': '.', 'base': ''})).lstrip('/\\'))
+ ]=]
+ 		OUTPUT_VARIABLE _PYTHON3_SITE_ARCH
+ 		OUTPUT_STRIP_TRAILING_WHITESPACE
