@@ -4670,7 +4670,7 @@
     },
     "lcms": {
       "baseline": "2.19.1",
-      "port-version": 0
+      "port-version": 1
     },
     "lely-core": {
       "baseline": "2.3.5",
