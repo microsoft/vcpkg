@@ -28,8 +28,8 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 3. For each candidate PR, fetch the changed file list and identify touched ports from paths matching `ports/<portname>/`.
 4. Treat the competing-PR relationship as port-specific. Group PRs together only for the particular shared port or ports they both modify.
 5. Keep PRs that do not modify a port in a separate index section instead of mixing them into port-competition groups.
-6. Launch subagents to evaluate each group of PRs touching the same port(s), according to the rules in .github/skills/shared/review-vcpkg-pr-guide.md . (Most of the time, this will be a single PR per group.)
-7. Write each per-PR report as you complete it. Write `index.md` last, after aggregating the final on-disk `results.json` files from every reviewed PR directory.
+6. Launch subagents to evaluate each group of PRs touching the same port(s), according to the rules in .github/skills/shared/review-vcpkg-pr-guide.md . Be sure each subagent reads all of .github/skills/shared/review-vcpkg-pr-guide.md.
+7. Write each per-PR report as you complete it. Write `index.md` last, after aggregating the final results from every reviewed PR directory.
 
 ## Parallel execution safety
 
@@ -59,7 +59,7 @@ This script should clean up any temporary worktrees created during the review pr
 
 ## Required output layout
 
-Write all deliverables under `reviews/`. Find out what report.md and results.json are from .github/skills/shared/review-vcpkg-pr-guide.md
+Write all deliverables under `reviews/`. Find out what report.md is from .github/skills/shared/review-vcpkg-pr-guide.md
 
 ```text
 reviews/
@@ -67,12 +67,10 @@ reviews/
 ├── cleanup-worktrees.ps1
 ├── pr-12345/
 │   ├── report.md
-│   └── results.json
 │   └── patches/
 │       └── *.patch
 └── pr-12346/
     ├── report.md
-    └── results.json
 ```
 
-Do not stop until `reviews/index.md`, `reviews/cleanup-worktrees.ps1`, and `reviews/pr-<pr-number>/report.md` `reviews/pr-<pr-number>/results.json` for each reviewed PR number exist and are complete.
+Do not stop until `reviews/index.md`, `reviews/cleanup-worktrees.ps1`, and `reviews/pr-<pr-number>/report.md` for each reviewed PR number exist and are complete.
