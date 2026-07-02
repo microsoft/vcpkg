@@ -6,8 +6,6 @@ if(NOT TARGET lcms2::lcms2)
     # Using SHARED IMPORTED on Windows DLL builds is required so that:
     #   IMPORTED_IMPLIB_*   carries the import library (.lib) used for linking
     #   IMPORTED_LOCATION_* carries the runtime DLL used by TARGET_RUNTIME_DLLS
-    # This is required for CMake's TARGET_RUNTIME_DLLS generator expression to
-    # propagate the DLL to consumers so it can be copied next to the executable.
     if(WIN32)
         file(GLOB LCMS2_RELEASE_DLLS "${_IMPORT_PREFIX}/bin/*lcms2*.dll")
         if(LCMS2_RELEASE_DLLS)
