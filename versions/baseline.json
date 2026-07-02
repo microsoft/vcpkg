@@ -2301,7 +2301,7 @@
       "port-version": 11
     },
     "curve-coco": {
-      "baseline": "4.3.0",
+      "baseline": "4.5.0",
       "port-version": 0
     },
     "curve-eraser": {
