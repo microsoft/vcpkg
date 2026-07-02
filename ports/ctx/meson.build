@@ -1,10 +1,10 @@
 project(
   'ctx',
   'c',
-  version : '0.1.14',
+  version : '0.1.18',
   meson_version : '>=0.63.0',
   default_options : [
-    'c_std=c99',
+    'c_std=c11',
   ],
 )
 
