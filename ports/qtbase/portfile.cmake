@@ -21,6 +21,7 @@ set(${PORT}_PATCHES
         clang-cl_QGADGET_fix.diff
         fix-host-aliasing.patch
         fix_deploy_windows.patch
+        windeployqt-webengine-debug-resources.patch
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
         moltenvk.patch
