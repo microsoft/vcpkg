@@ -1,0 +1,18 @@
+--- a/MagickCore/magick-config.h
++++ b/MagickCore/magick-config.h
+@@ -60,8 +60,13 @@
+ 
+ /* Compatibility block */
+ #if !defined(MAGICKCORE_QUANTUM_DEPTH) && defined(MAGICKCORE_QUANTUM_DEPTH_OBSOLETE_IN_H)
+-# warning "you should set MAGICKCORE_QUANTUM_DEPTH to sensible default set it to configure time default"
+-# warning "this is an obsolete behavior please fix your makefile"
++# ifdef _MSC_VER
++#  pragma message("you should set MAGICKCORE_QUANTUM_DEPTH to sensible default set it to configure time default")
++#  pragma message("this is an obsolete behavior please fix your makefile")
++# else
++#  warning "you should set MAGICKCORE_QUANTUM_DEPTH to sensible default set it to configure time default"
++#  warning "this is an obsolete behavior please fix your makefile"
++# endif
+ # define MAGICKCORE_QUANTUM_DEPTH MAGICKCORE_QUANTUM_DEPTH_OBSOLETE_IN_H
+ #endif
+ 
