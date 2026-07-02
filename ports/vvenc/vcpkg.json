@@ -6,8 +6,14 @@
   "license": "BSD-3-Clause-Clear",
   "supports": "!x86 & !arm32",
   "dependencies": [
-    "nlohmann-json",
-    "simde",
+    {
+      "name": "nlohmann-json",
+      "version>=": "3.12.0"
+    },
+    {
+      "name": "simde",
+      "version>=": "0.8.2"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

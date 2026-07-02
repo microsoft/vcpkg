@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
+        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,6 +20,7 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DCCACHE_FOUND=OFF
+        -DVVENC_ENABLE_THIRDPARTY_JSON=SYSTEM
         -DVVENC_LIBRARY_ONLY=OFF
         -DVVENC_INSTALL_FULLFEATURE_APP=ON
 )
@@ -28,6 +30,7 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DCCACHE_FOUND=OFF
+        -DVVENC_ENABLE_THIRDPARTY_JSON=SYSTEM
         -DVVENC_LIBRARY_ONLY=ON
 )
 endif()
