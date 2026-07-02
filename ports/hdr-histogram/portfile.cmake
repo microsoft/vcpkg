@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 f631876dd1871d5e90989523f198d93b8dc561c513e86724149fefd52603064c3687d57e60c77e5ccbdc5a54ab9e7397a8db7a34e23cc68948c6c1361de62031
     HEAD_REF main
+    PATCHES
+        001-fix-pkgconfig.patch
 )
 
 if("log" IN_LIST FEATURES)

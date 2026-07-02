@@ -545,7 +545,15 @@ index e459b3d..b3f74d7 100644
      if(TARGET "${_lib}")
        set(_explicit_libs "")
        get_target_property(_imported "${_lib}" IMPORTED)
-@@ -2202,8 +2241,25 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2195,15 +2234,32 @@ if(NOT CURL_DISABLE_INSTALL)
+       endif()
+       if(_lib STREQUAL OpenSSL::SSL AND NOT HAVE_BORINGSSL)  # BoringSSL does not provide openssl.pc
+         set(_modules "openssl")
+-      elseif(_lib STREQUAL ZLIB::ZLIB AND NOT ANDROID)  # Android does not provide zlib.pc
++      elseif(_lib STREQUAL ZLIB::ZLIB)
+         set(_modules "zlib")
+       else()
+         get_target_property(_modules "${_lib}" INTERFACE_LIBCURL_PC_MODULES)
        endif()
        if(_modules)
          list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "${_modules}")
