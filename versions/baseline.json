@@ -4592,6 +4592,10 @@
       "baseline": "0.2.0",
       "port-version": 0
     },
+    "knotifications": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "komihash": {
       "baseline": "5.29",
       "port-version": 0
