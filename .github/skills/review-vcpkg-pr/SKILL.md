@@ -7,7 +7,7 @@ description: Review a microsoft/vcpkg pull request end-to-end.
 
 | Input | Required | Meaning |
 |---|---|---|
-| `pr` | Yes | Pull request number to review. |
+| `pr` | Yes | Pull request number to review. Substituted for `{{PR_NUMBER}}` throughout this skill and the shared guide. |
 | `investigation-root` | No | Preferred directory for large temporary work such as detached worktrees, extracted archives, build trees, example builds, installs, caches, and other investigation artifacts. When omitted, infer a short same-drive investigations location if that is clear; otherwise ask the user. Do not use the Copilot session directory or an arbitrary long temp path. |
 | `review-depth` | No | One of `no-examples`, `examples`, or `examples-and-patches`. Default to `no-examples`. |
 
@@ -18,15 +18,15 @@ description: Review a microsoft/vcpkg pull request end-to-end.
 
 ## Review requirements
 
-Check out the PR in a detached worktree or equivalent detached-HEAD workspace, and copy vcpkg.exe (Windows) or vcpkg (non-Windows) into it. For example, after `git worktree add D:\vcpkg2 origin/master`, copy `.\vcpkg.exe` to `D:\vcpkg2`. Do **not** switch branches or run mutable review steps in the caller's current working tree. Then apply the review process as described the review prompt .github/skills/shared/review-vcpkg-pr-guide.md
+Check out the PR in a detached worktree or equivalent detached-HEAD workspace, and copy vcpkg.exe (Windows) or vcpkg (non-Windows) into it. For example, after `git worktree add D:\vcpkg2 origin/master`, copy `.\vcpkg.exe` to `D:\vcpkg2`. Do **not** switch branches or run mutable review steps in the caller's current working tree. Then apply the review process as described in .github/skills/shared/review-vcpkg-pr-guide.md.
 
 Be sure to read all of .github/skills/shared/review-vcpkg-pr-guide.md
 
 ## Required outputs
 
-Write all final deliverables under `reviews/<pr-number>`. Find out what these mean from review-vcpkg-pr-guide.md.
+Write all final deliverables under `reviews/pr-{{PR_NUMBER}}`. Find out what these mean from review-vcpkg-pr-guide.md.
 
-1. `reviews/pr-<pr-number>/report.md`
-3. `reviews/pr-<pr-number>/patches/*.patch` — only expected if review-depth is `examples-and-patches` and patches were produced
+1. `reviews/pr-{{PR_NUMBER}}/report.md`
+2. `reviews/pr-{{PR_NUMBER}}/patches/*.patch` — only expected if review-depth is `examples-and-patches` and patches were produced
 
-Do not stop until `reviews/pr-<pr-number>/report.md` exists and is complete.
+Do not stop until `reviews/pr-{{PR_NUMBER}}/report.md` exists and is complete.

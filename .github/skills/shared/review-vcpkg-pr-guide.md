@@ -12,9 +12,19 @@ If asked for review-depth = examples-and-patches, prepare individual validated p
 
 # Success criteria
 
-The goal is to verify that everything in the maintainer guide https://raw.githubusercontent.com/MicrosoftDocs/vcpkg-docs/refs/heads/main/vcpkg/contributing/maintainer-guide.md is consistently applied, and that the contents ports install are functional for end users.
+The goal is to verify that everything in the maintainer guide https://raw.githubusercontent.com/MicrosoftDocs/vcpkg-docs/refs/heads/main/vcpkg/contributing/maintainer-guide.md is consistently applied, and that the installed contents produced by each port are functional for end users.
 
 The report notes a verdict 'approve', 'approve-with-notes', 'request-changes', or 'unknown'.
+
+## Report structure
+
+The report is intentionally only lightly constrained:
+
+1. Start with a brief `## Summary`: the verdict and a few sentences justifying it. Keep this short.
+2. If the verdict is 'approve-with-notes' or 'request-changes', follow the Summary immediately with the `## Contributor Feedback` section described later in this guide. Keep it focused on issues.
+3. After that, include whatever additional findings, evidence, experiments, and detail the reviewer considers appropriate. This portion is intentionally unconstrained.
+
+Only the Summary and Contributor Feedback are meant to be brief; everything after them is as thorough as needed. There is no fixed section list or template for the unconstrained portion.
 
 The report considers the following in particular:
 
@@ -22,7 +32,7 @@ The report considers the following in particular:
 2. New ports contain a `"description"` field written in English.
 3. No unnecessary comments.
 4. Downloaded archives are versioned if available.
-5. New ports pass CI checks for triplets that the library officially supports.
+5. New ports pass CI checks for triplets that the library officially supports. Determine which triplets are officially supported from the upstream source and build system and, where applicable, upstream documentation found online.
 6. Patches fix issues that are vcpkg-specific or are submitted upstream (see also "## Patching" in the maintainer-guide).
 7. Sources are downloaded from official sources if available.
 8. New ports package projects are mature and ready for broad sharing with vcpkg users by meeting one of the following:
@@ -43,10 +53,10 @@ The report considers the following in particular:
     - Autotools `--with-*` / `--enable-*`
 11. There is no vendored 3rd party code used during a port's build. The report should list any well known 3rd party libraries found in extracted sources, if any.
 12. The versioning scheme in vcpkg.json matches the packaged content.
-13. The license declaration in vcpkg.json matches the content installed by installing a port. Note that content in sources may be skipped in settings in portfile.cmake. If a feature in vcpkg.json installs additional content under a different license, then the feature should have a separate license declared.
+13. The license declaration in vcpkg.json matches the content installed by installing a port. Note that content in sources may be skipped in settings in portfile.cmake. If a feature in vcpkg.json installs additional content under a different license, then the feature should have a separate license declared. Treat `"license": null` as an intentional declaration that no SPDX expression is available; inspect the copyright file and installed content instead.
 14. The generated "usage text" is brief and accurate.
 15. Ports do not use applications which modify the user's system like sudo, apt, brew, etc.
-16. Changes in shared build helpers or `scripts/cmake` that affect many ports need explicit justification for why a global change is necessary.
+16. Changes in shared build helpers or `scripts/cmake` that affect many ports need explicit justification for why a global change is necessary. Do not edit frozen `scripts/cmake` helpers when a corresponding `vcpkg-*` helper port exists; require ports to adopt the helper port instead.
 17. Ports use `vcpkg_check_linkage` over mutating `VCPKG_LIBRARY_LINKAGE` directly.
 18. Files in the port directory have LF line endings.
 19. Anything else you notice in the changeset which disagrees with the maintainer guide.
@@ -101,15 +111,15 @@ Ports are allowed but strongly discouraged from publishing or constraining on ve
 
 Use the VS Developer Prompt (vsdevcmd) to get access to cmake, ninja, and cl.
 
-When evaluating Azure CI logs, prefer the shared helper script .github/skills/shared/Get-VcpkgAzureFailureLogs.ps1 . You can use details_url with a job id to narrow the scope with -JobId.
+When evaluating Azure CI logs, prefer the shared helper script .github/skills/shared/Get-VcpkgAzureFailureLogs.ps1 . You can use details_url with a job id to narrow the scope with -JobId. Do not treat raw `BUILD_FAILED` lines as meaningful by themselves, because some build failures are expected by baseline files. Prefer `REGRESSION:` lines and feature-test `error:` lines.
 
 # Output
 
-Write all and ONLY final deliverables under reviews/pr-{{PR_NUMBER}}/report.md:
+Write all and ONLY final deliverables under reviews/pr-{{PR_NUMBER}}/:
 1. report.md: a thorough human-readable review.
 2. (only if review-depth is examples-and-patches) patches: optional focused git format-patch files to resolve each flagged issue.
 
-Use exactly one of these verdict values: approve, request-changes, or unknown.
+Use exactly one of these verdict values: approve, approve-with-notes, request-changes, or unknown.
 
 # Stop rules
 

@@ -28,8 +28,8 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 3. For each candidate PR, fetch the changed file list and identify touched ports from paths matching `ports/<portname>/`.
 4. Treat the competing-PR relationship as port-specific. Group PRs together only for the particular shared port or ports they both modify.
 5. Keep PRs that do not modify a port in a separate index section instead of mixing them into port-competition groups.
-6. Launch subagents to evaluate each group of PRs touching the same port(s), according to the rules in .github/skills/shared/review-vcpkg-pr-guide.md . Be sure each subagent reads all of .github/skills/shared/review-vcpkg-pr-guide.md.
-7. Write each per-PR report as you complete it. Write `index.md` last, after aggregating the final results from every reviewed PR directory.
+6. Evaluate each candidate PR independently according to the rules in .github/skills/shared/review-vcpkg-pr-guide.md. Be sure each worker reads all of .github/skills/shared/review-vcpkg-pr-guide.md. Competing PRs that touch the same port are still reviewed as separate PRs; only group them in the final `index.md`.
+7. Write each per-PR report as you complete it. Write `index.md` last, after aggregating the final results from every reviewed PR directory and adding any port-specific competing-PR groups.
 
 ## Parallel execution safety
 
@@ -55,16 +55,16 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 
 ## cleanup-worktrees.ps1 content
 
-This script should clean up any temporary worktrees created during the review process, one `git worktree remove` line per worktree. If this file is already present, append to it.
+If temporary worktrees were created during the review process, write this script with one `git worktree remove` line per worktree. If this file is already present, append to it. Skip this file when no temporary worktrees were created.
 
 ## Required output layout
 
-Write all deliverables under `reviews/`. Find out what report.md is from .github/skills/shared/review-vcpkg-pr-guide.md
+Write all deliverables under `reviews/`. Each worker reviews one PR and substitutes its number for `{{PR_NUMBER}}`. Find out what report.md is from .github/skills/shared/review-vcpkg-pr-guide.md
 
 ```text
 reviews/
 ├── index.md
-├── cleanup-worktrees.ps1
+├── cleanup-worktrees.ps1  (only when temporary worktrees were created)
 ├── pr-12345/
 │   ├── report.md
 │   └── patches/
@@ -73,4 +73,4 @@ reviews/
     ├── report.md
 ```
 
-Do not stop until `reviews/index.md`, `reviews/cleanup-worktrees.ps1`, and `reviews/pr-<pr-number>/report.md` for each reviewed PR number exist and are complete.
+Do not stop until `reviews/index.md` and `reviews/pr-{{PR_NUMBER}}/report.md` for each reviewed PR number exist and are complete. If temporary worktrees were created, also ensure `reviews/cleanup-worktrees.ps1` exists and is complete.
