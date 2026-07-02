@@ -7,6 +7,10 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "pthreads",
+      "platform": "windows & !mingw"
+    },
+    {
       "name": "vcpkg-tool-meson",
       "host": true
     }

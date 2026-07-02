@@ -12,6 +12,7 @@ pkg = import('pkgconfig')
 cc = meson.get_compiler('c')
 
 is_windows = host_machine.system() == 'windows'
+is_darwin = host_machine.system() == 'darwin'
 cpu_family = host_machine.cpu_family()
 is_wasm = host_machine.system() == 'emscripten' or cpu_family == 'wasm32' or cpu_family == 'wasm64'
 
@@ -27,7 +28,12 @@ babl_dep = dependency('babl-0.1', required : get_option('babl'))
 harfbuzz_dep = dependency('harfbuzz', required : get_option('harfbuzz'))
 curl_dep = dependency('libcurl', required : get_option('libcurl'))
 sdl_dep = dependency('sdl2', required : get_option('sdl'))
-thread_dep = dependency('threads')
+if is_windows and cc.get_argument_syntax() == 'msvc'
+  pthread_lib = get_option('debug') ? 'pthreadVC3d' : 'pthreadVC3'
+  thread_dep = cc.find_library(pthread_lib, required : true)
+else
+  thread_dep = dependency('threads')
+endif
 math_dep = cc.find_library('m', required : not is_windows)
 
 ctx_deps = [thread_dep]
@@ -93,6 +99,8 @@ endif
 if is_windows
   ctx_c_args += ['-D_USE_MATH_DEFINES']
   ctx_c_args += ['-D__restrict__=__restrict']
+elif is_darwin
+  ctx_c_args += ['-D_DARWIN_C_SOURCE', '-D_DEFAULT_SOURCE', '-D_XOPEN_SOURCE=700']
 else
   ctx_c_args += ['-D_DEFAULT_SOURCE', '-D_XOPEN_SOURCE=700']
 endif
