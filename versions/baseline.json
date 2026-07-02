@@ -9917,7 +9917,7 @@
       "port-version": 0
     },
     "sundials": {
-      "baseline": "7.7.0",
+      "baseline": "7.8.0",
       "port-version": 0
     },
     "superglu": {
