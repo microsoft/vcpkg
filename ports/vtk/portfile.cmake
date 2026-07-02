@@ -1,5 +1,6 @@
 set(VTK_SHORT_VERSION 9.6)
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+
+if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
