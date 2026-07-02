@@ -942,7 +942,6 @@ nanodbc:x64-linux=skip
 netcdf-cxx4:arm64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
 nethost:arm64-linux=fail
-ngspice:x64-android=fail
 ngspice:x64-windows-static=fail
 nifticlib:arm64-linux=fail
 nrf-ble-driver:arm-neon-android=fail
