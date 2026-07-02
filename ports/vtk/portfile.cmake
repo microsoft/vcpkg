@@ -70,7 +70,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "debugleaks"  VTK_DEBUG_LEAKS
         "fontconfig"  VTK_MODULE_ENABLE_VTK_RenderingFreeTypeFontConfig
         "gl2ps"       VTK_MODULE_ENABLE_VTK_gl2ps
-        "gl2ps"       VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
         "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
         "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
         "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
@@ -135,6 +134,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2
         "openvr"      VTK_MODULE_ENABLE_VTK_RenderingOpenVR
         "gdal"        VTK_MODULE_ENABLE_VTK_IOGDAL
+        "gl2ps"       VTK_MODULE_ENABLE_VTK_IOExportGL2PS
+        "gl2ps"       VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
         "geojson"     VTK_MODULE_ENABLE_VTK_IOGeoJSON
         "ioocct"      VTK_MODULE_ENABLE_VTK_IOOCCT
         "libtheora"   VTK_MODULE_ENABLE_VTK_IOOggTheora
