@@ -1310,7 +1310,6 @@ sdl2-ttf:arm64-linux=cascade
 sdl2pp:arm64-linux=cascade
 sdl3-shadercross((!windows | arm32 | uwp | xbox) & (!linux | !x64))=cascade
 sdl3-ttf:arm64-linux=cascade
-seacas[mpi]:arm64-linux=cascade
 seal[hexl]:arm64-linux=cascade
 seal[hexl]:arm64-osx=cascade
 seal[hexl]:arm64-windows=cascade

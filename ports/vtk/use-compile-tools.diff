@@ -1,5 +1,16 @@
+From 0764561c7101a8d0fd84100affa67540389bc35a Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 17:00:43 +0200
+Subject: [PATCH 16/22] tools
+
+---
+ CMake/vtk-config.cmake.in     | 13 +++++++++++++
+ CMakeLists.txt                |  3 +++
+ Wrapping/Tools/CMakeLists.txt |  4 ++++
+ 3 files changed, 20 insertions(+)
+
 diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
-index 3018421d..a14976ae 100644
+index 540ee121..105d167c 100644
 --- a/CMake/vtk-config.cmake.in
 +++ b/CMake/vtk-config.cmake.in
 @@ -1,3 +1,16 @@
@@ -20,10 +31,10 @@ index 3018421d..a14976ae 100644
  # vtk-config.cmake
  
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8df64eb1..67a948e4 100644
+index 3b6cf1d0..16a544c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -463,6 +463,9 @@ if (NOT DEFINED vtk_cmake_destination)
+@@ -572,6 +572,9 @@ if (NOT DEFINED vtk_cmake_destination)
      set(vtk_cmake_destination
        "${CMAKE_INSTALL_LIBDIR}/cmake/vtkcompiletools${vtk_version_suffix}")
      set(vtk_target_package PACKAGE "${vtk_install_export}")
@@ -34,12 +45,12 @@ index 8df64eb1..67a948e4 100644
  endif ()
  install(TARGETS vtkbuild EXPORT "${vtk_install_export}")
 diff --git a/Wrapping/Tools/CMakeLists.txt b/Wrapping/Tools/CMakeLists.txt
-index 05aa805f..dbec670a 100644
+index 8aace683..4ae94f7b 100644
 --- a/Wrapping/Tools/CMakeLists.txt
 +++ b/Wrapping/Tools/CMakeLists.txt
-@@ -49,6 +49,10 @@ vtk_module_add_module("${ns}::WrappingTools"
-   SOURCES ${sources}
-   HEADERS ${headers})
+@@ -59,6 +59,10 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
+       "-pthread")
+ endif ()
  
 +if (NOT VTK_BUILD_COMPILE_TOOLS_ONLY)
 +  return()
@@ -48,3 +59,6 @@ index 05aa805f..dbec670a 100644
  if (NOT TARGET "${ns}::WrapHierarchy")
    vtk_module_add_executable(WrapHierarchy
      DEVELOPMENT
+-- 
+2.47.3
+

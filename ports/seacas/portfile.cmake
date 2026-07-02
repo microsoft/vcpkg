@@ -1,20 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  sandialabs/seacas
-    REF 47120843900fd7ef845688fa145ebf76a825bc51
-    SHA512 13677746457edbd4b3619576a6c474f5d8ab2eb24f648fac687e655e3121282b62994575723d18db8d18b42266d219aa4d83344ecff53f5e9a737513a3461180
+    REF v${VERSION}
+    SHA512 f4278ec2d187fc1bcf9c3c7c3d45f4bff9ce36bbd793ffb8c745ae9706435bcf0bfc35233f5d1f4380ba1d7f49d41bd843a863e98a0bd9121c7a56158d0da8d8
     HEAD_REF master
-    PATCHES fix_tpl_libs.patch
-            fix-ioss-includes.patch
-            deps-and-shared.patch
-            fix-mpi.patch
-            fix-headers.patch
-            fix-fmt-10.patch
-            fix-build-error-with-fmt11.patch
-            netcdf-c.diff
-            use-std-localtime.patch
+    PATCHES 
+        deps-and-shared.patch
+        fix-mpi.patch
+        termios.diff
 )
-file(REMOVE "${SOURCE_PATH}/cmake/tribits/common_tpls/find_modules/FindHDF5.cmake")
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
     message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in seacas.")
@@ -67,18 +61,16 @@ endforeach()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        #--trace-expand
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
-        -DSeacas_ENABLE_Zoltan:BOOL=OFF
+        -DCGNS_FORCE_MODERN=ON
+        -DNetcdf_ALLOW_MODERN=ON
+        -DNetcdf_FORCE_MODERN=ON
+        -DSeacas_ENABLE_Fortran:BOOL=OFF
         -DSeacas_ENABLE_SEACAS:BOOL=ON
-        "-DSeacas_HOSTNAME:STRING=localhost"
-        "-DSeacas_GENERATE_REPO_VERSION_FILE:BOOL=OFF"
-        "-DNetcdf_ALLOW_MODERN:BOOL=ON"
-        "-DNetcdf_FORCE_MODERN:BOOL=ON"
-        "-DSeacas_ENABLE_Fortran:BOOL=OFF"
-        #"-DCGNS_ALLOW_PREDEFIND:BOOL=NO"
-        #"-DSeacas_ENABLE_ALL_PACKAGES:BOOL=ON"
+        -DSeacas_ENABLE_Zoltan:BOOL=OFF
+        -DSeacas_HOSTNAME:STRING=localhost
+        -DSeacas_GENERATE_REPO_VERSION_FILE:BOOL=OFF
         ${proj_options}
         ${tpl_options}
 )
@@ -123,12 +115,11 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/SeacasConfig.cmake")
+#file(REMOVE "${CURRENT_PACKAGES_DIR}/include/SeacasConfig.cmake")
 
 file(GLOB_RECURSE python_files LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/lib/*.py" "${CURRENT_PACKAGES_DIR}/debug/lib/*.py")
 if(python_files)
     file(REMOVE ${python_files})
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

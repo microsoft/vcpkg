@@ -1,7 +1,6 @@
 {
   "name": "vtk",
-  "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 17,
+  "version-semver": "9.6.2",
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -19,7 +18,6 @@
         "zlib"
       ]
     },
-    "gl2ps",
     "glew",
     {
       "name": "hdf5",
@@ -44,6 +42,7 @@
     "nlohmann-json",
     "pegtl",
     "pugixml",
+    "scnlib",
     {
       "name": "tiff",
       "default-features": false
@@ -166,6 +165,19 @@
     },
     "geojson": {
       "description": "Convert Geo JSON format to vtkPolyData"
+    },
+    "gl2ps": {
+      "description": "GL2PS functionality for VTK",
+      "dependencies": [
+        "gl2ps",
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
     },
     "ioocct": {
       "description": "Build with IOOCCT module",
@@ -347,13 +359,7 @@
       "description": "Enables vtk reader/writer with utf-8 path support"
     },
     "vtkm": {
-      "description": "Build with vtk-m accelerator and module.",
-      "dependencies": [
-        {
-          "name": "vtk-m",
-          "default-features": false
-        }
-      ]
+      "description": "[NO-OP] Build with vtk-m accelerator and module. TODO: Port to viskore."
     }
   }
 }
