@@ -1,0 +1,13 @@
+diff --git a/src/plugins/intel_npu/cmake/download_compiler_libs.cmake b/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
+index b2d6ab694b..0198224429 100644
+--- a/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
++++ b/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
+@@ -102,7 +102,7 @@ if(ENABLE_INTEL_NPU_COMPILER)
+ 
+     RESOLVE_DEPENDENCY(NPU_PLUGIN_COMPILER
+             ${PLUGIN_COMPILER_ARCHIVE_TYPE} "npu_compiler/${PLUGIN_COMPILER_PACKAGE_NAME}"
+-            TARGET_PATH "${TEMP}/${PLATFORM_SUBDIR}/npu_compiler_${PLUGIN_COMPILER_VERSION_UNDERSCORE}_${PLUGIN_COMPILER_COMMIT_SHA}"
++            TARGET_PATH "${CMAKE_BINARY_DIR}/${PLATFORM_SUBDIR}/npu_compiler_${PLUGIN_COMPILER_VERSION_UNDERSCORE}_${PLUGIN_COMPILER_COMMIT_SHA}"
+             ENVIRONMENT "NPU_PLUGIN_COMPILER_ROOT"
+             FOLDER
+             SHA256 "${PLUGIN_COMPILER_${OS_UPPERCASE}_CHECKSUM}"
