@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e9751cb..3cfd976 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -161,7 +161,7 @@ ENDIF()
+ message("version: ${MESHLIB_VERSION}")
+ 
+ set(MESHLIB_LIB_SUBDIR "${MESHLIB_PROJECT_NAME}" CACHE STRING "Subdirectory in the library directory to place the MeshLib libraries at")
+-IF(MESHLIB_USE_VCPKG)
++IF(TRUE)
+   # use OS-agnostic directory structure for vcpkg
+   set(MR_BIN_DIR bin)
+   set(MR_INCLUDE_DIR include/MeshLib)
