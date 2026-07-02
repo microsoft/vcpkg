@@ -9488,6 +9488,10 @@
       "baseline": "0.8.1",
       "port-version": 0
     },
+    "soatable": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "sobjectizer": {
       "baseline": "5.8.5.1",
       "port-version": 0
