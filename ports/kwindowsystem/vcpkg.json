@@ -28,8 +28,7 @@
       "host": true
     },
     {
-      "name": "wayland",
-      "default-features": false,
+      "name": "wayland-protocols",
       "platform": "linux"
     }
   ],
