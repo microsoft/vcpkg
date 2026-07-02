@@ -1472,6 +1472,10 @@
       "baseline": "3.1.1",
       "port-version": 0
     },
+    "box3d": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "braft": {
       "baseline": "2021-26-04",
       "port-version": 7
