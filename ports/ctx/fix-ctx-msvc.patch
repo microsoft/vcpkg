@@ -30,6 +30,23 @@ index 6a1e7afc1a..1d6bcab2a9 100644
  #ifdef _MSC_VER
  #define WIN32_LEAN_AND_MEAN
  #include <windows.h>
+@@ -4466,11 +4484,15 @@ extern float ctx_target_fps;
+ #endif
+ 
+ #if CTX_SDL || CTX_FB || CTX_HEADLESS
+-#if CTX_EVENTS
++#ifdef CTX_EVENTS
+ #undef CTX_EVENTS
+ #endif
+ #define CTX_EVENTS 1
+ #endif
++#ifdef _WIN32
++#undef CTX_EVENTS
++#define CTX_EVENTS 0
++#endif
+ 
+ 
+ 
 @@ -22980,6 +22998,6 @@ CTX_SIMD_SUFFIX (ctx_composite_fill_rect) (CtxRasterizer *rasterizer,
    {
       uint8_t *dst = ( (uint8_t *) rasterizer->buf);
