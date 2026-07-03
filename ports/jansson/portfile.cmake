@@ -34,5 +34,10 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
+    # Upstream sets CMAKE_DEBUG_POSTFIX=_d on Windows, but jansson.pc keeps -ljansson
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/jansson.pc" "-ljansson" "-ljansson_d")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
