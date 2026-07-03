@@ -9,8 +9,8 @@ if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
 
 $CMakeUrl = Get-AssetUrl `
   -SasToken $SasToken `
-  -InternetUrl 'https://github.com/Kitware/CMake/releases/download/v4.3.2/cmake-4.3.2-windows-x86_64.msi' `
-  -BlobAssetName 'cmake-4.3.2-windows-x86_64.msi'
+  -InternetUrl 'https://github.com/Kitware/CMake/releases/download/v4.3.3/cmake-4.3.3-windows-x86_64.msi' `
+  -BlobAssetName 'cmake-4.3.3-windows-x86_64.msi'
 
 DownloadAndInstall -Url $CMakeUrl -Args @('/quiet', '/norestart', 'ADD_CMAKE_TO_PATH=System')
 

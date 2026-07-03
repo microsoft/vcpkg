@@ -12,7 +12,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_install()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME "node")
+file(INSTALL "${SOURCE_PATH}/include/js_native_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include/js_native_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include/node_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include/node_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

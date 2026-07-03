@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO luau-lang/luau
     REF ${VERSION}
-    SHA512 4e654c8e26312f9bbc0cd34e07847760e3d1d0649b158e1ea87b6ada849cd577b60fb0eba01721c925369d885eacb72551f38b35cb58d64b73ec25c302ecf5d5
+    SHA512 3b0f5ff16a80c5dd0ae9d77ccefa1efbf7583b16065212bc26d42a5603aedbe60fae21ab82343a69ea8b2c21bfdfe926456f9da4f144cfa6e1678713a73ca990
     HEAD_REF master
     PATCHES
         cmake-config-export.patch

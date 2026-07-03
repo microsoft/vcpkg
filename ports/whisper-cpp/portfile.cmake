@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/whisper.cpp
     REF "v${VERSION}"
-    SHA512 b59f715cde44d54ab65a70df5605ee412a4c2189bfcaef8698efd53910fb45bda10b2c0f5a30b94ca8fe15ff5ce7a3cd4fc75aebaf3257ff5eaf3a95336f6c9e
+    SHA512 f686f7e4cb7a0c8d5734c21bbe7ba5225c559007a8ab91a14a140e22f9fbe2353ae19df6a4306fb85737ff2dc698804e4c626085bf951cde60123cfd2d0ae8a1
     HEAD_REF master
     PATCHES
         cmake-config.diff

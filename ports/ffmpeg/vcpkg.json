@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "8.1.1",
+  "version": "8.1.2",
   "port-version": 1,
   "description": [
     "A library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -64,6 +64,7 @@
             "swresample",
             "swscale",
             "theora",
+            "twolame",
             "vorbis",
             "vpx",
             "vulkan",
@@ -650,6 +651,12 @@
       "description": "Theora encoding via libtheora",
       "dependencies": [
         "libtheora"
+      ]
+    },
+    "twolame": {
+      "description": "MP2 encoding via libtwolame",
+      "dependencies": [
+        "libtwolame"
       ]
     },
     "vaapi": {

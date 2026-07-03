@@ -1,0 +1,200 @@
+From 60ccc9c7a1650115e40f691033b4d79f792de0c6 Mon Sep 17 00:00:00 2001
+From: Attila Kovacs <attipaci@gmail.com>
+Date: Mon, 8 Jun 2026 21:36:20 +0200
+Subject: [PATCH 1/3] Add xIsDebug()
+
+---
+ CHANGELOG.md      |  8 ++++++++
+ include/xchange.h |  1 +
+ src/xchange.c     | 18 +++++++++++++++---
+ 3 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index d33e3f9..6f32196 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+ [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+ 
+ 
++## [Unreleased]
++
++### Added
++
++ - Added `xIsDebug()` function to check on `xDebug`. While the global variable is fine in most cases, they are 
++   problematic for Windows DLLs. It's better to use purely functional access instead.
++   
++
+ ## [1.2.0] - 2026-06-08
+ 
+ High priority bug fixes and version bump.
+diff --git a/include/xchange.h b/include/xchange.h
+index 9ace22e..bb00226 100644
+--- a/include/xchange.h
++++ b/include/xchange.h
+@@ -240,6 +240,7 @@ extern boolean xDebug;          ///< Switch to enable debugging (very verbose) o
+ // In xutil.c ------------------------------------------------>
+ boolean xIsVerbose();
+ void xSetVerbose(boolean value);
++boolean xIsDebug();
+ void xSetDebug(boolean value);
+ int xError(const char *fn, int code);
+ const char *xErrorDescription(int code);
+diff --git a/src/xchange.c b/src/xchange.c
+index ca95a9e..ecd8644 100644
+--- a/src/xchange.c
++++ b/src/xchange.c
+@@ -129,7 +129,6 @@ int x_warn(const char *from, const char *desc, ...) {
+  * @return    TRUE (1) if verbosity is enabled, or else FALSE (0).
+  *
+  * @sa xSetVerbose()
+- * @sa xSetDebug()
+  */
+ boolean xIsVerbose() {
+   return xVerbose;
+@@ -140,18 +139,31 @@ boolean xIsVerbose() {
+  *
+  * @param value   TRUE (non-zero) to enable verbose output, or else FALSE (0).
+  *
+- * @sa xIsVerbose()
++ * @sa xIsVerbose(), xSetDebug()
+  */
+ void xSetVerbose(boolean value) {
+   xVerbose = value ? TRUE : FALSE;
+ }
+ 
++/**
++ * Checks if debug output is enabled
++ *
++ * @return      TRUE (1) if debug output is enabled, otherwise FALSE (0).
++ *
++ * @since 1.2.1
++ *
++ * @sa xSetDebug()
++ */
++boolean xIsDebug() {
++  return xDebug;
++}
++
+ /**
+  * Enables or disables debugging output.
+  *
+  * @param value   TRUE (non-zero) to enable verbose output, or else FALSE (0).
+  *
+- * @sa xSetVerbose()
++ * @sa xIsDebug(), xSetVerbose()
+  */
+ void xSetDebug(boolean value) {
+   xDebug = value ? TRUE : FALSE;
+-- 
+2.54.0
+
+
+From 30005906bc0101b7b683187fbb6cbd97ddb621ba Mon Sep 17 00:00:00 2001
+From: Attila Kovacs <attipaci@gmail.com>
+Date: Mon, 8 Jun 2026 21:37:19 +0200
+Subject: [PATCH 2/3] Don't check for math lib in package config
+
+---
+ CHANGELOG.md                 | 6 ++++++
+ cmake/xchangeConfig.cmake.in | 8 --------
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 6f32196..7c09af6 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+ 
+ ## [Unreleased]
+ 
++### Fixed
++
++ - CMake `xchangeConfig` to skip requiting math lib for non-Windows platforms in general, since it's can fail if the 
++   math library is not in the search path, but in the build path, such as in case of some cross builds (see e.g. the
++   vcpkg Android builds)
++
+ ### Added
+ 
+  - Added `xIsDebug()` function to check on `xDebug`. While the global variable is fine in most cases, they are 
+diff --git a/cmake/xchangeConfig.cmake.in b/cmake/xchangeConfig.cmake.in
+index 1742cc7..a8060b0 100644
+--- a/cmake/xchangeConfig.cmake.in
++++ b/cmake/xchangeConfig.cmake.in
+@@ -7,14 +7,6 @@ include(CMakeFindDependencyMacro)
+ # Include targets
+ include("${CMAKE_CURRENT_LIST_DIR}/xchangeTargets.cmake")
+ 
+-# Find math library if needed
+-if(NOT WIN32)
+-    find_library(MATH_LIBRARY m)
+-    if(NOT MATH_LIBRARY)
+-        message(FATAL_ERROR "Math library not found")
+-    endif()
+-endif()
+-
+ # Get include directories from target properties
+ get_target_property(xchange_INCLUDE_DIRS xchange::core INTERFACE_INCLUDE_DIRECTORIES)
+ 
+-- 
+2.54.0
+
+
+From b9c3f6ddc48fad6059929474e42796324c281cb8 Mon Sep 17 00:00:00 2001
+From: Attila Kovacs <attipaci@gmail.com>
+Date: Mon, 8 Jun 2026 21:44:31 +0200
+Subject: [PATCH 3/3] Reference functions not vars in xvprintf() and xdprintf()
+ macros
+
+---
+ CHANGELOG.md      | 9 +++++++--
+ include/xchange.h | 4 ++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 7c09af6..d1ca571 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -9,10 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+ 
+ ## [Unreleased]
+ 
++Upcoming bug-fix release, possbily as early as 1 August 2026.
++
+ ### Fixed
+ 
+- - CMake `xchangeConfig` to skip requiting math lib for non-Windows platforms in general, since it's can fail if the 
+-   math library is not in the search path, but in the build path, such as in case of some cross builds (see e.g. the
++ - CMake `xchangeConfig` to skip requiring math lib for non-Windows platforms in general, since it's can fail if the 
++   math library is in the build path, but not in the search path, such as in case of some cross builds (see e.g. the
+    vcpkg Android builds)
+ 
+ ### Added
+@@ -20,6 +22,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+  - Added `xIsDebug()` function to check on `xDebug`. While the global variable is fine in most cases, they are 
+    problematic for Windows DLLs. It's better to use purely functional access instead.
+    
++ - `xvprintf()` / `xdprintf()` macros to reference functions instead of global vars (see above comment on Windows
++   DLLs.
++   
+ 
+ ## [1.2.0] - 2026-06-08
+ 
+diff --git a/include/xchange.h b/include/xchange.h
+index bb00226..1dd1c3c 100644
+--- a/include/xchange.h
++++ b/include/xchange.h
+@@ -234,8 +234,8 @@ typedef struct {
+ extern boolean xVerbose;        ///< Switch to enable verbose console output for XChange operations.
+ extern boolean xDebug;          ///< Switch to enable debugging (very verbose) output for XChange operations.
+ 
+-#define xvprintf if(xVerbose) printf        ///< Use for generating verbose output
+-#define xdprintf if(xDebug) printf          ///< Use for generating debug output
++#define xvprintf if(xIsVerbose()) printf        ///< Use for generating verbose output
++#define xdprintf if(xIsDebug()) printf          ///< Use for generating debug output
+ 
+ // In xutil.c ------------------------------------------------>
+ boolean xIsVerbose();
+-- 
+2.54.0
+

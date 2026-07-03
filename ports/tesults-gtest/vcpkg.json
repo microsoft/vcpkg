@@ -1,0 +1,19 @@
+{
+  "name": "tesults-gtest",
+  "version": "1.0.2",
+  "description": "Google Test event listener for reporting test results to Tesults",
+  "homepage": "https://github.com/tesults/tesults-gtest",
+  "license": "MIT",
+  "dependencies": [
+    "gtest",
+    "tesults-cpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
