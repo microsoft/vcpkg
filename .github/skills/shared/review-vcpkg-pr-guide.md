@@ -74,7 +74,7 @@ The report does not treat the absence of published downstream C++ standard metad
 
 The report does not consider "dead branches" skipped by `if(FALSE)` or similar.
 
-For simple updates to existing ports (version + sha change) that do not introduce new issues the verdict is 'approve-with-notes', but still flag all existing issues in the report. All issues in a simple update should have a contrasting statement about whether they exist in the current version.
+For simple updates to existing ports (version + sha change) that introduce no new issues, use 'approve' when there are no issues to report. If there are only pre-existing non-blocking issues, use 'approve-with-notes' and flag those existing issues in the report. All issues in a simple update should have a contrasting statement about whether they exist in the current version.
 
 The review searches online to assess the library's provenance.
 
