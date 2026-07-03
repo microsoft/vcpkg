@@ -1,133 +1,157 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
-set(DIRECTX_DXC_TAG v1.9.2602.24)
-set(DIRECTX_DXC_VERSION 2026_05_27)
-set(DIRECTX_DXC_VERSION_WSL 2026_05_26)
-
-if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-   message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
-endif()
-
-if (VCPKG_TARGET_IS_LINUX)
-    vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/linux_dxc_${DIRECTX_DXC_VERSION_WSL}.x86_64.tar.gz"
-        FILENAME "linux_dxc_${DIRECTX_DXC_VERSION_WSL}.tar.gz"
-        SHA512 3da18b4b32899c65881276315411092fa1a076e25bbea20606bc247c5fa93c83f948785969e007115dc72afcd433ab76e54c392de6d37c11d93d8614a829e40a
-    )
-else()
-    vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/dxc_${DIRECTX_DXC_VERSION}.zip"
-        FILENAME "dxc_${DIRECTX_DXC_VERSION}.zip"
-        SHA512 cf331112f1753fca68525c85bb4964714d85dbf7cb5e41af4720bbdffefdfddad1878c7a1a74898e2105dff32957a526d188d9ee3f18f0df310ec8548827a374
-    )
-endif()
-
-vcpkg_download_distfile(
-    LICENSE_TXT
-    URLS "https://raw.githubusercontent.com/microsoft/DirectXShaderCompiler/${DIRECTX_DXC_TAG}/LICENSE.TXT"
-    FILENAME "LICENSE.${DIRECTX_DXC_VERSION}"
-    SHA512  9feaa85ca6d42d5a2d6fe773706bbab8241e78390a9d61ea9061c8f0eeb5a3e380ff07c222e02fbf61af7f2b2f6dd31c5fc87247a94dae275dc0a20cdfcc8c9d
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO microsoft/DirectXShaderCompiler
+    REF e39cf36f5b2a171000a3a1134dadc9f454ff54cf
+    SHA512 143f560ec7d8753ea1795fe7b2922823a6f1dcaf2becbd1a88b1a3fd9ce2da006072d8d1c318b834ea4b6344d3ec71d8d8f5b8870e06282fbb5352d16d7ca1cb
+    HEAD_REF main
+    PATCHES
+      # Update this patch file when update version
+      002-fix-gen-version-inc.patch
+      003-fix-python.patch
 )
 
-vcpkg_extract_source_archive(
-    PACKAGE_PATH
-    ARCHIVE ${ARCHIVE}
-    NO_REMOVE_ONE_LEVEL
-)
+function(checkout_in_path PATH URL REF)
+    cmake_parse_arguments(EXTERNAL "" "" "PATCHES" ${ARGN})
+    if(EXISTS "${PATH}")
+        file(GLOB_RECURSE subdirectory_children "${CURRENT_PACKAGES_DIR}/include/${directory_child}/*")
+        if(NOT "${subdirectory_children}" STREQUAL "")
+            return()
+        else()
+            file(REMOVE_RECURSE "${PATH}")
+        endif()
+    endif()
 
-if (VCPKG_TARGET_IS_LINUX)
-  file(INSTALL
-    "${PACKAGE_PATH}/include/dxc/dxcapi.h"
-    "${PACKAGE_PATH}/include/dxc/dxcerrors.h"
-    "${PACKAGE_PATH}/include/dxc/dxcisense.h"
-    "${PACKAGE_PATH}/include/dxc/WinAdapter.h"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+    vcpkg_from_git(
+        OUT_SOURCE_PATH DEP_SOURCE_PATH
+        URL "${URL}"
+        REF "${REF}"
+        PATCHES ${EXTERNAL_PATCHES}
+    )
+    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
+    file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
+endfunction()
 
-  file(INSTALL
-    "${PACKAGE_PATH}/lib/libdxcompiler.so"
-    "${PACKAGE_PATH}/lib/libdxil.so"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    checkout_in_path(
+        "${SOURCE_PATH}/external/DirectX-Headers"
+        "https://github.com/microsoft/DirectX-Headers"
+        "980971e835876dc0cde415e8f9bc646e64667bf7"
+    )
 
-  if(NOT DEFINED VCPKG_BUILD_TYPE)
-    file(INSTALL
-      "${PACKAGE_PATH}/lib/libdxcompiler.so"
-      "${PACKAGE_PATH}/lib/libdxil.so"
-      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  endif()
+    checkout_in_path(
+        "${SOURCE_PATH}/external/SPIRV-Headers"
+        "https://github.com/KhronosGroup/SPIRV-Headers"
+        "ad9184e76a66b1001c29db9b0a3e87f646c64de0"
+    )
 
-  file(INSTALL
-    "${PACKAGE_PATH}/bin/dxc"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/"
-    FILE_PERMISSIONS
-        OWNER_READ OWNER_WRITE OWNER_EXECUTE
-        GROUP_READ GROUP_EXECUTE
-        WORLD_READ WORLD_EXECUTE)
-
-  set(dll_name_dxc "libdxcompiler.so")
-  set(dll_name_dxil "libdxil.so")
-  set(dll_dir  "lib")
-  if(NOT DEFINED VCPKG_BUILD_TYPE)
-    set(dll_debug_dir "debug/lib")
-  else()
-    set(dll_debug_dir "lib")
-  endif()
-  set(lib_name "libdxcompiler.so")
-  set(tool_path "tools/${PORT}/dxc")
-else()
-  # VCPKG_TARGET_IS_WINDOWS
-  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-      set(DXC_ARCH arm64)
-  elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-      set(DXC_ARCH x86)
-  else()
-      set(DXC_ARCH x64)
-  endif()
-
-  file(INSTALL
-    "${PACKAGE_PATH}/inc/dxcapi.h"
-    "${PACKAGE_PATH}/inc/dxcerrors.h"
-    "${PACKAGE_PATH}/inc/dxcisense.h"
-    "${PACKAGE_PATH}/inc/d3d12shader.h"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-
-  file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  if(NOT DEFINED VCPKG_BUILD_TYPE)
-    file(INSTALL "${PACKAGE_PATH}/lib/${DXC_ARCH}/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  endif()
-
-  file(INSTALL
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-
-  if(NOT DEFINED VCPKG_BUILD_TYPE)
-    file(INSTALL
-      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
-      "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
-      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-  endif()
-
-  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
-
-  file(INSTALL
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxc.exe"
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxcompiler.dll"
-    "${PACKAGE_PATH}/bin/${DXC_ARCH}/dxil.dll"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/")
-
-  set(dll_name_dxc "dxcompiler.dll")
-  set(dll_name_dxil "dxil.dll")
-  set(dll_dir  "bin")
-  set(dll_debug_dir "bin")
-  set(lib_name "dxcompiler.lib")
-  set(tool_path "tools/${PORT}/dxc.exe")
+    checkout_in_path(
+        "${SOURCE_PATH}/external/SPIRV-Tools"
+        "https://github.com/KhronosGroup/SPIRV-Tools"
+        "0539c81f69a3daeb706fd3477dca61435b475156"
+    )
 endif()
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_find_acquire_program(PYTHON3)
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
-  @ONLY)
+# This port requires BUILD_SHARED_LIBS=OFF
+set(VCPKG_LIBRARY_LINKAGE_BACKUP ${VCPKG_LIBRARY_LINKAGE})
+set(VCPKG_LIBRARY_LINKAGE static)
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${LICENSE_TXT}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+        -DHLSL_OPTIONAL_PROJS_IN_DEFAULT=OFF
+        -DHLSL_ENABLE_ANALYZE=OFF
+        -DHLSL_OFFICIAL_BUILD=OFF
+        -DHLSL_ENABLE_FIXED_VER=OFF
+        -DHLSL_BUILD_DXILCONV=OFF
+        -DHLSL_INCLUDE_TESTS=OFF
+        -DHLSL_ENABLE_DEBUG_ITERATORS=ON
+        -DENABLE_SPIRV_CODEGEN=OFF
+        -DSPIRV_BUILD_TESTS=OFF
+        -DLLVM_BUILD_INSTRUMENTED_COVERAGE=OFF
+        -DLLVM_BUILD_RUNTIME=ON
+        -DLLVM_BUILD_EXAMPLES=OFF
+        -DLLVM_BUILD_TESTS=OFF
+        -DLLVM_INCLUDE_TESTS=OFF
+        -DLLVM_INCLUDE_DOCS=OFF
+        -DLLVM_INCLUDE_EXAMPLES=OFF
+        -DLLVM_OPTIMIZED_TABLEGEN=OFF
+        -DLLVM_APPEND_VC_REV=OFF
+        -DLLVM_ENABLE_RTTI=ON
+        -DLLVM_ENABLE_EH=ON
+        -DLLVM_ENABLE_TERMINFO=OFF
+        -DLLVM_TARGETS_TO_BUILD=None
+        -DLLVM_DEFAULT_TARGET_TRIPLE=dxil-ms-dx
+        -DCLANG_CL=OFF
+        -DCLANG_ENABLE_STATIC_ANALYZER=OFF
+        -DCLANG_ENABLE_ARCMT=OFF
+        -DCLANG_BUILD_EXAMPLES=OFF
+        -DCLANG_INCLUDE_TESTS=OFF
+        -DLIBCLANG_BUILD_STATIC=ON
+    MAYBE_UNUSED_VARIABLES
+        CLANG_CL
+)
+
+vcpkg_cmake_build()
+
+# Restore the original library linkage
+set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
+
+set(BUILD_DBG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+set(BUILD_REL_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+
+if(NOT EXISTS "${BUILD_REL_DIR}")
+    message(FATAL_ERROR "${BUILD_REL_DIR} is not exists")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/include/dxc/dxcapi.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/dxc")
+file(INSTALL "${SOURCE_PATH}/include/dxc/dxcerrors.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/dxc")
+file(INSTALL "${SOURCE_PATH}/include/dxc/dxcisense.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/dxc")
+file(INSTALL "${SOURCE_PATH}/include/dxc/dxcpix.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/dxc")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(Z_VCPKG_DXC_TARGET_IS_WINDOWS ON)
+
+    if (EXISTS "${BUILD_DBG_DIR}")
+        file(INSTALL "${BUILD_DBG_DIR}/bin/dxil.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(INSTALL "${BUILD_DBG_DIR}/bin/dxcompiler.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(INSTALL "${BUILD_DBG_DIR}/bin/dxil.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(INSTALL "${BUILD_DBG_DIR}/bin/dxcompiler.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(INSTALL "${BUILD_DBG_DIR}/lib/dxil.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${BUILD_DBG_DIR}/lib/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
+
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxil.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxcompiler.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxil.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxcompiler.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(INSTALL "${BUILD_REL_DIR}/lib/dxil.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(INSTALL "${BUILD_REL_DIR}/lib/dxcompiler.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxil.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxcompiler.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxc.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxv.exe" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+else()
+    set(Z_VCPKG_DXC_TARGET_IS_WINDOWS OFF)
+
+    file(INSTALL "${SOURCE_PATH}/include/dxc/WinAdapter.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/dxc")
+
+    if (EXISTS "${BUILD_DBG_DIR}")
+        file(INSTALL "${BUILD_DBG_DIR}/lib/libdxil.so" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${BUILD_DBG_DIR}/lib/libdxcompiler.so" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
+
+    file(INSTALL "${BUILD_REL_DIR}/lib/libdxil.so" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(INSTALL "${BUILD_REL_DIR}/lib/libdxcompiler.so" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxc" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(INSTALL "${BUILD_REL_DIR}/bin/dxv" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/directx-dxc-config.cmake" @ONLY)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")

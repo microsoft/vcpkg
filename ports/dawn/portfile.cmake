@@ -45,8 +45,6 @@ vcpkg_from_github(
         005-bsd-support.patch
         008-wrong-dxcapi-include.patch
         009-fix-tint-install.patch
-        010-fix-glslang.patch
-        011-fix-dxc.patch
 )
 
 function(checkout_in_path PATH URL REF)
@@ -126,7 +124,7 @@ vcpkg_check_features(
 )
 
 set(DAWN_USE_BUILT_DXC OFF)
-if(DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
+if(DAWN_ENABLE_D3D12)
     set(DAWN_USE_BUILT_DXC ON)
 endif()
 set(DAWN_USE_TINT_SPV OFF)

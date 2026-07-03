@@ -2430,7 +2430,7 @@
     },
     "dawn": {
       "baseline": "20260624.223603",
-      "port-version": 0
+      "port-version": 1
     },
     "daxa": {
       "baseline": "3.3.1",
@@ -2513,7 +2513,7 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2026-05-27",
+      "baseline": "2026-06-24",
       "port-version": 0
     },
     "directx-headers": {
