@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         msvc-openssl-autolink.patch
         no-system32-install.patch
+        relocatable-install-base.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -73,19 +74,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE "${TARGET_DIR_DEBUG}/bin")
     endif()
 endif()
-
-# INSTALL_BASE is the compile-time default root for runtime search paths
-# (MIBDIRS, SNMPCONFPATH, persistent storage, ...). Configure bakes the
-# absolute buildtree path into it, which is not relocatable and trips the
-# post-build absolute-path check. Restore upstream's default ("c:/usr",
-# see win32/net-snmp/net-snmp-config.h.in); users are expected to override
-# these paths at runtime via the environment or the registry.
-vcpkg_replace_string(
-    "${TARGET_DIR}/include/net-snmp/net-snmp-config.h"
-    "#define INSTALL_BASE \"${TARGET_DIR}\""
-    "#define INSTALL_BASE \"c:/usr\""
-    IGNORE_UNCHANGED
-)
 
 if(VCPKG_BUILD_TYPE STREQUAL "release")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
