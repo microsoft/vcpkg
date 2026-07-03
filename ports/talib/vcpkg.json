@@ -1,6 +1,6 @@
 {
   "name": "talib",
-  "version-semver": "0.6.4",
+  "version-semver": "0.7.1",
   "description": "TA-Lib - Technical Analysis Library",
   "homepage": "https://ta-lib.github.io/",
   "license": "BSD-2-Clause",
