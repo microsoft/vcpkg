@@ -1,6 +1,6 @@
 {
   "name": "kf6-solid",
-  "version": "6.26.0",
+  "version": "6.27.0",
   "description": "Desktop hardware abstraction",
   "homepage": "https://invent.kde.org/frameworks/solid",
   "documentation": "https://api.kde.org/solid-index.html",

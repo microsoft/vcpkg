@@ -1,6 +1,6 @@
 {
   "name": "kguiaddons",
-  "version": "6.26.0",
+  "version": "6.27.0",
   "description": "Addons to QtGui",
   "homepage": "https://invent.kde.org/frameworks/kguiaddons",
   "documentation": "https://api.kde.org/kguiaddons-index.html",
