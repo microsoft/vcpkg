@@ -411,6 +411,7 @@ gstreamer[gl]:arm64-linux=feature-fails
 gstreamer[gl-graphene]:arm64-linux=feature-fails # ERROR: Problem encountered: Could not find requested OpenGL library
 gstreamer[nvcodec](windows)=feature-fails
 gstreamer[vulkan]:arm64-linux=feature-fails
+gstreamer[vulkan]:arm64-osx=feature-fails # no MoltenVK on macOS
 gstreamer[vulkan](android | windows)=feature-fails
 gstreamer[wayland](osx | windows)=cascade
 gstreamer[x11]:arm64-linux=feature-fails
