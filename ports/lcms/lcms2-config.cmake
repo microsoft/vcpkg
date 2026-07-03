@@ -20,8 +20,6 @@ if(NOT TARGET lcms2::lcms2)
 
     set_target_properties(lcms2::lcms2 PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-        MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
-        MAP_IMPORTED_CONFIG_MINSIZEREL     Release
     )
 
     find_library(LCMS2_LIBRARY_DEBUG NAMES lcms2 PATHS "${_IMPORT_PREFIX}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
