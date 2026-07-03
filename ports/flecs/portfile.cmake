@@ -35,4 +35,12 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
+    COMMENT [[
+Beyond the main MIT LICENSE, some compiled sources bundle third-party notices:
+  src/addons/http/http.c        EmbeddableWebServer (BSD-2-Clause)
+  src/datastructures/hash.c     wyhash (Unlicense / public domain)
+  src/datastructures/strbuf.c   stm32tpl float formatting (Anton B. Gusev)
+]]
+)

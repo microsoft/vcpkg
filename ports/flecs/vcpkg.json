@@ -4,7 +4,7 @@
   "description": "A fast entity component system (ECS) for C & C++",
   "homepage": "https://github.com/SanderMertens/flecs",
   "documentation": "https://www.flecs.dev/flecs/",
-  "license": "MIT",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {
