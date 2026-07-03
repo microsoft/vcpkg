@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DBUILD_STATIC_LIBS=${JSON_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${JSON_BUILD_SHARED}
+        -DDISABLE_EXTRA_LIBS=ON
 )
 
 vcpkg_cmake_install()
