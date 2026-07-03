@@ -7,7 +7,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" ATKMM_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/atkmm/${ATKMM_MAJOR_MINOR}/atkmm-${VERSION}.tar.xz"
     FILENAME "atkmm-${VERSION}.tar.xz"
-    SHA512 2c2513b5c5fd7a5c9392727325c7551c766d4d51b8089fbea7e8043cde97d07c9b1f98a4a693f30835e4366e9236e28e092c2480a78415d77c5cb72e9432344f
+    SHA512 268a16bae365427c13ae5f318c0913782ddfdd705dd577407424f2b08a2454acc9a6435c67abcd1eef3986c7ca0e23936c78179269fd844dde402c69d2c95976
 )
 
 vcpkg_extract_source_archive(
@@ -27,6 +27,8 @@ vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
 file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
 file(INSTALL "${SOURCE_PATH}/README.win32.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
