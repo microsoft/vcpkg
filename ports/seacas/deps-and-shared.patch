@@ -136,6 +136,18 @@ index 5c5149e..cc97e28 100644
  #endif
  #endif /* EXODUS_EXPORT */
  
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C b/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C
+index 6e8d537..acfd00d 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C
++++ b/packages/seacas/libraries/ioss/src/Ioss_ParallelUtils.C
+@@ -403,6 +403,7 @@ template IOSS_EXPORT void Ioss::ParallelUtils::broadcast(int64_t &my_value, int)
+ 
+ namespace Ioss {
+   template <>
++  IOSS_EXPORT
+   void ParallelUtils::broadcast(IOSS_MAYBE_UNUSED std::string &my_str,
+                                 IOSS_MAYBE_UNUSED int          root) const
+   {
 diff --git a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.h b/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.h
 index 7de4793..0e2113d 100644
 --- a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.h
