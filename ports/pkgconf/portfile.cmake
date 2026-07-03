@@ -95,6 +95,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pkgconf/libpkgconf/libpkgconf-api.h" "#if defined(PKGCONFIG_IS_STATIC)" "#if 1")
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf spdxtool AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf pccritic spdxtool AUTO_CLEAN)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
