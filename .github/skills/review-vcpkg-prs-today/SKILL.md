@@ -7,7 +7,7 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 
 | Input | Required | Meaning |
 |---|---|---|
-| `investigation-root` | No | Preferred directory for large temporary work such as detached worktrees, extracted archives, build trees, example builds, installs, caches, and other investigation artifacts. When omitted, infer a short same-drive investigations location if that is clear; otherwise ask the user. Do not use the Copilot session directory or an arbitrary long temp path. |
+| `investigation-root` | No | Preferred directory for large temporary work such as detached worktrees, extracted archives, build trees, example builds, installs, caches, and other investigation artifacts. Final review deliverables are not investigation artifacts and must still be written under `reviews/` in the caller's current directory. When omitted, infer a short same-drive investigations location if that is clear; otherwise ask the user. Do not use the Copilot session directory or an arbitrary long temp path. |
 | `review-depth` | No | One of `no-examples`, `examples`, or `examples-and-patches`. Default to `no-examples`. |
 
 ### Example invocations
@@ -59,7 +59,7 @@ If temporary worktrees were created during the review process, write this script
 
 ## Required output layout
 
-Write all deliverables under `reviews/`. Each worker reviews one PR and substitutes its number for `{{PR_NUMBER}}`. Find out what report.md is from .github/skills/shared/review-vcpkg-pr-guide.md
+Write all deliverables under `reviews/` in the caller's current directory, not under `investigation-root`. Each worker reviews one PR and substitutes its number for `{{PR_NUMBER}}`. Find out what report.md is from .github/skills/shared/review-vcpkg-pr-guide.md
 
 ```text
 reviews/
