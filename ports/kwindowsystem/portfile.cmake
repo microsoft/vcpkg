@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
     REF "v${VERSION}"
-    SHA512 34efcb6df333ce37a90b22ae833b5516bad2e5bbf04cffbe43005f157499be8d8ba6c788fe84715a8535d80a23dea16d2bf1096ec217899fa5637750638159d7
+    SHA512 f0ec259bc57e55b613ac031c4f22e6b70ae2947da69ec31c311b1b3ca08fa8a4d3f1171ba5d7afd1e5737c1d281b6e17f700c4a717d4eacc8bd133d78c242180
     HEAD_REF master
     PATCHES
         001_guard_ecm_qml_module_include.patch
@@ -17,7 +17,7 @@ set(KWINDOWSYSTEM_WAYLAND OFF)
 if(VCPKG_TARGET_IS_LINUX)
     set(KWINDOWSYSTEM_X11 ON)
     set(KWINDOWSYSTEM_WAYLAND ON)
-    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev\n    libwayland-dev wayland-protocols libxkbcommon-dev libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev libwayland-dev wayland-protocols libxkbcommon-dev libxkbcommon-x11-dev")
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev\n    libwayland-dev libxkbcommon-dev libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev libwayland-dev libxkbcommon-dev libxkbcommon-x11-dev")
 endif()
 
 vcpkg_check_features(

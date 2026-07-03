@@ -1,6 +1,6 @@
 {
   "name": "threadweaver",
-  "version": "6.25.0",
+  "version": "6.26.0",
   "description": "KDE Threading library",
   "homepage": "https://invent.kde.org/frameworks/threadweaver",
   "documentation": "https://api.kde.org/threadweaver-index.html",

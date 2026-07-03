@@ -1,6 +1,6 @@
 {
   "name": "kwindowsystem",
-  "version": "6.25.0",
+  "version": "6.26.0",
   "description": "Access to the windowing system",
   "homepage": "https://invent.kde.org/frameworks/kwindowsystem",
   "documentation": "https://api.kde.org/kwindowsystem-index.html",
@@ -26,6 +26,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "wayland-protocols",
+      "platform": "linux"
     }
   ],
   "features": {
