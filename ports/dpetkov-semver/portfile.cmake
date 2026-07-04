@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DavidPetkovsek/semver
     REF "v${VERSION}"
-    SHA512 f41100b989097f8091053cbacf5f1ac8a96dd1e0c0b406ab063fd45e289dcb90428e187315c2257877c145212d5dab66e02ea9bde063c34fbdf27c09ffcd5182
+    SHA512 7edb53250ab4bf0a4960449ff475abc9b9ee51210cba658db790904161c2a0515a9204d9039597b29281a2c0084d2f9304eca13771a63147040c7904eb057044
     HEAD_REF main
 )
 
@@ -18,10 +18,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME semver
-    CONFIG_PATH lib/cmake/semver
+    PACKAGE_NAME dpetkov-semver
+    CONFIG_PATH lib/cmake/dpetkov-semver
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
