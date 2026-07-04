@@ -2616,6 +2616,10 @@
       "baseline": "26.3",
       "port-version": 5
     },
+    "dpetkov-semver": {
+      "baseline": "0.4.1",
+      "port-version": 0
+    },
     "dpp": {
       "baseline": "10.1.5",
       "port-version": 0
