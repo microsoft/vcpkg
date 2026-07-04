@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LAStools/LAStools
     REF "v${VERSION}"
-    SHA512 a44e6df02b8f7fe8388420fc7d454b035c38bcfb43a59d15ecb634cb30165c70730258b8ea79f335c4625b482827feb8a3d7afa8e07b369c19d5f7cc7be15001
+    SHA512 d02f376f1597155d65ec23f7dbde21e2fe6f2aabbf67d5813b27657985848aac7e5593427bb0869b243edacc8a1647edc0fa4600840eb054bde7cac0a6bc1b01
     HEAD_REF master
     PATCHES
         fix_install_paths_lastools.patch
@@ -25,7 +25,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LASlib PACKAGE_NAME laslib)
 
 if(BUILD_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 laszip64 txt2las64 AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 lasvalidate64 laszip64 txt2las64 AUTO_CLEAN)
 
     # Copy CSV files that are used as lookup tables by las2las.
     file(COPY "${SOURCE_PATH}/bin/serf/geo" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/serf")

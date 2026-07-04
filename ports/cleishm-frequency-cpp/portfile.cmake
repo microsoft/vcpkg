@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cleishm/frequency-cpp
     REF "v${VERSION}"
-    SHA512 9535b051bbe57b1586f5df11edb6f41d97dc4b7ab2210e03e7911a21f0f88cc91ff100a5ed1062ab470a870bce9a17b2f6cde30ef918f911ae5d501a5a78ccc7
+    SHA512 04b8fe41276135e0ce4e716cf0098d5d9186d9d5ed8309c3cf404371df031653c561e0d0c1727941fff7e38b55ba8caf1b3fdbb27279c405b374eebbfccdf700
     HEAD_REF main
 )
 
@@ -17,7 +17,5 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME frequency CONFIG_PATH lib/cmake/frequency)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

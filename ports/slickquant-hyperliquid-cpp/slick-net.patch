@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb3abad..57786da 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,8 +14,8 @@ endif()
+ find_package(nlohmann_json CONFIG REQUIRED)
+ find_package(OpenSSL REQUIRED)
+ 
+-find_package(slick-net 3.0.0 CONFIG QUIET)
+-if (NOT slick-net_FOUND)
++find_package(slick-net CONFIG REQUIRED)
++if (FALSE)
+     message(STATUS "Fetching slick-net...")
+     include(FetchContent)
+     set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)
+diff --git a/cmake/hyperliquid-config.cmake.in b/cmake/hyperliquid-config.cmake.in
+index 1dcbf98..ad664b7 100644
+--- a/cmake/hyperliquid-config.cmake.in
++++ b/cmake/hyperliquid-config.cmake.in
+@@ -1,11 +1,11 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(nlohmann_json CONFIG REQUIRED)
+-find_dependency(OpenSSL REQUIRED)
++find_dependency(nlohmann_json CONFIG)
++find_dependency(OpenSSL CONFIG)
+ 
+-find_dependency(slick-net 3.0.0 CONFIG QUIET)
+-if (NOT slick-net_FOUND)
++find_package(slick-net CONFIG)
++if (FALSE)
+     message(STATUS "Fetching slick-net...")
+     include(FetchContent)
+     set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)

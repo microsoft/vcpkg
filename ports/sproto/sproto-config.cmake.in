@@ -1,7 +1,7 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(unofficial-lua CONFIG)
+find_dependency(Lua)
 
 include("${CMAKE_CURRENT_LIST_DIR}/sproto-targets.cmake")
 

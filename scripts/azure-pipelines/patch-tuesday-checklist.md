@@ -11,16 +11,8 @@
 * [ ] Check for any other software for the Windows images we wish to update and make the edits to do
       so in `scripts/azure-pipelines/windows`
 * [ ] Check for any updates possible to `vcpkg-tools.json`.
-* [ ] Update the first line of android/Dockerfile with the current 'noble' image according to
-    https://hub.docker.com/_/ubuntu
-* [ ] Update the first line of linux/Dockerfile with the current 'noble' image according to
-    https://hub.docker.com/_/ubuntu
-* [ ] Run create-docker-images.ps1
-* [ ] Update android/azure-pipelines.yml and linux/azure-pipelines.yml to point to the new docker
-      images
 * [ ] Run windows/create-image.ps1
 * [ ] Submit PR with those changes and merge it.
 * [ ] In the Azure portal, mark the newly created image as the 'latest' one.
 * [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
 * [ ] Deploy the new base box to all hosts.
-* [ ] Update the software on the CTI's machine #1 to match.

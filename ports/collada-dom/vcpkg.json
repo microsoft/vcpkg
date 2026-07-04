@@ -1,15 +1,25 @@
 {
   "name": "collada-dom",
   "version": "2.5.0",
-  "port-version": 11,
+  "port-version": 12,
   "description": "The COLLADA Document Object Model (DOM) is an application programming interface (API) that provides a C++ object representation of a COLLADA XML instance document.",
   "homepage": "https://github.com/rdiankov/collada-dom",
   "license": null,
   "dependencies": [
     "boost-filesystem",
     "boost-system",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "minizip",
+    {
+      "name": "minizip",
+      "features": [
+        "unofficial-iowin32"
+      ],
+      "platform": "windows"
+    },
     "uriparser",
     {
       "name": "vcpkg-cmake",

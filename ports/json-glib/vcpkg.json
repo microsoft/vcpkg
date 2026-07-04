@@ -1,7 +1,6 @@
 {
   "name": "json-glib",
-  "version": "1.10.6",
-  "port-version": 1,
+  "version": "1.10.8",
   "description": "Implements a full JSON parser and generator using GLib and GObject, and integrates JSON with GLib data types.",
   "homepage": "https://wiki.gnome.org/Projects/JsonGlib",
   "license": "LGPL-2.1-or-later AND CC0-1.0 AND MIT",

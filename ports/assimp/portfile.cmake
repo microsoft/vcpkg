@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
     REF "v${VERSION}"
-    SHA512 182c4ef0feca7c37d4c7d6fae801a77e6efd93d86ea4a3ff2f32fac98bd5f83c04df6e5a667036a070450f5811cd91a5d23bcd4d4a1d00ded3b1c5cc14bd0363
+    SHA512 f3639e3964ea8ef41ce684eb1b764ece79f64a15ecae068846c5bc0853780e39f600776027d8843e6a3f47988daf067a164161a58f76ec6de13027ae1e473bfb
     HEAD_REF master
     PATCHES
         build_fixes.patch
@@ -27,6 +27,11 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/zlib")
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        draco   ASSIMP_BUILD_DRACO
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -37,6 +42,7 @@ vcpkg_cmake_configure(
         -DASSIMP_WARNINGS_AS_ERRORS=OFF
         -DASSIMP_IGNORE_GIT_HASH=ON
         -DASSIMP_INSTALL_PDB=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -45,7 +51,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/assimp")
 vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCVER vc140 vc141 vc142 vc143)
+    set(VCVER vc140 vc141 vc142 vc143 vc145)
     set(CRT mt md)
     set(DBG_NAMES)
     set(REL_NAMES)
@@ -71,7 +77,10 @@ if(ASSIMP_DBG)
 endif()
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
+    set(assimp_PC_REQUIRES "polyclipping pugixml minizip")
+    if("draco" IN_LIST FEATURES)
+        string(APPEND assimp_PC_REQUIRES " draco")
+    endif()
     set(assimp_LIBS_REQUIRES "-lpoly2tri")
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "Libs:" "Requires.private: ${assimp_PC_REQUIRES}\nLibs:")

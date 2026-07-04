@@ -1,0 +1,33 @@
+commit 65777538e6f853b43caa5f998dc19fde033eaa46
+Author: Benjamin Gilbert <bgilbert@cs.cmu.edu>
+Date:   Mon Jun 8 14:29:57 2026 -0500
+
+    tools: fix `slidetool test deps` on Windows
+    
+    Have g_spawn_sync() leave our file descriptors alone.  This is harmless
+    for us and lets g_spawn_sync() avoid invoking gspawn-win64-helper.exe,
+    which openslide-bin doesn't ship.
+    
+    Fixes error:
+    
+        slidetool.exe: Spawning child failed: Failed to execute helper program (No such file or directory)
+    
+    Signed-off-by: Benjamin Gilbert <bgilbert@cs.cmu.edu>
+
+diff --git a/tools/slidetool-test.c b/tools/slidetool-test.c
+index eb588b8a25e3..48d7f8b83615 100644
+--- a/tools/slidetool-test.c
++++ b/tools/slidetool-test.c
+@@ -38,7 +38,11 @@ static int do_test_deps(int narg, char **args) {
+       g_environ_setenv(child_env, "OPENSLIDE_DEBUG", "synthetic", true);
+     GError *tmp_err = NULL;
+     int status;
+-    if (!g_spawn_sync(NULL, child_argv, child_env, G_SPAWN_SEARCH_PATH,
++    if (!g_spawn_sync(NULL, child_argv, child_env,
++                      G_SPAWN_SEARCH_PATH |
++                      // avoid requiring gspawn-win64-helper.exe on Windows
++                      G_SPAWN_LEAVE_DESCRIPTORS_OPEN |
++                      G_SPAWN_CHILD_INHERITS_STDIN,
+                       NULL, NULL, NULL, NULL, &status, &tmp_err)) {
+       common_fail("Spawning child failed: %s", tmp_err->message);
+     }

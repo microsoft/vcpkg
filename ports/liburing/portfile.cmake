@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO axboe/liburing
     REF "liburing-${VERSION}"
-    SHA512 ada60d8c0bf5b546e45fe2e9e58b2cb4e342665d260648210218e5802dbc7bf650bc8bbcf0620dee27bc4310089dd5c509451a4f451368eccf1e1c5b3a4db0a7
+    SHA512 8f2de8b294b14ef2802fe1806ae62a0a4e1f8a52c423e1069a97600a742492eecb1078c435624b9a094a07ae5f706a68e333714c00c904f3d93ca8acf40f81ae
     HEAD_REF master
     PATCHES
         fix-configure.patch     # ignore unsupported options, handle ENABLE_SHARED

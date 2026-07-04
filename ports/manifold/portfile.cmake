@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO elalish/manifold
-    REF v${VERSION}
-    SHA512 22ff2236b97fd15463c231b3ce61baeefc6f651b145804480f80146ba83dc4b15d57e5f73ff788604153ec61eace416a409d2a9e7c1327c05cba89a95e2fc536
-    PATCHES
-        fix-size_t.patch
+    REF "v${VERSION}"
+    SHA512 439ff566bdf7703f257efcc79cec7679790042edfcdb3a57b865c8fa6a13fd59d87452900e0d3707eca03e700528c4037a84f35007f0940b72534834c138b5dd
 )
 
 vcpkg_cmake_configure(

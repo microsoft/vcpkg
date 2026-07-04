@@ -1,9 +1,12 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/pulsar-client-cpp
-    REF "v${VERSION}"
-    SHA512 ea4b3730c8dadbcd58c79df67399da97650cd4aad203c6151bcf261a18dfc58d2b9a50449fe0298a0f7616cfc799529a777ebe5e8907a80a43114299288c86ab
-    HEAD_REF main
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/pulsar/pulsar-client-cpp-${VERSION}/apache-pulsar-client-cpp-${VERSION}.tar.gz"
+    FILENAME "apache-pulsar-client-cpp-${VERSION}.tar.gz"
+    SHA512 575df2ae2b86abb21e58fbbbb0de962bc95f4e83963251d4d4f79b5bac29c3394e8efcb346a2f7922ef7d4cabf7b1a15fe6d3ee50794b0e0b3115d9910b7b0b4
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         disable-warnings.patch
 )

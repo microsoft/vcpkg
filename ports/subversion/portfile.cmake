@@ -13,8 +13,18 @@ vcpkg_execute_required_process(
     LOGNAME gen-make-${TARGET_TRIPLET}
 )
 
+if (VCPKG_HOST_IS_LINUX)
+    set(SVN_USE_PKG_CONFIG ON)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+else()
+    set(SVN_USE_PKG_CONFIG OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DSVN_USE_PKG_CONFIG="${SVN_USE_PKG_CONFIG}"
 )
 
 vcpkg_cmake_install()

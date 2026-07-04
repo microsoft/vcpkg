@@ -1,5 +1,5 @@
 diff --git a/dgif_lib.c b/dgif_lib.c
-index cbcf23f..15dee84 100644
+index cec94c1..05f2fbf 100644
 --- a/dgif_lib.c
 +++ b/dgif_lib.c
 @@ -57,7 +57,7 @@ GifFileType *DGifOpenFileName(const char *FileName, int *Error) {
@@ -39,7 +39,7 @@ index cbcf23f..15dee84 100644
  	/*@-mustfreeonly@*/
  	GifFile->Private = (void *)Private;
 diff --git a/egif_lib.c b/egif_lib.c
-index 1526868..6644eed 100644
+index f1141a2..1e90013 100644
 --- a/egif_lib.c
 +++ b/egif_lib.c
 @@ -64,10 +64,10 @@ GifFileType *EGifOpenFileName(const char *FileName, const bool TestExistence,
@@ -74,11 +74,11 @@ index 1526868..6644eed 100644
  	GifFile->Private = (void *)Private;
  	Private->FileHandle = FileHandle;
 diff --git a/gif_font.c b/gif_font.c
-index 75f9731..c215795 100644
+index 974e4f1..e136d2b 100644
 --- a/gif_font.c
 +++ b/gif_font.c
-@@ -200,6 +200,9 @@ void GifDrawRectangle(SavedImage *Image, const int x, const int y, const int w,
- 	}
+@@ -339,6 +339,9 @@ void GifDrawRectangle(SavedImage *Image, const int x, const int y, const int w,
+     }
  }
  
 +#ifdef _MSC_VER
@@ -86,4 +86,4 @@ index 75f9731..c215795 100644
 +#endif
  void GifDrawBoxedText8x8(SavedImage *Image, const int x, const int y,
                           const char *legend, const int border, const int bg,
-                          const int fg) {
+                          const int fg)
