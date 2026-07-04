@@ -38,7 +38,15 @@
   "features": {
     "codegen": {
       "description": "Build code generator machinery",
-      "supports": "!uwp"
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "features": [
+            "libprotoc"
+          ]
+        }
+      ]
     },
     "systemd": {
       "description": "Build with libsystemd support",
