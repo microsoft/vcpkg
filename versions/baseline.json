@@ -85,7 +85,7 @@
       "port-version": 7
     },
     "alembic": {
-      "baseline": "1.8.11",
+      "baseline": "1.8.12",
       "port-version": 0
     },
     "alibabacloud-oss-cpp-sdk-v2": {
