@@ -1,5 +1,5 @@
 diff --git a/src/libutil/strutil.cpp b/src/libutil/strutil.cpp
-index 844275c..85a62a4 100644
+index 844275c..3c3b67b 100644
 --- a/src/libutil/strutil.cpp
 +++ b/src/libutil/strutil.cpp
 @@ -29,6 +29,9 @@ OIIO_PRAGMA_WARNING_POP
@@ -12,6 +12,15 @@ index 844275c..85a62a4 100644
  #ifdef _WIN32
  #    include <windows.h>
  #endif
+@@ -51,7 +54,7 @@ OIIO_PRAGMA_WARNING_POP
+ #endif
+ #define stbsp__uintptr std::uintptr_t
+ 
+-#ifdef OpenImageIO_SANITIZE
++#if defined(OpenImageIO_SANITIZE) || defined(__EMSCRIPTEN__)
+ #    define STB_SPRINTF_NOUNALIGNED
+ #endif
+ 
 @@ -539,6 +542,8 @@ strcasecmp(const char* a, const char* b)
          if (*us1++ == '\0')
              return (0);
