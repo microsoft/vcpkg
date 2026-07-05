@@ -1,0 +1,17 @@
+{
+  "name": "scinumtools3",
+  "version": "0.5.11",
+  "description": "SciNumTools3: C++ toolkit for unit-aware scientific computation with runtime expressions and validated parameters.",
+  "homepage": "https://github.com/vrtulka23/scinumtools3",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

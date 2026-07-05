@@ -493,7 +493,7 @@
       "port-version": 0
     },
     "aws-c-sdkutils": {
-      "baseline": "0.2.6",
+      "baseline": "0.2.7",
       "port-version": 0
     },
     "aws-checksums": {
@@ -3473,7 +3473,7 @@
       "port-version": 0
     },
     "glibmm": {
-      "baseline": "2.88.0",
+      "baseline": "2.88.1",
       "port-version": 0
     },
     "glm": {
@@ -3514,7 +3514,7 @@
     },
     "gmp": {
       "baseline": "6.3.0",
-      "port-version": 3
+      "port-version": 4
     },
     "gmsh": {
       "baseline": "4.15.2",
@@ -5290,7 +5290,7 @@
     },
     "libmagic": {
       "baseline": "5.47",
-      "port-version": 0
+      "port-version": 1
     },
     "libmariadb": {
       "baseline": "3.4.8",
@@ -9084,6 +9084,10 @@
       "baseline": "5.5.8",
       "port-version": 0
     },
+    "scinumtools3": {
+      "baseline": "0.5.11",
+      "port-version": 0
+    },
     "sciplot": {
       "baseline": "0.3.1",
       "port-version": 1
@@ -10121,7 +10125,7 @@
       "port-version": 2
     },
     "tiff": {
-      "baseline": "4.7.1",
+      "baseline": "4.7.2",
       "port-version": 0
     },
     "tiledb": {
