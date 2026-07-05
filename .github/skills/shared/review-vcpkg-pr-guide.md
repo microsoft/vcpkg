@@ -86,8 +86,7 @@ If the verdict is 'approve-with-notes' or 'request-changes', the report has a "C
 - Be technical and impersonal. Use GitHub-flavored markdown.
 - Do not repeat 'correct' or passing points; focus only on issues.
 - Do not repeat the 'verdict'.
-- Note that you are an AI agent, using the precise text: "GPT-5.5 observes:"
-- Thank the contributor for their work, if they have not been thanked in the conversation history so far.
+- Note that the observation was AI assisted
 - Highlight all blocking issues, with links to guides / documentation when possible. If there are no blocking issues, omit this from the feedback.
 - Separately highlight all non-blocking issues. If there are no non-blocking issues, omit this from the feedback.
 - When enumerating the blocking + non-blocking issues, be concise.
