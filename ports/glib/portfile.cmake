@@ -160,4 +160,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib/gio"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt"
+        "${SOURCE_PATH}/LICENSES/LGPL-2.1-only.txt"
+        "${SOURCE_PATH}/LICENSES/MPL-1.1.txt"
+)
