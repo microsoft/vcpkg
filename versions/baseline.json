@@ -6209,7 +6209,7 @@
       "port-version": 0
     },
     "logme": {
-      "baseline": "2.4.17",
+      "baseline": "2.4.18",
       "port-version": 0
     },
     "loguru": {
