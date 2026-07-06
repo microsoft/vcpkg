@@ -1,0 +1,17 @@
+{
+  "name": "depz-sensor-sdk-c",
+  "version": "0.1.0",
+  "description": "Contract-first C11 decode/codec SDK for the DEPZ USB sensor line (SR04, VL53L8CX/CH, BNO086): CRCs, packet framing, USB identity, firmware container parsing, and the per-sensor decode layer.",
+  "homepage": "https://github.com/depz-ai/depz-sensor-sdk",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
