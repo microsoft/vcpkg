@@ -1,0 +1,11 @@
+flann provides CMake targets:
+
+  find_package(flann CONFIG REQUIRED)
+  # C++ project
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:flann::flann_cpp>,flann::flann_cpp,flann::flann_cpp_s>)
+  # C project
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:flann::flann>,flann::flann,flann::flann_s>)
+
+flann provides pkg-config modules:
+
+  flann

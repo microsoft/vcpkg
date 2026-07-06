@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5fd73ba..ff357f2 100644
+index f79d173..ec76e8a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -155,8 +155,8 @@ if (BUILD_CUDA_LIB)
+@@ -147,9 +147,15 @@ if (BUILD_CUDA_LIB)
      endif(CUDA_FOUND)
  endif(BUILD_CUDA_LIB)
  
@@ -11,8 +11,15 @@ index 5fd73ba..ff357f2 100644
 +find_package(lz4 CONFIG REQUIRED)
 +set(LZ4_LINK_LIBRARIES lz4::lz4)
  include_directories(${LZ4_INCLUDE_DIRS})
++string(APPEND PKG_EXTERNAL_DEPS " liblz4")
++if (CMAKE_BUILD_STATIC_LIBS)
++    set(FLANN_PKG_LIBS "-lflann_s -lflann_cpp_s")
++else()
++    set(FLANN_PKG_LIBS "-lflann -lflann_cpp")
++endif()
  
  #set the C/C++ include path to the "include" directory
+ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/cpp)
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
 index 6b95a71..d78c74a 100644
 --- a/cmake/Config.cmake.in
@@ -28,11 +35,23 @@ index 6b95a71..d78c74a 100644
  include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
  check_required_components("flann")
  
+diff --git a/cmake/flann.pc.in b/cmake/flann.pc.in
+index 07b8d64..84acd82 100644
+--- a/cmake/flann.pc.in
++++ b/cmake/flann.pc.in
+@@ -8,6 +8,6 @@ Name: @PROJECT_NAME@
+ Description: @PKG_DESC@
+ Version: @FLANN_VERSION@
+ Requires: @PKG_EXTERNAL_DEPS@
+-Libs: -L${libdir} @LZ4_STATIC_LDFLAGS@ -lflann -lflann_cpp
++Libs: -L${libdir} @FLANN_PKG_LIBS@
+ Cflags: -I${includedir}
+ 
 diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
-index 7603abc..cb31f6f 100644
+index 7603abc..2a45e95 100644
 --- a/src/cpp/CMakeLists.txt
 +++ b/src/cpp/CMakeLists.txt
-@@ -24,7 +24,9 @@ target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
+@@ -24,19 +24,24 @@ target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
  # export lz4 headers, so that MSVC to creates flann_cpp.lib
  set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
  
@@ -42,13 +61,30 @@ index 7603abc..cb31f6f 100644
 +endif()
  
  if (BUILD_CUDA_LIB)
-     SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-DFLANN_USE_CUDA;-Xcudafe \"--diag_suppress=partial_override\" ;-gencode=arch=compute_52,code=\"sm_52,compute_52\";-gencode=arch=compute_61,code=\"sm_61,compute_61\"")
-@@ -45,9 +47,12 @@ if (BUILD_CUDA_LIB)
+-    SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-DFLANN_USE_CUDA;-Xcudafe \"--diag_suppress=partial_override\" ;-gencode=arch=compute_52,code=\"sm_52,compute_52\";-gencode=arch=compute_61,code=\"sm_61,compute_61\"")
++    SET(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-DFLANN_USE_CUDA;-Xcudafe \"--diag_suppress=partial_override\" ")
+     if(CMAKE_COMPILER_IS_GNUCC)
+ 		set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};-Xcompiler;-fPIC;" )
+         if (NVCC_COMPILER_BINDIR)
+             set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};--compiler-bindir=${NVCC_COMPILER_BINDIR}")
+         endif()
++    elseif(MSVC)
++        list(APPEND CUDA_NVCC_FLAGS "-Xcompiler" "/Zc:preprocessor" "-std=c++17")
+     else()
+ 	    set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS};" )
+     endif()
+     cuda_add_library(flann_cuda_s STATIC ${CU_SOURCES})
++    target_link_libraries(flann_cuda_s ${LZ4_LINK_LIBRARIES})
+     set_property(TARGET flann_cuda_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
+     if (CMAKE_BUILD_STATIC_LIBS)
+         list(APPEND flann_install_targets flann_cuda_s)
+@@ -45,9 +50,13 @@ if (BUILD_CUDA_LIB)
      endif()
  
      cuda_add_library(flann_cuda SHARED ${CU_SOURCES})
 -    list(APPEND flann_install_targets flann_cuda)
 -    set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
++    target_link_libraries(flann_cuda ${LZ4_LINK_LIBRARIES})
 +    if (NOT CMAKE_BUILD_STATIC_LIBS)
 +        list(APPEND flann_install_targets flann_cuda)
 +        set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
@@ -58,7 +94,7 @@ index 7603abc..cb31f6f 100644
  else()
      set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
  endif()
-@@ -94,8 +99,9 @@ if (BUILD_C_BINDINGS)
+@@ -94,8 +103,9 @@ if (BUILD_C_BINDINGS)
  
      add_library(flann SHARED ${C_SOURCES})
      target_link_libraries(flann ${LZ4_LINK_LIBRARIES})
