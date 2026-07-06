@@ -3005,7 +3005,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "26.6",
+      "baseline": "26.7",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -3611,10 +3611,6 @@
     "gsl-lite": {
       "baseline": "1.1.0",
       "port-version": 0
-    },
-    "gsoap": {
-      "baseline": "2.8.112",
-      "port-version": 2
     },
     "gst-rtsp-server": {
       "baseline": "1.28.4",
@@ -9417,7 +9413,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "1.0.9",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "slick-net": {
