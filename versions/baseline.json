@@ -6273,7 +6273,7 @@
       "port-version": 0
     },
     "luajit": {
-      "baseline": "2026-06-16",
+      "baseline": "2026-06-29",
       "port-version": 0
     },
     "luasec": {
