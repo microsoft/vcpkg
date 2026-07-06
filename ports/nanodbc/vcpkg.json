@@ -1,7 +1,6 @@
 {
   "name": "nanodbc",
-  "version": "2.13.0",
-  "port-version": 8,
+  "version": "2.14.0",
   "description": "A small C++ wrapper for the native C ODBC API.",
   "homepage": "https://github.com/nanodbc/nanodbc",
   "supports": "!uwp",
