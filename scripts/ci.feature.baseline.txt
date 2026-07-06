@@ -823,7 +823,6 @@ ngspice:x64-windows-static=fail
 ngtcp2[gnutls]:arm64-windows-static-md=cascade
 ngtcp2[gnutls]:arm64-windows=cascade
 nifticlib:arm64-linux=fail
-nrf-ble-driver:arm64-linux=fail
 nss:x64-windows-static=cascade
 nvidia-cutlass:arm64-linux=cascade
 nvtt[cuda]:arm64-osx=cascade
