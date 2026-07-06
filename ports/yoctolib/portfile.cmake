@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yoctopuce/yoctolib_cpp
     REF "v${VERSION}"
-    SHA512 cfafcde7a47aaa5ca1be3888f2b79e70a477c58e85c42176a93f57d6db18d5df199d2e37218839ebd67270c8e2d335057fd5e1a184db0abca1fada908038fe34
+    SHA512 37559d4127c6cfe862084d63cccfc6a637b7d587ce481db5a82716db951863800b171ad2f8a79fa88e8451bc52334ce7da9aaa29c4434b2b19889d4e1f20efae
     HEAD_REF master
 )
 
