@@ -61,7 +61,7 @@
       "port-version": 0
     },
     "aeron": {
-      "baseline": "1.51.0",
+      "baseline": "1.52.0",
       "port-version": 0
     },
     "air-ctl": {
@@ -85,7 +85,7 @@
       "port-version": 7
     },
     "alembic": {
-      "baseline": "1.8.11",
+      "baseline": "1.8.12",
       "port-version": 0
     },
     "alibabacloud-oss-cpp-sdk-v2": {
@@ -294,7 +294,7 @@
     },
     "arrow": {
       "baseline": "24.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "arrow-adbc": {
       "baseline": "23",
@@ -493,7 +493,7 @@
       "port-version": 0
     },
     "aws-c-sdkutils": {
-      "baseline": "0.2.6",
+      "baseline": "0.2.7",
       "port-version": 0
     },
     "aws-checksums": {
@@ -2037,7 +2037,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.48.0",
+      "baseline": "0.49.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2057,7 +2057,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.12.0",
+      "baseline": "1.15.0",
       "port-version": 0
     },
     "cpp-pinyin": {
@@ -3001,7 +3001,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "26.6",
+      "baseline": "26.7",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -3357,7 +3357,7 @@
       "port-version": 3
     },
     "geo-utils-cpp": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "geogram": {
@@ -3445,7 +3445,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.8.3",
+      "baseline": "7.8.4",
       "port-version": 0
     },
     "glbinding": {
@@ -3473,7 +3473,7 @@
       "port-version": 0
     },
     "glibmm": {
-      "baseline": "2.88.0",
+      "baseline": "2.88.1",
       "port-version": 0
     },
     "glm": {
@@ -3514,7 +3514,7 @@
     },
     "gmp": {
       "baseline": "6.3.0",
-      "port-version": 3
+      "port-version": 4
     },
     "gmsh": {
       "baseline": "4.15.2",
@@ -3607,10 +3607,6 @@
     "gsl-lite": {
       "baseline": "1.1.0",
       "port-version": 0
-    },
-    "gsoap": {
-      "baseline": "2.8.112",
-      "port-version": 2
     },
     "gst-rtsp-server": {
       "baseline": "1.28.4",
@@ -3825,7 +3821,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.6.5",
+      "baseline": "2.6.6",
       "port-version": 0
     },
     "hidapi": {
@@ -4185,7 +4181,7 @@
       "port-version": 2
     },
     "json-c": {
-      "baseline": "0.18-20240915",
+      "baseline": "0.19-20260627",
       "port-version": 0
     },
     "json-dto": {
@@ -5290,7 +5286,7 @@
     },
     "libmagic": {
       "baseline": "5.47",
-      "port-version": 0
+      "port-version": 1
     },
     "libmariadb": {
       "baseline": "3.4.8",
@@ -5885,7 +5881,7 @@
       "port-version": 1
     },
     "libva": {
-      "baseline": "2.23.0",
+      "baseline": "2.24.0",
       "port-version": 0
     },
     "libvault": {
@@ -7417,7 +7413,7 @@
       "port-version": 0
     },
     "openexr": {
-      "baseline": "3.4.12",
+      "baseline": "3.4.13",
       "port-version": 0
     },
     "openfbx": {
@@ -7653,7 +7649,7 @@
       "port-version": 0
     },
     "pango": {
-      "baseline": "1.57.1",
+      "baseline": "1.58.0",
       "port-version": 0
     },
     "pangolin": {
@@ -8410,7 +8406,7 @@
     },
     "qtbase": {
       "baseline": "6.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.11.1",
@@ -8901,7 +8897,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.7.1",
+      "baseline": "4.7.2",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -9082,6 +9078,10 @@
     },
     "scintilla": {
       "baseline": "5.5.8",
+      "port-version": 0
+    },
+    "scinumtools3": {
+      "baseline": "0.5.11",
       "port-version": 0
     },
     "sciplot": {
@@ -9409,7 +9409,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "1.0.9",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "slick-net": {
@@ -10101,7 +10101,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "1.0.6",
+      "baseline": "1.0.7",
       "port-version": 0
     },
     "threadpool": {
@@ -10121,7 +10121,7 @@
       "port-version": 2
     },
     "tiff": {
-      "baseline": "4.7.1",
+      "baseline": "4.7.2",
       "port-version": 0
     },
     "tiledb": {
@@ -10565,7 +10565,7 @@
       "port-version": 8
     },
     "valijson": {
-      "baseline": "1.1.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "value-ptr-lite": {
