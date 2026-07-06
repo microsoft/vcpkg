@@ -3,8 +3,8 @@
   "version-semver": "0.7.1",
   "description": "TA-Lib - Technical Analysis Library",
   "homepage": "https://ta-lib.github.io/",
-  "license": "BSD-2-Clause",
-  "supports": "osx | (windows & !uwp)",
+  "license": "BSD-3-Clause",
+  "supports": "linux | osx | (windows & !uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
