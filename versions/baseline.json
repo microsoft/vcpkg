@@ -4200,10 +4200,6 @@
       "baseline": "2.4.0",
       "port-version": 0
     },
-    "json-spirit": {
-      "baseline": "4.1.0",
-      "port-version": 5
-    },
     "json11": {
       "baseline": "2017-06-20",
       "port-version": 7
