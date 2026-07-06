@@ -1,0 +1,11 @@
+{
+  "name": "chart-plugin",
+  "version": "1.0.0",
+  "description": "A Qt6 QML extension plugin for high-performance charting with SDF and Min-Max decimation.",
+  "homepage": "https://github.com/hnhuy16/chart-plugin",
+  "license": "MIT",
+  "dependencies": [
+    "qtbase",
+    "qtdeclarative"
+  ]
+}
