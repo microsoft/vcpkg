@@ -1,0 +1,9 @@
+sdl3-sound provides CMake targets:
+
+  find_package(SDL3 CONFIG REQUIRED)
+  find_package(SDL3_sound CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE SDL3_sound::SDL3_sound SDL3::SDL3)
+
+sdl3-sound provides pkg-config modules:
+
+  sdl3-sound

@@ -1,0 +1,33 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO icculus/SDL_sound
+    REF "v${VERSION}"
+    SHA512 2bf27cd895938d5913254d57d147255bad5f48d3f9bc9192742087cd1d3023b2874ac65496964a21fa9514164d20ae51b962a89b34c49eee9890780134dbcb96
+    HEAD_REF main
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDLSOUND_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDLSOUND_SHARED)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DSDLSOUND_BUILD_STATIC=${SDLSOUND_STATIC}
+        -DSDLSOUND_BUILD_SHARED=${SDLSOUND_SHARED}
+        -DSDLSOUND_BUILD_DOCS=OFF
+        -DSDLSOUND_BUILD_TEST=OFF
+        -DSDLSOUND_DECODER_MIDI=ON
+        -DSDLSOUND_INSTALL_CMAKEDIR=share/SDL3_sound
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(PACKAGE_NAME SDL3_sound)
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

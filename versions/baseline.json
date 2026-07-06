@@ -9184,6 +9184,10 @@
       "baseline": "3.0.0-preview2",
       "port-version": 0
     },
+    "sdl3-sound": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
     "sdl3-ttf": {
       "baseline": "3.2.2",
       "port-version": 1
