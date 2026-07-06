@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Haivision/srt
     REF "v${VERSION}"
-    SHA512 afb35de76be5c1b8558b3956586b8b7b044aa7709d7ce1b99b6b55e54f72c604eea50ae44962985c68ef681a69accb0a2a7f6a8678b8165e2aeee93632a0ff2f 
+    SHA512 afb35de76be5c1b8558b3956586b8b7b044aa7709d7ce1b99b6b55e54f72c604eea50ae44962985c68ef681a69accb0a2a7f6a8678b8165e2aeee93632a0ff2f
     HEAD_REF master
     PATCHES
         fix-static.patch
