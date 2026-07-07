@@ -38,7 +38,7 @@ index 6a2c57d..6c12992 100644
 +    NO_DEFAULT_PATH
 +)
 +list(APPEND PLATFORM_LIBS ${FASTFEAT})
-+set(LIBS_PRIVATE "${LIBS_PRIVATE} -lfastfeat")
++list(APPEND PC_LIBS_PRIVATE -lfastfeat)
 +
  if(BUILD_SHARED_LIBS)
      set(SVT_AV1_TARGET SVT-AV1-shared)
