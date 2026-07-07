@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 # Add apt repos
 
 DEBIAN_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
-NVIDIA_REPO_VERSION=debian13
+NVIDIA_REPO_VERSION="debian${DEBIAN_VERSION_ID}"
 DEBIAN_ARCHITECTURE=$(dpkg --print-architecture)
 
 case "$DEBIAN_ARCHITECTURE" in
@@ -49,7 +49,7 @@ dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 
 apt-get -y update
-apt-get -y upgrade
+apt-get -y dist-upgrade
 
 # Add apt packages
 
