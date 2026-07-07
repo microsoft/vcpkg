@@ -18,6 +18,8 @@ vcpkg_cmake_configure(
     -DLOGME_BUILD_EXAMPLES=OFF
     -DLOGME_BUILD_TOOLS=OFF
     -DUSE_JSONCPP=ON
+    -DUSE_ZLIB=OFF
+    -DLOGME_FMT_FORMAT=OFF
 )
 
 vcpkg_cmake_install()
@@ -25,5 +27,12 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/logme)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/Logme/Json")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Logme/Types.h" "!defined(_LOGME_STATIC_BUILD_)" "1")
+else()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Logme/Types.h" "!defined(_LOGME_STATIC_BUILD_)" "0")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
