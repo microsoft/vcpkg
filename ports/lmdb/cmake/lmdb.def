@@ -34,6 +34,7 @@ EXPORTS
    mdb_txn_begin
    mdb_txn_env
    mdb_txn_id
+   mdb_txn_flags
    mdb_txn_commit
    mdb_txn_prepare
    mdb_env_rollback
