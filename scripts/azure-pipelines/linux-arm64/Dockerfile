@@ -1,4 +1,4 @@
-FROM ubuntu:noble-20260410
+FROM debian:trixie-20260623
 
 ARG BUILD_DATE
 ARG POWERSHELL_VERSION=7.6.0
@@ -10,8 +10,8 @@ set -eux
 apt-get update
 apt-get install --no-install-recommends -y curl gnupg ca-certificates
 
-UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
-curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
+DEBIAN_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
+curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/debian/${DEBIAN_VERSION_ID}/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 

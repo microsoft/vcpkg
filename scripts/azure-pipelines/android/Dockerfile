@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:noble-20260113
+FROM debian:trixie-20260623
 
-ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
+ADD https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.18+8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.18_8.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.18_8.tar.gz
 ADD https://dl.google.com/android/repository/commandlinetools-linux-14742923_latest.zip /commandlinetools-linux-14742923_latest.zip
 ADD https://dl.google.com/android/repository/build-tools_r36.1_linux.zip /build-tools_r36.1_linux.zip
@@ -42,7 +42,7 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb-cursor-dev libxkbcommon-x11-dev libsm6 libsm-dev"
 
 ## PowerShell
-ENV APT_PACKAGES="$APT_PACKAGES powershell azcopy"
+ENV APT_PACKAGES="$APT_PACKAGES powershell"
 
 # The BUILD_DATE argument forces cache invalidation so we get updated apt dependencies
 ARG BUILD_DATE
@@ -68,6 +68,14 @@ apt-get -y update
 apt-get -y dist-upgrade
 
 apt-get -y --no-install-recommends install $APT_PACKAGES
+
+# AzCopy
+curl -L -o /tmp/azcopy.tar.gz https://aka.ms/downloadazcopy-v10-linux
+mkdir -p /tmp/azcopy
+tar xzf /tmp/azcopy.tar.gz -C /tmp/azcopy
+find /tmp/azcopy -name azcopy -type f -exec cp '{}' /usr/local/bin/azcopy ';'
+chmod +x /usr/local/bin/azcopy
+rm -rf /tmp/azcopy /tmp/azcopy.tar.gz
 
 # OpenJDK
 tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.18_8.tar.gz

@@ -30,7 +30,7 @@ jobs:
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-02-10'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-07-07'
   - name: LINUX_DOCKER_IMAGE
     value: ${{ parameters.linuxDockerImage }}
   steps:
