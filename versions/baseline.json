@@ -1597,8 +1597,8 @@
       "port-version": 0
     },
     "calceph": {
-      "baseline": "4.0.5",
-      "port-version": 2
+      "baseline": "5.0.0",
+      "port-version": 0
     },
     "camport3": {
       "baseline": "1.6.75",
@@ -4200,10 +4200,6 @@
       "baseline": "2.4.0",
       "port-version": 0
     },
-    "json-spirit": {
-      "baseline": "4.1.0",
-      "port-version": 5
-    },
     "json11": {
       "baseline": "2017-06-20",
       "port-version": 7
@@ -4670,7 +4666,7 @@
     },
     "lcms": {
       "baseline": "2.19.1",
-      "port-version": 0
+      "port-version": 1
     },
     "lely-core": {
       "baseline": "2.3.5",
@@ -6273,7 +6269,7 @@
       "port-version": 0
     },
     "luajit": {
-      "baseline": "2026-06-16",
+      "baseline": "2026-06-29",
       "port-version": 0
     },
     "luasec": {
@@ -7136,10 +7132,6 @@
       "baseline": "11.3.1",
       "port-version": 0
     },
-    "nrf-ble-driver": {
-      "baseline": "4.1.4",
-      "port-version": 2
-    },
     "nspr": {
       "baseline": "4.36",
       "port-version": 1
@@ -7407,10 +7399,6 @@
     "opencv4": {
       "baseline": "4.12.0",
       "port-version": 5
-    },
-    "opendnp3": {
-      "baseline": "3.1.2",
-      "port-version": 0
     },
     "openexr": {
       "baseline": "3.4.13",
@@ -9217,7 +9205,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.15.2",
+      "baseline": "0.15.3",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9243,10 +9231,6 @@
     "serf": {
       "baseline": "1.3.10",
       "port-version": 2
-    },
-    "sese": {
-      "baseline": "2.3.0",
-      "port-version": 3
     },
     "sf2cute": {
       "baseline": "0.2.0",
@@ -9409,7 +9393,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "1.1.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "slick-net": {
@@ -10702,10 +10686,6 @@
     },
     "verdict": {
       "baseline": "1.4.5",
-      "port-version": 0
-    },
-    "via-httplib": {
-      "baseline": "1.9.0",
       "port-version": 0
     },
     "vili": {
