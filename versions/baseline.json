@@ -2181,8 +2181,8 @@
       "port-version": 0
     },
     "cr": {
-      "baseline": "2020-04-26",
-      "port-version": 2
+      "baseline": "2026-06-23",
+      "port-version": 0
     },
     "crashcatch": {
       "baseline": "1.4.0",
