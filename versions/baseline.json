@@ -1732,6 +1732,10 @@
       "baseline": "2.1.4",
       "port-version": 0
     },
+    "chess-engine": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "chipmunk": {
       "baseline": "7.0.3",
       "port-version": 7
