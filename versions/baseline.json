@@ -2869,7 +2869,7 @@
       "port-version": 1
     },
     "ethindp-prism": {
-      "baseline": "0.16.7",
+      "baseline": "0.17.0",
       "port-version": 0
     },
     "etl": {
