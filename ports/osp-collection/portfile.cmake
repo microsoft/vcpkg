@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" OPTIONS -DCOLLECTION_BUILD_TESTS=OFF)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "collection" CONFIG_PATH "lib/cmake/collection")
 
