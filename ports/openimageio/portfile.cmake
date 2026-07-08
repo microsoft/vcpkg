@@ -6,6 +6,10 @@ set(PATCHES
     fix-openexr-target-missing.patch
 )
 
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    list(APPEND PATCHES fix-emscripten.patch)
+endif()
+
 if(VCPKG_TARGET_IS_OSX)
     execute_process(COMMAND xcrun --show-sdk-version
             OUTPUT_VARIABLE OSX_SDK_VERSION

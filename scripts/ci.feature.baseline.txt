@@ -1359,6 +1359,7 @@ sqlpp11-connector-mysql[mysql]:arm64-windows=cascade
 sqlpp11-connector-mysql[mysql]:x64-windows-static-md=cascade
 sqlpp11-connector-mysql[mysql]:x64-windows-static=cascade
 sqlpp11-connector-mysql[mysql]:x86-windows=cascade
+sqlpp23[core,mariadb,mysql]=options # the headers of the dependencies collide
 steam-audio:arm64-linux=cascade
 stella-cv-fbow:arm64-linux=cascade
 subversion(uwp | staticcrt | arm)=cascade
