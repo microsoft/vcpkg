@@ -1,7 +1,7 @@
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_BUILD_TYPE release)  # host tool for building directx-dxc
 
-# Stay up to date with directx-dxc-tblgen
-# dawn requires specific version of directx-dxc, when update this port, please check dawn's requirements
+# Stay up to date with directx-dxc
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/DirectXShaderCompiler
@@ -13,7 +13,6 @@ vcpkg_from_github(
         # Update this patch file when update version
         002-fix-gen-version-inc.patch
         003-fix-python.patch
-        004-fix-cross-compilation.patch
 )
 
 function(z_vcpkg_from_github_to_path)
@@ -68,9 +67,6 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DDXC_ENABLE_HOST_TOOLS=OFF
-        "-DLLVM_TABLEGEN=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/directx-dxc-tblgen/llvm-tblgen${VCPKG_HOST_EXECUTABLE_SUFFIX}"
-        "-DCLANG_TABLEGEN=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/directx-dxc-tblgen/clang-tblgen${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "-DPython3_EXECUTABLE=${PYTHON3}"
         -DHLSL_OPTIONAL_PROJS_IN_DEFAULT=OFF
         -DHLSL_ENABLE_ANALYZE=OFF
@@ -105,9 +101,8 @@ vcpkg_cmake_configure(
         CLANG_CL
 )
 
-vcpkg_cmake_build(TARGET "dxildll;dxcompiler;dxc;dxv")
+vcpkg_cmake_build(TARGET "llvm-tblgen;clang-tblgen")
 
-set(BUILD_DBG_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 set(BUILD_REL_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 if(NOT EXISTS "${BUILD_REL_DIR}")
@@ -115,80 +110,10 @@ if(NOT EXISTS "${BUILD_REL_DIR}")
 endif()
 
 file(INSTALL
-    "${SOURCE_PATH}/include/dxc/dxcapi.h"
-    "${SOURCE_PATH}/include/dxc/dxcerrors.h"
-    "${SOURCE_PATH}/include/dxc/dxcisense.h"
-    "${SOURCE_PATH}/include/dxc/dxcpix.h"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/dxc"
+    "${BUILD_REL_DIR}/bin/llvm-tblgen${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    "${BUILD_REL_DIR}/bin/clang-tblgen${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
+    USE_SOURCE_PERMISSIONS
 )
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(Z_VCPKG_DXC_TARGET_IS_WINDOWS ON)
-
-    if(EXISTS "${BUILD_DBG_DIR}")
-        file(INSTALL
-            "${BUILD_DBG_DIR}/bin/dxil.dll"
-            "${BUILD_DBG_DIR}/bin/dxil.pdb"
-            "${BUILD_DBG_DIR}/bin/dxcompiler.dll"
-            "${BUILD_DBG_DIR}/bin/dxcompiler.pdb"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
-        )
-        file(INSTALL
-            "${BUILD_DBG_DIR}/lib/dxil.lib"
-            "${BUILD_DBG_DIR}/lib/dxcompiler.lib"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
-        )
-    endif()
-
-    file(INSTALL
-        "${BUILD_REL_DIR}/bin/dxil.dll"
-        "${BUILD_REL_DIR}/bin/dxil.pdb"
-        "${BUILD_REL_DIR}/bin/dxcompiler.dll"
-        "${BUILD_REL_DIR}/bin/dxcompiler.pdb"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-    )
-    file(INSTALL
-        "${BUILD_REL_DIR}/lib/dxil.lib"
-        "${BUILD_REL_DIR}/lib/dxcompiler.lib"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-    )
-
-    file(INSTALL
-        "${BUILD_REL_DIR}/bin/dxil.dll"
-        "${BUILD_REL_DIR}/bin/dxcompiler.dll"
-        "${BUILD_REL_DIR}/bin/dxc.exe"
-        "${BUILD_REL_DIR}/bin/dxv.exe"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-    )
-else()
-    set(Z_VCPKG_DXC_TARGET_IS_WINDOWS OFF)
-
-    file(INSTALL
-        "${SOURCE_PATH}/include/dxc/WinAdapter.h"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/include/dxc"
-    )
-
-    if(EXISTS "${BUILD_DBG_DIR}")
-        file(INSTALL
-            "${BUILD_DBG_DIR}/lib/libdxil.so"
-            "${BUILD_DBG_DIR}/lib/libdxcompiler.so"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
-        )
-    endif()
-
-    file(INSTALL
-        "${BUILD_REL_DIR}/lib/libdxil.so"
-        "${BUILD_REL_DIR}/lib/libdxcompiler.so"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-    )
-
-    file(INSTALL
-        "${BUILD_REL_DIR}/bin/dxc"
-        "${BUILD_REL_DIR}/bin/dxv"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-        USE_SOURCE_PERMISSIONS
-    )
-endif()
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/directx-dxc-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/directx-dxc-config.cmake" @ONLY)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")

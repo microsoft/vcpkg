@@ -1,16 +1,12 @@
 {
-  "name": "directx-dxc",
+  "name": "directx-dxc-tblgen",
   "version-date": "2026-06-24",
-  "description": "DirectX Shader Compiler (LLVM/Clang)",
+  "description": "Host tool llvm-tblgen and clang-tblgen for directx-dxc build",
   "homepage": "https://github.com/microsoft/DirectXShaderCompiler",
   "documentation": "https://github.com/microsoft/DirectXShaderCompiler/wiki",
   "license": null,
-  "supports": "(windows & !arm32 & !uwp & !xbox) | (linux & x64)",
+  "supports": "native & ((windows & !arm32 & !uwp & !xbox) | (linux & x64))",
   "dependencies": [
-    {
-      "name": "directx-dxc-tblgen",
-      "host": true
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
