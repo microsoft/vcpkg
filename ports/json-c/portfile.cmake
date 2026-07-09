@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO json-c/json-c
     REF "json-c-${VERSION}"
 
-    SHA512 219d8c0da9a4016b74af238cc15dbec1f369a07de160bcc548d80279028e1b5d8d928deb13fec09c96a085fc0ecf10090e309cbe72d0081aca864433c4ae01db
+    SHA512 3be9058351acb3d9a66c7ae850391ebaa80472b42ee3f013f8b655743eb41b55513e0546c6798399af98ed049b80d11c93286ea3f5af26dc5f199905a28c4db1
     HEAD_REF master
 )
 
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DBUILD_STATIC_LIBS=${JSON_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${JSON_BUILD_SHARED}
+        -DDISABLE_EXTRA_LIBS=ON
 )
 
 vcpkg_cmake_install()

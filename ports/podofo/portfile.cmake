@@ -2,21 +2,21 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO podofo/podofo
     REF "${VERSION}"
-    SHA512 cb5608f7496974c0d546c73000d2551913e18a13319b991a7532a46dd04ee7305e0df4a1233156d0171cd965d0af1cf99a27b2400fcc6117a5d1f04c0ad8b364
-    PATCHES
-        dependencies.diff
+    SHA512 429cce822d9b2a4158540d01c61ce7dd2e543413cd5b2d188a9b33d7aa063c138382568383b3bccda0d787495992d1cac10a6321b92a639661f60e241ac7c484
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/3rdparty/date"
-    "${SOURCE_PATH}/3rdparty/fast_float.h"
-    "${SOURCE_PATH}/3rdparty/fmt"
+    "${SOURCE_PATH}/3rdparty/fastfloat"
+    "${SOURCE_PATH}/3rdparty/fmtlib"
+    "${SOURCE_PATH}/3rdparty/tcbspan"
+    "${SOURCE_PATH}/3rdparty/tclap"
     "${SOURCE_PATH}/3rdparty/utf8cpp"
     "${SOURCE_PATH}/3rdparty/utf8proc"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fontconfig  VCPKG_LOCK_FIND_PACKAGE_Fontconfig
+        fontconfig  PODOFO_WITH_FONTMANAGER
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PODOFO_BUILD_STATIC)
@@ -28,6 +28,13 @@ vcpkg_cmake_configure(
         -DPKG_CONFIG_FOUND=true # enable pc file for shared linkage
         -DPODOFO_BUILD_LIB_ONLY=1
         -DPODOFO_BUILD_STATIC=${PODOFO_BUILD_STATIC}
+        -DPODOFO_DEVENDOR_DATE=1
+        -DPODOFO_DEVENDOR_FASTFLOAT=1
+        -DPODOFO_DEVENDOR_FMT=1
+        -DPODOFO_DEVENDOR_FMT_HEADER_ONLY=1
+        -DPODOFO_DEVENDOR_TCBSPAN=1
+        -DPODOFO_DEVENDOR_UTF8CPP=1
+        -DPODOFO_DEVENDOR_UTF8PROC=1
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-find-tbb.patch
         0003-disable-werror.patch
         0004-support-eigen3-5.patch
+        0005-avoid-stdext-checked-array-iterator.diff # ~= https://github.com/esa/pagmo2/commit/d4daedc9f865bf9e926946c21e62c4a4eebf353e
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

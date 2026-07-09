@@ -1,3 +1,3 @@
-set(qtmultimedia_HASH "91f494e1784d1cbdfc683d18c0c1b086845ba5ff093777114996b88c14a59210358fa52527bcf79dc7166e83ce95c15b6d2a1793fdc1d3e7016ae8b066eaa9a8")
-set(qtmultimedia_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtmultimedia-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtmultimedia-everywhere-src-6.10.3.tar.xz")
-set(qtmultimedia_FILENAME "qtmultimedia-everywhere-src-6.10.3.tar.xz")
+set(qtmultimedia_HASH "accd9534b96df8ff464c219bf579c3da43e30b33efb35fc7e311c9e133cb57252f433422ca917f83b738e67cf925b19e0847ffcfaa92fe0e3d21b603dd580cd5")
+set(qtmultimedia_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtmultimedia-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtmultimedia-everywhere-src-6.11.1.tar.xz")
+set(qtmultimedia_FILENAME "qtmultimedia-everywhere-src-6.11.1.tar.xz")

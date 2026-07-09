@@ -1,5 +1,5 @@
 diff --git a/src/ggml-vulkan/CMakeLists.txt b/src/ggml-vulkan/CMakeLists.txt
-index 3f9524c..556e39e 100644
+index 04c142c2..40a2791f 100644
 --- a/src/ggml-vulkan/CMakeLists.txt
 +++ b/src/ggml-vulkan/CMakeLists.txt
 @@ -125,6 +125,12 @@ if (Vulkan_FOUND)

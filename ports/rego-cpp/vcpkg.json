@@ -1,6 +1,7 @@
 {
   "name": "rego-cpp",
   "version": "1.4.1",
+  "port-version": 1,
   "description": "A C++ interpreter for the OPA Rego policy language",
   "homepage": "https://github.com/microsoft/rego-cpp",
   "license": "MIT",

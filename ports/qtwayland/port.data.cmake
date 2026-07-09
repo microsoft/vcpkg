@@ -1,3 +1,3 @@
-set(qtwayland_HASH "e8fd87143b8a0def113d02ae43931ed8c8b5f1917926481398bf0b617a0c70ef79ba20bf8359881f902b318b7412765a8a479c50d55a7267723cb9c76bd8d4b1")
-set(qtwayland_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtwayland-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtwayland-everywhere-src-6.10.3.tar.xz")
-set(qtwayland_FILENAME "qtwayland-everywhere-src-6.10.3.tar.xz")
+set(qtwayland_HASH "97c9aa8a75d68d3ba5f28e86dd2af7fc3fd2a32a190ffc4c5b5145a98e7657627dbb2b63893f241d009baa72de7beaebfcf91282e731b7985c240d204c5aab9b")
+set(qtwayland_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtwayland-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtwayland-everywhere-src-6.11.1.tar.xz")
+set(qtwayland_FILENAME "qtwayland-everywhere-src-6.11.1.tar.xz")

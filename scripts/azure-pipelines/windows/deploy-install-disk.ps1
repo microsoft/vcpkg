@@ -3,7 +3,7 @@
 
 param([string]$SasToken)
 
-if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
@@ -32,14 +32,14 @@ Param(
 
     try {
         Write-Host "Attempting to online physical disk $DiskNumber"
-        [string]$diskpartScriptPath = Get-TempFilePath -Extension 'txt'
+        [System.IO.FileInfo]$diskpartScriptPath = Get-TempFilePath -Extension 'txt'
         [string]$diskpartScriptContent =
         "SELECT DISK $DiskNumber`r`n" +
         "ONLINE DISK`r`n"
 
         Write-Host "Writing diskpart script to $diskpartScriptPath with content:"
         Write-Host $diskpartScriptContent
-        Set-Content -Path $diskpartScriptPath -Value $diskpartScriptContent
+        Set-Content -LiteralPath $diskpartScriptPath -Value $diskpartScriptContent
         Write-Host 'Invoking DISKPART...'
         & diskpart.exe /s $diskpartScriptPath
 
@@ -52,7 +52,7 @@ Param(
         "ASSIGN LETTER=$Letter`r`n"
         Write-Host "Writing diskpart script to $diskpartScriptPath with content:"
         Write-Host $diskpartScriptContent
-        Set-Content -Path $diskpartScriptPath -Value $diskpartScriptContent
+        Set-Content -LiteralPath $diskpartScriptPath -Value $diskpartScriptContent
         Write-Host 'Invoking DISKPART...'
         & diskpart.exe /s $diskpartScriptPath
     }

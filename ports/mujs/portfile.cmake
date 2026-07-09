@@ -4,10 +4,9 @@ endif()
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  GITHUB_HOST https://codeberg.org
-  REPO ccxvii/mujs
+  REPO ArtifexSoftware/mujs
   REF "${VERSION}"
-  SHA512 b553c09f2994b54ef6aa48ece3e6f8355ea69c6ec9ee2ea101fd33b3054dd6b57482c923c063929b3f108a5244ab51ffbd807d5a1d0f3f4ed4f40896ac97ab87
+  SHA512 a3be06a861f88fe8b10151bc2e56c19b8122078579f3c65a84f0874385d1e7c90dbc7891eff5c78c75c290fff62160a3babc43717fe03982668ca7aa40289552
   HEAD_REF master
 )
 

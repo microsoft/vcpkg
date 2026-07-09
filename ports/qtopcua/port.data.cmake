@@ -1,3 +1,3 @@
-set(qtopcua_HASH "4ebff748066084dfbdc076fb3b16bece49e046665bd4acef18f91ef5f211471f1840a59abf9fdd8252137b678c7e612b39bdf719a18cfdabb0e50de3547dc368")
-set(qtopcua_URL "https://github.com/qt/qtopcua/archive/v6.10.3.tar.gz")
-set(qtopcua_FILENAME "qt-qtopcua-v6.10.3.tar.gz")
+set(qtopcua_HASH "e4c305e6e908680563dc023026cfc5af5ebe2b15c1995956142a684746d5ae8d3b2bc4d503034decf180988619c4c6198480feba973bd6f2584d4b9e351cfb40")
+set(qtopcua_URL "https://github.com/qt/qtopcua/archive/v6.11.1.tar.gz")
+set(qtopcua_FILENAME "qt-qtopcua-v6.11.1.tar.gz")

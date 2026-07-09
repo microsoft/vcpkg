@@ -1,0 +1,18 @@
+{
+  "name": "box3d",
+  "version-semver": "0.1.0",
+  "description": "A 3D physics engine for games",
+  "homepage": "https://github.com/erincatto/box3d",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

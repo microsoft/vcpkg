@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a00eb10..2c525765 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -73,10 +73,10 @@ if(BUILD_SQLCIPHER_CONNECTOR)
+     add_component(NAME SQLCipher PACKAGE SQLCipher DEPENDENCIES SQLCipher::SQLCipher DEFINES SQLPP_USE_SQLCIPHER HEADER_DIR sqlite3 MODULE_INTERFACE sqlpp23.sqlite3.cppm)
+ endif()
+ if(BUILD_MYSQL_CONNECTOR)
+-    add_component(NAME MySQL PACKAGE MySQL DEPENDENCIES MySQL::MySQL HEADER_DIR mysql MODULE_INTERFACE sqlpp23.mysql.cppm)
++    add_component(NAME MySQL PACKAGE unofficial-libmysql DEPENDENCIES unofficial::libmysql::libmysql HEADER_DIR mysql MODULE_INTERFACE sqlpp23.mysql.cppm)
+ endif()
+ if(BUILD_MARIADB_CONNECTOR)
+-    add_component(NAME MariaDB PACKAGE MariaDB DEPENDENCIES MariaDB::MariaDB HEADER_DIR mysql MODULE_INTERFACE sqlpp23.mysql.cppm)
++    add_component(NAME MariaDB PACKAGE unofficial-libmariadb DEPENDENCIES unofficial::libmariadb HEADER_DIR mysql MODULE_INTERFACE sqlpp23.mysql.cppm)
+ endif()
+ if(BUILD_POSTGRESQL_CONNECTOR)
+     add_component(NAME PostgreSQL PACKAGE PostgreSQL DEPENDENCIES PostgreSQL::PostgreSQL HEADER_DIR postgresql MODULE_INTERFACE sqlpp23.postgresql.cppm)
+diff --git a/cmake/configs/Sqlpp23MariaDBConfig.cmake b/cmake/configs/Sqlpp23MariaDBConfig.cmake
+index 32a594a9..088f88a4 100644
+--- a/cmake/configs/Sqlpp23MariaDBConfig.cmake
++++ b/cmake/configs/Sqlpp23MariaDBConfig.cmake
+@@ -1,2 +1,2 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(MariaDB)
+\ No newline at end of file
++find_dependency(unofficial-libmariadb)
+\ No newline at end of file
+diff --git a/cmake/configs/Sqlpp23MySQLConfig.cmake b/cmake/configs/Sqlpp23MySQLConfig.cmake
+index 0d2a5b3b..16f5e934 100644
+--- a/cmake/configs/Sqlpp23MySQLConfig.cmake
++++ b/cmake/configs/Sqlpp23MySQLConfig.cmake
+@@ -1,2 +1,2 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(MySQL)
+\ No newline at end of file
++find_dependency(unofficial-libmysql)
+\ No newline at end of file

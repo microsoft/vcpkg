@@ -1,8 +1,8 @@
 diff --git a/simpleble/CMakeLists.txt b/simpleble/CMakeLists.txt
-index a416c54..a78e345 100644
+index 1c2cd5c..367672f 100644
 --- a/simpleble/CMakeLists.txt
 +++ b/simpleble/CMakeLists.txt
-@@ -158,15 +158,16 @@ set(SIMPLEBLE_DONGL_SOURCES
+@@ -157,15 +157,16 @@ set(SIMPLEBLE_DONGL_SOURCES
      ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/serial/ProtocolBase.cpp
      ${CMAKE_CURRENT_SOURCE_DIR}/src/backends/dongl/serial/Wire.cpp
  

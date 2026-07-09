@@ -1,7 +1,7 @@
 {
   "name": "cctag",
   "version-semver": "1.0.4",
-  "port-version": 1,
+  "port-version": 2,
   "maintainers": "alicevision-team@googlegroups.com",
   "description": "Computer vision library for detecting CCTag markers made up of concentric circles",
   "homepage": "https://github.com/alicevision/CCTag",
@@ -11,6 +11,10 @@
   "dependencies": [
     "boost-accumulators",
     "boost-algorithm",
+    {
+      "name": "boost-config",
+      "version>=": "1.91.0"
+    },
     "boost-container",
     "boost-date-time",
     "boost-exception",
@@ -31,7 +35,6 @@
     "boost-serialization",
     "boost-spirit",
     "boost-stacktrace",
-    "boost-static-assert",
     "boost-test",
     "boost-thread",
     "boost-throw-exception",

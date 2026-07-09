@@ -4,12 +4,11 @@ if ("polyfill-cxx20" IN_LIST FEATURES)
     ]=])
 endif()
 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF b3c9308f143e27161c40f6d52a8fd18e8f05761b
-    SHA512 eb1b629b00fc28da939b0766ce567896da098401d71bd65b895f34ccd805d5ac99c0e45cc1733e63ce985c22b6d2118e576fb49a8e3a6f02170b9fe378e801bd
+    REF 20260506
+    SHA512 d565298a7709a34482977406a7290cf109d44a428eb96c1ab788ceb8529ee4aa5736a8db9f51b0aeedb90c54bea00615038d24d0b26336aa6959fc11b8835ff6
     HEAD_REF develop
 )
 
@@ -21,6 +20,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_from_github(
+    OUT_SOURCE_PATH WG14_SIGNALS_SOURCE_PATH
+    REPO ned14/wg14_signals
+    REF 36d3cdb66993078c8fecba93e2a5f2c549572d64
+    SHA512 096d8a539fc09635ca4ea11907244eef06d856719dd5fb4a1f07264c1b1896e6bfe6754af164435adbb57462c03779b90fdb12e284c9855a1d22274d53345fee
+    HEAD_REF main
+)
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS LLFIO_FEATURE_OPTIONS
     FEATURES
@@ -30,6 +37,8 @@ vcpkg_check_features(
 # LLFIO expects ntkernel-error-category to live inside its include directory
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
 file(RENAME "${NTKEC_SOURCE_PATH}" "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/llfio/wg14_signals")
+file(RENAME "${WG14_SIGNALS_SOURCE_PATH}" "${SOURCE_PATH}/include/llfio/wg14_signals")
 
 set(extra_config)
 # cmake does not correctly set CMAKE_SYSTEM_PROCESSOR when targeting ARM on Windows
