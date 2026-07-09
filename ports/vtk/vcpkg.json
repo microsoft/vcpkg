@@ -228,13 +228,6 @@
             "seacas",
             "vtkm"
           ]
-        },
-        {
-          "name": "vtk-m",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ]
         }
       ]
     },

@@ -1,5 +1,5 @@
 diff --git a/cmake/TPLs/FindTPLMETIS.cmake b/cmake/TPLs/FindTPLMETIS.cmake
-index 90911a3..bde1e25 100644
+index 90911a3..f4c94d8 100644
 --- a/cmake/TPLs/FindTPLMETIS.cmake
 +++ b/cmake/TPLs/FindTPLMETIS.cmake
 @@ -53,8 +53,8 @@
@@ -17,7 +17,7 @@ index 90911a3..bde1e25 100644
 +  INNER_FIND_PACKAGE_NAME "metis CONFIG"
 +  IMPORTED_TARGETS_FOR_ALL_LIBS metis )
 diff --git a/cmake/TPLs/FindTPLMatio.cmake b/cmake/TPLs/FindTPLMatio.cmake
-index c76713a..e57b5be 100644
+index c76713a..72729d0 100644
 --- a/cmake/TPLs/FindTPLMatio.cmake
 +++ b/cmake/TPLs/FindTPLMatio.cmake
 @@ -56,7 +56,9 @@ if (${CMAKE_VERSION} GREATER "3.13")
@@ -35,7 +35,7 @@ index c76713a..e57b5be 100644
 +  IMPORTED_TARGETS_FOR_ALL_LIBS matio::matio )
 +
 diff --git a/cmake/TPLs/FindTPLParMETIS.cmake b/cmake/TPLs/FindTPLParMETIS.cmake
-index 2dc2c14..9bc04ae 100644
+index 2dc2c14..2a69ded 100644
 --- a/cmake/TPLs/FindTPLParMETIS.cmake
 +++ b/cmake/TPLs/FindTPLParMETIS.cmake
 @@ -54,7 +54,8 @@
@@ -70,7 +70,7 @@ index cc607e9..069a37c 100644
 +  INNER_FIND_PACKAGE_NAME ZLIB
 +  IMPORTED_TARGETS_FOR_ALL_LIBS ZLIB::ZLIB )
 diff --git a/cmake/tribits/common_tpls/FindTPLCGNS.cmake b/cmake/tribits/common_tpls/FindTPLCGNS.cmake
-index 649ab49..f9a4a5d 100644
+index 649ab49..22b1207 100644
 --- a/cmake/tribits/common_tpls/FindTPLCGNS.cmake
 +++ b/cmake/tribits/common_tpls/FindTPLCGNS.cmake
 @@ -55,7 +55,7 @@ if ((CGNS_ALLOW_MODERN AND HDF5_FOUND_MODERN_CONFIG_FILE) OR CGNS_FORCE_MODERN)
@@ -148,6 +148,28 @@ index 6e8d537..acfd00d 100644
    void ParallelUtils::broadcast(IOSS_MAYBE_UNUSED std::string &my_str,
                                  IOSS_MAYBE_UNUSED int          root) const
    {
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h b/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h
+index 0a1c064..4467275 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h
++++ b/packages/seacas/libraries/ioss/src/Ioss_ScopeGuard.h
+@@ -53,7 +53,7 @@ namespace Ioss {
+     mutable bool dismissed_{false};
+ 
+   public:
+-    ScopeGuardImplBase() = default;
++    ScopeGuardImplBase();
+     void Dismiss() const { dismissed_ = true; }
+   };
+ 
+@@ -63,6 +63,8 @@ namespace Ioss {
+ #endif
+   typedef const ScopeGuardImplBase &ScopeGuard; // NOLINT
+ 
++  ScopeGuardImplBase::ScopeGuardImplBase() = default;
++
+   template <typename F> class ScopeGuardImpl0 : public ScopeGuardImplBase
+   {
+   public:
 diff --git a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.h b/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.h
 index 7de4793..0e2113d 100644
 --- a/packages/seacas/libraries/ioss/src/text_mesh/Iotm_TextMesh.h
@@ -584,7 +606,7 @@ index f07b316..770235c 100644
                              void_int    *elem_ids, /* Vector of element IDs */
                              void_int    *side_ids, /* Vector of side IDs */
 diff --git a/packages/seacas/libraries/nemesis/nemesis_cfg.h.in b/packages/seacas/libraries/nemesis/nemesis_cfg.h.in
-index b3a53a7..e854744 100755
+index b3a53a7..e854744 100644
 --- a/packages/seacas/libraries/nemesis/nemesis_cfg.h.in
 +++ b/packages/seacas/libraries/nemesis/nemesis_cfg.h.in
 @@ -1,8 +1,10 @@
