@@ -278,7 +278,11 @@ function(z_vcpkg_make_prepare_programs out_env)
             endif()
         endforeach()
 
-        if (NOT arg_DISABLE_MSVC_WRAPPERS AND NOT VCPKG_TARGET_IS_MINGW)
+        # The compile/ar-lib/windres-rc wrappers translate unix-style command lines
+        # for cl-style tools; compilers with a GNU-style frontend (e.g. clang
+        # targeting MSVC) take unix-style command lines directly and must not be
+        # wrapped, like they already are not for the ARFLAGS above.
+        if (NOT arg_DISABLE_MSVC_WRAPPERS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -304,13 +308,22 @@ function(z_vcpkg_make_prepare_programs out_env)
                 z_vcpkg_append_to_configure_environment(configure_env AR "ar-lib lib.exe -verbose")
             endif()
         else()
-            z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
-            z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-            z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+            # ABI flags (--target etc.) are extracted out of the compiler flags
+            # by z_vcpkg_make_prepare_flags and belong with the compiler itself,
+            # like the non-windows path below does. cl-style compilers never
+            # have any, but a GNU-frontend compiler targeting windows (clang)
+            # needs them to drive for the right platform.
+            list(JOIN ABIFLAGS_${arg_CONFIG} " " abiflags)
+            if(NOT abiflags STREQUAL "")
+                string(PREPEND abiflags " ")
+            endif()
+            z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags} -E")
+            z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags}")
+            z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}${abiflags}")
             if(NOT is_crosscompiling)
-                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
-                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags}")
+                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags} -E")
+                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}${abiflags}")
             else()
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
