@@ -119,6 +119,61 @@ elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     if(NOT " ${VCPKG_DETECTED_CMAKE_C_FLAGS} " MATCHES " -pthread ")
         vcpkg_list(APPEND CONFIGURE_OPTIONS no-threads)
     endif()
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    # clang with the GNU-style driver targeting windows-msvc. The Configure
+    # target adds what the environment cannot: the target triple, the CRT
+    # selection, Windows system defines and link libraries, the perlasm
+    # flavor and the DLL link rules.
+    if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        message(FATAL_ERROR "Only x64 is implemented for clang targeting windows-msvc")
+    endif()
+    # The FIPS provider is a loadable module, and modules stay disabled here.
+    if("fips" IN_LIST FEATURES)
+        message(FATAL_ERROR "Feature fips is not supported when building with clang targeting windows-msvc")
+    endif()
+    set(OPENSSL_ARCH mingw-clang-msvc64)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(OPENSSL_MS_RUNTIME_LIB static)
+    else()
+        set(OPENSSL_MS_RUNTIME_LIB dll)
+    endif()
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/90-clang-windows.conf.in" "${SOURCE_PATH}/Configurations/90-clang-windows.conf" @ONLY)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/ClangWindows.pm" DESTINATION "${SOURCE_PATH}/Configurations/platform")
+    # Providers are linked into libcrypto instead of loaded as modules.
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-module no-dso no-engine)
+    # perlasm asks $(CC) without CFLAGS for the symbol prefix: give it the target, or a macOS host answers "_"
+    # The compiler is named rather than given by path: make splits variables on
+    # spaces (C:/Program Files/LLVM), and its directory leads PATH (see above).
+    set(make_vars "CC=${compiler_name} --target=x86_64-pc-windows-msvc")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" OR "tools" IN_LIST FEATURES)
+        # The DLLs and openssl.exe carry version resources in windres syntax.
+        # llvm-windres is llvm-rc started under a name containing "windres";
+        # LLVM release packages ship only llvm-rc, so fall back to a copy.
+        find_program(LLVM_WINDRES NAMES llvm-windres PATHS "${compiler_path}" NO_DEFAULT_PATH)
+        if(NOT LLVM_WINDRES)
+            find_program(LLVM_RC NAMES llvm-rc PATHS "${compiler_path}" NO_DEFAULT_PATH)
+            if(NOT LLVM_RC)
+                message(FATAL_ERROR "Neither llvm-windres nor llvm-rc was found next to ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+            endif()
+            set(LLVM_WINDRES "${CURRENT_BUILDTREES_DIR}/llvm-windres${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+            file(COPY_FILE "${LLVM_RC}" "${LLVM_WINDRES}")
+        endif()
+        # Preprocess with the C compiler and its flags, so the resource sees
+        # the same target and SDK headers (winver.h) as the C sources.
+        string(REPLACE "'" "'\\''" quoted_compiler "${compiler_name}")
+        string(REPLACE "$" "$$" quoted_compiler "${quoted_compiler}")
+        set(rc_flags "--target=pe-x86-64 '--preprocessor=${quoted_compiler}'")
+        separate_arguments(c_flags NATIVE_COMMAND "-E -xc -DRC_INVOKED --target=x86_64-pc-windows-msvc ${VCPKG_DETECTED_CMAKE_C_FLAGS}")
+        foreach(flag IN LISTS c_flags)
+            string(REPLACE "'" "'\\''" quoted_flag "${flag}")
+            string(REPLACE "$" "$$" quoted_flag "${quoted_flag}")
+            string(APPEND rc_flags " '--preprocessor-arg=${quoted_flag}'")
+        endforeach()
+        string(REPLACE "'" "'\\''" quoted_windres "${LLVM_WINDRES}")
+        string(REPLACE "$" "$$" quoted_windres "${quoted_windres}")
+        vcpkg_list(APPEND make_vars "RC='${quoted_windres}'" "RCFLAGS=${rc_flags}")
+    endif()
+    vcpkg_list(APPEND MAKEFILE_OPTIONS OPTIONS ${make_vars})
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()
@@ -143,6 +198,14 @@ vcpkg_install_make(
     ${MAKEFILE_OPTIONS}
     BUILD_TARGET build_inst_sw
 )
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libssl.pc" "-L\${libdir} -lssl" "-L\${libdir} -llibssl")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libcrypto.pc" "-L\${libdir} -lcrypto" "-L\${libdir} -llibcrypto")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libssl.pc" "-L\${libdir} -lssl" "-L\${libdir} -llibssl")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcrypto.pc" "-L\${libdir} -lcrypto" "-L\${libdir} -llibcrypto")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
@@ -150,8 +213,11 @@ if("tools" IN_LIST FEATURES)
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/c_rehash" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/c_rehash")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/c_rehash")
     vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+else()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
+    # Only the apps install scripts here.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc/ssl/misc")
 endif()
 
