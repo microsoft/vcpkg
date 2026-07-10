@@ -2914,7 +2914,7 @@
     },
     "f3d": {
       "baseline": "3.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "faad2": {
       "baseline": "2.11.2",
