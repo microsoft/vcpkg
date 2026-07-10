@@ -4040,6 +4040,10 @@
       "baseline": "2023-04-12",
       "port-version": 0
     },
+    "ini-cpp": {
+      "baseline": "2.0.0",
+      "port-version": 0
+    },
     "inih": {
       "baseline": "62",
       "port-version": 1
