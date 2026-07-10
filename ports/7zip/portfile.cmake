@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ip7z/7zip
     REF "${upstream_version}"
-    SHA512 eb5ed600f82aca52f6dc8d2be3e4da4380670308dff2bcbfc96255d9d23bb5ca35dea073bd97070f0a1891b2f329d88a06b304f48e30f4ad89256c7664e9c1ea
+    SHA512 545ff9b8cf9ab1b91557cad17c01e0f0269a0fc0197c44c321c3693e97b881867f82837cffd89f3b49121527a7055d333dc6fca1ed77ce81d1c5f821298d1561
     HEAD_REF main
     PATCHES
         sort-asm.diff

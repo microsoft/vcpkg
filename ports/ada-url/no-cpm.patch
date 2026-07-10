@@ -1,20 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1b55e39..23ce61f 100644
+index d525b59..116095b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,7 +22,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake)
+@@ -26,7 +26,6 @@ option(ADA_USE_SIMDUTF "Whether to use SIMDUTF for IDNA" OFF)
  # errors due to CPM, so this is here to support disabling all the testing
  # and tooling for ada if one only wishes to use the ada library.
- if(ADA_TESTING OR ADA_BENCHMARKS OR ADA_TOOLS)
+ if(ADA_TESTING OR ADA_BENCHMARKS OR ADA_TOOLS OR ADA_USE_SIMDUTF)
 -  include(cmake/CPM.cmake)
    # CPM requires git as an implicit dependency
    # We use googletest in the tests
    if(ADA_TESTING)
 diff --git a/tools/cli/CMakeLists.txt b/tools/cli/CMakeLists.txt
-index 397b428..4b49928 100644
+index 5e7ffe0..f60a2d5 100644
 --- a/tools/cli/CMakeLists.txt
 +++ b/tools/cli/CMakeLists.txt
-@@ -8,12 +8,8 @@ if(MSVC AND BUILD_SHARED_LIBS)
+@@ -37,12 +37,8 @@ if(MSVC AND BUILD_SHARED_LIBS)
          "$<TARGET_FILE:ada>"      # <--this is in-file
          "$<TARGET_FILE_DIR:adaparse>")                 # <--this is out-file path
  endif()

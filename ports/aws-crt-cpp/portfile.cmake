@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-crt-cpp
     REF "v${VERSION}"
-    SHA512 e83b6645a90e1e2fdde9a17f0ce36aa7abe79f8dec9ffe5b552fdf241e8d0da3500f21c0e4df42b8d7ea25b37583c0b61452bbd419af065bab8393046eafe9f0
+    SHA512 22bf037ff67ecf1fa7f900376d1daf85b4e6889d8bb1a8ebbf808af074dca9646c005f8024dd5dd5dd994c85b406ce0718e1b92a7ba9e3f62b95b55b65f98b34
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)

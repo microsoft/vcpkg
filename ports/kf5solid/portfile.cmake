@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         001_fix_libmount.patch
         002_fix_imobile.patch
+        003_libmount.patch
 )
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")

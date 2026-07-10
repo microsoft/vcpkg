@@ -1,11 +1,12 @@
-#header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/comms
     REF "v${VERSION}"
-    SHA512 838b4c90a2c9c6374f0755a694057f60b53898dfdd100d16b0e81d308f6a62f3af9e680307b1782290d71c7c0d067fdf5af364e58f30907246b0fcad962e4ce8
+    SHA512 832228872ab688c7a87f1c89844e490ac1ab36e4be06f61d9ff9182912da79ec84d6b3e63bba0547310c6639a568a0419f036e4a81098f445165e27c1563fc0d
     HEAD_REF master
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -18,8 +19,5 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME LibComms CONFIG_PATH lib/LibComms/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

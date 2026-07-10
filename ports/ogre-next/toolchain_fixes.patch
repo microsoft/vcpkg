@@ -1,20 +1,20 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index 45d5935..cdb097a 100644
+index bcd74ff..b0ca7c1 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
 @@ -18,6 +18,7 @@ if(WIN32 OR APPLE)
  else()
-   set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
+ 	set(OGRE_CMAKE_DIR "${OGRE_LIB_DIRECTORY}/${OGRE_NEXT_PREFIX}/cmake")
  endif()
 +set(OGRE_CMAKE_DIR "share/ogre-next")
  
  set(INST_FILES
    Packages/FindRapidjson.cmake
 diff --git a/CMake/ConfigureBuild.cmake b/CMake/ConfigureBuild.cmake
-index 9d3b1b2..11fc345 100644
+index cd32ae3..171fe8f 100644
 --- a/CMake/ConfigureBuild.cmake
 +++ b/CMake/ConfigureBuild.cmake
-@@ -284,6 +284,11 @@ if (UNIX)
+@@ -261,6 +261,11 @@ if (UNIX)
      # there is no pkgconfig file for freeimage, so we need to add that lib manually
      set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} -lfreeimage")
      configure_file(${OGRE_TEMPLATES_DIR}/OGREStatic.pc.in ${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc @ONLY)
@@ -27,7 +27,7 @@ index 9d3b1b2..11fc345 100644
      configure_file(${OGRE_TEMPLATES_DIR}/OGRE.pc.in ${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc @ONLY)
    endif ()
 diff --git a/CMake/Utils/FindPkgMacros.cmake b/CMake/Utils/FindPkgMacros.cmake
-index 53111e0..e0f6716 100644
+index 8365f58..d82de5e 100644
 --- a/CMake/Utils/FindPkgMacros.cmake
 +++ b/CMake/Utils/FindPkgMacros.cmake
 @@ -81,6 +81,12 @@ endmacro (use_pkgconfig)
@@ -44,7 +44,7 @@ index 53111e0..e0f6716 100644
      set(${PREFIX} optimized ${${PREFIX}_REL} debug ${${PREFIX}_DBG})
    elseif (${PREFIX}_REL)
 diff --git a/CMake/Utils/OgreConfigTargets.cmake b/CMake/Utils/OgreConfigTargets.cmake
-index d8e0208..1fdb63c 100644
+index 930dd36..3e4c335 100644
 --- a/CMake/Utils/OgreConfigTargets.cmake
 +++ b/CMake/Utils/OgreConfigTargets.cmake
 @@ -41,7 +41,7 @@ if (NOT OGRE_RUNTIME_OUTPUT)
@@ -66,10 +66,10 @@ index d8e0208..1fdb63c 100644
    set(OGRE_RELWDBG_PATH "")
    set(OGRE_MINSIZE_PATH "")
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2786e35..7a92a7b 100755
+index 93ec6f4..6380b15 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -299,7 +299,6 @@ if (OGRE_BUILD_PLATFORM_APPLE_IOS)
+@@ -328,7 +328,6 @@ if (OGRE_BUILD_PLATFORM_APPLE_IOS)
      execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
      string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
    else()
@@ -77,7 +77,7 @@ index 2786e35..7a92a7b 100755
    endif()
  
    set(CMAKE_EXE_LINKER_FLAGS "-framework Foundation -framework CoreGraphics -framework QuartzCore -framework UIKit")
-@@ -364,7 +363,6 @@ elseif (APPLE AND NOT OGRE_BUILD_PLATFORM_APPLE_IOS)
+@@ -391,7 +390,6 @@ elseif (APPLE AND NOT OGRE_BUILD_PLATFORM_APPLE_IOS)
      execute_process(COMMAND xcodebuild -version -sdk "${XCODE_ATTRIBUTE_SDKROOT}" Path | head -n 1 OUTPUT_VARIABLE CMAKE_OSX_SYSROOT)
      string(REGEX REPLACE "(\r?\n)+$" "" CMAKE_OSX_SYSROOT "${CMAKE_OSX_SYSROOT}")
    else()
@@ -86,10 +86,10 @@ index 2786e35..7a92a7b 100755
  
    set( CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES )
 diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
-index b698b84..75fef2c 100644
+index d4ad520..0df005b 100644
 --- a/OgreMain/CMakeLists.txt
 +++ b/OgreMain/CMakeLists.txt
-@@ -439,7 +439,7 @@ if (APPLE)
+@@ -424,7 +424,7 @@ if (APPLE)
          LINK_FLAGS "-framework IOKit -framework Cocoa -framework Carbon -framework OpenGL -framework CoreVideo"
      )
  
@@ -98,7 +98,7 @@ index b698b84..75fef2c 100644
    
  	add_custom_command(TARGET ${OGRE_NEXT}Main POST_BUILD
  		COMMAND mkdir ARGS -p ${OGRE_BINARY_DIR}/lib/${OGRE_OSX_BUILD_CONFIGURATION}/Ogre.framework/Headers/Threading
-@@ -494,6 +494,9 @@ use_precompiled_header(${OGRE_NEXT}Main
+@@ -479,6 +479,9 @@ use_precompiled_header(${OGRE_NEXT}Main
  )
  
  # install ${OGRE_NEXT}Main
@@ -109,28 +109,15 @@ index b698b84..75fef2c 100644
  foreach(HEADER_FILE ${HEADER_FILES})
  	string(REGEX REPLACE "((${CMAKE_CURRENT_SOURCE_DIR}|${OGRE_BINARY_DIR})/)?(include|src)/" "" RELATIVE_HEADER_FILE ${HEADER_FILE})
 diff --git a/OgreMain/include/OgrePlatform.h b/OgreMain/include/OgrePlatform.h
-index 6754c4e..6b1879d 100644
+index b5445ef..60fab21 100644
 --- a/OgreMain/include/OgrePlatform.h
 +++ b/OgreMain/include/OgrePlatform.h
-@@ -504,7 +504,7 @@ THE SOFTWARE.
+@@ -508,7 +508,7 @@ THE SOFTWARE.
  
-     // Define whether or not Ogre compiled with NEON support.
-     #if OGRE_DOUBLE_PRECISION == 0 && OGRE_CPU == OGRE_CPU_ARM && \
--        ( defined(__aarch64__) || defined(__ARM_NEON__) || defined(_WIN32_WINNT_WIN8) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
-+        ( defined(__aarch64__) || defined(__ARM_NEON__) || defined(_M_ARM64) || defined(_WIN32_WINNT_WIN8) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
-         #define __OGRE_HAVE_NEON  1
-     #endif
- #endif
-diff --git a/OgreMain/include/OgreString.h b/OgreMain/include/OgreString.h
-index 8693c57..b4179ea 100644
---- a/OgreMain/include/OgreString.h
-+++ b/OgreMain/include/OgreString.h
-@@ -222,7 +222,7 @@ namespace Ogre {
- #   endif
- #elif OGRE_COMPILER == OGRE_COMPILER_MSVC && OGRE_COMP_VER >= 1600 && OGRE_COMP_VER < 1910 && !defined(STLPORT) // VC++ 10.0
-     typedef ::std::tr1::hash< _StringBase > _StringHash;
--#elif !defined( _STLP_HASH_FUN_H )
-+#elif 0
-     typedef stdext::hash_compare< _StringBase, std::less< _StringBase > > _StringHash;
- #else
-     typedef std::hash< _StringBase > _StringHash;
+ // Define whether or not Ogre compiled with NEON support.
+ #    if OGRE_DOUBLE_PRECISION == 0 && OGRE_CPU == OGRE_CPU_ARM && \
+-        ( defined( __aarch64__ ) || defined( __ARM_NEON__ ) || \
++        ( defined( __aarch64__ ) || defined( __ARM_NEON__ ) || defined(_M_ARM64) || \
+           defined( _WIN32_WINNT_WIN8 ) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
+ #        define __OGRE_HAVE_NEON 1
+ #    endif

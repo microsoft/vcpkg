@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b54f71a..a3c569b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -148,7 +148,7 @@ endif()
+ 
+ if(SOL2_ENABLE_INSTALL)
+ 	# pkg-config support, except on Windows
+-	if(NOT WIN32 OR NOT CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
++	if(1)
+ 		set(PKGCONFIG_INSTALL_DIR
+ 			"${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig"
+ 			CACHE PATH "Path where sol2.pc is installed")

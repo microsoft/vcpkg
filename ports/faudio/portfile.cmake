@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FNA-XNA/faudio
     REF "${FAUDIO_REF}"
-    SHA512 004567c6339ce006afbf19c44ee88e4fab8bfcd7b3e50b25058569584cd0caa891aeaf7087089bafabd646e9739ccc036f984f9f0fb271ba154406e1d30eb2e1
+    SHA512 18ffeab2f1f9bdb30119417557c9203f50eebe37ef590dac0bf3c079bde5161246c4b06e7b106e322d153290832a6e8794835c2b4296a86fc2f3c81c52f10400
     HEAD_REF master
 )
 
@@ -32,7 +32,14 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(
-    COMMENT "FAudio is licensed under the Zlib license."
+    COMMENT [[
+FAudio is licensed under the Zlib license.
+
+The installed FAudio library also compiles in vendored stb and qoa components
+from src/stb.h, src/stb_vorbis.h, and src/qoa_decoder.h. Those components are
+available under the MIT license; the stb components also offer a public-domain
+alternative.
+]]
     FILE_LIST
        "${SOURCE_PATH}/LICENSE"
 )

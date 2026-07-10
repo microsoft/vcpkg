@@ -2,15 +2,13 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
   REF "v${VERSION}"
-  SHA512 6cbfd93db56299c15df4e9e79f77c1bdf779931869bc87b152d1528499e76bd6b536de85d74c52fe789e46d9f0a3e262a7789bb9e0bfae017f10d8cbd9c8ceaa
+  SHA512 d8d057d6800283b8d9ec8326c3dc92024743531b6b3f79e9f18912aa90d0b13982496c85ed079b12b5992b86f97a640ea22ddc7ea0a992587134bbcc9e68a795
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
     0002-fix-android.patch
     # TODO: This patch should be deleted after following PR will be merged. https://github.com/facebook/rocksdb/pull/13573
     0003-include_cstdint.patch
-    # TODO: This patch should be deleted on upstream next release. https://github.com/facebook/rocksdb/commit/1d18c4ed0177f184f228a7cdfb78eb85d0dab540
-    0004-support-apple.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
@@ -27,6 +25,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "numa" WITH_NUMA
     "tbb" WITH_TBB
 )
+
+if(WITH_LIBURING)
+  vcpkg_find_acquire_program(PKGCONFIG)
+  vcpkg_list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"

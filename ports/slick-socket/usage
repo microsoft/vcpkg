@@ -1,0 +1,4 @@
+slick-socket provides CMake targets:
+
+  find_package(slick-socket CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE slick::socket)

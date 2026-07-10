@@ -2,22 +2,23 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 f31769a7ed52865165e7db4a03e9378b3376012b7aaf0bbc022aa76c3e999e71c3927e6eb8639d8681e04e33362dd73eafa9e7c62a3c71599ff78da09f5cee0a
+    SHA512 c72f4062aecc16d8b2b1e8678d5efe3af4cfaa0cc7c0997052248f9e499e60c2463acf07877cf3b78b246ce3e8078cb043e8d97e90a6b50d06af32ff7369a788
     HEAD_REF master
     PATCHES
-        0001-create-lib-libraries.patch
         0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
         0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0013-define-WINVER.patch
-        0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
-        0044-fix-vulkan-debug-callback-abi.patch
         0045-use-prebuilt-bin2c.patch
         0046-fix-msvc-detection.patch
+        0047-fix-msvc-utf8.patch
+        0048-backport-23039.patch
+        0049-fix-twolame-pkgconfig.patch
+        0050-fix-test-ld-absolute-lib-paths.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -103,7 +104,11 @@ if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
     list(APPEND prog_env "${RC_path}")
 endif()
 
-if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+# A GNU-frontend clang links through the compiler driver (the detected
+# CMAKE_LINKER flags are driver-style, not lld-link-style), so leave
+# configure's default LD=CC in place there.
+if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW
+   AND NOT VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "clang(-[0-9]+)?(\\.exe)?$")
     get_filename_component(LD_path "${VCPKG_DETECTED_CMAKE_LINKER}" DIRECTORY)
     get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
     set(ENV{LD} "${LD_filename}")
@@ -304,6 +309,14 @@ else()
     set(WITH_DAV1D OFF)
 endif()
 
+if("svt-av1" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsvtav1")
+    set(WITH_SVTAV1 ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsvtav1")
+    set(WITH_SVTAV1 OFF)
+endif()
+
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
     set(WITH_AAC ON)
@@ -421,12 +434,16 @@ else()
     set(WITH_OPENMPT OFF)
 endif()
 
+set(WITH_OPENSSL OFF)
+set(WITH_SCHANNEL OFF)
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
+    set(WITH_OPENSSL ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
         string(APPEND OPTIONS " --enable-schannel")
+        set(WITH_SCHANNEL ON)
     endif()
 endif()
 
@@ -494,6 +511,14 @@ if("theora" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-libtheora")
     set(WITH_THEORA OFF)
+endif()
+
+if("twolame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtwolame")
+    set(WITH_TWOLAME ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtwolame")
+    set(WITH_TWOLAME OFF)
 endif()
 
 if("vorbis" IN_LIST FEATURES)
@@ -565,11 +590,11 @@ else()
 endif()
 
 if ("qsv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
-    set(WITH_MFX ON)
+    set(OPTIONS "${OPTIONS} --enable-libvpl --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
+    set(WITH_VPL ON)
 else()
-    set(OPTIONS "${OPTIONS} --disable-libmfx")
-    set(WITH_MFX OFF)
+    set(OPTIONS "${OPTIONS} --disable-libvpl")
+    set(WITH_VPL OFF)
 endif()
 
 if ("vaapi" IN_LIST FEATURES)
@@ -622,6 +647,7 @@ endif()
 if(VCPKG_TARGET_IS_UWP)
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     string(APPEND OPTIONS " --disable-programs")
+    string(APPEND OPTIONS " --disable-filter=gfxcapture")
     string(APPEND OPTIONS " --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib --extra-ldflags=dxguid.lib")
 endif()
@@ -687,6 +713,18 @@ endif ()
 
 set(OPTIONS_DEBUG "--disable-optimizations --enable-debug")
 set(OPTIONS_RELEASE "--enable-optimizations")
+
+if(VCPKG_DETECTED_MSVC)
+    # Determine base linkage (MT or MD)
+    set(FFMPEG_CRT_PREFIX "-MT")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(FFMPEG_CRT_PREFIX "-MD")
+    endif()
+    # Append Release flags
+    string(APPEND OPTIONS_RELEASE " --extra-cflags=${FFMPEG_CRT_PREFIX} --extra-cxxflags=${FFMPEG_CRT_PREFIX}")
+    # Append Debug flags (adding the 'd' suffix for the debug runtime)
+    string(APPEND OPTIONS_DEBUG " --extra-cflags=${FFMPEG_CRT_PREFIX}d --extra-cxxflags=${FFMPEG_CRT_PREFIX}d")
+endif()
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 
@@ -822,15 +860,33 @@ if(VCPKG_TARGET_IS_WINDOWS)
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
 
+        # llvm-lib implements the lib.exe interface; use it when building on
+        # a host without the MSVC tools
+        if(CMAKE_HOST_WIN32)
+            set(LIB_TOOL lib.exe)
+        else()
+            find_program(LIB_TOOL NAMES llvm-lib llvm-lib-22 llvm-lib-19 REQUIRED)
+        endif()
         foreach(DEF_FILE ${DEF_FILES})
             get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
             get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
             string(REGEX REPLACE "-[0-9]*\\.def" "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" OUT_FILE_NAME "${DEF_FILE_NAME}")
+            if(NOT CMAKE_HOST_WIN32)
+                # ffmpeg's makedef emits no LIBRARY statement; lib.exe infers the
+                # DLL name from the def filename but llvm-lib leaves it EMPTY,
+                # producing import entries no Windows loader can resolve.
+                get_filename_component(DEF_BASE_NAME "${DEF_FILE}" NAME_WE)
+                file(READ "${DEF_FILE}" DEF_CONTENTS)
+                if(NOT DEF_CONTENTS MATCHES "LIBRARY")
+                    file(WRITE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}" "LIBRARY ${DEF_BASE_NAME}\n${DEF_CONTENTS}")
+                    set(DEF_FILE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}")
+                endif()
+            endif()
             file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
             file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
             message(STATUS "Generating ${OUT_FILE_NATIVE}")
             vcpkg_execute_required_process(
-                COMMAND lib.exe "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
+                COMMAND "${LIB_TOOL}" "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
                 WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
                 LOGNAME "libconvert-${TARGET_TRIPLET}"
             )

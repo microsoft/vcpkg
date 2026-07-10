@@ -11,12 +11,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 3e1796708155454c118550ba0964b42c0c1055b651fec00cfb55038e8a8abbf5f85df02449e62b50b99d2a4a2f7b47862067f8a965e9c8a72f71dee0153672d9
+    SHA512 a89c08101fa1d7e3c09b14f4a90d450bcf336a4f6a3e6e4ea990e4deddcd9ce250472f9114438fd134ff4b47fe93dd47232308567088b2b1c0b2eb50e3b56bdf
     PATCHES
         cmake-config.patch
         command-line-length.patch
         script-prefix.patch
-        aes_cfb128_vaes_encdec_wrapper.diff # https://github.com/openssl/openssl/issues/28745
         windows/install-layout.patch
         windows/install-pdbs.patch
         windows/install-programs.diff # https://github.com/openssl/openssl/issues/28744

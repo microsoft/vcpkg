@@ -1,0 +1,23 @@
+--- a/cmake/FlatBuffers.cmake
++++ b/cmake/FlatBuffers.cmake
+@@ -1,10 +1,2 @@
+-set(FlatBuffers_Include ${PROJECT_SOURCE_DIR}/third_party/flatbuffers/include)
+-file(GLOB FlatBuffers_Library_SRCS
+-  ${FlatBuffers_Include}/flatbuffers/*.h
+-)
+-add_library(flatbuffers INTERFACE)
+-target_sources(
+-  flatbuffers
+-  INTERFACE ${FlatBuffers_Library_SRCS}
+-)
+-target_include_directories(flatbuffers INTERFACE ${FlatBuffers_Include})
++find_package(FlatBuffers REQUIRED)
++add_library(flatbuffers ALIAS flatbuffers::flatbuffers)
+--- a/torch/CMakeLists.txt
++++ b/torch/CMakeLists.txt
+@@ -389,5 +389,4 @@
+ add_dependencies(torch_python torch_python_stubs)
+-add_dependencies(torch_python flatbuffers)
+
+
+ if(USE_PRECOMPILED_HEADERS)

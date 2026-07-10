@@ -1,4 +1,0 @@
-unimail-cpp-sdk provides CMake targets:
-
-  find_package(unimail-cpp-sdk CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE icurve::unimail)

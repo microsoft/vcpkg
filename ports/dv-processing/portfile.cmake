@@ -3,10 +3,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dv/dv-processing
     REF "${VERSION}"
-    SHA512 535680686214d9d44efa8281d9b7cb424e93a662b0742f02a07616ca6b1d313779f03845489059b082481aafd9a83eca20f5315a4b5319e8dc956a15ca790afa
+    SHA512 b53d59120b65aee8cfa8a524a5b9779c55687c649d847e20f344b246dd800aa639a31fe12e2f1cd810f38db743ec8051b9f6fbe895486e318942b86daab114c2
     HEAD_REF master
-    PATCHES
-        0001-support-eigen3-5.patch
 )
 
 vcpkg_from_gitlab(

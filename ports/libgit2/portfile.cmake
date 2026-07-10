@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
     REF "v${VERSION}"
-    SHA512 b9ac2d0a7cc92a31057fbf066e47145cdda89ebf0489d712d4452c709c3de9923a93a3c37128fdcfd8fbb5498f513a519a7f2a77ad6ef4efafe865323d481f18
+    SHA512 85036ade3aca33c5283605ae9de21a7948ec5952bc8cd468aa024ca873851a56ab0ebe62f95c0da109df9163875e9687a377d3df69728d434cc258b3f845ef0c
     HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
+        no-static-whole-program-optimization.diff # don't /GL a static lib; it forces /LTCG on consumers
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"

@@ -9,7 +9,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES missing-includes.patch
+    PATCHES
+        missing-includes.patch
+        fix-types.patch
 )
 
 set(LIB_SOURCE_PATH "${SOURCE_PATH}/LIBRARY")
@@ -23,6 +25,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME unofficial-intelrdfpmathlib
+)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/eula.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

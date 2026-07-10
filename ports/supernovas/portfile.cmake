@@ -2,12 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Smithsonian/SuperNOVAS
     REF "v${VERSION}"
-    SHA512 e1557fbe8e4550fc4c669e4cb7219069bce874942b47ae48edd769badcd548b6f9210f9243766ba3ae41b9cd3a3f33673e90c687d916a8934491ad3d380e9dad
+    SHA512 ae74ec6969c2902c53e5f1cc9bf66f41e97a838c7c0c0e6167a3f24050676a22f9ebd67f0b90a11105790b45166e3d1e79a4e9e264ccf68d4fb330785090f409
     HEAD_REF main
+    PATCHES pkgconfig.patch gmtime_s.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        cpp              ENABLE_CPP
         solsys-calceph   ENABLE_CALCEPH
 )
 
@@ -22,6 +24,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

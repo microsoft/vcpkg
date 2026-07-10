@@ -1,0 +1,54 @@
+diff --git a/alc/alc.cpp b/alc/alc.cpp
+index 729f91ec4..d10d186be 100644
+--- a/alc/alc.cpp
++++ b/alc/alc.cpp
+@@ -104,7 +104,7 @@
+ #include "effects/base.h"
+ #include "export_list.h"
+ #include "flexarray.h"
+-#include "fmt/core.h"
++#include "fmt/format.h"
+ #include "fmt/ranges.h"
+ #include "gsl/gsl"
+ #include "inprogext.h"
+diff --git a/alc/backends/pipewire.cpp b/alc/backends/pipewire.cpp
+index 7f925db5d..855a6d89e 100644
+--- a/alc/backends/pipewire.cpp
++++ b/alc/backends/pipewire.cpp
+@@ -54,7 +54,7 @@
+ #include "core/helpers.h"
+ #include "core/logging.h"
+ #include "dynload.h"
+-#include "fmt/core.h"
++#include "fmt/format.h"
+ #include "fmt/ranges.h"
+ #include "gsl/gsl"
+ #include "opthelpers.h"
+diff --git a/common/pffft.cpp b/common/pffft.cpp
+index 8dc965064..82a471cdb 100644
+--- a/common/pffft.cpp
++++ b/common/pffft.cpp
+@@ -74,7 +74,7 @@
+ 
+ #include "almalloc.h"
+ #include "alnumeric.h"
+-#include "fmt/core.h"
++#include "fmt/format.h"
+ #include "fmt/ranges.h"
+ #include "gsl/gsl"
+ #include "opthelpers.h"
+diff --git a/core/hrtf_loader.cpp b/core/hrtf_loader.cpp
+index 3582964ac..3ffa48a32 100644
+--- a/core/hrtf_loader.cpp
++++ b/core/hrtf_loader.cpp
+@@ -13,8 +13,9 @@
+ 
+ #include "alformat.hpp"
+ #include "alnumeric.h"
+-#include "fmt/core.h"
++#include "fmt/format.h"
+ #include "fmt/ranges.h"
++#include "fmt/std.h"
+ #include "gsl/gsl"
+ #include "hrtf.h"
+ #include "logging.h"

@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49f35983c..171ff6fef 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -627,9 +627,11 @@ include_directories( ${LLVM_INCLUDE_DIR} ${LLVM_MAIN_INCLUDE_DIR})
+ include_directories( ${LLVM_INCLUDE_DIR}/dxc/Tracing) # HLSL Change
+ 
+ # when crosscompiling import the executable targets from a file
++if(DXC_ENABLE_HOST_TOOLS)
+ if(LLVM_USE_HOST_TOOLS)
+   include(CrossCompile)
+ endif(LLVM_USE_HOST_TOOLS)
++endif()
+ 
+ if(${CMAKE_SYSTEM_NAME} MATCHES "(FreeBSD|DragonFly)")
+   # On FreeBSD, /usr/local/* is not used by default. In order to build LLVM
+diff --git a/cmake/modules/TableGen.cmake b/cmake/modules/TableGen.cmake
+index 85d720e91..2a872491a 100644
+--- a/cmake/modules/TableGen.cmake
++++ b/cmake/modules/TableGen.cmake
+@@ -92,6 +92,7 @@ macro(add_tablegen target project)
+   set(${project}_TABLEGEN_EXE ${${project}_TABLEGEN} PARENT_SCOPE)
+   set(${project}_TABLEGEN_TARGET ${${project}_TABLEGEN} PARENT_SCOPE)
+ 
++  if(DXC_ENABLE_HOST_TOOLS)
+   if(LLVM_USE_HOST_TOOLS)
+     if( ${${project}_TABLEGEN} STREQUAL "${target}" )
+       if (NOT CMAKE_CONFIGURATION_TYPES)
+@@ -110,6 +111,7 @@ macro(add_tablegen target project)
+       set(${project}_TABLEGEN_TARGET ${project}-tablegen-host PARENT_SCOPE)
+     endif()
+   endif()
++  endif()
+ 
+   if( MINGW )
+     if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+diff --git a/tools/llvm-config/CMakeLists.txt b/tools/llvm-config/CMakeLists.txt
+index edbd8c950..1d2e3e658 100644
+--- a/tools/llvm-config/CMakeLists.txt
++++ b/tools/llvm-config/CMakeLists.txt
+@@ -37,6 +37,7 @@ add_definitions(-DCMAKE_CFG_INTDIR="${CMAKE_CFG_INTDIR}")
+ # Add the dependency on the generation step.
+ add_file_dependencies(${CMAKE_CURRENT_SOURCE_DIR}/llvm-config.cpp ${BUILDVARIABLES_OBJPATH})
+ 
++if(DXC_ENABLE_HOST_TOOLS)
+ if(CMAKE_CROSSCOMPILING)
+   set(${project}_LLVM_CONFIG_EXE "${LLVM_NATIVE_BUILD}/bin/llvm-config")
+   set(${project}_LLVM_CONFIG_EXE ${${project}_LLVM_CONFIG_EXE} PARENT_SCOPE)
+@@ -51,3 +52,4 @@ if(CMAKE_CROSSCOMPILING)
+ 
+   add_dependencies(llvm-config ${project}NativeLLVMConfig)
+ endif(CMAKE_CROSSCOMPILING)
++endif()

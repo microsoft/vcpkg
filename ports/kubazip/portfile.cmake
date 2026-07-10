@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kuba--/zip
     REF "v${VERSION}"
-    SHA512 2bd11d2f7c33a882a32da764c1b19cb6fad3d2453e6d2004b60d6986c098dd5df5d66171857fd2737125622e7d17fc35e851e7ef0e0315e227bf69458518b5da
+    SHA512 e35df05d1db4542223f251b052094a8926f1e84a9051db3ff3f60cd0c3af912e0e3053852df8f24eb37b25c0be90afe058c613e9139ccfad0c3ad4d3950c2e70
     HEAD_REF master
     PATCHES
         fix-name-conflict.diff
+        disable-werror.patch
 )
 
 vcpkg_cmake_configure(

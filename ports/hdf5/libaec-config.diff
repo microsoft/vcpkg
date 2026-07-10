@@ -1,0 +1,30 @@
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index 6b75ff6..1be154e 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -202,12 +202,6 @@ endif ()
+ if (HDF5_ENABLE_SZIP_SUPPORT)
+   cmake_dependent_option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" ON HDF5_ENABLE_SZIP_SUPPORT OFF)
+   if (NOT SZIP_USE_EXTERNAL) # This checks if szip should be found on the system or built from an external source
+-    if (HDF5_USE_LIBAEC_STATIC)
+-      set (LIBAEC_SEARCH_TYPE "static")
+-    else ()
+-      set (LIBAEC_SEARCH_TYPE "shared")
+-    endif ()
+-    set (libaec_USE_STATIC_LIBS ${HDF5_USE_LIBAEC_STATIC})
+     set (SZIP_FOUND FALSE)
+     find_package (${LIBAEC_PACKAGE_NAME} OPTIONAL_COMPONENTS ${LIBAEC_SEARCH_TYPE})
+     set (H5_SZIP_FOUND ${${LIBAEC_PACKAGE_NAME}_FOUND})
+diff --git a/config/install/hdf5-config.cmake.in b/config/install/hdf5-config.cmake.in
+index bb9a8d6..a73bec8 100644
+--- a/config/install/hdf5-config.cmake.in
++++ b/config/install/hdf5-config.cmake.in
+@@ -137,7 +137,7 @@ endif ()
+ 
+ if (${HDF5_PACKAGE_NAME}_PROVIDES_SZIP_SUPPORT)
+   if (NOT @SZIP_USE_EXTERNAL@)
+-    find_dependency (@LIBAEC_PACKAGE_NAME@ OPTIONAL_COMPONENTS @LIBAEC_SEARCH_TYPE@)
++    find_dependency (@LIBAEC_PACKAGE_NAME@ CONFIG)
+   endif ()
+ endif ()
+ 

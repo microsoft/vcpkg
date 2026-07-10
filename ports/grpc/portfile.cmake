@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 25783f75295919d0a077e3d0ff70ea2e651eaf107da2ebe8af40a584540f2f56aae0e04c7b809f3b1eb7d5adc3892f84464662d80b1234a111836f454ba84a18 
+    SHA512 2fcc219bf91de49607ed1f74243c2d43c0fb0def4944e48fbd4b382033d648f0e0b8551426993d04db49b9cae8d8b9efe20a817f6985ed3c72f086bf8ea2e26e 
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -16,7 +16,6 @@ vcpkg_from_github(
         00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
-        00017-add-src-upb.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/third_party/abseil-cpp"

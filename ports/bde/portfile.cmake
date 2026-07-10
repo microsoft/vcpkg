@@ -5,12 +5,12 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 
 # Acquire BDE Tools and add them to PATH
-set (BDE_TOOLS_VER 4.13.0.0)
+set (BDE_TOOLS_VER "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
     REF "${BDE_TOOLS_VER}"
-    SHA512 6a0eec25889a33fb0302af735ed2fcce38afa5ad2be9202d2589d76509f9fd85f9ddc0a73147df1b6471543f51df3b5b40e8c08d378ab1335d2703d89b5921e6
+    SHA512 d250e40955aa7e4076a6d6382d20d10a4a0deabab3f729dce45dfa8e479cd5aecfb603e8d06c8283e15d81e74bf1cdec307c32c6e109097d9a5db9614b0ad30e
     HEAD_REF main
 )
 
@@ -23,8 +23,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 d6d7e453cf22f6e28f3513b818ab3f4b597db3e1d109587e0e0a8957338483c475494f55d953dfe86de507a6c292d1492d9cbb3c8be359044ef368fe80595448
+    SHA512 a3ca09ea673e5a35ca5385482838a8e017ac2c9ca0f570679598d9873c04517e0a9b01e2010c03d7ad56e1e8bcc6b6b87ee507e296420d7d650d0763039e14a6
     HEAD_REF main
+    PATCHES
+        fix-bdlar-target.patch
+        use-vcpkg-pcre2.patch
 )
 
 vcpkg_cmake_configure(
@@ -35,11 +38,8 @@ vcpkg_cmake_configure(
         -DCMAKE_CXX_STANDARD_REQUIRED=ON
         -DCMAKE_CXX_EXTENSIONS=OFF
         -DBBS_BUILD_SYSTEM=1
+        -DBDE_USE_EXTERNAL_PCRE2=1
         "-DBdeBuildSystem_DIR:PATH=${TOOLS_PATH}/BdeBuildSystem"
-    OPTIONS_RELEASE
-        -DBDE_BUILD_TARGET_OPT=1
-    OPTIONS_DEBUG
-        -DBDE_BUILD_TARGET_DBG=1
 )
 
 # Build release
@@ -48,7 +48,7 @@ vcpkg_cmake_build()
 # Install release
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-list(APPEND SUBPACKAGES "ryu" "inteldfp" "pcre2" "s_baltst" "bsl" "bdl" "bal")
+list(APPEND SUBPACKAGES "inteldfp" "s_baltst" "bsl" "bbryu" "bdl" "bbl" "bal")
 include(GNUInstallDirs) # needed for CMAKE_INSTALL_LIBDIR
 foreach(subpackage IN LISTS SUBPACKAGES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME ${subpackage} CONFIG_PATH /${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage} DO_NOT_DELETE_PARENT_CONFIG_PATH)

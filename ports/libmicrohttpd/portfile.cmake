@@ -3,7 +3,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://ftpmirror.gnu.org/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
         "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
     FILENAME "libmicrohttpd-${VERSION}.tar.gz"
-    SHA512 7092f307a00ba04b539be79a7c94ddf9b4b6e43343a66da49c6602fa860f77cf7f9017d7e40f9b7400d85a828a503248eb12dd121413aad68133003a20bb2c4a
+    SHA512 7ed3e81f0c4253a409f5e825446c8d2d8b975c0eb6f381b6867796bbdcf4890004a24659e95b8ec8c39e8df0a9885cc08a0ba75f953893ee1455ae180dc89391
 )
 
 vcpkg_extract_source_archive(

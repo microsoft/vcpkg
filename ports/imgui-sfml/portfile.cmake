@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-fix_find_package.patch
+        0002-support-imgui-1.92.patch # https://github.com/SFML/imgui-sfml/pull/330
 )
 
 vcpkg_cmake_configure(

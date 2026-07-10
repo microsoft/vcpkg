@@ -2,47 +2,18 @@ diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
 index e656b1228..41faad061 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -47,7 +47,13 @@ if(with_cxx_api)
+@@ -47,7 +47,10 @@ if(with_cxx_api)
    add_subdirectory(gvc++)
  endif()
  
 -if(BUILD_SHARED_LIBS)
 +if(1)
-+  set_target_properties(util PROPERTIES OUTPUT_NAME gvutil)
-+  install(TARGETS common util EXPORT private)
-+  install(EXPORT private
-+    NAMESPACE graphviz::private::
-+    DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
-+  )
++  set_target_properties(common PROPERTIES EXPORT_NAME private::common)
++  set_target_properties(util   PROPERTIES EXPORT_NAME private::util OUTPUT_NAME gvutil)
++  install(TARGETS common util EXPORT graphvizTargets)
    install(
-     FILES graphvizConfig.cmake
-     DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
-diff --git a/lib/cdt/CMakeLists.txt b/lib/cdt/CMakeLists.txt
-index 7110f1a79..f37d48414 100644
---- a/lib/cdt/CMakeLists.txt
-+++ b/lib/cdt/CMakeLists.txt
-@@ -71,7 +71,7 @@ set_target_properties(cdt PROPERTIES
-   SOVERSION 6
- )
- 
--if(BUILD_SHARED_LIBS)
-+if(1)
-   install(
-     EXPORT cdtConfig
-     FILE cdtConfig.cmake
-diff --git a/lib/cgraph/CMakeLists.txt b/lib/cgraph/CMakeLists.txt
-index d05d87a22..c267c5410 100644
---- a/lib/cgraph/CMakeLists.txt
-+++ b/lib/cgraph/CMakeLists.txt
-@@ -109,7 +109,7 @@ set_target_properties(cgraph PROPERTIES
-   SOVERSION 8
- )
- 
--if(BUILD_SHARED_LIBS)
-+if(1)
-   install(
-     EXPORT cgraphConfig
-     FILE cgraphConfig.cmake
+     EXPORT graphvizTargets
+     FILE graphvizTargets.cmake
 diff --git a/lib/cgraph/libcgraph.pc.in b/lib/cgraph/libcgraph.pc.in
 index 168ce85f0..9340aa32e 100644
 --- a/lib/cgraph/libcgraph.pc.in
@@ -52,31 +23,9 @@ index 168ce85f0..9340aa32e 100644
  Description: Graph library (file i/o, dot language parsing, graph, subgraph, node, edge, attribute, data structure manipulation)
  Version: @VERSION@
 -Libs.private: -lutil
-+Libs.private: -lgvprivate_util
++Libs.private: -lgvutil
  Libs: -L${libdir} -lcgraph -lcdt
  Cflags: -I${includedir} -I${includedir}/@PACKAGE@
-diff --git a/lib/graphvizConfig.cmake b/lib/graphvizConfig.cmake
-index e8c07cd73..2995c48a0 100644
---- a/lib/graphvizConfig.cmake
-+++ b/lib/graphvizConfig.cmake
-@@ -1,3 +1,4 @@
-+include(${CMAKE_CURRENT_LIST_DIR}/private.cmake)
- include(${CMAKE_CURRENT_LIST_DIR}/cdtConfig.cmake)
- include(${CMAKE_CURRENT_LIST_DIR}/cgraphConfig.cmake)
- include(${CMAKE_CURRENT_LIST_DIR}/gvcConfig.cmake)
-diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
-index 9f523354c..a6fb51f1d 100644
---- a/lib/gvc/CMakeLists.txt
-+++ b/lib/gvc/CMakeLists.txt
-@@ -158,7 +158,7 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
-   )
- endif()
- 
--if(BUILD_SHARED_LIBS)
-+if(1)
-   install(
-     EXPORT gvcConfig
-     FILE gvcConfig.cmake
 diff --git a/lib/gvc/libgvc.pc.in b/lib/gvc/libgvc.pc.in
 index 9b89519f8..22ee26e4c 100644
 --- a/lib/gvc/libgvc.pc.in
@@ -90,45 +39,6 @@ index 9b89519f8..22ee26e4c 100644
  Libs: -L${libdir} -lgvc -lcgraph -lcdt
  Cflags: -I${includedir} -I${includedir}/@PACKAGE@
  
-diff --git a/lib/gvpr/CMakeLists.txt b/lib/gvpr/CMakeLists.txt
-index eb3b50596..0789fadd6 100644
---- a/lib/gvpr/CMakeLists.txt
-+++ b/lib/gvpr/CMakeLists.txt
-@@ -104,7 +104,7 @@ set_target_properties(gvpr PROPERTIES
-   SOVERSION 2
- )
- 
--if(BUILD_SHARED_LIBS)
-+if(1)
-   install(
-     EXPORT gvprConfig
-     FILE gvprConfig.cmake
-diff --git a/lib/pathplan/CMakeLists.txt b/lib/pathplan/CMakeLists.txt
-index 6dfc79ad6..31fff4e42 100644
---- a/lib/pathplan/CMakeLists.txt
-+++ b/lib/pathplan/CMakeLists.txt
-@@ -74,7 +74,7 @@ set_target_properties(pathplan PROPERTIES
-   SOVERSION 4
- )
- 
--if(BUILD_SHARED_LIBS)
-+if(1)
-   install(
-     EXPORT pathplanConfig
-     FILE pathplanConfig.cmake
-diff --git a/lib/xdot/CMakeLists.txt b/lib/xdot/CMakeLists.txt
-index 12788b3d8..e614c539c 100644
---- a/lib/xdot/CMakeLists.txt
-+++ b/lib/xdot/CMakeLists.txt
-@@ -60,7 +60,7 @@ set_target_properties(xdot PROPERTIES
-   SOVERSION 4
- )
- 
--if(BUILD_SHARED_LIBS)
-+if(1)
-   install(
-     EXPORT xdotConfig
-     FILE xdotConfig.cmake
 diff --git a/plugin/CMakeLists.txt b/plugin/CMakeLists.txt
 index 3eac7cd4d..9e41c2fd2 100644
 --- a/plugin/CMakeLists.txt

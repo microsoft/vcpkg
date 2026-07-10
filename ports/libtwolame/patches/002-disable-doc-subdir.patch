@@ -1,0 +1,25 @@
+diff --git a/Makefile.am b/Makefile.am
+index 6504bf7..a00cb6d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,6 +1,6 @@
+ ACLOCAL_AMFLAGS = -I build-scripts
+ 
+-SUBDIRS = . libtwolame frontend simplefrontend doc tests
++SUBDIRS = . libtwolame frontend simplefrontend tests
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = twolame.pc
+@@ -23,11 +23,7 @@ ChangeLog:
+ 	[ -d .git ] && git log > ChangeLog || true
+ 
+ pkgdocdir = @docdir@
+-pkgdoc_DATA = \
+-	AUTHORS \
+-	COPYING \
+-	README \
+-	NEWS
++pkgdoc_DATA =
+ 
+ EXTRA_DIST = \
+ 	$(pkgdoc_DATA) \

@@ -1,0 +1,11 @@
+diff --git a/config/flags/HDFMsvcFlags.cmake b/config/flags/HDFMsvcFlags.cmake
+index db520fe..9ab9bde 100644
+--- a/config/flags/HDFMsvcFlags.cmake
++++ b/config/flags/HDFMsvcFlags.cmake
+@@ -25,5 +25,5 @@ if (NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 19.28)
+ endif ()
+ 
+ if(CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64" AND ${HDF_CFG_NAME} MATCHES "Debug")
+-  set (WIN_COMPILE_FLAGS "${WIN_COMPILE_FLAGS} /Gy")
++  list (APPEND WIN_COMPILE_FLAGS "/Gy")
+ endif ()

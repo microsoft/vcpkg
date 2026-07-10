@@ -15,6 +15,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         ffmpeg.diff
+        ffmpeg-8.diff # c2bd786 + b8da15a + 492a5cd
         FindLZMA.patch
         FindLZ4.patch
         libproj.patch
@@ -48,6 +49,8 @@ vcpkg_from_github(
         zspace.diff # https://gitlab.kitware.com/vtk/vtk/-/commit/01a8bd7a917d33892f67a8d76ce7fc4b524d56b4
         mpi-language.diff
         fix-eigen3.patch
+        avoid-stdext.diff
+        fix-fmt-header.patch
 )
 
 # =============================================================================

@@ -1,9 +1,11 @@
 #include <core/SkPath.h>
+#include <core/SkPathBuilder.h>
 
 int main() {
-    SkPath path;
-    path.moveTo(50, 50);
-    path.lineTo(150, 50);
-    path.lineTo(100, 150);
-    path.close();
+    SkPathBuilder builder;
+    builder.moveTo(50, 50);
+    builder.lineTo(150, 50);
+    builder.lineTo(100, 150);
+    builder.close();
+    SkPath path = builder.detach();
 }

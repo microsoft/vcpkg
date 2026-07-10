@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/shaderc
     REF "v${VERSION}"
-    SHA512 6761372591075944fddd926e9f7c2ea9447496566d2d549f523c6c529c3bd753d459b66d499f76d955bdcfb335016daddbeba49b087f4ecabf37d76a46ac14cd
+    SHA512 733f85a83db4b71814c7f251c44e6010b485ed03d7e2389db5c14f8426942bebf6c95a35e5eaef80e51c29f8efa28cc0577226344630a427553200c6a87349ec
     HEAD_REF master
     PATCHES 
         disable-update-version.patch
@@ -13,7 +13,7 @@ vcpkg_from_github(
         cmake-config-export.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")
+configure_file(${CMAKE_CURRENT_LIST_DIR}/build-version.inc ${SOURCE_PATH}/glslc/src/build-version.inc)
 
 set(OPTIONS "")
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")

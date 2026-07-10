@@ -9,7 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${archive}"
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     COPY_SOURCE
     OPTIONS
@@ -18,7 +18,7 @@ vcpkg_configure_make(
         --without-pgplot
         --without-cfitsio)
 
-vcpkg_install_make(MAKEFILE GNUmakefile)
+vcpkg_make_install(MAKEFILE GNUmakefile)
 vcpkg_fixup_pkgconfig()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 

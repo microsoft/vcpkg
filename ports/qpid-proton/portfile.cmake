@@ -1,11 +1,14 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/qpid-proton
-    REF "${VERSION}"
-    SHA512 ce24a92d623c9e56666128e243bc58acdbff8f7dfac1f728fdbd97a2c3ec21135b8c2a79c3e13920ca0d52545819766b90fc6aca35318b754eedf5ae5329ff36 
-    HEAD_REF next
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/qpid/proton/${VERSION}/qpid-proton-${VERSION}.tar.gz"
+    FILENAME "qpid-proton-${VERSION}.tar.gz"
+    SHA512 3e7fe56ca1423f45f71d81f5e1d6ec5f21c073cc580628e12a8dbd545a86805b7312834e0d1234dde43797633d575ed639f21a96239b217500cc0a824482aae3
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         early-cxx.diff
         fix-dependencies.patch

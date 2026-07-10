@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 9e636b659fd9260a35b0521550943fbbd2f2712cb1d9c79a702e4edca1435e0ef9938c0afb7d8792a0eb1ac66eb4a0f641b8de6fa8cbea43a9fa1bd4ebfeaef0
-    HEAD_REF master
+    SHA512 226bbd51eca36d7737ce5e2edba7e0a3beeca448462a861bcbfb6726a0994bc077b4c684d7ff8b0805d71bf770e00df14f10ed598256ee54a154d8cc08e6a5c1
+    HEAD_REF dev3
     PATCHES
         pkgconfig-cxx.diff
 )
@@ -42,6 +42,15 @@ file(COPY
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/mimalloc)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL
+        "${SOURCE_PATH}/bin/minject.exe"
+        "${SOURCE_PATH}/bin/minject32.exe"
+        "${SOURCE_PATH}/bin/minject-arm64.exe"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/"
+    )
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(
