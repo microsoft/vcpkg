@@ -658,11 +658,14 @@
     },
     "bbstrader": {
       "baseline": "2.3.0",
+<<<<<<< HEAD
 >>>>>>> 97b19caab97ab0c8d36c93230046c8c45fcd41d0
       "port-version": 0
     },
     "bbalouki-itch": {
       "baseline": "1.1.0",
+=======
+>>>>>>> 97b19caab97ab0c8d36c93230046c8c45fcd41d0
       "port-version": 0
     },
     "bcg729": {
