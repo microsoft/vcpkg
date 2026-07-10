@@ -3017,7 +3017,7 @@
       "port-version": 0
     },
     "fbgemm": {
-      "baseline": "1.5.0",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "fbthrift": {
