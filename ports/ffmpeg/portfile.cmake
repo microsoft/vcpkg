@@ -104,7 +104,11 @@ if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
     list(APPEND prog_env "${RC_path}")
 endif()
 
-if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+# A GNU-frontend clang links through the compiler driver (the detected
+# CMAKE_LINKER flags are driver-style, not lld-link-style), so leave
+# configure's default LD=CC in place there.
+if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW
+   AND NOT VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "clang(-[0-9]+)?(\\.exe)?$")
     get_filename_component(LD_path "${VCPKG_DETECTED_CMAKE_LINKER}" DIRECTORY)
     get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
     set(ENV{LD} "${LD_filename}")
@@ -856,15 +860,33 @@ if(VCPKG_TARGET_IS_WINDOWS)
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
 
+        # llvm-lib implements the lib.exe interface; use it when building on
+        # a host without the MSVC tools
+        if(CMAKE_HOST_WIN32)
+            set(LIB_TOOL lib.exe)
+        else()
+            find_program(LIB_TOOL NAMES llvm-lib llvm-lib-22 llvm-lib-19 REQUIRED)
+        endif()
         foreach(DEF_FILE ${DEF_FILES})
             get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
             get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
             string(REGEX REPLACE "-[0-9]*\\.def" "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" OUT_FILE_NAME "${DEF_FILE_NAME}")
+            if(NOT CMAKE_HOST_WIN32)
+                # ffmpeg's makedef emits no LIBRARY statement; lib.exe infers the
+                # DLL name from the def filename but llvm-lib leaves it EMPTY,
+                # producing import entries no Windows loader can resolve.
+                get_filename_component(DEF_BASE_NAME "${DEF_FILE}" NAME_WE)
+                file(READ "${DEF_FILE}" DEF_CONTENTS)
+                if(NOT DEF_CONTENTS MATCHES "LIBRARY")
+                    file(WRITE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}" "LIBRARY ${DEF_BASE_NAME}\n${DEF_CONTENTS}")
+                    set(DEF_FILE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}")
+                endif()
+            endif()
             file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
             file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
             message(STATUS "Generating ${OUT_FILE_NATIVE}")
             vcpkg_execute_required_process(
-                COMMAND lib.exe "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
+                COMMAND "${LIB_TOOL}" "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
                 WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
                 LOGNAME "libconvert-${TARGET_TRIPLET}"
             )
