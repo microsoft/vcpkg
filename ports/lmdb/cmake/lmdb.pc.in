@@ -7,4 +7,6 @@ Name: lmdb (OpenLDAP)
 Description: OpenLDAP Lightning Memory Mapped Database library
 URL: https://www.openldap.org
 Version: @LMDB_VERSION@
-Libs: -llmdb @PKGCONFIG_LIBS@
+Cflags: "-I${includedir}"
+Libs: "-L${libdir}" -llmdb @PKGCONFIG_LIBS@
+Libs.private: @PKGCONFIG_LIBS_PRIVATE@

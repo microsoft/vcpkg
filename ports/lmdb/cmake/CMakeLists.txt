@@ -46,11 +46,12 @@ install(EXPORT unofficial-lmdb-targets
 )
 
 set(PKGCONFIG_LIBS "")
+set(PKGCONFIG_LIBS_PRIVATE "")
 if(CMAKE_USE_PTHREADS_INIT)
     string(APPEND PKGCONFIG_LIBS " -pthread")
 endif()
 if(CMAKE_DL_LIBS STREQUAL "dl")
-    string(APPEND PKGCONFIG_LIBS " -ldl")
+    string(APPEND PKGCONFIG_LIBS_PRIVATE " -ldl")
 endif()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/lmdb.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/lmdb.pc" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lmdb.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
