@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 c8b9daf922cc98119e96a5bdb54187669e2f26be53fded8c7056630496b1410848fca7d37ff895f1ce8d6449853174ce2b5d2b3153ddbdc854af69c9c8ea68c7
     PATCHES
         fix-forced-install-prefix.patch
+        no-system-cleanup.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -17,6 +18,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DBUILD_DEV_TOOLS=OFF
 )
 vcpkg_cmake_install()
 
