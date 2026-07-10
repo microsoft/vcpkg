@@ -1,6 +1,6 @@
 {
   "name": "libczi",
-  "version": "0.67.2",
+  "version": "0.69.0",
   "description": "library to read and write CZI files.",
   "homepage": "https://github.com/ZEISS/libczi",
   "license": null,
@@ -34,6 +34,12 @@
             "ssl"
           ]
         }
+      ]
+    },
+    "experimental-chunked-compression": {
+      "description": "Enable experimental chunked-compression support. This feature may change or be removed in a future libCZI release.",
+      "dependencies": [
+        "lz4"
       ]
     }
   }
