@@ -4549,8 +4549,8 @@
       "port-version": 7
     },
     "kineto": {
-      "baseline": "2026-04-10",
-      "port-version": 1
+      "baseline": "2026-06-03",
+      "port-version": 0
     },
     "kissfft": {
       "baseline": "131.2.0",
