@@ -1,0 +1,7 @@
+{
+  "name": "ini-cpp",
+  "version": "2.0.0",
+  "description": "Single-header INI file reader and writer for modern C++ (C++17), with type-aware getters and sensible defaults",
+  "homepage": "https://github.com/SSARCandy/ini-cpp",
+  "license": "BSD-3-Clause"
+}
