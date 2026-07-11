@@ -1,17 +1,20 @@
-From 53ecd12879543a1934908d1026fb5bbf1f64d58a Mon Sep 17 00:00:00 2001
+From 631e128cc79d0dd2f92d434854f90c22bbc1b7c3 Mon Sep 17 00:00:00 2001
 From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
 Date: Mon, 8 Jun 2026 22:03:42 +0800
 Subject: [PATCH] Update CMake configuration to version 3.10 and enhance
  project structure
 
 ---
- CMakeLists.txt              | 150 ++++++++++++++++++++++++++++--------
- cmake/minmeaConfig.cmake.in |   3 +
- 2 files changed, 123 insertions(+), 30 deletions(-)
+ CMakeLists.txt                 | 150 ++++++++++++++++++++++++++-------
+ README.md                      |   2 +-
+ cmake/minmeaConfig.cmake.in    |   3 +
+ compat/minmea_compat_windows.h |   2 +-
+ minmea.h                       |   2 +-
+ 5 files changed, 126 insertions(+), 33 deletions(-)
  create mode 100644 cmake/minmeaConfig.cmake.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ce1865f..e7ba636 100644
+index ce1865f..318c97b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,48 +1,138 @@
@@ -50,6 +53,7 @@ index ce1865f..e7ba636 100644
 +
 +if(MSVC)
 +    target_compile_options(minmea PRIVATE /W4)
++    target_compile_definitions(minmea PRIVATE MINMEA_INCLUDE_COMPAT)
 +else()
 +    target_compile_options(minmea PRIVATE -Wall -Wextra)
 +endif()
@@ -154,8 +158,7 @@ index ce1865f..e7ba636 100644
 +    if(MSVC)
 +        install(FILES
 +            compat/minmea_compat_windows.h
-+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-+            RENAME minmea_compat.h
++            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/compat"
 +        )
 +    endif()
 +
@@ -184,6 +187,19 @@ index ce1865f..e7ba636 100644
 +        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/minmea
 +    )
 +endif()
+diff --git a/README.md b/README.md
+index 5d66e9a..42e2f53 100644
+--- a/README.md
++++ b/README.md
+@@ -39,7 +39,7 @@ Minmea runs out-of-the-box under most Unix-compatible systems. Support for non-U
+ (including native Windows builds under MSVC) is provided via compatibility headers:
+ 
+ 1. Define `MINMEA_INCLUDE_COMPAT` in the build environment.
+-2. Add appropriate compatibility header from under `compat/` directory as `minmea_compat.h`.
++2. Add appropriate compatibility header from under `compat/` directory.
+ 
+ If your GPS receiver outputs very long sentences, consider increasing `MINMEA_MAX_SENTENCE_LENGTH`
+ in your build environment.
 diff --git a/cmake/minmeaConfig.cmake.in b/cmake/minmeaConfig.cmake.in
 new file mode 100644
 index 0000000..a1af469
@@ -194,6 +210,32 @@ index 0000000..a1af469
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/minmeaTargets.cmake")
 \ No newline at end of file
+diff --git a/compat/minmea_compat_windows.h b/compat/minmea_compat_windows.h
+index ef1ccb7..3f70631 100644
+--- a/compat/minmea_compat_windows.h
++++ b/compat/minmea_compat_windows.h
+@@ -8,7 +8,7 @@
+ 
+ #if defined(_MSC_VER)
+ 
+-#if !defined(HAVE_STRUCT_TIMESPEC)
++#if _MSC_VER < 1900
+ struct timespec {
+     time_t tv_sec;
+     long tv_nsec;
+diff --git a/minmea.h b/minmea.h
+index da2ab4f..bca261d 100644
+--- a/minmea.h
++++ b/minmea.h
+@@ -19,7 +19,7 @@ extern "C" {
+ #include <time.h>
+ #include <math.h>
+ #ifdef MINMEA_INCLUDE_COMPAT
+-#include <minmea_compat.h>
++#include <compat/minmea_compat_windows.h>
+ #endif
+ 
+ #ifndef MINMEA_MAX_SENTENCE_LENGTH
 -- 
-2.47.3
+2.54.0.windows.1
 
