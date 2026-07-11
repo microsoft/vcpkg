@@ -10045,8 +10045,8 @@
       "port-version": 4
     },
     "tensorpipe": {
-      "baseline": "2022-03-16",
-      "port-version": 6
+      "baseline": "2025-11-05",
+      "port-version": 0
     },
     "termcolor": {
       "baseline": "2.1.0",
