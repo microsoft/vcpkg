@@ -9793,7 +9793,7 @@
       "port-version": 0
     },
     "stormlib": {
-      "baseline": "9.31",
+      "baseline": "9.40",
       "port-version": 0
     },
     "str-view": {
