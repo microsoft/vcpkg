@@ -1888,6 +1888,10 @@
       "baseline": "2024-09-04",
       "port-version": 0
     },
+    "cofetch": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "coin": {
       "baseline": "4.0.8",
       "port-version": 1
