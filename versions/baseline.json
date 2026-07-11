@@ -4798,7 +4798,7 @@
     },
     "libavif": {
       "baseline": "1.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libb2": {
       "baseline": "0.98.1",
