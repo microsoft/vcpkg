@@ -6645,7 +6645,7 @@
       "port-version": 0
     },
     "miniz": {
-      "baseline": "3.1.1",
+      "baseline": "3.1.2",
       "port-version": 0
     },
     "minizip": {
