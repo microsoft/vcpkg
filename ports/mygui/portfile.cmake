@@ -17,6 +17,7 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools MYGUI_BUILD_TOOLS
+        tools MYGUI_INSTALL_TOOLS
         msdf MYGUI_MSDF_FONTS
         msdf MYGUI_USE_SYSTEM_MSDFGEN
     INVERTED_FEATURES
