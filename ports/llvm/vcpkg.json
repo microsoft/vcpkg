@@ -1,15 +1,22 @@
 {
   "name": "llvm",
-  "version": "18.1.6",
-  "port-version": 6,
+  "version": "22.1.8",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0 WITH LLVM-exception",
-  "supports": "!uwp & !(arm & windows)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "atl",
       "platform": "windows & !mingw"
+    },
+    {
+      "name": "llvm",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -26,35 +33,42 @@
   ],
   "default-features": [
     "clang",
-    "default-targets",
-    "enable-bindings",
-    "enable-terminfo",
+    "enable-libxml2",
+    "enable-rtti",
     "enable-zlib",
     "enable-zstd",
     "lld",
+    "target-platform-specific",
     "tools"
   ],
   "features": {
     "bolt": {
-      "description": "BOLT is a post-link optimizer developed to speed up large applications.",
+      "description": "BOLT is a post-link optimizer developed to speed up large applications."
+    },
+    "clang": {
+      "description": "Include C Language Family Front-end."
+    },
+    "clang-enable-cir": {
+      "description": "Include ClangIR.",
       "dependencies": [
         {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools"
+            "clang",
+            "mlir"
           ]
         }
       ]
     },
-    "clang": {
-      "description": "Include C Language Family Front-end.",
+    "clang-enable-static-analyzer": {
+      "description": "Include static analyzer in Clang binary.",
       "dependencies": [
         {
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools"
+            "clang"
           ]
         }
       ]
@@ -80,35 +94,6 @@
           "features": [
             "clang"
           ]
-        }
-      ]
-    },
-    "default-targets": {
-      "description": "Build with platform-specific default targets.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-aarch64"
-          ],
-          "platform": "arm64"
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-x86"
-          ],
-          "platform": "x86 | x64"
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-arm"
-          ],
-          "platform": "arm & !arm64"
         }
       ]
     },
@@ -175,9 +160,6 @@
     "enable-rtti": {
       "description": "Build LLVM with run-time type information."
     },
-    "enable-terminfo": {
-      "description": "Use terminfo database if available."
-    },
     "enable-zlib": {
       "description": "Build with ZLib.",
       "dependencies": [
@@ -201,11 +183,14 @@
           "default-features": false,
           "features": [
             "clang",
-            "mlir",
-            "tools"
+            "flang-rt",
+            "mlir"
           ]
         }
       ]
+    },
+    "flang-rt": {
+      "description": "Include flang-rt library."
     },
     "libc": {
       "description": "Include libc library.",
@@ -215,14 +200,24 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "tools"
+            "clang"
           ]
         }
       ]
     },
     "libclc": {
-      "description": "Include OpenCL library."
+      "description": "Include OpenCL library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "clang",
+            "tools"
+          ]
+        }
+      ]
     },
     "libcxx": {
       "description": "Include libcxx library.",
@@ -232,8 +227,7 @@
           "default-features": false,
           "features": [
             "clang",
-            "libcxxabi",
-            "tools"
+            "libcxxabi"
           ]
         }
       ]
@@ -246,35 +240,19 @@
           "default-features": false,
           "features": [
             "clang",
-            "libcxx",
-            "tools"
+            "libcxx"
           ]
         }
       ]
+    },
+    "libsycl": {
+      "description": "Export libsycl library."
     },
     "libunwind": {
-      "description": "Include libunwind library.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Include libunwind library."
     },
     "lld": {
-      "description": "Include LLVM linker.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Include LLVM linker."
     },
     "lldb": {
       "description": "Include LLVM debugger.",
@@ -283,9 +261,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "enable-terminfo",
-            "tools"
+            "clang"
           ]
         }
       ]
@@ -297,11 +273,13 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools",
             "utils"
           ]
         }
       ]
+    },
+    "offload": {
+      "description": "Include offload library."
     },
     "openmp": {
       "description": "Include LLVM OpenMP libraries.",
@@ -316,6 +294,9 @@
         }
       ]
     },
+    "orc-rt": {
+      "description": "Include orc-rt library."
+    },
     "polly": {
       "description": "Include Polly (Polyhedral optimizations for LLVM) project.",
       "dependencies": [
@@ -323,20 +304,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools",
             "utils"
-          ]
-        }
-      ]
-    },
-    "pstl": {
-      "description": "Include pstl (Parallel STL) library.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
           ]
         }
       ]
@@ -422,6 +390,35 @@
     "target-nvptx": {
       "description": "Build with NVPTX backend."
     },
+    "target-platform-specific": {
+      "description": "Build with platform-specific backend.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-arm"
+          ],
+          "platform": "arm32"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-aarch64"
+          ],
+          "platform": "arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-x86"
+          ],
+          "platform": "x86 | x64"
+        }
+      ]
+    },
     "target-powerpc": {
       "description": "Build with PowerPC backend."
     },
@@ -432,7 +429,7 @@
       "description": "Build with Sparc backend."
     },
     "target-spirv": {
-      "description": "Build with SPIRV backend (experimental)."
+      "description": "Build with SPIRV backend."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
@@ -456,16 +453,7 @@
       "description": "Build LLVM tools."
     },
     "utils": {
-      "description": "Build LLVM utils.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Build LLVM utils."
     }
   }
 }
