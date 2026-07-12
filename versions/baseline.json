@@ -6881,8 +6881,8 @@
       "port-version": 1
     },
     "mygui": {
-      "baseline": "3.4.3",
-      "port-version": 4
+      "baseline": "3.5.0",
+      "port-version": 0
     },
     "mypaint-brushes": {
       "baseline": "2.0.2",
