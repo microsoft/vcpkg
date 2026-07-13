@@ -7,8 +7,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tools MYGUI_BUILD_TOOLS
-        tools MYGUI_INSTALL_TOOLS
         msdf MYGUI_MSDF_FONTS
         msdf MYGUI_USE_SYSTEM_MSDFGEN
     INVERTED_FEATURES
@@ -32,18 +30,12 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/MyGUI)
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/bin/SDL2.dll"
-    "${CURRENT_PACKAGES_DIR}/debug/bin/SDL2d.dll"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
-
-if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES FontEditor ImageEditor LayoutEditor SkinEditor AUTO_CLEAN)
-endif()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
