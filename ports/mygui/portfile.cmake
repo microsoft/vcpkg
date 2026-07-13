@@ -5,15 +5,6 @@ vcpkg_from_github(
     SHA512 6bf0430d170a0a6a2afa3724973811025e11bf6622afab8077f4024eea12f4e2835e19b88b46f7a9231ba151445e2a79a8dabee13b6a1e5f6725ac3b880afbeb
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
-    message(STATUS "Setting MYGUI_RENDERSYSTEM to 8 (GLES) - officially supported MyGUI render system for wasm32")
-    set(MYGUI_RENDERSYSTEM 8)
-elseif("opengl" IN_LIST FEATURES)
-    set(MYGUI_RENDERSYSTEM 4)
-else()
-    set(MYGUI_RENDERSYSTEM 1)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools MYGUI_BUILD_TOOLS
@@ -33,7 +24,7 @@ vcpkg_cmake_configure(
         -DMYGUI_BUILD_WRAPPER=FALSE
         -DMYGUI_BUILD_DOCS=FALSE
         -DMYGUI_USE_SYSTEM_PUGIXML=TRUE
-        -DMYGUI_RENDERSYSTEM=${MYGUI_RENDERSYSTEM}
+        -DMYGUI_RENDERSYSTEM=1
         ${FEATURE_OPTIONS}
 )
 

@@ -34,13 +34,6 @@
     "obsolete": {
       "description": "Keep obsolete functions."
     },
-    "opengl": {
-      "description": "Use OpenGL render system.",
-      "supports": "!android",
-      "dependencies": [
-        "opengl"
-      ]
-    },
     "tools": {
       "description": "Install MyGUI tools.",
       "supports": "!android"
