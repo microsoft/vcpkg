@@ -457,7 +457,7 @@
       "port-version": 2
     },
     "aws-c-auth": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -481,7 +481,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.27.2",
+      "baseline": "0.27.3",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -489,7 +489,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.12.7",
+      "baseline": "0.12.8",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -7605,7 +7605,7 @@
       "port-version": 0
     },
     "osp-collection": {
-      "baseline": "1.0.1",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "osqp": {
@@ -9985,7 +9985,7 @@
       "port-version": 0
     },
     "talib": {
-      "baseline": "0.6.4",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "tanakh-cmdline": {
