@@ -10,6 +10,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         arrow ITCH_WITH_ARROW
+        python ITCH_BUILD_PYTHON
 )
 
 vcpkg_cmake_configure(
