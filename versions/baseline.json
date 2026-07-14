@@ -6285,7 +6285,7 @@
       "port-version": 0
     },
     "luajit": {
-      "baseline": "2026-06-29",
+      "baseline": "2026-07-11",
       "port-version": 0
     },
     "luasec": {
