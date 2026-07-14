@@ -7,7 +7,8 @@ vcpkg_from_github(
     SHA512 d3072f590212d40010fa7946e000ac9fe927c9058fcda518c14275c7a217207db644d44a124398873d3875bb5f1f8e52dbeccfbc4b4c003e8e35fd83486fc343
     HEAD_REF master
     PATCHES
-        undef-KJ_USE_EPOLL-for-ANDROID_PLATFORM-23.patch
+        001-fix-android.patch
+        002-fix-pkg-config.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

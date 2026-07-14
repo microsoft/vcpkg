@@ -1,0 +1,24 @@
+diff --git a/c++/CMakeLists.txt b/c++/CMakeLists.txt
+index afc8ff6a..a311106f 100644
+--- a/c++/CMakeLists.txt
++++ b/c++/CMakeLists.txt
+@@ -233,13 +233,18 @@ if(NOT CAPNP_LITE)
+     pkgconfig/kj-gzip.pc
+     pkgconfig/kj-http.pc
+     pkgconfig/kj-test.pc
+-    pkgconfig/kj-tls.pc
+     pkgconfig/capnp-rpc.pc
+     pkgconfig/capnp-websocket.pc
+     pkgconfig/capnp-json.pc
+   )
+ endif()
+ 
++if(WITH_OPENSSL)
++  list(APPEND CAPNP_PKG_CONFIG_FILES
++    pkgconfig/kj-tls.pc
++  )
++endif()
++
+ foreach(pcfile ${CAPNP_PKG_CONFIG_FILES})
+   configure_file(${pcfile}.in "${CMAKE_CURRENT_BINARY_DIR}/${pcfile}" @ONLY)
+   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${pcfile}" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
