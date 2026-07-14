@@ -457,7 +457,7 @@
       "port-version": 2
     },
     "aws-c-auth": {
-      "baseline": "0.10.3",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -481,7 +481,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.27.2",
+      "baseline": "0.27.3",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -489,7 +489,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.12.7",
+      "baseline": "0.12.8",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -501,7 +501,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.40.1",
+      "baseline": "0.41.0",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -1809,7 +1809,7 @@
       "port-version": 2
     },
     "cleishm-frequency-cpp": {
-      "baseline": "1.1.3",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "cleishm-thermo-cpp": {
@@ -2777,7 +2777,7 @@
       "port-version": 1
     },
     "ecm": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "ecos": {
@@ -3369,7 +3369,7 @@
       "port-version": 3
     },
     "geo-utils-cpp": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "geogram": {
@@ -4273,15 +4273,15 @@
       "port-version": 0
     },
     "karchive": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kauth": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kbreezeicons": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kcenon-common-system": {
@@ -4289,15 +4289,15 @@
       "port-version": 0
     },
     "kcodecs": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kconfig": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kcoreaddons": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kcp": {
@@ -4305,7 +4305,7 @@
       "port-version": 0
     },
     "kcrash": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kdalgorithms": {
@@ -4317,7 +4317,7 @@
       "port-version": 0
     },
     "kdbusaddons": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kddockwidgets": {
@@ -4529,7 +4529,7 @@
       "port-version": 0
     },
     "kf6-solid": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kfr": {
@@ -4537,15 +4537,15 @@
       "port-version": 0
     },
     "kglobalaccel": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kguiaddons": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "ki18n": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kinectsdk1": {
@@ -4569,11 +4569,11 @@
       "port-version": 0
     },
     "kitemmodels": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kitemviews": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kleidiai": {
@@ -4637,11 +4637,11 @@
       "port-version": 3
     },
     "kwidgetsaddons": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kwindowsystem": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "kwsys": {
@@ -5893,7 +5893,7 @@
       "port-version": 1
     },
     "libva": {
-      "baseline": "2.24.0",
+      "baseline": "2.24.1",
       "port-version": 0
     },
     "libvault": {
@@ -6105,7 +6105,7 @@
       "port-version": 0
     },
     "libzim": {
-      "baseline": "9.8.0",
+      "baseline": "9.8.1",
       "port-version": 0
     },
     "libzip": {
@@ -6201,7 +6201,7 @@
       "port-version": 6
     },
     "lmdb": {
-      "baseline": "0.9.35",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "lodepng": {
@@ -6654,6 +6654,10 @@
     },
     "minizip-ng": {
       "baseline": "4.1.0",
+      "port-version": 0
+    },
+    "minmea": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "mio": {
@@ -7605,7 +7609,7 @@
       "port-version": 0
     },
     "osp-collection": {
-      "baseline": "1.0.1",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "osqp": {
@@ -9961,7 +9965,7 @@
       "port-version": 1
     },
     "syntax-highlighting": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "syscalls-cpp": {
@@ -9985,7 +9989,7 @@
       "port-version": 0
     },
     "talib": {
-      "baseline": "0.6.4",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "tanakh-cmdline": {
@@ -10113,7 +10117,7 @@
       "port-version": 4
     },
     "threadweaver": {
-      "baseline": "6.27.0",
+      "baseline": "6.28.0",
       "port-version": 0
     },
     "thrift": {
@@ -10329,7 +10333,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.26.10",
+      "baseline": "0.26.11",
       "port-version": 0
     },
     "tree-sitter-c": {

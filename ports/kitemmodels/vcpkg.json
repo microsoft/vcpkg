@@ -1,6 +1,6 @@
 {
   "name": "kitemmodels",
-  "version": "6.27.0",
+  "version": "6.28.0",
   "description": "Models for Qt Model/View system",
   "homepage": "https://invent.kde.org/frameworks/kitemmodels",
   "documentation": "https://api.kde.org/kitemmodels-index.html",
