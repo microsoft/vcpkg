@@ -1,0 +1,8 @@
+reliable provides a static library and header:
+
+    find_path(RELIABLE_INCLUDE_DIR reliable.h)
+    find_library(RELIABLE_LIBRARY reliable)
+    target_include_directories(main PRIVATE ${RELIABLE_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${RELIABLE_LIBRARY})
+
+reliable is also discoverable via pkg-config as "reliable".

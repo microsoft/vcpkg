@@ -1,0 +1,17 @@
+{
+  "name": "mas-bandwidth-yojimbo",
+  "version": "1.6.3",
+  "description": "A network library for client/server games written in C++, designed around the networking requirements of competitive multiplayer games.",
+  "homepage": "https://github.com/mas-bandwidth/yojimbo",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "libsodium",
+    "mas-bandwidth-netcode",
+    "mas-bandwidth-reliable",
+    "mas-bandwidth-serialize",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

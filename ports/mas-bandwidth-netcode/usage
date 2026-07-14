@@ -1,0 +1,13 @@
+netcode provides a static library and header:
+
+    find_path(NETCODE_INCLUDE_DIR netcode.h)
+    find_library(NETCODE_LIBRARY netcode)
+    target_include_directories(main PRIVATE ${NETCODE_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${NETCODE_LIBRARY})
+
+netcode uses libsodium for encryption and authentication; link it as well:
+
+    find_package(unofficial-sodium CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial-sodium::sodium)
+
+On Windows, also link ws2_32 and iphlpapi.

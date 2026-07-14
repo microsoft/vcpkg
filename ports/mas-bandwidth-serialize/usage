@@ -1,0 +1,4 @@
+serialize provides CMake targets:
+
+    find_package(serialize CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE serialize::serialize)
