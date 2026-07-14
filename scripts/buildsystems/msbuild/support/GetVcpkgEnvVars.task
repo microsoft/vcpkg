@@ -7,15 +7,33 @@
       <Using Namespace="System" />
       <Using Namespace="System.Text" />
       <Using Namespace="System.Collections" />
+      <Using Namespace="System.Collections.Generic" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
             var sb = new StringBuilder();
+
+            // VCPKG_KEEP_ENV_VARS lists additional variable names (semicolon-separated)
+            // that should be forwarded
+            var keepVars = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            string keepList = Environment.GetEnvironmentVariable("VCPKG_KEEP_ENV_VARS");
+            if (!string.IsNullOrEmpty(keepList))
+            {
+                foreach (var name in keepList.Split(';'))
+                {
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                      keepVars.Add(name.Trim());
+                    }
+                }
+            }
+
             foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
             {
                 string key = de.Key.ToString();
-                // Filter for both prefixes
-                if (key.StartsWith("VCPKG_", StringComparison.OrdinalIgnoreCase) || 
-                    key.StartsWith("X_VCPKG_", StringComparison.OrdinalIgnoreCase))
+                // Filter for both prefixes, plus anything explicitly kept via VCPKG_KEEP_ENV_VARS
+                if (key.StartsWith("VCPKG_", StringComparison.OrdinalIgnoreCase) ||
+                    key.StartsWith("X_VCPKG_", StringComparison.OrdinalIgnoreCase) ||
+                    keepVars.Contains(key))
                 {
                     string val = de.Value.ToString();
                     
