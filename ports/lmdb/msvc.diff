@@ -1,0 +1,89 @@
+diff --git a/libraries/liblmdb/mdb.c b/libraries/liblmdb/mdb.c
+index 6802cc7..0862916 100644
+--- a/libraries/liblmdb/mdb.c
++++ b/libraries/liblmdb/mdb.c
+@@ -7213,7 +7213,7 @@ ok:
+ #endif
+ 	*ret = p;
+ 	if (enc && env->me_encfunc) {
+-		*enc = (MDB_page *)(id3.mptr + rem * env->me_psize);
++		*enc = (MDB_page *)((char *)id3.mptr + rem * env->me_psize);
+ 	}
+ 	return rc;
+ }
+@@ -11614,7 +11614,8 @@ mdb_env_copyfd0(MDB_env *env, HANDLE fd)
+ #endif
+ #if MDB_RPAGE_CACHE
+ #ifdef _WIN32
+-	LARGE_INTEGER	off = 0;
++	LARGE_INTEGER	off;
++	off.QuadPart = 0;
+ #else
+ 	off_t	off = 0;
+ #endif
+@@ -11678,7 +11679,11 @@ mdb_env_copyfd0(MDB_env *env, HANDLE fd)
+ 	}
+ #if MDB_RPAGE_CACHE
+ 	if (MDB_REMAPPING(env->me_flags)) {
++#ifdef _WIN32
++		off.QuadPart = wsize;
++#else
+ 		off = wsize;
++#endif
+ 	}
+ #endif
+ 	wsize = w3 - wsize;
+@@ -11686,7 +11691,11 @@ mdb_env_copyfd0(MDB_env *env, HANDLE fd)
+ 		w2 = (wsize > MAX_WRITE) ? MAX_WRITE : wsize;
+ #if MDB_RPAGE_CACHE
+ 		if (MDB_REMAPPING(env->me_flags)) {
++#ifdef _WIN32
++			MAP(rc, env, ptr, w2, off.QuadPart);
++#else
+ 			MAP(rc, env, ptr, w2, off);
++#endif
+ 		}
+ #endif
+ 		DO_WRITE(rc, fd, ptr, w2, len);
+@@ -11704,7 +11713,11 @@ mdb_env_copyfd0(MDB_env *env, HANDLE fd)
+ 			wsize -= len;
+ #if MDB_RPAGE_CACHE
+ 			if (MDB_REMAPPING(env->me_flags)) {
++#ifdef _WIN32
++				off.QuadPart += len;
++#else
+ 				off += len;
++#endif
+ 			}
+ #endif
+ 			continue;
+@@ -11946,7 +11959,8 @@ mdb_env_incr_loadfd(MDB_env *env, HANDLE fd)
+ 		return ENOMEM;
+ 
+ #ifdef _WIN32
+-		SetFilePointerEx(env->me_fd, 0, NULL, FILE_BEGIN);
++		off.QuadPart = 0;
++		SetFilePointerEx(env->me_fd, off, NULL, FILE_BEGIN);
+ #else
+ 		lseek(env->me_fd, 0, SEEK_SET);
+ #endif
+@@ -12011,15 +12025,16 @@ mdb_env_incr_loadfd(MDB_env *env, HANDLE fd)
+ 			ptr += rlen;
+ 			rsize -= rlen;
+ 		}
+-		off = (pg-prevpg-numprev) * env->me_psize;
+ 		rsize = numpgs * env->me_psize;
+-		if (off) {
+ #ifdef _WIN32
++		off.QuadPart = (pg-prevpg-numprev) * env->me_psize;
++		if (off.QuadPart)
+ 			SetFilePointerEx(env->me_fd, off, NULL, FILE_CURRENT);
+ #else
++		off = (pg-prevpg-numprev) * env->me_psize;
++		if (off)
+ 			lseek(env->me_fd, off, SEEK_CUR);
+ #endif
+-		}
+ 		ptr = pbuf;
+ 		while (rsize > 0) {
+ 			w2 = (rsize > MAX_WRITE) ? MAX_WRITE: rsize;
