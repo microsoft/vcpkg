@@ -1099,7 +1099,6 @@ proxygen:arm64-linux=cascade
 ptyqt:arm64-linux=cascade
 ptyqt:arm64-windows=cascade
 pulseaudio:arm64-linux=cascade
-pybind11:arm64-linux=cascade
 python2:arm64-linux=fail
 qca:arm64-linux=cascade
 qcoro:arm64-linux=cascade
