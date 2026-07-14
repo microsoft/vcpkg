@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 bf845ed1c44c4d20fc7cd0a009b79d6591f63697d126fb6d9ab00dc071109fd6066e48d7124aeb9692555d016114f2a40acb6b8f48440e7839ece751ab9712bb
     HEAD_REF master
+    PATCHES
+        001-fix-linkage.patch
 )
 
 # Header only
