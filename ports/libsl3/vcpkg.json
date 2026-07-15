@@ -1,6 +1,6 @@
 {
   "name": "libsl3",
-  "version": "1.2.51003",
+  "version": "1.2.53003",
   "description": "A C++ interface for SQLite 3.x.",
   "homepage": "https://github.com/a4z/libsl3",
   "documentation": "https://a4z.github.io/libsl3/",
