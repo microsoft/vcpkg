@@ -1,14 +1,5 @@
-From 306220e57881064da99f89ad4192b3e19c7953a9 Mon Sep 17 00:00:00 2001
-From: Stig Hornang <shornang@gmail.com>
-Date: Thu, 31 Aug 2023 21:20:09 +0200
-Subject: [PATCH] Undef KJ_USE_EPOLL for ANDROID_PLATFORM < 23
-
----
- c++/src/kj/async-unix.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
 diff --git a/c++/src/kj/async-unix.h b/c++/src/kj/async-unix.h
-index 665305ea..c5f195cf 100644
+index e66ad8e4..fe8d803c 100644
 --- a/c++/src/kj/async-unix.h
 +++ b/c++/src/kj/async-unix.h
 @@ -34,7 +34,10 @@
@@ -23,6 +14,3 @@ index 665305ea..c5f195cf 100644
  // Default to epoll on Linux.
  #define KJ_USE_EPOLL 1
  #elif __APPLE__ || __FreeBSD__ || __NetBSD__ || __DragonFly__
--- 
-2.41.0.windows.3
-
