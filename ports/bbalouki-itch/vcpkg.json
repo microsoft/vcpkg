@@ -1,9 +1,10 @@
 {
   "name": "bbalouki-itch",
-  "version": "1.1.0",
-  "maintainers": "Bertin Balouki SIMYELI",
+  "version": "1.6.2",
   "description": "A High-Performance C++ library for parsing the ITCH 5.0 protocol.",
   "homepage": "https://github.com/bbalouki/itchcpp",
+  "documentation": "https://bbalouki.github.io/itchcpp/",
+  "maintainers": "Bertin Balouki SIMYELI",
   "license": "MIT",
   "dependencies": [
     {
@@ -14,5 +15,20 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "python": {
+      "description": "Build the pybind11 Python bindings",
+      "dependencies": ["pybind11"]
+    },
+    "arrow": {
+      "description": "Enable Apache Arrow / Parquet columnar export",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "features": ["parquet"]
+        }
+      ]
+    }
+  }
 }
