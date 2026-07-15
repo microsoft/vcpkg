@@ -2634,7 +2634,7 @@
     },
     "draco": {
       "baseline": "1.5.7",
-      "port-version": 0
+      "port-version": 1
     },
     "drekar-launch-process-cpp": {
       "baseline": "0.1.0",
