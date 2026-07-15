@@ -93,7 +93,7 @@ jobs:
     displayName: 'Ensure Node.js is available'
     condition: always()
     inputs:
-      version: '22.x'
+      version: '24.x'
   - task: PowerShell@2
     displayName: 'Build a file list for all packages'
     condition: always()

@@ -13,14 +13,23 @@ $CudaUrl = Get-AssetUrl `
   -BlobAssetName 'cuda_13.3.1_windows.exe'
 
 # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
-# Intentionally omitted:
+# On version updates, extract the package manifests from the installer with:
+#  7z x cuda_<version>_windows.exe -o<output> -ir!*.nvi
+# Each manifest whose customInstallTree/treeNode has accessibility="selectable" names a valid package
+# in its root <nvi name="..."> element. Compare those names with both lists below; NVIDIA changes the
+# package names and composition between releases. Confirm every omission is still related to drivers,
+# documentation, or Visual Studio.
+#
+# Intentionally omitted due to being Visual Studio / GUI features:
 #  ctadvisor_13.3
-#  documentation_13.3
 #  nsight_compute_13.3
 #  nsight_systems_13.3
 #  nsight_vse_13.3
-#  occupancy_calculator_13.3 (this is named like a tool but listed as 'documentation' in the installer)
 #  visual_studio_integration_13.3
+# Intentionally omitted due to being documentation:
+#  documentation_13.3
+#  occupancy_calculator_13.3 (this is named like a tool but listed as 'documentation' in the installer)
+# (Drivers used to be omitted but as of CUDA 13 they no longer seem to be in the CUDA installer)
 DownloadAndInstall -Url $CudaUrl -Args @(
   '-s',
   'crt_13.3',
