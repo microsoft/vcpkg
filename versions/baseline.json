@@ -2952,6 +2952,10 @@
       "baseline": "2021-02-13",
       "port-version": 0
     },
+    "fancyargumentparser": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "fann": {
       "baseline": "2023-01-26",
       "port-version": 0
