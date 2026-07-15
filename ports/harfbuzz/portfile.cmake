@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         ${ANDROID_LOCALECONV_L_PATCH}
+        ignore-unused-template.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -109,6 +110,13 @@ endif()
 set(LANGUAGES C CXX)
 if(VCPKG_TARGET_IS_APPLE)
     list(APPEND LANGUAGES OBJC OBJCXX)
+endif()
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    # The hb-gpu-* utilities fail to link on wasm32-emscripten (some objects
+    # are built with -pthread and some without, so wasm-ld rejects
+    # --shared-memory); only the libraries are useful here anyway.
+    list(APPEND OPTIONS -Dutilities=disabled)
 endif()
 
 vcpkg_configure_meson(
