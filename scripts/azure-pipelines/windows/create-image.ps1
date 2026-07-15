@@ -24,7 +24,7 @@ $WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 22
+$TotalProgress = 20
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -222,9 +222,6 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-cudnn.ps1'
-
-####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
