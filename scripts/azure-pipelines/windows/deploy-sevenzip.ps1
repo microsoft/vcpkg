@@ -9,7 +9,7 @@ if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
 
 $SevenZipUrl = Get-AssetUrl `
   -SasToken $SasToken `
-  -InternetUrl 'https://github.com/ip7z/7zip/releases/download/26.01/7z2601-x64.exe' `
-  -BlobAssetName '7z2601-x64.exe'
+  -InternetUrl 'https://github.com/ip7z/7zip/releases/download/26.02/7z2602-x64.exe' `
+  -BlobAssetName '7z2602-x64.exe'
 
 DownloadAndInstall -Url $SevenZipUrl -Args @('/S')
