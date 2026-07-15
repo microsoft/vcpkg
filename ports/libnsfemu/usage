@@ -1,0 +1,4 @@
+libnsfemu provides CMake targets:
+
+    find_package(libnsfemu CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libnsfemu::nsfemu)

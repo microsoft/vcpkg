@@ -5420,6 +5420,10 @@
       "baseline": "0.8.8",
       "port-version": 0
     },
+    "libnsfemu": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "libobfuscate": {
       "baseline": "2024-07-10",
       "port-version": 0
