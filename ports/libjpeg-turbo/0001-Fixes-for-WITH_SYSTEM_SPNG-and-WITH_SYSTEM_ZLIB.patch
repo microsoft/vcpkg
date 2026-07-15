@@ -1,20 +1,30 @@
-From 64831068d6260f1c631c0f0166e6d19899be1fa5 Mon Sep 17 00:00:00 2001
+From d8d95916fe397f9af8b4c98d27005190089da9b3 Mon Sep 17 00:00:00 2001
 From: tartanpaint <35690467+tartanpaint@users.noreply.github.com>
 Date: Tue, 14 Jul 2026 10:07:55 +0100
 Subject: [PATCH] Fixes for WITH_SYSTEM_SPNG and WITH_SYSTEM_ZLIB
 
 ---
- CMakeLists.txt          | 22 ++++++++++++++++++----
- release/Config.cmake.in | 11 +++++++++++
- 2 files changed, 29 insertions(+), 4 deletions(-)
+ CMakeLists.txt             | 51 +++++++++++++++++++++++++++++++-------
+ release/Config.cmake.in    | 11 ++++++++
+ release/libjpeg.pc.in      |  2 ++
+ release/libturbojpeg.pc.in |  2 ++
+ 4 files changed, 57 insertions(+), 9 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f1442728..7d8f9e7a 100644
+index f1442728..9f90dd39 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -735,10 +735,24 @@ if(WITH_TURBOJPEG OR WITH_TOOLS OR WITH_TESTS)
+@@ -734,17 +734,33 @@ if(WITH_TURBOJPEG OR WITH_TOOLS OR WITH_TESTS)
+     OFF)
    boolean_number(WITH_SYSTEM_SPNG)
    report_option(WITH_SYSTEM_SPNG "System-supplied libspng")
++
++  option(WITH_SYSTEM_ZLIB
++    "Build ${CMAKE_PROJECT_NAME} against the system-supplied zlib implementation rather than the implementation in the ${CMAKE_PROJECT_NAME} source tree"
++    OFF)
++  boolean_number(WITH_SYSTEM_ZLIB)
++  report_option(WITH_SYSTEM_ZLIB "System-supplied zlib")
++
    if(WITH_SYSTEM_SPNG)
 -    include(FindPkgConfig)
 -    pkg_check_modules(spng REQUIRED spng IMPORTED_TARGET)
@@ -39,8 +49,38 @@ index f1442728..7d8f9e7a 100644
 +        set(SPNG_LIBRARY PkgConfig::spng)
 +    endif()
    else()
-     option(WITH_SYSTEM_ZLIB
-       "Build ${CMAKE_PROJECT_NAME} against the system-supplied zlib implementation rather than the implementation in the ${CMAKE_PROJECT_NAME} source tree"
+-    option(WITH_SYSTEM_ZLIB
+-      "Build ${CMAKE_PROJECT_NAME} against the system-supplied zlib implementation rather than the implementation in the ${CMAKE_PROJECT_NAME} source tree"
+-      OFF)
+-    boolean_number(WITH_SYSTEM_ZLIB)
+-    report_option(WITH_SYSTEM_ZLIB "System-supplied zlib")
+     add_subdirectory(src/spng)
+     set(SPNG_STATIC_SOURCES $<TARGET_OBJECTS:spng-static>)
+     unset(SPNG_LIBRARY)
+@@ -757,6 +773,23 @@ if(WITH_TURBOJPEG OR WITH_TOOLS OR WITH_TESTS)
+     set(ZLIB_STATIC_SOURCES $<TARGET_OBJECTS:zlib-static>)
+     unset(ZLIB_LIBRARY)
+   endif()
++
++  # Set Pkg-Config variables for dependencies
++  set(PKG_REQUIRES_PRIVATE "")
++  set(PKG_LIBS_PRIVATE "")
++
++  if(WITH_SYSTEM_SPNG)
++    if(TARGET spng::spng_static)
++      string(APPEND PKG_LIBS_PRIVATE " -lspng_static")
++    else()
++      string(APPEND PKG_LIBS_PRIVATE " -lspng")
++    endif()
++  endif()
++
++  if(WITH_SYSTEM_ZLIB)
++    set(PKG_REQUIRES_PRIVATE "zlib")
++  endif()
++
+ endif()
+ 
+ if(ENABLE_SHARED)
 diff --git a/release/Config.cmake.in b/release/Config.cmake.in
 index 0c1ba8aa..639cb477 100644
 --- a/release/Config.cmake.in
@@ -61,6 +101,26 @@ index 0c1ba8aa..639cb477 100644
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@Targets.cmake")
  check_required_components("@CMAKE_PROJECT_NAME@")
+diff --git a/release/libjpeg.pc.in b/release/libjpeg.pc.in
+index 74fb7fc6..d47a331e 100644
+--- a/release/libjpeg.pc.in
++++ b/release/libjpeg.pc.in
+@@ -8,3 +8,5 @@ Description: A SIMD-accelerated JPEG codec that provides the libjpeg API
+ Version: @VERSION@
+ Libs: -L${libdir} -ljpeg
+ Cflags: -I${includedir}
++Requires.private: @PKG_REQUIRES_PRIVATE@
++Libs.private: @PKG_LIBS_PRIVATE@
+diff --git a/release/libturbojpeg.pc.in b/release/libturbojpeg.pc.in
+index 81a00632..ebf73550 100644
+--- a/release/libturbojpeg.pc.in
++++ b/release/libturbojpeg.pc.in
+@@ -8,3 +8,5 @@ Description: A SIMD-accelerated JPEG codec that provides the TurboJPEG API
+ Version: @VERSION@
+ Libs: -L${libdir} -lturbojpeg
+ Cflags: -I${includedir}
++Requires.private: @PKG_REQUIRES_PRIVATE@
++Libs.private: @PKG_LIBS_PRIVATE@
 -- 
 2.47.1.windows.1
 
