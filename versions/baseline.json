@@ -2434,7 +2434,7 @@
     },
     "dawn": {
       "baseline": "20260624.223603",
-      "port-version": 1
+      "port-version": 0
     },
     "daxa": {
       "baseline": "3.3.1",
@@ -2517,11 +2517,7 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2026-06-24",
-      "port-version": 0
-    },
-    "directx-dxc-tblgen": {
-      "baseline": "2026-06-24",
+      "baseline": "2026-05-27",
       "port-version": 0
     },
     "directx-headers": {
@@ -2769,7 +2765,7 @@
       "port-version": 0
     },
     "ecbuild": {
-      "baseline": "3.14.2",
+      "baseline": "3.15.0",
       "port-version": 0
     },
     "eccodes": {
@@ -4934,7 +4930,7 @@
     },
     "libdicom": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -5666,6 +5662,10 @@
     },
     "libsigcpp": {
       "baseline": "3.8.1",
+      "port-version": 0
+    },
+    "libsl3": {
+      "baseline": "1.2.53003",
       "port-version": 0
     },
     "libslirp": {
