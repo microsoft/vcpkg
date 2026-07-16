@@ -1,6 +1,6 @@
 {
   "name": "causalontology",
-  "version": "1.0.2",
+  "version": "2.0.1",
   "description": "The C++ binding of the Causalontology standard - reified causation as a language-neutral standard and shared commons. Zero dependencies; passes all 38 frozen conformance vectors.",
   "homepage": "https://github.com/ai-university-aiu/causalontology",
   "license": "Apache-2.0",
