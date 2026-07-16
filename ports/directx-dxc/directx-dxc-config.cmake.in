@@ -1,158 +1,28 @@
-get_filename_component(Z_VCPKG_DXC_ROOT "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(Z_VCPKG_DXC_ROOT "${Z_VCPKG_DXC_ROOT}" PATH)
-get_filename_component(Z_VCPKG_DXC_ROOT "${Z_VCPKG_DXC_ROOT}" PATH)
-if(Z_VCPKG_DXC_ROOT STREQUAL "/")
-  set(Z_VCPKG_DXC_ROOT "")
-endif()
+get_filename_component(_dxc_root "${CMAKE_CURRENT_LIST_DIR}" PATH)
+get_filename_component(_dxc_root "${_dxc_root}" PATH)
 
-find_program(DIRECTX_DXC_TOOL
-    NAMES dxc dxc.exe
-    PATHS "${Z_VCPKG_DXC_ROOT}/tools/@PORT@"
-    NO_DEFAULT_PATH
-    REQUIRED
-)
+set(DIRECTX_DXC_TOOL "${_dxc_root}/@tool_path@" CACHE PATH "Location of the dxc tool")
 mark_as_advanced(DIRECTX_DXC_TOOL)
 
-if(NOT TARGET Microsoft::DXIL)
-    add_library(Microsoft::DXIL SHARED IMPORTED)
-    find_library(Z_VCPKG_DXIL_LIBRARY_RELEASE
-        NAMES dxil
-        PATHS "${Z_VCPKG_DXC_ROOT}/lib"
-        NO_DEFAULT_PATH
-        REQUIRED
-    )
-    find_library(Z_VCPKG_DXIL_LIBRARY_DEBUG
-        NAMES dxil
-        PATHS "${Z_VCPKG_DXC_ROOT}/debug/lib"
-        NO_DEFAULT_PATH
-    )
-    if(@Z_VCPKG_DXC_TARGET_IS_WINDOWS@)
-        find_file(Z_VCPKG_DXIL_DLL_RELEASE
-            NAMES dxil.dll
-            PATHS "${Z_VCPKG_DXC_ROOT}/bin"
-            NO_DEFAULT_PATH
-            REQUIRED
-        )
-        find_file(Z_VCPKG_DXIL_DLL_DEBUG
-            NAMES dxil.dll
-            PATHS "${Z_VCPKG_DXC_ROOT}/debug/bin"
-            NO_DEFAULT_PATH
-        )
-        if(Z_VCPKG_DXIL_LIBRARY_DEBUG AND Z_VCPKG_DXIL_DLL_DEBUG)
-            set_target_properties(Microsoft::DXIL PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Debug;Release"
-                IMPORTED_IMPLIB_DEBUG               "${Z_VCPKG_DXIL_LIBRARY_DEBUG}"
-                IMPORTED_LOCATION_DEBUG             "${Z_VCPKG_DXIL_DLL_DEBUG}"
-                IMPORTED_IMPLIB_RELEASE             "${Z_VCPKG_DXIL_LIBRARY_RELEASE}"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXIL_DLL_RELEASE}"
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        else()
-            set_target_properties(Microsoft::DXIL PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Release"
-                IMPORTED_IMPLIB_RELEASE             "${Z_VCPKG_DXIL_LIBRARY_RELEASE}"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXIL_DLL_RELEASE}"
-                MAP_IMPORTED_CONFIG_DEBUG           Release
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        endif()
-    else()
-        if(Z_VCPKG_DXIL_LIBRARY_DEBUG)
-            set_target_properties(Microsoft::DXIL PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Debug;Release"
-                IMPORTED_LOCATION_DEBUG             "${Z_VCPKG_DXIL_LIBRARY_DEBUG}"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXIL_LIBRARY_RELEASE}"
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        else()
-            set_target_properties(Microsoft::DXIL PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Release"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXIL_LIBRARY_RELEASE}"
-                MAP_IMPORTED_CONFIG_DEBUG           Release
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        endif()
-    endif()
-endif()
+add_library(Microsoft::DirectXShaderCompiler SHARED IMPORTED)
+set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
+   IMPORTED_CONFIGURATIONS              "Debug;Release"
+   IMPORTED_LOCATION_DEBUG              "${_dxc_root}/@dll_debug_dir@/@dll_name_dxc@"
+   IMPORTED_LOCATION_RELEASE            "${_dxc_root}/@dll_dir@/@dll_name_dxc@"
+   IMPORTED_IMPLIB                      "${_dxc_root}/lib/@lib_name@"
+   IMPORTED_SONAME                      "@lib_name@"
+   INTERFACE_INCLUDE_DIRECTORIES        "${_dxc_root}/include/directx-dxc"
+   INTERFACE_LINK_LIBRARIES             "Microsoft::DXIL"
+   IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
 
-if(NOT TARGET Microsoft::DirectXShaderCompiler)
-    add_library(Microsoft::DirectXShaderCompiler SHARED IMPORTED)
-    find_library(Z_VCPKG_DXCOMPILER_LIBRARY_RELEASE
-        NAMES dxcompiler
-        PATHS "${Z_VCPKG_DXC_ROOT}/lib"
-        NO_DEFAULT_PATH
-        REQUIRED
-    )
-    find_library(Z_VCPKG_DXCOMPILER_LIBRARY_DEBUG
-        NAMES dxcompiler
-        PATHS "${Z_VCPKG_DXC_ROOT}/debug/lib"
-        NO_DEFAULT_PATH
-    )
-    if(@Z_VCPKG_DXC_TARGET_IS_WINDOWS@)
-        find_file(Z_VCPKG_DXCOMPILER_DLL_RELEASE
-            NAMES dxcompiler.dll
-            PATHS "${Z_VCPKG_DXC_ROOT}/bin"
-            NO_DEFAULT_PATH
-            REQUIRED
-        )
-        find_file(Z_VCPKG_DXCOMPILER_DLL_DEBUG
-            NAMES dxcompiler.dll
-            PATHS "${Z_VCPKG_DXC_ROOT}/debug/bin"
-            NO_DEFAULT_PATH
-        )
-        if(Z_VCPKG_DXCOMPILER_LIBRARY_DEBUG AND Z_VCPKG_DXCOMPILER_DLL_DEBUG)
-            set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Debug;Release"
-                IMPORTED_IMPLIB_DEBUG               "${Z_VCPKG_DXCOMPILER_LIBRARY_DEBUG}"
-                IMPORTED_LOCATION_DEBUG             "${Z_VCPKG_DXCOMPILER_DLL_DEBUG}"
-                IMPORTED_IMPLIB_RELEASE             "${Z_VCPKG_DXCOMPILER_LIBRARY_RELEASE}"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXCOMPILER_DLL_RELEASE}"
-                INTERFACE_LINK_LIBRARIES            "Microsoft::DXIL"
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        else()
-            set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Release"
-                IMPORTED_IMPLIB_RELEASE             "${Z_VCPKG_DXCOMPILER_LIBRARY_RELEASE}"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXCOMPILER_DLL_RELEASE}"
-                INTERFACE_LINK_LIBRARIES            "Microsoft::DXIL"
-                MAP_IMPORTED_CONFIG_DEBUG           Release
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        endif()
-    else()
-        if(Z_VCPKG_DXCOMPILER_LIBRARY_DEBUG)
-            set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Debug;Release"
-                IMPORTED_LOCATION_DEBUG             "${Z_VCPKG_DXCOMPILER_LIBRARY_DEBUG}"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXCOMPILER_LIBRARY_RELEASE}"
-                INTERFACE_LINK_LIBRARIES            "Microsoft::DXIL"
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        else()
-            set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
-                INTERFACE_INCLUDE_DIRECTORIES       "${Z_VCPKG_DXC_ROOT}/include/dxc"
-                IMPORTED_CONFIGURATIONS             "Release"
-                IMPORTED_LOCATION_RELEASE           "${Z_VCPKG_DXCOMPILER_LIBRARY_RELEASE}"
-                INTERFACE_LINK_LIBRARIES            "Microsoft::DXIL"
-                MAP_IMPORTED_CONFIG_DEBUG           Release
-                MAP_IMPORTED_CONFIG_RELWITHDEBINFO  Release
-                MAP_IMPORTED_CONFIG_MINSIZEREL      Release
-            )
-        endif()
-    endif()
-endif()
+add_library(Microsoft::DXIL SHARED IMPORTED)
+set_target_properties(Microsoft::DXIL PROPERTIES
+   IMPORTED_CONFIGURATIONS              "Debug;Release"
+   IMPORTED_LOCATION_DEBUG              "${_dxc_root}/@dll_debug_dir@/@dll_name_dxil@"
+   IMPORTED_LOCATION_RELASE             "${_dxc_root}/@dll_dir@/@dll_name_dxil@"
+   IMPORTED_IMPLIB                      "${_dxc_root}/lib/@lib_name@"
+   IMPORTED_NO_SONAME                   TRUE
+   INTERFACE_INCLUDE_DIRECTORIES        "${_dxc_root}/include/directx-dxc"
+   IMPORTED_LINK_INTERFACE_LANGUAGES    "C")
+
+unset(_dxc_root)

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO projectM-visualizer/projectm
     REF "v${VERSION}"
-    SHA512 "9102e5136653abb81da2f36f4b08446ef553fe2d49879d8e906bd4cd30728f97ca87075e6561605cf05e0f4ecf8cbd3d95f372a99b2af893058f5c522864ea69"
+    SHA512 "dbb3088c5a0db9eaabd4d2c3232df2dd939a4b1ce5928916a63e7b10cd4321b749d779a5e39a883a12318c613f91f3b4241973958edf52291d53e1b3dc348c77"
     HEAD_REF master
     PATCHES
         macos-pkgconfig.patch
@@ -53,5 +53,10 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    COMMENT "The bundled SOIL2 sources include MIT-0 code, Apache-2.0-licensed ETC1 code, and MIT-licensed PowerVR code, but upstream does not provide their complete license texts as separate files."
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/vendor/hlslparser/LICENSE"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
