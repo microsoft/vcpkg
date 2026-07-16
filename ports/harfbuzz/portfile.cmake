@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         ${ANDROID_LOCALECONV_L_PATCH}
         ignore-unused-template.patch
+        no-threads-on-emscripten.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -128,6 +129,7 @@ vcpkg_configure_meson(
         -Dtests=disabled
         -Dbenchmark=disabled
         -Dgpu_demo=disabled
+        -Dchafa=disabled     # no chafa feature; don't let hb-view auto-detect a system copy
         ${OPTIONS}
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
@@ -194,4 +196,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/src/ms-use/COPYING")
