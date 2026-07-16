@@ -1,0 +1,37 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f7ad09a..efd32ac 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -22,9 +22,11 @@ add_library(
+ # Apache Arrow / Parquet columnar export is optional and off by default so the
+ # core library stays dependency-free. The arrow_export.cpp translation unit is
+ # empty unless ITCH_WITH_ARROW is defined.
++set(ITCH_CONFIG_FIND_DEPENDENCIES "")
+ if(${PROJECT_NAME}_WITH_ARROW)
+     find_package(Arrow CONFIG REQUIRED)
+     find_package(Parquet CONFIG REQUIRED)
++    set(ITCH_CONFIG_FIND_DEPENDENCIES "include(CMakeFindDependencyMacro)\nfind_dependency(Arrow CONFIG)\nfind_dependency(Parquet CONFIG)\n")
+     target_compile_definitions(itch PUBLIC ITCH_WITH_ARROW)
+ 
+     # Arrow's CMake config only exports the *_shared targets when Arrow was
+@@ -85,8 +87,8 @@ install(
+ 
+ # Step 4: Specify Header Destinations
+ install(
+-    DIRECTORY ${PROJECT_SOURCE_DIR}/include
+-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/itch
++    DIRECTORY ${PROJECT_SOURCE_DIR}/include/
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
+ 
+ # Step 5: Export the Target Information
+diff --git a/src/cmake/ItchConfig.cmake.in b/src/cmake/ItchConfig.cmake.in
+index c02aa63..f55ca62 100644
+--- a/src/cmake/ItchConfig.cmake.in
++++ b/src/cmake/ItchConfig.cmake.in
+@@ -1,4 +1,5 @@
+ @PACKAGE_INIT@
+ 
++@ITCH_CONFIG_FIND_DEPENDENCIES@
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/ItchTargets.cmake")

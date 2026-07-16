@@ -1,16 +1,16 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bbalouki/itchcpp
     REF "v${VERSION}"
     SHA512 f35def9e84b68b47d4dd139a53243e263add0e706ee28548df3c4f89870fa6c383ca3a2b77dbd30a67d920f937ca0cc6b86cf80790f78037c98f3ac47d228420
     HEAD_REF main
+    PATCHES
+        fix-install-layout-and-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         arrow ITCH_WITH_ARROW
-        python ITCH_BUILD_PYTHON
 )
 
 vcpkg_cmake_configure(
@@ -28,7 +28,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "itch"
     CONFIG_PATH "lib/cmake/itch"
-   
 )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
