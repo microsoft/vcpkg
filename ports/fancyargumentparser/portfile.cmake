@@ -9,7 +9,4 @@ vcpkg_from_github(
 file(GLOB HEADERS "${SOURCE_PATH}/*.h" "${SOURCE_PATH}/*.hpp")
 file(INSTALL ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
