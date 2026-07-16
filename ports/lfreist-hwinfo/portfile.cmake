@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF fff0ffb494aa8f8cb8537a35d0032235d6d5b5cc
     SHA512 9100d6a5e39096d1aa36b462499e3937fd6c829887c7cab23ebb4ac8798f9abc844111df0bc781190780f164e8e2df93b1f0dbbc2d6ac824601910b03009ed3e
     HEAD_REF main
+	PATCHES fix-gcc-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HWINFO_BUILD_SHARED)
