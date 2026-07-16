@@ -33,7 +33,8 @@
     },
     "etw": {
       "description": "Whether to include the ETW Exporter in the SDK",
-      "supports": "windows"
+      "supports": "windows",
+      "license": "MIT"
     },
     "geneva": {
       "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository",
