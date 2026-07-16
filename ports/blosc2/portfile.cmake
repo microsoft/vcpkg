@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc2
     REF "v${VERSION}"
-    SHA512 64ceb1e2bba5e5945d2e03a34489a1ca5e6ce1ec62e533b9f4a8467f583058d0e75f01da0af67ae286713f9a86f39b8f6a84fdc44ee083c5b5e2d8565996308e
+    SHA512 1f3bea52fc8686196adb5cade1331a2fab314ba04cbc7eb6154c550b8128383a9ac6dce6aa4c7d3833fd85fc5dc5634fd9dd1e0f8f8d8986a0bbb4d6c924a6a6
     HEAD_REF main
 )
 

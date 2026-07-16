@@ -63,6 +63,10 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(TARGET_IS_ARM 1)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   set(TARGET_IS_X86_64 1)
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # wasm32 is not x86: leaving every TARGET_IS_* unset keeps OpenCV off the x86 SSE baseline,
+  # whose runtime guard aborts on wasm. SIMD comes from the wasm HAL configured below.
+  set(TARGET_IS_WASM 1)
 else()
   set(TARGET_IS_X86 1)
 endif()
@@ -407,6 +411,20 @@ endif()
 
 if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
+endif()
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # OpenCV's CPU-optimization machinery assumes a native (x86/ARM) target. On wasm the baseline
+  # and dispatch lists must be empty, otherwise it bakes an x86 SSE baseline whose runtime guard
+  # aborts at startup. Mirrors OpenCV's own platforms/js/build_js.py.
+  list(APPEND ADDITIONAL_BUILD_FLAGS -DCPU_BASELINE= -DCPU_DISPATCH=)
+  if("intrinsics" IN_LIST FEATURES)
+    # SIMD via OpenCV's wasm HAL (intrin_wasm.hpp); -msimd128 makes its builtins available.
+    # CV_ENABLE_INTRINSICS itself is turned on by the "intrinsics" feature.
+    list(APPEND ADDITIONAL_BUILD_FLAGS
+      -DOPENCV_EXTRA_C_FLAGS=-msimd128
+      -DOPENCV_EXTRA_CXX_FLAGS=-msimd128)
+  endif()
 endif()
 
 vcpkg_cmake_configure(

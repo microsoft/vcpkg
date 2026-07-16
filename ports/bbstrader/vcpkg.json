@@ -1,6 +1,6 @@
 {
   "name": "bbstrader",
-  "version": "2.1.0",
+  "version": "2.3.0",
   "description": "High-performance MetaTrader 5 C++/Python Bridge",
   "homepage": "https://github.com/bbalouki/bbstrader",
   "license": "MIT",
