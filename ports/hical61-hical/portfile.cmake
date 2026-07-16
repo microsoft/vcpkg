@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Hical61/Hical
     REF "v${VERSION}"
-    SHA512 b6713a4b8eefdbc15c2dc2400ddbd76dc3f0dd484e70d074ebdc79dc77e4ab028b5a4690c47bfe9b03e68dacc70a6cde87397dbd28714a97c0acd7a27f87402f
+    SHA512 feeebad5debd254b564b13822f5ef69b76d03f817f046b6ebf201c438b65cb7a19bc3e81bd8248b3edebc2d43e5d6f90d60d4de60c7a50dc4aefd2ca2bbb8057
     HEAD_REF main
 )
 

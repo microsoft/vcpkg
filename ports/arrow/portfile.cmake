@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0004-android-datetime.patch
         0005-cmake-msvcruntime.patch
         0007-use-vcpkg-mimalloc.patch
+        0008-ostringstring.patch
 )
 
 # Check cpp/cmake_modules/DefineOptions.cmake for option dependencies -

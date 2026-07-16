@@ -1,0 +1,24 @@
+diff --git a/src/c99/iers.c b/src/c99/iers.c
+index dbbae395..b27da1a6 100644
+--- a/src/c99/iers.c
++++ b/src/c99/iers.c
+@@ -64,7 +64,6 @@
+ #  define NTP_UNIX_EPOCH              2208988800LL      ///< [s] NTP timestamp of UNIX epoch (1970 Jan 1)
+ 
+ #ifdef _MSC_VER
+-#  define gmtime_r        gmtime_s                      ///< MSC equivalent
+ #  define strtok_r        strtok_s                      ///< MSVC equivalent
+ #endif
+ 
+@@ -823,7 +822,11 @@ int novas_lookup_leap(time_t t) {
+     struct tm tm = {};
+     char str[40] = {'\0'};
+     unlock_leap();
++#ifdef _MSC_VER
++    gmtime_s(&tm, &t);
++#else
+     gmtime_r(&t, &tm);
++#endif
+     strftime(str, sizeof(str), "%c", &tm);
+     return novas_error(NOVAS_INVALID_LEAP, ERANGE, fn, "Time %s is beyond the leap seconds coverage range", str);
+   }

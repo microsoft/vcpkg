@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
     REF "v${VERSION}"
-    SHA512 4a4808b09f65067c0d5e2be0d12e7f8a2f7f9aeca008da59e48185c82761d58423ca9b5999b0345db67c01e874abd8022b9c12f2dccd7ffbdf9c7e103dc36d89
+    SHA512 cfae7b94d2f56fe133687ce1ef5b4f91dd6b052ce93cee822e55e3fdda19ab8ce616cc1b18c240cf0db7137e5de0a001f19a313bb649a71a64d109a589e699b6
     HEAD_REF master
 )
 

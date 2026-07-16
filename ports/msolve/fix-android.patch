@@ -1,16 +1,33 @@
-diff --git a/configure.ac b/configure.ac
---- a/configure.ac
-+++ b/configure.ac
-@@ -73,11 +73,9 @@
- AX_GCC_BUILTIN([__builtin_clzll])
- AX_GCC_BUILTIN([__builtin_clzl])
+diff --git a/src/neogb/tools.c b/src/neogb/tools.c
+index 1c85fe6..28b6ebd 100644
+--- a/src/neogb/tools.c
++++ b/src/neogb/tools.c
+@@ -20,6 +20,10 @@
  
- # Checks for library functions.
--AC_FUNC_MALLOC
--AC_FUNC_REALLOC
--AC_CHECK_FUNCS([floor getdelim gettimeofday memmove memset pow sqrt strchr strstr strtol])
-+AC_CHECK_FUNCS([floor getdelim gettimeofday memmove memset malloc realloc pow sqrt strchr strstr strtol])
+ #include "tools.h"
  
- AC_CONFIG_HEADERS([config.h])
- AC_CONFIG_FILES([
-  Makefile
++#if defined(__ANDROID__) && __ANDROID_API__ < 29
++#include <sys/time.h>
++#endif
++
+ /* cpu time */
+ double cputime(void)
+ {
+@@ -32,10 +36,17 @@ double cputime(void)
+ /* wall time */
+ double realtime(void)
+ {
++#if defined(__ANDROID__) && __ANDROID_API__ < 29
++	struct timeval t;
++	gettimeofday(&t, NULL);
++	t.tv_sec -= (2017 - 1970)*3600*24*365;
++	return (1. + (double)t.tv_usec + ((double)t.tv_sec*1000000.)) / 1000000.;
++#else
+ 	struct timespec t;
+ 	timespec_get(&t, TIME_UTC);
+ 	t.tv_sec -= (2017 - 1970)*3600*24*365;
+ 	return (1. + (double)t.tv_nsec + ((double)t.tv_sec*1000000000.)) / 1000000000.;
++#endif
+ }
+ 
+ static void construct_trace(

@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
     REF "v${VERSION}"
-    SHA512 4abcdceca65ec2f735d64ee88e06347d5bce8e5465181d79f7a4be1e87b42df1cc385b051930a656358833fec1c5f3bf6ea565b1240faac2cd354c5d40678cc8
+    SHA512 dd7847b7aad705edf41c6ece246c345ccd92ce38344ade582d5c5e14a99c7cc94e732bea20ea5594b7a572225f7ad1820cc2cd003ee21a682e3102d9d0c8a6c5
     HEAD_REF master
     PATCHES
         disable-cpack.patch

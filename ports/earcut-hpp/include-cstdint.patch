@@ -1,0 +1,12 @@
+diff --git a/include/mapbox/earcut.hpp b/include/mapbox/earcut.hpp
+index a73ae87..6d30bc7 100644
+--- a/include/mapbox/earcut.hpp
++++ b/include/mapbox/earcut.hpp
+@@ -4,6 +4,7 @@
+ #include <cassert>
+ #include <cmath>
+ #include <cstddef>
++#include <cstdint>
+ #include <limits>
+ #include <memory>
+ #include <utility>
