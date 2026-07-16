@@ -1,6 +1,6 @@
 {
   "name": "cryptopp-modern",
-  "version": "2026.6.0",
+  "version": "2026.7.1",
   "description": "Modern C++ cryptography library with improved CMake support and code organization",
   "homepage": "https://github.com/cryptopp-modern/cryptopp-modern",
   "license": "BSL-1.0",

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cryptopp-modern/cryptopp-modern
     REF "${VERSION}"
-    SHA512 057cd3c863044f020d41913a65b6f54df1a0153ee1b36a5e87f1154e0606cf4683b313df4c7667119f4a603c98b467528cd274a731c241a55978e3b4ac8d1b77
+    SHA512 7d8ab77cdc7548edb9a4ef97094c999784e7a6718155cf0a529b891252be83893f851476d3e97fbf870f0f00aa8671118a2479cc1154483d9d2d60f7b588eba3
     HEAD_REF main
 )
 
@@ -25,16 +25,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cryptopp-modern)
-
-# Move pkgconfig files to correct locations
-if(NOT VCPKG_BUILD_TYPE)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/cryptopp-modern.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cryptopp-modern.pc")
-endif()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/cryptopp-modern.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cryptopp-modern.pc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cryptopp-modern)
 
 vcpkg_fixup_pkgconfig()
 
