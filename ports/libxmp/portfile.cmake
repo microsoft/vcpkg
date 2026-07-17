@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libxmp/libxmp
     REF libxmp-${VERSION}
-    SHA512 ab7ed467a5fc968769ca8debbc648c1b86fcbfc95c5f9813cf6a47b35bc731009c1cbf09ecf4878f66c0903e70e68bc99eece37ee5da1a787d9c4fb711e9f790
+    SHA512 972632ae9c213082165e38f710ed0d826d0b98fab34030b2aebe085e9b993333f9c7956df57d3c3b2c562873e1e5c651202a6581b5a16bcc411c05302a8f4a95
     PATCHES
         fix-cmake-config-dir.patch
 )
