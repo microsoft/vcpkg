@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         fix-netcdf-linkage.patch
+        fix-png-linkage.patch
 )
 
 if(VCPKG_HOST_IS_WINDOWS)
