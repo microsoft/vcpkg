@@ -2770,7 +2770,7 @@
     },
     "eccodes": {
       "baseline": "2.48.0",
-      "port-version": 1
+      "port-version": 0
     },
     "ecm": {
       "baseline": "6.28.0",
