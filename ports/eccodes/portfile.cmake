@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ecmwf/eccodes
     REF "${VERSION}"
-    SHA512 8d6d1dfa366f41bf1c7fe129540a02183a9e117e26793b9e17b102cde1bd2277ece9c9b7958daf88a4a6cf21997f55793d8a52b5b62c827b7a4a4b2ac1dd3344
+    SHA512 f1532d72fe572ab306c7c556e035d950fef5490bab9a6fcfdf2df8b50bb91bfebecd2eeacf887a2883062f6af96345927112675c16225c37a5336633cbe7daee
     HEAD_REF develop
     PATCHES
         fix-netcdf-linkage.patch

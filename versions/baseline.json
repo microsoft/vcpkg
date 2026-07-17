@@ -2769,8 +2769,8 @@
       "port-version": 0
     },
     "eccodes": {
-      "baseline": "2.47.0",
-      "port-version": 1
+      "baseline": "2.48.0",
+      "port-version": 0
     },
     "ecm": {
       "baseline": "6.28.0",
