@@ -99,6 +99,38 @@ vcpkg_replace_string(
 
 vcpkg_fixup_pkgconfig()
 
+set(_eccodes_pkgconfig_private_libraries -leccodes_memfs)
+set(_eccodes_pkgconfig_private_requires libopenjp2)
+if("aec" IN_LIST FEATURES)
+    list(APPEND _eccodes_pkgconfig_private_libraries -laec)
+endif()
+if("png" IN_LIST FEATURES)
+    list(APPEND _eccodes_pkgconfig_private_requires libpng)
+endif()
+string(JOIN " " _eccodes_pkgconfig_private_libraries ${_eccodes_pkgconfig_private_libraries})
+string(JOIN " " _eccodes_pkgconfig_private_requires ${_eccodes_pkgconfig_private_requires})
+
+function(_eccodes_fix_pkgconfig_file _file _libraries)
+    file(READ "${_file}" _contents)
+    set(_libs_line "libs=\"-L\${libdir}\" ${_libraries}")
+    set(_libs_private_line "libs_private=${_eccodes_pkgconfig_private_libraries}")
+    set(_requires_private_line "Requires.private: ${_eccodes_pkgconfig_private_requires}")
+    string(REGEX REPLACE "(^|\n)libs=[^\n]*" "\\1${_libs_line}" _contents "${_contents}")
+    string(REGEX REPLACE "(^|\n)libs_private=[^\n]*" "\\1${_libs_private_line}" _contents "${_contents}")
+    string(REGEX REPLACE "(^|\n)Requires.private:[^\n]*" "\\1${_requires_private_line}" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endfunction()
+
+foreach(_prefix IN ITEMS "" "debug/")
+    set(_eccodes_pc_dir "${CURRENT_PACKAGES_DIR}/${_prefix}lib/pkgconfig")
+    if(EXISTS "${_eccodes_pc_dir}/eccodes.pc")
+        _eccodes_fix_pkgconfig_file("${_eccodes_pc_dir}/eccodes.pc" "-leccodes")
+    endif()
+    if(EXISTS "${_eccodes_pc_dir}/eccodes_f90.pc")
+        _eccodes_fix_pkgconfig_file("${_eccodes_pc_dir}/eccodes_f90.pc" "-leccodes_f90 -leccodes")
+    endif()
+endforeach()
+
 set(_eccodes_tool_names
     codes_bufr_filter
     codes_count
