@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         devendor-dirent.patch
+        disable-debug-postfix.patch
 )
 
 set(CROSSCOMP_OPTIONS "")
