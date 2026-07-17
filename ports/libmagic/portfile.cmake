@@ -57,8 +57,8 @@ enable_feature("zlib" "zlib")
 enable_feature("lzma" "xzlib")
 enable_feature("zstd" "zstdlib")
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
@@ -69,10 +69,10 @@ vcpkg_configure_make(
 if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libmagic/bin")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(EXTRA_ARGS "ADD_BIN_TO_PATH")
+    vcpkg_add_to_path(PREPEND "${CURRENT_PACKAGES_DIR}/tools/libmagic/bin")
 endif()
 
-vcpkg_install_make(${EXTRA_ARGS})
+vcpkg_make_install()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 vcpkg_fixup_pkgconfig()
