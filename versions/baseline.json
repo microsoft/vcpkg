@@ -6533,7 +6533,7 @@
       "port-version": 3
     },
     "meojson": {
-      "baseline": "5.0.0",
+      "baseline": "5.1.2",
       "port-version": 0
     },
     "mesa": {
