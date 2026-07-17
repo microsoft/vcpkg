@@ -21,6 +21,17 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "orca",
+      "platform": "linux | freebsd | openbsd"
+    },
+    "power-management",
+    {
+      "name": "speech-dispatcher",
+      "platform": "linux | freebsd | openbsd"
+    }
+  ],
   "features": {
     "orca": {
       "description": "Enable the Orca backend",
