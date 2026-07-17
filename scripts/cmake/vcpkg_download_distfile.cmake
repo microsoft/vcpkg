@@ -1,20 +1,18 @@
-function(vcpkg_download_distfile out_var)
+function(z_vcpkg_download_distfile out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
         "FILENAME;SHA512"
         "URLS;HEADERS"
     )
 
+    # SILENT_EXIT and QUIET are meaningless but accepting and ignoring them allows
+    # vcpkg_download_distfile to pass through parameters without needing manipulation.
     if(NOT DEFINED arg_URLS)
         message(FATAL_ERROR "vcpkg_download_distfile requires a URLS argument.")
     endif()
     if(NOT DEFINED arg_FILENAME)
         message(FATAL_ERROR "vcpkg_download_distfile requires a FILENAME argument.")
     endif()
-    if(arg_SILENT_EXIT)
-        message(WARNING "SILENT_EXIT no longer has any effect. To resolve this warning, remove SILENT_EXIT.")
-    endif()
-
     # Note that arg_ALWAYS_REDOWNLOAD implies arg_SKIP_SHA512, and NOT arg_SKIP_SHA512 implies NOT arg_ALWAYS_REDOWNLOAD
     if(arg_ALWAYS_REDOWNLOAD AND NOT arg_SKIP_SHA512)
         message(FATAL_ERROR "ALWAYS_REDOWNLOAD requires SKIP_SHA512")
@@ -137,4 +135,30 @@ If you do not know the SHA512, add it as 'SHA512 0' and retry.")
     endif()
 
     set("${out_var}" "${downloaded_file_path}" PARENT_SCOPE)
+endfunction()
+
+function(vcpkg_download_distfile out_var)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        "SKIP_SHA512;SILENT_EXIT;QUIET;ALWAYS_REDOWNLOAD"
+        "FILENAME;SHA512"
+        "URLS;HEADERS"
+    )
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "vcpkg_download_distfile was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+    if(arg_SILENT_EXIT)
+        message(WARNING "SILENT_EXIT no longer has any effect. To resolve this warning, remove SILENT_EXIT.")
+    endif()
+
+    z_vcpkg_function_arguments(forwarded_args 1)
+    z_vcpkg_download_distfile("${out_var}" ${forwarded_args})
+    set("${out_var}" "${${out_var}}" PARENT_SCOPE)
+
+    list(GET arg_URLS 0 spdx_download_location)
+    z_vcpkg_add_spdx_resource(
+        NAME "${arg_FILENAME}"
+        FILENAME "${arg_FILENAME}"
+        DOWNLOAD_LOCATION "${spdx_download_location}"
+        SHA512 "${arg_SHA512}"
+    )
 endfunction()

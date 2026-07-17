@@ -22,11 +22,10 @@ function(z_vcpkg_acquire_msys_download_package out_archive)
         list(APPEND all_urls "${mirror_url}")
     endforeach()
 
-    vcpkg_download_distfile(msys_archive
+    z_vcpkg_download_distfile(msys_archive
         URLS ${all_urls}
         SHA512 "${arg_SHA512}"
         FILENAME "${arg_FILENAME}"
-        QUIET
     )
     set("${out_archive}" "${msys_archive}" PARENT_SCOPE)
 endfunction()
