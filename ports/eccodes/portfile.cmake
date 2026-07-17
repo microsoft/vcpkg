@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-netcdf-linkage.patch
         fix-png-linkage.patch
+        use-external-tl-expected.patch
 )
 
 if(VCPKG_HOST_IS_WINDOWS)
@@ -232,4 +233,7 @@ foreach(_file IN LISTS _eccodes_files_to_scrub)
     endif()
 endforeach()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/NOTICE"
+)
