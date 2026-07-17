@@ -38,4 +38,24 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
+foreach(header IN ITEMS flags.h log_severity.h logging.h raw_logging.h vlog_is_on.h)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/ng-log/${header}"
+        "#if defined(NGLOG_USE_EXPORT)"
+        "#if 1"
+    )
+endforeach()
+
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/ng-log/flags.h"
+    "#if defined(NGLOG_USE_GFLAGS)"
+    "#if 1"
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ng-log/export.h" "#ifdef NGLOG_STATIC_DEFINE" "#if 1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ng-log/export.h" "#ifdef NGLOG_STATIC_DEFINE" "#if 0")
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
