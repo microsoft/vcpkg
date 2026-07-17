@@ -27,7 +27,7 @@ $WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
+$TotalProgress = 17
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -183,9 +183,6 @@ if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
     Remove-Item -LiteralPath $tempScriptFilename -Force
   }
 }
-
-####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'verify-tlssettings.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-sevenzip.ps1'

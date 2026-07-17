@@ -4,7 +4,6 @@
 # This script runs all the scripts we run on Azure machines to deploy prerequisites,
 # and assumes it is being run as an admin user.
 
-. "$PSScriptRoot\verify-tlssettings.ps1"
 . "$PSScriptRoot\deploy-sevenzip.ps1"
 . "$PSScriptRoot\deploy-visual-studio.ps1"
 . "$PSScriptRoot\deploy-git.ps1"
