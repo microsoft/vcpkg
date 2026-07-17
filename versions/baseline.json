@@ -11349,7 +11349,7 @@
       "port-version": 4
     },
     "zpp-bits": {
-      "baseline": "4.7.1",
+      "baseline": "4.7.2",
       "port-version": 0
     },
     "zserge-webview": {
