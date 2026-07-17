@@ -1,14 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-param([string]$SasToken)
-
 if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
 $CMakeUrl = Get-AssetUrl `
-  -SasToken $SasToken `
   -InternetUrl 'https://github.com/Kitware/CMake/releases/download/v4.4.0/cmake-4.4.0-windows-x86_64.msi' `
   -BlobAssetName 'cmake-4.4.0-windows-x86_64.msi'
 

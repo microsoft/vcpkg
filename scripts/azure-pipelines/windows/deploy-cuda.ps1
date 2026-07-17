@@ -1,14 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-param([string]$SasToken)
-
 if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
 $CudaUrl = Get-AssetUrl `
-  -SasToken $SasToken `
   -InternetUrl 'https://developer.download.nvidia.com/compute/cuda/13.3.1/local_installers/cuda_13.3.1_windows.exe' `
   -BlobAssetName 'cuda_13.3.1_windows.exe'
 

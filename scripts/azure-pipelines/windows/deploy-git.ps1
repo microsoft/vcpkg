@@ -1,14 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-param([string]$SasToken)
-
 if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
 $GitUrl = Get-AssetUrl `
-  -SasToken $SasToken `
   -InternetUrl 'https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.3/Git-2.55.0.3-64-bit.exe' `
   -BlobAssetName 'Git-2.55.0.3-64-bit.exe'
 

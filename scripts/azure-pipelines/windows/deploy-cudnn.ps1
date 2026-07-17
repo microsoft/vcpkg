@@ -1,14 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-param([string]$SasToken)
-
 if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
   . "$PSScriptRoot/utility-prefix.ps1"
 }
 
 $CudnnUrl = Get-AssetUrl `
-  -SasToken $SasToken `
   -InternetUrl 'https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-9.24.0.43_cuda13-archive.zip' `
   -BlobAssetName 'cudnn-windows-x86_64-9.24.0.43_cuda13-archive.zip'
 
