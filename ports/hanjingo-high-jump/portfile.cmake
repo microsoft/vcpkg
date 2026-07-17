@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanjingo/high-jump
     REF v${VERSION}
-    SHA512 768d17fe0dbd4c1aec90c2b3b61984937f0afaa210749b34be5e4d85e830191e70e40d2aacfa8a1f317ebefeb56ef796f3e1da633c21e49148f60e900cb69b67
+    SHA512 1b21b1df6f6b205c3295031fe7a1a29506008af3037f6d997129a8f2b972c81d40ad60fe320278464d2a4e8fdd25eaf55138329cedd7da0fe3bb020adcabe84c
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,6 +38,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qrcode          HJ_ENABLE_QRCODE
         vector-index    HJ_ENABLE_VECTOR_INDEX
         llama           HJ_ENABLE_LLAMA
+        asr             HJ_ENABLE_ASR
 )
 
 vcpkg_cmake_configure(

@@ -1,6 +1,6 @@
 {
   "name": "hanjingo-high-jump",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -40,6 +40,12 @@
     }
   ],
   "features": {
+    "asr": {
+      "description": "Enable automatic speech recognition support",
+      "dependencies": [
+        "whisper-cpp"
+      ]
+    },
     "behavior-tree": {
       "description": "Enable behavior tree support",
       "dependencies": [
@@ -68,6 +74,23 @@
       "description": "Enable cryption/decryption support",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "cuda": {
+      "description": "Enable CUDA support for GGML, Whisper",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "features": [
+            "cuda"
+          ]
+        },
+        {
+          "name": "whisper-cpp",
+          "features": [
+            "cuda"
+          ]
+        }
       ]
     },
     "fix": {
