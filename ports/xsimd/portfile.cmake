@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 a8ba9b60eb12fcd8af63af2ec0184cb44c4fd92774fd16ad370505c6b793727d4da917b72ee993174adb51f5fa6c0b0aee74bfb8b16db37ae201e916b9a6c91d
     HEAD_REF master
+    PATCHES
+        fix-pkgconfig-xcomplex.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
