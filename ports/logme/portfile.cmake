@@ -3,7 +3,7 @@ vcpkg_from_github(
   REPO efmsoft/logme
   REF "v${VERSION}"
   SHA512 04cedb62185460fcdfe62a163f67391e0d3877108df82589bc579604db883ef3bb068d1a9e48099609ef7fa82d3ddf65c25abf7c81f69a7bc54d40398eadcdd6
-  HEAD_REF master
+  HEAD_REF main
   PATCHES
     fix-windows-static-link.patch
 )
