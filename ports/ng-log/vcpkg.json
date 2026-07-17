@@ -5,6 +5,10 @@
   "homepage": "https://ng-log.github.io/ng-log/",
   "license": "BSD-3-Clause",
   "dependencies": [
+    {
+      "name": "dirent",
+      "platform": "windows"
+    },
     "gflags",
     {
       "name": "libunwind",

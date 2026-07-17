@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 321ea867b4ef2c73d0d54ae7906942ad1341605f5a837c296170f3295e96cf87a42c4c71ce707983e09d865dd29e6cc0656fc640c2214381f9c0f0f242365e70
     HEAD_REF master
+    PATCHES
+        devendor-dirent.patch
 )
 
 set(CROSSCOMP_OPTIONS "")
