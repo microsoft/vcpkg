@@ -1,6 +1,7 @@
 {
   "name": "libdicom",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "libdicom is a C library and a set of command-line tools for reading DICOM WSI files",
   "homepage": "https://github.com/ImagingDataCommons/libdicom",
   "documentation": "https://libdicom.readthedocs.io/en/latest/",
