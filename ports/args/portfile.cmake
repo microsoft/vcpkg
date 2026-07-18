@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Taywee/args
     REF "${VERSION}"
-    SHA512 2f6575d9bd5e8495e3ee50ea6f1bc7fbc14540d76a4d175acb4ddb281ae580a3aeeec2979b9a3feca18ada27522e2520d3367e73d81bbdfcfe6fc52bb9dee4ff
+    SHA512 b0d87b3d65051c9cc44a6bfbc5d215c1fc9b9d82dbdb2c882a08d4c2ad57a73992fe6380d3aa6b8737cb53c8219456da5dca8518e3ae07fe90e8f3867309a95d
     HEAD_REF master
 )
 

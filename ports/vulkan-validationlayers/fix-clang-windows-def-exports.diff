@@ -1,0 +1,17 @@
+diff --git a/layers/CMakeLists.txt b/layers/CMakeLists.txt
+index 4a8ca7d..e091a8d 100644
+--- a/layers/CMakeLists.txt
++++ b/layers/CMakeLists.txt
+@@ -541,6 +541,12 @@ elseif(MINGW)
+     target_sources(vvl PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/${LAYER_NAME}.def)
+     target_compile_options(vvl PRIVATE -Wa,-mbig-obj)
+     set_target_properties(vvl PROPERTIES PREFIX "") # remove the prefix "lib" so the manifest json "library_path" matches
++elseif(WIN32)
++    # A GNU-frontend clang targeting *-windows-msvc (i.e. clang/clang++, not
++    # clang-cl) is detected as neither MSVC nor MINGW, so without this branch it
++    # falls through to the ELF --version-script case below, which the Windows
++    # linker (lld-link) rejects. Forward the MSVC-style .def through the driver.
++    target_link_options(vvl PRIVATE LINKER:/DEF:${CMAKE_CURRENT_SOURCE_DIR}/${LAYER_NAME}.def)
+ elseif(APPLE)
+ 
+ # IOS and APPLE can both be true (FYI)
