@@ -253,7 +253,7 @@
       "port-version": 0
     },
     "args": {
-      "baseline": "6.4.16",
+      "baseline": "6.5.0",
       "port-version": 0
     },
     "argtable2": {
@@ -481,7 +481,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.27.3",
+      "baseline": "0.27.4",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -489,7 +489,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.12.8",
+      "baseline": "0.13.1",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -501,7 +501,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.41.0",
+      "baseline": "0.42.1",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -793,7 +793,7 @@
       "port-version": 0
     },
     "blosc2": {
-      "baseline": "3.2.1",
+      "baseline": "3.2.3",
       "port-version": 0
     },
     "blpapi": {
@@ -4730,7 +4730,7 @@
     },
     "lfreist-hwinfo": {
       "baseline": "2025-07-10",
-      "port-version": 0
+      "port-version": 1
     },
     "lib3mf": {
       "baseline": "2.5.0",
