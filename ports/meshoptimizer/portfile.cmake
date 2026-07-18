@@ -8,6 +8,27 @@ vcpkg_from_github(
         dependencies.diff
 )
 
+file(READ "${SOURCE_PATH}/CMakeLists.txt" _cmake)
+string(REPLACE
+    "set_target_properties(gltfpack PROPERTIES CXX_STANDARD 11)"
+    "set_target_properties(gltfpack PROPERTIES CXX_STANDARD 11 NO_SYSTEM_FROM_IMPORTED ON)"
+    _cmake "${_cmake}"
+)
+file(WRITE "${SOURCE_PATH}/CMakeLists.txt" "${_cmake}")
+
+if ("gltfpack" IN_LIST FEATURES)
+    # gltfpack needs symbols not in a released cgltf/fast-obj tag yet; patch local copies here
+    # rather than the shared ports so other cgltf/fast-obj consumers are unaffected.
+    file(COPY "${CURRENT_INSTALLED_DIR}/include/cgltf.h" "${CURRENT_INSTALLED_DIR}/include/fast_obj.h" DESTINATION "${SOURCE_PATH}/gltf")
+
+    vcpkg_apply_patches(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PATCHES
+            cgltf-meshopt-color.diff
+            fastobj-face-lines.diff
+    )
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gltfpack  MESHOPT_BUILD_GLTFPACK

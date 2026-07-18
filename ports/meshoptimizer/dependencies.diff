@@ -1,8 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8ca03ab..af7eb9d 100644
+index 8ca03ab..53c7f2b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -147,6 +147,11 @@ if(MESHOPT_BUILD_GLTFPACK)
+@@ -126,4 +126,7 @@ endif()
+ if(MESHOPT_BUILD_GLTFPACK)
+     add_executable(gltfpack ${GLTF_SOURCES})
+     set_target_properties(gltfpack PROPERTIES CXX_STANDARD 11)
++    find_package(cgltf CONFIG REQUIRED)
++    find_package(fast-obj CONFIG REQUIRED)
++    target_link_libraries(gltfpack cgltf::cgltf fast-obj::fast-obj)
+     target_link_libraries(gltfpack meshoptimizer)
+@@ -151,6 +154,11 @@ if(MESHOPT_BUILD_GLTFPACK)
          target_compile_definitions(gltfpack PRIVATE WITH_BASISU)
          target_link_libraries(gltfpack basisu_encoder)
          set_source_files_properties(gltf/encodebasis.cpp PROPERTIES INCLUDE_DIRECTORIES ${BASISU_PATH}) # necessary because basisu_encoder doesn't export include directories
@@ -12,8 +20,51 @@ index 8ca03ab..af7eb9d 100644
 +        target_compile_definitions(gltfpack PRIVATE WITH_BASISU)
 +        target_link_libraries(gltfpack basisu::basisu_encoder Threads::Threads)
      endif()
- 
+
      if(NOT MESHOPT_GLTFPACK_LIBWEBP_PATH STREQUAL "")
+diff --git a/gltf/gltfpack.h b/gltf/gltfpack.h
+index abc1234..def5678 100644
+--- a/gltf/gltfpack.h
++++ b/gltf/gltfpack.h
+@@ -18,7 +18,7 @@
+ #define _CRT_NONSTDC_NO_WARNINGS
+ #endif
+
+-#include "../extern/cgltf.h"
++#include "cgltf.h"
+
+ #include <assert.h>
+
+diff --git a/gltf/parselib.cpp b/gltf/parselib.cpp
+index abc1234..def5678 100644
+--- a/gltf/parselib.cpp
++++ b/gltf/parselib.cpp
+@@ -4,10 +4,10 @@
+ #endif
+
+ #define CGLTF_IMPLEMENTATION
+-#include "../extern/cgltf.h"
++#include "cgltf.h"
+
+ #define FAST_OBJ_IMPLEMENTATION
+-#include "../extern/fast_obj.h"
++#include "fast_obj.h"
+
+ #undef CGLTF_IMPLEMENTATION
+ #undef FAST_OBJ_IMPLEMENTATION
+diff --git a/gltf/parseobj.cpp b/gltf/parseobj.cpp
+index abc1234..def5678 100644
+--- a/gltf/parseobj.cpp
++++ b/gltf/parseobj.cpp
+@@ -1,7 +1,7 @@
+ // This file is part of gltfpack; see gltfpack.h for version/license details
+ #include "gltfpack.h"
+
+-#include "../extern/fast_obj.h"
++#include "fast_obj.h"
+ #include "../src/meshoptimizer.h"
+
+ #include <stdlib.h>
 diff --git a/gltf/encodebasis.cpp b/gltf/encodebasis.cpp
 index 73cd962..74abf1b 100644
 --- a/gltf/encodebasis.cpp
@@ -21,9 +72,9 @@ index 73cd962..74abf1b 100644
 @@ -22,7 +22,7 @@
  #pragma GCC diagnostic ignored "-Wc++17-extensions"
  #endif
- 
+
 -#include "encoder/basisu_comp.h"
 +#include "basisu/encoder/basisu_comp.h"
- 
+
  struct BasisSettings
  {

@@ -1702,7 +1702,7 @@
     },
     "cgltf": {
       "baseline": "1.15",
-      "port-version": 0
+      "port-version": 1
     },
     "cgns": {
       "baseline": "4.5.1",

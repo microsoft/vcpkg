@@ -19,7 +19,9 @@
       "description": "Build gltfpack tool",
       "supports": "!uwp",
       "dependencies": [
-        "basisu"
+        "basisu",
+        "cgltf",
+        "fast-obj"
       ]
     }
   }
