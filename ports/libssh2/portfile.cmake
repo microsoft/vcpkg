@@ -7,6 +7,13 @@ vcpkg_from_github(
     PATCHES
         cmake-config.diff
         pkgconfig.diff
+        CVE-2026-7598-256d04b-applied.diff
+        CVE-2026-58051-a9758da.diff
+        CVE-2026-58050-3449752-applied.diff
+        CVE-2026-55200-97acf3d-applied.diff
+        CVE-2026-55199-1762685.diff
+        libssh2_priv_h_606c102.diff # required for CVE-2025-15661 fix
+        CVE-2025-15661-2dae302-applied.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
