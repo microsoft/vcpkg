@@ -9718,7 +9718,7 @@
     },
     "srell": {
       "baseline": "2026.01",
-      "port-version": 0
+      "port-version": 1
     },
     "srpc": {
       "baseline": "0.10.4",
