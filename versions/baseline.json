@@ -4253,7 +4253,7 @@
       "port-version": 0
     },
     "jwsung91-unilink": {
-      "baseline": "0.8.8",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -10994,6 +10994,10 @@
     },
     "wintoast": {
       "baseline": "1.3.2",
+      "port-version": 0
+    },
+    "wirestead": {
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "wmipp": {

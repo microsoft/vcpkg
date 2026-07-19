@@ -1,0 +1,10 @@
+jwsung91-unilink is deprecated. Use wirestead instead:
+
+    find_package(wirestead CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE wirestead::wirestead)
+
+This compatibility port depends on wirestead, which still installs the legacy
+UniLink CMake package for v0.9.x source compatibility:
+
+    find_package(unilink CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unilink::unilink)
