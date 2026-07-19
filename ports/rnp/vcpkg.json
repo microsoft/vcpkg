@@ -1,0 +1,37 @@
+{
+  "name": "rnp",
+  "version": "0.18.1",
+  "description": "Freely-licensed OpenPGP library and command-line tools",
+  "homepage": "https://www.rnpgp.org",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    "botan",
+    "bzip2",
+    "json-c",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    "sexpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "openssl": {
+      "description": "Use OpenSSL instead of Botan as the crypto backend",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "tools": {
+      "description": "Build the rnp and rnpkeys command line tools"
+    }
+  }
+}
