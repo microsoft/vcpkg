@@ -29,6 +29,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "-DGETOPT_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/getopt.lib"
         "-DDIRENT_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include"
     )
+    # Botan's installed headers default to __declspec(dllimport); when linking
+    # the static botan library on Windows the symbols are not decorated, so
+    # override BOTAN_DLL to an empty macro.
+    list(APPEND extra_options
+        "-DBOTAN_DLL="
+    )
 endif()
 
 vcpkg_cmake_configure(
