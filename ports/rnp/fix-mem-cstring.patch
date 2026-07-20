@@ -1,8 +1,9 @@
 diff --git a/src/lib/crypto/mem.cpp b/src/lib/crypto/mem.cpp
-index 1234567..abcdefg 100644
+index 94d90f5..dbd2a14 100644
 --- a/src/lib/crypto/mem.cpp
 +++ b/src/lib/crypto/mem.cpp
-@@ -26,6 +26,7 @@
+@@ -25,6 +25,7 @@
+  */
  
  #include <cstdio>
 +#include <cstring>
