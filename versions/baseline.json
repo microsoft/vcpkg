@@ -2041,7 +2041,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.49.0",
+      "baseline": "0.50.1",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -3170,7 +3170,7 @@
     },
     "fmt": {
       "baseline": "12.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "folly": {
       "baseline": "2026.02.23.00",
@@ -4709,7 +4709,7 @@
       "port-version": 0
     },
     "level-zero": {
-      "baseline": "1.31.0",
+      "baseline": "1.32.0",
       "port-version": 0
     },
     "leveldb": {
@@ -4837,7 +4837,7 @@
       "port-version": 0
     },
     "libcbor": {
-      "baseline": "0.13.0",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "libcds": {
@@ -6225,7 +6225,7 @@
       "port-version": 0
     },
     "logme": {
-      "baseline": "2.4.18",
+      "baseline": "2.4.20",
       "port-version": 0
     },
     "loguru": {
@@ -6533,7 +6533,7 @@
       "port-version": 3
     },
     "meojson": {
-      "baseline": "5.0.0",
+      "baseline": "5.1.2",
       "port-version": 0
     },
     "mesa": {
@@ -7569,11 +7569,11 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "5.4.0",
+      "baseline": "5.5.1",
       "port-version": 0
     },
     "orange-vmprotect-sdk": {
-      "baseline": "1.0.2",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "orc": {
@@ -8621,7 +8621,7 @@
       "port-version": 0
     },
     "quill": {
-      "baseline": "12.0.0",
+      "baseline": "12.1.0",
       "port-version": 0
     },
     "quirc": {
@@ -9718,7 +9718,7 @@
     },
     "srell": {
       "baseline": "2026.01",
-      "port-version": 0
+      "port-version": 1
     },
     "srpc": {
       "baseline": "0.10.4",
@@ -10017,7 +10017,7 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2023.0.0",
+      "baseline": "2023.1.0",
       "port-version": 0
     },
     "tcb-span": {
@@ -10577,7 +10577,7 @@
       "port-version": 8
     },
     "valijson": {
-      "baseline": "1.1.1",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "value-ptr-lite": {
@@ -11353,7 +11353,7 @@
       "port-version": 4
     },
     "zpp-bits": {
-      "baseline": "4.7.1",
+      "baseline": "4.7.2",
       "port-version": 0
     },
     "zserge-webview": {
