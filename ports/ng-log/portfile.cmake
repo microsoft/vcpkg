@@ -37,6 +37,23 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string(
+            "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libng-log.pc"
+            "-lgflags"
+            "-lgflags_static -lshlwapi"
+        )
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string(
+            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libng-log.pc"
+            "-lgflags"
+            "-lgflags_static_debug -lshlwapi"
+        )
+    endif()
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 foreach(header IN ITEMS flags.h log_severity.h logging.h raw_logging.h vlog_is_on.h)
