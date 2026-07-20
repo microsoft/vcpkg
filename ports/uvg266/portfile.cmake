@@ -13,19 +13,12 @@ else()
     SET(BUILD_SHARED_LIBS ON)
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    SET(UVG266_CMAKE_BUILD_TYPE "Debug")
-else()
-    SET(UVG266_CMAKE_BUILD_TYPE "RelWithDebInfo")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_TESTS=OFF
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DGIT_SUBMODULE=OFF
-        -DCMAKE_BUILD_TYPE=${UVG266_CMAKE_BUILD_TYPE}
 )
 
 vcpkg_cmake_install()

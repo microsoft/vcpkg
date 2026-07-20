@@ -4,7 +4,6 @@
   "description": "An open-source VVC encoder licensed under 3-clause BSD",
   "homepage": "https://github.com/ultravideo/uvg266",
   "license": "BSD-3-Clause-Clear",
-  "supports": "(x64 | arm64) & !static",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
