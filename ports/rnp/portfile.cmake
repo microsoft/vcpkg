@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-mem-cstring.patch
         fix-windows-static-botan.patch
+        fix-openssl-features-win.patch
 )
 
 # rnp locates the system sexpp library via pkg-config (SYSTEM_LIBSEXPP=ON)

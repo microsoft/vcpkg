@@ -1,0 +1,16 @@
+diff --git a/cmake/Modules/FindOpenSSLFeatures.cmake b/cmake/Modules/FindOpenSSLFeatures.cmake
+index c3e3e33..2511502 100644
+--- a/cmake/Modules/FindOpenSSLFeatures.cmake
++++ b/cmake/Modules/FindOpenSSLFeatures.cmake
+@@ -77,7 +77,10 @@ set(CMAKE_C_STANDARD 99)\n\
+ find_package(OpenSSL REQUIRED)\n\
+ add_executable(findopensslfeatures findopensslfeatures.c)\n\
+ target_include_directories(findopensslfeatures PRIVATE ${OPENSSL_INCLUDE_DIR})\n\
+-target_link_libraries(findopensslfeatures PRIVATE OpenSSL::Crypto)\n\
++target_link_libraries(findopensslfeatures PRIVATE OpenSSL::Crypto)
++if(WIN32)
++  target_link_libraries(findopensslfeatures PRIVATE crypt32 ws2_32)
++endif()
+ if (OpenSSL::applink)\n\
+   target_link_libraries(findopensslfeatures PRIVATE OpenSSL::applink)\n\
+ endif(OpenSSL::applink)\n"
