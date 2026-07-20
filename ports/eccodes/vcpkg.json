@@ -15,6 +15,7 @@
       "name": "python3",
       "host": true
     },
+    "tl-expected",
     {
       "name": "vcpkg-cmake",
       "host": true
