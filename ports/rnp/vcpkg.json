@@ -34,7 +34,7 @@
   "features": {
     "openssl": {
       "description": "Use OpenSSL instead of Botan as the crypto backend",
-      "supports": "!android & !(linux & arm64)",
+      "supports": "!android & !(linux & arm64) & !(windows & arm64)",
       "dependencies": [
         "openssl"
       ]
