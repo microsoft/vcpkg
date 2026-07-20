@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a64c8d5..12e40d9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1475,7 +1475,9 @@ include(cmake/FileMirroring.cmake)
+ # headers, etc.) into the torch package.  Previously declared via
+ # setup.py package_data; now consolidated here for both scikit-build-core
+ # and setuptools builds.
+-include(cmake/PackageData.cmake)
++if(BUILD_PYTHON)
++  include(cmake/PackageData.cmake)
++endif()
+ 
+ include(cmake/PostBuildSteps.cmake)
+ 
