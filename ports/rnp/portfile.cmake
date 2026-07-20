@@ -51,6 +51,44 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME rnp CONFIG_PATH "lib/cmake/rnp")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+# The v0.18.1 release computes an empty LIBRNP_PRIVATE_LIBS, so the installed
+# librnp.pc lacks the transitive dependencies and static consumers fail to
+# link. Patch the correct Libs.private into the pkg-config files.
+if(crypto_backend STREQUAL "openssl")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(rnp_libs_private "-llibcrypto -llibssl")
+    else()
+        set(rnp_libs_private "-lcrypto -lssl")
+    endif()
+else()
+    set(rnp_libs_private "-lbotan-3")
+endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(rnp_libs_private "${rnp_libs_private} -ljson-c -lzlib -lbz2 -lsexpp")
+else()
+    set(rnp_libs_private "${rnp_libs_private} -ljson-c -lz -lbz2 -lsexpp")
+endif()
+foreach(rnp_pc
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/librnp.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/librnp.pc")
+    if(EXISTS "${rnp_pc}")
+        file(STRINGS "${rnp_pc}" rnp_pc_lines)
+        set(rnp_pc_new "")
+        foreach(rnp_pc_line ${rnp_pc_lines})
+            if(rnp_pc_line MATCHES "^Libs\\.private:")
+                string(APPEND rnp_pc_new "Libs.private: ${rnp_libs_private}\n")
+            else()
+                string(APPEND rnp_pc_new "${rnp_pc_line}\n")
+            endif()
+        endforeach()
+        file(WRITE "${rnp_pc}" "${rnp_pc_new}")
+    endif()
+endforeach()
+unset(rnp_libs_private)
+unset(rnp_pc_lines)
+unset(rnp_pc_new)
+unset(rnp_pc_line)
+
 # The exported rnp-targets.cmake references dependency targets
 # (Botan::Botan, JSON-C::JSON-C, ZLIB::ZLIB, BZip2::BZip2, OpenSSL::Crypto
 # for the openssl backend, plus a plain 'sexpp' for static builds), but
@@ -96,4 +134,8 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.md"
+        "${SOURCE_PATH}/LICENSE-OCB.md"
+)

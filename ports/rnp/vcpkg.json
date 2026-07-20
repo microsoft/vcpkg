@@ -1,9 +1,10 @@
 {
   "name": "rnp",
   "version": "0.18.1",
+  "port-version": 1,
   "description": "Freely-licensed OpenPGP library and command-line tools",
   "homepage": "https://www.rnpgp.org",
-  "license": "BSD-2-Clause",
+  "license": "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT",
   "dependencies": [
     "botan",
     "bzip2",

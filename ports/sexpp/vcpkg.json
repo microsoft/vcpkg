@@ -1,6 +1,6 @@
 {
   "name": "sexpp",
-  "version-date": "2026-07-19",
+  "version-date": "2026-07-20",
   "description": "S-expressions parser and generator C++ library, fully compliant with https://people.csail.mit.edu/rivest/Sexp.txt",
   "homepage": "https://github.com/rnpgp/sexpp",
   "license": "MIT",
