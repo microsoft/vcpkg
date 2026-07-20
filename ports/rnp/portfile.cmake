@@ -4,7 +4,11 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "rnp-v${VERSION}.tar.gz"
     SHA512 49da892a75fb496625f069d2b4729f32a8db8b9fe15b176ff9d9cc458b3b672756b937e65f84d16a71ca883b368461801f3c273d1d993298fb8d6fa594cd26b7
 )
-vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
+vcpkg_extract_source_archive(
+    SOURCE_PATH ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-mem-cstring.patch
+)
 
 # rnp locates the system sexpp library via pkg-config (SYSTEM_LIBSEXPP=ON)
 find_program(PKGCONFIG NAMES pkgconf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH REQUIRED)
