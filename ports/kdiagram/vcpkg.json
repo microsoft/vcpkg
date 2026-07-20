@@ -8,7 +8,10 @@
     "ecm",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "widgets"
+      ]
     },
     "qtsvg",
     {
