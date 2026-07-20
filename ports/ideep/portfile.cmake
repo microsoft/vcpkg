@@ -9,4 +9,11 @@ vcpkg_from_github(
 # Header-only library: install the include tree directly.
 file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
+# ideep/python/binding.hpp defines a pybind11 extension module. It pulls in
+# pybind11 headers, which this port does not depend on, and its functions are
+# not declared inline, so it can only ever be compiled into a single
+# translation unit. Nothing else in ideep includes it, so drop it rather than
+# taking on a pybind11 dependency for a header no consumer of this port can use.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/ideep/python")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
