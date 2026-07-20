@@ -1,0 +1,29 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0aa1a08..1bf7c24 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -85,8 +85,8 @@ install(
+ 
+ # Step 4: Specify Header Destinations
+ install(
+-    DIRECTORY ${PROJECT_SOURCE_DIR}/include
+-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/itch
++    DIRECTORY ${PROJECT_SOURCE_DIR}/include/
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+ )
+ 
+ # Step 5: Export the Target Information
+diff --git a/src/cmake/ItchConfig.cmake.in b/src/cmake/ItchConfig.cmake.in
+index 6b06b0c..c0caa4e 100644
+--- a/src/cmake/ItchConfig.cmake.in
++++ b/src/cmake/ItchConfig.cmake.in
+@@ -1,4 +1,9 @@
+ @PACKAGE_INIT@
+ 
++if(@ITCH_WITH_ARROW@)
++    include(CMakeFindDependencyMacro)
++    find_dependency(Arrow CONFIG)
++    find_dependency(Parquet CONFIG)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/ItchTargets.cmake")

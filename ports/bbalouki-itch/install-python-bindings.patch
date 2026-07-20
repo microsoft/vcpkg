@@ -1,0 +1,47 @@
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 91b9eaa..1324e51 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -20,7 +20,17 @@ set_target_properties(itchcpp_python PROPERTIES OUTPUT_NAME "_itchcpp")
+ 
+ target_link_libraries(itchcpp_python PRIVATE itch::itch)
+ 
+-# When built through scikit-build-core (pip install .) install the extension into
+-# the itchcpp package directory alongside the pure-Python modules.
+-if(DEFINED SKBUILD)
++if(DEFINED ITCH_PYTHON_INSTALL_DIR)
++    install(
++        TARGETS itchcpp_python
++        LIBRARY DESTINATION "${ITCH_PYTHON_INSTALL_DIR}"
++        RUNTIME DESTINATION "${ITCH_PYTHON_INSTALL_DIR}"
++    )
++    install(
++        DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/itchcpp/"
++        DESTINATION "${ITCH_PYTHON_INSTALL_DIR}"
++    )
++elseif(DEFINED SKBUILD)
++    # When built through scikit-build-core (pip install .), install the extension
++    # into the itchcpp package directory alongside the pure-Python modules.
+     install(TARGETS itchcpp_python LIBRARY DESTINATION itchcpp)
+ endif()
+diff --git a/python/itchcpp/__init__.py b/python/itchcpp/__init__.py
+index 5adb63e..018d1db 100644
+--- a/python/itchcpp/__init__.py
++++ b/python/itchcpp/__init__.py
+@@ -18,7 +18,16 @@ add native extras (order-book reconstruction and VWAP) that are not part of the
+ 
+ from __future__ import annotations
+ 
++import os
+ from importlib.metadata import PackageNotFoundError, version
++from pathlib import Path
++
++if os.name == "nt":
++    _vcpkg_bin = Path(__file__).resolve().parents[5] / "bin"
++    if _vcpkg_bin.is_dir():
++        _vcpkg_dll_directory = os.add_dll_directory(_vcpkg_bin)
++    else:
++        _vcpkg_dll_directory = None
+ 
+ from . import analytics, book, indicators, messages, parser
+ from .messages import (
