@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ad80e46..529fafa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,6 +82,14 @@ tristate_feature_auto(ENABLE_RIPEMD160 "Enable RIPEMD-160 hash support.")
+ option(ENABLE_CRYPTO_REFRESH "Enable crypto-refresh support (v6)")
+ option(ENABLE_PQC "Enable PQC support")
+ 
++# Botan's installed headers default to __declspec(dllimport). When linking the
++# static Botan library on Windows, override BOTAN_DLL to avoid unresolved
++# __imp_botan_* symbols.
++if(MSVC AND NOT BUILD_SHARED_LIBS)
++  add_compile_definitions(BOTAN_DLL=)
++endif()
++
++
+ # Note: The following two flags are only temporary and will be removed once POC is in a stable state
+ if (DEFINED ENABLE_PQC_MLKEM_IPD)
+   add_definitions(-DENABLE_PQC_MLKEM_IPD)
