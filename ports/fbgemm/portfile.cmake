@@ -5,9 +5,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/fbgemm
     REF "v${VERSION}"
-    SHA512 dde37e9fd89817c77ea13bb81de73a1aec0318b480ab53e82df5cddc8bc95a9a8ba52462452bbffb07cc8c2374c68d75adcb71b8e68f27952c6b32ccab81ff61
+    SHA512 d8f5963bc118aad2c38e41eac18b0ef5c8973a01fa24cb376a39d666ab4d08518650fd5f1bda3f4968b539d195f307dea6920304bec616f73739ab26b0a5e51f
     PATCHES
         fix-cmakelists.patch
+        linkage.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
