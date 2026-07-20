@@ -19,6 +19,18 @@ else()
     set(crypto_backend "botan")
 endif()
 
+set(extra_options "")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # rnp's MSVC-specific find_path/find_library calls only search the current
+    # build-type subdir, so the headers/libraries installed by getopt-win32 and
+    # dirent are not found in Debug configurations. Give explicit hints.
+    list(APPEND extra_options
+        "-DGETOPT_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include"
+        "-DGETOPT_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/getopt.lib"
+        "-DDIRENT_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -28,6 +40,7 @@ vcpkg_cmake_configure(
         -DSYSTEM_LIBSEXPP=ON
         -DENABLE_DOC=OFF
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        ${extra_options}
 )
 
 vcpkg_cmake_install()
