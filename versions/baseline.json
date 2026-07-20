@@ -341,8 +341,8 @@
       "port-version": 0
     },
     "assimp": {
-      "baseline": "6.0.4",
-      "port-version": 3
+      "baseline": "6.0.5",
+      "port-version": 0
     },
     "astr": {
       "baseline": "0.3.1",
@@ -8238,7 +8238,7 @@
     },
     "qt5-3d": {
       "baseline": "5.15.19",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-activeqt": {
       "baseline": "5.15.19",
