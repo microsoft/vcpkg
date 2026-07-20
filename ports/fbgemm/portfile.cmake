@@ -34,6 +34,7 @@ file(RENAME
     "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryTargets.cmake")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryConfig.cmake"
     "include(CMakeFindDependencyMacro)\n"
+    "find_dependency(OpenMP)\n"
     "find_dependency(asmjit CONFIG)\n"
     "find_dependency(cpuinfo CONFIG)\n"
     "include(\"\${CMAKE_CURRENT_LIST_DIR}/fbgemmLibraryTargets.cmake\")\n")
