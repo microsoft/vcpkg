@@ -19,4 +19,7 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+# This file includes "srell/srell.hpp" which is not currently a dependency of this port.
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/upa/regex_engine_srell.h")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
