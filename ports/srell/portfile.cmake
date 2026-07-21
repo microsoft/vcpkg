@@ -4,7 +4,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://www.akenotsuki.com/misc/srell/releases/srell${VERSION}.zip"
     FILENAME "srell${VERSION}.zip"
-    SHA512 02d8292212ad570cc5fd37820c47097bef025b3f896a536ce9de2d3bd07bf961e6ab58d80caa216e40eaf0d75862f617010bae8bca7d2f424a81c832c8874697
+    SHA512 08e4629daf31083db6799390f1a4c942fdcd21358e90568666e060c1d7563c878281c6e2f2bb6ebf9889bfc5606166d0664ff0b6b4657bbcbed18c42dbf707f5
 )
 
 vcpkg_extract_source_archive(
