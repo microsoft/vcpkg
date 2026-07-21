@@ -5318,7 +5318,7 @@
     },
     "libmem": {
       "baseline": "5.1.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libmemcached-awesome": {
       "baseline": "1.1.4",
