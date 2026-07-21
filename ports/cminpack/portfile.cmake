@@ -10,6 +10,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DUSE_BLAS=OFF
+        -DBUILD_EXAMPLES_FORTRAN=OFF
+        -DUSE_LAPACK=OFF
 )
 
 vcpkg_cmake_install()
