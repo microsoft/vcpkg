@@ -3833,7 +3833,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.6.6",
+      "baseline": "2.6.7",
       "port-version": 0
     },
     "hidapi": {
