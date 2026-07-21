@@ -1,6 +1,6 @@
 {
   "name": "sbgecom",
-  "version": "5.6.2730",
+  "version": "5.7.626",
   "description": "C library used to communicate with SBG Systems IMU, AHRS and INS",
   "homepage": "https://github.com/SBG-Systems/sbgECom",
   "license": "MIT",

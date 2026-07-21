@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realtimechris/benchmarksuite
-    REF "v${VERSION}"    
-    SHA512 5f10d9c9b57d1e6e8826516ed6fd04af78360731cda378e379ea7d1a8ce651c00558d19722e80129539498a55ecadf13ac7e75b13cedeaee3174805eba026955
+    REF "v${VERSION}"
+    SHA512 8fd2254289952d2f9a1697cde1f3ee7b278ad5e00a38c49a0f114d311e504deed9d05b2b482aa05d3d6f1289e27477b107cb83b969bdf7dfa0cb04c0b6649c1c
     HEAD_REF main
 )
 
-set(VCPKG_BUILD_TYPE release) # header-only
+set(VCPKG_BUILD_TYPE release)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
