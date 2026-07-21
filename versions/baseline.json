@@ -1630,7 +1630,7 @@
     },
     "catch2": {
       "baseline": "3.15.2",
-      "port-version": 0
+      "port-version": 1
     },
     "cblas": {
       "baseline": "2025-10-29",
