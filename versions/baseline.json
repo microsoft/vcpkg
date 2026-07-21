@@ -8097,8 +8097,8 @@
       "port-version": 1
     },
     "pthreadpool": {
-      "baseline": "2024-11-04",
-      "port-version": 2
+      "baseline": "2026-04-29",
+      "port-version": 0
     },
     "pthreads": {
       "baseline": "3.0.0",

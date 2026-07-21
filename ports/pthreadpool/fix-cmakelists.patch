@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1361e94..5798f2e 100644
+index 399095e..56787e9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -4,8 +4,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
- PROJECT(pthreadpool C)
+@@ -41,8 +41,6 @@ IF(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+ ENDIF()
  
  # ---[ Options.
 -SET(PTHREADPOOL_LIBRARY_TYPE "default" CACHE STRING "Type of library (shared, static, or default) to build")
 -SET_PROPERTY(CACHE PTHREADPOOL_LIBRARY_TYPE PROPERTY STRINGS default static shared)
  OPTION(PTHREADPOOL_ALLOW_DEPRECATED_API "Enable deprecated API functions" ON)
- SET(PTHREADPOOL_SYNC_PRIMITIVE "default" CACHE STRING "Synchronization primitive (condvar, futex, gcd, event, or default) for worker threads")
- SET_PROPERTY(CACHE PTHREADPOOL_SYNC_PRIMITIVE PROPERTY STRINGS default condvar futex gcd event)
-@@ -14,7 +12,7 @@ IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i[3-6]86|AMD64|x86(_64)?)$")
+ SET(PTHREADPOOL_SYNC_PRIMITIVE "default" CACHE STRING "Synchronization primitive (condvar, futex, or default) for worker threads")
+ SET_PROPERTY(CACHE PTHREADPOOL_SYNC_PRIMITIVE PROPERTY STRINGS default condvar futex)
+@@ -51,7 +49,7 @@ IF(CMAKE_SYSTEM_PROCESSOR MATCHES "^(i[3-6]86|AMD64|x86(_64)?)$")
  ELSE()
    OPTION(PTHREADPOOL_ENABLE_FASTPATH "Enable fast path using atomic decrement instead of atomic compare-and-swap" OFF)
  ENDIF()
@@ -20,8 +20,8 @@ index 1361e94..5798f2e 100644
    OPTION(PTHREADPOOL_BUILD_TESTS "Build pthreadpool unit tests" ON)
    OPTION(PTHREADPOOL_BUILD_BENCHMARKS "Build pthreadpool micro-benchmarks" ON)
  ELSE()
-@@ -40,7 +38,7 @@ MACRO(PTHREADPOOL_TARGET_ENABLE_CXX11 target)
- ENDMACRO()
+@@ -71,7 +69,7 @@ IF(PTHREADPOOL_BUILD_TESTS)
+ ENDIF()
  
  # ---[ Download deps
 -IF(NOT DEFINED FXDIV_SOURCE_DIR)
@@ -29,7 +29,7 @@ index 1361e94..5798f2e 100644
    MESSAGE(STATUS "Downloading FXdiv to ${CMAKE_BINARY_DIR}/FXdiv-source (define FXDIV_SOURCE_DIR to avoid it)")
    CONFIGURE_FILE(cmake/DownloadFXdiv.cmake "${CMAKE_BINARY_DIR}/FXdiv-download/CMakeLists.txt")
    EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-@@ -92,21 +90,13 @@ ELSE()
+@@ -115,21 +113,13 @@ ELSE()
  ENDIF()
  
  ADD_LIBRARY(pthreadpool_interface INTERFACE)
@@ -53,7 +53,7 @@ index 1361e94..5798f2e 100644
  
  IF(PTHREADPOOL_SYNC_PRIMITIVE STREQUAL "condvar")
    TARGET_COMPILE_DEFINITIONS(pthreadpool PRIVATE PTHREADPOOL_USE_FUTEX=0)
-@@ -155,6 +145,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+@@ -165,6 +155,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
  ENDIF()
  
  # ---[ Configure FXdiv
@@ -63,7 +63,7 @@ index 1361e94..5798f2e 100644
  IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -162,12 +155,24 @@ IF(NOT TARGET fxdiv)
+@@ -172,12 +165,24 @@ IF(NOT TARGET fxdiv)
      "${FXDIV_SOURCE_DIR}"
      "${CMAKE_BINARY_DIR}/FXdiv")
  ENDIF()
