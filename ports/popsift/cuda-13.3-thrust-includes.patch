@@ -1,0 +1,17 @@
+diff --git a/src/popsift/s_filtergrid.cu b/src/popsift/s_filtergrid.cu
+index 9e35d8b..9ee93fd 100644
+--- a/src/popsift/s_filtergrid.cu
++++ b/src/popsift/s_filtergrid.cu
+@@ -17,10 +17,12 @@
+ #include <thrust/host_vector.h>
+ #include <thrust/iterator/constant_iterator.h>
+ #include <thrust/iterator/discard_iterator.h>
++#include <thrust/iterator/zip_iterator.h>
+ #include <thrust/sequence.h>
+ #include <thrust/sort.h>
+ #include <thrust/transform.h>
+ #include <thrust/transform_scan.h>
++#include <thrust/tuple.h>
+ #include <thrust/version.h>
+ 
+ namespace popsift

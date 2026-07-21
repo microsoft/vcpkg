@@ -1,0 +1,17 @@
+diff --git a/Code/Engine/Foundation/Platform/Win/Features_Platform.h b/Code/Engine/Foundation/Platform/Win/Features_Platform.h
+index 3200e56..811c5e8 100644
+--- a/Code/Engine/Foundation/Platform/Win/Features_Platform.h
++++ b/Code/Engine/Foundation/Platform/Win/Features_Platform.h
+@@ -87,7 +87,11 @@
+ #    define EZ_SSE_LEVEL EZ_SSE_20
+ #  endif
+ #elif EZ_ENABLED(EZ_PLATFORM_ARCH_ARM)
+-#  define EZ_SIMD_IMPLEMENTATION EZ_SIMD_IMPLEMENTATION_NEON
++#  if defined(_MSC_VER) && !defined(__clang__)
++#    define EZ_SIMD_IMPLEMENTATION EZ_SIMD_IMPLEMENTATION_FPU
++#  else
++#    define EZ_SIMD_IMPLEMENTATION EZ_SIMD_IMPLEMENTATION_NEON
++#  endif
+ #else
+ #  error "Unknown architecture."
+ #endif

@@ -1,0 +1,36 @@
+diff --git a/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt b/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt
+index 997ceeb..d0b8414 100644
+--- a/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt
++++ b/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt
+@@ -1,5 +1,7 @@
+ ez_cmake_init()
+ 
++ez_apply_build_filter(EditorPluginFmod)
++
+ ez_requires_editor()
+ 
+ ez_requires_fmod()
+diff --git a/Code/EnginePlugins/FmodPlugin/CMakeLists.txt b/Code/EnginePlugins/FmodPlugin/CMakeLists.txt
+index 924c1f0..76f5f4d 100644
+--- a/Code/EnginePlugins/FmodPlugin/CMakeLists.txt
++++ b/Code/EnginePlugins/FmodPlugin/CMakeLists.txt
+@@ -1,5 +1,7 @@
+ ez_cmake_init()
+ 
++ez_apply_build_filter(FmodPlugin)
++
+ ez_requires_fmod()
+ 
+ # Get the name of this folder as the project name
+diff --git a/Code/Tools/Libs/ModelImporter2/CMakeLists.txt b/Code/Tools/Libs/ModelImporter2/CMakeLists.txt
+index f2f0875..2860757 100644
+--- a/Code/Tools/Libs/ModelImporter2/CMakeLists.txt
++++ b/Code/Tools/Libs/ModelImporter2/CMakeLists.txt
+@@ -1,5 +1,7 @@
+ ez_cmake_init()
+ 
++ez_apply_build_filter(ModelImporter2)
++
+ ez_requires_assimp()
+ 
+ # Get the name of this folder as the project name
