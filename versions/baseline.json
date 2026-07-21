@@ -2193,8 +2193,8 @@
       "port-version": 0
     },
     "crashpad": {
-      "baseline": "2024-04-11",
-      "port-version": 13
+      "baseline": "2026-07-02",
+      "port-version": 0
     },
     "crashrpt": {
       "baseline": "1.4.3",
