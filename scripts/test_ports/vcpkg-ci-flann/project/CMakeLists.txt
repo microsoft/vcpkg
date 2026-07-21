@@ -36,5 +36,5 @@ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     endforeach()
 endif()
 
-add_executable(main_pkg main.c)
+add_executable(main_pkg main.cpp)
 target_link_libraries(main_pkg PRIVATE PkgConfig::Flann)
