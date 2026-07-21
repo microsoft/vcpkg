@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ImagingDataCommons/libdicom
     REF "v${VERSION}"
-    SHA512 7323616a0beee9954f725daeef255215b337ce56d921ea836262fe3a84ee2eb0cce8d6caf6610c88daea2a9b2d0a1deefb70a750268131f82ad48e66a5a29bdd
+    SHA512 060c640b8ea4730ec24ed0d576f86ced354af63b752ff893e7327eb715f34a3fbafe223be6e8a76b81ed79014005644aff78aeed100ea5d39b4338d330740cda
     HEAD_REF main
     PATCHES
         cross-build.diff

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 19d8f2a93..dca8948be 100644
+index 8c4b8d526..255113836 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -277,7 +277,7 @@ set(eCAL_install_app_dir           ${CMAKE_INSTALL_BINDIR})
@@ -12,10 +12,10 @@ index 19d8f2a93..dca8948be 100644
  set(eCAL_install_doc_dir           ${CMAKE_INSTALL_DOCDIR})
  set(eCAL_install_include_dir       ${CMAKE_INSTALL_INCLUDEDIR})
 diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
-index 6ed0d1a14..9a833a1f9 100644
+index 6ed0d1a14..8392f6043 100644
 --- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
 +++ b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
-@@ -4,12 +4,8 @@ include(cmake_functions.cmake)
+@@ -4,12 +4,7 @@ include(cmake_functions.cmake)
  
  project(CMakeFunctions VERSION 0.4.1)
  
@@ -25,8 +25,7 @@ index 6ed0d1a14..9a833a1f9 100644
 -else (MSVC)
 -set(cmake_functions_install_cmake_dir   lib/cmake/${PROJECT_NAME}-${PROJECT_VERSION})
 -endif (MSVC)
-+set(cmake_functions_install_cmake_dir "share/${PROJECT_NAME}")
-+
++set(cmake_functions_install_cmake_dir   "share/${PROJECT_NAME}")
  set(cmake_functions_config              ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake)
  set(cmake_functions_config_version      ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake)
  

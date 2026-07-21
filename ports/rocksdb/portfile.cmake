@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
   REF "v${VERSION}"
-  SHA512 a4aeac5a440cbdc5ef433f7ea1ebb445c04893663b8f287179752dfcd26b8c9ef6a05a96781aa9f748800a93e38643b7a7a72a6d691ae57124e9291efb2f0935
+  SHA512 d8d057d6800283b8d9ec8326c3dc92024743531b6b3f79e9f18912aa90d0b13982496c85ed079b12b5992b86f97a640ea22ddc7ea0a992587134bbcc9e68a795
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
@@ -25,6 +25,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "numa" WITH_NUMA
     "tbb" WITH_TBB
 )
+
+if(WITH_LIBURING)
+  vcpkg_find_acquire_program(PKGCONFIG)
+  vcpkg_list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"

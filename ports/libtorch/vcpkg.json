@@ -1,18 +1,17 @@
 {
   "name": "libtorch",
-  "version": "2.7.1",
+  "version": "2.12.0",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
-    "blas",
     "cpp-httplib",
     "cpuinfo",
     "eigen3",
     {
       "name": "fbgemm",
-      "platform": "x64"
+      "platform": "x64 & !uwp"
     },
     "flatbuffers",
     {
@@ -20,15 +19,22 @@
       "host": true
     },
     "fmt",
-    "foxi",
     "fp16",
-    "gemmlowp",
-    "lapack",
-    "lmdb",
-    "mimalloc",
+    "kineto",
+    {
+      "name": "kleidiai",
+      "platform": "arm64"
+    },
+    {
+      "name": "mimalloc",
+      "platform": "windows | (arm64 & !osx)"
+    },
     "nlohmann-json",
+    {
+      "name": "nnpack",
+      "platform": "linux | osx"
+    },
     "onnx",
-    "onnx-optimizer",
     "opencl",
     "pocketfft",
     "protobuf",
@@ -54,18 +60,23 @@
     "xnnpack"
   ],
   "default-features": [
-    "gflags",
-    "glog",
-    "opencv",
-    "zstd"
+    "blas"
   ],
   "features": {
+    "blas": {
+      "description": "BLAS/LAPACK backend (openblas on linux/windows, Accelerate on macOS). On by default; disable with [core,...] when using [mkl] instead.",
+      "dependencies": [
+        "blas",
+        "lapack"
+      ]
+    },
     "cuda": {
       "description": "Build with CUDA GPU backend",
       "supports": "(windows & x64 & !staticcrt) | (linux & x64)",
       "dependencies": [
         "cuda",
         "cudnn",
+        "cudnn-frontend",
         {
           "name": "gloo",
           "features": [
@@ -89,24 +100,20 @@
       ]
     },
     "dist": {
-      "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
-      "supports": "linux | windows",
+      "description": "Use distributed training/inference (Gloo, MPI, libuv, TensorPipe)",
+      "supports": "(linux & x64) | windows",
       "dependencies": [
         {
           "name": "gloo",
           "platform": "linux"
         },
         {
-          "name": "libtorch",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ],
-          "platform": "linux"
-        },
-        {
           "name": "libuv",
           "platform": "windows | osx"
+        },
+        {
+          "name": "mpi",
+          "platform": "linux"
         },
         {
           "name": "tensorpipe",
@@ -132,23 +139,13 @@
         "llvm"
       ]
     },
-    "mpi": {
-      "description": "Build with MPI",
+    "mkl": {
+      "description": "Intel performance backend: use oneMKL for BLAS/LAPACK and enable oneDNN (MKLDNN) CPU acceleration via ideep. Mutually exclusive with [blas] (the openblas default-feature) — install as libtorch[core,mkl,...] to skip the openblas backend, otherwise both backends get built and only MKL is linked.",
+      "supports": "(windows | linux) & x64 & !uwp",
       "dependencies": [
-        "mpi"
-      ]
-    },
-    "nnpack": {
-      "description": "Build with NNPack",
-      "supports": "linux | osx",
-      "dependencies": [
-        "nnpack"
-      ]
-    },
-    "opencv": {
-      "description": "Build with OpenCV",
-      "dependencies": [
-        "opencv"
+        "ideep",
+        "intel-mkl",
+        "onednn"
       ]
     },
     "vulkan": {
@@ -161,12 +158,6 @@
         "vulkan",
         "vulkan-loader",
         "vulkan-memory-allocator"
-      ]
-    },
-    "zstd": {
-      "description": "Build with ZSTD",
-      "dependencies": [
-        "zstd"
       ]
     }
   }

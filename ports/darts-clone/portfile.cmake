@@ -1,6 +1,3 @@
-vcpkg_check_linkage(
-  ONLY_STATIC_LIBRARY
-)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO s-yata/darts-clone
@@ -9,18 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+# darts-clone is header-only; the whole API lives in include/darts.h.
+# src/darts.cc is a command-line tool (defines main) and must not be compiled
+# into a library.
+file(INSTALL "${SOURCE_PATH}/include/darts.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
-)
-
-vcpkg_cmake_install()
-vcpkg_copy_pdbs()
-
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/Makefile.am")
-
-file(INSTALL "${SOURCE_PATH}/COPYING.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.md")
