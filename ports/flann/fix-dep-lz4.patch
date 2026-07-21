@@ -13,9 +13,9 @@ index f79d173..ec76e8a 100644
  include_directories(${LZ4_INCLUDE_DIRS})
 +string(APPEND PKG_EXTERNAL_DEPS " liblz4")
 +if (CMAKE_BUILD_STATIC_LIBS)
-+    set(FLANN_PKG_LIBS "-lflann_s -lflann_cpp_s")
++    set(FLANN_PKG_LIBS "-lflann_s${CMAKE_DEBUG_POSTFIX} -lflann_cpp_s${CMAKE_DEBUG_POSTFIX}")
 +else()
-+    set(FLANN_PKG_LIBS "-lflann -lflann_cpp")
++    set(FLANN_PKG_LIBS "-lflann${CMAKE_DEBUG_POSTFIX} -lflann_cpp${CMAKE_DEBUG_POSTFIX}")
 +endif()
  
  #set the C/C++ include path to the "include" directory
@@ -51,6 +51,13 @@ diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
 index 7603abc..2a45e95 100644
 --- a/src/cpp/CMakeLists.txt
 +++ b/src/cpp/CMakeLists.txt
+@@ -3,5 +3,6 @@
+ add_definitions(-D_FLANN_VERSION=${FLANN_VERSION})
+ 
++set(FLANN_STATIC ${CMAKE_BUILD_STATIC_LIBS})
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h)
+ 
+ file(GLOB_RECURSE C_SOURCES flann.cpp)
 @@ -24,19 +24,24 @@ target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
  # export lz4 headers, so that MSVC to creates flann_cpp.lib
  set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
@@ -106,3 +113,25 @@ index 7603abc..2a45e95 100644
      if(MINGW AND OPENMP_FOUND)
          target_link_libraries(flann gomp)
      endif()
+diff --git a/src/cpp/flann/config.h.in b/src/cpp/flann/config.h.in
+--- a/src/cpp/flann/config.h.in
++++ b/src/cpp/flann/config.h.in
+@@ -28,5 +28,6 @@
+ #define FLANN_CONFIG_H_
+ 
++#cmakedefine FLANN_STATIC
+ #ifdef FLANN_VERSION_
+ #undef FLANN_VERSION_
+ #endif
+diff --git a/src/cpp/flann/defines.h b/src/cpp/flann/defines.h
+--- a/src/cpp/flann/defines.h
++++ b/src/cpp/flann/defines.h
+@@ -34,7 +34,7 @@
+ #ifdef FLANN_EXPORT
+ #undef FLANN_EXPORT
+ #endif
+-#ifdef WIN32
++#ifdef _WIN32
+ /* win32 dll export/import directives */
+  #ifdef FLANN_EXPORTS
+   #define FLANN_EXPORT __declspec(dllexport)
