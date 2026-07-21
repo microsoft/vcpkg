@@ -1,0 +1,15 @@
+Backport of harfbuzz/harfbuzz@b011381 + @5e887d3 (see
+https://github.com/harfbuzz/harfbuzz/issues/6059): clang 23 (shipped in
+current emsdk) fires -Wunused-template inside hb-algs.hh/hb-meta.hh,
+which hb.hh's diagnostic pragmas promote to errors, breaking the build.
+
+--- a/src/hb.hh
++++ b/src/hb.hh
+@@ -151,6 +151,7 @@
+ #pragma GCC diagnostic ignored "-Wrange-loop-analysis" // https://github.com/harfbuzz/harfbuzz/issues/2834
+ #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ #pragma GCC diagnostic ignored "-Wtype-limits"
++#pragma GCC diagnostic ignored "-Wunused-template"
+ #pragma GCC diagnostic ignored "-Wc++11-compat" // only gcc raises it
+ #endif
+ 
