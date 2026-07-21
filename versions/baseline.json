@@ -3833,7 +3833,7 @@
       "port-version": 0
     },
     "hical61-hical": {
-      "baseline": "2.6.6",
+      "baseline": "2.6.7",
       "port-version": 0
     },
     "hidapi": {
@@ -3941,7 +3941,7 @@
       "port-version": 1
     },
     "ideep": {
-      "baseline": "2026-03-31",
+      "baseline": "2026-05-11",
       "port-version": 0
     },
     "ideviceinstaller": {
