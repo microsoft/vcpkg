@@ -1,0 +1,21 @@
+{
+  "name": "wirestead",
+  "version": "0.9.0",
+  "description": "Unified, cross-platform async C++ library for Serial, TCP, UDP, and UDS",
+  "homepage": "https://github.com/wirestead/wirestead",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-asio",
+    "boost-system",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
