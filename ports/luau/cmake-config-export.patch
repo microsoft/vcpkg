@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f215957..b8462b8 100644
+index bfbda9a..4ccd3bd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -87,45 +87,45 @@ add_library(Luau.VM.Internals INTERFACE)
+@@ -89,51 +89,51 @@ add_library(Luau.VM.Internals INTERFACE)
  include(Sources.cmake)
  
  target_compile_features(Luau.Common PUBLIC cxx_std_17)
@@ -23,6 +23,14 @@ index f215957..b8462b8 100644
 -target_include_directories(Luau.Bytecode PUBLIC Bytecode/include)
 +target_include_directories(Luau.Bytecode PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Bytecode/include> $<INSTALL_INTERFACE:include/luau>)
  target_link_libraries(Luau.Bytecode PUBLIC Luau.Common)
+ 
+ target_compile_features(Luau.Inliner PUBLIC cxx_std_17)
+-target_include_directories(Luau.Inliner PUBLIC Inliner/include)
++target_include_directories(Luau.Inliner PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Inliner/include> $<INSTALL_INTERFACE:include/luau>)
+ target_include_directories(Luau.Inliner PRIVATE Bytecode/src)
+-target_link_libraries(Luau.Inliner PRIVATE Luau.VM Luau.VM.Internals)
++target_link_libraries(Luau.Inliner PRIVATE Luau.VM $<BUILD_INTERFACE:Luau.VM.Internals>)
+ target_link_libraries(Luau.Inliner PUBLIC Luau.Bytecode)
  
  target_compile_features(Luau.Compiler PUBLIC cxx_std_17)
 -target_include_directories(Luau.Compiler PUBLIC Compiler/include)
@@ -59,30 +67,25 @@ index f215957..b8462b8 100644
  target_link_libraries(Luau.Require PUBLIC Luau.Config Luau.VM)
  
  target_include_directories(isocline PUBLIC extern/isocline/include)
-@@ -230,22 +230,6 @@ if(MSVC AND LUAU_BUILD_TESTS)
-     set_target_properties(Luau.CLI.Test PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
+@@ -240,7 +240,7 @@ if(MSVC AND LUAU_BUILD_TESTS)
  endif()
  
--# embed .natvis inside the library debug information
+ # embed .natvis inside the library debug information
 -if(MSVC)
--    target_link_options(Luau.Ast INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Ast.natvis)
--    target_link_options(Luau.Analysis INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Analysis.natvis)
--    target_link_options(Luau.CodeGen INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/CodeGen.natvis)
--    target_link_options(Luau.VM INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/VM.natvis)
--endif()
--
--# make .natvis visible inside the solution
++if(0)
+     target_link_options(Luau.Ast INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Ast.natvis)
+     target_link_options(Luau.Analysis INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Analysis.natvis)
+     target_link_options(Luau.CodeGen INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/CodeGen.natvis)
+@@ -248,7 +248,7 @@ if(MSVC)
+ endif()
+ 
+ # make .natvis visible inside the solution
 -if(MSVC_IDE)
--    target_sources(Luau.Ast PRIVATE tools/natvis/Ast.natvis)
--    target_sources(Luau.Analysis PRIVATE tools/natvis/Analysis.natvis)
--    target_sources(Luau.CodeGen PRIVATE tools/natvis/CodeGen.natvis)
--    target_sources(Luau.VM PRIVATE tools/natvis/VM.natvis)
--endif()
--
- # On Windows and Android threads are provided, on Linux/Mac/iOS we use pthreads
- add_library(osthreads INTERFACE)
- if(CMAKE_SYSTEM_NAME MATCHES "Linux|Darwin|iOS")
-@@ -338,3 +322,57 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.V
++if(0)
+     target_sources(Luau.Ast PRIVATE tools/natvis/Ast.natvis)
+     target_sources(Luau.Analysis PRIVATE tools/natvis/Analysis.natvis)
+     target_sources(Luau.CodeGen PRIVATE tools/natvis/CodeGen.natvis)
+@@ -348,3 +348,58 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.V
          endif()
      endif()
  endforeach()
@@ -104,7 +107,7 @@ index f215957..b8462b8 100644
 +)
 +
 +install(
-+  TARGETS Luau.Common Luau.Ast Luau.Bytecode Luau.Compiler Luau.Config Luau.Analysis Luau.VM Luau.CLI.lib Luau.Require
++  TARGETS Luau.Common Luau.Ast Luau.Bytecode Luau.Inliner Luau.Compiler Luau.Config Luau.Analysis Luau.VM Luau.CLI.lib Luau.Require
 +  EXPORT unofficial-luau-targets
 +  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 +  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -123,6 +126,7 @@ index f215957..b8462b8 100644
 +    DIRECTORY "${CMAKE_SOURCE_DIR}/Common/include/"
 +    DIRECTORY "${CMAKE_SOURCE_DIR}/Ast/include/"
 +    DIRECTORY "${CMAKE_SOURCE_DIR}/Bytecode/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Inliner/include/"
 +    DIRECTORY "${CMAKE_SOURCE_DIR}/Compiler/include/"
 +    DIRECTORY "${CMAKE_SOURCE_DIR}/Config/include/"
 +    DIRECTORY "${CMAKE_SOURCE_DIR}/Analysis/include/"

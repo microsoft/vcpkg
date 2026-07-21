@@ -1,8 +1,8 @@
 diff --git a/libass/meson.build b/libass/meson.build
-index 5251c2f..a3429bb 100644
+index 9eda958..cf057b9 100644
 --- a/libass/meson.build
 +++ b/libass/meson.build
-@@ -70,6 +70,28 @@ if enable_asm
+@@ -92,6 +92,28 @@ if enable_asm
  
      if asm_is_nasm
          libass_src += asm_sources
@@ -30,12 +30,12 @@ index 5251c2f..a3429bb 100644
 +        endforeach
      else
          asm_lib = static_library(
-             'libass_asm',
+             'ass_asm',
 diff --git a/meson.build b/meson.build
-index 4b1c24e..b82233e 100644
+index 91a0435..5b4c568 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -207,7 +207,9 @@ endif
+@@ -246,7 +246,9 @@ endif
  enable_asm = false
  # used in libass/meson.build
  asm_is_nasm = false
@@ -45,8 +45,7 @@ index 4b1c24e..b82233e 100644
  
  # ASM architecture variables
  asm_option = get_option('asm')
-@@ -276,6 +278,10 @@ if not asm_option.disabled()
-         enable_asm = true
+@@ -322,6 +324,10 @@ if not asm_option.disabled()
          conf.set('ARCH_AARCH64', 1)
          if host_system == 'darwin'
              asm_args += '-DPREFIX'

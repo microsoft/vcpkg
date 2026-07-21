@@ -4,9 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
     REF "v${VERSION}"
-    SHA512 f3d986e3a9a87dbafcf5ace337f1d88436735a0a3540c257b12f3faed2603a1415157daa957e5dc6dfa2b40d979d9a742f1ccb8ba83fb011401cc5ad1643187b
-    PATCHES
-        582.patch
+    SHA512 ef8fa2732d8f59cd335cb97306d05cd7f2373aa6686aab6c4eebdf687301ce51728fc01b06632bfc616aeaadc61c7eb4fcc4100fbc38fce6b6abed189c7a3579
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
