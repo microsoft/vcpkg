@@ -37,6 +37,7 @@ $semverVersion = ($version -replace '(\d+(\.\d+){1,3}).*', '$1')
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
+    'boost-cobalt' = 1
 }
 
 function Get-PortVersion {

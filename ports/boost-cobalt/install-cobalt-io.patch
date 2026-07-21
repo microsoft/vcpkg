@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,6 +124,14 @@ if (NOT BOOST_COBALT_IS_ROOT)
+         add_library(Boost::cobalt::io::ssl ALIAS boost_cobalt_io_ssl)
+     endif()
+ 
++    if (BOOST_SUPERPROJECT_VERSION AND NOT CMAKE_VERSION VERSION_LESS 3.13)
++        boost_install(
++            TARGETS boost_cobalt boost_cobalt_io
++            VERSION "${BOOST_SUPERPROJECT_VERSION}"
++            HEADER_DIRECTORY include
++        )
++    endif()
++
+     if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
+         add_subdirectory(test)
+     endif()

@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fail-on-compiler-not-supported.patch
+        install-cobalt-io.patch
 )
 
 set(FEATURE_OPTIONS "")
