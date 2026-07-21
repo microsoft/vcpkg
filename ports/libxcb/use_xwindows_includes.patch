@@ -5,7 +5,7 @@ index df6026da3..7591c61e7 100644
 @@ -31,10 +31,13 @@
  #define WINVER 0x0501 /* required for getaddrinfo/freeaddrinfo defined only for WinXP and above */
  #endif
- 
+
 -#include <winsock2.h>
 +#include <stdio.h>
 +#include <X11/Xwindows.h>
@@ -13,7 +13,7 @@ index df6026da3..7591c61e7 100644
 +typedef unsigned char BYTE;
 -#include <ws2tcpip.h>
 -#include <windef.h>
- 
+
 +#define STDERR_FILENO _fileno( stderr )
 +
  struct iovec  {

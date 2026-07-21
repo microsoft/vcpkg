@@ -22,6 +22,10 @@
     },
     "xcb-proto",
     "xcb-util-m4",
-    "xorg-macros"
+    "xorg-macros",
+    {
+      "name": "xproto",
+      "platform": "windows"
+    }
   ]
 }

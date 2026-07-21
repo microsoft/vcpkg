@@ -3,7 +3,7 @@
   "version": "1.17.0",
   "description": "XML-XCB protocol descriptions used by libxcb for the X11 protocol & extensions",
   "homepage": "https://xcb.freedesktop.org/",
-  "license": "X11-distribute-modifications-variant",
+  "license": "MIT AND MIT-open-group AND X11-distribute-modifications-variant",
   "dependencies": [
     {
       "name": "libxml2",
