@@ -95,6 +95,7 @@
           "name": "vtk",
           "default-features": false,
           "features": [
+            "anari",
             "cgns",
             "fontconfig",
             "gdal",
@@ -121,8 +122,14 @@
         }
       ]
     },
+    "anari": {
+      "description": "ANARI rendering functionality.",
+      "dependencies": [
+        "anari"
+      ]
+    },
     "atlmfc": {
-      "description": "Mfc functionality for vtk on Windows",
+      "description": "MFC functionality for VTK on Windows",
       "dependencies": [
         {
           "name": "atlmfc",
@@ -155,7 +162,7 @@
       ]
     },
     "gdal": {
-      "description": "Support GDAL compilation",
+      "description": "GDAL functionality",
       "dependencies": [
         {
           "name": "gdal",

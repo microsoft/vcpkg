@@ -42,6 +42,7 @@ vcpkg_from_github(
         wip.diff        
         pegtl-2.patch
         wip-2.diff
+        wip-3.diff
 )
 
 # =============================================================================
@@ -65,6 +66,7 @@ file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake
 vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
     FEATURES
         "all"         VTK_BUILD_ALL_MODULES
+        "anari"       VTK_MODULE_ENABLE_VTK_RenderingAnari
         "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
         "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
         "cuda"        VTK_USE_CUDA
@@ -272,6 +274,7 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_VTK_CommonArchive=NO
         -DVTK_MODULE_ENABLE_VTK_DomainsMicroscopy=NO
         -DVTK_MODULE_ENABLE_VTK_fides=NO
+        -DVTK_MODULE_ENABLE_VTK_FiltersONNX=NO
         -DVTK_MODULE_ENABLE_VTK_FiltersReebGraph=NO
         -DVTK_MODULE_ENABLE_VTK_InfovisBoost=NO
         -DVTK_MODULE_ENABLE_VTK_InfovisBoostGraphAlgorithms=NO
@@ -280,6 +283,7 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
         -DVTK_MODULE_ENABLE_VTK_IOOpenVDB=NO
         -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
+        -DVTK_MODULE_ENABLE_VTK_IOUSD=NO
         -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
         -DVTK_MODULE_ENABLE_VTK_WrappingTools=YES
         -DVTK_MODULE_ENABLE_VTK_xdmf3=NO
@@ -293,7 +297,8 @@ vcpkg_cmake_configure(
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
         -DCMAKE_POLICY_DEFAULT_CMP0177=NEW     # install() DESTINATION paths are normalized
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
--DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=NO  # needs viskore port
+-DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=NO  # needs viskores port
+-DVTK_MODULE_ENABLE_VTK_vtkviskores=NO           # needs viskores port
 -DVTK_MODULE_ENABLE_VTK_h5hut=NO                 # needs h5hut port and/or fixes
 -DVTK_MODULE_ENABLE_VTK_IOMotionFX=NO            # needs pegtl 2.8.3 or patches
     MAYBE_UNUSED_VARIABLES

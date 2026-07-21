@@ -1,0 +1,12 @@
+diff --git a/IO/ODBC/vtkODBCDatabase.cxx b/IO/ODBC/vtkODBCDatabase.cxx
+index c472a099..05ccb11b 100644
+--- a/IO/ODBC/vtkODBCDatabase.cxx
++++ b/IO/ODBC/vtkODBCDatabase.cxx
+@@ -8,6 +8,7 @@
+  * manageable.  No WIN32_LEAN_AND_MEAN for us!
+  */
+ #if defined(_WIN32) && !defined(__CYGWIN__)
++#define NOMINMAX
+ #include <vtkWindows.h>
+ #endif
+ 
