@@ -5,8 +5,7 @@
 
 #include <math.h>
 
-int main(void)
-{
+int main(void) {
     float dataset[] = {0.0f, 0.0f, 1.0f, 1.0f, 2.0f, 2.0f};
     float query[] = {1.8f, 2.1f};
     float speedup = 0.0f;
