@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tristanpenman/valijson
     REF "v${VERSION}"
-    SHA512 4916e12dc45312462a7abbc2707f5c1edfe129feb03e73afebf11a80ac6fb2f4469fdb4d83174d1c0565f8553ff958b1dc0ea78132d7063bbf640de0ade1676b
+    SHA512 664f6bb8eda93b57c6ec7dd8a0f8fdbc52578bf22d342b74a0a54662d34d99a27927440ce40380405817d9ad3db10ad4f9d9458ff9967ddbc0cd6842a9ac6b55
     HEAD_REF master
 )
 

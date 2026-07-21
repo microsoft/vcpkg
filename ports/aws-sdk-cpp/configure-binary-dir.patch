@@ -1,5 +1,5 @@
 diff --git a/cmake/initialize_project_version.cmake b/cmake/initialize_project_version.cmake
-index c9b42f603..894c10f95 100644
+index c9b42f603da..894c10f95b8 100644
 --- a/cmake/initialize_project_version.cmake
 +++ b/cmake/initialize_project_version.cmake
 @@ -6,9 +6,8 @@ if(GIT_FOUND)
@@ -15,7 +15,7 @@ index c9b42f603..894c10f95 100644
  
  set(PROJECT_VERSION "${VERSION_STRING}")
 diff --git a/src/aws-cpp-sdk-core/CMakeLists.txt b/src/aws-cpp-sdk-core/CMakeLists.txt
-index c6a0f1c26..c9ea5e8d7 100644
+index abc6668d0cb..bfa454385bd 100644
 --- a/src/aws-cpp-sdk-core/CMakeLists.txt
 +++ b/src/aws-cpp-sdk-core/CMakeLists.txt
 @@ -20,7 +20,7 @@ if(VERSION_STRING)
@@ -36,16 +36,16 @@ index c6a0f1c26..c9ea5e8d7 100644
                 NEWLINE_STYLE UNIX)
  
  file(GLOB AWS_HEADERS "include/aws/core/*.h")
-@@ -94,6 +94,8 @@ file(GLOB SMITHY_IDENTITY_SIGNER_BUILTIN_HEADERS "include/smithy/identity/signer
- file(GLOB SMITHY_INTERCEPTOR_HEADERS "include/smithy/interceptor/*.h")
+@@ -99,6 +99,8 @@ file(GLOB SMITHY_INTERCEPTOR_HEADERS "include/smithy/interceptor/*.h")
  file(GLOB SMITHY_INTERCEPTOR_IMPL_HEADERS "include/smithy/interceptor/impl/*.h")
+ file(GLOB SMITHY_CLIENT_SCHEMA_HEADERS "include/smithy/client/schema/*.h")
  
 +file(GLOB AWS_GENERATED_HEADERS "${CMAKE_CURRENT_BINARY_DIR}/include/aws/core/*.h")
 +
  file(GLOB AWS_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
  file(GLOB AWS_TINYXML2_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/source/external/tinyxml2/*.cpp")
  file(GLOB CJSON_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/source/external/cjson/*.cpp")
-@@ -387,7 +389,7 @@ file(GLOB AWS_NATIVE_SDK_SRC
+@@ -409,7 +411,7 @@ file(GLOB AWS_NATIVE_SDK_SRC
  
  # Visual studio project directory structure
  if(MSVC)
@@ -54,7 +54,7 @@ index c6a0f1c26..c9ea5e8d7 100644
      source_group("Header Files\\aws\\core\\auth" FILES ${AWS_AUTH_HEADERS})
      source_group("Header Files\\aws\\core\\auth\\signer" FILES ${AWS_AUTH_SIGNER_HEADERS})
      source_group("Header Files\\aws\\core\\auth\\signer-provider" FILES ${AWS_AUTH_SIGNER_PROVIDER_HEADERS})
-@@ -597,6 +599,7 @@ endif()
+@@ -627,6 +629,7 @@ endif()
  
  target_include_directories(${PROJECT_NAME} PUBLIC
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -62,7 +62,7 @@ index c6a0f1c26..c9ea5e8d7 100644
      $<INSTALL_INTERFACE:include>)
  
  if (EXTERNAL_DEPS_INCLUDE_DIRS)
-@@ -669,7 +672,7 @@ if(SIMPLE_INSTALL)
+@@ -699,7 +702,7 @@ if(SIMPLE_INSTALL)
      endif()
  endif()
  
@@ -73,7 +73,7 @@ index c6a0f1c26..c9ea5e8d7 100644
  install (FILES ${AWS_AUTH_SIGNER_PROVIDER_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/auth/signer-provider)
 diff --git a/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h b/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h
 deleted file mode 100644
-index 816c0579a..000000000
+index 92255cc62f0..00000000000
 --- a/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h
 +++ /dev/null
 @@ -1,10 +0,0 @@
@@ -83,7 +83,7 @@ index 816c0579a..000000000
 - */
 -#pragma once
 -
--#define AWS_SDK_VERSION_STRING "1.11.820"
+-#define AWS_SDK_VERSION_STRING "1.11.840"
 -#define AWS_SDK_VERSION_MAJOR 1
 -#define AWS_SDK_VERSION_MINOR 11
--#define AWS_SDK_VERSION_PATCH 820
+-#define AWS_SDK_VERSION_PATCH 840

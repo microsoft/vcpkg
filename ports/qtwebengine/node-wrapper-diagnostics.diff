@@ -1,0 +1,24 @@
+diff --git a/src/3rdparty/chromium/third_party/node/node.py b/src/3rdparty/chromium/third_party/node/node.py
+index 3af0f1d9ee..20516742f5 100644
+--- a/src/3rdparty/chromium/third_party/node/node.py
++++ b/src/3rdparty/chromium/third_party/node/node.py
+@@ -32,9 +32,15 @@ def RunNode(cmd_parts, stdout=None):
+   stdout, stderr = process.communicate()
+ 
+   if process.returncode != 0:
+-    # Handle cases where stderr is empty, even though the command failed, for
+-    # example https://github.com/microsoft/TypeScript/issues/615
+-    err = stderr if len(stderr) > 0 else stdout
+-    raise RuntimeError('Command \'%s\' failed\n%s' % (' '.join(cmd), err))
++    details = [
++        'Command \'%s\' failed with exit code %d' %
++            (' '.join(cmd), process.returncode),
++        'Working directory: %s' % os.getcwd(),
++        'stdout:',
++        stdout,
++        'stderr:',
++        stderr,
++    ]
++    raise RuntimeError('\n'.join(details))
+ 
+   return stdout
