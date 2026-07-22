@@ -28,6 +28,37 @@ function(vcpkg_from_git)
         set(arg_LFS "${arg_URL}")
     endif()
 
+    # Editable mode: delegate to consolidated helper
+    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
+        # Build optional parameters
+        set(_editable_extra_args "")
+        if(DEFINED arg_REF)
+            list(APPEND _editable_extra_args REF "${arg_REF}")
+        endif()
+        if(DEFINED arg_HEAD_REF)
+            list(APPEND _editable_extra_args HEAD_REF "${arg_HEAD_REF}")
+        endif()
+        if(DEFINED arg_FETCH_REF)
+            list(APPEND _editable_extra_args FETCH_REF "${arg_FETCH_REF}")
+        endif()
+        if(DEFINED arg_LFS)
+            list(APPEND _editable_extra_args LFS "${arg_LFS}")
+        endif()
+
+        include("${SCRIPTS}/cmake/z_vcpkg_from_git_editable.cmake")
+        z_vcpkg_from_git_editable(
+            URL "${arg_URL}"
+            OUT_SOURCE_PATH _editable_source_path
+            PATCHES ${arg_PATCHES}
+            ${_editable_extra_args}
+        )
+        set("${arg_OUT_SOURCE_PATH}" "${_editable_source_path}" PARENT_SCOPE)
+        if(DEFINED VCPKG_HEAD_VERSION)
+            set(VCPKG_HEAD_VERSION "${VCPKG_HEAD_VERSION}" PARENT_SCOPE)
+        endif()
+        return()
+    endif()
+
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
     vcpkg_list(SET extract_working_directory_param)
     vcpkg_list(SET skip_patch_check_param)
