@@ -465,7 +465,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.14.2",
+      "baseline": "0.14.3",
       "port-version": 0
     },
     "aws-c-compression": {
