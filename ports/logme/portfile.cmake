@@ -2,8 +2,10 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO efmsoft/logme
   REF "v${VERSION}"
-  SHA512 5563c8e5821094e7deb4f508b6666386a760c3ce477a8d6125e21e45d48b0e624d11fe5556add698f2480e78b97285a2b99273240510843d9627bfbb7ef66a11
-  HEAD_REF master
+  SHA512 04cedb62185460fcdfe62a163f67391e0d3877108df82589bc579604db883ef3bb068d1a9e48099609ef7fa82d3ddf65c25abf7c81f69a7bc54d40398eadcdd6
+  HEAD_REF main
+  PATCHES
+    fix-windows-static-link.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}"  "static" _logme_static_opt)
