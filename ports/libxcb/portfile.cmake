@@ -68,6 +68,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT 
             bigreq
             composite
             damage
+            dbe
             dpms
             dri2
             dri3
