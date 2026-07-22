@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         deps-and-shared.patch
         fix-mpi.patch
+        fix-cgns-backend.patch
         termios.diff
 )
 

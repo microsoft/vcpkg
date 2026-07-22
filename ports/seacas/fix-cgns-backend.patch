@@ -1,0 +1,48 @@
+--- a/packages/seacas/libraries/ioss/src/cgns/Iocgns_DecompositionData.C
++++ b/packages/seacas/libraries/ioss/src/cgns/Iocgns_DecompositionData.C
+@@ -517,7 +517,8 @@
+             donor_ptset_type != CGNS_ENUMV(PointListDonor)) {
+           IOSS_ERROR(fmt::format("ERROR: CGNS: Zone {} adjacency data is not correct type. Require "
+                                  "Abutting1to1 and PointList. {}\t{}\t{}",
+-                                 zone, connect_type, ptset_type, donor_ptset_type));
++                                 zone, static_cast<int>(connect_type), static_cast<int>(ptset_type),
++                                 static_cast<int>(donor_ptset_type)));
+         }
+ 
+         // Verify data consistency...
+--- a/packages/seacas/libraries/ioss/src/cgns/Iocgns_DecompositionData.h
++++ b/packages/seacas/libraries/ioss/src/cgns/Iocgns_DecompositionData.h
+@@ -68,6 +68,10 @@
+   {
+   public:
+     DecompositionDataBase() = default;
++    DecompositionDataBase(const DecompositionDataBase &)            = delete;
++    DecompositionDataBase(DecompositionDataBase &&)                 = delete;
++    DecompositionDataBase &operator=(const DecompositionDataBase &) = delete;
++    DecompositionDataBase &operator=(DecompositionDataBase &&)      = delete;
+ 
+     virtual ~DecompositionDataBase();
+     virtual void                  decompose_model(int filePtr, Ioss::MeshType mesh_type) = 0;
+--- a/packages/seacas/libraries/ioss/src/cgns/Iocgns_ParallelDatabaseIO.C
++++ b/packages/seacas/libraries/ioss/src/cgns/Iocgns_ParallelDatabaseIO.C
+@@ -27,7 +27,9 @@
+ #include <mpi.h>
+ #include <numeric>
+ #include <string>
++#if !defined(__IOSS_WINDOWS__)
+ #include <sys/select.h>
++#endif
+ #include <vector>
+ 
+ #include <pcgnslib.h>
+--- a/packages/seacas/libraries/ioss/src/cgns/Iocgns_Utils.C
++++ b/packages/seacas/libraries/ioss/src/cgns/Iocgns_Utils.C
+@@ -724,7 +724,7 @@
+ 
+     // ========================================================================
+     auto pack_lambda = [&off_data, &off_name, &off_cnt, &snd_zgc_data,
+-                        &snd_zgc_name](const std::vector<Ioss::ZoneConnectivity> &zgc) {
++                        &snd_zgc_name, BYTE_PER_NAME](const std::vector<Ioss::ZoneConnectivity> &zgc) {
+       for (const auto &z : zgc) {
+         if (!z.is_from_decomp() && z.is_active()) {
+           Ioss::Utils::copy_string(&snd_zgc_name[off_name], z.m_connectionName, BYTE_PER_NAME);
