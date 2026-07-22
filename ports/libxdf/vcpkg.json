@@ -1,9 +1,9 @@
 {
   "name": "libxdf",
-  "version": "0.99.10",
+  "version": "1.0.4",
   "description": "C++ library for loading multimodal, multi-rate signals stored in XDF files.",
   "homepage": "https://xdf-modules.github.io/libxdf/",
-  "license": "BSD-2-Clause",
+  "license": "BSD-2-Clause AND LGPL-3.0-or-later",
   "dependencies": [
     "pugixml",
     {
