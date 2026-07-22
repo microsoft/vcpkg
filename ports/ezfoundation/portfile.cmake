@@ -7,8 +7,7 @@ vcpkg_from_github(
     SHA512 c27f8241969c5c257123b789a964e102331a98f1803e038fa0521794ebdc7500f733bd987e1c53111a6220bd403f4ceffdbc2eb183aec7a178a2ffaf9a129afe
     HEAD_REF dev
     PATCHES
-        apply-build-filter-before-requirements.patch # https://github.com/ezEngine/ezEngine/pull/1992
-        fix-msvc-arm64.patch # https://github.com/ezEngine/ezEngine/pull/1991
+        ezengine-da345.patch # Backport of https://github.com/ezEngine/ezEngine/commit/da345c931aa000c80ee5904a19416fb4eed7b00d.diff?full_index=1
         disable-warnings-as-errors.diff
 )
 
