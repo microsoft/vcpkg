@@ -16,6 +16,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         application F3D_BUILD_APPLICATION
         application F3D_WINDOWS_BUILD_CONSOLE_APPLICATION
+        application F3D_USE_EXTERNAL_CXXOPTS        # avoid REQUIRED
+        application F3D_USE_EXTERNAL_DMON           # avoid REQUIRED
+        application F3D_USE_EXTERNAL_NLOHMANN_JSON  # avoid REQUIRED
         # optional modules
         exr         F3D_MODULE_EXR
         # optional plugins
@@ -29,12 +32,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DF3D_MACOS_BUNDLE=OFF
-        -DF3D_USE_EXTERNAL_CXXOPTS=ON
-        -DF3D_USE_EXTERNAL_DMON=ON
         -DF3D_USE_EXTERNAL_IMGUI=ON
-        -DF3D_USE_EXTERNAL_NLOHMANN_JSON=ON
         -DF3D_WINDOWS_BUILD_SHELL_THUMBNAILS_EXTENSION=OFF
-        -DVCPKG_TRACE_FIND_PACKAGE=1
     OPTIONS_DEBUG
         -DF3D_BUILD_APPLICATION=OFF
         -DF3D_WINDOWS_BUILD_CONSOLE_APPLICATION=OFF
