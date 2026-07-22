@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         hdf5.patch
+        export-cgio-context.patch
         install-lib-linkage.diff
         linux_lfs.patch
 )

@@ -23,6 +23,17 @@
  
      virtual ~DecompositionDataBase();
      virtual void                  decompose_model(int filePtr, Ioss::MeshType mesh_type) = 0;
+--- a/packages/seacas/libraries/ioss/src/cgns/Iocgns_DatabaseIO.C
++++ b/packages/seacas/libraries/ioss/src/cgns/Iocgns_DatabaseIO.C
+@@ -97,7 +97,7 @@
+ #endif
+   } cgns_io_ctx_t;
+ 
+-  extern cgns_io_ctx_t ctx_cgio; /* located in cgns_io.c */
++  extern CGNSDLL cgns_io_ctx_t ctx_cgio; /* located in cgns_io.c */
+   }
+ 
+   // There is a bug in the CGNS library (4.4.0 and before) where it
 --- a/packages/seacas/libraries/ioss/src/cgns/Iocgns_ParallelDatabaseIO.C
 +++ b/packages/seacas/libraries/ioss/src/cgns/Iocgns_ParallelDatabaseIO.C
 @@ -27,7 +27,9 @@
