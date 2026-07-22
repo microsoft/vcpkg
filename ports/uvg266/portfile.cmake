@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tools(TOOL_NAMES uvg266)
+vcpkg_copy_tools(TOOL_NAMES uvg266 AUTO_CLEAN)
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/uvg266")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -31,5 +31,11 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/LICENSE.EXT.greatest")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE.EXT.greatest"
+        "${SOURCE_PATH}/src/threadwrapper/LICENSE"
+        "${SOURCE_PATH}/src/extras/getopt.h"
+        "${SOURCE_PATH}/src/extras/libmd5.h"
+)
