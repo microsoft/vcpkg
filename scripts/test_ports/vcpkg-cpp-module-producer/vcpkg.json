@@ -2,7 +2,7 @@
   "name": "vcpkg-cpp-module-producer",
   "version-string": "ci",
   "description": "Test port that packages a C++20 module",
-  "license": "CC0-1.0",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

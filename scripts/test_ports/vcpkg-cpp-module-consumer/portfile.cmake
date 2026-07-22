@@ -27,6 +27,6 @@ execute_process(
 
 vcpkg_clean_executables_in_bin(FILE_NAMES consumer)
 
-vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/License")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "This test port is part of vcpkg.")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
