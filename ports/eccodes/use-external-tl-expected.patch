@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c63a982..5bc325f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,6 +32,8 @@ project( eccodes LANGUAGES CXX )
+ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
++find_package(tl-expected CONFIG REQUIRED)
++
+ 
+ ###############################################################################
+ # system checks needed for eccodes_config.h and some options like MEMFS
+@@ -431,7 +433,6 @@ set( ECCODES_INCLUDE_DIRS
+   ${CMAKE_CURRENT_BINARY_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/eccodes
+   ${CMAKE_CURRENT_BINARY_DIR}/src/eccodes
+-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/expected/include
+ )
+ set( ECCODES_LIBRARIES       eccodes )
+ 
+diff --git a/src/eccodes/CMakeLists.txt b/src/eccodes/CMakeLists.txt
+index 04b03eb..7f97c37 100644
+--- a/src/eccodes/CMakeLists.txt
++++ b/src/eccodes/CMakeLists.txt
+@@ -447,6 +447,7 @@ ecbuild_add_library(
+         ${ECCODES_EXTRA_LIBRARIES}
+         ${CMAKE_THREAD_LIBS_INIT}
+         ${ECCODES_PNG_LIBRARIES}
++        tl::expected
+         $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+     PUBLIC_LIBS
+         ${CMATH_LIBRARIES}
+
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 2106df1..cfaa8fe 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -94,6 +94,7 @@ foreach( tool ${test_c_bins} )
+                             LIBS      eccodes )
+ endforeach()
+ 
++target_link_libraries(unit_tests tl::expected)
+ 
+ # Now add each test (shell scripts)
+ #################################################
