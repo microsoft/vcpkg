@@ -10577,7 +10577,7 @@
       "port-version": 8
     },
     "valijson": {
-      "baseline": "1.1.2",
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "value-ptr-lite": {
