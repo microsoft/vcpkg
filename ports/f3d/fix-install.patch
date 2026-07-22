@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b946637..4140809 100644
+index b946637..d3c063c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -118,7 +118,9 @@ if (F3D_USE_EXTERNAL_NLOHMANN_JSON)
@@ -13,7 +13,18 @@ index b946637..4140809 100644
  endif ()
  if (F3D_USE_EXTERNAL_IMGUI)
    find_package(imgui REQUIRED)
-@@ -310,10 +312,12 @@ if (UNIX AND NOT APPLE AND NOT ANDROID)
+@@ -269,6 +271,10 @@ add_subdirectory(plugins)
+ # libf3d target
+ add_subdirectory(library)
+ 
++install(TARGETS vtkext vtkextPrivate vtkextNative
++    EXPORT f3dLibraryTargets
++)
++
+ if (F3D_BUILD_APPLICATION)
+   add_subdirectory(application)
+ endif()
+@@ -310,10 +316,12 @@ if (UNIX AND NOT APPLE AND NOT ANDROID)
  endif()
  
  install(FILES LICENSE.md
@@ -76,11 +87,44 @@ index 572a4dd..4f9c4a3 100644
    install(FILES "${F3D_SOURCE_DIR}/resources/f3d.desktop"
      DESTINATION "share/applications" COMPONENT assets)
    install(FILES "${F3D_SOURCE_DIR}/resources/logo16.png"
+diff --git a/cmake/f3dConfig.cmake.in b/cmake/f3dConfig.cmake.in
+index 543a118..4205689 100644
+--- a/cmake/f3dConfig.cmake.in
++++ b/cmake/f3dConfig.cmake.in
+@@ -1,3 +1,12 @@
++include(CMakeFindDependencyMacro)
++find_dependency(imgui)
++find_dependency(nlohmann_json)
++find_dependency(VTK)
++if("@F3D_USE_EXTERNAL_DMON@" AND NOT TARGET dmon::dmon) 
++  find_path(SEPTAG_DMON_INCLUDE_DIR "dmon.h" REQUIRED)
++  add_library(dmon::dmon INTERFACE IMPORTED)
++  target_include_directories(dmon::dmon INTERFACE "${SEPTAG_DMON_INCLUDE_DIR}")
++endif()
+ # When this file is run by CMake through the find_package command
+ #
+ # The following variables will be defined:
+diff --git a/cmake/f3dPlugin.cmake b/cmake/f3dPlugin.cmake
+index 96d3d3b..7efa82c 100644
+--- a/cmake/f3dPlugin.cmake
++++ b/cmake/f3dPlugin.cmake
+@@ -363,9 +363,9 @@ macro(f3d_plugin_build)
+     ${F3D_PLUGIN_VTK_MODULES}
+     ${modules})
+ 
+-  if(NOT F3D_PLUGIN_IS_STATIC)
++  if(1)
+     install(TARGETS f3d-plugin-${F3D_PLUGIN_NAME}
+-      EXPORT f3dTargets
++      EXPORT f3dLibraryTargets
+       ARCHIVE DESTINATION ${_f3d_plugins_install_dir} COMPONENT plugin
+       LIBRARY DESTINATION ${_f3d_plugins_install_dir} COMPONENT plugin)
+   endif()
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 287eb58..f92b747 100644
+index 287eb58..bfa0395 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
-@@ -252,7 +252,7 @@ install(
+@@ -252,16 +252,16 @@ install(
    DESTINATION
      "${CMAKE_INSTALL_LIBDIR}/cmake/f3d"
    COMPONENT sdk
@@ -88,8 +132,10 @@ index 287eb58..f92b747 100644
 +)
  
  ## Install the rest of the libraries and SDK parts
- if(BUILD_SHARED_LIBS)
-@@ -261,7 +261,7 @@ if(BUILD_SHARED_LIBS)
+-if(BUILD_SHARED_LIBS)
++if(1)
+ 
+   # Install the libf3d
    install(TARGETS libf3d
      EXPORT f3dLibraryTargets
      RUNTIME_DEPENDENCY_SET libf3dDeps
@@ -139,3 +185,25 @@ index 287eb58..f92b747 100644
 +  )
  
  endif()
+diff --git a/plugins/CMakeLists.txt b/plugins/CMakeLists.txt
+index 9549852..fcafba7 100644
+--- a/plugins/CMakeLists.txt
++++ b/plugins/CMakeLists.txt
+@@ -12,14 +12,17 @@ add_subdirectory(native)
+ 
+ if (F3D_PLUGIN_BUILD_ALEMBIC)
+   add_subdirectory(alembic)
++  install(TARGETS vtkextAlembic EXPORT f3dLibraryTargets)
+ endif()
+ 
+ if (F3D_PLUGIN_BUILD_ASSIMP)
+   add_subdirectory(assimp)
++  install(TARGETS vtkextAssimp EXPORT f3dLibraryTargets)
+ endif()
+ 
+ if (F3D_PLUGIN_BUILD_DRACO)
+   add_subdirectory(draco)
++  install(TARGETS vtkextDraco EXPORT f3dLibraryTargets)
+ endif()
+ 
+ if (F3D_PLUGIN_BUILD_HDF)
