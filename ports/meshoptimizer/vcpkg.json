@@ -1,6 +1,7 @@
 {
   "name": "meshoptimizer",
   "version": "1.2",
+  "port-version": 1,
   "description": "Mesh optimization library that makes meshes smaller and faster to render",
   "homepage": "https://github.com/zeux/meshoptimizer",
   "license": "MIT",
@@ -19,9 +20,7 @@
       "description": "Build gltfpack tool",
       "supports": "!uwp",
       "dependencies": [
-        "basisu",
-        "cgltf",
-        "fast-obj"
+        "basisu"
       ]
     }
   }

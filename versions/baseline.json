@@ -1702,7 +1702,7 @@
     },
     "cgltf": {
       "baseline": "1.15",
-      "port-version": 1
+      "port-version": 0
     },
     "cgns": {
       "baseline": "4.5.1",
@@ -6546,7 +6546,7 @@
     },
     "meshoptimizer": {
       "baseline": "1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "metis": {
       "baseline": "2025-07-04",
