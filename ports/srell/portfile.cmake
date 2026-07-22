@@ -20,4 +20,7 @@ file(INSTALL
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/license.txt"
+    COMMENT "The srell_ucfdata2.h and srell_updata3.h files were generated from the\nUnicode Data files, which are licensed under Unicode 3.0."
+)
