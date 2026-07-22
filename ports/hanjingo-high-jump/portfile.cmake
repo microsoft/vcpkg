@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanjingo/high-jump
     REF v${VERSION}
-    SHA512 1b21b1df6f6b205c3295031fe7a1a29506008af3037f6d997129a8f2b972c81d40ad60fe320278464d2a4e8fdd25eaf55138329cedd7da0fe3bb020adcabe84c
+    SHA512 b0cc8e40f05b01aa89fe4eda1441b6864ffc2e8149e1b6e75b88b44be60472e1d9cb3e261e625c9818807beea816b5ff5ac762faa7de88889ca12e2dc23567e0
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -48,6 +48,7 @@ vcpkg_cmake_configure(
         -DBUILD_LIB=OFF
         -DBUILD_TEST=OFF
         -DBUILD_BENCH=OFF
+        -DHJ_VERSION=${VERSION}
 )
 
 vcpkg_cmake_install()
@@ -55,3 +56,12 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage"
+[[The package hanjingo-high-jump provides CMake targets:
+
+    find_package(hj CONFIG REQUIRED)
+    # Note: The 'hj' target provides include paths only.
+    # You MUST link the feature libraries via ${hj_LIBRARIES}.
+    target_link_libraries(main PRIVATE hj ${hj_LIBRARIES})
+]])
