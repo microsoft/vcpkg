@@ -3089,8 +3089,8 @@
       "port-version": 0
     },
     "fkyaml": {
-      "baseline": "0.4.2",
-      "port-version": 1
+      "baseline": "0.4.3",
+      "port-version": 0
     },
     "flann": {
       "baseline": "2022-10-28",
