@@ -1,0 +1,7 @@
+{
+  "name": "randx",
+  "version": "1.3.1",
+  "description": "Modern, fast, and header-only C++ pseudo-random number generator and distribution library (C++17/C++23).",
+  "homepage": "https://github.com/lidaixingchen/RandX",
+  "license": "MIT"
+}
