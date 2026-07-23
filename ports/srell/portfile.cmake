@@ -20,7 +20,10 @@ file(INSTALL
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 
-vcpkg_install_copyright(
-    FILE_LIST "${SOURCE_PATH}/license.txt"
-    COMMENT "The srell_ucfdata2.h and srell_updata3.h files were generated from the\nUnicode Data files, which are licensed under Unicode 3.0."
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/license.txt"
+    # The build produces Unicode-licensed generated headers.
+    # The Unicode-license.txt file was downloaded from:
+    # https://www.unicode.org/license.txt
+    "${CURRENT_PORT_DIR}/Unicode-license.txt"
 )
