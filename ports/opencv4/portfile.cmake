@@ -154,15 +154,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "fs"         OPENCV_DISABLE_FILESYSTEM_SUPPORT
 )
 
-if("dnn" IN_LIST FEATURES)
-  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-  vcpkg_execute_required_process(
-    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
-    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
-    LOGNAME flatc-${TARGET_TRIPLET}
-  )
-endif()
-
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
   set(WITH_QT ${USE_QT_VERSION})
@@ -236,6 +227,7 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      0019-contrib-cout.diff
       "${CONTRIB_CUDA_NAMESPACE_FIX}"
       "${CONTRIB_CUDA_NOT1_FIX}"
   )
@@ -387,10 +379,22 @@ if("ipp" IN_LIST FEATURES)
     endif()
   endif()
 
-  if(VCPKG_OPENCV4_UPDATE)
-    message(STATUS "All downloads are up-to-date.")
-    message(FATAL_ERROR "Stopping due to VCPKG_OPENCV4_UPDATE being enabled.")
-  endif()
+endif()
+
+if(VCPKG_OPENCV4_UPDATE)
+  message(STATUS "All downloads are up-to-date.")
+  message(FATAL_ERROR "Stopping due to VCPKG_OPENCV4_UPDATE being enabled.")
+endif()
+
+# ^^^ downloads ^^^ | vvv after downloads vvv
+
+if("dnn" IN_LIST FEATURES)
+  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+  vcpkg_execute_required_process(
+    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
+    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
+    LOGNAME flatc-${TARGET_TRIPLET}
+  )
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)
