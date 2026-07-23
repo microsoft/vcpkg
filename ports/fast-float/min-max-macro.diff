@@ -1,5 +1,5 @@
 diff --git a/include/fast_float/ascii_number.h b/include/fast_float/ascii_number.h
-index 2bad1fb1..2748d65a 100644
+index 2bad1fb..2748d65 100644
 --- a/include/fast_float/ascii_number.h
 +++ b/include/fast_float/ascii_number.h
 @@ -804,7 +804,7 @@ parse_int_string(UC const *p, UC const *pend, T &value,
@@ -22,3 +22,16 @@ index 2bad1fb1..2748d65a 100644
  #ifdef FASTFLOAT_VISUAL_STUDIO
  #pragma warning(pop)
  #endif
+diff --git a/include/fast_float/parse_number.h b/include/fast_float/parse_number.h
+index c819c8a..58cdafd 100644
+--- a/include/fast_float/parse_number.h
++++ b/include/fast_float/parse_number.h
+@@ -96,7 +96,7 @@ fastfloat_really_inline bool rounds_to_nearest() noexcept {
+   // asm). The value does not need to be std::numeric_limits<float>::min(), any
+   // small value so that 1 + x should round to 1 would do (after accounting for
+   // excess precision, as in 387 instructions).
+-  static float volatile fmin = std::numeric_limits<float>::min();
++  static float volatile fmin = (std::numeric_limits<float>::min)();
+   float fmini = fmin; // we copy it so that it gets loaded at most once.
+ //
+ // Explanation:

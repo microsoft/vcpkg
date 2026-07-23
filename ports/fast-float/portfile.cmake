@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 eec563358117b593e882a9069074a269d811e8989457a0d57e50c5d2f4d534b6820308082bb70c0a8a8388513e92b64f12c5213389eff726ad0483eacba961ff
     HEAD_REF master
     PATCHES
-        max-macro.diff
+        min-max-macro.diff
 )
 
 vcpkg_cmake_configure(
