@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-flags-pollution.patch
+        fix-msvc-c4334.patch
         install.patch
 )
 
