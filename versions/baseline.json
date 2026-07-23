@@ -10101,8 +10101,8 @@
       "port-version": 4
     },
     "tgui": {
-      "baseline": "1.8.0",
-      "port-version": 2
+      "baseline": "1.13.0",
+      "port-version": 0
     },
     "thermadiag-seq": {
       "baseline": "2.1",
