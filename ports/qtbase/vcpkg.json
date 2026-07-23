@@ -99,6 +99,10 @@
     "harfbuzz",
     "icu",
     "jpeg",
+    {
+      "name": "libxcb",
+      "platform": "linux"
+    },
     "network",
     {
       "name": "opengl",
@@ -121,10 +125,6 @@
     "testlib",
     "thread",
     "widgets",
-    {
-      "name": "xcb",
-      "platform": "linux"
-    },
     {
       "name": "xcb-sm",
       "platform": "linux"
