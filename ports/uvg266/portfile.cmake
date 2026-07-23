@@ -18,6 +18,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/uvg266.pc" "-luvg266" "-llibuvg266")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/uvg266.pc" "-luvg266" "-llibuvg266")
+endif()
 vcpkg_copy_tools(TOOL_NAMES uvg266 AUTO_CLEAN)
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/uvg266")
 
