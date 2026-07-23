@@ -3,13 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ezEngine/ezEngine
-    REF 1448308ab99bae0d8d2a292ad345ff3a757f3124 #21.10
-    SHA512 20da87772366d1612795f534b31600123c0d04beba252d27d895c3c3cff7dae65952bd890629d79a7a691c2f3444601552c4b4eca99e8f8a99dc935ce2ebd284
+    REF "release-${VERSION}"
+    SHA512 c27f8241969c5c257123b789a964e102331a98f1803e038fa0521794ebdc7500f733bd987e1c53111a6220bd403f4ceffdbc2eb183aec7a178a2ffaf9a129afe
+    HEAD_REF dev
     PATCHES
-        ezfoundation-vcpkg.diff
-        # when making changes to this patch, use vim rather than VS Code or other editors that will
-        # normalize line endings because upstream's line endings are inconsistent which makes the
-        # patch get much larger than necessary
+        ezengine-da345.patch # Backport of https://github.com/ezEngine/ezEngine/commit/da345c931aa000c80ee5904a19416fb4eed7b00d.diff?full_index=1
         disable-warnings-as-errors.diff
 )
 
@@ -21,6 +19,8 @@ vcpkg_cmake_configure(
         -DEZ_3RDPARTY_ZLIB_SUPPORT=OFF
         -DEZ_BUILD_FILTER=FoundationOnly
         -DEZ_BUILD_UNITTESTS=OFF
+        -DEZ_CMAKE_NO_BUILD_INFO=ON
+        -DEZ_COMPILE_ENGINE_AS_DLL=OFF
         -DEZ_ENABLE_FOLDER_UNITY_FILES=OFF
         -DEZ_ENABLE_QT_SUPPORT=OFF
         -DEZ_USE_PCH=OFF
@@ -28,6 +28,7 @@ vcpkg_cmake_configure(
         -DEZ_OUTPUT_DIRECTORY_LIB=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Output/Lib
         -DEZ_OUTPUT_DIRECTORY_DLL=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Output/Bin
     OPTIONS_RELEASE
+        -DCMAKE_BUILD_TYPE=Shipping
         -DEZ_OUTPUT_DIRECTORY_LIB=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Output/Lib
         -DEZ_OUTPUT_DIRECTORY_DLL=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Output/Bin
 )

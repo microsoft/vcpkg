@@ -2917,8 +2917,8 @@
       "port-version": 0
     },
     "ezfoundation": {
-      "baseline": "21.10",
-      "port-version": 1
+      "baseline": "26.3",
+      "port-version": 0
     },
     "f3d": {
       "baseline": "3.2.0",
@@ -6698,7 +6698,7 @@
     },
     "mongo-c-driver": {
       "baseline": "2.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mongo-cxx-driver": {
       "baseline": "4.4.0",
@@ -7422,7 +7422,7 @@
     },
     "opencv4": {
       "baseline": "4.12.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openexr": {
       "baseline": "3.4.13",
@@ -7970,7 +7970,7 @@
     },
     "popsift": {
       "baseline": "0.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "portable-file-dialogs": {
       "baseline": "0.1.0",
