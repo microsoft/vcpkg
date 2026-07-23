@@ -75,17 +75,23 @@ diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
 index 48e0ee70..5f9af118 100644
 --- a/CMake/vtk-config.cmake.in
 +++ b/CMake/vtk-config.cmake.in
-@@ -128,9 +128,7 @@ set("${CMAKE_FIND_PACKAGE_NAME}_SMP_BACKENDS" "@vtk_smp_backends@")
- unset("${CMAKE_FIND_PACKAGE_NAME}_FOUND")
+@@ -129,14 +129,13 @@ set("${CMAKE_FIND_PACKAGE_NAME}_SMP_BACKENDS" "@vtk_smp_backends@")
  set("${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm" "@vtk_has_vtkm@")
  if (${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm)
--  find_package(VTKm
+   find_package(VTKm
 -    PATHS "${CMAKE_CURRENT_LIST_DIR}/vtkm"
 -    NO_DEFAULT_PATH)
-+  find_package(VTKm CONFIG REQUIRED)
++    CONFIG REQUIRED)
    if (NOT VTKm_FOUND)
      set("${CMAKE_FIND_PACKAGE_NAME}_FOUND" 0)
    endif ()
+ 
+   # Prior to VTK-m 2.0, the main VTK module was called VTK::vtkm
+-  if (TARGET VTK::vtkvtkm)
++  if (TARGET VTK::vtkvtkm AND NOT TARGET VTK::vtkm)
+     add_library(VTK::vtkm ALIAS VTK::vtkvtkm)
+   endif()
+ endif ()
 diff --git a/ThirdParty/vtkm/CMakeLists.txt b/ThirdParty/vtkm/CMakeLists.txt
 index 1ca03878..f9a6e996 100644
 --- a/ThirdParty/vtkm/CMakeLists.txt
