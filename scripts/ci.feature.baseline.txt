@@ -896,7 +896,6 @@ opencv3[opengl]:arm64-osx=no-separate-feature-test # needs gui (gtk | qt)
 opencv3[opengl]:x64-linux=no-separate-feature-test # needs gui (gtk | qt)
 opencv3[opengl](android)=feature-fails
 opencv3[ovis]:arm64-linux=cascade
-opencv3[python]:arm64-linux=cascade
 opencv3[qt]:arm64-linux=cascade
 opencv3[quality]:arm64-linux=cascade
 opencv3[sfm]:arm64-linux=cascade
