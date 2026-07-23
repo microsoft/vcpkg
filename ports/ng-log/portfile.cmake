@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         devendor-dirent.patch
-        disable-debug-postfix.patch
 )
 
 set(CROSSCOMP_OPTIONS "")
@@ -50,6 +49,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
             "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libng-log.pc"
             "-lgflags"
             "-lgflags_static_debug -lshlwapi"
+        )
+        vcpkg_replace_string(
+            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libng-log.pc"
+            " -lng-log"
+            "-lng-logd"
         )
     endif()
 endif()
