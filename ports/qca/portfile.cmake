@@ -12,12 +12,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
     REF "v${VERSION}"
-    SHA512 de06173aaea32aac19a24510b5dbb4bb79681217eb1e4256de36db9f7158ad485fa450ffba5e13c12a0425866923b54f9b4d6164d0eaf659fdf40e458f5ee017
+    SHA512 21bbc483f78d8c6b99bf2a4375db6a1bcc8a1a16df01e2295dc6a5b43fa27ccbef39114ee33d456071f712a00aca0ab3bc1bf767df82333c2f98ea35f7d35b45
     PATCHES
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
         0003-Define-NOMINMAX-for-botan-plugin-with-MSVC.patch
-        0004-fix-cmake4.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -36,11 +35,15 @@ endif()
 # So we do it here:
 message(STATUS "Importing certstore")
 file(REMOVE "${SOURCE_PATH}/certs/rootcerts.pem")
-# Using file(DOWNLOAD) to use https
-file(DOWNLOAD https://raw.githubusercontent.com/mozilla/gecko-dev/master/security/nss/lib/ckfw/builtins/certdata.txt
-    "${CURRENT_BUILDTREES_DIR}/cert/certdata.txt"
-    TLS_VERIFY ON
+
+vcpkg_download_distfile(CERTDATA_TXT
+    URLS     https://raw.githubusercontent.com/mozilla/gecko-dev/bc977a80f4fcf465681209d431c9dfe549f224cf/security/nss/lib/ckfw/builtins/certdata.txt
+    SHA512   a43dd8fa252afc5478c0a9297899eded17a18c21f359954d81bccad8b8f5a50d4f8aedfc1b9a43f2ce01a7f5352788b864045ed006fae65ccd21ce75430bc55d
+    FILENAME "certdata.txt"
 )
+file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cert")
+file(COPY_FILE "${CERTDATA_TXT}" "${CURRENT_BUILDTREES_DIR}/cert/certdata.txt")
+
 vcpkg_execute_required_process(
     COMMAND "${PERL}" "${CMAKE_CURRENT_LIST_DIR}/mk-ca-bundle.pl" -n "${SOURCE_PATH}/certs/rootcerts.pem"
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cert"
@@ -100,5 +103,13 @@ file(REMOVE_RECURSE
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    COMMENT [[
+The generated CA certificate bundle is derived from Mozilla's certdata.txt,
+which is licensed under MPL-2.0:
+https://raw.githubusercontent.com/mozilla/gecko-dev/bc977a80f4fcf465681209d431c9dfe549f224cf/security/nss/lib/ckfw/builtins/certdata.txt
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/src/botantools/botan/license.txt"
+)

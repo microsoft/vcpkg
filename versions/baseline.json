@@ -8149,8 +8149,8 @@
       "port-version": 1
     },
     "qca": {
-      "baseline": "2.3.7",
-      "port-version": 4
+      "baseline": "2.3.10",
+      "port-version": 0
     },
     "qcbor": {
       "baseline": "1.6.1",
