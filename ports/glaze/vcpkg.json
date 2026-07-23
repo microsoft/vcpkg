@@ -6,6 +6,7 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    "asio",
     {
       "name": "vcpkg-cmake",
       "host": true
