@@ -1,0 +1,12 @@
+diff --git a/util/file/filesystem.h b/util/file/filesystem.h
+index f04ee10..20e8afb 100644
+--- a/util/file/filesystem.h
++++ b/util/file/filesystem.h
+@@ -15,6 +15,7 @@
+ #ifndef CRASHPAD_UTIL_FILE_FILESYSTEM_H_
+ #define CRASHPAD_UTIL_FILE_FILESYSTEM_H_
+ 
++#include <stdint.h>
+ #include <time.h>
+ 
+ #include "base/files/file_path.h"

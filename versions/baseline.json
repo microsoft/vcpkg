@@ -293,8 +293,8 @@
       "port-version": 10
     },
     "arrow": {
-      "baseline": "24.0.0",
-      "port-version": 2
+      "baseline": "25.0.0",
+      "port-version": 0
     },
     "arrow-adbc": {
       "baseline": "23",
@@ -465,7 +465,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.14.2",
+      "baseline": "0.14.3",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -501,7 +501,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.42.1",
+      "baseline": "0.42.3",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -1869,7 +1869,7 @@
       "port-version": 0
     },
     "cminpack": {
-      "baseline": "1.3.11",
+      "baseline": "1.3.13",
       "port-version": 0
     },
     "cmocka": {
@@ -2193,8 +2193,8 @@
       "port-version": 0
     },
     "crashpad": {
-      "baseline": "2024-04-11",
-      "port-version": 13
+      "baseline": "2026-07-02",
+      "port-version": 0
     },
     "crashrpt": {
       "baseline": "1.4.3",
@@ -2770,7 +2770,7 @@
     },
     "eccodes": {
       "baseline": "2.48.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ecm": {
       "baseline": "6.28.0",
@@ -2917,8 +2917,8 @@
       "port-version": 0
     },
     "ezfoundation": {
-      "baseline": "21.10",
-      "port-version": 1
+      "baseline": "26.3",
+      "port-version": 0
     },
     "f3d": {
       "baseline": "3.2.0",
@@ -3089,8 +3089,8 @@
       "port-version": 0
     },
     "fkyaml": {
-      "baseline": "0.4.2",
-      "port-version": 1
+      "baseline": "0.4.3",
+      "port-version": 0
     },
     "flann": {
       "baseline": "2022-10-28",
@@ -3425,7 +3425,7 @@
       "port-version": 0
     },
     "ghc-filesystem": {
-      "baseline": "1.5.14",
+      "baseline": "1.5.16",
       "port-version": 0
     },
     "gherkin-c": {
@@ -4605,7 +4605,7 @@
       "port-version": 0
     },
     "komihash": {
-      "baseline": "5.29",
+      "baseline": "5.32",
       "port-version": 0
     },
     "krabsetw": {
@@ -4615,6 +4615,10 @@
     "krb5": {
       "baseline": "1.22.2",
       "port-version": 1
+    },
+    "krpc-cnano": {
+      "baseline": "0.6.0",
+      "port-version": 0
     },
     "ktx": {
       "baseline": "4.4.2",
@@ -5537,8 +5541,8 @@
       "port-version": 0
     },
     "libpqxx": {
-      "baseline": "8.0.1",
-      "port-version": 1
+      "baseline": "8.0.2",
+      "port-version": 0
     },
     "libprotobuf-mutator": {
       "baseline": "1.5",
@@ -6045,7 +6049,7 @@
       "port-version": 0
     },
     "libxmp": {
-      "baseline": "4.7.0",
+      "baseline": "4.7.1",
       "port-version": 0
     },
     "libxmu": {
@@ -6545,7 +6549,7 @@
       "port-version": 6
     },
     "meshoptimizer": {
-      "baseline": "1.1.1",
+      "baseline": "1.2",
       "port-version": 0
     },
     "metis": {
@@ -6698,7 +6702,7 @@
     },
     "mongo-c-driver": {
       "baseline": "2.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mongo-cxx-driver": {
       "baseline": "4.4.0",
@@ -7422,7 +7426,7 @@
     },
     "opencv4": {
       "baseline": "4.12.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openexr": {
       "baseline": "3.4.13",
@@ -7970,7 +7974,7 @@
     },
     "popsift": {
       "baseline": "0.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "portable-file-dialogs": {
       "baseline": "0.1.0",
@@ -9785,7 +9789,7 @@
       "port-version": 0
     },
     "stillwater-universal": {
-      "baseline": "4.7.2",
+      "baseline": "4.7.4",
       "port-version": 0
     },
     "stlab": {
@@ -9829,7 +9833,7 @@
       "port-version": 0
     },
     "strong-type": {
-      "baseline": "15",
+      "baseline": "16",
       "port-version": 0
     },
     "stronk": {
@@ -10577,7 +10581,7 @@
       "port-version": 8
     },
     "valijson": {
-      "baseline": "1.1.2",
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "value-ptr-lite": {
@@ -10617,7 +10621,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2024-05-23",
+      "baseline": "2026-07-21",
       "port-version": 0
     },
     "vcpkg-cmake-get-vars": {
@@ -11289,7 +11293,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.16.0",
+      "baseline": "5.0.0",
       "port-version": 0
     },
     "z4kn4fein-semver": {
@@ -11353,7 +11357,7 @@
       "port-version": 4
     },
     "zpp-bits": {
-      "baseline": "4.7.2",
+      "baseline": "4.7.3",
       "port-version": 0
     },
     "zserge-webview": {
