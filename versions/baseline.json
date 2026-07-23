@@ -7005,7 +7005,7 @@
       "port-version": 0
     },
     "neargye-semver": {
-      "baseline": "1.0.0-rc",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
