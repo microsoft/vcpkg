@@ -16,6 +16,7 @@
     "boost-asio",
     "boost-beast",
     "boost-circular-buffer",
+    "boost-coroutine2",
     "boost-filesystem",
     "boost-leaf",
     "boost-multi-index",
