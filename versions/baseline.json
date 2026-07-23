@@ -2594,7 +2594,7 @@
     },
     "dmlc": {
       "baseline": "2022-06-22",
-      "port-version": 0
+      "port-version": 1
     },
     "docopt": {
       "baseline": "2022-03-15",
@@ -6204,6 +6204,10 @@
       "baseline": "18.1.6",
       "port-version": 6
     },
+    "llvm-openmp": {
+      "baseline": "18.1.8",
+      "port-version": 0
+    },
     "lmdb": {
       "baseline": "1.0.0",
       "port-version": 0
@@ -7474,6 +7478,10 @@
     },
     "openmesh": {
       "baseline": "11.0",
+      "port-version": 0
+    },
+    "openmp": {
+      "baseline": "2024-07-08",
       "port-version": 0
     },
     "openmpi": {
