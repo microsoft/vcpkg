@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ada-url/idna
-    REF "${VERSION}"
+    REF "v${VERSION}"
     SHA512 68c77140fb2590168c9d6e2745dbb8e522b9074e68d1fb2b005f60c136f5e42c7b12861e5a967996f4280b9111a9b80e2fdf979bca58d5595333f6a57e61baa5
     HEAD_REF main
     PATCHES
+        fix-flags-pollution.patch
         install.patch
 )
 
