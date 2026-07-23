@@ -53,7 +53,8 @@
           "name": "curl",
           "default-features": false
         },
-        "indicators"
+        "indicators",
+        "tclap"
       ]
     }
   }

@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DHUIRA_NATIVE_ARCH=OFF
         -DHUIRA_TESTS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
 )
