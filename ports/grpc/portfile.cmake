@@ -71,6 +71,10 @@ vcpkg_cmake_configure(
         "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DgRPC_BUILD_GRPCPP_OTEL_PLUGIN=OFF
         -DgRPC_DOWNLOAD_ARCHIVES=OFF
+    OPTIONS_RELEASE
+        "-DCMAKE_COMPILE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pdbs"
+    OPTIONS_DEBUG
+        "-DCMAKE_COMPILE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pdbs"
     MAYBE_UNUSED_VARIABLES
         gRPC_MSVC_STATIC_RUNTIME
         gRPC_USE_SYSTEMD
@@ -80,13 +84,13 @@ vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(GLOB_RECURSE release_pdbs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.pdb")
+        file(GLOB release_pdbs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pdbs/*.pdb")
         if(release_pdbs)
             file(INSTALL ${release_pdbs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         endif()
     endif()
     if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(GLOB_RECURSE debug_pdbs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.pdb")
+        file(GLOB debug_pdbs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pdbs/*.pdb")
         if(debug_pdbs)
             file(INSTALL ${debug_pdbs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
