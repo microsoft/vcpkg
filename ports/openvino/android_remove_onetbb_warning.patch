@@ -1,0 +1,27 @@
+diff --git a/src/cmake/ov_parallel.cmake b/src/cmake/ov_parallel.cmake
+index 2f2efc00b7..0fa92c6200 100644
+--- a/src/cmake/ov_parallel.cmake
++++ b/src/cmake/ov_parallel.cmake
+@@ -77,14 +77,14 @@ endfunction()
+ 
+ macro(ov_find_package_tbb)
+     if((THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO" OR THREADING STREQUAL "TBB_ADAPTIVE") AND NOT TBB_FOUND)
+-        if(ANDROID)
+-            if(NOT DEFINED TBB_DIR AND NOT DEFINED ENV{TBB_DIR})
+-                message(FATAL_ERROR
+-                    "Android build with TBB threading requires a separately built oneTBB package. "
+-                    "Build oneTBB as described in docs/dev/build_android.md and configure OpenVINO "
+-                    "with -DTBB_DIR=<path>/lib/cmake/TBB.")
+-            endif()
+-        endif()
++        # if(ANDROID)
++        #     if(NOT DEFINED TBB_DIR AND NOT DEFINED ENV{TBB_DIR})
++        #         message(FATAL_ERROR
++        #             "Android build with TBB threading requires a separately built oneTBB package. "
++        #             "Build oneTBB as described in docs/dev/build_android.md and configure OpenVINO "
++        #             "with -DTBB_DIR=<path>/lib/cmake/TBB.")
++        #     endif()
++        # endif()
+ 
+         # conan generates TBBConfig.cmake files, which follows cmake's
+         # SameMajorVersion scheme, while TBB itself follows AnyNewerVersion one

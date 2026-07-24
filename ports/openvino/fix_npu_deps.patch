@@ -1,0 +1,13 @@
+diff --git a/cmake/features.cmake b/cmake/features.cmake
+index f1168663d8..84435b2d7c 100644
+--- a/cmake/features.cmake
++++ b/cmake/features.cmake
+@@ -196,7 +196,7 @@ ov_dependent_option (ENABLE_SYSTEM_TBB  "Enables use of system TBB" ${ENABLE_SYS
+ ov_option (ENABLE_SYSTEM_PUGIXML "Enables use of system PugiXML" OFF)
+ # the option is on by default, because we use only flatc compiler and don't use any libraries
+ ov_dependent_option(ENABLE_SYSTEM_FLATBUFFERS "Enables use of system flatbuffers" ${ENABLE_SYSTEM_FLATBUFFERS_DEFAULT}
+-    "ENABLE_OV_TF_LITE_FRONTEND" OFF)
++    "ENABLE_OV_TF_LITE_FRONTEND OR ENABLE_INTEL_NPU" OFF)
+ ov_dependent_option (ENABLE_SYSTEM_OPENCL "Enables use of system OpenCL" ${ENABLE_SYSTEM_LIBS_DEFAULT}
+     "ENABLE_INTEL_GPU" OFF)
+ # the option is turned off by default, because we compile our own static version of protobuf

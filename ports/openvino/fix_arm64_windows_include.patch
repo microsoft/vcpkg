@@ -1,0 +1,15 @@
+diff --git a/src/inference/src/system_conf.cpp b/src/inference/src/system_conf.cpp
+index c2499e49d3..efa645a6c4 100644
+--- a/src/inference/src/system_conf.cpp
++++ b/src/inference/src/system_conf.cpp
+@@ -48,6 +48,10 @@
+ #    include <xbyak/xbyak_util.h>
+ #endif
+ 
++#ifdef _WIN32
++#   include <processthreadsapi.h>
++#endif
++
+ namespace ov {
+ 
+ #if defined(OPENVINO_ARCH_X86) || defined(OPENVINO_ARCH_X86_64)
