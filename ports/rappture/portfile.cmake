@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
     PATCHES
         rappture.patch
         include_functional.patch
+        fix_c++17.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

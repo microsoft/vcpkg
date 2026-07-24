@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO algebraic-solving/msolve
     REF "v${VERSION}"
-    SHA512 db6fdae0fafe785618e457c6db787e5b835b5487359fd72fc39ebfa7f64fcae63ea131a2e6fe9f832c64d549c454688306e25ba52a9f2c3fa14a50fabd31b0de
+    SHA512 d51e63aa411a6d532812b725d39d546b58e0198aaf5e5ccf7796d616438edd280c340db735c5330bbc8aa2acdfe354f34c64ac7663f1c0014cf1f483e09aab35
     HEAD_REF master
     PATCHES
         fix-android.patch

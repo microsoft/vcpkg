@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 c702479259d77b3eeec85f5fbe177b040c598f2c0b3812139f4c95a1d3c292eff96cc84baa2c620bbfb2c507c61b4425f2cbeb4cb143235b8b25098ab816796a
     HEAD_REF develop
+    PATCHES
+        fix-format-header.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" IRSDKCPP_BUILD_SHARED)

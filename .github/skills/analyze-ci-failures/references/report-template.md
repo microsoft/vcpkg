@@ -14,6 +14,8 @@ Use it as the exact template when generating reports.
 **Triggered by:** {reason} on `{sourceBranch}` @ `{sourceVersion[:8]}`
 **Duration:** {startTime} → {finishTime} UTC (~{duration})
 **Result:** ❌ **FAILED** — {baseline_summary}
+**PR:** [#{prNumber}](https://github.com/microsoft/vcpkg/pull/{prNumber}) — `{pr_title}` by @{author}
+<!-- Include the PR line above for PR-triggered builds. Omit for scheduled/manual builds. -->
 
 ---
 
@@ -31,7 +33,7 @@ Use it as the exact template when generating reports.
 
 ---
 
-## 🔴 Cross-Platform Regressions (Windows + Linux)
+## 🔴 Cross-Platform Regressions
 
 ### N. `port-name` — Short Root Cause Title
 
@@ -63,6 +65,17 @@ Use it as the exact template when generating reports.
 ### N. `port-name` — Short Root Cause Title
 
 - **Triplet:** x64-linux
+- **Error:** `exact error message`
+- **Root cause:** ...
+- **Suggested fix:** ...
+
+---
+
+## 🔴 MacOS-Only Regressions
+
+### N. `port-name` — Short Root Cause Title
+
+- **Triplet:** arm64-osx
 - **Error:** `exact error message`
 - **Root cause:** ...
 - **Suggested fix:** ...
@@ -134,11 +147,22 @@ Use this as a reference for tone, depth, and structure.
 5. **Baseline ports**: Ports that explicitly reject a platform by design (`MSVC is not supported`, environment requirements) go to the Baseline section, not regressions
 6. **Dependency chain**: If port A fails because port B failed, list only port B as the regression with a note "causes N downstream failures: portA, portC, …"
 7. **Transient failures**: Download failures (curl errors, SHA mismatches) and exit-code-127 failures should be flagged as potentially transient
-8. **Priority levels**:
+8. **Version constraints**: Never suggest adding a `<=` version constraint as a fix — vcpkg only supports `>=` constraints. For API-breaking dependency updates, suggest updating the consuming port or patching it instead.
+9. **PR context**: For PR-triggered builds, always include a link to the PR, the PR title, and the author in the report header.
+10. **Portfile anti-patterns**: Never recommend `set(VCPKG_BUILD_TYPE release)` for ports that produce binaries — it is only for header-only libraries. Never recommend adding `VCPKG_POLICY_*` overrides to suppress post-build check warnings — fix the underlying issue instead. Most ports should not set any policy variable.
+11. **Case-sensitivity**: When a file-not-found error occurs only on Linux/Android but the port passes on Windows/macOS, always verify the exact filename casing in the upstream repository before concluding the file is missing.
+12. **`vcpkg_cmake_config_fixup` package name**: The `PACKAGE_NAME` argument must match the upstream CMake export name (what consumers pass to `find_package()`), which may differ from the vcpkg port name.
+13. **Priority levels**:
    - 🔴 **Immediate** — Core/popular ports, failures on 3+ triplets, or CI-environment regressions affecting many ports
    - 🟠 **High** — Failures on 2+ triplets, popular ports, or clear upstream API breaks
    - 🟡 **Medium** — Single-triplet failures with clear fixes
    - ℹ️ **Baseline/Investigate** — Expected failures, environment issues, or unclear root cause
+14. **Feature baseline unexpected passes**: When a job fails without REGRESSION lines, always scan the step log for `"passed but was marked expected to fail"` from `ci.feature.baseline.txt`. Report these under a separate "🟡 Unexpected Passes (Baseline Cleanup Required)" section, not as regressions or unrelated failures. The fix is to remove the stale entry from `scripts/ci.feature.baseline.txt`.
+15. **Android-specific macro collisions**: When a port fails only on Android with syntax errors and the compiler note says `"expanded from macro"` pointing to an NDK system header, this is a macro name collision — not a code bug in the traditional sense. Report it as an Android-specific issue with the fix being to rename the conflicting identifier upstream.
+16. **C++26 transitive include issues**: When a port compiles with `-std=c++2c` and fails on Clang/libc++ (macOS, Android) but passes on MSVC/GCC, suspect missing standard library includes that were previously available transitively. Check the compile command for the C++ standard flag.
+17. **Version validation failures**: When the "Validate version files" task fails, report it as a separate issue (not a build regression). The fix is always `vcpkg x-add-version {portname}`. No failure log artifacts are produced for this failure type.
+18. **Feature baseline coverage gaps**: When feature tests fail on multiple triplets but `ci.feature.baseline.txt` only covers some, explicitly list which triplets are missing entries and recommend expanding the baseline. Don't just say "update the baseline" — show which entries need to be added.
+19. **Debug/release CRT mismatch**: When a port fails on all Windows triplets except `x64-windows-release` with `LNK2038` runtime library mismatch errors, the root cause is host tools (code generators) mixing debug and release objects. Recommend using `OPTIONS_RELEASE`/`OPTIONS_DEBUG` in `vcpkg_cmake_configure()` to restrict tool building to the release configuration.
 
 ---
 
@@ -174,3 +198,50 @@ When analyzing a new build, scan for these high-frequency patterns before deep-d
 | `must install xorg-macros` | autotools ports | CI image missing xorg-dev package |
 | Build truncated, no error message | OOM or timeout | Use `DISABLE_PARALLEL` or check resources |
 | Many ports → same dependency fails | dep chain | Find root dep; rest are downstream casualties |
+| `passed but was marked expected to fail` | Job exit code 1, no REGRESSION lines | Stale `ci.feature.baseline.txt` entry — remove it |
+| `error: expected ')'` + `expanded from macro` on Android | Android NDK macro collision | POSIX signal macros (`si_value`, etc.) clash with code identifiers |
+| `no member named 'X' in namespace 'std'` + `-std=c++2c` | Clang/libc++ C++26 mode | Missing `#include` — transitive includes removed in C++26 |
+| `was not found in versions database` or `baseline.json: error: ... is assigned M, but the local port is N` | Version validation task | PR didn't run `vcpkg x-add-version` — no port builds attempted |
+| `Could not find GO_BIN` or `mkdir /go: permission denied` | Go-dependent features | Go not available/writable in CI — mark features as `feature-fails` |
+| Feature tests fail on triplets not in `ci.feature.baseline.txt` | Job exit code 1, no REGRESSION lines | Feature baseline entries only cover some triplets — expand them |
+| `LNK2038: mismatch detected for 'RuntimeLibrary'` or `'_ITERATOR_DEBUG_LEVEL'` | MSVC debug build, passes on release-only triplet | Debug/release CRT mismatch in host tools — use `OPTIONS_RELEASE` to build tools only in release |
+
+---
+
+## Minimum Viable Report (use when time-constrained)
+
+If you only have step-log data and no artifact details, write this minimal format:
+
+```markdown
+# vcpkg CI Failure Report — Build #{buildId}
+
+**Build:** [{buildNumber}]({build_url})
+**PR:** [#{prNumber}](https://github.com/microsoft/vcpkg/pull/{prNumber})
+
+## Summary
+
+| Triplet | Failures |
+|---------|----------|
+| {triplet} | N |
+
+## Regressions
+
+### {triplet}
+
+| Port | Failure Type | Error |
+|------|-------------|-------|
+| port | BUILD_FAILED | `error message from log` |
+| port | FILE_CONFLICTS | conflicts with port-b |
+| port | POST_BUILD_CHECKS_FAILED | `warning text from log` |
+| port | CASCADED_DUE_TO_MISSING_DEPENDENCIES | dependency port-b failed |
+
+## Version Validation Issues
+
+- `portname@N was not found in versions database` — run `vcpkg x-add-version portname`
+
+## Recommendations
+
+| Port | Action |
+|------|--------|
+| port | Fix description |
+```

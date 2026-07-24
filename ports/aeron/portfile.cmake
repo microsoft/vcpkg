@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aeron-io/aeron
     REF "${VERSION}"
-    SHA512 aacd14611acfff3f4890541fbd1f3cdb8b396d86a4e9fb2eb1f4f1a72c9fbe546d2b479ee86b4fe5900b5f3acf6e29d9916364efbe98255baa9cd6c429b057cb
+    SHA512 5d51aabeb9305d912534190bf88ddfaf09d842324d908f9a829e91e5acde1327103c4b4e07f0a2e48a3061d193f7b618d9b3fd154abaf8ecb39b9d35efb7b106
     HEAD_REF master
     PATCHES
         patches/add-libuuid-vcpkg-support.patch

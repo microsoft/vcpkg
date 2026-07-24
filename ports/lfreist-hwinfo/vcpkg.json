@@ -1,8 +1,10 @@
 {
   "name": "lfreist-hwinfo",
   "version-date": "2025-07-10",
+  "port-version": 1,
   "description": "hwinfo provides an easy-to-use and modern C++ API for retrieving hardware information of your systems components such as CPU, RAM, GPU, Disks, Mainboard, ...",
   "homepage": "https://github.com/lfreist/hwinfo",
+  "license": "MIT AND BSD-3-Clause",
   "supports": "!(uwp | android)",
   "dependencies": [
     {

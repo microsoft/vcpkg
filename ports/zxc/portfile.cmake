@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hellobertrand/zxc
     REF v${VERSION}
-    SHA512 284d9c1f1f23bf0a78c91bf074ed61a6c163422b857e4e40e32035be9e3a365149333b6650621270ec12245c70fe486b1bcb2f8c0bd2489e3b1f44773fae115e
+    SHA512 4ceb737bd6c703da5883c58f04a12801353841a1e4423a7df4cca55291131cf69c2e1a9d9f86de7e9511d9dd30016f226b179a054adba2250e5dbf160c3bc0a5
     HEAD_REF main
 )
 
@@ -40,6 +40,11 @@ if ("util" IN_LIST FEATURES)
             zxc
         AUTO_CLEAN
     )
+    # Upstream installs "unzxc" as a POSIX-only symlink to zxc that defaults to
+    # decompression. Recreate it alongside the relocated tool (skipped on Windows).
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        file(CREATE_LINK "zxc" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/unzxc" SYMBOLIC)
+    endif()
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -45,6 +45,7 @@ vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com"
     PATCHES
         fix-macos-15-6.patch
         pkgconfig.diff
+        avoid-stdext.diff # to avoid removal of stdext::checked_array_iterator
 )
 
 vcpkg_cmake_configure(

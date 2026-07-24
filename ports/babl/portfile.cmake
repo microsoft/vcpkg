@@ -11,10 +11,13 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         support-plugins.patch
+        gir-header-only-on-windows.patch
         remove-consistency-check.patch
 )
 
 set(feature_options "")
+set(debug_options "")
+set(release_options "")
 if("cmyk-icc" IN_LIST FEATURES)
     list(APPEND feature_options "-Dwith-lcms=enabled")
 else()
@@ -23,6 +26,12 @@ endif()
 
 if("introspection" IN_LIST FEATURES)
     list(APPEND feature_options "-Denable-gir=true")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        # The Windows debug scanner path is currently brittle; generate the
+        # GIR/typelib from release only and package those artifacts.
+        list(APPEND debug_options "-Denable-gir=false")
+        list(APPEND release_options "-Denable-gir=true")
+    endif()
     vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
     list(APPEND feature_options "-Denable-gir=false")
@@ -33,6 +42,10 @@ vcpkg_configure_meson(
     OPTIONS
         ${feature_options}
         -Dwith-docs=false
+    OPTIONS_DEBUG
+        ${debug_options}
+    OPTIONS_RELEASE
+        ${release_options}
     ADDITIONAL_BINARIES
         "g-ir-compiler='${GIR_COMPILER}'"
         "g-ir-scanner='${GIR_SCANNER}'"

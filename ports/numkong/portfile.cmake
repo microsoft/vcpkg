@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ashvardanian/NumKong
     REF "v${VERSION}"
-    SHA512 fdb0d0190890fdf802c5ec9b3164d52b5721efcdff98e33eb1cf06558b6e3c00ecfba44d22492dd9619749b77237e0d94ba366c39ee543f9ae744552faf6e2bc
+    SHA512 b64fd32302a18be57bee28ad15ccb23366daf66a3f743c42fd5a0a740741837e19efce2eefff02d97a32bd0bc0ed60d94616052df9c8b4b1b488209bc732d742
     HEAD_REF main
     PATCHES
         export-target.patch
@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DNK_BUILD_TEST=OFF
         -DNK_BUILD_SHARED_TEST=OFF
-        -DNK_BUILD_BENCHMARKS=OFF
+        -DNK_BUILD_BENCH=OFF
         "-DNK_BUILD_SHARED=${BUILD_SHARED}"
 )
 

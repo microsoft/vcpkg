@@ -1,0 +1,32 @@
+{
+  "name": "cpp-client-telemetry",
+  "version": "3.10.173.1",
+  "description": "Microsoft 1DS C/C++ Client Telemetry Library",
+  "homepage": "https://github.com/microsoft/cpp_client_telemetry",
+  "license": "Apache-2.0",
+  "supports": "((windows & !mingw) | linux | osx | ios | android) & !uwp",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ],
+      "platform": "linux | android"
+    },
+    "nlohmann-json",
+    {
+      "name": "sqlite3",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

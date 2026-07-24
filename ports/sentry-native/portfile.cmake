@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 2b84c14203fd3f65b3f76d9f298c09aa857d527eccf08d37040a51cac91dd19840d724f1bc85f0cc2a877d867c0a703534ac29c6591a92b45656f959fbc69704
+    SHA512 e99a68d9cd42fa32780c58b580a02cbcdb8e8de6b256c7b114cb96459d444ac7ea191ee17d5f2ca48873b6c3b892ac5df5728a27787e54071b96e508a70c6a46
 )
 
 vcpkg_extract_source_archive(
@@ -12,7 +12,6 @@ vcpkg_extract_source_archive(
         fix-crashpad-wer.patch
         fix-usage-runtime.patch
         fix-cmake4.patch
-        devendor-libunwind.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib/zlib")
 
@@ -51,6 +50,7 @@ vcpkg_cmake_configure(
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DCRASHPAD_ZLIB_SYSTEM=ON
+        -DSENTRY_LIBUNWIND_SYSTEM=ON
     MAYBE_UNUSED_VARIABLES
         CRASHPAD_ZLIB_SYSTEM
 )

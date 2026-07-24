@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f0723c0..c35b19b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@ if(POLICY CMP0090)
+     cmake_policy(SET CMP0090 NEW)
+ endif()
+ 
+-project(DataFrame VERSION 4.0.1 LANGUAGES CXX)
++project(DataFrame VERSION 4.0.2 LANGUAGES CXX)
+ 
+ option(HMDF_TESTING "Enable testing" OFF)
+ option(HMDF_EXAMPLES "Build Examples" OFF)
