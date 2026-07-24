@@ -6617,7 +6617,7 @@
       "port-version": 0
     },
     "minc": {
-      "baseline": "2.4.6",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "minhook": {
