@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO seladb/PcapPlusPlus
     REF "v${PCAPPLUSPLUS_VERSION}"
-    SHA512 83f95e82cbbd10a88b6d333d2b6c6f1e4fef8b0b86f8ad6202cf77d50bf7a1c6afdcb0254962c37cc1c4b55e2e9700b97cc6222129990ff86fcefc7b06621cd0
+    SHA512 06c1440a7f88cbef13e5cd2bfbd3c2c1be73f859fc778a25760e0af9ff988b2814a0888d6fadbb3771dfc155dacda5860aa865d8ec5f2cf348d1a1aa29d1cdf4
     HEAD_REF master
 )
 
