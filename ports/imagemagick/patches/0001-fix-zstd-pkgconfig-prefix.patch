@@ -1,0 +1,11 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -1692,7 +1692,7 @@
+ ZSTD_PKG=""
+ if test "x$with_zstd" = "xyes"; then
+   AC_MSG_RESULT([-------------------------------------------------------------])
+-  PKG_CHECK_MODULES([LIBZSTD],[libzstd >= 1.0.0],[have_zstd=yes],[have_zstd=no])
++  PKG_CHECK_MODULES([ZSTD],[libzstd >= 1.0.0],[have_zstd=yes],[have_zstd=no])
+   AC_MSG_RESULT([])
+ fi
+ 
