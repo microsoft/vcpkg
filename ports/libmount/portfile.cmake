@@ -3,7 +3,7 @@ string(REGEX MATCH "^([0-9]+\\.[0-9]+)" VERSION_SHORT "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION_SHORT}/util-linux-${VERSION}.tar.xz"
     FILENAME "util-linux-${VERSION}.tar.xz"
-    SHA512 3d299f0e05a4c982a04dbcbaaeff1222152feedf51c56c5dbdeb75999c68269d652a994f5cdf4c1ee42bb7b28475dd0792192c299fd9bc3b45198c5b153dad00
+    SHA512 7415add0be2930654e322830808dde03ff6d511bd357f0679e6b6287a13ca79fe58ce4ac05edef86b76fb381b3a36ca2da9d3c31b5dc0a1d889c203156a57277
 )
 
 vcpkg_extract_source_archive(
