@@ -1,0 +1,20 @@
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index cd4c95b..5cefa2c 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -422,9 +422,12 @@ function (mongoc_get_accept_args ARG2 ARG3)
+    }
+    ")
+ 
+-   TRY_COMPILE (RES ${CMAKE_CURRENT_BINARY_DIR}
+-   ${CMAKE_CURRENT_BINARY_DIR}/accept_test${VAR}.c CMAKE_FLAGS
+-   "-Werror -DCMAKE_CXX_LINK_EXECUTABLE='echo not linking now...'" OUTPUT_VARIABLE LOG2)
++   TRY_COMPILE (RES
++      "${CMAKE_CURRENT_BINARY_DIR}"
++      SOURCES "${CMAKE_CURRENT_BINARY_DIR}/accept_test${VAR}.c"
++      CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=-Werror" "-DCMAKE_CXX_LINK_EXECUTABLE='echo not linking now...'"
++      OUTPUT_VARIABLE LOG2
++   )
+ 
+    if (RES)
+       message (

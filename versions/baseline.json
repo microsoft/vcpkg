@@ -2770,7 +2770,7 @@
     },
     "eccodes": {
       "baseline": "2.48.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ecm": {
       "baseline": "6.28.0",
@@ -2917,8 +2917,8 @@
       "port-version": 0
     },
     "ezfoundation": {
-      "baseline": "21.10",
-      "port-version": 1
+      "baseline": "26.3",
+      "port-version": 0
     },
     "f3d": {
       "baseline": "3.2.0",
@@ -2970,7 +2970,7 @@
     },
     "fast-float": {
       "baseline": "8.2.10",
-      "port-version": 0
+      "port-version": 1
     },
     "fast-obj": {
       "baseline": "1.3",
@@ -3509,8 +3509,8 @@
       "port-version": 3
     },
     "glslang": {
-      "baseline": "16.3.0",
-      "port-version": 1
+      "baseline": "16.4.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -3893,7 +3893,7 @@
       "port-version": 3
     },
     "huira": {
-      "baseline": "0.9.5",
+      "baseline": "0.9.6",
       "port-version": 0
     },
     "hungarian": {
@@ -4615,6 +4615,14 @@
     "krb5": {
       "baseline": "1.22.2",
       "port-version": 1
+    },
+    "krpc": {
+      "baseline": "0.6.0",
+      "port-version": 0
+    },
+    "krpc-cnano": {
+      "baseline": "0.6.0",
+      "port-version": 0
     },
     "ktx": {
       "baseline": "4.4.2",
@@ -6698,7 +6706,7 @@
     },
     "mongo-c-driver": {
       "baseline": "2.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mongo-cxx-driver": {
       "baseline": "4.4.0",
@@ -7001,7 +7009,7 @@
       "port-version": 0
     },
     "neargye-semver": {
-      "baseline": "1.0.0-rc",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
@@ -7193,7 +7201,7 @@
       "port-version": 0
     },
     "numkong": {
-      "baseline": "7.7.0",
+      "baseline": "7.7.1",
       "port-version": 0
     },
     "nuraft": {
@@ -7418,11 +7426,11 @@
     },
     "opencv3": {
       "baseline": "3.4.20",
-      "port-version": 2
+      "port-version": 3
     },
     "opencv4": {
       "baseline": "4.12.0",
-      "port-version": 5
+      "port-version": 6
     },
     "openexr": {
       "baseline": "3.4.13",
@@ -7970,7 +7978,7 @@
     },
     "popsift": {
       "baseline": "0.10.0",
-      "port-version": 1
+      "port-version": 2
     },
     "portable-file-dialogs": {
       "baseline": "0.1.0",
@@ -9554,7 +9562,7 @@
     },
     "soundtouch": {
       "baseline": "2.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "soxr": {
       "baseline": "0.1.3",
@@ -9717,8 +9725,8 @@
       "port-version": 0
     },
     "srell": {
-      "baseline": "2026.01",
-      "port-version": 1
+      "baseline": "2026.05",
+      "port-version": 0
     },
     "srpc": {
       "baseline": "0.10.4",
@@ -10113,7 +10121,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "1.0.7",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "threadpool": {
@@ -10617,7 +10625,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-config": {
-      "baseline": "2024-05-23",
+      "baseline": "2026-07-21",
       "port-version": 0
     },
     "vcpkg-cmake-get-vars": {
