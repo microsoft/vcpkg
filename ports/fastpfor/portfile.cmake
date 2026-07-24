@@ -4,11 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fast-pack/FastPFOR
     REF "v${VERSION}"
-    SHA512 63eae397540e901e6b60420a92a165bbc16f35d97238221dac5d9d8819f40886a12edc17087d0aa2eeef706b8f411d1d19b77d6833d8bf34ad8340fa59f4cccf
+    SHA512 2e899ad43c128cab16846fd09c11bb794d25b26f4c89df57d85ceb97239a44426ee607f2769e58bc3283d77bfdd35d455f2142900ae73e961387bb8074f4062a
     HEAD_REF master
     PATCHES
         remove-cpm.patch
         fix-arm-checker.patch
+        check-sse4.patch
 )
 
 file(REMOVE
