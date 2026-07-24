@@ -2681,7 +2681,7 @@
       "port-version": 0
     },
     "duvc-ctl": {
-      "baseline": "2.0.1",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "dv-processing": {
