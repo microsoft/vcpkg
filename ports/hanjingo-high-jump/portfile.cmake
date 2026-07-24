@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO hanjingo/high-jump
     REF v${VERSION}
     SHA512 e7bb70810dd23649039c3565d8617e1de343251d0f0db20ee8e1ed2edd25435d1db4cffa41a4b80827ccfbfd1c3e7ef7f365907eb9a893e8ac29189bd6d95f09
+    PATCHES
+        fix-msvc-core-headers.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
