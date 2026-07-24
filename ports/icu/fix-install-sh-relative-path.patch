@@ -1,0 +1,13 @@
+diff --git a/source/icudefs.mk.in b/source/icudefs.mk.in
+--- a/source/icudefs.mk.in
++++ b/source/icudefs.mk.in
+@@ -100,8 +100,8 @@
+ # Installation programs
+
+ MKINSTALLDIRS = $(SHELL) $(top_srcdir)/mkinstalldirs
+
+-INSTALL = @INSTALL@
++INSTALL = $(top_srcdir)/install-sh -c
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_DATA = @INSTALL_DATA@
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
