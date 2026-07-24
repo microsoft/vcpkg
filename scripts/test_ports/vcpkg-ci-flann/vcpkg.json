@@ -1,0 +1,36 @@
+{
+  "name": "vcpkg-ci-flann",
+  "version-string": "ci",
+  "description": "Validates flann",
+  "dependencies": [
+    "flann",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "cuda": {
+      "description": "flann[cuda]",
+      "dependencies": [
+        {
+          "name": "flann",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "hdf5": {
+      "description": "flann[hdf5]",
+      "dependencies": [
+        {
+          "name": "flann",
+          "features": [
+            "hdf5"
+          ]
+        }
+      ]
+    }
+  }
+}
