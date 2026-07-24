@@ -236,6 +236,7 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      0027-contrib-cuda-tuple.patch # https://github.com/opencv/opencv_contrib/commit/054007b78c8288ef2fd040e77dc0cf2e45f70c15
       "${CONTRIB_CUDA_NAMESPACE_FIX}"
       "${CONTRIB_CUDA_NOT1_FIX}"
   )
