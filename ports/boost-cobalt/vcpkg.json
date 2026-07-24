@@ -82,5 +82,13 @@
       "name": "boost-variant2",
       "version>=": "1.91.0"
     }
-  ]
+  ],
+  "features": {
+    "ssl": {
+      "description": "Build boost_cobalt_io_ssl",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
 }

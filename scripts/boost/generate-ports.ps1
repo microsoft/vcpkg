@@ -81,7 +81,15 @@ $portData = @{
     };
     'boost-beast'            = @{ 'supports' = '!emscripten' };
     'boost-cmake'            = @{ 'dependencies' = @(@{ 'name' = 'vcpkg-boost'; 'host' = $true }); };
-    'boost-cobalt'           = @{ 'supports' = '!uwp' };
+    'boost-cobalt'           = @{
+        'supports' = '!uwp';
+        'features' = @{
+            'ssl' = @{
+                'description'  = 'Build boost_cobalt_io_ssl';
+                'dependencies' = @('openssl');
+            }
+        }
+    };
     'boost-context'          = @{ 'supports' = '!uwp & !emscripten' };
     'boost-coroutine'        = @{ 'supports' = '!(arm & windows) & !uwp & !emscripten' };
     'boost-dll'              = @{ 'supports' = '!uwp' };
