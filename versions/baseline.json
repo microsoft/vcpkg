@@ -4616,6 +4616,10 @@
       "baseline": "1.22.2",
       "port-version": 1
     },
+    "krpc": {
+      "baseline": "0.6.0",
+      "port-version": 0
+    },
     "krpc-cnano": {
       "baseline": "0.6.0",
       "port-version": 0
@@ -9558,7 +9562,7 @@
     },
     "soundtouch": {
       "baseline": "2.4.0",
-      "port-version": 1
+      "port-version": 2
     },
     "soxr": {
       "baseline": "0.1.3",
