@@ -1,0 +1,46 @@
+diff --git a/cmake/install-config.cmake.in b/cmake/install-config.cmake.in
+index dbd6977f..b9480918 100644
+--- a/cmake/install-config.cmake.in
++++ b/cmake/install-config.cmake.in
+@@ -10,6 +10,8 @@ if(_glaze_EETF_FORMAT)
+ endif()
+ unset(_glaze_EETF_FORMAT)
+ 
++find_dependency(asio REQUIRED)
++
+ # Handle SSL dependency (OpenSSL)
+ set(_glaze_ENABLE_SSL "@glaze_ENABLE_SSL@")
+ if(_glaze_ENABLE_SSL)
+@@ -18,14 +20,3 @@ endif()
+ unset(_glaze_ENABLE_SSL)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/glazeTargets.cmake")
+-
+-# Make the Asio backend selector available to networking consumers. This only
+-# declares the glaze_USE_BUNDLED_ASIO option and the glaze_setup_asio() function;
+-# nothing is resolved until the consumer calls glaze_setup_asio() and links
+-# glaze::asio. Doing so picks the same backend and sets GLZ_USE_BOOST_ASIO exactly
+-# as the in-tree build, so glaze/ext/glaze_asio.hpp can never disagree with the
+-# linked Asio (issue #2599). Guarded so a source build without the installed
+-# module (e.g. add_subdirectory) still configures.
+-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/glaze-asio.cmake")
+-    include("${CMAKE_CURRENT_LIST_DIR}/glaze-asio.cmake")
+-endif()
+diff --git a/cmake/install-rules.cmake b/cmake/install-rules.cmake
+index cae895a7..42accbfc 100644
+--- a/cmake/install-rules.cmake
++++ b/cmake/install-rules.cmake
+@@ -38,13 +38,6 @@ mark_as_advanced(glaze_INSTALL_CMAKEDIR)
+ # in-tree builds. FindAsio.cmake travels with it because glaze_setup_asio()
+ # locates it via CMAKE_CURRENT_FUNCTION_LIST_DIR (issue #2599). glazeConfig.cmake
+ # includes glaze-asio.cmake so the function is available after find_package(glaze).
+-install(
+-    FILES
+-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/glaze-asio.cmake"
+-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindAsio.cmake"
+-    DESTINATION "${glaze_INSTALL_CMAKEDIR}"
+-    COMPONENT glaze_Development
+-)
+ 
+ # Read FindErlang.cmake content for embedding into config file
+ # This avoids installing a separate FindErlang.cmake that could collide with other projects
