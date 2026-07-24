@@ -1,0 +1,12 @@
+diff --git a/src/lib/crypto/mem.cpp b/src/lib/crypto/mem.cpp
+index 94d90f5..dbd2a14 100644
+--- a/src/lib/crypto/mem.cpp
++++ b/src/lib/crypto/mem.cpp
+@@ -25,6 +25,7 @@
+  */
+ 
+ #include <cstdio>
++#include <cstring>
+ #include "mem.h"
+ #include "logging.h"
+ #include <botan/ffi.h>
