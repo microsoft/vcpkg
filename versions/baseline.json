@@ -5121,7 +5121,7 @@
       "port-version": 6
     },
     "libgossip": {
-      "baseline": "1.3.0.0",
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "libgpg-error": {
