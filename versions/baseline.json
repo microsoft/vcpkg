@@ -8734,7 +8734,7 @@
     },
     "re2": {
       "baseline": "2025-11-05",
-      "port-version": 0
+      "port-version": 1
     },
     "reaction": {
       "baseline": "1.0.0",
