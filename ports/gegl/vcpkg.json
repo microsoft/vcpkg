@@ -1,10 +1,11 @@
 {
   "name": "gegl",
   "version": "0.4.70",
+  "port-version": 1,
   "description": "Generic Graphical Library.",
   "homepage": "https://gegl.org/",
   "license": "LGPL-3.0-or-later",
-  "supports": "!windows | mingw",
+  "supports": "!(windows & arm64)",
   "dependencies": [
     "babl",
     "json-glib",
@@ -27,7 +28,7 @@
     },
     "introspection": {
       "description": "Enable introspection",
-      "supports": "!static",
+      "supports": "!static & (!windows | mingw)",
       "dependencies": [
         {
           "name": "babl",
