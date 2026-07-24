@@ -9173,8 +9173,8 @@
       "port-version": 1
     },
     "sdl2-net": {
-      "baseline": "2.2.0",
-      "port-version": 3
+      "baseline": "2.4.0",
+      "port-version": 0
     },
     "sdl2-ttf": {
       "baseline": "2.24.0",
