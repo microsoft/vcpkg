@@ -1,7 +1,6 @@
 {
   "name": "wxwidgets",
-  "version": "3.3.1",
-  "port-version": 1,
+  "version": "3.3.2",
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
     "Set WXWIDGETS_USE_STL in a custom triplet to build with the wxUSE_STL build option.",
@@ -24,6 +23,9 @@
     "expat",
     {
       "name": "gtk3",
+      "features": [
+        "wayland"
+      ],
       "platform": "!windows & !osx & !ios"
     },
     {
