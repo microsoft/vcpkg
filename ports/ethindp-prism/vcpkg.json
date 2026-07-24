@@ -1,14 +1,17 @@
 {
   "name": "ethindp-prism",
-  "version": "0.16.7",
+  "version": "0.17.3",
   "description": "The Platform-agnostic Reader Interface for Speech and Messages",
-  "license": "MPL-2.0",
-  "supports": "!uwp",
+  "license": "MPL-2.0 AND MIT AND Unlicense AND Apache-2.0",
+  "supports": "!uwp & !(x86 | arm32)",
   "dependencies": [
+    "concurrentqueue",
+    "fmt",
     {
       "name": "pkgconf",
       "host": true
     },
+    "simdutf",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,12 +21,33 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "orca",
+      "platform": "linux | freebsd | openbsd"
+    },
+    "power-management",
+    {
+      "name": "speech-dispatcher",
+      "platform": "linux | freebsd | openbsd"
+    }
+  ],
   "features": {
     "orca": {
       "description": "Enable the Orca backend",
       "supports": "(linux | freebsd | openbsd) & !android & !emscripten",
       "dependencies": [
         "glibmm"
+      ]
+    },
+    "power-management": {
+      "description": "Enable Prism to manage the backend availability polling thread based on OS power management transitions",
+      "supports": "!(ios | android | emscripten | qnx | vxworks)",
+      "dependencies": [
+        {
+          "name": "glibmm",
+          "platform": "freebsd | openbsd | linux"
+        }
       ]
     },
     "speech-dispatcher": {
