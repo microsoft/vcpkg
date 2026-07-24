@@ -1,22 +1,11 @@
 {
   "name": "jwsung91-unilink",
-  "version": "0.8.8",
-  "description": "Unified, cross-platform async C++ library for Serial, TCP, UDP, and UDS",
-  "homepage": "https://github.com/jwsung91/unilink",
+  "version": "0.9.0",
+  "description": "Deprecated alias for wirestead. unilink was renamed to Wirestead; this port installs nothing itself and only depends on wirestead to avoid conflicting with its installed files.",
+  "homepage": "https://github.com/wirestead/wirestead",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
-    "boost-asio",
-    "boost-system",
-    "boost-thread",
-    "spdlog",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
+    "wirestead"
   ]
 }

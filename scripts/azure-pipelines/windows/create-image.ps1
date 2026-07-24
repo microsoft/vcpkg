@@ -12,6 +12,9 @@ create-image.ps1 creates an Azure Windows VM image, set up for vcpkg's CI system
 This script assumes you have installed Azure tools into PowerShell by following the instructions
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
+
+The prototype-vm user-assigned managed identity in the vcpkg-image-minting resource group must have
+Storage Blob Data Reader access to the vcpkgimageminting storage account.
 #>
 
 $Location = 'westus3'
@@ -24,7 +27,7 @@ $WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 22
+$TotalProgress = 17
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -97,6 +100,9 @@ $Credential = New-Object System.Management.Automation.PSCredential ("AdminUser",
 
 $VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-minting-wus3'
 $Subnet = $VirtualNetwork.Subnets | Where-Object -Property 'Name' -EQ -Value 'image-minting' | Select-Object -First 1
+$PrototypeVmIdentity = Get-AzUserAssignedIdentity `
+  -ResourceGroupName 'vcpkg-image-minting' `
+  -Name 'prototype-vm'
 
 ####################################################################################################
 Write-Progress `
@@ -112,7 +118,12 @@ $Nic = New-AzNetworkInterface `
   -Subnet $Subnet `
   -EnableAcceleratedNetworking
 
-$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType TrustedLaunch -IdentityType SystemAssigned
+$VM = New-AzVMConfig `
+  -Name $ProtoVMName `
+  -VMSize $VMSize `
+  -SecurityType TrustedLaunch `
+  -IdentityType UserAssigned `
+  -IdentityId $PrototypeVmIdentity.Id
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Windows `
@@ -139,24 +150,8 @@ $VMCreated = Get-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMNam
 $VMCreatedOsDisk = $VMCreated.StorageProfile.OsDisk.Name
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Minting token for vcpkg-image-minting storage account' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$VcpkgImageMintingAccount = Get-AzStorageAccount -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkgimageminting'
-
-$AssetStorageContext = New-AzStorageContext -StorageAccountName 'vcpkgimageminting' -UseConnectedAccount
-$StartTime = Get-Date
-$ExpiryTime = $StartTime.AddHours(4)
-$AssetsSas = New-AzStorageContainerSASToken -Name 'assets' -Permission r -StartTime $StartTime -ExpiryTime $ExpiryTime -Context $AssetStorageContext
-
-####################################################################################################
 function Invoke-ScriptWithPrefix {
-  param(
-    [string]$ScriptName,
-    [switch]$SkipSas
-  )
+  param([string]$ScriptName)
 
   Write-Progress `
     -Activity $ProgressActivity `
@@ -164,6 +159,7 @@ function Invoke-ScriptWithPrefix {
     -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
   $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding ascii -Raw
+  $UtilityPrefixContent += "`n`$UseManagedIdentity = `$true`n"
 
   $tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
@@ -173,31 +169,20 @@ if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
   . "`$PSScriptRoot/utility-prefix.ps1"
 }
 "@
-    $script = $script.Replace($replacement, $UtilityPrefixContent);
+    $script = $script.Replace($replacement, $UtilityPrefixContent)
     Set-Content -LiteralPath $tempScriptFilename -Value $script -Encoding ascii
-
-    $parameter = $null
-    if (-not $SkipSas) {
-      $parameter = @{SasToken = "`"$AssetsSas`"";}
-    }
 
     $InvokeResult = Invoke-AzVMRunCommand `
       -ResourceGroupName 'vcpkg-image-minting' `
       -VMName $ProtoVMName `
       -CommandId 'RunPowerShellScript' `
-      -ScriptPath $tempScriptFilename `
-      -Parameter $parameter
+      -ScriptPath $tempScriptFilename
 
     Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
   } finally {
     Remove-Item -LiteralPath $tempScriptFilename -Force
   }
 }
-
-####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-tlssettings.ps1' -SkipSas
-Write-Host 'Waiting 1 minute for VM to reboot...'
-Start-Sleep -Seconds 60
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-sevenzip.ps1'
@@ -224,9 +209,6 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1'
 Invoke-ScriptWithPrefix -ScriptName 'deploy-cudnn.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1'
-
-####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
 
 ####################################################################################################
@@ -236,7 +218,7 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-azure-cli.ps1'
 Invoke-ScriptWithPrefix -ScriptName 'deploy-azcopy.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt' -SkipSas
+Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt'
 Restart-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 
 ####################################################################################################

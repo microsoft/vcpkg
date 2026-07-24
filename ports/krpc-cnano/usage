@@ -1,0 +1,4 @@
+krpc_cnano provides CMake integration:
+
+    find_package(krpc_cnano CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE krpc_cnano::krpc_cnano)

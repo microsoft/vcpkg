@@ -1,6 +1,6 @@
 {
   "name": "aws-c-common",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "description": "AWS common library for C",
   "homepage": "https://github.com/awslabs/aws-c-common",
   "license": "Apache-2.0 AND BSD-3-Clause AND MIT",
