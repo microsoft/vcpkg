@@ -14,6 +14,10 @@ vcpkg_from_github(
         add-options-for-docs-headers.patch
         # workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
+        # apply libjpeg-turbo patches for dependency issues https://github.com/libjpeg-turbo/libjpeg-turbo/issues/901
+        0001-Build-Fix-CMake-pkg-config-file-if-WITH_SYSTEM_.patch
+        0002-Build-Try-to-find-libspng-via-CMake-config-file.patch
+        0003-Build-Use-spng-spng_static-if-spng-spng-unavail.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -48,6 +52,8 @@ vcpkg_cmake_configure(
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
+        -DWITH_SYSTEM_SPNG=ON
+        -DWITH_SYSTEM_ZLIB=ON
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
     MAYBE_UNUSED_VARIABLES

@@ -1,0 +1,33 @@
+From 204e5c2bed4401309c26dc6ed95001e2fc50f833 Mon Sep 17 00:00:00 2001
+From: DRC <information@libjpeg-turbo.org>
+Date: Fri, 17 Jul 2026 12:45:13 -0400
+Subject: [PATCH] Build: Use spng::spng_static if spng::spng unavail
+
+This will be the case if libspng was built with
+-DSPNG_STATIC=1 -DSPNG_SHARED=0
+
+Refer to #901
+---
+ CMakeLists.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 767e9068..045da2a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -737,7 +737,11 @@ if(WITH_TURBOJPEG OR WITH_TOOLS OR WITH_TESTS)
+   if(WITH_SYSTEM_SPNG)
+     find_package(SPNG CONFIG QUIET)
+     if(SPNG_FOUND)
+-      set(SPNG_TARGET_DEFAULT spng::spng)
++      if(TARGET spng::spng)
++        set(SPNG_TARGET_DEFAULT spng::spng)
++      elseif(TARGET spng::spng_static)
++        set(SPNG_TARGET_DEFAULT spng::spng_static)
++      endif()
+     else()
+       include(FindPkgConfig)
+       pkg_check_modules(spng REQUIRED spng IMPORTED_TARGET)
+-- 
+2.47.1.windows.1
+

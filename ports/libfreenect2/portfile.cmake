@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency-libusb.patch
         fix-macbuild.patch
+        libfreenect2_libjpeg-turbo_cmake_fix.patch
 )
 
 file(READ "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" FINDLIBUSB)

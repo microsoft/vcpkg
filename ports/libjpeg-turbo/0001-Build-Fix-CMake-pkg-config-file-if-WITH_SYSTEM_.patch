@@ -1,0 +1,50 @@
+From 95156233739078e7d4de0aeeacc4b0595630f393 Mon Sep 17 00:00:00 2001
+From: DRC <information@libjpeg-turbo.org>
+Date: Wed, 15 Jul 2026 13:03:38 -0400
+Subject: [PATCH 1/2] Build: Fix CMake pkg config file if WITH_SYSTEM_*
+
+If WITH_SYSTEM_ZLIB or WITH_SYSTEM_SPNG is defined, then the generated
+CMake package config file will include (respectively)
+
+    INTERFACE_LINK_LIBRARIES "ZLIB::ZLIB"
+
+or
+
+    INTERFACE_LINK_LIBRARIES "PkgConfig::spng"
+
+in the libjpeg-turbo::turbojpeg and libjpeg-turbo::turbojpeg-static
+target properties.  Thus, our CMake package config file needs to find
+those dependencies.
+
+Fixes #901
+---
+ release/Config.cmake.in | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/release/Config.cmake.in b/release/Config.cmake.in
+index 0c1ba8aa..04c147ef 100644
+--- a/release/Config.cmake.in
++++ b/release/Config.cmake.in
+@@ -1,4 +1,19 @@
+ @PACKAGE_INIT@
+ 
++set(WITH_SYSTEM_SPNG @WITH_SYSTEM_SPNG@)
++set(WITH_SYSTEM_ZLIB @WITH_SYSTEM_ZLIB@)
++
++if(WITH_SYSTEM_SPNG OR WITH_SYSTEM_ZLIB)
++  include(CMakeFindDependencyMacro)
++  if(WITH_SYSTEM_SPNG)
++    find_dependency(PkgConfig)
++    if(PkgConfig_FOUND)
++      pkg_check_modules(spng REQUIRED spng IMPORTED_TARGET)
++    endif()
++  else()
++    find_dependency(ZLIB)
++  endif()
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@CMAKE_PROJECT_NAME@Targets.cmake")
+ check_required_components("@CMAKE_PROJECT_NAME@")
+-- 
+2.47.1.windows.1
+

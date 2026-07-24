@@ -1,0 +1,80 @@
+From 240e20d87c0b7d17614687ddc55ccd1fc631daf9 Mon Sep 17 00:00:00 2001
+From: DRC <information@libjpeg-turbo.org>
+Date: Thu, 16 Jul 2026 11:22:01 -0400
+Subject: [PATCH 2/2] Build: Try to find libspng via CMake config file
+
+Currently only vcpkg and Slackware seem to provide a libspng CMake
+package config file, and the one in Slackware is slightly broken.  (It
+doesn't include CMakeFindDependencyMacro, so find_dependency() fails.)
+Thus, I am only barely confident that this works.
+
+CMakeLists.txt:
+
+- If WITH_SYSTEM_SPNG, silently try to find libspng via a CMake package
+  config file and fall back to using pkg-config.
+
+- If WITH_SYSTEM_SPNG, allow the imported libspng target to be
+  overridden with a new CMake variable (SPNG_TARGET.)
+
+Config.cmake.in:
+
+- If WITH_SYSTEM_SPNG, call find_dependency(SPNG) if the libspng
+  imported target doesn't start with PkgConfig::.
+
+Further addresses limitations discussed in #901
+---
+ CMakeLists.txt          | 14 +++++++++++---
+ release/Config.cmake.in | 11 ++++++++---
+ 2 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f1442728..767e9068 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -735,10 +735,18 @@ if(WITH_TURBOJPEG OR WITH_TOOLS OR WITH_TESTS)
+   boolean_number(WITH_SYSTEM_SPNG)
+   report_option(WITH_SYSTEM_SPNG "System-supplied libspng")
+   if(WITH_SYSTEM_SPNG)
+-    include(FindPkgConfig)
+-    pkg_check_modules(spng REQUIRED spng IMPORTED_TARGET)
++    find_package(SPNG CONFIG QUIET)
++    if(SPNG_FOUND)
++      set(SPNG_TARGET_DEFAULT spng::spng)
++    else()
++      include(FindPkgConfig)
++      pkg_check_modules(spng REQUIRED spng IMPORTED_TARGET)
++      set(SPNG_TARGET_DEFAULT PkgConfig::spng)
++    endif()
++    set(SPNG_TARGET ${SPNG_TARGET_DEFAULT} CACHE STRING
++      "The imported target to use when linking libspng")
+     unset(SPNG_STATIC_SOURCES)
+-    set(SPNG_LIBRARY PkgConfig::spng)
++    set(SPNG_LIBRARY ${SPNG_TARGET})
+   else()
+     option(WITH_SYSTEM_ZLIB
+       "Build ${CMAKE_PROJECT_NAME} against the system-supplied zlib implementation rather than the implementation in the ${CMAKE_PROJECT_NAME} source tree"
+diff --git a/release/Config.cmake.in b/release/Config.cmake.in
+index 04c147ef..dedc3617 100644
+--- a/release/Config.cmake.in
++++ b/release/Config.cmake.in
+@@ -6,9 +6,14 @@ set(WITH_SYSTEM_ZLIB @WITH_SYSTEM_ZLIB@)
+ if(WITH_SYSTEM_SPNG OR WITH_SYSTEM_ZLIB)
+   include(CMakeFindDependencyMacro)
+   if(WITH_SYSTEM_SPNG)
+-    find_dependency(PkgConfig)
+-    if(PkgConfig_FOUND)
+-      pkg_check_modules(spng REQUIRED spng IMPORTED_TARGET)
++    set(SPNG_LIBRARY @SPNG_LIBRARY@)
++    if(SPNG_LIBRARY MATCHES "PkgConfig::")
++      find_dependency(PkgConfig)
++      if(PkgConfig_FOUND)
++        pkg_check_modules(spng REQUIRED spng IMPORTED_TARGET)
++      endif()
++    else()
++      find_dependency(SPNG)
+     endif()
+   else()
+     find_dependency(ZLIB)
+-- 
+2.47.1.windows.1
+
