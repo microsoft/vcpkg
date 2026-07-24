@@ -1,6 +1,6 @@
 {
   "name": "polyhook2",
-  "version-date": "2025-06-21",
+  "version-date": "2026-06-29",
   "description": "C++17, x86/x64 Hooking Library v2.0",
   "homepage": "https://github.com/stevemk14ebr/PolyHook_2_0",
   "license": "MIT",
@@ -17,12 +17,10 @@
     "zydis"
   ],
   "default-features": [
-    "detours",
     {
       "name": "exception",
       "platform": "windows"
     },
-    "inlinentd",
     {
       "name": "pe",
       "platform": "windows"
@@ -30,20 +28,8 @@
     "virtuals"
   ],
   "features": {
-    "detours": {
-      "description": "Implement detour functionality",
-      "dependencies": [
-        "asmtk"
-      ]
-    },
     "exception": {
       "description": "Implement all exception hooking functionality"
-    },
-    "inlinentd": {
-      "description": "Support inline hooks without specifying typedefs by generating callback stubs at runtime with AsmJit",
-      "dependencies": [
-        "asmjit"
-      ]
     },
     "pe": {
       "description": "Implement all win pe hooking functionality"

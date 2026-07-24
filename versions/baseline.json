@@ -329,12 +329,12 @@
       "port-version": 2
     },
     "asmjit": {
-      "baseline": "2025-10-13",
+      "baseline": "2026-03-26",
       "port-version": 0
     },
     "asmtk": {
-      "baseline": "2022-11-06",
-      "port-version": 1
+      "baseline": "2025-12-28",
+      "port-version": 0
     },
     "asock": {
       "baseline": "1.0.7",
@@ -769,8 +769,8 @@
       "port-version": 1
     },
     "blend2d": {
-      "baseline": "2025-03-08",
-      "port-version": 1
+      "baseline": "2025-11-29",
+      "port-version": 0
     },
     "blickfeld-qb2": {
       "baseline": "2.17",
@@ -3021,7 +3021,7 @@
       "port-version": 0
     },
     "fbgemm": {
-      "baseline": "1.5.0",
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "fbthrift": {
@@ -7953,7 +7953,7 @@
       "port-version": 13
     },
     "polyhook2": {
-      "baseline": "2025-06-21",
+      "baseline": "2026-06-29",
       "port-version": 0
     },
     "polymorphic-value": {

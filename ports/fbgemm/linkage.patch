@@ -1,0 +1,13 @@
+diff --git a/src/EmbeddingSpMDMAutovec.h b/src/EmbeddingSpMDMAutovec.h
+index 237161328..b17771583 100644
+--- a/src/EmbeddingSpMDMAutovec.h
++++ b/src/EmbeddingSpMDMAutovec.h
+@@ -40,7 +40,7 @@ typename EmbeddingSpMDMKernelSignature<InType, IndexType, OffsetType, OutType>::
+         bool is_bf16_in);
+ 
+ template <typename IndexType, typename OffsetType, typename OutType>
+-typename EmbeddingSpMDMKernelSignature<
++FBGEMM_API typename EmbeddingSpMDMKernelSignature<
+     uint8_t,
+     IndexType,
+     OffsetType,

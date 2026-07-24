@@ -1,13 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d348072..d5b6be9 100644
+index bb4ccd5..8b36f54 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -172,7 +172,7 @@ if (NOT ASMTK_EMBED)
+@@ -168,13 +168,7 @@ if (NOT ASMTK_EMBED)
+     $<$<CONFIG:Debug>:${ASMTK_PRIVATE_CFLAGS_DBG}>
      $<$<NOT:$<CONFIG:Debug>>:${ASMTK_PRIVATE_CFLAGS_REL}>)
  
-   if(ASMJIT_EXTERNAL)
+-  if(ASMJIT_EXTERNAL)
 -    target_link_libraries(asmtk PUBLIC ${ASMJIT_LIBRARY})
-+    target_link_libraries(asmtk PUBLIC asmjit::asmjit)
-     find_path(ASMJIT_INCLUDE_DIR NAMES asmjit/asmjit.h)
-     target_include_directories(asmtk PRIVATE ${ASMJIT_INCLUDE_DIR})
-   else()
+-    find_path(ASMJIT_INCLUDE_DIR NAMES asmjit/core.h)
+-    target_include_directories(asmtk PRIVATE ${ASMJIT_INCLUDE_DIR})
+-  else()
+     target_link_libraries(asmtk PUBLIC asmjit::asmjit)
+-  endif()
+ 
+   target_include_directories(asmtk BEFORE INTERFACE
+           $<BUILD_INTERFACE:${ASMTK_INCLUDE_DIRS}>
