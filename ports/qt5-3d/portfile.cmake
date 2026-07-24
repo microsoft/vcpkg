@@ -1,6 +1,6 @@
 include("${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake")
 
-set(OPTIONS -system-assimp)
+set(OPTIONS -system-assimp -c++std c++17)
 
 x_vcpkg_pkgconfig_get_modules(PREFIX assimp MODULES assimp LIBS)
 
