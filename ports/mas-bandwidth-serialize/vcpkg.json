@@ -1,0 +1,17 @@
+{
+  "name": "mas-bandwidth-serialize",
+  "version": "1.4.3",
+  "description": "A simple bitpacking serializer for C++.",
+  "homepage": "https://github.com/mas-bandwidth/serialize",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
