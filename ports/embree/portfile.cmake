@@ -1,12 +1,8 @@
-if(EXISTS "${CURRENT_INSTALLED_DIR}/share/embree/embree-config.cmake")
-    message(FATAL_ERROR "Port embree3 must be removed before installing embree.")
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RenderKit/embree
     REF v${VERSION}
-    SHA512 5e77a033192ade6562b50d32c806c6a467580722898ca52ccfe002b51279314055e9c0e6c969651b0d03716d04ab249301340cd2790556a0dbfb8c296e8f0574
+    SHA512 5700d6e16b3e9e5f0d087e421c831e14f054769dfa30edb45791fee3ab33c698355d8fad86791cea6bf200ebe7ce64f0394063d29dd927afe93d345c2cd6897a
     HEAD_REF master
     PATCHES
         avoid-library-conflicts.diff
@@ -70,6 +66,7 @@ vcpkg_cmake_configure(
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
         -DEMBREE_TASKING_SYSTEM:STRING=${EMBREE_TASKING_SYSTEM}
         -DEMBREE_TUTORIALS=OFF
+		--trace-expand
     MAYBE_UNUSED_VARIABLES
         EMBREE_STATIC_RUNTIME
 )
