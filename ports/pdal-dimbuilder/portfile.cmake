@@ -9,10 +9,11 @@ vcpkg_from_github(
     #[[
         Attention: pdal must be updated together with pdal-dimbuilder
     #]]
-    SHA512 051e0a8ee2f03ad6eaf55b5843a41626ebc6d2517cf9eeedffda52878fbb9b7d854ea24174e2b3434f69ef41ab244e20e250f6c2c1083325b496489526fb8fea
+    SHA512 e581f36a1712a6df3e22ed5d40b69d5954e20af52b51a98889a0fbd942d8960a379bec45d9b5524ba29ba48e9722c926eb22b4754545088ada8766e85c106027
     HEAD_REF master
     PATCHES
         namespace-nl.diff
+        disable-tests.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/vendor")
 
