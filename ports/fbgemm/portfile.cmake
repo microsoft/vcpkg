@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/fbgemm
     REF "v${VERSION}"
-    SHA512 dde37e9fd89817c77ea13bb81de73a1aec0318b480ab53e82df5cddc8bc95a9a8ba52462452bbffb07cc8c2374c68d75adcb71b8e68f27952c6b32ccab81ff61
+    SHA512 c10c6839bff2a37374646559310e39f0c68fb5a5e72211f85dbd1984de2aad7c38fb161b1f56bc7c549080fd2140bf682e5acbf7c9f78c7c073dd8e66d5f5a92
     PATCHES
         fix-cmakelists.patch
 )
@@ -34,6 +34,7 @@ file(RENAME
     "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryTargets.cmake")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryConfig.cmake"
     "include(CMakeFindDependencyMacro)\n"
+    "find_dependency(OpenMP)\n"
     "find_dependency(asmjit CONFIG)\n"
     "find_dependency(cpuinfo CONFIG)\n"
     "include(\"\${CMAKE_CURRENT_LIST_DIR}/fbgemmLibraryTargets.cmake\")\n")
