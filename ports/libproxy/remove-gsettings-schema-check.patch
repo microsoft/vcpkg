@@ -1,0 +1,10 @@
+--- a/meson.build
++++ b/meson.build
+@@ -118,7 +118,6 @@
+ gio_dep = dependency('gio-2.0', version: '>= 2.71.3')
+ curl_dep = dependency('libcurl', required: get_option('curl'))
+ ws2_32_dep = cc.find_library('ws2_32', required : with_platform_windows)
+-gsettings_desktop_schema = dependency('gsettings-desktop-schemas', required: get_option('config-gnome'))
+ 
+ subdir('src')
+ subdir('tests')
