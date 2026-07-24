@@ -10,3 +10,17 @@
 +  list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
 +endif()
  if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
+@@ -613,7 +619,11 @@ endif()
+   include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})
+   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
+ elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
+-  add_library(XNNPACK SHARED IMPORTED)
+-  add_library(microkernels-prod SHARED IMPORTED)
++  # vcpkg's xnnpack port always builds statically (vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
++  # in ports/xnnpack/portfile.cmake); declaring these SHARED leaves IMPORTED_IMPLIB unset,
++  # which fails CMake's generate step on Windows dynamic-linkage triplets (x64-windows,
++  # x64-windows-release) once torch_cpu actually needs to link against them.
++  add_library(XNNPACK STATIC IMPORTED)
++  add_library(microkernels-prod STATIC IMPORTED)
+   find_library(XNNPACK_LIBRARY XNNPACK)
+   find_library(microkernels-prod_LIBRARY microkernels-prod)
