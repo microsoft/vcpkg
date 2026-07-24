@@ -1,0 +1,81 @@
+{
+  "name": "libvncserver",
+  "version": "0.9.15",
+  "port-version": 3,
+  "description": "Libraries for implementing VNC servers and clients",
+  "homepage": "https://github.com/LibVNC/libvncserver",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "gcrypt": {
+      "description": "Use Libgcrypt as crypto backend",
+      "dependencies": [
+        "libgcrypt"
+      ]
+    },
+    "gnutls": {
+      "description": "Use GnuTLS for TLS support",
+      "dependencies": [
+        "libgnutls"
+      ]
+    },
+    "jpeg": {
+      "description": "Enable JPEG support",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lzo": {
+      "description": "Enable LZO support",
+      "dependencies": [
+        "lzo"
+      ]
+    },
+    "png": {
+      "description": "Enable PNG support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "sasl": {
+      "description": "Enable SASL support",
+      "dependencies": [
+        "cyrus-sasl"
+      ]
+    },
+    "ssl": {
+      "description": "Enable SSL/TLS support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "systemd": {
+      "description": "Enable systemd socket activation support",
+      "supports": "!windows & !uwp",
+      "dependencies": [
+        "libsystemd"
+      ]
+    },
+    "tightvnc-filetransfer": {
+      "description": "Enable TightVNC file transfer support"
+    },
+    "websockets": {
+      "description": "Enable websockets support"
+    },
+    "zlib": {
+      "description": "Enable zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}
