@@ -53,7 +53,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_replace_string(
             "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libng-log.pc"
             " -lng-log"
-            "-lng-logd"
+            " -lng-logd"
         )
     endif()
 endif()
