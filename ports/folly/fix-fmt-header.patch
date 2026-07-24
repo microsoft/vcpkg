@@ -1,0 +1,480 @@
+diff --git a/folly/Format.h b/folly/Format.h
+index 23837cff1..e13beda1d 100644
+--- a/folly/Format.h
++++ b/folly/Format.h
+@@ -20,7 +20,7 @@
+ 
+ /**
+  * folly::format has been superseded by
+- * [fmt](https://fmt.dev/latest/index.html). `#include <fmt/core.h>`
++ * [fmt](https://fmt.dev/latest/index.html). `#include <fmt/format.h>`
+  *
+  * format() performs text-formatting, similar to Python's str.format. The full
+  * specification is on github:
+diff --git a/folly/IPAddress.cpp b/folly/IPAddress.cpp
+index 678412283..c4fa32589 100644
+--- a/folly/IPAddress.cpp
++++ b/folly/IPAddress.cpp
+@@ -21,7 +21,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/String.h>
+ #include <folly/detail/IPAddressSource.h>
+diff --git a/folly/IPAddressV4.cpp b/folly/IPAddressV4.cpp
+index 173f39a4e..a214c6064 100644
+--- a/folly/IPAddressV4.cpp
++++ b/folly/IPAddressV4.cpp
+@@ -19,7 +19,7 @@
+ #include <ostream>
+ #include <string>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/Conv.h>
+ #include <folly/IPAddress.h>
+diff --git a/folly/IPAddressV6.cpp b/folly/IPAddressV6.cpp
+index 22771031a..ec49c54ea 100644
+--- a/folly/IPAddressV6.cpp
++++ b/folly/IPAddressV6.cpp
+@@ -20,7 +20,7 @@
+ #include <ostream>
+ #include <string>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/IPAddress.h>
+ #include <folly/IPAddressV4.h>
+diff --git a/folly/SocketAddress.cpp b/folly/SocketAddress.cpp
+index 74ef1792a..dd5974074 100644
+--- a/folly/SocketAddress.cpp
++++ b/folly/SocketAddress.cpp
+@@ -31,7 +31,7 @@
+ 
+ #include <boost/functional/hash.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/Exception.h>
+ #include <folly/hash/Hash.h>
+diff --git a/folly/algorithm/simd/test/FindFixedBenchmark.cpp b/folly/algorithm/simd/test/FindFixedBenchmark.cpp
+index 3800795fa..2d40ed816 100644
+--- a/folly/algorithm/simd/test/FindFixedBenchmark.cpp
++++ b/folly/algorithm/simd/test/FindFixedBenchmark.cpp
+@@ -19,7 +19,7 @@
+ #include <folly/Benchmark.h>
+ #include <folly/init/Init.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <algorithm>
+ #include <cstdint>
+diff --git a/folly/algorithm/simd/test/FindFixedTest.cpp b/folly/algorithm/simd/test/FindFixedTest.cpp
+index 7628051ef..d9cb784f5 100644
+--- a/folly/algorithm/simd/test/FindFixedTest.cpp
++++ b/folly/algorithm/simd/test/FindFixedTest.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include <folly/algorithm/simd/FindFixed.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ #include <folly/portability/GTest.h>
+diff --git a/folly/cli/Args.cpp b/folly/cli/Args.cpp
+index 669d120cd..5f3b01eb7 100644
+--- a/folly/cli/Args.cpp
++++ b/folly/cli/Args.cpp
+@@ -24,7 +24,7 @@
+ #include <system_error>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/FileUtil.h>
+ 
+diff --git a/folly/concurrency/CacheLocality.cpp b/folly/concurrency/CacheLocality.cpp
+index 7f6b8adc1..8f5bc7ed1 100644
+--- a/folly/concurrency/CacheLocality.cpp
++++ b/folly/concurrency/CacheLocality.cpp
+@@ -29,7 +29,7 @@
+ #include <optional>
+ #include <unordered_map>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ #include <folly/Indestructible.h>
+ #include <folly/Memory.h>
+diff --git a/folly/container/test/F14InterprocessTest.cpp b/folly/container/test/F14InterprocessTest.cpp
+index 93a457558..65213d904 100644
+--- a/folly/container/test/F14InterprocessTest.cpp
++++ b/folly/container/test/F14InterprocessTest.cpp
+@@ -24,7 +24,7 @@
+ #include <boost/interprocess/allocators/adaptive_pool.hpp>
+ #include <boost/interprocess/managed_shared_memory.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/Random.h>
+ #include <folly/Traits.h>
+diff --git a/folly/container/test/SparseByteSetBenchmark.cpp b/folly/container/test/SparseByteSetBenchmark.cpp
+index b5ab4e6b3..85603abb3 100644
+--- a/folly/container/test/SparseByteSetBenchmark.cpp
++++ b/folly/container/test/SparseByteSetBenchmark.cpp
+@@ -24,7 +24,7 @@
+ #include <random>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Benchmark.h>
+ #include <folly/Format.h>
+ #include <folly/portability/GFlags.h>
+diff --git a/folly/detail/IPAddressSource.h b/folly/detail/IPAddressSource.h
+index fc20cf2a2..389b9fa33 100644
+--- a/folly/detail/IPAddressSource.h
++++ b/folly/detail/IPAddressSource.h
+@@ -26,7 +26,7 @@
+ 
+ #include <glog/logging.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/detail/IPAddress.h>
+ 
+ // BSDish platforms don't provide standard access to s6_addr16
+diff --git a/folly/executors/test/IOThreadPoolDeadlockDetectorObserverTest.cpp b/folly/executors/test/IOThreadPoolDeadlockDetectorObserverTest.cpp
+index f09081260..2b36463b5 100644
+--- a/folly/executors/test/IOThreadPoolDeadlockDetectorObserverTest.cpp
++++ b/folly/executors/test/IOThreadPoolDeadlockDetectorObserverTest.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <memory>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <glog/logging.h>
+ #include <folly/concurrency/DeadlockDetector.h>
+diff --git a/folly/fibers/detail/AtomicBatchDispatcher.cpp b/folly/fibers/detail/AtomicBatchDispatcher.cpp
+index cc93904f2..9a6783fc0 100644
+--- a/folly/fibers/detail/AtomicBatchDispatcher.cpp
++++ b/folly/fibers/detail/AtomicBatchDispatcher.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <cassert>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace folly {
+ namespace fibers {
+diff --git a/folly/futures/detail/Core.cpp b/folly/futures/detail/Core.cpp
+index 776614c23..bba1f0465 100644
+--- a/folly/futures/detail/Core.cpp
++++ b/folly/futures/detail/Core.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <new>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Utility.h>
+ #include <folly/lang/Assume.h>
+ 
+diff --git a/folly/hash/test/HashBenchmark.cpp b/folly/hash/test/HashBenchmark.cpp
+index 15ac43ddb..2128577c3 100644
+--- a/folly/hash/test/HashBenchmark.cpp
++++ b/folly/hash/test/HashBenchmark.cpp
+@@ -25,7 +25,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ #include <folly/Benchmark.h>
+diff --git a/folly/io/async/fdsock/AsyncFdSocket.cpp b/folly/io/async/fdsock/AsyncFdSocket.cpp
+index 23841cdd3..3b332241d 100644
+--- a/folly/io/async/fdsock/AsyncFdSocket.cpp
++++ b/folly/io/async/fdsock/AsyncFdSocket.cpp
+@@ -15,7 +15,7 @@
+  */
+ 
+ #include <limits>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "AsyncFdSocket.h"
+ 
+diff --git a/folly/io/test/FsUtilTest.cpp b/folly/io/test/FsUtilTest.cpp
+index 204e539fb..b91891b45 100644
+--- a/folly/io/test/FsUtilTest.cpp
++++ b/folly/io/test/FsUtilTest.cpp
+@@ -20,7 +20,7 @@
+ #include <fstream>
+ #include <random>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ #include <folly/String.h>
+diff --git a/folly/io/tool/HugePageUtil.cpp b/folly/io/tool/HugePageUtil.cpp
+index 1bea8c66b..ad5cfefbe 100644
+--- a/folly/io/tool/HugePageUtil.cpp
++++ b/folly/io/tool/HugePageUtil.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <glog/logging.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Range.h>
+ #include <folly/io/HugePages.h>
+ #include <folly/portability/GFlags.h>
+diff --git a/folly/lang/Exception.h b/folly/lang/Exception.h
+index f8e292d7d..8c5d5ef1d 100644
+--- a/folly/lang/Exception.h
++++ b/folly/lang/Exception.h
+@@ -17,6 +17,7 @@
+ #pragma once
+ 
+ #include <atomic>
++#include <cstring>
+ #include <exception>
+ #include <functional>
+ #include <string>
+diff --git a/folly/lang/test/BitsTest.cpp b/folly/lang/test/BitsTest.cpp
+index 176c3e37d..c38415e90 100644
+--- a/folly/lang/test/BitsTest.cpp
++++ b/folly/lang/test/BitsTest.cpp
+@@ -20,7 +20,7 @@
+ #include <random>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/Random.h>
+ #include <folly/portability/GTest.h>
+diff --git a/folly/logging/LogStreamProcessor.h b/folly/logging/LogStreamProcessor.h
+index c60a3ff33..f6b0b8032 100644
+--- a/folly/logging/LogStreamProcessor.h
++++ b/folly/logging/LogStreamProcessor.h
+@@ -18,7 +18,7 @@
+ 
+ #include <cstdlib>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/CPortability.h>
+ #include <folly/Conv.h>
+ #include <folly/ExceptionString.h>
+diff --git a/folly/observer/WithJitter-inl.h b/folly/observer/WithJitter-inl.h
+index 93d720a8c..9e01f955b 100644
+--- a/folly/observer/WithJitter-inl.h
++++ b/folly/observer/WithJitter-inl.h
+@@ -22,7 +22,7 @@
+ #include <utility>
+ 
+ #include <fmt/chrono.h>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ #include <folly/DefaultKeepAliveExecutor.h>
+diff --git a/folly/python/import.h b/folly/python/import.h
+index e255d373b..3c0ec63cb 100644
+--- a/folly/python/import.h
++++ b/folly/python/import.h
+@@ -18,7 +18,7 @@
+ 
+ #include <atomic>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/Likely.h>
+ #include <folly/Portability.h>
+diff --git a/folly/result/demo/basketball.cpp b/folly/result/demo/basketball.cpp
+index 40a19459c..ef196c814 100644
+--- a/folly/result/demo/basketball.cpp
++++ b/folly/result/demo/basketball.cpp
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Portability.h> // FOLLY_HAS_RESULT
+ #include <folly/result/coro.h>
+ #include <folly/result/epitaph.h>
+diff --git a/folly/result/rich_error_base.h b/folly/result/rich_error_base.h
+index fe2650d13..82132f622 100644
+--- a/folly/result/rich_error_base.h
++++ b/folly/result/rich_error_base.h
+@@ -27,7 +27,7 @@
+ 
+ #include <iosfwd>
+ #include <iterator>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ // Old `fmt` isn't actually supported, but ... it needs to build :(
+ #if FMT_VERSION < 80000
+diff --git a/folly/result/rich_error_code.h b/folly/result/rich_error_code.h
+index b47556860..79075852d 100644
+--- a/folly/result/rich_error_code.h
++++ b/folly/result/rich_error_code.h
+@@ -17,7 +17,7 @@
+ #pragma once
+ 
+ #include <optional>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/lang/Pretty.h>
+ #include <folly/result/rich_error_base.h>
+diff --git a/folly/result/test/rich_error_code_test.cpp b/folly/result/test/rich_error_code_test.cpp
+index 0f18faf1f..2ce09a292 100644
+--- a/folly/result/test/rich_error_code_test.cpp
++++ b/folly/result/test/rich_error_code_test.cpp
+@@ -20,7 +20,7 @@
+ #include <optional>
+ #include <typeinfo>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/format.h>
+ #include <folly/Traits.h>
+ #include <folly/Utility.h>
+diff --git a/folly/result/test/rich_error_codes.h b/folly/result/test/rich_error_codes.h
+index 598d28170..8b7d0eace 100644
+--- a/folly/result/test/rich_error_codes.h
++++ b/folly/result/test/rich_error_codes.h
+@@ -19,7 +19,7 @@
+ #include <cstdint>
+ #include <type_traits>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/format.h>
+ #include <folly/Traits.h>
+ #include <folly/result/rich_error.h>
+diff --git a/folly/settings/CommandLineParser.cpp b/folly/settings/CommandLineParser.cpp
+index bce3dcbaf..4868107f9 100644
+--- a/folly/settings/CommandLineParser.cpp
++++ b/folly/settings/CommandLineParser.cpp
+@@ -21,7 +21,7 @@
+ #include <optional>
+ #include <string>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/format.h>
+ #include <folly/ExceptionString.h>
+ #include <folly/Function.h>
+diff --git a/folly/synchronization/test/SmallLocksBenchmark.cpp b/folly/synchronization/test/SmallLocksBenchmark.cpp
+index 7fe37be22..7302046ae 100644
+--- a/folly/synchronization/test/SmallLocksBenchmark.cpp
++++ b/folly/synchronization/test/SmallLocksBenchmark.cpp
+@@ -23,7 +23,7 @@
+ #include <thread>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/Benchmark.h>
+ #include <folly/SharedMutex.h>
+diff --git a/folly/system/MemoryMapping.cpp b/folly/system/MemoryMapping.cpp
+index 736bab169..9b6af9308 100644
+--- a/folly/system/MemoryMapping.cpp
++++ b/folly/system/MemoryMapping.cpp
+@@ -24,7 +24,7 @@
+ #include <system_error>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ #include <folly/Portability.h>
+diff --git a/folly/test/FileTest.cpp b/folly/test/FileTest.cpp
+index d3a2e5488..e537869b8 100644
+--- a/folly/test/FileTest.cpp
++++ b/folly/test/FileTest.cpp
+@@ -19,7 +19,7 @@
+ #include <fstream>
+ #include <random>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ #include <folly/String.h>
+diff --git a/folly/test/IPAddressBenchmark.cpp b/folly/test/IPAddressBenchmark.cpp
+index d5023c3c6..cd43e8464 100644
+--- a/folly/test/IPAddressBenchmark.cpp
++++ b/folly/test/IPAddressBenchmark.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <folly/IPAddress.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ #include <folly/Benchmark.h>
+diff --git a/folly/test/IPAddressTest.cpp b/folly/test/IPAddressTest.cpp
+index fccb969c5..cb377922a 100644
+--- a/folly/test/IPAddressTest.cpp
++++ b/folly/test/IPAddressTest.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include <string>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/MacAddress.h>
+ #include <folly/String.h>
+diff --git a/folly/test/MacAddressTest.cpp b/folly/test/MacAddressTest.cpp
+index 9ae28aa7b..ec8a4b774 100644
+--- a/folly/test/MacAddressTest.cpp
++++ b/folly/test/MacAddressTest.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <folly/MacAddress.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/IPAddressV6.h>
+ #include <folly/portability/GTest.h>
+diff --git a/folly/test/MemsetBenchmark.cpp b/folly/test/MemsetBenchmark.cpp
+index fd549278f..b261635c8 100644
+--- a/folly/test/MemsetBenchmark.cpp
++++ b/folly/test/MemsetBenchmark.cpp
+@@ -20,7 +20,7 @@
+ #include <stdlib.h>
+ #include <deque>
+ #include <string>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Benchmark.h>
+ #include <folly/Preprocessor.h>
+ #include <folly/portability/GFlags.h>

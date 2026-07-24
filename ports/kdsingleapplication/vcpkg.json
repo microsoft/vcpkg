@@ -1,6 +1,6 @@
 {
   "name": "kdsingleapplication",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "KDSingleApplication is a helper class for single-instance policy applications.",
   "homepage": "https://github.com/KDAB/KDSingleApplication",
   "license": "MIT",

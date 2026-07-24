@@ -11,7 +11,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 07cfcc71336ece71e713aab8be4a05e2b474bfab175d4c7a4ebcf378f4b1478bcf0e4a46ec88fc6163454fdf7fdf375ab856a5de1c444a41420a02510ae1ac7b
+    SHA512 a89c08101fa1d7e3c09b14f4a90d450bcf336a4f6a3e6e4ea990e4deddcd9ce250472f9114438fd134ff4b47fe93dd47232308567088b2b1c0b2eb50e3b56bdf
     PATCHES
         cmake-config.patch
         command-line-length.patch
@@ -23,7 +23,6 @@ vcpkg_from_github(
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
         unix/no-static-libs-for-shared.patch
-        fix-mingw-build.patch
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS

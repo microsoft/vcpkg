@@ -160,7 +160,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
 
     set(CMAKE_CXX_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${VCPKG_CXX_FLAGS}" CACHE STRING "")
     set(CMAKE_C_FLAGS "${_vcpkg_cpp_flags} ${_vcpkg_common_flags} ${VCPKG_C_FLAGS}" CACHE STRING "")
-    set(CMAKE_RC_FLAGS "-c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
+    set(CMAKE_RC_FLAGS "/c65001 ${_vcpkg_cpp_flags}" CACHE STRING "")
 
     unset(_vcpkg_cpp_flags)
     unset(_vcpkg_common_flags)

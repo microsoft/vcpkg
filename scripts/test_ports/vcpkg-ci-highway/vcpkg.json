@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-highway",
+  "version-string": "ci",
+  "description": "Validates highway",
+  "dependencies": [
+    "highway",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

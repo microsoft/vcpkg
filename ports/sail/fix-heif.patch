@@ -1,5 +1,5 @@
 diff --git a/src/sail-codecs/heif/CMakeLists.txt b/src/sail-codecs/heif/CMakeLists.txt
-index d9c34f85..87981930 100644
+index 326dd2c..7b7b2b2 100644
 --- a/src/sail-codecs/heif/CMakeLists.txt
 +++ b/src/sail-codecs/heif/CMakeLists.txt
 @@ -31,7 +31,7 @@ cmake_push_check_state(RESET)

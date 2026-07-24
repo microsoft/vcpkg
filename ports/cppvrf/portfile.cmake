@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cppvrf
     REF "v${VERSION}"
-    SHA512 286b52104a3067b73a28b7710484b077ad5ec69055416698e40a06cbb0ba76636d7bc1e6eea526f9fd637b39bb2f98cf33668ebbde1fac0ee3052a1b322295ff
+    SHA512 832bc6864126807eaef76ecdaaaa8bc26fce9649b354a55f68a5fbba6611c9795eabcf511266cffc6cd9e7713792fa7ebae514907a352b9b9b9a59495bda7390
     HEAD_REF main
-    PATCHES
-        fix-linux.patch
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")

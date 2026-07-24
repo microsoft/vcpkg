@@ -1,0 +1,65 @@
+diff --git a/packages/sdk/include/IRacingSDK/DiskClientDataFrameProcessor.h b/packages/sdk/include/IRacingSDK/DiskClientDataFrameProcessor.h
+index fc6d1df..6b785bd 100644
+--- a/packages/sdk/include/IRacingSDK/DiskClientDataFrameProcessor.h
++++ b/packages/sdk/include/IRacingSDK/DiskClientDataFrameProcessor.h
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+ #include <filesystem>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <IRacingSDK/DiskClient.h>
+ #include <IRacingSDK/LogInstance.h>
+ #include <IRacingSDK/Utils/ChronoHelpers.h>
+diff --git a/packages/sdk/include/IRacingSDK/ErrorTypes.h b/packages/sdk/include/IRacingSDK/ErrorTypes.h
+index 7310f1c..2917570 100644
+--- a/packages/sdk/include/IRacingSDK/ErrorTypes.h
++++ b/packages/sdk/include/IRacingSDK/ErrorTypes.h
+@@ -3,7 +3,7 @@
+ //
+ 
+ #pragma once
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <stdexcept>
+ #include <expected>
+ 
+diff --git a/packages/sdk/include/IRacingSDK/Utils/LUT.h b/packages/sdk/include/IRacingSDK/Utils/LUT.h
+index 6dbdb8a..9d14813 100644
+--- a/packages/sdk/include/IRacingSDK/Utils/LUT.h
++++ b/packages/sdk/include/IRacingSDK/Utils/LUT.h
+@@ -4,7 +4,7 @@
+ #include <functional>
+ #include <stdexcept>
+ #include <utility>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace IRacingSDK::Utils {
+ template<typename T, typename K>
+diff --git a/packages/sdk/tests/DiskClientTests.cpp b/packages/sdk/tests/DiskClientTests.cpp
+index 0724cc0..a9e7058 100644
+--- a/packages/sdk/tests/DiskClientTests.cpp
++++ b/packages/sdk/tests/DiskClientTests.cpp
+@@ -11,7 +11,7 @@
+ #include <IRacingSDK/Utils/FileHelpers.h>
+ #include <IRacingSDK/Utils/SDKMacros.h>
+ #include <IRacingSDK/VarHolder.h>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <gsl/util>
+ #include <gtest/gtest.h>
+ #include <spdlog/spdlog.h>
+diff --git a/packages/sdk/tests/SDKUtilTests.cpp b/packages/sdk/tests/SDKUtilTests.cpp
+index 3835bfa..3e9468c 100644
+--- a/packages/sdk/tests/SDKUtilTests.cpp
++++ b/packages/sdk/tests/SDKUtilTests.cpp
+@@ -2,7 +2,7 @@
+ #include <IRacingSDK/Utils/Singleton.h>
+ #include <IRacingSDK/Utils/Traits.h>
+ #include <gtest/gtest.h>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ using namespace IRacingSDK::Utils;
+ 

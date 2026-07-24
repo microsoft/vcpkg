@@ -1,0 +1,10 @@
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -512,6 +512,7 @@
+       "api:create_modular_peer_connection_factory",
+       "api:create_peerconnection_factory",
+       "api:enable_media",
++      "api:enable_media_with_defaults",
+       "api:rtc_error",
+       "api:transport_api",
+       "api/audio_codecs:opus_audio_decoder_factory",

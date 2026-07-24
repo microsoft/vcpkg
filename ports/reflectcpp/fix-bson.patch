@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fb1069f..070d6d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -311,10 +311,10 @@ if (REFLECTCPP_BSON OR REFLECTCPP_CHECK_HEADERS)
+     list(APPEND REFLECT_CPP_SOURCES
+         src/reflectcpp_bson.cpp
+     )
+-    if (NOT TARGET mongo::bson_static AND NOT TARGET mongo::bson_shared)
+-        find_package(bson-1.0 CONFIG REQUIRED)
++    if (NOT TARGET bson::static AND NOT TARGET bson::shared)
++        find_package(bson CONFIG REQUIRED)
+     endif ()
+-    target_link_libraries(reflectcpp PUBLIC $<IF:$<TARGET_EXISTS:mongo::bson_static>,mongo::bson_static,mongo::bson_shared>)
++    target_link_libraries(reflectcpp PUBLIC $<IF:$<TARGET_EXISTS:bson::static>,bson::static,bson::shared>)
+ endif ()
+ 
+ if (REFLECTCPP_CAPNPROTO OR REFLECTCPP_CHECK_HEADERS)
+diff --git a/reflectcpp-config.cmake.in b/reflectcpp-config.cmake.in
+index a1ba068..4e9c66c 100644
+--- a/reflectcpp-config.cmake.in
++++ b/reflectcpp-config.cmake.in
+@@ -36,7 +36,7 @@ if (REFLECTCPP_BOOST_SERIALIZATION)
+ endif ()
+ 
+ if (REFLECTCPP_BSON)  
+-  find_dependency(bson-1.0)
++  find_dependency(bson)
+ endif ()
+ 
+ if (REFLECTCPP_CAPNPROTO)  

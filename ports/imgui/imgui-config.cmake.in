@@ -22,6 +22,10 @@ if (@IMGUI_BUILD_VULKAN_BINDING@)
     find_dependency(Vulkan)
 endif()
 
+if (@IMGUI_BUILD_WEBGPU_BINDING@)
+    find_dependency(Dawn)
+endif()
+
 if (@IMGUI_FREETYPE@)
     find_dependency(freetype CONFIG)
 endif()

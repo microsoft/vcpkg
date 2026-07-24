@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/libva
     REF "${VERSION}"
-    SHA512 85f4aa6b6e9173d407ca3987745f985d0f898091f14c947a928b6db662a03b5cfe82483901690d81618697fe17a2c41ff6694a611f3654d5ab06840da987e40d
+    SHA512 368bca5a0d3f0989a51d663e20027f7ab7c705d6204ec54a65a1457236c5930fd816b3d7618078f3495d73e944341b71a48f0fbdca4d036de0a54cee77438515
     HEAD_REF master
 )
 
@@ -10,7 +10,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     x11             WITH_X11
     wayland         WITH_WAYLAND
-    glx            WITH_GLX
+    glx             WITH_GLX
 )
 
 message(WARNING "You will need to install libdrm dependencies to use this port:\nsudo apt install libdrm-dev\n")

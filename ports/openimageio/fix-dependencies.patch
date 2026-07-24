@@ -1,5 +1,5 @@
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index 2620994..6e5f0a1 100644
+index 047897c..193af52 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
 @@ -6,6 +6,32 @@
@@ -36,15 +36,15 @@ index 2620994..6e5f0a1 100644
  if (NOT @OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH@ AND NOT OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH)
      find_dependency(Imath @Imath_VERSION@
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index f8670a8..816ba08 100644
+index f10cfc8..6f786ab 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -125,16 +125,18 @@ checked_find_package (Freetype
+@@ -138,16 +138,18 @@ checked_find_package (Freetype
                        VERSION_MIN 2.10.0
                        DEFINITIONS USE_FREETYPE=1 )
  
 -checked_find_package (OpenColorIO REQUIRED
--                      VERSION_MIN 2.2
+-                      VERSION_MIN 2.3
 -                      VERSION_MAX 2.9
 -                     )
 +find_package(OpenColorIO CONFIG REQUIRED)
@@ -63,7 +63,7 @@ index f8670a8..816ba08 100644
                        DEFINITIONS USE_OPENCV=1)
  
  # Intel TBB
-@@ -146,11 +148,15 @@ checked_find_package (TBB 2017
+@@ -159,11 +161,15 @@ checked_find_package (TBB 2017
  # DCMTK is used to read DICOM images
  checked_find_package (DCMTK CONFIG VERSION_MIN 3.6.1)
  
@@ -78,21 +78,22 @@ index f8670a8..816ba08 100644
 +set(LIBHEIF_INCLUDES "")
 +set(LIBHEIF_LIBRARIES heif)
  checked_find_package (Libheif VERSION_MIN 1.11
+                       PREFER_CONFIG
                        RECOMMEND_MIN 1.16
-                       RECOMMEND_MIN_REASON "for orientation support")
-@@ -159,9 +165,8 @@ checked_find_package (LibRaw
+@@ -173,10 +179,8 @@ checked_find_package (LibRaw
                        VERSION_MIN 0.20.0
                        PRINT LibRaw_r_LIBRARIES)
  
 -checked_find_package (OpenJPEG VERSION_MIN 2.0
 -                      RECOMMEND_MIN 2.2
--                      RECOMMEND_MIN_REASON "for multithreading support")
+-                      RECOMMEND_MIN_REASON "for multithreading support"
+-                      PREFER_CONFIG)
 +set(CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG ${USE_OPENJPEG})
 +checked_find_package (OpenJPEG CONFIG)
  # Note: Recent OpenJPEG versions have exported cmake configs, but we don't
  # find them reliable at all, so we stick to our FindOpenJPEG.cmake module.
  
-@@ -178,6 +183,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
+@@ -195,6 +199,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
      checked_find_package (Ptex)
  endif ()
  

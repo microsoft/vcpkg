@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LunarG/VulkanTools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 96aefd30febf411d84204864cb84bd782efc88c4ee109beedb28b252e25f5f8e321c77d8788622f200514cdad461a99a0e886dd95a4d786339ca05718c712212
+    SHA512 f9724dacf5a9be1241f7414cf6eb7159bc75779650441a68c20f29b7bfbb3472418bf7611ae034f16ff80708e30c1ce62b088af429c408d57273a3b3628a57ed
     HEAD_REF main
     PATCHES
         disable-qtdeploy.patch

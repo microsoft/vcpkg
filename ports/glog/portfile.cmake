@@ -14,9 +14,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         unwind          WITH_UNWIND
-        customprefix    WITH_CUSTOM_PREFIX
-    INVERTED_FEATURES
-        unwind          CMAKE_DISABLE_FIND_PACKAGE_Unwind
+        unwind          VCPKG_LOCK_FIND_PACKAGE_Unwind
 )
 file(REMOVE "${SOURCE_PATH}/glog-modules.cmake.in")
 

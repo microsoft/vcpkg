@@ -1,6 +1,6 @@
 {
   "name": "orange-vmprotect-sdk",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Unofficial VMProtect SDK package port for C/C++ development.",
   "homepage": "https://vmpsoft.com",
   "license": "Zlib",

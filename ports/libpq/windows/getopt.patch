@@ -1,0 +1,14 @@
+diff --git a/meson.build b/meson.build
+index 34456b3..052e8c8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2650,6 +2650,9 @@ foreach header : header_checks
+             description: 'Define to 1 if you have the <@0@> header file.'.format(header))
+ endforeach
+ 
++if cc.get_id() == 'msvc'
++  cdata.set('HAVE_GETOPT_H', false)
++endif
+ 
+ decl_checks = [
+   ['F_FULLFSYNC', 'fcntl.h'],

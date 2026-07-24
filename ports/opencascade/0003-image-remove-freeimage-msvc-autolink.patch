@@ -1,0 +1,15 @@
+diff --git a/src/Visualization/TKService/Image/Image_AlienPixMap.cxx b/src/Visualization/TKService/Image/Image_AlienPixMap.cxx
+index 238efdcc42..94017e63aa 100644
+--- a/src/Visualization/TKService/Image/Image_AlienPixMap.cxx
++++ b/src/Visualization/TKService/Image/Image_AlienPixMap.cxx
+@@ -19,10 +19,6 @@
+ 
+ #ifdef HAVE_FREEIMAGE
+   #include <FreeImage.h>
+-
+-  #ifdef _MSC_VER
+-    #pragma comment(lib, "FreeImage.lib")
+-  #endif
+ #elif defined(HAVE_WINCODEC)
+   #include <wincodec.h>
+   // prevent warnings on MSVC10

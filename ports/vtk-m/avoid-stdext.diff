@@ -1,0 +1,13 @@
+diff --git a/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/fmt/format.h b/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/fmt/format.h
+index 1de9c38..7caa346 100644
+--- a/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/fmt/format.h
++++ b/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/fmt/format.h
+@@ -356,7 +356,7 @@ inline typename Container::value_type* get_data(Container& c) {
+   return c.data();
+ }
+ 
+-#if defined(_SECURE_SCL) && _SECURE_SCL
++#if defined(_SECURE_SCL) && _SECURE_SCL && (!defined(_MSC_VER) || _MSC_VER < 1951)
+ // Make a checked iterator to avoid MSVC warnings.
+ template <typename T> using checked_ptr = stdext::checked_array_iterator<T*>;
+ template <typename T> checked_ptr<T> make_checked(T* p, size_t size) {

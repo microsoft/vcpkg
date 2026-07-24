@@ -4,7 +4,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 ae9fcc9b4e8fd10a4c9bf34c3a755205dae7bbfe13fbc93ec4e63323dad10cc862df6a9e2e2e63c84ffa01c5e120a3be06ac9fad2a7c5e58d3dc6ba14d1766e8
+    SHA512 45ad815dda5d7b86fafe4a14300a676130f1c404299989616e41fa84e872516304bc6c3ebee9e1153bce01245333b1f8dfedee4bcde27a323e27d7e70fcb597f
 )
 
 vcpkg_extract_source_archive(
@@ -54,6 +54,14 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -Drelocatable=true)          
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_SYSTEM_VERSION VERSION_LESS "31")
+        list(APPEND OPTIONS -Dandroid=disabled)
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND OPTIONS -Dnative_windows_loaders=true) # Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option
 endif()
@@ -61,10 +69,10 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
-        -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
-        -Ddocs=false
+        -Ddocumentation=false       # Whether to generate the API reference (requires GTK-Doc)
         -Dtests=false
         -Dinstalled_tests=false
+        -Dglycin=disabled
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
         -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located;
                                     # Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf

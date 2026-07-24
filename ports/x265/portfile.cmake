@@ -2,7 +2,7 @@ vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO multicoreware/x265_git
     REF "${VERSION}"
-    SHA512 4b7d71f22f0a7f12ff93f9a01e361df2b80532cd8dac01b5465e63b5d8182f1a05c0289ad95f3aa972c963aa6cd90cb3d594f8b9a96f556a006cf7e1bdd9edda
+    SHA512 53fe7b3a1c9f10bfad33f3d794b9ace87973993a5ebfabb2021b2679b1c9c44a0da9d33e9b75347571a14e6bb8224ed55d619d93c9d106d1637dcd28f99a3895
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
@@ -12,7 +12,7 @@ vcpkg_from_bitbucket(
         pthread.diff
         compiler-target.diff
         neon.diff
-        fix-cmake-4.patch
+        advapi32.patch # Required since v4.2 as it is now using RegOpenKeyExA, RegQueryValueExA & RegCloseKey
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS

@@ -1,0 +1,14 @@
+{
+  "name": "libdotconf",
+  "version": "1.4.1",
+  "description": "dot.conf configuration file parser",
+  "homepage": "https://github.com/williamh/dotconf",
+  "license": "LGPL-2.1-only",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

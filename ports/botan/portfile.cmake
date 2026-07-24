@@ -2,16 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 83e8d9c877a7e1c253efb94953758dde141ef23f74c727294c3a9af60db02401e1aef92368908b297bad1fc005d155e6c63bd726ccc48ea831f46cc5c1915633
+    SHA512 33a47e5733aedc29704652bf16704a2cd080cdcebd01c95879b5db3af3186debbef711c53ef131a9cb7defe3dd8ffae49d6efe7e75aef9107473b92dc6b3f101
     HEAD_REF master
     PATCHES
-        embed-debug-info.patch
-        pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
-        fix-x86-msvc-amalgamation.patch
-        botan-3.10-illegal-instruction.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -33,11 +29,14 @@ vcpkg_list(SET configure_arguments
     "--distribution-info=vcpkg ${TARGET_TRIPLET}"
     --disable-cc-tests
     --with-pkg-config
+    --with-cmake-config
     --link-method=copy
     --with-debug-info
+    --without-include-namespace
     --includedir=include
     --bindir=bin
     --libdir=lib
+    --cmakeconfigdir=share/${PORT}
     --without-documentation
     "--with-external-includedir=${CURRENT_INSTALLED_DIR}/include"
 )
@@ -143,6 +142,13 @@ else()
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         vcpkg_list(APPEND configure_arguments --cc=clang)
     endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_list(APPEND configure_arguments --build-targets=shared,cli)
+    else()
+        vcpkg_list(APPEND configure_arguments --build-targets=static,cli)
+    endif()
+
     # botan's install.py doesn't handle DESTDIR on windows host,
     # so we must avoid the standard '--prefix' and 'DESTDIR' install.
     vcpkg_configure_make(
@@ -171,9 +177,7 @@ else()
     endif()
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Botan-${VERSION}")
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
+vcpkg_cmake_config_fixup()
 
 if(pkgconfig_requires)
     list(JOIN pkgconfig_requires ", " pkgconfig_requires)
@@ -187,7 +191,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/include/botan-3"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

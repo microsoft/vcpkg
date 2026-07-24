@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  ospray/rkcommon
     REF "v${VERSION}"
-    SHA512 48ced20506344250fd2b91875f8282c3b39828ac3eb0c8c0e2505dcc5cdb85a8f36dd328294f165aab66bdfe836b81b7a2c9f6f5c7ab49d281df5a3f95075548
+    SHA512 934092fdcec103eec427a852eed05b82cc5d470fb03b0f2b6c680cad7ea14a654205df4ae9516b2cc494d5c4d027469e8ba99b486ef1616d867351bf29c65929
     HEAD_REF master
     PATCHES fix-static.patch
 )

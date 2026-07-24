@@ -1,6 +1,6 @@
 {
   "name": "inflatelib",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Deflate and Deflate64 decompression library",
   "homepage": "https://github.com/microsoft/inflatelib",
   "license": "MIT",

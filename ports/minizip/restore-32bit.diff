@@ -1,0 +1,13 @@
+diff --git a/contrib/minizip/CMakeLists.txt b/contrib/minizip/CMakeLists.txt
+index 5847c3c..afc09ac 100644
+--- a/contrib/minizip/CMakeLists.txt
++++ b/contrib/minizip/CMakeLists.txt
+@@ -8,8 +8,6 @@ project(
+     HOMEPAGE_URL "https://www.winimage.com/zLibDll/minizip.html")
+ 
+ if(CMAKE_SIZEOF_VOID_P LESS 8 AND NOT MINGW)
+-    message(WARNING "libminizip needs 64bit - stopping here")
+-    return()
+ endif(CMAKE_SIZEOF_VOID_P LESS 8 AND NOT MINGW)
+ 
+ # ============================================================================

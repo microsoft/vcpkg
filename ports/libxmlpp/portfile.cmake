@@ -1,14 +1,9 @@
-string(REGEX MATCH "^([0-9]*[.][0-9]*)" MAJOR_MINOR "${VERSION}")
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/libxml++/${MAJOR_MINOR}/libxml++-${VERSION}.tar.xz"
-         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/libxml++/${MAJOR_MINOR}/libxml++-${VERSION}.tar.xz"
-    FILENAME "libxml++-${VERSION}.tar.xz"
-    SHA512 bba28edf40c60ac186ff1b704d9f4f41f73c1be3126cfb345005283b32bb5c9a596b8def64be8ad8e295e1e169bed91d120d5105cbbb6cecc4675d10b897dfe6
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO libxmlplusplus/libxmlplusplus
+    REF ${VERSION}
+    SHA512 ad164deebcf874b54fcf2923c672fe95ab7e397bc17bf6f7079899e8732eb4665e78b6477671cf481bbcb301db146e83c25b8c159da086dd2dd2cf32bba12ffa
+    HEAD_REF master
 )
 
 vcpkg_configure_meson(

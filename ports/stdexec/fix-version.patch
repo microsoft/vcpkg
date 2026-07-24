@@ -8,6 +8,6 @@ index 54f6330..8409707 100644
  file(STRINGS "${CMAKE_CURRENT_BINARY_DIR}/execution.bs" STD_EXECUTION_BS_REVISION_LINE REGEX "Revision: [0-9]+")
 -string(REGEX REPLACE "Revision: ([0-9]+)" "\\1" STD_EXECUTION_BS_REVISION ${STD_EXECUTION_BS_REVISION_LINE})
 +string(REGEX REPLACE "Revision: ([0-9]+).*" "\\1" STD_EXECUTION_BS_REVISION ${STD_EXECUTION_BS_REVISION_LINE})
- 
- project(STDEXEC VERSION "0.${STD_EXECUTION_BS_REVISION}.0" LANGUAGES CXX)
- 
+
+ # Determine if STDEXEC is built as a subproject (using add_subdirectory) or if it is the main project.
+ if (NOT DEFINED STDEXEC_MAIN_PROJECT)

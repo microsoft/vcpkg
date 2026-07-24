@@ -1,6 +1,7 @@
 {
   "name": "osgearth",
   "version": "3.8",
+  "port-version": 1,
   "description": "osgEarth - 3D Maps for OpenSceneGraph",
   "homepage": "https://github.com/pelicanmapping/osgearth",
   "license": "MIT",
@@ -16,6 +17,13 @@
     "draco",
     "gdal",
     "geos",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental",
+        "opengl3-binding"
+      ]
+    },
     "libwebp",
     "meshoptimizer",
     "opengl",

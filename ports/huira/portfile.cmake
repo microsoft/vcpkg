@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO huira-render/huira
     REF "v${VERSION}"
-    SHA512 acbe259332e59eadf84f588a8e9bc5c5c717469fec2be5098ffeecaa6f5c2557dc3c0ad2d968c2803e289b75714fc7a87021b6960be5b321ce1dfd9f029db3fe
+    SHA512 ed15d0a35c799c2f3b2f0c8eed8f26597e6dab5cb8a5e57d2e393c35139ecde7eef0a721c120b6018604db5c18052b245caf96f56f2d538d290087840b56223a
     HEAD_REF main
 )
 
@@ -18,25 +18,17 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DHUIRA_TESTS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
 )
-
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/huira)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES huira AUTO_CLEAN)
 endif()
 
-# Fix up the installed CMake config so that paths are relocatable.
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME huira
-    CONFIG_PATH lib/cmake/huira
-)
-
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/bin"
-    "${CURRENT_PACKAGES_DIR}/debug/bin"
-    "${CURRENT_PACKAGES_DIR}/lib"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

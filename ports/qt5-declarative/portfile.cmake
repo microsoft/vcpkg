@@ -10,6 +10,7 @@ qt_submodule_installation(
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         linker-oom.diff
+        fix-qmlimportscanner-debug-plugins.patch
     BUILD_OPTIONS
         ${CORE_OPTIONS}
 )

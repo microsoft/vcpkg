@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wiiuse/wiiuse
     REF "${VERSION}"
-    SHA512 b8cbc585f68b62b6bd3faac993130d616c6479f673ccfdc508497fb11a3afca7c86fa5bdf3780c757ef8846d993984dacede1b0365dea4123136bbc393f0d05e
+    SHA512 dcd65bc8c5890de85683c7689e55b56204127e78947cf1fbb6ce29ea5b4b0bda20ed721439297cb53163e9f94a7fad0579d90edb172fc4ceacc367fe9fbae742
     HEAD_REF master
 )
 
@@ -10,8 +10,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLE=OFF
-	-DBUILD_EXAMPLE_SDL=OFF
-	-DINSTALL_EXAMPLES=OFF
+	    -DBUILD_EXAMPLE_SDL=OFF
+	    -DINSTALL_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

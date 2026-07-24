@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/gil
     REF boost-${VERSION}
-    SHA512 6d425bd55e010353a361fc8b071b713225af0cd478d13272bf876cb3e36890b2feeeba8a8f30d83e3a7ee82c2770172f48846df1a23e5f0bc896a1b7399e1823
+    SHA512 563127c6428fd5be790265f83a2a430bb2e7a7fbdf269028a5e5eecaea1e1e2aae8bb37ae1014d8937f4e0fa945a14b86acf75ea453c9b8ff9104b6645a8784d
     HEAD_REF master
     PATCHES
         remove-boost-filesystem-dep.diff

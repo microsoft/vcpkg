@@ -1,0 +1,89 @@
+diff --git a/babl/babl.c b/babl/babl.c
+--- a/babl/babl.c
++++ b/babl/babl.c
+@@ -101,7 +101,7 @@ babl_dir_list (void)
+         babl_fatal ("Converting module filename to UTF-8 failed");
+ 
+       /* If the DLL file name is of the format
+-       * <foobar>\bin\*.dll, use <foobar>\lib\{BABL_LIBRARY}.
++       * <foobar>\bin\*.dll, use <foobar>\plugins\{BABL_LIBRARY}.
+        * Otherwise, use the directory where the DLL is.
+        */
+ 
+@@ -121,7 +121,7 @@ babl_dir_list (void)
+               filename_tmp = babl_malloc (sizeof (char) * tmp_size);
+               strcpy_s (filename_tmp, tmp_size, filename);
+               babl_free (filename);
+-              strcat_s (filename_tmp, tmp_size, "lib" BABL_DIR_SEPARATOR BABL_LIBRARY);
++              strcat_s (filename_tmp, tmp_size, "plugins" BABL_DIR_SEPARATOR BABL_LIBRARY);
+               filename = filename_tmp;
+             }
+         }
+diff --git a/extensions/meson.build b/extensions/meson.build
+--- a/extensions/meson.build
++++ b/extensions/meson.build
+@@ -85,7 +85,7 @@ foreach ext : extensions
+     dependencies: babl_ext_dep,
+     name_prefix: '',
+     install: true,
+-    install_dir: babl_libdir / lib_name,
++    install_dir: babl_pluginsdir / lib_name,
+   )
+ endforeach
+ 
+@@ -102,7 +102,7 @@ if host_cpu_family == 'x86_64'
+       dependencies: babl_ext_dep,
+       name_prefix: '',
+       install: true,
+-      install_dir: babl_libdir / lib_name,
++      install_dir: babl_pluginsdir / lib_name,
+    )
+   endforeach
+ 
+@@ -117,7 +117,7 @@ if host_cpu_family == 'x86_64'
+       dependencies: babl_ext_dep,
+       name_prefix: '',
+       install: true,
+-      install_dir: babl_libdir / lib_name,
++      install_dir: babl_pluginsdir / lib_name,
+    )
+   endforeach
+ 
+@@ -132,7 +132,7 @@ if host_cpu_family == 'x86_64'
+       dependencies: babl_ext_dep,
+       name_prefix: '',
+       install: true,
+-      install_dir: babl_libdir / lib_name,
++      install_dir: babl_pluginsdir / lib_name,
+    )
+   endforeach
+ 
+@@ -150,7 +150,7 @@ elif host_cpu_family == 'arm'
+       dependencies: babl_ext_dep,
+       name_prefix: '',
+       install: true,
+-      install_dir: babl_libdir / lib_name,
++      install_dir: babl_pluginsdir / lib_name,
+    )
+   endforeach
+ 
+diff --git a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -29,6 +29,7 @@ buildtype = get_option('buildtype')
+ 
+ babl_prefix = get_option('prefix')
+ babl_libdir = babl_prefix / get_option('libdir')
++babl_pluginsdir = babl_prefix / 'plugins'
+ 
+ project_build_root = meson.current_build_dir()
+ project_source_root = meson.current_source_dir()
+@@ -628,7 +629,7 @@ pkgconfig.generate(
+   subdirs: lib_name,
+   variables: [
+     'datadir=${prefix}/share',
+-    'pluginsdir=${libdir}/@0@'.format(lib_name),
++    'pluginsdir=${prefix}/plugins/@0@'.format(lib_name),
+     'girdir=${datadir}/gir-1.0',
+     'typelibdir=${libdir}/girepository-1.0',
+   ],

@@ -1,0 +1,83 @@
+diff --git a/source/creator/CMakeLists.txt b/source/creator/CMakeLists.txt
+index 81daefab..a5d309be 100644
+--- a/source/creator/CMakeLists.txt
++++ b/source/creator/CMakeLists.txt
+@@ -24,6 +24,14 @@ set(LIB
+   PRIVATE bf::dependencies::optional::opencolorio
+ )
+ 
++if(WIN32)
++  # `bf_intern_ghost` uses epoxy symbols, but the epoxy import library does
++  # not reliably propagate through Blender's static-library aggregation.
++  list(APPEND LIB
++    PRIVATE ${Epoxy_LIBRARIES}
++  )
++endif()
++
+ if(HAVE_FEENABLEEXCEPT)
+   add_definitions(-DHAVE_FEENABLEEXCEPT)
+ endif()
+@@ -405,10 +413,12 @@ elseif(WIN32)
+     set(TARGETDIR_LIB ${CMAKE_INSTALL_PREFIX_WITH_CONFIG}/bpy)
+     set(TARGETDIR_EXE ${CMAKE_INSTALL_PREFIX_WITH_CONFIG}/bpy)
+   else()
+-    set(TARGETDIR_VER "${BLENDER_VERSION}")
+-    set(TARGETDIR_TEXT ".")
+-    set(TARGETDIR_LIB "blender.shared")
+-    set(TARGETDIR_EXE ".")
++    # Keep the Windows runtime bundle together in a subdirectory for
++    # package-manager installs, similar to other platform-specific app bundles.
++    set(TARGETDIR_EXE "tools/blender")
++    set(TARGETDIR_VER "${TARGETDIR_EXE}/${BLENDER_VERSION}")
++    set(TARGETDIR_TEXT "${TARGETDIR_EXE}")
++    set(TARGETDIR_LIB "${TARGETDIR_EXE}/blender.shared")
+   endif()
+   set(TARGETDIR_SITE_PACKAGES "${TARGETDIR_VER}/python/lib/site-packages")
+ elseif(APPLE)
+@@ -599,16 +609,20 @@ if(WIN32)
+       DEBUG
+     )
+   endif()
+-  install(
+-    DIRECTORY ${LIBDIR}/opencolorio/lib/site-packages-debug/PyOpenColorIO
+-    DESTINATION ${TARGETDIR_SITE_PACKAGES}
+-    CONFIGURATIONS Debug
+-  )
+-  install(
+-    DIRECTORY ${LIBDIR}/opencolorio/lib/site-packages/PyOpenColorIO
+-    DESTINATION ${TARGETDIR_SITE_PACKAGES}
+-    CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel
+-  )
++  if(EXISTS ${LIBDIR}/opencolorio/lib/site-packages-debug/PyOpenColorIO)
++    install(
++      DIRECTORY ${LIBDIR}/opencolorio/lib/site-packages-debug/PyOpenColorIO
++      DESTINATION ${TARGETDIR_SITE_PACKAGES}
++      CONFIGURATIONS Debug
++    )
++  endif()
++  if(EXISTS ${LIBDIR}/opencolorio/lib/site-packages/PyOpenColorIO)
++    install(
++      DIRECTORY ${LIBDIR}/opencolorio/lib/site-packages/PyOpenColorIO
++      DESTINATION ${TARGETDIR_SITE_PACKAGES}
++      CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel
++    )
++  endif()
+   if(EXISTS ${LIBDIR}/OpenImageDenoise/bin/openimagedenoise.dll) # 4.0
+     windows_install_shared_manifest(
+       FILES
+@@ -2026,13 +2040,13 @@ if(WIN32 AND NOT WITH_PYTHON_MODULE)
+   install(
+     TARGETS blender blender-launcher
+     COMPONENT Blender
+-    DESTINATION "."
++    DESTINATION ${TARGETDIR_EXE}
+   )
+   if(WITH_CPU_CHECK)
+     install(
+       TARGETS blender_cpu_check
+       COMPONENT Blender
+-      DESTINATION "."
++      DESTINATION ${TARGETDIR_EXE}
+     )
+   endif()
+   set_target_properties(

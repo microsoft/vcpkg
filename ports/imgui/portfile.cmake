@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 3a019533e638b2023e0c71d0455561ee9d589ff33b677c8135345e85c28edb7b83580271d49a787e0e838fd6217d1625baad65e6559ae7faec53f3a309917ecd 
+        SHA512 927ecf72f00a228e0899d5b8008575b44748c49b083b9425b5f2a6b4490a9900eae111afad23f2bf0a1c9c62cf1fea80c903eb3076d7e7ea901a5625f09df78e
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 c9393bd9f6b49b036ad6ab3ba4d972876c6f60ce7f5c13a7a56ff11b3559ea3211b0caa03eed10b4f4fbe9c371e14f7f24866bd476652f543f3ed3aa878ea930
+        SHA512 60eb4f8478ae998ae68efa33b2e3c9f331f5e373a1272472f93befd9fd6cab4ed73935bb540e728b5abb154469fbc6c0fd69f7aaf54cd3187eefede6cb145a10
         HEAD_REF master
     )
 endif()
@@ -40,6 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     sdl3-renderer-binding       IMGUI_BUILD_SDL3_RENDERER_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
+    webgpu-binding              IMGUI_BUILD_WEBGPU_BINDING
     freetype                    IMGUI_FREETYPE
     freetype-svg                IMGUI_FREETYPE_SVG
     wchar32                     IMGUI_USE_WCHAR32
@@ -64,7 +65,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 44d6fd1c26c9c2cb3fcbd1560dba8e056f84dc170051dcb8db5d642945fb26475006a8166486f7f62e900a97d65f2f98d364ac06c121a57309b3229cc41556a4
+        SHA512 3a31bd3e1f86679ee60fc765971e96f76e05e530b3c7920aea284818604fd8a3cdf1fc7189e7e825a52a75446217ed6f1b2d7470d317799d381fb9019f14333b
         HEAD_REF master
     )
 

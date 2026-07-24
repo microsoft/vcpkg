@@ -1,0 +1,20 @@
+diff --git a/CMake/AbseilDll.cmake b/CMake/AbseilDll.cmake
+--- a/CMake/AbseilDll.cmake
++++ b/CMake/AbseilDll.cmake
+@@ -457,12 +457,14 @@ set(ABSL_INTERNAL_DLL_FILES
+   "strings/string_view.h"
+ )
+ 
+-if(MSVC)
++if(MSVC OR MINGW)
+   list(APPEND ABSL_INTERNAL_DLL_FILES
+     "time/internal/cctz/src/time_zone_name_win.cc"
+     "time/internal/cctz/src/time_zone_name_win.h"
+   )
+-else()
++endif()
++
++if(NOT MSVC)
+   list(APPEND ABSL_INTERNAL_DLL_FILES
+     "flags/commandlineflag.cc"
+     "flags/commandlineflag.h"

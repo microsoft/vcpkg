@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openzim/libzim
     REF "${VERSION}"
-    SHA512 acf11e4fe980adc1c0be760dab4d0f5a8d3da20579d918f627d439acc3266f12bae3f033c2f3f98009f6e1a20fc35190ca625b46fc581cb801594a8943e83d9d
+    SHA512 16ea86511991be2f3c6deb47a96e6578c2f8117d1783508b6f10d89a42fa7ec19cf8dca6cde34f537a5b715240ec1a0ebee0d27081e3a2195c9ff8c59317639f
     HEAD_REF main
     PATCHES
         cross-builds.diff

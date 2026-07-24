@@ -1,5 +1,5 @@
 diff --git a/config/meson.build b/config/meson.build
-index b6b3558e11..34b85f10b5 100644
+index 9ba7b9a..bbdad71 100644
 --- a/config/meson.build
 +++ b/config/meson.build
 @@ -95,7 +95,9 @@ eal_pmd_path = join_paths(get_option('prefix'), driver_install_path)
@@ -14,7 +14,7 @@ index b6b3558e11..34b85f10b5 100644
      if pmd_subdir_opt != '' and pmd_subdir_opt != '.'
          meson.add_install_script('../buildtools/symlink-drivers-solibs.sh',
 diff --git a/drivers/meson.build b/drivers/meson.build
-index 495e21b54a..ff7b5983cb 100644
+index 6ae102e..9a593b7 100644
 --- a/drivers/meson.build
 +++ b/drivers/meson.build
 @@ -322,7 +322,7 @@ foreach subpath:subdirs
@@ -51,10 +51,10 @@ index 495e21b54a..ff7b5983cb 100644
  
          set_variable('shared_@0@'.format(lib_name), shared_dep)
 diff --git a/lib/meson.build b/lib/meson.build
-index ce92cb5537..40880bbf02 100644
+index 8f5cfd2..907a46a 100644
 --- a/lib/meson.build
 +++ b/lib/meson.build
-@@ -274,7 +274,7 @@ foreach l:libraries
+@@ -270,7 +270,7 @@ foreach l:libraries
              c_args: cflags,
              dependencies: static_deps,
              include_directories: includes,
@@ -63,7 +63,7 @@ index ce92cb5537..40880bbf02 100644
      static_dep = declare_dependency(
              include_directories: includes,
              dependencies: static_deps)
-@@ -324,6 +324,7 @@ foreach l:libraries
+@@ -320,6 +320,7 @@ foreach l:libraries
          cflags += '-DRTE_BUILD_SHARED_LIB'
      endif
  
@@ -71,7 +71,7 @@ index ce92cb5537..40880bbf02 100644
      shared_lib = shared_library(libname,
              sources,
              objects: objs,
-@@ -341,6 +342,9 @@ foreach l:libraries
+@@ -336,6 +337,9 @@ foreach l:libraries
              dependencies: shared_deps)
  
      dpdk_libraries = [shared_lib] + dpdk_libraries

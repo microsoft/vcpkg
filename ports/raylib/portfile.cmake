@@ -14,11 +14,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
     REF "${VERSION}"
-    SHA512 503483a5436e189ad67533dc6c90be592283b84fbd57c86ab457dd1507b1dd11c897767ea9efa83affaf236f2711ec59e56658cf6fcad582a790a5fdc01b5ace
+    SHA512 dfdb2578859e28d424b6f318669579ab2361c35c4d45e0fee5a80b4c1d7d487a0e084ec2bafffad149b3dd96d34d092586fc3d30c8de6a211b0a2a038a959c07
     HEAD_REF master
     PATCHES
         android.diff
-        fix-link-path.patch
+        # Once the next version of cgltf is released, this patch will no longer be necessary.
+        fix-cgltf.patch
 )
 file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/cgltf.h"

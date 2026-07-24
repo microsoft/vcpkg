@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mm2/Little-CMS
     REF "lcms${VERSION}"
-    SHA512 1e256b6b7c06800ad21a5cd35971f39963710cc086cf22bc91a86f6f736b2bfa63cb705ada4431b6eb25714fe16a0e562acf51da742503d590fc1dd665a58b54
+    SHA512 1b2781ed8898e65f15be17cf0130a1500ec0bf5ca5159f871dff5692e387747be9526feef0bc7c370200656fc0aabe3036746041285a3978e90adec200d685f2
     HEAD_REF master
     PATCHES
         ${SHARED_LIBRARY_PATCH}
@@ -38,7 +38,7 @@ vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
-        TOOL_NAMES jpgicc linkicc psicc tificc transicc
+        TOOL_NAMES jpgicc linkicc psicc tificc transicc tifdiff
         AUTO_CLEAN
     )
 endif()

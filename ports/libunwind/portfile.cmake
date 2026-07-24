@@ -10,16 +10,16 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         --disable-documentation
         --disable-tests
         --disable-zlibdebuginfo
         --enable-minidebuginfo
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

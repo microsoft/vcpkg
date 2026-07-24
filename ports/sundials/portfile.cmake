@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LLNL/sundials
     REF "v${VERSION}"
-    SHA512 b6d15f68f25c5326bd42abb5e3652cc98e83d2eb31b213c9144b46c5b93fd123be5972e9d36217fdd09a0002dee3f78e530c21eda85f3b4d1d8d93b007546ea0
+    SHA512 312c22c6df61ffa7c3cb0bd0c30d0945b106014bc40c1ceedc1df5ebfa58d6b1b57bf7e0b30b22c6ac3e0c210b78aa6dc8d62da37b3cdc2cd3d3833012e1c2b5
     HEAD_REF master
 )
 

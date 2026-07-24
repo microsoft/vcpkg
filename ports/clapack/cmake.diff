@@ -1,0 +1,86 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 320ccc6..31a4083 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.6)
++cmake_minimum_required(VERSION 3.10)
+ project(CLAPACK C)
+ enable_testing()
+ include(CTest)
+@@ -19,16 +19,21 @@ if(NOT USE_BLAS_WRAP)
+ endif()
+ include_directories(${CLAPACK_SOURCE_DIR}/INCLUDE)
+ add_subdirectory(F2CLIBS)
+-add_subdirectory(BLAS)
++find_package(BLAS REQUIRED)
+ add_subdirectory(SRC)
+-add_subdirectory(TESTING)
+ set(CLAPACK_VERSION 3.2.1)
+ set(CPACK_PACKAGE_VERSION_MAJOR 3)
+ set(CPACK_PACKAGE_VERSION_MINOR 2)
+ set(CPACK_PACKAGE_VERSION_PATCH 1)
+ include(CPack)
+-export(TARGETS f2c blas lapack FILE clapack-targets.cmake)
++install(EXPORT clapack-targets
++   FILE clapack-targets.cmake
++   DESTINATION share/clapack
++   )
+ configure_file(${CLAPACK_SOURCE_DIR}/clapack-config-version.cmake.in
+   ${CLAPACK_BINARY_DIR}/clapack-config-version.cmake @ONLY)
+ configure_file(${CLAPACK_SOURCE_DIR}/clapack-config.cmake.in
+   ${CLAPACK_BINARY_DIR}/clapack-config.cmake @ONLY)
++install(FILES ${CLAPACK_BINARY_DIR}/clapack-config.cmake ${CLAPACK_BINARY_DIR}/clapack-config-version.cmake
++   DESTINATION share/clapack
++   )
+diff --git a/F2CLIBS/libf2c/CMakeLists.txt b/F2CLIBS/libf2c/CMakeLists.txt
+index 43d7b3f..0e988d1 100644
+--- a/F2CLIBS/libf2c/CMakeLists.txt
++++ b/F2CLIBS/libf2c/CMakeLists.txt
+@@ -60,3 +60,16 @@ include_directories(${CLAPACK_SOURCE_DIR}/F2CLIBS/libf2c)
+ include_directories(${CLAPACK_BINARY_DIR}/F2CLIBS/libf2c)
+ add_library(f2c ${OFILES} ${CMAKE_CURRENT_BINARY_DIR}/arith.h)
+ set_property(TARGET f2c PROPERTY PREFIX lib)
++if(UNIX)
++  target_link_libraries(f2c PRIVATE m)
++endif()
++install(TARGETS f2c
++   EXPORT clapack-targets
++   RUNTIME DESTINATION bin
++   LIBRARY DESTINATION lib
++   ARCHIVE DESTINATION lib
++   INCLUDES DESTINATION include
++   )
++install(FILES ${PROJECT_SOURCE_DIR}/INCLUDE/f2c.h
++  DESTINATION include
++)
+diff --git a/SRC/CMakeLists.txt b/SRC/CMakeLists.txt
+index ac4cce3..746ebe5 100644
+--- a/SRC/CMakeLists.txt
++++ b/SRC/CMakeLists.txt
+@@ -376,5 +376,14 @@ if(BUILD_COMPLEX16)
+   set(ALLOBJ  ${ZLASRC} ${ALLAUX} ${DZLAUX})
+ endif()
+ add_library(lapack ${ALLOBJ} ${ALLXOBJ})
+-target_link_libraries(lapack blas)
+-
++target_link_libraries(lapack PRIVATE ${BLAS_LIBRARIES} f2c)
++install(TARGETS lapack
++   EXPORT clapack-targets
++   RUNTIME DESTINATION bin
++   LIBRARY DESTINATION lib
++   ARCHIVE DESTINATION lib
++   INCLUDES DESTINATION include
++   )
++install(FILES ${PROJECT_SOURCE_DIR}/INCLUDE/clapack.h
++  DESTINATION include
++)
+diff --git a/clapack-config.cmake.in b/clapack-config.cmake.in
+index cd19f1d..7fa272f 100644
+--- a/clapack-config.cmake.in
++++ b/clapack-config.cmake.in
+@@ -1 +1,3 @@
+-include("@CLAPACK_BINARY_DIR@/clapack-targets.cmake")
++include(CMakeFindDependencyMacro)
++find_dependency(BLAS)
++include("${CMAKE_CURRENT_LIST_DIR}/clapack-targets.cmake")

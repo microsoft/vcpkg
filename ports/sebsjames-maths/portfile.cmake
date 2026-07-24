@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sebsjames/maths
     REF "${VERSION}"
-    SHA512 bd1f44f2cb3cf14458a4c35052840cc19cd6a03058936853eedbd209fdb10012e74b2b51e7fc7a46e3e76861baf27e946a7e1e5feff545f81b255d9d4af4303e
+    SHA512 2723179f328e9e79c58e7fc24f0e43db321be48d48b8197e0565bab8bda81aa9f1347866e111201908d54a9f6fb8824fb28912c065ac636ef1cd8e1d84f6dc3e
     HEAD_REF main
 )
 
@@ -13,6 +13,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_HDF5=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Armadillo=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Eigen3=OFF
 )
 
 vcpkg_cmake_install()

@@ -1,10 +1,10 @@
 {
   "name": "vvenc",
-  "version": "1.7.0",
+  "version": "1.14.0",
   "description": "VVenC is a fast and efficient H.266/VVC encoder implementation.",
   "homepage": "https://github.com/fraunhoferhhi/vvenc",
   "license": "BSD-3-Clause-Clear",
-  "supports": "!x86 & !arm",
+  "supports": "!x86 & !arm32",
   "dependencies": [
     "nlohmann-json",
     "simde",

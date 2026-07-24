@@ -1,6 +1,7 @@
 {
   "name": "onnxruntime",
   "version-semver": "1.23.2",
+  "port-version": 1,
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",
@@ -79,9 +80,16 @@
       "description": "Build a macOS/iOS framework, Objective-C library",
       "supports": "osx | ios"
     },
+    "kleidiai": {
+      "description": "Build kleidiai support",
+      "supports": "arm64",
+      "dependencies": [
+        "kleidiai"
+      ]
+    },
     "openvino": {
       "description": "Build with OpenVINO support",
-      "supports": "!(osx | ios | android | emscripten)",
+      "supports": "!(osx | ios | android | emscripten) & !static",
       "dependencies": [
         {
           "name": "openvino",

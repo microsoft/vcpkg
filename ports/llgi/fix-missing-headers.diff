@@ -1,0 +1,13 @@
+diff --git a/tools/ShaderTranspilerCore/ShaderTranspilerCore.h b/tools/ShaderTranspilerCore/ShaderTranspilerCore.h
+index 3ef5d67..674bbce 100644
+--- a/tools/ShaderTranspilerCore/ShaderTranspilerCore.h
++++ b/tools/ShaderTranspilerCore/ShaderTranspilerCore.h
+@@ -2,6 +2,8 @@
+ #pragma once
+ 
++#include <cstdint>
+ #include <stdint.h>
++#include <stddef.h>
+ 
+ #include "../../src/LLGI.Base.h"
+ #include <memory>

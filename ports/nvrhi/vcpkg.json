@@ -1,0 +1,23 @@
+{
+  "name": "nvrhi",
+  "version-date": "2026-02-26",
+  "description": "NVIDIA Rendering Hardware Interface abstraction layer for D3D11, D3D12, and Vulkan",
+  "homepage": "https://github.com/NVIDIA-RTX/NVRHI",
+  "license": "MIT",
+  "supports": "(windows & x64 & !uwp & !xbox) | (linux & (x64 | arm64))",
+  "dependencies": [
+    {
+      "name": "directx-headers",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vulkan-headers"
+  ]
+}

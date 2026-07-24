@@ -1,0 +1,16 @@
+{
+  "name": "yubico-piv-tool",
+  "version": "2.7.3",
+  "description": "YubiKey PIV library (libykpiv) for interacting with the PIV application on a YubiKey",
+  "homepage": "https://github.com/Yubico/yubico-piv-tool",
+  "license": "BSD-2-Clause",
+  "supports": "!android & !ios",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -64,15 +64,20 @@ set_package_properties(BISON PROPERTIES
+     PURPOSE "Required for the Predicate parser"
+ )
+ 
+-find_package(IMobileDevice)
++find_package(IMobileDevice NAMES unofficial-libimobiledevice)
+ set_package_properties(IMobileDevice PROPERTIES
+                        TYPE OPTIONAL
+                        PURPOSE "Needed to build the iOS device support backend"
+                       )
++if(TARGET unofficial::libimobiledevice::libimobiledevice)
++    set_target_properties(unofficial::libimobiledevice::libimobiledevice PROPERTIES
++        INTERFACE_COMPILE_DEFINITIONS "IMOBILEDEVICE_API=0x10300"
++    )
++endif()
+ 
+-find_package(PList)
++find_package(PList NAMES unofficial-libplist CONFIG)
+ set_package_properties(PList PROPERTIES
+                        TYPE OPTIONAL
+                        PURPOSE "Needed to build the iOS device support backend"
+                       )
+ 
+diff --git a/KF6SolidConfig.cmake.in b/KF6SolidConfig.cmake.in
+--- a/KF6SolidConfig.cmake.in
++++ b/KF6SolidConfig.cmake.in
+@@ -31,6 +31,11 @@ if (NOT @BUILD_SHARED_LIBS@)
+         find_dependency(LibMount)
+     endif()
+ 
++    if (@IMobileDevice_FOUND@ AND @PList_FOUND@)
++        find_dependency(unofficial-libimobiledevice)
++        find_dependency(unofficial-libplist)
++    endif()
++
+     if (@UDev_FOUND@)
+         find_dependency(UDev)
+     endif()
+diff --git a/src/solid/devices/backends/imobile/CMakeLists.txt b/src/solid/devices/backends/imobile/CMakeLists.txt
+--- a/src/solid/devices/backends/imobile/CMakeLists.txt
++++ b/src/solid/devices/backends/imobile/CMakeLists.txt
+@@ -6,6 +6,6 @@ set(backend_sources
+     imobileportablemediaplayer.cpp
+ )
+-set(backend_libs IMobileDevice::IMobileDevice PList::PList)
++set(backend_libs unofficial::libimobiledevice::libimobiledevice unofficial::libplist::libplist)
+ 
+ ecm_qt_declare_logging_category(backend_sources
+     HEADER imobile_debug.h

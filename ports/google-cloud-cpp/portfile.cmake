@@ -89,7 +89,7 @@ endforeach()
 
 # These packages are automatically installed depending on what features are
 # enabled.
-foreach(feature common compute_protos googleapis grpc_utils iam_v2 logging_type rest_internal rest_protobuf_internal)
+foreach(feature common compute_protos googleapis grpc_utils iam_v2 iam_v3 logging_type rest_internal rest_protobuf_internal)
     google_cloud_cpp_cmake_config_fixup(${feature})
 endforeach()
 

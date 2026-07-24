@@ -1,0 +1,13 @@
+diff --git a/include/sqlpp23/mysql/sqlpp_mysql.h b/include/sqlpp23/mysql/sqlpp_mysql.h
+index 5e545b9d..a40a866c 100644
+--- a/include/sqlpp23/mysql/sqlpp_mysql.h
++++ b/include/sqlpp23/mysql/sqlpp_mysql.h
+@@ -27,7 +27,7 @@
+  * POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
+-#include <mysql.h>
++#include <mysql/mysql.h>
+ 
+ namespace sqlpp::mysql {
+ #if LIBMYSQL_VERSION_ID >= 80000

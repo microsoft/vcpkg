@@ -1,0 +1,67 @@
+diff --git a/cmake/usBundleConfig.cmake.in b/cmake/usBundleConfig.cmake.in
+index f0ab1ca..e4ca5c5 100644
+--- a/cmake/usBundleConfig.cmake.in
++++ b/cmake/usBundleConfig.cmake.in
+@@ -6,6 +6,7 @@ set(US_@PROJECT_NAME@_RUNTIME_LIBRARY_DIRS "@PACKAGE_CONFIG_RUNTIME_LIBRARY_DIR@
+ include(CMakeFindDependencyMacro)
+ find_dependency(Boost COMPONENTS asio nowide CONFIG)
+ find_dependency(absl CONFIG)
++find_dependency(spdlog CONFIG)
+ 
+ if(NOT TARGET @PROJECT_TARGET@)
+   include("${CMAKE_CURRENT_LIST_DIR}/us@PROJECT_NAME@Targets.cmake")
+diff --git a/compendium/LogServiceImpl/CMakeLists.txt b/compendium/LogServiceImpl/CMakeLists.txt
+index 2b0d11e..edba10d 100644
+--- a/compendium/LogServiceImpl/CMakeLists.txt
++++ b/compendium/LogServiceImpl/CMakeLists.txt
+@@ -27,12 +27,7 @@ endif()
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/manifest.json.in
+ 	       ${CMAKE_CURRENT_BINARY_DIR}/resources/manifest.json)
+ 
+-# This is to suppress a warning from MSVC regarding the use of 
+-# stdext::checked_array_iterator in spdlog. If and when spdlog upgrades 
+-# to a future release of c++, std::span is available in c++20 and is not deprecated
+-if(MSVC)
+-  add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+-endif()
++find_package(spdlog CONFIG REQUIRED)
+ 
+ if(MINGW)
+   # silence ignored attributes warnings
+@@ -46,7 +41,7 @@ usMacroCreateBundle(LogServiceImpl
+   SYMBOLIC_NAME log_service
+   EMBED_RESOURCE_METHOD LINK
+   PRIVATE_INCLUDE_DIRS src/util src/service src/bundle ../third_party
+-  LINK_LIBRARIES ${_link_libraries}
++  LINK_LIBRARIES ${_link_libraries} spdlog::spdlog
+   PUBLIC_HEADERS ${_public_headers}
+   PRIVATE_HEADERS ${_hdrs}
+   SOURCES ${_srcs} src/Activator.cpp
+diff --git a/compendium/LogServiceImpl/src/LogServiceImpl.cpp b/compendium/LogServiceImpl/src/LogServiceImpl.cpp
+index 073378f..55de6ea 100644
+--- a/compendium/LogServiceImpl/src/LogServiceImpl.cpp
++++ b/compendium/LogServiceImpl/src/LogServiceImpl.cpp
+@@ -1,7 +1,7 @@
+ #include <sstream>
+ 
+-#include "spdlog/sinks/stdout_color_sinks.h"
+-#include "spdlog/spdlog.h"
++#include <spdlog/sinks/stdout_color_sinks.h>
++#include <spdlog/spdlog.h>
+ 
+ #include "cppmicroservices/ServiceReference.h"
+ 
+diff --git a/compendium/LogServiceImpl/src/LoggerImpl.cpp b/compendium/LogServiceImpl/src/LoggerImpl.cpp
+index 13d60d0..443b914 100644
+--- a/compendium/LogServiceImpl/src/LoggerImpl.cpp
++++ b/compendium/LogServiceImpl/src/LoggerImpl.cpp
+@@ -1,7 +1,7 @@
+ #include <sstream>
+ 
+-#include "spdlog/sinks/stdout_color_sinks.h"
+-#include "spdlog/spdlog.h"
++#include <spdlog/sinks/stdout_color_sinks.h>
++#include <spdlog/spdlog.h>
+ 
+ #include "cppmicroservices/ServiceReference.h"
+ 

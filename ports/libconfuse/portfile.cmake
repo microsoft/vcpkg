@@ -14,14 +14,14 @@ vcpkg_add_to_path("${FLEX_DIR}")
 
 set(ENV{AUTOPOINT} true) # true, the program
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         --disable-examples
         --disable-nls
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

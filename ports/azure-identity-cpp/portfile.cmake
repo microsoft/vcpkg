@@ -12,6 +12,12 @@ vcpkg_from_github(
 file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
 file(REMOVE_RECURSE ${unused})
 
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.toml")  
+file(REMOVE_RECURSE ${unused})
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")  
+file(REMOVE_RECURSE ${unused})
+
 if(EXISTS "${SOURCE_PATH}/sdk/identity/azure-identity")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/identity/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")

@@ -1,9 +1,9 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index a407271..f147d37 100755
+index 2e3beaaf3..17803d8b0 100755
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -85,6 +85,9 @@ else()
- endif()
+@@ -142,6 +142,9 @@ if(X64)
+ endif(X64)
  
  if(UNIX)
 +    set(THREADS_PREFER_PTHREAD_FLAG 1)
@@ -12,7 +12,7 @@ index a407271..f147d37 100755
      list(APPEND PLATFORM_LIBS pthread)
      find_library(LIBRT rt)
      if(LIBRT)
-@@ -705,6 +708,9 @@ if(X265_LATEST_TAG)
+@@ -1124,6 +1127,9 @@ if(X265_LATEST_TAG OR NOT GIT_FOUND)
          list(REMOVE_ITEM PLIBLIST "-lc" "-lpthread" "-lmingwex" "-lmingwthrd"
              "-lmingw32" "-lmoldname" "-lmsvcrt" "-ladvapi32" "-lshell32"
              "-luser32" "-lkernel32")

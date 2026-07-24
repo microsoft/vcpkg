@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO LibreDWG/libredwg
   REF "${VERSION}"
-  SHA512 cf0baf477d053eb6ab2feaeda187f2d92211c7d28aa50318c1c8d7acf1b9c463258fa3a388dddce266bf44e0d4e4cf1bd3aa591c918f8a253515919e5c1b3f57
+  SHA512 3a3c07784f1152dd4ff4a1e117d6028f2e01ea5b2eae14bf7b8b031d962f94aed6777443659fd77bb61c4e5e508b11b2941dfbcc17b4bd1b67b150028d8e9cb4
   HEAD_REF master
   PATCHES
     fix_install.patch

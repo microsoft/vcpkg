@@ -1,0 +1,12 @@
+diff --git a/src/vanillapdf/utils/buffer.h b/src/vanillapdf/utils/buffer.h
+index f2bcba10..32a238b6 100644
+--- a/src/vanillapdf/utils/buffer.h
++++ b/src/vanillapdf/utils/buffer.h
+@@ -12,6 +12,7 @@
+ #include <string>
+ #include <ostream>
+ #include <cassert>
++#include <cstring>
+ 
+ namespace vanillapdf {
+ 

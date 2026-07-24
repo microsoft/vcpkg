@@ -20,7 +20,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 7b78109055773e44af771e99b64ff6a1fcdc5c4984d6d62708491d14ab576344d432dac2377363cae89e47c1a1e55d016bcc7bde2c5c49d5b26550db5ac46304
+    SHA512 d10222a457d71470a26ad6dc812685f257bf5c90a64a11d90e543ef7eaba803aa4e2593c358ebd430ba55856e987f7a6f50597b1ad6d2da737c239ad4f18ad6a
     HEAD_REF release
     PATCHES
         003-fix-dep.patch
@@ -29,6 +29,7 @@ vcpkg_from_github(
         008-fix_clang8_compiler_error.patch
         009-vcpkg_install_folder_conventions.patch
         010-cmake_export_plugin_as_modules.patch
+        011-fix-tbb2023-task-api.patch
 )
 
 # Changes accompanying 003-fix-dep.patch
@@ -70,6 +71,7 @@ vcpkg_cmake_configure(
         -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
         -DPXR_USE_DEBUG_PYTHON:BOOL=OFF
     MAYBE_UNUSED_VARIABLES
+        PXR_ENABLE_PTEX_SUPPORT
         PXR_USE_PYTHON_3
         PYTHON_EXECUTABLE
 )

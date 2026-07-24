@@ -1,0 +1,19 @@
+--- a/CMakeLists.txt	2026-07-03 13:23:38.000000000 -0400
++++ b/CMakeLists.txt	2026-07-03 14:39:31.155802967 -0400
+@@ -23,10 +23,12 @@
+ endif()
+ 
+ if(WIN32)
+-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+-        set(CMAKE_INSTALL_PREFIX "C:/Program Files/TA-Lib" CACHE PATH "Installation Directory" FORCE)
+-    else()
+-        set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/TA-Lib" CACHE PATH "Installation Directory" FORCE)
++    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
++        if(CMAKE_SIZEOF_VOID_P EQUAL 8)
++            set(CMAKE_INSTALL_PREFIX "C:/Program Files/TA-Lib" CACHE PATH "Installation Directory" FORCE)
++        else()
++            set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/TA-Lib" CACHE PATH "Installation Directory" FORCE)
++        endif()
+     endif()
+ 
+ 	if(DEFINED ENV{Platform})

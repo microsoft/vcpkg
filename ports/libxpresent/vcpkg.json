@@ -1,6 +1,7 @@
 {
   "name": "libxpresent",
   "version": "1.0.2",
+  "port-version": 1,
   "description": "Xlib-based library for the X Present Extension",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxpresent",
   "license": null,
@@ -9,6 +10,10 @@
     "libxext",
     "libxfixes",
     "libxrandr",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xorg-macros",
     "xproto"
   ]

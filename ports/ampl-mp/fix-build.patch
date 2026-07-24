@@ -20,3 +20,16 @@ index 9754d35..2b53eb0 100644
      add_library(${name}-dynrt ${libtype} EXCLUDE_FROM_ALL
        ${add_mp_library_UNPARSED_ARGUMENTS} ${dynrt-objects})
      target_compile_options(${name}-dynrt PUBLIC /MD$<$<CONFIG:Debug>:d>)
+diff --git a/include/mp/format.h b/include/mp/format.h
+index 8320f8a..0314973 100644
+--- a/include/mp/format.h
++++ b/include/mp/format.h
+@@ -40,7 +40,7 @@
+ #include <vector>
+ #include <utility>
+ 
+-#ifdef _SECURE_SCL
++#if defined(_SECURE_SCL) && defined(_MSC_VER) && _MSC_VER < 1951
+ # define FMT_SECURE_SCL _SECURE_SCL
+ #else
+ # define FMT_SECURE_SCL 0

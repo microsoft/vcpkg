@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pupnp/pupnp
     REF "release-${VERSION}"
-    SHA512 2aed5c72cb8e33b89d85e6755b99e7bd4e82ffb58d03ef58c2cdd790d4dc6c33b3a9f91168595930be53f0bb803e266e2bb02ea5fcc5cda8edada9453bf56492
+    SHA512 a4ffb5977d9e103f8ce3ed8f9dec6a336424258c9541ae38790accaa35cd7bf92165cded285ce30f57c7aa5e03f05f0a639d846436b460800ee5e5fcb4d2d7c8
     PATCHES
         fix-pthreads4w-targets.patch
 )

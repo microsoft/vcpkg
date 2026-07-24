@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6934fca..c2f855d 100644
+index ffa0615..18e0886 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -68,7 +68,7 @@ set(GEOGRAM_INSTALL_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE PATH "
@@ -49,7 +49,7 @@ index 6934fca..c2f855d 100644
 +    "${project_config}"
 +    INSTALL_DESTINATION "${config_install_dir}"
 +)
-+ 
++
 +# Config
 +install(
 +    FILES "${project_config}" "${version_config}"

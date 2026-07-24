@@ -1,0 +1,11 @@
+--- a/sdk/src/crypto/OSSEncryptionClient.cpp
++++ b/sdk/src/crypto/OSSEncryptionClient.cpp
+@@ -18,8 +18,6 @@
+ constexpr const char* kCseCekAlgHeader = "x-oss-meta-client-side-encryption-cek-alg";
+ constexpr const char* kCseWrapAlgHeader = "x-oss-meta-client-side-encryption-wrap-alg";
+ constexpr const char* kCseMatDescHeader = "x-oss-meta-client-side-encryption-matdesc";
+-constexpr const char* kCseDataSizeHeader = "x-oss-meta-client-side-encryption-data-size";
+-constexpr const char* kCsePartSizeHeader = "x-oss-meta-client-side-encryption-part-size";
+ constexpr const char* kCseUnencryptedContentLengthHeader =
+     "x-oss-meta-client-side-encryption-unencrypted-content-length";
+ constexpr const char* kCseUnencryptedContentMD5Header = "x-oss-meta-client-side-encryption-unencrypted-content-md5";

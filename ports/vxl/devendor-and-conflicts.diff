@@ -1,0 +1,92 @@
+diff --git a/config/cmake/Modules/FindGEOTIFF.cmake b/config/cmake/Modules/FindGEOTIFF.cmake
+index 2f5d9d0..33c6f7b 100644
+--- a/config/cmake/Modules/FindGEOTIFF.cmake
++++ b/config/cmake/Modules/FindGEOTIFF.cmake
+@@ -18,7 +18,7 @@ if ( VXL_USE_GEOTIFF )
+ 
+     # If this FORCE variable is unset or is FALSE, try to find a native library.
+     if( NOT VXL_FORCE_V3P_GEOTIFF )
+-      include( ${MODULE_PATH}/NewCMake/FindGEOTIFF.cmake )
++      find_package(GeoTIFF CONFIG REQUIRED)
+       if( GEOTIFF_FOUND )
+         set(VXL_USING_NATIVE_GEOTIFF "YES")
+       endif()
+diff --git a/config/cmake/Modules/FindOpenJPEG2.cmake b/config/cmake/Modules/FindOpenJPEG2.cmake
+index c76bc44..41dc198 100644
+--- a/config/cmake/Modules/FindOpenJPEG2.cmake
++++ b/config/cmake/Modules/FindOpenJPEG2.cmake
+@@ -62,6 +62,8 @@ set(OPENJPEG2_DEFINITIONS "")
+ 
+ if(OPENJPEG2_FOUND)
+   set(VXL_USING_NATIVE_OPENJPEG2 "YES")
++elseif(NOT ENABLE_OPENJPEG)
++  set(VXL_USING_NATIVE_OPENJPEG2 "YES")  # to disable internal lib, too
+ else()
+   if( EXISTS ${VXL_ROOT_SOURCE_DIR}/v3p/openjpeg2/openjpeg.h)
+     set(OPENJPEG2_FOUND TRUE)
+diff --git a/config/cmake/Modules/VXLConfig_export.cmake.in b/config/cmake/Modules/VXLConfig_export.cmake.in
+index 86bb564..c69b7d8 100644
+--- a/config/cmake/Modules/VXLConfig_export.cmake.in
++++ b/config/cmake/Modules/VXLConfig_export.cmake.in
+@@ -152,6 +152,10 @@ set(VXL_TIFF_INCLUDE_DIR "@TIFF_INCLUDE_DIR@")
+ set(VXL_TIFF_LIBRARIES "@TIFF_LIBRARIES@")
+ 
+ set(VXL_GEOTIFF_FOUND "@GEOTIFF_FOUND@")
++if(VXL_GEOTIFF_FOUND)
++    include(CMakeFindDependencyMacro)
++    find_dependency(GeoTIFF CONFIG)
++endif()
+ set(VXL_GEOTIFF_INCLUDE_DIR "@GEOTIFF_INCLUDE_DIR@")
+ set(VXL_GEOTIFF_LIBRARIES "@GEOTIFF_LIBRARIES@")
+ 
+diff --git a/core/vgl/vgl_clip.hxx b/core/vgl/vgl_clip.hxx
+index 9ff64f8..10c986a 100644
+--- a/core/vgl/vgl_clip.hxx
++++ b/core/vgl/vgl_clip.hxx
+@@ -144,7 +144,7 @@ namespace {
+ 
+ #elif HAS_CLIPPER
+ 
+-#include <clipper.hxx>
++#include <clipper.hpp>
+ 
+ namespace {
+   //: Creates a Clipper polygon from a vgl_polygon.
+diff --git a/core/vpl/CMakeLists.txt b/core/vpl/CMakeLists.txt
+index f69d3e7..5f84776 100644
+--- a/core/vpl/CMakeLists.txt
++++ b/core/vpl/CMakeLists.txt
+@@ -26,6 +26,7 @@ set_vxl_library_properties(
+      USE_HIDDEN_VISIBILITY
+ )
+ 
++set_target_properties(${VXL_LIB_PREFIX}vpl PROPERTIES OUTPUT_NAME vxl_vpl) # avoid conflict with Intel libvpl
+ target_link_libraries( ${VXL_LIB_PREFIX}vpl ${VXL_LIB_PREFIX}vcl )
+ if(NOT UNIX)
+   target_link_libraries( ${VXL_LIB_PREFIX}vpl ws2_32 ${VXL_LIB_PREFIX}vcl )
+diff --git a/v3p/CMakeLists.txt b/v3p/CMakeLists.txt
+index 251ef9a..266cc5b 100644
+--- a/v3p/CMakeLists.txt
++++ b/v3p/CMakeLists.txt
+@@ -48,6 +48,9 @@ CMAKE_DEPENDENT_OPTION( VXL_FORCE_V3P_RPLY "Use V3P instead of any native RPLY l
+ mark_as_advanced( VXL_FORCE_V3P_RPLY )
+ 
+ if(VXL_BUILD_CORE_IMAGING)
++  add_subdirectory(openjpeg2)
++elseif(0)
++  # not used by core and vcl
+   include(${VXL_CMAKE_DIR}/FindZLIB.cmake)
+   if (VXL_FORCE_V3P_ZLIB OR ( NOT VXL_USING_NATIVE_ZLIB ) AND IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/zlib)
+     add_subdirectory(zlib)
+diff --git a/v3p/openjpeg2/CMakeLists.txt b/v3p/openjpeg2/CMakeLists.txt
+index e65a03b..910c56d 100644
+--- a/v3p/openjpeg2/CMakeLists.txt
++++ b/v3p/openjpeg2/CMakeLists.txt
+@@ -53,6 +53,7 @@ if(VXL_MATH_LIBRARY_FOUND)
+ endif()
+ mark_as_advanced(VXL_MATH_LIBRARY_FOUND)
+ set_target_properties(openjpeg2 PROPERTIES
++  OUTPUT_NAME   vxl_openjpeg
+   VERSION       2.0.0
+   DEFINE_SYMBOL OPJ_EXPORTS)
+ endif()

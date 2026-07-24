@@ -1,0 +1,4 @@
+dpetkov-semver provides CMake targets:
+
+    find_package(dpetkov-semver CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE dpetkov-semver::semver)

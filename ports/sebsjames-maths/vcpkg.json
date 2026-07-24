@@ -1,6 +1,7 @@
 {
   "name": "sebsjames-maths",
-  "version": "1.0",
+  "version": "2.0",
+  "port-version": 1,
   "description": "C++20 code for scalar, vector and complex maths.",
   "homepage": "https://github.com/sebsjames/maths",
   "license": "Apache-2.0",

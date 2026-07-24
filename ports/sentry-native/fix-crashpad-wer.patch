@@ -58,7 +58,7 @@ index 9ddca42..4fa1e4e 100644
 --- a/src/backends/sentry_backend_crashpad.cpp
 +++ b/src/backends/sentry_backend_crashpad.cpp
 @@ -156,7 +156,7 @@ crashpad_backend_user_consent_changed(sentry_backend_t *backend)
-     data->db->GetSettings()->SetUploadsEnabled(!sentry__should_skip_upload());
+    }
  }
 
 -#ifdef SENTRY_PLATFORM_WINDOWS

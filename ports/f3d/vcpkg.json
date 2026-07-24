@@ -1,6 +1,7 @@
 {
   "name": "f3d",
   "version": "3.2.0",
+  "port-version": 1,
   "description": "A fast and minimalist 3D viewer",
   "homepage": "https://f3d.app",
   "license": "BSD-3-Clause",

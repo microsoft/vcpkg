@@ -1,7 +1,15 @@
-The package inih provides unofficial CMake targets:
-    find_package(unofficial-inih CONFIG REQUIRED)
-    # C API
-    target_link_libraries(main PRIVATE unofficial::inih::libinih)
-    # C++ API (Requires "cpp" feature)
-    target_link_libraries(main PRIVATE unofficial::inih::inireader)
-Alternatively, if you are using pckgconfig use the name "inih" for the C API and "inireader" for the C++ API
+inih provides unofficial CMake targets:
+
+  find_package(unofficial-inih CONFIG REQUIRED)
+  # C API
+  target_link_libraries(main PRIVATE unofficial::inih::libinih)
+  # C++ API (Requires "cpp" feature)
+  target_link_libraries(main PRIVATE unofficial::inih::inireader)
+
+inih provides pkg-config modules:
+
+  # simple .INI file parser
+  inih
+
+  # simple .INI file parser for C++
+  INIReader

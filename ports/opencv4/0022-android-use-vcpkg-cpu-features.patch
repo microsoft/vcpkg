@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 79a0c96270..e6b1aefb9b 100644
+index 2dc1aaa..04332e2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -789,7 +789,9 @@ endif()
+@@ -805,7 +805,9 @@ endif()
  # ----------------------------------------------------------------------------
  
  if(ANDROID AND WITH_CPUFEATURES)

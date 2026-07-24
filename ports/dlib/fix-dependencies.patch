@@ -1,38 +1,46 @@
 diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
-index cfe6ad9..75cfd54 100644
+index 0c7f43b..2c69a29 100644
 --- a/dlib/CMakeLists.txt
 +++ b/dlib/CMakeLists.txt
-@@ -293,6 +293,7 @@ if (NOT TARGET dlib)
-    set(dlib_needed_public_ldflags)
-    set(dlib_needed_private_libraries)
-    set(dlib_needed_private_includes)
-+   set(pkg_config_dlib_requires_private "")
- 
-    if (DLIB_ISO_CPP_ONLY)
-       add_library(dlib ${source_files} )
-@@ -833,6 +834,10 @@ if (NOT TARGET dlib)
+@@ -603,6 +603,7 @@ if (NOT TARGET dlib)
+          if (DLIB_USE_BLAS)
+             if (blas_found)
+                list (APPEND dlib_needed_public_libraries ${blas_libraries})
++               string(APPEND pkg_config_dlib_requires_private " blas")
+             else()
+                set(DLIB_USE_BLAS OFF CACHE STRING ${DLIB_USE_BLAS_STR} FORCE )
+                toggle_preprocessor_switch(DLIB_USE_BLAS)
+@@ -612,6 +613,7 @@ if (NOT TARGET dlib)
+          if (DLIB_USE_LAPACK)
+             if (lapack_found)
+                list (APPEND dlib_needed_public_libraries ${lapack_libraries})
++               string(APPEND pkg_config_dlib_requires_private " lapack")
+                if (lapack_with_underscore)
+                   set(LAPACK_FORCE_UNDERSCORE 1)
+                   enable_preprocessor_switch(LAPACK_FORCE_UNDERSCORE)
+@@ -719,6 +721,10 @@ if (NOT TARGET dlib)
  
  
        if (DLIB_LINK_WITH_SQLITE3)
 +         find_package(unofficial-sqlite3 CONFIG REQUIRED)
-+         list(APPEND dlib_needed_libraries unofficial::sqlite3::sqlite3)
++         list(APPEND dlib_needed_public_libraries unofficial::sqlite3::sqlite3)
 +         string(APPEND pkg_config_dlib_requires_private " sqlite3")
 +      elseif(0)
           find_library(sqlite sqlite3)
           # make sure sqlite3.h is in the include path
           find_path(sqlite_path sqlite3.h)
-@@ -848,6 +853,10 @@ if (NOT TARGET dlib)
+@@ -734,6 +740,10 @@ if (NOT TARGET dlib)
  
  
        if (DLIB_USE_FFTW)
 +         find_package(FFTW3 CONFIG REQUIRED)
-+         list(APPEND dlib_needed_libraries FFTW3::fftw3)
++         list(APPEND dlib_needed_public_libraries FFTW3::fftw3)
 +         string(APPEND pkg_config_dlib_requires_private " fftw3")
 +      elseif(0)
           find_library(fftw fftw3)
           # make sure fftw3.h is in the include path
           find_path(fftw_path fftw3.h)
-@@ -998,6 +1007,8 @@ if (NOT TARGET dlib)
+@@ -877,6 +887,8 @@ if (NOT TARGET dlib)
  
        ## dlib-1.pc generation and installation
  
@@ -41,7 +49,7 @@ index cfe6ad9..75cfd54 100644
        configure_file("cmake_utils/dlib.pc.in" "dlib-1.pc" @ONLY)
        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dlib-1.pc"
           DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-@@ -1011,7 +1022,7 @@ if (NOT TARGET dlib)
+@@ -890,7 +902,7 @@ if (NOT TARGET dlib)
  
  endif()
  
@@ -51,7 +59,7 @@ index cfe6ad9..75cfd54 100644
     # visual studio mode that compiled them.  We do this so that people who
     # compile dlib and then copy the .lib files around (which they shouldn't be
 diff --git a/dlib/cmake_utils/dlib.pc.in b/dlib/cmake_utils/dlib.pc.in
-index 9060110..2ec27e8 100644
+index 9060110..8820f33 100644
 --- a/dlib/cmake_utils/dlib.pc.in
 +++ b/dlib/cmake_utils/dlib.pc.in
 @@ -6,3 +6,4 @@ Description: Numerical and networking C++ library
@@ -60,21 +68,72 @@ index 9060110..2ec27e8 100644
  Cflags: -I${includedir} @pkg_config_dlib_needed_includes@
 +Requires.private: @pkg_config_dlib_requires_private@
 diff --git a/dlib/cmake_utils/dlibConfig.cmake.in b/dlib/cmake_utils/dlibConfig.cmake.in
-index 2667a2e..cc7b4a2 100644
+index 4f7ea1e..24755ce 100644
 --- a/dlib/cmake_utils/dlibConfig.cmake.in
 +++ b/dlib/cmake_utils/dlibConfig.cmake.in
-@@ -31,6 +31,14 @@ if(NOT TARGET dlib-shared AND NOT dlib_BINARY_DIR)
-    unset(dlib_deps_threads_check)
- endif()
+@@ -12,6 +12,18 @@
+ # ===================================================================================
+ 
  
 +include(CMakeFindDependencyMacro)
++find_dependency(BLAS)
++find_dependency(LAPACK)
 +if("@DLIB_USE_FFTW@")
 +   find_dependency(FFTW3 CONFIG)
 +endif()
 +if("@DLIB_LINK_WITH_SQLITE3@")
 +   find_dependency(unofficial-sqlite3 CONFIG)
 +endif()
-+
- set(dlib_LIBRARIES dlib::dlib)
++if("@DLIB_USE_CUDA@")
++   find_dependency(CUDAToolkit)
++endif()
+ 
+  
+ # Our library dependencies (contains definitions for IMPORTED targets)
+@@ -35,10 +47,6 @@ set(dlib_LIBRARIES dlib::dlib)
  set(dlib_LIBS      dlib::dlib)
  set(dlib_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@" "@dlib_needed_includes@")
+ 
+-if (@DLIB_USE_CUDA@)
+-   find_package(CUDAToolkit)
+-endif()
+-
+ mark_as_advanced(dlib_LIBRARIES)
+ mark_as_advanced(dlib_LIBS)
+ mark_as_advanced(dlib_INCLUDE_DIRS)
+diff --git a/dlib/cmake_utils/find_blas.cmake b/dlib/cmake_utils/find_blas.cmake
+index bdd98cd..0040b0f 100644
+--- a/dlib/cmake_utils/find_blas.cmake
++++ b/dlib/cmake_utils/find_blas.cmake
+@@ -32,7 +32,7 @@ SET(lapack_without_underscore 0)
+ message(STATUS "Searching for BLAS and LAPACK")
+ INCLUDE(CheckFunctionExists)
+ 
+-if (UNIX OR MINGW)
++if (0)
+    message(STATUS "Searching for BLAS and LAPACK")
+ 
+    if (BUILDING_MATLAB_MEX_FILE)
+@@ -296,7 +296,7 @@ if (UNIX OR MINGW)
+ 
+ 
+ 
+-elseif(WIN32 AND NOT MINGW)
++elseif(0)
+    message(STATUS "Searching for BLAS and LAPACK")
+ 
+    include(CheckTypeSize)
+@@ -435,11 +435,13 @@ endif()
+ if (NOT blas_found)
+    find_package(BLAS QUIET)
+    if (${BLAS_FOUND})
++      set(BLAS_LIBRARIES BLAS::BLAS)
+       set(blas_libraries ${BLAS_LIBRARIES})      
+       set(blas_found 1)
+       if (NOT lapack_found)
+          find_package(LAPACK QUIET)
+          if (${LAPACK_FOUND})
++            set(LAPACK_LIBRARIES LAPACK::LAPACK)
+             set(lapack_libraries ${LAPACK_LIBRARIES})
+             set(lapack_found 1)
+          endif()

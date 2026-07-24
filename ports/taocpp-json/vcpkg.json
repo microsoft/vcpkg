@@ -1,9 +1,9 @@
 {
   "name": "taocpp-json",
-  "version-date": "2020-09-14",
-  "port-version": 4,
+  "version-semver": "1.0.0-beta.14",
   "description": "C++ header-only JSON library",
   "dependencies": [
+    "pegtl",
     {
       "name": "vcpkg-cmake",
       "host": true

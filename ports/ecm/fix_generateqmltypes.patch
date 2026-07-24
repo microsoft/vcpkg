@@ -1,5 +1,5 @@
 diff --git a/modules/ECMGenerateQmlTypes.cmake b/modules/ECMGenerateQmlTypes.cmake
-index d6e124266308028b8533203da63f572f6e99b308..7d7cecb5201521019764102eba0da2abf8b4d911 100644
+index f95ea29..1dbfef4 100644
 --- a/modules/ECMGenerateQmlTypes.cmake
 +++ b/modules/ECMGenerateQmlTypes.cmake
 @@ -1,4 +1,5 @@
@@ -18,9 +18,9 @@ index d6e124266308028b8533203da63f572f6e99b308..7d7cecb5201521019764102eba0da2ab
 -test named qmltypes-pluginname-version that makes sure that it doesn't need updating.
 +This function installs the file in DESTINATION folder.
  
- 
- Since 5.33.0
-@@ -40,7 +38,7 @@ function(ecm_generate_qmltypes)
+ With Qt6 prefer using qt_add_qml_module()/ecm_add_qml_module() and declarative
+ type registration, which do this automatically.
+@@ -43,7 +41,7 @@ function(ecm_generate_qmltypes)
      set(targetname "qmltypes-${ARG_UNPARSED_ARGUMENTS}")
      string(REPLACE ";" - targetname "${targetname}")
  

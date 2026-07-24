@@ -1,0 +1,20 @@
+diff --git a/Installation/include/CGAL/gdb_autoload.h b/Installation/include/CGAL/gdb_autoload.h
+index fa676fda69b..6acf832c8ba 100644
+--- a/Installation/include/CGAL/gdb_autoload.h
++++ b/Installation/include/CGAL/gdb_autoload.h
+@@ -25,11 +25,13 @@
+ 
+ // Use inline assembly to embed the .debug_gdb_scripts section
+ __asm__(
+-    ".pushsection \".debug_gdb_scripts\", \"MS\",@progbits,1\n"
+-    ".ascii \"\\4gdb.inlined-script.CGAL\\n\"\n"
++    ".pushsection \".debug_gdb_scripts\", \"MS\",%progbits,1\n"
++    ".byte 4\n"
++    ".ascii \"gdb.inlined-script.CGAL\\n\"\n"
+     ".ascii \"import gdb\\n\"\n"
+     ".ascii \"path=[line.strip() for line in gdb.execute('info sources', to_string=True).split(',') if line.count('include/CGAL/gdb_autoload.h')][0].replace('/include/CGAL/gdb_autoload.h', '')\\n\"\n"
+     ".ascii \"gdb.execute('source ' + path + '/share/gdb/auto-load/cgal_printers.py')\\n\"\n"
++    ".byte 0\n"
+     ".popsection\n"
+ );
+ 

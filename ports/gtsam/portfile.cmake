@@ -1,13 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO borglab/gtsam
-    REF ${VERSION}
-    SHA512 c0e5de8d86ea8241b49449bd291999ec0d6530bc9943b213e7c650b0ab29894ab53636bd1a0ed82d9d9d148dfc399ebff28e108b060d2d2176b584823bd722cd
+    REF "${VERSION}"
+    SHA512 63f77fb725c3466f548425e9f7c2459268034bbbdaca9d091265171da0b23078dbce6ff031d2b97b61e0eb8955b70b271119924754c8ed27bba62b33613cc46b
     HEAD_REF develop
     PATCHES
         build-fixes.patch
         path-fixes.patch
         eigen3-fixes.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tbb   GTSAM_WITH_TBB
 )
 
 vcpkg_cmake_configure(
@@ -23,6 +28,7 @@ vcpkg_cmake_configure(
         -DGTSAM_INSTALL_CPPUNITLITE=OFF
         -DGTSAM_BUILD_TYPE_POSTFIXES=OFF
         -DCMAKE_CXX_STANDARD=14 # Boost-math require C++14
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

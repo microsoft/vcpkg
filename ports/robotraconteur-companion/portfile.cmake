@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO robotraconteur/robotraconteur_companion
     REF "v${VERSION}"
-    SHA512 8bee3f71f6f1cedc6af9b30d32ed16515c2c117a4d43c3b6304c799fe90447056c5e447f573c96018c57112d9c174de422c16eba3a27b5c1343e88377d7e4117
+    SHA512 d632367b8fc823601de5cedd520607fda0bff3cab6b8fd3f68f1dc77c253d286a8aa4e909a5573370ed068a9f954551b4aee8bbc1d7c57cd1d5a151627f81128
     HEAD_REF master
-    PATCHES
-        0001-support-eigen3-5.patch
 )
 
 vcpkg_from_github(

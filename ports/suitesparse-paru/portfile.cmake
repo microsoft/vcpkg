@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/SuiteSparse
-    REF v7.8.3
-    SHA512 fc0fd0aaf55a6712a3b8ca23bf7536a31d52033e090370ebbf291f05d0e073c7dcfd991a80b037f54663f524804582b87af86522c2e4435091527f0d3c189244
+    REF v7.12.2
+    SHA512 0a7d070c90ef0a55c3ed821edf6567f4a84d5615250898b8fbacad19e1cf53dba199c38369c771465b4149ba5501bf0c1ae1352f29d0fb462fd10ca90e486cfa
     HEAD_REF dev
 )
 
@@ -15,6 +15,7 @@ configure_file(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -26,11 +27,14 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
         -DSUITESPARSE_USE_CUDA=OFF
         -DSUITESPARSE_USE_STRICT=ON
         -DSUITESPARSE_USE_FORTRAN=OFF
         -DSUITESPARSE_DEMOS=OFF
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
@@ -42,5 +46,6 @@ vcpkg_cmake_config_fixup(
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${PACKAGE_NAME}/LICENSE.txt")

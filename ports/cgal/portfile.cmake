@@ -4,8 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
     REF v${VERSION}
-    SHA512 682a028aee951b631827ede9a2fe7cacebbefdf0b2cc63c25c43828eb1f749800e995079c1655b820db41157e03c9cc4286d68d66b9bb7e97a7522f6d0fae05f
+    SHA512 d49b046ca87ef467efad066a4574aa04faa43941c65f2bc5b0b5e530b1d738d5bdc0f1d8c8a339f5ec49b3567d19fd959239ebe0bc6530bea41a1d4066c63f18
     HEAD_REF master
+    PATCHES
+        # upstream commit from the 6.2.x-branch (planned for CGAL version 6.2.1):
+        # https://github.com/CGAL/cgal/commit/eb2257df4da4c52c75fe384e803d9a6376057b8a
+        # > fix <CGAL/gdb_autoload.h>: end the section with a null byte
+        CGAL-6.2.0-gdb_autoload.patch
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

@@ -1,15 +1,17 @@
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO duckdb/duckdb
-        REF v${VERSION}
-        SHA512 2287ff1af67808e495ca4da527bd54e9c9f2044ed1bb4749cdaeee7993a7b0edca73cccd476a607442a4bf313b43e2358bf6ca28035e2dbe52b16847f6e5b30a
-        HEAD_REF main
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO duckdb/duckdb
+    REF v${VERSION}
+    SHA512 2287ff1af67808e495ca4da527bd54e9c9f2044ed1bb4749cdaeee7993a7b0edca73cccd476a607442a4bf313b43e2358bf6ca28035e2dbe52b16847f6e5b30a
+    HEAD_REF main
     PATCHES
         library-linkage.diff
+        avoid-stdext-checked-array-iterator.diff
 )
+
 # Remove vendored dependencies which are optional or not properly namespaced
 file(REMOVE_RECURSE
-    "${SOURCE_PATH}/extension/third_party/icu"
+    "${SOURCE_PATH}/extension/icu/third_party/icu"
     "${SOURCE_PATH}/third_party/catch"
     "${SOURCE_PATH}/third_party/imdb"
     "${SOURCE_PATH}/third_party/snowball"

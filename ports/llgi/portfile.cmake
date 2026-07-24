@@ -8,7 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmake-use-vcpkg.patch
-        fix-sources.patch
+        fix-missing-headers.diff
+        remove-warnings-as-errors.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

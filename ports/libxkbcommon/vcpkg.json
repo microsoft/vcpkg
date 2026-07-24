@@ -1,6 +1,6 @@
 {
   "name": "libxkbcommon",
-  "version": "1.7.0",
+  "version": "1.13.1",
   "description": "keymap handling library for toolkits and window systems",
   "homepage": "https://xkbcommon.org/",
   "license": null,

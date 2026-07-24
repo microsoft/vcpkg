@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 920e4c3..5f7e936 100644
+index 920e4c3..3e62a68 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -87,8 +87,8 @@ if(OpenMVS_USE_OPENMP)
@@ -46,7 +46,7 @@ index 920e4c3..5f7e936 100644
  endif()
  
 -FIND_PACKAGE(Eigen3 3.4 REQUIRED)
-+FIND_PACKAGE(Eigen3 3.4...5 CONFIG REQUIRED)
++FIND_PACKAGE(Eigen3 CONFIG REQUIRED)
 +set(EIGEN3_FOUND 1)
  if(EIGEN3_FOUND)
 -	LIST(APPEND OpenMVS_EXTRA_INCLUDES ${EIGEN3_INCLUDE_DIR})
@@ -202,21 +202,33 @@ index 18899af..258ada0 100644
  # Install
  SET_TARGET_PROPERTIES(Common PROPERTIES
 diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
-index 8533865..2a13923 100644
+index 8533865..8b3100d 100644
 --- a/libs/MVS/CMakeLists.txt
 +++ b/libs/MVS/CMakeLists.txt
-@@ -48,7 +48,13 @@ endif()
- if(_USE_CUDA)
- 	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
+@@ -45,20 +45,19 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
  endif()
--TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
+ 
+ # Link its dependencies
+-if(_USE_CUDA)
+-	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
 +TARGET_LINK_LIBRARIES(MVS PRIVATE        Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
 +TARGET_LINK_LIBRARIES(MVS PUBLIC Common)
 +TARGET_LINK_LIBRARIES(MVS PRIVATE $<BUILD_INTERFACE:Boost::graph>)
 +if(OpenMVS_USE_OPENMP)
 +	target_link_libraries(MVS PRIVATE "$<INSTALL_INTERFACE:OpenMP::OpenMP_CXX>")
-+endif()
+ endif()
+-TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
 +TARGET_INCLUDE_DIRECTORIES(MVS PUBLIC "$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>")
  
  if(OpenMVS_USE_PYTHON)
  	# Create the Python wrapper
+ 	cxx_library_with_type(pyOpenMVS "Libs" "SHARED" "${cxx_default}"
+ 		${PATH_PythonWrapper_cpp}
+ 	)
+-	# Link its dependencies
+-	if(_USE_CUDA)
+-		SET_TARGET_PROPERTIES(pyOpenMVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
+-	endif()
+ 	TARGET_LINK_LIBRARIES(pyOpenMVS PRIVATE MVS ${OpenMVS_EXTRA_LIBS})
+ 	# Suppress prefix "lib" because Python does not allow this prefix
+ 	SET_TARGET_PROPERTIES(pyOpenMVS PROPERTIES PREFIX "")

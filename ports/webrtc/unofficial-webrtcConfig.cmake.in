@@ -1,0 +1,64 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(absl CONFIG)
+find_dependency(AOM CONFIG)
+find_dependency(libyuv CONFIG)
+find_dependency(unofficial-libvpx CONFIG)
+find_dependency(Opus CONFIG)
+find_dependency(OpenSSL CONFIG)
+find_dependency(libSRTP CONFIG)
+find_dependency(jsoncpp CONFIG)
+find_dependency(pffft CONFIG)
+find_dependency(Threads)
+
+get_filename_component(_webrtc_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+include("${CMAKE_CURRENT_LIST_DIR}/webrtc-absl-targets.cmake")
+
+set(_webrtc_transitive_archives
+    ${WEBRTC_ABSL_STATIC_ARCHIVES}
+    AOM::aom
+    yuv
+    unofficial::libvpx::libvpx
+    Opus::opus
+    JsonCpp::JsonCpp
+    pffft::pffft
+    libSRTP::srtp2
+    OpenSSL::SSL
+)
+set(_webrtc_imported_location_debug "${_webrtc_prefix}/debug/lib/libwebrtc.a")
+set(_webrtc_imported_location_release "${_webrtc_prefix}/lib/libwebrtc.a")
+set(_webrtc_interface_link_libraries
+    "Threads::Threads;${WEBRTC_ABSL_IMPORTED_TARGETS};${_webrtc_transitive_archives}"
+)
+set(_webrtc_windows_system_libraries
+    ws2_32
+    winmm
+    iphlpapi
+    msdmo
+    dmoguids
+    wmcodecdspuuid
+)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(_webrtc_imported_location_debug "${_webrtc_prefix}/debug/lib/webrtc.lib")
+    set(_webrtc_imported_location_release "${_webrtc_prefix}/lib/webrtc.lib")
+    set(_webrtc_interface_link_libraries
+        "${WEBRTC_ABSL_IMPORTED_TARGETS};${_webrtc_transitive_archives};${_webrtc_windows_system_libraries}"
+    )
+endif()
+
+if(NOT TARGET unofficial::webrtc::webrtc)
+    add_library(unofficial::webrtc::webrtc STATIC IMPORTED)
+    set_target_properties(unofficial::webrtc::webrtc PROPERTIES
+        IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+        IMPORTED_LOCATION "${_webrtc_imported_location_release}"
+        IMPORTED_LOCATION_DEBUG "${_webrtc_imported_location_debug}"
+        IMPORTED_LOCATION_RELEASE "${_webrtc_imported_location_release}"
+        MAP_IMPORTED_CONFIG_MINSIZEREL Release
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+        INTERFACE_INCLUDE_DIRECTORIES "${_webrtc_prefix}/include"
+        INTERFACE_LINK_LIBRARIES "${_webrtc_interface_link_libraries}"
+        INTERFACE_LINK_OPTIONS "@WEBRTC_INTERFACE_LINK_OPTIONS@"
+        INTERFACE_COMPILE_DEFINITIONS "@WEBRTC_INTERFACE_COMPILE_DEFINITIONS@"
+    )
+endif()

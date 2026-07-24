@@ -1,13 +1,17 @@
 {
   "name": "libice",
   "version": "1.1.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Inter-Client Exchange Library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libice",
   "license": "MIT-open-group",
   "dependencies": [
     "bzip2",
     "libx11",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xorg-macros",
     "xproto",
     "xtrans"

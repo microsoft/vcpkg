@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eyalz800/zpp_bits
     REF "v${VERSION}"
-    SHA512 faa96f9702a96fae10ba9dec01d0eda0e708a8bda2ee9febbcca89dfe78cf4947edbff941fe51c5529ad4c76a344ea187069ba3ed79daa36140cf39acfb522b8
-    HEAD_REF master
+    SHA512 d06c62218f28a4c39f1e3957ae43542a8f709d5514cfc77fc685508edcba3b4f580ead715a3cb320ac017ceb14ee8e27a751e400cf73ae575452c04c5dc4ac14
+    HEAD_REF main
 )
 
 file(INSTALL "${SOURCE_PATH}/zpp_bits.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")

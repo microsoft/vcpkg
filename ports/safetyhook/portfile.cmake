@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cursey/safetyhook
     REF "v${VERSION}"
-    SHA512 59244cff42c99ec7ebe1c5cbf26a5e01b8f23a991b4dfb9a8e02555edf319d485075f0c2a80cee9d247e93075faf3a528010003f47f59dbbd89d2537ed5a54c0
+    SHA512 863aad37f9236f151be6a2e6f29d962cd2d356c6ff80a1e9e5a4f6d6a22c1dddbd52462ce48203ae67ae124f7d71eb60f6e2829c8eba417bb6b5569aab5683f2
     HEAD_REF main
 )
 

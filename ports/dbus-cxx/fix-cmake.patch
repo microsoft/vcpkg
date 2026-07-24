@@ -1,0 +1,92 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 75bc575..ba92141 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -23,7 +23,6 @@ include( CTest )
+ include( CheckCXXSymbolExists )
+ include( CheckCXXCompilerFlag )
+ IF( CMAKE_BUILD_TYPE MATCHES Debug )
+-include( CodeCoverage )
+ ENDIF( CMAKE_BUILD_TYPE MATCHES Debug )
+ 
+ find_package(PkgConfig REQUIRED)
+@@ -36,7 +35,8 @@ set( DBUS_CXX_INCLUDE_VERSION 2.0 )
+ set( PKG_VERSION ${dbus-cxx_VERSION} )
+ 
+ # Our required dependencies: libsigc++ 3.0
+-pkg_check_modules( sigc REQUIRED IMPORTED_TARGET sigc++-3.0 )
++find_package(sigc++-3 CONFIG REQUIRED)
++add_library(PkgConfig::sigc ALIAS sigc-3.0)
+ 
+ #
+ # Check our options
+diff --git a/cmake/dbus-cxxConfig.cmake.in b/cmake/dbus-cxxConfig.cmake.in
+index 2ba28c9..f07c619 100644
+--- a/cmake/dbus-cxxConfig.cmake.in
++++ b/cmake/dbus-cxxConfig.cmake.in
+@@ -5,27 +5,19 @@ set(dbus-cxx_KNOWN_COMPONENTS "glib" "qt" "uv")
+ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(Threads)
+-find_dependency(PkgConfig)
+-pkg_check_modules(sigc REQUIRED IMPORTED_TARGET sigc++-3.0)
++find_dependency(sigc++-3)
+ 
+ if(@ENABLE_GLIB_SUPPORT@)
++    find_dependency(PkgConfig)
+     pkg_check_modules(glib REQUIRED IMPORTED_TARGET glib-2.0)
+ endif()
+ 
+ if(@ENABLE_UV_SUPPORT@)
+-    if(@UV_STATIC@)
+-        pkg_check_modules(libuv REQUIRED IMPORTED_TARGET libuv-static)
+-    else()
+-        pkg_check_modules(libuv REQUIRED IMPORTED_TARGET libuv)
+-    endif()
++    find_dependency(libuv)
+ endif()
+ 
+ if(@ENABLE_QT_SUPPORT@)
+-    if(@QT_VERSION_MAJOR@ EQUAL 6)
+         find_dependency(Qt6 COMPONENTS Core)
+-    else()
+-        find_dependency(Qt5 COMPONENTS Core)
+-    endif()
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxxTargets.cmake")
+diff --git a/dbus-cxx-qt/CMakeLists.txt b/dbus-cxx-qt/CMakeLists.txt
+index 9233dcb..6f2376c 100644
+--- a/dbus-cxx-qt/CMakeLists.txt
++++ b/dbus-cxx-qt/CMakeLists.txt
+@@ -16,7 +16,7 @@ set(CMAKE_AUTOMOC ON)
+ set(CMAKE_AUTORCC ON)
+ set(CMAKE_AUTOUIC ON)
+ 
+-find_package(Qt6 COMPONENTS Core)
++find_package(Qt6 COMPONENTS Core REQUIRED)
+ if(Qt6_FOUND)
+     set(QT_VERSION_MAJOR 6)
+     set(QT_CORE_TARGET Qt6::Core)
+diff --git a/dbus-cxx-uv/CMakeLists.txt b/dbus-cxx-uv/CMakeLists.txt
+index 5cd4d0f..a1e3abb 100644
+--- a/dbus-cxx-uv/CMakeLists.txt
++++ b/dbus-cxx-uv/CMakeLists.txt
+@@ -18,7 +18,7 @@ else()
+   set( LIBUV_PKG_NAME libuv )
+ endif()
+ 
+-pkg_check_modules( libuv REQUIRED IMPORTED_TARGET ${LIBUV_PKG_NAME} )
++find_package(libuv CONFIG REQUIRED)
+ 
+ set( dbus-cxx-uv-headers dbus-cxx-uv.h uvdispatcher.h )
+ set( dbus-cxx-uv-sources dbus-cxx-uv.cpp uvdispatcher.cpp )
+@@ -33,7 +33,7 @@ target_include_directories( dbus-cxx-uv INTERFACE
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+     $<INSTALL_INTERFACE:include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION}>
+ )
+-target_link_libraries( dbus-cxx-uv PUBLIC PkgConfig::libuv )
++target_link_libraries( dbus-cxx-uv PUBLIC $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv> )
+ 
+ set_property( TARGET dbus-cxx-uv PROPERTY CXX_STANDARD 17 )
+ 

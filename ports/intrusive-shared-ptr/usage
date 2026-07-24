@@ -2,3 +2,9 @@ intrusive-shared-ptr provides CMake targets:
 
   find_package(isptr CONFIG REQUIRED)
   target_link_libraries(main PRIVATE isptr::isptr)
+
+To use a C++ module instead of headers, intrusive-shared-ptr
+provides a function that adds the module to your target:
+
+  find_package(isptr CONFIG REQUIRED)
+  isptr_add_module(main PRIVATE)

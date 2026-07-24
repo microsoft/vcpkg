@@ -22,7 +22,7 @@
           "features": [
             "dynamic-arch"
           ],
-          "platform": "linux"
+          "platform": "linux & !arm"
         },
         {
           "name": "openblas",

@@ -1,0 +1,12 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -530,3 +530,9 @@ endif()
+
+ # ---[ XNNPACK
++if(USE_XNNPACK)
++  find_package(unofficial-xnnpack CONFIG REQUIRED)
++  add_library(XNNPACK ALIAS unofficial::xnnpack::XNNPACK)
++  add_library(microkernels-prod ALIAS unofficial::xnnpack::microkernels-prod)
++  list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
++endif()
+ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)

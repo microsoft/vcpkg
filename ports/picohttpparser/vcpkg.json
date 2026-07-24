@@ -1,0 +1,17 @@
+{
+  "name": "picohttpparser",
+  "version-date": "2026-04-06",
+  "description": "Tiny, primitive, fast HTTP request/response parser",
+  "homepage": "https://github.com/h2o/picohttpparser",
+  "license": "MIT OR Artistic-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

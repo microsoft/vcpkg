@@ -1,21 +1,17 @@
-diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
-index c463658..a523040 100644
+--- a/c10/util/logging_is_google_glog.h
++++ b/c10/util/logging_is_google_glog.h
+@@ -52,7 +52,7 @@
+
+ namespace c10 {
+
+-[[noreturn]] void ThrowEnforceNotMet(
++[[noreturn]] C10_API void ThrowEnforceNotMet(
+     const char* file,
+     const int line,
+     const char* condition,
 --- a/c10/util/Logging.cpp
 +++ b/c10/util/Logging.cpp
-@@ -362,7 +362,7 @@ void UpdateLoggingLevelsFromFlags() {
- 
- void ShowLogInfoToStderr() {
-   FLAGS_logtostderr = 1;
--  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::GLOG_INFO);
-+  FLAGS_minloglevel = std::min<int>(FLAGS_minloglevel, google::GLOG_INFO);
- }
- } // namespace c10
- 
-diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
-index a523040..04375b6 100644
---- a/c10/util/Logging.cpp
-+++ b/c10/util/Logging.cpp
-@@ -295,23 +295,13 @@ C10_DEFINE_int(
+@@ -327,23 +327,13 @@
      google::GLOG_WARNING,
      "The minimum log level that caffe2 will output.");
  
@@ -40,3 +36,12 @@ index a523040..04375b6 100644
  #endif
    {
      ::google::InitGoogleLogging(name);
+@@ -394,7 +384,7 @@
+ 
+ void ShowLogInfoToStderr() {
+   FLAGS_logtostderr = 1;
+-  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::GLOG_INFO);
++  FLAGS_minloglevel = std::min<int>(FLAGS_minloglevel, google::GLOG_INFO);
+ }
+ } // namespace c10
+ 

@@ -1,6 +1,6 @@
 {
   "name": "flatcc",
-  "version": "0.6.1",
+  "version": "0.6.2-pre-29201734bf2d12713a7a1a035d31e5123aac9c93",
   "description": "FlatBuffers Compiler and Library in C for C",
   "homepage": "https://github.com/dvidelabs/flatcc",
   "license": "Apache-2.0",

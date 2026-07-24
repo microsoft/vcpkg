@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1daae35..403f9b2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -899,7 +899,7 @@ if(SDLMIXER_MIDI_FLUIDSYNTH)
+         message(STATUS "${PROJECT_NAME}: Using FluidSynth from CMake variable")
+         set(SDLMIXER_MIDI_FLUIDSYNTH_ENABLED TRUE)
+     else()
+-        find_package(FluidSynth "2.2.0" ${required})
++        find_package(FluidSynth CONFIG ${required})
+         if(FluidSynth_FOUND)
+             set(SDLMIXER_MIDI_FLUIDSYNTH_ENABLED TRUE)
+             message(STATUS "Using system FluidSynth")
+diff --git a/cmake/SDL3_mixerConfig.cmake.in b/cmake/SDL3_mixerConfig.cmake.in
+index acea4bd..2969ed3 100644
+--- a/cmake/SDL3_mixerConfig.cmake.in
++++ b/cmake/SDL3_mixerConfig.cmake.in
+@@ -94,7 +94,7 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL3_mixer-static-targets.cmake")
+         endif()
+ 
+         if(SDLMIXER_MIDI_FLUIDSYNTH AND NOT TARGET FluidSynth::libfluidsynth)
+-            find_dependency(FluidSynth "2.2.0")
++            find_dependency(FluidSynth CONFIG)
+         endif()
+ 
+         if(SDLMIXER_VORBIS_TREMOR AND NOT TARGET tremor::tremor)

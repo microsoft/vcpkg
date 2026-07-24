@@ -20,11 +20,11 @@ if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) AND NOT ENV{CXX_FLAGS}) # This
     set(ENV{CXXFLAGS} "-maes -msse4.2")
 endif()
 file(REMOVE_RECURSE "${SOURCE_PATH}/configure")
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH ${SOURCE_PATH}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -1,0 +1,18 @@
+diff --git a/contrib/minizip/CMakeLists.txt b/contrib/minizip/CMakeLists.txt
+index 775129f..5847c3c 100644
+--- a/contrib/minizip/CMakeLists.txt
++++ b/contrib/minizip/CMakeLists.txt
+@@ -129,6 +129,13 @@ set(MINIUNZIP_HDRS
+     unzip.h
+     zip.h)
+ 
++if(WITH_UNOFFICIAL_IOWIN32)
++    list(APPEND LIBMINIZIP_HDRS iowin32.h)
++    list(APPEND LIBMINIZIP_SRCS iowin32.c)
++    list(REMOVE_ITEM MINIZIP_SRCS $<$<BOOL:${WIN32}>:iowin32.c>)
++    list(REMOVE_ITEM MINIUNZIP_SRCS $<$<BOOL:${WIN32}>:iowin32.c>)
++endif()
++
+ if(WIN32 OR CYGWIN)
+     set(minizip_static_suffix "s")
+     set(CMAKE_DEBUG_POSTFIX "d")

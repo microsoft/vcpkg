@@ -80,16 +80,16 @@ else()
         MODULES ${pkg_config_modules}
         LIBS
     )
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS_RELEASE
             "LIBS=${PKGCONFIG_LIBS_RELEASE} \$LIBS"
         OPTIONS_DEBUG
             "LIBS=${PKGCONFIG_LIBS_DEBUG} \$LIBS"
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
 endif()
 
 vcpkg_fixup_pkgconfig()

@@ -1,6 +1,6 @@
 {
   "name": "thermadiag-seq",
-  "version": "2.0",
+  "version": "2.1",
   "description": "a collection of original C++17 STL-like containers and related tools",
   "homepage": "https://github.com/Thermadiag/seq",
   "license": "MIT",

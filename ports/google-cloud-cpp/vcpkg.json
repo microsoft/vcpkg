@@ -1,10 +1,11 @@
 {
   "name": "google-cloud-cpp",
   "version": "2.37.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !android",
   "dependencies": [
     "abseil",
     {

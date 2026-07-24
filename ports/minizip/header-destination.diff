@@ -1,0 +1,22 @@
+diff --git a/contrib/minizip/CMakeLists.txt b/contrib/minizip/CMakeLists.txt
+index afc09ac..e844959 100644
+--- a/contrib/minizip/CMakeLists.txt
++++ b/contrib/minizip/CMakeLists.txt
+@@ -145,7 +145,7 @@ if(MINIZIP_BUILD_SHARED)
+     add_library(MINIZIP::minizip ALIAS libminizip)
+     target_include_directories(
+         libminizip PUBLIC $<BUILD_INTERFACE:${minizip_SOURCE_DIR}>
+-                          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++                          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/minizip>)
+     target_compile_definitions(
+         libminizip
+         PRIVATE $<$<BOOL:${MSVC}>:_CRT_SECURE_NO_WARNINGS>
+@@ -291,7 +291,7 @@ if(MINIZIP_INSTALL)
+     install(
+         FILES ${LIBMINIZIP_HDRS}
+         COMPONENT Development
+-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/minizip")
+ 
+     set(prefix "${CMAKE_INSTALL_PREFIX}")
+     set(exec_prefix "\${prefix}")

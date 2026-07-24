@@ -37,9 +37,9 @@ else()
 endif()
 set(ALSA_CONFIG_DIR "/usr/share/alsa")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${BUILD_OPTS}
         --disable-python
@@ -47,7 +47,7 @@ vcpkg_configure_make(
         "--with-plugindir=${ALSA_PLUGIN_DIR}"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

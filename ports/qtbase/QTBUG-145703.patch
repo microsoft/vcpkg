@@ -1,0 +1,56 @@
+From 239c54452fa60157c90901c8be8685048a65ad0a Mon Sep 17 00:00:00 2001
+From: "Daniele E. Domenichelli" <daniele.domenichelli@kdab.com>
+Date: Wed, 8 Apr 2026 13:33:21 +0200
+Subject: [PATCH 1/2] Fix static consumers overriding deprecated API cutoff
+
+On Windows static builds, compat/removed_api.cpp emits strong symbol
+definitions for deprecated APIs. If consumers compile with a different
+QT_DISABLE_DEPRECATED_UP_TO value, those same functions may become inline
+definitions in consumer translation units, causing duplicate symbol
+errors.
+
+Fix this by making static consumers use the same
+QT_DISABLE_DEPRECATED_UP_TO value that Qt was built with.
+
+Task-number: QTBUG-145703
+Pick-to: 6.11 6.10
+Change-Id: Ia6064baf8d774d9a6aba0f0464cb557f3af19a86
+Reviewed-by: Thiago Macieira <thiago.macieira@intel.com>
+---
+ cmake/modulecppexports.h.in                      | 2 +-
+ src/corelib/global/qtdeprecationdefinitions.h.in | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/modulecppexports.h.in b/cmake/modulecppexports.h.in
+index 438526f107d..4042d482b0a 100644
+--- a/cmake/modulecppexports.h.in
++++ b/cmake/modulecppexports.h.in
+@@ -35,7 +35,7 @@
+     QT_IF_DEPRECATED_SINCE(major, minor, constexpr, /* not inline */)
+ #  define QT_@module_define_infix@_INLINE_IMPL_SINCE(major, minor) 1
+ #else
+-/* inside library, outside removed_api.cpp:
++/* inside library, outside removed_api.cpp, and outside library, using static builds
+  * keep deprecated API -> non-inline decl, no defi;
+  * remove deprecated API -> inline decl, defi */
+ #  define QT_@module_define_infix@_INLINE_SINCE(major, minor) \
+diff --git a/src/corelib/global/qtdeprecationdefinitions.h.in b/src/corelib/global/qtdeprecationdefinitions.h.in
+index 93f884d07f1..beac6a67b73 100644
+--- a/src/corelib/global/qtdeprecationdefinitions.h.in
++++ b/src/corelib/global/qtdeprecationdefinitions.h.in
+@@ -14,6 +14,12 @@
+ #  endif
+ #endif
+ 
++#if defined(QT_STATIC)
++// Static consumers must use the same deprecation cutoff that Qt was built with.
++#  undef QT_DISABLE_DEPRECATED_UP_TO
++#  define QT_DISABLE_DEPRECATED_UP_TO @QT_DISABLE_DEPRECATED_UP_TO@
++#endif
++
+ #if QT_DISABLE_DEPRECATED_UP_TO < @QT_DISABLE_DEPRECATED_UP_TO@ && defined(Q_CC_GNU)
+ #  warning QT_DISABLE_DEPRECATED_UP_TO is set to the version that is lower than the version that \
+            Qt was built with. This may lead to linking issues.
+-- 
+2.53.0
+

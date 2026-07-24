@@ -1,0 +1,8 @@
+bungee provides CMake targets:
+
+    find_package(unofficial-bungee CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::bungee::bungee)
+
+bungee provides pkg-config modules:
+
+    libbungee

@@ -64,6 +64,9 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     vcpkg_list(APPEND OPTIONS "ABI=32")
     string(APPEND asmflags " -m32")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    # Let vcpkg-make set CCAS/AS so Android --target/--sysroot flags are preserved.
+    set(ccas "")
 else()
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
@@ -74,24 +77,29 @@ elseif(ccas)
     cmake_path(GET ccas PARENT_PATH ccas_dir)
     vcpkg_add_to_path("${ccas_dir}")
     cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 endif()
-vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-if(VCPKG_HOST_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS AND (NOT DEFINED VCPKG_MAKE_ACQUIRE_MSYS OR VCPKG_MAKE_ACQUIRE_MSYS))
     # dumpbin detection fails with autoconf 2.72
     set(ENV{WANT_AUTOCONF} 2.71)
-endif()
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    ADDITIONAL_MSYS_PACKAGES
+    vcpkg_acquire_msys(MSYS_ROOT
+        PACKAGES autoconf-wrapper automake-wrapper autoconf-archive binutils libtool make which
         DIRECT_PACKAGES
             "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
             dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
+    )
+    vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+    set(VCPKG_MAKE_ACQUIRE_MSYS FALSE)
+endif()
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
+    LANGUAGES ASM C CXX
     OPTIONS
         ${OPTIONS}
         --enable-cxx
@@ -99,7 +107,7 @@ vcpkg_configure_make(
         --with-readline=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)

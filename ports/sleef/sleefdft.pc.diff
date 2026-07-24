@@ -1,8 +1,8 @@
 diff --git a/src/dft/CMakeLists.txt b/src/dft/CMakeLists.txt
-index 526c4f8..667a7c2 100644
+index d57c3b8..d404273 100644
 --- a/src/dft/CMakeLists.txt
 +++ b/src/dft/CMakeLists.txt
-@@ -443,3 +443,22 @@ install(
+@@ -445,3 +445,22 @@ install(
      INCLUDES #
      DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
  )

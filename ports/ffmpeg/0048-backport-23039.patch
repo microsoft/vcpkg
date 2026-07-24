@@ -1,0 +1,226 @@
+diff --git a/configure b/configure
+index 9bce658932..18be80a243 100755
+--- a/configure
++++ b/configure
+@@ -2746,7 +2746,9 @@ CONFIG_EXTRA="
+     cabac
+     cbs
+     cbs_apv
++    cbs_apv_lavf
+     cbs_av1
++    cbs_av1_lavf
+     cbs_h264
+     cbs_h265
+     cbs_h266
+@@ -3963,7 +3965,7 @@ mlp_demuxer_select="mlp_parser"
+ mmf_muxer_select="riffenc"
+ mov_demuxer_select="iso_media riffdec"
+ mov_demuxer_suggest="iamfdec zlib"
+-mov_muxer_select="iso_media iso_writer riffenc rtpenc_chain vp9_superframe_bsf aac_adtstoasc_bsf ac3_parser"
++mov_muxer_select="cbs_apv_lavf cbs_av1_lavf iso_media iso_writer riffenc rtpenc_chain vp9_superframe_bsf aac_adtstoasc_bsf ac3_parser"
+ mov_muxer_suggest="iamfenc"
+ mp3_demuxer_select="mpegaudio_parser"
+ mp3_muxer_select="mpegaudioheader"
+diff --git a/libavformat/Makefile b/libavformat/Makefile
+index c020e77c15..ac56e54aa8 100644
+--- a/libavformat/Makefile
++++ b/libavformat/Makefile
+@@ -40,6 +40,8 @@ OBJS = allformats.o         \
+ OBJS-$(HAVE_LIBC_MSVCRT)                 += file_open.o
+ 
+ # subsystems
++OBJS-$(CONFIG_CBS_APV_LAVF)              += cbs_apv.o cbs.o
++OBJS-$(CONFIG_CBS_AV1_LAVF)              += cbs_av1.o cbs.o
+ OBJS-$(CONFIG_ISO_MEDIA)                 += isom.o
+ OBJS-$(CONFIG_ISO_WRITER)                += avc.o hevc.o vvc.o
+ OBJS-$(CONFIG_IAMFDEC)                   += iamf_reader.o iamf_parse.o iamf.o
+@@ -390,7 +392,7 @@ OBJS-$(CONFIG_MOV_DEMUXER)               += mov.o mov_chan.o mov_esds.o \
+ OBJS-$(CONFIG_MOV_MUXER)                 += movenc.o \
+                                             movenchint.o mov_chan.o rtp.o \
+                                             movenccenc.o movenc_ttml.o rawutils.o \
+-                                            apv.o dovi_isom.o evc.o cbs.o cbs_av1.o cbs_apv.o
++                                            apv.o dovi_isom.o evc.o
+ OBJS-$(CONFIG_MP2_MUXER)                 += rawenc.o
+ OBJS-$(CONFIG_MP3_DEMUXER)               += mp3dec.o replaygain.o
+ OBJS-$(CONFIG_MP3_MUXER)                 += mp3enc.o rawenc.o id3v2enc.o
+diff --git a/libavformat/cbs.h b/libavformat/cbs.h
+index dffd0e9206..e4c0f33f6a 100644
+--- a/libavformat/cbs.h
++++ b/libavformat/cbs.h
+@@ -19,9 +19,13 @@
+ #ifndef AVFORMAT_CBS_H
+ #define AVFORMAT_CBS_H
+ 
++#include "config.h"
++
+ #define CBS_PREFIX lavf_cbs
+ #define CBS_WRITE 0
+ #define CBS_TRACE 0
++#define CBS_APV CONFIG_CBS_APV_LAVF
++#define CBS_AV1 CONFIG_CBS_AV1_LAVF
+ #define CBS_H264 0
+ #define CBS_H265 0
+ #define CBS_H266 0
+diff --git a/configure b/configure
+index 18be80a243..39a522e7e8 100755
+--- a/configure
++++ b/configure
+@@ -3751,6 +3751,7 @@ vvc_parser_select="cbs_h266"
+ # bitstream_filters
+ aac_adtstoasc_bsf_select="adts_header mpeg4audio"
+ ahx_to_mp2_bsf_deps="lgpl_gpl"
++apv_metadata_bsf_select="cbs_apv"
+ av1_frame_merge_bsf_select="cbs_av1"
+ av1_frame_split_bsf_select="cbs_av1"
+ av1_metadata_bsf_select="cbs_av1"
+diff --git a/libavcodec/bsf/filter_units.c b/libavcodec/bsf/filter_units.c
+index 696a1f37c4..2514c66fd6 100644
+--- a/libavcodec/bsf/filter_units.c
++++ b/libavcodec/bsf/filter_units.c
+@@ -25,6 +25,7 @@
+ #include "bsf.h"
+ #include "bsf_internal.h"
+ #include "cbs.h"
++#include "cbs_bsf.h"
+ 
+ 
+ typedef struct FilterUnitsContext {
+diff --git a/libavcodec/bsf/trace_headers.c b/libavcodec/bsf/trace_headers.c
+index 8781f5f100..c026a426d9 100644
+--- a/libavcodec/bsf/trace_headers.c
++++ b/libavcodec/bsf/trace_headers.c
+@@ -25,6 +25,7 @@
+ #include "bsf.h"
+ #include "bsf_internal.h"
+ #include "cbs.h"
++#include "cbs_bsf.h"
+ 
+ 
+ typedef struct TraceHeadersContext {
+diff --git a/libavcodec/cbs.c b/libavcodec/cbs.c
+index 7ff0f89aa5..aabddedeb2 100644
+--- a/libavcodec/cbs.c
++++ b/libavcodec/cbs.c
+@@ -63,40 +63,6 @@ static const CodedBitstreamType *const cbs_type_table[] = {
+ #endif
+ };
+ 
+-const enum AVCodecID CBS_FUNC(all_codec_ids)[] = {
+-#if CBS_APV
+-    AV_CODEC_ID_APV,
+-#endif
+-#if CBS_AV1
+-    AV_CODEC_ID_AV1,
+-#endif
+-#if CBS_H264
+-    AV_CODEC_ID_H264,
+-#endif
+-#if CBS_H265
+-    AV_CODEC_ID_H265,
+-#endif
+-#if CBS_H266
+-    AV_CODEC_ID_H266,
+-#endif
+-#if CBS_LCEVC
+-    AV_CODEC_ID_LCEVC,
+-#endif
+-#if CBS_JPEG
+-    AV_CODEC_ID_MJPEG,
+-#endif
+-#if CBS_MPEG2
+-    AV_CODEC_ID_MPEG2VIDEO,
+-#endif
+-#if CBS_VP8
+-    AV_CODEC_ID_VP8,
+-#endif
+-#if CBS_VP9
+-    AV_CODEC_ID_VP9,
+-#endif
+-    AV_CODEC_ID_NONE
+-};
+-
+ av_cold int CBS_FUNC(init)(CodedBitstreamContext **ctx_ptr,
+                         enum AVCodecID codec_id, void *log_ctx)
+ {
+diff --git a/libavcodec/cbs.h b/libavcodec/cbs.h
+index 8c4614479f..b56dddd842 100644
+--- a/libavcodec/cbs.h
++++ b/libavcodec/cbs.h
+@@ -296,14 +296,6 @@ typedef struct CodedBitstreamContext {
+ } CodedBitstreamContext;
+ 
+ 
+-/**
+- * Table of all supported codec IDs.
+- *
+- * Terminated by AV_CODEC_ID_NONE.
+- */
+-extern const enum AVCodecID CBS_FUNC(all_codec_ids)[];
+-
+-
+ /**
+  * Create and initialise a new context for the given codec.
+  */
+diff --git a/libavcodec/cbs_bsf.c b/libavcodec/cbs_bsf.c
+index f342e5489e..3a9dbad17c 100644
+--- a/libavcodec/cbs_bsf.c
++++ b/libavcodec/cbs_bsf.c
+@@ -22,6 +22,40 @@
+ 
+ #include "libavutil/attributes.h"
+ 
++const enum AVCodecID ff_cbs_all_codec_ids[] = {
++#if CONFIG_CBS_APV
++    AV_CODEC_ID_APV,
++#endif
++#if CONFIG_CBS_AV1
++    AV_CODEC_ID_AV1,
++#endif
++#if CONFIG_CBS_H264
++    AV_CODEC_ID_H264,
++#endif
++#if CONFIG_CBS_H265
++    AV_CODEC_ID_H265,
++#endif
++#if CONFIG_CBS_H266
++    AV_CODEC_ID_H266,
++#endif
++#if CONFIG_CBS_LCEVC
++    AV_CODEC_ID_LCEVC,
++#endif
++#if CONFIG_CBS_JPEG
++    AV_CODEC_ID_MJPEG,
++#endif
++#if CONFIG_CBS_MPEG2
++    AV_CODEC_ID_MPEG2VIDEO,
++#endif
++#if CONFIG_CBS_VP8
++    AV_CODEC_ID_VP8,
++#endif
++#if CONFIG_CBS_VP9
++    AV_CODEC_ID_VP9,
++#endif
++    AV_CODEC_ID_NONE
++};
++
+ static int cbs_bsf_update_side_data(AVBSFContext *bsf, AVPacket *pkt)
+ {
+     CBSBSFContext           *ctx = bsf->priv_data;
+diff --git a/libavcodec/cbs_bsf.h b/libavcodec/cbs_bsf.h
+index 26bd448b87..f6f7ae05df 100644
+--- a/libavcodec/cbs_bsf.h
++++ b/libavcodec/cbs_bsf.h
+@@ -59,6 +59,13 @@ typedef struct CBSBSFContext {
+     CodedBitstreamFragment fragment;
+ } CBSBSFContext;
+ 
++/**
++ * Table of all supported codec IDs.
++ *
++ * Terminated by AV_CODEC_ID_NONE.
++ */
++extern const enum AVCodecID ff_cbs_all_codec_ids[];
++
+ /**
+  * Initialise generic CBS BSF setup.
+  *

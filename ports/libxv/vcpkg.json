@@ -1,12 +1,17 @@
 {
   "name": "libxv",
   "version": "1.0.13",
+  "port-version": 1,
   "description": "Xlib-based library for the X Video (Xv) extension to the X Window System",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxv",
   "license": null,
   "dependencies": [
     "libx11",
     "libxext",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xorg-macros"
   ]
 }

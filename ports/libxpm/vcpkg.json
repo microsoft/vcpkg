@@ -1,12 +1,17 @@
 {
   "name": "libxpm",
   "version": "3.5.17",
+  "port-version": 1,
   "description": "XPM format pixmap library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxpm",
   "license": "MIT",
   "supports": "windows | linux",
   "dependencies": [
     "libx11",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xorg-macros",
     "xproto"
   ],

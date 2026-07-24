@@ -1,0 +1,26 @@
+diff --git a/src/plugins/intel_gpu/include/intel_gpu/runtime/compounds.hpp b/src/plugins/intel_gpu/include/intel_gpu/runtime/compounds.hpp
+index 0554b0fd..f07e4c82 100644
+--- a/src/plugins/intel_gpu/include/intel_gpu/runtime/compounds.hpp
++++ b/src/plugins/intel_gpu/include/intel_gpu/runtime/compounds.hpp
+@@ -50,7 +50,7 @@ public:
+     size_t size() const { return _size; }
+     bool empty() const { return _size == 0; }
+ 
+-#if defined(_SECURE_SCL) && (_SECURE_SCL > 0)
++#if defined(_SECURE_SCL) && (_SECURE_SCL > 0) && (!defined(_MSC_VER) || _MSC_VER < 1951)
+     typedef stdext::checked_array_iterator<T*> iterator;
+     typedef stdext::checked_array_iterator<const T*> const_iterator;
+     iterator begin() const { return stdext::make_checked_array_iterator(_data, _size); }
+diff --git a/src/plugins/intel_gpu/include/intel_gpu/runtime/memory.hpp b/src/plugins/intel_gpu/include/intel_gpu/runtime/memory.hpp
+index ee7dfa1f..91dedccb 100644
+--- a/src/plugins/intel_gpu/include/intel_gpu/runtime/memory.hpp
++++ b/src/plugins/intel_gpu/include/intel_gpu/runtime/memory.hpp
+@@ -186,7 +186,7 @@ struct mem_lock {
+     mem_lock(const mem_lock& other) = delete;
+     mem_lock& operator=(const mem_lock& other) = delete;
+ 
+-#if defined(_SECURE_SCL) && (_SECURE_SCL > 0)
++#if defined(_SECURE_SCL) && (_SECURE_SCL > 0) && (!defined(_MSC_VER) || _MSC_VER < 1951)
+     auto begin() & { return stdext::make_checked_array_iterator(_ptr, size()); }
+     auto end() & { return stdext::make_checked_array_iterator(_ptr, size(), size()); }
+ #else

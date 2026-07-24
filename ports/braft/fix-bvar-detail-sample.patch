@@ -1,0 +1,13 @@
+diff --git a/src/braft/util.cpp b/src/braft/util.cpp
+index 9770b75..3a12819 100644
+--- a/src/braft/util.cpp
++++ b/src/braft/util.cpp
+@@ -47,7 +47,7 @@ namespace detail {
+ typedef PercentileSamples<1022> CombinedPercentileSamples;
+ 
+ static int64_t get_window_recorder_qps(void* arg) {
+-    detail::Sample<Stat> s;
++    Sample<Stat> s;
+     static_cast<RecorderWindow*>(arg)->get_span(1, &s);
+     // Use floating point to avoid overflow.
+     if (s.time_us <= 0) {

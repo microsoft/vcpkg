@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gperftools/gperftools
     REF gperftools-${VERSION}
-    SHA512 6ac99109d9b02afdaf31fb5ecd0bbd752a2ed59494ac7cc584944a2ebdb3254e25df2cb18a0bc1fc0e9230b967890e550cccaf92b9e59473e538977de6a133bf
+    SHA512 db5435194019797ce2556ee3f113ade6df28963f13ad579f492528fc1307041093558676aac9d2295b1ab392bb8553532ae079687dc01bdc14b40261e5dfe2d4
     HEAD_REF master
     PATCHES
         libunwind.diff

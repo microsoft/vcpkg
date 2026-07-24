@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-node-addon-api",
+  "version-string": "ci",
+  "description": "Validates node-addon-api",
+  "dependencies": [
+    "node-addon-api",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

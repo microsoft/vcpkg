@@ -1,0 +1,13 @@
+diff --git a/include/jsonrpcpp.hpp b/include/jsonrpcpp.hpp
+index 1cea0ac..236850c 100644
+--- a/include/jsonrpcpp.hpp
++++ b/include/jsonrpcpp.hpp
+@@ -23,7 +23,7 @@
+ #define JSON_RPC_HPP
+ 
+ // nlohmann-json
+-#include <json.hpp>
++#include <nlohmann/json.hpp>
+ 
+ // standard headers
+ #include <cstring>

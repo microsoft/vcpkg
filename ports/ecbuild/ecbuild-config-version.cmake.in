@@ -1,0 +1,18 @@
+# ecCodes calls find_package(ecbuild 3.7), so CMake requires a package
+# version file next to ecbuild-config.cmake. The actual selected ecbuild
+# version is controlled by vcpkg before CMake configure is invoked.
+set(PACKAGE_VERSION "@VERSION@")
+
+if(PACKAGE_FIND_VERSION)
+    if(PACKAGE_VERSION VERSION_LESS PACKAGE_FIND_VERSION)
+        set(PACKAGE_VERSION_COMPATIBLE FALSE)
+    else()
+        set(PACKAGE_VERSION_COMPATIBLE TRUE)
+
+        if(PACKAGE_VERSION VERSION_EQUAL PACKAGE_FIND_VERSION)
+            set(PACKAGE_VERSION_EXACT TRUE)
+        endif()
+    endif()
+else()
+    set(PACKAGE_VERSION_COMPATIBLE TRUE)
+endif()

@@ -28,3 +28,16 @@ index 2b93540..6cfa3f8 100644
  
  include(${CMAKE_CURRENT_LIST_DIR}/hello_imgui_cmake/hello_imgui_add_app.cmake)
  include(${CMAKE_CURRENT_LIST_DIR}/hello-imgui-targets.cmake)
+diff --git a/hello_imgui_cmake/hello_imgui_build_lib.cmake b/hello_imgui_cmake/hello_imgui_build_lib.cmake
+index 7b5e7ac..37f5910 100644
+--- a/hello_imgui_cmake/hello_imgui_build_lib.cmake
++++ b/hello_imgui_cmake/hello_imgui_build_lib.cmake
+@@ -1181,7 +1181,7 @@ endfunction()
+ # Install: API = him_install
+ ###################################################################################################
+ function(him_install)
+-    if (HELLOIMGUI_INSTALL AND NOT IOS AND NOT ANDROID)
++    if (HELLOIMGUI_INSTALL)
+         install(TARGETS ${HELLOIMGUI_TARGET} DESTINATION lib/)
+         file(GLOB headers *.h)
+         install(FILES ${headers} DESTINATION include/hello_imgui/)

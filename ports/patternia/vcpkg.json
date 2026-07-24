@@ -1,7 +1,7 @@
 {
   "name": "patternia",
-  "version": "0.8.2",
-  "description": "Providing pattern matching for modern c++.",
+  "version": "0.9.3",
+  "description": "Header-only pattern matching library for modern C++",
   "homepage": "https://github.com/sentomk/patternia",
   "license": "MIT",
   "dependencies": [

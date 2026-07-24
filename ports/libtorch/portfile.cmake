@@ -4,39 +4,40 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
     REF "v${VERSION}"
-    SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e
+    SHA512 f5ab0f6933d88271f772b416f8c9b3b0d3e1ffaf8d00838b455206266b40d7c805e34003d84b01cddc7f1ad917dd72d6f79a05063b0962cbf223d9042cff3206
     HEAD_REF master
     PATCHES
-        fix-cmake.patch
-        fix-osx.patch
-        fix-vulkan.patch
+        fix-osx-protobuf.patch
+        fix-vulkan-vma.patch
+        fix-system-mimalloc.patch
+        fix-system-fp16.patch
+        fix-system-tensorpipe.patch
+        fix-system-fmt.patch
+        fix-system-fxdiv.patch
+        fix-system-kineto.patch
+        fix-torch-includes.patch
         fix-glog.patch
-        fix-pytorch-pr-156630.patch # https://github.com/pytorch/pytorch/pull/156630
-        fix-dist-cuda.patch
+        fix-system-flatbuffers.patch
+        fix-system-httplib.patch
+        fix-system-nlohmann.patch
+        fix-system-pthreadpool.patch
+        fix-system-cpuinfo.patch
+        fix-system-xnnpack.patch
+        fix-system-onnx.patch
+        fix-system-cutlass.patch
+        fix-system-fbgemm.patch
+        fix-system-nnpack.patch
+        fix-system-kleidiai.patch
+        fix-system-mkl.patch
+        fix-system-mkldnn.patch
+        fix-system-pocketfft.patch
+        fix-sleef.patch
+        fix-cudnn-frontend.patch
+        fix-windows-install-dirs.patch
+        fix-async-mm-cutlass.patch
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH src_kineto
-    REPO pytorch/kineto
-    REF d9753139d181b9ff42872465aac0e5d3018be415
-    SHA512 f037fac78e566c40108acf9eace55a8f67a2c5b71f298fd3cd17bf22cf05240c260fd89f017fa411656a7505ec9073a06a3048e191251d5cfc4b52c237b37d0b
-    HEAD_REF main
-    PATCHES
-      kineto.patch
-)
-file(COPY "${src_kineto}/" DESTINATION "${SOURCE_PATH}/third_party/kineto")
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH src_cudnn
-    REPO NVIDIA/cudnn-frontend # new port ?
-    REF 2533f5e5c1877fd76266133c1479ef1643ce3a8b #  1.6.1 
-    SHA512 8caacdf9f7dbd6ce55507f5f7165db8640b681e2a7dfd6a841de8eaa3489cff5ba41d11758cc464320b2ff9a491f8234e1749580cf43cac702f07cf82611e084
-    HEAD_REF main
-)
-file(COPY "${src_cudnn}/" DESTINATION "${SOURCE_PATH}/third_party/cudnn_frontend")
-
 
 file(REMOVE
   "${SOURCE_PATH}/cmake/Modules/FindBLAS.cmake"
@@ -60,7 +61,7 @@ message(STATUS "Using protoc: ${PROTOC}")
 
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
-    PACKAGES typing-extensions pyyaml 
+    PACKAGES typing-extensions pyyaml packaging setuptools
     # numpy
     OUT_PYTHON_VAR PYTHON3
 )
@@ -69,32 +70,38 @@ message(STATUS "Using Python3: ${PYTHON3}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
-    zstd    USE_ZSTD
-    fbgemm  USE_FBGEMM
-    opencv  USE_OPENCV
-    opencl  USE_OPENCL
-    mkldnn  USE_MKLDNN
+    dist    USE_DISTRIBUTED # Gloo, MPI, TensorPipe
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
     cuda    USE_SYSTEM_NCCL
     cuda    USE_NVRTC
     cuda    AT_CUDA_ENABLED
-    cuda    AT_CUDNN_ENABLED
     cuda    USE_MAGMA
-    vulkan  USE_VULKAN
+    vulkan  USE_VULKAN        # cmake_dependent_option forces OFF on non-Android; kept for future
     vulkan  USE_VULKAN_RELAXED_PRECISION
-    rocm    USE_ROCM  # This is an alternative to cuda not a feature! (Not in vcpkg.json!) -> disabled
+    rocm    USE_ROCM  # alternative to cuda, not a vcpkg feature; always disabled
     llvm    USE_LLVM
-    mpi     USE_MPI
-    nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
     python  USE_NUMPY
     glog    USE_GLOG
     gflags  USE_GFLAGS
 )
+
+# FBGEMM and NNPACK are ON by default in upstream PyTorch, so they are core (not
+# optional features). Enable each wherever its vcpkg dependency is available for
+# the target arch; the matching core dependency in vcpkg.json is platform-gated.
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    list(APPEND FEATURE_OPTIONS -DUSE_FBGEMM=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DUSE_FBGEMM=OFF)
+endif()
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS -DUSE_NNPACK=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DUSE_NNPACK=OFF)
+endif()
 
 if("dist" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
@@ -104,20 +111,79 @@ if("dist" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS -DUSE_LIBUV=ON)
     endif()
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
+    # MPI was folded into [dist]; the mpi dependency is linux-only (see vcpkg.json).
+    list(APPEND FEATURE_OPTIONS -DUSE_MPI=${VCPKG_TARGET_IS_LINUX})
 endif()
 
 if("cuda" IN_LIST FEATURES)
   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    # PyTorch's default TORCH_CUDA_ARCH_LIST still includes Maxwell (5.0). CUDA 13
+    # dropped Maxwell/Pascal/Volta (sm_50/60/70), so nvcc aborts with
+    # "Unsupported gpu architecture 'compute_50'". Pin to Turing->Hopper.
     list(APPEND FEATURE_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+        "-DTORCH_CUDA_ARCH_LIST=7.5;8.0;8.6;8.9;9.0"
     )
 endif()
 
 if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
     find_program(GLSLC NAMES glslc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc" REQUIRED)
     message(STATUS "Using glslc: ${GLSLC}")
-    list(APPEND FEATURE_OPTIONS "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}")
+    # Vulkan_GLSLC_EXECUTABLE is the variable FindVulkan honours; GLSLC_PATH is the
+    # one cmake/VulkanCodegen.cmake does its own find_program for, which under
+    # cross-compile (CMAKE_FIND_ROOT_PATH_MODE_PROGRAM=ONLY) won't see host tools.
+    # Set both so the codegen step accepts the host glslc binary.
+    list(APPEND FEATURE_OPTIONS
+        "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}"
+        "-DGLSLC_PATH:FILEPATH=${GLSLC}")
+endif()
+
+if("mkl" IN_LIST FEATURES)
+    # The mkl feature is the "Intel performance" bundle: it routes PyTorch's BLAS
+    # chooser at cmake/Dependencies.cmake through the MKL branch, which calls
+    # find_package(MKL) -> our replacement FindMKL.cmake -> vcpkg intel-mkl, and it
+    # also turns on oneDNN (MKLDNN) via ideep. VCPKG_LIBTORCH_MKL_FEATURE_ENABLED
+    # gates the FindMKL replacement: when the feature is off, the replacement
+    # returns MKL_FOUND=FALSE without calling find_package, so a transitively-staged
+    # intel-mkl can't silently turn on BLAS=MKL with ILP64 defaults and trip vml.h's
+    # `is_same_v<MKL_INT, int64_t>`.
+    list(APPEND FEATURE_OPTIONS
+        -DBLAS=MKL
+        -DVCPKG_LIBTORCH_MKL_FEATURE_ENABLED=ON
+        -DUSE_MKLDNN=ON
+        -DAT_MKLDNN_ENABLED=ON)
+else()
+    # oneDNN/ideep are only pulled in by [mkl]; without the feature, force MKLDNN
+    # off so PyTorch's default-ON USE_MKLDNN doesn't look for an absent dependency.
+    list(APPEND FEATURE_OPTIONS -DUSE_MKLDNN=OFF)
+endif()
+
+# Always force LP64. Even when libtorch[mkl] is off, mkldnn / fbgemm and other
+# subprojects can independently call find_package(MKL CONFIG); without this they
+# default to ILP64 and PyTorch's vml.h static_assert fails on Linux x86_64
+# (int64_t = long, but ILP64 MKL_INT = long long — same width, distinct types).
+list(APPEND FEATURE_OPTIONS -DMKL_INTERFACE=lp64)
+
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    # Upstream auto-enables USE_PRIORITIZED_TEXT_FOR_LD on Linux+AArch64
+    # (CMakeLists.txt:408-410), which runs tools/setup_helpers/generate_linker_script.py.
+    # That script calls $LD -verbose to capture the default linker script — but on
+    # vcpkg cross-compile CI hosts $LD is the x86-64 ld, producing a script with
+    # OUTPUT_FORMAT(elf64-x86-64). The aarch64 cross-linker then rejects it with
+    # "cannot represent machine i386:x86-64". Disable the optimization here.
+    list(APPEND FEATURE_OPTIONS -DUSE_PRIORITIZED_TEXT_FOR_LD=OFF)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    # PyTorch ends up reporting "USE_XNNPACK: OFF" on x86-windows anyway (some
+    # later guard flips it), but fix-system-xnnpack.patch fires at Dependencies.cmake:530
+    # while USE_XNNPACK is still ON and appends XNNPACK + microkernels-prod to
+    # Caffe2_DEPENDENCY_LIBS. That list never gets cleaned up, and the x86-windows
+    # imported targets fail the generate-time IMPORTED_IMPLIB check (x64-windows
+    # tolerates the same shape). Force the option off from the start so our patch
+    # branch is skipped entirely.
+    list(APPEND FEATURE_OPTIONS -DUSE_XNNPACK=OFF)
 endif()
 
 set(TARGET_IS_MOBILE OFF)
@@ -145,45 +211,40 @@ vcpkg_cmake_configure(
         -DCAFFE2_STATIC_LINK_CUDA=ON
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DBUILD_CUSTOM_PROTOBUF=OFF
-        -DBUILD_PYTHON=OFF
         -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF
         -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
-        -DUSE_METAL=OFF
         -DUSE_FLASH_ATTENTION=OFF
+        -DUSE_MEM_EFF_ATTENTION=OFF
+        -DUSE_XPU=OFF
+        -DUSE_XCCL=OFF
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
         -DUSE_PYTORCH_QNNPACK:BOOL=OFF
         -DUSE_ITT=OFF
-        -DUSE_ROCKSDB=ON
         -DUSE_OBSERVERS=OFF
         -DUSE_KINETO=OFF
         -DUSE_ROCM=OFF
         -DUSE_NUMA=OFF
-        -DUSE_SYSTEM_LIBS=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
-        ${BLAS_OPTIONS}
-        # BLAS=MKL not supported in this port
-        -DUSE_MKLDNN=OFF
-        -DUSE_MKLDNN_CBLAS=OFF
-        #-DCAFFE2_USE_MKL=ON
-        #-DAT_MKL_ENABLED=ON
-        -DAT_MKLDNN_ENABLED=OFF
-        -DUSE_OPENCL=ON
-        -DUSE_KINETO=OFF #
-    # Should be enabled in-future along with the "python" feature (currently disabled)
-    # OPTIONS_RELEASE
-    #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python311.lib
-    # OPTIONS_DEBUG
-    #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python311_d.lib
+        -DUSE_MKLDNN_CBLAS=OFF   # the CBLAS-via-MKLDNN sub-path stays off
+        -DUSE_OPENCL=ON          # opencl is a base dep, always on
+        -DCUDNN_FRONTEND_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
     MAYBE_UNUSED_VARIABLES
-        USE_NUMA
-        USE_SYSTEM_BIND11
-        MKLDNN_CPU_RUNTIME
-        PYTHON_LIBRARY
+        CUDNN_FRONTEND_INCLUDE_DIR
+        MKL_INTERFACE
+        USE_NUMA    # cmake_dependent_option forces OFF on non-Linux
+        USE_VULKAN  # cmake_dependent_option forces OFF on non-Android
+        VCPKG_LIBTORCH_MKL_FEATURE_ENABLED  # consumed by patched FindMKL.cmake, not the top-level CMakeLists
 )
+
+# cmake_install.cmake has an install rule for FindCUDAToolkit.cmake but we deleted
+# it before configure so cmake would use its own up-to-date version. Restore a stub
+# so cmake --install doesn't error out trying to install the now-missing file.
+file(WRITE "${SOURCE_PATH}/cmake/Modules/FindCUDAToolkit.cmake"
+    "# placeholder: original removed pre-configure so cmake uses its own FindCUDAToolkit\n")
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

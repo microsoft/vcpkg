@@ -37,8 +37,10 @@
           "name": "bzip2"
         },
         {
+          "$comment": "CMake 3.17 for non-global ALIAS target",
           "$package": "CURL",
           "name": "curl",
+          "$since": "3.18",
           "default-features": false
         },
         {
@@ -61,8 +63,10 @@
           "default-features": false
         },
         {
+          "$comment": "CMake 3.22 for (transitive) FindMPI looking at pkg-config",
           "$package": "GDAL",
           "name": "gdal",
+          "$since": "3.22",
           "default-features": false,
           "platform": "!uwp"
         },

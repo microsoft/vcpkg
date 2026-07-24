@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d477f8b..375a2a2 100644
+index 7c97ed2a..8df64eb1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -389,7 +389,6 @@ endif ()
+@@ -435,7 +435,6 @@ endif ()
  # Handle the requirement of `sqlitebin` for `proj`.
  set(vtk_sqlite_build_binary 0)
  if ("VTK::libproj" IN_LIST vtk_modules)
@@ -11,11 +11,10 @@ index d477f8b..375a2a2 100644
  
  cmake_dependent_option(VTK_ENABLE_KITS "Enable kits compilation" OFF
 diff --git a/ThirdParty/libproj/CMakeLists.txt b/ThirdParty/libproj/CMakeLists.txt
-index f8888876..d57c4c18 100644
+index cea568e1..05f85fbd 100644
 --- a/ThirdParty/libproj/CMakeLists.txt
 +++ b/ThirdParty/libproj/CMakeLists.txt
-@@ -4,11 +4,13 @@ vtk_module_third_party(
-     VERSION
+@@ -12,10 +12,12 @@ vtk_module_third_party(
        "8.1.0"
      STANDARD_INCLUDE_DIRS
    EXTERNAL

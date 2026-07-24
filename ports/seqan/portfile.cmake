@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://packages.seqan.de/seqan-library/seqan-library-2.4.0.zip"
-    FILENAME "seqan-library-2.4.0.zip"
-    SHA512 9a1b4fe9dff9ad49a8761798a6a6eaeebce683ccb5e2dd78ea4b8829093918606830a16ea458d67bf3f652531ddc55b550c12cb257be913bb187c8940d96a575
+    URLS "https://github.com/seqan/seqan/releases/download/seqan-v${VERSION}/seqan-library-${VERSION}.zip"
+    FILENAME "seqan-library-${VERSION}.zip"
+    SHA512 de62c69bfacf758df8f3dde11a12f4f54b145e18da8aba859f5e4a569f8969aa45a3dd5db6dda0b0970bb8bc088804ceb7a80ec4a85cea0c97a6d437851801e1
 )
 
 vcpkg_extract_source_archive(

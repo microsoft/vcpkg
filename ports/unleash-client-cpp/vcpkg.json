@@ -1,6 +1,6 @@
 {
   "name": "unleash-client-cpp",
-  "version": "1.3.0",
+  "version": "1.5.4",
   "description": "C++ client SDK for Unleash, an open-source feature flag management service.",
   "homepage": "https://github.com/aruizs/unleash-client-cpp",
   "license": "MIT",

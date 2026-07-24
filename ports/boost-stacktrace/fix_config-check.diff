@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9c5bf84..46b7288 100644
+index 771f6f1..4a7b524 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,7 +52,7 @@ include(CheckCXXSourceCompiles)
@@ -19,7 +19,7 @@ index 9c5bf84..46b7288 100644
 +stacktrace_check(BOOST_STACKTRACE_HAS_WINDBG_CACHED has_windbg_cached.cpp "" "dbgeng;ole32" "")
  
  set(_default_from_exception ON)
- if (NOT CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64|amd64|i386|i686|x86")
+ if (CMAKE_CXX_PLATFORM_ID MATCHES "Cygwin")
 @@ -98,7 +98,10 @@ message(STATUS "Boost.Stacktrace: "
  )
  

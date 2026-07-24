@@ -1,5 +1,5 @@
 diff --git a/cmake_modules/yacma/YACMACompilerLinkerSettings.cmake b/cmake_modules/yacma/YACMACompilerLinkerSettings.cmake
-index 7d7aa1b..81c8bf6 100644
+index edafe6d..0b18c5d 100644
 --- a/cmake_modules/yacma/YACMACompilerLinkerSettings.cmake
 +++ b/cmake_modules/yacma/YACMACompilerLinkerSettings.cmake
 @@ -95,7 +95,6 @@ if(NOT _YACMACompilerLinkerSettingsRun)
@@ -10,7 +10,7 @@ index 7d7aa1b..81c8bf6 100644
          # New warnings in clang 8.
          # NOTE: a few issues with macros here, let's disable for now.
          # _YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(-Wextra-semi-stmt)
-@@ -180,7 +179,6 @@ if(NOT _YACMACompilerLinkerSettingsRun)
+@@ -191,7 +190,6 @@ if(NOT _YACMACompilerLinkerSettingsRun)
          # Enable higher warning level than usual.
          _YACMA_CHECK_ENABLE_DEBUG_CXX_FLAG(/W4)
          # Treat warnings as errors.

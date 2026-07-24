@@ -1,11 +1,13 @@
 {
   "name": "supernovas",
-  "version": "1.5.1",
+  "version": "1.7.1",
+  "port-version": 1,
   "description": "SuperNOVAS C/C++ high-precision astrometry library",
-  "homepage": "https://smithsonian.github.io/SuperNOVAS/",
-  "documentation": "https://smithsonian.github.io/SuperNOVAS/doc/html/",
+  "homepage": "https://sigmyne.github.io/SuperNOVAS/",
+  "documentation": "https://sigmyne.github.io/SuperNOVAS/doc/html/",
   "license": "Unlicense",
   "dependencies": [
+    "curl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,9 +18,11 @@
     }
   ],
   "features": {
+    "cpp": {
+      "description": "C++11 API and runtime"
+    },
     "solsys-calceph": {
       "description": "Solar-system ephemeris support via the CALCEPH library",
-      "supports": "!uwp",
       "dependencies": [
         "calceph"
       ]

@@ -19,13 +19,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND VCPKG_C_FLAGS "/showIncludes ")
     string(APPEND VCPKG_CXX_FLAGS "/showIncludes ")
 endif()
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS ${OPTIONS} --enable-unit-tests=no
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

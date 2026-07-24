@@ -16,12 +16,12 @@ vcpkg_from_github(
         0002-disable-dd-log.patch  # windows does not export global variables
         ${MSVC_PATCH}
 )
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     COPY_SOURCE  # ensure generated files are found
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -1,9 +1,9 @@
-﻿diff --git a/src/runtime/CMakeLists.txt b/src/runtime/CMakeLists.txt
-index 127e2a4..f827a79 100644
+diff --git a/src/runtime/CMakeLists.txt b/src/runtime/CMakeLists.txt
+index 68c0feb..925da41 100644
 --- a/src/runtime/CMakeLists.txt
 +++ b/src/runtime/CMakeLists.txt
-@@ -12,5 +12,8 @@ add_library(flatccrt
- )
+@@ -11,5 +11,8 @@ target_include_directories(flatccrt PUBLIC
+     "${PROJECT_SOURCE_DIR}/include")
  
  if (FLATCC_INSTALL)
 -    install(TARGETS flatccrt DESTINATION ${lib_dir})

@@ -1,8 +1,8 @@
 diff --git a/cmake/eCALConfig.cmake.in b/cmake/eCALConfig.cmake.in
-index 704da4de8..e8cfb765c 100644
+index 704da4de8..08fd3c766 100644
 --- a/cmake/eCALConfig.cmake.in
 +++ b/cmake/eCALConfig.cmake.in
-@@ -25,12 +25,21 @@ set(eCAL_VERSION_MAJOR  @eCAL_VERSION_MAJOR@)
+@@ -25,12 +25,22 @@ set(eCAL_VERSION_MAJOR  @eCAL_VERSION_MAJOR@)
  set(eCAL_VERSION_MINOR  @eCAL_VERSION_MINOR@)
  set(eCAL_VERSION_PATCH  @eCAL_VERSION_PATCH@)
  set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
@@ -15,6 +15,7 @@ index 704da4de8..e8cfb765c 100644
 -find_package(Protobuf REQUIRED)
 +include(CMakeFindDependencyMacro)
 +find_dependency(Protobuf CONFIG)
++find_dependency(SimpleIni CONFIG)
 +
 +# Ensure transitive dependencies are present for static builds
 +if(NOT eCAL_IS_SHARED)
@@ -25,7 +26,7 @@ index 704da4de8..e8cfb765c 100644
  
  include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_add_functions.cmake")
  include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_helper_functions.cmake")
-@@ -44,6 +53,6 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
+@@ -44,6 +54,6 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
  #  list(APPEND CMAKE_PREFIX_PATH "${PACKAGE_PREFIX_DIR}/../../../../cmake")
  #endif()
  

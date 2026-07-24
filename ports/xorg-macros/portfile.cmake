@@ -20,11 +20,11 @@ vcpkg_from_gitlab(
     PATCHES ${PATCHES}
 ) 
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
 if(NOT CMAKE_HOST_WIN32)

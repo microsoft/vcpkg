@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMPT/openmpt
     REF "libopenmpt-${VERSION}"
-    SHA512 6e903b9d761e63fd8ab495cd9389ceed3100b2d0f2a5804aeff2c29cfc889cd32243c937efc2e534d883f8c032637c26e956d0bfcb93fd1d966d7cc3d6f338f4
+    SHA512 f9a0398f607349c55abf91bc22ea52c4e200c8c9e95c11d0ac0eb8c7f5b46c4885b65acc3d7e639c9d828fd0d9d84b5a51f8a010a995f8ef593d93c33a9b3b10
     HEAD_REF master
 )
 

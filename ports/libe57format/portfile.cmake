@@ -14,15 +14,14 @@ vcpkg_cmake_configure(
         -DE57_BUILD_TEST=OFF
         -DE57_BUILD_SHARED=${E57_BUILD_SHARED}
         -DE57_RELEASE_LTO=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=1
 )
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME E57Format CONFIG_PATH "lib/cmake/E57Format")
+vcpkg_cmake_config_fixup(PACKAGE_NAME e57format CONFIG_PATH "lib/cmake/E57Format")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

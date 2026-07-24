@@ -1,0 +1,46 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 4d154f8e19..9878e420ff 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -520,7 +520,6 @@ if (!build_with_chromium) {
+       "api/task_queue",
+       "api/task_queue:default_task_queue_factory",
+       "api/video_codecs:video_decoder_factory_template",
+-      "api/video_codecs:video_decoder_factory_template_dav1d_adapter",
+       "api/video_codecs:video_decoder_factory_template_libvpx_vp8_adapter",
+       "api/video_codecs:video_decoder_factory_template_libvpx_vp9_adapter",
+       "api/video_codecs:video_decoder_factory_template_open_h264_adapter",
+@@ -542,6 +541,10 @@ if (!build_with_chromium) {
+       "video",
+     ]
+ 
++    if (rtc_include_dav1d_in_internal_decoder_factory) {
++      deps += [ "api/video_codecs:video_decoder_factory_template_dav1d_adapter" ]
++    }
++
+     if (rtc_include_builtin_audio_codecs) {
+       deps += [
+         "api/audio_codecs:builtin_audio_decoder_factory",
+diff --git a/media/BUILD.gn b/media/BUILD.gn
+index 9b026bf244..bfcd6690bc 100644
+--- a/media/BUILD.gn
++++ b/media/BUILD.gn
+@@ -1007,7 +1007,6 @@ if (rtc_include_tests) {
+         "../api/video_codecs:scalability_mode",
+         "../api/video_codecs:video_codecs_api",
+         "../api/video_codecs:video_decoder_factory_template",
+-        "../api/video_codecs:video_decoder_factory_template_dav1d_adapter",
+         "../api/video_codecs:video_decoder_factory_template_libvpx_vp8_adapter",
+         "../api/video_codecs:video_decoder_factory_template_libvpx_vp9_adapter",
+         "../api/video_codecs:video_decoder_factory_template_open_h264_adapter",
+@@ -1064,6 +1063,10 @@ if (rtc_include_tests) {
+         "//third_party/abseil-cpp/absl/strings:string_view",
+       ]
+ 
++      if (rtc_include_dav1d_in_internal_decoder_factory) {
++        deps += [ "../api/video_codecs:video_decoder_factory_template_dav1d_adapter" ]
++      }
++
+       if (enable_libaom) {
+         defines += [ "RTC_USE_LIBAOM_AV1_ENCODER" ]
+       }

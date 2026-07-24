@@ -7,7 +7,7 @@ on:
 
 jobs:
   check-for-common-issues:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       issues: write
     steps:

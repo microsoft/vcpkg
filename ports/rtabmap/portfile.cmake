@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
     REF ${VERSION}
-    SHA512 9bcd0f359e0ee8060cf7088761544a3f7d38aadb37df820958f0811aa7b8edbfaf00f00d9472a8bf46261d4e5d868f9c10785263aaabaf374b6e5aa5237d70b0
+    SHA512 92c7709b189886e8de772bcf68b0e04ad79a411f0886c2bf8319d001a6015f197b6fb04ae1b3e9e90a2fbc83f5ecf4e607a631644dfa9453073315344c23ee73
     HEAD_REF master
     PATCHES
         0001-cmakelists-fixes.patch
         0002-fix-link.patch
         0003-multi-definition.patch
         0004-remove-apple-sys-path.patch
+        0005-fix-report-without-qt.patch
 )
 # Will use vcpkg to find these packages
 file(REMOVE_RECURSE
@@ -126,6 +127,7 @@ if("tools" IN_LIST FEATURES)
   vcpkg_copy_tools(
     TOOL_NAMES
         rtabmap-camera
+        rtabmap-cidsims_dataset
         rtabmap-console
         rtabmap-detectMoreLoopClosures
         rtabmap-export
@@ -139,6 +141,7 @@ if("tools" IN_LIST FEATURES)
         rtabmap-euroc_dataset
         rtabmap-cleanupLocalGrids
         rtabmap-globalBundleAdjustment
+        rtabmap-reduceGraph
     AUTO_CLEAN
   )
   if("gui" IN_LIST FEATURES)

@@ -1,0 +1,12 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index dd99233..8463e1f 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,6 +1,6 @@
+ lib_LTLIBRARIES = libdotconf.la
+ libdotconf_la_CFLAGS = $(WARNING_CFLAGS)
+-libdotconf_la_LDFLAGS = -version-info $(DC_CURRENT):$(DC_REVISION):$(DC_AGE)
++libdotconf_la_LDFLAGS = -no-undefined -version-info $(DC_CURRENT):$(DC_REVISION):$(DC_AGE)
+ libdotconf_la_SOURCES = dotconf.c \
+ 	dotconf.h \
+ 	dotconf_priv.h \

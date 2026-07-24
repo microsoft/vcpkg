@@ -37,3 +37,15 @@ index 2596a23..3ec1527 100644
    endif()
    set(COLLADA_DOM_LIBRARY_SUFFIX "${COLLADA_DOM_SOVERSION}-${COLLADA_PRECISION}-${MSVC_PREFIX}-mt")
  else()
+diff --git a/collada_dom-config.cmake.in b/collada_dom-config.cmake.in
+index 17f0e68..84fae8f 100644
+--- a/collada_dom-config.cmake.in
++++ b/collada_dom-config.cmake.in
+@@ -25,6 +25,7 @@ if( MSVC )
+   else()
+     set(MSVC_PREFIX "vc100")
+   endif()
++  set(MSVC_PREFIX "@MSVC_PREFIX@")
+   set(COLLADA_DOM_LIBRARY_SUFFIX "${COLLADA_DOM_VERSION_MAJOR}.${COLLADA_DOM_VERSION_MINOR}-@COLLADA_PRECISION@-${MSVC_PREFIX}-mt" CACHE STRING "the suffix for the collada-dom library" FORCE)
+ else()
+   set(COLLADA_DOM_LIBRARY_SUFFIX "${COLLADA_DOM_VERSION_MAJOR}.${COLLADA_DOM_VERSION_MINOR}-@COLLADA_PRECISION@")

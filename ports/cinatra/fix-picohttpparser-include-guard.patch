@@ -1,0 +1,27 @@
+From dfdd983a4daed8a12c0283e579d8d2e31a2504fc Mon Sep 17 00:00:00 2001
+From: vcpkg <patch@vcpkg>
+Date: Wed, 13 May 2026 15:05:10 -0700
+Subject: [PATCH] Use unique include guard for vendored picohttpparser
+
+---
+ include/cinatra/picohttpparser.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/cinatra/picohttpparser.h b/include/cinatra/picohttpparser.h
+index 30e3b45..dc26bb4 100644
+--- a/include/cinatra/picohttpparser.h
++++ b/include/cinatra/picohttpparser.h
+@@ -24,8 +24,8 @@
+  * IN THE SOFTWARE.
+  */
+ 
+-#ifndef picohttpparser_h
+-#define picohttpparser_h
++#ifndef cinatra_picohttpparser_h
++#define cinatra_picohttpparser_h
+ #include <assert.h>
+ #include <stddef.h>
+ #include <string.h>
+-- 
+2.54.0.windows.1
+

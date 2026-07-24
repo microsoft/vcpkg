@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 45d736147..cd713f897 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -718,7 +718,6 @@ configure_file("${BUILDLIB}/config.h.in" "${BUILD_INCLUDE}/config.h" ESCAPE_QUOT
+ # Sub-directories
+ add_subdirectory(ccan)
+ add_subdirectory(util)
+-add_subdirectory(kernel-boot)
+ add_subdirectory(kernel-headers)
+ # Libraries
+ add_subdirectory(libibumad)

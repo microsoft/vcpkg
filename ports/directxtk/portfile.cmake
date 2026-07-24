@@ -1,4 +1,4 @@
-set(DIRECTXTK_TAG oct2025)
+set(DIRECTXTK_TAG may2026)
 
 if(VCPKG_TARGET_IS_MINGW)
     message(NOTICE "Building ${PORT} for MinGW requires the HLSL Compiler fxc.exe also be in the PATH. See https://aka.ms/windowssdk.")
@@ -8,9 +8,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
     REF ${DIRECTXTK_TAG}
-    SHA512 3be2fce3c3a34a22b7bdfda914ca45930c5b979bb467530b8cbb510c0f58485056c285ff86ddaecbc5aac95ae67f0b92c4e1dd8261cee4a87cf3e7056329ac28
+    SHA512 9306774b06f52b4c37938fe4b3a10df8c7a85652188a25dc25e60ae9ff6fbf9d2cf920b114de3fc3945c564054cbb166cc45fca073021129e75ce282a51636e7
     HEAD_REF main
-    PATCHES CMake-build-options-improvements.patch
 )
 
 vcpkg_check_features(
@@ -40,7 +39,7 @@ if("tools" IN_LIST FEATURES)
     MAKESPRITEFONT_EXE
     URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/MakeSpriteFont.exe"
     FILENAME "makespritefont-${DIRECTXTK_TAG}.exe"
-    SHA512 edec18a1c7790d6f27f8d910307a38a037784cc974b38debb8ef6eb77369941b60bf7cb52de4150f80bca4ab541d76d54f21ef91524b83b11b684f0a92e1c879
+    SHA512 1b3f6e2b9394316bfb0ef828850368be9b3ca6227501c28e09a108763f63e2a010588222ee6a3f64233ca8deae663098ca407e41c2a0c93a745078dc24053f5f
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -55,7 +54,7 @@ if("tools" IN_LIST FEATURES)
       XWBTOOL_EXE
       URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool.exe"
       FILENAME "xwbtool-${DIRECTXTK_TAG}.exe"
-      SHA512 68ff3f4a99585e08698c6385550628341e31218315029700c9b8d9a17118ba964856358bc2bebc951b6ec8d1584e8d62138505780897430509dca2652832384b
+      SHA512 1b79d2f2d46a656810e8ef9e2061c9f0071f8304187a144e2aebbfdba2da3d9133a91114e22dcfc178f0bcf8fdb421640252800caea993c27bf987f2e50abafa
     )
 
     file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
@@ -68,7 +67,7 @@ if("tools" IN_LIST FEATURES)
       XWBTOOL_EXE
       URLS "https://github.com/Microsoft/DirectXTK/releases/download/${DIRECTXTK_TAG}/XWBTool_arm64.exe"
       FILENAME "xwbtool-${DIRECTXTK_TAG}-arm64.exe"
-      SHA512 8e9d0fdd206bff4e3c0b344ed754a16cee913833be205c822d41ed3264d3578ae168ef415043ff8f95b38890c37457a56ee7677b26d95b8afd60dd307bffb9e0
+      SHA512 dabffcb328f440eb699fcc80f3e33bb093e2f067fa6114bf0a5c521eaa5ab935ac568195a2e25eccb5c228b0ab1b1979121d6936eadae7f3dec8a2aed648a9b4
     )
 
     file(INSTALL "${XWBTOOL_EXE}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/directxtk/")

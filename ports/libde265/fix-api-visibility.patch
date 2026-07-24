@@ -1,0 +1,15 @@
+diff --git a/libde265/de265.h b/libde265/de265.h
+index e94467aa..95261453 100644
+--- a/libde265/de265.h
++++ b/libde265/de265.h
+@@ -34,7 +34,9 @@ extern "C" {
+ #endif
+ #include <stdint.h>
+ 
+-#if (defined(_WIN32) || defined(__CYGWIN__)) && !defined(LIBDE265_STATIC_BUILD)
++#if defined(LIBDE265_STATIC_BUILD)
++  #define LIBDE265_API
++#elif (defined(_WIN32) || defined(__CYGWIN__))
+   #ifdef LIBDE265_EXPORTS
+   #define LIBDE265_API __declspec(dllexport)
+   #else

@@ -1,0 +1,32 @@
+diff --git a/include/SdfLib/ExactOctreeSdfDepthFirst.h b/include/SdfLib/ExactOctreeSdfDepthFirst.h
+index a1c79a1..ca6d858 100644
+--- a/include/SdfLib/ExactOctreeSdfDepthFirst.h
++++ b/include/SdfLib/ExactOctreeSdfDepthFirst.h
+@@ -1,6 +1,7 @@
+ #ifndef EXACT_OCTREE_SDF_DEPTH_FIRST_H
+ #define EXACT_OCTREE_SDF_DEPTH_FIRST_H
+ 
++#include <cstring>
+ #include <string>
+ #include <stack>
+ #ifdef OPENMP_AVAILABLE
+diff --git a/src/tools/SdfLibUnity/SdfExportFunc.cpp b/src/tools/SdfLibUnity/SdfExportFunc.cpp
+index ff4e017..85d7842 100644
+--- a/src/tools/SdfLibUnity/SdfExportFunc.cpp
++++ b/src/tools/SdfLibUnity/SdfExportFunc.cpp
+@@ -1,3 +1,4 @@
++#include <cstring>
+ #include "SdfExportFunc.h"
+ #include "spdlog/sinks/rotating_file_sink.h"
+ 
+diff --git a/src/utils/Mesh.cpp b/src/utils/Mesh.cpp
+index 8bc7c6a..9ce200b 100644
+--- a/src/utils/Mesh.cpp
++++ b/src/utils/Mesh.cpp
+@@ -1,5 +1,6 @@
+ #include "SdfLib/utils/Mesh.h"
+ #include <iostream>
++#include <cstring>
+ #include <assert.h>
+ #include <spdlog/spdlog.h>
+ 

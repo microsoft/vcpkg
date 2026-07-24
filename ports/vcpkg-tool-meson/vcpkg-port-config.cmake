@@ -29,7 +29,7 @@ if(NOT SCRIPT_MESON)
     file(MAKE_DIRECTORY "${path_to_search}-tmp")
     file(ARCHIVE_EXTRACT INPUT "${archive_path}"
         DESTINATION "${path_to_search}-tmp"
-        #PATTERNS "**/mesonbuild/*" "**/*.py"
+        PATTERNS "meson-${ref}/mesonbuild" "meson-${ref}/meson.py"
         )
     z_vcpkg_apply_patches(
         SOURCE_PATH "${path_to_search}-tmp/meson-${ref}"

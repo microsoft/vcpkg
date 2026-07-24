@@ -1,8 +1,16 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 856a47d..06f5ea9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1040,14 +1040,14 @@ IF(XNNPACK_BUILD_ALL_MICROKERNELS)
+@@ -840,7 +840,8 @@
+   TARGET_LINK_LIBRARIES(reference-ukernels PRIVATE xnnpack-base)
+   TARGET_LINK_LIBRARIES(subgraph PRIVATE xnnpack-base allocator logging memory mutex operators operator-run datatype)
+   TARGET_LINK_LIBRARIES(XNNPACK PRIVATE xnnpack-base allocator cache hardware-config indirection memory microkernel-utils microparams-init mutex normalization operators operator-run operator-utils packing microkernels-prod subgraph datatype reference-ukernels)
+-  TARGET_LINK_LIBRARIES(XNNPACK PUBLIC pthreadpool logging)
++  TARGET_LINK_LIBRARIES(XNNPACK PUBLIC pthreadpool)
++  TARGET_LINK_LIBRARIES(XNNPACK PRIVATE logging)
+   SET_TARGET_PROPERTIES(XNNPACK PROPERTIES C_EXTENSIONS YES)
+ ENDIF()
+ IF(NOT MSVC)
+@@ -1040,14 +1041,14 @@
  ENDIF()
  TARGET_INCLUDE_DIRECTORIES(datatype PRIVATE include src)
  TARGET_INCLUDE_DIRECTORIES(microkernels-prod PRIVATE include src)
@@ -19,7 +27,7 @@ index 856a47d..06f5ea9 100644
    TARGET_INCLUDE_DIRECTORIES(XNNPACK PRIVATE src)
    TARGET_INCLUDE_DIRECTORIES(allocator PRIVATE include src)
    TARGET_INCLUDE_DIRECTORIES(cache PRIVATE include src)
-@@ -1085,6 +1085,8 @@ IF(XNNPACK_BUILD_WITH_LIBM)
+@@ -1085,6 +1086,8 @@
  ENDIF()
  
  # ---[ Configure cpuinfo
@@ -28,7 +36,7 @@ index 856a47d..06f5ea9 100644
  IF(NOT TARGET cpuinfo)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
-@@ -1111,6 +1113,8 @@ IF(XNNPACK_BUILD_LIBRARY)
+@@ -1111,6 +1114,8 @@
  ENDIF()
  
  # ---[ Configure pthreadpool
@@ -37,7 +45,7 @@ index 856a47d..06f5ea9 100644
  IF(NOT TARGET pthreadpool)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
-@@ -1135,6 +1139,8 @@ ENDIF()
+@@ -1135,6 +1140,8 @@
  TARGET_LINK_LIBRARIES(xnnpack-base INTERFACE pthreadpool)
  
  # ---[ Configure FXdiv
@@ -46,7 +54,7 @@ index 856a47d..06f5ea9 100644
  IF(NOT TARGET fxdiv)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
-@@ -1162,14 +1168,27 @@ IF(XNNPACK_BUILD_LIBRARY)
+@@ -1162,14 +1169,27 @@
  ENDIF()
  
  IF(XNNPACK_BUILD_LIBRARY)

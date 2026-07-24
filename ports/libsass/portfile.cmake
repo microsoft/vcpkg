@@ -7,11 +7,11 @@ vcpkg_from_github(
     PATCHES remove_compiler_flags.patch
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
 )
-vcpkg_install_make(MAKEFILE GNUmakefile)
+vcpkg_make_install(MAKEFILE GNUmakefile)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

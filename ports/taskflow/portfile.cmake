@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taskflow/taskflow
     REF "v${VERSION}"
-    SHA512 01da8c002774bac0e1651e32ca9cb6041ab17b78b2301f399640e0888d86fcd65657db7942e77b8a561dcefc0f137f4d698fd491d00fa1670ff85608d0e7597d
+    SHA512 c24a67cea14faa7b22049751eda6a058da81ea6a1d8bb3d753b36472dcb0a8a3a5ec9bfe4a87af1bb62253672a729b1de18d0b63fb7ee1a231baf297387b13ef
     HEAD_REF master
 )
 
@@ -19,9 +19,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Taskflow)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Taskflow)
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -454,7 +454,7 @@
+ # Link wolftpm library to wolfSSL.
+ # PRIVATE so the wolftpm_wolfssl_dep INTERFACE helper does not become part
+ # of wolftpm's export set (it is build-tree-only). Downstream consumers of
+ # wolftpm should `find_package(wolfssl)` themselves before find_package(wolftpm).
+ if(BUILD_WOLFTPM_LIB)
+-    target_link_libraries(wolftpm PRIVATE wolftpm_wolfssl_dep)
++    target_link_libraries(wolftpm PRIVATE $<BUILD_INTERFACE:wolftpm_wolfssl_dep>)
+ endif()

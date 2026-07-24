@@ -1,16 +1,17 @@
-string(REPLACE "." "_" VERSION_STR "V${VERSION}")
+# hot patch for 8.0.0 version is tag "V8_0_0_p1"
+set(VERSION_STR "V8_0_0_p1")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
     REF "${VERSION_STR}"
-    SHA512 65935a2f46021e2b9a7dd2a218515c06925454855a8cc952fcbd1cccbfd5c8d605ed8f1d930d2aec87ef172ded551d0a237fad128319fb9cbcabdc755aa0aa67
+    SHA512 f150f73a5b0cfd202838465d4fffabfc1177b1edbf175a1fa375bcec575896a35b22422bee711d5ae948c4fc242a0a89ed68f1a45a693c2b54b9b8326eabf669
     HEAD_REF master
     PATCHES
-        fix-install-prefix-path.patch
-        drop-bin-letter-d.patch
-        dependencies.patch
-        install-include-dir.patch
-        remove-vcpkg-enabling.patch
+        0001-cmake-keep-build-use-vcpkg-explicit.patch
+        0002-cmake-load-exported-package-dependencies.patch
+        0003-image-remove-freeimage-msvc-autolink.patch
+        0004-cmake-add-additional-path-extraction-for-OpenCASCADE.patch
+        0005-drop-bin-letter.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -24,7 +25,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         freeimage   USE_FREEIMAGE
         freetype    USE_FREETYPE
         rapidjson   USE_RAPIDJSON
-        samples     INSTALL_SAMPLES
         tbb         USE_TBB
         vtk         USE_VTK
 )
@@ -39,18 +39,15 @@ vcpkg_cmake_configure(
         -DBUILD_LIBRARY_TYPE=${BUILD_TYPE}
         -DBUILD_MODULE_Draw=OFF
         -DBUILD_DOC_Overview=OFF
-        -DBUILD_MODULE_DETools=OFF
         -DINSTALL_DIR_LAYOUT=Unix
         -DINSTALL_DIR_DOC=share/trash
         -DINSTALL_DIR_SCRIPT=share/trash # not relocatable
         -DINSTALL_TEST_CASES=OFF
         -DUSE_TK=OFF
-    OPTIONS_DEBUG
-        -DINSTALL_SAMPLES=OFF
 )
 
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/opencascade)
 
 #make occt includes relative to source_file

@@ -14,7 +14,7 @@ index 5c46cc4..18f6dad 100644
  # if IMGUI_VERSION_NUM < 18955
  inline ImVec2 operator-(const ImVec2& lhs);
 diff --git a/imgui_extra_math.inl b/imgui_extra_math.inl
-index 8b1b071..acc1254 100644
+index 8b1b071..a12708a 100644
 --- a/imgui_extra_math.inl
 +++ b/imgui_extra_math.inl
 @@ -19,6 +19,7 @@
@@ -25,11 +25,18 @@ index 8b1b071..acc1254 100644
  inline bool operator==(const ImVec2& lhs, const ImVec2& rhs)
  {
      return lhs.x == rhs.x && lhs.y == rhs.y;
-@@ -28,6 +29,7 @@ inline bool operator!=(const ImVec2& lhs, const ImVec2& rhs)
+@@ -28,11 +29,14 @@ inline bool operator!=(const ImVec2& lhs, const ImVec2& rhs)
  {
      return lhs.x != rhs.x || lhs.y != rhs.y;
  }
 +#endif
  
++# if IMGUI_VERSION_NUM < 19270
  inline ImVec2 operator*(const float lhs, const ImVec2& rhs)
  {
+     return ImVec2(lhs * rhs.x, lhs * rhs.y);
+ }
++#endif
+ 
+ # if IMGUI_VERSION_NUM < 18955
+ inline ImVec2 operator-(const ImVec2& lhs)

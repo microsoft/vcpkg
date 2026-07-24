@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-thorvg",
+  "version-string": "ci",
+  "description": "Validates thorvg",
+  "dependencies": [
+    "thorvg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
