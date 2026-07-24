@@ -14,8 +14,11 @@ if(WITH_HDF5)
     target_compile_definitions(main PRIVATE WITH_HDF5)
 endif()
 
-add_executable(main_c main.c)
-target_link_libraries(main_c PRIVATE $<IF:$<TARGET_EXISTS:flann::flann>,flann::flann,flann::flann_s>)
+# Skip hdf5 test with C, as there exists nothing we can test (hdf5.h is a C++ header)
+if(NOT WITH_HDF5)
+    add_executable(main_c main.c)
+    target_link_libraries(main_c PRIVATE $<IF:$<TARGET_EXISTS:flann::flann>,flann::flann,flann::flann_s>)
+endif()
 
 # Verify Pkg target
 find_package(PkgConfig REQUIRED)
@@ -38,3 +41,6 @@ endif()
 
 add_executable(main_pkg main.cpp)
 target_link_libraries(main_pkg PRIVATE PkgConfig::Flann)
+if(WITH_HDF5)
+    target_compile_definitions(main_pkg PRIVATE WITH_HDF5)
+endif()
