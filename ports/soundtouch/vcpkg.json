@@ -21,13 +21,7 @@
     },
     "soundtouchdll": {
       "description": "Build the SoundTouchDLL C wrapper dynamic library",
-      "supports": "!staticcrt",
-      "dependencies": [
-        {
-          "name": "atlmfc",
-          "platform": "windows"
-        }
-      ]
+      "supports": "!static"
     }
   }
 }
