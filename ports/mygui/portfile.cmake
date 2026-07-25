@@ -31,6 +31,13 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/MyGUI)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/MYGUI/MyGUI_Platform.h"
+        "#ifndef MYGUI_PLATFORM_H_\n#define MYGUI_PLATFORM_H_"
+        "#ifndef MYGUI_PLATFORM_H_\n#define MYGUI_PLATFORM_H_\n\n#define MYGUI_STATIC"
+    )
+endif()
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
