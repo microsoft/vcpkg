@@ -1,0 +1,27 @@
+{
+  "name": "apibrasil",
+  "version": "0.0.2",
+  "description": "SDK oficial C++ da plataforma APIBrasil - WhatsApp, SMS, consultas CPF/CNPJ, veiculos, CEP, correios, pagamentos PIX/boleto e mais.",
+  "homepage": "https://github.com/APIBrasil/apigratis-sdk-cpp",
+  "documentation": "https://doc.apibrasil.io",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false,
+      "features": [
+        "ssl"
+      ]
+    },
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
