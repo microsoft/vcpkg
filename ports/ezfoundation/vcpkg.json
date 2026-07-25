@@ -1,11 +1,10 @@
 {
   "name": "ezfoundation",
-  "version": "21.10",
-  "port-version": 1,
+  "version": "26.3",
   "description": "Foundation library out of ezEngine",
   "homepage": "https://ezengine.net/",
   "license": "MIT",
-  "supports": "windows | uwp",
+  "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
