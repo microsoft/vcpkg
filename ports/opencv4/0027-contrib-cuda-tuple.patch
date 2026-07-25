@@ -1,0 +1,12 @@
+diff --git a/modules/videostab/src/cuda/global_motion.cu b/modules/videostab/src/cuda/global_motion.cu
+index 7eca6ff..dbd3419 100644
+--- a/modules/videostab/src/cuda/global_motion.cu
++++ b/modules/videostab/src/cuda/global_motion.cu
+@@ -44,6 +44,7 @@
+ #include <thrust/device_ptr.h>
+ #include <thrust/remove.h>
+ #include <thrust/functional.h>
++#include <thrust/tuple.h>
+ #include "opencv2/core/cuda/common.hpp"
+ 
+ namespace cv { namespace cuda { namespace device { namespace globmotion {

@@ -1,0 +1,20 @@
+Emscripten without shared memory must not use -pthread: Meson's threads
+dependency injects it into compile/link args and the generated
+harfbuzz.pc (Libs/Cflags), forcing every pkg-config consumer into
+wasm shared-memory mode while dependencies remain single-threaded.
+Skip the threads dependency and build with HB_NO_MT instead.
+
+--- a/meson.build
++++ b/meson.build
+@@ -348,7 +348,10 @@
+ 
+ # threads
+ thread_dep = null_dep
+-if host_machine.system() != 'windows'
++if host_machine.system() == 'emscripten'
++  # No -pthread (it would poison harfbuzz.pc); no internal locking either.
++  add_project_arguments('-DHB_NO_MT', language: 'cpp')
++elif host_machine.system() != 'windows'
+   thread_dep = dependency('threads', required: false)
+ 
+   if thread_dep.found()

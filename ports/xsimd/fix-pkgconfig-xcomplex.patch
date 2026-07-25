@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0b12053..5d967fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,12 +46,16 @@ target_compile_features(xsimd INTERFACE cxx_std_14)
+ # developed or is vendored.
+ # Otherwise (if an install is performed), this will be handled in the user
+ # cmake script (xsimdConfig.cmake).
++set(XSIMD_PKGCONFIG_REQUIRES "")
++set(XSIMD_PKGCONFIG_CFLAGS "")
+ if(ENABLE_XTL_COMPLEX OR XSIMD_ENABLE_XTL_COMPLEX)
+     find_package(xtl 0.8.0 REQUIRED)
+     target_link_libraries(xsimd INTERFACE $<BUILD_INTERFACE:xtl>)
+     target_compile_definitions(xsimd INTERFACE
+         $<BUILD_INTERFACE:XSIMD_ENABLE_XTL_COMPLEX=1>
+     )
++    set(XSIMD_PKGCONFIG_REQUIRES "xtl >= 0.8.0")
++    set(XSIMD_PKGCONFIG_CFLAGS "-DXSIMD_ENABLE_XTL_COMPLEX=1")
+ endif()
+ 
+ if(BUILD_TESTS)
+diff --git a/xsimd.pc.in b/xsimd.pc.in
+index 0ab1a8a..d3c4daf 100644
+--- a/xsimd.pc.in
++++ b/xsimd.pc.in
+@@ -5,4 +5,5 @@ includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+ Name: xsimd
+ Description: xsimd provides a unified means for using SIMD features for library authors..
+ Version: @xsimd_VERSION@
+-Cflags: -I${includedir}
++Requires: @XSIMD_PKGCONFIG_REQUIRES@
++Cflags: -I${includedir} @XSIMD_PKGCONFIG_CFLAGS@

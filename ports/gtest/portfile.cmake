@@ -1,3 +1,9 @@
+vcpkg_download_distfile(CHARACTER_CONVERSION_PATCH
+    URLS "https://github.com/google/googletest/commit/fa8438ae6b70c57010177de47a9f13d7041a6328.patch?full_index=1"
+    FILENAME "googletest-fa8438ae6b70c57010177de47a9f13d7041a6328.patch"
+    SHA512 fe436859fc5cafdc18e7fcb6d12903ea7a4aa37a3a913132d717ab9f8d5495ead9e4ddbbb89d70199f498588ff04e7b47ea988cc3032ef46dabe03eb4110dd5f
+)
+
 if (EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
 endif()
@@ -12,6 +18,7 @@ vcpkg_from_github(
         001-fix-UWP-death-test.patch
         clang-tidy-no-lint.patch
         fix-main-lib-path.patch
+        "${CHARACTER_CONVERSION_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)

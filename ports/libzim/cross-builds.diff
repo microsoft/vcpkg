@@ -1,10 +1,10 @@
 diff --git a/meson.build b/meson.build
-index add8aa0..1f085d5 100644
+index 900feb8..e34a7b3 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1,9 +1,9 @@
  project('libzim', ['c', 'cpp'],
-   version : '9.8.0',
+   version : '9.8.1',
    license : 'GPL2',
 -  default_options : ['c_std=c11', 'cpp_std=c++17', 'werror=true'])
 +  default_options : ['c_std=c11', 'cpp_std=c++17'])
