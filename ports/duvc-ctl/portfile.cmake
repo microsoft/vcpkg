@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 50db1153e15fe15dcb0c26cd9dfdb945f74e60661ee4598ce1b3d048d2e4d5f51820e1fbd16cc384201085593f13e335ace191362daa52f125e89c530c28f653
     HEAD_REF main
+    PATCHES
+        fix-pkgconfig-library-name.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DUVC_BUILD_STATIC)
