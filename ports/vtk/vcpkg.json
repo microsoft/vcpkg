@@ -272,6 +272,7 @@
           "name": "vtk",
           "default-features": false,
           "features": [
+            "gl2ps",
             "libtheora",
             "netcdf",
             "qt",

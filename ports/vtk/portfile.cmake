@@ -118,7 +118,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
         "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
-        # "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part ... needs VTK_MODULE_ENABLE_VTK_h5hut, but see below.
+        "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part # needs VTK_MODULE_ENABLE_VTK_h5hut, but see below.
+        "paraview"    VTK_MODULE_ENABLE_VTK_h5hut    # needs h5hut port and/or fixes
         "paraview"    VTK_MODULE_ENABLE_VTK_IOH5Rage
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
         "paraview"    VTK_MODULE_ENABLE_VTK_IOTRUCHAS
@@ -299,7 +300,6 @@ vcpkg_cmake_configure(
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
 -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=NO  # needs viskores port
 -DVTK_MODULE_ENABLE_VTK_vtkviskores=NO           # needs viskores port
--DVTK_MODULE_ENABLE_VTK_h5hut=NO                 # needs h5hut port and/or fixes
 -DVTK_MODULE_ENABLE_VTK_IOMotionFX=NO            # needs pegtl 2.8.3 or patches
     MAYBE_UNUSED_VARIABLES
         VTK_ENABLE_OSPRAY
