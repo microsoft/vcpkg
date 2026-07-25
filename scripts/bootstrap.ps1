@@ -49,15 +49,67 @@ Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 $Config = ConvertFrom-StringData (Get-Content "$PSScriptRoot\vcpkg-tool-metadata.txt" -Raw)
 $versionDate = $Config.VCPKG_TOOL_RELEASE_TAG
 
-if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {
-    & "$scriptsDir/tls12-download-arm64.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" "$vcpkgRootDir\vcpkg.exe"
-} else {
-    & "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
+function Invoke-DownloadWithRetry
+{
+    param(
+        [Parameter(Mandatory=$true)][string]$Url,
+        [Parameter(Mandatory=$true)][string]$OutFile
+    )
+
+    # Some older Windows / .NET Framework configurations default
+    # ServicePointManager.SecurityProtocol to TLS 1.0/1.1, which GitHub's
+    # servers reject; force TLS 1.2 (in addition to whatever is already
+    # enabled) before issuing the request. This used to require a small
+    # prebuilt helper binary (tls12-download.exe); PowerShell can do the
+    # same thing on its own.
+    [System.Net.ServicePointManager]::SecurityProtocol = `
+        [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
+
+    $tempFile = "$OutFile.part"
+    Remove-Item -Path $tempFile -ErrorAction SilentlyContinue
+
+    $maxAttempts = 3
+    for ($attempt = 1; $attempt -le $maxAttempts; $attempt++)
+    {
+        try
+        {
+            $webClient = New-Object System.Net.WebClient
+            try
+            {
+                $webClient.DownloadFile($Url, $tempFile)
+            }
+            finally
+            {
+                $webClient.Dispose()
+            }
+            Move-Item -Path $tempFile -Destination $OutFile -Force
+            return $true
+        }
+        catch
+        {
+            Write-Warning "Attempt $attempt of $maxAttempts to download '$Url' failed: $_"
+            Remove-Item -Path $tempFile -ErrorAction SilentlyContinue
+            if ($attempt -lt $maxAttempts)
+            {
+                Start-Sleep -Seconds 1
+            }
+        }
+    }
+
+    return $false
 }
+
+if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {
+    $vcpkgToolUrl = "https://github.com/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe"
+} else {
+    $vcpkgToolUrl = "https://github.com/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe"
+}
+
+$downloadSucceeded = Invoke-DownloadWithRetry -Url $vcpkgToolUrl -OutFile "$vcpkgRootDir\vcpkg.exe"
 
 Write-Host ""
 
-if ($LASTEXITCODE -ne 0)
+if (-not $downloadSucceeded)
 {
     Write-Error "Downloading vcpkg.exe failed. Please check your internet connection, or consider downloading a recent vcpkg.exe from https://github.com/microsoft/vcpkg-tool with a browser."
     throw
