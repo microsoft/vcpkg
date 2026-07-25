@@ -45,6 +45,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-${VERSION_MAJOR_MINOR})
 
+file(COPY "${CURRENT_PACKAGES_DIR}/include/SEAL-${VERSION_MAJOR_MINOR}/seal" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
 # Provides pkg-config files only on UNIX.
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_pkgconfig()
