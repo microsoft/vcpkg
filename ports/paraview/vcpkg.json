@@ -5,12 +5,10 @@
   "homepage": "https://www.paraview.org/",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "boost-algorithm",
-    "boost-core",
-    "boost-format",
     "cgns",
     "protobuf",
     "qt5compat",
+    "qtbase",
     "qtsvg",
     {
       "name": "vcpkg-cmake",
@@ -51,6 +49,9 @@
         }
       ]
     },
+    "icet": {
+      "description": "Build the Image Composition Engine for Tiles (IceT), a high-performance sort-last parallel rendering library"
+    },
     "mpi": {
       "description": "Enable MPI support for parallel computing",
       "dependencies": [
@@ -85,6 +86,14 @@
     },
     "tools": {
       "description": "Build paraview tools"
+    },
+    "visitbridge": {
+      "description": "Build the Visit Database Bridge ParaView plugin",
+      "dependencies": [
+        "boost-algorithm",
+        "boost-core",
+        "boost-format"
+      ]
     },
     "vtkm": {
       "description": "enables vtkm for the build of paraview",
