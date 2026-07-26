@@ -139,7 +139,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/paraview-${VERSION_MAJOR_MINOR})
 
-
+set(TOOLS
+    smTestDriver-pv${VERSION_MAJOR_MINOR}
+    vtkProcessXML-pv${VERSION_MAJOR_MINOR}
+    vtkWrapClientServer-pv${VERSION_MAJOR_MINOR}
+)
 if("tools" IN_LIST FEATURES)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/paraview-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/paraview-config")
@@ -147,14 +151,11 @@ if("tools" IN_LIST FEATURES)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/paraview-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/paraview-config")
     endif()
-    set(TOOLS
+    list(APPEND TOOLS
         paraview
         pvdataserver
         pvrenderserver
         pvserver
-        smTestDriver-pv${VERSION_MAJOR_MINOR}
-        vtkProcessXML-pv${VERSION_MAJOR_MINOR}
-        vtkWrapClientServer-pv${VERSION_MAJOR_MINOR}
     )
     if("python" IN_LIST FEATURES)
         list(APPEND TOOLS
@@ -162,8 +163,8 @@ if("tools" IN_LIST FEATURES)
             pvpython
         )
     endif()
-    vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
 endif()
+vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
