@@ -1,32 +1,15 @@
 {
   "name": "libusb",
   "version": "1.0.30",
+  "port-version": 1,
   "description": "a cross-platform library to access USB devices",
   "homepage": "https://github.com/libusb/libusb",
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "vcpkg-make",
-      "host": true,
-      "platform": "!windows | mingw"
-    },
-    {
-      "name": "vcpkg-msbuild",
-      "host": true,
-      "platform": "windows & !mingw"
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
-  ],
-  "default-features": [
-    {
-      "name": "udev",
-      "platform": "linux"
-    }
-  ],
-  "features": {
-    "udev": {
-      "description": "Enable udev",
-      "supports": "linux"
-    }
-  }
+  ]
 }
