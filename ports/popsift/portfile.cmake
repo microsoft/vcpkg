@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         pr-183-add-zcpreprocessor-for-cuda-13-2.diff # https://github.com/alicevision/popsift/pull/183
+        cuda-13.3-thrust-includes.patch # https://github.com/alicevision/popsift/pull/188
 )
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)

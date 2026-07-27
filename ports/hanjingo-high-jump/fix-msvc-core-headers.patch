@@ -1,0 +1,344 @@
+diff --git a/cmakes/hjConfig.cmake.in b/cmakes/hjConfig.cmake.in
+index b24a2f7..f2cdbad 100644
+--- a/cmakes/hjConfig.cmake.in
++++ b/cmakes/hjConfig.cmake.in
+@@ -23,6 +23,8 @@ find_package(Boost REQUIRED COMPONENTS
+     filesystem 
+     algorithm
+     stacktrace_basic
++    coroutine2
++    context
+ )
+ list(APPEND hj_LIBRARIES ${Boost_LIBRARIES})
+ 
+@@ -387,4 +389,4 @@ endif()
+ list(REMOVE_DUPLICATES hj_LIBRARIES)
+ 
+ # Export the libraries variable
+-set(hj_LIBRARIES ${hj_LIBRARIES} CACHE INTERNAL "High-jump libraries")
+\ No newline at end of file
++set(hj_LIBRARIES ${hj_LIBRARIES} CACHE INTERNAL "High-jump libraries")
+diff --git a/hj/ai/llama.hpp b/hj/ai/llama.hpp
+index 4174c46..c73d423 100644
+--- a/hj/ai/llama.hpp
++++ b/hj/ai/llama.hpp
+@@ -129,7 +129,7 @@ class batch
+     void
+     set_tokens(const token_t *tokens, int32_t n_tokens, int32_t start_pos = 0)
+     {
+-        int32_t safe_tokens = std::min(n_tokens, _capacity);
++        int32_t safe_tokens = (std::min)(n_tokens, _capacity);
+         for(int32_t i = 0; i < safe_tokens; ++i)
+         {
+             _batch.token[i]     = tokens[i];
+diff --git a/hj/compress/gzip.hpp b/hj/compress/gzip.hpp
+index 1ff08e7..6d14acc 100644
+--- a/hj/compress/gzip.hpp
++++ b/hj/compress/gzip.hpp
+@@ -104,7 +104,7 @@ class gzip
+         const size_t MIN_ALLOC      = 4096;              // 4KB
+         const size_t MAX_SAFE_ALLOC = 1024 * 1024 * 256; // 256MB
+         if(max_output_sz > 0)
+-            return std::min(max_output_sz, MAX_SAFE_ALLOC);
++            return (std::min)(max_output_sz, MAX_SAFE_ALLOC);
+ 
+         if(src_sz == 0)
+             return MIN_ALLOC;
+@@ -112,7 +112,7 @@ class gzip
+         size_t estimated =
+             (src_sz <= MAX_SAFE_ALLOC / 4) ? src_sz * 4 : MAX_SAFE_ALLOC;
+ 
+-        return std::max(MIN_ALLOC, std::min(estimated, MAX_SAFE_ALLOC));
++        return (std::max)(MIN_ALLOC, (std::min)(estimated, MAX_SAFE_ALLOC));
+     }
+ 
+     static err compress(
+diff --git a/hj/crypto/aes.hpp b/hj/crypto/aes.hpp
+index 2a77e05..509eaed 100644
+--- a/hj/crypto/aes.hpp
++++ b/hj/crypto/aes.hpp
+@@ -611,7 +611,7 @@ class aes
+         while(total_read < cipher_len)
+         {
+             std::streamsize to_read =
+-                std::min(static_cast<std::streamsize>(AES_BUF_SIZE),
++                (std::min)(static_cast<std::streamsize>(AES_BUF_SIZE),
+                          cipher_len - total_read);
+             in.read(reinterpret_cast<char *>(inbuf.data()), to_read);
+             std::streamsize read_len = in.gcount();
+diff --git a/hj/crypto/des.hpp b/hj/crypto/des.hpp
+index c8a19dd..148b207 100644
+--- a/hj/crypto/des.hpp
++++ b/hj/crypto/des.hpp
+@@ -1003,7 +1003,7 @@ class des
+     {
+         memset(dst, 0, dst_len);
+         if(src && src_len > 0)
+-            memcpy(dst, src, std::min(src_len, dst_len));
++            memcpy(dst, src, (std::min)(src_len, dst_len));
+ 
+         unsigned char pad_val = static_cast<unsigned char>(dst_len - src_len);
+         switch(pad_style)
+diff --git a/hj/encoding/bytes.hpp b/hj/encoding/bytes.hpp
+index 36f86e2..badee83 100644
+--- a/hj/encoding/bytes.hpp
++++ b/hj/encoding/bytes.hpp
+@@ -325,7 +325,7 @@ inline T &string_to_bytes(T &bytes, const std::string &str)
+ {
+     static_assert(std::is_trivially_copyable<T>::value,
+                   "T must be trivially copyable");
+-    std::memcpy(bytes.data(), str.data(), std::min(str.size(), bytes.size()));
++    std::memcpy(bytes.data(), str.data(), (std::min)(str.size(), bytes.size()));
+     return bytes;
+ }
+ 
+@@ -335,7 +335,7 @@ string_to_bytes(unsigned char *bytes, size_t &sz, const std::string &str)
+     assert(bytes != nullptr && sz >= str.size()
+            && "bytes pointer must not be null and size must be at least string "
+               "size");
+-    sz = std::min(str.size(), sz);
++    sz = (std::min)(str.size(), sz);
+     std::memcpy(bytes, str.data(), sz);
+     return bytes;
+ }
+@@ -345,7 +345,7 @@ inline char *string_to_bytes(char *bytes, size_t &sz, const std::string &str)
+     assert(bytes != nullptr && sz >= str.size()
+            && "bytes pointer must not be null and size must be at least string "
+               "size");
+-    sz = std::min(str.size(), sz);
++    sz = (std::min)(str.size(), sz);
+     std::memcpy(bytes, str.data(), sz);
+     return bytes;
+ }
+diff --git a/hj/encoding/unicode.hpp b/hj/encoding/unicode.hpp
+index 01cb225..9dfc88e 100644
+--- a/hj/encoding/unicode.hpp
++++ b/hj/encoding/unicode.hpp
+@@ -25,6 +25,9 @@
+ 
+ #if (__cplusplus >= 201703L)
+ #if defined(_WIN32) || defined(_WIN64)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <Windows.h>
+ #endif
+ #else
+diff --git a/hj/encoding/utf8.hpp b/hj/encoding/utf8.hpp
+index a9d79c4..b82c478 100644
+--- a/hj/encoding/utf8.hpp
++++ b/hj/encoding/utf8.hpp
+@@ -27,6 +27,9 @@
+ 
+ #if (__cplusplus >= 201703L)
+ #if defined(_WIN32) || defined(_WIN64)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <Windows.h>
+ #endif
+ #else
+diff --git a/hj/hj.hpp b/hj/hj.hpp
+index 3d58939..f4bf0f6 100644
+--- a/hj/hj.hpp
++++ b/hj/hj.hpp
+@@ -1,6 +1,10 @@
+ #ifndef HJ_HPP
+ #define HJ_HPP
+ 
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
++
+ #include <hj/ai/ai.hpp>
+ 
+ #include <hj/algo/algo.hpp>
+diff --git a/hj/io/chain_buffer.hpp b/hj/io/chain_buffer.hpp
+index dd13cb9..8d2684c 100644
+--- a/hj/io/chain_buffer.hpp
++++ b/hj/io/chain_buffer.hpp
+@@ -60,7 +60,7 @@ class chain_buffer
+             }
+ 
+             size_t space   = _block_size - _blocks.back().size();
+-            size_t to_copy = std::min(space, len);
++            size_t to_copy = (std::min)(space, len);
+             _blocks.back().insert(_blocks.back().end(), p, p + to_copy);
+             p += to_copy;
+             len -= to_copy;
+@@ -106,7 +106,7 @@ class chain_buffer
+             }
+ 
+             size_t avail   = blk.size() - pos;
+-            size_t to_copy = std::min(avail, len);
++            size_t to_copy = (std::min)(avail, len);
+             std::memcpy(p + copied, blk.data() + pos, to_copy);
+             copied += to_copy;
+             len -= to_copy;
+diff --git a/hj/net/http/http_client.hpp b/hj/net/http/http_client.hpp
+index 1741d9b..a8c4220 100644
+--- a/hj/net/http/http_client.hpp
++++ b/hj/net/http/http_client.hpp
+@@ -27,6 +27,9 @@
+ #include <httplib.h>
+ 
+ #if defined(_WIN32)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <Windows.h>
+ #endif
+ 
+diff --git a/hj/net/http/http_request.hpp b/hj/net/http/http_request.hpp
+index c516645..ee20f9d 100644
+--- a/hj/net/http/http_request.hpp
++++ b/hj/net/http/http_request.hpp
+@@ -22,6 +22,9 @@
+ #include <httplib.h>
+ 
+ #if defined(_WIN32)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <Windows.h>
+ #endif
+ 
+diff --git a/hj/net/http/http_response.hpp b/hj/net/http/http_response.hpp
+index 9c5d20b..074977c 100644
+--- a/hj/net/http/http_response.hpp
++++ b/hj/net/http/http_response.hpp
+@@ -22,6 +22,9 @@
+ #include <httplib.h>
+ 
+ #if defined(_WIN32)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <Windows.h>
+ #endif
+ 
+diff --git a/hj/net/http/http_server.hpp b/hj/net/http/http_server.hpp
+index 7461655..e529db1 100644
+--- a/hj/net/http/http_server.hpp
++++ b/hj/net/http/http_server.hpp
+@@ -28,6 +28,9 @@
+ #include <httplib.h>
+ 
+ #if defined(_WIN32)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <Windows.h>
+ #endif
+ 
+diff --git a/hj/net/tcp/tcp_socket.hpp b/hj/net/tcp/tcp_socket.hpp
+index 951fad1..801c0e8 100644
+--- a/hj/net/tcp/tcp_socket.hpp
++++ b/hj/net/tcp/tcp_socket.hpp
+@@ -21,6 +21,9 @@
+ 
+ #ifdef _WIN32
+ #include <WinSock2.h>
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <Windows.h>
+ #endif
+ 
+diff --git a/hj/os/options.hpp b/hj/os/options.hpp
+index aab63eb..3b69c3d 100644
+--- a/hj/os/options.hpp
++++ b/hj/os/options.hpp
+@@ -109,6 +109,9 @@ struct unary_function
+ #if defined(_WIN32)
+ #include <io.h>
+ #include <fcntl.h>
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <windows.h>
+ 
+ #elif __linux__
+diff --git a/hj/os/process.hpp b/hj/os/process.hpp
+index 3b68158..d02c364 100644
+--- a/hj/os/process.hpp
++++ b/hj/os/process.hpp
+@@ -30,6 +30,9 @@
+ #include <cstring>
+ 
+ #if defined(_WIN32)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <windows.h>
+ #include <tlhelp32.h>
+ #else
+diff --git a/hj/sync/shared_memory.hpp b/hj/sync/shared_memory.hpp
+index 1d0a786..9f24cfd 100644
+--- a/hj/sync/shared_memory.hpp
++++ b/hj/sync/shared_memory.hpp
+@@ -26,6 +26,9 @@
+ #include <fcntl.h>
+ 
+ #if defined(_WIN32) || defined(_WIN64)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <windows.h>
+ #else
+ #include <unistd.h>
+diff --git a/hj/sync/thread_pool.hpp b/hj/sync/thread_pool.hpp
+index 766ba86..48f89b5 100644
+--- a/hj/sync/thread_pool.hpp
++++ b/hj/sync/thread_pool.hpp
+@@ -19,6 +19,9 @@
+ #include <unordered_set>
+ 
+ #if defined(_WIN32)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <windows.h>
+ 
+ #elif __APPLE__
+diff --git a/hj/testing/crash.hpp b/hj/testing/crash.hpp
+index 5b0c871..8838fa9 100644
+--- a/hj/testing/crash.hpp
++++ b/hj/testing/crash.hpp
+@@ -24,6 +24,9 @@
+ #include <functional>
+ 
+ #if defined(_WIN32)
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <windows.h>
+ #include <client/windows/handler/exception_handler.h>
+ #elif __APPLE__
+diff --git a/hj/testing/debugger.hpp b/hj/testing/debugger.hpp
+index 2475e5a..c3c2d2c 100644
+--- a/hj/testing/debugger.hpp
++++ b/hj/testing/debugger.hpp
+@@ -24,7 +24,7 @@
+ #include <vector>
+ #include <mutex>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <boost/asio.hpp>
+ 
+ #ifndef DEBUG_BUF_SIZE
+diff --git a/hj/util/string_util.hpp b/hj/util/string_util.hpp
+index c0840b2..0a3de60 100644
+--- a/hj/util/string_util.hpp
++++ b/hj/util/string_util.hpp
+@@ -36,6 +36,9 @@
+ #include <regex>
+ 
+ #ifdef _WIN32
++#if defined(_WIN32) && !defined(NOMINMAX)
++#define NOMINMAX
++#endif
+ #include <windows.h>
+ 
+ #else

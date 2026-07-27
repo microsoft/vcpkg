@@ -1,6 +1,6 @@
 {
   "name": "mujoco",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "description": "Multi-Joint dynamics with Contact.",
   "homepage": "https://mujoco.org",
   "license": "Apache-2.0",
