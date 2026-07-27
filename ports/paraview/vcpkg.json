@@ -63,6 +63,13 @@
           ]
         },
         {
+          "name": "paraview",
+          "default-features": false,
+          "features": [
+            "icet"
+          ]
+        },
+        {
           "name": "vtk",
           "default-features": false,
           "features": [
