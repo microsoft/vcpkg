@@ -4758,7 +4758,7 @@
     },
     "libaec": {
       "baseline": "1.1.7",
-      "port-version": 0
+      "port-version": 1
     },
     "libaes-siv": {
       "baseline": "2020-10-15",
