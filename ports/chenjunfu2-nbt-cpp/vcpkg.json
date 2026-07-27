@@ -13,7 +13,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
   "features": {
     "xxhash": {
       "description": "Enable XXHASH support for hash functionality",
