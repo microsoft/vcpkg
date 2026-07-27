@@ -9,11 +9,8 @@ vcpkg_from_github(
     SHA512 d2be6014542e7063013b27b95c0cfa83bc57b9cae6d390d26e62ff2806a36a9ba42edc23b9052c2b06f2c49956491602761a589a84e9d64a5a0f6d9879b829de
     HEAD_REF master
 )
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-)
-vcpkg_install_cmake()
+vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
+vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libusb)
