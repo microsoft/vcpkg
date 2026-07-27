@@ -1,0 +1,36 @@
+{
+  "name": "viskores",
+  "version": "1.1.1",
+  "description": "A visualization library for many-threaded devices",
+  "homepage": "https://viskores.org/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "anari": {
+      "description": "Enable ANARI interop support",
+      "dependencies": [
+        "anari"
+      ]
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "features": [
+            "hl"
+          ]
+        }
+      ]
+    }
+  }
+}
