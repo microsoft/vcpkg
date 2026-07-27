@@ -144,7 +144,9 @@ function(vcpkg_download_distfile out_var)
         "URLS;HEADERS"
     )
     if(DEFINED arg_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "vcpkg_download_distfile was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
+        # backcompat needed to be preserved for
+        # https://github.com/microsoft/vcpkg/blob/68b3d3404d0bc6f2a2287f64ed5f6aa777e70d56/ports/liblas/portfile.cmake#L9
+        message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "vcpkg_download_distfile was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     if(arg_SILENT_EXIT)
         message(WARNING "SILENT_EXIT no longer has any effect. To resolve this warning, remove SILENT_EXIT.")
