@@ -1,6 +1,6 @@
 {
   "name": "ormpp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A modern C++ ORM library for MySQL, PostgreSQL, and SQLite",
   "homepage": "https://github.com/qicosmos/ormpp",
   "license": "Apache-2.0",
