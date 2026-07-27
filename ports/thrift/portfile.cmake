@@ -12,7 +12,7 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/thrift/${VERSION}/thrift-${VERSION}.tar.gz"
     FILENAME "thrift-${VERSION}.tar.gz"
-    SHA512 a57c6fa645852f22ca10380621facc193393b19d1d760e113baa0f964365839043f2b527bd8cd3c03808380e9f09e9a8f707f8abbd931c51632e9d5181a459cf
+    SHA512 843ae8358b76eab1c37996e9693040115c26a0fdb1e6f8f6ade190d2f431ac5554492b0a5c7dc66c9ce6eb7c5db086d6e260e191a39b2706fe736d9e1f09cdbe
 )
 
 vcpkg_extract_source_archive(
