@@ -3,7 +3,7 @@
   "version": "0.2.44",
   "description": "VBI decoding library (teletext, closed caption, VPS, WSS, XDS)",
   "homepage": "https://github.com/zapping-vbi/zvbi",
-  "license": "LGPL-2.1-or-later",
+  "license": "GPL-2.0-only",
   "supports": "!android",
   "dependencies": [
     "libiconv",
