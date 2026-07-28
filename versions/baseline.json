@@ -7034,7 +7034,7 @@
     },
     "neko-network": {
       "baseline": "1.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-schema": {
       "baseline": "1.1.5",
