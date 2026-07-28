@@ -38,6 +38,12 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/taglib-config.cmd" "${CURRENT_PACKAGES_
 
 # remove bin directory for static builds (taglib creates a cmake batch file there)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/taglib/taglib-config.cmake"
+[[include("${CMAKE_CURRENT_LIST_DIR}/taglib-targets.cmake")]]
+[[include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+include("${CMAKE_CURRENT_LIST_DIR}/taglib-targets.cmake")]]
+    )
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/taglib/taglib_export.h" "defined(TAGLIB_STATIC)" "1")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/taglib/tag_c.h" "defined(TAGLIB_STATIC)" "1")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
