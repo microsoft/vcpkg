@@ -156,24 +156,24 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
 else()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic")
+    set(OPTIONS --disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic)
 
-    set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
-    set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
-    set(AS_NASM "--as=nasm")
+    set(OPTIONS_DEBUG --enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug)
+    set(OPTIONS_RELEASE --prefix=${CURRENT_PACKAGES_DIR})
+    set(AS_NASM --as=nasm)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
+        list(APPEND OPTIONS --disable-static --enable-shared)
     else()
-        set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
+        list(APPEND OPTIONS --enable-static --disable-shared)
     endif()
 
     if("realtime" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+        list(APPEND OPTIONS --enable-realtime-only)
     endif()
 
     if("highbitdepth" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+        list(APPEND OPTIONS --enable-vp9-highbitdepth)
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -229,19 +229,19 @@ else()
         set(LIBVPX_TARGET "generic-gnu")
         # Settings
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(OPTIONS "${OPTIONS} --disable-sse4_1 --disable-avx --disable-avx2 --disable-avx512")
+            list(APPEND OPTIONS --disable-sse4_1 --disable-avx --disable-avx2 --disable-avx512)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(OPTIONS "${OPTIONS} --disable-avx --disable-avx2 --disable-avx512")
+            list(APPEND OPTIONS --disable-avx --disable-avx2 --disable-avx512)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
+            list(APPEND OPTIONS --enable-thumb --disable-neon)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            set(OPTIONS "${OPTIONS} --enable-thumb")
+            list(APPEND OPTIONS --enable-thumb)
         endif()
         # Set environment variables for configure
         set(ENV{AS} ${VCPKG_DETECTED_CMAKE_C_COMPILER})
         set(ENV{LDFLAGS} "${LDFLAGS} --target=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET}")
         # Set clang target
-        set(OPTIONS "${OPTIONS} --extra-cflags=--target=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET} --extra-cxxflags=--target=${VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET}")
+        list(APPEND OPTIONS --extra-cflags=--target=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET} --extra-cxxflags=--target=${VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET})
         # Unset nasm and let AS do its job
         unset(AS_NASM)
     elseif(VCPKG_TARGET_IS_OSX)
