@@ -7030,7 +7030,7 @@
     },
     "neko-log": {
       "baseline": "1.0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-network": {
       "baseline": "1.0.3",
