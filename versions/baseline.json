@@ -9288,6 +9288,10 @@
       "baseline": "3.0.2",
       "port-version": 0
     },
+    "sfparse": {
+      "baseline": "2026-06-04",
+      "port-version": 0
+    },
     "sfsexp": {
       "baseline": "1.4.1",
       "port-version": 0
