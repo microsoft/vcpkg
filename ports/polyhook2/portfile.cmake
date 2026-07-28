@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevemk14ebr/PolyHook_2_0
-    REF 4c8872e207e76ea43fd23f802e3bf5acb43fee8a
-    SHA512 f3baec4fc99e90221ce1b663c4fa10516a16c777135cca457e4b1de5e121c87b6a8eb5ac6392b75ee1c41e9e5a15a73171136fd3adfb3ff51ffaf0f909c58dd3
+    REF 49a95d4566d47342b122303cf73585cf22653b0a
+    SHA512 9197075ac4aaee46f46ff3bf3dbfc84972dc9ecf758d11b6abfd569934c572716ebe6e5bb302302afa78dc78a0b9c7f5ee3aea940f48e1246dcf2205439564fc
     HEAD_REF master
 )
 
@@ -31,6 +31,8 @@ vcpkg_cmake_configure(
       -DPOLYHOOK_USE_EXTERNAL_ASMJIT=ON
       -DPOLYHOOK_USE_EXTERNAL_ASMTK=ON
       -DPOLYHOOK_USE_EXTERNAL_ZYDIS=ON
+      -DPOLYHOOK_FEATURE_DETOURS=OFF # Requires asmtk, which depends on asmjit
+      -DPOLYHOOK_FEATURE_INLINENTD=OFF # Disables as not compatible with latest asmjit: #https://github.com/stevemk14ebr/PolyHook_2_0/issues/221
 )
 
 vcpkg_cmake_install()
@@ -40,5 +42,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME PolyHook_2 CONFIG_PATH lib/PolyHook_2)
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
