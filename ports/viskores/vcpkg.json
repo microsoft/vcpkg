@@ -5,6 +5,7 @@
   "homepage": "https://viskores.org/",
   "license": null,
   "dependencies": [
+    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
