@@ -2,5 +2,6 @@
   "name": "nanoprintf",
   "version": "0.7.0",
   "description": "A tiny embeddable printf replacement written in C99",
-  "homepage": "https://github.com/charlesnicholson/nanoprintf"
+  "homepage": "https://github.com/charlesnicholson/nanoprintf",
+  "license": "Unlicense OR 0BSD"
 }
