@@ -31,6 +31,16 @@ index 7dbfde4..1d244f2 100644
    set_target_properties(nghttp3_static PROPERTIES
      COMPILE_FLAGS "${WARNCFLAGS}"
      VERSION ${LT_VERSION} SOVERSION ${LT_SOVERSION}
+diff --git a/lib/libnghttp3.pc.in b/lib/libnghttp3.pc.in
+--- a/lib/libnghttp3.pc.in
++++ b/lib/libnghttp3.pc.in
+@@ -30,5 +30,6 @@ Name: libnghttp3
+ Description: nghttp3 library
+ URL: https://github.com/ngtcp2/nghttp3
+ Version: @VERSION@
+ Libs: -L${libdir} -lnghttp3
++Libs.private: -lsfparse
+ Cflags: -I${includedir}
 diff --git a/lib/config.cmake.in b/lib/config.cmake.in
 index fc691dd..bc991b1 100644
 --- a/lib/config.cmake.in
