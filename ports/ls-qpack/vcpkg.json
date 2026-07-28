@@ -3,7 +3,7 @@
   "version": "2.6.6",
   "description": "QPACK compression library for use with HTTP/3",
   "homepage": "https://github.com/litespeedtech/ls-qpack",
-  "license": "MIT",
+  "license": "MIT AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
