@@ -1,4 +1,4 @@
-if(TARGET libbacktrace::libbacktrace)
+if(TARGET unofficial::libbacktrace::libbacktrace)
     return()
 endif()
 
@@ -26,22 +26,22 @@ find_library(
 include(SelectLibraryConfigurations)
 select_library_configurations(LIBBACKTRACE)
 
-if(NOT TARGET libbacktrace::libbacktrace)
-    add_library(libbacktrace::libbacktrace UNKNOWN IMPORTED)
+if(NOT TARGET unofficial::libbacktrace::libbacktrace)
+    add_library(unofficial::libbacktrace::libbacktrace UNKNOWN IMPORTED)
     set_target_properties(
-      libbacktrace::libbacktrace
+      unofficial::libbacktrace::libbacktrace
       PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${LIBBACKTRACE_INCLUDE_DIR}"
         IMPORTED_LOCATION "${LIBBACKTRACE_LIBRARY}"
     )
     if(LIBBACKTRACE_LIBRARY_RELEASE)
         set_property(
-          TARGET libbacktrace::libbacktrace
+          TARGET unofficial::libbacktrace::libbacktrace
           APPEND
           PROPERTY IMPORTED_CONFIGURATIONS RELEASE
         )
         set_target_properties(
-          libbacktrace::libbacktrace
+          unofficial::libbacktrace::libbacktrace
           PROPERTIES
             IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
             IMPORTED_LOCATION_RELEASE "${LIBBACKTRACE_LIBRARY_RELEASE}"
@@ -49,12 +49,12 @@ if(NOT TARGET libbacktrace::libbacktrace)
     endif()
     if(LIBBACKTRACE_LIBRARY_DEBUG)
         set_property(
-          TARGET libbacktrace::libbacktrace
+          TARGET unofficial::libbacktrace::libbacktrace
           APPEND
           PROPERTY IMPORTED_CONFIGURATIONS DEBUG
         )
         set_target_properties(
-          libbacktrace::libbacktrace
+          unofficial::libbacktrace::libbacktrace
           PROPERTIES
             IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
             IMPORTED_LOCATION_DEBUG "${LIBBACKTRACE_LIBRARY_DEBUG}"
