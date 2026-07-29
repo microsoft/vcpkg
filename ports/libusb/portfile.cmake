@@ -14,10 +14,12 @@ vcpkg_cmake_configure(
 	OPTIONS
 		-DLIBUSB_EXPORT_INSTALL_TARGETS=ON
 		-DLIBUSB_INSTALL_TARGETS=ON
-		-DLIBUSB_INSTALL_PKGCONFIG=OFF
+		-DLIBUSB_INSTALL_PKGCONFIG=ON
 )
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libusb)
+vcpkg_fixup_pkgconfig()
+
 file(INSTALL "${SOURCE_PATH}/libusb/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
