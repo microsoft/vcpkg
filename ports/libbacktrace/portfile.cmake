@@ -16,9 +16,6 @@ vcpkg_make_configure(
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
-file(
-    COPY "${CMAKE_CURRENT_LIST_DIR}/libbacktraceConfig.cmake"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/libbacktrace"
-)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/libbacktraceConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
