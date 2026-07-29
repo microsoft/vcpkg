@@ -10841,7 +10841,7 @@
       "port-version": 0
     },
     "vulkan-extensionlayer": {
-      "baseline": "1.4.350.1",
+      "baseline": "1.4.357.0",
       "port-version": 0
     },
     "vulkan-headers": {
