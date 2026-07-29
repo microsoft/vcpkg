@@ -10865,7 +10865,7 @@
       "port-version": 1
     },
     "vulkan-sdk-components": {
-      "baseline": "1.4.350.0",
+      "baseline": "1.4.357.0",
       "port-version": 0
     },
     "vulkan-tools": {
