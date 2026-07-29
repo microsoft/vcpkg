@@ -3,5 +3,5 @@ project(libbacktrace-test LANGUAGES C)
 
 find_package(libbacktrace CONFIG REQUIRED)
 
-add_executable(main main.cpp)
+add_executable(main main.c)
 target_link_libraries(main PRIVATE libbacktrace::libbacktrace)
