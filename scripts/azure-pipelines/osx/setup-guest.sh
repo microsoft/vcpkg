@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-export VM_DIRECTORY=`ls ~/Parallels | grep vcpkg-osx`
-export SSH_KEY="$HOME/Parallels/$VM_DIRECTORY/id_guest"
+export VM_DIRECTORY=`ls ~ | grep vcpkg-osx-`
+export SSH_KEY="$HOME/$VM_DIRECTORY/id_guest"
 export SSH_PUBLIC_KEY="$SSH_KEY.pub"
 ssh-keygen -P '' -f "$SSH_KEY"
 echo Type 'vcpkg' and press enter

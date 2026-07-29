@@ -11,10 +11,10 @@ if [ -z "$2" ]; then
 fi
 export AGENT=CPPMAC-ARM64-$2
 echo "THIS IS AGENT: $AGENT"
-export POOL=`echo ~/Parallels/*/ | sed -En 's/\/Users\/vcpkg\/Parallels\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64\/$/PrOsx-\1-arm64/p'`
+export POOL=`echo ~/vcpkg-osx-*-arm64/ | sed -En 's/\/Users\/vcpkg\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64\/$/PrOsx-\1-arm64/p'`
 # on arm64, DNS works
 export SSH_COOKIE=vcpkg@vcpkgs-Virtual-Machine.local
 echo "POOL: $POOL"
 echo "SSH_COOKIE: $SSH_COOKIE"
-ssh $SSH_COOKIE -o "StrictHostKeyChecking=no" -i ~/Parallels/*/id_guest "~/myagent/config.sh --unattended --url https://dev.azure.com/vcpkg --work ~/Data/work --auth pat --token $1 --pool $POOL --agent $AGENT --replace --acceptTeeEula"
-ssh $SSH_COOKIE -o "StrictHostKeyChecking=no" -i ~/Parallels/*/id_guest "sudo shutdown -h now"
+ssh $SSH_COOKIE -o "StrictHostKeyChecking=no" -i ~/vcpkg-osx-*-arm64/id_guest "~/myagent/config.sh --unattended --url https://dev.azure.com/vcpkg --work ~/Data/work --auth pat --token $1 --pool $POOL --agent $AGENT --replace --acceptTeeEula"
+ssh $SSH_COOKIE -o "StrictHostKeyChecking=no" -i ~/vcpkg-osx-*-arm64/id_guest "sudo shutdown -h now"
