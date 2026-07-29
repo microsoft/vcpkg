@@ -1,0 +1,200 @@
+# SPDX-License-Identifier: MPL-2.0
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# AUI configuration file (vcpkg edition)
+
+get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(AUI_ROOT_DIR "${SELF_DIR}/../.." ABSOLUTE)
+
+
+@AUI_CONFIG_VARS@
+@AUIB_DEPS@
+
+
+# Resolve transitive dependencies
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(glm CONFIG)
+find_dependency(fmt CONFIG)
+find_dependency(ZLIB)
+find_dependency(Threads)
+find_dependency(range-v3 CONFIG)
+
+# libbacktrace from vcpkg doesn't ship CMake config; define target directly
+if(NOT TARGET libbacktrace::libbacktrace)
+    find_library(_aui_libbacktrace_LIBRARY NAMES backtrace libbacktrace REQUIRED)
+    find_path(_aui_libbacktrace_INCLUDE_DIR backtrace.h REQUIRED)
+    add_library(libbacktrace::libbacktrace STATIC IMPORTED)
+    set_target_properties(libbacktrace::libbacktrace PROPERTIES
+        IMPORTED_LOCATION "${_aui_libbacktrace_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${_aui_libbacktrace_INCLUDE_DIR}"
+    )
+endif()
+
+# Try to find extra dependency packages needed by specific components.
+# This is best-effort: if a package is not installed, its targets will be
+# missing and the corresponding component will be silently skipped.
+macro(_aui_maybe_find_dep _name)
+    if(NOT ${_name}_FOUND AND NOT TARGET ${_name})
+        find_dependency(${_name} QUIET)
+    endif()
+endmacro()
+
+_aui_maybe_find_dep(OpenSSL)
+_aui_maybe_find_dep(CURL)
+_aui_maybe_find_dep(lunasvg CONFIG)
+_aui_maybe_find_dep(WebP CONFIG)
+_aui_maybe_find_dep(GLEW)
+_aui_maybe_find_dep(Freetype)
+_aui_maybe_find_dep(PulseAudio)
+
+
+if (NOT AUI_FIND_COMPONENTS) # case fix
+    set(AUI_FIND_COMPONENTS ${aui_FIND_COMPONENTS})
+endif()
+
+if (NOT AUI_FIND_COMPONENTS)
+    set(AUI_FIND_COMPONENTS ${AUI_AVAILABLE_COMPONENTS})
+    set(_all TRUE)
+else()
+    # add dependencies
+    if (views IN_LIST AUI_FIND_COMPONENTS)
+        list(APPEND AUI_FIND_COMPONENTS xml image)
+    endif()
+    list(REMOVE_DUPLICATES AUI_FIND_COMPONENTS)
+endif()
+
+# Check if all link-interface targets for a component are available.
+# Returns via _aui_deps_ok variable.
+function(_aui_check_component_deps _component)
+    set(_aui_deps_ok TRUE PARENT_SCOPE)
+    if(NOT DEFINED AUI_COMPONENT_${_component}_LINK_LIBS)
+        return()
+    endif()
+    foreach(_dep IN LISTS AUI_COMPONENT_${_component}_LINK_LIBS)
+        # strip $<LINK_ONLY:...> generator expressions
+        string(REGEX REPLACE "^\\\$<LINK_ONLY:(.*)>$" "\\1" _dep_target "${_dep}")
+        if(_dep_target MATCHES "::")
+            if(NOT TARGET "${_dep_target}")
+                set(_aui_deps_ok FALSE PARENT_SCOPE)
+                return()
+            endif()
+        endif()
+    endforeach()
+endfunction()
+
+set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
+foreach(_module ${AUI_FIND_COMPONENTS})
+    if (_module STREQUAL "toolbox")
+        # ignore it
+        set(${CMAKE_FIND_PACKAGE_NAME}_toolbox_FOUND TRUE)
+        continue()
+    endif()
+
+    set(_module_target_name aui::${_module})
+    if (TARGET ${_module_target_name})
+        continue()
+    endif()
+    if (NOT ${_module} IN_LIST AUI_ALL_COMPONENTS)
+        message(FATAL_ERROR "Unknown component ${_module}")
+    endif()
+    if (_module STREQUAL toolbox)
+        continue()
+    endif()
+    if (${_module} IN_LIST AUI_AVAILABLE_COMPONENTS)
+        set(_module_dir "${AUI_ROOT_DIR}/aui.${_module}")
+        if (EXISTS ${_module_dir})
+            # Skip component if its transitive deps are not available
+            _aui_check_component_deps(${_module})
+            if(NOT _aui_deps_ok)
+                message(STATUS "AUI component '${_module}' skipped: missing transitive dependencies")
+                if(NOT _all)
+                    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+                    if(${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED_${_module})
+                        message(FATAL_ERROR "Component ${_module} requires unavailable dependencies")
+                    endif()
+                endif()
+                continue()
+            endif()
+            if (WIN32)
+                find_file(${CMAKE_FIND_PACKAGE_NAME}_${_module}_LIBRARY
+                          NAMES "aui.${_module}.dll" "libaui.${_module}.dll"
+                          PATHS "${AUI_ROOT_DIR}/bin" "${AUI_ROOT_DIR}/aui.${_module}/bin"
+                          NO_DEFAULT_PATH
+                          NO_CACHE)
+                find_library(${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY "aui.${_module}"
+                             PATHS "${AUI_ROOT_DIR}/lib" "${AUI_ROOT_DIR}/aui.${_module}/lib"
+                             NO_DEFAULT_PATH
+                             NO_CACHE)
+            else()
+                find_library(${CMAKE_FIND_PACKAGE_NAME}_${_module}_LIBRARY "aui.${_module}"
+                             PATHS "${AUI_ROOT_DIR}/lib" "${AUI_ROOT_DIR}/aui.${_module}/lib"
+                             NO_DEFAULT_PATH
+                             NO_CACHE)
+            endif()
+            set(_lib ${${CMAKE_FIND_PACKAGE_NAME}_${_module}_LIBRARY})
+            set(_implib ${${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY})
+            set(_include ${AUI_ROOT_DIR}/aui.${_module}/include)
+            if ((_lib OR _implib) AND EXISTS ${_include})
+                set(${CMAKE_FIND_PACKAGE_NAME}_${_module}_FOUND TRUE)
+                if (NOT _lib)
+                    set(_lib ${_implib})
+                endif()
+                list(APPEND ${CMAKE_FIND_PACKAGE_NAME}_LIBRARIES ${_lib})
+                list(APPEND ${CMAKE_FIND_PACKAGE_NAME}_INCLUDE_DIRS ${_include})
+                list(APPEND ${CMAKE_FIND_PACKAGE_NAME}_IMPORTED_TARGETS "${_module_target_name}")
+                add_library(${_module_target_name} ${AUI_COMPONENT_${_module}_KIND} IMPORTED)
+                add_library(aui.${_module} ALIAS ${_module_target_name})
+                target_link_libraries(${_module_target_name} INTERFACE ${AUI_COMPONENT_${_module}_LINK_LIBS})
+                target_link_options(${_module_target_name} INTERFACE ${AUI_COMPONENT_${_module}_LINK_OPTIONS})
+                set_target_properties(${_module_target_name} PROPERTIES
+                        IMPORTED_LOCATION "${_lib}"
+                        IMPORTED_IMPLIB "${${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY}"
+                        INTERFACE_INCLUDE_DIRECTORIES "${_include}"
+                        INTERFACE_LINK_DIRECTORIES "${AUI_ROOT_DIR}/aui.${_module}/lib")
+
+                target_compile_definitions(${_module_target_name} INTERFACE ${AUI_COMPONENT_${_module}_COMPILE_DEFINITIONS})
+                if (AUI_COMPONENT_${_module}_WHOLEARCHIVE)
+                    set_target_properties(${_module_target_name} PROPERTIES INTERFACE_AUI_WHOLEARCHIVE ON)
+                endif()
+                continue()
+            endif()
+        endif()
+    endif()
+
+    set(${CMAKE_FIND_PACKAGE_NAME}_${_module}_FOUND FALSE)
+    if (NOT _all)
+        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+        if (${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED AND ${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED_${_module})
+            message(FATAL_ERROR "Component ${_module} is not found")
+        else()
+            message(STATUS "Component ${_module} is not found")
+        endif()
+    endif()
+endforeach()
+
+if (${CMAKE_FIND_PACKAGE_NAME}_FOUND AND NOT TARGET aui)
+    add_library(aui INTERFACE IMPORTED)
+    set_target_properties(aui PROPERTIES
+            INTERFACE_LINK_LIBRARIES "${${CMAKE_FIND_PACKAGE_NAME}_IMPORTED_TARGETS}")
+endif()
+
+if (UNIX AND NOT APPLE)
+    find_package(Threads REQUIRED)
+endif()
+
+if (${CMAKE_FIND_PACKAGE_NAME}_views_FOUND AND NOT ANDROID AND NOT IOS)
+    if (UNIX AND NOT APPLE)
+        find_package(X11 REQUIRED)
+        find_package(Fontconfig REQUIRED)
+    endif()
+    find_package(OpenGL REQUIRED)
+endif()
+
+if (${CMAKE_FIND_PACKAGE_NAME}_uitests_FOUND AND NOT ANDROID AND NOT IOS)
+    find_package(GTest REQUIRED)
+endif()
