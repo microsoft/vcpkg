@@ -806,7 +806,6 @@ nana:arm64-linux=fail
 nana:x64-linux=fail
 nanogui:arm64-linux=cascade
 nativefiledialog-extended:arm64-linux=cascade
-neko-network[nlog]:arm64-linux=feature-fails
 netcdf-c[core]:arm64-linux=combination-fails # error: cannot find math library
 netcdf-c[dap]:arm64-linux=feature-fails
 netcdf-c[szip]:arm64-linux=cascade
