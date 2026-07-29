@@ -1,7 +1,7 @@
 function(vcpkg_from_bitbucket)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF"
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;RAW_INCLUDE_MAPPING"
         "PATCHES")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -89,5 +89,24 @@ ${version_contents}
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
     )
+
+    # Forward any provided mapping after a quick sanity check.
+    # If nothing is passed into vcpkg_write_sourcelink_file, then it will 
+    # attempt to set a sensible default based upon the contents of the extracted repo.
+    if(DEFINED arg_RAW_INCLUDE_MAPPING)
+        list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
+        if (${num_mappings} LESS "2")
+            message(FATAL_ERROR "vcpkg_from_bitbucket was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
+        endif()
+        set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+    endif()
+
+    vcpkg_write_sourcelink_file(
+        SOURCE_PATH "${SOURCE_PATH}"
+        SERVER_PATH "https://bitbucket.com/${org_name}/${repo_name}/raw/${ref_to_use}/*"
+        RAW_SEARCH_REPO_NAME "${repo_name}"
+        RAW_INCLUDE_MAPPING "${raw_include_mapping}"
+    )
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
