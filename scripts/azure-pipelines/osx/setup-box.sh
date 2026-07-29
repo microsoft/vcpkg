@@ -11,7 +11,7 @@ curl -fsSL -o ~/Downloads/install-homebrew.sh https://raw.githubusercontent.com/
 rm ~/Downloads/install-homebrew.sh
 (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/vcpkg/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
-brew install autoconf-archive autoconf automake azcopy azure-cli bison cmake gettext gfortran gnu-sed gperf libtool meson nasm ninja pkg-config powershell texinfo
+brew install autoconf-archive autoconf automake azcopy azure-cli bison cmake gettext gfortran gnu-sed gperf libtool meson nasm ninja pkg-config powershell
 mkdir ~/Data
 curl -fsSL -o ~/Downloads/azure-agent.tar.gz https://download.agent.dev.azure.com/agent/4.266.2/vsts-agent-osx-arm64-4.266.2.tar.gz
 mkdir ~/myagent
