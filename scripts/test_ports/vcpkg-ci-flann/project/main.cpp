@@ -1,6 +1,10 @@
 #include <flann/flann.hpp>
+
 #ifdef WITH_HDF5
-#include <flann/io/hdf5.h>
+# include <flann/io/hdf5.h>
+#endif
+#ifdef WITH_CUDA
+# include <flann/flann_cuda.h>
 #endif
 
 #include <array>
@@ -12,6 +16,9 @@ int main() {
     index.usedMemory();
 #ifdef WITH_HDF5
     flann::load_from_file(dataset, {}, {});
+#endif
+#ifdef WITH_CUDA
+    flann::gpu::GpuIndexParams params;
 #endif
 
     return 0;

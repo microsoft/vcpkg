@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f79d173..ec76e8a 100644
+index f79d173..7b95694 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -147,9 +147,15 @@ if (BUILD_CUDA_LIB)
@@ -48,17 +48,18 @@ index 07b8d64..84acd82 100644
  Cflags: -I${includedir}
  
 diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
-index 7603abc..2a45e95 100644
+index 7603abc..2f8de78 100644
 --- a/src/cpp/CMakeLists.txt
 +++ b/src/cpp/CMakeLists.txt
-@@ -3,5 +3,6 @@
+@@ -2,6 +2,7 @@
+ 
  add_definitions(-D_FLANN_VERSION=${FLANN_VERSION})
  
 +set(FLANN_STATIC ${CMAKE_BUILD_STATIC_LIBS})
  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/flann/config.h)
  
  file(GLOB_RECURSE C_SOURCES flann.cpp)
-@@ -24,19 +24,24 @@ target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
+@@ -24,19 +25,24 @@ target_link_libraries(flann_cpp ${LZ4_LINK_LIBRARIES})
  # export lz4 headers, so that MSVC to creates flann_cpp.lib
  set_target_properties(flann_cpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
  
@@ -85,12 +86,13 @@ index 7603abc..2a45e95 100644
      set_property(TARGET flann_cuda_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
      if (CMAKE_BUILD_STATIC_LIBS)
          list(APPEND flann_install_targets flann_cuda_s)
-@@ -45,9 +50,13 @@ if (BUILD_CUDA_LIB)
+@@ -45,9 +51,14 @@ if (BUILD_CUDA_LIB)
      endif()
  
      cuda_add_library(flann_cuda SHARED ${CU_SOURCES})
 -    list(APPEND flann_install_targets flann_cuda)
 -    set_property(TARGET flann_cpp PROPERTY COMPILE_DEFINITIONS FLANN_USE_CUDA)
++    set_target_properties(flann_cuda PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS YES)
 +    target_link_libraries(flann_cuda ${LZ4_LINK_LIBRARIES})
 +    if (NOT CMAKE_BUILD_STATIC_LIBS)
 +        list(APPEND flann_install_targets flann_cuda)
@@ -101,7 +103,7 @@ index 7603abc..2a45e95 100644
  else()
      set_property(TARGET flann_cpp_s PROPERTY COMPILE_DEFINITIONS FLANN_STATIC)
  endif()
-@@ -94,8 +103,9 @@ if (BUILD_C_BINDINGS)
+@@ -94,8 +105,9 @@ if (BUILD_C_BINDINGS)
  
      add_library(flann SHARED ${C_SOURCES})
      target_link_libraries(flann ${LZ4_LINK_LIBRARIES})
@@ -114,9 +116,11 @@ index 7603abc..2a45e95 100644
          target_link_libraries(flann gomp)
      endif()
 diff --git a/src/cpp/flann/config.h.in b/src/cpp/flann/config.h.in
+index 2efd382..8692edc 100644
 --- a/src/cpp/flann/config.h.in
 +++ b/src/cpp/flann/config.h.in
-@@ -28,5 +28,6 @@
+@@ -30,6 +30,7 @@
+ #ifndef FLANN_CONFIG_H_
  #define FLANN_CONFIG_H_
  
 +#cmakedefine FLANN_STATIC
@@ -124,6 +128,7 @@ diff --git a/src/cpp/flann/config.h.in b/src/cpp/flann/config.h.in
  #undef FLANN_VERSION_
  #endif
 diff --git a/src/cpp/flann/defines.h b/src/cpp/flann/defines.h
+index afa62b3..280f524 100644
 --- a/src/cpp/flann/defines.h
 +++ b/src/cpp/flann/defines.h
 @@ -34,7 +34,7 @@
