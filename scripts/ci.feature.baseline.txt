@@ -1461,7 +1461,6 @@ wxchartdir:arm64-linux=cascade
 wxchartdir:arm64-windows=cascade
 wxcharts:arm64-linux=cascade
 wxwidgets:arm64-linux=cascade
-xbitmaps(!windows)=fail # error: must install xorg-macros 1.20 or later before running autoconf/autogen
 xdigest:arm64-linux=fail
 xerces-c[xmlch-wchar](!windows)=feature-fails # wchar_t must be 16 bit and not 32
 yara:arm64-linux=fail

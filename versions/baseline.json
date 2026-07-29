@@ -11113,8 +11113,8 @@
       "port-version": 0
     },
     "xbitmaps": {
-      "baseline": "1.1.3",
-      "port-version": 1
+      "baseline": "1.1.4",
+      "port-version": 0
     },
     "xbyak": {
       "baseline": "7.28",
