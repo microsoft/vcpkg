@@ -12,6 +12,8 @@ vcpkg_from_github(
         # Candidate upstream fix: makes configure-time toolchain probes use -Fo/-Fe when CC/LD is cl.exe or clang-cl.
         # Once upstream picks this up (or once we drop --enable-external-build), the MSVC arm64 SVE workaround below can also be removed.
         0007-msvc-use-Fo-in-toolchain-probe.patch
+        # mingw shared .dll patch
+        0008-enable-shared-on-mingw.patch
 )
 
 if(CMAKE_HOST_WIN32)
