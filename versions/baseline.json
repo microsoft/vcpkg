@@ -10873,7 +10873,7 @@
       "port-version": 0
     },
     "vulkan-utility-libraries": {
-      "baseline": "1.4.350.1",
+      "baseline": "1.4.357.0",
       "port-version": 0
     },
     "vulkan-validationlayers": {
