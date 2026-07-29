@@ -1,4 +1,6 @@
 #!/bin/sh
+set -e
+
 if [ -z "$1" ]; then
     echo "Token missing"
     exit 1
@@ -9,7 +11,7 @@ if [ -z "$2" ]; then
 fi
 export AGENT=CPPMAC-ARM64-$2
 echo "THIS IS AGENT: $AGENT"
-export POOL=`echo ~/Parallels/*/ | sed -nr 's/\/Users\/vcpkg\/Parallels\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64\/$/PrOsx-\1-arm64/p'`
+export POOL=`echo ~/Parallels/*/ | sed -En 's/\/Users\/vcpkg\/Parallels\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64\/$/PrOsx-\1-arm64/p'`
 # on arm64, DNS works
 export SSH_COOKIE=vcpkg@vcpkgs-Virtual-Machine.local
 echo "POOL: $POOL"

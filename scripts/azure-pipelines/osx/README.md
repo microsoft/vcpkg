@@ -56,7 +56,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ```
     scp path/to/Xcode.xip vcpkg@HOSTMACHINE:/Users/vcpkg/Xcode.xip
     ssh vcpkg@HOSTMACHINE
-    rm ~/.ssh/known_hosts
+    ssh-keygen -R vcpkgs-Virtual-Machine.local
     scp Xcode.xip vcpkg@vcpkgs-Virtual-Machine.local:/Users/vcpkg/Xcode.xip
     ssh vcpkg@vcpkgs-Virtual-Machine.local
     printf 'vcpkg\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vcpkg'
@@ -76,10 +76,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     scp path/to/console/tools.dmg vcpkg@HOSTMACHINE:/Users/vcpkg/clt.dmg
     ssh vcpkg@HOSTMACHINE
     chmod +x setup-guest.sh
-    ./setup-guest.sh
-    rm setup-guest.sh
-    rm setup-box.sh
-    rm clt.dmg
+    ./setup-guest.sh && rm setup-guest.sh setup-box.sh clt.dmg
     exit
     ```
 - [ ] Shut down the VM cleanly.
@@ -165,12 +162,12 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```pwsh
     scp register-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg/register-guest.sh
     ssh vcpkg@HOSTMACHINE
-    rm .ssh/known_hosts
+    ssh-keygen -R vcpkgs-Virtual-Machine.local
     chmod +x register-guest.sh
-    ./register-guest.sh TOKEN-GOES-HERE AGENT-NUMBER-GOES-HERE
-    rm register-guest.sh
+    ./register-guest.sh TOKEN-GOES-HERE AGENT-NUMBER-GOES-HERE && rm register-guest.sh
     ```
-- [ ] That will cleanly shut down the VM. In the KVM's terminal, relaunch the VM in ephemeral mode with:
+- [ ] After successful registration, the script will cleanly shut down the VM. If registration fails,
+      the VM remains running for diagnosis. In the KVM's terminal, relaunch a successfully registered VM in ephemeral mode with:
     ```sh
     ~/macosvm --ephemeral ./vm.json
     ```
