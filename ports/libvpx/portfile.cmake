@@ -215,7 +215,7 @@ else()
         if(LIBVPX_TARGET_ARCH STREQUAL "x86")
             set(LIBVPX_TARGET "x86-win32-gcc")
         else()
-            set(LIBVPX_TARGET "x86_64-win64-gcc")
+            set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-win64-gcc")
         endif()
     elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
         # WASM use target generic-gnu
