@@ -131,6 +131,7 @@ file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 file(GLOB dyn_libs
 	"${BINDIST_PATH}/lib/*.dylib"
 	"${BINDIST_PATH}/lib/*.so"
+	"${BINDIST_PATH}/lib/*.so.0.${VERSION}" # On linux, some of the .so files are postfixed by the version.
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
