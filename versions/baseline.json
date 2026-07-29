@@ -7093,7 +7093,7 @@
       "port-version": 0
     },
     "nghttp3": {
-      "baseline": "1.17.0",
+      "baseline": "1.18.0",
       "port-version": 0
     },
     "ngspice": {
@@ -9286,6 +9286,10 @@
     },
     "sfml": {
       "baseline": "3.0.2",
+      "port-version": 0
+    },
+    "sfparse": {
+      "baseline": "2026-06-04",
       "port-version": 0
     },
     "sfsexp": {
