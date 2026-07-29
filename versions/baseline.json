@@ -9649,7 +9649,7 @@
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.4.350.1",
+      "baseline": "1.4.357.0",
       "port-version": 0
     },
     "spirv-tools": {
