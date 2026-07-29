@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency-hdf5.patch
         fix-dep-lz4.patch
+		cuda.patch # https://github.com/flann-lib/flann/issues/527
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
