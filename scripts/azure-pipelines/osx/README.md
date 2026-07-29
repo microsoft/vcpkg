@@ -35,7 +35,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ```
     mkdir -p ~/vcpkg-osx-2026-07-29-arm64
     cd ~/vcpkg-osx-2026-07-29-arm64
-    ~/macosvm --disk disk.img,size=500g --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_26.6_25G72_Restore.ipsw ./vm.json
+    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_26.6_25G72_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
 - [ ] Follow prompts as you would on real hardware.
@@ -163,7 +163,8 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ./register-guest.sh TOKEN-GOES-HERE AGENT-NUMBER-GOES-HERE && rm register-guest.sh
     ```
 - [ ] After successful registration, the script will cleanly shut down the VM. If registration fails,
-      the VM remains running for diagnosis. In the KVM's terminal, relaunch a successfully registered VM in ephemeral mode with:
+      the VM remains running for diagnosis. In the KVM's terminal, relaunch the successfully registered
+      VM in ephemeral mode:
     ```sh
     ~/macosvm --ephemeral ./vm.json
     ```
