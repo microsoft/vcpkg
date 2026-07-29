@@ -9358,7 +9358,7 @@
     },
     "simd": {
       "baseline": "7.1.162",
-      "port-version": 0
+      "port-version": 1
     },
     "simde": {
       "baseline": "0.8.2",
