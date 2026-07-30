@@ -28,14 +28,16 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     rm macosvm-0.2-3-darwin21.tar.gz
     exit
     ```
-- [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example:
+- [ ] Download the matching `.ipsw` for the macOS copy to install. See the
+      [M4 Apple Silicon IPSW firmware database](https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/)
+      for links to the `.ipsw`. Example:
     https://updates.cdn-apple.com/2026SummerFCS/fullrestores/140-65618/10445B26-DE2C-43EC-9149-0A831602E74B/UniversalMac_26.6_25G72_Restore.ipsw
 - [ ] Determine the VM directory name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2026-07-29-arm64".
 - [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2026-07-29-arm64 and UniversalMac_26.6_25G72_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
     ```
     mkdir -p ~/vcpkg-osx-2026-07-29-arm64
     cd ~/vcpkg-osx-2026-07-29-arm64
-    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_26.6_25G72_Restore.ipsw ./vm.json
+    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 10 -r 18g --restore ~/UniversalMac_26.6_25G72_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
 - [ ] Follow prompts as you would on real hardware.
