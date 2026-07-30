@@ -53,10 +53,6 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 4. PRs with no touched `ports/<portname>/` entries.
 5. PRs that failed to review, with a short reason instead of silently omitting them.
 
-## cleanup-worktrees.ps1 content
-
-If temporary worktrees were created during the review process, write this script with one `git worktree remove` line per worktree. If this file is already present, append to it. Skip this file when no temporary worktrees were created.
-
 ## Required output layout
 
 Write all deliverables under `reviews/` in the caller's current directory, not under `investigation-root`. Each worker reviews one PR and substitutes its number for `{{PR_NUMBER}}`. Find out what report.md is from .github/skills/shared/review-vcpkg-pr-guide.md
@@ -64,7 +60,6 @@ Write all deliverables under `reviews/` in the caller's current directory, not u
 ```text
 reviews/
 ├── index.md
-├── cleanup-worktrees.ps1  (only when temporary worktrees were created)
 ├── pr-12345/
 │   ├── report.md
 │   └── patches/
@@ -73,4 +68,4 @@ reviews/
     ├── report.md
 ```
 
-Do not stop until `reviews/index.md` and `reviews/pr-{{PR_NUMBER}}/report.md` for each reviewed PR number exist and are complete. If temporary worktrees were created, also ensure `reviews/cleanup-worktrees.ps1` exists and is complete.
+Do not stop until `reviews/index.md` and `reviews/pr-{{PR_NUMBER}}/report.md` for each reviewed PR number exist and are complete.

@@ -82,7 +82,7 @@ The review highlights unusual aspects of the portfile and attempts to find other
 
 The review examines the upstream source code for optional dependencies, ensures they are correctly controlled by the portfile, and flags any vendored dependencies.
 
-If the verdict is 'approve-with-notes' or 'request-changes', the report has a "Contributor Feedback" section immediately after the Summary section. This section should be written by a gpt-5.5 subagent after the rest of the report is complete, using the following subguidance:
+If the verdict is 'approve-with-notes' or 'request-changes', the report has a "Contributor Feedback" section immediately after the Summary section. This section should be written by a gpt-5.6-sol subagent after the rest of the report is complete, using the following subguidance:
 - Be technical and impersonal. Use GitHub-flavored markdown.
 - Do not repeat 'correct' or passing points; focus only on issues.
 - Do not repeat the 'verdict'.
