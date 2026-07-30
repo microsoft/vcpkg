@@ -7022,31 +7022,31 @@
     },
     "neko-event": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-function": {
       "baseline": "1.0.11",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-log": {
       "baseline": "1.0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-network": {
       "baseline": "1.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-schema": {
       "baseline": "1.1.5",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-system": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "neko-threadpool": {
       "baseline": "1.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "neon2sse": {
       "baseline": "2026-04-28",
