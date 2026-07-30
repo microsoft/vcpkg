@@ -11,7 +11,7 @@ index dbd6977f..7227a9a8 100644
  # Handle SSL dependency (OpenSSL)
  set(_glaze_ENABLE_SSL "@glaze_ENABLE_SSL@")
  if(_glaze_ENABLE_SSL)
-@@ -19,13 +21,8 @@ unset(_glaze_ENABLE_SSL)
+@@ -19,13 +21,13 @@ unset(_glaze_ENABLE_SSL)
  
  include("${CMAKE_CURRENT_LIST_DIR}/glazeTargets.cmake")
  
@@ -25,9 +25,14 @@ index dbd6977f..7227a9a8 100644
 -if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/glaze-asio.cmake")
 -    include("${CMAKE_CURRENT_LIST_DIR}/glaze-asio.cmake")
 -endif()
-+# We removed the feature that automatically selected from `boost-asio` and standalone `asio`.
-+# It always use standalone "asio" now, just as specified in vcpkg.json.
-+# To maintain compatibility with the official usage, we add this empty function
++# vcpkg always uses standalone Asio, as declared in the port manifest.
++# Preserve the documented networking interface without selecting Boost or
++# downloading an undeclared dependency.
++if(NOT TARGET glaze::asio)
++    add_library(glaze::asio INTERFACE IMPORTED)
++    set_property(TARGET glaze::asio PROPERTY INTERFACE_LINK_LIBRARIES asio::asio)
++endif()
++
 +function(glaze_setup_asio)
 +endfunction()
 diff --git a/cmake/install-rules.cmake b/cmake/install-rules.cmake
