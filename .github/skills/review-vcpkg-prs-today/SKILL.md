@@ -27,7 +27,7 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 2. Prefer authenticated requests via `gh` or `GITHUB_TOKEN`; unauthenticated limits are usually too low for a full batch.
 3. For each candidate PR, fetch the changed file list and identify touched ports from paths matching `ports/<portname>/`.
 4. Group competing PRs only by the specific port or ports they share. Put PRs that touch no port in a separate index section.
-5. Review every candidate independently. Every worker must read all of `.github/skills/shared/review-vcpkg-pr-guide.md` and treat every instruction as mandatory. Group competing PRs only in the final `index.md`.
+5. Review every candidate independently with a `general-purpose` worker using its default high-capability model; do not override it with a fast or lightweight model. Every worker must read all of `.github/skills/shared/review-vcpkg-pr-guide.md` and treat every instruction as mandatory. Group competing PRs only in the final `index.md`.
 6. Write each report when completed. Write `index.md` last from the final per-PR results and port-specific competition groups.
 
 ## Parallel execution safety

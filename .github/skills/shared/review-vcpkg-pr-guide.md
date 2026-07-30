@@ -78,7 +78,9 @@ The review highlights unusual aspects of the portfile and attempts to find other
 
 The review examines the upstream source code for optional dependencies, ensures they are correctly controlled by the portfile, and flags any vendored dependencies.
 
-For `approve-with-notes` or `request-changes`, have a gpt-5.6-sol subagent write `## Contributor Feedback` after the rest of the report is complete, then place it immediately after `## Summary`. Instruct it to:
+Any subagent that owns substantive review analysis or final contributor feedback must be `general-purpose` and use its default high-capability model; do not override it with a fast or lightweight model.
+
+For `approve-with-notes` or `request-changes`, have a `general-purpose` subagent write `## Contributor Feedback` after the rest of the report is complete, then place it immediately after `## Summary`. Instruct it to:
 - Be technical and impersonal. Use GitHub-flavored markdown.
 - Do not repeat 'correct' or passing points; focus only on issues.
 - Do not repeat the 'verdict'.
