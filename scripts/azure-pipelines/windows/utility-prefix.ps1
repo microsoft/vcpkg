@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
+$UseManagedIdentity = $false
+
 <#
 .SYNOPSIS
 Gets a random file path in the temp directory.
@@ -30,11 +32,8 @@ Function Get-TempFilePath {
 Gets the download URL for an image asset.
 
 .DESCRIPTION
-Get-AssetUrl returns the upstream URL when no SAS token is provided, or the
-vcpkgimageminting asset URL when a SAS token is available.
-
-.PARAMETER SasToken
-The optional SAS token for accessing vcpkgimageminting assets.
+Get-AssetUrl returns the upstream URL unless UseManagedIdentity is specified,
+in which case it returns the corresponding vcpkgimageminting asset URL.
 
 .PARAMETER InternetUrl
 The upstream download URL.
@@ -45,17 +44,15 @@ The asset file name in the vcpkgimageminting blob container.
 Function Get-AssetUrl {
   [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [String]$SasToken,
     [Parameter(Mandatory)][uri]$InternetUrl,
     [Parameter(Mandatory)][String]$BlobAssetName
   )
 
-  if ([string]::IsNullOrEmpty($SasToken)) {
+  if (-not $UseManagedIdentity) {
     return $InternetUrl
   }
 
-  $SasToken = $SasToken.Replace('"', '').TrimStart('?')
-  return [uri]"https://vcpkgimageminting.blob.core.windows.net/assets/$($BlobAssetName)?$($SasToken)"
+  return [uri]"https://vcpkgimageminting.blob.core.windows.net/assets/$([uri]::EscapeDataString($BlobAssetName))"
 }
 
 <#
@@ -84,11 +81,7 @@ Function Get-ContentSourceDescription {
   }
 
   if ($Url.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
-    if ($Url.Query -match '(^\?|&)sig=') {
-      return 'vcpkgimageminting using SAS token'
-    }
-
-    return 'vcpkgimageminting'
+    return 'vcpkgimageminting using managed identity'
   }
 
   return 'the internet'
@@ -127,9 +120,38 @@ Function Get-LocalOrDownloadedFile {
     $tempPath = Get-TempFilePath
     New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
     $downloadPath = Join-Path $tempPath $LocalName
-    curl.exe --fail -L -o $downloadPath $Url
-    if (-Not $?) {
-      Write-Error 'Download failed!'
+
+    if ($Url.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
+      $tokenResponseJson = curl.exe `
+        --fail `
+        --silent `
+        --show-error `
+        --noproxy '*' `
+        --header 'Metadata: true' `
+        'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fstorage.azure.com%2F'
+      if ($LASTEXITCODE -ne 0) {
+        throw 'Failed to acquire an Azure Storage access token from IMDS.'
+      }
+
+      $storageAccessToken = ($tokenResponseJson | ConvertFrom-Json).access_token
+      if ([string]::IsNullOrWhiteSpace($storageAccessToken)) {
+        throw 'IMDS returned an empty Azure Storage access token.'
+      }
+
+      curl.exe `
+        --fail `
+        --location `
+        --show-error `
+        --header "Authorization: Bearer $storageAccessToken" `
+        --header 'x-ms-version: 2023-11-03' `
+        --output $downloadPath `
+        $Url
+    } else {
+      curl.exe --fail --location --show-error --output $downloadPath $Url
+    }
+
+    if ($LASTEXITCODE -ne 0) {
+      throw "Failed to download $LocalName."
     }
 
     return [pscustomobject]@{

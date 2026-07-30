@@ -17,6 +17,9 @@ endif()
 if("dav1d" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DAVIF_CODEC_DAV1D=SYSTEM")
 endif()
+if("svt" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DAVIF_CODEC_SVT=SYSTEM")
+endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 

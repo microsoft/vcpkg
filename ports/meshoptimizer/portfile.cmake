@@ -1,8 +1,12 @@
+# gltfpack needs cgltf_meshopt_compression_filter_color and fastObjMesh::face_lines,
+# neither of which is in a released cgltf/fast-obj tag yet. meshoptimizer's upstream
+# repo vendors matching copies of both under extern/, so build against those instead of
+# the vcpkg cgltf/fast-obj ports to avoid patching or pinning them to an unreleased commit.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/meshoptimizer
     REF "v${VERSION}"
-    SHA512 df771578407b661890590a0116d4d3375c0e65d1b2e71def151a9c3790cbe2b2a40aa21c6f23ff264aeaf837dee6e039f1c990fbbb6f34764f7410fbef4f9509
+    SHA512 23197a9dcd4cbbce625b9d142f2eaafc67c9cf92859f9a5ce94c4570fca8db07c97590d2737d97726dbf48e968f53c8d7dd26771678c2cade957c62a3600d88c
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -33,4 +37,11 @@ if ("gltfpack" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES gltfpack AUTO_CLEAN)
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+vcpkg_install_copyright(COMMENT [[
+meshoptimizer is provided under MIT license terms.
+gltfpack vendors cgltf and fast_obj (both MIT); their license notices are in the headers below.]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.md"
+        "${SOURCE_PATH}/extern/cgltf.h"
+        "${SOURCE_PATH}/extern/fast_obj.h"
+)

@@ -113,7 +113,7 @@ jobs:
     displayName: 'Ensure Node.js is available'
     condition: always()
     inputs:
-      version: '22.x'
+      version: '24.x'
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci || true
       # Construct the blob base url using the secret SAS token set earlier
