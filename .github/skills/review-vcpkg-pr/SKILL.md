@@ -8,7 +8,7 @@ description: Review a microsoft/vcpkg pull request end-to-end.
 | Input | Required | Meaning |
 |---|---|---|
 | `pr` | Yes | Pull request number to review. Substituted for `{{PR_NUMBER}}` throughout this skill and the shared guide. |
-| `investigation-root` | No | Preferred directory for large temporary work such as detached worktrees, extracted archives, build trees, example builds, installs, caches, and other investigation artifacts. Final review deliverables are not investigation artifacts and must still be written under `reviews/` in the caller's current directory. When omitted, infer a short same-drive investigations location if that is clear; otherwise ask the user. Do not use the Copilot session directory or an arbitrary long temp path. |
+| `investigation-root` | No | Preferred directory for large temporary work such as detached worktrees, extracted archives, build trees, example builds, installs, and other investigation artifacts. Final review deliverables are not investigation artifacts and must still be written under `reviews/` in the caller's current directory. When omitted, infer a short same-drive investigations location if that is clear; otherwise ask the user. Do not use the Copilot session directory or an arbitrary long temp path. |
 | `review-depth` | No | One of `no-examples`, `examples`, or `examples-and-patches`. Default to `no-examples`. |
 
 ### Example invocations

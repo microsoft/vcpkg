@@ -102,7 +102,9 @@ If you create an example app or supporting files, keep them in the investigation
 
 For citations of upstream code hosted in GitHub, when it is not modified by patches, prefer citations to the code on GitHub rather than on the local disk. Make sure to use the correct ref, not main.
 
-Keep intermediate files, logs, downloaded archives, raw API responses, and build outputs in the investigation-root.
+Keep intermediate files, logs, manually downloaded archives, raw API responses, and build outputs in the investigation-root.
+
+Use the shared vcpkg downloads cache; do not pass a separate `--downloads-root`. Avoid `--clean-after-build`: retain sources, build trees, packages, installs, logs, and examples for follow-up investigation or patches. If storage exhaustion blocks progress, clean only targeted worker-local artifacts, never the downloads cache.
 
 Ports are not expected to propagate C++ standard version settings to their consumers via cmake config/pkg-config. Propagating it is allowed but discouraged.
 
