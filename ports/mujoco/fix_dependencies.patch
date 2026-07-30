@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e01c662..e3afbf8 100644
+index b35975a..3d0843c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -175,7 +175,7 @@ if(EMSCRIPTEN)
+@@ -181,7 +181,7 @@ if(EMSCRIPTEN)
  endif()
  
  
@@ -11,7 +11,7 @@ index e01c662..e3afbf8 100644
  if(MUJOCO_ENABLE_AVX_INTRINSICS)
    target_compile_definitions(mujoco PUBLIC mjUSEPLATFORMSIMD)
  endif()
-@@ -198,9 +198,9 @@ target_link_libraries(
+@@ -204,9 +204,9 @@ target_link_libraries(
    mujoco
    PRIVATE ccd
            lodepng
@@ -23,9 +23,9 @@ index e01c662..e3afbf8 100644
 +          tinyxml2::tinyxml2
  )
  
- set_target_properties(
+ if(NOT EMSCRIPTEN)
 diff --git a/cmake/MujocoDependencies.cmake b/cmake/MujocoDependencies.cmake
-index 664fc31..07ad2eb 100644
+index b48537f..88db605 100644
 --- a/cmake/MujocoDependencies.cmake
 +++ b/cmake/MujocoDependencies.cmake
 @@ -88,7 +88,7 @@ set(BUILD_SHARED_LIBS
@@ -114,19 +114,18 @@ index 664fc31..07ad2eb 100644
    PACKAGE_NAME
    tinyxml2
    LIBRARY_NAME
-@@ -172,9 +195,10 @@ findorfetch(
+@@ -172,8 +195,10 @@ findorfetch(
    tinyxml2
    EXCLUDE_FROM_ALL
  )
 +if(0)
  target_compile_options(tinyxml2 PRIVATE ${MUJOCO_MACOS_COMPILE_OPTIONS})
  target_link_options(tinyxml2 PRIVATE ${MUJOCO_MACOS_LINK_OPTIONS})
--
 +endif()
+ 
  # update cmake_minimum_required version for compatibility with newer version of cmake
  if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
-   set(CMAKE_POLICY_VERSION_MINIMUM ${MUJOCO_CMAKE_MIN_REQ})
-@@ -182,7 +206,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+@@ -182,7 +207,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
  endif()
  findorfetch(
    USE_SYSTEM_PACKAGE
@@ -135,7 +134,7 @@ index 664fc31..07ad2eb 100644
    PACKAGE_NAME
    tinyobjloader
    LIBRARY_NAME
-@@ -215,7 +239,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+@@ -215,7 +240,7 @@ if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
  endif()
  findorfetch(
    USE_SYSTEM_PACKAGE
@@ -144,7 +143,7 @@ index 664fc31..07ad2eb 100644
    PACKAGE_NAME
    ccd
    LIBRARY_NAME
-@@ -233,12 +257,13 @@ if(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
+@@ -233,12 +258,13 @@ if(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
    unset(CMAKE_POLICY_VERSION_MINIMUM)
    unset(CMAKE_POLICY_VERSION_MINIMUM_LOCALLY_DEFINED)
  endif()
@@ -160,7 +159,7 @@ index 664fc31..07ad2eb 100644
    if(MSVC)
      # C4005 is the MSVC equivalent of -Wmacro-redefined.
      target_compile_options(ccd PRIVATE /wd4005)
-@@ -254,12 +279,7 @@ else()
+@@ -254,12 +280,7 @@ else()
    set(_BUILD_TESTS_WAS_DEFINED FALSE)
  endif()
  set(BUILD_TESTS OFF)
@@ -174,7 +173,7 @@ index 664fc31..07ad2eb 100644
  if(_BUILD_TESTS_WAS_DEFINED)
    set(BUILD_TESTS "${_OLD_BUILD_TESTS}")
  else()
-@@ -281,7 +301,7 @@ if(MUJOCO_BUILD_TESTS OR MUJOCO_BUILD_STUDIO OR MUJOCO_USE_FILAMENT)
+@@ -284,7 +305,7 @@ if(MUJOCO_BUILD_TESTS OR MUJOCO_BUILD_STUDIO OR MUJOCO_USE_FILAMENT)
    set(ABSL_BUILD_TESTING OFF)
    findorfetch(
      USE_SYSTEM_PACKAGE
@@ -184,15 +183,16 @@ index 664fc31..07ad2eb 100644
      absl
      LIBRARY_NAME
 diff --git a/plugin/obj_decoder/CMakeLists.txt b/plugin/obj_decoder/CMakeLists.txt
-index 689dfc5..9f86232 100644
+index 689dfc5..4488a7e 100644
 --- a/plugin/obj_decoder/CMakeLists.txt
 +++ b/plugin/obj_decoder/CMakeLists.txt
-@@ -17,4 +17,4 @@ target_sources(mujoco PRIVATE
+@@ -17,4 +17,5 @@ target_sources(mujoco PRIVATE
    obj_decoder.cc
  )
  
 -target_link_libraries(mujoco PRIVATE tinyobjloader)
 +target_link_libraries(mujoco PRIVATE tinyobjloader::tinyobjloader)
++
 diff --git a/simulate/cmake/SimulateDependencies.cmake b/simulate/cmake/SimulateDependencies.cmake
 index 7885f5f..1da1be2 100644
 --- a/simulate/cmake/SimulateDependencies.cmake

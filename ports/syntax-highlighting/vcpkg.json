@@ -1,6 +1,6 @@
 {
   "name": "syntax-highlighting",
-  "version": "6.27.0",
+  "version": "6.28.0",
   "description": "Syntax highlighting engine for Kate syntax definitions",
   "homepage": "https://invent.kde.org/frameworks/syntax-highlighting",
   "documentation": "https://api.kde.org/ksyntaxhighlighting-index.html",

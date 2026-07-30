@@ -1,5 +1,3 @@
-include(vcpkg_execute_in_download_mode)
-
 function(z_uri_encode input output_variable)
     string(HEX "${input}" hex)
     string(LENGTH "${hex}" length)
@@ -94,7 +92,7 @@ function(vcpkg_from_gitlab)
     if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED VCPKG_HEAD_VERSION)
         z_uri_encode("${arg_REPO}" encoded_repo_path)
         set(version_url "${arg_GITLAB_URL}/api/v4/projects/${encoded_repo_path}/repository/branches/${arg_HEAD_REF}")
-        vcpkg_download_distfile(archive_version
+        z_vcpkg_download_distfile(archive_version
             URLS "${version_url}"
             FILENAME "${downloaded_file_name}.version"
             ${headers_param}
@@ -110,7 +108,7 @@ function(vcpkg_from_gitlab)
     endif()
 
     # download the file information from gitlab
-    vcpkg_download_distfile(archive
+    z_vcpkg_download_distfile(archive
         URLS "${gitlab_link}/-/archive/${ref_to_use}/${repo_name}-${ref_to_use}.tar.gz"
         FILENAME "${downloaded_file_name}"
         ${headers_param}
@@ -123,6 +121,11 @@ function(vcpkg_from_gitlab)
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
+    )
+    z_vcpkg_add_spdx_resource(
+        NAME "${arg_REPO}"
+        DOWNLOAD_LOCATION "git+${arg_GITLAB_URL}/${arg_REPO}@${ref_to_use}"
+        SHA512 "${arg_SHA512}"
     )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
