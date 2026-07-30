@@ -1,6 +1,7 @@
 {
   "name": "wirestead",
   "version": "0.9.1",
+  "port-version": 1,
   "description": "Unified, cross-platform async C++ library for Serial, TCP, UDP, and UDS",
   "homepage": "https://github.com/wirestead/wirestead",
   "license": "Apache-2.0",
