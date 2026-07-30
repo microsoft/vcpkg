@@ -24,6 +24,8 @@ vcpkg_cmake_configure(
         -DUSEARCH_INSTALL=ON
         -DUSEARCH_BUILD_TEST_CPP=OFF
         -DUSEARCH_BUILD_BENCH_CPP=OFF
+    MAYBE_UNUSED_VARIABLES
+        USEARCH_USE_FP16LIB
 )
 
 vcpkg_cmake_install()
