@@ -7,7 +7,7 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 
 | Input | Required | Meaning |
 |---|---|---|
-| `investigation-root` | No | Preferred directory for large temporary work such as detached worktrees, extracted archives, build trees, example builds, installs, and other investigation artifacts. Final review deliverables are not investigation artifacts and must still be written under `reviews/` in the caller's current directory. When omitted, infer a short same-drive investigations location if that is clear; otherwise ask the user. Do not use the Copilot session directory or an arbitrary long temp path. |
+| `investigation-root` | No | Directory for large temporary artifacts such as worktrees, sources, builds, examples, and installs. Final deliverables still go under `reviews/` in the caller's current directory. If omitted, infer a short same-drive path when clear; otherwise ask. Never use the Copilot session directory or an arbitrary long temp path. |
 | `review-depth` | No | One of `no-examples`, `examples`, or `examples-and-patches`. Default to `no-examples`. |
 
 ### Example invocations
@@ -24,38 +24,31 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
    - `is:open`
    - `draft:false`
    - `updated:>=<today minus 30 days>`
-2. Prefer authenticated GitHub requests via `gh` or `GITHUB_TOKEN`, because unauthenticated API limits are usually too low for a full batch run.
+2. Prefer authenticated requests via `gh` or `GITHUB_TOKEN`; unauthenticated limits are usually too low for a full batch.
 3. For each candidate PR, fetch the changed file list and identify touched ports from paths matching `ports/<portname>/`.
-4. Treat the competing-PR relationship as port-specific. Group PRs together only for the particular shared port or ports they both modify.
-5. Keep PRs that do not modify a port in a separate index section instead of mixing them into port-competition groups.
-6. Evaluate each candidate PR independently according to the rules in .github/skills/shared/review-vcpkg-pr-guide.md. Be sure each worker reads all of .github/skills/shared/review-vcpkg-pr-guide.md. Competing PRs that touch the same port are still reviewed as separate PRs; only group them in the final `index.md`.
-7. Write each per-PR report as you complete it. Write `index.md` last, after aggregating the final results from every reviewed PR directory and adding any port-specific competing-PR groups.
+4. Group competing PRs only by the specific port or ports they share. Put PRs that touch no port in a separate index section.
+5. Review every candidate independently. Every worker must read all of `.github/skills/shared/review-vcpkg-pr-guide.md` and treat every instruction as mandatory. Group competing PRs only in the final `index.md`.
+6. Write each report when completed. Write `index.md` last from the final per-PR results and port-specific competition groups.
 
 ## Parallel execution safety
 
-1. A worker that checks out a PR, uses `gh pr checkout`, edits files, or creates build trees must do so only inside its own isolated workspace, not in the calling repository.
-2. Never point multiple workers at the same writable repository path, even if they are reviewing different PRs.
-3. Use detached worktrees or equivalent detached-HEAD checkouts for workers so that review activity does not change the caller's branch state. When setting up a worker, copy vcpkg.exe (windows) or vcpkg (non-Windows) into the worker's isolated workspace. For example, after `git worktree add D:\vcpkg2 origin/master`, copy `.\vcpkg.exe` to `D:\vcpkg2`.
-4. Do not use the shared current working tree for concurrent PR reviews unless exactly one worker is active and the user explicitly allows it.
-5. If you need a clean baseline for multiple workers, create the isolated workspaces first and then launch the workers against those paths.
+1. Give each concurrent worker its own writable detached worktree or equivalent detached-HEAD workspace. Never share a writable repository path between workers.
+2. Create all isolated workspaces before launching workers. Copy `vcpkg.exe` (Windows) or `vcpkg` (non-Windows) into each one; for example, after `git worktree add D:\vcpkg2 origin/master`, copy `.\vcpkg.exe` to `D:\vcpkg2`.
+3. Use the caller's working tree only when exactly one worker is active and the user explicitly allows it.
 
 ## index.md content
 
 `index.md` must include:
 
 1. Coverage summary, including how many PRs were reviewed, skipped, or failed.
-2. PRs grouped by recommended action as described in .github/skills/shared/review-vcpkg-pr-guide.md
-   - `approve`
-   - `approve-with-notes`
-   - `request-changes`
-   - `unknown`
+2. PRs grouped by the shared guide's verdicts: `approve`, `approve-with-notes`, `request-changes`, and `unknown`.
 3. Competing PRs grouped by shared modified port.
 4. PRs with no touched `ports/<portname>/` entries.
 5. PRs that failed to review, with a short reason instead of silently omitting them.
 
 ## Required output layout
 
-Write all deliverables under `reviews/` in the caller's current directory, not under `investigation-root`. Each worker reviews one PR and substitutes its number for `{{PR_NUMBER}}`. Find out what report.md is from .github/skills/shared/review-vcpkg-pr-guide.md
+Write all deliverables under `reviews/` in the caller's current directory, not under `investigation-root`. Each worker substitutes its PR number for `{{PR_NUMBER}}`; the shared guide defines `report.md`.
 
 ```text
 reviews/
