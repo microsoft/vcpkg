@@ -42,5 +42,11 @@ function(vcpkg_from_sourceforge)
         PATCHES ${arg_PATCHES}
     )
 
+    z_vcpkg_add_spdx_resource(
+        NAME "${arg_FILENAME}"
+        FILENAME "${arg_FILENAME}"
+        DOWNLOAD_LOCATION "https://sourceforge.net/projects/${arg_REPO}/files/${arg_REF}/${arg_FILENAME}"
+        SHA512 "${arg_SHA512}"
+    )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
