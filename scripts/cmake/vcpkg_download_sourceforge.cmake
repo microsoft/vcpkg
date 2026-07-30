@@ -27,13 +27,13 @@ function(vcpkg_download_sourceforge out_var)
     - an organization name without any slashes, or
     - an organization name followed by a repository name separated by a single slash")
     endif()
-    
+
     if(NOT "${arg_REF}" STREQUAL "")
         set(url "${sourceforge_host}/${org_name}/files/${repo_name}/${arg_REF}/${arg_FILENAME}")
     else()
         set(url "${sourceforge_host}/${arg_REPO}/files/${arg_FILENAME}")
     endif()
-        
+
     string(SUBSTRING "${arg_SHA512}" 0 10 sanitized_ref)
 
     set(sourceforge_mirrors
@@ -72,8 +72,8 @@ function(vcpkg_download_sourceforge out_var)
     foreach(mirror IN LISTS sourceforge_mirrors)
         list(APPEND all_urls "${url}/download?use_mirror=${mirror}")
     endforeach()
-    
-    vcpkg_download_distfile(archive
+
+    z_vcpkg_download_distfile(archive
         URLS ${all_urls}
         SHA512 "${arg_SHA512}"
         FILENAME "${arg_FILENAME}"
