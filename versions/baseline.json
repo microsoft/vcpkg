@@ -3457,7 +3457,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.9.0",
+      "baseline": "7.9.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3929,8 +3929,8 @@
       "port-version": 0
     },
     "iceoryx": {
-      "baseline": "2.0.6",
-      "port-version": 1
+      "baseline": "2.0.8",
+      "port-version": 0
     },
     "icey": {
       "baseline": "2.4.11",
@@ -5250,7 +5250,7 @@
     },
     "liblas": {
       "baseline": "1.8.1",
-      "port-version": 16
+      "port-version": 17
     },
     "liblbfgs": {
       "baseline": "1.10",
@@ -8157,8 +8157,8 @@
       "port-version": 1
     },
     "qca": {
-      "baseline": "2.3.7",
-      "port-version": 4
+      "baseline": "2.3.10",
+      "port-version": 0
     },
     "qcbor": {
       "baseline": "1.6.1",
@@ -9362,7 +9362,7 @@
     },
     "simd": {
       "baseline": "7.1.162",
-      "port-version": 0
+      "port-version": 1
     },
     "simde": {
       "baseline": "0.8.2",
