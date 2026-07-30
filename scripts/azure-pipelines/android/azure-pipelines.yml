@@ -30,7 +30,7 @@ jobs:
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-02-10'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-07-15'
   - name: LINUX_DOCKER_IMAGE
     value: ${{ parameters.linuxDockerImage }}
   steps:
@@ -113,7 +113,7 @@ jobs:
     displayName: 'Ensure Node.js is available'
     condition: always()
     inputs:
-      version: '22.x'
+      version: '24.x'
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci || true
       if [ "$(Build.Reason)" = "PullRequest" ]; then

@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fktn-k/fkYAML
     REF "v${VERSION}"
-    SHA512 20a7e2a236f77e27a676348585cbf6c36d8c46f1ad0964b879eb61925e3d6545d6dda46379b897712890faa2b8d5e837b7f9cc312448a3d762f0017c618cbcd1
+    SHA512 2c4a514c9441281ae1b6f2580fc16fc0bedffbc9c253a136e94796d8e6ef0e8970cdbdeca2966a8adf87e69e5a2ef6a4dae7065cb4516d5a1cf5fbc3d549b4b6
     HEAD_REF develop
-    PATCHES
-        fix-natvis-install.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

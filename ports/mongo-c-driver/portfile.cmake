@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-include-directory.patch
         fix-mingw.patch
         remove_abs_patch.cmake
+        cmake-4.4.patch # https://github.com/mongodb/mongo-c-driver/commit/ea1b54791ec2f1aafb665f98af6cc9dd21116782
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 file(TOUCH "${SOURCE_PATH}/src/utf8proc-editable")
