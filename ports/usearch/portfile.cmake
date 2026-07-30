@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         use-vcpkg-ports.patch
         fix-map-failed.patch # official fix: https://github.com/unum-cloud/USearch/pull/720 , remove this patch in the next release
+        fix-numkong-dynamic-dispatch.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
