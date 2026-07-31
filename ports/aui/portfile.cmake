@@ -142,25 +142,6 @@ vcpkg_replace_string(
 #include <glm/ext/matrix_clip_space.hpp>]]
 )
 
-# libbacktrace from vcpkg doesn't provide CMake config; generate one if needed
-find_package(libbacktrace CONFIG QUIET)
-if(NOT TARGET libbacktrace::libbacktrace)
-    file(WRITE "${SOURCE_PATH}/libbacktraceConfig.cmake"
-[[if(TARGET libbacktrace::libbacktrace)
-    return()
-endif()
-
-find_library(LIBBACKTRACE_LIBRARY NAMES backtrace libbacktrace REQUIRED)
-find_path(LIBBACKTRACE_INCLUDE_DIR backtrace.h REQUIRED)
-
-add_library(libbacktrace::libbacktrace STATIC IMPORTED)
-set_target_properties(libbacktrace::libbacktrace PROPERTIES
-    IMPORTED_LOCATION "${LIBBACKTRACE_LIBRARY}"
-    INTERFACE_INCLUDE_DIRECTORIES "${LIBBACKTRACE_INCLUDE_DIR}"
-)
-]])
-endif()
-
 # Use patched aui-config.cmake.in template for vcpkg layout (correct paths, no aui.build.cmake dependency)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 

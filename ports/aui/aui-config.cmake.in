@@ -23,17 +23,7 @@ find_dependency(fmt CONFIG)
 find_dependency(ZLIB)
 find_dependency(Threads)
 find_dependency(range-v3 CONFIG)
-
-# libbacktrace from vcpkg doesn't ship CMake config; define target directly
-if(NOT TARGET libbacktrace::libbacktrace)
-    find_library(_aui_libbacktrace_LIBRARY NAMES backtrace libbacktrace REQUIRED)
-    find_path(_aui_libbacktrace_INCLUDE_DIR backtrace.h REQUIRED)
-    add_library(libbacktrace::libbacktrace STATIC IMPORTED)
-    set_target_properties(libbacktrace::libbacktrace PROPERTIES
-        IMPORTED_LOCATION "${_aui_libbacktrace_LIBRARY}"
-        INTERFACE_INCLUDE_DIRECTORIES "${_aui_libbacktrace_INCLUDE_DIR}"
-    )
-endif()
+find_dependency(unofficial-libbacktrace CONFIG)
 
 # Try to find extra dependency packages needed by specific components.
 # This is best-effort: if a package is not installed, its targets will be
