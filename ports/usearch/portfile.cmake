@@ -12,7 +12,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fp16     USEARCH_USE_FP16LIB
         jemalloc USEARCH_USE_JEMALLOC
         numkong  USEARCH_USE_NUMKONG
 )
