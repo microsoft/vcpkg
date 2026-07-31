@@ -1378,7 +1378,6 @@ torch-th:arm64-windows-static-md=fail
 torch-th:arm64-windows=fail
 torch-th:x64-android=cascade
 torch-th:x64-windows-static=fail
-tracy[cli-tools]:arm64-linux=cascade
 tracy[gui-tools]:arm64-linux=cascade
 treehopper:arm64-linux=cascade
 treehopper:x64-windows-static=fail
