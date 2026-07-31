@@ -7025,8 +7025,8 @@
       "port-version": 1
     },
     "neko-function": {
-      "baseline": "1.0.11",
-      "port-version": 1
+      "baseline": "1.0.12",
+      "port-version": 0
     },
     "neko-log": {
       "baseline": "1.0.7",
