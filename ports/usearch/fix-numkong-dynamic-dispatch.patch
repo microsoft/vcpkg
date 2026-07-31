@@ -1,30 +1,43 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d8ae930..1a2b3c4 100644
+index 711bbe3..a8b9efd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -154,6 +154,13 @@ if (USEARCH_USE_NUMKONG)
-         ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE}
-         INTERFACE $<BUILD_INTERFACE:${NUMKONG_INCLUDE_DIRS}> $<INSTALL_INTERFACE:include>
-     )
-+    # `configure_with_numkong()` in index_plugins.hpp calls `nk_find_kernel_punned`, which is only declared
-+    # when NK_DYNAMIC_DISPATCH=1, and only implemented in the shared `nk_shared` runtime-dispatch library.
+@@ -128,7 +128,16 @@ endif ()
+ target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "USEARCH_USE_OPENMP=$<BOOL:${USEARCH_USE_OPENMP}>")
+ 
+ # Supplementary compilation settings affecting "index_plugins.hpp"
+-target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "USEARCH_USE_NUMKONG=$<BOOL:${USEARCH_USE_NUMKONG}>")
++set(USEARCH_USE_NUMKONG_SHARED OFF)
++if (USEARCH_USE_NUMKONG)
 +    find_package(unofficial-numkong CONFIG QUIET)
 +    if (TARGET unofficial::numkong::nk_shared)
++        set(USEARCH_USE_NUMKONG_SHARED ON)
 +        target_link_libraries(${USEARCH_TARGET_NAME} INTERFACE unofficial::numkong::nk_shared)
 +        target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "NK_DYNAMIC_DISPATCH=1")
 +    endif ()
- endif ()
- # Install a pkg-config file, so other tools can find this
- configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/pkg-config.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc")
++endif ()
++target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "USEARCH_USE_NUMKONG=$<BOOL:${USEARCH_USE_NUMKONG_SHARED}>")
+ 
+ # Define which types can be compiled
+ target_compile_definitions(
+@@ -148,7 +157,7 @@ target_include_directories(
+     ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE} INTERFACE $<BUILD_INTERFACE:${USEARCH_INCLUDE_BUILD_DIR}>
+                                                                $<INSTALL_INTERFACE:include>
+ )
+-if (USEARCH_USE_NUMKONG)
++if (USEARCH_USE_NUMKONG_SHARED)
+     find_path(NUMKONG_INCLUDE_DIRS "numkong/attention.h")
+     target_include_directories(
+         ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE}
 diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
-index 1234567..89abcde 100644
+index 7bba80c..8198810 100644
 --- a/cmake/config.cmake.in
 +++ b/cmake/config.cmake.in
 @@ -3,6 +3,10 @@ set(${CMAKE_FIND_PACKAGE_NAME}_CONFIG ${CMAKE_CURRENT_LIST_FILE})
  find_package_handle_standard_args(@PROJECT_NAME@ CONFIG_MODE)
-
+ 
  if(NOT TARGET @PROJECT_NAME@::@USEARCH_TARGET_NAME@)
-+    if(@USEARCH_USE_NUMKONG@)
++    if(@USEARCH_USE_NUMKONG_SHARED@)
 +        include(CMakeFindDependencyMacro)
 +        find_dependency(unofficial-numkong CONFIG)
 +    endif()
