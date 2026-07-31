@@ -1,6 +1,4 @@
-set(VCPKG_POLICY_ALLOW_DEBUG_SHARE enabled)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -34,6 +32,21 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# Remove empty folders
+function(_aui_prune_empty_dirs _root)
+    file(GLOB _aui_children "${_root}/*")
+    foreach(_aui_child IN LISTS _aui_children)
+        if(IS_DIRECTORY "${_aui_child}")
+            _aui_prune_empty_dirs("${_aui_child}")
+            file(GLOB _aui_grandchildren "${_aui_child}/*")
+            if(NOT _aui_grandchildren)
+                file(REMOVE_RECURSE "${_aui_child}")
+            endif()
+        endif()
+    endforeach()
+endfunction()
+_aui_prune_empty_dirs("${CURRENT_PACKAGES_DIR}")
+
 # aui installs its cmake config to the package root; move to share/aui/ for vcpkg_cmake_config_fixup
 if(EXISTS "${CURRENT_PACKAGES_DIR}/aui-config.cmake")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/aui")
@@ -44,7 +57,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake" "${CURRENT_PACKAGES_DIR}/debug/share/aui/aui-config.cmake")
 endif()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME aui)
+vcpkg_cmake_config_fixup(PACKAGE_NAME "${PORT}")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/aui")
 file(COPY "${CURRENT_PACKAGES_DIR}/share/aui/aui-config.cmake"
