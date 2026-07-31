@@ -19,9 +19,29 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
+set(_aui_cmake_options "")
+if(VCPKG_CROSSCOMPILING)
+    # aui.views compiles assets and shaders at build time with aui.toolbox, which
+    # must run on the host. When cross-compiling the in-tree aui.toolbox target is
+    # not built (and would target the wrong architecture anyway), so use the
+    # host-built tool from the aui-toolbox port. This also keeps AUI Boot from
+    # being invoked to fetch a host toolchain.
+    find_program(AUI_TOOLBOX_EXE NAMES aui.toolbox
+        HINTS "${CURRENT_HOST_INSTALLED_DIR}/tools/aui-toolbox"
+        NO_DEFAULT_PATH
+    )
+    if(NOT AUI_TOOLBOX_EXE)
+        message(FATAL_ERROR
+            "aui needs the host tool aui.toolbox when cross-compiling; "
+            "the aui-toolbox host dependency did not install it")
+    endif()
+    list(APPEND _aui_cmake_options "-DAUI_TOOLBOX_EXE=${AUI_TOOLBOX_EXE}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${_aui_cmake_options}
         -DAUI_INSTALL_RUNTIME_DEPENDENCIES=OFF
         -DAUIB_NO_PRECOMPILED=TRUE
         -DAUIB_DISABLE=ON

@@ -418,6 +418,10 @@
     },
     "aui": {
       "baseline": "7.1.2",
+      "port-version": 1
+    },
+    "aui-toolbox": {
+      "baseline": "7.1.2",
       "port-version": 0
     },
     "aurora": {
