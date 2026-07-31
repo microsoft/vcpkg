@@ -1,3 +1,4 @@
+Only in aui-7.1.2: .git
 diff -r aui-7.1.2/CMakeLists.txt current/CMakeLists.txt
 --- aui-7.1.2/CMakeLists.txt
 +++ current/CMakeLists.txt
@@ -34,6 +35,26 @@ diff -r aui-7.1.2/CMakeLists.txt current/CMakeLists.txt
  
  # [configure file example]
  configure_file(cmake/aui-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/aui-config.cmake @ONLY)
+diff -r aui-7.1.2/aui.boot.cmake current/aui.boot.cmake
+--- aui-7.1.2/aui.boot.cmake
++++ current/aui.boot.cmake
+@@ -203,16 +203,6 @@
+ endif()
+ 
+ 
+-# create all required dirs
+-if (NOT EXISTS ${AUIB_CACHE_DIR})
+-    file(MAKE_DIRECTORY ${AUIB_CACHE_DIR})
+-endif()
+-if (NOT EXISTS ${AUIB_CACHE_DIR}/prefix)
+-    file(MAKE_DIRECTORY ${AUIB_CACHE_DIR}/prefix)
+-endif()
+-if (NOT EXISTS ${AUIB_CACHE_DIR}/repo)
+-    file(MAKE_DIRECTORY ${AUIB_CACHE_DIR}/repo)
+-endif()
+ 
+ 
+ function(_auib_copy_runtime_dependencies DEP_INSTALL_PREFIX)
 diff -r aui-7.1.2/aui.core/CMakeLists.txt current/aui.core/CMakeLists.txt
 --- aui-7.1.2/aui.core/CMakeLists.txt
 +++ current/aui.core/CMakeLists.txt

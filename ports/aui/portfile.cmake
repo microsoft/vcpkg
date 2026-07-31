@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         debundle.patch
         disable-tests.patch
+        disable-auib.patch
         fix-fmt12.patch
         fix-glm.patch
         fix-macos.patch
