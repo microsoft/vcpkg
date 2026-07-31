@@ -1,3 +1,4 @@
+# Support aui.core/include/ include folders
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_from_github(
