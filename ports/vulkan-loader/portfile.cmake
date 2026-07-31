@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         link-directfb.patch
+        fix-marmasm-conditional-assembly.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
