@@ -10334,7 +10334,7 @@
     },
     "tracy": {
       "baseline": "0.13.1",
-      "port-version": 0
+      "port-version": 1
     },
     "transwarp": {
       "baseline": "2.2.3",
@@ -10534,7 +10534,7 @@
     },
     "usearch": {
       "baseline": "2.25.3",
-      "port-version": 0
+      "port-version": 1
     },
     "usockets": {
       "baseline": "0.8.8",
