@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO huira-render/huira
     REF "v${VERSION}"
-    SHA512 384befcf8b434a02346ce4fa2ba05918ddce47bbafc68b7c6b7e7c13c945c0b9a21ad683e68938e696103622b6e9ecb8e76d17cb9dee1f54f372446f906b934e
+    SHA512 ed15d0a35c799c2f3b2f0c8eed8f26597e6dab5cb8a5e57d2e393c35139ecde7eef0a721c120b6018604db5c18052b245caf96f56f2d538d290087840b56223a
     HEAD_REF main
 )
 
@@ -17,7 +17,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DHUIRA_NATIVE_ARCH=OFF
         -DHUIRA_TESTS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
 )

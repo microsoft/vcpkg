@@ -1,6 +1,6 @@
 {
   "name": "kitemviews",
-  "version": "6.27.0",
+  "version": "6.28.0",
   "description": "Widget addons for Qt Model/View",
   "homepage": "https://invent.kde.org/frameworks/kitemviews",
   "documentation": "https://api.kde.org/kitemviews-index.html",

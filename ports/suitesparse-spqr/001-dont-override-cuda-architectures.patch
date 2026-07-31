@@ -2,9 +2,11 @@ Respect CMAKE_CUDA_ARCHITECTURES, so they can be set by the user in the triplet 
 
 Also make the CUDA warnings fatal since we are always strictly enabling/disabling CUDA.
 
+diff --git a/SuiteSparse_config/cmake_modules/SuiteSparsePolicy.cmake b/SuiteSparse_config/cmake_modules/SuiteSparsePolicy.cmake
+index 2b04343b7..a9e510550 100644
 --- a/SuiteSparse_config/cmake_modules/SuiteSparsePolicy.cmake
 +++ b/SuiteSparse_config/cmake_modules/SuiteSparsePolicy.cmake
-@@ -321,7 +321,7 @@
+@@ -380,7 +380,7 @@ option ( SUITESPARSE_USE_CUDA "ON (default): enable CUDA acceleration for SuiteS
  if ( SUITESPARSE_USE_CUDA )
  
      # try finding CUDA
@@ -13,7 +15,7 @@ Also make the CUDA warnings fatal since we are always strictly enabling/disablin
      # message ( STATUS "Looking for CUDA" )
      if ( CMAKE_CUDA_COMPILER )
          # with CUDA:
-@@ -334,7 +334,7 @@
+@@ -393,7 +393,7 @@ if ( SUITESPARSE_USE_CUDA )
          message ( STATUS "CUDA toolkit lib: " ${CUDAToolkit_LIBRARY_DIR} )
          if ( CUDAToolkit_VERSION VERSION_LESS "11.2" )
              # CUDA is present but too old
@@ -22,7 +24,7 @@ Also make the CUDA warnings fatal since we are always strictly enabling/disablin
              set ( SUITESPARSE_HAS_CUDA OFF )
          else ( )
              # CUDA 11.2 or later present
-@@ -343,7 +343,7 @@
+@@ -402,7 +402,7 @@ if ( SUITESPARSE_USE_CUDA )
          endif ( )
      else ( )
          # without CUDA:
@@ -31,13 +33,13 @@ Also make the CUDA warnings fatal since we are always strictly enabling/disablin
          set ( SUITESPARSE_HAS_CUDA OFF )
      endif ( )
  
-@@ -354,13 +354,6 @@
+@@ -413,13 +413,6 @@ else ( )
  
  endif ( )
  
 -if ( SUITESPARSE_HAS_CUDA )
 -    message ( STATUS "CUDA:             enabled" )
--    set ( SUITESPARSE_CUDA_ARCHITECTURES "52;75;80" CACHE STRING "CUDA architectures" )
+-    set ( SUITESPARSE_CUDA_ARCHITECTURES "all" CACHE STRING "CUDA architectures" )
 -    set ( CMAKE_CUDA_ARCHITECTURES ${SUITESPARSE_CUDA_ARCHITECTURES} )
 -else ( )
 -    message ( STATUS "CUDA:             not enabled" )

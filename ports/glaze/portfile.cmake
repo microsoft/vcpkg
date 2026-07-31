@@ -6,8 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 77cbede7ce25165eb5cbfb48501af78d1d2e3deb85f846b5e98bdd2931702d4f5d6bdeb720c1119417f711e2c5f4dfecdfa5271771024047828d931ad53d311b
+    SHA512 46867a4ce74b974cfc6d05ee72987242a83c74b5c734488dbf7c608e40c18986ef639f9e16a4ce434e33002321c0d9e5e97dd2c860529860d6ec8c277a83d1cd
     HEAD_REF main
+    PATCHES
+        001-fix-asio.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -25,6 +27,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glaze/ext/glaze_asio.hpp" "#if __has_include(<asio.hpp>) && !defined(GLZ_USE_BOOST_ASIO)" "#if 1")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

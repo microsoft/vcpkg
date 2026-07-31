@@ -1,0 +1,17 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e48bcda..d4218c7 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -18,10 +18,10 @@ endif()
+ 
+ if(MSVC)
+   if("${MSVC_TOOLSET_VERSION}" STREQUAL "140")
+-    target_compile_options(ada INTERFACE /W0 /sdl)
++    target_compile_options(ada-idna PRIVATE /W0 /sdl)
+     set(ADA_LEGACY_VISUAL_STUDIO TRUE)
+   else()
+-    target_compile_options(ada-idna INTERFACE /WX /W3 /sdl /w34714) # https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4714?view=vs-2019
++    target_compile_options(ada-idna PRIVATE /WX /W3 /sdl /w34714) # https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4714?view=vs-2019
+   endif()
+ else(MSVC)
+   if(NOT WIN32)

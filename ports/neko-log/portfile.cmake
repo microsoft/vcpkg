@@ -1,6 +1,6 @@
 ﻿vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO moehoshio/NekoLog
+    REPO hoshimoe/NekoLog
     REF "v${VERSION}"
     SHA512 e64e01511dd77da3cfd648ac31911bd3ddda189817b818880568b80726d4ef2c7d118807164c4b18671e5d301a5c38f99209b66c030347d7d9c731497ff6c9a4
     HEAD_REF main

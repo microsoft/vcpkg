@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt	2026-07-10 12:07:34.514505823 -0400
++++ b/CMakeLists.txt	2026-07-10 12:07:54.722504260 -0400
+@@ -456,7 +456,6 @@
+         "    endforeach()\n"
+         "endif()\n"
+ 	)
+-	install(SCRIPT ${CMAKE_BINARY_DIR}/cleanup_glob.cmake )
+ endif()
+ 
+ if(BUILD_DEV_TOOLS)
