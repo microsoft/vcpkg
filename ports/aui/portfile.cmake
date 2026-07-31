@@ -12,15 +12,12 @@ vcpkg_from_github(
         disable-tests.patch
         fix-fmt12.patch
         fix-glm.patch
+        fix-macos.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
-set(ADDITIONAL_CMAKE_ARGS "")
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(PKGCONFIG)
-    set(ADDITIONAL_CMAKE_ARGS "${ADDITIONAL_CMAKE_ARGS} -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
-endif()
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -28,7 +25,7 @@ vcpkg_cmake_configure(
         -DAUI_INSTALL_RUNTIME_DEPENDENCIES=OFF
         -DAUIB_NO_PRECOMPILED=TRUE
         -DAUIB_DISABLE=ON
-        ${ADDITIONAL_CMAKE_ARGS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()
