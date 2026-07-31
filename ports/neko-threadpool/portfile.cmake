@@ -1,6 +1,6 @@
 ﻿vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO moehoshio/NekoThreadPool
+    REPO hoshimoe/NekoThreadPool
     REF "v${VERSION}"
     SHA512 143e4bd8ca900a6a1680e62144ce39c8426057ed2b7f8b53267eb388fa54c2f7cca7e1e587b866e7f7e22759102765224217ecd083e406497d49f4a8600acccb
     HEAD_REF main
