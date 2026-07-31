@@ -1,29 +1,12 @@
-# SPDX-License-Identifier: MPL-2.0
-#
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-# AUI configuration file (vcpkg edition)
-#
-# Dependency resolution is data-driven: AUI_COMPONENT_*_LINK_LIBS (generated
-# at build time from the real link interfaces) is the complete list of
-# dependencies a component needs. When building static libraries aui_link()
-# promotes every PRIVATE link to PUBLIC, so for static builds the recorded
-# link libs are the full transitive closure. Only the dependencies of the
-# *requested* components are searched for; nothing else is pulled in.
-
 get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(AUI_ROOT_DIR "${SELF_DIR}/../.." ABSOLUTE)
-
 
 @AUI_CONFIG_VARS@
 @AUIB_DEPS@
 
-
 include(CMakeFindDependencyMacro)
 
-if (NOT AUI_FIND_COMPONENTS) # case fix
+if (NOT AUI_FIND_COMPONENTS)
     set(AUI_FIND_COMPONENTS ${aui_FIND_COMPONENTS})
 endif()
 
@@ -31,14 +14,11 @@ if (NOT AUI_FIND_COMPONENTS)
     set(AUI_FIND_COMPONENTS ${AUI_AVAILABLE_COMPONENTS})
     set(_all TRUE)
 else()
-    # add dependencies
     if (views IN_LIST AUI_FIND_COMPONENTS)
         list(APPEND AUI_FIND_COMPONENTS xml image)
     endif()
     list(REMOVE_DUPLICATES AUI_FIND_COMPONENTS)
 endif()
-
-# --- Gather the external targets referenced by the requested components ---
 
 set(_aui_needed_targets "")
 foreach(_module ${AUI_FIND_COMPONENTS})
@@ -53,12 +33,6 @@ foreach(_module ${AUI_FIND_COMPONENTS})
     endforeach()
 endforeach()
 list(REMOVE_DUPLICATES _aui_needed_targets)
-
-# --- Make every referenced target available ---
-#
-# Each branch maps a target (prefix) to the find_dependency() call that
-# provides it. Targets that cannot be mapped are left alone: the component
-# check below reports them and the component is skipped.
 
 foreach(_target IN LISTS _aui_needed_targets)
     if(TARGET "${_target}")
@@ -99,11 +73,6 @@ foreach(_target IN LISTS _aui_needed_targets)
     elseif(_target MATCHES "^GTest::")
         find_dependency(GTest)
     elseif(_target MATCHES "^PkgConfig::")
-        # pkg-config provided dependencies (libpulse, libpulse-simple, opus,
-        # soxr, dbus-1, gtk+-3.0). The vcpkg toolchain does not set
-        # PKG_CONFIG_PATH, so point it at this package's installed tree:
-        # AUI_ROOT_DIR is <prefix>/installed/<triplet> (or .../debug for
-        # debug builds), which holds lib/pkgconfig next to it.
         if(NOT DEFINED PKG_CONFIG_FOUND)
             find_package(PkgConfig QUIET)
         endif()
@@ -144,19 +113,14 @@ foreach(_target IN LISTS _aui_needed_targets)
     endif()
 endforeach()
 
-# Check if all link-interface targets for a component are available.
-# Returns via _aui_deps_ok variable.
 function(_aui_check_component_deps _component)
     set(_aui_deps_ok TRUE PARENT_SCOPE)
     if(NOT DEFINED AUI_COMPONENT_${_component}_LINK_LIBS)
         return()
     endif()
     foreach(_dep IN LISTS AUI_COMPONENT_${_component}_LINK_LIBS)
-        # strip $<LINK_ONLY:...> generator expressions
         string(REGEX REPLACE "^\\\$<LINK_ONLY:(.*)>$" "\\1" _dep_target "${_dep}")
         if(_dep_target MATCHES "^aui::")
-            # dependency on another aui module: it is created by the
-            # component loop below (implicitly, if not requested directly)
             string(REPLACE "aui::" "" _dep_module "${_dep_target}")
             if(NOT _dep_module IN_LIST AUI_AVAILABLE_COMPONENTS)
                 set(_aui_deps_ok FALSE PARENT_SCOPE)
@@ -181,7 +145,6 @@ while(_aui_pending_components)
     endif()
     list(APPEND _aui_processed_components ${_module})
     if (_module STREQUAL "toolbox")
-        # ignore it
         set(${CMAKE_FIND_PACKAGE_NAME}_toolbox_FOUND TRUE)
         continue()
     endif()
@@ -196,7 +159,6 @@ while(_aui_pending_components)
     if (${_module} IN_LIST AUI_AVAILABLE_COMPONENTS)
         set(_module_dir "${AUI_ROOT_DIR}/aui.${_module}")
         if (EXISTS ${_module_dir})
-            # Skip component if its transitive deps are not available
             _aui_check_component_deps(${_module})
             if(NOT _aui_deps_ok)
                 message(STATUS "AUI component '${_module}' skipped: missing transitive dependencies")
@@ -249,8 +211,6 @@ while(_aui_pending_components)
                 if (AUI_COMPONENT_${_module}_WHOLEARCHIVE)
                     set_target_properties(${_module_target_name} PROPERTIES INTERFACE_AUI_WHOLEARCHIVE ON)
                 endif()
-                # queue this component's aui:: module dependencies so they are
-                # created too (transitive closure of the requested set)
                 foreach(_dep IN LISTS AUI_COMPONENT_${_module}_LINK_LIBS)
                     string(REGEX REPLACE "^\\\$<LINK_ONLY:(.*)>$" "\\1" _dep_target "${_dep}")
                     if(_dep_target MATCHES "^aui::")

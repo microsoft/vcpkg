@@ -1,3 +1,7 @@
+set(VCPKG_POLICY_ALLOW_DEBUG_SHARE enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aui-framework/aui
@@ -6,149 +10,18 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         debundle.patch
+        disable-tests.patch
+        fix-fmt12.patch
+        fix-glm.patch
 )
 
-vcpkg_replace_string(
-    "${SOURCE_PATH}/cmake/aui.build.cmake"
-    [[macro(aui_enable_tests AUI_MODULE_NAME)
-    if (NOT CMAKE_CROSSCOMPILING)]]
-    [[macro(aui_enable_tests AUI_MODULE_NAME)
-    if (0)]]
-)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/cmake/aui.build.cmake"
-    [[macro(aui_enable_benchmarks AUI_MODULE_NAME)
-    if (NOT CMAKE_CROSSCOMPILING)]]
-    [[macro(aui_enable_benchmarks AUI_MODULE_NAME)
-    if (0)]]
-)
-
-# fmt 12+ compatibility fixes
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.core/src/AUI/Common/AString.h"
-    [[#include <iostream>]]
-    [[#include <iostream>
-#include <cstring>]]
-)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.core/src/AUI/Common/AString.h"
-    [[template <> struct fmt::detail::is_string<AString>: std::false_type {};]]
-    ""
-)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.core/src/AUI/Common/AByteBufferView.h"
-    [[lhs.write(buf, std::distance(std::begin(buf), fmt::format_to(buf, " {:02x}", b)));]]
-    [[lhs.write(buf, std::distance(std::begin(buf), fmt::format_to(std::begin(buf), " {:02x}", b)));]]
-)
-
-# fmt 12+ removed automatic enum formatting; convert enums to underlying type
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.core/src/AUI/Traits/strings.h"
-    [[        template<typename T>
-        struct fmt<T, std::enable_if_t<std::is_base_of_v<AString, T>>> {
-            template<typename T2>
-            static decltype(auto) process(T2&& arg) {
-                return arg.toStdString();
-            }
-        };]]
-    [[        template<typename T>
-        struct fmt<T, std::enable_if_t<std::is_base_of_v<AString, T>>> {
-            template<typename T2>
-            static decltype(auto) process(T2&& arg) {
-                return arg.toStdString();
-            }
-        };
-
-        template<typename T>
-        struct fmt<T, std::enable_if_t<std::is_enum_v<T>>> {
-            static auto process(T arg) {
-                return static_cast<std::underlying_type_t<T>>(arg);
-            }
-        };]]
-)
-
-# GLM 1.0+ moved translate/rotate to separate header
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.views/src/AUI/Render/IRenderer.h"
-    [[#include <glm/glm.hpp>]]
-    [[#include <glm/glm.hpp>
-#include <glm/ext/matrix_transform.hpp>]]
-)
-
-# Add fmt formatter for AMetric (missing in fmt 12+)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.views/src/AUI/Util/AMetric.h"
-    [[#include <AUI/Core.h>
-#include <type_traits>
-#include <ostream>
-#include <tuple>
-#include "AUI/Util/Assert.h"]]
-    [[#include <AUI/Core.h>
-#include <type_traits>
-#include <ostream>
-#include <tuple>
-#include "AUI/Util/Assert.h"
-#include <fmt/core.h>]]
-)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.views/src/AUI/Util/AMetric.h"
-    [[    return o;
-}]]
-    [[    return o;
-}
-
-template <> struct fmt::formatter<AMetric> : fmt::formatter<float> {
-    auto format(AMetric val, fmt::format_context& ctx) const {
-        return fmt::formatter<float>::format(static_cast<float>(val), ctx);
-    }
-};]]
-)
-
-# Add fmt formatter for ranged_number (missing in fmt 12+)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.core/src/AUI/Traits/values.h"
-    [[#include <glm/glm.hpp>
-#include <AUI/Common/SharedPtrTypes.h>]]
-    [[#include <glm/glm.hpp>
-#include <AUI/Common/SharedPtrTypes.h>
-#include <fmt/core.h>]]
-)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.core/src/AUI/Traits/values.h"
-    [[using float_within_0_1 = ranged_number<float, 0, 1>;
-}   // namespace aui]]
-    [[using float_within_0_1 = ranged_number<float, 0, 1>;
-}   // namespace aui
-
-template <typename UnderlyingType, auto min, auto max>
-struct fmt::formatter<aui::ranged_number<UnderlyingType, min, max>> : fmt::formatter<UnderlyingType> {
-    auto format(aui::ranged_number<UnderlyingType, min, max> val, fmt::format_context& ctx) const {
-        return fmt::formatter<UnderlyingType>::format(static_cast<UnderlyingType>(val), ctx);
-    }
-};]]
-)
-
-# GLM 1.0+ moved ortho to separate header
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.views/src/AUI/GL/OpenGLRenderer.cpp"
-    [[#include "glm/fwd.hpp"]]
-    [[#include "glm/fwd.hpp"
-#include <glm/ext/matrix_clip_space.hpp>]]
-)
-vcpkg_replace_string(
-    "${SOURCE_PATH}/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp"
-    [[#include "AUI/GL/OpenGLRenderer.h"]]
-    [[#include "AUI/GL/OpenGLRenderer.h"
-#include <glm/ext/matrix_clip_space.hpp>]]
-)
-
-# Use patched aui-config.cmake.in template for vcpkg layout (correct paths, no aui.build.cmake dependency)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
+set(ADDITIONAL_CMAKE_ARGS "")
 
-# pkg_check_modules() in aui.audio/aui.views must resolve against the
-# vcpkg-installed .pc files (libpulse, opus, soxr, dbus-1, gtk+-3.0); the
-# vcpkg toolchain does not set PKG_CONFIG_PATH itself.
-set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig:${CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+if (NOT(VCPKG_TARGET_IS_WINDOWS))
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ADDITIONAL_CMAKE_ARGS "${ADDITIONAL_CMAKE_ARGS} -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -156,6 +29,7 @@ vcpkg_cmake_configure(
         -DAUI_INSTALL_RUNTIME_DEPENDENCIES=OFF
         -DAUIB_NO_PRECOMPILED=TRUE
         -DAUIB_DISABLE=ON
+        ${ADDITIONAL_CMAKE_ARGS}
 )
 
 vcpkg_cmake_install()
@@ -172,25 +46,11 @@ endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME aui)
 
-# vcpkg_cmake_config_fixup removes debug-side *Config.cmake files by design;
-# aui-config.cmake computes its paths (AUI_ROOT_DIR, pkg-config search path)
-# relative to its own location, so a debug copy makes debug consumers resolve
-# the debug tree (debug libs and .pc files) automatically.
-set(VCPKG_POLICY_ALLOW_DEBUG_SHARE enabled)
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/aui")
 file(COPY "${CURRENT_PACKAGES_DIR}/share/aui/aui-config.cmake"
      DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/aui")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
-
-# aui installs headers into module-specific directories, not a single include/
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
-
-#vcpkg_cmake_config_fixup(PACKAGE_NAME AudioFile CONFIG_PATH lib/cmake/AudioFile)
-
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
