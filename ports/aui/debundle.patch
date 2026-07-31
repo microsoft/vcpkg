@@ -36,12 +36,27 @@ index 6902d56..3a9f94c 100644
  # [configure file example]
  configure_file(cmake/aui-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/aui-config.cmake @ONLY)
 diff --git a/aui.audio/CMakeLists.txt b/aui.audio/CMakeLists.txt
-index 21e4415..c348288 100644
+index 21e4415..124d815 100644
 --- a/aui.audio/CMakeLists.txt
 +++ b/aui.audio/CMakeLists.txt
-@@ -18,13 +18,17 @@ if (AUI_PLATFORM_ANDROID)
-             INCLUDES      DESTINATION "aui.audio/include"
-     )
+@@ -5,26 +5,20 @@ add_subdirectory(3rdparty/ogg)
+ aui_link(aui.audio PUBLIC aui::core)
+ 
+ if (AUI_PLATFORM_ANDROID)
+-    auib_import(oboe https://github.com/google/oboe ADD_SUBDIRECTORY VERSION main)
+-    aui_link(aui.audio PUBLIC oboe $<LINK_ONLY:log> $<LINK_ONLY:OpenSLES>)
+-
+-    install(
+-            TARGETS oboe
+-            EXPORT aui
+-            ARCHIVE       DESTINATION "aui.audio/lib"
+-            LIBRARY       DESTINATION "aui.audio/lib"
+-            RUNTIME       DESTINATION "aui.audio/bin"
+-            PUBLIC_HEADER DESTINATION "aui.audio/include"
+-            INCLUDES      DESTINATION "aui.audio/include"
+-    )
++    find_package(oboe CONFIG REQUIRED)
++    aui_link(aui.audio PUBLIC oboe::oboe $<LINK_ONLY:log> $<LINK_ONLY:OpenSLES>)
  elseif (AUI_PLATFORM_LINUX)
 -    aui_link(aui.audio PUBLIC pulse)
 +    include(FindPkgConfig)
@@ -60,7 +75,7 @@ index 21e4415..c348288 100644
  
  if (AUI_PLATFORM_IOS OR AUI_PLATFORM_MACOS)
      auib_use_system_libs_begin()
-@@ -42,9 +46,7 @@ if (AUI_PLATFORM_MACOS)
+@@ -42,9 +36,7 @@ if (AUI_PLATFORM_MACOS)
  					   "-framework QuartzCore")
  endif()
  
