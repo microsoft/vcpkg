@@ -1,13 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quiet/libcorrect
-    REF f5a28c74fba7a99736fe49d3a5243eca29517ae9
-    SHA512 1367834c2a081e007b3eeeacb5bbe912617cce97cbd19d43193078f352fef103a54f030ef61a2def4ab7517476cf6be5d6a1736e43ae84913fe84a56340b69ce
+    REF ee82e6673a806dfdf0a969b975ab36596ecc5401
+    SHA512 a75593ca6c54c3cb4bbdb0bbf2c8aa98fa512e43aaa3434d5a6b23c60b976a0e4d7771999fc56883ff09f4352e2a697f576c5289f64b5bff5a5089eec06dd0ea
     HEAD_REF master
-    PATCHES fix-ninja.patch
+    PATCHES
+        fix-ninja.patch
 )
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DHAVE_LIBFEC=OFF
+)
 vcpkg_cmake_install()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -1,16 +1,16 @@
 {
   "name": "xcb-util",
   "version": "0.4.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": null,
   "dependencies": [
+    "libxcb",
     {
       "name": "vcpkg-make",
       "host": true
     },
-    "xcb",
     "xcb-util-m4",
     "xorg-macros"
   ]
