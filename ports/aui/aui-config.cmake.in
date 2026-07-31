@@ -5,6 +5,13 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 # AUI configuration file (vcpkg edition)
+#
+# Dependency resolution is data-driven: AUI_COMPONENT_*_LINK_LIBS (generated
+# at build time from the real link interfaces) is the complete list of
+# dependencies a component needs. When building static libraries aui_link()
+# promotes every PRIVATE link to PUBLIC, so for static builds the recorded
+# link libs are the full transitive closure. Only the dependencies of the
+# *requested* components are searched for; nothing else is pulled in.
 
 get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 get_filename_component(AUI_ROOT_DIR "${SELF_DIR}/../.." ABSOLUTE)
@@ -14,34 +21,7 @@ get_filename_component(AUI_ROOT_DIR "${SELF_DIR}/../.." ABSOLUTE)
 @AUIB_DEPS@
 
 
-# Resolve transitive dependencies
-
 include(CMakeFindDependencyMacro)
-
-find_dependency(glm CONFIG)
-find_dependency(fmt CONFIG)
-find_dependency(ZLIB)
-find_dependency(Threads)
-find_dependency(range-v3 CONFIG)
-find_dependency(unofficial-libbacktrace CONFIG)
-
-# Try to find extra dependency packages needed by specific components.
-# This is best-effort: if a package is not installed, its targets will be
-# missing and the corresponding component will be silently skipped.
-macro(_aui_maybe_find_dep _name)
-    if(NOT ${_name}_FOUND AND NOT TARGET ${_name})
-        find_dependency(${_name} QUIET)
-    endif()
-endmacro()
-
-_aui_maybe_find_dep(OpenSSL)
-_aui_maybe_find_dep(CURL)
-_aui_maybe_find_dep(lunasvg CONFIG)
-_aui_maybe_find_dep(WebP CONFIG)
-_aui_maybe_find_dep(GLEW)
-_aui_maybe_find_dep(Freetype)
-_aui_maybe_find_dep(PulseAudio)
-
 
 if (NOT AUI_FIND_COMPONENTS) # case fix
     set(AUI_FIND_COMPONENTS ${aui_FIND_COMPONENTS})
@@ -58,6 +38,112 @@ else()
     list(REMOVE_DUPLICATES AUI_FIND_COMPONENTS)
 endif()
 
+# --- Gather the external targets referenced by the requested components ---
+
+set(_aui_needed_targets "")
+foreach(_module ${AUI_FIND_COMPONENTS})
+    if(NOT DEFINED AUI_COMPONENT_${_module}_LINK_LIBS)
+        continue()
+    endif()
+    foreach(_dep IN LISTS AUI_COMPONENT_${_module}_LINK_LIBS)
+        string(REGEX REPLACE "^\\\$<LINK_ONLY:(.*)>$" "\\1" _dep_target "${_dep}")
+        if(_dep_target MATCHES "::" AND NOT _dep_target MATCHES "^aui::")
+            list(APPEND _aui_needed_targets "${_dep_target}")
+        endif()
+    endforeach()
+endforeach()
+list(REMOVE_DUPLICATES _aui_needed_targets)
+
+# --- Make every referenced target available ---
+#
+# Each branch maps a target (prefix) to the find_dependency() call that
+# provides it. Targets that cannot be mapped are left alone: the component
+# check below reports them and the component is skipped.
+
+foreach(_target IN LISTS _aui_needed_targets)
+    if(TARGET "${_target}")
+        continue()
+    endif()
+    if(_target MATCHES "^glm::")
+        find_dependency(glm CONFIG)
+    elseif(_target MATCHES "^fmt::")
+        find_dependency(fmt CONFIG)
+    elseif(_target MATCHES "^range-v3::")
+        find_dependency(range-v3 CONFIG)
+    elseif(_target STREQUAL "ZLIB::ZLIB")
+        find_dependency(ZLIB)
+    elseif(_target STREQUAL "Threads::Threads")
+        find_dependency(Threads)
+    elseif(_target STREQUAL "unofficial::libbacktrace::libbacktrace")
+        find_dependency(unofficial-libbacktrace CONFIG)
+    elseif(_target MATCHES "^OpenSSL::")
+        find_dependency(OpenSSL)
+    elseif(_target MATCHES "^CURL::")
+        find_dependency(CURL)
+    elseif(_target MATCHES "^lunasvg::")
+        find_dependency(lunasvg CONFIG)
+    elseif(_target MATCHES "^WebP::")
+        find_dependency(WebP CONFIG)
+    elseif(_target MATCHES "^GLEW::")
+        find_dependency(GLEW CONFIG)
+    elseif(_target STREQUAL "Freetype::Freetype")
+        find_dependency(Freetype)
+    elseif(_target MATCHES "^X11::")
+        find_dependency(X11)
+    elseif(_target STREQUAL "Fontconfig::Fontconfig")
+        find_dependency(Fontconfig)
+    elseif(_target MATCHES "^OpenGL::")
+        find_dependency(OpenGL)
+    elseif(_target MATCHES "^oboe::")
+        find_dependency(oboe CONFIG)
+    elseif(_target MATCHES "^GTest::")
+        find_dependency(GTest)
+    elseif(_target MATCHES "^PkgConfig::")
+        # pkg-config provided dependencies (libpulse, libpulse-simple, opus,
+        # soxr, dbus-1, gtk+-3.0). The vcpkg toolchain does not set
+        # PKG_CONFIG_PATH, so point it at this package's installed tree:
+        # AUI_ROOT_DIR is <prefix>/installed/<triplet> (or .../debug for
+        # debug builds), which holds lib/pkgconfig next to it.
+        if(NOT DEFINED PKG_CONFIG_FOUND)
+            find_package(PkgConfig QUIET)
+        endif()
+        if(NOT PKG_CONFIG_FOUND)
+            continue()
+        endif()
+        set(_aui_pkgconfig_name "")
+        if(_target STREQUAL "PkgConfig::PulseAudio")
+            set(_aui_pkgconfig_name libpulse)
+        elseif(_target STREQUAL "PkgConfig::PulseAudioSimple")
+            set(_aui_pkgconfig_name libpulse-simple)
+        elseif(_target STREQUAL "PkgConfig::Opus")
+            set(_aui_pkgconfig_name opus)
+        elseif(_target STREQUAL "PkgConfig::soxr")
+            set(_aui_pkgconfig_name soxr)
+        elseif(_target STREQUAL "PkgConfig::DBUS")
+            set(_aui_pkgconfig_name dbus-1)
+        elseif(_target STREQUAL "PkgConfig::GTK3")
+            set(_aui_pkgconfig_name gtk+-3.0)
+        endif()
+        if(_aui_pkgconfig_name)
+            string(REPLACE "PkgConfig::" "" _aui_pkgconfig_prefix "${_target}")
+            if(NOT TARGET "PkgConfig::${_aui_pkgconfig_prefix}")
+                if(DEFINED ENV{PKG_CONFIG_PATH})
+                    set(_aui_prev_pkg_config_path "$ENV{PKG_CONFIG_PATH}")
+                else()
+                    unset(_aui_prev_pkg_config_path)
+                endif()
+                set(ENV{PKG_CONFIG_PATH} "${AUI_ROOT_DIR}/lib/pkgconfig:${AUI_ROOT_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+                pkg_check_modules(${_aui_pkgconfig_prefix} IMPORTED_TARGET ${_aui_pkgconfig_name})
+                if(DEFINED _aui_prev_pkg_config_path)
+                    set(ENV{PKG_CONFIG_PATH} "${_aui_prev_pkg_config_path}")
+                else()
+                    unset(ENV{PKG_CONFIG_PATH})
+                endif()
+            endif()
+        endif()
+    endif()
+endforeach()
+
 # Check if all link-interface targets for a component are available.
 # Returns via _aui_deps_ok variable.
 function(_aui_check_component_deps _component)
@@ -68,7 +154,15 @@ function(_aui_check_component_deps _component)
     foreach(_dep IN LISTS AUI_COMPONENT_${_component}_LINK_LIBS)
         # strip $<LINK_ONLY:...> generator expressions
         string(REGEX REPLACE "^\\\$<LINK_ONLY:(.*)>$" "\\1" _dep_target "${_dep}")
-        if(_dep_target MATCHES "::")
+        if(_dep_target MATCHES "^aui::")
+            # dependency on another aui module: it is created by the
+            # component loop below (implicitly, if not requested directly)
+            string(REPLACE "aui::" "" _dep_module "${_dep_target}")
+            if(NOT _dep_module IN_LIST AUI_AVAILABLE_COMPONENTS)
+                set(_aui_deps_ok FALSE PARENT_SCOPE)
+                return()
+            endif()
+        elseif(_dep_target MATCHES "::")
             if(NOT TARGET "${_dep_target}")
                 set(_aui_deps_ok FALSE PARENT_SCOPE)
                 return()
@@ -78,7 +172,14 @@ function(_aui_check_component_deps _component)
 endfunction()
 
 set(${CMAKE_FIND_PACKAGE_NAME}_FOUND TRUE)
-foreach(_module ${AUI_FIND_COMPONENTS})
+set(_aui_pending_components ${AUI_FIND_COMPONENTS})
+set(_aui_processed_components "")
+while(_aui_pending_components)
+    list(POP_FRONT _aui_pending_components _module)
+    if(_module IN_LIST _aui_processed_components)
+        continue()
+    endif()
+    list(APPEND _aui_processed_components ${_module})
     if (_module STREQUAL "toolbox")
         # ignore it
         set(${CMAKE_FIND_PACKAGE_NAME}_toolbox_FOUND TRUE)
@@ -86,9 +187,6 @@ foreach(_module ${AUI_FIND_COMPONENTS})
     endif()
 
     set(_module_target_name aui::${_module})
-    if (TARGET ${_module_target_name})
-        continue()
-    endif()
     if (NOT ${_module} IN_LIST AUI_ALL_COMPONENTS)
         message(FATAL_ERROR "Unknown component ${_module}")
     endif()
@@ -145,12 +243,23 @@ foreach(_module ${AUI_FIND_COMPONENTS})
                         IMPORTED_LOCATION "${_lib}"
                         IMPORTED_IMPLIB "${${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY}"
                         INTERFACE_INCLUDE_DIRECTORIES "${_include}"
-                        INTERFACE_LINK_DIRECTORIES "${AUI_ROOT_DIR}/aui.${_module}/lib")
+                        INTERFACE_LINK_DIRECTORIES "${AUI_ROOT_DIR}/lib")
 
                 target_compile_definitions(${_module_target_name} INTERFACE ${AUI_COMPONENT_${_module}_COMPILE_DEFINITIONS})
                 if (AUI_COMPONENT_${_module}_WHOLEARCHIVE)
                     set_target_properties(${_module_target_name} PROPERTIES INTERFACE_AUI_WHOLEARCHIVE ON)
                 endif()
+                # queue this component's aui:: module dependencies so they are
+                # created too (transitive closure of the requested set)
+                foreach(_dep IN LISTS AUI_COMPONENT_${_module}_LINK_LIBS)
+                    string(REGEX REPLACE "^\\\$<LINK_ONLY:(.*)>$" "\\1" _dep_target "${_dep}")
+                    if(_dep_target MATCHES "^aui::")
+                        string(REPLACE "aui::" "" _dep_module "${_dep_target}")
+                        if(NOT _dep_module IN_LIST _aui_processed_components AND _dep_module IN_LIST AUI_AVAILABLE_COMPONENTS)
+                            list(APPEND _aui_pending_components ${_dep_module})
+                        endif()
+                    endif()
+                endforeach()
                 continue()
             endif()
         endif()
@@ -165,26 +274,10 @@ foreach(_module ${AUI_FIND_COMPONENTS})
             message(STATUS "Component ${_module} is not found")
         endif()
     endif()
-endforeach()
+endwhile()
 
 if (${CMAKE_FIND_PACKAGE_NAME}_FOUND AND NOT TARGET aui)
     add_library(aui INTERFACE IMPORTED)
     set_target_properties(aui PROPERTIES
             INTERFACE_LINK_LIBRARIES "${${CMAKE_FIND_PACKAGE_NAME}_IMPORTED_TARGETS}")
-endif()
-
-if (UNIX AND NOT APPLE)
-    find_package(Threads REQUIRED)
-endif()
-
-if (${CMAKE_FIND_PACKAGE_NAME}_views_FOUND AND NOT ANDROID AND NOT IOS)
-    if (UNIX AND NOT APPLE)
-        find_package(X11 REQUIRED)
-        find_package(Fontconfig REQUIRED)
-    endif()
-    find_package(OpenGL REQUIRED)
-endif()
-
-if (${CMAKE_FIND_PACKAGE_NAME}_uitests_FOUND AND NOT ANDROID AND NOT IOS)
-    find_package(GTest REQUIRED)
 endif()

@@ -145,13 +145,17 @@ vcpkg_replace_string(
 # Use patched aui-config.cmake.in template for vcpkg layout (correct paths, no aui.build.cmake dependency)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
+# pkg_check_modules() in aui.audio/aui.views must resolve against the
+# vcpkg-installed .pc files (libpulse, opus, soxr, dbus-1, gtk+-3.0); the
+# vcpkg toolchain does not set PKG_CONFIG_PATH itself.
+set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig:${CURRENT_INSTALLED_DIR}/share/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DAUI_INSTALL_RUNTIME_DEPENDENCIES=OFF
         -DAUIB_NO_PRECOMPILED=TRUE
         -DAUIB_DISABLE=ON
-        -Dlibbacktrace_DIR="${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
@@ -167,6 +171,15 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake")
 endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME aui)
+
+# vcpkg_cmake_config_fixup removes debug-side *Config.cmake files by design;
+# aui-config.cmake computes its paths (AUI_ROOT_DIR, pkg-config search path)
+# relative to its own location, so a debug copy makes debug consumers resolve
+# the debug tree (debug libs and .pc files) automatically.
+set(VCPKG_POLICY_ALLOW_DEBUG_SHARE enabled)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/aui")
+file(COPY "${CURRENT_PACKAGES_DIR}/share/aui/aui-config.cmake"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/debug/share/aui")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
