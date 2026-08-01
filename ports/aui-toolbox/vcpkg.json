@@ -4,7 +4,7 @@
   "description": "Host-side asset and shader compiler (aui.toolbox) for the AUI declarative UI toolkit",
   "homepage": "https://github.com/aui-framework/aui",
   "license": "MPL-2.0",
-  "supports": "!android & !ios",
+  "supports": "native & !(linux & arm64)",
   "dependencies": [
     "fmt",
     "glm",

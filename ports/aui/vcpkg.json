@@ -4,6 +4,7 @@
   "description": "Declarative UI toolkit for modern C++20",
   "homepage": "https://github.com/aui-framework/aui",
   "license": "MPL-2.0",
+  "supports": "!(linux & arm64)",
   "dependencies": [
     {
       "name": "aui-toolbox",
