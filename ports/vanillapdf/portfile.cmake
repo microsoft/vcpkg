@@ -17,8 +17,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Ensure debug symbols are copied for proper installation
 vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/vanillapdf/c_export.h"
+        "#if defined(VANILLAPDF_CONFIGURATION_DLL) && defined(COMPILER_MICROSOFT_VISUAL_STUDIO)"
+        "#if defined(COMPILER_MICROSOFT_VISUAL_STUDIO)"
+    )
+endif()
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "vanillapdf"
@@ -28,9 +35,6 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/debug")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(
     FILE_LIST
