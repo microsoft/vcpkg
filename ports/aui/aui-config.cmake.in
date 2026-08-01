@@ -176,8 +176,17 @@ while(_aui_pending_components)
                           PATHS "${AUI_ROOT_DIR}/bin" "${AUI_ROOT_DIR}/aui.${_module}/bin"
                           NO_DEFAULT_PATH
                           NO_CACHE)
+                find_file(${CMAKE_FIND_PACKAGE_NAME}_${_module}_LIBRARY_DEBUG
+                          NAMES "aui.${_module}.dll" "libaui.${_module}.dll"
+                          PATHS "${AUI_ROOT_DIR}/debug/bin" "${AUI_ROOT_DIR}/debug/aui.${_module}/bin"
+                          NO_DEFAULT_PATH
+                          NO_CACHE)
                 find_library(${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY "aui.${_module}"
                              PATHS "${AUI_ROOT_DIR}/lib" "${AUI_ROOT_DIR}/aui.${_module}/lib"
+                             NO_DEFAULT_PATH
+                             NO_CACHE)
+                find_library(${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY_DEBUG "aui.${_module}"
+                             PATHS "${AUI_ROOT_DIR}/debug/lib" "${AUI_ROOT_DIR}/debug/aui.${_module}/lib"
                              NO_DEFAULT_PATH
                              NO_CACHE)
             else()
@@ -185,14 +194,23 @@ while(_aui_pending_components)
                              PATHS "${AUI_ROOT_DIR}/lib" "${AUI_ROOT_DIR}/aui.${_module}/lib"
                              NO_DEFAULT_PATH
                              NO_CACHE)
+                find_library(${CMAKE_FIND_PACKAGE_NAME}_${_module}_LIBRARY_DEBUG "aui.${_module}"
+                             PATHS "${AUI_ROOT_DIR}/debug/lib" "${AUI_ROOT_DIR}/debug/aui.${_module}/lib"
+                             NO_DEFAULT_PATH
+                             NO_CACHE)
             endif()
             set(_lib ${${CMAKE_FIND_PACKAGE_NAME}_${_module}_LIBRARY})
+            set(_lib_debug ${${CMAKE_FIND_PACKAGE_NAME}_${_module}_LIBRARY_DEBUG})
             set(_implib ${${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY})
+            set(_implib_debug ${${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY_DEBUG})
             set(_include ${AUI_ROOT_DIR}/aui.${_module}/include)
             if ((_lib OR _implib) AND EXISTS ${_include})
                 set(${CMAKE_FIND_PACKAGE_NAME}_${_module}_FOUND TRUE)
                 if (NOT _lib)
                     set(_lib ${_implib})
+                endif()
+                if (NOT _lib_debug)
+                    set(_lib_debug ${_implib_debug})
                 endif()
                 list(APPEND ${CMAKE_FIND_PACKAGE_NAME}_LIBRARIES ${_lib})
                 list(APPEND ${CMAKE_FIND_PACKAGE_NAME}_INCLUDE_DIRS ${_include})
@@ -201,11 +219,22 @@ while(_aui_pending_components)
                 add_library(aui.${_module} ALIAS ${_module_target_name})
                 target_link_libraries(${_module_target_name} INTERFACE ${AUI_COMPONENT_${_module}_LINK_LIBS})
                 target_link_options(${_module_target_name} INTERFACE ${AUI_COMPONENT_${_module}_LINK_OPTIONS})
-                set_target_properties(${_module_target_name} PROPERTIES
-                        IMPORTED_LOCATION "${_lib}"
-                        IMPORTED_IMPLIB "${${CMAKE_FIND_PACKAGE_NAME}_${_module}_IMPLIBRARY}"
-                        INTERFACE_INCLUDE_DIRECTORIES "${_include}"
-                        INTERFACE_LINK_DIRECTORIES "${AUI_ROOT_DIR}/lib")
+                # Per-config imported locations: Debug consumers link the debug
+                # libs (debug/lib), all other configurations the release ones.
+                set(_aui_props
+                    IMPORTED_LOCATION "${_lib}"
+                    INTERFACE_INCLUDE_DIRECTORIES "$<$<CONFIG:Debug>:${AUI_ROOT_DIR}/debug/aui.${_module}/include>${AUI_ROOT_DIR}/aui.${_module}/include"
+                    INTERFACE_LINK_DIRECTORIES "${AUI_ROOT_DIR}/lib")
+                if(_implib)
+                    list(APPEND _aui_props IMPORTED_IMPLIB "${_implib}")
+                endif()
+                if(_lib_debug)
+                    list(APPEND _aui_props IMPORTED_LOCATION_DEBUG "${_lib_debug}")
+                endif()
+                if(_implib_debug)
+                    list(APPEND _aui_props IMPORTED_IMPLIB_DEBUG "${_implib_debug}")
+                endif()
+                set_target_properties(${_module_target_name} PROPERTIES ${_aui_props})
 
                 target_compile_definitions(${_module_target_name} INTERFACE ${AUI_COMPONENT_${_module}_COMPILE_DEFINITIONS})
                 if (AUI_COMPONENT_${_module}_WHOLEARCHIVE)

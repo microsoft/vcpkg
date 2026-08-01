@@ -76,11 +76,8 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/aui-config.cmake")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/aui")
     file(RENAME "${CURRENT_PACKAGES_DIR}/aui-config.cmake" "${CURRENT_PACKAGES_DIR}/share/aui/aui-config.cmake")
 endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/aui")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake" "${CURRENT_PACKAGES_DIR}/debug/share/aui/aui-config.cmake")
-endif()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
 
