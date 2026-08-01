@@ -49,7 +49,7 @@ vcpkg_cmake_configure(
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
-if(WIN32)
+if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/debug/bin")
 endif()
 
