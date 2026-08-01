@@ -223,7 +223,7 @@ while(_aui_pending_components)
                 # libs (debug/lib), all other configurations the release ones.
                 set(_aui_props
                     IMPORTED_LOCATION "${_lib}"
-                    INTERFACE_INCLUDE_DIRECTORIES "$<$<CONFIG:Debug>:${AUI_ROOT_DIR}/debug/aui.${_module}/include>${AUI_ROOT_DIR}/aui.${_module}/include"
+                    INTERFACE_INCLUDE_DIRECTORIES "$<$<CONFIG:Debug>:${AUI_ROOT_DIR}/debug/aui.${_module}/include>$<$<NOT:$<CONFIG:Debug>>:${AUI_ROOT_DIR}/aui.${_module}/include>"
                     INTERFACE_LINK_DIRECTORIES "${AUI_ROOT_DIR}/lib")
                 if(_implib)
                     list(APPEND _aui_props IMPORTED_IMPLIB "${_implib}")
