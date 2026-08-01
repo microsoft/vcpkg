@@ -49,6 +49,10 @@ vcpkg_cmake_configure(
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
+if(WIN32)
+    vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/debug/bin")
+endif()
+
 vcpkg_cmake_install()
 
 vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
