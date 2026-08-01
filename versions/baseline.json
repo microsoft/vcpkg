@@ -517,7 +517,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.840",
+      "baseline": "1.11.860",
       "port-version": 0
     },
     "ayush272002-dotenv": {
@@ -7029,32 +7029,32 @@
       "port-version": 0
     },
     "neko-event": {
-      "baseline": "1.0.1",
-      "port-version": 1
+      "baseline": "1.0.2",
+      "port-version": 0
     },
     "neko-function": {
-      "baseline": "1.0.11",
-      "port-version": 1
+      "baseline": "1.0.12",
+      "port-version": 0
     },
     "neko-log": {
-      "baseline": "1.0.7",
-      "port-version": 1
+      "baseline": "1.0.8",
+      "port-version": 0
     },
     "neko-network": {
-      "baseline": "1.0.3",
-      "port-version": 1
+      "baseline": "1.0.4",
+      "port-version": 0
     },
     "neko-schema": {
-      "baseline": "1.1.5",
-      "port-version": 1
+      "baseline": "1.1.6",
+      "port-version": 0
     },
     "neko-system": {
       "baseline": "1.0.1",
       "port-version": 1
     },
     "neko-threadpool": {
-      "baseline": "1.0.2",
-      "port-version": 1
+      "baseline": "1.0.3",
+      "port-version": 0
     },
     "neon2sse": {
       "baseline": "2026-04-28",
@@ -7401,8 +7401,8 @@
       "port-version": 0
     },
     "opencascade": {
-      "baseline": "8.0.0",
-      "port-version": 1
+      "baseline": "8.0.1",
+      "port-version": 0
     },
     "opencc": {
       "baseline": "1.1.9",
@@ -9057,7 +9057,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.7.3",
+      "baseline": "1.7.6",
       "port-version": 0
     },
     "safeint": {
@@ -10342,7 +10342,7 @@
     },
     "tracy": {
       "baseline": "0.13.1",
-      "port-version": 0
+      "port-version": 1
     },
     "transwarp": {
       "baseline": "2.2.3",
@@ -10485,7 +10485,7 @@
       "port-version": 2
     },
     "unimail-cpp-sdk": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "units": {
@@ -10542,7 +10542,7 @@
     },
     "usearch": {
       "baseline": "2.25.3",
-      "port-version": 0
+      "port-version": 1
     },
     "usockets": {
       "baseline": "0.8.8",
@@ -11125,8 +11125,8 @@
       "port-version": 0
     },
     "xbitmaps": {
-      "baseline": "1.1.3",
-      "port-version": 1
+      "baseline": "1.1.4",
+      "port-version": 0
     },
     "xbyak": {
       "baseline": "7.28",
