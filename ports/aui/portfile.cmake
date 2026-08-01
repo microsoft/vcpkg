@@ -72,7 +72,6 @@ function(_aui_prune_empty_dirs _root)
 endfunction()
 _aui_prune_empty_dirs("${CURRENT_PACKAGES_DIR}")
 
-# aui installs its cmake config to the package root; move to share/aui/ for vcpkg_cmake_config_fixup
 if(EXISTS "${CURRENT_PACKAGES_DIR}/aui-config.cmake")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/aui")
     file(RENAME "${CURRENT_PACKAGES_DIR}/aui-config.cmake" "${CURRENT_PACKAGES_DIR}/share/aui/aui-config.cmake")
@@ -81,8 +80,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/aui")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake" "${CURRENT_PACKAGES_DIR}/debug/share/aui/aui-config.cmake")
 endif()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME "${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
