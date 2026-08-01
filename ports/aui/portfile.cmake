@@ -79,7 +79,11 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/aui-config.cmake")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/aui-config.cmake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/aui")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/share/aui/cmake")
+endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

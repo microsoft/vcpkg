@@ -270,3 +270,15 @@ if (${CMAKE_FIND_PACKAGE_NAME}_FOUND AND NOT TARGET aui)
     set_target_properties(aui PROPERTIES
             INTERFACE_LINK_LIBRARIES "${${CMAKE_FIND_PACKAGE_NAME}_IMPORTED_TARGETS}")
 endif()
+
+set(AUI_BUILD_AUI_ROOT "${AUI_ROOT_DIR}")
+
+if(ANDROID)
+    macro(auib_use_system_libs_begin) endmacro()
+    macro(auib_use_system_libs_end) endmacro()
+endif()
+
+include("${AUI_BUILD_AUI_ROOT}/share/aui/cmake/aui.build.cmake")
+
+find_program(AUI_TOOLBOX_EXE NAMES aui.toolbox)
+
