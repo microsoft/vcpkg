@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fixes.patch
+        fix-arm64.patch
 )
 
 vcpkg_cmake_configure(

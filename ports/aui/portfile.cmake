@@ -14,6 +14,7 @@ vcpkg_from_github(
         fix-fmt12.patch
         fix-glm.patch
         fix-macos.patch
+        fix-arm64.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")

@@ -1,0 +1,13 @@
+diff --git a/libs/Common/Config.h b/libs/Common/Config.h
+index 9999e0a..0000000 100644
+--- a/libs/Common/Config.h
++++ b/libs/Common/Config.h
+@@ -151,7 +151,7 @@
+ 
+ #if defined(__powerpc__)
+ #define _PLATFORM_PPC 1
+-#elif defined(__arm__) || defined (__arm64__) || defined(__aarch64__) || defined(_M_ARM) || defined(_M_ARMT)
++#elif defined(__arm__) || defined (__arm64__) || defined(__aarch64__) || defined(_M_ARM) || defined(_M_ARMT) || defined(_M_ARM64)
+ #define _PLATFORM_ARM 1
+ #else
+ #define _PLATFORM_X86 1

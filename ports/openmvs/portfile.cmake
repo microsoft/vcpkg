@@ -17,6 +17,7 @@ vcpkg_from_github(
         missing-include.diff
         no-absolute-paths.patch
         cuda-13.diff
+        arm64.diff
 )
 
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEigen3.cmake")
