@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simfeo/FancyArgumentParser
-    REF "v1.0.1"
-    SHA512 c1805a6ed2c41addd346427ca8b22d6aaf575e3467cc25ef32467bde970b927787930cd1337b450cc469a6ffedc49481ebff9c7b37c2487fb21871a56bad4144
+    REF "v1.0.3"
+    SHA512 72152ba4a78a55344f68ed9adf7ae187e2f695bda50e8b9014ac3f0e83a61b43340fd244bc1fd1b34249e2721f03f0a563a5e23d062951c908debfc348dcdeec
     HEAD_REF main
 )
 

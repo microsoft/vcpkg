@@ -185,5 +185,14 @@ SHA is in the history. For example, you may be able to fix this error by changin
         ${skip_patch_check_param}
     )
 
+    if(VCPKG_USE_HEAD_VERSION AND DEFINED arg_HEAD_REF)
+        set(spdx_ref "${rev_parse_ref}")
+    else()
+        set(spdx_ref "${arg_REF}")
+    endif()
+    z_vcpkg_add_spdx_resource(
+        NAME "${arg_URL}"
+        DOWNLOAD_LOCATION "git+${arg_URL}@${spdx_ref}"
+    )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

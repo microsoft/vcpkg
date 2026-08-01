@@ -6,6 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-platform-detection.patch
+        use-preconfigured-version-header.patch
+)
+
+# Avoid upstream's debug and release configure steps racing to generate this shared source-tree file.
+configure_file(
+    "${SOURCE_PATH}/prj/txt/SimdVersion.h.txt"
+    "${SOURCE_PATH}/src/Simd/SimdVersion.h"
+    @ONLY
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
