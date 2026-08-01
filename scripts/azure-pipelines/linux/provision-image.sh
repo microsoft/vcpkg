@@ -27,7 +27,7 @@ arm64)
   ;;
 esac
 
-POWERSHELL_VERSION=7.6.0
+POWERSHELL_VERSION=7.6.3
 
 # Apt dependencies; needed for add-apt-repository and curl downloads to work
 apt-get -y update
@@ -163,33 +163,35 @@ APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 
 ## CUDA
-# The intent is to install everything that does not require an actual GPU, driver, or GUI.
-# Intentionally omitted: cuda-demo-suite-13-2 cuda-documentation-13-2 cuda-driver-*
-#                        cuda-gdb-13-2 cuda-gdb-src-13-2 cuda-nsight-* cuda-nvdisasm
-#                        cuda-nvprof cuda-nvprune cuda-profiler-api* cuda-sandbox-*
-#                        cuda-visual-tools-13-2 nvidia-gds-13-2 cuda-nvvp-13-2
-#                        cuda-toolkit-13-2 cuda-tools-13-2 cuda-command-line-tools-13-2
-#                        cuda-runtime-13-2
-#                        All libraries for which there is a -dev suffix included here
+# The intent is to install the CUDA toolkit except drivers, GUI tools, and documentation.
+# On version updates, inspect the Package and Depends fields in both of these repository manifests:
+# https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/x86_64/Packages
+# https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/sbsa/Packages
+# NVIDIA changes package names and dependencies between releases. Confirm that:
+# - cuda-compat-* and nvidia-gds-* remain omitted because they install or depend on driver components.
+#   cuda-driver-dev-* is only the driver stub library and is intentionally included.
+# - cuda-nsight-*, cuda-visual-tools-*, and cuda-documentation-* remain omitted as GUI or documentation.
+# - cuda-<version>, cuda-toolkit-*, and cuda-tools-* remain omitted because they pull in those exclusions.
+# Runtime libraries are installed through their corresponding -dev packages and are not listed separately.
 # cudnn9-jit-cuda-13 : cudnn9-jit appears to conflict with cudnn9-dev packages:
 # root@c47a4cc2ea72:/# apt install cudnn9-jit-cuda-13
 # The following additional packages will be installed:
-#   cudnn9-jit-cuda-13-2 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+#   cudnn9-jit-cuda-13-3 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
 # The following packages will be REMOVED:
-#   cudnn9-cuda-13 cudnn9-cuda-13-2 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
+#   cudnn9-cuda-13 cudnn9-cuda-13-3 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
 # The following NEW packages will be installed:
-#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-2 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
-APT_PACKAGES="$APT_PACKAGES cuda-cccl-13-2 cuda-compat-13-2 cuda-compiler-13-2 cuda-crt-13-2 \
-  cuda-cudart-dev-13-2 cuda-cuobjdump-13-2 cuda-cupti-dev-13-2 cuda-cuxxfilt-13-2 \
-  cuda-driver-dev-13-2 cuda-libraries-dev-13-2 cuda-minimal-build-13-2 cuda-nvcc-13-2 \
-  cuda-nvml-dev-13-2 cuda-nvrtc-dev-13-2 cuda-nvtx-13-2 libnvvm-13-2 \
-  cuda-sanitizer-13-2 cuda-toolkit-13-2-config-common cudnn9-cuda-13 gds-tools-13-2 \
-  libcublas-13-2 libcudnn9-dev-cuda-13 libcufft-dev-13-2 libcurand-dev-13-2 libcusolver-dev-13-2 \
-  libcusparse-dev-13-2 libnccl-dev libnpp-dev-13-2 libnvfatbin-dev-13-2 libnvjitlink-dev-13-2 \
-  libnvjpeg-dev-13-2"
+#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-3 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+APT_PACKAGES="$APT_PACKAGES cccl-13-3 cuda-command-line-tools-13-3 cuda-compiler-13-3 cuda-crt-13-3 \
+  cuda-cudart-dev-13-3 cuda-cuobjdump-13-3 cuda-cupti-dev-13-3 cuda-cuxxfilt-13-3 \
+  cuda-driver-dev-13-3 cuda-libraries-dev-13-3 cuda-minimal-build-13-3 cuda-nvcc-13-3 \
+  cuda-nvml-dev-13-3 cuda-nvrtc-dev-13-3 cuda-nvtx-13-3 libnvvm-13-3 \
+  cuda-sanitizer-13-3 cuda-toolkit-13-3-config-common cudnn9-cuda-13 gds-tools-13-3 \
+  libcublas-13-3 libcudnn9-dev-cuda-13 libcufft-dev-13-3 libcurand-dev-13-3 libcusolver-dev-13-3 \
+  libcusparse-dev-13-3 libnccl-dev libnpp-dev-13-3 libnvfatbin-dev-13-3 libnvjitlink-dev-13-3 \
+  libnvjpeg-dev-13-3"
 
 if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
-  APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-2"
+  APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-3"
 fi
 
 ## PowerShell + Azure
