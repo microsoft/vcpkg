@@ -50,13 +50,13 @@ vcpkg_cmake_configure(
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
-if(VCPKG_HOST_IS_WINDOWS)
-    vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/debug/bin")
-endif()
+vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_cmake_install()
 
-vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/aui.toolbox${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
+endif()
 
 # Remove empty folders
 function(_aui_prune_empty_dirs _root)

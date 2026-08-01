@@ -22,7 +22,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/aui.toolbox${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
+endif()
 
 file(GLOB _aui_toolbox_leftovers "${CURRENT_PACKAGES_DIR}/*")
 foreach(_entry IN LISTS _aui_toolbox_leftovers)
