@@ -959,7 +959,6 @@ openmvs:arm64-linux=cascade
 openmvs[cuda]((!windows | !x64 | xbox) & (!linux | !x64) & (!linux | !arm64))=cascade
 openmvs[opengl](android)=feature-fails
 openmvs[openmp]:arm64-osx=feature-fails # openmp setup needed
-openmvs(arm & windows)=fail # Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
 openni2:arm64-linux=cascade
 openni2:arm64-osx=cascade
 openni2:arm64-windows=cascade
