@@ -273,10 +273,10 @@ endif()
 
 set(AUI_BUILD_AUI_ROOT "${AUI_ROOT_DIR}")
 
-if(ANDROID)
-    macro(auib_use_system_libs_begin) endmacro()
-    macro(auib_use_system_libs_end) endmacro()
-endif()
+macro(auib_use_system_libs_begin)
+endmacro()
+macro(auib_use_system_libs_end)
+endmacro()
 
 include("${AUI_BUILD_AUI_ROOT}/share/aui/cmake/aui.build.cmake")
 
