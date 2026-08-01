@@ -51,6 +51,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
+
 # Remove empty folders
 function(_aui_prune_empty_dirs _root)
     file(GLOB _aui_children "${_root}/*")
