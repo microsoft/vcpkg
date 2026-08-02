@@ -1,7 +1,6 @@
 {
   "name": "kineto",
-  "version-date": "2026-04-10",
-  "port-version": 1,
+  "version-date": "2026-06-03",
   "description": "Kineto: PyTorch profiler library (headers)",
   "homepage": "https://github.com/pytorch/kineto",
   "license": "BSD-3-Clause",

@@ -1,6 +1,6 @@
 {
   "name": "kwindowsystem",
-  "version": "6.27.0",
+  "version": "6.28.0",
   "description": "Access to the windowing system",
   "homepage": "https://invent.kde.org/frameworks/kwindowsystem",
   "documentation": "https://api.kde.org/kwindowsystem-index.html",

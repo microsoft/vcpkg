@@ -1,6 +1,6 @@
 {
   "name": "yunsmall-usbipdcpp",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A C++ library for creating usbip servers",
   "homepage": "https://github.com/yunsmall/usbipdcpp",
   "license": "LGPL-3.0",
