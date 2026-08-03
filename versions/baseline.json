@@ -11261,7 +11261,7 @@
       "port-version": 0
     },
     "yara": {
-      "baseline": "4.5.5",
+      "baseline": "4.5.8",
       "port-version": 0
     },
     "yas": {
