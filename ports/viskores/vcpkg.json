@@ -4,6 +4,7 @@
   "description": "A visualization library for many-threaded devices",
   "homepage": "https://viskores.org/",
   "license": null,
+  "supports": "!(windows & x86)",
   "dependencies": [
     "fmt",
     {
