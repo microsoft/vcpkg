@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("Warning: `glaze` requires Clang15+ or GCC 12+ on Linux")
+    message("Warning: `glaze` requires Clang 17+ or GCC 13+ on Linux")
 endif()
 
 vcpkg_from_github(
@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -Dglaze_DEVELOPER_MODE=OFF
         -Dglaze_BUILD_EXAMPLES=OFF
+        -Dglaze_EETF_FORMAT=OFF
 )
 
 vcpkg_cmake_install()
