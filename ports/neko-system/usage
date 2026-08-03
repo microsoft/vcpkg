@@ -1,4 +1,4 @@
-neko-system provides CMake targets:
+NekoSystem provides CMake targets:
 
     find_package(NekoSystem CONFIG REQUIRED)
     target_link_libraries(main PRIVATE Neko::System)
