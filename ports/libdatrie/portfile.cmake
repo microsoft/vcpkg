@@ -34,4 +34,5 @@ if(NOT SKIP_TOOL)
     vcpkg_copy_tools(TOOL_NAMES trietool AUTO_CLEAN)
 endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
