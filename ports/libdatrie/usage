@@ -1,9 +1,9 @@
 libdatrie can be used via CMake:
 
-    find_path(LIBDATRIE_INCLUDE_DIR datrie/trie.h)
-    find_library(LIBDATRIE_LIBRARY NAMES datrie)
-    target_include_directories(main PRIVATE "${LIBDATRIE_INCLUDE_DIR}")
-    target_link_libraries(main PRIVATE "${LIBDATRIE_LIBRARY}")
+  find_path(LIBDATRIE_INCLUDE_DIR datrie/trie.h)
+  find_library(LIBDATRIE_LIBRARY NAMES datrie)
+  target_include_directories(main PRIVATE "${LIBDATRIE_INCLUDE_DIR}")
+  target_link_libraries(main PRIVATE "${LIBDATRIE_LIBRARY}")
 
 libdatrie provides pkg-config modules:
 
