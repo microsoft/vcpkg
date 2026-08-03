@@ -16,18 +16,13 @@
     }
   ],
   "features": {
-    "anari": {
-      "description": "Enable ANARI interop support",
-      "dependencies": [
-        "anari"
-      ]
-    },
     "hdf5": {
       "description": "Enable HDF5 support",
       "dependencies": [
         {
           "name": "hdf5",
           "features": [
+            "cpp",
             "hl"
           ]
         }
