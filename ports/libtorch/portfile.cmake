@@ -36,6 +36,7 @@ vcpkg_from_github(
         fix-windows-install-dirs.patch
         fix-async-mm-cutlass.patch
         fix-python-package-data.patch
+        fix-headeronly-glob.patch
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
