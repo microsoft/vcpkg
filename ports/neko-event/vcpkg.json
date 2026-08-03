@@ -1,8 +1,8 @@
 {
   "name": "neko-event",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A modern easy to use type-safe and high-performance event handling system for C++ ",
-  "homepage": "https://github.com/moehoshio/NekoEvent",
+  "homepage": "https://github.com/hoshimoe/NekoEvent",
   "license": "MIT OR Apache-2.0",
   "dependencies": [
     "neko-schema",

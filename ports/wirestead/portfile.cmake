@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wirestead/wirestead
     REF v${VERSION}
-    SHA512 dd6d67fbeb665cd9c3477e1e96ecf173691143e892c196b0286609fd7d605b402e84e8c68beb6bd8357ea0e54d874b8a28aae8ebb8390814615c28c0abb6f017
+    SHA512 fafcf718281ff4aea01fbfeafe580afd186c4e244d363a409a2fd1aafb8892c8d9f70163a785f29c5661f43d27980236da1a69fff28f19408eee534db52f926c
     HEAD_REF main
 )
 
@@ -56,4 +56,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/NOTICE"
+)
