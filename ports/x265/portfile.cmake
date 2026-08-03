@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_PIC=ON
         -DENABLE_LIBNUMA=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_VLD=ON
         "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
