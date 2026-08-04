@@ -7376,6 +7376,10 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "open3d": {
+      "baseline": "0.19.0",
+      "port-version": 1
+    },
     "open62541": {
       "baseline": "1.4.14",
       "port-version": 0
