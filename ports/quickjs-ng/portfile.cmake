@@ -6,10 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quickjs-ng/quickjs
     REF v${VERSION}
-    SHA512 5268bf0d0e0360ab0cbaf7f9c69293a7c1c384c5e3f243dcbfd24290954cdce9f0c91a236da07b8c17ef95223ef65eb4d09ed503138388b24df3218a00ce8aa9
+    SHA512 b154afe8bfd7439fcca4b45ccf7952750a01ac053819f639a77abb254c4d6c27d7b96e7407cd20ddf45aa27ff5bcd56c03bf775b157beb706bb30f882cbb47af
     HEAD_REF master
-    PATCHES
-        fix-manpage-install.patch # https://github.com/quickjs-ng/quickjs/pull/1632
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
