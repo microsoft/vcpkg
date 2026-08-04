@@ -119,7 +119,7 @@ index 5cffdb9..4479ca7 100644
                      mDecodedSamples.write(reinterpret_cast<char*>(&sample), sizeof(sample));
                  }
 diff --git a/aui.core/CMakeLists.txt b/aui.core/CMakeLists.txt
-index 6aa1b07..85f6a4d 100644
+index 6aa1b07..9115f5d 100644
 --- a/aui.core/CMakeLists.txt
 +++ b/aui.core/CMakeLists.txt
 @@ -11,9 +11,8 @@ aui_enable_benchmarks(aui.core)
@@ -163,7 +163,21 @@ index 6aa1b07..85f6a4d 100644
      target_compile_definitions(aui.core PRIVATE AUI_USE_BACKTRACE=1)
  elseif(_use_unwind)
      message(STATUS "Stacktrace backend: unwind")
-@@ -126,7 +125,7 @@ foreach(_var AUI_PLATFORM_WIN
+@@ -111,7 +110,12 @@ if (ANDROID)
+ endif()
+ 
+ aui_link(aui.core PRIVATE ZLIB::ZLIB)
+-add_subdirectory(3rdparty/minizip)
++find_package(minizip CONFIG REQUIRED)
++if(TARGET MINIZIP::minizip)
++    aui_link(aui.core PRIVATE MINIZIP::minizip)
++else()
++    aui_link(aui.core PRIVATE MINIZIP::minizipstatic)
++endif()
+ 
+ # forward platform info
+ foreach(_var AUI_PLATFORM_WIN
+@@ -126,7 +130,7 @@ foreach(_var AUI_PLATFORM_WIN
               AUI_COMPILER_CLANG
               AUI_COMPILER_GCC
               AUI_COMPILER_MSVC
@@ -172,7 +186,7 @@ index 6aa1b07..85f6a4d 100644
               AUI_ARCH_X86
               AUI_ARCH_X86_64
               AUI_ARCH_ARM_64
-@@ -147,13 +146,9 @@ endif()
+@@ -147,13 +151,9 @@ endif()
  
  
  # [auib_import examples]

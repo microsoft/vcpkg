@@ -40,6 +40,7 @@
       "platform": "linux"
     },
     "lunasvg",
+    "minizip",
     {
       "name": "oboe",
       "platform": "android"
