@@ -17,6 +17,7 @@ vcpkg_from_github(
         0047-fix-msvc-utf8.patch
         0049-fix-twolame-pkgconfig.patch
         0050-fix-test-ld-absolute-lib-paths.patch
+        0051-fix-msvc-undef-flags.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -84,11 +85,17 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
 
-    # FFmpeg 9.0 uses HOSTCC to preprocess generated x86 assembly sources.
-    # Since vcpkg always enables cross-compilation, FFmpeg otherwise defaults
-    # HOSTCC to gcc even for the MSVC toolchain.
+    # FFmpeg 9.0 builds native helper programs for generated sources. Using
+    # the target cl.exe as HOSTCC is valid for x86/x64 targets, but for ARM64
+    # it produces an ARM64 helper executable that cannot run on the x64 CI
+    # host. The helper is only needed by the optional unstable AArch64
+    # swscale backend, so disable that backend for this cross-build.
     if(VCPKG_HOST_IS_WINDOWS AND VCPKG_DETECTED_MSVC)
-        string(APPEND OPTIONS " --host-cc=${CC_filename}")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            string(APPEND OPTIONS " --disable-unstable")
+        else()
+            string(APPEND OPTIONS " --host-cc=${CC_filename}")
+        endif()
     endif()
 
     list(APPEND prog_env "${CC_path}")
