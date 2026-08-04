@@ -5,7 +5,7 @@
   "homepage": "https://github.com/Ai-finder-for-api/easy-vulkan-gui",
   "license": "MIT",
   "dependencies": [
-    "vulkan",
-    "vcpkg-cmake"
+    "vcpkg-cmake",
+    "vulkan"
   ]
 }
