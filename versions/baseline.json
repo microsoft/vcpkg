@@ -9225,7 +9225,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.4.0",
+      "baseline": "4.4.3",
       "port-version": 0
     },
     "seasocks": {
