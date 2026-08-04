@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency-libusb.patch
         fix-macbuild.patch
-        libfreenect2_libjpeg-turbo_cmake_fix.patch
+        CMake_4_and_OpenCL_headers.patch # https://github.com/OpenKinect/libfreenect2/pull/1209
 )
 
 file(READ "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" FINDLIBUSB)
@@ -33,6 +33,10 @@ endif()
 vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
 vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
 
+# force use of OpenCL 1.2
+#string(APPEND VCPKG_CXX_FLAGS " -DCL_TARGET_OPENCL_VERSION=120")
+#string(APPEND VCPKG_C_FLAGS " -DCL_TARGET_OPENCL_VERSION=120")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -40,6 +44,9 @@ vcpkg_cmake_configure(
         -DENABLE_CUDA=OFF
         -DBUILD_EXAMPLES=OFF
         ${FEATURE_OPTIONS}
+        -DCL_TARGET_OPENCL_VERSION=120
+        -DCL_HPP_TARGET_OPENCL_VERSION=120
+        -DCL_HPP_MINIMUM_OPENCL_VERSION=120
 )
 vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
