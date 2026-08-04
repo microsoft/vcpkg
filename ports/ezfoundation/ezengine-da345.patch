@@ -1,0 +1,75 @@
+diff --git a/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt b/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt
+index 9618c03a2ddce3c566107c32be9b645801812578..456be1610672832e1866e559ee0792a130acb285 100644
+--- a/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt
++++ b/Code/EditorPlugins/Fmod/EditorPluginFmod/CMakeLists.txt
+@@ -1,12 +1,14 @@
+ ez_cmake_init()
+ 
++# Get the name of this folder as the project name
++get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
++# FMOD is in a sub-module, when it isn't checked out ez_requires_fmod() doesn't exist, so early out here when it's not needed anyway
++ez_apply_build_filter(${PROJECT_NAME})
++
+ ez_requires_editor()
+ 
+ ez_requires_fmod()
+ 
+-# Get the name of this folder as the project name
+-get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+-
+ ez_create_target(LIBRARY ${PROJECT_NAME})
+ 
+ ez_link_target_qt(TARGET ${PROJECT_NAME} COMPONENTS Core Gui Widgets)
+diff --git a/Code/Engine/Foundation/Platform/Win/Features_Platform.h b/Code/Engine/Foundation/Platform/Win/Features_Platform.h
+index 8465fe3465b7d148dec0354913e9c0ad195e4e0a..deecaafc0cc0418f546b90967ecc342ef660996d 100644
+--- a/Code/Engine/Foundation/Platform/Win/Features_Platform.h
++++ b/Code/Engine/Foundation/Platform/Win/Features_Platform.h
+@@ -87,7 +87,11 @@
+ #    define EZ_SSE_LEVEL EZ_SSE_20
+ #  endif
+ #elif EZ_ENABLED(EZ_PLATFORM_ARCH_ARM)
+-#  define EZ_SIMD_IMPLEMENTATION EZ_SIMD_IMPLEMENTATION_NEON
++#  if EZ_ENABLED(EZ_COMPILER_MSVC_CLANG)
++#    define EZ_SIMD_IMPLEMENTATION EZ_SIMD_IMPLEMENTATION_NEON
++#  else
++#    define EZ_SIMD_IMPLEMENTATION EZ_SIMD_IMPLEMENTATION_FPU
++#  endif
+ #else
+ #  error "Unknown architecture."
+ #endif
+diff --git a/Code/EnginePlugins/FmodPlugin/CMakeLists.txt b/Code/EnginePlugins/FmodPlugin/CMakeLists.txt
+index 18368a56c2b8efa06187068c94fd68195fc940a0..45c9ecddc212b918d9b81031f9acb417c20f2e5a 100644
+--- a/Code/EnginePlugins/FmodPlugin/CMakeLists.txt
++++ b/Code/EnginePlugins/FmodPlugin/CMakeLists.txt
+@@ -1,9 +1,11 @@
+ ez_cmake_init()
+ 
+-ez_requires_fmod()
+-
+ # Get the name of this folder as the project name
+ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
++# FMOD is in a sub-module, when it isn't checked out ez_requires_fmod() doesn't exist, so early out here when it's not needed anyway
++ez_apply_build_filter(${PROJECT_NAME})
++
++ez_requires_fmod()
+ 
+ ez_create_target(LIBRARY ${PROJECT_NAME})
+ 
+diff --git a/Code/Tools/Libs/ModelImporter2/CMakeLists.txt b/Code/Tools/Libs/ModelImporter2/CMakeLists.txt
+index 82798c06fda044247684d53cc654697db2b18418..fdd6074980f79ffc3cce00a69a894898f609362c 100644
+--- a/Code/Tools/Libs/ModelImporter2/CMakeLists.txt
++++ b/Code/Tools/Libs/ModelImporter2/CMakeLists.txt
+@@ -1,9 +1,11 @@
+ ez_cmake_init()
+ 
+-ez_requires_assimp()
+-
+ # Get the name of this folder as the project name
+ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
++# AssImp is in a sub-module, when it isn't checked out ez_requires_assimp() doesn't exist, so early out here when it's not needed anyway
++ez_apply_build_filter(${PROJECT_NAME})
++
++ez_requires_assimp()
+ 
+ ez_create_target(LIBRARY ${PROJECT_NAME})
+ 
