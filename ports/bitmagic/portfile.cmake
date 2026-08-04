@@ -9,4 +9,8 @@ vcpkg_from_github(
 
 file(GLOB HEADER_LIST "${SOURCE_PATH}/src/*.h")
 file(INSTALL ${HEADER_LIST} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/src/sse2neon.h"
+)
