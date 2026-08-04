@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d8ef047..e0f615c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -237,30 +237,25 @@ IF(ENABLE_TEGRAJPEG)
+ ENDIF()
+ 
+ IF(LIBFREENECT2_WITH_VT_SUPPORT)
+-  FIND_PACKAGE(TurboJPEG)
++  find_package(libjpeg-turbo CONFIG)
+ ELSE()
+   # VAAPI can fail to start at runtime. It must have a fallback.
+-  FIND_PACKAGE(TurboJPEG REQUIRED)
++  find_package(libjpeg-turbo CONFIG REQUIRED)
+ ENDIF()
+ 
+ SET(HAVE_TurboJPEG no)
+-IF(TurboJPEG_FOUND)
++IF(TARGET libjpeg-turbo::turbojpeg OR libjpeg-turbo_FOUND)
+   SET(LIBFREENECT2_WITH_TURBOJPEG_SUPPORT 1)
+   SET(HAVE_TurboJPEG yes)
+ 
+-  INCLUDE_DIRECTORIES(${TurboJPEG_INCLUDE_DIRS})
+-
+   LIST(APPEND SOURCES
+     src/turbo_jpeg_rgb_packet_processor.cpp
+   )
+ 
+   LIST(APPEND LIBRARIES
+-    ${TurboJPEG_LIBRARIES}
++    libjpeg-turbo::turbojpeg
+   )
+ 
+-  LIST(APPEND LIBFREENECT2_DLLS
+-   ${TurboJPEG_DLL}
+-  )
+ ENDIF()
+ 
+ SET(HAVE_OpenGL disabled)

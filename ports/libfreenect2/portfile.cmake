@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-dependency-libusb.patch
         fix-macbuild.patch
         CMake_4_and_OpenCL_headers.patch # https://github.com/OpenKinect/libfreenect2/pull/1209
+        find_libjpegturbo.patch
 )
 
 file(READ "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" FINDLIBUSB)
