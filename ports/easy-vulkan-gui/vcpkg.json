@@ -4,6 +4,7 @@
   "description": "A simple, custom, dependency-free GUI library that makes Vulkan easier for all platforms.",
   "homepage": "https://github.com/Ai-finder-for-api/easy-vulkan-gui",
   "license": "MIT",
+  "supports": "windows",
   "dependencies": [
     "vcpkg-cmake",
     "vulkan"
