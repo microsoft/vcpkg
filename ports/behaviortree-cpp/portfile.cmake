@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BehaviorTree/BehaviorTree.CPP
     REF "${VERSION}"
-    SHA512 23ac30d7824282f641372f709b6b7a800a2947113bbb09d599f68547a3a67f509992cd0ca251e86b101062fe0d6697373b6851d21e7648578aadf1aa924e7ccf
+    SHA512 1c76440baa562ddae8d63e2c2ea0d2ebdd7863771486c6729e6c646928659feeb551a7d0cd6483d93e96f5d8f2a3f29e59a102e9dbb97406b4e90317dd804c2b
     HEAD_REF master
     PATCHES
         remove-source-charset.diff # because vcpkg's default toolchain uses /utf-8 which is incompatible with /source-charset

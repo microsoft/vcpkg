@@ -1,12 +1,12 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("Warning: `glaze` requires Clang15+ or GCC 12+ on Linux")
+    message("Warning: `glaze` requires Clang 17+ or GCC 13+ on Linux")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 46867a4ce74b974cfc6d05ee72987242a83c74b5c734488dbf7c608e40c18986ef639f9e16a4ce434e33002321c0d9e5e97dd2c860529860d6ec8c277a83d1cd
+    SHA512 564fc3bfef1a60f8b61ba91007beb9985079d72cf350dd10108c6960949e56908c11d7ad47607c6d129b71841b4cf2f7d7bf8aa66525d957fd6a19957900d94e
     HEAD_REF main
     PATCHES
         001-fix-asio.patch
@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -Dglaze_DEVELOPER_MODE=OFF
         -Dglaze_BUILD_EXAMPLES=OFF
+        -Dglaze_EETF_FORMAT=OFF
 )
 
 vcpkg_cmake_install()
