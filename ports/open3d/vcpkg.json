@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "open3d",
+  "version-semver": "0.19.0",
+  "port-version": 1,
+  "description": "Open3D: A Modern Library for 3D Data Processing",
+  "homepage": "https://www.open3d.org/",
+  "license": "MIT",
+  "supports": "(windows & !uwp) | linux | osx",
+  "dependencies": [
+    {
+      "name": "assimp",
+      "features": [
+        "draco"
+      ]
+    },
+    "cppzmq",
+    "curl",
+    "eigen3",
+    "embree",
+    "fmt",
+    "glew",
+    "glfw3",
+    "jsoncpp",
+    "libjpeg-turbo",
+    "libpng",
+    "msgpack",
+    "nanoflann",
+    "opengl",
+    "openssl",
+    "qhull",
+    "tbb",
+    "tinygltf",
+    "tinyobjloader",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vtk",
+      "default-features": false
+    },
+    "zeromq",
+    "zlib"
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build Open3D with CUDA support",
+      "dependencies": [
+        "cuda"
+      ]
+    }
+  }
+}
