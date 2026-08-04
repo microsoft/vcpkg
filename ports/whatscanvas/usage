@@ -1,0 +1,14 @@
+WhatsCanvas provides independent CMake targets for its renderers.
+
+OpenGL:
+
+    find_package(WhatsCanvas CONFIG REQUIRED COMPONENTS OpenGL)
+    target_link_libraries(main PRIVATE WhatsCanvas::OpenGL)
+
+CPU-only software rendering:
+
+    find_package(WhatsCanvas CONFIG REQUIRED COMPONENTS Software)
+    target_link_libraries(main PRIVATE WhatsCanvas::Software)
+
+The application owns the OpenGL context. Create the canvas only after the
+context is current and provide a valid GL procedure loader.
