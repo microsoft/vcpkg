@@ -32,6 +32,8 @@
       "name": "libbacktrace",
       "platform": "linux"
     },
+    "libogg",
+    "libvorbis",
     "libwebp",
     {
       "name": "libx11",

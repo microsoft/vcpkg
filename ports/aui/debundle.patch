@@ -36,10 +36,16 @@ index 6902d56..3a9f94c 100644
  # [configure file example]
  configure_file(cmake/aui-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/aui-config.cmake @ONLY)
 diff --git a/aui.audio/CMakeLists.txt b/aui.audio/CMakeLists.txt
-index 21e4415..124d815 100644
+index 21e4415..fb0302a 100644
 --- a/aui.audio/CMakeLists.txt
 +++ b/aui.audio/CMakeLists.txt
-@@ -5,26 +5,20 @@ add_subdirectory(3rdparty/ogg)
+@@ -1,30 +1,25 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+ aui_module(aui.audio WHOLEARCHIVE EXPORT aui)
+-add_subdirectory(3rdparty/ogg)
++find_package(Ogg CONFIG REQUIRED)
++find_package(Vorbis CONFIG REQUIRED)
  aui_link(aui.audio PUBLIC aui::core)
  
  if (AUI_PLATFORM_ANDROID)
@@ -75,7 +81,7 @@ index 21e4415..124d815 100644
  
  if (AUI_PLATFORM_IOS OR AUI_PLATFORM_MACOS)
      auib_use_system_libs_begin()
-@@ -42,9 +36,7 @@ if (AUI_PLATFORM_MACOS)
+@@ -42,9 +37,9 @@ if (AUI_PLATFORM_MACOS)
  					   "-framework QuartzCore")
  endif()
  
@@ -85,9 +91,33 @@ index 21e4415..124d815 100644
 -            )
 +include(FindPkgConfig)
 +pkg_check_modules(soxr REQUIRED IMPORTED_TARGET soxr)
++
++aui_link(aui.audio PRIVATE PkgConfig::soxr)
  
 -aui_link(aui.audio PRIVATE soxr)
-+aui_link(aui.audio PRIVATE PkgConfig::soxr)
++aui_link(aui.audio PRIVATE Vorbis::vorbisfile)
+diff --git a/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp b/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp
+index 5cffdb9..4479ca7 100644
+--- a/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp
++++ b/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp
+@@ -1,7 +1,7 @@
+ #include "AVorbisSoundPipe.h"
+ #include "vorbis/codec.h"
+ #include "AUI/Logging/ALogger.h"
+-#include "os.h"
++#include <cmath>
+ 
+ static constexpr auto LOG_TAG = "vorbis";
+ 
+@@ -71,7 +71,7 @@ void AVorbisSoundPipe::write(const char *src, size_t size) {
+             auto sampleCount = vorbis_synthesis_pcmout(mState.ptr(), &pcm);
+             for (int sampleNum = 0; sampleNum < sampleCount; sampleNum++) {
+                 for (int channel = 0; channel < mInfo->channels; channel++) {
+-                    auto sample = static_cast<int16_t>(vorbis_ftoi(
++                    auto sample = static_cast<int16_t>(std::lrint(
+                             glm::clamp(32768.f * pcm[channel][sampleNum], -32768.f, 32767.f)));
+                     mDecodedSamples.write(reinterpret_cast<char*>(&sample), sizeof(sample));
+                 }
 diff --git a/aui.core/CMakeLists.txt b/aui.core/CMakeLists.txt
 index 6aa1b07..85f6a4d 100644
 --- a/aui.core/CMakeLists.txt
