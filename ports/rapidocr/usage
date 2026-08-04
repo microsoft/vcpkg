@@ -1,0 +1,16 @@
+rapidocr provides CMake targets:
+
+    find_package(unofficial-rapidocr CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::rapidocr::rapidocr)
+
+Headers are installed under include/rapidocr/ (e.g. #include <rapidocr/OcrLite.h>).
+
+ONNX model weights are not bundled. Download the PP-OCR ONNX models and point
+your application at them, e.g.:
+
+    ch_PP-OCRv3_det_infer.onnx
+    ch_PP-OCRv3_rec_infer.onnx
+    ch_ppocr_mobile_v2.0_cls_infer.onnx
+    ppocr_keys_v1.txt
+
+See https://github.com/RapidAI/RapidOcrOnnx for details.
