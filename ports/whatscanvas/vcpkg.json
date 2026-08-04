@@ -5,6 +5,7 @@
   "homepage": "https://github.com/ClarkWain/WhatsCanvas",
   "documentation": "https://clarkwain.github.io/WhatsCanvas/",
   "license": "MIT",
+  "supports": "!android & !ios & !uwp",
   "dependencies": [
     "glm",
     "stb",
@@ -18,13 +19,20 @@
     }
   ],
   "default-features": [
-    "opengl",
+    {
+      "name": "opengl",
+      "platform": "!android & !ios & !uwp & !(arm64 & linux)"
+    },
     "software",
-    "text"
+    {
+      "name": "text",
+      "platform": "!android & !ios & !uwp & !(arm64 & linux)"
+    }
   ],
   "features": {
     "opengl": {
       "description": "Build the desktop OpenGL renderer",
+      "supports": "!android & !ios & !uwp & !(arm64 & linux)",
       "dependencies": [
         "opengl"
       ]
@@ -34,6 +42,7 @@
     },
     "text": {
       "description": "Enable FreeType rasterization and HarfBuzz shaping for the OpenGL renderer",
+      "supports": "!android & !ios & !uwp & !(arm64 & linux)",
       "dependencies": [
         {
           "name": "freetype",
@@ -42,6 +51,13 @@
         {
           "name": "harfbuzz",
           "default-features": false
+        },
+        {
+          "name": "whatscanvas",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
         }
       ]
     }

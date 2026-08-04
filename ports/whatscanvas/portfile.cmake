@@ -6,16 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(NOT "opengl" IN_LIST FEATURES AND NOT "software" IN_LIST FEATURES)
-    message(FATAL_ERROR "WhatsCanvas requires at least one renderer feature: opengl or software")
-endif()
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         opengl WHATSCANVAS_BUILD_OPENGL
         software WHATSCANVAS_BUILD_SOFTWARE
 )
+
+# vcpkg requires the core feature set to be independently buildable. Use the
+# dependency-free software renderer when no renderer feature was requested.
+if(NOT "opengl" IN_LIST FEATURES AND NOT "software" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DWHATSCANVAS_BUILD_SOFTWARE=ON)
+endif()
 
 if("text" IN_LIST FEATURES)
     set(WHATSCANVAS_TEXT_RASTERIZER ON)
