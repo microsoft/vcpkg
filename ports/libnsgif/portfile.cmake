@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF release/1.0.0
     SHA512 66f89247de14d8b2a0d53acea3114aec861a08e589a8431b18f707b4b41b5e6b2b4bcc47a7bd4028a6f10174fd037adf7707b2cad524c21c62fa88b103306d77
     HEAD_REF master
+    PATCHES
+        add-stddef-include.patch
 )
 
 file(COPY
