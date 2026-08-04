@@ -15,8 +15,6 @@ vcpkg_extract_source_archive(
 file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/meson.build"
     "${CMAKE_CURRENT_LIST_DIR}/meson_options.txt"
-    "${CMAKE_CURRENT_LIST_DIR}/ctx-wasm.pc.in"
-    "${CMAKE_CURRENT_LIST_DIR}/ctx-wasm-simd.pc.in"
     DESTINATION "${SOURCE_PATH}"
 )
 

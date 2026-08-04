@@ -135,27 +135,36 @@ pkg.generate(
 )
 
 if is_wasm
-  pc_conf = configuration_data()
-  pc_conf.set('prefix', get_option('prefix'))
-  pc_conf.set('libdir', join_paths(get_option('prefix'), get_option('libdir')))
-  pc_conf.set('includedir', join_paths(get_option('prefix'), get_option('includedir')))
-  pc_conf.set('version', meson.project_version())
+  wasm_cflags = [
+    '-DCTX_IMPLEMENTATION',
+    '-flto',
+    '-O3',
+    '-s WASM=1',
+    '-s ALLOW_MEMORY_GROWTH=1',
+    '-s EXPORTED_FUNCTIONS=_main,_free,_calloc,_malloc',
+  ]
 
-  ctx_wasm_pc = configure_file(
-    input : 'ctx-wasm.pc.in',
-    output : 'ctx-wasm.pc',
-    configuration : pc_conf,
+  pkg.generate(
+    filebase : 'ctx-wasm',
+    name : 'ctx',
+    description : 'ctx vector graphics - wasm target',
+    version : meson.project_version(),
+    libraries : ['-Wl,--lto-O3'],
+    extra_cflags : wasm_cflags,
+    variables : ['apiversion=0.0'],
   )
 
-  ctx_wasm_simd_pc = configure_file(
-    input : 'ctx-wasm-simd.pc.in',
-    output : 'ctx-wasm-simd.pc',
-    configuration : pc_conf,
-  )
-
-  install_data(
-    [ctx_wasm_pc, ctx_wasm_simd_pc],
-    install_dir : join_paths(get_option('libdir'), 'pkgconfig'),
+  pkg.generate(
+    filebase : 'ctx-wasm-simd',
+    name : 'ctx',
+    description : 'ctx vector graphics - wasm target with SIMD',
+    version : meson.project_version(),
+    libraries : ['-Wl,--lto-O3'],
+    extra_cflags : [
+      '-msimd128',
+      '-ftree-vectorize',
+    ] + wasm_cflags,
+    variables : ['apiversion=0.0'],
   )
 endif
 
