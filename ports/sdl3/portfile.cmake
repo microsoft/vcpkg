@@ -63,6 +63,17 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
+        # Prevent host-installed Unix libraries from silently changing SDL's capabilities.
+        -DSDL_FRIBIDI=OFF
+        -DSDL_JACK=OFF
+        -DSDL_KMSDRM=OFF
+        -DSDL_LIBTHAI=OFF
+        -DSDL_LIBUDEV=OFF
+        -DSDL_LIBURING=OFF
+        -DSDL_PIPEWIRE=OFF
+        -DSDL_PULSEAUDIO=OFF
+        -DSDL_SNDIO=OFF
+        -DSDL_WAYLAND_LIBDECOR=OFF
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
         -DSDL_X11_XSCRNSAVER=OFF
@@ -85,6 +96,9 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt"
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/src/video/yuv2rgb/LICENSE"
     COMMENT "Some configurations may use code licensed under the MIT and Apache-2.0 licenses."
 )
