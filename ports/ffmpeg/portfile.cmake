@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 c72f4062aecc16d8b2b1e8678d5efe3af4cfaa0cc7c0997052248f9e499e60c2463acf07877cf3b78b246ce3e8078cb043e8d97e90a6b50d06af32ff7369a788
+    SHA512 4327d259b2ed9cc35a6139606643bf9c9db5fb0372a9eb259fed61af50505a2b59f0c3d94c51fec89d2e0cd552a413c5f50514683931c94c429824198d56ec56
     HEAD_REF master
     PATCHES
-        0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
         0005-fix-nasm.patch
@@ -16,7 +15,6 @@ vcpkg_from_github(
         0045-use-prebuilt-bin2c.patch
         0046-fix-msvc-detection.patch
         0047-fix-msvc-utf8.patch
-        0048-backport-23039.patch
         0049-fix-twolame-pkgconfig.patch
         0050-fix-test-ld-absolute-lib-paths.patch
 )
@@ -85,6 +83,14 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
+
+    # FFmpeg 9.0 uses HOSTCC to preprocess generated x86 assembly sources.
+    # Since vcpkg always enables cross-compilation, FFmpeg otherwise defaults
+    # HOSTCC to gcc even for the MSVC toolchain.
+    if(VCPKG_HOST_IS_WINDOWS AND VCPKG_DETECTED_MSVC)
+        string(APPEND OPTIONS " --host-cc=${CC_filename}")
+    endif()
+
     list(APPEND prog_env "${CC_path}")
 endif()
 
