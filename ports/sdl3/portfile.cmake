@@ -72,11 +72,21 @@ vcpkg_cmake_configure(
         -DSDL_LIBURING=OFF
         -DSDL_PIPEWIRE=OFF
         -DSDL_PULSEAUDIO=OFF
+        -DSDL_ROCKCHIP=OFF
+        -DSDL_RPI=OFF
         -DSDL_SNDIO=OFF
         -DSDL_WAYLAND_LIBDECOR=OFF
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
+        -DSDL_X11_XCURSOR=OFF
+        -DSDL_X11_XDBE=OFF
+        -DSDL_X11_XFIXES=OFF
+        -DSDL_X11_XINPUT=OFF
+        -DSDL_X11_XRANDR=OFF
+        -DSDL_X11_XSHAPE=OFF
         -DSDL_X11_XSCRNSAVER=OFF
+        -DSDL_X11_XSYNC=OFF
+        -DSDL_X11_XTEST=OFF
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         # Specifying the revision skips the need to use git to determine a version
         -DSDL_REVISION=vcpkg
@@ -99,6 +109,9 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/src/hidapi/LICENSE-bsd.txt"
+        "${SOURCE_PATH}/src/video/stb_image.h"
         "${SOURCE_PATH}/src/video/yuv2rgb/LICENSE"
-    COMMENT "Some configurations may use code licensed under the MIT and Apache-2.0 licenses."
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2.h"
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2platform.h"
 )
