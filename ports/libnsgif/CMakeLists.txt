@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(libnsgif VERSION 1.0.0 LANGUAGES C)
 
-add_library(nsgif STATIC src/gif.c src/lzw.c)
+add_library(nsgif src/gif.c src/lzw.c)
 
 target_compile_definitions(nsgif PRIVATE NSGIF_NAME=nsgif NSGIF_VERSION=1.0.0)
 target_include_directories(nsgif PUBLIC
@@ -10,8 +10,9 @@ target_include_directories(nsgif PUBLIC
 
 install(TARGETS nsgif
     EXPORT nsgif_targets
-    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
 )
 install(FILES include/nsgif.h DESTINATION include)
 
