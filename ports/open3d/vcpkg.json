@@ -2,11 +2,11 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "open3d",
   "version-semver": "0.19.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Open3D: A Modern Library for 3D Data Processing",
   "homepage": "https://www.open3d.org/",
   "license": "MIT",
-  "supports": "(windows & !uwp) | linux | osx",
+  "supports": "(windows & !uwp & !arm & !xbox) | linux | osx",
   "dependencies": [
     {
       "name": "assimp",
@@ -50,6 +50,7 @@
   "features": {
     "cuda": {
       "description": "Build Open3D with CUDA support",
+      "supports": "(windows & x64 & !uwp & !xbox) | (linux & (x64 | arm64))",
       "dependencies": [
         "cuda"
       ]

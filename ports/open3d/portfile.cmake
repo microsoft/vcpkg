@@ -13,13 +13,19 @@ vcpkg_from_github(
     REF df18cd291b996035267672d4fbf847095d057f4a
     SHA512 c26eee0623f235f1d96056c1d106476a72d6191a6a13affdfea22a3824a3ffc19f9cfda84bb78df80c0541535783fe99d2e8c1a0671e131fe893920b54533e4a
     HEAD_REF main
+    PATCHES
+        disable-tools-apps.patch
+        fix-cuda-fmt.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_SHARED_LIBS=${OPEN3D_BUILD_SHARED}
         -DOPEN3D_USE_VCPKG=ON
+        -DBUILD_TOOLS=OFF
+        -DBUILD_APPS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_BENCHMARKS=OFF
@@ -57,6 +63,15 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/data/dataset"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/io/file_format"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/ml/tensorflow/tf_subsampling"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/t/io/file_format"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/visualization/gui/Materials"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/visualization/gui/Resources"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/visualization/rendering/gaussian_splat/shaders"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/visualization/shader/glsl"
+    "${CURRENT_PACKAGES_DIR}/include/open3d/visualization/webrtc_server/html"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
