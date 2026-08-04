@@ -1,19 +1,13 @@
 diff --git a/meson.build b/meson.build
-index 697e5a4..4639720 100644
+index 697e5a4..c6d531a 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -22,10 +22,10 @@ freetype = dependency('', required: false)
+@@ -20,7 +20,7 @@ freetype_version = ['24.0.18', '2.11.0']
+ # Set freetype as a dummy, for now
+ freetype = dependency('', required: false)
  
- if cc.get_argument_syntax() == 'msvc'
+-if cc.get_argument_syntax() == 'msvc'
++if false
      freetype = dependency(
--        'freetype',
--        version: '>= @0@'.format(freetype_version[1]),
--        method: 'cmake',
--        required: false,
-+        'freetype2',
-+        version: '>= @0@'.format(freetype_version[0]),
-+        method: 'pkg-config',
-+        required: true,
-     )
- 
-     if not freetype.found()
+         'freetype',
+         version: '>= @0@'.format(freetype_version[1]),
