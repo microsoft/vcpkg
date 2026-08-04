@@ -11105,7 +11105,7 @@
       "port-version": 2
     },
     "x265": {
-      "baseline": "4.2",
+      "baseline": "4.3",
       "port-version": 0
     },
     "x509cert-banned": {
