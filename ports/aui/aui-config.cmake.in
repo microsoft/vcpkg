@@ -281,4 +281,3 @@ endmacro()
 include("${AUI_BUILD_AUI_ROOT}/share/aui/cmake/aui.build.cmake")
 
 find_program(AUI_TOOLBOX_EXE NAMES aui.toolbox)
-
