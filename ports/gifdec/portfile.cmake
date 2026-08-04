@@ -19,5 +19,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-gifdec CONFIG_PATH lib/cmake/unofficial-gifdec)
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(WRITE "${SOURCE_PATH}/LICENSE" [[gifdec is released into the public domain, as stated in its README file.]])
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
