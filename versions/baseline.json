@@ -4925,8 +4925,8 @@
       "port-version": 0
     },
     "libdatrie": {
-      "baseline": "0.2.13",
-      "port-version": 1
+      "baseline": "0.2.14",
+      "port-version": 0
     },
     "libdc1394": {
       "baseline": "2.2.7",
@@ -5585,7 +5585,7 @@
       "port-version": 0
     },
     "libraqm": {
-      "baseline": "0.10.5",
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "libraw": {
