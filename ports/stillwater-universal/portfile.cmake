@@ -1,4 +1,10 @@
 set(VCPKG_BUILD_TYPE release)
+
+string(REPLACE "." ";" version_components "${VERSION}")
+list(GET version_components 0 version_major)
+list(GET version_components 1 version_minor)
+list(GET version_components 2 version_patch)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stillwater-sc/universal
@@ -14,6 +20,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DUNIVERSAL_ENABLE_TESTS=OFF
         -DUNIVERSAL_VERBOSE_BUILD=OFF
+        "-DUNIVERSAL_VERSION_MAJOR=${version_major}"
+        "-DUNIVERSAL_VERSION_MINOR=${version_minor}"
+        "-DUNIVERSAL_VERSION_PATCH=${version_patch}"
 )
 
 vcpkg_cmake_install()
@@ -26,4 +35,3 @@ file(REMOVE_RECURSE
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
