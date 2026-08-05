@@ -6,6 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
       fix-uwpwarning.patch
+      fix-pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
