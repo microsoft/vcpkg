@@ -1,6 +1,6 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 set(VCPKG_BUILD_TYPE release)
-set(SQLITE_VERSION "3.39.3")
+set(SQLITE_VERSION "${VERSION}")
 
 vcpkg_download_distfile(SOURCE_FILE
     URLS "https://github.com/sqlite/sqlite/raw/version-${SQLITE_VERSION}/tool/lemon.c"
