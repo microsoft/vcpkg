@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mas-bandwidth/netcode
     REF "v${VERSION}"
-    SHA512 871a6bd415807defaa58e8837601a6d8b760bbec1a4ad3e6a70b83ddda52c269826dc208a213b26161de24a93ba86e0f588b5dec623dccf4b1b684f70edd901b
+    SHA512 df66e0ce9196e6a357e674427517efc159614e5ec8b0fa6cad466726ae2aa2d235f642dce048035b4987f1ad83f5fb6eccfb93315de561d8d561b41dfa0eb640
     HEAD_REF main
 )
 
