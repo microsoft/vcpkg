@@ -22,11 +22,17 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_tools(TOOL_NAMES highs AUTO_CLEAN)
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/highs")
+
+file(STRINGS "${SOURCE_PATH}/extern/cli11/CLI11.hpp" cli11_license LIMIT_COUNT 32)
+list(TRANSFORM cli11_license REPLACE "^// ?" "")
+list(JOIN cli11_license "\n" cli11_license)
+file(WRITE "${CURRENT_BUILDTREES_DIR}/CLI11-license" "${cli11_license}\n")
+
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.txt"
         "${SOURCE_PATH}/THIRD_PARTY_NOTICES.md"
-        "${CMAKE_CURRENT_LIST_DIR}/CLI11-license"
+        "${CURRENT_BUILDTREES_DIR}/CLI11-license"
         "${SOURCE_PATH}/extern/pdqsort/license.txt"
         "${SOURCE_PATH}/extern/zstr/LICENSE"
 )
