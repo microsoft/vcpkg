@@ -20,3 +20,21 @@ index 0f0639f..30cb3cc 100644
  
  int ff_sws_decode_colors(SwsContext *ctx, SwsPixelType type,
                           SwsOpList *ops, const SwsFormat *fmt, bool *incomplete)
+diff --git a/libswscale/graph.c b/libswscale/graph.c
+index 5b14a9c..e3e0736 100644
+--- a/libswscale/graph.c
++++ b/libswscale/graph.c
+@@ -36,6 +36,13 @@
+ #include "graph.h"
+ #include "ops.h"
+ #include "ops_dispatch.h"
++
++/* The Vulkan swscale objects are built only when unstable is enabled. */
++#if CONFIG_VULKAN && !CONFIG_UNSTABLE
++#undef CONFIG_VULKAN
++#define CONFIG_VULKAN 0
++#endif
++
+ #if CONFIG_VULKAN
+ #include "vulkan/ops.h"
+ #endif
