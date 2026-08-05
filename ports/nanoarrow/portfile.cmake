@@ -2,13 +2,12 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/arrow/apache-arrow-nanoarrow-${VERSION}/apache-arrow-nanoarrow-${VERSION}.tar.gz"
     FILENAME "apache-arrow-nanoarrow-${VERSION}.tar.gz"
-    SHA512 98f9f4c8dada0175e39e02d2baa01d0f63ad94636925cd289cbffa423de26bf0ede437aaa1ec10ff91e7d375e72cfddd950d040602520ab7891ab4c6337ce4f7
+    SHA512 2fbdfe3274da9dcba5e3215ba0a7ff66da9f65395d1800841f0dc9a6bbc00b8cc224f900bcb946c91969b3c6e79d132ad5077c9a537f861502c4763dbffb33b8
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES fix-flatccrt-name.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
