@@ -7,6 +7,14 @@ vcpkg_check_features(
         cuda BUILD_CUDA_MODULE
 )
 
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO isl-org/Open3D
@@ -16,6 +24,7 @@ vcpkg_from_github(
     PATCHES
         disable-tools-apps.patch
         fix-cuda-fmt.patch
+        fix-cuda-msvc-preprocessor.patch
 )
 
 vcpkg_cmake_configure(
@@ -36,7 +45,7 @@ vcpkg_cmake_configure(
         -DBUILD_JUPYTER_EXTENSION=OFF
         -DBUILD_ISPC_MODULE=OFF
         -DWITH_IPP=OFF
-        -DWITH_MINIZIP=OFF
+        -DWITH_MINIZIP=ON
         -DBUILD_LIBREALSENSE=OFF
         -DBUILD_AZURE_KINECT=OFF
         -DBUILD_TENSORFLOW_OPS=OFF

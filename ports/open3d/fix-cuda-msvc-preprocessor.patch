@@ -1,0 +1,21 @@
+--- a/3rdparty/stdgpu/stdgpu.cmake
++++ b/3rdparty/stdgpu/stdgpu.cmake
+@@ -6,6 +6,10 @@
+ 
+ find_package(Git QUIET REQUIRED)
+ 
++if(MSVC)
++    set(STDGPU_CMAKE_ARGS -DCMAKE_CXX_FLAGS=/Zc:preprocessor)
++endif()
++
+ # In CUDA 13.0+, Thrust moved from include/thrust/ to include/cccl/thrust/
+ # Set the appropriate include directory based on CUDA version
+ if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL "13.0")
+@@ -40,6 +44,7 @@
+         -DSTDGPU_ENABLE_CONTRACT_CHECKS=OFF
+         -DTHRUST_INCLUDE_DIR=${THRUST_INCLUDE_DIR_PATH}
+         ${ExternalProject_CMAKE_ARGS_hidden}
++        ${STDGPU_CMAKE_ARGS}
+     CMAKE_CACHE_ARGS    # Lists must be passed via CMAKE_CACHE_ARGS
+         -DCMAKE_CUDA_ARCHITECTURES:STRING=${CMAKE_CUDA_ARCHITECTURES}
+     BUILD_BYPRODUCTS

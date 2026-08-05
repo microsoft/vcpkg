@@ -23,6 +23,7 @@
     "jsoncpp",
     "libjpeg-turbo",
     "libpng",
+    "minizip",
     "msgpack",
     "nanoflann",
     "opengl",
