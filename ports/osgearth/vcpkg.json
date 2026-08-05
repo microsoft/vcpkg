@@ -1,11 +1,9 @@
 {
   "name": "osgearth",
-  "version": "3.8",
-  "port-version": 1,
+  "version": "3.8.1",
   "description": "osgEarth - 3D Maps for OpenSceneGraph",
   "homepage": "https://github.com/pelicanmapping/osgearth",
   "license": "MIT",
-  "supports": "!(arm | x86 | wasm32 | android)",
   "dependencies": [
     {
       "name": "aws-sdk-cpp",
