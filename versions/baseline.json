@@ -3473,8 +3473,8 @@
       "port-version": 0
     },
     "glfw3": {
-      "baseline": "3.4",
-      "port-version": 1
+      "baseline": "3.5.1",
+      "port-version": 0
     },
     "gli": {
       "baseline": "2021-07-06",
@@ -6750,7 +6750,7 @@
     },
     "morphologica": {
       "baseline": "4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "morton-nd": {
       "baseline": "4.0.0",
