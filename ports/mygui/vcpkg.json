@@ -1,14 +1,13 @@
 {
   "name": "mygui",
-  "version": "3.4.3",
-  "port-version": 4,
+  "version": "3.5.0",
   "description": "Fast, flexible and simple GUI",
   "homepage": "http://mygui.info",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     "freetype",
-    "sdl2-image",
+    "pugixml",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -19,22 +18,20 @@
     }
   ],
   "features": {
-    "obsolete": {
-      "description": "Keep obsolete functions."
-    },
-    "opengl": {
-      "description": "Use OpenGL render system.",
-      "supports": "!android",
+    "msdf": {
+      "description": "Enable msdf support",
       "dependencies": [
-        "opengl"
+        {
+          "name": "msdfgen",
+          "default-features": false,
+          "features": [
+            "extensions"
+          ]
+        }
       ]
     },
-    "plugins": {
-      "description": "Build MyGUI plugins."
-    },
-    "tools": {
-      "description": "Install MyGUI tools.",
-      "supports": "!android"
+    "obsolete": {
+      "description": "Keep obsolete functions."
     }
   }
 }
