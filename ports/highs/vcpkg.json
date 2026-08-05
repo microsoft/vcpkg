@@ -3,7 +3,7 @@
   "version": "1.15.1",
   "description": "High performance library to solve linear, mixed-integer, and convex quadratic optimization problems.",
   "homepage": "https://highs.dev",
-  "license": "MIT",
+  "license": "MIT AND BSD-3-Clause AND Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
