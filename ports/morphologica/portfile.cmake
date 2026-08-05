@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO ABRG-Models/morphologica
     REF "v${VERSION}"
     SHA512 8e113cc92fab08decbe2612055da1d9740fba305646c20bd60118dc1a0f0d5975db8d0e2d83004290bee1030c46d8095ffc092eae78c02cd834f0436fc65e2b3 
+    PATCHES
+        001-fix-glfw3.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

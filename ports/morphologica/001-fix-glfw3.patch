@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index db9806e5..2d21d677 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -117,7 +117,7 @@ else()
+   find_package(OpenGL REQUIRED EGL) # GL ES 3.1 used in one gl compute example
+ endif()
+ 
+-find_package(glfw3 3.2...3.4 REQUIRED)
++find_package(glfw3 CONFIG REQUIRED)
+ # Find the HDF5 library. To prefer the use of static linking of HDF5, set HDF5_USE_STATIC_LIBRARIES first
+ #set(HDF5_USE_STATIC_LIBRARIES ON)
+ find_package(HDF5)
