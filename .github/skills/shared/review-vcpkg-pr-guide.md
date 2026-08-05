@@ -54,7 +54,7 @@ The report considers the following in particular:
 15. Ports do not use system-modifying applications such as sudo, apt, or brew.
 16. Changes in shared build helpers or `scripts/cmake` that affect many ports need explicit justification for why a global change is necessary. Do not edit frozen `scripts/cmake` helpers when a corresponding `vcpkg-*` helper port exists; require ports to adopt the helper port instead.
 17. Ports use `vcpkg_check_linkage` over mutating `VCPKG_LIBRARY_LINKAGE` directly.
-18. Files in the port directory have LF line endings.
+18. Non-patch files in the port directory have LF line endings. Patch files are normally LF-only; CRLF is acceptable in hunk lines that patch CRLF content, as produced by `git diff --output` (ignoring differences in the `index` extended header).
 19. Anything else in the changeset that conflicts with the maintainer guide.
 
 Read the PR description and conversation. Treat them as explanations, motivation, and questions to answer.
