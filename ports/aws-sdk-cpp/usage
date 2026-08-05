@@ -8,5 +8,4 @@ The package @PORT@:@TARGET_TRIPLET@ provides CMake targets:
     OR
     
     find_package(aws-cpp-sdk-core REQUIRED)
-    target_include_directories(main PRIVATE aws-cpp-sdk-core)
     target_link_libraries(main PRIVATE aws-cpp-sdk-core)

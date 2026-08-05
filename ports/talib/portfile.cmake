@@ -2,109 +2,59 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "TA-Lib/ta-lib"
     REF "v${VERSION}"
-    SHA512 189702beda83f9ebe16ef7d08d8bba76068a71b63409e2e00f1a5a4a06997037d54f048778323fcc6482fe1e5ce9125314b4d4b7a12dee5d64c5b0d3879fca45
+    SHA512 c8b9daf922cc98119e96a5bdb54187669e2f26be53fded8c7056630496b1410848fca7d37ff895f1ce8d6449853174ce2b5d2b3153ddbdc854af69c9c8ea68c7
+    PATCHES
+        fix-forced-install-prefix.patch
+        no-system-cleanup.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set(LFLAG "d")
-    else()
-        set(LFLAG "m")
-    endif()
-
-    # Debug build
-    if (NOT VCPKG_BUILD_TYPE)
-        file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}d")
-        file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}d/gen_code")
-        set(TALIB_SUBDIRS ta_common ta_func ta_abstract ta_libc gen_code)
-        foreach(subdir IN LISTS TALIB_SUBDIRS)
-            vcpkg_execute_build_process(
-                COMMAND nmake /nologo -f Makefile
-                WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}d/win32/msvc/${subdir}"
-                LOGNAME build-${TARGET_TRIPLET}-dbg-${subdir}
-            )
-        endforeach()
-
-        file(
-            INSTALL "${SOURCE_PATH}/lib/ta_abstract_c${LFLAG}d.lib"
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-            RENAME ta_abstract.lib
-        )
-        file(
-            INSTALL "${SOURCE_PATH}/lib/ta_libc_c${LFLAG}d.lib"
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-            RENAME ta_libc.lib
-        )
-        file(
-            INSTALL "${SOURCE_PATH}/lib/ta_func_c${LFLAG}d.lib"
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-            RENAME ta_func.lib
-        )
-        file(
-            INSTALL "${SOURCE_PATH}/lib/ta_common_c${LFLAG}d.lib"
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-            RENAME ta_common.lib
-        )
-    endif()
-
-    # Release build
-    file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}r")
-    file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}r/gen_code")
-    set(TALIB_SUBDIRS ta_common ta_func ta_abstract ta_libc gen_code)
-    foreach(subdir IN LISTS TALIB_SUBDIRS)
-        vcpkg_execute_build_process(
-            COMMAND nmake /nologo -f Makefile
-            WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}r/win32/msvc/${subdir}"
-            LOGNAME build-${TARGET_TRIPLET}-rel-${subdir}
-        )
-    endforeach()
-
-    file(
-        INSTALL "${SOURCE_PATH}/lib/ta_abstract_c${LFLAG}r.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        RENAME ta_abstract.lib
-    )
-    file(
-        INSTALL "${SOURCE_PATH}/lib/ta_libc_c${LFLAG}r.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        RENAME ta_libc.lib
-    )
-    file(
-        INSTALL "${SOURCE_PATH}/lib/ta_func_c${LFLAG}r.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        RENAME ta_func.lib
-    )
-    file(
-        INSTALL "${SOURCE_PATH}/lib/ta_common_c${LFLAG}r.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        RENAME ta_common.lib
-    )
-
-    # Include files
-    file(
-        INSTALL "${SOURCE_PATH}/include"
-        DESTINATION ${CURRENT_PACKAGES_DIR}
-        PATTERN Makefile.* EXCLUDE
-    )
-    file(
-        INSTALL "${SOURCE_PATH}/include/"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/include/ta-lib"
-        PATTERN Makefile.* EXCLUDE
-    )
-    file(INSTALL
-        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    )
-else()
-    vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE)
-    vcpkg_cmake_install()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    file(INSTALL
-        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    )
 endif()
+
+# Since upstream 0.6.1 the only supported build systems are CMake and
+# autotools on every platform; the make/ msvc tree this port used to
+# drive on Windows no longer exists in the source archive.
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DBUILD_DEV_TOOLS=OFF
+)
+vcpkg_cmake_install()
+
+# Upstream always builds and installs both the shared and the static
+# library. Keep only what matches the triplet's linkage.
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Static-only on Windows: drop the DLL and its import library, and
+    # let the static library take the canonical name.
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/ta-lib.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib.lib")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ta-lib-static.lib" "${CURRENT_PACKAGES_DIR}/lib/ta-lib.lib")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib-static.lib")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib.lib")
+    endif()
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB _talib_shared
+        "${CURRENT_PACKAGES_DIR}/lib/libta-lib*.so*"
+        "${CURRENT_PACKAGES_DIR}/lib/libta-lib*.dylib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libta-lib*.so*"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libta-lib*.dylib")
+    if(_talib_shared)
+        file(REMOVE ${_talib_shared})
+    endif()
+else()
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/lib/libta-lib.a"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/libta-lib.a")
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
+
 # License file
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

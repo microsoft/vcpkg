@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/SVT-AV1
     REF "v${VERSION}"
-    SHA512 4301e923965e3bff30a0fd2f74ae023d19260f91c2361d48ea7bc1718f501dcca73fa17cb8795b23392ca1bfbe1f4d55edcbb5ce06a2fa9e41da36c5166f527d
+    SHA512 89064696277b3e92e95945e4415bc86490c60c968680dc21253beb4b4caf39d5fa46838aa83759c6e9b31b759abb76c581fb40ebdf08d53d63aaf05a264fc9c9
     PATCHES
         no-force-llvm.diff
         no-inline-yy_unpacklo_epi128.diff
@@ -47,6 +47,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME SVT-AV1 CONFIG_PATH lib/cmake/SVT-AV1)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
@@ -56,4 +57,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md" "${SOURCE_PATH}/PATENTS.md")

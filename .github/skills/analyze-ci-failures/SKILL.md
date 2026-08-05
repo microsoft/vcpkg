@@ -43,6 +43,10 @@ Fetches build metadata and failure logs via Azure DevOps REST API, cross-referen
 > - For scheduled/manual builds: the full Azure DevOps URL `https://dev.azure.com/vcpkg/public/_build/results?buildId={buildId}`
 > - For PR builds: both the full PR URL `https://github.com/microsoft/vcpkg/pull/{prNumber}` AND the Azure DevOps build URL
 
+Before doing Azure-specific work, read `.\.github\skills\shared\azure-vcpkg-ci-notes.md` and follow its shared API and log-handling rules.
+
+When you use the shared helper script, execute the `.ps1` file directly by path. Do **not** open the script and inline its contents into a large PowerShell block.
+
 ### Phase 1: Extract failures from step logs (REQUIRED — do first)
 
 1. **Parse input** — Extract `buildId` from Azure DevOps URL. For PR URLs:
@@ -52,11 +56,19 @@ Fetches build metadata and failure logs via Azure DevOps REST API, cross-referen
    $buildId = ($builds | Sort-Object -Property id -Descending | Select-Object -First 1).id
    ```
    See [references/azure-devops-api.md](references/azure-devops-api.md).
+   For PR inputs where you want the failed step logs immediately, you may instead use the shared helper script:
+   ```powershell
+   & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -PrNumber <pr>
+   ```
 2. **Fetch metadata** — Build info, timeline, and artifacts list (parallelize these API calls).
 3. **Scan step logs** — For each failed job, find `"*** Test Modified Ports"` task and fetch its log:
    ```powershell
    $logText = Invoke-RestMethod "$($task.log.url)?api-version=7.0"
    $regressions = $logText -split "`n" | Where-Object { $_ -match 'REGRESSION:' }
+   ```
+   You may also use the shared helper script directly from a build id:
+   ```powershell
+   & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -BuildId <buildId>
    ```
    Captures all types: `BUILD_FAILED`, `FILE_CONFLICTS`, `POST_BUILD_CHECKS_FAILED`, `CASCADED_DUE_TO_MISSING_DEPENDENCIES`. **Report every REGRESSION line using the EXACT failure type keyword from the log — never paraphrase.** Also capture 2-3 lines around each error for root cause context. **Extract the triplet name from each failed job** (e.g., from job names like `x64-windows Build` or from log paths) — ensure ALL triplets with failures are listed in your report.
 4. **PR feature-test logs** — PR builds may NOT have `REGRESSION:` lines. Instead scan for `FAIL:` or `failed with` lines showing per-feature failures. Capture and quote verbatim:

@@ -1,5 +1,5 @@
 diff --git a/libvpl/CMakeLists.txt b/libvpl/CMakeLists.txt
-index 0419980..42a765a 100644
+index 0419980..5bef1c7 100644
 --- a/libvpl/CMakeLists.txt
 +++ b/libvpl/CMakeLists.txt
 @@ -188,10 +188,24 @@ if(INSTALL_DEV)
@@ -40,6 +40,6 @@ index aa9b158..46b2c38 100644
 +prefix=${pcfiledir}/../..
 +libdir=${prefix}/lib
 +includedir=${prefix}/include
-
+ 
  Name: Intel(R) Video Processing Library
  Description: Accelerated video decode, encode, and frame processing capabilities on Intel(R) GPUs

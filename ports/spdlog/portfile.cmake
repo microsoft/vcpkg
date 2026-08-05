@@ -1,9 +1,23 @@
+vcpkg_download_distfile(SPDLOG_BACKPORT_3541_PATCH
+    URLS https://github.com/gabime/spdlog/commit/1685e694c5cd8328280c48f8b94b1281c17c6fee.patch?full_index=1
+    FILENAME spdlog-backport-3541.patch
+    SHA512 9b5340c93b9a869ae7479395e23672288fc3b4347fc1e9a4535b580a6ade1dadd985e939fb5fbb820d262f0c2153599a88dd572443b62dab3498da8b327ee034
+)
+vcpkg_download_distfile(SPDLOG_BACKPORT_3543_PATCH
+    URLS https://github.com/gabime/spdlog/commit/d5af52d903ed69f96c7350155e94aeff248b31eb.patch?full_index=1
+    FILENAME spdlog-backport-3543.patch
+    SHA512 ada7e63920a48fa1641bf4929b6172c4e8570e2610534caf9fd1a769d00d304b7c5907987420f85989295a939aa1e75cf18c54bbf3ccc6ccad594a24aba2e8b9
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
     REF "v${VERSION}"
     SHA512 8df117055d19ff21c9c9951881c7bdf27cc0866ea3a4aa0614b2c3939cedceab94ac9abaa63dc4312b51562b27d708cb2f014c68c603fd1c1051d3ed5c1c3087
     HEAD_REF v1.x
+    PATCHES
+        "${SPDLOG_BACKPORT_3541_PATCH}"
+        "${SPDLOG_BACKPORT_3543_PATCH}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

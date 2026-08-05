@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/breeze-icons
     REF "v${VERSION}"
-    SHA512 a7eada2b173a05bc7e083af7f443ef3e5b8b62b0c85ccc33abd40afbc07c49e1043b34f053cdca9272a30259c1079911082a0bdfd4aa17f36cd018c742bf673b
+    SHA512 7f3dc9bf0cb6b10cbbe52c03bb3cf19f83b603333d66efcf4b2759d7df3ff6d6ae69f3abb2a83fe38977717d272dd8c25e62ffe1627594233a48ad67d2550cc9
     HEAD_REF master
 )
 

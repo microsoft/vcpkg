@@ -1,9 +1,9 @@
 {
   "name": "glib",
-  "version": "2.88.1",
+  "version": "2.88.2",
   "description": "Portable, general-purpose utility library.",
   "homepage": "https://developer.gnome.org/glib/",
-  "license": "LGPL-2.1-or-later",
+  "license": "LGPL-2.1-or-later AND (LGPL-2.1-only OR MPL-1.1)",
   "supports": "!uwp & !xbox",
   "dependencies": [
     "dirent",
