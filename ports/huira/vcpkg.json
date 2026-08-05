@@ -40,12 +40,6 @@
     }
   ],
   "features": {
-    "tests": {
-      "description": "Build huira tests",
-      "dependencies": [
-        "catch2"
-      ]
-    },
     "tools": {
       "description": "Build huira command line tools",
       "dependencies": [
