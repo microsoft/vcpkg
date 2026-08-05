@@ -1,0 +1,24 @@
+diff --git a/src/eccodes/CMakeLists.txt b/src/eccodes/CMakeLists.txt
+index 04b03eb..c944ad1 100644
+--- a/src/eccodes/CMakeLists.txt
++++ b/src/eccodes/CMakeLists.txt
+@@ -436,6 +436,10 @@ if( eccodes_HAVE_GEOGRAPHY AND eccodes_HAVE_ECKIT_GEO )
+     list( APPEND ECCODES_EXTRA_LIBRARIES eckit_geo )
+ endif()
+ 
++if(HAVE_PNG)
++    set(ECCODES_PNG_LIBRARIES PNG::PNG)
++endif()
++
+ ecbuild_add_library(
+     TARGET    eccodes
+     SOURCES
+@@ -446,7 +450,7 @@ ecbuild_add_library(
+     PRIVATE_LIBS
+         ${ECCODES_EXTRA_LIBRARIES}
+         ${CMAKE_THREAD_LIBS_INIT}
+-        ${PNG_LIBRARIES}
++        ${ECCODES_PNG_LIBRARIES}
+         $<$<BOOL:${libaec_FOUND}>:libaec::aec>
+     PUBLIC_LIBS
+         ${CMATH_LIBRARIES}

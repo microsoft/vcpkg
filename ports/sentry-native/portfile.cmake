@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 ceb6d633500ae73444280485ac9a66dc7c3ff335d3a6e1f05de616c06b9078938a8e396e261dd6863b7513be0150efa02726b3914494ef4515146267e10d4a86
+    SHA512 1e959348630e8de323390a44bb465c7326f8d393235a4ac7a04631d2b6f324294c0ef7359adb4662ceb4150a2fe8b0cf46e3e288eea1176374601a193484b876
 )
 
 vcpkg_extract_source_archive(
@@ -67,5 +67,17 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/crashpad_handler${VCPKG_TARGET_EXECUTABLE
     vcpkg_copy_tools(TOOL_NAMES crashpad_handler AUTO_CLEAN)
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/vendor/mpack.h"
+        "${SOURCE_PATH}/vendor/stb_sprintf.h"
+        "${SOURCE_PATH}/external/libunwindstack-ndk/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/getopt/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/lss/lss/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/mini_chromium/mini_chromium/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/mini_chromium/mini_chromium/base/third_party/icu/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/mpack/LICENSE"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
