@@ -5438,7 +5438,7 @@
     },
     "libnsgif": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libobfuscate": {
       "baseline": "2024-07-10",
