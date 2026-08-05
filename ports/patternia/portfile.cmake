@@ -3,8 +3,8 @@ set(VCPKG_BUILD_TYPE release)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO sentomk/patternia
-  REF 0cd3b1111a10d0160001b3be384fb008eee7278f # url of v0.9.4 returns 300, so use the commit hash instead
-  SHA512 2dcef8489db10d2cad5989f809acd6442c0f7b14d07cf12cf87478acb778f2bf72d25970f0e143f52a6e5134c4f7727f70ac8e1456ba2a11c5c42001ff1da770
+  REF "v${VERSION}"
+  SHA512 4d65b63c456f9dca5798194f2771b3b3481ab30469aeddb1fdc28ff47ad2790b9f6d2c4b52261ea36352070c3f6f73e19f84c1c3e5724dbd845886201b650a61
   HEAD_REF main
 )
 
