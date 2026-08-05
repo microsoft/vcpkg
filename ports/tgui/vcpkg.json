@@ -4,6 +4,7 @@
   "description": "TGUI is an easy to use, cross-platform, C++ GUI for SFML.",
   "homepage": "https://tgui.eu",
   "license": "Zlib",
+  "supports": "!android",
   "dependencies": [
     "stb",
     {

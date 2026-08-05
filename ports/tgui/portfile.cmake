@@ -9,9 +9,7 @@ if(NOT HAS_BACKEND)
     message(FATAL_ERROR "At least one of the backend features must be selected: ${BACKEND_LST}")
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-elseif(VCPKG_TARGET_IS_IOS)
+if(VCPKG_TARGET_IS_IOS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
