@@ -1,8 +1,8 @@
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO multicoreware/x265_git
+    REPO Multicorewareinc/x265
     REF "${VERSION}"
-    SHA512 53fe7b3a1c9f10bfad33f3d794b9ace87973993a5ebfabb2021b2679b1c9c44a0da9d33e9b75347571a14e6bb8224ed55d619d93c9d106d1637dcd28f99a3895
+    SHA512 270d0db180ecebfc5c2f1fe6451be66042fab69273d073428f4af00420fa0f8b792ecdc71ec1a15ee2860e3b6a325c56295143f117e94fa3616f0ccecb2ded75
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_PIC=ON
         -DENABLE_LIBNUMA=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_VLD=ON
         "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
