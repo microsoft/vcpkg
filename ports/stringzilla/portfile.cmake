@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/module.modulemap")
 file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/module.modulemap")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
