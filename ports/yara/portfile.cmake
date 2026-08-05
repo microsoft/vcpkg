@@ -31,5 +31,18 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libyara)
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+set(
+    copyright_files
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/libyara/modules/pe/authenticode-parser/authenticode.c"
+)
+if("dotnet" IN_LIST FEATURES)
+    vcpkg_install_copyright(
+        FILE_LIST
+            ${copyright_files}
+            "${SOURCE_PATH}/libyara/modules/dotnet/dotnet.c"
+        COMMENT "The .NET module is licensed under Apache-2.0; see https://www.apache.org/licenses/LICENSE-2.0."
+    )
+else()
+    vcpkg_install_copyright(FILE_LIST ${copyright_files})
+endif()
