@@ -1,6 +1,7 @@
 {
   "name": "enchantum",
   "version": "0.4.0",
+  "port-version": 1,
   "description": "Header-only C++20 fast compile time enum reflection library.",
   "homepage": "https://github.com/ZXShady/enchantum",
   "license": "MIT",
