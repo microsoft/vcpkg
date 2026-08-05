@@ -397,8 +397,8 @@
       "port-version": 0
     },
     "attr": {
-      "baseline": "2.5.2",
-      "port-version": 1
+      "baseline": "2.6.0",
+      "port-version": 0
     },
     "aubio": {
       "baseline": "2024-01-03",
@@ -2289,7 +2289,7 @@
       "port-version": 17
     },
     "cudnn-frontend": {
-      "baseline": "1.25.0",
+      "baseline": "1.26.0",
       "port-version": 0
     },
     "cunit": {
@@ -2417,7 +2417,7 @@
       "port-version": 0
     },
     "dav1d": {
-      "baseline": "1.5.3",
+      "baseline": "1.5.4",
       "port-version": 0
     },
     "daw-header-libraries": {
@@ -4925,8 +4925,8 @@
       "port-version": 0
     },
     "libdatrie": {
-      "baseline": "0.2.13",
-      "port-version": 1
+      "baseline": "0.2.14",
+      "port-version": 0
     },
     "libdc1394": {
       "baseline": "2.2.7",
@@ -5432,6 +5432,10 @@
       "baseline": "0.8.8",
       "port-version": 0
     },
+    "libnsgif": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "libobfuscate": {
       "baseline": "2024-07-10",
       "port-version": 0
@@ -5585,7 +5589,7 @@
       "port-version": 0
     },
     "libraqm": {
-      "baseline": "0.10.5",
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "libraw": {
@@ -8633,7 +8637,7 @@
       "port-version": 1
     },
     "quickjs-ng": {
-      "baseline": "0.16.0",
+      "baseline": "0.16.1",
       "port-version": 0
     },
     "quill": {
@@ -9221,7 +9225,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.4.0",
+      "baseline": "4.4.3",
       "port-version": 0
     },
     "seasocks": {
@@ -9365,8 +9369,8 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "7.1.162",
-      "port-version": 1
+      "baseline": "7.2.164",
+      "port-version": 0
     },
     "simde": {
       "baseline": "0.8.2",
@@ -10569,7 +10573,7 @@
       "port-version": 0
     },
     "uthash": {
-      "baseline": "2.3.0",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "uthenticode": {
@@ -11101,7 +11105,7 @@
       "port-version": 2
     },
     "x265": {
-      "baseline": "4.2",
+      "baseline": "4.3",
       "port-version": 0
     },
     "x509cert-banned": {
