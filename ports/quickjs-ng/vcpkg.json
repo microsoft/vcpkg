@@ -1,9 +1,9 @@
 {
   "name": "quickjs-ng",
-  "version": "0.15.1",
+  "version": "0.16.1",
   "description": "QuickJS, the Next Generation: a mighty JavaScript engine. A small and embeddable JavaScript engine supporting the latest ECMAScript specification.",
   "homepage": "https://github.com/quickjs-ng/quickjs",
-  "license": "MIT",
+  "license": "MIT AND Unicode-3.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
