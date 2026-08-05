@@ -26,7 +26,7 @@ vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.txt"
         "${SOURCE_PATH}/THIRD_PARTY_NOTICES.md"
-        "${CMAKE_CURRENT_LIST_DIR}/CLI11-license.txt"
+        "${CMAKE_CURRENT_LIST_DIR}/CLI11-license"
         "${SOURCE_PATH}/extern/pdqsort/license.txt"
         "${SOURCE_PATH}/extern/zstr/LICENSE"
 )
