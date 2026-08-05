@@ -18,6 +18,7 @@ vcpkg_from_github(
         0049-fix-twolame-pkgconfig.patch
         0050-fix-test-ld-absolute-lib-paths.patch
         0051-fix-msvc-undef-flags.patch
+        0052-fix-disable-unstable-swscale-link.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -85,11 +86,10 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
 
-    # FFmpeg 9.0 builds native helper programs for generated sources. Using
-    # the target cl.exe as HOSTCC is valid for x86/x64 targets, but for ARM64
-    # it produces an ARM64 helper executable that cannot run on the x64 CI
-    # host. The helper is only needed by the optional unstable AArch64
-    # swscale backend, so disable that backend for this cross-build.
+    # FFmpeg 9.0 builds a native helper for the unstable AArch64 swscale
+    # backend. Using the target cl.exe as HOSTCC produces an ARM64 executable
+    # that cannot run on the x64 build host. Disable only that unstable backend
+    # for Windows ARM64; 0052 keeps the legacy swscale path linkable.
     if(VCPKG_HOST_IS_WINDOWS AND VCPKG_DETECTED_MSVC)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             string(APPEND OPTIONS " --disable-unstable")
