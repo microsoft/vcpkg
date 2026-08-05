@@ -1,7 +1,7 @@
 vcpkg_download_distfile(
-    FIX_CVE
+    FIX-CVE-2022-43359
     URLS https://github.com/lecram/gifdec/pull/23.patch?full_index=1
-    FILENAME fix-cve.patch
+    FILENAME FIX-CVE-2022-43359.patch
     SHA512 457deb349492206c473edcc09fdc654261a2277307272c1716cc7ef42b0f75302039a7b453ddb355d7195bc5e1ac068a431f5fed5adc3161a3ee60ab03295a65
 )
 
@@ -16,7 +16,7 @@ vcpkg_from_github(
     SHA512 2756004cb7dd8be5560a32c188001da503b97f1b8e3eed908787563b7e36edf8cbca3605e2e75b2ebbc69b329e16d89b3237028dfd7a772d2763bf78b1675ad2
     HEAD_REF master
     PATCHES
-        "${FIX_CVE}"
+        "${FIX-CVE-2022-43359}"
 )
 
 file(COPY
