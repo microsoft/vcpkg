@@ -8,12 +8,6 @@ vcpkg_from_github(
         fix-freebsd.patch
 )
 
-vcpkg_download_distfile(APACHE_2_LICENSE
-    URLS "https://www.apache.org/licenses/LICENSE-2.0.txt"
-    FILENAME "apache-license-2.0.txt"
-    SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
-)
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
@@ -120,5 +114,5 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/src/video/yuv2rgb/LICENSE"
         "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2.h"
         "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2platform.h"
-        "${APACHE_2_LICENSE}"
+    COMMENT "SDL_opengles2_gl2platform.h is licensed under Apache-2.0; see https://www.apache.org/licenses/LICENSE-2.0."
 )
