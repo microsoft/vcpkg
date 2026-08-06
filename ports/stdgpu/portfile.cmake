@@ -11,6 +11,11 @@ vcpkg_from_github(
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 
+# CCCL headers (CUDA >= 13) require the conforming MSVC preprocessor.
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(APPEND VCPKG_CXX_FLAGS " /Zc:preprocessor")
+endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" STDGPU_BUILD_SHARED_LIBS)
 
 vcpkg_cmake_configure(
