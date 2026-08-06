@@ -39,10 +39,10 @@ index c3af986..e10172c 100644
  endif()
 diff --git a/source/cmake/multilib.cmake b/source/cmake/multilib.cmake
 new file mode 100644
-index 0000000..e589bb6
+index 0000000..6d29f4c
 --- /dev/null
 +++ b/source/cmake/multilib.cmake
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,113 @@
 +# multilib.cmake - Build the 10-bit and 12-bit static libraries as nested
 +# sub-builds and link them into the 8-bit API library so that a single library
 +# can switch bit depths at runtime, following the upstream
@@ -77,6 +77,15 @@ index 0000000..e589bb6
 +if(DEFINED CMAKE_BUILD_TYPE)
 +    list(APPEND _multilib_common_args "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
 +endif()
++if(DEFINED CMAKE_SYSTEM_VERSION)
++    list(APPEND _multilib_common_args "-DCMAKE_SYSTEM_VERSION=${CMAKE_SYSTEM_VERSION}")
++endif()
++if(CMAKE_CROSSCOMPILING AND DEFINED CMAKE_SYSTEM_NAME)
++    # Required for cross-compilation; not propagated for native builds, where
++    # an explicit CMAKE_SYSTEM_NAME would wrongly put the nested builds into
++    # cross-compiling mode
++    list(APPEND _multilib_common_args "-DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}")
++endif()
 +if(DEFINED VERSION)
 +    list(APPEND _multilib_common_args "-DVERSION=${VERSION}")
 +endif()
@@ -98,6 +107,17 @@ index 0000000..e589bb6
 +        list(APPEND _multilib_common_args "-D${_var}=${${_var}}")
 +    endif()
 +endforeach()
++# The triplet's configure options (e.g. ANDROID_ABI) must reach the nested
++# builds too, exactly as vcpkg_cmake_configure passes them to the parent build
++if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
++    list(APPEND _multilib_common_args ${VCPKG_CMAKE_CONFIGURE_OPTIONS})
++endif()
++if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE AND CMAKE_BUILD_TYPE STREQUAL "Release")
++    list(APPEND _multilib_common_args ${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE})
++endif()
++if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG AND CMAKE_BUILD_TYPE STREQUAL "Debug")
++    list(APPEND _multilib_common_args ${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG})
++endif()
 +
 +function(x265_build_multilib_variant dir)
 +    execute_process(
