@@ -10,22 +10,43 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/thirdparty/fmt"
-    #[[ namespace viskores: "${SOURCE_PATH}/viskores/thirdparty/lodepng" ]]
-    #[[ anonymous namespace: "${SOURCE_PATH}/viskores/thirdparty/loguru" ]]
+    # Vendored dependencies, as before in vtk-m.
+    # TODO: Should be replaced in the future with VCPKG internal versions
+    #[[ "${SOURCE_PATH}/viskores/thirdparty/diy" ]]
+    #[[ "${SOURCE_PATH}/viskores/thirdparty/lcl" ]]
+    #[[ namespace viskores:  "${SOURCE_PATH}/viskores/thirdparty/lodepng" ]]
+    #[[ anonymous namespace: q"${SOURCE_PATH}/viskores/thirdparty/loguru" ]]
+    #[[ namespace viskores:  "${SOURCE_PATH}/viskores/thirdparty/optionparser" ]]
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        cuda    Viskores_ENABLE_CUDA
+        double  Viskores_USE_DOUBLE_PRECISION
         hdf5    Viskores_ENABLE_HDF5_IO
+        omp     Viskores_ENABLE_OPENMP
+        tbb     Viskores_ENABLE_TBB
+        mpi     Viskores_ENABLE_MPI
 )
+
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        -DCMAKE_CUDA_ARCHITECTURES=all-major # override with VCPKG_CMAKE_CONFIGURE_OPTIONS
+    )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DViskores_ENABLE_CPACK=OFF
+        -DViskores_ENABLE_DEVELOPER_FLAGS=OFF
         -DViskores_INSTALL_CONFIG_DIR=share/${PORT}
         -DViskores_INSTALL_SHARE_DIR=share/${PORT}
--DVCPKG_TRACE_FIND_PACKAGE=1
+        -DViskores_NO_INSTALL_README_LICENSE=ON
+        -DViskores_USE_DEFAULT_TYPES_FOR_VTK=ON
 )
 
 vcpkg_cmake_install()

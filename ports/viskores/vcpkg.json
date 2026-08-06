@@ -17,16 +17,41 @@
     }
   ],
   "features": {
+    "cuda": {
+      "description": "Enable CUDA support",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "double": {
+      "description": "Use double precision in floating point calculations"
+    },
     "hdf5": {
       "description": "Enable HDF5 support",
       "dependencies": [
         {
           "name": "hdf5",
+          "default-features": false,
           "features": [
             "cpp",
             "hl"
           ]
         }
+      ]
+    },
+    "mpi": {
+      "description": "Enable MPI support",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "omp": {
+      "description": "Enable OpenMP support"
+    },
+    "tbb": {
+      "description": "Enable TBB support",
+      "dependencies": [
+        "tbb"
       ]
     }
   }
