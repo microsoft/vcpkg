@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-jsonifier",
+  "version-string": "ci",
+  "description": "Validates Jsonifier CMake target and direct-header integration",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    "jsonifier",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
