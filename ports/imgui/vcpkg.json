@@ -1,7 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.92.8",
-  "port-version": 1,
+  "version": "1.92.9",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -15,6 +14,10 @@
       "host": true
     }
   ],
+  "default-features": [
+    "default-font-bitmap",
+    "default-font-vector"
+  ],
   "features": {
     "allegro5-binding": {
       "description": "Make available Allegro5 binding",
@@ -25,6 +28,12 @@
     "android-binding": {
       "description": "Make available Android native app support",
       "supports": "android"
+    },
+    "default-font-bitmap": {
+      "description": "Embed ProggyClean font"
+    },
+    "default-font-vector": {
+      "description": "Embed ProggyForever font"
     },
     "docking-experimental": {
       "description": "Build with docking support"
@@ -89,6 +98,10 @@
     "metal-binding": {
       "description": "Make available Metal binding",
       "supports": "osx"
+    },
+    "metal4-binding": {
+      "description": "Make available Metal 4 binding",
+      "supports": "osx & arm64"
     },
     "opengl2-binding": {
       "description": "Make available OpenGL (legacy) binding",

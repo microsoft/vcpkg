@@ -75,6 +75,11 @@ if(IMGUI_BUILD_METAL_BINDING)
     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.mm PROPERTIES COMPILE_FLAGS -fobjc-weak)
 endif()
 
+if(IMGUI_BUILD_METAL4_BINDING)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal4.mm)
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal4.mm PROPERTIES COMPILE_FLAGS -fobjc-weak)
+endif()
+
 if(IMGUI_BUILD_OPENGL2_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl2.cpp)
 endif()
@@ -150,6 +155,14 @@ endif()
 
 if(IMGUI_USE_WCHAR32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_USE_WCHAR32)
+endif()
+
+if(NOT IMGUI_EMBED_DEFAULT_FONT_BITMAP)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_DISABLE_DEFAULT_FONT_BITMAP)
+endif()
+
+if(NOT IMGUI_EMBED_DEFAULT_FONT_VECTOR)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_DISABLE_DEFAULT_FONT_VECTOR)
 endif()
 
 if(IMGUI_TEST_ENGINE)
@@ -235,6 +248,10 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_METAL_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal.h DESTINATION include)
+    endif()
+
+    if(IMGUI_BUILD_METAL4_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_metal4.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_OPENGL2_BINDING)

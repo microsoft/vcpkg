@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 927ecf72f00a228e0899d5b8008575b44748c49b083b9425b5f2a6b4490a9900eae111afad23f2bf0a1c9c62cf1fea80c903eb3076d7e7ea901a5625f09df78e
+        SHA512 1a5ede24f8358c93a6a012a8961776eccca32dfefe0ea3b88cbbb562a76e6ef6418ab353ed0ec7d59069e5e51918cf2b38b041243cb6edaee0ffd040ccee21c6
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 60eb4f8478ae998ae68efa33b2e3c9f331f5e373a1272472f93befd9fd6cab4ed73935bb540e728b5abb154469fbc6c0fd69f7aaf54cd3187eefede6cb145a10
+        SHA512 980acd2d5b8047978e1b858d35cf35bd206ca5c96b6223f0e534db5efe5ec4f7475a51f7ff0455a5904a1f852307f5c548e61cc56925f455cc31e1b9849bb6a6
         HEAD_REF master
     )
 endif()
@@ -32,6 +32,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     glfw-binding                IMGUI_BUILD_GLFW_BINDING
     glut-binding                IMGUI_BUILD_GLUT_BINDING
     metal-binding               IMGUI_BUILD_METAL_BINDING
+    metal4-binding              IMGUI_BUILD_METAL4_BINDING
     opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
     opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
@@ -45,6 +46,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     freetype-svg                IMGUI_FREETYPE_SVG
     wchar32                     IMGUI_USE_WCHAR32
     test-engine                 IMGUI_TEST_ENGINE
+    default-font-bitmap         IMGUI_EMBED_DEFAULT_FONT_BITMAP
+    default-font-vector         IMGUI_EMBED_DEFAULT_FONT_VECTOR
 )
 
 if ("libigl-imgui" IN_LIST FEATURES)
@@ -65,7 +68,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 3a31bd3e1f86679ee60fc765971e96f76e05e530b3c7920aea284818604fd8a3cdf1fc7189e7e825a52a75446217ed6f1b2d7470d317799d381fb9019f14333b
+        SHA512 d622d4d8c9c5fac15d9745f1ce896bea6c04e2f4ed55a9715cd7e119e305b0443c52bc8edbabece6f1a6d301bdce9e78efeaf53fa75858073a48d4872eb5a870
         HEAD_REF master
     )
 
