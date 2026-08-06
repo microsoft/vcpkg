@@ -94,10 +94,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "sql"         VTK_MODULE_ENABLE_VTK_sqlite
         "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
         "tbb"         VTK_SMP_ENABLE_TBB
-#        "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
-#        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
-#        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
-#        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
+        "viskores"    VTK_MODULE_ENABLE_VTK_vtkviskores
+        "viskores"    VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
+        "viskores"    VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
+        "viskores"    VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
     INVERTED_FEATURES
         "all"         VTK_FORBID_DOWNLOADS
 )
@@ -298,8 +298,6 @@ vcpkg_cmake_configure(
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
         -DCMAKE_POLICY_DEFAULT_CMP0177=NEW     # install() DESTINATION paths are normalized
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
--DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=NO  # needs viskores port
--DVTK_MODULE_ENABLE_VTK_vtkviskores=NO           # needs viskores port
 -DVTK_MODULE_ENABLE_VTK_IOMotionFX=NO            # needs pegtl 2.8.3 or patches
     MAYBE_UNUSED_VARIABLES
         VTK_ENABLE_OSPRAY
