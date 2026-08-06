@@ -20,6 +20,10 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+        # Link the (optional) HiPO extras statically into highs instead of a
+        # separate highs_extras plugin library that would be dlopen()'d at
+        # runtime, so vcpkg installs a single self-contained library/tool.
+        -DBUILD_SHARED_EXTRAS_LIB=OFF
 )
 
 vcpkg_cmake_install()
