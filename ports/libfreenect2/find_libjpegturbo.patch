@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d8ef047..e0f615c 100644
+index d8ef047..9f7e326 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -237,30 +237,25 @@ IF(ENABLE_TEGRAJPEG)
+@@ -237,30 +237,35 @@ IF(ENABLE_TEGRAJPEG)
  ENDIF()
  
  IF(LIBFREENECT2_WITH_VT_SUPPORT)
@@ -16,7 +16,13 @@ index d8ef047..e0f615c 100644
  
  SET(HAVE_TurboJPEG no)
 -IF(TurboJPEG_FOUND)
-+IF(TARGET libjpeg-turbo::turbojpeg OR libjpeg-turbo_FOUND)
++IF(TARGET libjpeg-turbo::turbojpeg)
++  SET(TURBOJPEG_LINK_TARGET libjpeg-turbo::turbojpeg)
++ELSEIF(TARGET libjpeg-turbo::turbojpeg-static)
++  SET(TURBOJPEG_LINK_TARGET libjpeg-turbo::turbojpeg-static)
++ENDIF()
++
++IF(DEFINED TURBOJPEG_LINK_TARGET OR libjpeg-turbo_FOUND)
    SET(LIBFREENECT2_WITH_TURBOJPEG_SUPPORT 1)
    SET(HAVE_TurboJPEG yes)
  
@@ -26,10 +32,16 @@ index d8ef047..e0f615c 100644
      src/turbo_jpeg_rgb_packet_processor.cpp
    )
  
-   LIST(APPEND LIBRARIES
+-  LIST(APPEND LIBRARIES
 -    ${TurboJPEG_LIBRARIES}
-+    libjpeg-turbo::turbojpeg
-   )
+-  )
++  IF(DEFINED TURBOJPEG_LINK_TARGET)
++    LIST(APPEND LIBRARIES ${TURBOJPEG_LINK_TARGET})
++  ELSE()
++    # Fallback just in case an older environment sets libjpeg-turbo_FOUND 
++    # but doesn't define modern CMake targets
++    LIST(APPEND LIBRARIES turbojpeg)
++  ENDIF()
  
 -  LIST(APPEND LIBFREENECT2_DLLS
 -   ${TurboJPEG_DLL}
