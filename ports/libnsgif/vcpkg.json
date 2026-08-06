@@ -1,6 +1,7 @@
 {
   "name": "libnsgif",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "GIF image decompression library written in C",
   "homepage": "https://www.netsurf-browser.org/projects/libnsgif/",
   "license": "MIT",
