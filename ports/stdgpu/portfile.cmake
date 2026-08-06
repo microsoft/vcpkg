@@ -13,6 +13,7 @@ vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 
 # CCCL headers (CUDA >= 13) require the conforming MSVC preprocessor.
 if(VCPKG_TARGET_IS_WINDOWS)
+    string(APPEND VCPKG_C_FLAGS " /Zc:preprocessor")
     string(APPEND VCPKG_CXX_FLAGS " /Zc:preprocessor")
 endif()
 
