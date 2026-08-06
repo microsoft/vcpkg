@@ -46,6 +46,10 @@ vcpkg_replace_string(
     "\${CMAKE_CURRENT_LIST_DIR}/../../lib/${LIBRERUN_C_FILE}"
 )
 
+# The upstream install rule globs every header in the source tree, which sweeps in a vendored copy of cxxopts that no
+# part of the SDK includes.  Upstream considers it accidental, see rerun-io/rerun#5133.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/rerun/third_party")
+
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE-MIT"
     "${SOURCE_PATH}/LICENSE-APACHE"
