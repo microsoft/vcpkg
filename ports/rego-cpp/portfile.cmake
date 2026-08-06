@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/rego-cpp
     REF "v${VERSION}"
-    SHA512 a9e7b6202fdc7b7168433227c7bc67492d52bdf10c5d9b2c0954aa66a9eb5a16a9b4de7eb7385a335c6685111393aad6840c171ab12b3e6b2fd493b5bffea21c
+    SHA512 41c9a9ef4f531b872c5fc5a4ba4a1ac1a393a907e48e9dc22abf069098ce71045c294503a24f28c177058bbe3e148e6be0f49a73fbc46c64547c249f70f6fcd7
     HEAD_REF main
     PATCHES
       add-bigobj.diff # src\rego_to_bundle.cc : fatal error C1128: number of sections exceeded object file format limit: compile with /bigobj
