@@ -1,20 +1,6 @@
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPEN3D_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" OPEN3D_STATIC_WINDOWS_RUNTIME)
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        cuda BUILD_CUDA_MODULE
-)
-
-if("cuda" IN_LIST FEATURES)
-    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
-    list(APPEND FEATURE_OPTIONS
-        "-DCMAKE_CUDA_COMPILER=${NVCC}"
-        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO isl-org/Open3D
@@ -23,8 +9,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         disable-tools-apps.patch
-        fix-cuda-fmt.patch
-        fix-cuda-msvc-preprocessor.patch
 )
 
 vcpkg_cmake_configure(
@@ -39,11 +23,15 @@ vcpkg_cmake_configure(
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_PYTHON_MODULE=OFF
+        -DBUILD_CUDA_MODULE=OFF
         -DWITH_STUBGEN=OFF
         -DBUILD_GUI=OFF
         -DBUILD_WEBRTC=OFF
         -DBUILD_JUPYTER_EXTENSION=OFF
         -DBUILD_ISPC_MODULE=OFF
+        # X11 is not a declared dependency; keep the build deterministic by
+        # never letting FindX11 pick up whatever happens to be on the machine.
+        -DCMAKE_DISABLE_FIND_PACKAGE_X11=ON
         -DWITH_IPP=OFF
         -DWITH_MINIZIP=ON
         -DBUILD_LIBREALSENSE=OFF
@@ -55,11 +43,21 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_VTK=ON
         -DDEVELOPER_BUILD=OFF
         -DSTATIC_WINDOWS_RUNTIME=${OPEN3D_STATIC_WINDOWS_RUNTIME}
-        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+# zstd (always) and OpenBLAS (aarch64) are fetched as ExternalProjects at
+# build time; capture their licenses for the copyright file.
+set(extra_copyright_files "")
+foreach(thirdparty IN ITEMS zstd openblas)
+    set(thirdparty_license "${CURRENT_BUILDTREE_DIR}/${thirdparty}/${thirdparty}-prefix/src/ext_${thirdparty}/LICENSE")
+    if(EXISTS "${thirdparty_license}")
+        file(COPY_FILE "${thirdparty_license}" "${CURRENT_BUILDTREE_DIR}/${thirdparty}-LICENSE")
+        list(APPEND extra_copyright_files "${CURRENT_BUILDTREE_DIR}/${thirdparty}-LICENSE")
+    endif()
+endforeach()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
@@ -83,4 +81,27 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/open3d/visualization/webrtc_server/html"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    # The build compiles in third-party code that is downloaded at build time
+    # or bundled under 3rdparty/, each under its own license.
+    "${SOURCE_PATH}/3rdparty/dirent/LICENSE"
+    "${SOURCE_PATH}/3rdparty/liblzf/LICENSE"
+    "${SOURCE_PATH}/3rdparty/possionrecon/LICENSE"
+    "${SOURCE_PATH}/3rdparty/rply/LICENSE"
+    "${SOURCE_PATH}/3rdparty/tinyfiledialogs/LICENSE"
+    "${SOURCE_PATH}/3rdparty/tomasakeninemoeller/LICENSE"
+    "${SOURCE_PATH}/3rdparty/uvatlas/LICENSE_directxheaders"
+    "${SOURCE_PATH}/3rdparty/uvatlas/LICENSE_directxmath"
+    "${SOURCE_PATH}/3rdparty/uvatlas/LICENSE_uvatlas"
+    "${CURRENT_PORT_DIR}/spz-license.txt"
+    # Vulkan-Headers and VulkanMemoryAllocator headers are installed under
+    # include/open3d/3rdparty; their archives carry no license files.
+    "${CURRENT_PORT_DIR}/vulkan-headers-license.md"
+    "${CURRENT_PORT_DIR}/vkmemalloc-license.txt"
+    "${CURRENT_PORT_DIR}/vmahpp-license.txt"
+    # x64 builds statically link MKL binaries downloaded by the build system
+    # (Intel Simplified Software License, which permits binary redistribution).
+    "${CURRENT_PORT_DIR}/mkl-license.txt"
+    ${extra_copyright_files}
+)
