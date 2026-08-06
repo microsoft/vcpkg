@@ -27,9 +27,9 @@ vcpkg_cmake_configure(
         -DSTDGPU_ENABLE_CONTRACT_CHECKS=OFF
         -DCMAKE_CUDA_COMPILER=${NVCC}
         -DCUDAToolkit_ROOT=${CUDA_TOOLKIT_ROOT}
-        # Single architecture plus PTX: keeps CI build times down and stays
-        # forward-compatible via JIT.
-        -DCMAKE_CUDA_ARCHITECTURES=75
+        # Consistent with other CUDA ports (ginkgo, colmap); override via
+        # VCPKG_CMAKE_CONFIGURE_OPTIONS if needed.
+        -DCMAKE_CUDA_ARCHITECTURES=native
 )
 
 vcpkg_cmake_install()
