@@ -53,7 +53,7 @@ merge_binaries() {
             COMMAND="$COMMAND -arch $ARCH $SOURCE/$ARCH/$BINARY"
         done
 
-        $($COMMAND)
+        eval "$COMMAND"
     done
 }
 
@@ -80,7 +80,11 @@ if [ "@VCPKG_CMAKE_SYSTEM_NAME@" = "Android" ]; then
     OPTIONS_x86_64="${OPTIONS_x86}"
 else
     OPTIONS_arm=" --disable-asm --disable-x86asm"
-    OPTIONS_arm64=" --enable-asm --disable-x86asm"
+    if [ "@VCPKG_TARGET_IS_WINDOWS@" = "ON" ]; then
+        OPTIONS_arm64=" --disable-asm --disable-x86asm"
+    else
+        OPTIONS_arm64=" --enable-asm --disable-x86asm"
+    fi
     OPTIONS_x86=" --enable-asm --enable-x86asm"
     OPTIONS_x86_64="${OPTIONS_x86}"
 fi

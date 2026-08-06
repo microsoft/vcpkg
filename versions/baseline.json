@@ -3046,7 +3046,7 @@
     },
     "ffmpeg": {
       "baseline": "8.1.2",
-      "port-version": 3
+      "port-version": 4
     },
     "ffmpeg-bin2c": {
       "baseline": "8.1.1",
