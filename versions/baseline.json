@@ -9729,7 +9729,7 @@
       "port-version": 0
     },
     "sqlpp23": {
-      "baseline": "0.69",
+      "baseline": "0.70",
       "port-version": 0
     },
     "squirrel": {
