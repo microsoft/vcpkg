@@ -21,10 +21,10 @@
       "dependencies": [
         {
           "name": "openblas",
-          "platform": "!osx",
           "features": [
             "threads"
-          ]
+          ],
+          "platform": "!osx"
         }
       ]
     }
