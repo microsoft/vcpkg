@@ -16,26 +16,26 @@ vcpkg_from_github(
         multilib.diff
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    vcpkg_find_acquire_program(NASM)
-    set(NASM_OPTION "-DNASM_EXECUTABLE=${NASM}")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
-        # x265 doesn't create sufficient PIC for asm, breaking usage
-        # in shared libs, e.g. the libheif gdk pixbuf plugin.
-        # Users can override this in custom triplets.
-        set(ASSEMBLY_OPTION "-DENABLE_ASSEMBLY=OFF")
-    endif()
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    set(ASSEMBLY_OPTION "-DENABLE_ASSEMBLY=OFF")
-endif()
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
         tool      ENABLE_CLI
         multilib  ENABLE_MULTILIB
 )
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    vcpkg_find_acquire_program(NASM)
+    list(APPEND OPTIONS "-DNASM_EXECUTABLE=${NASM}")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
+        # x265 doesn't create sufficient PIC for asm, breaking usage
+        # in shared libs, e.g. the libheif gdk pixbuf plugin.
+        # Users can override this in custom triplets.
+        list(APPEND OPTIONS "-DENABLE_ASSEMBLY=OFF")
+    endif()
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS "-DENABLE_ASSEMBLY=OFF")
+endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 
 if("multilib" IN_LIST FEATURES AND DEFINED VCPKG_DETECTED_CMAKE_AR)
     # Pass the archiver used to merge the multilib static archives
@@ -46,12 +46,11 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/source"
     OPTIONS
-        ${NASM_OPTION}
-        ${ASSEMBLY_OPTION}
         ${OPTIONS}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_PIC=ON
         -DENABLE_LIBNUMA=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_VLD=ON
         "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF
@@ -60,7 +59,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
