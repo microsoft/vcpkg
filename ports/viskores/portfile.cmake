@@ -31,7 +31,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
-    list(APPEND OPTIONS
+    list(APPEND FEATURE_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
         -DCMAKE_CUDA_ARCHITECTURES=all-major # override with VCPKG_CMAKE_CONFIGURE_OPTIONS
     )
