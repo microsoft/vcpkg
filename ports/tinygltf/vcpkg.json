@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "A header only C++11 glTF 2.0 library.",
   "homepage": "https://github.com/syoyo/tinygltf",
+  "license": "MIT",
   "dependencies": [
     "nlohmann-json",
     "stb"
