@@ -1,6 +1,6 @@
 {
   "name": "hanjingo-high-jump",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -122,6 +122,18 @@
       "description": "Enable HTTP support",
       "dependencies": [
         "cpp-httplib"
+      ]
+    },
+    "https": {
+      "description": "Enable HTTPS support",
+      "dependencies": [
+        {
+          "name": "cpp-httplib",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
       ]
     },
     "lic": {
