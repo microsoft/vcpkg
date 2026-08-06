@@ -8,6 +8,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-flatccrt-export.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
@@ -39,4 +41,7 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/NOTICE.txt"
+)
