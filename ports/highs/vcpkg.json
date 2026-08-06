@@ -1,6 +1,6 @@
 {
   "name": "highs",
-  "version": "1.14.0",
+  "version": "1.15.1",
   "description": "High performance library to solve linear, mixed-integer, and convex quadratic optimization problems.",
   "homepage": "https://highs.dev",
   "license": "MIT",
@@ -14,5 +14,19 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "extras": {
+      "description": "Build the HiPO interior point solver, using OpenBLAS on Windows/Linux and Accelerate on macOS",
+      "dependencies": [
+        {
+          "name": "openblas",
+          "platform": "!osx",
+          "features": [
+            "threads"
+          ]
+        }
+      ]
+    }
+  }
 }
