@@ -3218,7 +3218,7 @@
     },
     "freeimage": {
       "baseline": "3.18.0",
-      "port-version": 27
+      "port-version": 28
     },
     "freerdp": {
       "baseline": "3.26.0",
