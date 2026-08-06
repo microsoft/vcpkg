@@ -1,0 +1,26 @@
+diff --git a/Source/FreeImage/PluginTIFF.cpp b/Source/FreeImage/PluginTIFF.cpp
+--- a/Source/FreeImage/PluginTIFF.cpp
++++ b/Source/FreeImage/PluginTIFF.cpp
+@@ -2232,10 +2232,6 @@
+ 			throw FI_MSG_ERROR_UNSUPPORTED_FORMAT;
+ 		}
+ 		
+-		// copy TIFF metadata (must be done after FreeImage_Allocate)
+-
+-		ReadMetadata(io, handle, tif, dib);
+-
+ 		// copy ICC profile data (must be done after FreeImage_Allocate)
+ 		
+ 		FreeImage_CreateICCProfile(dib, iccBuf, iccSize);
+@@ -2250,6 +2246,11 @@
+ 			}
+ 		}
+ 
++		// copy TIFF metadata (must be done after FreeImage_Allocate).
++		// After ICC: TIFFReadEXIFDirectory frees iccBuf from TIFFGetField.
++
++		ReadMetadata(io, handle, tif, dib);
++
+ 		// copy TIFF thumbnail (must be done after FreeImage_Allocate)
+ 		
+ 		ReadThumbnail(io, handle, data, tif, dib);
