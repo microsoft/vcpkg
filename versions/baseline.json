@@ -813,7 +813,7 @@
       "port-version": 0
     },
     "boinc": {
-      "baseline": "8.2.13",
+      "baseline": "8.2.15",
       "port-version": 0
     },
     "boolinq": {
