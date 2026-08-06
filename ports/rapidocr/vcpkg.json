@@ -16,6 +16,7 @@
         "tiff"
       ]
     },
+    "polyclipping",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -24,10 +25,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "tools": {
-      "description": "Build the RapidOcrOnnx CLI demo executable"
-    }
-  }
+  ]
 }

@@ -8,25 +8,28 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-# vcpkg onnxruntime installs headers under include/onnxruntime/ (and also
-# include/onnxruntime/core/session/). Upstream already uses:
-#   #include <onnxruntime/core/session/onnxruntime_cxx_api.h>
-# which resolves correctly — no include rewrite needed.
+# vcpkg installs the ONNX Runtime public wrapper under include/onnxruntime,
+# while upstream includes it from the source-tree root. Use the installed API.
+file(GLOB_RECURSE RAPIDOCR_CODE "${SOURCE_PATH}/include/*.h" "${SOURCE_PATH}/src/*.cpp")
+foreach(source_file IN LISTS RAPIDOCR_CODE)
+    file(READ "${source_file}" contents)
+    string(REPLACE "onnxruntime/core/session/onnxruntime_cxx_api.h"
+                   "onnxruntime/onnxruntime_cxx_api.h" contents "${contents}")
+    string(REPLACE "\"clipper.hpp\"" "<polyclipping/clipper.hpp>" contents "${contents}")
+    file(WRITE "${source_file}" "${contents}")
+endforeach()
+
+# Clipper is supplied by the polyclipping port; do not package or compile the
+# vendored copy. The CLI is intentionally not packaged, so getopt is unused.
+file(REMOVE "${SOURCE_PATH}/include/clipper.hpp" "${SOURCE_PATH}/src/clipper.cpp")
 
 # Upstream CMake expects vendored static OpenCV/ORT trees. Use our CMake.
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-rapidocr-config.cmake.in"
      DESTINATION "${SOURCE_PATH}")
 
-set(RAPIDOCR_BUILD_TOOLS OFF)
-if("tools" IN_LIST FEATURES)
-    set(RAPIDOCR_BUILD_TOOLS ON)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        "-DRAPIDOCR_BUILD_TOOLS=${RAPIDOCR_BUILD_TOOLS}"
 )
 
 vcpkg_cmake_install()
@@ -35,10 +38,6 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME unofficial-rapidocr
     CONFIG_PATH share/unofficial-rapidocr
 )
-
-if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES RapidOcrOnnx AUTO_CLEAN)
-endif()
 
 if(EXISTS "${SOURCE_PATH}/models/ppocr_keys_v1.txt")
     file(INSTALL "${SOURCE_PATH}/models/ppocr_keys_v1.txt"

@@ -5,10 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(RAPIDOCR_BUILD_TOOLS "Build RapidOcrOnnx CLI demo" OFF)
-
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
 find_package(onnxruntime CONFIG REQUIRED)
+find_package(polyclipping CONFIG REQUIRED)
 
 set(RAPIDOCR_SOURCES
     src/AngleNet.cpp
@@ -18,7 +17,6 @@ set(RAPIDOCR_SOURCES
     src/OcrLiteCApi.cpp
     src/OcrResultUtils.cpp
     src/OcrUtils.cpp
-    src/clipper.cpp
 )
 
 add_library(rapidocr ${RAPIDOCR_SOURCES})
@@ -55,6 +53,7 @@ endif()
 target_link_libraries(rapidocr
     PUBLIC
         onnxruntime::onnxruntime
+        polyclipping::polyclipping
         ${_RAPIDOCR_OPENCV_LIBS}
 )
 
@@ -77,6 +76,7 @@ install(DIRECTORY include/
         PATTERN "*.hpp"
         PATTERN "main.h" EXCLUDE
         PATTERN "getopt.h" EXCLUDE
+        PATTERN "clipper.hpp" EXCLUDE
         PATTERN "OcrLiteJni*" EXCLUDE
 )
 
@@ -95,21 +95,3 @@ install(EXPORT unofficial-rapidocr-targets
     NAMESPACE unofficial::rapidocr::
     DESTINATION share/unofficial-rapidocr
 )
-
-if(RAPIDOCR_BUILD_TOOLS)
-    add_executable(RapidOcrOnnx
-        src/main.cpp
-        src/getopt.cpp
-        ${RAPIDOCR_SOURCES}
-    )
-    target_include_directories(RapidOcrOnnx PRIVATE include)
-    target_compile_definitions(RapidOcrOnnx PRIVATE UNICODE _UNICODE __EXEC__ NOMINMAX)
-    target_link_libraries(RapidOcrOnnx PRIVATE
-        onnxruntime::onnxruntime
-        ${_RAPIDOCR_OPENCV_LIBS}
-    )
-    if(MSVC)
-        target_compile_options(RapidOcrOnnx PRIVATE /utf-8)
-    endif()
-    install(TARGETS RapidOcrOnnx RUNTIME DESTINATION tools/rapidocr)
-endif()
