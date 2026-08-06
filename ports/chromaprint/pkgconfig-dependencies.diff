@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 01b7df7..319bd3d 100644
+index bea55c9..739707c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,6 +23,9 @@ include(CheckSymbolExists)
@@ -17,7 +17,7 @@ index 01b7df7..319bd3d 100644
    if(APPLE AND ACCELERATE_LIBRARIES)
      set(FFT_LIB "vdsp")
 +    string(APPEND PC_LIBS_PRIVATE " -framework Accelerate")
-   elseif(FFMPEG_LIBAVUTIL_TX_FOUND)
+   elseif(HAVE_FFMPEG_TX_RDFT)
      set(FFT_LIB "avtx")
    elseif(FFMPEG_LIBAVCODEC_FFT_FOUND)
      set(FFT_LIB "avfft")
@@ -34,7 +34,7 @@ index 01b7df7..319bd3d 100644
      message(FATAL_ERROR "Selected ${AUDIO_PROCESSOR_LIB} for audio processing, but the library is not found")
    endif()
 diff --git a/libchromaprint.pc.cmake b/libchromaprint.pc.cmake
-index dbe8f98..b38f8d8 100644
+index 7a70d01..15b4de9 100644
 --- a/libchromaprint.pc.cmake
 +++ b/libchromaprint.pc.cmake
 @@ -7,6 +7,8 @@ Name: @PROJECT_NAME@
