@@ -1,8 +1,8 @@
 diff --git a/prj/cmake/CMakeLists.txt b/prj/cmake/CMakeLists.txt
-index ebe2847..15922a8 100644
+index de4a48b..b56651f 100644
 --- a/prj/cmake/CMakeLists.txt
 +++ b/prj/cmake/CMakeLists.txt
-@@ -114,12 +114,6 @@ endif()
+@@ -131,12 +131,6 @@ endif()
  include_directories("${SIMD_ROOT}/src")
  
  if(SIMD_GET_VERSION)
