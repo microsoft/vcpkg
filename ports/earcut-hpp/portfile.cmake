@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapbox/earcut.hpp
     REF "v${VERSION}"
-    SHA512 87f52bf99273dc47f78ebacd4ee0ccbab4edd3f9b85d97aed1c0d1165b3e2523e1a71f3a37a118e82170e79d57a2e09644d4115facb63dc6f704affb9c428e6b
+    SHA512 15f5ea72bddf63549bc7a178009ccc949bf078f45f527bd9d41d4e40b5972e09f5c61dd25375bf12dd7a623f9ad0df556733aa1492153c214715ad4319cb21ed
     HEAD_REF master
-    PATCHES
-        include-cstdint.patch # this patch is alread merged. remove it once the next version is released.
 )
 
 # This is a header only library
