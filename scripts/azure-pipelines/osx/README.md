@@ -1,6 +1,30 @@
-# `vcpkg-eg-mac` VMs
-
 This is the checklist for what the vcpkg team does when updating the macOS machines in the pool.
+
+The hosts do not accept incoming SSH connections. Perform all host-side work in a terminal opened
+through the KVM. Use the KVM software's "paste from clipboard" function to transfer commands and
+short-lived credentials to the host. SSH commands in this document connect from the host to its
+guest VM, not from a developer workstation to the host.
+
+Before publishing the VM update changes, update the Azure Agent URI in
+`scripts/azure-pipelines/osx/setup-box.sh` to the current version. You can find this by going to the
+agent pool, selecting "New agent", picking macOS, and copying the link. For example:
+https://download.agent.dev.azure.com/agent/5.277.0/vsts-agent-osx-arm64-5.277.0.tar.gz
+
+Publish the changes to a fork and branch that the hosts can access. Keep a clone of
+`microsoft/vcpkg` on each host as `origin`, add the operator's fork as a separate remote, and check
+out the working revision to provide the scripts used by these instructions:
+
+```sh
+git clone https://github.com/microsoft/vcpkg ~/vcpkg
+git -C ~/vcpkg remote add <WORKING-REMOTE> https://github.com/<GITHUB-USER>/vcpkg
+git -C ~/vcpkg fetch <WORKING-REMOTE> <WORKING-BRANCH>
+git -C ~/vcpkg checkout --detach FETCH_HEAD
+```
+
+For example, BillyONeal's fork should be added as remote `BillyONeal` with URL
+`https://github.com/BillyONeal/vcpkg`. Do not use `origin` for the working branch unless the changes
+have already been merged into `microsoft/vcpkg`. If the working branch is updated, repeat the
+`fetch` and detached `checkout` commands above on each host.
 
 ## Creating new base images
 
@@ -8,11 +32,10 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 
 - [ ] [macosvm](https://github.com/s-u/macosvm) allow-listed
   by macOS for arm64.
-- [ ] An Xcode 26.6 .xip - you can get this from Apple's developer website,
-  although you'll need to sign in first: <https://developer.apple.com/downloads>  
-  If you are doing this from a local macos box, you can skip to the "update the macos host" step.  
-- [ ] The Xcode 26.6 Command Line Tools installer
-- [ ] PowerShell 7.x, Azure CLI, and `az login` with your Microsoft corp credentials
+- [ ] The matching macOS IPSW, Xcode 26.6 `.xip`, and Xcode 26.6 Command Line Tools `.dmg`
+    uploaded to the `assets` container in the `vcpkgimageminting` storage account.
+- [ ] PowerShell 7.x, Azure CLI, and `az login` with your Microsoft corp credentials on a workstation
+    that can mint SAS tokens for the storage account.
 
 ### Instructions (ARM64)
 
@@ -20,29 +43,51 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
       and delete one of the agents that are idle.
 - [ ] Go to that machine in the KVM. (Passwords are stored as secrets in the CPP_GITHUB\vcpkg\vcpkgmm-passwords key vault)
 - [ ] Update the macos host
-- [ ] (Once only) install `macosvm` to `~` (this tarball is also backed up in our `vcpkg-image-minting` storage account). For example from a dev workstation:
+- [ ] Prepare the host. This installs Homebrew and AzCopy if needed, and installs `macosvm` to `~`:
+    ```sh
+    ~/vcpkg/scripts/azure-pipelines/osx/setup-host.sh
     ```
-    ssh vcpkg@HOSTMACHINE
-    curl -L -o macosvm-0.2-3-darwin21.tar.gz https://github.com/s-u/macosvm/releases/download/0.2-3/macosvm-0.2-3-darwin21.tar.gz
-    tar xvf macosvm-0.2-3-darwin21.tar.gz
-    rm macosvm-0.2-3-darwin21.tar.gz
-    exit
+- [ ] On a workstation, generate download commands with short-lived, blob-scoped credentials for
+    the matching IPSW, Xcode archive, and Command Line Tools installer in the `assets` container:
+    ```powershell
+    function Get-AssetDownloadCommand {
+        Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
+        $accountName = 'vcpkgimageminting'
+        $containerName = 'assets'
+        $uNow = (Get-Date).ToUniversalTime()
+        $start = $uNow.ToString('s') + 'Z'
+        $expiry = $uNow.AddHours(1).ToString('s') + 'Z'
+        $sas = az storage blob generate-sas --as-user --auth-mode login --account-name $accountName --container-name $containerName --name $FileName --permissions r --start $start --expiry $expiry --https-only --output tsv
+        return "azcopy copy `"https://vcpkgimageminting.blob.core.windows.net/assets/$($FileName)?$($sas)`" `"$FileName`""
+    }
+
+    Get-AssetDownloadCommand -FileName UniversalMac_26.6.1_25G76_Restore.ipsw
+    Get-AssetDownloadCommand -FileName Xcode_26.6_Apple_silicon.xip
+    Get-AssetDownloadCommand -FileName Command_Line_Tools_26.6_Apple_silicon.dmg
     ```
-- [ ] Download the matching `.ipsw` for the macOS copy to install. See the
-      [M4 Apple Silicon IPSW firmware database](https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/)
-      for links to the `.ipsw`. Example:
-    https://updates.cdn-apple.com/2026SummerFCS/fullrestores/140-65618/10445B26-DE2C-43EC-9149-0A831602E74B/UniversalMac_26.6_25G72_Restore.ipsw
-- [ ] Determine the VM directory name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2026-07-29-arm64".
-- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2026-07-29-arm64 and UniversalMac_26.6_25G72_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
+    This creates a user-delegation SAS for each blob. Each credential is read-only, HTTPS-only, and
+    valid for one hour. A SAS is not single-use and can be reused until it expires, so do not retain
+    the generated commands after the downloads finish.
+    If a matching IPSW has not yet been added to the container, use the
+    [M4 Apple Silicon IPSW firmware database](https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/)
+    to locate it and upload it first.
+- [ ] In the host's KVM terminal, change to `~`, then use the KVM software's "paste from
+      clipboard" function to paste and run each generated command:
+    ```sh
+    cd ~
+    # Paste and run the three azcopy commands generated on the workstation.
     ```
-    mkdir -p ~/vcpkg-osx-2026-07-29-arm64
-    cd ~/vcpkg-osx-2026-07-29-arm64
-    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 10 -r 18g --restore ~/UniversalMac_26.6_25G72_Restore.ipsw ./vm.json
+- [ ] Determine the VM directory name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2026-08-07-arm64".
+- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2026-08-07-arm64 and UniversalMac_26.6.1_25G76_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
+    ```
+    mkdir -p ~/vcpkg-osx-2026-08-07-arm64
+    cd ~/vcpkg-osx-2026-08-07-arm64
+    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 10 -r 18g --restore ~/UniversalMac_26.6.1_25G76_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
 - [ ] Follow prompts as you would on real hardware.
     * Set up as new.
-    * Account name: vcpkg
+    * Account name: builduser
     * A very similar password
     * Do not allow computer account password to be reset with your Apple Account.
     * Apple ID: 'Set Up Later' / Skip
@@ -53,15 +98,13 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Set the desktop wallpaper to a fixed color from Settings -> Wallpaper . (This makes the KVM a lot easier to use :) )
 - [ ] Disable automatic updates in the VM: Settings -> General -> Automatic Updates -> Disable them all
 - [ ] Enable remote login in the VM: Settings -> General -> Sharing -> Remote Login
-- [ ] Set the vcpkg user to be able to use sudo without a password, and install Xcode. For example from a dev workstation:
+- [ ] Allow the guest's `builduser` account to use sudo without a password, and install Xcode. In the host's KVM terminal, with the VM running:
     ```
-    scp path/to/Xcode.xip vcpkg@HOSTMACHINE:/Users/vcpkg/Xcode.xip
-    ssh vcpkg@HOSTMACHINE
-    ssh-keygen -R vcpkgs-Virtual-Machine.local
-    scp Xcode.xip vcpkg@vcpkgs-Virtual-Machine.local:/Users/vcpkg/Xcode.xip
-    ssh vcpkg@vcpkgs-Virtual-Machine.local
-    printf 'vcpkg\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vcpkg'
-    sudo chmod 0440 '/etc/sudoers.d/vcpkg'
+    ssh-keygen -R buildusers-Virtual-Machine.local
+    scp ~/Xcode_26.6_Apple_silicon.xip builduser@buildusers-Virtual-Machine.local:Xcode.xip
+    ssh builduser@buildusers-Virtual-Machine.local
+    printf 'builduser\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/builduser'
+    sudo chmod 0440 '/etc/sudoers.d/builduser'
     sudo mdutil -ad
     xip --expand Xcode.xip
     sudo mv Xcode.app /Applications/Xcode.app
@@ -69,19 +112,21 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     exit
     ```
 - [ ] Open Xcode from Applications in the guest GUI. Uncheck the "code completion model" and accept the EULA.
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://download.agent.dev.azure.com/agent/5.276.0/vsts-agent-osx-arm64-5.276.0.tar.gz
-- [ ] Copy setup-box.sh and the xcode installer renamed to 'clt.dmg' to the host. For example from a dev workstation:
-    ```
-    scp ./setup-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg
-    scp ./setup-box.sh vcpkg@HOSTMACHINE:/Users/vcpkg
-    scp path/to/console/tools.dmg vcpkg@HOSTMACHINE:/Users/vcpkg/clt.dmg
-    ssh vcpkg@HOSTMACHINE
+- [ ] Run the guest setup script from the host's vcpkg clone. The script transfers the downloaded
+            Command Line Tools installer to the guest as `clt.dmg`:
+        ```sh
+    cd ~/vcpkg/scripts/azure-pipelines/osx
     chmod +x setup-guest.sh
-    ./setup-guest.sh && rm setup-guest.sh setup-box.sh clt.dmg
-    exit
+        ./setup-guest.sh
     ```
 - [ ] Shut down the VM cleanly.
-- [ ] Package the VM into a tarball and upload it to blob storage. From a dev workstation, get the azcopy command to do the upload with:
+- [ ] Delete the temporary installation assets from the host:
+    ```sh
+    rm ~/UniversalMac_26.6.1_25G76_Restore.ipsw \
+        ~/Xcode_26.6_Apple_silicon.xip \
+        ~/Command_Line_Tools_26.6_Apple_silicon.dmg
+    ```
+- [ ] Package the VM into an archive and upload it to blob storage. In PowerShell on the host, generate the azcopy command with:
     ```powershell
     function Get-AzCopyWriteCommand {
         Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
@@ -94,17 +139,14 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
         return "azcopy copy  --check-length=false `"$($FileName)`" `"https://vcpkgimageminting.blob.core.windows.net/pvms/$($FileName)?$($sas)`""
     }
 
-    Get-AzCopyWriteCommand -FileName vcpkg-osx-2026-07-29-arm64.aar
+    Get-AzCopyWriteCommand -FileName vcpkg-osx-2026-08-07-arm64.aar
     ```
-    Then:
+    Paste the generated command into the host's KVM terminal, then run:
     ```
-    ssh vcpkg@HOSTMACHINE
     aa archive -d vcpkg-osx-<date>-arm64 -o vcpkg-osx-<date>-arm64.aar -enable-holes
-    brew install azcopy
     # (The azcopy command line generated above)
-    exit
     ```
-- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD-arm64` based on the current date. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-2026-08-07-arm64`. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
 - [ ] Follow the "Deploying images" steps below for each machine in the fleet.
 
 ## Deploying images
@@ -116,15 +158,14 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] If this machine was used before, delete it from the pool of which it is a member from https://dev.azure.com/vcpkg/public/_settings/agentqueues
 - [ ] Log in to the machine using the KVM.
 - [ ] Check for software updates in macOS system settings
-- [ ] (Once only) install `macosvm` to `~` (this tarball is also backed up in our `vcpkg-image-minting` storage account). From a developer machine:
+- [ ] Ensure the host's vcpkg clone is at the published working revision, then prepare the host. This
+      installs Homebrew and AzCopy if needed, and installs `macosvm` to `~`:
     ```sh
-    ssh vcpkg@HOSTMACHINE
-    curl -L -o macosvm-0.2-3-darwin21.tar.gz https://github.com/s-u/macosvm/releases/download/0.2-3/macosvm-0.2-3-darwin21.tar.gz
-    tar xvf macosvm-0.2-3-darwin21.tar.gz
-    rm macosvm-0.2-3-darwin21.tar.gz
-    exit
+    git -C ~/vcpkg fetch <WORKING-REMOTE> <WORKING-BRANCH>
+    git -C ~/vcpkg checkout --detach FETCH_HEAD
+    ~/vcpkg/scripts/azure-pipelines/osx/setup-host.sh
     ```
-- [ ] Skip if this is the image building machine. Mint a SAS token URI to the box to use from the Azure portal if you don't already have one, and download the VM. (Recommend running this via SSH from domain joined machine due to containing SAS tokens). From a developer machine, get the azcopy command with:
+- [ ] Skip if this is the image building machine. In PowerShell on the host, mint a SAS token and generate the azcopy command with:
     ```powershell
     function Get-AzCopyReadCommand {
         Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
@@ -137,32 +178,27 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
         return "azcopy copy `"https://vcpkgimageminting.blob.core.windows.net/pvms/$($FileName)?$($sas)`" `"$($FileName)`""
     }
 
-    Get-AzCopyReadCommand -FileName vcpkg-osx-2026-07-29-arm64.aar
+    Get-AzCopyReadCommand -FileName vcpkg-osx-2026-08-07-arm64.aar
     ```
-    Then run:
+    Paste the generated command into the host's KVM terminal, then run:
     ```sh
-    ssh vcpkg@HOSTMACHINE
-    brew install azcopy
     # (The azcopy command line generated above)
     aa extract -d vcpkg-osx-<DATE>-arm64 -i ./vcpkg-osx-<DATE>-arm64.aar -enable-holes
-    exit
     ```
 - [ ] Open a separate terminal window on the host and start the VM by running:
     ```sh
     cd ~/vcpkg-osx-<DATE>-arm64
     ~/macosvm ./vm.json
     ```
-- [ ] Generate an access token to add the agent to the pool:
+- [ ] In PowerShell on the host, generate an access token to add the agent to the pool. Use the KVM software's "paste from clipboard" function for any sign-in data needed on the host:
     ```pwsh
     az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken --output tsv
     ```
-- [ ] Copy the guest deploy script to the host, and run it with the access token/OAuth token from the `az account get-access-token` command above as the first parameter. From a developer machine pwsh:
-    ```pwsh
-    scp register-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg/register-guest.sh
-    ssh vcpkg@HOSTMACHINE
-    ssh-keygen -R vcpkgs-Virtual-Machine.local
-    chmod +x register-guest.sh
-    ./register-guest.sh TOKEN-GOES-HERE AGENT-NUMBER-GOES-HERE && rm register-guest.sh
+- [ ] In the host's KVM terminal, run the guest deploy script from the vcpkg clone with the access token/OAuth token from the `az account get-access-token` command above. The script derives the Azure DevOps agent name from a host name in the form `vcpkg-m4-NNN` and stops with an error if the host name or agent pool cannot be determined unambiguously:
+    ```sh
+    ssh-keygen -R buildusers-Virtual-Machine.local
+    chmod +x ~/vcpkg/scripts/azure-pipelines/osx/register-guest.sh
+    ~/vcpkg/scripts/azure-pipelines/osx/register-guest.sh TOKEN-GOES-HERE
     ```
 - [ ] After successful registration, the script will cleanly shut down the VM. If registration fails,
       the VM remains running for diagnosis. In the KVM's terminal, relaunch the successfully registered
@@ -172,9 +208,9 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```
 - [ ] Open a terminal window on the host and run the agent
     ```sh
-    ssh -i ~/vcpkg-osx-*-arm64/id_guest vcpkg@vcpkgs-Virtual-Machine.local
+    ssh -i ~/vcpkg-osx-*-arm64/id_guest builduser@buildusers-Virtual-Machine.local
     ~/myagent/run.sh
     ```
-- [ ] Check that the machine shows up in the pool, and lock the vcpkg user on the host.
+- [ ] Check that the machine shows up in the pool, and lock the current user account on the host.
 - [ ] Lock the screen on the host.
 - [ ] Update the "vcpkg Macs" spreadsheet line for the machine with the new pool.

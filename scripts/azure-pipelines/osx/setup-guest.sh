@@ -1,15 +1,15 @@
 #!/bin/sh
 set -e
 
-export VM_DIRECTORY=`ls ~ | grep vcpkg-osx-`
+export VM_DIRECTORY=`ls "$HOME" | grep vcpkg-osx-`
 export SSH_KEY="$HOME/$VM_DIRECTORY/id_guest"
 export SSH_PUBLIC_KEY="$SSH_KEY.pub"
 ssh-keygen -P '' -f "$SSH_KEY"
-echo Type 'vcpkg' and press enter
-ssh-copy-id -i "$SSH_PUBLIC_KEY" vcpkg@vcpkgs-Virtual-Machine.local
+echo Type 'builduser' and press enter
+ssh-copy-id -i "$SSH_PUBLIC_KEY" builduser@buildusers-Virtual-Machine.local
 echo Keys deployed
-ssh vcpkg@vcpkgs-Virtual-Machine.local -i "$SSH_KEY" echo hello from \`hostname\`
-scp -i "$SSH_KEY" ./clt.dmg vcpkg@vcpkgs-Virtual-Machine.local:/Users/vcpkg/clt.dmg
-scp -i "$SSH_KEY" ./setup-box.sh vcpkg@vcpkgs-Virtual-Machine.local:/Users/vcpkg/setup-box.sh
-ssh vcpkg@vcpkgs-Virtual-Machine.local -i "$SSH_KEY" chmod +x /Users/vcpkg/setup-box.sh
-ssh vcpkg@vcpkgs-Virtual-Machine.local -i "$SSH_KEY" /Users/vcpkg/setup-box.sh
+ssh builduser@buildusers-Virtual-Machine.local -i "$SSH_KEY" echo hello from \`hostname\`
+scp -i "$SSH_KEY" "$HOME/Command_Line_Tools_26.6_Apple_silicon.dmg" builduser@buildusers-Virtual-Machine.local:clt.dmg
+scp -i "$SSH_KEY" ./setup-box.sh builduser@buildusers-Virtual-Machine.local:setup-box.sh
+ssh builduser@buildusers-Virtual-Machine.local -i "$SSH_KEY" chmod +x setup-box.sh
+ssh builduser@buildusers-Virtual-Machine.local -i "$SSH_KEY" ./setup-box.sh

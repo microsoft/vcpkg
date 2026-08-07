@@ -6,15 +6,15 @@ sudo installer -pkg "/Volumes/setup-installer/Command Line Tools.pkg" -target /
 hdiutil detach /Volumes/setup-installer
 rm clt.dmg
 sudo xcode-select -s /Applications/Xcode.app
-curl -fsSL -o ~/Downloads/install-homebrew.sh https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-/bin/bash ~/Downloads/install-homebrew.sh
-rm ~/Downloads/install-homebrew.sh
-(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/vcpkg/.zprofile
+curl -fsSL -o "$HOME/Downloads/install-homebrew.sh" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+/bin/bash "$HOME/Downloads/install-homebrew.sh"
+rm "$HOME/Downloads/install-homebrew.sh"
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> "$HOME/.zprofile"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install autoconf-archive autoconf automake azcopy azure-cli bison cmake gettext gfortran gnu-sed gperf libtool meson nasm ninja pkg-config powershell
-mkdir ~/Data
-curl -fsSL -o ~/Downloads/azure-agent.tar.gz https://download.agent.dev.azure.com/agent/5.276.0/vsts-agent-osx-arm64-5.276.0.tar.gz
-mkdir ~/myagent
-tar xf ~/Downloads/azure-agent.tar.gz -C ~/myagent
-rm ~/Downloads/azure-agent.tar.gz
+mkdir "$HOME/Data"
+curl -fsSL -o "$HOME/Downloads/azure-agent.tar.gz" https://download.agent.dev.azure.com/agent/5.277.0/vsts-agent-osx-arm64-5.277.0.tar.gz
+mkdir "$HOME/myagent"
+tar xf "$HOME/Downloads/azure-agent.tar.gz" -C "$HOME/myagent"
+rm "$HOME/Downloads/azure-agent.tar.gz"
 rm setup-box.sh
