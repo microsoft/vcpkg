@@ -36,6 +36,15 @@ vcpkg_cmake_config_fixup(
     DO_NOT_DELETE_PARENT_CONFIG_PATH
 )
 
+# Fix bare "flatccrt" in INTERFACE_LINK_LIBRARIES - Windows needs the full path
+# Tracked upstream at https://github.com/apache/arrow-nanoarrow/issues/922
+if ("ipc" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/nanoarrow/nanoarrow-targets.cmake"
+        [[\$<LINK_ONLY:flatccrt>]]
+        [[\$<LINK_ONLY:${_IMPORT_PREFIX}/lib/flatccrt.lib>]]
+    )
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
