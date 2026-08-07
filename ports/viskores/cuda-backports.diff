@@ -1,3 +1,343 @@
+diff --git a/viskores/exec/cuda/internal/ExecutionPolicy.h b/viskores/exec/cuda/internal/ExecutionPolicy.h
+index 183ed0a4c..9eafcea14 100644
+--- a/viskores/exec/cuda/internal/ExecutionPolicy.h
++++ b/viskores/exec/cuda/internal/ExecutionPolicy.h
+@@ -24,23 +24,81 @@
+ 
+ #include <viskores/exec/cuda/internal/ThrustPatches.h>
+ VISKORES_THIRDPARTY_PRE_INCLUDE
++#include <thrust/distance.h>
+ #include <thrust/execution_policy.h>
++#include <thrust/functional.h>
+ #include <thrust/pair.h>
+ #include <thrust/sort.h>
+ #include <thrust/system/cuda/execution_policy.h>
+ #include <thrust/system/cuda/memory.h>
++#include <thrust/version.h>
++#if THRUST_VERSION >= 300100
++#include <cuda/std/functional>
++#include <cuda/std/iterator>
++#endif
+ VISKORES_THIRDPARTY_POST_INCLUDE
+ 
+ #define ThrustCudaPolicyPerThread ::thrust::cuda::par.on(cudaStreamPerThread)
+ 
++namespace viskores
++{
++namespace exec
++{
++namespace cuda
++{
++namespace internal
++{
++
++// In Thrust 3.1, several std-like utility functions and objects in the
++// `thrust` namespace were deprecated in favor of equivalent objects
++// provided by Cuda in the `cuda:std` namespace.
++#if THRUST_VERSION >= 300100
++template <typename T>
++using ThrustLess = ::cuda::std::less<T>;
++template <typename T>
++using ThrustGreater = ::cuda::std::greater<T>;
++template <typename T>
++using ThrustEqualTo = ::cuda::std::equal_to<T>;
++template <typename T>
++using ThrustPlus = ::cuda::std::plus<T>;
++
++template <typename Iterator>
++VISKORES_EXEC_CONT auto ThrustDistance(Iterator first, Iterator last)
++  -> decltype(::cuda::std::distance(first, last))
++{
++  return ::cuda::std::distance(first, last);
++}
++#else
++template <typename T>
++using ThrustLess = ::thrust::less<T>;
++template <typename T>
++using ThrustGreater = ::thrust::greater<T>;
++template <typename T>
++using ThrustEqualTo = ::thrust::equal_to<T>;
++template <typename T>
++using ThrustPlus = ::thrust::plus<T>;
++
++template <typename Iterator>
++VISKORES_EXEC_CONT auto ThrustDistance(Iterator first, Iterator last)
++  -> decltype(::thrust::distance(first, last))
++{
++  return ::thrust::distance(first, last);
++}
++#endif
++
++}
++}
++}
++} // namespace viskores::exec::cuda::internal
++
+ struct viskores_cuda_policy : thrust::device_execution_policy<viskores_cuda_policy>
+ {
+ };
+ 
+ //Specialize the sort call for cuda pointers using less/greater operators.
+ //The purpose of this is that for 32bit types (UInt32,Int32,Float32) thrust
+-//will call a super fast radix sort only if the operator is thrust::less
+-//or thrust::greater.
++//will call a super fast radix sort only if the operator is the default less
++//or greater comparator.
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+ template <typename T>
+ __host__ __device__ void sort(
+@@ -50,7 +108,8 @@ __host__ __device__ void sort(
+   viskores::exec::cuda::internal::WrappedBinaryPredicate<T, viskores::SortLess> comp)
+ { //sort for concrete pointers and less than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort(ThrustCudaPolicyPerThread, first, last, thrust::less<T>());
++  return thrust::sort(
++    ThrustCudaPolicyPerThread, first, last, viskores::exec::cuda::internal::ThrustLess<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+@@ -63,34 +122,43 @@ __host__ __device__ void sort_by_key(
+   viskores::exec::cuda::internal::WrappedBinaryPredicate<T, viskores::SortLess> comp)
+ { //sort for concrete pointers and less than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort_by_key(
+-    ThrustCudaPolicyPerThread, first, last, values_first, thrust::less<T>());
++  return thrust::sort_by_key(ThrustCudaPolicyPerThread,
++                             first,
++                             last,
++                             values_first,
++                             viskores::exec::cuda::internal::ThrustLess<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+ template <typename T>
+-__host__ __device__ void sort(
+-  const viskores_cuda_policy& exec,
+-  T* first,
+-  T* last,
+-  viskores::exec::cuda::internal::WrappedBinaryPredicate<T, ::thrust::less<T>> comp)
++__host__ __device__ void sort(const viskores_cuda_policy& exec,
++                              T* first,
++                              T* last,
++                              viskores::exec::cuda::internal::WrappedBinaryPredicate<
++                                T,
++                                viskores::exec::cuda::internal::ThrustLess<T>> comp)
+ { //sort for concrete pointers and less than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort(ThrustCudaPolicyPerThread, first, last, thrust::less<T>());
++  return thrust::sort(
++    ThrustCudaPolicyPerThread, first, last, viskores::exec::cuda::internal::ThrustLess<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+ template <typename T, typename RandomAccessIterator>
+-__host__ __device__ void sort_by_key(
+-  const viskores_cuda_policy& exec,
+-  T* first,
+-  T* last,
+-  RandomAccessIterator values_first,
+-  viskores::exec::cuda::internal::WrappedBinaryPredicate<T, ::thrust::less<T>> comp)
++__host__ __device__ void sort_by_key(const viskores_cuda_policy& exec,
++                                     T* first,
++                                     T* last,
++                                     RandomAccessIterator values_first,
++                                     viskores::exec::cuda::internal::WrappedBinaryPredicate<
++                                       T,
++                                       viskores::exec::cuda::internal::ThrustLess<T>> comp)
+ { //sort for concrete pointers and less than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort_by_key(
+-    ThrustCudaPolicyPerThread, first, last, values_first, thrust::less<T>());
++  return thrust::sort_by_key(ThrustCudaPolicyPerThread,
++                             first,
++                             last,
++                             values_first,
++                             viskores::exec::cuda::internal::ThrustLess<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+@@ -102,7 +170,8 @@ __host__ __device__ void sort(
+   viskores::exec::cuda::internal::WrappedBinaryPredicate<T, viskores::SortGreater> comp)
+ { //sort for concrete pointers and greater than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort(ThrustCudaPolicyPerThread, first, last, thrust::greater<T>());
++  return thrust::sort(
++    ThrustCudaPolicyPerThread, first, last, viskores::exec::cuda::internal::ThrustGreater<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+@@ -115,34 +184,43 @@ __host__ __device__ void sort_by_key(
+   viskores::exec::cuda::internal::WrappedBinaryPredicate<T, viskores::SortGreater> comp)
+ { //sort for concrete pointers and greater than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort_by_key(
+-    ThrustCudaPolicyPerThread, first, last, values_first, thrust::greater<T>());
++  return thrust::sort_by_key(ThrustCudaPolicyPerThread,
++                             first,
++                             last,
++                             values_first,
++                             viskores::exec::cuda::internal::ThrustGreater<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+ template <typename T>
+-__host__ __device__ void sort(
+-  const viskores_cuda_policy& exec,
+-  T* first,
+-  T* last,
+-  viskores::exec::cuda::internal::WrappedBinaryPredicate<T, ::thrust::greater<T>> comp)
++__host__ __device__ void sort(const viskores_cuda_policy& exec,
++                              T* first,
++                              T* last,
++                              viskores::exec::cuda::internal::WrappedBinaryPredicate<
++                                T,
++                                viskores::exec::cuda::internal::ThrustGreater<T>> comp)
+ { //sort for concrete pointers and greater than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort(ThrustCudaPolicyPerThread, first, last, thrust::greater<T>());
++  return thrust::sort(
++    ThrustCudaPolicyPerThread, first, last, viskores::exec::cuda::internal::ThrustGreater<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+ template <typename T, typename RandomAccessIterator>
+-__host__ __device__ void sort_by_key(
+-  const viskores_cuda_policy& exec,
+-  T* first,
+-  T* last,
+-  RandomAccessIterator values_first,
+-  viskores::exec::cuda::internal::WrappedBinaryPredicate<T, ::thrust::greater<T>> comp)
++__host__ __device__ void sort_by_key(const viskores_cuda_policy& exec,
++                                     T* first,
++                                     T* last,
++                                     RandomAccessIterator values_first,
++                                     viskores::exec::cuda::internal::WrappedBinaryPredicate<
++                                       T,
++                                       viskores::exec::cuda::internal::ThrustGreater<T>> comp)
+ { //sort for concrete pointers and greater than op
+   //this makes sure that we invoke the thrust radix sort and not merge sort
+-  return thrust::sort_by_key(
+-    ThrustCudaPolicyPerThread, first, last, values_first, thrust::greater<T>());
++  return thrust::sort_by_key(ThrustCudaPolicyPerThread,
++                             first,
++                             last,
++                             values_first,
++                             viskores::exec::cuda::internal::ThrustGreater<T>());
+ }
+ 
+ VISKORES_SUPPRESS_EXEC_WARNINGS
+diff --git a/viskores/exec/cuda/internal/IteratorFromArrayPortal.h b/viskores/exec/cuda/internal/IteratorFromArrayPortal.h
+index 7b90a75fb..d4d136bd1 100644
+--- a/viskores/exec/cuda/internal/IteratorFromArrayPortal.h
++++ b/viskores/exec/cuda/internal/IteratorFromArrayPortal.h
+@@ -20,6 +20,7 @@
+ 
+ #include <viskores/Pair.h>
+ #include <viskores/Types.h>
++#include <viskores/exec/cuda/internal/ThrustPatches.h>
+ #include <viskores/internal/ArrayPortalValueReference.h>
+ #include <viskores/internal/ExportMacros.h>
+ 
+@@ -128,8 +129,7 @@ private:
+ //must be treated as references. So do to do that properly we need to specialize
+ //is_non_const_reference to state an ArrayPortalValueReference by value is valid
+ //for writing
+-namespace thrust
+-{
++VISKORES_THRUST_NAMESPACE_BEGIN
+ namespace detail
+ {
+ 
+@@ -138,10 +138,10 @@ struct is_non_const_reference;
+ 
+ template <typename T>
+ struct is_non_const_reference<viskores::internal::ArrayPortalValueReference<T>>
+-  : thrust::detail::true_type
++  : ::thrust::detail::true_type
+ {
+ };
+ }
+-}
++VISKORES_THRUST_NAMESPACE_END
+ 
+ #endif //viskores_exec_cuda_internal_IteratorFromArrayPortal_h
+diff --git a/viskores/exec/cuda/internal/ThrustPatches.h b/viskores/exec/cuda/internal/ThrustPatches.h
+index 67e5c369c..4bafd7cba 100644
+--- a/viskores/exec/cuda/internal/ThrustPatches.h
++++ b/viskores/exec/cuda/internal/ThrustPatches.h
+@@ -25,12 +25,21 @@
+ // Needed so we can conditionally include components
+ #include <thrust/version.h>
+ 
++#if THRUST_VERSION >= 101301
++#define VISKORES_THRUST_NAMESPACE_BEGIN THRUST_NAMESPACE_BEGIN
++#define VISKORES_THRUST_NAMESPACE_END THRUST_NAMESPACE_END
++#else
++#define VISKORES_THRUST_NAMESPACE_BEGIN \
++  namespace thrust                      \
++  {
++#define VISKORES_THRUST_NAMESPACE_END }
++#endif
++
+ #if THRUST_VERSION >= 100900 && THRUST_VERSION < 100906
+ //So for thrust 1.9.0+ ( CUDA 9.X+ ) the aligned_reinterpret_cast has a bug
+ //where it is not marked as __host__device__. To fix this we add a new
+ //overload for void* with the correct markup (which is what everyone calls).
+-namespace thrust
+-{
++VISKORES_THRUST_NAMESPACE_BEGIN
+ namespace detail
+ {
+ //just in-case somebody has this fix also for primitive types
+@@ -179,7 +188,7 @@ ALIGN_RE_PAIR(viskores::Int64, viskores::Float64);
+ #undef ALIGN_RE_VEC
+ #undef ALIGN_RE_PAIR
+ }
+-}
++VISKORES_THRUST_NAMESPACE_END
+ #endif //THRUST_VERSION >= 100900 && THRUST_VERSION < 100906
+ 
+ #if (THRUST_VERSION >= 100904) && (THRUST_VERSION < 100909)
+@@ -192,8 +201,7 @@ VISKORES_THIRDPARTY_PRE_INCLUDE
+ #include <thrust/mr/allocator.h>
+ #include <thrust/system/cuda/memory_resource.h>
+ VISKORES_THIRDPARTY_POST_INCLUDE
+-namespace thrust
+-{
++VISKORES_THRUST_NAMESPACE_BEGIN
+ namespace mr
+ {
+ 
+@@ -245,7 +253,7 @@ public:
+   __host__ __device__ ~stateless_resource_allocator() {}
+ };
+ }
+-}
++VISKORES_THRUST_NAMESPACE_END
+ #endif //(THRUST_VERSION >= 100904) && (THRUST_VERSION < 100909)
+ 
+ 
+@@ -273,8 +281,7 @@ class WrappedBinaryOperator;
+ }
+ } //namespace viskores::exec::cuda::internal
+ 
+-namespace thrust
+-{
++VISKORES_THRUST_NAMESPACE_BEGIN
+ namespace system
+ {
+ namespace cuda
+@@ -340,8 +347,8 @@ destructive_accumulate_n(ConcurrentGroup& g,
+ }
+ }
+ }
+-} //namespace thrust::system::cuda::detail
+-#endif //THRUST_VERSION < 100900
++VISKORES_THRUST_NAMESPACE_END //namespace thrust::system::cuda::detail
++#endif                        //THRUST_VERSION < 100900
+ 
+ #endif //CUDA enabled
+ 
 diff --git a/viskores/exec/cuda/internal/WrappedOperators.h b/viskores/exec/cuda/internal/WrappedOperators.h
 index c00f1414b..de09ad9b0 100644
 --- a/viskores/exec/cuda/internal/WrappedOperators.h
@@ -12,7 +352,7 @@ index c00f1414b..de09ad9b0 100644
  
  namespace viskores
  {
-@@ -199,30 +202,40 @@ struct WrappedBinaryPredicate
+@@ -199,30 +202,39 @@ struct WrappedBinaryPredicate
  }
  } //namespace viskores::exec::cuda::internal
  
@@ -21,9 +361,12 @@ index c00f1414b..de09ad9b0 100644
 -namespace detail
 -{
  //
- // We tell Thrust that our WrappedBinaryOperator is commutative so that we
- // activate numerous fast paths inside thrust which are only available when
- // the binary functor is commutative and the T type is is_arithmetic
+-// We tell Thrust that our WrappedBinaryOperator is commutative so that we
+-// activate numerous fast paths inside thrust which are only available when
+-// the binary functor is commutative and the T type is is_arithmetic
++// We tell Thrust/CUDA that our WrappedBinaryOperator is commutative so that we
++// activate fast paths which are only available when the binary functor is
++// commutative and the T type is is_arithmetic.
  //
  //
 +#if THRUST_VERSION >= 300300
@@ -35,8 +378,7 @@ index c00f1414b..de09ad9b0 100644
 +    ::cuda::std::is_arithmetic<T>::value;
 +}
 +#else // THRUST_VERSION < 300300
-+namespace thrust
-+{
++VISKORES_THRUST_NAMESPACE_BEGIN
 +namespace detail
 +{
  #if THRUST_VERSION >= 200500
@@ -56,7 +398,8 @@ index c00f1414b..de09ad9b0 100644
 -#endif
 +#endif // THRUST_VERSION < 200500
  }
- } //namespace thrust::detail
+-} //namespace thrust::detail
++VISKORES_THRUST_NAMESPACE_END //namespace thrust::detail
 +#endif // THRUST_VERSION < 300300
  
  #endif //viskores_exec_cuda_internal_WrappedOperators_h

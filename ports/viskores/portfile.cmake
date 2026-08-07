@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         external-fmt.diff
         no-abs-path.diff
-        cuda-backports.diff
+        cuda-backports.diff # git diff v1.1.1..v1.2.0-rc2  -- viskores/exec/cuda
         cuda-msvc-preprocessor.diff
 )
 file(REMOVE_RECURSE
@@ -17,7 +17,7 @@ file(REMOVE_RECURSE
     #[[ "${SOURCE_PATH}/viskores/thirdparty/diy" ]]
     #[[ "${SOURCE_PATH}/viskores/thirdparty/lcl" ]]
     #[[ namespace viskores:  "${SOURCE_PATH}/viskores/thirdparty/lodepng" ]]
-    #[[ anonymous namespace: q"${SOURCE_PATH}/viskores/thirdparty/loguru" ]]
+    #[[ anonymous namespace: "${SOURCE_PATH}/viskores/thirdparty/loguru" ]]
     #[[ namespace viskores:  "${SOURCE_PATH}/viskores/thirdparty/optionparser" ]]
 )
 
