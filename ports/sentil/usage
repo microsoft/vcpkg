@@ -1,12 +1,13 @@
-sentil provides CMake and pkg-config integration.
+sentil provides CMake targets:
+
+    find_package(SentilCpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Sentil::cpp)
+
+To use the C API on its own:
 
     find_package(Sentil CONFIG REQUIRED)
     target_link_libraries(main PRIVATE Sentil::sentil)
 
-With pkg-config:
+sentil provides pkg-config modules:
 
-    pkg-config --cflags --libs sentil
-
-The header is included as:
-
-    #include <sentil.h>
+    sentil
