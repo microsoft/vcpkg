@@ -9,6 +9,7 @@ vcpkg_from_github(
         libmariadb.diff
         mingw.diff
         install.diff
+        crt-linkage.diff
 )
 
 
