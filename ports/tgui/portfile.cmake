@@ -9,7 +9,9 @@ if(NOT HAS_BACKEND)
     message(FATAL_ERROR "At least one of the backend features must be selected: ${BACKEND_LST}")
 endif()
 
-if(VCPKG_TARGET_IS_IOS)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+elseif(VCPKG_TARGET_IS_IOS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
@@ -19,6 +21,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 0b692bd77bcedb4a3c61334c3a7481a70dcfdcf95e86df8bb2997f466ba04f8e5723b30093b534efc83b0c13a723d90eb909f01995ea36cb99f0227c8499aeab
     HEAD_REF 1.x
+    PATCHES
+        fix-android-install-path.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/Backends/SDL/cmake_modules") # Config available
