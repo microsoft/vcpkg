@@ -45,6 +45,7 @@
       "default-features": false
     },
     "zeromq",
-    "zlib"
+    "zlib",
+    "zstd"
   ]
 }

@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         disable-tools-apps.patch
+        use-system-zstd.patch
 )
 
 vcpkg_cmake_configure(
@@ -48,10 +49,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# zstd (always) and OpenBLAS (aarch64) are fetched as ExternalProjects at
-# build time; capture their licenses for the copyright file.
+# OpenBLAS (aarch64) is fetched as an ExternalProject at build time;
+# capture its license for the copyright file.
 set(extra_copyright_files "")
-foreach(thirdparty IN ITEMS zstd openblas)
+foreach(thirdparty IN ITEMS openblas)
     set(thirdparty_license "${CURRENT_BUILDTREE_DIR}/${thirdparty}/${thirdparty}-prefix/src/ext_${thirdparty}/LICENSE")
     if(EXISTS "${thirdparty_license}")
         file(COPY_FILE "${thirdparty_license}" "${CURRENT_BUILDTREE_DIR}/${thirdparty}-LICENSE")
