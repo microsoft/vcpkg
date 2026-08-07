@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2e5b623..bed61da 100644
+index 2bccc365eb..b4709ffd1c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -314,6 +314,15 @@ if(BUILD_SHARED_LIBS)
+@@ -356,6 +356,15 @@ if(BUILD_SHARED_LIBS)
      set_target_properties(aom PROPERTIES SOVERSION ${SO_VERSION})
      set_target_properties(aom PROPERTIES VERSION ${SO_FILE_VERSION})
    endif()
@@ -18,11 +18,11 @@ index 2e5b623..bed61da 100644
  endif()
  
  if(NOT WIN32 AND NOT APPLE)
-diff --git a/build/cmake/aom_install.cmake b/build/cmake/aom_install.cmake
-index b02c7b9..c219841 100644
---- a/build/cmake/aom_install.cmake
-+++ b/build/cmake/aom_install.cmake
-@@ -79,7 +79,7 @@ macro(setup_aom_install_targets)
+diff --git a/cmake/aom_install.cmake b/cmake/aom_install.cmake
+index a8f6d64361..6b3ccdc9fa 100644
+--- a/cmake/aom_install.cmake
++++ b/cmake/aom_install.cmake
+@@ -81,7 +81,7 @@ macro(setup_aom_install_targets)
      endif()
  
      if(BUILD_SHARED_LIBS)

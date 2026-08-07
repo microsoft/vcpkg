@@ -1,16 +1,16 @@
 {
   "name": "xcb-util-errors",
   "version": "1.0.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "XCB utility library that gives human readable names to error, event, & request codes.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": null,
   "dependencies": [
+    "libxcb",
     {
       "name": "vcpkg-make",
       "host": true
     },
-    "xcb",
     "xcb-util"
   ]
 }

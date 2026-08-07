@@ -1,5 +1,5 @@
 {
-  "schema-version": 1,
+  "schema-version": 2,
   "tools": [
     {
       "name": "python3",
@@ -83,7 +83,8 @@
       "name": "git",
       "os": "windows",
       "arch": "arm64",
-      "version": "2.7.4",
+      "version": "2.55.0.windows.3",
+      "min-version": "2.7.4",
       "executable": "clangarm64/bin/git.exe",
       "url": "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.3/PortableGit-2.55.0.3-arm64.7z.exe",
       "sha512": "9067799a4ba50e78eaac7673c887756f241f6e4b396ce54cc1c92082f9eb07449e5f4861faa3da5209e59d5cb8c80e66bb2ba0e0b836aa0ca4b9ae62b5328f35",
@@ -93,7 +94,8 @@
       "name": "git",
       "os": "windows",
       "arch": "amd64",
-      "version": "2.7.4",
+      "version": "2.55.0.windows.3",
+      "min-version": "2.7.4",
       "executable": "mingw64/bin/git.exe",
       "url": "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.3/PortableGit-2.55.0.3-64-bit.7z.exe",
       "sha512": "b217b7eca2bd02815379d5452700bcf3ebd9bdd1987d622e477c18691df71990b5cb4e967bc0ab60f6efd16b0a45558fb2ab4cf09138c929920fa51df1a4c838",
@@ -102,20 +104,17 @@
     {
       "name": "git",
       "os": "linux",
-      "version": "2.7.4",
-      "executable": ""
+      "min-version": "2.7.4"
     },
     {
       "name": "git",
       "os": "osx",
-      "version": "2.7.4",
-      "executable": ""
+      "min-version": "2.7.4"
     },
     {
       "name": "git",
       "os": "freebsd",
-      "version": "2.7.4",
-      "executable": ""
+      "min-version": "2.7.4"
     },
     {
       "name": "gsutil",
