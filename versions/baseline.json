@@ -5937,7 +5937,7 @@
       "port-version": 0
     },
     "libvips": {
-      "baseline": "8.18.2",
+      "baseline": "8.18.5",
       "port-version": 0
     },
     "libvmaf": {
