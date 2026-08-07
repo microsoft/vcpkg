@@ -135,7 +135,6 @@ atkmm:x64-windows-static-md=cascade
 atkmm:x64-windows-static=cascade
 audit:arm64-linux=fail
 awlib[graphics]:arm64-linux=cascade
-awlib[graphics]:arm64-osx=feature-fails # Broken code. See https://github.com/microsoft/vcpkg/issues/39849
 azure-kinect-sensor-sdk:arm64-linux=cascade
 babl[introspection]:arm64-linux=cascade
 bddisasm:arm64-linux=fail
