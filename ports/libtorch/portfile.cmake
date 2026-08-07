@@ -297,5 +297,11 @@ vcpkg_install_copyright(FILE_LIST
 )
 
 
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled) # torch_global_deps.dll is empty.c and just for linking deps
+# torch_global_deps is built from an empty .c file; nothing links it. It exists so that
+# Python's _load_global_deps() can dlopen it with RTLD_GLOBAL and thereby pull its own
+# link-time deps (MPI/MKL/CUDA) into the global symbol namespace, which OpenMPI-style
+# plugin dlopen needs -- see upstream Note [Global dependencies] in caffe2/CMakeLists.txt.
+# Irrelevant here (BUILD_PYTHON=OFF, and _load_global_deps returns early on Windows), but
+# upstream installs it unconditionally under BUILD_SHARED_LIBS, and being empty it exports nothing.
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 
