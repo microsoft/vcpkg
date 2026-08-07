@@ -1,0 +1,8 @@
+{
+  "name": "pipeql",
+  "version": "1.1.4",
+  "description": "Pipelined, injection-safe polyglot query language - C SDK (libpipeql)",
+  "homepage": "https://github.com/Flaxmbot/PipeQL",
+  "license": "MIT",
+  "supports": "!(x86 | arm | arm64 | uwp)"
+}

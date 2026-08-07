@@ -7832,6 +7832,10 @@
       "baseline": "2019-07-11",
       "port-version": 2
     },
+    "pipeql": {
+      "baseline": "1.1.4",
+      "port-version": 0
+    },
     "pipewire": {
       "baseline": "1.6.7",
       "port-version": 0
