@@ -2,7 +2,7 @@
   "name": "ffmpeg-bin2c",
   "version": "9.0",
   "description": "Host tool bin2c for FFmpeg build",
-  "license": "LGPL-2.1-or-later",
+  "license": "MIT",
   "supports": "native",
   "dependencies": [
     {
