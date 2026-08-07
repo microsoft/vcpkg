@@ -1,0 +1,36 @@
+diff --git a/Source/FreeImage/PSDParser.cpp b/Source/FreeImage/PSDParser.cpp
+--- a/Source/FreeImage/PSDParser.cpp
++++ b/Source/FreeImage/PSDParser.cpp
+@@ -778,12 +778,20 @@
+ 
+ 	if(_dib) {
+ 		FreeImage_Unload(_dib);
++		_dib = NULL;
++	}
++
++	// Reject corrupt Photoshop thumbnail headers.
++	if (_Width <= 0 || _Height <= 0 || _BitPerPixel <= 0
++		|| _WidthBytes != _Width * _BitPerPixel / 8) {
++		io->seek_proc(handle, block_end, SEEK_SET);
++		return iResourceSize;
+ 	}
+ 
+ 	if(_Format == 1) {
+ 		// kJpegRGB thumbnail image
+ 		_dib = FreeImage_LoadFromHandle(FIF_JPEG, io, handle);
+-		if(isBGR) {
++		if(_dib && isBGR) {
+ 			SwapRedBlue32(_dib);
+ 		}
+ 		// HACK: manually go to end of thumbnail, because (for some reason) LoadFromHandle consumes more bytes then available!
+@@ -792,6 +800,10 @@
+ 	else {
+ 		// kRawRGB thumbnail image
+ 		_dib = FreeImage_Allocate(_Width, _Height, _BitPerPixel);
++		if(!_dib) {
++			io->seek_proc(handle, block_end, SEEK_SET);
++			return iResourceSize;
++		}
+ 		BYTE* dst_line_start = FreeImage_GetScanLine(_dib, _Height - 1);//<*** flipped
+ 		BYTE* line_start = new BYTE[_WidthBytes];
+ 		const unsigned dstLineSize = FreeImage_GetPitch(_dib);
