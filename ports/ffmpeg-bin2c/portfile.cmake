@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 e858e92e5eb08d562302cde371af55917df6e1fe53994e18462a3c929a40ede1828c2bd53c2a7d65a2cfd791782ead3cd94efb2def904f49cb5dd8ab5cd4256f
+    SHA512 4327d259b2ed9cc35a6139606643bf9c9db5fb0372a9eb259fed61af50505a2b59f0c3d94c51fec89d2e0cd552a413c5f50514683931c94c429824198d56ec56
     HEAD_REF master
 )
 
@@ -18,4 +18,4 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LGPLv2.1")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/ffbuild/bin2c.c")
