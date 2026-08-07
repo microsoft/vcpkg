@@ -10140,10 +10140,6 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
-    "threadpool": {
-      "baseline": "0.2.5",
-      "port-version": 4
-    },
     "threadweaver": {
       "baseline": "6.28.0",
       "port-version": 0
