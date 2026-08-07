@@ -1,3 +1,9 @@
+# stdgpu's shared build on Windows exports no symbols and does not install its
+# DLL, so only static linkage is usable there.
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stotko/stdgpu
