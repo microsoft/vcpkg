@@ -56,10 +56,10 @@ index c3af986..3ac927f 100644
      if(SVTHEVC_FOUND)
 diff --git a/source/cmake/multilib.cmake b/source/cmake/multilib.cmake
 new file mode 100644
-index 0000000..e17cf8e
+index 0000000..9a9e169
 --- /dev/null
 +++ b/source/cmake/multilib.cmake
-@@ -0,0 +1,106 @@
+@@ -0,0 +1,112 @@
 +# multilib.cmake - Build the 10-bit and 12-bit static libraries as nested
 +# sub-builds and link them into the 8-bit API library so that a single library
 +# can switch bit depths at runtime, following the upstream
@@ -137,20 +137,6 @@ index 0000000..e17cf8e
 +    endif()
 +endforeach()
 +
-+# Define the bit-depth sub-builds as regular targets; the main library targets
-+# depend on them (see CMakeLists.txt) so that the archives exist before linking
-+function(x265_define_multilib_variant name dir)
-+    add_custom_target(${name}
-+        COMMAND "${CMAKE_COMMAND}" -S "${_multilib_source}" -B "${dir}"
-+                ${_multilib_common_args} ${ARGN}
-+        COMMAND "${CMAKE_COMMAND}" --build "${dir}" --config "$<CONFIG>"
-+        COMMENT "Building the ${name} x265 sub-library"
-+        VERBATIM)
-+endfunction()
-+
-+x265_define_multilib_variant(x265-multilib-10bit "${_multilib_root}/10bit" "-DHIGH_BIT_DEPTH=ON")
-+x265_define_multilib_variant(x265-multilib-12bit "${_multilib_root}/12bit" "-DHIGH_BIT_DEPTH=ON" "-DMAIN12=ON")
-+
 +# The nested builds produce the static archive of the x265-static target
 +# (libx265.a on non-MSVC, x265-static.lib on MSVC)
 +if(MSVC)
@@ -158,6 +144,26 @@ index 0000000..e17cf8e
 +else()
 +    set(_multilib_archive_name "libx265.a")
 +endif()
++
++# Define the bit-depth sub-builds as regular targets that declare their
++# produced archive as an output, so that the build system knows how to build
++# the archives the main library links against; the main library targets depend
++# on them (see CMakeLists.txt)
++function(x265_define_multilib_variant name dir archive)
++    add_custom_command(
++        OUTPUT "${archive}"
++        COMMAND "${CMAKE_COMMAND}" -S "${_multilib_source}" -B "${dir}"
++                ${_multilib_common_args} ${ARGN}
++        COMMAND "${CMAKE_COMMAND}" --build "${dir}" --config "$<CONFIG>"
++        COMMENT "Building the ${name} x265 sub-library"
++        VERBATIM)
++    add_custom_target(${name} DEPENDS "${archive}")
++endfunction()
++
++x265_define_multilib_variant(x265-multilib-10bit "${_multilib_root}/10bit"
++    "${_multilib_root}/10bit/${_multilib_archive_name}" "-DHIGH_BIT_DEPTH=ON")
++x265_define_multilib_variant(x265-multilib-12bit "${_multilib_root}/12bit"
++    "${_multilib_root}/12bit/${_multilib_archive_name}" "-DHIGH_BIT_DEPTH=ON" "-DMAIN12=ON")
 +
 +# Link the 10/12-bit archives into this build; the LINKED_* options enable the
 +# bit-depth dispatch in the exported C API (see encoder/api.cpp)
