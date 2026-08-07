@@ -20,11 +20,13 @@ vcpkg_from_github(
         fix-system-flatbuffers.patch
         fix-system-httplib.patch
         fix-system-nlohmann.patch
+        fix-system-concurrentqueue.patch
         fix-system-pthreadpool.patch
         fix-system-cpuinfo.patch
-        fix-system-xnnpack.patch
+        fix-disable-xnnpack.patch
         fix-system-onnx.patch
         fix-system-cutlass.patch
+        fix-fbgemm-arch-check.patch
         fix-system-fbgemm.patch
         fix-system-nnpack.patch
         fix-system-kleidiai.patch
@@ -177,17 +179,6 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND FEATURE_OPTIONS -DUSE_PRIORITIZED_TEXT_FOR_LD=OFF)
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    # PyTorch ends up reporting "USE_XNNPACK: OFF" on x86-windows anyway (some
-    # later guard flips it), but fix-system-xnnpack.patch fires at Dependencies.cmake:530
-    # while USE_XNNPACK is still ON and appends XNNPACK + microkernels-prod to
-    # Caffe2_DEPENDENCY_LIBS. That list never gets cleaned up, and the x86-windows
-    # imported targets fail the generate-time IMPORTED_IMPLIB check (x64-windows
-    # tolerates the same shape). Force the option off from the start so our patch
-    # branch is skipped entirely.
-    list(APPEND FEATURE_OPTIONS -DUSE_XNNPACK=OFF)
-endif()
-
 set(TARGET_IS_MOBILE OFF)
 if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
     set(TARGET_IS_MOBILE ON)
@@ -224,6 +215,7 @@ vcpkg_cmake_configure(
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
         -DUSE_PYTORCH_QNNPACK:BOOL=OFF
+        -DUSE_XNNPACK:BOOL=OFF   # deprecated with PyTorch Mobile; off by default upstream
         -DUSE_ITT=OFF
         -DUSE_OBSERVERS=OFF
         -DUSE_KINETO=OFF
@@ -296,7 +288,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+# miniz is a fork carrying PyTorch-specific additions (MZ_ZIP_FLAG_DO_NOT_COMPUTE_CRC32,
+# an m_pSeek hook), so it cannot be replaced by the vcpkg miniz port; it is compiled
+# into torch_cpu and needs its own notice.
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/third_party/miniz-3.0.2/LICENSE"
+)
 
 
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled) # torch_global_deps.dll is empty.c and just for linking deps

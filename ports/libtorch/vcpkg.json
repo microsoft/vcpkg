@@ -6,6 +6,7 @@
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
+    "concurrentqueue",
     "cpp-httplib",
     "cpuinfo",
     "eigen3",
@@ -56,8 +57,7 @@
     {
       "name": "vcpkg-get-python-packages",
       "host": true
-    },
-    "xnnpack"
+    }
   ],
   "default-features": [
     "blas"
