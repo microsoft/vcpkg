@@ -8,6 +8,7 @@ vcpkg_from_github(
         external-fmt.diff
         no-abs-path.diff
         cuda-backports.diff
+        cuda-msvc-preprocessor.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/thirdparty/fmt"
