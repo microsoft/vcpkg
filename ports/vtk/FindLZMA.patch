@@ -1,5 +1,14 @@
+From ee7a9fd9e32b472fe91a91a80ca8c558810c97c4 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 15:11:43 +0200
+Subject: [PATCH 02/22] lzma
+
+---
+ CMake/FindLZMA.cmake | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
 diff --git a/CMake/FindLZMA.cmake b/CMake/FindLZMA.cmake
-index 0c8c794..796558c 100644
+index 0bdf4aa0..4aca8f73 100644
 --- a/CMake/FindLZMA.cmake
 +++ b/CMake/FindLZMA.cmake
 @@ -1,3 +1,11 @@
@@ -14,3 +23,6 @@ index 0c8c794..796558c 100644
  find_path(LZMA_INCLUDE_DIR
    NAMES lzma.h
    DOC "lzma include directory")
+-- 
+2.47.3
+

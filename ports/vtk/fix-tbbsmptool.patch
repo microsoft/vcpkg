@@ -1,10 +1,19 @@
+From 0c766dad0dbd192dda1e9e99fd6cfb5d77ceaa37 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 16:58:46 +0200
+Subject: [PATCH 15/22] tbb
+
+---
+ Common/Core/SMP/TBB/vtkSMPToolsImpl.txx | 4 ++++
+ 1 file changed, 4 insertions(+)
+
 diff --git a/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx b/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx
-index e5792ee..e81d5ed 100644
+index f8a007ab..af8c70c7 100644
 --- a/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx
 +++ b/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx
-@@ -190,6 +190,10 @@ int vtkSMPToolsImpl<BackendType::TBB>::GetEstimatedNumberOfThreads();
+@@ -214,6 +214,10 @@ VTKCOMMONCORE_EXPORT int vtkSMPToolsImpl<BackendType::TBB>::GetEstimatedNumberOf
  template <>
- bool vtkSMPToolsImpl<BackendType::TBB>::GetSingleThread();
+ VTKCOMMONCORE_EXPORT bool vtkSMPToolsImpl<BackendType::TBB>::GetSingleThread();
  
 +//--------------------------------------------------------------------------------
 +template <>
@@ -13,3 +22,6 @@ index e5792ee..e81d5ed 100644
  VTK_ABI_NAMESPACE_END
  } // namespace smp
  } // namespace detail
+-- 
+2.47.3
+
