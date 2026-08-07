@@ -9781,8 +9781,8 @@
       "port-version": 0
     },
     "stdgpu": {
-      "baseline": "1.3.0-20260708",
-      "port-version": 1
+      "baseline": "1.3.0-20260807",
+      "port-version": 0
     },
     "stduuid": {
       "baseline": "1.2.3",
