@@ -8,7 +8,12 @@
   "dependencies": [
     "concurrentqueue",
     "cpp-httplib",
-    "cpuinfo",
+    {
+      "name": "cpuinfo",
+      "features": [
+        "clog"
+      ]
+    },
     "eigen3",
     {
       "name": "fbgemm",
