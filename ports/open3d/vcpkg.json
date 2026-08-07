@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "open3d",
-  "version-date": "2026-08-03",
+  "version-date": "2026-08-07",
   "description": "Open3D: A Modern Library for 3D Data Processing",
   "homepage": "https://www.open3d.org/",
   "license": "MIT",
