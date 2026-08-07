@@ -2850,7 +2850,7 @@
     },
     "enchantum": {
       "baseline": "0.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "enet": {
       "baseline": "1.3.18",
