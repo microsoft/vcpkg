@@ -19,6 +19,7 @@ vcpkg_from_github(
         fix-glog.patch
         fix-system-flatbuffers.patch
         fix-system-httplib.patch
+        fix-httplib-params.patch
         fix-system-nlohmann.patch
         fix-system-concurrentqueue.patch
         fix-system-pthreadpool.patch
