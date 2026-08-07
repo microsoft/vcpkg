@@ -1,5 +1,5 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index c3af986..e10172c 100644
+index c3af986..3ac927f 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
 @@ -753,6 +753,14 @@ if(EXTRA_LIB)
@@ -17,7 +17,7 @@ index c3af986..e10172c 100644
  if(X64 OR ARM64 OR PPC64 OR RISCV64 OR LOONGARCH64)
      # NOTE: We only officially support high-bit-depth compiles of x265
      # on 64bit architectures. Main10 plus large resolution plus slow
-@@ -1079,6 +1087,19 @@ endif()
+@@ -1079,6 +1087,24 @@ endif()
  if(EXTRA_LIB)
      target_link_libraries(x265-static ${EXTRA_LIB})
  endif()
@@ -34,21 +34,41 @@ index c3af986..e10172c 100644
 +            -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/x265-merge.cmake"
 +        VERBATIM)
 +endif()
++if(ENABLE_MULTILIB)
++    # Make sure the 10/12-bit sub-builds are done before this library is
++    # archived and merged
++    add_dependencies(x265-static x265-multilib-10bit x265-multilib-12bit)
++endif()
  if(ENABLE_LIBVMAF)
      target_link_libraries(x265-static ${VMAF})
  endif()
+@@ -1163,6 +1189,11 @@ if(ENABLE_SHARED)
+     endif()
+     if(EXTRA_LIB)
+         target_link_libraries(x265-shared ${EXTRA_LIB})
++    endif()
++    if(ENABLE_MULTILIB)
++        # Make sure the 10/12-bit sub-builds are done before linking this
++        # shared library
++        add_dependencies(x265-shared x265-multilib-10bit x265-multilib-12bit)
+     endif()
+ 	 target_link_libraries(x265-shared ${PLATFORM_LIBS})
+     if(SVTHEVC_FOUND)
 diff --git a/source/cmake/multilib.cmake b/source/cmake/multilib.cmake
 new file mode 100644
-index 0000000..fab7daf
+index 0000000..e17cf8e
 --- /dev/null
 +++ b/source/cmake/multilib.cmake
-@@ -0,0 +1,111 @@
+@@ -0,0 +1,106 @@
 +# multilib.cmake - Build the 10-bit and 12-bit static libraries as nested
 +# sub-builds and link them into the 8-bit API library so that a single library
 +# can switch bit depths at runtime, following the upstream
 +# build/linux/multilib.sh recipe.
 +#
-+# Included from the top-level CMakeLists.txt when ENABLE_MULTILIB is ON.
++# Included from the top-level CMakeLists.txt when ENABLE_MULTILIB is ON. The
++# sub-builds are defined as regular build targets so that they are only built
++# when the library is built; the resulting archives are then merged into the
++# 8-bit API library by a POST_BUILD step (see CMakeLists.txt).
 +
 +if(NOT ENABLE_MULTILIB)
 +    return()
@@ -117,27 +137,19 @@ index 0000000..fab7daf
 +    endif()
 +endforeach()
 +
-+function(x265_build_multilib_variant dir)
-+    execute_process(
++# Define the bit-depth sub-builds as regular targets; the main library targets
++# depend on them (see CMakeLists.txt) so that the archives exist before linking
++function(x265_define_multilib_variant name dir)
++    add_custom_target(${name}
 +        COMMAND "${CMAKE_COMMAND}" -S "${_multilib_source}" -B "${dir}"
 +                ${_multilib_common_args} ${ARGN}
-+        RESULT_VARIABLE _multilib_result
-+    )
-+    if(NOT _multilib_result EQUAL 0)
-+        message(FATAL_ERROR "Failed to configure the x265 multilib sub-build in ${dir}: ${_multilib_result}")
-+    endif()
-+    execute_process(
-+        COMMAND "${CMAKE_COMMAND}" --build "${dir}" --config "${CMAKE_BUILD_TYPE}"
-+        RESULT_VARIABLE _multilib_result
-+    )
-+    if(NOT _multilib_result EQUAL 0)
-+        message(FATAL_ERROR "Failed to build the x265 multilib sub-build in ${dir}: ${_multilib_result}")
-+    endif()
++        COMMAND "${CMAKE_COMMAND}" --build "${dir}" --config "$<CONFIG>"
++        COMMENT "Building the ${name} x265 sub-library"
++        VERBATIM)
 +endfunction()
 +
-+file(MAKE_DIRECTORY "${_multilib_root}")
-+x265_build_multilib_variant("${_multilib_root}/10bit" "-DHIGH_BIT_DEPTH=ON")
-+x265_build_multilib_variant("${_multilib_root}/12bit" "-DHIGH_BIT_DEPTH=ON" "-DMAIN12=ON")
++x265_define_multilib_variant(x265-multilib-10bit "${_multilib_root}/10bit" "-DHIGH_BIT_DEPTH=ON")
++x265_define_multilib_variant(x265-multilib-12bit "${_multilib_root}/12bit" "-DHIGH_BIT_DEPTH=ON" "-DMAIN12=ON")
 +
 +# The nested builds produce the static archive of the x265-static target
 +# (libx265.a on non-MSVC, x265-static.lib on MSVC)
