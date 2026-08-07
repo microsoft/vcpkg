@@ -4,12 +4,14 @@ yojimbo provides a static library and headers:
     find_library(YOJIMBO_LIBRARY yojimbo)
     find_library(NETCODE_LIBRARY netcode)
     find_library(RELIABLE_LIBRARY reliable)
+    find_library(TLSF_LIBRARY tlsf)
     find_package(unofficial-sodium CONFIG REQUIRED)
     target_include_directories(main PRIVATE ${YOJIMBO_INCLUDE_DIR})
     target_link_libraries(main PRIVATE
         ${YOJIMBO_LIBRARY}
         ${NETCODE_LIBRARY}
         ${RELIABLE_LIBRARY}
+        ${TLSF_LIBRARY}
         unofficial-sodium::sodium)
 
 On Windows, also link ws2_32 and iphlpapi.
