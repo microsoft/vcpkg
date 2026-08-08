@@ -40,6 +40,7 @@ vcpkg_from_github(
         fix-async-mm-cutlass.patch
         fix-python-package-data.patch
         fix-headeronly-glob.patch
+        fix-torch-global-deps.patch
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -296,13 +297,3 @@ vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
     "${SOURCE_PATH}/third_party/miniz-3.0.2/LICENSE"
 )
-
-
-# torch_global_deps is built from an empty .c file; nothing links it. It exists so that
-# Python's _load_global_deps() can dlopen it with RTLD_GLOBAL and thereby pull its own
-# link-time deps (MPI/MKL/CUDA) into the global symbol namespace, which OpenMPI-style
-# plugin dlopen needs -- see upstream Note [Global dependencies] in caffe2/CMakeLists.txt.
-# Irrelevant here (BUILD_PYTHON=OFF, and _load_global_deps returns early on Windows), but
-# upstream installs it unconditionally under BUILD_SHARED_LIBS, and being empty it exports nothing.
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
-
