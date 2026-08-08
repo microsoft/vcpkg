@@ -11,6 +11,8 @@ vcpkg_from_github(
         fix-c2398.patch
         fix-find-kuku.patch
         fix-log4cplus-byte-ambiguity.patch
+        # https://github.com/microsoft/APSI/issues/84
+        fix-jsoncpp-target.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
