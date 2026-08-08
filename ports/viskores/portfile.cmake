@@ -50,6 +50,7 @@ vcpkg_cmake_configure(
         -DViskores_NO_INSTALL_README_LICENSE=ON
         -DViskores_USE_DEFAULT_TYPES_FOR_VTK=ON
         -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
 )
 
 vcpkg_cmake_install()
