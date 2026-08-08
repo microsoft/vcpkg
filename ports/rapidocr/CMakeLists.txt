@@ -28,6 +28,10 @@ target_include_directories(rapidocr
         $<INSTALL_INTERFACE:include>
 )
 
+# __CLIB__ gates the whole body of src/OcrLiteCApi.cpp, so it must stay defined
+# for the C API to exist in the library at all. It also used to select
+# dllexport/dllimport in OcrLiteCApi.h, but portfile.cmake strips that storage
+# class, so consumers no longer need to define it to link.
 target_compile_definitions(rapidocr
     PRIVATE
         UNICODE
@@ -41,8 +45,6 @@ if(MSVC)
     target_compile_definitions(rapidocr PRIVATE NOMINMAX)
 endif()
 
-# Official vcpkg onnxruntime installs onnxruntime_cxx_api.h at include root;
-# upstream RapidOcrOnnx includes onnxruntime/core/session/... — fixed by patch.
 # Prefer imported targets when present; fall back to OpenCV_LIBS (pulls jpeg/png/…).
 if(TARGET opencv_core)
     set(_RAPIDOCR_OPENCV_LIBS opencv_core opencv_imgproc opencv_imgcodecs)
@@ -80,9 +82,6 @@ install(DIRECTORY include/
         PATTERN "OcrLiteJni*" EXCLUDE
 )
 
-# Flat include convenience: #include <OcrLite.h> still works if consumers add
-# include/rapidocr — also install key public headers at include/rapidocr/.
-# Provide unofficial config.
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-rapidocr-config.cmake.in"
