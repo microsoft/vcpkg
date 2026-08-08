@@ -1,5 +1,21 @@
+diff --git a/source/Makefile.in b/source/Makefile.in
+index 9e15b6a016..53330a3921 100644
+--- a/source/Makefile.in
++++ b/source/Makefile.in
+@@ -189,7 +189,10 @@ install-icu: $(INSTALLED_BUILT_FILES)
+ 	$(INSTALL_SCRIPT) $(top_srcdir)/mkinstalldirs $(DESTDIR)$(pkgdatadir)/mkinstalldirs
+ 	$(INSTALL_SCRIPT) $(top_srcdir)/install-sh $(DESTDIR)$(pkgdatadir)/install-sh
+ 	@$(MKINSTALLDIRS) $(DESTDIR)$(libdir)/pkgconfig
+-	$(INSTALL_DATA) $(ALL_PKGCONFIG_FILES) $(DESTDIR)$(libdir)/pkgconfig/
++	# icu's fallback install-sh does not support multi-file install
++	@for file in $(ALL_PKGCONFIG_FILES); do \
++	  $(INSTALL_DATA) "$${file}" $(DESTDIR)$(libdir)/pkgconfig/ ; \
++	done
+ 	$(INSTALL_DATA) $(top_srcdir)/../LICENSE $(DESTDIR)$(pkgdatadir)/LICENSE
+ ifeq ($(INSTALL_ICU_CONFIG),true)
+ 	$(INSTALL_SCRIPT) $(top_builddir)/config/icu-config $(DESTDIR)$(bindir)/icu-config
 diff --git a/source/configure b/source/configure
-index a6df219..2e1ebcf 100644
+index dfa3a091f8..8ee911d42d 100755
 --- a/source/configure
 +++ b/source/configure
 @@ -4935,12 +4935,12 @@ test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
