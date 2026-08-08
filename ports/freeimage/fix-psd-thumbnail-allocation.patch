@@ -10,7 +10,7 @@ diff --git a/Source/FreeImage/PSDParser.cpp b/Source/FreeImage/PSDParser.cpp
 +
 +	// Reject corrupt Photoshop thumbnail headers.
 +	if (_Width <= 0 || _Height <= 0 || _BitPerPixel <= 0
-+		|| _WidthBytes != _Width * _BitPerPixel / 8) {
++		|| _WidthBytes != (_Width * _BitPerPixel + 31) / 32 * 4) {
 +		io->seek_proc(handle, block_end, SEEK_SET);
 +		return iResourceSize;
  	}
