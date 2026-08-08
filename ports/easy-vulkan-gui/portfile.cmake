@@ -1,17 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Ai-finder-for-api/easy-vulkan-gui
-    REF 0.06
-    SHA512 2ee1a5df82c5d49204074e0ecf85742370b2255c4e1375831175f457341f2f80eb5dafa9182c4a2f0e3d48a22c9530acc5a931ef560538edad9cf3c3940b47fe
-    HEAD_REF main
+    REPO            Ai-finder-for-api/easy-vulkan-gui
+    REF             main
+    SHA512          7de64563e79d5ce1f85d36d9e775244b0857046492b2bfd66bff1ce64ef6e55d18b9588414bf740c3447ebfcd8c785bcff42bd9367fd514d4b5ed0dcfc1bc4c9
+    HEAD_REF        main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DVGUI_BUILD_EXAMPLES=OFF
+        -DVGUI_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME   vgui
+    CONFIG_PATH    lib/cmake/vgui
+)
+
+# Remove debug includes (duplicate of release)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+# Install license
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
