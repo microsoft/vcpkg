@@ -1,0 +1,15 @@
+diff --git a/include/fastdds/fastdds_dll.hpp b/include/fastdds/fastdds_dll.hpp
+index ec2e54882..5b0e6d77e 100644
+--- a/include/fastdds/fastdds_dll.hpp
++++ b/include/fastdds/fastdds_dll.hpp
+@@ -18,6 +18,10 @@
+ 
+ #include <fastdds/config.hpp>
+ 
++#if defined(_WIN32) && !defined(FASTDDS_NO_LIB)
++#define FASTDDS_NO_LIB
++#endif
++
+ // normalize macros
+ #if !defined(FASTDDS_DYN_LINK) && !defined(FASTDDS_STATIC_LINK) \
+     && !defined(EPROSIMA_ALL_DYN_LINK) && !defined(EPROSIMA_ALL_STATIC_LINK)

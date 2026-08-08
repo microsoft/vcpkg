@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-deps.patch
+        disable-autolink.patch
         pdb-file.patch
         disable-test.patch
         disable-werror.patch
@@ -34,14 +35,19 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/fastdds/cmake)
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # copy tools from "bin" to "tools" folder
-    foreach(TOOL "fast-discovery-server-1.0.1.exe" "fastdds.bat" "ros-discovery.bat")
+    vcpkg_copy_tools(TOOL_NAMES "fast-discovery-server-1.0.1" AUTO_CLEAN)
+    file(INSTALL "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fast-discovery-server-1.0.1.exe"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+        RENAME "fast-discovery-server.exe"
+    )
+
+    foreach(TOOL "fastdds.bat" "ros-discovery.bat")
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
     endforeach()
 
-    # remove tools from debug builds
-    foreach(TOOL "fast-discovery-serverd-1.0.1.exe" "fastdds.bat" "ros-discovery.bat")
+    foreach(TOOL "fast-discovery-server.exe" "fast-discovery-serverd-1.0.1.exe" "fastdds.bat" "ros-discovery.bat")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
         if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
             file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
         endif()
@@ -51,7 +57,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery.bat" "%dir%\\..\\tools\\fastdds\\fastdds.py" "%dir%\\..\\fastdds\\fastdds.py")
 
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 elseif(VCPKG_TARGET_IS_LINUX)
     # copy tools from "bin" to "tools" folder
     foreach(TOOL "fast-discovery-server-1.0.1" "fast-discovery-server" "fastdds" "ros-discovery")
@@ -85,4 +90,13 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/thirdparty/boost/LICENSE.TXT"
+        "${SOURCE_PATH}/thirdparty/filewatch/LICENSE"
+        "${SOURCE_PATH}/thirdparty/optionparser/optionparser.hpp"
+        "${SOURCE_PATH}/thirdparty/optionparser/optionparser/optionparser.h"
+        "${SOURCE_PATH}/thirdparty/taocpp-pegtl/pegtl.hpp"
+        "${SOURCE_PATH}/src/cpp/rtps/persistence/sqlite3.h"
+)
