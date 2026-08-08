@@ -6941,8 +6941,8 @@
       "port-version": 2
     },
     "nanoarrow": {
-      "baseline": "0.8.0",
-      "port-version": 2
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "nanobench": {
       "baseline": "4.3.11",
