@@ -103,22 +103,15 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
 - [ ] Set the desktop wallpaper to a fixed color from Settings -> Wallpaper . (This makes the KVM a lot easier to use :) )
 - [ ] Disable automatic updates in the VM: Settings -> General -> Automatic Updates -> Disable them all
 - [ ] Enable remote login in the VM: Settings -> General -> Sharing -> Remote Login
-- [ ] Allow the guest's `builduser` account to use sudo without a password, and install Xcode. In the host's KVM terminal, with the VM running:
-    ```
-    ssh-keygen -R buildusers-Virtual-Machine.local
-    scp ~/Xcode_26.6_Apple_silicon.xip builduser@buildusers-Virtual-Machine.local:Xcode.xip
-    ssh builduser@buildusers-Virtual-Machine.local
-    printf 'builduser\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/builduser'
-    sudo chmod 0440 '/etc/sudoers.d/builduser'
-    sudo mdutil -ad
-    xip --expand Xcode.xip
-    sudo mv Xcode.app /Applications/Xcode.app
-    rm Xcode.xip
-    exit
+- [ ] Install Xcode from the host's vcpkg clone. This prompts for the guest password to install an
+    SSH key and enable passwordless sudo, then transfers and expands Xcode:
+    ```sh
+    cd ~/vcpkg/scripts/azure-pipelines/osx
+    ./host-install-xcode.sh
     ```
 - [ ] Open Xcode from Applications in the guest GUI. Uncheck the "code completion model" and accept the EULA.
-- [ ] Run the guest setup script from the host's vcpkg clone. The script transfers the downloaded
-      Command Line Tools installer to the guest as `clt.dmg`:
+- [ ] After completing the Xcode GUI step, run the guest preparation script. It installs the Command
+    Line Tools, build dependencies, and the Azure Pipelines agent:
     ```sh
     cd ~/vcpkg/scripts/azure-pipelines/osx
     ./host-prepare-guest.sh
@@ -200,7 +193,6 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```
 - [ ] In the host's KVM terminal, run the guest deploy script from the vcpkg clone with the access token/OAuth token from the `az account get-access-token` command above. The script derives the Azure DevOps agent name from a host name in the form `vcpkg-m4-NNN` and stops with an error if the host name or agent pool cannot be determined unambiguously:
     ```sh
-    ssh-keygen -R buildusers-Virtual-Machine.local
     ~/vcpkg/scripts/azure-pipelines/osx/host-register-guest.sh TOKEN-GOES-HERE
     ```
 - [ ] After successful registration, the script will cleanly shut down the VM. If registration fails,

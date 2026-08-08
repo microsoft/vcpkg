@@ -7,7 +7,7 @@ hdiutil detach /Volumes/setup-installer
 rm clt.dmg
 sudo xcode-select -s /Applications/Xcode.app
 curl -fsSL -o "$HOME/Downloads/install-homebrew.sh" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-/bin/bash "$HOME/Downloads/install-homebrew.sh"
+NONINTERACTIVE=1 /bin/bash "$HOME/Downloads/install-homebrew.sh"
 rm "$HOME/Downloads/install-homebrew.sh"
 (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> "$HOME/.zprofile"
 eval "$(/opt/homebrew/bin/brew shellenv)"

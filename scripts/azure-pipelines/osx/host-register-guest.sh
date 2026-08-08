@@ -32,7 +32,10 @@ case "$POOL" in
 esac
 # on arm64, DNS works
 export SSH_COOKIE=builduser@buildusers-Virtual-Machine.local
+mkdir -p "$HOME/.ssh"
+touch "$HOME/.ssh/known_hosts"
+ssh-keygen -R buildusers-Virtual-Machine.local -f "$HOME/.ssh/known_hosts"
 echo "POOL: $POOL"
 echo "SSH_COOKIE: $SSH_COOKIE"
-ssh $SSH_COOKIE -o "StrictHostKeyChecking=no" -i "$HOME"/vcpkg-osx-*-arm64/id_guest "\$HOME/myagent/config.sh --unattended --url https://dev.azure.com/vcpkg --work \$HOME/Data/work --auth pat --token $1 --pool $POOL --agent $AGENT --replace --acceptTeeEula"
-ssh $SSH_COOKIE -o "StrictHostKeyChecking=no" -i "$HOME"/vcpkg-osx-*-arm64/id_guest "sudo shutdown -h now"
+ssh -o "StrictHostKeyChecking=no" -i "$HOME"/vcpkg-osx-*-arm64/id_guest "$SSH_COOKIE" "\$HOME/myagent/config.sh --unattended --url https://dev.azure.com/vcpkg --work \$HOME/Data/work --auth pat --token $1 --pool $POOL --agent $AGENT --replace --acceptTeeEula"
+ssh -o "StrictHostKeyChecking=no" -i "$HOME"/vcpkg-osx-*-arm64/id_guest "$SSH_COOKIE" "sudo shutdown -h now"
