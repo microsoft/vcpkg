@@ -10,6 +10,13 @@ Before publishing the VM update changes, update the Azure Agent URI in
 agent pool, selecting "New agent", picking macOS, and copying the link. For example:
 https://download.agent.dev.azure.com/agent/5.277.0/vsts-agent-osx-arm64-5.277.0.tar.gz
 
+Install and enable Homebrew on each host before cloning vcpkg:
+
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
 Publish the changes to a fork and branch that the hosts can access. Keep a clone of
 `microsoft/vcpkg` on each host as `origin`, add the operator's fork as a separate remote, and check
 out the working revision to provide the scripts used by these instructions:
@@ -30,8 +37,6 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
 
 ### Prerequisites
 
-- [ ] [macosvm](https://github.com/s-u/macosvm) allow-listed
-  by macOS for arm64.
 - [ ] The matching macOS IPSW, Xcode 26.6 `.xip`, and Xcode 26.6 Command Line Tools `.dmg`
     uploaded to the `assets` container in the `vcpkgimageminting` storage account.
 - [ ] PowerShell 7.x, Azure CLI, and `az login` with your Microsoft corp credentials on a workstation
@@ -43,7 +48,7 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
       and delete one of the agents that are idle.
 - [ ] Go to that machine in the KVM. (Passwords are stored as secrets in the CPP_GITHUB\vcpkg\vcpkgmm-passwords key vault)
 - [ ] Update the macos host
-- [ ] Prepare the host. This installs Homebrew and AzCopy if needed, and installs `macosvm` to `~`:
+- [ ] Prepare the host. This enables Homebrew, installs AzCopy if needed, and installs `macosvm` to `~`:
     ```sh
     ~/vcpkg/scripts/azure-pipelines/osx/host-prepare.sh
     ```
@@ -158,7 +163,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] Log in to the machine using the KVM.
 - [ ] Check for software updates in macOS system settings
 - [ ] Ensure the host's vcpkg clone is at the published working revision, then prepare the host. This
-      installs Homebrew and AzCopy if needed, and installs `macosvm` to `~`:
+    enables Homebrew, installs AzCopy if needed, and installs `macosvm` to `~`:
     ```sh
     git -C ~/vcpkg fetch <WORKING-REMOTE> <WORKING-BRANCH>
     git -C ~/vcpkg checkout --detach FETCH_HEAD

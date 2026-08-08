@@ -1,11 +1,9 @@
 #!/bin/sh
 set -e
 
-if ! command -v brew >/dev/null 2>&1; then
-    installer="$(mktemp)"
-    curl -fsSL -o "$installer" https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
-    NONINTERACTIVE=1 /bin/bash "$installer"
-    rm "$installer"
+if [ ! -x /opt/homebrew/bin/brew ]; then
+    echo "Homebrew must be installed on the host before running this script" >&2
+    exit 1
 fi
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
