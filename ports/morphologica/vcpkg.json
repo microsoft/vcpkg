@@ -1,6 +1,7 @@
 {
   "name": "morphologica",
   "version": "4.1",
+  "port-version": 1,
   "description": "C++ header-only graphing and data visualization with Modern OpenGL",
   "homepage": "https://github.com/ABRG-Models/morphologica",
   "license": "Apache-2.0",
