@@ -125,6 +125,7 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
     ```
 - [ ] In the host's KVM terminal, package the VM into an archive:
     ```sh
+    cd ~
     aa archive -d vcpkg-osx-2026-08-07-arm64 -o vcpkg-osx-2026-08-07-arm64.aar -enable-holes
     ```
 - [ ] In PowerShell on a workstation, generate the AzCopy upload command:
@@ -162,7 +163,8 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     git -C ~/vcpkg checkout --detach FETCH_HEAD
     ~/vcpkg/scripts/azure-pipelines/osx/host-prepare.sh
     ```
-- [ ] Skip if this is the image building machine. In PowerShell on the host, mint a SAS token and generate the azcopy command with:
+- [ ] Skip if this is the image building machine. In PowerShell on a workstation, mint a SAS token
+    and generate the AzCopy command with:
     ```powershell
     function Get-AzCopyReadCommand {
         Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
@@ -177,7 +179,8 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 
     Get-AzCopyReadCommand -FileName vcpkg-osx-2026-08-07-arm64.aar
     ```
-    Paste the generated command into the host's KVM terminal, then run:
+    In the host's KVM terminal, use the KVM software's "paste from clipboard" function to paste and
+    run the generated command, then run:
     ```sh
     # (The azcopy command line generated above)
     aa extract -d vcpkg-osx-<DATE>-arm64 -i ./vcpkg-osx-<DATE>-arm64.aar -enable-holes
@@ -187,11 +190,16 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     cd ~/vcpkg-osx-<DATE>-arm64
     ~/macosvm ./vm.json
     ```
-- [ ] In PowerShell on the host, generate an access token to add the agent to the pool. Use the KVM software's "paste from clipboard" function for any sign-in data needed on the host:
+- [ ] In PowerShell on a workstation, generate a short-lived access token to add the agent to the
+    pool:
     ```pwsh
     az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken --output tsv
     ```
-- [ ] In the host's KVM terminal, run the guest deploy script from the vcpkg clone with the access token/OAuth token from the `az account get-access-token` command above. The script accepts a host name in the form `vcpkg-m4-NNN` case-insensitively, registers the Azure DevOps agent as `VCPKG-M4-NNN`, and stops with an error if the host name or agent pool cannot be determined unambiguously:
+- [ ] In the host's KVM terminal, use the KVM software's "paste from clipboard" function to paste
+    the short-lived access token into the guest deploy command from the vcpkg clone. The script
+    accepts a host name in the form `vcpkg-m4-NNN` case-insensitively, registers the Azure DevOps
+    agent as `VCPKG-M4-NNN`, and stops with an error if the host name or agent pool cannot be
+    determined unambiguously:
     ```sh
     ~/vcpkg/scripts/azure-pipelines/osx/host-register-guest.sh TOKEN-GOES-HERE
     ```
