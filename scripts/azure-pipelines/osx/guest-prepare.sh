@@ -17,4 +17,4 @@ curl -fsSL -o "$HOME/Downloads/azure-agent.tar.gz" https://download.agent.dev.az
 mkdir "$HOME/myagent"
 tar xf "$HOME/Downloads/azure-agent.tar.gz" -C "$HOME/myagent"
 rm "$HOME/Downloads/azure-agent.tar.gz"
-rm setup-box.sh
+rm guest-prepare.sh

@@ -6,7 +6,7 @@ short-lived credentials to the host. SSH commands in this document connect from 
 guest VM, not from a developer workstation to the host.
 
 Before publishing the VM update changes, update the Azure Agent URI in
-`scripts/azure-pipelines/osx/setup-box.sh` to the current version. You can find this by going to the
+`scripts/azure-pipelines/osx/guest-prepare.sh` to the current version. You can find this by going to the
 agent pool, selecting "New agent", picking macOS, and copying the link. For example:
 https://download.agent.dev.azure.com/agent/5.277.0/vsts-agent-osx-arm64-5.277.0.tar.gz
 
@@ -45,7 +45,7 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
 - [ ] Update the macos host
 - [ ] Prepare the host. This installs Homebrew and AzCopy if needed, and installs `macosvm` to `~`:
     ```sh
-    ~/vcpkg/scripts/azure-pipelines/osx/setup-host.sh
+    ~/vcpkg/scripts/azure-pipelines/osx/host-prepare.sh
     ```
 - [ ] On a workstation, generate download commands with short-lived, blob-scoped credentials for
     the matching IPSW, Xcode archive, and Command Line Tools installer in the `assets` container:
@@ -113,11 +113,10 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
     ```
 - [ ] Open Xcode from Applications in the guest GUI. Uncheck the "code completion model" and accept the EULA.
 - [ ] Run the guest setup script from the host's vcpkg clone. The script transfers the downloaded
-            Command Line Tools installer to the guest as `clt.dmg`:
-        ```sh
+      Command Line Tools installer to the guest as `clt.dmg`:
+    ```sh
     cd ~/vcpkg/scripts/azure-pipelines/osx
-    chmod +x setup-guest.sh
-        ./setup-guest.sh
+    ./host-prepare-guest.sh
     ```
 - [ ] Shut down the VM cleanly.
 - [ ] Delete the temporary installation assets from the host:
@@ -163,7 +162,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```sh
     git -C ~/vcpkg fetch <WORKING-REMOTE> <WORKING-BRANCH>
     git -C ~/vcpkg checkout --detach FETCH_HEAD
-    ~/vcpkg/scripts/azure-pipelines/osx/setup-host.sh
+    ~/vcpkg/scripts/azure-pipelines/osx/host-prepare.sh
     ```
 - [ ] Skip if this is the image building machine. In PowerShell on the host, mint a SAS token and generate the azcopy command with:
     ```powershell
@@ -197,8 +196,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] In the host's KVM terminal, run the guest deploy script from the vcpkg clone with the access token/OAuth token from the `az account get-access-token` command above. The script derives the Azure DevOps agent name from a host name in the form `vcpkg-m4-NNN` and stops with an error if the host name or agent pool cannot be determined unambiguously:
     ```sh
     ssh-keygen -R buildusers-Virtual-Machine.local
-    chmod +x ~/vcpkg/scripts/azure-pipelines/osx/register-guest.sh
-    ~/vcpkg/scripts/azure-pipelines/osx/register-guest.sh TOKEN-GOES-HERE
+    ~/vcpkg/scripts/azure-pipelines/osx/host-register-guest.sh TOKEN-GOES-HERE
     ```
 - [ ] After successful registration, the script will cleanly shut down the VM. If registration fails,
       the VM remains running for diagnosis. In the KVM's terminal, relaunch the successfully registered
