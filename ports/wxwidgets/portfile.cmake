@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
+        libsecret-link-dirs.patch
 )
 
 # Submodule dependencies
