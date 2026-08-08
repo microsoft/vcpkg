@@ -49,6 +49,7 @@ vcpkg_cmake_configure(
         -DViskores_INSTALL_SHARE_DIR=share/${PORT}
         -DViskores_NO_INSTALL_README_LICENSE=ON
         -DViskores_USE_DEFAULT_TYPES_FOR_VTK=ON
+        -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
 )
 
 vcpkg_cmake_install()
