@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ashvardanian/StringZilla
     REF "v${VERSION}"
-    SHA512 39960839dfa6a8bfda966df06c6f8d8786754605583f9c8cf319a8c733c0fdfb9ec5d06f962873a705b051d53156f903a1652e462d04b59a014dd0ec6dcaad39
+    SHA512 3b6ddeb5d8af5f50603a3f4067293f4a9df88122e66225317d63cc88f0ccd10827eddff5c5e8efaae98710f7009bcf87d180da41111600581f9e60444dd68f86
     HEAD_REF master
 )
 
 file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/module.modulemap")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,6 +1,6 @@
 {
   "name": "ls-qpack",
-  "version": "2.6.6",
+  "version": "2.7.0",
   "description": "QPACK compression library for use with HTTP/3",
   "homepage": "https://github.com/litespeedtech/ls-qpack",
   "license": "MIT AND BSD-3-Clause",
