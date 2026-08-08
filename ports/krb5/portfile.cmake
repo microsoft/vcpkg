@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         static-deps.diff
         define-des-zeroblock.diff
+        autoconf-2.72.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

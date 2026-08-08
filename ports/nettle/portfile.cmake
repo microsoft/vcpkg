@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
         host-tools.patch
         ccas.patch
         msvc-support.patch
+        fix-c23-prototypes.patch
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)

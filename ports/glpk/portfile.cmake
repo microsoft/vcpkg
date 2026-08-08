@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${DISTFILE}"
     PATCHES
         configure.ac.patch
+        fix-c23-bool.patch
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS)

@@ -1,0 +1,18 @@
+diff --git a/groups/bsl/bsls/bsls_compilerfeatures.cpp b/groups/bsl/bsls/bsls_compilerfeatures.cpp
+index 40d367d..f3b5c46 100644
+--- a/groups/bsl/bsls/bsls_compilerfeatures.cpp
++++ b/groups/bsl/bsls/bsls_compilerfeatures.cpp
+@@ -450,9 +450,11 @@ BSLS_IDENT("$Id$ $CSID$")
+ // removing the enforcement from here.
+ # if !defined(BSLS_PLATFORM_CMP_CLANG) \
+            || BSLS_PLATFORM_CMP_VERSION >= 190000
+-#   ifndef __cpp_sized_deallocation
++#   if !defined(__apple_build_version__) && \
++       !defined(__cpp_sized_deallocation)
+ #     error __cpp_sized_deallocation is not defined
+-#   elif __cpp_sized_deallocation < 201309L
++#   elif !defined(__apple_build_version__) && \
++         __cpp_sized_deallocation < 201309L
+ #     error __cpp_sized_deallocation does not suport C++17
+ #   endif
+ #   ifndef __cpp_template_template_args

@@ -4,7 +4,12 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 907d98ea2bd2e2a43604243fc7fd6c252aa02c3fdd79e21f2a784adf821cb18107e6e23a25ad0c64329fbe84e859da5c807272759a8bcd85a37b929c80af4a13
 )
 
-vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-c23-prototypes.patch
+)
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
