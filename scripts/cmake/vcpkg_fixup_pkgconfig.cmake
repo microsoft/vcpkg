@@ -139,6 +139,22 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
         debug_message("pkg-config --exists ${package_name} output: ${output}")
     endif()
 
+    if(PCCRITIC)
+        execute_process(
+            COMMAND "${PCCRITIC}" "${arg_file}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            RESULT_VARIABLE error_var
+            ERROR_VARIABLE  output
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            ERROR_STRIP_TRAILING_WHITESPACE
+        )
+        if(NOT "${error_var}" EQUAL "0")
+            message(FATAL_ERROR "${PCCRITIC} ${arg_file} failed with error code: ${error_var}
+        output: ${output}"
+            )
+        endif()
+    endif()
+
     z_vcpkg_restore_pkgconfig_path()
 endfunction()
 
@@ -192,6 +208,8 @@ function(vcpkg_fixup_pkgconfig)
         if(NOT arg_SKIP_CHECK) # The check can only run after all files have been corrected!
             vcpkg_find_acquire_program(PKGCONFIG)
             debug_message("Using pkg-config from: ${PKGCONFIG}")
+            cmake_path(GET PKGCONFIG PARENT_PATH pkgconfig_dir)
+            find_program(PCCRITIC NAMES pccritic PATHS "${pkgconfig_dir}" NO_DEFAULT_PATH)
             foreach(file IN LISTS "arg_${config}_FILES")
                 z_vcpkg_fixup_pkgconfig_check_files("${file}" "${config}")
             endforeach()
