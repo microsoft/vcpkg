@@ -1,6 +1,6 @@
 {
   "name": "sqlpp23",
-  "version": "0.69",
+  "version": "0.70",
   "description": "A type safe embedded domain specific language for SQL queries and results in C++.",
   "homepage": "https://github.com/rbock/sqlpp23",
   "license": "BSD-2-Clause",
