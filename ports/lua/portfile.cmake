@@ -1,14 +1,13 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.lua.org/ftp/lua-${VERSION}.tar.gz"
     FILENAME "lua-${VERSION}.tar.gz"
-    SHA512 3253d2cdc929da6438095a30d66ef16a1abdbb0ada8fee238705b3b38492f14be9553640fdca6b25661e01155ba5582032e0a2ef064e4c283e85efc0a128cabe
+    SHA512 1c8cb3d7194732d7685f80a30e0804cb24dc6aee1f8d1383bb9fd5d0699b84c70b823e686555dfa8fd61a32f32c0c687a8419ff4aa285f39d4f3bf3d5cd635c0
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         vs2015-impl-c99.patch
-        fix-ios-system.patch
         uwp-no-popen.diff
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
