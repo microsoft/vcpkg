@@ -14,6 +14,10 @@ vcpkg_from_github(
         CVE-2026-55199-1762685.diff
         libssh2_priv_h_606c102.diff # required for CVE-2025-15661 fix
         CVE-2025-15661-2dae302-applied.diff
+        CVE-2026-66032-5e47761-applied.diff
+        CVE-2026-66033-a2ed82d.diff
+        CVE-2026-66034-a13bb6c-applied.diff
+        CVE-2026-66035-42e33d8-applied.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
