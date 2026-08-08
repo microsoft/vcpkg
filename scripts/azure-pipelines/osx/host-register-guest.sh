@@ -11,16 +11,16 @@ HOST_NAME=$(hostname) || {
     exit 1
 }
 HOST_NAME=${HOST_NAME%%.*}
+HOST_NAME=$(printf '%s' "$HOST_NAME" | tr '[:lower:]' '[:upper:]')
 case "$HOST_NAME" in
-    vcpkg-m4-[0-9][0-9][0-9]) ;;
+    VCPKG-M4-[0-9][0-9][0-9]) ;;
     *)
-        echo "Host name '$HOST_NAME' does not match required format 'vcpkg-m4-NNN'" >&2
+        echo "Host name '$HOST_NAME' does not match required format 'VCPKG-M4-NNN'" >&2
         exit 1
         ;;
 esac
 
-AGENT_NUMBER=${HOST_NAME#vcpkg-m4-}
-export AGENT=VCPKG-M4-$AGENT_NUMBER
+export AGENT=$HOST_NAME
 echo "THIS IS AGENT: $AGENT"
 export POOL=`echo "$HOME"/vcpkg-osx-*-arm64/ | sed -En 's/.+\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64\/$/PrOsx-\1-arm64/p'`
 case "$POOL" in

@@ -123,7 +123,11 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
         ~/Xcode_26.6_Apple_silicon.xip \
         ~/Command_Line_Tools_26.6_Apple_silicon.dmg
     ```
-- [ ] Package the VM into an archive and upload it to blob storage. In PowerShell on the host, generate the azcopy command with:
+- [ ] In the host's KVM terminal, package the VM into an archive:
+    ```sh
+    aa archive -d vcpkg-osx-2026-08-07-arm64 -o vcpkg-osx-2026-08-07-arm64.aar -enable-holes
+    ```
+- [ ] In PowerShell on a workstation, generate the AzCopy upload command:
     ```powershell
     function Get-AzCopyWriteCommand {
         Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
@@ -138,11 +142,7 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
 
     Get-AzCopyWriteCommand -FileName vcpkg-osx-2026-08-07-arm64.aar
     ```
-    Paste the generated command into the host's KVM terminal, then run:
-    ```
-    aa archive -d vcpkg-osx-<date>-arm64 -o vcpkg-osx-<date>-arm64.aar -enable-holes
-    # (The azcopy command line generated above)
-    ```
+- [ ] Paste and run the generated AzCopy command in the host's KVM terminal.
 - [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-2026-08-07-arm64`. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
 - [ ] Follow the "Deploying images" steps below for each machine in the fleet.
 
@@ -191,7 +191,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```pwsh
     az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken --output tsv
     ```
-- [ ] In the host's KVM terminal, run the guest deploy script from the vcpkg clone with the access token/OAuth token from the `az account get-access-token` command above. The script derives the Azure DevOps agent name from a host name in the form `vcpkg-m4-NNN` and stops with an error if the host name or agent pool cannot be determined unambiguously:
+- [ ] In the host's KVM terminal, run the guest deploy script from the vcpkg clone with the access token/OAuth token from the `az account get-access-token` command above. The script accepts a host name in the form `vcpkg-m4-NNN` case-insensitively, registers the Azure DevOps agent as `VCPKG-M4-NNN`, and stops with an error if the host name or agent pool cannot be determined unambiguously:
     ```sh
     ~/vcpkg/scripts/azure-pipelines/osx/host-register-guest.sh TOKEN-GOES-HERE
     ```
