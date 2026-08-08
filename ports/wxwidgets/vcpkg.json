@@ -87,7 +87,13 @@
       ]
     },
     "secretstore": {
-      "description": "Use wxSecretStore class"
+      "description": "Use wxSecretStore class",
+      "dependencies": [
+        {
+          "name": "libsecret",
+          "platform": "!windows & !osx & !ios"
+        }
+      ]
     },
     "sound": {
       "description": "Build wxSound support",
