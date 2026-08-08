@@ -1,4 +1,4 @@
-yojimbo provides a static library and headers:
+mas-bandwidth-yojimbo provides a static library and headers:
 
     find_path(YOJIMBO_INCLUDE_DIR yojimbo.h)
     find_library(YOJIMBO_LIBRARY yojimbo)
