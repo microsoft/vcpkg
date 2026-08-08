@@ -210,6 +210,24 @@ foreach(config IN LISTS configs)
     vcpkg_replace_string("${config}" "${CURRENT_INSTALLED_DIR}/debug" [[${prefix}]])
 endforeach()
 
+# wxWidgets 3.3.3's wx_get_dependencies (build/cmake/config.cmake) leaks raw
+# CMake target names into wx-config's LIBS for imported deps that lack an
+# IMPORTED_LOCATION (i.e. vcpkg's header-only NanoSVG), producing entries like
+# "-lNanoSVG::nanosvg" that later trip target_link_libraries in downstream
+# projects. Strip those; vcpkg-cmake-wrapper.cmake re-adds the real
+# NanoSVG::nanosvg{,rast} targets for static builds. Fix targeted for wx 3.3.4
+# (see wxwidgets/wxWidgets#23373).
+file(GLOB all_configs LIST_DIRECTORIES false
+    "${CURRENT_PACKAGES_DIR}/lib/wx/config/*"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/wx/config/*"
+    "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wx-config"
+    "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/wx-config")
+foreach(config IN LISTS all_configs)
+    file(READ "${config}" _cfg)
+    string(REGEX REPLACE "-l[A-Za-z0-9_+.-]+::[A-Za-z0-9_+.-]+ *" "" _cfg "${_cfg}")
+    file(WRITE "${config}" "${_cfg}")
+endforeach()
+
 # For CMake multi-config in connection with wrapper
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h")
     file(INSTALL "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h"
