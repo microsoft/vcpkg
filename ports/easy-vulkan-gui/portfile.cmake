@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            Ai-finder-for-api/easy-vulkan-gui
     REF             main
-    SHA512          7de64563e79d5ce1f85d36d9e775244b0857046492b2bfd66bff1ce64ef6e55d18b9588414bf740c3447ebfcd8c785bcff42bd9367fd514d4b5ed0dcfc1bc4c9
+    SHA512          400889a2b61701a90ab837740a08c79ff1c28c0b8cf1ddfeb9381048d9b1612d4cb0747795b3d154e86ef6b898871dcc7d396f808d6f5f0f87eb6a6a828cc2cc
     HEAD_REF        main
 )
 
