@@ -1,7 +1,0 @@
-if(NOT MSVC)
-    include(CheckLinkerFlag)
-    check_linker_flag(CXX "LINKER:--no-keep-memory" HAVE_NO_KEEP_MEMORY)
-    if(HAVE_NO_KEEP_MEMORY)
-        add_link_options("$<$<LINK_LANGUAGE:CXX>:LINKER:--no-keep-memory>")
-    endif()
-endif()
