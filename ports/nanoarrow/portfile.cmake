@@ -2,13 +2,12 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/arrow/apache-arrow-nanoarrow-${VERSION}/apache-arrow-nanoarrow-${VERSION}.tar.gz"
     FILENAME "apache-arrow-nanoarrow-${VERSION}.tar.gz"
-    SHA512 98f9f4c8dada0175e39e02d2baa01d0f63ad94636925cd289cbffa423de26bf0ede437aaa1ec10ff91e7d375e72cfddd950d040602520ab7891ab4c6337ce4f7
+    SHA512 2fbdfe3274da9dcba5e3215ba0a7ff66da9f65395d1800841f0dc9a6bbc00b8cc224f900bcb946c91969b3c6e79d132ad5077c9a537f861502c4763dbffb33b8
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES fix-flatccrt-name.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
@@ -37,7 +36,19 @@ vcpkg_cmake_config_fixup(
     DO_NOT_DELETE_PARENT_CONFIG_PATH
 )
 
+# Fix bare "flatccrt" in INTERFACE_LINK_LIBRARIES - Windows needs the full path
+# Tracked upstream at https://github.com/apache/arrow-nanoarrow/issues/922
+if ("ipc" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/nanoarrow/nanoarrow-targets.cmake"
+        [[\$<LINK_ONLY:flatccrt>]]
+        [[\$<LINK_ONLY:${_IMPORT_PREFIX}/lib/flatccrt.lib>]]
+    )
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/NOTICE.txt"
+)
