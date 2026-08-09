@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JakubMelka/ExyokiOffice
     REF "v${VERSION}"
-    SHA512 0
+    SHA512 079d90326e104d4ba4a3e4449b7fcea5cd972bc79b1dd661ec25d51e5d5af7cea601bec4b44c87628971f74a1e12adb2241c1c6937411a38ef69c1c7a100c4fc
     HEAD_REF master
 )
 
