@@ -4,6 +4,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0001-Use-libtre.patch"
         "0003-Fix-WIN32-macro-checks.patch"
         "0004-Typedef-POSIX-types-on-Windows.patch"
+        "fix-public-ssize-t.diff"
         "0005-Include-dirent.h-for-S_ISREG-and-S_ISDIR.patch"
         "0006-Remove-Wrap-POSIX-headers.patch"
         "0007-Substitute-unistd-macros-for-MSVC.patch"
