@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO goToMain/libosdp
     REF "v${VERSION}"
-    SHA512 7a3fba87b294f91f01593f2abd07ff088248598db873996d29798cdf7e7733d298547a7b4305593a26ff77eaa972e8d513ca92f6477b7fabc5f773051676f8d0
+    SHA512 6994d6d54d237d6783a9ad4bdd2f60afedcbcef2bf89b498101aa121b1aeea4108d35da639ced853c0c4bce2782a533ad00215706fa42822e7ea8acf023c65b9
     HEAD_REF master
     PATCHES
         fix-export-macros.patch
