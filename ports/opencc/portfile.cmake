@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BYVoid/OpenCC
     REF "ver.${VERSION}"
-    SHA512 713cf00931d7616994eb455eef3bc893096b5cd6d42b346aa1130591752d9612891ea3ed035bd7bd4ec7df1c90425e86375f5b3337fac11663c656c79a8f33e9
+    SHA512 6a576747ecd51f2135801bb69131e48267fa1d23aee2cfa3019b39a1567ee4d5f0b06c5298459d49b5c755c23a1b2e112c1cf02c7b097c62208e84cad376284a
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix-dependencies.patch
-        # marisa-trie/0.3.0 requires C++17, so we need to enable it
-        enable-cpp17.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
