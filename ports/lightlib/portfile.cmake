@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lev2p1/lightlib
-    REF v0.1.3
-    SHA512 01412b7e26ae7f26664086b2f38ebec03d7c2a91831778819942e04f13b7135ebf6a55ad4b087ca74a3403dce1f813d9128a0c9fada5a173fbf71fa10aa1f3ba
+    REF v0.1.4
+    SHA512 f1ef42b92909e90622cce50a1c311909fb84485a2492e1358b8f2a3c818726d6ce15082c316765355bdbefcf575ba0254a060ffa00f87c96be0ed99711c7cf6e
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Light"
-    GENERATOR "Visual Studio 18 2026"
     OPTIONS
         -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
 )
@@ -17,10 +16,16 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE 
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
+endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/lightlib)
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

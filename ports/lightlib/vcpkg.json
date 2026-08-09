@@ -1,6 +1,6 @@
 {
   "name": "lightlib",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Modern C++ MVC framework designed for creating high-performance asynchronous APIs. The framework combines the power of Boost.Asio with modern C++20/23 features",
   "homepage": "https://github.com/lev2p1/lightlib",
   "license": "LGPL-3.0-or-later",
