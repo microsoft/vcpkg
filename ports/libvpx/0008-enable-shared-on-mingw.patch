@@ -115,7 +115,7 @@ diff --git a/libs.mk b/libs.mk
  INSTALL_MAPS += src/%     $(SRC_PATH_BARE)/%
  ifeq ($(CONFIG_MSVS),yes)
  INSTALL_MAPS += $(foreach p,$(VS_PLATFORMS),$(LIBSUBDIR)/$(p)/%  $(p)/Release/%)
-@@ -335,6 +336,13 @@ EXPORT_FILE             := libvpx.def
+@@ -335,6 +336,16 @@ EXPORT_FILE             := libvpx.def
  LIBVPX_SO_SYMLINKS      :=
  LIBVPX_SO_IMPLIB        := libvpx_dll.a
  else
@@ -125,27 +125,25 @@ diff --git a/libs.mk b/libs.mk
 +EXPORT_FILE             :=
 +LIBVPX_SO_SYMLINKS      :=
 +LIBVPX_SO_IMPLIB        := libvpx.dll.a
++# PE shared libraries are runtime loadables and belong next to the executables,
++# not in the link-time library directory.
++LIBVPX_SO_INSTALL_DIR   := $(BINSUBDIR)
 +else
  LIBVPX_SO               := libvpx.so.$(SO_VERSION_MAJOR).$(SO_VERSION_MINOR).$(SO_VERSION_PATCH)
  SHARED_LIB_SUF          := .so
  EXPORT_FILE             := libvpx.ver
-@@ -344,13 +352,14 @@ LIBVPX_SO_SYMLINKS      := $(addprefix $(LIBSUBDIR)/, \
+@@ -344,6 +355,10 @@ LIBVPX_SO_SYMLINKS      := $(addprefix $(LIBSUBDIR)/, \
  endif
  endif
  endif
 +endif
++
++# ELF/Darwin/OS2 keep the shared library alongside its symlinks in $(LIBSUBDIR).
++LIBVPX_SO_INSTALL_DIR   ?= $(LIBSUBDIR)
  
  LIBS-$(CONFIG_SHARED) += $(BUILD_PFX)$(LIBVPX_SO)\
                             $(notdir $(LIBVPX_SO_SYMLINKS)) \
-                            $(if $(LIBVPX_SO_IMPLIB), $(BUILD_PFX)$(LIBVPX_SO_IMPLIB))
- $(BUILD_PFX)$(LIBVPX_SO): $(LIBVPX_OBJS) $(EXPORT_FILE)
- $(BUILD_PFX)$(LIBVPX_SO): extralibs += -lm
--$(BUILD_PFX)$(LIBVPX_SO): SONAME = libvpx.so.$(SO_VERSION_MAJOR)
-+$(BUILD_PFX)$(LIBVPX_SO): SONAME = $(LIBVPX_SO)
- $(BUILD_PFX)$(LIBVPX_SO): EXPORTS_FILE = $(EXPORT_FILE)
- 
- libvpx.def: $(call enabled,CODEC_EXPORTS)
-@@ -366,6 +375,10 @@ libvpx_dll.a: $(LIBVPX_SO)
+@@ -366,6 +381,10 @@ libvpx_dll.a: $(LIBVPX_SO)
  	$(qexec)emximp -o $@ $<
  CLEAN-OBJS += libvpx_dll.a
  
@@ -156,12 +154,12 @@ diff --git a/libs.mk b/libs.mk
  define libvpx_symlink_template
  $(1): $(2)
  	@echo "    [LN]     $(2) $$@"
-@@ -382,7 +395,7 @@ $(eval $(call libvpx_symlink_template,\
+@@ -382,7 +401,7 @@ $(eval $(call libvpx_symlink_template,\
  
  
  INSTALL-LIBS-$(CONFIG_SHARED) += $(LIBVPX_SO_SYMLINKS)
 -INSTALL-LIBS-$(CONFIG_SHARED) += $(LIBSUBDIR)/$(LIBVPX_SO)
-+INSTALL-LIBS-$(CONFIG_SHARED) += $(BINSUBDIR)/$(LIBVPX_SO)
++INSTALL-LIBS-$(CONFIG_SHARED) += $(LIBVPX_SO_INSTALL_DIR)/$(LIBVPX_SO)
  INSTALL-LIBS-$(CONFIG_SHARED) += $(if $(LIBVPX_SO_IMPLIB),$(LIBSUBDIR)/$(LIBVPX_SO_IMPLIB))
  
  
