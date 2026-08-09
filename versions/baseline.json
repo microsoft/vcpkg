@@ -3326,7 +3326,7 @@
     },
     "gapp": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gasol": {
       "baseline": "2018-01-04",
