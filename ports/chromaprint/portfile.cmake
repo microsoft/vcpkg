@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         pkgconfig-dependencies.diff
         pkgconfig-cxx-linkage.diff
+        static-windows-dependencies.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/3rdparty")
 
