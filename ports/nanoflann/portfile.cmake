@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jlblancoc/nanoflann
     REF "${VERSION}"
-    SHA512 f7340b4f0126f3e3af6729d4fdbd9c21d91f9a49bde4d1be2042bde051c736f5b40fbe2174d0792d4d0aefe6069c6330d904b50bc6d361b18812f1de42969b2c
+    SHA512 bee1b914404d51537a8e572e3fe005d8ceeba7ef09eefd26997f4ef1caa0806c07c816465e79e58b23a6fd324671cf2e0d272692e0b6f9624a6cc3e37bde7c8a
     HEAD_REF master
 )
 
