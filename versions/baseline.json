@@ -7565,7 +7565,7 @@
       "port-version": 0
     },
     "openxr-loader": {
-      "baseline": "1.1.60",
+      "baseline": "1.1.62",
       "port-version": 0
     },
     "openzl": {
