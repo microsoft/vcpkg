@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"
     FILENAME "calceph-${VERSION}.tar.gz"
-    SHA512 d3f17a302dafee243a3c7698dd5b7e67550ba070cd3217c399e2cee5f90486d2be394ddcfe6dcc1b72f980e212d19bda50c4057fca05b032f6558794f191935a
+    SHA512 70a7d3d77bad40278ceafc37cef9639b3a81870d768a373f80654b973a590551eb9587e80ff7da999ef36c4b753ff23acb5d8947db338d57c2c74e4909cc716f
 )
 
 vcpkg_extract_source_archive(
@@ -9,7 +9,6 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         disable-gnu-source.diff
-        find-mathlib.diff
 )
 
 vcpkg_cmake_configure(

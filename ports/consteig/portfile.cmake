@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MitchellThompkins/consteig
     REF "${VERSION}"
-    SHA512 5ac9458afcdf3e4dd9827eadfc84e0328b60bf9f075ec743d7517ad2205bd7d9a11b0b154ca5be1d1e61273700743379c1118be6ca5b50cbb6c9c3f41224dc97
+    SHA512 8cb4d324eb11b1dd873e60ca47ddcc082fdfffa08723387fc47abd93f7eb14cb27eb148d66be7a59588f4ee55c4aac585752ffcb9c0f95fac6f42cb8a11e1a92
     HEAD_REF main
 )
 

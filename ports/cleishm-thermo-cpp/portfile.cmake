@@ -2,14 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cleishm/thermo-cpp
     REF "v${VERSION}"
-    SHA512 cd0c21ea0450ee829e928bca16f662d2d6a66bffa11b10337d45ce7b310a158b28b22d94aa9049ce66097f72cba862b6ad0b6de8a47a5b42364e8deffa6ca55c
+    SHA512 45b8801f95990b7290ac8230fba81965364e3166fa5d71585c680f04db816469dbeca41683dc1d5fae7e6214a090d36bdb4e6f32ded23bf95aeffd74f74b8194
     HEAD_REF main
+    PATCHES
+        001-fix-flags.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DTHERMO_BUILD_TESTS=OFF
+        -DTHERMO_BUILD_DOCS=OFF
 )
 
 vcpkg_cmake_install()

@@ -1,16 +1,16 @@
 {
   "name": "xcb-image",
   "version": "0.4.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "XCB port of Xlib's XImage and XShmImage functions.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": null,
   "dependencies": [
+    "libxcb",
     {
       "name": "vcpkg-make",
       "host": true
     },
-    "xcb",
     "xcb-util"
   ]
 }

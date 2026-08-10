@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aliyun/alibabacloud-oss-cpp-sdk-v2
     REF "${VERSION}"
-    SHA512 d5bc33e237dcf5a74327e35c4550e83eb7d8cf1ced7dbe82fc72bb46ea201dd7a069145711dfa4f949e21938178f712cac2e147114e7bd0d3fb307a38824d672
+    SHA512 f3dac1785188a65a90e53c7f152882387e571a502cece1094ce3d26a0edc1e9d6d87b34b16babe6c1e1527940b652629dd024f21c85b4598a3db49a20dc680bd
     HEAD_REF main
-    PATCHES
-        fix-unused-variables.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openssl     USE_SYSTEM_OPENSSL
         encryption  ENABLE_ENCRYPTION
         rtti        ENABLE_RTTI
+        tinyxml2    USE_SYSTEM_TINYXML2
 )
 
 vcpkg_cmake_configure(
@@ -33,11 +32,4 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME alibabacloud_oss_v2 CONFIG_PATH lib/cmake/
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(
-    FILE_LIST "${SOURCE_PATH}/LICENSE"
-    COMMENT [[Consult sdk/src/thirdparty/* in the original source tree for authoritative third-party notices.
-
-As of 2026-06-09, vendored code under sdk/src/thirdparty includes:
-- tinyxml2
-- base64]]
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/THIRD_PARTY_NOTICES")

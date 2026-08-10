@@ -1,0 +1,26 @@
+diff --git a/subprojects/gst-plugins-bad/gst-libs/gst/vulkan/meson.build b/subprojects/gst-plugins-bad/gst-libs/gst/vulkan/meson.build
+index 5892d16309..0fedc520ec 100644
+--- a/subprojects/gst-plugins-bad/gst-libs/gst/vulkan/meson.build
++++ b/subprojects/gst-plugins-bad/gst-libs/gst/vulkan/meson.build
+@@ -122,7 +122,7 @@ if host_system == 'darwin'
+   objcpp = meson.get_compiler('objcpp')
+   vulkan_dep = objcpp.find_library('MoltenVK', required: false)
+   if not vulkan_dep.found()
+-    vulkan_dep = dependency('MoltenVK', fallback: 'moltenvk', required: vulkan_opt)
++    vulkan_dep = dependency('MoltenVK', required: vulkan_opt)
+     # We need this to find libMoltenVK.dylib when installed
+     vulkan_plugin_kwargs += {'install_rpath': '@loader_path/..'}
+   endif
+diff --git a/subprojects/gst-plugins-bad/sys/applemedia/meson.build b/subprojects/gst-plugins-bad/sys/applemedia/meson.build
+index 1743b1a32c..adcf1aef8f 100644
+--- a/subprojects/gst-plugins-bad/sys/applemedia/meson.build
++++ b/subprojects/gst-plugins-bad/sys/applemedia/meson.build
+@@ -150,7 +150,7 @@ if gstvulkan_dep.found() and not vulkan_option.disabled()
+   if moltenvk_dep.found()
+     have_mvk_header = objcpp.has_header('MoltenVK/vk_mvk_moltenvk.h', required: vk_required)
+   else
+-    moltenvk_dep = dependency('MoltenVK', fallback: 'moltenvk', required: vk_required)
++    moltenvk_dep = dependency('MoltenVK', required: vk_required)
+     have_mvk_header = true
+   endif
+   metal_dep = dependency('Metal', required: vk_required)
