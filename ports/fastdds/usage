@@ -2,4 +2,3 @@ fastdds provides CMake targets:
 
   find_package(fastdds CONFIG REQUIRED)
   target_link_libraries(main PRIVATE fastdds)
-    

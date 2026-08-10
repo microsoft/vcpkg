@@ -1,13 +1,15 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("Warning: `glaze` requires Clang15+ or GCC 12+ on Linux")
+    message("Warning: `glaze` requires Clang 17+ or GCC 13+ on Linux")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 77cbede7ce25165eb5cbfb48501af78d1d2e3deb85f846b5e98bdd2931702d4f5d6bdeb720c1119417f711e2c5f4dfecdfa5271771024047828d931ad53d311b
+    SHA512 564fc3bfef1a60f8b61ba91007beb9985079d72cf350dd10108c6960949e56908c11d7ad47607c6d129b71841b4cf2f7d7bf8aa66525d957fd6a19957900d94e
     HEAD_REF main
+    PATCHES
+        001-fix-asio.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,10 +23,13 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -Dglaze_DEVELOPER_MODE=OFF
         -Dglaze_BUILD_EXAMPLES=OFF
+        -Dglaze_EETF_FORMAT=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glaze/ext/glaze_asio.hpp" "#if __has_include(<asio.hpp>) && !defined(GLZ_USE_BOOST_ASIO)" "#if 1")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

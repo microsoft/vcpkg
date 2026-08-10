@@ -1,0 +1,11 @@
+diff --git a/cmake/duvc.pc.in b/cmake/duvc.pc.in
+index 9470fd2..1a6dd42 100644
+--- a/cmake/duvc.pc.in
++++ b/cmake/duvc.pc.in
+@@ -7,5 +7,5 @@ Description: @PROJECT_DESCRIPTION@
+ Version: @PROJECT_VERSION@
+ URL: @PROJECT_HOMEPAGE_URL@
+ 
+-Libs: -L${libdir} -lduvc
++Libs: -L${libdir} -lduvc-core -lole32 -loleaut32 -lstrmiids -lpsapi -ladvapi32
+ Cflags: -I${includedir}

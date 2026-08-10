@@ -3,15 +3,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
-    REF 52791a2fd214b2a9dc5759d36725909c1daa7f2e
-    SHA512 1e5faf17a7236c5506c08cb28be16069b11bb929bbca64ed9745ce4277d46739186ab7d6597da7437d90ed2d166d4c37ef2f3bceabe8083ef3adbb0e8e5f227e
+    REF 2b4cd91092d335a697416b2a3cb398283246849d
+    SHA512 dc0cde133604329cee4690a77a14aafa74884cf1f0afe33f7a97caf74826bad907ebd7631cdd3e733e213682d00a82b66fd53a23aff9d46cb6612d17a8b2fb01
     PATCHES
         "${INSTALL_PACKAGE_CONFIG_PATCH}"
         support-find-package.patch
         use-vcpkg.patch
         support-test.patch
         fix-missing-cstdint.patch
-        fix-cuda13-deprecation.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

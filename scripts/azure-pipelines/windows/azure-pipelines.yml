@@ -20,7 +20,7 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: PrWin-WUS
-    demands: ImageVersionOverride -equals 2026.06.10
+    demands: ImageVersionOverride -equals 2026.07.16
   timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
@@ -93,7 +93,7 @@ jobs:
     displayName: 'Ensure Node.js is available'
     condition: always()
     inputs:
-      version: '22.x'
+      version: '24.x'
   - task: PowerShell@2
     displayName: 'Build a file list for all packages'
     condition: always()

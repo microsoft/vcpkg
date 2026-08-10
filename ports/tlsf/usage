@@ -1,0 +1,6 @@
+tlsf provides a static library and a header:
+
+    find_path(TLSF_INCLUDE_DIR tlsf.h)
+    find_library(TLSF_LIBRARY tlsf)
+    target_include_directories(main PRIVATE ${TLSF_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${TLSF_LIBRARY})
