@@ -6472,6 +6472,22 @@
       "baseline": "1.0.5",
       "port-version": 0
     },
+    "mas-bandwidth-netcode": {
+      "baseline": "1.4.3",
+      "port-version": 0
+    },
+    "mas-bandwidth-reliable": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
+    "mas-bandwidth-serialize": {
+      "baseline": "1.5.0",
+      "port-version": 0
+    },
+    "mas-bandwidth-yojimbo": {
+      "baseline": "1.9.0",
+      "port-version": 0
+    },
     "matajoh-libnpy": {
       "baseline": "2.1.2",
       "port-version": 0
@@ -10307,6 +10323,10 @@
     "tl-ranges": {
       "baseline": "2022-12-07",
       "port-version": 1
+    },
+    "tlsf": {
+      "baseline": "2020-03-29",
+      "port-version": 0
     },
     "tlx": {
       "baseline": "0.6.1",
