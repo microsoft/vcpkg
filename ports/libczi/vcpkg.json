@@ -35,12 +35,6 @@
           ]
         }
       ]
-    },
-    "experimental-chunked-compression": {
-      "description": "Enable experimental chunked-compression support. This feature may change or be removed in a future libCZI release.",
-      "dependencies": [
-        "lz4"
-      ]
     }
   }
 }

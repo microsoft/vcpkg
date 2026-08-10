@@ -15,9 +15,6 @@ vcpkg_check_features(
         azureblobstore  LIBCZI_BUILD_AZURESDK_BASED_STREAM
         curl            LIBCZI_BUILD_CURL_BASED_STREAM 
         curl            LIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LIBCURL
-        experimental-chunked-compression LIBCZI_BUILD_ENABLE_EXPERIMENTAL_FUNCTIONALITY
-        experimental-chunked-compression LIBCZI_BUILD_EXPERIMENTAL_CHUNKED_COMPRESSION
-        experimental-chunked-compression LIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LZ4
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBCZI)
