@@ -9,6 +9,7 @@ vcpkg_from_github(
         no-abs-path.diff
         cuda-backports.diff # git diff v1.1.1..v1.2.0-rc2  -- viskores/exec/cuda
         cuda-msvc-preprocessor.diff
+        cuda-extra.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/thirdparty/fmt"
@@ -35,7 +36,7 @@ if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND FEATURE_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
-        -DCMAKE_CUDA_ARCHITECTURES=all-major # override with VCPKG_CMAKE_CONFIGURE_OPTIONS
+        -DCMAKE_CUDA_ARCHITECTURES=75 # override with VCPKG_CMAKE_CONFIGURE_OPTIONS
     )
 endif()
 
