@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ERGO-Code/HiGHS
     REF v${VERSION}
-    SHA512 0ea407784bc6c8e31c72fbcdcab201e8a7cc7debbca57504e74177658208151e90637e5fb1e0cdf1b1ae6b677e7865e77771ec025b17f8223f74d00fc6420546
+    SHA512 0
     HEAD_REF master
     PATCHES
         fix-pkgconfig-zlib.patch
@@ -11,10 +11,12 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+        -DBUILD_SHARED_EXTRAS_LIB=OFF
 )
 
 vcpkg_cmake_install()
