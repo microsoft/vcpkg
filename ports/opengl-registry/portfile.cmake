@@ -1,7 +1,9 @@
+set(REF e8f7cd0e35ac8d6f5667a021ff83d04b1fec41ef)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenGL-Registry
-    REF e8f7cd0e35ac8d6f5667a021ff83d04b1fec41ef
+    REF "${REF}"
     SHA512 7b2eab04e54aa77294887f897f3091c07ecad38acc1dfb1e9d1efc3954d347a0b8c2666f3ceaf074dd17a3d97305f3d99494fe80c4b2f17d052183dfab1927c5
     HEAD_REF main
 )
@@ -22,11 +24,13 @@ file(COPY
 vcpkg_install_copyright(FILE_LIST "${CURRENT_PORT_DIR}/copyright")
 
 # pc layout from cygwin (consumed in xserver!)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/khronos-opengl-registry.pc" [=[
+set(pc_file [=[
 prefix=${pcfiledir}/../..
 datadir=${prefix}/share
 specdir=${datadir}/opengl
 Name: khronos-opengl-registry
 Description: Khronos OpenGL registry
-Version: git3530768138c5ba3dfbb2c43c830493f632f7ea33
+Version: git@REF@
 ]=])
+string(CONFIGURE "${pc_file}" pc_file @ONLY)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/pkgconfig/khronos-opengl-registry.pc" "${pc_file}")
