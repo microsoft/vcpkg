@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-c23-prototypes.patch
+        fix-cross-install-strip.patch
 )
 
 vcpkg_configure_make(
