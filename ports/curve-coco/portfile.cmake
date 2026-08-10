@@ -1,9 +1,10 @@
-set(VCPKG_BUILD_TYPE release) # Header-only library
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Curve/coco
     REF "v${VERSION}"
-    SHA512 7c011553834dba0030ad01d45fcdd3b092ca1b30ccb6f500bbc3e53ed5ee3c0eb57a581347f9879e5b3746cdc3e3214d41329a6ef04988c64c9f55350d8948a3
+    SHA512 b2ed5eaddbbec115d61fc044c6ac56cfef67e871bd44e4717cd64c998a2038195a5caa70e3351efc2c04ccbc69834ffd2e6bbe15331521a1cd33b19155534c7b
     HEAD_REF master
     PATCHES
         remove-cpm.patch
@@ -22,8 +23,8 @@ file(RENAME "${PACKAGE_PROJECT_PATH}" "${SOURCE_PATH}/cmake/packageproject.cmake
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/coco-${VERSION}" PACKAGE_NAME "coco")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/coco" PACKAGE_NAME "coco")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")  # from CMake config
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

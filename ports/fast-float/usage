@@ -1,4 +1,0 @@
-fast-float provides CMake targets:
-
-    find_package(FastFloat CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE FastFloat::fast_float)

@@ -2,10 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ecmwf/eccodes
     REF "${VERSION}"
-    SHA512 8d6d1dfa366f41bf1c7fe129540a02183a9e117e26793b9e17b102cde1bd2277ece9c9b7958daf88a4a6cf21997f55793d8a52b5b62c827b7a4a4b2ac1dd3344
+    SHA512 f1532d72fe572ab306c7c556e035d950fef5490bab9a6fcfdf2df8b50bb91bfebecd2eeacf887a2883062f6af96345927112675c16225c37a5336633cbe7daee
     HEAD_REF develop
     PATCHES
         fix-netcdf-linkage.patch
+        fix-png-linkage.patch
+        use-external-tl-expected.patch
 )
 
 if(VCPKG_HOST_IS_WINDOWS)
@@ -42,7 +44,6 @@ set(ECCODES_OPTIONS
     -DBUILD_TESTING=OFF
     -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
     -DVCPKG_LOCK_FIND_PACKAGE_Jasper=OFF
-    -DVCPKG_LOCK_FIND_PACKAGE_OpenMP=OFF
     -DENABLE_MEMFS=ON
     -DENABLE_INSTALL_ECCODES_DEFINITIONS=ON
     -DENABLE_INSTALL_ECCODES_SAMPLES=ON
@@ -97,6 +98,38 @@ vcpkg_replace_string(
 )
 
 vcpkg_fixup_pkgconfig()
+
+set(_eccodes_pkgconfig_private_libraries -leccodes_memfs)
+set(_eccodes_pkgconfig_private_requires libopenjp2)
+if("aec" IN_LIST FEATURES)
+    list(APPEND _eccodes_pkgconfig_private_libraries -laec)
+endif()
+if("png" IN_LIST FEATURES)
+    list(APPEND _eccodes_pkgconfig_private_requires libpng)
+endif()
+string(JOIN " " _eccodes_pkgconfig_private_libraries ${_eccodes_pkgconfig_private_libraries})
+string(JOIN " " _eccodes_pkgconfig_private_requires ${_eccodes_pkgconfig_private_requires})
+
+function(_eccodes_fix_pkgconfig_file _file _libraries)
+    file(READ "${_file}" _contents)
+    set(_libs_line "libs=\"-L\${libdir}\" ${_libraries}")
+    set(_libs_private_line "libs_private=${_eccodes_pkgconfig_private_libraries}")
+    set(_requires_private_line "Requires.private: ${_eccodes_pkgconfig_private_requires}")
+    string(REGEX REPLACE "(^|\n)libs=[^\n]*" "\\1${_libs_line}" _contents "${_contents}")
+    string(REGEX REPLACE "(^|\n)libs_private=[^\n]*" "\\1${_libs_private_line}" _contents "${_contents}")
+    string(REGEX REPLACE "(^|\n)Requires.private:[^\n]*" "\\1${_requires_private_line}" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endfunction()
+
+foreach(_prefix IN ITEMS "" "debug/")
+    set(_eccodes_pc_dir "${CURRENT_PACKAGES_DIR}/${_prefix}lib/pkgconfig")
+    if(EXISTS "${_eccodes_pc_dir}/eccodes.pc")
+        _eccodes_fix_pkgconfig_file("${_eccodes_pc_dir}/eccodes.pc" "-leccodes")
+    endif()
+    if(EXISTS "${_eccodes_pc_dir}/eccodes_f90.pc")
+        _eccodes_fix_pkgconfig_file("${_eccodes_pc_dir}/eccodes_f90.pc" "-leccodes_f90 -leccodes")
+    endif()
+endforeach()
 
 set(_eccodes_tool_names
     codes_bufr_filter
@@ -199,4 +232,7 @@ foreach(_file IN LISTS _eccodes_files_to_scrub)
     endif()
 endforeach()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/NOTICE"
+)

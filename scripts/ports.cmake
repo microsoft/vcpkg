@@ -34,6 +34,9 @@ list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 # Increment this number if we intentionally need to invalidate all binary caches due a change in
 # the following scripts: 1
 include("${SCRIPTS}/cmake/execute_process.cmake")
+include("${SCRIPTS}/cmake/vcpkg_execute_in_download_mode.cmake")
+include("${SCRIPTS}/cmake/z_vcpkg_spdx.cmake")
+
 include("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake")
 include("${SCRIPTS}/cmake/vcpkg_add_to_path.cmake")
 include("${SCRIPTS}/cmake/vcpkg_apply_patches.cmake")

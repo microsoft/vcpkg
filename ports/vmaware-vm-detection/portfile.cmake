@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kernelwernel/VMAware
     REF v${VERSION}
-    SHA512 585e2918b48da4c9a01c46e35440b19b9a4b6544aeb10fb6e4439d8071a4f9da033c8f33941749480dcaa54c6d1bf4129ef0649eeef6df5a97a73fb61ea0185b
+    SHA512 bf845ed1c44c4d20fc7cd0a009b79d6591f63697d126fb6d9ab00dc071109fd6066e48d7124aeb9692555d016114f2a40acb6b8f48440e7839ece751ab9712bb
     HEAD_REF master
+    PATCHES
+        001-fix-linkage.patch
 )
 
 # Header only
