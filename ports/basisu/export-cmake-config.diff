@@ -1,19 +1,51 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c3f8e28..77bfe37 100644
+index e165dd3..1af3cfa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -295,6 +295,10 @@ endif()
+@@ -100,6 +100,10 @@ message("Initial BASISU_EXAMPLES=${BASISU_EXAMPLES}")
+ message("Initial BASISU_DISABLE_ANDROID_ASTC_DECOMP=${BASISU_DISABLE_ANDROID_ASTC_DECOMP}")
+ message("Initial BASISU_SUPPORT_ASTCENC=${BASISU_SUPPORT_ASTCENC}")
  
++if(BASISU_SYSTEM_ZSTD)
++    find_package(zstd CONFIG REQUIRED)
++endif()
++
+ if ((NOT MSVC) AND BASISU_OPENCL)
+     # With MSVC builds we use the Khronos lib/include files in the project's "OpenCL" directory, to completely avoid requiring fiddly to install vendor SDK's.
+     # Otherwise we use the system's (if any).
+@@ -304,7 +308,6 @@ set(ENCODER_LIB_SRC_LIST
+     transcoder/basisu_transcoder.h
+     transcoder/basisu_idct.h
+     transcoder/basisu.h
+-    zstd/zstd.h
+ )
+ 
+ if (NOT BASISU_DISABLE_ANDROID_ASTC_DECOMP)
+@@ -340,12 +343,19 @@ if (BASISU_SUPPORT_ASTCENC)
+     )
+ endif()
+ 
+-if (BASISU_ZSTD)
+-    set(ENCODER_LIB_SRC_LIST ${ENCODER_LIB_SRC_LIST} zstd/zstd.c)
+-endif()
+-
  # Create the static library
  add_library(basisu_encoder STATIC ${ENCODER_LIB_SRC_LIST})
 +target_include_directories(basisu_encoder PUBLIC
 +    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/transcoder>
 +    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/encoder>
 +    $<INSTALL_INTERFACE:include>)
++
++if (BASISU_ZSTD AND BASISU_SYSTEM_ZSTD)
++    target_link_libraries(basisu_encoder PRIVATE zstd::libzstd)
++elseif (BASISU_ZSTD)
++    target_sources(basisu_encoder PRIVATE zstd/zstd.c zstd/zstd.h)
++    target_include_directories(basisu_encoder BEFORE PRIVATE zstd)
++endif()
  
- # Create the basisu executable and link against the static library
- add_executable(basisu basisu_tool.cpp)
-@@ -445,6 +449,7 @@ endif()
+ if (BASISU_SUPPORT_ASTCENC)
+     target_compile_definitions(basisu_encoder PRIVATE BASISU_SUPPORT_ASTCENC=1)
+@@ -507,6 +517,7 @@ endif()
  if (NOT EMSCRIPTEN)
      if (UNIX AND NOT BASISU_BUILD_WASM)
          if (CMAKE_BUILD_TYPE STREQUAL Release)
@@ -21,7 +53,7 @@ index c3f8e28..77bfe37 100644
              if (APPLE)
                  add_custom_command(TARGET basisu POST_BUILD COMMAND strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu)
                  #message("strip command: strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu")
-@@ -496,6 +501,34 @@ if (MSVC)
+@@ -558,6 +569,34 @@ if (MSVC)
      endif()
  endif()
  
@@ -58,12 +90,69 @@ index c3f8e28..77bfe37 100644
  # ------------------------------------------------------------
 diff --git a/basisu-config.cmake.in b/basisu-config.cmake.in
 new file mode 100644
-index 0000000..15c0d7e
+index 0000000..7acd627
 --- /dev/null
 +++ b/basisu-config.cmake.in
-@@ -0,0 +1,5 @@
+@@ -0,0 +1,10 @@
 +@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++if("@BASISU_ZSTD@" AND "@BASISU_SYSTEM_ZSTD@")
++  find_dependency(zstd CONFIG)
++endif()
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/basisu-targets.cmake")
 +
 +check_required_components(basisu)
+diff --git a/encoder/basisu_astc_ldr_encode.cpp b/encoder/basisu_astc_ldr_encode.cpp
+index b9603ae..8a892a8 100644
+--- a/encoder/basisu_astc_ldr_encode.cpp
++++ b/encoder/basisu_astc_ldr_encode.cpp
+@@ -28,7 +28,7 @@
+ #endif
+ 
+ #if BASISD_SUPPORT_KTX2_ZSTD
+-#include "../zstd/zstd.h"
++#include <zstd.h>
+ #endif
+ 
+ #ifndef BASISU_SUPPORT_ASTCENC
+diff --git a/encoder/basisu_comp.cpp b/encoder/basisu_comp.cpp
+index 37ecd49..b510252 100644
+--- a/encoder/basisu_comp.cpp
++++ b/encoder/basisu_comp.cpp
+@@ -34,7 +34,7 @@
+ #endif
+ 
+ #if BASISD_SUPPORT_KTX2_ZSTD
+-#include "../zstd/zstd.h"
++#include <zstd.h>
+ #endif
+ 
+ // Set to 1 to disable the mipPadding alignment workaround (which only seems to be needed when no key-values are written at all)
+diff --git a/encoder/basisu_xbc7_encode.cpp b/encoder/basisu_xbc7_encode.cpp
+index 035e722..9228c3b 100644
+--- a/encoder/basisu_xbc7_encode.cpp
++++ b/encoder/basisu_xbc7_encode.cpp
+@@ -1,7 +1,7 @@
+ // File: basisu_xbc7_encode.cpp
+ #include "basisu_xbc7_encode.h"
+ #include "../transcoder/basisu_transcoder.h"
+-#include "../zstd/zstd.h"
++#include <zstd.h>
+ #include "../transcoder/basisu_xbc7_decoder.h"
+ #include "basisu_bc7e_scalar.h"
+ 
+diff --git a/transcoder/basisu_transcoder.cpp b/transcoder/basisu_transcoder.cpp
+index f3d5593..5a4b069 100644
+--- a/transcoder/basisu_transcoder.cpp
++++ b/transcoder/basisu_transcoder.cpp
+@@ -175,7 +175,7 @@
+ // If BASISD_SUPPORT_KTX2_ZSTD is 0, data compressed with Zstd cannot be loaded.
+ #if BASISD_SUPPORT_KTX2_ZSTD
+ 	// We only use these Zstd API's: ZSTD_decompress(), ZSTD_isError() and ZSTD_getFrameContentSize()
+-	#include "../zstd/zstd.h"
++	#include <zstd.h>
+ #endif
+ 
+ #if BASISD_SUPPORT_UASTC_HDR

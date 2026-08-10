@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cutlass
     REF "v${VERSION}"
-    SHA512 435bd838b1c89a5fec45c95ac45bec78b3dd641f93665b97a2cea3d4a9a82bddb9d7cd4139afe9d749e5c6e7195521f09aff4871981eddfa546d5bf9b2dc23a3
+    SHA512 dd1a3f3b3ffd8b0ba6b499311d58592edc7d5df413d03feb736b7e74938b769fedb2879b4d8a6a5ad42ca7cbd063aafd84c6e70583873df5d7f8d4bb2e5f837c
     HEAD_REF main
 )
 
