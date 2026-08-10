@@ -4,7 +4,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
     FILENAME "armadillo-${VERSION}.tar.xz"
-    SHA512 E5983B109242F522561A16A4C5F095F25A8F5262E9E6A5C8AC9D7FA48B1F1B1C3A2E48D5671EB02C478B378BC1759BACE9AC061434C42E7338C0C2D21779F607
+    SHA512 f605678837c821b39273f64750e6398e0feff9ca4ec507a19712436ba8c0d07ab9901ffa01b96fe77a700ea49a6c19e7a75e66bfd9127c5a09bb20bfba3bbf68
     PATCHES
         cmake-config.patch
         dependencies.patch
@@ -53,4 +53,8 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp"
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/NOTICE.txt"
+)

@@ -50,11 +50,11 @@ The report considers the following in particular:
 11. No vendored third-party code is used during the build. List any well-known third-party libraries found in extracted sources.
 12. The versioning scheme in vcpkg.json matches the packaged content.
 13. The license declaration in vcpkg.json matches the content installed by installing a port. Note that content in sources may be skipped in settings in portfile.cmake. If a feature in vcpkg.json installs additional content under a different license, then the feature should have a separate license declared. Treat `"license": null` as an intentional declaration that no SPDX expression is available; inspect the copyright file and installed content instead. When the only available license or copyright notice for a library appears in its header files, patches pass one representative header containing the notice directly to `vcpkg_install_copyright(FILE_LIST ...)`. Do not create a separate text file that copies or extracts the notice from the header.
-14. The generated "usage text" is brief and accurate.
+14. The generated "usage text" is brief and accurate. Custom usage files are only used if not substantially identical to generated usage, which can be checked with `vcpkg print-usage <port> [--generated]`.
 15. Ports do not use system-modifying applications such as sudo, apt, or brew.
 16. Changes in shared build helpers or `scripts/cmake` that affect many ports need explicit justification for why a global change is necessary. Do not edit frozen `scripts/cmake` helpers when a corresponding `vcpkg-*` helper port exists; require ports to adopt the helper port instead.
 17. Ports use `vcpkg_check_linkage` over mutating `VCPKG_LIBRARY_LINKAGE` directly.
-18. Files in the port directory have LF line endings.
+18. Non-patch files in the port directory have LF line endings. Patch files are normally LF-only; CRLF is acceptable in hunk lines that patch CRLF content, as produced by `git diff --output` (ignoring differences in the `index` extended header).
 19. Anything else in the changeset that conflicts with the maintainer guide.
 
 Read the PR description and conversation. Treat them as explanations, motivation, and questions to answer.
