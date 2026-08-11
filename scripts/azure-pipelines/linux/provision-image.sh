@@ -27,7 +27,7 @@ arm64)
   ;;
 esac
 
-POWERSHELL_VERSION=7.6.3
+POWERSHELL_VERSION=7.6.4
 
 # Apt dependencies; needed for add-apt-repository and curl downloads to work
 apt-get -y update
@@ -51,7 +51,8 @@ curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
     tee /etc/apt/keyrings/microsoft.gpg > /dev/null
 chmod go+r /etc/apt/keyrings/microsoft.gpg
 
-AZ_DIST=$(lsb_release -cs)
+# Azure CLI does not yet publish a Resolute feed.
+AZ_DIST=noble
 echo "deb [arch=${DEBIAN_ARCHITECTURE} signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" |
     tee /etc/apt/sources.list.d/azure-cli.list
 
@@ -208,7 +209,7 @@ APT_PACKAGES="$APT_PACKAGES libspeechd-dev"
 if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
 else
-APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu74 debsums liblttng-ust1"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu78 debsums liblttng-ust1t64"
 fi
 
 apt-get --no-install-recommends -y install $APT_PACKAGES

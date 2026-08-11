@@ -6,7 +6,7 @@ if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
 }
 
 $AzCliUrl = Get-AssetUrl `
-  -InternetUrl 'https://azcliprod.blob.core.windows.net/msi/azure-cli-2.88.0-x64.msi' `
-  -BlobAssetName 'azure-cli-2.88.0-x64.msi'
+  -InternetUrl 'https://azcliprod.blob.core.windows.net/msi/azure-cli-2.89.0-x64.msi' `
+  -BlobAssetName 'azure-cli-2.89.0-x64.msi'
 
 DownloadAndInstall -Url $AzCliUrl -Args @('/quiet', '/norestart')
