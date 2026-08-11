@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nihilai-collective/jsonifier
     REF "v${VERSION}"
-    SHA512 146d55c941807f5f15ae9f4782538a13c5f730bfabb6a4dd8ced9a02ba3fb78ad0d9e795579c343cba72ece2d2b94d9781b3ef6d45431c2c87370c368e965c41
+    SHA512 73e0e80ed36215468284b68700509ce20c17731483bbf5fc4c34c633a6090fbb418bbd02366edade335a4b0b8ba134087db49306fbcfe7db29c8990d17ce7158
     HEAD_REF main
 )
 
@@ -14,4 +14,4 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.md" "${SOURCE_PATH}/Third_Party_Licenses.md")
