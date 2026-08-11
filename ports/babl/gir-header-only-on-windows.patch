@@ -1,15 +1,15 @@
 diff --git a/babl/meson.build b/babl/meson.build
-index e3129d3..35562f6 100644
+index 9a77cdf..80e3a52 100644
 --- a/babl/meson.build
 +++ b/babl/meson.build
-@@ -166,6 +166,10 @@ if build_gir
-       '--identifier-filter-cmd=@0@ @1@'.format(python.full_path(), 
-       '"' + meson.current_source_dir() / 'identfilter.py' + '"'),
-       '-DBABL_IS_BEING_COMPILED',
-+      # Windows DLL resolution for the temporary GIR helper executable is
-+      # unreliable in vcpkg builds. Babl does not expose GObject runtime
-+      # types, so a header-only scan is sufficient here.
-+      platform_win32 ? '--header-only' : '',
-       '--quiet',
-     ],
-     namespace: 'Babl',
+@@ -177,6 +177,10 @@ if build_gir
+         '--identifier-filter-cmd=@0@ @1@'.format(python.full_path(), 
+         '"' + meson.current_source_dir() / 'identfilter.py' + '"'),
+         '-DBABL_IS_BEING_COMPILED',
++        # Windows DLL resolution for the temporary GIR helper executable is
++        # unreliable in vcpkg builds. Babl does not expose GObject runtime
++        # types, so a header-only scan is sufficient here.
++        platform_win32 ? '--header-only' : '',
+         '--quiet',
+       ],
+       namespace: 'Babl',
