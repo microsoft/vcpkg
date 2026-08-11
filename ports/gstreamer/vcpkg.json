@@ -1,9 +1,9 @@
 {
   "name": "gstreamer",
-  "version": "1.28.4",
+  "version": "1.28.6",
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
-  "license": "LGPL-2.0-only",
+  "license": "LGPL-2.1-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
     "glib",
@@ -859,9 +859,9 @@
           ]
         },
         "libx11",
+        "libxcb",
         "libxext",
-        "libxkbcommon",
-        "xcb"
+        "libxkbcommon"
       ]
     },
     "x264": {

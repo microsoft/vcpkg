@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO memgraph/mgclient
     REF "v${VERSION}"
-    SHA512 0c4c0b1231f3f5e232ef9a80a01a58e00d2d50dc1e7bb4a6c25d800c93d7f77b8b21679af9ce26fc98a54813c54fac0a5e7eb8eb9a0eb78dbd88ce1ad569a2e2
+    SHA512 c3f897f48907d2e163c032d046b74d83218e1621d2929eb2e3688aa21d679c35b2720a309f51b984b13f5326d306e91b2d290da9684aa1ed165d8576576970f9
     HEAD_REF master
     PATCHES
         export-cmake.patch

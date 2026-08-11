@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO goToMain/libosdp
     REF "v${VERSION}"
-    SHA512 81c0e1c1cfdf8c9b283f557e1df7420788e0232eb53b9338c9106138b2838458f055f623dba9f269d5341e7d1bb100b877f74fafd617ffac124514a724b844ed
+    SHA512 7a3fba87b294f91f01593f2abd07ff088248598db873996d29798cdf7e7733d298547a7b4305593a26ff77eaa972e8d513ca92f6477b7fabc5f773051676f8d0
     HEAD_REF master
+    PATCHES
+        fix-export-macros.patch
 )
 
 # Download and extract the c-utils submodule at ${SOURCE_PATH}/utils as
@@ -39,5 +41,14 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libosdp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(BUILD_STATIC)
+    # Bake the define OSDP_STATIC_DEFINE into the installed header to ensure consumers get it.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libosdp/osdp_export.h"
+        "#define _OSDP_EXPORT_H_"
+        "#define _OSDP_EXPORT_H_\n\n#define OSDP_STATIC_DEFINE"
+    )
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
