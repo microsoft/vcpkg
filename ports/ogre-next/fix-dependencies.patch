@@ -1,5 +1,5 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index b0ca7c12f8..7e52ca668a 100644
+index b0ca7c1..7e52ca6 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
 @@ -21,9 +21,7 @@ endif()
@@ -25,10 +25,10 @@ index b0ca7c12f8..7e52ca668a 100644
  )
  if (WIN32)
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
-index 7dd36f2ab2..e83d040e83 100644
+index 7dd36f2..f00e891 100644
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
-@@ -74,26 +74,32 @@ set(CMAKE_FRAMEWORK_PATH ${OGRE_DEP_SEARCH_PATH} ${CMAKE_FRAMEWORK_PATH})
+@@ -74,12 +74,13 @@ set(CMAKE_FRAMEWORK_PATH ${OGRE_DEP_SEARCH_PATH} ${CMAKE_FRAMEWORK_PATH})
  #######################################################################
  
  # Find zlib
@@ -44,10 +44,7 @@ index 7dd36f2ab2..e83d040e83 100644
    macro_log_feature(ZZip_FOUND "zziplib" "Extract data from zip archives" "http://zziplib.sourceforge.net" FALSE "" "")
  endif ()
  
- # Find FreeImage
--find_package(FreeImage)
-+find_package(FreeImage NAMES freeimage)
-+set(FreeImage_LIBRARIES freeimage::FreeImage)
+@@ -88,12 +89,16 @@ find_package(FreeImage)
  macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net" FALSE "" "")
  
  # Find FreeType
@@ -65,7 +62,7 @@ index 7dd36f2ab2..e83d040e83 100644
  # Find X11
  if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
    find_package(X11)
-@@ -105,7 +111,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+@@ -105,7 +110,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
  endif ()
  
  # Find rapidjson
@@ -75,7 +72,7 @@ index 7dd36f2ab2..e83d040e83 100644
  
  find_package(RenderDoc)
 diff --git a/RenderSystems/Vulkan/CMakeLists.txt b/RenderSystems/Vulkan/CMakeLists.txt
-index 2fc1859d86..ae8e4e29df 100644
+index 2fc1859..ae8e4e2 100644
 --- a/RenderSystems/Vulkan/CMakeLists.txt
 +++ b/RenderSystems/Vulkan/CMakeLists.txt
 @@ -35,7 +35,7 @@ include_directories(
