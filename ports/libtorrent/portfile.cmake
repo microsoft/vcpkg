@@ -23,6 +23,7 @@ vcpkg_from_github(
     HEAD_REF RC_2_1
     PATCHES
         use-system-libdatachannel.patch
+        fix-shared-extra-exports.patch
 )
 
 vcpkg_from_github(
