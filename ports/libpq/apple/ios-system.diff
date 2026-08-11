@@ -1,0 +1,37 @@
+diff --git a/src/fe_utils/archive.c b/src/fe_utils/archive.c
+index 5de3617..1d010e0 100644
+--- a/src/fe_utils/archive.c
++++ b/src/fe_utils/archive.c
+@@ -18,6 +18,10 @@
+ #include <unistd.h>
+ #include <sys/stat.h>
+ 
++#ifdef __APPLE__
++#include <TargetConditionals.h>
++#endif
++
+ #include "access/xlog_internal.h"
+ #include "common/archive.h"
+ #include "common/logging.h"
+@@ -54,8 +58,21 @@ RestoreArchivedFile(const char *path, const char *xlogfname,
+ 	 * archival storage.
+ 	 */
+ 	fflush(NULL);
++#if defined(__APPLE__) && TARGET_OS_IPHONE
++	/*
++	 * Apple's non-macOS platforms provide no command shell, so their C library
++	 * marks system() as unavailable and restore_command cannot work there.
++	 * Report the failure at runtime instead of failing to build.  Despite its
++	 * name, TARGET_OS_IPHONE covers all of them: iOS, tvOS, watchOS, visionOS,
++	 * Mac Catalyst and their simulators.
++	 */
++	pfree(xlogRestoreCmd);
++	pg_log_error("\"restore_command\" is not supported on this platform");
++	return -1;
++#else
+ 	rc = system(xlogRestoreCmd);
+ 	pfree(xlogRestoreCmd);
++#endif
+ 
+ 	if (rc == 0)
+ 	{
