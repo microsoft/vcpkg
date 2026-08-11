@@ -1,12 +1,15 @@
-flatcitybuf provides CMake integration via a config-mode package.
+flatcitybuf provides CMake targets:
 
-  find_package(flatcitybuf CONFIG REQUIRED)
+    find_package(flatcitybuf CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE flatcitybuf::flatcitybuf)
 
-Add the library and the required CXX bridge source to your target:
+Reading a local file:
 
-  add_executable(my_app main.cpp ${FLATCITYBUF_CXX_BRIDGE_SOURCE})
-  target_link_libraries(my_app PRIVATE flatcitybuf::flatcitybuf)
+    #include <fcb/reader.hpp>
+    fcb::FcbReader reader = fcb::FcbReader::open_file("city.fcb");
 
-Note: FLATCITYBUF_CXX_BRIDGE_SOURCE is a cache variable set by find_package that
-points to lib.rs.cc (the CXX bridge generated source). It must be compiled
-together with your target — do not link it as a separate library.
+Install flatcitybuf[curl] to enable the libcurl HTTP range-request reader:
+
+    #include <fcb/http/curl_range_reader.hpp>
+    auto reader = fcb::FcbReader::open(
+        std::make_shared<fcb::CurlRangeReader>(url));
