@@ -35,7 +35,6 @@ vcpkg_cmake_configure(
         -DLIBCZI_ENABLE_INSTALL=ON
         # for cross-compilation scenarios, prevent execution of test-programs inside the libCZI-build-scripts
         -DCRASH_ON_UNALIGNED_ACCESS=FALSE
-        -DIS_BIG_ENDIAN=FALSE
         -DNEON_INTRINSICS_CAN_BE_USED=TRUE
         # Intentionally empty: Must be defined to avoid try-run.
         # Override in triplet if needed.
@@ -45,8 +44,8 @@ vcpkg_cmake_configure(
         -DLIBCZI_REPOSITORY_BRANCH=unknown
         -DLIBCZI_REPOSITORY_REMOTE=https://github.com/${LIBCZI_REPO_NAME}.git
     MAYBE_UNUSED_VARIABLES
-        CRASH_ON_UNALIGNED_ACCESS
-        IS_BIG_ENDIAN
+        # Only checked when AVX is unavailable, arm_neon.h exists, and the compiler is not MSVC:
+        # https://github.com/ZEISS/libczi/blob/61f74ff097d6d0fbe6e36f204ff59d92e299d7cd/Src/libCZI/CMakeLists.txt#L242-L261
         NEON_INTRINSICS_CAN_BE_USED
 )
 
