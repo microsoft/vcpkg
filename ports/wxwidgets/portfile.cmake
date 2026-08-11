@@ -263,4 +263,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/build")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/licence.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/docs/licence.txt"
+        "${lexilla_SOURCE_PATH}/License.txt"
+        "${scintilla_SOURCE_PATH}/License.txt"
+)
