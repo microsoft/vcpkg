@@ -14,16 +14,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         obsolete MYGUI_DONT_USE_OBSOLETE
 )
 
-set(MYGUI_BUILD_RENDERSYSTEMS "1")
-
-if("emscripten" IN_LIST FEATURES)
-  string(APPEND MYGUI_BUILD_RENDERSYSTEMS ";8")
-endif()
-
-if("opengl" IN_LIST FEATURES)
-  string(APPEND MYGUI_BUILD_RENDERSYSTEMS ";7")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -35,7 +25,6 @@ vcpkg_cmake_configure(
         -DMYGUI_BUILD_TOOLS=FALSE
         -DMYGUI_USE_SYSTEM_PUGIXML=TRUE
         -DMYGUI_RENDERSYSTEM=1
-        -DMYGUI_BUILD_RENDERSYSTEMS=${MYGUI_BUILD_RENDERSYSTEMS}
         ${FEATURE_OPTIONS}
 )
 

@@ -18,9 +18,6 @@
     }
   ],
   "features": {
-    "emscripten": {
-      "description": "Builds platform libraries for OpenGL ES 2.0 (Emscripten)"
-    },
     "msdf": {
       "description": "Enable msdf support",
       "dependencies": [
@@ -35,12 +32,6 @@
     },
     "obsolete": {
       "description": "Keep obsolete functions."
-    },
-    "opengl": {
-      "description": "Builds platform libraries for OpenGL 3.x",
-      "dependencies": [
-        "opengl"
-      ]
     }
   }
 }
