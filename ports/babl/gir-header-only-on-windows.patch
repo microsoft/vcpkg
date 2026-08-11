@@ -1,14 +1,8 @@
 diff --git a/babl/meson.build b/babl/meson.build
-index f6dd81c..ec42f68 100644
+index e3129d3..35562f6 100644
 --- a/babl/meson.build
 +++ b/babl/meson.build
-@@ -159,15 +159,19 @@ if build_gir
-   # identity filter, so GIR doesn't choke on the Babl type
-   # (since it has the same name as the Babl namespace)
-   babl_gir = gnome.generate_gir(
-     babl,
-     sources: babl_headers,
-     extra_args: [
+@@ -166,6 +166,10 @@ if build_gir
        '--identifier-filter-cmd=@0@ @1@'.format(python.full_path(), 
        '"' + meson.current_source_dir() / 'identfilter.py' + '"'),
        '-DBABL_IS_BEING_COMPILED',
@@ -19,8 +13,3 @@ index f6dd81c..ec42f68 100644
        '--quiet',
      ],
      namespace: 'Babl',
-     nsversion: api_version,
-     header: 'babl.h',
-     export_packages: 'babl-0.1',
-     install: true,
-   )
