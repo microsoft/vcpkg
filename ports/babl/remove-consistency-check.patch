@@ -1,8 +1,8 @@
 diff --git a/meson.build b/meson.build
-index 08332a0571..bd4e31c55f 100644
+index 5f5299a..269dc17 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -580,7 +580,7 @@ if build_docs
+@@ -581,7 +581,7 @@ if build_docs
  endif
  subdir('bin')
  
