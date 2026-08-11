@@ -633,8 +633,8 @@
       "port-version": 2
     },
     "babl": {
-      "baseline": "0.1.126",
-      "port-version": 2
+      "baseline": "0.1.128",
+      "port-version": 0
     },
     "backward-cpp": {
       "baseline": "2023-11-24",

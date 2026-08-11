@@ -3,7 +3,7 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gimp.org/pub/babl/${VERSION_MAJOR_MINOR}/babl-${VERSION}.tar.xz"
     FILENAME "babl-${VERSION}.tar.xz"
-    SHA512 953037386e1763b28385f0f1802a657e2b918b5db3932cc62e75aa32c36b36b0513258f1b5548dfebedb51fb6de47412503ea8f8aff4ce79c314e33a28d27166
+    SHA512 ce295226f9a0c98c22e1564306741e0588235dd3f420899978469949b3ddfd107c3c009e85279aed82055ece1689de7ded0a0f04974de89cff0ed585007b6290
 )
 
 vcpkg_extract_source_archive(
