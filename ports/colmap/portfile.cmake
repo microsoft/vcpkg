@@ -1,92 +1,85 @@
-# Update both, literally.
-set(COLMAP_REF 3.12.6 "4d5b60e19ad268072adaf1267d21fa38a9a828ca")
+# Update all three, literally.
+set(COLMAP_REF 4.1.1 "a0d785fba74b2664f31edc4a29026a8b27c00f67" "2026-07-17")
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF "${VERSION}"
-    SHA512 718e4542a128fbe39dd36a5e2e6d013c201ef7e23d0f6f38acc10aa5f505185389d8c9b8a75f02846cac4fd426adb75250cc32d32d427496b275ad4632a05ddb
+    SHA512 0e0da65dfe422872ce0802e062226b38f36e6276f293156f7c16fe106eef785bab5816fb63b4c0a61ccd5b0a5848b19f7efbe8283bd0fa6acd941c70e4e643d1
     HEAD_REF main
-    PATCHES
-        no-glu.diff
-        add-missing-cassert.patch
 )
 
-if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
-    message(FATAL_ERROR "Feature cuda and cuda-redist require x64 triplet.")
+if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
+    message(FATAL_ERROR "Features cuda and cuda-redist require an x64 triplet.")
 endif()
 
-# set GIT_COMMIT_ID and GIT_COMMIT_DATE
 if(DEFINED VCPKG_HEAD_VERSION)
     set(GIT_COMMIT_ID "${VCPKG_HEAD_VERSION}")
+    string(TIMESTAMP GIT_COMMIT_DATE "%Y-%m-%d")
 elseif(NOT VERSION IN_LIST COLMAP_REF)
     message(FATAL_ERROR "Version ${VERSION} missing in COLMAP_REF (${COLMAP_REF})")
 else()
     list(GET COLMAP_REF 1 GIT_COMMIT_ID)
+    list(GET COLMAP_REF 2 GIT_COMMIT_DATE)
 endif()
 
-string(TIMESTAMP COLMAP_GIT_COMMIT_DATE "%Y-%m-%d")
-
-foreach(FEATURE ${FEATURE_OPTIONS})
-    message(STATUS "${FEATURE}")
-endforeach()
-
 set(CUDA_ENABLED OFF)
-set(GUI_ENABLED OFF)
-set(CGAL_ENABLED OFF)
-set(OPENMP_ENABLED ON)
 
 if("cuda" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
     set(CUDA_ARCHITECTURES "native")
-endif()
-
-if("cuda-redist" IN_LIST FEATURES)
+elseif("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
     set(CUDA_ARCHITECTURES "all-major")
 endif()
 
-if("gui" IN_LIST FEATURES)
-    set(GUI_ENABLED ON)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cgal      CGAL_ENABLED
+        download  DOWNLOAD_ENABLED
+        gui       GUI_ENABLED
+        onnx      ONNX_ENABLED
+)
 
-if("cgal" IN_LIST FEATURES)
-    set(CGAL_ENABLED ON)
-endif()
-
-if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+set(OPENMP_ENABLED ON)
+if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     set(OPENMP_ENABLED OFF)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(APPEND VCPKG_C_FLAGS " /bigobj")
+    string(APPEND VCPKG_CXX_FLAGS " /bigobj")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DCUDA_ENABLED=${CUDA_ENABLED}
+        ${FEATURE_OPTIONS}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
-        -DGUI_ENABLED=${GUI_ENABLED}
-        -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
-        -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
-        -DOPENMP_ENABLED=${OPENMP_ENABLED}
-        -DCGAL_ENABLED=${CGAL_ENABLED}
-        -DTESTS_ENABLED=OFF
-        -DFETCH_POSELIB=OFF
+        -DCUDA_ENABLED=${CUDA_ENABLED}
         -DFETCH_FAISS=OFF
+        -DFETCH_ONNX=OFF
+        -DFETCH_POSELIB=OFF
+        -DGIT_COMMIT_DATE=${GIT_COMMIT_DATE}
+        -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
+        -DOPENMP_ENABLED=${OPENMP_ENABLED}
+        -DTESTS_ENABLED=OFF
 )
 
 vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup()
 
 file(GLOB TOOL_FILENAMES "${CURRENT_PACKAGES_DIR}/bin/*")
-foreach(TOOL_FILENAME ${TOOL_FILENAMES})
-    get_filename_component(TEST_TOOL_NAME ${TOOL_FILENAME} NAME_WLE)
+foreach(TOOL_FILENAME IN LISTS TOOL_FILENAMES)
+    get_filename_component(TEST_TOOL_NAME "${TOOL_FILENAME}" NAME_WLE)
     list(APPEND COLMAP_TOOL_NAMES "${TEST_TOOL_NAME}")
 endforeach()
-
 vcpkg_copy_tools(TOOL_NAMES ${COLMAP_TOOL_NAMES} AUTO_CLEAN)
 
-# remove empty folders and unused files
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -102,7 +95,5 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_copy_pdbs()
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")
-
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

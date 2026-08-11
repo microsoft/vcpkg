@@ -2,7 +2,7 @@ diff --git a/CMakeModules/ForgeConfig.cmake.in b/CMakeModules/ForgeConfig.cmake.
 index 6fb18ac..5a3b000 100644
 --- a/CMakeModules/ForgeConfig.cmake.in
 +++ b/CMakeModules/ForgeConfig.cmake.in
-@@ -83,3 +83,22 @@ if ((TARGET Forge::forge AND Forge_BINARY_EXISTS) OR TARGET forge)
+@@ -83,3 +83,21 @@ if ((TARGET Forge::forge AND Forge_BINARY_EXISTS) OR TARGET forge)
  else ()
      set(Forge_FOUND OFF)
  endif ()
@@ -14,7 +14,6 @@ index 6fb18ac..5a3b000 100644
 +    find_dependency(glad CONFIG)
 +    find_dependency(glfw3 CONFIG)
 +    find_dependency(freetype CONFIG)
-+    find_dependency(freeimage CONFIG)
 +    find_dependency(OpenGL)
 +
 +    if(NOT WIN32)

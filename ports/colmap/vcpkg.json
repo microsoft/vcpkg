@@ -1,11 +1,10 @@
 {
   "name": "colmap",
-  "version": "3.12.6",
-  "port-version": 1,
-  "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface. It offers a wide range of features for reconstruction of ordered and unordered image collections. The software is licensed under the new BSD license.",
+  "version": "4.1.1",
+  "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface.",
   "homepage": "https://colmap.github.io/",
   "license": "BSD-3-Clause",
-  "supports": "(linux | (windows & !static) | osx) & (x86 | x64 | arm64)",
+  "supports": "(linux | windows | osx) & (x86 | x64 | arm64)",
   "dependencies": [
     "boost-algorithm",
     "boost-graph",
@@ -17,12 +16,12 @@
       "name": "ceres",
       "features": [
         "lapack",
+        "schur",
         "suitesparse"
       ]
     },
     "eigen3",
     "faiss",
-    "freeimage",
     "gflags",
     "glog",
     {
@@ -30,6 +29,7 @@
       "default-features": false
     },
     "metis",
+    "openimageio",
     "poselib",
     "sqlite3",
     {
@@ -41,35 +41,60 @@
       "host": true
     }
   ],
-  "default-features": [
-    "gui"
-  ],
   "features": {
     "cgal": {
-      "description": "Build with CGAL.",
+      "description": "Build with CGAL support.",
       "dependencies": [
         "cgal"
       ]
     },
     "cuda": {
-      "description": "Build with CUDA.",
+      "description": "Build with CUDA support for the native architecture.",
       "dependencies": [
         "cuda",
         "glew"
       ]
     },
     "cuda-redist": {
-      "description": "Redistributable CUDA support for common supported compute architectures.",
+      "description": "Build with redistributable CUDA support for common supported compute architectures.",
       "dependencies": [
         "cuda",
         "glew"
       ]
     },
+    "download": {
+      "description": "Build with automatic resource download support.",
+      "dependencies": [
+        {
+          "name": "cryptopp",
+          "platform": "windows & arm64"
+        },
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        },
+        {
+          "name": "openssl",
+          "platform": "!(windows & arm64)"
+        }
+      ]
+    },
     "gui": {
-      "description": "Build the GUI.",
+      "description": "Build with GUI support.",
       "dependencies": [
         "glew",
-        "qt5-base"
+        "qtbase",
+        "qtsvg"
+      ]
+    },
+    "onnx": {
+      "description": "Build with ONNX support.",
+      "supports": "windows",
+      "dependencies": [
+        "onnxruntime-gpu"
       ]
     }
   }

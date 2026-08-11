@@ -46,7 +46,7 @@ index 7dd36f2ab2..e83d040e83 100644
  
  # Find FreeImage
 -find_package(FreeImage)
-+find_package(FreeImage NAMES freeimage REQUIRED)
++find_package(FreeImage NAMES freeimage)
 +set(FreeImage_LIBRARIES freeimage::FreeImage)
  macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net" FALSE "" "")
  
