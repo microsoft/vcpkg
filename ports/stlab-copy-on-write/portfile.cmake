@@ -13,8 +13,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH PACKAGE_PROJECT_PATH
     REPO stlab/cpp-library
-    REF "v5.0.0"
-    SHA512 5e158dbdcabe698f7ddaff460a68c490978a7f91af8cb90f19430456acc1ca0f115973f149303b07d5ed0fbb3b43cd857b133c46bc6b4e8cc96c1ee25b0e87a9
+    REF "v5.4.1"
+    SHA512 68e6bdb76627e5019b4dbe49cd7450c38011d1e721f9e93b3ffaf2d807a01883e243b069292e3b44e7dc8142a0e235facccaa877607ab1a5c4a4db2764d5382e
     HEAD_REF master
 )
 file(RENAME "${PACKAGE_PROJECT_PATH}" "${SOURCE_PATH}/cmake/cpp-library")
@@ -25,6 +25,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCPP_LIBRARY_VERSION=${VERSION}
 )
 
 vcpkg_cmake_install()
