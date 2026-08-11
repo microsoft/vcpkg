@@ -1,6 +1,6 @@
 # cli/2.7.2 has no dllexport annotations, so shared build yields a DLL without exports.
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCPKG_LIBRARY_LINKAGE static)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
