@@ -24,7 +24,7 @@ vcpkg_cmake_configure(
         -DMYGUI_BUILD_DOCS=FALSE
         -DMYGUI_BUILD_TOOLS=FALSE
         -DMYGUI_USE_SYSTEM_PUGIXML=TRUE
-        -DMYGUI_RENDERSYSTEM=1
+        -DMYGUI_RENDERSYSTEM=1 # Use an overlay port to change the render system. Read the discussion at: https://github.com/microsoft/vcpkg/pull/52862
         ${FEATURE_OPTIONS}
 )
 
