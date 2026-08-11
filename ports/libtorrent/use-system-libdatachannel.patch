@@ -90,7 +90,7 @@ diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
 -	# (rtc_signaling.cpp) actually uses
 -	target_include_directories(test_rtc PRIVATE
 -		$<TARGET_PROPERTY:datachannel-static,INTERFACE_INCLUDE_DIRECTORIES>)
-+	target_link_libraries(test_rtc PRIVATE LibDataChannel::LibDataChannel)
++	target_link_libraries(test_rtc LibDataChannel::LibDataChannel)
  endif()
  
  file(GLOB GZIP_ASSETS "${CMAKE_CURRENT_SOURCE_DIR}/*.gz")
