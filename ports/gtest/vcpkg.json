@@ -1,7 +1,6 @@
 {
   "name": "gtest",
-  "version-semver": "1.17.0",
-  "port-version": 3,
+  "version-semver": "1.18.0",
   "description": "Google Testing and Mocking Framework",
   "homepage": "https://github.com/google/googletest",
   "license": "BSD-3-Clause",
