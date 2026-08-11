@@ -1,0 +1,11 @@
+diff --git a/highs.pc.in b/highs.pc.in
+index 2ac74f4..fbd153d 100644
+--- a/highs.pc.in
++++ b/highs.pc.in
+@@ -7,5 +7,5 @@ URL: https://github.com/ERGO-Code/HiGHS
+ Version: @HIGHS_VERSION_MAJOR@.@HIGHS_VERSION_MINOR@.@HIGHS_VERSION_PATCH@
+ Libs: -L${libdir} -lhighs
+-#TODO Libs.private (when HiGHS lib is build as static lib)
+ Cflags: -I${includedir}
+ Requires:
++Requires.private: zlib
