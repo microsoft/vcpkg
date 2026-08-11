@@ -66,6 +66,7 @@ vcpkg_cmake_configure(
         -DENABLE_FIREBIRD=OFF
         -DENABLE_QT4=OFF
         -DENABLE_QT5=OFF
+        -DENABLE_QT6=OFF
         -DENABLE_LIBWTTEST=ON
         -DENABLE_OPENGL=ON
 
@@ -98,5 +99,10 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" W_CONFIG_H)
 string(REGEX REPLACE "([\r\n])#define RUNDIR[^\r\n]+" "\\1// RUNDIR intentionally unset by vcpkg" W_CONFIG_H "${W_CONFIG_H}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "${W_CONFIG_H}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/src/thirdparty/qrcodegen/license.txt"
+        "${SOURCE_PATH}/src/thirdparty/rapidxml/license.txt"
+)
 vcpkg_copy_pdbs()
