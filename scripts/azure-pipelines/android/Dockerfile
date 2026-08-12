@@ -2,7 +2,8 @@
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
 FROM ubuntu:resolute-20260724.1
 
-ADD https://packages.microsoft.com/config/ubuntu/26.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
+# The Ubuntu 26.04 feed does not yet publish PowerShell or AzCopy.
+ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20+8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.20_8.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.20_8.tar.gz
 ADD https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip /commandlinetools-linux-15859902_latest.zip
 ADD https://dl.google.com/android/repository/build-tools_r37_linux.zip /build-tools_r37_linux.zip
