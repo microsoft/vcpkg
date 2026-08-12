@@ -3,6 +3,13 @@
   <PropertyGroup>
     <CrtSysVcpkgIntegration>true</CrtSysVcpkgIntegration>
     <CrtSysRoot Condition="'$(CrtSysRoot)' == ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', '..', '..', '..'))</CrtSysRoot>
+    <CrtSysLibDir Condition="'$(CrtSysLibDir)' == '' and '$(Configuration)' == 'Debug'">$(CrtSysRoot)debug\lib\manual-link\</CrtSysLibDir>
+    <CrtSysLibDir Condition="'$(CrtSysLibDir)' == ''">$(CrtSysRoot)lib\manual-link\</CrtSysLibDir>
+    <CrtSysUseNtlContentCodecs Condition="'$(CrtSysUseNtlContentCodecs)' == ''">false</CrtSysUseNtlContentCodecs>
+    <CrtSysUseNtlKernelContentCodecs Condition="'$(CrtSysUseNtlKernelContentCodecs)' == ''">false</CrtSysUseNtlKernelContentCodecs>
+    <CrtSysMsQuicRoot Condition="'$(CrtSysMsQuicRoot)' == ''">$(CrtSysRoot)share\crtsys\msquic\</CrtSysMsQuicRoot>
+    <CrtSysUseNtlMsQuicHeaders Condition="'$(CrtSysUseNtlMsQuicHeaders)' == '' and Exists('$(CrtSysMsQuicRoot)include\msquic.h')">true</CrtSysUseNtlMsQuicHeaders>
+    <CrtSysUseNtlMsQuicHeaders Condition="'$(CrtSysUseNtlMsQuicHeaders)' == ''">false</CrtSysUseNtlMsQuicHeaders>
   </PropertyGroup>
 
   <Import Project="$(CrtSysRoot)build\native\crtsys.targets"

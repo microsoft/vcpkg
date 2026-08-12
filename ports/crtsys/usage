@@ -1,16 +1,11 @@
-crtsys provides CMake helpers and Visual Studio/MSBuild driver-model UI.
-
-CMake:
+crtsys provides CMake helpers for Windows kernel-mode drivers:
 
   find_package(crtsys CONFIG REQUIRED)
   crtsys_add_driver(my_driver src/main.cpp)
 
-Visual Studio/MSBuild manifest projects must use a static-CRT triplet. After
-vcpkg install, run the initializer once from the manifest root:
+Optional user-mode content codecs are available with crtsys[content-codecs].
+Pinned MsQuic headers are available with crtsys[msquic-headers].
 
-  .\vcpkg_installed\x64-windows-static\tools\crtsys\crtsys-vs-init.cmd
-
-Reload Visual Studio after the first install so the crtsys WDM/KMDF entry-point
-property page is reevaluated. Re-run with a different -Triplet to change the
-default, or pass -Remove to remove the generated integration. See
-share/crtsys/readme.md for driver examples.
+Visual Studio/MSBuild property-page integration is installed with the port.
+Run crtsys-vs-init.cmd once from a vcpkg manifest project, then reload the
+solution. See share/crtsys/readme.md for driver and entry-point examples.

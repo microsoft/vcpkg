@@ -4,6 +4,24 @@
   "description": "C runtime library and NTL helpers for Windows kernel-mode drivers",
   "homepage": "https://github.com/ntoskrnl7/crtsys",
   "documentation": "https://github.com/ntoskrnl7/crtsys#readme",
-  "license": "MIT AND BSD-2-Clause AND Zlib",
-  "supports": "windows & !uwp & !mingw & static & staticcrt & (x86 | x64 | arm | arm64)"
+  "license": "MIT AND BSD-2-Clause AND BSD-3-Clause",
+  "supports": "windows & !uwp & !mingw & static & staticcrt & (x86 | x64 | arm | arm64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "content-codecs": {
+      "description": "Enable user-mode NTL content codecs through vcpkg-managed zlib and Brotli",
+      "dependencies": [
+        "brotli",
+        "zlib"
+      ]
+    },
+    "msquic-headers": {
+      "description": "Install the pinned MsQuic public headers used by the optional NTL integration"
+    }
+  }
 }
