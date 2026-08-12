@@ -18,7 +18,6 @@ if(QT_UPDATE_VERSION)
 else()
     qt_build_submodule(
         "${SOURCE_PATH}"
-        OPTIONS "CONFIG+=c++17"
         BUILD_OPTIONS ${OPTIONS}
         BUILD_OPTIONS_RELEASE ${OPT_REL}
         BUILD_OPTIONS_DEBUG ${OPT_DBG}
