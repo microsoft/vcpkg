@@ -138,6 +138,7 @@ awlib[graphics]:arm64-linux=cascade
 azure-kinect-sensor-sdk:arm64-linux=cascade
 babl[introspection]:arm64-linux=cascade
 bddisasm:arm64-linux=fail
+bde:arm64-osx=fail # https://github.com/bloomberg/bde-tools/issues/54
 bext-text:arm64-linux=pass
 bgfx:arm64-linux=fail
 bitserializer[rapidyaml-archive]:arm64-windows=cascade

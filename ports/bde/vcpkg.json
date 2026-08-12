@@ -2,7 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "bde",
   "version": "4.38.0.0",
-  "port-version": 1,
   "description": "Basic Development Environment - a set of foundational C++ libraries used at Bloomberg.",
   "homepage": "https://github.com/bloomberg/bde",
   "documentation": "https://bloomberg.github.io/bde/",

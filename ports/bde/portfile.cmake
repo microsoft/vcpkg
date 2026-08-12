@@ -28,7 +28,6 @@ vcpkg_from_github(
     PATCHES
         fix-bdlar-target.patch
         use-vcpkg-pcre2.patch
-        apple-clang-sized-deallocation.patch
 )
 
 vcpkg_cmake_configure(
