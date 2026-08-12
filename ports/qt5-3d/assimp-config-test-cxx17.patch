@@ -1,0 +1,7 @@
+diff --git a/config.tests/assimp/assimp.pro b/config.tests/assimp/assimp.pro
+index a3aa924..94d00a1 100644
+--- a/config.tests/assimp/assimp.pro
++++ b/config.tests/assimp/assimp.pro
+@@ -1 +1,2 @@
+ SOURCES += main.cpp
++CONFIG += c++17

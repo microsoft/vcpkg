@@ -103,4 +103,10 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/contrib/openddlparser/LICENSE"
+        "${SOURCE_PATH}/contrib/Open3DGC/o3dgcCommon.h"
+        "${SOURCE_PATH}/contrib/Open3DGC/o3dgcArithmeticCodec.cpp"
+)
