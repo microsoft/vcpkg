@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 fc0a55ca01c32f613b9cd8c6cffad17ee0855ee542f03fa455632043c99a0a259599557a46c7c636032444260e64476867d9af43a1da689837f99c22942cd863
+    SHA512 6e6f91cde7dffec527af8a9b0162e9fb7997ec2b6770d3002c662cd75e5cd01afd2fb5f5cadfa2496c86e67ed22e876d99ebdf60b9ea7431a3a3caf5686d0f8f
     HEAD_REF main
     PATCHES
         fix-freebsd.patch
@@ -63,9 +63,30 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
+        # Prevent host-installed Unix libraries from silently changing SDL's capabilities.
+        -DSDL_FRIBIDI=OFF
+        -DSDL_JACK=OFF
+        -DSDL_KMSDRM=OFF
+        -DSDL_LIBTHAI=OFF
+        -DSDL_LIBUDEV=OFF
+        -DSDL_LIBURING=OFF
+        -DSDL_PIPEWIRE=OFF
+        -DSDL_PULSEAUDIO=OFF
+        -DSDL_ROCKCHIP=OFF
+        -DSDL_RPI=OFF
+        -DSDL_SNDIO=OFF
+        -DSDL_WAYLAND_LIBDECOR=OFF
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
+        -DSDL_X11_XCURSOR=OFF
+        -DSDL_X11_XDBE=OFF
+        -DSDL_X11_XFIXES=OFF
+        -DSDL_X11_XINPUT=OFF
+        -DSDL_X11_XRANDR=OFF
+        -DSDL_X11_XSHAPE=OFF
         -DSDL_X11_XSCRNSAVER=OFF
+        -DSDL_X11_XSYNC=OFF
+        -DSDL_X11_XTEST=OFF
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         # Specifying the revision skips the need to use git to determine a version
         -DSDL_REVISION=vcpkg
@@ -85,6 +106,13 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt"
-    COMMENT "Some configurations may use code licensed under the MIT and Apache-2.0 licenses."
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/src/hidapi/LICENSE-bsd.txt"
+        "${SOURCE_PATH}/src/video/stb_image.h"
+        "${SOURCE_PATH}/src/video/yuv2rgb/LICENSE"
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2.h"
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2platform.h"
+    COMMENT "SDL_opengles2_gl2platform.h is licensed under Apache-2.0; see https://www.apache.org/licenses/LICENSE-2.0."
 )
