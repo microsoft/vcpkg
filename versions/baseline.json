@@ -2205,7 +2205,7 @@
       "port-version": 2
     },
     "crcpp": {
-      "baseline": "1.2.1.0",
+      "baseline": "1.2.2.0",
       "port-version": 0
     },
     "crfsuite": {
@@ -2913,7 +2913,7 @@
       "port-version": 0
     },
     "ezc3d": {
-      "baseline": "1.7.0",
+      "baseline": "1.7.2",
       "port-version": 0
     },
     "ezfoundation": {
@@ -8182,7 +8182,7 @@
     },
     "qca": {
       "baseline": "2.3.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qcbor": {
       "baseline": "1.6.1",
@@ -9129,7 +9129,7 @@
       "port-version": 0
     },
     "scinumtools3": {
-      "baseline": "0.5.11",
+      "baseline": "0.6.3",
       "port-version": 0
     },
     "sciplot": {
@@ -11105,8 +11105,8 @@
       "port-version": 0
     },
     "wxwidgets": {
-      "baseline": "3.3.1",
-      "port-version": 1
+      "baseline": "3.3.3",
+      "port-version": 0
     },
     "wyhash": {
       "baseline": "2023-12-03",
