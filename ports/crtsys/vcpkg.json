@@ -5,7 +5,7 @@
   "homepage": "https://github.com/ntoskrnl7/crtsys",
   "documentation": "https://github.com/ntoskrnl7/crtsys#readme",
   "license": "MIT AND BSD-2-Clause AND BSD-3-Clause",
-  "supports": "windows & !uwp & !mingw & static & staticcrt & (x86 | x64 | arm | arm64)",
+  "supports": "windows & !uwp & !mingw & static & staticcrt & (x86 | x64 | arm64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
