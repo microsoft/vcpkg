@@ -659,7 +659,6 @@ libressl:arm64-linux=skip
 libsbml[expat, libxml2]=options # have to select excatly one xml lib(they are features)
 libsmb2[krb5]:arm64-linux=cascade
 libssh[core,openssl,mbedtls]=options # we have to select feature openssl or mbedtls
-libtar:arm64-linux=fail
 libtcod[sdl]:arm64-linux=cascade
 libtomcrypt(arm & windows)=fail
 libtorch:x86-windows=fail
