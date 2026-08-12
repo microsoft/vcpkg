@@ -1,7 +1,8 @@
-﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 63f903c..2f7286d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -846,30 +846,10 @@
+@@ -846,30 +846,10 @@ else()
  endif()
  
  if (webtorrent)
@@ -35,7 +36,7 @@
  	endif()
  endif()
  
-@@ -960,17 +940,12 @@
+@@ -960,19 +940,14 @@ include(CheckCXXCompilerFlag)
  add_subdirectory(bindings)
  
  if(webtorrent)
@@ -58,7 +59,9 @@
 +        BOOST_JSON_HEADER_ONLY
 +        BOOST_JSON_STATIC_LINK)
  endif()
-@@ -980,15 +955,5 @@
+ 
+ if(IS_ABSOLUTE "${CMAKE_INSTALL_LIBDIR}")
+@@ -980,16 +955,6 @@ if(IS_ABSOLUTE "${CMAKE_INSTALL_LIBDIR}")
  endif()
  
  set(LIBTORRENT_EXPORT_TARGETS torrent-rasterbar)
@@ -74,10 +77,14 @@
 -endif()
  
  install(TARGETS ${LIBTORRENT_EXPORT_TARGETS}
+     EXPORT LibtorrentRasterbarTargets
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 885818c..e7f7a7b 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
-@@ -47,15 +47,5 @@
+@@ -44,17 +44,7 @@ foreach(TARGET_SRC ${tests})
+ endforeach()
+ 
  if (webtorrent AND TARGET test_rtc)
 -	# torrent-rasterbar links datachannel-static privately when building
 -	# shared libs (so its include directories aren't propagated to

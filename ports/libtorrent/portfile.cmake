@@ -1,7 +1,25 @@
-﻿if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
     set(_static_runtime ON)
 else()
     set(_static_runtime OFF)
+endif()
+
+# Libtorrent exports TORRENT_ABI_VERSION=2 when deprecated-functions is enabled,
+# and 100 otherwise. Public headers use this value to select their ABI:
+# https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L738-L741
+if("deprfun" IN_LIST FEATURES)
+    set(_torrent_abi_version 2)
+else()
+    set(_torrent_abi_version 100)
+endif()
+
+# Libtorrent exports TORRENT_USE_RTC=0 when WebTorrent is disabled. When enabled,
+# config.hpp defaults it to 1, so no explicit definition is emitted:
+# https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L749-L750
+if("webtorrent" IN_LIST FEATURES)
+    set(_torrent_use_rtc 1)
+else()
+    set(_torrent_use_rtc 0)
 endif()
 
 vcpkg_check_features(
@@ -46,12 +64,54 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# These mirror libtorrent's public target compile definitions for this port's
+# fixed OpenSSL configuration. TORRENT_USE_LIBCRYPTO also selects the public
+# lcrypto inline namespace, so headers must define it to match the library ABI.
+# https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L769-L784
+set(_torrent_header_config [=[
+#ifndef TORRENT_USE_OPENSSL
+#define TORRENT_USE_OPENSSL
+#endif
+#ifndef TORRENT_USE_LIBCRYPTO
+#define TORRENT_USE_LIBCRYPTO
+#endif
+#ifndef TORRENT_SSL_PEERS
+#define TORRENT_SSL_PEERS
+#endif
+#ifndef TORRENT_ABI_VERSION
+#define TORRENT_ABI_VERSION @_torrent_abi_version@
+#endif
+#ifndef TORRENT_USE_RTC
+#define TORRENT_USE_RTC @_torrent_use_rtc@
+#endif
+]=])
+string(CONFIGURE "${_torrent_header_config}" _torrent_header_config @ONLY)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # Libtorrent exports this definition when building torrent-rasterbar shared:
+    # https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L549-L554
+    string(APPEND _torrent_header_config [=[
+#ifndef TORRENT_LINKING_SHARED
+#define TORRENT_LINKING_SHARED
+#endif
+]=])
+endif()
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/libtorrent/config.hpp"
+    "#define TORRENT_CONFIG_HPP_INCLUDED"
+    "#define TORRENT_CONFIG_HPP_INCLUDED\n${_torrent_header_config}"
+)
+
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME LibtorrentRasterbar
     CONFIG_PATH lib/cmake/LibtorrentRasterbar
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/include/libtorrent/aux_/puff.hpp"
+        "${TRYSIGNAL_SOURCE_PATH}/LICENSE"
+)
 
 file(
     REMOVE_RECURSE
