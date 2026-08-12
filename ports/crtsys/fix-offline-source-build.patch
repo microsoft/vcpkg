@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fd338690..17e3e385 100644
+index fd33869..2567e28 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,9 @@
@@ -113,9 +113,7 @@ index fd338690..17e3e385 100644
 +  if(NOT TARGET "${target_name}")
 +    message(FATAL_ERROR "Expected CMake target was not defined: ${target_name}")
 +  endif()
- 
--CPMAddPackage("gh:ntoskrnl7/FindWDK#master")
--list(APPEND CMAKE_MODULE_PATH "${FindWDK_SOURCE_DIR}/cmake")
++
 +  if(POLICY CMP0091)
 +    set_property(
 +      TARGET "${target_name}"
@@ -159,7 +157,9 @@ index fd338690..17e3e385 100644
 +    DOWNLOAD_ONLY YES
 +  )
 +endif()
-+
+ 
+-CPMAddPackage("gh:ntoskrnl7/FindWDK#master")
+-list(APPEND CMAKE_MODULE_PATH "${FindWDK_SOURCE_DIR}/cmake")
 +# FindWDK is bundled at a pinned revision so source builds and installed
 +# consumers use the same reproducible WDK discovery implementation.
  find_package(WDK REQUIRED)
@@ -221,7 +221,21 @@ index fd338690..17e3e385 100644
      file(GLOB PLATFORM_SOURCE_FILES
          ${ucxxrt_SOURCE_DIR}/src/i386/*.cpp
          ${ucxxrt_SOURCE_DIR}/src/i386/*.asm
-@@ -443,9 +564,8 @@ if (UCXXRT_ENABLED)
+@@ -395,6 +516,13 @@ target_include_directories(crtsys PRIVATE "${CRTSYS_MINIMUM_KMDF_INCLUDE_DIR}")
+ # link libraries
+ #
+ target_link_libraries(crtsys PRIVATE $<BUILD_INTERFACE:Ldk>)
++# On ARM64, WDK 10.0.26100's libcntpr archive stores wcslen and wcsnlen in
++# the same member. Ldk introduces the wcslen reference after the driver's
++# first ntoskrnl import library, so resolve the kernel import immediately
++# after Ldk instead of pulling that conflicting libcntpr member.
++if(CRTSYS_NATIVE_ARCH STREQUAL "ARM64")
++  target_link_libraries(crtsys PRIVATE WDK::NTOSKRNL)
++endif()
+ target_link_libraries(crtsys PRIVATE WDK::AUX_KLIB)
+ if(CRTSYS_USE_LIBCNTPR)
+   target_link_libraries(crtsys PRIVATE WDK::LIBCNTPR)
+@@ -443,9 +571,8 @@ if (UCXXRT_ENABLED)
    target_compile_options(crtsys PRIVATE "$<$<COMPILE_LANGUAGE:C,CXX>:/FI${ucxxrt_SOURCE_DIR}/ucxxrt.inl>")
  endif()
  
@@ -232,7 +246,7 @@ index fd338690..17e3e385 100644
  
  #
  # Generate Debug Info
-@@ -457,6 +577,7 @@ target_link_options(crtsys PUBLIC "$<$<CONFIG:Release>:/DEBUG>")
+@@ -457,6 +584,7 @@ target_link_options(crtsys PUBLIC "$<$<CONFIG:Release>:/DEBUG>")
  # Force File Output
  #
  if (CRTSYS_USE_LIBCNTPR AND
@@ -240,7 +254,7 @@ index fd338690..17e3e385 100644
      "${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}" VERSION_LESS
          "10.0.22000.0")
    # 10.0.17763.0
-@@ -472,7 +593,7 @@ if (CRTSYS_USE_LIBCNTPR AND
+@@ -472,7 +600,7 @@ if (CRTSYS_USE_LIBCNTPR AND
    # Older libcntpr archives still collide with kernel/UCRT members that
    # cannot be isolated by the modern compatibility metadata below.
    target_link_options(crtsys PUBLIC "/FORCE:MULTIPLE")
@@ -249,7 +263,7 @@ index fd338690..17e3e385 100644
    # ntoskrnl.lib(ntoskrnl.exe) : error LNK2005: RtlRaiseException already defined in Ldk.lib(except.obj).
    target_link_options(crtsys PUBLIC "/FORCE:MULTIPLE")
  endif()
-@@ -486,7 +606,7 @@ if(CRTSYS_BUILD_NTL_KERNEL_CONTENT_CODECS)
+@@ -486,7 +614,7 @@ if(CRTSYS_BUILD_NTL_KERNEL_CONTENT_CODECS)
    crtsys_add_ntl_kernel_content_codecs()
  endif()
  
@@ -258,7 +272,7 @@ index fd338690..17e3e385 100644
    # crtsys.lib(lowhelpr.obj) : error LNK2026: module unsafe for SAFESEH image.
    target_link_options(crtsys PUBLIC "/SAFESEH:NO")
  
-@@ -516,10 +636,7 @@ set_target_properties(crtsys PROPERTIES VS_USER_PROPS "${CMAKE_CURRENT_SOURCE_DI
+@@ -516,10 +644,7 @@ set_target_properties(crtsys PROPERTIES VS_USER_PROPS "${CMAKE_CURRENT_SOURCE_DI
  # lets an unrelated build silently replace another configuration's archive.
  #
  if(CRTSYS_IS_TOP_LEVEL)
@@ -270,7 +284,7 @@ index fd338690..17e3e385 100644
    set_target_properties(
      crtsys
      PROPERTIES
-@@ -528,15 +645,6 @@ if(CRTSYS_IS_TOP_LEVEL)
+@@ -528,15 +653,6 @@ if(CRTSYS_IS_TOP_LEVEL)
    )
  endif()
  
@@ -286,7 +300,7 @@ index fd338690..17e3e385 100644
  set(CRTSYS_NATIVE_TOOLSET "v${MSVC_TOOLSET_VERSION}")
  
  if(CRTSYS_ENABLE_INSTALL)
-@@ -544,7 +652,14 @@ if(CRTSYS_ENABLE_INSTALL)
+@@ -544,7 +660,14 @@ if(CRTSYS_ENABLE_INSTALL)
    include(CMakePackageConfigHelpers)
  
    set(CRTSYS_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/crtsys/cmake" CACHE STRING "crtsys CMake package install directory")
@@ -302,7 +316,7 @@ index fd338690..17e3e385 100644
  
    set(CRTSYS_INSTALL_TARGETS crtsys)
    if(TARGET Ldk)
-@@ -572,6 +687,10 @@ if(CRTSYS_ENABLE_INSTALL)
+@@ -572,6 +695,10 @@ if(CRTSYS_ENABLE_INSTALL)
        cmake/std-cxx.cmake
      DESTINATION "${CRTSYS_INSTALL_CMAKEDIR}"
    )
@@ -314,7 +328,7 @@ index fd338690..17e3e385 100644
    configure_package_config_file(
      cmake/crtsys-config.cmake.in
 diff --git a/cmake/CrtSys.cmake b/cmake/CrtSys.cmake
-index 66bd7b99..afcecff0 100644
+index 66bd7b9..e26a18a 100644
 --- a/cmake/CrtSys.cmake
 +++ b/cmake/CrtSys.cmake
 @@ -31,7 +31,10 @@ else()
@@ -467,14 +481,14 @@ index 66bd7b99..afcecff0 100644
          set(_config_dir Release)
 +        set(_standard_library
 +            "${_CRTSYS_ROOT}/lib/manual-link/${_library}")
-     endif()
- 
++    endif()
++
 +    file(TO_CMAKE_PATH "${_standard_library}" _standard_library)
 +    if(EXISTS "${_standard_library}")
 +        set(${_out_path} "${_standard_library}" PARENT_SCOPE)
 +        return()
-+    endif()
-+
+     endif()
+ 
 +    crtsys_get_prebuilt_arch(_arch)
 +    crtsys_get_prebuilt_toolset(_toolset)
 +
@@ -494,7 +508,7 @@ index 66bd7b99..afcecff0 100644
      endif()
  
      if(_crtsys_debug AND _crtsys_release)
-@@ -428,8 +398,9 @@ function(crtsys_apply_prebuilt_driver_interface _target)
+@@ -428,8 +398,20 @@ function(crtsys_apply_prebuilt_driver_interface _target)
          set(_crtsys_prebuilt_link_libraries
              "${_crtsys_release}" "${_ldk_release}")
      else()
@@ -503,21 +517,53 @@ index 66bd7b99..afcecff0 100644
 +        message(FATAL_ERROR
 +            "No crtsys libraries were found in the standard manual-link "
 +            "directories or the legacy native layout under ${_CRTSYS_ROOT}.")
++    endif()
++
++    crtsys_get_prebuilt_arch(_crtsys_target_arch)
++    # Keep the ARM64 kernel import after Ldk. WDK 10.0.26100 packages wcslen
++    # and wcsnlen in one libcntpr member, while ntoskrnl already exports both.
++    # Resolving Ldk's reference here avoids pulling the conflicting member.
++    if(_crtsys_target_arch STREQUAL "ARM64")
++        if(NOT TARGET WDK::NTOSKRNL)
++            message(FATAL_ERROR "WDK::NTOSKRNL is required for ARM64 crtsys prebuilt driver support.")
++        endif()
++        list(APPEND _crtsys_prebuilt_link_libraries WDK::NTOSKRNL)
      endif()
  
      foreach(_required_target IN ITEMS WDK::CNG WDK::AUX_KLIB WDK::WDMSEC)
-@@ -467,7 +438,8 @@ function(crtsys_apply_prebuilt_driver_interface _target)
+@@ -461,13 +443,17 @@ function(crtsys_apply_prebuilt_driver_interface _target)
+         ${_target} ${_usage_requirement_scope}
+         "$<$<COMPILE_LANGUAGE:C,CXX>:/MT>")
+ 
+-    if(CRTSYS_USE_LIBCNTPR)
++    if(CRTSYS_USE_LIBCNTPR AND
++       NOT _crtsys_target_arch STREQUAL "ARM64")
+         target_compile_definitions(
+             ${_target} ${_usage_requirement_scope} CRTSYS_USE_LIBCNTPR)
          target_link_options(
              ${_target} ${_usage_requirement_scope} "/FORCE:MULTIPLE")
++    elseif(CRTSYS_USE_LIBCNTPR)
++        target_compile_definitions(
++            ${_target} ${_usage_requirement_scope} CRTSYS_USE_LIBCNTPR)
      endif()
 -    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
-+    crtsys_get_prebuilt_arch(_crtsys_target_arch)
 +    if(_crtsys_target_arch STREQUAL "x86")
          target_link_options(
              ${_target} ${_usage_requirement_scope} "/SAFESEH:NO")
      endif()
+@@ -688,7 +674,9 @@ function(crtsys_add_driver _target)
+         # A source-tree consumer needs the same libcntpr duplicate-symbol
+         # policy as a prebuilt-package consumer. Link options placed on the
+         # static crtsys archive are not applied by every WDK generator path.
+-        if(CRTSYS_USE_LIBCNTPR)
++        crtsys_get_prebuilt_arch(_crtsys_driver_arch)
++        if(CRTSYS_USE_LIBCNTPR AND
++           NOT _crtsys_driver_arch STREQUAL "ARM64")
+             target_link_options(${_target} PRIVATE "/FORCE:MULTIPLE")
+         endif()
+         if(NOT TARGET WDK::WDMSEC)
 diff --git a/cmake/FindWDK.cmake b/cmake/FindWDK.cmake
-index db98dbb6..cd7a0433 100644
+index db98dbb..cd7a043 100644
 --- a/cmake/FindWDK.cmake
 +++ b/cmake/FindWDK.cmake
 @@ -8,19 +8,18 @@
@@ -565,7 +611,7 @@ index db98dbb6..cd7a0433 100644
      set(_CRTSYS_INSTALLED_WDK_LIB_VERSIONS)
      foreach(_CRTSYS_INSTALLED_WDK_LIB_DIR IN LISTS _CRTSYS_INSTALLED_WDK_LIB_DIRS)
 diff --git a/cmake/NtlContentCodecs.cmake b/cmake/NtlContentCodecs.cmake
-index c8eb6926..7f47a15a 100644
+index c8eb692..7f47a15 100644
 --- a/cmake/NtlContentCodecs.cmake
 +++ b/cmake/NtlContentCodecs.cmake
 @@ -1,5 +1,9 @@
@@ -744,7 +790,7 @@ index c8eb6926..7f47a15a 100644
      message(FATAL_ERROR
        "Kernel content codecs require FindWDK and wdk_add_library")
 diff --git a/cmake/NtlMsQuic.cmake b/cmake/NtlMsQuic.cmake
-index 4736cb10..f2458e2c 100644
+index 4736cb1..f2458e2 100644
 --- a/cmake/NtlMsQuic.cmake
 +++ b/cmake/NtlMsQuic.cmake
 @@ -1,5 +1,9 @@
@@ -780,7 +826,7 @@ index 4736cb10..f2458e2c 100644
      CPMAddPackage(
        # Keep the internal dependency name short. Visual Studio still applies
 diff --git a/cmake/crtsys-config.cmake.in b/cmake/crtsys-config.cmake.in
-index 89b3f647..61cab1ea 100644
+index 89b3f64..61cab1e 100644
 --- a/cmake/crtsys-config.cmake.in
 +++ b/cmake/crtsys-config.cmake.in
 @@ -2,6 +2,9 @@
@@ -795,7 +841,7 @@ index 89b3f647..61cab1ea 100644
  
 diff --git a/cmake/vendor/findwdk/LICENSE b/cmake/vendor/findwdk/LICENSE
 new file mode 100644
-index 00000000..4347c25f
+index 0000000..4347c25
 --- /dev/null
 +++ b/cmake/vendor/findwdk/LICENSE
 @@ -0,0 +1,26 @@
@@ -827,7 +873,7 @@ index 00000000..4347c25f
 +SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 diff --git a/cmake/vendor/findwdk/REVISION.txt b/cmake/vendor/findwdk/REVISION.txt
 new file mode 100644
-index 00000000..6242d903
+index 0000000..6242d90
 --- /dev/null
 +++ b/cmake/vendor/findwdk/REVISION.txt
 @@ -0,0 +1,2 @@
@@ -835,7 +881,7 @@ index 00000000..6242d903
 +Revision: 5e3c1cdd6ea92ab16ba47f82a49f645bf0ab7c1d
 diff --git a/cmake/vendor/findwdk/cmake/FindWdk.cmake b/cmake/vendor/findwdk/cmake/FindWdk.cmake
 new file mode 100644
-index 00000000..8eefac82
+index 0000000..8eefac8
 --- /dev/null
 +++ b/cmake/vendor/findwdk/cmake/FindWdk.cmake
 @@ -0,0 +1,296 @@
