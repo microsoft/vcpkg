@@ -4,12 +4,11 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" OPEN3D_STATIC_WINDOWS_RUNTI
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO isl-org/Open3D
-    REF 63e30be8e767948143c3307ba7182aa73a8a1e03
-    SHA512 3c05741bfdd64abdb60eaf6419c25b602f22088e042f0f88d205c5876d88c83424336a78854f5c77df40f40d7f4b3a4757845791e443ed30482cd0d943249879
+    REF 408890c3d940211228d85d86d12972ab82336f25
+    SHA512 e931055fbf74623e20b4f15de23e84ea4943d73844d267a52122808b28db12e9af2b200c8fdba19c1321823b283b612b595bebb54915dfc6b1187bec8c9f18e1
     HEAD_REF main
     PATCHES
         disable-tools-apps.patch
-        use-system-zstd.patch
 )
 
 vcpkg_cmake_configure(
@@ -65,6 +64,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Open3D)
 endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/open3d/Open3DConfig.cmake"
+    "include(CMakeFindDependencyMacro)"
+    "include(CMakeFindDependencyMacro)\nfind_dependency(zstd CONFIG)"
+)
 
 vcpkg_fixup_pkgconfig()
 
