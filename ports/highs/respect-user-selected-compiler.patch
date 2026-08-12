@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1dc3a98..5427d1e 100644
+index 79ef1f0..6790d5c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -6,15 +6,6 @@
@@ -17,4 +17,4 @@ index 1dc3a98..5427d1e 100644
 -
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
  
- include(set-version)
+ option(HIGHS_VCPKG "Vcpkg integration: " OFF)
