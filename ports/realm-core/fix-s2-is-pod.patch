@@ -1,11 +1,12 @@
 diff --git a/src/external/s2/base/macros.h b/src/external/s2/base/macros.h
-index 1d8f2e4..f5d2c6a 100644
+index eaf28fe..d556332 100644
 --- a/src/external/s2/base/macros.h
 +++ b/src/external/s2/base/macros.h
 @@ -133,62 +133,13 @@ char (&ArraySizeHelper(const T (&array)[N]))[N];
  #define AS_STRING(x)   AS_STRING_INTERNAL(x)
  #define AS_STRING_INTERNAL(x)   #x
  
+-
 -// One of the type traits, is_pod, makes it possible to query whether
 -// a type is a POD type. It is impossible for type_traits.h to get
 -// this right without compiler support, so it fails conservatively. It
@@ -36,15 +37,21 @@ index 1d8f2e4..f5d2c6a 100644
 -namespace std {                                    \
 -template<> struct is_pod<TypeName> : true_type { }; \
 -}                                                   \
--typedef int Dummy_Type_For_DECLARE_POD             
+-typedef int Dummy_Type_For_DECLARE_POD              \
 -
 -// We once needed a different technique to assert that a nested class
 -// is a POD. This is no longer necessary, and DECLARE_NESTED_POD is
--// just a synonym for DECLARE_POD. We continue to provide DECLARE_NESTED_POD
--// only so we don't have to change client code. Regardless of whether you
--// use DECLARE_POD or DECLARE_NESTED_POD: use it after the outer class.
--// Using it within a class definition will give a compiler error.
--#define DECLARE_NESTED_POD(TypeName) DECLARE_POD(TypeName)
+-// just a synonym for DECLARE_POD. We continue to provide
+-// DECLARE_NESTED_POD only so we don't have to change client
+-// code. Regardless of whether you use DECLARE_POD or
+-// DECLARE_NESTED_POD: use it after the outer class. Using it within a
+-// class definition will give a compiler error.
++// These macros are a mess of undefined behavior that specialize std::is_pod to
++// pretend that non-POD types are POD, which is both invalid and would do very
++// broken things. Fortunately s2 internally does not actually rely on this and
++// we can make them no-ops.
++#define DECLARE_POD(TypeName)
+ #define DECLARE_NESTED_POD(TypeName) DECLARE_POD(TypeName)
 -
 -// Declare that TemplateName<T> is a POD whenever T is
 -#define PROPAGATE_POD_FROM_TEMPLATE_ARGUMENT(TemplateName)             \
@@ -52,13 +59,15 @@ index 1d8f2e4..f5d2c6a 100644
 -template <typename T> struct is_pod<TemplateName<T> > : std::is_trivial<T> { }; \
 -}                                                                      \
 -typedef int Dummy_Type_For_PROPAGATE_POD_FROM_TEMPLATE_ARGUMENT
-+// These macros are a mess of undefined behavior that specialize std::is_pod to
-+// pretend that non-POD types are POD, which is both invalid and would do very
-+// broken things. Fortunately s2 internally does not actually rely on this and
-+// we can make them no-ops.
-+#define DECLARE_POD(TypeName)
-+#define DECLARE_NESTED_POD(TypeName) DECLARE_POD(TypeName)
+-
+-// Macro that does nothing if TypeName is a POD, and gives a compiler
+-// error if TypeName is a non-POD.  You should put a descriptive
+-// comment right next to the macro call so that people can tell what
+-// the compiler error is about.
+-//
+-// Implementation note: this works by taking the size of a type that's
+-// complete when TypeName is a POD and incomplete otherwise.
 +#define PROPAGATE_POD_FROM_TEMPLATE_ARGUMENT(TemplateName)
  
- // Macro that does nothing if TypeName is a POD, and gives a compiler
- // error if TypeName is a non-POD.  You should put a descriptive
+ template <bool IsPod> struct ERROR_TYPE_MUST_BE_POD;
+ template <> struct ERROR_TYPE_MUST_BE_POD<true> { };
