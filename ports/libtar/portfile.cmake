@@ -19,7 +19,7 @@ vcpkg_make_configure(
 set(install_options)
 if(VCPKG_CROSSCOMPILING)
     # Avoid using the host strip tool on cross-compiled target binaries.
-    list(APPEND install_options "INSTALL_PROGRAM=$(INSTALL)")
+    list(APPEND install_options "INSTALL_PROGRAM='$(INSTALL)'")
 endif()
 
 vcpkg_make_install(OPTIONS ${install_options})
