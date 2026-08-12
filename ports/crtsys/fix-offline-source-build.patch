@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fd338690..0ec2082f 100644
+index fd338690..17e3e385 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,9 @@
@@ -99,7 +99,7 @@ index fd338690..0ec2082f 100644
      NOT CRTSYS_USE_LIBCNTPR)
    set(LDK_USE_RAISE_EXCEPTION ON CACHE BOOL
        "Set to ON to use ldk!RaiseException" FORCE)
-@@ -227,15 +292,54 @@ if(CRTSYS_LDK_SOURCE_DIR)
+@@ -227,15 +292,57 @@ if(CRTSYS_LDK_SOURCE_DIR)
  else()
    CPMAddPackage("gh:ntoskrnl7/Ldk@0.7.25")
  endif()
@@ -122,15 +122,18 @@ index fd338690..0ec2082f 100644
 +      PROPERTY MSVC_RUNTIME_LIBRARY
 +        "MultiThreaded"
 +    )
-+  else()
-+    # CMake 3.14 has no MSVC_RUNTIME_LIBRARY abstraction. Keep the documented
-+    # minimum working while ensuring packaged archives never embed dynamic-CRT
-+    # /DEFAULTLIB directives.
-+    target_compile_options(
-+      "${target_name}" PRIVATE
-+      "/MT"
-+    )
 +  endif()
++
++  # The Visual Studio property sheets used to compile the CRT implementation
++  # deliberately clear RuntimeLibrary. Keep an explicit private /MT after
++  # those imports so the CRT headers do not see _DLL and mark the definitions
++  # in this static archive as dllimport. Kernel consumers must use the same
++  # static runtime selection, so /MT remains part of the public build contract.
++  # This also keeps CMake 3.14 working.
++  target_compile_options(
++    "${target_name}" PUBLIC
++    "$<$<COMPILE_LANGUAGE:C,CXX>:/MT>"
++  )
 +
 +  # Kernel libraries must not inject a user-mode CRT default library into the
 +  # consuming driver. They provide the required CRT surface themselves and
@@ -162,7 +165,7 @@ index fd338690..0ec2082f 100644
  find_package(WDK REQUIRED)
  crtsys_get_msvc_sdk_include_dirs(CRTSYS_MSVC_SDK_INCLUDE_DIRS)
  crtsys_generate_msvc_future_overlay(CRTSYS_MSVC_FUTURE_OVERLAY_DIR)
-@@ -274,7 +378,7 @@ set_source_files_properties(
+@@ -274,7 +381,7 @@ set_source_files_properties(
      COMPILE_OPTIONS "$<$<COMPILE_LANGUAGE:CXX>:/FI${CMAKE_CURRENT_SOURCE_DIR}/src/custom/misc/raw_pdb_kernel_compat.h>"
  )
  
@@ -171,7 +174,7 @@ index fd338690..0ec2082f 100644
    file(GLOB MATH_SOURCE_FILES
      src/custom/crt/math/*.c
      )
-@@ -298,7 +402,20 @@ if (UCXXRT_ENABLED)
+@@ -298,7 +405,20 @@ if (UCXXRT_ENABLED)
    list(APPEND SOURCE_FILES src/custom/msvc/common/crt/src/stl/winapisupp.cpp)
    list(REMOVE_ITEM SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/crt/math/ftol3.c)
  
@@ -193,7 +196,7 @@ index fd338690..0ec2082f 100644
  
    file(GLOB_RECURSE UCXXRT_SOURCE_FILES
      ${ucxxrt_SOURCE_DIR}/src/*.cpp
-@@ -308,7 +425,8 @@ if (UCXXRT_ENABLED)
+@@ -308,7 +428,8 @@ if (UCXXRT_ENABLED)
    list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/vcruntime/crt.cpp)
    list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/vcruntime/locales.cpp)
    list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/vcruntime/thread.cpp)
@@ -203,7 +206,7 @@ index fd338690..0ec2082f 100644
      list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/vcruntime/x86_exception_filter.cpp)
    endif()
    list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/cpu_disp.cpp)
-@@ -316,12 +434,12 @@ if (UCXXRT_ENABLED)
+@@ -316,12 +437,12 @@ if (UCXXRT_ENABLED)
    list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/misc/invalid_parameter.cpp)
    list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/sys_main.cpp)
    list(REMOVE_ITEM UCXXRT_SOURCE_FILES ${ucxxrt_SOURCE_DIR}/src/unittest.cpp)
@@ -218,7 +221,7 @@ index fd338690..0ec2082f 100644
      file(GLOB PLATFORM_SOURCE_FILES
          ${ucxxrt_SOURCE_DIR}/src/i386/*.cpp
          ${ucxxrt_SOURCE_DIR}/src/i386/*.asm
-@@ -443,9 +561,8 @@ if (UCXXRT_ENABLED)
+@@ -443,9 +564,8 @@ if (UCXXRT_ENABLED)
    target_compile_options(crtsys PRIVATE "$<$<COMPILE_LANGUAGE:C,CXX>:/FI${ucxxrt_SOURCE_DIR}/ucxxrt.inl>")
  endif()
  
@@ -229,7 +232,7 @@ index fd338690..0ec2082f 100644
  
  #
  # Generate Debug Info
-@@ -472,7 +589,7 @@ if (CRTSYS_USE_LIBCNTPR AND
+@@ -472,7 +592,7 @@ if (CRTSYS_USE_LIBCNTPR AND
    # Older libcntpr archives still collide with kernel/UCRT members that
    # cannot be isolated by the modern compatibility metadata below.
    target_link_options(crtsys PUBLIC "/FORCE:MULTIPLE")
@@ -238,7 +241,7 @@ index fd338690..0ec2082f 100644
    # ntoskrnl.lib(ntoskrnl.exe) : error LNK2005: RtlRaiseException already defined in Ldk.lib(except.obj).
    target_link_options(crtsys PUBLIC "/FORCE:MULTIPLE")
  endif()
-@@ -486,7 +603,7 @@ if(CRTSYS_BUILD_NTL_KERNEL_CONTENT_CODECS)
+@@ -486,7 +606,7 @@ if(CRTSYS_BUILD_NTL_KERNEL_CONTENT_CODECS)
    crtsys_add_ntl_kernel_content_codecs()
  endif()
  
@@ -247,7 +250,7 @@ index fd338690..0ec2082f 100644
    # crtsys.lib(lowhelpr.obj) : error LNK2026: module unsafe for SAFESEH image.
    target_link_options(crtsys PUBLIC "/SAFESEH:NO")
  
-@@ -516,10 +633,7 @@ set_target_properties(crtsys PROPERTIES VS_USER_PROPS "${CMAKE_CURRENT_SOURCE_DI
+@@ -516,10 +636,7 @@ set_target_properties(crtsys PROPERTIES VS_USER_PROPS "${CMAKE_CURRENT_SOURCE_DI
  # lets an unrelated build silently replace another configuration's archive.
  #
  if(CRTSYS_IS_TOP_LEVEL)
@@ -259,7 +262,7 @@ index fd338690..0ec2082f 100644
    set_target_properties(
      crtsys
      PROPERTIES
-@@ -528,15 +642,6 @@ if(CRTSYS_IS_TOP_LEVEL)
+@@ -528,15 +645,6 @@ if(CRTSYS_IS_TOP_LEVEL)
    )
  endif()
  
@@ -275,7 +278,7 @@ index fd338690..0ec2082f 100644
  set(CRTSYS_NATIVE_TOOLSET "v${MSVC_TOOLSET_VERSION}")
  
  if(CRTSYS_ENABLE_INSTALL)
-@@ -544,7 +649,14 @@ if(CRTSYS_ENABLE_INSTALL)
+@@ -544,7 +652,14 @@ if(CRTSYS_ENABLE_INSTALL)
    include(CMakePackageConfigHelpers)
  
    set(CRTSYS_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/crtsys/cmake" CACHE STRING "crtsys CMake package install directory")
@@ -291,7 +294,7 @@ index fd338690..0ec2082f 100644
  
    set(CRTSYS_INSTALL_TARGETS crtsys)
    if(TARGET Ldk)
-@@ -572,6 +684,10 @@ if(CRTSYS_ENABLE_INSTALL)
+@@ -572,6 +687,10 @@ if(CRTSYS_ENABLE_INSTALL)
        cmake/std-cxx.cmake
      DESTINATION "${CRTSYS_INSTALL_CMAKEDIR}"
    )
