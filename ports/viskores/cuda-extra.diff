@@ -1,27 +1,19 @@
 diff --git a/viskores/exec/cuda/internal/WrappedOperators.h b/viskores/exec/cuda/internal/WrappedOperators.h
-index de09ad9b0..a6550a989 100644
+index de09ad9b0..f1768ae1a 100644
 --- a/viskores/exec/cuda/internal/WrappedOperators.h
 +++ b/viskores/exec/cuda/internal/WrappedOperators.h
-@@ -88,8 +88,9 @@ struct WrappedUnaryPredicate
- // wrapped operator with complex value types such as
- // ArrayPortalValueReference which happen when passed an input array that
- // is implicit.
-+struct WrappedBinaryOperatorBase {};
- template <typename T_, typename Function>
--struct WrappedBinaryOperator
-+struct WrappedBinaryOperator : public WrappedBinaryOperatorBase
- {
-   using T = typename std::remove_const<T_>::type;
- 
-@@ -211,9 +212,9 @@ struct WrappedBinaryPredicate
+@@ -209,13 +209,10 @@ struct WrappedBinaryPredicate
+ //
+ //
  #if THRUST_VERSION >= 300300
- namespace cuda
- {
--template <typename T, typename F>
-+template <typename T>
+-namespace cuda
+-{
+ template <typename T, typename F>
  inline constexpr bool
 -  is_commutative_v<::viskores::exec::cuda::internal::WrappedBinaryOperator<T, F>, T> =
-+  is_commutative_v<::viskores::exec::cuda::internal::WrappedBinaryOperatorBase, T> =
++  ::cuda::is_commutative_v<::viskores::exec::cuda::internal::WrappedBinaryOperator<T, F>, T> =
      ::cuda::std::is_arithmetic<T>::value;
- }
+-}
  #else // THRUST_VERSION < 300300
+ VISKORES_THRUST_NAMESPACE_BEGIN
+ namespace detail
