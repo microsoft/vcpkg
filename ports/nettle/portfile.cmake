@@ -12,7 +12,6 @@ vcpkg_from_gitlab(
         host-tools.patch
         ccas.patch
         msvc-support.patch
-        fix-c23-prototypes.patch
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -29,7 +28,7 @@ if(GENERATE_SYMBOLS)
     endif()
 endif()
 
-vcpkg_list(SET OPTIONS)
+vcpkg_list(SET OPTIONS ac_cv_prog_cc_c23=no)
 if("tools" IN_LIST FEATURES)
     vcpkg_list(APPEND OPTIONS --enable-tools)
 endif()

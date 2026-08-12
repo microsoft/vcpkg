@@ -7,16 +7,21 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        fix-c23-prototypes.patch
-        fix-cross-install-strip.patch
 )
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ac_cv_prog_cc_c23=no
 )
 
-vcpkg_install_make()
+set(install_options)
+if(VCPKG_TARGET_IS_ANDROID)
+    # Avoid using the host strip tool on Android target binaries.
+    list(APPEND install_options "INSTALL_PROGRAM=$(INSTALL)")
+endif()
+
+vcpkg_install_make(OPTIONS ${install_options})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"  "${CURRENT_PACKAGES_DIR}/debug/share")
 
