@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fd33869..2567e28 100644
+index fd33869..3153fc7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,9 @@
@@ -221,7 +221,7 @@ index fd33869..2567e28 100644
      file(GLOB PLATFORM_SOURCE_FILES
          ${ucxxrt_SOURCE_DIR}/src/i386/*.cpp
          ${ucxxrt_SOURCE_DIR}/src/i386/*.asm
-@@ -395,6 +516,13 @@ target_include_directories(crtsys PRIVATE "${CRTSYS_MINIMUM_KMDF_INCLUDE_DIR}")
+@@ -395,6 +516,17 @@ target_include_directories(crtsys PRIVATE "${CRTSYS_MINIMUM_KMDF_INCLUDE_DIR}")
  # link libraries
  #
  target_link_libraries(crtsys PRIVATE $<BUILD_INTERFACE:Ldk>)
@@ -231,11 +231,15 @@ index fd33869..2567e28 100644
 +# after Ldk instead of pulling that conflicting libcntpr member.
 +if(CRTSYS_NATIVE_ARCH STREQUAL "ARM64")
 +  target_link_libraries(crtsys PRIVATE WDK::NTOSKRNL)
++  # Force the ARM64 ctype compatibility object into the final image before
++  # libcntpr is scanned. This prevents libcntpr's combined __ctype.obj from
++  # colliding with the ctype exports in the kernel import library.
++  target_link_options(crtsys PUBLIC "/INCLUDE:iscntrl")
 +endif()
  target_link_libraries(crtsys PRIVATE WDK::AUX_KLIB)
  if(CRTSYS_USE_LIBCNTPR)
    target_link_libraries(crtsys PRIVATE WDK::LIBCNTPR)
-@@ -443,9 +571,8 @@ if (UCXXRT_ENABLED)
+@@ -443,9 +575,8 @@ if (UCXXRT_ENABLED)
    target_compile_options(crtsys PRIVATE "$<$<COMPILE_LANGUAGE:C,CXX>:/FI${ucxxrt_SOURCE_DIR}/ucxxrt.inl>")
  endif()
  
@@ -246,7 +250,7 @@ index fd33869..2567e28 100644
  
  #
  # Generate Debug Info
-@@ -457,6 +584,7 @@ target_link_options(crtsys PUBLIC "$<$<CONFIG:Release>:/DEBUG>")
+@@ -457,6 +588,7 @@ target_link_options(crtsys PUBLIC "$<$<CONFIG:Release>:/DEBUG>")
  # Force File Output
  #
  if (CRTSYS_USE_LIBCNTPR AND
@@ -254,7 +258,7 @@ index fd33869..2567e28 100644
      "${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}" VERSION_LESS
          "10.0.22000.0")
    # 10.0.17763.0
-@@ -472,7 +600,7 @@ if (CRTSYS_USE_LIBCNTPR AND
+@@ -472,7 +604,7 @@ if (CRTSYS_USE_LIBCNTPR AND
    # Older libcntpr archives still collide with kernel/UCRT members that
    # cannot be isolated by the modern compatibility metadata below.
    target_link_options(crtsys PUBLIC "/FORCE:MULTIPLE")
@@ -263,7 +267,7 @@ index fd33869..2567e28 100644
    # ntoskrnl.lib(ntoskrnl.exe) : error LNK2005: RtlRaiseException already defined in Ldk.lib(except.obj).
    target_link_options(crtsys PUBLIC "/FORCE:MULTIPLE")
  endif()
-@@ -486,7 +614,7 @@ if(CRTSYS_BUILD_NTL_KERNEL_CONTENT_CODECS)
+@@ -486,7 +618,7 @@ if(CRTSYS_BUILD_NTL_KERNEL_CONTENT_CODECS)
    crtsys_add_ntl_kernel_content_codecs()
  endif()
  
@@ -272,7 +276,7 @@ index fd33869..2567e28 100644
    # crtsys.lib(lowhelpr.obj) : error LNK2026: module unsafe for SAFESEH image.
    target_link_options(crtsys PUBLIC "/SAFESEH:NO")
  
-@@ -516,10 +644,7 @@ set_target_properties(crtsys PROPERTIES VS_USER_PROPS "${CMAKE_CURRENT_SOURCE_DI
+@@ -516,10 +648,7 @@ set_target_properties(crtsys PROPERTIES VS_USER_PROPS "${CMAKE_CURRENT_SOURCE_DI
  # lets an unrelated build silently replace another configuration's archive.
  #
  if(CRTSYS_IS_TOP_LEVEL)
@@ -284,7 +288,7 @@ index fd33869..2567e28 100644
    set_target_properties(
      crtsys
      PROPERTIES
-@@ -528,15 +653,6 @@ if(CRTSYS_IS_TOP_LEVEL)
+@@ -528,15 +657,6 @@ if(CRTSYS_IS_TOP_LEVEL)
    )
  endif()
  
@@ -300,7 +304,7 @@ index fd33869..2567e28 100644
  set(CRTSYS_NATIVE_TOOLSET "v${MSVC_TOOLSET_VERSION}")
  
  if(CRTSYS_ENABLE_INSTALL)
-@@ -544,7 +660,14 @@ if(CRTSYS_ENABLE_INSTALL)
+@@ -544,7 +664,14 @@ if(CRTSYS_ENABLE_INSTALL)
    include(CMakePackageConfigHelpers)
  
    set(CRTSYS_INSTALL_CMAKEDIR "${CMAKE_INSTALL_DATADIR}/crtsys/cmake" CACHE STRING "crtsys CMake package install directory")
@@ -316,7 +320,7 @@ index fd33869..2567e28 100644
  
    set(CRTSYS_INSTALL_TARGETS crtsys)
    if(TARGET Ldk)
-@@ -572,6 +695,10 @@ if(CRTSYS_ENABLE_INSTALL)
+@@ -572,6 +699,10 @@ if(CRTSYS_ENABLE_INSTALL)
        cmake/std-cxx.cmake
      DESTINATION "${CRTSYS_INSTALL_CMAKEDIR}"
    )
@@ -328,7 +332,7 @@ index fd33869..2567e28 100644
    configure_package_config_file(
      cmake/crtsys-config.cmake.in
 diff --git a/cmake/CrtSys.cmake b/cmake/CrtSys.cmake
-index 66bd7b9..e26a18a 100644
+index 66bd7b9..6222762 100644
 --- a/cmake/CrtSys.cmake
 +++ b/cmake/CrtSys.cmake
 @@ -31,7 +31,10 @@ else()
@@ -508,7 +512,7 @@ index 66bd7b9..e26a18a 100644
      endif()
  
      if(_crtsys_debug AND _crtsys_release)
-@@ -428,8 +398,20 @@ function(crtsys_apply_prebuilt_driver_interface _target)
+@@ -428,8 +398,22 @@ function(crtsys_apply_prebuilt_driver_interface _target)
          set(_crtsys_prebuilt_link_libraries
              "${_crtsys_release}" "${_ldk_release}")
      else()
@@ -528,10 +532,12 @@ index 66bd7b9..e26a18a 100644
 +            message(FATAL_ERROR "WDK::NTOSKRNL is required for ARM64 crtsys prebuilt driver support.")
 +        endif()
 +        list(APPEND _crtsys_prebuilt_link_libraries WDK::NTOSKRNL)
++        target_link_options(
++            ${_target} ${_usage_requirement_scope} "/INCLUDE:iscntrl")
      endif()
  
      foreach(_required_target IN ITEMS WDK::CNG WDK::AUX_KLIB WDK::WDMSEC)
-@@ -461,13 +443,17 @@ function(crtsys_apply_prebuilt_driver_interface _target)
+@@ -461,13 +445,17 @@ function(crtsys_apply_prebuilt_driver_interface _target)
          ${_target} ${_usage_requirement_scope}
          "$<$<COMPILE_LANGUAGE:C,CXX>:/MT>")
  
@@ -551,7 +557,7 @@ index 66bd7b9..e26a18a 100644
          target_link_options(
              ${_target} ${_usage_requirement_scope} "/SAFESEH:NO")
      endif()
-@@ -688,7 +674,9 @@ function(crtsys_add_driver _target)
+@@ -688,8 +676,12 @@ function(crtsys_add_driver _target)
          # A source-tree consumer needs the same libcntpr duplicate-symbol
          # policy as a prebuilt-package consumer. Link options placed on the
          # static crtsys archive are not applied by every WDK generator path.
@@ -560,8 +566,11 @@ index 66bd7b9..e26a18a 100644
 +        if(CRTSYS_USE_LIBCNTPR AND
 +           NOT _crtsys_driver_arch STREQUAL "ARM64")
              target_link_options(${_target} PRIVATE "/FORCE:MULTIPLE")
++        elseif(_crtsys_driver_arch STREQUAL "ARM64")
++            target_link_options(${_target} PRIVATE "/INCLUDE:iscntrl")
          endif()
          if(NOT TARGET WDK::WDMSEC)
+             message(FATAL_ERROR "WDK::WDMSEC is required for secure NTL control devices.")
 diff --git a/cmake/FindWDK.cmake b/cmake/FindWDK.cmake
 index db98dbb..cd7a043 100644
 --- a/cmake/FindWDK.cmake
@@ -1181,3 +1190,92 @@ index 0000000..8eefac8
 +        COMMENT "Signing $<TARGET_FILE:${_target} ..."
 +    )
 +endfunction()
+diff --git a/src/custom/crt/ctype_arm64.c b/src/custom/crt/ctype_arm64.c
+new file mode 100644
+index 0000000..ec026f4
+--- /dev/null
++++ b/src/custom/crt/ctype_arm64.c
+@@ -0,0 +1,83 @@
++// ARM64 WDK 10.0.26100 packages the narrow ctype functions in one
++// libcntpr archive member. Some of those functions are also exported by the
++// kernel import library, so requesting one of the missing functions would
++// otherwise pull the whole member and create duplicate definitions.
++
++#if defined(_M_ARM64)
++
++#undef __isascii
++#undef __toascii
++#undef isalpha
++#undef isalnum
++#undef iscntrl
++#undef isgraph
++#undef ispunct
++#undef __iscsymf
++#undef __iscsym
++
++static int __cdecl crtsys_is_ascii_alpha(int value)
++{
++    const unsigned int character = (unsigned int)value;
++    return (character - (unsigned int)'A' <=
++            (unsigned int)('Z' - 'A')) ||
++           (character - (unsigned int)'a' <=
++            (unsigned int)('z' - 'a'));
++}
++
++static int __cdecl crtsys_is_ascii_digit(int value)
++{
++    const unsigned int character = (unsigned int)value;
++    return character - (unsigned int)'0' <=
++           (unsigned int)('9' - '0');
++}
++
++int __cdecl __isascii(int value)
++{
++    return (unsigned int)value <= 0x7fU;
++}
++
++int __cdecl __toascii(int value)
++{
++    return value & 0x7f;
++}
++
++int __cdecl isalpha(int value)
++{
++    return crtsys_is_ascii_alpha(value);
++}
++
++int __cdecl isalnum(int value)
++{
++    return crtsys_is_ascii_alpha(value) ||
++           crtsys_is_ascii_digit(value);
++}
++
++int __cdecl iscntrl(int value)
++{
++    const unsigned int character = (unsigned int)value;
++    return character < 0x20U || character == 0x7fU;
++}
++
++int __cdecl isgraph(int value)
++{
++    const unsigned int character = (unsigned int)value;
++    return character >= 0x21U && character <= 0x7eU;
++}
++
++int __cdecl ispunct(int value)
++{
++    return isgraph(value) && !isalnum(value);
++}
++
++int __cdecl __iscsymf(int value)
++{
++    return value == '_' || crtsys_is_ascii_alpha(value);
++}
++
++int __cdecl __iscsym(int value)
++{
++    return value == '_' || crtsys_is_ascii_alpha(value) ||
++           crtsys_is_ascii_digit(value);
++}
++
++#endif
