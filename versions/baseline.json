@@ -293,7 +293,7 @@
       "port-version": 10
     },
     "arrow": {
-      "baseline": "25.0.0",
+      "baseline": "25.0.1",
       "port-version": 0
     },
     "arrow-adbc": {
