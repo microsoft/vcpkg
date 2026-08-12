@@ -9,19 +9,20 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
     OPTIONS
         ac_cv_prog_cc_c23=no
 )
 
 set(install_options)
-if(VCPKG_TARGET_IS_ANDROID)
-    # Avoid using the host strip tool on Android target binaries.
+if(VCPKG_CROSSCOMPILING)
+    # Avoid using the host strip tool on cross-compiled target binaries.
     list(APPEND install_options "INSTALL_PROGRAM=$(INSTALL)")
 endif()
 
-vcpkg_install_make(OPTIONS ${install_options})
+vcpkg_make_install(OPTIONS ${install_options})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"  "${CURRENT_PACKAGES_DIR}/debug/share")
 

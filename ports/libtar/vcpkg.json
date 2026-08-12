@@ -4,5 +4,11 @@
   "port-version": 2,
   "description": "libtar - C library for manipulating tar files",
   "homepage": "https://repo.or.cz/libtar.git",
-  "supports": "!windows"
+  "supports": "!windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
 }
