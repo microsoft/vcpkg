@@ -1,7 +1,8 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 2baa187..65f9e01 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -1597,22 +1597,24 @@
- # Install `fmtlib` header.
+@@ -1633,6 +1633,7 @@ endif()
  # This was the default behavior before version 12.0.0.
  # Since PyTorch C API depends on it, make it available for projects that
  # depend on PyTorch.
@@ -9,16 +10,9 @@
  set(FMT_INSTALL ON)
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
- add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
- 
- # Disable compiler feature checks for `fmt`.
- #
- # CMake compiles a little program to check compiler features. Some of our build
- # configurations (notably the mobile build analyzer) will populate
- # CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
- # `fmt` is compatible with a superset of the compilers that PyTorch is, it
- # shouldn't be too bad to just disable the checks.
- set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
+@@ -1658,8 +1659,9 @@ target_compile_definitions(fmt PUBLIC "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_ad
+ target_compile_definitions(fmt-header-only INTERFACE "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
+ unset(_fmt_no_unique_address)
  
 +endif()
 +find_package(fmt REQUIRED)
@@ -26,3 +20,4 @@
 -set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
  
  # ---[ Kineto
+ # edge profiler depends on KinetoProfiler but it only does cpu

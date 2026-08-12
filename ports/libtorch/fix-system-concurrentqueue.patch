@@ -1,0 +1,10 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1774,3 +1774,5 @@
+ # Include moodycamel
+-add_library(moodycamel INTERFACE IMPORTED)
+-include_directories(moodycamel SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/third_party/concurrentqueue)
++find_package(concurrentqueue CONFIG REQUIRED)
++add_library(moodycamel ALIAS concurrentqueue::concurrentqueue)
++get_target_property(moodycamel_INCLUDE_DIRS concurrentqueue::concurrentqueue INTERFACE_INCLUDE_DIRECTORIES)
++include_directories(SYSTEM ${moodycamel_INCLUDE_DIRS})
