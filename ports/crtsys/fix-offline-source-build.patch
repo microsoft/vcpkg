@@ -232,7 +232,15 @@ index fd338690..17e3e385 100644
  
  #
  # Generate Debug Info
-@@ -472,7 +592,7 @@ if (CRTSYS_USE_LIBCNTPR AND
+@@ -457,6 +577,7 @@ target_link_options(crtsys PUBLIC "$<$<CONFIG:Release>:/DEBUG>")
+ # Force File Output
+ #
+ if (CRTSYS_USE_LIBCNTPR AND
++    NOT CRTSYS_NATIVE_ARCH STREQUAL "ARM64" AND
+     "${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}" VERSION_LESS
+         "10.0.22000.0")
+   # 10.0.17763.0
+@@ -472,7 +593,7 @@ if (CRTSYS_USE_LIBCNTPR AND
    # Older libcntpr archives still collide with kernel/UCRT members that
    # cannot be isolated by the modern compatibility metadata below.
    target_link_options(crtsys PUBLIC "/FORCE:MULTIPLE")
