@@ -1,9 +1,9 @@
 {
   "name": "c4core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Library of low-level C++ utilities",
   "homepage": "https://github.com/biojppm/c4core",
-  "license": "MIT",
+  "license": "MIT AND BSD-2-Clause AND BSL-1.0",
   "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     {

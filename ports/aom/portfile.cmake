@@ -1,8 +1,8 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 92d4c37fbdd08944a0e721bbaeb13318f10aebb0
-	FETCH_REF "v${VERSION}"
+    REF 03087864cf4bea6abb0d28f95cf7843511413d8f
+    FETCH_REF "v${VERSION}"
     HEAD_REF main
     PATCHES
         aom-rename-static.diff
@@ -53,4 +53,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/PATENTS"
+    "${SOURCE_PATH}/third_party/fastfeat/LICENSE"
+    "${SOURCE_PATH}/third_party/vector/LICENSE"
+    "${SOURCE_PATH}/third_party/x86inc/LICENSE"
+)

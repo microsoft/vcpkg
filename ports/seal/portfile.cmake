@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
     REF "v${VERSION}"
-    SHA512 ce5f59dbb02b298737ca4a47d0b0a141273285deeffa765a6be7a7cea3c96bc391db1f0f7f7211af259f3586fc78b5c5b795eacfa14d0968eac55edc1ece4151
+    SHA512 d3d4bec9094f11e8fb9371d57619a4cf976d144988450da73803e3b08acd0c14279b2930e972407b1d855ddf43b899ba54edd1dc479c8495228c5388022d56f5
     HEAD_REF main
     PATCHES
         shared-zstd.patch
@@ -44,6 +44,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-${VERSION_MAJOR_MINOR})
+
+file(COPY "${CURRENT_PACKAGES_DIR}/include/SEAL-${VERSION_MAJOR_MINOR}/seal" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 # Provides pkg-config files only on UNIX.
 if(NOT VCPKG_TARGET_IS_WINDOWS)

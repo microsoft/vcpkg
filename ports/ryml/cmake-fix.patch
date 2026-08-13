@@ -1,37 +1,47 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cd11625..4fb8872 100644
+index 7419418a..f3e9dab2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -30,10 +30,7 @@ option(RYML_INSTALL "Enable install target" ON)
- 
- #-------------------------------------------------------
- 
--c4_require_subproject(c4core INCORPORATE
--    SUBDIRECTORY ${RYML_EXT_DIR}/c4core
--    OVERRIDE C4CORE_INSTALL ${RYML_INSTALL}
--)
-+find_package(c4core CONFIG REQUIRED)
- 
- c4_add_library(ryml
-     SOURCES
-@@ -84,10 +81,10 @@ c4_add_library(ryml
-         ryml.natvis
-     SOURCE_ROOT ${RYML_SRC_DIR}
-     INC_DIRS
-+        $<BUILD_INTERFACE:${C4CORE_INCLUDE_DIR}>
-         $<BUILD_INTERFACE:${RYML_SRC_DIR}>
-         $<INSTALL_INTERFACE:include>
--    LIBS c4core
--    INCORPORATE c4core
-+    LIBS c4core::c4core
+@@ -97,7 +97,7 @@ c4_add_library(ryml
      )
  
- if(RYML_WITH_TAB_TOKENS)
-@@ -177,7 +174,6 @@ endif()
+ if(RYML_SYSTEM_C4CORE)
+-    find_package(c4core REQUIRED)
++    find_package(c4core CONFIG REQUIRED)
+     target_link_libraries(ryml PUBLIC c4core::c4core)
+ elseif(NOT RYML_STANDALONE)
+     target_link_libraries(ryml PUBLIC c4core)
+@@ -200,11 +200,10 @@ endif()
  if(RYML_INSTALL)
      c4_install_target(ryml)
-     c4_install_exports(DEPENDENCIES c4core)
+     if(RYML_STANDALONE OR RYML_SYSTEM_C4CORE)
+-        c4_install_exports()
++        c4_install_exports(DEPENDENCIES c4core)
+     else()
+         c4_install_exports(DEPENDENCIES c4core)
+     endif()
 -    c4_pack_project()
  endif()
  
+ # generate and install the install manifest
+@@ -216,7 +215,6 @@ list(SORT ryml_manifest)\n\
+ string(REPLACE \";\" \"\\n\" ryml_manifest \"\$\{ryml_manifest\}\")\n\
+ file(WRITE ${CMAKE_BINARY_DIR}/MANIFEST.txt \"\$\{ryml_manifest\}\")
+ ")
+-install(FILES "${CMAKE_BINARY_DIR}/MANIFEST.txt" DESTINATION ${CMAKE_INSTALL_PREFIX}/share/ryml)
  
+ # add a target to uninstall
+ add_custom_target(ryml-uninstall
+diff --git a/proj/c4proj/c4Project.cmake b/proj/c4proj/c4Project.cmake
+index 56d84b47..67d99253 100644
+--- a/proj/c4proj/c4Project.cmake
++++ b/proj/c4proj/c4Project.cmake
+@@ -2694,7 +2694,7 @@ include(CMakeFindDependencyMacro)
+                 continue()
+             endif()
+             c4_dbg("install: adding dependency check for ${d}")
+-            set(deps "${deps}find_dependency(${d} REQUIRED)
++            set(deps "${deps}find_dependency(${d})
+ ")
+         endforeach()
+         set(deps "${deps}#-----------------------------")
