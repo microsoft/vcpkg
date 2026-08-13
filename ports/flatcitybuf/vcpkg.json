@@ -1,6 +1,6 @@
 {
   "name": "flatcitybuf",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": [
     "Native C++17 reader and writer for FlatCityBuf, a cloud-optimized binary encoding of CityJSON.",
     "FlatCityBuf stores CityJSON semantics in FlatBuffers alongside a packed Hilbert R-tree for spatial queries and a static B+tree for attribute queries, so a client can fetch only the bytes it needs - including over HTTP range requests."

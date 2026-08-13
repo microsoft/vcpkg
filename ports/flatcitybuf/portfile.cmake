@@ -1,10 +1,14 @@
 # The C++ library is one subdirectory of a multi-language repository; the rest
 # of the tree (Rust, Python, TypeScript) is not built here.
+#
+# C++ releases are tagged cpp-v<version> (like npm-v*/python-v*): a bare
+# v<version> is the tag release.yml cuts for the Rust crates, which version
+# independently.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cityjson/flatcitybuf
-    REF "v${VERSION}"
-    SHA512 3679d687b7cba64832b6a18a04246c20431c5b1f641d9c2506edd785d53eb24f54b32a14f41bff19a89037bb878cbab8fc9f45533ad6af7457cb65367865279d
+    REF "cpp-v${VERSION}"
+    SHA512 c808e4b7b78471c0abe5cf2cdb732cd50d365ae3fe0e2f61f3e7520474e475ac48294d70ef6571a7fce2a921ee734273dac7397c74004a090f467588dda91488
     HEAD_REF main
     PATCHES
         relax-flatbuffers-version-check.patch
