@@ -11,8 +11,6 @@ vcpkg_from_github(
     REF 22599cfdcc185c2ed721d78c792e3193cf84cc01
     SHA512 de16413c81c7d95e48f2a5fbff018748e629a2316bc6c76c42f881b6922b337a12a1ec20eb732465ff244a04e22afe1846fdbacc9e4f2a72aa0204a0c11d397e
     HEAD_REF master
-    PATCHES
-        use-dynamic-cudart-on-windows.patch
 )
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
