@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e5d902..185039c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ cmake_minimum_required (VERSION 3.5)
+ 
+-project(CRCpp VERSION 1.2.1.0)
++project(CRCpp VERSION 1.2.2.0)
+ 
+ include(CMakePackageConfigHelpers)
+ include(GNUInstallDirs)
+@@ -32,14 +32,15 @@ configure_file(
+ configure_package_config_file(
+     cmake/CRCppConfig.cmake.in
+     "${CMAKE_CURRENT_BINARY_DIR}/CRCppConfig.cmake"
+-    INSTALL_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/crcpp")
++    INSTALL_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/crcpp"
++    PATH_VARS CMAKE_INSTALL_INCLUDEDIR)
+ write_basic_package_version_file(CRCppConfigVersion.cmake
+                                  VERSION ${PACKAGE_VERSION}
+                                  COMPATIBILITY SameMajorVersion
+                                  ARCH_INDEPENDENT)
+ 
+ # Installation
+-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/ DESTINATION ${CMAKE_INSTALL_INCLUDE_DIR})
++install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/inc/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ install(FILES
+           ${CMAKE_CURRENT_BINARY_DIR}/CRCpp.pc
+         DESTINATION ${CMAKE_INSTALL_DATADIR}/pkgconfig)
+diff --git a/cmake/CRCppConfig.cmake.in b/cmake/CRCppConfig.cmake.in
+index 67139f3..b06cc79 100644
+--- a/cmake/CRCppConfig.cmake.in
++++ b/cmake/CRCppConfig.cmake.in
+@@ -1,3 +1,3 @@
+ @PACKAGE_INIT@
+ 
+-set_and_check(CRCpp_INCLUDE_DIR "@PACKAGE_CRCpp_INCLUDE_INSTALL_DIR@")
++set_and_check(CRCpp_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
