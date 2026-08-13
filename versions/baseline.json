@@ -801,7 +801,7 @@
       "port-version": 0
     },
     "blosc2": {
-      "baseline": "3.2.3",
+      "baseline": "3.3.2",
       "port-version": 0
     },
     "blpapi": {
