@@ -4,7 +4,8 @@ crtsys provides CMake helpers for Windows kernel-mode drivers:
   crtsys_add_driver(my_driver src/main.cpp)
 
 The port acquires the matching Microsoft Windows SDK and WDK NuGet packages
-while building. Supported target architectures are x86, x64, and ARM64.
+while building. Supported target architectures are x86, x64, and ARM64. The
+official vcpkg port requires MSVC toolset v142 or later.
 
 Optional user-mode content codecs are available with crtsys[content-codecs].
 Pinned MsQuic headers are available with crtsys[msquic-headers].

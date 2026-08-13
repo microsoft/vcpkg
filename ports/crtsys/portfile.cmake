@@ -128,6 +128,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 704c877ff4422972bd31c47249548cb67319ea974c24a0e8cbb50b4ca39c69286920230325fd504a46a6b6f1a9d302d72407f9cee70e4f0223a480aa8bdf7c07
     HEAD_REF main
+    PATCHES
+        disable-legacy-ucxxrt.patch
 )
 
 vcpkg_from_github(
@@ -142,13 +144,6 @@ vcpkg_from_github(
     REPO MolecularMatters/raw_pdb
     REF 43cc59b7037238ad84e1d5abe10711a06d998fa0
     SHA512 04c7bd7d82598692069b7e371f90deb316dea450c1bafc1b1f6be06a392b3227c7fd547d24b22e77bc70ebdd13193c01a2f72ba26b6d0acfb14ac1398e1cac40
-)
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH UCXXRT_SOURCE_PATH
-    REPO ntoskrnl7/ucxxrt
-    REF cfb00b2ad3595fa1f89a3b3a665fa742cf5aa1aa
-    SHA512 eaa472ca43457a356cbbb0a802e8119694c12dbacb173bd86b88c0286411b93cd67c07c389cc09ad52221804a2685e80100d61f6b70344c846cc0a04e871cf17
 )
 
 vcpkg_download_distfile(CPM_CMAKE
@@ -179,7 +174,6 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DCRTSYS_LDK_SOURCE_DIR=${LDK_SOURCE_PATH}"
         "-DCRTSYS_RAW_PDB_SOURCE_DIR=${RAW_PDB_SOURCE_PATH}"
-        "-DCRTSYS_UCXXRT_SOURCE_DIR=${UCXXRT_SOURCE_PATH}"
         "-DCPM_SOURCE_CACHE=${CPM_SOURCE_CACHE}"
         "-DCRTSYS_TARGET_ARCHITECTURE=${CRTSYS_TARGET_ARCHITECTURE}"
         "-DCRTSYS_WDK_VERSION=${CRTSYS_WDK_CONTENT_VERSION}"
@@ -246,5 +240,4 @@ vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/cmake/vendor/findwdk/LICENSE"
     "${LDK_SOURCE_PATH}/LICENSE"
     "${RAW_PDB_SOURCE_PATH}/LICENSE"
-    "${UCXXRT_SOURCE_PATH}/LICENSE"
 )
