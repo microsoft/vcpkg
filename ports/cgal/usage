@@ -3,3 +3,37 @@ The package cgal provides CMake targets:
     find_package(CGAL CONFIG REQUIRED)
     target_link_libraries(main PRIVATE CGAL::CGAL)
 
+Each optional feature below requires linking its support target explicitly, per-target.
+find_package() uses CONFIG REQUIRED: enabling one of these features guarantees the
+dependency is installed, so treat it as mandatory rather than probing for it.
+
+"eigen3":
+
+    find_package(Eigen3 CONFIG REQUIRED)
+    include(CGAL_Eigen3_support)
+    target_link_libraries(main PRIVATE CGAL::Eigen3_support)
+
+"qt" ("qt-svg" needs no extra CMake, it's picked up automatically):
+
+    find_package(Qt6 CONFIG REQUIRED COMPONENTS OpenGL OpenGLWidgets Widgets OPTIONAL_COMPONENTS Svg)
+    include(CGAL_SetupCGAL_Qt6Dependencies)
+    target_link_libraries(main PRIVATE Qt6::Widgets CGAL::Qt6_moc_and_resources Qt6::OpenGLWidgets)
+    CGAL_setup_CGAL_Qt6_dependencies(main)
+
+"tbb":
+
+    find_package(TBB CONFIG REQUIRED)
+    include(CGAL_TBB_support)
+    target_link_libraries(main PRIVATE CGAL::TBB_support)
+
+"ceres":
+
+    find_package(Ceres CONFIG REQUIRED)
+    include(CGAL_Ceres_support)
+    target_link_libraries(main PRIVATE CGAL::Ceres_support)
+
+"openmesh":
+
+    find_package(OpenMesh CONFIG REQUIRED)
+    include(CGAL_OpenMesh_support)
+    target_link_libraries(main PRIVATE CGAL::OpenMesh_support)
