@@ -11,12 +11,10 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
-        -DBUILD_SHARED_EXTRAS_LIB=OFF
 )
 
 vcpkg_cmake_install()
