@@ -82,11 +82,11 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
     cd ~
     # Paste and run the three azcopy commands generated on the workstation.
     ```
-- [ ] Determine the VM directory name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2026-08-07-arm64".
-- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2026-08-07-arm64 and UniversalMac_26.6.1_25G76_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
+- [ ] Determine the VM directory name using the form "vcpkg-osx-YYYY-MM-DD-arm64", for example "vcpkg-osx-2026-08-07-arm64".
+- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-YYYY-MM-DD-arm64 and UniversalMac_26.6.1_25G76_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
     ```
-    mkdir -p ~/vcpkg-osx-2026-08-07-arm64
-    cd ~/vcpkg-osx-2026-08-07-arm64
+    mkdir -p ~/vcpkg-osx-YYYY-MM-DD-arm64
+    cd ~/vcpkg-osx-YYYY-MM-DD-arm64
     ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 10 -r 18g --restore ~/UniversalMac_26.6.1_25G76_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
@@ -126,7 +126,7 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
 - [ ] In the host's KVM terminal, package the VM into an archive:
     ```sh
     cd ~
-    aa archive -d vcpkg-osx-2026-08-07-arm64 -o vcpkg-osx-2026-08-07-arm64.aar -enable-holes
+    aa archive -d vcpkg-osx-YYYY-MM-DD-arm64 -o vcpkg-osx-YYYY-MM-DD-arm64.aar -enable-holes
     ```
 - [ ] In PowerShell on a workstation, generate the AzCopy upload command:
     ```powershell
@@ -141,10 +141,10 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
         return "azcopy copy  --check-length=false `"$($FileName)`" `"https://vcpkgimageminting.blob.core.windows.net/pvms/$($FileName)?$($sas)`""
     }
 
-    Get-AzCopyWriteCommand -FileName vcpkg-osx-2026-08-07-arm64.aar
+    Get-AzCopyWriteCommand -FileName vcpkg-osx-YYYY-MM-DD-arm64.aar
     ```
 - [ ] Paste and run the generated AzCopy command in the host's KVM terminal.
-- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-2026-08-07-arm64`. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD-arm64`. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
 - [ ] Follow the "Deploying images" steps below for each machine in the fleet.
 
 ## Deploying images
@@ -177,17 +177,17 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
         return "azcopy copy `"https://vcpkgimageminting.blob.core.windows.net/pvms/$($FileName)?$($sas)`" `"$($FileName)`""
     }
 
-    Get-AzCopyReadCommand -FileName vcpkg-osx-2026-08-07-arm64.aar
+    Get-AzCopyReadCommand -FileName vcpkg-osx-YYYY-MM-DD-arm64.aar
     ```
     In the host's KVM terminal, use the KVM software's "paste from clipboard" function to paste and
     run the generated command, then run:
     ```sh
     # (The azcopy command line generated above)
-    aa extract -d vcpkg-osx-<DATE>-arm64 -i ./vcpkg-osx-<DATE>-arm64.aar -enable-holes
+    aa extract -d vcpkg-osx-YYYY-MM-DD-arm64 -i ./vcpkg-osx-YYYY-MM-DD-arm64.aar -enable-holes
     ```
 - [ ] Open a separate terminal window on the host and start the VM by running:
     ```sh
-    cd ~/vcpkg-osx-<DATE>-arm64
+    cd ~/vcpkg-osx-YYYY-MM-DD-arm64
     ~/macosvm ./vm.json
     ```
 - [ ] In PowerShell on a workstation, generate a short-lived access token to add the agent to the

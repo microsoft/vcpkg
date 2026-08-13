@@ -13,6 +13,7 @@ rm "$HOME/Downloads/install-homebrew.sh"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install autoconf-archive autoconf automake azcopy azure-cli bison cmake gettext gfortran gnu-sed gperf libtool meson nasm ninja pkg-config powershell
 mkdir "$HOME/Data"
+# NOTE: update this URI when publishing a VM update
 curl -fsSL -o "$HOME/Downloads/azure-agent.tar.gz" https://download.agent.dev.azure.com/agent/5.277.0/vsts-agent-osx-arm64-5.277.0.tar.gz
 mkdir "$HOME/myagent"
 tar xf "$HOME/Downloads/azure-agent.tar.gz" -C "$HOME/myagent"
