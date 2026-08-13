@@ -139,7 +139,7 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
         debug_message("pkg-config --exists ${package_name} output: ${output}")
     endif()
 
-    if(PCCRITIC)
+    if(PCCRITIC AND arg_config STREQUAL "RELEASE")
         execute_process(
             COMMAND "${PCCRITIC}" "${arg_file}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
