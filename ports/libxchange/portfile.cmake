@@ -15,6 +15,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/xchange" PACKAGE_NAME "xchange")
+
+set(debug_pc "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xchange.pc")
+if(EXISTS "${debug_pc}")
+    vcpkg_replace_string("${debug_pc}" "-lxchange " "-lxchanged ")
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
