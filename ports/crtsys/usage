@@ -11,5 +11,9 @@ Optional user-mode content codecs are available with crtsys[content-codecs].
 Pinned MsQuic headers are available with crtsys[msquic-headers].
 
 Visual Studio/MSBuild property-page integration is installed with the port.
-Run crtsys-vs-init.cmd once from a vcpkg manifest project, then reload the
-solution. See share/crtsys/readme.md for driver and entry-point examples.
+From a vcpkg manifest project, run:
+
+  vcpkg env --tools --triplet=x64-windows-static "crtsys-vs-init.cmd"
+
+Then reload the solution. See share/crtsys/readme.md for driver and entry-point
+examples.
