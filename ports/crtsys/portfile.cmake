@@ -126,10 +126,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ntoskrnl7/crtsys
     REF "v${VERSION}"
-    SHA512 37acb5f8d0a047476bd96f9319db2f00d769dc9def4bfc9e2dbbee2ada33f5a4c1ecbbb8aff34a1094ffa9385b898f07ee3201b07b79a5caf62cf8344e6bd4f9
+    SHA512 704c877ff4422972bd31c47249548cb67319ea974c24a0e8cbb50b4ca39c69286920230325fd504a46a6b6f1a9d302d72407f9cee70e4f0223a480aa8bdf7c07
     HEAD_REF main
-    PATCHES
-        fix-offline-source-build.patch
 )
 
 vcpkg_from_github(

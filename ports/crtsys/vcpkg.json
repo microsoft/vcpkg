@@ -1,6 +1,6 @@
 {
   "name": "crtsys",
-  "version-semver": "0.1.41",
+  "version-semver": "0.1.42",
   "description": "C runtime library and NTL helpers for Windows kernel-mode drivers",
   "homepage": "https://github.com/ntoskrnl7/crtsys",
   "documentation": "https://github.com/ntoskrnl7/crtsys#readme",

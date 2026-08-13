@@ -2229,7 +2229,7 @@
       "port-version": 0
     },
     "crtsys": {
-      "baseline": "0.1.41",
+      "baseline": "0.1.42",
       "port-version": 0
     },
     "cryptopp": {
