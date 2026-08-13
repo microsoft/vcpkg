@@ -291,7 +291,11 @@
     "ass": {
       "description": "Libass subtitles rendering, needed for subtitles and ass filter support in ffmpeg",
       "dependencies": [
-        "libass"
+        "libass",
+        {
+          "name": "libiconv",
+          "platform": "windows & static"
+        }
       ]
     },
     "avcodec": {
