@@ -634,7 +634,7 @@
     },
     "babl": {
       "baseline": "0.1.128",
-      "port-version": 0
+      "port-version": 1
     },
     "backward-cpp": {
       "baseline": "2023-11-24",
@@ -3546,7 +3546,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.86.0",
-      "port-version": 2
+      "port-version": 3
     },
     "godot-cpp": {
       "baseline": "4.4",
