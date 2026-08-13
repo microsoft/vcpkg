@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/SuiteSparse
-    REF v7.12.3
-    SHA512 e6f8cba51459a345fbb8f2de3470c07f128790eaecf2faba06bf6b0a02e90ea4fdc87fe4cf6e444b8a458bdb8d83552033292eb64d5763b96e268657e9b9a048
+    REF v7.13.0
+    SHA512 62319607ddd06bdb160d1308233bccec2bafb8a4909d4f5123df1b1d1088d2df9290b21984f7963ec87c2502ee9c4d5e687b23bf9dcd13e2ff076a416b4e0eef
     HEAD_REF dev
     PATCHES
         001-detect-complex-support.patch
