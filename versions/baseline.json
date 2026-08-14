@@ -2897,7 +2897,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.8.2",
+      "baseline": "2.8.3",
       "port-version": 0
     },
     "expected-lite": {
@@ -3689,7 +3689,7 @@
       "port-version": 1
     },
     "gz-cmake": {
-      "baseline": "4.2.1",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "gz-common": {
@@ -3801,8 +3801,8 @@
       "port-version": 0
     },
     "hdf5": {
-      "baseline": "2.1.1",
-      "port-version": 1
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "hdr-histogram": {
       "baseline": "0.11.10",
@@ -5053,7 +5053,7 @@
       "port-version": 0
     },
     "libffi": {
-      "baseline": "3.7.1",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "libfido2": {
@@ -8245,8 +8245,8 @@
       "port-version": 0
     },
     "qpdf": {
-      "baseline": "12.3.2",
-      "port-version": 1
+      "baseline": "12.4.0",
+      "port-version": 0
     },
     "qpid-proton": {
       "baseline": "0.40.0",
@@ -9269,7 +9269,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.16.2",
+      "baseline": "0.16.3",
       "port-version": 0
     },
     "septag-dmon": {
@@ -10661,7 +10661,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2024-04-23",
+      "baseline": "2025-08-07",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
