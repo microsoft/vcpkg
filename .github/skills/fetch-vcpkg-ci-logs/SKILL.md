@@ -36,13 +36,15 @@ port, or artifact.
    & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -PrNumber <pr> [-JobId <job>]
    ```
 
-   Save its raw output as `failed-step-logs.txt`.
+   Save its raw output as `failed-step-logs.txt`. Ensure every failed `Validate version files` timeline
+   record is included; if the helper omits one, fetch its exact `log.url` and append the raw body.
 4. Unless only step logs were requested, download relevant `failure logs for {triplet}` ZIPs from each
    artifact's `resource.downloadUrl`. Narrow by the requested job, triplet, or port; fetch other
    artifacts only when requested. Skip `file lists for {triplet}` unless asked.
 5. Extract each ZIP into `artifacts/{triplet}/`. Keep only the ZIPs that were requested, and record any
    download or extraction failure with the artifact name and URL instead of retrying indefinitely.
-6. Return the save location, build ID/status, Azure and PR URLs, failed jobs/triplets, and errors.
+6. Return the save location, build ID/status, Azure and PR URLs, PR title/author for PR builds,
+   failed jobs/triplets, and errors.
 
 ## Downloading Rules
 
