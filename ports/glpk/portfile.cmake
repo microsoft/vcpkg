@@ -14,7 +14,7 @@ vcpkg_extract_source_archive(
         configure.ac.patch
 )
 
-vcpkg_list(SET CONFIGURE_OPTIONS)
+vcpkg_list(SET CONFIGURE_OPTIONS ac_cv_prog_cc_c23=no)
 if("dl" IN_LIST FEATURES)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-dl=dlfcn "LIBS=-ldl \$LIBS")
 else()
