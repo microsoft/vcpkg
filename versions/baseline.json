@@ -2905,7 +2905,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.8.2",
+      "baseline": "2.8.3",
       "port-version": 0
     },
     "expected-lite": {
