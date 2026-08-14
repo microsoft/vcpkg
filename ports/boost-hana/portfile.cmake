@@ -10,7 +10,11 @@ vcpkg_from_github(
 
 set(BOOST_HANA_MAX_NUMBER_OF_MEMBERS 55)
 if("large-struct-macros" IN_LIST FEATURES)
-    set(BOOST_HANA_MAX_NUMBER_OF_MEMBERS 125)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(BOOST_HANA_MAX_NUMBER_OF_MEMBERS 125)
+    else()
+        set(BOOST_HANA_MAX_NUMBER_OF_MEMBERS 200)
+    endif()
 endif()
 
 if(NOT BOOST_HANA_MAX_NUMBER_OF_MEMBERS EQUAL 55)
