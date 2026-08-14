@@ -23,3 +23,13 @@ vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
 file(INSTALL "${LEMPAR_C}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/lemon" RENAME "lempar.c")
+
+# same as sqlite3 port
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
+    "The author disclaims copyright to this source code.  In place of a legal notice,
+here is a blessing:
+
+    May you do good and not evil.
+    May you find forgiveness for yourself and forgive others.
+    May you share freely, never taking more than you give.
+")
