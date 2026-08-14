@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     REF nettle_3.10_release_20240616
     SHA512 8767e4f0c34ce76ead5d66f06f97e6b184d439fa94f848ee440196fafde3da2ea7cfc54f9bd8f9ab6a99929b0d14b3d5a28857e05d954551e94b619598c17659
     HEAD_REF master
-    PATCHES 
+    PATCHES
         subdirs.patch
         fix-libdir.patch
         compile.patch
@@ -28,7 +28,7 @@ if(GENERATE_SYMBOLS)
     endif()
 endif()
 
-vcpkg_list(SET OPTIONS)
+vcpkg_list(SET OPTIONS ac_cv_prog_cc_c23=no)
 if("tools" IN_LIST FEATURES)
     vcpkg_list(APPEND OPTIONS --enable-tools)
 endif()
