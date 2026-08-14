@@ -2221,7 +2221,7 @@
       "port-version": 1
     },
     "croncpp": {
-      "baseline": "2023-03-30",
+      "baseline": "2026-08-12",
       "port-version": 0
     },
     "crossdb": {
