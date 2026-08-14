@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix_bsd_and_solaris.patch
         fix_parallel_build_on_windows.patch
         fix-python-path-with-spaces.patch
+        fix-using-install-sh.diff
         mh-darwin.patch
         mh-mingw.patch
         mh-msys-msvc.patch

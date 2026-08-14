@@ -1,0 +1,17 @@
+diff --git a/prj/cmake/CMakeLists.txt b/prj/cmake/CMakeLists.txt
+index de4a48b..b56651f 100644
+--- a/prj/cmake/CMakeLists.txt
++++ b/prj/cmake/CMakeLists.txt
+@@ -131,12 +131,6 @@ endif()
+ include_directories("${SIMD_ROOT}/src")
+ 
+ if(SIMD_GET_VERSION)
+-	if (WIN32 AND NOT (CYGWIN OR MSYS))
+-		string(REPLACE "/" "\\" SIMD_ROOT_WINDOWS ${SIMD_ROOT})
+-		execute_process(COMMAND "${SIMD_ROOT}/prj/cmd/GetVersion.cmd" "${SIMD_ROOT_WINDOWS}" "${SIMD_INFO}")
+-	else()
+-		execute_process(COMMAND bash "${SIMD_ROOT}/prj/sh/GetVersion.sh" "${SIMD_ROOT}" "${SIMD_INFO}")
+-	endif()
+ else()
+ 	add_definitions(-DSIMD_VERSION="unknown")
+ endif()

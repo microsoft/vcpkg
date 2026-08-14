@@ -5,16 +5,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanodbc/nanodbc
-    REF 7404a4dd7697e188df5724ab95a7553d2fc404eb # v2.13.0
-    SHA512 35ca098e783d771f3df611bce84e9b8207a6a5b72c492d2f3909977bc91a7c22bb262c34768b0d97ebfbdf12eeda0214064a8ea171e7bdda7b759f93ff346f45
+    REF 1f7279111c013388509bab4bd0865a929ad02998 # v2.14.0
+    SHA512 e71ec290b0f51963a0faa45b92ebfb3409ae27389e4a0cb8bf6616ec40db41f74e3e45668cf8ee852e0a456fbd5d495092d6c337a24ee7b5b6cb0aea496034b6
     HEAD_REF master
     PATCHES
-        rename-version.patch
-        add-missing-include.patch
         find-unixodbc.patch
         no-werror.patch
 )
-file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
 
 if(DEFINED NANODBC_ODBC_VERSION)
     set(NANODBC_ODBC_VERSION -DNANODBC_ODBC_VERSION=${NANODBC_ODBC_VERSION})

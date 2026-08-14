@@ -6,10 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 218233098965ba78a93f33dd3fa357e4821b7dee6e137df19e3757dd3745ccbfc05b2c31d071f5dda23d120269642c2721d45e3ef1124ef514335a5a0c318cd4
+    SHA512 b5d309670c0dbd3771f78b5d7d447eb98c19947b7c4a2e2b9a36e160396a60e502d80087a13d77635e9b8ab558c82a4142712dfc263f1ccb195f5e71c12b8428
     HEAD_REF main
     PATCHES
         fix-target_link.patch
+        fix-pkgconfig-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -89,9 +90,17 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_pkgconfig(SKIP_CHECK)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/opentelemetry/sdk/configuration")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+if(WITH_ETW)
+    list(APPEND LICENSE_FILES "${SOURCE_PATH}/exporters/etw/include/opentelemetry/exporters/etw/LICENSE")
+endif()
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        ${LICENSE_FILES}
+)

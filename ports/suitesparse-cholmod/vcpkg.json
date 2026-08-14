@@ -1,7 +1,8 @@
 {
   "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-cholmod",
-  "version-semver": "5.3.4",
+  "version-semver": "5.3.5",
+  "port-version": 1,
   "description": "CHOLMOD: Routines for factorizing sparse symmetric positive definite matrices in SuiteSparse",
   "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
   "license": "LGPL-2.1-or-later AND Apache-2.0",

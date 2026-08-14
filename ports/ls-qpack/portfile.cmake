@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/ls-qpack
     REF "v${VERSION}"
-    SHA512 d6593011c709510e790c4af0598b2a9051e7c377291753408f678745303b787cc52f102066a8d0d3dc3514588587b59f23ed7c62fbe2188f0b32b00f0a5766f9
+    SHA512 2f2596486bb505feb3899ec20a94c52c1ee4b2bcda28f506f6ba5302dd3997fd18150a78428a3fd1944a5ba5ab17cc9b0c73ede9e90d3cf9dddf7bc2ab708438
     HEAD_REF master
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
@@ -29,4 +29,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/wincompat/sys/queue.h"
+)

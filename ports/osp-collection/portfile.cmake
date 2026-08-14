@@ -4,11 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-patterns/collection
     REF "${VERSION}"
-    SHA512 fe05b09d70fccf40829aff9136630eea49990a54af7062fe7228d2c9bf43fa08b6b7ce2dddbcc63e3bffd91849b43f5fab6499dd87de5f0d2031ecf87c3b637b
+    SHA512 140d654642f1ab29dda2786700ae8238adcf578dcba20401dae4473a4aabd75cf7a214450870d233fcb0dad0302fe397fd5bbc25129bc41cdba38b9ea58cc48a
     HEAD_REF main
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}" OPTIONS -DCOLLECTION_BUILD_TESTS=OFF)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "collection" CONFIG_PATH "lib/cmake/collection")
 
