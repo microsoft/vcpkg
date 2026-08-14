@@ -3709,7 +3709,7 @@
       "port-version": 1
     },
     "gz-math": {
-      "baseline": "8.2.1",
+      "baseline": "8.3.0",
       "port-version": 0
     },
     "gz-msgs": {
