@@ -53,6 +53,14 @@ else()
     )
 endif()
 
+# archive_random.c and archive_util.c always call BCrypt* on Windows, bcrypt must be linked.
+# ref. https://github.com/libarchive/libarchive/issues/3375
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ENABLE_CNG ON)
+else()
+    set(ENABLE_CNG OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -65,7 +73,7 @@ vcpkg_cmake_configure(
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
-        -DENABLE_CNG=OFF
+        -DENABLE_CNG=${ENABLE_CNG}
         -DENABLE_UNZIP=OFF
         -DENABLE_TAR=OFF
         -DENABLE_CPIO=OFF
