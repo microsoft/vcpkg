@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cityjson/flatcitybuf
     REF "cpp-v${VERSION}"
-    SHA512 c808e4b7b78471c0abe5cf2cdb732cd50d365ae3fe0e2f61f3e7520474e475ac48294d70ef6571a7fce2a921ee734273dac7397c74004a090f467588dda91488
+    SHA512 6991f3d82b4e0f331eea87d3234e87a1439c1c403d4e3d8489b8612451b098fbbc51f3d27282eeeb3a319623c10eda110893807ed38dbfc97b893279cbbd0986
     HEAD_REF main
     PATCHES
         relax-flatbuffers-version-check.patch
