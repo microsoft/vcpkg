@@ -13,7 +13,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTS
     FEATURES
         azureblobstore  LIBCZI_BUILD_AZURESDK_BASED_STREAM
-        curl            LIBCZI_BUILD_CURL_BASED_STREAM 
+        curl            LIBCZI_BUILD_CURL_BASED_STREAM
         curl            LIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LIBCURL
 )
 
@@ -26,24 +26,26 @@ vcpkg_cmake_configure(
         -DLIBCZI_DO_NOT_SET_MSVC_RUNTIME_LIBRARY=ON  # set by vcpkg
         -DLIBCZI_BUILD_CZICMD=OFF  # could be feature
         -DLIBCZI_BUILD_DYNLIB=${BUILD_SHARED_LIBCZI}
+        -DLIBCZI_BUILD_ENABLE_EXPERIMENTAL_FUNCTIONALITY=OFF
+        -DLIBCZI_BUILD_EXPERIMENTAL_CHUNKED_COMPRESSION=OFF
+        -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_LZ4=ON
         -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_EIGEN3=ON
         -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_ZSTD=ON
         -DLIBCZI_BUILD_UNITTESTS=OFF
         -DLIBCZI_ENABLE_INSTALL=ON
         # for cross-compilation scenarios, prevent execution of test-programs inside the libCZI-build-scripts
         -DCRASH_ON_UNALIGNED_ACCESS=FALSE
-        -DIS_BIG_ENDIAN=FALSE
         -DNEON_INTRINSICS_CAN_BE_USED=TRUE
         # Intentionally empty: Must be defined to avoid try-run.
         # Override in triplet if needed.
         -DADDITIONAL_LIBS_REQUIRED_FOR_ATOMIC:STRING=
         # VCS metadata injection
-        -DLIBCZI_REPOSITORY_HASH=${LIBCZI_REPO_REF}   
+        -DLIBCZI_REPOSITORY_HASH=${LIBCZI_REPO_REF}
         -DLIBCZI_REPOSITORY_BRANCH=unknown
         -DLIBCZI_REPOSITORY_REMOTE=https://github.com/${LIBCZI_REPO_NAME}.git
-    MAYBE_UNUSED_VARIABLES        
-        CRASH_ON_UNALIGNED_ACCESS
-        IS_BIG_ENDIAN
+    MAYBE_UNUSED_VARIABLES
+        # Only checked when AVX is unavailable, arm_neon.h exists, and the compiler is not MSVC:
+        # https://github.com/ZEISS/libczi/blob/61f74ff097d6d0fbe6e36f204ff59d92e299d7cd/Src/libCZI/CMakeLists.txt#L242-L261
         NEON_INTRINSICS_CAN_BE_USED
 )
 
@@ -53,4 +55,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/libczi)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/THIRD_PARTY_LICENSES.txt"
+)
