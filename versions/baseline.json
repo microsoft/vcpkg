@@ -3685,7 +3685,7 @@
       "port-version": 1
     },
     "gz-cmake": {
-      "baseline": "4.2.1",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "gz-common": {
