@@ -137,7 +137,7 @@ $portData = @{
     'boost-hana'             = @{
         'features' = @{
             'large-struct-macros' = @{
-                'description' = 'Regenerate Boost.Hana struct macros for up to 200 members (125 on Windows)';
+                'description' = 'Regenerate Boost.Hana struct macros for up to 200 members (124 on Windows)';
                 'supports' = 'windows | osx | (linux & x64)';
             }
         }
