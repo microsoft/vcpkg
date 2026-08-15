@@ -41,6 +41,7 @@ set(ENV{YACC} false)     # false, the program - not used here
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
+    LANGUAGES ASM C CXX
     OPTIONS
         --disable-dependency-tracking
         --disable-doc
@@ -62,7 +63,17 @@ vcpkg_make_configure(
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+vcpkg_copy_tools(
+    TOOL_NAMES
+        certtool
+        gnutls-cli
+        gnutls-cli-debug
+        gnutls-serv
+        ocsptool
+        psktool
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
+)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
@@ -79,4 +90,5 @@ unless otherwise specified in the indivual source files.
     FILE_LIST
         "${SOURCE_PATH}/COPYING.LESSERv2"
         "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/lib/inih/LICENSE.txt"
 )
