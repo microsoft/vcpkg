@@ -21,11 +21,15 @@ target_link_libraries(cmake_capi PRIVATE unofficial::rapidocr::rapidocr)
 
 # CI opencv4[cuda] compiles CUDA objects into static opencv_core but does not
 # INTERFACE-link the CUDA runtime. Consumers then fail with LNK2019 cudaMalloc
-# (x64-windows-static Debug). Add the runtime when the toolkit is present.
-find_package(CUDAToolkit QUIET)
-if(TARGET CUDA::cudart)
-    target_link_libraries(cmake_cxx PRIVATE CUDA::cudart)
-    target_link_libraries(cmake_capi PRIVATE CUDA::cudart)
+# (x64-windows-static Debug). Only probe CUDAToolkit on x64 Windows: the ARM
+# Windows agents have a host x64 CUDA install, and CMake 4.4's FindCUDAToolkit
+# then errors with unknown command _CUDAToolkit_find_and_add_import_lib.
+if(WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    find_package(CUDAToolkit QUIET)
+    if(TARGET CUDA::cudart)
+        target_link_libraries(cmake_cxx PRIVATE CUDA::cudart)
+        target_link_libraries(cmake_capi PRIVATE CUDA::cudart)
+    endif()
 endif()
 
 # C API header must compile with only the triplet include root (no opencv4).
