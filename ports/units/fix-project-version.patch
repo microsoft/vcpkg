@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 50eedb8..87e16b0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ cmake_minimum_required(VERSION 3.16...4.99 FATAL_ERROR)
+ 
+-PROJECT(units VERSION 3.4.0 LANGUAGES CXX)
++PROJECT(units VERSION 3.5.0 LANGUAGES CXX)
+ 
+ # check if this is the main project
+ set(MAIN_PROJECT OFF)

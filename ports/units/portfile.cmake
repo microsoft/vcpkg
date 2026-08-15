@@ -2,7 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nholthaus/units
     REF v${VERSION}
-    SHA512 9cedc52e0405140b9a8014195f59f4deb2edd155fe78df76005eb721974c2a640975d9b959777be48f41c24f6a0a7047536649958da847e2aa8b0c3b9a6d139a
+    SHA512 547ff44975ed502b3b02d90fe502ccbf21e2610ad4ec025fe1b7d829f60c91e43dfd2eba31ae63b2453bcd751baec2b87027742a7259ac9af6ac12d68eee33ea
+    PATCHES
+        fix-project-version.patch
 )
 
 set(VCPKG_BUILD_TYPE "release")
