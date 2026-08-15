@@ -13,11 +13,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install-path.patch
-)
-
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-    "set(UNIVERSAL_FALLBACK_VERSION_MAJOR 4)\nset(UNIVERSAL_FALLBACK_VERSION_MINOR 0)\nset(UNIVERSAL_FALLBACK_VERSION_PATCH 0)"
-    "set(UNIVERSAL_FALLBACK_VERSION_MAJOR ${version_major})\nset(UNIVERSAL_FALLBACK_VERSION_MINOR ${version_minor})\nset(UNIVERSAL_FALLBACK_VERSION_PATCH ${version_patch})"
+        fix-package-version.patch
 )
 
 vcpkg_cmake_configure(
@@ -25,6 +21,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DUNIVERSAL_ENABLE_TESTS=OFF
         -DUNIVERSAL_VERBOSE_BUILD=OFF
+        "-DUNIVERSAL_VERSION_MAJOR=${version_major}"
+        "-DUNIVERSAL_VERSION_MINOR=${version_minor}"
+        "-DUNIVERSAL_VERSION_PATCH=${version_patch}"
 )
 
 vcpkg_cmake_install()
