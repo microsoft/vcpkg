@@ -6,9 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-get-target-property.patch
+        fix-public-dependencies.patch
         fmt-12.patch
+        rename-cmake-package.patch
         use-expected-lite.patch
 )
+
+file(REMOVE "${SOURCE_PATH}/external/BS_thread_pool.hpp")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -32,7 +36,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/slang")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/slang-verilog")
 
 # Move misplaced pkgconfig files to the correct directory
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/pkgconfig/sv-lang.pc")
@@ -57,5 +61,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

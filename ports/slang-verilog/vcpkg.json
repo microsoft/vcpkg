@@ -7,6 +7,7 @@
   "supports": "!arm32 & !(windows & !x64)",
   "dependencies": [
     "boost-unordered",
+    "bshoshany-thread-pool",
     "expected-lite",
     "fmt",
     {
