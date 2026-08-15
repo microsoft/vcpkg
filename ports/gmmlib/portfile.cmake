@@ -35,5 +35,6 @@ vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.md"
         "${SOURCE_PATH}/third_party/sse2neon/LICENSE"
-        "${CURRENT_PORT_DIR}/third-party-copyright"
+        "${SOURCE_PATH}/Source/GmmLib/Utility/GmmLog/spdlog/details/format.h"
+        "${SOURCE_PATH}/Source/GmmLib/Utility/GmmLog/spdlog/details/mpmc_bounded_q.h"
 )
