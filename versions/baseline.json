@@ -7242,7 +7242,7 @@
     },
     "nvidia-cutlass": {
       "baseline": "4.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nvrhi": {
       "baseline": "2026-02-26",

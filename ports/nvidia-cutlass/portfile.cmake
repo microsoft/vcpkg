@@ -45,7 +45,21 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/NvidiaCutlass" PACKAGE_NAME "NvidiaCutlass")
 
-
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/cutlass/version.h"
+    "@CUTLASS_VERSION@"
+    "${VERSION}"
+)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/cutlass/version.h"
+    "@CUTLASS_REVISION@"
+    "v${VERSION}"
+)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/NvidiaCutlass/NvidiaCutlassTargets.cmake"
+    "INTERFACE_COMPILE_DEFINITIONS \""
+    "INTERFACE_COMPILE_DEFINITIONS \"CUTLASS_VERSIONS_GENERATED;"
+)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"
