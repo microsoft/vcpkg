@@ -15,14 +15,16 @@ vcpkg_from_github(
         fix-install-path.patch
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+    "set(UNIVERSAL_FALLBACK_VERSION_MAJOR 4)\nset(UNIVERSAL_FALLBACK_VERSION_MINOR 0)\nset(UNIVERSAL_FALLBACK_VERSION_PATCH 0)"
+    "set(UNIVERSAL_FALLBACK_VERSION_MAJOR ${version_major})\nset(UNIVERSAL_FALLBACK_VERSION_MINOR ${version_minor})\nset(UNIVERSAL_FALLBACK_VERSION_PATCH ${version_patch})"
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUNIVERSAL_ENABLE_TESTS=OFF
         -DUNIVERSAL_VERBOSE_BUILD=OFF
-        "-DUNIVERSAL_VERSION_MAJOR=${version_major}"
-        "-DUNIVERSAL_VERSION_MINOR=${version_minor}"
-        "-DUNIVERSAL_VERSION_PATCH=${version_patch}"
 )
 
 vcpkg_cmake_install()
@@ -33,5 +35,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/universal/internal/variablecascade"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
