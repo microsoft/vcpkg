@@ -1,0 +1,25 @@
+diff --git a/cmake/TritonCommonConfig.cmake.in b/cmake/TritonCommonConfig.cmake.in
+index a6c13cb..fbc17ad 100644
+--- a/cmake/TritonCommonConfig.cmake.in
++++ b/cmake/TritonCommonConfig.cmake.in
+@@ -31,6 +31,12 @@ list(APPEND CMAKE_MODULE_PATH ${TRITONCOMMON_CMAKE_DIR})
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(Threads)
++if(@TRITON_COMMON_ENABLE_PROTOBUF@)
++  find_dependency(Protobuf CONFIG)
++endif()
++if(@TRITON_COMMON_ENABLE_GRPC@)
++  find_dependency(gRPC CONFIG)
++endif()
+ 
+ if(NOT TARGET TritonCommon::triton-common-json)
+   include("${TRITONCOMMON_CMAKE_DIR}/TritonCommonTargets.cmake")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -201,4 +201,3 @@ set_target_properties(
+     OUTPUT_NAME tritontableprinter
+ )
+ 
+-add_subdirectory(test)
