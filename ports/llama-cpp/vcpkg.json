@@ -1,6 +1,7 @@
 {
   "name": "llama-cpp",
   "version": "9030",
+  "port-version": 1,
   "description": "LLM inference in C/C++",
   "homepage": "https://github.com/ggml-org/llama.cpp",
   "license": "MIT",
@@ -24,6 +25,17 @@
         {
           "name": "curl",
           "default-features": false
+        }
+      ]
+    },
+    "portable-cpu": {
+      "description": "Build the underlying ggml CPU backend without host-native ISA detection, for CI-safe portable binaries. Forwards to ggml's portable-cpu feature.",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "features": [
+            "portable-cpu"
+          ]
         }
       ]
     },
