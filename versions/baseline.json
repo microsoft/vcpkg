@@ -6965,7 +6965,7 @@
       "port-version": 0
     },
     "nanobench": {
-      "baseline": "4.3.11",
+      "baseline": "4.6.0",
       "port-version": 0
     },
     "nanobind": {
