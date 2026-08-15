@@ -13,6 +13,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install-path.patch
+        fix-package-version.patch
 )
 
 vcpkg_cmake_configure(
@@ -33,5 +34,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/universal/internal/variablecascade"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
