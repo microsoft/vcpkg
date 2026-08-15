@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 68fa2b90a93a2dfd84dfa586af07d90952fd4f2ad8dfe26061be250e80fec8f1a76ad78977f217c7dbdd26291249f1ac38a07f08ef323eee7a248c4cb67cd670
+    SHA512 b40b5a3b5062ea196b3e48363db584ef91aef21c61becf4f4d6616ba5e413d770c22445c357d06dcf0992dd4666c18cced44cd5d09d8cb884c0d8f62e6940422
     HEAD_REF develop
     PATCHES
         disable-testing.diff
         getarch.diff
         system-check-msvc.diff
         win32-uwp.diff
-        android-exclude-sme.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
