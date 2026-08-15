@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DNK_BUILD_TEST=OFF
         -DNK_BUILD_SHARED_TEST=OFF
         -DNK_BUILD_BENCH=OFF
+        -DNK_ENABLE_ASAN=OFF
         "-DNK_BUILD_SHARED=${BUILD_SHARED}"
 )
 
