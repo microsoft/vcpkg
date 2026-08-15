@@ -1,9 +1,9 @@
 {
   "name": "libxmlb",
-  "version": "0.3.28",
+  "version": "0.3.29",
   "description": "The libxmlb library takes XML source, and converts it to a structured binary representation with a deduplicated string table where the strings have the NULs included",
   "homepage": "https://github.com/hughsie/libxmlb/",
-  "license": "LGPL-2.1-only",
+  "license": "LGPL-2.1-or-later",
   "supports": "!windows | mingw",
   "dependencies": [
     "glib",

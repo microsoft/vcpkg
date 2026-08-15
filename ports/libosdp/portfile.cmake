@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO goToMain/libosdp
+    REPO osdp-dev/libosdp
     REF "v${VERSION}"
-    SHA512 7a3fba87b294f91f01593f2abd07ff088248598db873996d29798cdf7e7733d298547a7b4305593a26ff77eaa972e8d513ca92f6477b7fabc5f773051676f8d0
+    SHA512 6994d6d54d237d6783a9ad4bdd2f60afedcbcef2bf89b498101aa121b1aeea4108d35da639ced853c0c4bce2782a533ad00215706fa42822e7ea8acf023c65b9
     HEAD_REF master
     PATCHES
         fix-export-macros.patch
@@ -14,9 +14,9 @@ vcpkg_from_github(
 # Note: During package upgrade, the submodule ref needs to be updated.
 vcpkg_from_github(
     OUT_SOURCE_PATH UTILS_SOURCE_PATH
-    REPO goToMain/c-utils
-    REF "d832ba52a9c610f7b2f2c932e2d9114a17cf99d2"
-    SHA512 ec0815349bd5d481dac9a772f2c671b9e5c559b28c4041db03b2565cfb7e51c6b5ab3b5cf5ffc72484ace725ac01245eca57ceb495e02a7e6f47ae47407a0edd
+    REPO osdp-dev/c-utils
+    REF "33c08a2bf9ff7fb295677c28174180dec690270a"
+    SHA512 27c5841525d043983bffd1f8ca642dff649d98759db191a224662d149fa1d316518e0043b602177e07519720152896cbb7f15a82b37f3e8390caf4f5a73b6dc9
     HEAD_REF master
 )
 

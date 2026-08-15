@@ -40,6 +40,7 @@ vcpkg_from_github(
       0024-openvino-const-tensor-data.patch
       0025-fix-cuda-host-std-flag-forwarding.patch
       0026-cuda-msvc-preprocessor.patch
+      0028-ffmpeg9-support.patch
       "${PATCH1_FILE}"
       "${CUDA_13_SUPPORT_PATCH}"
 )

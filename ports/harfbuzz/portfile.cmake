@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF ${VERSION}
-    SHA512 b7642a81eb021bf96cf8c91c5ebdde7f4fdfd40c76db722f00cf001125f4b81b954d08485774d2b23318d49b1e954fa0189ba8f10db56d148f33f9d90891d0cb
+    REF "${VERSION}"
+    SHA512 f58f2a06307a515fd0145a3679a6c42f304a6ceef7869400504851069e640a4c6ea2d419118b2954a4f619d007b5482e650c798034cc7ef88b8d637d7f9bf227
     HEAD_REF master
     PATCHES
         ${ANDROID_LOCALECONV_L_PATCH}
-        ignore-unused-template.patch
         no-threads-on-emscripten.patch
 )
 
