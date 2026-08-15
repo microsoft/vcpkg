@@ -1,7 +1,7 @@
 function(z_vcpkg_spdx_json_string_encode out_var value)
     set(encoded "${value}")
-    string(REPLACE "\\" "\\\\" encoded "${encoded}")
-    string(REPLACE "\"" "\\\"" encoded "${encoded}")
+    string(REPLACE "\\" "\\\\" encoded "${encoded}") # that is, replace \ with \\
+    string(REPLACE "\"" "\\\"" encoded "${encoded}") # that is, replace " with \"
     string(ASCII 8 backspace)
     string(ASCII 12 form_feed)
     string(REPLACE "${backspace}" "\\b" encoded "${encoded}")
