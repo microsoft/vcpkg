@@ -1,7 +1,18 @@
 string(ASCII 1 control_character)
-set(expected_name "name; with \"quotes\", \\slashes\\,\nnewlines,\ttabs, and ${control_character}controls")
+string(ASCII 8 backspace)
+string(ASCII 12 form_feed)
+set(expected_name "name; with \"quotes\", \\slashes\\, /solidus, ${backspace}backspace, ${form_feed}form feed,\nnewlines,\rcarriage returns,\ttabs, and ${control_character}controls")
 set(expected_filename "archive;\"name\".tar.gz")
 set(expected_download_location "https://example.com/a;b?query=\"value\"")
+
+z_vcpkg_spdx_json_string_encode(encoded_name "${expected_name}")
+set(expected_encoded_name [["name; with \"quotes\", \\slashes\\, /solidus, \bbackspace, \fform feed,\nnewlines,\rcarriage returns,\ttabs, and \u0001controls"]])
+if(NOT encoded_name STREQUAL expected_encoded_name)
+    message(SEND_ERROR "SPDX JSON encoding does not match string(JSON STRING_ENCODE):
+    expected: ${expected_encoded_name}
+    actual  : ${encoded_name}")
+    set_has_error()
+endif()
 
 set_property(GLOBAL PROPERTY Z_VCPKG_SPDX_OBJECTS "")
 z_vcpkg_add_spdx_resource(
