@@ -5,14 +5,16 @@ set(expected_name "name; with \"quotes\", \\slashes\\, /solidus, ${backspace}bac
 set(expected_filename "archive;\"name\".tar.gz")
 set(expected_download_location "https://example.com/a;b?query=\"value\"")
 
-z_vcpkg_spdx_json_string_encode(encoded_name "${expected_name}")
 set(expected_encoded_name [["name; with \"quotes\", \\slashes\\, /solidus, \bbackspace, \fform feed,\nnewlines,\rcarriage returns,\ttabs, and \u0001controls"]])
-if(NOT encoded_name STREQUAL expected_encoded_name)
-    message(SEND_ERROR "SPDX JSON encoding does not match string(JSON STRING_ENCODE):
+foreach(encoder IN ITEMS z_vcpkg_spdx_json_string_encode z_vcpkg_spdx_json_string_encode_compat)
+    cmake_language(CALL "${encoder}" encoded_name "${expected_name}")
+    if(NOT encoded_name STREQUAL expected_encoded_name)
+        message(SEND_ERROR "${encoder} does not match string(JSON STRING_ENCODE):
     expected: ${expected_encoded_name}
     actual  : ${encoded_name}")
-    set_has_error()
-endif()
+        set_has_error()
+    endif()
+endforeach()
 
 set_property(GLOBAL PROPERTY Z_VCPKG_SPDX_OBJECTS "")
 z_vcpkg_add_spdx_resource(

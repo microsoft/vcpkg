@@ -1,4 +1,4 @@
-function(z_vcpkg_spdx_json_string_encode out_var value)
+function(z_vcpkg_spdx_json_string_encode_compat out_var value)
     set(encoded "${value}")
     string(REPLACE "\\" "\\\\" encoded "${encoded}") # that is, replace \ with \\
     string(REPLACE "\"" "\\\"" encoded "${encoded}") # that is, replace " with \"
@@ -23,6 +23,15 @@ function(z_vcpkg_spdx_json_string_encode out_var value)
     endforeach()
 
     set("${out_var}" "\"${encoded}\"" PARENT_SCOPE)
+endfunction()
+
+function(z_vcpkg_spdx_json_string_encode out_var value)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.3")
+        string(JSON encoded STRING_ENCODE "${value}")
+    else()
+        z_vcpkg_spdx_json_string_encode_compat(encoded "${value}")
+    endif()
+    set("${out_var}" "${encoded}" PARENT_SCOPE)
 endfunction()
 
 function(z_vcpkg_add_spdx_resource)
