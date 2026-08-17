@@ -1,0 +1,17 @@
+@PACKAGE_INIT@
+
+# Node.js CMake Configuration
+# Automatically generated during Node.js build
+# Version: @NODE_VERSION@
+#
+# This package provides both Release and Debug configurations
+# The appropriate configuration is selected based on CMAKE_BUILD_TYPE
+
+# Note: Node.js is built with bundled versions of dependencies (ICU, OpenSSL, ZLIB, libuv)
+# These are only found if they are available externally; the build is not dependent on them
+
+# Import Node.js library targets
+# Handles both Release (lib/) and Debug (debug/lib/) configurations
+include("${CMAKE_CURRENT_LIST_DIR}/nodeTargets.cmake")
+
+set(node_FOUND TRUE)

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "node",
+  "version-semver": "26.6.0",
+  "description": "Node.js is an open-source, cross-platform JavaScript runtime environment that can be embedded in C++ applications",
+  "homepage": "https://nodejs.org",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "openssl",
+      "features": [
+        "ssl3",
+        "tools"
+      ]
+    },
+    {
+      "name": "openssl",
+      "features": [
+        "fips"
+      ],
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-tool-rust",
+      "host": true
+    }
+  ],
+  "features": {
+    "npm": {
+      "description": "Include npm package manager"
+    },
+    "openssl": {
+      "description": "Include external openssl lib (default is to use openssl from node)"
+    }
+  }
+}

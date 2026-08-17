@@ -1,0 +1,62 @@
+set(LIB_NAME node::libnode)
+
+if(NOT TARGET ${LIB_NAME})
+  get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+  if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+  endif()
+
+  add_library(${LIB_NAME} SHARED IMPORTED)
+
+  # Determine build type
+  string(TOLOWER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_LOWER)
+
+  if (WIN32)
+    set_target_properties(${LIB_NAME} PROPERTIES
+      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/@NODE_RUNTIME_LIB@"
+      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/@NODE_RUNTIME_LIB_DEBUG@"
+    )
+
+    if(BUILD_TYPE_LOWER MATCHES "debug")
+      set_target_properties(${LIB_NAME} PROPERTIES
+        IMPORTED_LOCATION "${_IMPORT_PREFIX}/debug/bin/@NODE_RUNTIME_LIB_DEBUG@"
+      )
+    else()
+      set_target_properties(${LIB_NAME} PROPERTIES
+        IMPORTED_LOCATION "${_IMPORT_PREFIX}/bin/@NODE_RUNTIME_LIB@"
+      )
+    endif()
+  endif()
+
+  set_target_properties(${LIB_NAME} PROPERTIES
+    IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/@NODE_IMPORT_LIB@"
+    IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/@NODE_IMPORT_LIB_DEBUG@"
+  )
+
+  if(BUILD_TYPE_LOWER MATCHES "debug")
+    set_target_properties(${LIB_NAME} PROPERTIES
+      IMPORTED_IMPLIB "${_IMPORT_PREFIX}/debug/lib/@NODE_IMPORT_LIB_DEBUG@"
+    )
+  else()
+    set_target_properties(${LIB_NAME} PROPERTIES
+      IMPORTED_IMPLIB "${_IMPORT_PREFIX}/lib/@NODE_IMPORT_LIB@"
+    )
+  endif()
+
+  # Include directories (same for both Release and Debug)
+  set(INCLUDE_DIRS "${_IMPORT_PREFIX}/include"
+                   "${_IMPORT_PREFIX}/include/node"
+                   "${_IMPORT_PREFIX}/include/v8"
+                   "${_IMPORT_PREFIX}/include/libuv"
+  )
+  target_include_directories(${LIB_NAME} INTERFACE ${INCLUDE_DIRS})
+
+  # Link dependencies (optional, only if built separately)
+  if(TARGET ICU::uc)
+    set_target_properties(${LIB_NAME} PROPERTIES
+      INTERFACE_LINK_LIBRARIES "ICU::uc;ICU::i18n;OpenSSL::Crypto;OpenSSL::SSL;ZLIB::ZLIB;libuv::libuv"
+    )
+  endif()
+endif()
