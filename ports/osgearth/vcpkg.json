@@ -31,6 +31,7 @@
     "protobuf",
     "spdlog",
     "sqlite3",
+    "tinyxml",
     {
       "name": "vcpkg-cmake",
       "host": true
