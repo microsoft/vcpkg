@@ -2630,7 +2630,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 5
+      "port-version": 6
     },
     "dpetkov-semver": {
       "baseline": "0.4.1",
