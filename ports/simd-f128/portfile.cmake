@@ -2,9 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tiw302/simd-f128
     REF v1.6.2
-    SHA512 3d8914b45676bfe816e78b4c940bf5f367a7d2f70b9977dc41d2341fe2abbf7dd1f844a90c8d435b669a19111d4865791167a288d5447a0624b0eb4fc43a8215
+    SHA512 9f58ee84aefa763ade97632a3d4e337c87944159360c8d9dca37e0e7cf1cdc2e2bab09777ac7ff1029f1687f13f4162ff44c4e129ee752e646793a37290b0b4a
     HEAD_REF master
 )
+
+# Disable building tests during vcpkg install
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(tests)" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "enable_testing()" "")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
