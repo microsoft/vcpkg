@@ -1,0 +1,8 @@
+{
+  "name": "vcpkg-tool-rust",
+  "version": "1.97.1",
+  "description": "Rust",
+  "homepage": "https://rust-lang.org/tools/install/",
+  "license": "Apache-2.0",
+  "supports": "!uwp"
+}

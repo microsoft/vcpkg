@@ -10748,6 +10748,10 @@
       "baseline": "2.7.18",
       "port-version": 1
     },
+    "vcpkg-tool-rust": {
+      "baseline": "1.97.1",
+      "port-version": 0
+    },
     "vectorclass": {
       "baseline": "2.02.03",
       "port-version": 0
