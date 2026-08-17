@@ -1,6 +1,6 @@
 {
   "name": "simd-f128",
-  "version": "1.6.0",
+  "version": "1.6.2",
   "description": "Professional 128-bit (Double-Double) SIMD floating point math library",
   "homepage": "https://tiw302.github.io/simd-f128/",
   "license": "MIT",
