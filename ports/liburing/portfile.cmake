@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-configure.patch     # ignore unsupported options, handle ENABLE_SHARED
         disable-tests-and-examples.patch
+        fix-install-destinations.patch
 )
 
 # https://github.com/axboe/liburing/blob/liburing-2.8/src/Makefile#L13

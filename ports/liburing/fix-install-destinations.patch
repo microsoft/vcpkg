@@ -1,0 +1,85 @@
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -41,6 +41,10 @@
+ ifneq ($(MAKECMDGOALS),clean)
+ include ../config-host.mak
+ endif
++
++install_includedir := $(abspath $(includedir))
++install_libdir := $(abspath $(libdir))
++install_libdevdir := $(abspath $(libdevdir))
+ 
+ ifeq ($(CONFIG_USE_SANITIZER),y)
+ 	LINK_FLAGS=
+@@ -106,41 +110,41 @@
+ 	$(QUIET_CC)$(CC) $(SO_CFLAGS) -shared -Wl,--version-script=$(root)/src/liburing-ffi.map -Wl,-soname=$(ffi_soname) -o $@ $(liburing_sobjs) $(liburing_ffi_sobjs) $(LINK_FLAGS)
+ 
+ install: $(all_targets)
+-	install -D -m 644 $(root)/src/include/liburing/io_uring.h $(includedir)/liburing/io_uring.h
+-	install -D -m 644 $(root)/src/include/liburing.h $(includedir)/liburing.h
+-	install -D -m 644 include/liburing/compat.h $(includedir)/liburing/compat.h
+-	install -D -m 644 $(root)/src/include/liburing/barrier.h $(includedir)/liburing/barrier.h
+-	install -D -m 644 include/liburing/io_uring_version.h $(includedir)/liburing/io_uring_version.h
+-	install -D -m 644 $(root)/src/include/liburing/io_uring/query.h $(includedir)/liburing/io_uring/query.h
+-	install -D -m 644 $(root)/src/include/liburing/io_uring/bpf_filter.h $(includedir)/liburing/io_uring/bpf_filter.h
+-	install -D -m 644 liburing.a $(libdevdir)/liburing.a
+-	install -D -m 644 liburing-ffi.a $(libdevdir)/liburing-ffi.a
++	install -D -m 644 $(root)/src/include/liburing/io_uring.h $(install_includedir)/liburing/io_uring.h
++	install -D -m 644 $(root)/src/include/liburing.h $(install_includedir)/liburing.h
++	install -D -m 644 include/liburing/compat.h $(install_includedir)/liburing/compat.h
++	install -D -m 644 $(root)/src/include/liburing/barrier.h $(install_includedir)/liburing/barrier.h
++	install -D -m 644 include/liburing/io_uring_version.h $(install_includedir)/liburing/io_uring_version.h
++	install -D -m 644 $(root)/src/include/liburing/io_uring/query.h $(install_includedir)/liburing/io_uring/query.h
++	install -D -m 644 $(root)/src/include/liburing/io_uring/bpf_filter.h $(install_includedir)/liburing/io_uring/bpf_filter.h
++	install -D -m 644 liburing.a $(install_libdevdir)/liburing.a
++	install -D -m 644 liburing-ffi.a $(install_libdevdir)/liburing-ffi.a
+ ifeq ($(ENABLE_SHARED),1)
+-	install -D -m 755 $(libname) $(libdir)/$(libname)
+-	install -D -m 755 $(ffi_libname) $(libdir)/$(ffi_libname)
+-	ln -sf $(libname) $(libdir)/$(soname)
+-	ln -sf $(relativelibdir)$(libname) $(libdevdir)/liburing.so
+-	ln -sf $(ffi_libname) $(libdir)/$(ffi_soname)
+-	ln -sf $(relativelibdir)$(ffi_libname) $(libdevdir)/liburing-ffi.so
++	install -D -m 755 $(libname) $(install_libdir)/$(libname)
++	install -D -m 755 $(ffi_libname) $(install_libdir)/$(ffi_libname)
++	ln -sf $(libname) $(install_libdir)/$(soname)
++	ln -sf $(relativelibdir)$(libname) $(install_libdevdir)/liburing.so
++	ln -sf $(ffi_libname) $(install_libdir)/$(ffi_soname)
++	ln -sf $(relativelibdir)$(ffi_libname) $(install_libdevdir)/liburing-ffi.so
+ endif
+ 
+ uninstall:
+-	@rm -f $(includedir)/liburing/io_uring.h
+-	@rm -f $(includedir)/liburing.h
+-	@rm -f $(includedir)/liburing/compat.h
+-	@rm -f $(includedir)/liburing/barrier.h
+-	@rm -f $(includedir)/liburing/sanitize.h
+-	@rm -f $(includedir)/liburing/io_uring_version.h
+-	@rm -f $(includedir)/liburing/io_uring/query.h
+-	@rm -f $(libdevdir)/liburing.a
+-	@rm -f $(libdevdir)/liburing-ffi.a
++	@rm -f $(install_includedir)/liburing/io_uring.h
++	@rm -f $(install_includedir)/liburing.h
++	@rm -f $(install_includedir)/liburing/compat.h
++	@rm -f $(install_includedir)/liburing/barrier.h
++	@rm -f $(install_includedir)/liburing/sanitize.h
++	@rm -f $(install_includedir)/liburing/io_uring_version.h
++	@rm -f $(install_includedir)/liburing/io_uring/query.h
++	@rm -f $(install_libdevdir)/liburing.a
++	@rm -f $(install_libdevdir)/liburing-ffi.a
+ ifeq ($(ENABLE_SHARED),1)
+-	@rm -f $(libdir)/$(libname)
+-	@rm -f $(libdir)/$(ffi_libname)
+-	@rm -f $(libdir)/$(soname)
+-	@rm -f $(libdevdir)/liburing.so
+-	@rm -f $(libdir)/$(ffi_soname)
+-	@rm -f $(libdevdir)/liburing-ffi.so
++	@rm -f $(install_libdir)/$(libname)
++	@rm -f $(install_libdir)/$(ffi_libname)
++	@rm -f $(install_libdir)/$(soname)
++	@rm -f $(install_libdevdir)/liburing.so
++	@rm -f $(install_libdir)/$(ffi_soname)
++	@rm -f $(install_libdevdir)/liburing-ffi.so
+ endif
+ 
+ clean:
