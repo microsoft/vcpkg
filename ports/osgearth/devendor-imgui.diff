@@ -1,9 +1,3 @@
-diff --git a/.DS_Store b/.DS_Store
-index e36a7ba..3d96205 100644
-Binary files a/.DS_Store and b/.DS_Store differ
-diff --git a/src/.DS_Store b/src/.DS_Store
-index 4c7bc10..865f1cb 100644
-Binary files a/src/.DS_Store and b/src/.DS_Store differ
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 8353843..7e97f01 100644
 --- a/src/CMakeLists.txt
