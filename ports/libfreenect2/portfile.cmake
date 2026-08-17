@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-macbuild.patch
         CMake_4_and_OpenCL_headers.patch # https://github.com/OpenKinect/libfreenect2/pull/1209
         find_libjpegturbo.patch
+        fix-cross-compiling.patch # from conan libfreenect2 recipe https://github.com/conan-io/conan-center-index/pull/7628
 )
 
 file(READ "${SOURCE_PATH}/cmake_modules/FindLibUSB.cmake" FINDLIBUSB)

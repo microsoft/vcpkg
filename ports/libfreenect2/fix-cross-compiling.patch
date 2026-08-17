@@ -1,0 +1,41 @@
+This patch avoids compiling 'generate_resources_tool' to generate C sources of binary resources
+and instead uses CMake functionality to generate the files. This patch is necessary to enable
+cross-compiling without setting up host compiling environment. @sh0
+
+diff --git a/cmake_modules/GenerateResources.cmake b/cmake_modules/GenerateResources.cmake
+index 8616e38..6deea9a 100644
+--- a/cmake_modules/GenerateResources.cmake
++++ b/cmake_modules/GenerateResources.cmake
+@@ -1,14 +1,23 @@
+ FUNCTION(GENERATE_RESOURCES OUTPUT BASE_FOLDER)
+ 
+-ADD_EXECUTABLE(generate_resources_tool
+-  tools/generate_resources.cpp
+-)
+-
+-ADD_CUSTOM_COMMAND(
+-  OUTPUT ${OUTPUT}
+-  COMMAND generate_resources_tool ${BASE_FOLDER} ${ARGN} > ${OUTPUT}
+-  WORKING_DIRECTORY ${BASE_FOLDER}
+-  DEPENDS generate_resources_tool ${ARGN}
++set(RES_INDEX "0")
++foreach (SRC_ENTRY ${ARGN})
++  set(SRC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SRC_ENTRY}")
++  get_filename_component(SRC_NAME "${SRC_ENTRY}" NAME)
++  file(SIZE "${SRC_PATH}" DATA_SIZE)
++  file(READ "${SRC_PATH}" DATA_BIN HEX)
++  string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," DATA_HEX ${DATA_BIN})
++  string(APPEND RES_CONTENT "static unsigned char resource${RES_INDEX}[] = {\n  ${DATA_HEX}\n};\n")
++  string(APPEND RES_DESCRIPTOR "  { \"${SRC_NAME}\", resource${RES_INDEX}, sizeof(resource${RES_INDEX}) },\n")
++  math(EXPR RES_INDEX "${RES_INDEX} + 1")
++endforeach ()
++file(WRITE "${OUTPUT}"
++  "${RES_CONTENT}"
++  "static ResourceDescriptor resource_descriptors[] = {\n"
++  "${RES_DESCRIPTOR}"
++  "  {NULL, NULL, 0},\n"
++  "};\n"
++  "static int resource_descriptors_length = ${RES_INDEX};\n"
+ )
+ 
+ ENDFUNCTION(GENERATE_RESOURCES)
