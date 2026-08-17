@@ -7245,7 +7245,7 @@
       "port-version": 0
     },
     "nvidia-cutlass": {
-      "baseline": "4.6.1",
+      "baseline": "4.7.0",
       "port-version": 0
     },
     "nvrhi": {
