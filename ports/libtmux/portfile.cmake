@@ -25,6 +25,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME libtmux CONFIG_PATH lib/cmake/libtmux)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# Headers come from the release tree, and so does the license: the project
+# installs it to `share/licenses/libtmux/` for an ordinary `cmake --install`,
+# which is right there and wrong here — vcpkg keeps a port's copyright at
+# `share/libtmux/copyright` and rejects a `debug/share` outright.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
+                    "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
