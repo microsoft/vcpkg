@@ -1,0 +1,11 @@
+diff --git a/similarity_search/include/pow.h b/similarity_search/include/pow.h
+--- a/similarity_search/include/pow.h
++++ b/similarity_search/include/pow.h
+@@ -24,6 +24,7 @@
+  */
+ 
+ #include <cmath>
++#include <cstdint>
+ #include <limits>
+ 
+ #include "logging.h"

@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-osx-build.patch
         Add-static-shared-handling.patch
         Export-unofficial-target.patch
+        fix-missing-cstdint.patch
 )
 file(REMOVE_RECURSE 
     "${SOURCE_PATH}/3rdparty/concurrentqueue"

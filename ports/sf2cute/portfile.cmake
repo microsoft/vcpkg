@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.2
     HEAD_REF master
     SHA512 721762556c392a134500fa110ec849a60d1285a57e4e8d9cacb6281bed02f5658a14694efcccb8248719558b45db89da5ad53c56990bb9c263a9760fe0d99b8f
+    PATCHES
+        fix-missing-cstdint.patch
 )
 
 set(BUILD_EXAMPLE OFF)

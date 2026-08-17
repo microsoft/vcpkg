@@ -1,0 +1,44 @@
+diff --git a/src/sf2cute/riff_inst_chunk.hpp b/src/sf2cute/riff_inst_chunk.hpp
+--- a/src/sf2cute/riff_inst_chunk.hpp
++++ b/src/sf2cute/riff_inst_chunk.hpp
+@@ -7,6 +7,7 @@
+ #define SF2CUTE_RIFF_INST_CHUNK_HPP_
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ #include <vector>
+diff --git a/src/sf2cute/riff_phdr_chunk.hpp b/src/sf2cute/riff_phdr_chunk.hpp
+--- a/src/sf2cute/riff_phdr_chunk.hpp
++++ b/src/sf2cute/riff_phdr_chunk.hpp
+@@ -7,6 +7,7 @@
+ #define SF2CUTE_RIFF_PHDR_CHUNK_HPP_
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ #include <vector>
+diff --git a/src/sf2cute/riff_ibag_chunk.hpp b/src/sf2cute/riff_ibag_chunk.hpp
+--- a/src/sf2cute/riff_ibag_chunk.hpp
++++ b/src/sf2cute/riff_ibag_chunk.hpp
+@@ -7,6 +7,7 @@
+ #define SF2CUTE_RIFF_IBAG_CHUNK_HPP_
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ #include <vector>
+diff --git a/src/sf2cute/riff_pbag_chunk.hpp b/src/sf2cute/riff_pbag_chunk.hpp
+--- a/src/sf2cute/riff_pbag_chunk.hpp
++++ b/src/sf2cute/riff_pbag_chunk.hpp
+@@ -7,6 +7,7 @@
+ #define SF2CUTE_RIFF_PBAG_CHUNK_HPP_
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ #include <vector>

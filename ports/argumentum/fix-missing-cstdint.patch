@@ -1,0 +1,11 @@
+diff --git a/src/value.h b/src/value.h
+--- a/src/value.h
++++ b/src/value.h
+@@ -6,6 +6,7 @@
+ #include "convert.h"
+ #include "notifier.h"
+ 
++#include <cstdint>
+ #include <functional>
+ #include <string>
+ 

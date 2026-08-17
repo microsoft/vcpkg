@@ -1,0 +1,9 @@
+diff --git a/thirdparty/yaml-cpp/yaml-cpp/src/emitterutils.cpp b/thirdparty/yaml-cpp/yaml-cpp/src/emitterutils.cpp
+--- a/thirdparty/yaml-cpp/yaml-cpp/src/emitterutils.cpp
++++ b/thirdparty/yaml-cpp/yaml-cpp/src/emitterutils.cpp
+@@ -1,4 +1,5 @@
+ #include <algorithm>
++#include <cstdint>
+ #include <iomanip>
+ #include <sstream>
+ 

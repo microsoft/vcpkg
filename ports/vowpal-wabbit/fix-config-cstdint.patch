@@ -1,0 +1,44 @@
+diff --git a/vowpalwabbit/config/include/vw/config/option.h b/vowpalwabbit/config/include/vw/config/option.h
+--- a/vowpalwabbit/config/include/vw/config/option.h
++++ b/vowpalwabbit/config/include/vw/config/option.h
+@@ -7,6 +7,7 @@
+ #include "vw/common/vw_exception.h"
+ #include "vw/common/vw_throw.h"
+ 
++#include <cstdint>
+ #include <memory>
+ #include <set>
+ #include <sstream>
+diff --git a/vowpalwabbit/config/include/vw/config/cli_options_serializer.h b/vowpalwabbit/config/include/vw/config/cli_options_serializer.h
+--- a/vowpalwabbit/config/include/vw/config/cli_options_serializer.h
++++ b/vowpalwabbit/config/include/vw/config/cli_options_serializer.h
+@@ -7,6 +7,7 @@
+ #include "option.h"
+ #include "options_serializer.h"
+ 
++#include <cstdint>
+ #include <sstream>
+ #include <string>
+ 
+diff --git a/vowpalwabbit/core/include/vw/core/feature_group.h b/vowpalwabbit/core/include/vw/core/feature_group.h
+--- a/vowpalwabbit/core/include/vw/core/feature_group.h
++++ b/vowpalwabbit/core/include/vw/core/feature_group.h
+@@ -9,6 +9,7 @@
+ #include "vw/core/generic_range.h"
+ #include "vw/core/v_array.h"
+ 
+ #include <algorithm>
+ #include <cstddef>
++#include <cstdint>
+ #include <iterator>
+diff --git a/vowpalwabbit/core/include/vw/core/network.h b/vowpalwabbit/core/include/vw/core/network.h
+--- a/vowpalwabbit/core/include/vw/core/network.h
++++ b/vowpalwabbit/core/include/vw/core/network.h
+@@ -5,6 +5,7 @@
+ #include "vw/core/vw_fwd.h"
+ #include "vw/io/io_adapter.h"
+ 
++#include <cstdint>
+ #include <string>
+ 
+ namespace VW

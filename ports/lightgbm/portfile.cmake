@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 f968f984a0881a5eadd898dded367b799b619e3cc80415dec8b623897e84d7e1e1034f20179125354b93759ea1b8a3e334cfa506427442810ef098bc93fd4634
     PATCHES
         vcpkg_lightgbm_use_vcpkg_libs.patch
+        fix-json11-cstdint.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

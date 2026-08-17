@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 00e1b961b1e6730bf74209622a44f932b5221c15995c53bcea9de5b84ba7d75549c095658bcb5729d4a38bf60104b5c5a8fa97015f13977341fcdd62643f35c2
     HEAD_REF master
+    PATCHES
+        fix-parse-cstdint.patch
 )
 
 vcpkg_cmake_configure(

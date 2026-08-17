@@ -9,6 +9,7 @@ vcpkg_from_github(
         add-missing-thread-header.patch
         cmake4.patch
         disable-werror.diff
+        fix-missing-cstdint.patch
 )
 
 set(SHARED_FLAG OFF)

@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO rioki/c9y
     REF v0.8.0
     SHA512 f3161bde45fd534029ef4609b1b49d4edbeb636c9305e01e7e9cfa6a62cde0978632d46597510bea0ff96cae09b819905c0d8c5d2fd85cf641d7b47ea2a732b1
+    PATCHES
+        fix-missing-algorithm.patch
     )
 
 vcpkg_cmake_configure(

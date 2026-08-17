@@ -1,0 +1,11 @@
+diff --git a/src/tomsolver/parse.cpp b/src/tomsolver/parse.cpp
+--- a/src/tomsolver/parse.cpp
++++ b/src/tomsolver/parse.cpp
+@@ -6,6 +6,7 @@
+ #include <algorithm>
+ #include <cassert>
+ #include <cctype>
++#include <cstdint>
+ #include <functional>
+ #include <iterator>
+ #include <sstream>

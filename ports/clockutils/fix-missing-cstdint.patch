@@ -1,0 +1,22 @@
+diff --git a/include/clockUtils/compression/algorithm/HuffmanBase.h b/include/clockUtils/compression/algorithm/HuffmanBase.h
+--- a/include/clockUtils/compression/algorithm/HuffmanBase.h
++++ b/include/clockUtils/compression/algorithm/HuffmanBase.h
+@@ -25,6 +25,7 @@
+ #ifndef __CLOCKUTILS_COMPRESSION_ALGORITHM_HUFFMANBASE_H__
+ #define __CLOCKUTILS_COMPRESSION_ALGORITHM_HUFFMANBASE_H__
+ 
++#include <cstdint>
+ #include <memory>
+ #include <string>
+ #include <vector>
+diff --git a/include/clockUtils/compression/algorithm/HuffmanGeneric.h b/include/clockUtils/compression/algorithm/HuffmanGeneric.h
+--- a/include/clockUtils/compression/algorithm/HuffmanGeneric.h
++++ b/include/clockUtils/compression/algorithm/HuffmanGeneric.h
+@@ -25,6 +25,7 @@
+ #ifndef __CLOCKUTILS_COMPRESSION_ALGORITHM_HUFFMANGENERIC_H__
+ #define __CLOCKUTILS_COMPRESSION_ALGORITHM_HUFFMANGENERIC_H__
+ 
++#include <cstdint>
+ #include "clockUtils/compression/algorithm/HuffmanBase.h"
+ 
+ namespace clockUtils {

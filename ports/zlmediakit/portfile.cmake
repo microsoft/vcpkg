@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         fix-dependency.patch
         fix-android.patch
+        fix-recorder-cstdint.patch
 )
 
 vcpkg_from_github(

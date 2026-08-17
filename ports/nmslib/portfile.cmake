@@ -14,6 +14,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "${APPLE_CLANG_FIX}"
+        fix-pow-cstdint.patch
 )
 
 # TODO: check SSE and AVX availability and set corresponding tags

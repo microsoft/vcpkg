@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "dap-${VERSION}"
     SHA512 36f31cf7b90190820f5a5b7df679a3ca1a4f51b58a7a4c46f85c7b55b0ad9dbeba3436992b5eb8a3fd4499fc38bbf2b16f834f5f1989717f151abf13c262c747
     HEAD_REF main
+    PATCHES
+        fix-missing-cstdint.patch
 )
 
 vcpkg_cmake_configure(

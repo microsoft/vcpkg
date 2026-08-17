@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 9b5a49f6ec4169b67b9e5ffd11fdae9c238b0a3d
     SHA512 41962839cd13a314a17fef5f6065d7c3ed9967832039ca31993105685d584307d00f17c1514f4acf855a71fd884a1104c2d9c6a4461be5d2d7cfdc50b1ea7bdb
     HEAD_REF master
+    PATCHES
+        fix-logger-cstdint.patch
 )
 
 # Copy all header files

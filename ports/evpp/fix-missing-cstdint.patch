@@ -1,0 +1,10 @@
+diff --git a/apps/evmc/vbucket_config.h b/apps/evmc/vbucket_config.h
+--- a/apps/evmc/vbucket_config.h
++++ b/apps/evmc/vbucket_config.h
+@@ -1,5 +1,6 @@
+ #pragma once
+ 
++#include <cstdint>
+ #include <string>
+ #include <vector>
+ #include <memory>

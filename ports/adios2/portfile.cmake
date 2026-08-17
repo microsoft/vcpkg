@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 05decc3ff14e7458df9ec16ca6230a9770ca992e7d0ce3a18b3c9295a19dad94d8a9367102e50347a9487c6a3f35a8d52fbaa6a6fd98807aaec9636e607541ee
     HEAD_REF master
+    PATCHES
+        fix-yaml-cpp-cstdint.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

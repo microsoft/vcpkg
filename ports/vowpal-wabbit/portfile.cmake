@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-android-build.patch
         fix-fmt-header.patch
+        fix-config-cstdint.patch
 )
 
 vcpkg_cmake_configure(

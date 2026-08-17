@@ -1,0 +1,11 @@
+diff --git a/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/itlib/small_vector.hpp b/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/itlib/small_vector.hpp
+--- a/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/itlib/small_vector.hpp
++++ b/vtkm/thirdparty/diy/vtkmdiy/include/vtkmdiy/thirdparty/itlib/small_vector.hpp
+@@ -140,6 +140,7 @@
+ 
+ #include <type_traits>
+ #include <cstddef>
++#include <cstdint>
+ #include <memory>
+ 
+ #define ITLIB_SMALL_VECTOR_ERROR_HANDLING_NONE  0

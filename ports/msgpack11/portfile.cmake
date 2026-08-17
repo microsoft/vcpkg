@@ -9,6 +9,7 @@ vcpkg_from_github(
         msvc.patch
         fix-additerator.patch
         disable-werror.patch
+        fix-missing-cstdint.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,0 +1,11 @@
+diff --git a/source/core/BufferAllocator.hpp b/source/core/BufferAllocator.hpp
+--- a/source/core/BufferAllocator.hpp
++++ b/source/core/BufferAllocator.hpp
+@@ -9,6 +9,7 @@
+ #ifndef BufferAllocator_hpp
+ #define BufferAllocator_hpp
+ 
++#include <cstdint>
+ #include <map>
+ #include <memory>
+ #include <vector>

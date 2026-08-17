@@ -1,6 +1,7 @@
 {
   "name": "cppdap",
   "version-semver": "1.58.0-a",
+  "port-version": 1,
   "description": "A C++11 library (\"SDK\") implementation of the Debug Adapter Protocol, providing an API for implementing a DAP client or server.",
   "homepage": "https://github.com/google/cppdap",
   "license": "Apache-2.0",

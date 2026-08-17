@@ -1,0 +1,11 @@
+diff --git a/src/io/json11.cpp b/src/io/json11.cpp
+--- a/src/io/json11.cpp
++++ b/src/io/json11.cpp
+@@ -25,6 +25,7 @@
+ #include <cmath>
+ #include <cstdio>
+ #include <cstdlib>
++#include <cstdint>
+ #include <limits>
+ 
+ namespace json11_internal_lightgbm {

@@ -1,0 +1,11 @@
+diff --git a/src/source.h b/src/source.h
+--- a/src/source.h
++++ b/src/source.h
+@@ -7,6 +7,7 @@
+ #include <librealsense2/hpp/rs_types.hpp>
+ #include <src/frame-archive.h>
+ 
++#include <algorithm>
+ #include <tuple>
+ 
+ namespace librealsense

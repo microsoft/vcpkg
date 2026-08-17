@@ -1,0 +1,11 @@
+diff --git a/c9y/jthread.cpp b/c9y/jthread.cpp
+--- a/c9y/jthread.cpp
++++ b/c9y/jthread.cpp
+@@ -22,6 +22,7 @@
+ #include "jthread.h"
+ 
+ #ifndef C9Y_USE_STD_JTHREAD
++#include <algorithm>
+ #include <cassert>
+ #include <atomic>
+ #include <mutex>

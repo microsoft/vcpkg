@@ -1,0 +1,11 @@
+diff --git a/src/libtriton/includes/triton/modesEnums.hpp b/src/libtriton/includes/triton/modesEnums.hpp
+--- a/src/libtriton/includes/triton/modesEnums.hpp
++++ b/src/libtriton/includes/triton/modesEnums.hpp
+@@ -7,6 +7,7 @@
+ 
+ #ifndef TRITON_MODES_HPP
+ #define TRITON_MODES_HPP
++#include <cstdint>
+ 
+ 
+ 

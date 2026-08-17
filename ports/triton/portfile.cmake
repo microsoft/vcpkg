@@ -5,6 +5,7 @@ vcpkg_from_github(
   SHA512 eb184859fe3023f188f7828335924da36c45dea90dc1ece7d8cf770dc7951022d4e51647cdd520e9bc91a8e01cab4a8801808e469900bdbbc3806624c132ad8d
   HEAD_REF master
   PATCHES
+        fix-modes-enums-cstdint.patch
     fix_bin_path.patch
 )
 

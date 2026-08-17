@@ -1,0 +1,11 @@
+diff --git a/modules/actors/yato/actors/logger.h b/modules/actors/yato/actors/logger.h
+--- a/modules/actors/yato/actors/logger.h
++++ b/modules/actors/yato/actors/logger.h
+@@ -10,6 +10,7 @@
+ 
+ #include <cstdio>
+ #include <cassert>
++#include <cstdint>
+ #include <array>
+ #include <memory>
+ 

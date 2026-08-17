@@ -1,0 +1,11 @@
+diff --git a/src/Record/Recorder.h b/src/Record/Recorder.h
+--- a/src/Record/Recorder.h
++++ b/src/Record/Recorder.h
+@@ -12,6 +12,7 @@
+ #define SRC_MEDIAFILE_RECORDER_H_
+ 
+ #include <memory>
++#include <cstdint>
+ #include <string>
+ 
+ namespace mediakit {
