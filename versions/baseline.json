@@ -9392,6 +9392,10 @@
       "baseline": "7.2.164",
       "port-version": 0
     },
+    "simd-f128": {
+      "baseline": "1.6.2",
+      "port-version": 0
+    },
     "simde": {
       "baseline": "0.8.2",
       "port-version": 0
