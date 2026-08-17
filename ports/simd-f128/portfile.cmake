@@ -10,6 +10,8 @@ vcpkg_from_github(
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(tests)" "")
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "enable_testing()" "")
 
+set(VCPKG_BUILD_TYPE release) # Header-only port
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
