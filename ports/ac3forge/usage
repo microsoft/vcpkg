@@ -1,0 +1,21 @@
+ac3forge provides CMake targets via find_package(ac3forge):
+
+    find_package(ac3forge CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE ac3::forge)
+
+Three container writers are separate, opt-in features, all installed by default - when present,
+their own targets are also available:
+
+    matroska  ->  matroska::matroska  (Matroska/.mkv)
+    mp4       ->  mp4::mp4            (MP4/ISOBMFF, plus fMP4/CMAF + HLS/DASH)
+    mpegts    ->  mpegts::mpegts      (MPEG-2 Transport Stream)
+
+    target_link_libraries(main PRIVATE matroska::matroska mp4::mp4 mpegts::mpegts)
+
+To install ac3forge without any of them:
+
+    vcpkg install ac3forge[core]
+
+Or pick a subset, e.g. matroska only:
+
+    vcpkg install ac3forge[core,matroska]
