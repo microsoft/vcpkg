@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index abed216..856609d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 3.22)
+ project(faker-cxx
+     LANGUAGES CXX
+-    VERSION 4.0.1
++    VERSION 4.4.0
+     DESCRIPTION "C++ Faker library for generating fake (but realistic) data."
+     HOMEPAGE_URL "https://github.com/cieslarmichal/faker-cxx")
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7e9b0a8..a7c38fe 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -139,7 +139,7 @@ configure_file(
+     @ONLY
+ )
+ 
+-write_basic_package_version_file(${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
++write_basic_package_version_file(${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+     VERSION ${CMAKE_PROJECT_VERSION}
+     COMPATIBILITY SameMajorVersion)
+ 
+@@ -166,7 +166,7 @@ install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc"
+ )
+ 
+ install(FILES
+-    "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
++    "${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+ )
+ 
