@@ -1,5 +1,5 @@
 diff --git a/src/geo/OCCEdge.cpp b/src/geo/OCCEdge.cpp
-index 2ed6e08..248f938 100644
+index 28ca9f7..248f938 100644
 --- a/src/geo/OCCEdge.cpp
 +++ b/src/geo/OCCEdge.cpp
 @@ -1,4 +1,4 @@
@@ -8,7 +8,15 @@ index 2ed6e08..248f938 100644
  //
  // See the LICENSE.txt file in the Gmsh root directory for license information.
  // Please report all issues on https://gitlab.onelab.info/gmsh/gmsh/issues.
-@@ -34,6 +34,12 @@
+@@ -16,7 +16,6 @@
+ 
+ #include <Standard_Version.hxx>
+ #include <TopoDS.hxx>
+-#include <Geom2dLProp_CLProps2d.hxx>
+ #include <Geom_BezierCurve.hxx>
+ #include <Geom_OffsetCurve.hxx>
+ #include <Geom_Ellipse.hxx>
+@@ -35,6 +34,12 @@
  #include <BRep_Builder.hxx>
  #include <BOPTools_AlgoTools.hxx>
  
@@ -21,7 +29,7 @@ index 2ed6e08..248f938 100644
  OCCEdge::OCCEdge(GModel *m, TopoDS_Edge c, int num, GVertex *v1, GVertex *v2)
    : GEdge(m, num, v1, v2), _c(c), _trimmed(nullptr)
  {
-@@ -266,7 +272,7 @@ bool OCCEdge::containsPoint(const SPoint3 &pt) const
+@@ -267,7 +272,7 @@ bool OCCEdge::containsPoint(const SPoint3 &pt) const
    double u;
    SPoint3 xyz;
    if(_project(pt.data(), u, xyz.data())) {
@@ -30,7 +38,7 @@ index 2ed6e08..248f938 100644
      if(pt.distance(xyz) <= tolerance) return true;
    }
    return false;
-@@ -411,9 +417,13 @@ double OCCEdge::curvature(double par) const
+@@ -412,9 +417,13 @@ double OCCEdge::curvature(double par) const
  
    if(degenerate(0)) return eps;
  
@@ -45,7 +53,7 @@ index 2ed6e08..248f938 100644
      aCLProps.SetParameter(par);
      if(!aCLProps.IsTangentDefined())
        Crv = eps;
-@@ -458,4 +468,4 @@ void OCCEdge::writeGEO(FILE *fp)
+@@ -459,4 +468,4 @@ void OCCEdge::writeGEO(FILE *fp)
      GEdge::writeGEO(fp);
  }
  
