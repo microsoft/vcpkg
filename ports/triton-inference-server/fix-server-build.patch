@@ -1,0 +1,229 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index de46e97..1b9a535 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -30,36 +30,27 @@ project(tritonserverexe LANGUAGES C CXX)
+ 
+ include(GNUInstallDirs)
+ 
++option(TRITON_ENABLE_EXAMPLES "Build C++ server examples" ON)
++
+ #
+ # Dependencies
+ #
+-# We must include the transitive closure of all repos so that we can
+-# override the tag. The backend repo is needed for the tests.
+-#
+-include(FetchContent)
+-
+-FetchContent_Declare(
+-  repo-common
+-  GIT_REPOSITORY ${TRITON_REPO_ORGANIZATION}/common.git
+-  GIT_TAG ${TRITON_COMMON_REPO_TAG}
+-)
+-FetchContent_Declare(
+-  repo-core
+-  GIT_REPOSITORY ${TRITON_REPO_ORGANIZATION}/core.git
+-  GIT_TAG ${TRITON_CORE_REPO_TAG}
+-)
+-FetchContent_Declare(
+-  repo-backend
+-  GIT_REPOSITORY ${TRITON_REPO_ORGANIZATION}/backend.git
+-  GIT_TAG ${TRITON_BACKEND_REPO_TAG}
+-)
+-
+-if(TRITON_ENABLE_GRPC)
+-  set(TRITON_COMMON_ENABLE_PROTOBUF ON)
+-  set(TRITON_COMMON_ENABLE_GRPC ON)
+-endif() # TRITON_ENABLE_GRPC
+-
+-FetchContent_MakeAvailable(repo-common repo-core repo-backend)
++find_package(TritonCommon CONFIG REQUIRED)
++find_package(TritonCore CONFIG REQUIRED)
++find_package(unofficial-b64 CONFIG REQUIRED)
++find_package(ZLIB REQUIRED)
++
++add_library(triton-common-async-work-queue ALIAS TritonCommon::triton-common-async-work-queue)
++add_library(triton-common-error ALIAS TritonCommon::triton-common-error)
++add_library(triton-common-logging ALIAS TritonCommon::triton-common-logging)
++add_library(triton-common-table-printer ALIAS TritonCommon::triton-common-table-printer)
++add_library(triton-common-json ALIAS TritonCommon::triton-common-json)
++add_library(proto-library ALIAS TritonCommon::proto-library)
++add_library(grpc-health-library ALIAS TritonCommon::grpc-health-library)
++add_library(grpc-service-library ALIAS TritonCommon::grpc-service-library)
++add_library(triton-core-serverapi ALIAS TritonCore::triton-core-serverapi)
++add_library(triton-core-serverstub ALIAS TritonCore::triton-core-serverstub)
++add_library(b64 ALIAS unofficial::b64::b64)
+ 
+ # CUDA
+ #
+@@ -113,7 +104,7 @@ target_compile_features(main PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
+ target_compile_options(
+   main
+   PRIVATE
+-    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Werror
++    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations
+ )
+ 
+ # Dependency from common.h
+@@ -139,7 +130,7 @@ set_target_properties(
+     SKIP_BUILD_RPATH TRUE
+     BUILD_WITH_INSTALL_RPATH TRUE
+     INSTALL_RPATH_USE_LINK_PATH FALSE
+-    INSTALL_RPATH "$\{ORIGIN\}/../${LIB_DIR}"
++    INSTALL_RPATH "$\{ORIGIN\}/../../${LIB_DIR}"
+ )
+ 
+ target_link_libraries(
+@@ -333,7 +324,7 @@ if(${TRITON_ENABLE_HTTP}
+   target_compile_options(
+     http-endpoint-library
+     PRIVATE
+-      -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized -Werror
++      -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized
+   )
+ 
+   set_target_properties(
+@@ -440,7 +431,7 @@ if(${TRITON_ENABLE_HTTP}
+     http-endpoint-library
+     PUBLIC
+       b64
+-      z
++      ZLIB::ZLIB
+   )
+ 
+   target_link_libraries(
+@@ -544,6 +535,7 @@ endif() # TRITON_ENABLE_TRACING
+ #
+ # simple
+ #
++if(TRITON_ENABLE_EXAMPLES)
+ add_executable(
+   simple
+   simple.cc
+@@ -553,7 +545,7 @@ target_compile_features(simple PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
+ target_compile_options(
+   simple
+   PRIVATE
+-    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations -Werror
++    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations
+ )
+ 
+ set_target_properties(
+@@ -606,7 +598,7 @@ target_compile_features(multi_server PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
+ target_compile_options(
+   multi_server
+   PRIVATE
+-    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations -Werror
++    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations
+ )
+ 
+ set_target_properties(
+@@ -660,7 +652,7 @@ if(${TRITON_ENABLE_GPU})
+   target_compile_options(
+     memory_alloc
+     PRIVATE
+-      -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations -Werror
++      -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations
+   )
+ 
+   set_target_properties(
+@@ -694,9 +686,4 @@ if(${TRITON_ENABLE_GPU})
+     RUNTIME DESTINATION bin
+   )
+ endif() # TRITON_ENABLE_GPU
+-
+-# tritonfrontend python package
+-add_subdirectory(python)
+-
+-add_subdirectory(test test)
+-
++endif() # TRITON_ENABLE_EXAMPLES
+diff --git a/src/grpc/CMakeLists.txt b/src/grpc/CMakeLists.txt
+index 3560c95..a8e4331 100644
+--- a/src/grpc/CMakeLists.txt
++++ b/src/grpc/CMakeLists.txt
+@@ -41,7 +41,7 @@ target_compile_features(grpc-endpoint-library PRIVATE cxx_std_${TRITON_MIN_CXX_S
+ target_compile_options(
+   grpc-endpoint-library
+   PRIVATE
+-    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized -Werror
++    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized
+ )
+ 
+ set_target_properties(
+diff --git a/src/grpc/grpc_server.cc b/src/grpc/grpc_server.cc
+index 10da647..d9ceb61 100644
+--- a/src/grpc/grpc_server.cc
++++ b/src/grpc/grpc_server.cc
+@@ -867,8 +867,7 @@ CommonHandler::RegisterModelConfig()
+             model_config_message, &buffer, &byte_size);
+         if (err == nullptr) {
+           ::google::protobuf::util::JsonStringToMessage(
+-              ::google::protobuf::stringpiece_internal::StringPiece(
+-                  buffer, (int)byte_size),
++              absl::string_view(buffer, byte_size),
+               response->mutable_config());
+         }
+         TRITONSERVER_MessageDelete(model_config_message);
+diff --git a/src/http_server.cc b/src/http_server.cc
+index b8d9ea0..4cfd3b9 100644
+--- a/src/http_server.cc
++++ b/src/http_server.cc
+@@ -281,7 +281,12 @@ HTTPServer::StopCallback(evutil_socket_t sock, short events, void* arg)
+ void
+ HTTPServer::Dispatch(evhtp_request_t* req, void* arg)
+ {
+-  (static_cast<HTTPServer*>(arg))->Handle(req);
++  HTTPServer* server = static_cast<HTTPServer*>(arg);
++  {
++    std::lock_guard<std::mutex> lock(server->conn_mu_);
++    server->chunk_counts_.erase(req);
++  }
++  server->Handle(req);
+ }
+ 
+ evhtp_res
+@@ -308,7 +313,6 @@ evhtp_res
+ HTTPServer::ChunkCountIncrement(
+     evhtp_request_t* req, uint64_t chunk_len, void* arg)
+ {
+-  (void)arg;
+   if ((req->flags & EVHTP_REQ_FLAG_FINISHED) != 0) {
+     return EVHTP_RES_OK;
+   }
+@@ -316,7 +320,13 @@ HTTPServer::ChunkCountIncrement(
+   if (chunk_len == 0) {
+     return EVHTP_RES_OK;
+   }
+-  if (++req->chunk_count > kMaxChunkedChunks) {
++  HTTPServer* server = static_cast<HTTPServer*>(arg);
++  size_t chunk_count;
++  {
++    std::lock_guard<std::mutex> lock(server->conn_mu_);
++    chunk_count = ++server->chunk_counts_[req];
++  }
++  if (chunk_count > kMaxChunkedChunks) {
+     AddContentTypeHeader(req, "application/json");
+     const std::string msg =
+         std::string("Chunked request body exceeds maximum of ") +
+@@ -342,6 +352,7 @@ HTTPServer::EndConnection(evhtp_connection_t* conn, void* arg)
+   HTTPServer* server = static_cast<HTTPServer*>(arg);
+   {
+     std::lock_guard<std::mutex> lock(server->conn_mu_);
++    server->chunk_counts_.erase(conn->request);
+     server->conn_cnt_--;
+   }
+   return EVHTP_RES_OK;
+diff --git a/src/http_server.h b/src/http_server.h
+index a3f4e6b..12ebef0 100644
+--- a/src/http_server.h
++++ b/src/http_server.h
+@@ -127,6 +127,7 @@ class HTTPServer {
+ 
+   std::mutex conn_mu_;
+   uint32_t conn_cnt_;
++  std::unordered_map<evhtp_request_t*, size_t> chunk_counts_;
+   bool accepting_new_conn_;
+ };
+ 

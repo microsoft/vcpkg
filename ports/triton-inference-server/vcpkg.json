@@ -1,0 +1,40 @@
+{
+  "name": "triton-inference-server",
+  "version-semver": "2.71.0",
+  "description": "C++ HTTP and gRPC server executable and core library for NVIDIA Triton Inference Server",
+  "homepage": "https://github.com/triton-inference-server/server",
+  "license": "BSD-3-Clause",
+  "supports": "linux & !static",
+  "dependencies": [
+    "b64",
+    "boost-algorithm",
+    "boost-core",
+    "boost-functional",
+    "boost-interprocess",
+    {
+      "name": "boost-stacktrace",
+      "default-features": false
+    },
+    "grpc",
+    "libevent",
+    {
+      "name": "libevhtp",
+      "features": [
+        "thread"
+      ]
+    },
+    "numactl",
+    "protobuf",
+    "re2",
+    "triton-inference-server-client",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

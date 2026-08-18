@@ -1,8 +1,8 @@
 diff --git a/cmake/TritonCommonConfig.cmake.in b/cmake/TritonCommonConfig.cmake.in
-index a6c13cb..fbc17ad 100644
+index 7f4d28a..5f86997 100644
 --- a/cmake/TritonCommonConfig.cmake.in
 +++ b/cmake/TritonCommonConfig.cmake.in
-@@ -31,6 +31,12 @@ list(APPEND CMAKE_MODULE_PATH ${TRITONCOMMON_CMAKE_DIR})
+@@ -32,6 +32,12 @@ list(APPEND CMAKE_MODULE_PATH ${TRITONCOMMON_CMAKE_DIR})
  
  include(CMakeFindDependencyMacro)
  find_dependency(Threads)
@@ -15,11 +15,44 @@ index a6c13cb..fbc17ad 100644
  
  if(NOT TARGET TritonCommon::triton-common-json)
    include("${TRITONCOMMON_CMAKE_DIR}/TritonCommonTargets.cmake")
+diff --git a/protobuf/CMakeLists.txt b/protobuf/CMakeLists.txt
+index 3b70113..112a698 100644
+--- a/protobuf/CMakeLists.txt
++++ b/protobuf/CMakeLists.txt
+@@ -53,7 +53,7 @@ if(${TRITON_COMMON_ENABLE_PROTOBUF})
+   endif()
+ 
+   add_library(
+-    proto-library EXCLUDE_FROM_ALL OBJECT
++    proto-library STATIC
+     ${PROTO_SRCS} ${PROTO_HDRS}
+   )
+ 
+@@ -125,7 +125,7 @@ if(${TRITON_COMMON_ENABLE_GRPC})
+   endif()
+ 
+   add_library(
+-    grpc-service-library EXCLUDE_FROM_ALL OBJECT
++    grpc-service-library STATIC
+     ${GRPC_SRCS} ${GRPC_HDRS}
+   )
+ 
+@@ -181,7 +181,7 @@ if(${TRITON_COMMON_ENABLE_GRPC})
+   )
+ 
+   add_library(
+-    grpc-health-library EXCLUDE_FROM_ALL OBJECT
++    grpc-health-library STATIC
+     ${HEALTH_SRCS} ${HEALTH_HDRS}
+   )
+ 
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4c98094..ec9c76a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -201,4 +201,3 @@ set_target_properties(
+@@ -200,5 +200,3 @@ set_target_properties(
+   PROPERTIES
      OUTPUT_NAME tritontableprinter
  )
- 
+-
 -add_subdirectory(test)

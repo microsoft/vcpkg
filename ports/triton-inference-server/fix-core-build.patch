@@ -1,0 +1,71 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 90f7a23..91d54d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,7 +129,7 @@ target_compile_features(triton-core-serverstub PRIVATE cxx_std_${TRITON_MIN_CXX_
+ target_compile_options(
+   triton-core-serverstub
+   PRIVATE
+-    -Wall -Wextra -Wno-unused-parameter -Werror
++    -Wall -Wextra -Wno-unused-parameter
+ )
+ 
+ set_target_properties(
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4c0bff2..9d4c308 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -28,6 +28,8 @@ cmake_minimum_required(VERSION 3.31.8)
+ 
+ project(libtritonserver LANGUAGES C CXX)
+ 
++include(GNUInstallDirs)
++
+ if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release)
+ endif()
+@@ -35,20 +37,16 @@ endif()
+ #
+ # Dependencies
+ #
+-# We must include the transitive closure of all repos so that we can
+-# override the tag.
+-#
+-include(FetchContent)
+-
+-FetchContent_Declare(
+-  repo-common
+-  GIT_REPOSITORY ${TRITON_REPO_ORGANIZATION}/common.git
+-  GIT_TAG ${TRITON_COMMON_REPO_TAG}
+-)
+-
+-set(TRITON_COMMON_ENABLE_PROTOBUF ON)
++find_package(TritonCommon CONFIG REQUIRED)
+ 
+-FetchContent_MakeAvailable(repo-common)
++add_library(proto-library ALIAS TritonCommon::proto-library)
++add_library(triton-common-async-work-queue ALIAS TritonCommon::triton-common-async-work-queue)
++add_library(triton-common-thread-pool ALIAS TritonCommon::triton-common-thread-pool)
++add_library(triton-common-error ALIAS TritonCommon::triton-common-error)
++add_library(triton-common-model-config ALIAS TritonCommon::triton-common-model-config)
++add_library(triton-common-logging ALIAS TritonCommon::triton-common-logging)
++add_library(triton-common-json ALIAS TritonCommon::triton-common-json)
++add_library(triton-common-table-printer ALIAS TritonCommon::triton-common-table-printer)
+ 
+ #
+ # CUDA
+@@ -249,7 +247,7 @@ target_compile_features(triton-core PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
+ target_compile_options(
+   triton-core
+   PRIVATE
+-    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized -Werror
++    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized
+ )
+ set_target_properties(
+   triton-core
+@@ -518,5 +516,3 @@ install(
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+-
+-add_subdirectory(test test)
