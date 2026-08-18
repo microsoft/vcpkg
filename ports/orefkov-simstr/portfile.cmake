@@ -17,9 +17,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/simstr)
+vcpkg_cmake_config_fixup(PACKAGE_NAME simstr CONFIG_PATH lib/cmake/simstr)
+
+set(config_file "${CURRENT_PACKAGES_DIR}/share/simstr/simstrConfig.cmake")
+file(READ "${config_file}" config_contents)
+file(WRITE "${config_file}" "include(CMakeFindDependencyMacro)\nfind_dependency(simdutf CONFIG)\n\n${config_contents}")
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
