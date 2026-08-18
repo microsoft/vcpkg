@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     HEAD_REF master
     SHA512 2ae72d7a63f997e9a0bd61d0ae5104bfd61654190ff4710caa35477d7fdb84918bf081203b7aff1230f2c2aa20bde64c543fce345fa179134067d657a2623683
-    PATCHES
-        fix-windows-dynamic-header.patch
 )
 
 vcpkg_check_features(
@@ -31,6 +29,17 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(SIMDJSON_HEADER "${CURRENT_PACKAGES_DIR}/include/simdjson.h")
+    file(READ "${SIMDJSON_HEADER}" SIMDJSON_HEADER_CONTENTS)
+    file(WRITE "${SIMDJSON_HEADER}"
+        "#ifndef SIMDJSON_USING_WINDOWS_DYNAMIC_LIBRARY\n"
+        "#define SIMDJSON_USING_WINDOWS_DYNAMIC_LIBRARY 1\n"
+        "#endif\n"
+        "${SIMDJSON_HEADER_CONTENTS}"
+    )
+endif()
 
 vcpkg_copy_pdbs()
 
