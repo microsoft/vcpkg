@@ -1,8 +1,8 @@
 #include <rapidocr/OcrLiteCApi.h>
 
-int rapidocr_capi_root_include_ok()
+int rapidocr_capi_root_include_ok(void)
 {
-    OCR_PARAM param{};
+    OCR_PARAM param;
     param.padding = 0;
     param.maxSideLen = 0;
     param.boxScoreThresh = 0.f;
@@ -13,7 +13,7 @@ int rapidocr_capi_root_include_ok()
     return param.padding;
 }
 
-int main()
+int main(void)
 {
     return rapidocr_capi_root_include_ok();
 }

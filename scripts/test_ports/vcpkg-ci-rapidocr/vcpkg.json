@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-ci-rapidocr",
   "version-string": "ci",
-  "description": "Validates rapidocr CMake C++/C APIs and C-header root includes",
+  "description": "Validates rapidocr CMake C++/C APIs and a C-header root include",
   "license": "MIT",
   "supports": "!uwp & !xbox",
   "dependencies": [

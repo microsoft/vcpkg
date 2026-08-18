@@ -1,7 +1,7 @@
 {
   "name": "rapidocr",
-  "version": "1.2.3",
-  "description": "RapidOCR C++ (ONNX Runtime): PaddleOCR-style detect/classify/recognize pipeline",
+  "version-date": "2024-10-22",
+  "description": "C++ ONNX Runtime OCR (RapidOcrOnnx): PaddleOCR-style detect/classify/recognize pipeline",
   "homepage": "https://github.com/RapidAI/RapidOcrOnnx",
   "license": "Apache-2.0",
   "supports": "!uwp & !xbox",
