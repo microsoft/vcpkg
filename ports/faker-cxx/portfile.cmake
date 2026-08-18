@@ -30,5 +30,5 @@ vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/LICENSES.md"
-        "${CMAKE_CURRENT_LIST_DIR}/oklog-ulid-LICENSE"
+        "${SOURCE_PATH}/src/modules/ulid_struct.h"
 )
