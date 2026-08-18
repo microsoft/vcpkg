@@ -1,9 +1,9 @@
 {
   "name": "sentry-native",
-  "version": "0.15.4",
+  "version": "0.16.3",
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0 AND BSD-3-Clause AND ICU",
   "supports": "!uwp",
   "dependencies": [
     {

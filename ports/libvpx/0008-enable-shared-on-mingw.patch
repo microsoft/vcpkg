@@ -1,0 +1,165 @@
+diff --git a/build/make/Makefile b/build/make/Makefile
+--- a/build/make/Makefile
++++ b/build/make/Makefile
+@@ -342,6 +342,20 @@ $(1):
+             $$(filter %.o,$$^) $$(extralibs)
+ endef
+ 
++define dll_gnu_template
++# Not using a pattern rule here because we don't want to generate empty
++# archives when they are listed as a dependency in files not responsible
++# for creating them.
++#
++# This needs further abstraction for dealing with non-GNU linkers.
++$(1):
++	$(if $(quiet),@echo "    [LD] $$@")
++	$(qexec)$$(LD) -shared $$(LDFLAGS) \
++            -Wl,--no-undefined \
++            -o $$@ \
++            -Wl,--out-implib=$$(subst $(2),.dll.a,$(1)) $$(filter %.o,$$^) $$(extralibs)
++endef
++
+ define dl_template
+ # Not using a pattern rule here because we don't want to generate empty
+ # archives when they are listed as a dependency in files not responsible
+@@ -425,6 +439,7 @@ $(foreach lib,$(filter %_g.a,$(LIBS)),$(eval $(call archive_template,$(lib))))
+ $(foreach lib,$(filter %so.$(SO_VERSION_MAJOR).$(SO_VERSION_MINOR).$(SO_VERSION_PATCH),$(LIBS)),$(eval $(call so_template,$(lib))))
+ $(foreach lib,$(filter %$(SO_VERSION_MAJOR).dylib,$(LIBS)),$(eval $(call dl_template,$(lib))))
+ $(foreach lib,$(filter %$(SO_VERSION_MAJOR).dll,$(LIBS)),$(eval $(call dll_template,$(lib))))
++$(foreach lib,$(filter %-$(VERSION_MAJOR).dll,$(LIBS)),$(eval $(call dll_gnu_template,$(lib),-$(VERSION_MAJOR).dll)))
+ 
+ INSTALL-LIBS=$(call cond_enabled,CONFIG_INSTALL_LIBS,INSTALL-LIBS)
+ ifeq ($(MAKECMDGOALS),dist)
+diff --git a/build/make/configure.sh b/build/make/configure.sh
+--- a/build/make/configure.sh
++++ b/build/make/configure.sh
+@@ -737,7 +737,10 @@ process_common_cmdline() {
+       --libdir=*)
+         libdir="${optval}"
+         ;;
+-      --libc|--as|--prefix|--libdir)
++      --bindir=*)
++        bindir="${optval}"
++        ;;
++      --libc|--as|--prefix|--libdir|--bindir)
+         die "Option ${opt} requires argument"
+         ;;
+       --help|-h)
+@@ -766,9 +769,14 @@ post_process_common_cmdline() {
+   prefix="${prefix%/}"
+   libdir="${libdir:-${prefix}/lib}"
+   libdir="${libdir%/}"
++  bindir="${bindir:-${prefix}/bin}"
++  bindir="${bindir%/}"
+   if [ "${libdir#${prefix}}" = "${libdir}" ]; then
+     die "Libdir ${libdir} must be a subdirectory of ${prefix}"
+   fi
++  if [ "${bindir#${prefix}}" = "${bindir}" ]; then
++    die "Bindir ${bindir} must be a subdirectory of ${prefix}"
++  fi
+ }
+ 
+ post_process_cmdline() {
+diff --git a/configure b/configure
+--- a/configure
++++ b/configure
+@@ -540,6 +540,7 @@ else
+ DIST_DIR?=\$(DESTDIR)${prefix}
+ endif
+ LIBSUBDIR=${libdir##${prefix}/}
++BINSUBDIR=${bindir##${prefix}/}
+ 
+ VERSION_STRING=${VERSION_STRING}
+ 
+@@ -577,9 +578,13 @@ process_detect() {
+             ;;
+         *)
+             if enabled gnu; then
+-                echo "--enable-shared is only supported on ELF; assuming this is OK"
++                echo "--enable-shared is only supported on ELF and PE; assuming this is OK"
++            elif enabled win32; then
++                echo "--enable-shared is only supported on ELF and PE; assuming this is OK"
++            elif enabled win64; then
++                echo "--enable-shared is only supported on ELF and PE; assuming this is OK"
+             else
+-                die "--enable-shared only supported on ELF, OS/2, and Darwin for now"
++                die "--enable-shared only supported on ELF, OS/2, Darwin and PE for now"
+             fi
+             ;;
+         esac
+diff --git a/examples.mk b/examples.mk
+--- a/examples.mk
++++ b/examples.mk
+@@ -312,9 +312,13 @@ else
+ ifneq ($(filter os2%,$(TGT_OS)),)
+ SHARED_LIB_SUF=_dll.a
+ else
++ifneq ($(filter win%,$(TGT_OS)),)
++SHARED_LIB_SUF=.dll.a
++else
+ SHARED_LIB_SUF=.so
+ endif
+ endif
++endif
+ CODEC_LIB_SUF=$(if $(CONFIG_SHARED),$(SHARED_LIB_SUF),.a)
+ $(foreach bin,$(BINS-yes),\
+     $(eval $(bin):$(LIB_PATH)/lib$(CODEC_LIB)$(CODEC_LIB_SUF))\
+diff --git a/libs.mk b/libs.mk
+--- a/libs.mk
++++ b/libs.mk
+@@ -150,6 +150,7 @@ endif
+ INSTALL_MAPS += include/vpx/% $(SRC_PATH_BARE)/vpx/%
+ INSTALL_MAPS += include/vpx/% $(SRC_PATH_BARE)/vpx_ports/%
+ INSTALL_MAPS += $(LIBSUBDIR)/%     %
++INSTALL_MAPS += $(BINSUBDIR)/%     %
+ INSTALL_MAPS += src/%     $(SRC_PATH_BARE)/%
+ ifeq ($(CONFIG_MSVS),yes)
+ INSTALL_MAPS += $(foreach p,$(VS_PLATFORMS),$(LIBSUBDIR)/$(p)/%  $(p)/Release/%)
+@@ -335,6 +336,16 @@ EXPORT_FILE             := libvpx.def
+ LIBVPX_SO_SYMLINKS      :=
+ LIBVPX_SO_IMPLIB        := libvpx_dll.a
+ else
++ifeq ($(filter win%,$(TGT_OS)),$(TGT_OS))
++LIBVPX_SO               := libvpx-$(VERSION_MAJOR).dll
++SHARED_LIB_SUF          := .dll.a
++EXPORT_FILE             :=
++LIBVPX_SO_SYMLINKS      :=
++LIBVPX_SO_IMPLIB        := libvpx.dll.a
++# PE shared libraries are runtime loadables and belong next to the executables,
++# not in the link-time library directory.
++LIBVPX_SO_INSTALL_DIR   := $(BINSUBDIR)
++else
+ LIBVPX_SO               := libvpx.so.$(SO_VERSION_MAJOR).$(SO_VERSION_MINOR).$(SO_VERSION_PATCH)
+ SHARED_LIB_SUF          := .so
+ EXPORT_FILE             := libvpx.ver
+@@ -344,6 +355,10 @@ LIBVPX_SO_SYMLINKS      := $(addprefix $(LIBSUBDIR)/, \
+ endif
+ endif
+ endif
++endif
++
++# ELF/Darwin/OS2 keep the shared library alongside its symlinks in $(LIBSUBDIR).
++LIBVPX_SO_INSTALL_DIR   ?= $(LIBSUBDIR)
+ 
+ LIBS-$(CONFIG_SHARED) += $(BUILD_PFX)$(LIBVPX_SO)\
+                            $(notdir $(LIBVPX_SO_SYMLINKS)) \
+@@ -366,6 +381,10 @@ libvpx_dll.a: $(LIBVPX_SO)
+ 	$(qexec)emximp -o $@ $<
+ CLEAN-OBJS += libvpx_dll.a
+ 
++libvpx.dll.a: $(LIBVPX_SO)
++	@echo "    [IMPLIB] $@"
++CLEAN-OBJS += libvpx.dll.a
++
+ define libvpx_symlink_template
+ $(1): $(2)
+ 	@echo "    [LN]     $(2) $$@"
+@@ -382,7 +401,7 @@ $(eval $(call libvpx_symlink_template,\
+ 
+ 
+ INSTALL-LIBS-$(CONFIG_SHARED) += $(LIBVPX_SO_SYMLINKS)
+-INSTALL-LIBS-$(CONFIG_SHARED) += $(LIBSUBDIR)/$(LIBVPX_SO)
++INSTALL-LIBS-$(CONFIG_SHARED) += $(LIBVPX_SO_INSTALL_DIR)/$(LIBVPX_SO)
+ INSTALL-LIBS-$(CONFIG_SHARED) += $(if $(LIBVPX_SO_IMPLIB),$(LIBSUBDIR)/$(LIBVPX_SO_IMPLIB))
+ 
+ 

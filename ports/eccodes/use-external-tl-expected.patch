@@ -19,6 +19,17 @@ index c63a982..5bc325f 100644
  )
  set( ECCODES_LIBRARIES       eccodes )
  
+diff --git a/eccodes-import.cmake.in b/eccodes-import.cmake.in
+index c0155c8..3245f4f 100644
+--- a/eccodes-import.cmake.in
++++ b/eccodes-import.cmake.in
+@@ -1,3 +1,6 @@
++include(CMakeFindDependencyMacro)
++find_dependency(tl-expected CONFIG)
++
+ set( ECCODES_DEFINITION_PATH ${eccodes_BASE_DIR}/@ECCODES_DEFINITION_SUFF@ )
+ set( ECCODES_SAMPLES_PATH ${eccodes_BASE_DIR}/@ECCODES_SAMPLES_SUFF@ )
+ set( ECCODES_IFS_SAMPLES_PATH ${eccodes_BASE_DIR}/@ECCODES_IFS_SAMPLES_SUFF@ )
 diff --git a/src/eccodes/CMakeLists.txt b/src/eccodes/CMakeLists.txt
 index 04b03eb..7f97c37 100644
 --- a/src/eccodes/CMakeLists.txt
@@ -31,7 +42,6 @@ index 04b03eb..7f97c37 100644
          $<$<BOOL:${libaec_FOUND}>:libaec::aec>
      PUBLIC_LIBS
          ${CMATH_LIBRARIES}
-
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
 index 2106df1..cfaa8fe 100644
 --- a/tests/CMakeLists.txt

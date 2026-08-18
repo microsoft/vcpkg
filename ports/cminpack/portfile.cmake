@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO devernay/cminpack
     REF "v${VERSION}"
-    SHA512 97655252f99a01bda00da136bdfbd3719888f6c2fe191b5ed70a339900b0606ad4ee2504cb87a223bc46b84645fb051a228d742fdbe2979693527a27578c0360
+    SHA512 3a3879cd396b9a6665eae2edd6976ab465173881341de350f77c4af9cee73f6d77d5eaf60a5666674b50181031aae661e9711e9dbaa9e20f90e21b4ef91151e7
 )
 
 vcpkg_cmake_configure(
@@ -10,6 +10,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DUSE_BLAS=OFF
+        -DBUILD_EXAMPLES_FORTRAN=OFF
+        -DUSE_LAPACK=OFF
 )
 
 vcpkg_cmake_install()

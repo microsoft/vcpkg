@@ -1,9 +1,9 @@
 {
   "name": "seal",
-  "version": "4.3.3",
+  "version": "4.4.3",
   "description": "Microsoft SEAL is an easy-to-use and powerful homomorphic encryption library.",
   "homepage": "https://github.com/microsoft/SEAL",
-  "license": "MIT",
+  "license": "MIT AND CC0-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

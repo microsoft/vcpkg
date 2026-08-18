@@ -37,6 +37,8 @@ $semverVersion = ($version -replace '(\d+(\.\d+){1,3}).*', '$1')
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
+    'boost-cobalt' = 1
+    'boost-hana' = 1
 }
 
 function Get-PortVersion {
@@ -80,7 +82,15 @@ $portData = @{
     };
     'boost-beast'            = @{ 'supports' = '!emscripten' };
     'boost-cmake'            = @{ 'dependencies' = @(@{ 'name' = 'vcpkg-boost'; 'host' = $true }); };
-    'boost-cobalt'           = @{ 'supports' = '!uwp' };
+    'boost-cobalt'           = @{
+        'supports' = '!uwp';
+        'features' = @{
+            'ssl' = @{
+                'description'  = 'Build boost_cobalt_io_ssl';
+                'dependencies' = @('openssl');
+            }
+        }
+    };
     'boost-context'          = @{ 'supports' = '!uwp & !emscripten' };
     'boost-coroutine'        = @{ 'supports' = '!(arm & windows) & !uwp & !emscripten' };
     'boost-dll'              = @{ 'supports' = '!uwp' };
@@ -123,6 +133,14 @@ $portData = @{
                 'dependencies' = @('zstd');
             };
         };
+    };
+    'boost-hana'             = @{
+        'features' = @{
+            'large-struct-macros' = @{
+                'description' = 'Regenerate Boost.Hana struct macros for up to 200 members (124 on Windows)';
+                'supports' = 'windows | osx | (linux & x64)';
+            }
+        }
     };
     'boost-locale'           = @{
         'dependencies' = @(@{ 'name' = 'libiconv'; 'platform' = '!uwp & !windows & !mingw' });

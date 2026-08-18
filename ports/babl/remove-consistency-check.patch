@@ -1,13 +1,13 @@
 diff --git a/meson.build b/meson.build
-index 08332a0571..bd4e31c55f 100644
+index e8b4d39..e613b48 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -580,7 +580,7 @@ if build_docs
+@@ -611,7 +611,7 @@ if build_docs or build_gi_docgen
  endif
  subdir('bin')
  
--if not platform_osx and host_cpu_family != 'x86'
+-if host_machine.system() != 'emscripten'
 +if false
    nm = find_program('nm', required: false)
  
-   # Verify .def files for Windows linking.
+   # Verify .def files for Windows linking (and for macOS too when -Wl,-exported_symbols_list is used).
