@@ -30,7 +30,10 @@
     "mpi": {
       "description": "Enable MPI (experimental, not used for meshing)",
       "dependencies": [
-        "openmpi"
+        {
+          "name": "openmpi",
+          "platform": "!windows"
+        }
       ]
     },
     "occ": {
