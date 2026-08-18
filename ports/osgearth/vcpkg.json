@@ -45,12 +45,6 @@
     "controls": {
       "description": "Support for the old Controls API (superceded by imgui)"
     },
-    "stb": {
-      "description": "build optional STB DXT image compressor",
-      "dependencies": [
-        "stb"
-      ]
-    },
     "tools": {
       "description": "Build command-line tools"
     }
