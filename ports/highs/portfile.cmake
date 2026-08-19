@@ -5,7 +5,8 @@ vcpkg_from_github(
     SHA512 0ea407784bc6c8e31c72fbcdcab201e8a7cc7debbca57504e74177658208151e90637e5fb1e0cdf1b1ae6b677e7865e77771ec025b17f8223f74d00fc6420546
     HEAD_REF master
     PATCHES
-        fix-pkgconfig-zlib.patch
+        fix-pkgconfig.patch
+        fix-extras-metadata.patch
 )
 
 vcpkg_check_features(
@@ -37,6 +38,9 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/extern/cli11/CLI11.hpp"
         "${SOURCE_PATH}/extern/pdqsort/license.txt"
         "${SOURCE_PATH}/extern/zstr/LICENSE"
+        "${SOURCE_PATH}/extern/amd/License.txt"
+        "${SOURCE_PATH}/extern/metis/LICENSE.txt"
+        "${SOURCE_PATH}/extern/rcm/LICENSE"
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
