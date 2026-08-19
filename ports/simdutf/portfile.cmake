@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DSIMDUTF_TESTS=OFF
         -DSIMDUTF_BENCHMARKS=OFF
-        -DSIMDUTF_ICONV=OFF
+        -DSIMDUTF_ICONV=ON
 )
 
 vcpkg_cmake_install()

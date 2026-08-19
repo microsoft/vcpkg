@@ -16,7 +16,13 @@
   ],
   "features": {
     "tools": {
-      "description": "Build the fastbase64 and simdutf command line tools for transcoding strings"
+      "description": "Build the fastbase64 and simdutf command line tools for transcoding strings",
+      "dependencies": [
+        {
+          "name": "libiconv",
+          "platform": "windows"
+        }
+      ]
     }
   }
 }
