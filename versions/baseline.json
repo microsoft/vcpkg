@@ -6197,7 +6197,7 @@
       "port-version": 0
     },
     "livepp": {
-      "baseline": "2.11.3",
+      "baseline": "2.11.4",
       "port-version": 0
     },
     "llama-cpp": {
@@ -11453,7 +11453,7 @@
       "port-version": 0
     },
     "zxc": {
-      "baseline": "0.13.2",
+      "baseline": "0.13.3",
       "port-version": 0
     },
     "zycore": {
