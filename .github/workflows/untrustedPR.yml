@@ -139,10 +139,11 @@ jobs:
               core.summary.addList(crlf_files);
               core.summary.addRaw(fix_crlf);
               core.summary.addEOL();
-              core.summary.addRaw('Bash:');
+              core.summary.addEOL();
+              core.summary.addRaw('Alternately, you can fix by running the following bash on a machine with dos2unix installed:');
               core.summary.addEOL();
               core.summary.addCodeBlock(bash_fix, 'bash');
-              core.summary.addRaw('PowerShell:');
+              core.summary.addRaw('Alternately, you can fix by running the following PowerShell block:');
               core.summary.addEOL();
               core.summary.addCodeBlock(powershell_fix, 'powershell');
               for (const {file, line} of crlf_lines) {
