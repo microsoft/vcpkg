@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     # Remove when https://github.com/cieslarmichal/faker-cxx/issues/1126 is fixed in a release.
     PATCHES
-        fix-version-metadata.patch
+        fix-version-metadata.patch # https://github.com/cieslarmichal/faker-cxx/pull/1127
 )
 
 vcpkg_cmake_configure(
