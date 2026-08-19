@@ -18,6 +18,7 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DSIMDUTF_TESTS=OFF
         -DSIMDUTF_BENCHMARKS=OFF
+        -DSIMDUTF_ICONV=OFF
 )
 
 vcpkg_cmake_install()
@@ -30,4 +31,8 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-APACHE")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE-APACHE"
+    "${SOURCE_PATH}/LICENSE-MIT"
+)
