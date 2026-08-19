@@ -5694,7 +5694,7 @@
     },
     "libsm": {
       "baseline": "1.2.6",
-      "port-version": 1
+      "port-version": 2
     },
     "libsmacker": {
       "baseline": "1.2.0",
@@ -6193,7 +6193,7 @@
       "port-version": 0
     },
     "livepp": {
-      "baseline": "2.11.3",
+      "baseline": "2.11.4",
       "port-version": 0
     },
     "llama-cpp": {
@@ -9816,6 +9816,10 @@
       "baseline": "2026-05-25",
       "port-version": 0
     },
+    "stdgpu": {
+      "baseline": "2026-07-08",
+      "port-version": 0
+    },
     "stduuid": {
       "baseline": "1.2.3",
       "port-version": 0
@@ -11118,7 +11122,7 @@
     },
     "wxwidgets": {
       "baseline": "3.3.3",
-      "port-version": 0
+      "port-version": 1
     },
     "wyhash": {
       "baseline": "2023-12-03",
@@ -11449,7 +11453,7 @@
       "port-version": 0
     },
     "zxc": {
-      "baseline": "0.13.2",
+      "baseline": "0.13.3",
       "port-version": 0
     },
     "zycore": {
