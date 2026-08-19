@@ -19,12 +19,6 @@ vcpkg_from_github(
         kde-clang-format.diff
 )
 
-vcpkg_download_distfile(GPL_2_LICENSE
-    URLS "https://raw.githubusercontent.com/spdx/license-list-data/v3.27.0/text/GPL-2.0-or-later.txt"
-    FILENAME "spdx-license-list-data-v3.27.0-GPL-2.0-or-later.txt"
-    SHA512 fb956f64a9d0647514d7bd868747c46842e9e3b10ad1b3ff8f18908b9986fded8928e55d3d23b43676c918e971f0d9b7f60f2fef8941fb867a43422c31bc4655
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -43,6 +37,6 @@ vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSES/BSD-2-Clause.txt"
     "${SOURCE_PATH}/LICENSES/BSD-3-Clause.txt"
     "${SOURCE_PATH}/LICENSES/CC0-1.0.txt"
-    "${GPL_2_LICENSE}"
+    "${SOURCE_PATH}/toolchain/generate-fastlane-metadata.py"
     "${SOURCE_PATH}/LICENSES/MIT.txt"
 )
