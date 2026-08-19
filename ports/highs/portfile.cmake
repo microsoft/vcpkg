@@ -31,17 +31,22 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_tools(TOOL_NAMES highs AUTO_CLEAN)
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/highs")
-vcpkg_install_copyright(
-    FILE_LIST
-        "${SOURCE_PATH}/LICENSE.txt"
-        "${SOURCE_PATH}/THIRD_PARTY_NOTICES.md"
-        "${SOURCE_PATH}/extern/cli11/CLI11.hpp"
-        "${SOURCE_PATH}/extern/pdqsort/license.txt"
-        "${SOURCE_PATH}/extern/zstr/LICENSE"
+set(HIGHS_COPYRIGHT_FILES
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/THIRD_PARTY_NOTICES.md"
+    "${SOURCE_PATH}/extern/cli11/CLI11.hpp"
+    "${SOURCE_PATH}/extern/pdqsort/license.txt"
+    "${SOURCE_PATH}/extern/zstr/LICENSE"
+)
+if("extras" IN_LIST FEATURES)
+    # amd, metis/GKlib, and rcm are only compiled in when HIPO (the "extras" feature) is enabled.
+    list(APPEND HIGHS_COPYRIGHT_FILES
         "${SOURCE_PATH}/extern/amd/License.txt"
         "${SOURCE_PATH}/extern/metis/LICENSE.txt"
         "${SOURCE_PATH}/extern/rcm/LICENSE"
-)
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${HIGHS_COPYRIGHT_FILES})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
