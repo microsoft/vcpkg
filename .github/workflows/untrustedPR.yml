@@ -120,8 +120,8 @@ jobs:
             const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
             const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).split('\n').filter(s => s.length > 0)
             const crlf_lines = (await fs.readFile('.github-pr.crlf-lines', 'utf8')).split('\n').filter(s => s.length > 0).map(location => {
-              const separator = location.lastIndexOf(':');
-              return {file: location.slice(0, separator), line: Number(location.slice(separator + 1))};
+              const separatorIndex = location.lastIndexOf(':');
+              return {file: location.slice(0, separatorIndex), line: Number(location.slice(separatorIndex + 1))};
             })
 
             let approve = true;
@@ -131,7 +131,7 @@ jobs:
               const quote_bash = value => `'${value.replaceAll("'", "'\"'\"'")}'`;
               const quote_powershell = value => "'" + value.replaceAll("'", "''") + "'";
               const bash_fix = `dos2unix -- ${crlf_files.map(quote_bash).join(' ')}`;
-              const powershell_fix = '@(' + crlf_files.map(quote_powershell).join(', ') + ') | ForEach-Object { [IO.File]::WriteAllText($_, [IO.File]::ReadAllText($_).Replace("`r`n", "`n")) }';
+              const powershell_fix = '@(' + crlf_files.map(quote_powershell).join(', ') + ') | ForEach-Object {\n[IO.File]::WriteAllText($_, [IO.File]::ReadAllText($_).Replace("`r`n", "`n"))\n}';
               core.error(`Non-patch files associated with this change must use LF line endings. ${fix_crlf} Copy-pasteable terminal commands are in the workflow summary.`);
               core.summary.addHeading('Incorrect line endings', 3);
               core.summary.addRaw('Non-patch files associated with this change must use LF line endings:');
