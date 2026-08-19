@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "tools" SIMDUTF_TOOLS
+    "tools" SIMDUTF_ICONV
 )
 
 vcpkg_cmake_configure(
@@ -18,7 +19,6 @@ vcpkg_cmake_configure(
     OPTIONS ${FEATURE_OPTIONS}
         -DSIMDUTF_TESTS=OFF
         -DSIMDUTF_BENCHMARKS=OFF
-        -DSIMDUTF_ICONV=ON
 )
 
 vcpkg_cmake_install()
