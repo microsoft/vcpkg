@@ -165,14 +165,32 @@ vcpkg_cmake_configure(
         "-DENABLE_PROFILING_ITT=OFF"
         "-DENABLE_OV_JAX_FRONTEND=OFF"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
-vcpkg_copy_pdbs()
+if(ENABLE_INTEL_NPU AND VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB_RECURSE openvino_built_dlls "${CURRENT_PACKAGES_DIR}/*.dll")
+    list(FILTER openvino_built_dlls EXCLUDE REGEX "/openvino_intel_npu_(compiler|compiler_loader|vm_runtime)\\.dll$")
+    vcpkg_copy_pdbs(BUILD_PATHS ${openvino_built_dlls})
+
+    foreach(config IN ITEMS "" "debug/")
+        file(INSTALL
+            "${SOURCE_PATH}/npu_compiler/pdb/openvino_intel_npu_compiler.pdb"
+            "${SOURCE_PATH}/npu_compiler/pdb/openvino_intel_npu_compiler_loader.pdb"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/${config}bin"
+        )
+        file(INSTALL
+            "${SOURCE_PATH}/npu_compiler/pdb/npu_interpreter_runtime.pdb"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/${config}bin"
+            RENAME "openvino_intel_npu_vm_runtime.pdb"
+        )
+    endforeach()
+else()
+    vcpkg_copy_pdbs()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
