@@ -9812,6 +9812,10 @@
       "baseline": "2026-05-25",
       "port-version": 0
     },
+    "stdgpu": {
+      "baseline": "2026-07-08",
+      "port-version": 0
+    },
     "stduuid": {
       "baseline": "1.2.3",
       "port-version": 0
