@@ -6193,7 +6193,7 @@
       "port-version": 0
     },
     "livepp": {
-      "baseline": "2.11.3",
+      "baseline": "2.11.4",
       "port-version": 0
     },
     "llama-cpp": {
