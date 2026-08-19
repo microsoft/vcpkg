@@ -98,11 +98,6 @@ include(BoostRoot)\n"
 
     find_package(Boost REQUIRED COMPONENTS unit_test_framework)
     target_link_libraries(main PRIVATE Boost::unit_test_framework)
-
-or the generated cmake configs via:
-
-    find_package(boost_unit_test_framework REQUIRED CONFIG)
-    target_link_libraries(main PRIVATE Boost::unit_test_framework)
 ")
   else()
     set(BOOST_USAGE "${PORT} is compatible with built-in CMake targets of FindBoost.cmake:
