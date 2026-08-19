@@ -46,7 +46,7 @@ jobs:
           git diff --name-only --no-renames --merge-base HEAD^ HEAD -- ports/ | sed -nE 's|^(ports/[^/]+)/.*|\1|p' | sort -u > .github-pr.changed-port-directories
           while IFS= read -r port_directory; do
             git grep -In $'\r$' -- "$port_directory" ':(exclude,glob)**/*.diff' ':(exclude,glob)**/*.patch' || true
-          done | awk -F: '!seen[$1]++ { print $1 ":" $2 }' | sort -u > .github-pr.crlf-lines
+          done < .github-pr.changed-port-directories | awk -F: '!seen[$1]++ { print $1 ":" $2 }' | sort -u > .github-pr.crlf-lines
 
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
           if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
