@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueNovaStudio/cpp-printer
-    REF v1.0.1
-    SHA512 fea94740e9283cb1a839605f317ac7dcc8d6530e4ce74b7b5c61d6eb78cfd6c50da63f3622e8942eeb9ecd7800bea9b348fed3bfd492abcc0902e356217ab088
+    REF v1.0.2
+    SHA512 b1818d1fe068a452cbdfd6b832a2fdd2e8b13f1029f9a49428de8c1efc046cb622c934a35a9cfc04668f0e7188c0d7158533352c4ac71e2557b3983e88ee36eb
 )
 
 vcpkg_cmake_configure(
