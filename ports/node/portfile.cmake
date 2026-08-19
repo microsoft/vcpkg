@@ -146,12 +146,12 @@ function(z_build_nodejs)
 
       # Copy the mandatory runtime dependencies so generate_node_def can load libnode.dll
       file(MAKE_DIRECTORY "${SOURCE_PATH}/out/Release")
-      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libcrypto-3-x64.dll" DESTINATION "${SOURCE_PATH}/out/Release")
-      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libssl-3-x64.dll" DESTINATION "${SOURCE_PATH}/out/Release")
+      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libcrypto-3-${NODE_ARCH}.dll" DESTINATION "${SOURCE_PATH}/out/Release")
+      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libssl-3-${NODE_ARCH}.dll" DESTINATION "${SOURCE_PATH}/out/Release")
 
       file(MAKE_DIRECTORY "${SOURCE_PATH}/out/Debug")
-      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libcrypto-3-x64.dll" DESTINATION "${SOURCE_PATH}/out/Debug")
-      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libssl-3-x64.dll" DESTINATION "${SOURCE_PATH}/out/Debug")
+      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libcrypto-3-${NODE_ARCH}.dll" DESTINATION "${SOURCE_PATH}/out/Debug")
+      file(COPY "${CURRENT_INSTALLED_DIR}/bin/libssl-3-${NODE_ARCH}.dll" DESTINATION "${SOURCE_PATH}/out/Debug")
     else()
       set(ENV{LDFLAGS} "$ENV{LDFLAGS} -Wl,-rpath,${CURRENT_INSTALLED_DIR}/lib")
       set(OPENSSL_LIBNAME crypto,ssl)
