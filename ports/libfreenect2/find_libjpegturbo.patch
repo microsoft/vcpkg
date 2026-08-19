@@ -1,19 +1,92 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d8ef047..c12f53a 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -237,10 +237,12 @@ IF(ENABLE_TEGRAJPEG)
- ENDIF()
+diff --git a/cmake_modules/FindTurboJPEG.cmake b/cmake_modules/FindTurboJPEG.cmake
+index 55f7307..2b0c019 100644
+--- a/cmake_modules/FindTurboJPEG.cmake
++++ b/cmake_modules/FindTurboJPEG.cmake
+@@ -1,67 +1,24 @@
+-# FindTurboJPEG.cmake
+-# Uses environment variable TurboJPEG_ROOT as backup
+-# - TurboJPEG_FOUND
+-# - TurboJPEG_INCLUDE_DIRS
+-# - TurboJPEG_LIBRARIES
++# Delegate to the modern config provided by vcpkg's libjpeg-turbo port
++find_package(libjpeg-turbo CONFIG REQUIRED)
  
- IF(LIBFREENECT2_WITH_VT_SUPPORT)
--  FIND_PACKAGE(TurboJPEG)
-+  find_package(libjpeg-turbo CONFIG)
-+  find_package(TurboJPEG NAMES libjpeg-turbo)
- ELSE()
-   # VAAPI can fail to start at runtime. It must have a fallback.
--  FIND_PACKAGE(TurboJPEG REQUIRED)
-+  find_package(libjpeg-turbo CONFIG REQUIRED)
-+  find_package(TurboJPEG NAMES libjpeg-turbo REQUIRED)
- ENDIF()
+-FIND_PATH(TurboJPEG_INCLUDE_DIRS
+-  turbojpeg.h
+-  DOC "Found TurboJPEG include directory"
+-  PATHS
+-    "${DEPENDS_DIR}/libjpeg_turbo"
+-    "${DEPENDS_DIR}/libjpeg-turbo64"
+-    "/usr/local/opt/jpeg-turbo" # homebrew
+-    "/opt/local" # macports
+-    "C:/libjpeg-turbo64"
+-    "/opt/libjpeg-turbo"
+-    ENV TurboJPEG_ROOT
+-  PATH_SUFFIXES
+-    include
+-)
++# Map the modern target back to the legacy variables upstream libfreenect2 expects
++if(TARGET libjpeg-turbo::turbojpeg)
++  set(TurboJPEG_LIBRARIES libjpeg-turbo::turbojpeg)
++  set(TurboJPEG_FOUND TRUE)
++elseif(TARGET libjpeg-turbo::turbojpeg-static)
++  set(TurboJPEG_LIBRARIES libjpeg-turbo::turbojpeg-static)
++  set(TurboJPEG_FOUND TRUE)
++else()
++  set(TurboJPEG_FOUND FALSE)
++endif()
  
- SET(HAVE_TurboJPEG no)
+-#Library names:
+-# debian sid,strech: libturbojpeg0
+-# debian/ubuntu else: libturbojpeg1-dev #provided by libjpeg-turbo8-dev (ubuntu)
+-FIND_LIBRARY(TurboJPEG_LIBRARIES
+-  NAMES libturbojpeg.so.1 libturbojpeg.so.0 turbojpeg
+-  DOC "Found TurboJPEG library path"
+-  PATHS
+-    "${DEPENDS_DIR}/libjpeg_turbo"
+-    "${DEPENDS_DIR}/libjpeg-turbo64"
+-    "/usr/local/opt/jpeg-turbo" # homebrew
+-    "/opt/local" # macports
+-    "C:/libjpeg-turbo64"
+-    "/opt/libjpeg-turbo"
+-    ENV TurboJPEG_ROOT
+-  PATH_SUFFIXES
+-    lib
+-    lib64
+-)
++# We deliberately leave TurboJPEG_INCLUDE_DIRS unset.
++# Modern CMake targets (like libjpeg-turbo::turbojpeg) automatically 
++# propagate their include directories via INTERFACE_INCLUDE_DIRECTORIES
++# when they are appended to the TARGET_LINK_LIBRARIES list.
+ 
+-IF(WIN32)
+-FIND_FILE(TurboJPEG_DLL
+-  turbojpeg.dll
+-  DOC "Found TurboJPEG DLL path"
+-  PATHS
+-    "${DEPENDS_DIR}/libjpeg_turbo"
+-    "${DEPENDS_DIR}/libjpeg-turbo64"
+-    "C:/libjpeg-turbo64"
+-    ENV TurboJPEG_ROOT
+-  PATH_SUFFIXES
+-    bin
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(TurboJPEG 
++    FOUND_VAR TurboJPEG_FOUND
++    REQUIRED_VARS TurboJPEG_LIBRARIES
+ )
+-ENDIF()
+-
+-IF(TurboJPEG_INCLUDE_DIRS AND TurboJPEG_LIBRARIES)
+-INCLUDE(CheckCSourceCompiles)
+-set(CMAKE_REQUIRED_INCLUDES ${TurboJPEG_INCLUDE_DIRS})
+-set(CMAKE_REQUIRED_LIBRARIES ${TurboJPEG_LIBRARIES})
+-check_c_source_compiles("#include <turbojpeg.h>\nint main(void) { tjhandle h=tjInitCompress(); return 0; }" TURBOJPEG_WORKS)
+-set(CMAKE_REQUIRED_DEFINITIONS)
+-set(CMAKE_REQUIRED_INCLUDES)
+-set(CMAKE_REQUIRED_LIBRARIES)
+-ENDIF()
+-
+-INCLUDE(FindPackageHandleStandardArgs)
+-FIND_PACKAGE_HANDLE_STANDARD_ARGS(TurboJPEG FOUND_VAR TurboJPEG_FOUND
+-  REQUIRED_VARS TurboJPEG_LIBRARIES TurboJPEG_INCLUDE_DIRS TURBOJPEG_WORKS)
