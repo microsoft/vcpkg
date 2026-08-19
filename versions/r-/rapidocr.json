@@ -3,11 +3,6 @@
     {
       "git-tree": "1a4658646df781cd686250b52c8f17eb424739a7",
       "version-date": "2024-10-22"
-    },
-    {
-      "git-tree": "925186f7b0e7e8dc3cd3009a5c9aa23fc0a3be8a",
-      "version": "1.2.3",
-      "port-version": 0
     }
   ]
 }
