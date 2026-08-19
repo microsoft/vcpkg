@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${LIBSM_ARCHIVE}"
     PATCHES
         msvc.patch
+        xtrans.patch
 )
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")

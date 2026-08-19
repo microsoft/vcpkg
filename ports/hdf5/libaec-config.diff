@@ -1,30 +1,31 @@
-diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
-index 6b75ff6..1be154e 100644
---- a/CMakeFilters.cmake
-+++ b/CMakeFilters.cmake
-@@ -202,12 +202,6 @@ endif ()
- if (HDF5_ENABLE_SZIP_SUPPORT)
-   cmake_dependent_option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" ON HDF5_ENABLE_SZIP_SUPPORT OFF)
-   if (NOT SZIP_USE_EXTERNAL) # This checks if szip should be found on the system or built from an external source
--    if (HDF5_USE_LIBAEC_STATIC)
--      set (LIBAEC_SEARCH_TYPE "static")
--    else ()
--      set (LIBAEC_SEARCH_TYPE "shared")
--    endif ()
--    set (libaec_USE_STATIC_LIBS ${HDF5_USE_LIBAEC_STATIC})
-     set (SZIP_FOUND FALSE)
-     find_package (${LIBAEC_PACKAGE_NAME} OPTIONAL_COMPONENTS ${LIBAEC_SEARCH_TYPE})
-     set (H5_SZIP_FOUND ${${LIBAEC_PACKAGE_NAME}_FOUND})
+diff --git a/config/HDF5UseLibaec.cmake b/config/HDF5UseLibaec.cmake
+index 3b026970ebe..52fc1ab0e6b 100644
+--- a/config/HDF5UseLibaec.cmake
++++ b/config/HDF5UseLibaec.cmake
+@@ -42,13 +42,6 @@ function (system_szip_library)
+     message (FATAL_ERROR "LIBAEC_PACKAGE_NAME is undefined")
+   endif ()
+ 
+-  if (HDF5_USE_LIBAEC_STATIC)
+-    set (LIBAEC_SEARCH_TYPE "static")
+-  else ()
+-    set (LIBAEC_SEARCH_TYPE "shared")
+-  endif ()
+-  set (libaec_USE_STATIC_LIBS ${HDF5_USE_LIBAEC_STATIC})
+-
+   # For "libaec", start with our own Findlibaec.cmake module that prefers a
+   # CONFIG find mode if possible and falls back to MODULE find mode if necessary.
+   # For "szip", use CMake's standard MODULE find mode followed by a CONFIG find
 diff --git a/config/install/hdf5-config.cmake.in b/config/install/hdf5-config.cmake.in
-index bb9a8d6..a73bec8 100644
+index 1049f0b90db..f23eeb46608 100644
 --- a/config/install/hdf5-config.cmake.in
 +++ b/config/install/hdf5-config.cmake.in
-@@ -137,7 +137,7 @@ endif ()
- 
- if (${HDF5_PACKAGE_NAME}_PROVIDES_SZIP_SUPPORT)
-   if (NOT @SZIP_USE_EXTERNAL@)
--    find_dependency (@LIBAEC_PACKAGE_NAME@ OPTIONAL_COMPONENTS @LIBAEC_SEARCH_TYPE@)
-+    find_dependency (@LIBAEC_PACKAGE_NAME@ CONFIG)
-   endif ()
+@@ -140,7 +140,7 @@ endif ()
+ # If szip/libaec support was enabled and libaec was found on the system at build
+ # time, locate libaec to propagate the dependency
+ if (${HDF5_PACKAGE_NAME}_PROVIDES_SZIP_SUPPORT AND NOT @SZIP_USE_EXTERNAL@)
+-  find_dependency (@LIBAEC_PACKAGE_NAME@ OPTIONAL_COMPONENTS @LIBAEC_SEARCH_TYPE@)
++  find_dependency (@LIBAEC_PACKAGE_NAME@ CONFIG)
  endif ()
  
+ #-----------------------------------------------------------------------------

@@ -3,7 +3,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip"
     FILENAME "rerun_cpp_sdk_${VERSION}.zip"
-    SHA512 65beba590b1797c13a31aa946d457c18a3656bde3d06e05685994ed373da763724ca375ec17feac5279ff479b41844fb2c4826cb60304dc9604701bdaad4b839
+    SHA512 b77366df2c032bb3033dde38740f202fc90fbd21f518c70971153f4d47aa9bf8e17d20f678b682c66cec54f5cf63abe784829b1d569af08758e922dcd3bb47ea
 )
 
 # Workaround: The distributed SDK contains a prebuilt rerun_c that is built in Release mode.  On Windows, this means
@@ -46,9 +46,25 @@ vcpkg_replace_string(
     "\${CMAKE_CURRENT_LIST_DIR}/../../lib/${LIBRERUN_C_FILE}"
 )
 
-vcpkg_install_copyright(FILE_LIST
-    "${SOURCE_PATH}/LICENSE-MIT"
-    "${SOURCE_PATH}/LICENSE-APACHE"
+# The upstream install rule globs every header in the source tree, which sweeps in a vendored copy of cxxopts that no
+# part of rerun-sdk includes.  Upstream considers it accidental (see rerun-io/rerun#5133).  Remove the unused, vendored
+# third-party libraries since they provide no functional benefit.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/rerun/third_party")
+
+# rerun_c is prebuilt and statically links a large Rust dependency tree, so those licenses have to be acknowledged.
+# Provide instructions for how to obtain these licenses per the vcpkg maintainer guide.
+string(CONCAT RERUN_LICENSE_COMMENT
+    "The prebuilt rerun_c static library contains statically linked Rust dependencies.  Their licenses and "
+    "corresponding copyright notices can be obtained by checking out the matching Rerun release at "
+    "https://github.com/rerun-io/rerun/tree/${VERSION} and running `cargo-about` against "
+    "`crates/top/rerun_c/Cargo.toml`."
+)
+
+vcpkg_install_copyright(
+    COMMENT "${RERUN_LICENSE_COMMENT}"
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE-MIT"
+        "${SOURCE_PATH}/LICENSE-APACHE"
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

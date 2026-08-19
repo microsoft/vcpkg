@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-pkgconfig.patch
         fix-extras-metadata.patch
+        respect-user-selected-compiler.patch
 )
 
 vcpkg_check_features(
