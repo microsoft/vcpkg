@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index d5d8d0099c..35c4683d28 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -5,128 +5,99 @@ elseif (APPLE)
+@@ -5,128 +5,102 @@ elseif (APPLE)
  elseif (UNIX)
      cmake_minimum_required(VERSION 3.17)
  endif ()
@@ -96,6 +96,9 @@ index d5d8d0099c..35c4683d28 100644
 +    OUTPUT_NAME rapidocr
 +    EXPORT_NAME rapidocr
 +)
++if (BUILD_SHARED_LIBS)
++    set_target_properties(RapidOcrOnnx PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
++endif ()
 +
 +target_include_directories(RapidOcrOnnx
 +    PUBLIC
