@@ -1,0 +1,29 @@
+{
+  "name": "librats",
+  "version": "2.0.12",
+  "description": "C++17 peer-to-peer networking library: encrypted P2P (Noise XX), DHT/mDNS discovery, NAT traversal (STUN/UPnP/NAT-PMP), GossipSub pub/sub, file transfer, optional BitTorrent.",
+  "homepage": "https://github.com/librats/librats",
+  "license": "MIT AND BSD-3-Clause AND BSD-2-Clause AND BSD-1-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "bindings": {
+      "description": "Build the C API used by Node.js / Python / Java bindings"
+    },
+    "search-features": {
+      "description": "Enable BitTorrent client (bt_*, tracker, disk_io, info_hash spider)"
+    },
+    "storage": {
+      "description": "Enable distributed key-value storage module"
+    }
+  }
+}
