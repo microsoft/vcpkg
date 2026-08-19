@@ -1,51 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d8ef047..9f7e326 100644
+index d8ef047..c12f53a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -237,30 +237,35 @@ IF(ENABLE_TEGRAJPEG)
+@@ -237,10 +237,12 @@ IF(ENABLE_TEGRAJPEG)
  ENDIF()
  
  IF(LIBFREENECT2_WITH_VT_SUPPORT)
 -  FIND_PACKAGE(TurboJPEG)
 +  find_package(libjpeg-turbo CONFIG)
++  find_package(TurboJPEG NAMES libjpeg-turbo)
  ELSE()
    # VAAPI can fail to start at runtime. It must have a fallback.
 -  FIND_PACKAGE(TurboJPEG REQUIRED)
 +  find_package(libjpeg-turbo CONFIG REQUIRED)
++  find_package(TurboJPEG NAMES libjpeg-turbo REQUIRED)
  ENDIF()
  
  SET(HAVE_TurboJPEG no)
--IF(TurboJPEG_FOUND)
-+IF(TARGET libjpeg-turbo::turbojpeg)
-+  SET(TURBOJPEG_LINK_TARGET libjpeg-turbo::turbojpeg)
-+ELSEIF(TARGET libjpeg-turbo::turbojpeg-static)
-+  SET(TURBOJPEG_LINK_TARGET libjpeg-turbo::turbojpeg-static)
-+ENDIF()
-+
-+IF(DEFINED TURBOJPEG_LINK_TARGET OR libjpeg-turbo_FOUND)
-   SET(LIBFREENECT2_WITH_TURBOJPEG_SUPPORT 1)
-   SET(HAVE_TurboJPEG yes)
- 
--  INCLUDE_DIRECTORIES(${TurboJPEG_INCLUDE_DIRS})
--
-   LIST(APPEND SOURCES
-     src/turbo_jpeg_rgb_packet_processor.cpp
-   )
- 
--  LIST(APPEND LIBRARIES
--    ${TurboJPEG_LIBRARIES}
--  )
-+  IF(DEFINED TURBOJPEG_LINK_TARGET)
-+    LIST(APPEND LIBRARIES ${TURBOJPEG_LINK_TARGET})
-+  ELSE()
-+    # Fallback just in case an older environment sets libjpeg-turbo_FOUND 
-+    # but doesn't define modern CMake targets
-+    LIST(APPEND LIBRARIES turbojpeg)
-+  ENDIF()
- 
--  LIST(APPEND LIBFREENECT2_DLLS
--   ${TurboJPEG_DLL}
--  )
- ENDIF()
- 
- SET(HAVE_OpenGL disabled)
