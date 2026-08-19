@@ -6,28 +6,29 @@
   "homepage": "https://nodejs.org",
   "license": "MIT",
   "supports": "!uwp & !android & !(linux & (arm | arm64)) & !(windows & x86)",
-  "dependencies": [
-    {
-      "name": "openssl",
-      "features": [
-        "ssl3",
-        "tools"
-      ]
-    },
-    {
-      "name": "openssl",
-      "features": [
-        "fips"
-      ],
-      "platform": "windows"
-    }
-  ],
   "features": {
     "npm": {
       "description": "Include npm package manager"
     },
     "openssl": {
-      "description": "Include external openssl lib (default is to use openssl from node)"
+      "description": "Include external openssl lib (default is to use openssl from node)",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "features": [
+            "fips"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "openssl",
+          "features": [
+            "ssl3",
+            "tools"
+          ],
+          "platform": "!static"
+        }
+      ]
     }
   }
 }
