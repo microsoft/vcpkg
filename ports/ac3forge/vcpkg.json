@@ -1,9 +1,10 @@
 {
   "name": "ac3forge",
-  "version-semver": "0.8.0-beta.1",
+  "version-semver": "0.8.0-beta.2",
   "description": "Clean-room AC-3 (ATSC A/52) encoder and decoder with a spatial object layer, in C++23.",
   "homepage": "https://github.com/iainchesworthlabs/ac3forge",
   "license": "GPL-3.0-or-later",
+  "supports": "!(android & !arm64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -13,11 +14,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "matroska",
-    "mp4",
-    "mpegts"
   ],
   "features": {
     "matroska": {
