@@ -1,6 +1,6 @@
 name: Check For Common Issues
 
-on:
+on: # This is an edit to a CRLF file
   issues:
     types:
       - opened

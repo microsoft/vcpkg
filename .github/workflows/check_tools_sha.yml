@@ -1,6 +1,6 @@
 name: Check vcpkg Tools SHA
 
-on:
+on: # This is an edit to an LF file
   pull_request:
     paths:
       - "scripts/vcpkg-tools.json"

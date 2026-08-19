@@ -1,3 +1,4 @@
+# This file is LF so it should not fire checks
 set(VCPKG_BUILD_TYPE release)  # header-only
 
 vcpkg_from_github(
