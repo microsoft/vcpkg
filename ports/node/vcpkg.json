@@ -5,7 +5,7 @@
   "description": "Node.js is an open-source, cross-platform JavaScript runtime environment that can be embedded in C++ applications",
   "homepage": "https://nodejs.org",
   "license": "MIT",
-  "supports": "!uwp & !android",
+  "supports": "!uwp & !android & !(linux & (arm | arm64)) & !(windows & x86)",
   "dependencies": [
     {
       "name": "openssl",
