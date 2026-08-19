@@ -7,16 +7,6 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_PATH}")
 
-set(RUST_TOOL_PATH "${CURRENT_HOST_INSTALLED_DIR}/tools/vcpkg-tool-rust")
-find_program(RUST rustc REQUIRED PATHS "${RUST_TOOL_PATH}/rustc/bin")
-get_filename_component(RUST_PATH ${RUST} DIRECTORY)
-vcpkg_add_to_path(PREPEND "${RUST_PATH}")
-vcpkg_add_to_path(PREPEND "${RUST_TOOL_PATH}/rustc/lib")
-
-find_program(CARGO cargo REQUIRED PATHS "${RUST_TOOL_PATH}/cargo/bin")
-get_filename_component(CARGO_PATH ${CARGO} DIRECTORY)
-vcpkg_add_to_path(PREPEND "${CARGO_PATH}")
-
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_find_acquire_program(NASM)
   get_filename_component(NASM_PATH ${NASM} DIRECTORY)
@@ -34,9 +24,7 @@ message(STATUS "CMAKE_SHARED_LIBRARY_PREFIX: ${CMAKE_SHARED_LIBRARY_PREFIX}")
 message(STATUS "CMAKE_SHARED_LIBRARY_SUFFIX: ${CMAKE_SHARED_LIBRARY_SUFFIX}")
 message(STATUS "CMAKE_STATIC_LIBRARY_PREFIX: ${CMAKE_STATIC_LIBRARY_PREFIX}")
 message(STATUS "CMAKE_STATIC_LIBRARY_SUFFIX: ${CMAKE_STATIC_LIBRARY_SUFFIX}")
-message(STATUS "CARGO_PATH:            ${CARGO_PATH}")
 message(STATUS "PYTHON3_PATH:          ${PYTHON3_PATH}")
-message(STATUS "RUST_PATH:             ${RUST_PATH}")
 if(VCPKG_TARGET_IS_WINDOWS)
   message(STATUS "NASM_PATH:             ${NASM_PATH}")
 endif()
@@ -189,6 +177,7 @@ function(z_build_nodejs)
   set(CONFIGURE_OPTIONS ${SHARED_FLAG}
                         ${NPM_FLAG}
                         ${SHARED_LIBRARY}
+                        --v8-disable-temporal-support
                         --verbose
   )
 

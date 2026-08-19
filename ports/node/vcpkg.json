@@ -20,10 +20,6 @@
         "fips"
       ],
       "platform": "windows"
-    },
-    {
-      "name": "vcpkg-tool-rust",
-      "host": true
     }
   ],
   "features": {
