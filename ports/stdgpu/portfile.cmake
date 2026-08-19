@@ -11,8 +11,7 @@ vcpkg_from_github(
     REF 22599cfdcc185c2ed721d78c792e3193cf84cc01
     SHA512 de16413c81c7d95e48f2a5fbff018748e629a2316bc6c76c42f881b6922b337a12a1ec20eb732465ff244a04e22afe1846fdbacc9e4f2a72aa0204a0c11d397e
     HEAD_REF master
-    # stdgpu's custom Thrust target bypasses CCCL's upstream CMake fix:
-    # https://github.com/NVIDIA/cccl/pull/6791
+    # Current CCCL headers require the conforming MSVC preprocessor.
     PATCHES
         fix-msvc-preprocessor.patch
 )
