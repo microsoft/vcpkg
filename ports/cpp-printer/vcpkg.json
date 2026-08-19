@@ -1,0 +1,11 @@
+{
+  "name": "cpp-printer",
+  "version-semver": "1.0.0",
+  "description": "A lightweight C++ STL container printer",
+  "homepage": "https://github.com/BlueNovaStudio/bluenova-toolkit",
+  "license": "MIT",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
