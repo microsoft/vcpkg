@@ -12,8 +12,7 @@ index cb29e69..8ff6332 100644
 -	find_package(Utf8Proc REQUIRED)
 +	find_package(utf8proc CONFIG REQUIRED)
  
--	#HACK: Unicode.cpp requires functions from these files. The can't be taken from the library
-+	# Unicode.cpp requires PCRE2-private Unicode tables that are not exported by the library.
+ 	#HACK: Unicode.cpp requires functions from these files. The can't be taken from the library
  	POCO_SOURCES(SRCS RegExp
  		src/pcre2_ucd.c
  		src/pcre2_tables.c
