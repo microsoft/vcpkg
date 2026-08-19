@@ -1,7 +1,6 @@
 {
   "name": "vcpkg-boost",
   "version-date": "2025-03-29",
-  "port-version": 1,
   "license": "MIT",
   "dependencies": [
     {

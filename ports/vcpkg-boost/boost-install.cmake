@@ -88,19 +88,24 @@ include(BoostRoot)\n"
   # Install port specific usage
   set(BOOST_PORT_NAME "${boost_lib_name_config}")
   if(PORT STREQUAL "boost-stacktrace")
-    set(BOOST_USAGE "The package ${PORT} provides a CMake target:
+    set(BOOST_USAGE "${PORT} provides a CMake target:
 
     find_package(boost_stacktrace_basic REQUIRED CONFIG)
     target_link_libraries(main PRIVATE Boost::stacktrace_basic)
 ")
   elseif(PORT STREQUAL "boost-test")
-    set(BOOST_USAGE "The package ${PORT} provides a CMake target:
+    set(BOOST_USAGE "${PORT} is compatible with built-in CMake targets of FindBoost.cmake:
+
+    find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+    target_link_libraries(main PRIVATE Boost::unit_test_framework)
+
+or the generated cmake configs via:
 
     find_package(boost_unit_test_framework REQUIRED CONFIG)
     target_link_libraries(main PRIVATE Boost::unit_test_framework)
 ")
   else()
-    set(BOOST_USAGE "The package ${PORT} is compatible with built-in CMake targets of FindBoost.cmake:
+    set(BOOST_USAGE "${PORT} is compatible with built-in CMake targets of FindBoost.cmake:
 
     find_package(Boost REQUIRED COMPONENTS ${BOOST_PORT_NAME})
     target_link_libraries(main PRIVATE Boost::${BOOST_PORT_NAME})
@@ -111,5 +116,5 @@ or the generated cmake configs via:
     target_link_libraries(main PRIVATE Boost::${BOOST_PORT_NAME})
 ")
   endif()
-  configure_file("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-boost/usage.in" "${CURRENT_INSTALLED_DIR}/share/${PORT}/usage")
+  file(WRITE "${CURRENT_INSTALLED_DIR}/share/${PORT}/usage" "${BOOST_USAGE}")
 endfunction()
