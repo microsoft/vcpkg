@@ -1,6 +1,6 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO BlueNovaStudio/bluenova-toolkit
+    REPO BlueNovaStudio/cpp-printer
     REF v1.0.1
     SHA512 fea94740e9283cb1a839605f317ac7dcc8d6530e4ce74b7b5c61d6eb78cfd6c50da63f3622e8942eeb9ecd7800bea9b348fed3bfd492abcc0902e356217ab088
 )
