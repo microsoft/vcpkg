@@ -586,7 +586,6 @@ libcopp:arm64-windows=fail
 libdc1394:arm64-linux=cascade
 libedit:arm64-linux=fail
 libfreenect2:arm64-linux=cascade
-libfreenect2:arm64-windows=fail
 libfreenect2[opengl]:arm64-linux=cascade
 libfreenect2[openni2]:arm64-linux=cascade
 libfreenect2[openni2]:arm64-osx=cascade
