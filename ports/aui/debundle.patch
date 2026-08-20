@@ -298,3 +298,53 @@ index dfe6b18..575d849 100644
      endif ()
  
      if (NOT AUI_PLATFORM_WINDOWS)
+diff --git a/aui.image/CMakeLists.txt b/aui.image/CMakeLists.txt
+index ac9f3d1..e9494fe 100644
+--- a/aui.image/CMakeLists.txt
++++ b/aui.image/CMakeLists.txt
+@@ -12,6 +12,8 @@ endforeach()
+ find_package(WebP CONFIG REQUIRED)
+ 
+ aui_module(aui.image WHOLEARCHIVE EXPORT aui)
+-add_subdirectory(3rdparty)
+-aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux)
++find_package(unofficial-libnsgif CONFIG REQUIRED)
++find_package(Stb REQUIRED)
++aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux unofficial::libnsgif::nsgif)
++target_include_directories(aui.image PRIVATE ${Stb_INCLUDE_DIR})
+ aui_enable_tests(aui.image)
+diff --git a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
+index e9ca38f..4597d68 100644
+--- a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
++++ b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
+@@ -17,7 +17,9 @@
+ #include "AUI/Image/AImage.h"
+ #include "AUI/Util/ARaiiHelper.h"
+ #include "AUI/Logging/ALogger.h"
+-#include "nsgif.h"
++extern "C" {
++#include <nsgif.h>
++}
+ 
+ static nsgif_bitmap_t* create_callback(int width, int height) {
+     return new char[4 * width * height];
+diff --git a/aui.sqlite/CMakeLists.txt b/aui.sqlite/CMakeLists.txt
+index 6afd58f..8514048 100644
+--- a/aui.sqlite/CMakeLists.txt
++++ b/aui.sqlite/CMakeLists.txt
+@@ -1,12 +1,11 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+ 
+-file(GLOB_RECURSE SQLITE3_SRCS 3rdparty/*.c)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
+ 
+-aui_module(aui.sqlite ADDITIONAL_SRCS ${SQLITE3_SRCS}
+-                      EXPORT aui
++aui_module(aui.sqlite EXPORT aui
+                       PLUGIN)
+-target_include_directories(aui.sqlite PRIVATE 3rdparty/sqlite3)
++aui_link(aui.sqlite PRIVATE unofficial::sqlite3::sqlite3)
+ 
+ aui_link(aui.sqlite PUBLIC aui::core)
+ aui_link(aui.sqlite PUBLIC aui::data)

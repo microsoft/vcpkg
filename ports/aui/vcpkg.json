@@ -1,6 +1,7 @@
 {
   "name": "aui",
   "version": "7.1.2",
+  "port-version": 1,
   "description": "Declarative UI toolkit for modern C++20",
   "homepage": "https://github.com/aui-framework/aui",
   "license": "MPL-2.0",
@@ -32,6 +33,7 @@
       "name": "libbacktrace",
       "platform": "linux"
     },
+    "libnsgif",
     "libogg",
     "libvorbis",
     "libwebp",
@@ -53,6 +55,8 @@
     },
     "range-v3",
     "soxr",
+    "sqlite3",
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true

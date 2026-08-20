@@ -17,6 +17,8 @@ vcpkg_from_github(
         fix-arm64.patch
 )
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/aui.audio/3rdparty" "${SOURCE_PATH}/aui.core/3rdparty" "${SOURCE_PATH}/aui.image/3rdparty" "${SOURCE_PATH}/aui.sqlite/3rdparty")
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
 vcpkg_find_acquire_program(PKGCONFIG)
