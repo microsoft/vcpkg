@@ -7,12 +7,7 @@
   "supports": "!android",
   "dependencies": [
     "curl",
-    {
-      "name": "grpc",
-      "features": [
-        "codegen"
-      ]
-    },
+    "grpc",
     "protobuf",
     "rapidjson",
     {
