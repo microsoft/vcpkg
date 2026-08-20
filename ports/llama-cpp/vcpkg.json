@@ -28,17 +28,6 @@
         }
       ]
     },
-    "portable-cpu": {
-      "description": "Build the underlying ggml CPU backend without host-native ISA detection, for CI-safe portable binaries. Forwards to ggml's portable-cpu feature.",
-      "dependencies": [
-        {
-          "name": "ggml",
-          "features": [
-            "portable-cpu"
-          ]
-        }
-      ]
-    },
     "server": {
       "description": "Build llama-server and llama-cli"
     },

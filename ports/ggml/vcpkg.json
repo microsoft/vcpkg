@@ -46,9 +46,6 @@
       "description": "Enable OpenMP support",
       "supports": "!osx"
     },
-    "portable-cpu": {
-      "description": "Build without host-native CPU detection and optional AVX/BMI2 instruction sets for portable CI/cache binaries."
-    },
     "vulkan": {
       "description": "Enable Vulkan support",
       "dependencies": [
