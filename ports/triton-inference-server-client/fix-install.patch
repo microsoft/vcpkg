@@ -1,34 +1,26 @@
 diff --git a/src/c++/library/CMakeLists.txt b/src/c++/library/CMakeLists.txt
+index a8d0dd9cd7..c5b0728afb 100644
 --- a/src/c++/library/CMakeLists.txt
 +++ b/src/c++/library/CMakeLists.txt
-@@ -75,7 +75,7 @@
-     target_compile_options(
-       ${_json_target} PRIVATE
-       $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
--        -Wall -Wextra -Werror>
-+        -Wall -Wextra>
-       $<$<CXX_COMPILER_ID:MSVC>:/W0 /D_WIN32_WINNT=0x0A00 /EHsc>
-     )
+@@ -245,7 +245,7 @@ if(TRITON_ENABLE_CC_GRPC)
+        grpcclient
+        PROPERTIES
+          LINK_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/libgrpcclient.ldscript
+-         LINK_FLAGS "-Wl,--version-script=libgrpcclient.ldscript"
++         LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_BINARY_DIR}/libgrpcclient.ldscript"
+      )
+   endif() # NOT WIN32 AND NOT TRITON_KEEP_TYPEINFO
  
-@@ -141,7 +141,7 @@
-     target_compile_options(
-       ${_shm_target} PRIVATE
-       $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
--        -Wall -Wextra -Werror>
-+        -Wall -Wextra>
-       $<$<CXX_COMPILER_ID:MSVC>:/W0 /D_WIN32_WINNT=0x0A00 /EHsc>
-     )
- 
-@@ -262,7 +262,7 @@
+@@ -262,7 +262,7 @@ if(TRITON_ENABLE_CC_GRPC)
      target_compile_options(
        ${_client_target} PRIVATE
        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
 -        -Wall -Wextra -Werror>
-+        -Wall -Wextra>
++        -Wall -Wextra -Wno-deprecated-declarations -Werror>
        $<$<CXX_COMPILER_ID:MSVC>:/W0 /D_WIN32_WINNT=0x0A00 /EHsc>
      )
  
-@@ -422,7 +422,7 @@
+@@ -422,12 +422,12 @@ if(TRITON_ENABLE_CC_HTTP)
        TritonClient::httpclient ALIAS httpclient
    )
  
@@ -37,11 +29,13 @@ diff --git a/src/c++/library/CMakeLists.txt b/src/c++/library/CMakeLists.txt
       set_target_properties(
         httpclient
         PROPERTIES
-@@ -434,9 +434,16 @@
-   target_link_libraries(
-       httpclient
-       PRIVATE triton-common-json
-       PUBLIC CURL::libcurl
+          LINK_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/libhttpclient.ldscript
+-         LINK_FLAGS "-Wl,--version-script=libhttpclient.ldscript"
++         LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_BINARY_DIR}/libhttpclient.ldscript"
+      )
+   endif() # NOT WIN32
+ 
+@@ -438,6 +438,13 @@ if(TRITON_ENABLE_CC_HTTP)
        PUBLIC Threads::Threads
    )
  
@@ -54,16 +48,8 @@ diff --git a/src/c++/library/CMakeLists.txt b/src/c++/library/CMakeLists.txt
 +
    foreach(_client_target http-client-library httpclient_static httpclient)
      target_compile_features(${_client_target} PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
-@@ -443,7 +443,7 @@
      target_compile_options(
-       ${_client_target} PRIVATE
-       $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
--        -Wall -Wextra -Werror>
-+        -Wall -Wextra>
-       $<$<CXX_COMPILER_ID:MSVC>:/W0 /D_WIN32_WINNT=0x0A00 /EHsc>
-     )
- 
-@@ -463,10 +463,6 @@
+@@ -463,10 +470,6 @@ if(TRITON_ENABLE_CC_HTTP)
          ${CMAKE_CURRENT_SOURCE_DIR}
      )
  
@@ -74,11 +60,10 @@ diff --git a/src/c++/library/CMakeLists.txt b/src/c++/library/CMakeLists.txt
      if(TRITON_ENABLE_GPU)
        target_compile_definitions(
          ${_client_target}
-@@ -505,12 +501,19 @@
- 
+@@ -506,11 +509,18 @@ if(TRITON_ENABLE_CC_HTTP OR TRITON_ENABLE_CC_GRPC)
    include(GNUInstallDirs)
    set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/TritonClient)
-+
+ 
 +  if(BUILD_SHARED_LIBS)
 +    set(TRITON_GRPC_INSTALL_TARGET grpcclient)
 +    set(TRITON_HTTP_INSTALL_TARGET httpclient)
@@ -86,7 +71,7 @@ diff --git a/src/c++/library/CMakeLists.txt b/src/c++/library/CMakeLists.txt
 +    set(TRITON_GRPC_INSTALL_TARGET grpcclient_static)
 +    set(TRITON_HTTP_INSTALL_TARGET httpclient_static)
 +  endif()
- 
++
    if(TRITON_ENABLE_CC_GRPC)
      install(
        TARGETS
@@ -96,7 +81,7 @@ diff --git a/src/c++/library/CMakeLists.txt b/src/c++/library/CMakeLists.txt
        EXPORT
          triton-client-targets
        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -522,8 +525,7 @@
+@@ -522,8 +532,7 @@ if(TRITON_ENABLE_CC_HTTP OR TRITON_ENABLE_CC_GRPC)
    if(TRITON_ENABLE_CC_HTTP)
      install(
        TARGETS
@@ -107,6 +92,7 @@ diff --git a/src/c++/library/CMakeLists.txt b/src/c++/library/CMakeLists.txt
          triton-client-targets
        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 diff --git a/src/c++/library/cmake/TritonClientConfig.cmake.in b/src/c++/library/cmake/TritonClientConfig.cmake.in
+index b2529f166d..1563e34b88 100644
 --- a/src/c++/library/cmake/TritonClientConfig.cmake.in
 +++ b/src/c++/library/cmake/TritonClientConfig.cmake.in
 @@ -26,6 +26,19 @@
@@ -129,3 +115,4 @@ diff --git a/src/c++/library/cmake/TritonClientConfig.cmake.in b/src/c++/library
  get_filename_component(
    TRITONCLIENT_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH
  )
+

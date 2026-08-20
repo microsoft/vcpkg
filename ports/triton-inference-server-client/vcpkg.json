@@ -4,6 +4,7 @@
   "description": "C++ HTTP and gRPC client libraries for NVIDIA Triton Inference Server",
   "homepage": "https://github.com/triton-inference-server/client",
   "license": "BSD-3-Clause",
+  "supports": "!android",
   "dependencies": [
     "curl",
     {

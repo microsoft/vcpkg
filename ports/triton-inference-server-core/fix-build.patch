@@ -43,7 +43,7 @@ index 4c0bff2..9d4c308 100644
 +find_package(TritonCommon CONFIG REQUIRED)
  
 -FetchContent_MakeAvailable(repo-common)
-+add_library(proto-library ALIAS TritonCommon::proto-library)
++add_library(proto-library ALIAS TritonCommon::proto-library-static)
 +add_library(triton-common-async-work-queue ALIAS TritonCommon::triton-common-async-work-queue)
 +add_library(triton-common-thread-pool ALIAS TritonCommon::triton-common-thread-pool)
 +add_library(triton-common-error ALIAS TritonCommon::triton-common-error)
