@@ -48,112 +48,19 @@ diff --git a/IO/OCCT/vtkOCCTReader.cxx b/IO/OCCT/vtkOCCTReader.cxx
 index 52e76be72c..a60414c000 100644
 --- a/IO/OCCT/vtkOCCTReader.cxx
 +++ b/IO/OCCT/vtkOCCTReader.cxx
-@@ -26,8 +26,11 @@
+@@ -26,8 +26,12 @@
  #include <Poly_Triangulation.hxx>
  #include <Quantity_Color.hxx>
  #include <STEPCAFControl_Reader.hxx>
 +#if VTK_OCCT_VERSION(8, 0, 0) > OCC_VERSION_HEX
  #include <Standard_PrimitiveTypes.hxx>
--#include <TColgp_Array1OfVec.hxx>
 +#endif
-+#include <NCollection_Array1.hxx>
-+#include <NCollection_Sequence.hxx>
++#include <TColgp_Array1OfPnt.hxx>
+ #include <TColgp_Array1OfVec.hxx>
  #include <TDF_ChildIterator.hxx>
++#include <TDF_LabelSequence.hxx>
  #include <TDataStd_Name.hxx>
  #include <TDocStd_Document.hxx>
-@@ -92,7 +95,7 @@ public:
-     vtkNew<vtkCellArray> trianglesCells;
-     vtkNew<vtkCellArray> linesCells;
- 
--    Standard_Integer shift = 0;
-+    int shift = 0;
- 
-     if (this->Parent->GetReadWire())
-     {
-@@ -109,7 +112,7 @@ public:
-           // meshing
-           BRepMesh_IncrementalMesh(edge, this->Parent->GetLinearDeflection(),
-             this->Parent->GetRelativeDeflection(), this->Parent->GetAngularDeflection(),
--            Standard_True);
-+            true);
-         }
- 
-         if (poly.IsNull())
-@@ -117,11 +120,11 @@ public:
-           continue;
-         }
- 
--        Standard_Integer nbV = poly->NbNodes();
-+        int nbV = poly->NbNodes();
- 
-         // Points
--        const TColgp_Array1OfPnt& aNodes = poly->Nodes();
--        for (Standard_Integer i = 1; i <= nbV; i++)
-+        const NCollection_Array1<gp_Pnt>& aNodes = poly->Nodes();
-+        for (int i = 1; i <= nbV; i++)
-         {
-           gp_Pnt pt = aNodes(i).Transformed(location);
-           points->InsertNextPoint(pt.X(), pt.Y(), pt.Z());
-@@ -163,7 +166,7 @@ public:
-         // meshing
-         BRepMesh_IncrementalMesh(face, this->Parent->GetLinearDeflection(),
-           this->Parent->GetRelativeDeflection(), this->Parent->GetAngularDeflection(),
--          Standard_True);
-+          true);
-       }
- 
-       if (poly.IsNull())
-@@ -174,11 +177,11 @@ public:
-       Poly::ComputeNormals(poly);
-       TopAbs_Orientation faceOrientation = face.Orientation();
- 
--      Standard_Integer nbT = poly->NbTriangles();
--      Standard_Integer nbV = poly->NbNodes();
-+      int nbT = poly->NbTriangles();
-+      int nbV = poly->NbNodes();
- 
-       // Points
--      for (Standard_Integer i = 1; i <= nbV; i++)
-+      for (int i = 1; i <= nbV; i++)
-       {
-         gp_Pnt pt = poly->Node(i).Transformed(location);
-         points->InsertNextPoint(pt.X(), pt.Y(), pt.Z());
-@@ -187,7 +190,7 @@ public:
-       // Normals
-       if (poly->HasNormals())
-       {
--        for (Standard_Integer i = 1; i <= nbV; i++)
-+        for (int i = 1; i <= nbV; i++)
-         {
-           gp_Dir n = poly->Normal(i);
-           float fn[3] = { static_cast<float>(n.X()), static_cast<float>(n.Y()),
-@@ -203,7 +206,7 @@ public:
-       {
-         // just in case a face does not have normals, add a dummy normal
-         float fn[3] = { 0.0, 0.0, 1.0 };
--        for (Standard_Integer i = 1; i <= nbV; i++)
-+        for (int i = 1; i <= nbV; i++)
-         {
-           normals->InsertNextTypedTuple(fn);
-         }
-@@ -212,7 +215,7 @@ public:
-       // UVs
-       if (poly->HasUVNodes())
-       {
--        for (Standard_Integer i = 1; i <= nbV; i++)
-+        for (int i = 1; i <= nbV; i++)
-         {
-           gp_Pnt2d uv = poly->UVNode(i);
-           float fn[2] = { static_cast<float>(uv.X()), static_cast<float>(uv.Y()) };
-@@ -222,7 +225,7 @@ public:
-       else
-       {
-         float fn[3] = { 0.0, 0.0 };
--        for (Standard_Integer i = 1; i <= nbV; i++)
-+        for (int i = 1; i <= nbV; i++)
-         {
-           uvs->InsertNextTypedTuple(fn);
-         }
 @@ -343,11 +346,19 @@ public:
    }
  
@@ -187,39 +94,3 @@ index 52e76be72c..a60414c000 100644
    Handle(XCAFDoc_ShapeTool) ShapeTool;
    Handle(XCAFDoc_ColorTool) ColorTool;
  
-@@ -422,7 +436,7 @@ public:
-   ProgressIndicator(vtkOCCTReader* reader) { this->Reader = reader; }
- 
- protected:
--  void Show(const Message_ProgressScope&, const Standard_Boolean) override
-+  void Show(const Message_ProgressScope&, const bool) override
-   {
-     double currentPosition = this->GetPosition();
-     if (currentPosition - this->LastPosition > 0.01)
-@@ -487,12 +501,12 @@ public:
-   this->Internals->ShapeTool = XCAFDoc_DocumentTool::ShapeTool(doc->Main());
-   this->Internals->ColorTool = XCAFDoc_DocumentTool::ColorTool(doc->Main());
- 
--  TDF_LabelSequence topLevelShapes;
-+  NCollection_Sequence<TDF_Label> topLevelShapes;
- 
-   // create polydata leaves
-   this->Internals->ShapeTool->GetShapes(topLevelShapes);
- 
--  for (Standard_Integer iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
-+  for (int iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
-   {
-     TDF_Label label = topLevelShapes.Value(iLabel);
- 
-@@ -513,10 +527,10 @@ public:
- 
-   vtkNew<vtkMatrix4x4> mat;
-   mat->Identity();
--  for (Standard_Integer iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
-+  for (int iLabel = 1; iLabel <= topLevelShapes.Length(); ++iLabel)
-   {
-     this->Internals->AddLabel(topLevelShapes.Value(iLabel), mat, output);
-   }
- 
-   return 1;
- }
