@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cieslarmichal/faker-cxx
     REF "v${VERSION}"
-    SHA512 95ceedfa71889c9c5299949d51fe54936c94dc12a5e46e90c6aae3124cbdd5de627725afc3407bb27401addf7338ba77b70c66b6fe750c8499c3b070558c467b
+    SHA512 7996116664f05af95c91afc8ffb42d8610580e76572d089843fabbbf3756e0db6abf3ebca2b950e5ee29f40b30355a6a7d2c68ac4d0cdbffc953e0d392864e32
     HEAD_REF main
-    # Remove when https://github.com/cieslarmichal/faker-cxx/issues/1126 is fixed in a release.
-    PATCHES
-        fix-version-metadata.patch # https://github.com/cieslarmichal/faker-cxx/pull/1127
 )
 
 vcpkg_cmake_configure(
