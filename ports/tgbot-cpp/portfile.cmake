@@ -19,14 +19,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TgBot")
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/tgbot-cpp/TgBotConfig.cmake" tgbot_config)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/tgbot-cpp/TgBotConfig.cmake" "
-include(CMakeFindDependencyMacro)
-find_dependency(Boost COMPONENTS system)
-find_dependency(CURL)
-${tgbot_config}
-")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
