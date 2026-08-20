@@ -1,0 +1,23 @@
+file(READ "${RUNTIME_FILE}" runtime_dlls)
+string(REPLACE "\r\n" "\n" runtime_dlls "${runtime_dlls}")
+string(REPLACE "\n" ";" runtime_dlls "${runtime_dlls}")
+list(FILTER runtime_dlls EXCLUDE REGEX "^$")
+
+set(found_expected_dll FALSE)
+foreach(runtime_dll IN LISTS runtime_dlls)
+    if(NOT EXISTS "${runtime_dll}")
+        message(FATAL_ERROR "TARGET_RUNTIME_DLLS contains a missing file: ${runtime_dll}")
+    endif()
+
+    cmake_path(GET runtime_dll FILENAME runtime_name)
+    if(runtime_name STREQUAL EXPECTED_DLL)
+        set(found_expected_dll TRUE)
+        if(NOT EXISTS "${COPY_DIR}/${runtime_name}")
+            message(FATAL_ERROR "The expected runtime DLL was not copied: ${COPY_DIR}/${runtime_name}")
+        endif()
+    endif()
+endforeach()
+
+if(NOT found_expected_dll)
+    message(FATAL_ERROR "TARGET_RUNTIME_DLLS did not contain ${EXPECTED_DLL}: ${runtime_dlls}")
+endif()

@@ -15,12 +15,8 @@ set(BZ2_SOURCES
     bzlib.c)
 
 add_library(bz2 ${BZ2_SOURCES})
-target_include_directories(bz2 PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
-    "$<INSTALL_INTERFACE:include>")
 set_target_properties(bz2 PROPERTIES
     DEBUG_POSTFIX d
-    EXPORT_NAME bzip2
     VERSION "${BZ2_VERSION}"
     SOVERSION 1.0)
 if(BUILD_SHARED_LIBS)
@@ -34,17 +30,9 @@ if(MSVC)
 endif()
 
 install(TARGETS bz2
-    EXPORT BZip2Targets
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
-
-install(
-    EXPORT BZip2Targets
-    FILE unofficial-bzip2-config.cmake
-    NAMESPACE unofficial::bzip2::
-    DESTINATION share/unofficial-bzip2
-)
 
 if(NOT BZIP2_SKIP_TOOLS)
     add_executable(bzip2 bzip2.c ${BZ2_SOURCES})
