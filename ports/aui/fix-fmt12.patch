@@ -1,0 +1,111 @@
+diff --git a/aui.core/src/AUI/Common/AByteBufferView.h b/aui.core/src/AUI/Common/AByteBufferView.h
+index 0f826537..217f0ba0 100644
+--- a/aui.core/src/AUI/Common/AByteBufferView.h
++++ b/aui.core/src/AUI/Common/AByteBufferView.h
+@@ -117,7 +117,7 @@ inline std::ostream& operator<<(std::ostream& lhs, const AByteBufferView& rhs) {
+     lhs << "[";
+     for (const auto b : rhs) {
+         char buf[8];
+-        lhs.write(buf, std::distance(std::begin(buf), fmt::format_to(buf, " {:02x}", b)));
++        lhs.write(buf, std::distance(std::begin(buf), fmt::format_to(std::begin(buf), " {:02x}", b)));
+     }
+     lhs << " ]";
+ 
+diff --git a/aui.core/src/AUI/Common/AString.h b/aui.core/src/AUI/Common/AString.h
+index cbf9d120..33362df9 100644
+--- a/aui.core/src/AUI/Common/AString.h
++++ b/aui.core/src/AUI/Common/AString.h
+@@ -14,6 +14,7 @@
+ #include <algorithm>
+ #include <string>
+ #include <iostream>
++#include <cstring>
+ #include "AUI/Core.h"
+ #include "AUI/Traits/values.h"
+ #include <AUI/Common/ASet.h>
+@@ -839,7 +840,6 @@ namespace aui::win32 {
+ }
+ #endif
+ 
+-template <> struct fmt::detail::is_string<AString>: std::false_type {};
+ 
+ template <> struct fmt::formatter<AString>: fmt::formatter<std::string> {
+     auto format(const AString& s, format_context& ctx) const {
+diff --git a/aui.core/src/AUI/Traits/strings.h b/aui.core/src/AUI/Traits/strings.h
+index ef92c34b..46eebfad 100644
+--- a/aui.core/src/AUI/Traits/strings.h
++++ b/aui.core/src/AUI/Traits/strings.h
+@@ -36,6 +36,13 @@ namespace aui {
+                 return arg.toStdString();
+             }
+         };
++
++        template<typename T>
++        struct fmt<T, std::enable_if_t<std::is_enum_v<T>>> {
++            static auto process(T arg) {
++                return static_cast<std::underlying_type_t<T>>(arg);
++            }
++        };
+     }
+ 
+     /**
+diff --git a/aui.core/src/AUI/Traits/values.h b/aui.core/src/AUI/Traits/values.h
+index 65f8d112..2b44e6c6 100644
+--- a/aui.core/src/AUI/Traits/values.h
++++ b/aui.core/src/AUI/Traits/values.h
+@@ -18,6 +18,7 @@
+ #include <functional>
+ #include <optional>
+ #include <glm/glm.hpp>
++#include <fmt/core.h>
+ #include <AUI/Common/SharedPtrTypes.h>
+ #include <AUI/Common/AOptional.h>
+ #include <AUI/Thread/AMutex.h>
+@@ -438,4 +439,11 @@ private:
+ };
+ 
+ using float_within_0_1 = ranged_number<float, 0, 1>;
+-}   // namespace aui
+\ No newline at end of file
++}   // namespace aui
++
++template <typename UnderlyingType, auto min, auto max>
++struct fmt::formatter<aui::ranged_number<UnderlyingType, min, max>> : fmt::formatter<UnderlyingType> {
++    auto format(aui::ranged_number<UnderlyingType, min, max> val, fmt::format_context& ctx) const {
++        return fmt::formatter<UnderlyingType>::format(static_cast<UnderlyingType>(val), ctx);
++    }
++};
+diff --git a/aui.views/src/AUI/Util/AMetric.h b/aui.views/src/AUI/Util/AMetric.h
+index 84a5ec1d..6221585e 100644
+--- a/aui.views/src/AUI/Util/AMetric.h
++++ b/aui.views/src/AUI/Util/AMetric.h
+@@ -16,6 +16,7 @@
+ #include <ostream>
+ #include <tuple>
+ #include "AUI/Util/Assert.h"
++#include <fmt/core.h>
+ 
+ class AString;
+ 
+@@ -140,7 +141,7 @@ public:
+     operator float() const {
+         return getValuePx();
+     }
+-    
++
+     AMetric operator-() const {
+         return {-mValue, mUnit};
+     }
+@@ -259,4 +260,10 @@ inline std::ostream& operator<<(std::ostream& o, const AMetric& value) {
+             break;
+     }
+     return o;
+-}
+\ No newline at end of file
++}
++
++template <> struct fmt::formatter<AMetric> : fmt::formatter<float> {
++    auto format(AMetric val, fmt::format_context& ctx) const {
++        return fmt::formatter<float>::format(static_cast<float>(val), ctx);
++    }
++};
