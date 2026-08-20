@@ -1,6 +1,6 @@
 {
   "name": "simdutf",
-  "version-semver": "8.2.0",
+  "version-semver": "9.1.0",
   "description": "Unicode validation and transcoding at billions of characters per second",
   "homepage": "https://github.com/simdutf/simdutf",
   "license": "Apache-2.0 OR MIT",
@@ -16,7 +16,13 @@
   ],
   "features": {
     "tools": {
-      "description": "Build the fastbase64 and simdutf command line tools for transcoding strings"
+      "description": "Build the fastbase64 and simdutf command line tools for transcoding strings",
+      "dependencies": [
+        {
+          "name": "libiconv",
+          "platform": "windows"
+        }
+      ]
     }
   }
 }
