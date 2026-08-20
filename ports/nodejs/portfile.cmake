@@ -240,18 +240,18 @@ z_build_nodejs(
 # ============================================================================
 message(STATUS "Installing headers...")
 
-file(INSTALL "${SOURCE_PATH}/src/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node" FILES_MATCHING PATTERN "*.h")
+file(INSTALL "${SOURCE_PATH}/src/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/nodejs" FILES_MATCHING PATTERN "*.h")
 
 # Install V8 headers
 file(GLOB_RECURSE V8_HEADERS "${SOURCE_PATH}/deps/v8/include/*.h")
 foreach(HEADER ${V8_HEADERS})
   file(RELATIVE_PATH REL_HEADER "${SOURCE_PATH}/deps/v8/include" "${HEADER}")
   get_filename_component(DIR "${REL_HEADER}" DIRECTORY)
-  file(INSTALL "${HEADER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node/${DIR}")
+  file(INSTALL "${HEADER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/nodejs/${DIR}")
 endforeach()
 
 # Install libuv headers
-file(INSTALL "${SOURCE_PATH}/deps/uv/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node")
+file(INSTALL "${SOURCE_PATH}/deps/uv/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/nodejs")
 
 # Make sure we remove empty directories, so post-build check won't complain
 file(GLOB_RECURSE ALL_DIRS LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/include/*")
