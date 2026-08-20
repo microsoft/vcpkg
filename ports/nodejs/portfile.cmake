@@ -31,6 +31,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 message(STATUS "PATH ENV:              $ENV{PATH}")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(PATCH_FILE link-windows-system-libraries.patch)
+endif()
+
 # Download Node.js source from GitHub
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -38,7 +42,7 @@ vcpkg_from_github(
   REF "v${VERSION}"
   SHA512 dec39b2cc24d8f45bb82b38ef9c0c7452f685e301e4d957142744f155f38d96ad3cfbf96121158c549e642b328a20021d6c3df4319b35f556042eebc388ddd4b
   HEAD_REF main
-  PATCHES link-windows-system-libraries.patch
+  PATCHES ${PATCH_FILE}
 )
 
 message(STATUS "Building Node.js ${VERSION} for ${TARGET_TRIPLET}")
