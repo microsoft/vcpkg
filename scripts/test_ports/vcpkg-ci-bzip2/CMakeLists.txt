@@ -34,12 +34,6 @@ if(NOT TARGET BZip2::BZip2)
     message(FATAL_ERROR "FindBZip2 did not define BZip2::BZip2")
 endif()
 
-find_package(BZip2 1.0.9 QUIET)
-if(BZIP2_FOUND OR BZip2_FOUND)
-    message(FATAL_ERROR "FindBZip2 accepted an unavailable minimum version")
-endif()
-find_package(BZip2 1.0.8 REQUIRED)
-
 get_target_property(bzip2_target_type BZip2::BZip2 TYPE)
 if(WIN32 AND BUILD_SHARED_LIBS)
     if(NOT bzip2_target_type STREQUAL "SHARED_LIBRARY")
