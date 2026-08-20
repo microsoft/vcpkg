@@ -1,13 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 8353843..7e97f01 100644
+index 8353843..b7cef14 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -12,10 +12,12 @@ if(NOT OSGEARTH_BUILD_SHARED_LIBS)
-     add_definitions(-DOSGEARTH_LIBRARY_STATIC)
- endif()
- 
-+list(APPEND OSGEARTH_PUBLIC_DEPENDENCIES tinyxml)
-+
+@@ -15,7 +15,7 @@ endif()
  if(OSGEARTH_BUILD_IMGUI_NODEKIT)
      add_subdirectory(osgEarthImGui)
      list(APPEND OSGEARTH_COMPONENTS osgEarthImGui)
@@ -16,7 +11,7 @@ index 8353843..7e97f01 100644
  endif()
  
  if(OSGEARTH_BUILD_PROCEDURAL_NODEKIT)
-@@ -43,6 +45,10 @@ if(OSGEARTH_BUILD_LEGACY_SPLAT_NODEKIT)
+@@ -43,6 +43,10 @@ if(OSGEARTH_BUILD_LEGACY_SPLAT_NODEKIT)
      list(APPEND OSGEARTH_COMPONENTS osgEarthSplat)
  endif()
  
@@ -27,50 +22,6 @@ index 8353843..7e97f01 100644
  # plugins:
  add_subdirectory(osgEarthDrivers)
  
-diff --git a/src/osgEarth/CMakeLists.txt b/src/osgEarth/CMakeLists.txt
-index 20b266d..89bf64d 100644
---- a/src/osgEarth/CMakeLists.txt
-+++ b/src/osgEarth/CMakeLists.txt
-@@ -53,6 +53,8 @@ if (OSGEARTH_ENABLE_WININET_FOR_HTTP)
- endif()
- 
- 
-+find_package(tinyxml CONFIG REQUIRED)
-+
- # Source code .....................................................
- 
- SET(LIB_NAME osgEarth)
-@@ -470,9 +472,6 @@ SET(TARGET_H
-     mpark_variant.hpp
-     polyfill_string_view.hpp
- 
--    tinyxml/tinyxml.h
--    tinyxml/tinystr.h
--
-     ${OSGEARTH_BUILDCONFIG_HEADER}
-     ${OSGEARTH_VERSION_HEADER}
- )
-@@ -802,11 +801,6 @@ set(TARGET_SRC
-     XYZFeatureSource.cpp
-     XYZModelLayer.cpp
-     
--    tinyxml/tinyxml.cpp
--    tinyxml/tinyxmlerror.cpp
--    tinyxml/tinystr.cpp
--    tinyxml/tinyxmlparser.cpp
--    
-     ${SHADERS_CPP}
- )
- 
-@@ -939,6 +933,8 @@ if(aws-cpp-sdk-core_FOUND)
- 
- endif()
- 
-+target_link_libraries(${LIB_NAME} PRIVATE unofficial-tinyxml::unofficial-tinyxml)
-+
- # pthreads?
- if(UNIX)
-     target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads)
 diff --git a/src/osgEarthDrivers/stbdxt/CMakeLists.txt b/src/osgEarthDrivers/stbdxt/CMakeLists.txt
 index 49c0f9a..688ac3b 100644
 --- a/src/osgEarthDrivers/stbdxt/CMakeLists.txt
