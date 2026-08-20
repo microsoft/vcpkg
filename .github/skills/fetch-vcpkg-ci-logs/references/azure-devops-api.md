@@ -10,7 +10,11 @@ All endpoints below are appended to this base. The `vcpkg/public` project is **p
 
 ## API Version
 
-Always append `?api-version=7.0` (or include it in query strings).
+Append `?api-version=7.0` to build, timeline, and artifact endpoints.
+
+> ⚠️ Do **not** force `?api-version=7.0` onto raw **log body** URLs. That can return HTTP 500 even when
+> the log is anonymously readable. Use the exact `record.log.url` from the timeline as-is, or
+> `?api-version=7.1`.
 
 ---
 
@@ -106,11 +110,15 @@ GET https://dev.azure.com/{org}/{project}/_apis/build/builds/{buildId}/logs/{log
 
 Returns plain text of the log. Use this to read the "*** Test Modified Ports" task log, which contains `REGRESSION:` lines for **all** failures including those without artifact logs (e.g., `FILE_CONFLICTS`).
 
+> ⚠️ Prefer the timeline's `record.log.url` unmodified. Appending `?api-version=7.0` to a log body URL
+> can return HTTP 500; use `?api-version=7.1` if you must specify one.
+
 **Finding the right log ID:** Look up the task record in the timeline response — the `log.id` field on the `"*** Test Modified Ports"` task record gives the log ID. Alternatively, use `log.url` directly.
 
 **Scanning for REGRESSION lines:**
 ```powershell
-$logText = Invoke-RestMethod "https://dev.azure.com/{org}/{project}/_apis/build/builds/{buildId}/logs/{logId}?api-version=7.0"
+# Prefer the timeline record's log.url as-is
+$logText = Invoke-RestMethod $task.log.url
 $logText -split "`n" | Where-Object { $_ -match '^REGRESSION:' }
 ```
 

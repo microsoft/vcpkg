@@ -55,6 +55,12 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android --enable-jni --enable-mediacodec")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "QNX")
     string(APPEND OPTIONS " --target-os=qnx")
+elseif(VCPKG_TARGET_IS_OHOS)
+    # OHOS kernel is Linux/musl; ffmpeg configure has no "ohos" target-os,
+    # so without this it falls back to the host (e.g. darwin) and injects
+    # host-specific LDFLAGS (-Wl,-dynamic,-search_paths_first) that lld rejects,
+    # which also corrupts the memalign/posix_memalign link probes.
+    string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
