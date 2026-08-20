@@ -34,7 +34,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/bzip2)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME unofficial-bzip2
+    CONFIG_PATH share/unofficial-bzip2
+)
 
 file(READ "${CURRENT_PACKAGES_DIR}/include/bzlib.h" BZLIB_H)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

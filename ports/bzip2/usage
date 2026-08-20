@@ -1,4 +1,17 @@
-The package bzip2 is compatible with built-in CMake targets:
+bzip2 can be found with CMake's built-in FindBZip2 module:
 
     find_package(BZip2 REQUIRED)
     target_link_libraries(main PRIVATE BZip2::BZip2)
+
+The module target does not provide TARGET_RUNTIME_DLLS on Windows. For shared
+Windows builds, use runtime DLL metadata from vcpkg's config package:
+
+    find_package(unofficial-bzip2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::bzip2::bzip2)
+
+    add_custom_command(TARGET main POST_BUILD
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            $<TARGET_RUNTIME_DLLS:main>
+            $<TARGET_FILE_DIR:main>
+        COMMAND_EXPAND_LISTS
+    )
