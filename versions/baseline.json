@@ -1554,7 +1554,7 @@
     },
     "bzip2": {
       "baseline": "1.0.8",
-      "port-version": 6
+      "port-version": 7
     },
     "bzip3": {
       "baseline": "1.5.3",
