@@ -7470,7 +7470,7 @@
     },
     "openfbx": {
       "baseline": "2024-12-28",
-      "port-version": 0
+      "port-version": 1
     },
     "openfx": {
       "baseline": "1.4",
