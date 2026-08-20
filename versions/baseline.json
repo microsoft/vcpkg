@@ -2573,7 +2573,7 @@
       "port-version": 3
     },
     "dispenso": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.2",
       "port-version": 0
     },
     "distorm": {
