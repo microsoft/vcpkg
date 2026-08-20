@@ -1,0 +1,75 @@
+set(LIB_NAME unofficial::node::libnode)
+
+if(NOT TARGET ${LIB_NAME})
+  get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+  if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+  endif()
+
+  add_library(${LIB_NAME} SHARED IMPORTED)
+
+  # Determine build type
+  string(TOLOWER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_LOWER)
+
+  # =========================================================================
+  # 1. DEFINE RUNTIME LOCATIONS (IMPORTED_LOCATION) FOR ALL PLATFORMS
+  # =========================================================================
+  if (WIN32)
+    # On Windows, RUNTIME locations point to the executable DLLs in /bin
+    set_target_properties(${LIB_NAME} PROPERTIES
+      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/@NODE_RUNTIME_LIB@"
+      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/bin/@NODE_RUNTIME_LIB_DEBUG@"
+    )
+  else()
+    # On Linux/macOS, RUNTIME locations point to the .so or .dylib in /lib
+    set_target_properties(${LIB_NAME} PROPERTIES
+      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/@NODE_RUNTIME_LIB@"
+      IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/@NODE_RUNTIME_LIB_DEBUG@"
+    )
+  endif()
+
+  # Set fallback configuration-independent location
+  if(BUILD_TYPE_LOWER MATCHES "debug")
+    if(WIN32)
+      set_property(TARGET ${LIB_NAME} PROPERTY IMPORTED_LOCATION "${_IMPORT_PREFIX}/debug/bin/@NODE_RUNTIME_LIB_DEBUG@")
+    else()
+      set_property(TARGET ${LIB_NAME} PROPERTY IMPORTED_LOCATION "${_IMPORT_PREFIX}/debug/lib/@NODE_RUNTIME_LIB_DEBUG@")
+    endif()
+  else()
+    if(WIN32)
+      set_property(TARGET ${LIB_NAME} PROPERTY IMPORTED_LOCATION "${_IMPORT_PREFIX}/bin/@NODE_RUNTIME_LIB@")
+    else()
+      set_property(TARGET ${LIB_NAME} PROPERTY IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/@NODE_RUNTIME_LIB@")
+    endif()
+  endif()
+
+  # =========================================================================
+  # 2. DEFINE IMPORT LIBRARIES (IMPORTED_IMPLIB) WINDOWS ONLY
+  # =========================================================================
+  if(WIN32)
+    set_target_properties(${LIB_NAME} PROPERTIES
+      IMPORTED_IMPLIB_RELEASE "${_IMPORT_PREFIX}/lib/@NODE_IMPORT_LIB@"
+      IMPORTED_IMPLIB_DEBUG "${_IMPORT_PREFIX}/debug/lib/@NODE_IMPORT_LIB_DEBUG@"
+    )
+
+    if(BUILD_TYPE_LOWER MATCHES "debug")
+      set_target_properties(${LIB_NAME} PROPERTIES
+        IMPORTED_IMPLIB "${_IMPORT_PREFIX}/debug/lib/@NODE_IMPORT_LIB_DEBUG@"
+      )
+    else()
+      set_target_properties(${LIB_NAME} PROPERTIES
+        IMPORTED_IMPLIB "${_IMPORT_PREFIX}/lib/@NODE_IMPORT_LIB@"
+      )
+    endif()
+  endif()
+
+  # =========================================================================
+  # 3. INCLUDE DIRECTORIES & DEPENDENCIES (SAME FOR ALL)
+  # =========================================================================
+  set(INCLUDE_DIRS "${_IMPORT_PREFIX}/include"
+                   "${_IMPORT_PREFIX}/include/node"
+  )
+  target_include_directories(${LIB_NAME} INTERFACE ${INCLUDE_DIRS})
+endif()

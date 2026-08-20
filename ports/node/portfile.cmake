@@ -1,5 +1,6 @@
 # vcpkg portfile for Node.js
 # Builds Node.js as both Release and Debug shared libraries for C++ embedding
+set(ORG_VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE})
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 # Find Python for the build system
@@ -37,7 +38,7 @@ vcpkg_from_github(
   REF "v${VERSION}"
   SHA512 dec39b2cc24d8f45bb82b38ef9c0c7452f685e301e4d957142744f155f38d96ad3cfbf96121158c549e642b328a20021d6c3df4319b35f556042eebc388ddd4b
   HEAD_REF main
-  PATCHES
+  PATCHES link-windows-system-libraries.patch
 )
 
 message(STATUS "Building Node.js ${VERSION} for ${TARGET_TRIPLET}")
@@ -56,6 +57,7 @@ else()
 endif()
 
 # Base configure options
+set(NPM_FLAG "--without-npm")
 set(SHARED_FLAG "--shared")
 set(LIBRARY_PREFIX "${CMAKE_SHARED_LIBRARY_PREFIX}")
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -64,33 +66,12 @@ else()
   set(LIBRARY_SUFFIX "${CMAKE_SHARED_LIBRARY_SUFFIX}")
 endif()
 
-# Add feature-specific options
-if("npm" IN_LIST FEATURES)
-  # npm is included by default
-else()
-  set(NPM_FLAG "--without-npm")
-endif()
-
-if("openssl" IN_LIST FEATURES)
+if("openssl" IN_LIST FEATURES AND NOT ORG_VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(EXTERNAL_OPENSSL true)
 else()
   set(EXTERNAL_OPENSSL false)
 endif()
 
-
-function (z_patch_file)
-  set(oneValueArgs FILE_PATH OLD_CODE NEW_CODE)
-  cmake_parse_arguments(PARSE_ARGV 0 arg "" "${oneValueArgs}" "")
-
-  message(STATUS "Patching ${arg_FILE_PATH} ...")
-  if(EXISTS "${arg_FILE_PATH}")
-    file(READ "${arg_FILE_PATH}" FILE_CONTENT)
-
-    string(REPLACE "${arg_OLD_CODE}" "${arg_NEW_CODE}" FILE_CONTENT "${FILE_CONTENT}")
-    file(WRITE "${arg_FILE_PATH}" "${FILE_CONTENT}")
-    message(STATUS "Successfully patched ${arg_FILE_PATH}")
-  endif()
-endfunction()
 
 function (z_copy_files)
   set(oneValueArgs FILE_SEARCH DESTINATION)
@@ -186,26 +167,6 @@ function(z_build_nodejs)
     list(JOIN CONFIGURE_OPTIONS " " CONFIGURE_FLAGS)
     set(ENV{config_flags} "${CONFIGURE_FLAGS} --without-node-snapshot")
     set(DEST_CPU ${NODE_ARCH})
-
-    # Need to include a few more libraries to build Windows successfully
-    set(OLD_CODE "        [ 'node_shared==\"true\" and OS==\"win\"', {
-          'sources': [
-            'src/res/node.rc',
-          ],
-")
-    set(NEW_CODE "${OLD_CODE}          'libraries': [
-            'Dbghelp.lib',
-            'Psapi.lib',
-            'winmm.lib',
-            'Ws2_32.lib',
-            'crypt32.lib',
-          ],
-")
-    z_patch_file(
-      FILE_PATH "${SOURCE_PATH}/node.gyp"
-      OLD_CODE ${OLD_CODE}
-      NEW_CODE ${NEW_CODE}
-    )
   else()
     set(BUILD_CMD make -j${VCPKG_CONCURRENCY})
   endif()
@@ -282,11 +243,11 @@ file(GLOB_RECURSE V8_HEADERS "${SOURCE_PATH}/deps/v8/include/*.h")
 foreach(HEADER ${V8_HEADERS})
   file(RELATIVE_PATH REL_HEADER "${SOURCE_PATH}/deps/v8/include" "${HEADER}")
   get_filename_component(DIR "${REL_HEADER}" DIRECTORY)
-  file(INSTALL "${HEADER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/v8/${DIR}")
+  file(INSTALL "${HEADER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node/${DIR}")
 endforeach()
 
 # Install libuv headers
-file(INSTALL "${SOURCE_PATH}/deps/uv/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/libuv")
+file(INSTALL "${SOURCE_PATH}/deps/uv/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/node")
 
 # Make sure we remove empty directories, so post-build check won't complain
 file(GLOB_RECURSE ALL_DIRS LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/include/*")
@@ -335,22 +296,15 @@ set(PACKAGE_PREFIX_DIR ${CURRENT_PACKAGES_DIR})
 
 # Generate CMake config files from templates
 configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/nodeConfig.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/${PORT}/nodeConfig.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-config.cmake.in"
+  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-node-config.cmake"
   @ONLY
 )
 
 configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/nodeTargets.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/${PORT}/nodeTargets.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-targets.cmake.in"
+  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-node-targets.cmake"
   @ONLY
-)
-
-# Legacy compatibility
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/nodejsConfig.cmake"
-  "${CURRENT_PACKAGES_DIR}/share/${PORT}/nodejsConfig.cmake"
-  COPYONLY
 )
 
 # Usage file

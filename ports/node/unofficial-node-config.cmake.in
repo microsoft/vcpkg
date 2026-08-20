@@ -12,6 +12,6 @@
 
 # Import Node.js library targets
 # Handles both Release (lib/) and Debug (debug/lib/) configurations
-include("${CMAKE_CURRENT_LIST_DIR}/nodeTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-node-targets.cmake")
 
 set(node_FOUND TRUE)
