@@ -1,4 +1,4 @@
-set(LIB_NAME unofficial::node::libnode)
+set(LIB_NAME unofficial::nodejs::libnode)
 
 if(NOT TARGET ${LIB_NAME})
   get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)

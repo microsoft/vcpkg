@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-  "name": "node",
+  "name": "nodejs",
   "version-semver": "26.6.0",
   "description": "Node.js is an open-source, cross-platform JavaScript runtime environment that can be embedded in C++ applications",
   "homepage": "https://nodejs.org",

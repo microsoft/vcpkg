@@ -7168,10 +7168,6 @@
       "baseline": "2021-02-21",
       "port-version": 4
     },
-    "node": {
-      "baseline": "26.6.0",
-      "port-version": 0
-    },
     "node-addon-api": {
       "baseline": "8.9.2",
       "port-version": 0
@@ -7179,6 +7175,10 @@
     "node-api-headers": {
       "baseline": "1.9.0",
       "port-version": 1
+    },
+    "nodejs": {
+      "baseline": "26.6.0",
+      "port-version": 0
     },
     "nodesoup": {
       "baseline": "2023-06-12",

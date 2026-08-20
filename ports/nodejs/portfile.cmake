@@ -291,19 +291,19 @@ if(NODE_LIB_DEBUG_FILES)
 endif()
 
 # Extract Node.js version
-set(NODE_VERSION "${VERSION}")
+set(NODEJS_VERSION "${VERSION}")
 set(PACKAGE_PREFIX_DIR ${CURRENT_PACKAGES_DIR})
 
 # Generate CMake config files from templates
 configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-config.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-node-config.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/unofficial-nodejs-config.cmake.in"
+  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-nodejs-config.cmake"
   @ONLY
 )
 
 configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/unofficial-node-targets.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-node-targets.cmake"
+  "${CMAKE_CURRENT_LIST_DIR}/unofficial-nodejs-targets.cmake.in"
+  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-nodejs-targets.cmake"
   @ONLY
 )
 
