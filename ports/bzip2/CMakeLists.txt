@@ -17,6 +17,7 @@ set(BZ2_SOURCES
 add_library(bz2 ${BZ2_SOURCES})
 set_target_properties(bz2 PROPERTIES
     DEBUG_POSTFIX d
+    EXPORT_NAME BZip2
     VERSION "${BZ2_VERSION}"
     SOVERSION 1.0)
 if(BUILD_SHARED_LIBS)
@@ -30,9 +31,17 @@ if(MSVC)
 endif()
 
 install(TARGETS bz2
+    EXPORT BZip2Targets
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib)
+
+install(
+    EXPORT BZip2Targets
+    FILE BZip2Config.cmake
+    NAMESPACE BZip2::
+    DESTINATION share/bzip2
+)
 
 if(NOT BZIP2_SKIP_TOOLS)
     add_executable(bzip2 bzip2.c ${BZ2_SOURCES})
