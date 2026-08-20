@@ -13,6 +13,7 @@
       "name": "curl",
       "default-features": false
     },
+    "nlohmann-json",
     "openssl",
     {
       "name": "vcpkg-cmake",
