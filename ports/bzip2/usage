@@ -2,12 +2,3 @@ The package bzip2 is compatible with built-in CMake targets:
 
     find_package(BZip2 REQUIRED)
     target_link_libraries(main PRIVATE BZip2::BZip2)
-
-On shared Windows builds, TARGET_RUNTIME_DLLS includes the bzip2 DLL:
-
-    add_custom_command(TARGET main POST_BUILD
-        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-            $<TARGET_RUNTIME_DLLS:main>
-            $<TARGET_FILE_DIR:main>
-        COMMAND_EXPAND_LISTS
-    )
