@@ -3,6 +3,13 @@ string(REPLACE "\r\n" "\n" runtime_dlls "${runtime_dlls}")
 string(REPLACE "\n" ";" runtime_dlls "${runtime_dlls}")
 list(FILTER runtime_dlls EXCLUDE REGEX "^$")
 
+if(EXPECT_EMPTY)
+    if(runtime_dlls)
+        message(FATAL_ERROR "Static bzip2 unexpectedly populated TARGET_RUNTIME_DLLS: ${runtime_dlls}")
+    endif()
+    return()
+endif()
+
 set(found_expected_dll FALSE)
 foreach(runtime_dll IN LISTS runtime_dlls)
     if(NOT EXISTS "${runtime_dll}")

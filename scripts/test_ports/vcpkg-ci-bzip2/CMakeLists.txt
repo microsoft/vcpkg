@@ -55,10 +55,11 @@ add_executable(test main.c)
 target_link_libraries(test PRIVATE BZip2::BZip2)
 install(TARGETS test RUNTIME DESTINATION bin/vcpkg-ci-bzip2)
 
+set(runtime_file "${CMAKE_CURRENT_BINARY_DIR}/runtime-dlls-$<CONFIG>.txt")
+file(GENERATE OUTPUT "${runtime_file}" CONTENT "$<JOIN:$<TARGET_RUNTIME_DLLS:test>,\n>")
+
 if(WIN32 AND BUILD_SHARED_LIBS)
     set(runtime_copy_dir "${CMAKE_CURRENT_BINARY_DIR}/runtime-copy/$<CONFIG>")
-    set(runtime_file "${CMAKE_CURRENT_BINARY_DIR}/runtime-dlls-$<CONFIG>.txt")
-    file(GENERATE OUTPUT "${runtime_file}" CONTENT "$<JOIN:$<TARGET_RUNTIME_DLLS:test>,\n>")
 
     add_custom_command(TARGET test POST_BUILD
         COMMAND "${CMAKE_COMMAND}" -E rm -rf "${runtime_copy_dir}"
@@ -78,6 +79,16 @@ if(WIN32 AND BUILD_SHARED_LIBS)
         COMMAND_EXPAND_LISTS
         VERBATIM
     )
-elseif(VCPKG_CI_RUN_TEST)
+elseif(NOT BUILD_SHARED_LIBS)
+    add_custom_command(TARGET test POST_BUILD
+        COMMAND "${CMAKE_COMMAND}"
+            "-DRUNTIME_FILE=${runtime_file}"
+            -DEXPECT_EMPTY=ON
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/verify-runtime.cmake"
+        VERBATIM
+    )
+endif()
+
+if(VCPKG_CI_RUN_TEST AND NOT (WIN32 AND BUILD_SHARED_LIBS))
     add_custom_command(TARGET test POST_BUILD COMMAND "$<TARGET_FILE:test>" VERBATIM)
 endif()
