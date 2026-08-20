@@ -1,7 +1,6 @@
 {
   "name": "aui",
   "version": "7.1.2",
-  "port-version": 1,
   "description": "Declarative UI toolkit for modern C++20",
   "homepage": "https://github.com/aui-framework/aui",
   "license": "MPL-2.0",
