@@ -1,11 +1,12 @@
 {
   "name": "sfml",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
+    "sheenbidi",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -49,7 +50,15 @@
       ]
     },
     "network": {
-      "description": "Use sfml-network library"
+      "description": "Use sfml-network library",
+      "dependencies": [
+        {
+          "name": "mbedtls",
+          "features": [
+            "pthreads"
+          ]
+        }
+      ]
     },
     "window": {
       "description": "Use sfml-window library",
