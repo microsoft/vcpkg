@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b832b39..17af9f6 100644
+index b832b39..64d27f3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -197,7 +197,7 @@ if(MZ_ZLIB)
@@ -11,18 +11,25 @@ index b832b39..17af9f6 100644
          endif()
          set(ZLIB_VERSION ${ZLIB_VERSION_STRING})
      endif()
-@@ -214,9 +214,7 @@ if(MZ_ZLIB)
+@@ -214,9 +214,14 @@ if(MZ_ZLIB)
      elseif(ZLIB_FOUND AND NOT MZ_FORCE_FETCH_LIBS)
          message(STATUS "Using ZLIB ${ZLIB_VERSION}")
  
 -        list(APPEND MINIZIP_INC ${ZLIB_INCLUDE_DIRS})
 -        list(APPEND MINIZIP_LIB ${ZLIB_LIBRARIES})
 -        list(APPEND MINIZIP_LBD ${ZLIB_LIBRARY_DIRS})
-+        list(APPEND MINIZIP_LIB ZLIB::ZLIB)
++        if(TARGET ZLIB::ZLIB)
++            set(MINIZIP_ZLIB_TARGET ZLIB::ZLIB)
++        elseif(TARGET ZLIB::ZLIBSTATIC)
++            set(MINIZIP_ZLIB_TARGET ZLIB::ZLIBSTATIC)
++        else()
++            message(FATAL_ERROR "Zlib config package did not provide a supported target")
++        endif()
++        list(APPEND MINIZIP_LIB ${MINIZIP_ZLIB_TARGET})
  
          set(PC_PRIVATE_DEPS "zlib")
          set(ZLIB_COMPAT ON)
-@@ -258,7 +256,7 @@ if(MZ_ZLIB)
+@@ -258,7 +263,7 @@ if(MZ_ZLIB)
          if(ZLIB-NG_FOUND OR NOT ZLIB_COMPAT)
              list(APPEND MINIZIP_DEP_PKG ZLIB-NG)
          elseif(ZLIB_FOUND)
@@ -31,7 +38,7 @@ index b832b39..17af9f6 100644
          endif()
          list(APPEND MINIZIP_SRC mz_strm_zlib.c)
          list(APPEND MINIZIP_HDR mz_strm_zlib.h)
-@@ -274,11 +272,9 @@ if(MZ_BZIP2)
+@@ -274,11 +279,9 @@ if(MZ_BZIP2)
      if(BZIP2_FOUND AND NOT MZ_FORCE_FETCH_LIBS)
          message(STATUS "Using BZIP2 ${BZIP2_VERSION_STRING}")
  
@@ -45,7 +52,7 @@ index b832b39..17af9f6 100644
      elseif(MZ_FETCH_LIBS)
          clone_repo(bzip2 https://sourceware.org/git/bzip2.git master)
  
-@@ -320,24 +316,18 @@ endif()
+@@ -320,24 +323,18 @@ endif()
  if(MZ_LZMA)
      # Check if liblzma is present
      if(NOT MZ_FORCE_FETCH_LIBS)
@@ -75,7 +82,7 @@ index b832b39..17af9f6 100644
      elseif(MZ_FETCH_LIBS)
          set(BUILD_TESTING OFF CACHE BOOL "Build lzma tests" FORCE)
  
-@@ -356,7 +346,7 @@ if(MZ_LZMA)
+@@ -356,7 +353,7 @@ if(MZ_LZMA)
      endif()
  
      if(MZ_LZMA)
@@ -84,7 +91,7 @@ index b832b39..17af9f6 100644
          list(APPEND MINIZIP_DEF -DHAVE_LZMA -DLZMA_API_STATIC)
          list(APPEND MINIZIP_SRC mz_strm_lzma.c)
          list(APPEND MINIZIP_HDR mz_strm_lzma.h)
-@@ -366,12 +356,8 @@ endif()
+@@ -366,12 +363,8 @@ endif()
  if(MZ_ZSTD)
      # Check if zstd is present
      if(NOT MZ_FORCE_FETCH_LIBS)
@@ -98,7 +105,7 @@ index b832b39..17af9f6 100644
              if(ZSTD_FOUND)
                  if(TARGET zstd::libzstd_static)
                      list(APPEND ZSTD_LIBRARIES zstd::libzstd_static)
-@@ -389,7 +375,7 @@ if(MZ_ZSTD)
+@@ -389,7 +382,7 @@ if(MZ_ZSTD)
          list(APPEND MINIZIP_LIB ${ZSTD_LIBRARIES})
          list(APPEND MINIZIP_LBD ${ZSTD_LIBRARY_DIRS})
  
@@ -107,7 +114,7 @@ index b832b39..17af9f6 100644
      elseif(MZ_FETCH_LIBS)
          set(ZSTD_BUILD_PROGRAMS OFF CACHE BOOL "Build zstd programs")
  
-@@ -427,10 +413,6 @@ endif()
+@@ -427,10 +420,6 @@ endif()
  
  if(MZ_OPENSSL)
      # Check to see if openssl installation is present
@@ -118,7 +125,7 @@ index b832b39..17af9f6 100644
      if(NOT OPENSSL_FOUND)
          find_package(OpenSSL)
      endif()
-@@ -449,9 +431,7 @@ if(MZ_OPENSSL)
+@@ -449,9 +438,7 @@ if(MZ_OPENSSL)
              list(APPEND MINIZIP_INC ${OPENSSL_INCLUDE_DIR})
          endif()
  
