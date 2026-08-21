@@ -2573,7 +2573,7 @@
       "port-version": 3
     },
     "dispenso": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.2",
       "port-version": 0
     },
     "distorm": {
@@ -2773,7 +2773,7 @@
       "port-version": 1
     },
     "ecm": {
-      "baseline": "6.28.0",
+      "baseline": "6.29.0",
       "port-version": 0
     },
     "ecos": {
@@ -2941,7 +2941,7 @@
       "port-version": 0
     },
     "faker-cxx": {
-      "baseline": "4.3.2",
+      "baseline": "4.4.1",
       "port-version": 0
     },
     "fameta-counter": {
@@ -3461,7 +3461,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "8.0.0",
+      "baseline": "8.1.0",
       "port-version": 0
     },
     "glbinding": {
@@ -3621,7 +3621,7 @@
       "port-version": 2
     },
     "gsl-lite": {
-      "baseline": "1.1.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "gst-rtsp-server": {
@@ -6738,7 +6738,7 @@
     },
     "mongo-c-driver": {
       "baseline": "2.3.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mongo-cxx-driver": {
       "baseline": "4.4.0",
@@ -6806,7 +6806,7 @@
     },
     "mpg123": {
       "baseline": "1.33.7",
-      "port-version": 0
+      "port-version": 1
     },
     "mpi": {
       "baseline": "1",
@@ -7077,7 +7077,7 @@
       "port-version": 0
     },
     "neon2sse": {
-      "baseline": "2026-04-28",
+      "baseline": "2026-08-13",
       "port-version": 0
     },
     "neoslippi": {
@@ -7470,7 +7470,7 @@
     },
     "openfbx": {
       "baseline": "2024-12-28",
-      "port-version": 0
+      "port-version": 1
     },
     "openfx": {
       "baseline": "1.4",
@@ -7665,7 +7665,7 @@
       "port-version": 0
     },
     "otl": {
-      "baseline": "4.0.502",
+      "baseline": "4.0.504",
       "port-version": 0
     },
     "outcome": {
@@ -7962,7 +7962,7 @@
     },
     "poco": {
       "baseline": "1.14.1",
-      "port-version": 2
+      "port-version": 3
     },
     "podofo": {
       "baseline": "1.1.1",
@@ -9397,7 +9397,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.6.6",
+      "baseline": "4.6.7",
       "port-version": 0
     },
     "simdutf": {
