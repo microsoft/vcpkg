@@ -1930,7 +1930,7 @@
     },
     "collada-dom": {
       "baseline": "2.5.0",
-      "port-version": 12
+      "port-version": 13
     },
     "colmap": {
       "baseline": "3.12.6",
