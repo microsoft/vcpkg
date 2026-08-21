@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8154bb7..9e74a6b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -106,14 +106,20 @@ if(FASTPFOR_SIMD_MODE STREQUAL "native")
+         target_compile_options(FastPFOR PRIVATE -march=native)
+     else()
+         message(STATUS "native target not supported, falling back to portable mode")
++        if(SUPPORT_SSE42)
+         target_compile_options(FastPFOR PRIVATE -msse4.2)
++        endif()
+     endif()
+ elseif(FASTPFOR_SIMD_MODE STREQUAL "portable")
+     # Baseline: SSE4.2 is required by FastPFOR SIMD code
++    if(SUPPORT_SSE42)
+     target_compile_options(FastPFOR PRIVATE -msse4.2)
++    endif()
+ elseif(FASTPFOR_SIMD_MODE STREQUAL "runtime")
+     # Runtime dispatch: compile with baseline SSE4.2 and enable multi-versioning
++    if(SUPPORT_SSE42)
+     target_compile_options(FastPFOR PRIVATE -msse4.2)
++    endif()
+     target_compile_definitions(FastPFOR PRIVATE FASTPFOR_RUNTIME_DISPATCH)
+     message(STATUS "Runtime dispatch mode is experimental")
+ else()
