@@ -1,0 +1,14 @@
+diff --git a/win32/Configure b/win32/Configure
+index 37f597f..b0ad86f 100644
+--- a/win32/Configure
++++ b/win32/Configure
+@@ -263,9 +263,6 @@ my %net_snmp_config_subs = (
+     "ver" => [ "^#define PACKAGE_VERSION.*",
+                "#define PACKAGE_VERSION \"$version\"" ]
+     );
+-if ($prefix ne "") {
+-    $net_snmp_config_subs{"pfx"} = [ "^#define INSTALL_BASE.*", "#define INSTALL_BASE \"$prefix\"" ];
+-}
+ if ($linktype eq "dynamic") {
+     $net_snmp_config_subs{"dll"} = [ "^.*#undef NETSNMP_USE_DLL.*", "#define NETSNMP_USE_DLL 1" ];
+ }
