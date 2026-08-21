@@ -9,13 +9,10 @@ vcpkg_from_github(
 )
 vcpkg_cmake_configure (
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DGRANTLEE_BUILD_WITH_QT6=ON
-        -DBUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ktexttemplate)
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF6TextTemplate CONFIG_PATH lib/cmake/KF6TextTemplate)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
