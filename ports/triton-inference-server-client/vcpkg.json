@@ -1,0 +1,23 @@
+{
+  "name": "triton-inference-server-client",
+  "version-semver": "2.71.0",
+  "description": "C++ HTTP and gRPC client libraries for NVIDIA Triton Inference Server",
+  "homepage": "https://github.com/triton-inference-server/client",
+  "license": "BSD-3-Clause",
+  "supports": "!android",
+  "dependencies": [
+    "curl",
+    "grpc",
+    "protobuf",
+    "rapidjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

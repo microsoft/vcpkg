@@ -10420,6 +10420,18 @@
       "baseline": "2025-02-15",
       "port-version": 0
     },
+    "triton-inference-server": {
+      "baseline": "2.71.0",
+      "port-version": 0
+    },
+    "triton-inference-server-client": {
+      "baseline": "2.71.0",
+      "port-version": 0
+    },
+    "triton-inference-server-core": {
+      "baseline": "2.71.0",
+      "port-version": 0
+    },
     "trompeloeil": {
       "baseline": "49",
       "port-version": 0
