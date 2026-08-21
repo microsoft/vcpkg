@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Sigmyne/xchange
     REF "v${VERSION}"
-    SHA512 abce6b7da5921b682bbff76ab237d79fbe1e3647a6f535340e513e163102f980d58f4f88ff53b04161c3f83b17f3f893c9f43314b711efbe6810610b16a7e90b
+    SHA512 ee247ac5bcae3e57fa8cf0000295185c626d53d9ad8a1f79339343799c902cfff3e75718175da84c30c2e59d0365399eeefbdea9afed45d6454d3ffced99ee2a
     HEAD_REF main
-    PATCHES 0001.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,6 +15,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/xchange" PACKAGE_NAME "xchange")
+
+set(debug_pc "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xchange.pc")
+if(EXISTS "${debug_pc}")
+    vcpkg_replace_string("${debug_pc}" "-lxchange " "-lxchanged ")
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
