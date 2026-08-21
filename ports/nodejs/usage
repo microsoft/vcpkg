@@ -1,0 +1,24 @@
+Node.js is built as a shared library (libnode) that can be embedded in C++ applications.
+
+CMake Integration:
+
+    find_package(node CONFIG REQUIRED)
+    target_link_libraries(my_app PRIVATE node::libnode)
+
+To embed Node.js in your C++ application:
+
+    #include <node.h>
+    #include <uv.h>
+    #include <v8.h>
+
+See the Node.js Embedder API documentation:
+    https://nodejs.org/api/embedding.html
+
+The following headers are available:
+    - node.h, node_version.h - Node.js core API
+    - node_api.h, node_api_types.h - Node.js N-API
+    - node_buffer.h, node_object_wrap.h - Additional APIs
+    - v8/*.h - V8 JavaScript engine headers
+    - uv.h - libuv event loop headers
+
+Example C++ embedding code is provided in the examples directory.

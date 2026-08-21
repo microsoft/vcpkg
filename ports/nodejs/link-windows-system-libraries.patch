@@ -1,0 +1,16 @@
+--- a/node.gyp
++++ b/node.gyp
+@@ -1219,6 +1219,13 @@
+           'sources': [
+             'src/res/node.rc',
+           ],
++          'libraries': [
++            'Dbghelp.lib',
++            'Psapi.lib',
++            'winmm.lib',
++            'Ws2_32.lib',
++            'crypt32.lib',
++          ],
+         }],
+       ],
+     }, # node_lib_target_name
