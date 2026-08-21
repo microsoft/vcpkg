@@ -1,6 +1,6 @@
 {
   "name": "cpp-printer",
-  "version-semver": "1.0.3",
+  "version-semver": "1.0.4",
   "description": "A lightweight C++ STL container printer",
   "homepage": "https://github.com/BlueNovaStudio/cpp-printer",
   "license": "MIT",
