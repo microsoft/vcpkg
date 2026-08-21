@@ -6198,7 +6198,7 @@
     },
     "llama-cpp": {
       "baseline": "9030",
-      "port-version": 1
+      "port-version": 0
     },
     "llfio": {
       "baseline": "2026-05-06",
