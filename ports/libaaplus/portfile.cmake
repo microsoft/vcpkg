@@ -1,10 +1,8 @@
-set(VERSION 2.36)
-
 vcpkg_download_distfile(
     ARCHIVE_FILE
     URLS "http://www.naughter.com/download/aaplus_v${VERSION}.zip"
     FILENAME "aaplus_v${VERSION}.zip"
-    SHA512 a7abf20feb49df00b95be987809a3dc8df3e9ff706dd5a873ecfdd695af125f858264e092b6b856e83685e9eb46fd46520cf09dfae892c32cbb71f925ba17b86
+    SHA512 d3a134f5d4be3e1652798c7d1fec2addcf07efb631e2c681ea40553a53a56615552f71bd5b123903ad849a2959c117cc9f7fe3a1d335c613ea14f931407107d6
 )
 
 vcpkg_extract_source_archive(
