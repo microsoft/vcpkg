@@ -10,7 +10,36 @@ add_library(lfs src/lfs.h src/lfs.c src/lfs.def)
 
 target_include_directories(lfs PRIVATE ${LFS_INCLUDES})
 target_link_libraries(lfs PRIVATE ${LFS_LIBRARIES})
-target_include_directories(lfs INTERFACE $<INSTALL_INTERFACE:include/luafilesystem>) 
+target_include_directories(lfs INTERFACE $<INSTALL_INTERFACE:include/luafilesystem>)
+
+# If BUILD_SHARED_LIBS is ON, then add_library() will build a DLL and we can copy that to lib/lua/
+# to be loaded by the Lua interpreter, otherwise the DLL as an extra target for that purpose.
+
+if(BUILD_SHARED_LIBS)
+  if(WIN32)
+    add_custom_command(TARGET lfs POST_BUILD
+      COMMAND "${CMAKE_COMMAND}" -E copy
+        "$<TARGET_FILE:lfs>"
+        "${CMAKE_INSTALL_PREFIX}/lib/lua/lfs.dll")
+  else()
+    add_custom_command(TARGET lfs POST_BUILD
+      COMMAND "${CMAKE_COMMAND}" -E copy
+        "$<TARGET_FILE:lfs>"
+        "${CMAKE_INSTALL_PREFIX}/lib/lua/lfs.so")
+  endif()
+else()
+  add_library(lfs-module MODULE src/lfs.h src/lfs.c src/lfs.def)
+
+  target_include_directories(lfs-module PRIVATE ${LFS_INCLUDES})
+  target_link_libraries(lfs-module PRIVATE ${LFS_LIBRARIES})
+
+  set_target_properties(lfs-module PROPERTIES OUTPUT_NAME "lfs")
+  set_target_properties(lfs-module PROPERTIES PREFIX "")
+
+  install(TARGETS lfs-module
+    RUNTIME DESTINATION lib/lua
+    LIBRARY DESTINATION lib/lua)
+endif()
 
 install(TARGETS lfs
     EXPORT "unofficial-${PROJECT_NAME}-targets"
