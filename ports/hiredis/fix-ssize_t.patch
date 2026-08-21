@@ -1,10 +1,11 @@
 diff --git a/hiredis.h b/hiredis.h
+index 3211c20..9d5c037 100644
 --- a/hiredis.h
 +++ b/hiredis.h
 @@ -40,6 +40,7 @@
  #else
  struct timeval; /* forward declaration */
- typedef long long ssize_t;
+ typedef intptr_t ssize_t;
 +#define _SSIZE_T_ /* for compatibility with libuv */
  #endif
  #include <stdint.h> /* uintXX_t, etc */
