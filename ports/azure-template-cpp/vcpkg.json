@@ -3,19 +3,20 @@
     "NOTE: All changes made to this file will get overwritten by the next port release.",
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
-  "name": "azure-storage-files-datalake-cpp",
-  "version-semver": "12.17.0-beta.2",
+  "name": "azure-template-cpp",
+  "version-semver": "1.1.0-beta.6733185",
   "description": [
-    "Microsoft Azure Storage Files Data Lake SDK for C++",
-    "This library provides Azure Storage Files Data Lake SDK."
+    "Microsoft Azure Template SDK for C++",
+    "This is a template library meant to illustrate initial client library development process for Azure SDK.",
+    "It is not meant to be published to vcpkg."
   ],
-  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/storage/azure-storage-files-datalake",
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/template/azure-template",
   "license": "MIT",
   "dependencies": [
     {
-      "name": "azure-storage-blobs-cpp",
+      "name": "azure-core-cpp",
       "default-features": false,
-      "version>=": "12.18.0"
+      "version>=": "1.3.1"
     },
     {
       "name": "vcpkg-cmake",

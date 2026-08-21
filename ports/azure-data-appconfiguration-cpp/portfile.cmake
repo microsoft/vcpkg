@@ -4,8 +4,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 8874c67b42f51814a50d89c9e2c22e2f29595cd2
-    SHA512 e4c51e7f457e29e1b9fdb2538ae14506cd033e4fb6700c952bbc8850dee846952107609238d537ce9bb5b7fc759477bfd05644f9c6e47ddb91239cd717496308
+    REF 030b1fcaea3dbdf83a726ab3e478890c81900e0c
+    SHA512 54b1c6118a5bcb8472743adde70df8879f912660afb049828f9b5ec988ad4139747d149ad70db88d9d4eec741bd96f41b1b07b192ddb33cace9a4b645c40ec87
     HEAD_REF main
 )
 
@@ -18,13 +18,13 @@ file(REMOVE_RECURSE ${unused})
 file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")
 file(REMOVE_RECURSE ${unused})
 
-if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core-amqp")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/core/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/core/azure-core-amqp" "${SOURCE_PATH}/sdk/core/_")
-  file(RENAME "${SOURCE_PATH}/sdk/core" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
@@ -33,7 +33,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DWARNINGS_AS_ERRORS=OFF
         -DBUILD_TESTING=OFF
-        -DDISABLE_RUST_IN_BUILD=ON
 )
 
 vcpkg_cmake_install()
