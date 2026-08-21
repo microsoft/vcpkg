@@ -6156,6 +6156,10 @@
       "baseline": "4.5.0",
       "port-version": 0
     },
+    "lightlib": {
+      "baseline": "0.1.4",
+      "port-version": 0
+    },
     "lightningscanner": {
       "baseline": "1.0.2",
       "port-version": 0
