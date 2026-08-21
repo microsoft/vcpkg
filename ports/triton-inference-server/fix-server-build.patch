@@ -57,15 +57,6 @@ index de46e97..1b9a535 100644
  
  # CUDA
  #
-@@ -113,7 +104,7 @@ target_compile_features(main PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
- target_compile_options(
-   main
-   PRIVATE
--    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Werror
-+    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations
- )
- 
- # Dependency from common.h
 @@ -139,7 +130,7 @@ set_target_properties(
      SKIP_BUILD_RPATH TRUE
      BUILD_WITH_INSTALL_RPATH TRUE
@@ -75,15 +66,6 @@ index de46e97..1b9a535 100644
  )
  
  target_link_libraries(
-@@ -333,7 +324,7 @@ if(${TRITON_ENABLE_HTTP}
-   target_compile_options(
-     http-endpoint-library
-     PRIVATE
--      -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized -Werror
-+      -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized
-   )
- 
-   set_target_properties(
 @@ -440,7 +431,7 @@ if(${TRITON_ENABLE_HTTP}
      http-endpoint-library
      PUBLIC
@@ -101,33 +83,6 @@ index de46e97..1b9a535 100644
  add_executable(
    simple
    simple.cc
-@@ -553,7 +545,7 @@ target_compile_features(simple PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
- target_compile_options(
-   simple
-   PRIVATE
--    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations -Werror
-+    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations
- )
- 
- set_target_properties(
-@@ -606,7 +598,7 @@ target_compile_features(multi_server PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
- target_compile_options(
-   multi_server
-   PRIVATE
--    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations -Werror
-+    -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations
- )
- 
- set_target_properties(
-@@ -660,7 +652,7 @@ if(${TRITON_ENABLE_GPU})
-   target_compile_options(
-     memory_alloc
-     PRIVATE
--      -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations -Werror
-+      -Wall -Wextra -Wno-type-limits -Wno-unused-parameter -Wno-deprecated-declarations
-   )
- 
-   set_target_properties(
 @@ -694,9 +686,4 @@ if(${TRITON_ENABLE_GPU})
      RUNTIME DESTINATION bin
    )
@@ -139,19 +94,6 @@ index de46e97..1b9a535 100644
 -add_subdirectory(test test)
 -
 +endif() # TRITON_ENABLE_EXAMPLES
-diff --git a/src/grpc/CMakeLists.txt b/src/grpc/CMakeLists.txt
-index 3560c95..a8e4331 100644
---- a/src/grpc/CMakeLists.txt
-+++ b/src/grpc/CMakeLists.txt
-@@ -41,7 +41,7 @@ target_compile_features(grpc-endpoint-library PRIVATE cxx_std_${TRITON_MIN_CXX_S
- target_compile_options(
-   grpc-endpoint-library
-   PRIVATE
--    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized -Werror
-+    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized
- )
- 
- set_target_properties(
 diff --git a/src/grpc/grpc_server.cc b/src/grpc/grpc_server.cc
 index 10da647..d9ceb61 100644
 --- a/src/grpc/grpc_server.cc

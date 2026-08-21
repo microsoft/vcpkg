@@ -1,16 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 90f7a23..91d54d8 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -129,7 +129,7 @@ target_compile_features(triton-core-serverstub PRIVATE cxx_std_${TRITON_MIN_CXX_
- target_compile_options(
-   triton-core-serverstub
-   PRIVATE
--    -Wall -Wextra -Wno-unused-parameter -Werror
-+    -Wall -Wextra -Wno-unused-parameter
- )
- 
- set_target_properties(
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 4c0bff2..9d4c308 100644
 --- a/src/CMakeLists.txt
@@ -54,15 +41,6 @@ index 4c0bff2..9d4c308 100644
  
  #
  # CUDA
-@@ -249,7 +247,7 @@ target_compile_features(triton-core PRIVATE cxx_std_${TRITON_MIN_CXX_STANDARD})
- target_compile_options(
-   triton-core
-   PRIVATE
--    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized -Werror
-+    -Wall -Wextra -Wno-unused-parameter -Wno-deprecated-declarations -Wno-error=maybe-uninitialized
- )
- set_target_properties(
-   triton-core
 @@ -518,5 +516,3 @@ install(
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
