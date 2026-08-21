@@ -8696,6 +8696,10 @@
       "baseline": "2022-02-03",
       "port-version": 0
     },
+    "randx": {
+      "baseline": "1.4.2",
+      "port-version": 0
+    },
     "rang": {
       "baseline": "3.3",
       "port-version": 0
