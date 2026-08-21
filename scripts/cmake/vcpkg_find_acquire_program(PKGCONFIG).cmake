@@ -1,21 +1,3 @@
-macro(z_vcpkg_find_acquire_pkgconfig_msys_declare_packages)
-    z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~2.5.1-1-any.pkg.tar.zst"
-        SHA512 ef9f466471f9f24b836fd553b75d046b93914fb57f15bcc048df04195e8f2086101459d42890a1f194cb7ea1ac0bc5058258cdc166c7579f95aa90d95f3406d6
-        PROVIDES mingw-w64-clang-aarch64-pkg-config
-    )
-    z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.5.1-1-any.pkg.tar.zst"
-        SHA512 2e604ccb004e2afa151e870112c95cab7106e43ee3cdfe67ac8815f3ec6754ccbc25211732eec8ac9ffe491071c63c9af18c8fa2bbfd6521a1b467bb11b1da03
-        PROVIDES mingw-w64-x86_64-pkg-config
-    )
-    z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~2.5.1-1-any.pkg.tar.zst"
-        SHA512 d3ad08e1f34b676d9b984fb294c08b8eb6519581670cf4a158790708cc2a7e58f25b8ef4cbb76df181a2ad4ad2a8de7fab08eb3a356b7dc12386be945d046af5
-        PROVIDES mingw-w64-i686-pkg-config
-    )
-endmacro()
-
 set(program_name pkg-config)
 if(DEFINED "ENV{PKG_CONFIG}")
     debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
@@ -24,35 +6,31 @@ if(DEFINED "ENV{PKG_CONFIG}")
     return()
 elseif(CMAKE_HOST_WIN32)
     if(NOT EXISTS "${PKGCONFIG}")
-        set(program_version 2.1.0)
+        set(program_name pkgconf)
+        set(program_version 3.0.5)
+
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(host_arch "$ENV{PROCESSOR_ARCHITEW6432}")
         else()
             set(host_arch "$ENV{PROCESSOR_ARCHITECTURE}")
         endif()
-
         if("${host_arch}" STREQUAL "ARM64")
-            vcpkg_acquire_msys(PKGCONFIG_ROOT
-                NO_DEFAULT_PACKAGES
-                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
-                PACKAGES mingw-w64-clang-aarch64-pkgconf
-            )
-            set("${program}" "${PKGCONFIG_ROOT}/clangarm64/bin/pkg-config.exe" CACHE INTERNAL "")
+            set(program_arch "arm64")
+            set(download_sha512 7511a3aa67685148445056fdd653da9a29ab92712fa298f8f449268ba322c0734d70e897f96c4d513763c4d32d2948bde3a62b2b3836266f0de5c3f9e61c7db9)
         elseif("${host_arch}" MATCHES "64")
-            vcpkg_acquire_msys(PKGCONFIG_ROOT
-                NO_DEFAULT_PACKAGES
-                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
-                PACKAGES mingw-w64-x86_64-pkgconf
-            )
-            set("${program}" "${PKGCONFIG_ROOT}/mingw64/bin/pkg-config.exe" CACHE INTERNAL "")
+            set(program_arch "x64")
+            set(download_sha512 ad92411159e2f7ec70c958dc0f499cce2fc4d501d0d2e89de0c20c3b7475b204ea4da0ded5fc9f09a2b1d3b8d2f132e441a7dd900becdaf735d54103f79971b7)
         else()
-            vcpkg_acquire_msys(PKGCONFIG_ROOT
-                NO_DEFAULT_PACKAGES
-                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
-                PACKAGES mingw-w64-i686-pkgconf
-            )
-            set("${program}" "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" CACHE INTERNAL "")
+            set(program_arch "x86")
+            set(download_sha512 7c8b4fb1abcf051a34a59e5b559204021a3db8cae5d83a88f1618bb9404d69ecdfc3266bb09468b9ce1d2cb6b114b00977470d2875352123a10d326490a83a57)
         endif()
+        set(download_urls "https://github.com/pkgconf/pkgconf/releases/download/pkgconf-${program_version}/pkgconf-${program_arch}-${program_version}.msi")
+        set(download_filename "pkgconf-${program_arch}-${program_version}.msi")
+        set(tool_subdirectory "${program_arch}-${program_version}")
+        set(paths_to_search
+            "${DOWNLOADS}/tools/pkgconf/${tool_subdirectory}/PFiles64/pkgconf ${program_version}"
+            "${DOWNLOADS}/tools/pkgconf/${tool_subdirectory}/PFiles/pkgconf ${program_version}"
+        )
     endif()
     set("${program}" "${${program}}" PARENT_SCOPE)
     return()
