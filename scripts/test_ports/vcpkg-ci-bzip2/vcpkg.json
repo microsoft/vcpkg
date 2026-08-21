@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-bzip2",
+  "version-string": "ci",
+  "description": "Validates the bzip2 CMake integration",
+  "dependencies": [
+    "bzip2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
