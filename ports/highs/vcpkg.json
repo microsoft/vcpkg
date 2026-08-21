@@ -19,6 +19,7 @@
   "features": {
     "extras": {
       "description": "Build the HiPO interior point solver, using OpenBLAS on Windows/Linux and Accelerate on macOS",
+      "license": "Apache-2.0",
       "dependencies": [
         {
           "name": "openblas",
