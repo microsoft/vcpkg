@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 c7296ea614ed61dd66b0a6fc0b5af104686dd3759064df48478147110b353d7def7396fb84b8f7ccca635ccf6bb86644cf1f890d983974c269512cb3cd475113
     HEAD_REF master
+    PATCHES fix-plugin-installation.patch
 )
 vcpkg_cmake_configure (
     SOURCE_PATH "${SOURCE_PATH}"
