@@ -3284,6 +3284,10 @@
       "baseline": "0.2.0",
       "port-version": 0
     },
+    "fuzztest": {
+      "baseline": "2026-02-19",
+      "port-version": 0
+    },
     "fuzzylite": {
       "baseline": "6.0",
       "port-version": 6
