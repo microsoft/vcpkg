@@ -44,6 +44,6 @@ install(FILES ${CMAKE_SOURCE_DIR}/src/ofbx.h
 
 install(
     EXPORT unofficial-openfbxTargets
-    NAMESPACE unoffical::openfbx::
+    NAMESPACE unofficial::openfbx::
     DESTINATION ${CMAKE_INSTALL_DATADIR}/unofficial-openfbx
 )
