@@ -4296,6 +4296,10 @@
       "baseline": "6.28.0",
       "port-version": 0
     },
+    "kcolorscheme": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kconfig": {
       "baseline": "6.28.0",
       "port-version": 0
