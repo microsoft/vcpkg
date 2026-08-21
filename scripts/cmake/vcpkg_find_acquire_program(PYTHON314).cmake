@@ -26,16 +26,13 @@ if(CMAKE_HOST_WIN32)
         set(download_sha512 71c1ce33aa484935306b1a24c75b26193463bb475aa6e1c0f94767649caa22a862c49b2eb341d21f3d8428ae0e4243d5cae1488a83f9f598e23678ee8c548ad8)
     endif()
 
-    # Remove this after the next update
-    string(APPEND tool_subdirectory "-1")
-
     set(paths_to_search "${DOWNLOADS}/tools/python/${tool_subdirectory}")
 
     vcpkg_list(SET post_install_command
         "${CMAKE_COMMAND}" "-DPYTHON_DIR=${paths_to_search}" "-DPYTHON_VERSION=${program_version}" -P "${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_make_python_less_embedded.cmake"
     )
 else()
-    set(program_name python3)
-    set(brew_package_name "python")
-    set(apt_package_name "python3")
+    set(program_name python3.14)
+    set(brew_package_name "python@3.14")
+    set(apt_package_name "python3.14")
 endif()
