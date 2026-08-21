@@ -3100,6 +3100,10 @@
       "baseline": "2.4",
       "port-version": 1
     },
+    "flashaccept": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "flashlight-cpu": {
       "baseline": "0.3",
       "port-version": 5
