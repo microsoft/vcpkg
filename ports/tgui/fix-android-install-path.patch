@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -228,9 +228,6 @@ if(TGUI_OS_ANDROID)
+     if(CMAKE_ANDROID_API LESS 19)
+         message(FATAL_ERROR "Android API level (${CMAKE_ANDROID_API}) must be equal or greater than 19.")
+     endif()
+-
+-    # We install libs in a subdirectory named after the ABI (e.g. lib/armeabi/libtgui.so)
+-    set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}/${CMAKE_ANDROID_ARCH_ABI}")
+ endif()
+
+ # Add an option to choose whether PDB debug symbols should be generated for Visual Studio
