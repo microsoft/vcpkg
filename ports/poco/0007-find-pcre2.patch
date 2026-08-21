@@ -8,7 +8,8 @@ index cb29e69..8ff6332 100644
  if(POCO_UNBUNDLED)
 -	find_package(PCRE2 REQUIRED)
 +	find_package(PCRE2 CONFIG REQUIRED COMPONENTS 8BIT)
- 	find_package(ZLIB REQUIRED)
+-	find_package(ZLIB REQUIRED)
++	find_package(ZLIB CONFIG REQUIRED)
 -	find_package(Utf8Proc REQUIRED)
 +	find_package(utf8proc CONFIG REQUIRED)
  
