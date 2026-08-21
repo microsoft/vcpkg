@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8a1ce4b..71d07bf 100644
+index 3968eaa..eb9d6d7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -842,8 +842,9 @@ if(enable-examples)
+@@ -850,8 +850,9 @@ if(enable-examples)
  add_subdirectory( examples )
  endif()
  if(NOT WIN32)
@@ -14,7 +14,7 @@ index 8a1ce4b..71d07bf 100644
  endif(NOT enable-lgpl)
  
 diff --git a/fonts/CMakeLists.txt b/fonts/CMakeLists.txt
-index f529c18..aba1bc3 100644
+index 124c94e..2369887 100644
 --- a/fonts/CMakeLists.txt
 +++ b/fonts/CMakeLists.txt
 @@ -1,8 +1,20 @@
@@ -36,7 +36,7 @@ index f529c18..aba1bc3 100644
  target_link_libraries(make_bin ${MGL_DEP_LIBS})
 +endif()
  
- set(MGL_FONTS STIX adventor  bonum  cursor  heroscn  heros  pagella  schola  termes)
+ set(MGL_FONTS STIX adventor  bonum  cursor  heroscn  heros  pagella  schola  termes STIX2 NotoSansCJK NotoSerifCJK)
  set(MGL_FONTS_BIN )
 diff --git a/fonts/make_bin.cpp b/fonts/make_bin.cpp
 index 73d0adb..e0158be 100644
