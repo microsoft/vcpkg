@@ -16,10 +16,24 @@ vcpkg_check_features(
         extras HIPO
 )
 
+set(HIGHS_EXTRAS_BLAS_OPTIONS "")
+if("extras" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+    # HiGHS's own BLAS discovery (cmake/FindHipoDeps.cmake) prefers OpenBLAS's
+    # own CMake package over the generic find_package(BLAS) module whenever
+    # it can find one, which would leave highs_extras linked against
+    # OpenBLAS::OpenBLAS instead of the BLAS::BLAS target that vcpkg's "blas"
+    # port (and thus any consumer's find_package(highs)) resolves. Forcing a
+    # non-empty BLA_VENDOR here skips that preferential lookup so the build
+    # goes through find_package(BLAS) instead, which the "blas" port's
+    # vcpkg-cmake-wrapper.cmake intercepts and resolves consistently.
+    list(APPEND HIGHS_EXTRAS_BLAS_OPTIONS -DBLA_VENDOR=OpenBLAS)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${HIGHS_EXTRAS_BLAS_OPTIONS}
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
