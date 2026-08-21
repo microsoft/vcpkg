@@ -6738,7 +6738,7 @@
     },
     "mongo-c-driver": {
       "baseline": "2.3.1",
-      "port-version": 1
+      "port-version": 2
     },
     "mongo-cxx-driver": {
       "baseline": "4.4.0",
@@ -7962,7 +7962,7 @@
     },
     "poco": {
       "baseline": "1.14.1",
-      "port-version": 2
+      "port-version": 3
     },
     "podofo": {
       "baseline": "1.1.1",
