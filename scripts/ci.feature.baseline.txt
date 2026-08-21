@@ -1077,7 +1077,6 @@ plplot[x11]:x64-windows=cascade
 plplot[x11]:x86-windows=cascade
 pmdk:x64-windows-static=fail
 poco[core,mariadb,mysql]=options # You can not install mariadb and mysql at the same time
-poco[mysql]:x86-windows=cascade
 poco[odbc]:arm64-linux=feature-fails
 poco[pdf]:arm64-linux=cascade
 poppler[qt]:arm64-linux=cascade
