@@ -3132,6 +3132,10 @@
       "baseline": "0.6.3",
       "port-version": 0
     },
+    "flatcitybuf": {
+      "baseline": "0.9.0",
+      "port-version": 0
+    },
     "flecs": {
       "baseline": "4.1.6",
       "port-version": 0
