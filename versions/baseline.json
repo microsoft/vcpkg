@@ -6698,7 +6698,7 @@
     },
     "minizip-ng": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "minmea": {
       "baseline": "1.0.0",
