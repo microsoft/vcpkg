@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index da1917e..2b25abe 100644
+index da1917e..d385e46 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -17,10 +17,13 @@ option(BUILD_EXAMPLES "Build examples" ON)
@@ -7,7 +7,7 @@ index da1917e..2b25abe 100644
  include(CMakePackageConfigHelpers)
  
 -if(NOT CMAKE_HOST_WIN32)
-+find_library(MATH_LIBRARY_PATH m)
++find_library(MATH_LIBRARY_PATH NAMES m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
 +if(MATH_LIBRARY_PATH)
      set(MATH_LIBRARY "m")
 +    set(LIBS "-lm")
