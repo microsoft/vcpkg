@@ -1,0 +1,14 @@
+diff --git a/cmake/macros.cmake b/cmake/macros.cmake
+index 4822ad4..dfd5517 100644
+--- a/cmake/macros.cmake
++++ b/cmake/macros.cmake
+@@ -193,9 +193,6 @@ endmacro(PDAL_ADD_PLUGIN)
+ #    INCLUDES header file directories
+ #
+ 
+-if(NOT TARGET GTest::gtest)
+-    include (${PDAL_CMAKE_DIR}/gtest.cmake)
+-endif()
+ 
+ macro(PDAL_ADD_TEST _name)
+ 
