@@ -10665,7 +10665,7 @@
       "port-version": 0
     },
     "vcpkg-boost": {
-      "baseline": "2025-03-29",
+      "baseline": "2026-08-21",
       "port-version": 0
     },
     "vcpkg-cmake": {
