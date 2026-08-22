@@ -43,6 +43,11 @@ jobs:
             merge_base=$(git merge-base "$target_branch_commit" "$incoming_branch_commit")
           fi
 
+          git diff --name-only --no-renames --diff-filter=AM --merge-base HEAD^ HEAD | sed -nE 's|^(ports/[^/]+)/.*|\1|p; /^ports\//!p' | sort -u > .github-pr.changed-crlf-paths
+          while IFS= read -r changed_path; do
+            git grep -In $'\r$' -- "$changed_path" ':(exclude,glob)**/*.diff' ':(exclude,glob)**/*.patch' || true
+          done < .github-pr.changed-crlf-paths | awk -F: '!seen[$1]++ { print $1 ":" $2 }' | sort -u > .github-pr.crlf-lines
+
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
           if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
           if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_install_cmake|vcpkg_build_cmake|vcpkg_configure_cmake|vcpkg_fixup_cmake_targets)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-cmake; else touch .github-pr.deprecated-cmake; fi
@@ -114,8 +119,38 @@ jobs:
             const deprecated_cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).split('\n').filter(s => s.length > 0)
             const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
             const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).split('\n').filter(s => s.length > 0)
+            const crlf_lines = (await fs.readFile('.github-pr.crlf-lines', 'utf8')).split('\n').filter(s => s.length > 0).map(location => {
+              const separatorIndex = location.lastIndexOf(':');
+              return {file: location.slice(0, separatorIndex), line: Number(location.slice(separatorIndex + 1))};
+            })
 
             let approve = true;
+            if (crlf_lines.length > 0) {
+              const crlf_files = crlf_lines.map(({file}) => file);
+              const fix_crlf = 'To fix this in VS Code, click "CRLF" in the status bar, select "LF", and save the file.';
+              const quote_bash = value => `'${value.replaceAll("'", "'\"'\"'")}'`;
+              const quote_powershell = value => "'" + value.replaceAll("'", "''") + "'";
+              const bash_fix = `dos2unix -- ${crlf_files.map(quote_bash).join(' ')}`;
+              const powershell_fix = '@(' + crlf_files.map(quote_powershell).join(', ') + ') | ForEach-Object {\n    [IO.File]::WriteAllText($_, [IO.File]::ReadAllText($_).Replace("`r`n", "`n"))\n}';
+              core.error(`Non-patch files associated with this change must use LF line endings. ${fix_crlf} Copy-pasteable terminal commands are in the workflow summary.`);
+              core.summary.addHeading('Incorrect line endings', 3);
+              core.summary.addRaw('Non-patch files associated with this change must use LF line endings:');
+              core.summary.addEOL();
+              core.summary.addList(crlf_files);
+              core.summary.addRaw(fix_crlf);
+              core.summary.addEOL();
+              core.summary.addEOL();
+              core.summary.addRaw('Alternately, you can fix by running the following bash on a machine with dos2unix installed:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(bash_fix, 'bash');
+              core.summary.addRaw('Alternately, you can fix by running the following PowerShell block:');
+              core.summary.addEOL();
+              core.summary.addCodeBlock(powershell_fix, 'powershell');
+              for (const {file, line} of crlf_lines) {
+                core.error(`This file contains CRLF line endings. ${fix_crlf} Copy-pasteable terminal commands are in the workflow summary.`, {file, startLine: line});
+              }
+              approve = false;
+            }
             if (format !== "") {
               var format_output = '';
               format_output += "All vcpkg.json files and baselines must be formatted. To fix this problem, run:\n";
