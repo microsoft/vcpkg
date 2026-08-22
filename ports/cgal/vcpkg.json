@@ -1,9 +1,10 @@
 {
   "name": "cgal",
   "version": "6.2",
+  "port-version": 1,
   "description": "The Computational Geometry Algorithms Library (CGAL) is a C++ library that aims to provide easy access to efficient and reliable algorithms in computational geometry.",
   "homepage": "https://github.com/CGAL/cgal",
-  "license": "GPL-3.0-or-later AND LGPL-3.0-or-later AND BSL-1.0",
+  "license": "GPL-3.0-or-later AND LGPL-3.0-or-later AND BSL-1.0 AND MIT",
   "supports": "!xbox",
   "dependencies": [
     "boost-accumulators",
@@ -63,16 +64,53 @@
     "zlib"
   ],
   "features": {
-    "qt": {
-      "description": "Qt GUI support for CGAL",
+    "ceres": {
+      "description": "Ceres Solver integration for nonlinear least-squares optimization in mesh processing algorithms",
       "dependencies": [
-        "eigen3",
+        "ceres"
+      ]
+    },
+    "eigen3": {
+      "description": "Eigen3 library integration",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "openmesh": {
+      "description": "OpenMesh library integration",
+      "dependencies": [
+        "openmesh"
+      ]
+    },
+    "qt": {
+      "description": "Qt GUI support",
+      "dependencies": [
         {
           "name": "qtbase",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "qt-svg": {
+      "description": "SVG icon support for the Qt GUI feature",
+      "dependencies": [
+        {
+          "name": "cgal",
+          "default-features": false,
+          "features": [
+            "qt"
+          ]
         },
-        "qtdeclarative",
         "qtsvg"
+      ]
+    },
+    "tbb": {
+      "description": "Intel TBB support for parallel algorithms",
+      "dependencies": [
+        "tbb"
       ]
     }
   }
