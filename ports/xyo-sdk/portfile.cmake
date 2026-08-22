@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xyo-financial/sdk-cpp
     REF "v${VERSION}"
-    SHA512 812b3efb9f1b5455913efa7ee3c83b1d59e36e2a3f59ed1353aa67deda89f6dfdfe9765ec1e26bfaea706e3349e726ff689ccf24efa457532a4f5900a951376c
+    SHA512 d19529c9a1b2560ad41f8e08957221e49d92ba24aba8a5ecd911c71364abb98ec5c3b0770a148fdc0f59850ecc0b4abe1b378ee8f460b5f57745f4629f88a7ee
     HEAD_REF main
 )
 
