@@ -6313,7 +6313,7 @@
       "port-version": 0
     },
     "luajit": {
-      "baseline": "2026-08-03",
+      "baseline": "2026-08-19",
       "port-version": 0
     },
     "luasec": {
