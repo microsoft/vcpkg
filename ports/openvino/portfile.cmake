@@ -110,7 +110,7 @@ if(ENABLE_INTEL_NPU)
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_download_distfile(
             NPU_PLUGIN_COMPILER_ARCHIVE
             URLS "https://storage.openvinotoolkit.org/dependencies/thirdparty/windows/npu_compiler/npu_compiler_vcl_windows_2022-8_2_0-9802763.zip"
@@ -171,7 +171,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
-if(ENABLE_INTEL_NPU AND VCPKG_TARGET_IS_WINDOWS)
+if(ENABLE_INTEL_NPU AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB_RECURSE openvino_built_dlls "${CURRENT_PACKAGES_DIR}/*.dll")
     list(FILTER openvino_built_dlls EXCLUDE REGEX "/openvino_intel_npu_(compiler|compiler_loader|vm_runtime)\\.dll$")
     vcpkg_copy_pdbs(BUILD_PATHS ${openvino_built_dlls})
