@@ -1,7 +1,6 @@
 {
   "name": "zlmediakit",
-  "version-date": "2024-09-29",
-  "port-version": 1,
+  "version-date": "2026-08-21",
   "description": "A high-performance carrier-grade streaming media service framework based on C++11.",
   "homepage": "https://github.com/ZLMediaKit/ZLMediaKit",
   "license": "MIT",
