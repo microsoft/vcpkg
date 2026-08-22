@@ -1,0 +1,33 @@
+diff --git a/bdftruncate.c b/bdftruncate.c
+index 815d2ef..d344ef2 100644
+--- a/bdftruncate.c
++++ b/bdftruncate.c
+@@ -42,7 +42,13 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-
++#if defined(_MSC_VER)
++# if defined(_M_X64) || defined(_M_ARM64)
++#  define SSIZE_MAX LLONG_MAX
++# else
++#  define SSIZE_MAX LONG_MAX
++# endif
++#endif
+ #ifndef __has_attribute
+ # define __has_attribute(x) 0  /* Compatibility with older compilers. */
+ #endif
+diff --git a/ucs2any.c b/ucs2any.c
+index 33c018d..c673197 100644
+--- a/ucs2any.c
++++ b/ucs2any.c
+@@ -51,7 +51,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ 
+ /* global variable for argv[0] */
+ static const char *my_name = NULL;

@@ -1,0 +1,25 @@
+{
+  "name": "ompl",
+  "version": "1.7.0",
+  "description": "The Open Motion Planning Library, consists of many state-of-the-art sampling-based motion planning algorithms",
+  "homepage": "https://ompl.kavrakilab.org/",
+  "supports": "!(static & staticcrt) | (windows & !mingw)",
+  "dependencies": [
+    "boost-filesystem",
+    "boost-graph",
+    "boost-math",
+    "boost-odeint",
+    "boost-program-options",
+    "boost-serialization",
+    "boost-system",
+    "eigen3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

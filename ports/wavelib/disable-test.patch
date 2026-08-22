@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e2e8a4d..d228001 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,7 +48,6 @@ endif()
+ 
+ add_subdirectory(src)
+ add_subdirectory(auxiliary)
+-add_subdirectory(test) 
+ 
+ install(DIRECTORY ${WAVELIB_SRC_ROOT}/header/
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

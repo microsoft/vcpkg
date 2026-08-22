@@ -1,0 +1,8 @@
+trieste provides CMake targets:
+
+  find_package(trieste CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE trieste::trieste)
+
+  # Targets provided by trieste[parsers]:
+  target_link_libraries(main PRIVATE trieste::json)
+  target_link_libraries(main PRIVATE trieste::yaml)

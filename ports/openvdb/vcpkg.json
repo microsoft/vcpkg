@@ -1,0 +1,66 @@
+{
+  "name": "openvdb",
+  "version": "12.0.1",
+  "description": "Sparse volume data structure and tools",
+  "homepage": "https://www.openvdb.org",
+  "license": "Apache-2.0",
+  "supports": "!xbox",
+  "dependencies": [
+    "blosc",
+    "boost-any",
+    "boost-date-time",
+    "boost-interprocess",
+    "boost-iostreams",
+    "boost-ptr-container",
+    "boost-system",
+    "boost-thread",
+    "boost-uuid",
+    "imath",
+    "openexr",
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "ax": {
+      "description": "Provides a powerful and easy way of interacting with OpenVDB volume and point data.",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false
+        }
+      ]
+    },
+    "nanovdb": {
+      "description": "A lightweight GPU friendly version of VDB initially targeting rendering applications",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "nanovdb-tools": {
+      "description": "NanoVDB tools: print, validate, and convert.",
+      "dependencies": [
+        {
+          "name": "openvdb",
+          "features": [
+            "nanovdb"
+          ]
+        }
+      ]
+    },
+    "tools": {
+      "description": "OpenVDB utilities: view, print and render",
+      "dependencies": [
+        "glew",
+        "glfw3"
+      ]
+    }
+  }
+}

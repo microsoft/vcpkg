@@ -1,0 +1,41 @@
+diff --git a/contrib/minizip/CMakeLists.txt b/contrib/minizip/CMakeLists.txt
+index 80ccf99..e9e03b9 100644
+--- a/contrib/minizip/CMakeLists.txt
++++ b/contrib/minizip/CMakeLists.txt
+@@ -64,6 +64,7 @@ endif(NOT DEFINED ZLIB_BUILD_MINIZIP)
+ 
+ if(MINIZIP_ENABLE_BZIP2)
+     find_package(BZip2 REQUIRED)
++    string(APPEND MINIZIP_REQUIRES bzip2)
+ endif(MINIZIP_ENABLE_BZIP2)
+ 
+ #
+@@ -274,6 +275,17 @@ if(MINIZIP_INSTALL)
+         FILES ${LIBMINIZIP_HDRS}
+         COMPONENT Development
+         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++
++    set(prefix "${CMAKE_INSTALL_PREFIX}")
++    set(exec_prefix "\${prefix}")
++    set(libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
++    set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
++    set(PACKAGE_VERSION "${minizip_VERSION}")
++    configure_file(
++        ${minizip_SOURCE_DIR}/minizip.pc.in
++        ${minizip_BINARY_DIR}/minizip.pc)
++    install(FILES ${minizip_BINARY_DIR}/minizip.pc
++            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endif(MINIZIP_INSTALL)
+ 
+ if(MINIZIP_BUILD_TESTING)
+diff --git a/contrib/minizip/minizip.pc.in b/contrib/minizip/minizip.pc.in
+index 17eb6a9..eac7df5 100644
+--- a/contrib/minizip/minizip.pc.in
++++ b/contrib/minizip/minizip.pc.in
+@@ -9,5 +9,5 @@ Requires:
+ Version: @PACKAGE_VERSION@
+ License: Zlib
+ Libs: -L${libdir} -lminizip
+-Libs.private: -lz
++Requires.private: zlib @MINIZIP_REQUIRES@
+ Cflags: -I${includedir}

@@ -1,0 +1,13 @@
+diff --git a/nspr/config/nspr-config.in b/nspr/config/nspr-config.in
+index 2cb62a0..6db7aa3 100755
+--- a/nspr/config/nspr-config.in
++++ b/nspr/config/nspr-config.in
+@@ -136,7 +136,7 @@ if test "$echo_libs" = "yes"; then
+       if test -n "$lib_nspr"; then
+ 	libdirs="$libdirs -lnspr${major_version}"
+       fi
+-      os_ldflags="@LDFLAGS@"
++      os_ldflags=""
+       for i in $os_ldflags ; do
+ 	if echo $i | grep \^-L >/dev/null; then
+ 	  libdirs="$libdirs $i"

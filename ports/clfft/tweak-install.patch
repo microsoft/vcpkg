@@ -1,0 +1,28 @@
+diff --git a/src/clFFTConfig.cmake.in b/src/clFFTConfig.cmake.in
+index 5b58c35..ee749a2 100644
+--- a/src/clFFTConfig.cmake.in
++++ b/src/clFFTConfig.cmake.in
+@@ -1,3 +1,3 @@
+ include(${CMAKE_CURRENT_LIST_DIR}/clFFTTargets.cmake)
+-get_filename_component(CLFFT_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/@reldir@/include ABSOLUTE)
++get_filename_component(CLFFT_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/@reldir@/../include ABSOLUTE)
+ set(CLFFT_LIBRARIES clFFT)
+diff --git a/src/library/CMakeLists.txt b/src/library/CMakeLists.txt
+index 132ef86..12ba905 100644
+--- a/src/library/CMakeLists.txt
++++ b/src/library/CMakeLists.txt
+@@ -90,6 +90,7 @@ target_link_libraries( clFFT ${OPENCL_LIBRARIES} ${CMAKE_DL_LIBS} )
+ set_target_properties( clFFT PROPERTIES VERSION ${CLFFT_VERSION} )
+ set_target_properties( clFFT PROPERTIES SOVERSION ${CLFFT_SOVERSION} )
+ set_target_properties( clFFT PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/staging" )
++set_target_properties( clFFT PROPERTIES INTERFACE_INCLUDE_DIRECTORIES $<INSTALL_INTERFACE:include> )
+ 
+ if( CMAKE_COMPILER_IS_GNUCC )
+     configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/clFFT.pc.in
+@@ -104,5 +105,5 @@ install( TARGETS clFFT
+         EXPORT Library
+         RUNTIME DESTINATION bin${SUFFIX_BIN}
+         LIBRARY DESTINATION lib${SUFFIX_LIB}
+-        ARCHIVE DESTINATION lib${SUFFIX_LIB}/import
++        ARCHIVE DESTINATION lib${SUFFIX_LIB}
+         )

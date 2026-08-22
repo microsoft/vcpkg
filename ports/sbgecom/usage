@@ -1,0 +1,4 @@
+sbgECom provides CMake targets:
+
+find_package(sbgECom CONFIG REQUIRED)
+target_link_libraries(main PRIVATE sbgECom::sbgECom)

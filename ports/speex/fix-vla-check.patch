@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index d94c2fe..b813148 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -37,7 +37,7 @@ AC_C_RESTRICT
+ 
+ 
+ AC_MSG_CHECKING(for C99 variable-size arrays)
+-+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[
+ int foo;
+ foo = 10;
+ int array[foo];

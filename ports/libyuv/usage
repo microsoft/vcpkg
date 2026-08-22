@@ -1,0 +1,5 @@
+libyuv provides CMake targets:
+
+  # Unofficial config package and target from vcpkg
+  find_package(libyuv CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE yuv)

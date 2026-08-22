@@ -1,0 +1,11 @@
+# BLA_VENDOR and BLA_STATIC are documented at:
+# * https://cmake.org/cmake/help/latest/module/FindBLAS.html
+# * https://cmake.org/cmake/help/latest/module/FindLAPACK.html
+
+set(BLA_VENDOR @BLA_VENDOR@)
+set(BLA_STATIC @BLA_STATIC@)
+set(BLA_PREFER_PKGCONFIG ON)
+_find_package(${ARGS})
+unset(BLA_VENDOR)
+unset(BLA_STATIC)
+unset(BLA_PREFER_PKGCONFIG)

@@ -1,0 +1,19 @@
+--- a/meson.build
++++ b/meson.build
+@@ -90,8 +90,14 @@
+   gdk_pixbuf_conf.set('HAVE_ROUND', 1)
+ endif
+ 
+-if cc.has_function('lrint', dependencies: mathlib_dep)
+-  gdk_pixbuf_conf.set('HAVE_LRINT', 1)
++if cc.get_id() == 'msvc'
++    if cc.has_function('lrint', dependencies: mathlib_dep, args: '-Oi-')
++        gdk_pixbuf_conf.set('HAVE_LRINT', 1)
++    endif
++else
++    if cc.has_function('lrint', dependencies: mathlib_dep)
++      gdk_pixbuf_conf.set('HAVE_LRINT', 1)
++    endif
+ endif
+ 
+ intl_dep = cc.find_library('intl', required: false)

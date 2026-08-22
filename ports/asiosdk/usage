@@ -1,0 +1,4 @@
+asiosdk provides CMake targets:
+
+    find_package(unofficial-asiosdk CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::asiosdk::host)

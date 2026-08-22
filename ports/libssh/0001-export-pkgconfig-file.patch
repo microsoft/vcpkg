@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 474437f..1e5adfe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,11 +41,13 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
+ # Copy library files to a lib sub-directory
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+ 
++set(LIBSSH_PC_LIBS_PRIVATE "")
+ set(LIBSSSH_PC_REQUIRES_PRIVATE "")
+ 
+ # search for libraries
+ if (WITH_ZLIB)
+     find_package(ZLIB REQUIRED)
++    string(APPEND LIBSSH_PC_REQUIRES_PRIVATE "zlib")
+ endif (WITH_ZLIB)
+ 
+ if (WITH_GCRYPT)
+@@ -55,6 +57,7 @@ elseif(WITH_MBEDTLS)
+     find_package(MbedTLS REQUIRED)
+ else()
+   find_package(OpenSSL 1.1.1 REQUIRED)
++  string(APPEND LIBSSH_PC_REQUIRES_PRIVATE " libcrypto")
+ endif()
+ 
+ if (UNIT_TESTING)
+@@ -109,7 +112,7 @@ add_subdirectory(include)
+ add_subdirectory(src)
+ 
+ # pkg-config file
+-if (UNIX OR MINGW)
++if (1)
+ configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc @ONLY)
+ install(
+   FILES
+@@ -119,7 +122,7 @@ install(
+   COMPONENT
+     pkgconfig
+ )
+-endif (UNIX OR MINGW)
++endif (1)
+ 
+ # CMake config files
+ include(CMakePackageConfigHelpers)
+diff --git a/libssh.pc.cmake b/libssh.pc.cmake
+index 970db5e..df65d5d 100644
+--- a/libssh.pc.cmake
++++ b/libssh.pc.cmake
+@@ -9,3 +9,4 @@ Version: @PROJECT_VERSION@
+ Libs: -L${libdir} -lssh
+ Cflags: -I${includedir}
+ Requires.private: @LIBSSH_PC_REQUIRES_PRIVATE@
++Libs.private: @LIBSSH_PC_LIBS_PRIVATE@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a46f585..691df37 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -54,6 +54,8 @@ if (MINGW AND Threads_FOUND)
+     ${LIBSSH_LINK_LIBRARIES}
+     Threads::Threads
+   )
++  string(APPEND LIBSSH_PC_LIBS_PRIVATE " ${CMAKE_THREAD_LIBS_INIT}")
++  set(LIBSSH_PC_LIBS_PRIVATE "${LIBSSH_PC_LIBS_PRIVATE}" PARENT_SCOPE)
+ endif()
+ 
+ if (HAVE_LIBFIDO2)
+@@ -76,6 +78,8 @@ if (WIN32)
+     iphlpapi
+     ws2_32
+   )
++  string(APPEND LIBSSH_PC_LIBS_PRIVATE " -liphlpapi -lws2_32 -lshell32 -ladvapi32")
++  set(LIBSSH_PC_LIBS_PRIVATE "${LIBSSH_PC_LIBS_PRIVATE}" PARENT_SCOPE)
+ endif (WIN32)
+ 
+ if (BUILD_STATIC_LIB)

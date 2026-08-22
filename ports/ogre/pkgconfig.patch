@@ -1,0 +1,30 @@
+diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
+index cc8b28b..1d68c09 100644
+--- a/CMake/InstallResources.cmake
++++ b/CMake/InstallResources.cmake
+@@ -299,6 +299,13 @@ if (UNIX OR MINGW)
+     else()
+       set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} ${FreeImage_LIBRARY_REL}")
+     endif()
++    set(PC_REQUIRES_STATIC "")
++    if(OGRE_BUILD_COMPONENT_OVERLAY)
++      string(APPEND PC_REQUIRES_STATIC " freetype2")
++    endif()
++    if(X11_X11_LIB)
++      string(APPEND PC_REQUIRES_STATIC " x11 xt xaw7 gl")
++    endif()
+     configure_file(${OGRE_TEMPLATES_DIR}/OGREStatic.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/OGRE.pc @ONLY)
+   else ()
+     configure_file(${OGRE_TEMPLATES_DIR}/OGRE.pc.in ${PROJECT_BINARY_DIR}/pkgconfig/OGRE.pc @ONLY)
+diff --git a/CMake/Templates/OGREStatic.pc.in b/CMake/Templates/OGREStatic.pc.in
+index ff3c7c8..b3024c1 100644
+--- a/CMake/Templates/OGREStatic.pc.in
++++ b/CMake/Templates/OGREStatic.pc.in
+@@ -8,6 +8,6 @@ Name: OGRE (static lib)
+ Description: Object-Oriented Graphics Rendering Engine
+ Version: @OGRE_VERSION@
+ URL: http://www.ogre3d.org
+-Requires: freetype2, zziplib, gl, x11, xt, xaw7, wayland
++Requires: @PC_REQUIRES_STATIC@
+ Libs: -L${libdir} -L${plugindir} -lOgreMain@OGRE_LIB_SUFFIX@ @OGRE_ADDITIONAL_LIBS@
+ Cflags: -I${includedir} -I${includedir}/OGRE @OGRE_CFLAGS@

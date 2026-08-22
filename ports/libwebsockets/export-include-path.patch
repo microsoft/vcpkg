@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e067e99..35dbddd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1230,8 +1230,8 @@ file(RELATIVE_PATH
+     "${LWS_ABSOLUTE_INSTALL_CMAKE_DIR}"
+     "${LWS_ABSOLUTE_INSTALL_INCLUDE_DIR}") # Calculate the relative directory from the cmake dir.
+ 
+-if (DEFINED REL_INCLUDE_DIR)
+-    set(LWS__INCLUDE_DIRS "\${LWS_CMAKE_DIR}/${REL_INCLUDE_DIR}")
++if (1)
++	set(LWS__INCLUDE_DIRS "\${CMAKE_CURRENT_LIST_DIR}/../include")
+ endif()
+ if (DEFINED OPENSSL_INCLUDE_DIRS)
+ 	set(LWS__INCLUDE_DIRS "${LWS__INCLUDE_DIRS};${OPENSSL_INCLUDE_DIRS}")

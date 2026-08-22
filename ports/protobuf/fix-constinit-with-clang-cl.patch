@@ -1,0 +1,14 @@
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index a512b4843..31f1f5a12 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -678,6 +678,9 @@ static_assert(PROTOBUF_ABSL_MIN(20230125, 3),
+ #  define PROTOBUF_CONSTINIT
+ #  define PROTOBUF_CONSTEXPR constexpr
+ # endif
++#elif defined(_MSC_VER)  && defined(__clang__)
++#  define PROTOBUF_CONSTINIT
++#  define PROTOBUF_CONSTEXPR constexpr
+ #else
+ # if defined(__cpp_constinit) && !defined(__CYGWIN__)
+ #  define PROTOBUF_CONSTINIT constinit

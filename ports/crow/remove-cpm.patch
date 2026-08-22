@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 51fade9..dc0227d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,8 +11,6 @@ project(Crow
+ 
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+-# Make sure Findasio.cmake module is found
+-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+ 
+ # Check if Crow is the main project
+ set(CROW_IS_MAIN_PROJECT OFF)
+@@ -328,7 +326,6 @@ if(CROW_INSTALL)
+ 		INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Crow"
+ 	)
+ 	install(FILES
+-		"${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findasio.cmake"
+ 		"${CMAKE_CURRENT_BINARY_DIR}/CrowConfig.cmake"
+ 		DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Crow"
+ 	)

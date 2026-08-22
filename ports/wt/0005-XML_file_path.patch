@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96eff0a..c31fd49 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -111,7 +111,11 @@ SET(CMAKE_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake" CACHE STRING
+ 
+ IF(WIN32)
+ 
+-  SET(RUNDIR "c:/witty") # Does not apply to win32
++  if (NOT INSTALL_CONFIG_FILE_PATH)
++    SET(RUNDIR "c:/witty") # Does not apply to win32
++  else()
++    SET(RUNDIR ${INSTALL_CONFIG_FILE_PATH}) # Does not apply to win32
++  endif()
+ 
+   IF(NOT DEFINED CONFIGDIR)
+     SET(CONFIGDIR ${RUNDIR} CACHE STRING "Path for the configuration files")

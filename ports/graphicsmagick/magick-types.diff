@@ -1,0 +1,13 @@
+diff --git a/magick/magick_types.h.in b/magick/magick_types.h.in
+index 106ac97..a9f8a9a 100644
+--- a/magick/magick_types.h.in
++++ b/magick/magick_types.h.in
+@@ -108,8 +108,6 @@ extern "C" {
+ #  define MAGICK_SIZE_T unsigned long
+ #  define MAGICK_SSIZE_T_F ""
+ #  define MAGICK_SSIZE_T int
+-  typedef long magick_ptrdiff_t
+-  typedef unsigned long magick_uintptr_t;
+ #  endif // defined(WIN64)
+ 
+ #endif /* if defined(MAGICK_IMPLEMENTATION) */

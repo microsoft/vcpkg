@@ -1,0 +1,15 @@
+diff --git a/src/meson.build b/src/meson.build
+index 35ece7e..8837c5c 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -3,7 +3,9 @@ src_inc = include_directories('.')
+ ldflags = cc.get_supported_link_arguments('-Wl,--version-script,@0@'.format(symbol_map))
+ 
+ subdir('polkit')
+-if not get_option('libs-only')
++if get_option('libs-only')
++  subdir('polkitagent')
++else
+   subdir('polkitbackend')
+   subdir('polkitagent')
+   subdir('programs')

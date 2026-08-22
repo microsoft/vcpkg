@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3fcde11..1acc0b5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -128,7 +128,7 @@ if(MSVC)
+     # handle msvcrt setting being passed in CMAKE_C_FLAGS
+     if(CMAKE_C_FLAGS MATCHES "[/-]M[TD]d?")
+         # ensure CMAKE_MSVC_RUNTIME_LIBRARY is not already defined
+-        if(DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
++        if(NOT CMAKE_MSVC_RUNTIME_LIBRARY)
+             message(FATAL_ERROR "please set the runtime library via either CMAKE_C_FLAGS or CMAKE_MSVC_RUNTIME_LIBRARY, not both")
+         endif()
+ 

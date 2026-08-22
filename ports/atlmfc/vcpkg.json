@@ -1,0 +1,10 @@
+{
+  "name": "atlmfc",
+  "version": "0",
+  "port-version": 4,
+  "description": "A stub package that ensures Visual Studio has ATL/MFC installed.",
+  "supports": "windows & !xbox",
+  "dependencies": [
+    "atl"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "qoi",
+  "version-date": "2025-05-09",
+  "description": "The Quite OK Image Format for fast, lossless image compression",
+  "homepage": "https://qoiformat.org/",
+  "license": "MIT"
+}

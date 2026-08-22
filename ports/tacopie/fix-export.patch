@@ -1,0 +1,20 @@
+--- a/includes/tacopie/utils/logger.hpp
++++ b/includes/tacopie/utils/logger.hpp
+@@ -26,6 +26,8 @@
+ #include <mutex>
+ #include <string>
+ 
++#include <tacopie/utils/tacopie_export.hpp>
++
+ namespace tacopie {
+ 
+ //!
+@@ -161,7 +163,7 @@ private:
+ //! variable containing the current logger
+ //! by default, not set (no logs)
+ //!
+-extern std::unique_ptr<logger_iface> active_logger;
++extern TACOPIE_EXPORT std::unique_ptr<logger_iface> active_logger;
+ 
+ //!
+ //! debug logging

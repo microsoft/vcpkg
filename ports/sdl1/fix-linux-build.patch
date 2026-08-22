@@ -1,0 +1,13 @@
+diff --git a/src/video/x11/SDL_x11sym.h b/src/video/x11/SDL_x11sym.h
+index 4875b98..10bf365 100644
+--- a/src/video/x11/SDL_x11sym.h
++++ b/src/video/x11/SDL_x11sym.h
+@@ -165,7 +165,7 @@ SDL_X11_SYM(Bool,XShmQueryExtension,(Display* a),(a),return)
+  */
+ #ifdef LONG64
+ SDL_X11_MODULE(IO_32BIT)
+-SDL_X11_SYM(int,_XData32,(Display *dpy,register long *data,unsigned len),(dpy,data,len),return)
++SDL_X11_SYM(int,_XData32,(Display *dpy,_Xconst register long *data,unsigned len),(dpy,data,len),return)
+ SDL_X11_SYM(void,_XRead32,(Display *dpy,register long *data,long len),(dpy,data,len),)
+ #endif
+ 

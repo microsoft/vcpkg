@@ -1,0 +1,60 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO xiph/opus
+    REF "v${VERSION}"
+    SHA512 b9a504f8576c977df57caee808412ab95e7424e9a64e3dd4045f05616c3ed58706bc3549195b61e25721e299547509d15206d246d96f1a307b82562b703b412c
+    HEAD_REF main
+    PATCHES
+        fix-pkgconfig-version.patch
+        fix-arm64-windows-compile.diff # https://github.com/xiph/opus/pull/471
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        avx2 AVX2_SUPPORTED
+)
+
+set(STACK_PROTECTOR ON)
+set(ADDITIONAL_OPUS_OPTIONS "")
+if(VCPKG_TARGET_IS_MINGW)
+    set(STACK_PROTECTOR OFF)
+    string(APPEND VCPKG_C_FLAGS "-D_FORTIFY_SOURCE=0")
+    string(APPEND VCPKG_CXX_FLAGS "-D_FORTIFY_SOURCE=0")
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
+        list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_USE_NEON=OFF") # for version 1.3.1 (remove for future Opus release)
+        list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_DISABLE_INTRINSICS=ON") # for HEAD (and future Opus release)
+    endif()
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_STATIC_RUNTIME=ON")
+    endif()
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(STACK_PROTECTOR OFF)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+        -DPACKAGE_VERSION=${VERSION}
+        -DOPUS_STACK_PROTECTOR=${STACK_PROTECTOR}
+        -DOPUS_INSTALL_PKG_CONFIG_MODULE=ON
+        -DOPUS_INSTALL_CMAKE_CONFIG_MODULE=ON
+        -DOPUS_BUILD_PROGRAMS=OFF
+        -DOPUS_BUILD_TESTING=OFF
+        ${ADDITIONAL_OPUS_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        OPUS_USE_NEON
+        OPUS_DISABLE_INTRINSICS
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Opus)
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
+                    "${CURRENT_PACKAGES_DIR}/lib/cmake"
+                    "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

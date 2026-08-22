@@ -1,0 +1,19 @@
+{
+  "name": "pngwriter",
+  "version": "0.7.0",
+  "port-version": 5,
+  "description": "PNGwriter is a very easy to use open source graphics library that uses PNG as its output format",
+  "dependencies": [
+    "freetype",
+    "libpng",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

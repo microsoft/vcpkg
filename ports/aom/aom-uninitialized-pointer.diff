@@ -1,0 +1,13 @@
+diff --git a/cmake/aom_configure.cmake b/cmake/aom_configure.cmake
+index d5cd4db55b..61a6f1b1df 100644
+--- a/cmake/aom_configure.cmake
++++ b/cmake/aom_configure.cmake
+@@ -318,6 +318,8 @@ if(MSVC)
+ 
+   # Disable MSVC warnings that suggest making code non-portable.
+   add_compiler_flag_if_supported("/wd4996")
++  # Disable MSVC warnings for potentially uninitialized local pointer variable.
++  add_compiler_flag_if_supported("/wd4703")
+   if(ENABLE_WERROR)
+     add_compiler_flag_if_supported("/WX")
+   endif()

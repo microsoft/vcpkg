@@ -1,0 +1,37 @@
+{
+  "name": "kenlm",
+  "version": "20230531",
+  "port-version": 1,
+  "description": "KenLM: Faster and Smaller Language Model Queries",
+  "license": null,
+  "supports": "!(arm64 & windows)",
+  "dependencies": [
+    "boost-interprocess",
+    "boost-program-options",
+    "boost-ptr-container",
+    "boost-system",
+    "boost-test",
+    "boost-thread",
+    "bzip2",
+    "double-conversion",
+    "liblzma",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "interpolate": {
+      "description": "Build interpolation program",
+      "supports": "!windows",
+      "dependencies": [
+        "eigen3"
+      ]
+    }
+  }
+}

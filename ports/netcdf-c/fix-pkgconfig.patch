@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bbb647c..a04ae6b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1628,6 +1628,20 @@ list(REMOVE_DUPLICATES LINKFLAGS)
+ set(LIBS ${NC_LIBS})
+ set(NC_LIBS "-lnetcdf")
+ 
++set(NC_LIBS_PRIVATE " ${LIBS} ")
++set(NC_REQUIRES_PRIVATE "")
++macro(replace_pkgconfig_module PATTERN MODULE)
++  if(NC_LIBS_PRIVATE MATCHES " ${PATTERN} ")
++    string(REPLACE "${CMAKE_MATCH_0}" " " NC_LIBS_PRIVATE "${NC_LIBS_PRIVATE}")
++    string(APPEND NC_REQUIRES_PRIVATE " ${MODULE}")
++  endif()
++endmacro()
++replace_pkgconfig_module("-lCURL[^ ]*"          "libcurl")
++replace_pkgconfig_module("-lHDF5::HDF5"         "hdf5")
++replace_pkgconfig_module("-lhdf5::hdf5_hl"      "hdf5_hl")
++replace_pkgconfig_module("-ltinyxml2::tinyxml2" "tinyxml2")
++replace_pkgconfig_module("-lzip::zip"           "libzip")
++
+ configure_file(
+   ${netCDF_SOURCE_DIR}/netcdf.pc.in
+   ${netCDF_BINARY_DIR}/netcdf.pc @ONLY)
+diff --git a/netcdf.pc.in b/netcdf.pc.in
+index 238e113..5593c16 100644
+--- a/netcdf.pc.in
++++ b/netcdf.pc.in
+@@ -2,12 +2,13 @@ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+ includedir=@includedir@
+-ccompiler=@CC@
++ccompiler=false #redacted#
+ 
+ Name: @PACKAGE@
+ Description: NetCDF Client Library for C
+ URL: https://www.unidata.ucar.edu/netcdf
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} @NC_LIBS@
+-Libs.private: @LIBS@
++Libs.private: @NC_LIBS_PRIVATE@
+ Cflags: -I${includedir}
++Requires.private: @NC_REQUIRES_PRIVATE@

@@ -1,0 +1,17 @@
+{
+  "name": "pegtl",
+  "version-semver": "3.2.8",
+  "description": "The Parsing Expression Grammar Template Library (PEGTL) is a zero-dependency C++ header-only parser combinator library for creating parsers according to a Parsing Expression Grammar (PEG).",
+  "homepage": "https://github.com/taocpp/PEGTL",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

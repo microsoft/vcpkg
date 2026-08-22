@@ -1,0 +1,470 @@
+--- a/cmake/OpenCVDetectVTK.cmake
++++ b/cmake/OpenCVDetectVTK.cmake
+@@ -1,12 +1,30 @@
++# VTK 9.0
++if(NOT VTK_FOUND)
++  find_package(VTK 9 QUIET NAMES vtk COMPONENTS
++    FiltersExtraction
++    FiltersSources
++    FiltersTexture
++    IOExport
++    IOGeometry
++    IOPLY
++    InteractionStyle
++    RenderingCore
++    RenderingLOD
++    RenderingOpenGL2
++    NO_MODULE)
++endif()
++
+ # VTK 6.x components
+-find_package(VTK QUIET COMPONENTS vtkInteractionStyle vtkRenderingLOD vtkIOPLY vtkFiltersTexture vtkRenderingFreeType vtkIOExport NO_MODULE)
+-IF(VTK_FOUND)
+-  IF(VTK_RENDERING_BACKEND) #in vtk 7, the rendering backend is exported as a var.
++if(NOT VTK_FOUND)
++  find_package(VTK QUIET COMPONENTS vtkInteractionStyle vtkRenderingLOD vtkIOPLY vtkFiltersTexture vtkRenderingFreeType vtkIOExport NO_MODULE)
++  IF(VTK_FOUND)
++    IF(VTK_RENDERING_BACKEND) #in vtk 7, the rendering backend is exported as a var.
+       find_package(VTK QUIET COMPONENTS vtkRendering${VTK_RENDERING_BACKEND} vtkInteractionStyle vtkRenderingLOD vtkIOPLY vtkFiltersTexture vtkRenderingFreeType vtkIOExport vtkIOGeometry NO_MODULE)
+-  ELSE(VTK_RENDERING_BACKEND)
++    ELSE(VTK_RENDERING_BACKEND)
+       find_package(VTK QUIET COMPONENTS vtkRenderingOpenGL vtkInteractionStyle vtkRenderingLOD vtkIOPLY vtkFiltersTexture vtkRenderingFreeType vtkIOExport NO_MODULE)
+-  ENDIF(VTK_RENDERING_BACKEND)
+-ENDIF(VTK_FOUND)
++    ENDIF(VTK_RENDERING_BACKEND)
++  ENDIF(VTK_FOUND)
++endif()
+ 
+ # VTK 5.x components
+ if(NOT VTK_FOUND)
+--- a/modules/viz/CMakeLists.txt
++++ b/modules/viz/CMakeLists.txt
+@@ -3,7 +3,6 @@ if(NOT HAVE_VTK)
+ endif()
+ 
+ set(the_description "Viz")
+-include(${VTK_USE_FILE})
+ 
+ if(NOT BUILD_SHARED_LIBS)
+   # We observed conflict between builtin 3rdparty libraries and
+@@ -27,7 +26,14 @@ endif()
+ ocv_warnings_disable(CMAKE_CXX_FLAGS -Winconsistent-missing-override -Wsuggest-override)
+ 
+ ocv_define_module(viz opencv_core WRAP python)
+-ocv_target_link_libraries(${the_module} PRIVATE ${VTK_LIBRARIES})
++
++if (VTK_VERSION VERSION_LESS "8.90.0")
++  include(${VTK_USE_FILE})
++  ocv_target_link_libraries(${the_module} PRIVATE ${VTK_LIBRARIES})
++else ()
++  ocv_target_link_libraries(${the_module} PRIVATE ${VTK_LIBRARIES})
++  vtk_module_autoinit(TARGETS ${the_module} MODULES ${VTK_LIBRARIES})
++endif()
+ 
+ if(APPLE AND BUILD_opencv_viz)
+   ocv_target_link_libraries(${the_module} PRIVATE "-framework Cocoa")
+--- a/modules/viz/src/precomp.hpp
++++ b/modules/viz/src/precomp.hpp
+@@ -133,7 +133,8 @@
+ #include <vtkColorTransferFunction.h>
+ #include <vtkStreamingDemandDrivenPipeline.h>
+ #include <vtkLight.h>
+-#include "vtkCallbackCommand.h"
++#include <vtkCallbackCommand.h>
++#include <vtkVersion.h>
+ 
+ #if !defined(_WIN32) || defined(__CYGWIN__)
+ # include <unistd.h> /* unlink */
+@@ -149,6 +150,11 @@
+ #include "vtk/vtkTrajectorySource.h"
+ #include "vtk/vtkImageMatSource.h"
+ 
++#if VTK_MAJOR_VERSION >= 9
++typedef vtkIdType const * CellIterT;
++#else
++typedef vtkIdType * CellIterT;
++#endif
+ 
+ #include <opencv2/core.hpp>
+ #include <opencv2/viz.hpp>
+--- a/modules/viz/src/types.cpp
++++ b/modules/viz/src/types.cpp
+@@ -97,10 +97,12 @@ cv::viz::Mesh cv::viz::Mesh::load(const String& file, int type)
+     // Now handle the polygons
+     vtkSmartPointer<vtkCellArray> polygons = polydata->GetPolys();
+     mesh.polygons.create(1, polygons->GetSize(), CV_32SC1);
++    mesh.polygons = 0;
+     int* poly_ptr = mesh.polygons.ptr<int>();
+ 
+     polygons->InitTraversal();
+-    vtkIdType nr_cell_points, *cell_points;
++    vtkIdType nr_cell_points;
++    CellIterT cell_points;
+     while (polygons->GetNextCell(nr_cell_points, cell_points))
+     {
+         *poly_ptr++ = nr_cell_points;
+--- a/modules/viz/src/vizimpl.cpp
++++ b/modules/viz/src/vizimpl.cpp
+@@ -55,8 +55,17 @@ cv::viz::Viz3d::VizImpl::VizImpl(const String &name) : spin_once_state_(false),
+ 
+     // Create render window
+     window_ = vtkSmartPointer<vtkRenderWindow>::New();
+-    cv::Vec2i window_size = cv::Vec2i(window_->GetScreenSize()) / 2;
+-    window_->SetSize(window_size.val);
++    int * sz = window_->GetScreenSize();
++    if (sz)
++    {
++        cv::Vec2i window_size = cv::Vec2i(sz) / 2;
++        window_->SetSize(window_size.val);
++    }
++    else
++    {
++        int new_sz[2] = { 640, 480 };
++        window_->SetSize(new_sz);
++    }
+     window_->AddRenderer(renderer_);
+ 
+     // Create the interactor style
+--- a/modules/viz/src/vtk/vtkCocoaInteractorFix.mm
++++ b/modules/viz/src/vtk/vtkCocoaInteractorFix.mm
+@@ -49,6 +49,7 @@
+ #include <vtkCocoaRenderWindowInteractor.h>
+ #include <vtkObjectFactory.h>
+ #include <vtkSmartPointer.h>
++#include <vtkVersion.h>
+ 
+ namespace cv { namespace viz {
+     vtkSmartPointer<vtkRenderWindowInteractor> vtkCocoaRenderWindowInteractorNew();
+--- a/modules/viz/src/vtk/vtkOBJWriter.cpp
++++ b/modules/viz/src/vtk/vtkOBJWriter.cpp
+@@ -72,7 +72,7 @@ void cv::viz::vtkOBJWriter::WriteData()
+     }
+ 
+     vtkDebugMacro(<<"Opening vtk file for writing...");
+-    ostream *outfilep = new ofstream(this->FileName, ios::out);
++    std::ostream *outfilep = new std::ofstream(this->FileName, ios::out);
+     if (outfilep->fail())
+     {
+         vtkErrorMacro(<< "Unable to open file: "<< this->FileName);
+@@ -127,7 +127,8 @@ void cv::viz::vtkOBJWriter::WriteData()
+     // write out verts if any
+     if (input->GetNumberOfVerts() > 0)
+     {
+-        vtkIdType npts = 0, *index = 0;
++        vtkIdType npts = 0;
++        CellIterT index = 0;
+         vtkCellArray *cells = input->GetVerts();
+         for (cells->InitTraversal(); cells->GetNextCell(npts, index); )
+         {
+@@ -141,7 +142,8 @@ void cv::viz::vtkOBJWriter::WriteData()
+     // write out lines if any
+     if (input->GetNumberOfLines() > 0)
+     {
+-        vtkIdType npts = 0, *index = 0;
++        vtkIdType npts = 0;
++        CellIterT index = 0;
+         vtkCellArray *cells = input->GetLines();
+         for (cells->InitTraversal(); cells->GetNextCell(npts, index); )
+         {
+@@ -162,7 +164,8 @@ void cv::viz::vtkOBJWriter::WriteData()
+     // write out polys if any
+     if (input->GetNumberOfPolys() > 0)
+     {
+-        vtkIdType npts = 0, *index = 0;
++        vtkIdType npts = 0;
++        CellIterT index = 0;
+         vtkCellArray *cells = input->GetPolys();
+         for (cells->InitTraversal(); cells->GetNextCell(npts, index); )
+         {
+@@ -191,7 +194,8 @@ void cv::viz::vtkOBJWriter::WriteData()
+     // write out tstrips if any
+     if (input->GetNumberOfStrips() > 0)
+     {
+-        vtkIdType npts = 0, *index = 0;
++        vtkIdType npts = 0;
++        CellIterT index = 0;
+         vtkCellArray *cells = input->GetStrips();
+         for (cells->InitTraversal(); cells->GetNextCell(npts, index); )
+         {
+--- a/modules/viz/src/vtk/vtkXYZReader.cpp
++++ b/modules/viz/src/vtk/vtkXYZReader.cpp
+@@ -77,7 +77,7 @@ int cv::viz::vtkXYZReader::RequestData(vtkInformation*, vtkInformationVector**,
+     }
+ 
+     // Open the input file.
+-    ifstream fin(this->FileName);
++    std::ifstream fin(this->FileName);
+     if(!fin)
+     {
+         vtkErrorMacro("Error opening file " << this->FileName);
+--- a/modules/viz/src/vtk/vtkXYZWriter.cpp
++++ b/modules/viz/src/vtk/vtkXYZWriter.cpp
+@@ -69,7 +69,7 @@ void cv::viz::vtkXYZWriter::WriteData()
+     }
+ 
+     vtkDebugMacro(<<"Opening vtk file for writing...");
+-    ostream *outfilep = new ofstream(this->FileName, ios::out);
++    std::ostream *outfilep = new std::ofstream(this->FileName, ios::out);
+     if (outfilep->fail())
+     {
+         vtkErrorMacro(<< "Unable to open file: "<< this->FileName);
+--- a/modules/viz/test/test_tutorial2.cpp
++++ b/modules/viz/test/test_tutorial2.cpp
+@@ -28,7 +28,7 @@ static void tutorial2()
+     /// Rodrigues vector
+     Vec3d rot_vec = Vec3d::all(0);
+     double translation_phase = 0.0, translation = 0.0;
+-    while(!myWindow.wasStopped())
++    for(unsigned num = 0; num < 50; ++num)
+     {
+         /* Rotation using rodrigues */
+         /// Rotate around (1,1,1)
+@@ -45,7 +45,7 @@ static void tutorial2()
+ 
+         myWindow.setWidgetPose("Cube Widget", pose);
+ 
+-        myWindow.spinOnce(1, true);
++        myWindow.spinOnce(100, true);
+     }
+ }
+ 
+--- a/modules/viz/test/test_tutorial3.cpp
++++ b/modules/viz/test/test_tutorial3.cpp
+@@ -48,7 +48,7 @@ static void tutorial3(bool camera_pov)
+         myWindow.setViewerPose(camera_pose);
+ 
+     /// Start event loop.
+-    myWindow.spin();
++    myWindow.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, tutorial3_global_view)
+--- a/modules/viz/test/test_viz3d.cpp
++++ b/modules/viz/test/test_viz3d.cpp
+@@ -59,7 +59,7 @@ TEST(Viz_viz3d, DISABLED_develop)
+     //cv::Mat cloud = cv::viz::readCloud(get_dragon_ply_file_path());
+     //---->>>>> </to_test_in_future>
+ 
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ }} // namespace
+--- a/modules/viz/test/tests_simple.cpp
++++ b/modules/viz/test/tests_simple.cpp
+@@ -56,7 +56,7 @@ TEST(Viz, show_cloud_bluberry)
+     viz.showWidget("dragon", WCloud(dragon_cloud, Color::bluberry()), pose);
+ 
+     viz.showWidget("text2d", WText("Bluberry cloud", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_cloud_random_color)
+@@ -73,7 +73,7 @@ TEST(Viz, show_cloud_random_color)
+     viz.showWidget("coosys", WCoordinateSystem());
+     viz.showWidget("dragon", WCloud(dragon_cloud, colors), pose);
+     viz.showWidget("text2d", WText("Random color cloud", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_cloud_masked)
+@@ -91,7 +91,7 @@ TEST(Viz, show_cloud_masked)
+     viz.showWidget("coosys", WCoordinateSystem());
+     viz.showWidget("dragon", WCloud(dragon_cloud), pose);
+     viz.showWidget("text2d", WText("Nan masked cloud", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_cloud_collection)
+@@ -109,7 +109,7 @@ TEST(Viz, show_cloud_collection)
+     viz.showWidget("coosys", WCoordinateSystem());
+     viz.showWidget("ccol", ccol);
+     viz.showWidget("text2d", WText("Cloud collection", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_painted_clouds)
+@@ -124,7 +124,7 @@ TEST(Viz, show_painted_clouds)
+     viz.showWidget("cloud3", WPaintedCloud(cloud, Vec3d(0.0, 0.0, -1.0), Vec3d(0.0, 0.0, 1.0), Color::blue(), Color::red()));
+     viz.showWidget("arrow", WArrow(Vec3d(0.0, 1.0, -1.0), Vec3d(0.0, 1.0, 1.0), 0.009, Color::raspberry()));
+     viz.showWidget("text2d", WText("Painted clouds", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_mesh)
+@@ -137,7 +137,7 @@ TEST(Viz, show_mesh)
+     viz.showWidget("coosys", WCoordinateSystem());
+     viz.showWidget("mesh", WMesh(mesh), pose);
+     viz.showWidget("text2d", WText("Just mesh", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_mesh_random_colors)
+@@ -152,7 +152,7 @@ TEST(Viz, show_mesh_random_colors)
+     viz.showWidget("mesh", WMesh(mesh), pose);
+     viz.setRenderingProperty("mesh", SHADING, SHADING_PHONG);
+     viz.showWidget("text2d", WText("Random color mesh", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_widget_merger)
+@@ -173,7 +173,7 @@ TEST(Viz, show_widget_merger)
+     viz.showWidget("coo", WCoordinateSystem());
+     viz.showWidget("merger", merger);
+     viz.showWidget("text2d", WText("Widget merger", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_textured_mesh)
+@@ -210,7 +210,7 @@ TEST(Viz, show_textured_mesh)
+     viz.showWidget("mesh", WMesh(mesh));
+     viz.setRenderingProperty("mesh", SHADING, SHADING_PHONG);
+     viz.showWidget("text2d", WText("Textured mesh", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_polyline)
+@@ -229,7 +229,7 @@ TEST(Viz, show_polyline)
+     viz.showWidget("polyline", WPolyLine(polyline, colors));
+     viz.showWidget("coosys", WCoordinateSystem());
+     viz.showWidget("text2d", WText("Polyline", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_sampled_normals)
+@@ -244,7 +244,7 @@ TEST(Viz, show_sampled_normals)
+     viz.showWidget("normals", WCloudNormals(mesh.cloud, mesh.normals, 30, 0.1f, Color::green()), pose);
+     viz.setRenderingProperty("normals", LINE_WIDTH, 2.0);
+     viz.showWidget("text2d", WText("Cloud or mesh normals", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_cloud_shaded_by_normals)
+@@ -260,7 +260,7 @@ TEST(Viz, show_cloud_shaded_by_normals)
+     Viz3d viz("show_cloud_shaded_by_normals");
+     viz.showWidget("cloud", cloud, pose);
+     viz.showWidget("text2d", WText("Cloud shaded by normals", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_trajectories)
+@@ -287,15 +287,15 @@ TEST(Viz, show_trajectories)
+     viz.showWidget("text2d", WText("Different kinds of supported trajectories", Point(20, 20), 20, Color::green()));
+ 
+     int i = 0;
+-    while(!viz.wasStopped())
++    for(unsigned num = 0; num < 50; ++num)
+     {
+         double a = --i % 360;
+         Vec3d pose(sin(a * CV_PI/180), 0.7, cos(a * CV_PI/180));
+         viz.setViewerPose(makeCameraPose(pose * 7.5, Vec3d(0.0, 0.5, 0.0), Vec3d(0.0, 0.1, 0.0)));
+-        viz.spinOnce(20, true);
++        viz.spinOnce(100, true);
+     }
+     viz.resetCamera();
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_trajectory_reposition)
+@@ -306,7 +306,7 @@ TEST(Viz, show_trajectory_reposition)
+     viz.showWidget("coos", WCoordinateSystem());
+     viz.showWidget("sub3", WTrajectory(Mat(path).rowRange(0, (int)path.size()/3), WTrajectory::BOTH, 0.2, Color::brown()), path.front().inv());
+     viz.showWidget("text2d", WText("Trajectory resposition to origin", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_camera_positions)
+@@ -330,7 +330,7 @@ TEST(Viz, show_camera_positions)
+     viz.showWidget("pos3", WCameraPosition(0.75), poses[1]);
+     viz.showWidget("pos4", WCameraPosition(K, gray, 3, Color::indigo()), poses[1]);
+     viz.showWidget("text2d", WText("Camera positions with images", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_overlay_image)
+@@ -353,16 +353,16 @@ TEST(Viz, show_overlay_image)
+     viz.showWidget("text2d", WText("Overlay images", Point(20, 20), 20, Color::green()));
+ 
+     int i = 0;
+-    while(!viz.wasStopped())
++    for(unsigned num = 0; num < 50; ++num)
+     {
+         double a = ++i % 360;
+         Vec3d pose(sin(a * CV_PI/180), 0.7, cos(a * CV_PI/180));
+         viz.setViewerPose(makeCameraPose(pose * 3, Vec3d(0.0, 0.5, 0.0), Vec3d(0.0, 0.1, 0.0)));
+         viz.getWidget("img1").cast<WImageOverlay>().setImage(lena * pow(sin(i*10*CV_PI/180) * 0.5 + 0.5, 1.0));
+-        viz.spinOnce(1, true);
++        viz.spinOnce(100, true);
+     }
+     viz.showWidget("text2d", WText("Overlay images (stopped)", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ 
+@@ -376,7 +376,7 @@ TEST(Viz, show_image_method)
+     viz.showImage(lena, lena.size());
+     viz.spinOnce(1500, true);
+ 
+-    cv::viz::imshow("show_image_method", make_gray(lena)).spin();
++    cv::viz::imshow("show_image_method", make_gray(lena)).spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_image_3d)
+@@ -398,13 +398,13 @@ TEST(Viz, show_image_3d)
+     viz.showWidget("text2d", WText("Images in 3D", Point(20, 20), 20, Color::green()));
+ 
+     int i = 0;
+-    while(!viz.wasStopped())
++    for(unsigned num = 0; num < 50; ++num)
+     {
+         viz.getWidget("img0").cast<WImage3D>().setImage(lena * pow(sin(i++*7.5*CV_PI/180) * 0.5 + 0.5, 1.0));
+-        viz.spinOnce(1, true);
++        viz.spinOnce(100, true);
+     }
+     viz.showWidget("text2d", WText("Images in 3D (stopped)", Point(20, 20), 20, Color::green()));
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_simple_widgets)
+@@ -431,10 +431,10 @@ TEST(Viz, show_simple_widgets)
+ 
+     viz.showWidget("grid1", WGrid(Vec2i(7,7), Vec2d::all(0.75), Color::gray()), Affine3d().translate(Vec3d(0.0, 0.0, -1.0)));
+ 
+-    viz.spin();
++    viz.spinOnce(500, true);
+     viz.getWidget("text2d").cast<WText>().setText("Different simple widgets (updated)");
+     viz.getWidget("text3d").cast<WText3D>().setText("Updated text 3D");
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ TEST(Viz, show_follower)
+@@ -446,9 +446,9 @@ TEST(Viz, show_follower)
+     viz.showWidget("t3d_2", WText3D("Simple 3D follower", Point3d(-0.5, -0.5, 0.5), 0.125, true,  Color::green()));
+     viz.showWidget("text2d", WText("Follower: text always facing camera", Point(20, 20), 20, Color::green()));
+     viz.setBackgroundMeshLab();
+-    viz.spin();
++    viz.spinOnce(500, true);
+     viz.getWidget("t3d_2").cast<WText3D>().setText("Updated follower 3D");
+-    viz.spin();
++    viz.spinOnce(500, true);
+ }
+ 
+ }} // namespace

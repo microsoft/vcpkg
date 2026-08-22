@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-libmupdf",
+  "version-string": "ci",
+  "description": "Port to validate libmupdf within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "dependencies": [
+    "libmupdf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

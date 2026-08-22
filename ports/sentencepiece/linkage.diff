@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8d4a34f..6ef8aa9 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -250,6 +250,8 @@ if (SPM_ENABLE_SHARED)
+     set_target_properties(sentencepiece PROPERTIES IMPORT_SUFFIX ".dll.a")
+     set_target_properties(sentencepiece_train PROPERTIES IMPORT_SUFFIX ".dll.a")
+   endif()
++  list(REMOVE_ITEM SPM_INSTALLTARGETS sentencepiece-static sentencepiece_train-static)
++  set_target_properties(sentencepiece-static sentencepiece_train-static PROPERTIES EXCLUDE_FROM_ALL 1)
+ else()
+   add_library(sentencepiece ALIAS sentencepiece-static)
+   add_library(sentencepiece_train ALIAS sentencepiece_train-static)

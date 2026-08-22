@@ -1,0 +1,30 @@
+{
+  "name": "vcpkg-ci-wxwidgets",
+  "version-date": "2022-04-05",
+  "port-version": 1,
+  "description": "Builds a GUI app in order to validate the wxwidgets port.",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "wxwidgets",
+      "default-features": false,
+      "features": [
+        "example"
+      ]
+    }
+  ],
+  "default-features": [
+    {
+      "name": "wxrc",
+      "platform": "native"
+    }
+  ],
+  "features": {
+    "wxrc": {
+      "description": "Test wxrc"
+    }
+  }
+}

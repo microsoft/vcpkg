@@ -1,0 +1,30 @@
+{
+  "name": "ms-gltf",
+  "version-date": "2024-09-05",
+  "description": "glTF-SDK is a C++ Software Development Kit for glTF",
+  "homepage": "https://github.com/microsoft/glTF-SDK",
+  "license": "MIT",
+  "supports": "!linux",
+  "dependencies": [
+    "rapidjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "test"
+  ],
+  "features": {
+    "samples": {
+      "description": "Build with GLTF samples",
+      "supports": "!osx & !ios & !android"
+    },
+    "test": {
+      "description": "Build test programs",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  }
+}

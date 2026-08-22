@@ -1,0 +1,19 @@
+diff --git a/src/bin/dwarfdump/CMakeLists.txt b/src/bin/dwarfdump/CMakeLists.txt
+index 6e3761d..5124f29 100644
+--- a/src/bin/dwarfdump/CMakeLists.txt
++++ b/src/bin/dwarfdump/CMakeLists.txt
+@@ -62,7 +62,7 @@ add_executable(dwarfdump ${SOURCES} ${HEADERS} ${CONFIGURATION_FILES})
+ set_folder(dwarfdump src/bin/dwarfdump)
+ 
+ target_compile_definitions(dwarfdump PRIVATE
+-    "CONFPREFIX=${CMAKE_INSTALL_PREFIX}/lib" ${DW_LIBDWARF_STATIC}
++    "CONFPREFIX=${CMAKE_INSTALL_DATAROOTDIR}/libdwarf" ${DW_LIBDWARF_STATIC}
+     _GNU_SOURCE)
+ target_compile_options(dwarfdump PRIVATE ${DW_FWALL})
+ 
+@@ -72,4 +72,4 @@ install(TARGETS dwarfdump DESTINATION
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+-install(FILES dwarfdump.conf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/dwarfdump)
++install(FILES dwarfdump.conf DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/libdwarf)

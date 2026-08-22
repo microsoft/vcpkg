@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 50a11e8..3a93c83 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,6 +54,10 @@ if (TARGET_ARCHITECTURE MATCHES ".*(x86|amd|i686).*")
+     endif (CHECK_SSE2 AND SUPPORTS_CFLAG_SSE2 AND SUPPORTS_CFLAG_SSE_MATH)
+ endif (TARGET_ARCHITECTURE MATCHES ".*(x86|amd|i686).*")
+ 
++if (MSVC)
++    add_compile_options(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
++endif (MSVC)
++
+ configure_file(
+ 	uchardet.pc.in
+ 	uchardet.pc

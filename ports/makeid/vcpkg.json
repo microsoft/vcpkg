@@ -1,0 +1,7 @@
+{
+  "name": "makeid",
+  "version": "1.0.3",
+  "description": "MakeID is a cross platform C++ library for IDs allocation/deallocation",
+  "homepage": "http://www.humus.name/index.php?page=3D",
+  "license": null
+}

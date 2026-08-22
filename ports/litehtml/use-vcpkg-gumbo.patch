@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fe71729..21e77c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,11 +10,7 @@ enable_testing()
+ set(PROJECT_MAJOR 0)
+ set(PROJECT_MINOR 0)
+ 
+-option(EXTERNAL_GUMBO "Link against external gumbo instead of shipping a bundled copy" OFF)
+-
+-if(NOT EXTERNAL_GUMBO)
+-    add_subdirectory(src/gumbo)
+-endif()
++find_package(unofficial-gumbo CONFIG REQUIRED)
+ 
+ set(SOURCE_LITEHTML
+     src/codepoint.cpp
+@@ -153,7 +149,7 @@ if (LITEHTML_UTF8)
+ target_include_directories(${PROJECT_NAME} PRIVATE include/${PROJECT_NAME})
+ 
+ # Gumbo
+-target_link_libraries(${PROJECT_NAME} PUBLIC gumbo)
++target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::gumbo::gumbo)
+ 
+ # install and export
+ install(TARGETS ${PROJECT_NAME}
+diff --git a/cmake/litehtmlConfig.cmake b/cmake/litehtmlConfig.cmake
+index 5eedcf4..1027913 100644
+--- a/cmake/litehtmlConfig.cmake
++++ b/cmake/litehtmlConfig.cmake
+@@ -1,3 +1,3 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(gumbo)
++find_dependency(unofficial-gumbo)
+ include(${CMAKE_CURRENT_LIST_DIR}/litehtmlTargets.cmake)
+diff --git a/src/document.cpp b/src/document.cpp
+index 8bd1ea8..51a9d42 100644
+--- a/src/document.cpp
++++ b/src/document.cpp
+@@ -26,7 +26,7 @@
+ #include <cmath>
+ #include <cstdio>
+ #include <algorithm>
+-#include "gumbo.h"
++#include <gumbo.h>
+ #include "utf8_strings.h"
+ #include "render_item.h"
+ #include "render_table.h"

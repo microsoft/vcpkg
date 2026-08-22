@@ -1,0 +1,199 @@
+diff --git a/Lib/distutils/command/build_ext.py b/Lib/distutils/command/build_ext.py
+index 86a85c1..65a60b5 100644
+--- a/Lib/distutils/command/build_ext.py
++++ b/Lib/distutils/command/build_ext.py
+@@ -193,7 +193,7 @@ class build_ext (Command):
+             # Append the source distribution include and library directories,
+             # this allows distutils on windows to work in the source tree
+             self.include_dirs.append(os.path.join(sys.exec_prefix, 'PC'))
+-            if MSVC_VERSION == 9:
++            if MSVC_VERSION >= 9:
+                 # Use the .lib files for the correct architecture
+                 if self.plat_name == 'win32':
+                     suffix = ''
+diff --git a/Lib/distutils/msvc9compiler.py b/Lib/distutils/msvc9compiler.py
+index 33d3e51..9fe6417 100644
+--- a/Lib/distutils/msvc9compiler.py
++++ b/Lib/distutils/msvc9compiler.py
+@@ -662,11 +662,12 @@ class MSVCCompiler(CCompiler) :
+             if mfinfo is not None:
+                 mffilename, mfid = mfinfo
+                 out_arg = '-outputresource:%s;%s' % (output_filename, mfid)
+-                try:
+-                    self.spawn(['mt.exe', '-nologo', '-manifest',
+-                                mffilename, out_arg])
+-                except DistutilsExecError, msg:
+-                    raise LinkError(msg)
++                if self.__version < 10:
++                    try:
++                        self.spawn(['mt.exe', '-nologo', '-manifest',
++                                    mffilename, out_arg])
++                    except DistutilsExecError, msg:
++                        raise LinkError(msg)
+         else:
+             log.debug("skipping %s (up-to-date)", output_filename)
+ 
+diff --git a/PC/dl_nt.c b/PC/dl_nt.c
+index 3e58bac..cad9de5 100644
+--- a/PC/dl_nt.c
++++ b/PC/dl_nt.c
+@@ -18,6 +18,7 @@ char dllVersionBuffer[16] = ""; // a private buffer
+ HMODULE PyWin_DLLhModule = NULL;
+ const char *PyWin_DLLVersionString = dllVersionBuffer;
+ 
++#if HAVE_SXS
+ // Windows "Activation Context" work:
+ // Our .pyd extension modules are generally built without a manifest (ie,
+ // those included with Python and those built with a default distutils.
+@@ -29,6 +30,8 @@ const char *PyWin_DLLVersionString = dllVersionBuffer;
+ // As an added complication, this magic only works on XP or later - we simply
+ // use the existence (or not) of the relevant function pointers from kernel32.
+ // See bug 4566 (http://python.org/sf/4566) for more details.
++// In Visual Studio 2010, side by side assemblies are no longer used by
++// default.
+ 
+ typedef BOOL (WINAPI * PFN_GETCURRENTACTCTX)(HANDLE *);
+ typedef BOOL (WINAPI * PFN_ACTIVATEACTCTX)(HANDLE, ULONG_PTR *);
+@@ -75,6 +78,7 @@ void _Py_DeactivateActCtx(ULONG_PTR cookie)
+         if (!(*pfnDeactivateActCtx)(0, cookie))
+             OutputDebugString("Python failed to de-activate the activation context\n");
+ }
++#endif /* HAVE_SXS */
+ 
+ BOOL    WINAPI  DllMain (HANDLE hInst,
+                                                 ULONG ul_reason_for_call,
+@@ -87,6 +91,7 @@ BOOL    WINAPI  DllMain (HANDLE hInst,
+             // 1000 is a magic number I picked out of the air.  Could do with a #define, I spose...
+             LoadString(hInst, 1000, dllVersionBuffer, sizeof(dllVersionBuffer));
+ 
++#if HAVE_SXS
+             // and capture our activation context for use when loading extensions.
+             _LoadActCtxPointers();
+             if (pfnGetCurrentActCtx && pfnAddRefActCtx)
+@@ -98,12 +103,15 @@ BOOL    WINAPI  DllMain (HANDLE hInst,
+                                       "activation context\n");
+                     return FALSE;
+                 }
++#endif
+             break;
+ 
+         case DLL_PROCESS_DETACH:
++#if HAVE_SXS
+             if (pfnReleaseActCtx)
+                 (*pfnReleaseActCtx)(PyWin_DLLhActivationContext);
++#endif
+             break;
+     }
+     return TRUE;
+ }
+diff --git a/PC/msvcrtmodule.c b/PC/msvcrtmodule.c
+index 44c82e4..091957e 100644
+--- a/PC/msvcrtmodule.c
++++ b/PC/msvcrtmodule.c
+@@ -25,6 +25,8 @@
+ #ifdef _MSC_VER
+ #if _MSC_VER >= 1500 && _MSC_VER < 1600
+ #include <crtassem.h>
++#elif _MSC_VER >= 1600
++#include <crtversion.h>
+ #endif
+ #endif
+ 
+@@ -398,7 +400,7 @@ PyMODINIT_FUNC
+ initmsvcrt(void)
+ {
+     int st;
+-    PyObject *d;
++    PyObject *d, *version;
+     PyObject *m = Py_InitModule("msvcrt", msvcrt_functions);
+     if (m == NULL)
+         return;
+@@ -412,6 +414,7 @@ initmsvcrt(void)
+     insertint(d, "LK_UNLCK", _LK_UNLCK);
+ 
+     /* constants for the crt versions */
++    (void)st;
+ #ifdef _VC_ASSEMBLY_PUBLICKEYTOKEN
+     st = PyModule_AddStringConstant(m, "VC_ASSEMBLY_PUBLICKEYTOKEN",
+                                     _VC_ASSEMBLY_PUBLICKEYTOKEN);
+@@ -427,4 +430,13 @@ initmsvcrt(void)
+                                     __LIBRARIES_ASSEMBLY_NAME_PREFIX);
+     if (st < 0)return;
+ #endif
++/* constants for the 2010 crt versions */
++#if defined(_VC_CRT_MAJOR_VERSION) && defined (_VC_CRT_MINOR_VERSION) && defined(_VC_CRT_BUILD_VERSION) && defined(_VC_CRT_RBUILD_VERSION)
++    version = PyUnicode_FromFormat("%d.%d.%d.%d", _VC_CRT_MAJOR_VERSION,
++                                                  _VC_CRT_MINOR_VERSION,
++                                                  _VC_CRT_BUILD_VERSION,
++                                                  _VC_CRT_RBUILD_VERSION);
++    st = PyModule_AddObject(m, "CRT_ASSEMBLY_VERSION", version);
++    if (st < 0) return NULL;
++#endif
+ }
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index 5fa6398..0cbd236 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -226,14 +226,19 @@ typedef int pid_t;
+ #define Py_IS_FINITE(X) _finite(X)
+ #define copysign _copysign
+ 
+-#endif /* _MSC_VER */
++/* Side by Side assemblies supported in VS 2005 and VS 2008 but not 2010*/
++#if _MSC_VER >= 1400 && _MSC_VER < 1600
++#define HAVE_SXS 1
++#endif
+ 
+ /* define some ANSI types that are not defined in earlier Win headers */
+-#if defined(_MSC_VER) && _MSC_VER >= 1200
++#if _MSC_VER >= 1200
+ /* This file only exists in VC 6.0 or higher */
+ #include <basetsd.h>
+ #endif
+ 
++#endif /* _MSC_VER */
++
+ /* ------------------------------------------------------------------------*/
+ /* The Borland compiler defines __BORLANDC__ */
+ /* XXX These defines are likely incomplete, but should be easy to fix. */
+diff --git a/Python/dynload_win.c b/Python/dynload_win.c
+index 4e5555e..8626642 100644
+--- a/Python/dynload_win.c
++++ b/Python/dynload_win.c
+@@ -12,8 +12,10 @@
+ #include <windows.h>
+ 
+ // "activation context" magic - see dl_nt.c...
++#if HAVE_SXS
+ extern ULONG_PTR _Py_ActivateActCtx();
+ void _Py_DeactivateActCtx(ULONG_PTR cookie);
++#endif
+ 
+ const struct filedescr _PyImport_DynLoadFiletab[] = {
+ #ifdef _DEBUG
+@@ -176,7 +178,9 @@ dl_funcptr _PyImport_GetDynLoadFunc(const char *fqname, const char *shortname,
+         char pathbuf[260];
+         LPTSTR dummy;
+         unsigned int old_mode;
++#if HAVE_SXS
+         ULONG_PTR cookie = 0;
++#endif
+         /* We use LoadLibraryEx so Windows looks for dependent DLLs
+             in directory of pathname first.  However, Windows95
+             can sometimes not work correctly unless the absolute
+@@ -190,11 +194,15 @@ dl_funcptr _PyImport_GetDynLoadFunc(const char *fqname, const char *shortname,
+                             sizeof(pathbuf),
+                             pathbuf,
+                             &dummy)) {
++#if HAVE_SXS
+             ULONG_PTR cookie = _Py_ActivateActCtx();
++#endif
+             /* XXX This call doesn't exist in Windows CE */
+             hDLL = LoadLibraryEx(pathname, NULL,
+                                  LOAD_WITH_ALTERED_SEARCH_PATH);
++#if HAVE_SXS
+             _Py_DeactivateActCtx(cookie);
++#endif
+         }
+ 
+         /* restore old error mode settings */

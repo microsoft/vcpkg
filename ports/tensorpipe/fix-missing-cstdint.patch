@@ -1,0 +1,12 @@
+diff --git a/tensorpipe/common/defs.h b/tensorpipe/common/defs.h
+index f4f9736..7afa53a 100644
+--- a/tensorpipe/common/defs.h
++++ b/tensorpipe/common/defs.h
+@@ -13,6 +13,7 @@
+ #include <unistd.h>
+ 
+ #include <cstring>
++#include <cstdint>
+ #include <ctime>
+ #include <functional>
+ #include <iomanip>

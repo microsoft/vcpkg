@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 19852cd..8d803cf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,6 +8,8 @@
+ cmake_minimum_required(VERSION 3.16)
+ project(LIBWEBM CXX)
+ 
++set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
++
+ include(GNUInstallDirs)
+ include("${CMAKE_CURRENT_SOURCE_DIR}/build/cxx_flags.cmake")
+ 
+diff --git a/build/msvc_runtime.cmake b/build/msvc_runtime.cmake
+index 7058577..a5a18df 100644
+--- a/build/msvc_runtime.cmake
++++ b/build/msvc_runtime.cmake
+@@ -15,7 +15,6 @@ if(MSVC)
+             CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+             CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+       if(${flag_var} MATCHES "/MD")
+-        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+       endif(${flag_var} MATCHES "/MD")
+     endforeach(flag_var)
+   endif()

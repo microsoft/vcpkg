@@ -1,0 +1,13 @@
+diff --git a/pagmo-config.cmake.in b/pagmo-config.cmake.in
+index 9553fc8..cb5e90b 100644
+--- a/pagmo-config.cmake.in
++++ b/pagmo-config.cmake.in
+@@ -8,6 +8,8 @@ set(THREADS_PREFER_PTHREAD_FLAG YES)
+ find_package(Threads REQUIRED)
+ unset(THREADS_PREFER_PTHREAD_FLAG)
+ include(PagmoFindBoost)
++include(CMakeFindDependencyMacro)
++find_dependency(TBB CONFIG)
+ @_PAGMO_CONFIG_OPTIONAL_DEPS@
+ # Restore original module path.
+ set(CMAKE_MODULE_PATH "${_PAGMO_CONFIG_OLD_MODULE_PATH}")

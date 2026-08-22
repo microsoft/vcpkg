@@ -1,0 +1,114 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dfa9b72..e21eee0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,8 +1,9 @@
+-cmake_minimum_required(VERSION 2.8)
++cmake_minimum_required(VERSION 3.0)
+ 
+ ###################################################################################
+ project(libgo)
+ 
++if(0)
+ enable_language(C ASM)
+ 
+ if (CMAKE_BUILD_TYPE)
+@@ -43,34 +44,38 @@ message("-------------- Env ---------------")
+ message("  CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
+ message("  CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+ message("----------------------------------")
++endif()
++
++enable_language(C CXX ASM)
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
++set(INSTALL_BIN_DIR      "bin"                      CACHE PATH "Path where exe and dll will be installed")
++set(INSTALL_LIB_DIR      "lib"                      CACHE PATH "Path where lib will be installed")
++set(INSTALL_INCLUDE_DIR  "include/${PROJECT_NAME}"  CACHE PATH "Path where headers will be installed")
++set(INSTALL_CMAKE_DIR    "share/${PROJECT_NAME}"    CACHE PATH "Path where cmake configs will be installed")
++set(RELATIVE_INSTALL_INCLUDE_DIR ${INSTALL_INCLUDE_DIR})
++foreach(p LIB BIN INCLUDE CMAKE)
++  set(var INSTALL_${p}_DIR)
++  if(NOT IS_ABSOLUTE "${${var}}")
++    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
++  endif()
++endforeach()
++
++set(ENABLE_DEBUGGER 0)
++set(ENABLE_HOOK 0)
+ 
+ configure_file(${PROJECT_SOURCE_DIR}/libgo/common/cmake_config.h.in ${PROJECT_SOURCE_DIR}/libgo/common/cmake_config.h)
+ message("----------------------------------")
+ 
+ if (UNIX)
+-    set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC -Wall ${CMAKE_CXX_FLAGS}")
+-    set(CMAKE_CXX_FLAGS_DEBUG "-g")
+-    set(CMAKE_CXX_FLAGS_RELEASE "-g -O3 -DNDEBUG")
+-
+     set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS S)
+-    message("--> select asm source file, please wait about 5 seconds ...")
+     execute_process(COMMAND "${PROJECT_SOURCE_DIR}/third_party/select_asm.sh" "${PROJECT_SOURCE_DIR}" "jump" OUTPUT_VARIABLE jump_asm_file)
+     execute_process(COMMAND "${PROJECT_SOURCE_DIR}/third_party/select_asm.sh" "${PROJECT_SOURCE_DIR}" "make" OUTPUT_VARIABLE make_asm_file)
+ elseif (WIN32)
+-    # windows platform
+     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd /EHsc")
+-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT /EHsc")
+-
+-    #set(CMAKE_ASM_SOURCE_FILE_EXTENSIONS asm)
+-    #file(COPY ${PROJECT_SOURCE_DIR}/third_party/boost.context/libs/context/src/asm/make_x86_64_ms_pe_masm.asm DESTINATION ${PROJECT_SOURCE_DIR}/libgo/context)
+-    #file(COPY ${PROJECT_SOURCE_DIR}/third_party/boost.context/libs/context/src/asm/jump_x86_64_ms_pe_masm.asm DESTINATION ${PROJECT_SOURCE_DIR}/libgo/context)
+ endif()
+ 
+-message("------------ Cxx flags -------------")
+-message("  CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}: ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
+-message("------------------------------------")
+-
+ include_directories(${PROJECT_SOURCE_DIR})
+ aux_source_directory(${PROJECT_SOURCE_DIR}/libgo CO_SRC_LIST)
+ aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/common CO_SRC_LIST)
+@@ -97,6 +102,7 @@ else()
+     aux_source_directory(${PROJECT_SOURCE_DIR}/libgo/netio/disable_hook CO_SRC_LIST)
+ endif()
+ 
++if(0)
+ set(TARGET "libgo")
+ set(STATIC_T "libgo_static")
+ set(STATIC_HOOK "static_hook")
+@@ -136,7 +142,6 @@ if (UNIX)
+     )
+ 
+     set(PROFILE_FLAGS "-pg ${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}}")
+-
+     #message("PROFILE_FLAGS: ${PROFILE_FLAGS}")
+     add_custom_target(profile
+         COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=PROFILE -DCMAKE_CXX_FLAGS_PROFILE=\\'${PROFILE_FLAGS}\\' ${CMAKE_SOURCE_DIR}
+@@ -160,3 +165,27 @@ if (WIN32)
+ 	    add_subdirectory(${PROJECT_SOURCE_DIR}/tutorial)
+     endif()
+ endif()
++endif()
++
++list(APPEND CO_SRC_LIST ${jump_asm_file})
++list(APPEND CO_SRC_LIST ${make_asm_file})
++add_library(${PROJECT_NAME} ${CO_SRC_LIST})
++target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS})
++if (WIN32)
++    target_link_libraries(${PROJECT_NAME} ws2_32)
++    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4819 /wd4267")
++endif()
++
++install(TARGETS ${PROJECT_NAME}
++        EXPORT "${PROJECT_NAME}Config"
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib
++        RUNTIME DESTINATION bin)
++
++install(DIRECTORY ${PROJECT_SOURCE_DIR}/libgo/
++        DESTINATION ${INSTALL_INCLUDE_DIR}
++        FILES_MATCHING PATTERN "*.h")
++
++install(EXPORT "${PROJECT_NAME}Config"
++        NAMESPACE libgo::
++        DESTINATION "${INSTALL_CMAKE_DIR}")

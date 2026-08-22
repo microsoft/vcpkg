@@ -1,0 +1,35 @@
+{
+  "name": "tdscpp",
+  "version": "20250301",
+  "description": "C++ library to communicate with Microsoft SQL Server",
+  "homepage": "https://github.com/maharmstone/tdscpp",
+  "license": "LGPL-3.0",
+  "supports": "!android & !uwp & !osx",
+  "dependencies": [
+    {
+      "name": "fmt",
+      "platform": "!windows"
+    },
+    {
+      "name": "icu",
+      "platform": "!windows"
+    },
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "ssl": {
+      "description": "OpenSSL support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

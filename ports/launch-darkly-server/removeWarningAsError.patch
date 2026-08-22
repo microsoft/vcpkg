@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9acff7d..12904e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,7 +184,6 @@ else()
+                 -pedantic
+                 -Wall
+                 -Wextra
+-                -Werror
+                 -Wstrict-prototypes
+                 -Wmissing-prototypes
+                 -Wmissing-declarations
+diff --git a/c-sdk-common/CMakeLists.txt b/c-sdk-common/CMakeLists.txt
+index 15340f7..091e46d 100644
+--- a/c-sdk-common/CMakeLists.txt
++++ b/c-sdk-common/CMakeLists.txt
+@@ -87,7 +87,6 @@ else()
+                 -pedantic
+                 -Wall
+                 -Wextra
+-                -Werror
+                 -Wstrict-prototypes
+                 -Wmissing-prototypes
+                 -Wmissing-declarations
+@@ -123,7 +122,6 @@ else()
+         PRIVATE -fno-omit-frame-pointer
+                 -Wall
+                 -Wextra
+-                -Werror
+                 -Wstrict-prototypes
+                 -Wmissing-prototypes
+                 -Wmissing-declarations

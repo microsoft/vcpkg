@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0001c4f..e5e1d00 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -139,19 +139,15 @@ if(APPLE)
+ endif()
+ 
+ if(OPENGL_FOUND)
+-  add_library(lib STATIC gl2ps.c gl2ps.h)
+-  set_target_properties(lib PROPERTIES OUTPUT_NAME gl2ps)
+-
+-  add_library(shared SHARED gl2ps.c gl2ps.h)
+-  target_link_libraries(shared ${EXTERNAL_LIBRARIES})
+-  set_target_properties(shared PROPERTIES OUTPUT_NAME gl2ps
++  add_library(gl2ps gl2ps.c gl2ps.h)
++  target_link_libraries(gl2ps ${EXTERNAL_LIBRARIES})
++  set_target_properties(gl2ps PROPERTIES
+     VERSION ${GL2PS_MAJOR_VERSION}.${GL2PS_MINOR_VERSION}.${GL2PS_PATCH_VERSION}
+     SOVERSION ${GL2PS_MAJOR_VERSION})
+-  if(WIN32 OR CYGWIN)
+-    set_target_properties(shared PROPERTIES
+-        COMPILE_FLAGS "-DGL2PSDLL -DGL2PSDLL_EXPORTS")
++  if(WIN32 AND BUILD_SHARED_LIBS)
++    target_compile_definitions(gl2ps PRIVATE -DGL2PSDLL -DGL2PSDLL_EXPORTS)
+   endif()
+-  install(TARGETS lib shared RUNTIME DESTINATION bin
++  install(TARGETS gl2ps      RUNTIME DESTINATION bin
+                              LIBRARY DESTINATION lib${LIB_SUFFIX}
+                              ARCHIVE DESTINATION lib${LIB_SUFFIX})
+ endif()
+@@ -161,6 +157,7 @@ if(WIN32)
+ else()
+   set(GL2PS_DOC share/doc/gl2ps)
+ endif()
++set(GL2PS_DOC share/doc)
+ 
+ install(FILES gl2ps.h DESTINATION include)
+ install(FILES ${CMAKE_SOURCE_DIR}/README.txt DESTINATION ${GL2PS_DOC})

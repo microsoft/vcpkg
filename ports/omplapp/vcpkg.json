@@ -1,0 +1,35 @@
+{
+  "name": "omplapp",
+  "version": "1.7.0",
+  "description": "Use OMPL for reading meshes and performing collision checking",
+  "homepage": "https://ompl.kavrakilab.org/",
+  "license": null,
+  "dependencies": [
+    "assimp",
+    "boost-filesystem",
+    "boost-math",
+    "boost-program-options",
+    "boost-serialization",
+    "boost-system",
+    "ccd",
+    "eigen3",
+    "fcl",
+    "ompl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "opengl": {
+      "description": "Build with OpenGL support",
+      "dependencies": [
+        "opengl"
+      ]
+    }
+  }
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <CLCompile>
+      <!-- Use vcpkg ports instead of vendored externals -->
+      <PreprocessorDefinitions>_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="${VCPKG_LIBRARY_LINKAGE} == 'static'">XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+        %(AdditionalIncludeDirectories);${CURRENT_INSTALLED_DIR}/include
+      </AdditionalIncludeDirectories>
+    </CLCompile>
+    <Link>
+      <!-- Required Libs -->
+      <AdditionalDependencies Condition="'$(Configuration)'=='Release'">
+        ${ZLIB_RELEASE};%(AdditionalDependencies)
+      </AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)'=='Debug'">
+        ${ZLIB_DEBUG};%(AdditionalDependencies)
+      </AdditionalDependencies>
+
+      <!-- Extension modules -->
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Release|true'">
+        ${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE};%(AdditionalDependencies)
+      </AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Debug|true'">
+        ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
+      </AdditionalDependencies>
+    </Link>
+
+    <Lib>
+      <!-- Required to prevent linker errors on Visual Studio 2017 with static CRT -->
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x86'">MachineX86</TargetMachine>
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='x64'">MachineX64</TargetMachine>
+      <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='arm'">MachineARM</TargetMachine>
+      <!-- Required Libs -->
+      <AdditionalDependencies Condition="'$(Configuration)'=='Release'">
+        ${ZLIB_RELEASE};%(AdditionalDependencies)
+      </AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)'=='Debug'">
+        ${ZLIB_DEBUG};%(AdditionalDependencies)
+      </AdditionalDependencies>
+
+      <!-- Extension modules -->
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Release|true'">
+        ${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE};%(AdditionalDependencies)
+      </AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Debug|true'">
+        ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
+      </AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+</Project>

@@ -1,0 +1,18 @@
+{
+  "name": "ideviceinstaller",
+  "version-date": "2023-07-21",
+  "description": "Manage apps of iOS devices",
+  "homepage": "https://libimobiledevice.org/",
+  "license": "LGPL-2.0-or-later",
+  "supports": "!uwp & !android & !ios & !xbox",
+  "dependencies": [
+    "dirent",
+    "getopt",
+    "libimobiledevice",
+    "libzip",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

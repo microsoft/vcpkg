@@ -1,0 +1,11 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1662,6 +1662,6 @@
+ # Include nlohmann-json
+-add_library(nlohmann INTERFACE IMPORTED)
+-include_directories(nlohmann SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/third_party/nlohmann/include)
++find_package(nlohmann_json REQUIRED)
++add_library(nlohmann ALIAS nlohmann_json::nlohmann_json)
+
+ # Include moodycamel
+ add_library(moodycamel INTERFACE IMPORTED)

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 81328ea..c735419 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -755,7 +755,8 @@ ELSE()
+     FIND_PACKAGE(GStreamer COMPONENTS app pbutils)
+     FIND_PACKAGE(GLIB COMPONENTS gobject)
+     FIND_PACKAGE(DirectShow)
+-    FIND_PACKAGE(SDL2)
++    find_package(SDL2 CONFIG)
++    set(SDL2_LIBRARY SDL2::SDL2 SDL2::SDL2main)
+     FIND_PACKAGE(SDL)
+     FIND_PACKAGE(Poppler-glib)
+     FIND_PACKAGE(RSVG)

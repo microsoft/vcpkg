@@ -1,0 +1,17 @@
+{
+  "name": "eljonny-testcpp",
+  "version": "0.3.0-beta.4",
+  "description": "A simple C++ test framework with no dependencies other than C++11 STL.",
+  "homepage": "https://github.com/eljonny/TestCPP",
+  "license": "Unlicense",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+diff --git a/vowpalwabbit/core/include/vw/core/vw_string_view_fmt.h b/vowpalwabbit/core/include/vw/core/vw_string_view_fmt.h
+index 6f3cdff63..422bb04a7 100644
+--- a/vowpalwabbit/core/include/vw/core/vw_string_view_fmt.h
++++ b/vowpalwabbit/core/include/vw/core/vw_string_view_fmt.h
+@@ -11,7 +11,6 @@
+ #pragma once
+ #include "vw/common/string_view.h"
+ 
+-#include <fmt/core.h>
+ #include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+diff --git a/vowpalwabbit/core/src/learner.cc b/vowpalwabbit/core/src/learner.cc
+index 86e7c46a8..6b97c6a83 100644
+--- a/vowpalwabbit/core/src/learner.cc
++++ b/vowpalwabbit/core/src/learner.cc
+@@ -12,7 +12,7 @@
+ //     'fmt.v7.format_system_error(fmt.v7.detail.buffer<System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte>*!System.Runtime.CompilerServices.IsImplicitlyDereferenced,System.Int32,fmt.v7.basic_string_view<System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte>)':
+ //     badly-formed XML: Invalid at the top level of the document.
+ #endif
+-#include "fmt/core.h"
++#include "fmt/format.h"
+ #ifdef _WIN32
+ #  pragma warning(pop)
+ #endif
+diff --git a/vowpalwabbit/core/src/reductions/boosting.cc b/vowpalwabbit/core/src/reductions/boosting.cc
+index b514a88d3..2c2aa4ef7 100644
+--- a/vowpalwabbit/core/src/reductions/boosting.cc
++++ b/vowpalwabbit/core/src/reductions/boosting.cc
+@@ -19,7 +19,7 @@
+ #include "vw/core/vw_math.h"
+ #include "vw/io/logger.h"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <cfloat>
+ #include <climits>
+diff --git a/vowpalwabbit/core/src/reductions/ect.cc b/vowpalwabbit/core/src/reductions/ect.cc
+index e4eab18f7..ea2c46992 100644
+--- a/vowpalwabbit/core/src/reductions/ect.cc
++++ b/vowpalwabbit/core/src/reductions/ect.cc
+@@ -15,7 +15,7 @@
+ #include "vw/core/setup_base.h"
+ #include "vw/io/logger.h"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <cfloat>
+ #include <ctime>
+diff --git a/vowpalwabbit/core/src/reductions/topk.cc b/vowpalwabbit/core/src/reductions/topk.cc
+index f77458767..45688507a 100644
+--- a/vowpalwabbit/core/src/reductions/topk.cc
++++ b/vowpalwabbit/core/src/reductions/topk.cc
+@@ -12,7 +12,7 @@
+ #include "vw/io/errno_handling.h"
+ #include "vw/io/logger.h"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <cfloat>
+ #include <numeric>
+diff --git a/vowpalwabbit/io/include/vw/io/logger.h b/vowpalwabbit/io/include/vw/io/logger.h
+index f3b816361..6f45766bf 100644
+--- a/vowpalwabbit/io/include/vw/io/logger.h
++++ b/vowpalwabbit/io/include/vw/io/logger.h
+@@ -6,7 +6,7 @@
+ 
+ #include "vw/common/string_view.h"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <functional>
+ #include <memory>

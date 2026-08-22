@@ -1,0 +1,21 @@
+diff --git a/src/activation.c b/src/activation.c
+index 29bb2e8..69ec7b4 100644
+--- a/src/activation.c
++++ b/src/activation.c
+@@ -32,15 +32,11 @@
+ #include <libxml/HTMLtree.h>
+ #include <curl/curl.h>
+ 
+-#ifdef WIN32
+-#define IDEVICE_ACTIVATION_API __declspec( dllexport )
+-#else
+-#ifdef HAVE_FVISIBILITY
++#if !defined(_WIN32) && !defined(LIBIDEVICEACTIVATION_STATIC)
+ #define IDEVICE_ACTIVATION_API __attribute__((visibility("default")))
+ #else
+ #define IDEVICE_ACTIVATION_API
+ #endif
+-#endif
+ 
+ #ifdef WIN32
+ #include <windows.h>

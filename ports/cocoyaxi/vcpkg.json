@@ -1,0 +1,38 @@
+{
+  "name": "cocoyaxi",
+  "version-date": "2024-09-04",
+  "description": "A go-style coroutine library in C++11 and more",
+  "homepage": "https://github.com/idealvin/coost/",
+  "license": "MIT",
+  "supports": "!uwp & !(arm & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "libcurl": {
+      "description": "libcurl with OpenSSL support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
+      ]
+    },
+    "openssl": {
+      "description": "SSL support (OpenSSL)",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

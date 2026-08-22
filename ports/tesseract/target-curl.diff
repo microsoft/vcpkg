@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index faf7ac1..5066996 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -818,7 +818,7 @@ if(LibArchive_FOUND)
+   target_link_libraries(libtesseract PUBLIC ${LibArchive_LIBRARIES})
+ endif(LibArchive_FOUND)
+ if(CURL_FOUND)
+-  if(NOT CURL_LIBRARIES)
++  if(TARGET CURL::libcurl)
+     target_link_libraries(libtesseract PUBLIC CURL::libcurl)
+   else()
+     target_link_libraries(libtesseract PUBLIC ${CURL_LIBRARIES})

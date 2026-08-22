@@ -1,0 +1,31 @@
+diff --git a/src/file.h b/src/file.h
+index a67e8ff..9115c5b 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -82,7 +82,7 @@
+ #include <tre/regex.h>
+ #include <time.h>
+ #include <sys/types.h>
+-#ifndef WIN32
++#ifndef _WIN32
+ #include <sys/param.h>
+ #endif
+ /* Do this here and now, because struct stat gets re-defined on solaris */
+@@ -99,7 +99,7 @@
+ #define MAGIC "/etc/magic"
+ #endif
+ 
+-#if defined(__EMX__) || defined (WIN32)
++#if defined(__EMX__) || defined (_WIN32)
+ #define PATHSEP	';'
+ #else
+ #define PATHSEP	':'
+@@ -108,7 +108,7 @@
+ #define file_private static
+ 
+ #if HAVE_VISIBILITY
+-# if defined(WIN32)
++# if defined(_WIN32)
+ #  define file_public  __declspec(dllexport)
+ #  ifndef file_protected
+ #   define file_protected

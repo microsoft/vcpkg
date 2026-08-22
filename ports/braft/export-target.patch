@@ -1,0 +1,72 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3d75dd5..090a02e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,7 +99,7 @@ if(BRPC_WITH_GLOG)
+         ${OPENSSL_LIBRARIES}
+         ${OPENSSL_CRYPTO_LIBRARY}
+         dl
+-        z
++        ZLIB::ZLIB
+         )
+ else()
+     set(DYNAMIC_LIB
+@@ -111,7 +111,7 @@ else()
+         ${OPENSSL_LIBRARIES}
+         ${OPENSSL_CRYPTO_LIBRARY}
+         dl
+-        z
++        ZLIB::ZLIB
+ 	)
+ endif()
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 78adc56..50cffc6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -19,8 +19,10 @@ add_library(braft-static STATIC $<TARGET_OBJECTS:OBJ_LIB>)
+ endif()
+ 
+ if (BUILD_SHARED_LIBS)
++target_include_directories(braft-shared PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries(braft-shared PUBLIC ${DYNAMIC_LIB})
+ else()
++target_include_directories(braft-static PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries(braft-static PUBLIC ${DYNAMIC_LIB})
+ endif()
+ 
+@@ -31,15 +33,32 @@ SET_TARGET_PROPERTIES(braft-shared PROPERTIES OUTPUT_NAME braft CLEAN_DIRECT_OUT
+ endif()
+ 
+ if (NOT BUILD_SHARED_LIBS)
+-install(TARGETS braft-static
++install(TARGETS braft-static EXPORT unofficial-braftTargets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib${LIBSUFFIX}
+         ARCHIVE DESTINATION lib${LIBSUFFIX}
+         )
+ else()
+-install(TARGETS braft-shared
++install(TARGETS braft-shared EXPORT unofficial-braftTargets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib${LIBSUFFIX}
+         ARCHIVE DESTINATION lib${LIBSUFFIX}
+         )
+ endif()
++
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-braft-config.cmake"
++[[include(CMakeFindDependencyMacro)
++find_dependency(ZLIB)
++find_dependency(gflags CONFIG)
++find_dependency(Protobuf CONFIG)
++file(GLOB TARGET_FILES "${CMAKE_CURRENT_LIST_DIR}/unofficial-braftTargets.cmake")
++foreach (TARGET_FILE ${TARGET_FILES})
++    include("${TARGET_FILE}")
++endforeach()
++]])
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-braft-config.cmake" DESTINATION share/unofficial-braft)
++
++install(EXPORT unofficial-braftTargets
++    NAMESPACE unofficial::braft::
++    DESTINATION share/unofficial-braft
++)

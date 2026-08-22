@@ -1,0 +1,33 @@
+diff --git a/source/glbinding/CMakeLists.txt b/source/glbinding/CMakeLists.txt
+index 97654c8..bca68d1 100644
+--- a/source/glbinding/CMakeLists.txt
++++ b/source/glbinding/CMakeLists.txt
+@@ -261,6 +261,11 @@ target_link_libraries(${target}
+ # Compile definitions
+ # 
+ 
++
++if (CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
++  target_compile_definitions(${target} PRIVATE SYSTEM_WINDOWS WINDOWS_STORE)
++endif()
++
+ target_compile_definitions(${target}
+     PRIVATE
+     # since we use stl and stl is intended to use exceptions, exceptions should not be disabled
+diff --git a/source/glbinding/source/getProcAddress.cpp b/source/glbinding/source/getProcAddress.cpp
+index c1cfc5c..7e5f8bc 100644
+--- a/source/glbinding/source/getProcAddress.cpp
++++ b/source/glbinding/source/getProcAddress.cpp
+@@ -18,7 +18,11 @@ namespace glbinding {
+ 
+ ProcAddress getProcAddress(const char * name)
+ {
+-    static auto module = LoadLibrary(_T("OPENGL32.DLL"));
++#ifdef WINDOWS_STORE
++	static auto module = ::LoadPackagedLibrary(_T("OPENGL32.DLL"), 0);
++#else
++	static auto module = ::LoadLibrary(_T("OPENGL32.DLL"));
++#endif
+ 
+ 	// Prevent static linking of opengl32
+ 	static auto wglGetProcAddress_ = reinterpret_cast<void * (__stdcall *)(const char *)>(::GetProcAddress(module, "wglGetProcAddress"));

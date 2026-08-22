@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1234567..abcdefg 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -100,11 +100,11 @@ install(FILES
+ 
+ install(TARGETS SoundTouch
+   EXPORT SoundTouchTargets
++  COMPONENT SoundTouch
+   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+-  COMPONENT SoundTouch
+ )
+ 
+ #######################

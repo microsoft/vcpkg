@@ -1,0 +1,12 @@
+{
+  "name": "tl-generator",
+  "version-date": "2021-09-28",
+  "description": "Single-header, ranges-compatible generator type built on C++20 coroutines",
+  "homepage": "https://tl.tartanllama.xyz",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

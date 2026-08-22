@@ -1,0 +1,22 @@
+{
+  "name": "llfio-run-tests",
+  "version-string": "0",
+  "port-version": 1,
+  "description": "Ensures that LLFIO built with vcpkg version of dependencies produces working executables.",
+  "supports": "x64",
+  "dependencies": [
+    {
+      "name": "llfio",
+      "features": [
+        "run-tests"
+      ]
+    },
+    {
+      "name": "llfio",
+      "features": [
+        "run-tests",
+        "status-code"
+      ]
+    }
+  ]
+}

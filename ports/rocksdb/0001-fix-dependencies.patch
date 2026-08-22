@@ -1,0 +1,129 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9523fe3e7..ad90f6ef5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -106,7 +106,7 @@ endif()
+ 
+ include(CMakeDependentOption)
+ 
+-if(MSVC)
++if(0)
+   option(WITH_GFLAGS "build with GFlags" OFF)
+   option(WITH_XPRESS "build with windows built in compression" OFF)
+   option(ROCKSDB_SKIP_THIRDPARTY "skip thirdparty.inc" OFF)
+@@ -160,10 +160,7 @@ else()
+   endif()
+ 
+   if(WITH_SNAPPY)
+-    find_package(Snappy CONFIG)
+-    if(NOT Snappy_FOUND)
+-      find_package(Snappy REQUIRED)
+-    endif()
++    find_package(Snappy CONFIG REQUIRED)
+     add_definitions(-DSNAPPY)
+     list(APPEND THIRDPARTY_LIBS Snappy::snappy)
+   endif()
+@@ -187,16 +184,19 @@ else()
+   endif()
+ 
+   if(WITH_LZ4)
+-    find_package(lz4 REQUIRED)
++    find_package(lz4 CONFIG REQUIRED)
+     add_definitions(-DLZ4)
+     list(APPEND THIRDPARTY_LIBS lz4::lz4)
+   endif()
+ 
+   if(WITH_ZSTD)
+-    find_package(zstd REQUIRED)
++    find_package(zstd CONFIG REQUIRED)
+     add_definitions(-DZSTD)
+-    include_directories(${ZSTD_INCLUDE_DIRS})
+-    list(APPEND THIRDPARTY_LIBS zstd::zstd)
++    if(TARGET zstd::libzstd_shared)
++      list(APPEND THIRDPARTY_LIBS zstd::libzstd_shared)
++    elseif(TARGET zstd::libzstd_static)
++      list(APPEND THIRDPARTY_LIBS zstd::libzstd_static)
++    endif()
+   endif()
+ endif()
+ 
+@@ -347,11 +347,10 @@ int main() {
+ endif()
+ 
+ if (WITH_LIBURING)
+-  find_package(uring)
+-  if (uring_FOUND)
+-    add_definitions(-DROCKSDB_IOURING_PRESENT)
+-    list(APPEND THIRDPARTY_LIBS uring::uring)
+-  endif()
++  find_package(PkgConfig)
++  pkg_check_modules(liburing REQUIRED IMPORTED_TARGET GLOBAL liburing>=2.0)
++  add_definitions(-DROCKSDB_IOURING_PRESENT)
++  list(APPEND THIRDPARTY_LIBS PkgConfig::liburing)
+ endif()
+ 
+ # Reset the required flags
+@@ -409,17 +408,16 @@ endif()
+ 
+ option(WITH_NUMA "build with NUMA policy support" OFF)
+ if(WITH_NUMA)
+-  find_package(NUMA REQUIRED)
++  find_package(unofficial-numa CONFIG REQUIRED)
+   add_definitions(-DNUMA)
+-  include_directories(${NUMA_INCLUDE_DIRS})
+-  list(APPEND THIRDPARTY_LIBS NUMA::NUMA)
++  list(APPEND THIRDPARTY_LIBS unofficial::numa::numa)
+ endif()
+ 
+ option(WITH_TBB "build with Threading Building Blocks (TBB)" OFF)
+ if(WITH_TBB)
+-  find_package(TBB REQUIRED)
++  find_package(TBB CONFIG REQUIRED)
+   add_definitions(-DTBB)
+-  list(APPEND THIRDPARTY_LIBS TBB::TBB)
++  list(APPEND THIRDPARTY_LIBS TBB::tbb)
+ endif()
+ 
+ # Stall notifications eat some performance from inserts
+@@ -1289,8 +1287,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
+     endforeach()
+   endforeach()
+ 
+-  install(DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/modules" COMPONENT devel DESTINATION ${package_config_destination})
+-
+   install(
+     TARGETS ${ROCKSDB_STATIC_LIB}
+     EXPORT RocksDBTargets
+diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
+index 0bd14be11..ccc69ba72 100644
+--- a/cmake/RocksDBConfig.cmake.in
++++ b/cmake/RocksDBConfig.cmake.in
+@@ -33,19 +33,24 @@ if(@WITH_BZ2@)
+ endif()
+ 
+ if(@WITH_LZ4@)
+-  find_dependency(lz4)
++  find_dependency(lz4 CONFIG)
+ endif()
+ 
+ if(@WITH_ZSTD@)
+-  find_dependency(zstd)
++  find_dependency(zstd CONFIG)
+ endif()
+ 
+ if(@WITH_NUMA@)
+-  find_dependency(NUMA)
++  find_dependency(unofficial-numa CONFIG)
+ endif()
+ 
+ if(@WITH_TBB@)
+-  find_dependency(TBB)
++  find_dependency(TBB CONFIG)
++endif()
++
++if(@WITH_LIBURING@)
++  find_dependency(PkgConfig)
++  pkg_check_modules(liburing REQUIRED IMPORTED_TARGET GLOBAL liburing>=2.0)
+ endif()
+ 
+ find_dependency(Threads)

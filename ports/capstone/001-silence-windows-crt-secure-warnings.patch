@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f5f4448..5e5cc7e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,6 +87,10 @@ if(CAPSTONE_BUILD_STATIC_RUNTIME)
+     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ endif()
+ 
++if(WIN32)
++    add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
++endif()
++
+ ## sources
+ set(SOURCES_ENGINE
+     cs.c

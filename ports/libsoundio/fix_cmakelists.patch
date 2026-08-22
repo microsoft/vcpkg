@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6541f1b..e81bdce 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,5 @@
+-cmake_minimum_required(VERSION 2.8.5)
++cmake_minimum_required(VERSION 3.14)
++cmake_policy(SET CMP0022 NEW)
+ project(libsoundio C)
+ set(CMAKE_MODULE_PATH ${libsoundio_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+ 
+@@ -233,7 +234,8 @@ if(BUILD_DYNAMIC_LIBS)
+         LINKER_LANGUAGE C
+     )
+     target_link_libraries(libsoundio_shared LINK_PUBLIC ${LIBSOUNDIO_LIBS})
+-    install(TARGETS libsoundio_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    target_include_directories(libsoundio_shared PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++    install(TARGETS libsoundio_shared EXPORT libsoundio-export)
+ endif()
+ 
+ if(BUILD_STATIC_LIBS)
+@@ -204,8 +206,7 @@ if(MSVC)
+     set(EXAMPLE_CFLAGS "/W4")
+     set(TEST_CFLAGS "${LIB_CFLAGS}")
+     set(TEST_LDFLAGS " ")
+     set(LIBM " ")
+ else()
+-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Werror -pedantic")
+     set(LIB_CFLAGS "-std=c11 -fvisibility=hidden -Wall -Werror=strict-prototypes -Werror=old-style-definition -Werror=missing-prototypes -D_REENTRANT -D_POSIX_C_SOURCE=200809L -Wno-missing-braces")
+     set(EXAMPLE_CFLAGS "-std=c99 -Wall")
+@@ -243,9 +244,26 @@ if(BUILD_STATIC_LIBS)
+         COMPILE_FLAGS ${LIB_CFLAGS}
+         LINKER_LANGUAGE C
+     )
+-    install(TARGETS libsoundio_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
++    target_link_libraries(libsoundio_static PUBLIC ${LIBSOUNDIO_LIBS})
++    target_include_directories(libsoundio_static PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++    install(TARGETS libsoundio_static EXPORT libsoundio-export)
+ endif()
+ 
++add_library(libsoundio INTERFACE)
++if(BUILD_DYNAMIC_LIBS)
++    target_link_libraries(libsoundio INTERFACE libsoundio_shared)
++else()
++    target_link_libraries(libsoundio INTERFACE libsoundio_static)
++endif()
++install(TARGETS libsoundio EXPORT libsoundio-export)
++install(
++    EXPORT libsoundio-export
++    FILE libsoundio-config.cmake
++    DESTINATION share/libsoundio/
++    NAMESPACE ${PROJECT_NAME}::
++    EXPORT_LINK_INTERFACE_LIBRARIES
++)
++
+ install(FILES
+     ${LIBSOUNDIO_HEADERS}
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/soundio")

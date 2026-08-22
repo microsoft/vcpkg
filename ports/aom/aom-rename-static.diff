@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2bccc365eb..b4709ffd1c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -356,6 +356,15 @@ if(BUILD_SHARED_LIBS)
+     set_target_properties(aom PROPERTIES SOVERSION ${SO_VERSION})
+     set_target_properties(aom PROPERTIES VERSION ${SO_FILE_VERSION})
+   endif()
++
++  # override conditional changes
++  set_target_properties(aom PROPERTIES
++      ARCHIVE_OUTPUT_NAME aom
++  )
++  set_target_properties(aom_static PROPERTIES
++      ARCHIVE_OUTPUT_NAME aom_static
++      EXCLUDE_FROM_ALL 1
++  )
+ endif()
+ 
+ if(NOT WIN32 AND NOT APPLE)
+diff --git a/cmake/aom_install.cmake b/cmake/aom_install.cmake
+index a8f6d64361..6b3ccdc9fa 100644
+--- a/cmake/aom_install.cmake
++++ b/cmake/aom_install.cmake
+@@ -81,7 +81,7 @@ macro(setup_aom_install_targets)
+     endif()
+ 
+     if(BUILD_SHARED_LIBS)
+-      set(AOM_INSTALL_LIBS aom aom_static)
++      set(AOM_INSTALL_LIBS aom)
+     else()
+       set(AOM_INSTALL_LIBS aom)
+     endif()

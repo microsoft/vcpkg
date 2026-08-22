@@ -1,0 +1,12 @@
+diff --git a/src/src.pro b/src/src.pro
+index fceeb21..8a242d0 100644
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -2,6 +2,7 @@ win32 {
+     TEMPLATE = subdirs
+     CONFIG += ordered
+     SUBDIRS += winextras
++    SUBDIRS += imports
+ } else {
+     # fake project for creating the documentation
+     TEMPLATE = aux

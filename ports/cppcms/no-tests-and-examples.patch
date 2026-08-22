@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d2b91f5..c91ec97 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -647,7 +647,7 @@ add_custom_command(
+ 
+ 
+ 
+-if(NOT DISABLE_SHARED)
++if(installing-plugins)
+ 	add_custom_command(
+ 		OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/skin3.cpp
+ 		COMMAND ${PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/bin/cppcms_tmpl_cc 
+@@ -779,6 +779,7 @@ endif()
+ #####################################
+ # End of tests
+ #####################################
++set_target_properties(${ALL_TESTS} hello_world PROPERTIES EXCLUDE_FROM_ALL 1)
+ 
+ # These are use export
+ if(IS_WINDOWS AND NOT DISABLE_SHARED)
+diff --git a/booster/CMakeLists.txt b/booster/CMakeLists.txt
+index 822c470..0a95248 100644
+--- a/booster/CMakeLists.txt
++++ b/booster/CMakeLists.txt
+@@ -674,6 +674,7 @@ macro(add_booster_param_test MODULE TEST PARAMETER)
+ 	add_executable(${TEST_NAME} ${TEST_SRC})
+ 	target_link_libraries(${TEST_NAME} ${BOOSTER_LIB})
+ 	set_target_properties(${TEST_NAME} PROPERTIES COMPILE_DEFINITIONS "${EXE_COM_DEFS}")
++	set_target_properties(${TEST_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
+ 	add_test(${TEST_NAME} ${TEST_NAME} ${PARAMETER})
+ 	set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 20)
+ endmacro()

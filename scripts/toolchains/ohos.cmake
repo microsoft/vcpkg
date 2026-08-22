@@ -1,0 +1,83 @@
+set(CMAKE_SYSTEM_NAME OHOS CACHE STRING "")
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(OHOS_ARCH "arm64-v8a" CACHE STRING "")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    set(OHOS_ARCH "armeabi-v7a" CACHE STRING "")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(OHOS_ARCH "x86_64" CACHE STRING "")
+else()
+    message(FATAL_ERROR "Unsupported VCPKG_TARGET_ARCHITECTURE for OHOS: ${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    set(OHOS_STL "c++_shared" CACHE STRING "")
+else()
+    set(OHOS_STL "c++_static" CACHE STRING "")
+endif()
+
+if(DEFINED ENV{OHOS_SDK_ROOT})
+    set(OHOS_SDK_ROOT "$ENV{OHOS_SDK_ROOT}")
+else()
+    message(FATAL_ERROR
+        "Could not find the OHOS SDK. Set the OHOS_SDK_ROOT environment variable "
+        "to the root of the OpenHarmony SDK (e.g. ~/.local/opt/ohos/command-line-tools/sdk/default/openharmony)."
+    )
+endif()
+
+set(OHOS_NATIVE_ROOT "${OHOS_SDK_ROOT}/native")
+set(OHOS_TOOLCHAIN_FILE "${OHOS_NATIVE_ROOT}/build/cmake/ohos.toolchain.cmake")
+if(NOT EXISTS "${OHOS_TOOLCHAIN_FILE}")
+    message(FATAL_ERROR "Could not find OHOS toolchain file at ${OHOS_TOOLCHAIN_FILE}")
+endif()
+
+include("${OHOS_TOOLCHAIN_FILE}")
+
+# The OHOS SDK sets CMAKE_<LANG>_COMPILER_EXTERNAL_TOOLCHAIN which CMake
+# translates to --gcc-toolchain=.  This flag is unused during compilation
+# and causes Meson builds to fail with -Werror=unused-command-line-argument.
+# The OHOS clang already knows its toolchain location, so this is not needed.
+unset(CMAKE_C_COMPILER_EXTERNAL_TOOLCHAIN)
+unset(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
+unset(CMAKE_ASM_COMPILER_EXTERNAL_TOOLCHAIN)
+
+if(NOT _VCPKG_OHOS_TOOLCHAIN)
+    set(_VCPKG_OHOS_TOOLCHAIN 1)
+
+    if(POLICY CMP0056)
+        cmake_policy(SET CMP0056 NEW)
+    endif()
+    if(POLICY CMP0066)
+        cmake_policy(SET CMP0066 NEW)
+    endif()
+    if(POLICY CMP0067)
+        cmake_policy(SET CMP0067 NEW)
+    endif()
+    if(POLICY CMP0137)
+        cmake_policy(SET CMP0137 NEW)
+    endif()
+    list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+        VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE
+        VCPKG_C_FLAGS VCPKG_CXX_FLAGS
+        VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
+        VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
+        VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
+    )
+
+    string(APPEND CMAKE_C_FLAGS " -fPIC ${VCPKG_C_FLAGS} ")
+    string(APPEND CMAKE_CXX_FLAGS " -fPIC ${VCPKG_CXX_FLAGS} ")
+    string(APPEND CMAKE_C_FLAGS_DEBUG " ${VCPKG_C_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_CXX_FLAGS_DEBUG " ${VCPKG_CXX_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_C_FLAGS_RELEASE " ${VCPKG_C_FLAGS_RELEASE} ")
+    string(APPEND CMAKE_CXX_FLAGS_RELEASE " ${VCPKG_CXX_FLAGS_RELEASE} ")
+
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS " ${VCPKG_LINKER_FLAGS} ")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${VCPKG_LINKER_FLAGS} ")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " ${VCPKG_LINKER_FLAGS} ")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG " ${VCPKG_LINKER_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG " ${VCPKG_LINKER_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " ${VCPKG_LINKER_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS_RELEASE " ${VCPKG_LINKER_FLAGS_RELEASE} ")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS_RELEASE " ${VCPKG_LINKER_FLAGS_RELEASE} ")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " ${VCPKG_LINKER_FLAGS_RELEASE} ")
+endif()

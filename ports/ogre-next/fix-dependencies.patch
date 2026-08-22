@@ -1,0 +1,89 @@
+diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+index b0ca7c12f8..7e52ca668a 100644
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
+@@ -21,9 +21,7 @@ endif()
+ set(OGRE_CMAKE_DIR "share/ogre-next")
+ 
+ set(INST_FILES
+-  Packages/FindRapidjson.cmake
+   Packages/FindRemotery.cmake
+-  Packages/FindSDL2.cmake
+   Packages/FindOGRE.cmake
+   Utils/FindPkgMacros.cmake
+   Utils/MacroLogFeature.cmake
+@@ -44,11 +42,7 @@ if (OGRE_CONFIG_THREAD_PROVIDER STREQUAL "tbb")
+ endif ()
+ 
+ set(STATIC_INST_FILES
+-  Packages/FindFreeImage.cmake
+-  Packages/FindFreetype.cmake
+   Packages/FindOpenGLES2.cmake
+-  Packages/FindZLIB.cmake
+-  Packages/FindZZip.cmake
+   Packages/FindSoftimage.cmake
+ )
+ if (WIN32)
+diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
+index 7dd36f2ab2..e83d040e83 100644
+--- a/CMake/Dependencies.cmake
++++ b/CMake/Dependencies.cmake
+@@ -74,26 +74,32 @@ set(CMAKE_FRAMEWORK_PATH ${OGRE_DEP_SEARCH_PATH} ${CMAKE_FRAMEWORK_PATH})
+ #######################################################################
+ 
+ # Find zlib
+-find_package(ZLIB)
++find_package(ZLIB REQUIRED)
+ macro_log_feature(ZLIB_FOUND "zlib" "Simple data compression library" "http://www.zlib.net" FALSE "" "")
+ 
+ if (ZLIB_FOUND)
+   # Find zziplib
+-  find_package(ZZip)
++  find_package(ZZip NAMES zziplib CONFIG REQUIRED)
++  set(ZZip_LIBRARIES zziplib::libzzip)
+   macro_log_feature(ZZip_FOUND "zziplib" "Extract data from zip archives" "http://zziplib.sourceforge.net" FALSE "" "")
+ endif ()
+ 
+ # Find FreeImage
+-find_package(FreeImage)
++find_package(FreeImage NAMES freeimage REQUIRED)
++set(FreeImage_LIBRARIES freeimage::FreeImage)
+ macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net" FALSE "" "")
+ 
+ # Find FreeType
+-find_package(Freetype)
++find_package(FREETYPE NAMES freetype REQUIRED)
++set(FREETYPE_LIBRARIES freetype)
+ macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
+ 
+ find_package(Vulkan)
+ macro_log_feature(Vulkan_FOUND "vulkan-sdk" "Vulkan SDK" "https://vulkan.lunarg.com/" FALSE "" "")
+ 
++find_package(glslang CONFIG)
++macro_log_feature(glslang_FOUND "glslang" "glslang" "https://github.com/KhronosGroup/glslang" FALSE "" "")
++
+ # Find X11
+ if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+   find_package(X11)
+@@ -105,7 +111,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+ endif ()
+ 
+ # Find rapidjson
+-find_package(Rapidjson)
++find_package(Rapidjson NAMES RapidJSON CONFIG REQUIRED)
+ macro_log_feature(Rapidjson_FOUND "rapidjson" "C++ JSON parser" "https://rapidjson.org/" FALSE "" "")
+ 
+ find_package(RenderDoc)
+diff --git a/RenderSystems/Vulkan/CMakeLists.txt b/RenderSystems/Vulkan/CMakeLists.txt
+index 2fc1859d86..ae8e4e29df 100644
+--- a/RenderSystems/Vulkan/CMakeLists.txt
++++ b/RenderSystems/Vulkan/CMakeLists.txt
+@@ -35,7 +35,7 @@ include_directories(
+ include_directories( ${Vulkan_INCLUDE_DIRS} )
+ 
+ ogre_add_library(RenderSystem_Vulkan ${OGRE_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
+-target_link_libraries(RenderSystem_Vulkan ${OGRE_NEXT}Main ${Vulkan_LIBRARIES})
++target_link_libraries(RenderSystem_Vulkan ${OGRE_NEXT}Main ${Vulkan_LIBRARIES} glslang::glslang)
+ 
+ if( OGRE_VULKAN_WINDOW_XCB )
+ 	target_link_libraries(RenderSystem_Vulkan xcb-randr X11-xcb)

@@ -1,0 +1,6 @@
+function(find_python_module)
+endfunction()
+macro(find_boost_python)
+endmacro()
+macro(install_python)
+endmacro()

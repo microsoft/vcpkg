@@ -1,0 +1,13 @@
+diff --git a/CMake/fl_add_library.cmake b/CMake/fl_add_library.cmake
+index 29baa95..7e3490b 100644
+--- a/CMake/fl_add_library.cmake
++++ b/CMake/fl_add_library.cmake
+@@ -37,6 +37,8 @@ macro (FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
+ 
+   add_library(${TARGET_NAME} ${LIBTYPE} ${LIBFILES})
+ 
++  target_include_directories(${TARGET_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
++
+   # target properties for all libraries
+ 
+   set_target_properties(${TARGET_NAME}

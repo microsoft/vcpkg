@@ -1,0 +1,32 @@
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_Utils.C b/packages/seacas/libraries/ioss/src/Ioss_Utils.C
+index 241ff80..2d3df83 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_Utils.C
++++ b/packages/seacas/libraries/ioss/src/Ioss_Utils.C
+@@ -163,14 +163,27 @@ std::ostream &Ioss::Utils::get_debug_stream() { return *m_debugStream; }
+ void Ioss::Utils::time_and_date(char *time_string, char *date_string, size_t length)
+ {
+   std::time_t t    = std::time(nullptr);
++#if FMT_VERSION < 120000
+   std::string time = fmt::format("{:%H:%M:%S}", fmt::localtime(t));
++#else
++  std::string time = fmt::format("{:%H:%M:%S}", *std::localtime(&t));
++#endif
+   std::string date;
++#if FMT_VERSION < 120000
+   if (length >= 10) {
+     date = fmt::format("{:%Y/%m/%d}", fmt::localtime(t));
+   }
+   else {
+     date = fmt::format("{:%y/%m/%d}", fmt::localtime(t));
+   }
++#else
++  if (length >= 10) {
++    date = fmt::format("{:%Y/%m/%d}", *std::localtime(&t));
++  }
++  else {
++    date = fmt::format("{:%y/%m/%d}", *std::localtime(&t));
++  }
++#endif
+   copy_string(time_string, time, 9);
+   copy_string(date_string, date, length + 1);
+ }

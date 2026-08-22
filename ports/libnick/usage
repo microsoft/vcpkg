@@ -1,0 +1,8 @@
+libnick provides CMake targets:
+
+    find_package(libnick CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libnick::libnick)
+
+libnick provides pkg-config modules:
+
+    libnick

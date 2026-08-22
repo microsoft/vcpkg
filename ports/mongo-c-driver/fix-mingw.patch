@@ -1,0 +1,64 @@
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index 9b2c2f845d..64bdc251bb 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -204,7 +204,7 @@ endfunction()
+ # Per-backend link libs/options:
+ set(SecureTransport/LINK_LIBRARIES "-framework CoreFoundation" "-framework Security")
+ set(SecureTransport/pkg_config_LIBS -framework Corefoundation -framework Security)
+-set(SecureChannel/LINK_LIBRARIES secur32.lib crypt32.lib Bcrypt.lib ncrypt.lib)
++set(SecureChannel/LINK_LIBRARIES secur32.lib crypt32.lib bcrypt.lib ncrypt.lib)
+ set(SecureChannel/pkg_config_LIBS ${SecureChannel/LINK_LIBRARIES})
+ set(OpenSSL/LINK_LIBRARIES OpenSSL::SSL OpenSSL::Crypto $<$<PLATFORM_ID:Windows>:crypt32.lib>)
+ set(OpenSSL/pkg_config_LIBS -lssl -lcrypto $<$<PLATFORM_ID:Windows>:crypt32.lib>)
+@@ -338,7 +338,7 @@ function(_use_sasl libname)
+    target_link_libraries(_mongoc-dependencies INTERFACE _mongoc-sasl_backend)
+    install(TARGETS _mongoc-sasl_backend EXPORT mongoc-targets)
+    if(libname STREQUAL "SSPI")
+-      target_link_libraries(_mongoc-sasl_backend INTERFACE secur32.lib crypt32.lib Shlwapi.lib)
++      target_link_libraries(_mongoc-sasl_backend INTERFACE secur32.lib crypt32.lib shlwapi.lib)
+       set(backend "SSPI")
+    elseif(libname STREQUAL "CYRUS")
+       find_package(SASL2 2.0 REQUIRED)
+diff --git a/src/libmongoc/src/mongoc/mongoc-client.c b/src/libmongoc/src/mongoc/mongoc-client.c
+index f4322798c0..cf01aa86c2 100644
+--- a/src/libmongoc/src/mongoc/mongoc-client.c
++++ b/src/libmongoc/src/mongoc/mongoc-client.c
+@@ -20,8 +20,8 @@
+ 
+ #ifdef MONGOC_HAVE_DNSAPI
+ /* for DnsQuery_UTF8 */
+-#include <WinDNS.h>
+-#include <Windows.h>
++#include <winDNS.h>
++#include <windows.h>
+ #include <ws2tcpip.h>
+ #else
+ #if defined(MONGOC_HAVE_RES_NSEARCH) || defined(MONGOC_HAVE_RES_SEARCH)
+diff --git a/src/libmongoc/src/mongoc/mongoc-socket.c b/src/libmongoc/src/mongoc/mongoc-socket.c
+index 9231df1a12..440c109af2 100644
+--- a/src/libmongoc/src/mongoc/mongoc-socket.c
++++ b/src/libmongoc/src/mongoc/mongoc-socket.c
+@@ -23,7 +23,7 @@
+ #include <mongoc/mongoc-host-list.h>
+ 
+ #ifdef _WIN32
+-#include <Mstcpip.h>
++#include <mstcpip.h>
+ #include <process.h>
+ #endif
+ #include <mlib/cmp.h>
+diff --git a/src/libmongoc/src/mongoc/mongoc-sspi-private.h b/src/libmongoc/src/mongoc/mongoc-sspi-private.h
+index e5c8c970bd..83185cc50d 100644
+--- a/src/libmongoc/src/mongoc/mongoc-sspi-private.h
++++ b/src/libmongoc/src/mongoc/mongoc-sspi-private.h
+@@ -29,8 +29,8 @@ BSON_BEGIN_DECLS
+ 
+ #define SECURITY_WIN32 1 /* Required for SSPI */
+ 
+-#include <Windows.h>
+ #include <sspi.h>
++#include <windows.h>
+ 
+ #include <limits.h>
+ #include <string.h>

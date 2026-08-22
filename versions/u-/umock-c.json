@@ -1,0 +1,74 @@
+{
+  "versions": [
+    {
+      "git-tree": "524700bc9f0f017f7bbaa82086e967fec2b023d8",
+      "version-date": "2022-01-21",
+      "port-version": 1
+    },
+    {
+      "git-tree": "67f2fda1636719281706ebef0314a388ba5c8d15",
+      "version-date": "2022-01-21",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b34153650a29eb81f88e48f53bd06ca05d4383c4",
+      "version-string": "2020-06-17",
+      "port-version": 2
+    },
+    {
+      "git-tree": "10a9af0e9e3e4d0a7ab3a5819943e4d609677c1a",
+      "version-string": "2020-06-17-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "97a7fdde215f5c129ca102a68bd6c31fb05dc625",
+      "version-string": "2020-02-04.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b3247368a3dd68037fa1f77de94e14e234cf16aa",
+      "version-string": "2020-01-22",
+      "port-version": 0
+    },
+    {
+      "git-tree": "27141636977218c8c9e394370759e07e001c9503",
+      "version-string": "2019-11-27.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "413299817381e00342581ecd2ad6badb98b4546c",
+      "version-string": "2019-10-07.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "043b06d9b9c58987c224353e26f03b208f5a7eed",
+      "version-string": "2019-07-01-LTS-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "76d07d1bbf56cb4c3c9ccc57cc95cc0f4a82cd2f",
+      "version-string": "2019-10-07.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4dab55f47de9332734363419362ba25949921308",
+      "version-string": "2019-08-20.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "dea5476a79d9d42c9ea126d914d3c7f73aa1c173",
+      "version-string": "2019-05-16.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8c524063e559683d4e74003302b2548dfbc3a157",
+      "version-string": "2019-05-16",
+      "port-version": 0
+    },
+    {
+      "git-tree": "99d6f1960217643a28d932f7c4c3e32e60b9f4cb",
+      "version-string": "2019-04-11-1",
+      "port-version": 0
+    }
+  ]
+}

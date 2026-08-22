@@ -1,0 +1,17 @@
+{
+  "name": "pmdk",
+  "version": "1.12.0",
+  "port-version": 2,
+  "description": "Persistent Memory Development Kit",
+  "homepage": "https://github.com/pmem/pmdk",
+  "license": "BSD-3-Clause",
+  "supports": "!(linux | arm | x86)",
+  "dependencies": [
+    "getopt",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}

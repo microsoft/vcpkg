@@ -1,0 +1,12 @@
+diff --git a/db/blob/blob_file_meta.h b/db/blob/blob_file_meta.h
+index 2e47726f8..fbbf54cf4 100644
+--- a/db/blob/blob_file_meta.h
++++ b/db/blob/blob_file_meta.h
+@@ -11,6 +11,7 @@
+ #include <memory>
+ #include <string>
+ #include <unordered_set>
++#include <cstdint>
+ 
+ #include "rocksdb/rocksdb_namespace.h"
+ 

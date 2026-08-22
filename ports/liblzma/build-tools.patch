@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b0894e75..55fd0401 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1797,6 +1797,7 @@ function(my_install_man COMPONENT SRC_FILE LINK_NAMES)
+ endfunction()
+ 
+ 
++if(BUILD_TOOLS)
+ #############################################################################
+ # libgnu (getopt_long)
+ #############################################################################
+@@ -2466,6 +2467,8 @@ xzdiff, xzgrep, xzmore, xzless, and their symlinks" ON)
+                        src/scripts/xzless.1 "${XZLESS_LINKS}")
+     endif()
+ endif()
++endif()
++
+ 
+ 
+ #############################################################################

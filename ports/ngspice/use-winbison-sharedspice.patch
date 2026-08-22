@@ -1,0 +1,19 @@
+diff --git a/visualc/sharedspice.vcxproj b/visualc/sharedspice.vcxproj
+index 4ff0dfc..57b0c35 100644
+--- a/visualc/sharedspice.vcxproj
++++ b/visualc/sharedspice.vcxproj
+@@ -2223,12 +2223,12 @@
+   <ItemGroup>
+     <CustomBuild Include="..\src\frontend\parse-bison.y">
+       <Message>invoke win_bison.exe for %(Identity)</Message>
+-      <Command>..\..\flex-bison\win_bison.exe --output=.\tmp-bison\%(Filename).c --defines=.\tmp-bison\%(Filename).h %(Identity) || exit 1</Command>
++      <Command>win_bison.exe --output=.\tmp-bison\%(Filename).c --defines=.\tmp-bison\%(Filename).h %(Identity) || exit 1</Command>
+       <Outputs>.\tmp-bison\%(Filename).c;.\tmp-bison\%(Filename).h</Outputs>
+     </CustomBuild>
+     <CustomBuild Include="..\src\spicelib\parser\inpptree-parser.y">
+       <Message>invoke win_bison.exe for %(Identity)</Message>
+-      <Command>..\..\flex-bison\win_bison.exe --output=.\tmp-bison\%(Filename).c --defines=.\tmp-bison\%(Filename).h %(Identity) || exit 1</Command>
++      <Command>win_bison.exe --output=.\tmp-bison\%(Filename).c --defines=.\tmp-bison\%(Filename).h %(Identity) || exit 1</Command>
+       <Outputs>.\tmp-bison\%(Filename).c;.\tmp-bison\%(Filename).h</Outputs>
+     </CustomBuild>
+   </ItemGroup>

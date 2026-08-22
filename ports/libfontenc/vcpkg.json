@@ -1,0 +1,17 @@
+{
+  "name": "libfontenc",
+  "version": "1.1.9",
+  "description": "X font encoding library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libfontenc",
+  "license": null,
+  "dependencies": [
+    "font-util",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    "xorg-macros",
+    "xproto",
+    "zlib"
+  ]
+}

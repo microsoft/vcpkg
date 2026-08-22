@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 136400d..f54a722 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,15 +15,15 @@ include(CMakePushCheckState)
+ # Maximum warnings level & warnings as error
+ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+     if (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC") # clang-cl
+-        add_compile_options("/W4;/WX;")
++        add_compile_options("/W4")
+     else() # clang native
+-        add_compile_options("-Wall;-Wextra;-pedantic;-Werror")
++        add_compile_options("-Wall;-Wextra;-pedantic")
+     endif()
+ else()
+     add_compile_options(
+-        "$<$<CXX_COMPILER_ID:MSVC>:/W4;/WX>"
+-        "$<$<CXX_COMPILER_ID:GNU>:-Wall;-Wextra;-pedantic;-Werror>"
+-        "$<$<CXX_COMPILER_ID:AppleClang>:-Wall;-Wextra;-pedantic;-Werror>"
++        "$<$<CXX_COMPILER_ID:MSVC>:/W4>"
++        "$<$<CXX_COMPILER_ID:GNU>:-Wall;-Wextra;-pedantic>"
++        "$<$<CXX_COMPILER_ID:AppleClang>:-Wall;-Wextra;-pedantic>"
+     )
+ endif()
+ 

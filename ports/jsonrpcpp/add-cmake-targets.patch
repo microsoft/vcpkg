@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a682679..bdcf1b3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,11 +29,37 @@ if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
+ 		PATH "Output directory for header files")
+ endif()
+ 
+-include_directories(
+-	"include"
++find_package(nlohmann_json CONFIG REQUIRED)
++
++add_library(jsonrpcpp INTERFACE)
++target_include_directories(jsonrpcpp INTERFACE
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++)
++target_link_libraries(jsonrpcpp INTERFACE nlohmann_json::nlohmann_json)
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(
++  "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-jsonrpcpp-config.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/unofficial-jsonrpcpp-config.cmake"
++  INSTALL_DESTINATION "share/unofficial-jsonrpcpp"
++)
++install(
++  FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-jsonrpcpp-config.cmake"
++  DESTINATION "share/unofficial-jsonrpcpp"
++)
++
++install(TARGETS jsonrpcpp
++    EXPORT unofficial-jsonrpcpp-targets
++    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++)
++install(EXPORT unofficial-jsonrpcpp-targets
++    FILE unofficial-jsonrpcpp-targets.cmake
++    NAMESPACE unofficial::jsonrpcpp::
++    DESTINATION share/unofficial-jsonrpcpp
+ )
+ 
+-install(FILES include/jsonrpcpp.hpp include/json.hpp
++install(FILES include/jsonrpcpp.hpp
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/jsonrpcpp")
+ 
+ if(MSVC)

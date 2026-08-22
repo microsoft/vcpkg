@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-ci-bgfx",
+  "version-string": "ci",
+  "description": "Port to force features of bgfx within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "bgfx",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

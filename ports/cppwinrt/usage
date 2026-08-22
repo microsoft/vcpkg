@@ -1,0 +1,6 @@
+The C++/WinRT package provides CMake targets:
+
+    find_package(cppwinrt CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::CppWinRT)
+
+The CMake variable CPPWINRT_TOOL is also set to point to the .winmd to header command-line tool.

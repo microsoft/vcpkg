@@ -1,0 +1,16 @@
+{
+  "name": "cwalk",
+  "version": "1.2.9",
+  "description": "Path library for C/C++. Cross-Platform for Windows, MacOS and Linux. Supports UNIX and Windows path styles on those platforms.",
+  "homepage": "https://likle.github.io/cwalk/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

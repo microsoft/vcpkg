@@ -1,0 +1,233 @@
+diff --git a/src/PMDK.sln b/src/PMDK.sln
+index d8220c159..1959a7a59 100644
+--- a/src/PMDK.sln
++++ b/src/PMDK.sln
+@@ -239,8 +239,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "obj_alloc", "test\obj_alloc
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pmempool_info", "test\pmempool_info\pmempool_info.vcxproj", "{42CCEF95-5ADD-460C-967E-DD5B2C744943}"
+ EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "getopt", "test\getopt\getopt.vcxproj", "{433F7840-C597-4950-84C9-E4FF7DF6A298}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sys", "sys", "{45027FC5-4A32-47BD-AC5B-66CC7616B1D2}"
+ 	ProjectSection(SolutionItems) = preProject
+ 		windows\include\sys\file.h = windows\include\sys\file.h
+@@ -538,8 +538,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "obj_tx_flow", "test\obj_tx_
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "srcversion", "windows\srcversion\srcversion.vcxproj", "{901F04DB-E1A5-4A41-8B81-9D31C19ACD59}"
+ EndProject
+-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "getopt", "windows\getopt\getopt.vcxproj", "{9186EAC4-2F34-4F17-B940-6585D7869BCD}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libpmemlog", "libpmemlog", "{91C30620-70CA-46C7-AC71-71F3C602690E}"
+ EndProject
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "obj_realloc", "test\obj_realloc\obj_realloc.vcxproj", "{91E19AEB-7B75-43E0-B8B4-D2BB60D839EA}"
+@@ -2183,7 +2181,6 @@ Global
+ 		{3ED56E55-84A6-422C-A8D4-A8439FB8F245} = {BD6CC700-B36B-435B-BAF9-FC5AFCD766C9}
+ 		{42B97D47-F800-4100-BFA2-B3AC357E8B6B} = {63C9B3F8-437D-4AD9-B32D-D04AE38C35B6}
+ 		{42CCEF95-5ADD-460C-967E-DD5B2C744943} = {59AB6976-D16B-48D0-8D16-94360D3FE51D}
+-		{433F7840-C597-4950-84C9-E4FF7DF6A298} = {B870D8A6-12CD-4DD0-B843-833695C2310A}
+ 		{45027FC5-4A32-47BD-AC5B-66CC7616B1D2} = {9A8482A7-BF0C-423D-8266-189456ED41F6}
+ 		{46629F21-089C-4205-B2F8-E01748ECE517} = {A14A4556-9092-430D-B9CA-B2B1223D56CB}
+ 		{46B82069-10BE-432A-8D93-F4D995148555} = {4C291EEB-3874-4724-9CC2-1335D13FF0EE}
+@@ -2284,7 +2281,6 @@ Global
+ 		{8D75FA1A-EC74-4F88-8AC1-CE3F98E4D828} = {63C9B3F8-437D-4AD9-B32D-D04AE38C35B6}
+ 		{8E374371-30E1-4623-8755-2A2F3742170B} = {63C9B3F8-437D-4AD9-B32D-D04AE38C35B6}
+ 		{901F04DB-E1A5-4A41-8B81-9D31C19ACD59} = {95FAF291-03D1-42FC-9C10-424D551D475D}
+-		{9186EAC4-2F34-4F17-B940-6585D7869BCD} = {95FAF291-03D1-42FC-9C10-424D551D475D}
+ 		{91C30620-70CA-46C7-AC71-71F3C602690E} = {0CC6D525-806E-433F-AB4A-6CFD546418B1}
+ 		{91E19AEB-7B75-43E0-B8B4-D2BB60D839EA} = {63C9B3F8-437D-4AD9-B32D-D04AE38C35B6}
+ 		{9233FC80-B51C-4A89-AF58-5AE86C068F6A} = {A14A4556-9092-430D-B9CA-B2B1223D56CB}
+diff --git a/src/benchmarks/pmembench.vcxproj b/src/benchmarks/pmembench.vcxproj
+index ac9b3569e..906a50269 100644
+--- a/src/benchmarks/pmembench.vcxproj
++++ b/src/benchmarks/pmembench.vcxproj
+@@ -29,9 +29,6 @@
+     <ProjectReference Include="..\libpmempool\libpmempool.vcxproj">
+       <Project>{cf9a0883-6334-44c7-ac29-349468c78e27}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\common\ctl.c">
+@@ -205,10 +202,10 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+-    <IncludePath>$(SolutionDir)\core;$(SolutionDir)\examples\libpmemobj\hashmap;$(SolutionDir)\examples\libpmemobj\map;$(SolutionDir)\examples\libpmemobj\tree_map;$(SolutionDir)\common;$(SolutionDir)\test\unittest;$(SolutionDir)\windows\include;$(SolutionDir)\libpmemobj\;$(SolutionDir)\include;$(SolutionDir)\libpmemblk;$(SolutionDir)\windows\getopt;$(IncludePath)</IncludePath>
++    <IncludePath>$(SolutionDir)\core;$(SolutionDir)\examples\libpmemobj\hashmap;$(SolutionDir)\examples\libpmemobj\map;$(SolutionDir)\examples\libpmemobj\tree_map;$(SolutionDir)\common;$(SolutionDir)\test\unittest;$(SolutionDir)\windows\include;$(SolutionDir)\libpmemobj\;$(SolutionDir)\include;$(SolutionDir)\libpmemblk;$(IncludePath)</IncludePath>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+-    <IncludePath>$(SolutionDir)\core;$(SolutionDir)\examples\libpmemobj\hashmap;$(SolutionDir)\examples\libpmemobj\map;$(SolutionDir)\examples\libpmemobj\tree_map;$(SolutionDir)\common;$(SolutionDir)\test\unittest;$(SolutionDir)\windows\include;$(SolutionDir)\libpmemobj\;$(SolutionDir)\include;$(SolutionDir)\libpmemblk;$(SolutionDir)\windows\getopt;$(IncludePath)</IncludePath>
++    <IncludePath>$(SolutionDir)\core;$(SolutionDir)\examples\libpmemobj\hashmap;$(SolutionDir)\examples\libpmemobj\map;$(SolutionDir)\examples\libpmemobj\tree_map;$(SolutionDir)\common;$(SolutionDir)\test\unittest;$(SolutionDir)\windows\include;$(SolutionDir)\libpmemobj\;$(SolutionDir)\include;$(SolutionDir)\libpmemblk;$(IncludePath)</IncludePath>
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <ClCompile>
+diff --git a/src/test/bttdevice/bttdevice.vcxproj b/src/test/bttdevice/bttdevice.vcxproj
+index bfcc74064..05cd8c15d 100644
+--- a/src/test/bttdevice/bttdevice.vcxproj
++++ b/src/test/bttdevice/bttdevice.vcxproj
+@@ -72,9 +72,6 @@
+     <ProjectReference Include="..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="..\unittest\libut.vcxproj">
+       <Project>{ce3f2dfb-8470-4802-ad37-21caf6cb2681}</Project>
+     </ProjectReference>
+diff --git a/src/test/libpmempool_api_win/libpmempool_test_win.vcxproj b/src/test/libpmempool_api_win/libpmempool_test_win.vcxproj
+index 73cb7c0b2..ba87422ea 100644
+--- a/src/test/libpmempool_api_win/libpmempool_test_win.vcxproj
++++ b/src/test/libpmempool_api_win/libpmempool_test_win.vcxproj
+@@ -64,9 +64,6 @@
+     <ProjectReference Include="..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="..\unittest\libut.vcxproj">
+       <Project>{ce3f2dfb-8470-4802-ad37-21caf6cb2681}</Project>
+     </ProjectReference>
+diff --git a/src/test/tools/cmpmap/cmpmap.vcxproj b/src/test/tools/cmpmap/cmpmap.vcxproj
+index 5a502106c..fc0b07bb0 100644
+--- a/src/test/tools/cmpmap/cmpmap.vcxproj
++++ b/src/test/tools/cmpmap/cmpmap.vcxproj
+@@ -17,9 +17,6 @@
+     <ProjectReference Include="..\..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\common\file.c" />
+diff --git a/src/test/tools/ddmap/ddmap.vcxproj b/src/test/tools/ddmap/ddmap.vcxproj
+index 0824e2bb2..d80e82da3 100644
+--- a/src/test/tools/ddmap/ddmap.vcxproj
++++ b/src/test/tools/ddmap/ddmap.vcxproj
+@@ -17,9 +17,6 @@
+     <ProjectReference Include="..\..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\libpmemblk\btt.c" />
+diff --git a/src/test/tools/gran_detecto/gran_detecto.vcxproj b/src/test/tools/gran_detecto/gran_detecto.vcxproj
+index abbe5bfb9..316a39c20 100644
+--- a/src/test/tools/gran_detecto/gran_detecto.vcxproj
++++ b/src/test/tools/gran_detecto/gran_detecto.vcxproj
+@@ -90,9 +90,6 @@
+     <ProjectReference Include="..\..\..\libpmem2\libpmem2.vcxproj">
+       <Project>{f596c36c-5c96-4f08-b420-8908af500954}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="README" />
+diff --git a/src/test/tools/pmemalloc/pmemalloc.vcxproj b/src/test/tools/pmemalloc/pmemalloc.vcxproj
+index d84b87416..c1f910710 100644
+--- a/src/test/tools/pmemalloc/pmemalloc.vcxproj
++++ b/src/test/tools/pmemalloc/pmemalloc.vcxproj
+@@ -26,9 +26,6 @@
+     <ProjectReference Include="..\..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="pmemalloc.c" />
+diff --git a/src/test/tools/pmemdetect/pmemdetect.vcxproj b/src/test/tools/pmemdetect/pmemdetect.vcxproj
+index 1c4cfd70c..10f472eb4 100644
+--- a/src/test/tools/pmemdetect/pmemdetect.vcxproj
++++ b/src/test/tools/pmemdetect/pmemdetect.vcxproj
+@@ -93,9 +93,6 @@
+     <ProjectReference Include="..\..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+     <ProjectReference Include="..\..\unittest\libut.vcxproj">
+       <Project>{ce3f2dfb-8470-4802-ad37-21caf6cb2681}</Project>
+     </ProjectReference>
+diff --git a/src/test/tools/pmemobjcli/pmemobjcli.vcxproj b/src/test/tools/pmemobjcli/pmemobjcli.vcxproj
+index 092ad91f7..0c13bb915 100644
+--- a/src/test/tools/pmemobjcli/pmemobjcli.vcxproj
++++ b/src/test/tools/pmemobjcli/pmemobjcli.vcxproj
+@@ -20,9 +20,6 @@
+     <ProjectReference Include="..\..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="pmemobjcli.c" />
+diff --git a/src/test/tools/pmemspoil/pmemspoil.vcxproj b/src/test/tools/pmemspoil/pmemspoil.vcxproj
+index 0d7718e01..5eba7d1f7 100644
+--- a/src/test/tools/pmemspoil/pmemspoil.vcxproj
++++ b/src/test/tools/pmemspoil/pmemspoil.vcxproj
+@@ -32,9 +32,6 @@
+     <ProjectReference Include="..\..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ClInclude Include="..\..\..\tools\pmempool\common.h" />
+diff --git a/src/test/tools/pmemwrite/pmemwrite.vcxproj b/src/test/tools/pmemwrite/pmemwrite.vcxproj
+index f4e4a229f..efc80865f 100644
+--- a/src/test/tools/pmemwrite/pmemwrite.vcxproj
++++ b/src/test/tools/pmemwrite/pmemwrite.vcxproj
+@@ -26,9 +26,6 @@
+     <ProjectReference Include="..\..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\libpmemblk\btt.c" />
+diff --git a/src/test/tools/sparsefile/sparsefile.vcxproj b/src/test/tools/sparsefile/sparsefile.vcxproj
+index 76710038b..481bb9332 100644
+--- a/src/test/tools/sparsefile/sparsefile.vcxproj
++++ b/src/test/tools/sparsefile/sparsefile.vcxproj
+@@ -21,9 +21,6 @@
+     <ProjectReference Include="..\..\..\common\libpmemcommon.vcxproj">
+       <Project>{492baa3d-0d5d-478e-9765-500463ae69aa}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <PropertyGroup Label="Globals">
+     <ProjectGuid>{3EC30D6A-BDA4-4971-879A-8814204EAE31}</ProjectGuid>
+diff --git a/src/tools/pmempool/pmempool.vcxproj b/src/tools/pmempool/pmempool.vcxproj
+index 120fe35b6..65709ed92 100644
+--- a/src/tools/pmempool/pmempool.vcxproj
++++ b/src/tools/pmempool/pmempool.vcxproj
+@@ -77,9 +77,6 @@
+     <ProjectReference Include="..\..\libpmem\libpmem.vcxproj">
+       <Project>{9e9e3d25-2139-4a5d-9200-18148ddead45}</Project>
+     </ProjectReference>
+-    <ProjectReference Include="..\..\windows\getopt\getopt.vcxproj">
+-      <Project>{9186eac4-2f34-4f17-b940-6585d7869bcd}</Project>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <ResourceCompile Include="pmempool.rc" />

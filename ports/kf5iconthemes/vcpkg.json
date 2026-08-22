@@ -1,0 +1,43 @@
+{
+  "name": "kf5iconthemes",
+  "version": "5.116.0",
+  "description": "Icon GUI utilities",
+  "homepage": "https://api.kde.org/kiconthemes-index.html",
+  "dependencies": [
+    "ecm",
+    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kf5archive",
+    "kf5configwidgets",
+    "kf5coreaddons",
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5itemviews",
+    "kf5widgetsaddons",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-svg",
+    "qt5-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "designerplugin": {
+      "description": "Enables a Qt Designer plugin"
+    }
+  }
+}

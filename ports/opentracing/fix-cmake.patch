@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a451844..5966aa3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,11 +39,13 @@ set(CPACK_COMPONENTS_GROUPING ONE_PER_GROUP)
+ set(CPACK_GENERATOR "RPM")
+ set(CPACK_COMPONENTS_IGNORE_GROUPS 1)
+ 
++if(0)
+ include(CPack)
+ 
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
+ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
++endif()
+ 
+ # ==============================================================================
+ # Configure compilers
+@@ -165,7 +167,7 @@ if (BUILD_SHARED_LIBS)
+   target_compile_definitions(opentracing PRIVATE OPENTRACING_EXPORTS)
+   install(TARGETS opentracing EXPORT OpenTracingTargets
+           COMPONENT DIST
+-          RUNTIME DESTINATION ${LIB_INSTALL_DIR}
++          RUNTIME DESTINATION bin
+           LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+           ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+           )
+diff --git a/mocktracer/CMakeLists.txt b/mocktracer/CMakeLists.txt
+index 9835fe3..147179b 100644
+--- a/mocktracer/CMakeLists.txt
++++ b/mocktracer/CMakeLists.txt
+@@ -21,6 +21,7 @@ if (BUILD_SHARED_LIBS)
+   install(TARGETS opentracing_mocktracer
+           COMPONENT DIST
+           EXPORT OpenTracingTargets
++          RUNTIME DESTINATION bin
+           LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+           ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
+ 

@@ -1,0 +1,60 @@
+diff --git a/coin_chk_lapack.m4 b/coin_chk_lapack.m4
+index 3314f97..0156a0e 100644
+--- a/coin_chk_lapack.m4
++++ b/coin_chk_lapack.m4
+@@ -113,55 +113,7 @@ dnl can arrange that explicitly.
+         esac
+       ;;
+ 
+-      *-cygwin* | *-mingw* | *-msys*)
+-dnl Check for 64-bit sequential MKL in $LIB
+-        old_IFS="$IFS"
+-        IFS=";"
+-        coin_mkl=""
+-        for d in $LIB ; do
+-          # turn $d into unix-style short path (no spaces); cannot do -us,
+-          # so first do -ws, then -u
+-          d=`cygpath -ws "$d"`
+-          d=`cygpath -u "$d"`
+-          if test "$enable_shared" = yes ; then
+-            if test -e "$d/mkl_core_dll.lib" ; then
+-              case " $2 " in
+-                *\ int64\ * ) coin_mkl="$d/mkl_intel_ilp64_dll.lib $d/mkl_sequential_dll.lib $d/mkl_core_dll.lib" ;;
+-                *)          coin_mkl="$d/mkl_intel_lp64_dll.lib $d/mkl_sequential_dll.lib $d/mkl_core_dll.lib" ;;
+-              esac
+-              break
+-            fi
+-          else
+-            if test -e "$d/mkl_core.lib" ; then
+-              case " $2 " in
+-                *\ int64\ * ) coin_mkl="$d/mkl_intel_ilp64.lib $d/mkl_sequential.lib $d/mkl_core.lib" ;;
+-                *)          coin_mkl="$d/mkl_intel_lp64.lib $d/mkl_sequential.lib $d/mkl_core.lib" ;;
+-              esac
+-              break
+-            fi
+-          fi
+-        done
+-        IFS="$old_IFS"
+-        if test -n "$coin_mkl" ; then
+-           AC_COIN_TRY_LINK([dsyev],[$coin_mkl],[],
+-               [coin_has_lapack=yes
+-                lapack_lflags="$coin_mkl"
+-                lapack_what="Intel MKL ($lapack_lflags)"
+-               ],,no)
+-        fi
+-      ;;
+-
+       *-darwin*)
+-        case " $2 " in
+-          *\ int64\ * ) coin_mkl="-lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lm" ;;
+-          *)          coin_mkl="-lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lm" ;;
+-        esac
+-        AC_COIN_TRY_LINK([dsyev],
+-          [$coin_mkl],[],
+-          [coin_has_lapack=yes
+-           lapack_lflags="$coin_mkl"
+-           lapack_what="Intel MKL ($lapack_lflags)"
+-          ],,no)
+         if test "$coin_has_lapack" = no ; then
+           case " $2 " in
+             *\ int64\ * ) ;;

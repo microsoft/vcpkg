@@ -1,0 +1,24 @@
+{
+  "name": "fmi4cpp",
+  "version": "0.8.3",
+  "description": "FMI 2.0 implementation written in modern C++",
+  "homepage": "https://github.com/NTNU-IHB/FMI4cpp",
+  "license": "MIT",
+  "dependencies": [
+    "boost-property-tree",
+    {
+      "name": "libzip",
+      "features": [
+        "openssl"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

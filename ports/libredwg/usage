@@ -1,0 +1,4 @@
+libredwg provides CMake targets:
+
+    find_package(unofficial-libredwg CONFIG REQUIRED)
+    target_link_libraries(main unofficial::libredwg::libredwg)

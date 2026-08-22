@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d656fa..993e859 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,6 +24,6 @@ install(
+     EXPORT parsonTargets
+     FILE parsonConfig.cmake
+     NAMESPACE parson::
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++    DESTINATION share/${PROJECT_NAME}
+ )
+ 

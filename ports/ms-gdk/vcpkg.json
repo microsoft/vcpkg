@@ -1,0 +1,14 @@
+{
+  "name": "ms-gdk",
+  "version": "2604.3.7874",
+  "description": "Microsoft Game Development Kit (GDK)",
+  "homepage": "https://aka.ms/gdkx",
+  "documentation": "https://aka.ms/gamedevdocs",
+  "license": null,
+  "supports": "windows & (x64 | arm64) & !uwp & !xbox & !staticcrt",
+  "features": {
+    "playfab": {
+      "description": "Include PlayFab Extension Libraries"
+    }
+  }
+}

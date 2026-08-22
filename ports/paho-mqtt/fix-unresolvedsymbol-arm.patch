@@ -1,0 +1,13 @@
+diff --git a/src/SHA1.c b/src/SHA1.c
+index 5c4c349..59fd5c2 100644
+--- a/src/SHA1.c
++++ b/src/SHA1.c
+@@ -18,7 +18,7 @@
+ 
+ #if !defined(OPENSSL)
+ #if defined(_WIN32)
+-#pragma comment(lib, "crypt32.lib")
++#pragma comment(lib, "Advapi32.lib")
+ 
+ int SHA1_Init(SHA_CTX *c)
+ {

@@ -1,0 +1,39 @@
+--- a/cmake/modules/CppLibrary.cmake
++++ b/cmake/modules/CppLibrary.cmake
+@@ -206,8 +206,8 @@
+         EXPORT fbgemmLibraryConfig
+         ARCHIVE DESTINATION ${lib_install_destination}
+         LIBRARY DESTINATION ${lib_install_destination}
+         # For Windows
+-        RUNTIME DESTINATION ${lib_install_destination})
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+     ############################################################################
+     # Set the Output Variable(s)
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,6 +126,15 @@
+ # Setup OpenMP Flags
+ ################################################################################
+ 
++find_package(asmjit CONFIG REQUIRED)
++find_package(cpuinfo CONFIG REQUIRED)
++if(NOT TARGET asmjit)
++  add_library(asmjit ALIAS asmjit::asmjit)
++endif()
++if(NOT TARGET cpuinfo)
++  add_library(cpuinfo ALIAS cpuinfo::cpuinfo)
++endif()
++
+ find_package(OpenMP)
+ 
+ if(OpenMP_FOUND)
+@@ -430,6 +439,8 @@
+   DEPS
+     fbgemm_generic
+     ${fbgemm_targets}
++    asmjit::asmjit
++    cpuinfo::cpuinfo
+ )
+ 
+ get_filelist("get_fbgemm_public_headers()" FBGEMM_PUBLIC_HEADERS)

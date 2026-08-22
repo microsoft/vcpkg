@@ -1,0 +1,8 @@
+{
+  "name": "tensorflow-common",
+  "version-semver": "2.10.0",
+  "port-version": 4,
+  "description": "This meta package holds common files for the C [tensorflow] and the C++ [tensorflow-cc] API version of TensorFlow but is not installable on its own.",
+  "homepage": "https://github.com/tensorflow/tensorflow",
+  "license": "Apache-2.0"
+}

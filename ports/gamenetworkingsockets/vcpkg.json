@@ -1,0 +1,28 @@
+{
+  "name": "gamenetworkingsockets",
+  "version": "1.6.0",
+  "description": "GameNetworkingSockets is a basic transport layer for games.",
+  "homepage": "https://github.com/ValveSoftware/GameNetworkingSockets",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp & !(arm64 & windows)",
+  "dependencies": [
+    "openssl",
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "ice"
+  ],
+  "features": {
+    "ice": {
+      "description": "Build support for P2P connections using the native ICE client (STUN and TURN)."
+    }
+  }
+}

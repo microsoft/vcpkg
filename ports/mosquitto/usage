@@ -1,0 +1,15 @@
+mosquitto provides CMake targets:
+
+  find_package(unofficial-mosquitto CONFIG REQUIRED)
+  # C bindings
+  target_link_libraries(main PRIVATE unofficial::mosquitto::mosquitto)
+  # C++ bindings
+  target_link_libraries(main PRIVATE unofficial::mosquitto::mosquittopp)
+
+mosquitto provides pkg-config modules:
+
+  # mosquitto MQTT library (C bindings)
+  libmosquitto
+
+  # mosquitto MQTT library (C++ bindings)
+  libmosquittopp

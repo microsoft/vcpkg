@@ -1,0 +1,70 @@
+{
+  "name": "cairo",
+  "version": "1.18.4",
+  "port-version": 1,
+  "description": "Cairo is a 2D graphics library with support for multiple output devices. Currently supported output targets include the X Window System (via both Xlib and XCB), Quartz, Win32, image buffers, PostScript, PDF, and SVG file output. Experimental backends include OpenGL, BeOS, OS/2, and DirectFB.",
+  "homepage": "https://cairographics.org",
+  "license": "LGPL-2.1-only OR MPL-1.1",
+  "supports": "!xbox & !uwp",
+  "dependencies": [
+    "dirent",
+    "expat",
+    "libpng",
+    "pixman",
+    "pthread",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "fontconfig",
+    "freetype"
+  ],
+  "features": {
+    "fontconfig": {
+      "description": "Build with fontconfig",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "freetype": {
+      "description": "Use the freetype font backend",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "gobject": {
+      "description": "Build the gobject module",
+      "dependencies": [
+        "glib"
+      ]
+    },
+    "lzo": {
+      "description": "Build with lzo support",
+      "dependencies": [
+        "lzo"
+      ]
+    },
+    "x11": {
+      "description": "Build with X11 support",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ]
+        },
+        "libx11",
+        "libxext",
+        "libxrender"
+      ]
+    }
+  }
+}

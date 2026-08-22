@@ -1,0 +1,58 @@
+diff --git a/src/OpenMesh/Tools/Utils/Timer.cc b/src/OpenMesh/Tools/Utils/Timer.cc
+index e3fca04..9c77717 100644
+--- a/src/OpenMesh/Tools/Utils/Timer.cc
++++ b/src/OpenMesh/Tools/Utils/Timer.cc
+@@ -51,6 +51,9 @@
+ #  include <cmath>
+ #  include <cstdio>
+ #endif
++#if defined(WIN32) && (defined(_MSC_VER) || defined(__INTEL_COMPILER) || defined (__MINGW32__) )
++#  include <windows.h>
++#endif
+ #include "Timer.hh"
+ // ----------------------------------------------------------------------------
+ 
+@@ -85,10 +88,6 @@ public:
+ // ------------------------------------------------------------- windows 32 ----
+ #if defined(WIN32) && (defined(_MSC_VER) || defined(__INTEL_COMPILER) || defined (__MINGW32__) )
+ 
+-#ifndef DOXY_IGNORE_THIS
+-#include <windows.h>
+-#endif
+-
+ class TimerImplWin32 : public TimerImpl
+ {
+ protected:
+@@ -109,7 +108,7 @@ public:
+ 
+ TimerImplWin32::TimerImplWin32(void)
+ {
+-   if (QueryPerformanceFrequency(&freq_)==FALSE)
++   if (::QueryPerformanceFrequency(&freq_)==FALSE)
+      throw std::runtime_error("Performance counter of of stock!");
+ 
+    memset(&count_,0,sizeof(count_));
+@@ -125,20 +124,20 @@ void TimerImplWin32::reset(void)
+ void TimerImplWin32::start(void)
+ {
+    reset();
+-   QueryPerformanceCounter(&start_);
++   ::QueryPerformanceCounter(&start_);
+ }
+ 
+ void TimerImplWin32::stop(void)
+ {
+    LARGE_INTEGER stop_;
+ 
+-   QueryPerformanceCounter(&stop_);
++   ::QueryPerformanceCounter(&stop_);
+    count_.QuadPart += stop_.QuadPart - start_.QuadPart;
+ }
+ 
+ void TimerImplWin32::cont(void)
+ {
+-   QueryPerformanceCounter(&start_);
++   ::QueryPerformanceCounter(&start_);
+ }
+ 
+ double TimerImplWin32::seconds(void) const

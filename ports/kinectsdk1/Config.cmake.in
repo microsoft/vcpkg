@@ -1,0 +1,33 @@
+
+get_filename_component(_kinectsdk1_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_kinectsdk1_root "${_kinectsdk1_root}" PATH)
+get_filename_component(_kinectsdk1_root "${_kinectsdk1_root}" PATH)
+
+set(_kinectsdk1_rel_lib "${_kinectsdk1_root}/lib/Kinect10.lib")
+set(_kinectsdk1_dbg_lib "${_kinectsdk1_root}/debug/lib/Kinect10.lib")
+if (EXISTS "${_kinectsdk1_rel_lib}" OR EXISTS "${_kinectsdk1_dbg_lib}")
+
+    add_library(unofficial::kinectsdk1::kinectsdk1 INTERFACE IMPORTED)
+    set_target_properties(unofficial::kinectsdk1::kinectsdk1 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${_kinectsdk1_root}/include")
+
+    if (EXISTS "${_kinectsdk1_rel_lib}")
+        set_target_properties(unofficial::kinectsdk1::kinectsdk1 
+            PROPERTIES IMPORTED_LOCATION_RELEASE "${_kinectsdk1_rel_lib}")
+        set_property(TARGET unofficial::kinectsdk1::kinectsdk1 APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+    endif()
+    if (EXISTS "${_kinectsdk1_dbg_lib}")
+        set_target_properties(unofficial::kinectsdk1::kinectsdk1 
+            PROPERTIES IMPORTED_LOCATION_DEBUG "${_kinectsdk1_dbg_lib}")
+        set_property(TARGET unofficial::kinectsdk1::kinectsdk1 APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+    endif()
+
+else()
+
+    set(kinectsdk1_FOUND FALSE)
+
+endif()
+
+unset(_kinectsdk1_rel_lib)
+unset(_kinectsdk1_dbg_lib)
+
+unset(_kinectsdk1_root)

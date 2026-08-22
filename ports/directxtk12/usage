@@ -1,0 +1,4 @@
+The DirectX Tool Kit for DX12 package provides CMake targets
+
+    find_package(directxtk12 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::DirectXTK12)

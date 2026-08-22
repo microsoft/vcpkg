@@ -1,0 +1,12 @@
+diff --git a/XML/src/ParserEngine.h b/XML/src/ParserEngine.h
+index f74b553..c638778 100644
+--- a/XML/src/ParserEngine.h
++++ b/XML/src/ParserEngine.h
+@@ -19,6 +19,7 @@
+ 
+ #include "Poco/XML/XML.h"
+ #if defined(POCO_UNBUNDLED)
++#include <expat_config.h>
+ #include <expat.h>
+ #else
+ #include "expat.h"

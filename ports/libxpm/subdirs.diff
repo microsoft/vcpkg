@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index 235ee1f..d8d0f66 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,7 +1,7 @@
+ # Daniel Stone disowns all copyright on this file; no warranty is given as to its
+ # suitability or otherwise.
+ 
+-SUBDIRS = doc include man src sxpm cxpm test
++SUBDIRS =     include     src
+ 
+ ACLOCAL_AMFLAGS = -I m4
+ 

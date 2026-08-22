@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4254f89..aa08565 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -175,10 +175,16 @@ install(
+   COMPONENT "development")
+ 
+ # Process subdirectories
++if(NOT DISABLE_DOC)
+ add_subdirectory(doc)
++endif()
+ add_subdirectory(src)
++if(NOT DISABLE_TESTS)
+ add_subdirectory(tests)
++endif()
++if(NOT DISABLE_SAMPLES)
+ add_subdirectory(samples)
++endif()
+ 
+ # Display configuration summary
+ message(STATUS "")

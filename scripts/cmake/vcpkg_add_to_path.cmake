@@ -1,0 +1,10 @@
+function(vcpkg_add_to_path)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "PREPEND" "" "")
+    if(arg_PREPEND)
+        set(operation PREPEND)
+    else()
+        set(operation APPEND)
+    endif()
+
+    vcpkg_host_path_list("${operation}" ENV{PATH} ${arg_UNPARSED_ARGUMENTS})
+endfunction()

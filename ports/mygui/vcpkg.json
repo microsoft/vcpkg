@@ -1,0 +1,37 @@
+{
+  "name": "mygui",
+  "version": "3.5.1",
+  "description": "Fast, flexible and simple GUI",
+  "homepage": "http://mygui.info",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "freetype",
+    "pugixml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "msdf": {
+      "description": "Enable msdf support",
+      "dependencies": [
+        {
+          "name": "msdfgen",
+          "default-features": false,
+          "features": [
+            "extensions"
+          ]
+        }
+      ]
+    },
+    "obsolete": {
+      "description": "Keep obsolete functions."
+    }
+  }
+}

@@ -1,0 +1,31 @@
+diff --git a/src/Makefile b/src/Makefile
+index fe30a96..174931f 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -43,15 +43,20 @@ ALL_CFLAGS += $(CFLAGS) 						\
+ ALL_LDFLAGS += $(LDFLAGS) $(EXTRA_LDFLAGS)
+ 
+ ifeq ($(shell command -v $(PKG_CONFIG) 2> /dev/null),)
+-NO_PKG_CONFIG := 1
++$(error pkg-config not found)
+ endif
+-ifdef NO_PKG_CONFIG
+-	ALL_LDFLAGS += -lelf -lz
+-else
+-	ALL_CFLAGS += $(shell $(PKG_CONFIG) --cflags libelf zlib)
+-	ALL_LDFLAGS += $(shell $(PKG_CONFIG) --libs libelf zlib)
++
++ifneq ($(shell $(PKG_CONFIG) --env-only --exists libelf && echo true),true)
++$(error libelf not found)
+ endif
+ 
++ifneq ($(shell $(PKG_CONFIG) --env-only --exists zlib && echo true),true)
++$(error zlib not found)
++endif
++
++ALL_CFLAGS += $(shell $(PKG_CONFIG) --env-only --cflags libelf zlib)
++ALL_LDFLAGS += $(shell $(PKG_CONFIG) --env-only --libs libelf zlib)
++
+ OBJDIR ?= .
+ SHARED_OBJDIR := $(OBJDIR)/sharedobjs
+ STATIC_OBJDIR := $(OBJDIR)/staticobjs

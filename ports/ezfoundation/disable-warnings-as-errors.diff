@@ -1,0 +1,22 @@
+diff --git a/Code/Engine/Foundation/CMakeLists.txt b/Code/Engine/Foundation/CMakeLists.txt
+index 63db77f..7e87e0d 100644
+--- a/Code/Engine/Foundation/CMakeLists.txt
++++ b/Code/Engine/Foundation/CMakeLists.txt
+@@ -3,7 +3,7 @@ ez_cmake_init()
+ # Get the name of this folder as the project name
+ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+ 
+-ez_create_target(LIBRARY ${PROJECT_NAME})
++ez_create_target(LIBRARY ${PROJECT_NAME} NO_WARNINGS_AS_ERRORS)
+ 
+ if(EZ_CMAKE_PLATFORM_WINDOWS)
+   target_link_libraries(${PROJECT_NAME}
+@@ -13,8 +13,6 @@ if(EZ_CMAKE_PLATFORM_WINDOWS)
+   )
+ endif()
+ 
+-ez_enable_strict_warnings(${PROJECT_NAME})
+-
+ if(EZ_CMAKE_COMPILER_CLANG)
+   set_source_files_properties(ThirdParty/xxHash/xxHash.c PROPERTIES COMPILE_FLAGS "-Wno-unused-function")
+ endif()

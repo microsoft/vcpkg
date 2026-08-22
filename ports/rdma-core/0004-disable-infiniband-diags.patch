@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f0c411792..ffa784de1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -760,9 +760,6 @@ add_subdirectory(providers/siw)
+ add_subdirectory(libibmad)
+ add_subdirectory(libibnetdisc)
+ add_subdirectory(libibnetdisc/man)
+-add_subdirectory(infiniband-diags)
+-add_subdirectory(infiniband-diags/scripts)
+-add_subdirectory(infiniband-diags/man)
+ 
+ if (CYTHON_EXECUTABLE)
+   add_subdirectory(pyverbs)

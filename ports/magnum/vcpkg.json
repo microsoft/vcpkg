@@ -1,0 +1,560 @@
+{
+  "name": "magnum",
+  "version-string": "2020.06",
+  "port-version": 20,
+  "description": "C++11/C++14 graphics middleware for games and data visualization",
+  "homepage": "https://magnum.graphics/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "corrade",
+      "host": true,
+      "features": [
+        "utility"
+      ]
+    },
+    {
+      "name": "corrade",
+      "features": [
+        "utility"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "anyaudioimporter",
+    "anyimageconverter",
+    "anyimageimporter",
+    "anysceneconverter",
+    "anysceneimporter",
+    "debugtools",
+    "gl",
+    "meshtools",
+    "primitives",
+    "scenegraph",
+    "sdl2application",
+    "shaders",
+    "text",
+    "texturetools",
+    "trade"
+  ],
+  "features": {
+    "al-info": {
+      "description": "magnum-al-info utility",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "audio"
+          ]
+        }
+      ]
+    },
+    "anyaudioimporter": {
+      "description": "AnyAudioImporter plugin",
+      "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "pluginmanager"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "audio"
+          ]
+        }
+      ]
+    },
+    "anyimageconverter": {
+      "description": "AnyImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "anyimageimporter": {
+      "description": "AnyImageImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "anysceneconverter": {
+      "description": "AnySceneConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "anysceneimporter": {
+      "description": "AnySceneImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "anyshaderconverter": {
+      "description": "AnyShaderConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "shadertools"
+          ]
+        }
+      ]
+    },
+    "audio": {
+      "description": "Audio library",
+      "dependencies": [
+        "openal-soft"
+      ]
+    },
+    "cglcontext": {
+      "description": "CglContext library",
+      "supports": "osx",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "debugtools": {
+      "description": "DebugTools library"
+    },
+    "distancefieldconverter": {
+      "description": "magnum-distancefieldconverter utility",
+      "supports": "!ios & !android",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl",
+            "texturetools",
+            "trade"
+          ]
+        }
+      ]
+    },
+    "eglcontext": {
+      "description": "EglContext library",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "fontconverter": {
+      "description": "magnum-fontconverter utility",
+      "supports": "!ios & !android",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl",
+            "text",
+            "trade"
+          ]
+        }
+      ]
+    },
+    "gl": {
+      "description": "GL library",
+      "supports": "!uwp"
+    },
+    "gl-info": {
+      "description": "gl-info utility",
+      "supports": "!ios",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "glfwapplication": {
+      "description": "GlfwApplication library",
+      "dependencies": [
+        "glfw3"
+      ]
+    },
+    "glxcontext": {
+      "description": "GlxContext library",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "imageconverter": {
+      "description": "magnum-imageconverter utility",
+      "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "dynamic-pluginmanager"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "magnumfont": {
+      "description": "MagnumFont plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "text"
+          ]
+        }
+      ]
+    },
+    "magnumfontconverter": {
+      "description": "MagnumFontConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "text"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "tgaimageconverter"
+          ]
+        }
+      ]
+    },
+    "meshtools": {
+      "description": "MeshTools library",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "objimporter": {
+      "description": "ObjImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "opengltester": {
+      "description": "OpenGLTester library",
+      "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "testsuite"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "primitives": {
+      "description": "Primitives library",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "meshtools",
+            "trade"
+          ]
+        }
+      ]
+    },
+    "sceneconverter": {
+      "description": "magnum-sceneconverter utility",
+      "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "dynamic-pluginmanager"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "anysceneconverter"
+          ]
+        }
+      ]
+    },
+    "scenegraph": {
+      "description": "SceneGraph library"
+    },
+    "sdl2application": {
+      "description": "Sdl2Application library",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "shaderconverter": {
+      "description": "magnum-shaderconverter utility",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "anyshaderconverter",
+            "shadertools"
+          ]
+        }
+      ]
+    },
+    "shaders": {
+      "description": "Shaders library",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "shadertools": {
+      "description": "ShaderTools library"
+    },
+    "text": {
+      "description": "Text library",
+      "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "pluginmanager"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "texturetools"
+          ]
+        }
+      ]
+    },
+    "texturetools": {
+      "description": "TextureTools library"
+    },
+    "tgaimageconverter": {
+      "description": "TgaImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "tgaimporter": {
+      "description": "TgaImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "trade": {
+      "description": "Trade library",
+      "dependencies": [
+        {
+          "name": "corrade",
+          "default-features": false,
+          "features": [
+            "pluginmanager"
+          ]
+        }
+      ]
+    },
+    "vk": {
+      "description": "Vk library",
+      "dependencies": [
+        "vulkan"
+      ]
+    },
+    "vk-info": {
+      "description": "vk-info utility",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "vk"
+          ]
+        }
+      ]
+    },
+    "wavaudioimporter": {
+      "description": "WavAudioImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "audio"
+          ]
+        }
+      ]
+    },
+    "wglcontext": {
+      "description": "WglContext library",
+      "supports": "windows & !uwp",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "windowlesscglapplication": {
+      "description": "WindowlessCglApplication library",
+      "supports": "osx",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "windowlesseglapplication": {
+      "description": "WindowlessEglApplication library",
+      "supports": "!windows & !osx & !ios",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "windowlessglxapplication": {
+      "description": "WindowlessGlxApplication library",
+      "supports": "!windows & !osx & !ios",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    },
+    "windowlesswglapplication": {
+      "description": "WindowlessWglApplication library",
+      "supports": "windows & !uwp",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "gl"
+          ]
+        }
+      ]
+    }
+  }
+}

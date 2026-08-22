@@ -1,0 +1,16 @@
+{
+  "name": "vcpkg-ci-huira",
+  "version-string": "ci",
+  "description": "Port to validate huira within CI",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "huira",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+diff --git a/include/zim/zim.h b/include/zim/zim.h
+index d68d4e3..1238029 100644
+--- a/include/zim/zim.h
++++ b/include/zim/zim.h
+@@ -36,8 +36,10 @@
+ 
+ #include <zim/zim_config.h>
+ 
+-#if defined(_MSC_VER) && defined(LIBZIM_EXPORT_DLL)
++#if defined(_WIN32) && defined(LIBZIM_EXPORT_DLL)
+     #define LIBZIM_API __declspec(dllexport)
++#elif defined(_WIN32) && defined(LIBZIM_IMPORT_DLL)
++    #define LIBZIM_API __declspec(dllimport)
+ #else
+     #define LIBZIM_API
+ #endif

@@ -1,0 +1,77 @@
+diff --git a/gtsam/base/Matrix.cpp b/gtsam/base/Matrix.cpp
+index 5b8a021..abc6574 100644
+--- a/gtsam/base/Matrix.cpp
++++ b/gtsam/base/Matrix.cpp
+@@ -127,16 +127,6 @@ bool linear_dependent(const Matrix& A, const Matrix& B, double tol) {
+   }
+ }
+ 
+-/* ************************************************************************* */
+-Vector operator^(const Matrix& A, const Vector & v) {
+-  if (A.rows()!=v.size()) throw std::invalid_argument(
+-      boost::str(boost::format("Matrix operator^ : A.m(%d)!=v.size(%d)") % A.rows() % v.size()));
+-//  Vector vt = v.transpose();
+-//  Vector vtA = vt * A;
+-//  return vtA.transpose();
+-  return A.transpose() * v;
+-}
+-
+ const Eigen::IOFormat& matlabFormat() {
+   static const Eigen::IOFormat matlab(
+     Eigen::StreamPrecision, // precision
+diff --git a/gtsam/base/Matrix.h b/gtsam/base/Matrix.h
+index cfedf6d..05e3d0d 100644
+--- a/gtsam/base/Matrix.h
++++ b/gtsam/base/Matrix.h
+@@ -54,7 +54,7 @@ using Matrix7##N = Eigen::Matrix<double, 7, N>;  \
+ using Matrix8##N = Eigen::Matrix<double, 8, N>;  \
+ using Matrix9##N = Eigen::Matrix<double, 9, N>;  \
+ static const Eigen::MatrixBase<Matrix##N>::IdentityReturnType I_##N##x##N = Matrix##N::Identity(); \
+-static const Eigen::MatrixBase<Matrix##N>::ConstantReturnType Z_##N##x##N = Matrix##N::Zero();
++static const Eigen::MatrixBase<Matrix##N>::ZeroReturnType Z_##N##x##N = Matrix##N::Zero();
+ 
+ GTSAM_MAKE_MATRIX_DEFS(1)
+ GTSAM_MAKE_MATRIX_DEFS(2)
+@@ -133,12 +133,6 @@ GTSAM_EXPORT bool linear_independent(const Matrix& A, const Matrix& B, double to
+  */
+ GTSAM_EXPORT bool linear_dependent(const Matrix& A, const Matrix& B, double tol = 1e-9);
+ 
+-/**
+- * overload ^ for trans(A)*v
+- * We transpose the vectors for speed.
+- */
+-GTSAM_EXPORT Vector operator^(const Matrix& A, const Vector & v);
+-
+ /** products using old-style format to improve compatibility */
+ template<class MATRIX>
+ inline MATRIX prod(const MATRIX& A, const MATRIX&B) {
+diff --git a/gtsam/base/Vector.h b/gtsam/base/Vector.h
+index f7923ff..99573a5 100644
+--- a/gtsam/base/Vector.h
++++ b/gtsam/base/Vector.h
+@@ -27,6 +27,7 @@
+ 
+ #include <gtsam/global_includes.h>
+ #include <Eigen/Core>
++#include <cassert>
+ #include <iosfwd>
+ #include <list>
+ 
+@@ -42,14 +43,14 @@ typedef Eigen::Matrix<double, 1, 1> Vector1;
+ typedef Eigen::Vector2d Vector2;
+ typedef Eigen::Vector3d Vector3;
+ 
+-static const Eigen::MatrixBase<Vector2>::ConstantReturnType Z_2x1 = Vector2::Zero();
+-static const Eigen::MatrixBase<Vector3>::ConstantReturnType Z_3x1 = Vector3::Zero();
++static const Eigen::MatrixBase<Vector2>::ZeroReturnType Z_2x1 = Vector2::Zero();
++static const Eigen::MatrixBase<Vector3>::ZeroReturnType Z_3x1 = Vector3::Zero();
+ 
+ // Create handy typedefs and constants for vectors with N>3
+ // VectorN and Z_Nx1, for N=1..9
+ #define GTSAM_MAKE_VECTOR_DEFS(N)                \
+   using Vector##N = Eigen::Matrix<double, N, 1>; \
+-  static const Eigen::MatrixBase<Vector##N>::ConstantReturnType Z_##N##x1 = Vector##N::Zero();
++  static const Eigen::MatrixBase<Vector##N>::ZeroReturnType Z_##N##x1 = Vector##N::Zero();
+ 
+ GTSAM_MAKE_VECTOR_DEFS(4)
+ GTSAM_MAKE_VECTOR_DEFS(5)

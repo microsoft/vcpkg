@@ -1,0 +1,11 @@
+--- a/modules/SMTG_AddSMTGLibrary.cmake
++++ b/modules/SMTG_AddSMTGLibrary.cmake
+@@ -34,7 +34,7 @@ function(smtg_target_set_vst_win_architecture_name target)
+             set(WIN_ARCHITECTURE_NAME "arm64")
+         elseif(${GENERATOR_PLATFORM} MATCHES "arm")
+             set(WIN_ARCHITECTURE_NAME "arm")
+-        elseif(${GENERATOR_PLATFORM} MATCHES "win32")
++        elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+             set(WIN_ARCHITECTURE_NAME "x86")
+         else()
+             set(WIN_ARCHITECTURE_NAME "x86_64")

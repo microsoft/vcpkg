@@ -1,0 +1,28 @@
+{
+  "name": "loguru",
+  "version": "2.1.0",
+  "port-version": 6,
+  "description": "A lightweight and flexible C++ logging library",
+  "homepage": "https://github.com/emilk/loguru",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "fmt": {
+      "description": "Build with fmt support in non-header-only mode",
+      "dependencies": [
+        "fmt"
+      ]
+    },
+    "stream": {
+      "description": "Build with support for stream style logging"
+    }
+  }
+}

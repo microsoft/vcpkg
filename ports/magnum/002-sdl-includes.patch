@@ -1,0 +1,43 @@
+diff --git a/src/Magnum/Platform/Sdl2Application.cpp b/src/Magnum/Platform/Sdl2Application.cpp
+index 276c7ee55..90c52f3cb 100644
+--- a/src/Magnum/Platform/Sdl2Application.cpp
++++ b/src/Magnum/Platform/Sdl2Application.cpp
+@@ -34,7 +34,7 @@
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wpragma-pack"
+ #endif
+-#include <SDL.h>
++#include <SDL2/SDL.h>
+ #ifdef CORRADE_TARGET_CLANG_CL
+ #pragma clang diagnostic pop
+ #endif
+diff --git a/src/Magnum/Platform/Sdl2Application.h b/src/Magnum/Platform/Sdl2Application.h
+index b2426d513..176729fdb 100644
+--- a/src/Magnum/Platform/Sdl2Application.h
++++ b/src/Magnum/Platform/Sdl2Application.h
+@@ -57,11 +57,11 @@
+ #pragma clang diagnostic ignored "-Wpragma-pack"
+ #endif
+ /* SDL.h includes the world, adding 50k LOC. We don't want that either. */
+-#include <SDL_keycode.h>
+-#include <SDL_mouse.h>
+-#include <SDL_version.h> /* huh, why is this not pulled in implicitly?! */
+-#include <SDL_video.h>
+-#include <SDL_scancode.h>
++#include <SDL2/SDL_keycode.h>
++#include <SDL2/SDL_mouse.h>
++#include <SDL2/SDL_version.h> /* huh, why is this not pulled in implicitly?! */
++#include <SDL2/SDL_video.h>
++#include <SDL2/SDL_scancode.h>
+
+ #ifdef CORRADE_TARGET_IOS
+ /* Including SDL_main.h unconditionally would mean it'd override Corrade::Main
+@@ -74,7 +74,7 @@
+ #endif
+
+ #ifdef CORRADE_TARGET_WINDOWS_RT
+-#include <SDL_main.h> /* For SDL_WinRTRunApp */
++#include <SDL2/SDL_main.h> /* For SDL_WinRTRunApp */
+ #include <wrl.h> /* For the WinMain entrypoint */
+ #endif
+ #ifdef CORRADE_TARGET_CLANG_CL

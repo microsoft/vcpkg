@@ -1,0 +1,18 @@
+The libunistring library and its header files are dual-licensed under
+"the GNU LGPLv3+ or the GNU GPLv2". This means, you can use it under either
+  - the terms of the GNU Lesser General Public License (LGPL) version 3 or
+    (at your option) any later version, or
+  - the terms of the GNU General Public License (GPL) version 2, or
+  - the same dual license "the GNU LGPLv3+ or the GNU GPLv2".
+
+You find the GNU LGPL version 3 in the file COPYING.LIB.  This license is
+based on the GNU GPL version 3, see file COPYING.
+
+You can find the GNU GPL version 2 at
+<https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>.
+
+Note: This dual license makes it possible for the libunistring library
+to be used by packages under GPLv2 or GPLv2+ licenses, in particular. See
+the table in <https://www.gnu.org/licenses/gpl-faq.html#AllCompatibility>.
+
+The documentation is under another license; see in the documentation.

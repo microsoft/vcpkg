@@ -1,0 +1,14 @@
+{
+  "name": "anax",
+  "version": "2.1.0",
+  "port-version": 8,
+  "description": "An open source C++ entity system.",
+  "homepage": "https://github.com/miguelmartin75/anax",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

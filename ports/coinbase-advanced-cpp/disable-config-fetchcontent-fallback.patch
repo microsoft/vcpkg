@@ -1,0 +1,70 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 998f666..2738a32 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,15 +21,15 @@ find_package(nlohmann_json CONFIG REQUIRED)
+ find_package(OpenSSL CONFIG REQUIRED)
+ find_package(jwt-cpp CONFIG REQUIRED)
+ 
+-find_package(slick-net 3.0.0 CONFIG QUIET)
+-if (NOT slick-net_FOUND)
+-    message(STATUS "fetching slick-net...")
+-    include(FetchContent)
+-    set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)
+-    set(BUILD_SLICK_NET_TESTS OFF CACHE BOOL "" FORCE)
+-    FetchContent_Declare(
+-        slick-net
+-        GIT_REPOSITORY https://github.com/SlickQuant/slick-net.git
++find_package(slick-net 3.0.0 CONFIG REQUIRED)
++if (FALSE)
++    message(STATUS "fetching slick-net...")
++    include(FetchContent)
++    set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)
++    set(BUILD_SLICK_NET_TESTS OFF CACHE BOOL "" FORCE)
++    FetchContent_Declare(
++        slick-net
++        GIT_REPOSITORY https://github.com/SlickQuant/slick-net.git
+         GIT_TAG v3.0.0
+     )
+     FetchContent_MakeAvailable(slick-net)
+@@ -50,7 +50,7 @@ target_include_directories(coinbase-advanced-cpp PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:include>
+ )
+-target_link_libraries(coinbase-advanced-cpp PUBLIC slick::net jwt-cpp::jwt-cpp)
++target_link_libraries(coinbase-advanced-cpp PUBLIC slick::net jwt-cpp::jwt-cpp)
+ 
+ # PRIVATE precompiled headers for faster static library compilation
+ target_precompile_headers(coinbase-advanced-cpp PRIVATE
+diff --git a/cmake/coinbase-advanced-cppConfig.cmake.in b/cmake/coinbase-advanced-cppConfig.cmake.in
+index dfd8267..0cf7b1f 100644
+--- a/cmake/coinbase-advanced-cppConfig.cmake.in
++++ b/cmake/coinbase-advanced-cppConfig.cmake.in
+@@ -2,23 +2,10 @@
+ 
+ include(CMakeFindDependencyMacro)
+ 
+-find_dependency(nlohmann_json CONFIG REQUIRED)
+-find_dependency(OpenSSL CONFIG REQUIRED)
+-find_dependency(jwt-cpp CONFIG REQUIRED)
+-
+-find_dependency(slick-net 3.0.0 CONFIG QUIET)
+-if(NOT slick-net_FOUND)
+-    message(STATUS "Fetching slick-net...")
+-    include(FetchContent)
+-    set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)
+-    set(BUILD_SLICK_NET_TESTS OFF CACHE BOOL "" FORCE)
+-    FetchContent_Declare(
+-        slick-net
+-        GIT_REPOSITORY https://github.com/SlickQuant/slick-net.git
+-        GIT_TAG v3.0.0
+-    )
+-    FetchContent_MakeAvailable(slick-net)
+-endif()
++find_dependency(nlohmann_json CONFIG)
++find_dependency(OpenSSL CONFIG)
++find_dependency(jwt-cpp CONFIG)
++find_dependency(slick-net CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/coinbase-advanced-cppTargets.cmake")
+ 

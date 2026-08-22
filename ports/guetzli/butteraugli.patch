@@ -1,0 +1,13 @@
+diff --git a/guetzli/butteraugli_comparator.cc b/guetzli/butteraugli_comparator.cc
+index 142c203..f4e710d 100644
+--- a/guetzli/butteraugli_comparator.cc
++++ b/guetzli/butteraugli_comparator.cc
+@@ -56,7 +56,7 @@ ButteraugliComparator::ButteraugliComparator(const int width, const int height,
+       height_(height),
+       target_distance_(target_distance),
+       rgb_orig_(*rgb),
+-      comparator_(LinearRgb(width_, height_, *rgb)),
++      comparator_(LinearRgb(width_, height_, *rgb), 1.0f),
+       distance_(0.0),
+       stats_(stats) {}
+ 

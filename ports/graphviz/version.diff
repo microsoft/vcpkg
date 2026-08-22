@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3e7857..ac5a5c9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
+-project(Graphviz)
++project(Graphviz VERSION ${VERSION})
+ 
+ include(FeatureSummary)
+ 
+@@ -703,6 +703,7 @@ endif()
+ find_package(Python3 COMPONENTS Interpreter)
+ set_package_properties(Python3 PROPERTIES TYPE REQUIRED)
+ 
++if(0)
+ execute_process(
+   COMMAND           ${Python3_EXECUTABLE} gen_version.py --major
+   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+@@ -745,6 +746,15 @@ execute_process(
+   OUTPUT_STRIP_TRAILING_WHITESPACE
+   COMMAND_ERROR_IS_FATAL ANY
+ )
++endif()
++set(GRAPHVIZ_VERSION_MAJOR ${Graphviz_VERSION_MAJOR})
++set(GRAPHVIZ_VERSION_MINOR ${Graphviz_VERSION_MINOR})
++set(GRAPHVIZ_VERSION_PATCH ${Graphviz_VERSION_PATCH})
++set(GRAPHVIZ_VERSION_PRE_RELEASE "")
++set(GRAPHVIZ_VERSION_BUILD 0)
++set(GRAPHVIZ_VERSION
++  "${GRAPHVIZ_VERSION_MAJOR}.${GRAPHVIZ_VERSION_MINOR}.${GRAPHVIZ_VERSION_PATCH}${GRAPHVIZ_VERSION_PRE_RELEASE}"
++)
+ 
+ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/builddate.h
+      "#define BUILDDATE \"${GRAPHVIZ_VERSION_BUILD}\"")

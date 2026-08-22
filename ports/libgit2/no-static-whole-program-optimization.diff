@@ -1,0 +1,40 @@
+diff --git a/cmake/DefaultCFlags.cmake b/cmake/DefaultCFlags.cmake
+index 5abe0c8..ab1b7c2 100644
+--- a/cmake/DefaultCFlags.cmake
++++ b/cmake/DefaultCFlags.cmake
+@@ -50,13 +50,19 @@ if(MSVC)
+ 	# /Oy - Enable frame pointer omission (FPO) (otherwise CMake will automatically turn it off)
+ 	# /GL - Link time code generation (whole program optimization)
+ 	# /Gy - Function-level linking
+-	set(CMAKE_C_FLAGS_RELEASE "/DNDEBUG /O2 /Oy /GL /Gy ${CRT_FLAG_RELEASE}")
++	# /GL pays off only when the matching link runs /LTCG; a static libgit2 archive
++	# does no LTCG, so /GL would just force /LTCG onto every consumer. Shared/exe only.
++	if(BUILD_SHARED_LIBS)
++		set(GIT_WPO_C " /GL")
++		set(GIT_WPO_LINK " /LTCG")
++	endif()
++	set(CMAKE_C_FLAGS_RELEASE "/DNDEBUG /O2 /Oy${GIT_WPO_C} /Gy ${CRT_FLAG_RELEASE}")
+ 
+ 	# /Oy- - Disable frame pointer omission (FPO)
+-	set(CMAKE_C_FLAGS_RELWITHDEBINFO "/DNDEBUG /Zi /O2 /Oy- /GL /Gy ${CRT_FLAG_RELEASE}")
++	set(CMAKE_C_FLAGS_RELWITHDEBINFO "/DNDEBUG /Zi /O2 /Oy-${GIT_WPO_C} /Gy ${CRT_FLAG_RELEASE}")
+ 
+ 	# /O1 - Optimize for size
+-	set(CMAKE_C_FLAGS_MINSIZEREL "/DNDEBUG /O1 /Oy /GL /Gy ${CRT_FLAG_RELEASE}")
++	set(CMAKE_C_FLAGS_MINSIZEREL "/DNDEBUG /O1 /Oy${GIT_WPO_C} /Gy ${CRT_FLAG_RELEASE}")
+ 
+ 	# /IGNORE:4221 - Ignore empty compilation units
+ 	set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /IGNORE:4221")
+@@ -78,9 +84,9 @@ if(MSVC)
+ 	# /INCREMENTAL:NO - Required to use /LTCG
+ 	# /DEBUGTYPE:cv,fixup - Additional data embedded in the PDB (requires /INCREMENTAL:NO, so not on for Debug)
+ 	set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/DEBUG")
+-	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/RELEASE /LTCG /OPT:REF /OPT:ICF /INCREMENTAL:NO")
+-	set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/DEBUG /RELEASE /LTCG /OPT:REF /OPT:ICF /INCREMENTAL:NO /DEBUGTYPE:cv,fixup")
+-	set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "/RELEASE /LTCG /OPT:REF /OPT:ICF /INCREMENTAL:NO")
++	set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/RELEASE${GIT_WPO_LINK} /OPT:REF /OPT:ICF /INCREMENTAL:NO")
++	set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/DEBUG /RELEASE${GIT_WPO_LINK} /OPT:REF /OPT:ICF /INCREMENTAL:NO /DEBUGTYPE:cv,fixup")
++	set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "/RELEASE${GIT_WPO_LINK} /OPT:REF /OPT:ICF /INCREMENTAL:NO")
+ 
+ 	# Same linker settings for DLL as EXE
+ 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")

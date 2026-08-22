@@ -1,0 +1,11 @@
+--- a/vl/kmeans.c
++++ b/vl/kmeans.c
+@@ -669,7 +669,7 @@ VL_XCAT(_vl_kmeans_quantize_, SFX)
+ 
+ #ifdef _OPENMP
+ #pragma omp parallel default(none) \
+-            shared(self, distances, assignments, numData, distFn, data) \
++            shared(self, distances, assignments, numData, distFn, data, vl_infinity_d) \
+             num_threads(vl_get_max_threads())
+ #endif
+   {

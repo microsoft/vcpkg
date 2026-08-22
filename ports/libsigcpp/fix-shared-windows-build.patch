@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2475881..3828a13 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,6 +54,14 @@ set (PROJECT_SOURCE_DIR "${sigc++_SOURCE_DIR}/sigc++")
+ include_directories (${sigc++_SOURCE_DIR})
+ include_directories (${sigc++_BINARY_DIR})
+ 
++if (BUILD_SHARED_LIBS)
++    if (MSVC)
++        add_compile_options (-D_WINDLL)
++    endif()
++else()
++    add_compile_options (-DLIBSIGCXX_STATIC)
++endif()
++
+ configure_file (sigc++config.h.cmake sigc++config.h)
+ 
+ set (prefix ${CMAKE_INSTALL_PREFIX})

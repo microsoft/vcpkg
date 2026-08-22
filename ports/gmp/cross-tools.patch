@@ -1,0 +1,113 @@
+diff --git a/Makefile.am b/Makefile.am
+index 03356e0..9651b59 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,3 +1,7 @@
++# Using native tools, either this build or from host triplet
++HOST_TOOLS_PREFIX ?= .
++CC_FOR_BUILD = $(CC) $(CPPFLAGS) $(CFLAGS)
++
+ ## Process this file with automake to generate Makefile.in
+ 
+ 
+@@ -345,8 +349,8 @@ install-data-hook:
+ 
+ EXTRA_DIST += bootstrap.c
+ 
+-fac_table.h: gen-fac$(EXEEXT_FOR_BUILD)
+-	./gen-fac $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >fac_table.h || (rm -f fac_table.h; exit 1)
++fac_table.h: $(HOST_TOOLS_PREFIX)/gen-fac$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-fac $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >fac_table.h || (rm -f fac_table.h; exit 1)
+ BUILT_SOURCES += fac_table.h
+ 
+ gen-fac$(EXEEXT_FOR_BUILD): gen-fac$(U_FOR_BUILD).c bootstrap.c
+@@ -354,8 +358,8 @@ gen-fac$(EXEEXT_FOR_BUILD): gen-fac$(U_FOR_BUILD).c bootstrap.c
+ DISTCLEANFILES += gen-fac$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-fac.c
+ 
+-sieve_table.h: gen-sieve$(EXEEXT_FOR_BUILD)
+-	./gen-sieve $(GMP_LIMB_BITS) >sieve_table.h || (rm -f sieve_table.h; exit 1)
++sieve_table.h: $(HOST_TOOLS_PREFIX)/gen-sieve$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-sieve $(GMP_LIMB_BITS) >sieve_table.h || (rm -f sieve_table.h; exit 1)
+ BUILT_SOURCES += sieve_table.h
+ 
+ gen-sieve$(EXEEXT_FOR_BUILD): gen-sieve$(U_FOR_BUILD).c bootstrap.c
+@@ -364,12 +368,12 @@ DISTCLEANFILES += gen-sieve$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-sieve.c
+ 
+ 
+-fib_table.h: gen-fib$(EXEEXT_FOR_BUILD)
+-	./gen-fib header $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >fib_table.h || (rm -f fib_table.h; exit 1)
++fib_table.h: $(HOST_TOOLS_PREFIX)/gen-fib$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-fib header $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >fib_table.h || (rm -f fib_table.h; exit 1)
+ BUILT_SOURCES += fib_table.h
+ 
+-mpn/fib_table.c: gen-fib$(EXEEXT_FOR_BUILD)
+-	./gen-fib table $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mpn/fib_table.c || (rm -f mpn/fib_table.c; exit 1)
++mpn/fib_table.c: $(HOST_TOOLS_PREFIX)/gen-fib$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-fib table $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mpn/fib_table.c || (rm -f mpn/fib_table.c; exit 1)
+ BUILT_SOURCES += mpn/fib_table.c
+ 
+ gen-fib$(EXEEXT_FOR_BUILD): gen-fib$(U_FOR_BUILD).c bootstrap.c
+@@ -378,12 +382,12 @@ DISTCLEANFILES += gen-fib$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-fib.c
+ 
+ 
+-mp_bases.h: gen-bases$(EXEEXT_FOR_BUILD)
+-	./gen-bases header $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mp_bases.h || (rm -f mp_bases.h; exit 1)
++mp_bases.h: $(HOST_TOOLS_PREFIX)/gen-bases$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-bases header $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mp_bases.h || (rm -f mp_bases.h; exit 1)
+ BUILT_SOURCES += mp_bases.h
+ 
+-mpn/mp_bases.c: gen-bases$(EXEEXT_FOR_BUILD)
+-	./gen-bases table $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mpn/mp_bases.c || (rm -f mpn/mp_bases.c; exit 1)
++mpn/mp_bases.c: $(HOST_TOOLS_PREFIX)/gen-bases$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-bases table $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mpn/mp_bases.c || (rm -f mpn/mp_bases.c; exit 1)
+ BUILT_SOURCES += mpn/mp_bases.c
+ 
+ gen-bases$(EXEEXT_FOR_BUILD): gen-bases$(U_FOR_BUILD).c bootstrap.c
+@@ -392,8 +396,8 @@ DISTCLEANFILES += gen-bases$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-bases.c
+ 
+ 
+-trialdivtab.h: gen-trialdivtab$(EXEEXT_FOR_BUILD)
+-	./gen-trialdivtab $(GMP_LIMB_BITS) 8000 >trialdivtab.h || (rm -f trialdivtab.h; exit 1)
++trialdivtab.h: $(HOST_TOOLS_PREFIX)/gen-trialdivtab$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-trialdivtab $(GMP_LIMB_BITS) 8000 >trialdivtab.h || (rm -f trialdivtab.h; exit 1)
+ BUILT_SOURCES += trialdivtab.h
+ 
+ gen-trialdivtab$(EXEEXT_FOR_BUILD): gen-trialdivtab$(U_FOR_BUILD).c bootstrap.c
+@@ -402,8 +406,8 @@ DISTCLEANFILES += gen-trialdivtab$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-trialdivtab.c
+ 
+ 
+-mpn/jacobitab.h: gen-jacobitab$(EXEEXT_FOR_BUILD)
+-	./gen-jacobitab >mpn/jacobitab.h || (rm -f mpn/jacobitab.h; exit 1)
++mpn/jacobitab.h: $(HOST_TOOLS_PREFIX)/gen-jacobitab$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-jacobitab >mpn/jacobitab.h || (rm -f mpn/jacobitab.h; exit 1)
+ BUILT_SOURCES += mpn/jacobitab.h
+ 
+ gen-jacobitab$(EXEEXT_FOR_BUILD): gen-jacobitab$(U_FOR_BUILD).c
+@@ -412,8 +416,8 @@ DISTCLEANFILES += gen-jacobitab$(EXEEXT_FOR_BUILD)
+ EXTRA_DIST += gen-jacobitab.c
+ 
+ 
+-mpn/perfsqr.h: gen-psqr$(EXEEXT_FOR_BUILD)
+-	./gen-psqr $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mpn/perfsqr.h || (rm -f mpn/perfsqr.h; exit 1)
++mpn/perfsqr.h: $(HOST_TOOLS_PREFIX)/gen-psqr$(EXEEXT_FOR_BUILD)
++	$(HOST_TOOLS_PREFIX)/gen-psqr $(GMP_LIMB_BITS) $(GMP_NAIL_BITS) >mpn/perfsqr.h || (rm -f mpn/perfsqr.h; exit 1)
+ BUILT_SOURCES += mpn/perfsqr.h
+ 
+ gen-psqr$(EXEEXT_FOR_BUILD): gen-psqr$(U_FOR_BUILD).c bootstrap.c
+diff --git a/acinclude.m4 b/acinclude.m4
+index aea4c38..aaef13a 100644
+--- a/acinclude.m4
++++ b/acinclude.m4
+@@ -3833,6 +3833,7 @@ if AC_TRY_EVAL(gmp_compile); then
+   if (./a.out || ./b.out || ./a.exe || ./a_out.exe || ./conftest) >&AC_FD_CC 2>&1; then
+     cc_for_build_works=yes
+   fi
++  cc_for_build_works=yes # forced
+ fi
+ rm -f conftest* a.out b.out a.exe a_out.exe
+ AC_MSG_RESULT($cc_for_build_works)

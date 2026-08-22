@@ -1,0 +1,15 @@
+diff --git a/src/xkbmisc.c b/src/xkbmisc.c
+index 2f9b532e6..8be8dd508 100644
+--- a/src/xkbmisc.c	
++++ b/src/xkbmisc.c
+@@ -688,7 +688,9 @@ XkbNameMatchesPattern(char *name, char *ptrn)
+ _X_HIDDEN int
+ _XkbStrCaseCmp(char *str1, char *str2)
+ {
+-    const u_char *us1 = (const u_char *) str1, *us2 = (const u_char *) str2;
++    typedef unsigned char u_char;
++    const u_char *us1 = (const u_char *) str1;
++    const u_char *us2 = (const u_char *) str2;
+ 
+     while (tolower(*us1) == tolower(*us2)) {
+         if (*us1++ == '\0')

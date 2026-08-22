@@ -1,0 +1,7 @@
+{
+  "name": "tinyfsm",
+  "version": "0.3.3",
+  "description": "A simple C++ finite state machine library",
+  "homepage": "https://digint.ch/tinyfsm/",
+  "license": "MIT"
+}

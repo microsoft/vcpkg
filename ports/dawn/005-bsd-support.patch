@@ -1,0 +1,42 @@
+diff --git a/include/dawn/native/VulkanBackend.h b/include/dawn/native/VulkanBackend.h
+index 355c4b8646..de67992bd3 100644
+--- a/include/dawn/native/VulkanBackend.h
++++ b/include/dawn/native/VulkanBackend.h
+@@ -83,7 +83,7 @@ struct ExternalImageExportInfoVk : ExternalImageExportInfo {
+ };
+ 
+ // Can't use DAWN_PLATFORM_IS(LINUX) since header included in both Dawn and Chrome
+-#if defined(__linux__) || defined(__Fuchsia__)
++#if defined(__linux__) || defined(__Fuchsia__) || defined(__OpenBSD__) || defined(__FreeBSD__)
+ 
+ // Common properties of external images represented by FDs. On successful import the file
+ // descriptor's ownership is transferred to the Dawn implementation and they shouldn't be
+diff --git a/src/dawn/native/vulkan/BackendVk.cpp b/src/dawn/native/vulkan/BackendVk.cpp
+index 86e89f947c..3d9fad8bec 100644
+--- a/src/dawn/native/vulkan/BackendVk.cpp
++++ b/src/dawn/native/vulkan/BackendVk.cpp
+@@ -58,7 +58,7 @@ constexpr char kSwiftshaderLibName[] = "libvk_swiftshader.dylib";
+ #endif
+ 
+ #if DAWN_PLATFORM_IS(LINUX)
+-#if DAWN_PLATFORM_IS(ANDROID)
++#if DAWN_PLATFORM_IS(ANDROID) || DAWN_PLATFORM_IS(BSD)
+ constexpr char kVulkanLibName[] = "libvulkan.so";
+ #else
+ constexpr char kVulkanLibName[] = "libvulkan.so.1";
+diff --git a/src/utils/platform.h b/src/utils/platform.h
+index 4dd58a4878..f0d358a374 100644
+--- a/src/utils/platform.h
++++ b/src/utils/platform.h
+@@ -60,6 +60,11 @@
+ #error "Unsupported Windows platform."
+ #endif
+ 
++#elif defined(__OpenBSD__) || defined(__FreeBSD__)
++#define DAWN_PLATFORM_IS_LINUX 1
++#define DAWN_PLATFORM_IS_BSD 1
++#define DAWN_PLATFORM_IS_POSIX 1
++
+ #elif defined(__linux__)
+ #define DAWN_PLATFORM_IS_LINUX 1
+ #define DAWN_PLATFORM_IS_POSIX 1

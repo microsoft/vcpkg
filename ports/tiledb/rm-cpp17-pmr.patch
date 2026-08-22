@@ -1,0 +1,14 @@
+diff --git a/cmake/Modules/DetectStdPmr.cmake b/cmake/Modules/DetectStdPmr.cmake
+index cbea923..9651057 100644
+--- a/cmake/Modules/DetectStdPmr.cmake
++++ b/cmake/Modules/DetectStdPmr.cmake
+@@ -26,6 +26,9 @@
+ #
+ # Detect whether polymorphic allocators are available on the system.
+ 
++# Always use std::pmr for vcpkg port, to avoid compiling vendored source file.
++return()
++
+ # Special case for macOS when the CMAKE_OSX_DEPLOYMENT_TARGET is set to anything
+ # less than 14. For some reason, std::pmr is still detectable, but the resulting
+ # binary dies with a dyld missing symbol error.

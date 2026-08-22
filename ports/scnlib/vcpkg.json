@@ -1,0 +1,19 @@
+{
+  "name": "scnlib",
+  "version": "4.0.1",
+  "port-version": 1,
+  "description": "scnlib is a modern C++ library for replacing scanf and std::istream",
+  "homepage": "https://scnlib.dev/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "fast-float",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

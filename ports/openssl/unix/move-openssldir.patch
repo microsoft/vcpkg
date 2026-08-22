@@ -1,0 +1,16 @@
+diff --git a/Configurations/unix-Makefile.tmpl b/Configurations/unix-Makefile.tmpl
+index c82c086..6c5402d 100644
+--- a/Configurations/unix-Makefile.tmpl
++++ b/Configurations/unix-Makefile.tmpl
+@@ -690,6 +690,11 @@ install_ssldirs:
+ 		chmod 644 "$(DESTDIR)$(OPENSSLDIR)/ct_log_list.cnf"; \
+ 	fi
+ 
++	$(PERL) $(SRCDIR)/util/mkdir-p.pl $(DESTDIR)$(INSTALLTOP)$(OPENSSLDIR)
++	for I in $(DESTDIR)$(OPENSSLDIR)/*; do \
++		mv $$I $(DESTDIR)$(INSTALLTOP)$(OPENSSLDIR)/; \
++	done
++
+ install_dev: install_runtime_libs
+ 	@[ -n "$(INSTALLTOP)" ] || (echo INSTALLTOP should not be empty; exit 1)
+ 	@$(ECHO) "*** Installing development files"

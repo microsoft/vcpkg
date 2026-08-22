@@ -1,0 +1,4 @@
+The package poco is compatible with built-in CMake targets:
+
+    find_package(Poco REQUIRED [COMPONENTS <libs>...])
+    target_link_libraries(main PRIVATE Poco::<libs>)

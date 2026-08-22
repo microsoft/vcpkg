@@ -1,0 +1,7 @@
+{
+  "name": "clay",
+  "version": "0.14",
+  "description": "High performance UI layout library in C",
+  "homepage": "https://www.nicbarker.com/clay",
+  "license": "Zlib"
+}

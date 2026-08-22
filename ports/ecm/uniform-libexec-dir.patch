@@ -1,0 +1,39 @@
+diff --git a/kde-modules/KDEInstallDirs5.cmake b/kde-modules/KDEInstallDirs5.cmake
+index 5f67759..24308ad 100644
+--- a/kde-modules/KDEInstallDirs5.cmake
++++ b/kde-modules/KDEInstallDirs5.cmake
+@@ -222,7 +222,7 @@ for the prefix into a process.
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/KDEInstallDirsCommon.cmake)
+ 
+-if(WIN32)
++if(1)
+     _define_non_cache(LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}")
+ else()
+     _define_non_cache(LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}/kf5")
+diff --git a/kde-modules/KDEInstallDirs6.cmake b/kde-modules/KDEInstallDirs6.cmake
+index 469997b..87c5cd4 100644
+--- a/kde-modules/KDEInstallDirs6.cmake
++++ b/kde-modules/KDEInstallDirs6.cmake
+@@ -191,7 +191,7 @@ set(KDE_INSTALL_DIRS_NO_DEPRECATED TRUE)
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/KDEInstallDirsCommon.cmake)
+ 
+-if(WIN32)
++if(1)
+     _define_non_cache(LIBEXECDIR_KF "${CMAKE_INSTALL_LIBEXECDIR}")
+ else()
+     _define_non_cache(LIBEXECDIR_KF "${CMAKE_INSTALL_LIBEXECDIR}/kf6")
+diff --git a/kde-modules/KDEInstallDirsCommon.cmake b/kde-modules/KDEInstallDirsCommon.cmake
+index aae70d6..6b39058 100644
+--- a/kde-modules/KDEInstallDirsCommon.cmake
++++ b/kde-modules/KDEInstallDirsCommon.cmake
+@@ -241,7 +241,7 @@ _define_relative(LIBDIR EXECROOTDIR "${_LIBDIR_DEFAULT}"
+     "object code libraries"
+     LIB_INSTALL_DIR)
+ 
+-if(WIN32)
++if(1)
+     _define_relative(LIBEXECDIR BINDIR ""
+         "executables for internal use by programs and libraries"
+         LIBEXEC_INSTALL_DIR)

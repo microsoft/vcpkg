@@ -1,0 +1,19 @@
+diff --git a/configure.ac b/configure.ac
+index 082783a..b94ce25 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -97,9 +97,11 @@ AC_ARG_ENABLE([bz2],
+ 
+ if test "$enable_bz2" != no; then
+   bz2_devel=ok
+-  AC_CHECK_LIB([bz2], [BZ2_bzBuffToBuffCompress], [
+-	LIBS="-lbz2 $LIBS"
+-	AC_DEFINE([HAVE_LIBBZ2],1,[Define to 1 if you have the libbz2 library.])], [bz2_devel=missing])
++  PKG_CHECK_MODULES([BZ2_PKG], [bzip2], [
++      AC_DEFINE([HAVE_LIBBZ2],1,[Define to 1 if you have the libbz2 library.])
++      LIBS="$LIBS $BZ2_PKG_LIBS"
++      CFLAGS="$CFLAGS $BZ2_PKG_CFLAGS"
++    ], [bz2_devel=missing])
+   if test "$bz2_devel" != "ok"; then
+     AC_MSG_ERROR([libbzip2 development files not found.
+ 

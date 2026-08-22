@@ -1,0 +1,17 @@
+{
+  "name": "imath",
+  "version": "3.2.2",
+  "description": "Imath is a C++ and Python library of 2D and 3D vector, matrix, and math operations for computer graphics.",
+  "homepage": "https://github.com/AcademySoftwareFoundation/Imath",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

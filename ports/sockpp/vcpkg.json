@@ -1,0 +1,19 @@
+{
+  "name": "sockpp",
+  "version": "1.0.0",
+  "port-version": 2,
+  "description": "Simple, modern, C++ socket library. This is a fairly low-level C++ wrapper around the Berkeley sockets library using socket, acceptor, and connector classes that are familiar concepts from other languages.",
+  "homepage": "https://github.com/fpagliughi/sockpp",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

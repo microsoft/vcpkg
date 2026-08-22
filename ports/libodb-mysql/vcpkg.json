@@ -1,0 +1,19 @@
+{
+  "name": "libodb-mysql",
+  "version": "2.4.0",
+  "port-version": 11,
+  "description": "MySQL support for the ODB ORM library",
+  "homepage": "https://www.codesynthesis.com/products/odb/",
+  "dependencies": [
+    "libmysql",
+    "libodb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

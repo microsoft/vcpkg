@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index efefbfc..ae4b1fc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,11 +52,32 @@ find_package(Boost 1.47.0 COMPONENTS chrono system REQUIRED)
+ include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+ link_directories(${Boost_LIBRARY_DIRS})
+ 
+-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
+-find_package(Rabbitmqc REQUIRED)
+-INCLUDE_DIRECTORIES(SYSTEM ${Rabbitmqc_INCLUDE_DIRS})
++find_package(rabbitmq-c CONFIG REQUIRED)
++if (TARGET rabbitmq::rabbitmq)
++  set(Rabbitmqc_LIBRARY rabbitmq::rabbitmq)
++elseif (TARGET rabbitmq::rabbitmq-static)
++  set(Rabbitmqc_LIBRARY rabbitmq::rabbitmq-static)
++else()
++  message(FATAL_ERROR "Failed to find rabbitmq-c target")
++endif()
++get_target_property(Rabbitmqc_INCLUDE_DIRS ${Rabbitmqc_LIBRARY} INTERFACE_INCLUDE_DIRECTORIES)
++include_directories(SYSTEM ${Rabbitmqc_INCLUDE_DIRS})
++find_file(_Rabbitmqc_SSL_HEADER
++  NAMES amqp_ssl_socket.h
++  PATHS ${Rabbitmqc_INCLUDE_DIRS}
++  NO_DEFAULT_PATH
++)
++if (_Rabbitmqc_SSL_HEADER)
++  set(_ssl_enabled TRUE)
++else()
++  set(_ssl_enabled FALSE)
++endif()
++set(Rabbitmqc_SSL_ENABLED ${_ssl_enabled} CACHE BOOL "Rabbitmqc is SSL Enabled" FORCE)
+ 
+ option(ENABLE_SSL_SUPPORT "Enable SSL support." ${Rabbitmqc_SSL_ENABLED})
++if (ENABLE_SSL_SUPPORT AND NOT Rabbitmqc_SSL_ENABLED)
++  message(FATAL_ERROR "SSL support requested but rabbitmq-c was not built with SSL")
++endif()
+ 
+ if (ENABLE_SSL_SUPPORT)
+   add_definitions(-DSAC_SSL_SUPPORT_ENABLED)

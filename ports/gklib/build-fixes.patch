@@ -1,0 +1,84 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6a9a694..fd3705e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -163,11 +163,6 @@ target_compile_definitions(${PROJECT_NAME}
+ target_compile_options(${PROJECT_NAME}
+   PUBLIC $<$<AND:$<BOOL:${GPROF}>,$<BOOL:${HAVE_GPROF_SUPPORT}>>:-pg>)
+ 
+-target_compile_options(${PROJECT_NAME}
+-  PUBLIC $<$<AND:$<OR:$<BOOL:${DEBUG}>,$<BOOL:${GDB}>>,$<BOOL:${HAVE_GDB_SUPPORT}>>:-g>)
+-
+-target_compile_options(${PROJECT_NAME}
+-  PUBLIC $<$<NOT:$<OR:$<BOOL:${DEBUG}>,$<BOOL:${GDB}>>>:-O3>)
+ 
+ target_link_libraries(${PROJECT_NAME}
+   PUBLIC $<$<BOOL:${OpenMP_C_FOUND}>:OpenMP::OpenMP_C>)
+diff --git a/cmake/GKlibSystem.cmake b/cmake/GKlibSystem.cmake
+index 249d424..94d9fd6 100644
+--- a/cmake/GKlibSystem.cmake
++++ b/cmake/GKlibSystem.cmake
+@@ -2,7 +2,6 @@
+ 
+ # Add compiler flags.
+ if(MSVC)
+-  set(GKlib_COPTS "/Ox")
+   set(GKlib_COPTIONS "-DWIN32 -DMSC -D_CRT_SECURE_NO_DEPRECATE -DUSE_GKREGEX")
+ elseif(MINGW)
+   set(GKlib_COPTS "-DUSE_GKREGEX")
+@@ -20,6 +19,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+ 
+   if(VALGRIND)
+     set(GKlib_COPTIONS "${GK_COPTIONS} -march=x86-64 -mtune=generic")
++  elseif(1)
++    # Use flags from toolchain and triplet
+   else()
+     set(GKlib_COPTIONS "${GKlib_COPTIONS} -march=native")
+   endif(VALGRIND)
+@@ -30,6 +31,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+ 
+ # GCC warnings.
+   set(GKlib_COPTIONS "${GKlib_COPTIONS} -Werror -Wall -pedantic -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unknown-pragmas -Wno-unused-label")
++  string(REPLACE " -Werror " " " GKlib_COPTIONS "${GKlib_COPTIONS}")
+ endif()
+ 
+ if(${CMAKE_C_COMPILER_ID} MATCHES "Sun")
+diff --git a/include/gk_ms_inttypes.h b/include/gk_ms_inttypes.h
+index b89fc10..7247c38 100644
+--- a/include/gk_ms_inttypes.h
++++ b/include/gk_ms_inttypes.h
+@@ -35,6 +35,8 @@
+ 
+ #ifndef _MSC_INTTYPES_H_ // [
+ #define _MSC_INTTYPES_H_
++#include <inttypes.h>
++#elif 0
+ 
+ #if _MSC_VER > 1000
+ #pragma once
+diff --git a/include/gk_ms_stdint.h b/include/gk_ms_stdint.h
+index 7e200dc..1c51958 100644
+--- a/include/gk_ms_stdint.h
++++ b/include/gk_ms_stdint.h
+@@ -35,6 +35,8 @@
+ 
+ #ifndef _MSC_STDINT_H_ // [
+ #define _MSC_STDINT_H_
++#include <stdint.h>
++#elif 0
+ 
+ #if _MSC_VER > 1000
+ #pragma once
+diff --git a/src/win32/adapt.c b/src/win32/adapt.c
+index 546857c..d56f767 100644
+--- a/src/win32/adapt.c
++++ b/src/win32/adapt.c
+@@ -3,7 +3,7 @@
+ \brief Implementation of Win32 adaptation of libc functions
+ */
+ 
+-#include "adapt.h"
++#include "win32/adapt.h"
+ 
+ pid_t getpid(void)
+ {

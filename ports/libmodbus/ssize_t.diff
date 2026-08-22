@@ -1,0 +1,14 @@
+diff --git a/src/modbus-private.h b/src/modbus-private.h
+index ea83187..db5a3dc 100644
+--- a/src/modbus-private.h
++++ b/src/modbus-private.h
+@@ -14,7 +14,9 @@
+ #else
+ # include "stdint.h"
+ # include <time.h>
++# ifndef ssize_t
+ typedef int ssize_t;
++# endif
+ #endif
+ // clang-format on
+ #include <config.h>

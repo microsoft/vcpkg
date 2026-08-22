@@ -1,0 +1,32 @@
+diff --git a/src/encparse.c b/src/encparse.c
+index bf9ea23..395dd16 100644
+--- a/src/encparse.c
++++ b/src/encparse.c
+@@ -32,7 +32,11 @@ THE SOFTWARE.
+ #endif
+ 
+ #include <string.h>
++#ifndef _MSC_VER
+ #include <strings.h>
++#else
++#define strcasecmp _stricmp
++#endif
+ #include <stdio.h>
+ 
+ #include <stdlib.h>
+diff --git a/src/fontenc.c b/src/fontenc.c
+index d0a43e8..b7df75e 100644
+--- a/src/fontenc.c
++++ b/src/fontenc.c
+@@ -27,7 +27,11 @@ THE SOFTWARE.
+ #endif
+ 
+ #include <string.h>
++#ifndef _MSC_VER
+ #include <strings.h>
++#else
++#define strcasecmp _stricmp
++#endif
+ #include <stdlib.h>
+ 
+ #define FALSE 0

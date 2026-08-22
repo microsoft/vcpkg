@@ -1,0 +1,23 @@
+diff --git a/pxr/base/work/workTBB/dispatcher_impl.h b/pxr/base/work/workTBB/dispatcher_impl.h
+index 9cecf4a4d..6785dcec6 100644
+--- a/pxr/base/work/workTBB/dispatcher_impl.h
++++ b/pxr/base/work/workTBB/dispatcher_impl.h
+@@ -10,6 +10,18 @@
+ #include "pxr/pxr.h"
+ #include "pxr/base/work/api.h"
+ 
++// The TBB version macro is located in different headers in legacy TBB
++// (tbb/tbb_stddef.h) and oneTBB (tbb/version.h)
++#if __has_include(<tbb/tbb_stddef.h>)
++#include <tbb/tbb_stddef.h>
++#elif __has_include(<tbb/version.h>)
++#include <tbb/version.h>
++#endif
++
++#ifndef TBB_INTERFACE_VERSION_MAJOR
++#error "TBB version macro TBB_INTERFACE_VERSION_MAJOR not found"
++#endif
++
+ // Blocked range is not used in this file, but this header happens to pull in
+ // the TBB version header in a way that works in all TBB versions.
+ #include <tbb/blocked_range.h>

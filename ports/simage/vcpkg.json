@@ -1,0 +1,158 @@
+{
+  "name": "simage",
+  "version-semver": "1.8.4",
+  "description": "Image file format library abstraction layer",
+  "homepage": "https://github.com/coin3d/simage",
+  "license": "ISC",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Enable all features",
+      "dependencies": [
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "oggvorbis"
+          ]
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "sndfile"
+          ]
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "avienc"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "gdiplus"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "giflib"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "jpeg"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "png"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "tiff"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "simage",
+          "default-features": false,
+          "features": [
+            "zlib"
+          ],
+          "platform": "!windows"
+        }
+      ]
+    },
+    "avienc": {
+      "description": "Use Video for Windows for AVI encoding",
+      "supports": "windows"
+    },
+    "gdiplus": {
+      "description": "Use GDI+ on Windows to load/save images",
+      "supports": "windows"
+    },
+    "giflib": {
+      "description": "Enable support for GIF images",
+      "dependencies": [
+        "giflib"
+      ]
+    },
+    "jpeg": {
+      "description": "Enable support for JPEG images",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "oggvorbis": {
+      "description": "Enable support for ogg/vorbis extensions",
+      "dependencies": [
+        "libogg",
+        "libvorbis",
+        "opus"
+      ]
+    },
+    "png": {
+      "description": "Enable support for PNG images",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "sndfile": {
+      "description": "Use libsndfile to load/save sampled sound",
+      "dependencies": [
+        {
+          "name": "libsndfile",
+          "default-features": false,
+          "features": [
+            "external-libs"
+          ]
+        }
+      ]
+    },
+    "tiff": {
+      "description": "Enable support for TIFF images",
+      "dependencies": [
+        "liblzma",
+        "tiff",
+        "zstd"
+      ]
+    },
+    "zlib": {
+      "description": "Enable support for zlib library",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

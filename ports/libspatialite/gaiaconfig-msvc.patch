@@ -1,0 +1,64 @@
+diff --git a/src/headers/spatialite/gaiaconfig-msvc.h.in b/src/headers/spatialite/gaiaconfig-msvc.h.in
+index 8b49f74..75565d2 100644
+--- a/src/headers/spatialite/gaiaconfig-msvc.h.in
++++ b/src/headers/spatialite/gaiaconfig-msvc.h.in
+@@ -1,7 +1,8 @@
++/* ./src/headers/spatialite/gaiaconfig-msvc.h - vcpkg @PORT@[@FEATURES@] */
+ /* ./src/headers/spatialite/gaiaconfig-msvc.h.in - manually maintained */
+ 
+ /* Should be defined in order to enable GCP support. */
+-#undef ENABLE_GCP
++#cmakedefine ENABLE_GCP 1
+ 
+ /* Should be defined in order to enable GeoPackage support. */
+ #define ENABLE_GEOPACKAGE 1
+@@ -10,7 +11,7 @@
+ #define ENABLE_LIBXML2 1
+ 
+ /* Should be defined in order to enable RTTOPO support. */
+-#define ENABLE_RTTOPO 1
++#cmakedefine ENABLE_RTTOPO 1
+ 
+ /* Should be defined in order to enable GEOS_370 support. */
+ #define GEOS_370 1
+@@ -25,31 +26,31 @@
+ #define GEOS_REENTRANT 1
+ 
+ /* Should be defined in order to disable EPSG full support. */
+-#undef OMIT_EPSG
++/* #undef OMIT_EPSG */
+ 
+ /* Should be defined in order to disable FREEXL support. */
+-#undef OMIT_FREEXL
++#cmakedefine OMIT_FREEXL 1
+ 
+ /* Should be defined in order to disable GEOCALLBACKS support. */
+-#define OMIT_GEOCALLBACKS 1
++/* #define OMIT_GEOCALLBACKS */
+ 
+ /* Should be defined in order to disable GEOS support. */
+-#undef OMIT_GEOS
++/* #undef OMIT_GEOS */
+ 
+ /* Should be defined in order to disable ICONV support. */
+-#undef OMIT_ICONV
++/* #undef OMIT_ICONV */
+ 
+ /* Should be defined in order to disable KNN support. */
+-#undef OMIT_KNN
++/* #undef OMIT_KNN */
+ 
+ /* Should be defined in order to disable MATHSQL support. */
+-#undef OMIT_MATHSQL
++/* #undef OMIT_MATHSQL */
+ 
+ /* Should be defined in order to disable PROJ.4 support. */
+-#undef OMIT_PROJ
++/* #undef OMIT_PROJ */
+ 
+ /* Should be defined in order to enable PROJ.6 support. */
+ #define PROJ_NEW 1
+ 
+ /* the Version of this package */
+-#undef SPATIALITE_VERSION
++#define SPATIALITE_VERSION "@VERSION@"

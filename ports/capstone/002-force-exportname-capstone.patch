@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4797bc57..929eee49 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -658,7 +658,7 @@ target_include_directories(capstone PUBLIC
+ if(BUILD_STATIC_LIBS)
+     add_library(capstone_static STATIC $<TARGET_OBJECTS:capstone>)
+     # Use normal capstone name. Otherwise we get libcapstone_static.a
+-    set_target_properties(capstone_static PROPERTIES OUTPUT_NAME "capstone")
++    set_target_properties(capstone_static PROPERTIES OUTPUT_NAME "capstone" EXPORT_NAME "capstone")
+     target_include_directories(capstone_static PUBLIC
+         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+     )
+@@ -668,7 +668,7 @@ if(BUILD_SHARED_LIBS)
+     set_property(TARGET capstone PROPERTY POSITION_INDEPENDENT_CODE 1)
+     add_library(capstone_shared SHARED $<TARGET_OBJECTS:capstone>)
+     # Use normal capstone name. Otherwise we get libcapstone_shared.so
+-    set_target_properties(capstone_shared PROPERTIES OUTPUT_NAME "capstone")
++    set_target_properties(capstone_shared PROPERTIES OUTPUT_NAME "capstone" EXPORT_NAME "capstone")
+     set_target_properties(capstone_shared PROPERTIES
+         VERSION ${PROJECT_VERSION}
+         SOVERSION ${PROJECT_VERSION_MAJOR}

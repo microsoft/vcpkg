@@ -1,0 +1,22 @@
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index a453c1a..4a8edcb 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -15,7 +15,7 @@ set(UDEV_NAME 80-nfb.rules)
+ 
+ include(${CMAKE_CURRENT_LIST_DIR}/../functions.cmake)
+ 
+-set(prefix          "/usr")
++set(prefix          "${CMAKE_INSTALL_PREFIX}")
+ set(includedir      "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+ set(libdir          "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
+ set(datarootdir     "\${prefix}/${CMAKE_INSTALL_DATAROOTDIR}")
+@@ -27,7 +27,7 @@ configure_file(netcope-common.pc.in netcope-common.pc @ONLY)
+ 
+ install(
+ 	FILES nfb.udev.rules
+-	DESTINATION /etc/udev/rules.d
++	DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/udev/rules.d"
+ 	RENAME ${UDEV_NAME}
+ )
+ 

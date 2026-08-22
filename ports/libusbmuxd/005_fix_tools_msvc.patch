@@ -1,0 +1,42 @@
+diff --git a/tools/inetcat.c b/tools/inetcat.c
+index f70215b..748db15 100644
+--- a/tools/inetcat.c
++++ b/tools/inetcat.c
+@@ -33,7 +33,9 @@
+ #include <string.h>
+ #include <fcntl.h>
+ #include <stddef.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <getopt.h>
+ #ifdef WIN32
+@@ -50,6 +52,13 @@
+ #include "usbmuxd.h"
+ #include <libimobiledevice-glue/socket.h>
+ 
++#ifdef _MSC_VER
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#define STDIN_FILENO  _fileno(stdin)
++#define STDOUT_FILENO _fileno(stdout)
++#endif
++
+ static int debug_level = 0;
+ 
+ static size_t read_data_socket(int fd, uint8_t* buf, size_t bufsize)
+diff --git a/tools/iproxy.c b/tools/iproxy.c
+index d5f66b6..6510cb8 100644
+--- a/tools/iproxy.c
++++ b/tools/iproxy.c
+@@ -34,7 +34,9 @@
+ #include <string.h>
+ #include <fcntl.h>
+ #include <stddef.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <getopt.h>
+ #ifdef WIN32

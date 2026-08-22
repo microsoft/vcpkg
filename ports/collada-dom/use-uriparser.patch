@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3ec1527..d5d1608 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -237,10 +237,12 @@ else()
+   set(MINIZIP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dom/external-libs/minizip-1.1 ${ZLIB_INCLUDE_DIR})
+ endif()
+ 
+-pkg_check_modules(liburiparser liburiparser)
++find_package(liburiparser NAMES uriparser REQUIRED)
+ 
+ if(liburiparser_FOUND)
+   set(liburiparser_CFLAGS_OTHERS "-DUSE_URIPARSER")
++  set(liburiparser_LIBRARIES uriparser::uriparser)
++  message(STATUS "liburiparser found")
+ else()
+   # try using pcrecpp
+   pkg_check_modules(libpcrecpp libpcrecpp)
+diff --git a/dom/src/dae/daeURI.cpp b/dom/src/dae/daeURI.cpp
+index 3a8f815..1623753 100644
+--- a/dom/src/dae/daeURI.cpp
++++ b/dom/src/dae/daeURI.cpp
+@@ -790,7 +790,7 @@ bool cdom::parseUriRef(const string& uriRef,
+         scheme = fromRange(uri.scheme);
+         authority = fromRange(uri.hostText);
+         path = fromList(uri.pathHead, "/");
+-        if (uri.absolutePath != URI_TRUE and uri.hostText.first == NULL)
++        if (uri.absolutePath != URI_TRUE && uri.hostText.first == NULL)
+             path = path.erase(0, 1);
+         query = fromRange(uri.query);
+         fragment = fromRange(uri.fragment);

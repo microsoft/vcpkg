@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6c33c25..2c35ea2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,6 +82,10 @@ configure_file (cmake/fann.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/fann.pc @ONLY)
+ 
+ install (FILES ${CMAKE_CURRENT_BINARY_DIR}/fann.pc DESTINATION ${PKGCONFIG_INSTALL_DIR})
+ 
++if (MSVC)
++    add_compile_options(/wd4996)
++endif()
++
+ ADD_SUBDIRECTORY( src ) 
+ 
+ ################# cpack ################

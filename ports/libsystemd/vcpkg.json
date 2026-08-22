@@ -1,0 +1,28 @@
+{
+  "name": "libsystemd",
+  "version": "260.2",
+  "description": "System and Service Manager",
+  "homepage": "https://github.com/systemd/systemd",
+  "license": null,
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "gperf",
+      "host": true
+    },
+    "libcap",
+    "liblzma",
+    "libmount",
+    "libxcrypt",
+    "lz4",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zstd"
+  ]
+}

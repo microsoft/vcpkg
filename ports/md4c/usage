@@ -1,0 +1,4 @@
+md4c provides CMake targets:
+
+find_package(md4c CONFIG REQUIRED)
+target_link_libraries(main PRIVATE md4c::md4c)

@@ -1,0 +1,14 @@
+{
+  "name": "libopusenc",
+  "version": "0.3",
+  "description": "Library for encoding .opus audio files and live streams.",
+  "homepage": "https://github.com/xiph/libopusenc",
+  "supports": "!uwp",
+  "dependencies": [
+    "opus",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

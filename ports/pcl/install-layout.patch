@@ -1,0 +1,70 @@
+diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
+index cf21c44..1463514 100644
+--- a/PCLConfig.cmake.in
++++ b/PCLConfig.cmake.in
+@@ -403,7 +403,7 @@ endif()
+ find_package(PkgConfig QUIET)
+ 
+ file(TO_CMAKE_PATH "${PCL_DIR}" PCL_DIR)
+-if(WIN32 AND NOT MINGW)
++if(0)
+ # PCLConfig.cmake is installed to PCL_ROOT/cmake
+   get_filename_component(PCL_ROOT "${PCL_DIR}" PATH)
+   if(EXISTS "${PCL_ROOT}/3rdParty")
+@@ -425,6 +425,10 @@ elseif(EXISTS "${PCL_ROOT}/include/pcl/pcl_config.h")
+   # pcl_message("Found a PCL installation")
+   set(PCL_CONF_INCLUDE_DIR "${PCL_ROOT}/include")
+   set(PCL_LIBRARY_DIRS "${PCL_ROOT}/lib")
++  list(APPEND PCL_LIBRARY_DIRS "${PCL_ROOT}/debug/lib")
++  if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$")
++    list(REVERSE PCL_LIBRARY_DIRS)
++  endif()
+ elseif(EXISTS "${PCL_DIR}/include/pcl/pcl_config.h")
+   # Found PCLConfig.cmake in a build tree of PCL
+   # pcl_message("PCL found into a build tree.")
+diff --git a/cmake/Modules/FindFLANN.cmake b/cmake/Modules/FindFLANN.cmake
+index f42bca3..faca969 100644
+--- a/cmake/Modules/FindFLANN.cmake
++++ b/cmake/Modules/FindFLANN.cmake
+@@ -85,7 +85,7 @@ if(flann_FOUND)
+ 
+   # Determine FLANN installation root based on the path to the processed Config file
+   get_filename_component(_config_dir "${flann_CONFIG}" DIRECTORY)
+-  get_filename_component(FLANN_ROOT "${_config_dir}/../../.." ABSOLUTE)
++  get_filename_component(FLANN_ROOT "${_config_dir}/../.." ABSOLUTE)
+   unset(_config_dir)
+   message(STATUS "Found flann version ${flann_VERSION}")
+   return()
+diff --git a/cmake/pcl_utils.cmake b/cmake/pcl_utils.cmake
+index d87d02d..9c0ede1 100644
+--- a/cmake/pcl_utils.cmake
++++ b/cmake/pcl_utils.cmake
+@@ -100,6 +100,7 @@ macro(SET_INSTALL_DIRS)
+     else()
+       set(INCLUDE_INSTALL_ROOT "include") # Android, don't put into subdir
+     endif()
++    set(INCLUDE_INSTALL_ROOT "include")
+     set(INCLUDE_INSTALL_DIR "${INCLUDE_INSTALL_ROOT}/pcl")
+     set(DOC_INSTALL_DIR "share/doc/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
+     set(BIN_INSTALL_DIR "bin")
+@@ -109,6 +110,7 @@ macro(SET_INSTALL_DIRS)
+       else()
+         set(PCLCONFIG_INSTALL_DIR "share/${PROJECT_NAME_LOWER}-${PCL_VERSION_MAJOR}.${PCL_VERSION_MINOR}")
+       endif()
++    set(PCLCONFIG_INSTALL_DIR "share/pcl")
+ endmacro()
+ 
+ 
+diff --git a/cmake/pkgconfig.cmake.in b/cmake/pkgconfig.cmake.in
+index c351e44..b10577a 100644
+--- a/cmake/pkgconfig.cmake.in
++++ b/cmake/pkgconfig.cmake.in
+@@ -3,7 +3,7 @@ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+ libdir=${prefix}/@LIB_INSTALL_DIR@
+ #includedir=${prefix}/@INCLUDE_INSTALL_DIR@
+-includedir=${prefix}/include/@PROJECT_NAME_LOWER@-@PCL_VERSION_MAJOR@.@PCL_VERSION_MINOR@
++includedir=${prefix}/@INCLUDE_INSTALL_DIR@
+ Name: @PKG_NAME@
+ Description: @PKG_DESC@
+ Version: @PCL_VERSION@

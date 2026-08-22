@@ -1,0 +1,10 @@
+Skip tools subdir in libvmaf to build only the library.
+--- a/libvmaf/meson.build
++++ b/libvmaf/meson.build
+@@ -51,6 +51,5 @@ endif
+ 
+ subdir('include')
+ subdir('src')
+-subdir('tools')
+ subdir('doc')
+ subdir('test')

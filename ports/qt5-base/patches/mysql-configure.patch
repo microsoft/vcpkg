@@ -1,0 +1,11 @@
+--- a/src/plugins/sqldrivers/configure.json
++++ b/src/plugins/sqldrivers/configure.json
+@@ -65,7 +65,7 @@
+                 ],
+                 "main": "mysql_get_client_version();"
+             },
+-            "headers": "mysql.h",
++            "headers": "mysql/mysql.h",
+             "sources": [
+                 { "type": "mysqlConfig", "query": "--libs_r", "cleanlibs": true },
+                 { "type": "mysqlConfig", "query": "--libs", "cleanlibs": true },

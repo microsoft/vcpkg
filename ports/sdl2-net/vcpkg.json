@@ -1,0 +1,22 @@
+{
+  "name": "sdl2-net",
+  "version": "2.2.0",
+  "port-version": 3,
+  "description": "Networking library for SDL",
+  "homepage": "https://github.com/libsdl-org/SDL_net",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "sdl2",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

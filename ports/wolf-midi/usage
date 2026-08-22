@@ -1,0 +1,4 @@
+wolf-midi provides CMake targets:
+
+  find_package(wolf-midi CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE wolf-midi::wolf-midi)

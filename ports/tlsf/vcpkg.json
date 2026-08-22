@@ -1,0 +1,13 @@
+{
+  "name": "tlsf",
+  "version-date": "2020-03-29",
+  "description": "Two-Level Segregated Fit memory allocator implementation. O(1) cost for malloc, free, realloc and memalign, with extremely low overhead per allocation.",
+  "homepage": "https://github.com/mattconte/tlsf",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

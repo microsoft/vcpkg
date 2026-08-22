@@ -1,0 +1,13 @@
+diff --git a/dependencies/include/format.h b/dependencies/include/format.h
+index 3683993..e88b214 100644
+--- a/dependencies/include/format.h
++++ b/dependencies/include/format.h
+@@ -53,7 +53,7 @@ typedef long long          intmax_t;
+ # include <ostream>
+ #endif
+ 
+-#ifdef _SECURE_SCL
++#if defined(_SECURE_SCL) && defined(_MSC_VER) && _MSC_VER < 1951
+ # define FMT_SECURE_SCL _SECURE_SCL
+ #else
+ # define FMT_SECURE_SCL 0

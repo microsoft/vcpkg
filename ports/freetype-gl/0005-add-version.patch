@@ -1,0 +1,11 @@
+diff --git a/freetype-gl.pc.in b/freetype-gl.pc.in
+index 3b33096..a5ae350 100644
+--- a/freetype-gl.pc.in
++++ b/freetype-gl.pc.in
+@@ -5,5 +5,6 @@ includedir=@PKG_CONFIG_INCLUDEDIR@
+ 
+ Name: freetype-gl
+ Description: OpenGL text using one vertex buffer, one texture and FreeType
++Version: v1.0
+ Libs: -L${libdir} -lfreetype-gl
+ Cflags: -I${includedir}

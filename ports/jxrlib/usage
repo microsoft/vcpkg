@@ -1,0 +1,5 @@
+The package jxrlib provides CMake integration:
+
+    find_package(JXR REQUIRED)
+    target_include_directories(main PRIVATE ${JXR_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${JXR_LIBRARIES})

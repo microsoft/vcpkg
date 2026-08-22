@@ -1,0 +1,38 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 90f871d..8fd64b2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -3,11 +3,7 @@ cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+ project(uthenticode)
+ 
+ find_package(pe-parse REQUIRED)
+-find_package(
+-  OpenSSL 3.0
+-  COMPONENTS Crypto
+-  REQUIRED
+-)
++find_package(OpenSSL REQUIRED)
+ 
+ add_library("${PROJECT_NAME}" uthenticode.cpp)
+ 
+@@ -32,7 +28,7 @@ set_target_properties("${PROJECT_NAME}" PROPERTIES PUBLIC_HEADER "include/uthent
+ 
+ target_link_libraries("${PROJECT_NAME}" PUBLIC pe-parse::pe-parse)
+ 
+-target_link_libraries("${PROJECT_NAME}" PUBLIC OpenSSL::Crypto)
++target_link_libraries("${PROJECT_NAME}" PUBLIC OpenSSL::SSL OpenSSL::Crypto)
+ 
+ install(
+   TARGETS "${PROJECT_NAME}"
+diff --git a/src/include/uthenticode.h b/src/include/uthenticode.h
+index 223d662..07e5bc3 100644
+--- a/src/include/uthenticode.h
++++ b/src/include/uthenticode.h
+@@ -48,6 +48,7 @@ DECLARE_ASN1_FUNCTIONS(Authenticode_SpcIndirectDataContent)
+  * So we wrap it here for use with unique_ptr.
+  */
+ void OpenSSL_free(void *ptr);
++void SK_X509_free(stack_st_X509 *ptr);
+ 
+ /* Since OpenSSL 3.0.0 SK_X509_free is defined as a macro, which we can't use with decltype.
+  * So we wrap it here for use with unique_ptr.

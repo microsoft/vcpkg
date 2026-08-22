@@ -1,0 +1,19 @@
+{
+  "name": "libmpeg2",
+  "version": "0.5.1",
+  "port-version": 4,
+  "description": "a free MPEG-2 video stream decoder",
+  "homepage": "http://libmpeg2.sourceforge.net/",
+  "supports": "!(linux | osx | uwp | android)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools provided with libmpeg2"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "cute-headers",
+  "version-date": "2026-06-11",
+  "description": "Collection of cross-platform one-file C/C++ libraries with no dependencies",
+  "homepage": "https://github.com/RandyGaul/cute_headers",
+  "license": "Zlib OR Unlicense"
+}
