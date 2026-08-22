@@ -27,7 +27,7 @@ arm64)
   ;;
 esac
 
-POWERSHELL_VERSION=7.6.3
+POWERSHELL_VERSION=7.6.4
 
 # Apt dependencies; needed for add-apt-repository and curl downloads to work
 apt-get -y update
