@@ -8,7 +8,7 @@ set(CONFIG_VERSION_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/tmpinst/BoostConfigVer
 
 write_basic_package_version_file("${CONFIG_VERSION_FILE_NAME}" COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)
 
-install(FILES 
+install(FILES
           "${CONFIG_VERSION_FILE_NAME}"
           "${CMAKE_CURRENT_SOURCE_DIR}/config/BoostConfig.cmake"
         DESTINATION "share/boost")

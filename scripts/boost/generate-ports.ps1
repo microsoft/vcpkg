@@ -9,7 +9,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = '1.91.0',
+    $version = '1.92.0',
 # This script treats support statements as platform expressions. This is incorrect
 # in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
 # boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
@@ -36,10 +36,7 @@ $semverVersion = ($version -replace '(\d+(\.\d+){1,3}).*', '$1')
 
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
-$portVersions = @{
-    'boost-cobalt' = 1
-    'boost-hana' = 1
-}
+$portVersions = @{}
 
 function Get-PortVersion {
     param (
@@ -229,7 +226,7 @@ $suppressPlatformForDependency = @{
     'boost-wave'                  = @('boost-filesystem');
 }
 
-# boost/static_assert.hpp is provided by Boost.Config in 1.91.0.
+# boost/static_assert.hpp is provided by Boost.Config since 1.91.0.
 # However, these Boost libraries still link the CMake target
 # Boost::static_assert in their upstream CMakeLists.txt, so they still need
 # boost-static-assert to provide boost_static_assertConfig.cmake.
