@@ -1,0 +1,21 @@
+diff --git a/aui.boot.cmake b/aui.boot.cmake
+index 6baab15..9c39cca 100644
+--- a/aui.boot.cmake
++++ b/aui.boot.cmake
+@@ -203,16 +203,6 @@ if(${CMAKE_VERSION} VERSION_LESS "3.21.0")
+ endif()
+ 
+ 
+-# create all required dirs
+-if (NOT EXISTS ${AUIB_CACHE_DIR})
+-    file(MAKE_DIRECTORY ${AUIB_CACHE_DIR})
+-endif()
+-if (NOT EXISTS ${AUIB_CACHE_DIR}/prefix)
+-    file(MAKE_DIRECTORY ${AUIB_CACHE_DIR}/prefix)
+-endif()
+-if (NOT EXISTS ${AUIB_CACHE_DIR}/repo)
+-    file(MAKE_DIRECTORY ${AUIB_CACHE_DIR}/repo)
+-endif()
+ 
+ 
+ function(_auib_copy_runtime_dependencies DEP_INSTALL_PREFIX)
