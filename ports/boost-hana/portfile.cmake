@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/hana
     REF boost-${VERSION}
-    SHA512 92367ba0587cc854516cc3f19ad994638bb88c52de875aa0cb5acb4f7bb69ab67a6b6a898dcae29b89d70ffd12ef91bdf0f84104314ac93cd1f67eb86df6ed4d
+    SHA512 485ba2615aa75a4a2361889d5760cbc47f3d8e71294b0cfaf07c974abb5471f5677c888e316f08b3a120467edd15d02c0102c30d0b223818362c63e83d19d02c
     HEAD_REF master
 )
 
@@ -26,7 +26,6 @@ if("large-struct-macros" IN_LIST FEATURES)
     file(WRITE "${SOURCE_PATH}/include/boost/hana/detail/struct_macros.hpp" "${_boost_hana_struct_macros}")
     message(STATUS "boost-hana: generated struct_macros.hpp for up to ${BOOST_HANA_MAX_NUMBER_OF_MEMBERS} members")
 endif()
-
 set(FEATURE_OPTIONS "")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
