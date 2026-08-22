@@ -1397,7 +1397,6 @@ vtk[core,python,paraview]:x64-linux=options # paraview's transitive gfortran lin
 vtk[cuda]:arm64-osx=cascade
 vtk[cuda](arm64 & windows)=cascade # cuda[core] only supports (windows & x64 & !xbox) | (linux & x64) | (linux & arm64)
 vtk[gdal](android)=cascade
-vtk[ioocct]=skip
 vtk[mpi](arm64 & windows)=cascade # vtk-m[core] only supports !x86 & !(arm & windows)
 vtk[openmp]:arm64-osx=feature-fails
 vtk[openvr]:arm64-osx=cascade
