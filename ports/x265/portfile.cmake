@@ -13,11 +13,13 @@ vcpkg_from_github(
         compiler-target.diff
         neon.diff
         advapi32.patch # Required since v4.2 as it is now using RegOpenKeyExA, RegQueryValueExA & RegCloseKey
+        multilib.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
-        tool   ENABLE_CLI
+        tool      ENABLE_CLI
+        multilib  ENABLE_MULTILIB
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -34,6 +36,12 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
+
+if("multilib" IN_LIST FEATURES AND DEFINED VCPKG_DETECTED_CMAKE_AR)
+    # Pass the archiver used to merge the multilib static archives
+    # (lib.exe on MSVC, ar on other toolchains)
+    list(APPEND OPTIONS "-DMULTILIB_ARCHIVER=${VCPKG_DETECTED_CMAKE_AR}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/source"
