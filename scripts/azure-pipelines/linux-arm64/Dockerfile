@@ -1,4 +1,4 @@
-FROM ubuntu:resolute-20260724.1
+FROM ubuntu:noble-20260810
 
 ARG BUILD_DATE
 ARG POWERSHELL_VERSION=7.6.4
@@ -10,8 +10,8 @@ set -eux
 apt-get update
 apt-get install --no-install-recommends -y curl gnupg ca-certificates
 
-# The Ubuntu 26.04 feed does not yet publish PowerShell.
-curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb
+UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
+curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 

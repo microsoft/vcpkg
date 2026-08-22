@@ -34,13 +34,12 @@ apt-get -y update
 apt-get --no-install-recommends -y install ca-certificates curl apt-transport-https lsb-release gnupg software-properties-common
 
 ## CUDA
-curl -fsSL -o /tmp/cuda-keyring.deb "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-keyring_1.1-1_all.deb"
-dpkg -i /tmp/cuda-keyring.deb
-rm -f /tmp/cuda-keyring.deb
+curl -L -o /etc/apt/preferences.d/cuda-repository-pin-600 "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
+apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/3bf863cc.pub"
+add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/ /"
 
 ## PowerShell
-# The Ubuntu 26.04 feed does not yet publish PowerShell or AzCopy.
-curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb
+curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
 dpkg -i packages-microsoft-prod.deb
 rm -f packages-microsoft-prod.deb
 add-apt-repository universe
@@ -52,8 +51,7 @@ curl -sLS https://packages.microsoft.com/keys/microsoft.asc |
     tee /etc/apt/keyrings/microsoft.gpg > /dev/null
 chmod go+r /etc/apt/keyrings/microsoft.gpg
 
-# Azure CLI does not yet publish a Resolute feed.
-AZ_DIST=noble
+AZ_DIST=$(lsb_release -cs)
 echo "deb [arch=${DEBIAN_ARCHITECTURE} signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ $AZ_DIST main" |
     tee /etc/apt/sources.list.d/azure-cli.list
 
@@ -210,7 +208,7 @@ APT_PACKAGES="$APT_PACKAGES libspeechd-dev"
 if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
 else
-APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu78 debsums liblttng-ust1t64"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu74 debsums liblttng-ust1"
 fi
 
 apt-get --no-install-recommends -y install $APT_PACKAGES
