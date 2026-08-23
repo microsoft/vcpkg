@@ -12,6 +12,8 @@
       "host": true
     },
     "glib",
+    "libdaemon",
+    "libevent",
     {
       "name": "vcpkg-make",
       "host": true
