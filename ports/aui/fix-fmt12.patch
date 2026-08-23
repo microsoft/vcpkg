@@ -1,17 +1,16 @@
 diff --git a/aui.core/src/AUI/Common/AByteBufferView.h b/aui.core/src/AUI/Common/AByteBufferView.h
-index 0f82653..e9aca0a 100644
+index 0f82653..314ee56 100644
 --- a/aui.core/src/AUI/Common/AByteBufferView.h
 +++ b/aui.core/src/AUI/Common/AByteBufferView.h
-@@ -117,7 +117,12 @@ inline std::ostream& operator<<(std::ostream& lhs, const AByteBufferView& rhs) {
+@@ -116,8 +116,9 @@ public:
+ inline std::ostream& operator<<(std::ostream& lhs, const AByteBufferView& rhs) {
      lhs << "[";
      for (const auto b : rhs) {
-         char buf[8];
-+        #if defined(FMT_VERSION) && (FMT_VERSION < 100000)
-         lhs.write(buf, std::distance(std::begin(buf), fmt::format_to(buf, " {:02x}", b)));
-+        #else
-+        auto end = fmt::format_to(buf, " {:02x}", b);
+-        char buf[8];
+-        lhs.write(buf, std::distance(std::begin(buf), fmt::format_to(buf, " {:02x}", b)));
++        char buf[16];
++        auto end = fmt::format_to(buf, " {:02x}", static_cast<uint8_t>(b));
 +        lhs.write(buf, end - buf);
-+        #endif
      }
      lhs << " ]";
  
