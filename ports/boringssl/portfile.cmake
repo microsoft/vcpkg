@@ -24,7 +24,9 @@ vcpkg_from_github(
     0001-remove-WX-Werror.patch
 )
 
-set(BORINGSSL_OPTIONS)
+set(BORINGSSL_OPTIONS
+  "-DBUILD_TESTING=OFF"
+)
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   # MSVC armasm64 expects MASM syntax; BoringSSL uses GNU asm on arm64, so force the C fallback.
   list(APPEND BORINGSSL_OPTIONS "-DOPENSSL_NO_ASM=ON")
