@@ -4,6 +4,9 @@ vcpkg_from_github(
   REF "v${VERSION}"
   SHA512 27bba9a551152dfc7e721f326042e7bfce55d227044a6cbaee04d6fb0e3f59c36e159c2b7a4dd42d1c955cdf37cc1c303e91991c08928bbded91d796e9a22abe
   HEAD_REF master
+  PATCHES
+    # This patch will be part of v0.9
+    pc-libevent-requires.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
