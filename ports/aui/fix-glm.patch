@@ -1,5 +1,5 @@
 diff --git a/aui.views/src/AUI/GL/OpenGLRenderer.cpp b/aui.views/src/AUI/GL/OpenGLRenderer.cpp
-index 42fafa0b..b33409b3 100644
+index 42fafa0..b33409b 100644
 --- a/aui.views/src/AUI/GL/OpenGLRenderer.cpp
 +++ b/aui.views/src/AUI/GL/OpenGLRenderer.cpp
 @@ -33,6 +33,7 @@
@@ -11,7 +11,7 @@ index 42fafa0b..b33409b3 100644
  #include "AUI/Traits/bit.h"
  #include <AUI/Traits/callables.h>
 diff --git a/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp b/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp
-index 05ed0b01..39fc6519 100644
+index 05ed0b0..39fc651 100644
 --- a/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp
 +++ b/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp
 @@ -16,6 +16,7 @@
@@ -23,7 +23,7 @@ index 05ed0b01..39fc6519 100644
  void AGLEmbedAuiWrap::render(ARenderContext context) {
      windowMakeCurrent();
 diff --git a/aui.views/src/AUI/Render/IRenderer.h b/aui.views/src/AUI/Render/IRenderer.h
-index f7268651..d2d2f5ba 100644
+index f726865..f173190 100644
 --- a/aui.views/src/AUI/Render/IRenderer.h
 +++ b/aui.views/src/AUI/Render/IRenderer.h
 @@ -12,6 +12,7 @@
@@ -34,12 +34,3 @@ index f7268651..d2d2f5ba 100644
  #include <AUI/Reflect/AEnumerate.h>
  #include <AUI/Common/ASide.h>
  #include <AUI/Common/AColor.h>
-@@ -414,7 +415,7 @@ public:
-                               const glm::vec2& size,
-                               AAngleRadians begin,
-                               AAngleRadians end) = 0;
-- 
-+
-     /**
-      * @brief Sets the color which is multiplied with any brush.
-      * @param color color

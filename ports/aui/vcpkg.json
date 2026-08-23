@@ -22,7 +22,10 @@
       "platform": "linux"
     },
     "freetype",
-    "glew",
+    {
+      "name": "glew",
+      "platform": "windows | linux | osx"
+    },
     "glm",
     {
       "name": "gtk3",

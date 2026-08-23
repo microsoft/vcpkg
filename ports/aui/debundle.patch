@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6902d56..3a9f94c 100644
+index 6902d56..d1d37e1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -64,9 +64,7 @@ function(define_aui_component AUI_COMPONENT_NAME)
@@ -13,18 +13,13 @@ index 6902d56..3a9f94c 100644
  
  # define all components
  define_aui_component(core)
-@@ -86,11 +84,11 @@ define_aui_component(json)
+@@ -86,7 +84,7 @@ define_aui_component(json)
  define_aui_component(audio)
  define_aui_component(updater)
  
 -if (NOT ANDROID AND NOT IOS)
 +if (0)
      define_aui_component(uitests)
- endif()
- 
--if (AUI_BUILD_EXAMPLES) 
-+if (AUI_BUILD_EXAMPLES)
-     add_subdirectory(examples)
  endif()
  
 @@ -195,7 +193,6 @@ auib_precompiled_binary()
@@ -119,7 +114,7 @@ index 5cffdb9..4479ca7 100644
                      mDecodedSamples.write(reinterpret_cast<char*>(&sample), sizeof(sample));
                  }
 diff --git a/aui.core/CMakeLists.txt b/aui.core/CMakeLists.txt
-index 6aa1b07..9115f5d 100644
+index 6aa1b07..0eaa67f 100644
 --- a/aui.core/CMakeLists.txt
 +++ b/aui.core/CMakeLists.txt
 @@ -11,9 +11,8 @@ aui_enable_benchmarks(aui.core)
@@ -177,15 +172,6 @@ index 6aa1b07..9115f5d 100644
  
  # forward platform info
  foreach(_var AUI_PLATFORM_WIN
-@@ -126,7 +130,7 @@ foreach(_var AUI_PLATFORM_WIN
-              AUI_COMPILER_CLANG
-              AUI_COMPILER_GCC
-              AUI_COMPILER_MSVC
--             
-+
-              AUI_ARCH_X86
-              AUI_ARCH_X86_64
-              AUI_ARCH_ARM_64
 @@ -147,13 +151,9 @@ endif()
  
  
@@ -229,7 +215,7 @@ index 5141c8e..1da335a 100644
  aui_module(aui.curl EXPORT aui WHOLEARCHIVE)
  aui_enable_tests(aui.curl)
 diff --git a/aui.image/CMakeLists.txt b/aui.image/CMakeLists.txt
-index 033e7ad..ac9f3d1 100644
+index 033e7ad..e9494fe 100644
 --- a/aui.image/CMakeLists.txt
 +++ b/aui.image/CMakeLists.txt
 @@ -1,7 +1,6 @@
@@ -241,7 +227,7 @@ index 033e7ad..ac9f3d1 100644
  
  
  set(WEBP_COMPONENTS_TO_DISABLE ANIM_UTILS CWEBP DWEBP GIF2WEBP IMG2WEBP VWEBP WEBPINFO LIBWEBPMUX WEBPMUX EXTRAS)
-@@ -10,7 +9,7 @@ foreach(_component ${WEBP_COMPONENTS_TO_DISABLE})
+@@ -10,9 +9,11 @@ foreach(_component ${WEBP_COMPONENTS_TO_DISABLE})
      list(APPEND WEBP_CMAKE_ARGS "-DWEBP_BUILD_${_component}=OFF")
  endforeach()
  
@@ -249,7 +235,48 @@ index 033e7ad..ac9f3d1 100644
 +find_package(WebP CONFIG REQUIRED)
  
  aui_module(aui.image WHOLEARCHIVE EXPORT aui)
- add_subdirectory(3rdparty)
+-add_subdirectory(3rdparty)
+-aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux)
++find_package(unofficial-libnsgif CONFIG REQUIRED)
++find_package(Stb REQUIRED)
++aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux unofficial::libnsgif::nsgif)
++target_include_directories(aui.image PRIVATE ${Stb_INCLUDE_DIR})
+ aui_enable_tests(aui.image)
+diff --git a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
+index e9ca38f..4597d68 100644
+--- a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
++++ b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
+@@ -17,7 +17,9 @@
+ #include "AUI/Image/AImage.h"
+ #include "AUI/Util/ARaiiHelper.h"
+ #include "AUI/Logging/ALogger.h"
+-#include "nsgif.h"
++extern "C" {
++#include <nsgif.h>
++}
+ 
+ static nsgif_bitmap_t* create_callback(int width, int height) {
+     return new char[4 * width * height];
+diff --git a/aui.sqlite/CMakeLists.txt b/aui.sqlite/CMakeLists.txt
+index 6afd58f..8514048 100644
+--- a/aui.sqlite/CMakeLists.txt
++++ b/aui.sqlite/CMakeLists.txt
+@@ -1,12 +1,11 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+ 
+-file(GLOB_RECURSE SQLITE3_SRCS 3rdparty/*.c)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
+ 
+-aui_module(aui.sqlite ADDITIONAL_SRCS ${SQLITE3_SRCS}
+-                      EXPORT aui
++aui_module(aui.sqlite EXPORT aui
+                       PLUGIN)
+-target_include_directories(aui.sqlite PRIVATE 3rdparty/sqlite3)
++aui_link(aui.sqlite PRIVATE unofficial::sqlite3::sqlite3)
+ 
+ aui_link(aui.sqlite PUBLIC aui::core)
+ aui_link(aui.sqlite PUBLIC aui::data)
 diff --git a/aui.views/CMakeLists.txt b/aui.views/CMakeLists.txt
 index dfe6b18..575d849 100644
 --- a/aui.views/CMakeLists.txt
@@ -298,53 +325,3 @@ index dfe6b18..575d849 100644
      endif ()
  
      if (NOT AUI_PLATFORM_WINDOWS)
-diff --git a/aui.image/CMakeLists.txt b/aui.image/CMakeLists.txt
-index ac9f3d1..e9494fe 100644
---- a/aui.image/CMakeLists.txt
-+++ b/aui.image/CMakeLists.txt
-@@ -12,6 +12,8 @@ endforeach()
- find_package(WebP CONFIG REQUIRED)
- 
- aui_module(aui.image WHOLEARCHIVE EXPORT aui)
--add_subdirectory(3rdparty)
--aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux)
-+find_package(unofficial-libnsgif CONFIG REQUIRED)
-+find_package(Stb REQUIRED)
-+aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux unofficial::libnsgif::nsgif)
-+target_include_directories(aui.image PRIVATE ${Stb_INCLUDE_DIR})
- aui_enable_tests(aui.image)
-diff --git a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
-index e9ca38f..4597d68 100644
---- a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
-+++ b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
-@@ -17,7 +17,9 @@
- #include "AUI/Image/AImage.h"
- #include "AUI/Util/ARaiiHelper.h"
- #include "AUI/Logging/ALogger.h"
--#include "nsgif.h"
-+extern "C" {
-+#include <nsgif.h>
-+}
- 
- static nsgif_bitmap_t* create_callback(int width, int height) {
-     return new char[4 * width * height];
-diff --git a/aui.sqlite/CMakeLists.txt b/aui.sqlite/CMakeLists.txt
-index 6afd58f..8514048 100644
---- a/aui.sqlite/CMakeLists.txt
-+++ b/aui.sqlite/CMakeLists.txt
-@@ -1,12 +1,11 @@
- cmake_minimum_required(VERSION 3.10)
- 
- 
--file(GLOB_RECURSE SQLITE3_SRCS 3rdparty/*.c)
-+find_package(unofficial-sqlite3 CONFIG REQUIRED)
- 
--aui_module(aui.sqlite ADDITIONAL_SRCS ${SQLITE3_SRCS}
--                      EXPORT aui
-+aui_module(aui.sqlite EXPORT aui
-                       PLUGIN)
--target_include_directories(aui.sqlite PRIVATE 3rdparty/sqlite3)
-+aui_link(aui.sqlite PRIVATE unofficial::sqlite3::sqlite3)
- 
- aui_link(aui.sqlite PUBLIC aui::core)
- aui_link(aui.sqlite PUBLIC aui::data)
