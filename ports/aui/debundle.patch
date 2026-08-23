@@ -286,7 +286,7 @@ index 6afd58f..8514048 100644
  aui_link(aui.sqlite PUBLIC aui::core)
  aui_link(aui.sqlite PUBLIC aui::data)
 diff --git a/aui.views/CMakeLists.txt b/aui.views/CMakeLists.txt
-index dfe6b18..575d849 100644
+index dfe6b18..e8a40cf 100644
 --- a/aui.views/CMakeLists.txt
 +++ b/aui.views/CMakeLists.txt
 @@ -9,10 +9,7 @@ find_package(OpenGL)
@@ -312,19 +312,19 @@ index dfe6b18..575d849 100644
      endif ()
  
      aui_module(aui.views EXPORT aui)
-@@ -32,17 +27,17 @@ if (OPENGL_FOUND OR ANDROID OR IOS)
+@@ -32,17 +27,12 @@ if (OPENGL_FOUND OR ANDROID OR IOS)
          auib_use_system_libs_begin()
          find_package(PkgConfig REQUIRED)
  
 -        pkg_check_modules(DBUS REQUIRED dbus-1)
-+        pkg_check_modules(DBUS REQUIRED IMPORTED_TARGET dbus-1)
-         include_directories(${DBUS_INCLUDE_DIRS})
-         link_directories(${DBUS_LIBRARY_DIRS})
- 
+-        include_directories(${DBUS_INCLUDE_DIRS})
+-        link_directories(${DBUS_LIBRARY_DIRS})
+-
 -        pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+-        include_directories(${GTK3_INCLUDE_DIRS})
+-        link_directories(${GTK3_LIBRARY_DIRS})
++        pkg_check_modules(DBUS REQUIRED IMPORTED_TARGET dbus-1)
 +        pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
-         include_directories(${GTK3_INCLUDE_DIRS})
-         link_directories(${GTK3_LIBRARY_DIRS})
  
          auib_use_system_libs_end()
  
