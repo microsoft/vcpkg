@@ -10233,7 +10233,7 @@
       "port-version": 0
     },
     "tinyexif": {
-      "baseline": "1.0.4",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "tinyexpr": {
