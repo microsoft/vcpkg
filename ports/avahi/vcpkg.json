@@ -28,11 +28,11 @@
         }
       ]
     },
-    "libevent": {
-      "description": "Libevent integration",
+    "howl": {
+      "description": "Compatibility layer for HOWL",
       "dependencies": [
         {
-          "name": "libevent",
+          "name": "dbus",
           "default-features": false
         }
       ]
@@ -46,11 +46,11 @@
         }
       ]
     },
-    "howl": {
-      "description": "Compatibility layer for HOWL",
+    "libevent": {
+      "description": "Libevent integration",
       "dependencies": [
         {
-          "name": "dbus",
+          "name": "libevent",
           "default-features": false
         }
       ]
