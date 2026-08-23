@@ -11,7 +11,10 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    client  ENABLE_DBUS
+    client    ENABLE_CLIENT
+    libevent  ENABLE_LIBEVENT
+    libdns-sd ENABLE_LIBDNS_SD
+    howl      ENABLE_HOWL
 )
 
 vcpkg_list(SET options
@@ -29,7 +32,16 @@ vcpkg_list(SET options
   "--enable-tests=no"
 )
 
-if(NOT ${ENABLE_DBUS})
+if(NOT ${ENABLE_LIBEVENT})
+  list(APPEND options "--disable-libevent")
+endif()
+if(${ENABLE_LIBDNS_SD})
+  list(APPEND options "--enable-compat-libdns_sd=yes")
+endif()
+if(${ENABLE_HOWL})
+  list(APPEND options "--enable-compat-howl=yes")
+endif()
+if(NOT ${ENABLE_CLIENT} AND NOT ${ENABLE_LIBDNS_SD} AND NOT ${ENABLE_HOWL})
   list(APPEND options "--disable-dbus")
 endif()
 

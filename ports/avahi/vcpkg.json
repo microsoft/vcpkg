@@ -13,7 +13,6 @@
     },
     "glib",
     "libdaemon",
-    "libevent",
     {
       "name": "vcpkg-make",
       "host": true
@@ -22,6 +21,33 @@
   "features": {
     "client": {
       "description": "Avahi client library",
+      "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false
+        }
+      ]
+    },
+    "libevent": {
+      "description": "Libevent integration",
+      "dependencies": [
+        {
+          "name": "libevent",
+          "default-features": false
+        }
+      ]
+    },
+    "libdns-sd": {
+      "description": "Compatibility layer for libdns_sd",
+      "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false
+        }
+      ]
+    },
+    "howl": {
+      "description": "Compatibility layer for HOWL",
       "dependencies": [
         {
           "name": "dbus",
