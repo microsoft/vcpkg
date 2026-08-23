@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_list(SET options
   "--disable-qt3"
   "--disable-qt4"
+  "--disable-qt5"
   "--disable-gtk"
   "--disable-gtk3"
   "--disable-python"
