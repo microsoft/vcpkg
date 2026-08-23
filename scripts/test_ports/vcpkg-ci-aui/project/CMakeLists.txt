@@ -10,4 +10,5 @@ aui_executable(${PROJECT_NAME})
 aui_link(${PROJECT_NAME} PRIVATE aui::core aui::views aui::updater)
 aui_compile_assets(${PROJECT_NAME})
 aui_app(TARGET ${PROJECT_NAME} NAME "AUI CI Test" VENDOR "vcpkg"
-        ICON "assets/img/icon.svg")
+        ICON "assets/img/icon.svg"
+        ANDROID_PACKAGE "org.vcpkg.auitest")
