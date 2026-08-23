@@ -12,10 +12,13 @@
       "name": "libbacktrace",
       "platform": "linux"
     },
+    "libnsgif",
     "libwebp",
     "lunasvg",
+    "minizip",
     "openssl",
     "range-v3",
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true

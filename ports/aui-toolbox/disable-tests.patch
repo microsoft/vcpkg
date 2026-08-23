@@ -1,0 +1,22 @@
+diff --git a/cmake/aui.build.cmake b/cmake/aui.build.cmake
+index 90c53d45..c741359d 100644
+--- a/cmake/aui.build.cmake
++++ b/cmake/aui.build.cmake
+@@ -230,7 +230,7 @@ macro(_aui_import_gtest)
+ endmacro()
+ 
+ macro(aui_enable_tests AUI_MODULE_NAME)
+-    if (NOT CMAKE_CROSSCOMPILING)
++    if (0)
+         _aui_import_gtest()
+         if (NOT TARGET GTest::gtest)
+             message(FATAL_ERROR "GTest::gtest not found!")
+@@ -328,7 +328,7 @@ macro(_aui_import_google_benchmark)
+ endmacro()
+ 
+ macro(aui_enable_benchmarks AUI_MODULE_NAME)
+-    if (NOT CMAKE_CROSSCOMPILING)
++    if (0)
+         _aui_import_gtest()
+         _aui_import_google_benchmark()
+         if (NOT TARGET benchmark::benchmark)

@@ -7,7 +7,10 @@ vcpkg_from_github(
     SHA512 decac6cebb6003791896e8d7a9fd7334351aa30205eac787cdbb51d1da657cda140178e0b8f5d236b42a4c1f37633141fb869784e5fc5c9718b5396e077afe7d
     HEAD_REF master
     PATCHES
-        fixes.patch
+        debundle.patch
+        disable-tests.patch
+        disable-auib.patch
+        fix-fmt12.patch
         fix-arm64.patch
 )
 
