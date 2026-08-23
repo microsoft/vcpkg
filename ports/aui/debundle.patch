@@ -333,3 +333,30 @@ index dfe6b18..e8a40cf 100644
      endif ()
  
      if (NOT AUI_PLATFORM_WINDOWS)
+diff --git a/cmake/aui.build.cmake b/cmake/aui.build.cmake
+index 90c53d4..7a8e8e8 100644
+--- a/cmake/aui.build.cmake
++++ b/cmake/aui.build.cmake
+@@ -1072,18 +1072,18 @@ function(aui_module AUI_MODULE_NAME)
+                 ARCHIVE       DESTINATION "lib"
+                 LIBRARY       DESTINATION "lib"
+                 RUNTIME       DESTINATION "bin"
+-                PUBLIC_HEADER DESTINATION "${AUI_MODULE_NAME}/include"
+-                INCLUDES      DESTINATION "${AUI_MODULE_NAME}/include"
++                PUBLIC_HEADER DESTINATION "include"
++                INCLUDES      DESTINATION "include"
+         )
+ 
+         install(
+                 DIRECTORY src/
+-                DESTINATION "${AUI_MODULE_NAME}/include/"
++                DESTINATION "include/"
+                 FILES_MATCHING PATTERN "*.h"
+                 PATTERN "*.hpp"
+ 
+         )
+-        target_include_directories(${AUI_MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:${AUI_MODULE_NAME}/include/>)
++        target_include_directories(${AUI_MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+     endif()
+     if (NOT BUILD_AS_IMPORTED_NAME STREQUAL ${AUI_MODULE_NAME})
+         add_library(${BUILD_AS_IMPORTED_NAME} ALIAS ${AUI_MODULE_NAME})

@@ -1,6 +1,3 @@
-# Support aui.core/include/ include folders
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aui-framework/aui
@@ -55,6 +52,7 @@ vcpkg_cmake_configure(
 vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/debug/bin")
 
 vcpkg_cmake_install()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/aui.toolbox${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
