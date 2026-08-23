@@ -9481,7 +9481,7 @@
       "port-version": 0
     },
     "slick-shm": {
-      "baseline": "0.1.4",
+      "baseline": "0.1.5",
       "port-version": 0
     },
     "slick-socket": {
