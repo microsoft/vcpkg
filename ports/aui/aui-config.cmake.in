@@ -78,8 +78,16 @@ foreach(_target IN LISTS _aui_needed_targets)
         find_dependency(Fontconfig)
     elseif(_target MATCHES "^OpenGL::")
         find_dependency(OpenGL)
-    elseif(_target MATCHES "^oboe::")
-        find_dependency(oboe CONFIG)
+    elseif(_target MATCHES "^oboe::" OR _target STREQUAL "oboe")
+        find_path(OBOE_INCLUDE_DIR NAMES oboe/Oboe.h REQUIRED)
+        find_library(OBOE_LIBRARY NAMES oboe REQUIRED)
+        if(NOT TARGET oboe::oboe)
+            add_library(oboe::oboe UNKNOWN IMPORTED)
+            set_target_properties(oboe::oboe PROPERTIES
+                IMPORTED_LOCATION "${OBOE_LIBRARY}"
+                INTERFACE_INCLUDE_DIRECTORIES "${OBOE_INCLUDE_DIR}"
+            )
+        endif()
     elseif(_target MATCHES "^PkgConfig::")
         if(NOT DEFINED PKG_CONFIG_FOUND)
             find_package(PkgConfig QUIET)

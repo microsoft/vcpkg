@@ -31,10 +31,10 @@ index 6902d56..d1d37e1 100644
  # [configure file example]
  configure_file(cmake/aui-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/aui-config.cmake @ONLY)
 diff --git a/aui.audio/CMakeLists.txt b/aui.audio/CMakeLists.txt
-index 21e4415..fb0302a 100644
+index 21e4415..7beaeca 100644
 --- a/aui.audio/CMakeLists.txt
 +++ b/aui.audio/CMakeLists.txt
-@@ -1,30 +1,25 @@
+@@ -1,30 +1,33 @@
  cmake_minimum_required(VERSION 3.10)
  
  aui_module(aui.audio WHOLEARCHIVE EXPORT aui)
@@ -56,7 +56,15 @@ index 21e4415..fb0302a 100644
 -            PUBLIC_HEADER DESTINATION "aui.audio/include"
 -            INCLUDES      DESTINATION "aui.audio/include"
 -    )
-+    find_package(oboe CONFIG REQUIRED)
++    find_path(OBOE_INCLUDE_DIR NAMES oboe/Oboe.h REQUIRED)
++    find_library(OBOE_LIBRARY NAMES oboe REQUIRED)
++    if(NOT TARGET oboe::oboe)
++        add_library(oboe::oboe UNKNOWN IMPORTED)
++        set_target_properties(oboe::oboe PROPERTIES
++            IMPORTED_LOCATION "${OBOE_LIBRARY}"
++            INTERFACE_INCLUDE_DIRECTORIES "${OBOE_INCLUDE_DIR}"
++        )
++    endif()
 +    aui_link(aui.audio PUBLIC oboe::oboe $<LINK_ONLY:log> $<LINK_ONLY:OpenSLES>)
  elseif (AUI_PLATFORM_LINUX)
 -    aui_link(aui.audio PUBLIC pulse)
@@ -76,7 +84,7 @@ index 21e4415..fb0302a 100644
  
  if (AUI_PLATFORM_IOS OR AUI_PLATFORM_MACOS)
      auib_use_system_libs_begin()
-@@ -42,9 +37,9 @@ if (AUI_PLATFORM_MACOS)
+@@ -42,9 +45,9 @@ if (AUI_PLATFORM_MACOS)
  					   "-framework QuartzCore")
  endif()
  
