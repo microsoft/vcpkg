@@ -25,12 +25,29 @@ vcpkg_cmake_install()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/aui.toolbox${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
 endif()
-
 file(GLOB _aui_toolbox_leftovers "${CURRENT_PACKAGES_DIR}/*")
 foreach(_entry IN LISTS _aui_toolbox_leftovers)
-    if(NOT _entry STREQUAL "${CURRENT_PACKAGES_DIR}/tools")
+    if(NOT _entry STREQUAL "${CURRENT_PACKAGES_DIR}/tools" AND NOT _entry STREQUAL "${CURRENT_PACKAGES_DIR}/share")
         file(REMOVE_RECURSE "${_entry}")
     endif()
 endforeach()
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/aui-toolbox")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/aui-toolbox/aui-toolbox-config.cmake"
+[=[
+get_filename_component(_aui_toolbox_root "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+find_program(AUI_TOOLBOX_EXE NAMES aui.toolbox
+    HINTS
+        "${_aui_toolbox_root}/tools/aui-toolbox"
+        "${_aui_toolbox_root}/tools/aui"
+        "${_aui_toolbox_root}/bin"
+    NO_DEFAULT_PATH
+)
+if(AUI_TOOLBOX_EXE)
+    set(aui-toolbox_FOUND TRUE)
+else()
+    set(aui-toolbox_FOUND FALSE)
+endif()
+]=])
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
