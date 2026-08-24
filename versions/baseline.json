@@ -6780,6 +6780,10 @@
       "baseline": "2.0.22",
       "port-version": 1
     },
+    "motus": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "mp-units": {
       "baseline": "2.5.0",
       "port-version": 0
