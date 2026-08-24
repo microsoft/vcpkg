@@ -11,6 +11,7 @@ vcpkg_from_github(
         patches/fix-config-prefix.patch
         patches/use-eigen-config.patch
         patches/respect-static-libs-only.patch
+        patches/windows-boost-zlib.patch
 )
 
 # Upstream CMake FetchContent / file(DOWNLOAD)s extra sources during configure.
@@ -85,15 +86,30 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cairo RDK_BUILD_CAIRO_SUPPORT
 )
 
+if("cairo" IN_LIST FEATURES)
+    set(_rdkit_pkgconf "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    if(NOT EXISTS "${_rdkit_pkgconf}")
+        set(_rdkit_pkgconf "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkg-config${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
+    if(EXISTS "${_rdkit_pkgconf}")
+        list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${_rdkit_pkgconf}")
+    endif()
+endif()
+
+set(RDKIT_BOOST_STATIC OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(RDKIT_STATIC OFF)
     set(RDKIT_WINDOWS_DLL OFF)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(RDKIT_WINDOWS_DLL ON)
+        # MSVC LNK2005: Queries::Query inlines are emitted in GraphMol.dll and
+        # again in later DLLs. Keep this on the RDKit link line only.
+        set(VCPKG_LINKER_FLAGS "/FORCE:MULTIPLE ${VCPKG_LINKER_FLAGS}")
     endif()
 else()
     set(RDKIT_STATIC ON)
     set(RDKIT_WINDOWS_DLL OFF)
+    set(RDKIT_BOOST_STATIC ON)
 endif()
 
 set(RDKIT_POPCNT ON)
@@ -113,6 +129,7 @@ vcpkg_cmake_configure(
         -DRDK_INSTALL_STATIC_LIBS=${RDKIT_STATIC}
         -DRDK_BUILD_STATIC_LIBS_ONLY=${RDKIT_STATIC}
         -DRDK_INSTALL_DLLS_MSVC=${RDKIT_WINDOWS_DLL}
+        -DBoost_USE_STATIC_LIBS=${RDKIT_BOOST_STATIC}
         -DRDK_BUILD_PYTHON_WRAPPERS=OFF
         -DRDK_BUILD_SWIG_WRAPPERS=OFF
         -DRDK_BUILD_PGSQL=OFF
@@ -155,6 +172,26 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME rdkit CONFIG_PATH lib/cmake/rdkit)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+    foreach(prefix IN ITEMS "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/debug")
+        file(GLOB dlls "${prefix}/lib/*.dll")
+        if(dlls)
+            file(MAKE_DIRECTORY "${prefix}/bin")
+            foreach(dll IN LISTS dlls)
+                get_filename_component(dll_name "${dll}" NAME)
+                file(RENAME "${dll}" "${prefix}/bin/${dll_name}")
+            endforeach()
+        endif()
+    endforeach()
+    file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/rdkit/*targets*.cmake")
+    foreach(f IN LISTS cmake_files)
+        file(READ "${f}" contents)
+        string(REGEX REPLACE "/lib/([^\"/]+\\.dll)" "/bin/\\1" contents "${contents}")
+        file(WRITE "${f}" "${contents}")
+    endforeach()
+endif()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
