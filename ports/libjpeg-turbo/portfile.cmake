@@ -15,7 +15,7 @@ vcpkg_from_github(
         # workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
         # apply libjpeg-turbo patches for dependency issues https://github.com/libjpeg-turbo/libjpeg-turbo/issues/901
-        # This pacth file contains changes from the following upstream commits:
+        # This patch file contains changes from the following upstream commits:
         # https://github.com/libjpeg-turbo/libjpeg-turbo/commit/95156233739078e7d4de0aeeacc4b0595630f393
         # https://github.com/libjpeg-turbo/libjpeg-turbo/commit/240e20d87c0b7d17614687ddc55ccd1fc631daf9
         # https://github.com/libjpeg-turbo/libjpeg-turbo/commit/204e5c2bed4401309c26dc6ed95001e2fc50f833
