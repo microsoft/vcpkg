@@ -1,0 +1,12 @@
+--- a/rdkit-config.cmake.in	2026-08-01 00:58:31
++++ b/rdkit-config.cmake.in	2026-08-24 04:48:38
+@@ -1,5 +1,9 @@
+ # Compute installation prefix relative to this file
++# lib/cmake/rdkit -> 3 levels; share/rdkit (vcpkg cmake-config-fixup) -> 2 levels
+ get_filename_component(_prefix "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
++if(NOT EXISTS "${_prefix}/@RDKit_HdrDir@")
++  get_filename_component(_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
++endif()
+ 
+ # Report other info
+ set(RDKit_INCLUDE_DIRS "${_prefix}/@RDKit_HdrDir@")

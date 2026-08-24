@@ -1,0 +1,11 @@
+rdkit provides CMake targets:
+
+    find_package(rdkit CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE RDKit::GraphMol RDKit::SmilesParse RDKit::FileParsers RDKit::RDGeneral)
+
+The namespace is RDKit::. Library target names match the upstream CMake targets
+(GraphMol, SmilesParse, FileParsers, Depictor, MolDraw2D, ...).
+
+Runtime data files are installed under share/rdkit/Data. Set the RDBASE
+environment variable to the share/rdkit directory if RDKit looks for them at
+runtime.
