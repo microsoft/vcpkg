@@ -40,7 +40,7 @@ The report considers the following in particular:
     - The port is amongst the first web search results for "<PORT NAME>" or "<PORT NAME> C++"
     - The port packages a GitHub project and is in "<GitHub Org>-<GitHub Repo>" form
     - Some other reason explained by the contributor
-10. The port controls every optional build dependency by declaring it unconditionally in `vcpkg.json` or explicitly disabling it through patches or arguments such as [CMAKE_DISABLE_FIND_PACKAGE_Xxx](https://cmake.org/cmake/help/latest/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) or [VCPKG_LOCK_FIND_PACKAGE](https://learn.microsoft.com/vcpkg/users/buildsystems/cmake-integration#vcpkg_lock_find_package_pkg). Search sources for:
+10. The port deterministically resolves every optional build dependency that upstream probes for, so the result does not depend on packages already installed in the build environment. Each such dependency is either declared unconditionally in `vcpkg.json` or explicitly disabled through patches or arguments such as [CMAKE_DISABLE_FIND_PACKAGE_Xxx](https://cmake.org/cmake/help/latest/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) or [VCPKG_LOCK_FIND_PACKAGE](https://learn.microsoft.com/vcpkg/users/buildsystems/cmake-integration#vcpkg_lock_find_package_pkg). A dependency choice fixed by upstream, including an upstream default that does not probe for availability, is already resolved and need not be repeated in `portfile.cmake`. Search sources for:
     - `find_package(...)`
     - `pkg_check_modules(...)`
     - `option(...)`
@@ -76,7 +76,7 @@ The review searches online to assess the library's provenance.
 
 The review highlights unusual aspects of the portfile and attempts to find other vcpkg ports which use similar or alternative techniques.
 
-The review examines the upstream source code for optional dependencies, ensures they are correctly controlled by the portfile, and flags any vendored dependencies.
+The review examines the upstream source code for optional dependencies, ensures any availability probes are resolved deterministically by declared dependencies or explicit disabling, and flags any vendored dependencies.
 
 Any subagent that owns substantive review analysis or final contributor feedback must be `general-purpose` and use its default high-capability model; do not override it with a fast or lightweight model.
 
