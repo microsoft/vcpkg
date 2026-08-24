@@ -1,5 +1,5 @@
 diff --git a/configure b/configure
-index 5116bb97..8083a2ea 100755
+index 5116bb97..e4ff41cc 100755
 --- a/configure
 +++ b/configure
 @@ -1,4 +1,7 @@
@@ -27,14 +27,3 @@ index 5116bb97..8083a2ea 100755
          fi
          ;;
      s390|s390x)
-@@ -1429,8 +1434,10 @@ if [ $SYS = WINDOWS -a $ARCH = X86 -a $compiler = GNU ] ; then
- fi
- 
- if cc_check "stdio.h" "-D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64" "fseeko(stdin,0,0);" ; then
-+  if cc_check "" "" "#if defined(__ANDROID_API__) && __ANDROID_API__ < 24\n#error\n#endif\n" ; then
-     define fseek fseeko
-     define ftell ftello
-+  fi
- elif cc_check "stdio.h" "" "fseeko64(stdin,0,0);" ; then
-     define fseek fseeko64
-     define ftell ftello64
