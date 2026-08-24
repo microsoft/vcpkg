@@ -15,7 +15,7 @@
   "features": {
     "multilib": {
       "description": "Build a single library containing the 8-bit, 10-bit and 12-bit encoders, switching bit depths at runtime",
-      "supports": "x64"
+      "supports": "!(x86 | arm32)"
     },
     "tool": {
       "description": "Build the command line tool",
