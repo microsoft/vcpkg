@@ -2,7 +2,7 @@
 set(ref b35605ace3ddf7c1a5d67a2eb553f034aef41d55)
 
 # Note on x264 versioning:
-# The pc file exports "0.164.<N>" where is the number of commits.
+# The pc file exports "0.<ABI>.<N>" where N is the number of commits.
 # The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.
 # With a git clone, this can be determined by running `versions.sh`.
 # With vcpkg_from_gitlab, we modify `versions.sh` accordingly.
