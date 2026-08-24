@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 c72f4062aecc16d8b2b1e8678d5efe3af4cfaa0cc7c0997052248f9e499e60c2463acf07877cf3b78b246ce3e8078cb043e8d97e90a6b50d06af32ff7369a788
+    SHA512 41aa687cec4e93d0ffde21ea96faa48e4344fda0e9d2c9c71adfb68fedadf03beb274ec712eb1e082bf64fdcee87c55a47bb5c78d5193934be3f3f06e5e792b2
     HEAD_REF master
     PATCHES
-        0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
         0005-fix-nasm.patch
@@ -16,9 +15,10 @@ vcpkg_from_github(
         0045-use-prebuilt-bin2c.patch
         0046-fix-msvc-detection.patch
         0047-fix-msvc-utf8.patch
-        0048-backport-23039.patch
         0049-fix-twolame-pkgconfig.patch
         0050-fix-test-ld-absolute-lib-paths.patch
+        0051-fix-msvc-undef-flags.patch
+        0052-fix-disable-unstable-swscale-link.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -55,6 +55,12 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android --enable-jni --enable-mediacodec")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "QNX")
     string(APPEND OPTIONS " --target-os=qnx")
+elseif(VCPKG_TARGET_IS_OHOS)
+    # OHOS kernel is Linux/musl; ffmpeg configure has no "ohos" target-os,
+    # so without this it falls back to the host (e.g. darwin) and injects
+    # host-specific LDFLAGS (-Wl,-dynamic,-search_paths_first) that lld rejects,
+    # which also corrupts the memalign/posix_memalign link probes.
+    string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -85,6 +91,19 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
+
+    # FFmpeg 9.0 builds a native helper for the unstable AArch64 swscale
+    # backend. Using the target cl.exe as HOSTCC produces an ARM64 executable
+    # that cannot run on the x64 build host. Disable only that unstable backend
+    # for Windows ARM64; 0052 keeps the legacy swscale path linkable.
+    if(VCPKG_HOST_IS_WINDOWS AND VCPKG_DETECTED_MSVC)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            string(APPEND OPTIONS " --disable-unstable")
+        else()
+            string(APPEND OPTIONS " --host-cc=${CC_filename}")
+        endif()
+    endif()
+
     list(APPEND prog_env "${CC_path}")
 endif()
 
@@ -1082,4 +1101,8 @@ you may need to add the following link option for your library:
 ")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/${LICENSE_FILE}"
+        "${SOURCE_PATH}/LICENSE.md"
+)

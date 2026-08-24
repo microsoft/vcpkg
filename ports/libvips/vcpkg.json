@@ -1,6 +1,6 @@
 {
   "name": "libvips",
-  "version": "8.18.2",
+  "version": "8.18.5",
   "description": "libvips is a demand-driven, horizontally threaded image processing library.",
   "homepage": "https://github.com/libvips/libvips",
   "license": "LGPL-2.1-or-later",

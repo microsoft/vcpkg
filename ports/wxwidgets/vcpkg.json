@@ -1,6 +1,6 @@
 {
   "name": "wxwidgets",
-  "version": "3.3.1",
+  "version": "3.3.3",
   "port-version": 1,
   "description": [
     "Widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications. ",
@@ -8,7 +8,7 @@
     "Set WXWIDGETS_USE_STD_CONTAINERS in a custom triplet to build with the wxUSE_STD_CONTAINERS build option."
   ],
   "homepage": "https://github.com/wxWidgets/wxWidgets",
-  "license": "LGPL-2.0-or-later WITH WxWindows-exception-3.1",
+  "license": "LGPL-2.0-or-later WITH WxWindows-exception-3.1 AND HPND",
   "supports": "!uwp & !xbox",
   "dependencies": [
     {
@@ -32,6 +32,10 @@
     },
     "libjpeg-turbo",
     "libpng",
+    {
+      "name": "libsm",
+      "platform": "!windows & !osx & !ios"
+    },
     "libwebp",
     "nanosvg",
     "opengl",
@@ -88,7 +92,13 @@
       ]
     },
     "secretstore": {
-      "description": "Use wxSecretStore class"
+      "description": "Use wxSecretStore class",
+      "dependencies": [
+        {
+          "name": "libsecret",
+          "platform": "!windows & !osx & !ios"
+        }
+      ]
     },
     "sound": {
       "description": "Build wxSound support",

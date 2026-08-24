@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 1e959348630e8de323390a44bb465c7326f8d393235a4ac7a04631d2b6f324294c0ef7359adb4662ceb4150a2fe8b0cf46e3e288eea1176374601a193484b876
+    SHA512 12f5d3434c051c35c8e906663319ab35d2b72849507430fed36fb0406f428d142fc15b352ccdad1f7d4b357f4581204b337fb6c55885e16c30816a5663c3a6d7
 )
 
 vcpkg_extract_source_archive(

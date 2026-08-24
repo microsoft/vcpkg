@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 81bf76f..13a8d09 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -265,7 +265,7 @@ target_link_libraries(apsi
+     PUBLIC SEAL::seal
+     PUBLIC Kuku::kuku
+     PUBLIC flatbuffers::flatbuffers
+-    PUBLIC jsoncpp_static)
++    PUBLIC JsonCpp::JsonCpp)
+ if(APSI_USE_LOG4CPLUS)
+     target_link_libraries(apsi PUBLIC log4cplus::log4cplus)
+ endif()
