@@ -37,12 +37,6 @@
       ],
       "dependencies": [
         {
-          "$comment": "pkgconf locates the system libunwind, which sentry-native only looks for on Linux.",
-          "name": "pkgconf",
-          "host": true,
-          "platform": "linux"
-        },
-        {
           "$comment": "sentry-native[transport] is used by the crashpad backend.",
           "name": "sentry-native",
           "features": [
