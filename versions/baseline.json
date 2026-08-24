@@ -3709,8 +3709,8 @@
       "port-version": 0
     },
     "gz-msgs": {
-      "baseline": "11.1.0",
-      "port-version": 1
+      "baseline": "11.2.0",
+      "port-version": 0
     },
     "gz-physics": {
       "baseline": "8.3.0",
