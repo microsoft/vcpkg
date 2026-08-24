@@ -6661,7 +6661,7 @@
       "port-version": 0
     },
     "minifb": {
-      "baseline": "0.10.1",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "minimp3": {
