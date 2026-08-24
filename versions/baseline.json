@@ -457,7 +457,7 @@
       "port-version": 0
     },
     "aws-c-auth": {
-      "baseline": "0.10.4",
+      "baseline": "0.10.5",
       "port-version": 0
     },
     "aws-c-cal": {
