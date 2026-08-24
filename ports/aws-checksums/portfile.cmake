@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 217e0f9d0a12f1640056c08e0e03b91802623fc4762c573cd2679d6cb32192d619d19a4c750ccd5b2127583d09b640f78a5bb314dd1c641a83d61e1b9cfbb550
     HEAD_REF main
+    PATCHES
+        fix-cmake-config.patch
 )
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
