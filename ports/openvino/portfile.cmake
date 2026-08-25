@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 c8f222cf278017da610a8d0f0c5bd5c6c54c0324bfcfdf9352063df2706732eaa54b7b01408aec1ca266a3f02bd2bffa671d2415121d8f3675f46d8114355de6
+    SHA512 161ee93fb99df97ff7724411f4d697f90c70614840aee3eb40b865faad719f8e2e8892637b867fc3cd97c1de8ebadab84973c379c5a1927bed70ca2c74e6344c
     HEAD_REF master
     PATCHES
         msvc-debug-info-only-in-pdb.patch
-        onednn-gpu-includes.patch
         protobuf-6.patch
-        npu-deps.patch
-        remove-stdext-on-new-msvc.diff
+        levelzero-prepareheaders.patch
+        android-ignore-onetbb-warning.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,8 +37,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF 470e87eb07bdc805937a9f6d45d5c3a0fe4d27e7
-        SHA512 ab5c303e415e88b83bf9a20b65c097827cb7b3ca8af196568fadb62f15c49af879dccb1c9130eadd40df7eb170521d02d7a48d021446ecd31fdaa56d31dba416
+        REF v3.13
+        SHA512 e2dc1a17252bff470c1dce2ef675d77308255ad3c9d40c3e77bcc3f560a2d1617f0878e5dec22a5012c31fb75809c0483a2cd8eefd5b9f2a2549a5afecf9135c
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
@@ -52,8 +51,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF 6b6492b1ea9ef5ca9ff3c5c59ed71dcca683a446
-        SHA512 767aa34ea4b423d951a91bc7c33e737485f24679cebc15536d5d9b4a993a25daaa788ebd7809c942267d8c27009d968f46118fc71302f06c8851824ab2284493
+        REF f82d833de6f13fac4bb1926d521ca8fec4f4ae01
+        SHA512 aea38db54ad75196d4475c8bcf9a7d781979d714f0eadf964337cff3f713a747e3a82f4c68c2597ecfd6ea882cf8a30e1a53f0425206e7c892b1e2e86a1e3201
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -81,16 +80,16 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v52.8.0
-            SHA512 bf1cc17fce1bd1a2aded7af8427a4ce9eedd8dc8d97329a9a533c40347fac1c620aa03af9f33e1e7e029060fd1ff235c82348d7d6fb33b260a7466adda430482
+            REF v53.1.0
+            SHA512 6f49f1a66d8242d73d2f736668ea7156a2564d47b1eb8dc106095ec0f0b662873f65f8e3e47bdbfb769f273d9d7707d253ab3eba95b2830eb0ddbc80f657f718
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
 
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/kleidiai
-            REF v1.19.0
-            SHA512 46de1f0cdd04ce1e8de5d1bdb2499d07eb377e616eb3a8596fbcd296b7887e413be5470f383b5790cef73dc370bead3db36ef2ed116513b95924ae71d87ef123
+            REF v1.26.0
+            SHA512 bdb2fa30025d7cd885ab143df98f70c454e2ff7a5d94be6ac99cfa66dafa4a8dcd83f07652b285ef61ed8523bdb0d4c313b506cd1c71347d5400e935783fc459
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/kleidiai")
     endif()
@@ -106,10 +105,24 @@ if(ENABLE_INTEL_NPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF 42768cc73e74f6d371bd9dd51b1860b07774e7ec
-        SHA512 f5b45e5e210722f6b2d7b50a89a234089c6f141bfc63eaaab7fc7d8dc4275961bc823046f4f367f6ad8d90a1a5e0c329721a134996fb7aad0e577d94eb49e1c1
+        REF f9ad3bf89c2418d714aef2e6b96a5aafb12a1971
+        SHA512 ab450badbf3aa39ca9b753b0b3019c0d3fb6d267c4689cffca3c9a36163aaaebcba327f11991d5bc0798b6d5f530331e4456abdaec520e5ad486bfca9f6404ff
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
+
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_download_distfile(
+            NPU_PLUGIN_COMPILER_ARCHIVE
+            URLS "https://storage.openvinotoolkit.org/dependencies/thirdparty/windows/npu_compiler/npu_compiler_vcl_windows_2022-8_2_0-9802763.zip"
+            FILENAME "npu_compiler_vcl_windows_2022-8_2_0-9802763.zip"
+            SHA512 "5fbe44129b796b12c106a80a967fc9e50e561fcac1bd7b1a2f17cfd50462accfe82d3049f75512566c3d80963ee597e3003a1e0ce52ce7bb0280193ceed83fa3"
+        )
+        vcpkg_extract_archive(
+            ARCHIVE ${NPU_PLUGIN_COMPILER_ARCHIVE}
+            DESTINATION ${SOURCE_PATH}/npu_compiler
+        )
+        list(APPEND FEATURE_OPTIONS "-DNPU_PLUGIN_COMPILER_ROOT=${SOURCE_PATH}/npu_compiler")
+    endif()
 endif()
 
 if(ENABLE_OV_TF_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_PADDLE_FRONTEND)
@@ -126,6 +139,10 @@ endif()
 
 if(CMAKE_HOST_WIN32)
     list(APPEND FEATURE_OPTIONS "-DENABLE_API_VALIDATOR=OFF")
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_PDB_IN_RELEASE=ON")
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -154,7 +171,26 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
-vcpkg_copy_pdbs()
+if(ENABLE_INTEL_NPU AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB_RECURSE openvino_built_dlls "${CURRENT_PACKAGES_DIR}/*.dll")
+    list(FILTER openvino_built_dlls EXCLUDE REGEX "/openvino_intel_npu_(compiler|compiler_loader|vm_runtime)\\.dll$")
+    vcpkg_copy_pdbs(BUILD_PATHS ${openvino_built_dlls})
+
+    foreach(config IN ITEMS "" "debug/")
+        file(INSTALL
+            "${SOURCE_PATH}/npu_compiler/pdb/openvino_intel_npu_compiler.pdb"
+            "${SOURCE_PATH}/npu_compiler/pdb/openvino_intel_npu_compiler_loader.pdb"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/${config}bin"
+        )
+        file(INSTALL
+            "${SOURCE_PATH}/npu_compiler/pdb/npu_interpreter_runtime.pdb"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/${config}bin"
+            RENAME "openvino_intel_npu_vm_runtime.pdb"
+        )
+    endforeach()
+else()
+    vcpkg_copy_pdbs()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
