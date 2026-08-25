@@ -174,10 +174,10 @@ index 0000000..9a9e169
 +set(LINKED_12BIT ON CACHE BOOL "12bit libx265 is being linked with this library" FORCE)
 diff --git a/source/cmake/x265-merge.cmake b/source/cmake/x265-merge.cmake
 new file mode 100644
-index 0000000..15939c2
+index 0000000..a77e287
 --- /dev/null
 +++ b/source/cmake/x265-merge.cmake
-@@ -0,0 +1,103 @@
+@@ -0,0 +1,104 @@
 +# x265-merge.cmake - Merge several static archives into one.
 +#
 +# Usage:
@@ -231,6 +231,7 @@ index 0000000..15939c2
 +        find_program(_archiver NAMES lib.exe llvm-lib)
 +        set(_mode "msvc")
 +    elseif(APPLE)
++        find_program(_archiver NAMES libtool)
 +        set(_mode "libtool")
 +    else()
 +        find_program(_archiver NAMES ar)
