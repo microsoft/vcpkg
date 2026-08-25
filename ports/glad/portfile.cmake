@@ -136,5 +136,10 @@ typedef GLADloadfunc GLADloadproc;
 static inline int gladLoadGLLoader(GLADloadproc load) {
     return gladLoadGL(load);
 }
+#ifdef __cplusplus
+static inline int gladLoadGL() {
+    return gladLoaderLoadGL();
+}
+#endif
 ]=])
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
