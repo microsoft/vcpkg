@@ -129,4 +129,12 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(COPY "${SOURCE_PATH}/glad" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/glad/glad.h" [=[
+#pragma once
+#include <glad/gl.h>
+typedef GLADloadfunc GLADloadproc;
+static inline int gladLoadGLLoader(GLADloadproc load) {
+    return gladLoadGL(load);
+}
+]=])
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
