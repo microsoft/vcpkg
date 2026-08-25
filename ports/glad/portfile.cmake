@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dav1dde/glad
@@ -21,15 +23,14 @@ endif()
 if("gles1-api-10" IN_LIST FEATURES OR "gles1-api-latest" IN_LIST FEATURES)
     list(APPEND GLAD_API "gles1=1.0")
 endif()
-if("gles2-api-20" IN_LIST FEATURES OR "gles2-api-latest" IN_LIST FEATURES)
-    list(APPEND GLAD_API "gles2=2.0")
-endif()
-if("gles2-api-30" IN_LIST FEATURES)
-    list(APPEND GLAD_API "gles2=3.0")
+if("gles2-api-latest" IN_LIST FEATURES OR "gles2-api-32" IN_LIST FEATURES)
+    list(APPEND GLAD_API "gles2=3.2")
 elseif("gles2-api-31" IN_LIST FEATURES)
     list(APPEND GLAD_API "gles2=3.1")
-elseif("gles2-api-32" IN_LIST FEATURES)
-    list(APPEND GLAD_API "gles2=3.2")
+elseif("gles2-api-30" IN_LIST FEATURES)
+    list(APPEND GLAD_API "gles2=3.0")
+elseif("gles2-api-20" IN_LIST FEATURES)
+    list(APPEND GLAD_API "gles2=2.0")
 endif()
 if("glsc2-api-20" IN_LIST FEATURES OR "glsc2-api-latest" IN_LIST FEATURES)
     list(APPEND GLAD_API "glsc2=2.0")
@@ -44,6 +45,8 @@ if("wgl" IN_LIST FEATURES)
     list(APPEND GLAD_API "wgl=1.0")
 endif()
 
+string(REPLACE ";" "," GLAD_API "${GLAD_API}")
+
 set(GLAD_LOADER)
 if("loader" IN_LIST FEATURES)
     set(GLAD_LOADER LOADER)
@@ -52,6 +55,19 @@ set(GLAD_ALL_EXTENSIONS OFF)
 if("extensions" IN_LIST FEATURES)
     set(GLAD_ALL_EXTENSIONS ON)
 endif()
+
+file(COPY
+    "${CURRENT_INSTALLED_DIR}/share/opengl/egl.xml"
+    "${CURRENT_INSTALLED_DIR}/share/opengl/gl.xml"
+    "${CURRENT_INSTALLED_DIR}/share/opengl/glx.xml"
+    "${CURRENT_INSTALLED_DIR}/share/opengl/wgl.xml"
+    DESTINATION "${SOURCE_PATH}"
+)
+file(COPY
+    "${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h"
+    "${CURRENT_INSTALLED_DIR}/include/EGL/eglplatform.h"
+    DESTINATION "${SOURCE_PATH}/glad/files"
+)
 
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
@@ -65,6 +81,7 @@ project(glad C)
 
 set(GLAD_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "" FORCE)
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/GladConfig.cmake")
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(GLAD_ARGS STATIC REPRODUCIBLE)
 if(GLAD_LOADER)
     list(APPEND GLAD_ARGS LOADER)
