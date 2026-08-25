@@ -61,6 +61,14 @@ file(COPY "${COORDGEN_SOURCE}/" DESTINATION "${SOURCE_PATH}/External/CoordGen/co
 file(COPY "${URF_SOURCE}/" DESTINATION "${SOURCE_PATH}/External/RingFamilies/RingDecomposerLib")
 file(COPY "${PUBCHEM_SOURCE}/" DESTINATION "${SOURCE_PATH}/External/pubchem_shape/pubchem-align3d")
 
+# Android NDK clang defines INFINITY in float.h; RingDecomposerLib uses it as a
+# local unsigned sentinel (UINT_MAX) and fails with "conflicting types for __builtin_inff".
+vcpkg_replace_string(
+    "${SOURCE_PATH}/External/RingFamilies/RingDecomposerLib/src/RingDecomposerLib/RDLapsp.c"
+    "INFINITY"
+    "RDL_INFINITY"
+)
+
 # Upstream FindEigen3.cmake requests version 2.91.0 (old Eigen world numbering),
 # which rejects Eigen 5.x's CMake package. Use Eigen's own config instead.
 file(REMOVE "${SOURCE_PATH}/Code/cmake/Modules/FindEigen3.cmake")
