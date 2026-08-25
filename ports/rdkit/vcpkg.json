@@ -69,11 +69,7 @@
     "cairo": {
       "description": "Enable Cairo-based 2D molecule drawing",
       "dependencies": [
-        "cairo",
-        {
-          "name": "pkgconf",
-          "host": true
-        }
+        "cairo"
       ]
     }
   }

@@ -12,6 +12,8 @@ vcpkg_from_github(
         patches/use-eigen-config.patch
         patches/respect-static-libs-only.patch
         patches/windows-boost-zlib.patch
+        patches/find-cairo-pkgconfig.patch
+        patches/fix-install-layout.patch
 )
 
 # Upstream CMake FetchContent / file(DOWNLOAD)s extra sources during configure.
@@ -46,6 +48,8 @@ vcpkg_from_github(
     REF "v1.1.3_rdkit"
     SHA512 e82b97838a36d9f9557a4b7631de34830572add83d6793a01eec46ff9fe9139481db4262442b3f21c22d822efb5110386ceafb496c2bab2f31ddc26d43525215
     HEAD_REF master
+    PATCHES
+        patches/ringdecomposerlib-infinity.patch
 )
 
 vcpkg_from_github(
@@ -61,33 +65,9 @@ file(COPY "${COORDGEN_SOURCE}/" DESTINATION "${SOURCE_PATH}/External/CoordGen/co
 file(COPY "${URF_SOURCE}/" DESTINATION "${SOURCE_PATH}/External/RingFamilies/RingDecomposerLib")
 file(COPY "${PUBCHEM_SOURCE}/" DESTINATION "${SOURCE_PATH}/External/pubchem_shape/pubchem-align3d")
 
-# Android NDK clang defines INFINITY in float.h; RingDecomposerLib uses it as a
-# local unsigned sentinel (UINT_MAX) and fails with "conflicting types for __builtin_inff".
-vcpkg_replace_string(
-    "${SOURCE_PATH}/External/RingFamilies/RingDecomposerLib/src/RingDecomposerLib/RDLapsp.c"
-    "INFINITY"
-    "RDL_INFINITY"
-)
-
 # Upstream FindEigen3.cmake requests version 2.91.0 (old Eigen world numbering),
 # which rejects Eigen 5.x's CMake package. Use Eigen's own config instead.
 file(REMOVE "${SOURCE_PATH}/Code/cmake/Modules/FindEigen3.cmake")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(RDKit_ShareDir \"share/RDKit\")" "set(RDKit_ShareDir \"share/rdkit\")")
-vcpkg_replace_string("${SOURCE_PATH}/rdkit-config.cmake.in"
-    "find_dependency(Boost @Boost_VERSION_STRING@ COMPONENTS \${RDKit_USE_BOOST_COMPONENTS})"
-    "find_dependency(Boost @Boost_VERSION_STRING@ CONFIG COMPONENTS \${RDKit_USE_BOOST_COMPONENTS})")
-
-# Upstream FindCairo.cmake links only libcairo and drops pkg-config Requires
-# (pixman, fontconfig, Apple frameworks). Replace it with an imported target.
-file(WRITE "${SOURCE_PATH}/Code/cmake/Modules/FindCairo.cmake" [[
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(Cairo REQUIRED IMPORTED_TARGET cairo)
-if(NOT TARGET Cairo::Cairo)
-    add_library(Cairo::Cairo ALIAS PkgConfig::Cairo)
-endif()
-set(Cairo_FOUND TRUE)
-set(CAIRO_FOUND TRUE)
-]])
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -95,13 +75,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("cairo" IN_LIST FEATURES)
-    set(_rdkit_pkgconf "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    if(NOT EXISTS "${_rdkit_pkgconf}")
-        set(_rdkit_pkgconf "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkg-config${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    endif()
-    if(EXISTS "${_rdkit_pkgconf}")
-        list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${_rdkit_pkgconf}")
-    endif()
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 endif()
 
 set(RDKIT_BOOST_STATIC OFF)
@@ -179,39 +154,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME rdkit CONFIG_PATH lib/cmake/rdkit)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
-    foreach(prefix IN ITEMS "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/debug")
-        file(GLOB dlls "${prefix}/lib/*.dll")
-        if(dlls)
-            file(MAKE_DIRECTORY "${prefix}/bin")
-            foreach(dll IN LISTS dlls)
-                get_filename_component(dll_name "${dll}" NAME)
-                file(RENAME "${dll}" "${prefix}/bin/${dll_name}")
-            endforeach()
-        endif()
-    endforeach()
-    file(GLOB cmake_files "${CURRENT_PACKAGES_DIR}/share/rdkit/*targets*.cmake")
-    foreach(f IN LISTS cmake_files)
-        file(READ "${f}" contents)
-        string(REGEX REPLACE "/lib/([^\"/]+\\.dll)" "/bin/\\1" contents "${contents}")
-        file(WRITE "${f}" "${contents}")
-    endforeach()
-endif()
-
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdkit)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/share/rdkit/Docs"
-    "${CURRENT_PACKAGES_DIR}/share/rdkit/Contrib"
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

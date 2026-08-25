@@ -1,0 +1,78 @@
+diff --git a/Code/cmake/Modules/FindCairo.cmake b/Code/cmake/Modules/FindCairo.cmake
+index 3943458..e513561 100644
+--- a/Code/cmake/Modules/FindCairo.cmake
++++ b/Code/cmake/Modules/FindCairo.cmake
+@@ -37,63 +37,15 @@
+ # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-FIND_PACKAGE(PkgConfig)
+-PKG_CHECK_MODULES(PC_CAIRO cairo QUIET)
+-
+-FIND_PATH(CAIRO_INCLUDE_DIRS
+-    NAMES cairo.h
+-    HINTS ${CAIRO_INCLUDE_DIR}
+-          ${PC_CAIRO_INCLUDEDIR}
+-          ${PC_CAIRO_INCLUDE_DIRS}
+-    PATH_SUFFIXES cairo
+-)
+-
+-FIND_LIBRARY(CAIRO_LIBRARIES
+-    NAMES cairo
+-    HINTS ${CAIRO_LIBRARY_DIR}
+-          ${PC_CAIRO_LIBDIR}
+-          ${PC_CAIRO_LIBRARY_DIRS}
+-)
+-
+-IF (CAIRO_INCLUDE_DIRS)
+-    IF (EXISTS "${CAIRO_INCLUDE_DIRS}/cairo-version.h")
+-        FILE(READ "${CAIRO_INCLUDE_DIRS}/cairo-version.h" CAIRO_VERSION_CONTENT)
+-
+-        STRING(REGEX MATCH "#define +CAIRO_VERSION_MAJOR +([0-9]+)" _dummy "${CAIRO_VERSION_CONTENT}")
+-        SET(CAIRO_VERSION_MAJOR "${CMAKE_MATCH_1}")
+-
+-        STRING(REGEX MATCH "#define +CAIRO_VERSION_MINOR +([0-9]+)" _dummy "${CAIRO_VERSION_CONTENT}")
+-        SET(CAIRO_VERSION_MINOR "${CMAKE_MATCH_1}")
+-
+-        STRING(REGEX MATCH "#define +CAIRO_VERSION_MICRO +([0-9]+)" _dummy "${CAIRO_VERSION_CONTENT}")
+-        SET(CAIRO_VERSION_MICRO "${CMAKE_MATCH_1}")
+-
+-        SET(CAIRO_VERSION "${CAIRO_VERSION_MAJOR}.${CAIRO_VERSION_MINOR}.${CAIRO_VERSION_MICRO}")
+-    ENDIF ()
+-ENDIF ()
+-
+-SET(VERSION_OK TRUE)
+-IF (Cairo_FIND_VERSION)
+-    IF (Cairo_FIND_VERSION_EXACT)
+-        IF (NOT "${Cairo_FIND_VERSION}" VERSION_EQUAL "${CAIRO_VERSION}")
+-            SET(VERSION_OK FALSE)
+-        ENDIF ()
+-    ELSE ()
+-        IF ("${Cairo_FIND_VERSION}" VERSION_GREATER "${CAIRO_VERSION}")
+-            SET(VERSION_OK FALSE)
+-        ENDIF ()
+-    ENDIF ()
+-ENDIF ()
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(Cairo
+-                                  FOUND_VAR Cairo_FOUND
+-                                  REQUIRED_VARS CAIRO_INCLUDE_DIRS CAIRO_LIBRARIES VERSION_OK
+-                                  )
+-
+-if(Cairo_FOUND AND NOT TARGET Cairo::Cairo)
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(Cairo REQUIRED cairo)
++if(NOT TARGET Cairo::Cairo)
+   add_library(Cairo::Cairo INTERFACE IMPORTED)
+-  set_target_properties(Cairo::Cairo PROPERTIES
+-    INTERFACE_INCLUDE_DIRECTORIES  "${CAIRO_INCLUDE_DIRS}"
+-    INTERFACE_LINK_LIBRARIES       "${CAIRO_LIBRARIES}")
++  set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Cairo_INCLUDE_DIRS}")
++  set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_LINK_LIBRARIES "${Cairo_LINK_LIBRARIES}")
++  if(Cairo_CFLAGS_OTHER)
++    set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_COMPILE_OPTIONS "${Cairo_CFLAGS_OTHER}")
++  endif()
+ endif()
++set(CAIRO_FOUND TRUE)
++set(Cairo_FOUND TRUE)
