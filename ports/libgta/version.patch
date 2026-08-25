@@ -1,0 +1,15 @@
+diff --git a/libgta/CMakeLists.txt b/libgta/CMakeLists.txt
+index 7f587d2..0431d53 100644
+--- a/libgta/CMakeLists.txt
++++ b/libgta/CMakeLists.txt
+@@ -18,8 +18,8 @@ option(GTA_BUILD_DOCUMENTATION "Build API reference documentation (requires Doxy
+ # libgta version
+ set(GTA_VERSION_MAJOR "1")
+ set(GTA_VERSION_MINOR "2")
+-set(GTA_VERSION_PATCH "0")
+-set(GTA_VERSION 1.2.0)
++set(GTA_VERSION_PATCH "1")
++set(GTA_VERSION 1.2.1)
+ set(GTA_VERSION_NUMBER 0x010200)
+ set(GTA_LIB_VERSION "1.0.0")
+ set(GTA_LIB_SOVERSION "1")
