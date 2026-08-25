@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-event-stream
     REF "v${VERSION}"
-    SHA512 7bc0ed2490f8f2d349fb4aaf77ea20276437f2d184c9c1bfabac72225d0cd37a5bc1e1a8b8dd834f5eccb81aa108426119b9a9250246d4bb88b745e81d9ad07d
-    HEAD_REF master
+    SHA512 38a8ac44e4cd6325e1ff75ccc57dd6aa792ce3ad81ba767a4dcd105723a59fa0fb4a109e67c0ae8511f2fdfafd337d7b00ebf48e70717e2a5c5a427c38532a45
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
@@ -29,4 +29,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)
