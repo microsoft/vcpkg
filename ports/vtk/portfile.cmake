@@ -3,6 +3,25 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
+# vtk[python] and paraview[python] conflict: both install vtkmodules to the
+# same site-packages path. Fail fast with actionable guidance.
+if("python" IN_LIST FEATURES AND
+   EXISTS "${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}/vtkmodules/__init__.py")
+    message(FATAL_ERROR
+        "vtk[python] cannot be installed: paraview's Python bindings are already "
+        "installed in this triplet (${CURRENT_INSTALLED_DIR}), and vtk[python] "
+        "would install the same 'vtkmodules' Python package to the same "
+        "tools/python3 site-packages path, which is not something Python "
+        "supports two different builds sharing.\n"
+        "Pick one of the following:\n"
+        "  * `vcpkg remove paraview` (or reinstall it without the \"python\" "
+        "feature), then install vtk[python], or\n"
+        "  * use paraview[python] instead of vtk[python] if you only need VTK's "
+        "Python bindings for a ParaView-based workflow, or\n"
+        "  * install into a separate triplet if you genuinely need both "
+        "vtk[python] and paraview[python] installed at once.")
+endif()
+
 set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 # =============================================================================
@@ -10,8 +29,8 @@ set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 09a76bc55b37caad94d0d8ebe865caaed1b438af # v9.3.x used by ParaView 5.12.0
-    SHA512 396ee901fafacae8aef860b9c9c17cb92ae8b4969527fd271ad8dd9f6a9e0dc8e3dc807c8d43cc585608ad101a64edcd7aff49e1580c7a61a817c2ea8e2655f5
+    REF v${VERSION}
+    SHA512 d0ea8c23bb8f9fa76029d5722bd914d6d11e49b0b6609c647e377f07b0516fc46d878108b2dc8dfb8dfbdc0bc1cac4fa05a3060d88d378aa7587ff5b7929523c
     HEAD_REF master
     PATCHES
         ffmpeg.diff
@@ -27,7 +46,6 @@ vcpkg_from_github(
         # CHECK: module-name-mangling.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-        # fix-gdal.patch TODO?
         cgns.patch
         vtkm.patch
         afxdll.patch
@@ -38,13 +56,13 @@ vcpkg_from_github(
         fix-exprtk.patch # just for dbow2 and theia
         devendor_exodusII.patch
         remove-prefix-changes.patch
-        hdf5helper.patch
         opencascade-7.8.0.patch
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
         octree.patch
         fix-tbbsmptool.patch  # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
         backport-bda8324.diff # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/12418
+        backport-99bd602b.diff # https://gitlab.kitware.com/vtk/vtk/-/commit/99bd602b, fixes LNK2005 on ImplicitBackends
         use-compile-tools.diff
         zspace.diff # https://gitlab.kitware.com/vtk/vtk/-/commit/01a8bd7a917d33892f67a8d76ce7fc4b524d56b4
         mpi-language.diff
@@ -124,24 +142,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
-        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
-        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
-        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingVolumeAMR
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOXdmf2
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOH5part
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOH5Rage
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelLSDyna
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOTRUCHAS
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOVPIC
-        "paraview"    VTK_MODULE_ENABLE_VTK_RenderingAnnotation
-        "paraview"    VTK_MODULE_ENABLE_VTK_DomainsChemistry
-        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelDIY2
-        "paraview"    VTK_MODULE_ENABLE_VTK_cli11
-        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersOpenTURNS
-        "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelVerdict
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOOMF
-        "paraview"    VTK_MODULE_ENABLE_VTK_IOPIO
         "mpi"         VTK_GROUP_ENABLE_MPI
         "opengl"      VTK_MODULE_ENABLE_VTK_ImagingOpenGL2
         "opengl"      VTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2
@@ -184,21 +184,13 @@ if("python" IN_LIST FEATURES)
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
 
-if ("paraview" IN_LIST FEATURES OR "opengl" IN_LIST FEATURES)
+if ("opengl" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
         -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_FiltersParallelDIY2=YES
-    )
-endif()
-
-if ("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_WebCore=YES
-        -DVTK_MODULE_ENABLE_VTK_WebPython=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
     )
 endif()
 
@@ -212,13 +204,6 @@ endif()
 list(APPEND ADDITIONAL_OPTIONS -DVTK_USE_MPI=${use_mpi})
 if(use_mpi)
     list(APPEND ADDITIONAL_OPTIONS -DVTK_MODULE_ENABLE_VTK_ParallelMPI=YES)
-
-    if("paraview" IN_LIST FEATURES)
-        list(APPEND ADDITIONAL_OPTIONS
-            -DVTK_MODULE_ENABLE_VTK_FiltersParallelFlowPaths=YES
-            -DVTK_MODULE_ENABLE_VTK_RenderingParallelLIC=YES
-        )
-    endif()
 
     if("python" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS
@@ -255,6 +240,32 @@ endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_IOODBC=NO
+    )
+endif()
+
+# =============================================================================
+# Cross-compiling: The wrap tools generate C++ source at build time and must
+# run on the build machine, not the target. vtk does not declare a self
+# "host" dependency to force a host-triplet copy to exist; it is an ordinary
+# library port, not a host-tool-only one. Whoever cross-compiles with it is
+# expected to have vtk installed for their host triplet already. Look for
+# it and fail clearly if it is missing.
+set(VTK_HOST_TOOLS_DIR "")
+if(VCPKG_CROSSCOMPILING)
+    set(VTK_HOST_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/vtk")
+    if(NOT EXISTS "${VTK_HOST_TOOLS_DIR}/vtkWrapHierarchy-${VTK_SHORT_VERSION}${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        message(FATAL_ERROR
+            "vtk is cross-compiling (target triplet '${TARGET_TRIPLET}', host "
+            "triplet '${HOST_TRIPLET}') and needs prebuilt wrap-tool binaries "
+            "from a host-triplet vtk install to generate wrapper code, but none "
+            "were found at '${VTK_HOST_TOOLS_DIR}'.\n"
+            "Install vtk for your host triplet first, e.g.:\n"
+            "  vcpkg install vtk:${HOST_TRIPLET}")
+    endif()
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_USE_EXTERNAL_COMPILE_TOOLS=ON
+        "-DVTK_HOST_TOOLS_DIR=${VTK_HOST_TOOLS_DIR}"
+        "-DVTK_HOST_EXECUTABLE_SUFFIX=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
     )
 endif()
 
@@ -302,7 +313,6 @@ vcpkg_cmake_configure(
         -DVTK_DEBUG_MODULE=ON
         -DVTK_QT_VERSION=6
         -DCMAKE_INSTALL_QMLDIR:PATH=qml
-        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
         -DCMAKE_POLICY_DEFAULT_CMP0174=NEW     # cmake_parse_arguments
         -DCMAKE_POLICY_DEFAULT_CMP0177=NEW     # install() DESTINATION paths are normalized

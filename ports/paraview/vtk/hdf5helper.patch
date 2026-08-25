@@ -1,0 +1,13 @@
+diff --git a/IO/ERF/vtkHDF5Helper.h b/IO/ERF/vtkHDF5Helper.h
+index 0000000..0000000 100644
+--- a/IO/ERF/vtkHDF5Helper.h
++++ b/IO/ERF/vtkHDF5Helper.h
+@@ -42,7 +42,7 @@ public:
+   /**
+    *  Check existence of group defined by groupName relative to fileId.
+    */
+-  static bool GroupExists(int64_t fileId, const char* groupName);
++  static bool GroupExists(hid_t fileId, const char* groupName);
+ 
+   /**
+    *  Get length of array defined by arrayId.

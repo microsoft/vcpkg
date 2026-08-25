@@ -1,0 +1,152 @@
+diff --git a/Common/Core/vtkAffineImplicitBackend.txx b/Common/Core/vtkAffineImplicitBackend.txx
+index f15841f3846fd91fc9ff9c8a1127c7a62d672708..9bda16d2d5c9973bb756dee86286121045668cab 100644
+--- a/Common/Core/vtkAffineImplicitBackend.txx
++++ b/Common/Core/vtkAffineImplicitBackend.txx
+@@ -46,9 +46,27 @@ ValueType vtkAffineImplicitBackend<ValueType>::operator()(int index) const
+ 
+ #endif // vtkAffineImplicitBackend_txx
+ 
+-#ifdef VTK_AFFINE_BACKEND_INSTANTIATING
++#if defined(VTK_AFFINE_BACKEND_INSTANTIATING)
++
+ #define VTK_INSTANTIATE_AFFINE_BACKEND(ValueType)                                                  \
+   VTK_ABI_NAMESPACE_BEGIN                                                                          \
+   template struct VTKCOMMONCORE_EXPORT vtkAffineImplicitBackend<ValueType>;                        \
+   VTK_ABI_NAMESPACE_END
++
++#elif defined(VTK_USE_EXTERN_TEMPLATE)
++
++#ifndef VTK_AFFINE_BACKEND_TEMPLATE_EXTERN
++#define VTK_AFFINE_BACKEND_TEMPLATE_EXTERN
++#ifdef _MSC_VER
++#pragma warning(push)
++#pragma warning(disable : 4910) // extern and dllexport incompatible
++#endif
++VTK_ABI_NAMESPACE_BEGIN
++vtkExternTemplateMacro(extern template struct VTKCOMMONCORE_EXPORT vtkAffineImplicitBackend);
++VTK_ABI_NAMESPACE_END
++#ifdef _MSC_VER
++#pragma warning(pop)
++#endif
++#endif // VTK_AFFINE_IMPLICIT_BACKEND_TEMPLATE_EXTERN
++
+ #endif
+diff --git a/Common/Core/vtkCompositeImplicitBackend.h b/Common/Core/vtkCompositeImplicitBackend.h
+index 8d00081e1c867fd9580850f60c15aed057a81f8f..73d72bba881b399e0cb89c9c36757d7087e99b35 100644
+--- a/Common/Core/vtkCompositeImplicitBackend.h
++++ b/Common/Core/vtkCompositeImplicitBackend.h
+@@ -39,6 +39,8 @@
+  * > information.
+  */
+ #include "vtkCommonCoreModule.h"
++#include "vtkCompiler.h" // For VTK_USE_EXTERN_TEMPLATE
++#include "vtkType.h"     // For vtkExternTemplateMacro
+ 
+ #include <memory>
+ #include <vector>
+@@ -74,9 +76,27 @@ VTK_ABI_NAMESPACE_END
+ 
+ #endif // vtkCompositeImplicitBackend_h
+ 
+-#ifdef VTK_COMPOSITE_BACKEND_INSTANTIATING
++#if defined(VTK_COMPOSITE_BACKEND_INSTANTIATING)
++
+ #define VTK_INSTANTIATE_COMPOSITE_BACKEND(ValueType)                                               \
+   VTK_ABI_NAMESPACE_BEGIN                                                                          \
+   template class VTKCOMMONCORE_EXPORT vtkCompositeImplicitBackend<ValueType>;                      \
+   VTK_ABI_NAMESPACE_END
++
++#elif defined(VTK_USE_EXTERN_TEMPLATE)
++
++#ifndef VTK_COMPOSITE_BACKEND_TEMPLATE_EXTERN
++#define VTK_COMPOSITE_BACKEND_TEMPLATE_EXTERN
++#ifdef _MSC_VER
++#pragma warning(push)
++#pragma warning(disable : 4910) // extern and dllexport incompatible
++#endif
++VTK_ABI_NAMESPACE_BEGIN
++vtkExternTemplateMacro(extern template class VTKCOMMONCORE_EXPORT vtkCompositeImplicitBackend);
++VTK_ABI_NAMESPACE_END
++#ifdef _MSC_VER
++#pragma warning(pop)
++#endif
++#endif // VTK_COMPOSITE_IMPLICIT_BACKEND_TEMPLATE_EXTERN
++
+ #endif
+diff --git a/Common/Core/vtkConstantImplicitBackend.h b/Common/Core/vtkConstantImplicitBackend.h
+index 3d2440d05f8446337e1201dc72f97cee4e6f947b..0ca6a40866c17574e9c3f2caa6b2cb3fa892e01e 100644
+--- a/Common/Core/vtkConstantImplicitBackend.h
++++ b/Common/Core/vtkConstantImplicitBackend.h
+@@ -5,7 +5,9 @@
+ #define vtkConstantImplicitBackend_h
+ 
+ #include "vtkCommonCoreModule.h"
+-#include "vtkSetGet.h" // for vtkNotUsed
++#include "vtkCompiler.h" // For VTK_USE_EXTERN_TEMPLATE
++#include "vtkSetGet.h"   // for vtkNotUsed
++#include "vtkType.h"     // For vtkExternTemplateMacro
+ 
+ /**
+  * \struct vtkConstantImplicitBackend
+@@ -58,9 +60,27 @@ VTK_ABI_NAMESPACE_END
+ 
+ #endif // vtkConstantImplicitBackend_h
+ 
+-#ifdef VTK_CONSTANT_BACKEND_INSTANTIATING
++#if defined(VTK_CONSTANT_BACKEND_INSTANTIATING)
++
+ #define VTK_INSTANTIATE_CONSTANT_BACKEND(ValueType)                                                \
+   VTK_ABI_NAMESPACE_BEGIN                                                                          \
+   template struct VTKCOMMONCORE_EXPORT vtkConstantImplicitBackend<ValueType>;                      \
+   VTK_ABI_NAMESPACE_END
++
++#elif defined(VTK_USE_EXTERN_TEMPLATE)
++
++#ifndef VTK_CONSTANT_BACKEND_TEMPLATE_EXTERN
++#define VTK_CONSTANT_BACKEND_TEMPLATE_EXTERN
++#ifdef _MSC_VER
++#pragma warning(push)
++#pragma warning(disable : 4910) // extern and dllexport incompatible
++#endif
++VTK_ABI_NAMESPACE_BEGIN
++vtkExternTemplateMacro(extern template struct VTKCOMMONCORE_EXPORT vtkConstantImplicitBackend);
++VTK_ABI_NAMESPACE_END
++#ifdef _MSC_VER
++#pragma warning(pop)
++#endif
++#endif // VTK_CONSTANT_IMPLICIT_BACKEND_TEMPLATE_EXTERN
++
+ #endif
+diff --git a/Common/Core/vtkIndexedImplicitBackend.h b/Common/Core/vtkIndexedImplicitBackend.h
+index a57924dd181b660298bb57d632abe3f2cd898a18..138173b017eedd4763a20126a88d1f638e71f79f 100644
+--- a/Common/Core/vtkIndexedImplicitBackend.h
++++ b/Common/Core/vtkIndexedImplicitBackend.h
+@@ -78,9 +78,27 @@ VTK_ABI_NAMESPACE_END
+ 
+ #endif // vtkIndexedImplicitBackend_h
+ 
+-#ifdef VTK_INDEXED_BACKEND_INSTANTIATING
++#if defined(VTK_INDEXED_BACKEND_INSTANTIATING)
++
+ #define VTK_INSTANTIATE_INDEXED_BACKEND(ValueType)                                                 \
+   VTK_ABI_NAMESPACE_BEGIN                                                                          \
+   template class VTKCOMMONCORE_EXPORT vtkIndexedImplicitBackend<ValueType>;                        \
+   VTK_ABI_NAMESPACE_END
++
++#elif defined(VTK_USE_EXTERN_TEMPLATE)
++
++#ifndef VTK_INDEXED_BACKEND_TEMPLATE_EXTERN
++#define VTK_INDEXED_BACKEND_TEMPLATE_EXTERN
++#ifdef _MSC_VER
++#pragma warning(push)
++#pragma warning(disable : 4910) // extern and dllexport incompatible
++#endif
++VTK_ABI_NAMESPACE_BEGIN
++vtkExternTemplateMacro(extern template class VTKCOMMONCORE_EXPORT vtkIndexedImplicitBackend);
++VTK_ABI_NAMESPACE_END
++#ifdef _MSC_VER
++#pragma warning(pop)
++#endif
++#endif // VTK_INDEXED_IMPLICIT_BACKEND_TEMPLATE_EXTERN
++
+ #endif
