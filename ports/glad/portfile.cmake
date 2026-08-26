@@ -75,41 +75,11 @@ x_vcpkg_get_python_packages(
     OUT_PYTHON_VAR PYTHON3
 )
 
-file(WRITE "${SOURCE_PATH}/CMakeLists.txt" [=[
-cmake_minimum_required(VERSION 3.15)
-project(glad C)
-
-set(GLAD_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "" FORCE)
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/GladConfig.cmake")
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(GLAD_ARGS STATIC REPRODUCIBLE)
-if(GLAD_LOADER)
-    list(APPEND GLAD_ARGS LOADER)
-endif()
-list(APPEND GLAD_ARGS API ${GLAD_API})
-if(NOT GLAD_ALL_EXTENSIONS)
-    list(APPEND GLAD_ARGS EXTENSIONS NONE)
-endif()
-glad_add_library(glad ${GLAD_ARGS})
-set_property(TARGET glad PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/gladsources/glad/include>;$<INSTALL_INTERFACE:include>"
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/glad-config.cmake.in"
+    DESTINATION "${SOURCE_PATH}"
 )
-
-include(CMakePackageConfigHelpers)
-install(TARGETS glad EXPORT glad-targets ARCHIVE DESTINATION lib INCLUDES DESTINATION include)
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gladsources/glad/include/" DESTINATION include)
-install(EXPORT glad-targets FILE glad-targets.cmake NAMESPACE glad:: DESTINATION share/glad)
-configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/glad-config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/glad-config.cmake"
-    INSTALL_DESTINATION share/glad
-)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/glad-config.cmake" DESTINATION share/glad)
-]=])
-file(WRITE "${SOURCE_PATH}/glad-config.cmake.in" [=[
-@PACKAGE_INIT@
-include("${CMAKE_CURRENT_LIST_DIR}/glad-targets.cmake")
-]=])
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -126,21 +96,13 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/glad)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/EGL")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
-
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/include/EGL"
+    "${CURRENT_PACKAGES_DIR}/include/KHR"
+)
 file(COPY "${SOURCE_PATH}/glad" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/glad/glad.h" [=[
-#pragma once
-#include <glad/gl.h>
-typedef GLADloadfunc GLADloadproc;
-static inline int gladLoadGLLoader(GLADloadproc load) {
-    return gladLoadGL(load);
-}
-#ifdef __cplusplus
-static inline int gladLoadGL() {
-    return gladLoaderLoadGL();
-}
-#endif
-]=])
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/glad.h"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/glad"
+)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

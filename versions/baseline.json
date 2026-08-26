@@ -3462,7 +3462,7 @@
     },
     "glad": {
       "baseline": "2.0.8",
-      "port-version": 1
+      "port-version": 0
     },
     "glaze": {
       "baseline": "8.1.0",
