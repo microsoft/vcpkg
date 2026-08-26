@@ -4206,7 +4206,7 @@
     },
     "json-c": {
       "baseline": "0.19-20260627",
-      "port-version": 0
+      "port-version": 1
     },
     "json-dto": {
       "baseline": "0.3.4",
