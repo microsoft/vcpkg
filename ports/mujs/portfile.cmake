@@ -26,4 +26,8 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-mujs)
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+  FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/SpecialCasing.txt"
+)

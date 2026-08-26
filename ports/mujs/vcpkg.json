@@ -3,7 +3,7 @@
   "version": "1.3.10",
   "description": "An embeddable Javascript interpreter in C",
   "homepage": "https://mujs.com/",
-  "license": "ISC",
+  "license": "ISC AND Unicode-3.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
