@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-dis/open-dis-cpp
     REF "v${VERSION}"
-    SHA512 7403570f0d2f9c57b130a318d75b39bf07e4db6688c9219f1c0350c5734232a2b26a7952a392a5cb53a7e8bf0e71f151c7eb63b6ad583fcda6c2b46d92b4cd02
+    SHA512 54d46ba71b67af8710d2f15c42ed28f90ea31fb90edcdf0cc8ec099339648fe3cfa0faac4754c863332a24b01c3f6554d2a978e0ecfe8e4e0484fce78fbf45df
     HEAD_REF master
 )
 
@@ -11,6 +11,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
+        -DBUILD_OPENDIS6=ON
+        -DBUILD_OPENDIS7=ON
 )
 
 vcpkg_cmake_install()
