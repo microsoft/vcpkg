@@ -124,10 +124,11 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/glad)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include/KHR")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/include/EGL")
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/EGL")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
+
 file(COPY "${SOURCE_PATH}/glad" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/glad/glad.h" [=[
 #pragma once
