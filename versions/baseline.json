@@ -2769,7 +2769,7 @@
       "port-version": 0
     },
     "ecbuild": {
-      "baseline": "3.15.0",
+      "baseline": "3.15.2",
       "port-version": 0
     },
     "eccodes": {
