@@ -8932,6 +8932,10 @@
       "baseline": "1.15.2",
       "port-version": 0
     },
+    "rlimgui": {
+      "baseline": "Raylib_6_0",
+      "port-version": 0
+    },
     "rlottie": {
       "baseline": "2024-08-26",
       "port-version": 0
