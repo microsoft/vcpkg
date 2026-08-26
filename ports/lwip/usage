@@ -1,0 +1,22 @@
+lwIP must be configured for the target platform by the consuming application.
+Set LWIP_INCLUDE_DIRS to directories containing your lwipopts.h and platform
+port headers before finding the package:
+
+    set(LWIP_INCLUDE_DIRS
+        "${CMAKE_CURRENT_SOURCE_DIR}/config"
+        "${CMAKE_CURRENT_SOURCE_DIR}/port/include"
+    )
+    find_package(unofficial-lwip CONFIG REQUIRED)
+
+    target_sources(main PRIVATE
+        # For example: the platform's sys_arch.c implementation.
+        "${CMAKE_CURRENT_SOURCE_DIR}/port/sys_arch.c"
+    )
+    target_link_libraries(main PRIVATE unofficial::lwip::core)
+
+Link to unofficial::lwip::apps instead when the built-in application
+implementations are needed; it also links to unofficial::lwip::core.
+
+The package also provides LWIP_DIR and the upstream source lists. Optional
+contrib libraries and the supplied Unix/Windows ports can be included from
+${LWIP_DIR}/contrib; see ${LWIP_DIR}/BUILDING for upstream integration details.

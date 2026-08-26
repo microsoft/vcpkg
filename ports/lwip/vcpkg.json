@@ -1,0 +1,7 @@
+{
+  "name": "lwip",
+  "version": "2.2.1",
+  "description": "lwIP is a small independent implementation of the TCP/IP protocol suite.",
+  "homepage": "https://github.com/lwip-tcpip/lwip",
+  "license": "BSD-3-Clause"
+}
