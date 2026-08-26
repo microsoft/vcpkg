@@ -117,7 +117,7 @@ vcpkg_cmake_configure(
         -DGLAD_API:STRING=${GLAD_API}
         -DGLAD_LOADER:BOOL=${GLAD_LOADER}
         -DGLAD_ALL_EXTENSIONS:BOOL=${GLAD_ALL_EXTENSIONS}
-        -DPython_EXECUTABLE=${PYTHON3}
+        "-DPython_EXECUTABLE=${PYTHON3}"
 )
 
 vcpkg_cmake_install()
