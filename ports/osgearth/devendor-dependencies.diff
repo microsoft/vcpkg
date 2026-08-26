@@ -23,16 +23,15 @@ index 8353843..b7cef14 100644
  add_subdirectory(osgEarthDrivers)
  
 diff --git a/src/osgEarth/CMakeLists.txt b/src/osgEarth/CMakeLists.txt
-index 20b266d..b6aecda 100644
+index 20b266d..7bd8c00 100644
 --- a/src/osgEarth/CMakeLists.txt
 +++ b/src/osgEarth/CMakeLists.txt
-@@ -939,6 +939,10 @@ if(aws-cpp-sdk-core_FOUND)
+@@ -939,6 +939,9 @@ if(aws-cpp-sdk-core_FOUND)
  
  endif()
  
-+if(OSGEARTH_ENABLE_STBDXT)
-+    target_compile_definitions(${LIB_NAME} PRIVATE OSGEARTH_USE_STB_IMAGE_RESIZE=0)
-+endif()
++# Do not use stb image resize
++target_compile_definitions(${LIB_NAME} PRIVATE OSGEARTH_USE_STB_IMAGE_RESIZE=0)
 +
  # pthreads?
  if(UNIX)
