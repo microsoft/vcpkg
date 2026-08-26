@@ -118,6 +118,18 @@ elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     if(NOT " ${VCPKG_DETECTED_CMAKE_C_FLAGS} " MATCHES " -pthread ")
         vcpkg_list(APPEND CONFIGURE_OPTIONS no-threads)
     endif()
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    # clang targeting windows-msvc through the unix flow. The Configure
+    # target adds what the environment cannot: Windows system defines, the
+    # CRT selection, the Windows link libraries and the perlasm flavor.
+    # Module/engine DSOs stay off; the win32 DSO scheme requires them to be
+    # built as DLLs, which the unix flow does not do.
+    if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        message(FATAL_ERROR "Only x64 is implemented for clang targeting windows-msvc")
+    endif()
+    set(OPENSSL_ARCH clang-windows-msvc)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/90-clang-windows.conf" DESTINATION "${SOURCE_PATH}/Configurations")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-module no-dso no-engine)
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()
