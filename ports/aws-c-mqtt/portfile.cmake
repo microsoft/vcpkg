@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-mqtt
     REF "v${VERSION}"
-    SHA512 59dcef959d8674af5020cf2e8a0e92c500a7ba568f0072ed277f9c4dab06f79db0192ff8c2634746d7a5c2d299df8fb01d9735b9351c2ace1db6f4873e1625ee
-    HEAD_REF master
+    SHA512 6abe7c2aa2861334930ae2c604f66e9ca2c8a155b7b196469bb8b545cbabe0ee6f6895f13b170953a2016b484d6331b82542e96c784531bd9952c7ea1a068d4b
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
@@ -29,4 +29,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)

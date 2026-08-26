@@ -38,6 +38,13 @@ if("compression" IN_LIST FEATURES)
     vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_COMPRESSION=ON")
 endif()
 
+# sentry-native only looks for pkg-config on Linux, to locate the system libunwind for
+# SENTRY_LIBUNWIND_SYSTEM. Acquire it directly instead of depending on the pkgconf port.
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    vcpkg_list(APPEND options "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
     set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
