@@ -1,6 +1,6 @@
 {
   "name": "alibabacloud-oss-cpp-sdk-v2",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Alibaba Cloud OSS SDK for C++ v2",
   "homepage": "https://github.com/aliyun/alibabacloud-oss-cpp-sdk-v2",
   "license": "Apache-2.0 AND Zlib AND BSL-1.0",
