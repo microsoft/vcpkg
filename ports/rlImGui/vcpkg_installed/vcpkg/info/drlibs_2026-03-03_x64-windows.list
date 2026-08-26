@@ -1,0 +1,10 @@
+x64-windows/
+x64-windows/include/
+x64-windows/include/dr_flac.h
+x64-windows/include/dr_mp3.h
+x64-windows/include/dr_wav.h
+x64-windows/share/
+x64-windows/share/drlibs/
+x64-windows/share/drlibs/copyright
+x64-windows/share/drlibs/vcpkg.spdx.json
+x64-windows/share/drlibs/vcpkg_abi_info.txt

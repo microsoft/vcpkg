@@ -1,0 +1,19 @@
+{
+  "name": "rlimgui",
+  "version-string": "Raylib_6_0",
+  "description": "A Raylib integration with DearImGui",
+  "homepage": "https://github.com/raylib-extras/rlImGui",
+  "license": "Zlib",
+  "dependencies": [
+    "raylib",
+    {
+        "name": "vcpkg-cmake",
+        "host": true
+    },
+    {
+       "name": "vcpkg-cmake-config",
+       "host": true
+    },
+    "imgui"
+  ]
+}

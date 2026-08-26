@@ -1,0 +1,8 @@
+x64-windows/
+x64-windows/include/
+x64-windows/include/qoi.h
+x64-windows/share/
+x64-windows/share/qoi/
+x64-windows/share/qoi/copyright
+x64-windows/share/qoi/vcpkg.spdx.json
+x64-windows/share/qoi/vcpkg_abi_info.txt

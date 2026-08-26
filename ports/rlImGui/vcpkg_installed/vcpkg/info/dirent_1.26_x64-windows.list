@@ -1,0 +1,8 @@
+x64-windows/
+x64-windows/include/
+x64-windows/include/dirent.h
+x64-windows/share/
+x64-windows/share/dirent/
+x64-windows/share/dirent/copyright
+x64-windows/share/dirent/vcpkg.spdx.json
+x64-windows/share/dirent/vcpkg_abi_info.txt

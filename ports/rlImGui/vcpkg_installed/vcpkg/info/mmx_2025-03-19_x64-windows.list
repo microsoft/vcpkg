@@ -1,0 +1,13 @@
+x64-windows/
+x64-windows/include/
+x64-windows/include/mmx/
+x64-windows/include/mmx/json.h
+x64-windows/include/mmx/sched.h
+x64-windows/include/mmx/sdefl.h
+x64-windows/include/mmx/sinfl.h
+x64-windows/include/mmx/web.h
+x64-windows/share/
+x64-windows/share/mmx/
+x64-windows/share/mmx/copyright
+x64-windows/share/mmx/vcpkg.spdx.json
+x64-windows/share/mmx/vcpkg_abi_info.txt
