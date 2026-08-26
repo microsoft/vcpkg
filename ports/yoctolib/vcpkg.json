@@ -1,6 +1,6 @@
 {
   "name": "yoctolib",
-  "version": "2.1.15391",
+  "version": "2.1.15681",
   "description": "Official Yoctopuce Library for C++",
   "homepage": "https://github.com/yoctopuce/yoctolib_cpp",
   "license": null,
