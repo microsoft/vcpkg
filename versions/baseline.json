@@ -8949,7 +8949,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.7.2",
+      "baseline": "5.1.0",
       "port-version": 0
     },
     "robin-hood-hashing": {
