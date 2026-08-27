@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 be42ed09230d87b8d3192507b9738c62eea7d6bbe3c5552d1d2fcba7ebc036e0925706c744a6f4e078eae9811e344aba0fc0d9e96682d64ea1710c8afaedb1c8
+    SHA512 5607ac820258dd05d5de37a935f5a3d8e1d6e03f68533bce2dd990a9fafc1cd854ade2b92e3302423ac6612d20f301ddeafc83769396c348bdae934ee83c9df8
     HEAD_REF main
     PATCHES
         build.diff

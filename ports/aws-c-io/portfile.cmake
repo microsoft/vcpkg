@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-io
     REF "v${VERSION}"
-    SHA512 2037b119155e5f40c3e4f9772df21a509314b20653b6f3f96a6ea1e6cd499a9e11e886fbb8b9a81af267b9c2f1698044e7194534796b9906769a6f38433ced03
-    HEAD_REF master
+    SHA512 e812fd7168c0b71cc98a7f835dd3dd48174d0c14e5d92ed10b5ecf558fc29bed2b4adf32f55408ee3ed7f54dfaa50d9f12334f5c89b0d76cedb800fb08daf483
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
@@ -29,4 +29,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)

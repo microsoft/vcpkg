@@ -1,4 +1,0 @@
-minifb provides CMake targets:
-
-    find_package(minifb CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE minifb::minifb)

@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
+        fix-flags.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 

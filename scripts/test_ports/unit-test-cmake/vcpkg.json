@@ -17,7 +17,8 @@
     "list",
     "merge-libs",
     "minimum-required",
-    "setup-pkgconfig-path"
+    "setup-pkgconfig-path",
+    "spdx"
   ],
   "features": {
     "backup-restore-env-vars": {
@@ -56,6 +57,9 @@
     },
     "setup-pkgconfig-path": {
       "description": "Test the z_vcpkg_setup/restore_pkgconfig_path functions"
+    },
+    "spdx": {
+      "description": "Test SPDX resource generation"
     }
   }
 }
