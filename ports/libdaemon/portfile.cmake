@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
 )
 
 vcpkg_make_install()
