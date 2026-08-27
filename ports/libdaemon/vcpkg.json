@@ -4,7 +4,7 @@
   "description": "libdaemon is a lightweight C library that eases the writing of UNIX daemons",
   "homepage": "https://0pointer.de/lennart/projects/libdaemon/",
   "license": "LGPL-2.0-or-later",
-  "supports": "linux",
+  "supports": "linux | osx | openbsd | freebsd",
   "dependencies": [
     {
       "name": "vcpkg-make",
