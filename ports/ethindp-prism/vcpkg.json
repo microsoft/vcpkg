@@ -1,8 +1,8 @@
 {
   "name": "ethindp-prism",
-  "version": "0.18.1",
+  "version": "0.18.2",
   "description": "The Platform-agnostic Reader Interface for Speech and Messages",
-  "license": "MPL-2.0",
+  "license": "MPL-2.0 AND BSD-2-Clause AND Apache-2.0 AND Unlicense AND MIT AND Zlib",
   "supports": "!uwp & !(x86 | arm32)",
   "dependencies": [
     "concurrentqueue",
