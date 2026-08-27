@@ -22,6 +22,7 @@
     }
   ],
   "default-features": [
+    "gl-api-latest",
     "loader"
   ],
   "features": {

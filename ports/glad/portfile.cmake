@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(GLAD_API "gl:compatibility=4.6")
+set(GLAD_API "gl:compatibility=1.0")
 foreach(version IN ITEMS 46 45 44 43 42 41 40 33 32 31 30 21 20 15 14 13 12 11 10)
     if("gl-api-${version}" IN_LIST FEATURES)
         string(SUBSTRING "${version}" 0 1 major)
