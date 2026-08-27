@@ -1462,7 +1462,7 @@
     },
     "boringssl": {
       "baseline": "2026-08-13",
-      "port-version": 0
+      "port-version": 1
     },
     "botan": {
       "baseline": "3.12.0",

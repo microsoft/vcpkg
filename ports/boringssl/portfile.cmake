@@ -22,6 +22,12 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-remove-WX-Werror.patch
+    0002-install-decrepit.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    decrepit BORINGSSL_INSTALL_DECREPIT
 )
 
 set(BORINGSSL_OPTIONS
@@ -41,6 +47,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     ${BORINGSSL_OPTIONS}
+    ${FEATURE_OPTIONS}
   OPTIONS_DEBUG
     ${CMAKE_CONFIGURE_OPTIONS_DEBUG}
 )

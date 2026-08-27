@@ -2,3 +2,7 @@ boringssl can be found via the built-in CMake find-module:
 
     find_package(OpenSSL REQUIRED)
     target_link_libraries(main PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+
+The decrepit feature additionally provides the legacy cryptography library:
+
+    target_link_libraries(main PRIVATE OpenSSL::decrepit)
