@@ -14,6 +14,8 @@ vcpkg_from_github(
         fix-arm64.patch
 )
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/aui.audio/3rdparty" "${SOURCE_PATH}/aui.core/3rdparty" "${SOURCE_PATH}/aui.image/3rdparty" "${SOURCE_PATH}/aui.sqlite/3rdparty")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
