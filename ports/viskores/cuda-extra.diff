@@ -1,0 +1,19 @@
+diff --git a/viskores/exec/cuda/internal/WrappedOperators.h b/viskores/exec/cuda/internal/WrappedOperators.h
+index de09ad9b0..f1768ae1a 100644
+--- a/viskores/exec/cuda/internal/WrappedOperators.h
++++ b/viskores/exec/cuda/internal/WrappedOperators.h
+@@ -209,13 +209,10 @@ struct WrappedBinaryPredicate
+ //
+ //
+ #if THRUST_VERSION >= 300300
+-namespace cuda
+-{
+ template <typename T, typename F>
+ inline constexpr bool
+-  is_commutative_v<::viskores::exec::cuda::internal::WrappedBinaryOperator<T, F>, T> =
++  ::cuda::is_commutative_v<::viskores::exec::cuda::internal::WrappedBinaryOperator<T, F>, T> =
+     ::cuda::std::is_arithmetic<T>::value;
+-}
+ #else // THRUST_VERSION < 300300
+ VISKORES_THRUST_NAMESPACE_BEGIN
+ namespace detail

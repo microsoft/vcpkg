@@ -2,11 +2,16 @@ diff --git a/CMake/ViskoresCompilerFlags.cmake b/CMake/ViskoresCompilerFlags.cma
 index 34e64c4b2..f87e3e8ab 100644
 --- a/CMake/ViskoresCompilerFlags.cmake
 +++ b/CMake/ViskoresCompilerFlags.cmake
-@@ -65,6 +65,7 @@ if(VISKORES_COMPILER_IS_MSVC)
+@@ -65,6 +65,12 @@ if(VISKORES_COMPILER_IS_MSVC)
    target_compile_options(viskores_compiler_flags INTERFACE $<$<COMPILE_LANGUAGE:CXX>:/Gy>)
    if(TARGET viskores_cuda)
      target_compile_options(viskores_compiler_flags INTERFACE $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler="/Gy">)
-+    target_compile_options(viskores_compiler_flags INTERFACE $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/Zc:preprocessor>)
++    target_compile_options(viskores_compiler_flags INTERFACE
++        $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/Zc:preprocessor>
++        $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/utf-8>
++        $<$<COMPILE_LANGUAGE:CUDA>:-Xcudafe=--unicode_source_kind=UTF-8>
++        $<$<COMPILE_LANGUAGE:CUDA>:-Xcicc=--unicode_source_kind=UTF-8>
++    )
    endif()
  elseif(NOT (VISKORES_COMPILER_IS_PGI OR VISKORES_COMPILER_IS_XL)) #can't find an equivalant PGI/XL flag
    target_compile_options(viskores_compiler_flags INTERFACE $<$<COMPILE_LANGUAGE:CXX>:-ffunction-sections>)

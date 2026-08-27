@@ -7,8 +7,9 @@ vcpkg_from_github(
     PATCHES
         external-fmt.diff
         no-abs-path.diff
-        cuda-backports.diff
+        cuda-backports.diff # git diff v1.1.1..v1.2.0-rc2  -- viskores/exec/cuda
         cuda-msvc-preprocessor.diff
+        cuda-extra.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/thirdparty/fmt"
@@ -17,7 +18,7 @@ file(REMOVE_RECURSE
     #[[ "${SOURCE_PATH}/viskores/thirdparty/diy" ]]
     #[[ "${SOURCE_PATH}/viskores/thirdparty/lcl" ]]
     #[[ namespace viskores:  "${SOURCE_PATH}/viskores/thirdparty/lodepng" ]]
-    #[[ anonymous namespace: q"${SOURCE_PATH}/viskores/thirdparty/loguru" ]]
+    #[[ anonymous namespace: "${SOURCE_PATH}/viskores/thirdparty/loguru" ]]
     #[[ namespace viskores:  "${SOURCE_PATH}/viskores/thirdparty/optionparser" ]]
 )
 
@@ -35,7 +36,7 @@ if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND FEATURE_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
-        -DCMAKE_CUDA_ARCHITECTURES=all-major # override with VCPKG_CMAKE_CONFIGURE_OPTIONS
+        -DCMAKE_CUDA_ARCHITECTURES=75 # override with VCPKG_CMAKE_CONFIGURE_OPTIONS
     )
 endif()
 
@@ -49,6 +50,7 @@ vcpkg_cmake_configure(
         -DViskores_INSTALL_SHARE_DIR=share/${PORT}
         -DViskores_NO_INSTALL_README_LICENSE=ON
         -DViskores_USE_DEFAULT_TYPES_FOR_VTK=ON
+        -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
 )
 
 vcpkg_cmake_install()
