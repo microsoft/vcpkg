@@ -17,6 +17,7 @@ set_property(TARGET glad PROPERTY INTERFACE_INCLUDE_DIRECTORIES
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/gladsources/glad/include>;$<INSTALL_INTERFACE:include>"
 )
 
+# glad 1 provided this "official" CMake config name and target.
 include(CMakePackageConfigHelpers)
 install(TARGETS glad EXPORT glad-targets ARCHIVE DESTINATION lib INCLUDES DESTINATION include)
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/gladsources/glad/include/" DESTINATION include)
