@@ -1,0 +1,17 @@
+diff --git a/src/ctz.h b/src/ctz.h
+index 483ce4b..b592afb 100644
+--- a/src/ctz.h
++++ b/src/ctz.h
+@@ -72,7 +72,12 @@ static inline uint32_t b3CTZ64( uint64_t block )
+ 
+ static inline int b3PopCount64( uint64_t block )
+ {
++#ifdef _WIN64
+ 	return (int)__popcnt64( block );
++#else
++	// 32-bit fall back
++	return (int)( __popcnt( (uint32_t)block ) + __popcnt( (uint32_t)( block >> 32 ) ) );
++#endif
+ }
+ 
+ #else

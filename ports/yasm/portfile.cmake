@@ -36,6 +36,8 @@ vcpkg_cmake_configure(
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
         -DENABLE_NLS=OFF
         -DYASM_BUILD_TESTS=OFF
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()

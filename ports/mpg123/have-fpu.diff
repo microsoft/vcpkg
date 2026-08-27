@@ -1,10 +1,12 @@
 diff --git a/ports/cmake/src/CMakeLists.txt b/ports/cmake/src/CMakeLists.txt
-index f6a77b9..0867669 100644
 --- a/ports/cmake/src/CMakeLists.txt
 +++ b/ports/cmake/src/CMakeLists.txt
-@@ -198,6 +198,8 @@ check_cpu_arch_arm64(ARCH_IS_ARM64)
+@@ -196,8 +196,10 @@
+ check_cpu_arch_arm32(ARCH_IS_ARM32)
+ check_cpu_arch_arm64(ARCH_IS_ARM64)
  
- if(WIN32 OR (ARCH_IS_ARM64 AND APPLE))
+-if(WIN32 OR (ARCH_IS_ARM64 AND APPLE))
++if(WIN32 OR ARCH_IS_ARM64)
      set(HAVE_FPU 1)
 +elseif(CMAKE_CROSSCOMPILING OR DEFINED HAVE_FPU)
 +    set(HAVE_FPU 1 CACHE STRING "Override in triplet if needed")

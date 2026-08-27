@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/GraphBLAS
-    REF v10.3.1
-    SHA512 a23a00d6dcab445ffe745c351fe870174b1fe0753ba048143b2494da20358a407252c4e72ac3666a43f683c59f19f5651d650deca4d5493b1ceef11514ddbe61
+    REF v10.5.0
+    SHA512 ed92d8d44b3ad5aeb60f6c2951ea342f24cd6a96ece3626f991182352e9d78aaa2a1cc39b919785c7e87396a460780dd5855a283b10c16a06cb7af102b30bed6
     HEAD_REF stable
     PATCHES
         crossbuild.diff

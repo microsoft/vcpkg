@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 63ad4ee0cee6d5511e069f2203947c6ae0e9c0b64b3423d1f03f50f059b768d62fe658ae4631c1b7a3fdeb375f26f22ed5439ee30a480c5c3ccf2357a717ac6d
+    SHA512 34adaf10d8a4b69740acc6ac9db9564483cbe6e3226a2adec3692b0b8432aa086a5158bae1eafd1a621f1566f462eb1352bc323672f93eacb8d26ee2f03052d4
     HEAD_REF master
     PATCHES
         fix-always-nanosvg.diff

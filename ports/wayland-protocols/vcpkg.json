@@ -1,35 +1,51 @@
 {
   "name": "wayland-protocols",
   "version": "1.49",
+  "port-version": 1,
   "description": "wayland-protocols contains Wayland protocols that add functionality not available in the Wayland core protocol.",
   "homepage": "https://wayland.freedesktop.org",
   "license": "MIT",
   "dependencies": [
-    "wayland"
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
   ],
   "features": {
     "force-build": {
       "description": [
-        "Build wayland libraries instead of depending on system ones.",
-        "Requires triplet variable X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES to be set."
+        "Generate protocol helper headers.",
+        "Use the wayland-scanner host tool from vcpkg."
       ],
       "dependencies": [
-        {
-          "name": "vcpkg-tool-meson",
-          "host": true
-        },
-        {
-          "name": "wayland",
-          "features": [
-            "force-build"
-          ]
-        },
         {
           "name": "wayland",
           "host": true,
           "features": [
-            "force-build"
+            "scanner"
           ]
+        },
+        {
+          "name": "wayland-protocols",
+          "features": [
+            "generated-headers"
+          ]
+        }
+      ]
+    },
+    "generated-headers": {
+      "description": [
+        "Generate protocol helper headers.",
+        "Requires the wayland-scanner host tool."
+      ],
+      "dependencies": [
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "scanner"
+          ],
+          "platform": "!windows & !osx & !android"
         }
       ]
     }

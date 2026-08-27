@@ -1,11 +1,12 @@
 {
   "name": "hamlib",
   "version": "4.7.2",
+  "port-version": 1,
   "description": "Ham radio control library for rigs (radios), rotators, and amplifiers.",
   "homepage": "https://hamlib.github.io/",
   "documentation": "https://github.com/Hamlib/Hamlib/wiki/Documentation",
   "license": null,
-  "supports": "(!windows | mingw) & !android",
+  "supports": "!windows | mingw",
   "dependencies": [
     {
       "name": "vcpkg-make",

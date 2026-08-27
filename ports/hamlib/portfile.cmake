@@ -17,6 +17,10 @@ else()
     list(APPEND options --with-xml-support=no)
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND options "LIBS=\$LIBS -llog")
+endif()
+
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF

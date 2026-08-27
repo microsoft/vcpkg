@@ -8,6 +8,7 @@ vcpkg_from_github(
         export-symbols-only-in-shared-build.patch
         fix-linux-build.patch
         sdl-config.patch
+        fix-gcc15-function-signatures.patch
 )
 
 configure_file("${SOURCE_PATH}/include/SDL_config.h.default" "${SOURCE_PATH}/include/SDL_config.h" COPYONLY)

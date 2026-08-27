@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5048309..114e054 100644
+index e3c0913..efbb93b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -7,9 +7,9 @@ project(slick-logger
@@ -13,4 +13,17 @@ index 5048309..114e054 100644
 +if (FALSE)
      message(STATUS "Fetching slick-queue...")
      include(FetchContent)
+ 
+diff --git a/cmake/slick-loggerConfig.cmake.in b/cmake/slick-loggerConfig.cmake.in
+index 7ea75d1..4c30d13 100644
+--- a/cmake/slick-loggerConfig.cmake.in
++++ b/cmake/slick-loggerConfig.cmake.in
+@@ -3,7 +3,7 @@
+ include(CMakeFindDependencyMacro)
+ 
+ # Find slick-queue dependency
+-find_dependency(slick-queue 1.2.2 CONFIG)
++find_dependency(slick-queue CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/slick-loggerTargets.cmake")
  

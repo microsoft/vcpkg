@@ -1,9 +1,9 @@
 diff --git a/examples/example_glfw_wgpu/CMakeLists.txt b/examples/example_glfw_wgpu/CMakeLists.txt
-index 11248df..f34d704 100644
+index 4eaaee762..3e3254e60 100644
 --- a/examples/example_glfw_wgpu/CMakeLists.txt
 +++ b/examples/example_glfw_wgpu/CMakeLists.txt
-@@ -35,20 +35,11 @@ endif()
- set(CMAKE_CXX_STANDARD 17) # Dawn requires C++17
+@@ -40,20 +40,11 @@ endif()
+ set(CMAKE_CXX_STANDARD 20) # Dawn requires C++20
  
  # Dear ImGui
 -set(IMGUI_DIR ../../)
@@ -24,7 +24,7 @@ index 11248df..f34d704 100644
  )
  
  if(EMSCRIPTEN)
-@@ -147,6 +138,7 @@ else() # Native/Desktop build
+@@ -172,6 +163,7 @@ else() # Native/Desktop build
  endif()
  
  add_executable(${IMGUI_EXECUTABLE} ${IMGUI_EXAMPLE_SOURCE_FILES})

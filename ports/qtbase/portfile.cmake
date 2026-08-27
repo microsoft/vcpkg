@@ -21,6 +21,7 @@ set(${PORT}_PATCHES
         clang-cl_QGADGET_fix.diff
         fix-host-aliasing.patch
         fix_deploy_windows.patch
+        windeployqt-webengine-debug-resources.patch
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
         moltenvk.patch
@@ -497,6 +498,7 @@ endif()
 set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
 set(REL_PATH "")
 set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
+set(LIBEXEC_DEBUG_SUFFIX "")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_release.conf" @ONLY) # For vcpkg-qmake
 set(BACKUP_CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 set(BACKUP_CURRENT_HOST_INSTALLED_DIR "${CURRENT_HOST_INSTALLED_DIR}")
@@ -507,6 +509,9 @@ set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${installed_to_host}")
 set(REL_HOST_TO_DATA "${host_to_installed}")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.conf")
 set(REL_PATH debug/)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(LIBEXEC_DEBUG_SUFFIX "/debug")
+endif()
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.debug.conf")
 
 set(CURRENT_INSTALLED_DIR "${BACKUP_CURRENT_INSTALLED_DIR}")
