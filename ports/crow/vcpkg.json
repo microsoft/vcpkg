@@ -1,6 +1,7 @@
 {
   "name": "crow",
   "version": "1.3.3",
+  "port-version": 1,
   "description": "Very fast and easy to use C++ micro web framework",
   "homepage": "https://github.com/CrowCpp/crow",
   "license": "BSD-3-Clause",
@@ -14,5 +15,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "boost-asio": {
+      "description": "Use Boost.Asio instead of standalone Asio",
+      "dependencies": [
+        "boost-asio"
+      ]
+    }
+  }
 }
