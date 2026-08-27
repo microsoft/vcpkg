@@ -1,9 +1,9 @@
 {
   "name": "simdjson",
-  "version": "4.6.6",
+  "version": "4.6.7",
   "description": "An extremely fast JSON library that can parse gigabytes of JSON per second",
   "homepage": "https://simdjson.org/",
-  "license": "Apache-2.0 OR MIT",
+  "license": "(Apache-2.0 OR MIT) AND BSL-1.0 AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

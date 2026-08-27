@@ -1,23 +1,35 @@
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 set(VCPKG_BUILD_TYPE release)
-set(SQLITE_VERSION "3.39.3")
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-vcpkg_download_distfile(SOURCE_FILE
-    URLS "https://github.com/sqlite/sqlite/raw/version-${SQLITE_VERSION}/tool/lemon.c"
-    FILENAME "lemon.c"
-    SHA512 "e9cca77d45a3be55fc958be69a30730dcbd39ba5c85c4c6c6c9eb6988c5cae9d14607be214ce57c11c73a6ffd4005784fb4d046d78f50e348ffa7ea6392ee03a"
+vcpkg_download_distfile(LEMON_C
+    URLS "https://github.com/sqlite/sqlite/raw/version-${VERSION}/tool/lemon.c"
+    FILENAME "lemon-${VERSION}.c"
+    SHA512 "baa6c01b9398f332fce35187cfcda5ba8fed8f20e49bdd53955b4e6d77a2d47eb382cf32696004e3b24b73e504de959e272a23a6983638330e760467f1b56957"
 )
 
-get_filename_component(SOURCE_PATH "${SOURCE_FILE}" DIRECTORY)
+vcpkg_download_distfile(LEMPAR_C
+    URLS "https://github.com/sqlite/sqlite/raw/version-${VERSION}/tool/lempar.c"
+    FILENAME "lempar-${VERSION}.c"
+    SHA512 "05fc35c854da1b597d5ebb781d81694d53af586a698bd4271b257b65ab2b8d97423823334d404eb051dd1a9fca04b0ae12a0bb47d09956934ae8993d7fc307c2"
+)
+
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${VERSION}")
+file(REMOVE_RECURSE "${SOURCE_PATH}")
+file(MAKE_DIRECTORY "${SOURCE_PATH}")
+file(COPY_FILE "${LEMON_C}" "${SOURCE_PATH}/lemon.c")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
-vcpkg_download_distfile(LEMPAR
-    URLS "https://github.com/sqlite/sqlite/raw/version-${SQLITE_VERSION}/tool/lempar.c"
-    FILENAME "lempar.c"
-    SHA512 "45ef60bbfef54f6583d6f9a854aaa72c5538e791b09ad15f4094a96905974277f964f471dcd5775e76b685b54415897a32a40c09f913f61cf91b99eb2e5ff5f0"
-)
+file(INSTALL "${LEMPAR_C}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/lemon" RENAME "lempar.c")
 
-file(COPY "${LEMPAR}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/lemon")
+# same as sqlite3 port
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright"
+    "The author disclaims copyright to this source code.  In place of a legal notice,
+here is a blessing:
+
+    May you do good and not evil.
+    May you find forgiveness for yourself and forgive others.
+    May you share freely, never taking more than you give.
+")

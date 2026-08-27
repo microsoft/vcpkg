@@ -1,0 +1,43 @@
+diff --git a/src/video/Xext/XME/xme.c b/src/video/Xext/XME/xme.c
+index 2cead35..7364078 100644
+--- a/src/video/Xext/XME/xme.c
++++ b/src/video/Xext/XME/xme.c
+@@ -206,7 +206,7 @@ static char *xigmisc_extension_name = XIGMISC_PROTOCOL_NAME;
+ /*
+  * find_display - locate the display info block
+  */
+-static int XiGMiscCloseDisplay();
++static int XiGMiscCloseDisplay(Display *, XExtCodes *);
+ 
+ static XExtensionHooks xigmisc_extension_hooks = {
+     NULL,                               /* create_gc */
+diff --git a/src/video/Xext/Xinerama/Xinerama.c b/src/video/Xext/Xinerama/Xinerama.c
+index 4ff42eb..ba07fdd 100644
+--- a/src/video/Xext/Xinerama/Xinerama.c
++++ b/src/video/Xext/Xinerama/Xinerama.c
+@@ -50,7 +50,7 @@ static /* const */ char *panoramiX_extension_name = PANORAMIX_PROTOCOL_NAME;
+ #define PanoramiXSimpleCheckExtension(dpy,i) \
+   XextSimpleCheckExtension (dpy, i, panoramiX_extension_name)
+ 
+-static int close_display();
++static int close_display(Display *, XExtCodes *);
+ static /* const */ XExtensionHooks panoramiX_extension_hooks = {
+     NULL,				/* create_gc */
+     NULL,				/* copy_gc */
+diff --git a/src/video/Xext/Xv/Xv.c b/src/video/Xext/Xv/Xv.c
+index 7147b9e..dcdb710 100644
+--- a/src/video/Xext/Xv/Xv.c
++++ b/src/video/Xext/Xv/Xv.c
+@@ -63,9 +63,9 @@ static char *xv_extension_name = XvName;
+ #define XvCheckExtension(dpy, i, val) \
+   XextCheckExtension(dpy, i, xv_extension_name, val)
+ 
+-static char *xv_error_string();
+-static int xv_close_display();
+-static Bool xv_wire_to_event();
++static char *xv_error_string(Display *, int, XExtCodes *, char *, int);
++static int xv_close_display(Display *, XExtCodes *);
++static Bool xv_wire_to_event(Display *, XEvent *, xEvent *);
+ 
+ static XExtensionHooks xv_extension_hooks = {
+     NULL,                               /* create_gc */
