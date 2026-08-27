@@ -1,5 +1,9 @@
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Unable to build shared library on Windows yet
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        # baseclient.cc exceeds the object section limit on ARM64 without /bigobj
+        set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /bigobj")
+    endif()
 endif()
 
 vcpkg_from_github(
