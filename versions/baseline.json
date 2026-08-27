@@ -5981,7 +5981,7 @@
       "port-version": 0
     },
     "libxchange": {
-      "baseline": "1.3.0-rc1",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "libxcomposite": {
