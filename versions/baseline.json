@@ -4654,7 +4654,7 @@
     },
     "kwindowsystem": {
       "baseline": "6.28.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kwsys": {
       "baseline": "2021-08-06",
