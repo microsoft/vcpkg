@@ -349,7 +349,7 @@
       "port-version": 0
     },
     "async-mqtt": {
-      "baseline": "10.3.0",
+      "baseline": "10.3.1",
       "port-version": 0
     },
     "async-simple": {
@@ -4206,7 +4206,7 @@
     },
     "json-c": {
       "baseline": "0.19-20260627",
-      "port-version": 0
+      "port-version": 1
     },
     "json-dto": {
       "baseline": "0.3.4",
@@ -4729,8 +4729,8 @@
       "port-version": 0
     },
     "leveldb": {
-      "baseline": "1.23",
-      "port-version": 1
+      "baseline": "2026-03-11",
+      "port-version": 0
     },
     "levmar": {
       "baseline": "2.6",
@@ -6477,7 +6477,7 @@
       "port-version": 0
     },
     "mas-bandwidth-serialize": {
-      "baseline": "1.9.0",
+      "baseline": "1.15.0",
       "port-version": 0
     },
     "mas-bandwidth-yojimbo": {
@@ -7541,7 +7541,7 @@
       "port-version": 0
     },
     "openssl": {
-      "baseline": "3.6.3",
+      "baseline": "3.6.4",
       "port-version": 0
     },
     "opensubdiv": {
@@ -8861,7 +8861,7 @@
       "port-version": 0
     },
     "rerun-sdk": {
-      "baseline": "0.36.0",
+      "baseline": "0.36.3",
       "port-version": 0
     },
     "rest-rpc": {
