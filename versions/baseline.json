@@ -181,7 +181,7 @@
       "port-version": 0
     },
     "aom": {
-      "baseline": "3.14.1",
+      "baseline": "3.15.0",
       "port-version": 0
     },
     "apache-datasketches": {
