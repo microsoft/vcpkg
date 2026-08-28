@@ -2770,7 +2770,7 @@
     },
     "ecbuild": {
       "baseline": "3.15.2",
-      "port-version": 0
+      "port-version": 1
     },
     "eccodes": {
       "baseline": "2.48.0",
