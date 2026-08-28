@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 06307676fc94e97ec48953edca31d49d320ea12a46a3b8418f1b23dcbe0232677ce9d910dfcada5a71a5a9857fa92872b0231e320380f09c789ad8792211cc2f
     HEAD_REF main
+    PATCHES
+        0001-boringssl-cmake-integration.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
@@ -11,6 +13,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        boringssl ENABLE_BORINGSSL
         wolfssl  ENABLE_WOLFSSL
         gnutls   ENABLE_GNUTLS
         openssl  ENABLE_OPENSSL
@@ -22,9 +25,8 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
         "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
+        -DENABLE_LIB_ONLY=ON
         -DBUILD_TESTING=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Libev=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Libnghttp3=ON
         -DCMAKE_INSTALL_DOCDIR=share/ngtcp2
 )
 vcpkg_cmake_install()

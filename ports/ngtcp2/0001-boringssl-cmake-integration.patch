@@ -1,0 +1,89 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9f94b9c..0b4aabc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -143,6 +143,12 @@ endif()
+ if(ENABLE_OPENSSL OR ENABLE_PICOTLS)
+   find_package(OpenSSL 1.1.1 REQUIRED)
+ endif()
++if(ENABLE_BORINGSSL)
++  find_package(OpenSSL CONFIG REQUIRED)
++  get_target_property(BORINGSSL_INCLUDE_DIR OpenSSL::Crypto
++    INTERFACE_INCLUDE_DIRECTORIES)
++  set(BORINGSSL_LIBRARIES OpenSSL::SSL)
++endif()
+ if(ENABLE_WOLFSSL)
+   find_package(wolfssl 5.5.0 REQUIRED)
+ endif()
+diff --git a/crypto/boringssl/CMakeLists.txt b/crypto/boringssl/CMakeLists.txt
+index 60d2d41..fcd951a 100644
+--- a/crypto/boringssl/CMakeLists.txt
++++ b/crypto/boringssl/CMakeLists.txt
+@@ -29,20 +29,36 @@ set(ngtcp2_crypto_boringssl_SOURCES
+ )
+ 
+ set(ngtcp2_crypto_boringssl_INCLUDE_DIRS
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/includes"
+-  "${CMAKE_CURRENT_BINARY_DIR}/../../lib/includes"
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../lib"
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../crypto/includes"
+-  "${CMAKE_CURRENT_BINARY_DIR}/../../crypto/includes"
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../crypto"
+-  "${CMAKE_CURRENT_BINARY_DIR}/../../crypto"
+-  "${BORINGSSL_INCLUDE_DIRS}"
++  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>"
++  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/crypto/includes>"
++  "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/crypto/includes>"
++  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/crypto>"
++  "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/crypto>"
+ )
+ 
+ foreach(name libngtcp2_crypto_boringssl.pc)
+   configure_file("${name}.in" "${name}" @ONLY)
+ endforeach()
+ 
++# Public shared library
++if(ENABLE_SHARED_LIB)
++  add_library(ngtcp2_crypto_boringssl SHARED ${ngtcp2_crypto_boringssl_SOURCES})
++  set_target_properties(ngtcp2_crypto_boringssl PROPERTIES
++    COMPILE_FLAGS "${WARNCFLAGS}"
++    C_VISIBILITY_PRESET hidden
++    POSITION_INDEPENDENT_CODE ON
++  )
++  target_include_directories(ngtcp2_crypto_boringssl PUBLIC
++    ${ngtcp2_crypto_boringssl_INCLUDE_DIRS})
++  target_link_libraries(ngtcp2_crypto_boringssl PUBLIC ngtcp2 OpenSSL::SSL)
++
++  install(TARGETS ngtcp2_crypto_boringssl
++    EXPORT "${PROJECT_NAME}Targets"
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
++endif()
++
+ if(ENABLE_STATIC_LIB)
+   # Public static library
+   add_library(ngtcp2_crypto_boringssl_static STATIC ${ngtcp2_crypto_boringssl_SOURCES})
+@@ -55,8 +71,11 @@ if(ENABLE_STATIC_LIB)
+     "-DNGTCP2_STATICLIB")
+   target_include_directories(ngtcp2_crypto_boringssl_static PUBLIC
+     ${ngtcp2_crypto_boringssl_INCLUDE_DIRS})
++  target_link_libraries(ngtcp2_crypto_boringssl_static PUBLIC
++    ngtcp2_static OpenSSL::SSL)
+ 
+   install(TARGETS ngtcp2_crypto_boringssl_static
++    EXPORT "${PROJECT_NAME}Targets"
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+diff --git a/lib/config.cmake.in b/lib/config.cmake.in
+index fffcd51..a672c7c 100644
+--- a/lib/config.cmake.in
++++ b/lib/config.cmake.in
+@@ -1,5 +1,5 @@
+ include(CMakeFindDependencyMacro)
+-if("@HAVE_OSSL@")
++if("@HAVE_OSSL@" OR "@HAVE_BORINGSSL@")
+     find_dependency(OpenSSL)
+ endif()
+ 
