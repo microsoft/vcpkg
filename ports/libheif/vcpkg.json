@@ -53,6 +53,7 @@
       "description": "Support for ISO23001-17 (uncompressed) codec",
       "license": "LGPL-3.0-only",
       "dependencies": [
+        "brotli",
         "zlib"
       ]
     },
@@ -72,6 +73,7 @@
     },
     "uvg266": {
       "description": "uvg266 VVC encoder",
+      "supports": "!x86",
       "license": "BSD-3-Clause",
       "dependencies": [
         "uvg266"
