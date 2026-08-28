@@ -1933,8 +1933,8 @@
       "port-version": 12
     },
     "colmap": {
-      "baseline": "3.12.6",
-      "port-version": 1
+      "baseline": "4.1.1",
+      "port-version": 0
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -3202,7 +3202,7 @@
     },
     "forge": {
       "baseline": "1.0.8",
-      "port-version": 3
+      "port-version": 4
     },
     "foxi": {
       "baseline": "2021-12-01",
@@ -3219,10 +3219,6 @@
     "freeglut": {
       "baseline": "3.8.0",
       "port-version": 0
-    },
-    "freeimage": {
-      "baseline": "3.18.0",
-      "port-version": 27
     },
     "freerdp": {
       "baseline": "3.30.0",
@@ -3694,15 +3690,11 @@
     },
     "gz-common": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-fuel-tools": {
       "baseline": "10.1.0",
       "port-version": 0
-    },
-    "gz-gui": {
-      "baseline": "9.0.2",
-      "port-version": 1
     },
     "gz-math": {
       "baseline": "8.3.0",
@@ -3714,23 +3706,11 @@
     },
     "gz-physics": {
       "baseline": "8.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gz-plugin": {
       "baseline": "3.1.0",
       "port-version": 0
-    },
-    "gz-rendering": {
-      "baseline": "9.5.0",
-      "port-version": 1
-    },
-    "gz-sensors": {
-      "baseline": "9.2.0",
-      "port-version": 1
-    },
-    "gz-sim": {
-      "baseline": "9.5.0",
-      "port-version": 2
     },
     "gz-tools": {
       "baseline": "2.0.3",
@@ -7350,11 +7330,11 @@
     },
     "ogre": {
       "baseline": "14.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ogre-next": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ois": {
       "baseline": "1.6.0",
@@ -7422,7 +7402,7 @@
     },
     "opencascade": {
       "baseline": "8.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "opencc": {
       "baseline": "1.4.1",

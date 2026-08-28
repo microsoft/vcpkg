@@ -7,6 +7,12 @@ ignition_modular_library(
    REF "${PORT}${VERSION_MAJOR}_${VERSION}"
    VERSION "${VERSION}"
    SHA512 a3c8d28e552ae1f4d0fa1639638c862a09324dda484f95c9c6edf5a77eeb37528e84d53e22e59a6e27ab5229ea1fd94cf45ccfb6b53ac759aad12c40e4fe6bd9
+   OPTIONS
+      -DSKIP_heightmap=ON
+      -DSKIP_mesh=ON
+      -DSKIP_dartsim=ON
+      -DSKIP_tpe=ON
+      -DSKIP_bullet=ON
    PATCHES
       dependencies.patch
 )

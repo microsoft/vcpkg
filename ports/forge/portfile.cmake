@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DFG_BUILD_DOCS=OFF
         -DFG_BUILD_EXAMPLES=OFF
+        -DFG_WITH_FREEIMAGE=OFF
         -DFG_INSTALL_BIN_DIR=bin
         -DFG_INSTALL_CMAKE_DIR=share/forge
 )
