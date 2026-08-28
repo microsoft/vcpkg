@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
-    REF ${VERSION}
-    SHA512 3638269782215c7d24dc76a8e4178f5792dfeb97ea02f8b1bb2d33a199a4595478c2642f82c083fbdff4cd768e4da8c0fef0806865081239047fe5446437f4f2
-    HEAD_REF master
+    REF "${VERSION}"
+    SHA512 35d86d23306be0d9713fe6feb4632d83945a3e81557d12c6bdc23164818981dea30483d9ed7fdd5f8ba91803ceec716244f43527221e407f4b8fae021743e6a3
+    HEAD_REF main
     PATCHES
         fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
