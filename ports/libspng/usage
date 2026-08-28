@@ -6,4 +6,4 @@ libspng provides CMake targets:
 libspng provides pkg-config modules:
 
     # PNG decoding and encoding library
-    @PC_NAME@
+    spng

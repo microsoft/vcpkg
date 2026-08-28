@@ -27,15 +27,27 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/spng PACKAGE_NAME spng)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(PC_NAME "spng")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/spng.h" "#define SPNG_H" "#define SPNG_H\n#define SPNG_STATIC")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/spng_static.pc" "Name: spng_static" "Name: spng")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/spng.pc")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/spng_static.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/spng.pc")
+    if (NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spng_static.pc" "Name: spng_static" "Name: spng")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spng.pc")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spng_static.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spng.pc")
+    endif()
 else()
-    set(PC_NAME "spng_static")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/spng_static.pc")
+    if (NOT VCPKG_BUILD_TYPE)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spng_static.pc")
+    endif()
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+vcpkg_fixup_pkgconfig()
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(
     FILE_LIST
