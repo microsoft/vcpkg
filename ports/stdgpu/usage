@@ -1,0 +1,6 @@
+stdgpu provides CMake targets:
+
+    find_package(stdgpu CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE stdgpu::stdgpu)
+
+This port builds stdgpu with the CUDA backend.

@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 7d274a5..3761020 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -59,7 +59,7 @@ XTRANS_CONNECTION_FLAGS
+ AC_CHECK_FUNCS([getaddrinfo]) ])
+ 
+ # Obtain compiler/linker options for dependencies
+-PKG_CHECK_MODULES(SM, [ice >= 1.1.0 xproto $genid_module])
++PKG_CHECK_MODULES(SM, [ice >= 1.1.0 xproto xtrans])
+ 
+ 
+ AC_CONFIG_FILES([Makefile

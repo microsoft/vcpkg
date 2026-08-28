@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
     REF "v${VERSION}"
-    SHA512 391b657693b592ba72669b996a7076f8b0da847d6961dcb83aa51b56197406189fc76d1ff7e195e2851259f43a6b5ac00f8fbfa04196269cc12c46ee9db13520
+    SHA512 8120184790bcecfdfde1595eca33ec1cedcc1dc2aad68cc143d8955e7c73966ae8bc17b4770e619545ab79713aafbe0694a9f9885b6c89dafddd4b2b227512f7
     HEAD_REF master
     PATCHES
         001_guard_ecm_qml_module_include.patch
