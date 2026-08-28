@@ -12,8 +12,7 @@ file(COPY
     "${SOURCE_PATH}/cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     PATTERN "Find*.cmake" EXCLUDE
-    PATTERN "GetGitRevisionDescription.cmake" EXCLUDE
-    PATTERN "GetGitRevisionDescription.cmake.in" EXCLUDE
+    PATTERN "contrib" EXCLUDE
 )
 
 file(COPY
