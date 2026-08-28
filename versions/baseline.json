@@ -9088,10 +9088,6 @@
       "baseline": "0.7.0",
       "port-version": 0
     },
-    "sail": {
-      "baseline": "1.2.0",
-      "port-version": 0
-    },
     "sajson": {
       "baseline": "2018-09-21",
       "port-version": 3

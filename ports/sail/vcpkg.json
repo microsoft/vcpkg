@@ -243,8 +243,11 @@
           "features": [
             "avcodec",
             "avformat",
+            "bzip2",
+            "lzma",
             "swresample",
-            "swscale"
+            "swscale",
+            "zlib"
           ]
         }
       ]
