@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-name-conflict.diff
         disable-werror.patch
+        fix-project-version.patch # https://github.com/kuba--/zip/commit/dd80aeab4293d1e11e31af20fabfd538d88625ef
 )
 
 vcpkg_cmake_configure(
@@ -27,4 +28,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # legacy polyfill
 file(INSTALL "${CURRENT_PORT_DIR}/kubazipConfig.cmake" "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/src/miniz.h"
+)
