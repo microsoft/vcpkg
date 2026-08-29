@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
         -DSOCI_TESTS=OFF
         -DSOCI_INSTALL=ON
         -DSOCI_FMT_BUILTIN=OFF
+        -DSOCI_SQLITE3_BUILTIN=OFF
         # SOCI components whose backends are not yet available through vcpkg
         -DSOCI_DB2=OFF
         -DSOCI_FIREBIRD=OFF
