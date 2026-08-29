@@ -20,6 +20,7 @@ function(z_vcpkg_setup_pkgconfig_path)
     cmake_path(GET PKGCONFIG PARENT_PATH pkgconfig_path)
     string(FIND "${pkgconfig_path}" "${DOWNLOADS}/tools/" index)
     if(PKGCONFIG MATCHES " " AND index EQUAL "0")
+        # *** Keep this in sync with ports/vcpkg-make/vcpkg_scripts.cmake ***
         # autotools builds may stumble over space in ENV{PKG_CONFIG}.
         # Unfortunately, the unpacked pkgconf 3.0.6 MSI has this property.
         # Mitigate by creating a sufficiently unique name to be found robustly via PATH
