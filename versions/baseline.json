@@ -5025,7 +5025,7 @@
       "port-version": 5
     },
     "libevdev": {
-      "baseline": "1.13.6",
+      "baseline": "1.13.7",
       "port-version": 0
     },
     "libevent": {
