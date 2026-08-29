@@ -35,6 +35,7 @@ vcpkg_cmake_configure(
         ${options}
     MAYBE_UNUSED_VARIABLES
         CMAKE_REQUIRE_FIND_PACKAGE_Boost
+		SOCI_SQLITE3_BUILTIN
 )
 
 vcpkg_cmake_install()
