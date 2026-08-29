@@ -1,23 +1,26 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index c3af986..3ac927f 100644
+index c3af986..498e0d1 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -753,6 +753,14 @@ if(EXTRA_LIB)
- endif(EXTRA_LIB)
- mark_as_advanced(EXTRA_LIB EXTRA_LINK_FLAGS)
+@@ -931,6 +931,17 @@ endif()
+ configure_file("${PROJECT_SOURCE_DIR}/x265_config.h.in"
+                "${PROJECT_BINARY_DIR}/x265_config.h")
  
 +# Build a single library containing the 8-bit, 10-bit and 12-bit encoders,
-+# switching bit depths at runtime (see build/linux/multilib.sh)
++# switching bit depths at runtime (see build/linux/multilib.sh). Toolchain
++# settings that CMake cannot infer (e.g. a packaging toolchain's target
++# triplet) can be passed through MULTILIB_CMAKE_ARGS.
 +option(ENABLE_MULTILIB "Build a single library containing all supported bit depths" OFF)
++set(MULTILIB_CMAKE_ARGS "" CACHE STRING "Extra CMake arguments for the multilib sub-builds")
 +set(MULTILIB_ARCHIVER "" CACHE STRING "Archiver used to merge the multilib static libraries")
 +if(ENABLE_MULTILIB)
 +    include(cmake/multilib.cmake)
 +endif()
 +
- if(X64 OR ARM64 OR PPC64 OR RISCV64 OR LOONGARCH64)
-     # NOTE: We only officially support high-bit-depth compiles of x265
-     # on 64bit architectures. Main10 plus large resolution plus slow
-@@ -1079,6 +1087,24 @@ endif()
+ add_subdirectory(encoder)
+ add_subdirectory(common)
+ 
+@@ -1079,6 +1090,24 @@ endif()
  if(EXTRA_LIB)
      target_link_libraries(x265-static ${EXTRA_LIB})
  endif()
@@ -42,7 +45,7 @@ index c3af986..3ac927f 100644
  if(ENABLE_LIBVMAF)
      target_link_libraries(x265-static ${VMAF})
  endif()
-@@ -1163,6 +1189,11 @@ if(ENABLE_SHARED)
+@@ -1163,6 +1192,11 @@ if(ENABLE_SHARED)
      endif()
      if(EXTRA_LIB)
          target_link_libraries(x265-shared ${EXTRA_LIB})
@@ -56,10 +59,10 @@ index c3af986..3ac927f 100644
      if(SVTHEVC_FOUND)
 diff --git a/source/cmake/multilib.cmake b/source/cmake/multilib.cmake
 new file mode 100644
-index 0000000..8a5e87f
+index 0000000..86a496a
 --- /dev/null
 +++ b/source/cmake/multilib.cmake
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,122 @@
 +# multilib.cmake - Build the 10-bit and 12-bit static libraries as nested
 +# sub-builds and link them into the 8-bit API library so that a single library
 +# can switch bit depths at runtime, following the upstream
@@ -69,6 +72,11 @@ index 0000000..8a5e87f
 +# sub-builds are defined as regular build targets so that they are only built
 +# when the library is built; the resulting archives are then merged into the
 +# 8-bit API library by a POST_BUILD step (see CMakeLists.txt).
++#
++# The nested builds inherit the generator, the toolchain and this project's
++# build options. Toolchain-specific settings that CMake cannot infer (e.g. a
++# target-selection variable such as ANDROID_ABI, or a packaging toolchain's
++# triplet) can be passed through MULTILIB_CMAKE_ARGS.
 +
 +set(_multilib_root "${CMAKE_CURRENT_BINARY_DIR}/multilib")
 +set(_multilib_source "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -82,16 +90,11 @@ index 0000000..8a5e87f
 +    "-DENABLE_PIC=ON"
 +    "-DEXPORT_C_API=OFF"
 +)
-+if(WIN32)
-+    # VLD is a Windows-only optional dependency
-+    list(APPEND _multilib_common_args "-DCMAKE_DISABLE_FIND_PACKAGE_VLD=ON")
-+endif()
-+if(UNIX)
-+    # libnuma is only probed on Linux
-+    list(APPEND _multilib_common_args "-DENABLE_LIBNUMA=OFF")
-+endif()
 +if(DEFINED CMAKE_GENERATOR_PLATFORM)
 +    list(APPEND _multilib_common_args "-DCMAKE_GENERATOR_PLATFORM=${CMAKE_GENERATOR_PLATFORM}")
++endif()
++if(DEFINED CMAKE_GENERATOR_TOOLSET AND NOT CMAKE_GENERATOR_TOOLSET STREQUAL "")
++    list(APPEND _multilib_common_args "-T${CMAKE_GENERATOR_TOOLSET}")
 +endif()
 +if(DEFINED CMAKE_MAKE_PROGRAM)
 +    list(APPEND _multilib_common_args "-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}")
@@ -108,36 +111,32 @@ index 0000000..8a5e87f
 +    # cross-compiling mode
 +    list(APPEND _multilib_common_args "-DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}")
 +endif()
-+if(DEFINED VERSION)
-+    list(APPEND _multilib_common_args "-DVERSION=${VERSION}")
-+endif()
-+if(DEFINED NASM_EXECUTABLE)
-+    list(APPEND _multilib_common_args "-DNASM_EXECUTABLE=${NASM_EXECUTABLE}")
-+endif()
-+if(DEFINED ENABLE_ASSEMBLY)
-+    list(APPEND _multilib_common_args "-DENABLE_ASSEMBLY=${ENABLE_ASSEMBLY}")
-+endif()
-+# vcpkg: propagate the triplet settings so the nested builds use the same
-+# compiler and flags as the parent build
-+foreach(_var IN ITEMS VCPKG_TARGET_TRIPLET VCPKG_CHAINLOAD_TOOLCHAIN_FILE VCPKG_CXX_FLAGS
-+                       VCPKG_CXX_FLAGS_RELEASE VCPKG_CXX_FLAGS_DEBUG VCPKG_C_FLAGS
-+                       VCPKG_C_FLAGS_RELEASE VCPKG_C_FLAGS_DEBUG VCPKG_CRT_LINKAGE
-+                       VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
-+                       VCPKG_TARGET_ARCHITECTURE VCPKG_SET_CHARSET_FLAG VCPKG_PLATFORM_TOOLSET
-+                       VCPKG_INSTALLED_DIR _VCPKG_INSTALLED_DIR VCPKG_MANIFEST_INSTALL)
-+    if(DEFINED ${_var})
-+        list(APPEND _multilib_common_args "-D${_var}=${${_var}}")
++# Inherit this project's build options
++foreach(_option IN ITEMS ENABLE_ASSEMBLY ENABLE_LIBNUMA ENABLE_HDR10_PLUS
++                           ENABLE_SVT_HEVC ENABLE_LIBVMAF ENABLE_ALPHA
++                           ENABLE_MULTIVIEW ENABLE_SCC_EXT)
++    if(DEFINED ${_option})
++        list(APPEND _multilib_common_args "-D${_option}=${${_option}}")
 +    endif()
 +endforeach()
-+# The triplet's configure options (e.g. ANDROID_ABI) are spliced into the
-+# configure command line by vcpkg_cmake_configure, so they are visible here as
-+# plain cache variables and must reach the nested builds too
-+foreach(_var IN ITEMS ANDROID_ABI ANDROID_ARM_NEON ANDROID_ARM_MODE
-+                       OHOS_ARCH CMAKE_PLATFORM_NO_VERSIONED_SONAME)
-+    if(DEFINED ${_var})
-+        list(APPEND _multilib_common_args "-D${_var}=${${_var}}")
-+    endif()
-+endforeach()
++if(DEFINED CMAKE_DISABLE_FIND_PACKAGE_VLD)
++    list(APPEND _multilib_common_args "-DCMAKE_DISABLE_FIND_PACKAGE_VLD=${CMAKE_DISABLE_FIND_PACKAGE_VLD}")
++endif()
++# Packager hook: extra CMake arguments for the nested builds (e.g. the
++# toolchain's target selection such as ANDROID_ABI)
++if(DEFINED MULTILIB_CMAKE_ARGS AND NOT MULTILIB_CMAKE_ARGS STREQUAL "")
++    separate_arguments(_multilib_extra_args NATIVE_COMMAND "${MULTILIB_CMAKE_ARGS}")
++    list(APPEND _multilib_common_args ${_multilib_extra_args})
++endif()
++# Forward the parallelism of the parent build when it is known
++set(_multilib_parallel_args "")
++if(DEFINED ENV{CMAKE_BUILD_PARALLEL_LEVEL} AND NOT "$ENV{CMAKE_BUILD_PARALLEL_LEVEL}" STREQUAL "")
++    set(_multilib_parallel_args "-j$ENV{CMAKE_BUILD_PARALLEL_LEVEL}")
++endif()
++
++# Track the x265 sources so that the nested builds re-run when they change;
++# without this the produced archive would be considered up to date forever
++file(GLOB_RECURSE _multilib_depends CONFIGURE_DEPENDS "${_multilib_source}/*")
 +
 +# The nested builds produce the static archive of the x265-static target
 +# (libx265.a on non-MSVC, x265-static.lib on MSVC)
@@ -167,6 +166,8 @@ index 0000000..8a5e87f
 +                "-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_MINSIZEREL=${dir}"
 +                "-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO=${dir}"
 +        COMMAND "${CMAKE_COMMAND}" --build "${dir}" --config "$<CONFIG>"
++                ${_multilib_parallel_args}
++        DEPENDS ${_multilib_depends}
 +        COMMENT "Building the ${name} x265 sub-library"
 +        VERBATIM)
 +    add_custom_target(${name} DEPENDS "${archive}")
