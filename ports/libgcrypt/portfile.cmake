@@ -4,7 +4,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/libgcrypt/libgcrypt-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${VERSION}.tar.bz2"
     FILENAME "libgcrypt-${VERSION}.tar.bz2"
-    SHA512 dc1a4a6c00a0d84d90c8d71f4bd121b968c80df74137d6e8867f1f4cc014a539efb5238c1a1429d7cb95e493a40718fc19252edc592ffe0f43057b372896591c
+    SHA512 84c150730af55669e35d3d9109250ae28175da1b506de84117701464ac5c7e542163977a1eb2e5df4cdaa8c723ea759aa8c004cccc98251902482aff7f847cad
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
