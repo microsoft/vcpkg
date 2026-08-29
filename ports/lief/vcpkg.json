@@ -1,6 +1,7 @@
 {
   "name": "lief",
   "version-semver": "0.17.6",
+  "port-version": 1,
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
   "license": "Apache-2.0",
