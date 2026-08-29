@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwidgetsaddons
     REF "v${VERSION}"
-    SHA512 30dfa80c7521a1771e658e249d0044cc3ce81edda1b3b40197d0d946b2f142d2e5bfc0011423646a7dcc5f6da62b8e5e5f7650c285de3792e94cce3af06d5b15
+    SHA512 f1645698c93513366d41e49bf95e763c877e715ea3deccee1af9cbc9180102ffacf3bd9fdfef85df2ad83a51a0c16acb0cb9ad246ccc818aab0f335fd5a1e887
     HEAD_REF master
 )
 
