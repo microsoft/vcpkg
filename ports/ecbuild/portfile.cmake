@@ -39,4 +39,5 @@ file(INSTALL
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
     "${SOURCE_PATH}/NOTICE"
+    "${SOURCE_PATH}/cmake/contrib/GetGitRevisionDescription.cmake"
 )
