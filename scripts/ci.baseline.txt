@@ -1037,7 +1037,6 @@ salome-medcoupling:x64-linux=fail
 saucer:arm64-osx=fail # std::move_only_function is not supported
 saucer:x64-linux=fail # requires gcc14 or later
 sentry-native:arm64-linux=fail
-septag-sx:x64-android=fail
 sfgui:arm-neon-android=fail
 sfgui:arm64-android=fail
 sfgui:x64-android=fail

@@ -9264,10 +9264,6 @@
       "baseline": "2026-02-23",
       "port-version": 0
     },
-    "septag-sx": {
-      "baseline": "2019-05-07",
-      "port-version": 5
-    },
     "seqan": {
       "baseline": "2.5.3",
       "port-version": 0
