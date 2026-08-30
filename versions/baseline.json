@@ -2605,7 +2605,7 @@
       "port-version": 1
     },
     "docraft": {
-      "baseline": "v1.0.0-RC6",
+      "baseline": "v1.0.0-RC7",
       "port-version": 0
     },
     "doctest": {
