@@ -20,6 +20,16 @@ if(VCPKG_TARGET_IS_IOS)
   set(MATSDK_BUILD_IOS ON)
 endif()
 
+# Prefer platform dependencies on Apple. Other platforms use the SDK's
+# feature-stripped SQLite and vendored zlib to reduce the installed dependency
+# set and avoid shipping SQLite features that the telemetry cache does not use.
+set(MATSDK_SQLITE_PROVIDER MINIMAL)
+set(MATSDK_ZLIB_PROVIDER VENDORED)
+if(VCPKG_TARGET_IS_OSX)
+  set(MATSDK_SQLITE_PROVIDER SYSTEM)
+  set(MATSDK_ZLIB_PROVIDER SYSTEM)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -28,10 +38,18 @@ vcpkg_cmake_configure(
         -DMATSDK_BUILD_TEST_TOOL=OFF
         -DMATSDK_BUILD_UNIT_TESTS=OFF
         -DMATSDK_BUILD_FUNC_TESTS=OFF
+        -DMATSDK_BUILD_PRIVACYGUARD=OFF
+        -DMATSDK_BUILD_CDS=OFF
+        -DMATSDK_BUILD_LIVEEVENTINSPECTOR=OFF
+        -DMATSDK_BUILD_SIGNALS=OFF
+        -DMATSDK_BUILD_SANITIZER=OFF
+        -DMATSDK_BUILD_AZMON=OFF
         -DMATSDK_BUILD_JNI_WRAPPER=OFF
         -DMATSDK_BUILD_OBJC_WRAPPER=OFF
         -DMATSDK_BUILD_SWIFT_WRAPPER=OFF
         -DMATSDK_BUILD_PACKAGE=OFF
+        -DMATSDK_SQLITE_PROVIDER=${MATSDK_SQLITE_PROVIDER}
+        -DMATSDK_ZLIB_PROVIDER=${MATSDK_ZLIB_PROVIDER}
         -DBUILD_VERSION=${VERSION}
         -DMATSDK_BUILD_APPLE_HTTP=${MATSDK_BUILD_APPLE_HTTP}
         -DBUILD_IOS=${MATSDK_BUILD_IOS}

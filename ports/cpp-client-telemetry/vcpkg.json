@@ -10,14 +10,22 @@
       "name": "curl",
       "default-features": false,
       "features": [
-        "openssl"
+        "mbedtls"
       ],
-      "platform": "linux | android"
+      "platform": "linux"
+    },
+    {
+      "name": "mbedtls",
+      "features": [
+        "pthreads"
+      ],
+      "platform": "linux"
     },
     "nlohmann-json",
     {
       "name": "sqlite3",
-      "default-features": false
+      "default-features": false,
+      "platform": "osx"
     },
     {
       "name": "vcpkg-cmake",
@@ -27,6 +35,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
+    {
+      "name": "zlib",
+      "platform": "osx"
+    }
   ]
 }
