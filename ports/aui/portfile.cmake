@@ -12,9 +12,11 @@ vcpkg_from_github(
         fix-glm.patch
         fix-macos.patch
         fix-arm64.patch
-)
+        fix-public-headers.patch
+    )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/aui.audio/3rdparty" "${SOURCE_PATH}/aui.core/3rdparty" "${SOURCE_PATH}/aui.image/3rdparty" "${SOURCE_PATH}/aui.sqlite/3rdparty")
+file(REMOVE "${SOURCE_PATH}/platform/android/project/gradle/wrapper/gradle-wrapper.jar")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/aui-config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
@@ -53,6 +55,12 @@ vcpkg_host_path_list(PREPEND ENV{PATH} "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT
 
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/AUI/api.h"
+        "#pragma once"
+        "#pragma once\n\n#ifndef AUI_STATIC\n#define AUI_STATIC\n#endif"
+    )
+endif()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/aui.toolbox${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES aui.toolbox AUTO_CLEAN)
@@ -85,5 +93,11 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
     file(RENAME "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/share/aui/cmake")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/platform")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/aui")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/platform" "${CURRENT_PACKAGES_DIR}/share/aui/platform")
+endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/platform")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
