@@ -144,6 +144,7 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
             COMMAND "${PCCRITIC}" "${arg_file}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
             RESULT_VARIABLE error_var
+            OUTPUT_VARIABLE output
             ERROR_VARIABLE  output
             OUTPUT_STRIP_TRAILING_WHITESPACE
             ERROR_STRIP_TRAILING_WHITESPACE
@@ -152,6 +153,11 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
             message(FATAL_ERROR "${PCCRITIC} ${arg_file} failed with error code: ${error_var}
         output: ${output}"
             )
+        endif()
+        string(REGEX MATCHALL "\\[(critical|major) *\][^\n]+" major_warnings "${output}")
+        if(NOT "${major_warnings}" STREQUAL "")
+            list(JOIN major_warnings "   \n" major_warnings)
+            message(STATUS "pccritic warnings for ${arg_file}:\n   ${major_warnings}")
         endif()
     endif()
 
@@ -184,6 +190,13 @@ function(vcpkg_fixup_pkgconfig)
         endforeach()
     endif()
 
+    if(NOT arg_SKIP_CHECK)
+        vcpkg_find_acquire_program(PKGCONFIG)
+        debug_message("Using pkg-config from: ${PKGCONFIG}")
+        cmake_path(GET PKGCONFIG PARENT_PATH pkgconfig_dir)
+        find_program(PCCRITIC NAMES pccritic PATHS "${pkgconfig_dir}" NO_DEFAULT_PATH)
+    endif()
+
     foreach(config IN ITEMS RELEASE DEBUG)
         debug_message("${config} Files: ${arg_${config}_FILES}")
         if("${VCPKG_BUILD_TYPE}" STREQUAL "release" AND "${config}" STREQUAL "DEBUG")
@@ -206,10 +219,6 @@ function(vcpkg_fixup_pkgconfig)
         endforeach()
 
         if(NOT arg_SKIP_CHECK) # The check can only run after all files have been corrected!
-            vcpkg_find_acquire_program(PKGCONFIG)
-            debug_message("Using pkg-config from: ${PKGCONFIG}")
-            cmake_path(GET PKGCONFIG PARENT_PATH pkgconfig_dir)
-            find_program(PCCRITIC NAMES pccritic PATHS "${pkgconfig_dir}" NO_DEFAULT_PATH)
             foreach(file IN LISTS "arg_${config}_FILES")
                 z_vcpkg_fixup_pkgconfig_check_files("${file}" "${config}")
             endforeach()
