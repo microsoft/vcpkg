@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libevdev/libevdev
     REF "libevdev-${VERSION}"
-    SHA512 4e3d81af35151b965410dd382482c0971b138c2432dd6c86fc843c4c5f697c36d0c30914f11575ca85d5e5f8c79cc27f2a2cdabe3ba04b8e28aa80ecf17bdfef
+    SHA512 2c43c0b2601b84b46fa585ab3fb903e8bb3d4838c3ed2245b6a42b7ecb32f6e2c25211327414d8019994ee29724a1edb06efc7a95480ea0f5cd7589efc515343
     HEAD_REF master
 )
 
@@ -17,5 +17,9 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
