@@ -1,6 +1,7 @@
 {
   "name": "soci",
   "version": "4.1.4",
+  "port-version": 1,
   "description": "SOCI - The C++ Database Access Library",
   "homepage": "https://soci.sourceforge.net/",
   "license": "BSL-1.0",
