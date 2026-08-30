@@ -20,13 +20,15 @@ if(VCPKG_TARGET_IS_IOS)
   set(MATSDK_BUILD_IOS ON)
 endif()
 
-# Prefer platform dependencies on Apple. Other platforms use the SDK's
-# feature-stripped SQLite and vendored zlib to reduce the installed dependency
-# set and avoid shipping SQLite features that the telemetry cache does not use.
+# Prefer external dependencies when they are already required by the platform
+# transport. Other platforms use the SDK's feature-stripped SQLite and vendored
+# zlib to reduce the installed dependency set.
 set(MATSDK_SQLITE_PROVIDER MINIMAL)
 set(MATSDK_ZLIB_PROVIDER VENDORED)
 if(VCPKG_TARGET_IS_OSX)
   set(MATSDK_SQLITE_PROVIDER SYSTEM)
+endif()
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
   set(MATSDK_ZLIB_PROVIDER SYSTEM)
 endif()
 

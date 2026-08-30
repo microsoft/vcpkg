@@ -37,7 +37,7 @@
     },
     {
       "name": "zlib",
-      "platform": "osx"
+      "platform": "linux | osx"
     }
   ]
 }
