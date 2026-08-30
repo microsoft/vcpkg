@@ -49,7 +49,15 @@ set(PKGCONFIG "/a/b c/pkgconf")
 z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
 cmake_path(CONVERT "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig;${CURRENT_PACKAGES_DIR}/share/pkgconfig;${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig" TO_NATIVE_PATH_LIST expected)
 unit_test_check_variable_equal([[]] ENV{PKG_CONFIG_PATH} "${expected}")
-unit_test_check_variable_equal([[]] ENV{PKG_CONFIG} "pkgconf")
+unit_test_check_variable_equal([[]] ENV{PKG_CONFIG} "/a/b c/pkgconf")
+
+set(DOWNLOADS "${CURRENT_BUILDTREES_DIR}/D")
+file(REMOVE_RECURSE "${DOWNLOADS}/tools/${PORT}/b c")
+file(MAKE_DIRECTORY "${DOWNLOADS}/tools/${PORT}/b c")
+set(PKGCONFIG "${DOWNLOADS}/tools/${PORT}/b c/pkgconf.x")
+file(TOUCH "${PKGCONFIG}")
+z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
+unit_test_check_variable_equal([[]] ENV{PKG_CONFIG} "vcpkg-pkgconf.x")
 
 # z_vcpkg_setup_pkgconfig_path changes PATH but it is not restored.
 # It is hard to see which side effects a restore would have, so

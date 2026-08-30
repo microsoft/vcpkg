@@ -26,7 +26,8 @@ function(z_vcpkg_setup_pkgconfig_path)
         # Mitigate by creating a sufficiently unique name to be found robustly via PATH
         # despite the presence of the incompatible msys /usr/bin/pkgconf.exe.
         # However, we can leave PKGCONFIG unchanged.
-        set(vcpkg_pkgconfig_filename "vcpkg-pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        cmake_path(GET PKGCONFIG FILENAME pkgconfig_filename)
+        set(vcpkg_pkgconfig_filename "vcpkg-${pkgconfig_filename}")
         set(vcpkg_pkgconfig_filepath "${pkgconfig_path}/${vcpkg_pkgconfig_filename}")
         if(NOT EXISTS "${vcpkg_pkgconfig_filepath}")
             file(COPY_FILE "${PKGCONFIG}" "${vcpkg_pkgconfig_filepath}")
