@@ -1,0 +1,30 @@
+usd provides CMake targets:
+
+  find_package(pxr CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE usd sdf usdGeom)
+
+  # pxr exports many library targets (usd, sdf, tf, gf, usdGeom, usdShade,
+  # usdLux, ...) without a namespace prefix. Link only the libraries your
+  # application needs.
+
+USD discovers plugins at runtime via plugInfo.json registries. When deploying
+an application, copy the USD libraries and plugin directories from the vcpkg
+installed tree:
+
+  Windows:
+    bin/*.dll         (core USD libraries)
+    lib/*.lib         (import libraries)
+    bin/usd/          (top-level plugInfo.json and core library resource registries)
+    plugin/usd/       (MODULE plugin DLLs)
+
+  Unix:
+    lib/*.so*         (USD libraries you linked against, and their dependencies)
+    lib/usd/          (top-level plugInfo.json and core library resource registries)
+    plugin/usd/       (MODULE plugin shared objects)
+
+On Windows, the top-level plugInfo.json must be deployed under bin/usd/ next to
+the USD libraries so Plug can discover core library plugins.
+
+Optional port features install additional MODULE plugins under plugin/usd/.
+For example, imaging adds Hydra and imaging plugins, and openimageio adds the
+hioOiio image I/O plugin.
