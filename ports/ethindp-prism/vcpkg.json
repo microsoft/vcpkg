@@ -21,6 +21,7 @@
       "name": "pkgconf",
       "host": true
     },
+    "simdutf",
     {
       "name": "vcpkg-cmake",
       "host": true
