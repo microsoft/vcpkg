@@ -3,12 +3,14 @@ vcpkg_download_distfile(ARCHIVE
          "https://ftp.gnu.org/gnu/gdbm/gdbm-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gdbm/gdbm-${VERSION}.tar.gz"
     FILENAME "gdbm-${VERSION}.tar.gz"
-    SHA512 401ff8c707079f21da1ac1d6f4714a87f224b6f41943078487dc891be49f51fd1ac7a32fd599aae0fad185f2c6ba7432616d328fd6aaab068eb54db9562ff7fa
+    SHA512 44aafe254f0950a8f5215d8f1337674f07b19f2a375f6eb19a7e39690028c80c3774b705c2b76b470ae74042b21f2ca77d02f6f57aa2ee50296db801220a3352
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-readline-linkage.patch
 )
 
 vcpkg_list(SET options)
