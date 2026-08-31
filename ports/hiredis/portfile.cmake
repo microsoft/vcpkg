@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-timeval.patch
         support-static.patch
         fix-cmake-conf-install-dir.patch
+        fix-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -29,6 +30,27 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis.pc"
+    " -lhiredis"
+    " -lhiredisd"
+)
+if("ssl" IN_LIST FEATURES)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis_ssl.pc"
+        " -lhiredis_ssl"
+        " -lhiredis_ssld"
+    )
+endif()
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    foreach(config IN ITEMS "" "debug/")
+        file(APPEND
+            "${CURRENT_PACKAGES_DIR}/${config}lib/pkgconfig/hiredis.pc"
+            "Libs.private: -lws2_32 -lcrypt32\n"
+        )
+    endforeach()
+endif()
+
 vcpkg_cmake_config_fixup()
 if("ssl" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME hiredis_ssl CONFIG_PATH share/hiredis_ssl)
@@ -36,4 +58,8 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/ffc.h"
+)
