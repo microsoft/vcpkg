@@ -1,3 +1,10 @@
+# Fix Brotli linking
+vcpkg_download_distfile(PR1899
+    URLS "https://github.com/strukturag/libheif/commit/0dda3b7d9dc173803212d2eed94de551cf6f531e.patch?full_index=1"
+    FILENAME "pr-1899.patch"
+    SHA512 645473365795aebd4c22222d650fb3c93a961cff24368f50305bb83093e8f9741fb19df61450052e5a17be63a2aa7269e0d94f7f44010a91641a5dc219de0eaf
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
@@ -9,6 +16,7 @@ vcpkg_from_github(
         find-modules.diff
         gdk-pixbuf.patch
         symbol-exports.diff
+		"${PR1899}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
