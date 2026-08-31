@@ -16,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools              AVRO_BUILD_EXECUTABLES
     INVERTED_FEATURES
         snappy             CMAKE_DISABLE_FIND_PACKAGE_Snappy
+        zstd               CMAKE_DISABLE_FIND_PACKAGE_zstd
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -39,5 +40,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/lang/c++/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/lang/c++/LICENSE"
+        "${SOURCE_PATH}/lang/c++/NOTICE"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
