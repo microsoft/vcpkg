@@ -416,6 +416,14 @@
       "baseline": "4.1.4",
       "port-version": 0
     },
+    "aui": {
+      "baseline": "7.1.2",
+      "port-version": 0
+    },
+    "aui-toolbox": {
+      "baseline": "7.1.2",
+      "port-version": 0
+    },
     "aurora": {
       "baseline": "2017-06-21-c75699d2a8caa726260c29b6d7a0fd35f8f28933",
       "port-version": 2
@@ -9594,7 +9602,7 @@
     },
     "soxr": {
       "baseline": "0.1.3",
-      "port-version": 8
+      "port-version": 9
     },
     "spaceland": {
       "baseline": "7.8.2",
