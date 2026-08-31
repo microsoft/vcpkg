@@ -465,7 +465,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "0.14.5",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -3357,8 +3357,8 @@
       "port-version": 0
     },
     "gdk-pixbuf": {
-      "baseline": "2.44.6",
-      "port-version": 1
+      "baseline": "2.44.8",
+      "port-version": 0
     },
     "gegl": {
       "baseline": "0.4.70",
@@ -3466,7 +3466,7 @@
     },
     "glaze": {
       "baseline": "8.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "glbinding": {
       "baseline": "3.1.0",
@@ -3713,8 +3713,8 @@
       "port-version": 0
     },
     "gz-physics": {
-      "baseline": "8.3.0",
-      "port-version": 1
+      "baseline": "8.4.0",
+      "port-version": 0
     },
     "gz-plugin": {
       "baseline": "3.1.0",
@@ -3729,15 +3729,15 @@
       "port-version": 1
     },
     "gz-sim": {
-      "baseline": "9.5.0",
-      "port-version": 2
+      "baseline": "9.6.0",
+      "port-version": 0
     },
     "gz-tools": {
-      "baseline": "2.0.3",
-      "port-version": 1
+      "baseline": "2.0.4",
+      "port-version": 0
     },
     "gz-transport": {
-      "baseline": "14.2.0",
+      "baseline": "14.3.0",
       "port-version": 0
     },
     "gz-utils": {
@@ -4637,7 +4637,7 @@
       "port-version": 0
     },
     "kubazip": {
-      "baseline": "0.3.14",
+      "baseline": "0.3.15",
       "port-version": 0
     },
     "kubernetes": {
@@ -4778,7 +4778,7 @@
     },
     "libaio": {
       "baseline": "0.3.113",
-      "port-version": 0
+      "port-version": 1
     },
     "libalkimia": {
       "baseline": "8.1.72",
@@ -4789,7 +4789,7 @@
       "port-version": 6
     },
     "libarchive": {
-      "baseline": "3.8.7",
+      "baseline": "3.8.8",
       "port-version": 0
     },
     "libaribcaption": {
@@ -4877,8 +4877,8 @@
       "port-version": 0
     },
     "libconfuse": {
-      "baseline": "3.3",
-      "port-version": 1
+      "baseline": "3.4",
+      "port-version": 0
     },
     "libcopp": {
       "baseline": "2.3.2",
@@ -9389,7 +9389,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.6.7",
+      "baseline": "4.6.8",
       "port-version": 0
     },
     "simdutf": {
@@ -9546,7 +9546,7 @@
     },
     "soci": {
       "baseline": "4.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "sockpp": {
       "baseline": "1.0.0",
@@ -10157,7 +10157,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "1.1.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "threadweaver": {
@@ -10558,7 +10558,7 @@
     },
     "usd": {
       "baseline": "26.8",
-      "port-version": 0
+      "port-version": 1
     },
     "usearch": {
       "baseline": "2.25.3",

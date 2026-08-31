@@ -69,6 +69,10 @@ vcpkg_cmake_configure(
 
         -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
         -DPXR_USE_DEBUG_PYTHON:BOOL=OFF
+
+        # USD never includes GNUInstallDirs, but its install rules use these.
+        -DCMAKE_INSTALL_BINDIR:STRING=bin
+        -DCMAKE_INSTALL_LIBDIR:STRING=lib
     MAYBE_UNUSED_VARIABLES
         PXR_ENABLE_PTEX_SUPPORT
         PXR_USE_PYTHON_3
@@ -122,13 +126,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
       file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
     endif()
     file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
-
-    # fix plugInfo.json for runtime
-    file(GLOB_RECURSE PLUGINFO_FILES ${CURRENT_PACKAGES_DIR}/lib/usd/*/resources/plugInfo.json)
-    file(GLOB_RECURSE PLUGINFO_FILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/usd/*/resources/plugInfo.json)
-    foreach(PLUGINFO ${PLUGINFO_FILES} ${PLUGINFO_FILES_DEBUG})
-        file_replace_regex(${PLUGINFO} [=["LibraryPath": "../../([a-zA-Z0-9_]+).dll"]=] [=["LibraryPath": "../../../bin/\1.dll"]=])
-    endforeach()
 endif()
 
 # Handle copyright
