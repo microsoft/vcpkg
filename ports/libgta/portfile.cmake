@@ -4,6 +4,8 @@ vcpkg_from_github(
 	REF "libgta-${VERSION}"
 	SHA512 e64a1e2a64538ae16a5ac1f1bdf43932e14d9db95a88e358d9ce6182b03ec423b5205888e0a0ac15f9ab07957c67245151ebe8e2e13800047fc48a44c2f5fde7
 	HEAD_REF master
+    # This correction is included in the official 1.2.1 release archive:
+    # https://marlam.de/gta/releases/libgta-1.2.1.tar.xz
     PATCHES
         version.patch
 )
@@ -26,6 +28,13 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/GTA-${VERSION}" PACKAGE_NAME "GT
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/gta/gta.h"
+        "#define GTA_H"
+        "#define GTA_H\n#define GTA_STATIC"
+    )
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 

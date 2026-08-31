@@ -3,6 +3,7 @@
   "version": "1.2.1",
   "description": "Libgta is a portable library that implements the Generic Tagged Array (GTA) file format.",
   "homepage": "https://download.savannah.nongnu.org/releases/gta",
+  "license": "LGPL-2.1-or-later",
   "dependencies": [
     "bzip2",
     "liblzma",
