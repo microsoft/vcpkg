@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emoon/minifb
     REF "v${VERSION}"
-    SHA512 fc4e3cfbe8dc3b105c06c771f394013ee3aede2adde8b81131b9b449021aab0dcde843faac0f99b5f5cb7496cbcbf3d84b2c7b8783e73a24b908ce4c68af0413
+    SHA512 1981dfaab36dd1082b9014810e8ba5a9bdfaeb8055544b902724b05e282aee4b9ad6305a2d48974f234b355451bb7bddbc7f65e4a89c05f0e113b9742231464d
     HEAD_REF master
 )
 
