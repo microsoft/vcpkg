@@ -12,6 +12,7 @@ vcpkg_from_github(
         0005-avoid-stdext-checked-array-iterator.diff # ~= https://github.com/esa/pagmo2/commit/d4daedc9f865bf9e926946c21e62c4a4eebf353e
         0006-config-find-libipopt.patch
         0007-ipopt-transitive-deps.patch # coin-or-ipopt provides no cmake config
+        0008-ipopt-header-search.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
