@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 dfe28df7ff859e73006214f2dcf96bd99cdddfcca3b185f887df82e3493f8beaaf19eda2bf16f7cf7b139bc0f776be426d802c960a7067ed3a315f535909ef2f
     HEAD_REF master
-    PATCHES remove-libcrypto-messages.patch
 )
 
 if (NOT (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX))
@@ -35,4 +34,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)
