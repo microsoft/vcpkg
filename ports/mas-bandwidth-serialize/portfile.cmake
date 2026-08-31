@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mas-bandwidth/serialize
     REF "v${VERSION}"
-    SHA512 16342bd5114c3a4bfde6479d897b49aeaccba2a3f18f3738c64e52a58957eeae29e100362e36e1d852666d72ee437513e6ea5bf7196e9d9db1e06f0fc94684bf
+    SHA512 10ee9e79eb7bd0bbb9c7f43e5ba1a0e392143f05ee716518014d8df2bd08d59babf98f6ddb381efcee8d300f097f7ac53ddddc0975502e4efb143fc5362482b1
     HEAD_REF main
 )
 
