@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/avro/avro-${VERSION}/avro-src-${VERSION}.tar.gz"
     FILENAME "avro-src-${VERSION}.tar.gz"
-    SHA512 0d86bfece0f12f8bc424e27e71e3e6b828c4280fa1a6d7dc7e0d58bff2351f2c1fd3ccb98c1291dfc6c67d9cb5a0bdb7bb9f36ba5bd6b26fa9545f358db42663
+    SHA512 a31ad410d75c0e7f58fc9d9b7e7989dae12f328524806f6d64fdae22ddb9112fe2adc5fb74ee83df2135b87bd6618e8765a823220b2a0a162d1684192b9926da
 )
 
 vcpkg_extract_source_archive(
@@ -16,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools              AVRO_BUILD_EXECUTABLES
     INVERTED_FEATURES
         snappy             CMAKE_DISABLE_FIND_PACKAGE_Snappy
+        zstd               CMAKE_DISABLE_FIND_PACKAGE_zstd
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -39,5 +40,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/lang/c++/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/lang/c++/LICENSE"
+        "${SOURCE_PATH}/lang/c++/NOTICE"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
