@@ -30,4 +30,8 @@ file(REMOVE_RECURSE
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/utilite/resource_generator/main.cpp"
+)
