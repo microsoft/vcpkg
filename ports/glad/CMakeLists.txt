@@ -1,13 +1,10 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.12)
 project(glad C)
 
 set(GLAD_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "" FORCE)
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/GladConfig.cmake")
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-set(GLAD_ARGS STATIC REPRODUCIBLE)
-if(GLAD_LOADER)
-    list(APPEND GLAD_ARGS LOADER)
-endif()
+set(GLAD_ARGS STATIC REPRODUCIBLE LOADER)
 list(APPEND GLAD_ARGS API ${GLAD_API})
 if(NOT GLAD_ALL_EXTENSIONS)
     list(APPEND GLAD_ARGS EXTENSIONS NONE)
@@ -17,6 +14,8 @@ set_property(TARGET glad PROPERTY INTERFACE_INCLUDE_DIRECTORIES
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/gladsources/glad/include>;$<INSTALL_INTERFACE:include>"
 )
 
+# Glad 2 only provides a CMake helper for generating libraries.
+# This wrapper adds the install rules and package config used by vcpkg.
 # glad 1 provided this "official" CMake config name and target.
 include(CMakePackageConfigHelpers)
 install(TARGETS glad EXPORT glad-targets ARCHIVE DESTINATION lib INCLUDES DESTINATION include)

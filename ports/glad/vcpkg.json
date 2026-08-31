@@ -4,7 +4,7 @@
   "description": "Multi-Language Vulkan/GL/GLES/EGL/GLX/WGL Loader-Generator based on the official specs.",
   "homepage": "https://github.com/Dav1dde/glad",
   "documentation": "https://github.com/Dav1dde/glad/wiki",
-  "license": "MIT",
+  "license": "MIT AND (WTFPL OR CC0-1.0) AND Apache-2.0",
   "dependencies": [
     "egl-registry",
     "opengl-registry",
@@ -20,10 +20,6 @@
       "name": "vcpkg-get-python-packages",
       "host": true
     }
-  ],
-  "default-features": [
-    "gl-api-latest",
-    "loader"
   ],
   "features": {
     "egl": {
@@ -347,9 +343,6 @@
     "glx": {
       "description": "Use `glx` spec instead of `gl`. Only available with the X Window System.",
       "supports": "!(windows | uwp)"
-    },
-    "loader": {
-      "description": "Generate loader logic."
     },
     "wgl": {
       "description": "Use `wgl` spec instead of `gl`. Only available for Windows and UWP platforms.",

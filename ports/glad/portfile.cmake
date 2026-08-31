@@ -47,10 +47,6 @@ endif()
 
 string(REPLACE ";" "," GLAD_API "${GLAD_API}")
 
-set(GLAD_LOADER)
-if("loader" IN_LIST FEATURES)
-    set(GLAD_LOADER LOADER)
-endif()
 set(GLAD_ALL_EXTENSIONS OFF)
 if("extensions" IN_LIST FEATURES)
     set(GLAD_ALL_EXTENSIONS ON)
@@ -61,7 +57,7 @@ file(COPY
     "${CURRENT_INSTALLED_DIR}/share/opengl/gl.xml"
     "${CURRENT_INSTALLED_DIR}/share/opengl/glx.xml"
     "${CURRENT_INSTALLED_DIR}/share/opengl/wgl.xml"
-    DESTINATION "${SOURCE_PATH}"
+    DESTINATION "${SOURCE_PATH}/glad/files"
 )
 file(COPY
     "${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h"
@@ -85,7 +81,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DGLAD_API:STRING=${GLAD_API}
-        -DGLAD_LOADER:BOOL=${GLAD_LOADER}
         -DGLAD_ALL_EXTENSIONS:BOOL=${GLAD_ALL_EXTENSIONS}
         "-DPython_EXECUTABLE=${PYTHON3}"
 )
@@ -99,10 +94,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/EGL"
     "${CURRENT_PACKAGES_DIR}/include/KHR"
-)
-file(COPY "${SOURCE_PATH}/glad" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
-file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/glad.h"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/glad"
 )
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
