@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         dependencies.patch
         ffmpeg.diff
+        fix-aom-target.patch
         install-layout.patch
         windows-linkage.patch
 )
@@ -19,6 +20,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        av1         WITH_AOM
         av1         WITH_GFX_AV1
         client      WITH_CLIENT
         ffmpeg      WITH_DSP_FFMPEG
