@@ -5593,7 +5593,7 @@
       "port-version": 0
     },
     "librats": {
-      "baseline": "2.0.12",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "libraw": {
