@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 750f1b0cec2cf1242f4627215bf156d56cce659e15a7e9ba1c407ff9bf56bb9cd028b92337bb98710ceb106ba687db0c4557764171cabc5feb53c74eb363af29
+    SHA512 7e721ad5719478fa78570fe6a57a2f45cd2815234c1c0eea2e710c1c324980c20d0eecbb4856288ee248a6f1cf930815ef203d85ff26602969d341e04cdf7602
     HEAD_REF main
     PATCHES
         001-fix-asio.patch
@@ -14,7 +14,8 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        ssl     glaze_ENABLE_SSL
+        networking      glaze_ENABLE_NETWORKING
+        ssl             glaze_ENABLE_SSL
 )
 
 vcpkg_cmake_configure(
@@ -29,8 +30,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glaze/ext/glaze_asio.hpp" "#if __has_include(<asio.hpp>) && !defined(GLZ_USE_BOOST_ASIO)" "#if 1")
+if("networking" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glaze/ext/glaze_asio.hpp" "#if __has_include(<asio.hpp>) && !defined(GLZ_USE_BOOST_ASIO)" "#if 1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
