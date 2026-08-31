@@ -2765,8 +2765,8 @@
       "port-version": 5
     },
     "ebml": {
-      "baseline": "1.4.5",
-      "port-version": 1
+      "baseline": "1.4.7",
+      "port-version": 0
     },
     "ecal": {
       "baseline": "5.13.4",
