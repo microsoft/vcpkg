@@ -6,6 +6,7 @@
   "license": "MIT",
   "supports": "windows | linux | osx",
   "dependencies": [
+    "doctest",
     {
       "name": "vcpkg-cmake",
       "host": true
