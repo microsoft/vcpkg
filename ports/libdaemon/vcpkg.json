@@ -3,7 +3,7 @@
   "version": "0.14",
   "description": "libdaemon is a lightweight C library that eases the writing of UNIX daemons",
   "homepage": "https://0pointer.de/lennart/projects/libdaemon/",
-  "license": "LGPL-2.0-or-later",
+  "license": "LGPL-2.1-or-later",
   "supports": "linux | osx | openbsd | freebsd",
   "dependencies": [
     {
