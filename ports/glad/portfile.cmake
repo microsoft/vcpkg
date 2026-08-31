@@ -89,6 +89,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/glad)
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/glad.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/glad")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE
