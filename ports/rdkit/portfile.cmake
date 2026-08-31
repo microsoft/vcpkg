@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         skip-catch2-when-tests-off.patch
+        use-external-better-enums.patch
         fix-config-prefix.patch
         use-eigen-config.patch
         respect-static-libs-only.patch
@@ -17,18 +18,11 @@ vcpkg_from_github(
         fix-install-layout.patch
 )
 
-# Upstream CMake FetchContent / file(DOWNLOAD)s extra sources during configure.
-# These are not separate vcpkg ports (RingDecomposerLib is an RDKit-specific
-# fork tag). Vendor the pinned sources so the build stays offline, and install
-# their license notices with the copyright file.
-vcpkg_from_github(
-    OUT_SOURCE_PATH BETTER_ENUMS_SOURCE
-    REPO aantron/better-enums
-    REF c35576bed0295689540b39873126129adfa0b4c8
-    SHA512 023506e55729c4da13b839926862e485297731372c6ed272120690327eb2ac1c09300023c63ea41f4999340762ce77816d6f95bca4a97ea567c6849f0fbd81aa
-    HEAD_REF master
-)
-
+# Upstream downloads these sources during configure. maeparser and coordgenlibs
+# do not yet have vcpkg ports; RDKit consumes their source trees through its own
+# build. RingDecomposerLib uses an RDKit-specific fork tag, and pubchem-align3d
+# has no standalone package configuration. Keep them pinned and install their
+# notices while the build remains offline.
 vcpkg_from_github(
     OUT_SOURCE_PATH MAEPARSER_SOURCE
     REPO schrodinger/maeparser
@@ -105,7 +99,6 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
-        "-DFETCHCONTENT_SOURCE_DIR_BETTER_ENUMS=${BETTER_ENUMS_SOURCE}"
         -DFETCHCONTENT_FULLY_DISCONNECTED=ON
         -DRDK_INSTALL_INTREE=OFF
         -DRDK_INSTALL_DEV_COMPONENT=ON
@@ -149,7 +142,6 @@ vcpkg_cmake_configure(
         CMAKE_DISABLE_FIND_PACKAGE_Inchi # InChI support is off
         CMAKE_DISABLE_FIND_PACKAGE_maeparser # bundled maeparser, not a find_package
         CMAKE_DISABLE_FIND_PACKAGE_coordgen # bundled coordgen, not a find_package
-        FETCHCONTENT_SOURCE_DIR_BETTER_ENUMS # FetchContent name may not match
 )
 
 vcpkg_cmake_install()
@@ -164,10 +156,10 @@ file(REMOVE_RECURSE
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/license.txt"
-    "${BETTER_ENUMS_SOURCE}/LICENSE.md"
     "${MAEPARSER_SOURCE}/LICENSE.txt"
     "${COORDGEN_SOURCE}/LICENSE"
     "${URF_SOURCE}/LICENSE"
     "${PUBCHEM_SOURCE}/LICENSE"
+    "${SOURCE_PATH}/Data/Fonts/roboto_regular_license.txt"
     "${SOURCE_PATH}/Data/Fonts/telex_font_license.txt"
 )

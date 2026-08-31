@@ -1,6 +1,8 @@
+diff --git a/Code/cmake/Modules/FindCairo.cmake b/Code/cmake/Modules/FindCairo.cmake
+index 3943458..fe59a19 100644
 --- a/Code/cmake/Modules/FindCairo.cmake
 +++ b/Code/cmake/Modules/FindCairo.cmake
-@@ -37,63 +37,13 @@
+@@ -37,63 +37,5 @@
  # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
@@ -59,16 +61,10 @@
 -                                  )
 -
 -if(Cairo_FOUND AND NOT TARGET Cairo::Cairo)
-+find_package(PkgConfig REQUIRED)
-+pkg_check_modules(Cairo REQUIRED cairo)
-+if(NOT TARGET Cairo::Cairo)
-   add_library(Cairo::Cairo INTERFACE IMPORTED)
+-  add_library(Cairo::Cairo INTERFACE IMPORTED)
 -  set_target_properties(Cairo::Cairo PROPERTIES
 -    INTERFACE_INCLUDE_DIRECTORIES  "${CAIRO_INCLUDE_DIRS}"
 -    INTERFACE_LINK_LIBRARIES       "${CAIRO_LIBRARIES}")
-+  set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Cairo_INCLUDE_DIRS}")
-+  set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_LINK_LIBRARIES "${Cairo_LINK_LIBRARIES}")
-+  if(Cairo_CFLAGS_OTHER)
-+    set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_COMPILE_OPTIONS "${Cairo_CFLAGS_OTHER}")
-+  endif()
- endif()
+-endif()
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(Cairo REQUIRED cairo)
