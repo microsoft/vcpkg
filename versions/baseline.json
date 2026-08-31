@@ -429,7 +429,7 @@
       "port-version": 2
     },
     "aurora-au": {
-      "baseline": "0.5.1",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "autodiff": {
