@@ -194,7 +194,7 @@
     },
     "appstream": {
       "baseline": "1.0.6",
-      "port-version": 1
+      "port-version": 2
     },
     "appstream-glib": {
       "baseline": "0.8.3",
@@ -5798,7 +5798,7 @@
     },
     "libsystemd": {
       "baseline": "260.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libtar": {
       "baseline": "1.2.20",
