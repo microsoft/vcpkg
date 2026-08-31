@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBFN_TESTS=OFF
+        -DDISABLE_CCACHE_DETECTION=ON
 )
 
 vcpkg_cmake_install()
