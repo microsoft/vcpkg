@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f32f99f6640e4887517da86648cba41403ad4eda59bc786f861172384506475e09d6ab10aff943f196c62940edab7896402d31e4085a550251ba42f803cf266c
     HEAD_REF master
+    PATCHES use-system-fmt.patch
 )
 
 if(VCPKG_TARGET_IS_ANDROID)
