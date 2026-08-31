@@ -6857,7 +6857,7 @@
       "port-version": 0
     },
     "msgpack": {
-      "baseline": "8.0.0",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "msgpack-c": {
