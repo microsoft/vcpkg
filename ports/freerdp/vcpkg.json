@@ -24,7 +24,10 @@
   ],
   "features": {
     "av1": {
-      "description": "Enable AV1 support for GFX channel encoding/decoding"
+      "description": "Enable AV1 support for GFX channel encoding/decoding",
+      "dependencies": [
+        "aom"
+      ]
     },
     "client": {
       "description": "Build client components"
