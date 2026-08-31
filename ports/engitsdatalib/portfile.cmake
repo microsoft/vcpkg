@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v1.0.0
     SHA512 7dc9c240b45bb3a768ea910c1a29c5aa885debd636b2aff49211ee1f4cef6ce2bc4803775e8afe5fc16c4ae8276cbcd3a0a56325da1930a395db57b1fa37dccf
     HEAD_REF master
+    PATCHES
+        use-system-doctest.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" EDL_BUILD_STATIC)
@@ -27,8 +29,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(
-    FILE_LIST
-        "${SOURCE_PATH}/LICENSE"
-        "${SOURCE_PATH}/LICENSES/doctest.txt"
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
