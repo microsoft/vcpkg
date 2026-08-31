@@ -30,25 +30,32 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis.pc"
-    " -lhiredis"
-    " -lhiredisd"
-)
-if("ssl" IN_LIST FEATURES)
+if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis_ssl.pc"
-        " -lhiredis_ssl"
-        " -lhiredis_ssld"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis.pc"
+        " -lhiredis"
+        " -lhiredisd"
     )
+    if("ssl" IN_LIST FEATURES)
+        vcpkg_replace_string(
+            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis_ssl.pc"
+            " -lhiredis_ssl"
+            " -lhiredis_ssld"
+        )
+    endif()
 endif()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    foreach(config IN ITEMS "" "debug/")
+    file(APPEND
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hiredis.pc"
+        "Libs.private: -lws2_32 -lcrypt32\n"
+    )
+
+    if(NOT VCPKG_BUILD_TYPE)
         file(APPEND
-            "${CURRENT_PACKAGES_DIR}/${config}lib/pkgconfig/hiredis.pc"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis.pc"
             "Libs.private: -lws2_32 -lcrypt32\n"
         )
-    endforeach()
+    endif()
 endif()
 
 vcpkg_cmake_config_fixup()
