@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-always-nanosvg.diff
         fix-heif.patch
         fix-include-directory.patch
+        fix-video-zlib-debug-name.patch
 )
 
 # Enable selected codecs
