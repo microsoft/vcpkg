@@ -9021,7 +9021,7 @@
       "port-version": 0
     },
     "rtabmap-res-tool": {
-      "baseline": "0.23.2",
+      "baseline": "0.23.8",
       "port-version": 0
     },
     "rtaudio": {
