@@ -26,6 +26,12 @@
     },
     "tools": {
       "description": "Build extra executables"
+    },
+    "zstd": {
+      "description": "Support zstd for compression",
+      "dependencies": [
+        "zstd"
+      ]
     }
   }
 }

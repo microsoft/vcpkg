@@ -3,7 +3,7 @@
   "version": "1.12.2",
   "description": "Apache Avro is a data serialization system",
   "homepage": "https://github.com/apache/avro",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 AND BSD-3-Clause AND LicenseRef-Public-Domain",
   "supports": "!uwp",
   "dependencies": [
     "jansson",
