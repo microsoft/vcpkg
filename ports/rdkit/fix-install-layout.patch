@@ -11,9 +11,11 @@ index 3e7f86f..487c056 100644
  endif(RDK_INSTALL_INTREE)
  
  if(RDK_BUILD_RPATH_SUPPORT)
-@@ -547,17 +547,6 @@ if(NOT RDK_INSTALL_INTREE)
+@@ -547,17 +547,8 @@ if(NOT RDK_INSTALL_INTREE)
        COMPONENT data
        PATTERN ".svn" EXCLUDE
++      PATTERN "Amadeus.ttf" EXCLUDE
++      PATTERN "amadeus_font_license.txt" EXCLUDE
        )
 -  install(DIRECTORY Docs DESTINATION
 -      ${RDKit_ShareDir}

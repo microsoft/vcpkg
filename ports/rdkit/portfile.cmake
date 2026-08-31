@@ -7,17 +7,20 @@ vcpkg_from_github(
     SHA512 7f45afde23b4df28aaa3dca8c66feac915deb155056027c2b7984737a96f8508eead1f955192cc9f84651254f3fe83bd96ce1e63fd9bb54f814dac7db109bca3
     HEAD_REF master
     PATCHES
-        patches/skip-catch2-when-tests-off.patch
-        patches/fix-config-prefix.patch
-        patches/use-eigen-config.patch
-        patches/respect-static-libs-only.patch
-        patches/windows-boost-zlib.patch
-        patches/find-cairo-pkgconfig.patch
-        patches/fix-install-layout.patch
+        skip-catch2-when-tests-off.patch
+        fix-config-prefix.patch
+        use-eigen-config.patch
+        respect-static-libs-only.patch
+        windows-boost-zlib.patch
+        find-cairo-pkgconfig.patch
+        moldraw2d-cairo-link.patch
+        fix-install-layout.patch
 )
 
 # Upstream CMake FetchContent / file(DOWNLOAD)s extra sources during configure.
-# Vendor them here so the build stays offline after the vcpkg fetch step.
+# These are not separate vcpkg ports (RingDecomposerLib is an RDKit-specific
+# fork tag). Vendor the pinned sources so the build stays offline, and install
+# their license notices with the copyright file.
 vcpkg_from_github(
     OUT_SOURCE_PATH BETTER_ENUMS_SOURCE
     REPO aantron/better-enums
@@ -49,7 +52,7 @@ vcpkg_from_github(
     SHA512 e82b97838a36d9f9557a4b7631de34830572add83d6793a01eec46ff9fe9139481db4262442b3f21c22d822efb5110386ceafb496c2bab2f31ddc26d43525215
     HEAD_REF master
     PATCHES
-        patches/ringdecomposerlib-infinity.patch
+        ringdecomposerlib-infinity.patch
 )
 
 vcpkg_from_github(
@@ -79,20 +82,17 @@ if("cairo" IN_LIST FEATURES)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 endif()
 
-set(RDKIT_BOOST_STATIC OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(RDKIT_STATIC OFF)
-    set(RDKIT_WINDOWS_DLL OFF)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        set(RDKIT_WINDOWS_DLL ON)
-        # MSVC LNK2005: Queries::Query inlines are emitted in GraphMol.dll and
-        # again in later DLLs. Keep this on the RDKit link line only.
-        set(VCPKG_LINKER_FLAGS "/FORCE:MULTIPLE ${VCPKG_LINKER_FLAGS}")
-    endif()
-else()
+# Upstream leaves RDK_INSTALL_DLLS_MSVC OFF: Query templates cannot be
+# consistently exported from MSVC DLLs (LNK2005 if the export is empty,
+# LNK2019 if they are owned by GraphMol). Match that and install static
+# libraries on MSVC even for dynamic CRT triplets.
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+set(RDKIT_STATIC OFF)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(RDKIT_STATIC ON)
-    set(RDKIT_WINDOWS_DLL OFF)
-    set(RDKIT_BOOST_STATIC ON)
 endif()
 
 set(RDKIT_POPCNT ON)
@@ -111,8 +111,7 @@ vcpkg_cmake_configure(
         -DRDK_INSTALL_DEV_COMPONENT=ON
         -DRDK_INSTALL_STATIC_LIBS=${RDKIT_STATIC}
         -DRDK_BUILD_STATIC_LIBS_ONLY=${RDKIT_STATIC}
-        -DRDK_INSTALL_DLLS_MSVC=${RDKIT_WINDOWS_DLL}
-        -DBoost_USE_STATIC_LIBS=${RDKIT_BOOST_STATIC}
+        -DRDK_INSTALL_DLLS_MSVC=OFF
         -DRDK_BUILD_PYTHON_WRAPPERS=OFF
         -DRDK_BUILD_SWIG_WRAPPERS=OFF
         -DRDK_BUILD_PGSQL=OFF
@@ -145,12 +144,12 @@ vcpkg_cmake_configure(
         -DCMAKE_REQUIRE_FIND_PACKAGE_Boost=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_Freetype=ON
     MAYBE_UNUSED_VARIABLES
-        RDK_INSTALL_DLLS_MSVC
-        RDK_OPTIMIZE_POPCNT
-        CMAKE_DISABLE_FIND_PACKAGE_Inchi
-        CMAKE_DISABLE_FIND_PACKAGE_maeparser
-        CMAKE_DISABLE_FIND_PACKAGE_coordgen
-        FETCHCONTENT_SOURCE_DIR_BETTER_ENUMS
+        RDK_INSTALL_DLLS_MSVC # only consumed on MSVC
+        RDK_OPTIMIZE_POPCNT # only consumed on x86/x64
+        CMAKE_DISABLE_FIND_PACKAGE_Inchi # InChI support is off
+        CMAKE_DISABLE_FIND_PACKAGE_maeparser # bundled maeparser, not a find_package
+        CMAKE_DISABLE_FIND_PACKAGE_coordgen # bundled coordgen, not a find_package
+        FETCHCONTENT_SOURCE_DIR_BETTER_ENUMS # FetchContent name may not match
 )
 
 vcpkg_cmake_install()
@@ -163,4 +162,12 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/license.txt"
+    "${BETTER_ENUMS_SOURCE}/LICENSE.md"
+    "${MAEPARSER_SOURCE}/LICENSE.txt"
+    "${COORDGEN_SOURCE}/LICENSE"
+    "${URF_SOURCE}/LICENSE"
+    "${PUBCHEM_SOURCE}/LICENSE"
+    "${SOURCE_PATH}/Data/Fonts/telex_font_license.txt"
+)

@@ -1,8 +1,6 @@
-diff --git a/Code/cmake/Modules/FindCairo.cmake b/Code/cmake/Modules/FindCairo.cmake
-index 3943458..e513561 100644
 --- a/Code/cmake/Modules/FindCairo.cmake
 +++ b/Code/cmake/Modules/FindCairo.cmake
-@@ -37,63 +37,15 @@
+@@ -37,63 +37,13 @@
  # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
@@ -74,5 +72,3 @@ index 3943458..e513561 100644
 +    set_property(TARGET Cairo::Cairo PROPERTY INTERFACE_COMPILE_OPTIONS "${Cairo_CFLAGS_OTHER}")
 +  endif()
  endif()
-+set(CAIRO_FOUND TRUE)
-+set(Cairo_FOUND TRUE)

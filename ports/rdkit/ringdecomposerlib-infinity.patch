@@ -1,24 +1,21 @@
-diff --git a/src/RingDecomposerLib/RDLapsp.c b/src/RingDecomposerLib/RDLapsp.c
-index 4327a51..ea27988 100644
 --- a/src/RingDecomposerLib/RDLapsp.c
 +++ b/src/RingDecomposerLib/RDLapsp.c
-@@ -42,7 +42,7 @@ static void RDL_initializeSPathInfo(RDL_sPathInfo *info, RDL_graph *gra)
+@@ -42,7 +42,6 @@ static void RDL_initializeSPathInfo(RDL_sPathInfo *info, RDL_graph *gra)
  
  static void RDL_findpaths(RDL_sPathInfo *spi, RDL_graph *gra)
  {
 -  const unsigned INFINITY = UINT_MAX;
-+  const unsigned RDL_INFINITY = UINT_MAX;
    unsigned i,j,w,adj,run;
    unsigned q_head, q_nextfree, q_size;
    char *color = malloc(gra->V * sizeof(*color));
-@@ -60,8 +60,8 @@ static void RDL_findpaths(RDL_sPathInfo *spi, RDL_graph *gra)
+@@ -60,8 +59,8 @@ static void RDL_findpaths(RDL_sPathInfo *spi, RDL_graph *gra)
        {
          if(run==1)
          {
 -          spi->dist[i][j] = INFINITY;
 -          spi->pred[i][j] = INFINITY;
-+          spi->dist[i][j] = RDL_INFINITY;
-+          spi->pred[i][j] = RDL_INFINITY;
++          spi->dist[i][j] = UINT_MAX;
++          spi->pred[i][j] = UINT_MAX;
            spi->reachable[i][j] = 0;
          }
          color[j] = 'w'; /*white*/

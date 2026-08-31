@@ -3,7 +3,7 @@
   "version-string": "2026.03.5",
   "description": "Open-source C++ cheminformatics and machine-learning toolkit (RDKit).",
   "homepage": "https://www.rdkit.org/",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND BSD-2-Clause AND MIT AND OFL-1.1",
   "supports": "!uwp & !xbox",
   "dependencies": [
     "boost-algorithm",
@@ -61,9 +61,6 @@
       "host": true
     },
     "zlib"
-  ],
-  "default-features": [
-    "cairo"
   ],
   "features": {
     "cairo": {
