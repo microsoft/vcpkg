@@ -1,6 +1,6 @@
 {
   "name": "cppduals",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": [
     "Header-only C++17 dual-number library for exact forward-mode automatic differentiation",
     "If you use this in research, please cite doi:10.21105/joss.01487 (Tesch, JOSS 4(43):1487, 2019)."

@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-compression
     REF "v${VERSION}"
-    SHA512 a44549d441e21c6f7b6a3b5d3c8ea7228e066cd7026432c121683abca54014c439790143108150e3f502be13d43102e6c99c1de0288b1a373060733f47cc57d9
-    HEAD_REF master
+    SHA512 78e9aab97a95245e5d84b3fb7e3a7dcc392c1f8eb310892306f72a13382cf847c2a85304c52a5f4e19a63523a31020577dec8bea41e0e211712668fbfa77a38e
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
@@ -29,4 +29,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)

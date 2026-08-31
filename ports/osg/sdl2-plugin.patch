@@ -1,0 +1,28 @@
+diff --git a/src/osgPlugins/CMakeLists.txt b/src/osgPlugins/CMakeLists.txt
+index 812550412..cc4db9ee4 100644
+--- a/src/osgPlugins/CMakeLists.txt
++++ b/src/osgPlugins/CMakeLists.txt
+@@ -299,9 +299,9 @@ ENDIF()
+ #
+ # Device integration plugins
+ #
+-IF   (SDL_FOUND)
++IF   (SDL2_FOUND)
+     ADD_PLUGIN_DIRECTORY(sdl)
+-ENDIF(SDL_FOUND)
++ENDIF(SDL2_FOUND)
+ 
+ IF(ASIO_FOUND)
+     ADD_PLUGIN_DIRECTORY(RestHttpDevice)
+diff --git a/src/osgPlugins/sdl/CMakeLists.txt b/src/osgPlugins/sdl/CMakeLists.txt
+index ff1502e36..fcb584e6b 100644
+--- a/src/osgPlugins/sdl/CMakeLists.txt
++++ b/src/osgPlugins/sdl/CMakeLists.txt
+@@ -1,5 +1,5 @@
+-SET(TARGET_EXTERNAL_LIBRARIES ${SDL_LIBRARY} )
+-INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR} )
++SET(TARGET_EXTERNAL_LIBRARIES ${SDL2_LIBRARY} )
++INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIR} )
+ 
+ SET(TARGET_SRC
+     JoystickDevice.cpp

@@ -5,6 +5,8 @@ vcpkg_from_github(
 
     SHA512 3be9058351acb3d9a66c7ae850391ebaa80472b42ee3f013f8b655743eb41b55513e0546c6798399af98ed049b80d11c93286ea3f5af26dc5f199905a28c4db1
     HEAD_REF master
+    PATCHES
+        json_object_put-leak.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSON_BUILD_STATIC)

@@ -1,5 +1,61 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8353843..b7cef14 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -15,7 +15,7 @@ endif()
+ if(OSGEARTH_BUILD_IMGUI_NODEKIT)
+     add_subdirectory(osgEarthImGui)
+     list(APPEND OSGEARTH_COMPONENTS osgEarthImGui)
+-    list(APPEND OSGEARTH_PUBLIC_DEPENDENCIES OpenGL)
++    list(APPEND OSGEARTH_PUBLIC_DEPENDENCIES OpenGL imgui)
+ endif()
+ 
+ if(OSGEARTH_BUILD_PROCEDURAL_NODEKIT)
+@@ -43,6 +43,10 @@ if(OSGEARTH_BUILD_LEGACY_SPLAT_NODEKIT)
+     list(APPEND OSGEARTH_COMPONENTS osgEarthSplat)
+ endif()
+ 
++if (OSGEARTH_ENABLE_STBDXT)
++    list(APPEND OSGEARTH_PUBLIC_DEPENDENCIES Stb)
++endif()
++
+ # plugins:
+ add_subdirectory(osgEarthDrivers)
+ 
+diff --git a/src/osgEarth/CMakeLists.txt b/src/osgEarth/CMakeLists.txt
+index 20b266d..7bd8c00 100644
+--- a/src/osgEarth/CMakeLists.txt
++++ b/src/osgEarth/CMakeLists.txt
+@@ -939,6 +939,9 @@ if(aws-cpp-sdk-core_FOUND)
+ 
+ endif()
+ 
++# Do not use stb image resize
++target_compile_definitions(${LIB_NAME} PRIVATE OSGEARTH_USE_STB_IMAGE_RESIZE=0)
++
+ # pthreads?
+ if(UNIX)
+     target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads)
+diff --git a/src/osgEarthDrivers/stbdxt/CMakeLists.txt b/src/osgEarthDrivers/stbdxt/CMakeLists.txt
+index 49c0f9a..688ac3b 100644
+--- a/src/osgEarthDrivers/stbdxt/CMakeLists.txt
++++ b/src/osgEarthDrivers/stbdxt/CMakeLists.txt
+@@ -1,10 +1,10 @@
+ option(OSGEARTH_ENABLE_STBDXT "Set to ON to build optional STB DXT image compressor." ON)
+ if(OSGEARTH_ENABLE_STBDXT)
+-
++    find_package(Stb REQUIRED)
+     add_osgearth_plugin(
+         TARGET osgdb_stbdxt
+-        HEADERS
+-            stb_dxt.h
++        INCLUDE_DIRECTORIES
++            ${Stb_INCLUDE_DIR}
+         SOURCES
+             STBDXTImageProcessor.cpp )
+ 
 diff --git a/src/osgEarthImGui/CMakeLists.txt b/src/osgEarthImGui/CMakeLists.txt
-index c8a2b4061..b75ced6c2 100644
+index c8a2b40..b75ced6 100644
 --- a/src/osgEarthImGui/CMakeLists.txt
 +++ b/src/osgEarthImGui/CMakeLists.txt
 @@ -10,8 +10,11 @@ set(LIB_NAME osgEarthImGui)
@@ -24,7 +80,7 @@ index c8a2b4061..b75ced6c2 100644
 +    LIBRARIES PUBLIC OpenGL::GL imgui::imgui
      FOLDER "NodeKits")
 diff --git a/src/osgEarthImGui/Common b/src/osgEarthImGui/Common
-index 6e3ee948e..d236a325a 100644
+index 6e3ee94..d236a32 100644
 --- a/src/osgEarthImGui/Common
 +++ b/src/osgEarthImGui/Common
 @@ -17,6 +17,6 @@
@@ -36,7 +92,7 @@ index 6e3ee948e..d236a325a 100644
  #include <osgEarthImGui/imnodes.h>
  #endif
 diff --git a/src/osgEarthImGui/ImGuiEventHandler.cpp b/src/osgEarthImGui/ImGuiEventHandler.cpp
-index 183963a9e..372c5af32 100644
+index 183963a..372c5af 100644
 --- a/src/osgEarthImGui/ImGuiEventHandler.cpp
 +++ b/src/osgEarthImGui/ImGuiEventHandler.cpp
 @@ -144,7 +144,7 @@ void ImGuiEventHandler::render(osg::RenderInfo& ri)
@@ -49,7 +105,7 @@ index 183963a9e..372c5af32 100644
          glDisable(GL_MULTISAMPLE);
  
 diff --git a/src/osgEarthImGui/ImGuiPanel b/src/osgEarthImGui/ImGuiPanel
-index 2751d0e8d..aaefcecf6 100644
+index 2751d0e..aaefcec 100644
 --- a/src/osgEarthImGui/ImGuiPanel
 +++ b/src/osgEarthImGui/ImGuiPanel
 @@ -424,7 +424,7 @@ namespace ImGuiEx
@@ -71,7 +127,7 @@ index 2751d0e8d..aaefcecf6 100644
      }
  
 diff --git a/src/osgEarthImGui/ResourceLibraryGUI b/src/osgEarthImGui/ResourceLibraryGUI
-index cdc8c28c4..e92de02b8 100644
+index cdc8c28..e92de02 100644
 --- a/src/osgEarthImGui/ResourceLibraryGUI
 +++ b/src/osgEarthImGui/ResourceLibraryGUI
 @@ -207,7 +207,7 @@ namespace osgEarth
@@ -93,7 +149,7 @@ index cdc8c28c4..e92de02b8 100644
                      {
                          setSelectedModel(model.get());
 diff --git a/src/osgEarthImGui/imnodes.cpp b/src/osgEarthImGui/imnodes.cpp
-index a77c0a9ed..e2d9e5e94 100644
+index a77c0a9..e2d9e5e 100644
 --- a/src/osgEarthImGui/imnodes.cpp
 +++ b/src/osgEarthImGui/imnodes.cpp
 @@ -350,7 +350,11 @@ void ImDrawListGrowChannels(ImDrawList* draw_list, const int num_channels)
