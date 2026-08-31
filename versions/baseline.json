@@ -477,7 +477,7 @@
       "port-version": 0
     },
     "aws-c-compression": {
-      "baseline": "0.3.3",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "aws-c-event-stream": {
