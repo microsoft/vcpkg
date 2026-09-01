@@ -5,6 +5,8 @@
   "homepage": "https://www.open-mpi.org/",
   "supports": "!windows",
   "dependencies": [
+    "hwloc",
+    "libevent",
     {
       "name": "pkgconf",
       "host": true
