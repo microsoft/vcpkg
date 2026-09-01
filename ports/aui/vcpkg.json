@@ -1,0 +1,67 @@
+{
+  "name": "aui",
+  "version": "7.1.2",
+  "description": "Declarative UI toolkit for modern C++20",
+  "homepage": "https://github.com/aui-framework/aui",
+  "license": "MPL-2.0",
+  "dependencies": [
+    {
+      "name": "aui-toolbox",
+      "host": true,
+      "platform": "!native"
+    },
+    "curl",
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
+    "fmt",
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
+    "freetype",
+    {
+      "name": "glew",
+      "platform": "windows | linux | osx"
+    },
+    "glm",
+    {
+      "name": "gtk3",
+      "platform": "linux"
+    },
+    {
+      "name": "libbacktrace",
+      "platform": "linux"
+    },
+    "libnsgif",
+    "libogg",
+    "libvorbis",
+    "libwebp",
+    {
+      "name": "libx11",
+      "platform": "linux"
+    },
+    "lunasvg",
+    "minizip",
+    {
+      "name": "oboe",
+      "platform": "android"
+    },
+    "openssl",
+    "opus",
+    {
+      "name": "pulseaudio",
+      "platform": "linux"
+    },
+    "range-v3",
+    "soxr",
+    "sqlite3",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

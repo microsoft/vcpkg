@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 610f968..d4a0854 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -460,7 +460,7 @@ if(PAGMO_WITH_NLOPT)
+     set(_PAGMO_CONFIG_OPTIONAL_DEPS "${_PAGMO_CONFIG_OPTIONAL_DEPS}find_package(NLopt 2.6 REQUIRED NO_MODULE)\n")
+ endif()
+ if(PAGMO_WITH_IPOPT)
+-    set(_PAGMO_CONFIG_OPTIONAL_DEPS "${_PAGMO_CONFIG_OPTIONAL_DEPS}find_package(pagmo_IPOPT REQUIRED COMPONENTS header)\n")
++    set(_PAGMO_CONFIG_OPTIONAL_DEPS "${_PAGMO_CONFIG_OPTIONAL_DEPS}find_package(pagmo_IPOPT REQUIRED COMPONENTS header libipopt)\n")
+ endif()
+ 
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pagmo-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/pagmo-config.cmake" @ONLY)
