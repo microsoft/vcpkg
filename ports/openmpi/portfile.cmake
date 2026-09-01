@@ -29,22 +29,16 @@ endif()
 vcpkg_make_configure(
     COPY_SOURCE
     SOURCE_PATH "${SOURCE_PATH}"
-    # An unset filter is treated as an empty regex by vcpkg-make 2026-07-09,
-    # which removes every default option, including --prefix.
-    DEFAULT_OPTIONS_EXCLUDE "^$"
     OPTIONS
         --disable-dependency-tracking
         "--with-hwloc=${CURRENT_INSTALLED_DIR}"
+        "--with-hwloc-libdir=${CURRENT_INSTALLED_DIR}/lib"
         "--with-libevent=${CURRENT_INSTALLED_DIR}"
+        "--with-libevent-libdir=${CURRENT_INSTALLED_DIR}/lib"
         --with-pmix=internal
         --enable-mpi-fortran=no
-    OPTIONS_RELEASE
-        "--with-hwloc-libdir=${CURRENT_INSTALLED_DIR}/lib"
-        "--with-libevent-libdir=${CURRENT_INSTALLED_DIR}/lib"
     OPTIONS_DEBUG
         --enable-debug
-        "--with-hwloc-libdir=${CURRENT_INSTALLED_DIR}/debug/lib"
-        "--with-libevent-libdir=${CURRENT_INSTALLED_DIR}/debug/lib"
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
