@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-http
     REF "v${VERSION}"
-    SHA512 426fadb4e93e1a76232c3f4a563399adf8ceae0984bf22aef9fc918be1b2bd6f348c8f75f8eda54ecc6d3e7c1eab888515b481dd62a075a3bcfeddbb52a0b55c
-    HEAD_REF master
+    SHA512 6236e6713f44d87446f4a521d5044d9c46b06bc5738bbf38c112aeff9a222427a52c8acb57eabff55c229de41dce8380b6cc04a8970a78cc378a63240e31ecc3
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common/modules" # use extra cmake files
         -DBUILD_TESTING=FALSE
 )
 
@@ -29,4 +29,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)

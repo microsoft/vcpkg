@@ -1,0 +1,22 @@
+--- a/rtc_base/BUILD.gn
++++ b/rtc_base/BUILD.gn
+@@ -236,18 +236,16 @@ rtc_library("logging") {
+     "//third_party/abseil-cpp/absl/base:nullability",
+     "//third_party/abseil-cpp/absl/strings:string_view",
+   ]
+-  all_dependent_configs = [ "//third_party/perfetto/gn:public_config" ]
+   if (rtc_use_perfetto) {
++    all_dependent_configs = [ "//third_party/perfetto/gn:public_config" ]
+     if (build_with_chromium) {
+       deps += [ "//third_party/perfetto:libperfetto" ]
+     } else {
+       deps += [
+         "//third_party/perfetto/include/perfetto/tracing",
+         "//third_party/perfetto/src/tracing:client_api_without_backends",
+         "//third_party/perfetto/src/tracing:platform_impl",
+       ]
+     }
+-  } else {
+-    deps += [ "//third_party/perfetto/include/perfetto/tracing" ]
+   }
+ }

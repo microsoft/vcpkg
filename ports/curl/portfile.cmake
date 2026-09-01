@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 1ce097d400da48e038f64e637ed338ab5873b2a961b1837b615ef890e530fd711fe44d47527eecbc3652e67e09bed2bb81bb2045b8e0f5b5137236e74b458f96
+    SHA512 0ab6c99c3d5b86fb65c526db517c3159b11db2f8d82552d635c4887059c0602288603c93b754ce0ec543ea2f275122ccec2c8dcd866c2611b5b949c728ee72df
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -15,27 +15,31 @@ vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[LIBCURL_TIMESTAMP
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        http2       USE_NGHTTP2
-        http3       USE_NGTCP2
-        wolfssl     CURL_USE_WOLFSSL
-        openssl     CURL_USE_OPENSSL
-        openssl     CURL_CA_FALLBACK
-        mbedtls     CURL_USE_MBEDTLS
-        ssh         CURL_USE_LIBSSH2
-        tool        BUILD_CURL_EXE
-        c-ares      ENABLE_ARES
-        sspi        CURL_WINDOWS_SSPI
         brotli      CURL_BROTLI
-        idn2        USE_LIBIDN2
-        winidn      USE_WIN32_IDN
-        zstd        CURL_ZSTD
-        psl         CURL_USE_LIBPSL
-        gssapi      CURL_USE_GSSAPI
-        gsasl       CURL_USE_GSASL
+        c-ares      ENABLE_ARES
         gnutls      CURL_USE_GNUTLS
-        rtmp        USE_LIBRTMP
+        gsasl       CURL_USE_GSASL
+        gssapi      CURL_USE_GSSAPI
+        gssapi      VCPKG_LOCK_FIND_PACKAGE_GSS
+        http2       USE_NGHTTP2
+        http2       VCPKG_LOCK_FIND_PACKAGE_NGHTTP2
+        http3       USE_NGTCP2
         httpsrr     USE_HTTPSRR
+        idn2        USE_LIBIDN2
+        idn2        VCPKG_LOCK_FIND_PACKAGE_Libidn2
+        ldap        VCPKG_LOCK_FIND_PACKAGE_LDAP
+        mbedtls     CURL_USE_MBEDTLS
+        openssl     CURL_CA_FALLBACK
+        openssl     CURL_USE_OPENSSL
+        psl         CURL_USE_LIBPSL
+        ssh         CURL_USE_LIBSSH2
+        ssh         VCPKG_LOCK_FIND_PACKAGE_Libssh2
         ssls-export USE_SSLS_EXPORT
+        sspi        CURL_WINDOWS_SSPI
+        tool        BUILD_CURL_EXE
+        winidn      USE_WIN32_IDN
+        wolfssl     CURL_USE_WOLFSSL
+        zstd        CURL_ZSTD
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
@@ -45,8 +49,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("ssl" IN_LIST FEATURES AND
     NOT "http3" IN_LIST FEATURES AND
-    # (windows & !uwp) | mingw to match curl[ssl]'s "platform"
-    ((VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP) OR VCPKG_TARGET_IS_MINGW))
+    # Match curl[ssl]'s "platform": "windows & !uwp"
+    (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
     list(APPEND FEATURE_OPTIONS -DCURL_USE_SCHANNEL=ON)
 endif()
 
@@ -72,31 +76,36 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DENABLE_UNICODE=ON)
 endif()
 
+if(VCPKG_TARGET_IS_APPLE AND
+    ("openssl" IN_LIST FEATURES OR "gnutls" IN_LIST FEATURES))
+    list(APPEND OPTIONS -DUSE_APPLE_SECTRUST=ON)
+endif()
+
 vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_CURL_MANUAL=OFF
         -DIMPORT_LIB_SUFFIX=   # empty
         -DSHARE_LIB_OBJECT=OFF
+        -DCURL_USE_CMAKECONFIG=ON
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     MAYBE_UNUSED_VARIABLES
-        PKG_CONFIG_EXECUTABLE
+        VCPKG_LOCK_FIND_PACKAGE_GSS
+        VCPKG_LOCK_FIND_PACKAGE_LDAP
+        VCPKG_LOCK_FIND_PACKAGE_Libidn2
+        VCPKG_LOCK_FIND_PACKAGE_Libssh2
+        VCPKG_LOCK_FIND_PACKAGE_NGHTTP2
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-if ("tool" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES curl AUTO_CLEAN)
-endif()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CURL)
 
 vcpkg_fixup_pkgconfig()
@@ -109,7 +118,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc" " -lcurl" " -l${namespec}-d")
 endif()
 
-#Fix install path
+if ("tool" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES curl AUTO_CLEAN)
+endif()
+
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_PACKAGES_DIR}" "\${prefix}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "${CURRENT_INSTALLED_DIR}" "\${prefix}" IGNORE_UNCHANGED)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curl-config" "\nprefix='\${prefix}'" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])

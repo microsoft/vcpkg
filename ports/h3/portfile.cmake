@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uber/h3
     REF "v${VERSION}"
-    SHA512 e8a87c109ba917887483c73b0410bfd11f9259815ba7f9b967779963c9a7a5c208d70f0d6f6ae586ff371feeab3e19d96273137b42fd03a84ae08965bb8ea643
+    SHA512 8b74989632e2f23ecd26098d1accf6289ab0aac025ed695eafc0919e450090f935990518d26cb5b2f01df180e60f1bf3896607bc39771808b63ffc87a18921e4
     HEAD_REF master
 )
 
@@ -25,6 +25,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 

@@ -1,3 +1,5 @@
+string(REGEX REPLACE "^([0-9]+\\.[0-9]+)\\..*$" "\\1" VERSION_MAJOR_MINOR "${VERSION}")
+
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
@@ -6,11 +8,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
     REF "v${VERSION}"
-    SHA512 8e97e8106ae2eeceee743634b0db1936b3a3a1381ceceb5646f6de8008d2147cdc9b847219dafd7d8b8f7457e63c7463f155694e8a192d13531171b468e8f365
+    SHA512 2e043f69569fe8e2b596d8606399934fd33eb9bea96793655482676a16319a732a3238f72605f2b4fecb37417f86215da3fbbdc9a5604ca1b7731ac944c7c610
     HEAD_REF main
     PATCHES
         shared-zstd.patch
-        fix-hexl.patch
 )
 
 vcpkg_replace_string(
@@ -22,9 +23,9 @@ vcpkg_replace_string(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ms-gsl SEAL_USE_MSGSL
-        zlib SEAL_USE_ZLIB
-        zstd SEAL_USE_ZSTD
-        hexl SEAL_USE_INTEL_HEXL
+        zlib   SEAL_USE_ZLIB
+        zstd   SEAL_USE_ZSTD
+        hexl   SEAL_USE_INTEL_HEXL
     INVERTED_FEATURES
         no-throw-tran SEAL_THROW_ON_TRANSPARENT_CIPHERTEXT
 )
@@ -35,19 +36,22 @@ vcpkg_cmake_configure(
         -DSEAL_BUILD_DEPS=OFF
         -DSEAL_BUILD_EXAMPLES=OFF
         -DSEAL_BUILD_TESTS=OFF
+        -DSEAL_BUILD_BENCH=OFF
         -DSEAL_BUILD_SEAL_C=OFF
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-4.1)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-${VERSION_MAJOR_MINOR})
 
-# provides pkgconfig files only on UNIX
+file(COPY "${CURRENT_PACKAGES_DIR}/include/SEAL-${VERSION_MAJOR_MINOR}/seal" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+# Provides pkg-config files only on UNIX.
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_pkgconfig()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/NOTICE")

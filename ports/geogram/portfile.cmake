@@ -5,6 +5,9 @@ vcpkg_from_github(
     SHA512 19cf5720496172a144b2c5725a0a9763fde730ee14af75d92598973ff84106619e564d34746fd7b3da7d56f0cf52654fa656e3228fb32c0897f3aba178421f28
     PATCHES
         fix-vcpkg-install.patch
+        remove-hash-map.diff #   https://github.com/BrunoLevy/geogram/commit/4e500108606584abfe50e66cf5cc161ab4b3a8d3
+                             # + https://github.com/BrunoLevy/geogram/commit/5c18dc89209189ab7b507ad230b50ef2952cae49
+                             # + https://github.com/BrunoLevy/geogram/pull/353
 )
 
 #third_party: amgcl
@@ -31,9 +34,12 @@ vcpkg_from_github(
     SHA512 b236279d3f0e6e1062703555415236183da31a9e40c49d478954586725f8dc6c0582aef0db7b605cb7967c3bd4a96d2fe8e6601cc56b8a1d53129a25efa7d1f2
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
     "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb"
-	"${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+    "${SOURCE_PATH}/src/lib/geogram/third_party/rply"
+)
+
 file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl")
 file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
 file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")

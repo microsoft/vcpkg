@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 046316b4297460bffca09c890ecad17ea39d8b3db92ff445d03b547dd551663d37e40f38bce8ae11e2994374ff01e622b408da27aa8e40f4140185ee8f001a60
+    SHA512 68fa2b90a93a2dfd84dfa586af07d90952fd4f2ad8dfe26061be250e80fec8f1a76ad78977f217c7dbdd26291249f1ac38a07f08ef323eee7a248c4cb67cd670
     HEAD_REF develop
     PATCHES
         disable-testing.diff
         getarch.diff
         system-check-msvc.diff
         win32-uwp.diff
+        android-exclude-sme.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -59,6 +60,18 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
+
+#fix for libm linking on non-windows platforms
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(PCFILE IN ITEMS
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
+        if(EXISTS "${PCFILE}")
+            file(APPEND "${PCFILE}" "Libs.private: -lm\n")
+        endif()
+    endforeach()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 # Required from native builds, optional from cross builds.

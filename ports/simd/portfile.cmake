@@ -2,10 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ermig1979/Simd
     REF "v${VERSION}"
-    SHA512 654130952483052462e248665fa37856e764561f73b4acf52f02f9351cc27984485a6a3bff8ecffce1cf703e082ffa7255fd01274e5b8f09bd9b1c1aad343f2a
+    SHA512 0b83c51f7838de29c4348b13e60e37b0279014c530d4a4d9ea87a5094753651e3904dada304d6e9af51c21fd75c27dfebb5433620668c1b8b7df9c0b494eee59
     HEAD_REF master
     PATCHES
-        fix-platform-detection.patch
+        use-preconfigured-version-header.patch
+)
+
+# Avoid upstream's debug and release configure steps racing to generate this shared source-tree file.
+configure_file(
+    "${SOURCE_PATH}/prj/txt/SimdVersion.h.txt"
+    "${SOURCE_PATH}/src/Simd/SimdVersion.h"
+    @ONLY
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))

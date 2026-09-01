@@ -1,3 +1,3 @@
-set(qtapplicationmanager_HASH "082ae8d24fc7ef6de283c9844ff994c89b7ef09bac8bca2e96e8d583435b6197b013807aec68280aaf81a9a52b516a48ce57860d45dcee881ac6d36852caa491")
-set(qtapplicationmanager_URL "https://github.com/qt/qtapplicationmanager/archive/v6.10.2.tar.gz")
-set(qtapplicationmanager_FILENAME "qt-qtapplicationmanager-v6.10.2.tar.gz")
+set(qtapplicationmanager_HASH "68cb1b0ecaabda40cdbd4bf94fbe2fad387f4da2d02eed65b4b15b280f151025a0b195e63ea7c1e77c6a65a174be22d907b9d661c7037cb5f5f54755a345ebf0")
+set(qtapplicationmanager_URL "https://github.com/qt/qtapplicationmanager/archive/v6.11.1.tar.gz")
+set(qtapplicationmanager_FILENAME "qt-qtapplicationmanager-v6.11.1.tar.gz")

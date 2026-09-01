@@ -1,21 +1,17 @@
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://flintlib.org/download/flint-${VERSION}.zip"
-    FILENAME "flint-${VERSION}.zip"
-    SHA512 a4180c4a8ce889d552e207f699d1243bb9af3001aee5f084bc0f67d04cb788268a31725ba23ffa750b1726cd7756ad4efa9f38b5242960fe962bebe96600e7d8
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO flintlib/flint
+    REF v${VERSION}
+    SHA512 f1057affd37d2460522fbd4620454616571d3a8220d53fa6ee668d8cec25f7996275ec00decaf4b4d9a799db117419192b68f4c3b720f094d12d9b4cf2aa977a
+    HEAD_REF master
     PATCHES
-        fix-static.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(PYTHON3)
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_PARALLEL_CONFIGURE # see configure_file(${CMAKE_CURRENT_SOURCE_DIR} ...
         OPTIONS
             "-DPython_EXECUTABLE=${PYTHON3}"
             -DVCPKG_LOCK_FIND_PACKAGE_CBLAS=OFF
@@ -27,6 +23,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        AUTORECONF
         OPTIONS
             --with-ntl=no
             --with-blas=no

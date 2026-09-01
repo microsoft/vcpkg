@@ -32,9 +32,9 @@ def sha512(data):
 
 
 def extract_version(content):
-    major = re.search(r"^set *\( *(\w+)_VERSION_MAJOR +(\d+) ", content, re.M).group(2)
-    minor = re.search(r"^set *\( *(\w+)_VERSION_MINOR +(\d+) ", content, re.M).group(2)
-    sub = re.search(r"^set *\( *(\w+)_VERSION_(?:SUB|PATCH|UPDATE) +(\d+) ", content, re.M).group(2)
+    major = re.search(r"^set *\( *(\w+)_VER(?:SION)?_MAJOR +(\d+) ", content, re.M).group(2)
+    minor = re.search(r"^set *\( *(\w+)_VER(?:SION)?_MINOR +(\d+) ", content, re.M).group(2)
+    sub = re.search(r"^set *\( *(\w+)_VER(?:SION)?_(?:SUB|PATCH|UPDATE) +(\d+) ", content, re.M).group(2)
     return f"{major}.{minor}.{sub}"
 
 
@@ -62,9 +62,21 @@ def update_manifest(pkg_name, version):
     manifest_path = port_dir / "vcpkg.json"
     manifest = json.loads(manifest_path.read_text("utf8"))
     if manifest["version-semver"] == version:
-        return False
-    manifest["version-semver"] = version
-    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
+        if "port-version" in manifest:
+            manifest["port-version"] = manifest["port-version"] + 1
+        else:
+            # Need to rebuild manifest so we can insert "port-version" directly after "version-semver"
+            new_manifest = {}
+            for key, val in manifest.items():
+                new_manifest[key] = val
+                if key == "version-semver":
+                    new_manifest["port-version"] = 1
+            manifest = new_manifest
+    else:
+        manifest["version-semver"] = version
+        if "port-version" in manifest:
+            del manifest["port-version"]
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     return True
 
 
@@ -72,13 +84,13 @@ def update_portfile(pkg_name, new_version, new_hash):
     port_dir = ports_root / pkg_name
     portfile_path = port_dir / "portfile.cmake"
     content = portfile_path.read_text("utf8")
-    content, n = re.subn(r"\bREF v\S+", f"REF v{new_version}", content, re.M)
+    content, n = re.subn(r"\bREF v\S+", f"REF v{new_version}", content, flags=re.M)
     if n != 1:
         raise Exception(f"Updating {pkg_name} portfile ref failed!")
-    content, n = re.subn(r"\bSHA512 \S+", f"SHA512 {new_hash}", content, re.M)
+    content, n = re.subn(r"\bSHA512 \S+", f"SHA512 {new_hash}", content, flags=re.M)
     if n != 1:
         raise Exception(f"Updating {pkg_name} portfile hash failed!")
-    portfile_path.write_text(content)
+    portfile_path.write_text(content, newline="\n")
 
 
 def update_port(pkg_name, new_version, suitesparse_hash):

@@ -14,9 +14,9 @@ vcpkg_extract_source_archive(
   SOURCE_PATH
   ARCHIVE "${ARCHIVE}"
   PATCHES 
-    hdf5.patch        # CMake patches for hdf5
-    hdf5-2.patch      # source patches to fix API version of HDF5
-    more-fixes.patch  # include fixes
+    hdf5.patch
+    include-io.patch
+    quote-paths-in-install-code.diff # Required when CMake is in a path with spaces, e.g. C:\Program Files\CMake\bin\cmake.exe
 )
 
 foreach(_source_file IN ITEMS "CMakeLists.txt" "CMakeLists.txt.in")
@@ -31,17 +31,14 @@ foreach(_source_file IN ITEMS "src/CMakeLists.txt" "src/CMakeLists.txt.in" "tool
         " DESTINATION lib\${LIB_SUFFIX} RUNTIME DESTINATION bin)"
     )
 endforeach()
-vcpkg_replace_string("${SOURCE_PATH}/tools/mdump/CMakeLists.txt"
-    "{CMAKE_COMMAND} -E create_symlink mdump4 mdump "
-    "{CMAKE_COMMAND} -E copy mdump4${VCPKG_TARGET_EXECUTABLE_SUFFIX} mdump${VCPKG_TARGET_EXECUTABLE_SUFFIX} "
-)
-vcpkg_replace_string("${SOURCE_PATH}/tools/mdump/CMakeLists.txt"
-    "{CMAKE_COMMAND} -E create_symlink xmdump4 xmdump "
-    "{CMAKE_COMMAND} -E copy xmdump4 xmdump "
-)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  MEDFILE_BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"  MEDFILE_BUILD_SHARED_LIBS)
+
+# Ensure a host-compatible pkg-config is used. During cross-compilation, the target
+# triplet's pkgconf (e.g. arm64) cannot execute on the host. Without this, CMake may
+# cache the wrong PKG_CONFIG_EXECUTABLE, breaking find_dependency(MPI) from hdf5-config.
+vcpkg_find_acquire_program(PKGCONFIG)
 
 # If there are problems with the cmake build try switching to autotools for !windows
 vcpkg_cmake_configure(
@@ -53,6 +50,7 @@ vcpkg_cmake_configure(
       -DMEDFILE_INSTALL_DOC=OFF
       -DMEDFILE_BUILD_TESTS=OFF
       -DCMAKE_Fortran_COMPILER=NOTFOUND # Disable Fortran
+      "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     )
 
 vcpkg_cmake_install()

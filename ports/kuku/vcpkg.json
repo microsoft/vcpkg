@@ -1,6 +1,6 @@
 {
   "name": "kuku",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Kuku is a compact and convenient cuckoo hashing library written in C++.",
   "homepage": "https://github.com/microsoft/Kuku",
   "license": "MIT",

@@ -89,6 +89,10 @@ vcpkgCheckRepoTool()
             echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
             echo "On Solaris and illumos distributions:"
             echo "  pkg install web/curl compress/zip compress/unzip"
+            echo "On FreeBSD:"
+            echo "  pkg install curl zip unzip tar"
+            echo "On OpenBSD:"
+            echo "  pkg_add curl zip unzip tar"
             exit 1
         fi
     fi
@@ -260,6 +264,7 @@ You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disa
 passing --disable-metrics to vcpkg on the command line,
 or by setting the VCPKG_DISABLE_METRICS environment variable.
 
-Read more about vcpkg telemetry at docs/about/privacy.md
+Read more about vcpkg telemetry at https://learn.microsoft.com/vcpkg/about/privacy
+Read the Microsoft Privacy Statement at https://go.microsoft.com/fwlink/?LinkId=521839
 EOF
 fi

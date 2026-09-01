@@ -1,14 +1,15 @@
 diff --git a/Accelerators/Vtkm/Core/CMakeLists.txt b/Accelerators/Vtkm/Core/CMakeLists.txt
-index 397dca9f6..bc9c62ac5 100644
+index 51f7ccfd..7f24284e 100644
 --- a/Accelerators/Vtkm/Core/CMakeLists.txt
 +++ b/Accelerators/Vtkm/Core/CMakeLists.txt
-@@ -1,4 +1,3 @@
+@@ -1,5 +1,4 @@
 -list(INSERT CMAKE_MODULE_PATH 0
 -  "${VTK_SOURCE_DIR}/ThirdParty/vtkm/vtkvtkm/vtk-m/CMake")
 +find_package(VTKm CONFIG REQUIRED)
  
  set(private_headers
-@@ -31,8 +31,5 @@ vtkm_add_target_information(${vtkm_accel_target}
+   vtkmlib/DataArrayConverters.hxx
+@@ -31,9 +30,6 @@ vtk_module_add_module(VTK::AcceleratorsVTKmCore
    NOWRAP_HEADERS  ${nowrap_headers}
    NOWRAP_CLASSES  ${nowrap_classes}
    PRIVATE_HEADERS ${private_headers})
@@ -17,8 +18,9 @@ index 397dca9f6..bc9c62ac5 100644
 -  VALUE     vtkm_pool)
  
  _vtk_module_real_target(vtkm_accel_target VTK::AcceleratorsVTKmCore)
+ vtkm_add_target_information(${vtkm_accel_target}
 diff --git a/Accelerators/Vtkm/DataModel/CMakeLists.txt b/Accelerators/Vtkm/DataModel/CMakeLists.txt
-index 9d5dfe100..7fea257b7 100644
+index 9b6f144f..4eda89c8 100644
 --- a/Accelerators/Vtkm/DataModel/CMakeLists.txt
 +++ b/Accelerators/Vtkm/DataModel/CMakeLists.txt
 @@ -1,7 +1,6 @@
@@ -30,15 +32,18 @@ index 9d5dfe100..7fea257b7 100644
  
  set(sources
    vtkmlib/ArrayConvertersReal.cxx
-@@ -40,6 +39,3 @@ vtkm_add_target_information(${vtkm_accel_target}
+@@ -39,9 +38,6 @@ vtk_module_add_module(VTK::AcceleratorsVTKmDataModel
+   CLASSES ${classes}
    NOWRAP_CLASSES  ${nowrap_classes}
    PRIVATE_HEADERS ${private_headers})
 -vtk_module_set_property(VTK::AcceleratorsVTKmDataModel
 -  PROPERTY  JOB_POOL_COMPILE
 -  VALUE     vtkm_pool)
  _vtk_module_real_target(vtkm_accel_target VTK::AcceleratorsVTKmDataModel)
+ vtkm_add_target_information(${vtkm_accel_target}
+                             EXTENDS_VTKM
 diff --git a/Accelerators/Vtkm/Filters/CMakeLists.txt b/Accelerators/Vtkm/Filters/CMakeLists.txt
-index 0f51c436d..567b49197 100644
+index c14283aa..073f9845 100644
 --- a/Accelerators/Vtkm/Filters/CMakeLists.txt
 +++ b/Accelerators/Vtkm/Filters/CMakeLists.txt
 @@ -1,7 +1,6 @@
@@ -50,7 +55,8 @@ index 0f51c436d..567b49197 100644
  
  set(classes
    vtkmAverageToCells
-@@ -91,7 +90,4 @@ vtkm_add_target_information(${vtkm_accel_target}
+@@ -90,13 +89,10 @@ vtk_module_add_module(VTK::AcceleratorsVTKmFilters
+   SOURCES ${sources}
    HEADERS ${headers}
    CLASSES ${classes})
 -vtk_module_set_property(VTK::AcceleratorsVTKmFilters
@@ -58,11 +64,18 @@ index 0f51c436d..567b49197 100644
 -  VALUE     vtkm_pool)
  vtk_module_link(VTK::AcceleratorsVTKmFilters
    PRIVATE
+-    vtkm_worklet
+-    vtkm_filter)
++    vtkm::worklet
++    vtkm::filter)
+ vtk_module_definitions(VTK::AcceleratorsVTKmFilters
+   PUBLIC "VTK_ENABLE_VTKM_OVERRIDES=$<BOOL:${VTK_ENABLE_VTKM_OVERRIDES}>")
+ 
 diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
-index a8c40085a..764298f0e 100644
+index 48e0ee70..5f9af118 100644
 --- a/CMake/vtk-config.cmake.in
 +++ b/CMake/vtk-config.cmake.in
-@@ -126,9 +126,7 @@ set("${CMAKE_FIND_PACKAGE_NAME}_AVAILABLE_COMPONENTS" "@vtk_all_components@")
+@@ -128,9 +128,7 @@ set("${CMAKE_FIND_PACKAGE_NAME}_SMP_BACKENDS" "@vtk_smp_backends@")
  unset("${CMAKE_FIND_PACKAGE_NAME}_FOUND")
  set("${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm" "@vtk_has_vtkm@")
  if (${CMAKE_FIND_PACKAGE_NAME}_HAS_VTKm)
@@ -74,7 +87,7 @@ index a8c40085a..764298f0e 100644
      set("${CMAKE_FIND_PACKAGE_NAME}_FOUND" 0)
    endif ()
 diff --git a/ThirdParty/vtkm/CMakeLists.txt b/ThirdParty/vtkm/CMakeLists.txt
-index 8cfbf92b0..ad78cc8f5 100644
+index 1ca03878..f9a6e996 100644
 --- a/ThirdParty/vtkm/CMakeLists.txt
 +++ b/ThirdParty/vtkm/CMakeLists.txt
 @@ -1,15 +1,34 @@
@@ -128,7 +141,7 @@ index 8cfbf92b0..ad78cc8f5 100644
 +    INCLUDE_DIRS VTKm_INCLUDE_DIRS VTKm_DIY_INCLUDE_DIRS VTKm_OPTION_INCLUDE_DIRS
 +)
 diff --git a/ThirdParty/vtkm/vtk.module b/ThirdParty/vtkm/vtk.module
-index a8e4dad0f..c7bbbf0e8 100644
+index 26f23782..130fe4b0 100644
 --- a/ThirdParty/vtkm/vtk.module
 +++ b/ThirdParty/vtkm/vtk.module
 @@ -3,5 +3,7 @@ NAME
@@ -140,18 +153,3 @@ index a8e4dad0f..c7bbbf0e8 100644
 +LIBRARY_NAME
 +  VTKm
  THIRD_PARTY
-diff --git a/Accelerators/Vtkm/Filters/CMakeLists.txt b/Accelerators/Vtkm/Filters/CMakeLists.txt
-index 7c1b10410c..610bf831fb 100644
---- a/Accelerators/Vtkm/Filters/CMakeLists.txt
-+++ b/Accelerators/Vtkm/Filters/CMakeLists.txt
-@@ -91,8 +91,8 @@ vtk_module_add_module(VTK::AcceleratorsVTKmFilters
-   CLASSES ${classes})
- vtk_module_link(VTK::AcceleratorsVTKmFilters
-   PRIVATE
--    vtkm_worklet
--    vtkm_filter)
-+    vtkm::worklet
-+    vtkm::filter)
- vtk_module_definitions(VTK::AcceleratorsVTKmFilters
-   PUBLIC "VTK_ENABLE_VTKM_OVERRIDES=$<BOOL:${VTK_ENABLE_VTKM_OVERRIDES}>")
- 

@@ -9,7 +9,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = '1.90.0',
+    $version = '1.92.0',
 # This script treats support statements as platform expressions. This is incorrect
 # in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
 # boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
@@ -35,9 +35,8 @@ if ($null -eq $vcpkg) {
 $semverVersion = ($version -replace '(\d+(\.\d+){1,3}).*', '$1')
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
-$portVersions = @{
-}
+$defaultPortVersion = 0
+$portVersions = @{}
 
 function Get-PortVersion {
     param (
@@ -80,7 +79,15 @@ $portData = @{
     };
     'boost-beast'            = @{ 'supports' = '!emscripten' };
     'boost-cmake'            = @{ 'dependencies' = @(@{ 'name' = 'vcpkg-boost'; 'host' = $true }); };
-    'boost-cobalt'           = @{ 'supports' = '!uwp' };
+    'boost-cobalt'           = @{
+        'supports' = '!uwp';
+        'features' = @{
+            'ssl' = @{
+                'description'  = 'Build boost_cobalt_io_ssl';
+                'dependencies' = @('openssl');
+            }
+        }
+    };
     'boost-context'          = @{ 'supports' = '!uwp & !emscripten' };
     'boost-coroutine'        = @{ 'supports' = '!(arm & windows) & !uwp & !emscripten' };
     'boost-dll'              = @{ 'supports' = '!uwp' };
@@ -123,6 +130,14 @@ $portData = @{
                 'dependencies' = @('zstd');
             };
         };
+    };
+    'boost-hana'             = @{
+        'features' = @{
+            'large-struct-macros' = @{
+                'description' = 'Regenerate Boost.Hana struct macros for up to 200 members (124 on Windows)';
+                'supports' = 'windows | osx | (linux & x64)';
+            }
+        }
     };
     'boost-locale'           = @{
         'dependencies' = @(@{ 'name' = 'libiconv'; 'platform' = '!uwp & !windows & !mingw' });
@@ -210,6 +225,24 @@ $suppressPlatformForDependency = @{
     'boost-python'                = @('boost-graph');
     'boost-wave'                  = @('boost-filesystem');
 }
+
+# boost/static_assert.hpp is provided by Boost.Config since 1.91.0.
+# However, these Boost libraries still link the CMake target
+# Boost::static_assert in their upstream CMakeLists.txt, so they still need
+# boost-static-assert to provide boost_static_assertConfig.cmake.
+$staticAssertCMakeTargetUsers = @(
+    'contract',
+    'date_time',
+    'geometry',
+    'graph',
+    'icl',
+    'program_options',
+    'python',
+    'serialization',
+    'spirit',
+    'variant',
+    'wave'
+)
 
 function GeneratePortName() {
     param (
@@ -665,7 +698,7 @@ foreach ($library in $libraries) {
             elseif ($_ -match 'is_placeholder.hpp|mem_fn.hpp') { 'bind' }
             elseif ($_ -eq 'circular_buffer_fwd.hpp') { 'circular_buffer' }
             elseif ($_ -match '^concept$|concept_archetype.hpp') { 'concept_check' }
-            elseif ($_ -match 'cstdint.hpp|cxx11_char_types.hpp|limits.hpp|version.hpp') { 'config' }
+            elseif ($_ -match 'cstdint.hpp|cxx11_char_types.hpp|limits.hpp|version.hpp|static_assert.hpp') { 'config' }
             elseif ($_ -eq 'contract_macro.hpp') { 'contract' }
             elseif ($_ -match 'implicit_cast.hpp|polymorphic_cast.hpp|polymorphic_pointer_cast.hpp') { 'conversion' }
             elseif ($_ -eq 'make_default.hpp') { 'convert' }
@@ -710,6 +743,11 @@ foreach ($library in $libraries) {
         # Remove optional dependencies
         $deps = @($deps `
             | Where-Object {
+                # Boost.SmartPtr is not linked by default
+                # See https://github.com/apolukhin/Boost.DLL/blob/develop/CMakeLists.txt
+                -not ($library -eq 'dll' -and $_ -eq 'smart_ptr')
+            } `
+            | Where-Object {
                 # Boost.Filesystem only used for tests or examples
                 # See https://github.com/boostorg/gil#requirements
                 -not ($library -eq 'gil' -and $_ -eq 'filesystem')
@@ -751,6 +789,10 @@ foreach ($library in $libraries) {
                 }
             }
             $boostPortDependencies += @(GeneratePortDependency $library)
+        }
+
+        if ($staticAssertCMakeTargetUsers -contains $library) {
+            $deps += 'static_assert'
         }
 
         $deps = $deps | Select-Object -Unique

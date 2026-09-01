@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
     REF "${VERSION}"
-    SHA512 9ae7b09986cdcacb2018b94874a35965201fd0e08e0e92d384041b6ee1b31d57e152789c7c48235424e19291a1059aa12296c5071c0e3ecee639ea3f4caaedb7
+    SHA512 1200a6623cd37df2db46220b5b36e7a760f5675cb6a7e8c79fea7cad3a58f57bbfe761311bb8f67928107b477b4cd618ba917517013bf219d702302843d3cc09
     HEAD_REF master
     PATCHES
         0005-XML_file_path.patch
@@ -66,6 +66,7 @@ vcpkg_cmake_configure(
         -DENABLE_FIREBIRD=OFF
         -DENABLE_QT4=OFF
         -DENABLE_QT5=OFF
+        -DENABLE_QT6=OFF
         -DENABLE_LIBWTTEST=ON
         -DENABLE_OPENGL=ON
 
@@ -98,5 +99,10 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" W_CONFIG_H)
 string(REGEX REPLACE "([\r\n])#define RUNDIR[^\r\n]+" "\\1// RUNDIR intentionally unset by vcpkg" W_CONFIG_H "${W_CONFIG_H}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "${W_CONFIG_H}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/src/thirdparty/qrcodegen/license.txt"
+        "${SOURCE_PATH}/src/thirdparty/rapidxml/license.txt"
+)
 vcpkg_copy_pdbs()

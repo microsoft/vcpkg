@@ -1,13 +1,29 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 991f6af..bb6221c 100644
+index c47da23..03e2f1e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -7,7 +7,7 @@ project(slick-logger
- set(CMAKE_CXX_STANDARD 20)
- set(CMAKE_CXX_STANDARD_REQUIRED ON)
+@@ -9,9 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
--find_package(slick-queue 1.2.2 CONFIG QUIET)
-+find_package(slick-queue 1.2.2 CONFIG REQUIRED)
+ # 1.5.0 or newer is required: multi-process logging relies on the slick-shm based
+ # shared-memory implementation introduced in slick-queue 1.3.0.
+-find_package(slick-queue 1.5.0 CONFIG QUIET)
++find_package(slick-queue CONFIG REQUIRED)
  
- if (NOT slick-queue_FOUND)
+-if (NOT slick-queue_FOUND)
++if (FALSE)
      message(STATUS "Fetching slick-queue...")
+     include(FetchContent)
+ 
+diff --git a/cmake/slick-loggerConfig.cmake.in b/cmake/slick-loggerConfig.cmake.in
+index d7160a7..4c30d13 100644
+--- a/cmake/slick-loggerConfig.cmake.in
++++ b/cmake/slick-loggerConfig.cmake.in
+@@ -3,7 +3,7 @@
+ include(CMakeFindDependencyMacro)
+ 
+ # Find slick-queue dependency
+-find_dependency(slick-queue 1.5.0 CONFIG)
++find_dependency(slick-queue CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/slick-loggerTargets.cmake")
+ 

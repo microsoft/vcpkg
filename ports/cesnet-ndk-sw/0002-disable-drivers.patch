@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 286ce3f..4e875d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,7 +17,6 @@ set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "Main")
+ #check_function_exists(cmake_host_system_information HAVE_HSI)
+ #cmake_host_system_information(RESULT DISTRIB_ID_LIKE QUERY DISTRIB_ID_LIKE)
+ 
+-add_subdirectory(drivers)
+ add_subdirectory(libnfb)
+ add_subdirectory(ext)
+ add_subdirectory(tools)

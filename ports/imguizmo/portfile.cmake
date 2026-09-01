@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CedricGuillemet/ImGuizmo
-    REF ba662b119d64f9ab700bb2cd7b2781f9044f5565
-    SHA512 682d785b582379914d525985de3a0bc04932b4ed715607127b1803ffba4d9b85165255dca1c18d2fd0934bab43de5d6c9c2d9909ac84d0ddaea12dad1871bcf8
+    REF "${VERSION}"
+    SHA512 c707e22d3caffcf06c5aab33201ebc4fe352d07e893ee8623db374a7e848bc18d031fb1904e7ddae5573443783bd70ccf787cd7029074a1de2c7e9fe12a54733
     HEAD_REF master
-    PATCHES
-        fix-imgui-1.92.5.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

@@ -3,72 +3,69 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO madler/zlib
     REF "v${VERSION}"
-    SHA512 8c9642495bafd6fad4ab9fb67f09b268c69ff9af0f4f20cf15dfc18852ff1f312bd8ca41de761b3f8d8e90e77d79f2ccacd3d4c5b19e475ecf09d021fdfe9088
+    SHA512 16fea4df307a68cf0035858abe2fd550250618a97590e202037acd18a666f57afc10f8836cbbd472d54a0e76539d0e558cb26f059d53de52ff90634bbf4f47d4
     HEAD_REF master
     PATCHES
-        0001-remove-ifndef-NOUNCRYPT.patch
-        0002-add-declaration-for-mkdir.patch
-        pkgconfig.patch
-        android-fileapi.patch
+        pkgconfig.patch          # https://github.com/madler/zlib/pull/1242
+        install-tools.diff
+        restore-32bit.diff       # somewhere in https://github.com/madler/zlib/pull/1233
+        unofficial-iowin32.diff  # https://github.com/madler/zlib/pull/1243
+        header-destination.diff  # for https://github.com/madler/zlib/issues/1252
 )
-
-# Maintainer switch: Temporarily set this to 1 to re-generate the lists
-# of exported symbols. This is needed when the version is bumped.
-set(GENERATE_SYMBOLS 0)
-if(GENERATE_SYMBOLS)
-    vcpkg_cmake_get_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-    if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-        vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-    else()
-        set(GENERATE_SYMBOLS 0)
-    endif()
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        bzip2   ENABLE_BZIP2
+        bzip2               MINIZIP_ENABLE_BZIP2
+        unofficial-iowin32  WITH_UNOFFICIAL_IOWIN32
     INVERTED_FEATURES
-        tools   DISABLE_INSTALL_TOOLS
+        tools               DISABLE_INSTALL_TOOLS
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
-          "${CMAKE_CURRENT_LIST_DIR}/minizip-win32.def"
-          "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake.in"
-    DESTINATION "${SOURCE_PATH}/contrib/minizip"
-)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MINIZIP_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MINIZIP_BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/contrib/minizip"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPACKAGE_VERSION=${VERSION}
+        -DMINIZIP_BUILD_SHARED=${MINIZIP_BUILD_SHARED}
+        -DMINIZIP_BUILD_STATIC=${MINIZIP_BUILD_STATIC}
+        -DMINIZIP_BUILD_TESTING=OFF
     OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
         -DDISABLE_INSTALL_TOOLS=ON
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-minizip)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/minizip)
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/minizip.pc" " -lminizip" " -lminizips")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/minizip.pc" " -lminizip" " -lminizipsd")
+        else()
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/minizip.pc" " -lminizip" " -lminizipd")
+        endif()
+    endif()
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/minizip/minizipConfig.cmake" [[_MINIZIP_supported_components "shared" "static"]] [[_MINIZIP_supported_components "static"]])
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/minizip/minizipConfig.cmake" [[_MINIZIP_supported_components "shared" "static"]] [[_MINIZIP_supported_components "shared"]])
+endif()
+
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES minizip miniunz AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES minizip miniunzip AUTO_CLEAN)
 endif()
 
-if ("bzip2" IN_LIST FEATURES)
-    file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/minizip/*.h")
-    foreach(HEADER ${HEADERS})
-        vcpkg_replace_string("${HEADER}" "#ifdef HAVE_BZIP2" "#if 1" IGNORE_UNCHANGED)
-    endforeach()
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/minizipConfig.cmake" @ONLY)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-minizipConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-minizip")
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/contrib/minizip/MiniZip64_info.txt")
-
-if(GENERATE_SYMBOLS)
-    include("${CMAKE_CURRENT_LIST_DIR}/lib-to-def.cmake")
-    lib_to_def(BASENAME minizip REGEX "(call|fill|unz|win32|zip)")
-endif()

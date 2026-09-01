@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-server
     REF "mysql-${VERSION}"
-    SHA512 f0591d263de557877a618b04871d332dc227e26c7e9b61994093dc9af29971ea6332761de5391bb8da955bd58b3b98da90722bafdbf86f36764995a70f94ae62
+    SHA512 68e42702c3f99eb92f695d4d26cfbd7b07c0b8cfaa07f23d8aad5d7271fadf8d619679fcde821296c6dbc6b14b0c5637b31b5ec91eb414cfc5e19339bfdf6e07
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -17,7 +17,11 @@ vcpkg_from_github(
 )
 
 file(GLOB third_party "${SOURCE_PATH}/extra/*" "${SOURCE_PATH}/include/boost_1_*")
-list(REMOVE_ITEM third_party "${SOURCE_PATH}/extra/libedit")
+list(REMOVE_ITEM third_party
+    "${SOURCE_PATH}/extra/libedit"
+    "${SOURCE_PATH}/extra/unordered_dense"
+    "${SOURCE_PATH}/extra/xxhash"
+)
 if (third_party)
     file(REMOVE_RECURSE ${third_party})
 endif()
@@ -87,6 +91,7 @@ vcpkg_cmake_configure(
         -DFORCE_UNSUPPORTED_COMPILER=${FORCE_UNSUPPORTED_COMPILER}
         -DINSTALL_STATIC_LIBRARIES=${BUILD_STATIC_LIBS}
         -DLINK_STATIC_RUNTIME_LIBRARIES=${STATIC_CRT_LINKAGE}
+        -DWITH_EXT_BACKTRACE=OFF
     MAYBE_UNUSED_VARIABLES
         BUNDLE_RUNTIME_LIBRARIES # only on windows
         LINK_STATIC_RUNTIME_LIBRARIES # only on windows

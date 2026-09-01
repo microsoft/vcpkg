@@ -8,6 +8,12 @@ vcpkg_from_github(
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
         0005-dont-expect-gnu-diff.patch
+        0006-gen-vcxproj-ignore-unknown-flags.patch
+        # Candidate upstream fix: makes configure-time toolchain probes use -Fo/-Fe when CC/LD is cl.exe or clang-cl.
+        # Once upstream picks this up (or once we drop --enable-external-build), the MSVC arm64 SVE workaround below can also be removed.
+        0007-msvc-use-Fo-in-toolchain-probe.patch
+        # mingw shared .dll patch
+        0008-enable-shared-on-mingw.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -30,6 +36,12 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp")
+    # Remove stale vpx-* dist directories from previous builds to avoid picking old artifacts.
+    file(GLOB _vpx_stale_dirs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*")
+    if(_vpx_stale_dirs)
+        file(REMOVE_RECURSE ${_vpx_stale_dirs})
+    endif()
+
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(LIBVPX_CRT_LINKAGE --enable-static-msvcrt)
@@ -68,14 +80,26 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_TARGET_VS "vs15")
     endif()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --enable-pic")
+    set(OPTIONS --disable-examples --disable-tools --disable-docs --enable-pic --disable-dependency-tracking)
+
+    # Force VS generation to avoids Unix-style rules that break with cl/ar semantics
+    list(APPEND OPTIONS --enable-external-build)
+
+   # Disable SVE/SVE2 probe to avoids missing `<arm_sve.h>` in pure-MSVC.
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        vcpkg_cmake_get_vars(_libvpx_cmake_vars_file)
+        include("${_libvpx_cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+            list(APPEND OPTIONS --disable-sve --disable-sve2)
+        endif()
+    endif()
 
     if("realtime" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+        list(APPEND OPTIONS --enable-realtime-only)
     endif()
 
     if("highbitdepth" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+        list(APPEND OPTIONS --enable-vp9-highbitdepth)
     endif()
 
     message(STATUS "Generating makefile")
@@ -103,13 +127,18 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_SUBPATH vpx.vcxproj
     )
 
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
-    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nopost-nomt-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
-    else()
-        set(LIBVPX_INCLUDE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-vp8-vp9-nodocs-${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
+    # libvpx's make dist creates a directory with the pattern:
+    #   vpx-[CODEC_FEATURES]-[ARCH][CRT]-[VS]-v[VERSION]
+    # GLOB to find the actual directory.
+    file(GLOB LIBVPX_INCLUDE_DIR_CANDIDATES
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vpx-*${LIBVPX_TARGET_ARCH}${LIBVPX_CRT_SUFFIX}-${LIBVPX_TARGET_VS}-v${VERSION}/include/vpx")
+    list(LENGTH LIBVPX_INCLUDE_DIR_CANDIDATES _vpx_n)
+    if(_vpx_n EQUAL 0)
+        message(FATAL_ERROR "libvpx: no dist include directory found under ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/")
+    elseif(_vpx_n GREATER 1)
+        message(FATAL_ERROR "libvpx: found ${_vpx_n} candidate dist directories; expected exactly one")
     endif()
+    list(GET LIBVPX_INCLUDE_DIR_CANDIDATES 0 LIBVPX_INCLUDE_DIR)
     file(
         INSTALL
             "${LIBVPX_INCLUDE_DIR}"
@@ -129,24 +158,24 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
 else()
 
-    set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic")
+    set(OPTIONS --disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic)
 
-    set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
-    set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
-    set(AS_NASM "--as=nasm")
+    set(OPTIONS_DEBUG --enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug)
+    set(OPTIONS_RELEASE --prefix=${CURRENT_PACKAGES_DIR})
+    set(AS_NASM --as=nasm)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
+        list(APPEND OPTIONS --disable-static --enable-shared)
     else()
-        set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
+        list(APPEND OPTIONS --enable-static --disable-shared)
     endif()
 
     if("realtime" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-realtime-only")
+        list(APPEND OPTIONS --enable-realtime-only)
     endif()
 
     if("highbitdepth" IN_LIST FEATURES)
-        set(OPTIONS "${OPTIONS} --enable-vp9-highbitdepth")
+        list(APPEND OPTIONS --enable-vp9-highbitdepth)
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
@@ -159,6 +188,8 @@ else()
         set(LIBVPX_TARGET_ARCH "arm64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL riscv64)
         set(LIBVPX_TARGET_ARCH "riscv64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL wasm32)
+        set(LIBVPX_TARGET_ARCH "wasm32")
     else()
         message(FATAL_ERROR "libvpx does not support architecture ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
@@ -175,7 +206,7 @@ else()
         set(ENV{CC} ${VCPKG_DETECTED_CMAKE_C_COMPILER})
         set(ENV{CXX} ${VCPKG_DETECTED_CMAKE_CXX_COMPILER})
         set(ENV{AR} ${VCPKG_DETECTED_CMAKE_AR})
-        set(ENV{LD} ${VCPKG_DETECTED_CMAKE_LINKER})
+        set(ENV{LD} ${VCPKG_DETECTED_CMAKE_CXX_COMPILER})
         set(ENV{RANLIB} ${VCPKG_DETECTED_CMAKE_RANLIB})
         set(ENV{STRIP} ${VCPKG_DETECTED_CMAKE_STRIP})
     endif()
@@ -184,8 +215,11 @@ else()
         if(LIBVPX_TARGET_ARCH STREQUAL "x86")
             set(LIBVPX_TARGET "x86-win32-gcc")
         else()
-            set(LIBVPX_TARGET "x86_64-win64-gcc")
+            set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-win64-gcc")
         endif()
+    elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+        # WASM use target generic-gnu
+        set(LIBVPX_TARGET "generic-gnu")
     elseif(VCPKG_TARGET_IS_LINUX)
         # RISCV64 use target generic-gnu
         if(LIBVPX_TARGET_ARCH STREQUAL "riscv64")
@@ -197,19 +231,19 @@ else()
         set(LIBVPX_TARGET "generic-gnu")
         # Settings
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(OPTIONS "${OPTIONS} --disable-sse4_1 --disable-avx --disable-avx2 --disable-avx512")
+            list(APPEND OPTIONS --disable-sse4_1 --disable-avx --disable-avx2 --disable-avx512)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(OPTIONS "${OPTIONS} --disable-avx --disable-avx2 --disable-avx512")
+            list(APPEND OPTIONS --disable-avx --disable-avx2 --disable-avx512)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-            set(OPTIONS "${OPTIONS} --enable-thumb --disable-neon")
+            list(APPEND OPTIONS --enable-thumb --disable-neon)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            set(OPTIONS "${OPTIONS} --enable-thumb")
+            list(APPEND OPTIONS --enable-thumb)
         endif()
         # Set environment variables for configure
         set(ENV{AS} ${VCPKG_DETECTED_CMAKE_C_COMPILER})
         set(ENV{LDFLAGS} "${LDFLAGS} --target=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET}")
         # Set clang target
-        set(OPTIONS "${OPTIONS} --extra-cflags=--target=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET} --extra-cxxflags=--target=${VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET}")
+        list(APPEND OPTIONS --extra-cflags=--target=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET} --extra-cxxflags=--target=${VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET})
         # Unset nasm and let AS do its job
         unset(AS_NASM)
     elseif(VCPKG_TARGET_IS_OSX)
@@ -321,4 +355,12 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-libvpx-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-libvpx/unofficial-libvpx-config.cmake" @ONLY)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    COMMENT [[
+The first LICENSE below is the libvpx license (BSD-3-Clause).
+The second LICENSE below is the license of the bundled third_party/x86inc assembly macros (ISC), which are assembled into libvpx on x86 and x64 targets.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/third_party/x86inc/LICENSE"
+)

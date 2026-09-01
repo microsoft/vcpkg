@@ -1,5 +1,5 @@
 diff --git a/Configure.cmake b/Configure.cmake
-index e23f577..c7b5023 100644
+index 23225ab..178ea44 100644
 --- a/Configure.cmake
 +++ b/Configure.cmake
 @@ -55,9 +55,15 @@ endif()
@@ -29,10 +29,10 @@ index 6e423f2..4d415ab 100644
 +endif()
  include("${CMAKE_CURRENT_LIST_DIR}/sleefTargets.cmake")
 diff --git a/src/dft/CMakeLists.txt b/src/dft/CMakeLists.txt
-index 15bee24..526c4f8 100644
+index 57a4a80..d57c3b8 100644
 --- a/src/dft/CMakeLists.txt
 +++ b/src/dft/CMakeLists.txt
-@@ -216,8 +216,8 @@ endif()
+@@ -218,8 +218,8 @@ endif()
  
  # Compiler properties
  
@@ -43,7 +43,7 @@ index 15bee24..526c4f8 100644
  
  if(MSVC)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
-@@ -414,7 +414,7 @@ endforeach()
+@@ -416,7 +416,7 @@ endforeach()
  # Target libdft
  
  add_library(${TARGET_LIBDFT} $<TARGET_OBJECTS:dftcommon_obj> $<TARGET_OBJECTS:dft_obj> ${UNROLL_OBJECTS})

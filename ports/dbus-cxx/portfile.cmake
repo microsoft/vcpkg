@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbus-cxx/dbus-cxx
     REF "${VERSION}"
-    SHA512 ad6551d03d0c7d499e9f0c6d77584e39d361a1464017be3c40c237d4c43306ad0ffb49b52c06b89cd62ec7346ebcb29f3d166a31b245fd978159e337a08ebafb
+    SHA512 6a0635a564a5172a975560d555e32c727727c48f61d172c75fee29b5f2d9d9caa561e2db5c0e8384325d4511f3f1bf19ad88e39cefbebca029d7ec8d947464ca
     HEAD_REF master
     PATCHES
-        create-cmakeconfig.patch    
-        use-cmakeconfig.patch
+        fix-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

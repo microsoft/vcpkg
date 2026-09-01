@@ -9,6 +9,10 @@ vcpkg_from_github(
     PATCHES
         fix-find-seal.patch
         fix-c2398.patch
+        fix-find-kuku.patch
+        fix-log4cplus-byte-ambiguity.patch
+        # https://github.com/microsoft/APSI/issues/84
+        fix-jsoncpp-target.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,13 +28,12 @@ if (VCPKG_CROSSCOMPILING)
     endif()
     if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(CROSSCOMP_OPTIONS -DAPSI_FOURQ_AMD64_EXITCODE=0 -DHAVE_AVX_EXTENSIONS_EXITCODE=0 -DHAVE_AVX2_EXTENSIONS_EXITCODE=1)
-    endif() 
+    endif()
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DAPSI_BUILD_TESTS=OFF
         -DAPSI_BUILD_CLI=OFF
         ${FEATURE_OPTIONS}

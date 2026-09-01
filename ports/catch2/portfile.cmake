@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
     REF v${VERSION}
-    SHA512 6eeeedc4e38b79a0a7253edfce3e29862a8761b6556f77aa3f77debd4e6631e0b57cdce7657eba2df01c4e2fd494c5b3f4bbf0dbdff32763387cf6c75d6e0c50
+    SHA512 b17a1d03bd206ec2a006bfd2cb6a40cb641dd6c3ee192f4e4830ecc2c7fe60ffb2d98397adbb7c039b065c891ebc5dcd0e02331dff472ced7411f8263e1d7b29
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
@@ -42,23 +42,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/benchmark/internal")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/generators/internal")
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch_all.hpp>")
-
-# Copy pdb files to lib folders
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  # Catch2 builds static libraries even when shared libraries are requested.
-  # We thus cannot use vcpkg_copy_pdbs which only works for dlls but have to search for the pdbs manually.
-  file(GLOB_RECURSE catch2_pdb_files "${CURRENT_BUILDTREES_DIR}/*.pdb")
-  list(FILTER catch2_pdb_files INCLUDE REGEX ".*${TARGET_TRIPLET}.*")
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    set(catch2_release_pdb_files ${catch2_pdb_files})
-    list(FILTER catch2_release_pdb_files INCLUDE REGEX ".*${TARGET_TRIPLET}-rel.*")
-    file(COPY ${catch2_release_pdb_files} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  endif()
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    set(catch2_debug_pdb_files ${catch2_pdb_files})
-    list(FILTER catch2_debug_pdb_files INCLUDE REGEX ".*${TARGET_TRIPLET}-dbg.*")
-    file(COPY ${catch2_debug_pdb_files} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  endif()
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

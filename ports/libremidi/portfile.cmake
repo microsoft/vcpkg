@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jcelerier/libremidi
     REF "v${VERSION}"
-    SHA512 4ba9d06a171dc29c393d5401661cbefbd5cdcc00ae8a02cb64345367b829ea49b109056167ea86c0f85e1d4f6ce9a01be89c988f03dc90f02ae4943d13b74845
+    SHA512 7eac753eedb7cb420881182516b8d9af710dde3d70c9decf0650dbd5d08a0b1c798b79454aa1d18db07fb6761d6d05d91312e546c57d67cfb815dce731709aab
     HEAD_REF master
 )
 
@@ -20,6 +20,8 @@ vcpkg_cmake_configure(
         -DLIBREMIDI_NO_BOOST=ON
         -DLIBREMIDI_NO_JACK=ON
         -DLIBREMIDI_NO_PIPEWIRE=ON
+        -DLIBREMIDI_NO_ANDROID=ON
+        -DLIBREMIDI_NO_WINMIDI=ON
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mysql/mysql-connector-cpp
     REF "${VERSION}"
-    SHA512 aa432822d4c9d7f1328bf59e261c362570f6b2237a5a9f730f96f079aba14bdc689f400ab2857c4cdd1dca025eb09eaaf2b26328f3b42d117f24b9182dc2cc0a
+    SHA512 85907f4c506dea15fd8c7eb203c1f434929a7c47d3a3e10cc1574e9bc31ceb11d373e7f513e98419d7714e905969377de83e62cf87f6fd3e18071bfd563fc9ac
     HEAD_REF master
     PATCHES
         depfindprotobuf.diff

@@ -1,0 +1,14 @@
+diff --git a/Configure.cmake b/Configure.cmake
+index 178ea44..ef5676c 100644
+--- a/Configure.cmake
++++ b/Configure.cmake
+@@ -877,6 +877,9 @@ endif()
+ # Built-in math functions
+ 
+ CHECK_C_SOURCE_COMPILES("
++  #if defined(_MSC_VER) && _MSC_VER == 1951
++  #error Not supported, avoid a compiler crash
++  #endif
+   int main(void) {
+     double a = __builtin_sqrt (2);
+     float  b = __builtin_sqrtf(2);

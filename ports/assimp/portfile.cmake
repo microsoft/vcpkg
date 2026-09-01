@@ -51,7 +51,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/assimp")
 vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCVER vc140 vc141 vc142 vc143)
+    set(VCVER vc140 vc141 vc142 vc143 vc145)
     set(CRT mt md)
     set(DBG_NAMES)
     set(REL_NAMES)

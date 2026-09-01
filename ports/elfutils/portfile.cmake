@@ -8,6 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        crc32.diff
         disable-werror.diff
         link-libs.diff
         rpath-link.diff

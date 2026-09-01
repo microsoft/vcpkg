@@ -24,6 +24,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         x11     CMAKE_REQUIRE_FIND_PACKAGE_X11
 )
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    # Without this change, the library hardcodes vcpkg's package staging directory.
+    # Change to the expected system location.
+    list(APPEND options "-DDBUS_RUNSTATEDIR=/run")
+endif()
+
 unset(ENV{DBUSDIR})
 
 vcpkg_cmake_configure(

@@ -1,0 +1,6 @@
+cppduals provides CMake targets:
+
+    find_package(cppduals CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cppduals::duals)
+
+If you use this in research, please cite doi:10.21105/joss.01487 (Tesch, JOSS 4(43):1487, 2019).

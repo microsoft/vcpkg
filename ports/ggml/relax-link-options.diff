@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index c8f3d859..8aa425f6 100644
+index 1ec27e83..3cef2687 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -117,9 +117,7 @@ if (NOT MSVC)

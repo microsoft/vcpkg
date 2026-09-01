@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 e5bb42320b53adcee71712d948f0ff7616867edc01d41f8833c03ae1594fa2dbb4b4143d038a9a9638751091154abdd0164468d5b8113d40c747a2a0b5a437cd
+    SHA512 f474174c27fec97b26809ae28ded2923f37e82fd25783ce31bbee40a99a02e5f9ce517583f0e499d91289e6b0ebae8e2dc249cba721d827ee35c7b867378797d
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH

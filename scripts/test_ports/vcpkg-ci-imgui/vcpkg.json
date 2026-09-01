@@ -6,13 +6,7 @@
   "license": "MIT",
   "dependencies": [
     {
-      "name": "imgui",
-      "features": [
-        "test-engine"
-      ]
-    },
-    {
-      "name":"glfw3",
+      "name": "glfw3",
       "features": [
         "wayland"
       ],
@@ -22,6 +16,7 @@
       "name": "imgui",
       "features": [
         "glfw-binding",
+        "test-engine",
         "webgpu-binding"
       ]
     },

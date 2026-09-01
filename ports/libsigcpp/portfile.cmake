@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsigcplusplus/libsigcplusplus
     REF "${VERSION}"
-    SHA512 8fc90594fe161a4fd82b88fe4b0cb5b667d61712dae47982ba569775b4a855e03d4b30d3ba232f96e6a98f87473f7c9d4948b7a17a3f9ca2da547f95b6f91a40
+    SHA512 39c63131fdde701c08accc0bc318435fba65a01593f97d6fa61ad356a6a3441610810107fb7aded7b3ef48e34a603e513a43cf8c36a57d2286f54d41ead412c6
     HEAD_REF master
     PATCHES
         disable_tests_enable_static_build.patch

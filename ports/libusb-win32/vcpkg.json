@@ -1,6 +1,6 @@
 {
   "name": "libusb-win32",
-  "version": "1.4.0.0",
+  "version": "1.4.0.2",
   "description": "Allows user space applications to access many USB device on Windows.",
   "homepage": "https://github.com/mcuee/libusb-win32",
   "license": "LGPL-3.0-only",

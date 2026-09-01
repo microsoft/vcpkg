@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(sdl3-image-test C CXX) # C++ for tiff[lerc]
+project(sdl3-image-test C CXX) # C++ for tiff[lerc] and sdl3(android)
 
 block(SCOPE_FOR VARIABLES)
     find_package(SDL3_image CONFIG REQUIRED)
@@ -21,5 +21,9 @@ block(SCOPE_FOR VARIABLES)
         # Use raw flags, avoid find_library
         target_compile_options(main-pkconfig PRIVATE ${PC_SDL3_IMAGE_CFLAGS})
         target_link_libraries(main-pkconfig PRIVATE ${PC_SDL3_IMAGE_LDFLAGS})
+    endif()
+    if(ANDROID)
+        # sdl3 needs C++ linker for HID, but it is not carried in sdl3.pc
+        set_target_properties(main-pkconfig PROPERTIES LINKER_LANGUAGE CXX)
     endif()
 endblock()

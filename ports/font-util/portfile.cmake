@@ -3,17 +3,22 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO font/util
-    REF "font-util-${VERSION}"
-    SHA512 93285c2e8c5c01f069a7621dba0bbb1175c0ebbea27d521395b40f036443c162fc1948c4d3cb34fe6c509d1818d95ed7e6d38919e3f7857dfa53e388aadb9128
-    HEAD_REF master
-    PATCHES build.patch
-) 
+vcpkg_download_distfile(
+    FONTUTIL_ARCHIVE
+    URLS "https://www.x.org/archive//individual/font/font-util-${VERSION}.tar.xz"
+    FILENAME "font-util-${VERSION}.tar.xz"
+    SHA512 3def5f08bcb30ec3e0008f648478ebe1f65127d03e821613de550e95247812751b4ff31383739ad120123b2f69c87d819c18d44d1edee2ca51075a3c031e3a6f
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${FONTUTIL_ARCHIVE}"
+    PATCHES
+        build.patch
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -52,6 +57,5 @@ if(NOT VCPKG_BUILD_TYPE)
     string(REPLACE "exec_prefix=\${prefix}" "exec_prefix=\${prefix}/../tools/${PORT}" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
 endif()
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
-endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

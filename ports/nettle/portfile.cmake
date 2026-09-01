@@ -86,6 +86,7 @@ vcpkg_configure_make(
         ${OPTIONS}
         --disable-documentation
         --disable-openssl
+        ac_cv_prog_cc_c23=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
     OPTIONS_DEBUG
         --disable-tools

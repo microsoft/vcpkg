@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4e9d498..70414b4 100644
+index 3246265..295da5f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -410,7 +410,6 @@ option(EXTENSION_STATIC_BUILD
+@@ -420,7 +420,6 @@ option(EXTENSION_STATIC_BUILD
          FALSE)
  
  if(WIN32 OR ZOS)
@@ -10,7 +10,7 @@ index 4e9d498..70414b4 100644
    add_definitions(-D_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS=1)
  endif()
  
-@@ -857,6 +856,7 @@ if (NOT EXTENSION_CONFIG_BUILD AND NOT ${EXTENSION_TESTS_ONLY} AND NOT CLANG_TID
+@@ -863,6 +862,7 @@ if (NOT ${EXTENSION_CONFIG_BUILD} AND NOT ${EXTENSION_TESTS_ONLY} AND NOT CLANG_
      message(STATUS "Extensions will be deployed to: ${LOCAL_EXTENSION_REPO_DIR}")
    endif()
  endif()
@@ -18,7 +18,7 @@ index 4e9d498..70414b4 100644
  
  function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTENSION_VERSION CAPI_VERSION PARAMETERS)
    set(TARGET_NAME ${NAME}_loadable_extension)
-@@ -875,6 +875,8 @@ function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTEN
+@@ -881,6 +881,8 @@ function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTEN
  
    if(EMSCRIPTEN)
       add_library(${TARGET_NAME} STATIC ${FILES})

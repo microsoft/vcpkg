@@ -93,7 +93,7 @@ are some ways you can contribute:
 * [Submit issues][contributing:submit-issue] in vcpkg or existing packages
 * [Submit fixes and new packages][contributing:submit-pr]
 
-Please refer to our [mantainer guide](https://learn.microsoft.com/vcpkg/contributing/maintainer-guide) and
+Please refer to our [maintainer guide](https://learn.microsoft.com/vcpkg/contributing/maintainer-guide) and
 [packaging tutorial](https://learn.microsoft.com/vcpkg/get_started/get-started-packaging) for more details.
 
 This project has adopted the [Microsoft Open Source Code of
@@ -131,7 +131,7 @@ system preferred by the original developers of those libraries, and download
 source code and build tools from their official distribution locations. For use
 behind a firewall, the specific access needed will depend on which ports are
 being installed. If you must install it in an "air gapped" environment, consider
-instaling once in a non-"air gapped" environment, populating an [asset
+installing once in a non-"air gapped" environment, populating an [asset
 cache](https://learn.microsoft.com/vcpkg/users/assetcaching) shared with the otherwise "air gapped"
 environment.
 

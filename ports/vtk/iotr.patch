@@ -1,17 +1,5 @@
-diff --git a/IO/IOSS/vtkIOSSUtilities.cxx b/IO/IOSS/vtkIOSSUtilities.cxx
-index 26470b965..bee76107a 100644
---- a/IO/IOSS/vtkIOSSUtilities.cxx
-+++ b/IO/IOSS/vtkIOSSUtilities.cxx	
-@@ -38,6 +38,7 @@
- #include <Ioss_NodeBlock.h>
- #include <Ioss_SideBlock.h>
- #include <Ioss_SideSet.h>
-+#include <Iotr_Factory.h>
- 
- #include <memory>
- 
 diff --git a/IO/IOSS/vtkIOSSReaderInternal.cxx b/IO/IOSS/vtkIOSSReaderInternal.cxx
-index de8d456..237644b 100644
+index de8d4561..237644bb 100644
 --- a/IO/IOSS/vtkIOSSReaderInternal.cxx
 +++ b/IO/IOSS/vtkIOSSReaderInternal.cxx
 @@ -9,6 +9,8 @@
@@ -23,4 +11,15 @@ index de8d456..237644b 100644
  #include "vtkCellArrayIterator.h"
  #include "vtkCellData.h"
  #include "vtkDataArraySelection.h"
-
+diff --git a/IO/IOSS/vtkIOSSUtilities.cxx b/IO/IOSS/vtkIOSSUtilities.cxx
+index 38765256..c0d9c3d6 100644
+--- a/IO/IOSS/vtkIOSSUtilities.cxx
++++ b/IO/IOSS/vtkIOSSUtilities.cxx
+@@ -32,6 +32,7 @@
+ #include <Ioss_NodeBlock.h>
+ #include <Ioss_SideBlock.h>
+ #include <Ioss_SideSet.h>
++#include <Iotr_Factory.h>
+ 
+ #include <memory>
+ 

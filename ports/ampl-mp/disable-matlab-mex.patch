@@ -1,8 +1,8 @@
 diff --git a/src/asl/CMakeLists.txt b/src/asl/CMakeLists.txt
-index b7d7ecf..c31a032 100644
+index b1a15ab..79e1d5f 100644
 --- a/src/asl/CMakeLists.txt
 +++ b/src/asl/CMakeLists.txt
-@@ -59,7 +59,7 @@ endif ()
+@@ -58,7 +58,7 @@ endif ()
  
  target_link_libraries(aslmp ${CMAKE_DL_LIBS})
  

@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Kuku
     REF "v${VERSION}"
-    SHA512 4b0f0cae191c70d20337fb1581fa06a8fe363a942cf3a3b6be59fbef551b70446405fb1e4e5e7ec917d5519e8d2ad0ea59bd59c36dbf917e838fc1a1cd6a3bef
+    SHA512 c5c79d0ca94e4a02786934ac419311ce2a46090b8846b885ec11f24205977a02270a14bbd7178b82eb9284e3345c89a421b710171bac5946491a61c9661775b8
     HEAD_REF main
 )
 
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Kuku-2.1)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Kuku)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

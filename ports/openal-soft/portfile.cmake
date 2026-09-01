@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         pkgconfig-cxx.diff
         devendor-fmt.diff
+        fix-fmt-header.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

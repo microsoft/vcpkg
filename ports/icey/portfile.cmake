@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nilstate/icey
-    REF 6692243b82e687279ed40f6df54ab93d8964b6a1 # 2.4.2
-    SHA512 c1956e7035c2f4aef8cd1005fc8f6373d4b90c4409bd1dd104b5f9f415f9e347da7b1c530ac8f1192f7953a076ec21f0a8aed9618e236324e0c5154f12e79dce
+    REF ${VERSION}
+    SHA512 666f3f3151b855d7463690fbf42380d31b5b9998dd4e4b99cf0e7a24d3dc7fdcf7bca2bea8e1e08f5704194734379281dc034103b02a9e60812ce3ee568a0b02
     HEAD_REF main
     PATCHES
-        001-devendor-nlohmann-json.patch
+        fix-minizip-config.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,6 +26,7 @@ vcpkg_cmake_configure(
         -DBUILD_ALPHA=OFF
         -DWITH_LIBDATACHANNEL=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
+        -DVCPKG_LOCK_FIND_PACKAGE_minizip=ON
         -DENABLE_NATIVE_ARCH=OFF
         ${FEATURE_OPTIONS}
 )

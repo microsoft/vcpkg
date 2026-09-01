@@ -1,3 +1,3 @@
-set(qthttpserver_HASH "7fb6d3aa7f8785b9fd1dddc5762c3f756f14217f2f8d256a667dfc547c13ef9419e3a331878eb5ba98f36c50f57ef3385ab182d99a5140eb947a80e3a67d2297")
-set(qthttpserver_URL "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/qthttpserver-everywhere-src-6.10.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.2/submodules/qthttpserver-everywhere-src-6.10.2.tar.xz")
-set(qthttpserver_FILENAME "qthttpserver-everywhere-src-6.10.2.tar.xz")
+set(qthttpserver_HASH "e80fc75df50b4f79ad17b1bda49ecda9ed5020cdc327ec20946e45b4c61eec3070903b53d5faadc5c6b9b72e3deab53b0d0e9b6cbc8853d7255f4929ce5acbcf")
+set(qthttpserver_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qthttpserver-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qthttpserver-everywhere-src-6.11.1.tar.xz")
+set(qthttpserver_FILENAME "qthttpserver-everywhere-src-6.11.1.tar.xz")

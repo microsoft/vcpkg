@@ -1,5 +1,5 @@
 diff --git a/contrib/ecalhdf5/CMakeLists.txt b/contrib/ecalhdf5/CMakeLists.txt
-index c167bacd4..45e754340 100644
+index 3b7eb705a..1c7f4598c 100644
 --- a/contrib/ecalhdf5/CMakeLists.txt
 +++ b/contrib/ecalhdf5/CMakeLists.txt
 @@ -18,9 +18,14 @@

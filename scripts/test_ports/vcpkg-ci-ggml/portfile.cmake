@@ -8,7 +8,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/examples/test-cmake"
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 vcpkg_cmake_build()

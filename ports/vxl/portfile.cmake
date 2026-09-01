@@ -11,13 +11,13 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake-package.diff
-        devendor.diff
+        devendor-and-conflicts.diff
         disable-tests.diff
-        file_formats.diff
+        file-formats.diff
         limits.diff
         mingw.diff
-        openjpeg.diff
 )
+
 file(GLOB_RECURSE vendored_sources "${SOURCE_PATH}/v3p/*.c" "${SOURCE_PATH}/v3p/*.cpp" "${SOURCE_PATH}/v3p/*.cxx")
 list(FILTER vendored_sources EXCLUDE REGEX "/(netlib|openjpeg2)/")
 file(REMOVE_RECURSE ${vendored_sources})

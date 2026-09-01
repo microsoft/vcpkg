@@ -1,6 +1,6 @@
 {
   "name": "rang",
-  "version": "3.2",
+  "version": "3.3",
   "description": "Colors for your Terminal.",
   "homepage": "https://github.com/agauniyal/rang",
   "dependencies": [

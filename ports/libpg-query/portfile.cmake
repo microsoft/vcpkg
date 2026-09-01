@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pganalyze/libpg_query
     REF "${VERSION}"
-    SHA512 1570ff2347be48a93d764e2aac19639cef538566ce1c458aa5171698f0b886ca98f1f0e27faa23019b884d956f735f6ac39b71b8af9c4676d6a40d9f669b0ea6
+    SHA512 6b58ba3ac7f8b0cf16baa4bbe0d8184eb727c20b74158013c2f2790521c65e996f6545302d9c7f7dc4edf7ffc4d57657ced3cb5e7b1179696093c94c4e8bf43b
     HEAD_REF master
     PATCHES
         0001-use-system-deps.patch

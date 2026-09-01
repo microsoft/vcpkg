@@ -10,7 +10,7 @@ vcpkg_download_distfile(GLIB_ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "${PORT}-${VERSION}.tar.xz"
-    SHA512 ceead8d88720db17dc6bbff7aff14f261f90afc5e8261448aae0657f89b5fcc616cf62f4b049be88a4ddd3f50a869bbcdb66b29777da4969a47987828ecac280
+    SHA512 9e2b4985d5e4e06c6897a33cf8c100b9303528ebd72152c10e4cb734fa62fc011c84b816b20f686a3b2aac9a4a5a46f33e7517b4c4c7f3c25c75ac3ddc11f844
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -160,4 +160,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib/gio"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt"
+        "${SOURCE_PATH}/LICENSES/LGPL-2.1-only.txt"
+        "${SOURCE_PATH}/LICENSES/MPL-1.1.txt"
+)

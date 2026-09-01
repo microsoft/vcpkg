@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 005044e..9b8b22c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,9 +18,4 @@ set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "Main")
+ #cmake_host_system_information(RESULT DISTRIB_ID_LIKE QUERY DISTRIB_ID_LIKE)
+ 
+ add_subdirectory(libnfb)
+-add_subdirectory(tools)
+-add_subdirectory(tools-debug)
+-add_subdirectory(tools-misc)
+ add_subdirectory(utils)
+-add_subdirectory(pynfb)
+-add_subdirectory(python/nfb-tools)

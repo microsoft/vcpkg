@@ -1,0 +1,30 @@
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -90,6 +90,7 @@
+ # Note: the folders that are being commented out have not been properly
+ # addressed yet.
+ 
++if(FALSE)
+ if(NOT MSVC AND USE_XNNPACK)
+   if(NOT TARGET fxdiv)
+     set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+@@ -99,6 +100,7 @@
+       "${CMAKE_BINARY_DIR}/FXdiv")
+   endif()
+ endif()
++endif()
+ 
+ add_subdirectory(core)
+ add_subdirectory(serialize)
+@@ -1220,8 +1222,10 @@
+   endif()
+ endif()
+ 
+-if(NOT MSVC AND USE_XNNPACK)
++if(FALSE)
++  if(NOT MSVC AND USE_XNNPACK)
+   TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
++  endif()
+ endif()
+ 
+ # ==========================================================

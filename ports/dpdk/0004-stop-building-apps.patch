@@ -1,8 +1,8 @@
 diff --git a/app/meson.build b/app/meson.build
-index e2db888ae1..5e28824780 100644
+index 1798db3..4efbafc 100644
 --- a/app/meson.build
 +++ b/app/meson.build
-@@ -52,7 +52,7 @@ endif
+@@ -48,7 +48,7 @@ endif
  
  foreach app:apps
      name = app

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenColorIO
     REF "v${VERSION}"
-    SHA512 93d370a96882523defbaeb3c546860bf08cb152e430ff28cf02a976d265f0785d92aed1ab69a44db9ae4fc220ab1adaf0c5c1ecd2426d6b192a48add4c479364
+    SHA512 99f222158a67ff8ba981f01a908915a9e08a76b1eb73c667ff38990b31dd9a4c1f5934e924daaff18eef2fc96dd10928b77be18c97489b1aff631409631122e3
     HEAD_REF master
     PATCHES
         dependencies.diff

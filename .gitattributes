@@ -3,3 +3,8 @@ ports/** -linguist-detectable
 
 # Declare files that will always have LF line endings on checkout.
 scripts/ci.baseline.txt text eol=lf
+
+# Stored patch files may legitimately contain whitespace that represents the
+# patched content rather than the patch file itself.
+*.diff -whitespace
+*.patch -whitespace
