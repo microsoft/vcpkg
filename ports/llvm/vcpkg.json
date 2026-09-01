@@ -1,7 +1,6 @@
 {
   "name": "llvm",
-  "version": "18.1.6",
-  "port-version": 6,
+  "version": "23.1.0",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0 WITH LLVM-exception",
@@ -28,7 +27,7 @@
     "clang",
     "default-targets",
     "enable-bindings",
-    "enable-terminfo",
+    "enable-libxml2",
     "enable-zlib",
     "enable-zstd",
     "lld",
@@ -55,6 +54,19 @@
           "default-features": false,
           "features": [
             "tools"
+          ]
+        }
+      ]
+    },
+    "clang-enable-cir": {
+      "description": "Include ClangIR.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "mlir"
           ]
         }
       ]
@@ -175,9 +187,6 @@
     "enable-rtti": {
       "description": "Build LLVM with run-time type information."
     },
-    "enable-terminfo": {
-      "description": "Use terminfo database if available."
-    },
     "enable-zlib": {
       "description": "Build with ZLib.",
       "dependencies": [
@@ -201,8 +210,19 @@
           "default-features": false,
           "features": [
             "clang",
-            "mlir",
-            "tools"
+            "mlir"
+          ]
+        }
+      ]
+    },
+    "flang-rt": {
+      "description": "Include flang-rt library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "flang"
           ]
         }
       ]
@@ -215,14 +235,24 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "tools"
+            "clang"
           ]
         }
       ]
     },
     "libclc": {
-      "description": "Include OpenCL library."
+      "description": "Include OpenCL library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "clang",
+            "tools"
+          ]
+        }
+      ]
     },
     "libcxx": {
       "description": "Include libcxx library.",
@@ -232,8 +262,7 @@
           "default-features": false,
           "features": [
             "clang",
-            "libcxxabi",
-            "tools"
+            "libcxxabi"
           ]
         }
       ]
@@ -246,11 +275,14 @@
           "default-features": false,
           "features": [
             "clang",
-            "libcxx",
-            "tools"
+            "libcxx"
           ]
         }
       ]
+    },
+    "libsycl": {
+      "description": "Export libsycl library.",
+      "supports": "!(windows & staticcrt)"
     },
     "libunwind": {
       "description": "Include libunwind library.",
@@ -283,9 +315,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "enable-terminfo",
-            "tools"
+            "clang"
           ]
         }
       ]
@@ -297,8 +327,19 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools",
             "utils"
+          ]
+        }
+      ]
+    },
+    "offload": {
+      "description": "Include offload library.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "openmp"
           ]
         }
       ]
@@ -316,6 +357,9 @@
         }
       ]
     },
+    "orc-rt": {
+      "description": "Include orc-rt library."
+    },
     "polly": {
       "description": "Include Polly (Polyhedral optimizations for LLVM) project.",
       "dependencies": [
@@ -323,20 +367,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools",
             "utils"
-          ]
-        }
-      ]
-    },
-    "pstl": {
-      "description": "Include pstl (Parallel STL) library.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
           ]
         }
       ]
@@ -432,7 +463,7 @@
       "description": "Build with Sparc backend."
     },
     "target-spirv": {
-      "description": "Build with SPIRV backend (experimental)."
+      "description": "Build with SPIRV backend."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
