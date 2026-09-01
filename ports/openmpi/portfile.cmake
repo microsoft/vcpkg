@@ -23,7 +23,9 @@ vcpkg_list(PREPEND VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG [[--datadir=\${prefix}/../
 vcpkg_list(PREPEND VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE [[--datadir=\${prefix}/tools/openmpi/share]])
 if(VCPKG_TARGET_IS_OSX)
     # This ensures that vcpkg-fixup-macho-rpath succeeds
-    string(APPEND VCPKG_LINKER_FLAGS " -headerpad_max_install_names")
+    # CoreFoundation and IOKit are transitive dependencies of static hwloc,
+    # but hwloc.pc does not report them.
+    string(APPEND VCPKG_LINKER_FLAGS " -headerpad_max_install_names -framework CoreFoundation -framework IOKit")
 endif()
 
 vcpkg_make_configure(
