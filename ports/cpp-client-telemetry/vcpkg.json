@@ -10,14 +10,7 @@
       "name": "curl",
       "default-features": false,
       "features": [
-        "mbedtls"
-      ],
-      "platform": "linux"
-    },
-    {
-      "name": "mbedtls",
-      "features": [
-        "pthreads"
+        "openssl"
       ],
       "platform": "linux"
     },
