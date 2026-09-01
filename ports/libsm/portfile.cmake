@@ -16,7 +16,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${LIBSM_ARCHIVE}"
     PATCHES
         msvc.patch
-        xtrans.patch
+        xtrans.patch # https://gitlab.freedesktop.org/xorg/lib/libsm/-/commit/d65819505c31f74ffc731003029702576eb9811d
 )
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
