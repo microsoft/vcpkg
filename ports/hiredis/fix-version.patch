@@ -1,0 +1,15 @@
+diff --git a/hiredis.h b/hiredis.h
+index 3211c20..9d655f8 100644
+--- a/hiredis.h
++++ b/hiredis.h
+@@ -47,8 +47,8 @@ typedef intptr_t ssize_t;
+ 
+ #define HIREDIS_MAJOR 1
+ #define HIREDIS_MINOR 4
+-#define HIREDIS_PATCH 0
+-#define HIREDIS_SONAME 1.4.0
++#define HIREDIS_PATCH 1
++#define HIREDIS_SONAME 1.4.1
+ 
+ /* Connection type can be blocking or non-blocking and is set in the
+  * least significant bit of the flags field in redisContext. */
