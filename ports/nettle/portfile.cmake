@@ -40,6 +40,7 @@ set(disable_assembly OFF)
 set(ccas "")
 set(asmflags "")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    vcpkg_list(APPEND OPTIONS "CFLAGS=-std:c11 \$CFLAGS")  # for alignas
     vcpkg_list(APPEND OPTIONS ac_cv_func_memset=yes)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         string(APPEND asmflags " --target=i686-pc-windows-msvc -m32")
@@ -86,7 +87,6 @@ vcpkg_configure_make(
         ${OPTIONS}
         --disable-documentation
         --disable-openssl
-        ac_cv_prog_cc_c23=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
     OPTIONS_DEBUG
         --disable-tools
