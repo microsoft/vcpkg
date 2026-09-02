@@ -15,27 +15,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         aom         WITH_AOM_DECODER
         aom         WITH_AOM_ENCODER
-        aom         VCPKG_LOCK_FIND_PACKAGE_AOM
         gdk-pixbuf  WITH_GDK_PIXBUF
         hevc        WITH_X265
-        hevc        VCPKG_LOCK_FIND_PACKAGE_X265
         iso23001-17 WITH_UNCOMPRESSED_CODEC
-        iso23001-17 VCPKG_LOCK_FIND_PACKAGE_ZLIB
-        iso23001-17 VCPKG_LOCK_FIND_PACKAGE_Brotli
         header-compression WITH_HEADER_COMPRESSION
-        header-compression VCPKG_LOCK_FIND_PACKAGE_ZLIB
-        header-compression VCPKG_LOCK_FIND_PACKAGE_Brotli
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
-        jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
-        openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
         uvg266      WITH_UVG266
-        uvg266      VCPKG_LOCK_FIND_PACKAGE_UVG266
         x264        WITH_X264
         h264-decoder WITH_OpenH264_DECODER
-        h264-decoder VCPKG_LOCK_FIND_PACKAGE_OpenH264
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -51,23 +41,11 @@ vcpkg_cmake_configure(
         -DWITH_DAV1D=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_LIBSHARPYUV=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_LIBDE265=ON   # feature candidate
-        -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
         ${FEATURE_OPTIONS}
     OPTIONS_RELEASE
         "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/plugins/libheif"
     OPTIONS_DEBUG
         "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/debug/plugins/libheif"
-    MAYBE_UNUSED_VARIABLES
-        VCPKG_LOCK_FIND_PACKAGE_AOM
-        VCPKG_LOCK_FIND_PACKAGE_Brotli
-        VCPKG_LOCK_FIND_PACKAGE_OpenH264
-        VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
-        VCPKG_LOCK_FIND_PACKAGE_UVG266
-        VCPKG_LOCK_FIND_PACKAGE_X265
-        VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
