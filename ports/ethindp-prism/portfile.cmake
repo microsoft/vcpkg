@@ -7,6 +7,7 @@ vcpkg_from_github(
   REF v0.18.2
   SHA512 290a532d4f9d761ef5e89fcbca2eae5253c1d969a25217a74975fb42aafbe931f55f1a344e6454316d528141f1a25f87b522b75db2cc2755b33cf4bfb63f726d
   HEAD_REF master
+  PATCHES cmake-deps-fix.patch
 )
 vcpkg_check_features(
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS
