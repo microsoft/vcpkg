@@ -9,7 +9,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         subdirs.patch
-        #fix-libdir.patch
         compile.patch
         host-tools.patch
         ccas.patch
@@ -21,7 +20,7 @@ include("${cmake_vars_file}")
 
 # Maintainer switch: Temporarily set this to 1 to re-generate the lists
 # of exported symbols. This is needed when the version is bumped.
-set(GENERATE_SYMBOLS 1)
+set(GENERATE_SYMBOLS 0)
 if(GENERATE_SYMBOLS)
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
         vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
