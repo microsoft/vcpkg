@@ -1,22 +1,14 @@
-# Fix Brotli linking
-vcpkg_download_distfile(PR1899
-    URLS "https://github.com/strukturag/libheif/commit/0dda3b7d9dc173803212d2eed94de551cf6f531e.patch?full_index=1"
-    FILENAME "pr-1899.patch"
-    SHA512 645473365795aebd4c22222d650fb3c93a961cff24368f50305bb83093e8f9741fb19df61450052e5a17be63a2aa7269e0d94f7f44010a91641a5dc219de0eaf
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 d34ccd40d7f7cc48ff8ceddafd8f7c7004ab0df2a657237fcc715c4bcc453a41946d7db542d32b781875868ee116c451b4b63daaf073530245ec7b117ae60e27
+    SHA512 b8c153f9efb2a06f77b3de50377d492dc19a6f6f61fc8073fb4b50f7b8375a4cfb634e48390010aab868185c14d5e99a7bbd3c4cf7b3eb41827641107c8778c2
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff
         find-modules.diff
         gdk-pixbuf.patch
         symbol-exports.diff
-		"${PR1899}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -30,6 +22,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         iso23001-17 WITH_UNCOMPRESSED_CODEC
         iso23001-17 VCPKG_LOCK_FIND_PACKAGE_ZLIB
         iso23001-17 VCPKG_LOCK_FIND_PACKAGE_Brotli
+        header-compression WITH_HEADER_COMPRESSION
+        header-compression VCPKG_LOCK_FIND_PACKAGE_ZLIB
+        header-compression VCPKG_LOCK_FIND_PACKAGE_Brotli
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
         jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
