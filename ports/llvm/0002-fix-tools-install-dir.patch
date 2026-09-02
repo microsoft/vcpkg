@@ -188,3 +188,16 @@ index b6ad8d4..a425458 100644
      if(ARG_INSTALL_PREFIX)
        set(install_dest ${ARG_INSTALL_PREFIX})
      endif()
+diff --git a/lldb/utils/TableGen/CMakeLists.txt b/lldb/utils/TableGen/CMakeLists.txt
+index 7ca1ea5..eb4d62b 100644
+--- a/lldb/utils/TableGen/CMakeLists.txt
++++ b/lldb/utils/TableGen/CMakeLists.txt
+@@ -8,7 +8,7 @@ if (NOT DEFINED LLDB_TABLEGEN_EXE)
+     set(LLVM_LINK_COMPONENTS Support)
+ 
+     add_tablegen(lldb-tblgen LLDB
+-      DESTINATION "${CMAKE_INSTALL_BINDIR}"
++      DESTINATION "${LLVM_TOOLS_INSTALL_DIR}"
+       EXPORT LLDB
+       LLDBOptionDefEmitter.cpp
+       LLDBPropertyDefEmitter.cpp

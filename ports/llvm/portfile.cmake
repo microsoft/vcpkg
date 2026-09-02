@@ -376,7 +376,10 @@ endif()
 # Remove empty directories to avoid vcpkg warnings
 set(empty_dirs)
 if("clang" IN_LIST FEATURES AND NOT "target-msp430" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang/Basic/Target/MSP430")
+    list(APPEND empty_dirs
+        "${CURRENT_PACKAGES_DIR}/include/clang/Basic/Target/MSP430"
+        "${CURRENT_PACKAGES_DIR}/include/clang/Basic/Target"
+    )
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND empty_dirs
