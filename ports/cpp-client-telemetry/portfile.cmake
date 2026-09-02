@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/cpp_client_telemetry
-    REF v3.10.240.1
+    REF v${VERSION}
     SHA512 4a3cdb2f8d7664f6b003d8cb24190c7d98ad39c899d13e2ecf27af4f32b8820f5deecacd6377c7dafda698864a19f7beb9501372c2d1291b6a75f44a9cf832fc
     HEAD_REF main
 )
