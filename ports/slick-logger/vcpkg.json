@@ -9,7 +9,7 @@
   "dependencies": [
     {
       "name": "slick-queue",
-      "version>=": "1.5"
+      "version>=": "1.5.0"
     },
     {
       "name": "vcpkg-cmake",
