@@ -6201,7 +6201,7 @@
       "port-version": 0
     },
     "litehtml": {
-      "baseline": "0.9.0",
+      "baseline": "0.10",
       "port-version": 0
     },
     "live555": {
@@ -8618,7 +8618,7 @@
     },
     "qttools": {
       "baseline": "6.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qttranslations": {
       "baseline": "6.11.1",
