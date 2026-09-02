@@ -245,10 +245,12 @@
       "dependencies": [
         {
           "name": "llvm",
-          "host": true,
           "default-features": false,
           "features": [
             "clang",
+            "target-amdgpu",
+            "target-nvptx",
+            "target-spirv",
             "tools"
           ]
         }

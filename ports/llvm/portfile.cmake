@@ -160,6 +160,7 @@ endif()
 
 # Supported runtimes: libc;libunwind;libcxxabi;libcxx;compiler-rt;openmp;offload;flang-rt;libclc;libsycl;orc-rt
 set(LLVM_ENABLE_RUNTIMES)
+set(LLVM_RUNTIME_TARGETS)
 if("libc" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libc")
 endif()
@@ -203,13 +204,37 @@ if("flang-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "flang-rt")
 endif()
 if("libclc" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_RUNTIMES "libclc")
+    set(libclc_runtime_targets
+        amdgcn-amd-amdhsa-llvm
+        nvptx64-nvidia-cuda
+        spirv32-unknown-unknown
+        spirv64-unknown-unknown
+        spirv64-unknown-vulkan
+    )
+    list(APPEND LLVM_RUNTIME_TARGETS ${libclc_runtime_targets})
+    foreach(libclc_runtime_target IN LISTS libclc_runtime_targets)
+        list(APPEND FEATURE_OPTIONS
+            "-DRUNTIMES_${libclc_runtime_target}_LLVM_ENABLE_RUNTIMES=libclc"
+        )
+    endforeach()
+    foreach(libclc_spirv_target IN ITEMS
+        spirv32-unknown-unknown
+        spirv64-unknown-unknown
+        spirv64-unknown-vulkan
+    )
+        list(APPEND FEATURE_OPTIONS
+            "-DRUNTIMES_${libclc_spirv_target}_LIBCLC_USE_SPIRV_BACKEND=ON"
+        )
+    endforeach()
 endif()
 if("libsycl" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libsycl")
 endif()
 if("orc-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "orc-rt")
+endif()
+if(LLVM_RUNTIME_TARGETS AND (LLVM_ENABLE_RUNTIMES OR "flang" IN_LIST FEATURES))
+    list(PREPEND LLVM_RUNTIME_TARGETS default)
 endif()
 
 # this is for normal targets
@@ -267,7 +292,7 @@ vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 
-if("${LLVM_ENABLE_RUNTIMES}" STREQUAL "")
+if("${LLVM_ENABLE_RUNTIMES}" STREQUAL "" AND "${LLVM_RUNTIME_TARGETS}" STREQUAL "")
     list(APPEND FEATURE_OPTIONS
         -DLLVM_INCLUDE_RUNTIMES=OFF
         -DLLVM_BUILD_RUNTIMES=OFF
@@ -298,6 +323,7 @@ vcpkg_cmake_configure(
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
+        "-DLLVM_RUNTIME_TARGETS=${LLVM_RUNTIME_TARGETS}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
         ${FEATURE_OPTIONS}
