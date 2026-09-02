@@ -20,18 +20,6 @@ if(VCPKG_TARGET_IS_IOS)
   set(MATSDK_BUILD_IOS ON)
 endif()
 
-# Prefer external dependencies when they are already required by the platform
-# transport. Other platforms use the SDK's feature-stripped SQLite and vendored
-# zlib to reduce the installed dependency set.
-set(MATSDK_SQLITE_PROVIDER MINIMAL)
-set(MATSDK_ZLIB_PROVIDER VENDORED)
-if(VCPKG_TARGET_IS_OSX)
-  set(MATSDK_SQLITE_PROVIDER SYSTEM)
-endif()
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
-  set(MATSDK_ZLIB_PROVIDER SYSTEM)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -50,8 +38,8 @@ vcpkg_cmake_configure(
         -DMATSDK_BUILD_OBJC_WRAPPER=OFF
         -DMATSDK_BUILD_SWIFT_WRAPPER=OFF
         -DMATSDK_BUILD_PACKAGE=OFF
-        -DMATSDK_SQLITE_PROVIDER=${MATSDK_SQLITE_PROVIDER}
-        -DMATSDK_ZLIB_PROVIDER=${MATSDK_ZLIB_PROVIDER}
+        -DMATSDK_SQLITE_PROVIDER=SYSTEM
+        -DMATSDK_ZLIB_PROVIDER=SYSTEM
         -DBUILD_VERSION=${VERSION}
         -DMATSDK_BUILD_APPLE_HTTP=${MATSDK_BUILD_APPLE_HTTP}
         -DBUILD_IOS=${MATSDK_BUILD_IOS}
