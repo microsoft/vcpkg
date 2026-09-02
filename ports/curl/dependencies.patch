@@ -412,7 +412,7 @@ index 953c1c6..1e3668f 100644
 --- a/CMake/Macros.cmake
 +++ b/CMake/Macros.cmake
 @@ -258,7 +258,15 @@ macro(curl_collect_target_link_options _target)
-     # Explicitly skip this query to avoid CMake v3.18 and older erroring out.
+     # Explicitly skip this query to avoid CMake 3.18 and older erroring out.
      get_target_property(_val ${_target} TYPE)
      if(NOT "${_val}" STREQUAL "INTERFACE_LIBRARY")
 -      get_target_property(_val ${_target} LOCATION)

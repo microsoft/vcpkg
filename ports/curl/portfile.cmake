@@ -3,8 +3,8 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF #[[ ${curl_version} ]] rc-8_22_0-3
-    SHA512 900177e5a0fe78451f383266dbe1b8960e6a57df709ccf96af2e57c9415684dde9855aa2a4e916c1ad19159e40d138b28632e38347d3b08653417e7066f8df03
+    REF ${curl_version}
+    SHA512 6284a82c908329fda4b5a8c2efe409bf477a1fd79a0b71c04ae62ee407a4f00751722e98c1b73c728b0b79ee032eed1d1903876783c48cc6be71166619c025a7
     HEAD_REF master
     PATCHES
         dependencies.patch
