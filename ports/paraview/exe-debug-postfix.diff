@@ -1,0 +1,32 @@
+diff --git a/Utilities/ProcessXML/CMakeLists.txt b/Utilities/ProcessXML/CMakeLists.txt
+index ba0d397..6152d91 100644
+--- a/Utilities/ProcessXML/CMakeLists.txt
++++ b/Utilities/ProcessXML/CMakeLists.txt
+@@ -18,4 +18,5 @@ if (NOT TARGET ParaView::ProcessXML)
+   vtk_module_add_executable(ParaView::ProcessXML
+     DEVELOPMENT
+     ProcessXML.cxx)
++  set_target_properties(ProcessXML PROPERTIES DEBUG_POSTFIX "")
+ endif ()
+diff --git a/Utilities/TestDriver/CMakeLists.txt b/Utilities/TestDriver/CMakeLists.txt
+index 45a2f35..5b9f5bb 100644
+--- a/Utilities/TestDriver/CMakeLists.txt
++++ b/Utilities/TestDriver/CMakeLists.txt
+@@ -32,6 +32,7 @@ vtk_module_add_executable(ParaView::smTestDriver
+   vtkSMTestDriver.cxx
+   vtkSMTestDriver.h
+   "${CMAKE_CURRENT_BINARY_DIR}/vtkSMTestDriverConfig.h")
++set_target_properties(smTestDriver PROPERTIES DEBUG_POSTFIX "")
+ 
+ set(mpi_defines)
+ if (PARAVIEW_USE_MPI)
+diff --git a/Utilities/WrapClientServer/CMakeLists.txt b/Utilities/WrapClientServer/CMakeLists.txt
+index f826cf8..89bcf48 100644
+--- a/Utilities/WrapClientServer/CMakeLists.txt
++++ b/Utilities/WrapClientServer/CMakeLists.txt
+@@ -5,4 +5,5 @@ if (NOT TARGET ParaView::WrapClientServer)
+   vtk_module_add_executable(ParaView::WrapClientServer
+     DEVELOPMENT
+     vtkWrapClientServer.c)
++  set_target_properties(WrapClientServer PROPERTIES DEBUG_POSTFIX "")
+ endif ()

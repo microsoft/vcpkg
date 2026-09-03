@@ -1,8 +1,17 @@
+From cb685d160f993a1c66afec16a749da3500214395 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 17:01:40 +0200
+Subject: [PATCH 17/22] mpi
+
+---
+ CMake/vtkModule.cmake | 3 +++
+ 1 file changed, 3 insertions(+)
+
 diff --git a/CMake/vtkModule.cmake b/CMake/vtkModule.cmake
-index 28d09e98..654c93f6 100644
+index 6c193d3c..5e361d89 100644
 --- a/CMake/vtkModule.cmake
 +++ b/CMake/vtkModule.cmake
-@@ -5424,6 +5424,9 @@ if (_vtk_module_find_package_enabled)
+@@ -5779,6 +5779,9 @@ if (_vtk_module_find_package_enabled)
        \"Failed to find the ${_vtk_export_package} package.\")
    endif ()\n")
  
@@ -12,3 +21,6 @@ index 28d09e98..654c93f6 100644
        string(APPEND _vtk_export_module_build_content "${_vtk_export_module_content}")
        # Private usages should be guarded by `$<BUILD_INTERFACE>` and can be
        # skipped for the install tree regardless of the build mode.
+-- 
+2.47.3
+

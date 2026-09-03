@@ -1,8 +1,17 @@
+From 6250c059680640baf0c71a1ef7d5027a96ca1ca5 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 15:17:58 +0200
+Subject: [PATCH 03/22] lz4
+
+---
+ CMake/FindLZ4.cmake | 35 +++--------------------------------
+ 1 file changed, 3 insertions(+), 32 deletions(-)
+
 diff --git a/CMake/FindLZ4.cmake b/CMake/FindLZ4.cmake
-index 8c94e3bcd..ade3f9451 100644
+index 8c94e3bc..b4147d4e 100644
 --- a/CMake/FindLZ4.cmake
 +++ b/CMake/FindLZ4.cmake
-@@ -1,38 +1,5 @@
+@@ -1,38 +1,9 @@
 -find_path(LZ4_INCLUDE_DIR
 -  NAMES lz4.h
 -  DOC "lz4 include directory")
@@ -29,21 +38,21 @@ index 8c94e3bcd..ade3f9451 100644
 -find_package_handle_standard_args(LZ4
 -  REQUIRED_VARS LZ4_LIBRARY LZ4_INCLUDE_DIR
 -  VERSION_VAR LZ4_VERSION)
--
--if (LZ4_FOUND)
++find_package(LZ4 NAMES lz4)
+ 
+ if (LZ4_FOUND)
 -  set(LZ4_INCLUDE_DIRS "${LZ4_INCLUDE_DIR}")
 -  set(LZ4_LIBRARIES "${LZ4_LIBRARY}")
--
--  if (NOT TARGET LZ4::LZ4)
+ 
+   if (NOT TARGET LZ4::LZ4)
 -    add_library(LZ4::LZ4 UNKNOWN IMPORTED)
 -    set_target_properties(LZ4::LZ4 PROPERTIES
 -      IMPORTED_LOCATION "${LZ4_LIBRARY}"
 -      INTERFACE_INCLUDE_DIRECTORIES "${LZ4_INCLUDE_DIR}")
--  endif ()
--endif ()
-+find_package(LZ4 NAMES lz4 REQUIRED)
-+if(NOT TARGET LZ4::LZ4)
 +    add_library(LZ4::LZ4 INTERFACE IMPORTED)
 +    target_link_libraries(LZ4::LZ4 INTERFACE lz4::lz4)
-+endif()
-\ No newline at end of file
+   endif ()
+ endif ()
+-- 
+2.47.3
+

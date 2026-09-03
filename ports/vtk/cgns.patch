@@ -1,17 +1,26 @@
+From 61e6ae731263d50a341716a843c0718c2af82a72 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 16:14:59 +0200
+Subject: [PATCH 10/22] cgns
+
+---
+ CMake/FindCGNS.cmake | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
 diff --git a/CMake/FindCGNS.cmake b/CMake/FindCGNS.cmake
-index 005f1afd..432cd8b0 100644
+index 005f1afd..87ee7a8f 100644
 --- a/CMake/FindCGNS.cmake
 +++ b/CMake/FindCGNS.cmake
-@@ -16,7 +16,7 @@ mark_as_advanced(CGNS_INCLUDE_DIR)
- 
+@@ -17,6 +17,8 @@ mark_as_advanced(CGNS_INCLUDE_DIR)
  find_library(CGNS_LIBRARY
    NAMES
--    cgns
-+    cgnsdll cgns
+     cgns
++    cgnsdll
++  NAMES_PER_DIR
    DOC "CGNS library")
  mark_as_advanced(CGNS_LIBRARY)
  
-@@ -44,5 +44,10 @@ if (CGNS_FOUND)
+@@ -44,5 +46,10 @@ if (CGNS_FOUND)
      set_target_properties(CGNS::CGNS PROPERTIES
        IMPORTED_LOCATION "${CGNS_LIBRARY}"
        INTERFACE_INCLUDE_DIRECTORIES "${CGNS_INCLUDE_DIR}")
@@ -22,3 +31,6 @@ index 005f1afd..432cd8b0 100644
 +    endif()
    endif ()
  endif ()
+-- 
+2.47.3
+

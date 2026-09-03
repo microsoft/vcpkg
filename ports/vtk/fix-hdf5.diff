@@ -1,12 +1,3 @@
-From acb1aa73c2511f4c0084e6b824d28d6361c0034c Mon Sep 17 00:00:00 2001
-From: Kai Pastor <dg0yt@darc.de>
-Date: Mon, 22 Jun 2026 03:01:05 +0200
-Subject: [PATCH 20/22] hdf5
-
----
- CMake/patches/99/FindHDF5.cmake | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/CMake/patches/99/FindHDF5.cmake b/CMake/patches/99/FindHDF5.cmake
 index ecc7f568..ae4ef466 100644
 --- a/CMake/patches/99/FindHDF5.cmake
@@ -20,6 +11,3 @@ index ecc7f568..ae4ef466 100644
              # Some HDF5 versions (e.g. 1.8.18) used hdf5::hdf5 etc
              set(_target_prefix "hdf5::")
          endif()
--- 
-2.47.3
-
