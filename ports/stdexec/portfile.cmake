@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-boost-asio-dependency.patch
         fix-tbb-dependency.patch
         fix-taskflow-dependency.patch
+        fix-libdispatch-vector-include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
