@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 161ee93fb99df97ff7724411f4d697f90c70614840aee3eb40b865faad719f8e2e8892637b867fc3cd97c1de8ebadab84973c379c5a1927bed70ca2c74e6344c
+    SHA512 9d74bd9d78d44841c78c14a1ae86f2e96cf43b60f8a32172c467959c1f917e5ddf9f9d260fd65394c0302ea681d3f6f28fc6ae0f4e01b106ea92e5edc345c2d6
     HEAD_REF master
     PATCHES
         msvc-debug-info-only-in-pdb.patch
@@ -113,9 +113,9 @@ if(ENABLE_INTEL_NPU)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_download_distfile(
             NPU_PLUGIN_COMPILER_ARCHIVE
-            URLS "https://storage.openvinotoolkit.org/dependencies/thirdparty/windows/npu_compiler/npu_compiler_vcl_windows_2022-8_2_0-9802763.zip"
+            URLS "https://storage.openvinotoolkit.org/dependencies/thirdparty/windows/npu_compiler/npu_compiler_vcl_windows_2022-8_3_0-4d68351.zip"
             FILENAME "npu_compiler_vcl_windows_2022-8_2_0-9802763.zip"
-            SHA512 "5fbe44129b796b12c106a80a967fc9e50e561fcac1bd7b1a2f17cfd50462accfe82d3049f75512566c3d80963ee597e3003a1e0ce52ce7bb0280193ceed83fa3"
+            SHA512 "3d32fc28006099014e6046b54d78751cd9100c1146c72d5bde04a6002afbecac90f3278ce2fe3e135202fd34df7f2abc2102f896cbf41d3d67d32fe1baefc04c"
         )
         vcpkg_extract_archive(
             ARCHIVE ${NPU_PLUGIN_COMPILER_ARCHIVE}
