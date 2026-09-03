@@ -2744,6 +2744,7 @@
       "baseline": "2.1.0",
       "port-version": 0
     },
+   "easy-vulkan-gui": { "baseline": "0.0.7", "port-version": 0 },
     "easycl": {
       "baseline": "0.3",
       "port-version": 2
