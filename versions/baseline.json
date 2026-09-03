@@ -8893,7 +8893,7 @@
       "port-version": 0
     },
     "restinio": {
-      "baseline": "0.7.9.1",
+      "baseline": "0.7.10",
       "port-version": 0
     },
     "resultlib": {
