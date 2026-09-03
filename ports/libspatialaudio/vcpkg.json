@@ -1,0 +1,12 @@
+{
+  "name": "libspatialaudio",
+  "version": "0.4.0",
+  "description": "Spatial Audio rendering library, with Ambisonic encoding/decoding, binauralization in C++",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
