@@ -1,7 +1,6 @@
 {
   "name": "glaze",
-  "version": "8.2.0",
-  "port-version": 1,
+  "version": "8.3.0",
   "description": "One of the fastest JSON libraries in the world. Glaze reads and writes from C++ memory, simplifying interfaces and offering incredible performance.",
   "homepage": "https://github.com/stephenberry/glaze",
   "license": "MIT",
