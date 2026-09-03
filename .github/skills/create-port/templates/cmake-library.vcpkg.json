@@ -1,0 +1,32 @@
+{
+  "name": "{{PACKAGE_NAME}}",
+  "version": "{{VERSION}}",
+  "description": "{{DESCRIPTION}}",
+  "homepage": "{{HOMEPAGE}}",
+  "license": "{{LICENSE}}",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }{{#if DEPENDENCIES}},
+    {{#each DEPENDENCIES}}
+    "{{this}}"{{#unless @last}},{{/unless}}
+    {{/each}}{{/if}}
+  ]{{#if FEATURES}},
+  "features": {
+    {{#each FEATURES}}
+    "{{@key}}": {
+      "description": "{{description}}"{{#if dependencies}},
+      "dependencies": [
+        {{#each dependencies}}
+        "{{this}}"{{#unless @last}},{{/unless}}
+        {{/each}}
+      ]{{/if}}
+    }{{#unless @last}},{{/unless}}
+    {{/each}}
+  }{{/if}}
+}
