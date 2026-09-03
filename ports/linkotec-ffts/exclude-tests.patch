@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 748f412..c2d21e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -543,7 +543,7 @@ if(ENABLE_STATIC OR ENABLE_SHARED)
+     include_directories(${MPFR_INCLUDES})
+   endif(MPFR_INCLUDES)
+ 
+-  add_executable(ffts_trig_test
++  add_executable(ffts_trig_test EXCLUDE_FROM_ALL
+     tests/trig_test.c
+   )
+ 
+@@ -566,7 +566,7 @@ if(ENABLE_STATIC OR ENABLE_SHARED)
+     endif(MSVC)
+   endif(OPENMP_FOUND)
+ 
+-  add_executable(ffts_test
++  add_executable(ffts_test EXCLUDE_FROM_ALL
+     tests/test.c
+   )
+ 
+@@ -582,7 +582,7 @@ if(ENABLE_STATIC OR ENABLE_SHARED)
+     ${FFTS_EXTRA_LIBRARIES}
+   )
+ 
+-  add_executable(ffts_cpu_test
++  add_executable(ffts_cpu_test EXCLUDE_FROM_ALL
+     src/ffts_cpu.c
+     src/ffts_cpu.h
+     tests/cpu_test.c

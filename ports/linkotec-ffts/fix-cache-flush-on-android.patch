@@ -1,0 +1,16 @@
+diff --git a/src/ffts.c b/src/ffts.c
+index 35c5cad..c1f9928 100644
+--- a/src/ffts.c
++++ b/src/ffts.c
+@@ -115,10 +115,8 @@ ffts_flush_instruction_cache(void *start, size_t length)
+ #else
+ #ifdef __APPLE__
+     sys_icache_invalidate(start, length);
+-#elif __ANDROID__
+-    cacheflush((long) start, (long) start + length, 0);
+ #elif __linux__
+-#if GCC_VERSION_AT_LEAST(4,3)
++#if __has_builtin(__builtin___clear_cache)
+     __builtin___clear_cache(start, (char*) start + length);
+ #elif __GNUC__
+     __clear_cache((long) start, (long) start + length);
