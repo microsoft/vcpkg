@@ -1,0 +1,5 @@
+libvncserver provides CMake targets:
+
+    find_package(LibVNCServer CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE LibVNCServer::vncclient)
+    target_link_libraries(main PRIVATE LibVNCServer::vncserver)
