@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-cmake-pkg-config",
+  "version-string": "ci",
+  "description": "Validated function cmake_pkg_config",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}
