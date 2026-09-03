@@ -1,0 +1,11 @@
+--- a/src/cgns_io.c
++++ b/src/cgns_io.c
+@@ -62,7 +62,7 @@
+ #endif
+ 
+ #if CG_BUILD_HDF5
+-cgns_io_ctx_t ctx_cgio = { .hdf5_access = "NATIVE",
++CGNSDLL cgns_io_ctx_t ctx_cgio = { .hdf5_access = "NATIVE",
+ #if CG_BUILD_PARALLEL
+ .pcg_mpi_comm = MPI_COMM_NULL, 
+ .pcg_mpi_comm_size=1,
