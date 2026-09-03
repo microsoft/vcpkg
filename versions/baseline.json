@@ -6888,6 +6888,10 @@
       "baseline": "1.7",
       "port-version": 5
     },
+    "msl": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "msmpi": {
       "baseline": "10.1.12498.52",
       "port-version": 0
