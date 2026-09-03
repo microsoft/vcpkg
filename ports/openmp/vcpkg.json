@@ -1,0 +1,16 @@
+{
+  "name": "openmp",
+  "version-date": "2024-07-08",
+  "description": "Metapackage for OpenMP libraries",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "llvm-openmp",
+      "platform": "!android & !uwp"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
