@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 6f98fa3ab389a8d33535f3a9edeac1d0c2a8edaa822bc069d216f233d48805d8e9949a2aaeb462b530401e4e7b024bb8dff3cc7ed559a6c146c583d5e002f4cc
+    SHA512 2ce19c7705c9297beadb79067716f7bf67ecdb1839d2599c63fc49e1c23622e645a346fe51b0b296b81ee78f63b316d40134cc6c7075b3707405d24bb00a97b8
 )
 
 vcpkg_extract_source_archive(
@@ -36,6 +36,13 @@ endif()
 
 if("compression" IN_LIST FEATURES)
     vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_COMPRESSION=ON")
+endif()
+
+# sentry-native only looks for pkg-config on Linux, to locate the system libunwind for
+# SENTRY_LIBUNWIND_SYSTEM. Acquire it directly instead of depending on the pkgconf port.
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    vcpkg_list(APPEND options "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

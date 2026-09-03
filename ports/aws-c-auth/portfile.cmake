@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-auth
     REF "v${VERSION}"
-    SHA512 f10209473bc417388a1f6804a10f93fb549f5b960ed4f1522c1080c4d073037f86fd3ab8c6faf8ab0f9d9603602a968f5d1000041299be6690b40cf0e1252357
+    SHA512 6ff5e408a3c9d88eb4f0b6b711eb98acdba94f8677f15297e44636de1a2a3d352aaa8cd264693cf1d757a3b58d6bf05e5182cb7b80956c8531c53be34d9f8f73
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common/modules" # use extra cmake files
         -DBUILD_TESTING=FALSE
 )
 

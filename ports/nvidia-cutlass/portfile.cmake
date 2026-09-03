@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cutlass
     REF "v${VERSION}"
-    SHA512 dd1a3f3b3ffd8b0ba6b499311d58592edc7d5df413d03feb736b7e74938b769fedb2879b4d8a6a5ad42ca7cbd063aafd84c6e70583873df5d7f8d4bb2e5f837c
+    SHA512 c8c11ca996dd6526696137f33a4cf155dee1cb7159da0b47dee2bc3e0070ad52a8544dbccd38ee7dc85376efd9de2afb556228693dbe2aa1e838cad9bf0eac74
     HEAD_REF main
 )
 
@@ -45,7 +45,21 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/NvidiaCutlass" PACKAGE_NAME "NvidiaCutlass")
 
-
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/cutlass/version.h"
+    "@CUTLASS_VERSION@"
+    "${VERSION}"
+)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/cutlass/version.h"
+    "@CUTLASS_REVISION@"
+    "v${VERSION}"
+)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/NvidiaCutlass/NvidiaCutlassTargets.cmake"
+    "INTERFACE_COMPILE_DEFINITIONS \""
+    "INTERFACE_COMPILE_DEFINITIONS \"CUTLASS_VERSIONS_GENERATED;"
+)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"

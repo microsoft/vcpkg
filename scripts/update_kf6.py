@@ -15,7 +15,7 @@ import time
 # ============================================================
 # CONFIGURATION - Set version, port list, and paths here
 # ============================================================
-NEW_VERSION = "6.28.0"           # <-- TARGET VERSION
+NEW_VERSION = "6.29.0"           # <-- TARGET VERSION
 
 PORT_LIST = [
     "ecm",
