@@ -179,17 +179,13 @@ function(vcpkg_prepare_pkgconfig config)
         set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     endif()
 
-    foreach(path IN ITEMS
-        "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
-        "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
-        "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig"
-        "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig"
-    )
-        if(EXISTS "${path}")
-            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${path}")
-        endif()
-    endforeach()
-    # After installation, (merged) 'lib' is always searched before 'share'.
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
+                            # After installation, (merged) 'lib' is always searched before 'share'.
+                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig"
+                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig"
+                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
+                        )
 endfunction()
 
 function(vcpkg_restore_pkgconfig)
