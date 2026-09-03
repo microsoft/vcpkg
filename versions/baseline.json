@@ -2924,6 +2924,10 @@
       "baseline": "0.0.3",
       "port-version": 0
     },
+    "exyokioffice": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "ez8-co-yapi": {
       "baseline": "2022-08-10",
       "port-version": 0
