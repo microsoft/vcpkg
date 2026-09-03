@@ -4,10 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 e6f7b5782a43a91783607549e4d0f0a9cbd46dfb67a602f81aaffc7bcdd8f450fe9c225f0bc314704f2923e396f0df5b03ea91af4a7887203c0b8372bc2749d0
+    SHA512 13fafff073a8e0bcf67fd06195da979c3c6273b3f5fdd25f5e5c39ad6af20eefe107f13dc73d52b6021e986d87401e46121e00bba8fbd09f098334e34f78462f
     PATCHES
         fix-cmakelists.patch
-        fix-pr-7390.patch # part of https://github.com/onnx/onnx PR 7390
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
@@ -28,7 +27,6 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         "-DPython_EXECUTABLE:FILEPATH=${PYTHON3}"
         "-DPython3_EXECUTABLE:FILEPATH=${PYTHON3}"
         "-DProtobuf_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}"
@@ -79,4 +77,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference/ops"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/common/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/preview"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/tensor/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/inliner/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/shape_inference/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/adapters/CMakeFiles"
 )
