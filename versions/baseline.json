@@ -4300,6 +4300,10 @@
       "baseline": "6.29.0",
       "port-version": 0
     },
+    "kbookmarks": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kbreezeicons": {
       "baseline": "6.29.0",
       "port-version": 0
