@@ -1,0 +1,21 @@
+{
+  "name": "kumi",
+  "version": "4.0",
+  "description": "C++20 tuple and tuple-based algorithms library",
+  "homepage": "https://jfalcou.github.io/kumi/",
+  "license": "BSL-1.0",
+  "dependencies": [
+    {
+      "name": "copacabana",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

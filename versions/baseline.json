@@ -4656,6 +4656,10 @@
       "baseline": "3.0.0",
       "port-version": 0
     },
+    "kumi": {
+      "baseline": "4.0",
+      "port-version": 0
+    },
     "kvasir-mpl": {
       "baseline": "2019-08-06",
       "port-version": 3
