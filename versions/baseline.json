@@ -3773,8 +3773,8 @@
       "port-version": 1
     },
     "halide": {
-      "baseline": "18.0.0",
-      "port-version": 1
+      "baseline": "21.0.0",
+      "port-version": 0
     },
     "hamlib": {
       "baseline": "4.7.2",
@@ -10017,8 +10017,8 @@
       "port-version": 0
     },
     "symengine": {
-      "baseline": "0.14.0",
-      "port-version": 1
+      "baseline": "0.15.0",
+      "port-version": 0
     },
     "syntax-highlighting": {
       "baseline": "6.29.0",
