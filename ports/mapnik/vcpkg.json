@@ -1,6 +1,6 @@
 {
   "name": "mapnik",
-  "version": "4.0.7",
+  "version": "4.3.0",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -50,9 +50,10 @@
       "platform": "osx"
     },
     "icu",
+    "libavif",
     "mapbox-geometry",
-    "mapbox-polylabel",
     "mapbox-variant",
+    "mapnik-polylabel",
     "protozero",
     {
       "name": "vcpkg-cmake",
