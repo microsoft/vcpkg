@@ -1,0 +1,7 @@
+mpss provides CMake targets:
+
+  find_package(mpss CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mpss::mpss>,mpss::mpss,mpss::mpss_static>)
+
+  # OpenSSL provider (if installed with vcpkg install mpss[openssl]):
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mpss::mpss_openssl>,mpss::mpss_openssl,mpss::mpss_openssl_static>)
