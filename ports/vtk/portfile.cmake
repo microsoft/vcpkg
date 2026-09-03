@@ -39,7 +39,7 @@ vcpkg_from_github(
         devendor_exodusII.patch
         remove-prefix-changes.patch
         hdf5helper.patch
-        opencascade-7.8.0.patch
+        opencascade.patch
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
         octree.patch
@@ -199,6 +199,17 @@ if ("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_WebCore=YES
         -DVTK_MODULE_ENABLE_VTK_WebPython=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
+    )
+endif()
+
+if("ioocct" IN_LIST FEATURES)
+    # OCCT 8.0's headers require C++17. VTK's own CMake forces CMAKE_CXX_STANDARD to 11 unless told
+    # otherwise, which combined with Eigen3's cxx_std_14 requirement causes some targets to compile
+    # as c++14 instead of 17, so both need to be overridden together.
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_IGNORE_CMAKE_CXX11_CHECKS=ON
+        -DCMAKE_CXX_STANDARD=17
+        -DCMAKE_CXX_STANDARD_REQUIRED=ON
     )
 endif()
 
