@@ -36,4 +36,8 @@ if(NOT _VCPKG_CLANGCL_TOOLCHAIN)
     else()
         include("${CMAKE_CURRENT_LIST_DIR}/windows.cmake")
     endif()
+
+    string(REGEX REPLACE "/[cC]65001" "" CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS}")
+    string(STRIP "${CMAKE_RC_FLAGS}" CMAKE_RC_FLAGS)
+    set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS}" CACHE STRING "" FORCE)
 endif()
