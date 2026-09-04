@@ -2,13 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bungee-audio-stretch/bungee
     REF "v${VERSION}"
-    SHA512 9824eb682d8b6601d9bc276b80062bc5fd910ea6a72b6798ab62ecb9750275d27ef9a58803e1f9701ae74ea203277db42840562210851c496092efec2fc1ee4d
+    SHA512 ec5bf082385716d6246dbd31b7ef34620654cf4290dd1b9ff3279275bfdc1deb5f5636785ecf97e72ef637afdfe9c7761d13eeda736831da76ab273b87f5e789
     HEAD_REF main
     PATCHES
         cmake-use-vcpkg-deps-and-install-layout.patch
         pffft-include-path.patch
-        assert-win32-compat.patch
-        resample-msvc-noinline.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUNGEE_BUILD_SHARED_LIBRARY)
