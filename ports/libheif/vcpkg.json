@@ -1,9 +1,9 @@
 {
   "name": "libheif",
-  "version": "1.23.2",
+  "version": "1.23.3",
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
-  "license": "LGPL-3.0-only",
+  "license": "LGPL-3.0-only AND MIT",
   "supports": "!xbox",
   "dependencies": [
     "libde265",
@@ -35,10 +35,18 @@
       ]
     },
     "h264-decoder": {
-      "description": "OpenH264 decoder",
+      "description": "OpenH264 AVC decoder",
       "license": "BSD-2-Clause",
       "dependencies": [
         "openh264"
+      ]
+    },
+    "header-compression": {
+      "description": "Support for HEIF header compression",
+      "license": "LGPL-3.0-only",
+      "dependencies": [
+        "brotli",
+        "zlib"
       ]
     },
     "hevc": {
@@ -49,9 +57,10 @@
       ]
     },
     "iso23001-17": {
-      "description": "Support for ISO23001-17 (uncompressed) codec (experimental)",
+      "description": "Support for ISO23001-17 (uncompressed) codec",
       "license": "LGPL-3.0-only",
       "dependencies": [
+        "brotli",
         "zlib"
       ]
     },
@@ -67,6 +76,14 @@
       "license": "BSD-2-Clause",
       "dependencies": [
         "openjpeg"
+      ]
+    },
+    "uvg266": {
+      "description": "uvg266 VVC encoder",
+      "supports": "!x86",
+      "license": "BSD-3-Clause",
+      "dependencies": [
+        "uvg266"
       ]
     },
     "x264": {
