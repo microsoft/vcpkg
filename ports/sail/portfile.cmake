@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-always-nanosvg.diff
         fix-heif.patch
         fix-include-directory.patch
-        fix-video-zlib-debug-name.patch
+        fix-video-zlib-and-linking.patch
 )
 
 # Enable selected codecs
@@ -34,12 +34,6 @@ if ("openmp" IN_LIST FEATURES)
     set(SAIL_ENABLE_OPENMP ON)
 endif()
 
-if ("video" IN_LIST FEATURES)
-    set(SAIL_MANIP_USE_SWSCALE ON)
-else()
-    set(SAIL_MANIP_USE_SWSCALE OFF)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         test BUILD_TESTING
@@ -61,7 +55,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DSAIL_COMBINE_CODECS=ON
         -DSAIL_ENABLE_OPENMP=${SAIL_ENABLE_OPENMP}
-        -DSAIL_MANIP_USE_SWSCALE=${SAIL_MANIP_USE_SWSCALE}
+        -DSAIL_MANIP_USE_SWSCALE=ON
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
