@@ -5605,7 +5605,7 @@
       "port-version": 0
     },
     "librats": {
-      "baseline": "2.2.0",
+      "baseline": "2.3.7",
       "port-version": 0
     },
     "libraw": {
