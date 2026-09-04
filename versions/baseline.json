@@ -3393,8 +3393,8 @@
       "port-version": 0
     },
     "geos": {
-      "baseline": "3.14.1",
-      "port-version": 1
+      "baseline": "3.15.0",
+      "port-version": 0
     },
     "geotrans": {
       "baseline": "3.10",
