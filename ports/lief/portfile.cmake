@@ -8,8 +8,8 @@ vcpkg_from_github(
         fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
-        disable-warnings-as-errors.diff
-        fix-utfcpp-4-2-0.diff
+        disable-warnings-as-errors.patch
+        fix-utfcpp-4.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
