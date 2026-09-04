@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO librats/librats
     REF "${VERSION}"
-    SHA512 f45c070236fcbd3aee3df195431d1b819c9a30eb373f02827d30931ccd29c71baf142c7ad1d350a5f80798d8af8299ee92a9022ad41cdfec66ea0a94f4af458d
+    SHA512 35a82456a734a6bd7baac4f013c44d01ae76fb78fe2ab43fd546c8bde4aa7690d1ad233e447e8cecf4d30126d1cb9b3c54f1a5493367ccfa388a80ac8d25952b
     HEAD_REF master
 )
 
