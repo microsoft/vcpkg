@@ -1,75 +1,58 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index f80cbfb..f746bc1 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -159,6 +159,14 @@ elseif(LIBCXX)
+   set(PKGCONFIG_CXX_LIB "-lc++")
+ endif()
+ 
++# The MSVC runtime bundles the math functions, there is no separate libm to
++# link against.
++if(MSVC)
++  set(PKGCONFIG_MATH_LIB "")
++else()
++  set(PKGCONFIG_MATH_LIB "-lm")
++endif()
++
+ # The jxl_cms library definition.
+ include(jxl_cms.cmake)
+ # The jxl library definition.
 diff --git a/lib/jxl.cmake b/lib/jxl.cmake
-index 59b2cca..a87f516 100644
+index 59b2cca..b5db0c8 100644
 --- a/lib/jxl.cmake
 +++ b/lib/jxl.cmake
-@@ -269,12 +269,17 @@ install(TARGETS jxl
- set(JPEGXL_LIBRARY_REQUIRES
-     "libhwy libbrotlienc libbrotlidec libjxl_cms")
+@@ -271,10 +271,10 @@ set(JPEGXL_LIBRARY_REQUIRES
  
-+# MSVCRT bundles math functions so no explicit libm dependency is required
  if (BUILD_SHARED_LIBS)
    set(JPEGXL_REQUIRES_TYPE "Requires.private")
 -  set(JPEGXL_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  if (NOT MSVC)
-+    set(JPEGXL_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
++  set(JPEGXL_PRIVATE_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
  else()
    set(JPEGXL_REQUIRES_TYPE "Requires")
 -  set(JPEGXL_PUBLIC_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  if (NOT MSVC)
-+    set(JPEGXL_PUBLIC_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
++  set(JPEGXL_PUBLIC_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
  endif()
  
  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl.pc.in"
 diff --git a/lib/jxl_cms.cmake b/lib/jxl_cms.cmake
-index 62d5b65..e8ebc8f 100644
+index 62d5b65..a50b441 100644
 --- a/lib/jxl_cms.cmake
 +++ b/lib/jxl_cms.cmake
-@@ -60,12 +60,17 @@ install(TARGETS jxl_cms
-         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+@@ -62,10 +62,10 @@ install(TARGETS jxl_cms
  
-+# MSVCRT bundles math functions so no explicit libm dependency is required
  if (BUILD_SHARED_LIBS)
    set(JPEGXL_REQUIRES_TYPE "Requires.private")
 -  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  if (NOT MSVC)
-+    set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
++  set(JPEGXL_CMS_PRIVATE_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
  else()
    set(JPEGXL_REQUIRES_TYPE "Requires")
 -  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  if (NOT MSVC)
-+    set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
++  set(JPEGXL_CMS_PRIVATE_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
  endif()
  
  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl_cms.pc.in"
-diff --git a/lib/jxl_threads.cmake b/lib/jxl_threads.cmake
-index 43552fc..0f21113 100644
---- a/lib/jxl_threads.cmake
-+++ b/lib/jxl_threads.cmake
-@@ -83,12 +83,17 @@ else()
-     set(PKGCONFIG_TARGET_LIBS "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
- endif()
- 
-+# MSVCRT bundles math functions so no explicit libm dependency is required
- if (BUILD_SHARED_LIBS)
-   set(JPEGXL_REQUIRES_TYPE "Requires.private")
- else()
-   set(JPEGXL_REQUIRES_TYPE "Requires")
- endif()
- 
-+if (NOT MSVC)
-+  set(JPEGXL_THREADS_PRIVATE_LIBS "-lm")
-+endif()
-+
- set(JPEGXL_THREADS_LIBRARY_REQUIRES "")
- configure_file("${CMAKE_CURRENT_SOURCE_DIR}/threads/libjxl_threads.pc.in"
-                "libjxl_threads.pc" @ONLY)
 diff --git a/lib/threads/libjxl_threads.pc.in b/lib/threads/libjxl_threads.pc.in
-index dfbaa3f..8e4979e 100644
+index dfbaa3f..1a22d5e 100644
 --- a/lib/threads/libjxl_threads.pc.in
 +++ b/lib/threads/libjxl_threads.pc.in
 @@ -8,6 +8,6 @@ Description: JPEG XL multi-thread runner using std::threads.
@@ -77,6 +60,6 @@ index dfbaa3f..8e4979e 100644
  @JPEGXL_REQUIRES_TYPE@: @JPEGXL_THREADS_LIBRARY_REQUIRES@
  Libs: -L${libdir} -ljxl_threads
 -Libs.private: -lm
-+Libs.private: @JPEGXL_THREADS_PRIVATE_LIBS@
++Libs.private: @PKGCONFIG_MATH_LIB@
  Cflags: -I${includedir}
  Cflags.private: -DJXL_THREADS_STATIC_DEFINE
