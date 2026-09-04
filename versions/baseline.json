@@ -6162,7 +6162,7 @@
     },
     "lief": {
       "baseline": "0.17.6",
-      "port-version": 0
+      "port-version": 1
     },
     "lightgbm": {
       "baseline": "4.5.0",
@@ -10589,7 +10589,7 @@
       "port-version": 0
     },
     "utfcpp": {
-      "baseline": "4.1.1",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "utfz": {
