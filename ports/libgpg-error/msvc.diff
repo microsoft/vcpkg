@@ -1,0 +1,290 @@
+diff --git a/configure.ac b/configure.ac
+index 1f2fe0d..1796fa1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -780,6 +780,11 @@ AC_CONFIG_FILES([src/gpg-error-config-old:src/gpg-error-config.in], [chmod +x sr
+ AC_CONFIG_FILES([src/gpgrt-config], [chmod +x src/gpgrt-config])
+ AC_CONFIG_FILES([src/gpg-error-config-test.sh], [chmod +x src/gpg-error-config-test.sh])
+ 
++AC_CONFIG_COMMANDS([libtool-ar-flags], [
++  sed -e 's/^lt_ar_flags=\(.*\)/lt_ar_flags="\1"/' libtool > libtool.tmp && mv libtool.tmp libtool
++  chmod +x libtool
++])
++
+ AC_OUTPUT
+ 
+ tmp=
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 7fd1d98..d3cbd0c 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -250,7 +250,7 @@ code-to-errno.h: Makefile mkerrnos.awk errnos.in
+ # It is correct to use $(CPP).  We want the host's idea of the error codes.
+ mkerrcodes.h: Makefile mkerrcodes.awk
+ 	$(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in >_$@
+-	$(CPP) $(CPPFLAGS) -P _$@ | grep GPG_ERR_ | \
++	$(CPP) $(CPPFLAGS) _$@ | grep GPG_ERR_ | \
+                $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
+ 	-rm _$@
+ 
+diff --git a/src/argparse.c b/src/argparse.c
+index 0cf0083..549fd29 100644
+--- a/src/argparse.c
++++ b/src/argparse.c
+@@ -33,7 +33,9 @@
+ #include <stdarg.h>
+ #include <limits.h>
+ #include <errno.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <time.h>
+ 
+ #include "gpgrt-int.h"
+diff --git a/src/estream-printf.c b/src/estream-printf.c
+index 058ca71..0811039 100644
+--- a/src/estream-printf.c
++++ b/src/estream-printf.c
+@@ -83,7 +83,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <stdarg.h>
+ #include <errno.h>
+ #include <stddef.h>
+diff --git a/src/estream.c b/src/estream.c
+index d2cdc12..1a92db0 100644
+--- a/src/estream.c
++++ b/src/estream.c
+@@ -68,12 +68,18 @@
+ # include <sys/time.h>
+ #endif
+ #include <sys/types.h>
+-#include <sys/file.h>
++#if defined(HAVE_W32_SYSTEM) || defined(_WIN32)
++# include <io.h>
++#else
++# include <sys/file.h>
++#endif
+ #include <sys/stat.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <stdarg.h>
+ #include <fcntl.h>
+ #include <errno.h>
+diff --git a/src/gpg-error.c b/src/gpg-error.c
+index e0b5920..27b93b5 100644
+--- a/src/gpg-error.c
++++ b/src/gpg-error.c
+@@ -51,6 +51,15 @@
+ 
+ #include <gpg-error.h>
+ 
++#if defined(_MSC_VER)
++# ifndef strcasecmp
++#  define strcasecmp _stricmp
++# endif
++# ifndef strncasecmp
++#  define strncasecmp _strnicmp
++# endif
++#endif
++
+ 
+ #if HAVE_W32_SYSTEM
+ /* The implementation follows below.  */
+diff --git a/src/gpg-error.h.in b/src/gpg-error.h.in
+index a40f616..f52b4cb 100644
+--- a/src/gpg-error.h.in
++++ b/src/gpg-error.h.in
+@@ -255,7 +255,7 @@ typedef unsigned int gpg_error_t;
+ 
+ /* A macro defined if a GCC style __FUNCTION__ macro is available.  */
+ #undef GPGRT_HAVE_MACRO_FUNCTION
+-#if _GPG_ERR_GCC_VERSION >= 20500
++#if _GPG_ERR_GCC_VERSION >= 20500 || defined(_MSC_VER)
+ # define GPGRT_HAVE_MACRO_FUNCTION 1
+ #endif
+ 
+diff --git a/src/gpgrt-int.h b/src/gpgrt-int.h
+index b8533dc..629cdaf 100644
+--- a/src/gpgrt-int.h
++++ b/src/gpgrt-int.h
+@@ -89,6 +89,43 @@
+ /*
+  * Common helper macros.
+  */
++
++#ifdef HAVE_W32_SYSTEM
++# ifndef F_OK
++#  define F_OK 0
++#  define X_OK 1
++#  define W_OK 2
++#  define R_OK 4
++# endif
++# ifndef S_IRUSR
++#  define S_IRUSR 0400
++#  define S_IWUSR 0200
++#  define S_IXUSR 0100
++# endif
++# ifndef S_IRGRP
++#  define S_IRGRP 0040
++#  define S_IWGRP 0020
++#  define S_IXGRP 0010
++# endif
++# ifndef S_IROTH
++#  define S_IROTH 0004
++#  define S_IWOTH 0002
++#  define S_IXOTH 0001
++# endif
++# ifndef S_IRWXU
++#  define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
++#  define S_IRWXG (S_IRGRP | S_IWGRP | S_IXGRP)
++#  define S_IRWXO (S_IROTH | S_IWOTH | S_IXOTH)
++# endif
++# ifdef _MSC_VER
++#  ifndef strcasecmp
++#   define strcasecmp _stricmp
++#  endif
++#  ifndef strncasecmp
++#   define strncasecmp _strnicmp
++#  endif
++# endif
++#endif
+ #ifndef DIM
+ # define DIM(array) (sizeof (array) / sizeof (*array))
+ #endif
+diff --git a/src/logging.c b/src/logging.c
+index 4f52d80..99d4ece 100644
+--- a/src/logging.c
++++ b/src/logging.c
+@@ -44,7 +44,9 @@
+ # include <netinet/in.h>
+ # include <arpa/inet.h>
+ #endif /*!HAVE_W32_SYSTEM*/
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <fcntl.h>
+ /* #include <execinfo.h> */
+ 
+diff --git a/src/mkheader.c b/src/mkheader.c
+index 09727d5..f7923b6 100644
+--- a/src/mkheader.c
++++ b/src/mkheader.c
+@@ -16,7 +16,14 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <errno.h>
+-#include <unistd.h>
++#if !defined(_WIN32) || defined(__MINGW32__)
++# include <unistd.h>
++#else
++# include <io.h>
++# ifndef R_OK
++#  define R_OK 4
++# endif
++#endif
+ 
+ #define PGM "mkheader"
+ 
+diff --git a/src/spawn-w32.c b/src/spawn-w32.c
+index f21991a..2d5fc57 100644
+--- a/src/spawn-w32.c
++++ b/src/spawn-w32.c
+@@ -38,7 +38,17 @@
+ #ifdef HAVE_SIGNAL_H
+ # include <signal.h>
+ #endif
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++# include <unistd.h>
++#endif
++#include <io.h>
++#include <process.h>
++#ifndef F_OK
++# define F_OK 0
++# define X_OK 1
++# define W_OK 2
++# define R_OK 4
++#endif
+ #include <fcntl.h>
+ #ifdef HAVE_STAT
+ # include <sys/stat.h>
+diff --git a/src/sysutils.c b/src/sysutils.c
+index b6d6a55..9cbc670 100644
+--- a/src/sysutils.c
++++ b/src/sysutils.c
+@@ -22,7 +22,9 @@
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <string.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <errno.h>
+ #ifdef HAVE_W32_SYSTEM
+ # include <windows.h>
+diff --git a/src/versioninfo.rc.in b/src/versioninfo.rc.in
+index e00b638..c83e437 100644
+--- a/src/versioninfo.rc.in
++++ b/src/versioninfo.rc.in
+@@ -13,9 +13,11 @@
+ 
+ /* This file is processed by configure to create versioninfo.rc */
+ 
+-#line __LINE__ "versioninfo.rc.in"
+-
+-#include <afxres.h>
++#ifdef _MSC_VER
++# include <winres.h>
++#else
++# include <afxres.h>
++#endif
+ 
+ 
+ VS_VERSION_INFO VERSIONINFO
+diff --git a/src/visibility.c b/src/visibility.c
+index 5574f33..6d7e58b 100644
+--- a/src/visibility.c
++++ b/src/visibility.c
+@@ -1111,11 +1111,7 @@ void
+ _gpgrt_log_assert (const char *expr, const char *file,
+                    int line, const char *func)
+ {
+-#ifdef GPGRT_HAVE_MACRO_FUNCTION
+   _gpgrt__log_assert (expr, file, line, func);
+-#else
+-  _gpgrt__log_assert (expr, file, line);
+-#endif
+ }
+ 
+ 
+diff --git a/src/w32-estream.c b/src/w32-estream.c
+index 08b9b16..d70ba81 100644
+--- a/src/w32-estream.c
++++ b/src/w32-estream.c
+@@ -127,7 +127,7 @@ reader (void *arg)
+ {
+   struct reader_context_s *ctx = arg;
+   int nbytes;
+-  ssize_t nread;
++  gpgrt_ssize_t nread;
+ 
+   trace (("%p: reader starting", ctx));
+ 
+@@ -430,7 +430,7 @@ static DWORD CALLBACK
+ writer (void *arg)
+ {
+   struct writer_context_s *ctx = arg;
+-  ssize_t nwritten;
++  gpgrt_ssize_t nwritten;
+ 
+   trace (("%p: writer starting", ctx));
+ 
