@@ -1,8 +1,8 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index c3af986..498e0d1 100644
+index cb6908783..1bd7a92d0 100755
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -931,6 +931,17 @@ endif()
+@@ -930,6 +930,17 @@ endif()
  configure_file("${PROJECT_SOURCE_DIR}/x265_config.h.in"
                 "${PROJECT_BINARY_DIR}/x265_config.h")
  
@@ -20,7 +20,7 @@ index c3af986..498e0d1 100644
  add_subdirectory(encoder)
  add_subdirectory(common)
  
-@@ -1079,6 +1090,24 @@ endif()
+@@ -1075,6 +1086,24 @@ endif()
  if(EXTRA_LIB)
      target_link_libraries(x265-static ${EXTRA_LIB})
  endif()
@@ -45,7 +45,7 @@ index c3af986..498e0d1 100644
  if(ENABLE_LIBVMAF)
      target_link_libraries(x265-static ${VMAF})
  endif()
-@@ -1163,6 +1192,11 @@ if(ENABLE_SHARED)
+@@ -1160,6 +1189,11 @@ if(ENABLE_SHARED)
      endif()
      if(EXTRA_LIB)
          target_link_libraries(x265-shared ${EXTRA_LIB})
@@ -59,10 +59,10 @@ index c3af986..498e0d1 100644
      if(SVTHEVC_FOUND)
 diff --git a/source/cmake/multilib.cmake b/source/cmake/multilib.cmake
 new file mode 100644
-index 0000000..86a496a
+index 000000000..d29844caf
 --- /dev/null
 +++ b/source/cmake/multilib.cmake
-@@ -0,0 +1,122 @@
+@@ -0,0 +1,129 @@
 +# multilib.cmake - Build the 10-bit and 12-bit static libraries as nested
 +# sub-builds and link them into the 8-bit API library so that a single library
 +# can switch bit depths at runtime, following the upstream
@@ -177,20 +177,27 @@ index 0000000..86a496a
 +    "${_multilib_root}/10bit/${_multilib_archive_name}" "-DHIGH_BIT_DEPTH=ON")
 +x265_define_multilib_variant(x265-multilib-12bit "${_multilib_root}/12bit"
 +    "${_multilib_root}/12bit/${_multilib_archive_name}" "-DHIGH_BIT_DEPTH=ON" "-DMAIN12=ON")
++# Build the bit-depth sub-libraries sequentially (like build/linux/multilib.sh)
++# so that a parallel parent build does not run two nested builds at once
++add_dependencies(x265-multilib-12bit x265-multilib-10bit)
 +
 +# Link the 10/12-bit archives into this build; the LINKED_* options enable the
 +# bit-depth dispatch in the exported C API (see encoder/api.cpp)
-+set(EXTRA_LIB
-+    "${_multilib_root}/10bit/${_multilib_archive_name};${_multilib_root}/12bit/${_multilib_archive_name}"
-+    CACHE STRING "Extra libraries to link against" FORCE)
-+set(LINKED_10BIT ON CACHE BOOL "10bit libx265 is being linked with this library" FORCE)
-+set(LINKED_12BIT ON CACHE BOOL "12bit libx265 is being linked with this library" FORCE)
++if(EXTRA_LIB)
++    message(WARNING "ENABLE_MULTILIB is enabled but EXTRA_LIB is already set; the multilib archives will not be linked automatically")
++else()
++    set(EXTRA_LIB
++        "${_multilib_root}/10bit/${_multilib_archive_name};${_multilib_root}/12bit/${_multilib_archive_name}"
++        CACHE STRING "Extra libraries to link against" FORCE)
++    set(LINKED_10BIT ON CACHE BOOL "10bit libx265 is being linked with this library" FORCE)
++    set(LINKED_12BIT ON CACHE BOOL "12bit libx265 is being linked with this library" FORCE)
++endif()
 diff --git a/source/cmake/x265-merge.cmake b/source/cmake/x265-merge.cmake
 new file mode 100644
-index 0000000..a77e287
+index 000000000..348ba3ce9
 --- /dev/null
 +++ b/source/cmake/x265-merge.cmake
-@@ -0,0 +1,104 @@
+@@ -0,0 +1,114 @@
 +# x265-merge.cmake - Merge several static archives into one.
 +#
 +# Usage:
@@ -284,9 +291,19 @@ index 0000000..a77e287
 +    foreach(_input IN LISTS _inputs)
 +        list(APPEND _command "${_work}/${_input}")
 +    endforeach()
-+    execute_process(COMMAND ${_command} WORKING_DIRECTORY "${_work}" RESULT_VARIABLE _result)
++    execute_process(COMMAND ${_command} WORKING_DIRECTORY "${_work}"
++                    OUTPUT_VARIABLE _out ERROR_VARIABLE _err RESULT_VARIABLE _result)
 +    if(NOT _result EQUAL 0)
-+        message(FATAL_ERROR "Failed to merge static archives with libtool: ${_result}")
++        message(FATAL_ERROR "Failed to merge static archives with libtool: ${_result}\n${_out}${_err}")
++    endif()
++    # libtool warns about the identically-named object members that the three
++    # bit-depth builds produce; harmless, filter them from the output
++    if(_err)
++        string(REGEX REPLACE "[^\n]*member name[^\n]*\n?" "" _err "${_err}")
++        string(STRIP "${_err}" _err)
++        if(NOT _err STREQUAL "")
++            message(STATUS "${_err}")
++        endif()
 +    endif()
 +endif()
 +
