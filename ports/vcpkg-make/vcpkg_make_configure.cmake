@@ -83,7 +83,7 @@ function(vcpkg_make_configure)
     )
     z_vcpkg_make_set_common_vars()
     if(VCPKG_TARGET_IS_EMSCRIPTEN)
-        set(EMMAKEN_JUST_CONFIGURE 1) # as in emconfigure
+        set(ENV{EMMAKEN_JUST_CONFIGURE} 1) # as in emconfigure
     endif()
 
     foreach(config IN LISTS buildtypes)
