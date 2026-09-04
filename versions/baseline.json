@@ -5706,7 +5706,7 @@
     },
     "libsm": {
       "baseline": "1.2.6",
-      "port-version": 2
+      "port-version": 3
     },
     "libsmacker": {
       "baseline": "1.2.0",
