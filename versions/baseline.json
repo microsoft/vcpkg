@@ -9269,7 +9269,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.16.4",
+      "baseline": "0.16.5",
       "port-version": 0
     },
     "septag-dmon": {
