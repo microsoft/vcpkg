@@ -14,6 +14,7 @@ vcpkg_from_github(
         0005-fix-runtimes.patch
         0006-create-destination-mlir-directory.patch
         0007-use-cxx-for-libxml2-check.patch
+        0008-fix-windows-system-library-names.patch
         cmake4.patch
 )
 
