@@ -11,7 +11,9 @@ vcpkg_from_github(
         disable-test-setup.diff
         pkgconfig-lib-order.diff
         msvc.diff
+        emscripten-ofwhere.diff
 )
+
 file(REMOVE
     "${SOURCE_PATH}/CMake/FindICONV.cmake"
     "${SOURCE_PATH}/CMake/FindJPEG.cmake"

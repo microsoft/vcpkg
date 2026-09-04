@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 452a76a238b6fa63d579eea37551cab9a02003fd542895905cf5ddc6b01b845697d30ebf5bf7b74db2c73113da3dcaf88d09093c9e2bdf8b4958690625d8800c
+    SHA512 6284a82c908329fda4b5a8c2efe409bf477a1fd79a0b71c04ae62ee407a4f00751722e98c1b73c728b0b79ee032eed1d1903876783c48cc6be71166619c025a7
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -74,6 +74,11 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DENABLE_UNICODE=ON)
+endif()
+
+if(VCPKG_TARGET_IS_APPLE AND
+    ("openssl" IN_LIST FEATURES OR "gnutls" IN_LIST FEATURES))
+    list(APPEND OPTIONS -DUSE_APPLE_SECTRUST=ON)
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)

@@ -17,21 +17,6 @@ index cc2a7df8f..e11de1815 100644
  # Load exports
  include(${OUR_CMAKE_DIR}/@PACKAGE_NAME@-exports.cmake)
  
-diff --git a/cmake/FindTBB.cmake b/cmake/FindTBB.cmake
-index 0ecd4ca0e..725589a2d 100644
---- a/cmake/FindTBB.cmake
-+++ b/cmake/FindTBB.cmake
-@@ -1,3 +1,4 @@
-+if(0)
- # The MIT License (MIT)
- #
- # Copyright (c) 2015 Justus Calvin
-@@ -321,3 +322,4 @@ if(NOT TBB_FOUND)
-   unset(TBB_DEFAULT_SEARCH_DIR)
- 
- endif()
-+endif()
-\ No newline at end of file
 diff --git a/cmake/HandleMetis.cmake b/cmake/HandleMetis.cmake
 index 5cbec4ff5..10dbb53de 100644
 --- a/cmake/HandleMetis.cmake
@@ -59,9 +44,18 @@ index 5cbec4ff5..10dbb53de 100644
  else()
    # Bundled version:
 diff --git a/cmake/HandleTBB.cmake b/cmake/HandleTBB.cmake
-index fb944ba5b..393aeb345 100644
+index fb944ba5b..3a3600c2c 100644
 --- a/cmake/HandleTBB.cmake
 +++ b/cmake/HandleTBB.cmake
+@@ -1,7 +1,7 @@
+ ###############################################################################
+ if (GTSAM_WITH_TBB)
+     # Find TBB
+-    find_package(TBB 4.4 COMPONENTS tbb tbbmalloc)
++    find_package(TBB 4.4 CONFIG COMPONENTS tbb tbbmalloc)
+ 
+     # Set up variables if we're using TBB
+     if(TBB_FOUND)
 @@ -14,7 +14,7 @@ if (GTSAM_WITH_TBB)
          endif()
          # all definitions and link requisites will go via imported targets:

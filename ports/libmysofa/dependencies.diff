@@ -1,20 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9d830c6..214a82f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,6 +24,10 @@ set(CPACK_PACKAGE_VERSION_PATCH "3")
+ set(CPACK_DEBIAN_PACKAGE_DEPENDS "zlib1g")
+ 
+ set(PKG_CONFIG_PRIVATELIBS "")
++set(PKG_CONFIG_LIBNAME mysofa)
++if(WIN32 AND BUILD_SHARED_LIBS)
++  set(PKG_CONFIG_LIBNAME mysofa_shared)
++endif()
+ 
+ set(PROJECT_VERSION
+     "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}")
 diff --git a/libmysofa.pc.cmake b/libmysofa.pc.cmake
-index 3c597fa..b09b0b7 100644
+index 3c597fa..091ce79 100644
 --- a/libmysofa.pc.cmake
 +++ b/libmysofa.pc.cmake
-@@ -8,4 +8,4 @@ Libs: -L${libdir} -lmysofa
+@@ -4,8 +4,8 @@ Version: @PROJECT_VERSION@
+ Requires: @PKG_CONFIG_REQUIRES@
+ includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+ libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+-Libs: -L${libdir} -lmysofa
++Libs: -L${libdir} -l@PKG_CONFIG_LIBNAME@
  Cflags: -I${includedir}
  
  Libs.private: @PKG_CONFIG_PRIVATELIBS@
 -#Requires.private:
 +Requires.private: zlib
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index cc800b3..29e9b5d 100644
+index 37fe41f..3df874e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -4,23 +4,19 @@ configure_file(config.h.in config.h)
+@@ -3,30 +3,16 @@ set(CMAKE_C_STANDARD 99)
+ configure_file(config.h.in config.h)
  include_directories(${CMAKE_CURRENT_BINARY_DIR})
  
++set(MATH "")
  if(NOT MSVC)
 -  if(NOT WIN32)
 -    find_library(MATH m)
@@ -22,26 +44,29 @@ index cc800b3..29e9b5d 100644
 -    set(MATH "")
 -  endif()
 -  include(FindZLIB)
-+  find_library(HAVE_MATH m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
-+endif()
-+if(HAVE_MATH)
-+  set(MATH m)
-+  string(APPEND PKG_CONFIG_PRIVATELIBS " -lm")
- else()
-   set(MATH "")
+-  include_directories(${ZLIB_INCLUDE_DIRS})
+-  set(PKG_CONFIG_PRIVATELIBS "-lm ${PKG_CONFIG_PRIVATELIBS}")
+-  set(PKG_CONFIG_PRIVATELIBS "-lz ${PKG_CONFIG_PRIVATELIBS}")
+-else()
+-  set(MATH "")
 -  find_program(NUGET nuget)
--  if(NUGET)
+-  if(NOT NUGET)
+-    message(
+-      FATAL
+-      "Cannot find nuget command line tool.\nInstall it with e.g. choco install nuget.commandline"
+-    )
+-  else()
 -    execute_process(COMMAND ${NUGET} install zlib)
--  endif()
++  find_library(HAVE_MATH m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
++  if(HAVE_MATH)
++    set(MATH m)
++    string(APPEND PKG_CONFIG_PRIVATELIBS " -lm")
+   endif()
 -  include_directories(
--    ${PROJECT_SOURCE_DIR}/windows/third-party/zlib-1.2.11/include/)
+-    ${PROJECT_SOURCE_DIR}/windows/third-party/zlib-1.3.1/include/)
  endif()
 +find_package(ZLIB REQUIRED)
 +set(ZLIB_LIBRARIES ZLIB::ZLIB)
  
--if(NOT MSVC)
-+if(1)
-+elseif(0) # redundant
-   if(NOT WIN32)
-     find_library(MATH m)
-   else()
+ set(libsrc
+     hrtf/reader.c

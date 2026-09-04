@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "8.1.1",
+  "version": "9.0.1",
   "port-version": 1,
   "description": [
     "A library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -64,6 +64,7 @@
             "swresample",
             "swscale",
             "theora",
+            "twolame",
             "vorbis",
             "vpx",
             "vulkan",
@@ -159,6 +160,14 @@
             "opencl"
           ],
           "platform": "!uwp & !osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "svt-av1"
+          ],
+          "platform": "!x86 & !arm32 & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -283,7 +292,11 @@
     "ass": {
       "description": "Libass subtitles rendering, needed for subtitles and ass filter support in ffmpeg",
       "dependencies": [
-        "libass"
+        "libass",
+        {
+          "name": "libiconv",
+          "platform": "windows & static"
+        }
       ]
     },
     "avcodec": {
@@ -626,6 +639,13 @@
         "libssh"
       ]
     },
+    "svt-av1": {
+      "description": "AV1 encoding via libSvtAv1Enc",
+      "supports": "!x86 & !arm32 & !uwp",
+      "dependencies": [
+        "svt-av1"
+      ]
+    },
     "swresample": {
       "description": "Build the swresample library"
     },
@@ -650,6 +670,12 @@
       "description": "Theora encoding via libtheora",
       "dependencies": [
         "libtheora"
+      ]
+    },
+    "twolame": {
+      "description": "MP2 encoding via libtwolame",
+      "dependencies": [
+        "libtwolame"
       ]
     },
     "vaapi": {

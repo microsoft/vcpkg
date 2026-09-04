@@ -19,7 +19,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: PrOsx-2026-01-12-arm64
+    name: PrOsx-2026-08-07-arm64
   workspace:
     clean: resources
   timeoutInMinutes: 2880 # 2 days
@@ -64,7 +64,7 @@ jobs:
   - task: UseNode@1
     displayName: 'Ensure Node.js is available'
     inputs:
-      version: '22.x'
+      version: '24.x'
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci || true
       # Construct the blob base url using the secret SAS token set earlier

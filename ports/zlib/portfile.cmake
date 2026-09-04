@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 16fea4df307a68cf0035858abe2fd550250618a97590e202037acd18a666f57afc10f8836cbbd472d54a0e76539d0e558cb26f059d53de52ff90634bbf4f47d4
     HEAD_REF master
+    PATCHES
+        0001-no-version-script-on-ohos.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZLIB_BUILD_SHARED)

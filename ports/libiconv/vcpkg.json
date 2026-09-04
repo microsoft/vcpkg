@@ -1,7 +1,6 @@
 {
   "name": "libiconv",
-  "version": "1.18",
-  "port-version": 4,
+  "version": "1.19",
   "description": [
     "iconv() text conversion.",
     "This port installs GNU libiconv if the system C runtime doesn't provide a suitable iconv() implementation."
@@ -13,6 +12,10 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true,
       "platform": "android"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
     }
   ]
 }

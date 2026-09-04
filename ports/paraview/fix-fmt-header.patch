@@ -1,0 +1,61 @@
+diff --git a/Plugins/Prism/Filters/vtkPrismGeometryConverter.cxx b/Plugins/Prism/Filters/vtkPrismGeometryConverter.cxx
+index 0ba008c239..686adeae19 100644
+--- a/Plugins/Prism/Filters/vtkPrismGeometryConverter.cxx
++++ b/Plugins/Prism/Filters/vtkPrismGeometryConverter.cxx
+@@ -9,7 +9,7 @@
+ 
+ // clang-format off
+ #include <vtk_fmt.h> // needed for `fmt`
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ // clang-format on
+ 
+ //------------------------------------------------------------------------------
+diff --git a/VTKExtensions/Core/vtkPVDataUtilities.cxx b/VTKExtensions/Core/vtkPVDataUtilities.cxx
+index 21fbca502b..8fb7c148ad 100644
+--- a/VTKExtensions/Core/vtkPVDataUtilities.cxx
++++ b/VTKExtensions/Core/vtkPVDataUtilities.cxx
+@@ -15,7 +15,7 @@
+ 
+ // clang-format off
+ #include <vtk_fmt.h> // needed for `fmt`
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ // clang-format on
+ 
+ namespace
+diff --git a/VTKExtensions/Core/vtkPVStringFormatter.h b/VTKExtensions/Core/vtkPVStringFormatter.h
+index 771052ecad..27be619a42 100644
+--- a/VTKExtensions/Core/vtkPVStringFormatter.h
++++ b/VTKExtensions/Core/vtkPVStringFormatter.h
+@@ -26,7 +26,7 @@
+ #include <vtk_fmt.h> // needed for `fmt`
+ #include VTK_FMT(fmt/args.h)
+ #include VTK_FMT(fmt/chrono.h)
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ #include VTK_FMT(fmt/ranges.h)
+ // clang-format on
+ 
+@@ -357,7 +357,7 @@ private:
+      * If argument already exists, it's ignored.
+      */
+     template <typename T>
+-    void AddArg(const fmt::detail::named_arg<char_type, T>& fmtArg)
++    void AddArg(const fmt::named_arg<T, char_type>& fmtArg)
+     {
+       bool argNotFound = std::find_if(this->Arguments.begin(), this->Arguments.end(),
+                            [&fmtArg](const vtkNamedArgument& arg) {
+diff --git a/VTKExtensions/IOCore/vtkParallelSerialWriter.cxx b/VTKExtensions/IOCore/vtkParallelSerialWriter.cxx
+index 5f1833ba29..23c4a9d7c9 100644
+--- a/VTKExtensions/IOCore/vtkParallelSerialWriter.cxx
++++ b/VTKExtensions/IOCore/vtkParallelSerialWriter.cxx
+@@ -29,7 +29,7 @@
+ 
+ // clang-format off
+ #include <vtk_fmt.h> // needed for `fmt`
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ // clang-format on
+ 
+ namespace

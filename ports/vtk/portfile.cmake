@@ -50,6 +50,7 @@ vcpkg_from_github(
         mpi-language.diff
         fix-eigen3.patch
         avoid-stdext.diff
+        fix-fmt-header.patch
 )
 
 # =============================================================================

@@ -17,6 +17,10 @@ END OF PORT UPDATE CHECKLIST (delete this line) -->
 <!-- If this PR adds a new port, please uncomment and fill out this checklist:
 
 - [ ] Changes comply with the [maintainer guide](https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/contributing/maintainer-guide.md).
+- [ ] The packaged project is [mature and ready for broad sharing with vcpkg users](https://learn.microsoft.com/vcpkg/contributing/maintainer-guide#packaged-projects-should-be-mature)
+    - [ ] Has a release at least 6 months old or 6 months of demonstrated public development
+    - [ ] Is an official component of something else meeting that criteria
+    - [ ] Some other reason (please explain)
 - [ ] The packaged project shows strong association with the chosen port name. Check this box if at least one of the following criteria is met:
     - [ ] The project is in Repology: https://repology.org/project/<PORT NAME>/versions
     - [ ] The project is amongst the first web search results for "<PORT NAME>" or "<PORT NAME> C++". Include a screenshot of the search engine results in the PR.

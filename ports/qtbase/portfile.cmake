@@ -21,15 +21,16 @@ set(${PORT}_PATCHES
         clang-cl_QGADGET_fix.diff
         fix-host-aliasing.patch
         fix_deploy_windows.patch
+        windeployqt-webengine-debug-resources.patch
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
         moltenvk.patch
         fix-ioring-32bit.patch
-        fix-wayland-opengl-guard.patch
+        fix-liburing-config-test.patch
         fix-libresolv-test.patch
         use_inotify_on_freebsd.patch
-        QTBUG-145239.patch # https://github.com/qt/qtbase/commit/a76004f16fdc43e1b7af83bfdf3f1a613491b234
         silence-winrtbase-coroutine-warnings.diff
+        QTBUG-145703.patch # https://github.com/qt/qtbase/commit/239c54452fa60157c90901c8be8685048a65ad0a
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -93,7 +94,7 @@ FEATURES
     "zstd"                FEATURE_zstd
     "framework"           FEATURE_framework
     "concurrent"          FEATURE_concurrent
-    "concurrent"          FEATURE_future
+    "future"              FEATURE_future
     "dbus"                FEATURE_dbus
     "gui"                 FEATURE_gui
     "thread"              FEATURE_thread
@@ -132,6 +133,7 @@ FEATURES
     "glib"                FEATURE_glib
     "icu"                 FEATURE_icu
     "pcre2"               FEATURE_pcre2
+    "async-io"            FEATURE_async_io
     #"icu"                 CMAKE_REQUIRE_FIND_PACKAGE_ICU
     #"glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
 INVERTED_FEATURES
@@ -140,6 +142,20 @@ INVERTED_FEATURES
     "icu"                  CMAKE_DISABLE_FIND_PACKAGE_ICU
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
+
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
+        FEATURES
+            "ioring" FEATURE_liburing
+    )
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OS_CORE_OPTIONS
+        FEATURES
+            "ioring" FEATURE_windows_ioring
+    )
+endif()
+
+list(APPEND FEATURE_CORE_OPTIONS ${FEATURE_OS_CORE_OPTIONS})
 
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
@@ -469,6 +485,9 @@ endif()
 if(NOT VCPKG_TARGET_IS_IOS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/ios")
 endif()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/windows")
+endif()
 
 file(RELATIVE_PATH installed_to_host "${CURRENT_INSTALLED_DIR}" "${CURRENT_HOST_INSTALLED_DIR}")
 file(RELATIVE_PATH host_to_installed "${CURRENT_HOST_INSTALLED_DIR}" "${CURRENT_INSTALLED_DIR}")
@@ -479,6 +498,7 @@ endif()
 set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
 set(REL_PATH "")
 set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
+set(LIBEXEC_DEBUG_SUFFIX "")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_release.conf" @ONLY) # For vcpkg-qmake
 set(BACKUP_CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
 set(BACKUP_CURRENT_HOST_INSTALLED_DIR "${CURRENT_HOST_INSTALLED_DIR}")
@@ -489,6 +509,9 @@ set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${installed_to_host}")
 set(REL_HOST_TO_DATA "${host_to_installed}")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.conf")
 set(REL_PATH debug/)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(LIBEXEC_DEBUG_SUFFIX "/debug")
+endif()
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/qt.debug.conf")
 
 set(CURRENT_INSTALLED_DIR "${BACKUP_CURRENT_INSTALLED_DIR}")

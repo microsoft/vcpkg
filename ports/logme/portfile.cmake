@@ -2,8 +2,10 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO efmsoft/logme
   REF "v${VERSION}"
-  SHA512 4debf121f997bddbd62e749b7cbc237142d9fd052cb7b2099d359cfb563cd43458ad452135dbe9eba1d37b8b139cf2f793ab61b379382b7e54a1a651fb50e793
-  HEAD_REF master
+  SHA512 04cedb62185460fcdfe62a163f67391e0d3877108df82589bc579604db883ef3bb068d1a9e48099609ef7fa82d3ddf65c25abf7c81f69a7bc54d40398eadcdd6
+  HEAD_REF main
+  PATCHES
+    fix-windows-static-link.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}"  "static" _logme_static_opt)
@@ -18,6 +20,8 @@ vcpkg_cmake_configure(
     -DLOGME_BUILD_EXAMPLES=OFF
     -DLOGME_BUILD_TOOLS=OFF
     -DUSE_JSONCPP=ON
+    -DUSE_ZLIB=OFF
+    -DLOGME_FMT_FORMAT=OFF
 )
 
 vcpkg_cmake_install()
@@ -25,5 +29,12 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/logme)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/Logme/Json")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Logme/Types.h" "!defined(_LOGME_STATIC_BUILD_)" "1")
+else()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Logme/Types.h" "!defined(_LOGME_STATIC_BUILD_)" "0")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,4 +1,9 @@
 minizip provides CMake targets:
 
-    find_package(unofficial-minizip CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::minizip::minizip)
+  find_package(minizip CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:MINIZIP::minizip>,MINIZIP::minizip,MINIZIP::minizipstatic>)
+
+minizip provides pkg-config modules:
+
+  # Minizip zip file manipulation library
+  minizip

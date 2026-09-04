@@ -1,0 +1,16 @@
+diff --git a/src/magic.h.in b/src/magic.h.in
+index 230fcbd..37d5542 100644
+--- a/src/magic.h.in
++++ b/src/magic.h.in
+@@ -28,6 +28,11 @@
+ 
+ #include <sys/types.h>
+ 
++#ifdef _MSC_VER
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
++
+ #define	MAGIC_NONE		0x0000000 /* No flags */
+ #define	MAGIC_DEBUG		0x0000001 /* Turn on debugging */
+ #define	MAGIC_SYMLINK		0x0000002 /* Follow symlinks */

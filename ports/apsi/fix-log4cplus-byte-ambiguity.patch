@@ -1,0 +1,28 @@
+--- a/common/apsi/log.cpp	2026-08-08 03:05:11.906696658 +0900
++++ b/common/apsi/log.cpp	2026-08-08 03:05:26.372972353 +0900
+@@ -13,6 +13,13 @@
+ #include "apsi/config.h"
+ #include "apsi/log.h"
+
++#ifdef APSI_USE_LOG4CPLUS
++#include "log4cplus/consoleappender.h"
++#include "log4cplus/fileappender.h"
++#include "log4cplus/logger.h"
++#include "log4cplus/nullappender.h"
++#endif
++
+ using namespace std;
+
+ namespace apsi {
+@@ -86,11 +93,6 @@
+
+ #ifdef APSI_USE_LOG4CPLUS
+
+-#include "log4cplus/consoleappender.h"
+-#include "log4cplus/fileappender.h"
+-#include "log4cplus/logger.h"
+-#include "log4cplus/nullappender.h"
+-
+ using namespace log4cplus;
+
+ namespace apsi {

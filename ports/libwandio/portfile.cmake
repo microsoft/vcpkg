@@ -10,9 +10,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wanduow/wandio
     REF ${VERSION}
-    SHA512 931bdfe91c8923de52217873d5a12568bcac97b2ab7e4e50f48cd9999d7b3887175885c3f56250b0cd822584bbf4a9262b017ab57ed599ddd288abda1fad9885
+    SHA512 6468a6f22f7536b78c27d9c4399454ac0f471ea94c832869b5dad1b334edb8d66ebe931a0614ccc052b21a85fb21310fa9410850ad0ebbb4d722e3036990ffea
     HEAD_REF master
-    PATCHES configure.lib.patch # This is how configure.ac files with dependencies get fixed. 
+    PATCHES configure.lib.patch # This is how configure.ac files with dependencies get fixed.
             configure.patch
             ${PATCHES}
 )

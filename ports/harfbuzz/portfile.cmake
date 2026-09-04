@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF ${VERSION}
-    SHA512 649521b69d5d7328245cabca8b769448f695b0b7e3bf16208ddb1635b29165dfd363a06b1b2831229f6ff722d0e8212fd82054e6b64992552a6a21af238c5cb3
+    REF "${VERSION}"
+    SHA512 a0f4e70e2662c9fb982303108690dd5e8e72311f191ff3369fedbdc8a0df40db3f2418b80ce9304827c4a8e908b7d5e54d4e82cb491a84b1c3ceb8cece832e2e
     HEAD_REF master
     PATCHES
-        fix-eol-mismatch.diff # https://github.com/harfbuzz/harfbuzz/commit/ab6aa4f449457be45e8e0218f7a8de271fb19967.diff?full_index=1
         ${ANDROID_LOCALECONV_L_PATCH}
+        no-threads-on-emscripten.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -76,6 +76,13 @@ else()
     list(APPEND OPTIONS -Dintrospection=disabled)
 endif()
 
+# This option switches the link language to C++,
+# matching the C++ sources. This is necessary
+# for android-dynamic and maybe more platforms.
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS -Dwith_libstdcxx=true)
+endif()
+
 set(cxx_link_libraries "")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     block(PROPAGATE cxx_link_libraries)
@@ -83,14 +90,33 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_cmake_get_vars(cmake_vars_file)
         include("${cmake_vars_file}")
         list(REMOVE_ITEM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_LINK_LIBRARIES})
-        list(TRANSFORM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES PREPEND "-l")
-        string(JOIN " " cxx_link_libraries ${VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
+        # Some toolchains (e.g. mingw-w64 cross gcc) report C++ implicit link
+        # libraries as resolved absolute archive paths. Those are already valid
+        # linker input and must be passed through verbatim; only bare library
+        # names get the "-l" prefix. Prepending "-l" to an absolute path produces
+        # a malformed "-l/abs/path/libfoo.a" token that downstream `ld` rejects.
+        set(cxx_link_flags "")
+        foreach(lib IN LISTS VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
+            if(IS_ABSOLUTE "${lib}")
+                list(APPEND cxx_link_flags "${lib}")
+            else()
+                list(APPEND cxx_link_flags "-l${lib}")
+            endif()
+        endforeach()
+        string(JOIN " " cxx_link_libraries ${cxx_link_flags})
     endblock()
 endif()
 
 set(LANGUAGES C CXX)
 if(VCPKG_TARGET_IS_APPLE)
     list(APPEND LANGUAGES OBJC OBJCXX)
+endif()
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    # The hb-gpu-* utilities fail to link on wasm32-emscripten (some objects
+    # are built with -pthread and some without, so wasm-ld rejects
+    # --shared-memory); only the libraries are useful here anyway.
+    list(APPEND OPTIONS -Dutilities=disabled)
 endif()
 
 vcpkg_configure_meson(
@@ -102,6 +128,7 @@ vcpkg_configure_meson(
         -Dtests=disabled
         -Dbenchmark=disabled
         -Dgpu_demo=disabled
+        -Dchafa=disabled     # no chafa feature; don't let hb-view auto-detect a system copy
         ${OPTIONS}
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
@@ -168,4 +195,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/src/ms-use/COPYING")

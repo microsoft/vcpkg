@@ -1,7 +1,6 @@
 {
   "name": "libdatrie",
-  "version": "0.2.13",
-  "port-version": 1,
+  "version": "0.2.14",
   "description": "Implementation of double-array structure for representing trie",
   "homepage": "https://linux.thai.net/pub/ThaiLinux/software/libthai",
   "license": "LGPL-2.1-or-later",

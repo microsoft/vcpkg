@@ -1,0 +1,54 @@
+diff --git a/c++/CMakeLists.txt b/c++/CMakeLists.txt
+index afc8ff6a..a311106f 100644
+--- a/c++/CMakeLists.txt
++++ b/c++/CMakeLists.txt
+@@ -218,6 +218,9 @@ if(NOT MSVC)
+   set(PTHREAD_CFLAGS "-pthread")
+ endif()
+ set(STDLIB_FLAG)  # TODO: Unsupported
++if(WIN32)
++  set(ASYNC_LIBS "-lws2_32")
++endif()
+ set(CAPNP_PKG_CONFIG_FILES
+   pkgconfig/kj.pc
+   pkgconfig/capnp.pc
+@@ -233,13 +233,18 @@ if(NOT CAPNP_LITE)
+     pkgconfig/kj-gzip.pc
+     pkgconfig/kj-http.pc
+     pkgconfig/kj-test.pc
+-    pkgconfig/kj-tls.pc
+     pkgconfig/capnp-rpc.pc
+     pkgconfig/capnp-websocket.pc
+     pkgconfig/capnp-json.pc
+   )
+ endif()
+ 
++if(WITH_OPENSSL)
++  list(APPEND CAPNP_PKG_CONFIG_FILES
++    pkgconfig/kj-tls.pc
++  )
++endif()
++
+ foreach(pcfile ${CAPNP_PKG_CONFIG_FILES})
+   configure_file(${pcfile}.in "${CMAKE_CURRENT_BINARY_DIR}/${pcfile}" @ONLY)
+   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${pcfile}" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+diff --git a/c++/pkgconfig/kj-tls.pc.in b/c++/pkgconfig/kj-tls.pc.in
+index 22b8292..a4463cd 100644
+--- a/c++/pkgconfig/kj-tls.pc.in
++++ b/c++/pkgconfig/kj-tls.pc.in
+@@ -8,4 +8,5 @@ Description: Basic utility library called KJ (TLS part)
+ Version: @VERSION@
+ Libs: -L${libdir} -lkj-tls @PTHREAD_CFLAGS@ @PTHREAD_LIBS@ @STDLIB_FLAG@
+ Requires: kj-async = @VERSION@
++Requires.private: openssl
+ Cflags: -I${includedir} @PTHREAD_CFLAGS@ @STDLIB_FLAG@ @CAPNP_LITE_FLAG@
+diff --git a/c++/pkgconfig/kj-async.pc.in b/c++/pkgconfig/kj-async.pc.in
+index 1a7a55f..4e2c765 100644
+--- a/c++/pkgconfig/kj-async.pc.in
++++ b/c++/pkgconfig/kj-async.pc.in
+@@ -8,4 +8,4 @@ Description: Basic utility library called KJ (async part)
+ Version: @VERSION@
+ Libs: -L${libdir} -lkj-async @ASYNC_LIBS@ @PTHREAD_CFLAGS@ @PTHREAD_LIBS@ @STDLIB_FLAG@
+ Requires: kj = @VERSION@
+-Cflags: -I${includedir} @ASYNC_LIBS@ @PTHREAD_CFLAGS@ @STDLIB_FLAG@ @CAPNP_LITE_FLAG@
++Cflags: -I${includedir} @PTHREAD_CFLAGS@ @STDLIB_FLAG@ @CAPNP_LITE_FLAG@

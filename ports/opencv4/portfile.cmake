@@ -40,6 +40,7 @@ vcpkg_from_github(
       0024-openvino-const-tensor-data.patch
       0025-fix-cuda-host-std-flag-forwarding.patch
       0026-cuda-msvc-preprocessor.patch
+      0028-ffmpeg9-support.patch
       "${PATCH1_FILE}"
       "${CUDA_13_SUPPORT_PATCH}"
 )
@@ -63,6 +64,10 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(TARGET_IS_ARM 1)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   set(TARGET_IS_X86_64 1)
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # wasm32 is not x86: leaving every TARGET_IS_* unset keeps OpenCV off the x86 SSE baseline,
+  # whose runtime guard aborts on wasm. SIMD comes from the wasm HAL configured below.
+  set(TARGET_IS_WASM 1)
 else()
   set(TARGET_IS_X86 1)
 endif()
@@ -140,6 +145,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "text"       BUILD_opencv_text
  "text"       WITH_TESSERACT
  "tiff"       WITH_TIFF
+ "v4l"        WITH_V4L
  "vtk"        WITH_VTK
  "vulkan"     WITH_VULKAN
  "webp"       WITH_WEBP
@@ -148,15 +154,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  INVERTED_FEATURES
  "fs"         OPENCV_DISABLE_FILESYSTEM_SUPPORT
 )
-
-if("dnn" IN_LIST FEATURES)
-  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-  vcpkg_execute_required_process(
-    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
-    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
-    LOGNAME flatc-${TARGET_TRIPLET}
-  )
-endif()
 
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
@@ -231,6 +228,8 @@ if("contrib" IN_LIST FEATURES)
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      0019-contrib-cout.diff
+      0027-contrib-cuda-tuple.patch # https://github.com/opencv/opencv_contrib/commit/054007b78c8288ef2fd040e77dc0cf2e45f70c15
       "${CONTRIB_CUDA_NAMESPACE_FIX}"
       "${CONTRIB_CUDA_NOT1_FIX}"
   )
@@ -382,10 +381,22 @@ if("ipp" IN_LIST FEATURES)
     endif()
   endif()
 
-  if(VCPKG_OPENCV4_UPDATE)
-    message(STATUS "All downloads are up-to-date.")
-    message(FATAL_ERROR "Stopping due to VCPKG_OPENCV4_UPDATE being enabled.")
-  endif()
+endif()
+
+if(VCPKG_OPENCV4_UPDATE)
+  message(STATUS "All downloads are up-to-date.")
+  message(FATAL_ERROR "Stopping due to VCPKG_OPENCV4_UPDATE being enabled.")
+endif()
+
+# ^^^ downloads ^^^ | vvv after downloads vvv
+
+if("dnn" IN_LIST FEATURES)
+  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+  vcpkg_execute_required_process(
+    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
+    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
+    LOGNAME flatc-${TARGET_TRIPLET}
+  )
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)
@@ -406,6 +417,20 @@ endif()
 
 if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
+endif()
+
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # OpenCV's CPU-optimization machinery assumes a native (x86/ARM) target. On wasm the baseline
+  # and dispatch lists must be empty, otherwise it bakes an x86 SSE baseline whose runtime guard
+  # aborts at startup. Mirrors OpenCV's own platforms/js/build_js.py.
+  list(APPEND ADDITIONAL_BUILD_FLAGS -DCPU_BASELINE= -DCPU_DISPATCH=)
+  if("intrinsics" IN_LIST FEATURES)
+    # SIMD via OpenCV's wasm HAL (intrin_wasm.hpp); -msimd128 makes its builtins available.
+    # CV_ENABLE_INTRINSICS itself is turned on by the "intrinsics" feature.
+    list(APPEND ADDITIONAL_BUILD_FLAGS
+      -DOPENCV_EXTRA_C_FLAGS=-msimd128
+      -DOPENCV_EXTRA_CXX_FLAGS=-msimd128)
+  endif()
 endif()
 
 vcpkg_cmake_configure(

@@ -1,0 +1,79 @@
+diff --git a/src/C++/CMakeLists.txt b/src/C++/CMakeLists.txt
+index 9582c7f..38684f4 100644
+--- a/src/C++/CMakeLists.txt
++++ b/src/C++/CMakeLists.txt
+@@ -1,4 +1,5 @@
+ add_subdirectory(test)
++find_package(double-conversion CONFIG REQUIRED)
+ 
+ set(quickfix_VERSION_MAJOR 17)
+ set(quickfix_VERSION_MINOR 0)
+@@ -83,6 +84,7 @@ else()
+   target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES} ${MYSQL_CLIENT_LIBS} ${PostgreSQL_LIBRARIES} ${ODBC_LIBRARIES} pthread)
+ endif()
+ 
++target_link_libraries(${PROJECT_NAME} double-conversion::double-conversion)
+ include(CheckFunctionExists)
+ check_symbol_exists(ftime "sys/timeb.h" HAVE_FTIME)
+ if(HAVE_FTIME)
+@@ -90,12 +92,12 @@ if(HAVE_FTIME)
+ endif()
+ 
+ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+-target_include_directories(${PROJECT_NAME} INTERFACE ${PROJECT_SOURCE_DIR}/include)
+ target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/src/C++)
++target_include_directories(${PROJECT_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
+ 
+ set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${quickfix_VERSION} SOVERSION ${quickfix_VERSION_MAJOR} )
+ 
+-install(TARGETS ${PROJECT_NAME} DESTINATION lib)
++install(TARGETS ${PROJECT_NAME} EXPORT quickfix-config DESTINATION lib)
+ 
+ get_target_property(debug_postfix ${PROJECT_NAME} DEBUG_POSTFIX)
+ if(${debug_postfix} STREQUAL debug_postfix-NOTFOUND)
+@@ -115,3 +117,4 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/C++/ DESTINATION include/quickfix
+         FILES_MATCHING PATTERN "*.h"
+         PATTERN double-conversion EXCLUDE
+         PATTERN test EXCLUDE)
++install(EXPORT quickfix-config DESTINATION share/cmake/quickfix)
+diff --git a/src/C++/FieldConvertors.cpp b/src/C++/FieldConvertors.cpp
+index 3e0637a..883306f 100644
+--- a/src/C++/FieldConvertors.cpp
++++ b/src/C++/FieldConvertors.cpp
+@@ -25,21 +25,10 @@
+ 
+ #include "FieldConvertors.h"
+ #include <math.h>
++#include <double-conversion/double-conversion.h>
+ 
+ namespace FIX {
+ 
+-// we include "double-conversion" project in FIX namespace
+-// to avoid linking errors if quickfix is linked statically
+-// and "double-conversion" is already used by target project
+-
+-#include "double-conversion/bignum-dtoa.cc"
+-#include "double-conversion/bignum.cc"
+-#include "double-conversion/cached-powers.cc"
+-#include "double-conversion/diy-fp.cc"
+-#include "double-conversion/double-conversion.cc"
+-#include "double-conversion/fast-dtoa.cc"
+-#include "double-conversion/fixed-dtoa.cc"
+-#include "double-conversion/strtod.cc"
+ 
+ static double_conversion::DoubleToStringConverter g_dtoa_converter(
+     double_conversion::DoubleToStringConverter::NO_FLAGS,
+diff --git a/src/C++/UtilitySSL.cpp b/src/C++/UtilitySSL.cpp
+index af916bc..13a48fc 100644
+--- a/src/C++/UtilitySSL.cpp
++++ b/src/C++/UtilitySSL.cpp
+@@ -135,6 +135,9 @@
+ 
+ #ifdef _MSC_VER
+ 
++#include <winsock2.h>
++#include <ws2tcpip.h>
++
+ #if !defined(snprintf)
+ #define snprintf _snprintf
+ #endif

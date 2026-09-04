@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
     REF "${VERSION_STR}"
-    SHA512 fc5a57a25677f73b1adff8e94a901a11ff62109f16f447f2c8e8effe490ba501a705d8149a42f6c05f8a1524a5e9071df0566b48497cd58b0898a7e69b2c676b
+    SHA512 bbe7099071cbf5397940ebc6e66ec05f8023d5e5aae6142870e14b93aa6f8f94c30980ef421e717f0fbfbc23b3520c3ccfe8a939c4caba3ccbf325060e26eb52
     HEAD_REF master
     PATCHES
         0001-cmake-keep-build-use-vcpkg-explicit.patch

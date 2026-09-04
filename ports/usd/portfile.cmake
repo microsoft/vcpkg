@@ -20,7 +20,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 3d5dae46c7ae096501dc51b373ba05c8603a1cf16e5054728d41d0c2970b59ce3ee5ec83e1c575b92482bc8cf2c59643df093a9e7aa82bcdd53dada05292720d
+    SHA512 82f7bb4f77b295be79cd36f591f242276d36c0d589b0fca383344c27e70daf7e29151bf587528bb2fc2b2a8b974387a253993ace3caf5f79ae70f9ebbc71cf1a
     HEAD_REF release
     PATCHES
         003-fix-dep.patch
@@ -69,7 +69,12 @@ vcpkg_cmake_configure(
 
         -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
         -DPXR_USE_DEBUG_PYTHON:BOOL=OFF
+
+        # USD never includes GNUInstallDirs, but its install rules use these.
+        -DCMAKE_INSTALL_BINDIR:STRING=bin
+        -DCMAKE_INSTALL_LIBDIR:STRING=lib
     MAYBE_UNUSED_VARIABLES
+        PXR_ENABLE_PTEX_SUPPORT
         PXR_USE_PYTHON_3
         PYTHON_EXECUTABLE
 )
@@ -121,13 +126,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
       file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
     endif()
     file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
-
-    # fix plugInfo.json for runtime
-    file(GLOB_RECURSE PLUGINFO_FILES ${CURRENT_PACKAGES_DIR}/lib/usd/*/resources/plugInfo.json)
-    file(GLOB_RECURSE PLUGINFO_FILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/usd/*/resources/plugInfo.json)
-    foreach(PLUGINFO ${PLUGINFO_FILES} ${PLUGINFO_FILES_DEBUG})
-        file_replace_regex(${PLUGINFO} [=["LibraryPath": "../../([a-zA-Z0-9_]+).dll"]=] [=["LibraryPath": "../../../bin/\1.dll"]=])
-    endforeach()
 endif()
 
 # Handle copyright

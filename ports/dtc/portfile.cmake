@@ -6,17 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dgibson/dtc
     REF "v${VERSION}"
-    SHA512 5cf48c8bd426919bb8aad6a8866e063305eca830547f8ceb5fe7746bc85a8d6a0a1e13fd29432cb389d3d51337368f217077aabf9436b526e77d425b33167694
+    SHA512 93a65d2e18995907f70d3033d83ac9b246e1589dff255c4e018bfd2c2ff8b9153130728ebc28d1d0adba7e077d9354de7a781f95f5c3f636547c08338d85ef8d
     HEAD_REF main
-    PATCHES
-        0001-enable-static-or-shared.patch
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(STATIC_BUILD true)
-else()
-    set(STATIC_BUILD false)
-endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -26,7 +18,6 @@ vcpkg_configure_meson(
         -Dvalgrind=disabled
         -Dpython=disabled
         -Dtests=false
-        "-Dstatic-build=${STATIC_BUILD}"
 )
 
 vcpkg_install_meson()

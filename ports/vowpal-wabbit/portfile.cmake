@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-android-build.patch
+        fix-fmt-header.patch
 )
 
 vcpkg_cmake_configure(

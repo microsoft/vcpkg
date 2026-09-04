@@ -1,3 +1,5 @@
+set(_installNuGet ON)
+
 if(VCPKG_TARGET_IS_XBOX)
 
     cmake_path(SET GameDKXboxLatest "$ENV{GameDKXboxLatest}")
@@ -26,6 +28,7 @@ if(VCPKG_TARGET_IS_XBOX)
 
     # Output user-friendly status message for installed edition.
     if(${GAMEINPUT_H} MATCHES ".*/([0-9][0-9])([0-9][0-9])([0-9][0-9])/.*")
+        set(GDKEditionNumber ${CMAKE_MATCH_1}${CMAKE_MATCH_2}${CMAKE_MATCH_3})
         set(_months "null" "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December")
         list(GET _months ${CMAKE_MATCH_2} month)
         set(update "")
@@ -33,20 +36,31 @@ if(VCPKG_TARGET_IS_XBOX)
             set(update " Update ${CMAKE_MATCH_3}")
         endif()
         message(STATUS "Found the Microsoft GDK with Xbox Extensions (${month} 20${CMAKE_MATCH_1}${update})")
+    else()
+        set(GDKEditionNumber 000000)
     endif()
 
-    file(INSTALL ${GAMEINPUT_H} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(INSTALL ${GAMEINPUT_LIB} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL ${GAMEINPUT_LIB} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if(GDKEditionNumber LESS 251000)
+        # GameInput NuGet package works on Xbox, but only for October 2025 or later.
+        message(STATUS "Using GameInput files from the installed GDKX")
+        set(_installNuGet OFF)
+        set(LIB_NAME "gameinput.lib")
 
-    set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
+        file(INSTALL ${GAMEINPUT_H} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+        file(INSTALL ${GAMEINPUT_LIB} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(INSTALL ${GAMEINPUT_LIB} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-else()
+        set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
+    endif()
+
+endif()
+
+if(_installNuGet)
 
     vcpkg_download_distfile(ARCHIVE
         URLS "https://www.nuget.org/api/v2/package/Microsoft.GameInput/${VERSION}"
         FILENAME "gameinput.${VERSION}.zip"
-        SHA512 e91aef50dc929a9446772525a59e832050979b81c460314a9e42f45359cd533b196a0218adad70099a4b06863c4b640325c36bcd2445bad741eabf982cec5bf2
+        SHA512 53f93bdc3a897386abd8a48fc13bdf1e9d86644f9258b6ad24ede881d816b6c3792ea98b2b922ef0d9f92eabc47daacaf462dcae6ae31c94c2db77b206b53677
     )
 
     vcpkg_extract_source_archive(
@@ -56,7 +70,10 @@ else()
     )
 
     file(INSTALL "${PACKAGE_PATH}/native/include/gameinput.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(INSTALL "${PACKAGE_PATH}/redist/GameInputRedist.msi" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+
+    if(NOT VCPKG_TARGET_IS_XBOX)
+        file(INSTALL "${PACKAGE_PATH}/redist/GameInputRedist.msi" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+    endif()
 
     vcpkg_install_copyright(FILE_LIST "${PACKAGE_PATH}/LICENSE.txt")
 

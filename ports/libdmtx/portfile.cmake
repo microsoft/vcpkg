@@ -2,13 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dmtx/libdmtx
     REF v${VERSION}
-    SHA512 802a697669afeb74da0cc3736fe7301fcc1653c1e3bebc343a8baf76e52226cc5509231519343267a92e22ebdfcc5b2825380339991340f054f0a6685d2ffcdc
-    PATCHES
-        001-cmake-add-install-target.patch
+    SHA512 2796b2a43d2e83732bd9e9c3d4c702c3b40f55453713d968cf8927534952af3891c8e1f650650e4d47e9c58f50b23f43e2653e2b9ea474359a00dcd097b6bf00
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DMTX_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DMTX_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DDMTX_SHARED=${DMTX_SHARED}
+        -DDMTX_STATIC=${DMTX_STATIC}
 )
 
 vcpkg_cmake_install()

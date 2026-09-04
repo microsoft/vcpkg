@@ -1,4 +1,4 @@
-set(GDK_EDITION_NUMBER 260401)
+set(GDK_EDITION_NUMBER 260403)
 
 # The GDK contains a combination of static C++ libraries and DLL-based extension libraries.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -6,13 +6,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE_CORE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.Core/${VERSION}"
     FILENAME "ms-gdk-core.${VERSION}.zip"
-    SHA512 a9137a7973430818088448e48a4906cf069ce1bd51ad8fdd9cd82e2a5bd13274e3d4380f6b6f3aeacdcedcd5d2a23619cc88f9a8cd8c240d8aa8af4cc08aeba3
+    SHA512 9c607f4bed88a53aafde4f56c89fc02f0b7bfd7006f793aeeea77aceb0ccefbe7dbf4874b6414ead4e26c78599236476c3432150eed78576b684e6219e075fd7
 )
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.Windows/${VERSION}"
     FILENAME "ms-gdk-windows.${VERSION}.zip"
-    SHA512 368266a719783ebcff721483860cf02f9122d85c430288c19b21f0834ab81649a585630dfedfef1acde9f0a0665c94331e3c3b970bed73a68ea059bf3fa854d6
+    SHA512 bd6951bc05c2010f35a2f2565bb42a4306c9962309810bfa82379d689d5095f483e11f590c226e7bf8847fa1b868d8f44b75abf707feee00944dc9db5b98113c
 )
 
 vcpkg_extract_source_archive(
@@ -45,10 +45,6 @@ set(WINDOWS_PATH "${PACKAGE_PATH}/native/${GDK_EDITION_NUMBER}/windows")
 file(REMOVE "${WINDOWS_PATH}/include/GameInput.h")
 file(REMOVE "${WINDOWS_PATH}/lib/arm64/GameInput.lib")
 file(REMOVE "${WINDOWS_PATH}/lib/x64/GameInput.lib")
-
-# We use the cpprestsdk port instead
-file(REMOVE_RECURSE "${WINDOWS_PATH}/include/cpprest")
-file(REMOVE_RECURSE "${WINDOWS_PATH}/include/pplx")
 
 # Install core content
 set(CORE_BINS xgameruntime.dll xgameruntime.thunks.dll GameChat2.dll libHttpClient.dll XCurl.dll)

@@ -1,0 +1,28 @@
+Subject: [PATCH] macOS: keep @rpath install names
+
+qca 2.3.10 replaced `cmake_policy(SET CMP0042 OLD)` with
+`set(CMAKE_MACOSX_RPATH OFF)`. As a normal (non-cache) variable it overrides
+the `set(CMAKE_MACOSX_RPATH ON CACHE BOOL "")` from vcpkg's osx toolchain.
+
+Combined with USE_RELATIVE_PATHS=ON (which makes qca skip INSTALL_NAME_DIR),
+libqca ends up with the bare install name `libqca.2.dylib`, and the crypto
+plugins record that bare name as their dependency. vcpkg's
+z_vcpkg_fixup_macho_rpath_in_dir repairs libqca itself, but skips the plugins:
+they are CMake MODULEs, which `file -b` reports as "Mach-O 64-bit bundle"
+rather than "shared library"/"executable". The plugins are therefore left with
+an unresolvable dependency and dlopen() fails, so e.g. qca-ossl never
+registers.
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7220566..a53557c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,8 +15,6 @@ set(QCA_LIB_MAJOR_VERSION "2")
+ set(QCA_LIB_MINOR_VERSION "3")
+ set(QCA_LIB_PATCH_VERSION "10")
+ 
+-set(CMAKE_MACOSX_RPATH OFF)
+-
+ option(BUILD_WITH_QT6 "Build with Qt 6" OFF)
+ option(BUILD_TESTS "Create test" ON)
+ option(BUILD_TOOLS "Compile mozcerts and qcatool" ON)

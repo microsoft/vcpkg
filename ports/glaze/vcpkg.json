@@ -1,6 +1,6 @@
 {
   "name": "glaze",
-  "version": "7.6.0",
+  "version": "8.3.0",
   "description": "One of the fastest JSON libraries in the world. Glaze reads and writes from C++ memory, simplifying interfaces and offering incredible performance.",
   "homepage": "https://github.com/stephenberry/glaze",
   "license": "MIT",
@@ -16,9 +16,22 @@
     }
   ],
   "features": {
+    "networking": {
+      "description": "Enable networking support",
+      "dependencies": [
+        "asio"
+      ]
+    },
     "ssl": {
       "description": "Enable SSL/TLS support for HTTPS servers",
       "dependencies": [
+        {
+          "name": "glaze",
+          "default-features": false,
+          "features": [
+            "networking"
+          ]
+        },
         "openssl"
       ]
     }
