@@ -4,12 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 547fe1a3183f75edd23e925ab4151ef7a3afa5f65329784456374d733d54f04e744257239868d4a6c1a21e17edcc3c1eced7b1ed9885cec42006444323fd47e5
+    SHA512 72e9ad42a11d64c73f4cd4569115e75790ee7d73c850a1ac00ed453418bb782266e180cc06c2ba0ff205d97ea18d5fa2b23247a8b23ed5cb6edb86e28b94e501
     HEAD_REF master
 )
-
-# Avoid conflicting utf-8 flags for MSVC
-vcpkg_replace_string("${SOURCE_PATH}/expat/CMakeLists.txt" "/source-charset:utf-8" "")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" EXPAT_LINKAGE)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" EXPAT_CRT_LINKAGE)
