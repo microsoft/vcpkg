@@ -1,6 +1,6 @@
 {
   "name": "cpp-client-telemetry",
-  "version": "3.10.173.1",
+  "version": "3.10.240.1",
   "description": "Microsoft 1DS C/C++ Client Telemetry Library",
   "homepage": "https://github.com/microsoft/cpp_client_telemetry",
   "license": "Apache-2.0",
@@ -12,7 +12,7 @@
       "features": [
         "openssl"
       ],
-      "platform": "linux | android"
+      "platform": "linux"
     },
     "nlohmann-json",
     {
