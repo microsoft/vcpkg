@@ -13,6 +13,7 @@ vcpkg_from_github(
         0004-disable-libomp-aliases.patch
         0005-fix-runtimes.patch
         0006-create-destination-mlir-directory.patch
+        0007-use-cxx-for-libxml2-check.patch
         cmake4.patch
 )
 
