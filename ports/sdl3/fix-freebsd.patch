@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9e19336..ff6424b 100644
+index 51657f6e4..694571670 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -4038,7 +4038,7 @@ else()
+@@ -4283,7 +4283,7 @@ else()
  endif()
  set(SDL_INSTALL_CMAKEDIR_ROOT "${SDL_INSTALL_CMAKEDIR_ROOT_DEFAULT}" CACHE STRING "Root folder where to install SDL3Config.cmake related files (SDL3 subfolder for MSVC projects)")
  
