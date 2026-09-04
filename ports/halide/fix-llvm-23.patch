@@ -62,10 +62,16 @@ index 07cc3ea..0b9b03c 100644
      }
  
 diff --git a/src/CodeGen_PTX_Dev.cpp b/src/CodeGen_PTX_Dev.cpp
-index 17f9a5a..2bc2f37 100644
+index 17f9a5a..db8a78a 100644
 --- a/src/CodeGen_PTX_Dev.cpp
 +++ b/src/CodeGen_PTX_Dev.cpp
-@@ -614,9 +614,10 @@ vector<char> CodeGen_PTX_Dev::compile_to_src() {
+@@ -609,14 +609,15 @@ vector<char> CodeGen_PTX_Dev::compile_to_src() {
+     // Allocate target machine
+ 
+     std::string err_str;
+-    const llvm::Target *llvm_target = TargetRegistry::lookupTarget(triple.str(), err_str);
++    const llvm::Target *llvm_target = TargetRegistry::lookupTarget(triple, err_str);
+     internal_assert(llvm_target) << err_str << "\n";
  
      TargetOptions options;
      options.AllowFPOpFusion = FPOpFusion::Fast;

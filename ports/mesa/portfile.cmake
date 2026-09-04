@@ -55,6 +55,9 @@ endif()
 
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
+    list(APPEND MESA_ADDITIONAL_BINARIES
+        "llvm-config=['${CURRENT_INSTALLED_DIR}/tools/llvm/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}']"
+    )
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
@@ -103,6 +106,7 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         python=['${PYTHON3}','-I']
         python3=['${PYTHON3}','-I']
+        ${MESA_ADDITIONAL_BINARIES}
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
