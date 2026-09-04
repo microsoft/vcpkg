@@ -1,5 +1,0 @@
-sdl1-mixer is compatible with built-in CMake variables:
-
-  find_package(SDL_mixer REQUIRED)
-  target_include_directories(main PRIVATE ${SDL_MIXER_INCLUDE_DIRS})
-  target_link_libraries(main PRIVATE ${SDL_MIXER_LIBRARIES})

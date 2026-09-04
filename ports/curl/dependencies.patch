@@ -55,15 +55,15 @@ diff --git a/CMake/FindGSS.cmake b/CMake/FindGSS.cmake
 index 6f352b2..e7b6d24 100644
 --- a/CMake/FindGSS.cmake
 +++ b/CMake/FindGSS.cmake
-@@ -60,6 +60,7 @@ if(NOT GSS_ROOT_DIR AND NOT "$ENV{GSS_ROOT_DIR}")
+@@ -68,6 +68,7 @@ if(NOT GSS_ROOT_DIR AND NOT "$ENV{GSS_ROOT_DIR}" AND NOT GSS_FIND_COMPONENTS STR
  endif()
  
  if(NOT _gss_FOUND)  # Not found by pkg-config. Let us take more traditional approach.
 +elseif(0)
-   find_file(_gss_configure_script NAMES "krb5-config" PATH_SUFFIXES "bin" HINTS ${_gss_root_hints}
-     NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH)
-   # If not found in user-supplied directories, maybe system knows better
-@@ -258,7 +259,6 @@ if(GSS_FOUND)
+   if(GSS_FIND_COMPONENTS STREQUAL "Apple")
+     find_path(_gss_INCLUDE_DIRS NAMES "GSS/gssapi.h" PATH_SUFFIXES "include")
+     find_library(_gss_LIBRARIES NAMES "GSS")
+@@ -276,7 +277,6 @@ if(GSS_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_gss_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_gss_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_gss_INCLUDE_DIRS}"
@@ -130,9 +130,9 @@ diff --git a/CMake/FindLibgsasl.cmake b/CMake/FindLibgsasl.cmake
 index 7fbaa71..021cf20 100644
 --- a/CMake/FindLibgsasl.cmake
 +++ b/CMake/FindLibgsasl.cmake
-@@ -47,6 +47,9 @@ if(_libgsasl_FOUND)
-   set(Libgsasl_FOUND TRUE)
+@@ -48,6 +48,9 @@ if(_libgsasl_FOUND)
    set(LIBGSASL_FOUND TRUE)
+   set(LIBGSASL_VERSION ${_libgsasl_VERSION})
    message(STATUS "Found Libgsasl (via pkg-config): ${_libgsasl_INCLUDE_DIRS} (found version \"${LIBGSASL_VERSION}\")")
 +elseif(1)
 +  include(FindPackageHandleStandardArgs)
@@ -140,7 +140,7 @@ index 7fbaa71..021cf20 100644
  else()
    find_path(LIBGSASL_INCLUDE_DIR NAMES "gsasl.h")
    find_library(LIBGSASL_LIBRARY NAMES "gsasl" "libgsasl")
-@@ -85,7 +88,6 @@ if(LIBGSASL_FOUND)
+@@ -86,7 +89,6 @@ if(LIBGSASL_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_libgsasl_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_libgsasl_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_libgsasl_INCLUDE_DIRS}"
@@ -336,17 +336,17 @@ diff --git a/CMake/FindNettle.cmake b/CMake/FindNettle.cmake
 index c963180..4c623df 100644
 --- a/CMake/FindNettle.cmake
 +++ b/CMake/FindNettle.cmake
-@@ -48,6 +48,9 @@ if(_nettle_FOUND)
+@@ -50,6 +50,9 @@ if(_nettle_FOUND)
    set(NETTLE_FOUND TRUE)
-   set(NETTLE_VERSION ${_nettle_VERSION})
+   set(NETTLE_VERSION ${_nettle_nettle_VERSION})
    message(STATUS "Found Nettle (via pkg-config): ${_nettle_INCLUDE_DIRS} (found version \"${NETTLE_VERSION}\")")
 +elseif(1)
 +  include(FindPackageHandleStandardArgs)
 +  find_package_handle_standard_args(Nettle REQUIRED_VARS _nettle_FOUND)
  else()
    find_path(NETTLE_INCLUDE_DIR NAMES "nettle/sha2.h")
-   find_library(NETTLE_LIBRARY NAMES "nettle")
-@@ -91,7 +94,6 @@ if(NETTLE_FOUND)
+   find_library(NETTLE_HOGWEED_LIBRARY NAMES "hogweed")
+@@ -95,7 +98,6 @@ if(NETTLE_FOUND)
        INTERFACE_LIBCURL_PC_MODULES "${_nettle_pc_requires}"
        INTERFACE_COMPILE_OPTIONS "${_nettle_CFLAGS}"
        INTERFACE_INCLUDE_DIRECTORIES "${_nettle_INCLUDE_DIRS}"
@@ -412,7 +412,7 @@ index 953c1c6..1e3668f 100644
 --- a/CMake/Macros.cmake
 +++ b/CMake/Macros.cmake
 @@ -258,7 +258,15 @@ macro(curl_collect_target_link_options _target)
-     # Explicitly skip this query to avoid CMake v3.18 and older erroring out.
+     # Explicitly skip this query to avoid CMake 3.18 and older erroring out.
      get_target_property(_val ${_target} TYPE)
      if(NOT "${_val}" STREQUAL "INTERFACE_LIBRARY")
 -      get_target_property(_val ${_target} LOCATION)
@@ -436,7 +436,7 @@ index b4300ca..440e904 100644
    list(APPEND _curl_libs CURL::cares)
  endif()
  if("@HAVE_GSSAPI@")
--  find_dependency(GSS MODULE)
+-  find_dependency(GSS MODULE COMPONENTS "@GSS_FLAVOR@")
    list(APPEND _curl_libs CURL::gss)
  endif()
  if("@USE_BACKTRACE@")
@@ -490,7 +490,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e459b3d..b3f74d7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1899,6 +1899,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+@@ -1906,6 +1906,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
    endif()
  endif()
  
@@ -535,7 +535,7 @@ index e459b3d..b3f74d7 100644
  if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")  # MSVC but exclude clang-cl
    set_property(DIRECTORY APPEND PROPERTY COMPILE_OPTIONS "-MP")  # Parallel compilation
  endif()
-@@ -2176,7 +2214,8 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2182,7 +2220,8 @@ if(NOT CURL_DISABLE_INSTALL)
    set(_explicit_libdirs "")
    set(LIBCURL_PC_REQUIRES_PRIVATE "")
    set(LIBCURL_PC_LIBS_PRIVATE_LIST "")
@@ -545,7 +545,7 @@ index e459b3d..b3f74d7 100644
      if(TARGET "${_lib}")
        set(_explicit_libs "")
        get_target_property(_imported "${_lib}" IMPORTED)
-@@ -2195,15 +2234,32 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2201,15 +2240,32 @@ if(NOT CURL_DISABLE_INSTALL)
        endif()
        if(_lib STREQUAL OpenSSL::SSL AND NOT HAVE_BORINGSSL)  # BoringSSL does not provide openssl.pc
          set(_modules "openssl")
@@ -579,7 +579,7 @@ index e459b3d..b3f74d7 100644
        foreach(_lib IN LISTS _explicit_libs)
          if(_lib MATCHES "/")
            # This gets a bit more complex, because we want to specify the
-@@ -2222,26 +2278,47 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2228,26 +2284,47 @@ if(NOT CURL_DISABLE_INSTALL)
              if(NOT _libdir IN_LIST _sys_libdirs)
                list(APPEND _ldflags "-L${_libdir}")
              endif()
@@ -627,7 +627,7 @@ index e459b3d..b3f74d7 100644
        list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
      endif()
    endforeach()
-@@ -2275,6 +2352,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2281,6 +2358,7 @@ if(NOT CURL_DISABLE_INSTALL)
  
      string(REPLACE ";" " " LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE}")
    endif()
@@ -661,12 +661,9 @@ diff --git a/libcurl.pc.in b/libcurl.pc.in
 index c0ba524..17b7db9 100644
 --- a/libcurl.pc.in
 +++ b/libcurl.pc.in
-@@ -33,9 +33,9 @@ Name: libcurl
- URL: https://curl.se/
- Description: Library to transfer files with HTTP, FTP, etc.
- Version: @CURLVERSION@
--Requires: @LIBCURL_PC_REQUIRES@
-+Requires:
+@@ -39,8 +39,8 @@ Version: @CURLVERSION@
+ Source: https://curl.se/download/curl-@CURLVERSION@.tar.gz
+ Requires: @LIBCURL_PC_REQUIRES@
  Requires.private: @LIBCURL_PC_REQUIRES_PRIVATE@
 -Libs: -L${libdir} -lcurl @LIBCURL_PC_LIBS@
 +Libs: -L${libdir} -lcurl
@@ -674,3 +671,4 @@ index c0ba524..17b7db9 100644
 -Cflags: -I${includedir} @LIBCURL_PC_CFLAGS@
 +Cflags: -I${includedir}
  Cflags.private: @LIBCURL_PC_CFLAGS_PRIVATE@
+ Link.ABI: c
