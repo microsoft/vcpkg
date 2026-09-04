@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF "azure-storage-queues_${VERSION}"
-    SHA512 d11a55a5d5b3ef7a79e20bd79364ba981e5a2d6539d3e8c3152f4c462f5e52025fe9de8f81f821fd0747e6f3143ba4ddacff1683d9ba4c1f5a1a454e9255f773
+    REF 3fc8b8372d0acfb93f274d7ce9f1e4096bb10b6b
+    SHA512 e6192da005f7bbcef84ad81f715cb7da82546a322995779b59836e22628c3821fabb65db1fec6996a67307e5b575c2f3572036f48769d3067a72b15eb2c4eb0a
     HEAD_REF main
 )
 
 file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
 file(REMOVE_RECURSE ${unused})
 
-file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.toml")  
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.toml")
 file(REMOVE_RECURSE ${unused})
 
-file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")  
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")
 file(REMOVE_RECURSE ${unused})
 
 if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-queues")
