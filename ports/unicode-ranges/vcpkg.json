@@ -1,0 +1,25 @@
+{
+  "name": "unicode-ranges",
+  "version-semver": "0.1.0",
+  "description": "C++23 validated UTF-8, UTF-16, and UTF-32 text types and algorithms",
+  "homepage": "https://github.com/cristi1990an/unicode_ranges",
+  "license": "MIT OR Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "icu": {
+      "description": "Enable ICU-backed locale-aware casing",
+      "dependencies": [
+        "icu"
+      ]
+    }
+  }
+}
