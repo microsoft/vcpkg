@@ -3344,6 +3344,10 @@
       "baseline": "2018-01-04",
       "port-version": 4
     },
+    "gauche": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "gaussianlib": {
       "baseline": "2024-11-03",
       "port-version": 0
