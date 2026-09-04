@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001_guard_ecm_qml_module_include.patch
+        fix_linkage.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
