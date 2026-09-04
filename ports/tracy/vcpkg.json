@@ -1,7 +1,6 @@
 {
   "name": "tracy",
-  "version": "0.13.1",
-  "port-version": 1,
+  "version": "0.14.0",
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
   "license": "BSD-3-Clause",
@@ -25,7 +24,7 @@
   ],
   "features": {
     "cli-tools": {
-      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome`, `import-fuchsia` and `update`",
+      "description": "Build Tracy command-line tools: `capture`, `capture-daemon`, `csvexport`, `import-chrome`, `import-fuchsia`, `merge` and `update`",
       "supports": "!(windows & x86)",
       "dependencies": [
         {
