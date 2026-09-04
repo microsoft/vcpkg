@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1b9d3701..dc7557fd 100644
+index 334f6f83..7dd28e3c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -313,7 +313,9 @@ else()
-     ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/span.hpp)
+@@ -301,7 +301,9 @@ else()
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/)
  endif()
  
 -target_link_libraries(LIB_LIEF PRIVATE lief_spdlog)
@@ -13,7 +13,7 @@ index 1b9d3701..dc7557fd 100644
  
  if(ANDROID AND LIEF_LOGGING)
    target_link_libraries(LIB_LIEF PUBLIC log)
-@@ -503,11 +505,11 @@ if(LIEF_INSTALL)
+@@ -507,11 +509,11 @@ if(LIEF_INSTALL)
    endif()
  
    install(
