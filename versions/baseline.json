@@ -89,7 +89,7 @@
       "port-version": 0
     },
     "alibabacloud-oss-cpp-sdk-v2": {
-      "baseline": "0.1.2",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "aliyun-oss-c-sdk": {
