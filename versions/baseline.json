@@ -10988,6 +10988,10 @@
       "baseline": "2019-08-13",
       "port-version": 2
     },
+    "whatscanvas": {
+      "baseline": "0.1.20",
+      "port-version": 0
+    },
     "whereami": {
       "baseline": "2024-08-26",
       "port-version": 0
