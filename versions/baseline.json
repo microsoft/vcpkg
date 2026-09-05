@@ -429,7 +429,7 @@
       "port-version": 2
     },
     "aurora-au": {
-      "baseline": "0.5.1",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "autodiff": {
@@ -1629,7 +1629,7 @@
       "port-version": 0
     },
     "casadi": {
-      "baseline": "3.7.2",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "casclib": {
@@ -2049,7 +2049,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.53.1",
+      "baseline": "0.54.1",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2217,7 +2217,7 @@
       "port-version": 2
     },
     "crcpp": {
-      "baseline": "1.2.2.0",
+      "baseline": "1.2.3.0",
       "port-version": 0
     },
     "crfsuite": {
@@ -2309,8 +2309,8 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.21.0",
-      "port-version": 1
+      "baseline": "8.22.0",
+      "port-version": 0
     },
     "curlcpp": {
       "baseline": "3.1",
@@ -2613,7 +2613,7 @@
       "port-version": 1
     },
     "docraft": {
-      "baseline": "v1.0.0-beta.3",
+      "baseline": "v1.0.0",
       "port-version": 0
     },
     "doctest": {
@@ -2700,10 +2700,6 @@
       "baseline": "2.0.3",
       "port-version": 0
     },
-    "dx": {
-      "baseline": "1.0.1",
-      "port-version": 3
-    },
     "dxcam-cpp": {
       "baseline": "0.2.5",
       "port-version": 0
@@ -2781,8 +2777,8 @@
       "port-version": 1
     },
     "eccodes": {
-      "baseline": "2.48.0",
-      "port-version": 1
+      "baseline": "2.48.2",
+      "port-version": 0
     },
     "ecm": {
       "baseline": "6.29.0",
@@ -3029,7 +3025,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "26.8",
+      "baseline": "26.9",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -3477,8 +3473,8 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "8.2.0",
-      "port-version": 1
+      "baseline": "8.3.0",
+      "port-version": 0
     },
     "glbinding": {
       "baseline": "3.1.0",
@@ -4837,7 +4833,7 @@
       "port-version": 2
     },
     "libbluray": {
-      "baseline": "1.4.1",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "libbpf": {
@@ -4994,7 +4990,7 @@
     },
     "libdvdnav": {
       "baseline": "6.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libdvdread": {
       "baseline": "6.1.3",
@@ -5417,8 +5413,8 @@
       "port-version": 3
     },
     "libmysofa": {
-      "baseline": "1.3.4",
-      "port-version": 1
+      "baseline": "1.3.5",
+      "port-version": 0
     },
     "libmysql": {
       "baseline": "8.0.46",
@@ -6041,7 +6037,7 @@
       "port-version": 1
     },
     "libxfont": {
-      "baseline": "2.0.7",
+      "baseline": "2.0.9",
       "port-version": 0
     },
     "libxft": {
@@ -6066,7 +6062,7 @@
     },
     "libxlsxwriter": {
       "baseline": "1.2.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libxml2": {
       "baseline": "2.15.3",
@@ -6681,7 +6677,7 @@
       "port-version": 0
     },
     "minimp3": {
-      "baseline": "2021-11-30",
+      "baseline": "2026-07-27",
       "port-version": 0
     },
     "minio-cpp": {
@@ -9221,7 +9217,7 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.14",
+      "baseline": "3.4.16",
       "port-version": 0
     },
     "sdl3-image": {
@@ -9465,7 +9461,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "slick-net": {
@@ -9810,7 +9806,7 @@
     },
     "stdexec": {
       "baseline": "2026-05-25",
-      "port-version": 0
+      "port-version": 1
     },
     "stdgpu": {
       "baseline": "2026-07-08",
@@ -10533,7 +10529,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "4.9.2",
+      "baseline": "4.11.0",
       "port-version": 0
     },
     "unqlite": {
@@ -11280,6 +11276,10 @@
       "baseline": "0.8.3",
       "port-version": 0
     },
+    "xyo-sdk": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "yajl": {
       "baseline": "2.1.0",
       "port-version": 5
@@ -11449,7 +11449,7 @@
       "port-version": 0
     },
     "zxc": {
-      "baseline": "0.13.3",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "zycore": {
