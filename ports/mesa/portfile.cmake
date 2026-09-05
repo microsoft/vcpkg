@@ -47,7 +47,7 @@ list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
 
-if(VCPKG_TARGET_IS_LINUX AND "llvm" IN_LIST FEATURES)
+if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURES)
     list(APPEND MESA_ADDITIONAL_BINARIES
         "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
     )
@@ -73,7 +73,7 @@ if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS_RELEASE --native "${LLVM_CONFIG_RELEASE_NATIVE_FILE}")
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
-    if(VCPKG_TARGET_IS_LINUX)
+    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
         list(APPEND MESA_OPTIONS "-Dvulkan-drivers=[]")
     endif()
 endif()

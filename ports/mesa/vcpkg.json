@@ -54,7 +54,7 @@
           "features": [
             "tools"
           ],
-          "platform": "linux"
+          "platform": "linux | android"
         },
         {
           "name": "llvm",

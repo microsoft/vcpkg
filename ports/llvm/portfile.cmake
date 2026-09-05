@@ -15,6 +15,7 @@ vcpkg_from_github(
         0006-create-destination-mlir-directory.patch
         0007-use-cxx-for-libxml2-check.patch
         0008-fix-windows-system-library-names.patch
+        0009-fix-android-build.patch
         cmake4.patch
 )
 
@@ -36,6 +37,15 @@ vcpkg_check_features(
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+
+if(VCPKG_TARGET_IS_ANDROID)
+    # LLVM obtains its default host triple from config.guess, which reports the
+    # build machine during cross-compilation. Keep runtime sub-builds on the
+    # Android target selected by the vcpkg toolchain.
+    list(APPEND FEATURE_OPTIONS
+        "-DLLVM_HOST_TRIPLE=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET}"
+    )
+endif()
 
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
