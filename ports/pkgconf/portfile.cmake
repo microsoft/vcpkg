@@ -47,6 +47,12 @@ if(NOT VCPKG_CROSSCOMPILING)
         set(SYSTEM_LIBDIR "/lib:/lib/riscv64-linux-gnu:/usr/lib:/usr/lib/riscv64-linux-gnu")
         set(PKG_DEFAULT_PATH "/usr/local/lib/riscv64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/riscv64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
         set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
+    elseif(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        # These defaults are obtained from pkgconf/pkg-config on Ubuntu
+        set(SYSTEM_INCLUDEDIR "/usr/include")
+        set(SYSTEM_LIBDIR "/lib:/lib/aarch64-linux-gnu:/usr/lib:/usr/lib/aarch64-linux-gnu")
+        set(PKG_DEFAULT_PATH "/usr/local/lib/aarch64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+        set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
     endif()
 endif()
 

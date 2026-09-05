@@ -10,5 +10,6 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "port-version": 1
 }
