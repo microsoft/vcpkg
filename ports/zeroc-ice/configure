@@ -65,6 +65,7 @@ all:
 
 install:
 	\$(MAKE) \${VCPKG_MAKE_OPTS} install-slice
+	\$(MAKE) \${VCPKG_MAKE_OPTS} -C cpp install-cmake
 	for COMPONENT in ${ICE_COMPONENTS} ; do \\
 		\$(MAKE) \${VCPKG_MAKE_OPTS} -C cpp \$\${COMPONENT}_install || exit 1 ; \\
 	done

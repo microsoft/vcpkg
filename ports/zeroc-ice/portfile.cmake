@@ -9,6 +9,11 @@ vcpkg_from_github(
         rpath-link.patch
 )
 
+string(REPLACE "." ";" ICE_VERSION_COMPONENTS "${VERSION}")
+list(GET ICE_VERSION_COMPONENTS 0 ICE_VERSION_MAJOR)
+list(GET ICE_VERSION_COMPONENTS 1 ICE_VERSION_MINOR)
+list(GET ICE_VERSION_COMPONENTS 2 ICE_VERSION_PATCH)
+
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
@@ -183,6 +188,16 @@ else()
         MAKEFILE "Makefile.vcpkg"
     )
 
+	file(GLOB INSTALLED_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/lib/cmake/Ice-${ICE_VERSION_MAJOR}.${ICE_VERSION_MINOR}/*")
+	if (NOT INSTALLED_CMAKE_FILES)
+		message(FATAL_ERROR "Unable to locate installed CMake files")
+	endif()
+	file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/Ice-${ICE_VERSION_MAJOR}.${ICE_VERSION_MINOR}")
+	foreach (CURRENT_FILE IN LISTS INSTALLED_CMAKE_FILES)
+		cmake_path(GET CURRENT_FILE FILENAME CURRENT_FILE_NAME)
+		file(RENAME "${CURRENT_FILE}" "${CURRENT_PACKAGES_DIR}/share/Ice-${ICE_VERSION_MAJOR}.${ICE_VERSION_MINOR}/${CURRENT_FILE_NAME}")
+	endforeach()
+
     if(icebox IN_LIST ICE_PROGRAMS_MAKE)
         list(APPEND ICE_PROGRAMS_MAKE icebox++11)
     endif()
@@ -196,6 +211,8 @@ else()
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
+        "${CURRENT_PACKAGES_DIR}/lib/cmake"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
     )
 endif()
 

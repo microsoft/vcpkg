@@ -1,4 +1,5 @@
 set(Ice_HOME "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
+set(Ice_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
 set(Ice_SLICE_DIR "${Ice_HOME}/share/ice/slice")
 foreach(z_vcpkg_ice_component IN ITEMS Freeze
                                        Glacier2
