@@ -172,6 +172,13 @@
           "platform": "!android & !uwp"
         },
         {
+          "$package": "vcpkg-ci-Ice",
+          "$since": "3.9",
+          "$comment": "CMake 3.9 because the test needs full find_dependency syntax.",
+          "name": "zeroc-ice",
+          "platform": "!android & !uwp & !(windows & arm) & !wasm32"
+        },
+        {
           "$package": "ZLIB",
           "name": "zlib"
         }

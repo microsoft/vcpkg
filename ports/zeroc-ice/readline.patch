@@ -1,0 +1,49 @@
+diff --git a/config/Make.rules.Linux b/config/Make.rules.Linux
+index 7f081f522b..b4d3775692 100644
+--- a/config/Make.rules.Linux
++++ b/config/Make.rules.Linux
+@@ -201,8 +201,8 @@ glacier2router_system_libs    = -lcrypt
+ icegridregistry_system_libs   = -lcrypt
+ icegridnode_system_libs       = -lcrypt
+ 
+-icegridadmin_system_libs                        = -ledit
+-icestormadmin_system_libs                       = -ledit
++icegridadmin_system_libs                        = $(readline_libs)
++icestormadmin_system_libs                       = $(readline_libs)
+ 
+ # If BlueZ and DBus are installed, set the IceBT system libraries.
+ # The build system uses this variable to determine whether or not to build the IceBT targets.
+diff --git a/cpp/src/IceGrid/Parser.cpp b/cpp/src/IceGrid/Parser.cpp
+index 5be9a89d0c..842b4d5194 100644
+--- a/cpp/src/IceGrid/Parser.cpp
++++ b/cpp/src/IceGrid/Parser.cpp
+@@ -14,7 +14,12 @@
+ #include "../Ice/DisableWarnings.h"
+ 
+ #if defined(__APPLE__) || defined(__linux__)
++#  if defined(__linux__)
++#    include <readline/history.h>
++#    include <readline/readline.h>
++#  else
+ #    include <editline/readline.h>
++#  endif
+ #    include <unistd.h>
+ #elif defined(_WIN32)
+ #    include <windows.h>
+diff --git a/cpp/src/IceStorm/Parser.cpp b/cpp/src/IceStorm/Parser.cpp
+index 68bfc6816a..1f44980a6e 100644
+--- a/cpp/src/IceStorm/Parser.cpp
++++ b/cpp/src/IceStorm/Parser.cpp
+@@ -10,7 +10,12 @@
+ #include <algorithm>
+ 
+ #if defined(__APPLE__) || defined(__linux__)
++#  if defined(__linux__)
++#    include <readline/history.h>
++#    include <readline/readline.h>
++#  else
+ #    include <editline/readline.h>
++#  endif
+ #    include <unistd.h>
+ #elif defined(_WIN32)
+ #    include <windows.h>

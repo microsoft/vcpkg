@@ -1,151 +1,173 @@
 {
   "name": "zeroc-ice",
-  "version": "3.7.10",
+  "version": "3.8.2",
   "maintainers": "Benjamin Oldenburg <benjamin.oldenburg@ordis.co.th>",
-  "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more.",
+  "description": "Comprehensive RPC framework with support for C++, CSharp, Java, JavaScript, Python and more. (This port only covers C++.)",
   "homepage": "https://github.com/zeroc-ice/ice",
   "license": null,
-  "supports": "!uwp & !(windows & arm) & !wasm32",
+  "supports": "linux | osx | (windows & !arm & !mingw & !uwp & !xbox)",
   "dependencies": [
     "bzip2",
-    "expat",
-    "lmdb",
-    "mcpp",
     {
       "name": "openssl",
-      "platform": "!windows"
+      "platform": "!osx & !windows"
     },
     {
       "name": "vcpkg-msbuild",
       "host": true,
       "platform": "windows"
     },
-    "zlib"
+    {
+      "name": "zeroc-ice",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "zeroc-ice-mcpp",
+      "platform": "native | windows"
+    }
   ],
   "default-features": [
-    "glacier2lib",
-    "icegridlib",
-    "icestormlib"
+    "cxx11"
   ],
   "features": {
-    "glacier2lib": {
-      "description": "Glacier2 libraries"
+    "cxx11": {
+      "description": "Build the C++11 API."
     },
-    "glacier2router": {
-      "description": "Glacier2Router",
-      "supports": "!(windows & static)",
+    "glacier2lib": {
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
-            "icessl"
+            "cxx11"
+          ]
+        }
+      ]
+    },
+    "glacier2router": {
+      "description": "The Glacier2 router daemon.",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "tools"
           ]
         }
       ]
     },
     "iceboxlib": {
-      "description": "IceBox libraries and runtime",
-      "supports": "!(windows & static)"
-    },
-    "iceboxtools": {
-      "description": "IceBox tools",
-      "supports": "!(windows & static)"
-    },
-    "icebridge": {
-      "description": "IceBridge",
-      "supports": "!(windows & static)",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "iceboxlib"
+            "cxx11"
+          ]
+        }
+      ]
+    },
+    "iceboxtools": {
+      "description": "Deprecated. Included in tools.",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "tools"
           ]
         }
       ]
     },
     "icediscovery": {
-      "description": "IceDiscovery",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
-            "iceboxlib",
-            "icessl",
-            "icestormlib"
+            "cxx11"
           ]
         }
       ]
     },
     "icegridlib": {
-      "description": "IceGrid library",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib"
+            "cxx11"
           ]
         }
       ]
     },
     "icegridtools": {
-      "description": "IceGrid tools",
-      "supports": "!(windows & static)",
+      "description": "Deprecated. Included in tools.",
       "dependencies": [
-        "expat",
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
-            "iceboxlib",
-            "icegridlib",
-            "icessl"
+            "tools"
           ]
         }
       ]
     },
     "icelocatordiscovery": {
-      "description": "IceLocatorDiscovery",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
-            "iceboxlib",
-            "icessl",
-            "icestormlib"
+            "cxx11"
           ]
         }
       ]
     },
     "icessl": {
-      "description": "IceSSL",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
         {
-          "name": "openssl",
-          "platform": "!windows"
+          "name": "zeroc-ice",
+          "default-features": false,
+          "features": [
+            "cxx11"
+          ]
         }
       ]
     },
     "icestormlib": {
-      "description": "IceStorm library"
-    },
-    "icestormtools": {
-      "description": "IceStorm tools",
-      "supports": "!(windows & static)",
+      "description": "Deprecated. Included in core (C++98) and cxx11.",
       "dependencies": [
-        "lmdb",
         {
           "name": "zeroc-ice",
+          "default-features": false,
           "features": [
-            "glacier2lib",
-            "iceboxlib",
-            "icegridlib",
-            "icestormlib"
+            "cxx11"
           ]
         }
       ]
+    },
+    "icestormtools": {
+      "description": "Deprecated. Included in tools.",
+      "dependencies": [
+        {
+          "name": "zeroc-ice",
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "tools": {
+      "description": "Build tools",
+      "supports": "!static"
     }
   }
 }

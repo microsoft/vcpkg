@@ -1,0 +1,73 @@
+#!/bin/sh
+
+set -e
+
+echo "$0" "$*"
+
+ICE_BUILD_PLATFORM=
+ICE_BZIP2_LIBS=$(${PKG_CONFIG:-pkg-config} --libs bzip2)
+ICE_COMPONENTS=Ice
+ICE_LINKAGE=static
+ICE_OPTIMIZE=
+ICE_PREFIX=
+ICE_READLINE_LIBS=$(${PKG_CONFIG:-pkg-config} --libs history readline ncurses || true)
+ICE_SLICE2CPP=
+
+for OPTION; do
+    case "${OPTION}" in
+	--enable-shared|--enable-shared=y)
+		ICE_LINKAGE=shared
+		;;
+	--prefix=*)
+		ICE_PREFIX="${OPTION#--prefix=}"
+		;;
+	build-platform=*)
+		ICE_BUILD_PLATFORM="${OPTION#build-platform=}"
+		;;
+	COMPONENTS=*)
+		ICE_COMPONENTS="${OPTION#COMPONENTS=}"
+		;;
+	OPTIMIZE=*)
+		ICE_OPTIMIZE="${OPTION}"
+		;;
+	slice2cpp_path=*)
+		ICE_SLICE2CPP="${OPTION}"
+		;;
+	esac
+done
+
+cat > Makefile.vcpkg <<END_MAKEFILE ;
+
+VCPKG_MAKE_OPTS = \\
+	build-platform=${ICE_BUILD_PLATFORM} \\
+	embedded_runpath=no \\
+	linux_id=vcpkg \\
+	prefix="${ICE_PREFIX}" \\
+	MCPP_HOME="${ICE_PREFIX}" \\
+	LMDB_HOME="${ICE_PREFIX}" \\
+	${ICE_SLICE2CPP} \\
+	CONFIGS="${ICE_LINKAGE} cpp11-${ICE_LINKAGE}" \\
+	${ICE_OPTIMIZE} \\
+	USR_DIR_INSTALL=yes \\
+	CXX="\$(CXX) \$(CPPFLAGS) \$(CXXFLAGS)"
+
+VCPKG_BUILD_OPTS = \\
+	bz2_ldflags="${ICE_BZIP2_LIBS}" \\
+	readline_libs="${ICE_READLINE_LIBS}"
+
+ifeq "${ICE_OPTIMIZE}" "OPTIMIZE=no"
+VCPKG_BUILD_OPTS +=  \\
+	mcpp_ldflags="-lmcppd"
+endif
+
+all:
+	\$(MAKE) \$(VCPKG_MAKE_OPTS) -C cpp ${ICE_COMPONENTS} \${VCPKG_BUILD_OPTS}
+
+install:
+	\$(MAKE) \${VCPKG_MAKE_OPTS} install-slice
+	\$(MAKE) \${VCPKG_MAKE_OPTS} -C cpp install-cmake
+	for COMPONENT in ${ICE_COMPONENTS} ; do \\
+		\$(MAKE) \${VCPKG_MAKE_OPTS} -C cpp \$\${COMPONENT}_install || exit 1 ; \\
+	done
+
+END_MAKEFILE
