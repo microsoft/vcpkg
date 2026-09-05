@@ -32,6 +32,10 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" gRPC_MSVC_STATIC_RUNTIME)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" gRPC_STATIC_LINKING)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(APPEND VCPKG_C_FLAGS_RELEASE " /Zi")
+    string(APPEND VCPKG_CXX_FLAGS_RELEASE " /Zi")
+endif()
 
 set(cares_CARES_PROVIDER "package")
 if(VCPKG_TARGET_IS_UWP)
@@ -67,6 +71,10 @@ vcpkg_cmake_configure(
         "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DgRPC_BUILD_GRPCPP_OTEL_PLUGIN=OFF
         -DgRPC_DOWNLOAD_ARCHIVES=OFF
+    OPTIONS_RELEASE
+        "-DCMAKE_COMPILE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pdbs"
+    OPTIONS_DEBUG
+        "-DCMAKE_COMPILE_PDB_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pdbs"
     MAYBE_UNUSED_VARIABLES
         gRPC_MSVC_STATIC_RUNTIME
         gRPC_USE_SYSTEMD
@@ -74,6 +82,20 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB release_pdbs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pdbs/*.pdb")
+        if(release_pdbs)
+            file(INSTALL ${release_pdbs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        endif()
+    endif()
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB debug_pdbs "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pdbs/*.pdb")
+        if(debug_pdbs)
+            file(INSTALL ${debug_pdbs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        endif()
+    endif()
+endif()
 vcpkg_cmake_config_fixup()
 
 if (VCPKG_TARGET_IS_WINDOWS)
