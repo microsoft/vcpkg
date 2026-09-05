@@ -16,7 +16,6 @@
         "enable-bindings",
         "enable-eh",
         "enable-rtti",
-        "enable-terminfo",
         "enable-zlib",
         "lld",
         "lldb",

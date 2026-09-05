@@ -4,20 +4,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 9e9ec501336127339347c01ffd47768d501a84ef415c6a72fe56d31e867f982baeb3c4659be8e9b8475848a460357f33a6b2aa0ee9f81150e363963b98387bc0
+    SHA512 3167e55b7a9f823f4028ef62f214bd863e8a2920df72ac187c1d12364869e0b336025cdd72dbd5cc68e816101a93a3e02e704b7de2dd52db5af649c04f0cc783
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
         0002-fix-tools-install-dir.patch
         0003-fix-llvm-config.patch
         0004-disable-libomp-aliases.patch
-        0005-remove-numpy.patch
+        0005-fix-runtimes.patch
         0006-create-destination-mlir-directory.patch
-        0007-fix-missing-includes.patch
-        75711.patch # [clang] Add intrin0.h header to mimic intrin0.h used by MSVC STL for clang-cl #75711
-        79694.patch # [SEH] Ignore EH pad check for internal intrinsics #79694
-        82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
-        add-include-chrono.patch # https://github.com/llvm/llvm-project/pull/118059
+        0007-use-cxx-for-libxml2-check.patch
+        0008-fix-windows-system-library-names.patch
+        0009-fix-android-build.patch
         cmake4.patch
 )
 
@@ -32,8 +30,6 @@ vcpkg_check_features(
         enable-assertions LLVM_ENABLE_ASSERTIONS
         enable-rtti LLVM_ENABLE_RTTI
         enable-ffi LLVM_ENABLE_FFI
-        enable-terminfo LLVM_ENABLE_TERMINFO
-        enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
         export-symbols LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
@@ -41,6 +37,15 @@ vcpkg_check_features(
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+
+if(VCPKG_TARGET_IS_ANDROID)
+    # LLVM obtains its default host triple from config.guess, which reports the
+    # build machine during cross-compilation. Keep runtime sub-builds on the
+    # Android target selected by the vcpkg toolchain.
+    list(APPEND FEATURE_OPTIONS
+        "-DLLVM_HOST_TRIPLE=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET}"
+    )
+endif()
 
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
 # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
@@ -89,6 +94,8 @@ else()
     )
 endif()
 
+# All projects: bolt;clang;clang-tools-extra;lld;lldb;mlir;polly
+# Extra projects: flang
 set(LLVM_ENABLE_PROJECTS)
 if("bolt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "bolt")
@@ -96,26 +103,24 @@ if("bolt" IN_LIST FEATURES)
         -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm
     )
 endif()
-if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
+if("clang" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang")
-    list(APPEND FEATURE_OPTIONS
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS CLANG_FEATURE_OPTIONS
+        FEATURES
+            clang-enable-cir CLANG_ENABLE_CIR
+    )
+    string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})
+    list(APPEND CLANG_FEATURE_OPTIONS
         -DCLANG_INSTALL_PACKAGE_DIR:PATH=share/clang
         -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        # Disable ARCMT
-        -DCLANG_ENABLE_ARCMT=OFF
-        # Disable static analyzer
-        -DCLANG_ENABLE_STATIC_ANALYZER=OFF
+        # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
+        # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
+        -DCLANG_RESOURCE_DIR=lib/clang/${CLANG_VERSION_MAJOR}
     )
-    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
-    # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
-    string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${CLANG_VERSION_MAJOR})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
-endif()
-if("compiler-rt" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
 endif()
 if("flang" IN_LIST FEATURES)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -130,9 +135,6 @@ if("flang" IN_LIST FEATURES)
         # Flang requires C++17
         -DCMAKE_CXX_STANDARD=17
     )
-endif()
-if("libclc" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "libclc")
 endif()
 if("lld" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lld")
@@ -161,17 +163,6 @@ if("mlir" IN_LIST FEATURES)
         )
     endif()
 endif()
-if("openmp" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "openmp")
-    # Perl is required for the OpenMP run-time
-    vcpkg_find_acquire_program(PERL)
-    list(APPEND FEATURE_OPTIONS
-        -DLIBOMP_INSTALL_ALIASES=OFF
-        -DOPENMP_ENABLE_LIBOMPTARGET=OFF # Currently libomptarget cannot be compiled on Windows or MacOS X.
-        -DOPENMP_ENABLE_OMPT_TOOLS=OFF # Currently tools are not tested well on Windows or MacOS X.
-        -DPERL_EXECUTABLE=${PERL}
-    )
-endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
     list(APPEND FEATURE_OPTIONS
@@ -179,21 +170,11 @@ if("polly" IN_LIST FEATURES)
     )
 endif()
 
+# Supported runtimes: libc;libunwind;libcxxabi;libcxx;compiler-rt;openmp;offload;flang-rt;libclc;libsycl;orc-rt
 set(LLVM_ENABLE_RUNTIMES)
+set(LLVM_RUNTIME_TARGETS)
 if("libc" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libc")
-endif()
-if("libcxx" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_DETECTED_MSVC_VERSION LESS "1914")
-        # libcxx supports being built with clang-cl, but not with MSVC’s cl.exe, as cl doesn’t support the #include_next extension.
-        # Furthermore, VS 2017 or newer (19.14) is required.
-        # More info: https://releases.llvm.org/17.0.1/projects/libcxx/docs/BuildingLibcxx.html#support-for-windows
-        message(FATAL_ERROR "libcxx requiries MSVC 19.14 or newer.")
-    endif()
-    list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
-endif()
-if("libcxxabi" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_RUNTIMES "libcxxabi")
 endif()
 if("libunwind" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
@@ -205,11 +186,67 @@ else()
         -DLIBCXXABI_USE_LLVM_UNWINDER=OFF
     )
 endif()
-if("pstl" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building pstl with MSVC is not supported.")
+if("libcxxabi" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "libcxxabi")
+endif()
+if("libcxx" IN_LIST FEATURES)
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_DETECTED_MSVC_VERSION LESS "1914")
+        # libcxx supports being built with clang-cl, but not with MSVC’s cl.exe, as cl doesn’t support the #include_next extension.
+        # Furthermore, VS 2017 or newer (19.14) is required.
+        # More info: https://releases.llvm.org/17.0.1/projects/libcxx/docs/BuildingLibcxx.html#support-for-windows
+        message(FATAL_ERROR "libcxx requiries MSVC 19.14 or newer.")
     endif()
-    list(APPEND LLVM_ENABLE_RUNTIMES "pstl")
+    list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
+endif()
+if("compiler-rt" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "compiler-rt")
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS COMPILER_RT_FEATURE_OPTIONS
+        FEATURES
+            enable-ios COMPILER_RT_ENABLE_IOS
+    )
+endif()
+if("openmp" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "openmp")
+endif()
+if("offload" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "offload")
+endif()
+if("flang-rt" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "flang-rt")
+endif()
+if("libclc" IN_LIST FEATURES)
+    set(libclc_runtime_targets
+        amdgcn-amd-amdhsa-llvm
+        nvptx64-nvidia-cuda
+        spirv32-unknown-unknown
+        spirv64-unknown-unknown
+        spirv64-unknown-vulkan
+    )
+    list(APPEND LLVM_RUNTIME_TARGETS ${libclc_runtime_targets})
+    foreach(libclc_runtime_target IN LISTS libclc_runtime_targets)
+        list(APPEND FEATURE_OPTIONS
+            "-DRUNTIMES_${libclc_runtime_target}_LLVM_ENABLE_RUNTIMES=libclc"
+        )
+    endforeach()
+    foreach(libclc_spirv_target IN ITEMS
+        spirv32-unknown-unknown
+        spirv64-unknown-unknown
+        spirv64-unknown-vulkan
+    )
+        list(APPEND FEATURE_OPTIONS
+            "-DRUNTIMES_${libclc_spirv_target}_LIBCLC_USE_SPIRV_BACKEND=ON"
+        )
+    endforeach()
+endif()
+if("libsycl" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "libsycl")
+endif()
+if("orc-rt" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "orc-rt")
+endif()
+if(LLVM_RUNTIME_TARGETS AND (LLVM_ENABLE_RUNTIMES OR "flang" IN_LIST FEATURES))
+    list(PREPEND LLVM_RUNTIME_TARGETS default)
 endif()
 
 # this is for normal targets
@@ -228,6 +265,7 @@ set(known_llvm_targets
     PowerPC
     RISCV
     Sparc
+    SPIRV
     SystemZ
     VE
     WebAssembly
@@ -249,7 +287,6 @@ set(known_llvm_experimental_targets
     CSKY
     DirectX
     M68k
-    SPIRV
     Xtensa
 )
 
@@ -262,12 +299,19 @@ foreach(llvm_target IN LISTS known_llvm_experimental_targets)
 endforeach()
 
 vcpkg_find_acquire_program(PYTHON3)
+if("libc" IN_LIST FEATURES)
+    x_vcpkg_get_python_packages(
+        PYTHON_EXECUTABLE "${PYTHON3}"
+        OUT_PYTHON_VAR PYTHON3
+        PACKAGES pyyaml
+    )
+endif()
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
+vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
 file(REMOVE "${SOURCE_PATH}/llvm/cmake/modules/Findzstd.cmake")
 
-if("${LLVM_ENABLE_RUNTIMES}" STREQUAL "")
+if("${LLVM_ENABLE_RUNTIMES}" STREQUAL "" AND "${LLVM_RUNTIME_TARGETS}" STREQUAL "")
     list(APPEND FEATURE_OPTIONS
         -DLLVM_INCLUDE_RUNTIMES=OFF
         -DLLVM_BUILD_RUNTIMES=OFF
@@ -296,13 +340,15 @@ vcpkg_cmake_configure(
         -DLLVM_PARALLEL_LINK_JOBS=1
         -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        "-DPython3_EXECUTABLE=${PYTHON3}"
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
+        "-DLLVM_RUNTIME_TARGETS=${LLVM_RUNTIME_TARGETS}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
         ${FEATURE_OPTIONS}
-    MAYBE_UNUSED_VARIABLES 
-        COMPILER_RT_ENABLE_IOS
+        ${CLANG_FEATURE_OPTIONS}
+        ${COMPILER_RT_FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -334,13 +380,7 @@ llvm_cmake_package_config_fixup("flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH "lib/cmake/ParallelSTL")
 llvm_cmake_package_config_fixup("llvm")
-
-if("mlir" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "set(MLIR_MAIN_SRC_DIR \"${SOURCE_PATH}/mlir\")" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mlir/MLIRConfig.cmake" "${CURRENT_BUILDTREES_DIR}" "\${MLIR_INCLUDE_DIRS}")
-endif()
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
@@ -353,48 +393,61 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/lib")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/lib")
 endif()
 
-# Remove empty directories to avoid vcpkg warning
+# Remove empty directories to avoid vcpkg warnings
 set(empty_dirs)
-if("clang-tools-extra" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
+if("clang" IN_LIST FEATURES AND NOT "target-msp430" IN_LIST FEATURES)
+    list(APPEND empty_dirs
+        "${CURRENT_PACKAGES_DIR}/include/clang/Basic/Target/MSP430"
+        "${CURRENT_PACKAGES_DIR}/include/clang/Basic/Target"
+    )
 endif()
-if("pstl" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-    endif()
+if("clang-tools-extra" IN_LIST FEATURES)
+    list(APPEND empty_dirs
+        "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin"
+        "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable"
+    )
 endif()
 if("flang" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Config")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CMakeFiles")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CodeGen/CMakeFiles")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Dialect/CMakeFiles")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/HLFIR/CMakeFiles")
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Transforms/CMakeFiles")
+    list(APPEND empty_dirs
+        "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles"
+        "${CURRENT_PACKAGES_DIR}/include/flang/Config"
+        "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CMakeFiles"
+        "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/CodeGen/CMakeFiles"
+        "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Dialect/CMakeFiles"
+        "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/HLFIR/CMakeFiles"
+        "${CURRENT_PACKAGES_DIR}/include/flang/Optimizer/Transforms/CMakeFiles"
+    )
 endif()
-if(empty_dirs)
-    foreach(empty_dir IN LISTS empty_dirs)
-        if(NOT EXISTS "${empty_dir}")
-            message(WARNING "Directory '${empty_dir}' does not exist. Please remove it from the list of empty directories.")
+foreach(empty_dir IN LISTS empty_dirs)
+    if(EXISTS "${empty_dir}")
+        file(GLOB_RECURSE files_in_dir "${empty_dir}/*")
+        if(files_in_dir)
+            message(WARNING "Directory '${empty_dir}' is not empty. Please remove it from the list of empty directories.")
         else()
-            file(GLOB_RECURSE files_in_dir "${empty_dir}/*")
-            if(files_in_dir)
-                message(WARNING "Directory '${empty_dir}' is not empty. Please remove it from the list of empty directories.")
-            else()
-                file(REMOVE_RECURSE "${empty_dir}")
-            endif()
+            file(REMOVE_RECURSE "${empty_dir}")
         endif()
-    endforeach()
-endif()
+    endif()
+endforeach()
 
-# Remove debug headers and tools
+# Preserve the debug llvm-config so consumers can select the debug LLVM libraries.
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(debug_llvm_config "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(EXISTS "${debug_llvm_config}")
+        set(debug_llvm_config_staging "${CURRENT_PACKAGES_DIR}/debug/llvm-config-staging")
+        file(MAKE_DIRECTORY "${debug_llvm_config_staging}")
+        file(RENAME "${debug_llvm_config}" "${debug_llvm_config_staging}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        vcpkg_copy_tool_dependencies("${debug_llvm_config_staging}")
+    endif()
+
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
         "${CURRENT_PACKAGES_DIR}/debug/tools"
     )
+
+    if(EXISTS "${debug_llvm_config_staging}")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/tools")
+        file(RENAME "${debug_llvm_config_staging}" "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+    endif()
 endif()
 
 # LLVM generates shared libraries in a static build (LLVM-C.dll, libclang.dll, LTO.dll, Remarks.dll, ...)
