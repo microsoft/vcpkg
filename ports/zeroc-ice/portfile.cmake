@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeroc-ice/ice
     REF "v${VERSION}"
-    SHA512 07d7c439fbe1f69d808d05a11f32e09cdd8d4df2a93b6f253496304e0a521d417212ae688e316b4450dae406b59d1a460025b51ecd0614c69e48d86c0a6f81c5
+    SHA512 8cf76e8971a2fbe60d1d6a6255d11ac0f7302de0c8e764c5630e12be397094684a4a535eeac8b6a09cd4723060401f61d81152db4711f19ba3124f924afb4d27
     PATCHES
-        no-werror.patch
+        no-werror.patch # Will be deprecated by https://github.com/zeroc-ice/ice/commit/b144681625a32d3878a6c478dac8c52d5f4c665c
         readline.patch
         rpath-link.patch
-        fix-missing-functional.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
@@ -40,10 +39,7 @@ endfunction()
 set(components
     IceUtil
     Ice
-    IcePatch2
-    IceSSL
     Glacier2
-    Glacier2CryptPermissionsVerifier
     IceBox
     IceGrid
     IceStorm
@@ -88,120 +84,6 @@ if("cxx11" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icegrid++11")
     vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icediscovery++11")
 endif()
-
-if(0)
-set(ICE_INCLUDE_SUB_DIRECTORIES "Ice" "IceUtil")
-set(ICE_COMPONENTS_MSBUILD "/t:C++98\\ice")
-set(ICE_COMPONENTS_MAKE "IceUtil Ice")
-set(ICE_PROGRAMS_MAKE "")
-set(pkgconfig_packages "")
-set(msbuild_additional_libs "")
-
-if("icepatch2" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IcePatch2")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icepatch2")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IcePatch2")
-endif()
-
-if("icepatch2tools" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icepatch2server")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icepatch2client")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icepatch2calc")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icepatch2server")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icepatch2client")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icepatch2calc")
-endif()
-
-if("icessl" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceSSL")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icessl")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceSSL")
-endif()
-
-if("glacier2" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "Glacier2")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\glacier2")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\glacier2cryptpermissionsverifier")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\glacier2++11")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "Glacier2")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "Glacier2CryptPermissionsVerifier")
-endif()
-
-if("glacier2router" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\glacier2router")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "glacier2router")
-endif()
-
-if("icebox" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceBox")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\iceboxlib")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\iceboxlib++11")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceBox")
-endif()
-
-if("iceboxtools" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icebox")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\iceboxadmin")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icebox++11")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icebox")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "iceboxadmin")
-endif()
-
-if("icegrid" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceGrid")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icegrid")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icegrid++11")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceGrid")
-    vcpkg_list(APPEND msbuild_additional_libs "lmdb.lib")
-
-endif()
-
-if("icegridtools" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icegridadmin")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icegriddb")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icegridnode")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icegridregistry")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icegridadmin")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icegriddb")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icegridnode")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icegridregistry")
-    list(APPEND pkgconfig_packages expat)
-endif()
-
-if("icestorm" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceStorm")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icestorm")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icestormservice")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icestorm++11")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceStorm")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceStormService")
-endif()
-
-if("icestormtools" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icestormadmin")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icestormdb")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icestormadmin")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icestormdb")
-endif()
-
-if("icebridge" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icebridge")
-    vcpkg_list(APPEND ICE_PROGRAMS_MAKE "icebridge")
-endif()
-
-if("icediscovery" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceDiscovery")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++98\\icediscovery")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icediscovery++11")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceDiscovery")
-endif()
-
-if("icelocatordiscovery" IN_LIST FEATURES)
-    vcpkg_list(APPEND ICE_INCLUDE_SUB_DIRECTORIES "IceLocatorDiscovery")
-    vcpkg_list(APPEND ICE_COMPONENTS_MSBUILD "/t:C++11\\icelocatordiscovery++11")
-    vcpkg_list(APPEND ICE_COMPONENTS_MAKE "IceLocatorDiscovery")
-endif()
-endif(0)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
