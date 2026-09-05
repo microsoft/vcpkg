@@ -5,14 +5,12 @@ string(REGEX REPLACE [[^([0-9]+[.][0-9]+).*$]] [[\1]] OpenMPI_SHORT_VERSION "${V
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.open-mpi.org/release/open-mpi/v${OpenMPI_SHORT_VERSION}/openmpi-${VERSION}.tar.gz"
     FILENAME "openmpi-${VERSION}.tar.gz"
-    SHA512 25eb96116126641cd1c8fdccbd3c4b40cbdd7b1e8709ff629c6fca9ee58b566983e00e829c724952fca685a8d321b4dddf8691df08693a2ffee5f05b30e08058
+    SHA512 a174b6ac6d286f378ccc7a1ac3500cdff3c7368eaa00c1b672f0a71452c2cbe7812e030796e62ebb09a3fffb0cb9d89fbc6798a80609079038e68c7b0d318923
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        keep_isystem.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -20,12 +18,14 @@ cmake_path(GET PERL PARENT_PATH PERL_PATH)
 vcpkg_add_to_path("${PERL_PATH}")
 
 # Put wrapper data dir side-by-side to wrapper executables dir instead of loosing debug data.
-# VCPKG_CONFIGURE_MAKE_OPTIONS overwrites vcpkg_configure_make overwrites OPTIONS.
-vcpkg_list(PREPEND VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG [[--datadir=\${prefix}/../tools/openmpi/debug/share]])
-vcpkg_list(PREPEND VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE [[--datadir=\${prefix}/tools/openmpi/share]])
+# vcpkg-make appends these to the configuration-specific options.
+vcpkg_list(PREPEND VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG [[--datadir=\${prefix}/../tools/openmpi/debug/share]])
+vcpkg_list(PREPEND VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE [[--datadir=\${prefix}/tools/openmpi/share]])
 if(VCPKG_TARGET_IS_OSX)
     # This ensures that vcpkg-fixup-macho-rpath succeeds
-    string(APPEND VCPKG_LINKER_FLAGS " -headerpad_max_install_names")
+    # CoreFoundation and IOKit are transitive dependencies of static hwloc,
+    # but hwloc.pc does not report them.
+    string(APPEND VCPKG_LINKER_FLAGS " -headerpad_max_install_names -framework CoreFoundation -framework IOKit")
 endif()
 
 vcpkg_make_configure(
@@ -33,15 +33,40 @@ vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-dependency-tracking
-        --with-hwloc=internal
-        --with-libevent=internal
+        "--with-hwloc=${CURRENT_INSTALLED_DIR}"
+        "--with-hwloc-libdir=${CURRENT_INSTALLED_DIR}/lib"
+        "--with-libevent=${CURRENT_INSTALLED_DIR}"
+        "--with-libevent-libdir=${CURRENT_INSTALLED_DIR}/lib"
         --with-pmix=internal
-        --disable-mpi-fortran
+        --enable-mpi-fortran=no
     OPTIONS_DEBUG
         --enable-debug
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
+
+# pmix_config.h records the configure command line. Redact its build-machine
+# paths without changing the generated C string syntax.
+foreach(dir IN ITEMS "" "debug/")
+    set(pmix_config "${CURRENT_PACKAGES_DIR}/${dir}include/pmix/src/include/pmix_config.h")
+    if(EXISTS "${pmix_config}")
+        foreach(abs_path IN ITEMS
+            "${CURRENT_PACKAGES_DIR}"
+            "${CURRENT_BUILDTREES_DIR}"
+            "${CURRENT_INSTALLED_DIR}"
+            "${DOWNLOADS}"
+        )
+            if(NOT abs_path STREQUAL "")
+                vcpkg_replace_string(
+                    "${pmix_config}"
+                    "${abs_path}"
+                    "VCPKG_REDACTED_PATH"
+                    IGNORE_UNCHANGED
+                )
+            endif()
+        endforeach()
+    endif()
+endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
