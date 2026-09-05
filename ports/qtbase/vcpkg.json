@@ -1,8 +1,8 @@
 {
   "name": "qtbase",
-  "version": "6.5.2",
+  "version": "6.11.1",
   "port-version": 1,
-  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "!uwp",
@@ -11,7 +11,11 @@
       "name": "libb2",
       "platform": "!windows"
     },
-    "pcre2",
+    "md4c",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qtbase",
       "host": true,
@@ -28,9 +32,19 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
+        "cups",
         "thread"
       ],
       "platform": "osx"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "thread"
+      ],
+      "platform": "android"
     },
     {
       "name": "qtbase",
@@ -51,32 +65,96 @@
     "zlib"
   ],
   "default-features": [
+    {
+      "name": "appstore-compliant",
+      "platform": "uwp"
+    },
+    "async-io",
     "brotli",
     "concurrent",
-    "dbus",
-    "default-features",
+    {
+      "name": "dbus",
+      "platform": "!(static & windows) & !android"
+    },
+    "dnslookup",
     "doubleconversion",
+    {
+      "name": "egl",
+      "platform": "linux"
+    },
+    {
+      "name": "egl",
+      "platform": "android"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
     "freetype",
+    {
+      "name": "gles2",
+      "platform": "android"
+    },
     "gui",
     "harfbuzz",
     "icu",
     "jpeg",
     "network",
-    "opengl",
-    "openssl",
+    {
+      "name": "opengl",
+      "platform": "!ios"
+    },
+    {
+      "name": "openssl",
+      "platform": "!ios"
+    },
     "pcre2",
     "png",
+    {
+      "name": "securetransport",
+      "platform": "ios"
+    },
+    "sessionmanager",
     "sql",
     "sql-psql",
     "sql-sqlite",
     "testlib",
     "thread",
     "widgets",
+    {
+      "name": "xcb",
+      "platform": "linux"
+    },
+    {
+      "name": "xcb-sm",
+      "platform": "linux"
+    },
+    {
+      "name": "xcb-xlib",
+      "platform": "linux"
+    },
+    {
+      "name": "xrender",
+      "platform": "linux"
+    },
     "zstd"
   ],
   "features": {
     "appstore-compliant": {
       "description": "Disable code that is not allowed in platform app stores. This is on by default for platforms which require distribution through an app store by default, in particular Android, iOS, tvOS, and watchOS."
+    },
+    "async-io": {
+      "description": "Provides support for asynchronous file I/O",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "future",
+            "thread"
+          ]
+        }
+      ]
     },
     "brotli": {
       "description": "Support for downloading and decompressing resources compressed with Brotli through QNetworkAccessManager.",
@@ -98,45 +176,58 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "thread"
+            "future"
           ]
         }
       ]
     },
-    "dbus": {
-      "description": "Qt D-Bus"
-    },
-    "default-features": {
-      "description": "Platform-dependent default features",
+    "cups": {
+      "description": "Provides support for the Common Unix Printing System.",
+      "supports": "linux | osx",
       "dependencies": [
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "appstore-compliant"
-          ],
-          "platform": "uwp"
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "dbus": {
+      "description": "Qt D-Bus",
+      "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "dbus"
+          ]
         },
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "egl",
-            "fontconfig",
-            "xcb",
-            "xcb-xlib",
-            "xrender"
-          ],
-          "platform": "linux"
-        },
+            "thread"
+          ]
+        }
+      ]
+    },
+    "dnslookup": {
+      "description": "Enable DNS lookup support",
+      "dependencies": [
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "egl",
-            "gles2"
-          ],
-          "platform": "android"
+            "network",
+            "thread"
+          ]
         }
       ]
     },
@@ -148,19 +239,28 @@
     },
     "egl": {
       "description": "EGL",
-      "supports": "linux",
+      "supports": "android | linux",
       "dependencies": [
-        "egl"
+        "egl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "fontconfig": {
       "description": "Use fontconfig",
+      "supports": "!osx & !windows",
       "dependencies": [
         "fontconfig",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "freetype",
             "gui"
           ]
         }
@@ -176,8 +276,18 @@
         {
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
         }
       ]
+    },
+    "future": {
+      "description": "Qt Future (QFuture) support"
     },
     "gles2": {
       "description": "OpenGL ES 2.0",
@@ -192,22 +302,45 @@
         }
       ]
     },
+    "gles3": {
+      "description": "OpenGL ES 3.0",
+      "supports": "!windows & !osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gles2"
+          ]
+        }
+      ]
+    },
     "glib": {
       "description": "GLib",
       "dependencies": [
         "glib"
       ]
     },
-    "gui": {
-      "description": "Qt Gui",
+    "gtk3": {
+      "description": "GTK3 platform theme plugin",
+      "supports": "linux",
       "dependencies": [
-        "opengl",
+        "gtk3",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "freetype"
+            "glib"
           ]
+        }
+      ]
+    },
+    "gui": {
+      "description": "Qt Gui",
+      "dependencies": [
+        {
+          "name": "opengl",
+          "platform": "!ios"
         },
         {
           "name": "qtbase",
@@ -216,6 +349,17 @@
             "opengl"
           ],
           "platform": "osx"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "egl",
+            "freetype",
+            "gles2",
+            "opengl"
+          ],
+          "platform": "android"
         },
         {
           "name": "qtbase",
@@ -244,6 +388,23 @@
       "description": "Enable ICU support",
       "dependencies": [
         "icu"
+      ]
+    },
+    "ioring": {
+      "description": "qioring for async-io",
+      "supports": "linux | (windows & !x86)",
+      "dependencies": [
+        {
+          "name": "liburing",
+          "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "async-io"
+          ]
+        }
       ]
     },
     "jpeg": {
@@ -291,7 +452,10 @@
     "pcre2": {
       "description": "Enable PCRE2 support",
       "dependencies": [
-        "pcre2"
+        {
+          "name": "pcre2",
+          "default-features": false
+        }
       ]
     },
     "png": {
@@ -305,6 +469,28 @@
             "gui"
           ]
         }
+      ]
+    },
+    "securetransport": {
+      "description": "Enable Secure Transport",
+      "supports": "ios | osx"
+    },
+    "sessionmanager": {
+      "description": "Sessionmanager",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
+    "shared-mime-info": {
+      "description": "Use GPL licensed shared-mime-info port from freedesktop.org",
+      "dependencies": [
+        "shared-mime-info"
       ]
     },
     "sql": {
@@ -335,7 +521,6 @@
     "sql-oci": {
       "description": "Enable SQL Driver Oracle OCI",
       "dependencies": [
-        "ocilib",
         {
           "name": "qtbase",
           "default-features": false,
@@ -347,7 +532,6 @@
     },
     "sql-odbc": {
       "description": "Enable SQL Driver odbc",
-      "supports": "windows",
       "dependencies": [
         {
           "name": "qtbase",
@@ -355,6 +539,10 @@
           "features": [
             "sql"
           ]
+        },
+        {
+          "name": "unixodbc",
+          "platform": "!windows"
         }
       ]
     },
@@ -391,7 +579,30 @@
       "description": "Thread support; provides QThread and related classes."
     },
     "vulkan": {
-      "description": "Enable Vulkan support"
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        "vulkan"
+      ]
+    },
+    "wayland": {
+      "description": "Enable Wayland platform plugin",
+      "supports": "linux | osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
     },
     "widgets": {
       "description": "Qt Widgets",
@@ -405,6 +616,27 @@
         }
       ]
     },
+    "windeployqt": {
+      "description": "Qt Windows Deployment Tool",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        },
+        {
+          "name": "qtbase",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "windeployqt"
+          ]
+        }
+      ]
+    },
     "xcb": {
       "description": "XCB",
       "dependencies": [
@@ -412,9 +644,22 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "concurrent",
+            "thread",
             "xkbcommon-x11",
             "xlib"
+          ]
+        }
+      ]
+    },
+    "xcb-sm": {
+      "description": "xcb-sm",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sessionmanager",
+            "xcb"
           ]
         }
       ]
@@ -447,7 +692,16 @@
       ]
     },
     "xlib": {
-      "description": "XLib"
+      "description": "XLib",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
     },
     "xrender": {
       "description": "XRender for native painting",
@@ -456,7 +710,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "xcb"
+            "fontconfig",
+            "xcb-xlib"
           ]
         }
       ]

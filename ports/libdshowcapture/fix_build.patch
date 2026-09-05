@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c88ff6..ee1688b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,8 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Mo
+ 
+ option(BUILD_SHARED_LIBS "Build shared library" ON)
+ 
+-find_package(CXX11 REQUIRED)
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAGS}")
++set(CMAKE_CXX_STANDARD 17)
+ 
+ if(${CMAKE_C_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES
+                                              "Clang")
+diff --git a/source/dshow-formats.cpp b/source/dshow-formats.cpp
+index 4baf381..3f41a99 100644
+--- a/source/dshow-formats.cpp
++++ b/source/dshow-formats.cpp
+@@ -283,7 +283,7 @@ bool GetMediaTypeVFormat(const AM_MEDIA_TYPE &mt, VideoFormat &format)
+ 
+ 	/* raw formats */
+ 	if (mt.subtype == MEDIASUBTYPE_RGB24)
+-		format = VideoFormat::XRGB;
++		format = VideoFormat::RGB24;
+ 	else if (mt.subtype == MEDIASUBTYPE_RGB32)
+ 		format = VideoFormat::XRGB;
+ 	else if (mt.subtype == MEDIASUBTYPE_ARGB32)

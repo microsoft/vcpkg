@@ -3,17 +3,22 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO font/util
-    REF  d45011b8324fecebb4fc79e57491d341dd96e325 #1.3.2
-    SHA512 d783cbb5b8b0975891a247f98b78c2afadfd33e1d26ee8bcf7ab7ccc11615b0150d07345c719182b0929afc3c54dc3288a01a789b5374e18aff883ac23d15b04
-    HEAD_REF master
-    PATCHES build.patch
-) 
+vcpkg_download_distfile(
+    FONTUTIL_ARCHIVE
+    URLS "https://www.x.org/archive//individual/font/font-util-${VERSION}.tar.xz"
+    FILENAME "font-util-${VERSION}.tar.xz"
+    SHA512 3def5f08bcb30ec3e0008f648478ebe1f65127d03e821613de550e95247812751b4ff31383739ad120123b2f69c87d819c18d44d1edee2ca51075a3c031e3a6f
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${FONTUTIL_ARCHIVE}"
+    PATCHES
+        build.patch
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -22,12 +27,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND VCPKG_CXX_FLAGS " /DNEED_BASENAME")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -52,6 +57,5 @@ if(NOT VCPKG_BUILD_TYPE)
     string(REPLACE "exec_prefix=\${prefix}" "exec_prefix=\${prefix}/../tools/${PORT}" _contents "${_contents}")
     file(WRITE "${_file}" "${_contents}")
 endif()
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
-endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,48 +1,33 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
     REF "v${VERSION}"
-    SHA512 f4fd81db731b60eebd7d67b8a7f2aa67f44d788f4c0a3f2cef9490fd4f0f1ae9caea1a9a8727619edab6aeda815ae6ace5266b1428b9bea81b7c984deb78bbac
+    SHA512 3d9eebd7788a71d8a329b33d18b329c2f4a17f4d5c5866639854c33f567b8316bd6b23a926164368b71b8203d906381cf9942c599724e042ad41308e2efc2cb9
     HEAD_REF master
     PATCHES
-        use-openjpeg-config.patch
-        fix-share-path.patch
-        Fix-Cmake_DIR.patch
-        fix-dependence-getopt.patch
+        no-absolute-paths.diff
+        prefer-config.diff
 )
 
-file(REMOVE "${SOURCE_PATH}/CMake/FindOpenJPEG.cmake")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-endif()
-
-set(USE_VCPKG_GETOPT OFF)
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-   set(USE_VCPKG_GETOPT ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DGDCM_BUILD_DOCBOOK_MANPAGES=OFF
-        -DGDCM_BUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
-        -DGDCM_INSTALL_INCLUDE_DIR=include
-        -DGDCM_USE_SYSTEM_EXPAT=ON
-        -DGDCM_USE_SYSTEM_ZLIB=ON
-        -DGDCM_USE_SYSTEM_OPENJPEG=ON
+        -DGDCM_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DGDCM_BUILD_TESTING=OFF
-        -DUSE_VCPKG_GETOPT=${USE_VCPKG_GETOPT}
-    MAYBE_UNUSED_VARIABLES
-        USE_VCPKG_GETOPT
+        -DGDCM_INSTALL_DATA_DIR=share/${PORT}
+        -DGDCM_INSTALL_DOC_DIR=share/${PORT}/doc
+        -DGDCM_INSTALL_INCLUDE_DIR=include
+        -DGDCM_INSTALL_PACKAGE_DIR=share/${PORT}
+        -DGDCM_USE_SYSTEM_EXPAT=ON
+        -DGDCM_USE_SYSTEM_OPENJPEG=ON
+        -DGDCM_USE_SYSTEM_ZLIB=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/gdcm)
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
@@ -50,22 +35,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMTargets.cmake"
-    "set(CMAKE_IMPORT_FILE_VERSION 1)"
-    "set(CMAKE_IMPORT_FILE_VERSION 1)
-    find_package(OpenJPEG QUIET)"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gdcmConfigure.h" "#define GDCM_SOURCE_DIR \"${SOURCE_PATH}\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gdcmConfigure.h" "#define GDCM_EXECUTABLE_OUTPUT_PATH \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gdcmConfigure.h" "#define GDCM_LIBRARY_OUTPUT_PATH    \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gdcmConfigure.h" "#define GDCM_CMAKE_INSTALL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMConfig.cmake" "set( GDCM_INCLUDE_DIRS \"${SOURCE_PATH}/Source/Common;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Source/Common;${SOURCE_PATH}/Source/DataStructureAndEncodingDefinition;${SOURCE_PATH}/Source/MediaStorageAndFileFormat;${SOURCE_PATH}/Source/MessageExchangeDefinition;${SOURCE_PATH}/Source/DataDictionary;${SOURCE_PATH}/Source/InformationObjectDefinition\")" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdcm/GDCMConfig.cmake" "set(GDCM_LIBRARY_DIRS \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/.\")" "")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
+vcpkg_install_copyright(FILE_LIST "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Copyright.txt")

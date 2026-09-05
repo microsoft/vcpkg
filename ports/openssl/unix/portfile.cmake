@@ -6,7 +6,7 @@ openssl requires Linux kernel headers from the system package manager.
 ]])
 endif()
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(MAKE "${MSYS_ROOT}/usr/bin/make.exe")
     set(PERL "${MSYS_ROOT}/usr/bin/perl.exe")
@@ -45,8 +45,7 @@ vcpkg_list(SET MAKEFILE_OPTIONS)
 if(VCPKG_TARGET_IS_ANDROID)
     set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
     set(OPENSSL_ARCH "android-${VCPKG_DETECTED_CMAKE_ANDROID_ARCH}")
-    # asm on arm32 NEON is broken, https://github.com/openssl/openssl/pull/21583#issuecomment-1727057735
-    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" #[[AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON]])
+    if(VCPKG_DETECTED_CMAKE_ANDROID_ARCH STREQUAL "arm" AND NOT VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
         vcpkg_list(APPEND CONFIGURE_OPTIONS no-asm)
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -73,29 +72,52 @@ elseif(VCPKG_TARGET_IS_IOS)
     endif()
     # disable that makes linkage error (e.g. require stderr usage)
     list(APPEND CONFIGURE_OPTIONS no-ui no-asm)
+elseif(VCPKG_TARGET_IS_TVOS OR VCPKG_TARGET_IS_WATCHOS)
+    set(OPENSSL_ARCH iphoneos-cross)
+    # disable that makes linkage error (e.g. require stderr usage)
+    list(APPEND CONFIGURE_OPTIONS no-ui no-asm)
 elseif(VCPKG_TARGET_IS_OSX)
+    # Universal builds don't support ASM
+    if(VCPKG_OSX_ARCHITECTURES MATCHES "arm64" AND VCPKG_OSX_ARCHITECTURES MATCHES "x86_64")
+        list(APPEND CONFIGURE_OPTIONS no-asm)
+    endif()
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         set(OPENSSL_ARCH darwin64-arm64)
     else()
         set(OPENSSL_ARCH darwin64-x86_64)
     endif()
-elseif(VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
-    set(OPENSSL_ARCH BSD-generic64)
+elseif(VCPKG_TARGET_IS_BSD)
+    set(OPENSSL_ARCH BSD-nodef-generic64)
+elseif(VCPKG_TARGET_IS_SOLARIS)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(OPENSSL_ARCH solaris64-x86_64-gcc)
+    else()
+        set(OPENSSL_ARCH solaris-x86-gcc)
+    endif()
 elseif(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(OPENSSL_ARCH mingw64)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(OPENSSL_ARCH mingwarm64)
     else()
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
-        threads
         no-engine
         no-asm
         no-sse2
         no-srtp
         --cross-compile-prefix=
     )
+    # Cf. https://emscripten.org/docs/porting/pthreads.html:
+    # For Pthreads support, not just openssl but everything
+    # must be compiled and linked with `-pthread`.
+    # This makes it a triplet/toolchain-wide setting.
+    if(NOT " ${VCPKG_DETECTED_CMAKE_C_FLAGS} " MATCHES " -pthread ")
+        vcpkg_list(APPEND CONFIGURE_OPTIONS no-threads)
+    endif()
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()
@@ -118,7 +140,7 @@ vcpkg_configure_make(
 )
 vcpkg_install_make(
     ${MAKEFILE_OPTIONS}
-    BUILD_TARGET build_sw
+    BUILD_TARGET build_inst_sw
 )
 vcpkg_fixup_pkgconfig()
 

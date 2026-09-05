@@ -2,7 +2,7 @@ diff --git a/CMake/FindEXPAT.cmake b/CMake/FindEXPAT.cmake
 index 45d923764..0ebcd3c83 100644
 --- a/CMake/FindEXPAT.cmake
 +++ b/CMake/FindEXPAT.cmake
-@@ -73,15 +73,37 @@ if(EXPAT_FOUND)
+@@ -70,15 +70,37 @@ if(EXPAT_FOUND)
  
    if(NOT TARGET EXPAT::EXPAT)
      include(vtkDetectLibraryType)

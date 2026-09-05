@@ -5,16 +5,16 @@
   "license": "Apache-2.0",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
       "name": "arrow",
       "default-features": false,
       "features": [
         "csv",
         "example"
       ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }

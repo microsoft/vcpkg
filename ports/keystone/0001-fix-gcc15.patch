@@ -1,0 +1,12 @@
+diff --git a/llvm/include/llvm/ADT/STLExtras.h b/llvm/include/llvm/ADT/STLExtras.h
+index 3346de93..a2adf853 100644
+--- a/llvm/include/llvm/ADT/STLExtras.h
++++ b/llvm/include/llvm/ADT/STLExtras.h
+@@ -21,6 +21,7 @@
+ #include <algorithm> // for std::all_of
+ #include <cassert>
+ #include <cstddef> // for std::size_t
++#include <cstdint>
+ #include <cstdlib> // for qsort
+ #include <functional>
+ #include <iterator>

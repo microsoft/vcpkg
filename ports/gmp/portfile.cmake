@@ -2,8 +2,6 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/
     message(FATAL_ERROR "Can't build ${PORT} if mpir is installed. Please remove mpir, and try install ${PORT} again if you need it.")
 endif()
 
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_download_distfile(
     ARCHIVE
     URLS
@@ -11,7 +9,7 @@ vcpkg_download_distfile(
         "https://ftp.gnu.org/gnu/gmp/gmp-${VERSION}.tar.xz"
         "https://gmplib.org/download/gmp/gmp-${VERSION}.tar.xz"
     FILENAME "gmp-${VERSION}.tar.xz"
-    SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
+    SHA512 e85a0dab5195889948a3462189f0e0598d331d3457612e2d3350799dba2e244316d256f8161df5219538eb003e4b5343f989aaa00f96321559063ed8c8f29fd2
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -23,7 +21,8 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         msvc_symbol.patch
         arm64-coff.patch
-        gmp-arm64-asm-fix-5f32dbc41afc.patch # Avoid the x18 register since it is reserved on arm64 osx and windows. Source: https://gmplib.org/repo/gmp/raw-rev/5f32dbc41afc
+        remove_compiler_info.patch
+        c23.patch
 )
 
 vcpkg_list(SET OPTIONS)
@@ -65,6 +64,9 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     vcpkg_list(APPEND OPTIONS "ABI=32")
     string(APPEND asmflags " -m32")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    # Let vcpkg-make set CCAS/AS so Android --target/--sysroot flags are preserved.
+    set(ccas "")
 else()
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
@@ -75,16 +77,29 @@ elseif(ccas)
     cmake_path(GET ccas PARENT_PATH ccas_dir)
     vcpkg_add_to_path("${ccas_dir}")
     cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 endif()
-vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_configure_make(
+if(VCPKG_HOST_IS_WINDOWS AND (NOT DEFINED VCPKG_MAKE_ACQUIRE_MSYS OR VCPKG_MAKE_ACQUIRE_MSYS))
+    # dumpbin detection fails with autoconf 2.72
+    set(ENV{WANT_AUTOCONF} 2.71)
+    vcpkg_acquire_msys(MSYS_ROOT
+        PACKAGES autoconf-wrapper automake-wrapper autoconf-archive binutils libtool make which
+        DIRECT_PACKAGES
+            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-4-any.pkg.tar.zst"
+            c93b791eb55893cbe7c425e764074837355fd165deb7b1775f652c8e25d9d1f0cdd4120ab710d56fb859b7df55c4f971eccda7c112448f60615bff8a2dc81166
+    )
+    vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+    set(VCPKG_MAKE_ACQUIRE_MSYS FALSE)
+endif()
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
+    LANGUAGES ASM C CXX
     OPTIONS
         ${OPTIONS}
         --enable-cxx
@@ -92,7 +107,7 @@ vcpkg_configure_make(
         --with-readline=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
@@ -102,6 +117,7 @@ if(NOT VCPKG_CROSSCOMPILING)
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-fib${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-jacobitab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-psqr${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-sieve${VCPKG_HOST_EXECUTABLE_SUFFIX}"
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen-trialdivtab${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
         USE_SOURCE_PERMISSIONS

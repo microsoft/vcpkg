@@ -1,10 +1,9 @@
-libffi can be imported via CMake FindPkgConfig module:
-
-    find_package(PkgConfig)
-    pkg_check_modules(LIBFFI REQUIRED IMPORTED_TARGET libffi)
-    target_link_libraries(main PRIVATE PkgConfig::LIBFFI)
-
 vcpkg provides proprietary CMake targets:
 
-    find_package(unofficial-libffi CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libffi::libffi)
+  find_package(unofficial-libffi CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::libffi::libffi)
+
+libffi provides pkg-config modules:
+
+  # Library supporting Foreign Function Interfaces
+  libffi

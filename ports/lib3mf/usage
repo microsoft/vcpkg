@@ -1,0 +1,8 @@
+lib3mf provides CMake targets:
+
+  find_package(lib3mf CONFIG REQUIRED)
+  target_link_libraries(target_name PRIVATE lib3mf::lib3mf) 
+
+lib3mf provides pkg-config modules:
+
+  lib3mf

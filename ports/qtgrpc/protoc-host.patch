@@ -1,0 +1,23 @@
+diff --git a/cmake/FindWrapProtoc.cmake b/cmake/FindWrapProtoc.cmake
+index 82972c8f18..08335fa746 100644
+--- a/cmake/FindWrapProtoc.cmake
++++ b/cmake/FindWrapProtoc.cmake
+@@ -13,7 +13,7 @@ if(${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY)
+     list(APPEND __WrapProtoc_find_package_args QUIET)
+ endif()
+ 
+-if(NOT CMAKE_CROSSCOMPILING)
++if(0)
+     if(NOT TARGET Threads::Threads)
+         find_package(Threads ${__WrapProtoc_find_package_args})
+     endif()
+@@ -52,8 +52,8 @@ if(NOT CMAKE_CROSSCOMPILING)
+     endif()
+ endif()
+ 
+-if(NOT __WrapProtoc_protoc_imported_location)
++if(1)
+    if(CMAKE_CROSSCOMPILING)
+         set(__WrapProtoc_extra_prefix_paths "${QT_ADDITIONAL_HOST_PACKAGES_PREFIX_PATH}")
+     endif()
+     find_program(__WrapProtoc_protoc_imported_location

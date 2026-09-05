@@ -1,6 +1,7 @@
 {
   "name": "vcpkg-ci-wxwidgets",
   "version-date": "2022-04-05",
+  "port-version": 1,
   "description": "Builds a GUI app in order to validate the wxwidgets port.",
   "dependencies": [
     {
@@ -16,22 +17,12 @@
     }
   ],
   "default-features": [
-    "default-features"
+    {
+      "name": "wxrc",
+      "platform": "native"
+    }
   ],
   "features": {
-    "default-features": {
-      "description": "Default features depending on system",
-      "dependencies": [
-        {
-          "name": "vcpkg-ci-wxwidgets",
-          "default-features": false,
-          "features": [
-            "wxrc"
-          ],
-          "platform": "native"
-        }
-      ]
-    },
     "wxrc": {
       "description": "Test wxrc"
     }

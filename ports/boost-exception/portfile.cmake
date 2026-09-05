@@ -3,12 +3,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/exception
-    REF boost-1.83.0
-    SHA512 9b5bc191b3f50c529e3f61bfe6acfdfb095a6f462ff9e62bbd7ad63e93e52b6286f13c59847063889623d281d09f607277a42134ab735c3734959db2bf627546
+    REF boost-${VERSION}
+    SHA512 088e0f8d12c1399d450e02c76cded6903fef9b78833321f80a9593f3bf859d4f8126255eb566e64a5bf5b594dffd3d3b408f08af518dccae21c587bd6e35fc3f
     HEAD_REF master
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

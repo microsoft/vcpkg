@@ -1,0 +1,67 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fc52494..9bc2db3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -64,7 +64,7 @@ string(REGEX REPLACE "^<version>([0-9]+)\\.([0-9]+)\\.([0-9]+)</version>$" "\\3"
+ set(DART_VERSION "${DART_MAJOR_VERSION}.${DART_MINOR_VERSION}.${DART_PATCH_VERSION}")
+ 
+ set(DART_PKG_DESC "Dynamic Animation and Robotics Toolkit.")
+-set(DART_PKG_EXTERNAL_DEPS "assimp, ccd, eigen3, fcl, octomap")
++set(DART_PKG_EXTERNAL_DEPS "assimp,      eigen3, fcl, octomap")
+ 
+ #===============================================================================
+ # Build options
+diff --git a/cmake/DARTFindBullet.cmake b/cmake/DARTFindBullet.cmake
+index c2d3e63..fbcdd4d 100644
+--- a/cmake/DARTFindBullet.cmake
++++ b/cmake/DARTFindBullet.cmake
+@@ -9,7 +9,7 @@
+ # Bullet. Force MODULE mode to use the FindBullet.cmake file distributed with
+ # CMake. Otherwise, we may end up using the BulletConfig.cmake file distributed
+ # with Bullet, which uses relative paths and may break transitive dependencies.
+-find_package(Bullet COMPONENTS BulletMath BulletCollision MODULE QUIET)
++find_package(BULLET COMPONENTS LinearMath BulletCollision        QUIET NAMES Bullet)
+ 
+ if((BULLET_FOUND OR Bullet_FOUND) AND NOT TARGET Bullet)
+   add_library(Bullet INTERFACE IMPORTED)
+diff --git a/cmake/Findassimp.cmake b/cmake/Findassimp.cmake
+index b5c1c66..099a3b4 100644
+--- a/cmake/Findassimp.cmake
++++ b/cmake/Findassimp.cmake
+@@ -25,7 +25,7 @@ find_path(ASSIMP_INCLUDE_DIRS assimp/scene.h
+     PATHS "${CMAKE_INSTALL_PREFIX}/include")
+ 
+ # Libraries
+-if(MSVC)
++if(1)
+   find_package(assimp QUIET CONFIG)
+   if(TARGET assimp::assimp)
+     set(ASSIMP_LIBRARIES "assimp::assimp")
+diff --git a/cmake/Findfcl.cmake b/cmake/Findfcl.cmake
+index 7be9d61..d082d4d 100644
+--- a/cmake/Findfcl.cmake
++++ b/cmake/Findfcl.cmake
+@@ -27,7 +27,7 @@ find_path(FCL_INCLUDE_DIRS
+     PATHS "${CMAKE_INSTALL_PREFIX}/include")
+ 
+ # Libraries
+-if(MSVC)
++if(1)
+   find_package(fcl QUIET CONFIG)
+   if(TARGET fcl)
+     set(FCL_LIBRARIES fcl)
+diff --git a/cmake/Findtinyxml2.cmake b/cmake/Findtinyxml2.cmake
+index 0552a8e..c731624 100644
+--- a/cmake/Findtinyxml2.cmake
++++ b/cmake/Findtinyxml2.cmake
+@@ -29,8 +29,8 @@ find_path(TINYXML2_INCLUDE_DIRS
+     PATHS "${CMAKE_INSTALL_PREFIX}/include")
+ 
+ # Libraries
+-if(MSVC)
+-  set(TINYXML2_LIBRARIES "tinyxml2$<$<CONFIG:Debug>:d>")
++if(1)
++  set(TINYXML2_LIBRARIES tinyxml2::tinyxml2)
+ else()
+   find_library(TINYXML2_LIBRARIES
+       NAMES tinyxml2

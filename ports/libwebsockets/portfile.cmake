@@ -1,18 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF b0a749c8e7a8294b68581ce4feac0e55045eb00b # v4.3.2
-    SHA512 48c1d59cfdbe6cc043a51e950a614273bd2f9bbfd0ab8436e4ba30bf119cfdbc3e691c02608e8c169356ec79ca96472340d98d17659b66ee60bb998f3695d3c4
+    REF "v${VERSION}"
+    SHA512 77fcb15c325d514fee18193a6509755618ce4232115259377d67f93015490a11642f5974fddd2efebc89496e28a52f0a135b6635c662be1e2c641aaa68397b11
     HEAD_REF master
     PATCHES
         fix-dependency-libuv.patch
         fix-build-error.patch
         export-include-path.patch
-        fix-find-openssl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LWS_WITH_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 ## All LWS options could be possible features:
 # #
@@ -142,6 +142,7 @@ vcpkg_cmake_configure(
         ${EXTRA_ARGS}
         -DLWS_WITH_STATIC=${LWS_WITH_STATIC}
         -DLWS_WITH_SHARED=${LWS_WITH_SHARED}
+        -DLWS_MSVC_STATIC_RUNTIME=${STATIC_CRT}
         -DLWS_WITH_GENCRYPTO=ON
         -DLWS_WITH_TLS=ON
         -DLWS_WITH_BUNDLED_ZLIB=OFF
@@ -170,11 +171,11 @@ string(REPLACE "/../include" "/../../include" LIBWEBSOCKETSCONFIG_CMAKE "${LIBWE
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/libwebsockets/libwebsockets-config.cmake" "${LIBWEBSOCKETSCONFIG_CMAKE}")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    vcpkg_replace_string( "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake" "websockets_static.lib" "websockets.lib")
+    vcpkg_replace_string( "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-debug.cmake" "websockets_static.lib" "websockets.lib" IGNORE_UNCHANGED)
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    vcpkg_replace_string( "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake" "websockets_static.lib" "websockets.lib")
+    vcpkg_replace_string( "${CURRENT_PACKAGES_DIR}/share/libwebsockets/LibwebsocketsTargets-release.cmake" "websockets_static.lib" "websockets.lib" IGNORE_UNCHANGED)
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)

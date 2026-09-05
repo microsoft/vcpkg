@@ -7,25 +7,18 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-if (NOT "${VERSION}" MATCHES [[^([0-9]+)\.([0-9]+)\.([0-9]+)$]])
-    message(FATAL_ERROR "Version regex did not match.")
-endif()
-set(OPENSSL_VERSION_MAJOR "${CMAKE_MATCH_1}")
-set(OPENSSL_VERSION_MINOR "${CMAKE_MATCH_2}")
-set(OPENSSL_VERSION_FIX "${CMAKE_MATCH_3}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 248353b000ef6b9a3434bf808b147eb4672c82f36968b2995c159373680f80208183bb70c02effa36ae4a1705fe5a5e315960075e8899352c4e84069d6c651c2
+    SHA512 f67b9cbf0b47d25904f912e22d90e920eabd3f346c136c38b21dab8a0a1d61eaff593b75ceb519c95d464116487ea4e4db83535db5a666ea2c6612e8310e5d0a
     PATCHES
-        disable-apps.patch
-        disable-install-docs.patch
+        cmake-config.patch
+        command-line-length.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
+        windows/install-programs.diff # https://github.com/openssl/openssl/issues/28744
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
@@ -35,10 +28,17 @@ vcpkg_from_github(
 vcpkg_list(SET CONFIGURE_OPTIONS
     enable-static-engine
     enable-capieng
-    no-ssl3
-    no-weak-ssl-ciphers
     no-tests
+    no-docs
 )
+
+# https://github.com/openssl/openssl/blob/master/INSTALL.md#enable-ec_nistp_64_gcc_128
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$"
+   AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(x64|arm64|riscv64|ppc64le)$")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ec_nistp_64_gcc_128)
+endif()
 
 set(INSTALL_FIPS "")
 if("fips" IN_LIST FEATURES)
@@ -54,6 +54,15 @@ endif()
 
 if(NOT "tools" IN_LIST FEATURES)
     vcpkg_list(APPEND CONFIGURE_OPTIONS no-apps)
+endif()
+
+if("weak-ssl-ciphers" IN_LIST FEATURES)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-weak-ssl-ciphers)
+endif()
+
+if("ssl3" IN_LIST FEATURES)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ssl3)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ssl3-method)
 endif()
 
 if(DEFINED OPENSSL_USE_NOPINSHARED)
@@ -72,4 +81,13 @@ else()
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+if (NOT "${VERSION}" MATCHES [[^([0-9]+)\.([0-9]+)\.([0-9]+)$]])
+    message(FATAL_ERROR "Version regex did not match.")
+endif()
+set(OPENSSL_VERSION_MAJOR "${CMAKE_MATCH_1}")
+set(OPENSSL_VERSION_MINOR "${CMAKE_MATCH_2}")
+set(OPENSSL_VERSION_FIX "${CMAKE_MATCH_3}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

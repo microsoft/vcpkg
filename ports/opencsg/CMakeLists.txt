@@ -21,9 +21,6 @@ set(SRCS
 	src/renderSCS.cpp
 	src/scissorMemo.cpp
 	src/settings.cpp
-	src/stencilManager.cpp
-	src/pBufferTexture.cpp
-	RenderTexture/RenderTexture.cpp
 )
 
 

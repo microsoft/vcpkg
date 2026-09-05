@@ -2,12 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openzim/libzim
     REF "${VERSION}"
-    SHA512 4554a9237f5167f6f94aad76ef0e847e949c47c6ee2a89bbd6e587da3b3a3e2d0a8b2d03f7a0fbde0e0dc96fb61bf8c115b3ef3cbd7eff5e880f152bee9b29f0
+    SHA512 16ea86511991be2f3c6deb47a96e6578c2f8117d1783508b6f10d89a42fa7ec19cf8dca6cde34f537a5b715240ec1a0ebee0d27081e3a2195c9ff8c59317639f
     HEAD_REF main
     PATCHES
         cross-builds.diff
         dllexport.diff
-        disable-gtest.diff
+        subdirs.diff
 )
 
 set(EXTRA_OPTIONS "")
@@ -28,6 +28,10 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zim/zim.h" "defined(LIBZIM_IMPORT_DLL)" "1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

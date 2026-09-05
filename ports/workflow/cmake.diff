@@ -1,0 +1,49 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 455e70c..49cb955 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+-if(ANDROID)
++if(0)
+ 	include_directories(${OPENSSL_INCLUDE_DIR})
+ 	link_directories(${OPENSSL_LINK_DIR})
+ else()
+@@ -80,10 +80,12 @@ add_library(
+ 	$<TARGET_OBJECTS:client>
+ )
+ 
+-if(ANDROID)
++if(0)
+ 	target_link_libraries(${SHARED_LIB_NAME} PUBLIC ssl crypto c)
+ 	target_link_libraries(${STATIC_LIB_NAME} PUBLIC ssl crypto c)
+ else()
++	find_package(Threads REQUIRED)
++	add_library(pthread ALIAS Threads::Threads)
+ 	target_link_libraries(${SHARED_LIB_NAME} PUBLIC OpenSSL::SSL OpenSSL::Crypto pthread)
+ 	target_link_libraries(${STATIC_LIB_NAME} PUBLIC OpenSSL::SSL OpenSSL::Crypto pthread)
+ endif ()
+@@ -122,17 +124,22 @@ if (KAFKA STREQUAL "y")
+ 	set_target_properties(${KAFKA_SHARED_LIB_NAME} PROPERTIES OUTPUT_NAME "wfkafka" VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR})
+ endif ()
+ 
++if(NOT BUILD_SHARED_LIBS)
++set_target_properties(${SHARED_LIB_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
+ install(
+ 	TARGETS ${STATIC_LIB_NAME}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	COMPONENT devel
+ )
+ 
++else()
++set_target_properties(${STATIC_LIB_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
+ install(
+ 	TARGETS ${SHARED_LIB_NAME}
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	COMPONENT devel
+ )
++endif()
+ 
+ if (KAFKA STREQUAL "y")
+ 	install(

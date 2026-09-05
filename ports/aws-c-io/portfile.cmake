@@ -2,22 +2,22 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-io
     REF "v${VERSION}"
-    SHA512 54f6ef23ab7fb65c9d1425d21d59daf1b13a50595f7f06c7d4f74bfb5941a7ddf0185ae3249b940473422c1880bb034c0610876c6e13ae499ccd2dcc888c1b23
-    HEAD_REF master
+    SHA512 f0a16581dcb3f11d1c8b883f9eeffd2cfc029868683488da0193dce7dd619b5d17843baeaa944da122a0281ae0e58d78b5e50a2bcc10773d0059e3c50bd80500
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common/modules" # use extra cmake files
         -DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
 
 string(REPLACE "dynamic" "shared" subdir "${VCPKG_LIBRARY_LINKAGE}")
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" [[/${type}/]] "/")
 
 file(REMOVE_RECURSE
@@ -29,4 +29,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)

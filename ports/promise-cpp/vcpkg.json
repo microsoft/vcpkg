@@ -1,6 +1,6 @@
 {
   "name": "promise-cpp",
-  "version": "2.1.2",
+  "version": "2.1.5",
   "description": "C++ promise/A+ library in Javascript style.",
   "homepage": "https://github.com/xhawk18/promise-cpp",
   "dependencies": [

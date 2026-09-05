@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index acbd6b4971..1ed8cb72ab 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -495,10 +495,10 @@ set(open62541_LIBRARIES "")
+ set(open62541_PUBLIC_LIBRARIES "")
+ if("${UA_ARCHITECTURE}" STREQUAL "posix")
+     list(APPEND open62541_LIBRARIES "m")
+-    if(UA_MULTITHREADING GREATER_EQUAL 100 OR UA_BUILD_UNIT_TESTS)
++    if(UA_MULTITHREADING GREATER_EQUAL 100 OR UA_BUILD_UNIT_TESTS AND NOT ANDROID)
+         list(APPEND open62541_PUBLIC_LIBRARIES "pthread")
+     endif()
+-    if(NOT APPLE AND (NOT ${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD"))
++    if(NOT APPLE AND (NOT ${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD") AND NOT ANDROID)
+         list(APPEND open62541_LIBRARIES "rt")
+     endif()
+ elseif("${UA_ARCHITECTURE}" STREQUAL "win32")

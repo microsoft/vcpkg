@@ -1,4 +1,4 @@
-The package DirectXMesh is compatible with built-in CMake targets:
+The DirectXMesh package provides CMake targets:
 
     find_package(directxmesh CONFIG REQUIRED)
     target_link_libraries(main PRIVATE Microsoft::DirectXMesh)

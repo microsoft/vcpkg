@@ -1,8 +1,8 @@
 diff --git a/bdftruncate.c b/bdftruncate.c
-index 2b317c0b0..3ab84978f 100644
---- a/bdftruncate.c	
+index 815d2ef..d344ef2 100644
+--- a/bdftruncate.c
 +++ b/bdftruncate.c
-@@ -40,7 +40,13 @@
+@@ -42,7 +42,13 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -14,14 +14,14 @@ index 2b317c0b0..3ab84978f 100644
 +#  define SSIZE_MAX LONG_MAX
 +# endif
 +#endif
- #if (defined(__GNUC__) && ((__GNUC__ * 100 + __GNUC_MINOR__) >= 205))	\
-         || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))
- # define ATTR_NORETURN __attribute((noreturn))
+ #ifndef __has_attribute
+ # define __has_attribute(x) 0  /* Compatibility with older compilers. */
+ #endif
 diff --git a/ucs2any.c b/ucs2any.c
-index 1f575d14f..75b662b3d 100644
---- a/ucs2any.c	
+index 33c018d..c673197 100644
+--- a/ucs2any.c
 +++ b/ucs2any.c
-@@ -49,7 +49,9 @@
+@@ -51,7 +51,9 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>

@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2b042ff..d7b707e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,31 +25,7 @@ endif()
+ # First we look for the Eigen3 cmake module
+ # provided by the libeigen3-dev on newer Ubuntu. If that fails, then we
+ # fall-back to the version provided in the cmake/modules.
+-find_package(Eigen3 QUIET)
+-
+-if(NOT EIGEN3_FOUND)
+-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+-  find_package(Eigen3 REQUIRED)
+-endif()
+-
+-# Note that eigen 3.2 (on Ubuntu Wily) only provides EIGEN3_INCLUDE_DIR,
+-# not EIGEN3_INCLUDE_DIRS, so we have to set the latter from the former.
+-if(NOT EIGEN3_INCLUDE_DIRS)
+-  set(EIGEN3_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+-endif()
+-
+-# Necessary for Ubuntu 16.04's god-awful FindEigen3.cmake.
+-if((NOT (DEFINED EIGEN3_VERSION)) AND (DEFINED EIGEN3_VERSION_STRING))
+-  set(EIGEN3_VERSION ${EIGEN3_VERSION_STRING})
+-endif()
+-
+-if(${EIGEN3_VERSION} VERSION_EQUAL "3.3.6")
+-  message(WARNING "Eigen3 version ${EIGEN3_VERSION} found in ${EIGEN3_INCLUDE_DIRS},"
+-                  "but this version has a [bug](http://eigen.tuxfamily.org/bz/show_bug.cgi?id=1643)")
+-elseif(${EIGEN3_VERSION} VERSION_LESS "3.3.8")
+-  message(WARNING "Eigen3 version ${EIGEN3_VERSION} found in ${EIGEN3_INCLUDE_DIRS}. "
+-                  "Beware that the move semantic has a bug and resolves to a simple copy.")
+-endif()
++find_package(Eigen3 3.3.8...5 CONFIG REQUIRED)
+ 
+ # Options. Turn on with 'cmake -DBUILD_TESTING=ON'.
+ # catkin build manif --cmake-args -DBUILD_TESTING=ON -DBUILD_EXAMPLES=ON
+@@ -103,12 +79,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE
+ target_link_libraries(${PROJECT_NAME} INTERFACE "$<$<BOOL:${tl-optional_FOUND}>:tl::optional>")
+ 
+ # Add Eigen interface dependency, depending on available cmake info
+-if(TARGET Eigen3::Eigen)
+-  target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
+-  set(Eigen3_DEPENDENCY "find_dependency(Eigen3 ${Eigen3_VERSION})")
+-else(TARGET Eigen3::Eigen)
+-  target_include_directories(${PROJECT_NAME} SYSTEM INTERFACE ${EIGEN3_INCLUDE_DIRS})
+-endif(TARGET Eigen3::Eigen)
++target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
++set(Eigen3_DEPENDENCY "find_dependency(Eigen3 ${Eigen3_VERSION})")
+ 
+ # Add tl-optional interface dependency if enabled
+ if(tl-optional_FOUND)

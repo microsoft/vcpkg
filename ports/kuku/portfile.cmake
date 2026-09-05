@@ -1,11 +1,13 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Kuku
-    REF 1338c4ae2211ab4c739022ff57f48ce5a76531d5
-    SHA512 6cba13b7fc8c453acbfcb4921ee3acc9c3e91d4bba0e01480ea396e17f85288d0179342090111a2e3c056b6918c7b09ec63c41116eb4021e63c54acc19631156
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 c5c79d0ca94e4a02786934ac419311ce2a46090b8846b885ec11f24205977a02270a14bbd7178b82eb9284e3345c89a421b710171bac5946491a61c9661775b8
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
@@ -14,9 +16,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Kuku-2.1)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Kuku)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

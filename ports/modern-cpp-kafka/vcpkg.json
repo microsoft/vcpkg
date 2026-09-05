@@ -1,6 +1,6 @@
 {
   "name": "modern-cpp-kafka",
-  "version-string": "2023.03.07",
+  "version-string": "2024.07.03",
   "description": "A C++ API for Kafka clients (i.e. KafkaProducer, KafkaConsumer, AdminClient)",
   "homepage": "https://github.com/morganstanley/modern-cpp-kafka",
   "license": "Apache-2.0",

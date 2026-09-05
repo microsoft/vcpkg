@@ -1,18 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO esa/pagmo2
-    REF 27ae9159f4fcd11bb93de0ae8189d15352655b0a # v2.19.0
-    SHA512 9f85fe5dbce0542bf3c52918562da9632ec64ee2839d1d2404bf5a6caa4c854c654ca1735c617a15208a597a79a8c28431378e6968335b1c3e9e8d86b6d7d237
+    REF "v${VERSION}"
+    SHA512 9ebe7f63b907607ea5762e56a884be62630efaca3f45d9ba9ad85ca1818d60d09864422bd075c2653aea1a14609fe9ad6520297aee5a00e07fa88df45872cef9
     HEAD_REF master
     PATCHES
-        doxygen.patch
-        find-tbb.patch
-        disable-werror.patch
+        0001-doxygen.patch
+        0002-find-tbb.patch
+        0003-disable-werror.patch
+        0004-support-eigen3-5.patch
+        0005-avoid-stdext-checked-array-iterator.diff # ~= https://github.com/esa/pagmo2/commit/d4daedc9f865bf9e926946c21e62c4a4eebf353e
+        0006-config-find-libipopt.patch
+        0007-ipopt-transitive-deps.patch # coin-or-ipopt provides no cmake config
+        0008-ipopt-header-search.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-   FEATURES
-   nlopt PAGMO_WITH_NLOPT
+    FEATURES
+        ipopt PAGMO_WITH_IPOPT
+        nlopt PAGMO_WITH_NLOPT
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAGMO_BUILD_STATIC_LIBRARY)
 vcpkg_cmake_configure(

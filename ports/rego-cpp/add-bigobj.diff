@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c916c90..6e77a58 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -66,7 +66,7 @@ target_link_libraries(rego
+ )
+ 
+ if(MSVC)
+-  target_compile_options(rego PUBLIC "/Zc:__cplusplus")
++  target_compile_options(rego PUBLIC "/Zc:__cplusplus" "/bigobj")
+   target_compile_definitions(rego PUBLIC "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" "DATE_BUILD_LIB")
+ endif()
+ 

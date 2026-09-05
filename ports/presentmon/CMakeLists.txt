@@ -6,18 +6,18 @@ option(BUILD_TOOLS "Build tool PresentMon" OFF)
 
 set(PRESENTDATA_SRCS
     PresentData/Debug.cpp
-    PresentData/MixedRealityTraceConsumer.cpp
+    PresentData/GpuTrace.cpp
     PresentData/PresentMonTraceConsumer.cpp
+    PresentData/PresentMonTraceSession.cpp
     PresentData/TraceConsumer.cpp
-    PresentData/TraceSession.cpp
 )
 
 set(PRESENTDATA_HDRS
     PresentData/Debug.hpp
-    PresentData/MixedRealityTraceConsumer.hpp
+    PresentData/GpuTrace.hpp
     PresentData/PresentMonTraceConsumer.hpp
+    PresentData/PresentMonTraceSession.hpp
     PresentData/TraceConsumer.hpp
-    PresentData/TraceSession.hpp
     ${CMAKE_BINARY_DIR}/generated/version.h
 )
 
@@ -47,11 +47,10 @@ if (BUILD_TOOLS)
         PresentMon/Console.cpp
         PresentMon/ConsumerThread.cpp
         PresentMon/CsvOutput.cpp
-        PresentMon/LateStageReprojectionData.cpp
         PresentMon/MainThread.cpp
         PresentMon/OutputThread.cpp
         PresentMon/Privilege.cpp
-        PresentMon/TraceSession.cpp
+        PresentMon/PresentMon.hpp
     )
     
     add_executable(PresentMon ${PresentMon_SRCS})

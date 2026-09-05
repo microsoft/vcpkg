@@ -102,8 +102,8 @@ list(REMOVE_DUPLICATES tools)
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_INSTALL_DIR	\"${CURRENT_PACKAGES_DIR}\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_FONT_PATH\t\"${CURRENT_PACKAGES_DIR}/fonts\"" "") # there is no fonts folder
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_FONT_PATH\t\"${CURRENT_PACKAGES_DIR}/share/mathgl/fonts\"" "")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_FONT_PATH\t\"${CURRENT_PACKAGES_DIR}/fonts\"" "" IGNORE_UNCHANGED) # there is no fonts folder
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mgl2/config.h" "#define MGL_FONT_PATH\t\"${CURRENT_PACKAGES_DIR}/share/mathgl/fonts\"" "" IGNORE_UNCHANGED)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

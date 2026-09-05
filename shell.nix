@@ -1,9 +1,10 @@
 { pkgs ? import <nixpkgs> {}, withX11 ? false }:
 
-(pkgs.buildFHSUserEnv {
+(pkgs.buildFHSEnv {
   name = "vcpkg";
   targetPkgs = pkgs: (with pkgs; [
       autoconf
+      curl
       automake
       cmake
       gcc
@@ -14,7 +15,8 @@
       libxkbcommon.dev
       m4
       ninja
-      pkgconfig
+      pkg-config
+      unzip
       zip
       zstd.dev
     ] ++ pkgs.lib.optionals withX11 [

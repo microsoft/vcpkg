@@ -9,20 +9,27 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wanduow/wandio
-    REF 012b646e7ba7ab191a5a2206488adfac493fcdc6
-    SHA512 e94a82038902c34933c4256f8bd4d7ef3f2cf32fea46f8e31a25df34cc90d3a275ff56d3bc9892aca0c85e6d875e696f96a836cc1444fe165db8364331e6e77d
+    REF ${VERSION}
+    SHA512 6468a6f22f7536b78c27d9c4399454ac0f471ea94c832869b5dad1b334edb8d66ebe931a0614ccc052b21a85fb21310fa9410850ad0ebbb4d722e3036990ffea
     HEAD_REF master
-    PATCHES configure.lib.patch # This is how configure.ac files with dependencies get fixed. 
+    PATCHES configure.lib.patch # This is how configure.ac files with dependencies get fixed.
             configure.patch
             ${PATCHES}
 )
 
-vcpkg_configure_make(
-    AUTOCONFIG
+if (VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS ac_cv_func_malloc_0_nonnull=yes)
+    list(APPEND OPTIONS ac_cv_func_realloc_0_nonnull=yes)
+endif()
+
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
+    OPTIONS
+        ${OPTIONS}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

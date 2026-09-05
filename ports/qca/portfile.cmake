@@ -11,22 +11,23 @@ vcpkg_add_to_path("${PERL_EXE_PATH}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF v2.3.5
-    SHA512 c83ac69597f22d915479fd4fd1557b89c56ba384321c324f93cf2f1bd32a819cb6d7b008c44e7606fa39c8184043d97c36ee1210d23a6e8ce24c41c8a83e4fb9
+    REF "v${VERSION}"
+    SHA512 21bbc483f78d8c6b99bf2a4375db6a1bcc8a1a16df01e2295dc6a5b43fa27ccbef39114ee33d456071f712a00aca0ab3bc1bf767df82333c2f98ea35f7d35b45
     PATCHES
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
         0003-Define-NOMINMAX-for-botan-plugin-with-MSVC.patch
+        0004-fix-macos-rpath.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
 else()
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
 endif()
 
 # According to:
@@ -35,11 +36,16 @@ endif()
 # So we do it here:
 message(STATUS "Importing certstore")
 file(REMOVE "${SOURCE_PATH}/certs/rootcerts.pem")
-# Using file(DOWNLOAD) to use https
-file(DOWNLOAD https://raw.githubusercontent.com/mozilla/gecko-dev/master/security/nss/lib/ckfw/builtins/certdata.txt
-    "${CURRENT_BUILDTREES_DIR}/cert/certdata.txt"
-    TLS_VERIFY ON
+
+set(CERTDATA_COMMIT_HASH bc977a80f4fcf465681209d431c9dfe549f224cf)
+vcpkg_download_distfile(CERTDATA_TXT
+    URLS     "https://raw.githubusercontent.com/mozilla/gecko-dev/${CERTDATA_COMMIT_HASH}/security/nss/lib/ckfw/builtins/certdata.txt"
+    SHA512   a43dd8fa252afc5478c0a9297899eded17a18c21f359954d81bccad8b8f5a50d4f8aedfc1b9a43f2ce01a7f5352788b864045ed006fae65ccd21ce75430bc55d
+    FILENAME "qca-certdata-${CERTDATA_COMMIT_HASH}.txt"
 )
+file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cert")
+file(COPY_FILE "${CERTDATA_TXT}" "${CURRENT_BUILDTREES_DIR}/cert/certdata.txt")
+
 vcpkg_execute_required_process(
     COMMAND "${PERL}" "${CMAKE_CURRENT_LIST_DIR}/mk-ca-bundle.pl" -n "${SOURCE_PATH}/certs/rootcerts.pem"
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cert"
@@ -47,9 +53,17 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
-set(PLUGINS gnupg logger softstore wincrypto)
+set(PLUGINS gnupg logger wincrypto)
 if("botan" IN_LIST FEATURES)
     list(APPEND PLUGINS botan)
+endif()
+if ("ossl" IN_LIST FEATURES)
+    list(APPEND PLUGINS ossl)
+endif()
+if (VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(STATUS "Building with an osx-dynamic triplet: 'softstore' disabled.")
+else()
+    list(APPEND PLUGINS softstore)
 endif()
 
 # Configure and build
@@ -62,13 +76,13 @@ vcpkg_cmake_configure(
         -DBUILD_TOOLS=OFF
         -DBUILD_WITH_QT6=ON
         -DQCA_SUFFIX=OFF
-        -DQCA_FEATURE_INSTALL_DIR=share/qca/mkspecs/features
+        -DQCA_FEATURE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features
         -DOSX_FRAMEWORK=OFF
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_PLUGIN_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_RELEASE}
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_PLUGIN_INSTALL_DIR_RELEASE}
 )
 
 vcpkg_cmake_install()
@@ -91,5 +105,13 @@ file(REMOVE_RECURSE
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    COMMENT [[
+The generated CA certificate bundle is derived from Mozilla's certdata.txt,
+which is licensed under MPL-2.0:
+https://raw.githubusercontent.com/mozilla/gecko-dev/bc977a80f4fcf465681209d431c9dfe549f224cf/security/nss/lib/ckfw/builtins/certdata.txt
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/src/botantools/botan/license.txt"
+)

@@ -1,7 +1,7 @@
 {
   "name": "libavif",
-  "version-semver": "0.11.1",
-  "port-version": 2,
+  "version-semver": "1.4.2",
+  "port-version": 1,
   "description": "Library for encoding and decoding AVIF files",
   "homepage": "https://github.com/AOMediaCodec/libavif",
   "license": "BSD-2-Clause AND Apache-2.0",
@@ -21,6 +21,19 @@
       "description": "AV1 codec library",
       "dependencies": [
         "aom"
+      ]
+    },
+    "dav1d": {
+      "description": "dav1d decoder library",
+      "dependencies": [
+        "dav1d"
+      ]
+    },
+    "svt": {
+      "description": "SVT-AV1 encoder library",
+      "supports": "!x86 & !arm32 & !uwp",
+      "dependencies": [
+        "svt-av1"
       ]
     }
   }

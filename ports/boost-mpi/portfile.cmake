@@ -3,13 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mpi
-    REF boost-1.83.0
-    SHA512 f70aedba476b350e217717d420178af9b11539d5a30066edb1a4697dbfee08679a5a7b50f8c8cbb2c645dbd3b67735311ed8562907d3836dd1988a89f05bedc1
+    REF boost-${VERSION}
+    SHA512 b68b8f691a97243ccc64935e45d619920d0c1d9f16383d64385cce26cb1c1de45cca7ac41b7ee4835e093b380152f4f9c96e794ad2b7a548c9380425a5e4d3c5
     HEAD_REF master
-    PATCHES fix-build-with-msvc.patch
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

@@ -1,56 +1,52 @@
-# This port needs to be updated at the same time as mongo-c-driver
-
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 242416638bf6722ccda67ecc15cf78f8531f1a4ae0e89fd66cde74221d7b98b859442f5b70628802972961e69156fd7afcc916d7a83cc134d5723eb0b6e15cc9
+    SHA512 5c70bd494118800a077e67da9c79f897c46a815760a2b504d9d4d0be64854b99a7af10ca2c243c3af7c5661926590e49b3aa7c7e4758dbf223aca380b1be9234
     HEAD_REF master
     PATCHES
-        disable-dynamic-when-static.patch
         fix-include-directory.patch # vcpkg legacy decision
-        fix-missing-header.patch  # for building mongo-c-driver
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 
 # Cannot use string(COMPARE EQUAL ...)
 set(ENABLE_STATIC OFF)
+set(ENABLE_SHARED OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(ENABLE_STATIC ON)
+else()
+    set(ENABLE_SHARED ON)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # because it writes the file VERSION_CURRENT in the source directory
     OPTIONS
+        "-DBUILD_VERSION=${VERSION}"
         -DENABLE_BSON=ON
         -DENABLE_EXAMPLES=OFF
-        -DENABLE_ICU=OFF
         -DENABLE_MONGOC=OFF
         -DENABLE_SASL=OFF
         -DENABLE_SNAPPY=OFF
         -DENABLE_SRV=OFF
         -DENABLE_SSL=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
+        -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_TESTS=OFF
+        -DBUILD_TESTING=OFF
         -DENABLE_UNINSTALL=OFF
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_ZSTD=OFF
 )
+
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME bson-1.0 CONFIG_PATH "lib/cmake/bson-1.0" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME "bson-${VERSION}" CONFIG_PATH "lib/cmake/bson-${VERSION}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/bson/bson-macros.h"
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/bson/macros.h"
         "#define BSON_MACROS_H" "#define BSON_MACROS_H\n#ifndef BSON_STATIC\n#define BSON_STATIC\n#endif")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME libbson-static-1.0 CONFIG_PATH "lib/cmake/libbson-static-1.0")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/libbson-1.0")
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libbson-1.0-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libbson-1.0")
-else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME libbson-1.0 CONFIG_PATH "lib/cmake/libbson-1.0")
 endif()
 
 file(REMOVE_RECURSE

@@ -1,7 +1,7 @@
 {
   "name": "libevhtp",
   "version": "1.2.18",
-  "port-version": 5,
+  "port-version": 6,
   "description": "Libevhtp was created as a replacement API for Libevent's current HTTP API.",
   "homepage": "https://github.com/criticalstack/libevhtp",
   "supports": "!windows",

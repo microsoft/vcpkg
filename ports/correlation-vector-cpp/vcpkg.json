@@ -1,0 +1,21 @@
+{
+  "name": "correlation-vector-cpp",
+  "version": "1.0",
+  "description": "CorrelationVector-Cpp provides a reference C++ implementation of the CorrelationVector protocol for tracing and correlation of events through a distributed system.",
+  "homepage": "https://github.com/microsoft/CorrelationVector-Cpp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "libuuid",
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

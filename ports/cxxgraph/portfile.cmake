@@ -4,13 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZigRazor/CXXGraph
     REF "v${VERSION}"
-    SHA512 a4409c81132e6c7e34022c54d9a57b965970aa8e1fcd97b9f916334c1d480674a526e7d5ad727ab652e4842083249dea89de519b104c1f9f205423eabd3c2338
+    SHA512 81af9edbb3d768bf770a3626b411c753632763a1229fe87dbdca7c8d8f96554205abf527f0916bfe6dff47b5c19259345f2f9cad81bc84eb4d7972de75643af4
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 # cxxgraph provides no targets and is a header only lib designed to be copied to include dir
-file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/cxxgraph")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/cxxgraph" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-

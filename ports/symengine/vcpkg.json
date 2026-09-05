@@ -1,6 +1,6 @@
 {
   "name": "symengine",
-  "version": "0.10.1",
+  "version": "0.14.0",
   "port-version": 1,
   "description": "SymEngine is a fast symbolic manipulation library",
   "homepage": "https://github.com/symengine/symengine",
@@ -34,7 +34,12 @@
     "arb": {
       "description": "Build with arb",
       "dependencies": [
-        "arb"
+        {
+          "name": "symengine",
+          "features": [
+            "flint"
+          ]
+        }
       ]
     },
     "flint": {

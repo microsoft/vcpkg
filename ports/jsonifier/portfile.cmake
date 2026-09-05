@@ -1,10 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO realtimechris/jsonifier
+    REPO nihilai-collective/jsonifier
     REF "v${VERSION}"
-    SHA512 6cc28660c8dd9a5e299d8ebcc2c26d1859925b00e58db96351a17a12934df78b1e1a2d3b26fccdee0e2bbb46a13e26dbae7149a80611b02bc69aad6874c11df2
+    SHA512 259b9b90aa093e1c6c79ddc1867199cc0256b3ac2066d4ea1606ba7727cc73c9bb690c4c4f27820098fad7c5bb339db6bbc00e6a3aa97427cd18b1f781ca502f
     HEAD_REF main
 )
+
+set(VCPKG_BUILD_TYPE release)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -12,6 +14,4 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.md" "${SOURCE_PATH}/Third_Party_Licenses.md")

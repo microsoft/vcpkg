@@ -34,19 +34,28 @@ function(z_vcpkg_meson_set_proglist_variables config_type)
         if(VCPKG_DETECTED_CMAKE_${prog}_COMPILER)
             string(TOUPPER "MESON_${prog}" var_to_set)
             if(meson_${prog})
-                set("${var_to_set}" "${meson_${prog}} = ['${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}']" PARENT_SCOPE)
+                if(VCPKG_DETECTED_CMAKE_${prog}_FLAGS_${config_type})
+                    # Need compiler flags in prog vars for sanity check.
+                    z_vcpkg_meson_convert_compiler_flags_to_list(${prog}flags "${VCPKG_DETECTED_CMAKE_${prog}_FLAGS_${config_type}}")
+                endif()
+                list(PREPEND ${prog}flags "${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}")
+                list(FILTER ${prog}flags EXCLUDE REGEX "(-|/)nologo") # Breaks compiler detection otherwise
+                z_vcpkg_meson_convert_list_to_python_array(${prog}flags ${${prog}flags})
+                set("${var_to_set}" "${meson_${prog}} = ${${prog}flags}" PARENT_SCOPE)
                 if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$")
                     string(TOUPPER "MESON_${prog}_LD" var_to_set)
                     set(${var_to_set} "${meson_${prog}}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
                 endif()
-            elseif(${prog} MATCHES RC AND VCPKG_DETECTED_CMAKE_RC_FLAGS_${config_type})
-                z_vcpkg_meson_convert_compiler_flags_to_list(rc_flags "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${config_type}}")
-                list(PREPEND rc_flags "${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}")
-                z_vcpkg_meson_convert_list_to_python_array(rc_flags ${rc_flags})
-                set("${var_to_set}" "${meson_${prog}} = ${rc_flags}" PARENT_SCOPE)
             else()
+                if(VCPKG_DETECTED_CMAKE_${prog}_FLAGS_${config_type})
+                     # Need compiler flags in prog vars for sanity check.
+                    z_vcpkg_meson_convert_compiler_flags_to_list(${prog}flags "${VCPKG_DETECTED_CMAKE_${prog}_FLAGS_${config_type}}")
+                endif()
+                list(PREPEND ${prog}flags "${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}")
+                list(FILTER ${prog}flags EXCLUDE REGEX "(-|/)nologo") # Breaks compiler detection otherwise
+                z_vcpkg_meson_convert_list_to_python_array(${prog}flags ${${prog}flags})
                 string(TOLOWER "${prog}" proglower)
-                set("${var_to_set}" "${proglower} = ['${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}']" PARENT_SCOPE)
+                set("${var_to_set}" "${proglower} = ${${prog}flags}" PARENT_SCOPE)
                 if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$")
                     string(TOUPPER "MESON_${prog}_LD" var_to_set)
                     set(${var_to_set} "${proglower}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
@@ -104,7 +113,7 @@ function(z_vcpkg_meson_set_flags_variables config_type)
         z_vcpkg_meson_convert_compiler_flags_to_list(linker_flags "${linker_flags}")
         vcpkg_list(APPEND linker_flags "${libpath}")
         z_vcpkg_meson_convert_list_to_python_array(linker_flags ${linker_flags})
-        string(APPEND MESON_${lang_mapping}FLAGS "${langlower}_link_args = ${linker_flags}")
+        string(APPEND MESON_${lang_mapping}FLAGS "${langlower}_link_args = ${linker_flags}\n")
         set(MESON_${lang_mapping}FLAGS "${MESON_${lang_mapping}FLAGS}" PARENT_SCOPE)
     endforeach()
 endfunction()
@@ -143,6 +152,14 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
             OUTPUT_STRIP_TRAILING_WHITESPACE
             COMMAND_ERROR_IS_FATAL ANY)
 
+        if(CMAKE_HOST_SOLARIS)
+            execute_process(
+                COMMAND isainfo -k
+                OUTPUT_VARIABLE MACHINE
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                COMMAND_ERROR_IS_FATAL ANY)
+        endif()
+
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
@@ -180,13 +197,14 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
 
     set(build "[build_machine]\n") # Machine the build is performed on
     string(APPEND build "endian = 'little'\n")
-    if(WIN32)
+    if(CMAKE_HOST_WIN32)
         string(APPEND build "system = 'windows'\n")
-    elseif(DARWIN)
+    elseif(CMAKE_HOST_APPLE)
         string(APPEND build "system = 'darwin'\n")
-    elseif(CYGWIN)
+        string(APPEND build "subsystem = 'macos'\n")
+    elseif(VCPKG_HOST_IS_CYGWIN)
         string(APPEND build "system = 'cygwin'\n")
-    elseif(UNIX)
+    elseif(CMAKE_HOST_UNIX)
         string(APPEND build "system = 'linux'\n")
     else()
         set(build_unknown TRUE)
@@ -209,6 +227,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
         set(host_cpu_fam x86)
         set(host_cpu i686)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64(EC|ec)$")
+        set(host_cpu_fam aarch64)
+        set(host_cpu arm64ec)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
         set(host_cpu_fam aarch64)
         set(host_cpu armv8)
@@ -228,7 +249,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         set(host_unkown TRUE)
     endif()
 
-    set(host "[host_machine]\n") # host=target in vcpkg. 
+    set(host "[host_machine]\n") # host=target in vcpkg.
     string(APPEND host "endian = 'little'\n")
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
         set(meson_system_name "windows")
@@ -236,6 +257,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" meson_system_name)
     endif()
     string(APPEND host "system = '${meson_system_name}'\n")
+    if(meson_system_name STREQUAL "darwin")
+        string(APPEND host "subsystem = 'macos'\n")
+    endif()
     string(APPEND host "cpu_family = '${host_cpu_fam}'\n")
     string(APPEND host "cpu = '${host_cpu}'")
     if(NOT host_unkown)
@@ -243,8 +267,11 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     endif()
 
     if(NOT build_cpu_fam MATCHES "${host_cpu_fam}"
-       OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP
-       OR (VCPKG_TARGET_IS_MINGW AND NOT WIN32))
+       OR VCPKG_TARGET_IS_ANDROID
+       OR VCPKG_TARGET_IS_OHOS
+       OR (VCPKG_TARGET_IS_APPLE AND NOT VCPKG_TARGET_IS_OSX)
+       OR VCPKG_TARGET_IS_UWP
+       OR (VCPKG_TARGET_IS_MINGW AND NOT CMAKE_HOST_WIN32))
         set(${is_cross} TRUE PARENT_SCOPE)
     endif()
 endfunction()
@@ -347,7 +374,7 @@ function(vcpkg_configure_meson)
         set(meson_input_file_${buildname} "${CURRENT_BUILDTREES_DIR}/meson-${TARGET_TRIPLET}-${suffix_${buildname}}.log")
     endif()
 
-    vcpkg_list(APPEND arg_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
+    vcpkg_list(APPEND arg_OPTIONS --backend ninja --wrap-mode nodownload -Dbuildtype=plain)
 
     z_vcpkg_get_build_and_host_system(MESON_HOST_MACHINE MESON_BUILD_MACHINE IS_CROSS)
 
@@ -418,11 +445,7 @@ function(vcpkg_configure_meson)
         file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}")
         #setting up PKGCONFIG
         if(NOT arg_NO_PKG_CONFIG)
-            if ("${buildtype}" STREQUAL "DEBUG")
-                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug")
-            else()
-                z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}")
-            endif()
+            z_vcpkg_setup_pkgconfig_path(CONFIG "${buildtype}")
         endif()
 
         z_vcpkg_meson_setup_variables(${buildtype})

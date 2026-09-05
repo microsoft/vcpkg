@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO asmjit/asmjit
-    REF 51b10b19b6631434d3f9ad536a6fb140944a36d2 # commited on 2023-03-25
-    SHA512 1fba5159d2adad64e9a2b07a1f90de6988d1da47b9802ca8b57c61a89d8a90924525f6d0d6607279994bdbadcf693b2cc96cd7e4bf7f018ad64127b640dc38fb
+    REF 9eb6edbf711ceb25346ee40bae68b40a4505cdf5 # commited on 2025-05-08
+    SHA512 9c3567634205bf0c64462833b28b6bbf1c1965216aa09872196048953417fab18822d94d70d112f7a506396a5b94716d714316dd2559c3509edf1273650768b9
     HEAD_REF master
 )
 
@@ -12,11 +12,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DASMJIT_STATIC=${ASMJIT_STATIC}
- )
+)
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/asmjit)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

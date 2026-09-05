@@ -1,7 +1,8 @@
 {
   "name": "camport3",
-  "version": "1.6.2",
+  "version": "1.6.75",
   "description": "percipio.xyz cameras SDK",
   "homepage": "https://github.com/percipioxyz/camport3",
+  "license": "LicenseRef-PERCIPIO",
   "supports": "((windows & !uwp & !arm & !arm64 & !static) | linux) & !wasm32"
 }

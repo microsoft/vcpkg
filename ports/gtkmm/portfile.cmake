@@ -2,16 +2,16 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GTKMM_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/${GTKMM_MAJOR_MINOR}/gtkmm-${VERSION}.tar.xz"
     FILENAME "gtkmm-${VERSION}.tar.xz"
-    SHA512 ee40cce37c34814884ffc06e614013d23fa31cac51ea9d98ea5689a08acc2ff58bb2ca80ba822d6fe3c0f3bdcb9ce2596ede3c05c69a702b524c4e38afc3d9ab
+    SHA512 b0c4b77249dcf2d917919d43b04e41b819507ab34366aa4bbffd53bbe5edbb195081d69ae4996a116573a5d4e6d2affbbbc62d4ff986dcbf95045c5d64284d7f
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
 )
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dmsvc14x-parallel-installable=false # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
         -Dbuild-tests=false
@@ -26,4 +26,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

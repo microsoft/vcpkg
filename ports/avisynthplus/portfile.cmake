@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
-    REF v3.7.2
-    SHA512 82cf2afed4cc53c0e09d367ff3df1db0e9ac17ff2458e4660c646430d8e72f472b072a3910c9595b26eb5ac89c82fe74699acab3869014f87d8e2738b81568a1
+    REF "v${VERSION}"
+    SHA512 63a6c793261690500876edf8bd31011700ab077554533efaf613372edd8cdc44a0e348b6e82723ab88be969764d41d031b58fcfbf993e447ef1a280fe90e3f80
     HEAD_REF master
     PATCHES
-        clang-cl.patch # the normal lookup is not working since it doesn't take Ninja as a Generator into account
+        backport_409369a.patch # Fix Ninja + MSVC issue
 )
 
 vcpkg_download_distfile(GHC_ARCHIVE
@@ -29,4 +29,4 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/distrib/gpl.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/distrib/gpl.txt")

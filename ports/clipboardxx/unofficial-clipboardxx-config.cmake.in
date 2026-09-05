@@ -7,7 +7,7 @@ endif()
 
 add_library(unofficial::ClipboardXX INTERFACE IMPORTED)
 set_target_properties(unofficial::ClipboardXX PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
 )
 
 if("@VCPKG_TARGET_IS_LINUX@")

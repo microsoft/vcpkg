@@ -1,8 +1,11 @@
-vcpkg_from_git(
-    OUT_SOURCE_PATH SOURCE_PATH
-    URL git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
-    FETCH_REF "v${VERSION}"
-    REF ae275c375477f207912113e5cf190fada78f3f90 # v2.0.1
+vcpkg_download_distfile(ARCHIVE
+    URLS https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-${VERSION}.tar.gz
+    FILENAME libgpiod-${VERSION}.tar.gz
+    SHA512 5880c6f09755e94eb36a92e5b9bbffd103347fc20117289ee68682875e09cb1e6ab7b6460c428687d190adcdde6e1519c19256397f6a6e4b2d0b34b0f7ee4cd6
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -30,8 +33,8 @@ else()
   set(USE_CXX_BINDINGS no)
 endif()
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
@@ -41,7 +44,7 @@ vcpkg_configure_make(
         --enable-bindings-python=no
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

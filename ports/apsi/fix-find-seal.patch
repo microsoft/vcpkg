@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 78d54a6..4d3f338 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -122,7 +122,7 @@ set(APSI_INCLUDES_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/APSI-${APSI_VERSION_MA
+ # find_package might throw a FATAL_ERROR before"xxx: not found", e.g. with vcpkg.cmake.
+ 
+ # Microsoft SEAL
+-find_package(SEAL 4.1 QUIET REQUIRED)
++find_package(SEAL QUIET REQUIRED)
+ if(NOT SEAL_FOUND)
+     message(FATAL_ERROR "Microsoft SEAL: not found")
+ else()

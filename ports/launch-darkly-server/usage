@@ -1,5 +1,4 @@
-The package launchdarklyserver provides CMake targets:
+launch-darkly-server provides CMake targets:
 
-    find_package(launch-darkly-server CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ldserverapi::ldserverapi)
- 
+  find_package(ldserverapi CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE ldserverapi::ldserverapi)

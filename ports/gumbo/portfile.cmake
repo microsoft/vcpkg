@@ -1,11 +1,17 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO google/gumbo-parser
-  REF v0.10.1
-  SHA512  bb1fb55cd07076ab6a9f38dc14db50397dbdca9a04ace4895dfba8b8cbc09038a96e26070c09c75fa929ada2e815affe233c1e2ecd8afe2aba6201647cf277d1
-  HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://codeberg.org/gumbo-parser/gumbo-parser/archive/${VERSION}.tar.gz"
+    FILENAME "gumbo-${VERSION}.tar.gz"
+    # Codeberg re-packs the same tag without changing the version string; refresh
+    # the hash when download fails with "hash mismatch" (observed 2026-08-02).
+    SHA512 612b570bfa4029272bc4b8d4ff43f6023e03a2a2ac6ba299fa6d0818dc112df84ef98908ef9102801dbf847e93cc6e1f8c976e2f9f782199d6785cb28db8dbb5
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    SOURCE_BASE "${VERSION}"
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -25,4 +31,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gumbo" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/COPYING")

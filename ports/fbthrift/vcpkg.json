@@ -1,6 +1,7 @@
 {
   "name": "fbthrift",
-  "version-string": "2023.07.03.00",
+  "version-string": "2026.02.23.00",
+  "port-version": 1,
   "description": "Facebook's branch of Apache Thrift, including a new C++ server.",
   "homepage": "https://github.com/facebook/fbthrift",
   "license": "Apache-2.0",
@@ -17,6 +18,7 @@
     "folly",
     "gflags",
     "glog",
+    "mvfst",
     "openssl",
     {
       "name": "vcpkg-cmake",
@@ -27,6 +29,7 @@
       "host": true
     },
     "wangle",
+    "xxhash",
     "zlib",
     "zstd"
   ]

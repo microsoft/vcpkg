@@ -1,24 +1,21 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
     REF "v${VERSION}"
-    SHA512 ccd868cb297d86f054318acec4c3bf9f8ec07b54c320d5e887853c4190adefbd3b2d188e7453896656b5ad0e81b32d133fd0ce67bf58e647d58c96918bc993eb
+    SHA512 8cc3a62d345914e95c34ba6cf2fdf93a8fb15618f7702b973203e2e974abe99d1c12dade2197327c291a790b0e961afdc28d085cf318507f5a5b346b78a26407
     HEAD_REF master
     PATCHES
-        fmt-fix.patch
-        fix-builderror.patch
-        fix-dependency.patch
         fix-install.patch
 )
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "CACHE LIST" "CACHE STRING")
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/externals")
+# Remove bundled externals that are replaced by vcpkg dependencies, keeping known-good bundled ones.
+file(GLOB externals "${SOURCE_PATH}/externals/*")
+list(FILTER externals EXCLUDE REGEX "/externals/incbin$")
+file(REMOVE_RECURSE ${externals})
 file(COPY "${CURRENT_INSTALLED_DIR}/include/IF97.h" DESTINATION "${SOURCE_PATH}/externals/IF97")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/REFPROP_lib.h" DESTINATION "${SOURCE_PATH}/externals/REFPROP-headers/")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/rapidjson" DESTINATION "${SOURCE_PATH}/externals/rapidjson/include")
-# Fix GCC warning when thread_local is substitude as __thread
-vcpkg_replace_string("${SOURCE_PATH}/externals/rapidjson/include/rapidjson/document.h" "thread_local static " "static thread_local ")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COOLPROP_SHARED_LIBRARY)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" COOLPROP_STATIC_LIBRARY)
@@ -32,12 +29,12 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DCOOLPROP_SHARED_LIBRARY=${COOLPROP_SHARED_LIBRARY}
         -DCOOLPROP_STATIC_LIBRARY=${COOLPROP_STATIC_LIBRARY}
         -DCOOLPROP_MSVC_DYNAMIC=${COOLPROP_MSVC_DYNAMIC}
         -DCOOLPROP_MSVC_STATIC=${COOLPROP_MSVC_STATIC}
-        "-DPYTHON_EXECUTABLE=${PYTHON3}"
+        -DFORCE_BITNESS_NATIVE=ON   # follow toolchain properties
+        "-DPython_EXECUTABLE=${PYTHON3}"
     OPTIONS_RELEASE
         "-DCOOLPROP_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
     OPTIONS_DEBUG
@@ -55,5 +52,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

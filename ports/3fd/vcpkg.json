@@ -1,7 +1,7 @@
 {
   "name": "3fd",
   "version": "2.6.3",
-  "port-version": 4,
+  "port-version": 5,
   "description": "C++ Framework For Fast Development",
   "supports": "windows & !static & !arm64",
   "dependencies": [
@@ -15,6 +15,11 @@
     },
     {
       "name": "poco",
+      "default-features": false,
+      "features": [
+        "data",
+        "odbc"
+      ],
       "platform": "windows"
     },
     "rapidxml",

@@ -4,18 +4,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/shaderc
-    REF adca18dcadd460eb517fe44f6cd2460fa0650ebe
-    SHA512 3a27d4c51be9e9396b9a854cb96d88e78ff2ca6dcb8400bd3288f6984d25876af0eae649aa1c72ad613edbbcfa4324a12809f13ceb7a0134eef41cb1a698dfdf
+    REF "v${VERSION}"
+    SHA512 733f85a83db4b71814c7f251c44e6010b485ed03d7e2389db5c14f8426942bebf6c95a35e5eaef80e51c29f8efa28cc0577226344630a427553200c6a87349ec
     HEAD_REF master
     PATCHES 
         disable-update-version.patch
         fix-build-type.patch
         cmake-config-export.patch
-        # NOTE: This should be removed when shaderc gets updated to use glslang 11.12.0
-        fix-tbuiltinresource-for-glslang-11-12.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")
+configure_file(${CMAKE_CURRENT_LIST_DIR}/build-version.inc ${SOURCE_PATH}/glslc/src/build-version.inc)
 
 set(OPTIONS "")
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
@@ -27,6 +25,8 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
+# Add these libraries to the pkgconfig file since we patch the build to link against these
+set(EXTRA_STATIC_PKGCONFIG_LIBS "-lglslang -lSPIRV-Tools-opt -lSPIRV-Tools")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -34,9 +34,16 @@ vcpkg_cmake_configure(
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DSHADERC_ENABLE_EXAMPLES=OFF
         -DSHADERC_SKIP_TESTS=true 
+        "-DEXTRA_STATIC_PKGCONFIG_LIBS=${EXTRA_STATIC_PKGCONFIG_LIBS}"
 )
 
 vcpkg_cmake_install()
+if(NOT VCPKG_BUILD_TYPE)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/shaderc.pc" "-lglslang" "-lglslangd")
+    endif()
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/shaderc.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-shaderc CONFIG_PATH share/unofficial-shaderc)

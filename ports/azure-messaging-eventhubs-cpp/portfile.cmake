@@ -1,9 +1,22 @@
+# NOTE: All changes made to this file will get overwritten by the next port release.
+# Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp.
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-messaging-eventhubs_1.0.0-beta.2
-    SHA512 3677edf50218c39e378a968661c0ec0600b8760d3af33f204f3267e104449c0aef42b9520cb63b5e5810b89bf91f06979d009ffdd6d6d04d2c14e1a21f0e111f
+    REF "azure-messaging-eventhubs_${VERSION}"
+    SHA512 7b364684914406bb20dfba0832e5e39c1c2464bc0adc7f0e40618ecbb6b6ebaaf0baa80d59e1c56b7ffdad1a5129a8207bf3cdc5d1dfbae5196e9a9239ea5dbb
+    HEAD_REF main
 )
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
+file(REMOVE_RECURSE ${unused})
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.toml")
+file(REMOVE_RECURSE ${unused})
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")
+file(REMOVE_RECURSE ${unused})
 
 if(EXISTS "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/eventhubs/_")

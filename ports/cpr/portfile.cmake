@@ -1,13 +1,10 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
-    REF 0445800cd2cace404ac37eb3e78ec5d1431a4f30 #1.10.2
-    SHA512 77723343b2ce89a10b8622cf54127edd6639412e3d457caed31b4fa1d3935d79846b4be695c327001fc2228313591e320c9080dbf8c09e3b69265f81641b9973
+    REF ${VERSION}
+    SHA512 9907d2936f814924e82aaaf652149c119e2d9b94677efde0c80c570bc8cb50e4a36aa2520e2efb3f1fc82cba10ef61b9262705cd6e5cb49757b0c37af071ae22
     HEAD_REF master
     PATCHES
-        001-cpr-config.patch
         disable_werror.patch
 )
 
@@ -18,12 +15,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DCPR_BUILD_TESTS=OFF
-        -DCPR_FORCE_USE_SYSTEM_CURL=ON
+        -DCPR_USE_SYSTEM_CURL=ON
         ${FEATURE_OPTIONS}
-    OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
+        # skip test for unused sanitizer flags
+        -DTHREAD_SANITIZER_AVAILABLE=OFF
+        -DADDRESS_SANITIZER_AVAILABLE=OFF
+        -DLEAK_SANITIZER_AVAILABLE=OFF
+        -DUNDEFINED_BEHAVIOUR_SANITIZER_AVAILABLE=OFF
+        -DALL_SANITIZERS_AVAILABLE=OFF
 )
 
 vcpkg_cmake_install()

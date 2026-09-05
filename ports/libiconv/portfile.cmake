@@ -1,4 +1,18 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID)
+if(NOT DEFINED X_VCPKG_BUILD_GNU_LIBICONV)
+    set(X_VCPKG_BUILD_GNU_LIBICONV 0)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_BSD)
+        set(X_VCPKG_BUILD_GNU_LIBICONV 1)
+    elseif(VCPKG_TARGET_IS_ANDROID)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_SYSTEM_VERSION VERSION_LESS "28")
+            set(X_VCPKG_BUILD_GNU_LIBICONV 1)
+        endif()
+    endif()
+endif()
+
+if(NOT X_VCPKG_BUILD_GNU_LIBICONV)
+    message(STATUS "Not building GNU libiconv.")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/iconv")
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/iconv")
@@ -6,10 +20,11 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
+    URLS "https://ftpmirror.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
     FILENAME "libiconv-${VERSION}.tar.gz"
-    SHA512 18a09de2d026da4f2d8b858517b0f26d853b21179cf4fa9a41070b2d140030ad9525637dc4f34fc7f27abca8acdc84c6751dfb1d426e78bf92af4040603ced86
+    SHA512 1e8150f9bca907579330cd9c44ebbee46a260271fbe8f50d5ee24a39ef29c8d254505e85c3409324f7440596da711a8bd49e89f848a6be0cb3238a58c24aaecd
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
@@ -18,7 +33,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0002-Config-for-MSVC.patch
         0003-Add-export.patch
         0004-ModuleFileName.patch
-        clang-fortify.patch # ported from https://git.savannah.gnu.org/cgit/gnulib.git/commit/?id=522aea1093a598246346b3e1c426505c344fe19a
 )
 
 vcpkg_list(SET OPTIONS)
@@ -26,17 +40,15 @@ if (NOT VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND OPTIONS --enable-relocatable)
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DETERMINE_BUILD_TRIPLET
-    USE_WRAPPERS
     OPTIONS
         --enable-extra-encodings
         --without-libiconv-prefix
         --without-libintl-prefix
         ${OPTIONS}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
@@ -50,19 +62,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}") # share contains un
 
 # Please keep, the default usage is broken
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(READ "${SOURCE_PATH}/COPYING.LIB" copying_lib)
-file(READ "${SOURCE_PATH}/COPYING" copying_tool)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "
+
+# Handle copyright
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LIB" "${SOURCE_PATH}/COPYING" COMMENT "
 The libiconv and libcharset libraries and their header files are under LGPL,
 see COPYING.LIB below.
 
-The iconv program and the documentation are under GPL, see COPYING below.
-
-# COPYING.LIB
-
-${copying_lib}
-
-# COPYING
-
-${copying_tool}
-")
+The iconv program and the documentation are under GPL, see COPYING below.")

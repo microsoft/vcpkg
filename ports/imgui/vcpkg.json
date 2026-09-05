@@ -1,6 +1,7 @@
 {
   "name": "imgui",
-  "version": "1.89.9",
+  "version": "1.92.8",
+  "port-version": 1,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -20,6 +21,10 @@
       "dependencies": [
         "allegro5"
       ]
+    },
+    "android-binding": {
+      "description": "Make available Android native app support",
+      "supports": "android"
     },
     "docking-experimental": {
       "description": "Build with docking support"
@@ -46,8 +51,8 @@
         "freetype"
       ]
     },
-    "freetype-lunasvg": {
-      "description": "Add support to render OpenType SVG fonts using LunaSVG",
+    "freetype-svg": {
+      "description": "Add support to render OpenType SVG fonts",
       "dependencies": [
         {
           "name": "imgui",
@@ -55,7 +60,12 @@
             "freetype"
           ]
         },
-        "lunasvg"
+        {
+          "name": "plutosvg",
+          "features": [
+            "freetype"
+          ]
+        }
       ]
     },
     "glfw-binding": {
@@ -82,7 +92,7 @@
     },
     "opengl2-binding": {
       "description": "Make available OpenGL (legacy) binding",
-      "supports": "!uwp"
+      "supports": "!(uwp | android)"
     },
     "opengl3-binding": {
       "description": "Make available OpenGL3/ES/ES2 (modern) binding"
@@ -91,16 +101,36 @@
       "description": "Make available OSX binding",
       "supports": "osx"
     },
-    "sdl2-binding": {
-      "description": "Make available SDL2 binding",
+    "sdl3-binding": {
+      "description": "Make available SDL3 binding",
       "dependencies": [
-        "sdl2"
+        "sdl3"
       ]
     },
-    "sdl2-renderer-binding": {
-      "description": "Make available SDL2 Renderer binding",
+    "sdl3-renderer-binding": {
+      "description": "Make available SDL3 Renderer binding",
       "dependencies": [
-        "sdl2"
+        "sdl3"
+      ]
+    },
+    "sdlgpu3-binding": {
+      "description": "Make available SDLGPU3 binding",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "sdl3-binding"
+          ]
+        },
+        "sdl3"
+      ]
+    },
+    "test-engine": {
+      "description": "Build test engine",
+      "supports": "!uwp",
+      "license": null,
+      "dependencies": [
+        "stb"
       ]
     },
     "vulkan-binding": {
@@ -111,6 +141,12 @@
     },
     "wchar32": {
       "description": "Use WCHAR32 instead of WCHAR16"
+    },
+    "webgpu-binding": {
+      "description": "Make available WebGPU binding",
+      "dependencies": [
+        "dawn"
+      ]
     },
     "win32-binding": {
       "description": "Make available Win32 binding",

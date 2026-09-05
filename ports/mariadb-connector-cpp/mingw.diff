@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ffa175a..82be8d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -428,7 +428,7 @@ IF(WIN32)
+   ENDIF()
+   ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -DWIN32_LEAN_AND_MEAN)
+   SET(INSTALL_PLUGINDIR "${MARIADB_DEFAULT_PLUGINS_SUBDIR}")
+-  SET(PLATFORM_DEPENDENCIES ${PLATFORM_DEPENDENCIES} version.lib)
++  SET(PLATFORM_DEPENDENCIES ${PLATFORM_DEPENDENCIES} version)
+ ENDIF()
+ 
+ ### Build options, initial settings and platform defaults

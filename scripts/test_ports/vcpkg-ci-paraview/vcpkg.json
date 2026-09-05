@@ -10,15 +10,14 @@
       "default-features": false,
       "features": [
         "tools"
-      ],
-      "platform": "x86 & windows"
+      ]
     },
     {
       "name": "paraview",
       "default-features": false,
       "features": [
-        "python",
-        "mpi"
+        "mpi",
+        "python"
       ],
       "platform": "!(windows & static) & !x86"
     },
@@ -27,7 +26,8 @@
       "default-features": false,
       "features": [
         "gdal",
-        "utf8"
+        "utf8",
+        "vtkm"
       ],
       "platform": "!x86"
     },
@@ -38,15 +38,6 @@
         "openvr"
       ],
       "platform": "!osx & !(windows & staticcrt)"
-    },
-    {
-      "name": "paraview",
-      "default-features": false,
-      "features": [
-        "tools",
-        "vtkm"
-      ],
-      "platform": "!(x86 & windows)"
     }
   ]
 }

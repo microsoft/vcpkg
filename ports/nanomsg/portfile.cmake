@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nanomsg
-    REF 1.2
-    SHA512 377b3a0b4be6d6decd2711ff84ac1855ae0a298e7557dbe4b7d881c2a76f4e521671b47987b924c434afdad7ff1dfebb50982c8c0afca9b44682c898510d4c92
+    REF "${VERSION}"
+    SHA512 29acccabf48a37d0e3a3b56da3edcb86179659753e74a808fecb591bd7f96b26298e92d7a8cca4552dc6d49ec320cafae4f55ef663d227ae1172834434282fab
     HEAD_REF master
 )
 
@@ -53,8 +53,9 @@ endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string(
         ${CURRENT_PACKAGES_DIR}/share/${PORT}/nanomsg-config.cmake
-        "set_and_check(nanomsg_BINDIR \${PACKAGE_PREFIX_DIR}/bin)"
+        "set_and_check(nanomsg_BINDIR \${VCPKG_IMPORT_PREFIX}/bin)"
         ""
+        IGNORE_UNCHANGED
     )
 endif()
 

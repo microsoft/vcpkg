@@ -1,115 +1,104 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 #
-variables:
-  android-pool: 'PrAnd-1ES-Pool'
-  linux-pool: 'PrLin-1ES-Pool'
-  windows-pool: 'PrWin-2023-09-13'
-  osx-pool: 'PrOsx-2023-09-11'
-  linux-docker-image: 'andcontainerregistry.azurecr.io/vcpkg-android:2023-09-13'
-
 parameters:
   - name: vcpkgToolSha
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
-    default: 'use default'
-  - name: tripletPattern
-    displayName: 'Enable triplets which contain this substring'
+    default:  'use default'
+  - name: x64LinuxDockerImage
+    displayName: 'Linux Docker Image to use for the x64 Linux build'
     type: string
-    default: '-'
+    default: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-08-21'
+  - name: arm64LinuxDockerImage
+    displayName: 'Linux Docker Image to use for the arm64 Linux build'
+    type: string
+    default: 'vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-08-21'
+  - name: tripletPattern
+    displayName: 'Enable triplets which contain this substring (^ matches begin, $ matches end)'
+    type: string
+    default: '^'
 
 jobs:
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x86-windows
     jobName: x86_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x64-windows
     jobName: x64_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x64-windows-static
+    jobName: x64_windows_release
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: windows/azure-pipelines.yml
+  parameters:
     jobName: x64_windows_static
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x64-windows-static-md
     jobName: x64_windows_static_md
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: x64-uwp
-    jobName: x64_uwp
-    poolName: $(windows-pool)
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-
-- template: windows/azure-pipelines.yml
-  parameters:
-    triplet: arm64-windows
     jobName: arm64_windows
-    poolName: $(windows-pool)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: windows/azure-pipelines.yml
   parameters:
-    triplet: arm64-uwp
-    jobName: arm64_uwp
-    poolName: $(windows-pool)
+    jobName: arm64_windows_static_md
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: osx/azure-pipelines.yml
   parameters:
-    poolName: $(osx-pool)
+    jobName: arm64_osx
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: linux/azure-pipelines.yml
   parameters:
-    poolName: $(linux-pool)
+    jobName: x64_linux
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: linux/azure-pipelines.yml
+  parameters:
+    jobName: arm64_linux
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.arm64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
-    triplet: arm-neon-android
     jobName: arm_neon_android
-    poolName: $(android-pool)
-    dockerImage: $(linux-docker-image)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
-    triplet: x64-android
     jobName: x64_android
-    poolName: $(android-pool)
-    dockerImage: $(linux-docker-image)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
-    triplet: arm64-android
     jobName: arm64_android
-    poolName: $(android-pool)
-    dockerImage: $(linux-docker-image)
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}

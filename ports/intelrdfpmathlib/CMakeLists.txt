@@ -258,10 +258,18 @@ else()
   add_compile_options(-Defi2=1 -DEFI2=1)
 endif()
 
-
-include_directories(. src float128)
-
 add_library(intel_decimal128 ${intelrdfpmathlib_SOURCES})
+
+set_target_properties(intel_decimal128 PROPERTIES EXPORT_NAME decimal128)
+
+target_include_directories(
+  intel_decimal128
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/float128>
+    $<INSTALL_INTERFACE:include>
+)
 
 target_compile_definitions(
   intel_decimal128 PRIVATE -DDECIMAL_CALL_BY_REFERENCE=0 -DDECIMAL_GLOBAL_ROUNDING=0 -DDECIMAL_GLOBAL_EXCEPTION_FLAGS=0
@@ -278,12 +286,19 @@ else()
 endif()
 
 install(
-  TARGETS  intel_decimal128
+  TARGETS intel_decimal128
+  EXPORT unofficial-intelrdfpmathlib-config
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
+install(
+  EXPORT unofficial-intelrdfpmathlib-config
+  NAMESPACE unofficial::intelrdfpmathlib::
+  DESTINATION share/unofficial-intelrdfpmathlib
+)
+
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES src/dfp754.h DESTINATION include)
+  install(FILES src/dfp754.h src/bid_conf.h src/bid_functions.h DESTINATION include)
 endif()

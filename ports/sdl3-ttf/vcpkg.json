@@ -1,0 +1,41 @@
+{
+  "name": "sdl3-ttf",
+  "version": "3.2.2",
+  "port-version": 1,
+  "description": "A library for rendering TrueType fonts with SDL",
+  "homepage": "https://github.com/libsdl-org/SDL_ttf",
+  "license": "Zlib",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "freetype",
+      "default-features": false
+    },
+    {
+      "name": "sdl3",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "harfbuzz": {
+      "description": "Enable HarfBuzz support",
+      "dependencies": [
+        "harfbuzz"
+      ]
+    },
+    "svg": {
+      "description": "Enable plutosvg for color emoji support",
+      "dependencies": [
+        "plutosvg"
+      ]
+    }
+  }
+}

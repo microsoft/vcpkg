@@ -15,6 +15,7 @@ vcpkg_extract_source_archive(
         fix-makefiles.patch
         geos-config.patch
         fix-pc-file.patch
+        constant-nan.patch # https://developercommunity.visualstudio.com/t/NAN-is-no-longer-compile-time-constant-i/10688907
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -61,15 +62,15 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_replace_string("${outfile}" " -lrttopo -lm" " -llibrttopo")
     endif()
 else()
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS_DEBUG
             "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/debug/bin/geos-config"
         OPTIONS_RELEASE
             "--with-geosconfig=${CURRENT_INSTALLED_DIR}/tools/geos/bin/geos-config"
     )
-    vcpkg_install_make()
+    vcpkg_make_install()
 endif()
 vcpkg_fixup_pkgconfig()
 

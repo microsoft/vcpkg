@@ -1,11 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" MAJOR_MINOR "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.24/7.24.1
-    SHA512 7dad36900c13b69a89b5a173fc283130bc4cf15c781ed31ed72ce0b6ba0db4895a12314d0f302c7a91c2762333b7c162f20f32e67ed5e2e7a4099e1f2238c255
+    REF "client_release/${MAJOR_MINOR}/${VERSION}"
+    SHA512 e3984f66e37f8d677696a15b9c6fa363e55c6cd4895a0d39580f2cae02049c1ac494c70603ef5b5d15df1228d7bd322fffdbde6a2cf5ec60a3c968e82dcd647a
     HEAD_REF master
+    PATCHES
+        fix-base64-header.patch # https://github.com/BOINC/boinc/pull/7205
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -38,6 +40,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
         ${build_options}
 )
 
@@ -48,6 +51,7 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" BOINC_CONFIG)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" "
 include(CMakeFindDependencyMacro)
 find_dependency(OpenSSL)
+find_dependency(libzip)
 ${BOINC_CONFIG}
 ")
 

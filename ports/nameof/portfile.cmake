@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/nameof
     REF "v${VERSION}"
-    SHA512 2b0bad2a3309202bcd6e361c2f2d4a61b474359a6c2df0a8b9e1a6c9e077bbf0c0d18dc5b603ecb4f82cc1f74656aae51e52ece0f7049ac3f75b593f14542b93
+    SHA512 e7df7fd1e4210080b59df91860901757f8ef8db47a7e81d57395313bc93eedf977e4812f49bfd0ac3af7a85f3e45c22d5c21015bb9e3062c07b889cceb2ef55d
     HEAD_REF master
 )
 
@@ -19,8 +19,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

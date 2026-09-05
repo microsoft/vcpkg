@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d03ebe3..f5e4ca9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -157,11 +157,11 @@ set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH ON)
+ #
+ # If Eigen3 is not found, manually set the cache variable EIGEN3_INCLUDE_DIR
+ #===============================================================================
+-find_package(Eigen3 3.0.5 QUIET CONFIG)
++find_package(Eigen3 QUIET CONFIG)
+ 
+ # If Eigen3Config.cmake is not found, use the FindEigen3.cmake module
+ if(NOT Eigen3_FOUND)
+-  find_package(Eigen3 3.0.5 QUIET MODULE)
++  find_package(Eigen3 QUIET MODULE)
+   set(Eigen3_FOUND ON)
+ endif()
+ 

@@ -1,16 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strasdat/Sophus
-    REF 1.22.10
-    SHA512 0b212a015d487b3a39a9c4beb4280ebd659782f527ec863f429b5aa57462d53c41976c9285894855b380baa97d5fda35b46dfd09aa31653fb35b51039816ac78
-    HEAD_REF master
+    REF 1.24.6
+    SHA512 cbc01e92c8361937194bed320ac84a7cfd8b71ecc3a842d3d3c9796ff52a08d13aa0b4f30184c4c7ddc223da0141a80176382c8b25a328e53fa00c4627511ec3
+    HEAD_REF main
+    PATCHES
+        0001-support-eigen3-5.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DBUILD_SOPHUS_TESTS=OFF
-        -DBUILD_SOPHUS_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

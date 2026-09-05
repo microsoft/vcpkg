@@ -2,9 +2,9 @@ string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)[.]([0-9]+)" "\\1,0\\2,0\\3
 string(REGEX REPLACE "^([0-9]+),0*([0-9][0-9]),0*([0-9][0-9]),0*([0-9][0-9])," "\\1\\2\\3\\4" SQLITE_VERSION "${SQLITE_VERSION}")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2023/sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
-    SHA512 241b22899c9090d94677328335588ba964a5bc3bfb278b8dcc97d6062cdfab6460b5b03dc166124f6119f5f8ece62ef9d06298de06eb5b36ed3ea49fd6ddc394
+    URLS "https://sqlite.org/2026/sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
+    FILENAME "sqlite-autoconf-${SQLITE_VERSION}.tar.gz"
+    SHA512 c24374e9393a943157f533f96e89e6c5743e5f5aad169d8393cff3088ca5ccbe5cc0561681ace49c349d0fe402298ee2624d319f422967247ce0792e3b3aa01e
 )
 
 vcpkg_extract_source_archive(
@@ -30,12 +30,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         fts5                SQLITE_ENABLE_FTS5
         math                SQLITE_ENABLE_MATH_FUNCTIONS
         zlib                WITH_ZLIB
+        unicode             SQLITE_ENABLE_ICU
     INVERTED_FEATURES
         tool                SQLITE3_SKIP_TOOLS
 )
 vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-effects
     FEATURES
         dbstat              SQLITE_ENABLE_DBSTAT_VTAB
+        dbpage-vtab         SQLITE_ENABLE_DBPAGE_VTAB
         fts3                SQLITE_ENABLE_FTS3
         fts4                SQLITE_ENABLE_FTS4
         memsys3             SQLITE_ENABLE_MEMSYS3
@@ -44,8 +46,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-
         rtree               SQLITE_ENABLE_RTREE
         session             SQLITE_ENABLE_SESSION
         session             SQLITE_ENABLE_PREUPDATE_HOOK
+        snapshot            SQLITE_ENABLE_SNAPSHOT
         omit-load-extension SQLITE_OMIT_LOAD_EXTENSION
         geopoly             SQLITE_ENABLE_GEOPOLY
+        soundex             SQLITE_SOUNDEX
+        percentile          SQLITE_ENABLE_PERCENTILE
     INVERTED_FEATURES
         json1               SQLITE_OMIT_JSON
 )
@@ -70,6 +75,9 @@ vcpkg_cmake_configure(
         -DPKGCONFIG_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DSQLITE3_SKIP_TOOLS=ON
+    MAYBE_UNUSED_VARIABLES
+        SQLITE_ENABLE_FTS5
+        SQLITE_ENABLE_MATH_FUNCTIONS
 )
 
 vcpkg_cmake_install()
@@ -86,6 +94,9 @@ configure_file(
     "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-sqlite3-config.cmake"
     @ONLY
 )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    configure_file("${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()

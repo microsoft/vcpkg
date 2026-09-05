@@ -2,14 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
     REF "release-${VERSION}"
-    SHA512 ffd0f838525e17a43d03ea5d4a094b0c79b2627bdbfb4589645abfb606c594773d60184de31bda45999421da75a69f1987ed696b255991212e498161102972b1
+    SHA512 738ae5c39a02753a11ce41b3739de42bb99b399d34698c3fde16a76745d4d3b05cd0b3d78d4b37b2859f5449b4ebbf04ad75d77910e47fff772f1070910eb84e
     HEAD_REF main
-    PATCHES fix-pkgconfig.patch fix-findwebp.patch
+    PATCHES
+        fix-findwebp.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        avif          SDL2IMAGE_AVIF
         libjpeg-turbo SDL2IMAGE_JPG
         libwebp       SDL2IMAGE_WEBP
         tiff          SDL2IMAGE_TIF
@@ -39,7 +41,17 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE 
+set(debug_libname "SDL2_imaged")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/SDL2_image.pc" "-lSDL2_image" "-lSDL2_image-static")
+    set(debug_libname "SDL2_image-staticd")
+endif()
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_image.pc" "-lSDL2_image" "-l${debug_libname}")
+endif()
+
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/SDL2_image.framework"

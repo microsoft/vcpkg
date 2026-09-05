@@ -3,12 +3,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dpilger26/NumCpp
     REF "Version_${VERSION}"
-    SHA512 57848211a9ff55b12e9590351e5add36082809a3457b2983317b5cb23d8f1c04a65b2c7a17d119b2c3e3959ef152c8e9dc38cf338da362ef9499c9c9eeb393eb
+    SHA512 5242ba0cf0bccc77d8dc06058915c6bbf4798329cdeeb96623518642d5771d10e3559a6bd091040c02c237dee631adff77ea11bf2e8149649732fedef63dba9b
     HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        boost NUMCPP_NO_USE_BOOST
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

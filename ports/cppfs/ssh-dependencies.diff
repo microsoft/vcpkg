@@ -20,7 +20,7 @@ index aa37eda..d29176a 100644
  
 -find_package(LibSSH2)
 -find_package(LibCrypto)
-+find_package(LibSSH2 NAMES Libssh2)
++find_package(LibSSH2 NAMES libssh2)
  find_package(ZLIB)
  find_package(OpenSSL)
 +set(LibCrypto_FOUND "${OpenSSL_FOUND}")
@@ -36,7 +36,7 @@ index aa37eda..d29176a 100644
 -        ${LIBCRYPTO_LIBRARY}
 -        ${ZLIB_LIBRARY}
 +        OpenSSL::SSL
-+        $<IF:$<TARGET_EXISTS:Libssh2::libssh2_shared>,Libssh2::libssh2_shared,Libssh2::libssh2_static>
++        libssh2::libssh2
 +        OpenSSL::Crypto
 +        ZLIB::ZLIB
      )

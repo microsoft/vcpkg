@@ -1,8 +1,8 @@
 {
   "name": "kf5guiaddons",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Addons to QtGui",
-  "homepage": "https://api.kde.org/frameworks/kguiaddons/html/index.html",
+  "homepage": "https://api.kde.org/kguiaddons-index.html",
   "dependencies": [
     "ecm",
     "qt5-tools",

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v${VERSION}
     HEAD_REF main
     SHA512 0348a39c0e091b1b0d6887528f6d48372162ed2526fb81935761cf93ff006fc685bbf834d44cea60cdaf4d8b2e947b6cb1a81c901c02aaba68a0dfd16a12ca20
+    PATCHES
+        always-depend-on-boost.patch # https://github.com/cmannett85/arg_router/pull/398
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

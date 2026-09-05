@@ -1,6 +1,6 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "USE_TARBALL_API"
         "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
         "PATCHES")
 
@@ -57,7 +57,7 @@ function(vcpkg_from_github)
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
     if(VCPKG_USE_HEAD_VERSION)
         string(REPLACE "/" "_-" sanitized_head_ref "${arg_HEAD_REF}")
-        vcpkg_download_distfile(archive_version
+        z_vcpkg_download_distfile(archive_version
             URLS "${github_api_url}/repos/${org_name}/${repo_name}/git/refs/heads/${arg_HEAD_REF}"
             FILENAME "${org_name}-${repo_name}-${sanitized_head_ref}.version"
             ${headers_param}
@@ -102,9 +102,23 @@ Error was: ${head_version_err}
     else()
         set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
     endif()
+
+    if(arg_USE_TARBALL_API)
+        # This alternative endpoint has a better support for GitHub's personal
+        # access tokens (for instance when there is SSO enabled within the
+        # organization).
+        set(download_url
+            "${github_api_url}/repos/${org_name}/${repo_name}/tarball/${ref_to_use}"
+        )
+    else()
+        set(download_url
+            "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+        )
+    endif()
+
     # Try to download the file information from github
-    vcpkg_download_distfile(archive
-        URLS "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+    z_vcpkg_download_distfile(archive
+        URLS "${download_url}"
         FILENAME "${downloaded_file_name}"
         ${headers_param}
         ${sha512_param}
@@ -117,6 +131,11 @@ Error was: ${head_version_err}
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
         ${skip_patch_check_param}
+    )
+    z_vcpkg_add_spdx_resource(
+        NAME "${arg_REPO}"
+        DOWNLOAD_LOCATION "git+${github_host}/${arg_REPO}@${ref_to_use}"
+        SHA512 "${arg_SHA512}"
     )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

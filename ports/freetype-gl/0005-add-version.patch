@@ -6,6 +6,6 @@ index 3b33096..a5ae350 100644
  
  Name: freetype-gl
  Description: OpenGL text using one vertex buffer, one texture and FreeType
-+Version: 2022-01-17
++Version: v1.0
  Libs: -L${libdir} -lfreetype-gl
  Cflags: -I${includedir}

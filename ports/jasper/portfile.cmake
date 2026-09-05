@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jasper-software/jasper
-    REF 402d096b39f4f618ad9e6ff2b4fc1b5eb260a2e4 # version-4.0.0
-    SHA512 b2c2a2514479ec4a3d634d42d0a614951c06f6177e43a80b9a31797b7d4ad248fcdff632596806fcf811c87779990ba7c19aa2f9b91afafbc172dd85f96bb239
+    REF "version-${VERSION}"
+    SHA512 5c74521150f49a1055b909e01629ced3b97f222d0d81b0f5b42dcca4915fff11a11e247cc1ec37bcb669b819812892c950ec980275cbebe9897a2aec8b52ab3d
     HEAD_REF master
     PATCHES
         no_stdc_check.patch
@@ -16,11 +16,6 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" JAS_ENABLE_SHARED)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        opengl    JAS_ENABLE_OPENGL
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -29,6 +24,7 @@ vcpkg_cmake_configure(
         -DJAS_ENABLE_LIBJPEG=ON
         -DJAS_ENABLE_DOC=OFF
         -DJAS_ENABLE_LATEX=OFF
+        -DJAS_ENABLE_OPENGL=OFF  # only used by programs, which are turned off
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
     OPTIONS_DEBUG

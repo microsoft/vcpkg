@@ -1,0 +1,17 @@
+diff --git a/meson.build b/meson.build
+index dd7ca47..8e0964a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -3023,6 +3023,12 @@ if not nlsopt.disabled()
+   endif
+ 
+   if libintl.found()
++    if build_system == 'windows'
++      iconv_dep = cc.find_library('iconv', required: false, dirs: test_lib_d)
++      if iconv_dep.found()
++        libintl = declare_dependency(dependencies: [libintl, iconv_dep])
++      endif
++    endif
+     i18n = import('i18n')
+     cdata.set('ENABLE_NLS', 1)
+   endif

@@ -1,13 +1,13 @@
 {
   "name": "libxkbcommon",
-  "version": "1.4.1",
-  "port-version": 1,
+  "version": "1.13.2",
   "description": "keymap handling library for toolkits and window systems",
   "homepage": "https://xkbcommon.org/",
   "license": null,
   "dependencies": [
     "getopt",
     "libx11",
+    "libxcb",
     {
       "name": "vcpkg-tool-meson",
       "host": true
@@ -16,7 +16,6 @@
       "name": "wayland",
       "platform": "linux"
     },
-    "xcb",
     "xcb-render-util"
   ]
 }

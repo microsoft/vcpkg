@@ -1,6 +1,6 @@
-set(LUAFILESYSTEM_VERSION 1.8.0)
-set(LUAFILESYSTEM_REVISION v1_8_0)
-set(LUAFILESYSTEM_HASH 79d964f13ae43716281dc8521d2f128b22f2261234c443e242b857cfdf621e208bdf4512f8ba710baa113e9b3b71e2544609de65e2c483f569c243a5cf058247)
+set(LUAFILESYSTEM_VERSION 1.9.0)
+set(LUAFILESYSTEM_REVISION v1_9_0)
+set(LUAFILESYSTEM_HASH 753ae633966364835b9c81a020cf0b7674da443adeafee70b7a9637571a8180c7f1526d3b7f4bea4f85ec201e8609ebd93e82e309b54cff1e7b7dcb5e6481b39)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,16 +11,23 @@ vcpkg_from_github(
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-luafilesystem-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DLFS_VERSION="${VERSION}"
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-luafilesystem")
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-# Allow empty include directory
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

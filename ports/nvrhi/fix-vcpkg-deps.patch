@@ -1,0 +1,69 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5d1797e..7cfb05b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -61,10 +61,18 @@ endif()
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+ 
++if (NVRHI_WITH_VULKAN AND NOT TARGET Vulkan-Headers AND NOT TARGET Vulkan::Headers)
++    find_package(VulkanHeaders CONFIG QUIET)
++endif()
++
+ if (NVRHI_WITH_VULKAN AND NOT TARGET Vulkan-Headers AND NOT TARGET Vulkan::Headers)
+     add_subdirectory(thirdparty/Vulkan-Headers)
+ endif()
+ 
++if(NVRHI_WITH_DX12 AND NOT TARGET DirectX-Headers AND NOT TARGET Microsoft::DirectX-Headers)
++    find_package(directx-headers CONFIG QUIET)
++endif()
++
+ if(NVRHI_WITH_DX12 AND NOT TARGET DirectX-Headers AND NOT TARGET Microsoft::DirectX-Headers)
+     add_subdirectory(thirdparty/DirectX-Headers)
+ endif()
+@@ -209,7 +217,9 @@ if (NVRHI_BUILD_SHARED)
+     if(NVRHI_WITH_VULKAN)
+         target_compile_definitions(nvrhi PRIVATE VULKAN_HPP_STORAGE_SHARED VULKAN_HPP_STORAGE_SHARED_EXPORT)
+     endif()
+-    set_property(TARGET nvrhi PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++    if(NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
++        set_property(TARGET nvrhi PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++    endif()
+ endif()
+ 
+ if (NVRHI_WITH_VALIDATION)
+@@ -220,7 +230,7 @@ endif()
+ 
+ target_include_directories(nvrhi PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>)
++    $<INSTALL_INTERFACE:include>)
+ 
+ set_target_properties(nvrhi PROPERTIES FOLDER "NVRHI")
+ 
+@@ -388,4 +398,4 @@ if (NVRHI_INSTALL)
+             EXPORT_LINK_INTERFACE_LIBRARIES
+             DESTINATION "${nvrhi_CONFIG_PATH}")
+     endif()
+-endif()
+\ No newline at end of file
++endif()
+diff --git a/src/nvrhiConfig.cmake.in b/src/nvrhiConfig.cmake.in
+index f9ff79d..6de08c5 100644
+--- a/src/nvrhiConfig.cmake.in
++++ b/src/nvrhiConfig.cmake.in
+@@ -19,4 +19,14 @@
+ # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ # DEALINGS IN THE SOFTWARE.
+ 
++include(CMakeFindDependencyMacro)
++
++if(@NVRHI_WITH_VULKAN@)
++    find_dependency(VulkanHeaders CONFIG)
++endif()
++
++if(@NVRHI_WITH_DX12@)
++    find_dependency(directx-headers CONFIG)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/nvrhiTargets.cmake")

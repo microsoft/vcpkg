@@ -1,0 +1,18 @@
+{
+  "name": "vcpkg-ci-glaze",
+  "version-string": "ci",
+  "description": "Validates Glaze networking CMake integration",
+  "dependencies": [
+    {
+      "name": "glaze",
+      "default-features": false,
+      "features": [
+        "networking"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

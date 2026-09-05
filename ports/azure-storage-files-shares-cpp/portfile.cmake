@@ -1,9 +1,22 @@
+# NOTE: All changes made to this file will get overwritten by the next port release.
+# Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp.
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-storage-files-shares_12.7.0
-    SHA512 2482a7c437bd36e63efc8c77d917a09d73bde2bc12d49afd1e24cf0977656e991c59c15d34b52c1bd19c6988fe7c40c95b5edea8740977ffc676f3dd6758dc5e
+    REF "azure-storage-files-shares_${VERSION}"
+    SHA512 bf972244839b625f52c2a3f8385eb60eb265db3c76b0d4e5cb4c8ba4b60da1176480e4537d2e6164263e56b5c8ce99370cd664a7c314e8a04c03f8ddf5ac16f0
+    HEAD_REF main
 )
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
+file(REMOVE_RECURSE ${unused})
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.toml")
+file(REMOVE_RECURSE ${unused})
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")
+file(REMOVE_RECURSE ${unused})
 
 if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-files-shares")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/storage/_")

@@ -1,0 +1,4 @@
+inflatelib provides CMake targets:
+
+    find_package(inflatelib CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE inflatelib::inflatelib)

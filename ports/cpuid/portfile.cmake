@@ -1,17 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anrieff/libcpuid
-    REF v0.6.2
-    SHA512 36175387ae86e6f602544c516a875ac7fe0a3bde52e3e3c09f8852a804dd252694e17c638723aa3d36219d4588981cfd2261086bcf561d175e7c038e3a69e2ff
+    REF "v${VERSION}"
+    SHA512 6b642418bef40848fa0b61a6798c90121e1d31dceee815946bde621e01f50a8353d4cd22bce864af080e4342e036bab9bfe1f61f99083620885f9e252ce11895
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-LNK2019.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_DOCS=OFF
+        -DLIBCPUID_ENABLE_DOCS=OFF
 )
 
 vcpkg_cmake_install()
@@ -23,4 +24,4 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

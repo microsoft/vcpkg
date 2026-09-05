@@ -1,0 +1,34 @@
+{
+  "name": "vcpkg-ci-minc",
+  "version-string": "ci",
+  "description": "Port to force features of minc within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "minc",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all features",
+      "dependencies": [
+        {
+          "name": "minc",
+          "features": [
+            "minc1"
+          ],
+          "platform": "native"
+        }
+      ]
+    }
+  }
+}

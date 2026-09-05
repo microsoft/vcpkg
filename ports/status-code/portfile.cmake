@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/status-code
-    REF 5be338838d278e730b78c07f6306ae71f6c1959c
-    SHA512 61685b7ba40fd2e8a985a8135065b335655aac7aee7778ca3317004c9730078361cfa4bd1b9ac2f9002efc707bfb6168c0275f11e0c5a6b079d42c8240528a90
+    REF 937b0fc71c85dcae77059f4a3bec6424fdf1b5f9
+    SHA512 f0d71b0a6982261fcb41f75cdb49c035fac00a5cd9e61b706c606dc255775c48af2ba15772c19330cf5497e787af6c455b097233554f3f2d2ffd72a9fb79a08c
     HEAD_REF master
     PATCHES
-        add-missing-include.patch
 )
 
 # Because status-code's deployed files are header-only, the debug build is not necessary
@@ -14,8 +13,11 @@ set(VCPKG_BUILD_TYPE release)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPROJECT_IS_DEPENDENCY=On
+        -DBUILD_TESTING=OFF
+        -Dstatus-code_IS_DEPENDENCY=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_Boost
 )
 
 vcpkg_cmake_install()

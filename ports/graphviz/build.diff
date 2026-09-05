@@ -1,0 +1,247 @@
+diff --git a/cmd/gvpr/CMakeLists.txt b/cmd/gvpr/CMakeLists.txt
+index 2a49d2c8b..98b7016d7 100644
+--- a/cmd/gvpr/CMakeLists.txt
++++ b/cmd/gvpr/CMakeLists.txt
+@@ -11,12 +11,9 @@ target_include_directories(gvpr-bin PRIVATE
+ )
+ 
+ target_link_libraries(gvpr-bin PRIVATE
+-  ast
+   cgraph
+   gvc
+   gvpr
+-  expr
+-  sfio
+ )
+ 
+ set_target_properties(gvpr-bin
+diff --git a/lib/ast/CMakeLists.txt b/lib/ast/CMakeLists.txt
+index e6bbe8dff..7efb097f3 100644
+--- a/lib/ast/CMakeLists.txt
++++ b/lib/ast/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-add_library(ast STATIC
++add_library(ast OBJECT  # private in gvpr
+   chresc.c
+   chrtoi.c
+   error.c
+diff --git a/lib/cdt/CMakeLists.txt b/lib/cdt/CMakeLists.txt
+index 8ec7cd1f0..3a8f84f89 100644
+--- a/lib/cdt/CMakeLists.txt
++++ b/lib/cdt/CMakeLists.txt
+@@ -16,7 +16,9 @@ add_library(cdt
+   dtwalk.c
+ )
+ 
++if(BUILD_SHARED_LIBS)
+ target_compile_definitions(cdt PRIVATE EXPORT_CDT)
++endif()
+ 
+ target_include_directories(cdt PRIVATE
+   ..
+diff --git a/lib/cgraph/CMakeLists.txt b/lib/cgraph/CMakeLists.txt
+index e2b76f9f6..3bf51a6ed 100644
+--- a/lib/cgraph/CMakeLists.txt
++++ b/lib/cgraph/CMakeLists.txt
+@@ -43,7 +43,9 @@ if(HAVE_C_WUNUSED_BUT_SET_VARIABLE)
+     PROPERTIES COMPILE_FLAGS -Wno-unused-but-set-variable)
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
+ target_compile_definitions(cgraph PRIVATE EXPORT_CGRAPH EXPORT_CGHDR)
++endif()
+ 
+ target_include_directories(cgraph
+   PUBLIC
+diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
+index bf37ff92f..3626aa0d9 100644
+--- a/lib/common/CMakeLists.txt
++++ b/lib/common/CMakeLists.txt
+@@ -103,20 +103,17 @@ if(APPLE)
+   target_compile_options(common_obj PRIVATE "-fno-common")
+ endif()
+ 
+-add_library(common STATIC
+-  $<TARGET_OBJECTS:common_obj>
+-)
+-
+-target_link_libraries(common PRIVATE
++# legacy; target objects in gvc
++add_library(common INTERFACE)
++target_link_libraries(common INTERFACE
+   cgraph
+   pathplan
+-  label
+   xdot
+   util
+ )
+ 
+ if(EXPAT_FOUND)
+-  target_link_libraries(common PRIVATE
++  target_link_libraries(common INTERFACE
+     ${EXPAT_LIBRARIES}
+   )
+ endif()
+diff --git a/lib/dotgen/CMakeLists.txt b/lib/dotgen/CMakeLists.txt
+index cf02ab457..84cafa181 100644
+--- a/lib/dotgen/CMakeLists.txt
++++ b/lib/dotgen/CMakeLists.txt
+@@ -29,5 +29,6 @@ target_include_directories(dotgen PRIVATE
+ 
+ target_link_libraries(dotgen PRIVATE
+   cgraph
++  gvc # ortho, pack
+   util
+ )
+diff --git a/lib/expr/CMakeLists.txt b/lib/expr/CMakeLists.txt
+index 5e949ff14..95359f59e 100644
+--- a/lib/expr/CMakeLists.txt
++++ b/lib/expr/CMakeLists.txt
+@@ -5,7 +5,7 @@ BISON_TARGET(
+   COMPILE_FLAGS "--yacc -Wno-yacc --defines --debug --verbose"
+ )
+ 
+-add_library(expr STATIC
++add_library(expr OBJECT  # private in gvpr
+   # Source files
+   excc.c
+   excontext.c
+diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
+index 100df84cf..985d24851 100644
+--- a/lib/gvc/CMakeLists.txt
++++ b/lib/gvc/CMakeLists.txt
+@@ -38,8 +38,9 @@ if(WIN32 AND NOT MINGW)
+   )
+ endif()
+ 
+-target_link_libraries(gvc PRIVATE
++target_sources(gvc PRIVATE
+   $<TARGET_OBJECTS:common_obj>
++  $<TARGET_OBJECTS:label>
+   $<TARGET_OBJECTS:pack_obj>
+ )
+ 
+@@ -47,7 +48,6 @@ target_link_libraries(gvc PRIVATE
+   cdt
+   cgraph
+   common
+-  pack
+   util
+ )
+ 
+@@ -64,10 +64,7 @@ if(ZLIB_FOUND)
+ endif()
+ 
+ if(with_ortho)
+-  target_link_libraries(gvc PRIVATE
+-    $<TARGET_OBJECTS:ortho_obj>
+-  )
+-  target_link_libraries(gvc PRIVATE ortho)
++  target_sources(gvc PRIVATE $<TARGET_OBJECTS:ortho_obj>)
+ endif()
+ 
+ # Installation location of library files
+diff --git a/lib/gvpr/CMakeLists.txt b/lib/gvpr/CMakeLists.txt
+index ed32e9cb5..20f4057c7 100644
+--- a/lib/gvpr/CMakeLists.txt
++++ b/lib/gvpr/CMakeLists.txt
+@@ -6,7 +6,9 @@ add_library(gvpr
+   parse.c
+ )
+ 
++if(BUILD_SHARED_LIBS)
+ target_compile_definitions(gvpr PRIVATE EXPORT_GVPR)
++endif()
+ 
+ target_include_directories(gvpr
+   PUBLIC
+@@ -34,13 +36,16 @@ if(WIN32 AND NOT MINGW)
+   target_include_directories(gvpr PRIVATE ../../windows/include/unistd)
+ endif()
+ 
+-target_link_libraries(gvpr PRIVATE
++target_sources(gvpr PRIVATE
+   $<TARGET_OBJECTS:ast>
++  $<TARGET_OBJECTS:expr>
++  $<TARGET_OBJECTS:sfio>
++)
++
++target_link_libraries(gvpr PRIVATE
+   cgraph
+   gvc
+   util
+-  $<TARGET_OBJECTS:expr>
+-  $<TARGET_OBJECTS:sfio>
+ )
+ 
+ if(NOT HAVE_GETOPT_H)
+diff --git a/lib/label/CMakeLists.txt b/lib/label/CMakeLists.txt
+index 834a9f7e5..6600d76c9 100644
+--- a/lib/label/CMakeLists.txt
++++ b/lib/label/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-add_library(label STATIC
++add_library(label OBJECT  # export with gvc
+   index.c
+   node.c
+   rectangle.c
+diff --git a/lib/ortho/CMakeLists.txt b/lib/ortho/CMakeLists.txt
+index 0a22c418b..5b6f77cc3 100644
+--- a/lib/ortho/CMakeLists.txt
++++ b/lib/ortho/CMakeLists.txt
+@@ -24,10 +24,7 @@ target_include_directories(ortho_obj PRIVATE
+ 
+ target_link_libraries(ortho_obj PRIVATE util)
+ 
+-add_library(ortho STATIC
+-  $<TARGET_OBJECTS:ortho_obj>
+-)
+-
+-target_link_libraries(ortho PRIVATE util)
++add_library(ortho INTERFACE) # legacy
++target_link_libraries(ortho INTERFACE gvc) # target objects in gvc
+ 
+ endif()
+diff --git a/lib/pack/CMakeLists.txt b/lib/pack/CMakeLists.txt
+index c7e1acd4b..0458180fe 100644
+--- a/lib/pack/CMakeLists.txt
++++ b/lib/pack/CMakeLists.txt
+@@ -17,11 +17,9 @@ target_include_directories(pack_obj PRIVATE
+ 
+ target_link_libraries(pack_obj PRIVATE util)
+ 
+-add_library(pack STATIC
+-  $<TARGET_OBJECTS:pack_obj>
+-)
+-
+-target_link_libraries(pack PRIVATE util)
++# legacy; target objects in gvc
++add_library(pack INTERFACE)
++target_link_libraries(pack INTERFACE gvc)
+ 
+ # Specify headers to be installed
+ install(
+diff --git a/lib/sfio/CMakeLists.txt b/lib/sfio/CMakeLists.txt
+index fe95440b4..ee6166d1f 100644
+--- a/lib/sfio/CMakeLists.txt
++++ b/lib/sfio/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-add_library(sfio STATIC
++add_library(sfio OBJECT  # private in gvpr
+   sfcvt.c
+   sfextern.c
+   sftable.c
+diff --git a/lib/xdot/CMakeLists.txt b/lib/xdot/CMakeLists.txt
+index 2f02b2415..dc91c67ef 100644
+--- a/lib/xdot/CMakeLists.txt
++++ b/lib/xdot/CMakeLists.txt
+@@ -2,7 +2,9 @@ add_library(xdot
+   xdot.c
+ )
+ 
++if(BUILD_SHARED_LIBS)
+ target_compile_definitions(xdot PRIVATE EXPORT_XDOT)
++endif()
+ 
+ target_include_directories(xdot
+   PUBLIC

@@ -1,0 +1,26 @@
+{
+  "name": "kcenon-common-system",
+  "version-semver": "0.2.0",
+  "description": "High-performance C++20 foundation library providing Result<T> pattern, interfaces, and common utilities",
+  "homepage": "https://github.com/kcenon/common_system",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "yaml": {
+      "description": "YAML configuration file support via yaml-cpp",
+      "dependencies": [
+        "yaml-cpp"
+      ]
+    }
+  }
+}

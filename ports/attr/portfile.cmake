@@ -1,7 +1,8 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://download.savannah.nongnu.org/releases/attr/attr-${VERSION}.tar.xz"
+    URLS "https://download.savannah.nongnu.org/releases/attr/attr-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/download.savannah.gnu.org/releases/attr/attr-${VERSION}.tar.xz"
     FILENAME "attr-${VERSION}.tar.xz"
-    SHA512 9e5555260189bb6ef2440c76700ebb813ff70582eb63d446823874977307d13dfa3a347dfae619f8866943dfa4b24ccf67dadd7e3ea2637239fdb219be5d2932
+    SHA512 870d0c34fbaa7520aad058ecd6509fe8eddd17430781a16d1e80484d4947307a7c641f0449183cbac1da611a85f82c9bee2d2d7bff76170fc2195b123100d22e
 )
 
 vcpkg_extract_source_archive(
@@ -18,14 +19,14 @@ else()
     vcpkg_list(APPEND options "--disable-nls")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${options}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")

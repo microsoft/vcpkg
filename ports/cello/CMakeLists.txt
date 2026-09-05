@@ -16,6 +16,10 @@ target_include_directories(
 
 set_target_properties(cello PROPERTIES PUBLIC_HEADER include/Cello.h)
 
+if(ANDROID AND ANDROID_NATIVE_API_LEVEL LESS "33")
+    target_compile_definitions(cello PRIVATE CELLO_NSTRACE)
+endif()
+
 install(TARGETS cello EXPORT unofficial-cello-config)
 
 install(

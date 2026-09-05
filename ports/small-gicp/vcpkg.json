@@ -1,0 +1,36 @@
+{
+  "name": "small-gicp",
+  "version": "1.0.0",
+  "description": "Efficient and parallelized algorithms for point cloud registration",
+  "homepage": "https://github.com/koide3/small_gicp",
+  "license": "MIT",
+  "supports": "!(x86 | arm32)",
+  "dependencies": [
+    "eigen3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP based parallelism."
+    },
+    "pcl": {
+      "description": "Enable interfacing with PointCloud Library.",
+      "dependencies": [
+        "pcl"
+      ]
+    },
+    "tbb": {
+      "description": "Enable Intel TBB based parallelism.",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
+}

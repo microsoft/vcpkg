@@ -1,0 +1,12 @@
+minc provides CMake integration:
+
+  find_package(LIBMINC CONFIG REQUIRED)
+  target_include_directories(main PRIVATE ${LIBMINC_INCLUDE_DIRS})
+  target_link_directories(main PRIVATE ${LIBMINC_LIBRARY_DIRS})
+  target_link_libraries(main PRIVATE ${LIBMINC_LIBRARIES})
+
+LIBMINC_LIBRARIES may include imported targets.
+Downstream CMake config may need to add:
+
+  include(CMakeFindDependencyMacro)
+  find_dependency(LIBMINC CONFIG)

@@ -1,17 +1,20 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+vcpkg_download_distfile(PR1453
+    URLS "https://github.com/libgeos/geos/commit/4226b5a034d249e64385d3dac7e69774ff30d6f3.patch?full_index=1"
+    FILENAME "geos-pr-1453.patch"
+    SHA512 31a24f6feff44af2cb4b923845e4496ca77d78dbe18a170c4deaae8973581c5e8c5430e033b63c2cda3ee8926d1e31007625fbace22b87fd5cde3bd43bd3caaf
+)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.osgeo.org/geos/geos-${VERSION}.tar.bz2"
     FILENAME "geos-${VERSION}.tar.bz2"
-    SHA512 b5df5b773bef595335e1be6c6d3325f932f1577e2a4b8bdfa8cf26f09c7d41ed5e0695ca15826d1f95bc4a45b777839c2be8a96a8af5415c8bcf58cc804eb1ec
+    SHA512 a5a27c34249a6b7fa8bc5d6d557f278bcc3a81ca188f9f543bee7afb6e47d9f8a545e676c5884c0651530bccd24eb929feaaf95cda8e73b033296073e6626f0d
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
-        disable-warning-4996.patch
         fix-exported-config.patch
-        fix-dll-builds.patch
-        gcc-13-fix-backport.patch
+        "${PR1453}"
 )
 
 vcpkg_cmake_configure(
@@ -54,4 +57,4 @@ endif()
 vcpkg_copy_pdbs()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

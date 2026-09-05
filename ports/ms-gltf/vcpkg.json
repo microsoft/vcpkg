@@ -1,7 +1,6 @@
 {
   "name": "ms-gltf",
-  "version-date": "2022-06-28",
-  "port-version": 2,
+  "version-date": "2024-09-05",
   "description": "glTF-SDK is a C++ Software Development Kit for glTF",
   "homepage": "https://github.com/microsoft/glTF-SDK",
   "license": "MIT",

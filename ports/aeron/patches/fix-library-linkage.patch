@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index febb611..042fd02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -58,6 +58,14 @@ option(AERON_INSTALL_TARGETS "Enable installation step" ${STANDALONE_BUILD})
+ 
+ unset(STANDALONE_BUILD)
+ 
++# Linkage of the primary (non "_static") library targets. Honour BUILD_SHARED_LIBS when it is set
++# explicitly, so that a static-only install does not export targets referring to missing shared libraries.
++if (DEFINED BUILD_SHARED_LIBS AND NOT BUILD_SHARED_LIBS)
++    set(AERON_LIB_LINKAGE STATIC)
++else ()
++    set(AERON_LIB_LINKAGE SHARED)
++endif ()
++
+ # CMAKE_OSX_ARCHITECTURES can be set to arm64 or x86_64 (or both) to make a specific architecture version. Requires
+ # CMake 3.21. Must be set before project(), etc.
+ #set(CMAKE_OSX_ARCHITECTURES x86_64)
+diff --git a/aeron-archive/src/main/c/CMakeLists.txt b/aeron-archive/src/main/c/CMakeLists.txt
+index 5e6af48..8245ba4 100644
+--- a/aeron-archive/src/main/c/CMakeLists.txt
++++ b/aeron-archive/src/main/c/CMakeLists.txt
+@@ -189,7 +189,7 @@ SET(HEADERS
+ )
+ 
+ # shared library
+-add_library(aeron_archive_c_client SHARED ${SOURCE} ${HEADERS})
++add_library(aeron_archive_c_client ${AERON_LIB_LINKAGE} ${SOURCE} ${HEADERS})
+ add_library(aeron::aeron_archive_c_client ALIAS aeron_archive_c_client)
+ 
+ add_dependencies(aeron_archive_c_client c_codecs)
+diff --git a/aeron-client/src/main/c/CMakeLists.txt b/aeron-client/src/main/c/CMakeLists.txt
+index 761a0b4..b97344b 100644
+--- a/aeron-client/src/main/c/CMakeLists.txt
++++ b/aeron-client/src/main/c/CMakeLists.txt
+@@ -237,7 +237,7 @@ set(HEADERS
+     aeron_windows.h
+     aeronc.h)
+ 
+-add_library(aeron SHARED ${SOURCE} ${HEADERS})
++add_library(aeron ${AERON_LIB_LINKAGE} ${SOURCE} ${HEADERS})
+ add_library(aeron::aeron ALIAS aeron)
+ target_include_directories(aeron
+     PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" "$<INSTALL_INTERFACE:include/aeron>")
+diff --git a/aeron-driver/src/main/c/CMakeLists.txt b/aeron-driver/src/main/c/CMakeLists.txt
+index 06f9f3e..80bc99e 100644
+--- a/aeron-driver/src/main/c/CMakeLists.txt
++++ b/aeron-driver/src/main/c/CMakeLists.txt
+@@ -412,7 +412,7 @@ SET(HEADERS
+     aeron_driver_version.h
+     aeronmd.h)
+ 
+-add_library(aeron_driver SHARED ${DRIVER_ONLY_SOURCE} ${HEADERS})
++add_library(aeron_driver ${AERON_LIB_LINKAGE} ${DRIVER_ONLY_SOURCE} ${HEADERS})
+ add_library(aeron::aeron_driver ALIAS aeron_driver)
+ target_include_directories(aeron_driver PUBLIC
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${AERON_C_CLIENT_SOURCE_PATH}>"

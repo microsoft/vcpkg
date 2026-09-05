@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
     REF "${VERSION}"
-    SHA512 d7b1501cd8d15aead7eca38172f3335d5a5f3165f948658df09016b773a870f024d16bf472ed7a65cb178408177a6af9db647892942818e53d044f67648e3435
+    SHA512 ae9345e0876a80e2f2dfa393d12176215cdcf17ed1985d2e46527d12a3abf4ea2b7796217871b562aaab9c7c876bef226de661d5e9cbdc862c8f49d57e9e8173
     HEAD_REF master
     PATCHES
-        qt.patch
+        set_cmake_module_path.patch
+        fix_windows_version_resources_generation.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
@@ -24,15 +25,17 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC=${BUILD_STATIC}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "qt6advanceddocking" CONFIG_PATH "lib/cmake/qt6advanceddocking")
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "qtadvanceddocking-qt6" CONFIG_PATH "lib/cmake/qtadvanceddocking-qt6")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/qt6advanceddocking/qt6advanceddockingConfig.cmake"
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/qtadvanceddocking-qt6/qtadvanceddocking-qt6Config.cmake"
 "include(CMakeFindDependencyMacro)"
 [[include(CMakeFindDependencyMacro)
 find_dependency(Qt6 COMPONENTS Core Gui Widgets)]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/license")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/license")
 
 file(INSTALL "${SOURCE_PATH}/gnu-lgpl-v2.1.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

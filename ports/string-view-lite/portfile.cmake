@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO martinmoene/string-view-lite
-    REF v1.7.0
-    SHA512 9dd8d2ad838275b1d5418520acf0f215dc586ff40f2dac7a2e4fd845aae5eb3663ce81bc6117df50b0a68f2b8152f3d3ccb0d611728af47bc1b11286328125b5
+    REPO nonstd-lite/string-view-lite
+    REF "v${VERSION}"
+    SHA512 8bcdd8d47be22613821f96a1cb292a4037fccff99ee492cbfb96a32c3432748471f7586f80b1f23171374043769d591d02fd4f02616b28d3b689e0520236617b
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

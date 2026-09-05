@@ -2,10 +2,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://git.lysator.liu.se/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nettle/nettle
-    REF nettle_3.8.1_release_20220727
-    SHA512 ed1fa1b77afd61fafa15b63f4324809fa69569691d16b93f403c83794672859a1760d102902349f93b1632de568c36e06a0e2b5b61877082b1982dfcf2c52172
+    REF nettle_3.10_release_20240616
+    SHA512 8767e4f0c34ce76ead5d66f06f97e6b184d439fa94f848ee440196fafde3da2ea7cfc54f9bd8f9ab6a99929b0d14b3d5a28857e05d954551e94b619598c17659
     HEAD_REF master
-    PATCHES 
+    PATCHES
         subdirs.patch
         fix-libdir.patch
         compile.patch
@@ -28,7 +28,7 @@ if(GENERATE_SYMBOLS)
     endif()
 endif()
 
-vcpkg_list(SET OPTIONS)
+vcpkg_list(SET OPTIONS ac_cv_prog_cc_c23=no)
 if("tools" IN_LIST FEATURES)
     vcpkg_list(APPEND OPTIONS --enable-tools)
 endif()
@@ -62,7 +62,7 @@ elseif(ccas)
     cmake_path(GET ccas PARENT_PATH ccas_dir)
     vcpkg_add_to_path("${ccas_dir}")
     cmake_path(GET ccas FILENAME ccas_command)
-    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASM_FLAGS=${asmflags}")
 endif()
 
 if(VCPKG_CROSSCOMPILING)

@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DeveloperPaul123/thread-pool
     REF ${VERSION}
-    SHA512 fccd39616f7961fbd4ff6c2f845b4d1494e50a85e44d1799c30308bdee0b2e13f55011c5a535a555857a91157a7dddf4ec38e1020f693ae33bf0977d8fb97451
+    SHA512 c2a75117f7def0dacc2679f8eb70835acfba58d1aba7beec9bf0a29cdb23883222294dc4b04b77e323f8ecb8623b70d728bee46bf2c5a4fd6711a749c9709981
     HEAD_REF master
+    PATCHES
+        include.diff
 )
 
 vcpkg_cmake_configure(
@@ -14,6 +16,7 @@ vcpkg_cmake_configure(
         -DTP_BUILD_TESTS=OFF
         -DTP_BUILD_EXAMPLES=OFF
         -DTP_BUILD_BENCHMARKS=OFF
+        -DTP_CXX_STANDARD=20
 )
 
 vcpkg_cmake_install()

@@ -1,4 +1,16 @@
-The package unixodbc is compatible with built-in CMake targets:
+unixodbc provides CMake targets:
 
-    find_package(unixodbc REQUIRED)
-    target_link_libraries(main PRIVATE UNIX::odbc)
+  # unixODBC Driver Manager library
+  find_package(unofficial-unixodbc CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE (unofficial::unixodbc::odbc)
+
+unixodbc provides pkg-config modules:
+
+  # unixODBC Driver Manager library
+  odbc
+
+  # unixODBC Cursor Library
+  odbccr
+
+  # unixODBC Configuration Library
+  odbcinst

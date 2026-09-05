@@ -1,7 +1,8 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -13,20 +14,23 @@ if(VCPKG_CROSSCOMPILING)
     set(PATCHES cc_for_build.patch)
 endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxt
-    REF edd70bdfbbd16247e3d9564ca51d864f82626eb7 # 1.2.1
-    SHA512  c49876253dfd187e7d56a098d3d992157daefa2c25ee732eaae5818ee04513bedd807d2f265085db2e82c0b1821e152a88fb4998c0002f6ac57204543fe18566
-    HEAD_REF master
+vcpkg_download_distfile(
+    LIBXT_ARCHIVE
+    URLS "https://www.x.org/archive/individual/lib/libXt-${VERSION}.tar.xz"
+    FILENAME "libXt-${VERSION}.tar.xz"
+    SHA512 c220292f60b0f53134cf9364831a32bbaa9fa6bbb3a7143e917920957b7a48c616e946042747089f29ea9d8a18ecd64de620bcaf56d82462e7107de906f5db38
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXT_ARCHIVE}"
     PATCHES
         windows_build.patch
         globals.patch
         getcwd.patch
         add-missing-process-h.patch
         ${PATCHES}
-) 
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -100,7 +104,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(NOT VCPKG_CROSSCOMPILING)
@@ -108,6 +111,4 @@ if(NOT VCPKG_CROSSCOMPILING)
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

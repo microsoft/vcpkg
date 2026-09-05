@@ -2,54 +2,33 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
     REF "r${VERSION}"
-    SHA512 f9f0d83ee2ef1f3c2dae1f3663b893d819737d4e646d0137fb623b84663382eb93ab36123c2a85247f43ae979a95276fa231d5da8ad62a6da002ab9daecaa0d4
+    SHA512 01c30d05187ccfdefff187b3fd81951b6b4c51cae01ecaaf88082edcf66e78ebdc59dde641dbb2d3ea19662f625b1d8b2d516e0dabe3497a2f6ef7cef03a2549
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
 )
-file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
-# This port offered C++17 ABI alternative via features.
-# This was reduced to boost only.
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        boost   BSONCXX_POLY_USE_BOOST
-    INVERTED_FEATURES
-        boost   BSONCXX_POLY_USE_STD
-        boost   CMAKE_DISABLE_FIND_PACKAGE_Boost
-)
+file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         "-DCMAKE_PROJECT_MONGO_CXX_DRIVER_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DBSONCXX_HEADER_INSTALL_DIR=include
         -DENABLE_TESTS=OFF
         -DENABLE_UNINSTALL=OFF
         -DMONGOCXX_HEADER_INSTALL_DIR=include
+        -DNEED_DOWNLOAD_C_DRIVER=OFF
     MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_Boost
+        BSONCXX_HEADER_INSTALL_DIR
+        MONGOCXX_HEADER_INSTALL_DIR
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "bsoncxx" CONFIG_PATH "lib/cmake/bsoncxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(PACKAGE_NAME "mongocxx" CONFIG_PATH "lib/cmake/mongocxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/bsoncxx/config/export.hpp"
-        "#define BSONCXX_API_H" "#define BSONCXX_API_H\n#ifndef BSONCXX_STATIC\n#define BSONCXX_STATIC\n#endif")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libbsoncxx-static" CONFIG_PATH "lib/cmake/libbsoncxx-static-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libbsoncxx-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libbsoncxx")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mongocxx/config/export.hpp"
-        "#define MONGOCXX_API_H" "#define MONGOCXX_API_H\n#ifndef MONGOCXX_STATIC\n#define MONGOCXX_STATIC\n#endif")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libmongocxx-static" CONFIG_PATH "lib/cmake/libmongocxx-static-${VERSION}")
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libmongocxx-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libmongocxx")
-else()
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libbsoncxx" CONFIG_PATH "lib/cmake/libbsoncxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "libmongocxx" CONFIG_PATH "lib/cmake/libmongocxx-${VERSION}")
-endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "mongocxx" CONFIG_PATH "lib/cmake/mongocxx-${VERSION}")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

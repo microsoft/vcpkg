@@ -1,0 +1,9 @@
+xlnt provides CMake targets:
+
+  find_package(Xlnt CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE xlnt::xlnt)
+
+xlnt provides pkg-config modules:
+
+  # cross-platform user-friendly xlsx library for C++11
+  xlnt

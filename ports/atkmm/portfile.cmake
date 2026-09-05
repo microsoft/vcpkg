@@ -2,13 +2,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-set(ATKMM_VERSION 2.36.1)
-
 # Keep distfile, don't use GitLab!
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" ATKMM_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/atkmm/2.36/atkmm-${ATKMM_VERSION}.tar.xz"
-    FILENAME "atkmm-${ATKMM_VERSION}.tar.xz"
-    SHA512 23c831afac6bb9a0f9f2e622f8f9ffea29445a33b1cd650e0c07ee77e60b28ae5ee978c029e8e0f9b94e9ff4679d69ebde833f15e0a5403d97914cc7ccf98a6a
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/atkmm/${ATKMM_MAJOR_MINOR}/atkmm-${VERSION}.tar.xz"
+    FILENAME "atkmm-${VERSION}.tar.xz"
+    SHA512 268a16bae365427c13ae5f318c0913782ddfdd705dd577407424f2b08a2454acc9a6435c67abcd1eef3986c7ca0e23936c78179269fd844dde402c69d2c95976
 )
 
 vcpkg_extract_source_archive(
@@ -28,4 +27,8 @@ vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
+file(INSTALL "${SOURCE_PATH}/README.win32.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

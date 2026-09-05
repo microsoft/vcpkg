@@ -1,0 +1,66 @@
+diff --git a/toolchain/apple/toolchain.gni b/toolchain/apple/toolchain.gni
+index dd2722015..f6b7a4486 100644
+--- a/toolchain/apple/toolchain.gni
++++ b/toolchain/apple/toolchain.gni
+@@ -470,7 +470,7 @@ template("single_apple_toolchain") {
+     tool("cxx") {
+       depfile = "{{output}}.d"
+       precompiled_header_type = "gcc"
+-      command = "$coverage_wrapper$cxx $md -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}} {{module_deps_no_self}} -c {{source}} -o {{output}}"
++      command = "$coverage_wrapper$cxx $md -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}} -c {{source}} -o {{output}}"
+       depsformat = "gcc"
+       description = "CXX {{output}}"
+       outputs = [ "$object_subdir/{{source_name_part}}.o" ]
+@@ -482,7 +482,7 @@ template("single_apple_toolchain") {
+ 
+       # Module file doesn't need coverage instrumentation because module files
+       # represent interfaces rather than implementations.
+-      command = "$cxx -MD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}} {{module_deps_no_self}} -fmodule-name={{cc_module_name}} -c -x c++ -Xclang -emit-module {{source}} -o {{output}}"
++      command = "this-should-never-run"
+       depsformat = "gcc"
+       description = "CXX_MODULE {{output}}"
+       outputs = [ "$object_subdir/{{source_name_part}}.pcm" ]
+diff --git a/toolchain/gcc_toolchain.gni b/toolchain/gcc_toolchain.gni
+index a22678bb1..eb5db24c9 100644
+--- a/toolchain/gcc_toolchain.gni
++++ b/toolchain/gcc_toolchain.gni
+@@ -332,7 +332,7 @@ template("single_gcc_toolchain") {
+     tool("cxx") {
+       depfile = "{{output}}.d"
+       precompiled_header_type = "gcc"
+-      command = "$coverage_wrapper$cxx $md -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}}${extra_cppflags}${extra_cxxflags} {{module_deps_no_self}} -c {{source}} -o {{output}}"
++      command = "$coverage_wrapper$cxx $md -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}}${extra_cppflags}${extra_cxxflags} -c {{source}} -o {{output}}"
+       depsformat = "gcc"
+       description = "CXX {{output}}"
+       outputs = [ "$object_subdir/{{source_name_part}}.o" ]
+@@ -343,7 +343,7 @@ template("single_gcc_toolchain") {
+ 
+       # Module file doesn't need coverage instrumentation because module files
+       # represent interfaces rather than implementations.
+-      command = "$cxx -MD -MF $depfile {{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}}${extra_cppflags}${extra_cxxflags} {{module_deps_no_self}} -fmodule-name={{cc_module_name}} -x c++ -Xclang -emit-module -c {{source}} -o {{output}}"
++      command = "this-should-never-run"
+       depsformat = "gcc"
+       description = "CXX_MODULE {{output}}"
+       outputs = [ "$object_subdir/{{source_name_part}}.pcm" ]
+diff --git a/toolchain/win/toolchain.gni b/toolchain/win/toolchain.gni
+index 8d0b87816..dbefdda0b 100644
+--- a/toolchain/win/toolchain.gni
++++ b/toolchain/win/toolchain.gni
+@@ -239,7 +239,7 @@ template("msvc_toolchain") {
+       depsformat = "msvc"
+       description = "CXX_MODULE {{output}}"
+       outputs = [ "$object_subdir/{{source_name_part}}.pcm" ]
+-      command = "$env_wrapper$cl /Fo{{output}} /nologo $show_includes $sys_include_flags{{defines}} {{include_dirs}} {{cflags}} {{cflags_cc}} {{module_deps_no_self}} /Fd\"$pdbname\" -fmodule-name={{cc_module_name}} /c -x c++ -Xclang -emit-module {{source}}"
++      command = "this-should-never-run"
+     }
+ 
+     tool("cxx") {
+@@ -255,7 +255,7 @@ template("msvc_toolchain") {
+ 
+       # Note that the code coverage wrapper scripts assumes that {{source}}
+       # comes immediately after /c.
+-      command = "$coverage_wrapper$env_wrapper$cl /c {{source}} /Fo{{output}} /nologo $show_includes $sys_include_flags{{defines}} {{include_dirs}} {{cflags}} /TP {{cflags_cc}} {{module_deps_no_self}} /Fd\"$pdbname\""
++      command = "$coverage_wrapper$env_wrapper$cl /c {{source}} /Fo{{output}} /nologo $show_includes $sys_include_flags{{defines}} {{include_dirs}} {{cflags}} /TP {{cflags_cc}} /Fd\"$pdbname\""
+     }
+ 
+     tool("rc") {

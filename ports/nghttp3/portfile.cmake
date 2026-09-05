@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/nghttp3
     REF v${VERSION}
-    SHA512 e6288157f897007a14587c3a31e26401c338a22b8e1547da731549a0c23e8b18e04048cb661e6b7072835b6bf7f3218f4a7a07c8e43ff94954c274221d8f92f9
+    SHA512 2d8bfed2ef5d9906769d717dff934d7b2a1ed832b5e17e56615b2c817093730ac2378b212d420ac6296158e1b0ac667ed6db4226016cb11797c0edc3083ef984
     HEAD_REF main
+    PATCHES
+        001-devendor-sfparse.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" ENABLE_STATIC_CRT)
@@ -18,13 +20,13 @@ vcpkg_cmake_configure(
         "-DENABLE_STATIC_CRT=${ENABLE_STATIC_CRT}"
         "-DENABLE_STATIC_LIB=${ENABLE_STATIC_LIB}"
         "-DENABLE_SHARED_LIB=${ENABLE_SHARED_LIB}"
-        -DCMAKE_DISABLE_FIND_PACKAGE_CUnit=ON
     MAYBE_UNUSED_VARIABLES
         BUILD_TESTING
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/nghttp3")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -40,6 +42,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/nghttp3/version.h" [[
 ]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nghttp3/nghttp3.h"
+    "#ifdef NGHTTP3_STATICLIB"
+    "#if 1"
+    )
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

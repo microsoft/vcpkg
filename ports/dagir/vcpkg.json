@@ -1,0 +1,17 @@
+{
+  "name": "dagir",
+  "version": "0.1.0",
+  "description": "Header-only C++20 library for read-only external DAG views, traversal, and IR rendering",
+  "homepage": "https://github.com/Alan-Jowett/dagir",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "libsl3",
+  "version": "1.2.53003",
+  "description": "A C++ interface for SQLite 3.x.",
+  "homepage": "https://github.com/a4z/libsl3",
+  "documentation": "https://a4z.github.io/libsl3/",
+  "license": "MPL-2.0",
+  "dependencies": [
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

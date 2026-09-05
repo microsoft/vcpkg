@@ -1,7 +1,6 @@
 {
   "name": "wampcc",
-  "version-date": "2019-09-04",
-  "port-version": 5,
+  "version-date": "2024-07-10",
   "description": "Wampcc is C++ library that implements the Web Application Messaging Protocol (WAMP) protocol.",
   "license": "MIT",
   "supports": "!(windows & arm64)",
@@ -11,6 +10,10 @@
     "openssl",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],

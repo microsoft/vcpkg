@@ -1,9 +1,11 @@
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redboltz/mqtt_cpp
-    REF v13.1.0    
+    REF "v${VERSION}"
     SHA512
-    71907ba013d844d3b00c932b8598480067c0b2a2088ea95ae6d65a548145b851f6a25135f4e3c1e61cfc3831b024308e872f194bc9af7febe0036edc2e63b9d4
+    81e2b6a1d070bb57a212fb95abe3f36f8b41131058675528b67e41a2076a19f30f488619b9e3a5dbc0fe53db4efa5c9959111f06c241ebe616b78a70f9dfcad1
     HEAD_REF master
 )
 
@@ -19,6 +21,6 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME mqtt_cpp_iface CONFIG_PATH lib/cmake/mqtt_cpp_iface)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")

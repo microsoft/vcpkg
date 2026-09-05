@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO nodejs/node-api-headers
   REF "v${VERSION}"
-  SHA512 e80d9b8cc2d96929a6d73fc1e5bcfbf6d585bef114946f939b93195aefb91bf8e6ef8720625394d344636626fd74548db71ff178f9f529ab5b20db980f09b197
+  SHA512 68e1a689482a1108fcc3d7477e38d8ca19efe7eb1ee8bc2db540bc4245ecfe067b257e4aa775e358265846bfabb72703432cc190ccbeddd0194eaec1f099d31b
   HEAD_REF main
 )
 
@@ -12,7 +12,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_cmake_install()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include" RENAME "node")
+file(INSTALL "${SOURCE_PATH}/include/js_native_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include/js_native_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include/node_api.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/include/node_api_types.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

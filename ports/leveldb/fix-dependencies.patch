@@ -1,13 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98b87dc..76d2e9b 100644
+index ce8f587..c620ace 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -35,8 +35,14 @@ include(CheckIncludeFile)
+@@ -37,11 +37,19 @@ option(LEVELDB_INSTALL "Install LevelDB's header and library" ON)
+ include(CheckIncludeFile)
  check_include_file("unistd.h" HAVE_UNISTD_H)
  
- include(CheckLibraryExists)
+-include(CheckLibraryExists)
 -check_library_exists(crc32c crc32c_value "" HAVE_CRC32C)
 -check_library_exists(snappy snappy_compress "" HAVE_SNAPPY)
+-check_library_exists(zstd zstd_compress "" HAVE_ZSTD)
+-check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
 +if (WITH_CRC32C)
 +    find_package(Crc32c CONFIG REQUIRED)
 +    set(HAVE_CRC32C 1)
@@ -16,10 +19,15 @@ index 98b87dc..76d2e9b 100644
 +    find_package(Snappy CONFIG REQUIRED)
 +    set(HAVE_SNAPPY 1)
 +endif()
- check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
++if (WITH_ZSTD)
++    find_package(zstd CONFIG REQUIRED)
++    set(HAVE_ZSTD 1)
++endif()
++set(HAVE_TCMALLOC 0)
  
  include(CheckCXXSymbolExists)
-@@ -246,10 +252,10 @@ if(HAVE_CLANG_THREAD_SAFETY)
+ # Using check_cxx_symbol_exists() instead of check_c_symbol_exists() because
+@@ -269,13 +277,13 @@ if(HAVE_CLANG_THREAD_SAFETY)
  endif(HAVE_CLANG_THREAD_SAFETY)
  
  if(HAVE_CRC32C)
@@ -30,5 +38,34 @@ index 98b87dc..76d2e9b 100644
 -  target_link_libraries(leveldb snappy)
 +  target_link_libraries(leveldb Snappy::snappy)
  endif(HAVE_SNAPPY)
+ if(HAVE_ZSTD)
+-  target_link_libraries(leveldb zstd)
++  target_link_libraries(leveldb zstd::libzstd)
+ endif(HAVE_ZSTD)
  if(HAVE_TCMALLOC)
    target_link_libraries(leveldb tcmalloc)
+diff --git a/cmake/leveldbConfig.cmake.in b/cmake/leveldbConfig.cmake.in
+index 2572728..710f780 100644
+--- a/cmake/leveldbConfig.cmake.in
++++ b/cmake/leveldbConfig.cmake.in
+@@ -4,6 +4,19 @@
+ 
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++
++find_dependency(Threads)
++if (@WITH_CRC32C@)
++    find_dependency(Crc32c CONFIG)
++endif()
++if (@WITH_SNAPPY@)
++    find_dependency(Snappy CONFIG)
++endif()
++if (@WITH_ZSTD@)
++    find_dependency(zstd CONFIG)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/leveldbTargets.cmake")
+ 
+ check_required_components(leveldb)
+\ No newline at end of file

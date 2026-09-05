@@ -1,18 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO json-c/json-c
-    REF d28ac67dde77566f53a97f22b4ea7cb36afe6582
-    SHA512 30063c8e32eb82e170647363055119f2f7eab19e1c3152673b966f41ed07e0349c3d6141b215b9912f9e84c2e06677b3d7ac949f720c7ebc2c95d692dc3881fe
+    REF "json-c-${VERSION}"
+
+    SHA512 3be9058351acb3d9a66c7ae850391ebaa80472b42ee3f013f8b655743eb41b55513e0546c6798399af98ed049b80d11c93286ea3f5af26dc5f199905a28c4db1
     HEAD_REF master
-    PATCHES pkgconfig.patch
-            fix-clang-cl.patch
-            fix-build-with-clang.patch #https://github.com/json-c/json-c/pull/783 Remove in next version
+    PATCHES
+        json_object_put-leak.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSON_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" JSON_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DBUILD_STATIC_LIBS=${JSON_BUILD_STATIC}
+        -DBUILD_SHARED_LIBS=${JSON_BUILD_SHARED}
+        -DDISABLE_EXTRA_LIBS=ON
 )
 
 vcpkg_cmake_install()
@@ -24,4 +30,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

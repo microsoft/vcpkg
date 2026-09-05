@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bb05cd8..6aff88b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,11 +51,13 @@ set(SQLPP11_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Sqlpp11 CACHE STRING
+ 
+ ### Dependencies
+ if(DEPENDENCY_CHECK AND BUILD_MYSQL_CONNECTOR)
+-    find_package(MySQL REQUIRED)
++    find_package(MySQL NAMES unofficial-libmysql REQUIRED)
++    add_library(MySQL::MySQL ALIAS unofficial::libmysql::libmysql)
+ endif()
+ 
+ if(DEPENDENCY_CHECK AND BUILD_MARIADB_CONNECTOR)
+-    find_package(MariaDB REQUIRED)
++    find_package(MariaDB NAMES unofficial-libmariadb REQUIRED)
++    add_library(MariaDB::MariaDB ALIAS unofficial::libmariadb)
+ endif()
+ 
+ if(DEPENDENCY_CHECK AND BUILD_POSTGRESQL_CONNECTOR)
+diff --git a/cmake/configs/Sqlpp11MariaDBConfig.cmake b/cmake/configs/Sqlpp11MariaDBConfig.cmake
+index 32a594a..fb63205 100644
+--- a/cmake/configs/Sqlpp11MariaDBConfig.cmake
++++ b/cmake/configs/Sqlpp11MariaDBConfig.cmake
+@@ -1,2 +1,2 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(MariaDB)
+\ No newline at end of file
++find_dependency(unofficial-libmariadb)
+diff --git a/cmake/configs/Sqlpp11MySQLConfig.cmake b/cmake/configs/Sqlpp11MySQLConfig.cmake
+index 0d2a5b3..53dab6e 100644
+--- a/cmake/configs/Sqlpp11MySQLConfig.cmake
++++ b/cmake/configs/Sqlpp11MySQLConfig.cmake
+@@ -1,2 +1,2 @@
+ include(CMakeFindDependencyMacro)
+-find_dependency(MySQL)
+\ No newline at end of file
++find_dependency(unofficial-libmysql)

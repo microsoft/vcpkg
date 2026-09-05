@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mozilla/cubeb
-    REF dc511c6b3597b6384d28949285b9289e009830ea
-    SHA512 a4ccd3f0a156db4e2e75a8d231e95a08d555390571551cb3e92c71cdee46dc74dc66b5272fda4b5f1f083b92672b360152cefd38be242f238fe802acc1ea17e9
+    REF f1bfefbbd412eaa0fe89f5afb3c11b427dc2446a
+    SHA512 541bdcdc17c02f51e6faae1c90e0ddf30f40b137bb47498f7845919107190a4acb97d88e26ccf4877dbce7aeddee0f6538fd34c71396bc6a81644438a1a3242e
     HEAD_REF master
 )
 
@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
         -DUSE_SANITIZERS=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
+        -DDOXYGEN_EXECUTABLE= # Prevents the generation of documentation
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cubeb)

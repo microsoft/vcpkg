@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LMDB/lmdb
     REF "LMDB_${VERSION}"
-    SHA512 a5763ff94af0b5bbc2406c52890797e6232e77593bacdb240441ed30c8634e4e6de6eba206880475544e21561ccd0be2dee16733d6ec35483eb1dbbb81913a8d
+    SHA512 902908ca5fa66f8e2064ab44505f8172cd193c88c608a8369cc76e1285e9b36ef4c275f5b8ed21fd1ee31f0d7148a0050945dd0d5ea7cf74c24ada2f7c8d222d
     HEAD_REF master
     PATCHES
         getopt-win32.diff
 )
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake/" DESTINATION "${SOURCE_PATH}/libraries/liblmdb")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options_release
@@ -20,22 +21,19 @@ vcpkg_cmake_configure(
         "-DLMDB_VERSION=${VERSION}"
     OPTIONS_RELEASE
         ${options_release}
-    OPTIONS_DEBUG
-        -DLMDB_INSTALL_HEADERS=OFF
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lmdb)
+vcpkg_fixup_pkgconfig()
 
 if(LMDB_BUILD_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES mdb_copy mdb_dump mdb_load mdb_stat AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES mdb_copy mdb_drop mdb_dump mdb_load mdb_stat AUTO_CLEAN)
 endif()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(COPY "${CURRENT_PORT_DIR}/lmdb-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/libraries/liblmdb/COPYRIGHT"

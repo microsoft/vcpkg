@@ -1,8 +1,15 @@
+vcpkg_list(SET PATCHES)
+
+if (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_MINGW)
+    vcpkg_list(APPEND PATCHES "enable-asm.diff")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
-    REF 5.6.0
-    SHA512 16e1b5a74261843dff148eee6a83a0c84717477c06907af3ee1bc799f9157ba8c0d3c71eee9d93d74a1081151198a8a23d84c14a60c4b35fc145d10ee901cca1
+    REF ${VERSION}
+    SHA512 51534cb55b6efe5ec04feb3019bdadba58662fdb9df27921c92e31931ddc9fdd053412b29bc25c510ddcee47cbf07d2b2cdb292337972f0a6b8fc3f04531bff4
+    PATCHES ${PATCHES}
 )
 
 vcpkg_cmake_configure(
@@ -13,7 +20,6 @@ vcpkg_cmake_configure(
         -DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF
         -DWAVPACK_BUILD_WINAMP_PLUGIN=OFF
         -DBUILD_TESTING=OFF
-        -DWAVPACK_BUILD_DOCS=OFF
 )
 
 vcpkg_cmake_install()
@@ -30,7 +36,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if(WIN32 AND (NOT MINGW))
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
             vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wavpack.pc" "-lwavpack" "-lwavpackdll")

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
     REF "v${VERSION}"
-    SHA512 5982b17d04ebbcb281848a998b3f2f35c5a83bc6d14cd6fecb8eef695300b577fb8dcc1377e9a8827587ac06d58441328cb0d55b19ae65788c2fce8da7ce702a
+    SHA512 16ac093a07fdea00c36f3f768f7dc26c77090701ed6cdae4c037cb5080cc3f4cb91be494ec985bb9d2556fdf96c1743d4588a3e4b15f3e9b78540961f43b9dd3
     HEAD_REF master
     PATCHES fix-DisableWC4191.patch
 )
@@ -28,15 +28,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     endif()
 else()
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         COPY_SOURCE
-        AUTOCONFIG
+        AUTORECONF
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --with-oracle-import=runtime
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/${PORT}" "${CURRENT_PACKAGES_DIR}/share/${PORT}")

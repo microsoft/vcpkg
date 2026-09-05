@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-ci-coin-or-ipopt",
+  "version-string": "ci",
+  "description": "Validation port",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "coin-or-ipopt",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

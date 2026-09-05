@@ -11,6 +11,8 @@ set(libunibreak_srcs
   src/graphemebreak.c
   src/graphemebreakdata.c
   src/emojidef.c
+  src/eastasianwidthdef.c
+  src/eastasianwidthdata.c
   src/unibreakbase.c
   src/unibreakdef.c
 )
@@ -30,6 +32,9 @@ if(NOT DISABLE_INSTALL_HEADERS)
   install(
     FILES
     src/emojidef.h
+    src/eastasianwidthdef.h
+    src/unibreakbase.h
+    src/unibreakdef.h
     src/graphemebreak.h
     src/graphemebreakdef.h
     src/linebreak.h

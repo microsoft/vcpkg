@@ -1,0 +1,37 @@
+diff --git a/acinclude.m4 b/acinclude.m4
+index e84c5c785..8e7bb4ae7 100644
+--- a/acinclude.m4
++++ b/acinclude.m4
+@@ -564,23 +564,6 @@
+ }
+ ])
+ 
+-# __builtin_alloca is not available everywhere, check it exists before
+-# seeing that it works
+-GMP_PROG_CC_WORKS_PART_TEST([$1],[__builtin_alloca availability],
+-[int k; int foo () { __builtin_alloca (k); }],
+-  [GMP_PROG_CC_WORKS_PART([$1], [alloca array],
+-[/* The following provokes an internal compiler error from Itanium HP-UX cc
+-    under +O2 or higher.  We use this sort of code in mpn/generic/mul_fft.c. */
+-int k;
+-int foo ()
+-{
+-  int i, **a;
+-  a = __builtin_alloca (k);
+-  for (i = 0; i <= k; i++)
+-    a[i] = __builtin_alloca (1 << i);
+-}
+-])])
+-
+ GMP_PROG_CC_WORKS_PART([$1], [abs int -> double conversion],
+ [/* The following provokes an internal error from the assembler on
+    power2-ibm-aix4.3.1.0.  gcc -mrios2 compiles to nabs+fcirz, and this
+@@ -609,7 +609,7 @@
+ 
+ #if defined (__GNUC__) && ! defined (__cplusplus)
+ typedef unsigned long long t1;typedef t1*t2;
+-void g(){}
++void g(int,t1 const*,t1,t2,t1 const*,int){}
+ void h(){}
+ static __inline__ t1 e(t2 rp,t2 up,int n,t1 v0)
+ {t1 c,x,r;int i;if(v0){c=1;for(i=1;i<n;i++){x=up[i];r=x+1;rp[i]=r;}}return c;}

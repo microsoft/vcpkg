@@ -9,15 +9,15 @@ set(WX_ROOT_DIR "${_vcpkg_wx_root}" CACHE INTERNAL "")
 unset(_vcpkg_wx_root)
 
 if(WIN32)
-    # Find all libs with "32" infix which is unknown to FindwxWidgets.cmake
+    # Find all libs with "33" infix which is unknown to FindwxWidgets.cmake
     function(z_vcpkg_wxwidgets_find_base_library BASENAME)
-        find_library(WX_${BASENAME}d wx${BASENAME}32ud NAMES wx${BASENAME}d PATHS "${wxWidgets_ROOT_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(WX_${BASENAME}  wx${BASENAME}32u  NAMES wx${BASENAME}  PATHS "${wxWidgets_ROOT_DIR}/lib" NO_DEFAULT_PATH REQUIRED)
+        find_library(WX_${BASENAME}d wx${BASENAME}33ud NAMES wx${BASENAME}d PATHS "${wxWidgets_ROOT_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(WX_${BASENAME}  wx${BASENAME}33u  NAMES wx${BASENAME}  PATHS "${wxWidgets_ROOT_DIR}/lib" NO_DEFAULT_PATH REQUIRED)
     endfunction()
     function(z_vcpkg_wxwidgets_find_suffix_library BASENAME)
         foreach(lib IN LISTS ARGN)
-            find_library(WX_${lib}d NAMES wx${BASENAME}32ud_${lib} PATHS "${wxWidgets_ROOT_DIR}/debug/lib" NO_DEFAULT_PATH)
-            find_library(WX_${lib}  NAMES wx${BASENAME}32u_${lib}  PATHS "${wxWidgets_ROOT_DIR}/lib" NO_DEFAULT_PATH)
+            find_library(WX_${lib}d NAMES wx${BASENAME}33ud_${lib} PATHS "${wxWidgets_ROOT_DIR}/debug/lib" NO_DEFAULT_PATH)
+            find_library(WX_${lib}  NAMES wx${BASENAME}33u_${lib}  PATHS "${wxWidgets_ROOT_DIR}/lib" NO_DEFAULT_PATH)
         endforeach()
     endfunction()
     z_vcpkg_wxwidgets_find_base_library(base)
@@ -48,7 +48,13 @@ else()
 endif()
 set(WX_LIB_DIR "${wxWidgets_LIB_DIR}" CACHE INTERNAL "")
 
+# https://gitlab.kitware.com/cmake/cmake/-/issues/26718
+# Instead of special-casing the `atomic` library, we skip the checks entirely.
+set(_wx_lib_found TRUE)
+
 _find_package(${ARGS})
+
+unset(_wx_lib_found)
 
 if(DEFINED _vcpkg_wxwidgets_backup_crosscompiling)
     set(CMAKE_CROSSCOMPILING "${_vcpkg_wxwidgets_backup_crosscompiling}")

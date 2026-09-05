@@ -1,32 +1,36 @@
 {
   "name": "osgearth",
-  "version": "3.4",
-  "port-version": 1,
-  "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2021 Pelican Mapping.",
-  "homepage": "https://github.com/gwaldron/osgearth",
-  "license": "LGPL-3.0-or-later",
-  "supports": "!(arm | x86 | wasm32 | xbox)",
+  "version": "3.8.1",
+  "description": "osgEarth - 3D Maps for OpenSceneGraph",
+  "homepage": "https://github.com/pelicanmapping/osgearth",
+  "license": "MIT",
+  "supports": "!(arm | x86 | wasm32 | android)",
   "dependencies": [
-    "basisu",
-    "blosc",
-    "cfitsio",
-    "draco",
-    "geos",
-    "glew",
-    "libwebp",
-    "libzip",
-    "opengl",
     {
-      "name": "osg",
-      "default-features": false,
+      "name": "aws-sdk-cpp",
       "features": [
-        "plugins"
+        "s3"
       ]
     },
+    "blend2d",
+    "draco",
+    "gdal",
+    "geos",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental",
+        "opengl3-binding"
+      ]
+    },
+    "lerc",
+    "libwebp",
+    "meshoptimizer",
+    "opengl",
+    "osg",
     "protobuf",
-    "pthreads",
+    "spdlog",
     "sqlite3",
-    "tinyxml",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -36,31 +40,18 @@
       "host": true
     }
   ],
-  "default-features": [
-    "default-features"
-  ],
   "features": {
-    "blend2d": {
-      "description": "Enable Blend2D support",
-      "dependencies": [
-        "blend2d"
-      ]
+    "controls": {
+      "description": "Support for the old Controls API (superceded by imgui)"
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
+    "stb": {
+      "description": "build optional STB DXT image compressor",
       "dependencies": [
-        {
-          "name": "osgearth",
-          "default-features": false,
-          "features": [
-            "blend2d"
-          ],
-          "platform": "!(arm & windows) & !uwp & !wasm32"
-        }
+        "stb"
       ]
     },
     "tools": {
-      "description": "Build tools"
+      "description": "Build command-line tools"
     }
   }
 }

@@ -1,0 +1,12 @@
+diff --git a/cmake/QtToolchainHelpers.cmake b/cmake/QtToolchainHelpers.cmake
+index 8d5a97777..08296e504 100644
+--- a/cmake/QtToolchainHelpers.cmake
++++ b/cmake/QtToolchainHelpers.cmake
+@@ -142,6 +142,7 @@ endfunction()
+ function(create_pkg_config_wrapper wrapperName wrapperCmd)
+     file(WRITE ${wrapperName}
+         "#!/bin/sh\n"
++        "exit 0\n"
+         "unset PKG_CONFIG_LIBDIR\n"
+         "unset PKG_CONFIG_PATH\n"
+         "unset PKG_CONFIG_SYSROOT_DIR\n"

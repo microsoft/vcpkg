@@ -1,226 +1,219 @@
-# `vcpkg-eg-mac` VMs
+This is the checklist for what the vcpkg team does when updating the macOS machines in the pool.
 
-## Table of Contents
+The hosts do not accept incoming SSH connections. Perform all host-side work in a terminal opened
+through the KVM. Use the KVM software's "paste from clipboard" function to transfer commands and
+short-lived credentials to the host. SSH commands in this document connect from the host to its
+guest VM, not from a developer workstation to the host.
 
-- [`vcpkg-eg-mac` VMs](#vcpkg-eg-mac-vms)
-  - [Table of Contents](#table-of-contents)
-  - [Basic Usage](#basic-usage)
-    - [Creating a new Vagrant box](#creating-a-new-vagrant-box)
-      - [VM Software Versions](#vm-software-versions)
-    - [Creating a New Azure Agent Pool](#creating-a-new-azure-agent-pool)
-    - [Running the VM](#running-the-vm)
-  - [Getting an Azure Pipelines PAT](#getting-an-azure-pipelines-pat)
-  - [Setting up a new macOS machine](#setting-up-a-new-macos-machine)
+Before publishing the VM update changes, update the Azure Agent URI in
+`scripts/azure-pipelines/osx/guest-prepare.sh` to the current version. You can find this by going to the
+agent pool, selecting "New agent", picking macOS, and copying the link. For example:
+https://download.agent.dev.azure.com/agent/5.277.0/vsts-agent-osx-arm64-5.277.0.tar.gz
 
-## Basic Usage
+Install and enable Homebrew on each host before cloning vcpkg:
 
-The most common operation here is to set up a new VM for Azure
-pipelines; we try to make that operation as easy as possible.
-It should take all of three steps, assuming the machine is
-already set up (or read [these instructions] for how to set up a machine):
+```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
 
-1. [Create a new vagrant box](#creating-a-new-vagrant-box)
-2. [Create a new agent pool](#creating-a-new-azure-agent-pool)
-3. [Setup and run the vagrant VM](#running-the-vm)
-4. Update `azure-pipelines.yml` and `azure-pipelines-osx.yml` to point to the new macOS pool.
+Publish the changes to a fork and branch that the hosts can access. Keep a clone of
+`microsoft/vcpkg` on each host as `origin`, add the operator's fork as a separate remote, and check
+out the working revision to provide the scripts used by these instructions:
 
-[these instructions]: #setting-up-a-new-macos-machine
+```sh
+git clone https://github.com/microsoft/vcpkg ~/vcpkg
+git -C ~/vcpkg remote add <WORKING-REMOTE> https://github.com/<GITHUB-USER>/vcpkg
+git -C ~/vcpkg fetch <WORKING-REMOTE> <WORKING-BRANCH>
+git -C ~/vcpkg checkout --detach FETCH_HEAD
+```
 
-### Creating a new Vagrant box
+For example, BillyONeal's fork should be added as remote `BillyONeal` with URL
+`https://github.com/BillyONeal/vcpkg`. Do not use `origin` for the working branch unless the changes
+have already been merged into `microsoft/vcpkg`. If the working branch is updated, repeat the
+`fetch` and detached `checkout` commands above on each host.
 
-Whenever we want to install updated versions of the command line tools,
-or of macOS, we need to create a new vagrant box.
-This is pretty easy, but the results of the creation are not public,
-since we're concerned about licensing.
-However, if you're sure you're following Apple's licensing,
-you can set up your own vagrant boxes that are the same as ours by doing the following:
+## Creating new base images
 
-You'll need some prerequisites:
+### Prerequisites
 
-- An Xcode installer - you can get this from Apple's developer website,
-  although you'll need to sign in first: <https://developer.apple.com/downloads>
+- [ ] The matching macOS IPSW, Xcode 26.6 `.xip`, and Xcode 26.6 Command Line Tools `.dmg`
+    uploaded to the `assets` container in the `vcpkgimageminting` storage account.
+- [ ] PowerShell 7.x, Azure CLI, and `az login` with your Microsoft corp credentials on a workstation
+    that can mint SAS tokens for the storage account.
 
-If you're updating the CI pool, make sure you update macOS.
+### Instructions (ARM64)
 
-First, you'll need to create a base VM;
-this is where you determine what version of macOS is installed.
-Follow the Parallels process for creating a macOS VM:
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues , pick the current osx queue,
+      and delete one of the agents that are idle.
+- [ ] Go to that machine in the KVM. (Passwords are stored as secrets in the CPP_GITHUB\vcpkg\vcpkgmm-passwords key vault)
+- [ ] Update the macos host
+- [ ] Prepare the host. This enables Homebrew, installs AzCopy if needed, and installs `macosvm` to `~`:
+    ```sh
+    ~/vcpkg/scripts/azure-pipelines/osx/host-prepare.sh
+    ```
+- [ ] On a workstation, generate download commands with short-lived, blob-scoped credentials for
+    the matching IPSW, Xcode archive, and Command Line Tools installer in the `assets` container:
+    ```powershell
+    function Get-AssetDownloadCommand {
+        Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
+        $accountName = 'vcpkgimageminting'
+        $containerName = 'assets'
+        $uNow = (Get-Date).ToUniversalTime()
+        $start = $uNow.ToString('s') + 'Z'
+        $expiry = $uNow.AddHours(1).ToString('s') + 'Z'
+        $sas = az storage blob generate-sas --as-user --auth-mode login --account-name $accountName --container-name $containerName --name $FileName --permissions r --start $start --expiry $expiry --https-only --output tsv
+        return "azcopy copy `"https://vcpkgimageminting.blob.core.windows.net/assets/$($FileName)?$($sas)`" `"$FileName`""
+    }
 
-1. Get a machine with matching version of Parallels.
-2. If you haven't already, install Vagrant and vagrant-parallels:
-      ```sh
-      $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-      $ brew install hashicorp/tap/hashicorp-vagrant
-      $ vagrant plugin install vagrant-parallels
-      ```
-3. Update your MacOS host.
-4. Run parallels, and select 'Other Options' -> 'Install macOS 13.5.2 Using the Recovery Partition' (version number to change :))
-5. Install MacOS like you would on real hardware.
+    Get-AssetDownloadCommand -FileName UniversalMac_26.6.1_25G76_Restore.ipsw
+    Get-AssetDownloadCommand -FileName Xcode_26.6_Apple_silicon.xip
+    Get-AssetDownloadCommand -FileName Command_Line_Tools_26.6_Apple_silicon.dmg
+    ```
+    This creates a user-delegation SAS for each blob. Each credential is read-only, HTTPS-only, and
+    valid for one hour. A SAS is not single-use and can be reused until it expires, so do not retain
+    the generated commands after the downloads finish.
+    If a matching IPSW has not yet been added to the container, use the
+    [M4 Apple Silicon IPSW firmware database](https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/)
+    to locate it and upload it first.
+- [ ] In the host's KVM terminal, change to `~`, then use the KVM software's "paste from
+      clipboard" function to paste and run each generated command:
+    ```sh
+    cd ~
+    # Paste and run the three azcopy commands generated on the workstation.
+    ```
+- [ ] Determine the VM directory name using the form "vcpkg-osx-YYYY-MM-DD-arm64", for example "vcpkg-osx-2026-08-07-arm64".
+- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-YYYY-MM-DD-arm64 and UniversalMac_26.6.1_25G76_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
+    ```
+    mkdir -p ~/vcpkg-osx-YYYY-MM-DD-arm64
+    cd ~/vcpkg-osx-YYYY-MM-DD-arm64
+    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 10 -r 18g --restore ~/UniversalMac_26.6.1_25G76_Restore.ipsw ./vm.json
+    ~/macosvm -g ./vm.json
+    ```
+- [ ] Follow prompts as you would on real hardware.
+    * Set up as new.
+    * Account name: builduser
+    * A very similar password
+    * Do not allow computer account password to be reset with your Apple Account.
     * Apple ID: 'Set Up Later' / Skip
-    * Account name: vagrant
-    * Account password: vagrant
-6. Install Parallels Tools
-7. Shut down the VM
-8. Open Parallels Control Center, right click the VM, and make the following edits:
-    * 12 processors
-    * 24000 MB of memory
+    * No location services
+    * Yes send crash reports
+    * Set up screen time later
+    * Only download updates automatically
+- [ ] Set the desktop wallpaper to a fixed color from Settings -> Wallpaper . (This makes the KVM a lot easier to use :) )
+- [ ] Disable automatic updates in the VM: Settings -> General -> Automatic Updates -> Disable them all
+- [ ] Enable remote login in the VM: Settings -> General -> Sharing -> Remote Login
+- [ ] Install Xcode from the host's vcpkg clone. This prompts for the guest password to install an
+    SSH key and enable passwordless sudo, then transfers and expands Xcode:
+    ```sh
+    cd ~/vcpkg/scripts/azure-pipelines/osx
+    ./host-install-xcode.sh
+    ```
+- [ ] Open Xcode from Applications in the guest GUI. Uncheck the "code completion model" and accept the EULA.
+- [ ] After completing the Xcode GUI step, run the guest preparation script. It installs the Command
+    Line Tools, build dependencies, and the Azure Pipelines agent:
+    ```sh
+    cd ~/vcpkg/scripts/azure-pipelines/osx
+    ./host-prepare-guest.sh
+    ```
+- [ ] Shut down the VM cleanly.
+- [ ] Delete the temporary installation assets from the host:
+    ```sh
+    rm ~/UniversalMac_26.6.1_25G76_Restore.ipsw \
+        ~/Xcode_26.6_Apple_silicon.xip \
+        ~/Command_Line_Tools_26.6_Apple_silicon.dmg
+    ```
+- [ ] In the host's KVM terminal, package the VM into an archive:
+    ```sh
+    cd ~
+    aa archive -d vcpkg-osx-YYYY-MM-DD-arm64 -o vcpkg-osx-YYYY-MM-DD-arm64.aar -enable-holes
+    ```
+- [ ] In PowerShell on a workstation, generate the AzCopy upload command:
+    ```powershell
+    function Get-AzCopyWriteCommand {
+        Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
+        $accountName = 'vcpkgimageminting'
+        $containerName = 'pvms'
+        $uNow = (Get-Date).ToUniversalTime()
+        $start = $uNow.ToString('s') + 'Z'
+        $expiry = $uNow.AddHours(1).ToString('s') + 'Z'
+        $sas = az storage blob generate-sas --as-user --auth-mode login --account-name $accountName --container-name $containerName --name $FileName --permissions cw --start $start --expiry $expiry --https-only --output tsv
+        return "azcopy copy  --check-length=false `"$($FileName)`" `"https://vcpkgimageminting.blob.core.windows.net/pvms/$($FileName)?$($sas)`""
+    }
 
-Once it's finished installing, make sure to turn on the SSH server.
-Open System Preferences, then go to Sharing > Remote Login,
-and turn it on.
-You'll then want to add the vagrant SSH keys to the VM's vagrant user.
-Open the terminal application and run the following:
+    Get-AzCopyWriteCommand -FileName vcpkg-osx-YYYY-MM-DD-arm64.aar
+    ```
+- [ ] Paste and run the generated AzCopy command in the host's KVM terminal.
+- [ ] Go to https://dev.azure.com/vcpkg/public/_settings/agentqueues and create a new self hosted Agent pool named `PrOsx-YYYY-MM-DD-arm64`. Grant microsoft.vcpkg.ci and microsoft.vcpkg.pr access.
+- [ ] Follow the "Deploying images" steps below for each machine in the fleet.
 
-```sh
-$ # basic stuff
-$ date | sudo tee '/etc/vagrant_box_build_time'
-$ printf 'vagrant\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vagrant'
-$ sudo chmod 0440 '/etc/sudoers.d/vagrant'
-$ # then install vagrant keys
-$ mkdir -p ~/.ssh
-$ curl -fsSL 'https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub' >~/.ssh/authorized_keys
-$ chmod 0600 ~/.ssh/authorized_keys
-```
-
-Now, let's package the VM into a base box.
-(The following instructions are adapted from
-[these official instructions][base-box-instructions]).
-
-Shut down the VM cleanly. On the host, run the following commands:
-
-```sh
-$ cd ~/Parallels
-$ echo '{ "provider": "parallels" }' >metadata.json
-$ prl_disk_tool compact --hdd ./<name of VM>.pvm/harddisk.hdd
-$ tar zcvf <name-of-box>.box ./metadata.json ./<name of VM>.pvm
-$ rm ./metadata.json
-```
-
-This will create a box file which contains all the necessary data.
-
-```sh
-$ vagrant box add <name-of-box>.box --name <name-of-box>
-```
-
-Then, we'll create the final box,
-which contains all the necessary programs for doing CI work.
-Copy `Vagrantfile-box.rb` as `Vagrantfile`
-into a new directory. Edit the config.vm.box line to <name-of-box>.
-Into that same directory, download the Xcode command line tools dmg, typically from
-https://developer.apple.com/download/all/ , and name it `clt.dmg`.
-Then, run the following in that directory:
-
-```sh
-$ vagrant up
-$ vagrant package
-$ vagrant destroy
-```
-
-This will create a `package.box`, which is the box file for the base VM.
-Once you've created this box, log in to the Azure Portal, and upload the box to
-vcpkg-image-minting/vcpkgvagrantboxes/boxes. (You might need to use scp to copy the box to
-a machine that can see the Portal)
-
-Once you've done that, add the software versions under [VM Software Versions](#vm-software-versions).
-
-[base-box-instructions]: https://parallels.github.io/vagrant-parallels/docs/boxes/base.html
-
-#### VM Software Versions
-
-* 2023-09-11
-  * macOS: 13.5
-  * Xcode CLTs: 14.3.1
-* 2022-02-04 (minor update to 2022-01-03)
-  * macOS: 12.1
-  * Xcode CLTs: 13.2
-
-### Creating a New Azure Agent Pool
-
-When updating the macOS machines to a new version, you'll need to create
-a new agent pool for the machines to join. The standard for this is to
-name it `PrOsx-YYYY-MM-DD`, with `YYYY-MM-DD` the day that the process
-is started.
-
-In order to create a new agent pool, go to the `vcpkg/public` project;
-go to `Project settings`, then go to `Agent pools` under `Pipelines`.
-Add a new self-hosted pool, name it as above, and make certain to check
-the box for "Grant access permission to all pipelines".
-
-Once you've done this, you are done; you can start adding new machines
-to the pool!
+## Deploying images
 
 ### Running the VM
 
-First, make sure that your software is up to date, first by checking in
+Run these steps on each machine to add to the fleet. Skip steps that were done implicitly above if this machine was used to build a box.
 
-* macOS system settings
-* Parallels' UI
-* homebrew:
+- [ ] If this machine was used before, delete it from the pool of which it is a member from https://dev.azure.com/vcpkg/public/_settings/agentqueues
+- [ ] Log in to the machine using the KVM.
+- [ ] Check for software updates in macOS system settings
+- [ ] Ensure the host's vcpkg clone is at the published working revision, then prepare the host. This
+    enables Homebrew, installs AzCopy if needed, and installs `macosvm` to `~`:
     ```sh
-    $ brew update
-    $ brew upgrade
+    git -C ~/vcpkg fetch <WORKING-REMOTE> <WORKING-BRANCH>
+    git -C ~/vcpkg checkout --detach FETCH_HEAD
+    ~/vcpkg/scripts/azure-pipelines/osx/host-prepare.sh
     ```
+- [ ] Skip if this is the image building machine. In PowerShell on a workstation, mint a SAS token
+    and generate the AzCopy command with:
+    ```powershell
+    function Get-AzCopyReadCommand {
+        Param([Parameter(Mandatory=$true)][ValidateNotNullOrEmpty()][string]$FileName)
+        $accountName = 'vcpkgimageminting'
+        $containerName = 'pvms'
+        $uNow = (Get-Date).ToUniversalTime()
+        $start = $uNow.ToString('s') + 'Z'
+        $expiry = $uNow.AddHours(1).ToString('s') + 'Z'
+        $sas = az storage blob generate-sas --as-user --auth-mode login --account-name $accountName --container-name $containerName --name $FileName --permissions r --start $start --expiry $expiry --https-only --output tsv
+        return "azcopy copy `"https://vcpkgimageminting.blob.core.windows.net/pvms/$($FileName)?$($sas)`" `"$($FileName)`""
+    }
 
-If this machine has been used before, you might have to remove an existing boxes:
-
-```sh
-$ cd ~/vagrant/vcpkg-ec-mac
-$ vagrant halt
-$ vagrant destroy
-$ cd ~
-$ rm -rf ~/vagrant
-$ mkdir ~/vagrant
-```
-
-[grab a PAT], mint a SAS token to vcpkg-image-minting/vcpkgvagrantboxes/boxes, and pull the box:
-
-```sh
-$ vagrant box list
-$ vagrant box remove <any boxes listed by previous command>
-$ vagrant box add 'https://vcpkgvagrantboxes.blob.core.windows.net/boxes/<name of box>.box?<SAS token>' --name <name of box>
-```
-
-Copy the contents of Vagrantfile-vm.rb to ~/vagrant/Vagrantfile, and edit the values at the top
-to match this particular machine:
-
-* machine_name
-* box
-* azure_agent_url should be changed to the latest version
-* agent_pool
-* pat
-
-Then:
-
-```sh
-$ cd ~/vagrant
-$ vagrant up
-```
-
-If the `vagrant up` fails you might need to `vagrant halt` and rerun from within the KVM as
-sometimes over SSH this fails.
-
-[grab a PAT]: #getting-an-azure-pipelines-pat
-
-## Getting an Azure Pipelines PAT
-
-Personal Access Tokens are an important part of this process,
-and they are fairly easy to generate.
-On ADO, under the correct project (in vcpkg's case, "vcpkg"),
-click on the "User Settings" icon, then go to "Personal access tokens".
-It is the icon to the left of your user icon, in the top right corner.
-
-Then, create a new token, give it a name, make sure it expires quickly,
-and give it a custom defined scope that includes the
-"Agent pools: Read & manage" permission (you'll need to "Show all scopes"
-to access this).
-You can now copy this token and use it to allow machines to join.
-
-## Setting up a new macOS machine
-
-* Install Parallels
-* Install Homebrew
+    Get-AzCopyReadCommand -FileName vcpkg-osx-YYYY-MM-DD-arm64.aar
+    ```
+    In the host's KVM terminal, use the KVM software's "paste from clipboard" function to paste and
+    run the generated command, then run:
     ```sh
-    $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-    $ brew install hashicorp/tap/hashicorp-vagrant
-    $ vagrant plugin install vagrant-parallels
+    # (The azcopy command line generated above)
+    aa extract -d vcpkg-osx-YYYY-MM-DD-arm64 -i ./vcpkg-osx-YYYY-MM-DD-arm64.aar -enable-holes
     ```
+- [ ] Open a separate terminal window on the host and start the VM by running:
+    ```sh
+    cd ~/vcpkg-osx-YYYY-MM-DD-arm64
+    ~/macosvm ./vm.json
+    ```
+- [ ] In PowerShell on a workstation, generate a short-lived access token to add the agent to the
+    pool:
+    ```pwsh
+    az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken --output tsv
+    ```
+- [ ] In the host's KVM terminal, use the KVM software's "paste from clipboard" function to paste
+    the short-lived access token into the guest deploy command from the vcpkg clone. The script
+    accepts a host name in the form `vcpkg-m4-NNN` case-insensitively, registers the Azure DevOps
+    agent as `VCPKG-M4-NNN`, and stops with an error if the host name or agent pool cannot be
+    determined unambiguously:
+    ```sh
+    ~/vcpkg/scripts/azure-pipelines/osx/host-register-guest.sh TOKEN-GOES-HERE
+    ```
+- [ ] After successful registration, the script will cleanly shut down the VM. If registration fails,
+      the VM remains running for diagnosis. In the KVM's terminal, relaunch the successfully registered
+      VM in ephemeral mode:
+    ```sh
+    ~/macosvm --ephemeral ./vm.json
+    ```
+- [ ] Open a terminal window on the host and run the agent
+    ```sh
+    ssh -i ~/vcpkg-osx-*-arm64/id_guest builduser@buildusers-Virtual-Machine.local
+    ~/myagent/run.sh
+    ```
+- [ ] Check that the machine shows up in the pool, and lock the current user account on the host.
+- [ ] Lock the screen on the host.
+- [ ] Update the "vcpkg Macs" spreadsheet line for the machine with the new pool.

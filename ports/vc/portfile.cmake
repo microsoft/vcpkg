@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  VcDevel/Vc
-    REF 1.4.3
-    SHA512 7c0c4ccf8c7c4585334482135f2daf1a5bc088114b880093893583bdcea1fbfcec02485da6059304c510c8b1bb1b768ef04fd7ac8ccb21b9ebbad5d0d5babaef
+    REF "${VERSION}"
+    SHA512 6525a72beae5270e31fe288b6b61cb2c3e431354bda3965b5fea5d743a3a76b33baaa28ef6f024353970a5b9e877fdc27a76754201f97cf21284ee1abdf16665
     HEAD_REF 1.4
     PATCHES 
        correct_cmake_config_path.patch
-       Fix-internal-func-export.patch #remove it in next version
 )
 
 vcpkg_cmake_configure(
@@ -22,4 +21,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,9 +1,9 @@
 diff --git a/src/plist.c b/src/plist.c
-index 19279edb..a62687eb 100644
+index a33a6fb..1dda4d7 100644
 --- a/src/plist.c
 +++ b/src/plist.c
-@@ -51,6 +51,8 @@
- typedef SSIZE_T ssize_t;
+@@ -132,6 +132,8 @@ static int plist_debug = 0;
+         static void f(void)
  #endif
  
 +#ifndef LIBPLIST_STATIC  // disable dll constructor
@@ -11,9 +11,9 @@ index 19279edb..a62687eb 100644
  extern void plist_xml_init(void);
  extern void plist_xml_deinit(void);
  extern void plist_bin_init(void);
-@@ -137,6 +139,8 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
- #warning No compiler support for constructor/destructor attributes, some features might not be available.
- #endif
+@@ -158,6 +160,8 @@ INITIALIZER(internal_plist_init)
+     atexit(internal_plist_deinit);
+ }
  
 +#endif  // disable dll constructor
 +

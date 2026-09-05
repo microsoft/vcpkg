@@ -1,7 +1,7 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://vic.crs4.it/vic/download/pkgs/sl-7.8.2-Source.tar.gz"
+    URLS "https://www.crs4.it/vic/download/pkgs/sl-7.8.2-Source.tar.gz"
     FILENAME "sl-7.8.2-Source.tar.gz"
     SHA512 1391dac1474ddb47d0cf0eb7baeb7db68d6356c2116f732dd57b8a050739523282ded0643cc466640f2b22f25dd6bfced00ede4e041b7ff83754a99ae6725d7d
 )
@@ -9,16 +9,16 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES include_functional.patch
+    PATCHES
+        include_functional.patch
+        fix-cmake4.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-	OPTIONS
-		-DSL_TEST=OFF
-		-DSL_INSTALL_SLFIND_MODULE=OFF
-	OPTIONS_DEBUG
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=11 # 17 does not allow 'register'
         -DSL_TEST=OFF
         -DSL_INSTALL_SLFIND_MODULE=OFF
 )

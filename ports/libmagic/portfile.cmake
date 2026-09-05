@@ -1,30 +1,34 @@
+set(extra_patches "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES
+    list(APPEND extra_patches
         "0001-Use-libtre.patch"
-        "0002-Change-zlib-lib-name-to-match-CMake-output.patch"
         "0003-Fix-WIN32-macro-checks.patch"
         "0004-Typedef-POSIX-types-on-Windows.patch"
+        "fix-public-ssize-t.diff"
         "0005-Include-dirent.h-for-S_ISREG-and-S_ISDIR.patch"
         "0006-Remove-Wrap-POSIX-headers.patch"
         "0007-Substitute-unistd-macros-for-MSVC.patch"
         "0008-Add-FILENO-defines.patch"
-        "0009-No-fcntl-in-magic.c.patch"
         "0010-Properly-check-for-the-presence-of-bitmasks.patch"
         "0011-Remove-pipe-related-functions-in-funcs.c.patch"
         "0012-Convert-MSYS2-paths-to-Windows-paths.patch"
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
-        "0014-Define-POSIX-macros-if-missing.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
+        "0016-Fix-file_famagic-function.patch"
     )
 endif()
 
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)$" "FILE\\1_\\2" FILE_REF "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
-    REF FILE5_40
-    SHA512 d76bfe5326e1b40368e055c2e049a24b4ffdbd727371f4f3aa1dd3f53787d16b88550b3cc71ecf02151e2fb3e567eb2598e4707badab8c391eb71113c2dcc319
+    REF "${FILE_REF}"
+    SHA512 40568ddef1bd2cedb468f032bf07aaabf1756d20fe8bcba3b4f3fd42be13ed3242768a825db1456b7c0a12c6e549c3e714e1ea182bf5065d1d06e88cdd7a9363
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES
+        0002-Change-zlib-lib-name-to-match-CMake-output.patch
+        0017-Change-bzlib-name-to-match-CMake-output.patch
+        ${extra_patches}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -32,18 +36,44 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
 endif()
 
-vcpkg_configure_make(
-    AUTOCONFIG
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -DBUILD_AS_WINDOWS_STATIC_LIBARAY")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -DBUILD_AS_WINDOWS_STATIC_LIBARAY")
+endif()
+
+set(FEATURE_OPTIONS)
+
+macro(enable_feature feature switch)
+    if("${feature}" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "--enable-${switch}")
+        set(has_${feature} 1)
+    else()
+        list(APPEND FEATURE_OPTIONS "--disable-${switch}")
+        set(has_${feature} 0)
+    endif()
+endmacro()
+
+enable_feature("bzip2" "bzlib")
+enable_feature("zlib" "zlib")
+enable_feature("lzma" "xzlib")
+enable_feature("zstd" "zstdlib")
+
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        "--disable-lzlib"
+        "--disable-libseccomp"
 )
 
 if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libmagic/bin")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(EXTRA_ARGS "ADD_BIN_TO_PATH")
+    vcpkg_add_to_path(PREPEND "${CURRENT_PACKAGES_DIR}/tools/libmagic/bin")
 endif()
 
-vcpkg_install_make(${EXTRA_ARGS})
+vcpkg_make_install()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 vcpkg_fixup_pkgconfig()
@@ -67,5 +97,13 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man5")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    "${CMAKE_CURRENT_LIST_DIR}/unofficial-${PORT}-config.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
+    INSTALL_DESTINATION "share/unofficial-${PORT}"
+)
+
+# Handle copyright and usage
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

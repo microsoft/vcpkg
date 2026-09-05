@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2006604..c9fedb9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -323,6 +323,7 @@ if (USE_THREAD)
+   endif()
+ endif()
+ 
++if(BUILD_TESTING)
+ #if (MSVC OR NOT NOFORTRAN)
+ if (NOT NO_CBLAS)
+   if (NOT ONLY_CBLAS)
+@@ -348,6 +349,7 @@ endif()
+   if (CPP_THREAD_SAFETY_TEST OR CPP_THREAD_SAFETY_GEMV)
+     add_subdirectory(cpp_thread_test)
+   endif()
++endif()
+ 
+ if (NOT FIXED_LIBNAME)
+ set_target_properties(${OpenBLAS_LIBS} PROPERTIES

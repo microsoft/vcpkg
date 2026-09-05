@@ -1,9 +1,11 @@
 {
   "name": "flecs",
-  "version": "3.2.4",
+  "version": "4.1.6",
   "description": "A fast entity component system (ECS) for C & C++",
   "homepage": "https://github.com/SanderMertens/flecs",
-  "license": "MIT",
+  "documentation": "https://www.flecs.dev/flecs/",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

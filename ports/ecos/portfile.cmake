@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embotech/ecos
-    REF v2.0.8
-    SHA512 c1adb188d6b2c400f817de15272472adfd013e2a174f49ec0bb2f7f889f26ba2b7ea165d9bedac3031bd2da7a770f2a285ad825d5b22ccc6cf43c756a20f844f
+    REF "v${VERSION}"
+    SHA512 b79434c194b5681f323b275eff0126f56beba792d270bd1773307cdf33297bee550b13bd2f96f5923dc4b8e200216d897ea01978f65da69dd81f1a669f8fd6e2
     HEAD_REF develop
 )
 

@@ -67,13 +67,15 @@ diff --git a/vl/sift.h b/vl/sift.h
 index 50e03f4..f9558ad 100644
 --- a/vl/sift.h
 +++ b/vl/sift.h
-@@ -138,7 +138,8 @@ void  vl_sift_keypoint_init              (VlSiftFilt const *f,
-                                           double y,
+@@ -139,6 +139,11 @@ void  vl_sift_keypoint_init              (VlSiftFilt const *f,
                                            double sigma) ;
  /** @} */
--
+ 
 +VL_EXPORT
-+void update_gradient(VlSiftFilt* f);
++void vl_sift_update_gradient(VlSiftFilt* f);
++
++#define update_gradient vl_sift_update_gradient
++
  /** @name Retrieve data and parameters
   ** @{
   **/

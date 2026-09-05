@@ -1,37 +1,41 @@
-set(FLINT_VERSION 2.8.0)
-set(FLINT_HASH "916285d13a55d12a041236195a9d7bbc5c1c3c30c3aa2f169efee6063b800d34f96ad3235f1c77285b04305ce685e5890169c984108d50d0c9ee7a77c3f6e73d")
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.flintlib.org/flint-${FLINT_VERSION}.zip"
-    FILENAME "flint-${FLINT_VERSION}.zip"
-    SHA512 ${FLINT_HASH}
-)
-
-vcpkg_find_acquire_program(PYTHON3)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO flintlib/flint
+    REF v${VERSION}
+    SHA512 f1057affd37d2460522fbd4620454616571d3a8220d53fa6ee668d8cec25f7996275ec00decaf4b4d9a799db117419192b68f4c3b720f094d12d9b4cf2aa977a
+    HEAD_REF master
     PATCHES
-        fix-cmakelists.patch
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DPYTHON_EXECUTABLE=${PYTHON3}
-        -DWITH_NTL=OFF
-        -DWITH_CBLAS=OFF
-)
-
-vcpkg_cmake_install()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/flint/flint-config.h"
-        "#elif defined(MSC_USE_DLL)" "#elif 1"
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_PARALLEL_CONFIGURE # see configure_file(${CMAKE_CURRENT_SOURCE_DIR} ...
+        OPTIONS
+            "-DPython_EXECUTABLE=${PYTHON3}"
+            -DVCPKG_LOCK_FIND_PACKAGE_CBLAS=OFF
+            -DWITH_NTL=OFF
     )
+    vcpkg_cmake_install()
+    vcpkg_copy_pdbs()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/flint)
+else()
+    vcpkg_make_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTORECONF
+        OPTIONS
+            --with-ntl=no
+            --with-blas=no
+    )
+    vcpkg_make_install()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/gpl-2.0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

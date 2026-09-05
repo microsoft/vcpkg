@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 07c1238..13d5f40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,7 +71,7 @@ endif()
+ # check external libraries
+ #variable_watch(fftw3f_INCLUDE_DIR)
+ if (FIND_FFTW)
+-    find_package(fftw3f)
++    find_package(FFTW3f CONFIG REQUIRED)
+ endif()
+ 
+ # cross-platform threads (e.g. thread.h for C11
+@@ -466,8 +466,8 @@ foreach(target ${LIQUID_TARGETS})
+         PROPERTIES
+             PUBLIC_HEADER include/liquid.h)
+     target_link_libraries(${target} c m)
+-    if (fftw3f_FOUND)
+-        target_link_libraries(${target} fftw3f)
++    if (FFTW3f_FOUND)
++        target_link_libraries(${target} FFTW3::fftw3f)
+     endif()
+ endforeach()
+ 
+@@ -560,7 +560,7 @@ install(FILES
+ # ---------------------------------------- pkg-config ----------------------------------------
+ 
+ set(LIQUID_PC_LIBS_PRIVATE "")
+-if (fftw3f_FOUND)
++if (FFTW3f_FOUND)
+     string(APPEND LIQUID_PC_LIBS_PRIVATE " -lfftw3f")
+ endif()
+ 

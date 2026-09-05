@@ -3,10 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/circular_buffer
-    REF boost-1.83.0
-    SHA512 8ec66b5b9185971684c72cd6f4ef86c2ed5d0decb1a72949d1dc7423f8f220f14e124151d1c6a7042805ecb9813a2ce67080f2ebef316e24a0b67ea5686a2e1f
+    REF boost-${VERSION}
+    SHA512 039bbce015c88f9b247e786ef2c582eee57de5262cba4ba6cf87562bcb331810b57891db0ba4779316ba68df9a299f755aacac0cbd43d078680a7e0ea8160eff
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

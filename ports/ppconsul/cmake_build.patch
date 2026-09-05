@@ -1,62 +1,97 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 92e4698..aa643aa 100644
+index f82410c..01dd9bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -52,6 +52,8 @@ endif()
+@@ -25,7 +25,7 @@ project(Ppconsul VERSION ${VERSION})
  
- enable_testing()
+ include(./conan_paths.cmake OPTIONAL)
  
-+find_package(json11 REQUIRED)
-+
- if (${USE_CPPNETLIB})
-     find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS thread filesystem system date_time chrono regex)
+-if (WIN32)
++if (NOT BUILD_SHARED_LIBS)
+     option(BUILD_STATIC_LIB "Build Ppconsul as static library" ON)
+ else()
+     option(BUILD_STATIC_LIB "Build Ppconsul as static library" OFF)
+@@ -64,7 +64,13 @@ endif()
  
-@@ -75,6 +77,8 @@ else ()
- 	   set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${CURL_ROOT}/lib")
-     endif ()
-     find_package(CURL REQUIRED)
-+    find_package(OpenSSL REQUIRED)
-+    find_package(ZLIB REQUIRED)
+ 
+ if (NOT ${USE_BOOST_REGEX})
+-    find_package(Boost ${BOOST_MIN_VERSION} REQUIRED)
++    find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS
++        fusion
++        mpl
++        optional
++        preprocessor
++        variant
++    )
+ else ()
+     find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS regex)
+     add_definitions(-DPPCONSUL_USE_BOOST_REGEX)
+@@ -82,8 +88,8 @@ if (NOT ${CURL_ROOT} STREQUAL "")
  endif ()
+ find_package(CURL REQUIRED)
  
- set(LIBB64_DIR "${PROJECT_SOURCE_DIR}/ext/b64")
-@@ -87,9 +91,7 @@ if (WIN32 AND NOT BUILD_STATIC_LIB)
+-set(LIBB64_DIR "${PROJECT_SOURCE_DIR}/ext/b64")
+-set(LIBB64_SOURCES "${LIBB64_DIR}/cdecode.h" "${LIBB64_DIR}/cdecode.c" "${LIBB64_DIR}/cencode.h" "${LIBB64_DIR}/cencode.c")
++find_package(unofficial-b64 CONFIG REQUIRED)
++set(LIBB64_SOURCES "")
+ 
+ set(CATCH_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/ext/catch")
+ set(HEADERS_DIR "${PROJECT_SOURCE_DIR}/include/ppconsul")
+@@ -92,7 +98,7 @@ if (WIN32 AND NOT BUILD_STATIC_LIB)
      message(FATAL_ERROR "Building Ppconsul as dynamic library on Windows is not supported, see https://github.com/oliora/ppconsul/issues/25")
  endif()
  
 -add_subdirectory(ext/json11)
++find_package(json11 CONFIG REQUIRED)
  add_subdirectory(src)
--add_subdirectory(tests)
  
- install(
-     DIRECTORY "${HEADERS_DIR}"
+ option(BUILD_TESTS "Flag to use to build test or not" ON)
+diff --git a/ppconsul.pc.in b/ppconsul.pc.in
+index 199395a..abeb1dc 100644
+--- a/ppconsul.pc.in
++++ b/ppconsul.pc.in
+@@ -6,5 +6,7 @@ libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+ Name: ppconsul
+ Description: C++ client for the Consul HTTP API
+ Version: @Ppconsul_VERSION@
++Requires.private: libcurl
+ Libs: -L${libdir} @ppconsul_libs@
++Libs.prvate: -lb64
+ Cflags: -I${includedir}
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index d747100..966c7e2 100644
+index 1318433..8400172 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -78,7 +78,7 @@ target_include_directories(${PROJECT_NAME}
+@@ -66,18 +66,22 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_auto_type cxx_decltype cxx_st
+ target_include_directories(${PROJECT_NAME}
+     PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+-        $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}>
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+     PRIVATE
+         ${CMAKE_CURRENT_SOURCE_DIR}
+-        ${Boost_INCLUDE_DIRS}
+-        ${CMAKE_CURRENT_SOURCE_DIR}/../ext
+ )
  
++target_include_directories(${PROJECT_NAME} PRIVATE ${JSON11_INCLUDE_DIRS})
  target_link_libraries(${PROJECT_NAME}
      PRIVATE
 -        json11
+-        ${Boost_LIBRARIES}
++        unofficial::b64::b64
 +        ${JSON11_LIBRARIES}
-         ${Boost_LIBRARIES}
++    PUBLIC
++        Boost::fusion
++        Boost::mpl
++        Boost::optional
++        Boost::preprocessor
++        Boost::variant
  )
  
-@@ -87,7 +87,10 @@ if (${USE_CPPNETLIB})
-     target_link_libraries(${PROJECT_NAME} PRIVATE ${CPPNETLIB_LIBRARIES})
- else ()
-     target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
--    target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES})
-+    target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES} ${OPENSSL_LIBRARIES} ZLIB::ZLIB)
-+    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-+        target_link_libraries(${PROJECT_NAME} PRIVATE "-framework CoreFoundation" "-framework Security")
-+    endif ()
- endif ()
- 
- source_group(${PROJECT_NAME} FILES ${SOURCES})
+ target_include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
 diff --git a/src/s11n.h b/src/s11n.h
-index c317834..3cb03c4 100644
+index 33fa151..c4f9a84 100644
 --- a/src/s11n.h
 +++ b/src/s11n.h
 @@ -6,7 +6,7 @@

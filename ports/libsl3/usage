@@ -1,0 +1,4 @@
+libsl3 provides CMake targets:
+
+    find_package(sl3 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE a4z::sl3)

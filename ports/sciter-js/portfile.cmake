@@ -6,8 +6,8 @@ endif()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION c039754b11eb3b3b39024ba3257a28a63d581c7e)
-set(SCITER_SHA 77314cb55a01ceca39f00382e78ba65507d439b9302e97dae6f5bf10d7bc308df64d440dc97c9f90c06176121710102a75767d706972700f5b4f968e9740dc96)
+set(SCITER_REVISION 8c6caec64de4ce408ca167e34ebb74d221f6810c)
+set(SCITER_SHA d010b7b63569f00fe0179ab827ef3f78b2df08721faa48662b620a741b79533c87c274a233158ad9732943e214689ffe3b459f607576e068bbc93ae3a263f887)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -54,18 +54,17 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 
     file(INSTALL ${SCITER_BIN}/usciter DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
-    file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/libsciter.so DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${SCITER_TOOLS})
 
-    if ("windowless" IN_LIST FEATURES)
-        set(SCITER_BIN ${SOURCE_PATH}/bin.lite/linux/x64)
+    file(INSTALL ${SCITER_BIN}/libsciter.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${SCITER_BIN}/libsciter.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
-
-    file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 elseif(VCPKG_TARGET_IS_OSX)
     set(SCITER_BIN ${SOURCE_PATH}/bin/macosx)
@@ -80,6 +79,18 @@ elseif(VCPKG_TARGET_IS_OSX)
 
     execute_process(COMMAND sh -c "chmod +x usciterjs.app/Contents/MacOS/usciterjs" WORKING_DIRECTORY ${SCITER_TOOLS})
     execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
+
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    if ("webview" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -98,13 +109,20 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SCITER_BIN}/window-mixin.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
 
-    if ("windowless" IN_LIST FEATURES)
-        set(SCITER_BIN ${SOURCE_PATH}/bin.lite/windows/${SCITER_ARCH})
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    if ("webview" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
     message(WARNING "Sciter requires manual deployment of the correct DLL files.")
-	
 endif()

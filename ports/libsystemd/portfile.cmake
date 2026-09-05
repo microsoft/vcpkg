@@ -2,53 +2,85 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO systemd/systemd
   REF "v${VERSION}"
-  SHA512 84b4d16980fe2e64d5c3c95b9b4fbaad1076f368f493fdd745cbafbe7ce825293384f5fa0b6360ba8188da23c4575e87402fb666a3b71f84ff8b323aba0c07ff
+  SHA512 63d15da49e7580952a48a0b50df20c1b398e4b77edf259510b0cdb9022e919387baadf2190194a50f1f582b83e0768c13997a4189cf0fb6a61b65015496d9c80
   PATCHES
+    disable-warning-nonnull.patch
+    only-libsystemd.patch
     pkgconfig.patch
+    fix-2604-build.patch
+)
+
+set(static false)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(static pic)
+endif()
+
+vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(
+    PYTHON_VERSION 3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PACKAGES "jinja2"
 )
 
 vcpkg_configure_meson(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -Dstatic-libsystemd=true
-    -Daudit=false
-    -Dgcrypt=false
-  OPTIONS_DEBUG
-    -Drootprefix=${CURRENT_PACKAGES_DIR}/debug
-    -Dpkgconfiglibdir={CURRENT_PACKAGES_DIR}/debug
-  OPTIONS_RELEASE
-    -Drootprefix=${CURRENT_PACKAGES_DIR}
-    -Dpkgconfiglibdir={CURRENT_PACKAGES_DIR}
+    -Dmode=release
+    -Dstatic-libsystemd=${static}
+    -Dtests=false
+    # disabled capabilites
+    -Ddns-over-tls=false
+    -Dtranslations=false
+    # disabled dependencies
+    -Dacl=disabled
+    -Dapparmor=disabled
+    -Daudit=disabled
+    -Dblkid=disabled
+    -Dbpf-framework=disabled
+    -Dbzip2=disabled
+    -Ddbus=disabled # tests only
+    -Delfutils=disabled
+    -Dfdisk=disabled
+    -Dgcrypt=disabled
+    -Dglib=disabled # tests only
+    -Dgnutls=disabled
+    -Dkmod=disabled
+    -Dlibcurl=disabled
+    -Dlibcryptsetup=disabled
+    -Dlibfido2=disabled
+    -Dlibidn=disabled
+    -Dlibidn2=disabled
+    -Dlibiptc=disabled
+    -Dmicrohttpd=disabled
+    -Dopenssl=disabled
+    -Dp11kit=disabled
+    -Dpam=disabled
+    -Dpcre2=disabled
+    -Dpolkit=disabled
+    -Dpwquality=disabled
+    -Dpasswdqc=disabled
+    -Dseccomp=disabled
+    -Dselinux=disabled
+    -Dtpm2=disabled
+    -Dxenctrl=disabled
+    -Dxkbcommon=disabled
+    -Dzlib=disabled
+    # enabled dependencies
+    -Dlz4=enabled
+    -Dxz=enabled
+    -Dzstd=enabled
+  ADDITIONAL_BINARIES
+    "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
 )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  vcpkg_build_ninja(
-    TARGETS libsystemd.a devel
-  )
-else()
-  vcpkg_build_ninja(
-    TARGETS libsystemd devel
-  )
-endif()
 
-file(INSTALL "${SOURCE_PATH}/src/systemd" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+vcpkg_install_meson()
 
-set(BUILD_DIR_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(INSTALL "${BUILD_DIR_RELEASE}/libsystemd.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-else()
-  file(INSTALL "${BUILD_DIR_RELEASE}/libsystemd.so" DESTINATION "${CURRENT_PACKAGES_DIR}/lib" FOLLOW_SYMLINK_CHAIN)
-endif()
-
-set(BUILD_DIR_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(INSTALL "${BUILD_DIR_DEBUG}/libsystemd.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-else()
-  file(INSTALL "${BUILD_DIR_DEBUG}/libsystemd.so" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib" FOLLOW_SYMLINK_CHAIN)
-endif()
-
-file(INSTALL "${BUILD_DIR_RELEASE}/src/libsystemd/libsystemd.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(INSTALL "${BUILD_DIR_DEBUG}/src/libsystemd/libsystemd.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.LGPL2.1")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/README.md" "${SOURCE_PATH}/LICENSE.LGPL2.1"
+  COMMENT [[
+This port provides libsystemd.so/.a, which is based on sources in
+src/basic, src/fundamental, src/systemd and src/libsystemd.
+]])

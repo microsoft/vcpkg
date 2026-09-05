@@ -1,0 +1,13 @@
+diff --git a/src/colmap/sfm/observation_manager.cc b/src/colmap/sfm/observation_manager.cc
+index 22d076da..53412449 100644
+--- a/src/colmap/sfm/observation_manager.cc
++++ b/src/colmap/sfm/observation_manager.cc
+@@ -36,6 +36,8 @@
+ #include "colmap/util/logging.h"
+ #include "colmap/util/misc.h"
+ 
++#include <cassert>
++
+ namespace colmap {
+ 
+ bool MergeAndFilterReconstructions(const double max_reproj_error,

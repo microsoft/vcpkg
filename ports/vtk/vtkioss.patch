@@ -1,38 +1,20 @@
 diff --git a/IO/IOSS/vtkIOSSReader.cxx b/IO/IOSS/vtkIOSSReader.cxx
-index 34218f0a6..226896a9e 100644
+index a37317fe..24b1154a 100644
 --- a/IO/IOSS/vtkIOSSReader.cxx
 +++ b/IO/IOSS/vtkIOSSReader.cxx
-@@ -1343,20 +1343,20 @@ Ioss::Region* vtkIOSSReader::vtkInternals::GetRegion(const std::string& dbasenam
-       {
-         switch (properties.get(name).get_type())
-         {
--          case vtkioss_Ioss::Property::BasicType::POINTER:
-+          case Ioss::Property::BasicType::POINTER:
-             vtkLog(TRACE, << name << " : " << properties.get(name).get_pointer());
-             break;
--          case vtkioss_Ioss::Property::BasicType::INTEGER:
-+          case Ioss::Property::BasicType::INTEGER:
-             vtkLog(TRACE, << name << " : " << std::to_string(properties.get(name).get_int()));
-             break;
--          case vtkioss_Ioss::Property::BasicType::INVALID:
-+          case Ioss::Property::BasicType::INVALID:
-             vtkLog(TRACE, << name << " : "
-                           << "invalid type");
-             break;
--          case vtkioss_Ioss::Property::BasicType::REAL:
-+          case Ioss::Property::BasicType::REAL:
-             vtkLog(TRACE, << name << " : " << std::to_string(properties.get(name).get_real()));
-             break;
--          case vtkioss_Ioss::Property::BasicType::STRING:
-+          case Ioss::Property::BasicType::STRING:
-             vtkLog(TRACE, << name << " : " << properties.get(name).get_string());
-             break;
-           default:
+@@ -54,6 +54,7 @@
+ #include VTK_IOSS(Ioss_SideBlock.h)
+ #include VTK_IOSS(Ioss_SideSet.h)
+ #include VTK_IOSS(Ioss_StructuredBlock.h)
++#include VTK_IOSS(Iotr_Factory.h)
+ // clang-format on
+ 
+ #include <array>
 diff --git a/ThirdParty/ioss/CMakeLists.txt b/ThirdParty/ioss/CMakeLists.txt
-index 3066c4bb5..44e1eb1bf 100644
+index eeab3b90..f556903f 100644
 --- a/ThirdParty/ioss/CMakeLists.txt
 +++ b/ThirdParty/ioss/CMakeLists.txt
-@@ -5,7 +5,7 @@ vtk_module_third_party(
+@@ -13,7 +13,7 @@ vtk_module_third_party(
      STANDARD_INCLUDE_DIRS
    EXTERNAL
      PACKAGE SEACASIoss

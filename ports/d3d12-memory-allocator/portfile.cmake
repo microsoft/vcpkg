@@ -1,22 +1,22 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator 
-    REF 10f148cef0dfd34ae1a9373b9396beb1581c992a
-    SHA512 c99934a606ce5a5c9c59e05faf2e659bfad2e485b58aaf00f38219a6c89f17b62033f4a69935915f0d5269a4f0ecba41037b044913ae6f4077fa981eaab470c8
+    REF v${VERSION}
+    SHA512 2dd282d1c297e02b21b46651588f2b3614b96aaad1f89b0616f55b405eaf9674d54827f09912716bcf06bfae363e444d05755a1c2b3bbe47820a721de4b5bebc
     HEAD_REF master
+    PATCHES "0001-build-options.patch"
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH cmake/)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME D3D12MemoryAllocator
+    CONFIG_PATH share/cmake/D3D12MemoryAllocator/
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

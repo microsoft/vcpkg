@@ -1,0 +1,36 @@
+diff --git a/include/wil/resource.h b/include/wil/resource.h
+index c2ff77e..ca7db78 100644
+--- a/include/wil/resource.h
++++ b/include/wil/resource.h
+@@ -1245,6 +1245,7 @@ public:
+         {
+             reset_array(ElementDeleter());
+ 
++#if __cpp_if_constexpr >= 201606L
+             // If the deleter has overloads that can accept either just the pointer, or the pointer and size, we prioritize the
+             // pointer-only version, since that is the version we initially supported. And if we can't invoke it with either
+             // parameter set, we'll allow the compiler to still try to invoke the pointer-only version and cause it to emit an
+@@ -1257,6 +1258,10 @@ public:
+             {
+                 ArrayDeleter()(m_ptr, m_size);
+             }
++#else
++            // No C++17 support... fall back to the old behavior and assume just a pointer
++            ArrayDeleter()(m_ptr);
++#endif
+ 
+             m_ptr = nullptr;
+             m_size = size_type{};
+@@ -8322,10 +8327,12 @@ namespace details
+     {
+     };
+ 
++#if __cpp_lib_scoped_lock >= 201703L
+     template <typename TMutex>
+     struct lock_proof_traits<std::scoped_lock<TMutex>> : exclusive_lock_proof
+     {
+     };
++#endif
+ } // namespace details
+ /// @endcond
+ 

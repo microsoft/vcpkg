@@ -1,0 +1,24 @@
+diff --git a/absl/container/internal/hash_policy_traits.h b/absl/container/internal/hash_policy_traits.h
+--- a/absl/container/internal/hash_policy_traits.h
++++ b/absl/container/internal/hash_policy_traits.h
+@@ -147,7 +147,7 @@
+   }
+ 
+   template <class Hash, bool kIsDefault>
+-  static constexpr HashSlotFn get_hash_slot_fn() {
++  static HashSlotFn get_hash_slot_fn() {
+ // get_hash_slot_fn may return nullptr to signal that non type erased function
+ // should be used. GCC warns against comparing function address with nullptr.
+ #if defined(__GNUC__) && !defined(__clang__)
+diff --git a/absl/container/internal/raw_hash_set.h b/absl/container/internal/raw_hash_set.h
+--- a/absl/container/internal/raw_hash_set.h
++++ b/absl/container/internal/raw_hash_set.h
+@@ -3567,7 +3567,7 @@
+                   size_t{(std::numeric_limits<uint32_t>::max)()});
+     static constexpr size_t kBackingArrayAlignment =
+         BackingArrayAlignment(alignof(slot_type));
+-    static constexpr PolicyFunctions value = {
++    static const PolicyFunctions value = {
+         static_cast<uint32_t>(sizeof(key_type)),
+         static_cast<uint32_t>(sizeof(value_type)),
+         static_cast<uint32_t>(sizeof(slot_type)),

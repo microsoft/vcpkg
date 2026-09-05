@@ -1,11 +1,12 @@
 {
   "name": "soci",
-  "version": "4.0.3",
+  "version": "4.1.4",
   "port-version": 1,
-  "description": "SOCI database access library",
-  "homepage": "https://github.com/SOCI/soci",
+  "description": "SOCI - The C++ Database Access Library",
+  "homepage": "https://soci.sourceforge.net/",
   "license": "BSL-1.0",
   "dependencies": [
+    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -26,26 +27,41 @@
         "boost-tuple"
       ]
     },
+    "empty": {
+      "description": "Build the backend skeleton for new backends development"
+    },
     "mysql": {
-      "description": "Build mysql backend",
+      "description": "Include MySQL support",
       "dependencies": [
         "libmysql"
       ]
     },
     "odbc": {
-      "description": "Build odbc backend",
-      "supports": "!uwp"
+      "description": "Include ODBC support",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "unixodbc",
+          "platform": "!windows"
+        }
+      ]
     },
     "postgresql": {
-      "description": "Build postgresql backend",
+      "description": "Include PostgreSQL support",
       "dependencies": [
-        "libpq"
+        {
+          "name": "libpq",
+          "default-features": false
+        }
       ]
     },
     "sqlite3": {
-      "description": "Build sqlite3 backend",
+      "description": "Include SQLite3 support",
       "dependencies": [
-        "sqlite3"
+        {
+          "name": "sqlite3",
+          "default-features": false
+        }
       ]
     }
   }

@@ -1,0 +1,97 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0b2af5c..c112347 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,8 @@ project(pxlib)
+ 
+ option(ENABLE_GSF "Build with gsf support" OFF)
+ 
++include(GNUInstallDirs)
++
+ if(CMAKE_COMPILER_IS_GNUCC)
+     add_definitions(
+         -DHAVE_CONFIG_H
+@@ -101,7 +103,6 @@ set(SOURCES
+ )
+ 
+ add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+-add_definitions(-DPXLIB_EXPORTS)
+ 
+ # Versioning
+ set(PXLIB_MAJOR_VERSION "0")
+@@ -135,7 +136,16 @@ if(WIN32)
+     configure_file(${CMAKE_SOURCE_DIR}/pxlib.rc.in ${CMAKE_BINARY_DIR}/pxlib.rc)
+ endif()
+ 
+-add_library(pxlib SHARED ${SOURCES})
++add_library(pxlib ${SOURCES})
++
++if(WIN32 AND BUILD_SHARED_LIBS)
++    target_compile_definitions(pxlib
++        PRIVATE
++            $<BUILD_INTERFACE:PXLIB_EXPORTS>
++        PUBLIC
++            $<INSTALL_INTERFACE:PXLIB_DLL>
++    )
++endif()
+ 
+ # Add Windows resource file to the library
+ if(WIN32)
+@@ -144,10 +154,41 @@ endif()
+ 
+ target_include_directories(pxlib
+     PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_BINARY_DIR}
+-    PUBLIC ${CMAKE_BINARY_DIR}/include
++    PUBLIC
++        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
+ 
+ # Link iconv library if needed
+ if(ICONV_LIBRARIES)
+     target_link_libraries(pxlib PRIVATE ${ICONV_LIBRARIES})
+-endif()
+\ No newline at end of file
++endif()
++
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(
++   "${CMAKE_CURRENT_BINARY_DIR}/unofficial-pxlib-version.cmake"
++   VERSION ${PXLIB_DOTTED_VERSION}
++   COMPATIBILITY SameMajorVersion
++)
++configure_package_config_file(
++   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/unofficial-pxlib-config.cmake.in"
++   "${CMAKE_CURRENT_BINARY_DIR}/unofficial-pxlib-config.cmake"
++   INSTALL_DESTINATION share/unofficial-pxlib
++)
++install(TARGETS pxlib
++   EXPORT PxLibTargets
++   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++)
++install(EXPORT PxLibTargets
++   FILE unofficial-pxlib-targets.cmake
++   NAMESPACE unofficial::pxlib::
++   DESTINATION share/unofficial-pxlib
++)
++install(FILES
++   "${CMAKE_CURRENT_BINARY_DIR}/unofficial-pxlib-config.cmake"
++   "${CMAKE_CURRENT_BINARY_DIR}/unofficial-pxlib-version.cmake"
++   DESTINATION share/unofficial-pxlib
++)
++install(FILES ${CMAKE_BINARY_DIR}/include/paradox.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+\ No newline at end of file
+diff --git a/cmake/modules/unofficial-pxlib-config.cmake.in b/cmake/modules/unofficial-pxlib-config.cmake.in
+new file mode 100644
+index 0000000..1966348
+--- /dev/null
++++ b/cmake/modules/unofficial-pxlib-config.cmake.in
+@@ -0,0 +1,5 @@
++@PACKAGE_INIT@
++
++include(${CMAKE_CURRENT_LIST_DIR}/unofficial-pxlib-targets.cmake)
++
++check_required_components(unofficial-pxlib)
+\ No newline at end of file

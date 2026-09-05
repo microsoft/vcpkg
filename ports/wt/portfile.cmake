@@ -1,16 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF ${VERSION}
-    SHA512 70ab7bc79463fb0cf60b5ff07598f58b422cfff8d46fec2e9bb1d8598f5e2785e9f5dad2c6dbc24f7ff0ccf8cdcd8c52a09e647b6e1a9000444a1866f710175d
+    REF "${VERSION}"
+    SHA512 1200a6623cd37df2db46220b5b36e7a760f5675cb6a7e8c79fea7cad3a58f57bbfe761311bb8f67928107b477b4cd618ba917517013bf219d702302843d3cc09
     HEAD_REF master
     PATCHES
-        0002-link-glew.patch
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
+        0007-fix-haru.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS
@@ -50,7 +53,6 @@ vcpkg_cmake_configure(
         -DINSTALL_CONFIG_FILE_PATH="${DOWNLOADS}/wt"
         -DSHARED_LIBS=${SHARED_LIBS}
         -DBOOST_DYNAMIC=${SHARED_LIBS}
-        -DDISABLE_BOOST_AUTOLINK=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
 
@@ -64,6 +66,7 @@ vcpkg_cmake_configure(
         -DENABLE_FIREBIRD=OFF
         -DENABLE_QT4=OFF
         -DENABLE_QT5=OFF
+        -DENABLE_QT6=OFF
         -DENABLE_LIBWTTEST=ON
         -DENABLE_OPENGL=ON
 
@@ -71,12 +74,15 @@ vcpkg_cmake_configure(
         ${WT_PLATFORM_SPECIFIC_OPTIONS}
 
         -DUSE_SYSTEM_SQLITE3=ON
-        -DUSE_SYSTEM_GLEW=ON
 
         -DCMAKE_INSTALL_DIR=share
         # see https://redmine.webtoolkit.eu/issues/9646
         -DWTHTTP_CONFIGURATION=
         -DCONFIGURATION=
+
+        "-DUSERLIB_PREFIX=${CURRENT_INSTALLED_DIR}"
+    MAYBE_UNUSED_VARIABLES
+        USE_SYSTEM_SQLITE3
 
 )
 
@@ -93,5 +99,10 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" W_CONFIG_H)
 string(REGEX REPLACE "([\r\n])#define RUNDIR[^\r\n]+" "\\1// RUNDIR intentionally unset by vcpkg" W_CONFIG_H "${W_CONFIG_H}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "${W_CONFIG_H}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/src/thirdparty/qrcodegen/license.txt"
+        "${SOURCE_PATH}/src/thirdparty/rapidxml/license.txt"
+)
 vcpkg_copy_pdbs()

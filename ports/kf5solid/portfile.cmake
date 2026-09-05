@@ -1,19 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/solid
-    REF v5.98.0
-    SHA512 9f0aed7f8ea29a6132ca9c99c4c744ca5580bb3f7be1712e27d1fc3ae47b2edac26a5ce20abddef4d9998612f2386e1cc6915504c02897f2b3ebcec01cd26208
+    REF "v${VERSION}"
+    SHA512 67d22f9da0646e9e98c029e9beec73705582d9bf946c1330166c168f7216113786a3a1ae81c88ad3886244147d48a655c9a938d8700ee39414c1d575c0949959
     HEAD_REF master
     PATCHES
         001_fix_libmount.patch
         002_fix_imobile.patch
+        003_libmount.patch
 )
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 if(VCPKG_TARGET_IS_OSX)
     # On Darwin platform, the bundled version of 'bison' may be too old (< 3.0).
     vcpkg_find_acquire_program(BISON)
     execute_process(
-        COMMAND ${BISON} --version
+        COMMAND "${BISON}" --version
         OUTPUT_VARIABLE BISON_OUTPUT
     )
     string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" BISON_VERSION "${BISON_OUTPUT}")
@@ -28,30 +31,33 @@ endif()
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    "libmount" CMAKE_DISABLE_FIND_PACKAGE_LibMount
-    "imobile" CMAKE_DISABLE_FIND_PACKAGE_unofficial-libimobiledevice
+    FEATURES
+        libmount    CMAKE_REQUIRE_FIND_PACKAGE_LibMount
+        imobile     CMAKE_REQUIRE_FIND_PACKAGE_IMobileDevice
+        imobile     CMAKE_REQUIRE_FIND_PACKAGE_PList
+    INVERTED_FEATURES
+        libmount    CMAKE_DISABLE_FIND_PACKAGE_LibMount
+        imobile     CMAKE_DISABLE_FIND_PACKAGE_IMobileDevice
+        imobile     CMAKE_DISABLE_FIND_PACKAGE_PList
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_QMLDIR=qml
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Solid CONFIG_PATH lib/cmake/KF5Solid)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Solid)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
@@ -59,13 +65,12 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Until https://github.com/microsoft/vcpkg/pull/34091
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

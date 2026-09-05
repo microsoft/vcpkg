@@ -3,10 +3,32 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/hana
-    REF boost-1.83.0
-    SHA512 7a4e76839f5afece4dd1f8fc333364f5522bac1a02601dcfaf7525a67fd4e36617357d4731a486d03a9f0ad04b67364e6ec156fefc37f5e3e11d6d5e87abb2c3
+    REF boost-${VERSION}
+    SHA512 485ba2615aa75a4a2361889d5760cbc47f3d8e71294b0cfaf07c974abb5471f5677c888e316f08b3a120467edd15d02c0102c30d0b223818362c63e83d19d02c
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+if("large-struct-macros" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(BOOST_HANA_MAX_NUMBER_OF_MEMBERS 124)
+    else()
+        set(BOOST_HANA_MAX_NUMBER_OF_MEMBERS 200)
+    endif()
+
+    math(EXPR BOOST_HANA_GENERATOR_LIMIT "${BOOST_HANA_MAX_NUMBER_OF_MEMBERS} + 1")
+    vcpkg_find_acquire_program(RUBY)
+    vcpkg_execute_required_process(
+        COMMAND "${RUBY}" -rerb -e "ENV['MAX_NUMBER_OF_MEMBERS'] = ARGV[0]; print ERB.new(File.read(ARGV[1])).result" "${BOOST_HANA_GENERATOR_LIMIT}" "${SOURCE_PATH}/include/boost/hana/detail/struct_macros.hpp.erb"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME "boost-hana-generate-struct-macros"
+        OUTPUT_VARIABLE _boost_hana_struct_macros
+    )
+    file(WRITE "${SOURCE_PATH}/include/boost/hana/detail/struct_macros.hpp" "${_boost_hana_struct_macros}")
+    message(STATUS "boost-hana: generated struct_macros.hpp for up to ${BOOST_HANA_MAX_NUMBER_OF_MEMBERS} members")
+endif()
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

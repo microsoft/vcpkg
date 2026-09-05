@@ -1,6 +1,5 @@
 {
   "name": "pcg",
-  "version-date": "2021-04-06",
-  "port-version": 2,
+  "version-date": "2022-04-09",
   "description": "Permuted Congruential Generator"
 }

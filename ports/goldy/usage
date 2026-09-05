@@ -1,0 +1,11 @@
+The package goldy provides CMake targets:
+
+    find_package(goldy CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE goldy::goldy)
+
+Include the headers:
+    #include <goldy.hpp>  // C++ RAII wrapper
+    #include <goldy.h>    // C API
+
+Note: goldy_ffi.dll must be in your PATH or next to your executable at runtime.
+The Slang compiler (slang.dll) is also required at runtime (from Vulkan SDK).

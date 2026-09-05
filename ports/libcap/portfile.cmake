@@ -1,8 +1,12 @@
-vcpkg_from_git(
-    OUT_SOURCE_PATH SOURCE_PATH
-    URL git://git.kernel.org/pub/scm/libs/libcap/libcap.git
-    FETCH_REF "libcap-${VERSION}"
-    REF 3c7dda330bd9a154bb5b878d31fd591e4951fe17
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-${VERSION}.tar.xz"
+    FILENAME "libcap-${VERSION}.tar.xz"
+    SHA512 a156a8708dd59f13400f701f4e1ddc81f915fe4e7b32f93a328f7d6f030b7a004fb985fa9ac60812dfffeb8ad860d2e1f59895485497350250efd9378682626b
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
@@ -14,14 +18,14 @@ if(VCPKG_CROSSCOMPILING)
     file(TOUCH "${SOURCE_PATH}/libcap/cap_names.h")
 endif()
 
-vcpkg_configure_make(
+vcpkg_cmake_get_vars(cmake_vars_file)
+set(ENV{OBJCOPY} "${VCPKG_DETECTED_CMAKE_OBJCOPY}")
+
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     COPY_SOURCE
-    DETERMINE_BUILD_TRIPLET
 )
-vcpkg_install_make(
-    MAKEFILE "Makefile.vcpkg"
-)
+vcpkg_make_install(MAKEFILE "Makefile.vcpkg")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b5c812c..7fb66f7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,7 +24,10 @@ if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+ endif(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+ 
+ # find libusb
+-find_package ( USB1 REQUIRED )
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(LIBUSB REQUIRED libusb-1.0)
++set(LIBUSB_INCLUDE_DIR "${LIBUSB_INCLUDE_DIRS}")
++set(LIBUSB_LIBRARIES "${LIBUSB_LINK_LIBRARIES}")
+ include_directories ( ${LIBUSB_INCLUDE_DIR} )
+ 
+ # Find Boost

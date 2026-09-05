@@ -3,28 +3,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.83.0
-    SHA512 8d30de6f2a02768716a109b8784f573e6fdd75fe0ba50fabbe1edf6cd65fb0ec92eccf6929102130d464bfbcdc3a677b53f0ac57ab82464a4f0b8cbbd3d644a6
+    REF boost-${VERSION}
+    SHA512 8323b1fce0695e05abb3df04eabde421ceb3315af38e37d6c37aabdb6b4b136caff04944afe827a46f2d0d46f3c9312aba0596e59d2065dd7b61a090b61768d4
     HEAD_REF master
-    PATCHES
-        0001-fix-build-error-on-MSVC.patch
-        fix-dependencies.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
-    "import config : requires ;"
-    "import ../config/checks/config : requires ;"
+set(FEATURE_OPTIONS "")
+include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_IS_MINGW)
+    # mingw cross compile toolchain lacks std conv support
+    list(APPEND FEATURE_OPTIONS "-DBOOST_LOCALE_ENABLE_STD=OFF")
+endif()
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
-    "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
-    @ONLY
-)
-boost_modular_build(
-    SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
-)
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

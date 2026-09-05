@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boost-ext/sml
-    REF v1.1.5
-    SHA512 6babee6da2db93912afa2eb932591674a73f43609b7c2b0523e84ba682c09f6d4f67d1c7f6ea48f73f1f09de8df2eaf2ae30b3399c1602189ea08d42689758d7
+    REF "v${VERSION}"
+    SHA512 4e0da6178513fffd3f6830d155d0f77e5e92b774e54f2e3d56510b6a94072b68d197c3e8407c7756639f90efef6e0d8a960ed7061abd5f633ae24a326bbb2530
     HEAD_REF master
 )
 
@@ -12,4 +12,4 @@ file(INSTALL "${SOURCE_PATH}/include/boost/sml.hpp"
 )
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

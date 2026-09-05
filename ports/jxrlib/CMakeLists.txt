@@ -22,7 +22,11 @@ if(NOT WIN32)
   add_definitions(-D__ANSI__)
 endif()
 if(NOT MSVC)
-  add_compile_options(-Wno-error=implicit-function-declaration -Wno-endif-labels)
+  add_compile_options(
+    -Wno-error=implicit-function-declaration
+    -Wno-endif-labels
+    -Wno-incompatible-pointer-types             # https://gcc.gnu.org/gcc-14/porting_to.html#incompatible-pointer-types
+  )
 endif()
 
 include(TestBigEndian)

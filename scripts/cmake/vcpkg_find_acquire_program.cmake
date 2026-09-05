@@ -49,6 +49,7 @@ function(z_vcpkg_find_acquire_program_find_external program)
         unset(SCRIPT_${arg_PROGRAM_NAME} CACHE)
     endif()
 
+    set(${program} "$CACHE{${program}}")
     if("${version_command}" STREQUAL "")
         set(version_is_good ON) # can't check for the version being good, so assume it is
     elseif(${program}) # only do a version check if ${program} has a value
@@ -60,8 +61,10 @@ function(z_vcpkg_find_acquire_program_find_external program)
         )
     endif()
 
-    if(NOT version_is_good)
-        unset("${program}" PARENT_SCOPE)
+    if(version_is_good)
+        set(${program} "$CACHE{${program}}" PARENT_SCOPE)
+    else()
+        set("${program}" "${program}-NOTFOUND" PARENT_SCOPE)
         unset("${program}" CACHE)
     endif()
 endfunction()
@@ -84,10 +87,34 @@ function(z_vcpkg_find_acquire_program_find_internal program)
             PATHS ${arg_PATHS}
             NO_DEFAULT_PATH)
         if(SCRIPT_${program})
-            set("${program}" ${${arg_INTERPRETER}} ${SCRIPT_${program}} CACHE INTERNAL "")
+            if(arg_INTERPRETER MATCHES "PYTHON")
+              set("${program}" ${${arg_INTERPRETER}} -I ${SCRIPT_${program}} CACHE INTERNAL "")
+            else()
+              set("${program}" ${${arg_INTERPRETER}} ${SCRIPT_${program}} CACHE INTERNAL "")
+            endif()
         endif()
         unset(SCRIPT_${program} CACHE)
     endif()
+    set(${program} "$CACHE{${program}}" PARENT_SCOPE)
+endfunction()
+
+function(z_use_vcpkg_fetch program)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        ""
+        "FETCH_NAME"
+        ""
+    )
+    if(NOT arg_FETCH_NAME)
+      string(TOLOWER "${program}" arg_FETCH_NAME)
+    endif()
+    vcpkg_execute_in_download_mode(
+        COMMAND "$ENV{VCPKG_COMMAND}" fetch "${arg_FETCH_NAME}" --x-stderr-status
+        OUTPUT_VARIABLE ${program}
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        COMMAND_ERROR_IS_FATAL ANY
+    )
+    set("${program}" "${${program}}" CACHE STRING "" FORCE)
+    set(z_uses_vcpkg_fetch ON PARENT_SCOPE)
 endfunction()
 
 function(vcpkg_find_acquire_program program)
@@ -105,7 +132,6 @@ function(vcpkg_find_acquire_program program)
     set(rename_binary_to "")
     set(tool_subdirectory "")
     set(interpreter "")
-    set(supported_on_unix "")
     set(post_install_command "")
     set(paths_to_search "")
     set(version_command "")
@@ -116,6 +142,9 @@ function(vcpkg_find_acquire_program program)
     set(program_information "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/vcpkg_find_acquire_program(${program}).cmake")
     if(program MATCHES "^[A-Z0-9]+\$" AND EXISTS "${program_information}")
         include("${program_information}")
+        if(z_uses_vcpkg_fetch)
+          return()
+        endif()
     else()
         message(FATAL_ERROR "unknown tool ${program} -- unable to acquire.")
     endif()
@@ -137,6 +166,15 @@ function(vcpkg_find_acquire_program program)
         set(search_names "${program_name}")
     endif()
 
+    # Force nested `find_program` to either use the cached variable or
+    # to actually search, regardless of a parent scope variable.
+    # Called functions must change the variable in this scope.
+    if("$CACHE{${program}}" STREQUAL "")
+        set(${program} "NOTFOUND")
+    else()
+        set(${program} "$CACHE{${program}}")
+    endif()
+
     z_vcpkg_find_acquire_program_find_internal("${program}"
         INTERPRETER "${interpreter}"
         PATHS ${paths_to_search}
@@ -152,8 +190,9 @@ function(vcpkg_find_acquire_program program)
             VERSION_COMMAND ${version_command}
         )
     endif()
+
     if(NOT ${program})
-        if(NOT VCPKG_HOST_IS_WINDOWS AND NOT supported_on_unix)
+        if("${download_urls}" STREQUAL "" AND "${sourceforge_args}" STREQUAL "")
             set(example ".")
             if(NOT "${brew_package_name}" STREQUAL "" AND VCPKG_HOST_IS_OSX)
                 set(example ":\n    brew install ${brew_package_name}")
@@ -163,66 +202,50 @@ function(vcpkg_find_acquire_program program)
             message(FATAL_ERROR "Could not find ${program_name}. Please install it via your package manager${example}")
         endif()
 
-        if(NOT "${sourceforge_args}" STREQUAL "")
-            # Locally change editable to suppress re-extraction each time
-            set(_VCPKG_EDITABLE 1)
-            vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${sourceforge_args})
-            unset(_VCPKG_EDITABLE)
-        else()
-            vcpkg_download_distfile(archive_path
+        if("${sourceforge_args}" STREQUAL "")
+            z_vcpkg_download_distfile(archive_path
                 URLS ${download_urls}
                 SHA512 "${download_sha512}"
                 FILENAME "${download_filename}"
             )
-
+        else()
+            vcpkg_download_sourceforge(archive_path
+                ${sourceforge_args}
+                SHA512 "${download_sha512}"
+                FILENAME "${download_filename}"
+            )
+        endif()
+        if(raw_executable)
             file(MAKE_DIRECTORY "${full_subdirectory}")
-            if(raw_executable)
-                if(NOT "${rename_binary_to}" STREQUAL "")
-                    file(INSTALL "${archive_path}"
-                        DESTINATION "${full_subdirectory}"
-                        RENAME "${rename_binary_to}"
-                        FILE_PERMISSIONS
-                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                            GROUP_READ GROUP_EXECUTE
-                            WORLD_READ WORLD_EXECUTE
-                    )
-                else()
-                    file(COPY "${archive_path}"
-                        DESTINATION "${full_subdirectory}"
-                        FILE_PERMISSIONS
-                            OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                            GROUP_READ GROUP_EXECUTE
-                            WORLD_READ WORLD_EXECUTE
-                    )
-                endif()
+            if("${rename_binary_to}" STREQUAL "")
+                file(COPY "${archive_path}"
+                    DESTINATION "${full_subdirectory}"
+                    FILE_PERMISSIONS
+                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE
+                )
             else()
-                cmake_path(GET download_filename EXTENSION archive_extension)
-                string(TOLOWER "${archive_extension}" archive_extension)
-                if("${archive_extension}" MATCHES [[\.msi$]])
-                    cmake_path(NATIVE_PATH archive_path archive_native_path)
-                    cmake_path(NATIVE_PATH full_subdirectory destination_native_path)
-                    vcpkg_execute_in_download_mode(
-                        COMMAND msiexec
-                            /a "${archive_native_path}"
-                            /qn "TARGETDIR=${destination_native_path}"
-                        WORKING_DIRECTORY "${DOWNLOADS}"
-                    )
-                elseif("${archive_extension}" MATCHES [[\.7z\.exe$]])
-                    vcpkg_find_acquire_program(7Z)
-                    vcpkg_execute_in_download_mode(
-                        COMMAND ${7Z} x
-                            "${archive_path}"
-                            "-o${full_subdirectory}"
-                            -y -bso0 -bsp0
-                        WORKING_DIRECTORY "${full_subdirectory}"
-                    )
-                else()
-                    vcpkg_execute_in_download_mode(
-                        COMMAND "${CMAKE_COMMAND}" -E tar xzf "${archive_path}"
-                        WORKING_DIRECTORY "${full_subdirectory}"
-                    )
-                endif()
+                file(INSTALL "${archive_path}"
+                    DESTINATION "${full_subdirectory}"
+                    RENAME "${rename_binary_to}"
+                    FILE_PERMISSIONS
+                        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                        GROUP_READ GROUP_EXECUTE
+                        WORLD_READ WORLD_EXECUTE
+                )
             endif()
+        elseif(tool_subdirectory STREQUAL "")
+            # The effective tool subdir is owned by the extracted paths of the archive.
+            # *** This behavior is provided for convenience and short paths. ***
+            # There must be no overlap between different providers of subdirs.
+            # Otherwise tool_subdirectory must be used in order to separate extracted trees.
+            file(REMOVE_RECURSE "${full_subdirectory}.temp")
+            vcpkg_extract_archive(ARCHIVE "${archive_path}" DESTINATION "${full_subdirectory}.temp")
+            file(COPY "${full_subdirectory}.temp/" DESTINATION "${full_subdirectory}")
+            file(REMOVE_RECURSE "${full_subdirectory}.temp")
+        else()
+            vcpkg_extract_archive(ARCHIVE "${archive_path}" DESTINATION "${full_subdirectory}")
         endif()
 
         if(NOT "${post_install_command}" STREQUAL "")

@@ -1,28 +1,65 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/gdk-pixbuf
-    REF "${VERSION}"
-    SHA512 5b7ddb6e816a88ffd2b7f85583c841ea92719bef7da1acbd6f5714afebf8538660c5d391809f959eb1887613f9579cf51c85d6796c84335cedbf7af975d790c9
-    HEAD_REF master
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 5fa8066abbfc29d7d9f07d95af2cfa2668e90381ecf1055ea449d35661b997d55e84e64ae1dedc14cf13d66912d05b1398075c560ce1aeeea7ae60a7d73c873a
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix_build_error_windows.patch
         loaders-cache.patch
         use-libtiff-4-pkgconfig.patch
+        fix-static-deps.patch
 )
 
 if("introspection" IN_LIST FEATURES)
-    list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
-    list(APPEND OPTIONS -Dintrospection=disabled)
+    list(APPEND OPTIONS_RELEASE -Dintrospection=disabled)
 endif()
 
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
+if("png" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dpng=enabled)
 else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+    list(APPEND OPTIONS -Dpng=disabled)
+endif()
+
+if("tiff" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dtiff=enabled)
+else()
+    list(APPEND OPTIONS -Dtiff=disabled)
+endif()
+
+if("jpeg" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Djpeg=enabled)
+else()
+    list(APPEND OPTIONS -Djpeg=disabled)
+endif()
+
+if("others" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dothers=enabled)
+else()
+    list(APPEND OPTIONS -Dothers=disabled)
+endif()
+
+# Whether to enable application bundle relocation support.
+# Limitation cf. gdk-pixbuf/gdk-pixbuf-io.c
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -Drelocatable=true)          
+endif()
+
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_CMAKE_SYSTEM_VERSION VERSION_LESS "31")
+        list(APPEND OPTIONS -Dandroid=disabled)
+    endif()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -32,28 +69,24 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
-        -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
-        -Ddocs=false
-        -Dpng=enabled               # Enable PNG loader (requires libpng)
-        -Dtiff=enabled              # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
-        -Djpeg=enabled              # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
-        -Drelocatable=true          # Whether to enable application bundle relocation support
+        -Ddocumentation=false       # Whether to generate the API reference (requires GTK-Doc)
         -Dtests=false
         -Dinstalled_tests=false
+        -Dglycin=disabled
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
         -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located;
                                     # Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf
         ${OPTIONS}
-    OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -Dintrospection=disabled
     ADDITIONAL_BINARIES
         glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources'
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
@@ -74,4 +107,4 @@ vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

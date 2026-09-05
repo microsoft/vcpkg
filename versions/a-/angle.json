@@ -1,6 +1,36 @@
 {
   "versions": [
     {
+      "git-tree": "6eb27c13ec4328ed3d63f058a485a4e213087bda",
+      "version-string": "chromium_7258",
+      "port-version": 2
+    },
+    {
+      "git-tree": "165d665818d070431c2889ac2b8f97f006948924",
+      "version-string": "chromium_7258",
+      "port-version": 1
+    },
+    {
+      "git-tree": "d344a4b6599e8c2c79256b47ff499a9844ac6334",
+      "version-string": "chromium_7258",
+      "port-version": 0
+    },
+    {
+      "git-tree": "025eefba308651be2ae69502477d1201dfdf04ea",
+      "version-string": "chromium_5414",
+      "port-version": 10
+    },
+    {
+      "git-tree": "b0e6049d392ece97ba5be00c7c3e4410aa78d3f0",
+      "version-string": "chromium_5414",
+      "port-version": 9
+    },
+    {
+      "git-tree": "1729007831807f980abc75357ab0e73f0f9216cf",
+      "version-string": "chromium_5414",
+      "port-version": 8
+    },
+    {
       "git-tree": "b5502570ef18abdcf0535470f3ea6589db70607b",
       "version-string": "chromium_5414",
       "port-version": 7

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/cctz
-    REF v2.3
-    SHA512 e688ddac1bff108e8315bf94cb61483b72b0d16f601e4e1eeb0fd5c064aefe5a573eee66e8903401aa4c2be71ea9f10dd6c9a9cdf8379f5bb6073248a21a83ff
+    REF "v${VERSION}"
+    SHA512 e3eba96482b7745b145ecfd9b3b96b09d9120bde952dfdb66d625e642a463b87c74205b1813e3c4bd9b408410bb26fb095d034ca56a4953005bf0c988ccc741e
     HEAD_REF master
 )
 

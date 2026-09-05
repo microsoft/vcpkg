@@ -1,0 +1,13 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 0a54d5d..e69a984 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -38,7 +38,7 @@ target_include_directories(${lib} INTERFACE
+ install(
+     TARGETS ${lib}
+     EXPORT ${intf}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT Libraries)

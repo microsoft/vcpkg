@@ -13,7 +13,7 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(
     ${PROJECT_NAME}
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_SOURCE_DIR}/test-engine>"
         $<INSTALL_INTERFACE:include>
 )
 
@@ -31,9 +31,13 @@ target_sources(
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
 
 if(IMGUI_BUILD_ALLEGRO5_BINDING)
-    find_package(unofficial-allegro5 CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PRIVATE unofficial-allegro5::allegro unofficial-allegro5::allegro_ttf unofficial-allegro5::allegro_font unofficial-allegro5::allegro_main)
+    find_package(Allegro CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE Allegro::allegro Allegro::allegro_ttf Allegro::allegro_font Allegro::allegro_main)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp)
+endif()
+
+if(IMGUI_BUILD_ANDROID_BINDING)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_android.cpp)
 endif()
 
 if(IMGUI_BUILD_DX9_BINDING)
@@ -76,6 +80,14 @@ if(IMGUI_BUILD_OPENGL2_BINDING)
 endif()
 
 if(IMGUI_BUILD_OPENGL3_BINDING)
+    if(APPLE AND (CMAKE_SYSTEM_NAME MATCHES "iOS"))
+        target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_IMPL_OPENGL_ES3)
+        target_link_libraries(${PROJECT_NAME} PUBLIC -framework OpenGLES)
+    elseif(ANDROID)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_IMPL_OPENGL_ES3)
+        find_path(OPENGL_INCLUDE_DIR NAMES GLES3/gl3.h REQUIRED)
+        target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIR})
+    endif()
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
 endif()
 
@@ -83,16 +95,22 @@ if(IMGUI_BUILD_OSX_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_osx.mm)
 endif()
 
-if(IMGUI_BUILD_SDL2_BINDING)
-    find_package(SDL2 CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp)
+if(IMGUI_BUILD_SDL3_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp)
 endif()
 
-if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
-    find_package(SDL2 CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.cpp)
+if(IMGUI_BUILD_SDLGPU3_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3.cpp)
+endif()
+
+if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
 endif()
 
 if(IMGUI_BUILD_VULKAN_BINDING)
@@ -105,6 +123,18 @@ if(IMGUI_BUILD_WIN32_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_win32.cpp)
 endif()
 
+if(IMGUI_BUILD_WEBGPU_BINDING)
+    find_package(Dawn CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC dawn::webgpu_dawn)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_IMPL_WEBGPU_BACKEND_DAWN)
+    list(APPEND WGPU_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_wgpu.cpp)
+    target_sources(${PROJECT_NAME} PRIVATE ${WGPU_SRCS})
+    if(APPLE)
+        set_source_files_properties(${WGPU_SRCS} PROPERTIES LANGUAGE OBJCXX)
+        target_link_libraries(${PROJECT_NAME} PUBLIC "-framework Foundation")
+    endif()
+endif()
+
 if(IMGUI_FREETYPE)
     find_package(freetype CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC freetype)
@@ -112,14 +142,31 @@ if(IMGUI_FREETYPE)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE)
 endif()
 
-if(IMGUI_FREETYPE_LUNASVG)
-    find_package(unofficial-lunasvg CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC unofficial::lunasvg::lunasvg)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE_LUNASVG)
+if(IMGUI_FREETYPE_SVG)
+    find_package(plutosvg CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC plutosvg::plutosvg)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE_PLUTOSVG)
 endif()
 
 if(IMGUI_USE_WCHAR32)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_USE_WCHAR32)
+endif()
+
+if(IMGUI_TEST_ENGINE)
+    find_package(Stb REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${Stb_INCLUDE_DIR})
+    target_sources(
+        ${PROJECT_NAME}
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_capture_tool.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_context.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_coroutine.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_engine.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_exporters.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_perftool.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_ui.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_utils.cpp
+    )
 endif()
 
 list(REMOVE_DUPLICATES BINDINGS_SOURCES)
@@ -156,6 +203,10 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_ALLEGRO5_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.h DESTINATION include)
+    endif()
+
+    if (IMGUI_BUILD_ANDROID_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_android.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_DX9_BINDING)
@@ -204,12 +255,22 @@ if(NOT IMGUI_SKIP_HEADERS)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_osx.h DESTINATION include)
     endif()
 
-    if(IMGUI_BUILD_SDL2_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl2.h DESTINATION include)
+    if(IMGUI_BUILD_SDL3_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.h DESTINATION include)
     endif()
 
-    if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.h DESTINATION include)
+    if(IMGUI_BUILD_SDLGPU3_BINDING)
+        install(
+            FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3_shaders.h
+            DESTINATION
+                include
+        )
+    endif()
+
+    if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_VULKAN_BINDING)
@@ -220,8 +281,30 @@ if(NOT IMGUI_SKIP_HEADERS)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_win32.h DESTINATION include)
     endif()
 
+    if(IMGUI_BUILD_WEBGPU_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_wgpu.h DESTINATION include)
+    endif()
+
     if(IMGUI_FREETYPE)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/misc/freetype/imgui_freetype.h DESTINATION include)
+    endif()
+
+    if(IMGUI_TEST_ENGINE)
+        install(
+            FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_capture_tool.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_context.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_coroutine.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_engine.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_exporters.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_imconfig.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_internal.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_perftool.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_ui.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/test-engine/imgui_te_utils.h
+            DESTINATION
+                include
+        )
     endif()
 endif()
 

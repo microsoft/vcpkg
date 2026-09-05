@@ -1,7 +1,7 @@
 {
   "name": "vamp-sdk",
   "version": "2.10",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Library for Vamp plugins",
   "homepage": "https://www.vamp-plugins.org/develop.html",
   "license": "MIT",

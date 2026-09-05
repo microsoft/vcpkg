@@ -1,0 +1,81 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0e5ac72..0fb7c75 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -177,9 +177,7 @@ endif(WITH_CONAN)
+ set(LIBRARIES
+     ${LIBSSL}
+     ${LIBCRYPTO}
+-    ${LIBBOOST_SYSTEM}
+-    ${LIBDL}
+-    ${LIBZ})
++    ${LIBBOOST_SYSTEM})
+ 
+ # === Compiler flags ===
+ option(USE_PTHREAD_EXIT "Call pthread_exit on server threads" OFF)
+@@ -335,10 +333,6 @@ add_library(static_lib ${STATIC_LIB_SRC})
+ add_library(NuRaft::static_lib ALIAS static_lib)
+ set_target_properties(static_lib PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} CLEAN_DIRECT_OUTPUT 1)
+ 
+-add_library(shared_lib SHARED ${STATIC_LIB_SRC})
+-add_library(NuRaft::shared_lib ALIAS shared_lib)
+-set_target_properties(shared_lib PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} CLEAN_DIRECT_OUTPUT 1)
+-
+ # Include directories are necessary for dependents to use the targets.
+ target_include_directories(static_lib
+     PUBLIC
+@@ -346,17 +340,25 @@ target_include_directories(static_lib
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+ )
+ 
+-target_include_directories(shared_lib
+-    PUBLIC
+-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+-)
+-
+ # if (APPLE)
+ # There is no harm in adding libraries; this is required when building with Conan
+-target_link_libraries(shared_lib ${LIBRARIES})
+ target_link_libraries(static_lib ${LIBRARIES})
+ 
++if(NOT WIN32)
++    set(TARGET_LIST "shared_lib;static_lib")
++    add_library(shared_lib SHARED ${STATIC_LIB_SRC})
++    add_library(NuRaft::shared_lib ALIAS shared_lib)
++    set_target_properties(shared_lib PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} CLEAN_DIRECT_OUTPUT 1)
++    target_include_directories(shared_lib
++        PUBLIC
++        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
++    )
++    target_link_libraries(shared_lib ${LIBRARIES})
++else()
++    set(TARGET_LIST "static_lib")
++endif()
++
+ # endif ()
+ if(WIN32)
+     set(LIBRARY_OUTPUT_NAME "${LIBRARY_NAME}.lib")
+@@ -404,7 +406,7 @@ if(CODE_COVERAGE GREATER 0)
+ endif()
+ 
+ # === Install Targets ===
+-install(TARGETS shared_lib static_lib
++install(TARGETS ${TARGET_LIST}
+     EXPORT nuraft-targets
+     LIBRARY DESTINATION lib
+     ARCHIVE DESTINATION lib
+diff --git a/src/tracer.hxx b/src/tracer.hxx
+index ac5f100..e10b30a 100644
+--- a/src/tracer.hxx
++++ b/src/tracer.hxx
+@@ -53,7 +53,7 @@ static inline std::string msg_if_given(const char* format, ...) {
+     }
+ 
+     // Get rid of newline at the end.
+-    if ((not msg.empty()) && (msg.back() == '\n')) {
++    if ((!msg.empty()) && (msg.back() == '\n')) {
+         msg.pop_back();
+     }
+     return msg;

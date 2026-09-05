@@ -7,6 +7,7 @@ vcpkg_from_sourceforge(
         001_initialize-resampler.patch
         002_disable_warning.patch
         003_detect_arm.patch
+        004_install-pkgconfig-windows.patch
 )
 
 vcpkg_check_features(
@@ -24,6 +25,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_SHARED_RUNTIME=${BUILD_SHARED_RUNTIME}
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibAVUtil=TRUE
         ${FEATURE_OPTIONS}
 )
 

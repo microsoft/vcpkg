@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  microsoft/scenepic 
     REF "v${VERSION}"
-    SHA512 2ec8cdaa54a4432386175c545c4114d0682015cb34f77968622eac0b9ef6ccd8a5f14ba663339995bf109b472958407f694d40adf6025c02e464e94ef4fe5bd0
+    SHA512 13beecaa8eb218f53b617ce4babe70292a3056f649d5dd85c8b7bfda6e870df147afe50dba228b8a0e460cebf1e2d051318004c9ec0f2a70b9349c5016a5364d
     HEAD_REF main
     PATCHES
-        "fix_dependencies.patch"
-        "fix-CMakeInstall.patch"
+        0001-fix-dependencies.patch
 )
 
 # Run npm install and npm run build on the cloned project    

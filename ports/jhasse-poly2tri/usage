@@ -1,0 +1,4 @@
+jhasse-poly2tri provides CMake targets:
+
+  find_package(poly2tri CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE poly2tri::poly2tri)

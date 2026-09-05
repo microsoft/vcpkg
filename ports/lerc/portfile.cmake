@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Esri/lerc
-    REF  v4.0.0
-    SHA512 36fe453b6e732f6bed554d1c1c5cd4668aec63593d6de11f12b659c7b9cbc059ac9aaacc6cea483b3257d522f1b07e13c299914d08b1f8aeb0bb2cde42ba47cf
+    REF "js_v${VERSION}"
+    SHA512 655fff837b6b76d04c08a6a3c9271cf04286750acab0a577f46764de9e5f5f3f7ce4bfd93b95606df74031ebbe032ca80636f6d150826e0ced977b964c494d81
     HEAD_REF master
     PATCHES
-        "create_package.patch"
-        "include_algorithm_for_std_min.patch"
+        create_package.patch
+        cxx-linkage-pkgconfig.patch
 )
 
 vcpkg_cmake_configure(

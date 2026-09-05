@@ -1,6 +1,6 @@
 {
   "name": "stx",
-  "version": "0.0.3",
+  "version": "1.0.5",
   "description": "STX is a collection of libraries and utilities designed to make working with C++ easier and less error-prone.",
   "homepage": "https://github.com/lamarrr/STX",
   "license": "MIT",

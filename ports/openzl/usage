@@ -1,0 +1,8 @@
+OpenZL provides CMake targets:
+
+  find_package(OpenZL CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE OpenZL::openzl)
+
+Optional C++ bindings are available as:
+
+  target_link_libraries(main PRIVATE OpenZL::openzl_cpp)

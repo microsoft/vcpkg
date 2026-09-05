@@ -1,9 +1,9 @@
 diff --git a/include/toml++/impl/parser.inl b/include/toml++/impl/parser.inl
-index 27de2b0..bb2fb46 100644
+index 6f0136f..be37f0d 100644
 --- a/include/toml++/impl/parser.inl
 +++ b/include/toml++/impl/parser.inl
 @@ -23,6 +23,12 @@
- #include "unicode.h"
+ #include "unicode.hpp"
  TOML_DISABLE_WARNINGS;
  #include <istream>
 +

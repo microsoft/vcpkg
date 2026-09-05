@@ -73,19 +73,6 @@ index 7e0062692b..6fb3279a20 100644
        <Project>{a1a295e5-463c-437f-81ca-1f32367685da}</Project>
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
-diff --git a/PCbuild/_ssl.vcxproj b/PCbuild/_ssl.vcxproj
-index 4907f49b66..4dffa202b7 100644
---- a/PCbuild/_ssl.vcxproj
-+++ b/PCbuild/_ssl.vcxproj
-@@ -99,7 +99,7 @@
-   </ItemDefinitionGroup>
-   <ItemGroup>
-     <ClCompile Include="..\Modules\_ssl.c" />
--    <ClCompile Include="$(opensslIncludeDir)\applink.c">
-+    <ClCompile Condition="false" Include="$(opensslIncludeDir)\applink.c">
-       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;$(PreprocessorDefinitions)</PreprocessorDefinitions>
-     </ClCompile>
-   </ItemGroup>
 diff --git a/PCbuild/pyexpat.vcxproj b/PCbuild/pyexpat.vcxproj
 index b2d9f5d57d..4efb826a05 100644
 --- a/PCbuild/pyexpat.vcxproj

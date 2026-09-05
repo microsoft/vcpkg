@@ -1,11 +1,15 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.onelab.info
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO gmsh/gmsh
-    REF gmsh_4_11_1
-    SHA512 4c10a41659ee4f70ba5091f9ae1c4c3ee285ccf217c3de1157a0d6d694e6f1df9a6b1329b2b24029dd52f945dd7605e477302bdb358106a8d97e903eaba425dc
-    HEAD_REF master
-    PATCHES fix-install.patch
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://gmsh.info/src/gmsh-${VERSION}-source.tgz"
+    FILENAME "gmsh-${VERSION}-source.tgz"
+    SHA512 9e05267e3d2bae54eeab21b384ab5cc85383e8040ed622ff859485fabd3dc9fc4b5a87d9d58acf3fc5573471d9c3c8e0831df4f44ae196d1a26ecbe9c613753c
+)
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        installdirs.diff
+        linking-and-naming.diff
+        opencascade.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)
@@ -14,10 +18,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        opencascade ENABLE_OCC
-        opencascade ENABLE_OCC_CAF
-        opencascade ENABLE_OCC_TBB
         mpi         ENABLE_MPI
+        occ         ENABLE_OCC
+        occ         ENABLE_OCC_CAF
         zipper      ENABLE_ZIPPER
 )
 
@@ -30,10 +33,12 @@ vcpkg_cmake_configure(
         -DENABLE_BUILD_LIB=${BUILD_LIB}
         -DENABLE_BUILD_SHARED=${BUILD_SHARED}
         -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
+        -DENABLE_OS_SPECIFIC_INSTALL=OFF
+        -DGMSH_PACKAGER=vcpkg
         -DGMSH_RELEASE=ON
         -DENABLE_PACKAGE_STRIP=ON
         -DENABLE_SYSTEM_CONTRIB=ON
-        # Not implement
+        # Not implemented
         -DENABLE_GRAPHICS=OFF # Requires mesh, post, plugins and onelab
         -DENABLE_POST=OFF
         -DENABLE_PLUGINS=OFF
@@ -103,9 +108,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

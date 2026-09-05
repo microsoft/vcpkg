@@ -1,21 +1,38 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 52cc81ace..d7a1f63f8 100644
---- a/CMakeLists.txt	
+index caf681a..58b7648 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -403,9 +404,11 @@ ENDIF(LIBMINC_MINC1_SUPPORT)
- # Keep this variable for compatibility
- SET(VOLUME_IO_LIBRARY  ${LIBMINC_EXTERNAL_LIB_PREFIX}minc2)
- SET(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+@@ -3,6 +3,8 @@
+ # Andrew Janke - a.janke@gmail.com
+ # Vladimir S. FONOV - vladimir.fonov@gmail.com
  
- ADD_LIBRARY(${LIBMINC_LIBRARY} ${LIBRARY_TYPE} ${minc_LIB_SRCS} ${minc_HEADERS} ${volume_io_LIB_SRCS} ${volume_io_HEADERS} )
++CMAKE_MINIMUM_REQUIRED(VERSION 3.6...3.10)
++
+ PROJECT(LIBMINC)
+ 
+ SET(LIBMINC_PACKAGE_VERSION_MAJOR 2)
+@@ -22,8 +24,6 @@ INCLUDE(CTest)
+ 
+ ENABLE_TESTING()
+ 
+-CMAKE_MINIMUM_REQUIRED(VERSION 3.6)
 -
-+if(WIN32)
-+    target_link_libraries(${LIBMINC_LIBRARY} ws2_32)
-+endif()
- IF(NIFTI_FOUND AND NOT LIBMINC_USE_SYSTEM_NIFTI)
-     ADD_DEPENDENCIES(${LIBMINC_LIBRARY} NIFTI)
+ IF( POLICY CMP0063 )
+   CMAKE_POLICY(SET CMP0063 NEW)
  ENDIF()
-@@ -453,7 +456,7 @@ IF( LIBMINC_INSTALL_LIB_DIR )
+@@ -445,6 +445,11 @@ IF(UNIX)
+   SET(LIBMINC_STATIC_LIBRARIES_CONFIG ${LIBMINC_STATIC_LIBRARIES_CONFIG} m dl ${RT_LIBRARY_NAME})
+ ENDIF(UNIX)
+ 
++if(WIN32)
++  add_definitions(-DMNCAPI=)
++  list(APPEND LIBMINC_LIBRARIES_CONFIG ws2_32)
++endif()
++
+ SET(minc_LIB_SRCS ${minc2_LIB_SRCS} ${minc_common_SRCS})
+ SET(minc_HEADERS  ${minc2_HEADERS} ${minc_common_HEADERS})
+ 
+@@ -513,7 +518,7 @@ IF( LIBMINC_INSTALL_LIB_DIR )
        ${LIBMINC_EXPORTED_TARGETS} 
      LIBRARY DESTINATION ${LIBMINC_INSTALL_LIB_DIR} COMPONENT libraries
      ARCHIVE DESTINATION ${LIBMINC_INSTALL_LIB_DIR} COMPONENT libraries
@@ -24,44 +41,3 @@ index 52cc81ace..d7a1f63f8 100644
    )
  ENDIF( LIBMINC_INSTALL_LIB_DIR )
  
-@@ -538,7 +541,7 @@ IF(LIBMINC_INSTALL_LIB_DIR AND NOT LIBMINC_INSTALL_NO_DEVELOPMENT)
-      ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/Use${LIBMINC_EXTERNAL_LIB_PREFIX}LIBMINC.cmake 
-      ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${LIBMINC_EXTERNAL_LIB_PREFIX}LIBMINCConfig.cmake
-     DESTINATION 
--     ${LIBMINC_INSTALL_LIB_DIR}
-+     ${LIBMINC_INSTALL_LIB_DIR}/cmake
-     COMPONENT Development)
-   
- ENDIF(LIBMINC_INSTALL_LIB_DIR AND NOT LIBMINC_INSTALL_NO_DEVELOPMENT)
-diff --git a/config.h.cmake b/config.h.cmake
-index 9ceffa8fc..21c2f3baf 100644
---- a/config.h.cmake	
-+++ b/config.h.cmake
-@@ -1,4 +1,8 @@
- /* various defines */
-+#ifdef _MSC_VER
-+#define strcasecmp _stricmp 
-+#define strncasecmp _strnicmp 
-+#endif
- 
- #ifndef MINC2
- #define MINC2 @MINC2@
-diff --git a/libcommon/minc_config.c b/libcommon/minc_config.c
-index 531ef108e..5472d9274 100644
---- a/libcommon/minc_config.c	
-+++ b/libcommon/minc_config.c
-@@ -20,14 +20,6 @@
- 
- #include "minc_config.h"
- 
--#ifdef _MSC_VER
--#define snprintf _snprintf 
--#define vsnprintf _vsnprintf 
--#define strcasecmp _stricmp 
--#define strncasecmp _strnicmp 
--#endif
--
--
- static const char *_CONFIG_VAR[]=
-   {
-       "MINC_FORCE_V2",

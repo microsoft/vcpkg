@@ -1,0 +1,8 @@
+realsense2 provides CMake targets:
+
+  find_package(realsense2 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE realsense2::realsense2)
+
+realsense2 provides pkg-config modules:
+
+  realsense2

@@ -1,7 +1,7 @@
 {
   "name": "qt",
-  "version": "6.5.2",
-  "description": "Qt",
+  "version": "6.11.1",
+  "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
@@ -29,7 +29,14 @@
         "textcodec"
       ]
     },
-    "qtapplicationmanager",
+    {
+      "name": "qtapplicationmanager",
+      "features": [
+        "installer",
+        "package-server"
+      ],
+      "platform": "android | ios | linux | osx | qnx | (windows & !uwp & (arm64 | x64))"
+    },
     {
       "name": "qtbase",
       "default-features": false
@@ -52,6 +59,8 @@
       "platform": "linux"
     },
     "qtdoc",
+    "qtgraphs",
+    "qtgrpc",
     {
       "name": "qtimageformats",
       "default-features": false,
@@ -75,6 +84,7 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
+        "ffmpeg",
         "qml",
         "widgets"
       ]
@@ -83,18 +93,12 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "platform": "linux"
+        }
       ],
       "platform": "!windows"
-    },
-    {
-      "name": "qtmultimedia",
-      "default-features": false,
-      "features": [
-        "ffmpeg",
-        "gstreamer"
-      ],
-      "platform": "windows & !static"
     },
     "qtnetworkauth",
     {
@@ -165,13 +169,17 @@
     },
     {
       "name": "qtwebengine",
+      "default-features": false
+    },
+    {
+      "name": "qtwebengine",
       "default-features": false,
       "features": [
         "geolocation",
         "spellchecker",
         "webchannel"
       ],
-      "platform": "!static & !(windows & arm)"
+      "platform": "(linux | osx | (windows & x64)) & !static"
     },
     {
       "name": "qtwebsockets",
@@ -182,7 +190,8 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false
+      "default-features": false,
+      "platform": "x64 | arm64"
     },
     {
       "name": "qtwebview",
@@ -206,6 +215,13 @@
             "qml"
           ],
           "platform": "windows"
+        },
+        {
+          "name": "qtquick3d",
+          "features": [
+            "openxr"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "qtwayland",

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emoon/minifb
-    REF 1e087f1e9fe5bd33cdb2210b8e92d513ff7dc339 # 2023-02-03
-    SHA512 482bdcdb81d9f163ac7ff1224297331bfee68e53778a9170bfec52c8150c840445cb1338250bfc3e780aef011e3e95e7df3d7134183e59df947f69109a27108a
+    REF "v${VERSION}"
+    SHA512 1981dfaab36dd1082b9014810e8ba5a9bdfaeb8055544b902724b05e282aee4b9ad6305a2d48974f234b355451bb7bddbc7f65e4a89c05f0e113b9742231464d
     HEAD_REF master
 )
 
@@ -20,4 +20,3 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

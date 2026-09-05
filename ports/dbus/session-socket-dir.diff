@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3d96059..63fb6cc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -567,8 +567,8 @@ set(DBUS_SESSION_SOCKET_DIR "" CACHE STRING "Default directory for session socke
+ if(UNIX)
+     if (CMAKE_CROSSCOMPILING)
+         if (NOT DBUS_SESSION_SOCKET_DIR)
+-            message(FATAL_ERROR "cannot autodetect session socket directory "
+-                    "when crosscompiling, pass -DDBUS_SESSION_SOCKET_DIR=...")
++            # backporting the *effect* of https://gitlab.freedesktop.org/dbus/dbus/-/merge_requests/522/diffs
++            set(DBUS_SESSION_SOCKET_DIR "/tmp")
+         endif()
+     elseif(NOT $ENV{TMPDIR} STREQUAL "")
+         set(DBUS_SESSION_SOCKET_DIR $ENV{TMPDIR})

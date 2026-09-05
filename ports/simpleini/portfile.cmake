@@ -1,19 +1,20 @@
-# header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brofield/simpleini
-    REF 9b3ed7ec815997bc8c5b9edf140d6bde653e1458 #v4.19
-    SHA512 80358c8e5b8d8ea6183c685d002378805450ee3d65599f5966c1c24c20869be4680b044a4443f00d64740e131d1c0efcdaaf0a53d5cbce26b185cdf946630d8a
+    REF "v${VERSION}"
+    SHA512 a62c5748efe2473aae5bddab96ba9114d981a72f5b0d1a44d563daa085d5c231ed8c447794691d9bd67e1e0c6bfb44e4a8736be75fee59967d0c67ce3a59bb6e
     HEAD_REF master
+    PATCHES
+        disable-tests.patch
 )
 
-# Install codes
-set(SIMPLEINI_SOURCE ${SOURCE_PATH}/SimpleIni.h
-                     ${SOURCE_PATH}/ConvertUTF.h
-                     ${SOURCE_PATH}/ConvertUTF.c
-)
+set(VCPKG_BUILD_TYPE release) # header-only port
 
-file(INSTALL ${SIMPLEINI_SOURCE} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SimpleIni PACKAGE_NAME SimpleIni)
 
-# copyright
-file(INSTALL "${SOURCE_PATH}/LICENCE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENCE.txt")

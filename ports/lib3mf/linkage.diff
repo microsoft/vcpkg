@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ec1d7dd..c273eff 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -293,7 +293,6 @@ if (USE_INCLUDED_ZLIB)
+ else()
+     set(_lib3mf_external_link_visibility PRIVATE)
+     if (NOT LIB3MF_BUILD_SHARED)
+-      set(_lib3mf_external_link_visibility PUBLIC)
+     endif()
+ 
+     find_package(ZLIB QUIET)

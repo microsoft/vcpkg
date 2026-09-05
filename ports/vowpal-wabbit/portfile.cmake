@@ -4,9 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VowpalWabbit/vowpal_wabbit
     REF "${VERSION}"
-    SHA512 37c4401e5304c20a7a4c2ffa6102bfa82085c4bbc787c796da295e789996f09472ac4b3e732b0a44016eab6579c2648085b1e67b1df2658257d52f7e46a1b683
+    SHA512 997ac8cf79fc93671a15395c9494494cb3f5eba2945622996d4b9c962b635adc979eb609bba0bbd7b74c0c21a751686006ea9eaecee1861e2d817b6f9c34d226
     HEAD_REF master
-    PATCHES cmake_remove_bin_targets.patch
+    PATCHES
+        fix-android-build.patch
+        fix-fmt-header.patch
 )
 
 vcpkg_cmake_configure(
@@ -20,9 +22,11 @@ vcpkg_cmake_configure(
         -DVW_ZLIB_SYS_DEP=ON
         -DVW_EIGEN_SYS_DEP=ON
         -DVW_BUILD_VW_C_WRAPPER=OFF
+        -DVW_BUILD_EXECUTABLES=OFF
         -DBUILD_TESTING=OFF
         -DVW_STRING_VIEW_LITE_SYS_DEP=ON
         -DVW_SSE2NEON_SYS_DEP=ON
+        -DVW_CXX_STANDARD=14 # boost-math require c++14
 )
 vcpkg_cmake_install()
 

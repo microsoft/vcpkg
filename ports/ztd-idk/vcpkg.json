@@ -1,0 +1,17 @@
+{
+  "name": "ztd-idk",
+  "version-date": "2023-11-03",
+  "description": "The IDK (Industrial Development Kit) library!",
+  "homepage": "https://github.com/soasis/idk",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

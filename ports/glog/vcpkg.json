@@ -1,6 +1,6 @@
 {
   "name": "glog",
-  "version": "0.6.0",
+  "version": "0.7.1",
   "port-version": 2,
   "description": "C++ implementation of the Google logging module",
   "homepage": "https://github.com/google/glog",
@@ -17,12 +17,12 @@
     }
   ],
   "features": {
-    "customprefix": {
-      "description": "Enable support for user-generated message prefixes"
-    },
     "unwind": {
       "description": "Enable libunwind support",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        "libunwind"
+      ]
     }
   }
 }

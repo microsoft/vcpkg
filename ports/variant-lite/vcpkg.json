@@ -1,6 +1,6 @@
 {
   "name": "variant-lite",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A C++17-like variant, a type-safe union for C++98, C++11 and later in a single-file header-only library",
   "dependencies": [
     {

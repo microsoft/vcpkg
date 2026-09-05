@@ -1,0 +1,13 @@
+diff --git a/cmake/redisx.pc.in b/cmake/redisx.pc.in
+index 9f6386e..9506a37 100644
+--- a/cmake/redisx.pc.in
++++ b/cmake/redisx.pc.in
+@@ -3,7 +3,7 @@ exec_prefix=${prefix}
+ libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+ includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+ 
+-Name: supernovas
++Name: redisx
+ Description: @PROJECT_DESCRIPTION@
+ Version: @PROJECT_VERSION@
+ URL: @PROJECT_HOMEPAGE_URL@

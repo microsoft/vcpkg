@@ -4,22 +4,28 @@ if ("polyfill-cxx20" IN_LIST FEATURES)
     ]=])
 endif()
 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF b588deb7593d62e3afc025f85477d09b8012fb90
-    SHA512 47b43c716406d2847b16c33730376dc2a98ad8d079319387087ba4b37fdf5623c660fc53c92e2f90995a877001a7a739985d15d0b5133e079254e2d85ba5d8e4
+    REF 20260506
+    SHA512 d565298a7709a34482977406a7290cf109d44a428eb96c1ab788ceb8529ee4aa5736a8db9f51b0aeedb90c54bea00615038d24d0b26336aa6959fc11b8835ff6
     HEAD_REF develop
-    PATCHES
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH NTKEC_SOURCE_PATH
     REPO ned14/ntkernel-error-category
-    REF bbd44623594142155d49bd3ce8820d3cf9da1e1e
-    SHA512 589d3bc7bca98ca8d05ce9f5cf009dd98b8884bdf3739582f2f6cbf5a324ce95007ea041450ed935baa4a401b4a0242c181fb6d2dcf7ad91587d75f05491f50e
+    REF 5e50ff9af36a029c8ead9e0a833aa78304e95f28
+    SHA512 a3b8bfba8b22c79913ced23358c4a5ec56d2f2f8ca8da3ebd2e7cfaa783363d92d9de1b49766756c7b008114eee31c1509195232adcc364446eae724489be930
     HEAD_REF master
+)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH WG14_SIGNALS_SOURCE_PATH
+    REPO ned14/wg14_signals
+    REF 36d3cdb66993078c8fecba93e2a5f2c549572d64
+    SHA512 096d8a539fc09635ca4ea11907244eef06d856719dd5fb4a1f07264c1b1896e6bfe6754af164435adbb57462c03779b90fdb12e284c9855a1d22274d53345fee
+    HEAD_REF main
 )
 
 vcpkg_check_features(
@@ -31,18 +37,22 @@ vcpkg_check_features(
 # LLFIO expects ntkernel-error-category to live inside its include directory
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
 file(RENAME "${NTKEC_SOURCE_PATH}" "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/llfio/wg14_signals")
+file(RENAME "${WG14_SIGNALS_SOURCE_PATH}" "${SOURCE_PATH}/include/llfio/wg14_signals")
 
 set(extra_config)
 # cmake does not correctly set CMAKE_SYSTEM_PROCESSOR when targeting ARM on Windows
 if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
-  list(APPEND extra_config -DLLFIO_ASSUME_CROSS_COMPILING=On)
+  list(APPEND extra_config -DLLFIO_ASSUME_CROSS_COMPILING=ON)
 endif()
 # setting CMAKE_CXX_STANDARD here to prevent llfio from messing with compiler flags
 # the cmake package config requires said C++ standard target transitively via quickcpplib
-if ("cxx20" IN_LIST FEATURES)
-    list(APPEND extra_config -DCMAKE_CXX_STANDARD=20)
-elseif("cxx17" IN_LIST FEATURES)
+if ("polyfill-cxx20" IN_LIST FEATURES)
     list(APPEND extra_config -DCMAKE_CXX_STANDARD=17)
+endif()
+if (VCPKG_CROSSCOMPILING)
+    # try_run() is not supported when cross-compiling
+    list(APPEND extra_config -DCXX_HAS_CXX17_FILESYSTEM=ON)
 endif()
 
 # quickcpplib parses CMAKE_MSVC_RUNTIME_LIBRARY and cannot support the default crt linkage generator expression from vcpkg
@@ -57,10 +67,9 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPROJECT_IS_DEPENDENCY=On
-        -Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib
+        -Dllfio_IS_DEPENDENCY=On
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}"
         ${LLFIO_FEATURE_OPTIONS}
-        -DLLFIO_FORCE_OPENSSL_OFF=ON
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCXX_CONCEPTS_FLAGS=
@@ -83,8 +92,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/llfio)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if("status-code" IN_LIST FEATURES)
-    file(INSTALL "${CURRENT_PORT_DIR}/usage-status-code-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    set(_USAGE_FEATURE "status-code")
 else()
-    file(INSTALL "${CURRENT_PORT_DIR}/usage-error-code-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    set(_USAGE_FEATURE "error-code")
 endif()
+file(INSTALL "${CURRENT_PORT_DIR}/usage-${_USAGE_FEATURE}-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Licence.txt")

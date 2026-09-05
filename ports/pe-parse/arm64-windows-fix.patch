@@ -1,12 +1,13 @@
-find_package(Filesystem) fails on arm64 Windows.
-We can remove it as it is only used for tests which are not built in vcpkg.
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cb6600c..51eb37f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -15,7 +15,6 @@ endif ()
+@@ -13,9 +13,6 @@ if (NOT CMAKE_BUILD_TYPE)
+ endif ()
+ 
  include(cmake/compilation_flags.cmake)
- # Greater c++17 filesystem compatibility (like with experimental)
- list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+-# Greater c++17 filesystem compatibility (like with experimental)
+-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 -find_package(Filesystem COMPONENTS Experimental Final REQUIRED)
  list(APPEND GLOBAL_CXXFLAGS ${DEFAULT_CXX_FLAGS})
  

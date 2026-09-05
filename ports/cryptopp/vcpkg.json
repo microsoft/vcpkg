@@ -1,6 +1,6 @@
 {
   "name": "cryptopp",
-  "version": "8.8.0",
+  "version": "2026-03-02",
   "description": "Crypto++ is a free C++ class library of cryptographic schemes.",
   "homepage": "https://github.com/weidai11/cryptopp",
   "license": "BSL-1.0",

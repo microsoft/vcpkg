@@ -1,0 +1,14 @@
+diff --git a/lang/c/src/codec.c b/lang/c/src/codec.c
+index 613a91437..176fb21d6 100644
+--- a/lang/c/src/codec.c
++++ b/lang/c/src/codec.c
+@@ -27,6 +27,9 @@
+ #  elif defined(_WIN32)
+ #    include <stdlib.h>
+ #    define __bswap_32 _byteswap_ulong
++#  elif defined(__ANDROID__)
++#    include <byteswap.h>
++#    define __bswap_32 bswap_32
+ #  else
+ #    include <byteswap.h>
+ #  endif

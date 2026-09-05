@@ -54,7 +54,7 @@
      if(PNG_FOUND)
        include(CheckIncludeFile)
        check_include_file("${PNG_PNG_INCLUDE_DIR}/libpng/png.h" HAVE_LIBPNG_PNG_H)
-@@ -247,7 +247,7 @@ endif()
+@@ -249,7 +249,7 @@ endif()
  
  # --- GDAL (optional) ---
  if(WITH_GDAL)
@@ -63,7 +63,7 @@
  
      if(NOT GDAL_FOUND)
          set(HAVE_GDAL NO)
-@@ -259,7 +259,7 @@ if(WITH_GDAL)
+@@ -261,7 +261,7 @@ if(WITH_GDAL)
  endif()
  
  if(WITH_GDCM)
@@ -72,16 +72,14 @@
    if(NOT GDCM_FOUND)
      set(HAVE_GDCM NO)
      ocv_clear_vars(GDCM_VERSION GDCM_LIBRARIES)
-diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
-index 213667a..4052387 100644
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
-@@ -24,7 +24,7 @@ endif()
-
+@@ -20,7 +20,7 @@ endif()
+ 
  if(HAVE_WEBP)
    add_definitions(-DHAVE_WEBP)
 -  ocv_include_directories(${WEBP_INCLUDE_DIR})
 +  ocv_include_directories(${WEBP_INCLUDE_DIRS})
    list(APPEND GRFMT_LIBS ${WEBP_LIBRARIES})
  endif()
-
+ 

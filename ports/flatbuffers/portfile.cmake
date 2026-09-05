@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/flatbuffers
     REF "v${VERSION}"
-    SHA512 cd0a5efad8016e1217d01a181d6b02e546f5693c6412361bfeaee820d5dfe5e2a424cee1963270e851c1a4f936ae8a0032a51c5bb16ee19313e0ecc77dc4ba31
+    SHA512 808c77536fbfb1c8a1145506873a2b4e5cb508e48bf35f8502a2d1349b64e7581bfe7ff2f587b3edb2642cc885c60c0170a8875fad245240a1288057f4c07a42
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
+        fix-runtime-flags-msvc.patch
 )
 
 set(options "")
@@ -25,6 +26,8 @@ vcpkg_cmake_configure(
         -DFLATBUFFERS_BUILD_TESTS=OFF
         -DFLATBUFFERS_BUILD_GRPCTEST=OFF
         ${options}
+    OPTIONS_DEBUG
+        -DFLATBUFFERS_BUILD_FLATC=OFF
 )
 
 vcpkg_cmake_install()
@@ -40,8 +43,8 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/flatbuffers/pch")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nmslib/hnswlib
     REF "v${VERSION}"
-    SHA512 fd74c23040598973d7e0b5a6af73eb884ee2d30703187d1702fdd48eaf8f7f96d8fbb125d3763f90111d9fb7c5ab3434ebdb818da8717d35c5571e99083c812b
+    SHA512 aab0a55a43595c811902780b245b4e50f69f64af167a5252861a085b465539a40e4a5d136915d06ed123b268dc00569fbc99253609c084476738be061ae0e8a2
     HEAD_REF master
-    PATCHES
-        cmake.patch # Backport CMake targets from nmslib/hnswlib #446 to 0.7.0 release.
 )
 
 set(VCPKG_BUILD_TYPE "release") # header-only port

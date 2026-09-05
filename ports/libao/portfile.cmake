@@ -17,13 +17,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
   set(ENV{LIBS} "-lwinmm -lksuser")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  AUTOCONFIG
+  AUTORECONF
   OPTIONS  --disable-binaries
            ${NO_DLFCN}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

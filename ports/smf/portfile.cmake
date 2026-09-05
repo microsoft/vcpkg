@@ -1,14 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vpetrigo/smf
-    REF v0.1.1
-    SHA512 56e06ebcaa84beae2c65ab508b0b331a8c473600e91fcb797b413b774da0bbc7e2e44b93af810d739158a6ccf157f6ca32ba52efc8e47c366f94dec892623aa3
+    REF "v${VERSION}"
+    SHA512 bed114b54142e6fbcbb5eec9dc202c61f73e7592559eaaeb0ed3c62231ed1e4bd5eedf4ac5b5bfa2b4cf64095f432d09a8644c37b47cdba8c367b14ad080bba0
     HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         hierarchical    SMF_ANCESTOR_SUPPORT
+        init-transition SMF_INITIAL_TRANSITION
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"

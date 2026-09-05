@@ -22,11 +22,10 @@ function(z_vcpkg_acquire_msys_download_package out_archive)
         list(APPEND all_urls "${mirror_url}")
     endforeach()
 
-    vcpkg_download_distfile(msys_archive
+    z_vcpkg_download_distfile(msys_archive
         URLS ${all_urls}
         SHA512 "${arg_SHA512}"
         FILENAME "${arg_FILENAME}"
-        QUIET
     )
     set("${out_archive}" "${msys_archive}" PARENT_SCOPE)
 endfunction()
@@ -157,7 +156,7 @@ endfunction()
 function(vcpkg_acquire_msys out_msys_root)
     cmake_parse_arguments(PARSE_ARGV 1 "arg"
         "NO_DEFAULT_PACKAGES;Z_ALL_PACKAGES"
-        ""
+        "Z_DECLARE_EXTRA_PACKAGES_COMMAND"
         "PACKAGES;DIRECT_PACKAGES"
     )
 
@@ -166,6 +165,9 @@ function(vcpkg_acquire_msys out_msys_root)
     endif()
 
     z_vcpkg_acquire_msys_declare_all_packages()
+    if(NOT "${arg_Z_DECLARE_EXTRA_PACKAGES_COMMAND}" STREQUAL "")
+        cmake_language(CALL "${arg_Z_DECLARE_EXTRA_PACKAGES_COMMAND}")
+    endif()
     set(requested "${arg_PACKAGES}")
     if(arg_Z_ALL_PACKAGES)
         set(requested "${Z_VCPKG_MSYS_PACKAGES_AVAILABLE}")
@@ -245,6 +247,15 @@ This can be resolved by explicitly passing URL/SHA pairs to DIRECT_PACKAGES.")
         # This fstab entry removes the cygdrive prefix from paths.
         file(WRITE "${path_to_root}/etc/fstab" "none  /  cygdrive  binary,posix=0,noacl,user  0  0")
     endif()
+    # No pkgconfig hints from msys2 installation
+    file(REMOVE_RECURSE
+        "${path_to_root}/clangarm64/lib/pkgconfig"
+        "${path_to_root}/clang64/lib/pkgconfig"
+        "${path_to_root}/mingw32/lib/pkgconfig"
+        "${path_to_root}/mingw64/lib/pkgconfig"
+        "${path_to_root}/ucrt64/lib/pkgconfig"
+        "${path_to_root}/usr/lib/pkgconfig"
+    )
     message(STATUS "Using msys root at ${path_to_root}")
     set("${out_msys_root}" "${path_to_root}" PARENT_SCOPE)
 endfunction()
@@ -261,25 +272,25 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
 
     # msys subsystem
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20221207-1-any.pkg.tar.zst"
-        SHA512 601ceb483ddf49d744ed7e365317d64777752e35010a1087082452afd42d8d29fc5331cb3fa4654eb09eec85416c8c5b70fed91a45acfaa667f06f80e6d42f30
+        URL "https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20250528-1-any.pkg.tar.zst"
+        SHA512 a25b4d2a239bce094e6d4019d943c8381df92e3f982464f01cdb6fd79a449094ba44e0e45032270bd0f9e6c98cdaf0ab3560fc97084aaaeb708812297ee62996
         PROVIDES autoconf
-        DEPS autoconf2.71 bash sed
+        DEPS autoconf2.72 bash sed
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-1-any.pkg.tar.zst"
-        SHA512 bf725b7d4440764fb21061c066b765193801a03c7ded03cf19ae85aee87ea54059c4283e56877e4e2a54cfec9ef65874160c2cb76de0d08f2550c6032f07c36e
+        URL "https://mirror.msys2.org/msys/x86_64/autoconf2.72-2.72-3-any.pkg.tar.zst"
+        SHA512 307751b00b6a9729673d0af35ccf327041880f20498143100053a9d914927e86dd20a4aa4cd9e83e3d4e7e27c2d068cfc0313c6cab4f103955e4dafede22f4d0
         DEPS awk bash diffutils m4 perl sed
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/autoconf-archive-2022.09.03-1-any.pkg.tar.zst"
-        SHA512 d8567215c405632cd9ce232982c79aa1e8c063d13aac7c64a0ba84901c26710f0254ab72ab9ab464a9ec3fb7163ed60cb950b1f0509880f3378066b073a83d80
+        URL "https://mirror.msys2.org/msys/x86_64/autoconf-archive-2024.10.16-1-any.pkg.tar.zst"
+        SHA512 bb7a1a14d5e291da646c00e0bcc6663500c9c0ac00079a88d06956fa2e37749c3c2431cba647e41ce3840f323b73198ea0cf54e07014ac2345de47e7069d0581
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/automake-wrapper-20221207-1-any.pkg.tar.zst"
-        SHA512 22a65f75d1f19788cab93ecf70cb653fcedf67c18285ccbd2bb74ed1303dae8b09e9cfff40e8733920e75d8c4754d59481fa0c5b07d0c28803809448b011f45f
+        URL "https://mirror.msys2.org/msys/x86_64/automake-wrapper-20250528-1-any.pkg.tar.zst"
+        SHA512 d1c45179feb0b9b25002943f2a29f603c816e9e440ecc8d073733767bcd5b223bf6daad70f4a8aa513471d4967c71e1236724ba77279adc219963a3985dbdb97
         PROVIDES automake
-        DEPS automake1.16 bash gawk
+        DEPS automake1.16 automake1.17 automake1.18 bash gawk
     )
     z_vcpkg_acquire_msys_declare_package(
         URL "https://mirror.msys2.org/msys/x86_64/automake1.16-1.16.5-1-any.pkg.tar.zst"
@@ -288,13 +299,23 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         PATCHES "${Z_VCPKG_AUTOMAKE_CLANG_CL_PATCH}"
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/bash-5.2.015-1-x86_64.pkg.tar.zst"
-        SHA512 2a1e35ccabe023332454cc58f6b9d8c4fdf9fb823f4c8a99127fcf69ab6f7aca35a3d7ea0f4f97378c4f696ef397f48bd30c2379f41d8b5dffd2de0d6177e612
+        URL "https://mirror.msys2.org/msys/x86_64/automake1.17-1.17-1-any.pkg.tar.zst"
+        SHA512 cb935efc2e303e6f88eee3ab12ca1311c32d3c92e73e04b00b6b9269ce512649efa09af03d22a733f9cc4ebbb99fc64d8dcc123bf68fb914a20bf3cc651375f5
+        DEPS bash perl
+    )
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/msys/x86_64/automake1.18-1.18.1-1-any.pkg.tar.zst"
+        SHA512 d994eb278c5f341d6fe4b89a9034d486b2eaa880c0bd84160862352f964786d7d2220d91549515f02c2d01b5a978be7e8e1551ed2e89ddd449cfbcf05f6354e5
+        DEPS bash perl
+    )
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/msys/x86_64/bash-5.3.009-1-x86_64.pkg.tar.zst"
+        SHA512 b142bab3f4ae6b17a397c80186eab2e564be75dbc6a16f8b4d010e2be7d0e99a8053518a7b050a34c7914b4d2eae731c8ca41fd9061ef4f825540db063fe5c6c
         PROVIDES sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/binutils-2.40-1-x86_64.pkg.tar.zst"
-        SHA512 d7f00f93b54fd77102cc2e535303902d0958664eeacf09865a92e572a5bdca11e0782b7b89eb6412c3340a02fc581cbfeb074a5be1b75537422a2b28ed0e6773
+        URL "https://mirror.msys2.org/msys/x86_64/binutils-2.45.1-1-x86_64.pkg.tar.zst"
+        SHA512 97e6f0919c7014ba8d11f4a367dd841afa5e9182b01adc3d28bbb33c821940ea2ddeb92a7f3ad2e223759e8f990e068f12e424f8246da439b455287f31e0ba64
         DEPS libiconv libintl zlib
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -308,58 +329,58 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         DEPS libiconv libintl gmp
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/diffutils-3.9-1-x86_64.pkg.tar.zst"
-        SHA512 5858c7cfa84b2f79b8e61a34901f43af441cf6e792f534532aeafced4cee470241e72d117cffa5136ffa6ad1b04e2a4e0963080df1b380e9b2657dc7dd9bd193
+        URL "https://mirror.msys2.org/msys/x86_64/diffutils-3.12-1-x86_64.pkg.tar.zst"
+        SHA512 9b486fa45e827392eda39cff268530b0f3bdc5cc80881b55ae610828f861e6a63b790f395976277085b469423264ade705e5a0ecdf7b22fc8c017fc3d90acc78
         DEPS libiconv libintl sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/file-5.44-5-x86_64.pkg.tar.zst"
-        SHA512 68d1df9eb548af935b4f3e7f32d0bb3599bf6d59219e229a0501e531b78c6fbecba620c8854f504b44acc48c9bacc4c2420975c598a396ae7f6ae56c742ab6d2
+        URL "https://mirror.msys2.org/msys/x86_64/file-5.46-2-x86_64.pkg.tar.zst"
+        SHA512 1225311082642b094991c7467ba88eaca3b16e680d736979b6b7f750468b05f5a410e88f7d211e2159e1e80b6aa84c882b26e68296a27f5ee9c3998b61f73fb5
         DEPS gcc-libs libbz2 liblzma libzstd zlib
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/findutils-4.9.0-3-x86_64.pkg.tar.zst"
-        SHA512 1538733929ecc11bc7c19797577e4cd59cc88499b375e3c2ea4a8ed4d66a1a02f4468ff916046c76195ba92f4c591d0e351371768117a423595d2e43b3321aad
+        URL "https://mirror.msys2.org/msys/x86_64/findutils-4.10.0-2-x86_64.pkg.tar.zst"
+        SHA512 d817f31b1130f73ababf004585e540c2adc14b2517ae350c73ef3f9b6c25b92ee377b24f6695980fd815c91fa8c870e574633092bd9436b7dbfb30b9d782b5fc
         DEPS libintl libiconv
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/gawk-5.2.1-2-x86_64.pkg.tar.zst"
-        SHA512 0d056ae2bd906badc4e8ac362bd848800ec0fbe53137c74eb20667b86fa18c7fc0da291c5baec129a8fdfba31216d8500d827475b8ad0e8bcbfb2a0e46ddb95e
+        URL "https://mirror.msys2.org/msys/x86_64/gawk-5.3.2-1-x86_64.pkg.tar.zst"
+        SHA512 8d33ff3772fcfd666ebf2211b92942f9ee4af6cd80d4f69762cdac0afb8522aad85244a1701df80a9980c8dba58e7b70d757146945e28cb77e80160b27f2a49f
         PROVIDES awk
         DEPS libintl libreadline mpfr sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/gcc-libs-11.3.0-3-x86_64.pkg.tar.zst" # 05-Jul-2022
-        SHA512 eb8dccfa7939f3cb86a585a71d3083dda814bb38ee8484446147533a355520862989716b5ff3e483741496c594314367759646153cb6a4fedc0b44a87373a3fc
+        URL "https://mirror.msys2.org/msys/x86_64/gcc-libs-15.2.0-1-x86_64.pkg.tar.zst"
+        SHA512 1d7705870a3e65f4c485d9572f179b8ae1e9837c558ca1448ba1e94faa836ae0a87b19b8b53965f5c783267f2497926589b42112c9e3a9ef64aae21918d9dc63
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/gettext-0.21-2-x86_64.pkg.tar.zst"
-        SHA512 2f6b95686e6c9cabfdac22994cbd6402dc22da71ab9582205874e7967452be65a25bf73b8994cce679ef43b26a29dec25eb3f233f7126d8c4b2f5ddd28588bd4
+        URL "https://mirror.msys2.org/msys/x86_64/gettext-0.22.5-1-x86_64.pkg.tar.zst"
+        SHA512 50e1969179c6b33376396f200f6c25f709a6104d253121a8148bc5591b140c6f1729dc703374315a96137fa7cfec2abe427ea63bce243d5c0729cee8964ffbd3
         DEPS libasprintf libgettextpo libintl
     )
     # This package shouldn't be a here
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/gettext-devel-0.21-2-x86_64.pkg.tar.zst"
-        SHA512 c8852c4c8cf7810434dab18c7a002e59c2248de93b575097a30a31f4e7f41719855c0f3cf55356173576aab03119139f71dce758df1421b3f23c1ca3520e4261
+        URL "https://mirror.msys2.org/msys/x86_64/gettext-devel-0.22.5-1-x86_64.pkg.tar.zst"
+        SHA512 6de3e04ba238353df65111120ec4850b49f5797f27626ebc27c561390f75b4b1b25c84ac377f6ab15d586ca3ee3940eaf3aba074db1a50d8b8930c1135eae7cf
         DEPS gettext # libiconv-devel
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/gmp-6.2.1-2-x86_64.pkg.tar.zst"
-        SHA512 b2df273243ba08ed2b1117d2b4826900706859c51c1c39ca6e47df2b44b006b2512f7db801738fdbb9411594bc8bc67d308cf205f7fa1aab179863844218e513
+        URL "https://mirror.msys2.org/msys/x86_64/gmp-6.3.0-2-x86_64.pkg.tar.zst"
+        SHA512 739ef6b80f98cac58020d559f407fdabf0f70a1fd8ced4d2473d67427a263ea87ded3efd6c38c221e0a80c7791991c940d7823364eee594ad40cd03694a6d36e
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/grep-1~3.0-6-x86_64.pkg.tar.zst"
-        SHA512 79b4c652082db04c2ca8a46ed43a86d74c47112932802b7c463469d2b73e731003adb1daf06b08cf75dc1087f0e2cdfa6fec0e8386ada47714b4cff8a2d841e1
+        URL "https://mirror.msys2.org/msys/x86_64/grep-1~3.0-7-x86_64.pkg.tar.zst"
+        SHA512 8a5248d0aa7c8d9e57a810f0b03b76db31ebc3c64158886804fdc82095709d496fee433d3aa744484c6cdcb5877ebe95d03b15486cc7bdb13ba33cfbf71e4e14
         DEPS libiconv libintl libpcre sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/gzip-1.12-2-x86_64.pkg.tar.zst"
-        SHA512 107754050a4b0f8633d680fc05aae443ff7326f67517f0542ce2d81b8a1eea204a0006e8dcf3de42abb3be3494b7107c30aba9a4d3d03981e9cacdc9a32ea854
+        URL "https://mirror.msys2.org/msys/x86_64/gzip-1.14-1-x86_64.pkg.tar.zst"
+        SHA512 cc316915d1dc0090b5acb385ce392a3ac2c37e1df4f72198a976f9b0f7c4b42d15cf14229bc06c19c22ce39dca79389e426cff592437e05df77f453ecc6f42c5
         DEPS bash
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libasprintf-0.21-2-x86_64.pkg.tar.zst"
-        SHA512 e583ae8a6611f11ce56bdd8c0e420854d253070072776c78358ee052260fb3c7b1a7a53eed5e3f1e555e883fa489bb6154679ffe91c88e0390596805b1799d71
+        URL "https://mirror.msys2.org/msys/x86_64/libasprintf-0.22.5-1-x86_64.pkg.tar.zst"
+        SHA512 26ad060897f86cfa8257657d9ca3f64302c3bf949369ef29edd1d2f1525cbd462351d3177ba036ae91e8dec0c8501afdd5a666c1e51d7693d7f16f05406d35dd
         DEPS gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -368,51 +389,50 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         DEPS gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libcrypt-2.1-4-x86_64.pkg.tar.zst"
-        SHA512 8bd56a777326dc8793df8bc7bc837bbfd9fb888d678fbfded8c37449fcc85aa3e318b5a249f773aa38ef4e12d8c58f080dce7db9c322b649702bdba292708ebc
+        URL "https://mirror.msys2.org/msys/x86_64/libgettextpo-0.22.5-1-x86_64.pkg.tar.zst"
+        SHA512 a4ea2c576de4dca804d013e257e99a185eacafa558bd3793ece3216a21884c0ff23b5369cd8954bf7258e8cea9ffe9197d8a752baa67b5e895daac83de93d2f0
         DEPS gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libgettextpo-0.21-2-x86_64.pkg.tar.zst"
-        SHA512 e5736e2d5b8a7f0df02bab3a4c0e09f5a83069f4ff5554fa176f832b455fe836210686428172a34951db7f4ce6f20ec5428440af06d481fcaa90d632aac4afd2
-        DEPS gcc-libs
-    )
-    z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libiconv-1.17-1-x86_64.pkg.tar.zst"
-        SHA512 e8fc6338d499ccf3a143b3dbdb91838697de76e1c9582bb44b0f80c1d2da5dcfe8102b7512efa798c5409ba9258f4014eb4eccd24a9a46d89631c06afc615678
+        URL "https://mirror.msys2.org/msys/x86_64/libiconv-1.18-1-x86_64.pkg.tar.zst"
+        SHA512 77979ed35af45aa5bb7fb6b07d649e8eafa69ebdc8e421c2a7bf69ee567f814b38623a12be0736fb56c17c0aeff69ba769bc52110f62f8e5fdc5bcf334d88d44
         DEPS gcc-libs libintl
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libintl-0.21-2-x86_64.pkg.tar.zst"
-        SHA512 fd066ea0fa9bc67fe3bcb09ba4d9dd4524611840bb3179e521fa3049dc88ba5e49851cc04cb76d8f0394c4ec1a6bf45c3f6ce6231dc5b0d3eb1f91d983b7f93b
+        URL "https://mirror.msys2.org/msys/x86_64/libintl-0.22.5-1-x86_64.pkg.tar.zst"
+        SHA512 1f1826763bcc252f15a0a5a27fbf596a2b5fad5e092bdff17af8231c373c0de17be7411938068aac0f0a617edbb32533de6619f6c58ebcdec7480c210673af45
         DEPS gcc-libs libiconv
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/liblzma-5.4.1-1-x86_64.pkg.tar.zst"
-        SHA512 298a49e0c26587899e37c894f61c9e9c4702548bcc181610fc8408b773097cc3e042b5ae24a4e01ee0b592b68c8f24152f9dcc298b7d1860ffa6562c2513274d
+        URL "https://mirror.msys2.org/msys/x86_64/liblzma-5.8.2-1-x86_64.pkg.tar.zst"
+        SHA512 1a9353996e7da8b90ff6a95b4199953a0c72350f6e1b7133373161ce221640ae63260ebaf95278bb099432bd3e30b1138b3da98b6e5a1a4b9af1223e0cda8b54
         # This package installs only a DLL. No extra deps.
         DEPS # gettext libiconv sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libpcre-8.45-3-x86_64.pkg.tar.zst"
-        SHA512 566a2723f5b078a586d80c077f9267afb7badf3640386640a098d76ef9142797e7fa8acef5e638b962d9479206fb443c924750eec00a26bccdc39fb49094963f
+        URL "https://mirror.msys2.org/msys/x86_64/libpcre-8.45-5-x86_64.pkg.tar.zst"
+        SHA512 3a0fffaf4d24bac07847220bac70b0e3f15645ea04171c5f4079966cbec01cee9138e36e5100b989af2dcce67660756c060fb3298c86fa120779c15d083231eb
         DEPS gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libreadline-8.2.001-3-x86_64.pkg.tar.zst"
-        SHA512 fe8fa6c0d9fd81eab945855b83b9ee8ae224159b3c5eb550424645f2a611e82fd92744093cbcd560a2e2717a142b0dbb3f3cbb627bf41a309483241d3340a9c3
+        URL "https://mirror.msys2.org/msys/x86_64/libreadline-8.3.003-1-x86_64.pkg.tar.zst"
+        SHA512 216c30e8307c0f72994d52955e4c00ef08f16d8bd9bd82db92c0294a81db05849202c670c62cd5060e871fdcc6d3cb34fbb51e9b0a9ea3a67c6104d384aeb5d3
         DEPS ncurses
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libtool-2.4.7-3-x86_64.pkg.tar.zst"
-        SHA512 a202ddaefa93d8a4b15431dc514e3a6200c47275c5a0027c09cc32b28bc079b1b9a93d5ef65adafdc9aba5f76a42f3303b1492106ddf72e67f1801ebfe6d02cc
-        DEPS sh tar
+        URL "https://mirror.msys2.org/msys/x86_64/libtool-2.5.4-4-x86_64.pkg.tar.zst"
+        SHA512 72589fe4526fffac7aaea38a86c2c037cf1094f7bfe1be65543221a3104dfa2ef7d8d6adb8758119c1a74368c881d690988cd3cbe7502a5202d351382271c9c5
+        DEPS bash
              # extra deps which are really needed
-             awk findutils grep sed
+             awk findutils grep sed tar
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/libzstd-1.5.4-1-x86_64.pkg.tar.zst"
-        SHA512 5aed6a9b2e40759144878f1b5f888f221016fe3fb23ba04f17d515ca51b78c592f79747d90fcc096c735d74cccfeb22c19f2154dfa49d14bedc6c306f0c07759
+        URL "https://mirror.msys2.org/msys/x86_64/libxcrypt-4.5.2-1-x86_64.pkg.tar.zst"
+        SHA512 98b775bc22fe120846b60353483f3ce8f9aacb33941392a49c96720e0217a76ee44cf867dcd61055d65933e0eae157af6d99bcd2221ab512de876030d76ccb9a
+    )
+    z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/msys/x86_64/libzstd-1.5.7-1-x86_64.pkg.tar.zst"
+        SHA512 02cf577567773f7f93f4df404d3b0a62d0cab4b2b63c76d572ef3af591e9fe6571b3d7e79e868ae5d7967b8f540941489a4004367c64113e1688f392827fc6cd
         DEPS gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -421,36 +441,44 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         DEPS bash gcc-libs libiconv
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/make-4.4.1-1-x86_64.pkg.tar.zst"
-        SHA512 7e1c95b976d949db4b74c444e0d1495bbee26649aa82eadf34076dba3c1223d4e7b901e07935ba73dceda67f0a0cf25dd99fe3eed5300a5163fdaab14ca8d9fc
+        URL "https://mirror.msys2.org/msys/x86_64/make-4.4.1-2-x86_64.pkg.tar.zst"
+        SHA512 b55caaf0d54b784b5dffcbb75a1862fc7359b91caa1e60234e208de03c74159fd003d68f5dddd387adef752bb13805e654f17ec5cb6add51546b9e30a1091b61
         DEPS libintl sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/mpfr-4.2.0-2-x86_64.pkg.tar.zst"
-        SHA512 a294154a0c48bbf6673e87f5f38eda9f8a0c99f8300a795c14cd2ec4ae18b39b158b2e76ca1cda51fa76575bd70339cb3b24c4ccf8f265f0e59515f5e457b040
+        URL "https://mirror.msys2.org/msys/x86_64/mpfr-4.2.2-1-x86_64.pkg.tar.zst"
+        SHA512 80fa09c637c4ff3943b20a5b74e945c7084e1f7d571d7124a5b45926533a24125a0027167f99eb9c1e9f96fc3d61344e23c0b4471815846d90367bcfb8f89eba
         DEPS gmp
     )
+    if(X_VCPKG_USE_MSYS2_RUNTIME_3.4) # temporary option, for Windows 7.0 and 8.0, or in case of regressions
+        z_vcpkg_acquire_msys_declare_package(
+            URL "https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.4-3.4.10-2-x86_64.pkg.tar.zst"
+            SHA512 3fa087d4eb4e260785b81d5b6f4400ec128a83ff940da732bf147dfde457224573fa467e735b63c9a138872f5c9830f3684f824b2aa5d344fb95dfb91632f832
+            PROVIDES msys2-runtime
+        )
+    else()
+        z_vcpkg_acquire_msys_declare_package(
+            URL "https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.6.5-1-x86_64.pkg.tar.zst"
+            SHA512 974dbe29e35b04a4a4f5ffbfed1327702c5eb34cfbfafd45e00df3553e66ca3a4a92cf8b69dbb42b8e3c2ef034281ea73888c03c271ad28ce12fee32ce1bbf3d
+        )
+    endif()
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/msys2-runtime-3.4.6-1-x86_64.pkg.tar.zst"
-        SHA512 fbdcf2572d242b14ef3b39f29a6119ee58705bad651c9da48ffd11e80637e8d767d20ed5d562f67d92eecd01f7fc3bc351af9d4f84fb9b321d2a9aff858b3619
-    )
-    z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/ncurses-6.4-1-x86_64.pkg.tar.zst"
-        SHA512 48093633b6506f4217fbe37b43d4e128874a01e5e56f817de38112e5a5b8d3ee4f77e99fb3cd63b55616e3ae84edbc49ac78d90968a24c25dfa368103d208897
+        URL "https://mirror.msys2.org/msys/x86_64/ncurses-6.5.20240831-2-x86_64.pkg.tar.zst"
+        SHA512 ff84849e3857e31fd4f3acc48e8a9bc2fa6ff226f848636c206fb322e7c49de9677c24784575ad5d13620f31d6203739b0f7ab068081bef0d8ab873c4473ee4d
         DEPS gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/patch-2.7.6-2-x86_64.pkg.tar.zst"
-        SHA512 eb484156e6e93da061645437859531f7b04abe6fef9973027343302f088a8681d413d87c5635a10b61ddc4a3e4d537af1de7552b3a13106639e451b95831ec91
+        URL "https://mirror.msys2.org/msys/x86_64/patch-2.7.6-3-x86_64.pkg.tar.zst"
+        SHA512 dd5069cab243c8367152b1b8799a199103a7a86be2d478a9f4f84406591ad892284859531ec29ca09de8f278e6c97492896a08b6a08bcbc3ac09ac297e653ec0
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/perl-5.36.0-1-x86_64.pkg.tar.zst"
-        SHA512 fa83a0451b949155bdba53d71d51381d99e4a28dc0f872c53912c8646a5e1858495b8dcfdb0c235975e41de57bc2464eb1e71ffeab96a25c4aa5327cdaa03414
-        DEPS coreutils libcrypt sh
+        URL "https://mirror.msys2.org/msys/x86_64/perl-5.40.3-1-x86_64.pkg.tar.zst"
+        SHA512 99128c78b10cefea1ebea3352e6305b31a22062d7d7a5f2ba31289a1c41621d2a14a31e21371b6e2459207a3d832cd4f94d40ab59adf5827a564060d529d0892
+        DEPS coreutils libxcrypt sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/pkgconf-1.9.4-1-x86_64.pkg.tar.zst"
-        SHA512 0a5f0d69eec591a00d1aee985458dd855100184ec845b076d8f22ca51ba106964b8cf5b0061df288cdd611aa6a6e5fcb98eafded1c46536a0d17253240966f15
+        URL "https://mirror.msys2.org/msys/x86_64/pkgconf-2.5.1-1-x86_64.pkg.tar.zst"
+        SHA512 5af92108c94896a0bef549ef248909a30627259e25d845f08e028bd23ac1d10004868d2bf8bf35d6e27a363aa30d0a8b1bb312ac15fc8fc18207e2c92e37c2c1
         PROVIDES pkg-config
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -459,182 +487,180 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         DEPS libintl sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/tar-1.34-3-x86_64.pkg.tar.zst"
-        SHA512 19e063393ef0f7eb18df2755798985e78a171f9aa4a747490a357b108d02a9a6a76cae514dd58da0e48a7dd66857dc251be30535677d9fa02e1640bc165cc004
+        URL "https://mirror.msys2.org/msys/x86_64/tar-1.35-3-x86_64.pkg.tar.zst"
+        SHA512 73ad6a144c259368f4307b9570b8dd6faf57b2c3fc5af32e311621edc757efa33d99abdb26aecad682f91eee11414c9e5b9b104bb028a58a952b1f736b4cbc2e
         DEPS libiconv libintl sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/texinfo-7.0.2-1-x86_64.pkg.tar.zst"
-        SHA512 f3fc972bb4f738d3a6a736285ee2574262989fdb7bec0f4a260abb1bbfeb94f3fb3795986ba121cf623a96c60eccea2ff67906275acd466c640eae2fe18a2158
+        URL "https://mirror.msys2.org/msys/x86_64/texinfo-7.2-2-x86_64.pkg.tar.zst"
+        SHA512 dcec28ff844abd424cf9ff0deea568059034a2c0b7bb28b2bfea121b59d46a3e35125500a654f70b0884c00ab096b35df12aa551f22248d5f92ae663d5814ef5
         DEPS perl sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/unzip-6.0-2-x86_64.pkg.tar.xz"
-        SHA512 b8a1e0ce6deff26939cb46267f80ada0a623b7d782e80873cea3d388b4dc3a1053b14d7565b31f70bc904bf66f66ab58ccc1cd6bfa677065de1f279dd331afb9
+        URL "https://mirror.msys2.org/msys/x86_64/unzip-6.0-3-x86_64.pkg.tar.zst"
+        SHA512 1d6df49e826617ef3d3976be33361e189d8a5aee3a33ae79474fd08ca44ebd113981e6ba25c968b3cf5fb9826edd42dee21a97261cbc86fd8b143c950ba1f357
         DEPS bash libbz2
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/which-2.21-4-x86_64.pkg.tar.zst"
-        SHA512 5323fd6635093adf67c24889f469e1ca8ac969188c7f087244a43b3afa0bf8f14579bd87d9d7beb16a7cd61a5ca1108515a46b331868b4817b35cebcb4eba1d1
+        URL "https://mirror.msys2.org/msys/x86_64/which-2.23-4-x86_64.pkg.tar.zst"
+        SHA512 ad8ad602b76719b13cf8e650ca493fe9433cfd35d48bda33ce38d0523e9ade5702f89a62508ec0e2a453639a78ed54fc212f76ce8861ac58ac81e6eed476397a
         DEPS sh
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/xz-5.4.1-1-x86_64.pkg.tar.zst"
-        SHA512 5a04e8c244c05926da4bcc63f4fdc731b508c37396629c33e98833c7b6e10c0784b1b0de72f6f11f7f2bdab5ac8eafe2e1613081efd0f973b558200c6ccb6d90
+        URL "https://mirror.msys2.org/msys/x86_64/xz-5.8.2-1-x86_64.pkg.tar.zst"
+        SHA512 1bd7c718af1b5dd6ce2910aaea37236e5744faea2a514547b2852a1748b1f91d1d679208c4334b1d5dc6d6e69880192c5c10503d4de752e163dc41c39f57ba29
         DEPS libiconv libintl liblzma
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/msys/x86_64/zlib-1.2.13-1-x86_64.pkg.tar.zst"
-        SHA512 8dc7525091cf94b1c0646fd21a336cd984385e7e163f925b1f3f786c8be8b884f6cb9b68f55fdb932104c0eb4c8e270fc8df2ec4742404d2dcd0ad9c3e29e7e8
+        URL "https://mirror.msys2.org/msys/x86_64/zlib-1.3.1-1-x86_64.pkg.tar.zst"
+        SHA512 a432b0f927d342b678df706487595eff1b780371548933f956adcf697eea11ddbca2863d9d9fb88675a7040dcfddab56f8f71a8ae4d0cd4969e715545c77e87c
         DEPS gcc-libs
     )
 
     # mingw64 subsystem
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-bzip2-1.0.8-2-any.pkg.tar.zst"
-        SHA512 4f7ba44189d953d4d00e7bbf5a7697233f759c92847c074f0f2888d2a641c59ce4bd3c39617adac0ad7b53c5836e529f9ffd889f976444016976bb517e5c24a2
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-bzip2-1.0.8-3-any.pkg.tar.zst"
+        SHA512 fb1ae524d7b04e1f35c3101c318136dbe08da8093bda98f6aea7e6c2564fec5f8533fb61cac5001b6425105cd982511964ec04099c6651f990dc3b8baf7f7057
         DEPS mingw-w64-x86_64-gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ca-certificates-20230311-1-any.pkg.tar.zst"
-        SHA512 f7526ad35bccc5edba3fcf1354a85eacbd61dba5780b1bc65c7e8795ecb252432004af809052bb0ba981b1dea174c40e2d3f20655d8e2b29be95ad54d2aa5782
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ca-certificates-20250419-1-any.pkg.tar.zst"
+        SHA512 f005061251cfb3dc540f4fe815b35b4078c06c39960067799dfc10656630d2e236f41f763c5b2d40a7ac9dd8af54402d9219f11abe4bde7792a95ee5f04dbeb4
         DEPS mingw-w64-x86_64-p11-kit
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-expat-2.5.0-1-any.pkg.tar.zst"
-        SHA512 b49ec84750387af5b73a78d654673d62cf0e2cb2b59b4d25acb7eca3830018f7a2aefe600d67d843417cfbdd97db81ecfd49a8811e312f53b42c21fb106b230d
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-expat-2.7.3-1-any.pkg.tar.zst"
+        SHA512 c1d5487022d826cadab8f827e344e10227552c788c59c13f2928afa85a063c50ef3851150e621154be5c834d368966cd58791d0d31bb4175cd1d7d294e221922
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-libgfortran-12.2.0-10-any.pkg.tar.zst"
-        SHA512 0fbe2b01a22c327affcf1581b33912494731ac32c58cc94df740604f6f5a284f89f13508f977f4e15a1345c81e3e8ada3ff5c55bff0a907631d27ed7c0f74677
-        DEPS mingw-w64-x86_64-gcc-libs
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-libgfortran-15.2.0-8-any.pkg.tar.zst"
+        SHA512 a8938b388ff19f1f671ac56ac5fb6a68f22f02c0c4c3731bbcdaa6512beb2dc9e981bfbae711b75760a6bacd586b50f01aacfbe530930aa86f27452fe3a523ad
+        PROVIDES mingw-w64-x86_64-fc-libs
+        DEPS mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-libwinpthread
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-libs-12.2.0-10-any.pkg.tar.zst"
-        SHA512 94b001fa5a2cba5a5fc4b27887cf1dfc930a67dd03a889247b15d51f11280af01c509fe63b7412ec36b549a5a302e1f4d98a13685d1d10068e7d12a4446777a4
-        PROVIDES mingw-w64-x86_64-libssp mingw-w64-x86_64-omp
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-libs-15.2.0-8-any.pkg.tar.zst"
+        SHA512 03f6e7561bcd16edf2468522d7b3e987d1f7b9f2001371ad5dcb862c0876fd617ba33c2b1e43fc6acba2ab5798e038ddffd07dbc7e8a90867533a1411b2f98cb
+        PROVIDES mingw-w64-x86_64-omp mingw-w64-x86_64-cc-libs
         DEPS mingw-w64-x86_64-libwinpthread
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gettext-0.21.1-1-any.pkg.tar.zst"
-        SHA512 9002289afe530706912eb5b8feffe1d7adb23e01d6b79516ff5deef2faec1577b31890dda15426cc4cc2f30b5f12e55166a4bad492db533234b44cc89fe81117
-        DEPS mingw-w64-x86_64-expat mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-libiconv
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gettext-runtime-0.26-2-any.pkg.tar.zst"
+        SHA512 3b6d0b6fc0ea6a6082d09c15061b0057995e1c2b7512e4c1fbe9816f9f87bdac75bbdae2451267fbe7a48bbbca87e460fdde6858bff9c7ab5f8dd254dab09fd7
+        DEPS mingw-w64-x86_64-cc-libs mingw-w64-x86_64-libiconv
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gmp-6.2.1-5-any.pkg.tar.zst"
-        SHA512 7d884ef1186bd6942f7a7ace28963aae679bb6c6c77c05f186323c44b11894b80f53203a6fad55a0ae112fec41b4e1a624e67021e5f2f529a7fedf35c2755245
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gmp-6.3.0-2-any.pkg.tar.zst"
+        SHA512 38ab150051d787e44f1c75b3703d6c8deb429d244acb2a973ee232043b708e6c9e29a1f9e28f12e242c136d433e8eb5a5133a4d9ac7b87157a9749a8d215d2f0
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libffi-3.4.4-1-any.pkg.tar.zst"
-        SHA512 ec88a0e0cb9b3ff3879d3fd952d3ad52f0d86a42669eddaeca47778ab0d5213abdea7d480a23aa3870e08d6b93b9c4988855e368474be7186e9719456baae5df
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libffi-3.5.2-1-any.pkg.tar.zst"
+        SHA512 75f4cb15257c362d760b3cd26b63ce65fdb91929ce7cf907c82ad04d9664da071df7740b5e92ad3c2bc091cf4d89626954a53f5ff35b0729ee279bee7aefc924
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libiconv-1.17-3-any.pkg.tar.zst"
-        SHA512 57221118a6ed975ddde322e0d34487d4752c18c62c6184e9ed77ca14fe0a3a78a78aefe628cda3285294a5564d87cd057c56f4864b12fa8580d68b8e8a805e16
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libiconv-1.18-1-any.pkg.tar.zst"
+        SHA512 7aed58286d279699dede96c74e649cea7b78942e51350d277aca9272351d3b645ecfd129b5bbafd40f7e95bfc0187c9df118eca47f2cb795811752a18bcb3745
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libsystre-1.0.1-4-any.pkg.tar.xz"
-        SHA512 6540e896636d00d1ea4782965b3fe4d4ef1e32e689a98d25e2987191295b319eb1de2e56be3a4b524ff94f522a6c3e55f8159c1a6f58c8739e90f8e24e2d40d8
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libsystre-1.0.2-2-any.pkg.tar.zst"
+        SHA512 f042e762fa6f37017fedde3dfac5e4956e63e67d45bfcafeb83a125e5a76e970e9ab8a94de80a7b282bea3988948814d2d8d23fc768afb85eac1c1a4679d4f70
         PROVIDES mingw-w64-x86_64-libgnurx
         DEPS mingw-w64-x86_64-libtre
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libtasn1-4.19.0-1-any.pkg.tar.zst"
-        SHA512 761a7c316914d7f98ec6489fb4c06d227e5956d50f2e233ad9be119cfd6301f6b7e4f872316c0bae3913268c1aa9b224b172ab94130489fbd5d7269ff9064cfb
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libtasn1-4.20.0-1-any.pkg.tar.zst"
+        SHA512 989beaec97ff400127cafb8202f8e181eecb4ca429ac5b90a3a54cde64e030ce29a259e680ebf7dae223c7374c72632f5f33628e0855387a324f46686cfd8a9b
         DEPS mingw-w64-x86_64-gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libtre-git-r128.6fb7206-2-any.pkg.tar.xz"
-        SHA512 d595dbcf3a3b6ed098e46f370533ab86433efcd6b4d3dcf00bbe944ab8c17db7a20f6535b523da43b061f071a3b8aa651700b443ae14ec752ae87500ccc0332d
-        PROVIDES mingw-w64-x86_64-libtre
-        DEPS mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-gettext
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libtre-0.9.0-2-any.pkg.tar.zst"
+        SHA512 e2ed8902c7a793ae71643c8063682beceb6f67ab8ad2781e50e6abee9ff9d6259ca5e3d94d7bbca3f011051e85912079576dfebffd1c8a584ef180658ee49e38
+        DEPS mingw-w64-x86_64-gettext-runtime
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libwinpthread-git-10.0.0.r234.g283e5b23a-1-any.pkg.tar.zst"
-        SHA512 e79bb2c93f4c9426c5a5400cd0d3a871c39c56db7068d45b208778fce19a9adb18229ee826397ee2fe8e68df0c554281490315687b3f50b48d6c7f2a6a68ec4b
-        PROVIDES mingw-w64-x86_64-libwinpthread
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-libwinpthread-13.0.0.r391.g848cce552-1-any.pkg.tar.zst"
+        SHA512 1273dc74f22e5c006396cbb56714e8386031c9e811d692c1bbfbc4ca2c7b246be08bf384bc283ba6123cd3cd4e49f2496d0a3249843df9c808367079a3d4aab8
+        PROVIDES mingw-w64-x86_64-libwinpthread-git
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-mpc-1.3.1-1-any.pkg.tar.zst"
-        SHA512 57b86866e2439baa21f296ecb5bdfd624a155dbd260ffe157165e2f8b20bc6fbd5cc446d25dee61e9ed8c28aca941e6f478be3c2d70393f160ed5fd8438e9683
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-mpc-1.3.1-2-any.pkg.tar.zst"
+        SHA512 3fe183d4af3b3935a4394502eab75a8f7b7692f551fd44e54c67935a4691388d23a021ee1147f0345ed27ffe8a8db3e9e7e37caf2348df3413e0acd519c12a0c
         DEPS mingw-w64-x86_64-gmp mingw-w64-x86_64-mpfr
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-mpdecimal-2.5.1-1-any.pkg.tar.zst"
-        SHA512 1204c31367f9268ffd6658be04af7687c01f984c9d6be8c7a20ee0ebde1ca9a03b766ef1aeb1fa7aaa97b88a57f7a73afa7f7a7fed9c6b895a032db11e6133bf
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-mpdecimal-4.0.1-1-any.pkg.tar.zst"
+        SHA512 5a2d1b31cb5029e65c95b00f0614123855774b398335491b1bcf81636d55ff7ad4c5e46199f5b23549dd06c47c04edf19e0be65162f3a54034817e30e9834639
         DEPS mingw-w64-x86_64-gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-mpfr-4.2.0-1-any.pkg.tar.zst"
-        SHA512 5c8edf4f5ab59afa51cbf1c5ae209583feebaea576e7e3abb59d7e448fe13e143993e6f35117c26ccc221bc6efc44568119c2e25d469c726a592a026b2498d92
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-mpfr-4.2.2-1-any.pkg.tar.zst"
+        SHA512 4795debd7e47a1c539d35e3aa3a6948831a7be77ca8b915273eba7f6dc1f951d2c500f988f78321cf96dea40e4ec8c2a463c12fccdb408f424040f61e7395de7
         DEPS mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-gmp
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ncurses-6.4.20230211-1-any.pkg.tar.zst"
-        SHA512 3a86a851805646939dadd9dc4756fea45ffdbd89dec32f8452513d6aa491760861850eec68efb6a48b8b99953d7904547c6d55ff4fd67f20fd2641591781b53c
-        DEPS mingw-w64-x86_64-libsystre
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-ncurses-6.5.20250927-2-any.pkg.tar.zst"
+        SHA512 50e056e0bd5b9de1a09a20ab67a76c422aada788ba95ee296971601972ea4cfc001b5377a7370c52ce64443ef3b644035cb530dde8de09caf3f58ed9431c9414
+        DEPS mingw-w64-x86_64-cc-libs mingw-w64-x86_64-libsystre
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-openblas-0.3.21-7-any.pkg.tar.zst"
-        SHA512 e1e49f477cb44f00b5f8760f9c25bd24746844fd076ca0c490b882cfe31204ae100692387e83de22cd89093c102ae751b99bca9dd2d328aaf5de0e401a531e8a
-        PROVIDES mingw-w64-x86_64-OpenBLAS
-        DEPS mingw-w64-x86_64-gcc-libgfortran mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-libwinpthread mingw-w64-x86_64-omp
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-openblas-0.3.30-2-any.pkg.tar.zst"
+        SHA512 610b6cf4abfff3207cf92ad270629ffc72575be0b73163e2385ec8f80b828d492c1a5e292f71af8c45f01390885bf104050e0b5ace8d56cbc59b491a8ab3f672
+        DEPS mingw-w64-x86_64-gcc-libgfortran mingw-w64-x86_64-cc-libs mingw-w64-x86_64-omp
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-openssl-3.1.0-1-any.pkg.tar.zst"
-        SHA512 f146d0f2b31b767422c767f4ea39312cbe90eac86e8b248e24d28595069e6cc450351280dd5b837e27ffdd743fb7eb4880360a658f0d2b3709b8a170be3e37d2
-        #DEPS mingw-w64-x86_64-ca-certificates mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-zlib
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-openssl-3.6.0-1-any.pkg.tar.zst"
+        SHA512 c89353609ea65cbcf00796b9c1849691d03e138e4df0e9fef34eecf99cb3fec96da2df0fe799f1fabd2fb704f7dbab49b329b81fc9bf7a3b336467d68fc8f3bc
+        #DEPS mingw-w64-x86_64-ca-certificates mingw-w64-x86_64-cc-libs mingw-w64-x86_64-zlib
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-p11-kit-0.24.1-5-any.pkg.tar.zst"
-        SHA512 cbdecf7bf56ce64605a77b3c700c30322f7b0fbc8efbe2cb7007ae4108815ef96530a57db5631c788b41f1d20fbcad202de92066871bb76c78ea27ea07c848e0
-        DEPS mingw-w64-x86_64-gettext mingw-w64-x86_64-libffi mingw-w64-x86_64-libtasn1
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-p11-kit-0.25.10-1-any.pkg.tar.zst"
+        SHA512 d2d959fc1b727f75dcc0257029cb1d8d819b89c0f9c6fe1df2a7bfa90f4fc0a440092ed71769b23e24b6cc3ce2ae7aa47a608c613cf502ba51c244b4db523d06
+        DEPS mingw-w64-x86_64-gettext-runtime mingw-w64-x86_64-libffi mingw-w64-x86_64-libtasn1
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-python-3.10.10-1-any.pkg.tar.zst"
-        SHA512 be778ecfd0d4a0f186f0628dab8959596c83b1f1cfaf8554fef63e3b9fd6c5506fa30cf84ad16bbb1eed6793b1f62a5770eff71fa53de6304c0c63d3bb164b00
-        PROVIDES mingw-w64-x86_64-python3 mingw-w64-x86_64-python3.10
-        DEPS mingw-w64-x86_64-bzip2 mingw-w64-x86_64-expat mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-libffi mingw-w64-x86_64-mpdecimal mingw-w64-x86_64-ncurses mingw-w64-x86_64-openssl mingw-w64-x86_64-sqlite3 mingw-w64-x86_64-tcl mingw-w64-x86_64-tk mingw-w64-x86_64-xz mingw-w64-x86_64-zlib
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-python-3.12.12-1-any.pkg.tar.zst"
+        SHA512 d73ed3396613ac3d424a36024696b71393851138e531ba231fa4c2d03bcbadf9d177972f07474c039d6c01a32a8c1dad25a965e2383a6601f5566fad645cce42
+        PROVIDES mingw-w64-x86_64-python3 mingw-w64-x86_64-python3.12
+        DEPS mingw-w64-x86_64-bzip2 mingw-w64-x86_64-expat mingw-w64-x86_64-cc-libs mingw-w64-x86_64-libffi mingw-w64-x86_64-mpdecimal mingw-w64-x86_64-ncurses mingw-w64-x86_64-openssl mingw-w64-x86_64-sqlite3 mingw-w64-x86_64-tcl mingw-w64-x86_64-tk mingw-w64-x86_64-xz mingw-w64-x86_64-zlib
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-python-numpy-1.24.2-1-any.pkg.tar.zst"
-        SHA512 0c651815fc7d553430c577d350f460f74b731951125bf44cdbf148c705cb45801c032b98b53315cf98fbf57be3c8f5b598a148f0fbf93dd55079361e05445e7e
-        PROVIDES mingw-w64-x86_64-python3-numpy
-        DEPS mingw-w64-x86_64-openblas mingw-w64-x86_64-python
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-python-numpy-2.3.5-1-any.pkg.tar.zst"
+        SHA512 b37c8663842adb4452ce5bddd8966d068cb93b08889efe84d273beb427a4f912d9e6665a81cb6de4279f6ce828f3d2f3efb91b60fb63e20bdc848b769af91dfc
+        DEPS mingw-w64-x86_64-omp mingw-w64-x86_64-openblas mingw-w64-x86_64-python
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-readline-8.2.001-6-any.pkg.tar.zst"
-        SHA512 7b09a854b2225732b8452f6df7ebb378463066da3801ea29372c52ff68b2f6be5ccf8adf3d7d15a75e6fb3d471c5ade7bd4b9fc9599116d269c00bd9adde566e
-        DEPS mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-termcap
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-readline-8.3.003-1-any.pkg.tar.zst"
+        SHA512 4e504e5cd84d1be3c20b6472bf7fca6e224d78e054375ab0fbe645f2d0080a2955c9ee86a49bb7dfc3a20d9feaac396aa7a443fd211b41089088383faaae4f0b
+        DEPS mingw-w64-x86_64-cc-libs mingw-w64-x86_64-termcap
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-sqlite3-3.41.1-1-any.pkg.tar.zst"
-        SHA512 efa7ddcb9326bf25abcac35db36d461fb0817d40f5a6ffc1b412b627df5030a1494b0c87d2f0d0231bc962362d213e6c8eaad7cf057e88f51a0cdd8d2377d327
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-sqlite3-3.51.1-1-any.pkg.tar.zst"
+        SHA512 d8d21d5b2de708bd3c4e418ffa98879981a79e516e5264a7f1263f2f7e6d252b9343efdb5a6c334f254701080d48dd9b5d30eca86d12973369a2630d9553ec7b
         PROVIDES mingw-w64-x86_64-sqlite mingw-w64-x86_64-sqlite-analyzer
-        DEPS mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-readline mingw-w64-x86_64-tcl mingw-w64-x86_64-zlib
+        DEPS mingw-w64-x86_64-readline mingw-w64-x86_64-zlib
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-termcap-1.3.1-6-any.pkg.tar.zst"
-        SHA512 602d182ba0f1e20c4c51ae09b327c345bd736e6e4f22cd7d58374ac68c705dd0af97663b9b94d41870457f46bb9110abb29186d182196133618fc460f71d1300
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-termcap-1.3.1-7-any.pkg.tar.zst"
+        SHA512 2610355be441fd933f660f8181a5ad074057361a9aadeaad85961230dcf6df5d5165b94ccf9887144c91812485be57c2d79f39e8191ff525889bdff042d34ce6
         DEPS mingw-w64-x86_64-gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-tcl-8.6.12-1-any.pkg.tar.zst"
-        SHA512 145e4a1e3093da20cd6755ca8d2b04f7ace87e3ac952d3593880d57f6719a4767ca315543a4f82ee5cb37cff311ff29c446b36484568f65fb6d0c58706763b9b
-        DEPS mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-zlib
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-tcl-8.6.17-1-any.pkg.tar.zst"
+        SHA512 ed45b8077fc29368a9977bd699e5634c488ab3409d8e37872652086428b9706b3def7629d7bc5b3838d218e8633c83b8269c92b21977368d2ccdca232f67ca56
+        DEPS mingw-w64-x86_64-cc-libs mingw-w64-x86_64-zlib
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-tk-8.6.12-1-any.pkg.tar.zst"
-        SHA512 d3eb26a0fa4986ba4f6c77baf48d6fa9d623500f0b72aac9a385ff3c242dc8842eb80b563490995c162869fe3366e8b89d65561b4810b6b661ebbff2161428bf
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-tk-8.6.17-2-any.pkg.tar.zst"
+        SHA512 67fa5c5f71b8cb7679d53fb5854b05a5efedbd0c08e14c7c86a4e22256f94a70f90ccfdba085870256bb5bdcd6d2ce2e2fa20f89b5ce19da2ef31703203464c5
         DEPS mingw-w64-x86_64-tcl
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-xz-5.4.1-1-any.pkg.tar.zst"
-        SHA512 93e01ebade4de60f06f4485f083accd9c9e212d2fa2de63acca6d7d31f009a4fb89720da23101018fd74b99415e1fb661cc3f3a7ba4be3cea49dadd768826f33
-        DEPS mingw-w64-x86_64-gettext
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-xz-5.8.2-1-any.pkg.tar.zst"
+        SHA512 efcfc92ab4f8bbae372e97c8f74fcaa668f9e9fada21662f360a7d3eb97d9b91fc501d4f36a2ac5017c893a02d12775958c6e2b0e105f87cb52cb150656d3290
+        DEPS mingw-w64-x86_64-gettext-runtime
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-zlib-1.2.13-3-any.pkg.tar.zst"
-        SHA512 c07bea5fcc78016da74756612827b662b5dd4901d27f3a3390acc3c39b767806f48b09bd231140a40e3cd7aba76e5d869ed18278c720277e55f831f0c7809d54
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-zlib-1.3.1-1-any.pkg.tar.zst"
+        SHA512 1336cd0db102af495d8bbfc6a1956f365750b19d2377fe809e9b26f61a8a6600394e7343677645c5743f4974161535dad5c0503ff50f6126d27bb927754e7320
     )
 endmacro()

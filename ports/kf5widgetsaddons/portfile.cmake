@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwidgetsaddons
-    REF v5.98.0
-    SHA512 cfc8dc0fb44a03897ee595abd32e0f5977a16ea5d36235c51ea1a548f2fe160308838aefa3fc7c4b0edeb12e626cdd46f58c7fc2a72cbaf59e2c4286aecc5ba3
+    REF "v${VERSION}"
+    SHA512 83435073854fe3b4ea765d1bf2b58bffb13ba5ea16c2c7efc04ee7205bb8dbd88f4fa04063e3d39632fe4fefc38e689e0dce7b464a6872b987a981d52d71217c
     HEAD_REF master
 )
 
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5WidgetsAddons CONFIG_PATH lib/cmake/KF5WidgetsAddons)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5WidgetsAddons)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -29,4 +29,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

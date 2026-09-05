@@ -1,57 +1,39 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n${VERSION}
-    SHA512 da1b836c8f51cf69f95db750d5da5191a71d534fa7b0f019d6d6454f8dd6db5598789576b4fe5ad983dcd0197b9a7e8f9d43f10707b6d40ac31425da23da35b2
+    REF "n${VERSION}"
+    SHA512 41aa687cec4e93d0ffde21ea96faa48e4344fda0e9d2c9c71adfb68fedadf03beb274ec712eb1e082bf64fdcee87c55a47bb5c78d5193934be3f3f06e5e792b2
     HEAD_REF master
     PATCHES
-        0001-create-lib-libraries.patch
-        0002-fix-msvc-link.patch #upstreamed in future version
         0003-fix-windowsinclude.patch
-        0004-fix-debug-build.patch
-        0005-fix-nasm.patch #upstreamed in future version
-        0006-fix-StaticFeatures.patch
+        0004-dependencies.patch
+        0005-fix-nasm.patch
         0007-fix-lib-naming.patch
-        0009-Fix-fdk-detection.patch
-        0011-Fix-x265-detection.patch
-        0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0015-Fix-xml2-detection.patch
-        0020-fix-aarch64-libswscale.patch
-        0022-fix-iconv.patch
-        0024-fix-gcc13-binutils.patch
+        0024-fix-osx-host-c11.patch
+        0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
+        0045-use-prebuilt-bin2c.patch
+        0046-fix-msvc-detection.patch
+        0047-fix-msvc-utf8.patch
+        0049-fix-twolame-pkgconfig.patch
+        0050-fix-test-ld-absolute-lib-paths.patch
+        0051-fix-msvc-undef-flags.patch
+        0052-fix-disable-unstable-swscale-link.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/ffmpeg-bin2c")
+
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
     vcpkg_add_to_path("${NASM_EXE_PATH}")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    #We're assuming that if we're building for Windows we're using MSVC
-    set(INCLUDE_VAR "INCLUDE")
-    set(LIB_PATH_VAR "LIB")
-else()
-    set(INCLUDE_VAR "CPATH")
-    set(LIB_PATH_VAR "LIBRARY_PATH")
-endif()
-
-set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
-    set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
-    vcpkg_add_to_path("${MSYS_ROOT}/usr/share/automake-1.16")
-    string(APPEND OPTIONS " --pkg-config=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-else()
-    find_program(SHELL bash)
-endif()
+set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect")
 
 if(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -62,14 +44,23 @@ if(VCPKG_TARGET_IS_MINGW)
 elseif(VCPKG_TARGET_IS_LINUX)
     string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 elseif(VCPKG_TARGET_IS_UWP)
-    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-mediafoundation")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
+    string(APPEND OPTIONS " --target-os=win32 --enable-w32threads --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_OSX)
     string(APPEND OPTIONS " --target-os=darwin --enable-appkit --enable-avfoundation --enable-coreimage --enable-audiotoolbox --enable-videotoolbox")
+elseif(VCPKG_TARGET_IS_IOS)
+    string(APPEND OPTIONS " --enable-avfoundation --enable-coreimage --enable-videotoolbox")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-    string(APPEND OPTIONS " --target-os=android")
-else()
+    string(APPEND OPTIONS " --target-os=android --enable-jni --enable-mediacodec")
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "QNX")
+    string(APPEND OPTIONS " --target-os=qnx")
+elseif(VCPKG_TARGET_IS_OHOS)
+    # OHOS kernel is Linux/musl; ffmpeg configure has no "ohos" target-os,
+    # so without this it falls back to the host (e.g. darwin) and injects
+    # host-specific LDFLAGS (-Wl,-dynamic,-search_paths_first) that lld rejects,
+    # which also corrupts the memalign/posix_memalign link probes.
+    string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -80,7 +71,6 @@ endif()
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_DETECTED_MSVC)
-    string(APPEND OPTIONS " --disable-inline-asm") # clang-cl has inline assembly but this leads to undefined symbols.
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
@@ -94,8 +84,6 @@ string(APPEND VCPKG_COMBINED_C_FLAGS_RELEASE " -I \"${CURRENT_INSTALLED_DIR}/inc
 
 ## Setup vcpkg toolchain
 
-set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
-
 set(prog_env "")
 
 if(VCPKG_DETECTED_CMAKE_C_COMPILER)
@@ -103,7 +91,19 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
-    #string(APPEND OPTIONS " --host_cc=${CC_filename}") ffmpeg not yet setup for cross builds?
+
+    # FFmpeg 9.0 builds a native helper for the unstable AArch64 swscale
+    # backend. Using the target cl.exe as HOSTCC produces an ARM64 executable
+    # that cannot run on the x64 build host. Disable only that unstable backend
+    # for Windows ARM64; 0052 keeps the legacy swscale path linkable.
+    if(VCPKG_HOST_IS_WINDOWS AND VCPKG_DETECTED_MSVC)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            string(APPEND OPTIONS " --disable-unstable")
+        else()
+            string(APPEND OPTIONS " --host-cc=${CC_filename}")
+        endif()
+    endif()
+
     list(APPEND prog_env "${CC_path}")
 endif()
 
@@ -112,7 +112,6 @@ if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
     get_filename_component(CXX_filename "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}" NAME)
     set(ENV{CXX} "${CXX_filename}")
     string(APPEND OPTIONS " --cxx=${CXX_filename}")
-    #string(APPEND OPTIONS " --host_cxx=${CC_filename}")
     list(APPEND prog_env "${CXX_path}")
 endif()
 
@@ -124,12 +123,15 @@ if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
     list(APPEND prog_env "${RC_path}")
 endif()
 
-if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+# A GNU-frontend clang links through the compiler driver (the detected
+# CMAKE_LINKER flags are driver-style, not lld-link-style), so leave
+# configure's default LD=CC in place there.
+if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW
+   AND NOT VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "clang(-[0-9]+)?(\\.exe)?$")
     get_filename_component(LD_path "${VCPKG_DETECTED_CMAKE_LINKER}" DIRECTORY)
     get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
     set(ENV{LD} "${LD_filename}")
     string(APPEND OPTIONS " --ld=${LD_filename}")
-    #string(APPEND OPTIONS " --host_ld=${LD_filename}")
     list(APPEND prog_env "${LD_path}")
 endif()
 
@@ -162,10 +164,33 @@ if(VCPKG_DETECTED_CMAKE_RANLIB)
     list(APPEND prog_env "${RANLIB_path}")
 endif()
 
+if(VCPKG_DETECTED_CMAKE_STRIP)
+    get_filename_component(STRIP_path "${VCPKG_DETECTED_CMAKE_STRIP}" DIRECTORY)
+    get_filename_component(STRIP_filename "${VCPKG_DETECTED_CMAKE_STRIP}" NAME)
+    set(ENV{STRIP} "${STRIP_filename}")
+    string(APPEND OPTIONS " --strip=${STRIP_filename}")
+    list(APPEND prog_env "${STRIP_path}")
+endif()
+
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake)
+    set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
+    vcpkg_execute_required_process(
+        COMMAND "${SHELL}" -c "'/usr/bin/automake' --print-lib"
+        OUTPUT_VARIABLE automake_lib
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        WORKING_DIRECTORY "${MSYS_ROOT}"
+        LOGNAME automake-print-lib
+    )
+    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}${automake_lib}")
+else()
+    find_program(SHELL bash)
+endif()
+
 list(REMOVE_DUPLICATES prog_env)
 vcpkg_add_to_path(PREPEND ${prog_env})
 
-# More? OBJCC STRIP BIN2C
+# More? OBJCC BIN2C
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -237,15 +262,6 @@ else()
     set(ENABLE_AVFILTER OFF)
 endif()
 
-if("postproc" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-postproc")
-    set(ENABLE_POSTPROC ON)
-    list(APPEND FFMPEG_PKGCONFIG_MODULES libpostproc)
-else()
-    set(OPTIONS "${OPTIONS} --disable-postproc")
-    set(ENABLE_POSTPROC OFF)
-endif()
-
 if("swresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-swresample")
     set(ENABLE_SWRESAMPLE ON)
@@ -264,11 +280,6 @@ else()
     set(ENABLE_SWSCALE OFF)
 endif()
 
-set(STATIC_LINKAGE OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(STATIC_LINKAGE ON)
-endif()
-
 if ("alsa" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-alsa")
 else()
@@ -283,14 +294,18 @@ endif()
 
 if("aom" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libaom")
+    set(WITH_AOM ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libaom")
+    set(WITH_AOM OFF)
 endif()
 
 if("ass" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libass")
+    set(WITH_ASS ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libass")
+    set(WITH_ASS OFF)
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
@@ -307,20 +322,38 @@ endif()
 
 if("dav1d" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libdav1d")
+    set(WITH_DAV1D ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libdav1d")
+    set(WITH_DAV1D OFF)
+endif()
+
+if("svt-av1" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsvtav1")
+    set(WITH_SVTAV1 ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsvtav1")
+    set(WITH_SVTAV1 OFF)
 endif()
 
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
+    set(WITH_AAC ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libfdk-aac")
+    set(WITH_AAC OFF)
 endif()
 
 if("fontconfig" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfontconfig")
 else()
     set(OPTIONS "${OPTIONS} --disable-libfontconfig")
+endif()
+
+if("drawtext" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libharfbuzz")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libharfbuzz")
 endif()
 
 if("freetype" IN_LIST FEATURES)
@@ -337,32 +370,42 @@ endif()
 
 if("iconv" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-iconv")
+    set(WITH_ICONV ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-iconv")
+    set(WITH_ICONV OFF)
 endif()
 
 if("ilbc" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libilbc")
+    set(WITH_ILBC ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libilbc")
+    set(WITH_ILBC OFF)
 endif()
 
 if("lzma" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-lzma")
+    set(WITH_LZMA ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-lzma")
+    set(WITH_LZMA OFF)
 endif()
 
 if("mp3lame" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmp3lame")
+    set(WITH_MP3LAME ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libmp3lame")
+    set(WITH_MP3LAME OFF)
 endif()
 
 if("modplug" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmodplug")
+    set(WITH_MODPLUG ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libmodplug")
+    set(WITH_MODPLUG OFF)
 endif()
 
 if("nvcodec" IN_LIST FEATURES)
@@ -374,8 +417,10 @@ endif()
 
 if("opencl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-opencl")
+    set(WITH_OPENCL ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-opencl")
+    set(WITH_OPENCL OFF)
 endif()
 
 if("opengl" IN_LIST FEATURES)
@@ -386,37 +431,47 @@ endif()
 
 if("openh264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenh264")
+    set(WITH_OPENH264 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenh264")
+    set(WITH_OPENH264 OFF)
 endif()
 
 if("openjpeg" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
+    set(WITH_OPENJPEG ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
+    set(WITH_OPENJPEG OFF)
 endif()
 
 if("openmpt" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopenmpt")
+    set(WITH_OPENMPT ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopenmpt")
+    set(WITH_OPENMPT OFF)
 endif()
 
+set(WITH_OPENSSL OFF)
+set(WITH_SCHANNEL OFF)
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
+    set(WITH_OPENSSL ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
         string(APPEND OPTIONS " --enable-schannel")
-    elseif(VCPKG_TARGET_IS_OSX)
-        string(APPEND OPTIONS " --enable-securetransport")
+        set(WITH_SCHANNEL ON)
     endif()
 endif()
 
 if("opus" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libopus")
+    set(WITH_OPUS ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libopus")
+    set(WITH_OPUS OFF)
 endif()
 
 if("sdl2" IN_LIST FEATURES)
@@ -427,26 +482,34 @@ endif()
 
 if("snappy" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsnappy")
+    set(WITH_SNAPPY ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libsnappy")
+    set(WITH_SNAPPY OFF)
 endif()
 
 if("soxr" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsoxr")
+    set(WITH_SOXR ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libsoxr")
+    set(WITH_SOXR OFF)
 endif()
 
 if("speex" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libspeex")
+    set(WITH_SPEEX ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libspeex")
+    set(WITH_SPEEX OFF)
 endif()
 
 if("ssh" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libssh")
+    set(WITH_SSH ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libssh")
+    set(WITH_SSH OFF)
 endif()
 
 if("tensorflow" IN_LIST FEATURES)
@@ -463,44 +526,72 @@ endif()
 
 if("theora" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libtheora")
+    set(WITH_THEORA ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libtheora")
+    set(WITH_THEORA OFF)
+endif()
+
+if("twolame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtwolame")
+    set(WITH_TWOLAME ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtwolame")
+    set(WITH_TWOLAME OFF)
 endif()
 
 if("vorbis" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvorbis")
+    set(WITH_VORBIS ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libvorbis")
+    set(WITH_VORBIS OFF)
 endif()
 
 if("vpx" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libvpx")
+    set(WITH_VPX ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libvpx")
+    set(WITH_VPX OFF)
+endif()
+
+if("vulkan" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-vulkan")
+else()
+    set(OPTIONS "${OPTIONS} --disable-vulkan")
 endif()
 
 if("webp" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libwebp")
+    set(WITH_WEBP ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libwebp")
+    set(WITH_WEBP OFF)
 endif()
 
 if("x264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx264")
+    set(WITH_X264 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx264")
+    set(WITH_X264 OFF)
 endif()
 
 if("x265" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx265")
+    set(WITH_X265 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libx265")
+    set(WITH_X265 OFF)
 endif()
 
 if("xml2" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libxml2")
+    set(WITH_XML2 ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libxml2")
+    set(WITH_XML2 OFF)
 endif()
 
 if("zlib" IN_LIST FEATURES)
@@ -511,14 +602,42 @@ endif()
 
 if ("srt" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libsrt")
+    set(WITH_SRT ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-libsrt")
+    set(WITH_SRT OFF)
 endif()
 
 if ("qsv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")   
+    set(OPTIONS "${OPTIONS} --enable-libvpl --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
+    set(WITH_VPL ON)
 else()
-    set(OPTIONS "${OPTIONS} --disable-libmfx")
+    set(OPTIONS "${OPTIONS} --disable-libvpl")
+    set(WITH_VPL OFF)
+endif()
+
+if ("vaapi" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-vaapi")
+    set(WITH_VAAPI ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-vaapi")
+    set(WITH_VAAPI OFF)
+endif()
+
+if("zmq" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libzmq")
+    set(WITH_ZMQ ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libzmq")
+    set(WITH_ZMQ OFF)
+endif()
+
+if("rubberband" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-librubberband")
+    set(WITH_RUBBERBAND ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-librubberband")
+    set(WITH_RUBBERBAND OFF)
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")
@@ -547,12 +666,84 @@ endif()
 if(VCPKG_TARGET_IS_UWP)
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     string(APPEND OPTIONS " --disable-programs")
+    string(APPEND OPTIONS " --disable-filter=gfxcapture")
     string(APPEND OPTIONS " --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
-    string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
+    string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib --extra-ldflags=dxguid.lib")
 endif()
 
-set(OPTIONS_DEBUG "--debug --disable-optimizations")
+if (VCPKG_TARGET_IS_IOS)
+    set(vcpkg_target_arch "${VCPKG_TARGET_ARCHITECTURE}")
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(vcpkg_target_arch "x86_64")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        message(FATAL_ERROR "You can build for arm up to iOS 10 but ffmpeg can only be built for iOS 11.0 and later.
+                            Did you mean arm64?")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        message(FATAL_ERROR "You can build for x86 up to iOS 10 but ffmpeg can only be built for iOS 11.0 and later.
+                            Did you mean x64")
+    endif ()
+
+    set(vcpkg_osx_deployment_target "${VCPKG_OSX_DEPLOYMENT_TARGET}")
+    if (NOT VCPKG_OSX_DEPLOYMENT_TARGET)
+        set(vcpkg_osx_deployment_target 11.0)
+    elseif (VCPKG_OSX_DEPLOYMENT_TARGET LESS 11.0) # nowadays ffmpeg needs to be built for ios 11.0 and later
+        message(FATAL_ERROR "ffmpeg can be built only for iOS 11.0 and later but you set VCPKG_OSX_DEPLOYMENT_TARGET to
+                            ${VCPKG_OSX_DEPLOYMENT_TARGET}")
+    endif ()
+
+    if (VCPKG_OSX_SYSROOT STREQUAL "iphonesimulator")
+        set(simulator "-simulator")
+    endif ()
+
+    set(OPTIONS "${OPTIONS} --extra-cflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
+    set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
+
+    set(vcpkg_osx_sysroot "${VCPKG_OSX_SYSROOT}")
+    # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
+    # (on apple silicon it's not required but shouldn't cause any problems)
+    if ((VCPKG_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$") OR (NOT VCPKG_OSX_SYSROOT) OR (VCPKG_OSX_SYSROOT STREQUAL "")) # if it's not a path
+        if (VCPKG_OSX_SYSROOT MATCHES "^(iphoneos|iphonesimulator)$")
+            set(requested_sysroot "${VCPKG_OSX_SYSROOT}")
+        elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") # if the sysroot is not specified we have to guess
+            set(requested_sysroot "iphoneos")
+        elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(requested_sysroot "iphonesimulator")
+        else ()
+            message(FATAL_ERROR "Unsupported build arch: ${VCPKG_TARGET_ARCHITECTURE}")
+        endif ()
+        message(STATUS "Retrieving default SDK for ${requested_sysroot}")
+        execute_process(
+                COMMAND /usr/bin/xcrun --sdk ${requested_sysroot} --show-sdk-path
+                OUTPUT_VARIABLE sdk_path
+                ERROR_VARIABLE xcrun_error
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                ERROR_STRIP_TRAILING_WHITESPACE
+        )
+        if (sdk_path)
+            message(STATUS "Found!")
+            set(vcpkg_osx_sysroot "${sdk_path}")
+        else ()
+            message(FATAL_ERROR "Can't determine ${CMAKE_OSX_SYSROOT} SDK path. Error: ${xcrun_error}")
+        endif ()
+    endif ()
+    set(OPTIONS "${OPTIONS} --extra-cflags=-isysroot\"${vcpkg_osx_sysroot}\"")
+    set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot\"${vcpkg_osx_sysroot}\"")
+endif ()
+
+set(OPTIONS_DEBUG "--disable-optimizations --enable-debug")
 set(OPTIONS_RELEASE "--enable-optimizations")
+
+if(VCPKG_DETECTED_MSVC)
+    # Determine base linkage (MT or MD)
+    set(FFMPEG_CRT_PREFIX "-MT")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(FFMPEG_CRT_PREFIX "-MD")
+    endif()
+    # Append Release flags
+    string(APPEND OPTIONS_RELEASE " --extra-cflags=${FFMPEG_CRT_PREFIX} --extra-cxxflags=${FFMPEG_CRT_PREFIX}")
+    # Append Debug flags (adding the 'd' suffix for the debug runtime)
+    string(APPEND OPTIONS_DEBUG " --extra-cflags=${FFMPEG_CRT_PREFIX}d --extra-cxxflags=${FFMPEG_CRT_PREFIX}d")
+endif()
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 
@@ -566,6 +757,21 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
 endif()
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(maybe_needed_libraries -lm)
+else()
+    set(maybe_needed_libraries "")
+endif()
+
+separate_arguments(standard_libraries NATIVE_COMMAND "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
+foreach(item IN LISTS standard_libraries)
+    if(item IN_LIST maybe_needed_libraries)
+        set(OPTIONS "${OPTIONS} \"--extra-libs=${item}\"")
+    endif()
+endforeach()
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(OPTIONS "${OPTIONS} --pkg-config=\"${PKGCONFIG}\"")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(OPTIONS "${OPTIONS} --pkg-config-flags=--static")
 endif()
@@ -574,9 +780,12 @@ message(STATUS "Building Options: ${OPTIONS}")
 
 # Release build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    if (VCPKG_DETECTED_MSVC)
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-ldflags=-libpath:\"${CURRENT_INSTALLED_DIR}/lib\"")
+    else()
+        set(OPTIONS_RELEASE "${OPTIONS_RELEASE} --extra-ldflags=-L\"${CURRENT_INSTALLED_DIR}/lib\"")
+    endif()
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
-    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
-    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
     message(STATUS "Building ${PORT} for Release")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     # We use response files here as the only known way to handle spaces in paths
@@ -601,20 +810,26 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG RELEASE)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-rel"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 # Debug build
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if (VCPKG_DETECTED_MSVC)
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-ldflags=-libpath:\"${CURRENT_INSTALLED_DIR}/debug/lib\"")
+    else()
+        set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-ldflags=-L\"${CURRENT_INSTALLED_DIR}/debug/lib\"")
+    endif()
     message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
-    set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
-    set(ENV{LDFLAGS} "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
-    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
     message(STATUS "Building ${PORT} for Debug")
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cflags.rsp")
@@ -636,12 +851,16 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 
     configure_file("${CMAKE_CURRENT_LIST_DIR}/build.sh.in" "${BUILD_DIR}/build.sh" @ONLY)
 
+    z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
+
     vcpkg_execute_required_process(
         COMMAND "${SHELL}" ./build.sh
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME "build-${TARGET_TRIPLET}-dbg"
         SAVE_LOG_FILES ffbuild/config.log
     )
+
+    z_vcpkg_restore_pkgconfig_path()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -660,15 +879,33 @@ if(VCPKG_TARGET_IS_WINDOWS)
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
 
+        # llvm-lib implements the lib.exe interface; use it when building on
+        # a host without the MSVC tools
+        if(CMAKE_HOST_WIN32)
+            set(LIB_TOOL lib.exe)
+        else()
+            find_program(LIB_TOOL NAMES llvm-lib llvm-lib-22 llvm-lib-19 REQUIRED)
+        endif()
         foreach(DEF_FILE ${DEF_FILES})
             get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
             get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
             string(REGEX REPLACE "-[0-9]*\\.def" "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" OUT_FILE_NAME "${DEF_FILE_NAME}")
+            if(NOT CMAKE_HOST_WIN32)
+                # ffmpeg's makedef emits no LIBRARY statement; lib.exe infers the
+                # DLL name from the def filename but llvm-lib leaves it EMPTY,
+                # producing import entries no Windows loader can resolve.
+                get_filename_component(DEF_BASE_NAME "${DEF_FILE}" NAME_WE)
+                file(READ "${DEF_FILE}" DEF_CONTENTS)
+                if(NOT DEF_CONTENTS MATCHES "LIBRARY")
+                    file(WRITE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}" "LIBRARY ${DEF_BASE_NAME}\n${DEF_CONTENTS}")
+                    set(DEF_FILE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}")
+                endif()
+            endif()
             file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
             file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
             message(STATUS "Generating ${OUT_FILE_NATIVE}")
             vcpkg_execute_required_process(
-                COMMAND lib.exe "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
+                COMMAND "${LIB_TOOL}" "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
                 WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
                 LOGNAME "libconvert-${TARGET_TRIPLET}"
             )
@@ -704,55 +941,24 @@ endif()
 
 vcpkg_copy_pdbs()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(_dirs "/")
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        list(APPEND _dirs "/debug/")
-    endif()
-    foreach(_debug IN LISTS _dirs)
-        foreach(PKGCONFIG_MODULE IN LISTS FFMPEG_PKGCONFIG_MODULES)
-            set(PKGCONFIG_FILE "${CURRENT_PACKAGES_DIR}${_debug}lib/pkgconfig/${PKGCONFIG_MODULE}.pc")
-            # remove redundant cygwin style -libpath entries
-            execute_process(
-                COMMAND "${MSYS_ROOT}/usr/bin/cygpath.exe" -u "${CURRENT_INSTALLED_DIR}"
-                OUTPUT_VARIABLE CYG_INSTALLED_DIR
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-            )
-            vcpkg_replace_string("${PKGCONFIG_FILE}" "-libpath:${CYG_INSTALLED_DIR}${_debug}lib/pkgconfig/../../lib " "")
-            # transform libdir, includedir, and prefix paths from cygwin style to windows style
-            file(READ "${PKGCONFIG_FILE}" PKGCONFIG_CONTENT)
-            foreach(PATH_NAME prefix libdir includedir)
-                string(REGEX MATCH "${PATH_NAME}=[^\n]*" PATH_VALUE "${PKGCONFIG_CONTENT}")
-                string(REPLACE "${PATH_NAME}=" "" PATH_VALUE "${PATH_VALUE}")
-                if(NOT PATH_VALUE)
-                    message(FATAL_ERROR "failed to find pkgconfig variable ${PATH_NAME}")
-                endif()
-                execute_process(
-                    COMMAND "${MSYS_ROOT}/usr/bin/cygpath.exe" -w "${PATH_VALUE}"
-                    OUTPUT_VARIABLE FIXED_PATH
-                    OUTPUT_STRIP_TRAILING_WHITESPACE
-                )
-                file(TO_CMAKE_PATH "${FIXED_PATH}" FIXED_PATH)
-                vcpkg_replace_string("${PKGCONFIG_FILE}" "${PATH_NAME}=${PATH_VALUE}" "${PATH_NAME}=${FIXED_PATH}")
-            endforeach()
-            # list libraries with -l flag (so pkgconf knows they are libraries and not just linker flags)
-            foreach(LIBS_ENTRY Libs Libs.private)
-                string(REGEX MATCH "${LIBS_ENTRY}: [^\n]*" LIBS_VALUE "${PKGCONFIG_CONTENT}")
-                if(NOT LIBS_VALUE)
-                    message(FATAL_ERROR "failed to find pkgconfig entry ${LIBS_ENTRY}")
-                endif()
-                string(REPLACE "${LIBS_ENTRY}: " "" LIBS_VALUE "${LIBS_VALUE}")
-                if(LIBS_VALUE)
-                    set(LIBS_VALUE_OLD "${LIBS_VALUE}")
-                    string(REGEX REPLACE "([^ ]+)[.]lib" "-l\\1" LIBS_VALUE "${LIBS_VALUE}")
-                    set(LIBS_VALUE_NEW "${LIBS_VALUE}")
-                    vcpkg_replace_string("${PKGCONFIG_FILE}" "${LIBS_ENTRY}: ${LIBS_VALUE_OLD}" "${LIBS_ENTRY}: ${LIBS_VALUE_NEW}")
-                endif()
-            endforeach()
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+    foreach(file IN LISTS pc_files)
+        # ffmpeg exports -libpath:foo and bar.lib for transitive deps.
+        # But CMake's pkg_check_modules cannot handle this properly.
+        # pc files generally use non-msvc syntax with -Lfoo -lbar.
+        file(READ "${file}" content)
+        foreach(entry IN ITEMS Libs Libs.private)
+            if(content MATCHES "${entry}:( [^\n]*)")
+                set(old_value "${CMAKE_MATCH_1}")
+                string(REGEX REPLACE "-libpath:" "-L" new_value "${old_value}")
+                string(REGEX REPLACE " ([^ /]+)[.]lib" " -l\\1" new_value "${new_value}")
+                string(REPLACE "${entry}:${old_value}" "${entry}:${new_value}" content "${content}")
+            endif()
         endforeach()
+        file(WRITE "${file}" "${content}")
     endforeach()
 endif()
-
 vcpkg_fixup_pkgconfig()
 
 # Handle dependencies
@@ -761,7 +967,8 @@ x_vcpkg_pkgconfig_get_modules(PREFIX FFMPEG_PKGCONFIG MODULES ${FFMPEG_PKGCONFIG
 
 function(append_dependencies_from_libs out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "LIBS" "")
-    string(REGEX REPLACE "[ ]+" ";" contents "${arg_LIBS}")
+    separate_arguments(contents UNIX_COMMAND "${arg_LIBS}")
+    list(FILTER contents EXCLUDE REGEX "^-F.+")
     list(FILTER contents EXCLUDE REGEX "^-framework$")
     list(FILTER contents EXCLUDE REGEX "^-L.+")
     list(FILTER contents EXCLUDE REGEX "^-libpath:.+")
@@ -773,7 +980,6 @@ function(append_dependencies_from_libs out)
     list(FILTER contents EXCLUDE REGEX "^avdevice$")
     list(FILTER contents EXCLUDE REGEX "^avfilter$")
     list(FILTER contents EXCLUDE REGEX "^avformat$")
-    list(FILTER contents EXCLUDE REGEX "^postproc$")
     list(FILTER contents EXCLUDE REGEX "^swresample$")
     list(FILTER contents EXCLUDE REGEX "^swscale$")
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -883,6 +1089,20 @@ else()
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake" @ONLY)
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "
+To use the static libraries to build your own shared library,
+you may need to add the following link option for your library:
+
+  -Wl,-Bsymbolic
+")
+endif()
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/${LICENSE_FILE}"
+        "${SOURCE_PATH}/LICENSE.md"
+)

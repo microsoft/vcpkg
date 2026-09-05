@@ -1,0 +1,93 @@
+From bdd99371b995e02d6b39acc93221c477aafd284a Mon Sep 17 00:00:00 2001
+From: Jeremy Nimmer <jeremy.nimmer@tri.global>
+Date: Thu, 22 Sep 2022 17:39:19 -0700
+Subject: [PATCH] Fix build errors when in C++20 mode
+
+---
+ src/libqhullcpp/QhullLinkedList.h | 12 +++++++-----
+ src/libqhullcpp/QhullSet.h        | 22 +++++++++++-----------
+ 2 files changed, 18 insertions(+), 16 deletions(-)
+
+diff --git a/src/libqhullcpp/QhullLinkedList.h b/src/libqhullcpp/QhullLinkedList.h
+index 9f145ee..7c7104d 100644
+--- a/src/libqhullcpp/QhullLinkedList.h
++++ b/src/libqhullcpp/QhullLinkedList.h
+@@ -62,16 +62,18 @@ private:
+ 
+ #//!\name Constructors
+ public:
+-                        QhullLinkedList<T>(T b, T e) : begin_node(b), end_node(e) {}
++
++                        QhullLinkedList(T b, T e) : begin_node(b), end_node(e) {}
+                         //! Copy constructor copies begin_node and end_node, but not the list elements.  Needed for return by value and parameter passing.
+-                        QhullLinkedList<T>(const QhullLinkedList<T> &other) : begin_node(other.begin_node), end_node(other.end_node) {}
++
++                        QhullLinkedList(const QhullLinkedList<T> &other) : begin_node(other.begin_node), end_node(other.end_node) {}
+                         //! Copy assignment copies begin_node and end_node, but not the list elements.
+-                        QhullLinkedList<T> & operator=(const QhullLinkedList<T> &other) { begin_node= other.begin_node; end_node= other.end_node; return *this; }
+-                        ~QhullLinkedList<T>() {}
++                        QhullLinkedList & operator=(const QhullLinkedList &other) { begin_node= other.begin_node; end_node= other.end_node; return *this; }
++                        ~QhullLinkedList() {}
+ 
+ private:
+                         //!disabled since a sentinel must be allocated as the private type
+-                        QhullLinkedList<T>() {}
++                        QhullLinkedList() {}
+ 
+ public:
+ 
+diff --git a/src/libqhullcpp/QhullSet.h b/src/libqhullcpp/QhullSet.h
+index f6b248a..803e703 100644
+--- a/src/libqhullcpp/QhullSet.h
++++ b/src/libqhullcpp/QhullSet.h
+@@ -110,17 +110,17 @@ public:
+     typedef typename QhullSet<T>::const_iterator ConstIterator;
+ 
+ #//!\name Constructors
+-                        QhullSet<T>(const Qhull &q, setT *s) : QhullSetBase(q, s) { }
+-                        QhullSet<T>(QhullQh *qqh, setT *s) : QhullSetBase(qqh, s) { }
++                        QhullSet(const Qhull &q, setT *s) : QhullSetBase(q, s) { }
++                        QhullSet(QhullQh *qqh, setT *s) : QhullSetBase(qqh, s) { }
+                         //Conversion from setT* is not type-safe.  Implicit conversion for void* to T
+                         //Copy constructor copies pointer but not contents.  Needed for return by value.
+-                        QhullSet<T>(const QhullSet<T> &other) : QhullSetBase(other) {}
+-    QhullSet<T> &       operator=(const QhullSet<T> &other) { QhullSetBase::operator=(other); return *this; }
+-                        ~QhullSet<T>() {}
++                        QhullSet(const QhullSet &other) : QhullSetBase(other) {}
++    QhullSet<T> &       operator=(const QhullSet &other) { QhullSetBase::operator=(other); return *this; }
++                        ~QhullSet() {}
+ 
+ private:
+                         //!Disable default constructor.  See QhullSetBase
+-                        QhullSet<T>();
++                        QhullSet();
+ public:
+ 
+ #//!\name Conversion
+@@ -136,8 +136,8 @@ public:
+     using QhullSetBase::count;
+     using QhullSetBase::isEmpty;
+     // operator== defined for QhullSets of the same type
+-    bool                operator==(const QhullSet<T> &other) const { return qh_setequal(getSetT(), other.getSetT()); }
+-    bool                operator!=(const QhullSet<T> &other) const { return !operator==(other); }
++    bool                operator==(const QhullSet &other) const { return qh_setequal(getSetT(), other.getSetT()); }
++    bool                operator!=(const QhullSet &other) const { return !operator==(other); }
+ 
+ #//!\name Element access
+     // Constructs T.  Cannot return reference.
+@@ -294,9 +294,9 @@ private:
+ 
+ public:
+ #//!\name Constructors
+-                        QhullSetIterator<T>(const QhullSet<T> &s) : i(s.data()), begin_i(i), end_i(s.endData()), qh_qh(s.qh()) {}
+-                        QhullSetIterator<T>(const QhullSetIterator<T> &o) : i(o.i), begin_i(o.begin_i), end_i(o.end_i), qh_qh(o.qh_qh) {}
+-    QhullSetIterator<T> &operator=(const QhullSetIterator<T> &o) { i= o.i; begin_i= o.begin_i; end_i= o.end_i; qh_qh= o.qh_qh; return *this; }
++                        QhullSetIterator(const QhullSet<T> &s) : i(s.data()), begin_i(i), end_i(s.endData()), qh_qh(s.qh()) {}
++                        QhullSetIterator(const QhullSetIterator<T> &o) : i(o.i), begin_i(o.begin_i), end_i(o.end_i), qh_qh(o.qh_qh) {}
++    QhullSetIterator &operator=(const QhullSetIterator &o) { i= o.i; begin_i= o.begin_i; end_i= o.end_i; qh_qh= o.qh_qh; return *this; }
+ 
+ #//!\name ReadOnly
+     countT              countRemaining() { return static_cast<countT>(end_i-i); } // WARN64
+-- 
+2.44.0
+

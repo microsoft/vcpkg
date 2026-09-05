@@ -8,13 +8,9 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF "v${VERSION}"
-  SHA512 6bdc7cba821d66e17a559250cc0ce0095808e9db81cec9e16eaa4c31abdfa705299c67b72016d9b06b302bc306d063e83a374eb00728071b83a5ad650d59034f
+  REF c05cd34119d62f96deed28c803d2fd0b59548d8f
+  SHA512 b756494d97c719d947ba79db478811c17b1aea4dc8e32efc8eba73b7feebe05b02d3042af91fe2134360a9d5b0ae6c320ef008134d1ace55af03e6a973d6bd77
   HEAD_REF master
-  PATCHES
-    0001-fix-uwp.patch
-    0002-fix-cmake-install.patch
-    fix-uninitialized-values.patch  #Update the new version please remove this patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -30,7 +26,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/date)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
+else()
+  vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/date")
+endif()
 
 vcpkg_copy_pdbs()
 

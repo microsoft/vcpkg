@@ -2,7 +2,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO            cppslippi
     FILENAME        "CppSlippi-${VERSION}.zip"
-    SHA512          b23f7794f1fc5ec56bba1b48882588ce0dc68985edc673108f3c8b1504f61f9e5769baa01af056df527826b66ba4cbaf3767c8117d626ec99832ecab3c5b840c
+    SHA512          8bd20b485ce15fbd184d48dd8f58d20d448ea081efd97ae613cbb78a8c9fa0b8f9b643b16a6e25317e9582b86a968eac2ec1ee6b6b6749b8cc79a8b9a9f6de9b
     NO_REMOVE_ONE_LEVEL
 )
 

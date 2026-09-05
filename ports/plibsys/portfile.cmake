@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO saprykin/plibsys
-    REF 0.0.4
-    SHA512 61957666fb454469e1ff68435463eaf426e960caed33540dbb495e1aa7c446c9803d100f33f1a6ea70d5f2ee2d0d19ec315f3a8c651747f65a186ad061c05e51
+    REF "${VERSION}"
+    SHA512 ccc4dd0e54d69121542f4ddec319ec9fd2069866a93135acb87fe564c7bd067a218038dfaa4ddda4debcd897975c016165cbe3d41af6c2149d2b49fbe52f8fbb
     HEAD_REF master
     PATCHES
         fix_configuration.patch
@@ -17,14 +17,14 @@ vcpkg_cmake_configure(
         -DPLIBSYS_COVERAGE=OFF
         -DPLIBSYS_BUILD_DOC=OFF
         -DPLIBSYS_BUILD_STATIC=${PLIBSYS_STATIC}
+        -DPLIBSYS_WRITE_PACKAGE=TRUE
 )
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/plibsys)
 
 vcpkg_copy_pdbs()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

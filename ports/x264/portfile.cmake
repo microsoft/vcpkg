@@ -1,57 +1,38 @@
-vcpkg_from_github(
+# The latest ref in branch stable
+set(ref b35605ace3ddf7c1a5d67a2eb553f034aef41d55)
+
+# Note on x264 versioning:
+# The pc file exports "0.<ABI>.<N>" where N is the number of commits.
+# The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.
+# With a git clone, this can be determined by running `versions.sh`.
+# With vcpkg_from_gitlab, we modify `versions.sh` accordingly.
+# For --editable mode, use configured patch instead of vcpkg_replace_string.
+string(REGEX MATCH "^......." short_ref "${ref}")
+string(REGEX MATCH "[0-9]+\$" revision "${VERSION}")
+configure_file("${CURRENT_PORT_DIR}/version.diff.in" "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff" @ONLY)
+
+vcpkg_from_gitlab(
+    GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mirror/x264
-    REF eaa68fad9e5d201d42fde51665f2d137ae96baf0 # 0.164.3107 in pc file, to be updated below
-    SHA512 9181b222e7f8bbde4331141ff399e1ef20d3e2e7a8f939b373fbe08df6f3caa99b992afb0e559cc19f78c96f0105b88b2eb4e4b935484e25b2c15da7903d179b
-    HEAD_REF stable
+    REPO videolan/x264
+    REF "${ref}"
+    SHA512 bfac118da55da2fcc4587b17a3184d9ed70d6e03188bc0497f5922df22b5685fa49fa4325f9c5196c76d03e6e3f56d5906475c540d0df7e1739dc4182816eebe
+    HEAD_REF master
     PATCHES
+        "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff"
         uwp-cflags.patch
         parallel-install.patch
         allow-clang-cl.patch
-        configure-as.patch # Ignore ':' from `vcpkg_configure_make`
+        configure.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/configure" [[/bin/bash]] [[/usr/bin/env bash]])
-
-# Note on x264 versioning:
-# The pc file exports "0.164.<N>" where is the number of commits.
-# This must be fixed here because vcpkg uses a GH tarball instead of cloning the source.
-# (The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.)
-vcpkg_replace_string("${SOURCE_PATH}/version.sh" [[ver="x"]] [[ver="3095"]])
-
-# Ensure that 'ENV{PATH}' leads to tool 'name' exactly at 'filepath'.
-function(ensure_tool_in_path name filepath)
-    unset(program_found CACHE)
-    find_program(program_found "${name}" PATHS ENV PATH NO_DEFAULT_PATH NO_CACHE)
-    if(NOT filepath STREQUAL program_found)
-        cmake_path(GET filepath PARENT_PATH parent_path)
-        vcpkg_add_to_path(PREPEND "${parent_path}")
-    endif()
+function(add_cross_prefix)
+  if(configure_env MATCHES "CC=([^\/]*-)gcc$")
+      vcpkg_list(APPEND arg_OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
+  endif()
+  set(arg_OPTIONS "${arg_OPTIONS}" PARENT_SCOPE)
 endfunction()
 
-# Ensure that parent-scope variable 'var' doesn't contain a space,
-# updating 'ENV{PATH}' and 'var' if needed.
-function(transform_path_no_space var)
-    set(path "${${var}}")
-    if(path MATCHES " ")
-        cmake_path(GET path FILENAME program_name)
-        set("${var}" "${program_name}" PARENT_SCOPE)
-        ensure_tool_in_path("${program_name}" "${path}")
-    endif()
-endfunction()
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-
-transform_path_no_space(VCPKG_DETECTED_CMAKE_C_COMPILER)
-set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-
-vcpkg_list(SET OPTIONS)
-if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*-)gcc$")
-    vcpkg_list(APPEND OPTIONS "--cross-prefix=${CMAKE_MATCH_1}")
-endif()
-
-vcpkg_list(SET EXTRA_ARGS)
 set(nasm_archs x86 x64)
 set(gaspp_archs arm arm64)
 if(NOT "asm" IN_LIST FEATURES)
@@ -60,10 +41,8 @@ elseif(NOT "$ENV{AS}" STREQUAL "")
     # Accept setting from triplet
 elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST nasm_archs)
     vcpkg_find_acquire_program(NASM)
-    transform_path_no_space(NASM)
-    list(APPEND EXTRA_ARGS CONFIGURE_ENVIRONMENT_VARIABLES AS)
-    set(AS "${NASM}") # for CONFIGURE_ENVIRONMENT_VARIABLES
-    set(ENV{AS} "${NASM}") # for non-WIN32
+    vcpkg_insert_program_into_path("${NASM}")
+    set(ENV{AS} "${NASM}")
 elseif(VCPKG_TARGET_ARCHITECTURE IN_LIST gaspp_archs AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
     vcpkg_find_acquire_program(GASPREPROCESSOR)
     list(FILTER GASPREPROCESSOR INCLUDE REGEX gas-preprocessor)
@@ -89,17 +68,17 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-D_WIN32_WINNT=0x0A00)
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND OPTIONS --enable-pic)
-endif()
-
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    NO_ADDITIONAL_PATHS
-    DETERMINE_BUILD_TRIPLET
-    ${EXTRA_ARGS}
+    DISABLE_CPPFLAGS # Build is not using CPP/CPPFLAGS
+    DISABLE_MSVC_WRAPPERS
+    LANGUAGES ASM C CXX # Requires NASM to compile
+    DISABLE_MSVC_TRANSFORMATIONS # disable warnings about unknown -Xcompiler/-Xlinker flags
+    PRE_CONFIGURE_CMAKE_COMMANDS
+        add_cross_prefix
     OPTIONS
         ${OPTIONS}
+        --enable-pic
         --disable-lavf
         --disable-swscale
         --disable-avs
@@ -110,12 +89,14 @@ vcpkg_configure_make(
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
         --enable-strip
+        "--bindir=\\\${prefix}/bin"
     OPTIONS_DEBUG
         --enable-debug
         --disable-cli
+        "--bindir=\\\${prefix}/bin"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 if("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
@@ -137,7 +118,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT 
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "#ifdef X264_API_IMPORTS" "#if 1")
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "defined(U_STATIC_IMPLEMENTATION)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/x264.h" "defined(U_STATIC_IMPLEMENTATION)" "1" IGNORE_UNCHANGED)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
@@ -148,4 +129,4 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

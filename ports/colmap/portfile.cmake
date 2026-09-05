@@ -1,13 +1,15 @@
-set(COLMAP_REF "30da037ce19bdceb6d239c45342fadb221bdabb2") # 3.8 with bugfixes
+# Update both, literally.
+set(COLMAP_REF 3.12.6 "4d5b60e19ad268072adaf1267d21fa38a9a828ca")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
-    REF "${COLMAP_REF}"
-    SHA512 2aad3c39efee025bebdbec41215f32968c3a63e160f9e7de0a6a2bf2d2c96bb1c20af0e10173d1d81ed4712e58fd97e7c8aabef8f9c47cc542d89b14c6ae420d
-    HEAD_REF dev
+    REF "${VERSION}"
+    SHA512 718e4542a128fbe39dd36a5e2e6d013c201ef7e23d0f6f38acc10aa5f505185389d8c9b8a75f02846cac4fd426adb75250cc32d32d427496b275ad4632a05ddb
+    HEAD_REF main
     PATCHES
-        fix-dependencies.patch
+        no-glu.diff
+        add-missing-cassert.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
@@ -17,14 +19,22 @@ endif()
 # set GIT_COMMIT_ID and GIT_COMMIT_DATE
 if(DEFINED VCPKG_HEAD_VERSION)
     set(GIT_COMMIT_ID "${VCPKG_HEAD_VERSION}")
+elseif(NOT VERSION IN_LIST COLMAP_REF)
+    message(FATAL_ERROR "Version ${VERSION} missing in COLMAP_REF (${COLMAP_REF})")
 else()
-    set(GIT_COMMIT_ID "${COLMAP_REF}")
+    list(GET COLMAP_REF 1 GIT_COMMIT_ID)
 endif()
 
 string(TIMESTAMP COLMAP_GIT_COMMIT_DATE "%Y-%m-%d")
 
+foreach(FEATURE ${FEATURE_OPTIONS})
+    message(STATUS "${FEATURE}")
+endforeach()
+
 set(CUDA_ENABLED OFF)
-set(TESTS_ENABLED OFF)
+set(GUI_ENABLED OFF)
+set(CGAL_ENABLED OFF)
+set(OPENMP_ENABLED ON)
 
 if("cuda" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
@@ -36,13 +46,16 @@ if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ARCHITECTURES "all-major")
 endif()
 
-if("tests" IN_LIST FEATURES)
-    set(TESTS_ENABLED ON)
+if("gui" IN_LIST FEATURES)
+    set(GUI_ENABLED ON)
 endif()
 
-set(OPENMP_ENABLED ON)
+if("cgal" IN_LIST FEATURES)
+    set(CGAL_ENABLED ON)
+endif()
+
 if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-    set(OPENMP_ENABLED Off)
+    set(OPENMP_ENABLED OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -51,10 +64,14 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
-        -DTESTS_ENABLED=${TESTS_ENABLED}
+        -DGUI_ENABLED=${GUI_ENABLED}
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
         -DOPENMP_ENABLED=${OPENMP_ENABLED}
+        -DCGAL_ENABLED=${CGAL_ENABLED}
+        -DTESTS_ENABLED=OFF
+        -DFETCH_POSELIB=OFF
+        -DFETCH_FAISS=OFF
 )
 
 vcpkg_cmake_install()
@@ -74,7 +91,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/include/colmap/exe"
-    "${CURRENT_PACKAGES_DIR}/include/colmap/lib/Graclus/multilevelLib"
     "${CURRENT_PACKAGES_DIR}/include/colmap/tools"
     "${CURRENT_PACKAGES_DIR}/include/colmap/ui/media"
     "${CURRENT_PACKAGES_DIR}/include/colmap/ui/shaders"
@@ -87,6 +103,6 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -2,17 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_mixer
     REF "release-${VERSION}"
-    SHA512 74c2b449e8a9928679d42e25bd7a5967e41fe9d51732f26197c6bbe1db9170be784125b7f268476050017f3dc970497e09a0409d50731026a18355375d0369ce
+    SHA512 4c2ba587a89721e060472b65e8a846ed3012121b4de7a2952704dab5df5f9e5d828a4105a7eb9b2fd65158ea9264e8b53eb689b87cb7f098452c2ab959a25a06
     PATCHES 
-        fix-pkg-prefix.patch 
-        fix-pkgconfig.patch 
-        fix-deps-targets.patch
+        fix-pkg-prefix.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fluidsynth SDL2MIXER_MIDI
         fluidsynth SDL2MIXER_MIDI_FLUIDSYNTH
         libflac SDL2MIXER_FLAC
         libflac SDL2MIXER_FLAC_LIBFLAC
@@ -20,13 +17,24 @@ vcpkg_check_features(
         libmodplug SDL2MIXER_MOD_MODPLUG
         mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
+        timidity SDL2MIXER_MIDI_TIMIDITY
+        wavpack SDL2MIXER_WAVPACK
+        wavpack SDL2MIXER_WAVPACK_DSD
         opusfile SDL2MIXER_OPUS
 )
+
+if("fluidsynth" IN_LIST FEATURES OR "timidity" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DSDL2MIXER_MIDI=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DSDL2MIXER_MIDI=OFF")
+endif()
 
 if("fluidsynth" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
     list(APPEND EXTRA_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -41,8 +49,10 @@ vcpkg_cmake_configure(
         -DSDL2MIXER_VORBIS="VORBISFILE"
         -DSDL2MIXER_FLAC_DRFLAC=OFF
         -DSDL2MIXER_MIDI_NATIVE=OFF
-        -DSDL2MIXER_MIDI_TIMIDITY=OFF
         -DSDL2MIXER_MP3_DRMP3=OFF
+        -DSDL2MIXER_MOD_XMP_SHARED=${BUILD_SHARED}
+    MAYBE_UNUSED_VARIABLES
+        SDL2MIXER_MP3_DRMP3
 )
 
 vcpkg_cmake_install()
@@ -52,6 +62,16 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH "lib/cmake/SDL2_mixer"
 )
 vcpkg_fixup_pkgconfig()
+
+set(debug_libname "SDL2_mixerd")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/SDL2_mixer.pc" "-lSDL2_mixer" "-lSDL2_mixer-static")
+    set(debug_libname "SDL2_mixer-staticd")
+endif()
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_mixer.pc" "-lSDL2_mixer" "-l${debug_libname}")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

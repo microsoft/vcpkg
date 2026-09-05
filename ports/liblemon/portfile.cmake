@@ -14,11 +14,13 @@ vcpkg_extract_source_archive(
     SOURCE_BASE "${VERSION}"
     PATCHES
         fix-cmake.patch
+        fix-cmake4.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_CXX_STANDARD=14
         -DLEMON_ENABLE_GLPK=OFF
         -DLEMON_ENABLE_ILOG=OFF
         -DLEMON_ENABLE_COIN=OFF

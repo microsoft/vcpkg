@@ -1,19 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
-    REF v0.10.1
-    SHA512 8a105f4d854829995799016bb2837ec3c80da1cca0bc1833069a04928d6104677568d1e80fac02a4aa86d1b79b837586366fa28e2d21d43211f31bbb0e79399c
+    REF "v${VERSION}"
+    SHA512 135c8a05f0b5b8bf90eed1779ffce39d95653cec1113a3e7a3f758a38d29761b080e04b07b0c1ab8f29632189b9f23edfe75b7931b3db8941e5c1f60e81fdc62
     HEAD_REF master
-    PATCHES
-        install-tools.patch
-        windows-build-option.patch
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND BUILD_OPTIONS -Dstatic=true)
-else()
-    list(APPEND BUILD_OPTIONS -Dstatic=false)
-endif()
 
 if ("tools" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -Dtools=all)
@@ -24,13 +15,15 @@ vcpkg_configure_meson(
     OPTIONS
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
-        -Dengines=sw
+        -Dstatic=true # Use static modules
+        -Dengines=['cpu']
         -Dloaders=all
-        -Dsavers=tvg
-        -Dvector=true
+        -Dsavers=all
+        -Dsimd=true
         -Dbindings=capi
         -Dtests=false
-        -Dexamples=false
+        -Dstrip=false
+        -Dextra=['']
     OPTIONS_DEBUG
         -Dlog=true
         -Dbindir=${CURRENT_PACKAGES_DIR}/debug/bin
@@ -40,10 +33,16 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/thorvg-1/thorvg.h" "#ifndef TVG_STATIC" "#if 0")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/thorvg-1/thorvg.h" "#ifndef TVG_STATIC" "#if 1")
+endif()
+
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES svg2tvg svg2png AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES tvg-svg2png tvg-lottie2gif AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,25 +1,37 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CppAD
-    REF 5e1c0090e23d897f268c6802eaffed87078b78c0 #20230000.0
-    SHA512 9583323277023a7c7ae6c1b077262b1f228989c9dd432a7162dd8c7cd9b97881abcd3d368fdd916fb7250f3fadbbf41557462cfc0fcb6076c6b8fdc76a38d3ed
+    REF "${VERSION}"
+    SHA512 abe9dd9a971f8d154990d54c1f798c8cab6bf90d016bb288efbcb23a14331897762610295658eec04fb50e5c13b05f4bb6b50a4647d6f0468eb94833dc3400d2
     HEAD_REF master
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" cppad_static_lib)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
-    OPTIONS_RELEASE
-        -Dcmake_install_libdirs=lib
-    OPTIONS_DEBUG
-        -Dcmake_install_libdirs=debug/lib
+        -Dcppad_static_lib=${cppad_static_lib}
 )
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
-# Add the copyright
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/pkgconfig" # redundant
+    # Remove empty dirs
+    "${CURRENT_PACKAGES_DIR}/include/cppad/local/sweep/template"
+    "${CURRENT_PACKAGES_DIR}/include/cppad/local/var_op/template"
+)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

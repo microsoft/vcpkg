@@ -1,25 +1,32 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/MaterialX
-    REF b1ba83b312576fc58f02a6a7db40b18ddbe4f87f # 1.38.4
-    SHA512 3988c42d487e391f9f0f3ab5f34eaa26c7f450079695d96954b871e078eecfe692daa9917279560ba3f10bf771685df3da6e26273d575a23a11c3d17fb897c62
+    REF "v${VERSION}"
+    SHA512 a9af568dd2918a2679de1727295178a3155cb63a1b1a58eec0ff2bf804031e716918c036546916cfdab2ef1fcbe3cc2edc34037a082f7a50f0c6852236b8e449
     HEAD_REF main
 )
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        glsl-generator MATERIALX_BUILD_GEN_GLSL
+        mdl-generator  MATERIALX_BUILD_GEN_MDL
+        osl-generator  MATERIALX_BUILD_GEN_OSL
+        render         MATERIALX_BUILD_RENDER
+)
+if (VCPKG_TARGET_IS_LINUX AND MATERIALX_BUILD_RENDER)
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev.")
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPTION_BUILD_SHARED_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         "-DMATERIALX_BUILD_SHARED_LIBS:BOOL=${OPTION_BUILD_SHARED_LIB}"
         "-DMATERIALX_BUILD_JS:BOOL=NO"
         "-DMATERIALX_BUILD_PYTHON:BOOL=NO"
         "-DMATERIALX_BUILD_VIEWER:BOOL=NO"
         "-DMATERIALX_BUILD_DOCS:BOOL=NO"
-        "-DMATERIALX_BUILD_GEN_GLSL:BOOL=NO"
-        "-DMATERIALX_BUILD_GEN_OSL:BOOL=NO"
-        "-DMATERIALX_BUILD_GEN_MDL:BOOL=NO"
-        "-DMATERIALX_BUILD_RENDER:BOOL=NO"
         "-DMATERIALX_BUILD_OIIO:BOOL=NO"
         "-DMATERIALX_BUILD_TESTS:BOOL=NO"
         "-DMATERIALX_PYTHON_LTO:BOOL=NO"
@@ -44,6 +51,14 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/LICENSE"
     "${CURRENT_PACKAGES_DIR}/debug/README.md"
     "${CURRENT_PACKAGES_DIR}/debug/THIRD-PARTY.md"
-    "${CURRENT_PACKAGES_DIR}/debug/include")
+    "${CURRENT_PACKAGES_DIR}/debug/include"
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+    # MaterialXGenShader explicitely install resources
+    "${CURRENT_PACKAGES_DIR}/include/MaterialXRender/External/OpenImageIO" 
+
+    # Based on how OSL does it, it could be that those `.mdl` source would be better located inside `libraries/pbrlib/genmdl/**`
+    # But it seems that they are instead installed into `libraries/mdl`
+    "${CURRENT_PACKAGES_DIR}/include/MaterialXGenMdl/mdl"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

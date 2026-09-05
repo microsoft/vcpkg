@@ -1,31 +1,24 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release)  # header-only library
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cameron314/concurrentqueue
     REF v${VERSION}
-    SHA512 a27306d1a7ad725daf5155a8e33a93efd29839708b2147ba703d036c4a92e04cbd8a505d804d2596ccb4dd797e88aca030b1cb34a4eaf09c45abb0ab55e604ea
+    SHA512 7a58f237a38b3faed778fbe8508eadd9e5b282bd38ef4a0f40118498cf578fe96f1d4272c0b839bd290150e6ff25c6d44fe7362e3fc046b04d44ade8edd091ea
     HEAD_REF master
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
-
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-concurrentqueue)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/concurrentqueue")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+# transitional polyfill
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/unofficial/concurrentqueue")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/unofficial/concurrentqueue/concurrentqueue.h" [[#include "../../moodycamel/concurrentqueue.h"]])
+file(COPY "${CURRENT_PORT_DIR}/unofficial-concurrentqueue-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-concurrentqueue")
 
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/unofficial-concurrentqueue-config.in.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/unofficial-concurrentqueue/unofficial-concurrentqueue-config.cmake"
-    @ONLY
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(GLOB HEADER_FILES "${SOURCE_PATH}/*.h")
-file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/moodycamel/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

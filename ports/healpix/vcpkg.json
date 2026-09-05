@@ -1,11 +1,16 @@
 {
   "name": "healpix",
-  "version": "1.12.10",
-  "port-version": 9,
-  "description": "HEALPix is an acronym for Hierarchical Equal Area isoLatitude Pixelation of a sphere.",
-  "homepage": "http://healpix.sourceforge.net/",
-  "supports": "linux",
+  "version": "3.83",
+  "description": "C++ library for Data Analysis, Simulations and Visualization on the Sphere",
+  "homepage": "https://healpix.sourceforge.io/",
+  "license": "GPL-2.0-or-later",
+  "supports": "!windows | mingw",
   "dependencies": [
-    "cfitsio"
+    "cfitsio",
+    "libsharp",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ]
 }

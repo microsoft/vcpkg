@@ -1,6 +1,7 @@
-set(OPENSP_VERSION 1.5.2)
-
-set(PATCHES opensp_1.5.2-13.diff)                   # http://deb.debian.org/debian/pool/main/o/opensp/opensp_1.5.2-13.diff.gz
+set(PATCHES
+    opensp_1.5.2-13.diff                   # http://deb.debian.org/debian/pool/main/o/opensp/opensp_1.5.2-13.diff.gz
+    use-cpp-using-declarations.patch
+)
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     list(APPEND PATCHES windows_cmake_build.diff)   # https://invent.kde.org/packaging/craft-blueprints-kde/-/tree/master/libs/libopensp
 endif()
@@ -9,15 +10,15 @@ if (VCPKG_TARGET_IS_UWP)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://downloads.sourceforge.net/project/openjade/opensp/${OPENSP_VERSION}/OpenSP-${OPENSP_VERSION}.tar.gz"
-    FILENAME "OpenSP-${OPENSP_VERSION}.tar.gz"
+    URLS "https://downloads.sourceforge.net/project/openjade/opensp/${VERSION}/OpenSP-${VERSION}.tar.gz"
+    FILENAME "OpenSP-${VERSION}.tar.gz"
     SHA512 a7dcc246ba7f58969ecd6d107c7b82dede811e65f375b7aa3e683621f2c6ff3e7dccefdd79098fcadad6cca8bb94c2933c63f4701be2c002f9a56f1bbe6b047e
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    SOURCE_BASE ${OPENSP_VERSION}
+    SOURCE_BASE ${VERSION}
     PATCHES ${PATCHES}
 )
 
@@ -33,15 +34,15 @@ else()
         set(EXTRA_LIBS "-framework CoreFoundation -lintl -liconv") 
     endif()
 
-    vcpkg_configure_make(
-        AUTOCONFIG
+    vcpkg_make_configure(
+        AUTORECONF
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             --disable-doc-build
             "LDFLAGS=${EXTRA_LIBS} \$LDFLAGS"
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/opensp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opensp.pc" @ONLY)

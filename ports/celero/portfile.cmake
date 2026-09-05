@@ -1,10 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
     REF "v${VERSION}"
-    SHA512 17bb1525b2e02a78739f2c530aa8453e07ca4c803568264aeb7d99f219244f361bcfd4f7e2bf13b3b06e5da0581a5abe93b94e8efda4dac6b092afa9e65cd1df
+    SHA512 8b0043a93c4f8b45fbfc1886aa3cd0c00730413e36c806c7780031d6955553e963670a3f816fb0e64b76eb70d84b2b2fd02f1113ee88cc78b42af0e9dbae2406
     HEAD_REF master
     PATCHES
         fix-bin-install-path.patch

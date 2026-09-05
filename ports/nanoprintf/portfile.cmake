@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO charlesnicholson/nanoprintf
     REF "v${VERSION}"
-    SHA512 a82da24fcd176c385c8c2d1666416bcbafc3bf3e1b9e1365c8ffd7a0158485c7af6b0dbf7cd0821a7af55238784cd682a0f22fe37527b91ea3f3eaa702c61c46
+    SHA512 69deaf564669ed0b61a97ee6c669b754b179de4a6d49e67ac12f1c309c945a0f76309c9ee4cc2698f384e567345be789b3735ed7e16acc6dc13eed5567ca7011
     HEAD_REF master
 )
 

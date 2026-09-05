@@ -1,7 +1,7 @@
 {
   "name": "matroska",
   "version": "1.7.1",
-  "port-version": 2,
+  "port-version": 3,
   "description": "a C++ library to parse Matroska files (.mkv and .mka)",
   "homepage": "https://github.com/Matroska-Org/libmatroska",
   "dependencies": [

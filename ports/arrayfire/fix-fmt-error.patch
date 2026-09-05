@@ -1,0 +1,9 @@
+diff --git a/src/backend/opencl/compile_module.cpp b/src/backend/opencl/compile_module.cpp
+index 35f992f..8cfc83e 100644
+--- a/src/backend/opencl/compile_module.cpp
++++ b/src/backend/opencl/compile_module.cpp
+@@ -21,2 +21,4 @@
+ #include <traits.hpp>
++#include <fmt/format.h>
++#include <fmt/ranges.h>
+

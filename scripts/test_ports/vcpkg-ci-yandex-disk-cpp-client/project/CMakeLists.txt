@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.28)
+project(yandex-disk-cpp-client-test LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(yandex-disk-cpp-client CONFIG REQUIRED)
+add_executable(main main.cpp)
+target_link_libraries(main PRIVATE yandex-disk-cpp-client::yandex-disk-cpp-client)

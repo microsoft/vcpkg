@@ -1,15 +1,13 @@
-#Get release from GitHub
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/fineftp-server
     REF "v${VERSION}"
-    SHA512 dcced2cf743434a55314ad661ca729efc1c4883ae0c0883335f43a12ed47568ebcb50d233dab8a1410bb526587b24f1cf19938241bf649cfe54b11ffe264124b
+    SHA512 ce658369d3250c99e9e05f927711d73285218c39c7e923c2a9a28d93d76cfb1d3746d30a186769847ba423ea6285c99f0af432fa919a07377b81b43e1733ccbc
     HEAD_REF master
     PATCHES
         asio.patch
 )
 
-# Configure
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )

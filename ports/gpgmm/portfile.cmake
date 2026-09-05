@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO intel/gpgmm
-  REF v0.0.4
-  SHA512 2ffc3c8299f2d10cb1c0013cd306ba45781a644fa0aa426ef1dfa616e4b53671461a376f65b7068b1ff8a4a2d1a6f9539664174eb5830ea6a760ef5e5d0fc6b0
+  REF "v${VERSION}"
+  SHA512 1e949e87110e555aa139e564a667a030150e77fd9b174f11bd3238b1fc3e7ae7ef17cc483b8afc9b0b7c346ce36564c94959454e27509c520bec18ef8396b5a1
   HEAD_REF main
 )
 
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -24,7 +25,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(GLOB GPGMM_INCLUDE "${SOURCE_PATH}/src/include/*.h")
-file(COPY ${GPGMM_INCLUDE} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(GLOB_RECURSE GPGMM_INCLUDE "${SOURCE_PATH}/include/*.h")
+file(INSTALL ${GPGMM_INCLUDE} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

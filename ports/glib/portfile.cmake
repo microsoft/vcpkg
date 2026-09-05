@@ -1,8 +1,16 @@
-string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" VERSION_MAJOR_MINOR "${VERSION}")
+# https://github.com/GNOME/glib/blob/main/SECURITY.md#supported-versions
+if(NOT VERSION_MAJOR_MINOR MATCHES "[02468]\$")
+    message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "glib ${VERSION_MAJOR_MINOR} is a not a \"stable release series\".")
+endif()
+# vcpkg_from_* is not used because the project uses submodules and Anubis deployed to GNOME's gitlab
+# causes vcpkg_from_gitlab to fail for several users
 vcpkg_download_distfile(GLIB_ARCHIVE
-    URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
-    FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 190a98e9a0ebb802a31b511e95725ed1fec9d750aed6bd87f14f3047d1f1d79458be3fa954fd6eb9af9f481a8deeaae73c95c990f5aa002a4b1166372ed4c4f1
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "${PORT}-${VERSION}.tar.xz"
+    SHA512 9e2b4985d5e4e06c6897a33cf8c100b9303528ebd72152c10e4cb734fa62fc011c84b816b20f686a3b2aac9a4a5a46f33e7517b4c4c7f3c25c75ac3ddc11f844
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -10,15 +18,15 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
-        fix-build-race-on-gio.patch # https://gitlab.gnome.org/GNOME/glib/-/merge_requests/3512
 )
 
-if(APPLE)
-    list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_ENABLE_OBJC=1")
+set(LANGUAGES C CXX)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    list(APPEND LANGUAGES OBJC OBJCXX)
 endif()
 
 vcpkg_list(SET OPTIONS)
-if (selinux IN_LIST FEATURES)
+if ("selinux" IN_LIST FEATURES)
     if(NOT EXISTS "/usr/include/selinux")
         message(WARNING "SELinux was not found in its typical system location. Your build may fail. You can install SELinux with \"apt-get install selinux libselinux1-dev\".")
     endif()
@@ -27,7 +35,7 @@ else()
     list(APPEND OPTIONS -Dselinux=disabled)
 endif()
 
-if (libmount IN_LIST FEATURES)
+if ("libmount" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dlibmount=enabled)
 else()
     list(APPEND OPTIONS -Dlibmount=disabled)
@@ -42,15 +50,18 @@ endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    LANGUAGES C CXX OBJC OBJCXX
+    LANGUAGES ${LANGUAGES}
     ADDITIONAL_BINARIES
         ${ADDITIONAL_BINARIES}
     OPTIONS
         ${OPTIONS}
-        -Dgtk_doc=false
+        -Ddocumentation=false
+        -Ddtrace=disabled
         -Dinstalled_tests=false
+        -Dintrospection=disabled
         -Dlibelf=disabled
-        -Dman=false
+        -Dman-pages=disabled
+        -Dsysprof=disabled
         -Dtests=false
         -Dxattr=false
 )
@@ -73,6 +84,9 @@ endforeach()
 set(GLIB_TOOLS
     gapplication
     gdbus
+    gi-compile-repository
+    gi-decompile-typelib
+    gi-inspect-typelib
     gio
     gio-querymodules
     glib-compile-resources
@@ -110,11 +124,11 @@ endif()
 set(pc_replace_intl_path gio glib gmodule-no-export gobject gthread)
 foreach(pc_prefix IN LISTS pc_replace_intl_path)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\"" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/debug/lib/${LIBINTL_NAME}" "-lintl")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/debug/lib/${LIBINTL_NAME}" "-lintl" IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl" IGNORE_UNCHANGED)
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${pc_prefix}-2.0.pc" "\"" "")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${pc_prefix}-2.0.pc" "\${prefix}/lib/${LIBINTL_NAME}" "-lintl" IGNORE_UNCHANGED)
     endif()
 endforeach()
 
@@ -146,4 +160,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib/gio"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt"
+        "${SOURCE_PATH}/LICENSES/LGPL-2.1-only.txt"
+        "${SOURCE_PATH}/LICENSES/MPL-1.1.txt"
+)

@@ -2,24 +2,17 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lv2/sratom
-    REF v0.6.4
-    SHA512 c155694365e9efe2f108135cccafd6369e896bd27ec816ac8bb429785d9218b1b30e8532188cfb39485d4b163a920ddb47466a461dcd6958d754ed0698d31081
+    REF "v${VERSION}"
+    SHA512 81d58155f3d42f1a3671632ef0ab1e5dbbf756e23378b03034b626dcf1d23b00b9763d153e3dbd1183571f089dfa1f2501cc68b5ce7a1ca337979bc148bb9210
     HEAD_REF master
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
-vcpkg_cmake_configure(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
 )
 
-vcpkg_cmake_install()
+vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup()
-file(
-    INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

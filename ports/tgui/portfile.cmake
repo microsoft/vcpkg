@@ -1,5 +1,12 @@
-if(NOT "sdl2" IN_LIST FEATURES AND NOT "sfml" IN_LIST FEATURES)
-    message(FATAL_ERROR "At least one of the backend features must be selected: sdl2 sfml")
+
+set(BACKEND_LST "sfml" "sdl2" "sdl3" "raylib")
+foreach(BACKEND IN LISTS BACKEND_LST)
+    if(BACKEND IN_LIST FEATURES)
+        set(HAS_BACKEND ON)
+    endif()
+endforeach()
+if(NOT HAS_BACKEND)
+    message(FATAL_ERROR "At least one of the backend features must be selected: ${BACKEND_LST}")
 endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
@@ -11,11 +18,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO texus/TGUI
-    REF v0.9.5
-    SHA512 68c02679598448440ffaad69ee606a8413c2bcb508c91a59c2997ac866681617dadf6b9688f6c5eb07e5e38b5094a39bd79f0753a82236ec5f48498797c11134
-    HEAD_REF 0.10
+    REF "v${VERSION}"
+    SHA512 54d46e3604ebe3f3f2ff845da9348152e780a2e67eddc9d6476f5b66b24a3930ced34ac097f4006c9475d7d963d87076dd4ee4cc47aad23b501f14663be5745e
+    HEAD_REF 1.x
     PATCHES
-        fix-dependencies.patch
         devendor-stb.patch
 )
 
@@ -29,10 +35,14 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" TGUI_USE_STATIC_STD_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    sdl2    TGUI_HAS_BACKEND_SDL
-    sfml    TGUI_HAS_BACKEND_SFML
+    sfml    TGUI_HAS_BACKEND_SFML_GRAPHICS
     tool    TGUI_BUILD_GUI_BUILDER
+    sdl3    TGUI_USE_SDL3
+    raylib  TGUI_HAS_BACKEND_RAYLIB
 )
+if(FEATURES MATCHES "sdl")
+    list(APPEND FEATURE_OPTIONS "TGUI_HAS_BACKEND_SDL_RENDERER")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -49,7 +59,7 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         -DTGUI_BUILD_GUI_BUILDER=OFF
     MAYBE_UNUSED_VARIABLES
-        TGUI_BUILD_FRAMEWORK
+        TGUI_USE_STATIC_STD_LIBS
 )
 
 vcpkg_cmake_install()

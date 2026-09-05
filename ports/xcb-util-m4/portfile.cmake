@@ -1,13 +1,13 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
+    GITLAB_URL "https://gitlab.freedesktop.org/xorg"
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO util/xcb-util-m4
-    REF  f662e3a93ebdec3d1c9374382dcc070093a42fed #v1.19.2
-    SHA512 29840da449a434f169437fd2cef78273e0cba00a7f76d48790c838dc8f40fe55cb0932d96b649e1bd066c6c5e257dd2d9d71c663ce100aa5ca25a2ccec1b7e77
+    REPO "util/xcb-util-m4"
+    REF c617eee22ae5c285e79e81ec39ce96862fd3262f
+    SHA512 d2d977574a106ca59207988e3e4ec12ecbcf30852df46456f7ec5284983e49f31ee85025f404d863f8e3d766f193e6a79508f26a3dcd33173d7bbefccdb279fa
     HEAD_REF master
-) 
+)
 
 file(GLOB_RECURSE M4_FILES "${SOURCE_PATH}/*.m4")
 file(INSTALL ${M4_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal")
