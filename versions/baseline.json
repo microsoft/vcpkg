@@ -8772,6 +8772,10 @@
       "baseline": "3.3.1",
       "port-version": 0
     },
+    "rdkit": {
+      "baseline": "2026.03.5",
+      "port-version": 0
+    },
     "rdma-core": {
       "baseline": "62.0",
       "port-version": 2
