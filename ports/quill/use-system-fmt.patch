@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 768c9167..c57f6101 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -197,6 +197,8 @@ endif ()
+ # library name
+ set(TARGET_NAME quill)
+ 
++find_package(fmt CONFIG REQUIRED)
++
+ # header files
+ set(HEADER_FILES
+         include/quill/backend/BackendManager.h
+@@ -216,20 +218,6 @@ set(HEADER_FILES
+         include/quill/backend/TransitEventBuffer.h
+         include/quill/backend/BackendUtilities.h
+ 
+-        include/quill/bundled/fmt/args.h
+-        include/quill/bundled/fmt/base.h
+-        include/quill/bundled/fmt/chrono.h
+-        include/quill/bundled/fmt/color.h
+-        include/quill/bundled/fmt/compile.h
+-        include/quill/bundled/fmt/format.h
+-        include/quill/bundled/fmt/format-inl.h
+-        include/quill/bundled/fmt/os.h
+-        include/quill/bundled/fmt/ostream.h
+-        include/quill/bundled/fmt/printf.h
+-        include/quill/bundled/fmt/ranges.h
+-        include/quill/bundled/fmt/std.h
+-        include/quill/bundled/fmt/xchar.h
+-
+         include/quill/core/Attributes.h
+         include/quill/core/BoundedSPSCQueue.h
+         include/quill/core/ChronoTimeUtils.h
