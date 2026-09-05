@@ -55,9 +55,16 @@ endif()
 
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
-    list(APPEND MESA_ADDITIONAL_BINARIES
-        "llvm-config=['${CURRENT_INSTALLED_DIR}/tools/llvm/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}']"
+    set(LLVM_CONFIG_DEBUG_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-debug.ini")
+    set(LLVM_CONFIG_RELEASE_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-release.ini")
+    file(WRITE "${LLVM_CONFIG_DEBUG_NATIVE_FILE}"
+        "[binaries]\nllvm-config = ['${CURRENT_INSTALLED_DIR}/debug/tools/llvm/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}']\n"
     )
+    file(WRITE "${LLVM_CONFIG_RELEASE_NATIVE_FILE}"
+        "[binaries]\nllvm-config = ['${CURRENT_INSTALLED_DIR}/tools/llvm/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}']\n"
+    )
+    list(APPEND MESA_OPTIONS_DEBUG --native "${LLVM_CONFIG_DEBUG_NATIVE_FILE}")
+    list(APPEND MESA_OPTIONS_RELEASE --native "${LLVM_CONFIG_RELEASE_NATIVE_FILE}")
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
@@ -99,14 +106,17 @@ endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -Dgles-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
+    OPTIONS_DEBUG
+        ${MESA_OPTIONS_DEBUG}
+    OPTIONS_RELEASE
+        ${MESA_OPTIONS_RELEASE}
     ADDITIONAL_BINARIES
         python=['${PYTHON3}','-I']
         python3=['${PYTHON3}','-I']
-        ${MESA_ADDITIONAL_BINARIES}
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()

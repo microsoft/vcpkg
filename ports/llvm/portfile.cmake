@@ -411,12 +411,25 @@ foreach(empty_dir IN LISTS empty_dirs)
     endif()
 endforeach()
 
-# Remove debug headers and tools
+# Preserve the debug llvm-config so consumers can select the debug LLVM libraries.
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(debug_llvm_config "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(EXISTS "${debug_llvm_config}")
+        set(debug_llvm_config_staging "${CURRENT_PACKAGES_DIR}/debug/llvm-config-staging")
+        file(MAKE_DIRECTORY "${debug_llvm_config_staging}")
+        file(RENAME "${debug_llvm_config}" "${debug_llvm_config_staging}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        vcpkg_copy_tool_dependencies("${debug_llvm_config_staging}")
+    endif()
+
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
         "${CURRENT_PACKAGES_DIR}/debug/share"
         "${CURRENT_PACKAGES_DIR}/debug/tools"
     )
+
+    if(EXISTS "${debug_llvm_config_staging}")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/tools")
+        file(RENAME "${debug_llvm_config_staging}" "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+    endif()
 endif()
 
 # LLVM generates shared libraries in a static build (LLVM-C.dll, libclang.dll, LTO.dll, Remarks.dll, ...)
