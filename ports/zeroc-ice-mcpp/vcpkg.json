@@ -1,6 +1,6 @@
 {
   "name": "zeroc-ice-mcpp",
-  "version-date": "2023-09-08",
+  "version": "2.7.2.20",
   "description": [
     "Fork of mcpp, a C/C++ preprocessor",
     "A simplified version of mcpp 2.7.2 plus various fixes, tailored to the Slice compilers requirements."

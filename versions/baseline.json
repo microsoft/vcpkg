@@ -9117,7 +9117,7 @@
       "port-version": 0
     },
     "zeroc-ice-mcpp": {
-      "baseline": "2023-09-08",
+      "baseline": "2.7.2.20",
       "port-version": 0
     },
     "zeromq": {
