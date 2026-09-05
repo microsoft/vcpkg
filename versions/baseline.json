@@ -2700,10 +2700,6 @@
       "baseline": "2.0.3",
       "port-version": 0
     },
-    "dx": {
-      "baseline": "1.0.1",
-      "port-version": 3
-    },
     "dxcam-cpp": {
       "baseline": "0.2.5",
       "port-version": 0
@@ -2781,8 +2777,8 @@
       "port-version": 1
     },
     "eccodes": {
-      "baseline": "2.48.0",
-      "port-version": 1
+      "baseline": "2.48.2",
+      "port-version": 0
     },
     "ecm": {
       "baseline": "6.29.0",
@@ -3029,7 +3025,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "26.8",
+      "baseline": "26.9",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -6045,7 +6041,7 @@
       "port-version": 1
     },
     "libxfont": {
-      "baseline": "2.0.7",
+      "baseline": "2.0.9",
       "port-version": 0
     },
     "libxft": {
@@ -6070,7 +6066,7 @@
     },
     "libxlsxwriter": {
       "baseline": "1.2.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libxml2": {
       "baseline": "2.15.3",
@@ -6685,7 +6681,7 @@
       "port-version": 0
     },
     "minimp3": {
-      "baseline": "2021-11-30",
+      "baseline": "2026-07-27",
       "port-version": 0
     },
     "minio-cpp": {
@@ -9225,7 +9221,7 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.14",
+      "baseline": "3.4.16",
       "port-version": 0
     },
     "sdl3-image": {
@@ -10537,7 +10533,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "4.9.2",
+      "baseline": "4.11.0",
       "port-version": 0
     },
     "unqlite": {
@@ -11457,7 +11453,7 @@
       "port-version": 0
     },
     "zxc": {
-      "baseline": "0.13.3",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "zycore": {
