@@ -237,6 +237,10 @@
           "features": [
             "clang"
           ]
+        },
+        {
+          "name": "vcpkg-get-python-packages",
+          "host": true
         }
       ]
     },

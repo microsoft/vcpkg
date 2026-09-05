@@ -49,6 +49,14 @@
       "description": "Build with llvmpipe",
       "dependencies": [
         {
+          "name": "glslang",
+          "host": true,
+          "features": [
+            "tools"
+          ],
+          "platform": "linux"
+        },
+        {
           "name": "llvm",
           "default-features": false,
           "features": [

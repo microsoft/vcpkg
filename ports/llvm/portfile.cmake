@@ -289,6 +289,13 @@ foreach(llvm_target IN LISTS known_llvm_experimental_targets)
 endforeach()
 
 vcpkg_find_acquire_program(PYTHON3)
+if("libc" IN_LIST FEATURES)
+    x_vcpkg_get_python_packages(
+        PYTHON_EXECUTABLE "${PYTHON3}"
+        OUT_PYTHON_VAR PYTHON3
+        PACKAGES pyyaml
+    )
+endif()
 get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
@@ -323,6 +330,7 @@ vcpkg_cmake_configure(
         -DLLVM_PARALLEL_LINK_JOBS=1
         -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
         -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        "-DPython3_EXECUTABLE=${PYTHON3}"
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_RUNTIME_TARGETS=${LLVM_RUNTIME_TARGETS}"
