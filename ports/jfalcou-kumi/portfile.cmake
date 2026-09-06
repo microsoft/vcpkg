@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+# The port is named for its owner, vcpkg asking for that when a name is ambiguous, but what it installs
+# keeps the project's own name: find_package(kumi CONFIG) is what a consumer writes.
 # Header-only: the headers are copied and the package files are written here. Configuring the
 # project's own CMake would pull copacabana in for nothing, there being no test to run from here.
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
@@ -14,8 +16,8 @@ file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
 string(REGEX MATCH "^[0-9]+" VERSION_MAJOR "${VERSION}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/kumi-config-version.cmake.in"
-               "${CURRENT_PACKAGES_DIR}/share/${PORT}/kumi-config-version.cmake" @ONLY)
+               "${CURRENT_PACKAGES_DIR}/share/kumi/kumi-config-version.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/kumi-config.cmake"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/kumi")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
