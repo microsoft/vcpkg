@@ -5697,7 +5697,7 @@
       "port-version": 0
     },
     "libsl3": {
-      "baseline": "1.2.53003",
+      "baseline": "1.2.53004",
       "port-version": 0
     },
     "libslirp": {
