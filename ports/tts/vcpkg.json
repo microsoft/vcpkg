@@ -3,19 +3,5 @@
   "version": "3.0",
   "description": "Tiny Test System, a C++20 unit test library for numerical code",
   "homepage": "https://jfalcou.github.io/tts/",
-  "license": "BSL-1.0",
-  "dependencies": [
-    {
-      "name": "jfalcou-copacabana",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ]
+  "license": "BSL-1.0"
 }
