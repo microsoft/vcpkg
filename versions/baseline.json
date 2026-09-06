@@ -10448,10 +10448,6 @@
       "baseline": "0.7.0",
       "port-version": 0
     },
-    "tts": {
-      "baseline": "3.0",
-      "port-version": 0
-    },
     "tuplet": {
       "baseline": "2.1.1",
       "port-version": 0
