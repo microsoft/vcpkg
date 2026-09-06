@@ -1,5 +1,5 @@
 {
-  "name": "spy",
+  "name": "jfalcou-spy",
   "version": "3.0.0",
   "description": "Compile-time detection of compilers, operating systems, architectures and SIMD extensions",
   "homepage": "https://jfalcou.github.io/spy/",
