@@ -9473,7 +9473,7 @@
       "port-version": 0
     },
     "slick-queue": {
-      "baseline": "1.5.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "slick-shm": {
