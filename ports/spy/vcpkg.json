@@ -3,19 +3,5 @@
   "version": "3.0.0",
   "description": "Compile-time detection of compilers, operating systems, architectures and SIMD extensions",
   "homepage": "https://jfalcou.github.io/spy/",
-  "license": "BSL-1.0",
-  "dependencies": [
-    {
-      "name": "jfalcou-copacabana",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    }
-  ]
+  "license": "BSL-1.0"
 }

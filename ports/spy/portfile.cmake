@@ -6,19 +6,16 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-# The build is written with copacabana, which CPM fetches at configure time; the
-# copacabana port is handed to CPM instead, so nothing is downloaded here.
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        "-DCPM_COPACABANA_SOURCE=${CURRENT_HOST_INSTALLED_DIR}/share/jfalcou-copacabana"
-        -DCPM_LOCAL_PACKAGES_ONLY=ON
-        -DSPY_BUILD_TEST=OFF
-        -DSPY_BUILD_DOCUMENTATION=OFF
-)
+# Header-only: the headers are copied and the package files are written here. Configuring the
+# project's own CMake would pull copacabana in for nothing, SPY having no test to run from here.
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/spy)
+file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+string(REGEX MATCH "^[0-9]+" VERSION_MAJOR "${VERSION}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/spy-config-version.cmake.in"
+               "${CURRENT_PACKAGES_DIR}/share/${PORT}/spy-config-version.cmake" @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/spy-config.cmake"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
