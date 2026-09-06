@@ -6,7 +6,7 @@
   "license": "BSL-1.0",
   "dependencies": [
     {
-      "name": "copacabana",
+      "name": "jfalcou-copacabana",
       "host": true
     },
     {
