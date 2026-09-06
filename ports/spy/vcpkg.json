@@ -1,12 +1,12 @@
 {
   "name": "spy",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Compile-time detection of compilers, operating systems, architectures and SIMD extensions",
   "homepage": "https://jfalcou.github.io/spy/",
   "license": "BSL-1.0",
   "dependencies": [
     {
-      "name": "copacabana",
+      "name": "jfalcou-copacabana",
       "host": true
     },
     {

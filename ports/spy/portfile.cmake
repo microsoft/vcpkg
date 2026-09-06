@@ -2,27 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jfalcou/spy
     REF "${VERSION}"
-    SHA512 454b0ce4b6736e89fe84f11ce4a52800b84049f07cdb310920fd587dc89f4bd05d4b1d203c138234654318971f0860bb89638b92a6a91180473bc225c4340a4f
+    SHA512 f997d61a73fafecb9af837b92ae9ceee515380852d900fc1778950885fbb62f1121e8923a991500d7380396d847c65e7fd33d41b616b2f66d0234c5a947e0dfd
     HEAD_REF main
 )
-
-# This release downloads CPM itself at configure time, at the version its dependencies.cmake
-# pins. Seeding CPM_SOURCE_CACHE with the file keeps the configure step off the network.
-vcpkg_download_distfile(CPM_CMAKE
-    URLS "https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.40.2/CPM.cmake"
-    FILENAME "CPM-0.40.2.cmake"
-    SHA512 5cb650049473690466c9678ac5f1c42185429c0c12f95e2bab0577c34640fa80c1331b0f46af18ecae258a9eb3c6ed980df4f1cca07650f5ca2a084a88415ffc
-)
-set(CPM_CACHE "${CURRENT_BUILDTREES_DIR}/cpm-cache")
-file(INSTALL "${CPM_CMAKE}" DESTINATION "${CPM_CACHE}/cpm" RENAME "CPM_0.40.2.cmake")
 
 # The build is written with copacabana, which CPM fetches at configure time; the
 # copacabana port is handed to CPM instead, so nothing is downloaded here.
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCPM_SOURCE_CACHE=${CPM_CACHE}"
-        "-DCPM_COPACABANA_SOURCE=${CURRENT_HOST_INSTALLED_DIR}/share/copacabana"
+        "-DCPM_COPACABANA_SOURCE=${CURRENT_HOST_INSTALLED_DIR}/share/jfalcou-copacabana"
         -DCPM_LOCAL_PACKAGES_ONLY=ON
         -DSPY_BUILD_TEST=OFF
         -DSPY_BUILD_DOCUMENTATION=OFF
