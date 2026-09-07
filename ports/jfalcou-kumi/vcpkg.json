@@ -1,6 +1,6 @@
 {
   "name": "jfalcou-kumi",
-  "version": "4.0",
+  "version": "5.0",
   "description": "C++20 tuple and tuple-based algorithms library",
   "homepage": "https://jfalcou.github.io/kumi/",
   "license": "BSL-1.0"
