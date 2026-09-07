@@ -1,14 +1,16 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_indiesort
-    REF fb28b3f24886253d4eaab5e05f23b8cf84238f1e
-    SHA512 1f8f7b8dbb698d22e02701d6991bf5525a825ac5404bdeba7b09bc7814175fedaeedebbd6aba4db587d5d93ab14d4f3e0dbe78a098b10e9c0d4efb1bc1456026
+    REF 23d3fb6e1f738d9ec6e05bd9e20a8d1f55df9eed
+    SHA512 42f468cbe948fee697f01e1547baed899cc55024ab28cc793dab0530c36faa08ca48011395c70d06e8d03c8e766dcaf87fee36cd2c611c8eb19f678cb917dd7b
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/plf_indiesort.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY "${SOURCE_PATH}/plf_indiesort.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.md"
+)
