@@ -41,6 +41,7 @@ vcpkg_from_github(
       0025-fix-cuda-host-std-flag-forwarding.patch
       0026-cuda-msvc-preprocessor.patch
       0028-ffmpeg9-support.patch
+      0029-nvidia-video-codec-sdk-dir.patch
       "${PATCH1_FILE}"
       "${CUDA_13_SUPPORT_PATCH}"
 )
@@ -127,6 +128,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "jpegxl"     WITH_JPEGXL
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
+ "nvcuvid"    WITH_NVCUVID
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
  "opencl"     WITH_OPENCL
  "openvino"   WITH_OPENVINO
@@ -230,6 +232,7 @@ if("contrib" IN_LIST FEATURES)
       0018-contrib-fix-tesseract.patch
       0019-contrib-cout.diff
       0027-contrib-cuda-tuple.patch # https://github.com/opencv/opencv_contrib/commit/054007b78c8288ef2fd040e77dc0cf2e45f70c15
+      0030-contrib-nvidia-video-codec-sdk-dir.patch
       "${CONTRIB_CUDA_NAMESPACE_FIX}"
       "${CONTRIB_CUDA_NOT1_FIX}"
   )
@@ -433,6 +436,37 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
   endif()
 endif()
 
+if("nvcuvid" IN_LIST FEATURES)
+  # cudacodec links the NVDEC entry points of the display driver's nvcuvid.dll. Those are
+  # described by the NVIDIA Video Codec SDK, which is not redistributable, but the same API is
+  # published by NVIDIA under MIT in nv-codec-headers (the ffnvcodec port). Assemble the two
+  # pieces OpenCV looks for -- a <nvcuvid.h> with plain prototypes, and an import library -- and
+  # point OpenCV at them. No SDK download and no driver are needed to build.
+  vcpkg_cmake_get_vars(cmake_vars_file)
+  include("${cmake_vars_file}")
+
+  set(NVCODEC_SDK_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-nvcodec-sdk")
+  file(REMOVE_RECURSE "${NVCODEC_SDK_DIR}")
+  file(MAKE_DIRECTORY "${NVCODEC_SDK_DIR}/include" "${NVCODEC_SDK_DIR}/lib")
+  file(COPY "${CURRENT_INSTALLED_DIR}/include/ffnvcodec" DESTINATION "${NVCODEC_SDK_DIR}/include")
+  file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/nvcuvid-shim.h"
+       DESTINATION "${NVCODEC_SDK_DIR}/include" RENAME "nvcuvid.h")
+
+  vcpkg_execute_required_process(
+    COMMAND "${VCPKG_DETECTED_CMAKE_AR}"
+            "/def:${CMAKE_CURRENT_LIST_DIR}/nvcuvid.def"
+            "/machine:${VCPKG_TARGET_ARCHITECTURE}"
+            "/out:${NVCODEC_SDK_DIR}/lib/nvcuvid.lib"
+    WORKING_DIRECTORY "${NVCODEC_SDK_DIR}"
+    LOGNAME "nvcuvid-implib-${TARGET_TRIPLET}"
+  )
+
+  list(APPEND ADDITIONAL_BUILD_FLAGS
+    "-DNVIDIA_VIDEO_CODEC_SDK_DIR=${NVCODEC_SDK_DIR}"
+    "-DCUDA_nvcuvid_LIBRARY=${NVCODEC_SDK_DIR}/lib/nvcuvid.lib"
+  )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -514,7 +548,6 @@ vcpkg_cmake_configure(
         -DWITH_JASPER=OFF #Jasper is deprecated and will be removed in a future release, and is mutually exclusive with openjpeg that is preferred
         -DWITH_LAPACK=OFF
         -DWITH_MATLAB=OFF
-        -DWITH_NVCUVID=OFF
         -DWITH_NVCUVENC=OFF
         -DWITH_OBSENSOR=OFF
         -DWITH_OPENCL_D3D11_NV=OFF
