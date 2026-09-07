@@ -22,6 +22,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/redisx" PACKAGE_NAME "redisx")
+
+set(debug_pc "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/redisx.pc")
+if(EXISTS "${debug_pc}")
+    vcpkg_replace_string("${debug_pc}" "-lredisx " "-lredisxd ")
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
