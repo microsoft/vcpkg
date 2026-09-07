@@ -5181,7 +5181,7 @@
       "port-version": 6
     },
     "libheif": {
-      "baseline": "1.23.3",
+      "baseline": "1.23.4",
       "port-version": 0
     },
     "libhsplasma": {
