@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Sigmyne/redisx
     REF "v${VERSION}"
-    SHA512 2438cc052c2dc58acab3d0349cf6b4549cd1fe7030a4d2d8a9b935240ed1dba21d01425d8dd365847dcf662fd7ec71a05ce80fc4ab8f25ae7760d37e36999198
+    SHA512 518a7b55c0d16de7ca916f5bc71e43084eba7e4becd3cf7968ea912fc3c681d758ee4221d45c07ba040402b4fba4a61d18152acac4a4ca16b4d69d9a2f9904b6
     HEAD_REF main
-    PATCHES pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
