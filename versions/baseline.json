@@ -11104,6 +11104,10 @@
       "baseline": "10.0.10320",
       "port-version": 5
     },
+    "wukong-easy-sdk": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "wxchartdir": {
       "baseline": "2.0.0",
       "port-version": 2
