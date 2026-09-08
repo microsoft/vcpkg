@@ -1,0 +1,8 @@
+zlink provides CMake targets whose name follows the selected linkage:
+
+    find_package(zlink CONFIG REQUIRED)
+    if(TARGET libzlink)
+        target_link_libraries(main PRIVATE libzlink)
+    else()
+        target_link_libraries(main PRIVATE libzlink-static)
+    endif()

@@ -11388,6 +11388,10 @@
       "baseline": "2.3.3",
       "port-version": 0
     },
+    "zlink": {
+      "baseline": "0.17.3",
+      "port-version": 0
+    },
     "zlmediakit": {
       "baseline": "2024-09-29",
       "port-version": 1
