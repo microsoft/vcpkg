@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lexbor/lexbor
     REF v${VERSION}
-    SHA512 076ff831e89717f07ad0f846cf2ea46fe4dfd0c7fbf37b5705f0eacaa4baa418116ce1e020fde44bd7ed75ddf5931cac74947e37fcf1330d68389b39cc392f6a
+    SHA512 d65906504f490a03579eb737fa85007f1e948c4e82f986454d763728e4d71be40fe953a5a7cfda84b322cb99837f482295ee89bc3f07f2ef89ccaeeab39a4acf
 )
 
 vcpkg_check_features(
