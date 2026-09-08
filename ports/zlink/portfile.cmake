@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
         -DZLINK_BUILD_TESTS=OFF
         -DBUILD_BENCHMARKS=OFF
+        -DZLINK_CMAKECONFIG_INSTALL_DIR=lib/cmake/zlink
         -DWITH_DOC=OFF
         -DENABLE_CPACK=OFF
         -DWITH_TLS=ON
