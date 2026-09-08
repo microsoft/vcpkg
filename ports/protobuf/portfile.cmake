@@ -19,8 +19,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIM
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        libprotoc protobuf_BUILD_TARGET_LIBPROTOC
-        zlib      protobuf_WITH_ZLIB
+        full-runtime protobuf_BUILD_LIBPROTOBUF
+        libprotoc    protobuf_BUILD_TARGET_LIBPROTOC
+        zlib         protobuf_WITH_ZLIB
 )
 
 set(protobuf_BUILD_LIBPROTOC OFF)
@@ -55,6 +56,8 @@ vcpkg_cmake_configure(
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
         -Dprotobuf_BUILD_TESTS=OFF
+        -Dprotobuf_BUILD_CONFORMANCE=OFF
+        -Dprotobuf_BUILD_EXAMPLES=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
@@ -80,7 +83,13 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
     "if(protobuf_MODULE_COMPATIBLE)"
-    "if(protobuf_MODULE_COMPATIBLE OR CMAKE_FIND_PACKAGE_NAME STREQUAL \"Protobuf\")"
+    [=[if(protobuf_MODULE_COMPATIBLE AND NOT TARGET protobuf::libprotobuf)
+  set("${CMAKE_FIND_PACKAGE_NAME}_FOUND" FALSE)
+  set("${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE"
+    "Protobuf module compatibility requires the full-runtime feature. Use find_package(protobuf CONFIG) and protobuf::libprotobuf-lite for lite consumers.")
+  return()
+endif()
+if(protobuf_MODULE_COMPATIBLE OR (CMAKE_FIND_PACKAGE_NAME STREQUAL "Protobuf" AND TARGET protobuf::libprotobuf))]=]
 )
 if(NOT protobuf_BUILD_LIBPROTOC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake"

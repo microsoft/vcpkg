@@ -1,6 +1,7 @@
 {
   "name": "arrow",
   "version": "25.0.1",
+  "port-version": 1,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -90,7 +91,13 @@
         "abseil",
         "c-ares",
         "grpc",
-        "protobuf"
+        {
+          "name": "protobuf",
+          "features": [
+            "full-runtime"
+          ],
+          "version>=": "7.36.1#1"
+        }
       ]
     },
     "flightsql": {

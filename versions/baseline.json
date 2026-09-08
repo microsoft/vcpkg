@@ -230,7 +230,7 @@
     },
     "arcus": {
       "baseline": "4.10.0",
-      "port-version": 5
+      "port-version": 6
     },
     "arg-router": {
       "baseline": "1.4.0",
@@ -294,7 +294,7 @@
     },
     "arrow": {
       "baseline": "25.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "arrow-adbc": {
       "baseline": "23",
@@ -1486,7 +1486,7 @@
     },
     "braft": {
       "baseline": "2021-26-04",
-      "port-version": 7
+      "port-version": 8
     },
     "breakpad": {
       "baseline": "2024-02-16",
@@ -1814,7 +1814,7 @@
     },
     "cld3": {
       "baseline": "3.0.14",
-      "port-version": 2
+      "port-version": 3
     },
     "cleishm-frequency-cpp": {
       "baseline": "1.2.0",
@@ -2766,7 +2766,7 @@
     },
     "ecal": {
       "baseline": "5.13.4",
-      "port-version": 2
+      "port-version": 3
     },
     "ecaludp": {
       "baseline": "0.1.2",
@@ -3330,7 +3330,7 @@
     },
     "gamenetworkingsockets": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gamma": {
       "baseline": "gamma-2018-01-27",
@@ -3562,7 +3562,7 @@
     },
     "google-cloud-cpp": {
       "baseline": "2.37.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gperf": {
       "baseline": "3.3",
@@ -3618,7 +3618,7 @@
     },
     "grpc": {
       "baseline": "1.81.1",
-      "port-version": 0
+      "port-version": 1
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -3710,7 +3710,7 @@
     },
     "gz-gui": {
       "baseline": "9.0.2",
-      "port-version": 1
+      "port-version": 2
     },
     "gz-math": {
       "baseline": "8.3.0",
@@ -3734,7 +3734,7 @@
     },
     "gz-sensors": {
       "baseline": "9.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "gz-sim": {
       "baseline": "9.6.0",
@@ -3746,7 +3746,7 @@
     },
     "gz-transport": {
       "baseline": "14.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-utils": {
       "baseline": "3.1.1",
@@ -3778,7 +3778,7 @@
     },
     "hanjingo-high-jump": {
       "baseline": "1.0.10",
-      "port-version": 0
+      "port-version": 1
     },
     "happly": {
       "baseline": "1.1.0",
@@ -4634,7 +4634,7 @@
     },
     "krpc": {
       "baseline": "0.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "krpc-cnano": {
       "baseline": "0.6.0",
@@ -5174,7 +5174,7 @@
     },
     "libhdfs3": {
       "baseline": "2019-11-05",
-      "port-version": 6
+      "port-version": 7
     },
     "libheif": {
       "baseline": "1.23.2",
@@ -5518,7 +5518,7 @@
     },
     "libosmscout": {
       "baseline": "1.1.1",
-      "port-version": 8
+      "port-version": 9
     },
     "libp7client": {
       "baseline": "5.6",
@@ -5538,7 +5538,7 @@
     },
     "libphonenumber": {
       "baseline": "9.0.37",
-      "port-version": 0
+      "port-version": 1
     },
     "libplist": {
       "baseline": "2.7.0",
@@ -5570,7 +5570,7 @@
     },
     "libprotobuf-mutator": {
       "baseline": "1.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libproxy": {
       "baseline": "0.4.18",
@@ -5830,7 +5830,7 @@
     },
     "libtorch": {
       "baseline": "2.13.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libtorrent": {
       "baseline": "2.1.1",
@@ -6738,7 +6738,7 @@
     },
     "mnn": {
       "baseline": "1.1.0",
-      "port-version": 7
+      "port-version": 8
     },
     "modern-cpp-kafka": {
       "baseline": "2024.07.03",
@@ -6950,7 +6950,7 @@
     },
     "mysql-connector-cpp": {
       "baseline": "9.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "mysvac-jsonlib": {
       "baseline": "3.0.0",
@@ -7394,7 +7394,7 @@
     },
     "onnx": {
       "baseline": "1.19.0",
-      "port-version": 0
+      "port-version": 1
     },
     "onnx-optimizer": {
       "baseline": "0.4.2",
@@ -7402,7 +7402,7 @@
     },
     "onnxruntime": {
       "baseline": "1.23.2",
-      "port-version": 1
+      "port-version": 2
     },
     "onnxruntime-gpu": {
       "baseline": "1.23.2",
@@ -7470,11 +7470,11 @@
     },
     "opencv3": {
       "baseline": "3.4.20",
-      "port-version": 4
+      "port-version": 5
     },
     "opencv4": {
       "baseline": "4.12.0",
-      "port-version": 9
+      "port-version": 10
     },
     "openexr": {
       "baseline": "3.4.15",
@@ -7562,7 +7562,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.28.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opentelemetry-cpp-contrib-version": {
       "baseline": "2026-07-09",
@@ -7582,7 +7582,7 @@
     },
     "openvino": {
       "baseline": "2026.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.10",
@@ -7630,7 +7630,7 @@
     },
     "orc": {
       "baseline": "2.2.2",
-      "port-version": 2
+      "port-version": 3
     },
     "orefkov-simstr": {
       "baseline": "1.9.1",
@@ -7658,7 +7658,7 @@
     },
     "osgearth": {
       "baseline": "3.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "osmanip": {
       "baseline": "4.6.1",
@@ -7734,7 +7734,7 @@
     },
     "paraview": {
       "baseline": "5.12.1",
-      "port-version": 7
+      "port-version": 8
     },
     "parmetis": {
       "baseline": "2023-03-26",
@@ -8102,11 +8102,11 @@
     },
     "protobuf": {
       "baseline": "7.36.1",
-      "port-version": 0
+      "port-version": 1
     },
     "protobuf-c": {
       "baseline": "1.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "protopuf": {
       "baseline": "3.1.0",
@@ -8166,7 +8166,7 @@
     },
     "pulsar-client-cpp": {
       "baseline": "4.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pulseaudio": {
       "baseline": "17.0",
@@ -8506,7 +8506,7 @@
     },
     "qtgrpc": {
       "baseline": "6.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qthttpserver": {
       "baseline": "6.11.1",
@@ -9266,7 +9266,7 @@
     },
     "sentencepiece": {
       "baseline": "0.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sentry-native": {
       "baseline": "0.16.4",
@@ -9766,7 +9766,7 @@
     },
     "srpc": {
       "baseline": "0.10.4",
-      "port-version": 2
+      "port-version": 3
     },
     "sse2neon": {
       "baseline": "1.9.1",

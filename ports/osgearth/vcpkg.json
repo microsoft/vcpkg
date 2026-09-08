@@ -1,6 +1,7 @@
 {
   "name": "osgearth",
   "version": "3.8.1",
+  "port-version": 1,
   "description": "osgEarth - 3D Maps for OpenSceneGraph",
   "homepage": "https://github.com/pelicanmapping/osgearth",
   "license": "MIT",
@@ -28,7 +29,13 @@
     "meshoptimizer",
     "opengl",
     "osg",
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1#1"
+    },
     "spdlog",
     "sqlite3",
     {

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package vcpkg_test;
+option optimize_for = LITE_RUNTIME;
+
+message LiteMessage {
+  uint64 id = 1;
+  string name = 2;
+  bytes payload = 3;
+  repeated sint32 values = 4;
+  map<string, int32> counts = 5;
+}

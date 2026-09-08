@@ -1,6 +1,7 @@
 {
   "name": "protobuf",
   "version": "7.36.1",
+  "port-version": 1,
   "description": "Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",
@@ -9,7 +10,11 @@
     {
       "name": "protobuf",
       "host": true,
-      "version>=": "7.36.1"
+      "default-features": false,
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1#1"
     },
     "utf8-range",
     {
@@ -22,13 +27,34 @@
     }
   ],
   "features": {
+    "full-runtime": {
+      "description": "Build the full runtime, including reflection and full message APIs."
+    },
     "libprotoc": {
       "description": "Build the libprotoc compiler library for target builds.",
-      "supports": "!uwp"
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "default-features": false,
+          "features": [
+            "full-runtime"
+          ],
+          "version>=": "7.36.1#1"
+        }
+      ]
     },
     "zlib": {
       "description": "ZLib based features like Gzip streams",
       "dependencies": [
+        {
+          "name": "protobuf",
+          "default-features": false,
+          "features": [
+            "full-runtime"
+          ],
+          "version>=": "7.36.1#1"
+        },
         "zlib"
       ]
     }

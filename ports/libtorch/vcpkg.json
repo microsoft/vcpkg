@@ -1,6 +1,7 @@
 {
   "name": "libtorch",
   "version": "2.13.0",
+  "port-version": 1,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -43,10 +44,16 @@
     "onnx",
     "opencl",
     "pocketfft",
-    "protobuf",
     {
       "name": "protobuf",
       "host": true
+    },
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1#1"
     },
     "pthreadpool",
     "pybind11",

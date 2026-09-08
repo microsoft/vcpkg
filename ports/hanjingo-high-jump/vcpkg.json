@@ -1,6 +1,7 @@
 {
   "name": "hanjingo-high-jump",
   "version": "1.0.10",
+  "port-version": 1,
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -165,7 +166,13 @@
     "protobuf": {
       "description": "Enable protobuf support",
       "dependencies": [
-        "protobuf"
+        {
+          "name": "protobuf",
+          "features": [
+            "full-runtime"
+          ],
+          "version>=": "7.36.1#1"
+        }
       ]
     },
     "qrcode": {

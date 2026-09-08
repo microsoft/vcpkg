@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.20",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -95,7 +95,13 @@
     "flann": {
       "description": "opencv_flann module",
       "dependencies": [
-        "protobuf"
+        {
+          "name": "protobuf",
+          "features": [
+            "full-runtime"
+          ],
+          "version>=": "7.36.1#1"
+        }
       ]
     },
     "freetype": {

@@ -1,7 +1,7 @@
 {
   "name": "paraview",
   "version": "5.12.1",
-  "port-version": 7,
+  "port-version": 8,
   "description": "VTK-based Data Analysis and Visualization Application",
   "homepage": "https://www.paraview.org/",
   "license": "BSD-3-Clause",
@@ -10,7 +10,13 @@
     "boost-core",
     "boost-format",
     "cgns",
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1#1"
+    },
     "qt5compat",
     "qtsvg",
     {
