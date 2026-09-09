@@ -4,7 +4,7 @@
   "description": "Left-hand traffic area classifier for point, line, and bbox queries over OSM driving-side data",
   "homepage": "https://github.com/Project-OSRM/gauche-rs",
   "license": "BSD-2-Clause AND MIT",
-  "supports": "!uwp",
+  "supports": "!windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
