@@ -3,7 +3,7 @@
   "version": "1.3.4",
   "description": "Very fast and easy to use C++ micro web framework",
   "homepage": "https://github.com/CrowCpp/crow",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND MIT AND ISC",
   "dependencies": [
     "asio",
     {
