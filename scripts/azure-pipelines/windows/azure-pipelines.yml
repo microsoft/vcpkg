@@ -101,7 +101,7 @@ jobs:
       targetType: inline
       script: |
         cd scripts/azure-pipelines/owners-db
-        npm ci -s
+        npm ci -s --omit=dev
         if ($env:BUILD_REASON -eq 'PullRequest') {
           Write-Host 'Running file_script_from_cache for PR'
           $blob = "https://vcpkgbinarycachewus.blob.core.windows.net/cache?$env:BCACHE_SAS_TOKEN"
