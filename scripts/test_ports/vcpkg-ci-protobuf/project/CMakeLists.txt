@@ -4,14 +4,34 @@ project(protobuf_consumer_tests LANGUAGES CXX)
 option(PROTOBUF_TEST_FULL "Require and test the full runtime" OFF)
 option(PROTOBUF_TEST_LIBPROTOC "Require and test libprotoc" OFF)
 option(PROTOBUF_TEST_ZLIB "Require and test gzip streams" OFF)
+option(PROTOBUF_TEST_LITE_ONLY "Reject full runtime and compiler libraries in an isolated lite installation" OFF)
+set(PROTOBUF_TEST_PACKAGE_NAME "protobuf" CACHE STRING "Package spelling to discover first")
+set_property(CACHE PROTOBUF_TEST_PACKAGE_NAME PROPERTY STRINGS protobuf Protobuf)
 
-find_package(protobuf CONFIG REQUIRED)
+if(NOT PROTOBUF_TEST_PACKAGE_NAME STREQUAL "protobuf" AND
+   NOT PROTOBUF_TEST_PACKAGE_NAME STREQUAL "Protobuf")
+    message(FATAL_ERROR "PROTOBUF_TEST_PACKAGE_NAME must be protobuf or Protobuf")
+endif()
+if(PROTOBUF_TEST_LITE_ONLY AND (PROTOBUF_TEST_FULL OR PROTOBUF_TEST_LIBPROTOC OR PROTOBUF_TEST_ZLIB))
+    message(FATAL_ERROR "Lite-only validation cannot request full runtime features")
+endif()
+
+find_package(${PROTOBUF_TEST_PACKAGE_NAME} CONFIG REQUIRED)
 if(NOT TARGET protobuf::libprotobuf-lite OR NOT TARGET protobuf::protoc)
     message(FATAL_ERROR "Missing lite runtime or host protoc target")
 endif()
 
-# Both spellings must support CONFIG consumers, including lite installations.
+# Test both first discovery and repeated discovery with the other spelling.
+find_package(protobuf CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
+
+if(PROTOBUF_TEST_LITE_ONLY)
+    foreach(target IN ITEMS protobuf::libprotobuf protobuf::libprotoc protobuf::libupb)
+        if(TARGET ${target})
+            message(FATAL_ERROR "Lite-only validation found unexpected target ${target}; check the host/target triplets and feature union")
+        endif()
+    endforeach()
+endif()
 
 enable_testing()
 add_executable(lite_roundtrip lite_roundtrip.cpp lite.proto)
@@ -25,6 +45,10 @@ if(PROTOBUF_TEST_FULL OR PROTOBUF_TEST_LIBPROTOC OR PROTOBUF_TEST_ZLIB)
     if(NOT TARGET protobuf::libprotobuf)
         message(FATAL_ERROR "The requested feature did not provide the full runtime")
     endif()
+endif()
+
+# Another consumer may enable full in the shared CI dependency graph.
+if(TARGET protobuf::libprotobuf)
     set(protobuf_MODULE_COMPATIBLE ON)
     find_package(Protobuf CONFIG REQUIRED)
     if(NOT Protobuf_LIBRARIES OR NOT Protobuf_INCLUDE_DIRS)
@@ -38,6 +62,9 @@ if(PROTOBUF_TEST_FULL OR PROTOBUF_TEST_LIBPROTOC OR PROTOBUF_TEST_ZLIB)
     add_test(NAME full_roundtrip COMMAND full_roundtrip)
 endif()
 
+if(PROTOBUF_TEST_LIBPROTOC AND NOT TARGET protobuf::libprotoc)
+    message(FATAL_ERROR "The libprotoc feature did not provide the target compiler library")
+endif()
 if(PROTOBUF_TEST_LIBPROTOC OR TARGET protobuf::libprotoc)
     add_executable(compiler_import compiler_import.cpp)
     target_compile_features(compiler_import PRIVATE cxx_std_17)

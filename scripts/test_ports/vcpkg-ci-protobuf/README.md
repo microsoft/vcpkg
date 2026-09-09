@@ -37,6 +37,10 @@ Although features remain additive, removing the full runtime from core changes
 the existing consumer contract. External projects that link the full runtime
 must also request `full-runtime` when adopting this port revision. Migrating the
 registry consumers does not update application manifests outside the registry.
+The installed `share/protobuf/usage` file explains the manifest and CMake
+migration at the point of consumption. Request `libprotoc` explicitly when
+building a plugin that links the compiler library; installing the host `protoc`
+executable alone does not provide that target library.
 
 ## Build the consumers
 
@@ -57,6 +61,26 @@ has `protobuf-lite.pc` and the lite library, with no target `libprotobuf`,
 `libprotoc`, `libupb`, or `protobuf.pc`. Tools copied from the host are separate
 from this target-runtime assertion.
 
+Verify the isolated core installation before moving to the full cases. Reuse
+the test-port build directory created by the first installation:
+
+```text
+cmake -S scripts/test_ports/vcpkg-ci-protobuf/project -B buildtrees/vcpkg-ci-protobuf/x64-windows-static-rel -DPROTOBUF_TEST_LITE_ONLY=ON -DPROTOBUF_TEST_FULL=OFF -DPROTOBUF_TEST_LIBPROTOC=OFF -DPROTOBUF_TEST_ZLIB=OFF -DPROTOBUF_TEST_PACKAGE_NAME=Protobuf
+```
+
+This must fail if a previously installed full package, a native host request,
+or another consumer has brought full into the target. The expected diagnostic
+names the unexpected target. Repeat with `-DPROTOBUF_TEST_PACKAGE_NAME=protobuf`
+to verify first discovery using the other spelling. Separate CMake invocations
+prevent the first successful lookup from hiding a failure in the other spelling.
+Repeat for the Debug build directory when present.
+
+For full and mixed-graph validation, set `PROTOBUF_TEST_LITE_ONLY=OFF`. The
+project also builds the full consumer whenever the full target is present,
+even when `PROTOBUF_TEST_FULL=OFF`, so a transitive full-runtime request tests
+both libraries. Requesting `PROTOBUF_TEST_LIBPROTOC=ON` without the compiler
+library must report the missing `libprotoc` target.
+
 The test port builds executables for:
 
 - Host-generated lite messages with integer, string, byte, repeated, and map
@@ -71,6 +95,13 @@ and legacy module variables when the full runtime is requested. Lite CONFIG
 discovery does not alias `protobuf::libprotobuf` to the lite library. Explicit
 module compatibility on a lite installation produces a missing-package
 diagnostic explaining the `full-runtime` requirement.
+
+CI's shared installation may contain full because another port requested it.
+Successfully building the core test port in that graph proves that its lite
+consumer still works with full installed; it does not prove a lite-only package.
+The isolated installation, strict target check, and package inspection above
+are required evidence for that claim. The test port compiles the consumers;
+runtime execution is a separate CTest step.
 
 On a machine that can execute the selected target, run CTest in the existing
 test-port build directories:
