@@ -35,7 +35,16 @@
     },
     "tools": {
       "description": "Build tools (protoc-gen-c).",
-      "supports": "!uwp"
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "features": [
+            "libprotoc"
+          ],
+          "version>=": "6.33.4#2"
+        }
+      ]
     }
   }
 }
