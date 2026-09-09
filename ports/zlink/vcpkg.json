@@ -1,6 +1,6 @@
 {
   "name": "zlink",
-  "version": "0.17.3",
+  "version": "0.17.5",
   "description": "High-performance asynchronous messaging library",
   "homepage": "https://github.com/zlink-systems/zlink",
   "license": "MPL-2.0",
