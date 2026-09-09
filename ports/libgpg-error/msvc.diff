@@ -14,18 +14,6 @@ index 1f2fe0d..1796fa1 100644
  AC_OUTPUT
  
  tmp=
-diff --git a/src/Makefile.am b/src/Makefile.am
-index 7fd1d98..d3cbd0c 100644
---- a/src/Makefile.am
-+++ b/src/Makefile.am
-@@ -250,7 +250,7 @@ code-to-errno.h: Makefile mkerrnos.awk errnos.in
- # It is correct to use $(CPP).  We want the host's idea of the error codes.
- mkerrcodes.h: Makefile mkerrcodes.awk
- 	$(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in >_$@
--	$(CPP) $(CPPFLAGS) -P _$@ | grep GPG_ERR_ | \
-+	$(CPP) $(CPPFLAGS) _$@ | grep GPG_ERR_ | \
-                $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
- 	-rm _$@
  
 diff --git a/src/argparse.c b/src/argparse.c
 index 0cf0083..549fd29 100644
