@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO lexbor/lexbor
     REF v${VERSION}
     SHA512 d65906504f490a03579eb737fa85007f1e948c4e82f986454d763728e4d71be40fe953a5a7cfda84b322cb99837f482295ee89bc3f07f2ef89ccaeeab39a4acf
+    PATCHES
+        fix-install-dirs.patch
 )
 
 vcpkg_check_features(
