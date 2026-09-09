@@ -7909,7 +7909,7 @@
       "port-version": 0
     },
     "plf-nanotimer": {
-      "baseline": "1.0.8",
+      "baseline": "1.0.10",
       "port-version": 0
     },
     "plf-queue": {
