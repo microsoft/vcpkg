@@ -1,7 +1,6 @@
 {
   "name": "protobuf",
   "version": "7.36.1",
-  "port-version": 1,
   "description": "Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",
@@ -14,7 +13,7 @@
       "features": [
         "full-runtime"
       ],
-      "version>=": "7.36.1#1"
+      "version>=": "7.36.1"
     },
     "utf8-range",
     {
@@ -40,7 +39,7 @@
           "features": [
             "full-runtime"
           ],
-          "version>=": "7.36.1#1"
+          "version>=": "7.36.1"
         }
       ]
     },
@@ -53,7 +52,7 @@
           "features": [
             "full-runtime"
           ],
-          "version>=": "7.36.1#1"
+          "version>=": "7.36.1"
         },
         "zlib"
       ]

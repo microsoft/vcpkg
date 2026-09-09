@@ -8,7 +8,7 @@ reflection, descriptors, text/JSON conversion, or full generated messages reques
 ```json
 {
   "name": "protobuf",
-  "version>=": "7.36.1#1",
+  "version>=": "7.36.1",
   "default-features": false,
   "features": ["full-runtime"]
 }
@@ -18,7 +18,7 @@ Lite consumers use generated messages with `option optimize_for = LITE_RUNTIME;`
 and link `protobuf::libprotobuf-lite`. A simple application is not automatically
 a lite consumer: its generated code, imported schemas, API use, and transitive
 dependencies determine its runtime requirements.
-With a versioned manifest, require `7.36.1#1` or later for the lite-target
+With a versioned manifest, require `7.36.1` or later for the lite-target
 behavior; older protobuf port revisions still provide full in core.
 
 The compiler remains an automatic host dependency. Host and target requests for

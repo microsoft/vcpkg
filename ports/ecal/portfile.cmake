@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/ecal
     REF "v${VERSION}"
-    SHA512 ae34bfc4aa021ab049758373dbac90dfcee34e92f94590813797d88b854420f9e4419f35fbd0db41c7b8aedbfcd24e46dd385f3017a7e0c1a04ee6863c4f948a 
+    SHA512 ae34bfc4aa021ab049758373dbac90dfcee34e92f94590813797d88b854420f9e4419f35fbd0db41c7b8aedbfcd24e46dd385f3017a7e0c1a04ee6863c4f948a
     HEAD_REF master
     PATCHES
         0001-disable-app-plugins.patch

@@ -28,7 +28,7 @@
       "features": [
         "full-runtime"
       ],
-      "version>=": "7.36.1#1"
+      "version>=": "7.36.1"
     },
     "re2",
     "utf8-range",
