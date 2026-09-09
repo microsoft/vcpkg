@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         fix-android.patch
+        fix-config-dependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIB)
