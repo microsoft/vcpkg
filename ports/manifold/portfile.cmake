@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 837eaba3df67046aaed4e2912c68e8f9415218a524674442c56d8c31430a804fc70c405439c59584ad0d5219bee16b60bccd68e40ce9c8c2548c23f1b1006768
     PATCHES
-        fix-pkgconfig-cflags.patch
+        fix-pkgconfig-cflags.patch # https://github.com/elalish/manifold/pull/1824
 )
 
 vcpkg_cmake_configure(
