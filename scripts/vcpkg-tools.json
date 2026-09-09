@@ -233,29 +233,29 @@
       "name": "7zip",
       "os": "windows",
       "arch": "amd64",
-      "version": "26.02",
+      "version": "26.03",
       "executable": "7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7z2602-x64.exe",
-      "sha512": "85389eaef377aa9fef3155d2e3375c1fff77fc10e39d9312cab229f202f3aff78f6e807460cf6b04bc2a32f72f7853afbf475cf0dce6232a40c0a6f8ddcbe4da",
-      "archive": "7z2602-x64.7z.exe"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.03/7z2603-x64.exe",
+      "sha512": "50025bab628b69f8eb35a590900093814e540ce7ffef8c676a1198e2d2a3f1dcdc44f04f92c28ca89bf6ee869fad3710786e14073c7db36281e8f7a4c495ea7f",
+      "archive": "7z2603-x64.7z.exe"
     },
     {
       "name": "7zip",
       "os": "windows",
       "arch": "arm64",
-      "version": "26.02",
+      "version": "26.03",
       "executable": "7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7z2602-arm64.exe",
-      "sha512": "17d438ee775e4587156d88400390fa5fe59425474c125d0ad0760644373a86547eebd0670501f313c845f7a7cf148ff142eea8980e840d1f077f623539e5615d",
-      "archive": "7z2602-arm64.7z.exe"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.03/7z2603-arm64.exe",
+      "sha512": "323e07eeab30fd3179b5b2c8860052bb77b4df56cc7a4e1eba541795d126ac2ddfbf3368bd64ff6fa36713f7dcbaa8eb22d5ca4ca91745246d95f4fb9a021a13",
+      "archive": "7z2603-arm64.7z.exe"
     },
     {
       "name": "7zr",
       "os": "windows",
-      "version": "26.02",
+      "version": "26.03",
       "executable": "7zr.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.02/7zr.exe",
-      "sha512": "dfdcf16edb65baddd43181c9481a2c9453b0c678a6825108c2ab4cb30de34497c5fda5639721b3ced9cb4b98744fb6dab7314bd49685385c365425b721b19279"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.03/7zr.exe",
+      "sha512": "211a97487c573b8611dfe3acacbd361ffd41a888a9d63c69f2a7b52cbadc686a424ea08ec88c9566e4e1365c5d6caf1825865440f79f4a751fefb27fe9f0bea9"
     },
     {
       "name": "ninja",

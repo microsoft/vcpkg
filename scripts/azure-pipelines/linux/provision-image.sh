@@ -34,9 +34,9 @@ apt-get -y update
 apt-get --no-install-recommends -y install ca-certificates curl apt-transport-https lsb-release gnupg software-properties-common
 
 ## CUDA
-curl -L -o /etc/apt/preferences.d/cuda-repository-pin-600 "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
-apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/3bf863cc.pub"
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/ /"
+curl -L -o cuda-keyring.deb "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-keyring_1.1-1_all.deb"
+dpkg -i cuda-keyring.deb
+rm -f cuda-keyring.deb
 
 ## PowerShell
 curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
