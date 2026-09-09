@@ -14,12 +14,6 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
   set(MATSDK_BUILD_APPLE_HTTP ON)
 endif()
 
-# iOS build options
-set(MATSDK_BUILD_IOS OFF)
-if(VCPKG_TARGET_IS_IOS)
-  set(MATSDK_BUILD_IOS ON)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -42,7 +36,6 @@ vcpkg_cmake_configure(
         -DMATSDK_ZLIB_PROVIDER=SYSTEM
         -DBUILD_VERSION=${VERSION}
         -DMATSDK_BUILD_APPLE_HTTP=${MATSDK_BUILD_APPLE_HTTP}
-        -DBUILD_IOS=${MATSDK_BUILD_IOS}
 )
 
 vcpkg_cmake_install()
