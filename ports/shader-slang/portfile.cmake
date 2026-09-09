@@ -157,6 +157,22 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND DEBUG_INFO_PATH)
   endif()
 endif()
 
+# The precompiled standard modules are looked up next to the slang runtime library
+file(GLOB standard_modules
+  "${BINDIST_PATH}/bin/slang-standard-module-*"
+  "${BINDIST_PATH}/lib/slang-standard-module-*"
+)
+if(NOT standard_modules)
+  message(FATAL_ERROR "No slang-standard-module-* directory found in the upstream archive.")
+endif()
+file(GLOB api_modules "${BINDIST_PATH}/bin/*.slang") # slang.slang and gfx.slang, the host API bindings
+list(APPEND standard_modules ${api_modules})
+if(VCPKG_TARGET_IS_WINDOWS)
+  file(COPY ${standard_modules} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+else()
+  file(COPY ${standard_modules} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+endif()
+
 if(NOT VCPKG_BUILD_TYPE)
   file(INSTALL "${CURRENT_PACKAGES_DIR}/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
   if(VCPKG_TARGET_IS_WINDOWS)
@@ -174,6 +190,7 @@ endif()
 
 # Must manually copy some tool dependencies since vcpkg can't copy them automagically for us
 file(INSTALL ${dyn_libs} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
+file(COPY ${standard_modules} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/shader-slang")
 vcpkg_copy_tools(TOOL_NAMES slangc slangd slangi slang SEARCH_DIR "${BINDIST_PATH}/bin")
 
 file(GLOB headers "${BINDIST_PATH}/include/*.h")
@@ -207,14 +224,15 @@ The Slang code itself is under the Apache 2.0 with LLVM Exception license.
 
 Builds of the core Slang tools depend on the following projects, either automatically or optionally, which may have their own licenses:
 
+* [`ankerl::unordered_dense::{map, set}`](https://github.com/martinus/unordered_dense) (MIT)
+* [`fast_float`](https://github.com/fastfloat/fast_float) (Apache 2.0 / MIT / Boost)
 * [`glslang`](https://github.com/KhronosGroup/glslang) (BSD)
 * [`lz4`](https://github.com/lz4/lz4) (BSD)
 * [`miniz`](https://github.com/richgel999/miniz) (MIT)
 * [`spirv-headers`](https://github.com/KhronosGroup/SPIRV-Headers) (Modified MIT)
 * [`spirv-tools`](https://github.com/KhronosGroup/SPIRV-Tools) (Apache 2.0)
-* [`ankerl::unordered_dense::{map, set}`](https://github.com/martinus/unordered_dense) (MIT)
 
-Slang releases may include [slang-llvm](https://github.com/shader-slang/slang-llvm) which includes [LLVM](https://github.com/llvm/llvm-project) under the license:
+Slang releases may include [LLVM](https://github.com/llvm/llvm-project) under the license:
 
 * [`llvm`](https://llvm.org/docs/DeveloperPolicy.html#new-llvm-project-license-framework) (Apache 2.0 License with LLVM exceptions)
 ]])
