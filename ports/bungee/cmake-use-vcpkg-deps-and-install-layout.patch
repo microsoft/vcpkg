@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2a0af39..d5c1a0c 100644
+index 2a0af39..12afb7f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -10,9 +10,12 @@ endif()
@@ -57,7 +57,7 @@ index 2a0af39..d5c1a0c 100644
    if (BUNGEE_INSTALL_FRAMEWORK)
      set_target_properties(bungee_library PROPERTIES
        FRAMEWORK TRUE
-@@ -78,32 +66,27 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
+@@ -78,32 +66,21 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
    endif()
    install(FILES 
      ${BUNGEE_LIBRARY_HEADERS}
@@ -87,19 +87,35 @@ index 2a0af39..d5c1a0c 100644
 +      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-bungee
    )
  
- get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)
- 
+-get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)
+-
 -if (APPLE)
 -  set(PKGCONFIG_LINK_PATH -F)
 -  set(PKGCONFIG_LINK_FLAG "-framework ")
 -else()
-   set(PKGCONFIG_LINK_PATH -L)
-   set(PKGCONFIG_LINK_FLAG "-l")
+-  set(PKGCONFIG_LINK_PATH -L)
+-  set(PKGCONFIG_LINK_FLAG "-l")
 -endif()
-+
  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libbungee.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc @ONLY)
  
 -install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}/pkgconfig)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
- 
+-
 -endif()
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+diff --git a/libbungee.pc.in b/libbungee.pc.in
+index a121863..d21ca98 100644
+--- a/libbungee.pc.in
++++ b/libbungee.pc.in
+@@ -1,5 +1,10 @@
++prefix=${pcfiledir}/../..
++libdir=${prefix}/lib
++includedir=${prefix}/include
++
+ Name: bungee
+ Description: Bungee audio time-stretch and pitch-shift library
+ Version: @BUNGEE_VERSION@
+-Libs: @PKGCONFIG_LINK_PATH@${pcfiledir}/.. @PKGCONFIG_LINK_FLAG@@BUNGEE_LIBRARY_OUTPUT_NAME@
+-Cflags: -I${pcfiledir}/../../include
++Libs: -L${libdir} -lbungee
++Libs.private: -lpffft
++Cflags: -I${includedir}
