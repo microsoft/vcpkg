@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_find_acquire_program(CARGO)
+find_program(CARGO NAMES cargo cargo.exe HINTS "$ENV{CARGO_HOME}/bin" "$ENV{USERPROFILE}/.cargo/bin" "$ENV{HOME}/.cargo/bin" REQUIRED)
 
 message(STATUS "Building native Rust polyxml-c library...")
 vcpkg_execute_required_process(
