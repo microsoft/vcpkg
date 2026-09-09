@@ -3,6 +3,7 @@
   "version": "5.4.0",
   "description": "libdivide.h is a header-only C/C++ library for optimizing integer division.",
   "homepage": "https://github.com/ridiculousfish/libdivide",
+  "license": "BSL-1.0 OR Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
