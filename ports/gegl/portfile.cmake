@@ -70,6 +70,12 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    COMMENT [[
+Bundled libnsgif is licensed under MIT, ctx under ISC, and the Khronos OpenCL
+headers under Apache-2.0.
+]]
+    FILE_LIST "${SOURCE_PATH}/docs/copyright.adoc"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
