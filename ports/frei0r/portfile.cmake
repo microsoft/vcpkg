@@ -6,11 +6,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dyne/frei0r
     REF "v${VERSION}"
-    SHA512 84b7c7d7da75c3c76b2bd68fbdf877831c45bc99f0ba306a1c7270867073b27f53595a5c6d845c5a628f72aa05f54525e02fd8000794c650e13af8e88a946550
+    SHA512 f73723a165ac42029801b895d2324ee8dcf4d9b49165458e707b6891ad88294203848d2b1cd89ffe58769f13232f9175e17040fc30905b37df29d348c36f2e1c
     HEAD_REF master
     PATCHES
         001-fix-defs.patch
         002-install-dlls-to-bin.patch
+        m_pi.patch
 )
 
 vcpkg_check_features(
@@ -23,8 +24,9 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      ${FEATURE_OPTIONS}
-      -DWITHOUT_GAVL=ON
+        -DBUILD_TESTING=OFF
+        -DWITHOUT_GAVL=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -34,4 +36,7 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+)
