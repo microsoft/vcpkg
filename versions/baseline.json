@@ -5333,7 +5333,7 @@
       "port-version": 0
     },
     "libmaxminddb": {
-      "baseline": "1.13.3",
+      "baseline": "1.14.0",
       "port-version": 0
     },
     "libmediainfo": {
