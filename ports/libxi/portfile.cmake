@@ -1,15 +1,19 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL "https://gitlab.freedesktop.org/xorg"
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO "lib/libxi"
-    REF "libXi-${VERSION}"
-    SHA512 3928777184c89f93182d5d6b0d8e37e0ec797c37c0e73305ac843a8c874c3c1261e37338d61edf526e9ca74120bf6dcc1832760ebe9af2550e9f8279dd2f6f6f
-    HEAD_REF master
+vcpkg_download_distfile(
+    LIBXCOMPOSITE_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libXi-${VERSION}.tar.xz"
+    FILENAME "libXi-${VERSION}.tar.xz"
+    SHA512 5fb8273424467c102d3bab01cb273169038ff6fae739f6873ca357be8890c4fd30ba2952bca2759249458796df53ad130e2c9c3674b385602afd13c718faf79a
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXCOMPOSITE_ARCHIVE}"
     PATCHES
         fix-configure.patch
 )
@@ -23,15 +27,17 @@ endif()
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
-    OPTIONS ${OPTIONS}
+    OPTIONS
+        --with-asciidoc=no
+        --with-fop=no
+        --with-xmlto=no
+        --with-xsltproc=no
+        ${OPTIONS}
 )
 
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-endif()

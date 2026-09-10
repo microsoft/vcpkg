@@ -1,12 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version": "2026.3.0",
+  "version": "2026.3.1",
   "port-version": 1,
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
-    "Intel® Distribution of OpenVINO™ toolkit is an open-source toolkit for optimizing ",
+    "Intel\u00ae Distribution of OpenVINO\u2122 toolkit is an open-source toolkit for optimizing ",
     "and deploying AI inference. It can be used to develop applications and solutions based ",
     "on deep learning tasks, such as: emulation of human vision, automatic speech recognition, ",
     "natural language processing, recommendation systems, etc. It provides high-performance ",
