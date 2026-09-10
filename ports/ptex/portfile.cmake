@@ -36,13 +36,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 vcpkg_copy_pdbs()
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/PtexExports.h" PTEX_HEADER)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    string(REPLACE "ifdef PTEX_STATIC" "if 0" PTEX_HEADER "${PTEX_HEADER}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/PtexExports.h" "ifdef PTEX_STATIC" "if 0")
 else()
-    string(REPLACE "ifdef PTEX_STATIC" "if 1" PTEX_HEADER "${PTEX_HEADER}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/PtexExports.h" "ifdef PTEX_STATIC" "if 1")
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/PtexExports.h" "${PTEX_HEADER}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
