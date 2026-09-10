@@ -206,7 +206,7 @@
       "description": "Export symbols for plugins."
     },
     "flang": {
-      "description": "Include Fortran front end.",
+      "description": "Include the Flang compiler and runtime libraries.",
       "dependencies": [
         {
           "name": "llvm",
@@ -214,18 +214,6 @@
           "features": [
             "clang",
             "mlir"
-          ]
-        }
-      ]
-    },
-    "flang-rt": {
-      "description": "Include flang-rt library.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "flang"
           ]
         }
       ]

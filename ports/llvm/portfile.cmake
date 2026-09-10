@@ -128,6 +128,7 @@ if("flang" IN_LIST FEATURES)
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
     list(APPEND FEATURE_OPTIONS
+        -DFLANG_ENABLE_FLANG_RT=ON
         -DFLANG_INSTALL_PACKAGE_DIR:PATH=share/flang
         -DFLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
     )
@@ -220,9 +221,6 @@ if("openmp" IN_LIST FEATURES)
 endif()
 if("offload" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "offload")
-endif()
-if("flang-rt" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_RUNTIMES "flang-rt")
 endif()
 if("libclc" IN_LIST FEATURES)
     set(libclc_runtime_targets
