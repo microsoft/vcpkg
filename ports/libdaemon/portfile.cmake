@@ -14,6 +14,7 @@ vcpkg_make_configure(
     AUTORECONF
     OPTIONS
       --disable-lynx
+      --disable-examples
 )
 
 vcpkg_make_install()
