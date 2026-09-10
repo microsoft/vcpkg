@@ -9258,7 +9258,7 @@
     },
     "secp256k1": {
       "baseline": "0.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "selene": {
       "baseline": "0.3.1",
