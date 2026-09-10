@@ -36,6 +36,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 vcpkg_copy_pdbs()
 
+file(READ "${CURRENT_PACKAGES_DIR}/include/PtexExports.h" PTEX_HEADER)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    string(REPLACE "ifdef PTEX_STATIC" "if 0" PTEX_HEADER "${PTEX_HEADER}")
+else()
+    string(REPLACE "ifdef PTEX_STATIC" "if 1" PTEX_HEADER "${PTEX_HEADER}")
+endif()
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/PtexExports.h" "${PTEX_HEADER}")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
