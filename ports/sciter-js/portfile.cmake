@@ -69,10 +69,10 @@ elseif(VCPKG_TARGET_IS_OSX)
     file(INSTALL "${SCITER_BIN}/qjsc" DESTINATION "${SCITER_TOOLS}" ${TOOL_PERMS})
 
     file(INSTALL "${SCITER_BIN}/inspector.app" DESTINATION "${SCITER_TOOLS}")
-    file(INSTALL "${SCITER_BIN}/usciterjs.app" DESTINATION "${SCITER_TOOLS}")
+    file(INSTALL "${SCITER_BIN}/usciter.app" DESTINATION "${SCITER_TOOLS}")
     file(INSTALL "${SCITER_BIN}/libsciter.dylib" DESTINATION "${SCITER_TOOLS}")
 
-    execute_process(COMMAND sh -c "chmod +x usciterjs.app/Contents/MacOS/usciterjs" WORKING_DIRECTORY "${SCITER_TOOLS}")
+    execute_process(COMMAND sh -c "chmod +x usciter.app/Contents/MacOS/usciter" WORKING_DIRECTORY "${SCITER_TOOLS}")
     execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY "${SCITER_TOOLS}")
 
     if ("sqlite" IN_LIST FEATURES)
