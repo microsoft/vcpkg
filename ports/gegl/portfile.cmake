@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
     PATCHES
         disable_tests.patch
         remove-consistency-check.patch
+        use-bundled-opencl-headers.patch
 )
 
 if("introspection" IN_LIST FEATURES)
@@ -55,6 +56,7 @@ vcpkg_configure_meson(
         -Dpoppler=disabled
         -Dpygobject=disabled
         -Dsdl2=disabled
+        -Dsdl3=disabled
         -Dumfpack=disabled
         -Dwebp=disabled
     ADDITIONAL_BINARIES
