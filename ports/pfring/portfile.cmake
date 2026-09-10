@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 8b7c0d5532a6f69cee1153594903a115d3262f6a1988a46449bafb29da8ace3fc7437ff46bfc9f73804fa4c8c76bed0df3fd07b9ad1ced05b311bfaf5bf990ad
     HEAD_REF dev
+    PATCHES
+        use-external-libpcap.patch
 )
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/kernel")
@@ -25,6 +27,7 @@ vcpkg_configure_make(
         ac_cv_header_hiredis_h=no
         ac_cv_lib_nl_nl_handle_alloc=no
         ac_cv_lib_nl_3_nl_socket_alloc=no
+        "BPF_INCLUDE=-I${CURRENT_INSTALLED_DIR}/include"
 )
 string(REPLACE "dynamic" "shared" install_target "install-${VCPKG_LIBRARY_LINKAGE}")
 vcpkg_install_make(
