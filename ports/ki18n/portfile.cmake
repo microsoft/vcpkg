@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
     REF "v${VERSION}"
-    SHA512 84aabcee462989dcf38b260cee46b65d28a9abd25a73853c44946833c3282ff305534b119c0fd13119372d71fc05fa8b2d4c4b15ebd08befa1db704e372e1055
+    SHA512 79e58072cd8893a50af351feb7c7f9f5c1c21064c87358b5794b9913c310438f1338728b4ae75dc4969e576fe1cf56b02e07dfe570fef7ee54d5f4f28ade2387
     HEAD_REF master
 )
 
@@ -12,10 +12,17 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        qml BUILD_WITH_QML
+        qml       BUILD_WITH_QML
+        isocodes  CMAKE_DISABLE_FIND_PACKAGE_IsoCodes
+    INVERTED_FEATURES
+        isocodes  CMAKE_REQUIRE_FIND_PACKAGE_IsoCodes
 )
 
 vcpkg_find_acquire_program(PYTHON3)
+if(CMAKE_REQUIRE_FIND_PACKAGE_IsoCodes)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -26,7 +33,7 @@ vcpkg_cmake_configure(
         -DFALLBACK_KI18N_PYTHON_EXECUTABLE=${PYTHON3}
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QTPLUGINDIR=plugins
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QMLDIR=qmls
 )
 
 vcpkg_cmake_install()
@@ -40,8 +47,10 @@ vcpkg_copy_pdbs()
 # fallback. This is an absolute path but is ultimately relocatable, so skip the check.
 set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
