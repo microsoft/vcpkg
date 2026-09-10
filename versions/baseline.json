@@ -5097,8 +5097,8 @@
       "port-version": 5
     },
     "libfuse": {
-      "baseline": "3.18.2",
-      "port-version": 1
+      "baseline": "3.18.3",
+      "port-version": 0
     },
     "libgcrypt": {
       "baseline": "1.12.2",
