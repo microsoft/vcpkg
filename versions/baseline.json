@@ -3369,7 +3369,7 @@
       "port-version": 0
     },
     "gegl": {
-      "baseline": "0.4.70",
+      "baseline": "0.4.72",
       "port-version": 0
     },
     "gemmlowp": {
