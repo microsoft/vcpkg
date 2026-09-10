@@ -5,7 +5,7 @@
       "port-version": 5
     },
     "7zip": {
-      "baseline": "26.2",
+      "baseline": "26.3",
       "port-version": 0
     },
     "abcmake": {
@@ -277,7 +277,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "15.4.2",
+      "baseline": "15.6.0",
       "port-version": 0
     },
     "arp1it-minecraft-server-status": {
@@ -574,7 +574,7 @@
     },
     "azure-messaging-eventhubs-cpp": {
       "baseline": "1.0.0-beta.15",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
@@ -1533,7 +1533,7 @@
       "port-version": 3
     },
     "bungee": {
-      "baseline": "2.4.15",
+      "baseline": "2.4.30",
       "port-version": 0
     },
     "bustache": {
@@ -1697,7 +1697,7 @@
       "port-version": 0
     },
     "cgal": {
-      "baseline": "6.2",
+      "baseline": "6.2.1",
       "port-version": 0
     },
     "cgicc": {
@@ -2041,7 +2041,7 @@
       "port-version": 0
     },
     "cpp-client-telemetry": {
-      "baseline": "3.10.173.1",
+      "baseline": "3.10.240.1",
       "port-version": 0
     },
     "cpp-exiftool": {
@@ -2433,7 +2433,7 @@
       "port-version": 0
     },
     "daw-header-libraries": {
-      "baseline": "2.132.1",
+      "baseline": "2.135.0",
       "port-version": 0
     },
     "daw-json-link": {
@@ -2809,7 +2809,7 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "1.6.3",
+      "baseline": "1.7.2",
       "port-version": 0
     },
     "egl": {
@@ -4013,8 +4013,8 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.92.8",
-      "port-version": 1
+      "baseline": "1.92.9",
+      "port-version": 0
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
@@ -4049,7 +4049,7 @@
       "port-version": 0
     },
     "inflatelib": {
-      "baseline": "0.2.0",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "influxdb-cxx": {
@@ -5525,7 +5525,7 @@
       "port-version": 5
     },
     "libpcap": {
-      "baseline": "1.10.6",
+      "baseline": "1.10.7",
       "port-version": 0
     },
     "libpff": {
@@ -6365,7 +6365,7 @@
       "port-version": 0
     },
     "lzav": {
-      "baseline": "5.12",
+      "baseline": "5.17",
       "port-version": 0
     },
     "lzfse": {
@@ -7001,7 +7001,7 @@
       "port-version": 0
     },
     "nanomsg": {
-      "baseline": "1.2.4",
+      "baseline": "1.2.5",
       "port-version": 0
     },
     "nanopb": {
@@ -7597,7 +7597,7 @@
       "port-version": 0
     },
     "openxr-loader": {
-      "baseline": "1.1.62",
+      "baseline": "1.1.63",
       "port-version": 0
     },
     "openzl": {
@@ -7897,7 +7897,7 @@
       "port-version": 0
     },
     "plf-hive": {
-      "baseline": "2025-12-22",
+      "baseline": "2026-09-06",
       "port-version": 0
     },
     "plf-indiesort": {
@@ -9397,7 +9397,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "9.1.0",
+      "baseline": "9.1.1",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
@@ -9981,7 +9981,7 @@
       "port-version": 2
     },
     "sundials": {
-      "baseline": "7.8.0",
+      "baseline": "7.9.0",
       "port-version": 0
     },
     "superglu": {
@@ -10617,7 +10617,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "20.79.0",
+      "baseline": "20.80.0",
       "port-version": 0
     },
     "v-hacd": {
@@ -11104,6 +11104,10 @@
       "baseline": "10.0.10320",
       "port-version": 5
     },
+    "wukong-easy-sdk": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "wxchartdir": {
       "baseline": "2.0.0",
       "port-version": 2
@@ -11337,7 +11341,7 @@
       "port-version": 0
     },
     "yyjson": {
-      "baseline": "0.12.0",
+      "baseline": "0.13.0",
       "port-version": 0
     },
     "z3": {
