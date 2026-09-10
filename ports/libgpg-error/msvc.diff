@@ -52,7 +52,7 @@ index d2cdc12..1a92db0 100644
  #endif
  #include <sys/types.h>
 -#include <sys/file.h>
-+#if defined(HAVE_W32_SYSTEM) || defined(_WIN32)
++#if defined(_WIN32)
 +# include <io.h>
 +#else
 +# include <sys/file.h>
@@ -171,7 +171,7 @@ index 09727d5..f7923b6 100644
  #include <string.h>
  #include <errno.h>
 -#include <unistd.h>
-+#if !defined(_WIN32) || defined(__MINGW32__)
++#ifdef HAVE_UNISTD_H
 +# include <unistd.h>
 +#else
 +# include <io.h>
@@ -219,41 +219,6 @@ index b6d6a55..9cbc670 100644
  #include <errno.h>
  #ifdef HAVE_W32_SYSTEM
  # include <windows.h>
-diff --git a/src/versioninfo.rc.in b/src/versioninfo.rc.in
-index e00b638..c83e437 100644
---- a/src/versioninfo.rc.in
-+++ b/src/versioninfo.rc.in
-@@ -13,9 +13,11 @@
- 
- /* This file is processed by configure to create versioninfo.rc */
- 
--#line __LINE__ "versioninfo.rc.in"
--
--#include <afxres.h>
-+#ifdef _MSC_VER
-+# include <winres.h>
-+#else
-+# include <afxres.h>
-+#endif
- 
- 
- VS_VERSION_INFO VERSIONINFO
-diff --git a/src/visibility.c b/src/visibility.c
-index 5574f33..6d7e58b 100644
---- a/src/visibility.c
-+++ b/src/visibility.c
-@@ -1111,11 +1111,7 @@ void
- _gpgrt_log_assert (const char *expr, const char *file,
-                    int line, const char *func)
- {
--#ifdef GPGRT_HAVE_MACRO_FUNCTION
-   _gpgrt__log_assert (expr, file, line, func);
--#else
--  _gpgrt__log_assert (expr, file, line);
--#endif
- }
- 
- 
 diff --git a/src/w32-estream.c b/src/w32-estream.c
 index 08b9b16..d70ba81 100644
 --- a/src/w32-estream.c
