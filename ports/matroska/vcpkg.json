@@ -1,14 +1,11 @@
 {
   "name": "matroska",
-  "version": "1.7.1",
-  "port-version": 3,
+  "version": "1.7.2",
   "description": "a C++ library to parse Matroska files (.mkv and .mka)",
   "homepage": "https://github.com/Matroska-Org/libmatroska",
+  "license": "LGPL-2.1-or-later",
   "dependencies": [
-    {
-      "name": "ebml",
-      "version>=": "1.4.4"
-    },
+    "ebml",
     {
       "name": "vcpkg-cmake",
       "host": true

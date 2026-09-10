@@ -1,0 +1,12 @@
+diff --git a/src/container_qpainter_p.h b/src/container_qpainter_p.h
+index 23c55b4..4ae1cc1 100644
+--- a/src/container_qpainter_p.h
++++ b/src/container_qpainter_p.h
+@@ -14,7 +14,6 @@
+ #include <QString>
+ #include <QVector>
+ 
+-#include <litehtml/types.h>
+ #include <unordered_map>
+ 
+ QT_BEGIN_NAMESPACE
