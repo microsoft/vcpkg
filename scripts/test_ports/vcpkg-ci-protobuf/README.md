@@ -117,6 +117,37 @@ cross-architecture binaries on an incompatible host. Repeat the core case with
 dynamic target linkage and different host/target triplets to exercise DLL
 exports. Native full builds alone cannot validate lite-only packaging.
 
+## Check consumer language modes
+
+The consumer targets require at least C++17; passing those tests does not prove
+compatibility with a C++20 consumer. Reuse an existing full DLL test directory
+and keep the installed runtime unchanged while changing only the consumer's
+language mode. For example, after installing full for `x64-windows`:
+
+```text
+cmake -S scripts/test_ports/vcpkg-ci-protobuf/project -B buildtrees/vcpkg-ci-protobuf/x64-windows-rel -DPROTOBUF_TEST_FULL=ON -DPROTOBUF_TEST_LITE_ONLY=OFF -DCMAKE_CXX_STANDARD=17
+cmake --build buildtrees/vcpkg-ci-protobuf/x64-windows-rel --target full_roundtrip --parallel 1 --verbose
+ctest --test-dir buildtrees/vcpkg-ci-protobuf/x64-windows-rel -R ^full_roundtrip$ --output-on-failure --no-tests=error
+cmake -S scripts/test_ports/vcpkg-ci-protobuf/project -B buildtrees/vcpkg-ci-protobuf/x64-windows-rel -DCMAKE_CXX_STANDARD=20
+cmake --build buildtrees/vcpkg-ci-protobuf/x64-windows-rel --target full_roundtrip --parallel 1 --verbose
+ctest --test-dir buildtrees/vcpkg-ci-protobuf/x64-windows-rel -R ^full_roundtrip$ --output-on-failure --no-tests=error
+```
+
+Run the second CTest command only if its build succeeds. Use the directory and
+DLL search path for the full installation actually being tested. Record the
+compiler, library build standard, consumer flags, and link command. Restore
+the previous `CMAKE_CXX_STANDARD` afterward and rebuild the consumer; if the
+cache originally had no explicit standard, configure with
+`-U CMAKE_CXX_STANDARD` to return to the target's requirements.
+
+The current 7.36.1 prerequisite has a reproduced MSVC full DLL incompatibility:
+a consumer compiled as C++20 expects `fixed_address_empty_string` with type
+`GlobalEmptyStringConstexpr`, while the C++17 runtime exports
+`GlobalEmptyStringDynamicInit`. The C++17 consumer passes. This is a release
+compatibility blocker even with `full-runtime` selected; it is not counted as
+a successful C++20 validation. Repeat both language modes after applying the
+release compatibility fix, including CTest execution after successful links.
+
 ## Benchmark boundaries
 
 Compare the same source release, compiler, target triplet, build configurations,
