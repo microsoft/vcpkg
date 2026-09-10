@@ -29,8 +29,9 @@ set(ext_vtk_patch_copy "${CURRENT_BUILDTREES_DIR}/paraview_external_vtk_pr.diff"
 file(COPY "${external_vtk_patch}" DESTINATION "${CURRENT_BUILDTREES_DIR}" )
 
 # Remove stuff which cannot be patched since it does not exist
-vcpkg_replace_string("${ext_vtk_patch_copy}"
-[[
+# Keep the blank diff-context line explicit so whitespace cleanup cannot remove it.
+string(CONCAT sccache_patch
+[=[
 diff --git a/.gitlab/ci/sccache.sh b/.gitlab/ci/sccache.sh
 index f1897d6f719c3b61b6d4fa317966c007dab2fc23..e88d7c89198696832e5645bfb0e758fd5d92e6af 100755
 --- a/.gitlab/ci/sccache.sh
@@ -38,15 +39,16 @@ index f1897d6f719c3b61b6d4fa317966c007dab2fc23..e88d7c89198696832e5645bfb0e758fd
 @@ -37,6 +37,6 @@ $shatool --check sccache.sha256sum
  mv "$filename" sccache
  chmod +x sccache
-
+]=]
+" \n"
+[=[
 -mkdir shortcuts
 +mkdir -p shortcuts
  cp ./sccache shortcuts/gcc
  cp ./sccache shortcuts/g++
-]]
-""
-IGNORE_UNCHANGED
-)
+]=])
+
+vcpkg_replace_string("${ext_vtk_patch_copy}" "${sccache_patch}" "")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
