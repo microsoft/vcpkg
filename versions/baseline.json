@@ -3493,7 +3493,7 @@
       "port-version": 2
     },
     "glib": {
-      "baseline": "2.88.3",
+      "baseline": "2.90.0",
       "port-version": 0
     },
     "glib-networking": {
@@ -3502,7 +3502,7 @@
     },
     "glibmm": {
       "baseline": "2.88.1",
-      "port-version": 0
+      "port-version": 1
     },
     "glm": {
       "baseline": "1.0.3",
