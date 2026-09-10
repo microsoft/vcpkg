@@ -362,6 +362,8 @@ vcpkg_cmake_configure(
         -DLLVM_BUILD_TESTS=OFF
         -DLLVM_INCLUDE_BENCHMARKS=OFF
         -DLLVM_BUILD_BENCHMARKS=OFF
+        -DLLVM_ENABLE_LIBEDIT=OFF
+        -DLLVM_ENABLE_LIBPFM=OFF
         # Force TableGen to be built with optimization. This will significantly improve build time.
         -DLLVM_OPTIMIZED_TABLEGEN=ON
         -DPACKAGE_VERSION=${VERSION}
