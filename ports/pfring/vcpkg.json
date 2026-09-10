@@ -4,5 +4,8 @@
   "description": "Library to interface with the PF_RING™ kernel module for processing packets at high-rates while providing a consistent API.",
   "homepage": "https://github.com/ntop/PF_RING",
   "license": null,
-  "supports": "linux"
+  "supports": "linux",
+  "dependencies": [
+    "libpcap"
+  ]
 }

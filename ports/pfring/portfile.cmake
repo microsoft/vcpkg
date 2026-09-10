@@ -35,6 +35,8 @@ vcpkg_install_make(
         "YACC=${BISON}"
 )
 
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/kernel/linux/pf_ring.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/linux")
+
 vcpkg_install_copyright(
     COMMENT [[
 The user-space PF_RING library source code is distributed under the LGPLv2.1.
