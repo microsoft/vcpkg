@@ -1029,7 +1029,6 @@ paraview[mpi,vtkm]:x86-windows=cascade
 paraview[python]:arm64-windows-static-md=feature-fails
 paraview[python]:arm64-windows=feature-fails
 paraview(arm64 & windows)=fail # in-build host tools
-parmetis:arm64-linux=cascade
 parmetis:arm64-windows=cascade
 parquet:arm64-windows=cascade
 parquet:x86-windows=cascade
