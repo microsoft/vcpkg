@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_install.patch
+        fix-ndk-r30.patch # https://github.com/google/oboe/issues/2406
 )
 
 vcpkg_cmake_configure(
