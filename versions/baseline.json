@@ -4961,7 +4961,7 @@
       "port-version": 12
     },
     "libdivide": {
-      "baseline": "5.3.0",
+      "baseline": "5.4.0",
       "port-version": 0
     },
     "libdjinterop": {
