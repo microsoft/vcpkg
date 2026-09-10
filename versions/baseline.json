@@ -4440,10 +4440,6 @@
       "baseline": "5.116.0",
       "port-version": 0
     },
-    "kf5diagram": {
-      "baseline": "deprecated",
-      "port-version": 0
-    },
     "kf5globalaccel": {
       "baseline": "5.116.0",
       "port-version": 1
@@ -8470,7 +8466,7 @@
     },
     "qtbase": {
       "baseline": "6.11.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qtcharts": {
       "baseline": "6.11.1",
@@ -8567,10 +8563,6 @@
     "qtquick3dphysics": {
       "baseline": "6.11.1",
       "port-version": 0
-    },
-    "qtquickcontrols2": {
-      "baseline": "deprecated",
-      "port-version": 1
     },
     "qtquickeffectmaker": {
       "baseline": "6.11.1",
@@ -8722,10 +8714,6 @@
     },
     "rapidcsv": {
       "baseline": "8.99",
-      "port-version": 0
-    },
-    "rapidfuzz": {
-      "baseline": "deprecated",
       "port-version": 0
     },
     "rapidfuzz-cpp": {
@@ -9734,14 +9722,6 @@
     },
     "sqlpp11": {
       "baseline": "0.66",
-      "port-version": 0
-    },
-    "sqlpp11-connector-mysql": {
-      "baseline": "0.61",
-      "port-version": 0
-    },
-    "sqlpp11-connector-sqlite3": {
-      "baseline": "0.61",
       "port-version": 0
     },
     "sqlpp23": {
@@ -10874,10 +10854,6 @@
     },
     "vulkan-headers": {
       "baseline": "1.4.357.0",
-      "port-version": 0
-    },
-    "vulkan-hpp": {
-      "baseline": "deprecated",
       "port-version": 0
     },
     "vulkan-loader": {
