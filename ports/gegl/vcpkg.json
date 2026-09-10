@@ -27,7 +27,7 @@
     },
     "introspection": {
       "description": "Enable introspection",
-      "supports": "!static & !mingw",
+      "supports": "!static",
       "dependencies": [
         {
           "name": "babl",
