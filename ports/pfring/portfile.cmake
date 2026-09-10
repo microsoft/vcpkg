@@ -37,4 +37,5 @@ which adds an NTOP END USER LICENSE AGREEMENT.
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/userland/lib/libs/EULA.txt"
+        "${SOURCE_PATH}/userland/lib/third_party/uthash.h"
 )
