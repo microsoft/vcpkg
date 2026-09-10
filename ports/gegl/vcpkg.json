@@ -3,7 +3,7 @@
   "version": "0.4.72",
   "description": "Generic Graphical Library.",
   "homepage": "https://gegl.org",
-  "license": "LGPL-3.0-or-later",
+  "license": "LGPL-3.0-or-later AND GPL-3.0-or-later AND BSD-3-Clause AND MIT AND ISC AND Apache-2.0",
   "supports": "!windows | mingw",
   "dependencies": [
     "babl",
