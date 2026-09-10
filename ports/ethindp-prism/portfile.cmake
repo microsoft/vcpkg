@@ -40,4 +40,9 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME prism CONFIG_PATH share/prism)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_pdbs()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+  "${SOURCE_PATH}/LICENSE"
+  "${SOURCE_PATH}/LICENSES/djinni/LICENSE"
+  "${SOURCE_PATH}/LICENSES/dr_wav/LICENSE"
+  "${SOURCE_PATH}/LICENSES/moderncom/LICENSE"
+)
