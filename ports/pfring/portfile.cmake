@@ -18,6 +18,13 @@ vcpkg_configure_make(
     COPY_SOURCE
     OPTIONS
         --disable-archopt
+        --disable-redis
+        --disable-zmq
+        --disable-ndpi
+        --disable-xdp
+        ac_cv_header_hiredis_h=no
+        ac_cv_lib_nl_nl_handle_alloc=no
+        ac_cv_lib_nl_3_nl_socket_alloc=no
 )
 string(REPLACE "dynamic" "shared" install_target "install-${VCPKG_LIBRARY_LINKAGE}")
 vcpkg_install_make(
