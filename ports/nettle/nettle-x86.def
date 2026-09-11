@@ -1,4 +1,43 @@
 EXPORTS
+     nettle_slh_dsa_sha2_128f_root
+     nettle_slh_dsa_sha2_128f_generate_keypair
+     nettle_slh_dsa_sha2_128f_sign
+     nettle_slh_dsa_sha2_128f_verify
+     nettle_slh_dsa_sha2_128s_root
+     nettle_slh_dsa_sha2_128s_generate_keypair
+     nettle_slh_dsa_sha2_128s_sign
+     nettle_slh_dsa_sha2_128s_verify
+     nettle_slh_dsa_shake_128f_root
+     nettle_slh_dsa_shake_128f_generate_keypair
+     nettle_slh_dsa_shake_128f_sign
+     nettle_slh_dsa_shake_128f_verify
+     nettle_slh_dsa_shake_128s_root
+     nettle_slh_dsa_shake_128s_generate_keypair
+     nettle_slh_dsa_shake_128s_sign
+     nettle_slh_dsa_shake_128s_verify
+     _nettle_slh_dsa_128f_params
+     _nettle_slh_dsa_128s_params
+     _nettle_slh_dsa_pure_digest
+     _nettle_slh_dsa_pure_rdigest
+     _nettle_slh_dsa_sign
+     _nettle_slh_dsa_verify
+     _nettle_xmss_gen
+     _nettle_xmss_sign
+     _nettle_xmss_verify
+     _nettle_wots_gen
+     _nettle_wots_sign
+     _nettle_wots_verify
+     _nettle_merkle_root
+     _nettle_merkle_sign
+     _nettle_merkle_verify
+     _nettle_fors_gen
+     _nettle_fors_sign
+     _nettle_fors_verify
+     _nettle_slh_hash_sha256
+     _nettle_slh_hash_shake
+     nettle_drbg_ctr_aes256_init
+     nettle_drbg_ctr_aes256_random
+     nettle_drbg_ctr_aes256_update
      nettle_xts_aes256_set_encrypt_key
      nettle_xts_aes256_set_decrypt_key
      nettle_xts_aes256_encrypt_message
@@ -84,25 +123,29 @@ EXPORTS
      nettle_sm3_update
      nettle_sm3_digest
      nettle_sha3_256_shake
+     nettle_sha3_256_shake_output
+     nettle_sha3_128_update
+     nettle_sha3_128_shake
+     nettle_sha3_128_shake_output
+     _nettle_sha3_shake
+     _nettle_sha3_shake_output
      nettle_sha3_512
-     nettle_sha3_512_init
      nettle_sha3_512_update
      nettle_sha3_512_digest
      nettle_sha3_384
-     nettle_sha3_384_init
      nettle_sha3_384_update
      nettle_sha3_384_digest
      nettle_sha3_256
-     nettle_sha3_256_init
      nettle_sha3_256_update
      nettle_sha3_256_digest
      nettle_sha3_224
-     nettle_sha3_224_init
      nettle_sha3_224_update
      nettle_sha3_224_digest
      nettle_sha3_permute
+     nettle_sha3_init
      _nettle_sha3_update
      _nettle_sha3_pad
+     _nettle_sha3_digest
      nettle_sha512_256
      nettle_sha512_224
      nettle_sha512
@@ -184,8 +227,6 @@ EXPORTS
      nettle_get_hashes
      _nettle_ciphers
      nettle_get_ciphers
-     _nettle_armors
-     nettle_get_armors
      _nettle_aeads
      nettle_get_aeads
      nettle_lookup_hash
@@ -193,13 +234,10 @@ EXPORTS
      nettle_memxor
      nettle_memeql_sec
      nettle_md5
-     nettle_MD5Init
-     nettle_MD5Update
-     nettle_MD5Final
-     nettle_md5_compress
      nettle_md5_init
      nettle_md5_update
      nettle_md5_digest
+     nettle_md5_compress
      nettle_md4
      nettle_md4_init
      nettle_md4_update
@@ -217,6 +255,8 @@ EXPORTS
      nettle_hmac_sm3
      nettle_hmac_streebog256
      nettle_hmac_streebog512
+     nettle_hmac_gosthash94
+     nettle_hmac_gosthash94cp
      nettle_hmac_sha512
      nettle_hmac_sha384
      nettle_hmac_sha256
@@ -257,9 +297,7 @@ EXPORTS
      nettle_hmac_gosthash94cp_set_key
      nettle_hmac_gosthash94cp_update
      nettle_hmac_gosthash94cp_digest
-     nettle_hmac_set_key
-     nettle_hmac_update
-     nettle_hmac_digest
+     _nettle_hmac_set_key
      nettle_gosthash94
      nettle_gosthash94cp
      nettle_gosthash94_init
@@ -332,12 +370,6 @@ EXPORTS
      nettle_gcm_aes128_encrypt
      nettle_gcm_aes128_decrypt
      nettle_gcm_aes128_digest
-     nettle_gcm_aes_set_key
-     nettle_gcm_aes_set_iv
-     nettle_gcm_aes_update
-     nettle_gcm_aes_encrypt
-     nettle_gcm_aes_decrypt
-     nettle_gcm_aes_digest
      nettle_gcm_set_key
      nettle_gcm_set_iv
      nettle_gcm_update
@@ -473,10 +505,8 @@ EXPORTS
      nettle_buffer_write
      nettle_buffer_space
      nettle_buffer_copy
-     nettle_base64url
      nettle_base64url_decode_init
      nettle_base64url_encode_init
-     nettle_base64
      nettle_base64_decode_init
      nettle_base64_decode_single
      nettle_base64_decode_update
@@ -486,8 +516,6 @@ EXPORTS
      nettle_base64_encode_update
      nettle_base64_encode_final
      nettle_base64_encode_raw
-     nettle_base64_encode_group
-     nettle_base16
      nettle_base16_decode_init
      nettle_base16_decode_single
      nettle_base16_decode_update
@@ -544,24 +572,15 @@ EXPORTS
      nettle_aes128_set_decrypt_key
      nettle_aes128_invert_key
      nettle_aes128_set_encrypt_key
-     nettle_aes_set_decrypt_key
-     nettle_aes_invert_key
-     nettle_aes_set_encrypt_key
      _nettle_aes_set_key
      _nettle_aes_invert
      nettle_aes256_encrypt
      nettle_aes192_encrypt
      nettle_aes128_encrypt
      _nettle_aes_encrypt_table
-     nettle_aes_encrypt
      _nettle_aes_encrypt
      nettle_aes256_decrypt
      nettle_aes192_decrypt
      nettle_aes128_decrypt
      _nettle_aes_decrypt_table
-     nettle_aes_decrypt
      _nettle_aes_decrypt
-     nettle_sha3_256_shake_output
-     nettle_sha3_128_init
-     nettle_sha3_128_update
-     nettle_sha3_128_shake_output
