@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Sigmyne/redisx
     REF "v${VERSION}"
-    SHA512 518a7b55c0d16de7ca916f5bc71e43084eba7e4becd3cf7968ea912fc3c681d758ee4221d45c07ba040402b4fba4a61d18152acac4a4ca16b4d69d9a2f9904b6
+    SHA512 e5d2a21f203da3909e2fe2d79aba3b4651c591856ee33e14df898f44aee93bfd119328ef00a554775520a2517fa35fd836b2e13785afe998d845e3d382d4026c
     HEAD_REF main
 )
 
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_CLI=OFF
+        -DENABLE_OPENMP=ON
         ${FEATURE_OPTIONS}
 )
 
