@@ -1,8 +1,8 @@
 {
   "name": "gst-rtsp-server",
-  "version": "1.28.6",
+  "version": "1.28.7",
   "description": "gst-rtsp-server is a library on top of GStreamer for building an RTSP server",
-  "homepage": "https://gstreamer.freedesktop.org/",
+  "homepage": "https://gstreamer.freedesktop.org",
   "license": "LGPL-2.1-or-later",
   "supports": "!xbox",
   "dependencies": [

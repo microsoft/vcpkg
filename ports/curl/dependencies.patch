@@ -76,15 +76,7 @@ diff --git a/CMake/FindGnuTLS.cmake b/CMake/FindGnuTLS.cmake
 index 7f5b227..d6d10db 100644
 --- a/CMake/FindGnuTLS.cmake
 +++ b/CMake/FindGnuTLS.cmake
-@@ -36,6 +36,7 @@
- 
- set(_gnutls_pc_requires "gnutls")
- 
-+unset(GNUTLS_LIBRARY CACHE) # from shiftmedia-libgnutls cmake wrapper
- if(CURL_USE_PKGCONFIG AND
-    NOT DEFINED GNUTLS_INCLUDE_DIR AND
-    NOT DEFINED GNUTLS_LIBRARY)
-@@ -48,6 +49,9 @@ if(_gnutls_FOUND)
+@@ -48,6 +48,9 @@ if(_gnutls_FOUND)
    set(GNUTLS_FOUND TRUE)
    set(GNUTLS_VERSION ${_gnutls_VERSION})
    message(STATUS "Found GnuTLS (via pkg-config): ${_gnutls_INCLUDE_DIRS} (found version \"${GNUTLS_VERSION}\")")

@@ -1,5 +1,0 @@
-vulkan-hpp is deprecated. Please use port vulkan-headers instead.
-vulkan-hpp can be used with CMake:
-
-    find_package(VulkanHeaders CONFIG)
-    target_link_libraries(main PRIVATE Vulkan::Headers)
