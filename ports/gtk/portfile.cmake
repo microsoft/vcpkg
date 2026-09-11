@@ -85,7 +85,13 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/gdk/COPYING"
+        "${SOURCE_PATH}/gtk/roaring/COPYING"
+        "${SOURCE_PATH}/gtk/timsort/COPYING"
+)
 
 set(TOOL_NAMES gtk4-builder-tool
                gtk4-encode-symbolic-svg
