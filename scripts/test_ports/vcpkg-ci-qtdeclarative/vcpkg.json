@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-qtdeclarative",
+  "version-string": "ci",
+  "description": "Validates qtdeclarative",
+  "dependencies": [
+    "qtbase",
+    "qtdeclarative",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
