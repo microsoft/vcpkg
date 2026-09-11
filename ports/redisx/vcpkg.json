@@ -20,6 +20,10 @@
     }
   ],
   "features": {
+    "parallel-cluster": {
+      "description": "Parallelized cluster connect / disconnect with OpenMP",
+      "supports": "!(osx & arm64)"
+    },
     "tls": {
       "description": "TLS encryption support",
       "dependencies": [

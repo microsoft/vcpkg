@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        parallel-cluster ENABLE_OPENMP
         tls              ENABLE_TLS
 )
 
@@ -16,7 +17,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_CLI=OFF
-        -DENABLE_OPENMP=ON
         ${FEATURE_OPTIONS}
 )
 
