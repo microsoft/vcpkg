@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index 1f2fe0d..1796fa1 100644
+index 3e26b48..59a07b3 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -780,6 +780,11 @@ AC_CONFIG_FILES([src/gpg-error-config-old:src/gpg-error-config.in], [chmod +x sr
+@@ -785,6 +785,11 @@ AC_CONFIG_FILES([src/gpg-error-config-old:src/gpg-error-config.in], [chmod +x sr
  AC_CONFIG_FILES([src/gpgrt-config], [chmod +x src/gpgrt-config])
  AC_CONFIG_FILES([src/gpg-error-config-test.sh], [chmod +x src/gpg-error-config-test.sh])
  
@@ -14,7 +14,25 @@ index 1f2fe0d..1796fa1 100644
  AC_OUTPUT
  
  tmp=
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 6cedcb3..b247b36 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -256,8 +256,12 @@ code-to-errno.h: Makefile mkerrnos.awk errnos.in
+ # It is correct to use $(CPP).  We want the host's idea of the error codes.
+ mkerrcodes.h: Makefile mkerrcodes.awk
+ 	$(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in >_$@
+-	$(CPP) $(CPPFLAGS) -P _$@ | grep GPG_ERR_ | \
+-               $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
++	case "$(CPP)" in \
++	    *cl* | *CL*) \
++	      $(CPP) $(CPPFLAGS) _$@ | grep GPG_ERR_ | $(AWK) -f $(srcdir)/mkerrcodes.awk >$@ ;; \
++	    *) \
++	      $(CPP) $(CPPFLAGS) -P _$@ | grep GPG_ERR_ | $(AWK) -f $(srcdir)/mkerrcodes.awk >$@ ;; \
++	esac
+ 	-rm _$@
  
+ # We use CC proper for preprocessing thus we have to convince it that
 diff --git a/src/argparse.c b/src/argparse.c
 index 0cf0083..549fd29 100644
 --- a/src/argparse.c
@@ -44,7 +62,7 @@ index 058ca71..0811039 100644
  #include <errno.h>
  #include <stddef.h>
 diff --git a/src/estream.c b/src/estream.c
-index d2cdc12..1a92db0 100644
+index d2cdc12..5af619f 100644
 --- a/src/estream.c
 +++ b/src/estream.c
 @@ -68,12 +68,18 @@
@@ -163,7 +181,7 @@ index 4f52d80..99d4ece 100644
  /* #include <execinfo.h> */
  
 diff --git a/src/mkheader.c b/src/mkheader.c
-index 09727d5..f7923b6 100644
+index 09727d5..ad0e04b 100644
 --- a/src/mkheader.c
 +++ b/src/mkheader.c
 @@ -16,7 +16,14 @@
@@ -219,6 +237,24 @@ index b6d6a55..9cbc670 100644
  #include <errno.h>
  #ifdef HAVE_W32_SYSTEM
  # include <windows.h>
+diff --git a/src/versioninfo.rc.in b/src/versioninfo.rc.in
+index e00b638..4f4b81c 100644
+--- a/src/versioninfo.rc.in
++++ b/src/versioninfo.rc.in
+@@ -13,9 +13,12 @@
+ 
+ /* This file is processed by configure to create versioninfo.rc */
+ 
++#if defined(__MINGW32__) || defined(__GNUC__)
+ #line __LINE__ "versioninfo.rc.in"
+-
+ #include <afxres.h>
++#else
++#include <winres.h>
++#endif
+ 
+ 
+ VS_VERSION_INFO VERSIONINFO
 diff --git a/src/w32-estream.c b/src/w32-estream.c
 index 08b9b16..d70ba81 100644
 --- a/src/w32-estream.c
