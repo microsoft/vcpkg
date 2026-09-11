@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        -DAVX_TYPE=AVX0
         -DDPP_USE_EXTERNAL_JSON=ON
         -DDPP_BUILD_TEST=OFF
 )
