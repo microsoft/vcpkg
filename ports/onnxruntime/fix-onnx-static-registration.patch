@@ -1,0 +1,25 @@
+diff --git a/onnxruntime/core/session/environment.cc b/onnxruntime/core/session/environment.cc
+index 0a32c14..a2d1925 100644
+--- a/onnxruntime/core/session/environment.cc
++++ b/onnxruntime/core/session/environment.cc
+@@ -320,15 +320,17 @@ Status Environment::Initialize(std::unique_ptr<logging::LoggingManager> logging_
+ #ifdef USE_DML
+       dml::RegisterDmlSchemas();
+ #endif
+-      RegisterOnnxOperatorSetSchema();
++      if (ONNX_NAMESPACE::IsOnnxStaticRegistrationDisabled()) {
++        RegisterOnnxOperatorSetSchema();
+ 
+ #ifndef DISABLE_ML_OPS
+-      RegisterOnnxMLOperatorSetSchema();
++        RegisterOnnxMLOperatorSetSchema();
+ #endif
+ 
+ #if defined(ENABLE_TRAINING_OPS)
+-      RegisterOnnxTrainingOperatorSetSchema();
++        RegisterOnnxTrainingOperatorSetSchema();
+ #endif
++      }
+ 
+ #if defined(ENABLE_TRAINING_OPS)
+       // preserve this order until <training schemas>: this depends on operatorsetschema registration.
