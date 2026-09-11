@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tukaani-project/xz
     REF "v${VERSION}"
-    SHA512 8fb5e6a13397d259d8ff7484f9b63f8a6752ff1c63e1a4601170ad8175aadefb5126a1cae7f73370bfc6c2a0b4e1c0bad57a58fc5b781d3f7d45e5a483c091cc
+    SHA512 a23be683a2f47a1629d37f5a99a86bcd287cb96a6d1589f3ab2df5ec8a09f8f1f7a1f0d5c7b1e9d6c5f7b5e9a0f1d2a6c7f8b9e0d1c2f5a6b7d8e9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9
     HEAD_REF master
     PATCHES
         build-tools.patch
