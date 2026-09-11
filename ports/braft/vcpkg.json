@@ -1,7 +1,7 @@
 {
   "name": "braft",
   "version-date": "2021-26-04",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Consensus algorithm library",
   "homepage": "https://github.com/baidu/braft",
   "license": "Apache-2.0",
@@ -11,7 +11,13 @@
     "gflags",
     "glog",
     "leveldb",
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
+    },
     "thrift",
     {
       "name": "vcpkg-cmake",

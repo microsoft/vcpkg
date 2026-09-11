@@ -1,6 +1,7 @@
 {
   "name": "grpc",
   "version-semver": "1.81.1",
+  "port-version": 1,
   "description": "gRPC is a modern, open source, high-performance remote procedure call (RPC) framework that can run anywhere. gRPC enables client and server applications to communicate transparently, and simplifies the building of connected systems.",
   "homepage": "https://github.com/grpc/grpc",
   "license": "Apache-2.0",
@@ -18,10 +19,16 @@
       ]
     },
     "openssl",
-    "protobuf",
     {
       "name": "protobuf",
       "host": true
+    },
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
     },
     "re2",
     "utf8-range",

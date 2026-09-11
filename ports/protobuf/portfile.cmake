@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF "v33.4"
-    SHA512 540059a93721447cf4723bcca06e91c43a4399cb366c05bf84e9d8e2c439f3107ba17803f9d912549b54c471f2dcc4c9fc834145ec441dff31ca24f9a3543aa9
+    REF "v36.1"
+    SHA512 bc6342a664c406ae5bad2628a44683dbce02cc04a3e3f039a21df2894aa3a8f5b85ec6eb9dad2bc58024ecc6de7bf7cb22a5c4b72a87c965ab1025e02bdf8618
     HEAD_REF master
     PATCHES
         fix-static-build.patch
@@ -19,8 +19,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIM
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        libprotoc protobuf_BUILD_TARGET_LIBPROTOC
-        zlib      protobuf_WITH_ZLIB
+        full-runtime protobuf_BUILD_LIBPROTOBUF
+        libprotoc    protobuf_BUILD_TARGET_LIBPROTOC
+        zlib         protobuf_WITH_ZLIB
 )
 
 set(protobuf_BUILD_LIBPROTOC OFF)
@@ -55,6 +56,8 @@ vcpkg_cmake_configure(
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
         -Dprotobuf_BUILD_TESTS=OFF
+        -Dprotobuf_BUILD_CONFORMANCE=OFF
+        -Dprotobuf_BUILD_EXAMPLES=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
@@ -80,7 +83,13 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
     "if(protobuf_MODULE_COMPATIBLE)"
-    "if(protobuf_MODULE_COMPATIBLE OR CMAKE_FIND_PACKAGE_NAME STREQUAL \"Protobuf\")"
+    [=[if(protobuf_MODULE_COMPATIBLE AND NOT TARGET protobuf::libprotobuf)
+  set("${CMAKE_FIND_PACKAGE_NAME}_FOUND" FALSE)
+  set("${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE"
+    "Protobuf module compatibility requires the full-runtime feature. Use find_package(protobuf CONFIG) and protobuf::libprotobuf-lite for lite consumers.")
+  return()
+endif()
+if(protobuf_MODULE_COMPATIBLE OR (CMAKE_FIND_PACKAGE_NAME STREQUAL "Protobuf" AND TARGET protobuf::libprotobuf))]=]
 )
 if(NOT protobuf_BUILD_LIBPROTOC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake"
@@ -138,3 +147,4 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

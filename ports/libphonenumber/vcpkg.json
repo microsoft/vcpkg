@@ -1,6 +1,7 @@
 {
   "name": "libphonenumber",
   "version": "9.0.37",
+  "port-version": 1,
   "description": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
   "homepage": "https://github.com/google/libphonenumber",
   "license": "Apache-2.0",
@@ -10,7 +11,13 @@
     "boost-system",
     "boost-thread",
     "icu",
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
+    },
     "re2",
     {
       "name": "vcpkg-cmake",

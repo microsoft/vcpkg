@@ -1,8 +1,8 @@
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index 65765ca29..f5ad69102 100644
+index 3e0e165..2f331c3 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
-@@ -65,7 +65,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+@@ -72,7 +72,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
      endforeach ()
    endif ()
    foreach (binary IN LISTS _protobuf_binaries)
@@ -11,12 +11,15 @@ index 65765ca29..f5ad69102 100644
        set_property(TARGET ${binary}
          PROPERTY INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
      elseif (APPLE)
-@@ -85,7 +85,5 @@ set(protobuf_HEADERS
-   ${cpp_features_proto_proto_srcs}
-   ${descriptor_proto_proto_srcs}
-   ${plugin_proto_proto_srcs}
--  ${java_features_proto_proto_srcs}
--  ${go_features_proto_proto_srcs}
- )
- if (protobuf_BUILD_LIBUPB)
-   list(APPEND protobuf_HEADERS ${libupb_hdrs})
+@@ -95,6 +95,11 @@ if (TARGET libupb)
+ endif ()
+ 
+ include(${protobuf_SOURCE_DIR}/src/file_lists.cmake)
++list(REMOVE_ITEM release_all_options_protos_files
++  "${protobuf_SOURCE_DIR}/csharp/google/protobuf/c_sharp_features.proto"
++  "${protobuf_SOURCE_DIR}/go/google/protobuf/go_features.proto"
++  "${protobuf_SOURCE_DIR}/java/core/src/main/resources/google/protobuf/java_features.proto"
++)
+ set(protobuf_HEADERS
+   ${libprotobuf_hdrs}
+   ${libprotoc_public_hdrs}

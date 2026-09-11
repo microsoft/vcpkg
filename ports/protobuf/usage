@@ -1,0 +1,38 @@
+protobuf provides the lite runtime in core. Request full-runtime explicitly
+when linking protobuf::libprotobuf or using full generated messages, reflection,
+descriptors, or text/JSON conversion. Existing applications that require these
+APIs must update their manifest when adopting this port revision:
+
+    {
+      "name": "protobuf",
+      "features": ["full-runtime"]
+    }
+
+Full runtime CMake usage:
+
+    find_package(protobuf CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE protobuf::libprotobuf)
+
+Lite runtime CMake usage:
+
+    find_package(protobuf CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE protobuf::libprotobuf-lite)
+
+Lite consumers must generate compatible messages, for example by adding
+option optimize_for = LITE_RUNTIME; to their .proto files. Small messages do
+not automatically use lite. Imported schemas and other dependencies must also
+be compatible with the chosen runtime.
+
+The host protoc compiler is installed automatically. Building compiler plugins
+that link protobuf::libprotoc requires the libprotoc feature; this also enables
+full-runtime. The zlib feature likewise enables full-runtime for gzip APIs.
+
+Host and target requests for the same triplet share their features, so equal
+host/target triplets still install full. A lite-only target requires distinct
+triplets and no full-runtime request elsewhere in the target dependency graph.
+An additional full-runtime request preserves protobuf::libprotobuf-lite.
+
+Use the host protoc from this installation when generating C++ messages; the
+generated code and runtime versions must match. CONFIG discovery supports both
+protobuf and Protobuf spellings. Explicit protobuf_MODULE_COMPATIBLE requires
+full-runtime.

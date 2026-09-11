@@ -1,10 +1,17 @@
 {
   "name": "libprotobuf-mutator",
   "version": "1.5",
+  "port-version": 1,
   "description": "Library for structured fuzzing with protobuffers.",
   "dependencies": [
     "liblzma",
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
