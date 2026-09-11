@@ -13,11 +13,6 @@ set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
 
-if(PORT MATCHES "(qtquickcontrols2)")
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    return()
-endif()
-
 ### Setting up the git tag.
 
 set(QT_PORTS qt
@@ -38,7 +33,6 @@ set(QT_PORTS qt
              qtmqtt
              qtnetworkauth
              qt3d)
-             # qtquickcontrols2 -> moved into qtdeclarative
 if(QT_VERSION VERSION_GREATER_EQUAL 6.1)
     list(APPEND QT_PORTS
              ## New in 6.1
