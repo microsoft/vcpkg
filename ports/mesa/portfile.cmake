@@ -41,11 +41,17 @@ if(CMAKE_HOST_WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-# For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
+# For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more.
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
+
+if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURES)
+    list(APPEND MESA_ADDITIONAL_BINARIES
+        "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
+    )
+endif()
 
 if("offscreen" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dosmesa=true)
@@ -55,8 +61,21 @@ endif()
 
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
+    set(LLVM_CONFIG_DEBUG_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-debug.ini")
+    set(LLVM_CONFIG_RELEASE_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-release.ini")
+    file(WRITE "${LLVM_CONFIG_DEBUG_NATIVE_FILE}"
+        "[binaries]\nllvm-config = ['${CURRENT_INSTALLED_DIR}/debug/tools/llvm/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}']\n"
+    )
+    file(WRITE "${LLVM_CONFIG_RELEASE_NATIVE_FILE}"
+        "[binaries]\nllvm-config = ['${CURRENT_INSTALLED_DIR}/tools/llvm/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}']\n"
+    )
+    list(APPEND MESA_OPTIONS_DEBUG --native "${LLVM_CONFIG_DEBUG_NATIVE_FILE}")
+    list(APPEND MESA_OPTIONS_RELEASE --native "${LLVM_CONFIG_RELEASE_NATIVE_FILE}")
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
+    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
+        list(APPEND MESA_OPTIONS "-Dvulkan-drivers=[]")
+    endif()
 endif()
 
 set(use_gles OFF)
@@ -73,7 +92,7 @@ else()
     list(APPEND MESA_OPTIONS -Dgles2=disabled)
 endif()
 
-if(use_gles)
+if(use_gles OR "egl" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  # shared GLAPI required when building two or more of the following APIs - gles1 gles2
 else()
     list(APPEND MESA_OPTIONS -Dshared-glapi=auto)
@@ -92,17 +111,37 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
         set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
     endif()
+elseif(VCPKG_TARGET_IS_ANDROID)
+    # Do not let target dependency detection fall back to the build machine's
+    # system pkg-config directories while cross-compiling.
+    set(MESA_EMPTY_PKG_CONFIG_DIR "${CURRENT_BUILDTREES_DIR}/empty-pkgconfig")
+    file(MAKE_DIRECTORY "${MESA_EMPTY_PKG_CONFIG_DIR}")
+    list(APPEND MESA_ADDITIONAL_PROPERTIES
+        "pkg_config_libdir = ['${MESA_EMPTY_PKG_CONFIG_DIR}']"
+    )
+    list(APPEND MESA_OPTIONS
+        -Dplatforms=['android']
+        -Dandroid-stub=true
+        -Dgallium-drivers=['swrast']
+    )
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -Dgles-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
+    OPTIONS_DEBUG
+        ${MESA_OPTIONS_DEBUG}
+    OPTIONS_RELEASE
+        ${MESA_OPTIONS_RELEASE}
     ADDITIONAL_BINARIES
         python=['${PYTHON3}','-I']
         python3=['${PYTHON3}','-I']
+        ${MESA_ADDITIONAL_BINARIES}
+    ADDITIONAL_PROPERTIES
+        ${MESA_ADDITIONAL_PROPERTIES}
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
@@ -135,10 +174,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
     endif()
-endif()
-
-if(FEATURES STREQUAL "core")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")
