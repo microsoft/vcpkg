@@ -11,6 +11,7 @@ vcpkg_from_github(
     SHA512 4da74166ed68730ee60435fcac8ed79f206968a07c21228db14a7c1e7a39c922df7a8088276528b620d285d34529e2ce61f7bb03eccef8fea6231e81537d874d
     PATCHES
         "${DPP_BACKPORT_1636_PATCH}"
+        use-external-json.patch
 )
 
 file(REMOVE_RECURSE
