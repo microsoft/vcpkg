@@ -21,4 +21,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/cpp-sort")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE.txt")
