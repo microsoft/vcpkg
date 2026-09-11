@@ -171,13 +171,13 @@ index 09727d5..f7923b6 100644
  #include <string.h>
  #include <errno.h>
 -#include <unistd.h>
-+#ifdef HAVE_UNISTD_H
-+# include <unistd.h>
-+#else
++#if defined(_MSC_VER)
 +# include <io.h>
 +# ifndef R_OK
 +#  define R_OK 4
 +# endif
++#else
++# include <unistd.h>
 +#endif
  
  #define PGM "mkheader"
