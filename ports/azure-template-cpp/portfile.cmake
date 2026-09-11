@@ -4,8 +4,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 131add210ccaa0c1898ab750161306c06962d41d
-    SHA512 2930e38ebb321c86e230b681cae3f03b00aba966ac5aa25ec0fa43eadf75484298528b8aec719d9594bd91f90311a1d89778a1c91a8a6861bedcd1ba1a69a402
+    REF 5adcc048b3bc5ee519d3817c935738de10c8464c
+    SHA512 7d99b16039e110769c6eeee6d26ce47f931b6a0642909d1b12122d0c88308c3678c52d4272061d9b3cc5af375f69a111d01d128e9ca25de51e4be36f2ce1036f
     HEAD_REF main
 )
 
@@ -18,13 +18,13 @@ file(REMOVE_RECURSE ${unused})
 file(GLOB_RECURSE unused "${SOURCE_PATH}/Cargo.lock")
 file(REMOVE_RECURSE ${unused})
 
-if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core-tracing-opentelemetry")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/core/_")
+if(EXISTS "${SOURCE_PATH}/sdk/template/azure-template")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/template/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/core/azure-core-tracing-opentelemetry" "${SOURCE_PATH}/sdk/core/_")
-  file(RENAME "${SOURCE_PATH}/sdk/core" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template/azure-template" "${SOURCE_PATH}/sdk/template/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
