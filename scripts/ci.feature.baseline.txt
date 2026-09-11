@@ -746,7 +746,6 @@ mesa:x64-linux=fail # Missing dependent libraries.
 mesa:x64-windows-static=fail # Due to static crt.
 mesa[egl](!windows)=feature-fails # ERROR: Problem encountered: EGL requires dri, haiku, or windows
 mesa[llvm]:arm64-linux=cascade # llvm:arm64-linux is baseline-failed.
-mesa[llvm](android)=cascade # Android NDK r29's Clang does not support a builtin required by LLVM 23's libclc.
 metrohash:arm64-linux=fail
 minc:arm64-linux=cascade
 minc[minc1](android)=feature-fails
