@@ -38,6 +38,37 @@ vcpkg_make_configure(
         "--with-libevent=${CURRENT_INSTALLED_DIR}"
         "--with-libevent-libdir=${CURRENT_INSTALLED_DIR}/lib"
         --with-pmix=internal
+        # Prevent optional components from depending on libraries found on the
+        # build machine. Such integrations need declared vcpkg dependencies.
+        --without-argobots
+        --without-cuda
+        --without-gpfs
+        --without-hcoll
+        --without-ime
+        --without-knem
+        --without-libltdl
+        --without-libnl
+        --without-lsf
+        --without-lustre
+        --without-memkind
+        --without-munge
+        --without-ofi
+        --without-pbs
+        --without-portals4
+        --without-psm2
+        --without-pvfs2
+        --without-qthreads
+        --without-rocm
+        --without-sge
+        --without-slurm
+        --without-tm
+        --without-ucc
+        --without-ucx
+        --without-ugni
+        --without-usnic
+        --without-valgrind
+        --without-xpmem
+        --without-zlibng
         --enable-mpi-fortran=no
     OPTIONS_DEBUG
         --enable-debug
@@ -73,4 +104,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 configure_file("${CURRENT_PORT_DIR}/mpi-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/mpi-wrapper.cmake" @ONLY)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/3rd-party/openpmix/LICENSE"
+    "${SOURCE_PATH}/3rd-party/prrte/LICENSE"
+    "${SOURCE_PATH}/3rd-party/treematch/LICENSE"
+    "${SOURCE_PATH}/3rd-party/treematch/COPYING"
+)
