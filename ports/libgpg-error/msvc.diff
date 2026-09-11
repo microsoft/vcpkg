@@ -2,6 +2,12 @@ diff --git a/configure.ac b/configure.ac
 index 3e26b48..59a07b3 100644
 --- a/configure.ac
 +++ b/configure.ac
+@@ -500,4 +500,4 @@ if test "$have_w32_system" = yes; then
+-  GPG_ERROR_CONFIG_LIBS_PRIVATE=-lws2_32
++  GPG_ERROR_CONFIG_LIBS_PRIVATE="-lws2_32 -luser32 -ladvapi32"
+   AC_DEFINE([USE_WINDOWS_THREADS], [1])
+   LIBTHREAD=
+   LTLIBTHREAD=
 @@ -785,6 +785,11 @@ AC_CONFIG_FILES([src/gpg-error-config-old:src/gpg-error-config.in], [chmod +x sr
  AC_CONFIG_FILES([src/gpgrt-config], [chmod +x src/gpgrt-config])
  AC_CONFIG_FILES([src/gpg-error-config-test.sh], [chmod +x src/gpg-error-config-test.sh])
