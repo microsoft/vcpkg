@@ -3649,7 +3649,7 @@
       "port-version": 0
     },
     "gtk": {
-      "baseline": "4.22.4",
+      "baseline": "4.22.5",
       "port-version": 0
     },
     "gtk3": {
