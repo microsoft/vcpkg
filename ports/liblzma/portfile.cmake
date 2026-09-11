@@ -40,6 +40,8 @@ vcpkg_cmake_configure(
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
         ENABLE_NLS
+        # Only used with the tools feature.
+        XZ_SANDBOX
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
