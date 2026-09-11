@@ -17,9 +17,13 @@ DEBIAN_ARCHITECTURE=$(dpkg --print-architecture)
 case "$DEBIAN_ARCHITECTURE" in
 amd64)
   NVIDIA_REPO_ARCHITECTURE=x86_64
+  POWERSHELL_ARCHITECTURE=x64
+  AZCOPY_ARCHITECTURE=amd64
   ;;
 arm64)
   NVIDIA_REPO_ARCHITECTURE=sbsa
+  POWERSHELL_ARCHITECTURE=arm64
+  AZCOPY_ARCHITECTURE=arm64
   ;;
 *)
   echo "Unsupported CUDA repository architecture: $DEBIAN_ARCHITECTURE" >&2
@@ -28,6 +32,7 @@ arm64)
 esac
 
 POWERSHELL_VERSION=7.6.6
+AZCOPY_VERSION=10.32.8
 
 # Apt dependencies; needed for add-apt-repository and curl downloads to work
 apt-get -y update
@@ -38,10 +43,6 @@ curl -L -o cuda-keyring.deb "https://developer.download.nvidia.com/compute/cuda/
 dpkg -i cuda-keyring.deb
 rm -f cuda-keyring.deb
 
-## PowerShell
-curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
-rm -f packages-microsoft-prod.deb
 add-apt-repository universe
 
 ## Azure CLI
@@ -194,12 +195,8 @@ if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
   APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-3"
 fi
 
-## PowerShell + Azure
-APT_PACKAGES="$APT_PACKAGES azcopy azure-cli"
-
-if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
-  APT_PACKAGES="$APT_PACKAGES powershell"
-fi
+## Azure
+APT_PACKAGES="$APT_PACKAGES azure-cli libicu78"
 
 ## Required for speech-dispatcher feature for ethindp-prism
 APT_PACKAGES="$APT_PACKAGES libspeechd-dev"
@@ -208,19 +205,23 @@ APT_PACKAGES="$APT_PACKAGES libspeechd-dev"
 if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
 else
-APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu74 debsums liblttng-ust1"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g debsums liblttng-ust1t64"
 fi
 
 apt-get --no-install-recommends -y install $APT_PACKAGES
 
-if [[ "$DEBIAN_ARCHITECTURE" == "arm64" ]]; then
-  curl -L -o /tmp/powershell-linux-arm64.tar.gz "https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-arm64.tar.gz"
-  mkdir -p /opt/microsoft/powershell/7
-  tar zxf /tmp/powershell-linux-arm64.tar.gz -C /opt/microsoft/powershell/7
-  chmod +x /opt/microsoft/powershell/7/pwsh
-  ln -sf /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
-  rm -f /tmp/powershell-linux-arm64.tar.gz
-fi
+curl -L -o /tmp/powershell.tar.gz "https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-${POWERSHELL_ARCHITECTURE}.tar.gz"
+mkdir -p /opt/microsoft/powershell/7
+tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
+chmod +x /opt/microsoft/powershell/7/pwsh
+ln -sf /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+rm -f /tmp/powershell.tar.gz
+
+curl -L -o /tmp/azcopy.tar.gz "https://github.com/Azure/azure-storage-azcopy/releases/download/v${AZCOPY_VERSION}/azcopy_linux_${AZCOPY_ARCHITECTURE}_${AZCOPY_VERSION}.tar.gz"
+mkdir -p /tmp/azcopy
+tar zxf /tmp/azcopy.tar.gz -C /tmp/azcopy --strip-components=1
+install /tmp/azcopy/azcopy /usr/bin/azcopy
+rm -rf /tmp/azcopy /tmp/azcopy.tar.gz
 
 rm -rf /var/lib/apt/lists/*
 

@@ -1,4 +1,4 @@
-FROM ubuntu:noble-20260810
+FROM ubuntu:resolute-20260901
 
 ARG BUILD_DATE
 ARG POWERSHELL_VERSION=7.6.6
@@ -8,12 +8,7 @@ RUN <<EOF
 set -eux
 
 apt-get update
-apt-get install --no-install-recommends -y curl gnupg ca-certificates
-
-UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
-curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
-rm -f packages-microsoft-prod.deb
+apt-get install --no-install-recommends -y curl ca-certificates
 
 echo "Build date: ${BUILD_DATE}"
 DEBIAN_ARCHITECTURE=$(dpkg --print-architecture)
@@ -22,9 +17,9 @@ apt-get update
 apt-get upgrade -y
 apt-get install --no-install-recommends -y \
     build-essential \
-    gcc-13-aarch64-linux-gnu \
-    g++-13-aarch64-linux-gnu \
-    gfortran-13-aarch64-linux-gnu \
+    gcc-aarch64-linux-gnu \
+    g++-aarch64-linux-gnu \
+    gfortran-aarch64-linux-gnu \
     cmake \
     autoconf \
     autoconf-archive \
@@ -37,6 +32,7 @@ apt-get install --no-install-recommends -y \
     gfortran \
     libnuma1 \
     libnuma-dev \
+    libicu78 \
     libudev-dev \
     libtirpc-dev \
     libx11-dev \
@@ -94,15 +90,10 @@ apt-get install --no-install-recommends -y \
 
 case "$DEBIAN_ARCHITECTURE" in
     amd64)
-        apt-get install --no-install-recommends -y powershell
+        POWERSHELL_ARCHITECTURE=x64
         ;;
     arm64)
-        curl -L -o /tmp/powershell-linux-arm64.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-arm64.tar.gz
-        mkdir -p /opt/microsoft/powershell/7
-        tar zxf /tmp/powershell-linux-arm64.tar.gz -C /opt/microsoft/powershell/7
-        chmod +x /opt/microsoft/powershell/7/pwsh
-        ln -sf /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
-        rm -f /tmp/powershell-linux-arm64.tar.gz
+        POWERSHELL_ARCHITECTURE=arm64
         ;;
     *)
         echo "Unsupported PowerShell architecture: $DEBIAN_ARCHITECTURE" >&2
@@ -110,8 +101,12 @@ case "$DEBIAN_ARCHITECTURE" in
         ;;
 esac
 
-update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-13 100
-update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-13 100
-update-alternatives --install /usr/bin/aarch64-linux-gnu-gfortran aarch64-linux-gnu-gfortran /usr/bin/aarch64-linux-gnu-gfortran-13 100
+curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-${POWERSHELL_ARCHITECTURE}.tar.gz
+mkdir -p /opt/microsoft/powershell/7
+tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7
+chmod +x /opt/microsoft/powershell/7/pwsh
+ln -sf /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+rm -f /tmp/powershell.tar.gz
+
 rm -rf /var/lib/apt/lists/*
 EOF

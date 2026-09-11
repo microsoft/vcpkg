@@ -1,9 +1,10 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:noble-20260810
+FROM ubuntu:resolute-20260901
 
-ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1+1/OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
+ADD https://github.com/PowerShell/PowerShell/releases/download/v7.6.6/powershell-7.6.6-linux-x64.tar.gz /powershell-7.6.6-linux-x64.tar.gz
+ADD https://github.com/Azure/azure-storage-azcopy/releases/download/v10.32.8/azcopy_linux_amd64_10.32.8.tar.gz /azcopy_linux_amd64_10.32.8.tar.gz
 ADD https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip /commandlinetools-linux-16111833_latest.zip
 ADD https://dl.google.com/android/repository/build-tools_r37_linux.zip /build-tools_r37_linux.zip
 ADD https://dl.google.com/android/repository/platform-36_r02.zip /platform-36_r02.zip
@@ -16,7 +17,7 @@ ADD https://dl.google.com/android/repository/android-ndk-r30-linux.zip /android-
 ENV APT_PACKAGES="git curl zip unzip tar"
 
 ## Common build prereqs
-ENV APT_PACKAGES="$APT_PACKAGES g++ vim pkg-config cmake ca-certificates"
+ENV APT_PACKAGES="$APT_PACKAGES g++ vim pkg-config cmake ca-certificates libicu78"
 
 ENV APT_PACKAGES="$APT_PACKAGES autoconf nasm bison flex build-essential libtool libtool-bin libltdl-dev gettext automake autoconf-archive"
 
@@ -41,9 +42,6 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev \
   libxcb-cursor-dev libxkbcommon-x11-dev libsm6 libsm-dev"
 
-## PowerShell
-ENV APT_PACKAGES="$APT_PACKAGES powershell azcopy"
-
 # The BUILD_DATE argument forces cache invalidation so we get updated apt dependencies
 ARG BUILD_DATE
 RUN echo "Build date: ${BUILD_DATE}"
@@ -57,17 +55,22 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get -y update
 apt-get -y --no-install-recommends install ca-certificates
 
-# Add apt repos
-
-## PowerShell
-dpkg -i packages-microsoft-prod.deb
-rm -f packages-microsoft-prod.deb
-
 # Run apt things
 apt-get -y update
 apt-get -y dist-upgrade
 
 apt-get -y --no-install-recommends install $APT_PACKAGES
+
+# PowerShell and AzCopy
+mkdir -p /opt/microsoft/powershell/7
+tar xzf powershell-7.6.6-linux-x64.tar.gz -C /opt/microsoft/powershell/7
+chmod +x /opt/microsoft/powershell/7/pwsh
+ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+rm powershell-7.6.6-linux-x64.tar.gz
+
+tar xzf azcopy_linux_amd64_10.32.8.tar.gz
+install azcopy_linux_amd64_10.32.8/azcopy /usr/bin/azcopy
+rm -rf azcopy_linux_amd64_10.32.8 azcopy_linux_amd64_10.32.8.tar.gz
 
 # OpenJDK
 tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
