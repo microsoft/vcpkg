@@ -26,7 +26,8 @@ vcpkg_download_distfile(
 )
 
 set(ext_vtk_patch_copy "${CURRENT_BUILDTREES_DIR}/paraview_external_vtk_pr.diff")
-file(COPY "${external_vtk_patch}" DESTINATION "${CURRENT_BUILDTREES_DIR}" )
+# Restore the original contents even when a previous filtered copy has the same timestamp.
+file(COPY_FILE "${external_vtk_patch}" "${ext_vtk_patch_copy}" ONLY_IF_DIFFERENT)
 
 # Remove stuff which cannot be patched since it does not exist
 # Keep the blank diff-context line explicit so whitespace cleanup cannot remove it.
