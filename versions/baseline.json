@@ -2909,7 +2909,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.8.3",
+      "baseline": "2.8.4",
       "port-version": 0
     },
     "expected-lite": {
