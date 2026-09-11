@@ -1,0 +1,22 @@
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -1,3 +1,6 @@
++option(BUILD_TOOLS "Build Open3D tools" ON)
++option(BUILD_APPS "Build Open3D applications" ON)
++
+ if(OPEN3D_USE_INSTALLED_LIBRARY)
+     # Build only Python bindings and optional ML ops against find_package(Open3D).
+     # Skip in-tree core, tools, apps, and tests (already in the devel package).
+@@ -10,6 +13,10 @@
+ else()
+     add_subdirectory(open3d)
+-    add_subdirectory(tools)
+-    add_subdirectory(apps)
++    if(BUILD_TOOLS)
++        add_subdirectory(tools)
++    endif()
++    if(BUILD_APPS)
++        add_subdirectory(apps)
++    endif()
+     if(BUILD_UNIT_TESTS)
+         add_subdirectory(tests)
