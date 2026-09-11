@@ -4,15 +4,15 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ethindp/prism
-  REF v0.16.7
-  SHA512 92f42ca446904f48badd29ef8b6153bc6405d3473e5953a8fa24d8f283996114252218a8726e7bc2b51b87fa771e810f17f0c386d58238897883212176406c84
+  REF v0.18.2
+  SHA512 290a532d4f9d761ef5e89fcbca2eae5253c1d969a25217a74975fb42aafbe931f55f1a344e6454316d528141f1a25f87b522b75db2cc2755b33cf4bfb63f726d
   HEAD_REF master
+  PATCHES cmake-deps-fix.patch
 )
 vcpkg_check_features(
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    orca PRISM_VCPKG_WANTS_ORCA_BACKEND
-    speech-dispatcher PRISM_VCPKG_WANTS_SPEECH_DISPATCHER_BACKEND
+    speech-dispatcher PRISM_ENABLE_SPEECH_DISPATCHER_BACKEND
 )
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -21,16 +21,28 @@ vcpkg_cmake_configure(
     -DPRISM_ENABLE_DEMOS=OFF
     -DPRISM_ENABLE_LINTING=OFF
     -DPRISM_ENABLE_GDEXTENSION=OFF
-    -DPRISM_ENABLE_VCPKG_SPECIFIC_OPTIONS=ON
     -DPRISM_ENABLE_LEGACY_BACKENDS=ON
+    -DPRISM_ENABLE_POWER_MANAGEMENT=ON
+    -DPRISM_ENABLE_SPIEL_BACKEND=OFF
     ${FEATURE_OPTIONS}
+    -DPRISM_DEPENDENCY_PROVIDER=SYSTEM
 )
 vcpkg_cmake_install()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+  vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/prism.h"
+    "#if defined(_WIN32)\n#if defined(PRISM_STATIC)"
+    "#if defined(_WIN32)\n#ifndef PRISM_STATIC\n#define PRISM_STATIC\n#endif\n#if defined(PRISM_STATIC)"
+  )
 endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME prism CONFIG_PATH share/prism)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_pdbs()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+  "${SOURCE_PATH}/LICENSE"
+  "${SOURCE_PATH}/LICENSES/djinni/LICENSE"
+  "${SOURCE_PATH}/LICENSES/dr_wav/LICENSE"
+  "${SOURCE_PATH}/LICENSES/moderncom/LICENSE"
+)
