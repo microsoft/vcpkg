@@ -4928,6 +4928,10 @@
       "baseline": "0.69.1",
       "port-version": 0
     },
+    "libdaemon": {
+      "baseline": "0.14",
+      "port-version": 0
+    },
     "libdatachannel": {
       "baseline": "0.24.5",
       "port-version": 0
