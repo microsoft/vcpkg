@@ -51,6 +51,7 @@ vcpkg_from_github(
         fix-eigen3.patch
         avoid-stdext.diff
         fix-fmt-header.patch
+        python313-module-init.patch # https://github.com/Kitware/VTK/commit/675929762a09ad0b40cb2667918a7061c47a418c
 )
 
 if("python" IN_LIST FEATURES)
