@@ -11,14 +11,5 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "features": {
-    "content-codecs": {
-      "description": "Enable user-mode NTL content codecs through vcpkg-managed zlib and Brotli",
-      "dependencies": [
-        "brotli",
-        "zlib"
-      ]
-    }
-  }
+  ]
 }
