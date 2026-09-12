@@ -1,0 +1,17 @@
+taglib provides CMake targets:
+
+  # C++
+  find_package(taglib CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE TagLib::tag)
+
+  # C
+  find_package(taglib CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE TagLib::tag_c)
+
+taglib provides pkg-config modules:
+
+  # Audio meta-data library
+  taglib
+
+  # Audio meta-data library (C bindings)
+  taglib_c
