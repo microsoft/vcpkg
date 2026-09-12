@@ -8,3 +8,5 @@ vcpkg_from_github(
 file(INSTALL "${SOURCE_PATH}/include/mercenary.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+ 
