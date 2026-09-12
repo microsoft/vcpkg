@@ -1,17 +1,14 @@
 {
   "name": "paraview",
-  "version": "5.12.1",
-  "port-version": 7,
+  "version": "6.1.1",
   "description": "VTK-based Data Analysis and Visualization Application",
   "homepage": "https://www.paraview.org/",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "boost-algorithm",
-    "boost-core",
-    "boost-format",
     "cgns",
     "protobuf",
     "qt5compat",
+    "qtbase",
     "qtsvg",
     {
       "name": "vcpkg-cmake",
@@ -31,7 +28,7 @@
   ],
   "features": {
     "all-modules": {
-      "description": "enables the build of all paraview modules",
+      "description": "Build all modules",
       "dependencies": [
         "ffmpeg",
         "gdal",
@@ -40,7 +37,7 @@
       ]
     },
     "cuda": {
-      "description": "enables cuda within paraview",
+      "description": "Support CUDA compilation",
       "dependencies": [
         "cuda",
         {
@@ -52,14 +49,24 @@
         }
       ]
     },
+    "icet": {
+      "description": "Build the Image Composition Engine for Tiles (IceT), a high-performance sort-last parallel rendering library"
+    },
     "mpi": {
-      "description": "enables cuda within paraview",
+      "description": "Enable MPI support for parallel computing",
       "dependencies": [
         {
           "name": "hdf5",
           "default-features": false,
           "features": [
             "parallel"
+          ]
+        },
+        {
+          "name": "paraview",
+          "default-features": false,
+          "features": [
+            "icet"
           ]
         },
         {
@@ -72,8 +79,9 @@
       ]
     },
     "python": {
-      "description": "enables the build of python wrappers",
+      "description": "Enable Python scripting support",
       "dependencies": [
+        "python3",
         {
           "name": "vtk",
           "default-features": false,
@@ -85,6 +93,14 @@
     },
     "tools": {
       "description": "Build paraview tools"
+    },
+    "visitbridge": {
+      "description": "Build the Visit Database Bridge ParaView plugin",
+      "dependencies": [
+        "boost-algorithm",
+        "boost-core",
+        "boost-format"
+      ]
     },
     "vtkm": {
       "description": "enables vtkm for the build of paraview",

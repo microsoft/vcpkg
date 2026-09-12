@@ -1,0 +1,13 @@
+diff --git a/CMake/ParaViewPlugin.cmake b/CMake/ParaViewPlugin.cmake
+index 65f942e..de9c3f9 100644
+--- a/CMake/ParaViewPlugin.cmake
++++ b/CMake/ParaViewPlugin.cmake
+@@ -475,7 +475,7 @@ function (paraview_plugin_build)
+     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_paraview_build_LIBRARY_DESTINATION}")
+   endif ()
+ 
+-  if (WIN32)
++  if (WIN32 AND BUILD_SHARED_LIBS)
+     set(_paraview_build_plugin_destination "${_paraview_build_RUNTIME_DESTINATION}")
+   else ()
+     set(_paraview_build_plugin_destination "${_paraview_build_LIBRARY_DESTINATION}")

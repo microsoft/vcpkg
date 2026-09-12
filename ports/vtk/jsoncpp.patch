@@ -1,5 +1,14 @@
+From 8b507e9201e3f8e351521facbd2a9debb46993a6 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 16:39:23 +0200
+Subject: [PATCH 12/22] jsoncpp
+
+---
+ ThirdParty/jsoncpp/CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
 diff --git a/ThirdParty/jsoncpp/CMakeLists.txt b/ThirdParty/jsoncpp/CMakeLists.txt
-index 420cdf5c..bb5bbafc 100644
+index 48c25477..97576b73 100644
 --- a/ThirdParty/jsoncpp/CMakeLists.txt
 +++ b/ThirdParty/jsoncpp/CMakeLists.txt
 @@ -12,7 +12,6 @@ vtk_module_third_party(
@@ -10,3 +19,6 @@ index 420cdf5c..bb5bbafc 100644
      TARGETS JsonCpp::JsonCpp
      STANDARD_INCLUDE_DIRS)
  
+-- 
+2.47.3
+

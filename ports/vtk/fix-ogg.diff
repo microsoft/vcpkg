@@ -1,0 +1,28 @@
+diff --git a/CMake/vtkInstallCMakePackage.cmake b/CMake/vtkInstallCMakePackage.cmake
+index 5f3cb83e..0b06886a 100644
+--- a/CMake/vtkInstallCMakePackage.cmake
++++ b/CMake/vtkInstallCMakePackage.cmake
+@@ -119,7 +119,6 @@ set(vtk_cmake_module_files
+   FindMySQL.cmake
+   FindNetCDF.cmake
+   FindODBC.cmake
+-  FindOGG.cmake
+   FindOpenSlide.cmake
+   FindOpenVR.cmake
+   FindOpenXRRemoting.cmake
+diff --git a/ThirdParty/ogg/CMakeLists.txt b/ThirdParty/ogg/CMakeLists.txt
+index 25918927..be5d3e36 100644
+--- a/ThirdParty/ogg/CMakeLists.txt
++++ b/ThirdParty/ogg/CMakeLists.txt
+@@ -12,8 +12,9 @@ vtk_module_third_party(
+       "1.3.5"
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+-    PACKAGE OGG
+-    TARGETS OGG::OGG
++    PACKAGE Ogg
++    TARGETS Ogg::ogg
++    CONFIG_MODE
+     STANDARD_INCLUDE_DIRS)
+ 
+ configure_file(

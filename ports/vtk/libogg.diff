@@ -1,0 +1,41 @@
+From 7538e796ca1ed8adca1310e0394176fe8e5e8e0d Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 22:05:34 +0200
+Subject: [PATCH 19/22] ogg
+
+---
+ CMake/vtkInstallCMakePackage.cmake | 1 -
+ ThirdParty/ogg/CMakeLists.txt      | 5 +++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMake/vtkInstallCMakePackage.cmake b/CMake/vtkInstallCMakePackage.cmake
+index 5f3cb83e..0b06886a 100644
+--- a/CMake/vtkInstallCMakePackage.cmake
++++ b/CMake/vtkInstallCMakePackage.cmake
+@@ -119,7 +119,6 @@ set(vtk_cmake_module_files
+   FindMySQL.cmake
+   FindNetCDF.cmake
+   FindODBC.cmake
+-  FindOGG.cmake
+   FindOpenSlide.cmake
+   FindOpenVR.cmake
+   FindOpenXRRemoting.cmake
+diff --git a/ThirdParty/ogg/CMakeLists.txt b/ThirdParty/ogg/CMakeLists.txt
+index 25918927..be5d3e36 100644
+--- a/ThirdParty/ogg/CMakeLists.txt
++++ b/ThirdParty/ogg/CMakeLists.txt
+@@ -12,8 +12,9 @@ vtk_module_third_party(
+       "1.3.5"
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+-    PACKAGE OGG
+-    TARGETS OGG::OGG
++    PACKAGE Ogg
++    TARGETS Ogg::ogg
++    CONFIG_MODE
+     STANDARD_INCLUDE_DIRS)
+ 
+ configure_file(
+-- 
+2.47.3
+

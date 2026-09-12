@@ -1,5 +1,14 @@
+From 846ef66951f76a08fb2ea31c607ff9c1ee9a044d Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 15:21:01 +0200
+Subject: [PATCH 08/22] noundefdebug
+
+---
+ Utilities/Python/vtkPython.h | 1 -
+ 1 file changed, 1 deletion(-)
+
 diff --git a/Utilities/Python/vtkPython.h b/Utilities/Python/vtkPython.h
-index 2fe0ac96..621b5446 100644
+index c4e36937..19ec3ff1 100644
 --- a/Utilities/Python/vtkPython.h
 +++ b/Utilities/Python/vtkPython.h
 @@ -37,7 +37,6 @@
@@ -10,3 +19,6 @@ index 2fe0ac96..621b5446 100644
  #if defined(_MSC_VER)
  #define _CRT_NOFORCE_MANIFEST 1
  #endif
+-- 
+2.47.3
+

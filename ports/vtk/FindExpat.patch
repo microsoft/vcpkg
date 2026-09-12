@@ -1,48 +1,46 @@
+From ce2f2f10b787546a80d021b15cf8f2cc58d5cc57 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 16:13:46 +0200
+Subject: [PATCH 09/22] expat
+
+---
+ CMake/FindEXPAT.cmake | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
 diff --git a/CMake/FindEXPAT.cmake b/CMake/FindEXPAT.cmake
-index 45d923764..0ebcd3c83 100644
+index 545d9cc2..85ca2353 100644
 --- a/CMake/FindEXPAT.cmake
 +++ b/CMake/FindEXPAT.cmake
-@@ -70,15 +70,37 @@ if(EXPAT_FOUND)
+@@ -88,6 +88,7 @@ if (POLICY CMP0159)
+   cmake_policy(SET CMP0159 NEW) # file(STRINGS) with REGEX updates CMAKE_MATCH_<n>
+ endif ()
+ 
++if(0)
+ find_package(PkgConfig QUIET)
+ if(PkgConfig_FOUND)
+   pkg_check_modules(PC_EXPAT QUIET expat)
+@@ -183,16 +184,16 @@ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(EXPAT
+                                   REQUIRED_VARS EXPAT_LIBRARY EXPAT_INCLUDE_DIR
+                                   VERSION_VAR EXPAT_VERSION)
++endif(0)
++find_package(EXPAT NAMES expat)
+ 
+ # Copy the results to the output variables and target.
+ if(EXPAT_FOUND)
+-  set(EXPAT_INCLUDE_DIRS ${EXPAT_INCLUDE_DIR})
+-
+-  if(NOT EXPAT_LIBRARIES)
+-    set(EXPAT_LIBRARIES ${EXPAT_LIBRARY})
+-  endif()
  
    if(NOT TARGET EXPAT::EXPAT)
++    add_library(EXPAT::EXPAT INTERFACE IMPORTED)
++    target_link_libraries(EXPAT::EXPAT INTERFACE expat::expat)
++  elseif(0)
      include(vtkDetectLibraryType)
--    vtk_detect_library_type(expat_library_type
--      PATH "${EXPAT_LIBRARY}")
-+    if(EXPAT_LIBRARY_RELEASE)
-+            vtk_detect_library_type(expat_library_type
-+                                    PATH "${EXPAT_LIBRARY_RELEASE}")
-+    elseif(EXPAT_LIBRARY_DEBUG)
-+            vtk_detect_library_type(expat_library_type
-+                                    PATH "${EXPAT_LIBRARY_RELEASE}")
-+    else()
-+            vtk_detect_library_type(expat_library_type
-+                                    PATH "${EXPAT_LIBRARY}")
-+    endif()
-+
-     add_library(EXPAT::EXPAT "${expat_library_type}" IMPORTED)
-     unset(expat_library_type)
-     set_target_properties(EXPAT::EXPAT PROPERTIES
--      IMPORTED_LINK_INTERFACE_LANGUAGES "C"
--      IMPORTED_LOCATION "${EXPAT_LIBRARY}"
--      IMPORTED_IMPLIB "${EXPAT_LIBRARY}"
--      INTERFACE_INCLUDE_DIRECTORIES "${EXPAT_INCLUDE_DIRS}")
-+          IMPORTED_LINK_INTERFACE_LANGUAGES "C"
-+          INTERFACE_INCLUDE_DIRECTORIES "${EXPAT_INCLUDE_DIRS}")
-+    if(EXPAT_LIBRARY_RELEASE)
-+        set_target_properties(EXPAT::EXPAT PROPERTIES
-+          IMPORTED_LOCATION_RELEASE "${EXPAT_LIBRARY_RELEASE}"
-+          IMPORTED_IMPLIB_RELEASE "${EXPAT_LIBRARY_RELEASE}")
-+    endif()
-+    if(EXPAT_LIBRARY_DEBUG)
-+        set_target_properties(EXPAT::EXPAT PROPERTIES
-+          IMPORTED_LOCATION_DEBUG "${EXPAT_LIBRARY_DEBUG}"
-+          IMPORTED_IMPLIB_DEBUG "${EXPAT_LIBRARY_DEBUG}")
-+    endif()
-+    if(EXPAT_LIBRARY_RELEASE OR EXPAT_LIBRARY_DEBUG AND NOT (EXPAT_LIBRARY_RELEASE AND EXPAT_LIBRARY_DEBUG))
-+        set_target_properties(EXPAT::EXPAT PROPERTIES
-+          IMPORTED_LOCATION "${EXPAT_LIBRARY}"
-+          IMPORTED_IMPLIB "${EXPAT_LIBRARY}")
-+    endif()
-   endif()
- endif()
- 
+     set(expat_location)
+     if(EXPAT_LIBRARY_RELEASE)
+-- 
+2.47.3
+

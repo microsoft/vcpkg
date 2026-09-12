@@ -1,8 +1,17 @@
+From a59dcd0842b25a6b2302a2d9d0891e1cf53ba87b Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 15:20:44 +0200
+Subject: [PATCH 07/22] python
+
+---
+ CMake/vtkModuleWrapPython.cmake | 3 +++
+ 1 file changed, 3 insertions(+)
+
 diff --git a/CMake/vtkModuleWrapPython.cmake b/CMake/vtkModuleWrapPython.cmake
-index d8d8151c..5770cd3e 100644
+index b0707df6..c6e9e48d 100644
 --- a/CMake/vtkModuleWrapPython.cmake
 +++ b/CMake/vtkModuleWrapPython.cmake
-@@ -172,6 +172,8 @@ function (_vtk_module_wrap_python_sources module sources classes)
+@@ -176,6 +176,8 @@ function (_vtk_module_wrap_python_sources module sources classes)
        "$<TARGET_PROPERTY:${_vtk_python_target_name},COMPILE_DEFINITIONS>")
      set(_vtk_python_genex_include_directories
        "$<TARGET_PROPERTY:${_vtk_python_target_name},INCLUDE_DIRECTORIES>")
@@ -11,7 +20,7 @@ index d8d8151c..5770cd3e 100644
    else ()
      if (NOT DEFINED ENV{CI})
        message(AUTHOR_WARNING
-@@ -185,6 +187,7 @@ function (_vtk_module_wrap_python_sources module sources classes)
+@@ -189,6 +191,7 @@ function (_vtk_module_wrap_python_sources module sources classes)
      OUTPUT  "${_vtk_python_args_file}"
      CONTENT "$<$<BOOL:${_vtk_python_genex_compile_definitions}>:\n-D\'$<JOIN:${_vtk_python_genex_compile_definitions},\'\n-D\'>\'>\n
  $<$<BOOL:${_vtk_python_genex_include_directories}>:\n-I\'$<JOIN:${_vtk_python_genex_include_directories},\'\n-I\'>\'>\n
@@ -19,3 +28,6 @@ index d8d8151c..5770cd3e 100644
  $<$<BOOL:${_vtk_python_hierarchy_files}>:\n--types \'$<JOIN:${_vtk_python_hierarchy_files},\'\n--types \'>\'>\n")
  
    set(_vtk_python_sources)
+-- 
+2.47.3
+
