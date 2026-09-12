@@ -1,0 +1,23 @@
+diff --git a/win32/Makefile.in b/win32/Makefile.in
+index 6c5138a..206bc07 100644
+--- a/win32/Makefile.in
++++ b/win32/Makefile.in
+@@ -475,9 +475,6 @@ install ::
+ 	@-echo Copying DLL files to $(PREFIX_DOS)
+         @-Copy win32\bin\$(CFG)\*.dll $(PREFIX_DOS)\bin > NUL:
+ 
+-	@-echo Copying DLL files to %SYSTEMROOT%\System32
+-        @-Copy win32\bin\$(CFG)\*.dll %SYSTEMROOT%\System32 > NUL:
+-
+         @-echo Done copying files to $(PREFIX_DOS)
+         cd win32
+ 
+@@ -504,8 +501,5 @@ install_devel ::
+ 
+         @-echo Done copying files to $(PREFIX_DOS)
+ 
+-	@-echo Copying PDB files to %SYSTEMROOT%\System32
+-	@-Copy win32\bin\$(CFG)\*.pdb %SYSTEMROOT%\System32 > NUL:
+-
+         cd win32
+ 

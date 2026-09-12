@@ -1,0 +1,21 @@
+diff --git a/win32/net-snmp/net-snmp-config.h.in b/win32/net-snmp/net-snmp-config.h.in
+index d2d0074..9b1498f 100644
+--- a/win32/net-snmp/net-snmp-config.h.in
++++ b/win32/net-snmp/net-snmp-config.h.in
+@@ -1777,13 +1777,9 @@ enum {
+ /* MSVC OpenSSL linker settings. */
+ #if defined(_MSC_VER)
+ #  if defined(NETSNMP_USE_OPENSSL)
+-#    ifdef _DLL
+-#      pragma comment(lib, "libcrypto.lib")
+-#      pragma comment(lib, "libssl.lib")
+-#    else
+-#      pragma comment(lib, "libcrypto_static.lib")
+-#      pragma comment(lib, "libssl_static.lib")
+-#    endif
++#    pragma comment(lib, "libcrypto.lib")
++#    pragma comment(lib, "libssl.lib")
++#    pragma comment(lib, "crypt32.lib")
+ #    pragma comment(lib, "gdi32.lib")
+ #    pragma comment(lib, "user32.lib")
+ #  endif
