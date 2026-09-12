@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF v${VERSION}
-    SHA512 521e29921d7aed6ee9766a1781c28071447ec0046f02a23376798ac35c18feba37cc0f4c217df41abb1c4470b7bf7aae26cf88da0ec8136f64a969be9ff56426
+    REF "v${VERSION}"
+    SHA512 8471e97cbcdcddae7bac5350bec56527c35018a5cbe75474544edf212424529987dd5f74479d6274911db7aaeac355bcf911fe9fdd170b0cc54de70f8aa3549e
     HEAD_REF master
     PATCHES
       android.patch
@@ -66,8 +66,13 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/open62541")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/open62541/tools")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/open62541/tools"
+)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+)
