@@ -2,13 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Sigmyne/redisx
     REF "v${VERSION}"
-    SHA512 2438cc052c2dc58acab3d0349cf6b4549cd1fe7030a4d2d8a9b935240ed1dba21d01425d8dd365847dcf662fd7ec71a05ce80fc4ab8f25ae7760d37e36999198
+    SHA512 e5d2a21f203da3909e2fe2d79aba3b4651c591856ee33e14df898f44aee93bfd119328ef00a554775520a2517fa35fd836b2e13785afe998d845e3d382d4026c
     HEAD_REF main
-    PATCHES pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        parallel-cluster ENABLE_OPENMP
         tls              ENABLE_TLS
 )
 
@@ -23,6 +23,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/redisx" PACKAGE_NAME "redisx")
+
+set(debug_pc "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/redisx.pc")
+if(EXISTS "${debug_pc}")
+    vcpkg_replace_string("${debug_pc}" "-lredisx " "-lredisxd ")
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
