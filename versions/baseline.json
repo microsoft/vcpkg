@@ -4388,6 +4388,10 @@
       "baseline": "2025.11.1",
       "port-version": 0
     },
+    "keynub-licdongle": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "keystone": {
       "baseline": "0.9.2",
       "port-version": 4

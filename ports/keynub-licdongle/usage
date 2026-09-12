@@ -1,0 +1,9 @@
+keynub-licdongle provides CMake targets:
+
+    find_package(keynub_licdongle CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE keynub::licdongle)       # the C API
+    target_link_libraries(main PRIVATE keynub::licdongle_cpp)   # the header-only C++11 wrapper
+    target_link_libraries(main PRIVATE keynub::licdongle_flat)  # the flat companion API
+
+The library is loaded by name at start-up; keynub_copy_runtime(main) copies it
+next to the executable after each build.
