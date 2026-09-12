@@ -1,0 +1,19 @@
+{
+  "name": "flashaccept",
+  "version": "1.0.1",
+  "description": "Fast io_uring TCP accept engine for Linux (multishot accept, registered/direct descriptors, MSG_MORE reply+FIN fusion).",
+  "homepage": "https://github.com/thealonlevi/flashaccept",
+  "license": "MIT",
+  "supports": "linux",
+  "dependencies": [
+    "liburing",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
