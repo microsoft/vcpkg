@@ -2,22 +2,29 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGNS/CGNS
     REF "v${VERSION}"
-    SHA512 f0a3f82824d81e2db4c992fc41e91c53158898fbf0b342c0c857e5e3f02d081df3822035b9eb558fe12c48ce36e4123810adc11f9b85e60e76e7de7f35a56162
+    SHA512 b9b11324b6f7bbfbf0355f5c2c3d1caa745c1fc51bb061fd715fbf69273032ba507a67396dd41ae0a1f9029b48ca13ec129d158a34606a04cc4a436001ddbeab
     HEAD_REF develop
     PATCHES
         hdf5.patch
+        export-cgio-context.patch
         install-lib-linkage.diff
         linux_lfs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
    FEATURES
-     "fortran"      CGNS_ENABLE_FORTRAN
      "hdf5"         CGNS_ENABLE_HDF5
      "lfs"          CGNS_ENABLE_LFS
      "legacy"       CGNS_ENABLE_LEGACY
      "tests"        CGNS_ENABLE_TESTS
 )
+
+if ("mpi" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS
+        -DHDF5_NEED_MPI=ON
+        -DCGNS_ENABLE_PARALLEL=ON
+    )
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CGNS_BUILD_SHARED)
 
@@ -26,6 +33,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCGNS_BUILD_SHARED=${CGNS_BUILD_SHARED}
+        -DCGNS_ENABLE_FORTRAN:BOOL=OFF
         -DCGNS_ENABLE_SCOPING:BOOL=ON
     OPTIONS_RELEASE
         -DCMAKE_TRY_COMPILE_CONFIGURATION=Release
