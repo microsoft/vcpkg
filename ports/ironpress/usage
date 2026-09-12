@@ -1,0 +1,7 @@
+ironpress provides C and C++ CMake targets:
+
+    find_package(Ironpress CONFIG REQUIRED)
+    target_link_libraries(your_c_target PRIVATE Ironpress::C)
+    target_link_libraries(your_cpp_target PRIVATE Ironpress::CXX)
+
+Select static or dynamic linkage through the vcpkg triplet.
