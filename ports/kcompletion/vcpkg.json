@@ -1,0 +1,50 @@
+{
+  "name": "kcompletion",
+  "version": "6.25.0",
+  "description": "Text completion helpers and widgets",
+  "homepage": "https://invent.kde.org/frameworks/kcompletion",
+  "documentation": "https://api.kde.org/kcompletion-index.html",
+  "dependencies": [
+    "ecm",
+    "kconfig",
+    "kwidgetsaddons",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "designerplugin": {
+      "description": "Build Qt Designer plugin",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false,
+          "features": [
+            "designer"
+          ]
+        }
+      ]
+    },
+    "translations": {
+      "description": "Build and install translation files",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
