@@ -155,7 +155,6 @@ endfunction()
 function(vcpkg_make_setup_win_msys msys_out)
     list(APPEND msys_require_packages autoconf-wrapper automake-wrapper autoconf-archive binutils libtool make which)
     vcpkg_insert_msys_into_path(msys PACKAGES ${msys_require_packages})
-    find_program(PKGCONFIG NAMES pkgconf NAMES_PER_DIR PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH)
     set("${msys_out}" "${msys}" PARENT_SCOPE)
 endfunction()
 

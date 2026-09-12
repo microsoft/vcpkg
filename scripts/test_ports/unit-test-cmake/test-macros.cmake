@@ -1,5 +1,9 @@
 include_guard(GLOBAL)
 
+if(POLICY CMP0219)
+    cmake_policy(SET CMP0219 NEW) # for message() macro
+endif()
+
 function(set_fatal_error err)
     set(Z_VCPKG_UNIT_TEST_HAS_FATAL_ERROR "ON" CACHE BOOL "" FORCE)
     set(Z_VCPKG_UNIT_TEST_FATAL_ERROR "${err}" CACHE STRING "" FORCE)
