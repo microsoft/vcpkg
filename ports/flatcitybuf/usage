@@ -1,0 +1,15 @@
+flatcitybuf provides CMake targets:
+
+    find_package(flatcitybuf CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE flatcitybuf::flatcitybuf)
+
+Reading a local file:
+
+    #include <fcb/reader.hpp>
+    fcb::FcbReader reader = fcb::FcbReader::open_file("city.fcb");
+
+Install flatcitybuf[curl] to enable the libcurl HTTP range-request reader:
+
+    #include <fcb/http/curl_range_reader.hpp>
+    auto reader = fcb::FcbReader::open(
+        std::make_shared<fcb::CurlRangeReader>(url));

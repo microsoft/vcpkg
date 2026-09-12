@@ -1,0 +1,14 @@
+{
+  "versions": [
+    {
+      "git-tree": "ba42f5261c1473b3b6a21a0b225c3dcc1fb0f01d",
+      "version": "0.9.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "922f5c9984fe68f60b03630bc2f701a9ace104ed",
+      "version": "0.8.1",
+      "port-version": 0
+    }
+  ]
+}
