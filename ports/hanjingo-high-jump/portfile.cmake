@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanjingo/high-jump
     REF v${VERSION}
-    SHA512 e7bb70810dd23649039c3565d8617e1de343251d0f0db20ee8e1ed2edd25435d1db4cffa41a4b80827ccfbfd1c3e7ef7f365907eb9a893e8ac29189bd6d95f09
+    SHA512 79f4a5f4eba33273d50c7f34654f35068116aa235ef6ca2d03ecb2f5bc3116fb6da310c377ed572742393bc5c3d6f64ca6d72278958e1379f802b7d16a37b8ad
     PATCHES
         fix-msvc-core-headers.patch
 )
@@ -14,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         singleton       HJ_ENABLE_SINGLETON
         timer           HJ_ENABLE_TIMER
         http            HJ_ENABLE_HTTP
+        https           HJ_ENABLE_HTTPS
         zmq             HJ_ENABLE_ZMQ
         test            HJ_ENABLE_UNIT_TEST
         bench           HJ_ENABLE_BENCHMARK
