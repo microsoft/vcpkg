@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO koide3/small_gicp
     REF "v${VERSION}"
-    SHA512 b4d4b662d74b5492b7b89bcaf022e2d90262eecd3f1b6d3229edefbb00288a95910d486e66a9e884528f6f9c253a5e535ce7f96829fdc760f58ac001f6192790
+    SHA512 28589b57a75ddb11ae3a1355dffc358d682ae49e390d125365d80b0d14f9043a34c566601af5b0ea7cf939173d1c611106b1cee2f6f7f3cdacb2cdc20fa6e4dc
     HEAD_REF master
-    PATCHES preprocessor_portability.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
