@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
         windows/macro-def.patch
         windows/spin_delay.patch
         windows/getopt.patch
+        apple/ios-system.diff
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
@@ -45,6 +46,12 @@ endif()
 
 if("nls" IN_LIST FEATURES)
     list(APPEND MESON_OPTIONS -Dnls=enabled)
+endif()
+
+if(VCPKG_TARGET_IS_IOS)
+    # PostgreSQL probes for a sysroot with `xcrun --sdk macosx` and appends the
+    # result to the link flags, which overrides the SDK selected by vcpkg.
+    vcpkg_list(APPEND MESON_OPTIONS "-Ddarwin_sysroot=${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
 endif()
 
 if("client" IN_LIST FEATURES)
