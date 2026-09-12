@@ -6588,6 +6588,10 @@
       "baseline": "5.1.2",
       "port-version": 0
     },
+    "mercenary": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "mesa": {
       "baseline": "24.0.7",
       "port-version": 3
