@@ -79,7 +79,6 @@ cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_LINKER NORMALIZE ld)
 # instead.
 vcpkg_build_nmake(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_JOM
     CL_LANGUAGE NONE
     PRERUN_SHELL_RELEASE "${PERL}" Configure
         ${CONFIGURE_OPTIONS} 
