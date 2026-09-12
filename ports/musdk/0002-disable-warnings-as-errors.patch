@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 2e5a7668..26357a3b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -257,7 +257,6 @@ AC_CHECK_HEADERS([stdlib.h unistd.h])
+ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+ 
+ CFLAGS="$CFLAGS -Wall "
+-CFLAGS+="-Werror "
+ CFLAGS+="-Wstrict-prototypes "
+ CFLAGS+="-Wmissing-prototypes "
+ CFLAGS+="-pthread "
