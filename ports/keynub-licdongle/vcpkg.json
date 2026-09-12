@@ -1,0 +1,9 @@
+{
+  "name": "keynub-licdongle",
+  "version": "1.1.1",
+  "description": "Host SDK for the KeyNub USB-C license dongle: a prebuilt C library (verify authenticity, encrypted session, license records, counters, app-data encryption) with a header-only C++11 wrapper. Driverless on Windows, Linux and macOS.",
+  "homepage": "https://www.keynub.com/developers/c-cpp/",
+  "documentation": "https://github.com/AB-KeyNub/KeyNub-SDK/blob/master/NATIVES.md",
+  "license": null,
+  "supports": "!uwp & !xbox & !android & !emscripten & !(static & staticcrt) & (x64 | x86 | arm64) & (windows | linux | osx)"
+}
