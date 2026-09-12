@@ -1,10 +1,10 @@
 diff --git a/include/conncpp/CArray.hpp b/include/conncpp/CArray.hpp
-index f3e4634..e0f62eb 100644
+index 2f48142..1dbac0b 100644
 --- a/include/conncpp/CArray.hpp
 +++ b/include/conncpp/CArray.hpp
-@@ -24,6 +24,7 @@
- #include "buildconf.hpp"
+@@ -25,6 +25,7 @@
  #include <initializer_list>
+ #include <cstdint>
  #include <vector>
 +#include <stdint.h>
  
