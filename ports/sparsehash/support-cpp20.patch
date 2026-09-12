@@ -1,0 +1,295 @@
+diff --git a/src/sparsehash/internal/densehashtable.h b/src/sparsehash/internal/densehashtable.h
+index cdf4ff6..79cecab 100644
+--- a/src/sparsehash/internal/densehashtable.h
++++ b/src/sparsehash/internal/densehashtable.h
+@@ -149,7 +149,8 @@ struct dense_hashtable_const_iterator;
+ template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
+ struct dense_hashtable_iterator {
+  private:
+-  typedef typename A::template rebind<V>::other value_alloc_type;
++  typedef typename std::allocator_traits<A>::template rebind_alloc<V> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
+ 
+  public:
+   typedef dense_hashtable_iterator<V,K,HF,ExK,SetK,EqK,A>       iterator;
+@@ -157,10 +158,10 @@ struct dense_hashtable_iterator {
+ 
+   typedef std::forward_iterator_tag iterator_category;  // very little defined!
+   typedef V value_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::reference reference;
+-  typedef typename value_alloc_type::pointer pointer;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef value_type& reference;
++  typedef typename value_alloc_traits::pointer pointer;
+ 
+   // "Real" constructor and default constructor
+   dense_hashtable_iterator(const dense_hashtable<V,K,HF,ExK,SetK,EqK,A> *h,
+@@ -202,7 +203,8 @@ struct dense_hashtable_iterator {
+ template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
+ struct dense_hashtable_const_iterator {
+  private:
+-  typedef typename A::template rebind<V>::other value_alloc_type;
++  typedef typename std::allocator_traits<A>::template rebind_alloc<V> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
+ 
+  public:
+   typedef dense_hashtable_iterator<V,K,HF,ExK,SetK,EqK,A>       iterator;
+@@ -210,10 +212,10 @@ struct dense_hashtable_const_iterator {
+ 
+   typedef std::forward_iterator_tag iterator_category;  // very little defined!
+   typedef V value_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::const_reference reference;
+-  typedef typename value_alloc_type::const_pointer pointer;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef const value_type& reference;
++  typedef typename value_alloc_traits::const_pointer pointer;
+ 
+   // "Real" constructor and default constructor
+   dense_hashtable_const_iterator(
+@@ -259,7 +261,8 @@ template <class Value, class Key, class HashFcn,
+           class ExtractKey, class SetKey, class EqualKey, class Alloc>
+ class dense_hashtable {
+  private:
+-  typedef typename Alloc::template rebind<Value>::other value_alloc_type;
++  typedef typename std::allocator_traits<Alloc>::template rebind_alloc<Value> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
+ 
+  public:
+   typedef Key key_type;
+@@ -268,12 +271,12 @@ class dense_hashtable {
+   typedef EqualKey key_equal;
+   typedef Alloc allocator_type;
+ 
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::reference reference;
+-  typedef typename value_alloc_type::const_reference const_reference;
+-  typedef typename value_alloc_type::pointer pointer;
+-  typedef typename value_alloc_type::const_pointer const_pointer;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef value_type& reference;
++  typedef const value_type& const_reference;
++  typedef typename value_alloc_traits::pointer pointer;
++  typedef typename value_alloc_traits::const_pointer const_pointer;
+   typedef dense_hashtable_iterator<Value, Key, HashFcn,
+                                    ExtractKey, SetKey, EqualKey, Alloc>
+   iterator;
+@@ -518,7 +521,9 @@ class dense_hashtable {
+   // FUNCTIONS CONCERNING SIZE
+  public:
+   size_type size() const      { return num_elements - num_deleted; }
+-  size_type max_size() const  { return val_info.max_size(); }
++  size_type max_size() const  {
++      return std::allocator_traits<ValInfo>::max_size(val_info);
++  }
+   bool empty() const          { return size() == 0; }
+   size_type bucket_count() const      { return num_buckets; }
+   size_type max_bucket_count() const  { return max_size(); }
+@@ -1170,8 +1175,9 @@ class dense_hashtable {
+   template <class A>
+   class alloc_impl : public A {
+    public:
+-    typedef typename A::pointer pointer;
+-    typedef typename A::size_type size_type;
++    typedef std::allocator_traits<A> alloc_traits;
++    typedef typename alloc_traits::pointer pointer;
++    typedef typename alloc_traits::size_type size_type;
+ 
+     // Convert a normal allocator to one that has realloc_or_die()
+     alloc_impl(const A& a) : A(a) { }
+diff --git a/src/sparsehash/internal/sparsehashtable.h b/src/sparsehash/internal/sparsehashtable.h
+index f54ea51..1c71d6d 100644
+--- a/src/sparsehash/internal/sparsehashtable.h
++++ b/src/sparsehash/internal/sparsehashtable.h
+@@ -160,7 +160,8 @@ struct sparse_hashtable_const_iterator;
+ template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
+ struct sparse_hashtable_iterator {
+  private:
+-  typedef typename A::template rebind<V>::other value_alloc_type;
++  typedef typename std::allocator_traits<A>::template rebind_alloc<V> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
+ 
+  public:
+   typedef sparse_hashtable_iterator<V,K,HF,ExK,SetK,EqK,A>       iterator;
+@@ -170,10 +171,10 @@ struct sparse_hashtable_iterator {
+ 
+   typedef std::forward_iterator_tag iterator_category;  // very little defined!
+   typedef V value_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::reference reference;
+-  typedef typename value_alloc_type::pointer pointer;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef value_type& reference;
++  typedef typename value_alloc_traits::pointer pointer;
+ 
+   // "Real" constructor and default constructor
+   sparse_hashtable_iterator(const sparse_hashtable<V,K,HF,ExK,SetK,EqK,A> *h,
+@@ -212,7 +213,9 @@ struct sparse_hashtable_iterator {
+ template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
+ struct sparse_hashtable_const_iterator {
+  private:
+-  typedef typename A::template rebind<V>::other value_alloc_type;
++  typedef typename std::allocator_traits<A>::template rebind_alloc<V> value_alloc_type;
++  typedef typename std::allocator_traits<value_alloc_type> value_alloc_traits;
++
+ 
+  public:
+   typedef sparse_hashtable_iterator<V,K,HF,ExK,SetK,EqK,A>       iterator;
+@@ -222,10 +225,10 @@ struct sparse_hashtable_const_iterator {
+ 
+   typedef std::forward_iterator_tag iterator_category;  // very little defined!
+   typedef V value_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::const_reference reference;
+-  typedef typename value_alloc_type::const_pointer pointer;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef const value_type& reference;
++  typedef typename value_alloc_traits::const_pointer pointer;
+ 
+   // "Real" constructor and default constructor
+   sparse_hashtable_const_iterator(const sparse_hashtable<V,K,HF,ExK,SetK,EqK,A> *h,
+@@ -267,7 +270,9 @@ struct sparse_hashtable_const_iterator {
+ template <class V, class K, class HF, class ExK, class SetK, class EqK, class A>
+ struct sparse_hashtable_destructive_iterator {
+  private:
+-  typedef typename A::template rebind<V>::other value_alloc_type;
++  typedef typename std::allocator_traits<A>::template rebind_alloc<V> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
++
+ 
+  public:
+   typedef sparse_hashtable_destructive_iterator<V,K,HF,ExK,SetK,EqK,A> iterator;
+@@ -276,10 +281,10 @@ struct sparse_hashtable_destructive_iterator {
+ 
+   typedef std::forward_iterator_tag iterator_category;  // very little defined!
+   typedef V value_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::reference reference;
+-  typedef typename value_alloc_type::pointer pointer;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef value_type& reference;
++  typedef typename value_alloc_traits::pointer pointer;
+ 
+   // "Real" constructor and default constructor
+   sparse_hashtable_destructive_iterator(const
+@@ -320,7 +325,8 @@ template <class Value, class Key, class HashFcn,
+           class ExtractKey, class SetKey, class EqualKey, class Alloc>
+ class sparse_hashtable {
+  private:
+-  typedef typename Alloc::template rebind<Value>::other value_alloc_type;
++  typedef typename std::allocator_traits<Alloc>::template rebind_alloc<Value> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
+ 
+  public:
+   typedef Key key_type;
+@@ -329,12 +335,12 @@ class sparse_hashtable {
+   typedef EqualKey key_equal;
+   typedef Alloc allocator_type;
+ 
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::reference reference;
+-  typedef typename value_alloc_type::const_reference const_reference;
+-  typedef typename value_alloc_type::pointer pointer;
+-  typedef typename value_alloc_type::const_pointer const_pointer;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef value_type& reference;
++  typedef const value_type& const_reference;
++  typedef typename value_alloc_traits::pointer pointer;
++  typedef typename value_alloc_traits::const_pointer const_pointer;
+   typedef sparse_hashtable_iterator<Value, Key, HashFcn, ExtractKey,
+                                     SetKey, EqualKey, Alloc>
+   iterator;
+diff --git a/src/sparsehash/sparsetable b/src/sparsehash/sparsetable
+index 6259ebd..60c71dc 100644
+--- a/src/sparsehash/sparsetable
++++ b/src/sparsehash/sparsetable
+@@ -802,16 +802,17 @@ class destructive_two_d_iterator {
+ template <class T, u_int16_t GROUP_SIZE, class Alloc>
+ class sparsegroup {
+  private:
+-  typedef typename Alloc::template rebind<T>::other value_alloc_type;
++  typedef typename std::allocator_traits<Alloc>::template rebind_alloc<T> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
+ 
+  public:
+   // Basic types
+   typedef T value_type;
+   typedef Alloc allocator_type;
+-  typedef typename value_alloc_type::reference reference;
+-  typedef typename value_alloc_type::const_reference const_reference;
+-  typedef typename value_alloc_type::pointer pointer;
+-  typedef typename value_alloc_type::const_pointer const_pointer;
++  typedef value_type& reference;
++  typedef const value_type& const_reference;
++  typedef typename value_alloc_traits::pointer pointer;
++  typedef typename value_alloc_traits::const_pointer const_pointer;
+ 
+   typedef table_iterator<sparsegroup<T, GROUP_SIZE, Alloc> > iterator;
+   typedef const_table_iterator<sparsegroup<T, GROUP_SIZE, Alloc> >
+@@ -1289,8 +1290,9 @@ class sparsegroup {
+   template <class A>
+   class alloc_impl : public A {
+    public:
+-    typedef typename A::pointer pointer;
+-    typedef typename A::size_type size_type;
++    typedef std::allocator_traits<A> alloc_traits;
++    typedef typename alloc_traits::pointer pointer;
++    typedef typename alloc_traits::size_type size_type;
+ 
+     // Convert a normal allocator to one that has realloc_or_die()
+     alloc_impl(const A& a) : A(a) { }
+@@ -1362,20 +1364,21 @@ template <class T, u_int16_t GROUP_SIZE = DEFAULT_SPARSEGROUP_SIZE,
+           class Alloc = libc_allocator_with_realloc<T> >
+ class sparsetable {
+  private:
+-  typedef typename Alloc::template rebind<T>::other value_alloc_type;
+-  typedef typename Alloc::template rebind<
+-      sparsegroup<T, GROUP_SIZE, value_alloc_type> >::other vector_alloc;
++  typedef typename std::allocator_traits<Alloc>::template rebind_alloc<T> value_alloc_type;
++  typedef std::allocator_traits<value_alloc_type> value_alloc_traits;
++  typedef typename std::allocator_traits<Alloc>::template rebind_alloc<
++      sparsegroup<T, GROUP_SIZE, value_alloc_type> > vector_alloc;
+ 
+  public:
+   // Basic types
+   typedef T value_type;                        // stolen from stl_vector.h
+   typedef Alloc allocator_type;
+-  typedef typename value_alloc_type::size_type size_type;
+-  typedef typename value_alloc_type::difference_type difference_type;
+-  typedef typename value_alloc_type::reference reference;
+-  typedef typename value_alloc_type::const_reference const_reference;
+-  typedef typename value_alloc_type::pointer pointer;
+-  typedef typename value_alloc_type::const_pointer const_pointer;
++  typedef typename value_alloc_traits::size_type size_type;
++  typedef typename value_alloc_traits::difference_type difference_type;
++  typedef value_type& reference;
++  typedef const value_type& const_reference;
++  typedef typename value_alloc_traits::pointer pointer;
++  typedef typename value_alloc_traits::const_pointer const_pointer;
+   typedef table_iterator<sparsetable<T, GROUP_SIZE, Alloc> > iterator;
+   typedef const_table_iterator<sparsetable<T, GROUP_SIZE, Alloc> >
+       const_iterator;
+@@ -1446,7 +1449,7 @@ class sparsetable {
+     return destructive_iterator(groups.begin(), groups.end(), groups.end());
+   }
+ 
+-  typedef sparsegroup<value_type, GROUP_SIZE, allocator_type> group_type;
++  typedef sparsegroup<value_type, GROUP_SIZE, value_alloc_type> group_type;
+   typedef std::vector<group_type, vector_alloc > group_vector_type;
+ 
+   typedef typename group_vector_type::reference GroupsReference;
