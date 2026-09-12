@@ -1,0 +1,39 @@
+{
+  "name": "kbookmarks",
+  "version": "6.25.0",
+  "description": "Bookmarks management library",
+  "homepage": "https://invent.kde.org/frameworks/kbookmarks",
+  "documentation": "https://api.kde.org/kbookmarks-index.html",
+  "dependencies": [
+    "ecm",
+    "kconfig",
+    "kcoreaddons",
+    "kwidgetsaddons",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "translations": {
+      "description": "Build and install translation files",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
