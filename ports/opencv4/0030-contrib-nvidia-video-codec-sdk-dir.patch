@@ -1,0 +1,17 @@
+diff --git a/modules/cudacodec/CMakeLists.txt b/modules/cudacodec/CMakeLists.txt
+index a2dd450..deddf32 100644
+--- a/modules/cudacodec/CMakeLists.txt
++++ b/modules/cudacodec/CMakeLists.txt
+@@ -17,7 +17,11 @@ endif()
+ 
+ ocv_add_module(cudacodec ${required_dependencies} OPTIONAL opencv_cudev WRAP python)
+ 
+-ocv_module_include_directories()
++if(NVIDIA_VIDEO_CODEC_SDK_DIR)
++  ocv_module_include_directories("${NVIDIA_VIDEO_CODEC_SDK_DIR}/include")
++else()
++  ocv_module_include_directories()
++endif()
+ ocv_glob_module_sources()
+ 
+ set(extra_libs "")
