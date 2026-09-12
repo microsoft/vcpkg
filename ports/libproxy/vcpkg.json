@@ -1,42 +1,53 @@
 {
   "name": "libproxy",
-  "version": "0.4.18",
-  "port-version": 3,
+  "version": "0.5.12",
   "description": "libproxy is a library that provides automatic proxy configuration management.",
   "homepage": "https://github.com/libproxy/libproxy",
   "license": "LGPL-2.1-only",
   "supports": "!(uwp | xbox | android)",
   "dependencies": [
+    "glib",
+    "pkgconf",
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg-tool-meson",
       "host": true
     }
   ],
   "features": {
-    "bindings-csharp": {
-      "description": "Install C# bindings"
+    "curl": {
+      "description": "Build with cURL support",
+      "dependencies": [
+        "curl"
+      ]
     },
-    "bindings-perl": {
-      "description": "Install PERL bindings"
+    "duktape": {
+      "description": "Build with PAC Runner Duktape support",
+      "dependencies": [
+        "duktape"
+      ]
     },
-    "bindings-python": {
-      "description": "Install Python bindings"
-    },
-    "bindings-ruby": {
-      "description": "Install Ruby bindings"
-    },
-    "bindings-vala": {
-      "description": "Install Vala bindings"
+    "introspection": {
+      "description": "Build introspection support",
+      "supports": "!static",
+      "dependencies": [
+        "gobject-introspection"
+      ]
     },
     "tests": {
-      "description": "Build libproxy tests"
+      "description": "Build tests"
     },
-    "tools": {
-      "description": "build tools"
+    "vala": {
+      "description": "Build Vala vapi support",
+      "supports": "!static",
+      "dependencies": [
+        "gobject-introspection",
+        {
+          "name": "libproxy",
+          "features": [
+            "introspection"
+          ]
+        }
+      ]
     }
   }
 }
