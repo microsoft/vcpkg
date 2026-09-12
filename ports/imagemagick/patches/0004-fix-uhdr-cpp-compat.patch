@@ -1,0 +1,58 @@
+--- a/coders/uhdr.c
++++ b/coders/uhdr.c
+@@ -574,8 +574,8 @@
+     status = MagickTrue;
+ 
+   uhdr_raw_image_t
+-    hdrImgDescriptor = {0},
+-    sdrImgDescriptor = {0};
++    hdrImgDescriptor = {},
++    sdrImgDescriptor = {};
+ 
+   uhdr_mem_block_t
+     sdr_profile, hdr_profile;
+@@ -811,7 +811,7 @@
+           if (hdrImgDescriptor.fmt == UHDR_IMG_FMT_24bppYCbCrP010)
+           {
+             uint16_t
+-              *crBase = crBuffer, *cbBase = cbBuffer, *yBase = yBuffer;
++              *crBase = (uint16_t *) crBuffer, *cbBase = (uint16_t *) cbBuffer, *yBase = (uint16_t *) yBuffer;
+ 
+             yBase[y * hdrImgDescriptor.stride[UHDR_PLANE_Y] + x] =
+               ScaleQuantumToShort(GetPixelY(image, p)) & 0xFFC0;
+@@ -826,7 +826,7 @@
+           else if (hdrImgDescriptor.fmt == UHDR_IMG_FMT_64bppRGBAHalfFloat)
+           {
+             uint64_t
+-              *rgbaBase = yBuffer;
++              *rgbaBase = (uint64_t *) yBuffer;
+ 
+             unsigned short
+               r, g, b, a;
+@@ -842,7 +842,7 @@
+           else
+           {
+             uint32_t
+-              *rgbBase = yBuffer;
++              *rgbBase = (uint32_t *) yBuffer;
+ 
+             unsigned short
+               r, g, b;
+@@ -860,7 +860,7 @@
+           if (sdrImgDescriptor.fmt == UHDR_IMG_FMT_12bppYCbCr420)
+           {
+             uint8_t
+-              *crBase = crBuffer, *cbBase = cbBuffer, *yBase = yBuffer;
++              *crBase = (uint8_t *) crBuffer, *cbBase = (uint8_t *) cbBuffer, *yBase = (uint8_t *) yBuffer;
+ 
+             yBase[y * sdrImgDescriptor.stride[UHDR_PLANE_Y] + x] =
+               ScaleQuantumToChar(GetPixelY(image, p));
+@@ -875,7 +875,7 @@
+           else
+           {
+             uint32_t
+-              *rgbBase = yBuffer;
++              *rgbBase = (uint32_t *) yBuffer;
+ 
+             unsigned char
+               r, g, b;
