@@ -1,0 +1,196 @@
+diff --git a/aui.core/src/AUI/Common/AByteBufferView.h b/aui.core/src/AUI/Common/AByteBufferView.h
+index 0f82653..176170c 100644
+--- a/aui.core/src/AUI/Common/AByteBufferView.h
++++ b/aui.core/src/AUI/Common/AByteBufferView.h
+@@ -116,8 +116,13 @@ public:
+ inline std::ostream& operator<<(std::ostream& lhs, const AByteBufferView& rhs) {
+     lhs << "[";
+     for (const auto b : rhs) {
+-        char buf[8];
++        char buf[16];
++        #if defined(FMT_VERSION) && (FMT_VERSION < 100000)
+         lhs.write(buf, std::distance(std::begin(buf), fmt::format_to(buf, " {:02x}", b)));
++        #else
++        auto end = fmt::format_to(buf, " {:02x}", static_cast<uint8_t>(b));
++        lhs.write(buf, end - buf);
++        #endif
+     }
+     lhs << " ]";
+ 
+diff --git a/aui.core/src/AUI/Common/AString.h b/aui.core/src/AUI/Common/AString.h
+index cbf9d12..2623866 100644
+--- a/aui.core/src/AUI/Common/AString.h
++++ b/aui.core/src/AUI/Common/AString.h
+@@ -14,6 +14,7 @@
+ #include <algorithm>
+ #include <string>
+ #include <iostream>
++#include <cstring>
+ #include "AUI/Core.h"
+ #include "AUI/Traits/values.h"
+ #include <AUI/Common/ASet.h>
+@@ -839,7 +840,9 @@ namespace aui::win32 {
+ }
+ #endif
+ 
++#if defined(FMT_VERSION) && (FMT_VERSION < 100000)
+ template <> struct fmt::detail::is_string<AString>: std::false_type {};
++#endif
+ 
+ template <> struct fmt::formatter<AString>: fmt::formatter<std::string> {
+     auto format(const AString& s, format_context& ctx) const {
+diff --git a/aui.core/src/AUI/Traits/strings.h b/aui.core/src/AUI/Traits/strings.h
+index ef92c34..7d5d5d7 100644
+--- a/aui.core/src/AUI/Traits/strings.h
++++ b/aui.core/src/AUI/Traits/strings.h
+@@ -17,6 +17,7 @@
+ #include "types.h"
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ namespace aui {
+ 
+diff --git a/aui.curl/src/AUI/Curl/ACurlMulti.cpp b/aui.curl/src/AUI/Curl/ACurlMulti.cpp
+index f6faf9b..b6774cc 100644
+--- a/aui.curl/src/AUI/Curl/ACurlMulti.cpp
++++ b/aui.curl/src/AUI/Curl/ACurlMulti.cpp
+@@ -53,7 +53,11 @@ void ACurlMulti::run(bool infinite) {
+         AThread::interruptionPoint();
+ 
+         if (status) {
++            #if defined(FMT_VERSION) && (FMT_VERSION < 100000)
+             throw ACurl::Exception("curl poll failed: {}"_format(status));
++            #else
++            throw ACurl::Exception(fmt::format("curl poll failed: {}", static_cast<int>(status)));
++            #endif
+         }
+ 
+         int messagesLeft;
+diff --git a/aui.toolbox/src/ShadingLanguage/Lang/Parser.cpp b/aui.toolbox/src/ShadingLanguage/Lang/Parser.cpp
+index 0847241..58f6e0f 100644
+--- a/aui.toolbox/src/ShadingLanguage/Lang/Parser.cpp
++++ b/aui.toolbox/src/ShadingLanguage/Lang/Parser.cpp
+@@ -95,7 +95,11 @@ _<AST> Parser::parseShader() {
+                                 break;
+ 
+                             default:
++                                #if defined(FMT_VERSION) && (FMT_VERSION < 100000)
+                                 reportUnexpectedErrorAndSkip("expected using, class, struct, input, output, inter, uniform, entry keywords"_format(keywordType));
++                                #else
++                                reportUnexpectedErrorAndSkip(fmt::format("expected using, class, struct, input, output, inter, uniform, entry keywords {}", keywordType));
++                                #endif
+                         }
+                         break;
+                     }
+diff --git a/aui.toolbox/src/ShadingLanguage/Lang/Token/KeywordToken.h b/aui.toolbox/src/ShadingLanguage/Lang/Token/KeywordToken.h
+index c75dc8b..bdebaae 100644
+--- a/aui.toolbox/src/ShadingLanguage/Lang/Token/KeywordToken.h
++++ b/aui.toolbox/src/ShadingLanguage/Lang/Token/KeywordToken.h
+@@ -101,4 +101,10 @@ public:
+     static Type fromName(const AString& name);
+ };
+ 
+-
++#if defined(FMT_VERSION) && (FMT_VERSION >= 100000)
++template <> struct fmt::formatter<KeywordToken::Type> : fmt::formatter<const char*> {
++    auto format(KeywordToken::Type type, fmt::format_context& ctx) const {
++        return fmt::formatter<const char*>::format(KeywordToken(type).getName(), ctx);
++    }
++};
++#endif
+diff --git a/aui.views/src/AUI/ASS/Property/Opacity.h b/aui.views/src/AUI/ASS/Property/Opacity.h
+index 53d4786..dfde6ce 100644
+--- a/aui.views/src/AUI/ASS/Property/Opacity.h
++++ b/aui.views/src/AUI/ASS/Property/Opacity.h
+@@ -19,6 +19,15 @@
+ #include <AUI/Common/IStringable.h>
+ #include "IProperty.h"
+ 
++#if defined(FMT_VERSION) && (FMT_VERSION >= 100000)
++template <> struct fmt::formatter<aui::float_within_0_1> : fmt::formatter<float> {
++    auto format(const aui::float_within_0_1& v, fmt::format_context& ctx) const {
++        return fmt::formatter<float>::format(static_cast<float>(v), ctx);
++    }
++};
++#endif
++
++
+ namespace ass {
+ 
+     /**
+diff --git a/aui.views/src/AUI/ASS/unset.h b/aui.views/src/AUI/ASS/unset.h
+index 62a2fb8..fa5780c 100644
+--- a/aui.views/src/AUI/ASS/unset.h
++++ b/aui.views/src/AUI/ASS/unset.h
+@@ -182,4 +182,28 @@ std::ostream& operator<<(std::ostream& o, const ass::unset_wrap<T>& wrap) {
+         o << "<unset>";
+     }
+     return o;
+-}
+\ No newline at end of file
++}
++
++#if defined(FMT_VERSION) && (FMT_VERSION >= 100000)
++template <typename T, typename Char>
++struct fmt::formatter<ass::unset_wrap<T>, Char> {
++    fmt::formatter<T, Char> inner;
++
++    // Parse format specs like {:>10}, {:.2f}, etc.
++    template<typename ParseContext>
++    constexpr auto parse(ParseContext& ctx) {
++        return inner.parse(ctx);
++    }
++
++    // Format either the value (if set) or the "<unset>" fallback
++    template<typename FormatContext>
++    auto format(const ass::unset_wrap<T>& value, FormatContext& ctx) const {
++        if (value) {
++            return inner.format(*value, ctx);
++        } else {
++            static constexpr auto fallback = std::basic_string_view<Char>(FMT_STRING("<unset>"));
++            return fmt::format_to(ctx.out(), "{}", fallback);
++        }
++    }
++};
++#endif
+diff --git a/aui.views/src/AUI/Util/AMetric.h b/aui.views/src/AUI/Util/AMetric.h
+index 84a5ec1..f58e160 100644
+--- a/aui.views/src/AUI/Util/AMetric.h
++++ b/aui.views/src/AUI/Util/AMetric.h
+@@ -16,6 +16,7 @@
+ #include <ostream>
+ #include <tuple>
+ #include "AUI/Util/Assert.h"
++#include <fmt/format.h>
+ 
+ class AString;
+ 
+@@ -259,4 +260,25 @@ inline std::ostream& operator<<(std::ostream& o, const AMetric& value) {
+             break;
+     }
+     return o;
+-}
+\ No newline at end of file
++}
++
++#if defined(FMT_VERSION) && (FMT_VERSION >= 100000)
++template <> struct fmt::formatter<AMetric> {
++    constexpr auto parse(format_parse_context& ctx) {
++        return ctx.begin(); // No custom formatting options needed
++    }
++
++    template <typename FormatContext>
++    auto format(const AMetric& metric, FormatContext& ctx) const {
++        std::string_view suffix;
++        switch (metric.getUnit()) {
++            case AMetric::T_PX: suffix = "px"; break;
++            case AMetric::T_DP: suffix = "dp"; break;
++            case AMetric::T_PT: suffix = "pt"; break;
++            default:            suffix = "";   break;
++        }
++
++        return fmt::format_to(ctx.out(), "{}{}", metric.getRawValue(), suffix);
++    }
++};
++#endif

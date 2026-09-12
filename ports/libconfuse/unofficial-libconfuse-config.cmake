@@ -9,8 +9,8 @@ if(NOT TARGET unofficial::libconfuse::libconfuse)
         IMPORTED_LOCATION_RELEASE "${Z_VCPKG_libconfuse_LIBRARY_RELEASE}"
         IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
     )
-    if("@VCPKG_BUILD_TYPE@" STREQUAL "")
-        find_library(Z_VCPKG_libconfuse_LIBRARY_DEBUG NAMES libconfuse PATHS "${z_vcpkg_libconfuse_prefix}/debug/lib" NO_DEFAULT_PATH REQUIRED)
+    if(EXISTS "${z_vcpkg_libconfuse_prefix}/debug/lib")
+        find_library(Z_VCPKG_libconfuse_LIBRARY_DEBUG NAMES confuse PATHS "${z_vcpkg_libconfuse_prefix}/debug/lib" NO_DEFAULT_PATH REQUIRED)
         set_property(TARGET unofficial::libconfuse::libconfuse APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
         set_target_properties(unofficial::libconfuse::libconfuse PROPERTIES
             IMPORTED_LOCATION_DEBUG "${Z_VCPKG_libconfuse_LIBRARY_DEBUG}"

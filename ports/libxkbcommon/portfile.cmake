@@ -13,7 +13,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xkbcommon/libxkbcommon
     REF "xkbcommon-${VERSION}"
-    SHA512 450c33fe26af6b847cf7516685d0df63c2ba0126887e27595c40fe80e4d0487009aa6cdf38ff1270d595c7900cbf3c11e7aa4f9cff80fa361742b5ebb10d83bd
+    SHA512 261af9e02ad533bb6560e2711171812c7d92094db8b54eaa19b477ab68270e6d62b315e18d42527ca9c944e87f36f063d003d74aeb4829b21ecb96ab1b0c1ce7
     HEAD_REF master
     PATCHES
         disable-test.patch

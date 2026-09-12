@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 5559616755c3050077589c1000ea451b195cfb450c74d2278c6a09e0c2bfff718293dbc0041428c0a8e8ca321131daa14c92483f70bb5bed4482bb7962f1ef92
+    SHA512 6c331729259d4da657dbd4a475c894cde624fe92fb35821425f5d678f91868c492ab4b921581fbb7410c3c398a86b9af4516f323fb34c855af9743cd23cd654f
     HEAD_REF master
     PATCHES
         dependencies.patch
         ffmpeg.diff
+        fix-aom-target.patch
         install-layout.patch
         windows-linkage.patch
 )
@@ -19,6 +20,7 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        av1         WITH_AOM
         av1         WITH_GFX_AV1
         client      WITH_CLIENT
         ffmpeg      WITH_DSP_FFMPEG

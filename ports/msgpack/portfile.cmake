@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO msgpack/msgpack-c
     REF cpp-${VERSION}
-    SHA512 23e1fa14c9d1bcf70b74ebb6d2379691a3224022a5b5a186c48e0c3c0af54eb6c755bcbaf900024ecaafb031a450c34e207cd4d66bdfb701ffef44fc06d87915
+    SHA512 2501fc1ec9a52614ae86210545ecc8ae4b36e055018cd6bfca6543503d3c17b6a84e464c9136c881fb32bc6464cea5b38c7cc2c44c84c173f67a612cc220a2c6
     HEAD_REF cpp_master
 )
 

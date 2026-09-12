@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index da1917e..d385e46 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,10 +17,13 @@ option(BUILD_EXAMPLES "Build examples" ON)
+ include(GNUInstallDirs)
+ include(CMakePackageConfigHelpers)
+ 
+-if(NOT CMAKE_HOST_WIN32)
++find_library(MATH_LIBRARY_PATH NAMES m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
++if(MATH_LIBRARY_PATH)
+     set(MATH_LIBRARY "m")
++    set(LIBS "-lm")
+ else()
+     set(MATH_LIBRARY "")
++    set(LIBS "")
+ endif()
+ 
+ if(NOT ENABLE_OPT)
+@@ -93,16 +96,13 @@ install(
+   DESTINATION ${config_install_dir}
+ )
+ 
+-if(NOT CMAKE_HOST_WIN32 OR CYGWIN OR MINGW)
+-    set(prefix      ${CMAKE_INSTALL_PREFIX})
+-    set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+-    set(libdir      ${CMAKE_INSTALL_FULL_LIBDIR})
+-    set(includedir  ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+-    set(LIBS        "-lm")
++set(prefix      ${CMAKE_INSTALL_PREFIX})
++set(exec_prefix ${CMAKE_INSTALL_PREFIX})
++set(libdir      ${CMAKE_INSTALL_FULL_LIBDIR})
++set(includedir  ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+ 
+-    foreach(libname ${spng_TARGETS})
+-        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/libspng.pc.in ${CMAKE_CURRENT_BINARY_DIR}/cmake/lib${libname}.pc @ONLY)
++foreach(libname ${spng_TARGETS})
++    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/spng.pc.in ${CMAKE_CURRENT_BINARY_DIR}/cmake/${libname}.pc @ONLY)
+ 
+-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/lib${libname}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+-    endforeach()
+-endif()
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/${libname}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
++endforeach()
+diff --git a/cmake/libspng.pc.in b/cmake/spng.pc.in
+similarity index 92%
+rename from cmake/libspng.pc.in
+rename to cmake/spng.pc.in
+index 71e0e47..1904c09 100644
+--- a/cmake/libspng.pc.in
++++ b/cmake/spng.pc.in
+@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+ includedir=@includedir@/
+ 
+-Name: lib@libname@
++Name: @libname@
+ Description: PNG decoding and encoding library
+ Version: @SPNG_VERSION@
+ Requires: zlib

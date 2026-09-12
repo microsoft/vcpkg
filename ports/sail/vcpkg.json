@@ -1,6 +1,6 @@
 {
   "name": "sail",
-  "version-semver": "1.1.0",
+  "version-semver": "1.2.0",
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/HappySeaFox/sail",
   "license": "MIT",
@@ -195,7 +195,10 @@
       "description": "Enable PSD codec"
     },
     "qoi": {
-      "description": "Enable QOI codec"
+      "description": "Enable QOI codec",
+      "dependencies": [
+        "qoi"
+      ]
     },
     "raw": {
       "description": "Enable RAW codec",
@@ -240,8 +243,11 @@
           "features": [
             "avcodec",
             "avformat",
+            "bzip2",
+            "lzma",
             "swresample",
-            "swscale"
+            "swscale",
+            "zlib"
           ]
         }
       ]
