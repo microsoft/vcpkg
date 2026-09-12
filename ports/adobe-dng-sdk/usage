@@ -1,0 +1,4 @@
+The package adobe-dng-sdk provides CMake targets:
+
+    find_package(dngsdk CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE dngsdk::dng)
