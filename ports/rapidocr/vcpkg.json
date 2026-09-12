@@ -1,0 +1,29 @@
+{
+  "name": "rapidocr",
+  "version-date": "2024-10-22",
+  "description": "C++ ONNX Runtime OCR (RapidOcrOnnx): PaddleOCR-style detect/classify/recognize pipeline",
+  "homepage": "https://github.com/RapidAI/RapidOcrOnnx",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "onnxruntime",
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "jpeg",
+        "png",
+        "tiff"
+      ]
+    },
+    "polyclipping",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
