@@ -47,8 +47,8 @@ index c046d47..50e82b3 100644
 +      "${FMILIB_THIRDPARTYLIBS}/Minizip/minizip/miniunz.c"
 +      "${FMILIB_THIRDPARTYLIBS}/Minizip/minizip/minizip.c"
 +    )
-+    find_package(unofficial-minizip CONFIG REQUIRED)
-+    target_link_libraries(minizip PRIVATE unofficial::minizip::minizip)
++    find_package(minizip CONFIG REQUIRED)
++    target_link_libraries(minizip PRIVATE $<IF:$<TARGET_EXISTS:MINIZIP::minizip>,MINIZIP::minizip,MINIZIP::minizipstatic>)
  	
  	include_directories("${FMIZIPDIR}/include" "${FMILIB_THIRDPARTYLIBS}/Minizip/minizip" "${FMILIB_THIRDPARTYLIBS}/FMI" "${FMILIB_THIRDPARTYLIBS}/Zlib/zlib-1.2.6" "${FMILibrary_BINARY_DIR}/zlib")
  
