@@ -3761,7 +3761,7 @@
       "port-version": 1
     },
     "halfmesh": {
-      "baseline": "0.3.0",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "halide": {
