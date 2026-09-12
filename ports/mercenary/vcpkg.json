@@ -1,0 +1,7 @@
+{
+    "name": "mercenary",
+    "version": "1.0.0",
+    "description": "A lightning-fast, header-only C++17 library to cleanly format booleans(True/False, 1/0, true/false).",
+    "homepage": "https://github.com/ChampionUgrax/mercenary.git",
+    "license": "MIT"
+}
