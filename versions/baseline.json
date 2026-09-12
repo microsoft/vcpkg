@@ -6440,10 +6440,6 @@
       "baseline": "2.0.3",
       "port-version": 0
     },
-    "mapbox-polylabel": {
-      "baseline": "2.0.1",
-      "port-version": 0
-    },
     "mapbox-variant": {
       "baseline": "1.2.0",
       "port-version": 3
@@ -6453,7 +6449,11 @@
       "port-version": 0
     },
     "mapnik": {
-      "baseline": "4.0.7",
+      "baseline": "4.3.0",
+      "port-version": 0
+    },
+    "mapnik-polylabel": {
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "marble": {
