@@ -1,0 +1,10 @@
+prefix=@destination@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: libmpdec
+Description: Arbitrary precision decimal floating point arithmetic
+Version: @VERSION@
+Libs: -L${libdir} -llibmpdec
+Cflags: -I${includedir}

@@ -1,7 +1,6 @@
 {
   "name": "python3",
-  "version": "3.12.13",
-  "port-version": 1,
+  "version": "3.13.15",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
