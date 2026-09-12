@@ -2,17 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rockdaboot/libpsl
     REF "${VERSION}"
-    SHA512 "d8e224b2ce5d9a6ac78700eb8975d09aef4e5af7db29539e5e339c5cd100f1272371fe45757ab5383ddbcd569bdf9d697a78932ea9fdf43ff48d3cea02f644cd"
+    SHA512 b9e360fd7eb5f219594de33b705090a68fdf3568b2e017cf6df2d15774bf5165c0976a441648646a5b9a10cb94e292b9bf14e9d0abc1df61697d6d1a9e901ca5
     HEAD_REF master
 )
 
-set(list_ref 0ed17ee161ed2ae551c78f3b399ac8f2724d2154)
+set(list_ref e1b8015c3b2f0f4f8c18659c2480fc1a22c07b20)
 string(SUBSTRING "${list_ref}" 0 6 short_hash)
 vcpkg_download_distfile(
     PUBLIC_SUFFIX_LIST_DAT 
     URLS https://raw.githubusercontent.com/publicsuffix/list/${list_ref}/public_suffix_list.dat
     FILENAME "libpsl-public_suffix_list-${short_hash}.dat"
-    SHA512 7969c40b0600baf2786af0e6503b4282d487b6603418c41f28c3b39e9cd9320ac66c0d2e8fbfa2b794e461f26843e3479d60ec24ac5c0990fe8f0c6bfaeee69d
+    SHA512 dc982df0eea4130c62dc28d6977fb5850d6694c06e5a0e05a544312f71f0a0c4f5791fd6b419f626fe059f04b20c62527eeae3e2b33d29f1fabecb9fbb6956f5
 )
 
 vcpkg_list(SET RUNTIME_OPTIONS)
