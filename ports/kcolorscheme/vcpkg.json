@@ -1,0 +1,32 @@
+{
+  "name": "kcolorscheme",
+  "version": "6.25.0",
+  "description": "KDE Color Scheme library",
+  "homepage": "https://invent.kde.org/frameworks/kcolorscheme",
+  "documentation": "https://api.kde.org/kcolorscheme-index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kconfig",
+    "kguiaddons",
+    "ki18n",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
