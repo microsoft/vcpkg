@@ -1,6 +1,6 @@
 {
   "name": "snmalloc",
-  "version-semver": "0.7.4",
+  "version-semver": "0.7.5",
   "description": "A high-performance, message passing based allocator",
   "homepage": "https://github.com/microsoft/snmalloc",
   "license": "MIT",
