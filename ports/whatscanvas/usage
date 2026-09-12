@@ -1,0 +1,14 @@
+WhatsCanvas always provides the CPU-only software renderer:
+
+    find_package(WhatsCanvas CONFIG REQUIRED COMPONENTS Software)
+    target_link_libraries(main PRIVATE WhatsCanvas::Software)
+
+The OpenGL target requires the opengl feature:
+
+    vcpkg install whatscanvas[opengl]
+    find_package(WhatsCanvas CONFIG REQUIRED COMPONENTS OpenGL)
+    target_link_libraries(main PRIVATE WhatsCanvas::OpenGL)
+
+The text feature selects opengl and adds FreeType and HarfBuzz support.
+The application owns the OpenGL context; create the canvas only after the
+context is current.
