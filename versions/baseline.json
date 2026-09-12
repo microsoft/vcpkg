@@ -8054,7 +8054,7 @@
     },
     "ppqsort": {
       "baseline": "1.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "pprint": {
       "baseline": "2019-07-19",
@@ -10345,8 +10345,8 @@
       "port-version": 6
     },
     "tracy": {
-      "baseline": "0.13.1",
-      "port-version": 1
+      "baseline": "0.14.1",
+      "port-version": 0
     },
     "transwarp": {
       "baseline": "2.2.3",

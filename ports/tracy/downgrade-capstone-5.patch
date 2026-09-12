@@ -1,17 +1,14 @@
-diff --git a/profiler/src/profiler/TracySourceView.cpp b/profiler/src/profiler/TracySourceView.cpp
-index c79948b8..2795bf92 100644
---- a/profiler/src/profiler/TracySourceView.cpp
-+++ b/profiler/src/profiler/TracySourceView.cpp
-@@ -4,7 +4,7 @@
- #include <sstream>
- #include <stdio.h>
- 
+diff --git a/profiler/src/profiler/TracyDisassembly.cpp b/profiler/src/profiler/TracyDisassembly.cpp
+index a41f871..436601b 100644
+--- a/profiler/src/profiler/TracyDisassembly.cpp
++++ b/profiler/src/profiler/TracyDisassembly.cpp
+@@ -1,4 +1,4 @@
 -#include <capstone.h>
 +#include <capstone/capstone.h>
+ #include <string.h>
  
- #include "imgui.h"
- #include "TracyCharUtil.hpp"
-@@ -713,7 +713,7 @@ bool SourceView::Disassemble( uint64_t symAddr, const Worker& worker )
+ #include "TracyDisassembly.hpp"
+@@ -249,7 +249,7 @@ DisasmData Disassemble( uint64_t symAddr, const Worker& worker )
          rval = cs_open( CS_ARCH_ARM, CS_MODE_ARM, &handle );
          break;
      case CpuArchArm64:
@@ -20,7 +17,7 @@ index c79948b8..2795bf92 100644
          break;
      default:
          assert( false );
-@@ -778,9 +778,9 @@ bool SourceView::Disassemble( uint64_t symAddr, const Worker& worker )
+@@ -317,9 +317,9 @@ DisasmData Disassemble( uint64_t symAddr, const Worker& worker )
                      }
                      break;
                  case CpuArchArm64:
@@ -32,7 +29,7 @@ index c79948b8..2795bf92 100644
                      }
                      break;
                  default:
-@@ -865,18 +865,18 @@ bool SourceView::Disassemble( uint64_t symAddr, const Worker& worker )
+@@ -404,18 +404,18 @@ DisasmData Disassemble( uint64_t symAddr, const Worker& worker )
                  }
                  break;
              case CpuArchArm64:
@@ -57,7 +54,7 @@ index c79948b8..2795bf92 100644
                          break;
                      default:
 diff --git a/server/TracyWorker.cpp b/server/TracyWorker.cpp
-index d94a1ab5..437f4a78 100644
+index d075a3c..b68c5f9 100644
 --- a/server/TracyWorker.cpp
 +++ b/server/TracyWorker.cpp
 @@ -21,7 +21,7 @@
@@ -69,7 +66,7 @@ index d94a1ab5..437f4a78 100644
  
  #define ZDICT_STATIC_LINKING_ONLY
  #include <zdict.h>
-@@ -3912,7 +3912,7 @@ void Worker::AddSymbolCode( uint64_t ptr, const char* data, size_t sz )
+@@ -4005,7 +4005,7 @@ void Worker::AddSymbolCode( uint64_t ptr, const char* data, size_t sz )
          rval = cs_open( CS_ARCH_ARM, CS_MODE_ARM, &handle );
          break;
      case CpuArchArm64:
@@ -78,7 +75,7 @@ index d94a1ab5..437f4a78 100644
          break;
      default:
          assert( false );
-@@ -3952,9 +3952,9 @@ void Worker::AddSymbolCode( uint64_t ptr, const char* data, size_t sz )
+@@ -4045,9 +4045,9 @@ void Worker::AddSymbolCode( uint64_t ptr, const char* data, size_t sz )
                          }
                          break;
                      case CpuArchArm64:
