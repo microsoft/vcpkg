@@ -16,6 +16,10 @@
       "baseline": "3.1.5",
       "port-version": 0
     },
+    "abscom": {
+      "baseline": "0.2.6",
+      "port-version": 0
+    },
     "abseil": {
       "baseline": "20260107.1",
       "port-version": 3
