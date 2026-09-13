@@ -30,7 +30,7 @@ jobs:
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-08-21'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-09-08'
   - name: LINUX_DOCKER_IMAGE
     value: ${{ parameters.linuxDockerImage }}
   steps:
@@ -115,13 +115,13 @@ jobs:
     inputs:
       version: '24.x'
   - bash: |
-      cd scripts/azure-pipelines/owners-db && npm ci || true
+      cd scripts/azure-pipelines/owners-db && npm ci --omit=dev || true
       if [ "$(Build.Reason)" = "PullRequest" ]; then
         echo "Running file_script_from_cache for PR"
-        npx --yes ts-node ./file_script_from_cache.ts --pr-hashes "$(Build.Repository.LocalPath)/pr-hashes.json" --blob-base-url "https://vcpkgbinarycachewus.blob.core.windows.net/cache?${BCACHE_SAS_TOKEN}" --target-branch "origin/master" --out-dir ../../list_files
+        npx --yes tsx ./file_script_from_cache.ts --pr-hashes "$(Build.Repository.LocalPath)/pr-hashes.json" --blob-base-url "https://vcpkgbinarycachewus.blob.core.windows.net/cache?${BCACHE_SAS_TOKEN}" --target-branch "origin/master" --out-dir ../../list_files
       else
         echo "Running file_script for CI"
-        npx --yes ts-node ./file_script.ts --info-dir /mnt/vcpkg-ci/installed/vcpkg/info/ --out-dir ../../list_files
+        npx --yes tsx ./file_script.ts --info-dir /mnt/vcpkg-ci/installed/vcpkg/info/ --out-dir ../../list_files
       fi
     displayName: 'Build a file list for all packages'
     condition: always()

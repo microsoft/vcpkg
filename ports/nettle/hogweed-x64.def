@@ -142,45 +142,17 @@ EXPORTS
      nettle_asn1_der_decode_bitstring
      nettle_asn1_der_decode_bitstring_last
      nettle_asn1_der_get_uint32
-     nettle_rsa_keypair_to_openpgp
-     nettle_pgp_put_uint32
-     nettle_pgp_put_uint16
-     nettle_pgp_put_mpi
-     nettle_pgp_put_string
-     nettle_pgp_put_length
-     nettle_pgp_put_header
-     nettle_pgp_put_header_length
-     nettle_pgp_sub_packet_start
-     nettle_pgp_put_sub_packet
-     nettle_pgp_sub_packet_end
-     nettle_pgp_put_public_rsa_key
-     nettle_pgp_put_rsa_sha1_signature
-     nettle_pgp_put_userid
-     nettle_pgp_crc24
-     nettle_pgp_armor
      nettle_dsa_signature_from_sexp
      nettle_dsa_keypair_from_sexp_alist
      nettle_dsa_sha1_keypair_from_sexp
      nettle_dsa_sha256_keypair_from_sexp
      nettle_dsa_keypair_to_sexp
-     nettle_dsa_sha256_verify
-     nettle_dsa_sha256_verify_digest
-     nettle_dsa_sha256_sign
-     nettle_dsa_sha256_sign_digest
-     nettle_dsa_sha1_verify
-     nettle_dsa_sha1_verify_digest
-     nettle_dsa_sha1_sign
-     nettle_dsa_sha1_sign_digest
      _nettle_dsa_hash
+     _nettle_gostdsa_hash
      nettle_dsa_generate_keypair
      nettle_dsa_verify
      nettle_dsa_sign
      nettle_dsa_generate_params
-     nettle_dsa_compat_generate_keypair
-     nettle_dsa_public_key_init
-     nettle_dsa_public_key_clear
-     nettle_dsa_private_key_init
-     nettle_dsa_private_key_clear
      nettle_dsa_params_init
      nettle_dsa_params_clear
      nettle_dsa_signature_init
@@ -188,11 +160,17 @@ EXPORTS
      nettle_rsa_keypair_from_sexp_alist
      nettle_rsa_keypair_from_sexp
      nettle_rsa_keypair_to_sexp
-     _nettle_rsa_blind
-     _nettle_rsa_unblind
      nettle_rsa_generate_keypair
      nettle_rsa_decrypt_tr
      nettle_rsa_sec_decrypt
+     nettle_rsa_oaep_sha256_decrypt
+     nettle_rsa_oaep_sha384_decrypt
+     nettle_rsa_oaep_sha512_decrypt
+     _nettle_rsa_oaep_decrypt
+     nettle_rsa_oaep_sha256_encrypt
+     nettle_rsa_oaep_sha384_encrypt
+     nettle_rsa_oaep_sha512_encrypt
+     _nettle_rsa_oaep_encrypt
      nettle_rsa_decrypt
      nettle_rsa_encrypt
      nettle_rsa_pss_sha384_verify_digest
@@ -256,6 +234,8 @@ EXPORTS
      nettle_pkcs1_rsa_digest_encode
      _nettle_pkcs1_sec_decrypt
      _nettle_pkcs1_sec_decrypt_variable
+     _nettle_oaep_decode_mgf1
+     _nettle_oaep_encode_mgf1
      nettle_pkcs1_decrypt
      nettle_pkcs1_encrypt
      _nettle_pkcs1_signature_prefix
@@ -285,13 +265,3 @@ EXPORTS
      nettle_sexp_iterator_check_type
      nettle_sexp_iterator_check_types
      nettle_sexp_iterator_assoc
-     _nettle_rsa_oaep_decrypt
-     _nettle_rsa_oaep_encrypt
-     nettle_rsa_oaep_sha256_decrypt
-     nettle_rsa_oaep_sha384_decrypt
-     nettle_rsa_oaep_sha512_decrypt     
-     nettle_rsa_oaep_sha256_encrypt
-     nettle_rsa_oaep_sha384_encrypt
-     nettle_rsa_oaep_sha512_encrypt
-     _nettle_oaep_decode_mgf1
-     _nettle_oaep_encode_mgf1

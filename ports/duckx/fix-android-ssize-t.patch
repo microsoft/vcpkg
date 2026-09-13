@@ -1,0 +1,14 @@
+diff --git a/src/zip.h b/src/zip.h
+index 5f39df5..14743fa 100644
+--- a/src/zip.h
++++ b/src/zip.h
+@@ -19,7 +19,8 @@
+ extern "C" {
+ #endif
+ 
+-#if !defined(_SSIZE_T_DEFINED) && !defined(_SSIZE_T_DEFINED_) &&               \
++#if !defined(__ANDROID__) && !defined(_SSIZE_T_DEFINED) &&                    \
++    !defined(_SSIZE_T_DEFINED_) &&                                             \
+     !defined(_SSIZE_T) && !defined(_SSIZE_T_) && !defined(__ssize_t_defined)
+ #define _SSIZE_T
+ // 64-bit Windows is the only mainstream platform

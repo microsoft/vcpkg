@@ -1,0 +1,39 @@
+diff --git a/untracked/gio/giomm/dbusactiongroup.h b/untracked/gio/giomm/dbusactiongroup.h
+index 1434ea1..d577ba9 100644
+--- a/untracked/gio/giomm/dbusactiongroup.h
++++ b/untracked/gio/giomm/dbusactiongroup.h
+@@ -28,8 +28,15 @@
+ 
+ 
+ #ifndef DOXYGEN_SHOULD_SKIP_THIS
+-using GDBusActionGroup = struct _GDBusActionGroup;
+-using GDBusActionGroupClass = struct _GDBusActionGroupClass;
++// GDBusActionGroup was declared a final type between GLib 2.89.1 and 2.89.2.
++// Before that, GDBusActionGroupClass was not declared in GLib.
++// The preprocessor macro G_DBUS_ACTION_GROUP_CLASS was defined, though.
++#if !GLIB_CHECK_VERSION(2,89,1) || (!GLIB_CHECK_VERSION(2,89,2) && defined(G_DBUS_ACTION_GROUP_CLASS))
++  // glib < 2.89.1 or (glib == 2.89.1 and G_DBUS_ACTION_GROUP_CLASS is a preprocessor macro)
++  // GDBusActionGroup is not a final type,
++  // GDBusActionGroupClass is not declared in GLib.
++  using GDBusActionGroupClass = struct _GDBusActionGroupClass;
++#endif
+ #endif /* DOXYGEN_SHOULD_SKIP_THIS */
+ 
+ 
+diff --git a/untracked/gio/giomm/emblem.h b/untracked/gio/giomm/emblem.h
+index e2267b3..b3d5a42 100644
+--- a/untracked/gio/giomm/emblem.h
++++ b/untracked/gio/giomm/emblem.h
+@@ -24,11 +24,10 @@
+ 
+ #include <glibmm/object.h>
+ #include <giomm/icon.h>
++#include <gio/gio.h>
+ 
+ 
+ #ifndef DOXYGEN_SHOULD_SKIP_THIS
+-using GEmblem = struct _GEmblem;
+-using GEmblemClass = struct _GEmblemClass;
+ #endif /* DOXYGEN_SHOULD_SKIP_THIS */
+ 
+ 
