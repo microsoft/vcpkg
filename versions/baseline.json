@@ -6673,7 +6673,7 @@
       "port-version": 0
     },
     "minifb": {
-      "baseline": "0.11.0",
+      "baseline": "0.13.0",
       "port-version": 0
     },
     "minimp3": {
