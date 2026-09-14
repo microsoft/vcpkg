@@ -17,6 +17,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME cc_ublox CONFIG_PATH lib/cc_ublox/cmake)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/cc_ublox/cc_ubloxConfig.cmake"
+    "# Compute the installation prefix relative to this file."
+    "include(CMakeFindDependencyMacro)\nfind_dependency(LibComms CONFIG)\n\n# Compute the installation prefix relative to this file."
+)
 # currently this is only a header only library. after moving lib/ublox to share this lib path will be empty
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
