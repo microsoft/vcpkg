@@ -24,6 +24,14 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nng)
 
+if("mbedtls" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/share/nng/nng-config.cmake"
+        "foreach(_PKG IN ITEMS )"
+        "foreach(_PKG IN ITEMS MbedTLS)"
+    )
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_replace_string(
