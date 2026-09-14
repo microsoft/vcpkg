@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c0e36b..e1588fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,9 +46,9 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+   endif(HAVE_ELF_AUX_INFO)
+ endif()
+ 
++include(GNUInstallDirs)
+ # Global variables
+ if(UNIX)
+-  include(GNUInstallDirs)
+   set(prefix "${CMAKE_INSTALL_PREFIX}")
+   set(exec_prefix "\${prefix}")
+   set(libdir "\${exec_prefix}/lib")
