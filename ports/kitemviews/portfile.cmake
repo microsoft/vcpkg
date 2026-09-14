@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kitemviews
     REF "v${VERSION}"
-    SHA512 978b601e704e8d33ecee8ebb90a05b3b7fb7c664a91fc76efff151edd0e6cb3a5c92e301a1f14acfc9fa33dcd4e93b4912b03dc48aad80680ea068e8f2f27ddb
+    SHA512 8c449ac9ad9c1f0434ab2000c343e3e519f9c9927078d7f9fa14d66e56b21a0fbd1291a8ed0faab8d07aff1968947171094e2ed449affc0ecf0e0d153b0d944a
     HEAD_REF master
 )
 
