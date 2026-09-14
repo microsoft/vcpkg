@@ -6,7 +6,10 @@
   "documentation": "https://github.com/commschamp/cc.ublox.generated",
   "license": "MPL-2.0",
   "dependencies": [
-    "comms",
+    {
+      "name": "comms",
+      "version>=": "5.5.3"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
