@@ -1,10 +1,17 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+vcpkg_download_distfile(DEFLATE_OPTIONS_PATCH
+    URLS "https://github.com/machinezone/IXWebSocket/commit/b02063e3371319dc51b3a27420c906fb733097ca.patch?full_index=1"
+    FILENAME "ixwebsocket-b02063e3371319dc51b3a27420c906fb733097ca.patch"
+    SHA512 279680e5321af1aad2c15fb616bb721215a5ab76ab01b1ec00b41de7caae5450d01deadb7d230395b36beee615136c2729ac546e6f2b8ca8d13779c112fb9f6a
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
     REF "v${VERSION}"
     SHA512 ef8fa2732d8f59cd335cb97306d05cd7f2373aa6686aab6c4eebdf687301ce51728fc01b06632bfc616aeaadc61c7eb4fcc4100fbc38fce6b6abed189c7a3579
+    PATCHES "${DEFLATE_OPTIONS_PATCH}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
