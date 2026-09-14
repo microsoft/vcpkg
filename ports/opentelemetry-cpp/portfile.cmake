@@ -6,11 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 b5d309670c0dbd3771f78b5d7d447eb98c19947b7c4a2e2b9a36e160396a60e502d80087a13d77635e9b8ab558c82a4142712dfc263f1ccb195f5e71c12b8428
+    SHA512 f3e8603d55bca5d5eb96d01cab82470a7c2cca8fb1db48fc0e328af3f4e40928c31f76e5ab61b557bb84d61238b1bceec986d19c7fec9a4a2191d523c49f29a4
     HEAD_REF main
-    PATCHES
-        fix-target_link.patch
-        fix-pkgconfig-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,6 +25,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         user-events BUILD_TRACEPOINTS
 )
+
+if(WITH_OPENTRACING)
+    list(APPEND FEATURE_OPTIONS -DCMAKE_REQUIRE_FIND_PACKAGE_OpenTracing=ON)
+endif()
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP_FILE OR WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
