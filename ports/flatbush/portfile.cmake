@@ -15,5 +15,12 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/flatbush)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
+# The configured FLATBUSH_SPAN setting must also apply to consumers that include the header directly.
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/flatbush.h"
+    "#define FLATBUSH_FLATBUSH_H"
+    "#define FLATBUSH_FLATBUSH_H\n\n#define FLATBUSH_SPAN"
+)
+
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
