@@ -338,18 +338,6 @@ vcpkg_acquire_msys(msys_root Z_ALL_PACKAGES)
 analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_acquire_msys.cmake")
 set(known_packages "${Z_VCPKG_MSYS_PACKAGES_RESOLVED}")
 
-set(Z_VCPKG_MSYS_PACKAGES_RESOLVED "" CACHE INTERNAL "")
-vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_acquire_msys(msys_root
-    NO_DEFAULT_PACKAGES
-    Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_acquire_pkgconfig_msys_declare_packages"
-    PACKAGES
-        mingw-w64-clang-aarch64-pkgconf
-        mingw-w64-x86_64-pkgconf
-        mingw-w64-i686-pkgconf
-)
-analyze_package_list(Z_VCPKG_MSYS_PACKAGES_RESOLVED "vcpkg_find_acquire_program(PKGCONFIG).cmake")
-
 set(CMAKE_Fortran_COMPILER "")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(CMAKE_Fortran_COMPILER "true")
