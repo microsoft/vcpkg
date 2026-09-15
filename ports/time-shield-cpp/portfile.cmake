@@ -22,4 +22,5 @@ vcpkg_cmake_config_fixup(
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/AGENTS.md")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
