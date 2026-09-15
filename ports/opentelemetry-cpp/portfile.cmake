@@ -17,25 +17,25 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ${OPENTELEMETRY_PLATFORM_FEATURES}
-        zipkin WITH_ZIPKIN
-        prometheus WITH_PROMETHEUS
-        elasticsearch WITH_ELASTICSEARCH
-        otlp-file WITH_OTLP_FILE
-        otlp-http WITH_OTLP_HTTP
-        otlp-grpc WITH_OTLP_GRPC
+        zipkin OTELCPP_WITH_ZIPKIN
+        prometheus OTELCPP_WITH_PROMETHEUS
+        elasticsearch OTELCPP_WITH_ELASTICSEARCH
+        otlp-file OTELCPP_WITH_OTLP_FILE
+        otlp-http OTELCPP_WITH_OTLP_HTTP
+        otlp-grpc OTELCPP_WITH_OTLP_GRPC
         geneva WITH_GENEVA
         user-events WITH_USER_EVENTS
-        opentracing WITH_OPENTRACING
+        opentracing OTELCPP_WITH_OPENTRACING
     INVERTED_FEATURES
         user-events BUILD_TRACEPOINTS
 )
 
-if(WITH_OPENTRACING)
+if(OTELCPP_WITH_OPENTRACING)
     list(APPEND FEATURE_OPTIONS -DCMAKE_REQUIRE_FIND_PACKAGE_OpenTracing=ON)
 endif()
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_FILE OR WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
+if(OTELCPP_WITH_OTLP_FILE OR OTELCPP_WITH_OTLP_GRPC OR OTELCPP_WITH_OTLP_HTTP)
     set(OTEL_PROTO_VERSION "1.8.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
@@ -81,10 +81,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DWITH_EXAMPLES=OFF
-        -DOPENTELEMETRY_INSTALL=ON
-        -DWITH_BENCHMARK=OFF
-        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
+        -DOTELCPP_WITH_EXAMPLES=OFF
+        -DOTELCPP_INSTALL=ON
+        -DOTELCPP_WITH_BENCHMARK=OFF
+        -DOTELCPP_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         WITH_GENEVA
