@@ -1,0 +1,18 @@
+diff --git a/configure b/configure
+index 0cc2199..d0b4eaf 100644
+--- a/configure
++++ b/configure
+@@ -5607,6 +5607,13 @@ MAGICK_FILTER_MODULE_PATH="${builddir}/filters"
+ DIRSEP=':'
+ case "${build_os}" in
+     mingw* )
++        # WinPathScript is initialized later by configure. On MSYS2/MinGW,
++        # it is used here first, so provide a safe fallback to avoid executing
++        # path strings as shell commands.
++        if test -z "$WinPathScript"; then
++            WinPathScript='echo'
++        fi
++
+         MAGICK_CODER_MODULE_PATH=`$WinPathScript "${MAGICK_CODER_MODULE_PATH}" 0`
+         MAGICK_CONFIGURE_SRC_PATH=`$WinPathScript "${MAGICK_CONFIGURE_SRC_PATH}" 0`
+         MAGICK_CONFIGURE_BUILD_PATH=`$WinPathScript "${MAGICK_CONFIGURE_BUILD_PATH}" 0`

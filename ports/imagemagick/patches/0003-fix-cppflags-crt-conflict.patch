@@ -1,0 +1,33 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -955,25 +955,27 @@ MODULE_EXTRA_CPPFLAGS=''
+ MODULE_EXTRA_CPPFLAGS=''
+ LIBRARY_EXTRA_CPPFLAGS=''
+ if test "${native_win32_build}" = 'yes'; then
+     if test "${libtool_build_shared_libs}" = 'yes'; then
+-        CPPFLAGS="$CPPFLAGS -D_DLL"
+         MAGICK_CPPFLAGS="$MAGICK_CPPFLAGS -D_DLL"
+         MAGICK_PCFLAGS="$MAGICK_PCFLAGS -D_DLL"
+         LIBRARY_EXTRA_CPPFLAGS="$LIBRARY_EXTRA_CPPFLAGS -D_MAGICKLIB_"
++        # _DLL and _MT are kept in MAGICK_CPPFLAGS / MAGICK_PCFLAGS (consumed
++        # by .pc files and the ImageMagick build) but NOT in CPPFLAGS.  Adding
++        # them to CPPFLAGS pollutes AC_CHECK_SIZEOF and other autoconf runtime
++        # tests: -D_DLL makes CRT headers declare stdio functions as dllimport,
++        # which is incompatible with static CRT linkage (-MT) and causes LNK2019.
+         if test "$build_modules" = 'yes'; then
+             LIBRARY_EXTRA_CPPFLAGS="$LIBRARY_EXTRA_CPPFLAGS -D_MAGICKMOD_"
+         else
+             MODULE_EXTRA_CPPFLAGS="$MODULE_EXTRA_CPPFLAGS -D_MAGICKLIB_"
+         fi
+     else
+-        CPPFLAGS="$CPPFLAGS -D_LIB"
+         MAGICK_CPPFLAGS="$MAGICK_CPPFLAGS -D_LIB"
+         MAGICK_PCFLAGS="$MAGICK_PCFLAGS -D_LIB"
+     fi
+     if test "$with_threads" = 'yes'; then
+-         CPPFLAGS="$CPPFLAGS -D_MT"
+          MAGICK_CPPFLAGS="$MAGICK_CPPFLAGS -D_MT"
+          MAGICK_PCFLAGS="$MAGICK_PCFLAGS -D_MT"
+     fi
+ fi
+ AC_SUBST([MODULE_EXTRA_CPPFLAGS])

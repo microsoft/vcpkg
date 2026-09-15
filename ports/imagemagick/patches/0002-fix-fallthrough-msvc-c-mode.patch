@@ -1,0 +1,14 @@
+--- a/MagickCore/method-attribute.h
++++ b/MagickCore/method-attribute.h
+@@ -104,7 +104,9 @@
+ #else
+ #  define magick_alloc_size(x)  /* nothing */
+ #  define magick_alloc_sizes(x,y)  /* nothing */
+-#  if defined(_MSC_VER)
++#  if defined(_MSC_VER) && defined(__cplusplus)
+ #    define magick_fallthrough [[fallthrough]]
++#  elif defined(_MSC_VER)
++#    define magick_fallthrough  /* no [[fallthrough]] in MSVC C mode */
+ #  else
+ #    define magick_fallthrough  /* nothing */
+ #  endif
