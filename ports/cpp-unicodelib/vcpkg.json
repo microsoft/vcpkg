@@ -1,0 +1,7 @@
+{
+  "name": "cpp-unicodelib",
+  "version-date": "2026-09-05",
+  "description": "A C++17 header-only Unicode library. (Unicode 17.0.0)",
+  "homepage": "https://github.com/yhirose/cpp-unicodelib",
+  "license": "MIT"
+}
