@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mity/md4c
-    REF "release-${VERSION}"
-    SHA512 213d6b9fbad24b2bfb4fa0a8124cb4c20861da2cb57790882aa0e5ff8c18903450f1d9ffdbcc0547debd103137777059f27a526cd818294f698b5ffdbfe7fbcb
+    REF 65c6c9d72cebd9a731aaa5597414ce04d9ea5de3
+    SHA512 4a4971d340f44238259c97eadc08f84fec180bc24db3b4db1d997a08d11e36a47ae10a2b127fb7d149a33b326bf6bc43ab71dc664d5f6bf9ea83ca111ebcacc9
     HEAD_REF master
     PATCHES
         "cmake.patch"
