@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strukturag/libde265
     REF "v${VERSION}"
-    SHA512 fb2207f5a3ba901853f61f345c72130f000134918febbc4f3529c3d289fc79ee7457b3e61660110f698bb4ac15d62426e284034bf870bfbd1859ab3feaa52be8
+    SHA512 58eabdac466c0b59e0bc82e4d2b6d4fc9cbf6ee0af9562e36d63c0601c92c2fe21bd3dfca2a119934ee4a9dcc73e7207f6ea25dba78382752e901374896c4471
     HEAD_REF master
     PATCHES
         fix-linkage.patch
-        fix-api-visibility.patch
 )
 
 vcpkg_cmake_configure(
