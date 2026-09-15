@@ -1,5 +1,7 @@
+set(OPENTELEMETRY_PLATFORM_FEATURES)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    list(APPEND OPENTELEMETRY_PLATFORM_FEATURES etw OTELCPP_WITH_ETW)
 endif()
 
 vcpkg_from_github(
@@ -12,7 +14,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        etw WITH_ETW
+        ${OPENTELEMETRY_PLATFORM_FEATURES}
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
@@ -97,7 +99,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/opentelemetry/sdk/configuration")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(WITH_ETW)
+if(OTELCPP_WITH_ETW)
     list(APPEND LICENSE_FILES "${SOURCE_PATH}/exporters/etw/include/opentelemetry/exporters/etw/LICENSE")
 endif()
 vcpkg_install_copyright(
