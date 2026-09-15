@@ -28,7 +28,7 @@ if("mbedtls" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(
         "${CURRENT_PACKAGES_DIR}/share/nng/nng-config.cmake"
         "foreach(_PKG IN ITEMS "
-        "foreach(_PKG IN ITEMS MbedTLS"
+        "foreach(_PKG IN ITEMS MbedTLS "
     )
 endif()
 
