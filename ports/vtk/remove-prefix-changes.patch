@@ -1,8 +1,17 @@
+From b0479235230a03517ae69bfbd8e12d28416cddc9 Mon Sep 17 00:00:00 2001
+From: Kai Pastor <dg0yt@darc.de>
+Date: Sun, 21 Jun 2026 16:55:31 +0200
+Subject: [PATCH 14/22] prefix
+
+---
+ CMake/vtk-config.cmake.in | 2 --
+ 1 file changed, 2 deletions(-)
+
 diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
-index 9f095ba..8cf7ee2 100644
+index e03eaea3..540ee121 100644
 --- a/CMake/vtk-config.cmake.in
 +++ b/CMake/vtk-config.cmake.in
-@@ -114,8 +114,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/vtk-prefix.cmake")
+@@ -118,8 +118,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/vtk-prefix.cmake")
  set("${CMAKE_FIND_PACKAGE_NAME}_PREFIX_PATH"
    "${_vtk_module_import_prefix}")
  unset(_vtk_module_import_prefix)
@@ -11,4 +20,6 @@ index 9f095ba..8cf7ee2 100644
  
  set("${CMAKE_FIND_PACKAGE_NAME}_VERSION" "@VTK_MAJOR_VERSION@.@VTK_MINOR_VERSION@.@VTK_BUILD_VERSION@")
  set("${CMAKE_FIND_PACKAGE_NAME}_MAJOR_VERSION" "@VTK_MAJOR_VERSION@")
+-- 
+2.47.3
 
