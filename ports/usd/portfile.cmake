@@ -89,7 +89,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         )
     foreach(debug_target IN LISTS debug_targets)
         file(READ "${debug_target}" contents)
-        string(REPLACE "\${_IMPORT_PREFIX}/usd" "\${_IMPORT_PREFIX}/debug/usd" contents "${contents}")
         string(REPLACE "\${_IMPORT_PREFIX}/plugin" "\${_IMPORT_PREFIX}/debug/plugin" contents "${contents}")
         file(WRITE "${debug_target}" "${contents}")
     endforeach()
@@ -130,3 +129,5 @@ endif()
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE.txt)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
