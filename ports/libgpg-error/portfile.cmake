@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
         mingw.diff
         pkgconfig-libintl.patch
         win32-nls.diff
+        msvc.diff
 )
 
 vcpkg_list(SET options)
