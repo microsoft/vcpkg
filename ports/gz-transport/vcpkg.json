@@ -1,6 +1,7 @@
 {
   "name": "gz-transport",
   "version": "14.3.0",
+  "port-version": 1,
   "description": "Transport middleware for robotics",
   "license": null,
   "dependencies": [
@@ -16,7 +17,13 @@
       "name": "libuuid",
       "platform": "!windows & !osx"
     },
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
+    },
     "sqlite3",
     "zeromq"
   ]

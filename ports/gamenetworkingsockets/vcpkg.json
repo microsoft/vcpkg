@@ -1,13 +1,20 @@
 {
   "name": "gamenetworkingsockets",
   "version": "1.6.0",
+  "port-version": 1,
   "description": "GameNetworkingSockets is a basic transport layer for games.",
   "homepage": "https://github.com/ValveSoftware/GameNetworkingSockets",
   "license": "BSD-3-Clause",
   "supports": "!uwp & !(arm64 & windows)",
   "dependencies": [
     "openssl",
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

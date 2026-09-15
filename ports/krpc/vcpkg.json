@@ -1,12 +1,19 @@
 {
   "name": "krpc",
   "version": "0.6.0",
+  "port-version": 1,
   "description": "kRPC C++ client — control Kerbal Space Program from C++ programs via RPC",
   "homepage": "https://krpc.github.io/krpc",
   "license": "LGPL-3.0-or-later",
   "dependencies": [
     "asio",
-    "protobuf",
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

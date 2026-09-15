@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2b9ca8ed6..1881eb221 100644
+index 1c91702..bb01999 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -13,6 +13,7 @@ endif()

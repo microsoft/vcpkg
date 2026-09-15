@@ -1,6 +1,7 @@
 {
   "name": "mysql-connector-cpp",
   "version": "9.7.0",
+  "port-version": 1,
   "description": "This is a release of MySQL Connector/C++, the C++ interface for communicating with MySQL servers.",
   "homepage": "https://github.com/mysql/mysql-connector-cpp",
   "license": null,
@@ -13,10 +14,16 @@
       "platform": "!windows | mingw"
     },
     "openssl",
-    "protobuf",
     {
       "name": "protobuf",
       "host": true
+    },
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
     },
     "rapidjson",
     {
