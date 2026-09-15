@@ -24,6 +24,22 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME NumCpp CONFIG_PATH share/NumCpp/cmake)
 
+if("boost" NOT IN_LIST FEATURES)
+    file(GLOB_RECURSE numcpp_headers "${CURRENT_PACKAGES_DIR}/include/*.hpp")
+    foreach(numcpp_header IN LISTS numcpp_headers)
+        file(READ "${numcpp_header}" numcpp_header_contents)
+        if(numcpp_header_contents MATCHES "NUMCPP_NO_USE_BOOST")
+            string(REPLACE
+                "#pragma once"
+                "#pragma once\n\n#ifndef NUMCPP_NO_USE_BOOST\n#define NUMCPP_NO_USE_BOOST\n#endif"
+                numcpp_header_contents
+                "${numcpp_header_contents}"
+            )
+            file(WRITE "${numcpp_header}" "${numcpp_header_contents}")
+        endif()
+    endforeach()
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
