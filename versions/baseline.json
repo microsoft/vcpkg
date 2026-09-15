@@ -7861,8 +7861,8 @@
       "port-version": 0
     },
     "piex": {
-      "baseline": "2019-07-11",
-      "port-version": 2
+      "baseline": "0.27",
+      "port-version": 0
     },
     "pipewire": {
       "baseline": "1.6.7",
