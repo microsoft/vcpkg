@@ -1,0 +1,51 @@
+diff --git a/cmake/PrismDeps.cmake b/cmake/PrismDeps.cmake
+index 0b7c700..826fde2 100644
+--- a/cmake/PrismDeps.cmake
++++ b/cmake/PrismDeps.cmake
+@@ -75,11 +75,23 @@ function(prism_declare_dependency NAME)
+   if(_provider STREQUAL "SYSTEM")
+     set(_pkg "${PD_PACKAGE}")
+     set(_pkg_targets "${PD_SYSTEM_TARGETS}")
+-    find_package(${_pkg} ${PD_MIN_VERSION} CONFIG QUIET)
++    find_package(${_pkg} CONFIG QUIET)
++    set(_found_version "${${_pkg}_VERSION}")
++    if(${_pkg}_FOUND
++       AND PD_MIN_VERSION
++       AND (NOT _found_version OR _found_version VERSION_LESS PD_MIN_VERSION))
++      set(${_pkg}_FOUND FALSE)
++    endif()
+     if(NOT ${_pkg}_FOUND AND PD_ALT_PACKAGE)
+       set(_pkg "${PD_ALT_PACKAGE}")
+       set(_pkg_targets "${PD_ALT_SYSTEM_TARGETS}")
+-      find_package(${_pkg} ${PD_MIN_VERSION} CONFIG QUIET)
++      find_package(${_pkg} CONFIG QUIET)
++      set(_found_version "${${_pkg}_VERSION}")
++      if(${_pkg}_FOUND
++         AND PD_MIN_VERSION
++         AND (NOT _found_version OR _found_version VERSION_LESS PD_MIN_VERSION))
++        set(${_pkg}_FOUND FALSE)
++      endif()
+     endif()
+     if(NOT ${_pkg}_FOUND)
+       set(_tried "${PD_PACKAGE}")
+@@ -105,7 +117,19 @@ function(prism_declare_dependency NAME)
+       set(_found_version "${PD_MIN_VERSION}")
+     endif()
+     set(_sfd "${PRISM_SYSTEM_DEP_FIND_DEPENDS}")
+-    list(APPEND _sfd "find_dependency(${_pkg} ${_found_version} CONFIG)")
++    list(APPEND _sfd "find_dependency(${_pkg} CONFIG)")
++    if(PD_MIN_VERSION)
++      list(
++        APPEND
++        _sfd
++        "set(_prism_dep_version \"\${${_pkg}_VERSION}\")"
++        "if(NOT _prism_dep_version OR _prism_dep_version VERSION_LESS \"${PD_MIN_VERSION}\")"
++        "  set(\${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)"
++        "  set(\${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE \"${_pkg} >= ${PD_MIN_VERSION} is required, but found '\${${_pkg}_VERSION}'\")"
++        "  return()"
++        "endif()"
++        "unset(_prism_dep_version)")
++    endif()
+     set(PRISM_SYSTEM_DEP_FIND_DEPENDS
+         "${_sfd}"
+         CACHE INTERNAL "")
