@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${options}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )
 
 vcpkg_cmake_install()
