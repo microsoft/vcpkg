@@ -1,7 +1,6 @@
 {
   "name": "redisx",
-  "version": "1.0.4",
-  "port-version": 1,
+  "version": "1.1.0-rc2",
   "description": "A free and independent Redis / Valkey client library for C/C++",
   "homepage": "https://sigmyne.github.io/redisx/",
   "documentation": "https://sigmyne.github.io/redisx/doc/html/",
@@ -9,7 +8,7 @@
   "dependencies": [
     {
       "name": "libxchange",
-      "version>=": "1.2.0#1"
+      "version>=": "1.3.0"
     },
     {
       "name": "vcpkg-cmake",
@@ -21,6 +20,10 @@
     }
   ],
   "features": {
+    "parallel-cluster": {
+      "description": "Parallelized cluster connect / disconnect with OpenMP",
+      "supports": "!(osx & arm64)"
+    },
     "tls": {
       "description": "TLS encryption support",
       "dependencies": [
