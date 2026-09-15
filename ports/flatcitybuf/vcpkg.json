@@ -1,0 +1,31 @@
+{
+  "name": "flatcitybuf",
+  "version": "0.9.0",
+  "description": [
+    "Native C++17 reader and writer for FlatCityBuf, a cloud-optimized binary encoding of CityJSON.",
+    "FlatCityBuf stores CityJSON semantics in FlatBuffers alongside a packed Hilbert R-tree for spatial queries and a static B+tree for attribute queries, so a client can fetch only the bytes it needs - including over HTTP range requests."
+  ],
+  "homepage": "https://github.com/cityjson/flatcitybuf",
+  "documentation": "https://github.com/cityjson/flatcitybuf/tree/main/src/cpp",
+  "license": "MIT",
+  "dependencies": [
+    "flatbuffers",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "curl": {
+      "description": "HTTP range-request reader backed by libcurl",
+      "dependencies": [
+        "curl"
+      ]
+    }
+  }
+}
