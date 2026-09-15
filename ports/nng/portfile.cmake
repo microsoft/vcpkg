@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 61650b22ca55122c382b44e8f979401cfb09b59ca9e1d2bb73dd8881fd92dd337617b7d9b3cce983dda9a6347647bd9c2447608a7524eafd7de96a697b62e054
     HEAD_REF master
+    PATCHES
+        fix-static-mbedtls-export.patch
 )
 
 vcpkg_check_features(
@@ -23,14 +25,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nng)
-
-if("mbedtls" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/share/nng/nng-config.cmake"
-        "foreach(_PKG IN ITEMS "
-        "foreach(_PKG IN ITEMS MbedTLS "
-    )
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
