@@ -4946,7 +4946,7 @@
     },
     "libde265": {
       "baseline": "1.1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libdeflate": {
       "baseline": "1.26",
