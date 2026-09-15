@@ -135,8 +135,6 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/gdk-config.cmake.in"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
     @ONLY)
 
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
 
 message(STATUS "BY USING THE SOFTWARE, YOU ACCEPT THESE TERMS: https://www.nuget.org/packages/Microsoft.GDK.Windows/${VERSION}/License")
