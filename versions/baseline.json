@@ -8198,7 +8198,7 @@
     },
     "python3": {
       "baseline": "3.13.15",
-      "port-version": 0
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.10",
