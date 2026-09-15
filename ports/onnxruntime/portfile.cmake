@@ -1,5 +1,4 @@
-# https://github.com/microsoft/onnxruntime/blob/v1.22.1/tools/python/util/vcpkg_helpers.py
-message(WARNING "The port requires 'onnx' port build with CMake option ONNX_DISABLE_STATIC_REGISTRATION=ON")
+# https://github.com/microsoft/onnxruntime/blob/v1.29.0/tools/python/util/vcpkg_helpers.py
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("framework" IN_LIST FEATURES)
         # The Objective-C API requires onnxruntime_BUILD_SHARED_LIB
@@ -11,12 +10,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/onnxruntime
     REF "v${VERSION}"
-    SHA512 373c51575ada457b8aead5d195a5f3eba62fb747b6370a2a9889fff875c40ea30af8fd49104d58cc86f79247410e829086b0979f37ca8635c6dd34960e9cc424
+    SHA512 9ea05f5279fc93fd243a967f3664aaabe9216f6e3ce9358ead662653984476e9cb0cb950947f31f8602541224c946a3ceac91d7c1990ffe2b8314d61361c300f
     PATCHES
-        fix-cmake.patch # .framework install, external library workarounds(abseil-cpp, eigen3)
+        fix-cmake.patch # .framework install, system dependency workarounds
         fix-cmake-cuda.patch
-        fix-missing-cstdint.patch
         fix-cmake-mlas.patch
+        fix-onnx-static-registration.patch
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
