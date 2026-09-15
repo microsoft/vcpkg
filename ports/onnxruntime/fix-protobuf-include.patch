@@ -1,0 +1,13 @@
+diff --git a/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu b/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
+index 1111111..2222222 100644
+--- a/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
++++ b/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
+@@ -43,7 +43,7 @@
+ #include <cub/device/device_radix_sort.cuh>
+ #include <cub/util_type.cuh>
+ 
+-#include "contrib_ops/cuda/utils/dump_cuda_tensor.h"
++#include "contrib_ops/cpu/utils/debug_macros.h"
+ 
+ namespace ort_fastertransformer {
+ static constexpr int WARP_SIZE = 32;
