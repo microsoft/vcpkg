@@ -1,34 +1,21 @@
-# Copyright The Pit Project Owners. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# Please see https://openpit.dev and the OWNERS file for details.
-
 # The C++ layer is a header-only wrapper around the C ABI, so a debug variant
 # would build the same headers twice and install nothing extra.
 set(VCPKG_BUILD_TYPE release)
 # The engine itself ships as a prebuilt shared library.
-set(VCPKG_LIBRARY_LINKAGE dynamic)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 # That prebuilt engine is released in one flavour, so there is no debug binary
 # to pair it with and nothing to gain from installing a second copy.
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+# The engine library is code-signed and already carries an @rpath install
+# name. Rewriting its load commands would break the signature, and arm64
+# macOS refuses to load a library whose signature is broken.
+set(VCPKG_FIXUP_MACHO_RPATH OFF)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO openpitkit/pit
-  REF "v0.8.0"
-  SHA512 7c0b5eeb6ed1964076d93c15c0ffe747a3d41acb23dd41b49b7fcb203e903880b73f3cfb28e5b408b1a79265f1c9ab06c17e4b69f67aead4a4578bd3342f5ed7
+  REF "v0.8.1"
+  SHA512 55fac6e56af7b876c84de0017d1b986b1606e5442ade5232aa7bbfd78236ab94efaa473172789c2dec5058f7db4e13f3e777c5744f9bd409a49ff1eb7a6b91fc
   HEAD_REF main)
 
 # Select the engine for the target triplet and supply it to both the package
@@ -39,19 +26,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "openpit: no prebuilt engine for windows-${VCPKG_TARGET_ARCHITECTURE}")
   endif()
   set(openpit_runtime_asset "openpit-ffi--windows-amd64-openpit_ffi.dll")
-  set(openpit_runtime_sha512 "5907fb719c23fff6fc23d27c277d64659ee274ab32e1b9fbb28b8cab797f159341a4cbde456eb8c69ac64f7abbad144783ad7cc03172e657b631b34f5e76931c")
+  set(openpit_runtime_sha512 "6383f9692131c0f9279b9dd259a9741267e85155b19242509fff79e6abc2c07101a093a7bc2e3b63e922017b89666beb175d69ab397b84e8122e2ebc47448c42")
   set(openpit_runtime_file "openpit_ffi.dll")
   set(openpit_implib_asset "openpit-ffi--windows-amd64-openpit_ffi.dll.lib")
-  set(openpit_implib_sha512 "1eb93db664806cd90ec7c636219773bd13c0bacbbd8e35b92b47e25b5fbd324462826e7ed9873b3d5e0362515355578b24d6321dec5cb92324eea891f49e4d60")
+  set(openpit_implib_sha512 "348b876fb0378eb2fb785b40f6a134b3e6c171c4943c7bb4a738653cf0523e7b91ba393f30f7deb937227167368ba69ffa2728563dc64e70c29507169fc2c162")
   set(openpit_implib_file "openpit_ffi.lib")
 elseif(VCPKG_TARGET_IS_OSX)
   set(openpit_runtime_file "libopenpit_ffi.dylib")
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(openpit_runtime_asset "openpit-ffi--darwin-arm64-libopenpit_ffi.dylib")
-    set(openpit_runtime_sha512 "7f0b61237178a682ae213b47d4073ba1fc5d05a2c479db255403ade170328ef29710d7ad0c78aea18d79a223d45700abf88e7fada488087b366093525ba2ba8d")
+    set(openpit_runtime_sha512 "d8d66f6cb9f91c2299c9f5a7e24151b6d3dbeefe8b5ac4780b1e0f71053859b622a7beba72a5b8db7e061c12daf94b1a50ab97a86d4d70a299309433fe427a57")
   elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(openpit_runtime_asset "openpit-ffi--darwin-amd64-libopenpit_ffi.dylib")
-    set(openpit_runtime_sha512 "10095d7d3f2d7db1b6745f9877c899d00d11e0b86d871ac4257dba518cfa0548c3aa5c8d338664b7d7cf73c8d193f7f90a8219f82f774e4756181eb8dc4b9f90")
+    set(openpit_runtime_sha512 "0d86233879cf62e8c5cce1910191eca5d506c075a5a0ee0896753b4300a4a017d87f67e425b82cfeb3cf2f19acb8cb3b315d8231bd129efa99cef284d3d8f1ec")
   else()
     message(FATAL_ERROR
       "openpit: no prebuilt engine for osx-${VCPKG_TARGET_ARCHITECTURE}")
@@ -60,10 +47,10 @@ elseif(VCPKG_TARGET_IS_LINUX)
   set(openpit_runtime_file "libopenpit_ffi.so")
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     set(openpit_runtime_asset "openpit-ffi--linux-arm64-libopenpit_ffi.so")
-    set(openpit_runtime_sha512 "27d7a6348b239dccf6ccf6d5d5b12f2200e03b994f761583dee0bc7e88f1ee52ef79d3830ee45417af40f05131b7abc6f898c708f621e60fae00ddac2724fb2b")
+    set(openpit_runtime_sha512 "d60fbd3bc66e14ddbfe6f13b33da55b2c38a8eabe36fcc0e17f1c49c64c0ccb245c34d4a1815b1c6fcb2d9114a98ac376a434b91495c7cc6d5527525eda3e980")
   elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(openpit_runtime_asset "openpit-ffi--linux-amd64-libopenpit_ffi.so")
-    set(openpit_runtime_sha512 "64e5848732879f143cf5408ec5b89d39222fbdc0aad51413e833e6eccdc309dede68914e77c532cb50a811b872ba5e058751217623799434650b8999eb4d106b")
+    set(openpit_runtime_sha512 "136a5af1554cd5bd1e3d4250498d380d4025e4b9d45b49d891d4ff4043502d1d49b368428e633c0ddce9b9f5c93f6fc5653b06e2e62e249b0f26b26d1617ac80")
   else()
     message(FATAL_ERROR
       "openpit: no prebuilt engine for linux-${VCPKG_TARGET_ARCHITECTURE}")
@@ -73,7 +60,7 @@ else()
 endif()
 
 vcpkg_download_distfile(openpit_runtime_path
-  URLS "https://github.com/openpitkit/pit/releases/download/v0.8.0/${openpit_runtime_asset}"
+  URLS "https://github.com/openpitkit/pit/releases/download/v0.8.1/${openpit_runtime_asset}"
   FILENAME "${openpit_runtime_asset}"
   SHA512 "${openpit_runtime_sha512}")
 
@@ -81,7 +68,7 @@ set(openpit_runtime_options
   "-DOPENPIT_RUNTIME_LIBRARY=${openpit_runtime_path}")
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_download_distfile(openpit_implib_path
-    URLS "https://github.com/openpitkit/pit/releases/download/v0.8.0/${openpit_implib_asset}"
+    URLS "https://github.com/openpitkit/pit/releases/download/v0.8.1/${openpit_implib_asset}"
     FILENAME "${openpit_implib_asset}"
     SHA512 "${openpit_implib_sha512}")
   list(APPEND openpit_runtime_options
@@ -93,8 +80,8 @@ vcpkg_cmake_configure(
   OPTIONS
     ${openpit_runtime_options}
     "-DOPENPIT_CPP_BUILD_TESTS=OFF"
-    "-DOPENPIT_PACKAGE_VERSION=0.8.0"
-    "-DOPENPIT_RUNTIME_VERSION=0.8.0")
+    "-DOPENPIT_PACKAGE_VERSION=0.8.1"
+    "-DOPENPIT_RUNTIME_VERSION=0.8.1")
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenPit)
@@ -136,4 +123,6 @@ vcpkg_replace_string(
   "openpit_resolve_runtime()"
   "${openpit_config_runtime}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+  "${SOURCE_PATH}/LICENSE"
+  "${SOURCE_PATH}/THIRD-PARTY-LICENSES")
