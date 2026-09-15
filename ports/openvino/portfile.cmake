@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 161ee93fb99df97ff7724411f4d697f90c70614840aee3eb40b865faad719f8e2e8892637b867fc3cd97c1de8ebadab84973c379c5a1927bed70ca2c74e6344c
+    SHA512 9d74bd9d78d44841c78c14a1ae86f2e96cf43b60f8a32172c467959c1f917e5ddf9f9d260fd65394c0302ea681d3f6f28fc6ae0f4e01b106ea92e5edc345c2d6
     HEAD_REF master
     PATCHES
         msvc-debug-info-only-in-pdb.patch
