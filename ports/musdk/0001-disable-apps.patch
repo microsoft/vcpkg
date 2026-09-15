@@ -1,0 +1,10 @@
+diff --git a/Makefile.am b/Makefile.am
+index 1cb44a66..0e31137c 100755
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,4 +1,4 @@
+ ACLOCAL_AMFLAGS = -I m4
+ AUTOMAKE_OPTIONS = foreign
+ AM_MAKEFLAGS = --no-print-directory
+-SUBDIRS = src apps 
++SUBDIRS = src
