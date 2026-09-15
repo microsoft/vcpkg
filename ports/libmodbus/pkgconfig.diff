@@ -2,7 +2,9 @@ diff --git a/configure.ac b/configure.ac
 index 06d5dfa..f3122ac 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -133,6 +133,8 @@ if test "$os_cygwin" = "false"; then
+@@ -135,7 +135,9 @@ if test "$os_cygwin" = "false"; then
+ if test "$os_cygwin" = "false"; then
+     # Required for getaddrinfo (TCP IP - IPv6)
      AC_CHECK_HEADERS([winsock2.h], HAVE_WINSOCK2_H=yes)
      if test "x$HAVE_WINSOCK2_H" = "xyes"; then
          LIBS="$LIBS -lws2_32"
