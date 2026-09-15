@@ -38,6 +38,7 @@ vcpkg_make_configure(
         "--with-libevent=${CURRENT_INSTALLED_DIR}"
         "--with-libevent-libdir=${CURRENT_INSTALLED_DIR}/lib"
         --with-pmix=internal
+        --with-prrte=internal
         # Prevent optional components from depending on libraries found on the
         # build machine. Such integrations need declared vcpkg dependencies.
         --without-argobots
