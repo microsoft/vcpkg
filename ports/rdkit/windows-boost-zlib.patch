@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3e7f86f..86de9fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -452,9 +452,6 @@ if(RDK_USE_BOOST_SERIALIZATION)
+     find_package(Boost ${RDK_BOOST_VERSION} COMPONENTS serialization iostreams REQUIRED CONFIG)
+     target_link_libraries(rdkit_base INTERFACE ${Boost_LIBRARIES})
+     target_compile_definitions(rdkit_base INTERFACE -DRDK_USE_BOOST_SERIALIZATION)
+-    if(NOT Boost_USE_STATIC_LIBS)
+-      target_compile_definitions(rdkit_base INTERFACE -DBOOST_SERIALIZATION_DYN_LINK)
+-    endif()
+ endif()
+ 
+ if(RDK_USE_BOOST_IOSTREAMS)
+@@ -462,23 +459,14 @@ if(RDK_USE_BOOST_IOSTREAMS)
+     find_package(Boost ${RDK_BOOST_VERSION} COMPONENTS iostreams REQUIRED CONFIG)
+     target_link_libraries(rdkit_base INTERFACE ${Boost_LIBRARIES})
+ 
+-    if (NOT Boost_USE_STATIC_LIBS)
+-      target_compile_definitions(rdkit_base INTERFACE -DBOOST_IOSTREAMS_DYN_LINK)
+-    endif()
+ 
+     # deal with zlib
+-    if (WIN32)
+-      find_package(Boost ${RDK_BOOST_VERSION} COMPONENTS zlib CONFIG)
+-      if(Boost_zlib_FOUND)
+-        set(zlib_lib Boost::zlib)
+-      endif()
+-    else()
+-      if(Boost_USE_STATIC_LIBS)
+-        # when we're doing static linkage of boost
+-        # to also link against zlib (due to iostreams)
+-        find_package(ZLIB)
+-        set(zlib_lib ${ZLIB_LIBRARIES})
+-     endif()
++    # Modular Boost does not ship Boost::zlib; iostreams already depends on ZLIB.
++    find_package(ZLIB)
++    if(TARGET ZLIB::ZLIB)
++      set(zlib_lib ZLIB::ZLIB)
++    elseif(ZLIB_FOUND)
++      set(zlib_lib ${ZLIB_LIBRARIES})
+     endif()
+     target_link_libraries(rdkit_base INTERFACE ${zlib_lib})
+ endif()
