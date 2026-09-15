@@ -1,0 +1,7 @@
+exyokioffice provides CMake targets:
+
+    find_package(ExyokiOffice 1.0 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE ExyokiOffice::ExyokiOffice)
+
+The tools and mcp features install exyoki and the MCP servers into
+tools/exyokioffice.
