@@ -10,6 +10,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f3e8603d55bca5d5eb96d01cab82470a7c2cca8fb1db48fc0e328af3f4e40928c31f76e5ab61b557bb84d61238b1bceec986d19c7fec9a4a2191d523c49f29a4
     HEAD_REF main
+    PATCHES
+        fix-span-limits-32-bit.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
