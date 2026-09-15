@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         fix-LNK2019.patch
-        fix-install.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DLIBCPUID_ENABLE_DOCS=OFF
         -DLIBCPUID_BUILD_DRIVERS=OFF
+        -DCMAKE_INSTALL_INCLUDEDIR=include
 )
 
 vcpkg_cmake_install()
