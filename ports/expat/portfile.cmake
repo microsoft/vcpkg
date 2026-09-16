@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 e60e6d6ae9d0115f41186f06f3854008054863f0b29a58d44142f5b30057a494337145d820b5e18270b8ca3e779e318a757fcc6bf64d6d204e5498df5eeb2195
+    SHA512 72e9ad42a11d64c73f4cd4569115e75790ee7d73c850a1ac00ed453418bb782266e180cc06c2ba0ff205d97ea18d5fa2b23247a8b23ed5cb6edb86e28b94e501
     HEAD_REF master
 )
 
@@ -40,4 +40,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/expat/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/expat/COPYING"
+        "${SOURCE_PATH}/expat/lib/siphash.h"
+)

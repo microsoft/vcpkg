@@ -1,10 +1,10 @@
 {
   "name": "faker-cxx",
-  "version": "4.3.2",
+  "version": "4.4.1",
   "description": "C++ Faker library for generating fake (but realistic) data.",
   "homepage": "https://github.com/cieslarmichal/faker-cxx",
   "documentation": "https://cieslarmichal.github.io/faker-cxx/",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -70,7 +70,7 @@ vcpkg_configure_meson(
     -Dxz=enabled
     -Dzstd=enabled
   ADDITIONAL_BINARIES
-    "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${HOST_EXECUTABLE_SUFFIX}']"
+    "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
 )
 
 vcpkg_install_meson()

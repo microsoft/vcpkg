@@ -1,11 +1,11 @@
 {
   "name": "libtorrent",
-  "version": "2.0.11",
+  "version": "2.1.1",
   "maintainers": "Arvid Norberg <arvid.norberg@gmail.com>",
   "description": "An efficient feature complete C++ BitTorrent implementation",
   "homepage": "https://libtorrent.org",
   "documentation": "https://libtorrent.org/reference.html",
-  "license": "BSD-2-Clause",
+  "license": "BSD-3-Clause AND Zlib AND BSL-1.0 AND APSL-2.0 AND BSD-4-Clause",
   "supports": "!uwp",
   "dependencies": [
     "boost-asio",
@@ -33,32 +33,53 @@
     }
   ],
   "default-features": [
-    "iconv"
+    {
+      "name": "webtorrent",
+      "platform": "!xbox"
+    }
   ],
   "features": {
     "deprfun": {
-      "description": "build with deprecated functions enabled"
+      "description": "Build with deprecated libtorrent APIs enabled"
     },
     "examples": {
-      "description": "build the examples in the examples directory"
-    },
-    "iconv": {
-      "description": "build with libiconv",
-      "dependencies": [
-        "libiconv"
-      ]
+      "description": "Build the examples in the examples directory"
     },
     "python": {
-      "description": "build the python bindings in bindings/python directory",
+      "description": "Build the Python bindings",
+      "supports": "native & !emscripten & !ios & !android & !mingw & !(staticcrt & windows)",
       "dependencies": [
-        "boost-python"
+        "boost-python",
+        {
+          "name": "libtorrent",
+          "default-features": false,
+          "features": [
+            "deprfun"
+          ]
+        },
+        {
+          "name": "python3",
+          "default-features": false,
+          "features": [
+            "extensions"
+          ]
+        }
       ]
     },
     "test": {
-      "description": "build the libtorrent tests"
+      "description": "Build the libtorrent tests"
     },
     "tools": {
-      "description": "build the tools in the tools directory"
+      "description": "Build the libtorrent tools"
+    },
+    "webtorrent": {
+      "description": "Build with WebTorrent/WebRTC support",
+      "supports": "!xbox",
+      "dependencies": [
+        "boost-beast",
+        "boost-json",
+        "libdatachannel"
+      ]
     }
   }
 }

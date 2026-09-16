@@ -1,4 +1,0 @@
-slick-shm provides CMake targets:
-
-  find_package(slick-shm CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE slick::shm)

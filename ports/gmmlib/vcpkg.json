@@ -1,9 +1,9 @@
 {
   "name": "gmmlib",
-  "version": "22.10.0",
+  "version": "22.10.1",
   "description": "Intel(R) Graphics Memory Management Library",
   "homepage": "https://github.com/intel/gmmlib",
-  "license": "MIT",
+  "license": "MIT AND BSD-2-Clause",
   "supports": "linux",
   "dependencies": [
     {

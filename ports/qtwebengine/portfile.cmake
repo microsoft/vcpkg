@@ -199,6 +199,11 @@ if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 endif()
 
+set(qtwebengine_install_options ADD_BIN_TO_PATH)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # The outer CMake build invokes a parallel Chromium Ninja build.
+    list(APPEND qtwebengine_install_options DISABLE_PARALLEL)
+endif()
 set(ENV{QTWEBENGINE_GN_THREADS} "${VCPKG_CONCURRENCY}")
 set(ENV{NINJAFLAGS} "-j${VCPKG_CONCURRENCY} $ENV{NINJAFLAGS}")
 
@@ -252,7 +257,7 @@ if(NOT VCPKG_BUILD_TYPE)
         file(APPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Debug/${target_args_gn}" "\ngcc_target_rpath=\"\\\${ORIGIN}:${CURRENT_INSTALLED_DIR}/debug/lib\"\n")
     endif()
     vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-    vcpkg_cmake_install(ADD_BIN_TO_PATH)
+    vcpkg_cmake_install(${qtwebengine_install_options})
     endblock()
 endif()
 vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
@@ -262,7 +267,7 @@ if(VCPKG_TARGET_IS_LINUX AND EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
     file(APPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/${target_args_gn}" "\ngcc_target_rpath=\"\\\${ORIGIN}:${CURRENT_INSTALLED_DIR}/lib\"\n")
 endif()
 vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_cmake_install(${qtwebengine_install_options})
 endblock()
 vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 

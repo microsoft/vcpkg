@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/charconv
     REF boost-${VERSION}
-    SHA512 fb89934b13ed3ac5dd967ffadaa75a400b9d78efa120874d74533ecfe202dbce8e5783c6cb37d8494e69617bfa80ea828f287cce8ec761c22845754f772bdfbe
+    SHA512 6d4deb5a3fbff19c11eb12aa289c486f775a87e01e430ac18ca959937f9a2e1e76d4dbe5a5dddae45af893358cb2c2fe1d7b3737b0b00102fb9bca13b9a4b566
     HEAD_REF master
 )
 

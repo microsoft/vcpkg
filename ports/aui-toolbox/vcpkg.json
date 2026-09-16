@@ -1,0 +1,28 @@
+{
+  "name": "aui-toolbox",
+  "version": "7.1.2",
+  "description": "Host-side asset and shader compiler (aui.toolbox) for the AUI declarative UI toolkit",
+  "homepage": "https://github.com/aui-framework/aui",
+  "license": "MPL-2.0",
+  "supports": "native & !(linux & arm64)",
+  "dependencies": [
+    "fmt",
+    "glm",
+    {
+      "name": "libbacktrace",
+      "platform": "linux"
+    },
+    "libnsgif",
+    "libwebp",
+    "lunasvg",
+    "minizip",
+    "openssl",
+    "range-v3",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

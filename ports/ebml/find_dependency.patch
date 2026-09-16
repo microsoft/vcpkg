@@ -1,0 +1,16 @@
+diff --git a/EBMLConfig.cmake.in b/EBMLConfig.cmake.in
+index f7c5071..ead37da 100644
+--- a/EBMLConfig.cmake.in
++++ b/EBMLConfig.cmake.in
+@@ -1,5 +1,11 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++
++if(NOT @BUILD_SHARED_LIBS@)
++    find_dependency(utf8cpp REQUIRED)
++endif()
++
+ include(${CMAKE_CURRENT_LIST_DIR}/EBMLTargets.cmake)
+ 
+ check_required_components(EBML)

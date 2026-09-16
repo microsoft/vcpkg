@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8.0)
 project(gumbo)
 
 set(gumbo_public_headers
-  src/gumbo.h 
+  src/gumbo.h
   src/tag_enum.h
 )
 
@@ -19,6 +19,7 @@ set(gumbo_srcs
   src/utf8.c
   src/util.c
   src/vector.c
+  src/char_ref_gperf.c
 )
 
 include_directories(src)

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6759f30..91c8f55 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -729,7 +729,9 @@ execute_process(
+ add_definitions("-DGIT_COMMIT_HASH=${GIT_COMMIT_HASH}")
+ add_definitions("-DGIT_BRANCH=${GIT_BRANCH}")
+ 
+-set(PROJECT_VERSION "${PROJECT_VERSION}.${GIT_COMMIT_HASH}")
++if(GIT_COMMIT_HASH)
++  set(PROJECT_VERSION "${PROJECT_VERSION}.${GIT_COMMIT_HASH}")
++endif()
+ 
+ message(STATUS "")
+ message(STATUS "PROJECT_NAME                = ${PROJECT_NAME}")

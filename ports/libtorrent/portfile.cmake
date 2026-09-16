@@ -1,11 +1,25 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    # Building python bindings is currently broken on Windows
-    if("python" IN_LIST FEATURES)
-        message(FATAL_ERROR "The python feature is currently broken on Windows")
-    endif()
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
-        set(_static_runtime ON)
-    endif()
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(_static_runtime ON)
+else()
+    set(_static_runtime OFF)
+endif()
+
+# Libtorrent exports TORRENT_ABI_VERSION=2 when deprecated-functions is enabled,
+# and 100 otherwise. Public headers use this value to select their ABI:
+# https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L738-L741
+if("deprfun" IN_LIST FEATURES)
+    set(_torrent_abi_version 2)
+else()
+    set(_torrent_abi_version 100)
+endif()
+
+# Libtorrent exports TORRENT_USE_RTC=0 when WebTorrent is disabled. When enabled,
+# config.hpp defaults it to 1, so no explicit definition is emitted:
+# https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L749-L750
+if("webtorrent" IN_LIST FEATURES)
+    set(_torrent_use_rtc 1)
+else()
+    set(_torrent_use_rtc 0)
 endif()
 
 vcpkg_check_features(
@@ -13,78 +27,105 @@ vcpkg_check_features(
     FEATURES
         deprfun     deprecated-functions
         examples    build_examples
-        iconv       iconv
         python      python-bindings
         test        build_tests
         tools       build_tools
-)
-
-if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
-    vcpkg_add_to_path(${PYTHON3_PATH})
-    file(GLOB BOOST_PYTHON_LIB "${CURRENT_INSTALLED_DIR}/lib/*boost_python*")
-    string(REGEX REPLACE ".*(python)([0-9])([0-9]+).*" "\\1\\2\\3" _boost-python-module-name "${BOOST_PYTHON_LIB}")
-endif()
-
-vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO arvidn/libtorrent
-        REF "v${VERSION}"
-        SHA512 375fb12754ce73b34b215c1ca077b0ec58a8c91f6a6e4a48e2ae55251be38f647405d135ebeae38f8b0dfb478bcea8d5f0d6509e97f1baddbc2cd2e788948f2a
-        HEAD_REF RC_2_0
+        webtorrent  webtorrent
 )
 
 vcpkg_from_github(
-        OUT_SOURCE_PATH TRYSIGNAL_SOURCE_PATH
-        REPO arvidn/try_signal
-        REF 105cce59972f925a33aa6b1c3109e4cd3caf583d #2022-10-27
-        SHA512 4a0090755831e0e4a1930817345fa5934144421d9a9d710fe8ed3712233fa2fa037fc0e0d4f88b7cc8fb1bc05fe2d55372af1ff47d6fbf5208e03f45f2a424e4
-        HEAD_REF master
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO arvidn/libtorrent
+    REF "v${VERSION}"
+    SHA512 5563939466e4240849fd24b1eec394b56f39f71ebae9a26fd858e638e819c78c856afb6146963e998e2e1355eaed56b74f27228980ceed1c53ad189cf3fc2b80
+    HEAD_REF RC_2_1
+    PATCHES
+        use-system-libdatachannel.patch
+        fix-shared-extra-exports.patch
 )
 
 vcpkg_from_github(
-        OUT_SOURCE_PATH ASIO_GNUTLS_SOURCE_PATH
-        REPO paullouisageneau/boost-asio-gnutls
-        REF a57d4d36923c5fafa9698e14be16b8bc2913700a
-        SHA512 1e093dd4e999cce9c6d74f1d4c2d20f73512258b83505c307c7d53b8c7ed15626a8e90c8e6a6280827aafa069bc233c0c6f4c9276f1c332e4b141c7c350c47c0
-        HEAD_REF master
+    OUT_SOURCE_PATH TRYSIGNAL_SOURCE_PATH
+    REPO arvidn/try_signal
+    REF 105cce59972f925a33aa6b1c3109e4cd3caf583d
+    SHA512 4a0090755831e0e4a1930817345fa5934144421d9a9d710fe8ed3712233fa2fa037fc0e0d4f88b7cc8fb1bc05fe2d55372af1ff47d6fbf5208e03f45f2a424e4
+    HEAD_REF master
 )
 
-vcpkg_from_github(
-        OUT_SOURCE_PATH LIB_SIMULATOR_SOURCE_PATH
-        REPO arvidn/libsimulator
-        REF 39144efe83fcd38778cf76fc609e3475694642ca #2022-10-27
-        SHA512 a021f769d52d127355ecaceaf912bf3e86aaa256d4768d270fbe6066793b6159eddecd0262f3f2158602f883d49b3aac39eb79be5399212cdd7711f921ffa15a
-        HEAD_REF master
-)
-
-file(COPY ${TRYSIGNAL_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/deps/try_signal)
-file(COPY ${ASIO_GNUTLS_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/deps/asio-gnutls)
-file(COPY ${LIB_SIMULATOR_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/simulation/libsimulator)
+file(COPY "${TRYSIGNAL_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/deps/try_signal")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-       ${FEATURE_OPTIONS}
-       -Dboost-python-module-name=${_boost-python-module-name}
-       -Dstatic_runtime=${_static_runtime}
-       -DPython3_USE_STATIC_LIBS=ON
+        ${FEATURE_OPTIONS}
+        -Dstatic_runtime=${_static_runtime}
+        -Dgnutls=OFF
 )
-
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME LibtorrentRasterbar CONFIG_PATH lib/cmake/LibtorrentRasterbar)
+# These mirror libtorrent's public target compile definitions for this port's
+# fixed OpenSSL configuration. TORRENT_USE_LIBCRYPTO also selects the public
+# lcrypto inline namespace, so headers must define it to match the library ABI.
+# https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L769-L784
+set(_torrent_header_config [=[
+#ifndef TORRENT_USE_OPENSSL
+#define TORRENT_USE_OPENSSL
+#endif
+#ifndef TORRENT_USE_LIBCRYPTO
+#define TORRENT_USE_LIBCRYPTO
+#endif
+#ifndef TORRENT_SSL_PEERS
+#define TORRENT_SSL_PEERS
+#endif
+#ifndef TORRENT_ABI_VERSION
+#define TORRENT_ABI_VERSION @_torrent_abi_version@
+#endif
+#ifndef TORRENT_USE_RTC
+#define TORRENT_USE_RTC @_torrent_use_rtc@
+#endif
+]=])
+string(CONFIGURE "${_torrent_header_config}" _torrent_header_config @ONLY)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # Libtorrent exports this definition when building torrent-rasterbar shared:
+    # https://github.com/arvidn/libtorrent/blob/56ae8caba38bf154ffc210403cb23f91d0ecaa49/CMakeLists.txt#L549-L554
+    string(APPEND _torrent_header_config [=[
+#ifndef TORRENT_LINKING_SHARED
+#define TORRENT_LINKING_SHARED
+#endif
+]=])
+endif()
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/libtorrent/config.hpp"
+    "#define TORRENT_CONFIG_HPP_INCLUDED"
+    "#define TORRENT_CONFIG_HPP_INCLUDED\n${_torrent_header_config}"
+)
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME LibtorrentRasterbar
+    CONFIG_PATH lib/cmake/LibtorrentRasterbar
+)
 
-# Do not duplicate include files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/cmake")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/include/libtorrent/aux_/puff.hpp"
+        "${TRYSIGNAL_SOURCE_PATH}/LICENSE"
+)
+
+file(
+    REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/cmake"
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-       file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(
+        REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
 endif()
 
 vcpkg_fixup_pkgconfig()

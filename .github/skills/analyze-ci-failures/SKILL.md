@@ -1,29 +1,28 @@
 ---
 name: analyze-ci-failures
 metadata:
-   version: 2025-05-07
+   version: 2026-08-14
 description: >
-  Analyze vcpkg Azure DevOps CI failures. Downloads logs, identifies regression root causes,
-  generates a report by package and triplet.
+  Analyze collected vcpkg CI failure evidence, classify regressions and known failures, identify root
+  causes, recommend actions, and generate a report by package and triplet.
 
-  USE FOR: CI failure analysis, regression triage, log diagnosis.
+  USE FOR: explicit requests for CI regression triage, a failure inventory, baseline classification,
+  action recommendations, or a formal CI failure report.
 
-  DO NOT USE FOR: general coding, creating ports, modifying portfiles.
+  DO NOT USE FOR: fetching logs as the final output, targeted debugging of one failure, answering a one-off
+  question about logs the user pasted or pointed at, general coding, creating ports, or modifying portfiles.
+  When requested analysis lacks local evidence, run fetch-vcpkg-ci-logs as the acquisition stage first.
 
-  **UTILITY SKILL** INVOKES: Azure DevOps REST API, PowerShell.
+  **ANALYSIS SKILL** USES: locally collected CI logs, vcpkg baselines, Azure DevOps metadata.
 ---
 
 # vcpkg CI Failures Analyzer
 
-## When to Use
-
-- Investigating CI failures on Azure DevOps
-- Identifying regressions in a PR or scheduled build
-- Triaging root causes before assigning bugs
-
 ## Overview
 
-Fetches build metadata and failure logs via Azure DevOps REST API, cross-references with baselines, produces a regression report.
+Consumes already-collected CI evidence, cross-references it with baselines, and produces a regression
+report. If evidence has not yet been collected, invoke `fetch-vcpkg-ci-logs` first, then return to this
+workflow. Do not duplicate its acquisition steps here.
 
 ## MCP Tools
 
@@ -33,59 +32,56 @@ Fetches build metadata and failure logs via Azure DevOps REST API, cross-referen
 
 ## Prerequisites
 
-- **GitHub MCP server** — needed for PR URL input
+- Local failed step logs and relevant extracted failure-log artifacts.
+- Build metadata and full Azure build URL.
+- For PR builds, PR metadata and full PR URL.
+
+## Evidence Acquisition
+
+When the required evidence is not already local, delegate acquisition to a subagent using
+`fetch-vcpkg-ci-logs`. Prefer a fast, low-cost model for this mechanical work. Ask
+the subagent to return only the evidence inventory and local paths; keep regression analysis and report
+generation in the main agent.
+
+When the evidence is already available locally, proceed directly to analysis.
 
 ## Workflow
 
-> **OUTPUT RULE**: Write `report.md` as SOON as step-log analysis (Phase 1) completes. Do not wait for artifact downloads. You can update the file later. Your response MUST also contain the complete report content — not a summary.
+> **OUTPUT RULE**: This skill applies only when the user asked for triage or report output, so a `report.md`
+> is always required once it is selected. Write it as soon as step-log analysis completes, then enhance it
+> from artifacts. Your response MUST also contain the complete report content — not a summary.
 
 > **URL RULE**: Your response text (not just the report file) MUST include:
 > - For scheduled/manual builds: the full Azure DevOps URL `https://dev.azure.com/vcpkg/public/_build/results?buildId={buildId}`
 > - For PR builds: both the full PR URL `https://github.com/microsoft/vcpkg/pull/{prNumber}` AND the Azure DevOps build URL
 
-Before doing Azure-specific work, read `.\.github\skills\shared\azure-vcpkg-ci-notes.md` and follow its shared API and log-handling rules.
+Before analysis, read `.\.github\skills\shared\azure-vcpkg-ci-notes.md`.
 
-When you use the shared helper script, execute the `.ps1` file directly by path. Do **not** open the script and inline its contents into a large PowerShell block.
+### Phase 1: Analyze failed step logs
 
-### Phase 1: Extract failures from step logs (REQUIRED — do first)
-
-1. **Parse input** — Extract `buildId` from Azure DevOps URL. For PR URLs:
-   ```powershell
-   $prNumber = 51515
-   $builds = (Invoke-RestMethod "https://dev.azure.com/vcpkg/public/_apis/build/builds?reasonFilter=pullRequest&repositoryType=GitHub&repositoryId=microsoft/vcpkg&branchName=refs/pull/$prNumber/merge&api-version=7.0").value
-   $buildId = ($builds | Sort-Object -Property id -Descending | Select-Object -First 1).id
-   ```
-   See [references/azure-devops-api.md](references/azure-devops-api.md).
-   For PR inputs where you want the failed step logs immediately, you may instead use the shared helper script:
-   ```powershell
-   & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -PrNumber <pr>
-   ```
-2. **Fetch metadata** — Build info, timeline, and artifacts list (parallelize these API calls).
-3. **Scan step logs** — For each failed job, find `"*** Test Modified Ports"` task and fetch its log:
-   ```powershell
-   $logText = Invoke-RestMethod "$($task.log.url)?api-version=7.0"
-   $regressions = $logText -split "`n" | Where-Object { $_ -match 'REGRESSION:' }
-   ```
-   You may also use the shared helper script directly from a build id:
-   ```powershell
-   & '.\.github\skills\shared\Get-VcpkgAzureFailureLogs.ps1' -BuildId <buildId>
-   ```
-   Captures all types: `BUILD_FAILED`, `FILE_CONFLICTS`, `POST_BUILD_CHECKS_FAILED`, `CASCADED_DUE_TO_MISSING_DEPENDENCIES`. **Report every REGRESSION line using the EXACT failure type keyword from the log — never paraphrase.** Also capture 2-3 lines around each error for root cause context. **Extract the triplet name from each failed job** (e.g., from job names like `x64-windows Build` or from log paths) — ensure ALL triplets with failures are listed in your report.
-4. **PR feature-test logs** — PR builds may NOT have `REGRESSION:` lines. Instead scan for `FAIL:` or `failed with` lines showing per-feature failures. Capture and quote verbatim:
+1. **Inventory evidence** — Confirm the build metadata, failed step-log paths, artifact paths, and triplets
+   available from the acquisition step.
+2. **Scan step logs** — Extract every `REGRESSION:` line and retain exact failure type keywords:
+   `BUILD_FAILED`, `FILE_CONFLICTS`, `POST_BUILD_CHECKS_FAILED`, and
+   `CASCADED_DUE_TO_MISSING_DEPENDENCIES`. Capture 2-3 surrounding lines for context.
+3. **PR feature-test logs** — PR builds may not have `REGRESSION:` lines. Instead scan for `FAIL:`,
+   `failed with`, and feature-test `error:` lines. Capture verbatim:
    - Compiler errors (missing headers, undefined symbols)
    - Post-build check failures (file path issues, misplaced files)
    - Version validation errors
    - Platform-specific feature guard messages
    
    Report each feature failure individually. Dependency ports that fail get their own entry.
-5. **Version validation** — Check `"Validate version files"` task. If failed, scan for version database errors and quote them verbatim. Fix: `vcpkg x-add-version`.
-6. **Write report immediately** — Generate and save `report.md` using all step-log data. This ensures output exists even if later steps time out.
+4. **Version validation** — Inspect the `"Validate version files"` evidence for version database errors.
+5. **Write report immediately** — Generate and save `report.md` using the step-log evidence.
 
-### Phase 2: Download logs and enhance (time permitting)
+### Phase 2: Analyze artifacts and enhance
 
-7. **Download logs** — `Invoke-WebRequest` or curl shell commands for artifact ZIPs (not `web_fetch`). Only download `"failure logs for {triplet}"` — skip `"file lists"`. Extract into `ci-failure-analysis/{scope}/logs/{triplet}/`. If download fails, still create the directory with a placeholder noting the URL.
-8. **Analyze** — Read `stdout-{triplet}.log` last lines. Classify per [references/vcpkg-failure-patterns.md](references/vcpkg-failure-patterns.md). Update report with additional root cause detail.
-9. **Baselines** — Check both `ci.baseline.txt` and `ci.feature.baseline.txt`.
+6. **Analyze artifacts** — Read relevant `stdout-{triplet}.log` tails and supporting logs. Classify per
+   [references/vcpkg-failure-patterns.md](references/vcpkg-failure-patterns.md).
+7. **Baselines** — Check both `ci.baseline.txt` and `ci.feature.baseline.txt`.
+8. **Enhance report** — Add root causes, downstream impact, and actionable recommendations supported by
+   the evidence.
 
 ### Report Requirements
 
@@ -100,23 +96,24 @@ Format per [references/report-template.md](references/report-template.md):
 
 ## Output Structure
 
-```
-ci-failure-analysis/
+Write reports under the session folder from the environment context, alongside the raw evidence, never
+into the repository working tree:
+
+```text
+{session-folder}/files/ci-failure-analysis/
 ├── ci-129315/         ← scheduled build
-│   ├── report.md
-│   └── logs/
-│       ├── x64-windows/
-│       └── arm64-linux/
+│   └── report.md
 └── pr-51202/          ← PR build
-    ├── report.md
-    └── logs/
+    └── report.md
 ```
+
+Raw evidence stays where `fetch-vcpkg-ci-logs` placed it, in
+`{session-folder}/files/ci-failure-logs/`; reference those paths from the report instead of copying them.
 
 ## Critical Rules
 
-- Use `Invoke-WebRequest` or curl shell commands for ZIPs — `web_fetch` can't download binaries
-- Artifact type is `PipelineArtifact` — Container API won't work
-- Scan step logs first — `FILE_CONFLICTS` only appear there
+- Do not fetch or download logs as part of this skill; use the acquisition skill first.
+- Scan step logs first because `FILE_CONFLICTS` may appear only there.
 - Check **both** baseline files
 - Never suggest `<=` version constraints or `VCPKG_BUILD_TYPE release`
-- If artifact download fails, still create `logs/{triplet}/` directory with a placeholder noting the download URL
+- Clearly distinguish proven root causes from hypotheses and requests for additional diagnostics.

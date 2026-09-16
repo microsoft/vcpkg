@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-sdkutils
     REF "v${VERSION}"
-    SHA512 46db6a4bc6746311d5e5eeb5888b4dd22513fe2e17c147ee40d649dea8db86a9b229e5815911fc8ae5e8f716be1df6cf4915c646ab842d5bc39f7a9ed5c36976
+    SHA512 782f9002223ad2b31a86d3577eb9afbb0f3459cc13cc798d0e067bb258cfe029313b88df6206e6af8578eca8513312b14758d3d931b5dde9b5e94aaa86a18669
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common/modules" # use extra cmake files
         -DBUILD_TESTING=FALSE
 )
 

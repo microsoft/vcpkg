@@ -1,0 +1,15 @@
+diff --git a/libdispatch/dcrc64.c b/libdispatch/dcrc64.c
+index 5354608..8e14391 100644
+--- a/libdispatch/dcrc64.c
++++ b/libdispatch/dcrc64.c
+@@ -123,7 +123,9 @@ static void crc64_big_init(void)
+ /* Run the init() function exactly once.  If pthread.h is not included, then
+    this macro will use a simple static state variable for the purpose, which is
+    not thread-safe.  The init function must be of the type void init(void). */
+-#ifdef PTHREAD_ONCE_INIT
++/* Android exposes PTHREAD_ONCE_INIT through system headers without declaring
++   pthread_once(). */
++#if defined(PTHREAD_ONCE_INIT) && !defined(__ANDROID__)
+ #  define ONCE(init) \
+     do { \
+         static pthread_once_t once = PTHREAD_ONCE_INIT; \

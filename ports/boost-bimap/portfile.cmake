@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/bimap
     REF boost-${VERSION}
-    SHA512 39ace5043a65d0f3fd1275e5dbb1a8efc443b019fd49f7f460bc9aca0f9d04d0e6dc40f2c5b90898cf3c1b5b6c91fa6c94eee960ff1dffd58442a98b1a314db6
+    SHA512 ed50dc1b5394e9b23579d09b1734b10a9b837eab1d6550f40b2279712cd6118f2f1c767882bc61edbd38c85ccb0b91d76456448e2ff722a4aa69d5bf4748be8b
     HEAD_REF master
 )
 

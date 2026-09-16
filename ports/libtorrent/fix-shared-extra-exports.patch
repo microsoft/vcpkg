@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 63f903c..c339f3a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1071,6 +1071,12 @@ if (MSVC)
+ 	)
+ endif()
+ 
++# Tests, examples and tools use some internal functions. Export those symbols
++# from shared builds whenever any of these targets are enabled.
++if(build_tests OR build_examples OR build_tools)
++	target_compile_definitions(torrent-rasterbar PUBLIC TORRENT_EXPORT_EXTRA)
++endif()
++
+ # === build tools ===
+ if (build_tools)
+ 	add_subdirectory(tools)
+@@ -1084,8 +1090,6 @@ endif()
+ # === build tests ===
+ if(build_tests)
+ 	enable_testing()
+-	# this will make some internal functions available in the DLL interface
+-	target_compile_definitions(torrent-rasterbar PUBLIC TORRENT_EXPORT_EXTRA)
+ 	add_subdirectory(test)
+ endif()
+ 

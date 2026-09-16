@@ -379,7 +379,7 @@ fn fs_main(input: FragmentInput) -> FragmentOutput {
 
 #if !defined(__EMSCRIPTEN__)
         auto present_status = state.surface.Present();
-        ASSERT(present_status, "Failed to present the surface");
+        ASSERT(present_status == wgpu::Status::Success, "Failed to present the surface");
         state.device.Tick();
 #endif
     }

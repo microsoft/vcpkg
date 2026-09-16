@@ -1,10 +1,9 @@
 diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
-index 5447d33..f5440b4 100644
 --- a/build/cmake/init.cmake
 +++ b/build/cmake/init.cmake
-@@ -530,7 +530,9 @@ if(wxUSE_GUI)
+@@ -691,7 +691,9 @@ if(wxUSE_GUI)
      endif()
- 
+
      if(wxUSE_SOUND AND wxUSE_LIBSDL AND UNIX AND NOT APPLE)
 -        find_package(SDL2)
 +        find_package(SDL2 CONFIG REQUIRED)
@@ -12,18 +11,17 @@ index 5447d33..f5440b4 100644
 +        set(SDL2_LIBRARY SDL2::SDL2 CACHE INTERNAL "")
          if(NOT SDL2_FOUND)
              find_package(SDL)
-         endif()
+             mark_as_advanced(SDL_INCLUDE_DIR SDLMAIN_LIBRARY)
 diff --git a/build/cmake/wxWidgetsConfig.cmake.in b/build/cmake/wxWidgetsConfig.cmake.in
-index 60cf762..202a8c3 100644
 --- a/build/cmake/wxWidgetsConfig.cmake.in
 +++ b/build/cmake/wxWidgetsConfig.cmake.in
 @@ -2,6 +2,9 @@
- 
+
  include(CMakeFindDependencyMacro)
  find_dependency(NanoSVG CONFIG)
 +if("@wxUSE_LIBSDL@")
 +    find_dependency(SDL2 CONFIG)
 +endif()
- 
+
  cmake_policy(PUSH)
  # Set policies to prevent warnings

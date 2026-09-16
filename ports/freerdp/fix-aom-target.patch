@@ -1,0 +1,33 @@
+diff --git a/cmake/Findaom.cmake b/cmake/Findaom.cmake
+index 89a1b5d..4656f65 100644
+--- a/cmake/Findaom.cmake
++++ b/cmake/Findaom.cmake
+@@ -38,10 +38,11 @@ else()
+     if(NOT AOM_FIND_QUIETLY)
+       message(STATUS "Found AOM: ${AOM_LIBRARIES}")
+     endif(NOT AOM_FIND_QUIETLY)
+-    add_library(aom INTERFACE IMPORTED GLOBAL)
++    add_library(AOM::aom UNKNOWN IMPORTED GLOBAL)
+     set_target_properties(
+-      aom PROPERTIES IMPORTED_LOCATION "${AOM_LIBRARY}" INTERFACE_INCLUDE_DIRECTORIES "${AOM_INCLUDE_DIR}"
++      AOM::aom PROPERTIES IMPORTED_LOCATION "${AOM_LIBRARY}" INTERFACE_INCLUDE_DIRECTORIES "${AOM_INCLUDE_DIR}"
+     )
++    add_library(aom ALIAS AOM::aom)
+   else(AOM_FOUND)
+     if(AOM_FIND_REQUIRED)
+       message(FATAL_ERROR "AOM was not found")
+diff --git a/libfreerdp/FreeRDPConfig.cmake.in b/libfreerdp/FreeRDPConfig.cmake.in
+index e59bb1d..33e40aa 100644
+--- a/libfreerdp/FreeRDPConfig.cmake.in
++++ b/libfreerdp/FreeRDPConfig.cmake.in
+@@ -1,6 +1,10 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(WinPR @FREERDP_VERSION@)
+ 
++if("@WITH_AOM@" AND NOT "@BUILD_SHARED_LIBS@")
++	find_dependency(AOM CONFIG)
++endif()
++
+ if("@WITH_SMARTCARD_EMULATE@" AND NOT "@BUILD_SHARED_LIBS@")
+ 	find_dependency(ZLIB)
+ endif()

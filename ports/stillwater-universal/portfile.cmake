@@ -9,10 +9,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stillwater-sc/universal
     REF "v${VERSION}"
-    SHA512 099b634b2242243ac1319e5b6aafb5f3787ab1c03ad9b0cf3abbeec9eb5773d9efc64f1f80c1c566d112f6c77bea55de638ea38a0edc3eb98311ab4e89b0bd85
+    SHA512 a5d0e8a8d7f09e4fa1fa1051d75188764b4b7947d5e2a9c3a3147dc103558ceb72922797640286f863a161aa64d4553f0f5e8efc8625ac7108e94041d0532b77
     HEAD_REF master
     PATCHES
         fix-install-path.patch
+        fix-package-version.patch
 )
 
 vcpkg_cmake_configure(
@@ -33,5 +34,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/universal/internal/variablecascade"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,4 +1,4 @@
-EXPORTS 
+EXPORTS
 	te_compile
 	te_eval
 	te_free

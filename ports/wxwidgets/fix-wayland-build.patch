@@ -1,0 +1,29 @@
+diff --git a/build/cmake/setup.h.in b/build/cmake/setup.h.in
+index d72d20d5cbc6..08169ee065e6 100644
+--- a/build/cmake/setup.h.in
++++ b/build/cmake/setup.h.in
+@@ -626,9 +626,9 @@
+ 
+     This is needed by any Wayland-specific code in wxGTK implementation.
+ 
+-    Recommended setting: 1, only set to 0 if wayland-client is not available.
++    Define if wayland-client is available.
+  */
+-#cmakedefine01 wxHAVE_WAYLAND_CLIENT
++#cmakedefine wxHAVE_WAYLAND_CLIENT 1
+ 
+ /*
+    Use XTest extension to implement wxUIActionSimulator?
+diff --git a/setup.h.in b/setup.h.in
+index 2de3139090d1..4bec4eb6e4e1 100644
+--- a/setup.h.in
++++ b/setup.h.in
+@@ -625,7 +625,7 @@
+ 
+     This is needed by any Wayland-specific code in wxGTK implementation.
+ 
+-    Recommended setting: 1, only set to 0 if wayland-client is not available.
++    Define if wayland-client is available.
+  */
+ #undef wxHAVE_WAYLAND_CLIENT
+ 

@@ -1,0 +1,362 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6902d56..d1d37e1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -64,9 +64,7 @@ function(define_aui_component AUI_COMPONENT_NAME)
+     add_subdirectory("aui.${AUI_COMPONENT_NAME}")
+ endfunction()
+ 
+-auib_import(ZLIB https://github.com/aui-framework/zlib
+-            VERSION 448a9c76a97202a21f68bd82e453dd743e944a3a
+-            CMAKE_ARGS -DZLIB_BUILD_EXAMPLES=OFF)
++find_package(ZLIB REQUIRED)
+ 
+ # define all components
+ define_aui_component(core)
+@@ -86,7 +84,7 @@ define_aui_component(json)
+ define_aui_component(audio)
+ define_aui_component(updater)
+ 
+-if (NOT ANDROID AND NOT IOS)
++if (0)
+     define_aui_component(uitests)
+ endif()
+ 
+@@ -195,7 +193,6 @@ auib_precompiled_binary()
+ # [auib_precompiled_binary]
+ 
+ # test aui.boot on ci/cd
+-add_subdirectory(test/)
+ 
+ # [configure file example]
+ configure_file(cmake/aui-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/aui-config.cmake @ONLY)
+diff --git a/aui.audio/CMakeLists.txt b/aui.audio/CMakeLists.txt
+index 21e4415..7beaeca 100644
+--- a/aui.audio/CMakeLists.txt
++++ b/aui.audio/CMakeLists.txt
+@@ -1,30 +1,33 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+ aui_module(aui.audio WHOLEARCHIVE EXPORT aui)
+-add_subdirectory(3rdparty/ogg)
++find_package(Ogg CONFIG REQUIRED)
++find_package(Vorbis CONFIG REQUIRED)
+ aui_link(aui.audio PUBLIC aui::core)
+ 
+ if (AUI_PLATFORM_ANDROID)
+-    auib_import(oboe https://github.com/google/oboe ADD_SUBDIRECTORY VERSION main)
+-    aui_link(aui.audio PUBLIC oboe $<LINK_ONLY:log> $<LINK_ONLY:OpenSLES>)
+-
+-    install(
+-            TARGETS oboe
+-            EXPORT aui
+-            ARCHIVE       DESTINATION "aui.audio/lib"
+-            LIBRARY       DESTINATION "aui.audio/lib"
+-            RUNTIME       DESTINATION "aui.audio/bin"
+-            PUBLIC_HEADER DESTINATION "aui.audio/include"
+-            INCLUDES      DESTINATION "aui.audio/include"
+-    )
++    find_path(OBOE_INCLUDE_DIR NAMES oboe/Oboe.h REQUIRED)
++    find_library(OBOE_LIBRARY NAMES oboe REQUIRED)
++    if(NOT TARGET oboe::oboe)
++        add_library(oboe::oboe UNKNOWN IMPORTED)
++        set_target_properties(oboe::oboe PROPERTIES
++            IMPORTED_LOCATION "${OBOE_LIBRARY}"
++            INTERFACE_INCLUDE_DIRECTORIES "${OBOE_INCLUDE_DIR}"
++        )
++    endif()
++    aui_link(aui.audio PUBLIC oboe::oboe $<LINK_ONLY:log> $<LINK_ONLY:OpenSLES>)
+ elseif (AUI_PLATFORM_LINUX)
+-    aui_link(aui.audio PUBLIC pulse)
++    include(FindPkgConfig)
++    pkg_check_modules(PulseAudio REQUIRED IMPORTED_TARGET libpulse)
++    pkg_check_modules(PulseAudioSimple REQUIRED IMPORTED_TARGET libpulse-simple)
++    aui_link(aui.audio PRIVATE PkgConfig::PulseAudio PkgConfig::PulseAudioSimple)
+ elseif (AUI_PLATFORM_WIN)
+     aui_link(aui.audio PUBLIC Winmm dsound.lib dxguid.lib)
+ endif()
+ 
+-auib_import(Opus https://github.com/xiph/opus.git VERSION v1.4)
+-aui_link(aui.audio PRIVATE Opus::opus)
++include(FindPkgConfig)
++pkg_check_modules(Opus REQUIRED IMPORTED_TARGET opus)
++aui_link(aui.audio PRIVATE PkgConfig::Opus)
+ 
+ if (AUI_PLATFORM_IOS OR AUI_PLATFORM_MACOS)
+     auib_use_system_libs_begin()
+@@ -42,9 +45,9 @@ if (AUI_PLATFORM_MACOS)
+ 					   "-framework QuartzCore")
+ endif()
+ 
+-auib_import(soxr https://github.com/aui-framework/soxr
+-            ADD_SUBDIRECTORY
+-            VERSION adacc686124ac3568432f3dca388878963a005ee
+-            )
++include(FindPkgConfig)
++pkg_check_modules(soxr REQUIRED IMPORTED_TARGET soxr)
++
++aui_link(aui.audio PRIVATE PkgConfig::soxr)
+ 
+-aui_link(aui.audio PRIVATE soxr)
++aui_link(aui.audio PRIVATE Vorbis::vorbisfile)
+diff --git a/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp b/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp
+index 5cffdb9..4479ca7 100644
+--- a/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp
++++ b/aui.audio/src/AUI/Audio/Formats/vorbis/AVorbisSoundPipe.cpp
+@@ -1,7 +1,7 @@
+ #include "AVorbisSoundPipe.h"
+ #include "vorbis/codec.h"
+ #include "AUI/Logging/ALogger.h"
+-#include "os.h"
++#include <cmath>
+ 
+ static constexpr auto LOG_TAG = "vorbis";
+ 
+@@ -71,7 +71,7 @@ void AVorbisSoundPipe::write(const char *src, size_t size) {
+             auto sampleCount = vorbis_synthesis_pcmout(mState.ptr(), &pcm);
+             for (int sampleNum = 0; sampleNum < sampleCount; sampleNum++) {
+                 for (int channel = 0; channel < mInfo->channels; channel++) {
+-                    auto sample = static_cast<int16_t>(vorbis_ftoi(
++                    auto sample = static_cast<int16_t>(std::lrint(
+                             glm::clamp(32768.f * pcm[channel][sampleNum], -32768.f, 32767.f)));
+                     mDecodedSamples.write(reinterpret_cast<char*>(&sample), sizeof(sample));
+                 }
+diff --git a/aui.core/CMakeLists.txt b/aui.core/CMakeLists.txt
+index 6aa1b07..0eaa67f 100644
+--- a/aui.core/CMakeLists.txt
++++ b/aui.core/CMakeLists.txt
+@@ -11,9 +11,8 @@ aui_enable_benchmarks(aui.core)
+ 
+ 
+ get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-if (GLM_INCLUDE_DIR)
+-    message(STATUS "Using custom GLM_INCLUDE_DIR: ${GLM_INCLUDE_DIR}")
+-else()
++find_package(glm REQUIRED)
++if (0) # vendored glm replaced by vcpkg's glm
+     set(GLM_INCLUDE_DIR "${SELF_DIR}/3rdparty/glm")
+ 
+     install(
+@@ -21,7 +20,8 @@ else()
+             DESTINATION "aui.core/include/"
+     )
+ endif()
+-target_include_directories(aui.core PUBLIC $<BUILD_INTERFACE:${GLM_INCLUDE_DIR}>)
++target_link_libraries(aui.core PUBLIC glm::glm-header-only)
++target_compile_definitions(aui.core PUBLIC GLM_ENABLE_EXPERIMENTAL=1)
+ 
+ target_compile_definitions(aui.core PRIVATE UNICODE=1)
+ target_compile_definitions(aui.core PUBLIC NOMINMAX=1)
+@@ -49,8 +49,7 @@ if (NOT WIN32)
+     endif()
+ 
+     if (AUI_PLATFORM_LINUX)
+-        auib_import(backtrace https://github.com/aui-framework/libbacktrace
+-                    VERSION a5a32e3cc8e22a9fc40689a884b032c52ee3f88e)
++        find_package(unofficial-libbacktrace CONFIG REQUIRED)
+         set(_use_backtrace TRUE)
+     else()
+ 
+@@ -84,7 +83,7 @@ endif()
+ 
+ if(_use_backtrace)
+     message(STATUS "Stacktrace backend: backtrace")
+-    aui_link(aui.core PRIVATE backtrace)
++    aui_link(aui.core PRIVATE unofficial::libbacktrace::libbacktrace)
+     target_compile_definitions(aui.core PRIVATE AUI_USE_BACKTRACE=1)
+ elseif(_use_unwind)
+     message(STATUS "Stacktrace backend: unwind")
+@@ -111,7 +110,12 @@ if (ANDROID)
+ endif()
+ 
+ aui_link(aui.core PRIVATE ZLIB::ZLIB)
+-add_subdirectory(3rdparty/minizip)
++find_package(minizip CONFIG REQUIRED)
++if(TARGET MINIZIP::minizip)
++    aui_link(aui.core PRIVATE MINIZIP::minizip)
++else()
++    aui_link(aui.core PRIVATE MINIZIP::minizipstatic)
++endif()
+ 
+ # forward platform info
+ foreach(_var AUI_PLATFORM_WIN
+@@ -147,13 +151,9 @@ endif()
+ 
+ 
+ # [auib_import examples]
+-auib_import(fmt https://github.com/fmtlib/fmt
+-            VERSION 9.1.0
+-            CMAKE_ARGS -DFMT_TEST=FALSE -DFMT_DOC=FALSE)
++find_package(fmt CONFIG REQUIRED)
+ 
+-auib_import(range-v3 https://github.com/ericniebler/range-v3
+-        VERSION 0.12.0
+-        CMAKE_ARGS -DRANGE_V3_DOCS=OFF -DRANGE_V3_TESTS=OFF -DRANGE_V3_EXAMPLES=OFF -DRANGE_V3_PERF=OFF -DRANGE_V3_HEADER_CHECKS=OFF)
++find_package(range-v3 CONFIG REQUIRED)
+ # [auib_import examples]
+ 
+ aui_link(aui.core PUBLIC fmt::fmt-header-only range-v3::range-v3)
+diff --git a/aui.crypt/CMakeLists.txt b/aui.crypt/CMakeLists.txt
+index c5354f2..9adab74 100644
+--- a/aui.crypt/CMakeLists.txt
++++ b/aui.crypt/CMakeLists.txt
+@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
+ 
+ unset(OPENSSL_CRYPTO_LIBRARY CACHE)
+ unset(OPENSSL_SSL_LIBRARY CACHE)
+-auib_import(OpenSSL https://github.com/aui-framework/openssl-cmake/archive/56ee19b7e11b418e0f29825414abdca96ff6b83e.zip ARCHIVE)
++find_package(OpenSSL REQUIRED)
+ 
+ aui_module(aui.crypt EXPORT aui)
+ aui_enable_tests(aui.crypt)
+diff --git a/aui.curl/CMakeLists.txt b/aui.curl/CMakeLists.txt
+index 5141c8e..1da335a 100644
+--- a/aui.curl/CMakeLists.txt
++++ b/aui.curl/CMakeLists.txt
+@@ -1,7 +1,6 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+-auib_import(CURL https://github.com/aui-framework/curl/archive/refs/heads/master.zip
+-            ARCHIVE)
++find_package(CURL REQUIRED)
+ 
+ aui_module(aui.curl EXPORT aui WHOLEARCHIVE)
+ aui_enable_tests(aui.curl)
+diff --git a/aui.image/CMakeLists.txt b/aui.image/CMakeLists.txt
+index 033e7ad..e9494fe 100644
+--- a/aui.image/CMakeLists.txt
++++ b/aui.image/CMakeLists.txt
+@@ -1,7 +1,6 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+-auib_import(lunasvg https://github.com/aui-framework/lunasvg
+-            VERSION 272ceee)
++find_package(lunasvg CONFIG REQUIRED)
+ 
+ 
+ set(WEBP_COMPONENTS_TO_DISABLE ANIM_UTILS CWEBP DWEBP GIF2WEBP IMG2WEBP VWEBP WEBPINFO LIBWEBPMUX WEBPMUX EXTRAS)
+@@ -10,9 +9,11 @@ foreach(_component ${WEBP_COMPONENTS_TO_DISABLE})
+     list(APPEND WEBP_CMAKE_ARGS "-DWEBP_BUILD_${_component}=OFF")
+ endforeach()
+ 
+-auib_import(WebP https://github.com/webmproject/libwebp VERSION 1.3.1 CMAKE_ARGS ${WEBP_CMAKE_ARGS})
++find_package(WebP CONFIG REQUIRED)
+ 
+ aui_module(aui.image WHOLEARCHIVE EXPORT aui)
+-add_subdirectory(3rdparty)
+-aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux)
++find_package(unofficial-libnsgif CONFIG REQUIRED)
++find_package(Stb REQUIRED)
++aui_link(aui.image PRIVATE aui::core lunasvg::lunasvg WebP::webp WebP::webpdemux unofficial::libnsgif::nsgif)
++target_include_directories(aui.image PRIVATE ${Stb_INCLUDE_DIR})
+ aui_enable_tests(aui.image)
+diff --git a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
+index e9ca38f..4597d68 100644
+--- a/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
++++ b/aui.image/src/AUI/Image/gif/GifImageFactory.cpp
+@@ -17,7 +17,9 @@
+ #include "AUI/Image/AImage.h"
+ #include "AUI/Util/ARaiiHelper.h"
+ #include "AUI/Logging/ALogger.h"
+-#include "nsgif.h"
++extern "C" {
++#include <nsgif.h>
++}
+ 
+ static nsgif_bitmap_t* create_callback(int width, int height) {
+     return new char[4 * width * height];
+diff --git a/aui.sqlite/CMakeLists.txt b/aui.sqlite/CMakeLists.txt
+index 6afd58f..8514048 100644
+--- a/aui.sqlite/CMakeLists.txt
++++ b/aui.sqlite/CMakeLists.txt
+@@ -1,12 +1,11 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+ 
+-file(GLOB_RECURSE SQLITE3_SRCS 3rdparty/*.c)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
+ 
+-aui_module(aui.sqlite ADDITIONAL_SRCS ${SQLITE3_SRCS}
+-                      EXPORT aui
++aui_module(aui.sqlite EXPORT aui
+                       PLUGIN)
+-target_include_directories(aui.sqlite PRIVATE 3rdparty/sqlite3)
++aui_link(aui.sqlite PRIVATE unofficial::sqlite3::sqlite3)
+ 
+ aui_link(aui.sqlite PUBLIC aui::core)
+ aui_link(aui.sqlite PUBLIC aui::data)
+diff --git a/aui.views/CMakeLists.txt b/aui.views/CMakeLists.txt
+index dfe6b18..e8a40cf 100644
+--- a/aui.views/CMakeLists.txt
++++ b/aui.views/CMakeLists.txt
+@@ -9,10 +9,7 @@ find_package(OpenGL)
+ auib_use_system_libs_end()
+ 
+ if (OPENGL_FOUND OR ANDROID OR IOS)
+-    auib_import(Freetype https://github.com/freetype/freetype/archive/refs/tags/VER-2-13-3.zip ARCHIVE
+-                CONFIG_ONLY
+-                CMAKE_ARGS -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON
+-    )
++    find_package(Freetype REQUIRED)
+ 
+     if (NOT TARGET Freetype::Freetype)
+         message(FATAL_ERROR "Freetype not imported")
+@@ -20,9 +17,7 @@ if (OPENGL_FOUND OR ANDROID OR IOS)
+ 
+ 
+     if (AUI_PLATFORM_WIN OR AUI_PLATFORM_LINUX OR AUI_PLATFORM_MACOS)
+-        auib_import(GLEW https://github.com/aui-framework/glew-cmake
+-                CMAKE_WORKING_DIR "build/cmake"
+-                VERSION a80a1dc)
++        find_package(GLEW CONFIG REQUIRED)
+     endif ()
+ 
+     aui_module(aui.views EXPORT aui)
+@@ -32,17 +27,12 @@ if (OPENGL_FOUND OR ANDROID OR IOS)
+         auib_use_system_libs_begin()
+         find_package(PkgConfig REQUIRED)
+ 
+-        pkg_check_modules(DBUS REQUIRED dbus-1)
+-        include_directories(${DBUS_INCLUDE_DIRS})
+-        link_directories(${DBUS_LIBRARY_DIRS})
+-
+-        pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+-        include_directories(${GTK3_INCLUDE_DIRS})
+-        link_directories(${GTK3_LIBRARY_DIRS})
++        pkg_check_modules(DBUS REQUIRED IMPORTED_TARGET dbus-1)
++        pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
+ 
+         auib_use_system_libs_end()
+ 
+-        aui_link(aui.views PRIVATE X11::X11 X11::Xrandr X11::Xcursor X11::Xi ${DBUS_LIBRARIES} ${GTK3_LIBRARIES} Fontconfig::Fontconfig)
++        aui_link(aui.views PRIVATE X11::X11 X11::Xrandr X11::Xcursor X11::Xi PkgConfig::DBUS PkgConfig::GTK3 Fontconfig::Fontconfig)
+     endif ()
+ 
+     if (NOT AUI_PLATFORM_WINDOWS)
+diff --git a/cmake/aui.build.cmake b/cmake/aui.build.cmake
+index 90c53d4..7a8e8e8 100644
+--- a/cmake/aui.build.cmake
++++ b/cmake/aui.build.cmake
+@@ -1072,18 +1072,18 @@ function(aui_module AUI_MODULE_NAME)
+                 ARCHIVE       DESTINATION "lib"
+                 LIBRARY       DESTINATION "lib"
+                 RUNTIME       DESTINATION "bin"
+-                PUBLIC_HEADER DESTINATION "${AUI_MODULE_NAME}/include"
+-                INCLUDES      DESTINATION "${AUI_MODULE_NAME}/include"
++                PUBLIC_HEADER DESTINATION "include"
++                INCLUDES      DESTINATION "include"
+         )
+ 
+         install(
+                 DIRECTORY src/
+-                DESTINATION "${AUI_MODULE_NAME}/include/"
++                DESTINATION "include/"
+                 FILES_MATCHING PATTERN "*.h"
+                 PATTERN "*.hpp"
+ 
+         )
+-        target_include_directories(${AUI_MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:${AUI_MODULE_NAME}/include/>)
++        target_include_directories(${AUI_MODULE_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+     endif()
+     if (NOT BUILD_AS_IMPORTED_NAME STREQUAL ${AUI_MODULE_NAME})
+         add_library(${BUILD_AS_IMPORTED_NAME} ALIAS ${AUI_MODULE_NAME})

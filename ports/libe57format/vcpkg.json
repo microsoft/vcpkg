@@ -1,11 +1,11 @@
 {
   "name": "libe57format",
-  "version": "3.3.0",
-  "port-version": 1,
+  "version": "3.4.0",
   "description": "A library to provide read & write support for the E57 file format.",
   "homepage": "https://github.com/asmaloney/libE57Format",
   "license": "BSL-1.0",
   "dependencies": [
+    "crcpp",
     {
       "name": "vcpkg-cmake",
       "host": true

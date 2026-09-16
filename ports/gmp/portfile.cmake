@@ -90,8 +90,8 @@ if(VCPKG_HOST_IS_WINDOWS AND (NOT DEFINED VCPKG_MAKE_ACQUIRE_MSYS OR VCPKG_MAKE_
     vcpkg_acquire_msys(MSYS_ROOT
         PACKAGES autoconf-wrapper automake-wrapper autoconf-archive binutils libtool make which
         DIRECT_PACKAGES
-            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
-            dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
+            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-4-any.pkg.tar.zst"
+            c93b791eb55893cbe7c425e764074837355fd165deb7b1775f652c8e25d9d1f0cdd4120ab710d56fb859b7df55c4f971eccda7c112448f60615bff8a2dc81166
     )
     vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
     set(VCPKG_MAKE_ACQUIRE_MSYS FALSE)

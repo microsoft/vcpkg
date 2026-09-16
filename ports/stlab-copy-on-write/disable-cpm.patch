@@ -1,15 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6452b57..6e4e9d4 100644
+index 086a9da..8bf9ecf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,11 +1,8 @@
+@@ -1,15 +1,12 @@
  cmake_minimum_required(VERSION 3.24)
  
 -include(cmake/CPM.cmake)
 -
  # Fetch cpp-library before project()
- # Check https://github.com/stlab/cpp-library/releases for the latest version
--CPMAddPackage("gh:stlab/cpp-library@5.0.0")
+ # [DEPENDENCY] https://github.com/stlab/cpp-library/releases for the latest version
+ # CPMAddPackage(
+ #     NAME cpp-library
+ #     SOURCE_DIR "${CMAKE_SOURCE_DIR}/../cpp-library"
+ # )
+-CPMAddPackage("gh:stlab/cpp-library@5.4.1")
 -include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
 +include(cmake/cpp-library/cpp-library.cmake)
  

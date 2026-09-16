@@ -1,0 +1,11 @@
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -1835,7 +1835,7 @@ endif()
+ # namespaces, so libtorch is loaded with all its dependencies in a local scope.
+ # That usually leads to missing symbol errors at run-time, so to avoid a situation like
+ # this we have to preload those libs in a global namespace.
+-if(BUILD_SHARED_LIBS)
++if(BUILD_SHARED_LIBS AND BUILD_PYTHON)
+   add_library(torch_global_deps SHARED ${TORCH_SRC_DIR}/csrc/empty.c)
+   if(HAVE_SOVERSION)
+     set_target_properties(torch_global_deps PROPERTIES

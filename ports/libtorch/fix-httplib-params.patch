@@ -1,0 +1,26 @@
+--- a/torch/csrc/distributed/c10d/control_plane/WorkerServer.cpp
++++ b/torch/csrc/distributed/c10d/control_plane/WorkerServer.cpp
+@@ -13,19 +13,21 @@ namespace c10d::control_plane {
+ namespace {
+ class RequestImpl : public Request {
+  public:
+-  RequestImpl(const httplib::Request& req) : req_(req) {}
++  RequestImpl(const httplib::Request& req)
++      : req_(req), params_(req.params.begin(), req.params.end()) {}
+
+   const std::string& body() const override {
+     return req_.body;
+   }
+
+   const std::multimap<std::string, std::string>& params() const override {
+-    return req_.params;
++    return params_;
+   }
+
+  private:
+   // NOLINTNEXTLINE(cppcoreguidelines-avoid-const-or-ref-data-members)
+   const httplib::Request& req_;
++  std::multimap<std::string, std::string> params_;
+ };
+
+ class ResponseImpl : public Response {

@@ -1,8 +1,8 @@
 # The latest ref in branch stable
-set(ref 31e19f92f00c7003fa115047ce50978bc98c3a0d)
+set(ref b35605ace3ddf7c1a5d67a2eb553f034aef41d55)
 
 # Note on x264 versioning:
-# The pc file exports "0.164.<N>" where is the number of commits.
+# The pc file exports "0.<ABI>.<N>" where N is the number of commits.
 # The binary releases on https://artifacts.videolan.org/x264/ are named x264-r<N>-<COMMIT>.
 # With a git clone, this can be determined by running `versions.sh`.
 # With vcpkg_from_gitlab, we modify `versions.sh` accordingly.
@@ -12,11 +12,11 @@ string(REGEX MATCH "[0-9]+\$" revision "${VERSION}")
 configure_file("${CURRENT_PORT_DIR}/version.diff.in" "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff" @ONLY)
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://code.videolan.org/
+    GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/x264
     REF "${ref}"
-    SHA512 707ff486677a1b5502d6d8faa588e7a03b0dee45491c5cba89341be4be23d3f2e48272c3b11d54cfc7be1b8bf4a3dfc3c3bb6d9643a6b5a2ed77539c85ecf294
+    SHA512 bfac118da55da2fcc4587b17a3184d9ed70d6e03188bc0497f5922df22b5685fa49fa4325f9c5196c76d03e6e3f56d5906475c540d0df7e1739dc4182816eebe
     HEAD_REF master
     PATCHES
         "${CURRENT_BUILDTREES_DIR}/src/version-${VERSION}.diff"

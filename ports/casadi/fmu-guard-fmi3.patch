@@ -1,0 +1,17 @@
+diff --git a/casadi/core/fmu.cpp b/casadi/core/fmu.cpp
+index 3fc0082..e60b78f 100644
+--- a/casadi/core/fmu.cpp
++++ b/casadi/core/fmu.cpp
+@@ -778,7 +778,12 @@ Dict FmuInternal::compile_fmu(const std::string& name, const Dict& files, const
+   // Augment the file map with the compiled binary
+   // (FMI-3 layout: binaries/<dll_infix>/<modelIdentifier><suffix>)
+   Dict ret = files;
++#ifdef WITH_FMI3
+   ret[dll] = "binaries/" + Fmu3::dll_infix() + "/" + name + dll_suffix();
++#else  // WITH_FMI3
++  // Fmu3 is only compiled when FMI 3 support is enabled
++  casadi_error("CasADi was not compiled with WITH_FMI3=ON.");
++#endif  // WITH_FMI3
+   return ret;
+ }
+ 

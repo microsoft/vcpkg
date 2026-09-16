@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
     REF "${BDE_TOOLS_VER}"
-    SHA512 d250e40955aa7e4076a6d6382d20d10a4a0deabab3f729dce45dfa8e479cd5aecfb603e8d06c8283e15d81e74bf1cdec307c32c6e109097d9a5db9614b0ad30e
+    SHA512 3d15bb0aff27facd167e243a5c5c77c33e1c27e340c84e7deb870c98525a1e653f8d25b82ea7d89c703b87c82b61bc39a94da406b94654d211739618a89d8293
     HEAD_REF main
 )
 
@@ -23,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 a3ca09ea673e5a35ca5385482838a8e017ac2c9ca0f570679598d9873c04517e0a9b01e2010c03d7ad56e1e8bcc6b6b87ee507e296420d7d650d0763039e14a6
+    SHA512 d895d11de518eb67805baaa50ef08d2c8c872375a23134c55dd9db8c790436143823ac8dd5707e1cce583f23a5e455fe9f13d7907d92cc2e86b85c3f3d0a5309
     HEAD_REF main
     PATCHES
         fix-bdlar-target.patch
@@ -51,10 +51,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 list(APPEND SUBPACKAGES "inteldfp" "s_baltst" "bsl" "bbryu" "bdl" "bbl" "bal")
 include(GNUInstallDirs) # needed for CMAKE_INSTALL_LIBDIR
 foreach(subpackage IN LISTS SUBPACKAGES)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME ${subpackage} CONFIG_PATH /${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${subpackage}" CONFIG_PATH "/${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${CMAKE_INSTALL_LIBDIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/${CMAKE_INSTALL_LIBDIR}/cmake")
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/thirdparty/bbryu/LICENSE-Boost"
+        "${SOURCE_PATH}/thirdparty/inteldfp/eula.txt"
+)
 vcpkg_fixup_pkgconfig()
