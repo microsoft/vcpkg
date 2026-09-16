@@ -24,7 +24,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME NumCpp CONFIG_PATH share/NumCpp/cmake)
 
-if("boost" NOT IN_LIST FEATURES)
+if(NOT "boost" IN_LIST FEATURES)
     file(GLOB_RECURSE numcpp_headers "${CURRENT_PACKAGES_DIR}/include/*.hpp")
     foreach(numcpp_header IN LISTS numcpp_headers)
         file(READ "${numcpp_header}" numcpp_header_contents)
