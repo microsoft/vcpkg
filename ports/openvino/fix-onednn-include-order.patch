@@ -1,0 +1,39 @@
+diff --git a/src/plugins/intel_gpu/src/graph/CMakeLists.txt b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
+index c864f02..2358264 100644
+--- a/src/plugins/intel_gpu/src/graph/CMakeLists.txt
++++ b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
+@@ -92,7 +92,7 @@ macro(ov_gpu_add_backend_target)
+ 
+     # We use onednn headers all over the graph module, so we have to append includes to all backends and add a dependency between targets
+     if (ENABLE_ONEDNN_FOR_GPU)
+-        target_include_directories(${ARG_NAME} SYSTEM BEFORE PRIVATE $<TARGET_PROPERTY:onednn_gpu_tgt,INTERFACE_INCLUDE_DIRECTORIES>)
++        target_include_directories(${ARG_NAME} BEFORE PRIVATE $<TARGET_PROPERTY:onednn_gpu_tgt,INTERFACE_INCLUDE_DIRECTORIES>)
+         add_dependencies(openvino_intel_gpu_${IMPL_TYPE}_obj onednn_gpu_tgt)
+     endif()
+ endmacro()
+@@ -146,6 +146,11 @@ ov_add_target(
+ 
+ ov_build_target_faster(${TARGET_NAME} PCH)
+ 
++if (ENABLE_ONEDNN_FOR_GPU)
++    target_include_directories(${TARGET_NAME} BEFORE PRIVATE
++        $<TARGET_PROPERTY:onednn_gpu_tgt,INTERFACE_INCLUDE_DIRECTORIES>)
++endif()
++
+ target_compile_options(${TARGET_NAME} PRIVATE ${COMMON_COMPILE_OPTIONS})
+ 
+ ov_set_threading_interface_for(${TARGET_NAME})
+diff --git a/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt b/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt
+index 3078ac0..8b47fdf 100644
+--- a/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt
++++ b/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt
+@@ -67,6 +67,9 @@ target_compile_options(${TARGET_NAME} PRIVATE
+   $<$<CONFIG:Release>:$<IF:$<CXX_COMPILER_ID:MSVC>,/Os,-Os>>)
+ 
+ if (ENABLE_ONEDNN_FOR_GPU)
++    # Prefer this private oneDNN revision over oneDNN headers from the consumer prefix.
++    target_include_directories(${TARGET_NAME} BEFORE PRIVATE
++        $<TARGET_PROPERTY:onednn_gpu_tgt,INTERFACE_INCLUDE_DIRECTORIES>)
+     target_link_libraries(${TARGET_NAME} PRIVATE onednn_gpu_tgt)
+ endif()
+ 
