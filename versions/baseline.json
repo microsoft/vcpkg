@@ -7845,8 +7845,8 @@
       "port-version": 0
     },
     "physfs": {
-      "baseline": "3.2.0",
-      "port-version": 1
+      "baseline": "2026-09-03",
+      "port-version": 0
     },
     "physx": {
       "baseline": "5.5.0",
