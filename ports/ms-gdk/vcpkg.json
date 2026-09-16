@@ -1,7 +1,6 @@
 {
   "name": "ms-gdk",
   "version": "2604.4.7897",
-  "port-version": 1,
   "description": "Microsoft Game Development Kit (GDK)",
   "homepage": "https://aka.ms/gdkx",
   "documentation": "https://aka.ms/gamedevdocs",
