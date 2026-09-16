@@ -1,5 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+vcpkg_download_distfile(LLVM_BACKPORT_137403_PATCH
+    URLS https://github.com/llvm/llvm-project/commit/59978b21ad9c65276ee8e14f26759691b8a65763.patch?full_index=1
+    FILENAME llvm-backport-137403.patch
+    SHA512 46248ef42a2bf756b4238dd3ff74a89bceb779565f09741bddc546865b7a62fa9f5900fc48502893242a2686ec06c1a3830a03ccd978571fee2dc4edacb63af2
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
@@ -19,6 +25,7 @@ vcpkg_from_github(
         82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
         add-include-chrono.patch # https://github.com/llvm/llvm-project/pull/118059
         cmake4.patch
+        "${LLVM_BACKPORT_137403_PATCH}"
 )
 
 vcpkg_check_features(
