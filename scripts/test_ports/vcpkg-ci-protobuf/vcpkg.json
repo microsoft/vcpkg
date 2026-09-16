@@ -1,0 +1,52 @@
+{
+  "name": "vcpkg-ci-protobuf",
+  "version-date": "2026-09-08",
+  "description": "Validate Protobuf runtime exports and generated-message consumers.",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "protobuf",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "full-runtime": {
+      "description": "Validate the full runtime and reflection.",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "features": [
+            "full-runtime"
+          ]
+        }
+      ]
+    },
+    "libprotoc": {
+      "description": "Validate the target compiler library.",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "features": [
+            "libprotoc"
+          ]
+        }
+      ]
+    },
+    "zlib": {
+      "description": "Validate gzip serialization with the full runtime.",
+      "dependencies": [
+        {
+          "name": "protobuf",
+          "features": [
+            "zlib"
+          ]
+        }
+      ]
+    }
+  }
+}

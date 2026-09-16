@@ -1,0 +1,7 @@
+syntax = "proto3";
+package vcpkg_test;
+
+message FullMessage {
+  int32 id = 1;
+  string name = 2;
+}

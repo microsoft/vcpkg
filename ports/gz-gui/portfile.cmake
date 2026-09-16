@@ -11,12 +11,12 @@ ignition_modular_library(
    REF "${PORT}${VERSION_MAJOR}_${VERSION}"
    VERSION "${VERSION}"
    SHA512 154d8e6149f762d7f32cebde2b41e17b42846b65a643a7216cabde93644ae821d626b10ba3a9faf9fe39c404976489cf726896e3373daf2598177b6738d76545
-   OPTIONS 
+   OPTIONS
    PATCHES
       dependencies.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)   
+if(VCPKG_TARGET_IS_WINDOWS)
    file(GLOB plugins "${CURRENT_PACKAGES_DIR}/lib/${PORT}-${VERSION_MAJOR}/plugins/*.dll")
    if (NOT plugins STREQUAL "")
       file(COPY ${plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/engine-plugins/")

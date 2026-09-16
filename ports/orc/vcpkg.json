@@ -1,17 +1,23 @@
 {
   "name": "orc",
   "version": "2.2.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The smallest, fastest columnar storage for Hadoop workloads.",
   "homepage": "https://orc.apache.org/",
   "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "lz4",
-    "protobuf",
     {
       "name": "protobuf",
       "host": true
+    },
+    {
+      "name": "protobuf",
+      "features": [
+        "full-runtime"
+      ],
+      "version>=": "7.36.1"
     },
     "snappy",
     {
