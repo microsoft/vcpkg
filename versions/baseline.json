@@ -513,7 +513,7 @@
       "port-version": 0
     },
     "aws-lambda-cpp": {
-      "baseline": "0.2.10",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "aws-sdk-cpp": {
@@ -1957,7 +1957,7 @@
       "port-version": 0
     },
     "comms-ublox": {
-      "baseline": "3.0.7",
+      "baseline": "3.0.8",
       "port-version": 0
     },
     "commsdsl": {
@@ -4729,7 +4729,7 @@
       "port-version": 0
     },
     "level-zero": {
-      "baseline": "1.32.0",
+      "baseline": "1.33.1",
       "port-version": 0
     },
     "leveldb": {
@@ -9094,7 +9094,7 @@
     },
     "sail": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -9237,7 +9237,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.4.4",
+      "baseline": "4.4.5",
       "port-version": 0
     },
     "seasocks": {
@@ -9885,80 +9885,80 @@
       "port-version": 1
     },
     "suitesparse": {
-      "baseline": "7.14.0",
+      "baseline": "7.14.1",
       "port-version": 0
     },
     "suitesparse-amd": {
       "baseline": "3.3.4",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-btf": {
       "baseline": "2.3.3",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-camd": {
       "baseline": "3.3.5",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-ccolamd": {
       "baseline": "3.3.5",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-cholmod": {
       "baseline": "5.3.5",
-      "port-version": 2
+      "port-version": 3
     },
     "suitesparse-colamd": {
       "baseline": "3.3.5",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-config": {
-      "baseline": "7.14.0",
+      "baseline": "7.14.1",
       "port-version": 0
     },
     "suitesparse-cxsparse": {
       "baseline": "4.4.2",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-graphblas": {
-      "baseline": "10.5.0",
+      "baseline": "10.5.1",
       "port-version": 0
     },
     "suitesparse-klu": {
       "baseline": "2.3.6",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-lagraph": {
       "baseline": "1.2.2",
-      "port-version": 2
+      "port-version": 3
     },
     "suitesparse-ldl": {
       "baseline": "3.3.3",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-mongoose": {
       "baseline": "3.3.6",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-paru": {
       "baseline": "1.1.2",
-      "port-version": 1
+      "port-version": 2
     },
     "suitesparse-rbio": {
       "baseline": "4.3.5",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-spex": {
       "baseline": "3.2.4",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-spqr": {
       "baseline": "4.3.6",
-      "port-version": 3
+      "port-version": 4
     },
     "suitesparse-umfpack": {
       "baseline": "6.3.8",
-      "port-version": 2
+      "port-version": 3
     },
     "sundials": {
       "baseline": "7.9.0",
@@ -10542,7 +10542,7 @@
     },
     "usd": {
       "baseline": "26.8",
-      "port-version": 1
+      "port-version": 2
     },
     "usearch": {
       "baseline": "2.25.3",
