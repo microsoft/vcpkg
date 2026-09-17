@@ -9,6 +9,7 @@ vcpkg_from_github(
         library-linkage.diff
         pkgconfig.diff
         ssize_t.diff
+        fdsetsize-win32.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
