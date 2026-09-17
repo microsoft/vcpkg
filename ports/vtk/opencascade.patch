@@ -45,10 +45,23 @@ index e81444eceb..4baddeb719 100644
    vtk_module_include(VTK::IOOCCT PRIVATE "${OpenCASCADE_INCLUDE_DIR}")
  endif ()
 diff --git a/IO/OCCT/vtkOCCTReader.cxx b/IO/OCCT/vtkOCCTReader.cxx
-index 52e76be72c..5aca5c93c8 100644
+index 52e76be72c..a60414c000 100644
 --- a/IO/OCCT/vtkOCCTReader.cxx
 +++ b/IO/OCCT/vtkOCCTReader.cxx
-@@ -345,11 +345,19 @@ public:
+@@ -26,8 +26,12 @@
+ #include <Poly_Triangulation.hxx>
+ #include <Quantity_Color.hxx>
+ #include <STEPCAFControl_Reader.hxx>
++#if VTK_OCCT_VERSION(8, 0, 0) > OCC_VERSION_HEX
+ #include <Standard_PrimitiveTypes.hxx>
++#endif
++#include <TColgp_Array1OfPnt.hxx>
+ #include <TColgp_Array1OfVec.hxx>
+ #include <TDF_ChildIterator.hxx>
++#include <TDF_LabelSequence.hxx>
+ #include <TDataStd_Name.hxx>
+ #include <TDocStd_Document.hxx>
+@@ -343,11 +346,19 @@ public:
    }
  
    //----------------------------------------------------------------------------
@@ -68,7 +81,7 @@ index 52e76be72c..5aca5c93c8 100644
  
    //----------------------------------------------------------------------------
    static void GetMatrix(const TopLoc_Location& loc, vtkMatrix4x4* mat)
-@@ -381,8 +389,11 @@ public:
+@@ -379,8 +390,11 @@ public:
        GetMatrix(hLoc->Get(), location);
      }
    }
