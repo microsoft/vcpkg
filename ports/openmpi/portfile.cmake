@@ -109,6 +109,7 @@ configure_file("${CURRENT_PORT_DIR}/mpi-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/
 
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/docs/license/mpich.txt"
     "${SOURCE_PATH}/3rd-party/openpmix/LICENSE"
     "${SOURCE_PATH}/3rd-party/prrte/LICENSE"
     "${SOURCE_PATH}/3rd-party/treematch/LICENSE"
