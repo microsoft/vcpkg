@@ -3930,7 +3930,7 @@
     },
     "hyperscan": {
       "baseline": "5.4.2",
-      "port-version": 3
+      "port-version": 4
     },
     "hypodermic": {
       "baseline": "2023-03-03",
