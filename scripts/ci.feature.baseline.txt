@@ -786,7 +786,6 @@ mysql-connector-cpp:arm64-linux=fail
 nana:arm64-linux=fail
 nana:x64-linux=fail
 nanogui:arm64-linux=cascade
-nativefiledialog-extended[wayland]:arm64-linux=feature-fails # arm64 cross-build container has no wayland-client development files
 netcdf-c[core]:arm64-linux=combination-fails # error: cannot find math library
 netcdf-c[dap]:arm64-linux=feature-fails
 netcdf-c[szip]:arm64-linux=cascade

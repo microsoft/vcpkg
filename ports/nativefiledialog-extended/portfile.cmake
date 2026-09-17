@@ -11,12 +11,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wayland NFD_WAYLAND
 )
 
+set(copyright_files "${SOURCE_PATH}/LICENSE")
 if(NFD_WAYLAND)
-    message(WARNING "You will need to install Wayland dependencies to use feature wayland:\nsudo apt install libwayland-dev\n")
     # Upstream expects wayland-protocols as a git submodule, which is not part of the release archive.
-    file(COPY "${CURRENT_INSTALLED_DIR}/share/wayland-protocols/unstable/xdg-foreign/xdg-foreign-unstable-v1.xml"
+    set(wayland_protocol_file "${CURRENT_INSTALLED_DIR}/share/wayland-protocols/unstable/xdg-foreign/xdg-foreign-unstable-v1.xml")
+    file(COPY "${wayland_protocol_file}"
         DESTINATION "${SOURCE_PATH}/3ps/wayland-protocols/unstable/xdg-foreign"
     )
+    list(APPEND copyright_files "${wayland_protocol_file}")
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/wayland")
 endif()
 
@@ -27,6 +29,7 @@ vcpkg_cmake_configure(
         -DNFD_BUILD_TESTS=OFF
         -DNFD_PORTAL=ON
     MAYBE_UNUSED_VARIABLES
+        # Used only for Linux builds.
         NFD_PORTAL
         NFD_WAYLAND
 )
@@ -38,4 +41,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST ${copyright_files})

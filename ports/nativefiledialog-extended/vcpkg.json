@@ -28,7 +28,8 @@
   "features": {
     "wayland": {
       "description": "Support Wayland on Linux",
-      "supports": "!osx & !windows",
+      "supports": "!osx & !windows & native",
+      "license": "MIT",
       "dependencies": [
         "wayland",
         {
