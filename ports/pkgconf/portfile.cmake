@@ -103,4 +103,11 @@ endif()
 
 vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf pccritic spdxtool AUTO_CLEAN)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/cli/getopt_long.c"
+        "${SOURCE_PATH}/cli/getopt_long.h"
+        "${SOURCE_PATH}/cli/spdxtool/main.c"
+        "${SOURCE_PATH}/pkg.m4"
+)
