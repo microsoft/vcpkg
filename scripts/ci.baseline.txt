@@ -193,7 +193,6 @@ gainput:x64-android=fail
 gamenetworkingsockets:arm-neon-android=fail
 gamenetworkingsockets:arm64-android=fail
 gamenetworkingsockets:x64-android=fail
-gegl:arm64-osx=fail
 gemmlowp:arm-neon-android=fail
 gemmlowp:arm64-android=fail
 gemmlowp:x64-android=fail
