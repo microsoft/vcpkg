@@ -1,0 +1,34 @@
+diff --git a/Wrapping/PythonCore/PyVTKNamespace.cxx b/Wrapping/PythonCore/PyVTKNamespace.cxx
+index bed60dc..c182308 100644
+--- a/Wrapping/PythonCore/PyVTKNamespace.cxx
++++ b/Wrapping/PythonCore/PyVTKNamespace.cxx
+@@ -112,8 +112,10 @@ PyObject* PyVTKNamespace_New(const char* name)
+   {
+     // make sure python has readied the type object
+     PyType_Ready(&PyVTKNamespace_Type);
+-    // call the allocator provided by python for this type
+-    self = PyVTKNamespace_Type.tp_alloc(&PyVTKNamespace_Type, 0);
++    // call the superclass new function
++    PyObject* empty = PyTuple_New(0);
++    self = PyVTKNamespace_Type.tp_base->tp_new(&PyVTKNamespace_Type, empty, nullptr);
++    Py_DECREF(empty);
+     // call the superclass init function
+     PyObject* pyname = PyUnicode_FromString(name);
+     PyObject* args = PyTuple_Pack(1, pyname);
+diff --git a/Wrapping/PythonCore/PyVTKTemplate.cxx b/Wrapping/PythonCore/PyVTKTemplate.cxx
+index 26421f6..e7780bf 100644
+--- a/Wrapping/PythonCore/PyVTKTemplate.cxx
++++ b/Wrapping/PythonCore/PyVTKTemplate.cxx
+@@ -761,8 +761,10 @@ PyObject* PyVTKTemplate_New(const char* name, const char* docstring)
+ {
+   // make sure python has readied the type object
+   PyType_Ready(&PyVTKTemplate_Type);
+-  // call the allocator provided by python for this type
+-  PyObject* self = PyVTKTemplate_Type.tp_alloc(&PyVTKTemplate_Type, 0);
++  // call the superclass new function
++  PyObject* empty = PyTuple_New(0);
++  PyObject* self = PyVTKTemplate_Type.tp_base->tp_new(&PyVTKTemplate_Type, empty, nullptr);
++  Py_DECREF(empty);
+   // call the superclass init function
+   PyObject* pyname = PyUnicode_FromString(name);
+   PyObject* pydoc = PyUnicode_FromString(docstring);
