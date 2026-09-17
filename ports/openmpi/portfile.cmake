@@ -42,6 +42,7 @@ vcpkg_make_configure(
         # Prevent optional components from depending on libraries found on the
         # build machine. Such integrations need declared vcpkg dependencies.
         --without-argobots
+        --without-cray-xpmem
         --without-cuda
         --without-gpfs
         --without-hcoll
@@ -66,6 +67,7 @@ vcpkg_make_configure(
         --without-ucc
         --without-ucx
         --without-ugni
+        --without-udreg
         --without-usnic
         --without-valgrind
         --without-xpmem
