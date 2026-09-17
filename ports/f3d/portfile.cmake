@@ -1,16 +1,24 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO f3d-app/f3d
     REF v${VERSION}
-    SHA512 210845e20af37288a069a0a00f35c989d662de27027e6d841cec2eea43c1c5beb66dcf68555bfc22b656e086522de7c5fe52431f2875e70939f15d9aa05a015c
+    SHA512 da302baff8294af87032d238552f46dbd6ebce04dce2a8ec4711c79398f01d38641b2a8e7da4ab3261c555c6eaf84b73c91e3b100a3a85ef1e1d24b3a654d79e
     HEAD_REF master
     PATCHES
         fix-install.patch
 )
+file(GLOB external_sources "${SOURCE_PATH}/external/*")
+list(REMOVE_ITEM external_sources "${SOURCE_PATH}/external/CMakeLists.txt")
+file(REMOVE_RECURSE ${external_sources})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         application F3D_BUILD_APPLICATION
+        application F3D_WINDOWS_BUILD_CONSOLE_APPLICATION
+        application F3D_USE_EXTERNAL_CXXOPTS        # avoid REQUIRED
+        application F3D_USE_EXTERNAL_DMON           # avoid REQUIRED
+        application F3D_USE_EXTERNAL_NLOHMANN_JSON  # avoid REQUIRED
         # optional modules
         exr         F3D_MODULE_EXR
         # optional plugins
@@ -24,10 +32,11 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DF3D_MACOS_BUNDLE=OFF
+        -DF3D_USE_EXTERNAL_IMGUI=ON
         -DF3D_WINDOWS_BUILD_SHELL_THUMBNAILS_EXTENSION=OFF
-    MAYBE_UNUSED_VARIABLES
-        F3D_MACOS_BUNDLE
-        F3D_WINDOWS_BUILD_SHELL_THUMBNAILS_EXTENSION
+    OPTIONS_DEBUG
+        -DF3D_BUILD_APPLICATION=OFF
+        -DF3D_WINDOWS_BUILD_CONSOLE_APPLICATION=OFF
 )
 
 vcpkg_cmake_install()
@@ -36,7 +45,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/f3d)
 
 # If the application feature is enabled, install it as a tool
 if("application" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES f3d AUTO_CLEAN)
+    set(tools f3d)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND tools f3d-console)
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
 
 vcpkg_copy_pdbs()

@@ -1,12 +1,13 @@
 {
   "name": "f3d",
-  "version": "3.2.0",
-  "port-version": 1,
+  "version": "3.5.0",
   "description": "A fast and minimalist 3D viewer",
   "homepage": "https://f3d.app",
   "license": "BSD-3-Clause",
   "supports": "!(windows & (arm | uwp))",
   "dependencies": [
+    "imgui",
+    "nlohmann-json",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -19,6 +20,7 @@
       "name": "vtk",
       "default-features": false,
       "features": [
+        "netcdf",
         "opengl",
         "seacas"
       ]
@@ -32,7 +34,12 @@
       ]
     },
     "application": {
-      "description": "build the application"
+      "description": "Build the application",
+      "dependencies": [
+        "cxxopts",
+        "septag-dmon",
+        "tinyfiledialogs"
+      ]
     },
     "assimp": {
       "description": "assimp plugin",
@@ -47,7 +54,7 @@
       ]
     },
     "exr": {
-      "description": "support for OpenEXR images",
+      "description": "OpenEXR images support",
       "dependencies": [
         "openexr"
       ]
