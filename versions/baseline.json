@@ -1941,8 +1941,8 @@
       "port-version": 12
     },
     "colmap": {
-      "baseline": "3.12.6",
-      "port-version": 1
+      "baseline": "4.1.1",
+      "port-version": 0
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -3210,7 +3210,7 @@
     },
     "forge": {
       "baseline": "1.0.8",
-      "port-version": 3
+      "port-version": 4
     },
     "foxi": {
       "baseline": "2021-12-01",
@@ -3698,7 +3698,7 @@
     },
     "gz-common": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-fuel-tools": {
       "baseline": "10.1.0",
@@ -7342,11 +7342,11 @@
     },
     "ogre": {
       "baseline": "14.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ogre-next": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ois": {
       "baseline": "1.6.0",
@@ -7414,7 +7414,7 @@
     },
     "opencascade": {
       "baseline": "8.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "opencc": {
       "baseline": "1.4.1",

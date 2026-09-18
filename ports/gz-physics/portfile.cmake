@@ -13,6 +13,7 @@ ignition_modular_library(
       -DSKIP_dartsim=ON
       -DSKIP_tpe=ON
       -DSKIP_bullet=ON
+      -DSKIP_bullet-featherstone=ON
    PATCHES
       dependencies.patch
 )

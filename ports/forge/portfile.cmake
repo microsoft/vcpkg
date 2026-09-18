@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/bin/* ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/bin/*" "${CURRENT_PACKAGES_DIR}/debug/bin/*")
 list(FILTER DLLS EXCLUDE REGEX "forge\\.dll\$")
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

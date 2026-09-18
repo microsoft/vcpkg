@@ -9,7 +9,11 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 0e0da65dfe422872ce0802e062226b38f36e6276f293156f7c16fe106eef785bab5816fb63b4c0a61ccd5b0a5848b19f7efbe8283bd0fa6acd941c70e4e643d1
     HEAD_REF main
+    PATCHES
+        no-glu.diff
+        use-cryptopp-config.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/FindCryptoPP.cmake")
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
     message(FATAL_ERROR "Features cuda and cuda-redist require an x64 triplet.")
