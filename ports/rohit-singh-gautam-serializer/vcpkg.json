@@ -1,7 +1,7 @@
 {
   "name": "rohit-singh-gautam-serializer",
   "version": "1.0.0",
-  "description": "C++20 schema compiler and serialization runtime with C++ and Java output, JSON, binary, and Protobuf codecs.",
+  "description": "C++20 schema compiler and serialization runtime with multi-language output, JSON, binary, Protobuf codecs, and optional compression.",
   "homepage": "https://github.com/rohit-singh-gautam/Serializer",
   "license": "GPL-3.0-or-later",
   "supports": "!uwp",
@@ -14,5 +14,25 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "lz4": {
+      "description": "Enable LZ4 frame compression.",
+      "dependencies": [
+        "lz4"
+      ]
+    },
+    "zlib": {
+      "description": "Enable gzip, zlib, and raw DEFLATE compression.",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Enable Zstandard frame compression.",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }
