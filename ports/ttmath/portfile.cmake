@@ -1,9 +1,7 @@
-vcpkg_from_sourceforge(
+vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ttmath
-    REF ttmath/ttmath-0.9.3
-    FILENAME "ttmath-0.9.3-src.tar.gz"
-    SHA512 ee5f56e92476c4d77c40beae1a2bd4d62fde2e9450b46184a2e37f2c52fc7d69ccac5688974a05aef68517b812515eb74a8992dd5d0104e57a32bf6e905c14e3
+    URL "https://gitea.ttmath.org/tomasz.sowa/ttmath.git"
+    REF aad580f51e7ffc32966507a9897ec575c389e3e6
     PATCHES
         disable-msvc-x64-asm.patch
 )
