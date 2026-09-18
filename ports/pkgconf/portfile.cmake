@@ -50,8 +50,8 @@ if(NOT VCPKG_CROSSCOMPILING)
     elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         # These defaults are obtained from pkgconf/pkg-config on Ubuntu
         set(SYSTEM_INCLUDEDIR "/usr/include")
-        set(SYSTEM_LIBDIR "/lib:/lib/aarch64-linux-gnu:/usr/lib:/usr/lib/aarch64-linux-gnu")
-        set(PKG_DEFAULT_PATH "/usr/local/lib/aarch64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+        set(SYSTEM_LIBDIR "/lib:/lib/aarch64-linux-gnu:/lib64:/usr/lib:/usr/lib/aarch64-linux-gnu:/usr/lib64")
+        set(PKG_DEFAULT_PATH "/usr/local/lib/aarch64-linux-gnu/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
         set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
     endif()
 endif()
@@ -103,4 +103,11 @@ endif()
 
 vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf pccritic spdxtool AUTO_CLEAN)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/cli/getopt_long.c"
+        "${SOURCE_PATH}/cli/getopt_long.h"
+        "${SOURCE_PATH}/cli/spdxtool/main.c"
+        "${SOURCE_PATH}/pkg.m4"
+)
