@@ -497,7 +497,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "1.1.1",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -2092,6 +2092,10 @@
       "baseline": "3.0.1",
       "port-version": 0
     },
+    "cpp-unicodelib": {
+      "baseline": "2026-09-05",
+      "port-version": 0
+    },
     "cppad": {
       "baseline": "20260000.0",
       "port-version": 0
@@ -2189,7 +2193,7 @@
       "port-version": 0
     },
     "cpuid": {
-      "baseline": "0.8.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "cpuinfo": {
@@ -3769,8 +3773,8 @@
       "port-version": 1
     },
     "halide": {
-      "baseline": "18.0.0",
-      "port-version": 1
+      "baseline": "21.0.0",
+      "port-version": 0
     },
     "hamlib": {
       "baseline": "4.7.2",
@@ -3926,7 +3930,7 @@
     },
     "hyperscan": {
       "baseline": "5.4.2",
-      "port-version": 3
+      "port-version": 4
     },
     "hypodermic": {
       "baseline": "2023-03-03",
@@ -5246,7 +5250,7 @@
     },
     "libjpeg-turbo": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libjuice": {
       "baseline": "1.7.2",
@@ -5898,7 +5902,7 @@
     },
     "liburing": {
       "baseline": "2.15",
-      "port-version": 0
+      "port-version": 1
     },
     "libusb": {
       "baseline": "1.0.30",
@@ -6237,8 +6241,8 @@
       "port-version": 0
     },
     "llvm": {
-      "baseline": "18.1.6",
-      "port-version": 6
+      "baseline": "23.1.1",
+      "port-version": 0
     },
     "lmdb": {
       "baseline": "1.0.1",
@@ -6590,7 +6594,7 @@
     },
     "mesa": {
       "baseline": "24.0.7",
-      "port-version": 3
+      "port-version": 4
     },
     "meschach": {
       "baseline": "1.2b",
@@ -6653,7 +6657,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "3.5.2",
+      "baseline": "3.5.3",
       "port-version": 0
     },
     "mimicpp": {
@@ -6811,6 +6815,10 @@
     "mpc": {
       "baseline": "1.3.1",
       "port-version": 3
+    },
+    "mpdecimal": {
+      "baseline": "4.0.1",
+      "port-version": 0
     },
     "mpfr": {
       "baseline": "4.2.2",
@@ -7169,7 +7177,7 @@
       "port-version": 3
     },
     "nng": {
-      "baseline": "1.12.0",
+      "baseline": "1.12.3",
       "port-version": 0
     },
     "nngpp": {
@@ -7242,7 +7250,7 @@
     },
     "numcpp": {
       "baseline": "2.16.1",
-      "port-version": 0
+      "port-version": 1
     },
     "numkong": {
       "baseline": "7.8.1",
@@ -7582,7 +7590,7 @@
     },
     "openvino": {
       "baseline": "2026.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.10",
@@ -8193,8 +8201,8 @@
       "port-version": 7
     },
     "python3": {
-      "baseline": "3.12.13",
-      "port-version": 1
+      "baseline": "3.13.15",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.10",
@@ -8953,7 +8961,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.7.2",
+      "baseline": "5.2.1",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -9094,7 +9102,7 @@
     },
     "sail": {
       "baseline": "1.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sajson": {
       "baseline": "2018-09-21",
@@ -9993,8 +10001,8 @@
       "port-version": 0
     },
     "symengine": {
-      "baseline": "0.14.0",
-      "port-version": 1
+      "baseline": "0.15.0",
+      "port-version": 0
     },
     "syntax-highlighting": {
       "baseline": "6.30.0",
@@ -10150,6 +10158,10 @@
     },
     "tiledb": {
       "baseline": "2.30.1",
+      "port-version": 0
+    },
+    "time-shield-cpp": {
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "tinkerforge": {
@@ -10497,7 +10509,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "4.11.0",
+      "baseline": "5.0.1",
       "port-version": 0
     },
     "unqlite": {
@@ -10818,7 +10830,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 17
+      "port-version": 18
     },
     "vtk-compile-tools": {
       "baseline": "9.3.0-pv5.12.1",
