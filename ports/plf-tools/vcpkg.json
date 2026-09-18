@@ -1,0 +1,7 @@
+{
+  "name": "plf-tools",
+  "version-string": "1.02",
+  "description": "Toolsets shared across plf:: libraries",
+  "homepage": "https://www.plflib.org",
+  "license": "Zlib"
+}
