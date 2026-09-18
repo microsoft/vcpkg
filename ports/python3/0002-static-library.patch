@@ -1,8 +1,8 @@
-diff --git a/PC/pyconfig.h.in b/PC/pyconfig.h.in
-index 7e998fa..6aa885b 100644
---- a/PC/pyconfig.h.in
-+++ b/PC/pyconfig.h.in
-@@ -299,6 +299,9 @@ typedef int pid_t;
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index 710a737..22bf062 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -304,6 +304,9 @@ typedef int pid_t;
  
  /* For Windows the Python core is in a DLL by default.  Test
  Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
@@ -12,9 +12,9 @@ index 7e998fa..6aa885b 100644
  #if !defined(MS_NO_COREDLL) && !defined(Py_NO_ENABLE_SHARED)
  #       define Py_ENABLE_SHARED 1 /* standard symbol for shared library */
  #       define MS_COREDLL       /* deprecated old symbol */
-@@ -333,6 +336,15 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
+@@ -342,6 +345,15 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
  #                       endif /* Py_GIL_DISABLED */
- #               endif /* _MSC_VER */
+ #               endif /* _MSC_VER && !Py_NO_LINK_LIB */
  #       endif /* Py_BUILD_CORE */
 +#else
 +        /* So MSVC users need not specify the .lib file in their own config */
@@ -29,7 +29,7 @@ index 7e998fa..6aa885b 100644
  
  #ifdef MS_WIN64
 diff --git a/PCbuild/_freeze_module.vcxproj b/PCbuild/_freeze_module.vcxproj
-index d6bf127..854e937 100644
+index e084517..4c4a1b9 100644
 --- a/PCbuild/_freeze_module.vcxproj
 +++ b/PCbuild/_freeze_module.vcxproj
 @@ -88,7 +88,7 @@
@@ -42,10 +42,10 @@ index d6bf127..854e937 100644
        <Optimization>Disabled</Optimization>
        <WholeProgramOptimization>false</WholeProgramOptimization>
 diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
-index 766eb72..0ca45d4 100644
+index 00e132f..d49973e 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
-@@ -58,7 +58,7 @@
+@@ -60,7 +60,7 @@
        <BuildInParallel>false</BuildInParallel>
      </Projects>
      <!-- python3.dll -->
@@ -55,7 +55,7 @@ index 766eb72..0ca45d4 100644
      <Projects Include="pylauncher.vcxproj;pywlauncher.vcxproj" Condition="false" />
      <!-- pyshellext.dll -->
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 387b45e..00c7032 100644
+index ba23333..08a4158 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -73,7 +73,7 @@
@@ -69,18 +69,18 @@ index 387b45e..00c7032 100644
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 @@ -102,7 +102,7 @@
        <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
-       <AdditionalIncludeDirectories>$(PySourcePath)Modules\_hacl\include;$(PySourcePath)Modules\_hacl\internal;$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-       <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
--      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <AdditionalIncludeDirectories>$(PySourcePath)Modules\_hacl;$(PySourcePath)Modules\_hacl\include;$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalIncludeDirectories Condition="'$(UseJIT)' == 'true'">$(GeneratedJitStencilsDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";ZLIB_COMPAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;MS_DLL_ID="$(SysWinVer)";ZLIB_COMPAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <PreprocessorDefinitions Condition="'$(UseJIT)' == 'true'">_Py_JIT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
        <PreprocessorDefinitions Condition="'$(UseTIER2)' != '' and '$(UseTIER2)' != '0'">_Py_TIER2=$(UseTIER2);%(PreprocessorDefinitions)</PreprocessorDefinitions>
 diff --git a/Python/sysmodule.c b/Python/sysmodule.c
-index f3132f3..c57ae54 100644
+index eeb9ef2..ba8a183 100644
 --- a/Python/sysmodule.c
 +++ b/Python/sysmodule.c
-@@ -3637,6 +3637,9 @@ _PySys_InitCore(PyThreadState *tstate, PyObject *sysdict)
+@@ -3892,6 +3892,9 @@ _PySys_InitCore(PyThreadState *tstate, PyObject *sysdict)
  #ifdef MS_COREDLL
      SET_SYS("dllhandle", PyLong_FromVoidPtr(PyWin_DLLhModule));
      SET_SYS_FROM_STRING("winver", PyWin_DLLVersionString);
