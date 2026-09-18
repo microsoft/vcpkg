@@ -4,33 +4,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
     REF "v${VERSION}"
-    SHA512 ab684be4cb8bad7b46b8df5271efb37d3675344f689e37b7af1f12f584fba23318ed8f934156a8b99802b86bdebb55fac9cbcca193d58951ae0ace4816e4ec46
+    SHA512 474fe321f28dd88f8c681d41b9f4d828230e3db5ed69d6a0e08fa3e5143d6cebb294f226f34b0d4c1c5fa276e53401fbbfb33555c20ee07a01f8048d8ca170de
     HEAD_REF main
-)
-
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        target-aarch64 TARGET_AARCH64
-        target-amdgpu TARGET_AMDGPU
-        target-arm TARGET_ARM
-        target-d3d12compute TARGET_D3D12COMPUTE
-        target-opengl-compute TARGET_OPENGLCOMPUTE
-        target-hexagon TARGET_HEXAGON
-        target-metal TARGET_METAL
-        target-nvptx TARGET_NVPTX
-        target-opencl TARGET_OPENCL
-        target-powerpc TARGET_POWERPC
-        target-riscv TARGET_RISCV
-        target-webassembly TARGET_WEBASSEMBLY
-        target-x86 TARGET_X86
+    PATCHES
+        fix-llvm-23.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
-        -DWITH_WABT=OFF
-        -DWITH_V8=OFF
+    OPTIONS
+        -DHalide_WASM_BACKEND=OFF
         -DWITH_DOCS=OFF
         -DWITH_PYTHON_BINDINGS=OFF
         -DWITH_TESTS=OFF
@@ -49,6 +32,7 @@ vcpkg_cmake_configure(
 # ADD_BIN_TO_PATH needed to compile autoschedulers, 
 # which use Halide.dll (and deps) during the build.
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_copy_tools(TOOL_NAMES gengen AUTO_CLEAN)
 
 # Release mode MODULE targets in CMake don't get PDBs.
 # Exclude those to avoid warning with default globs.
