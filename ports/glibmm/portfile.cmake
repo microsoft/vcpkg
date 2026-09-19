@@ -9,6 +9,8 @@ vcpkg_download_distfile(GLIBMM_ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${GLIBMM_ARCHIVE}"
+    PATCHES
+        glib_2_90_compatibility.patch # Backport from glibmm 2.89.0 (devel version)
 )
 
 vcpkg_configure_meson(
@@ -29,7 +31,7 @@ file(REMOVE_RECURSE
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright and readmes
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
-file(INSTALL "${SOURCE_PATH}/README.win32.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+)

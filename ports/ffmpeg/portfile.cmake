@@ -512,11 +512,7 @@ else()
     set(WITH_SSH OFF)
 endif()
 
-if("tensorflow" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libtensorflow")
-else()
-    set(OPTIONS "${OPTIONS} --disable-libtensorflow")
-endif()
+set(OPTIONS "${OPTIONS} --disable-libtensorflow")
 
 if("tesseract" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libtesseract")

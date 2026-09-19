@@ -1,36 +1,41 @@
+set(OPENTELEMETRY_PLATFORM_FEATURES)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    list(APPEND OPENTELEMETRY_PLATFORM_FEATURES etw OTELCPP_WITH_ETW)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 b5d309670c0dbd3771f78b5d7d447eb98c19947b7c4a2e2b9a36e160396a60e502d80087a13d77635e9b8ab558c82a4142712dfc263f1ccb195f5e71c12b8428
+    SHA512 f3e8603d55bca5d5eb96d01cab82470a7c2cca8fb1db48fc0e328af3f4e40928c31f76e5ab61b557bb84d61238b1bceec986d19c7fec9a4a2191d523c49f29a4
     HEAD_REF main
     PATCHES
-        fix-target_link.patch
-        fix-pkgconfig-dependencies.patch
+        fix-span-limits-32-bit.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        etw WITH_ETW
-        zipkin WITH_ZIPKIN
-        prometheus WITH_PROMETHEUS
-        elasticsearch WITH_ELASTICSEARCH
-        otlp-file WITH_OTLP_FILE
-        otlp-http WITH_OTLP_HTTP
-        otlp-grpc WITH_OTLP_GRPC
+        ${OPENTELEMETRY_PLATFORM_FEATURES}
+        zipkin OTELCPP_WITH_ZIPKIN
+        prometheus OTELCPP_WITH_PROMETHEUS
+        elasticsearch OTELCPP_WITH_ELASTICSEARCH
+        otlp-file OTELCPP_WITH_OTLP_FILE
+        otlp-http OTELCPP_WITH_OTLP_HTTP
+        otlp-grpc OTELCPP_WITH_OTLP_GRPC
         geneva WITH_GENEVA
         user-events WITH_USER_EVENTS
-        opentracing WITH_OPENTRACING
+        opentracing OTELCPP_WITH_OPENTRACING
     INVERTED_FEATURES
         user-events BUILD_TRACEPOINTS
 )
 
+if(OTELCPP_WITH_OPENTRACING)
+    list(APPEND FEATURE_OPTIONS -DCMAKE_REQUIRE_FIND_PACKAGE_OpenTracing=ON)
+endif()
+
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_FILE OR WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
+if(OTELCPP_WITH_OTLP_FILE OR OTELCPP_WITH_OTLP_GRPC OR OTELCPP_WITH_OTLP_HTTP)
     set(OTEL_PROTO_VERSION "1.8.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
@@ -64,6 +69,8 @@ if(WITH_GENEVA OR WITH_USER_EVENTS)
     endif()
 
     if(WITH_USER_EVENTS)
+        # The contrib subproject still controls its examples with the legacy cache option.
+        list(APPEND FEATURE_OPTIONS -DWITH_EXAMPLES=OFF)
         if(WITH_GENEVA)
             set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}\;${CONTRIB_SOURCE_PATH}/exporters/user_events")
         else()
@@ -76,10 +83,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DWITH_EXAMPLES=OFF
-        -DOPENTELEMETRY_INSTALL=ON
-        -DWITH_BENCHMARK=OFF
-        -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
+        -DOTELCPP_WITH_EXAMPLES=OFF
+        -DOTELCPP_INSTALL=ON
+        -DOTELCPP_WITH_BENCHMARK=OFF
+        -DOTELCPP_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         WITH_GENEVA
@@ -96,7 +103,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/opentelemetry/sdk/configuration")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(WITH_ETW)
+if(OTELCPP_WITH_ETW)
     list(APPEND LICENSE_FILES "${SOURCE_PATH}/exporters/etw/include/opentelemetry/exporters/etw/LICENSE")
 endif()
 vcpkg_install_copyright(

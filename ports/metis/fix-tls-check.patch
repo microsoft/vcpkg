@@ -1,0 +1,16 @@
+diff --git a/conf/check_thread_storage.c b/conf/check_thread_storage.c
+index e6e1e98..5f1207a 100644
+--- a/conf/check_thread_storage.c
++++ b/conf/check_thread_storage.c
+@@ -1,5 +1,9 @@
+-extern __thread int x;
++#if defined(_MSC_VER)
++#define __thread __declspec(thread)
++#endif
++
++__thread int x;
+ 
+ int main(int argc, char **argv) {
+-  return 0;
++  return x;
+ }
