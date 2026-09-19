@@ -1,0 +1,8 @@
+flashaccept provides CMake targets:
+
+    find_package(flashaccept CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE flashaccept::flashaccept)
+
+and a pkg-config module:
+
+    pkg-config --cflags --libs flashaccept
