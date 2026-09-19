@@ -1,9 +1,9 @@
 {
   "name": "roaring",
-  "version": "4.7.2",
+  "version": "5.2.1",
   "description": "A better compressed bitset in C (and C++)",
   "homepage": "https://github.com/RoaringBitmap/CRoaring",
-  "license": "Apache-2.0 OR MIT",
+  "license": "(Apache-2.0 OR MIT) AND BSD-3-Clause",
   "supports": "!(android & arm32)",
   "dependencies": [
     {

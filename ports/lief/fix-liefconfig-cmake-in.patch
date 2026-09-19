@@ -1,5 +1,5 @@
 diff --git a/cmake/LIEFConfig.cmake.in b/cmake/LIEFConfig.cmake.in
-index 562fda16..220208c7 100644
+index 562fda1..220208c 100644
 --- a/cmake/LIEFConfig.cmake.in
 +++ b/cmake/LIEFConfig.cmake.in
 @@ -76,7 +76,7 @@ macro(LIEF_load_targets lib_type)

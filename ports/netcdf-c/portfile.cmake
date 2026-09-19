@@ -28,6 +28,7 @@ vcpkg_from_github(
         plugin-install-dir.diff
         fstat.patch
         backport-d7895f6.diff  # cf. https://github.com/Unidata/netcdf-c/pull/3237
+        android-pthread.diff
         "${WINDOWS_STAT1_PATCH}"
         "${WINDOWS_STAT2_PATCH}"
         "${WINDOWS_STAT3_PATCH}"

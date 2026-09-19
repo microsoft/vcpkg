@@ -1,19 +1,20 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# Upstream tag is v1.92.9b (a patch of 1.92.9); the letter suffix is not a valid vcpkg version.
 if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
-        REF "v${VERSION}-docking"
-        SHA512 927ecf72f00a228e0899d5b8008575b44748c49b083b9425b5f2a6b4490a9900eae111afad23f2bf0a1c9c62cf1fea80c903eb3076d7e7ea901a5625f09df78e
+        REF "v${VERSION}b-docking"
+        SHA512 7eddcdb475f1db1fc8242d918533b955c964d2267abe713bdf23f8e2444770946d3c79c7855e360bab6168e36231b95bd05a84106c08f876dcd53daac9caccac
         HEAD_REF docking
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
-        REF "v${VERSION}"
-        SHA512 60eb4f8478ae998ae68efa33b2e3c9f331f5e373a1272472f93befd9fd6cab4ed73935bb540e728b5abb154469fbc6c0fd69f7aaf54cd3187eefede6cb145a10
+        REF "v${VERSION}b"
+        SHA512 1a8fc7e4d7fe8926289ed9598f39dd5b601baffa3b2a7a0889ed0f9a8f252c85710f4ba65b2a6801bb5b46a17d1fd30b5542e11f67b8989c6640b498ef68bb2d
         HEAD_REF master
     )
 endif()
@@ -64,8 +65,8 @@ if ("test-engine" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
-        REF "v${VERSION}"
-        SHA512 3a31bd3e1f86679ee60fc765971e96f76e05e530b3c7920aea284818604fd8a3cdf1fc7189e7e825a52a75446217ed6f1b2d7470d317799d381fb9019f14333b
+        REF "v${VERSION}b"
+        SHA512 fc261713a8ab3da41d5fe502fce76de4b19f111a3b6cc896369770bc08858a8e6e2be2ae24fa4ac86aa1308bfdf1eaf6833b03f84fe022e0294a0882de6c578d
         HEAD_REF master
     )
 

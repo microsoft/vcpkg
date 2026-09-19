@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 c5d92b42302c564b5949a9002f92ae096f7afaaf283ec21e01db6529ae4f1fa979ce0dc7bf268c25ad6e13d0bb2273df41f7f7304c39e2ab01ff2463e2878329
+    SHA512 ef24d926153eb81c95e6c79c335eed12c6e14523a2dd817faddc3f666909a244eab5f4be43cc01a6d8c8d62b5695d29fb535b3762128cdef50a7ee55302b2886
     HEAD_REF dev3
     PATCHES
         pkgconfig-cxx.diff
