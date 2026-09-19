@@ -8,15 +8,23 @@ vcpkg_from_github(
         fix-linkage.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        decoder-tool         ENABLE_DECODER
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DENABLE_SDL=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libde265)
-vcpkg_copy_tools(TOOL_NAMES dec265 AUTO_CLEAN)
+if(ENABLE_DECODER)
+    vcpkg_copy_tools(TOOL_NAMES dec265 AUTO_CLEAN)
+endif()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
