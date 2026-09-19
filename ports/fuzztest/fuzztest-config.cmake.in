@@ -1,0 +1,30 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(absl CONFIG)
+find_dependency(re2 CONFIG)
+find_dependency(GTest CONFIG)
+
+include("${CMAKE_CURRENT_LIST_DIR}/fuzztest-targets.cmake")
+
+if(TARGET fuzztest::fuzztest_fuzztest)
+  add_library(fuzztest::fuzztest ALIAS fuzztest::fuzztest_fuzztest)
+endif()
+if(TARGET fuzztest::fuzztest_fuzztest_core)
+  add_library(fuzztest::fuzztest_core ALIAS fuzztest::fuzztest_fuzztest_core)
+endif()
+if(TARGET fuzztest::fuzztest_fuzztest_gtest_main)
+  add_library(fuzztest::fuzztest_gtest_main ALIAS fuzztest::fuzztest_fuzztest_gtest_main)
+endif()
+if(TARGET fuzztest::fuzztest_init_fuzztest)
+  add_library(fuzztest::init_fuzztest ALIAS fuzztest::fuzztest_init_fuzztest)
+endif()
+if(TARGET fuzztest::fuzztest_domain)
+  add_library(fuzztest::domain ALIAS fuzztest::fuzztest_domain)
+endif()
+if(TARGET fuzztest::fuzztest_domain_core)
+  add_library(fuzztest::domain_core ALIAS fuzztest::fuzztest_domain_core)
+endif()
+
+check_required_components(fuzztest)
