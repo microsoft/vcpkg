@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-ci-flann-cuda",
+  "version-string": "ci",
+  "description": "Validates flann with CUDA",
+  "dependencies": [
+    {
+      "name": "flann",
+      "features": [
+        "cuda"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
