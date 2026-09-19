@@ -2777,8 +2777,8 @@
       "port-version": 0
     },
     "ecbuild": {
-      "baseline": "3.15.2",
-      "port-version": 1
+      "baseline": "3.16.0",
+      "port-version": 0
     },
     "eccodes": {
       "baseline": "2.48.2",
