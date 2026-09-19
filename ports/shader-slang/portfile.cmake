@@ -217,8 +217,18 @@ block(SCOPE_FOR VARIABLES)
 	)
 endblock()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(
-	FILE_LIST "${BINDIST_PATH}/LICENSE"
+	FILE_LIST
+		"${BINDIST_PATH}/LICENSE"
+		"${BINDIST_PATH}/LICENSES/Apache-2.0.txt"
+		"${BINDIST_PATH}/LICENSES/BSL-1.0.txt"
+		"${BINDIST_PATH}/LICENSES/CC-BY-4.0.txt"
+		"${BINDIST_PATH}/LICENSES/LicenseRef-UOI-NCSA.txt"
+		"${BINDIST_PATH}/LICENSES/LLVM-exception.txt"
+		"${BINDIST_PATH}/LICENSES/MIT.txt"
+		"${BINDIST_PATH}/LICENSES/Unlicense.txt"
 	COMMENT #[[ from README ]] [[
 The Slang code itself is under the Apache 2.0 with LLVM Exception license.
 
