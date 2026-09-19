@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_net
-    REF 669e75b84632e2c6cc5c65974ec9e28052cb7a4e # release-2.2.0
-    SHA512 180c757d704c72dc7fcc392c13942214c87b90de22e32045ec9eb6cde5da2b762516e14120d8bee52f7f4a59ad8e30d4f71e313918432ae07ef71df8e9380e4b
+    REF release-${VERSION}
+    SHA512 19681402d41eb24b06296da73d82c5f27d4cbe7f8ec7ae64f6be63d232db99d6def3bd330beef1dcd280a29df419e9d3fdc713d9ef0d7106cc6c95717aa2db43
     HEAD_REF main
     PATCHES
         fix-uwp.patch
@@ -23,12 +23,12 @@ else()
 endif()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
