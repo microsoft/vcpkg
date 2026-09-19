@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "ball-lang",
+  "version-semver": "1.64.0",
+  "description": "ball — the unified CLI for the Ball programming language: compile, encode, and run programs where every program is a Protocol Buffer message.",
+  "homepage": "https://github.com/Ball-Lang/ball",
+  "documentation": "https://github.com/Ball-Lang/ball/blob/main/cpp/AGENTS.md",
+  "license": "MIT",
+  "supports": "!uwp & !android & !ios",
+  "dependencies": [
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "selfhost"
+  ],
+  "features": {
+    "selfhost": {
+      "description": "The self-hosted verbs: `ball run`, `info`, `validate` and `tree`. Downloads the pre-generated C++ sources published with each release (Ball's own compiler emits them from Ball source, which needs a Dart toolchain vcpkg's sandbox does not have). Drop it with `ball-lang[core]` for a compile/encode/version-only build."
+    }
+  }
+}
