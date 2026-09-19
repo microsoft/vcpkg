@@ -75,7 +75,6 @@ vcpkg_cmake_configure(
         -DSDL_ROCKCHIP=OFF
         -DSDL_RPI=OFF
         -DSDL_SNDIO=OFF
-        -DSDL_WAYLAND_LIBDECOR=OFF
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
         -DSDL_X11_XCURSOR=OFF
