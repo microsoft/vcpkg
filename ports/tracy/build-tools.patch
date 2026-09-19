@@ -1,25 +1,53 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 72901a8c..365724a8 100644
+index 073fb6f..ecea95b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -193,3 +193,15 @@ if(TRACY_CLIENT_PYTHON)
- 
-     add_subdirectory(python)
+@@ -295,3 +295,16 @@ endif()
+ if(PROJECT_IS_TOP_LEVEL)
+     set(CMAKE_COLOR_DIAGNOSTICS ON)
  endif()
 +
 +option(VCPKG_CLI_TOOLS "library" OFF)
 +option(VCPKG_GUI_TOOLS "library" OFF)
++if(VCPKG_GUI_TOOLS)
++    add_subdirectory(profiler)
++endif()
 +if(VCPKG_CLI_TOOLS)
 +    add_subdirectory(csvexport)
 +    add_subdirectory(capture)
 +    add_subdirectory(import)
++    add_subdirectory(merge)
 +    add_subdirectory(update)
 +endif()
-+if(VCPKG_GUI_TOOLS)
-+    add_subdirectory(profiler)
-+endif()
+diff --git a/cmake/GitRef.cmake b/cmake/GitRef.cmake
+index cbb9110..6b31a03 100644
+--- a/cmake/GitRef.cmake
++++ b/cmake/GitRef.cmake
+@@ -18,20 +18,13 @@ function(add_git_ref target)
+             )
+         else()
+             message(WARNING "git not found, using 'unknown' as git ref.")
+-            add_custom_command(
+-                OUTPUT GitRef.hpp
+-                COMMAND ${CMAKE_COMMAND} -E echo "#pragma once" > GitRef.hpp
+-                COMMAND ${CMAKE_COMMAND} -E echo "namespace tracy { static inline const char* GitRef = \"unknown\"; }" >> GitRef.hpp
+-                VERBATIM
+-            )
++            file(WRITE ${CMAKE_BINARY_DIR}/GitRef.hpp "#pragma once\nnamespace tracy { static inline const char* GitRef = \"unknown\"; }\n")
+         endif()
+     endif()
+ 
+-    target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
++    target_include_directories(${target} PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR})
+     get_property(_git_found GLOBAL PROPERTY _GIT_FOUND)
+     if(_git_found)
+         add_dependencies(${target} git-ref)
+-    else()
+-        target_sources(${target} PUBLIC GitRef.hpp)
+     endif()
+ endfunction()
 diff --git a/cmake/server.cmake b/cmake/server.cmake
-index c12a3408..0d55cf91 100644
+index 8298d21..ca5e9f3 100644
 --- a/cmake/server.cmake
 +++ b/cmake/server.cmake
 @@ -1,3 +1,4 @@
@@ -28,7 +56,7 @@ index c12a3408..0d55cf91 100644
  
  set(TRACY_COMMON_SOURCES
 diff --git a/cmake/vendor.cmake b/cmake/vendor.cmake
-index 29f12cfa..40b3e078 100644
+index d0083f5..0cbdcce 100644
 --- a/cmake/vendor.cmake
 +++ b/cmake/vendor.cmake
 @@ -1,3 +1,4 @@
