@@ -32,7 +32,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
     vcpkg_make_install()
 else()
     set(MSVC_VERSION 14)
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v14(1|2|3)")
+    if(VCPKG_PLATFORM_TOOLSET MATCHES "v14[0-9]")
         set(MSVC_VERSION 15)
     endif()
 
