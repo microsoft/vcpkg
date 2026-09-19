@@ -1,6 +1,6 @@
 {
   "name": "arrow-adbc",
-  "version": "23",
+  "version": "24",
   "description": "Apache Arrow ADBC: Database Connectivity API for Arrow-based data systems",
   "homepage": "https://arrow.apache.org/adbc/",
   "license": "Apache-2.0",
