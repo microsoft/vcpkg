@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
     REF "v${VERSION}"
-    SHA512 18c0c589a1d97d0760958c8ab00ba2135bc602fd359d48445b5d8ed76e5b08742d818bb8f835b599149030f455e553a92db86fb7bae049b47820e4401cf9f935
+    SHA512 d6d07db668e62e2c4fb476b549243c240434613554e99bd68b6446b56b92e6cec606246186a02964ed9a223b5ccdac55546185510cd9f6fda05d458314fb05c1
     HEAD_REF master
     PATCHES
         build-tools.patch
@@ -30,8 +30,8 @@ if ("gui-tools" IN_LIST FEATURES)
    vcpkg_from_github(
        OUT_SOURCE_PATH tracy_imgui_path
        REPO ocornut/imgui
-       REF "v1.92.5-docking"
-       SHA512 4618b8bd6e65ac27cd7cecb3469d135622279d83f8a580c028231578f7023c4465911c5878ee7e40c2f6dda606aef86f27c3cecfb7bc9a6022bd1d89eed17c29
+       REF "v1.92.9b-docking"
+       SHA512 7eddcdb475f1db1fc8242d918533b955c964d2267abe713bdf23f8e2444770946d3c79c7855e360bab6168e36231b95bd05a84106c08f876dcd53daac9caccac
        PATCHES
            "${SOURCE_PATH}/cmake/imgui-emscripten.patch"
            "${SOURCE_PATH}/cmake/imgui-loader.patch"
@@ -73,7 +73,7 @@ endfunction()
 
 set(TOOLS)
 if("cli-tools" IN_LIST FEATURES)
-    list(APPEND TOOLS tracy-capture tracy-csvexport)
+    list(APPEND TOOLS tracy-capture tracy-capture-daemon tracy-csvexport tracy-merge)
     tracy_copy_tool(tracy-import-chrome import)
     tracy_copy_tool(tracy-import-fuchsia import)
     tracy_copy_tool(tracy-update update)
