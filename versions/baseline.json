@@ -393,7 +393,7 @@
       "port-version": 4
     },
     "atomic-queue": {
-      "baseline": "1.9.2",
+      "baseline": "1.9.4",
       "port-version": 0
     },
     "attr": {
@@ -509,7 +509,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.43.6",
+      "baseline": "0.43.7",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -2985,8 +2985,8 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "8.2.10",
-      "port-version": 1
+      "baseline": "8.3.0",
+      "port-version": 0
     },
     "fast-obj": {
       "baseline": "1.3",
@@ -4375,10 +4375,6 @@
     "kealib": {
       "baseline": "1.6.2",
       "port-version": 0
-    },
-    "keccak-tiny": {
-      "baseline": "2014-09-08",
-      "port-version": 2
     },
     "kedixa-coke": {
       "baseline": "0.7.0",
@@ -6997,7 +6993,7 @@
       "port-version": 0
     },
     "nanoflann": {
-      "baseline": "1.12.1",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "nanogui": {
@@ -7106,7 +7102,7 @@
     },
     "netcdf-c": {
       "baseline": "4.9.3",
-      "port-version": 4
+      "port-version": 5
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
@@ -7261,7 +7257,7 @@
       "port-version": 0
     },
     "nuspell": {
-      "baseline": "5.1.8",
+      "baseline": "5.1.9",
       "port-version": 0
     },
     "nvidia-cutlass": {
@@ -7569,7 +7565,7 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.28.0",
+      "baseline": "1.29.0",
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
@@ -10893,7 +10889,7 @@
       "port-version": 1
     },
     "wabt": {
-      "baseline": "1.0.41",
+      "baseline": "1.0.42",
       "port-version": 0
     },
     "wampcc": {
@@ -11005,7 +11001,7 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "6.4.0",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "winsock2": {
