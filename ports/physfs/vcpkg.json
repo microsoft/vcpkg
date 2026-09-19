@@ -1,7 +1,6 @@
 {
   "name": "physfs",
-  "version-semver": "3.2.0",
-  "port-version": 1,
+  "version-date": "2026-09-03",
   "description": "a library to provide abstract access to various archives",
   "homepage": "https://icculus.org/physfs/",
   "license": "Zlib",
