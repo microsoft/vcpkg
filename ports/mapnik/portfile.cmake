@@ -3,9 +3,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF v${VERSION}
-    SHA512 ac3cda35240eca404fedc77e6c36d9b3d0596a077857fb7c41e8d4d5dce2a292f425ce0c134ac6e8577b50c6a126ba56e5de1103e63c752ebe9f6fa3db62dd3d
+    REF "v${VERSION}"
+    SHA512 b70426b5ee79a080cdf9e9bb079176f5029b054d7319d8b1c8cc691a99475050da44a4a19864f08c14492c3b501dcf2061662ec2b7950980a7d6d3989e9c733a
     HEAD_REF master
+    PATCHES
+        tiles.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,15 +23,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "svg-renderer"              USE_SVG_RENDERER
         "input-csv"                 USE_PLUGIN_INPUT_CSV
         "input-gdal"                USE_PLUGIN_INPUT_GDAL
+        "input-gdal-ogr"            USE_PLUGIN_INPUT_GDAL_OGR
         "input-geobuf"              USE_PLUGIN_INPUT_GEOBUF
         "input-geojson"             USE_PLUGIN_INPUT_GEOJSON
         "input-ogr"                 USE_PLUGIN_INPUT_OGR
         "input-pgraster"            USE_PLUGIN_INPUT_PGRASTER
         "input-postgis"             USE_PLUGIN_INPUT_POSTGIS
+        "input-postgis-pgraster"    USE_PLUGIN_INPUT_POSTGIS_PGRASTER
         "input-raster"              USE_PLUGIN_INPUT_RASTER
         "input-shape"               USE_PLUGIN_INPUT_SHAPE
         "input-sqlite"              USE_PLUGIN_INPUT_SQLITE
         "input-topojson"            USE_PLUGIN_INPUT_TOPOJSON
+        "input-tiles"               USE_PLUGIN_INPUT_TILES
+        "input-tiles-ssl"           USE_PLUGIN_INPUT_TILES_SSL
         "viewer"                    BUILD_DEMO_VIEWER
         "utility-geometry-to-wkb"   BUILD_UTILITY_GEOMETRY_TO_WKB
         "utility-mapnik-index"      BUILD_UTILITY_MAPNIK_INDEX
@@ -40,11 +46,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "utility-svg2png"           BUILD_UTILITY_SVG2PNG
 )
 
-if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(BUILD_SHARED_CRT ON)
-else()
-    set(BUILD_SHARED_CRT OFF)
+if("input-tiles" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH VECTOR_TILE_SOURCE_PATH
+        REPO mapnik/mapnik-vector-tile
+        REF 5a0cfbb6b909ae945f4a9e40777772a2b1c8fe9b
+        SHA512 c637f323daadb4af9071e2b88cb9d14a4b21568e19081687da204eb342efa09c67148ddcbf0d6c9ddc419049a7a2436b3b812603a3d9a3bb7ed390c81f6484f2
+        HEAD_REF master
+    )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/deps/mapbox/mapnik-vector-tile")
+    file(RENAME "${VECTOR_TILE_SOURCE_PATH}" "${SOURCE_PATH}/deps/mapbox/mapnik-vector-tile")
 endif()
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" BUILD_SHARED_CRT)
 vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
@@ -77,7 +91,7 @@ vcpkg_copy_pdbs()
 set(_tool_names "")
 if("viewer" IN_LIST FEATURES)
     # copy the ini file to reference the plugins correctly
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/viewer.ini" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/viewer.ini" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/viewer.ini")
     list(APPEND _tool_names mapnik-viewer)
 endif()
 
@@ -110,11 +124,17 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/mapnik/cmake)
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/mapnik/mapnikPlugins-debug.cmake" "set(MAPNIK_PLUGINS_DIR_DEBUG \"\${PACKAGE_PREFIX_DIR}/debug/bin/mapnik/input\" CACHE STRING \"\")")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/fonts/unifont_license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME fonts_copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/fonts/unifont_license.txt"
+)

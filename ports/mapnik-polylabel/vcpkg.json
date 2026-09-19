@@ -1,8 +1,8 @@
 {
-  "name": "mapbox-polylabel",
-  "version-semver": "2.0.1",
+  "name": "mapnik-polylabel",
+  "version-semver": "2.1.0",
   "description": "A fast algorithm for finding the pole of inaccessibility of a polygon (in JavaScript and C++)",
-  "homepage": "https://github.com/mapbox/polylabel",
+  "homepage": "https://github.com/mapnik/polylabel",
   "license": "ISC",
   "dependencies": [
     "mapbox-geometry",

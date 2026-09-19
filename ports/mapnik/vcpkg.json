@@ -1,6 +1,6 @@
 {
   "name": "mapnik",
-  "version": "4.0.7",
+  "version": "4.3.1",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -50,9 +50,10 @@
       "platform": "osx"
     },
     "icu",
+    "libavif",
     "mapbox-geometry",
-    "mapbox-polylabel",
     "mapbox-variant",
+    "mapnik-polylabel",
     "protozero",
     {
       "name": "vcpkg-cmake",
@@ -96,6 +97,12 @@
         "gdal"
       ]
     },
+    "input-gdal-ogr": {
+      "description": "GDAL+OGR input plugin",
+      "dependencies": [
+        "gdal"
+      ]
+    },
     "input-geobuf": {
       "description": "GEOBUF input plugin",
       "dependencies": [
@@ -123,6 +130,12 @@
         "libpq"
       ]
     },
+    "input-postgis-pgraster": {
+      "description": "POSTGIS+PGRASTER input plugin",
+      "dependencies": [
+        "libpq"
+      ]
+    },
     "input-raster": {
       "description": "RASTER input plugin",
       "dependencies": [
@@ -136,6 +149,33 @@
       "description": "SQLITE input plugin",
       "dependencies": [
         "sqlite3"
+      ]
+    },
+    "input-tiles": {
+      "description": "Tiles input plugin",
+      "dependencies": [
+        "boost-beast",
+        "boost-context",
+        {
+          "name": "boost-json",
+          "platform": "windows"
+        },
+        "boost-lockfree",
+        "boost-url",
+        "sqlite3"
+      ]
+    },
+    "input-tiles-ssl": {
+      "description": "SSL support in plugin input tiles",
+      "dependencies": [
+        {
+          "name": "mapnik",
+          "default-features": false,
+          "features": [
+            "input-tiles"
+          ]
+        },
+        "openssl"
       ]
     },
     "input-topojson": {
