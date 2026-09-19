@@ -7,7 +7,12 @@ set(NANOVG_SOURCES src/nanovg.c)
 set(NANOVG_HEADERS src/nanovg.h src/nanovg_gl.h src/nanovg_gl_utils.h)
 add_library(nanovg STATIC ${NANOVG_SOURCES} ${NANOVG_HEADERS})
 set_target_properties(nanovg PROPERTIES PUBLIC_HEADER "${NANOVG_HEADERS}")
-target_include_directories(nanovg PRIVATE ${STB_INCLUDES})
+target_include_directories(nanovg
+  PRIVATE ${STB_INCLUDES}
+  PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
+    "$<INSTALL_INTERFACE:include>"
+)
 
 target_compile_definitions(nanovg PRIVATE
     $<$<CONFIG:Debug>:DEBUG>
