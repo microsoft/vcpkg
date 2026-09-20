@@ -1,8 +1,8 @@
-diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index ebe371182..e351df7da 100644
---- a/Lib/sysconfig.py
-+++ b/Lib/sysconfig.py
-@@ -51,8 +51,8 @@
+diff --git a/Lib/sysconfig/__init__.py b/Lib/sysconfig/__init__.py
+index 43edebc..7f522da 100644
+--- a/Lib/sysconfig/__init__.py
++++ b/Lib/sysconfig/__init__.py
+@@ -53,8 +53,8 @@ _INSTALL_SCHEMES = {
          'platstdlib': '{base}/Lib',
          'purelib': '{base}/Lib/site-packages',
          'platlib': '{base}/Lib/site-packages',
