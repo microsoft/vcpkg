@@ -3673,7 +3673,7 @@
       "port-version": 9
     },
     "gtsam": {
-      "baseline": "4.2.2",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "guetzli": {
