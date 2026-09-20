@@ -9132,6 +9132,10 @@
       "baseline": "6.5.0",
       "port-version": 0
     },
+    "scalergrad": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "scenepic": {
       "baseline": "1.1.2",
       "port-version": 0

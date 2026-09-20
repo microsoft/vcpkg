@@ -1,0 +1,17 @@
+{
+  "name": "scalergrad",
+  "version": "0.1.0",
+  "description": "A small header-only autograd engine and neural network library in C++, inspired by micrograd.",
+  "homepage": "https://github.com/Tamalckb531/scalergrad",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
