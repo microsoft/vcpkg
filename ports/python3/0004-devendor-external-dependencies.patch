@@ -1,20 +1,5 @@
-From 6c5c3793cbc6ba2a1d0d623a2bdaa9c2125be516 Mon Sep 17 00:00:00 2001
-From: Adam Johnson <AdamJohnso@gmail.com>
-Date: Wed, 9 Sep 2020 15:24:38 -0400
-Subject: [PATCH 3/6] devendor external dependencies
-
-externally fetched libraries may cause linker errors resulting from
-duplicate symbols in downstream projects.
----
- PCbuild/_bz2.vcxproj     | 4 +++-
- PCbuild/_lzma.vcxproj    | 5 ++---
- PCbuild/_sqlite3.vcxproj | 2 +-
- PCbuild/_ssl.vcxproj     | 2 +-
- PCbuild/pyexpat.vcxproj  | 6 ++++--
- 5 files changed, 11 insertions(+), 8 deletions(-)
-
 diff --git a/PCbuild/_bz2.vcxproj b/PCbuild/_bz2.vcxproj
-index 3fe95fbf83..6b12e8818e 100644
+index 90db6a8..73ab37f 100644
 --- a/PCbuild/_bz2.vcxproj
 +++ b/PCbuild/_bz2.vcxproj
 @@ -101,6 +101,8 @@
@@ -35,8 +20,36 @@ index 3fe95fbf83..6b12e8818e 100644
      <ClInclude Include="$(bz2Dir)\bzlib.h" />
      <ClInclude Include="$(bz2Dir)\bzlib_private.h" />
    </ItemGroup>
+diff --git a/PCbuild/_elementtree.vcxproj b/PCbuild/_elementtree.vcxproj
+index 21a4961..58556f8 100644
+--- a/PCbuild/_elementtree.vcxproj
++++ b/PCbuild/_elementtree.vcxproj
+@@ -92,12 +92,12 @@
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+-    <ClCompile>
++    <ClCompile Condition="false">
+       <AdditionalIncludeDirectories>..\Modules\expat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+   </ItemDefinitionGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="..\Modules\expat\ascii.h" />
+     <ClInclude Include="..\Modules\expat\asciitab.h" />
+     <ClInclude Include="..\Modules\expat\expat.h" />
+@@ -117,6 +117,8 @@
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_elementtree.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="..\Modules\expat\xmlparse.c" />
+     <ClCompile Include="..\Modules\expat\xmlrole.c" />
+     <ClCompile Include="..\Modules\expat\xmltok.c" />
 diff --git a/PCbuild/_lzma.vcxproj b/PCbuild/_lzma.vcxproj
-index fe076a6fc5..70cc61dd95 100644
+index 98e551e..b01c80f 100644
 --- a/PCbuild/_lzma.vcxproj
 +++ b/PCbuild/_lzma.vcxproj
 @@ -94,10 +94,9 @@
@@ -61,7 +74,7 @@ index fe076a6fc5..70cc61dd95 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/_sqlite3.vcxproj b/PCbuild/_sqlite3.vcxproj
-index 7e0062692b..6fb3279a20 100644
+index 5a8a850..adb0037 100644
 --- a/PCbuild/_sqlite3.vcxproj
 +++ b/PCbuild/_sqlite3.vcxproj
 @@ -127,7 +127,7 @@
@@ -74,10 +87,10 @@ index 7e0062692b..6fb3279a20 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/pyexpat.vcxproj b/PCbuild/pyexpat.vcxproj
-index b2d9f5d57d..4efb826a05 100644
+index 2f9c05c..8638ed9 100644
 --- a/PCbuild/pyexpat.vcxproj
 +++ b/PCbuild/pyexpat.vcxproj
-@@ -89,17 +89,19 @@
+@@ -89,12 +89,12 @@
    </ImportGroup>
    <PropertyGroup Label="UserMacros" />
    <ItemDefinitionGroup>
@@ -89,8 +102,10 @@ index b2d9f5d57d..4efb826a05 100644
    </ItemDefinitionGroup>
 -  <ItemGroup>
 +  <ItemGroup Condition="false">
+     <ClInclude Include="..\Modules\expat\fallthrough.h" />
+     <ClInclude Include="..\Modules\expat\memory_sanitizer.h" />
      <ClInclude Include="..\Modules\expat\xmlrole.h" />
-     <ClInclude Include="..\Modules\expat\xmltok.h" />
+@@ -102,6 +102,8 @@
    </ItemGroup>
    <ItemGroup>
      <ClCompile Include="..\Modules\pyexpat.c" />
@@ -99,6 +114,3 @@ index b2d9f5d57d..4efb826a05 100644
      <ClCompile Include="..\Modules\expat\xmlparse.c" />
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
      <ClCompile Include="..\Modules\expat\xmltok.c" />
--- 
-2.28.0.windows.1
-

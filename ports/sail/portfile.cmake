@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-always-nanosvg.diff
         fix-heif.patch
         fix-include-directory.patch
-        fix-video-zlib-debug-name.patch
+        fix-video-zlib-and-linking.patch
 )
 
 # Enable selected codecs
@@ -34,12 +34,6 @@ if ("openmp" IN_LIST FEATURES)
     set(SAIL_ENABLE_OPENMP ON)
 endif()
 
-if ("video" IN_LIST FEATURES)
-    set(SAIL_MANIP_USE_SWSCALE ON)
-else()
-    set(SAIL_MANIP_USE_SWSCALE OFF)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         test BUILD_TESTING
@@ -61,7 +55,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DSAIL_COMBINE_CODECS=ON
         -DSAIL_ENABLE_OPENMP=${SAIL_ENABLE_OPENMP}
-        -DSAIL_MANIP_USE_SWSCALE=${SAIL_MANIP_USE_SWSCALE}
+        -DSAIL_MANIP_USE_SWSCALE=ON
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
@@ -95,8 +89,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 
-# Fix pkg-config files
-vcpkg_fixup_pkgconfig()
+# Remove pkg-config files
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 # Unused because SAIL_COMBINE_CODECS is ON, removes an absolute path from the output
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH [^\r\n]+[\r\n]*" "" REGEX)
