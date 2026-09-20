@@ -5420,6 +5420,10 @@
       "baseline": "8.0.46",
       "port-version": 0
     },
+    "libnatpmp": {
+      "baseline": "2025-04-03",
+      "port-version": 0
+    },
     "libnice": {
       "baseline": "0.1.23",
       "port-version": 0
