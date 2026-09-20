@@ -7913,7 +7913,7 @@
       "port-version": 0
     },
     "plf-queue": {
-      "baseline": "2.2",
+      "baseline": "2.0.21",
       "port-version": 0
     },
     "plf-stack": {
