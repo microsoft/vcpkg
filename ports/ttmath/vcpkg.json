@@ -1,0 +1,7 @@
+{
+  "name": "ttmath",
+  "version-date": "2019-10-23",
+  "description": "A bignum library for C++",
+  "homepage": "https://www.ttmath.org/",
+  "license": "BSD-3-Clause"
+}
