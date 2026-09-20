@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 46e2f1a5deb6680a3263b5c876f241493dfe7d66a744d1dc549d780f8acd6d530e8438608a5f247bece75bf0cc6c9031c47e2e7c2b1dec3565df0cfb19b30791
     HEAD_REF main
+    PATCHES xthread.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

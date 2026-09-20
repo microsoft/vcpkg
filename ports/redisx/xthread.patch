@@ -1,0 +1,15 @@
+diff --git a/include/redisx.h b/include/redisx.h
+index 5344ef7..1f97921 100644
+--- a/include/redisx.h
++++ b/include/redisx.h
+@@ -559,8 +559,8 @@ int redisxDeleteEntries(Redis *redis, const char *pattern);
+ 
+ typedef HANDLE                        xthread_type;     ///< portable thread handle
+ 
+-typedef LPVOID                        xthread_arg_type; ///< portable thread function argument type
+-typedef DWORD                         xthread_rtn_type; ///< portable thread function return type
++#  define xthread_arg_type            LPVOID            ///< portable thread function argument type
++#  define xthread_rtn_type            DWORD WINAPI      ///< portable thread function return type
+ 
+ /**
+  * Portable thread creation.
