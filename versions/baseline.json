@@ -1629,7 +1629,7 @@
       "port-version": 0
     },
     "casadi": {
-      "baseline": "3.8.0",
+      "baseline": "3.8.1",
       "port-version": 0
     },
     "casclib": {
@@ -7924,6 +7924,10 @@
       "baseline": "2.0.13",
       "port-version": 0
     },
+    "plf-tools": {
+      "baseline": "1.0.4",
+      "port-version": 0
+    },
     "plib": {
       "baseline": "1.8.5",
       "port-version": 8
@@ -9214,7 +9218,7 @@
     },
     "sdl3": {
       "baseline": "3.4.16",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl3-image": {
       "baseline": "3.4.4",
@@ -9317,8 +9321,8 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2026.7.1",
-      "port-version": 1
+      "baseline": "2026.18",
+      "port-version": 0
     },
     "shaderc": {
       "baseline": "2026.2",
