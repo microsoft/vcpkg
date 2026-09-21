@@ -256,6 +256,11 @@ endif()
 if("icu" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -icu)
 
+    # ICU 78's public headers require C++17 (std::u16string_view, nested namespace
+    # definitions, inline variables), but Qt 5.15's mkspecs default to an earlier
+    # standard, so the icu feature-detection compile fails without this.
+    list(APPEND CORE_OPTIONS "CONFIG+=c++17")
+
     # This if/else corresponds to icu setup in src/corelib/configure.json.
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND CORE_OPTIONS
