@@ -1,9 +1,10 @@
 {
   "name": "casadi",
   "version": "3.8.1",
+  "port-version": 1,
   "description": "CasADi is a symbolic framework for numeric optimization implementing automatic differentiation in forward and reverse modes on sparse matrix-valued computational graphs. It supports self-contained C-code generation and interfaces state-of-the-art codes such as SUNDIALS, IPOPT etc. It can be used from C++, Python or Matlab/Octave.",
   "homepage": "https://web.casadi.org",
-  "license": "LGPL-3.0-only",
+  "license": "LGPL-3.0-only AND BSD-2-Clause",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -14,5 +15,29 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "fatrop": {
+      "description": "FATROP structure-exploiting NLP/QP solver plugin",
+      "dependencies": [
+        "fatrop"
+      ]
+    },
+    "fmu": {
+      "description": "Import of FMI 2.0/3.0 Functional Mock-up Units (DaeBuilder)",
+      "dependencies": [
+        "ghc-filesystem",
+        "libzip",
+        "tinyxml2",
+        "zlib"
+      ]
+    },
+    "onnx": {
+      "description": "ONNX graph import/export (GraphModel)",
+      "dependencies": [
+        "onnx",
+        "protobuf"
+      ]
+    }
+  }
 }

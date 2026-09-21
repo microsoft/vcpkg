@@ -1,0 +1,24 @@
+Find packaged zlib (ZLIB::ZLIB target) and ghc_filesystem (correct package name).
+Upstream: https://github.com/casadi/casadi/pull/4419
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2719,8 +2719,7 @@
+     find_package(ZLIB REQUIRED)
+     add_library(ZLIB::libz INTERFACE IMPORTED)
+     set_target_properties(ZLIB::libz PROPERTIES
+-      INTERFACE_INCLUDE_DIRECTORIES "${ZLIB_INCLUDE_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${ZLIB_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
+   endif()
+ endif()
+ add_feature_info(zlib-interface WITH_ZLIB "Interface to the zlib.")
+@@ -2769,7 +2768,7 @@
+       INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/external_projects/include"
+     )
+   else()
+-    find_package(ghcFilesystem REQUIRED)
++    find_package(ghc_filesystem REQUIRED)
+   endif()
+ endif()
+ add_feature_info(ghc-filesystem-interface WITH_GHC_FILESYSTEM "Interface to the ghc.")

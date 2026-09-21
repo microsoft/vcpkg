@@ -1,0 +1,17 @@
+{
+  "name": "blasfeo",
+  "version-date": "2026-08-28",
+  "description": "BLASFEO: Basic Linear Algebra Subroutines For Embedded Optimization, high-performance dense linear algebra for small to medium matrices",
+  "homepage": "https://github.com/giaf/blasfeo",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

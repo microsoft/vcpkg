@@ -1,0 +1,30 @@
+Reserve a guard block so the GENERIC lib4 kernels' over-read stays inside the allocation.
+Upstream: https://github.com/giaf/blasfeo/pull/216
+
+diff --git a/auxiliary/x_aux_ext_dep.c b/auxiliary/x_aux_ext_dep.c
+index a04954e1..ced4870c 100644
+--- a/auxiliary/x_aux_ext_dep.c
++++ b/auxiliary/x_aux_ext_dep.c
+@@ -39,7 +39,11 @@
+ // create a matrix structure for a matrix of size m*n by dynamically allocating the memory
+ void ALLOCATE_MAT(int m, int n, struct MAT *sA)
+ 	{
+-	size_t size = MEMSIZE_MAT(m, n);
++	// GENERIC lib4 kernels (_vs_/_gen) load full 4-wide blocks and may read up
++	// to one block past the logical end. Over-allocate a guard so that read
++	// stays within the allocation (benign on Linux, SIGSEGV elsewhere). The
++	// struct's memsize/dims are unchanged (CREATE uses the logical size).
++	size_t size = MEMSIZE_MAT(m, n) + 64;
+ 	void *mem;
+ 	blasfeo_malloc_align(&mem, size);
+ 	blasfeo_zero_memset(size, mem);
+@@ -65,7 +69,8 @@ void FREE_MAT(struct MAT *sA)
+ // create a vector structure for a vector of size m by dynamically allocating the memory
+ void ALLOCATE_VEC(int m, struct VEC *sa)
+ 	{
+-	size_t size = MEMSIZE_VEC(m);
++	// See ALLOCATE_MAT: guard against GENERIC lib4 kernel block over-reads.
++	size_t size = MEMSIZE_VEC(m) + 64;
+ 	void *mem;
+ 	blasfeo_malloc_align(&mem, size);
+ 	blasfeo_zero_memset(size, mem);
