@@ -1,11 +1,5 @@
-# The C++ layer is a header-only wrapper around the C ABI, so a debug variant
-# would build the same headers twice and install nothing extra.
-set(VCPKG_BUILD_TYPE release)
 # The engine itself ships as a prebuilt shared library.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-# That prebuilt engine is released in one flavour, so there is no debug binary
-# to pair it with and nothing to gain from installing a second copy.
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 # The engine library is code-signed and already carries an @rpath install
 # name. Rewriting its load commands would break the signature, and arm64
 # macOS refuses to load a library whose signature is broken.
@@ -15,11 +9,10 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO openpitkit/pit
   REF "v0.8.1"
-  SHA512 55fac6e56af7b876c84de0017d1b986b1606e5442ade5232aa7bbfd78236ab94efaa473172789c2dec5058f7db4e13f3e777c5744f9bd409a49ff1eb7a6b91fc
-  HEAD_REF main)
+  SHA512 55fac6e56af7b876c84de0017d1b986b1606e5442ade5232aa7bbfd78236ab94efaa473172789c2dec5058f7db4e13f3e777c5744f9bd409a49ff1eb7a6b91fc)
 
 # Select the engine for the target triplet and supply it to both the package
-# build and the exported config. All downloads stay in the vcpkg asset cache.
+# build and the exported config.
 if(VCPKG_TARGET_IS_WINDOWS)
   if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     message(FATAL_ERROR
@@ -61,7 +54,7 @@ endif()
 
 vcpkg_download_distfile(openpit_runtime_path
   URLS "https://github.com/openpitkit/pit/releases/download/v0.8.1/${openpit_runtime_asset}"
-  FILENAME "${openpit_runtime_asset}"
+  FILENAME "openpit-${VERSION}-${openpit_runtime_asset}"
   SHA512 "${openpit_runtime_sha512}")
 
 set(openpit_runtime_options
@@ -69,42 +62,64 @@ set(openpit_runtime_options
 if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_download_distfile(openpit_implib_path
     URLS "https://github.com/openpitkit/pit/releases/download/v0.8.1/${openpit_implib_asset}"
-    FILENAME "${openpit_implib_asset}"
+    FILENAME "openpit-${VERSION}-${openpit_implib_asset}"
     SHA512 "${openpit_implib_sha512}")
   list(APPEND openpit_runtime_options
     "-DOPENPIT_RUNTIME_IMPORT_LIBRARY=${openpit_implib_path}")
 endif()
 
-vcpkg_cmake_configure(
-  SOURCE_PATH "${SOURCE_PATH}/bindings/cpp"
-  OPTIONS
-    ${openpit_runtime_options}
-    "-DOPENPIT_CPP_BUILD_TESTS=OFF"
-    "-DOPENPIT_PACKAGE_VERSION=0.8.1"
-    "-DOPENPIT_RUNTIME_VERSION=0.8.1")
+# The C++ layer is a header-only wrapper around the C ABI, so one
+# configuration of its CMake package covers every consumer.
+block(SCOPE_FOR VARIABLES)
+  set(VCPKG_BUILD_TYPE release)
+  vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/bindings/cpp"
+    OPTIONS
+      ${openpit_runtime_options}
+      "-DOPENPIT_CPP_BUILD_TESTS=OFF"
+      "-DOPENPIT_PACKAGE_VERSION=0.8.1"
+      "-DOPENPIT_RUNTIME_VERSION=0.8.1")
+  vcpkg_cmake_install()
+  vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenPit)
+endblock()
 
-vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenPit)
-
+# The engine is released in one flavour. A triplet that builds both
+# configurations gets the same binary under debug/ as well, so Debug consumers
+# link and deploy it too.
+set(openpit_install_prefixes "${CURRENT_PACKAGES_DIR}")
+if(NOT VCPKG_BUILD_TYPE)
+  list(APPEND openpit_install_prefixes "${CURRENT_PACKAGES_DIR}/debug")
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
-  file(INSTALL "${openpit_runtime_path}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
-    RENAME "${openpit_runtime_file}")
-  file(INSTALL "${openpit_implib_path}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-    RENAME "${openpit_implib_file}")
   set(openpit_runtime_dir "bin")
 else()
-  file(INSTALL "${openpit_runtime_path}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
-    RENAME "${openpit_runtime_file}")
   set(openpit_runtime_dir "lib")
 endif()
+foreach(openpit_install_prefix IN LISTS openpit_install_prefixes)
+  file(INSTALL "${openpit_runtime_path}"
+    DESTINATION "${openpit_install_prefix}/${openpit_runtime_dir}"
+    RENAME "${openpit_runtime_file}")
+  if(VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL "${openpit_implib_path}"
+      DESTINATION "${openpit_install_prefix}/lib"
+      RENAME "${openpit_implib_file}")
+  endif()
+endforeach()
 
 # Point the exported config at the engine this port just installed. The
 # resolver returns on the first branch when the path is set, so a consumer
 # never reaches for a release asset. The config lives in share/${PORT}, hence
 # two levels up.
+set(openpit_config_file
+  "${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenPitConfig.cmake")
+file(READ "${openpit_config_file}" openpit_config_contents)
+string(FIND "${openpit_config_contents}" "openpit_resolve_runtime()"
+  openpit_resolver_call)
+if(openpit_resolver_call EQUAL -1)
+  message(FATAL_ERROR
+    "openpit: OpenPitConfig.cmake no longer calls openpit_resolve_runtime(), "
+    "so the installed engine cannot be wired into the package config")
+endif()
 set(openpit_config_prelude
   "set(OPENPIT_RUNTIME_LIBRARY \"\${CMAKE_CURRENT_LIST_DIR}/../../${openpit_runtime_dir}/${openpit_runtime_file}\")")
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -118,8 +133,7 @@ if(VCPKG_TARGET_IS_LINUX)
   string(APPEND openpit_config_runtime
     "\nset_target_properties(OpenPit::runtime PROPERTIES IMPORTED_NO_SONAME TRUE)")
 endif()
-vcpkg_replace_string(
-  "${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenPitConfig.cmake"
+vcpkg_replace_string("${openpit_config_file}"
   "openpit_resolve_runtime()"
   "${openpit_config_runtime}")
 
