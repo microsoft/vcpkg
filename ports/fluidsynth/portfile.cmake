@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 673edd454c912e2fb2b0848c4ab8c47b068f06d611df7e2bcb73d66f1457078024a474c1f45bac4ea2c63921131eea58ceb1efe3340e643895dc8979fb44da32
+    SHA512 5c46421ba17559cb826fb2e6b8002b3459c910ff2ebd6d75c55f3139bea58487ddb4ac8da71c6bb72bc5af9590e11752b3d88a8e41170b8e41f228e9a08257cd
     HEAD_REF master
     PATCHES
         fix-gcem.patch
