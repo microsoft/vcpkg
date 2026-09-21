@@ -393,7 +393,7 @@
       "port-version": 4
     },
     "atomic-queue": {
-      "baseline": "1.9.2",
+      "baseline": "1.9.4",
       "port-version": 0
     },
     "attr": {
@@ -509,7 +509,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.43.6",
+      "baseline": "0.43.7",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -1629,7 +1629,7 @@
       "port-version": 0
     },
     "casadi": {
-      "baseline": "3.8.0",
+      "baseline": "3.8.1",
       "port-version": 0
     },
     "casclib": {
@@ -2305,7 +2305,7 @@
       "port-version": 17
     },
     "cudnn-frontend": {
-      "baseline": "1.27.0",
+      "baseline": "1.29.0",
       "port-version": 0
     },
     "cunit": {
@@ -2450,7 +2450,7 @@
     },
     "dawn": {
       "baseline": "20260911.162847",
-      "port-version": 0
+      "port-version": 1
     },
     "daxa": {
       "baseline": "3.3.1",
@@ -2634,7 +2634,7 @@
     },
     "dpdk": {
       "baseline": "26.3",
-      "port-version": 5
+      "port-version": 6
     },
     "dpetkov-semver": {
       "baseline": "0.4.1",
@@ -2777,8 +2777,8 @@
       "port-version": 0
     },
     "ecbuild": {
-      "baseline": "3.15.2",
-      "port-version": 1
+      "baseline": "3.16.0",
+      "port-version": 0
     },
     "eccodes": {
       "baseline": "2.48.2",
@@ -2985,8 +2985,8 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "8.2.10",
-      "port-version": 1
+      "baseline": "8.3.0",
+      "port-version": 0
     },
     "fast-obj": {
       "baseline": "1.3",
@@ -3061,11 +3061,11 @@
       "port-version": 0
     },
     "ffmpeg": {
-      "baseline": "9.0.1",
-      "port-version": 2
+      "baseline": "9.0.2",
+      "port-version": 0
     },
     "ffmpeg-bin2c": {
-      "baseline": "9.0.1",
+      "baseline": "9.0.2",
       "port-version": 0
     },
     "ffnvcodec": {
@@ -3237,7 +3237,7 @@
       "port-version": 27
     },
     "freerdp": {
-      "baseline": "3.31.0",
+      "baseline": "3.31.1",
       "port-version": 0
     },
     "freetds": {
@@ -3505,8 +3505,8 @@
       "port-version": 0
     },
     "glibmm": {
-      "baseline": "2.88.1",
-      "port-version": 1
+      "baseline": "2.90.0",
+      "port-version": 0
     },
     "glm": {
       "baseline": "1.0.3",
@@ -4375,10 +4375,6 @@
     "kealib": {
       "baseline": "1.6.2",
       "port-version": 0
-    },
-    "keccak-tiny": {
-      "baseline": "2014-09-08",
-      "port-version": 2
     },
     "kedixa-coke": {
       "baseline": "0.7.0",
@@ -5369,7 +5365,7 @@
       "port-version": 13
     },
     "libmodbus": {
-      "baseline": "3.1.12",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "libmodman": {
@@ -5953,7 +5949,7 @@
       "port-version": 0
     },
     "libvmaf": {
-      "baseline": "3.2.0",
+      "baseline": "3.2.1",
       "port-version": 0
     },
     "libvorbis": {
@@ -6329,7 +6325,7 @@
       "port-version": 0
     },
     "luajit": {
-      "baseline": "2026-08-19",
+      "baseline": "2026-09-08",
       "port-version": 0
     },
     "luasec": {
@@ -6342,7 +6338,7 @@
     },
     "luau": {
       "baseline": "0.737",
-      "port-version": 0
+      "port-version": 1
     },
     "lunarg-vulkantools": {
       "baseline": "1.4.357.0",
@@ -6997,7 +6993,7 @@
       "port-version": 0
     },
     "nanoflann": {
-      "baseline": "1.12.1",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "nanogui": {
@@ -7106,7 +7102,7 @@
     },
     "netcdf-c": {
       "baseline": "4.9.3",
-      "port-version": 4
+      "port-version": 5
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
@@ -7177,7 +7173,7 @@
       "port-version": 3
     },
     "nng": {
-      "baseline": "1.12.3",
+      "baseline": "1.12.4",
       "port-version": 0
     },
     "nngpp": {
@@ -7261,7 +7257,7 @@
       "port-version": 0
     },
     "nuspell": {
-      "baseline": "5.1.8",
+      "baseline": "5.1.9",
       "port-version": 0
     },
     "nvidia-cutlass": {
@@ -7569,7 +7565,7 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.28.0",
+      "baseline": "1.29.0",
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
@@ -7926,6 +7922,10 @@
     },
     "plf-stack": {
       "baseline": "2.0.13",
+      "port-version": 0
+    },
+    "plf-tools": {
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "plib": {
@@ -8290,7 +8290,7 @@
     },
     "qt3d": {
       "baseline": "6.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5": {
       "baseline": "5.15.19",
@@ -8346,7 +8346,7 @@
     },
     "qt5-location": {
       "baseline": "5.15.19",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-macextras": {
       "baseline": "5.15.19",
@@ -9145,7 +9145,7 @@
       "port-version": 0
     },
     "scinumtools3": {
-      "baseline": "0.6.3",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "sciplot": {
@@ -9218,7 +9218,7 @@
     },
     "sdl3": {
       "baseline": "3.4.16",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl3-image": {
       "baseline": "3.4.4",
@@ -9321,8 +9321,8 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2026.7.1",
-      "port-version": 1
+      "baseline": "2026.18",
+      "port-version": 0
     },
     "shaderc": {
       "baseline": "2026.2",
@@ -10137,7 +10137,7 @@
       "port-version": 2
     },
     "thorvg": {
-      "baseline": "1.1.1",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "threadweaver": {
@@ -10426,6 +10426,10 @@
     },
     "tsl-sparse-map": {
       "baseline": "0.7.0",
+      "port-version": 0
+    },
+    "ttmath": {
+      "baseline": "2019-10-23",
       "port-version": 0
     },
     "tuplet": {
@@ -10893,7 +10897,7 @@
       "port-version": 1
     },
     "wabt": {
-      "baseline": "1.0.41",
+      "baseline": "1.0.42",
       "port-version": 0
     },
     "wampcc": {
@@ -11005,7 +11009,7 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "6.4.0",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "winsock2": {
@@ -11341,7 +11345,7 @@
       "port-version": 0
     },
     "zimpl": {
-      "baseline": "3.7.1",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "zint": {
