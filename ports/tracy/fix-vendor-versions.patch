@@ -12,7 +12,7 @@ index ca5e9f3..f327252 100644
      target_compile_definitions(TracyServer PUBLIC TRACY_NO_STATISTICS)
  endif()
 diff --git a/cmake/vendor.cmake b/cmake/vendor.cmake
-index 0cbdcce..827e037 100644
+index 0cbdcce..9576068 100644
 --- a/cmake/vendor.cmake
 +++ b/cmake/vendor.cmake
 @@ -4,81 +4,19 @@ include_guard(GLOBAL)
@@ -209,7 +209,7 @@ index 0cbdcce..827e037 100644
          ${CMAKE_DL_LIBS}
      )
      target_compile_definitions(TracyImGui PRIVATE "IMGUI_ENABLE_FREETYPE")
-@@ -222,120 +93,38 @@ if(VENDOR_GUI)
+@@ -222,120 +93,33 @@ if(VENDOR_GUI)
  
      # NFD
  
@@ -244,12 +244,7 @@ index 0cbdcce..827e037 100644
 -            "BUILD_SHARED_LIBS OFF"
 -        EXCLUDE_FROM_ALL TRUE
 -    )
-+    # vcpkg's md4c port is 0.5.3, which predates the footnote support tracy
-+    # requires (mity/md4c@a8b0d3e). Build the parser from the revision tracy
-+    # pins instead; md4c's own CMakeLists forces /MT and installs its libs,
-+    # so compile the single source file directly rather than add_subdirectory.
-+    add_library(md4c STATIC EXCLUDE_FROM_ALL "${md4c_SOURCE_DIR}/src/md4c.c")
-+    target_include_directories(md4c PUBLIC "${md4c_SOURCE_DIR}/src")
++    find_package(md4c CONFIG)
  
      if(NOT EMSCRIPTEN)
  
@@ -343,18 +338,21 @@ index 0cbdcce..827e037 100644
      endif()
  
 diff --git a/profiler/CMakeLists.txt b/profiler/CMakeLists.txt
-index 5747b13..3918236 100644
+index 5747b13..48d3d69 100644
 --- a/profiler/CMakeLists.txt
 +++ b/profiler/CMakeLists.txt
-@@ -303,20 +303,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
+@@ -301,22 +301,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
+     TracyImGui
+     Threads::Threads
      nlohmann_json::nlohmann_json
-     md4c
- )
+-    md4c
+-)
 -target_include_directories(${PROJECT_NAME} PRIVATE
 -    ${tidy_SOURCE_DIR}/include
 -)
- target_include_directories(${PROJECT_NAME} PRIVATE
-     ${md4c_SOURCE_DIR}/src
+-target_include_directories(${PROJECT_NAME} PRIVATE
+-    ${md4c_SOURCE_DIR}/src
++    md4c::md4c
  )
  
  if(NOT EMSCRIPTEN)
@@ -372,7 +370,7 @@ index 5747b13..3918236 100644
      )
  endif()
  
-@@ -329,7 +326,7 @@ if(NOT EMSCRIPTEN)
+@@ -329,7 +323,7 @@ if(NOT EMSCRIPTEN)
          target_compile_definitions(${PROJECT_NAME} PRIVATE TRACY_NO_FILESELECTOR)
      endif()
      if(NOT USE_WAYLAND)

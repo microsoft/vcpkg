@@ -42,18 +42,8 @@ if ("gui-tools" IN_LIST FEATURES)
    )
    list(APPEND TOOLS_OPTIONS "-DImGui_SOURCE_DIR=${tracy_imgui_path}")
 
-   # Not the md4c port: 0.5.3 predates the footnote API tracy 0.14 uses, and md4c
-   # has no newer release. Pinned to the same commit upstream tracy pins.
-   vcpkg_from_github(
-       OUT_SOURCE_PATH tracy_md4c_path
-       REPO mity/md4c
-       REF 65c6c9d72cebd9a731aaa5597414ce04d9ea5de3
-       SHA512 4a4971d340f44238259c97eadc08f84fec180bc24db3b4db1d997a08d11e36a47ae10a2b127fb7d149a33b326bf6bc43ab71dc664d5f6bf9ea83ca111ebcacc9
-   )
-   list(APPEND TOOLS_OPTIONS "-Dmd4c_SOURCE_DIR=${tracy_md4c_path}")
-
-   # tracy-profiler statically links imgui and md4c
-   list(APPEND extra_copyright "${tracy_imgui_path}/LICENSE.txt" "${tracy_md4c_path}/LICENSE.md")
+   # tracy-profiler statically links imgui
+   list(APPEND extra_copyright "${tracy_imgui_path}/LICENSE.txt")
 endif()
 
 if("cli-tools" IN_LIST FEATURES OR "gui-tools" IN_LIST FEATURES)
@@ -74,7 +64,6 @@ vcpkg_cmake_configure(
         LEGACY
         CMAKE_DISABLE_FIND_PACKAGE_Git
         ImGui_SOURCE_DIR
-        md4c_SOURCE_DIR
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

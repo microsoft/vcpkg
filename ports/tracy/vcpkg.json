@@ -73,6 +73,7 @@
         },
         "freetype",
         "glfw3",
+        "md4c",
         "nativefiledialog-extended",
         "nlohmann-json",
         "ppqsort",
