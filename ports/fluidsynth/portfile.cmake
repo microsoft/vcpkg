@@ -23,7 +23,6 @@ file(REMOVE
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        libinstpatch enable-libinstpatch
         sndfile      enable-libsndfile
         pulseaudio   enable-pulseaudio
         pipewire     enable-pipewire
@@ -36,7 +35,7 @@ set(MACOS_OPTIONS enable-coreaudio enable-coremidi COREAUDIO_FOUND COREMIDI_FOUN
 set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
 set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack
-    enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-portaudio
+    enable-midishare enable-oboe enable-openmp enable-oss enable-portaudio
     enable-profiling enable-readline enable-sdl3 enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
