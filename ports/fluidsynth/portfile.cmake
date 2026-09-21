@@ -26,6 +26,7 @@ vcpkg_check_features(
         libinstpatch enable-libinstpatch
         sndfile      enable-libsndfile
         pulseaudio   enable-pulseaudio
+        pipewire     enable-pipewire
 )
 
 # enable platform-specific features, force the build to fail if the required libraries are not found,
@@ -35,7 +36,7 @@ set(MACOS_OPTIONS enable-coreaudio enable-coremidi COREAUDIO_FOUND COREMIDI_FOUN
 set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
 set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack
-    enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
+    enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-portaudio
     enable-profiling enable-readline enable-sdl3 enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
