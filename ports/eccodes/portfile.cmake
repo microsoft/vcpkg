@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-netcdf-linkage.patch
         fix-png-linkage.patch
         use-external-tl-expected.patch
-        fix-static-consumption.patch
+        fix-static-dependencies.patch
 )
 
 if(VCPKG_HOST_IS_WINDOWS)
