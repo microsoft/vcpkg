@@ -19,6 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_CHOLMOD=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         -DGTSAM_BUILD_TESTS=OFF
         -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF
@@ -26,6 +27,7 @@ vcpkg_cmake_configure(
         -DGTSAM_BUILD_UNSTABLE=OFF
         -DGTSAM_UNSTABLE_BUILD_PYTHON=OFF
         -DGTSAM_USE_SYSTEM_EIGEN=ON
+        -DGTSAM_USE_SYSTEM_CCOLAMD=OFF
         -DGTSAM_USE_SYSTEM_METIS=ON
         -DGTSAM_INSTALL_CPPUNITLITE=OFF
         -DGTSAM_BUILD_TYPE_POSTFIXES=OFF
@@ -45,5 +47,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/LICENSE.BSD")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE.BSD"
+        "${SOURCE_PATH}/gtsam/3rdparty/CCOLAMD/Doc/License.txt"
+        "${SOURCE_PATH}/gtsam/3rdparty/SuiteSparse_config/README.txt"
+        "${SOURCE_PATH}/gtsam/3rdparty/cephes/LICENSE.txt"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
