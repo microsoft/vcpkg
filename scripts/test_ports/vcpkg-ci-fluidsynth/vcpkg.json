@@ -34,12 +34,6 @@
             "sndfile"
           ],
           "platform": "!xbox"
-        },
-        {
-          "name": "fluidsynth",
-          "features": [
-            "libinstpatch"
-          ]
         }
       ]
     }
