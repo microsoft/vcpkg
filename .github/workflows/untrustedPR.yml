@@ -129,20 +129,26 @@ jobs:
             const crlf_lines = parse_locations(await fs.readFile('.github-pr.crlf-lines', 'utf8'))
             const trailing_whitespace_lines = parse_locations(await fs.readFile('.github-pr.trailing-whitespace-lines', 'utf8'))
 
+            const summary_tab = 'Click the "Summary" tab on the left';
             let approve = true;
             if (crlf_lines.length > 0 || trailing_whitespace_lines.length > 0) {
               const whitespace_files = [...new Set([...crlf_lines, ...trailing_whitespace_lines].map(({file}) => file))];
-              const fix_whitespace = 'The commands in the workflow summary fix both problems and are safe to run if a file has only one of them.';
+              const preexisting_whitespace = 'The whitespace may predate your change. This check reports existing problems when the affected file is edited, or when any file in the same port is edited. Some reported issues may not have been introduced by your changes, but we ask that they be fixed when the affected file or port is otherwise modified.';
+              const console_summary = `${summary_tab} to see the affected files and copy-pasteable fix commands.`;
+              const annotation_summary = 'Click "View Details" in this comment, then click the "Summary" tab on the left to see the affected files and copy-pasteable fix commands.';
               const quote_bash = value => `'${value.replaceAll("'", "'\"'\"'")}'`;
               const quote_powershell = value => "'" + value.replaceAll("'", "''") + "'";
               const bash_fix = `sh ./.github/scripts/fix-whitespace.sh ${whitespace_files.map(quote_bash).join(' ')}`;
               const powershell_fix = '@(' + whitespace_files.map(quote_powershell).join(', ') + ') | ForEach-Object {\n    [IO.File]::WriteAllText($_, [Text.RegularExpressions.Regex]::Replace([IO.File]::ReadAllText($_), "[ \\t]+(?=\\r?$)|\\r$", "", "Multiline"))\n}';
-              core.error(`Non-patch files associated with this change must use LF line endings and must not contain trailing whitespace. ${fix_whitespace}`);
+              core.error(`Non-patch files associated with this change must use LF line endings and must not contain trailing whitespace. ${preexisting_whitespace} ${console_summary}`);
               core.summary.addHeading('Incorrect whitespace', 3);
               core.summary.addRaw('These non-patch files must use LF line endings and must not contain trailing whitespace:');
               core.summary.addEOL();
               core.summary.addList(whitespace_files);
-              core.summary.addRaw(fix_whitespace);
+              core.summary.addRaw(preexisting_whitespace);
+              core.summary.addEOL();
+              core.summary.addEOL();
+              core.summary.addRaw('The commands below fix both problems and are safe to run if a file has only one of them.');
               core.summary.addEOL();
               core.summary.addEOL();
               core.summary.addRaw('Fix both problems by running the following command from the repository root on Linux or macOS:');
@@ -152,10 +158,10 @@ jobs:
               core.summary.addEOL();
               core.summary.addCodeBlock(powershell_fix, 'powershell');
               for (const {file, line} of crlf_lines) {
-                core.error(`This file contains CRLF line endings. ${fix_whitespace}`, {file, startLine: line});
+                core.error(`This file contains CRLF line endings. ${preexisting_whitespace} ${annotation_summary}`, {file, startLine: line});
               }
               for (const {file, line} of trailing_whitespace_lines) {
-                core.error(`This line contains trailing whitespace. ${fix_whitespace}`, {file, startLine: line});
+                core.error(`This line contains trailing whitespace. ${preexisting_whitespace} ${annotation_summary}`, {file, startLine: line});
               }
               approve = false;
             }
@@ -166,7 +172,7 @@ jobs:
               format_output += "./vcpkg format-feature-baseline scripts/ci.baseline.txt\n";
               format_output += "./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt\n";
               format_output += "\n";
-              format_output += "It should make the following changes. See the workflow summary for the generated diff.";
+              format_output += `It should make the following changes. ${summary_tab} to see the generated diff.`;
               core.error(format_output);
               core.summary.addHeading('Manifest formatting diff', 3);
               core.summary.addRaw('All vcpkg.json files and baselines must be formatted. To fix this problem, run:');
@@ -181,7 +187,7 @@ jobs:
               var add_version_output = '';
               add_version_output += "PRs must add only one version, and must not modify any published versions.\n";
               add_version_output += "When making any changes to a library, the version or port-version in vcpkg.json must be modified, and the version database updated.\n";
-              add_version_output += "Making the following changes will fix this problem. See the workflow summary for the generated diff.";
+              add_version_output += `Making the following changes will fix this problem. ${summary_tab} to see the generated diff.`;
               core.error(add_version_output);
               core.summary.addHeading('x-add-version diff', 3);
               core.summary.addRaw('PRs must add only one version, and must not modify any published versions.');
