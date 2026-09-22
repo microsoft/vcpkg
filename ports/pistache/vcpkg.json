@@ -4,12 +4,12 @@
   "description": "Pistache is a modern and elegant HTTP and REST framework for C++. It is entirely written in pure-C++17 and provides a clear and pleasant API",
   "homepage": "https://github.com/pistacheio/pistache",
   "license": "Apache-2.0",
-  "supports": "!android & !(windows & (arm64 | x86))",
+  "supports": "!android & !windows",
   "dependencies": [
     "date",
     {
       "name": "libevent",
-      "platform": "windows | osx | bsd"
+      "platform": "osx | bsd"
     },
     "rapidjson",
     {
