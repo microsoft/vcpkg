@@ -238,7 +238,7 @@ jobs:
               core.summary.addCodeBlock(add_version, 'diff');
               approve = false;
             }
-            
+
             if (deprecated_function.length > 0) {
               var deprecated_output = '';
               deprecated_output += "**You have modified or added at least one portfile where deprecated functions are used**\n"
