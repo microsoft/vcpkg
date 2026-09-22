@@ -2174,7 +2174,7 @@
     },
     "cppwinrt": {
       "baseline": "3.0.260818.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cppxaml": {
       "baseline": "0.0.16",
