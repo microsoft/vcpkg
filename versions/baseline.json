@@ -1669,7 +1669,7 @@
       "port-version": 1
     },
     "cdt": {
-      "baseline": "1.4.5",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "celero": {
