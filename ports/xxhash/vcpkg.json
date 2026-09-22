@@ -16,7 +16,8 @@
   ],
   "features": {
     "xxhsum": {
-      "description": "Build the xxhsum binary"
+      "description": "Build the xxhsum binary",
+      "license": "GPL-2.0-or-later"
     }
   }
 }

@@ -28,4 +28,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(LICENSE_FILES "${SOURCE_PATH}/LICENSE")
+if("xxhsum" IN_LIST FEATURES)
+    list(APPEND LICENSE_FILES "${SOURCE_PATH}/cli/COPYING")
+endif()
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
