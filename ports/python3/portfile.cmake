@@ -32,8 +32,9 @@ set(PATCHES
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
     0019-fix-ssl-linkage.patch
-    0020-Py_NO_LINK_LIB.patch # Remove in 3.14 https://github.com/python/cpython/pull/19740
     0021-use-system-libmpdec.patch
+    0022-use-system-zstd.patch
+    0023-regenerate-configure.patch # Generated with Autoconf 2.72 after the configure.ac patches.
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -62,7 +63,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${VERSION}
-    SHA512 91a91a6d50311eeac22d42a2bcb95d41b769f3c0539b04731b2c2e1c3200825874a39eb53f2d6410be082c2c099ceb452f67a61c236a22032aaba49dc2f9b2bf
+    SHA512 e02e73a249227b8ff23e4edd68d1a98b92d98dcce220a2100d79f9c86088e21775e3650d7d184e189ab6e6cc4a720ecaab049c729f3b6be1c71fd0acf9d82776
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -102,6 +103,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         find_library(FFI_DEBUG NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(ZSTD_RELEASE NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(ZSTD_DEBUG NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(MPDECIMAL_RELEASE NAMES libmpdec PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(MPDECIMAL_DEBUG NAMES libmpdec PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
@@ -119,7 +122,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND add_libs_rel "${ZLIB_RELEASE}")
     list(APPEND add_libs_dbg "${ZLIB_DEBUG}")
 
-    configure_file("${SOURCE_PATH}/PC/pyconfig.h.in" "${SOURCE_PATH}/PC/pyconfig.h" COPYONLY)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
     file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
@@ -291,7 +293,6 @@ else()
 
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTORECONF
         DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}

@@ -7378,7 +7378,7 @@
     },
     "omniorb": {
       "baseline": "4.3.0",
-      "port-version": 5
+      "port-version": 6
     },
     "ompl": {
       "baseline": "1.7.0",
@@ -8201,7 +8201,7 @@
       "port-version": 7
     },
     "python3": {
-      "baseline": "3.13.15",
+      "baseline": "3.14.7",
       "port-version": 0
     },
     "qca": {
