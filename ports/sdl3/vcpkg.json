@@ -1,6 +1,7 @@
 {
   "name": "sdl3",
   "version": "3.4.16",
+  "port-version": 1,
   "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
   "homepage": "https://www.libsdl.org",
   "license": "Zlib AND MIT AND Apache-2.0 AND BSD-3-Clause",
@@ -71,6 +72,10 @@
       "dependencies": [
         "libusb"
       ]
+    },
+    "macos-keyboard-grab": {
+      "description": "Let SDL_SetWindowKeyboardGrab() capture system keyboard shortcuts on macOS (uses private API, so it is not suitable for sandboxed apps)",
+      "supports": "osx"
     },
     "vulkan": {
       "description": "Vulkan functionality for SDL"

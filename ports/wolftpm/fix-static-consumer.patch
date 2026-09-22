@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 866c07c..24a1fb2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -476,12 +476,13 @@ else()
+     endif()
+ endif()
+ 
+-# Link wolftpm library to wolfSSL.
+-# PRIVATE so the wolftpm_wolfssl_dep INTERFACE helper does not become part
+-# of wolftpm's export set (it is build-tree-only). Downstream consumers of
+-# wolftpm should `find_package(wolfssl)` themselves before find_package(wolftpm).
++# Link wolftpm library to wolfSSL. Use the build-only helper while building
++# wolftpm and the installed wolfSSL target for downstream consumers.
+ if(BUILD_WOLFTPM_LIB)
+-    target_link_libraries(wolftpm PRIVATE $<BUILD_INTERFACE:wolftpm_wolfssl_dep>)
++    target_link_libraries(wolftpm
++        PRIVATE $<BUILD_INTERFACE:wolftpm_wolfssl_dep>
++        PUBLIC $<INSTALL_INTERFACE:wolfssl::wolfssl>
++    )
+ endif()
+ 
+ # fwTPM requires wolfCrypt
+diff --git a/cmake/wolftpm-config.cmake.in b/cmake/wolftpm-config.cmake.in
+index 4d8861c..d0cf45e 100644
+--- a/cmake/wolftpm-config.cmake.in
++++ b/cmake/wolftpm-config.cmake.in
+@@ -1,6 +1,7 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
++find_dependency(wolfssl CONFIG REQUIRED)
+ if(@WOLFTPM_CONFIG_NEEDS_THREADS@)
+     find_dependency(Threads)
+ endif()
