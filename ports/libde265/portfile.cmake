@@ -40,4 +40,12 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
+set(copyright_files
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/extra/win32cond.c"
+)
+if("decoder-tool" IN_LIST FEATURES)
+    list(APPEND copyright_files "${SOURCE_PATH}/extra/getopt.c")
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
