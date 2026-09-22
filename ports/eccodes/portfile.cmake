@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-netcdf-linkage.patch
         fix-png-linkage.patch
         use-external-tl-expected.patch
+        fix-static-consumption.patch
 )
 
 if(VCPKG_HOST_IS_WINDOWS)
@@ -15,7 +16,6 @@ if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
 endif()
 
-vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
 get_filename_component(PYTHON3_ROOT "${PYTHON3_PATH}" DIRECTORY)
@@ -75,7 +75,6 @@ vcpkg_cmake_configure(
         ${ECCODES_OPTIONS}
         -DCMAKE_REQUIRE_FIND_PACKAGE_ecbuild=ON
         -Decbuild_ROOT=${CURRENT_HOST_INSTALLED_DIR}
-        -DPERL_EXECUTABLE=${PERL}
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DPython_EXECUTABLE=${PYTHON3}
         -DPython3_EXECUTABLE=${PYTHON3}
@@ -101,8 +100,12 @@ vcpkg_fixup_pkgconfig()
 
 set(_eccodes_pkgconfig_private_libraries -leccodes_memfs)
 set(_eccodes_pkgconfig_private_requires libopenjp2)
-if("aec" IN_LIST FEATURES)
-    list(APPEND _eccodes_pkgconfig_private_libraries -laec)
+if("aec" IN_LIST FEATURES OR "netcdf" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND _eccodes_pkgconfig_private_libraries -laec-static)
+    else()
+        list(APPEND _eccodes_pkgconfig_private_libraries -laec)
+    endif()
 endif()
 if("png" IN_LIST FEATURES)
     list(APPEND _eccodes_pkgconfig_private_requires libpng)
@@ -117,7 +120,11 @@ function(_eccodes_fix_pkgconfig_file _file _libraries)
     set(_requires_private_line "Requires.private: ${_eccodes_pkgconfig_private_requires}")
     string(REGEX REPLACE "(^|\n)libs=[^\n]*" "\\1${_libs_line}" _contents "${_contents}")
     string(REGEX REPLACE "(^|\n)libs_private=[^\n]*" "\\1${_libs_private_line}" _contents "${_contents}")
-    string(REGEX REPLACE "(^|\n)Requires.private:[^\n]*" "\\1${_requires_private_line}" _contents "${_contents}")
+    if(_contents MATCHES "(^|\n)Requires\\.private:")
+        string(REGEX REPLACE "(^|\n)Requires\\.private:[^\n]*" "\\1${_requires_private_line}" _contents "${_contents}")
+    else()
+        string(REGEX REPLACE "(\n### Features:)" "\n${_requires_private_line}\\1" _contents "${_contents}")
+    endif()
     file(WRITE "${_file}" "${_contents}")
 endfunction()
 

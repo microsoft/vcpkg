@@ -1,0 +1,119 @@
+diff --git a/eccodes-import.cmake.in b/eccodes-import.cmake.in
+index d51cba1..ed7ba2f 100644
+--- a/eccodes-import.cmake.in
++++ b/eccodes-import.cmake.in
+@@ -1,5 +1,11 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(tl-expected CONFIG)
++if(@HAVE_PNG@)
++    find_dependency(PNG)
++endif()
++if(@libaec_FOUND@)
++    find_dependency(libaec CONFIG)
++endif()
+ 
+ set( ECCODES_DEFINITION_PATH  ${eccodes_BASE_DIR}/@ECCODES_DEFINITION_SUFF@ )
+ set( ECCODES_SAMPLES_PATH     ${eccodes_BASE_DIR}/@ECCODES_SAMPLES_SUFF@ )
+diff --git a/src/eccodes/CMakeLists.txt b/src/eccodes/CMakeLists.txt
+index 5431b8f..b669656 100644
+--- a/src/eccodes/CMakeLists.txt
++++ b/src/eccodes/CMakeLists.txt
+@@ -441,6 +441,39 @@ if(HAVE_PNG)
+     set(ECCODES_PNG_LIBRARIES PNG::PNG)
+ endif()
+ 
++if(NOT BUILD_SHARED_LIBS)
++    set(_eccodes_static_accessors "${CMAKE_CURRENT_BINARY_DIR}/static_accessor_registrations.cc")
++    set(_eccodes_static_accessor_headers "")
++    set(_eccodes_static_accessor_registrations "")
++    set(_eccodes_static_accessor_index 0)
++    foreach(_source IN LISTS eccodes_src_files)
++        if(_source MATCHES "^accessor/(.+)\\.cc$")
++            file(READ "${CMAKE_CURRENT_SOURCE_DIR}/${_source}" _contents)
++            string(REGEX MATCH "AccessorBuilder<([^>]+)>" _registration "${_contents}")
++            if(_registration)
++                set(_accessor_type "${CMAKE_MATCH_1}")
++                if(NOT _accessor_type MATCHES "::")
++                    set(_accessor_type "eccodes::accessor::${_accessor_type}")
++                endif()
++                string(REGEX REPLACE "\\.cc$" ".h" _header "${_source}")
++                string(APPEND _eccodes_static_accessor_headers "#include \"${_header}\"\n")
++                string(APPEND _eccodes_static_accessor_registrations
++                    "    static eccodes::AccessorBuilder<${_accessor_type}> accessor_${_eccodes_static_accessor_index};\n"
++                )
++                math(EXPR _eccodes_static_accessor_index "${_eccodes_static_accessor_index} + 1")
++            endif()
++        endif()
++    endforeach()
++    file(WRITE "${_eccodes_static_accessors}"
++        "${_eccodes_static_accessor_headers}\n"
++        "void eccodes_force_static_accessors()\n"
++        "{\n"
++        "${_eccodes_static_accessor_registrations}"
++        "}\n"
++    )
++    list(APPEND eccodes_src_files "${_eccodes_static_accessors}")
++endif()
++
+ ecbuild_add_library(
+     TARGET    eccodes
+     SOURCES
+@@ -469,3 +502,10 @@ ecbuild_add_library(
+         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+ )
++
++if(NOT BUILD_SHARED_LIBS)
++    target_compile_definitions(eccodes PRIVATE ECCODES_DISABLE_ACCESSOR_REGISTRATION)
++    set_source_files_properties("${_eccodes_static_accessors}" PROPERTIES
++        COMPILE_DEFINITIONS ECCODES_ENABLE_ACCESSOR_REGISTRATION
++    )
++endif()
+diff --git a/src/eccodes/CodesFactory.h b/src/eccodes/CodesFactory.h
+index d9ecbf1..69167a6 100644
+--- a/src/eccodes/CodesFactory.h
++++ b/src/eccodes/CodesFactory.h
+@@ -118,7 +118,17 @@ public:
+ };
+ 
+ // Backward-compatible alias
++#if defined(ECCODES_DISABLE_ACCESSOR_REGISTRATION) && !defined(ECCODES_ENABLE_ACCESSOR_REGISTRATION)
++template <class T, class ConcreteType>
++class DisabledRegistrar
++{
++};
++
++template <class T, class ConcreteType>
++using Builder = DisabledRegistrar<T, ConcreteType>;
++#else
+ template <class T, class ConcreteType>
+ using Builder = Registrar<T, ConcreteType>;
++#endif
+ 
+ } // namespace eccodes
+diff --git a/src/eccodes/grib_accessor_factory.cc b/src/eccodes/grib_accessor_factory.cc
+index 946eb32..9c1822b 100644
+--- a/src/eccodes/grib_accessor_factory.cc
++++ b/src/eccodes/grib_accessor_factory.cc
+@@ -15,6 +15,10 @@
+ 
+ static eccodes::sync::Mutex mutex;
+ 
++#ifdef ECCODES_DISABLE_ACCESSOR_REGISTRATION
++void eccodes_force_static_accessors();
++#endif
++
+ grib_section* grib_create_root_section(const grib_context* context, grib_handle* h)
+ {
+     const char* fpath = 0;
+@@ -47,6 +51,10 @@ grib_section* grib_create_root_section(const grib_context* context, grib_handle*
+ grib_accessor* grib_accessor_factory(grib_section* p, grib_action* creator,
+                                      const long len, grib_arguments* params)
+ {
++#ifdef ECCODES_DISABLE_ACCESSOR_REGISTRATION
++    eccodes_force_static_accessors();
++#endif
++
+     size_t size      = 0;
+     grib_accessor* a = nullptr;
+ 
