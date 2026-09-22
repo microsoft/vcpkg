@@ -4,10 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 e6f7b5782a43a91783607549e4d0f0a9cbd46dfb67a602f81aaffc7bcdd8f450fe9c225f0bc314704f2923e396f0df5b03ea91af4a7887203c0b8372bc2749d0
+    SHA512 df13189eaf9d746341419f8067ada4ff0a44b4f09d2ed58c993eed8e1ada6c76d4318cc2bc63feaeb6e606804d567758b6eee4f620e05e23f92055d8141cce90
     PATCHES
         fix-cmakelists.patch
-        fix-pr-7390.patch # part of https://github.com/onnx/onnx PR 7390
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
@@ -52,31 +51,35 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     # the others are empty
+    "${CURRENT_PACKAGES_DIR}/include/onnx/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/include/onnx/backend"
     "${CURRENT_PACKAGES_DIR}/include/onnx/bin"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/controlflow"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/generator"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/common/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/controlflow/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/generator/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/image"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/logical"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/math"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/nn"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/math/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/nn/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/object_detection"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/optional"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/optional/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/preview"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/quantization"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/reduction"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/reduction/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/rnn"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/sequence"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/sequence/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/tensor/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/text"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/traditionalml"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/traditionalml/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/include/onnx/defs/training"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/examples"
     "${CURRENT_PACKAGES_DIR}/include/onnx/frontend"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/fuzz"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/inliner/CMakeFiles"
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_cpp2py_export"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/test"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/tools"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_ml"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_data"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml"
-    "${CURRENT_PACKAGES_DIR}/include/onnx/reference/ops"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/shape_inference/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/tools"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/adapters/CMakeFiles"
 )
