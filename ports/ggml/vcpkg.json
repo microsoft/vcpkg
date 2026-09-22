@@ -57,6 +57,11 @@
           ]
         },
         {
+          "name": "glslang",
+          "host": true,
+          "version>=": "15.3.0"
+        },
+        {
           "name": "shaderc",
           "host": true
         },
