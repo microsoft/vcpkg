@@ -1,0 +1,7 @@
+The package kurlyk provides the CMake target:
+
+    find_package(kurlyk CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE kurlyk::kurlyk)
+
+The package requires C++11 or later. Its HTTP and WebSocket transports use the
+vcpkg-provided curl, OpenSSL, and Asio dependencies.
