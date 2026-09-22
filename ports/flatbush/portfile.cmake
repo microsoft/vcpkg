@@ -19,7 +19,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/include/flatbush.h"
     "#define FLATBUSH_FLATBUSH_H"
-    "#define FLATBUSH_FLATBUSH_H\n\n#define FLATBUSH_SPAN"
+    "#define FLATBUSH_FLATBUSH_H\n\n#ifndef FLATBUSH_SPAN\n#define FLATBUSH_SPAN\n#endif"
 )
 
 vcpkg_download_distfile(
