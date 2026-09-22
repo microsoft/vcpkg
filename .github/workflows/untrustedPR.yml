@@ -47,6 +47,9 @@ jobs:
           while IFS= read -r changed_path; do
             git grep -In $'\r$' -- "$changed_path" ':(exclude,glob)**/*.diff' ':(exclude,glob)**/*.patch' || true
           done < .github-pr.changed-crlf-paths | awk -F: '!seen[$1]++ { print $1 ":" $2 }' | sort -u > .github-pr.crlf-lines
+          while IFS= read -r changed_path; do
+            git grep -InE $'[ \t]+(\r)?$' -- "$changed_path" ':(exclude,glob)**/*.diff' ':(exclude,glob)**/*.patch' || true
+          done < .github-pr.changed-crlf-paths | awk -F: '!seen[$1 FS $2]++ { print $1 ":" $2 }' | sort -u > .github-pr.trailing-whitespace-lines
 
           git diff --name-status --merge-base HEAD^ HEAD --diff-filter=MAR -- '*portfile.cmake' | sed 's/[MAR]\t*//' > .github-pr.changed-portfiles
           if [ -s .github-pr.changed-portfiles ]; then (grep -n -H -E '(vcpkg_apply_patches|vcpkg_build_msbuild|vcpkg_extract_source_archive_ex)' $(cat .github-pr.changed-portfiles) || true) > .github-pr.deprecated-function; else touch .github-pr.deprecated-function; fi
@@ -119,35 +122,40 @@ jobs:
             const deprecated_cmake = (await fs.readFile('.github-pr.deprecated-cmake', 'utf8')).split('\n').filter(s => s.length > 0)
             const missing_license = (await fs.readFile('.github-pr.missing-license', 'utf8')).trim()
             const deprecated_license = (await fs.readFile('.github-pr.deprecated-license', 'utf8')).split('\n').filter(s => s.length > 0)
-            const crlf_lines = (await fs.readFile('.github-pr.crlf-lines', 'utf8')).split('\n').filter(s => s.length > 0).map(location => {
+            const parse_locations = contents => contents.split('\n').filter(s => s.length > 0).map(location => {
               const separatorIndex = location.lastIndexOf(':');
               return {file: location.slice(0, separatorIndex), line: Number(location.slice(separatorIndex + 1))};
             })
+            const crlf_lines = parse_locations(await fs.readFile('.github-pr.crlf-lines', 'utf8'))
+            const trailing_whitespace_lines = parse_locations(await fs.readFile('.github-pr.trailing-whitespace-lines', 'utf8'))
 
             let approve = true;
-            if (crlf_lines.length > 0) {
-              const crlf_files = crlf_lines.map(({file}) => file);
-              const fix_crlf = 'To fix this in VS Code, click "CRLF" in the status bar, select "LF", and save the file.';
+            if (crlf_lines.length > 0 || trailing_whitespace_lines.length > 0) {
+              const whitespace_files = [...new Set([...crlf_lines, ...trailing_whitespace_lines].map(({file}) => file))];
+              const fix_whitespace = 'The commands in the workflow summary fix both problems and are safe to run if a file has only one of them.';
               const quote_bash = value => `'${value.replaceAll("'", "'\"'\"'")}'`;
               const quote_powershell = value => "'" + value.replaceAll("'", "''") + "'";
-              const bash_fix = `dos2unix -- ${crlf_files.map(quote_bash).join(' ')}`;
-              const powershell_fix = '@(' + crlf_files.map(quote_powershell).join(', ') + ') | ForEach-Object {\n    [IO.File]::WriteAllText($_, [IO.File]::ReadAllText($_).Replace("`r`n", "`n"))\n}';
-              core.error(`Non-patch files associated with this change must use LF line endings. ${fix_crlf} Copy-pasteable terminal commands are in the workflow summary.`);
-              core.summary.addHeading('Incorrect line endings', 3);
-              core.summary.addRaw('Non-patch files associated with this change must use LF line endings:');
+              const bash_fix = `sh ./.github/scripts/fix-whitespace.sh ${whitespace_files.map(quote_bash).join(' ')}`;
+              const powershell_fix = '@(' + whitespace_files.map(quote_powershell).join(', ') + ') | ForEach-Object {\n    [IO.File]::WriteAllText($_, [Text.RegularExpressions.Regex]::Replace([IO.File]::ReadAllText($_), "[ \\t]+(?=\\r?$)|\\r$", "", "Multiline"))\n}';
+              core.error(`Non-patch files associated with this change must use LF line endings and must not contain trailing whitespace. ${fix_whitespace}`);
+              core.summary.addHeading('Incorrect whitespace', 3);
+              core.summary.addRaw('These non-patch files must use LF line endings and must not contain trailing whitespace:');
               core.summary.addEOL();
-              core.summary.addList(crlf_files);
-              core.summary.addRaw(fix_crlf);
+              core.summary.addList(whitespace_files);
+              core.summary.addRaw(fix_whitespace);
               core.summary.addEOL();
               core.summary.addEOL();
-              core.summary.addRaw('Alternately, you can fix by running the following bash on a machine with dos2unix installed:');
+              core.summary.addRaw('Fix both problems by running the following command from the repository root on Linux or macOS:');
               core.summary.addEOL();
               core.summary.addCodeBlock(bash_fix, 'bash');
-              core.summary.addRaw('Alternately, you can fix by running the following PowerShell block:');
+              core.summary.addRaw('Alternately, fix both problems by running the following PowerShell block:');
               core.summary.addEOL();
               core.summary.addCodeBlock(powershell_fix, 'powershell');
               for (const {file, line} of crlf_lines) {
-                core.error(`This file contains CRLF line endings. ${fix_crlf} Copy-pasteable terminal commands are in the workflow summary.`, {file, startLine: line});
+                core.error(`This file contains CRLF line endings. ${fix_whitespace}`, {file, startLine: line});
+              }
+              for (const {file, line} of trailing_whitespace_lines) {
+                core.error(`This line contains trailing whitespace. ${fix_whitespace}`, {file, startLine: line});
               }
               approve = false;
             }
