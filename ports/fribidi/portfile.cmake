@@ -50,4 +50,7 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${CMAKE_CURRENT_LIST_DIR}/Unicode-license.txt"
+)
