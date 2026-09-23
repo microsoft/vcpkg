@@ -136,6 +136,10 @@
       "baseline": "4.3.27",
       "port-version": 0
     },
+    "amsozzer1-plusweb": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "anari": {
       "baseline": "0.15.0",
       "port-version": 0
