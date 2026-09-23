@@ -41,7 +41,7 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 `index.md` must include:
 
 1. Coverage summary, including how many PRs were reviewed, skipped, or failed.
-2. PRs grouped by the shared guide's verdicts: `approve`, `approve-with-notes`, `request-changes`, and `unknown`.
+2. PRs grouped by the shared guide's verdicts: `approve`, `approve-with-notes`, `request-changes`, and `unknown`, with relative links to their reports.
 3. Competing PRs grouped only by the specific modified ports they share.
 4. PRs with no touched `ports/<portname>/` entries.
 5. PRs that failed to review, with a short reason instead of silently omitting them.
@@ -51,7 +51,7 @@ description: Review open non-draft microsoft/vcpkg pull requests updated in the 
 Write only final deliverables under the fixed `reviews-root`, not under `investigation-root`:
 
 1. `index.md` at `reviews-root`.
-2. `report.md` in each worker's `{{REPORT_DIR}}`, with contents defined by the shared guide.
+2. `report.md` in each worker's `{{REPORT_DIR}}`, including the guide's self-contained `## Fix handoff` for use without this session's chat history.
 3. `patches/*.patch` in each worker's `{{REPORT_DIR}}` -- only for `examples-and-patches`; omit if no patches were produced and explain any unpatched issues in the report.
 
 Do not stop until the index and every reviewed PR's report exist at these absolute destinations and are complete.

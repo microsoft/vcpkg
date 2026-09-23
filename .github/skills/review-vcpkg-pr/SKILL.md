@@ -30,7 +30,7 @@ If `VCPKG_DOWNLOADS` is already nonempty, preserve it for all review commands an
 
 Write only final deliverables in `{{REPORT_DIR}}`, not under `investigation-root`. The shared guide defines their contents:
 
-1. `report.md`
+1. `report.md`, including the guide's self-contained `## Fix handoff` for use without this session's chat history.
 2. `patches/*.patch` -- only for `examples-and-patches`; omit if no patches were produced and explain any unpatched issues in the report.
 
 Do not stop until `report.md` exists in `{{REPORT_DIR}}` and is complete.

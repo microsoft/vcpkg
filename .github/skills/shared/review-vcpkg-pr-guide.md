@@ -21,6 +21,21 @@ Use verdict `approve`, `approve-with-notes`, `request-changes`, or `unknown`.
 1. Start with a brief `## Summary` containing the verdict and its justification.
 2. For `approve-with-notes` or `request-changes`, immediately follow with the concise `## Contributor Feedback` defined below.
 3. Follow with any findings, evidence, experiments, and detail needed. This thorough portion has no fixed template.
+4. Include the self-contained `## Fix handoff` defined below so a later session can act without chat history.
+
+### Fix handoff
+
+Record the following at every review depth; link to sections of this report rather than duplicating evidence:
+
+- **Revision:** PR URL, contributor repository and branch, reviewed head SHA, target branch and comparison SHA, affected ports, and `review-depth`.
+- **Workspace:** Absolute worktree and investigation paths, actual checked-out SHA, and any review-created commits or uncommitted changes. Identify retained sources, builds, installs, examples, and patches; distinguish the original PR from experimental fixes.
+- **Findings:** Give each issue a stable identifier such as `F1`. Record blocking/non-blocking status, introduced/pre-existing/unknown classification, evidence, required outcome, and any agreed scope exclusions. Distinguish confirmed causes from hypotheses and optional implementation suggestions.
+- **Validation:** Record exact commands and working directories, triplets, features, configurations, relevant toolchain versions and non-secret settings, expected versus observed results, and what was not tested. Include decisive error excerpts or CI permalinks, not just local log paths. For custom reproducers, include the minimal source/build recipe or exact reconstruction instructions so missing local artifacts do not require rediscovering the issue.
+- **Next steps:** Map remaining fixes and validation to finding IDs. Identify existing patch files and their validation status, unsuccessful approaches worth avoiding, and unresolved questions.
+
+Do not run extra examples merely to fill this section; record absent evidence explicitly. Essential findings and reproduction details must survive loss of the original session or workspace. Before finishing, check that all handoff paths and references are accurate and that no required information exists only in chat or subagent output.
+
+## Review criteria
 
 The report considers the following in particular:
 
@@ -105,7 +120,7 @@ For Azure CI logs, prefer `.github/skills/shared/Get-VcpkgAzureFailureLogs.ps1`;
 # Output
 
 Write all and ONLY final deliverables in the supplied absolute `{{REPORT_DIR}}`, regardless of the current workspace:
-1. `report.md`: a thorough human-readable review, including patch validation and reasons for any unpatched issues when `review-depth = examples-and-patches`.
+1. `report.md`: a thorough human-readable review with `## Fix handoff`, including patch validation and reasons for any unpatched issues when `review-depth = examples-and-patches`.
 2. `patches/*.patch`: focused, validated `git format-patch` files, only for `examples-and-patches`. Omit when no patches were produced.
 
 Use exactly one of these verdict values: approve, approve-with-notes, request-changes, or unknown.
