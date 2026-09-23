@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 658e008d0df68d1eea95583d0619665aaa28af9169508e5487d8f25cb964a9edd8da6e4f404eb84e08fb3eee7b1fc48e4b97d5b05ad1ff6f1edf34c3a9ac9415
     HEAD_REF master
+    PATCHES
+        define-boost-thread-version.patch
 )
 
 vcpkg_check_features(
