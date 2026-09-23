@@ -3,7 +3,6 @@
   "version-string": "ci",
   "description": "Ensures that the CMake scripts are unit tested.",
   "license": "MIT",
-  "supports": "x64",
   "default-features": [
     "backup-restore-env-vars",
     "execute-required-process",

@@ -27,13 +27,13 @@ vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_find_acquire_program(SCONS)
-vcpkg_find_acquire_program(YASM)
 
 if(NOT VCPKG_HOST_IS_OSX)
     vcpkg_find_acquire_program(DOXYGEN)
     vcpkg_find_acquire_program(MESON) # System python too old (3.9; meson needs 3.10)
     vcpkg_find_acquire_program(RUBY)
     vcpkg_find_acquire_program(SWIG)
+    vcpkg_find_acquire_program(YASM)  # Not provided for arm64
 endif()
 
 if(VCPKG_HOST_IS_LINUX)
@@ -73,7 +73,7 @@ endif()
 
 # The postcondition of `vcpkg_find_acquire_program` is that there is a regular
 # variable of the requested name with a non-false value in the calling scope.
-# 
+#
 # Normally, it searches for the requested program and sets a regular variable
 # in the calling scope. However, it does nothing if a variable with that name
 # is already set to a value which CMake regards as true.

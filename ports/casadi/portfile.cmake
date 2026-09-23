@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO casadi/casadi
     REF "${VERSION}"
-    SHA512 ebd1d91f18b29620c8898fd014e35eefce2d621f9a698a14454b478cded78087bffa3651d808908a16ed8864571c7ddae99e387e53cb79a451ca60a8d690c8bb
+    SHA512 4750d2e9c7eda630bae02a8b8adb074a6e7ce361fd2a83425e3ac215a1446e90316ddfb0d4e3c1ecf3264c441833749c5bb8c6cecb96f1fd7b283b7dfdcc6a4f
     HEAD_REF main
 )
 
@@ -28,6 +28,12 @@ vcpkg_cmake_configure(
      -DENABLE_SHARED=${ENABLE_SHARED}
      -DWITH_DEEPBIND=${WITH_DEEPBIND}
      -DWITH_SELFCONTAINED=OFF
+     # CasADi compiles the vendored FMI standard headers (BSD-2-Clause) into the
+     # core library by default. They are not available as a separate package, so
+     # disable FMI import rather than redistribute third-party code from this port.
+     -DWITH_FMI2=OFF
+     -DWITH_FMI3=OFF
+     -DWITH_EXAMPLES=OFF
      -DWITH_TINYXML=OFF
      -DWITH_BUILD_TINYXML=OFF
      -DWITH_QPOASES=OFF
@@ -46,8 +52,6 @@ vcpkg_cmake_config_fixup()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 vcpkg_fixup_pkgconfig()
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_tools(TOOL_NAMES casadi-cli AUTO_CLEAN)

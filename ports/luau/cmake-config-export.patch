@@ -107,7 +107,7 @@ index bfbda9a..4ccd3bd 100644
 +)
 +
 +install(
-+  TARGETS Luau.Common Luau.Ast Luau.Bytecode Luau.Inliner Luau.Compiler Luau.Config Luau.Analysis Luau.VM Luau.CLI.lib Luau.Require
++  TARGETS Luau.Common Luau.Ast Luau.Bytecode Luau.Inliner Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.VM Luau.CLI.lib Luau.Require
 +  EXPORT unofficial-luau-targets
 +  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 +  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"

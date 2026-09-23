@@ -176,7 +176,7 @@ function Main {
 
     if ($stalePrs.Count -eq 0) {
         Write-ReportLine -Text "No open PRs with no activity for $Age days or more found in $resolvedRepo." -ReportLines $reportLines
-        
+
         if ($OutputFile) {
             $directory = Split-Path -Path $OutputFile -Parent
             if ($directory -and -not (Test-Path -LiteralPath $directory -PathType Container)) {

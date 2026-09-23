@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-s3
     REF "v${VERSION}"
-    SHA512 0a28013378acab14e7dee20fe491492924525ab158fb9b0b5fafbee642493aef0d07253bac61be749c5efe8c902c44bb28ce0c3cda83417baf0f504723b9c6b5
+    SHA512 5017710d2ab4177c3e0b7d913e45cc116099d627a260a8428edff5a63c8896b8fe911ef76a4cfa0731c945940b4d0b1aea6ed92361728fbcb01ee0594dcc7cf0
     HEAD_REF main
 )
 
@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common/modules" # use extra cmake files
         -DBUILD_TESTING=FALSE
         ${FEATURE_OPTIONS}
 )

@@ -1,6 +1,7 @@
 {
   "name": "libsystemd",
   "version": "260.2",
+  "port-version": 1,
   "description": "System and Service Manager",
   "homepage": "https://github.com/systemd/systemd",
   "license": null,

@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 34adaf10d8a4b69740acc6ac9db9564483cbe6e3226a2adec3692b0b8432aa086a5158bae1eafd1a621f1566f462eb1352bc323672f93eacb8d26ee2f03052d4
+    SHA512 7a129b275c78aa6edcb00095aabf85aefb6e726f95742dc15c4b2c32d51f0baa71c22c1f50641b2a0dadde111d6d93aff615829d2387aac22b49720a5c971361
     HEAD_REF master
     PATCHES
         fix-always-nanosvg.diff
         fix-heif.patch
         fix-include-directory.patch
+        fix-video-zlib-and-linking.patch
 )
 
 # Enable selected codecs
@@ -54,6 +55,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DSAIL_COMBINE_CODECS=ON
         -DSAIL_ENABLE_OPENMP=${SAIL_ENABLE_OPENMP}
+        -DSAIL_MANIP_USE_SWSCALE=ON
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
@@ -87,8 +89,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 
-# Fix pkg-config files
-vcpkg_fixup_pkgconfig()
+# Remove pkg-config files
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 # Unused because SAIL_COMBINE_CODECS is ON, removes an absolute path from the output
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH [^\r\n]+[\r\n]*" "" REGEX)

@@ -15,9 +15,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDAB/KDDockWidgets
-    REF "v${VERSION}" 
-    SHA512 1e220c5cf608c5bb9242b530eb1e45a15dae462b126c12d253483a1213e72374baa75943d8734c5dc79e34b03b480d1a87cd59cb945996abc0ab20b5d649a5cb
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 578b7809e6b080be64c8b0b5e0aa1a68dca8118825cfd900a1edf1b179f30a939f8931729a529df65b56cc7a4cf1c59241ea806b87f880101bd74a40f0487f53
+    HEAD_REF main
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/src/3rdparty"
@@ -55,8 +55,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE.txt"

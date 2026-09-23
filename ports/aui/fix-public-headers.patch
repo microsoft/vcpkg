@@ -1,0 +1,141 @@
+diff --git a/aui.core/src/AUI/api.h b/aui.core/src/AUI/api.h
+index 7be8bd6..5aae23d 100644
+--- a/aui.core/src/AUI/api.h
++++ b/aui.core/src/AUI/api.h
+@@ -11,6 +11,84 @@
+ 
+ #pragma once
+ 
++#if !defined(AUI_PLATFORM_WIN) && !defined(AUI_PLATFORM_LINUX) && !defined(AUI_PLATFORM_APPLE) && !defined(AUI_PLATFORM_ANDROID) && !defined(AUI_PLATFORM_EMSCRIPTEN)
++    #if defined(_WIN32)
++        #define AUI_PLATFORM_WIN 1
++    #elif defined(__ANDROID__)
++        #define AUI_PLATFORM_ANDROID 1
++        #define AUI_PLATFORM_UNIX 1
++    #elif defined(__APPLE__)
++        #define AUI_PLATFORM_APPLE 1
++        #define AUI_PLATFORM_UNIX 1
++        #include <TargetConditionals.h>
++        #if TARGET_OS_IPHONE
++            #define AUI_PLATFORM_IOS 1
++        #else
++            #define AUI_PLATFORM_MACOS 1
++        #endif
++    #elif defined(__EMSCRIPTEN__)
++        #define AUI_PLATFORM_EMSCRIPTEN 1
++    #elif defined(__linux__)
++        #define AUI_PLATFORM_LINUX 1
++        #define AUI_PLATFORM_UNIX 1
++    #elif defined(__unix__)
++        #define AUI_PLATFORM_UNIX 1
++    #endif
++#endif
++#ifndef AUI_PLATFORM_WIN
++    #define AUI_PLATFORM_WIN 0
++#endif
++#ifndef AUI_PLATFORM_LINUX
++    #define AUI_PLATFORM_LINUX 0
++#endif
++#ifndef AUI_PLATFORM_APPLE
++    #define AUI_PLATFORM_APPLE 0
++#endif
++#ifndef AUI_PLATFORM_MACOS
++    #define AUI_PLATFORM_MACOS 0
++#endif
++#ifndef AUI_PLATFORM_IOS
++    #define AUI_PLATFORM_IOS 0
++#endif
++#ifndef AUI_PLATFORM_ANDROID
++    #define AUI_PLATFORM_ANDROID 0
++#endif
++#ifndef AUI_PLATFORM_EMSCRIPTEN
++    #define AUI_PLATFORM_EMSCRIPTEN 0
++#endif
++#ifndef AUI_PLATFORM_UNIX
++    #define AUI_PLATFORM_UNIX 0
++#endif
++#if !defined(AUI_ARCH_X86) && !defined(AUI_ARCH_X86_64) && !defined(AUI_ARCH_ARM_V7) && !defined(AUI_ARCH_ARM_64)
++    #if defined(__x86_64__) || defined(_M_X64) || defined(__amd64__)
++        #define AUI_ARCH_X86_64 1
++    #elif defined(__i386__) || defined(_M_IX86)
++        #define AUI_ARCH_X86 1
++    #elif defined(__aarch64__) || defined(_M_ARM64) || defined(_M_ARM64EC)
++        #define AUI_ARCH_ARM_64 1
++    #elif defined(__arm__) || defined(_M_ARM)
++        #define AUI_ARCH_ARM_V7 1
++    #endif
++#endif
++#ifndef AUI_ARCH_X86
++    #define AUI_ARCH_X86 0
++#endif
++#ifndef AUI_ARCH_X86_64
++    #define AUI_ARCH_X86_64 0
++#endif
++#ifndef AUI_ARCH_ARM_V7
++    #define AUI_ARCH_ARM_V7 0
++#endif
++#ifndef AUI_ARCH_ARM_64
++    #define AUI_ARCH_ARM_64 0
++#endif
++#ifndef AUI_DEBUG
++    #if defined(NDEBUG)
++        #define AUI_DEBUG 0
++    #else
++        #define AUI_DEBUG 1
++    #endif
++#endif
+ #ifdef AUI_STATIC
+     #define AUI_IMPORT
+     #define AUI_EXPORT
+@@ -23,6 +101,51 @@
+         #define AUI_EXPORT __attribute__((visibility("default")))
+     #endif
+ #endif
++#ifndef API_AUI_CORE
++#define API_AUI_CORE AUI_IMPORT
++#endif
++#ifndef API_AUI_VIEWS
++#define API_AUI_VIEWS AUI_IMPORT
++#endif
++#ifndef API_AUI_AUDIO
++#define API_AUI_AUDIO AUI_IMPORT
++#endif
++#ifndef API_AUI_CRYPT
++#define API_AUI_CRYPT AUI_IMPORT
++#endif
++#ifndef API_AUI_CURL
++#define API_AUI_CURL AUI_IMPORT
++#endif
++#ifndef API_AUI_DATA
++#define API_AUI_DATA AUI_IMPORT
++#endif
++#ifndef API_AUI_IMAGE
++#define API_AUI_IMAGE AUI_IMPORT
++#endif
++#ifndef API_AUI_JSON
++#define API_AUI_JSON AUI_IMPORT
++#endif
++#ifndef API_AUI_MYSQL
++#define API_AUI_MYSQL AUI_IMPORT
++#endif
++#ifndef API_AUI_NETWORK
++#define API_AUI_NETWORK AUI_IMPORT
++#endif
++#ifndef API_AUI_SQLITE
++#define API_AUI_SQLITE AUI_IMPORT
++#endif
++#ifndef API_AUI_UITESTS
++#define API_AUI_UITESTS AUI_IMPORT
++#endif
++#ifndef API_AUI_UPDATER
++#define API_AUI_UPDATER AUI_IMPORT
++#endif
++#ifndef API_AUI_XML
++#define API_AUI_XML AUI_IMPORT
++#endif
++#ifndef GLM_ENABLE_EXPERIMENTAL
++#define GLM_ENABLE_EXPERIMENTAL 1
++#endif
+ 
+ 
+ #if !__cpp_rtti

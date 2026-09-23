@@ -28,7 +28,21 @@ $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
 $TotalProgress = 17
-$CurrentProgress = 1
+$CurrentProgress = 0
+
+function Start-ImageProgress {
+  param([string]$Status)
+
+  Write-Progress `
+    -Activity $ProgressActivity `
+    -Status $Status `
+    -PercentComplete (100 / $TotalProgress * $script:CurrentProgress)
+  $script:CurrentProgress++
+}
+
+function Complete-ImageProgress {
+  Write-Progress -Activity $ProgressActivity -Completed
+}
 
 # Assigning this to another variable helps when running the commands in this script manually for
 # debugging
@@ -105,10 +119,7 @@ $PrototypeVmIdentity = Get-AzUserAssignedIdentity `
   -Name 'prototype-vm'
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Creating prototype VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Creating prototype VM'
 
 $NicName = $Prefix + 'NIC'
 $Nic = New-AzNetworkInterface `
@@ -148,15 +159,13 @@ New-AzVm `
 
 $VMCreated = Get-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 $VMCreatedOsDisk = $VMCreated.StorageProfile.OsDisk.Name
+Complete-ImageProgress
 
 ####################################################################################################
 function Invoke-ScriptWithPrefix {
   param([string]$ScriptName)
 
-  Write-Progress `
-    -Activity $ProgressActivity `
-    -Status "Running provisioning script $ScriptName in VM" `
-    -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+  Start-ImageProgress -Status "Running provisioning script $ScriptName in VM"
 
   $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding ascii -Raw
   $UtilityPrefixContent += "`n`$UseManagedIdentity = `$true`n"
@@ -177,11 +186,12 @@ if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
       -VMName $ProtoVMName `
       -CommandId 'RunPowerShellScript' `
       -ScriptPath $tempScriptFilename
-
-    Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
   } finally {
+    Complete-ImageProgress
     Remove-Item -LiteralPath $tempScriptFilename -Force
   }
+
+  Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
 }
 
 ####################################################################################################
@@ -225,18 +235,13 @@ Restart-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 Invoke-ScriptWithPrefix -ScriptName 'sysprep.ps1'
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Waiting for VM to shut down' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Waiting for VM to shut down'
 
 Wait-Shutdown -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
+Complete-ImageProgress
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Converting VM to Image' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Converting VM to Image'
 
 Stop-AzVM `
   -ResourceGroupName 'vcpkg-image-minting' `
@@ -262,19 +267,17 @@ New-AzGalleryImageVersion `
   -StorageAccountType 'Premium_LRS' `
   -PublishingProfileExcludeFromLatest `
   -TargetRegion @($westus3Location, $westusLocation)
+Complete-ImageProgress
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Deleting unused temporary resources' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Deleting unused temporary resources'
 
 Remove-AzVM -Id $VMCreated.ID -Force
 Remove-AzDisk -ResourceGroupName 'vcpkg-image-minting' -Name $VMCreatedOsDisk -Force
 Remove-AzNetworkInterface -ResourceGroupName 'vcpkg-image-minting' -Name $NicName -Force
 
 ####################################################################################################
-Write-Progress -Activity $ProgressActivity -Completed
+Complete-ImageProgress
 Write-Host "Generated Image:  $GalleryImageVersion"
 Write-Host 'Finished!'
 
