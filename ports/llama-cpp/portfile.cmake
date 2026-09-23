@@ -81,4 +81,17 @@ vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
 set(gguf-py-license "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gguf-py LICENSE")
 file(COPY_FILE "${SOURCE_PATH}/gguf-py/LICENSE" "${gguf-py-license}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${gguf-py-license}")
+set(copyright_files
+    "${SOURCE_PATH}/LICENSE"
+    "${gguf-py-license}"
+    "${SOURCE_PATH}/vendor/sheredom/subprocess.h"
+)
+if("tools" IN_LIST FEATURES)
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/vendor/hash/xxhash/LICENSE"
+        "${SOURCE_PATH}/vendor/hash/sha1/sha1.h"
+        "${SOURCE_PATH}/vendor/hash/sha256/sha256.h"
+        "${SOURCE_PATH}/vendor/hash/rotate-bits/LICENSE.md"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})

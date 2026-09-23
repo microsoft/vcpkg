@@ -3,7 +3,7 @@
   "version-semver": "0.4.1",
   "description": "LLM inference in C/C++",
   "homepage": "https://github.com/ggml-org/llama.cpp",
-  "license": "MIT",
+  "license": "MIT AND Unlicense",
   "dependencies": [
     {
       "name": "cpp-httplib",
@@ -46,6 +46,7 @@
     },
     "tools": {
       "description": "Build tools",
+      "license": "BSD-2-Clause AND MIT AND LicenseRef-Public-Domain",
       "dependencies": [
         "miniaudio",
         "stb"
