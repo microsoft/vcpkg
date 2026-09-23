@@ -1,8 +1,8 @@
 diff --git a/ctx.h b/ctx.h
-index 6a1e7afc1a..1d6bcab2a9 100644
+index 89cda84..1b8a774 100644
 --- a/ctx.h
 +++ b/ctx.h
-@@ -54,9 +54,27 @@ extern "C" {
+@@ -55,6 +55,27 @@ extern "C" {
  #include <alloca.h>
  #else
  #include <malloc.h>
@@ -23,31 +23,38 @@ index 6a1e7afc1a..1d6bcab2a9 100644
 +#ifndef strncasecmp
 +#define strncasecmp _strnicmp
 +#endif
++#ifndef S_ISDIR
++#define S_ISDIR(mode) (((mode) & _S_IFMT) == _S_IFDIR)
++#endif
 +#endif
  #endif
  #include <stdio.h>
  
- #ifdef _MSC_VER
- #define WIN32_LEAN_AND_MEAN
- #include <windows.h>
-@@ -4466,11 +4484,15 @@ extern float ctx_target_fps;
+@@ -4150,8 +4171,12 @@ extern float ctx_target_fps;
+ 
+ 
+ #ifndef CTX_EVENTS
++#ifdef _WIN32
++#define CTX_EVENTS              0
++#else
+ #define CTX_EVENTS              1
+ #endif
++#endif
+ 
+ #ifndef CTX_MAX_DEVICES
+ #define CTX_MAX_DEVICES 16
+@@ -4467,9 +4492,7 @@ extern float ctx_target_fps;
  #endif
  
  #if CTX_SDL || CTX_FB || CTX_HEADLESS
 -#if CTX_EVENTS
-+#ifdef CTX_EVENTS
  #undef CTX_EVENTS
- #endif
+-#endif
  #define CTX_EVENTS 1
  #endif
-+#ifdef _WIN32
-+#undef CTX_EVENTS
-+#define CTX_EVENTS 0
-+#endif
  
- 
- 
-@@ -22980,6 +22998,6 @@ CTX_SIMD_SUFFIX (ctx_composite_fill_rect) (CtxRasterizer *rasterizer,
+@@ -22979,7 +23002,7 @@ CTX_SIMD_SUFFIX (ctx_composite_fill_rect) (CtxRasterizer *rasterizer,
+   if ((width >0) & (height>0))
    {
       uint8_t *dst = ( (uint8_t *) rasterizer->buf);
 -     uint8_t coverage[width+2];
@@ -56,11 +63,10 @@ index 6a1e7afc1a..1d6bcab2a9 100644
       uint32_t x1i = (int)x1-has_right;
       uint32_t y0i = (int)y0+has_top;
 diff --git a/ctx_config.h b/ctx_config.h
-index 8f720f0836..71ea0ee85d 100644
+index 999e826..fd9a143 100644
 --- a/ctx_config.h
 +++ b/ctx_config.h
-@@ -3,8 +3,14 @@
- 
+@@ -4,7 +4,13 @@
  #include "local.conf"
  
  #define CTX_MIPMAP               1
@@ -74,7 +80,7 @@ index 8f720f0836..71ea0ee85d 100644
  
  
  #define CTX_CURRENT_PATH         1
-@@ -45,6 +51,8 @@
+@@ -45,7 +51,9 @@
  #define CTX_GET_CONTENTS         1
  #define CTX_MAGIC                1
  #define CTX_PROTOCOL_U8_COLOR    1
@@ -83,3 +89,4 @@ index 8f720f0836..71ea0ee85d 100644
 +#endif
  
  #ifdef CTX_WANT_FONT
+ 

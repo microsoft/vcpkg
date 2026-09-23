@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-msvc-loose-includes.patch
         fix-ctx-msvc.patch
+        fix-sdl-backend-windows.patch
 )
 
 file(COPY
