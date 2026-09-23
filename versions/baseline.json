@@ -3145,7 +3145,7 @@
       "port-version": 0
     },
     "flatcc": {
-      "baseline": "0.6.3",
+      "baseline": "0.6.4",
       "port-version": 0
     },
     "flecs": {
