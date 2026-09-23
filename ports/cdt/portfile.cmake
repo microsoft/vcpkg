@@ -32,5 +32,6 @@ endif()
 
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/CDT/include/portable_nth_element.hpp"
     "${SOURCE_PATH}/CDT/include/predicates.h"
 )
