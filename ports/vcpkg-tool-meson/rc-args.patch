@@ -1,0 +1,54 @@
+diff --git a/mesonbuild/scripts/rc.py b/mesonbuild/scripts/rc.py
+index 877425c..851af18 100644
+--- a/mesonbuild/scripts/rc.py
++++ b/mesonbuild/scripts/rc.py
+@@ -4,28 +4,37 @@
+ 
+ from __future__ import annotations
+ 
+-import argparse
+ import subprocess
+ import sys
+ import typing as T
+ 
+ 
+-parser = argparse.ArgumentParser()
+-parser.add_argument('--rc', nargs='+', required=True)
+-parser.add_argument('--cl', nargs='+', required=True)
+-parser.add_argument('--Xarg', action='append')
+-
+-
+ def run(args: T.List[str]) -> int:
+-    options, rc_args = parser.parse_known_args(args)
+-    target = rc_args[-1] if rc_args else None
++    # argparse cannot be used: --rc and --cl are each an executable followed by
++    # its own arguments, and those arguments may start with '-' (e.g. '-MP' from
++    # a compiler command embedded in a machine file). argparse would treat such
++    # tokens as unknown options and misattribute them to the resource compiler.
++    rc: T.List[str] = []
++    cl: T.List[str] = []
++    xargs: T.List[str] = []
++    rc_args: T.List[str] = []
++    current = rc_args
++    for arg in args:
++        if arg == '--rc':
++            current = rc
++        elif arg == '--cl':
++            current = cl
++        elif arg.startswith('--Xarg='):
++            xargs.append(arg[len('--Xarg='):])
++            current = rc_args
++        else:
++            current.append(arg)
+ 
+-    rc = options.rc
+-    cl = options.cl
++    target = rc_args[-1] if rc_args else None
+ 
+     # Use preprocessor to display include files
+     include_args = [a for a in rc_args if a.startswith(('/I', '-I'))]
+-    cmd = [*cl, *include_args, *options.Xarg]
++    cmd = [*cl, *include_args, *xargs]
+     if target:
+         cmd += [target]
+     result = subprocess.call(cmd, stdout=subprocess.DEVNULL)
