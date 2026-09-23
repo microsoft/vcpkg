@@ -1,9 +1,13 @@
 diff --git a/Makefile.am b/Makefile.am
-index 5af2e237a..e75fd1755 100644
---- a/Makefile.am	
+index 07a0e25..6327418 100644
+--- a/Makefile.am
 +++ b/Makefile.am
-@@ -159,14 +159,14 @@ endif
- EXTRA_DIST = src/builtins/buildfont README.md
+@@ -154,17 +154,17 @@ libXfont2_la_SOURCES +=			\
+ 	src/fc/fstrans.c
+ endif
+ 
+-EXTRA_DIST = src/builtins/buildfont README.md
++# EXTRA_DIST = src/builtins/buildfont README.md
  
  # Test utilities
 -EXTRA_DIST += test/utils/README
@@ -20,11 +24,28 @@ index 5af2e237a..e75fd1755 100644
 +# lsfontdir_SOURCES = test/utils/lsfontdir.c $(TEST_UTIL_SRCS)
 +# lsfontdir_LDADD = libXfont2.la $(LTLIBOBJS)
  
+ # Security regression tests
+ TESTS =
+@@ -248,11 +248,11 @@ clean-local:
+ 	-rmdir $(TEST_FONT_DIRS) test/data 2>/dev/null || true
+ endif HAVE_PYTHON
+ 
+-EXTRA_DIST += test/gen_evil_pcf_repad.py		\
+-	      test/gen_evil_pcf_props.py		\
+-	      test/gen_evil_pcf_bitmapscale.py	\
+-	      test/gen_evil_pcf_encoding.py	\
+-	      test/gen_evil_pcf_norepad.py
++# EXTRA_DIST += test/gen_evil_pcf_repad.py		\
++#	      test/gen_evil_pcf_props.py		\
++#	      test/gen_evil_pcf_bitmapscale.py	\
++#	      test/gen_evil_pcf_encoding.py	\
++#	      test/gen_evil_pcf_norepad.py
+ 
  
  MAINTAINERCLEANFILES = ChangeLog INSTALL
 diff --git a/include/X11/fonts/fontmisc.h b/include/X11/fonts/fontmisc.h
-index 06e49f5f0..6b68dfcb8 100644
---- a/include/X11/fonts/fontmisc.h	
+index 06e49f5..6b68dfc 100644
+--- a/include/X11/fonts/fontmisc.h
 +++ b/include/X11/fonts/fontmisc.h
 @@ -34,7 +34,9 @@ in this Software without prior written authorization from The Open Group.
  #include <X11/Xfuncs.h>

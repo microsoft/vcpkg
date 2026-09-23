@@ -3,12 +3,12 @@
 FROM ubuntu:noble-20260810
 
 ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
-ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20+8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.20_8.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.20_8.tar.gz
-ADD https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip /commandlinetools-linux-15859902_latest.zip
+ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1+1/OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
+ADD https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip /commandlinetools-linux-16111833_latest.zip
 ADD https://dl.google.com/android/repository/build-tools_r37_linux.zip /build-tools_r37_linux.zip
 ADD https://dl.google.com/android/repository/platform-36_r02.zip /platform-36_r02.zip
 ADD https://dl.google.com/android/repository/platform-tools_r37.0.1-linux.zip /platform-tools_r37.0.1-linux.zip
-ADD https://dl.google.com/android/repository/android-ndk-r29-linux.zip /android-ndk-r29-linux.zip
+ADD https://dl.google.com/android/repository/android-ndk-r30-linux.zip /android-ndk-r30-linux.zip
 
 # Add apt packages
 
@@ -70,12 +70,12 @@ apt-get -y dist-upgrade
 apt-get -y --no-install-recommends install $APT_PACKAGES
 
 # OpenJDK
-tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.20_8.tar.gz
-rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.20_8.tar.gz
+tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
+rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
 
 # Android SDK
-unzip -q commandlinetools-linux-15859902_latest.zip -d android-sdk
-rm commandlinetools-linux-15859902_latest.zip
+unzip -q commandlinetools-linux-16111833_latest.zip -d android-sdk
+rm commandlinetools-linux-16111833_latest.zip
 
 unzip -q build-tools_r37_linux.zip -d android-sdk/build-tools
 mv android-sdk/build-tools/android-37.0 android-sdk/build-tools/37.0.0
@@ -90,19 +90,19 @@ unzip -q platform-tools_r37.0.1-linux.zip -d android-sdk
 rm platform-tools_r37.0.1-linux.zip
 
 # JRE for sdk setup
-export JAVA_HOME=/jdk-17.0.20+8
+export JAVA_HOME=/jdk-17.0.20.1+1
 yes | /android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/android-sdk --licenses
 
 # Android NDK
-unzip -q /android-ndk-r29-linux.zip
-rm -f android-ndk-r29-linux.zip
+unzip -q /android-ndk-r30-linux.zip
+rm -f android-ndk-r30-linux.zip
 
 END_OF_SCRIPT
 
-ENV JAVA_HOME="/jdk-17.0.20+8"
+ENV JAVA_HOME="/jdk-17.0.20.1+1"
 
 ENV ANDROID_HOME="/android-sdk"
 
-ENV ANDROID_NDK_HOME="/android-ndk-r29"
+ENV ANDROID_NDK_HOME="/android-ndk-r30"
 
 WORKDIR /vcpkg

@@ -30,10 +30,10 @@ index 639515105..27ad3ee0e 100644
  
  #include <idlsysdep.h>
 diff --git a/src/tool/omniidl/cxx/dir.mk b/src/tool/omniidl/cxx/dir.mk
-index 84f10ac03..3b5a60b87 100644
+index 84f10ac..cd222d2 100644
 --- a/src/tool/omniidl/cxx/dir.mk
 +++ b/src/tool/omniidl/cxx/dir.mk
-@@ -190,13 +190,13 @@ ifdef Win32Platform
+@@ -190,14 +190,19 @@ ifdef Win32Platform
  
  DIR_CPPFLAGS += -DMSDOS -DOMNIIDL_EXECUTABLE
  
@@ -47,5 +47,11 @@ index 84f10ac03..3b5a60b87 100644
 -PYLIB     := python$(subst .,,$(PYVERSION)).lib
 +PYLIB     := python$(subst .,,$(PYVERSION)).lib advapi32.lib
  CXXLINKOPTIONS += $(patsubst %,-libpath:%,$(PYLIBDIR))
++ifdef BuildDebugBinary
++# Match the stack reserve of CPython's Windows Debug executable.
++# https://github.com/python/cpython/blob/823f0323ee6ec1402088b73bce1a38473cac36dc/PCbuild/python.vcxproj#L98-L100
++CXXLINKOPTIONS += -STACK:12000000
++endif
  endif
  
+ omniidl = $(patsubst %,$(BinPattern),omniidl)

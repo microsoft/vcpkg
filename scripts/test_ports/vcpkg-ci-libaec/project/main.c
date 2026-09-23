@@ -8,7 +8,7 @@ int main()
 
     unsigned char dest[64];
     int dest_lenth = 64;
-    
+
     struct aec_stream strm;
     strm.bits_per_sample = 32;
     strm.block_size = 16;

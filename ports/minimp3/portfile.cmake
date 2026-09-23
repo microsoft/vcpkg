@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lieff/minimp3
-    REF afb604c06bc8beb145fecd42c0ceb5bda8795144 # committed on 2021-11-30
-    SHA512 633da0b20982f6f22c87d872c69626b2939ffb4519339cd0c090d7538308007cf633c07af57020cd2332a75c6e7b9bf3ebd5bda1af59dc96a4f0e85ce1b3f751
+    REF ea99364f61c14656440e8d77e9c233ccf3124633 # committed on 2026-07-27
+    SHA512 f05e513ccc2b4111609800676efe618addf7cbb82a91e69c8a6e5599e5b49cfcb225050b33eec39211eac35e2060b94a48d15af4db72546cacc1dfc916362dbc
     HEAD_REF master
 )
 
 file(COPY "${SOURCE_PATH}/minimp3.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 file(COPY "${SOURCE_PATH}/minimp3_ex.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

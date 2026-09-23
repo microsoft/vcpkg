@@ -1,13 +1,32 @@
 diff --git a/configure.ac b/configure.ac
-index 7d274a5..3761020 100644
+index 7d274a5f71f2626b9dbce243c7ad4fdb8057321f..e65dad7e7adb66207383773eebdc45fc3ef9cca0 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -59,7 +59,7 @@ XTRANS_CONNECTION_FLAGS
+@@ -53,13 +53,13 @@ AM_CONDITIONAL(WITH_LIBUUID, test x"$HAVE_LIBUUID" = xyes)
+ # If UUID support is not found, fall back to using network addresses
+ # to generate client ids
+ AS_IF([test x"$HAVE_LIBUUID" != xyes && test x"$ac_cv_func_uuid_create" != xyes],
+-      [genid_module="xtrans"
++      [
+ # Needed to check for TCP & IPv6 support and set flags appropriately
+ XTRANS_CONNECTION_FLAGS
  AC_CHECK_FUNCS([getaddrinfo]) ])
  
  # Obtain compiler/linker options for dependencies
 -PKG_CHECK_MODULES(SM, [ice >= 1.1.0 xproto $genid_module])
-+PKG_CHECK_MODULES(SM, [ice >= 1.1.0 xproto xtrans])
++PKG_CHECK_MODULES(SM, [ice >= 1.1.0 xproto])
  
  
  AC_CONFIG_FILES([Makefile
+diff --git a/src/sm_manager.c b/src/sm_manager.c
+index e792021d8b905cd39ef7ca27c81cbddc968568db..5986de8666d66ca65df3a0306749434f0fef8ee9 100644
+--- a/src/sm_manager.c
++++ b/src/sm_manager.c
+@@ -33,7 +33,6 @@ in this Software without prior written authorization from The Open Group.
+ #endif
+ #include <X11/SM/SMlib.h>
+ #include "SMlibint.h"
+-#include <X11/Xtrans/Xtrans.h>
+ 
+ static Status
+ _SmsProtocolSetupProc (IceConn    iceConn,
