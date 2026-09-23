@@ -121,6 +121,10 @@
     "thread",
     "widgets",
     {
+      "name": "windeployqt",
+      "platform": "windows"
+    },
+    {
       "name": "xcb",
       "platform": "linux"
     },
