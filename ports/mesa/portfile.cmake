@@ -8,12 +8,14 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
     REF mesa-${VERSION}
-    SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
+    SHA512 ed886a0dee1fc9bea11dad8949dfbc9a47f9a925f4e9a2238b6fbe81cffc01e684539e789e75e0eba54a4b563ed212d17bdd4e55af49a40055a64383e67e1136
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
+    PATCHES
+        001-windows-gles-dispatch.patch
 )
 
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako pyyaml)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
@@ -53,13 +55,14 @@ if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURE
     )
 endif()
 
-if("offscreen" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dosmesa=true)
-else()
-    list(APPEND MESA_OPTIONS -Dosmesa=false)
+if("lavapipe" IN_LIST FEATURES)
+    list(APPEND MESA_ADDITIONAL_BINARIES
+        "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
+    )
+    list(APPEND MESA_OPTIONS -Dvulkan-drivers=['swrast'])
 endif()
 
-if("llvm" IN_LIST FEATURES)
+if("llvm" IN_LIST FEATURES OR "lavapipe" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
     set(LLVM_CONFIG_DEBUG_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-debug.ini")
     set(LLVM_CONFIG_RELEASE_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-release.ini")
@@ -90,12 +93,6 @@ if("gles2" IN_LIST FEATURES)
     set(use_gles ON)
 else()
     list(APPEND MESA_OPTIONS -Dgles2=disabled)
-endif()
-
-if(use_gles OR "egl" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  # shared GLAPI required when building two or more of the following APIs - gles1 gles2
-else()
-    list(APPEND MESA_OPTIONS -Dshared-glapi=auto)
 endif()
 
 if("egl" IN_LIST FEATURES)
@@ -137,8 +134,8 @@ vcpkg_configure_meson(
     OPTIONS_RELEASE
         ${MESA_OPTIONS_RELEASE}
     ADDITIONAL_BINARIES
-        python=['${PYTHON3}','-I']
-        python3=['${PYTHON3}','-I']
+        python=['${PYTHON3}','-E','-s']
+        python3=['${PYTHON3}','-E','-s']
         ${MESA_ADDITIONAL_BINARIES}
     ADDITIONAL_PROPERTIES
         ${MESA_ADDITIONAL_PROPERTIES}
@@ -174,6 +171,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
     endif()
+endif()
+
+if("lavapipe" IN_LIST FEATURES)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
+         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")

@@ -1,7 +1,6 @@
 {
   "name": "mesa",
-  "version": "24.0.7",
-  "port-version": 4,
+  "version": "26.2.3",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "license": "MIT AND BSL-1.0 AND SGI-B-2.0",
@@ -16,7 +15,11 @@
       "host": true
     },
     "zlib",
-    "zstd"
+    "zstd",
+    {
+      "name": "directx-headers",
+      "platform": "windows"
+    }
   ],
   "default-features": [
     "gles1",
@@ -43,6 +46,51 @@
       "description": "Build support for OpenGL ES 2.x and 3.x",
       "dependencies": [
         "opengl"
+      ]
+    },
+    "lavapipe": {
+      "description": "Build the lavapipe software Vulkan driver",
+      "dependencies": [
+        {
+          "name": "glslang",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "enable-rtti",
+            "libclc",
+            "tools"
+          ]
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-arm"
+          ],
+          "platform": "arm32"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-aarch64"
+          ],
+          "platform": "arm64"
+        },
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "target-x86"
+          ],
+          "platform": "x64 | x86"
+        }
       ]
     },
     "llvm": {
@@ -89,12 +137,6 @@
           ],
           "platform": "x64 | x86"
         }
-      ]
-    },
-    "offscreen": {
-      "description": "Build with support for offscreen rendering (OSMesa)",
-      "dependencies": [
-        "opengl"
       ]
     }
   }
