@@ -8469,11 +8469,11 @@
       "port-version": 0
     },
     "qtactiveqt": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtapplicationmanager": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtbase": {
@@ -8485,7 +8485,7 @@
       "port-version": 0
     },
     "qtcoap": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtconnectivity": {
@@ -8505,7 +8505,7 @@
       "port-version": 0
     },
     "qtdoc": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtgraphs": {
@@ -8525,7 +8525,7 @@
       "port-version": 0
     },
     "qtinterfaceframework": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtkeychain": {
@@ -8561,7 +8561,7 @@
       "port-version": 0
     },
     "qtopcua": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtpositioning": {
@@ -8581,7 +8581,7 @@
       "port-version": 0
     },
     "qtquicktimeline": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtremoteobjects": {
@@ -8597,7 +8597,7 @@
       "port-version": 0
     },
     "qtserialbus": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtserialport": {
@@ -8617,15 +8617,15 @@
       "port-version": 0
     },
     "qttools": {
-      "baseline": "6.11.1",
-      "port-version": 1
+      "baseline": "6.11.2",
+      "port-version": 0
     },
     "qttranslations": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtvirtualkeyboard": {
-      "baseline": "6.11.1",
+      "baseline": "6.11.2",
       "port-version": 0
     },
     "qtwayland": {
@@ -8637,8 +8637,8 @@
       "port-version": 0
     },
     "qtwebengine": {
-      "baseline": "6.11.1",
-      "port-version": 2
+      "baseline": "6.11.2",
+      "port-version": 0
     },
     "qtwebsockets": {
       "baseline": "6.11.1",
