@@ -1,8 +1,8 @@
 {
   "name": "openexr",
-  "version": "3.4.15",
+  "version": "3.5.0",
   "description": "OpenEXR is a high dynamic-range (HDR) image file format developed by Industrial Light & Magic for use in computer imaging applications",
-  "homepage": "https://www.openexr.com/",
+  "homepage": "https://www.openexr.com",
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
@@ -16,7 +16,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zstd"
   ],
   "features": {
     "tools": {
