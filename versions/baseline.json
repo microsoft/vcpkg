@@ -6553,7 +6553,7 @@
       "port-version": 0
     },
     "md4c": {
-      "baseline": "0.5.3",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "mdl-sdk": {
@@ -8062,7 +8062,7 @@
     },
     "ppqsort": {
       "baseline": "1.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "pprint": {
       "baseline": "2019-07-19",
@@ -8310,7 +8310,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.19",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-charts": {
       "baseline": "5.15.19",
@@ -8478,7 +8478,7 @@
     },
     "qtbase": {
       "baseline": "6.11.1",
-      "port-version": 2
+      "port-version": 3
     },
     "qtcharts": {
       "baseline": "6.11.1",
@@ -10345,8 +10345,8 @@
       "port-version": 6
     },
     "tracy": {
-      "baseline": "0.13.1",
-      "port-version": 1
+      "baseline": "0.14.1",
+      "port-version": 0
     },
     "transwarp": {
       "baseline": "2.2.3",

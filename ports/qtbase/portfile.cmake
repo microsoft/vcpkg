@@ -31,6 +31,7 @@ set(${PORT}_PATCHES
         use_inotify_on_freebsd.patch
         silence-winrtbase-coroutine-warnings.diff
         QTBUG-145703.patch # https://github.com/qt/qtbase/commit/239c54452fa60157c90901c8be8685048a65ad0a
+        md4c.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
