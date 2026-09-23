@@ -21,4 +21,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/natpmp_declspec.h"
+        "#define NATPMP_DECLSPEC_H_INCLUDED"
+        "#define NATPMP_DECLSPEC_H_INCLUDED\n\n#define NATPMP_STATICLIB"
+    )
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
