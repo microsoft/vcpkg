@@ -62,7 +62,7 @@ if("lavapipe" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dvulkan-drivers=['swrast'])
 endif()
 
-if("llvm" IN_LIST FEATURES OR "lavapipe" IN_LIST FEATURES)
+if("llvm" IN_LIST FEATURES OR "lavapipe" IN_LIST FEATURES OR VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
     set(LLVM_CONFIG_DEBUG_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-debug.ini")
     set(LLVM_CONFIG_RELEASE_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-release.ini")
@@ -165,17 +165,20 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     # opengl32.lib is already installed by port opengl.
     # Mesa claims to provide a drop-in replacement of opengl32.dll.
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
-    if(NOT VCPKG_BUILD_TYPE)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
     endif()
 endif()
 
 if("lavapipe" IN_LIST FEATURES)
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/lavapipe-usage"
+         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+         RENAME usage)
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")

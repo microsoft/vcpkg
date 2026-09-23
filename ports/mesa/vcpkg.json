@@ -19,6 +19,17 @@
     {
       "name": "directx-headers",
       "platform": "windows"
+    },
+    {
+      "name": "llvm",
+      "default-features": false,
+      "features": [
+        "enable-rtti",
+        "libclc",
+        "tools",
+        "target-x86"
+      ],
+      "platform": "windows"
     }
   ],
   "default-features": [
@@ -26,7 +37,7 @@
     "gles2",
     {
       "name": "llvm",
-      "platform": "x64"
+      "platform": "x64 | x86"
     }
   ],
   "features": {
@@ -50,6 +61,7 @@
     },
     "lavapipe": {
       "description": "Build the lavapipe software Vulkan driver",
+      "supports": "windows & !uwp & (x64 | x86)",
       "dependencies": [
         {
           "name": "glslang",
@@ -64,32 +76,9 @@
           "features": [
             "enable-rtti",
             "libclc",
-            "tools"
-          ]
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-arm"
-          ],
-          "platform": "arm32"
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "target-aarch64"
-          ],
-          "platform": "arm64"
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
+            "tools",
             "target-x86"
-          ],
-          "platform": "x64 | x86"
+          ]
         }
       ]
     },
