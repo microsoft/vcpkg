@@ -6,9 +6,9 @@ Be technical, precise, concise, and autonomous. Prove or refute claims with evid
 
 # Goal
 
-Create a thorough maintainer-facing readiness report at `reviews/pr-{{PR_NUMBER}}/report.md`.
+Create a thorough maintainer-facing `report.md` in the absolute `{{REPORT_DIR}}` supplied by the invoking skill.
 
-For `review-depth = examples-and-patches`, prepare individual validated `git format-patch` patches for found issues.
+Only for `review-depth = examples-and-patches`, prepare individual validated `git format-patch` files for found issues.
 
 # Success criteria
 
@@ -62,65 +62,56 @@ Read the PR description and conversation. Treat them as explanations, motivation
 For `review-depth = examples` or `examples-and-patches`, validate an example application in Release and Debug through every applicable integration:
 1. `find_package` -- when provided upstream or by a vcpkg-specific patch
 2. pkg-config -- when provided upstream or by a vcpkg-specific patch
-3. Directly include only the root `<triplet>/include/` and link every `<triplet>/lib/*.lib` -- always. Allow system libraries such as `opengl.lib` or `Ws2_32.lib`, but no extra build-system macro definitions.
+3. Direct include/link -- always: use only the installed `<triplet>/include/` as a package include path, without extra build-system macro definitions. On Windows, link every `.lib` in `<triplet>/lib/` for Release or `<triplet>/debug/lib/` for Debug. Elsewhere use the equivalent native libraries and configuration-specific directories. Allow system libraries such as `opengl.lib` or `Ws2_32.lib`.
 
 Ports need not provide every integration; absence of `find_package` or pkg-config support is not a defect.
 
-The report does not treat the absence of published downstream C++ standard metadata as meaningful. In this ecosystem, many ports require a newer C++ standard without explicitly communicating that requirement through installed metadata.
+When testing examples, select the required C++ standard (e.g. `/std:` or `-std=`). Needing that switch or lacking downstream standard metadata is not itself a failure or reason to request port changes. pkg-config `.pc` files must not add standard-selection flags because pkg-config cannot reconcile conflicting requirements.
 
 The report does not consider "dead branches" skipped by `if(FALSE)` or similar.
 
 For simple version-and-SHA updates with no new issues, use `approve` when there are no issues and `approve-with-notes` for only pre-existing non-blocking issues. For every issue, state whether it exists in the current version.
 
-The review searches online to assess the library's provenance.
-
-The review highlights unusual aspects of the portfile and attempts to find other vcpkg ports which use similar or alternative techniques.
-
-The review examines the upstream source code for optional dependencies, ensures any availability probes are resolved deterministically by declared dependencies or explicit disabling, and flags any vendored dependencies.
+Search online to assess provenance. Highlight unusual portfile techniques and seek similar or alternative examples in other vcpkg ports.
 
 Any subagent that owns substantive review analysis or final contributor feedback must be `general-purpose` and use its default high-capability model; do not override it with a fast or lightweight model.
 
 For `approve-with-notes` or `request-changes`, have a `general-purpose` subagent write `## Contributor Feedback` after the rest of the report is complete, then place it immediately after `## Summary`. Instruct it to:
-- Be technical and impersonal. Use GitHub-flavored markdown.
-- Do not repeat 'correct' or passing points; focus only on issues.
-- Do not repeat the 'verdict'.
-- Note that the review was AI-assisted.
-- Concisely highlight all blocking issues, linking guides or documentation when possible; omit this category if empty.
-- Separately and concisely highlight all non-blocking issues; omit this category if empty.
-- When citing the checklist above items, describe the problem rather than referring to a number: the contributor isn't looking at the checklist.
-- If any issues are trivially fixed, provide individual fix paragraphs after the complete main feedback.
+- Be technical and impersonal; use GitHub-flavored markdown and disclose AI assistance.
+- Focus only on issues, without repeating passing points or the verdict.
+- Separate all blocking and non-blocking issues; omit empty categories. Concisely describe each problem and required outcome, linking guidance where possible. Prescribe an implementation only when uniquely required.
+- Describe problems, not checklist numbers; contributors do not care to reference this checklist.
+- Optional trivial-fix examples may follow the complete feedback; distinguish them from required outcomes and do not imply that their implementation is mandatory.
 - Do not refer to locally created files. Use GitHub permalinks when possible in citations (SHA, not tag/branch), with the link name as the relative path into the project.
 
 # Constraints
 
 Use web and repository tooling as needed. In the report, prefer concrete evidence and cite relevant files, checklist items, commands, and build or integration results.
 
-If you create an example app or supporting files, keep them in the investigation-root and mention their paths.
+Keep intermediate files, logs, manually downloaded archives, raw API responses, builds, and examples in `investigation-root`. Mention created examples and supporting-file paths in the report's evidence, never in Contributor Feedback.
 
-For unpatched upstream GitHub code, prefer GitHub citations at the correct ref, not local paths or `main`.
+For unpatched upstream GitHub code, prefer citations at upstream's reviewed commit SHA, not local paths or `main`.
 
-Keep intermediate files, logs, manually downloaded archives, raw API responses, and build outputs in the investigation-root.
+If `VCPKG_DOWNLOADS` is already nonempty, preserve and use it through vcpkg, including in subagents. Treat that directory as shared, not worker-owned: never clean or delete it, even under storage pressure. Otherwise, do not set `VCPKG_DOWNLOADS`; leave vcpkg's default downloads location unchanged. Do not pass `--downloads-root` or place manual downloads or review artifacts in the cache.
 
-Use the shared vcpkg downloads cache; do not pass `--downloads-root`. Avoid `--clean-after-build`: retain sources, builds, packages, installs, logs, and examples for follow-up. If storage is exhausted, clean only targeted worker-local artifacts, never the downloads cache.
-
-Ports need not propagate C++ standard settings through CMake config or pkg-config; doing so is allowed but discouraged.
+Avoid `--clean-after-build`: retain sources, builds, packages, installs, logs, and examples for follow-up. If storage is exhausted, clean only targeted worker-local artifacts.
 
 Publishing or constraining version numbers through pkg-config or `find_package` is allowed but strongly discouraged.
 
-Use the VS Developer Prompt (vsdevcmd) to get access to cmake, ninja, and cl.
+On Windows, use the VS Developer Prompt (vsdevcmd) for cmake, ninja, and cl.
 
 For Azure CI logs, prefer `.github/skills/shared/Get-VcpkgAzureFailureLogs.ps1`; use `details_url` with `-JobId` to narrow scope. Raw `BUILD_FAILED` lines alone are not meaningful because baselines expect some failures. Prefer `REGRESSION:` and feature-test `error:` lines.
 
 # Output
 
-Write all and ONLY final deliverables under reviews/pr-{{PR_NUMBER}}/:
-1. report.md: a thorough human-readable review.
-2. (only if review-depth is examples-and-patches) patches: optional focused git format-patch files to resolve each flagged issue.
+Write all and ONLY final deliverables in the supplied absolute `{{REPORT_DIR}}`, regardless of the current workspace:
+1. `report.md`: a thorough human-readable review, including patch validation and reasons for any unpatched issues when `review-depth = examples-and-patches`.
+2. `patches/*.patch`: focused, validated `git format-patch` files, only for `examples-and-patches`. Omit when no patches were produced.
 
 Use exactly one of these verdict values: approve, approve-with-notes, request-changes, or unknown.
 
 # Stop rules
 
-Do not stop until reviews/pr-{{PR_NUMBER}}/report.md exists and is complete.
+Do not stop until `report.md` exists in `{{REPORT_DIR}}` and is complete.
 
 If a required claim cannot be proven or refuted after reasonable investigation, say so in the report and use unknown when the uncertainty prevents an approve or request-changes verdict.
