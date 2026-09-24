@@ -10137,7 +10137,7 @@
       "port-version": 2
     },
     "thermadiag-seq": {
-      "baseline": "2.1",
+      "baseline": "2.3",
       "port-version": 0
     },
     "think-cell-range": {
