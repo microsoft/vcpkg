@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "amsozzer1-plusweb",
+  "version": "0.1.2",
+  "description": "Express-style HTTP framework for C++17 built on libuv and llhttp, with a segment-trie router and a middleware chain",
+  "homepage": "https://github.com/Amsozzer1/PlusWeb",
+  "documentation": "https://amsozzer.com/projects/plusweb",
+  "license": "MIT",
+  "supports": "!windows",
+  "dependencies": [
+    "libuv",
+    "llhttp",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

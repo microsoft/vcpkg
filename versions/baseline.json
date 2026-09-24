@@ -136,6 +136,10 @@
       "baseline": "4.3.27",
       "port-version": 0
     },
+    "amsozzer1-plusweb": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "anari": {
       "baseline": "0.15.0",
       "port-version": 0
@@ -1929,7 +1933,7 @@
       "port-version": 1
     },
     "coinbase-advanced-cpp": {
-      "baseline": "1.0.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "coinutils": {
@@ -2913,7 +2917,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.8.4",
+      "baseline": "2.8.5",
       "port-version": 0
     },
     "expected-lite": {
@@ -3165,7 +3169,7 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.5.7",
+      "baseline": "2.6.1",
       "port-version": 0
     },
     "flux": {
@@ -3437,8 +3441,8 @@
       "port-version": 0
     },
     "ggml": {
-      "baseline": "0.11.1",
-      "port-version": 1
+      "baseline": "0.24.0",
+      "port-version": 0
     },
     "ghc-filesystem": {
       "baseline": "1.5.16",
@@ -3541,7 +3545,7 @@
       "port-version": 1
     },
     "gmmlib": {
-      "baseline": "22.10.1",
+      "baseline": "22.10.2",
       "port-version": 0
     },
     "gmp": {
@@ -3673,7 +3677,7 @@
       "port-version": 9
     },
     "gtsam": {
-      "baseline": "4.2.2",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "guetzli": {
@@ -4009,7 +4013,7 @@
       "port-version": 0
     },
     "imath": {
-      "baseline": "3.2.2",
+      "baseline": "3.2.3",
       "port-version": 0
     },
     "imcce-openfa": {
@@ -5038,7 +5042,7 @@
     },
     "libevent": {
       "baseline": "2.1.12+20230128",
-      "port-version": 1
+      "port-version": 2
     },
     "libeventheader-decode": {
       "baseline": "1.4.0",
@@ -5418,6 +5422,10 @@
     },
     "libmysql": {
       "baseline": "8.0.46",
+      "port-version": 0
+    },
+    "libnatpmp": {
+      "baseline": "2025-04-03",
       "port-version": 0
     },
     "libnice": {
@@ -6209,7 +6217,7 @@
       "port-version": 0
     },
     "llama-cpp": {
-      "baseline": "9030",
+      "baseline": "0.4.1",
       "port-version": 0
     },
     "llfio": {
@@ -7873,8 +7881,8 @@
       "port-version": 0
     },
     "pistache": {
-      "baseline": "2021-03-31",
-      "port-version": 4
+      "baseline": "0.4.25",
+      "port-version": 0
     },
     "pixel": {
       "baseline": "2022-03-15",
@@ -9269,7 +9277,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.16.8",
+      "baseline": "0.17.0",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9466,6 +9474,10 @@
     },
     "slick-object-pool": {
       "baseline": "0.2.0",
+      "port-version": 0
+    },
+    "slick-perfmon": {
+      "baseline": "0.1.0",
       "port-version": 0
     },
     "slick-queue": {

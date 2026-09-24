@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/llama.cpp
-    REF b${VERSION}
-    SHA512 ef5e21b61ca2961004fc57ad9d4a07191458df4f1749e71a9dc96d653676a6d68d43b7b8c74ebb235f6dffe5c064330cb1124887bc5c119876d7292543321945
+    REF v${VERSION}
+    SHA512 b82f755c40897d273ec3784f4f22b02f6a5f5f7b3c2a4240495d13a4617575c9aa69597de6a4f0b9a6568f51cc976e0b72ac847d83c2f953ed7fa52365e71d9a
     HEAD_REF master
     PATCHES
         cmake-config.diff
@@ -18,7 +18,6 @@ file(REMOVE_RECURSE
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
-        download    LLAMA_CURL
         server      LLAMA_BUILD_SERVER
         tools       LLAMA_BUILD_TOOLS
 )
@@ -28,6 +27,10 @@ vcpkg_cmake_configure(
     OPTIONS
         ${options}
         -DGGML_CCACHE=OFF
+        -DLLAMA_BUILD_IS_DEV=OFF
+        -DLLAMA_BUILD_APP=OFF
+        -DLLAMA_BUILD_UI=OFF
+        -DLLAMA_USE_PREBUILT_UI=OFF
         -DLLAMA_ALL_WARNINGS=OFF
         -DLLAMA_BUILD_TESTS=OFF
         -DLLAMA_BUILD_EXAMPLES=OFF
@@ -41,16 +44,14 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/gguf-py/gguf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gguf-py")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/convert_hf_to_gguf.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/convert-hf-to-gguf.py")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/convert_hf_to_gguf.py")
+file(INSTALL "${SOURCE_PATH}/conversion" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(INSTALL "${SOURCE_PATH}/convert_hf_to_gguf.py" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}" RENAME convert-hf-to-gguf.py)
 
 if("tools" IN_LIST FEATURES)
     set(tool_names
         llama-batched-bench
         llama-bench
         llama-completion
-        llama-cvector-generator
-        llama-export-lora
         llama-fit-params
         llama-gguf-split
         llama-imatrix
@@ -58,13 +59,12 @@ if("tools" IN_LIST FEATURES)
         llama-perplexity
         llama-quantize
         llama-results
-        llama-template-analysis
         llama-tokenize
         llama-tts
     )
-    # https://github.com/ggml-org/llama.cpp/blob/master/tools/parser/CMakeLists.txt#L1
-    if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND tool_names llama-debug-template-parser)
+    # These tools require the CPU backend, which ggml disables for MSVC arm64.
+    if(NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
+        list(APPEND tool_names llama-cvector-generator llama-export-lora)
     endif()
     if("server" IN_LIST FEATURES)
         list(APPEND tool_names llama-cli llama-server)
@@ -81,4 +81,17 @@ vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
 set(gguf-py-license "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gguf-py LICENSE")
 file(COPY_FILE "${SOURCE_PATH}/gguf-py/LICENSE" "${gguf-py-license}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${gguf-py-license}")
+set(copyright_files
+    "${SOURCE_PATH}/LICENSE"
+    "${gguf-py-license}"
+    "${SOURCE_PATH}/vendor/sheredom/subprocess.h"
+)
+if("tools" IN_LIST FEATURES)
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/vendor/hash/xxhash/LICENSE"
+        "${SOURCE_PATH}/vendor/hash/sha1/sha1.h"
+        "${SOURCE_PATH}/vendor/hash/sha256/sha256.h"
+        "${SOURCE_PATH}/vendor/hash/rotate-bits/LICENSE.md"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
