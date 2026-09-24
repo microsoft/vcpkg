@@ -79,6 +79,7 @@ vcpkg_cmake_configure(
         -DWITH_MANPAGES=OFF
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
+        -DWITH_SNDIO=OFF
         -DWITH_UNICODE_BUILTIN=ON
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
@@ -109,6 +110,7 @@ vcpkg_cmake_configure(
         USE_UNWIND
         VCPKG_LOCK_FIND_PACKAGE_X11
         WITH_CLIENT_WINDOWS
+        WITH_SNDIO
 )
 
 vcpkg_cmake_install()
