@@ -36,7 +36,7 @@
     "gles2",
     {
       "name": "llvm",
-      "platform": "x64 | x86"
+      "platform": "(x64 | x86) & !android"
     }
   ],
   "features": {

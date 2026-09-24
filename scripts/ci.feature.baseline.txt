@@ -745,6 +745,7 @@ mesa:x64-linux=fail # Missing dependent libraries.
 mesa:x64-windows-static=fail # Due to static crt.
 mesa[egl](!windows)=feature-fails # ERROR: Problem encountered: EGL requires dri, haiku, or windows
 mesa[llvm]:arm64-linux=cascade # llvm:arm64-linux is baseline-failed.
+mesa[llvm](android)=cascade # llvm is baseline-failed on Android.
 mesa[llvm](windows)=options # Mesa 26 requires LLVM for LLVMPipe on Windows.
 metrohash:arm64-linux=fail
 minc:arm64-linux=cascade

@@ -157,6 +157,13 @@ if(NOT remaining)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
 endif()
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug")
+    file(GLOB debug_remaining "${CURRENT_PACKAGES_DIR}/debug/*")
+    if(NOT debug_remaining)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     # opengl32.lib is already installed by port opengl.
     # Mesa claims to provide a drop-in replacement of opengl32.dll.
