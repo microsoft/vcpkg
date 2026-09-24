@@ -159,6 +159,9 @@ file(REMOVE_RECURSE
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/channels/audin/client/opensles/opensl_io.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md4.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md5.c"
         "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/NOTICE"
         "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/cpu-features.h"
 )
