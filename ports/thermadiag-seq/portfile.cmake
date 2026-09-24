@@ -22,4 +22,9 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/seq.pc" "${CURRENT_PACKAGES
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSES/komihash.txt"
+        "${SOURCE_PATH}/LICENSES/sse2neon.txt"
+)
