@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 83eb932705df7e83d6165e4936114d3b3bf54233df1a70e5485dd99a1b1ec41f726088a3b03636a2292d9f1a27b601da68a155234e2a6512385657f68a92438a
+    SHA512 5c20852e51fad9860a181a07ca8dd5b0d3654fc45836a8ba23129a1c1ab0dec2635d1f2da3a752be5dcee374df79ceffee6c60f29efc7cdfa4c45863d770fec0
     HEAD_REF main
     PATCHES
         001-fix-asio.patch
