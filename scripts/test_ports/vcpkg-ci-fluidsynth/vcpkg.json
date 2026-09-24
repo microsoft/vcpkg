@@ -24,6 +24,13 @@
         {
           "name": "fluidsynth",
           "features": [
+            "pipewire"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "fluidsynth",
+          "features": [
             "pulseaudio"
           ],
           "platform": "linux"
