@@ -6945,8 +6945,8 @@
       "port-version": 0
     },
     "mxml": {
-      "baseline": "4.0.4",
-      "port-version": 1
+      "baseline": "4.0.6",
+      "port-version": 0
     },
     "mygui": {
       "baseline": "3.5.1",
