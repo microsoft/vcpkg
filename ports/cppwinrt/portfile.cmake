@@ -59,7 +59,7 @@ file(WRITE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/cppwinrt.rsp" "${args}")
 
 #--- Generate headers and modules
 string(REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" SDKVersion $ENV{WindowsSDKVersion})
-if(CPPWINRT_MODULE)
+if(CPPWINRT_MODULES)
     message(STATUS "Generating headers and modules for Windows SDK ${SDKVersion}")
 else()
     message(STATUS "Generating headers for Windows SDK ${SDKVersion}")

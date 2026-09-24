@@ -18,6 +18,7 @@ if (NOT TARGET Microsoft::CppWinRT)
 endif()
 
 set(CPPWINRT_TOOL "${_cppwinrt_root}/@tool_path@")
+set(CPPWINRT_MODULE_BASE_DIR "${_cppwinrt_root}/include")
 
 if(@CPPWINRT_MODULES@)
     file(GLOB CPPWINRT_MODULE_FILES "${_cppwinrt_root}/include/winrt/*.ixx")
