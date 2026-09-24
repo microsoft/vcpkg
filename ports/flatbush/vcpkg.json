@@ -1,9 +1,10 @@
 {
   "name": "flatbush",
   "version": "1.5.0",
+  "port-version": 1,
   "description": "A C++11 header-only single file port of Flatbush",
   "homepage": "https://github.com/chusitoo/flatbush",
-  "license": "MIT",
+  "license": "MIT AND BSL-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

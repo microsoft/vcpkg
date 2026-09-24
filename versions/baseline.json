@@ -3138,7 +3138,7 @@
     },
     "flatbush": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "flatcc": {
       "baseline": "0.6.3",
