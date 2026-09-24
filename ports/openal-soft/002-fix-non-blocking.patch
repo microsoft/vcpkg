@@ -1,0 +1,13 @@
+diff --git a/common/opthelpers.h b/common/opthelpers.h
+index 247090489..41c0edcad 100644
+--- a/common/opthelpers.h
++++ b/common/opthelpers.h
+@@ -62,7 +62,7 @@
+ #define LIFETIMEBOUND
+ #endif
+ 
+-#if HAS_ATTRIBUTE(clang::nonblocking)
++#if HAS_ATTRIBUTE(clang::nonblocking) && !defined(_MSVC_STL_UPDATE)
+ #define NONBLOCKING [[clang::nonblocking]]
+ #else
+ #define NONBLOCKING

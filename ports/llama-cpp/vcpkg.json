@@ -1,11 +1,14 @@
 {
   "name": "llama-cpp",
-  "version": "9030",
+  "version-semver": "0.4.1",
   "description": "LLM inference in C/C++",
   "homepage": "https://github.com/ggml-org/llama.cpp",
-  "license": "MIT",
+  "license": "MIT AND Unlicense",
   "dependencies": [
-    "cpp-httplib",
+    {
+      "name": "cpp-httplib",
+      "default-features": false
+    },
     "ggml",
     "nlohmann-json",
     {
@@ -22,16 +25,28 @@
       "description": "Support downloading a model from an URL",
       "dependencies": [
         {
-          "name": "curl",
-          "default-features": false
+          "name": "cpp-httplib",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
         }
       ]
     },
     "server": {
-      "description": "Build llama-server and llama-cli"
+      "description": "Build llama-server and llama-cli",
+      "dependencies": [
+        {
+          "name": "llama-cpp",
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     },
     "tools": {
       "description": "Build tools",
+      "license": "BSD-2-Clause AND MIT AND LicenseRef-Public-Domain",
       "dependencies": [
         "miniaudio",
         "stb"
