@@ -43,7 +43,7 @@ The report considers the following in particular:
 2. New ports contain a `"description"` field written in English.
 3. No unnecessary comments.
 4. Downloaded archives are versioned if available.
-5. New ports pass CI checks for triplets that the library officially supports. Determine which triplets are officially supported from the upstream source and build system and, where applicable, upstream documentation found online. The `"supports"` field excludes known-incompatible configurations; it need not mirror upstream's documented support matrix.
+5. New ports pass CI checks for triplets that the library officially supports. Determine which triplets are officially supported from the upstream source and build system and, where applicable, upstream documentation found online. The `"supports"` field excludes known-incompatible configurations of the port itself; it need not mirror upstream's documented support matrix or the intersection of its dependencies' current `"supports"` expressions. A failed install because a transitive dependency in the current catalog excludes a triplet is not, by itself, evidence that the reviewed port's `"supports"` is too broad: an overlay port or another dependency version could support that triplet. Flag a port-level support defect only with independent evidence that the port or its upstream source is incompatible with the triplet.
 6. Patches fix issues that are vcpkg-specific or are submitted upstream (see also "## Patching" in the maintainer-guide).
 7. Sources are downloaded from official sources if available.
 8. New ports package mature projects ready for broad use by meeting one of:
