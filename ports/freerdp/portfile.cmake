@@ -9,6 +9,7 @@ vcpkg_from_github(
         ffmpeg.diff
         fix-aom-target.patch
         fix-cjson-config.patch
+        fix-windows-pkgconfig.patch
         install-layout.patch
         windows-linkage.patch
 )
