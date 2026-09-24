@@ -5150,7 +5150,7 @@
     },
     "libgpiod": {
       "baseline": "2.2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libgta": {
       "baseline": "1.0.8",
