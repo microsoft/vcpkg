@@ -185,7 +185,7 @@
       "port-version": 0
     },
     "aom": {
-      "baseline": "3.15.0",
+      "baseline": "3.15.1",
       "port-version": 0
     },
     "apache-datasketches": {
@@ -1673,7 +1673,7 @@
       "port-version": 1
     },
     "cdt": {
-      "baseline": "1.4.5",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "celero": {
@@ -1766,7 +1766,7 @@
     },
     "cimg": {
       "baseline": "4.0.5",
-      "port-version": 0
+      "port-version": 1
     },
     "cinatra": {
       "baseline": "1.0.0",
@@ -5797,7 +5797,7 @@
       "port-version": 3
     },
     "libsvm": {
-      "baseline": "3.35",
+      "baseline": "3.37",
       "port-version": 0
     },
     "libsystemd": {
@@ -6838,7 +6838,7 @@
     },
     "mpir": {
       "baseline": "3.0.0",
-      "port-version": 12
+      "port-version": 13
     },
     "mpmcqueue": {
       "baseline": "2021-12-01",
@@ -8097,7 +8097,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.8.1",
+      "baseline": "9.9.0",
       "port-version": 0
     },
     "projectm": {
@@ -9277,7 +9277,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.17.0",
+      "baseline": "0.17.1",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9465,7 +9465,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "1.3.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "slick-net": {
@@ -10137,7 +10137,7 @@
       "port-version": 2
     },
     "thermadiag-seq": {
-      "baseline": "2.1",
+      "baseline": "2.3",
       "port-version": 0
     },
     "think-cell-range": {
