@@ -148,6 +148,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
 endif()
 
+file(COPY "${CURRENT_PACKAGES_DIR}/include/freerdp3/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${CURRENT_PACKAGES_DIR}/include/winpr3/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
 file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
 file(REMOVE_RECURSE
     ${cmakefiles}
