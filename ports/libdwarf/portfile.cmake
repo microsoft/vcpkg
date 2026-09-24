@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davea42/libdwarf-code
     REF "v${VERSION}"
-    SHA512 e8eb74c622cedb512d82dff313ce9c5ac2064a7a7a0691c776213b384c1c64d0f549aaab1ef732dcba8c72d52048cea641d9909d3b2503cf96760ad8e81ae77c
+    SHA512 ff856a53aca16c8389e34974d5f852dc46dec5ebd1731d8dc0f675eb981d7024d772ab03285107a1849a2df626da705e7e4a971225fb4b1709d305d956d49989
     HEAD_REF main
     PATCHES
         include-dir.diff # avoid dwarf.h conflict with elfutils
@@ -11,14 +11,12 @@ vcpkg_from_github(
         dwarfdump-conf.diff # no absolute paths
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_NON_SHARED)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_NON_SHARED=${BUILD_NON_SHARED}
-        -DBUILD_SHARED=${BUILD_SHARED}
+        -DINSTALL_STATIC_LIBRARIES=${BUILD_STATIC}
     OPTIONS_DEBUG
         -DBUILD_DWARFDUMP=OFF
 )
