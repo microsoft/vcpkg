@@ -1,0 +1,39 @@
+diff --git a/cmake/mumps.cmake b/cmake/mumps.cmake
+index fbf80db..d7b98ea 100644
+--- a/cmake/mumps.cmake
++++ b/cmake/mumps.cmake
+@@ -166,6 +166,34 @@ if(BUILD_SHARED_LIBS AND APPLE AND CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang
+   set_property(TARGET mumps_common PROPERTY LINKER_LANGUAGE C)
+ endif()
+ 
++# A static MUMPS leaves the Fortran runtime unresolved for consumers that do not
++# enable Fortran themselves, so carry it on the exported interface. Only the
++# libraries Fortran adds over C/C++ are used, so libc/libm are not duplicated.
++if(NOT BUILD_SHARED_LIBS)
++  set(mumps_fortran_runtime_libs ${CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES})
++  set(mumps_fortran_runtime_dirs ${CMAKE_Fortran_IMPLICIT_LINK_DIRECTORIES})
++  if(CMAKE_C_IMPLICIT_LINK_LIBRARIES OR CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    list(REMOVE_ITEM mumps_fortran_runtime_libs
++      ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
++  endif()
++  if(CMAKE_C_IMPLICIT_LINK_DIRECTORIES OR CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES)
++    list(REMOVE_ITEM mumps_fortran_runtime_dirs
++      ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
++  endif()
++  # Keep the last occurrence of each library so static link order holds, as
++  # lapack-reference does.
++  list(REVERSE mumps_fortran_runtime_libs)
++  list(REMOVE_DUPLICATES mumps_fortran_runtime_libs)
++  list(REVERSE mumps_fortran_runtime_libs)
++  list(REMOVE_DUPLICATES mumps_fortran_runtime_dirs)
++  if(mumps_fortran_runtime_dirs)
++    target_link_directories(mumps_common INTERFACE ${mumps_fortran_runtime_dirs})
++  endif()
++  if(mumps_fortran_runtime_libs)
++    target_link_libraries(mumps_common INTERFACE ${mumps_fortran_runtime_libs})
++  endif()
++endif()
++
+ set_target_properties(mumps_common PROPERTIES
+ EXPORT_NAME COMMON
+ VERSION ${MUMPS_ACTUAL_VERSION}
