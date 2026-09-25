@@ -6,6 +6,7 @@ vcpkg_from_git(
     HEAD_REF master
     PATCHES
         fix-cmake-target-interface.patch
+        fix-android-pthread-detection.patch
 )
 
 vcpkg_check_features(
