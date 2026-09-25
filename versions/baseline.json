@@ -4292,6 +4292,10 @@
       "baseline": "0.11",
       "port-version": 1
     },
+    "kalshi-cpp": {
+      "baseline": "0.6.2",
+      "port-version": 0
+    },
     "kangaru": {
       "baseline": "4.3.2",
       "port-version": 0
