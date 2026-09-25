@@ -7,6 +7,7 @@ vcpkg_from_git(
     PATCHES
         fix-cmake-target-interface.patch
         fix-android-pthread-detection.patch
+        fix-win32-header-detection.patch
 )
 
 vcpkg_check_features(
