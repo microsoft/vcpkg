@@ -1,12 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c4148db..ccabb6c 100644
+index 904dc81..911bafb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21)
+ set(CMAKE_CXX_STANDARD 20)
+ 
+ project(coinbase-advanced-cpp
+-    VERSION 1.0.1
++    VERSION 2.0.0
+     LANGUAGES CXX)
+ 
+ option(BUILD_COINBASE_ADVANCED_TESTS "Build coinbase advanced tests" ${PROJECT_IS_TOP_LEVEL})
 @@ -21,8 +21,8 @@ find_package(nlohmann_json CONFIG REQUIRED)
  find_package(OpenSSL CONFIG REQUIRED)
  find_package(jwt-cpp CONFIG REQUIRED)
  
--find_package(slick-net 3.1.0 CONFIG QUIET)
+-find_package(slick-net 4.0.0 CONFIG QUIET)
 -if (NOT slick-net_FOUND)
 +find_package(slick-net CONFIG REQUIRED)
 +if (FALSE)
@@ -14,14 +23,14 @@ index c4148db..ccabb6c 100644
      include(FetchContent)
      set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)
 diff --git a/cmake/coinbase-advanced-cppConfig.cmake.in b/cmake/coinbase-advanced-cppConfig.cmake.in
-index bb101f7..0cf7b1f 100644
+index 34b4468..0cf7b1f 100644
 --- a/cmake/coinbase-advanced-cppConfig.cmake.in
 +++ b/cmake/coinbase-advanced-cppConfig.cmake.in
 @@ -5,7 +5,7 @@ include(CMakeFindDependencyMacro)
  find_dependency(nlohmann_json CONFIG)
  find_dependency(OpenSSL CONFIG)
  find_dependency(jwt-cpp CONFIG)
--find_dependency(slick-net 3.0.0 CONFIG)
+-find_dependency(slick-net 4.0.0 CONFIG)
 +find_dependency(slick-net CONFIG)
  
  include("${CMAKE_CURRENT_LIST_DIR}/coinbase-advanced-cppTargets.cmake")

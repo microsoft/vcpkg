@@ -256,6 +256,20 @@ endif()
 if("icu" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -icu)
 
+    # ICU 78's public headers require C++17 (std::u16string_view, nested namespace
+    # definitions, inline variables), but Qt 5.15's mkspecs default to an earlier
+    # standard. -c++std only affects the final build, not configure's own
+    # feature-detection compiles, so the flag must also be forced directly for
+    # the icu config test to succeed.
+    list(APPEND CORE_OPTIONS -c++std c++17)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND RELEASE_OPTIONS "QMAKE_CXXFLAGS_RELEASE+=/std:c++17")
+        list(APPEND DEBUG_OPTIONS "QMAKE_CXXFLAGS_DEBUG+=/std:c++17")
+    else()
+        list(APPEND RELEASE_OPTIONS "QMAKE_CXXFLAGS_RELEASE+=-std=c++17")
+        list(APPEND DEBUG_OPTIONS "QMAKE_CXXFLAGS_DEBUG+=-std=c++17")
+    endif()
+
     # This if/else corresponds to icu setup in src/corelib/configure.json.
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND CORE_OPTIONS

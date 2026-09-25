@@ -1,0 +1,41 @@
+{
+  "name": "mumps-solver",
+  "version": "5.9.1",
+  "description": "MUMPS (MUltifrontal Massively Parallel sparse direct Solver) solves systems of linear equations Ax = b where A is a square sparse matrix",
+  "homepage": "https://mumps-solver.org/",
+  "license": "CECILL-C AND BSD-3-Clause AND LicenseRef-Public-Domain AND MIT",
+  "supports": "!android & !ios & !emscripten & !uwp & !(windows & arm) & !(windows & !mingw & static)",
+  "dependencies": [
+    "blas",
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-gfortran",
+      "platform": "windows & !mingw"
+    }
+  ],
+  "default-features": [
+    "double"
+  ],
+  "features": {
+    "complex": {
+      "description": "Build single precision complex (cmumps) interface"
+    },
+    "complex-double": {
+      "description": "Build double precision complex (zmumps) interface"
+    },
+    "double": {
+      "description": "Build double precision real (dmumps) interface"
+    },
+    "single": {
+      "description": "Build single precision real (smumps) interface"
+    }
+  }
+}

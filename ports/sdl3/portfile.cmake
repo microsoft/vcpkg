@@ -31,6 +31,13 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_list(APPEND FEATURE_OPTIONS "${EMSCRIPTEN_FEATURE_OPTIONS}")
 endif()
 
+if ("macos-keyboard-grab" IN_LIST FEATURES)
+    # SDL only disables the system shortcuts in SDL_SetWindowKeyboardGrab() on
+    # macOS if SDL_MAC_NO_SANDBOX is defined
+    string(APPEND VCPKG_C_FLAGS " -DSDL_MAC_NO_SANDBOX")
+    string(APPEND VCPKG_CXX_FLAGS " -DSDL_MAC_NO_SANDBOX")
+endif()
+
 if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
 endif()

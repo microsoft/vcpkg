@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "slick-perfmon",
+  "version": "0.1.0",
+  "description": "Header-only C++20 latency measurement for code that cannot afford to be measured. ~200 cycles per stamp: one RDTSC read and a 16-byte publish to a lock-free MPMC ring. Pairing, Welford stats, histogram percentiles and file I/O happen on a collector thread or in a separate process.",
+  "homepage": "https://github.com/SlickQuant/slick-perfmon",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "slick-queue",
+    "slick-shm",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

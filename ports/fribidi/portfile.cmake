@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fribidi/fribidi
-    REF v${VERSION}
-    SHA512 13d7104f80e1b480d65a4c47fd694f5930222f3db843b8b6c1b6af58c43ee74b08635ce6166d005451498d060e549e4c666aa30c46d4df003d9ad63dba1d854a
+    REF "v${VERSION}"
+    SHA512 7cb021b2e2e25f5a9867e0c05cc5c0d2b9668172fb9409dda5b5ec330af57448c83afe82ff287e9f23488175aba65a9b7b628c221a8724959ffb42752361c5a1
     HEAD_REF master
     PATCHES meson-crosscompile.patch
 )
@@ -50,5 +50,7 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/gen.tab/unidata/ReadMe.txt"
+)

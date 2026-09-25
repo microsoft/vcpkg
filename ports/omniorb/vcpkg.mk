@@ -75,7 +75,7 @@ RANLIB       = true
 #ZSTD_ROOT = /cygdrive/c/zstd
 #ZSTD_CPPFLAGS = -DOMNI_ENABLE_ZIOP_ZSTD -I$(ZSTD_ROOT)/include
 #ZSTD_LIB = $(patsubst %,$(LibPathPattern),$(ZSTD_ROOT)/lib) zstd.lib
-LN_S=cp -pR 
+LN_S=cp -pR
 
 define ExportSharedLibraryToDir
  $(ExportLibraryToDir); \

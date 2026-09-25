@@ -1,25 +1,26 @@
-if(NOT VCPKG_TARGET_IS_LINUX)
-    message(FATAL_ERROR "${PORT} currently only supports Linux platform.")
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Upstream's generated .def file names the DLL "pistache":
+    # https://github.com/pistacheio/pistache/blob/9f4a8b365f52d4eb58db311d89161a87c1a730b6/subprojects/dump2def/dump2def.cc#L139-L144
+    # They suppress the linker warning caused by the versioned DLL having a different name:
+    # https://github.com/pistacheio/pistache/blob/9f4a8b365f52d4eb58db311d89161a87c1a730b6/src/meson.build#L258-L263
+    # Their build also writes to Program Files, registers an event manifest, and modifies HKCU:
+    # https://github.com/pistacheio/pistache/blob/9f4a8b365f52d4eb58db311d89161a87c1a730b6/src/winlog/installman.ps1#L62-L112
+    message(FATAL_ERROR "Upstream's Windows build produces an unusable DLL and modifies the host system.")
 endif()
-
-vcpkg_download_distfile(ADD_CSTDINT_PATCH
-    URLS https://github.com/pistacheio/pistache/commit/dabe9fcd3eaaa6b0b8723369b2565778341630c0.diff?full_index=1
-    FILENAME pistache-cstdint-dabe9fcd3eaaa6b0b8723369b2565778341630c0.diff
-    SHA512 1cef4b084050a5cb409a2f055e12f03184ad3cd07c8b896c38152f9c0c630d812a73fb78ccb3e7270ffe8001d877c3da173be06810744c2e0807a20e488ee66d
-)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pistacheio/pistache
-    REF 9dc080b9ebbe6fc1726b45e9db1550305938313e #2021-03-31
-    SHA512 b55c395fb98af85317590ed2502564af5e92e30a35618132568c6ab589a6d0971570ad20ddbd1f49d9dd8cf54692866c69cfc1350c6fdccf9efb039aacf153b4
-    HEAD_REF master 
-    PATCHES
-        "${ADD_CSTDINT_PATCH}"
+    REF "v${VERSION}"
+    SHA512 2f6d3178354bd4fe78e48fbb0b15055c2a92bee4f4fcee26c3bcc2076df8ca47ef4cac931ee565f5003837beb78a2456ed7d2b6a39083860631426fd074b497c
+    HEAD_REF master
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DPISTACHE_BUILD_TESTS=false
+        -DPISTACHE_BUILD_EXAMPLES=false
 )
 vcpkg_install_meson()
 

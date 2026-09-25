@@ -2,12 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 6c331729259d4da657dbd4a475c894cde624fe92fb35821425f5d678f91868c492ab4b921581fbb7410c3c398a86b9af4516f323fb34c855af9743cd23cd654f
+    SHA512 5dfb05f8de39092cd4874fb6839f399fc9c179939e1cd4ae43988506c836d554b1f3544febb0589adbdd4fa700acb6a26a26d59c90bb6652e251fbca79f74b29
     HEAD_REF master
     PATCHES
         dependencies.patch
         ffmpeg.diff
         fix-aom-target.patch
+        fix-cjson-config.patch
+        fix-windows-pkgconfig.patch
         install-layout.patch
         windows-linkage.patch
 )
@@ -79,6 +81,7 @@ vcpkg_cmake_configure(
         -DWITH_MANPAGES=OFF
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
+        -DWITH_SNDIO=OFF
         -DWITH_UNICODE_BUILTIN=ON
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
@@ -109,6 +112,7 @@ vcpkg_cmake_configure(
         USE_UNWIND
         VCPKG_LOCK_FIND_PACKAGE_X11
         WITH_CLIENT_WINDOWS
+        WITH_SNDIO
 )
 
 vcpkg_cmake_install()
@@ -146,6 +150,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
 endif()
 
+file(COPY
+    "${CURRENT_PACKAGES_DIR}/include/freerdp3/"
+    "${CURRENT_PACKAGES_DIR}/include/winpr3/"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
+
 file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
 file(REMOVE_RECURSE
     ${cmakefiles}
@@ -157,6 +167,9 @@ file(REMOVE_RECURSE
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/channels/audin/client/opensles/opensl_io.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md4.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md5.c"
         "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/NOTICE"
         "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/cpu-features.h"
 )
