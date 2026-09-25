@@ -54,4 +54,5 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/COPYING"
         "${SOURCE_PATH}/LICENCE-LGPL-2.1.txt"
         "${SOURCE_PATH}/LICENCE-BSD.txt"
+        "${SOURCE_PATH}/include/win32/win32_compat.h"
 )
