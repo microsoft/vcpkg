@@ -71,7 +71,6 @@ vcpkg_cmake_configure(
         -DPOSIX_REGEX_LIB=NONE
         -DENABLE_MBEDTLS=OFF
         -DENABLE_NETTLE=OFF
-        -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
         -DENABLE_CNG=${ENABLE_CNG}
         -DENABLE_UNZIP=OFF
