@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brechtsanders/xlsxio
     REF "${VERSION}"
-    SHA512 6d22aa23290da84fbbf9ed5fbfbc3203b0171b58de14e94283cdd240c65f7f2b0b5b9f7f044d0b0a5d925f645cac305718b338b806004d8f844a525292972d28
+    SHA512 81b6d25728ba14a2cee72ff196751a47f4399b45a993f5f91f970b76eb13a235a7c43bb7fb389205d5867cc7efc25654375fb9f341dc97c44542d88f3420af83
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_PC_FILES=OFF
         -DBUILD_TOOLS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
