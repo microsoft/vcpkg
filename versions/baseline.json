@@ -7578,7 +7578,7 @@
     },
     "opentelemetry-cpp": {
       "baseline": "1.29.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opentelemetry-cpp-contrib-version": {
       "baseline": "2026-07-09",
