@@ -1,7 +1,7 @@
 libarchive is compatible with the CMake Find Module:
 
   find_package(LibArchive REQUIRED)
-  target_link_libraries(main PRIVATE LibArchive::LibArchive) # since CMake 3.17
+  target_link_libraries(main PRIVATE LibArchive::Archive) # since CMake 3.17
 
 libarchive provides pkg-config modules:
 
