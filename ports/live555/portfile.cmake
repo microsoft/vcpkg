@@ -31,4 +31,4 @@ file(GLOB HEADERS
 )
 
 file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${SOURCE_PATH}/COPYING.LESSER")
