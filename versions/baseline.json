@@ -4841,7 +4841,7 @@
       "port-version": 0
     },
     "libbson": {
-      "baseline": "2.3.2",
+      "baseline": "2.5.5",
       "port-version": 0
     },
     "libcaer": {
@@ -6757,8 +6757,8 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "2.3.1",
-      "port-version": 2
+      "baseline": "2.5.5",
+      "port-version": 0
     },
     "mongo-cxx-driver": {
       "baseline": "4.4.0",
@@ -10623,10 +10623,6 @@
     "v-hacd": {
       "baseline": "4.1.0",
       "port-version": 0
-    },
-    "v8": {
-      "baseline": "9.1.269.39",
-      "port-version": 8
     },
     "valijson": {
       "baseline": "1.1.3",
