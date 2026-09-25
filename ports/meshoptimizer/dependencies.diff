@@ -1,21 +1,22 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8ca03ab..af7eb9d 100644
+index 7e4bbb8..a732583 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -147,6 +147,11 @@ if(MESHOPT_BUILD_GLTFPACK)
+@@ -153,6 +153,12 @@ if(MESHOPT_BUILD_GLTFPACK)
          target_compile_definitions(gltfpack PRIVATE WITH_BASISU)
          target_link_libraries(gltfpack basisu_encoder)
          set_source_files_properties(gltf/encodebasis.cpp PROPERTIES INCLUDE_DIRECTORIES ${BASISU_PATH}) # necessary because basisu_encoder doesn't export include directories
 +    else()
 +        find_package(basisu CONFIG REQUIRED)
 +        find_package(Threads REQUIRED) # cf. further down
++        set_target_properties(gltfpack PROPERTIES CXX_STANDARD 17) # basisu headers use C++17 inline variables
 +        target_compile_definitions(gltfpack PRIVATE WITH_BASISU)
 +        target_link_libraries(gltfpack basisu::basisu_encoder Threads::Threads)
      endif()
  
      if(NOT MESHOPT_GLTFPACK_LIBWEBP_PATH STREQUAL "")
 diff --git a/gltf/encodebasis.cpp b/gltf/encodebasis.cpp
-index 73cd962..74abf1b 100644
+index 720262d..cf4329f 100644
 --- a/gltf/encodebasis.cpp
 +++ b/gltf/encodebasis.cpp
 @@ -22,7 +22,7 @@
