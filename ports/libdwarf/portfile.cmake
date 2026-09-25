@@ -27,8 +27,8 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES dwarfdump AUTO_CLEAN)
 
-if(BUILD_SHARED)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 1")
+if(BUILD_STATIC)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 0")
 endif()
 
 file(REMOVE_RECURSE
