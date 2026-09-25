@@ -1,0 +1,22 @@
+{
+  "name": "mach",
+  "version": "1.0.0",
+  "description": "A modern C++20 web framework designed for performance, type safety, and a great developer experience.",
+  "homepage": "https://machframework.dev",
+  "license": "MIT",
+  "dependencies": [
+    "boost-asio",
+    "boost-beast",
+    "fmt",
+    "nlohmann-json",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
