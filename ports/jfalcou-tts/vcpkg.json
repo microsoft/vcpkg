@@ -1,0 +1,7 @@
+{
+  "name": "jfalcou-tts",
+  "version": "3.0",
+  "description": "Tiny Test System, a C++20 unit test library for numerical code",
+  "homepage": "https://jfalcou.github.io/tts/",
+  "license": "BSL-1.0"
+}
