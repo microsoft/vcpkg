@@ -393,6 +393,53 @@ if(EMSCRIPTEN)
 endif()
 
 set(VCPKG_TARGET_TRIPLET "${Z_VCPKG_TARGET_TRIPLET_ARCH}-${Z_VCPKG_TARGET_TRIPLET_PLAT}" CACHE STRING "Vcpkg target triplet (ex. x86-windows)")
+
+# The host triplet: what the tools that have to run during this build are built
+# for. vcpkg itself defaults this from the machine it is running on, but that
+# default was never passed down here, so VCPKG_HOST_TRIPLET was empty unless
+# the user set it. VCPKG_USE_HOST_TOOLS below is gated on it and could
+# therefore never turn on by itself, leaving a cross build to look for host
+# tools among the target's -- where they are either missing or unrunnable.
+#
+# Unlike the target triplet above this is deliberately not derived from the
+# compiler: the compiler builds for the target, while this describes the
+# machine doing the building.
+if(NOT DEFINED VCPKG_HOST_TRIPLET OR VCPKG_HOST_TRIPLET STREQUAL "")
+    if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
+        set(Z_VCPKG_HOST_TRIPLET_ARCH x64)
+    elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64)$")
+        set(Z_VCPKG_HOST_TRIPLET_ARCH arm64)
+    elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(i386|i686|x86|X86)$")
+        set(Z_VCPKG_HOST_TRIPLET_ARCH x86)
+    elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
+        set(Z_VCPKG_HOST_TRIPLET_ARCH arm)
+    elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le|riscv32|riscv64|loongarch32|loongarch64)$")
+        set(Z_VCPKG_HOST_TRIPLET_ARCH "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    endif()
+
+    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        set(Z_VCPKG_HOST_TRIPLET_PLAT windows)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+        set(Z_VCPKG_HOST_TRIPLET_PLAT osx)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+        set(Z_VCPKG_HOST_TRIPLET_PLAT linux)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
+        set(Z_VCPKG_HOST_TRIPLET_PLAT freebsd)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
+        set(Z_VCPKG_HOST_TRIPLET_PLAT openbsd)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "NetBSD")
+        set(Z_VCPKG_HOST_TRIPLET_PLAT netbsd)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "SunOS")
+        set(Z_VCPKG_HOST_TRIPLET_PLAT solaris)
+    endif()
+
+    # Left unset where the host is not one vcpkg names, rather than guessed at:
+    # VCPKG_USE_HOST_TOOLS then stays off exactly as it did before.
+    if(Z_VCPKG_HOST_TRIPLET_ARCH AND Z_VCPKG_HOST_TRIPLET_PLAT)
+        set(VCPKG_HOST_TRIPLET "${Z_VCPKG_HOST_TRIPLET_ARCH}-${Z_VCPKG_HOST_TRIPLET_PLAT}"
+            CACHE STRING "Vcpkg host triplet (ex. x64-windows)")
+    endif()
+endif()
 set(Z_VCPKG_TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 # Detect .vcpkg-root to figure VCPKG_ROOT_DIR
