@@ -1,0 +1,39 @@
+diff --git a/include/AngleNet.h b/include/AngleNet.h
+index d14503c..3d42862 100644
+--- a/include/AngleNet.h
++++ b/include/AngleNet.h
+@@ -22,7 +22,7 @@ public:
+ private:
+     bool isOutputAngleImg = false;
+ 
+-    Ort::Session *session;
++    Ort::Session *session = nullptr;
+     Ort::Env env = Ort::Env(ORT_LOGGING_LEVEL_ERROR, "AngleNet");
+     Ort::SessionOptions sessionOptions = Ort::SessionOptions();
+     int numThread = 0;
+diff --git a/include/CrnnNet.h b/include/CrnnNet.h
+index 2b4cdbe..33fdfab 100644
+--- a/include/CrnnNet.h
++++ b/include/CrnnNet.h
+@@ -20,7 +20,7 @@ public:
+ 
+ private:
+     bool isOutputDebugImg = false;
+-    Ort::Session *session;
++    Ort::Session *session = nullptr;
+     Ort::Env env = Ort::Env(ORT_LOGGING_LEVEL_ERROR, "CrnnNet");
+     Ort::SessionOptions sessionOptions = Ort::SessionOptions();
+     int numThread = 0;
+diff --git a/include/DbNet.h b/include/DbNet.h
+index e2b9a17..f15e30c 100644
+--- a/include/DbNet.h
++++ b/include/DbNet.h
+@@ -19,7 +19,7 @@ public:
+                                       float boxThresh, float unClipRatio);
+ 
+ private:
+-    Ort::Session *session;
++    Ort::Session *session = nullptr;
+     Ort::Env env = Ort::Env(ORT_LOGGING_LEVEL_ERROR, "DbNet");
+     Ort::SessionOptions sessionOptions = Ort::SessionOptions();
+     int numThread = 0;
