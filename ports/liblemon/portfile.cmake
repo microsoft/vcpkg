@@ -1,11 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(VERSION ed2c21cbd6ef)
+set(VERSION a278d16bd2d0)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://lemon.cs.elte.hu/hg/lemon/archive/${VERSION}.zip"
     FILENAME "lemon-${VERSION}.zip"
-    SHA512 849d99743a9c4eeee255fb09e586153cb41b7e1c159641665954af6f1d23f6fb830ce4d318aa39631a5ec6dce366d2f686a087bf62699c39733165a21c21bfd9
+    SHA512 db303a78a9f1235775917dd19af21f72358bbbce9292ea6d6a0475bdbf709d2c183089df4bad753b882012007c34662c463fb70ecfa37b565d7dc11443f11d07
 )
 
 vcpkg_extract_source_archive(
