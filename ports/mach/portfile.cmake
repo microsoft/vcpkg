@@ -29,5 +29,7 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(
-    FILE_LIST "${SOURCE_PATH}/LICENSE"
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${CURRENT_PORT_DIR}/LICENSE-BSL-1.0.txt"
 )

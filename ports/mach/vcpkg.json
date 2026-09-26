@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A modern C++20 web framework designed for performance, type safety, and a great developer experience.",
   "homepage": "https://machframework.dev",
-  "license": "MIT",
+  "license": "MIT AND BSL-1.0",
   "dependencies": [
     "boost-asio",
     "boost-beast",
