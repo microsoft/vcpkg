@@ -12,7 +12,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pistacheio/pistache
     REF "v${VERSION}"
-    SHA512 2f6d3178354bd4fe78e48fbb0b15055c2a92bee4f4fcee26c3bcc2076df8ca47ef4cac931ee565f5003837beb78a2456ed7d2b6a39083860631426fd074b497c
+    SHA512 764dfafb7208bb18b6954103aa72aece17ee2b47a9ef32312038428551224eec6263471a6731110c64b0a8ec6850cbbc6302e8fb2b05b47a4fa14cb9d3f3febb
     HEAD_REF master
 )
 
@@ -26,5 +26,4 @@ vcpkg_install_meson()
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
