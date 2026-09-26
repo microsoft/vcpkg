@@ -7722,7 +7722,7 @@
     },
     "pagmo2": {
       "baseline": "2.20.0",
-      "port-version": 0
+      "port-version": 1
     },
     "paho-mqtt": {
       "baseline": "1.3.16",
