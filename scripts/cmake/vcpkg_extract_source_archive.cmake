@@ -73,12 +73,15 @@ function(vcpkg_extract_source_archive)
         message(FATAL_ERROR "SOURCE_BASE (${arg_SOURCE_BASE}) must not contain slashes")
     endif()
 
-    # Take the last 10 chars of the base
     set(base_max_length 10)
+    if(CMAKE_HOST_WIN32)
+      set(base_max_length 6)
+    endif()
+
+    # Take the first ${base_max_length} chars of the base
     string(LENGTH "${arg_SOURCE_BASE}" source_base_length)
     if(source_base_length GREATER base_max_length)
-        math(EXPR start "${source_base_length} - ${base_max_length}")
-        string(SUBSTRING "${arg_SOURCE_BASE}" "${start}" -1 arg_SOURCE_BASE)
+        string(SUBSTRING "${arg_SOURCE_BASE}" 0 ${base_max_length} arg_SOURCE_BASE)
     endif()
 
     # Hash the archive hash along with the patches. Take the first 10 chars of the hash
@@ -96,7 +99,7 @@ function(vcpkg_extract_source_archive)
     endforeach()
 
     string(SHA512 patchset_hash "${patchset_hash}")
-    string(SUBSTRING "${patchset_hash}" 0 10 patchset_hash)
+    string(SUBSTRING "${patchset_hash}" 0 ${base_max_length} patchset_hash)
     cmake_path(APPEND working_directory "${arg_SOURCE_BASE}-${patchset_hash}"
         OUTPUT_VARIABLE source_path
     )
@@ -106,7 +109,7 @@ function(vcpkg_extract_source_archive)
         message(STATUS "Using source at ${source_path}")
         return()
     elseif(NOT _VCPKG_EDITABLE)
-        cmake_path(APPEND_STRING source_path ".clean")
+        cmake_path(APPEND_STRING source_path ".c")
         if(EXISTS "${source_path}")
             message(STATUS "Cleaning sources at ${source_path}. Use --editable to skip cleaning for the packages you specify.")
             file(REMOVE_RECURSE "${source_path}")
