@@ -18,4 +18,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.md"
+        "${SOURCE_PATH}/include/daw/compressed_pair.h"
 )

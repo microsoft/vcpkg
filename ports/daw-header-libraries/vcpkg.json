@@ -3,7 +3,7 @@
   "version": "2.136.0",
   "description": "Set of header-only algorithms used in daw-utf8-range and daw-json-link.",
   "homepage": "https://github.com/beached/header_libraries",
-  "license": "BSL-1.0",
+  "license": "BSL-1.0 AND Apache-2.0 WITH LLVM-exception",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
