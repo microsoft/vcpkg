@@ -4292,6 +4292,10 @@
       "baseline": "0.11",
       "port-version": 1
     },
+    "kalshi-cpp": {
+      "baseline": "0.6.2",
+      "port-version": 0
+    },
     "kangaru": {
       "baseline": "4.3.2",
       "port-version": 0
@@ -5986,7 +5990,7 @@
     },
     "libwebsockets": {
       "baseline": "4.5.8",
-      "port-version": 0
+      "port-version": 1
     },
     "libx11": {
       "baseline": "1.8.1",
