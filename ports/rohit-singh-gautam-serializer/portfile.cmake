@@ -1,0 +1,48 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO rohit-singh-gautam/Serializer
+    REF aa96e132bff529db27f2016d44388fddf146f43c
+    SHA512 b4fcaaa81363435e43013fd1439b9c8753d6072dad0838fdf1ea938f71067283721111a1a1fba0ac0abcec5196377ad82413bf93dbbb31e57a3bc507d957cbe1
+    HEAD_REF main
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        lz4 SERIALIZER_WITH_LZ4
+        zlib SERIALIZER_WITH_ZLIB
+        zstd SERIALIZER_WITH_ZSTD
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DSERIALIZER_BUILD_TESTS=OFF
+        -DSERIALIZER_BUILD_PROTOBUF_INTEROP_TESTS=OFF
+        -DSERIALIZER_BUILD_BENCHMARKS=OFF
+        -DSERIALIZER_BUILD_FUZZERS=OFF
+        -DSERIALIZER_BUILD_STYLE_EXAMPLES=OFF
+        -DSERIALIZER_BUILD_IOSTREAM_EXAMPLES=OFF
+        -DSERIALIZER_BUILD_COMPRESSION_EXAMPLES=OFF
+        -DSERIALIZER_BUILD_JAVA_EXAMPLES=OFF
+        -DSERIALIZER_BUILD_INTEROP_EXAMPLES=OFF
+        -DSERIALIZER_BUILD_ALL_LANGUAGE_EXAMPLES=OFF
+        -DSERIALIZER_INSTALL=ON
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME Serializer CONFIG_PATH lib/cmake/Serializer)
+vcpkg_copy_tools(TOOL_NAMES serializer AUTO_CLEAN)
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/licenses"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
