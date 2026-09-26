@@ -1341,7 +1341,6 @@ usbmuxd:arm64-linux=cascade
 usbmuxd:x64-windows-static-md=fail
 usd=skip # USD has set official policy that they will not update to be compatible with TBB in the near term (https://github.com/PixarAnimationStudios/USD/issues/1600)
 usockets[network]:arm64-osx=cascade
-v8(windows)=fail # the version of v8 we have in the repo doesn't support VS2022
 vcpkg-ci-box2d:arm64-linux=fail
 vcpkg-ci-lua:arm64-linux=fail
 vcpkg-ci-podofo:arm64-linux=fail
