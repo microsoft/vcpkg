@@ -193,7 +193,10 @@ function(z_vcpkg_make_determine_target_triplet out)
         set(output "${CMAKE_MATCH_1}")
     elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
         set(output "${TARGET_ARCH}-unknown-emscripten")
-    elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+    elseif(VCPKG_TARGET_IS_IOS)
+        # Needs to be different from --build to enable cross builds.
+        set(output "${TARGET_ARCH}-apple-ios")
+    elseif(VCPKG_TARGET_IS_OSX)
         set(output "${TARGET_ARCH}-apple-darwin")
     elseif(VCPKG_TARGET_IS_UWP)
         # Needs to be different from --build to enable cross builds.
