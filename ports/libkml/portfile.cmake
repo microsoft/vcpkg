@@ -14,6 +14,7 @@ vcpkg_from_github(
         fix-mingw.patch
         fix-minizip.patch
         add-target-include-directories.patch
+        fix-cxx20-intrusive-ptr.patch
 )
 
 file(REMOVE
