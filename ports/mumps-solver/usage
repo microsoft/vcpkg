@@ -1,0 +1,12 @@
+mumps-solver provides CMake targets:
+
+    find_package(unofficial-mumps-solver CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::mumps-solver::DMUMPS)
+
+MUMPS is written in Fortran, but the exported targets carry the Fortran runtime,
+so C and C++ projects can link it without enabling Fortran themselves.
+
+mumps-solver also provides the pkg-config module unofficial-mumps-solver.
+
+This port builds MUMPS in sequential mode; it uses the bundled MPI stub, whose
+headers are installed to the "mumps_seq" include subdirectory.

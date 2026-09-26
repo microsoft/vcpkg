@@ -38,6 +38,13 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/xlsxwriter/third_party")
+
+set(public_third_party_files  # used by include/xlsxwriter/common.h
+    "${CURRENT_PACKAGES_DIR}/include/xlsxwriter/third_party/queue.h"
+    "${CURRENT_PACKAGES_DIR}/include/xlsxwriter/third_party/tree.h"
+)
+file(GLOB third_party_files "${CURRENT_PACKAGES_DIR}/include/xlsxwriter/third_party/*")
+list(REMOVE_ITEM third_party_files ${public_third_party_files})
+file(REMOVE_RECURSE ${third_party_files})
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")

@@ -1,9 +1,9 @@
 {
   "name": "tinyexif",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "tiny ISO-compliant C++ EXIF and XMP parsing library for JPEG images",
   "homepage": "https://github.com/cdcseacave/TinyEXIF",
-  "license": "MIT",
+  "license": "MIT AND BSD-2-Clause",
   "dependencies": [
     "tinyxml2",
     {

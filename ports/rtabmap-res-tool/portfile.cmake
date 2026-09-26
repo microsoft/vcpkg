@@ -6,8 +6,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
-    REF ${VERSION}
-    SHA512 9bcd0f359e0ee8060cf7088761544a3f7d38aadb37df820958f0811aa7b8edbfaf00f00d9472a8bf46261d4e5d868f9c10785263aaabaf374b6e5aa5237d70b0
+    REF "${VERSION}"
+    SHA512 b18515a1215d76592f748c6d18c4c7cd6311739be411dfbc787d11d69729b1193265d5970816cef2b5b5dc9f4418547896d7749fd76137c0888e1dcb7de66fca
     HEAD_REF master
 )
 file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -21,10 +21,17 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/include"
+    "${CURRENT_PACKAGES_DIR}/lib"
+)
 
+# We don't use vcpkg_copy_tools here, as some platforms need rtabmap-res_tool-${UTILITE_VERSION}, aside from rtabmap-res_tool
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/utilite/resource_generator/main.cpp"
+)

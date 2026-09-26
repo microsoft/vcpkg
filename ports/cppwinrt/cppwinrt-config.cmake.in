@@ -2,14 +2,26 @@ get_filename_component(_cppwinrt_root "${CMAKE_CURRENT_LIST_DIR}" PATH)
 get_filename_component(_cppwinrt_root "${_cppwinrt_root}" PATH)
 
 if (NOT TARGET Microsoft::CppWinRT)
-      add_library(Microsoft::CppWinRT INTERFACE IMPORTED)
-      set_target_properties(Microsoft::CppWinRT PROPERTIES
-         INTERFACE_COMPILE_FEATURES cxx_std_17
-         INTERFACE_INCLUDE_DIRECTORIES "${_cppwinrt_root}/include"
-         INTERFACE_LINK_LIBRARIES "${_cppwinrt_root}/lib/@lib_name@"
-      )
+    add_library(Microsoft::CppWinRT INTERFACE IMPORTED)
+    set_target_properties(Microsoft::CppWinRT PROPERTIES
+        INTERFACE_COMPILE_FEATURES cxx_std_17
+        INTERFACE_INCLUDE_DIRECTORIES "${_cppwinrt_root}/include"
+    )
+    if(@CPPWINRT_WINDOWSAPP@)
+        set_property(TARGET Microsoft::CppWinRT APPEND PROPERTY
+            INTERFACE_LINK_LIBRARIES "windowsapp.lib")
+    endif()
+    if(@CPPWINRT_FASTABI@)
+        set_property(TARGET Microsoft::CppWinRT APPEND PROPERTY
+            INTERFACE_LINK_LIBRARIES "${_cppwinrt_root}/lib/@lib_name@")
+    endif()
 endif()
 
 set(CPPWINRT_TOOL "${_cppwinrt_root}/@tool_path@")
+set(CPPWINRT_MODULE_BASE_DIR "${_cppwinrt_root}/include")
+
+if(@CPPWINRT_MODULES@)
+    file(GLOB CPPWINRT_MODULE_FILES "${_cppwinrt_root}/include/winrt/*.ixx")
+endif()
 
 unset(_cppwinrt_root)

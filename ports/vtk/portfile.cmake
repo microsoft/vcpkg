@@ -51,7 +51,21 @@ vcpkg_from_github(
         fix-eigen3.patch
         avoid-stdext.diff
         fix-fmt-header.patch
+        python313-module-init.patch # https://github.com/Kitware/VTK/commit/675929762a09ad0b40cb2667918a7061c47a418c
 )
+
+if("python" IN_LIST FEATURES)
+    # VTK's mpi4py import includes generated C sources and the MS-MPI build fix.
+    # This is the subtree merged by VTK commit fbdd9a63, not the full VTK source.
+    vcpkg_from_github(
+        OUT_SOURCE_PATH MPI4PY_SOURCE_PATH
+        REPO Kitware/VTK
+        REF 1ac079e59e2577238aba615ce5a1c2dbce8f1f47 # mpi4py 4.0.1, for/vtk-20241113-4.0.1
+        SHA512 fc3953024393bde5da0700be30d1b3dc5b2b575d7f4da2d8622ccdf689460be5d2877cfe8458115946c6a401394a0a439e15359b36ccd58fa9ea9f18af937dbf
+    )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/ThirdParty/mpi4py/vtkmpi4py")
+    file(COPY "${MPI4PY_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/mpi4py/vtkmpi4py")
+endif()
 
 # =============================================================================
 # Overwrite outdated modules if they have not been patched:

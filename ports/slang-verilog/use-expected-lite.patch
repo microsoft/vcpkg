@@ -1,0 +1,41 @@
+diff --git a/external/CMakeLists.txt b/external/CMakeLists.txt
+index 1a54f7a24..bcc698bd0 100644
+--- a/external/CMakeLists.txt
++++ b/external/CMakeLists.txt
+@@ -217,10 +217,6 @@ if(SLANG_INCLUDE_INSTALL)
+     DIRECTORY ${PROJECT_SOURCE_DIR}/external/ieee1800/
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ieee1800
+     COMPONENT slang_Development)
+-  install(
+-    FILES ${PROJECT_SOURCE_DIR}/external/expected.hpp
+-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+-    COMPONENT slang_Development)
+ 
+   if(NOT fmt_FOUND)
+     install(
+diff --git a/include/slang/syntax/SyntaxTree.h b/include/slang/syntax/SyntaxTree.h
+index 5a9030bc8..32d93de93 100644
+--- a/include/slang/syntax/SyntaxTree.h
++++ b/include/slang/syntax/SyntaxTree.h
+@@ -7,7 +7,7 @@
+ //------------------------------------------------------------------------------
+ #pragma once
+ 
+-#include <expected.hpp>
++#include <nonstd/expected.hpp>
+ #include <memory>
+ #include <vector>
+ 
+diff --git a/include/slang/text/SourceManager.h b/include/slang/text/SourceManager.h
+index 0bbdf05bc..a06c8c5b8 100644
+--- a/include/slang/text/SourceManager.h
++++ b/include/slang/text/SourceManager.h
+@@ -8,7 +8,7 @@
+ #pragma once
+ 
+ #include <atomic>
+-#include <expected.hpp>
++#include <nonstd/expected.hpp>
+ #include <filesystem>
+ #include <memory>
+ #include <mutex>

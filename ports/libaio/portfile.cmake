@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://pagure.io/libaio/archive/libaio-${VERSION}/libaio-libaio-${VERSION}.tar.gz"
+    URLS "https://releases.pagure.org/libaio/libaio-${VERSION}.tar.gz"
     FILENAME "libaio-${VERSION}.tar.gz"
-    SHA512 8058c927de0b5f7079fc232d2be23272537694bf271488af1dc0330b58afc307931792ab138512c5e00aa3ea921935a6d862f575fb0cc2bf323de63d8df208cd
+    SHA512 65c30a102433bf8386581b03fc706d84bd341be249fbdee11a032b237a7b239e8c27413504fef15e2797b1acd67f752526637005889590ecb380e2e120ab0b71
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

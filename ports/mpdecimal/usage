@@ -1,0 +1,7 @@
+mpdecimal provides the C library libmpdec. The C++ wrapper is not included.
+
+It can be used with pkg-config from CMake:
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(MPDEC REQUIRED IMPORTED_TARGET libmpdec)
+    target_link_libraries(main PRIVATE PkgConfig::MPDEC)

@@ -12,7 +12,7 @@ index 355c4b8646..de67992bd3 100644
  // Common properties of external images represented by FDs. On successful import the file
  // descriptor's ownership is transferred to the Dawn implementation and they shouldn't be
 diff --git a/src/dawn/native/vulkan/BackendVk.cpp b/src/dawn/native/vulkan/BackendVk.cpp
-index 86e89f947c..3d9fad8bec 100644
+index a93ea4f996..5d93ff37a4 100644
 --- a/src/dawn/native/vulkan/BackendVk.cpp
 +++ b/src/dawn/native/vulkan/BackendVk.cpp
 @@ -58,7 +58,7 @@ constexpr char kSwiftshaderLibName[] = "libvk_swiftshader.dylib";

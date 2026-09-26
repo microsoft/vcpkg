@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aliyun/alibabacloud-oss-cpp-sdk-v2
     REF "${VERSION}"
-    SHA512 f3dac1785188a65a90e53c7f152882387e571a502cece1094ce3d26a0edc1e9d6d87b34b16babe6c1e1527940b652629dd024f21c85b4598a3db49a20dc680bd
+    SHA512 e50229d8db547b779a706810b4e4fc7aca6cf2ec0e7bbe54f14add79c5545dff121224093906efca38c70a7c7ac7b5d3f910aa53280d0072473d21a74f7b18ed
     HEAD_REF main
 )
 

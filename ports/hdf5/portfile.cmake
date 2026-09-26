@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${VERSION}"
-    SHA512 45844e2f0e89b5a0291c9fecd9b4b663eed1a7a21b38e358fd6f6198fe509c19bcf91651d1ae3b4cf8de7445f7a71854acdb1635b939b6d08fdaf6b6c0e396d1
+    SHA512 b009572b70eba02fa0963119f202da202cdcf20a3b4c01a94c5618e8b612033c0b8dc23664ccb0c2a2ebbdab427ad96ba8163ff8eb0356bb093617d37a9932f8
     HEAD_REF develop
     PATCHES
         default-plugin-dir.diff # avoid absolute path
@@ -137,8 +137,10 @@ foreach(script IN ITEMS h5cc h5c++ h5hlcc h5hlc++ h5pcc h5fuse.sh)
 endforeach()
 vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 if("parallel" IN_LIST FEATURES)
@@ -149,4 +151,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/H5public.h" "#define H5public_H" "#define H5public_H\n#ifndef H5_BUILT_AS_DYNAMIC_LIB\n#define H5_BUILT_AS_DYNAMIC_LIB\n#endif\n")
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

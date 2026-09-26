@@ -1,8 +1,8 @@
 {
   "name": "string-view-lite",
-  "version": "1.8.0",
-  "port-version": 1,
+  "version": "1.8.1",
   "description": "A C++17-like string_view for C++98, C++11 and later in a single-file header-only library",
+  "homepage": "https://github.com/nonstd-lite/string-view-lite",
   "license": "BSL-1.0",
   "dependencies": [
     {

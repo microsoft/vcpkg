@@ -2,7 +2,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
-import AdmZip from "adm-zip";
+import * as yauzl from "yauzl";
 import { execSync } from "child_process";
 
 const keyword = "/include/";
@@ -13,18 +13,29 @@ function writeOutputLines(outDir: string, dbLines: string[], headerLines: string
   fs.writeFileSync(path.join(outDir, "VCPKGHeadersDatabase.txt"), headerLines.join("\n") + (headerLines.length ? "\n" : ""));
 }
 
-function listZipFiles(buffer: Buffer, pkgName: string, dbLines: string[], headerLines: string[]) {
-  const zip = new AdmZip(buffer);
-  const entries = zip.getEntries();
-  for (const e of entries) {
-    if (e.isDirectory) continue;
-    const entryName = "/" + e.entryName.replace(/\\/g, "/");
-    if (entryName === "/BUILD_INFO" || entryName === "/CONTROL") continue;
-    dbLines.push(`${pkgName}:${entryName}`);
-    if (entryName.startsWith(keyword)) {
-      headerLines.push(`${pkgName}:${entryName.substring(keyword.length)}`);
-    }
-  }
+function listZipFiles(buffer: Buffer, pkgName: string, dbLines: string[], headerLines: string[]): Promise<void> {
+  return new Promise((resolve, reject) => {
+    yauzl.fromBuffer(buffer, { lazyEntries: true }, (error, zip) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      zip.on("error", reject);
+      zip.on("entry", (entry) => {
+        const entryName = "/" + entry.fileName.replace(/\\/g, "/");
+        if (!entryName.endsWith("/") && entryName !== "/BUILD_INFO" && entryName !== "/CONTROL") {
+          dbLines.push(`${pkgName}:${entryName}`);
+          if (entryName.startsWith(keyword)) {
+            headerLines.push(`${pkgName}:${entryName.substring(keyword.length)}`);
+          }
+        }
+        zip.readEntry();
+      });
+      zip.on("end", resolve);
+      zip.readEntry();
+    });
+  });
 }
 
 function downloadUrlToBuffer(url: string): Promise<Buffer> {
@@ -167,7 +178,7 @@ async function main() {
       console.log(`Downloading ${blobUrl} for port ${port}...`);
       try {
         const buf = await downloadUrlToBuffer(blobUrl);
-        listZipFiles(buf, `${port}:${item.triplet}`, dbLines, headerLines);
+        await listZipFiles(buf, `${port}:${item.triplet}`, dbLines, headerLines);
       } catch (err) {
         console.warn(`Failed to download or process blob for ${port}: ${err}`);
       }

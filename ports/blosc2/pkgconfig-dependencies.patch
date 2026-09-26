@@ -1,0 +1,12 @@
+diff --git a/blosc2.pc.in b/blosc2.pc.in
+index 380c956..c231515 100644
+--- a/blosc2.pc.in
++++ b/blosc2.pc.in
+@@ -7,5 +7,7 @@ URL: https://blosc.org/
+ Version: @BLOSC2_VERSION_STRING@
+ 
+ Requires:
++Requires.private: @BLOSC2_PC_REQUIRES_PRIVATE@
+ Libs: -L${libdir} -lblosc2
++Libs.private: @BLOSC2_PC_LIBS_PRIVATE@
+ Cflags: -I${includedir}

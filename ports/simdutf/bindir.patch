@@ -1,0 +1,25 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 7732e253..b85040b4 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -107,16 +107,16 @@ install(
+ if(WIN32)
+   # On Windows, install a copy of fastbase64 as fastbase64.coreutils
+   install(PROGRAMS $<TARGET_FILE:fastbase64>
+-    DESTINATION ${CMAKE_INSTALL_BINDIR}
++    DESTINATION tools/simdutf
+     RENAME fastbase64.coreutils
+   )
+ else()
+   # On non-Windows, create a symlink fastbase64.coreutils -> fastbase64 at install time
+   install(CODE "
+-    if(IS_ABSOLUTE \"${CMAKE_INSTALL_BINDIR}\")
+-      set(BINDIR \"${CMAKE_INSTALL_BINDIR}\")
++    if(IS_ABSOLUTE \"tools/simdutf\")
++      set(BINDIR \"tools/simdutf\")
+     else()
+-      set(BINDIR \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}\")
++      set(BINDIR \"\${CMAKE_INSTALL_PREFIX}/tools/simdutf\")
+     endif()
+     set(BINDIR \"\$ENV{DESTDIR}\${BINDIR}\")
+     file(MAKE_DIRECTORY \"\${BINDIR}\")
