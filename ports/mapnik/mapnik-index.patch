@@ -1,0 +1,34 @@
+diff --git a/utils/mapnik-index/CMakeLists.txt b/utils/mapnik-index/CMakeLists.txt
+index 111ac934e..877b7353d 100644
+--- a/utils/mapnik-index/CMakeLists.txt
++++ b/utils/mapnik-index/CMakeLists.txt
+@@ -6,6 +6,22 @@ add_executable(mapnik-index
+     process_geojson_file_x3.cpp
+     ../../plugins/input/csv/csv_utils.cpp # this project depends on this file
+ )
++if(NOT MSVC AND NOT APPLE)
++    target_link_libraries(mapnik-index PRIVATE
++        -Wl,--start-group
++            mapnik::mapnik
++            mapnik::json
++            mapnik::wkt
++            Boost::program_options
++            ICU::data 
++            ICU::i18n 
++            ICU::uc
++        -Wl,--end-group
++        Threads::Threads
++        m
++        dl
++    )
++else()
+ target_link_libraries(mapnik-index PRIVATE
+     mapnik::mapnik
+     mapnik::json
+@@ -13,5 +29,6 @@ target_link_libraries(mapnik-index PRIVATE
+     Boost::program_options
+     ICU::data ICU::i18n ICU::uc # needed for the static build (TODO: why isn't this correctly propagated from mapnik::mapnik?)
+ )
++endif()
+ 
+ mapnik_install_utility(mapnik-index)
