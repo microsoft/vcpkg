@@ -1,0 +1,20 @@
+{
+  "name": "vcpkg-ci-pagmo2",
+  "version-string": "ci",
+  "description": "Validation port",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "supports": "!android & !ios & !emscripten & !uwp & !(windows & arm) & !(windows & !mingw & static)",
+  "dependencies": [
+    {
+      "name": "pagmo2",
+      "features": [
+        "ipopt"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
