@@ -1,0 +1,13 @@
+sentil provides CMake targets:
+
+    find_package(SentilCpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Sentil::cpp)
+
+To use the C API on its own:
+
+    find_package(Sentil CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Sentil::sentil)
+
+sentil provides pkg-config modules:
+
+    sentil
