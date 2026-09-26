@@ -29,7 +29,7 @@ Verify consistent application of the [maintainer guide](https://raw.githubuserco
 9. Ports and port features are correctly named by meeting one of the conditions below. Replace `{{port-name}}` with the actual vcpkg port name before fetching or searching; for example, for `fmt`, use `https://repology.org/project/fmt/versions` and search for `fmt` or `fmt C++`.
     - The port packages the same content as indexed at `https://repology.org/project/{{port-name}}/versions`
     - The port is amongst the first web search results for `{{port-name}}` or `{{port-name}} C++`
-    - The port packages a GitHub project and is in "<GitHub Org>-<GitHub Repo>" form
+    - The port packages a GitHub project and is in "GitHubOrg-GitHubRepo" form
     - Some other reason explained by the contributor
 10. The port deterministically resolves every optional build dependency that upstream probes for, so the result does not depend on packages already installed in the build environment. Each such dependency is either declared unconditionally in `vcpkg.json` or explicitly disabled through patches or arguments such as [CMAKE_DISABLE_FIND_PACKAGE_Xxx](https://cmake.org/cmake/help/latest/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) or [VCPKG_LOCK_FIND_PACKAGE](https://learn.microsoft.com/vcpkg/users/buildsystems/cmake-integration#vcpkg_lock_find_package_pkg). A dependency choice fixed by upstream, including an upstream default that does not probe for availability, is already resolved and need not be repeated in `portfile.cmake`. Search sources for:
     - `find_package(...)`
