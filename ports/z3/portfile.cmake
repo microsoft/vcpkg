@@ -11,6 +11,7 @@ vcpkg_from_github(
   PATCHES
       fix-install-path.patch
       remove-flag-overrides.patch
+      fix-gcc-return-type.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
