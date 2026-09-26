@@ -1,0 +1,6 @@
+The feature mesa[lavapipe] provides the lavapipe software Vulkan driver.
+To use the driver, point the Vulkan loader at the installed ICD manifest:
+    VK_DRIVER_FILES=<vcpkg_installed>/share/vulkan/icd.d/lvp_icd.x86_64.json
+(replaces driver discovery) or
+    VK_ADD_DRIVER_FILES=<vcpkg_installed>/share/vulkan/icd.d/lvp_icd.x86_64.json
+(adds lavapipe to the normal driver search).
