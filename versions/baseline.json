@@ -11389,8 +11389,8 @@
       "port-version": 0
     },
     "zlmediakit": {
-      "baseline": "2024-09-29",
-      "port-version": 1
+      "baseline": "2026-08-21",
+      "port-version": 0
     },
     "zoe": {
       "baseline": "3.6",
