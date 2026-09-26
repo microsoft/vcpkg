@@ -21,7 +21,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        freeimage   USE_FREEIMAGE
         freetype    USE_FREETYPE
         rapidjson   USE_RAPIDJSON
         tbb         USE_TBB
@@ -42,6 +41,7 @@ vcpkg_cmake_configure(
         -DINSTALL_DIR_DOC=share/trash
         -DINSTALL_DIR_SCRIPT=share/trash # not relocatable
         -DINSTALL_TEST_CASES=OFF
+        -DUSE_FREEIMAGE=OFF
         -DUSE_TK=OFF
 )
 

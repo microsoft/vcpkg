@@ -7,11 +7,18 @@ ignition_modular_library(
    REF "${PORT}${VERSION_MAJOR}_${VERSION}"
    VERSION "${VERSION}"
    SHA512 41192ce9dc3fef34ea94e4b969f662960e2b381f95e2b102efbbb368d6a49bf4f901a9cff6e5dcdfe54e109f9aae4917e69126463b5b14260a260811dc113a36
+   OPTIONS
+      -DSKIP_heightmap=ON
+      -DSKIP_mesh=ON
+      -DSKIP_dartsim=ON
+      -DSKIP_tpe=ON
+      -DSKIP_bullet=ON
+      -DSKIP_bullet-featherstone=ON
    PATCHES
       dependencies.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)   
+if(VCPKG_TARGET_IS_WINDOWS)
    file(GLOB plugins "${CURRENT_PACKAGES_DIR}/lib/${PORT}-${VERSION_MAJOR}/engine-plugins/*.dll")
    if (NOT plugins STREQUAL "")
       file(COPY ${plugins} DESTINATION "${CURRENT_PACKAGES_DIR}/engine-plugins/")
