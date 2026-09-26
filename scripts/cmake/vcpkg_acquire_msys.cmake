@@ -207,7 +207,7 @@ function(vcpkg_acquire_msys out_msys_root)
         endforeach()
         list(INSERT requested 0 ${direct_packages})
     endif()
- 
+
     z_vcpkg_acquire_msys_download_packages(
         PACKAGES ${requested}
         OUT_RESOLVED resolved
