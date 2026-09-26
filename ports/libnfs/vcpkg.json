@@ -3,7 +3,7 @@
   "version-semver": "8.0.0",
   "description": "Client library for accessing NFS shares over a network",
   "homepage": "https://github.com/sahlberg/libnfs",
-  "license": "LGPL-2.1-or-later AND BSD-2-Clause",
+  "license": "LGPL-2.1-or-later AND BSD-2-Clause AND MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

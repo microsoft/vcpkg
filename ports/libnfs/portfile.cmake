@@ -7,6 +7,7 @@ vcpkg_from_git(
     PATCHES
         fix-cmake-target-interface.patch
         fix-android-pthread-detection.patch
+        fix-win32-header-detection.patch
 )
 
 vcpkg_check_features(
@@ -15,11 +16,16 @@ vcpkg_check_features(
         multithreading ENABLE_MULTITHREADING
 )
 
+if(VCPKG_TARGET_IS_IOS)
+    list(APPEND GSSAPI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         # Upstream utilities/examples are GPL-3.0-or-later. Keep this port library-only.
         ${FEATURE_OPTIONS}
+        ${GSSAPI_OPTIONS}
         -DENABLE_TESTS=OFF
         -DENABLE_DOCUMENTATION=OFF
         -DENABLE_UTILS=OFF
@@ -53,4 +59,5 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/COPYING"
         "${SOURCE_PATH}/LICENCE-LGPL-2.1.txt"
         "${SOURCE_PATH}/LICENCE-BSD.txt"
+        "${SOURCE_PATH}/include/win32/win32_compat.h"
 )
