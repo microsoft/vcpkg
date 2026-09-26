@@ -1,0 +1,30 @@
+; Import library definition for the NVDEC entry points of the NVIDIA display
+; driver's nvcuvid.dll. The names are those declared by the MIT-licensed
+; nv-codec-headers (ffnvcodec); no DLL or driver is needed to build the import
+; library from this file.
+LIBRARY nvcuvid.dll
+EXPORTS
+  cuvidCreateVideoSource
+  cuvidCreateVideoSourceW
+  cuvidDestroyVideoSource
+  cuvidSetVideoSourceState
+  cuvidGetVideoSourceState
+  cuvidGetSourceVideoFormat
+  cuvidGetSourceAudioFormat
+  cuvidCreateVideoParser
+  cuvidParseVideoData
+  cuvidDestroyVideoParser
+  cuvidGetDecoderCaps
+  cuvidCreateDecoder
+  cuvidDestroyDecoder
+  cuvidDecodePicture
+  cuvidGetDecodeStatus
+  cuvidReconfigureDecoder
+  cuvidMapVideoFrame
+  cuvidMapVideoFrame64
+  cuvidUnmapVideoFrame
+  cuvidUnmapVideoFrame64
+  cuvidCtxLockCreate
+  cuvidCtxLockDestroy
+  cuvidCtxLock
+  cuvidCtxUnlock
