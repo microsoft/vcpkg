@@ -106,6 +106,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/contrib/earcut-hpp/LICENSE"
         "${SOURCE_PATH}/contrib/openddlparser/LICENSE"
         "${SOURCE_PATH}/contrib/Open3DGC/o3dgcCommon.h"
         "${SOURCE_PATH}/contrib/Open3DGC/o3dgcArithmeticCodec.cpp"

@@ -23,7 +23,13 @@ else()
         BUILD_OPTIONS_DEBUG ${OPT_DBG}
     )
 
-    qt_install_copyright("${SOURCE_PATH}")
+    vcpkg_install_copyright(
+        FILE_LIST
+            "${SOURCE_PATH}/LICENSE.LGPLv3"
+            "${SOURCE_PATH}/src/3rdparty/imgui/LICENSE.txt"
+            "${SOURCE_PATH}/src/3rdparty/imgui/LICENSE_imstb.txt"
+            "${SOURCE_PATH}/src/3rdparty/imgui/LICENSE_proggyclean.txt"
+    )
 endif()
 
 vcpkg_restore_env_variables(VARS QMAKEFLAGS)
