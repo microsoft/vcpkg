@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_common.cmake")
 
 function(vcpkg_run_shell)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "" 
+        ""
         "WORKING_DIRECTORY;LOGNAME"
         "SHELL;COMMAND;SAVE_LOG_FILES"
     )
@@ -20,7 +20,7 @@ function(vcpkg_run_shell)
     # In the construction of the shell command, we need to handle environment variable assignments and configure options differently:
     #
     # 1. Environment variable assignments (e.g., CC, CXX, etc.):
-    #    - These must not be quoted. 
+    #    - These must not be quoted.
     #    - If the environment variable names (e.g., CC, CXX, CC_FOR_BUILD) are quoted, the shell will treat them as part of the value, breaking the declaration.
     #    - For example, CC='/usr/bin/gcc' is valid, but "CC='/usr/bin/gcc'" would cause an error because the shell would try to use the entire quoted string as the variable name.
     #
@@ -30,11 +30,11 @@ function(vcpkg_run_shell)
     #    - By quoting the options like "--prefix=/some path/with spaces", we ensure they are passed correctly to the configure script as a single argument.
     #
     # The resulting command should look something like this:
-    # V=1 CC='/Library/Developer/CommandLineTools/usr/bin/cc -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
-    #     CXX='/Library/Developer/CommandLineTools/usr/bin/c++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
+    # V=1 CC='/Library/Developer/CommandLineTools/usr/bin/cc -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64'
+    #     CXX='/Library/Developer/CommandLineTools/usr/bin/c++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64'
     #     CC_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/cc -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64'
-    #     CPP_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/cc -E -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
-    #     CXX_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/c++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64' 
+    #     CPP_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/cc -E -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64'
+    #     CXX_FOR_BUILD='/Library/Developer/CommandLineTools/usr/bin/c++ -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -arch arm64'
     #     ....
     #     ./../src/8bc98c3a0d-84009aba94.clean/configure "--enable-pic" "--disable-lavf" "--disable-swscale" "--disable-avs" ...
     vcpkg_list(JOIN arg_COMMAND " " arg_COMMAND)
@@ -48,7 +48,7 @@ endfunction()
 
 function(vcpkg_run_shell_as_build)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "" 
+        ""
         "WORKING_DIRECTORY;LOGNAME"
         "SHELL;COMMAND;NO_PARALLEL_COMMAND;SAVE_LOG_FILES"
     )
@@ -135,7 +135,7 @@ function(vcpkg_run_autoreconf shell_cmd work_dir)
         file(STRINGS "${CURRENT_BUILDTREES_DIR}/aclocal-${TARGET_TRIPLET}-err.log" libltdl REGEX "libltdl")
         if(configure_ac MATCHES "LT_CONFIG_LTDL_DIR|LT_SYS_SYMBOL_USCORE" AND libltdl MATCHES "missing")
             message(FATAL_ERROR "${PORT} depends on ltdl development files from the system package manager:
-        
+
     On Debian and Ubuntu derivatives:
         sudo apt install libltdl-dev
     On recent Red Hat and Fedora derivatives:
@@ -249,21 +249,21 @@ function(z_vcpkg_make_prepare_env config)
         ""
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    # Used by CL 
+    # Used by CL
     vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # Used by GCC
     vcpkg_host_path_list(PREPEND ENV{C_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
     vcpkg_host_path_list(PREPEND ENV{CPLUS_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
-    
+
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_backup_env_variables(VARS _CL_ _LINK_)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         if(VCPKG_TARGET_IS_UWP)
-            # Be aware that configure thinks it is crosscompiling due to: 
-            # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
+            # Be aware that configure thinks it is crosscompiling due to:
+            # error while loading shared libraries: VCRUNTIME140D_APP.dll:
             # cannot open shared object file: No such file or directory
-            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
+            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
@@ -308,8 +308,8 @@ endfunction()
 
 function(z_vcpkg_make_restore_env)
     # Only variables which are inspected in vcpkg_make_prepare_env need to be restored here.
-    # Rest is restored add the end of configure. 
-    vcpkg_restore_env_variables(VARS 
+    # Rest is restored add the end of configure.
+    vcpkg_restore_env_variables(VARS
          LIBRARY_PATH LIB LIBPATH
          PATH
     )
@@ -317,7 +317,7 @@ endfunction()
 
 function(vcpkg_make_run_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ADD_BIN_TO_PATH" 
+        "ADD_BIN_TO_PATH"
         "CONFIG;SHELL;WORKING_DIRECTORY;CONFIGURE_PATH;CONFIGURE_ENV"
         "OPTIONS"
     )
