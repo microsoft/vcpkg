@@ -1,6 +1,6 @@
 name: Request a feature or improvement to a port
 description: Suggest an improvement to one the the ports/libraries in vcpkg.
-title: "[<portname>] <short description of feature>"
+title: "[REPLACE_WITH_PORT_NAME] REPLACE_WITH_FEATURE_DESCRIPTION"
 labels: ["category:port-feature"]
 body:
   - type: textarea
