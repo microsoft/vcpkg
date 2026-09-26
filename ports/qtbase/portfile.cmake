@@ -30,7 +30,6 @@ set(${PORT}_PATCHES
         fix-libresolv-test.patch
         use_inotify_on_freebsd.patch
         silence-winrtbase-coroutine-warnings.diff
-        QTBUG-145703.patch # https://github.com/qt/qtbase/commit/239c54452fa60157c90901c8be8685048a65ad0a
         md4c.diff
 )
 
@@ -42,7 +41,7 @@ if("shared-mime-info" IN_LIST FEATURES)
     list(APPEND ${PORT}_PATCHES use-shared-mime-info.patch)
 endif()
 
-list(APPEND ${PORT}_PATCHES 
+list(APPEND ${PORT}_PATCHES
         dont_force_cmakecache_latest.patch
     )
 
@@ -56,7 +55,7 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "qtbase currently requires packages from the system package manager. "
-    "They can be installed on Ubuntu systems via sudo apt-get install " 
+    "They can be installed on Ubuntu systems via sudo apt-get install "
     "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
     "libxkbcommon-x11-dev libegl1-mesa-dev.")
 endif()
@@ -211,12 +210,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xcb-sm"              FEATURE_xcb_sm
     "xcb-xlib"            FEATURE_xcb_xlib
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
-    "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
+    "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled.
     "xrender"             FEATURE_xcb_native_painting # experimental
     "gles2"               FEATURE_opengles2
     "gles3"               FEATURE_opengles3
     #Cannot be required since Qt will look in CONFIG mode first but is controlled via CMAKE_DISABLE_FIND_PACKAGE_Vulkan below
-    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_WrapVulkanHeaders 
+    #"vulkan"              CMAKE_REQUIRE_FIND_PACKAGE_WrapVulkanHeaders
     "egl"                 FEATURE_egl
     #"fontconfig"          CMAKE_REQUIRE_FIND_PACKAGE_Fontconfig
     #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
@@ -520,7 +519,7 @@ set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
 set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY) # For vcpkg-qmake
 
-# target_qt_conf exists iff CMAKE_CROSSCOMPILING 
+# target_qt_conf exists iff CMAKE_CROSSCOMPILING
 # cf. qt_generate_qmake_and_qtpaths_wrapper_for_target in <src>/cmake/QtQmakeHelpers.cmake
 set(target_qt_conf "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/target_qt.conf")
 if(EXISTS "${target_qt_conf}")
