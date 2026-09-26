@@ -5432,6 +5432,10 @@
       "baseline": "2025-04-03",
       "port-version": 0
     },
+    "libnfs": {
+      "baseline": "8.0.0",
+      "port-version": 0
+    },
     "libnice": {
       "baseline": "0.1.23",
       "port-version": 0
