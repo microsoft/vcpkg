@@ -45,7 +45,12 @@ jobs:
 
           git diff --name-only --no-renames --diff-filter=AM --merge-base HEAD^ HEAD | sed -nE 's|^(ports/[^/]+)/.*|\1|p; /^ports\//!p' | sort -u > .github-pr.changed-crlf-paths
           while IFS= read -r changed_path; do
-            git grep -In $'\r$' -- "$changed_path" ':(exclude,glob)**/*.diff' ':(exclude,glob)**/*.patch' || true
+            # These scripts contain signature blocks; converting their CRLFs to LF can invalidate valid signatures.
+            git grep -In $'\r$' -- "$changed_path" ':(exclude,glob)**/*.diff' ':(exclude,glob)**/*.patch' \
+              ':(exclude)scripts/addPoshVcpkgToPowershellProfile.ps1' \
+              ':(exclude)scripts/buildsystems/msbuild/applocal.ps1' \
+              ':(exclude)scripts/posh-vcpkg/posh-vcpkg.psd1' \
+              ':(exclude)scripts/posh-vcpkg/posh-vcpkg.psm1' || true
           done < .github-pr.changed-crlf-paths | awk -F: '!seen[$1]++ { print $1 ":" $2 }' | sort -u > .github-pr.crlf-lines
           while IFS= read -r changed_path; do
             git grep -InE $'[ \t]+(\r)?$' -- "$changed_path" ':(exclude,glob)**/*.diff' ':(exclude,glob)**/*.patch' || true
