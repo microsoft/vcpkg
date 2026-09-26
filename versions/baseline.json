@@ -5285,8 +5285,8 @@
       "port-version": 0
     },
     "liblemon": {
-      "baseline": "2019-06-13",
-      "port-version": 10
+      "baseline": "2020-07-29",
+      "port-version": 0
     },
     "liblinear": {
       "baseline": "250",
