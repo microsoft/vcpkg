@@ -46,6 +46,7 @@ endif()
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more.
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
+list(APPEND MESA_OPTIONS -Ddisplay-info=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
 
