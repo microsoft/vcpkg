@@ -35,4 +35,13 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    foreach(header IN ITEMS xlsxio_read.h xlsxio_write.h)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${header}"
+            "#ifndef DLL_EXPORT_XLSXIO"
+            "#ifndef BUILD_XLSXIO_STATIC\n#define BUILD_XLSXIO_STATIC\n#endif\n#ifndef DLL_EXPORT_XLSXIO"
+        )
+    endforeach()
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
