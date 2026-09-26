@@ -85,7 +85,7 @@ When testing examples, select the required C++ standard (e.g. `/std:` or `-std=`
 
 The report does not consider "dead branches" skipped by `if(FALSE)` or similar.
 
-For simple version-and-SHA updates with no new issues, use `approve` when there are no issues and `approve-with-notes` for only pre-existing non-blocking issues. For every issue, state whether it exists in the current version.
+For version updates, including accompanying compatibility changes, normally accept the PR if it introduces no regressions and the package remains usable for at least one customer scenario. Do not require contributors to fix unrelated pre-existing defects merely because they updated a version: record those defects, including failures in other supported configurations, as non-blocking notes. Use `approve` when there are no issues and `approve-with-notes` when only pre-existing issues remain. Reserve `request-changes` for issues introduced by this PR or a package that no longer has a viable use; investigate whether a reported failure also exists in the current version before assigning a verdict.
 
 Search online to assess provenance. Highlight unusual portfile techniques and seek similar or alternative examples in other vcpkg ports.
 

@@ -1,6 +1,6 @@
 {
   "name": "pistache",
-  "version": "0.4.25",
+  "version": "0.4.26",
   "description": "Pistache is a modern and elegant HTTP and REST framework for C++. It is entirely written in pure-C++17 and provides a clear and pleasant API",
   "homepage": "https://github.com/pistacheio/pistache",
   "license": "Apache-2.0",
