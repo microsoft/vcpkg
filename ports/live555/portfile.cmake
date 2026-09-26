@@ -1,10 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-string(REPLACE "-" "." format_version ${VERSION})
+string(REPLACE "-" "." format_version "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.live555.com/live.${format_version}.tar.gz"
     FILENAME "live.${format_version}.tar.gz"
-    SHA512 8372dc0e90a5070600bc50b8d9372c52976056446dc2f8a088613d88f12a520bac571a00deff96f018445ca935c4b094408b2ec6e53855aea93cf5eac9c97320
+    SHA512 c5ee0ffa89a08e01a09367e3ae414fe2933e173abf060c8c9a39fde0e555df59f4f81f31e14d014bc6227569f464f736325b05e270fd061d472e3d1cc5136986
 )
 
 vcpkg_extract_source_archive(
@@ -31,4 +31,8 @@ file(GLOB HEADERS
 )
 
 file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/COPYING.LESSER"
+)

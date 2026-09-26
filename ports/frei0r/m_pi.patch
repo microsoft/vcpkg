@@ -1,0 +1,15 @@
+diff --git a/src/filter/shake0scillate/shake0scillate.cpp b/src/filter/shake0scillate/shake0scillate.cpp
+index f9657db..a042fcf 100755
+--- a/src/filter/shake0scillate/shake0scillate.cpp
++++ b/src/filter/shake0scillate/shake0scillate.cpp
+@@ -17,9 +17,9 @@
+  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
++#define _USE_MATH_DEFINES
+ #include "frei0r.hpp"
+ #include <cairo.h>
+-#define _USE_MATH_DEFINES
+ #include <cmath>
+ 
+ class Shake0scillate : public frei0r::filter {

@@ -1,19 +1,65 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index f80cbfb..f746bc1 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -159,6 +159,14 @@ elseif(LIBCXX)
+   set(PKGCONFIG_CXX_LIB "-lc++")
+ endif()
+ 
++# The MSVC runtime bundles the math functions, there is no separate libm to
++# link against.
++if(MSVC)
++  set(PKGCONFIG_MATH_LIB "")
++else()
++  set(PKGCONFIG_MATH_LIB "-lm")
++endif()
++
+ # The jxl_cms library definition.
+ include(jxl_cms.cmake)
+ # The jxl library definition.
 diff --git a/lib/jxl.cmake b/lib/jxl.cmake
-index 404b976..119f49e 100644
+index 59b2cca..b5db0c8 100644
 --- a/lib/jxl.cmake
 +++ b/lib/jxl.cmake
-@@ -271,10 +271,14 @@ set(JPEGXL_LIBRARY_REQUIRES
+@@ -271,10 +271,10 @@ set(JPEGXL_LIBRARY_REQUIRES
  
  if (BUILD_SHARED_LIBS)
    set(JPEGXL_REQUIRES_TYPE "Requires.private")
-+  if (NOT MSVC)
-   set(JPEGXL_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
+-  set(JPEGXL_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
++  set(JPEGXL_PRIVATE_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
  else()
    set(JPEGXL_REQUIRES_TYPE "Requires")
-+  if (NOT MSVC)
-   set(JPEGXL_PUBLIC_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
+-  set(JPEGXL_PUBLIC_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
++  set(JPEGXL_PUBLIC_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
  endif()
  
  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl.pc.in"
+diff --git a/lib/jxl_cms.cmake b/lib/jxl_cms.cmake
+index 62d5b65..a50b441 100644
+--- a/lib/jxl_cms.cmake
++++ b/lib/jxl_cms.cmake
+@@ -62,10 +62,10 @@ install(TARGETS jxl_cms
+ 
+ if (BUILD_SHARED_LIBS)
+   set(JPEGXL_REQUIRES_TYPE "Requires.private")
+-  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
++  set(JPEGXL_CMS_PRIVATE_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
+ else()
+   set(JPEGXL_REQUIRES_TYPE "Requires")
+-  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
++  set(JPEGXL_CMS_PRIVATE_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
+ endif()
+ 
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl_cms.pc.in"
+diff --git a/lib/threads/libjxl_threads.pc.in b/lib/threads/libjxl_threads.pc.in
+index dfbaa3f..1a22d5e 100644
+--- a/lib/threads/libjxl_threads.pc.in
++++ b/lib/threads/libjxl_threads.pc.in
+@@ -8,6 +8,6 @@ Description: JPEG XL multi-thread runner using std::threads.
+ Version: @JPEGXL_LIBRARY_VERSION@
+ @JPEGXL_REQUIRES_TYPE@: @JPEGXL_THREADS_LIBRARY_REQUIRES@
+ Libs: -L${libdir} -ljxl_threads
+-Libs.private: -lm
++Libs.private: @PKGCONFIG_MATH_LIB@
+ Cflags: -I${includedir}
+ Cflags.private: -DJXL_THREADS_STATIC_DEFINE

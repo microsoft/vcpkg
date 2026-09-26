@@ -1,3 +1,3 @@
-set(qtspeech_HASH "99958a370cbbd65d1c6b83904902550dcd0219be846b23e0cf3c23f2450bb2486768885107e4e18aca02bff06fd810332fda98240ad03fa8aa9d1e674d7d506a")
-set(qtspeech_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtspeech-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtspeech-everywhere-src-6.11.1.tar.xz")
-set(qtspeech_FILENAME "qtspeech-everywhere-src-6.11.1.tar.xz")
+set(qtspeech_HASH "f35c2380ea053910e4acfafd6359cab37f7c5295d9a96ca2c85b0ee3d21f7830b7a4dff1f9f4b87cf8ed1f0efb609b83f40a6f311cea31ec1f3414a72ab27d5c")
+set(qtspeech_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtspeech-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtspeech-everywhere-src-6.11.2.tar.xz")
+set(qtspeech_FILENAME "qtspeech-everywhere-src-6.11.2.tar.xz")

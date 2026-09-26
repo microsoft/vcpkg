@@ -2,14 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO esa/pagmo2
     REF "v${VERSION}"
-    SHA512 9ebe7f63b907607ea5762e56a884be62630efaca3f45d9ba9ad85ca1818d60d09864422bd075c2653aea1a14609fe9ad6520297aee5a00e07fa88df45872cef9
+    SHA512 3d0d171f8069b845016f3604f4054aaf6cab09dd55212a8ac317ba3d9454b4f2c81ee0cc835b1946838c97081da9ed9e6c80dba8e75c11c6ba210a0643dcf13f
     HEAD_REF master
     PATCHES
         0001-doxygen.patch
-        0002-find-tbb.patch
         0003-disable-werror.patch
-        0004-support-eigen3-5.patch
-        0005-avoid-stdext-checked-array-iterator.diff # ~= https://github.com/esa/pagmo2/commit/d4daedc9f865bf9e926946c21e62c4a4eebf353e
         0006-config-find-libipopt.patch
         0007-ipopt-transitive-deps.patch # coin-or-ipopt provides no cmake config
         0008-ipopt-header-search.patch

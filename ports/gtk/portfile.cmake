@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 f474174c27fec97b26809ae28ded2923f37e82fd25783ce31bbee40a99a02e5f9ce517583f0e499d91289e6b0ebae8e2dc249cba721d827ee35c7b867378797d
+    SHA512 e96d5de6ee0581aa36306bd62b7db3d69c5f89c3c2d1e37289250b25fbef0df54ab79e3152b40a9fc9fff8a4048c8c7bc237139da67a6c02ef3452edccb93793
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -85,10 +85,15 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/gdk/COPYING"
+        "${SOURCE_PATH}/gtk/roaring/COPYING"
+        "${SOURCE_PATH}/gtk/timsort/COPYING"
+)
 
 set(TOOL_NAMES gtk4-builder-tool
-               gtk4-encode-symbolic-svg
                gtk4-path-tool
                gtk4-query-settings
                gtk4-rendernode-tool
