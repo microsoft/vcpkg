@@ -20,6 +20,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/manifold)
+foreach(dir IN ITEMS lib/pkgconfig debug/lib/pkgconfig)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/${dir}/manifold.pc")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${dir}/manifold.pc" "Requires-private:" "Requires.private:")
+    endif()
+endforeach()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
