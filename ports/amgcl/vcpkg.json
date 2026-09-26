@@ -1,0 +1,17 @@
+{
+  "name": "amgcl",
+  "version": "1.5.0",
+  "description": "Header-only library for solving large sparse linear systems with algebraic multigrid (AMG) method",
+  "homepage": "https://amgcl.readthedocs.io",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
