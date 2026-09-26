@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-flann",
+  "version-string": "ci",
+  "description": "Validates flann",
+  "dependencies": [
+    "flann",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
