@@ -1,6 +1,6 @@
 {
   "name": "unordered-dense",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "A fast & densely stored hashmap and hashset",
   "homepage": "https://github.com/martinus/unordered_dense",
   "license": "MIT",
