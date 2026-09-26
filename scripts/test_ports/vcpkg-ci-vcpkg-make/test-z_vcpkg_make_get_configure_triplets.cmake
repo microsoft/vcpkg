@@ -49,6 +49,11 @@ elseif(VCPKG_TARGET_IS_ANDROID)
         [[ z_vcpkg_make_get_configure_triplets(actual COMPILER_NAME "/bin/armv7a-linux-androideabi28-clang") ]]
         actual "--host=armv7a-linux-androideabi28;${build_opt}"
     )
+elseif(VCPKG_TARGET_IS_IOS)
+    unit_test_check_variable_equal(
+        [[ string(REGEX MATCH "--host=[^;]*-(apple-ios)" output "${triplets}") ]]
+        CMAKE_MATCH_1 "apple-ios"
+    )
 elseif(VCPKG_TARGET_IS_MINGW)
     unit_test_check_variable_equal(
         [[ string(REGEX MATCH "--host=[^;]*-(mingw32|[^-;]*)" output "${triplets}") ]]
