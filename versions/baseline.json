@@ -2913,7 +2913,7 @@
       "port-version": 9
     },
     "exiv2": {
-      "baseline": "0.28.8",
+      "baseline": "0.28.9",
       "port-version": 0
     },
     "expat": {
