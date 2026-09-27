@@ -180,11 +180,12 @@ endif()
 # OpenCV >= 4.14.0 raises this from an Android-only extra to the general ARM HAL:
 #   OCV_OPTION(WITH_KLEIDICV ... (NOT CV_DISABLE_OPTIMIZATION)
 #     VISIBLE_IF (AARCH64 AND (ANDROID OR UNIX)))
-# so on every AArch64 target it defaults to ON and hal/kleidicv/kleidicv.cmake
-# fetches kleidicv-${KLEIDICV_SRC_COMMIT} at configure time, which the port
-# forbids (0001-disable-downloading.patch). The pinned commit is 26.03 and the
-# cache key must match the HASH that OpenCV passes to ocv_download, otherwise
-# the download is not recognised and configure still fails.
+# so on every AArch64 target it defaults to ON 
+# hal/kleidicv/kleidicv.cmake fetches kleidicv-${KLEIDICV_SRC_COMMIT} at configure time,
+# but 0001-disable-downloading.patch disables that, so fetch it here instead.
+
+# The pinned commit is 26.03 and the cache key must match the HASH that OpenCV passes to ocv_download,
+# otherwise the download is not recognised and configure still fails.
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/26.03/kleidicv-26.03.tar.gz"
