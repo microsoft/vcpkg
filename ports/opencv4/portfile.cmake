@@ -307,7 +307,7 @@ if("ipp" IN_LIST FEATURES)
     set(key "linux-${VCPKG_TARGET_ARCHITECTURE}")
   endif()
 
-  # For convenient updates, use 
+  # For convenient updates, use
   # vcpkg install opencv4[core,ipp] --cmake-args=-DVCPKG_OPENCV4_UPDATE=1
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_OPENCV4_UPDATE)
     if(VCPKG_TARGET_IS_APPLE OR VCPKG_OPENCV4_UPDATE)
