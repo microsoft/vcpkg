@@ -28,16 +28,6 @@ vcpkg_from_github(
 # Disallow accidental build of vendored copies
 file(GLOB third_party "${SOURCE_PATH}/3rdparty/*")
 list(FILTER third_party EXCLUDE REGEX "/ippicv\$")
-# dlpack is a header-only shim (3rdparty/dlpack/include/dlpack/dlpack.h plus its
-# LICENSE) that OpenCV 4.14.0 uses for DNN DLPack interop. cmake/OpenCVDetectDLPack.cmake
-# falls back to it when find_package(dlpack) fails, and installs its LICENSE:
-#   if (NOT dlpack_FOUND)
-#       ocv_include_directories("${OpenCV_SOURCE_DIR}/3rdparty/dlpack/include")
-#       ocv_install_3rdparty_licenses(dlpack "${OpenCV_SOURCE_DIR}/3rdparty/dlpack/LICENSE")
-#   endif()
-# Removing it makes the install step fail with
-#   file INSTALL cannot find ".../3rdparty/dlpack/LICENSE": No such file or directory.
-# vcpkg has no dlpack port, so keep the vendored copy.
 list(FILTER third_party EXCLUDE REGEX "/dlpack\$")
 file(REMOVE_RECURSE ${third_party})
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
