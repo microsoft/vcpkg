@@ -104,7 +104,7 @@ function(vcpkg_from_git)
 
             vcpkg_execute_required_process(
                 ALLOW_IN_DOWNLOAD_MODE
-                COMMAND "${GIT}" lfs install --local --force
+                COMMAND "${GIT}" lfs install --local --force --skip-repo
                 WORKING_DIRECTORY "${git_working_directory}"
                 LOGNAME "git-lfs-install-${TARGET_TRIPLET}"
             )
@@ -183,6 +183,16 @@ SHA is in the history. For example, you may be able to fix this error by changin
         NO_REMOVE_ONE_LEVEL
         ${extract_working_directory_param}
         ${skip_patch_check_param}
+    )
+
+    if(VCPKG_USE_HEAD_VERSION AND DEFINED arg_HEAD_REF)
+        set(spdx_ref "${rev_parse_ref}")
+    else()
+        set(spdx_ref "${arg_REF}")
+    endif()
+    z_vcpkg_add_spdx_resource(
+        NAME "${arg_URL}"
+        DOWNLOAD_LOCATION "git+${arg_URL}@${spdx_ref}"
     )
 
     # Sourcelink can only be enabled for generic git repos if the URL for raw retrieval is provided.

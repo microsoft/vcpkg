@@ -1,11 +1,23 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8df871c..2eafe3f 100644
+index 8df871c..a8f93b8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,5 +1,5 @@
++CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
  PROJECT(yasm)
 -CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
-+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
  if (COMMAND cmake_policy)
      cmake_policy(SET CMP0003 NEW)
  endif (COMMAND cmake_policy)
+diff --git a/ConfigureChecks.cmake b/ConfigureChecks.cmake
+index 4b05d04..3b9971a 100644
+--- a/ConfigureChecks.cmake
++++ b/ConfigureChecks.cmake
+@@ -34,7 +34,6 @@ CONFIGURE_FILE(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+ 
+ ADD_DEFINITIONS(-DHAVE_CONFIG_H)
+ 
+-INCLUDE(FindPythonInterp)
+ IF (NOT PYTHON_EXECUTABLE)
+     MESSAGE(FATAL_ERROR "Could not find Python executable")
+ ENDIF (NOT PYTHON_EXECUTABLE)

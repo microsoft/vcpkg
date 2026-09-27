@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b5c73c..77ca1f5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,8 +22,10 @@
- #-----------------------------------------------------------------------------
+@@ -23,6 +23,8 @@ set(PACKAGE_RELEASE_VERSION 1)
  include(GNUInstallDirs)
  include(CheckIPOSupported)
  include(CMakePackageConfigHelpers)
@@ -11,32 +11,30 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  # default is "No tests"
  option(BUILD_TESTING "" OFF)
  include(CTest)
- include(sources.cmake)
-@@ -118,8 +120,19 @@
- target_link_options(${PROJECT_NAME} BEFORE PRIVATE
+@@ -119,6 +121,18 @@ target_link_options(${PROJECT_NAME} BEFORE PRIVATE
      ${LTM_LD_FLAGS}
  )
  
 +if(MSVC)
 +    cmake_push_check_state()
 +    set(CMAKE_REQUIRED_LIBRARIES bcrypt)
-+    check_symbol_exists(BCryptGenRandom "Windows.h;bcrypt.h" BCRYPT_AVAILABLE)
++    check_symbol_exists(BCryptGenRandom "windows.h;bcrypt.h" BCRYPT_AVAILABLE)
 +    cmake_pop_check_state()
 +    if(BCRYPT_AVAILABLE)
 +        target_compile_definitions(${PROJECT_NAME} PRIVATE LTM_WIN32_BCRYPT)
 +        target_link_libraries(${PROJECT_NAME} PRIVATE bcrypt)
++        string(APPEND PC_LIBS_PRIVATE -lbcrypt)
 +    endif()
 +endif()
 +
  set(PUBLIC_HEADERS tommath.h)
  set(C89 False CACHE BOOL "(Usually maintained automatically) Enable when the library is in c89 mode to package the correct header files on install")
  if(C89)
-     list(APPEND PUBLIC_HEADERS tommath_c89.h)
 diff --git a/bn_s_mp_rand_platform.c b/bn_s_mp_rand_platform.c
+index 27339bf..097f7be 100644
 --- a/bn_s_mp_rand_platform.c
 +++ b/bn_s_mp_rand_platform.c
-@@ -28,8 +28,19 @@
- #endif
+@@ -29,6 +29,17 @@ static mp_err s_read_arc4random(void *p, size_t n)
  
  #define WIN32_LEAN_AND_MEAN
  #include <windows.h>
@@ -54,9 +52,7 @@ diff --git a/bn_s_mp_rand_platform.c b/bn_s_mp_rand_platform.c
  #include <wincrypt.h>
  
  static mp_err s_read_wincsp(void *p, size_t n)
- {
-@@ -45,8 +56,9 @@
-       hProv = h;
+@@ -46,6 +57,7 @@ static mp_err s_read_wincsp(void *p, size_t n)
     }
     return CryptGenRandom(hProv, (DWORD)n, (BYTE *)p) == TRUE ? MP_OKAY : MP_ERR;
  }
@@ -64,4 +60,13 @@ diff --git a/bn_s_mp_rand_platform.c b/bn_s_mp_rand_platform.c
  #endif /* WIN32 */
  
  #if !defined(BN_S_READ_WINCSP_C) && defined(__linux__) && defined(__GLIBC_PREREQ)
- #if __GLIBC_PREREQ(2, 25)
+diff --git a/libtommath.pc.in b/libtommath.pc.in
+index 7ce50fd..4b8e5fa 100644
+--- a/libtommath.pc.in
++++ b/libtommath.pc.in
+@@ -6,4 +6,5 @@ Name: LibTomMath
+ Description: public domain library for manipulating large integer numbers
+ Version: @PROJECT_VERSION@
+ Libs: -L${libdir} -ltommath
++Libs.private: @PC_LIBS_PRIVATE@
+ Cflags: -I${includedir}

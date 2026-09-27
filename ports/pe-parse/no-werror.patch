@@ -1,8 +1,16 @@
 diff --git a/cmake/compilation_flags.cmake b/cmake/compilation_flags.cmake
-index 395f1b5..bb10165 100644
+index 395f1b5..f55db79 100644
 --- a/cmake/compilation_flags.cmake
 +++ b/cmake/compilation_flags.cmake
-@@ -26,7 +26,7 @@ else ()
+@@ -13,7 +13,6 @@ if (MSVC)
+   endif ()
+ 
+   if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+-    list(APPEND DEFAULT_CXX_FLAGS /WX)
+   endif ()
+ 
+ else ()
+@@ -26,7 +25,7 @@ else ()
      -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization
      -Wformat=2 -Winit-self -Wlong-long -Wmissing-declarations -Wmissing-include-dirs -Wcomment
      -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wshadow -Wsign-conversion
@@ -12,9 +20,18 @@ index 395f1b5..bb10165 100644
    )
  
 diff --git a/examples/peaddrconv/CMakeLists.txt b/examples/peaddrconv/CMakeLists.txt
-index fbad06a..02c8bcf 100644
+index fbad06a..bac7e06 100644
 --- a/examples/peaddrconv/CMakeLists.txt
 +++ b/examples/peaddrconv/CMakeLists.txt
+@@ -12,7 +12,7 @@ if (MSVC)
+   # directory on Windows its not found by CMake when performing its search.
+   list(APPEND CMAKE_PREFIX_PATH /usr/lib/cmake)
+ 
+-  list(APPEND PEADDRCONV_CXXFLAGS /W4 /WX /analyze)
++  list(APPEND PEADDRCONV_CXXFLAGS /W4 /analyze)
+ 
+   if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+     list(APPEND PEADDRCONV_CXXFLAGS /Zi)
 @@ -26,7 +26,7 @@ else ()
      -pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wdisabled-optimization
      -Wformat=2 -Winit-self -Wlong-long -Wmissing-declarations -Wmissing-include-dirs -Wcomment

@@ -1,0 +1,64 @@
+diff --git a/rtc_base/denormal_disabler.cc b/rtc_base/denormal_disabler.cc
+index 6f2ebb2857..ae0e0e4bfb 100644
+--- a/rtc_base/denormal_disabler.cc
++++ b/rtc_base/denormal_disabler.cc
+@@ -10,18 +10,27 @@
+ 
+ #include "rtc_base/denormal_disabler.h"
+ 
++#if defined(_MSC_VER) && \
++    (defined(WEBRTC_ARCH_X86_FAMILY) || \
++     (defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_64_BITS)))
++#include <intrin.h>
++#endif
++
+ #include "rtc_base/checks.h"
+ #include "rtc_base/system/arch.h"
+ 
+ namespace webrtc {
+ namespace {
+ 
+-#if defined(WEBRTC_ARCH_X86_FAMILY) && defined(__clang__)
++#if defined(WEBRTC_ARCH_X86_FAMILY) && \
++    (defined(__clang__) || defined(_MSC_VER))
+ #define WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED
+ #endif
+ 
+ #if defined(WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED) || \
+-    defined(WEBRTC_ARCH_ARM_FAMILY)
++    (defined(WEBRTC_ARCH_ARM_FAMILY) &&                                      \
++     ((defined(__clang__) || defined(__GNUC__)) ||                           \
++      (defined(_MSC_VER) && defined(WEBRTC_ARCH_64_BITS))))
+ #define WEBRTC_DENORMAL_DISABLER_SUPPORTED
+ #endif
+ 
+@@ -43,7 +52,14 @@ constexpr int kDenormalBitMask = 1 << 24;
+ int ReadStatusWord() {
+   int result = kUnspecifiedStatusWord;
+ #if defined(WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED)
++#if defined(_MSC_VER)
++  result = static_cast<int>(_mm_getcsr());
++#else
+   asm volatile("stmxcsr %0" : "=m"(result));
++#endif
++#elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_64_BITS) && \
++    defined(_MSC_VER)
++  result = static_cast<int>(_ReadStatusReg(ARM64_FPCR));
+ #elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_32_BITS)
+   asm volatile("vmrs %[result], FPSCR" : [result] "=r"(result));
+ #elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_64_BITS)
+@@ -56,7 +72,14 @@ int ReadStatusWord() {
+ // and the compiler are supported.
+ void SetStatusWord(int status_word) {
+ #if defined(WEBRTC_DENORMAL_DISABLER_X86_SUPPORTED)
++#if defined(_MSC_VER)
++  _mm_setcsr(static_cast<unsigned int>(status_word));
++#else
+   asm volatile("ldmxcsr %0" : : "m"(status_word));
++#endif
++#elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_64_BITS) && \
++    defined(_MSC_VER)
++  _WriteStatusReg(ARM64_FPCR, static_cast<__int64>(status_word));
+ #elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_32_BITS)
+   asm volatile("vmsr FPSCR, %[src]" : : [src] "r"(status_word));
+ #elif defined(WEBRTC_ARCH_ARM_FAMILY) && defined(WEBRTC_ARCH_64_BITS)

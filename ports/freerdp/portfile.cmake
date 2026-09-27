@@ -2,11 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 8e5380ad9772eb28bd8767703bfee05ca60ef77b491c7f695b666d0fbda626365084cca4b48cabc15225088ad2ce88f45d58dff8ee80c102d3e4847f1532a851
+    SHA512 5dfb05f8de39092cd4874fb6839f399fc9c179939e1cd4ae43988506c836d554b1f3544febb0589adbdd4fa700acb6a26a26d59c90bb6652e251fbca79f74b29
     HEAD_REF master
     PATCHES
         dependencies.patch
         ffmpeg.diff
+        fix-aom-target.patch
+        fix-cjson-config.patch
+        fix-windows-pkgconfig.patch
         install-layout.patch
         windows-linkage.patch
 )
@@ -19,6 +22,8 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        av1         WITH_AOM
+        av1         WITH_GFX_AV1
         client      WITH_CLIENT
         ffmpeg      WITH_DSP_FFMPEG
         ffmpeg      WITH_FFMPEG
@@ -76,6 +81,7 @@ vcpkg_cmake_configure(
         -DWITH_MANPAGES=OFF
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
+        -DWITH_SNDIO=OFF
         -DWITH_UNICODE_BUILTIN=ON
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
@@ -91,7 +97,7 @@ vcpkg_cmake_configure(
         -DWITH_CUPS=OFF
         -DWITH_FUSE=OFF
         -DWITH_KRB5=OFF
-        -DWITH_LIBSYSTEMD=OFF
+        -DWITH_SYSTEMD=OFF
         -DWITH_OPUS=OFF
         -DWITH_OSS=OFF
         -DWITH_PCSC=OFF
@@ -106,6 +112,7 @@ vcpkg_cmake_configure(
         USE_UNWIND
         VCPKG_LOCK_FIND_PACKAGE_X11
         WITH_CLIENT_WINDOWS
+        WITH_SNDIO
 )
 
 vcpkg_cmake_install()
@@ -143,6 +150,12 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
 endif()
 
+file(COPY
+    "${CURRENT_PACKAGES_DIR}/include/freerdp3/"
+    "${CURRENT_PACKAGES_DIR}/include/winpr3/"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
+
 file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
 file(REMOVE_RECURSE
     ${cmakefiles}
@@ -151,4 +164,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/channels/audin/client/opensles/opensl_io.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md4.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md5.c"
+        "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/NOTICE"
+        "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/cpu-features.h"
+)

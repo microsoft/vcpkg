@@ -1,0 +1,16 @@
+diff --git a/cmake/OpenCVDetectCUDAUtils.cmake b/cmake/OpenCVDetectCUDAUtils.cmake
+index 9cf1600..f584831 100644
+--- a/cmake/OpenCVDetectCUDAUtils.cmake
++++ b/cmake/OpenCVDetectCUDAUtils.cmake
+@@ -360,6 +360,11 @@ macro(ocv_cuda_filter_options)
+     # issue: #11552 (from OpenCVCompilerOptions.cmake)
+     string(REGEX REPLACE "-Wimplicit-fallthrough(=[0-9]+)? " "" ${var} "${${var}}")
+ 
++    # CUDA first-class-language builds set their own standard level via CMake.
++    # Forwarding a second host -std= flag through -Xcompiler can conflict with
++    # the CUDA frontend's standard selection and break compilation on newer GCC.
++    string(REGEX REPLACE "(^| )(-std=[^ ]+|/std:c\\+\\+[^ ]+)( |$)" " " ${var} "${${var}}")
++
+     # removal of custom specified options
+     if(OPENCV_CUDA_NVCC_FILTEROUT_OPTIONS)
+       foreach(__flag ${OPENCV_CUDA_NVCC_FILTEROUT_OPTIONS})

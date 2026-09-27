@@ -243,6 +243,8 @@ function(vcpkg_cmake_configure)
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
         ${arg_OPTIONS} ${arg_OPTIONS_DEBUG})
 
+    vcpkg_host_path_list(REMOVE_DUPLICATES ENV{PATH})
+
     if(NOT arg_DISABLE_PARALLEL_CONFIGURE)
         vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 

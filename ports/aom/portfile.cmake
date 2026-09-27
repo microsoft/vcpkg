@@ -1,16 +1,21 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF d772e334cc724105040382a977ebb10dfd393293
+    REF 44d0a57786f432d933ff64b653347c66f4d0fa1d
+    FETCH_REF "v${VERSION}"
     HEAD_REF main
     PATCHES
         aom-rename-static.diff
-        aom-uninitialized-pointer.diff
-        aom-fix-nasm.diff # TODO: remove this patch after the next release
 )
 
-vcpkg_find_acquire_program(NASM)
 vcpkg_find_acquire_program(PERL)
+
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)$")
+    # Upstream AOM only uses NASM on x86-family targets. Non-x86 targets such as
+    # Apple Silicon configure with ENABLE_NASM=OFF and should not require nasm.
+    vcpkg_find_acquire_program(NASM)
+    set(aom_nasm_compiler "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+endif()
 
 set(aom_target_cpu "")
 if(VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
@@ -24,16 +29,17 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${aom_target_cpu}
+        -DENABLE_APPS=OFF
         -DENABLE_DOCS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTDATA=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_TOOLS=OFF
         -DTHREADS_PREFER_PTHREAD_FLAG=ON
-        "-DCMAKE_ASM_NASM_COMPILER=${NASM}"
+        ${aom_nasm_compiler}
         "-DPERL_EXECUTABLE=${PERL}"
 )
 
@@ -47,4 +53,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/PATENTS"
+    "${SOURCE_PATH}/third_party/fastfeat/LICENSE"
+    "${SOURCE_PATH}/third_party/vector/LICENSE"
+    "${SOURCE_PATH}/third_party/x86inc/LICENSE"
+)

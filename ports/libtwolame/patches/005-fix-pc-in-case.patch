@@ -1,0 +1,13 @@
+diff --git a/twolame.pc.in b/twolame.pc.in
+index 0395b69..882c984 100644
+--- a/twolame.pc.in
++++ b/twolame.pc.in
+@@ -8,6 +8,6 @@ Description: An optimized MPEG Audio Layer 2 encoder
+ Requires:
+ Version: @VERSION@
+ Libs: -L${libdir} -ltwolame
+-Libs.Private: @LIBS@
++Libs.private: @LIBS@
+ Cflags: -I${includedir}
+ Cflags.private: -DLIBTWOLAME_STATIC
+ 

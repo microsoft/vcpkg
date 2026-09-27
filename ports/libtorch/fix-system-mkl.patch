@@ -1,0 +1,40 @@
+--- a/cmake/Modules/FindMKL.cmake
++++ b/cmake/Modules/FindMKL.cmake
+@@ -1,3 +1,37 @@
++if(NOT VCPKG_LIBTORCH_MKL_FEATURE_ENABLED)
++  set(MKL_FOUND FALSE)
++  return()
++endif()
++
++find_package(MKL CONFIG REQUIRED)
++
++if(NOT TARGET MKL::MKL)
++  message(FATAL_ERROR
++    "libtorch[mkl] is enabled but the intel-mkl port did not provide MKL::MKL. "
++    "Check that the intel-mkl dependency installed successfully.")
++endif()
++
++set(MKL_LIBRARIES MKL::MKL)
++set(MKL_LAPACK_LIBRARIES MKL::MKL)
++set(MKL_OPENMP_TYPE "Intel")
++set(MKL_OPENMP_LIBRARY "")
++set(MKL_VERSION "vcpkg-intel-mkl")
++
++get_target_property(_mkl_inc MKL::MKL INTERFACE_INCLUDE_DIRECTORIES)
++if(_mkl_inc)
++  set(MKL_INCLUDE_DIR ${_mkl_inc})
++endif()
++
++if(NOT DEFINED MKL_ROOT OR NOT IS_DIRECTORY "${MKL_ROOT}")
++  if(MKL_INCLUDE_DIR)
++    list(GET MKL_INCLUDE_DIR 0 _mkl_first_inc)
++    get_filename_component(MKL_ROOT "${_mkl_first_inc}" DIRECTORY)
++  endif()
++endif()
++
++message(STATUS "MKL: using vcpkg intel-mkl (MKL::MKL); MKL_ROOT=${MKL_ROOT}")
++return()
++
+ # - Find INTEL MKL library
+ #
+ # This module sets the following variables:

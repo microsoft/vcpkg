@@ -149,7 +149,7 @@
         "qt",
         "tiff"
       ],
-      "platform": "!android & !uwp & !(windows & arm)"
+      "platform": "!android & !windows"
     },
     {
       "name": "opencv3",

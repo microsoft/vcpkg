@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wdas/ptex
     REF "v${VERSION}"
-    SHA512 26265899d3bb47eca67052d69b08efb89a01cf06a01a4aabdd8118e0497aac87319317450719ac56ea676bbb2ea771bd9b8fe73bc41caa8a2a6818cbc3d83bea
+    SHA512 f405fada625e792d9ca5796ee28667d75a16bb4a0a0ac65d02dc675c21f6b5d39d0922c95f74b694c78b9366cd04b2deb96e069845b1f5ae5ca8c83fad204681
     HEAD_REF master
     PATCHES
         fix-build.patch
         fix-android.patch
+        fix-config-dependency.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIB)
@@ -35,15 +36,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 vcpkg_copy_pdbs()
 
-foreach(HEADER PtexHalf.h Ptexture.h)
-    file(READ "${CURRENT_PACKAGES_DIR}/include/${HEADER}" PTEX_HEADER)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        string(REPLACE "ifndef PTEX_STATIC" "if 1" PTEX_HEADER "${PTEX_HEADER}")
-    else()
-        string(REPLACE "ifndef PTEX_STATIC" "if 0" PTEX_HEADER "${PTEX_HEADER}")
-    endif()
-    file(WRITE "${CURRENT_PACKAGES_DIR}/include/${HEADER}" "${PTEX_HEADER}")
-endforeach()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/PtexExports.h" "ifdef PTEX_STATIC" "if 0")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/PtexExports.h" "ifdef PTEX_STATIC" "if 1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

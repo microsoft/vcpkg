@@ -1,0 +1,10 @@
+wirestead provides CMake targets:
+
+    find_package(wirestead CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE wirestead::wirestead)
+
+The legacy UniLink compatibility package is also installed for v0.9.x source
+compatibility:
+
+    find_package(unilink CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unilink::unilink)

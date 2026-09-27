@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/yap
     REF boost-${VERSION}
-    SHA512 04a309a512519ee0bb901a84868c1ff69dc89e3b8c4bf060c662a7c6daf3bc8ce3940de488f558a4bf6a71d39c9836ac1990c2d5f66f684d0dcc9c8b21ade171
+    SHA512 0eea170ed303d8c5b6df77faec9b27a59204cc927d8967b54dfc7b19a57a2738b5bbe2ec93f2eb4fe24d4e6ad2ecccc3193ecee9e59b9fb0629092b46c45133f
     HEAD_REF master
 )
 

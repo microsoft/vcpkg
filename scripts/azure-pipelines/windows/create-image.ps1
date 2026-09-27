@@ -12,6 +12,9 @@ create-image.ps1 creates an Azure Windows VM image, set up for vcpkg's CI system
 This script assumes you have installed Azure tools into PowerShell by following the instructions
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
+
+The prototype-vm user-assigned managed identity in the vcpkg-image-minting resource group must have
+Storage Blob Data Reader access to the vcpkgimageminting storage account.
 #>
 
 $Location = 'westus3'
@@ -24,8 +27,22 @@ $WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 18
-$CurrentProgress = 1
+$TotalProgress = 17
+$CurrentProgress = 0
+
+function Start-ImageProgress {
+  param([string]$Status)
+
+  Write-Progress `
+    -Activity $ProgressActivity `
+    -Status $Status `
+    -PercentComplete (100 / $TotalProgress * $script:CurrentProgress)
+  $script:CurrentProgress++
+}
+
+function Complete-ImageProgress {
+  Write-Progress -Activity $ProgressActivity -Completed
+}
 
 # Assigning this to another variable helps when running the commands in this script manually for
 # debugging
@@ -97,12 +114,12 @@ $Credential = New-Object System.Management.Automation.PSCredential ("AdminUser",
 
 $VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-minting-wus3'
 $Subnet = $VirtualNetwork.Subnets | Where-Object -Property 'Name' -EQ -Value 'image-minting' | Select-Object -First 1
+$PrototypeVmIdentity = Get-AzUserAssignedIdentity `
+  -ResourceGroupName 'vcpkg-image-minting' `
+  -Name 'prototype-vm'
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Creating prototype VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Creating prototype VM'
 
 $NicName = $Prefix + 'NIC'
 $Nic = New-AzNetworkInterface `
@@ -112,7 +129,12 @@ $Nic = New-AzNetworkInterface `
   -Subnet $Subnet `
   -EnableAcceleratedNetworking
 
-$VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType TrustedLaunch -IdentityType SystemAssigned
+$VM = New-AzVMConfig `
+  -Name $ProtoVMName `
+  -VMSize $VMSize `
+  -SecurityType TrustedLaunch `
+  -IdentityType UserAssigned `
+  -IdentityId $PrototypeVmIdentity.Id
 $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Windows `
@@ -137,70 +159,55 @@ New-AzVm `
 
 $VMCreated = Get-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 $VMCreatedOsDisk = $VMCreated.StorageProfile.OsDisk.Name
-
-####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Minting token for vcpkg-image-minting storage account' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
-
-$VcpkgImageMintingAccount = Get-AzStorageAccount -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkgimageminting'
-
-$AssetStorageContext = New-AzStorageContext -StorageAccountName 'vcpkgimageminting' -UseConnectedAccount
-$StartTime = Get-Date
-$ExpiryTime = $StartTime.AddHours(4)
-$AssetsSas = New-AzStorageContainerSASToken -Name 'assets' -Permission r -StartTime $StartTime -ExpiryTime $ExpiryTime -Context $AssetStorageContext
+Complete-ImageProgress
 
 ####################################################################################################
 function Invoke-ScriptWithPrefix {
-  param(
-    [string]$ScriptName,
-    [switch]$SkipSas
-  )
+  param([string]$ScriptName)
 
-  Write-Progress `
-    -Activity $ProgressActivity `
-    -Status "Running provisioning script $ScriptName in VM" `
-    -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+  Start-ImageProgress -Status "Running provisioning script $ScriptName in VM"
 
-  $UtilityPrefixContent = Get-Content "$Root\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $UtilityPrefixContent = Get-Content -LiteralPath "$Root\utility-prefix.ps1" -Encoding ascii -Raw
+  $UtilityPrefixContent += "`n`$UseManagedIdentity = `$true`n"
 
   $tempScriptFilename = "$env:TEMP\temp-script.txt"
   try {
-    $script = Get-Content "$Root\$ScriptName" -Encoding utf8NoBOM -Raw
+    $script = Get-Content -LiteralPath "$Root\$ScriptName" -Encoding ascii -Raw
 $replacement = @"
-if (Test-Path "`$PSScriptRoot/utility-prefix.ps1") {
+if (Test-Path -LiteralPath "`$PSScriptRoot/utility-prefix.ps1") {
   . "`$PSScriptRoot/utility-prefix.ps1"
 }
 "@
-    $script = $script.Replace($replacement, $UtilityPrefixContent);
-    Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
-
-    $parameter = $null
-    if (-not $SkipSas) {
-      $parameter = @{SasToken = "`"$AssetsSas`"";}
-    }
+    $script = $script.Replace($replacement, $UtilityPrefixContent)
+    Set-Content -LiteralPath $tempScriptFilename -Value $script -Encoding ascii
 
     $InvokeResult = Invoke-AzVMRunCommand `
       -ResourceGroupName 'vcpkg-image-minting' `
       -VMName $ProtoVMName `
       -CommandId 'RunPowerShellScript' `
-      -ScriptPath $tempScriptFilename `
-      -Parameter $parameter
-
-    Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
+      -ScriptPath $tempScriptFilename
   } finally {
-    Remove-Item $tempScriptFilename -Force
+    Complete-ImageProgress
+    Remove-Item -LiteralPath $tempScriptFilename -Force
   }
+
+  Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
 }
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-tlssettings.ps1' -SkipSas
-Write-Host 'Waiting 1 minute for VM to reboot...'
-Start-Sleep -Seconds 60
+Invoke-ScriptWithPrefix -ScriptName 'deploy-sevenzip.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-git.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cmake.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-ninja.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1'
@@ -212,9 +219,6 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1'
 Invoke-ScriptWithPrefix -ScriptName 'deploy-cudnn.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-inteloneapi.ps1'
-
-####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
 
 ####################################################################################################
@@ -224,25 +228,20 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-azure-cli.ps1'
 Invoke-ScriptWithPrefix -ScriptName 'deploy-azcopy.ps1'
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt' -SkipSas
+Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt'
 Restart-AzVM -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'sysprep.ps1'
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Waiting for VM to shut down' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Waiting for VM to shut down'
 
 Wait-Shutdown -ResourceGroupName 'vcpkg-image-minting' -Name $ProtoVMName
+Complete-ImageProgress
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Converting VM to Image' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Converting VM to Image'
 
 Stop-AzVM `
   -ResourceGroupName 'vcpkg-image-minting' `
@@ -268,19 +267,17 @@ New-AzGalleryImageVersion `
   -StorageAccountType 'Premium_LRS' `
   -PublishingProfileExcludeFromLatest `
   -TargetRegion @($westus3Location, $westusLocation)
+Complete-ImageProgress
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Deleting unused temporary resources' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+Start-ImageProgress -Status 'Deleting unused temporary resources'
 
 Remove-AzVM -Id $VMCreated.ID -Force
 Remove-AzDisk -ResourceGroupName 'vcpkg-image-minting' -Name $VMCreatedOsDisk -Force
 Remove-AzNetworkInterface -ResourceGroupName 'vcpkg-image-minting' -Name $NicName -Force
 
 ####################################################################################################
-Write-Progress -Activity $ProgressActivity -Completed
+Complete-ImageProgress
 Write-Host "Generated Image:  $GalleryImageVersion"
 Write-Host 'Finished!'
 

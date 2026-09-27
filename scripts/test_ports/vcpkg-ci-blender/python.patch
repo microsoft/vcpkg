@@ -1,0 +1,26 @@
+diff --git a/source/blender/makesrna/intern/rna_define.cc b/source/blender/makesrna/intern/rna_define.cc
+index 79c417a0..d7c9c00c 100644
+--- a/source/blender/makesrna/intern/rna_define.cc
++++ b/source/blender/makesrna/intern/rna_define.cc
+@@ -787,7 +787,9 @@ void RNA_struct_free_extension(StructRNA *srna, ExtensionRNA *rna_ext)
+ 
+   /* Decrease the reference and set to null so #RNA_struct_free doesn't warn of a leak. */
+   if (srna->py_type) {
++#ifdef WITH_PYTHON
+     BPY_DECREF(srna->py_type);
++#endif
+     RNA_struct_py_type_set(srna, nullptr);
+   }
+ #else
+diff --git a/source/blender/editors/interface/regions/interface_region_tooltip.cc b/source/blender/editors/interface/regions/interface_region_tooltip.cc
+index bf3c76bf..2975ccc7 100644
+--- a/source/blender/editors/interface/regions/interface_region_tooltip.cc
++++ b/source/blender/editors/interface/regions/interface_region_tooltip.cc
+@@ -494,6 +494,7 @@ static std::unique_ptr<uiTooltipData> ui_tooltip_data_from_tool(bContext *C,
+    *
+    * If we drop the hard coded 3D-view in properties hack, we can remove this check. */
+   bool has_valid_context = true;
++  bool is_label = false;
+   const char *has_valid_context_error = IFACE_("Unsupported context");
+   {
+     ScrArea *area = CTX_wm_area(C);

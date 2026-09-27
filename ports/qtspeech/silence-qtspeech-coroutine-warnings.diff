@@ -1,0 +1,36 @@
+diff --git a/src/plugins/tts/winrt/qtexttospeech_winrt.cpp b/src/plugins/tts/winrt/qtexttospeech_winrt.cpp
+index 6032bbe..a7d10d4 100644
+--- a/src/plugins/tts/winrt/qtexttospeech_winrt.cpp
++++ b/src/plugins/tts/winrt/qtexttospeech_winrt.cpp
+@@ -14,6 +14,7 @@
+ #include <QtCore/qset.h>
+ #include <QtCore/private/qfunctions_winrt_p.h>
+ 
++#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+ #include <winrt/base.h>
+ #include <QtCore/private/qfactorycacheregistration_p.h>
+ #include <windows.foundation.h>
+diff --git a/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.cpp b/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.cpp
+index 22fb436..c818775 100644
+--- a/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.cpp
++++ b/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.cpp
+@@ -11,6 +11,7 @@
+ #include <QtCore/private/qsystemerror_p.h>
+ 
+ #include <robuffer.h>
++#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+ #include <winrt/base.h>
+ #include <QtCore/private/qfactorycacheregistration_p.h>
+ #include <windows.foundation.h>
+diff --git a/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.h b/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.h
+index 8aceb81..d800b9d 100644
+--- a/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.h
++++ b/src/plugins/tts/winrt/qtexttospeech_winrt_audiosource.h
+@@ -9,6 +9,7 @@
+ #include <QtMultimedia/QAudioFormat>
+ 
+ #include <robuffer.h>
++#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+ #include <winrt/base.h>
+ #include <QtCore/private/qfactorycacheregistration_p.h>
+ #include <QtCore/private/qcomobject_p.h>

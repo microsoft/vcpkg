@@ -1,0 +1,39 @@
+diff --git a/build_files/cmake/Modules/FindOpenImageIO.cmake b/build_files/cmake/Modules/FindOpenImageIO.cmake
+index ac74db028d..b4c74357c8 100644
+--- a/build_files/cmake/Modules/FindOpenImageIO.cmake
++++ b/build_files/cmake/Modules/FindOpenImageIO.cmake
+@@ -18,6 +18,25 @@
+ #  OPENIMAGEIO_LIBRARY, where to find the OpenImageIO library.
+ 
+ # If `OPENIMAGEIO_ROOT_DIR` was defined in the environment, use it.
++block(SCOPE_FOR VARIABLES)
++  find_package(OpenImageIO CONFIG REQUIRED)
++  set(_openimageio_libraries OpenImageIO::OpenImageIO)
++  if(TARGET OpenImageIO::OpenImageIO_Util)
++    list(APPEND _openimageio_libraries OpenImageIO::OpenImageIO_Util)
++  endif()
++  get_target_property(_openimageio_include_dirs OpenImageIO::OpenImageIO INTERFACE_INCLUDE_DIRECTORIES)
++  set(OpenImageIO_FOUND TRUE PARENT_SCOPE)
++  set(OPENIMAGEIO_FOUND TRUE PARENT_SCOPE)
++  set(OPENIMAGEIO_LIBRARIES "${_openimageio_libraries}" PARENT_SCOPE)
++  set(OPENIMAGEIO_INCLUDE_DIRS "${_openimageio_include_dirs}" PARENT_SCOPE)
++  set(OPENIMAGEIO_INCLUDE_DIR "${_openimageio_include_dirs}" PARENT_SCOPE)
++  set(OPENIMAGEIO_PUGIXML_FOUND TRUE PARENT_SCOPE)
++  if(TARGET OpenImageIO::oiiotool)
++    set(OPENIMAGEIO_TOOL OpenImageIO::oiiotool PARENT_SCOPE)
++  endif()
++endblock()
++
++if(0)
+ if(DEFINED OPENIMAGEIO_ROOT_DIR)
+   # Pass.
+ elseif(DEFINED ENV{OPENIMAGEIO_ROOT_DIR})
+@@ -111,6 +129,8 @@ else()
+   set(OPENIMAGEIO_PUGIXML_FOUND FALSE)
+ endif()
+ 
++endif()
++
+ mark_as_advanced(
+   OPENIMAGEIO_INCLUDE_DIR
+   OPENIMAGEIO_LIBRARY

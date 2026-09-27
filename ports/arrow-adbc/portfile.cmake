@@ -2,14 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow-adbc
     REF apache-arrow-adbc-${VERSION}
-    SHA512 59cccbeeefa295d69cacfa8851b621376106aca57ebd94291523fcca314c0bd10c1d296801d1eacce9edddd46a8c87deaf3d8367e32ba5fd5b322b34c6af8625
+    SHA512 48f3e5663ae59d3910f0e545f0bad68778151017e7a67804143832a5812126ff5796db18e9584be75dcedae751f294f13457600964bb84c1038f65eb285c2d05
     HEAD_REF main
-    PATCHES
-        fix_static_build.patch
-        fix_windows_build.patch
-        unvendor.patch
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor")
+file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor/fmt")
+file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor/nanoarrow")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -36,6 +33,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME AdbcDriverCommon
+        CONFIG_PATH lib/cmake/AdbcDriverCommon
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME AdbcDriverManager
     CONFIG_PATH lib/cmake/AdbcDriverManager

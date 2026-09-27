@@ -6,17 +6,17 @@ endif()
 # tinyfiledialogs-current.zip: changing SHA512
 # last resort: explicit source files
 # Reviewers may compare git and zip sources at the time of the port update.
-set(ref b071fb40ad9b321408d480a6d1433bf21be01578)
+set(ref fe637654492cb8257cb68a8025dfc09ce3e0f490)
 string(SUBSTRING "${ref}" 0 7 short_ref)
 vcpkg_download_distfile(tinyfiledialogs_c_file
     URLS "https://sourceforge.net/p/tinyfiledialogs/code/ci/${ref}/tree/tinyfiledialogs.c?format=raw"
     FILENAME "tinyfiledialogs-${short_ref}.c"
-    SHA512 cc8dd57d47ed9b449d91a66dad421140ef2aa8da00c622c0de3c13c9587ff1b7165343b61e40a2240eef7d15dc27fe28bd4595c89b52e3775060229a7c8a5926
+    SHA512 8cd199ddb3320a8096f9d5ad4bdab45e982a189fe94e96a978ed88ef7c4ead5c69863565088b0ff1c446fca93bcbde95e206d1b4cd3f5f7fd84ffcf2011fc9d1
 )
 vcpkg_download_distfile(tinyfiledialogs_h_file
     URLS "https://sourceforge.net/p/tinyfiledialogs/code/ci/${ref}/tree/tinyfiledialogs.h?format=raw"
     FILENAME "tinyfiledialogs-${short_ref}.h"
-    SHA512 7b95aa5e32065aee9d16a7cafe644ed93bc9e4cd139882f0298572da1418305ce30d0770e1a6f2b441fb7d9bcb710d57b54ca3c2eb67c9fd5f04c0fdbece31bf
+    SHA512 8deaf823a5f6e9ec85e958f15a0e6d29957ed48748624bb52abce32ba55c26dbf186b09a6c0048439f27f5bae390fd2fee03757756a1ea172dbb28735293bb8f
 )
 
 file(READ "${tinyfiledialogs_c_file}" c_source)

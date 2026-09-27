@@ -1,0 +1,19 @@
+diff --git a/MPC/config/zlib.mpb b/MPC/config/zlib.mpb
+index 8edc952e..af8ee020 100644
+--- a/MPC/config/zlib.mpb
++++ b/MPC/config/zlib.mpb
+@@ -17,6 +17,13 @@ feature(zlib) {
+     Debug::lit_libs += zd
+     Release::lit_libs += z
+   } else {
+-    lit_libs += z
++    Debug::lit_libs += zd
++    Release::lit_libs += z
++  }
++  specific(prop:static) {
++    Debug::lit_libs += zsd
++    Debug::lit_libs -= zd
++    Release::lit_libs += zs
++    Release::lit_libs -= z
+   }
+ }

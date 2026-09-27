@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 77259f2211aa27c70c4930795ab6a7f7a0eade6fa8cda9b38caafdb3fa8081dba7c6bb5c2fa75adbdb224e4d84c80c48f19eef463500cd58316aa55183e6d660
+    SHA512 9d74bd9d78d44841c78c14a1ae86f2e96cf43b60f8a32172c467959c1f917e5ddf9f9d260fd65394c0302ea681d3f6f28fc6ae0f4e01b106ea92e5edc345c2d6
     HEAD_REF master
     PATCHES
-        msvc_debug_info_only_in_pdb.patch
-        onednn_gpu_includes.patch
+        msvc-debug-info-only-in-pdb.patch
         protobuf-6.patch
-        npu_deps.patch
+        levelzero-prepareheaders.patch
+        android-ignore-onetbb-warning.patch
+        fix-onednn-include-order.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -37,8 +38,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF v3.11
-        SHA512 de60ecd881b97e9942441e0eb5c53e2caa2a0a1a1c78ab9211ab103244b66b62c0f3dfa5b322bb2c39dfe13f85a9aebf82b899dde1ccdc01ba8ff9deed832787
+        REF v3.13
+        SHA512 e2dc1a17252bff470c1dce2ef675d77308255ad3c9d40c3e77bcc3f560a2d1617f0878e5dec22a5012c31fb75809c0483a2cd8eefd5b9f2a2549a5afecf9135c
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
@@ -51,8 +52,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF c6b79c1207bd5f20b9395536dab1d71a47cfcb1d
-        SHA512 2ed3444c60771229f051688964ee51b7cd229f75dfdbc6e59390d64223bb5d98074dd30cd4cd2458725bfba147bdf985bcc1d7ba8291f097ff4f291859b35ce3
+        REF f82d833de6f13fac4bb1926d521ca8fec4f4ae01
+        SHA512 aea38db54ad75196d4475c8bcf9a7d781979d714f0eadf964337cff3f713a747e3a82f4c68c2597ecfd6ea882cf8a30e1a53f0425206e7c892b1e2e86a1e3201
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -80,33 +81,49 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v52.6.0
-            SHA512 b7f0c5b33466a064e87fbc549fbb78f49c03ef10d50d5e84a9e8dca66094e469cff5d6c5ec01e26873e957e74e8b8a8472c369ab8aeea74c7c36ad0dfe1ad152
+            REF v53.1.0
+            SHA512 6f49f1a66d8242d73d2f736668ea7156a2564d47b1eb8dc106095ec0f0b662873f65f8e3e47bdbfb769f273d9d7707d253ab3eba95b2830eb0ddbc80f657f718
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
 
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/kleidiai
-            REF v1.19.0
-            SHA512 46de1f0cdd04ce1e8de5d1bdb2499d07eb377e616eb3a8596fbcd296b7887e413be5470f383b5790cef73dc370bead3db36ef2ed116513b95924ae71d87ef123
+            REF v1.26.0
+            SHA512 bdb2fa30025d7cd885ab143df98f70c454e2ff7a5d94be6ac99cfa66dafa4a8dcd83f07652b285ef61ed8523bdb0d4c313b506cd1c71347d5400e935783fc459
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/kleidiai")
     endif()
 endif()
 
+if(ENABLE_INTEL_GPU OR ENABLE_INTEL_NPU)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_SYSTEM_LEVEL_ZERO=ON")
+endif()
+
 if(ENABLE_INTEL_NPU)
-    list(APPEND FEATURE_OPTIONS
-        "-DENABLE_INTEL_NPU_INTERNAL=OFF"
-        "-DENABLE_SYSTEM_LEVEL_ZERO=ON")
+    list(APPEND FEATURE_OPTIONS "-DENABLE_INTEL_NPU_INTERNAL=OFF")
 
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF 8404c63a88d182726038d2b07c219731dada9c21
-        SHA512 701c3dbb3fc016a5b2fd70b68375a8191013299b8824bdd2a2830efd69cadc3d4b104b6479c37a46164d1a1a9781e8cc50eebb96c0ada64743e5e2b9456bb1af
+        REF f9ad3bf89c2418d714aef2e6b96a5aafb12a1971
+        SHA512 ab450badbf3aa39ca9b753b0b3019c0d3fb6d267c4689cffca3c9a36163aaaebcba327f11991d5bc0798b6d5f530331e4456abdaec520e5ad486bfca9f6404ff
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
+
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_download_distfile(
+            NPU_PLUGIN_COMPILER_ARCHIVE
+            URLS "https://storage.openvinotoolkit.org/dependencies/thirdparty/windows/npu_compiler/npu_compiler_vcl_windows_2022-8_2_0-9802763.zip"
+            FILENAME "npu_compiler_vcl_windows_2022-8_2_0-9802763.zip"
+            SHA512 "5fbe44129b796b12c106a80a967fc9e50e561fcac1bd7b1a2f17cfd50462accfe82d3049f75512566c3d80963ee597e3003a1e0ce52ce7bb0280193ceed83fa3"
+        )
+        vcpkg_extract_archive(
+            ARCHIVE ${NPU_PLUGIN_COMPILER_ARCHIVE}
+            DESTINATION ${SOURCE_PATH}/npu_compiler
+        )
+        list(APPEND FEATURE_OPTIONS "-DNPU_PLUGIN_COMPILER_ROOT=${SOURCE_PATH}/npu_compiler")
+    endif()
 endif()
 
 if(ENABLE_OV_TF_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_PADDLE_FRONTEND)
@@ -123,6 +140,10 @@ endif()
 
 if(CMAKE_HOST_WIN32)
     list(APPEND FEATURE_OPTIONS "-DENABLE_API_VALIDATOR=OFF")
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS "-DENABLE_PDB_IN_RELEASE=ON")
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -151,7 +172,26 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
-vcpkg_copy_pdbs()
+if(ENABLE_INTEL_NPU AND VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(GLOB_RECURSE openvino_built_dlls "${CURRENT_PACKAGES_DIR}/*.dll")
+    list(FILTER openvino_built_dlls EXCLUDE REGEX "/openvino_intel_npu_(compiler|compiler_loader|vm_runtime)\\.dll$")
+    vcpkg_copy_pdbs(BUILD_PATHS ${openvino_built_dlls})
+
+    foreach(config IN ITEMS "" "debug/")
+        file(INSTALL
+            "${SOURCE_PATH}/npu_compiler/pdb/openvino_intel_npu_compiler.pdb"
+            "${SOURCE_PATH}/npu_compiler/pdb/openvino_intel_npu_compiler_loader.pdb"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/${config}bin"
+        )
+        file(INSTALL
+            "${SOURCE_PATH}/npu_compiler/pdb/npu_interpreter_runtime.pdb"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/${config}bin"
+            RENAME "openvino_intel_npu_vm_runtime.pdb"
+        )
+    endforeach()
+else()
+    vcpkg_copy_pdbs()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

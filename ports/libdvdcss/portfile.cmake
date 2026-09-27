@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org/
     REPO videolan/libdvdcss
     REF "${VERSION}"
-    SHA512 276ab26a7295bb45dd852c8d8ad262dfb6f8bc4dae347b1f83ac6949aaea4cabf4cf84f79dabf2442d207c1f9bffca07793748794aa338a4694327672326799b
+    SHA512 511f1e43845af22ed31da32e54a25168a3d1754bec6cf21704017ef0e1819976b97a483c2df5dd6aa11df1a2496a528124c4b9eb8c6b75b21c707d16121799ba
     HEAD_REF master
 )
 

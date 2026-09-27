@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 01b7df7..319bd3d 100644
+index bea55c9..739707c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,6 +23,9 @@ include(CheckSymbolExists)
@@ -12,29 +12,22 @@ index 01b7df7..319bd3d 100644
  find_package(Threads)
  
  option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-@@ -106,10 +109,12 @@ set(USE_KISSFFT OFF)
+@@ -106,10 +109,13 @@ set(USE_KISSFFT OFF)
  if(NOT FFT_LIB)
    if(APPLE AND ACCELERATE_LIBRARIES)
      set(FFT_LIB "vdsp")
 +    string(APPEND PC_LIBS_PRIVATE " -framework Accelerate")
-   elseif(FFMPEG_LIBAVUTIL_TX_FOUND)
+   elseif(HAVE_FFMPEG_TX_RDFT)
      set(FFT_LIB "avtx")
++    string(APPEND PC_REQUIRES_PRIVATE " libavutil")
    elseif(FFMPEG_LIBAVCODEC_FFT_FOUND)
      set(FFT_LIB "avfft")
 +    string(APPEND PC_REQUIRES_PRIVATE " libavcodec")
    elseif(FFTW3_LIBRARIES)
      set(FFT_LIB "fftw3")
    elseif(FFTW3_FFTWF_LIBRARY)
-@@ -172,6 +177,7 @@ if(AUDIO_PROCESSOR_LIB STREQUAL "swresample")
-     set(USE_SWRESAMPLE ON)
-     set(AUDIO_PROCESSOR_LIBRARIES ${FFMPEG_LIBSWRESAMPLE_LIBRARIES})
-     set(AUDIO_PROCESSOR_INCLUDE_DIRS ${FFMPEG_LIBSWRESAMPLE_INCLUDE_DIRS})
-+    string(APPEND PC_REQUIRES_PRIVATE " libswresample")
-   else()
-     message(FATAL_ERROR "Selected ${AUDIO_PROCESSOR_LIB} for audio processing, but the library is not found")
-   endif()
 diff --git a/libchromaprint.pc.cmake b/libchromaprint.pc.cmake
-index dbe8f98..b38f8d8 100644
+index 7a70d01..15b4de9 100644
 --- a/libchromaprint.pc.cmake
 +++ b/libchromaprint.pc.cmake
 @@ -7,6 +7,8 @@ Name: @PROJECT_NAME@

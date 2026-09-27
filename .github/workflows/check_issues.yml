@@ -7,11 +7,11 @@ on:
 
 jobs:
   check-for-common-issues:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     permissions:
       issues: write
     steps:
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             let issue_query = {
@@ -33,7 +33,7 @@ jobs:
             }
 
             let issue_body = issue.data.body.replaceAll("\r\n", "\n");
-              
+
             // missing-windows-sdk-issue
             let reg = /RC Pass 1: command "rc .*" failed \(exit code 0\) with the following output:/;
             if (reg.test(issue_body)){

@@ -1,0 +1,44 @@
+diff --git a/cmake/icey_config.cmake.in b/cmake/icey_config.cmake.in
+index e4d8173..4845f9d 100644
+--- a/cmake/icey_config.cmake.in
++++ b/cmake/icey_config.cmake.in
+@@ -65,13 +65,14 @@ if(@USE_SYSTEM_DEPS@)
+   endif()
+   find_dependency(ZLIB)
+   if("archo" IN_LIST _icey_supported_components OR "pacm" IN_LIST _icey_supported_components)
+-    find_dependency(unofficial-minizip CONFIG QUIET)
++    find_package(unofficial-minizip CONFIG QUIET)
+     find_dependency(minizip CONFIG QUIET)
+-    if(NOT TARGET unofficial-minizip::minizip AND NOT TARGET minizip::minizip AND PkgConfig_FOUND)
++    if(NOT TARGET unofficial::minizip::minizip AND NOT TARGET MINIZIP::minizip AND NOT TARGET MINIZIP::minizipstatic AND PkgConfig_FOUND)
+       pkg_check_modules(MINIZIP QUIET IMPORTED_TARGET GLOBAL minizip)
+     endif()
+-    _icey_add_compat_target(minizip unofficial-minizip::minizip)
+-    _icey_add_compat_target(minizip minizip::minizip)
++    _icey_add_compat_target(minizip MINIZIP::minizip)
++    _icey_add_compat_target(minizip MINIZIP::minizipstatic)
++    _icey_add_compat_target(minizip unofficial::minizip::minizip)
+     _icey_add_compat_target(minizip PkgConfig::MINIZIP)
+     if(NOT TARGET minizip)
+       message(FATAL_ERROR "icey archo/pacm components require minizip via a CMake package config or pkg-config")
+diff --git a/icey.cmake b/icey.cmake
+index 1cee0dd..dc01579 100644
+--- a/icey.cmake
++++ b/icey.cmake
+@@ -254,10 +254,12 @@ else()
+   # minizip: try packaged targets first, fall back to building from source
+   find_package(unofficial-minizip CONFIG QUIET)
+   find_package(minizip CONFIG QUIET)
+-  if(TARGET unofficial-minizip::minizip)
+-    icy_add_compat_target(minizip unofficial-minizip::minizip)
+-  elseif(TARGET minizip::minizip)
+-    icy_add_compat_target(minizip minizip::minizip)
++  if(TARGET MINIZIP::minizip)
++    icy_add_compat_target(minizip MINIZIP::minizip)
++  elseif(TARGET MINIZIP::minizipstatic)
++    icy_add_compat_target(minizip MINIZIP::minizipstatic)
++  elseif(TARGET unofficial::minizip::minizip)
++    icy_add_compat_target(minizip unofficial::minizip::minizip)
+   elseif(PkgConfig_FOUND)
+     pkg_check_modules(MINIZIP QUIET IMPORTED_TARGET GLOBAL minizip)
+     icy_add_compat_target(minizip PkgConfig::MINIZIP)

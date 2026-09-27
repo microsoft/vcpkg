@@ -1,3 +1,9 @@
+vcpkg_download_distfile(ALGORITHM_INCLUDE_PATCH
+    URLS "https://github.com/google/draco/commit/b283ba36eea52dc525ab4c9324ae6de2055d1191.patch?full_index=1"
+    FILENAME "draco-b283ba36eea52dc525ab4c9324ae6de2055d1191.patch"
+    SHA512 8dab3a74ec52b6628955c68e79cca70383ec283f0624c054ec3a29baf6455029b38aeded4ed819978f891a0192472116e7c57d3100e1bc714ec96f7e3d4be778
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
@@ -10,6 +16,7 @@ vcpkg_from_github(
         fix-pkgconfig.patch
         disable-symlinks.patch
         install-linkage.diff
+        "${ALGORITHM_INCLUDE_PATCH}"
 )
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)

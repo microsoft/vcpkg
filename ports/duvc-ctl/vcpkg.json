@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "duvc-ctl",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Windows DirectShow UVC camera control library",
   "homepage": "https://github.com/allanhanan/duvc-ctl",
   "license": "MIT",

@@ -2,22 +2,24 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO absurdworlds/awlib
     REF ${VERSION}
-    SHA512 bfb4668abc3db176744bb674a20bf770c6406db522a14191069b8d833414285ca784f042c3ad50404f7f8bc76afe69627dfcf540080e12316abbbfe420955526
+    SHA512 096c70759e3243b29132f243cc05a44fa7a6f5e05357dc191296776fa3fc86b5b1aa33367304c845b22bfc7d688ebad9d7e4d7b569d4e133970bd662cbb32ce0
     HEAD_REF master
-    PATCHES
-        fix-mac-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     hudf             AW_ENABLE_HUDF
     graphics         AW_ENABLE_GRAPHICS
+    # awgraphics links awimage and awmesh unconditionally
+    graphics         AW_ENABLE_IMAGE
+    graphics         AW_ENABLE_MESH
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DAW_MAKE_TESTS=OFF
 )
 
 vcpkg_cmake_install()

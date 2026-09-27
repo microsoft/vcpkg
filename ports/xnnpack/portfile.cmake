@@ -1,5 +1,9 @@
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    # Force the explicit STATIC branch of upstream CMakeLists.txt:821-829 — the default
+    # branch falls back to BUILD_SHARED_LIBS, and on x86-windows the resolution produces
+    # an exported target the consumer reads as SHARED (demanding IMPORTED_IMPLIB).
+    set(XNNPACK_LIBRARY_TYPE_OPT "-DXNNPACK_LIBRARY_TYPE=static")
 endif()
 
 vcpkg_from_github(
@@ -23,6 +27,7 @@ vcpkg_cmake_configure(
         -DXNNPACK_ENABLE_SPARSE=ON
         -DXNNPACK_BUILD_TESTS=OFF
         -DXNNPACK_BUILD_BENCHMARKS=OFF
+        ${XNNPACK_LIBRARY_TYPE_OPT}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

@@ -1,10 +1,8 @@
-set(LIBDATRIE_VERSION 0.2.13)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tlwg/libdatrie
-    REF v${LIBDATRIE_VERSION}
-    SHA512 38f5a3ee1f3ca0f0601a5fcfeec3892cb34857d4b4720b8e018ca1beb6520c4c10af3bd2f0e4d64367cb256e8e2bca4d0a59b1c81fb36782613d2c258b64df59
+    REF "v${VERSION}"
+    SHA512 293c04a80d767b7fc7762f5ec1d8b7dd9bfff8bce2267120de320c5c06bbc7e371dc3385f3f7f4a505ddf159bcfc58d1b721a9d662f1012e1d5e4f73e1e976a7
     HEAD_REF master
     PATCHES
         fix-exports.patch
@@ -21,7 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DVERSION=${LIBDATRIE_VERSION}
+        -DVERSION=${VERSION}
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSKIP_TOOL=ON
@@ -37,4 +35,4 @@ if(NOT SKIP_TOOL)
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

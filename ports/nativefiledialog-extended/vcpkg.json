@@ -1,6 +1,6 @@
 {
   "name": "nativefiledialog-extended",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Native File Dialog Extended",
   "homepage": "https://github.com/btzy/nativefiledialog-extended",
   "license": "Zlib",
@@ -18,5 +18,29 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "wayland",
+      "platform": "!osx & !windows & native"
+    }
+  ],
+  "features": {
+    "wayland": {
+      "description": "Support Wayland on Linux",
+      "supports": "!osx & !windows & native",
+      "license": "MIT",
+      "dependencies": [
+        "wayland",
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "scanner"
+          ]
+        },
+        "wayland-protocols"
+      ]
+    }
+  }
 }

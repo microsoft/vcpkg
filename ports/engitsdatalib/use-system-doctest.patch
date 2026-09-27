@@ -1,0 +1,107 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e825e7b..86244d2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,8 @@ include(CMakePackageConfigHelpers)
+ include(CTest)
+ include(TestBigEndian)
+ 
++find_package(doctest CONFIG REQUIRED)
++
+ # export build setup for development environment
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+@@ -66,7 +68,6 @@ edl/amr.h
+ edl/bmap.h
+ edl/containertricks.h
+ edl/csvreader.h
+-edl/doctest.h
+ edl/edlerror.h
+ edl/edl.h
+ edl/fastremovelist.h
+@@ -137,6 +138,7 @@ else(CREATE_STATIC_LIBRARY)
+ endif(CREATE_STATIC_LIBRARY)
+ 
+ target_compile_features(engitsdatalib PUBLIC cxx_std_17)
++target_link_libraries(engitsdatalib PUBLIC doctest::doctest)
+ 
+ target_compile_definitions(engitsdatalib
+   PUBLIC
+diff --git a/cmake/enGitsDataLibConfig.cmake.in b/cmake/enGitsDataLibConfig.cmake.in
+index dbb9be4..ee92d55 100644
+--- a/cmake/enGitsDataLibConfig.cmake.in
++++ b/cmake/enGitsDataLibConfig.cmake.in
+@@ -1,5 +1,8 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(doctest CONFIG)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/enGitsDataLibTargets.cmake")
+ 
+ if(TARGET enGitsDataLib::engitsdatalib)
+diff --git a/edl/edl.cpp b/edl/edl.cpp
+index d76d74c..22d530e 100644
+--- a/edl/edl.cpp
++++ b/edl/edl.cpp
+@@ -10,7 +10,7 @@
+ 
+ #include "edl/edl.h"
+ #define DOCTEST_CONFIG_IMPLEMENT
+-#include "edl/doctest.h"
++#include <doctest/doctest.h>
+ 
+ namespace EDL_NAMESPACE
+ {
+diff --git a/edl/edl.h b/edl/edl.h
+index 0dd2389..6618128 100644
+--- a/edl/edl.h
++++ b/edl/edl.h
+@@ -32,7 +32,7 @@ template <class T, unsigned int DIM> class StaticVector;
+ #include <map>
+ #include <string>
+ 
+-#include "edl/doctest.h"
++#include <doctest/doctest.h>
+ 
+ #if defined(_WIN32) && defined(_MSC_VER)
+ #include "engitsdatalib_export.h"
+diff --git a/edl/tools.h b/edl/tools.h
+index 7aa4f3e..8c6881e 100644
+--- a/edl/tools.h
++++ b/edl/tools.h
+@@ -18,7 +18,7 @@
+ #include <cstddef>
+ #include <vector>
+ 
+-#include "doctest.h"
++#include <doctest/doctest.h>
+ 
+ namespace EDL_NAMESPACE
+ {
+diff --git a/tests/doctest_test.cpp b/tests/doctest_test.cpp
+index 9b68586..769609d 100644
+--- a/tests/doctest_test.cpp
++++ b/tests/doctest_test.cpp
+@@ -8,7 +8,7 @@
+ // +                                                                    +
+ // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+-#include "edl/doctest.h"
++#include <doctest/doctest.h>
+ 
+ #define EDL_DOCTEST
+ 
+diff --git a/tests/geometrytools_test.cpp b/tests/geometrytools_test.cpp
+index 6ad116c..ec37db0 100644
+--- a/tests/geometrytools_test.cpp
++++ b/tests/geometrytools_test.cpp
+@@ -9,7 +9,7 @@
+ // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+ #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+-#include "edl/doctest.h"
++#include <doctest/doctest.h>
+ 
+ #include "edl/geometrytools.h"
+ 

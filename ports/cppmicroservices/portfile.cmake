@@ -6,8 +6,9 @@ vcpkg_from_github(
     HEAD_REF development
     PATCHES
         werror.patch
-        fix_strnicmp.patch
-        devendor_boost_absl.patch
+        fix-strnicmp.patch
+        devendor-boost-absl.patch
+        devendor-spdlog.diff
         remove-ut-macro.patch
 )
 
@@ -15,6 +16,7 @@ vcpkg_from_github(
 file(REMOVE_RECURSE
   "${SOURCE_PATH}/third_party/absl"
   "${SOURCE_PATH}/third_party/boost"
+  "${SOURCE_PATH}/third_party/spdlog"
 )
 
 vcpkg_cmake_configure(

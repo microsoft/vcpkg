@@ -1,0 +1,17 @@
+include_guard(GLOBAL)
+
+get_filename_component(ecbuild_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+set(ecbuild_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(ecbuild_ROOT "${ecbuild_BASE_DIR}")
+set(ecbuild_CMAKE_DIR "${ecbuild_BASE_DIR}/share/ecbuild/cmake")
+set(ecbuild_MACROS_DIR "${ecbuild_CMAKE_DIR}")
+set(ECBUILD_MACROS_DIR "${ecbuild_CMAKE_DIR}")
+set(ecbuild_VERSION "@VERSION@")
+set(ecbuild_VERSION_STR "@VERSION@")
+set(ecbuild_FOUND TRUE)
+
+if(NOT "${ecbuild_CMAKE_DIR}" IN_LIST CMAKE_MODULE_PATH)
+    list(INSERT CMAKE_MODULE_PATH 0 "${ecbuild_CMAKE_DIR}")
+endif()
+
+include(ecbuild)

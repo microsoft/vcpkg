@@ -1,0 +1,16 @@
+diff --git a/cmake/Installing.cmake b/cmake/Installing.cmake
+index 6dfe6df..3d654b0 100644
+--- a/cmake/Installing.cmake
++++ b/cmake/Installing.cmake
+@@ -12,8 +12,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+         EXPORT "${PROJECT_NAME}Targets"
+         FILE_SET public_headers
+-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}/debug/bin # bin
+-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/debug # lib/debug
+-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/debug # lib/debug
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
+         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME} # include/str_view
+         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
+     )

@@ -20,13 +20,19 @@ vcpkg_extract_source_archive(SOURCE_PATH
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
     FEATURES
-        freexl          ENABLE_FREEXL
         gcp             ENABLE_GCP
         rttopo          ENABLE_RTTOPO
+    INVERTED_FEATURES
+        freexl          OMIT_FREEXL
+)
+configure_file(
+    "${SOURCE_PATH}/src/headers/spatialite/gaiaconfig-msvc.h.in"
+    "${SOURCE_PATH}/src/headers/spatialite/gaiaconfig-msvc.h"
+    @ONLY
 )
 
 set(pkg_config_modules geos libxml-2.0 proj sqlite3 zlib)
-if(ENABLE_FREEXL)
+if(NOT OMIT_FREEXL)
     list(APPEND pkg_config_modules freexl)
 endif()
 if(ENABLE_RTTOPO)
@@ -36,9 +42,10 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
-        MODULES --msvc-syntax ${pkg_config_modules}
+        MODULES ${pkg_config_modules}
         CFLAGS
         LIBS
+        USE_MSVC_SYNTAX_ON_WINDOWS
     )
 
     # cherry-picked from Makefile.vc (CFLAGS) and nmake.opt (OPTFLAGS)
@@ -47,15 +54,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(APPEND CFLAGS " /DDLL_EXPORT")
         set(WANT_LIB spatialite_i.lib)
-    endif()
-    if(NOT ENABLE_FREEXL)
-        string(APPEND CFLAGS " /DOMIT_FREEXL")
-    endif()
-    if(ENABLE_GCP)
-        string(APPEND CFLAGS " /DENABLE_GCP")
-    endif()
-    if(ENABLE_RTTOPO)
-        string(APPEND CFLAGS " /DENABLE_RTTOPO")
     endif()
 
     set(SYSTEM_LIBS "iconv.lib charset.lib")
@@ -111,10 +109,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_replace_string("${outfile}" "  -lm" " ")
     endif()
 else()
-    if(ENABLE_FREEXL)
-        set(FREEXL_OPTION "--enable-freexl")
-    else()
+    if(OMIT_FREEXL)
         set(FREEXL_OPTION "--disable-freexl")
+    else()
+        set(FREEXL_OPTION "--enable-freexl")
     endif()
     if(ENABLE_GCP)
         set(GCP_OPTION "--enable-gcp")

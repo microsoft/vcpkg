@@ -1,3 +1,5 @@
+diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
+index 8c7bc93..88a1db9 100644
 --- a/cmake/OpenCVFindLibsGrfmt.cmake
 +++ b/cmake/OpenCVFindLibsGrfmt.cmake
 @@ -16,6 +16,7 @@ if(WITH_ZLIB_NG)
@@ -92,7 +94,7 @@
        set(SPNG_LIBRARIES ${SPNG_LIBRARY})
      else()
        if(PkgConfig_FOUND)
-@@ -331,7 +332,7 @@ if(NOT HAVE_SPNG AND WITH_PNG)
+@@ -334,7 +335,7 @@ if(NOT HAVE_SPNG AND WITH_PNG)
      ocv_clear_vars(PNG_FOUND)
    else()
      ocv_clear_internal_cache_vars(PNG_LIBRARY PNG_INCLUDE_DIR)
@@ -101,7 +103,7 @@
    endif()
  
    if(NOT PNG_FOUND)
-@@ -354,7 +355,8 @@ if(WITH_OPENEXR)
+@@ -357,7 +358,8 @@ if(WITH_OPENEXR)
    ocv_clear_vars(HAVE_OPENEXR)
    if(NOT BUILD_OPENEXR)
      ocv_clear_internal_cache_vars(OPENEXR_INCLUDE_PATHS OPENEXR_LIBRARIES OPENEXR_ILMIMF_LIBRARY OPENEXR_VERSION)
@@ -111,7 +113,7 @@
    endif()
  
    if(OPENEXR_FOUND)
-@@ -374,7 +376,7 @@ endif()
+@@ -377,7 +379,7 @@ endif()
  
  # --- GDAL (optional) ---
  if(WITH_GDAL)
@@ -120,7 +122,7 @@
  
      if(NOT GDAL_FOUND)
          set(HAVE_GDAL NO)
-@@ -386,7 +388,7 @@ if(WITH_GDAL)
+@@ -389,7 +391,7 @@ if(WITH_GDAL)
  endif()
  
  if(WITH_GDCM)
@@ -129,9 +131,11 @@
    if(NOT GDCM_FOUND)
      set(HAVE_GDCM NO)
      ocv_clear_vars(GDCM_VERSION GDCM_LIBRARIES)
+diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
+index c322645..1d5ea0d 100644
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
-@@ -30,7 +30,7 @@ endif()
+@@ -25,7 +25,7 @@ endif()
  
  if(HAVE_WEBP)
    add_definitions(-DHAVE_WEBP)

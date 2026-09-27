@@ -1,5 +1,21 @@
+diff --git a/libraries/liblmdb/mdb_drop.c b/libraries/liblmdb/mdb_drop.c
+index 93f3d35..e835f31 100644
+--- a/libraries/liblmdb/mdb_drop.c
++++ b/libraries/liblmdb/mdb_drop.c
+@@ -16,7 +16,11 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <ctype.h>
++#ifdef _MSC_VER
++#include <getopt.h>
++#else
+ #include <unistd.h>
++#endif
+ #include <signal.h>
+ #include "lmdb.h"
+ 
 diff --git a/libraries/liblmdb/mdb_dump.c b/libraries/liblmdb/mdb_dump.c
-index 7ea72e8..198230c 100644
+index a31797f..7ae582b 100644
 --- a/libraries/liblmdb/mdb_dump.c
 +++ b/libraries/liblmdb/mdb_dump.c
 @@ -16,7 +16,11 @@
@@ -15,7 +31,7 @@ index 7ea72e8..198230c 100644
  #include "lmdb.h"
  
 diff --git a/libraries/liblmdb/mdb_load.c b/libraries/liblmdb/mdb_load.c
-index d2a3cec..f050286 100644
+index 838cff3..cd441f6 100644
 --- a/libraries/liblmdb/mdb_load.c
 +++ b/libraries/liblmdb/mdb_load.c
 @@ -16,7 +16,11 @@
@@ -29,9 +45,9 @@ index d2a3cec..f050286 100644
 +#endif
  #include "lmdb.h"
  
- #define PRINT	1
+ #ifdef _WIN32
 diff --git a/libraries/liblmdb/mdb_stat.c b/libraries/liblmdb/mdb_stat.c
-index 3a81175..f1f4a75 100644
+index 97f786f..6d1718e 100644
 --- a/libraries/liblmdb/mdb_stat.c
 +++ b/libraries/liblmdb/mdb_stat.c
 @@ -14,7 +14,13 @@
@@ -47,4 +63,4 @@ index 3a81175..f1f4a75 100644
 +#endif
  #include "lmdb.h"
  
- #ifdef	_WIN32
+ #define Z	MDB_FMT_Z

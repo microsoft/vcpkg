@@ -3,11 +3,15 @@ EXPORTS
    mdb_version
    mdb_strerror
    mdb_env_create
+   mdb_env_set_flags
    mdb_env_open
    mdb_env_copy
    mdb_env_copyfd
    mdb_env_copy2
    mdb_env_copyfd2
+   mdb_env_incr_dumpfd
+   mdb_env_incr_dump
+   mdb_env_incr_loadfd
    mdb_env_stat
    mdb_env_info
    mdb_env_sync
@@ -17,6 +21,7 @@ EXPORTS
    mdb_env_get_path
    mdb_env_get_fd
    mdb_env_set_mapsize
+   mdb_env_set_pagesize
    mdb_env_set_maxreaders
    mdb_env_get_maxreaders
    mdb_env_set_maxdbs
@@ -24,10 +29,16 @@ EXPORTS
    mdb_env_set_userctx
    mdb_env_get_userctx
    mdb_env_set_assert
+   mdb_env_set_encrypt
+   mdb_env_set_checksum
    mdb_txn_begin
    mdb_txn_env
    mdb_txn_id
+   mdb_txn_flags
    mdb_txn_commit
+   mdb_txn_prepare
+   mdb_env_rollback
+   mdb_txn_abort
    mdb_txn_abort
    mdb_txn_reset
    mdb_txn_renew
@@ -48,6 +59,7 @@ EXPORTS
    mdb_cursor_renew
    mdb_cursor_txn
    mdb_cursor_dbi
+   mdb_cursor_is_db
    mdb_cursor_get
    mdb_cursor_put
    mdb_cursor_del
@@ -56,3 +68,6 @@ EXPORTS
    mdb_dcmp
    mdb_reader_list
    mdb_reader_check
+   mdb_modload
+   mdb_modunload
+   mdb_modsetup

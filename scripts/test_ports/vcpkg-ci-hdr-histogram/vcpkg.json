@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-hdr-histogram",
+  "version-string": "ci",
+  "description": "Validates hdr-histogram",
+  "dependencies": [
+    "hdr-histogram",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

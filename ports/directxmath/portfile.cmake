@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMath
-    REF apr2025
-    SHA512 c7d3b107180b269c5c4e823fa51d96a316dc35cace3cb13f030022d9096c9465e8a770559419176692b047574fd67c96d8527abd8817998264a149eee0b88c9d
+    REF jun2026
+    SHA512 47003d3c223e0b99f99346f0f6f971df1cab319dc975479b12a8b353022de603293761e1da78e811b824e649ec935de07b54c0abff308d4b0fcea05b7732e494
     HEAD_REF main
-    PATCHES
-        MinGW-fix.patch
-        Linux-SHMath-SAL.patch
-        powerpc64le.patch
 )
 
 vcpkg_check_features(

@@ -1,0 +1,22 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1466,13 +1466,17 @@
+ # inductor templates, and symlink-replacement copies.  Previously handled
+ # by setup.py; now consolidated here for both scikit-build-core and
+ # setuptools builds.
+-include(cmake/FileMirroring.cmake)
++if(BUILD_PYTHON)
++  include(cmake/FileMirroring.cmake)
++endif()
+ 
+ # Package data: install non-Python data files (type stubs, templates,
+ # headers, etc.) into the torch package.  Previously declared via
+ # setup.py package_data; now consolidated here for both scikit-build-core
+ # and setuptools builds.
+-include(cmake/PackageData.cmake)
++if(BUILD_PYTHON)
++  include(cmake/PackageData.cmake)
++endif()
+ 
+ include(cmake/PostBuildSteps.cmake)
+ 

@@ -13,7 +13,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xkbcommon/libxkbcommon
     REF "xkbcommon-${VERSION}"
-    SHA512  454fbb2861405ca957d64035e924c1bbb7d43db7867903963fc053b7ecb64a8fba89a21cc8ac18ebeec9b61ae0789fb88c52521a850dc371857f28b08e80167b
+    SHA512 261af9e02ad533bb6560e2711171812c7d92094db8b54eaa19b477ab68270e6d62b315e18d42527ca9c944e87f36f063d003d74aeb4829b21ecb96ab1b0c1ce7
     HEAD_REF master
     PATCHES
         disable-test.patch
@@ -30,7 +30,11 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS -Denable-xkbregistry=false)
+    list(APPEND OPTIONS -Denable-xkbregistry=false)
+endif()
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND OPTIONS -Dxkb-config-root=/usr/share/X11/xkb)
+    list(APPEND OPTIONS -Dx-locale-root=/usr/share/X11/locale)
 endif()
 
 vcpkg_configure_meson(

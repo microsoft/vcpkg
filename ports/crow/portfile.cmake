@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CrowCpp/crow
     REF "v${VERSION}"
-    SHA512 b413cfbd5e25ed2a1eb6f06ad3e997cc3f592775fd98db900c15a95a13a31578ce7563ec372794f77bf1a4b7c21a7998e9129a0c5e0dc840e8e7d83e688a75ad
+    SHA512 1d12cfe1a6c2c928d9397e2e3bdb57c5bc425f1509a388d5b3bd68f52aaeb3950f564cd6c5612331cb389165feb0d2a1c6e593ea8f14f68072658376e71f14c3
     HEAD_REF master
     PATCHES remove-cpm.patch
 )
@@ -17,7 +17,13 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Crow)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/lib"
+)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/README.md"
+)

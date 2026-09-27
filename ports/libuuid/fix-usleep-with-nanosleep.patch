@@ -1,0 +1,40 @@
+diff --git a/all-io.h b/all-io.h
+index d8a3e6d..6a9d9e0 100644
+--- a/all-io.h
++++ b/all-io.h
+@@ -9,6 +9,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
++#include <time.h>
+ 
+ #include "c.h"
+ 
+@@ -29,8 +30,11 @@ static inline int write_all(int fd, const void *buf, size_t count)
+ 				buf = (void *) ((char *) buf + tmp);
+ 		} else if (errno != EINTR && errno != EAGAIN)
+ 			return -1;
+-		if (errno == EAGAIN)	/* Try later, *sigh* */
+-			usleep(10000);
++		if (errno == EAGAIN) {	/* Try later, *sigh* */
++			struct timespec ts = { .tv_sec = 0, .tv_nsec = 10000000 };
++
++			nanosleep(&ts, NULL);
++		}
+ 	}
+ 	return 0;
+ }
+@@ -46,8 +50,11 @@ static inline int fwrite_all(const void *ptr, size_t size,
+ 				ptr = (void *) ((char *) ptr + (tmp * size));
+ 		} else if (errno != EINTR && errno != EAGAIN)
+ 			return -1;
+-		if (errno == EAGAIN)	/* Try later, *sigh* */
+-			usleep(10000);
++		if (errno == EAGAIN) {	/* Try later, *sigh* */
++			struct timespec ts = { .tv_sec = 0, .tv_nsec = 10000000 };
++
++			nanosleep(&ts, NULL);
++		}
+ 	}
+ 	return 0;
+ }

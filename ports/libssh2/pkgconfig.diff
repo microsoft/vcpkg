@@ -15,9 +15,9 @@ diff --git a/cmake/libssh2-config.cmake.in b/cmake/libssh2-config.cmake.in
 index edc86d7..905e4a2 100644
 --- a/cmake/libssh2-config.cmake.in
 +++ b/cmake/libssh2-config.cmake.in
-@@ -14,7 +14,7 @@ elseif("@CRYPTO_BACKEND@" STREQUAL "mbedTLS")
-   find_dependency(MbedTLS)
+@@ -16,7 +16,7 @@ elseif("@CRYPTO_BACKEND@" STREQUAL "mbedTLS")
  endif()
+ set(CMAKE_MODULE_PATH ${_libssh2_cmake_module_path_save})
  
 -if(@ZLIB_FOUND@)
 +if(@ENABLE_ZLIB_COMPRESSION@)

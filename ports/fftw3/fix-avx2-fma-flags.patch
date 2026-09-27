@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2114601..f89f77a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -337,14 +337,12 @@ if (HAVE_AVX)
+                                PROPERTIES COMPILE_FLAGS "${AVX_FLAG}")
+ endif ()
+ if (HAVE_AVX2)
+-  set_source_files_properties (${fftw_dft_simd_avx2_SOURCE}
+-                               ${fftw_rdft_simd_avx2_SOURCE}
+-                               PROPERTIES COMPILE_FLAGS "${AVX2_FLAG}")
+-endif ()
+-if (HAVE_FMA)
+-  set_source_files_properties (${fftw_dft_simd_avx2_SOURCE}
+-                               ${fftw_rdft_simd_avx2_SOURCE}
+-                               PROPERTIES COMPILE_FLAGS "${FMA_FLAG}")
++  set(AVX2_COMPILE_FLAGS "${AVX2_FLAG}")
++  if (HAVE_FMA)
++    string(APPEND AVX2_COMPILE_FLAGS " ${FMA_FLAG}")
++  endif ()
++  set_source_files_properties (${fftw_dft_simd_avx2_SOURCE} ${fftw_rdft_simd_avx2_SOURCE}
++							   PROPERTIES COMPILE_FLAGS "${AVX2_COMPILE_FLAGS}")
+ endif ()
+ if (HAVE_LIBM)
+   target_link_libraries (${fftw3_lib} m)

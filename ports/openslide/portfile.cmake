@@ -2,13 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openslide/openslide
     REF "v${VERSION}" 
-    SHA512 98822994dd437f5a7d40e0a769fc9c63eda46823ede0547f530390b78b256631a50f66ac0d63d32a8875fc38283f96bc2f624f1023fe98772e9a89a8d6afb514
+    SHA512 52e6fc203d5ba81f332925aace61b29caacb430f9a09455392dfddd084d91994e85326c469e94769050695b47781c6aeaf06136bf8124cef5f9b92d60f5d8509
     HEAD_REF main
     PATCHES
         cross-build.diff
-        fix-win-build.patch
-        slidetool-unicode.patch
-        windows-dll-name.patch
+        slidetool-test-deps.diff
 )
 if(VCPKG_CROSSCOMPILING)
     file(COPY 

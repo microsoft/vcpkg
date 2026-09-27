@@ -1,0 +1,45 @@
+diff --git a/build_files/cmake/macros.cmake b/build_files/cmake/macros.cmake
+--- a/build_files/cmake/macros.cmake
++++ b/build_files/cmake/macros.cmake
+@@ -1377,27 +1377,37 @@ macro(windows_install_shared_manifest)
+   if(WINDOWS_INSTALL_RELEASE)
+     set(WINDOWS_CONFIGURATIONS "${WINDOWS_CONFIGURATIONS};Release;RelWithDebInfo;MinSizeRel")
+   endif()
++  set(WINDOWS_INSTALL_EXISTING_FILES "")
++  foreach(_windows_install_file ${WINDOWS_INSTALL_FILES})
++    if(EXISTS "${_windows_install_file}")
++      list(APPEND WINDOWS_INSTALL_EXISTING_FILES "${_windows_install_file}")
++    endif()
++  endforeach()
++  if(WINDOWS_INSTALL_EXISTING_FILES)
+   if(NOT WITH_PYTHON_MODULE)
+     # Blender executable with manifest.
+     if(WINDOWS_INSTALL_DEBUG)
+-      list(APPEND WINDOWS_SHARED_MANIFEST_DEBUG ${WINDOWS_INSTALL_FILES})
++      list(APPEND WINDOWS_SHARED_MANIFEST_DEBUG ${WINDOWS_INSTALL_EXISTING_FILES})
+     endif()
+     if(WINDOWS_INSTALL_RELEASE)
+-      list(APPEND WINDOWS_SHARED_MANIFEST_RELEASE ${WINDOWS_INSTALL_FILES})
++      list(APPEND WINDOWS_SHARED_MANIFEST_RELEASE ${WINDOWS_INSTALL_EXISTING_FILES})
+     endif()
+     install(
+-      FILES ${WINDOWS_INSTALL_FILES}
++      FILES ${WINDOWS_INSTALL_EXISTING_FILES}
+       DESTINATION "blender.shared"
+       CONFIGURATIONS ${WINDOWS_CONFIGURATIONS}
+     )
+   else()
+     # Python module without manifest.
+     install(
+-      FILES ${WINDOWS_INSTALL_FILES}
++      FILES ${WINDOWS_INSTALL_EXISTING_FILES}
+       DESTINATION "bpy"
+       CONFIGURATIONS ${WINDOWS_CONFIGURATIONS}
+     )
+   endif()
++  endif()
++  unset(_windows_install_file)
++  unset(WINDOWS_INSTALL_EXISTING_FILES)
+ endmacro()
+ 
+ macro(windows_generate_manifest)

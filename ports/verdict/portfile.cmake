@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  sandialabs/verdict
     REF ${VERSION}
-    SHA512 e4a38fabcb7b56cbc50b59ee2d97c8a4cc3a2afea6ec22860005b77b79536a8dae16acef48197ae881f5b6dbd20495c16ba5b3eadd57d7d478482e5734a98b1d
+    SHA512 86a67742f52473c9d51b0259201d47a8f46b7a62d4df11f54e85779c7fc8326e8f7e05a59487070901329f7d191068ecb04e15bd03bd17cc9f5d4977192cf9b3
     HEAD_REF master
     PATCHES include.patch
             fix_osx.patch
@@ -21,4 +21,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
-

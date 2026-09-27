@@ -2,14 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
     REF "${VERSION}"
-    SHA512 d25aed55f833f75c813fdb34bd8fcb1346313e010e762797b5e6b2548d82ceb9c8a9df2aef020471ac0a67879e69e719afbf1fd987eb56b632d1aadd287221b6
+    SHA512 c4daebcf1b4b882c0b87274548c4081154e909aa379a54269c460ceac6c3000cf68add7ee2da9ff05530e8d8db8b93ca12ea954524467f662ea557ec6612727f
     HEAD_REF master
 )
+
+vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        "-DPython3_EXECUTABLE=${PYTHON3}"
         -DSKIP_BUILD_TEST=ON
+        -DBUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

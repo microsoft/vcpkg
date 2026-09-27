@@ -1,0 +1,17 @@
+diff --git a/src/logging.cc b/src/logging.cc
+index 44bf8cb..013da81 100644
+--- a/src/logging.cc
++++ b/src/logging.cc
+@@ -54,11 +54,7 @@
+ #include "stacktrace.h"
+ #include "utilities.h"
+ 
+-#ifdef NGLOG_OS_WINDOWS
+-#  include "windows/dirent.h"
+-#else
+-#  include <dirent.h>  // for automatic removal of old logs
+-#endif
++#include <dirent.h>  // for automatic removal of old logs
+ 
+ #include <fcntl.h>
+ #include <sys/stat.h>

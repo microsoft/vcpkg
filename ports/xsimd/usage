@@ -1,4 +1,0 @@
-xsimd provides CMake targets:
-
-    find_package(xsimd CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE xsimd)

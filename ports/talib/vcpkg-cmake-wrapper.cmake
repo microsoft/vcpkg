@@ -1,9 +1,8 @@
 get_filename_component(_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 
-# Header lives at: <prefix>/include/ta_libc.h (Windows) or <prefix>/include/ta-lib/ta_libc.h (Unix)
 find_path(talib_INCLUDE_DIR
-  NAMES ta_libc.h ta-lib/ta_libc.h
-  PATHS "${_prefix}/include"
+  NAMES ta_libc.h
+  PATHS "${_prefix}/include/ta-lib" "${_prefix}/include"
   NO_DEFAULT_PATH
 )
 
@@ -58,8 +57,9 @@ find_package_handle_standard_args(talib
 
 if(talib_FOUND AND NOT TARGET talib::talib)
   add_library(talib::talib INTERFACE IMPORTED)
+  # Both <ta_libc.h> (upstream's documented form) and <ta-lib/ta_libc.h> compile.
   set_property(TARGET talib::talib PROPERTY
-    INTERFACE_INCLUDE_DIRECTORIES "${talib_INCLUDE_DIR}"
+    INTERFACE_INCLUDE_DIRECTORIES "${talib_INCLUDE_DIR}" "${_prefix}/include"
   )
 
   if(NOT talib_LIBRARIES_DEBUG)
@@ -68,8 +68,9 @@ if(talib_FOUND AND NOT TARGET talib::talib)
 
   target_link_libraries(talib::talib INTERFACE
     $<$<CONFIG:Debug>:${talib_LIBRARIES_DEBUG}>
-    $<$<CONFIG:RelWithDebInfo>:${talib_LIBRARIES_RELEASE}>
-    $<$<CONFIG:Release>:${talib_LIBRARIES_RELEASE}>
-    $<$<CONFIG:MinSizeRel>:${talib_LIBRARIES_RELEASE}>
+    $<$<NOT:$<CONFIG:Debug>>:${talib_LIBRARIES_RELEASE}>
   )
+  if(UNIX AND NOT APPLE)
+    target_link_libraries(talib::talib INTERFACE m)
+  endif()
 endif()

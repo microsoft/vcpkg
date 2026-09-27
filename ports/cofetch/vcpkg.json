@@ -1,0 +1,19 @@
+{
+  "name": "cofetch",
+  "version": "0.1.2",
+  "description": "Chainable async HTTP client for C++ event loops, built on libcurl multi and ASIO. One API serves callbacks, std::future, and C++20 co_await",
+  "homepage": "https://github.com/SSARCandy/cofetch",
+  "license": "MIT",
+  "dependencies": [
+    "asio",
+    "curl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

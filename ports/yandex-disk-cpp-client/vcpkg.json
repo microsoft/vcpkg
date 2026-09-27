@@ -1,14 +1,20 @@
 {
   "name": "yandex-disk-cpp-client",
-  "version": "1.0.3",
-  "description": "Modern C++ client for Yandex.Disk REST API",
+  "version": "1.0.4",
+  "description": "C++ client library for Yandex Disk REST API",
   "homepage": "https://github.com/Krasnovvvvv/yandex-disk-cpp-client",
   "documentation": "https://krasnovvvvv.github.io/yandex-disk-cpp-client/",
   "license": "MIT",
   "dependencies": [
     "curl",
     "nlohmann-json",
-    "vcpkg-cmake",
-    "vcpkg-cmake-config"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

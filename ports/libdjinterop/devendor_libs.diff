@@ -30,6 +30,18 @@ index 7ca2d6f..f317c4d 100644
  
  if(SYSTEM_SQLITE)
      # Search for system installation of SQLite and use that.
+diff --git a/DjInteropConfig.cmake.in b/DjInteropConfig.cmake.in
+index 1234567..abcdefg 100644
+--- a/DjInteropConfig.cmake.in
++++ b/DjInteropConfig.cmake.in
+@@ -4,6 +4,7 @@ set(DJINTEROP_SYSTEM_SQLITE @SYSTEM_SQLITE@)
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 
+ include(CMakeFindDependencyMacro)
++find_dependency(date)
+ find_dependency(ZLIB)
+ if(DJINTEROP_SYSTEM_SQLITE)
+   find_dependency(SQLite3)
 diff --git a/src/djinterop/util/chrono.cpp b/src/djinterop/util/chrono.cpp
 index 0d551dd..475aece 100644
 --- a/src/djinterop/util/chrono.cpp

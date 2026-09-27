@@ -1,0 +1,71 @@
+diff --git a/build-scripts/cmake/openzl-config.cmake.in b/build-scripts/cmake/openzl-config.cmake.in
+index 6c8a0df..fc4bd0d 100644
+--- a/build-scripts/cmake/openzl-config.cmake.in
++++ b/build-scripts/cmake/openzl-config.cmake.in
+@@ -15,11 +15,14 @@
+ include(CMakeFindDependencyMacro)
+
+ set_and_check(OPENZL_INCLUDE_DIR "@PACKAGE_OPENZL_INSTALL_INCLUDEDIR@")
+ set_and_check(OPENZL_CMAKE_DIR "@PACKAGE_OPENZL_INSTALL_CMAKEDIR@")
+
+ # find_dependency() ends up changing PACKAGE_PREFIX_DIR, so save
+ # openzl's prefix directory in the OPENZL_PREFIX_DIR variable
+ set(OPENZL_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+
++find_dependency(zstd CONFIG)
++find_dependency(lz4 CONFIG)
++
+ # Include the openzl-targets.cmake file, which is generated from our CMake rules
+ if (NOT TARGET OpenZL::openzl)
+   include("${OPENZL_CMAKE_DIR}/openzl-targets.cmake")
+diff --git a/build-scripts/cmake/openzl-deps.cmake b/build-scripts/cmake/openzl-deps.cmake
+index 62c1229..df5ff7e 100644
+--- a/build-scripts/cmake/openzl-deps.cmake
++++ b/build-scripts/cmake/openzl-deps.cmake
+@@ -40,7 +40,9 @@ endfunction()
+ message(STATUS "Attempting zstd dependency resolution...")
+
+ # Check if zstd is already available
+-check_zstd_available(ZSTD_AVAILABLE)
++find_package(zstd CONFIG REQUIRED)
++set(ZSTD_AVAILABLE TRUE)
++add_library(libzstd ALIAS zstd::libzstd)
+ if(ZSTD_AVAILABLE)
+     message(STATUS "zstd dependency already present")
+ else()
+@@ -104,7 +106,6 @@ set(ZSTD_BUILD_CONTRIB OFF CACHE BOOL "")
+ set(ZSTD_BUILD_TESTS OFF CACHE BOOL "")
+
+ # Add zstd subdirectory directly instead of using FetchContent
+-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd/build/cmake" zstd_build)
+ # Note: find_package not needed when using add_subdirectory - targets are directly available
+ list(APPEND OPENZL_LINK_LIBRARIES libzstd)
+
+@@ -138,7 +139,9 @@ if (NOT LZ4_AVAILABLE)
+     check_lz4_available(LZ4_AVAILABLE)
+ endif()
+
+-check_lz4_available(LZ4_AVAILABLE)
++find_package(lz4 CONFIG REQUIRED)
++set(LZ4_AVAILABLE TRUE)
++add_library(lz4 ALIAS lz4::lz4)
+ if(NOT LZ4_AVAILABLE)
+     message(STATUS "Tier 1 failed. Tier 2: Trying FetchContent with verified tarball...")
+
+@@ -160,7 +163,7 @@ if(NOT LZ4_AVAILABLE)
+ endif()
+
+ check_lz4_available(LZ4_AVAILABLE)
+-if(NOT LZ4_AVAILABLE)
++if(0)
+     message(FATAL_ERROR "Failed to obtain lz4 dependency through all available methods (git submodule, FetchContent+tarball)")
+ endif()
+ message(STATUS "lz4 dependency resolved successfully")
+@@ -178,7 +181,6 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+ set(BUILD_STATIC_LIBS ON CACHE BOOL "" FORCE)
+
+ # Add lz4 subdirectory directly instead of using FetchContent
+-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/deps/lz4/build/cmake" lz4_build)
+
+ # Restore BUILD_SHARED_LIBS and BUILD_STATIC_LIBS to their original values
+ set(BUILD_SHARED_LIBS ${_OPENZL_SAVED_BUILD_SHARED_LIBS} CACHE BOOL "" FORCE)

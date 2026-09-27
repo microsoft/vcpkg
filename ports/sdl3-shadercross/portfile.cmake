@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_shadercross
-    REF 7b7365a86611b2a7b6462e521cf1c43a037d0970
-    SHA512 52efd2c2507d6ae874cdc177945e15494920f11148e9e9cf8da27fb5ccacb5fcbe44581005e132a84631e9d438616aa1247b7ae23f4ef1785203cdcb08af19af
+    REF 1ca46e0ef7a9e50c706e7be6ef73ce467bac3b2e
+    SHA512 61feb70137b1a8e9037b0f9113a28b1f59578d6604423ef2a66173d9772b15a001f661cb4b53b0f3be941c0178d3562b0ae4d7a7f35404b137204bdce95f537f
     HEAD_REF main
     PATCHES
         fix-directx-shader-compiler-includes.patch

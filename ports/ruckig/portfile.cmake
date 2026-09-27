@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pantor/ruckig
     REF "v${VERSION}"
-    SHA512 5399e1f0c61c1c4d96a8a910e4b934b629c6302fd18fd609c7a8bc76156bf0f3f5197ff9e83ac0fc443083e40cc7208d9a2f09070f4f8ab4511f4a6566981b5d
+    SHA512 357b78a39b0ed0dde959aa7629af036d66e77ba3c0c4d0edb1f8fe3a6de4afca91bd4aecd316edd26d8b35a00e739f395850671374cd0f46743d4fe9a088f14b
     HEAD_REF main
     PATCHES
         third_party.patch

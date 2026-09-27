@@ -1,0 +1,8 @@
+rego-cpp provides CMake targets:
+
+    find_package(regocpp CONFIG REQUIRED)
+    target_link_libraries(<your-target> PRIVATE regocpp::rego)
+
+When installed with the "tools" feature, the rego CLI is available at:
+
+    $(vcpkg_installed)/<triplet>/tools/rego-cpp/rego

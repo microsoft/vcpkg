@@ -83,7 +83,7 @@ index cef87f8bd..cf61556bd 100644
  AC_DEFUN([OMNI_ENABLE_ZIOP],
 -[AC_CHECK_LIB(z,compressBound,omni_cv_enable_ziop_zlib=yes,omni_cv_enable_ziop_zlib=no)
 -AC_CHECK_LIB(zstd,ZSTD_compress,omni_cv_enable_ziop_zstd=yes,omni_cv_enable_ziop_zstd=no)
-+[AC_SEARCH_LIBS(compressBound,[z zlib zlibd],omni_cv_enable_ziop_zlib=yes,omni_cv_enable_ziop_zlib=no)
++[AC_SEARCH_LIBS(compressBound,[z zs zlib zd zsd zlibd],omni_cv_enable_ziop_zlib=yes,omni_cv_enable_ziop_zlib=no)
 +AC_SEARCH_LIBS(ZSTD_compress,[zstd zstdd],omni_cv_enable_ziop_zstd=yes,omni_cv_enable_ziop_zstd=no)
  omni_cv_enable_ziop="no"
  if test "$omni_cv_enable_ziop_zlib" = "yes"; then

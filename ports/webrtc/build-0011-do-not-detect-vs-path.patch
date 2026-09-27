@@ -1,0 +1,13 @@
+diff --git a/toolchain/win/setup_toolchain.py b/toolchain/win/setup_toolchain.py
+index e0b7c03..64e112c 100644
+--- a/toolchain/win/setup_toolchain.py
++++ b/toolchain/win/setup_toolchain.py
+@@ -148,7 +148,7 @@ def _LoadToolchainEnv(cpu, toolchain_root, sdk_dir, target_store):
+       assert _LowercaseDict(json_env) == _LowercaseDict(cmd_env)
+   else:
+     if 'GYP_MSVS_OVERRIDE_PATH' not in os.environ:
+-      os.environ['GYP_MSVS_OVERRIDE_PATH'] = _DetectVisualStudioPath()
++      os.environ['GYP_MSVS_OVERRIDE_PATH'] = toolchain_root
+     # We only support x64-hosted tools.
+     script_path = os.path.normpath(
+         os.path.join(os.environ['GYP_MSVS_OVERRIDE_PATH'], 'VC/vcvarsall.bat'))

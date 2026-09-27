@@ -1,0 +1,14 @@
+diff --git a/src/dawn/common/DRMUtils.cpp b/src/dawn/common/DRMUtils.cpp
+index a5e37669cb..400da3b152 100644
+--- a/src/dawn/common/DRMUtils.cpp
++++ b/src/dawn/common/DRMUtils.cpp
+@@ -30,7 +30,9 @@
+ #include <dirent.h>
+ #include <fcntl.h>
+ #include <sys/stat.h>
++#if defined(__linux__)
+ #include <sys/sysmacros.h>
++#endif
+ 
+ #include <algorithm>
+ #include <cctype>

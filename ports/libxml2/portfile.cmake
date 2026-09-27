@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
     REF "v${VERSION}"
-    SHA512 2a5034a90050c24bc8b9423456e80f85fd329eaaff2e9e729e71e373fc86c1f0c46b2572838d5550532f9849338f9be818f83cba3da67cffa09509aa614e3eee
+    SHA512 add8a6dac82510ef5c2d277692071776f8157984d880ccdb54d762b1ce2f5d06f00d51f64002744bf6908146e7c61ec9090fa4b9ce73f156629531067d5561c4
     HEAD_REF master
     PATCHES
         cxx-for-icu.diff
@@ -65,8 +65,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h" "!defined(LIBXML_STATIC)" "0 /* LIBXML_STATIC */")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"

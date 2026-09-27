@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dvidelabs/flatcc
     REF "v${VERSION}"
-    SHA512 46ba5ca75facc7d3360dba797d24ae7bfe539a854a48831e1c7b96528cf9594d8bea22b267678fd7c6d742b6636d9e52930987119b4c6b2e38d4abe89b990cae
+    SHA512 2beae74098a57d5e42fc7d99deb66c9463e49c7ef4795ed017e2767a601dad5cc516b71a383a4cade38eb457c1bb677cfc252f30e1f5eff34646c6d21eba1e98
     HEAD_REF master
     PATCHES
         fix_install_dir.patch
@@ -20,6 +20,7 @@ vcpkg_cmake_configure(
         -DFLATCC_TEST=OFF
         -DFLATCC_CXX_TEST=OFF
         -DFLATCC_RTONLY=ON
+        -DFLATCC_DEBUG_CLANG_SANITIZE=OFF
         ${EXTRA_OPTIONS}
 )
 

@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/intel-ipsec-mb
-    REF bde82c8737edc04d80549f0a68225ede7e5cefd #v1.1
-    SHA512 f41dcde88b062e8ec2327987c6d36cd4f74a5e4fea386cc1ef8364f1dc432a2db02ca7d3312c0471b443cf93e815af6d74a4819c249afd6777aa91693b2546e5
-    HEAD_REF master
-    PATCHES
-        always-generate-pdb.patch # https://github.com/intel/intel-ipsec-mb/pull/93
+    REF "v${VERSION}"
+    SHA512 3a0f39f4fd65e6abb2c6d88477491b390a302cd2e470692b8c1c498f02fcfabf57b3fd1e70c767e0b4d9c591ccdc6344ba28971a7e65ba6e7c492bcfddab2cc4
+    HEAD_REF main
 )
 
 vcpkg_find_acquire_program(NASM)

@@ -1,6 +1,6 @@
 {
   "name": "libgpg-error",
-  "version": "1.59",
+  "version": "1.61",
   "description": "A runtime library for GnuPG and other software which likes to use it.",
   "homepage": "https://gnupg.org/software/libgpg-error/",
   "license": "LGPL-2.1-or-later",

@@ -1,8 +1,8 @@
 {
   "name": "libevdev",
-  "version": "1.13.6",
+  "version": "1.13.7",
   "description": "Wrapper library for evdev devices",
-  "homepage": "https://www.freedesktop.org/wiki/Software/libevdev",
+  "homepage": "https://www.freedesktop.org/wiki/Software/libevdev/",
   "license": "MIT",
   "supports": "linux",
   "dependencies": [

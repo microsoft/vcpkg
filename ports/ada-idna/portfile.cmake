@@ -1,10 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ada-url/idna
-    REF "${VERSION}"
-    SHA512 8a5d1b01c53d951b4931d1dddc78863b971e513b44ab35dbfa3e98d654b72bb58e173b529e2758ba76394040cc134fcd90280988789ae2c60a46ebf743455ed8
+    REF "v${VERSION}"
+    SHA512 68c77140fb2590168c9d6e2745dbb8e522b9074e68d1fb2b005f60c136f5e42c7b12861e5a967996f4280b9111a9b80e2fdf979bca58d5595333f6a57e61baa5
     HEAD_REF main
     PATCHES
+        fix-flags-pollution.patch
+        fix-msvc-c4334.patch
         install.patch
 )
 
@@ -24,6 +26,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-ada-idna)
+
+if(ADA_USE_SIMDUTF)
+    file(READ "${CURRENT_PACKAGES_DIR}/share/unofficial-ada-idna/unofficial-ada-idna-config.cmake" cmake_config)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/unofficial-ada-idna/unofficial-ada-idna-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(simdutf)
+${cmake_config}
+")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

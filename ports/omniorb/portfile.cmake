@@ -1,14 +1,14 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://netcologne.dl.sourceforge.net/project/omniorb/omniORB/omniORB-${VERSION}/omniORB-${VERSION}.tar.bz2"
+    URLS "https://sourceforge.net/projects/omniorb/files/omniORB/omniORB-4.3.0/omniORB-4.3.0.tar.bz2/download"
     FILENAME "omniORB-${VERSION}.tar.bz2"
     SHA512 b081c1acbea3c7bee619a288fec209a0705b7d436f8e5fd4743675046356ef271a8c75882334fcbde4ff77d15f54d2da55f6cfcd117b01e42919d04fd29bfe2f
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-set (PATCHES 
+set (PATCHES
       hardcode_vaargs_for_msvc.patch
     )
-set (OPTIONS 
+set (OPTIONS
       ac_cv_prog_cc_g=yes
       ac_cv_prog_cxx_11=no
       ac_cv_prog_cxx_g=yes
@@ -19,7 +19,7 @@ endif()
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES 
+    PATCHES
       fix_dependency.patch
       def_gen_fix.patch
       msvc-src-build-fixes.patch
@@ -50,8 +50,8 @@ cmake_path(GET BISON PARENT_PATH BISON_DIR)
 vcpkg_add_to_path("${BISON_DIR}")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  set(z_vcpkg_org_linkage "${VCPKG_LIBRARY_LINKAGE}") 
-  # convoluted build system; shared builds requires 
+  set(z_vcpkg_org_linkage "${VCPKG_LIBRARY_LINKAGE}")
+  # convoluted build system; shared builds requires
   # static library to create def file for symbol export
   # tools seem to only dynamically link on windows due to make rules!
   # zlib/zstd deps for ZIOP seem to not work on windows. At least configure
@@ -94,11 +94,10 @@ vcpkg_configure_make(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel//mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoDebugBuild=1")
+  vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoDebugBuild=1")
   if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/mk/platforms/vcpkg.mk" "replace-with-per-config-text" "NoReleaseBuild=1\nBuildDebugBinary=1")
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "python$(subst .,,$(PYVERSION)).lib" "python$(subst .,,$(PYVERSION))_d.lib")
-    vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/tool/omniidl/cxx/dir.mk" "zlib.lib" "zlibd.lib")
   endif()
 endif()
 
@@ -193,7 +192,7 @@ file(COPY
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
-# Restore old linkage info. 
+# Restore old linkage info.
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
    set(VCPKG_LIBRARY_LINKAGE "${z_vcpkg_org_linkage}")
 endif()

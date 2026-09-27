@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HEASARC/cfitsio
     REF "cfitsio-${VERSION}"
-    SHA512 5db1b0c881169d2718cecff53c2de2ef2c93b933d48996025a0559ecff903f4aea0a0727aec0863b5eedafba4022325fcebd9092d50c427b3c1bab9a5c3fde6f
+    SHA512 8892efb8d248adb4882084da99aad9e0d2a58b393b16d74953f7eb2c219f285230276cbe99c3aa5a845e675c9901bdc81c90f3a667d58dc0416de8f730b9f12a
     HEAD_REF master
     PATCHES
         dependencies.diff

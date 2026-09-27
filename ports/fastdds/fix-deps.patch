@@ -41,3 +41,15 @@ index 070597df6..c0b2d6b64 100644
      $<$<BOOL:${LINK_SSL}>:OpenSSL::SSL$<SEMICOLON>OpenSSL::Crypto$<$<BOOL:${WIN32}>:$<SEMICOLON>crypt32.lib>>
      $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
      ${THIRDPARTY_BOOST_LINK_LIBS}
+diff --git a/cmake/packaging/Config.cmake.in b/cmake/packaging/Config.cmake.in
+index 0fe3d9589..26134720c 100644
+--- a/cmake/packaging/Config.cmake.in
++++ b/cmake/packaging/Config.cmake.in
+@@ -24,6 +24,7 @@ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(fastcdr REQUIRED)
+ find_dependency(foonathan_memory REQUIRED)
++find_dependency(nlohmann_json CONFIG)
+ 
+ set(fastdds_known_comps static shared)
+ set(fastdds_comp_static NO)

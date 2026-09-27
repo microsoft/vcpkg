@@ -1,8 +1,8 @@
 diff --git a/Modules/_ctypes/malloc_closure.c b/Modules/_ctypes/malloc_closure.c
-index 788bae6a9..3938f79db 100644
+index bb4f8f2..57cc8b6 100644
 --- a/Modules/_ctypes/malloc_closure.c
 +++ b/Modules/_ctypes/malloc_closure.c
-@@ -11,6 +11,9 @@
+@@ -15,6 +15,9 @@
  #endif
  #include "ctypes.h"
  

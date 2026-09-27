@@ -2,8 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/faiss
     REF "v${VERSION}"
-    SHA512 f4f1e392a3b25d5523cd1f4a6293f13018703687aeb609fafc93e2d99b3c8bba1d7a2ae300ec9ceea7750d66517c688d1a2b1160f98edfea37b78d218804f9ed
-    HEAD_REF master
+    SHA512 c1cbf92a96dfee0a27dc0cb8d719a451efec6ea44a73bd4a8b764593624bc0e074da5aa6bca19fbc904899416aab2a82aa5659d06bb07174624cb4449252ac07
+    HEAD_REF main
     PATCHES
         msvc-template.diff
         undef-small.diff
@@ -20,6 +20,10 @@ if ("gpu" IN_LIST FEATURES)
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     )
+    if(VCPKG_TARGET_IS_WINDOWS)
+        # See https://github.com/NVIDIA/cuda-samples/pull/412
+        list(APPEND FEATURE_OPTIONS "-DCMAKE_CUDA_FLAGS_INIT=-Xcompiler=/Zc:preprocessor")
+    endif()
 endif()
 
 vcpkg_cmake_configure(

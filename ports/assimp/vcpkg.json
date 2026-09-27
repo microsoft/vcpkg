@@ -1,11 +1,10 @@
 {
   "name": "assimp",
-  "version": "6.0.4",
+  "version": "6.0.5",
   "description": "The Open Asset import library",
   "homepage": "https://github.com/assimp/assimp",
-  "license": "BSD-3-Clause",
+  "license": "BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT",
   "dependencies": [
-    "draco",
     "jhasse-poly2tri",
     "kubazip",
     "minizip",
@@ -23,5 +22,13 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "draco": {
+      "description": "Enable Draco compressed mesh support",
+      "dependencies": [
+        "draco"
+      ]
+    }
+  }
 }

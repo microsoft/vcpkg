@@ -24,10 +24,15 @@ else()
     endif()
 endif()
 
-set(URL "https://naif.jpl.nasa.gov/pub/naif/misc/toolkit_N00${VERSION}/C/${SUBPATH}")
 get_filename_component(ext "${SUBPATH}" EXT)
 string(SUBSTRING "${SHA512}" 0 6 subsha)
-vcpkg_download_distfile(ARCHIVE URLS "${URL}" FILENAME "cspice-${subsha}${ext}" SHA512 "${SHA512}")
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://naif.jpl.nasa.gov/pub/naif/misc/toolkit_N00${VERSION}/C/${SUBPATH}"
+        "https://naif.jpl.nasa.gov/pub/naif/toolkit/C/${SUBPATH}"
+    FILENAME "cspice-${subsha}${ext}"
+    SHA512 "${SHA512}"
+)
 
 vcpkg_extract_source_archive(
     SOURCE_PATH

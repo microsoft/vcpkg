@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO man-group/sparrow
-    REF "${VERSION}"
-    SHA512 c2d8f7da6d97f65a15960d598b554b5d8caa1e586cf442c05f5d3be1d65d7e0372e2ff130d0241ff7b52268679a067afd8409a5cbb13391ab563bfe18dbfe13f
+    REF 7c521929ca10afeea29b8500e57e54842f8fc837 # this is 2.4.0 + an MSVC build break fix https://github.com/man-group/sparrow/pull/672
+    SHA512 747da0b989207640fc14ea3406da4fb7e77e3c88a24d998db3c1d45a96e28a43dd1fdd40c320e5e373d6bfb74a1a71f499c714e2dedb3870f564db5945197047
     HEAD_REF main
 )
 

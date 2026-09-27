@@ -1,0 +1,20 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -701,7 +701,7 @@ endif()
+ endif()
+
+ # ---[ FBGEMM
+-if(USE_FBGEMM)
++if(FALSE)
+   set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
+   if(NOT DEFINED FBGEMM_SOURCE_DIR)
+     set(FBGEMM_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/fbgemm" CACHE STRING "FBGEMM source directory")
+@@ -726,6 +726,8 @@ endif()
+
+ if(USE_FBGEMM)
+   caffe2_update_option(USE_FBGEMM ON)
++  find_package(fbgemmLibrary CONFIG REQUIRED)
++  list(APPEND Caffe2_DEPENDENCY_LIBS fbgemm)
+ else()
+   caffe2_update_option(USE_FBGEMM OFF)
+ endif()

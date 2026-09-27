@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO confluentinc/librdkafka
     REF "v${VERSION}"
-    SHA512 d58913665f6a53e9e9c100e73d9c9429d569dbe4779c6ce015e6b8ba3d3ccf507a63ed89292cc04e05e946700be09d82ba156e6893f6d021e16cbe2526d8c699
+    SHA512 8d1cebb0dcefe3eb0905381e1a6bd1239b90e35be1924c9538d7ffcbba4a0a5b42febccc10465ea3a3fab15ecff2371c44a971cfe2835d8743c39e181fcd99e5
     HEAD_REF master
     PATCHES
         lz4.patch
-        # remove it when https://github.com/confluentinc/librdkafka/pull/5136 is merged
-        fix_oauthbearer_check.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
@@ -70,8 +68,5 @@ endif()
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES.txt" )
-
-# Install usage
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
 vcpkg_fixup_pkgconfig()

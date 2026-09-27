@@ -79,7 +79,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_compile_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "DISABLE_CPPFLAGS;NO_FLAG_ESCAPING;DISABLE_MSVC_WRAPPERS" 
+        "DISABLE_CPPFLAGS;NO_FLAG_ESCAPING;DISABLE_MSVC_WRAPPERS"
         "COMPILER_FRONTEND;CONFIG;FLAGS_OUT"
         "LANGUAGES"
     )
@@ -113,7 +113,7 @@ function(z_vcpkg_make_prepare_compile_flags)
     foreach(var IN ITEMS ABIFLAGS LDFLAGS ARFLAGS RCFLAGS)
         vcpkg_list(APPEND flags ${var})
     endforeach()
-    
+
     set(ABIFLAGS "")
     set(pattern "")
     foreach(arg IN LISTS CFLAGS)
@@ -278,7 +278,11 @@ function(z_vcpkg_make_prepare_programs out_env)
             endif()
         endforeach()
 
-        if (NOT arg_DISABLE_MSVC_WRAPPERS AND NOT VCPKG_TARGET_IS_MINGW)
+        # The compile/ar-lib/windres-rc wrappers translate unix-style command lines
+        # for cl-style tools; compilers with a GNU-style frontend (e.g. clang
+        # targeting MSVC) take unix-style command lines directly and must not be
+        # wrapped, like they already are not for the ARFLAGS above.
+        if (NOT arg_DISABLE_MSVC_WRAPPERS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -304,13 +308,22 @@ function(z_vcpkg_make_prepare_programs out_env)
                 z_vcpkg_append_to_configure_environment(configure_env AR "ar-lib lib.exe -verbose")
             endif()
         else()
-            z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
-            z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-            z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+            # ABI flags (--target etc.) are extracted out of the compiler flags
+            # by z_vcpkg_make_prepare_flags and belong with the compiler itself,
+            # like the non-windows path below does. cl-style compilers never
+            # have any, but a GNU-frontend compiler targeting windows (clang)
+            # needs them to drive for the right platform.
+            list(JOIN ABIFLAGS_${arg_CONFIG} " " abiflags)
+            if(NOT abiflags STREQUAL "")
+                string(PREPEND abiflags " ")
+            endif()
+            z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags} -E")
+            z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags}")
+            z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}${abiflags}")
             if(NOT is_crosscompiling)
-                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
-                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+                z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags}")
+                z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}${abiflags} -E")
+                z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}${abiflags}")
             else()
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
@@ -334,7 +347,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env OBJDUMP "${VCPKG_DETECTED_CMAKE_OBJDUMP}") # Trick to ignore the RANLIB call
         endif()
         if(VCPKG_DETECTED_CMAKE_STRIP) # If required set the ENV variable STRIP in the portfile correctly
-            z_vcpkg_append_to_configure_environment(configure_env STRIP "${VCPKG_DETECTED_CMAKE_STRIP}") 
+            z_vcpkg_append_to_configure_environment(configure_env STRIP "${VCPKG_DETECTED_CMAKE_STRIP}")
         else()
             z_vcpkg_append_to_configure_environment(configure_env STRIP ": STRIP-disabled")
             list(APPEND arg_OPTIONS ac_cv_prog_ac_ct_STRIP=:)
@@ -342,12 +355,12 @@ function(z_vcpkg_make_prepare_programs out_env)
         if(VCPKG_DETECTED_CMAKE_NM) # If required set the ENV variable NM in the portfile correctly
             z_vcpkg_append_to_configure_environment(configure_env NM "${VCPKG_DETECTED_CMAKE_NM}")
         else()
-            # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
+            # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm
             # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
             z_vcpkg_append_to_configure_environment(configure_env NM "dumpbin.exe -symbols -headers")
         endif()
         if(VCPKG_DETECTED_CMAKE_DLLTOOL) # If required set the ENV variable DLLTOOL in the portfile correctly
-            z_vcpkg_append_to_configure_environment(configure_env DLLTOOL "${VCPKG_DETECTED_CMAKE_DLLTOOL}") 
+            z_vcpkg_append_to_configure_environment(configure_env DLLTOOL "${VCPKG_DETECTED_CMAKE_DLLTOOL}")
         else()
             z_vcpkg_append_to_configure_environment(configure_env DLLTOOL "link.exe -verbose -dll")
         endif()
@@ -375,7 +388,7 @@ function(z_vcpkg_make_prepare_programs out_env)
                     set(ccas "${ccas_filename}")
                 endif()
                 string(APPEND ccas " ${asmflags}")
-            endif() 
+            endif()
             z_vcpkg_append_to_configure_environment(configure_env CCAS "${ccas} -c")
             z_vcpkg_append_to_configure_environment(configure_env AS "${ccas} -c")
         endif()
@@ -441,7 +454,7 @@ function(z_vcpkg_make_prepare_link_flags)
     )
 
     set(link_flags ${${arg_IN_OUT_VAR}})
-    
+
     if(arg_VCPKG_TRANSFORM_LIBS)
         list(TRANSFORM link_flags REPLACE "[.](dll[.]lib|lib|a|so)$" "")
 
@@ -462,7 +475,7 @@ endfunction()
 
 function(z_vcpkg_make_prepare_flags)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "DISABLE_CPPFLAGS;DISABLE_MSVC_WRAPPERS;NO_FLAG_ESCAPING" 
+        "DISABLE_CPPFLAGS;DISABLE_MSVC_WRAPPERS;NO_FLAG_ESCAPING"
         "LIBS_OUT;FRONTEND_VARIANT_OUT;C_COMPILER_NAME"
         "LANGUAGES"
     )
@@ -494,7 +507,7 @@ function(z_vcpkg_make_prepare_flags)
     endif()
 
     z_vcpkg_make_prepare_link_flags(
-        IN_OUT_VAR all_libs_list 
+        IN_OUT_VAR all_libs_list
         ${vcpkg_transform_libs}
     )
 
@@ -516,9 +529,9 @@ function(z_vcpkg_make_prepare_flags)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         if(VCPKG_TARGET_IS_UWP)
             # Be aware that configure thinks it is crosscompiling due to:
-            # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
+            # error while loading shared libraries: VCRUNTIME140D_APP.dll:
             # cannot open shared object file: No such file or directory
-            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
+            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
@@ -558,7 +571,7 @@ function(z_vcpkg_make_prepare_flags)
     )
     if(NOT DEFINED VCPKG_BUILD_TYPE)
         z_vcpkg_make_prepare_compile_flags(
-            CONFIG DEBUG 
+            CONFIG DEBUG
             COMPILER_FRONTEND "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}"
             FLAGS_OUT debug_flags_list
             ${flags_opts}
@@ -568,7 +581,7 @@ function(z_vcpkg_make_prepare_flags)
     foreach(flag IN LISTS release_flags_list debug_flags_list)
         set("${flag}" "${${flag}}" PARENT_SCOPE)
     endforeach()
-    
+
     cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME cname)
     set("${arg_C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_configure_triplets
     set("${arg_FRONTEND_VARIANT_OUT}" "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" PARENT_SCOPE)
@@ -576,7 +589,7 @@ endfunction()
 
 function(z_vcpkg_make_default_path_and_configure_options out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "" 
+        ""
         "CONFIG;EXCLUDE_FILTER"
         ""
     )
@@ -592,10 +605,10 @@ function(z_vcpkg_make_default_path_and_configure_options out_var)
     # Pre-processing windows configure requirements
     if (VCPKG_TARGET_IS_WINDOWS)
         # Other maybe interesting variables to control
-        # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
+        # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line.
         # LINK This is the command used to actually link a C program.
-        # CXXCOMPILE The command used to actually compile a C++ source file. The file name is appended to form the complete command line. 
-        # CXXLINK  The command used to actually link a C++ program. 
+        # CXXCOMPILE The command used to actually compile a C++ source file. The file name is appended to form the complete command line.
+        # CXXLINK  The command used to actually link a C++ program.
 
         # Variables not correctly detected by configure. In release builds.
         list(APPEND opts gl_cv_double_slash_root=yes

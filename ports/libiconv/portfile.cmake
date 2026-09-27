@@ -24,7 +24,7 @@ vcpkg_download_distfile(ARCHIVE
          "https://ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
     FILENAME "libiconv-${VERSION}.tar.gz"
-    SHA512 a55eb3b7b785a78ab8918db8af541c9e11deb5ff4f89d54483287711ed797d87848ce0eafffa7ce26d9a7adb4b5a9891cb484f94bd4f51d3ce97a6a47b4c719a
+    SHA512 1e8150f9bca907579330cd9c44ebbee46a260271fbe8f50d5ee24a39ef29c8d254505e85c3409324f7440596da711a8bd49e89f848a6be0cb3238a58c24aaecd
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
@@ -40,17 +40,15 @@ if (NOT VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND OPTIONS --enable-relocatable)
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DETERMINE_BUILD_TRIPLET
-    USE_WRAPPERS
     OPTIONS
         --enable-extra-encodings
         --without-libiconv-prefix
         --without-libintl-prefix
         ${OPTIONS}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")

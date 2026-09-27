@@ -1,0 +1,12 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO simfeo/FancyArgumentParser
+    REF "v1.0.4"
+    SHA512 64af53d2e0eb4ea9386d351488e68a73618f6a8d58981b683d454b14e167a301de4b8fade5e659e20ca8772ce9308da17f7c23617134b5c9f4090e163bee7351
+    HEAD_REF main
+)
+
+file(GLOB HEADERS "${SOURCE_PATH}/*.h" "${SOURCE_PATH}/*.hpp")
+file(INSTALL ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

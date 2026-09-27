@@ -13,55 +13,55 @@ function(vcpkg_find_fortran out_var)
     macro(z_vcpkg_warn_ambiguous_system_variables)
     # CMakeDetermineFortranCompiler is for project mode.
     endmacro()
-    include(CMakeDetermineFortranCompiler)
 
-    if(NOT CMAKE_Fortran_COMPILER AND "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" STREQUAL "")
-        # If a user uses their own VCPKG_CHAINLOAD_TOOLCHAIN_FILE, they _must_ figure out fortran on their own.
-        if(CMAKE_HOST_WIN32)
-            message(STATUS "No Fortran compiler found on the PATH. Using MinGW gfortran!")
-            # If no Fortran compiler is on the path we switch to use gfortan from MinGW within vcpkg
-            if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
-                set(mingw_path mingw32)
-                set(machine_flag -m32)
-                vcpkg_acquire_msys(msys_root
-                    NO_DEFAULT_PACKAGES
-                    Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_fortran_msys_declare_packages"
-                    PACKAGES mingw-w64-i686-gcc-fortran
-                )
-            elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
-                set(mingw_path mingw64)
-                set(machine_flag -m64)
-                vcpkg_acquire_msys(msys_root
-                    NO_DEFAULT_PACKAGES
-                    Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_fortran_msys_declare_packages"
-                    PACKAGES mingw-w64-x86_64-gcc-fortran
-                )
-            else()
-                message(FATAL_ERROR "Unknown architecture '${VCPKG_TARGET_ARCHITECTURE}' for MinGW Fortran build!")
-            endif()
-
-            set(mingw_bin "${msys_root}/${mingw_path}/bin")
-            vcpkg_add_to_path(PREPEND "${mingw_bin}")
-            vcpkg_list(APPEND additional_cmake_args
-                -DCMAKE_GNUtoMS=ON
-                "-DCMAKE_Fortran_COMPILER=${mingw_bin}/gfortran.exe"
-                "-DCMAKE_C_COMPILER=${mingw_bin}/gcc.exe"
-                "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${machine_flag} ${VCPKG_Fortran_FLAGS}")
-
-            # This is for private use by vcpkg-gfortran
-            set(vcpkg_find_fortran_MSYS_ROOT "${msys_root}" PARENT_SCOPE)
-            set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
-            set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled PARENT_SCOPE)
-            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake" PARENT_SCOPE) # Switching to MinGW toolchain for Fortran
-            if(VCPKG_CRT_LINKAGE STREQUAL "static")
-                set(VCPKG_CRT_LINKAGE dynamic PARENT_SCOPE)
-                message(STATUS "VCPKG_CRT_LINKAGE linkage for ${PORT} using vcpkg's internal gfortran cannot be static due to linking against MinGW libraries. Forcing dynamic CRT linkage")
-            endif()
-            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-                set(VCPKG_LIBRARY_LINKAGE dynamic PARENT_SCOPE)
-                message(STATUS "VCPKG_LIBRARY_LINKAGE linkage for ${PORT} using vcpkg's internal gfortran cannot be static due to linking against MinGW libraries. Forcing dynamic library linkage")
-            endif()
+    if(VCPKG_PROVIDED_FORTRAN)
+        message(STATUS "Using MinGW gfortran; set VCPKG_PROVIDED_FORTRAN=OFF if supplying Fortran from your toolchain")
+        if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
+            set(mingw_path mingw32)
+            set(machine_flag -m32)
+            vcpkg_acquire_msys(msys_root
+                NO_DEFAULT_PACKAGES
+                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_fortran_msys_declare_packages"
+                PACKAGES mingw-w64-i686-gcc-fortran
+            )
+        elseif("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x64")
+            set(mingw_path mingw64)
+            set(machine_flag -m64)
+            vcpkg_acquire_msys(msys_root
+                NO_DEFAULT_PACKAGES
+                Z_DECLARE_EXTRA_PACKAGES_COMMAND "z_vcpkg_find_fortran_msys_declare_packages"
+                PACKAGES mingw-w64-x86_64-gcc-fortran
+            )
         else()
+            message(FATAL_ERROR "Unknown architecture '${VCPKG_TARGET_ARCHITECTURE}' for MinGW Fortran build!")
+        endif()
+
+        set(mingw_bin "${msys_root}/${mingw_path}/bin")
+        vcpkg_add_to_path(PREPEND "${mingw_bin}")
+        vcpkg_list(APPEND additional_cmake_args
+            -DCMAKE_GNUtoMS=ON
+            "-DCMAKE_Fortran_COMPILER=${mingw_bin}/gfortran.exe"
+            "-DCMAKE_C_COMPILER=${mingw_bin}/gcc.exe"
+            "-DCMAKE_Fortran_FLAGS_INIT:STRING= -mabi=ms ${machine_flag} ${VCPKG_Fortran_FLAGS}")
+
+        # This is for private use by vcpkg-gfortran
+        set(vcpkg_find_fortran_MSYS_ROOT "${msys_root}" PARENT_SCOPE)
+        set(VCPKG_USE_INTERNAL_Fortran TRUE PARENT_SCOPE)
+        set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled PARENT_SCOPE)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake" PARENT_SCOPE) # Switching to MinGW toolchain for Fortran
+        if(VCPKG_CRT_LINKAGE STREQUAL "static")
+            set(VCPKG_CRT_LINKAGE dynamic PARENT_SCOPE)
+            message(STATUS "VCPKG_CRT_LINKAGE linkage for ${PORT} using vcpkg's internal gfortran cannot be static due to linking against MinGW libraries. Forcing dynamic CRT linkage")
+        endif()
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            set(VCPKG_LIBRARY_LINKAGE dynamic PARENT_SCOPE)
+            message(STATUS "VCPKG_LIBRARY_LINKAGE linkage for ${PORT} using vcpkg's internal gfortran cannot be static due to linking against MinGW libraries. Forcing dynamic library linkage")
+        endif()
+    elseif(CMAKE_HOST_WIN32)
+        message(STATUS "Deferring Fortran compiler selection to the triplet toolchain.")
+    else()
+        include(CMakeDetermineFortranCompiler)
+        if(NOT CMAKE_Fortran_COMPILER)
             message(FATAL_ERROR "Unable to find a Fortran compiler using 'CMakeDetermineFortranCompiler'. Please install one (e.g. gfortran) and make it available on the PATH!")
         endif()
     endif()

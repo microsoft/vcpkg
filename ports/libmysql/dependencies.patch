@@ -2,14 +2,15 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e17ec1d0..465e42f0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -818,8 +818,12 @@ INCLUDE(fileutils)
+@@ -818,9 +818,13 @@ INCLUDE(fileutils)
  INCLUDE(zlib)
  INCLUDE(zstd)
  INCLUDE(lz4)
 -INCLUDE(icu)
--INCLUDE(libevent)
 +macro(MYSQL_CHECK_ICU)
 +endmacro()
+ INCLUDE(libbacktrace)
+-INCLUDE(libevent)
 +macro(MYSQL_CHECK_LIBEVENT)
 +endmacro()
 +macro(WARN_MISSING_SYSTEM_LIBEVENT)
@@ -17,7 +18,7 @@ index e17ec1d0..465e42f0 100644
  INCLUDE(ssl)
  INCLUDE(sasl)
  INCLUDE(ldap)
-@@ -837,7 +841,8 @@ INCLUDE(curl)
+@@ -837,7 +840,8 @@ INCLUDE(curl)
  INCLUDE(rapidjson)
  INCLUDE(fprofile)
  INCLUDE(gloves)

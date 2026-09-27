@@ -1,0 +1,241 @@
+From 631e128cc79d0dd2f92d434854f90c22bbc1b7c3 Mon Sep 17 00:00:00 2001
+From: Mohammad Rahimi <rahimi.mhmmd@gmail.com>
+Date: Mon, 8 Jun 2026 22:03:42 +0800
+Subject: [PATCH] Update CMake configuration to version 3.10 and enhance
+ project structure
+
+---
+ CMakeLists.txt                 | 150 ++++++++++++++++++++++++++-------
+ README.md                      |   2 +-
+ cmake/minmeaConfig.cmake.in    |   3 +
+ compat/minmea_compat_windows.h |   2 +-
+ minmea.h                       |   2 +-
+ 5 files changed, 126 insertions(+), 33 deletions(-)
+ create mode 100644 cmake/minmeaConfig.cmake.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ce1865f..318c97b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,48 +1,138 @@
+-cmake_minimum_required(VERSION 3.3)
++cmake_minimum_required(VERSION 3.10)
+ 
+-project(minmea)
++project(minmea
++    VERSION 1.0.0
++    LANGUAGES C
++)
+ 
+-option(MINMEA_ENABLE_TESTING "Enable building and running unit tests" ON)
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
++
++# -------------------------------------------------
++# Options
++# -------------------------------------------------
++option(MINMEA_BUILD_EXAMPLES "Build example program" ON)
++option(MINMEA_ENABLE_TESTING "Build and run tests" ON)
++option(MINMEA_INSTALL "Enable installation rules" ON)
++
++# -------------------------------------------------
++# Library
++# -------------------------------------------------
++add_library(minmea minmea.c minmea.h)
+ 
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -Wextra -Werror -std=c99")
+-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_POSIX_C_SOURCE=199309L -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_DARWIN_C_SOURCE")
++add_library(minmea::minmea ALIAS minmea)
+ 
+-set(minmea_SRCS minmea.c minmea.h)
+-add_library(minmea ${minmea_SRCS})
++target_compile_features(minmea PRIVATE c_std_99)
++
++if(MSVC)
++    target_compile_options(minmea PRIVATE /W4)
++    target_compile_definitions(minmea PRIVATE MINMEA_INCLUDE_COMPAT)
++else()
++    target_compile_options(minmea PRIVATE -Wall -Wextra)
++endif()
++
++if(NOT WIN32)
++    target_compile_definitions(minmea PRIVATE
++        _POSIX_C_SOURCE=199309L
++        _BSD_SOURCE
++        _DEFAULT_SOURCE
++        _DARWIN_C_SOURCE
++    )
++endif()
+ 
+-add_executable(example example.c)
+-target_link_libraries(example minmea)
++target_include_directories(minmea
++    PUBLIC
++        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++)
+ 
+-if (MINMEA_ENABLE_TESTING)
++# -------------------------------------------------
++# Example
++# -------------------------------------------------
++if(MINMEA_BUILD_EXAMPLES)
++    add_executable(example example.c)
++    target_link_libraries(example PRIVATE minmea)
++endif()
++
++# -------------------------------------------------
++# Tests
++# -------------------------------------------------
++if(MINMEA_ENABLE_TESTING AND PROJECT_IS_TOP_LEVEL)
+     enable_testing()
+-    find_package(Threads REQUIRED) # Workaround for https://github.com/libcheck/check/issues/48#issuecomment-322965461
+-    find_package(PkgConfig)
++
++    find_package(Threads REQUIRED)
++    find_package(PkgConfig REQUIRED)
+     pkg_check_modules(CHECK REQUIRED check)
+-    link_directories(${CHECK_LIBRARY_DIRS})
+ 
+     add_executable(tests tests.c)
+-    target_link_libraries(tests minmea ${CHECK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+-    target_include_directories(tests PUBLIC ${CHECK_INCLUDE_DIRS})
+-    target_compile_options(tests PUBLIC ${CHECK_CFLAGS_OTHER})
+ 
+-    add_test(NAME tests COMMAND $<TARGET_FILE:tests>)
++    target_link_libraries(tests PRIVATE
++        minmea
++        Threads::Threads
++        ${CHECK_LIBRARIES}
++    )
++
++    target_include_directories(tests PRIVATE
++        ${CHECK_INCLUDE_DIRS}
++    )
++
++    target_compile_options(tests PRIVATE
++        ${CHECK_CFLAGS_OTHER}
++    )
++
++    add_test(NAME tests COMMAND tests)
++
++    # Optional static analysis hook (kept simple)
+     add_test(
+         NAME clang_static_analysis
+-        COMMAND scan-build make
+-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
++        COMMAND scan-build --status-bugs ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}
+     )
+-    list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
+ endif()
+ 
+-include(GNUInstallDirs)
++# -------------------------------------------------
++# Installation + Export
++# -------------------------------------------------
++if(MINMEA_INSTALL)
++    install(TARGETS minmea
++        EXPORT minmeaTargets
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    )
+ 
+-install(TARGETS minmea
+-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+-install(FILES minmea.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-if(MSVC)
+-    install(FILES compat/minmea_compat_windows.h
++    install(FILES minmea.h
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+-        RENAME minmea_compat.h)
+-endif()
+\ No newline at end of file
++    )
++
++    if(MSVC)
++        install(FILES
++            compat/minmea_compat_windows.h
++            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/compat"
++        )
++    endif()
++
++    install(EXPORT minmeaTargets
++        FILE minmeaTargets.cmake
++        NAMESPACE minmea::
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/minmea
++    )
++
++    # Package config
++    write_basic_package_version_file(
++        "${CMAKE_CURRENT_BINARY_DIR}/minmeaConfigVersion.cmake"
++        VERSION ${PROJECT_VERSION}
++        COMPATIBILITY SameMajorVersion
++    )
++
++    configure_package_config_file(
++        "${CMAKE_CURRENT_LIST_DIR}/cmake/minmeaConfig.cmake.in"
++        "${CMAKE_CURRENT_BINARY_DIR}/minmeaConfig.cmake"
++        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/minmea
++    )
++
++    install(FILES
++        "${CMAKE_CURRENT_BINARY_DIR}/minmeaConfig.cmake"
++        "${CMAKE_CURRENT_BINARY_DIR}/minmeaConfigVersion.cmake"
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/minmea
++    )
++endif()
+diff --git a/README.md b/README.md
+index 5d66e9a..42e2f53 100644
+--- a/README.md
++++ b/README.md
+@@ -39,7 +39,7 @@ Minmea runs out-of-the-box under most Unix-compatible systems. Support for non-U
+ (including native Windows builds under MSVC) is provided via compatibility headers:
+ 
+ 1. Define `MINMEA_INCLUDE_COMPAT` in the build environment.
+-2. Add appropriate compatibility header from under `compat/` directory as `minmea_compat.h`.
++2. Add appropriate compatibility header from under `compat/` directory.
+ 
+ If your GPS receiver outputs very long sentences, consider increasing `MINMEA_MAX_SENTENCE_LENGTH`
+ in your build environment.
+diff --git a/cmake/minmeaConfig.cmake.in b/cmake/minmeaConfig.cmake.in
+new file mode 100644
+index 0000000..a1af469
+--- /dev/null
++++ b/cmake/minmeaConfig.cmake.in
+@@ -0,0 +1,3 @@
++@PACKAGE_INIT@
++
++include("${CMAKE_CURRENT_LIST_DIR}/minmeaTargets.cmake")
+\ No newline at end of file
+diff --git a/compat/minmea_compat_windows.h b/compat/minmea_compat_windows.h
+index ef1ccb7..3f70631 100644
+--- a/compat/minmea_compat_windows.h
++++ b/compat/minmea_compat_windows.h
+@@ -8,7 +8,7 @@
+ 
+ #if defined(_MSC_VER)
+ 
+-#if !defined(HAVE_STRUCT_TIMESPEC)
++#if _MSC_VER < 1900
+ struct timespec {
+     time_t tv_sec;
+     long tv_nsec;
+diff --git a/minmea.h b/minmea.h
+index da2ab4f..bca261d 100644
+--- a/minmea.h
++++ b/minmea.h
+@@ -19,7 +19,7 @@ extern "C" {
+ #include <time.h>
+ #include <math.h>
+ #ifdef MINMEA_INCLUDE_COMPAT
+-#include <minmea_compat.h>
++#include <compat/minmea_compat_windows.h>
+ #endif
+ 
+ #ifndef MINMEA_MAX_SENTENCE_LENGTH
+-- 
+2.54.0.windows.1
+

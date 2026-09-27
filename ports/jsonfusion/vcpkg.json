@@ -1,10 +1,19 @@
 {
   "name": "jsonfusion",
-  "version": "0.710.0",
+  "version": "1.1.1",
   "description": "Type-driven JSON/CBOR parser with declarative validation. Header-only C++23 library.",
   "homepage": "https://github.com/tucher/JsonFusion",
   "license": "MIT",
+  "supports": "!windows",
   "dependencies": [
     "boost-pfr"
-  ]
+  ],
+  "features": {
+    "yyjson": {
+      "description": "High-performance JSON backend (JsonFusion/yyjson.hpp) built on yyjson",
+      "dependencies": [
+        "yyjson"
+      ]
+    }
+  }
 }

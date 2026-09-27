@@ -1,0 +1,13 @@
+diff --git a/logme/CMakeLists.txt b/logme/CMakeLists.txt
+index 975d940..087982d 100644
+--- a/logme/CMakeLists.txt
++++ b/logme/CMakeLists.txt
+@@ -55,7 +55,7 @@ if (LOGME_USE_FMT_FORMAT)
+   target_link_libraries(logme PUBLIC fmt::fmt)
+ endif()
+ if(WIN32)
+-  target_link_libraries(logme PUBLIC Advapi32)
++  target_link_libraries(logme PUBLIC Advapi32 Ws2_32)
+ else()
+   find_package(Threads REQUIRED)
+   target_link_libraries(logme PUBLIC Threads::Threads ${CMAKE_DL_LIBS})

@@ -1,0 +1,48 @@
+diff --git a/src/bluetooth/qbluetoothdevicediscoveryagent_winrt.cpp b/src/bluetooth/qbluetoothdevicediscoveryagent_winrt.cpp
+index 25d429c..d74e555 100644
+--- a/src/bluetooth/qbluetoothdevicediscoveryagent_winrt.cpp
++++ b/src/bluetooth/qbluetoothdevicediscoveryagent_winrt.cpp
+@@ -14,6 +14,7 @@
+ #include <QtCore/QMutex>
+ #include <QtCore/qendian.h>
+ 
++#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+ #include <winrt/Windows.Devices.Bluetooth.h>
+ #include <winrt/Windows.Devices.Bluetooth.Advertisement.h>
+ #include <winrt/Windows.Devices.Bluetooth.Rfcomm.h>
+diff --git a/src/bluetooth/qbluetoothdevicewatcher_winrt_p.h b/src/bluetooth/qbluetoothdevicewatcher_winrt_p.h
+index 74f5635..4f76004 100644
+--- a/src/bluetooth/qbluetoothdevicewatcher_winrt_p.h
++++ b/src/bluetooth/qbluetoothdevicewatcher_winrt_p.h
+@@ -20,6 +20,7 @@
+ 
+ #include <private/qbluetoothutils_winrt_p.h>
+ 
++#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+ #include <winrt/base.h>
+ #include <QtCore/private/qfactorycacheregistration_p.h>
+ #include <winrt/Windows.Devices.Enumeration.h>
+diff --git a/src/bluetooth/qbluetoothutils_winrt_p.h b/src/bluetooth/qbluetoothutils_winrt_p.h
+index 9e1d475..c55d956 100644
+--- a/src/bluetooth/qbluetoothutils_winrt_p.h
++++ b/src/bluetooth/qbluetoothutils_winrt_p.h
+@@ -17,6 +17,7 @@
+ 
+ // Workaround for Windows SDK bug.
+ // See https://github.com/microsoft/Windows.UI.Composition-Win32-Samples/issues/47
++#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+  #include <winrt/base.h>
+ #include <QtCore/private/qfactorycacheregistration_p.h>
+ namespace winrt::impl
+diff --git a/src/bluetooth/qlowenergycontroller_winrt_p.h b/src/bluetooth/qlowenergycontroller_winrt_p.h
+index 2a1c650..828339a 100644
+--- a/src/bluetooth/qlowenergycontroller_winrt_p.h
++++ b/src/bluetooth/qlowenergycontroller_winrt_p.h
+@@ -24,6 +24,7 @@
+ #include "qlowenergycontroller.h"
+ #include "qlowenergycontrollerbase_p.h"
+ 
++#define _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+ #include <winrt/Windows.Foundation.h>
+ #include <winrt/Windows.Devices.Bluetooth.h>
+ #include <winrt/Windows.Devices.Bluetooth.GenericAttributeProfile.h>

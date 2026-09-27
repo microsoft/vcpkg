@@ -1,3 +1,3 @@
-set(qtactiveqt_HASH "19b11c6bbc9b2f6c083b65d69d17016af7d4ca08222fc9b831f8dac7d67918921cf47b3bce77938c2bbe09f0f3fe0510ccbf9343246654f29791488545d3680c")
-set(qtactiveqt_URL "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/qtactiveqt-everywhere-src-6.10.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.2/submodules/qtactiveqt-everywhere-src-6.10.2.tar.xz")
-set(qtactiveqt_FILENAME "qtactiveqt-everywhere-src-6.10.2.tar.xz")
+set(qtactiveqt_HASH "440f264203e5a6e3f09b6a19e652149bf893f4661f0b9ae757c04606a594f0aad2b1ba95e278de6eb2d597402a47c3f389d091b03dd796ddcc7544c4c1422cdb")
+set(qtactiveqt_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtactiveqt-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtactiveqt-everywhere-src-6.11.2.tar.xz")
+set(qtactiveqt_FILENAME "qtactiveqt-everywhere-src-6.11.2.tar.xz")

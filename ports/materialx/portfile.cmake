@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/MaterialX
     REF "v${VERSION}"
-    SHA512 ca743e619f51bddd67419c79a31e9fb92dd7883e8c182897c1d8cea2e5dc51cddf13ac8cc798cfa0f022dacf4fd77881aefc24f3184f8b7273651ba55c7df400
+    SHA512 a9af568dd2918a2679de1727295178a3155cb63a1b1a58eec0ff2bf804031e716918c036546916cfdab2ef1fcbe3cc2edc34037a082f7a50f0c6852236b8e449
     HEAD_REF main
 )
 
@@ -13,7 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         osl-generator  MATERIALX_BUILD_GEN_OSL
         render         MATERIALX_BUILD_RENDER
 )
-if ((VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_LINUX) AND MATERIALX_BUILD_RENDER)
+if (VCPKG_TARGET_IS_LINUX AND MATERIALX_BUILD_RENDER)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev.")
 endif()
 

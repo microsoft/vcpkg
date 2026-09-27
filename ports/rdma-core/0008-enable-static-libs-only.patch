@@ -1,0 +1,79 @@
+diff --git a/buildlib/rdma_functions.cmake b/buildlib/rdma_functions.cmake
+index ef77d95d0..84e650497 100644
+--- a/buildlib/rdma_functions.cmake
++++ b/buildlib/rdma_functions.cmake
+@@ -117,7 +117,10 @@ function(rdma_library DEST VERSION_SCRIPT SOVERSION VERSION)
+     SOVERSION ${SOVERSION}
+     VERSION ${VERSION}
+     LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB}")
+-  install(TARGETS ${DEST} DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++
++  if(NOT ENABLE_STATIC)
++    install(TARGETS ${DEST} DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++  endif()
+ endfunction()
+ 
+ # Create a special provider with exported symbols in it The shared provider
+@@ -153,20 +156,23 @@ function(rdma_shared_provider DEST VERSION_SCRIPT SOVERSION VERSION)
+     SOVERSION ${SOVERSION}
+     VERSION ${VERSION}
+     LIBRARY_OUTPUT_DIRECTORY "${BUILD_LIB}")
+-  install(TARGETS ${DEST} DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+-
+-  # Compute a relative symlink from VERBS_PROVIDER_DIR to LIBDIR
+-  execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/buildlib/relpath
+-    "${CMAKE_INSTALL_FULL_LIBDIR}/lib${DEST}.so.${VERSION}"
+-    "${VERBS_PROVIDER_DIR}"
+-    OUTPUT_VARIABLE DEST_LINK_PATH OUTPUT_STRIP_TRAILING_WHITESPACE
+-    RESULT_VARIABLE retcode)
+-  if(NOT "${retcode}" STREQUAL "0")
+-    message(FATAL_ERROR "Unable to run buildlib/relpath, do you have python?")
+-  endif()
+ 
+-  rdma_install_symlink("${DEST_LINK_PATH}" "${VERBS_PROVIDER_DIR}/lib${DEST}${IBVERBS_PROVIDER_SUFFIX}")
+-  rdma_create_symlink("lib${DEST}.so.${VERSION}" "${BUILD_LIB}/lib${DEST}${IBVERBS_PROVIDER_SUFFIX}")
++  if(NOT ENABLE_STATIC)
++    install(TARGETS ${DEST} DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++  
++    # Compute a relative symlink from VERBS_PROVIDER_DIR to LIBDIR
++    execute_process(COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/buildlib/relpath
++      "${CMAKE_INSTALL_FULL_LIBDIR}/lib${DEST}.so.${VERSION}"
++      "${VERBS_PROVIDER_DIR}"
++      OUTPUT_VARIABLE DEST_LINK_PATH OUTPUT_STRIP_TRAILING_WHITESPACE
++      RESULT_VARIABLE retcode)
++    if(NOT "${retcode}" STREQUAL "0")
++      message(FATAL_ERROR "Unable to run buildlib/relpath, do you have python?")
++    endif()
++
++    rdma_install_symlink("${DEST_LINK_PATH}" "${VERBS_PROVIDER_DIR}/lib${DEST}${IBVERBS_PROVIDER_SUFFIX}")
++    rdma_create_symlink("lib${DEST}.so.${VERSION}" "${BUILD_LIB}/lib${DEST}${IBVERBS_PROVIDER_SUFFIX}")
++  endif()
+ endfunction()
+ 
+ # Create a provider shared library for libibverbs
+@@ -201,15 +207,17 @@ function(rdma_provider DEST)
+   # Provider Plugins do not use SONAME versioning, there is no reason to
+   # create the usual symlinks.
+ 
+-  if (VERBS_PROVIDER_DIR)
+-    install(TARGETS ${DEST} DESTINATION "${VERBS_PROVIDER_DIR}")
+-  else()
+-    install(TARGETS ${DEST} DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++  if(NOT ENABLE_STATIC)
++    if (VERBS_PROVIDER_DIR)
++      install(TARGETS ${DEST} DESTINATION "${VERBS_PROVIDER_DIR}")
++    else()
++      install(TARGETS ${DEST} DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ 
+-    # FIXME: This symlink is provided for compat with the old build, but it
+-    # never should have existed in the first place, nothing should use this
+-    # name, we can probably remove it.
+-    rdma_install_symlink("lib${DEST}${IBVERBS_PROVIDER_SUFFIX}" "${CMAKE_INSTALL_LIBDIR}/lib${DEST}.so")
++      # FIXME: This symlink is provided for compat with the old build, but it
++      # never should have existed in the first place, nothing should use this
++      # name, we can probably remove it.
++      rdma_install_symlink("lib${DEST}${IBVERBS_PROVIDER_SUFFIX}" "${CMAKE_INSTALL_LIBDIR}/lib${DEST}.so")
++    endif()
+   endif()
+ endfunction()
+ 

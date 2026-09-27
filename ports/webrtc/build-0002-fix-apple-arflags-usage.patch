@@ -1,0 +1,18 @@
+diff --git a/toolchain/apple/toolchain.gni b/toolchain/apple/toolchain.gni
+index dd2722015..122773617 100644
+--- a/toolchain/apple/toolchain.gni
++++ b/toolchain/apple/toolchain.gni
+@@ -528,11 +528,11 @@ template("single_apple_toolchain") {
+ 
+         # Apple's libtool fails if the response file is empty (e.g., for empty targets).
+         # We work around this by writing a dummy archive with the ar magic number.
+-        command = "rm -f {{output}} && if [ -s \"$rspfile\" ]; then TOOL_VERSION=${tool_versions.filter_libtool} $python_path $script $libtool -static -D {{arflags}} -o {{output}} @$rspfile; else printf '!<arch>\n' > {{output}}; fi"
++        command = "rm -f {{output}} && if [ -s \"$rspfile\" ]; then TOOL_VERSION=${tool_versions.filter_libtool} $python_path $script $libtool -static {{arflags}} -o {{output}} @$rspfile; else printf '!<arch>\n' > {{output}}; fi"
+         description = "LIBTOOL-STATIC {{output}}"
+       } else {
+         ar = "${prefix}llvm-ar"
+-        command = "\"$ar\" {{arflags}} -r -c -s -D {{output}} @$rspfile"
++        command = "\"$ar\" {{arflags}} -r -c -s {{output}} @$rspfile"
+ 
+         # Remove the output file first so that ar doesn't try to modify the
+         # existing file.

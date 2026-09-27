@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO WebAssembly/wabt
     REF "${VERSION}"
-    SHA512 48e6419067c8323a56887b4fb37c4ef694296395328dd03ca414c83e62a2163face4da9c01d595eb6d1a73bded0a8b56fa0f4ae917f8062814b1166bcd027b47
+    SHA512 193ac42f4aad0721e841d3bb1f478f236d52d1acf2a45fae8faa280ee14304dc22ff0a752e7d80320b22816e6a29409d7c12a72b0f269178cb11ac1038611f43
     HEAD_REF main
 )
 
@@ -37,7 +37,6 @@ if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES
             spectest-interp
-            wasm-decompile
             wasm-interp
             wasm-objdump
             wasm-stats
@@ -52,8 +51,10 @@ if ("tools" IN_LIST FEATURES)
     )
 endif ()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/man")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/share/man"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

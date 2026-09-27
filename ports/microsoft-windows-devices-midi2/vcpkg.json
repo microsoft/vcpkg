@@ -1,6 +1,6 @@
 {
   "name": "microsoft-windows-devices-midi2",
-  "version": "1.0.13-preview.13.192",
+  "version": "1.0.17-rc.4.25",
   "maintainers": "Pete Brown pmbrown@microsoft.com",
   "description": "Application SDK for using Windows MIDI Services (MIDI 1.0 and MIDI 2.0) from C++ apps. Microsoft.Windows.Devices.Midi2",
   "homepage": "https://aka.ms/midi",

@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO the-tcpdump-group/libpcap
     REF "libpcap-${VERSION}"
-    SHA512 eb0a627cabdc4fab8f56e81065469a6fad713681d06c43e7a3080896cad3925e8b22c6957fcc0439e9229b3ebf21af55d22cd89c8494342e4188bb0ac193c7ab
+    SHA512 58c50265ce10a0e30f5bbc372719ca6cac870db8909905db7cc68978b5ab3ca9c95c1b0b1a92cda6d21d2300f32e5e69b5b061d411ab50f76fcebb0bcc9d4dab
     HEAD_REF master
     PATCHES
         install.diff

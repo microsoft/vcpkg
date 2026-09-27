@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${VERSION}.tgz"
          "https://mirror.eu.oneandone.net/software/openldap/openldap-release/openldap-${VERSION}.tgz"
     FILENAME "openldap-${VERSION}.tgz"
-    SHA512 951b510393433114939f386d43e202a62803724f395e4e400a556ca451f90ff1e179fe580b3db51f275859257b32814e66a13145d46f68bded4ff61c1fa37f36
+    SHA512 a64b222bee2e8693e534f64eeb7afcd1f0c7a4b9ae2288ce2c53be9b532902fac3a1e3318c82545cf30c7f982a68b5167ee8baba1f4be5c1a72abdb7c75ac80b
 )
 
 vcpkg_extract_source_archive(
@@ -33,7 +33,8 @@ elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
 endif()
 
 # Disable build environment details in binaries
-set(ENV{SOURCE_DATE_EPOCH} "1659614616")
+# Refresh with `date +%s`
+set(ENV{SOURCE_DATE_EPOCH} "1780131797")
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"

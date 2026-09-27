@@ -1,0 +1,9 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -610,5 +610,5 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
+   include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})
+   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
+-elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
++elseif(USE_XNNPACK AND NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
+   add_library(XNNPACK SHARED IMPORTED)
+   add_library(microkernels-prod SHARED IMPORTED)

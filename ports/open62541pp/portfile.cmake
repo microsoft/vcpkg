@@ -2,17 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541pp/open62541pp
     REF "v${VERSION}"
-    SHA512 6d70eb27b6178816db26ee7fe6cb0ab16ec15ec9c9d2e9283672ced67693a5a48207d2a31ffdd09cf2c46dc4c1d0997d676f18d7554540939f321d4a3e5e6504
+    SHA512 1d342df92eb4b09e139b9e653a45b797591e1f472cd3f9fdae7153acf396658dc95bdf6d7274dd02f144d4a0b175031a0fbc05a94f42d5ce757a783db361d68f
     HEAD_REF master
 )
-
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DUAPP_BUILD_DOCUMENTATION=OFF
         -DUAPP_INTERNAL_OPEN62541=OFF
 )
 

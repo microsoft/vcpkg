@@ -1,13 +1,29 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 991f6af..bb6221c 100644
+index 76154d3..3a3da39 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -7,7 +7,7 @@ project(slick-logger
- set(CMAKE_CXX_STANDARD 20)
- set(CMAKE_CXX_STANDARD_REQUIRED ON)
+@@ -19,9 +19,9 @@ option(BUILD_SLICK_LOGGER_BENCHMARKS "Build performance benchmarks" OFF)
  
--find_package(slick-queue 1.2.2 CONFIG QUIET)
-+find_package(slick-queue 1.2.2 CONFIG REQUIRED)
+ # 2.1.0 or newer is required: the string ring is built with the items_per_slot
+ # constructor introduced in slick-queue 2.1.0.
+-find_package(slick-queue 2.1.0 CONFIG QUIET)
++find_package(slick-queue CONFIG REQUIRED)
  
- if (NOT slick-queue_FOUND)
+-if (NOT slick-queue_FOUND)
++if (FALSE)
      message(STATUS "Fetching slick-queue...")
+     include(FetchContent)
+ 
+diff --git a/cmake/slick-loggerConfig.cmake.in b/cmake/slick-loggerConfig.cmake.in
+index d7dff73..5754945 100644
+--- a/cmake/slick-loggerConfig.cmake.in
++++ b/cmake/slick-loggerConfig.cmake.in
+@@ -2,7 +2,7 @@
+ 
+ include(CMakeFindDependencyMacro)
+ 
+-find_dependency(slick-queue 2.1.0 CONFIG)
++find_dependency(slick-queue CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/slick-loggerTargets.cmake")
+ 

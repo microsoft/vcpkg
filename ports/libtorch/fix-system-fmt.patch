@@ -1,0 +1,23 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 2baa187..65f9e01 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1633,6 +1633,7 @@ endif()
+ # This was the default behavior before version 12.0.0.
+ # Since PyTorch C API depends on it, make it available for projects that
+ # depend on PyTorch.
++if(FALSE)
+ set(FMT_INSTALL ON)
+ set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+@@ -1658,8 +1659,9 @@ target_compile_definitions(fmt PUBLIC "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_ad
+ target_compile_definitions(fmt-header-only INTERFACE "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
+ unset(_fmt_no_unique_address)
+ 
++endif()
++find_package(fmt REQUIRED)
+ list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+-set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
+ 
+ # ---[ Kineto
+ # edge profiler depends on KinetoProfiler but it only does cpu

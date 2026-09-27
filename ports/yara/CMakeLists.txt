@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(yara C)
 
 if(MSVC)
@@ -9,7 +9,6 @@ endif()
 
 
 find_package(OpenSSL REQUIRED)
-
 include_directories(
   .
   libyara
@@ -179,5 +178,9 @@ if(NOT DISABLE_INSTALL_TOOLS)
 endif()
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(DIRECTORY libyara/include/ DESTINATION include)
+  install(
+    DIRECTORY libyara/include/
+    DESTINATION include
+    PATTERN "tlshc" EXCLUDE
+  )
 endif()

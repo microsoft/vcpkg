@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e2264828be..5dc72e76f0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -351,13 +351,6 @@ endif()
+ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}" CACHE INTERNAL "" FORCE)
+ 
+ set (BIN_LETTER "")
+-if (NOT LAYOUT_IS_VCPKG)
+-  if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+-    set (BIN_LETTER "d")
+-  elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+-    set (BIN_LETTER "i")
+-  endif()
+-endif()
+ 
+ # the list of being built toolkits
+ set (BUILD_ADDITIONAL_TOOLKITS "" CACHE STRING "${BUILD_ADDITIONAL_TOOLKITS_DESCR}")
+@@ -1089,6 +1082,7 @@ else()
+     set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE        "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
+     set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bini")
+     set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG          "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bind")
++    set (CMAKE_PDB_OUTPUT_DIRECTORY_DEBUG              "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
+   endif()
+ endif()
+ 
+diff --git a/adm/cmake/occt_macros.cmake b/adm/cmake/occt_macros.cmake
+index 11c686a1a4..b050d477de 100644
+--- a/adm/cmake/occt_macros.cmake
++++ b/adm/cmake/occt_macros.cmake
+@@ -696,17 +696,7 @@ macro (OCCT_UPDATE_TARGET_FILE)
+ endmacro()
+ 
+ macro (OCCT_INSERT_CODE_FOR_TARGET)
+-  if (LAYOUT_IS_VCPKG)
+-    install(CODE "set (OCCT_INSTALL_BIN_LETTER \"\")")
+-  else()
+-    install(CODE "if (\"\${CMAKE_INSTALL_CONFIG_NAME}\" MATCHES \"^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$\")
+-      set (OCCT_INSTALL_BIN_LETTER \"\")
+-    elseif (\"\${CMAKE_INSTALL_CONFIG_NAME}\" MATCHES \"^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$\")
+-      set (OCCT_INSTALL_BIN_LETTER \"i\")
+-    elseif (\"\${CMAKE_INSTALL_CONFIG_NAME}\" MATCHES \"^([Dd][Ee][Bb][Uu][Gg])$\")
+-      set (OCCT_INSTALL_BIN_LETTER \"d\")
+-    endif()")
+-  endif()
++  install(CODE "set (OCCT_INSTALL_BIN_LETTER \"\")")
+ endmacro()
+ 
+ macro (OCCT_UPDATE_DRAW_DEFAULT_FILE)

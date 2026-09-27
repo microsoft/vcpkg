@@ -1,6 +1,6 @@
 {
   "name": "reflectcpp",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "A C++ library for serialization and deserialization using reflection. Supports JSON, Avro, BSON, Cap'n Proto, CBOR, CSV, flexbuffers, msgpack, parquet, TOML, UBJSON, XML, YAML.",
   "homepage": "https://github.com/getml/reflect-cpp/",
   "license": "MIT",
@@ -23,6 +23,15 @@
     }
   ],
   "features": {
+    "boost-serialization": {
+      "description": "Enable Boost.Serialization support",
+      "dependencies": [
+        {
+          "name": "boost-serialization",
+          "version>=": "1.74.0"
+        }
+      ]
+    },
     "bson": {
       "description": "Support for the BSON format",
       "dependencies": [
@@ -47,6 +56,15 @@
         {
           "name": "jsoncons",
           "version>=": "1.4.0"
+        }
+      ]
+    },
+    "cereal": {
+      "description": "Enable Cereal support",
+      "dependencies": [
+        {
+          "name": "cereal",
+          "version>=": "1.3.2"
         }
       ]
     },
@@ -125,6 +143,15 @@
         {
           "name": "yaml-cpp",
           "version>=": "0.8.0#1"
+        }
+      ]
+    },
+    "yas": {
+      "description": "Enable yas support",
+      "dependencies": [
+        {
+          "name": "yas",
+          "version>=": "7.1.0"
         }
       ]
     }

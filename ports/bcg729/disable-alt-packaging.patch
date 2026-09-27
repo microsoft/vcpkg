@@ -1,10 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 69dbaef..695f4d0 100644
+index 7661f2e..a4eadcc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -125,5 +125,4 @@ install(FILES
- 	DESTINATION ${CONFIG_PACKAGE_LOCATION}
+@@ -115,4 +115,3 @@ install(FILES
  )
  
--add_subdirectory(build)
  
+-add_subdirectory(build)

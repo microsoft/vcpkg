@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 2870d76fffd68bb5c702766a5dd3aa95f864c56a1d19444a3ad0a0e38fa1c66b25d61d5eb31046a3c53b875499ce7b784277cc9bf0bcbf698f35df0fb6a7b3f1
+    SHA512 58c666b3e298a7836dc13f87665d841dc11397d7e86cec53fcb36375041c4f7bec1eafb91190627c9cdc6a29495dbe8bbb5789ab15889e671aa03f4c004b6927
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -11,7 +11,12 @@ vcpkg_from_gitlab(
         fix-multiple-def.patch
         x264-api-imports.diff
         duplicate-unused.diff
+        11894.diff  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/11894
+        no-moltenvk-download.diff
 )
+
+# subprojects that do their own downloads
+file(REMOVE_RECURSE "${SOURCE_PATH}/subprojects/moltenvk")
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
@@ -137,6 +142,11 @@ else()
     set(PLUGIN_BASE_GL_PLATFORM auto)
 endif()
 
+# Darwin platforms require MoltenVK for Vulkan support
+if(VCPKG_TARGET_IS_APPLE AND "vulkan" IN_LIST FEATURES)
+    message(WARNING "You will need to install MoltenVK dependencies to use feature vulkan\n")
+endif()
+
 #
 # References
 #   https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/1.20.4/subprojects/gstreamer/meson_options.txt
@@ -161,7 +171,6 @@ vcpkg_configure_meson(
         -Ddevtools=disabled
         -Drtsp_server=disabled
         -Drs=disabled
-        -Dvaapi=disabled
         -Dgst-examples=disabled
         # Bindings
         -Dpython=disabled

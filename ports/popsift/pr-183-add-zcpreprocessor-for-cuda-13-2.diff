@@ -1,0 +1,14 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 86fc3c1b..11cb5a6a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -49,6 +49,9 @@ target_link_libraries(popsift
+ set_target_properties(popsift PROPERTIES VERSION ${PROJECT_VERSION})
+ set_target_properties(popsift PROPERTIES DEBUG_POSTFIX "d")
+ set_target_properties(popsift PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
++if(MSVC)
++        target_compile_options(popsift PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/Zc:preprocessor>)
++endif()
+ 
+ # build directory containing the automatically generated files
+ set(popsift_generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")

@@ -1,0 +1,24 @@
+--- a/cmake/Modules/FindMKLDNN.cmake
++++ b/cmake/Modules/FindMKLDNN.cmake
+@@ -1,3 +1,21 @@
++find_package(dnnl CONFIG REQUIRED)
++find_path(IDEEP_INCLUDE_DIR ideep.hpp REQUIRED)
++
++set(MKLDNN_FOUND TRUE)
++set(MKLDNN_INCLUDE_DIR "${IDEEP_INCLUDE_DIR}")
++set(MKLDNN_LIBRARIES DNNL::dnnl)
++set(AT_MKLDNN_ENABLED 1)
++
++if(MKL_FOUND)
++  add_definitions(-DIDEEP_USE_MKL)
++  list(APPEND MKLDNN_LIBRARIES MKL::MKL)
++  list(APPEND MKLDNN_INCLUDE_DIR ${MKL_INCLUDE_DIR})
++  message(STATUS "MKL-DNN: ideep is using MKL (IDEEP_USE_MKL)")
++endif()
++
++message(STATUS "MKL-DNN: using vcpkg onednn (DNNL::dnnl) + ideep (${IDEEP_INCLUDE_DIR})")
++return()
++
+ # - Try to find MKLDNN
+ #
+ # The following variables are optionally searched for defaults

@@ -1,5 +1,5 @@
 diff --git a/cmake/FindCMath.cmake b/cmake/FindCMath.cmake
-index ad92218..9c8247f 100644
+index 346106de..8a2e700c 100644
 --- a/cmake/FindCMath.cmake
 +++ b/cmake/FindCMath.cmake
 @@ -31,6 +31,15 @@ include(CheckSymbolExists)
@@ -18,16 +18,3 @@ index ad92218..9c8247f 100644
  find_library(CMath_LIBRARY NAMES m)
  
  if(NOT CMath_HAVE_LIBC_POW)
-@@ -61,7 +70,11 @@ if(CMath_FOUND)
-     endif()
- 
-     if(NOT TARGET CMath::CMath)
--        if(CMath_LIBRARIES)
-+        if(CMath_LIBRARIES STREQUAL "m")
-+            add_library(CMath::CMath INTERFACE IMPORTED)
-+            set_target_properties(CMath::CMath PROPERTIES
-+                  INTERFACE_LINK_LIBRARIES m)
-+        elseif(CMath_LIBRARIES)
-             add_library(CMath::CMath UNKNOWN IMPORTED)
-             set_target_properties(CMath::CMath PROPERTIES
-                   IMPORTED_LOCATION "${CMath_LIBRARY}")

@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aous72/OpenJPH
     REF "${VERSION}"
-    SHA512 eb43bc4e4fa741ef24514f49a6b09049eafdfde8f22275721f4a8fd53d6360e2a047e7f7799c3ab3e0c434ab8c377ec65471498b42dc9911f1d1ad29b98602a3
+    SHA512 4207570b05deef8e46ca6d8b2dba0d5fd4a02e3bed8ddcc5d950b4404368505d918a6047c716143a56cd38e8e778f62c046b6472d7ff8bc0a71a2ab694bfdd07
     HEAD_REF master
     PATCHES
         xsi-strerror_r.patch
+        fix-pkgconfig-library-name.patch
 )
 
 vcpkg_check_features(
@@ -28,6 +29,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/openjph)
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

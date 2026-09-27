@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 36b9731..80cba07 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -160,11 +160,18 @@ target_include_directories(${PROJECT_NAME}
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
+ 
+-add_executable(dxf2vrml dxf2vrml/dxf2vrml.cpp)
+-target_link_libraries(dxf2vrml PRIVATE dime)
++set(TOOLS_TARGETS)
++if(DIME_BUILD_TOOLS)
++  find_package(Threads REQUIRED)
+ 
+-add_executable(dxfsphere dxfsphere/dxfsphere.cpp)
+-target_link_libraries(dxfsphere PRIVATE dime)
++  add_executable(dxf2vrml dxf2vrml/dxf2vrml.cpp)
++  target_link_libraries(dxf2vrml PRIVATE dime Threads::Threads)
++
++  add_executable(dxfsphere dxfsphere/dxfsphere.cpp)
++  target_link_libraries(dxfsphere PRIVATE dime Threads::Threads)
++
++  set(TOOLS_TARGETS dxf2vrml dxfsphere)
++endif()
+ 
+ # ############################################################################
+ # Add a target to generate API documentation with Doxygen
+@@ -338,7 +345,7 @@ configure_file(include/config.h.cmake.in config.h)
+ install(DIRECTORY include/${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT development FILES_MATCHING PATTERN "*.h")
+ 
+ if(NOT CMAKE_VERSION VERSION_LESS 3.12)
+-  install(TARGETS ${PROJECT_NAME} dxf2vrml dxfsphere EXPORT ${PROJECT_NAME}
++  install(TARGETS ${PROJECT_NAME} ${TOOLS_TARGETS} EXPORT ${PROJECT_NAME}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime NAMELINK_COMPONENT development
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT development
+@@ -349,7 +356,7 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.12)
+     endif()
+   endif()
+ else()
+-  install(TARGETS ${PROJECT_NAME} dxf2vrml dxfsphere EXPORT ${PROJECT_NAME}
++  install(TARGETS ${PROJECT_NAME} ${TOOLS_TARGETS} EXPORT ${PROJECT_NAME}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime NAMELINK_SKIP
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT development

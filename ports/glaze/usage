@@ -1,0 +1,7 @@
+glaze provides CMake targets:
+
+  find_package(glaze CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE glaze::glaze)
+  # Glaze's networking features, this requires glaze[networking] to be on
+  glaze_setup_asio()
+  target_link_libraries(main PRIVATE glaze::asio)

@@ -16,4 +16,6 @@ vcpkg_make_configure(
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-${PORT}-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

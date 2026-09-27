@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b02632b1f..cce1f3e9b 100644
+index 1cc5cf112..0858bebc6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -327,8 +327,8 @@ if(PkgConfig_FOUND)
@@ -13,18 +13,14 @@ index b02632b1f..cce1f3e9b 100644
    if(AUTO_POPPLER)
      pkg_check_modules(POPPLER poppler-glib)
    elseif(WITH_POPPLER)
-@@ -682,7 +682,13 @@ endif()
+@@ -681,8 +681,8 @@ if(NOT ENABLE_RUBY STREQUAL "OFF")
+ endif()
  
  if(UNIX)
-   find_library(MATH_LIB m)
+-  find_library(MATH_LIB m)
 -  link_libraries(${MATH_LIB})
-+  if(MATH_LIB)
-+    set(MATH_LIB m CACHE INTERNAL "")
-+    link_libraries(${MATH_LIB})
-+    string(APPEND LIBGVC_PC_LIBS_PRIVATE " -lm")
-+  else()
-+    set(MATH_LIB "")
-+  endif()
++  link_libraries(m)
++  string(APPEND LIBGVC_PC_LIBS_PRIVATE " -lm")
  endif()
  
  if(WIN32)
@@ -47,7 +43,7 @@ index a6fdf8e3c..a4690653b 100644
    find_program(EXPAT_RUNTIME_LIBRARY NAMES libexpat-1.dll)
    find_program(FONTCONFIG_RUNTIME_LIBRARY NAMES libfontconfig-1.dll)
 diff --git a/cmake/FindGD.cmake b/cmake/FindGD.cmake
-index 49d372c37..2ed7e42af 100644
+index 33e037d26..d360f361f 100644
 --- a/cmake/FindGD.cmake
 +++ b/cmake/FindGD.cmake
 @@ -1,3 +1,11 @@
@@ -112,7 +108,7 @@ index d185f0bf7..222789a96 100644
  
    find_program(GOBJECT_RUNTIME_LIBRARY NAMES libgobject-2.0-0.dll)
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 65a357678..e656b1228 100644
+index bbec3faca..64a5dde8d 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -59,3 +59,6 @@ if(BUILD_SHARED_LIBS)
@@ -134,10 +130,10 @@ index 2b8c8f47b..168ce85f0 100644
  Libs: -L${libdir} -lcgraph -lcdt
  Cflags: -I${includedir} -I${includedir}/@PACKAGE@
 diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
-index 3b0e469f4..265de0354 100644
+index bf37ff92f..0cd013774 100644
 --- a/lib/common/CMakeLists.txt
 +++ b/lib/common/CMakeLists.txt
-@@ -136,6 +136,9 @@ if(EXPAT_FOUND)
+@@ -120,6 +120,9 @@ if(EXPAT_FOUND)
      ${EXPAT_LIBRARIES}
    )
  endif()
@@ -147,17 +143,17 @@ index 3b0e469f4..265de0354 100644
  
  # Specify headers to be installed
  install(
-@@ -148,3 +151,5 @@ install(
+@@ -132,3 +135,5 @@ install(
      usershape.h
    DESTINATION ${HEADER_INSTALL_DIR}
  )
 +
 +set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
 diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
-index 11dba53f3..1d54de861 100644
+index 100df84cf..4a373406c 100644
 --- a/lib/gvc/CMakeLists.txt
 +++ b/lib/gvc/CMakeLists.txt
-@@ -70,12 +70,17 @@ if(LTDL_FOUND)
+@@ -55,12 +55,17 @@ if(LTDL_FOUND)
    target_include_directories(gvc SYSTEM PRIVATE ${LTDL_INCLUDE_DIRS})
    if(NOT WIN32 OR MINGW)
      target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
@@ -175,7 +171,7 @@ index 11dba53f3..1d54de861 100644
  endif()
  
  if(with_ortho)
-@@ -152,3 +157,6 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
+@@ -140,3 +145,6 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
      DESTINATION ${BINARY_INSTALL_DIR}
    )
  endif()

@@ -83,7 +83,7 @@ function(vcpkg_cmake_config_fixup)
     endif()
 
     file(GLOB_RECURSE release_targets
-        "${release_share}/*-release.cmake"
+        "${release_share}/*-[Rr]elease.cmake"
     )
     foreach(release_target IN LISTS release_targets)
         file(READ "${release_target}" contents)
@@ -94,7 +94,7 @@ function(vcpkg_cmake_config_fixup)
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(GLOB_RECURSE debug_targets
-            "${debug_share}/*-debug.cmake"
+            "${debug_share}/*-[Dd]ebug.cmake"
             )
         foreach(debug_target IN LISTS debug_targets)
             file(RELATIVE_PATH debug_target_rel "${debug_share}" "${debug_target}")
