@@ -180,7 +180,7 @@ endif()
 # OpenCV >= 4.14.0 raises this from an Android-only extra to the general ARM HAL:
 #   OCV_OPTION(WITH_KLEIDICV ... (NOT CV_DISABLE_OPTIMIZATION)
 #     VISIBLE_IF (AARCH64 AND (ANDROID OR UNIX)))
-# so on every AArch64 target it defaults to ON 
+# so on every AArch64 target it defaults to ON
 # hal/kleidicv/kleidicv.cmake fetches kleidicv-${KLEIDICV_SRC_COMMIT} at configure time,
 # but 0001-disable-downloading.patch disables that, so fetch it here instead.
 
@@ -307,7 +307,7 @@ if("ipp" IN_LIST FEATURES)
     set(key "linux-${VCPKG_TARGET_ARCHITECTURE}")
   endif()
 
-  # For convenient updates, use 
+  # For convenient updates, use
   # vcpkg install opencv4[core,ipp] --cmake-args=-DVCPKG_OPENCV4_UPDATE=1
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_OPENCV4_UPDATE)
     if(VCPKG_TARGET_IS_APPLE OR VCPKG_OPENCV4_UPDATE)
