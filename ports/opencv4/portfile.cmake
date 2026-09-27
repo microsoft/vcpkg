@@ -28,6 +28,17 @@ vcpkg_from_github(
 # Disallow accidental build of vendored copies
 file(GLOB third_party "${SOURCE_PATH}/3rdparty/*")
 list(FILTER third_party EXCLUDE REGEX "/ippicv\$")
+# dlpack is a header-only shim (3rdparty/dlpack/include/dlpack/dlpack.h plus its
+# LICENSE) that OpenCV 4.14.0 uses for DNN DLPack interop. cmake/OpenCVDetectDLPack.cmake
+# falls back to it when find_package(dlpack) fails, and installs its LICENSE:
+#   if (NOT dlpack_FOUND)
+#       ocv_include_directories("${OpenCV_SOURCE_DIR}/3rdparty/dlpack/include")
+#       ocv_install_3rdparty_licenses(dlpack "${OpenCV_SOURCE_DIR}/3rdparty/dlpack/LICENSE")
+#   endif()
+# Removing it makes the install step fail with
+#   file INSTALL cannot find ".../3rdparty/dlpack/LICENSE": No such file or directory.
+# vcpkg has no dlpack port, so keep the vendored copy.
+list(FILTER third_party EXCLUDE REGEX "/dlpack\$")
 file(REMOVE_RECURSE ${third_party})
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
@@ -180,12 +191,11 @@ endif()
 # OpenCV >= 4.14.0 raises this from an Android-only extra to the general ARM HAL:
 #   OCV_OPTION(WITH_KLEIDICV ... (NOT CV_DISABLE_OPTIMIZATION)
 #     VISIBLE_IF (AARCH64 AND (ANDROID OR UNIX)))
-# so on every AArch64 target it defaults to ON
-# hal/kleidicv/kleidicv.cmake fetches kleidicv-${KLEIDICV_SRC_COMMIT} at configure time,
-# but 0001-disable-downloading.patch disables that, so fetch it here instead.
-
-# The pinned commit is 26.03 and the cache key must match the HASH that OpenCV passes to ocv_download,
-# otherwise the download is not recognised and configure still fails.
+# so on every AArch64 target it defaults to ON and hal/kleidicv/kleidicv.cmake
+# fetches kleidicv-${KLEIDICV_SRC_COMMIT} at configure time, which the port
+# forbids (0001-disable-downloading.patch). The pinned commit is 26.03 and the
+# cache key must match the HASH that OpenCV passes to ocv_download, otherwise
+# the download is not recognised and configure still fails.
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/26.03/kleidicv-26.03.tar.gz"
@@ -307,7 +317,7 @@ if("ipp" IN_LIST FEATURES)
     set(key "linux-${VCPKG_TARGET_ARCHITECTURE}")
   endif()
 
-  # For convenient updates, use
+  # For convenient updates, use 
   # vcpkg install opencv4[core,ipp] --cmake-args=-DVCPKG_OPENCV4_UPDATE=1
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_OPENCV4_UPDATE)
     if(VCPKG_TARGET_IS_APPLE OR VCPKG_OPENCV4_UPDATE)
