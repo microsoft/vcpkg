@@ -1,25 +1,10 @@
 set(USE_QT_VERSION "6")
 
-# fix to get version from eigen after v3.4.0
-vcpkg_download_distfile(
-    PATCH1_FILE
-    URLS "https://github.com/opencv/opencv/commit/468de9b36740b3355f0d5cd8be2ce28b340df120.patch?full_index=1"
-    SHA512 09ee552fcd9a96359230104d7bf8610a63e05d743a3b51d58c6469331729a6440444e05c616464380dbebaefdd7ee6fb06cac5fc70694af85f9c8d40201aad10
-    FILENAME "468de9b36740b3355f0d5cd8be2ce28b340df120.patch"
-)
-
-vcpkg_download_distfile(
-    CUDA_13_SUPPORT_PATCH
-    URLS "https://github.com/opencv/opencv/commit/f0888a10e8266b2202d930c6974433a421e6f9a7.diff?full_index=1"
-    SHA512 6efbc9f7e4ad158e648632060bac6ecb542239f1f656774378e6a2beaa42f094784c3b2755b44d599fe4eed69dd9f1f461e0be1ebcd57f9ebc261ead739ed7d5
-    FILENAME "opencv4-support-cuda-13-f0888a10e8266b2202d930c6974433a421e6f9a7.diff"
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 8ac63ddd61e22cc0eaeafee4f30ae6e1cab05fc4929e2cea29070203b9ca8dfead12cc0fd7c4a87b65c1e20ec6b9ab4865a1b83fad33d114fc0708fdf107c51b
+    SHA512 4f1e606cd24f74b49227a32bd1558882d3b01dbbadca8b49a0e07dd9fc6291b4c584d7f2c3951409758c3128dc53d38d84c4c7642c7a6f6a054a5eb9d5c6f91e
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -33,16 +18,11 @@ vcpkg_from_github(
       0012-miss-openexr.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
-      0023-ffmpeg8-support.patch
-      0024-openvino-const-tensor-data.patch
       0025-fix-cuda-host-std-flag-forwarding.patch
       0026-cuda-msvc-preprocessor.patch
       0028-ffmpeg9-support.patch
-      "${PATCH1_FILE}"
-      "${CUDA_13_SUPPORT_PATCH}"
 )
 
 # Disallow accidental build of vendored copies
@@ -196,32 +176,29 @@ if("cuda" IN_LIST FEATURES)
   )
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
+# ARM KleidiCV HAL.
+# OpenCV >= 4.14.0 raises this from an Android-only extra to the general ARM HAL:
+#   OCV_OPTION(WITH_KLEIDICV ... (NOT CV_DISABLE_OPTIMIZATION)
+#     VISIBLE_IF (AARCH64 AND (ANDROID OR UNIX)))
+# so on every AArch64 target it defaults to ON and hal/kleidicv/kleidicv.cmake
+# fetches kleidicv-${KLEIDICV_SRC_COMMIT} at configure time, which the port
+# forbids (0001-disable-downloading.patch). The pinned commit is 26.03 and the
+# cache key must match the HASH that OpenCV passes to ocv_download, otherwise
+# the download is not recognised and configure still fails.
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
   vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/0.5.0/kleidicv-0.5.0.tar.gz"
-    FILENAME "opencv-cache/kleidicv/ba5648f8df678548f337d19d8ac607d6-kleidicv-0.5.0.tar.gz"
-    SHA512 81b3bd441dae10407ce2646b7bc2f099cdfb72600429040d78d1b53fae44d527b37c5191a29a0e29985717d52a27e8d1e6d2fbc559e616aa612ace30ec82fe6e
+    URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/26.03/kleidicv-26.03.tar.gz"
+    FILENAME "opencv-cache/kleidicv/b85a745bfe0e87e67e30be9533eb6b24-kleidicv-26.03.tar.gz"
+    SHA512 f5963dd7a4eae810afc580581a2c5319a03e2ec4735cef0c928b767f77806f0d98c7617c0b2b18dc9e371b2328dd89f3754b02c9fd7e430da439dc5cca491b6d
   )
 endif()
 
 if("contrib" IN_LIST FEATURES)
-  vcpkg_download_distfile(CONTRIB_CUDA_NAMESPACE_FIX
-    URLS "https://github.com/opencv/opencv_contrib/commit/f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff?full_index=1"
-    FILENAME "opencv4-contrib-cuda13-namespace-fix-f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff"
-    SHA512 1065406fef35ffdfa4d27e991cd96df915e61b1ff4d17df391658a5eb069755b437a6546aaf05eac7b04b616882eb52b121ebe36c7f0af63e3040bda574ca3ed
-  )
-
-  vcpkg_download_distfile(CONTRIB_CUDA_NOT1_FIX
-    URLS "https://github.com/opencv/opencv_contrib/commit/f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff?full_index=1"
-    FILENAME "opencv4-contrib-cuda13-not1-fix-f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff"
-    SHA512 b1e46be570417a26aec4b2a6e1824008f92c404fb67f307218fdf386074b51ca3ea063516517449631a8dd2ca487b0736c1978a3a5e38f88686c25802af4f300
-  )
-
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF "${VERSION}"
-    SHA512 574121ca57328671741413df91fbf600cc04bb9a9beeacfb7bc20c15b2b4e8c9e031df30aafbcc34f82d85edfb098e5d008a744f4e6d833d6e47537a042045c6
+    SHA512 7fa7ecaacc2ef4e8634f0e4558dae94fed862cdf7c6a3ab1724598a9b9a33a39d73f587b0bcd377201c0f96ebaf6708c884dc33afbcaa2cd95d376b9d62eaead
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
@@ -229,9 +206,6 @@ if("contrib" IN_LIST FEATURES)
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
       0019-contrib-cout.diff
-      0027-contrib-cuda-tuple.patch # https://github.com/opencv/opencv_contrib/commit/054007b78c8288ef2fd040e77dc0cf2e45f70c15
-      "${CONTRIB_CUDA_NAMESPACE_FIX}"
-      "${CONTRIB_CUDA_NOT1_FIX}"
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
