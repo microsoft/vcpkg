@@ -1,7 +1,7 @@
 {
   "name": "coin-or-ipopt",
   "version-date": "2023-02-01",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Ipopt (Interior Point OPTimizer, pronounced eye-pea-Opt) is a software package for large-scale nonlinear optimization",
   "homepage": "https://github.com/coin-or/Ipopt",
   "license": "EPL-2.0",
@@ -12,5 +12,19 @@
       "name": "vcpkg-make",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "mumps",
+      "platform": "!android & !ios & !emscripten & !uwp & !(windows & arm) & !(windows & !mingw & static)"
+    }
+  ],
+  "features": {
+    "mumps": {
+      "description": "Use the MUMPS sparse linear solver, required for Ipopt to solve problems",
+      "dependencies": [
+        "mumps-solver"
+      ]
+    }
+  }
 }

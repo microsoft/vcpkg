@@ -1,9 +1,9 @@
 diff --git a/PCbuild/_freeze_module.vcxproj b/PCbuild/_freeze_module.vcxproj
-index 59a615e..a21c6eb 100644
+index 5ceddf7..e7fba1d 100644
 --- a/PCbuild/_freeze_module.vcxproj
 +++ b/PCbuild/_freeze_module.vcxproj
-@@ -455,7 +455,7 @@
-   </Target>
+@@ -438,7 +438,7 @@
+   </ImportGroup>
  
    <Target Name="_RebuildGetPath" AfterTargets="_RebuildFrozen" Condition="$(Configuration) != 'PGUpdate'">
 -    <Exec Command='"$(TargetPath)" "%(GetPath.ModName)" "%(GetPath.FullPath)" "%(GetPath.IntFile)"' />
@@ -11,7 +11,7 @@ index 59a615e..a21c6eb 100644
  
      <Copy SourceFiles="%(GetPath.IntFile)"
            DestinationFiles="%(GetPath.OutFile)"
-@@ -467,7 +467,7 @@
+@@ -450,7 +450,7 @@
               Condition="'@(_UpdatedGetPath)' != ''" Importance="high" />
    </Target>
    <Target Name="_RebuildFrozen" AfterTargets="AfterBuild" Condition="$(Configuration) != 'PGUpdate'">
@@ -21,7 +21,7 @@ index 59a615e..a21c6eb 100644
      <Copy SourceFiles="%(None.IntFile)"
            DestinationFiles="%(None.OutFile)"
 diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
-index 4604839..766eb72 100644
+index 6976adc..00e132f 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
 @@ -18,7 +18,7 @@

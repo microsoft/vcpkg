@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e165dd3..1af3cfa 100644
+index e165dd3..4cd1da4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -100,6 +100,10 @@ message("Initial BASISU_EXAMPLES=${BASISU_EXAMPLES}")
@@ -21,7 +21,7 @@ index e165dd3..1af3cfa 100644
  )
  
  if (NOT BASISU_DISABLE_ANDROID_ASTC_DECOMP)
-@@ -340,12 +343,19 @@ if (BASISU_SUPPORT_ASTCENC)
+@@ -340,12 +343,20 @@ if (BASISU_SUPPORT_ASTCENC)
      )
  endif()
  
@@ -31,6 +31,7 @@ index e165dd3..1af3cfa 100644
 -
  # Create the static library
  add_library(basisu_encoder STATIC ${ENCODER_LIB_SRC_LIST})
++target_compile_features(basisu_encoder PUBLIC cxx_std_17)
 +target_include_directories(basisu_encoder PUBLIC
 +    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/transcoder>
 +    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/encoder>
@@ -45,7 +46,7 @@ index e165dd3..1af3cfa 100644
  
  if (BASISU_SUPPORT_ASTCENC)
      target_compile_definitions(basisu_encoder PRIVATE BASISU_SUPPORT_ASTCENC=1)
-@@ -507,6 +517,7 @@ endif()
+@@ -507,6 +518,7 @@ endif()
  if (NOT EMSCRIPTEN)
      if (UNIX AND NOT BASISU_BUILD_WASM)
          if (CMAKE_BUILD_TYPE STREQUAL Release)
@@ -53,7 +54,7 @@ index e165dd3..1af3cfa 100644
              if (APPLE)
                  add_custom_command(TARGET basisu POST_BUILD COMMAND strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu)
                  #message("strip command: strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu")
-@@ -558,6 +569,34 @@ if (MSVC)
+@@ -558,6 +570,34 @@ if (MSVC)
      endif()
  endif()
  

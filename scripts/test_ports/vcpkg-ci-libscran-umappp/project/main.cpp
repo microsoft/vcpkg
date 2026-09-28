@@ -2,7 +2,7 @@
 
 // See example in README from https://github.com/libscran/umappp
 int main() {
-    
+
     // Define the test data
     int ndim = 2;
     int nobs = 2;
@@ -23,7 +23,7 @@ int main() {
         ndim,
         nobs,
         data.data(),
-        vp_builder, 
+        vp_builder,
         out_dim,
         embedding.data(),
         opt

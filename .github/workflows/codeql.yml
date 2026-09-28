@@ -42,7 +42,7 @@ jobs:
         ./bootstrap-vcpkg.sh
         # This list of ports which are meaningful for CodeQL to analyze because they have actual code in vcpkg's repo
         # See https://github.com/search?q=repo%3Amicrosoft%2Fvcpkg++language%3AC+&type=code
-        # See https://github.com/search?q=repo%3Amicrosoft%2Fvcpkg++language%3AC%2B%2B&type=code 
+        # See https://github.com/search?q=repo%3Amicrosoft%2Fvcpkg++language%3AC%2B%2B&type=code
         ./vcpkg install alac-decoder breakpad[tools] gettimeofday modp-base64
 
     - name: Perform CodeQL Analysis

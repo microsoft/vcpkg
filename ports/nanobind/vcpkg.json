@@ -1,6 +1,6 @@
 {
   "name": "nanobind",
-  "version-semver": "3.0.1",
+  "version-semver": "3.1.0",
   "description": "Tiny and efficient C++/Python bindings",
   "homepage": "https://nanobind.readthedocs.io/en/latest/",
   "license": "BSD-3-Clause",
