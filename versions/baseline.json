@@ -4798,7 +4798,7 @@
     },
     "libao": {
       "baseline": "1.2.2",
-      "port-version": 6
+      "port-version": 7
     },
     "libarchive": {
       "baseline": "3.8.8",
