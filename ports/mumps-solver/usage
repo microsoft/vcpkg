@@ -4,7 +4,8 @@ mumps-solver provides CMake targets:
     target_link_libraries(main PRIVATE unofficial::mumps-solver::DMUMPS)
 
 MUMPS is written in Fortran, but the exported targets carry the Fortran runtime,
-so C and C++ projects can link it without enabling Fortran themselves.
+so C and C++ projects can link it without enabling Fortran themselves. For a
+static MUMPS, the runtime is located with GNU Fortran, which must be on PATH.
 
 mumps-solver also provides the pkg-config module unofficial-mumps-solver.
 
