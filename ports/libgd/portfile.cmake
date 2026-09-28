@@ -12,7 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         control-build.patch
-        fix-dependencies.cmake
+        fix-dependencies.patch
         fix_msvc_build.patch
         fix-static-usage.patch
         "${BUMPAVIF}"
