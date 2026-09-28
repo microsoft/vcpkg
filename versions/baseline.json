@@ -5253,8 +5253,8 @@
       "port-version": 1
     },
     "libjxl": {
-      "baseline": "0.11.2",
-      "port-version": 1
+      "baseline": "0.12.0",
+      "port-version": 0
     },
     "libkeyfinder": {
       "baseline": "2.2.8",
