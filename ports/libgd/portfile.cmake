@@ -1,3 +1,9 @@
+vcpkg_download_distfile(BUMPAVIF
+    URLS "https://github.com/libgd/libgd/commit/282a620ddbdd8dd52b457d14ba32784b45a2d4e0.patch?full_index=1"
+    FILENAME "bump-avif.patch"
+    SHA512 1550959aaa9828a129698b94991743281500db2eb8601c67dd52d62c2652174023240065aab1c1c0a2c0ce196e19fc60bdb83216577f217a135e534d4209a55c
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
@@ -9,6 +15,7 @@ vcpkg_from_github(
         fix-dependencies.cmake
         fix_msvc_build.patch
         fix-static-usage.patch
+        "${BUMPAVIF}"
 )
 
 # Delete vendored Find modules
@@ -25,8 +32,10 @@ file(REMOVE
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+	    avif         ENABLE_AVIF
         fontconfig   ENABLE_FONTCONFIG
         freetype     ENABLE_FREETYPE
+		heif         ENABLE_HEIF
         jpeg         ENABLE_JPEG
         tiff         ENABLE_TIFF
         png          ENABLE_PNG
