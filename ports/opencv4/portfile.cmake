@@ -299,15 +299,15 @@ if("ipp" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_WINDOWS)
   elseif(VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/767426b2a40a011eb2fa7f44c677c13e60e205ad/ippicv/ippicv_2022.1.0_win_intel64_20250130_general.zip"
-        FILENAME "opencv-cache/ippicv/67a611ab22410f392239bddff6f91df7-ippicv_2022.1.0_win_intel64_20250130_general.zip"
-        SHA512 3a3d8a0aa4279dcbede489039eee3effea5263575fdd0a2d79dd14c0af48f90680fa7ce8567cbc47e9fec88e21d3d674a53c5939ded2d065b07e25fdefa690aa
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8338862a733cb3980d8b51d8e14917fe0e695f71/ippicv/ippicv_2026.0.0_win_intel64_20260630_general.zip"
+        FILENAME "opencv-cache/ippicv/d81c8b7d40da2867df82f0077a40afa1-ippicv_2026.0.0_win_intel64_20260630_general.zip"
+        SHA512 db82b3489a8d755d758fafdcfdcd2e516ec0c25a2ecb3539b40cbfeaa1c4aef9c3c556a7e357d55eb79c8e307c6bad74f50a3a2505bdddecca1711a986862916
     )
   elseif(VCPKG_TARGET_IS_LINUX)
     set(key "linux-${VCPKG_TARGET_ARCHITECTURE}")
   endif()
 
-  # For convenient updates, use
+  # For convenient updates, use 
   # vcpkg install opencv4[core,ipp] --cmake-args=-DVCPKG_OPENCV4_UPDATE=1
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_OPENCV4_UPDATE)
     if(VCPKG_TARGET_IS_APPLE OR VCPKG_OPENCV4_UPDATE)
@@ -319,16 +319,16 @@ if("ipp" IN_LIST FEATURES)
     endif()
     if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
-          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/767426b2a40a011eb2fa7f44c677c13e60e205ad/ippicv/ippicv_2022.1.0_win_intel64_20250130_general.zip"
-          FILENAME "opencv-cache/ippicv/67a611ab22410f392239bddff6f91df7-ippicv_2022.1.0_win_intel64_20250130_general.zip"
-          SHA512 3a3d8a0aa4279dcbede489039eee3effea5263575fdd0a2d79dd14c0af48f90680fa7ce8567cbc47e9fec88e21d3d674a53c5939ded2d065b07e25fdefa690aa
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8338862a733cb3980d8b51d8e14917fe0e695f71/ippicv/ippicv_2026.0.0_win_intel64_20260630_general.zip"
+          FILENAME "opencv-cache/ippicv/d81c8b7d40da2867df82f0077a40afa1-ippicv_2026.0.0_win_intel64_20260630_general.zip"
+          SHA512 db82b3489a8d755d758fafdcfdcd2e516ec0c25a2ecb3539b40cbfeaa1c4aef9c3c556a7e357d55eb79c8e307c6bad74f50a3a2505bdddecca1711a986862916
       )
     endif()
     if(NOT (VCPKG_TARGET_IS_APPLE OR VCPKG_TARGET_IS_WINDOWS) OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
-          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/767426b2a40a011eb2fa7f44c677c13e60e205ad/ippicv/ippicv_2022.1.0_lnx_intel64_20250130_general.tgz"
-          FILENAME "opencv-cache/ippicv/98ff71fc242d52db9cc538388e502f57-ippicv_2022.1.0_lnx_intel64_20250130_general.tgz"
-          SHA512 4fe385d3b589ebac7f319c48d05214fad8f3c52fb5c8cf1fc40807a2ad7a7e9019949ad8832dd8b84f9200a5c51071175a873358eab2cb8f75ef00fbd162ad73
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8338862a733cb3980d8b51d8e14917fe0e695f71/ippicv/ippicv_2026.0.0_lnx_intel64_20260630_general.tgz"
+          FILENAME "opencv-cache/ippicv/a77e60db544e07a126ae98f5ffe83be1-ippicv_2026.0.0_lnx_intel64_20260630_general.tgz"
+          SHA512 2f5a844a1bd5d374ae4e1acc85da12c32dc513b61f7fbd7b9fe882b91a15681534bc86c47100de951cc70adf0cffe46a67ed403bce624b0743378115861848b2
       )
     endif()
   endif()
