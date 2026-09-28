@@ -5,7 +5,7 @@ set(VERSION ed2c21cbd6ef)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://lemon.cs.elte.hu/hg/lemon/archive/${VERSION}.zip"
     FILENAME "lemon-${VERSION}.zip"
-    SHA512 029640e4f791a18068cb2e2b4e794d09822d9d56fb957eb3e2cceae3a30065c0041a31c465637cfcadf7b2473564070b34adc88513439cdf9046831854e2aa70
+    SHA512 849d99743a9c4eeee255fb09e586153cb41b7e1c159641665954af6f1d23f6fb830ce4d318aa39631a5ec6dce366d2f686a087bf62699c39733165a21c21bfd9
 )
 
 vcpkg_extract_source_archive(
