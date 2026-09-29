@@ -1,6 +1,6 @@
 {
   "name": "fcftest",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "fcfTest is a lightweight C++ (>= C++11) unit testing framework. Modern, zero-dependency, header-only cpp unittest library for TDD.",
   "homepage": "https://github.com/fcf-framework/fcfTest",
   "license": "MIT"
