@@ -3048,6 +3048,10 @@
       "baseline": "2026.02.23.00",
       "port-version": 1
     },
+    "fcftest": {
+      "baseline": "1.2.5",
+      "port-version": 0
+    },
     "fcl": {
       "baseline": "0.7.0",
       "port-version": 5
