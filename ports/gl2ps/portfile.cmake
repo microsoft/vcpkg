@@ -6,6 +6,8 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        static-no-dll-exports.patch
 )
 
 vcpkg_cmake_configure(
