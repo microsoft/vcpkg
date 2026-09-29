@@ -17,12 +17,23 @@ vcpkg_cmake_build(
     TARGET fcf-test-test
 )
 
-message(STATUS "Running internal fcfTest tests...")
-vcpkg_execute_build_process(
-    COMMAND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/fcf-test-test"
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-    LOGNAME "test-run-${TARGET_TRIPLET}-dbg"
-)
+if(NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_IOS AND (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL CMAKE_HOST_SYSTEM_NAME))
+    message(STATUS "Running internal fcfTest tests...")
+    vcpkg_execute_build_process(
+        COMMAND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/fcf-test-test"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        LOGNAME "test-run-${TARGET_TRIPLET}-dbg"
+    )
+
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/test-run-${TARGET_TRIPLET}-dbg-out.log")
+        file(READ "${CURRENT_BUILDTREES_DIR}/test-run-${TARGET_TRIPLET}-dbg-out.log" TEST_OUTPUT_LOG)
+        message(STATUS "=== INTERNAL TESTS LOG OUTPUT BEGIN ===")
+        message(STATUS "${TEST_OUTPUT_LOG}")
+        message(STATUS "=== INTERNAL TESTS LOG OUTPUT END ===")
+    endif()
+else()
+    message(STATUS "Skipping internal tests execution due to cross-compilation target (${TARGET_TRIPLET})")
+endif()
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/fcftest/fcftestConfig.cmake" "
   if(NOT TARGET fcf::fcftest)
