@@ -4664,6 +4664,10 @@
       "baseline": "2019-08-06",
       "port-version": 3
     },
+    "kvazaar": {
+      "baseline": "2.3.2",
+      "port-version": 0
+    },
     "kwidgetsaddons": {
       "baseline": "6.30.0",
       "port-version": 0
