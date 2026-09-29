@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b732000..ec345de 100644
+index b732000..a16f5b2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -462,13 +462,25 @@ if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
+@@ -462,13 +462,27 @@ if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
  endif()
  
  if(ENABLE_DATA_MYSQL)
@@ -15,6 +15,8 @@ index b732000..ec345de 100644
 +		find_package(unofficial-libmariadb CONFIG REQUIRED)
 +		set(POCO_MYSQL_PACKAGE unofficial-libmariadb)
 +		set(MYSQL_LIBRARIES unofficial::libmariadb)
++		# The target's include directory is <prefix>/include/mysql, but Poco includes <mysql/mysql.h>
++		find_path(MYSQL_INCLUDE_DIR NAMES mysql/mysql.h REQUIRED)
 +	endif()
 +	set(MYSQL_FOUND TRUE)
  endif()
@@ -30,10 +32,10 @@ index b732000..ec345de 100644
  	find_package(ODBC REQUIRED)
  endif()
 diff --git a/Data/MySQL/CMakeLists.txt b/Data/MySQL/CMakeLists.txt
-index 0ea8701..3c8a426 100644
+index 0ea8701..1dcb834 100644
 --- a/Data/MySQL/CMakeLists.txt
 +++ b/Data/MySQL/CMakeLists.txt
-@@ -21,7 +21,7 @@ set_target_properties(DataMySQL
+@@ -21,12 +21,15 @@ set_target_properties(DataMySQL
  	DEFINE_SYMBOL MySQL_EXPORTS
  )
  
@@ -42,6 +44,14 @@ index 0ea8701..3c8a426 100644
  target_include_directories(DataMySQL
  	PUBLIC
  		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
++if(MYSQL_INCLUDE_DIR)
++	target_include_directories(DataMySQL PRIVATE "${MYSQL_INCLUDE_DIR}")
++endif()
+ target_compile_definitions(DataMySQL PUBLIC THREADSAFE NO_TCL)
+ 
+ if(WIN32)
 diff --git a/Data/MySQL/cmake/PocoDataMySQLConfig.cmake b/Data/MySQL/cmake/PocoDataMySQLConfig.cmake
 index 092774b..9042656 100644
 --- a/Data/MySQL/cmake/PocoDataMySQLConfig.cmake

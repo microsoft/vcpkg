@@ -184,6 +184,7 @@
     },
     "pdf": {
       "description": "Haru support for POCO",
+      "supports": "!windows | static",
       "dependencies": [
         "libharu",
         {
