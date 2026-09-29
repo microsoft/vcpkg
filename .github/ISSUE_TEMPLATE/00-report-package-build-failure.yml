@@ -1,6 +1,6 @@
 name: Report package build failure
 description: Let us know about build failures in ports.
-title: "[<port name>] build failure"
+title: "[REPLACE_WITH_PORT_NAME] build failure"
 labels: ["category:port-bug"]
 body:
   - type: markdown
