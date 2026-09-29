@@ -1,39 +1,47 @@
-From 196555707236f4387875749f66620fb519166963 Mon Sep 17 00:00:00 2001
-From: Adam Johnson <AdamJohnso@gmail.com>
-Date: Wed, 9 Sep 2020 15:20:36 -0400
-Subject: [PATCH 2/6] use vcpkg zlib
-
-building without zlib is not a supported configuration, per the warning
-messages.
----
- PCbuild/pythoncore.vcxproj | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index dbe236829a..5f30a35eb3 100644
+index df3d557..ba23333 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
-@@ -540,8 +540,10 @@
-     <ClCompile Include="..\Python\deepfreeze\deepfreeze.c" />
-     <!-- END deepfreeze -->
+@@ -101,7 +101,6 @@
+     <ClCompile>
+       <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+       <AdditionalIncludeDirectories>$(PySourcePath)Modules\_hacl;$(PySourcePath)Modules\_hacl\include;$(PySourcePath)Python;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibNgDir);$(GeneratedZlibNgDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalIncludeDirectories Condition="'$(UseJIT)' == 'true'">$(GeneratedJitStencilsDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";ZLIB_COMPAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+@@ -113,7 +112,6 @@
+     </ClCompile>
+     <Link>
+       <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies Condition="$(IncludeExternals)">zlib-ng$(PyDebugExt).lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+@@ -672,7 +670,7 @@
+     <ClCompile Include="..\Python\tracemalloc.c" />
+     <ClCompile Include="..\Python\uniqueid.c" />
    </ItemGroup>
 -  <ItemGroup Condition="$(IncludeExternals)">
 +  <ItemGroup>
      <ClCompile Include="..\Modules\zlibmodule.c" />
-+  </ItemGroup>
-+  <ItemGroup Condition="false">
-     <ClCompile Include="$(zlibDir)\adler32.c" />
-     <ClCompile Include="$(zlibDir)\compress.c" />
-     <ClCompile Include="$(zlibDir)\crc32.c" />
-@@ -593,7 +595,7 @@
-   <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v140' and $(PlatformToolset) != 'v141' and $(PlatformToolset) != 'v142' and $(PlatformToolset) != 'v143'">
+   </ItemGroup>
+   <ItemGroup>
+@@ -682,7 +680,7 @@
+     <ResourceCompile Include="..\PC\python_nt.rc" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ProjectReference Include="zlib-ng.vcxproj" Condition="$(IncludeExternals)">
++    <ProjectReference Include="zlib-ng.vcxproj" Condition="false">
+       <Project>{fb91c8b2-6fbc-3a01-b644-1637111f902d}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+@@ -719,7 +717,7 @@
+   <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v141' and $(PlatformToolset) != 'v142' and $(PlatformToolset) != 'v143'">
      <Warning Text="Toolset $(PlatformToolset) is not used for official builds. Your build may have errors or incompatibilities." />
    </Target>
 -  <Target Name="_WarnAboutZlib" BeforeTargets="PrepareForBuild" Condition="!$(IncludeExternals)">
 +  <Target Name="_WarnAboutZlib" BeforeTargets="PrepareForBuild" Condition="false">
-     <Warning Text="Not including zlib is not a supported configuration." />
+     <Warning Text="Not including zlib or zlib-ng is not a supported configuration." />
    </Target>
  
--- 
-2.28.0.windows.1
-

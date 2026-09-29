@@ -1,0 +1,43 @@
+diff --git a/configure b/configure
+index 2cb22a7..bf7e549 100644
+--- a/configure
++++ b/configure
+@@ -3561,6 +3561,20 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
+ 
+ 
+ 
++if test "$ac_sys_system" != "Darwin"; then
++if test "x$GNULD" = xyes
++then :
++
++  LDFLAGS="$LDFLAGS -Wl,--enable-new-dtags,-rpath,$vcpkg_rpath"
++
++else case e in #(
++  e)
++  LDFLAGS="$LDFLAGS -Wl,-rpath,$vcpkg_rpath"
++ ;;
++esac
++fi
++fi
++
+ 
+ 
+ 
+@@ -31286,7 +31300,7 @@ save_LDFLAGS=$LDFLAGS
+ save_LIBS=$LIBS
+ 
+ 
+-  LIBS="$LIBS $OPENSSL_LIBS"
++  LIBS="$OPENSSL_LIBS $LIBS"
+   CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
+   LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS $OPENSSL_LDFLAGS_RPATH"
+ 
+@@ -31351,7 +31365,7 @@ save_LDFLAGS=$LDFLAGS
+ save_LIBS=$LIBS
+ 
+ 
+-  LIBS="$LIBS $LIBCRYPTO_LIBS"
++  LIBS="$LIBCRYPTO_LIBS $LIBS"
+   CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
+   LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS $OPENSSL_LDFLAGS_RPATH"
+ 

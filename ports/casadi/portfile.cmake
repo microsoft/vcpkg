@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO casadi/casadi
     REF "${VERSION}"
-    SHA512 9706f0209333ff6636ec5fe545feaf9cb730e86356667d4f01ff922f8ed55094426f83a60ac54ea080143d879da8d1cb77bdfbd8c8eced757addfacbb03efc57
+    SHA512 4750d2e9c7eda630bae02a8b8adb074a6e7ce361fd2a83425e3ac215a1446e90316ddfb0d4e3c1ecf3264c441833749c5bb8c6cecb96f1fd7b283b7dfdcc6a4f
     HEAD_REF main
-    PATCHES
-        fmu-guard-fmi3.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

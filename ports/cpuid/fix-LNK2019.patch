@@ -1,5 +1,5 @@
 diff --git a/libcpuid/CMakeLists.txt b/libcpuid/CMakeLists.txt
-index 09189ef..fa3f6ff 100644
+index 4a57585..652e826 100644
 --- a/libcpuid/CMakeLists.txt
 +++ b/libcpuid/CMakeLists.txt
 @@ -21,7 +21,7 @@ if(UNIX)

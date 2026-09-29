@@ -1,6 +1,6 @@
 name: Request a new port
 description: Request a new port/library that vcpkg should support.
-title: "[New Port Request] <library name here>"
+title: "[New Port Request] REPLACE_WITH_LIBRARY_NAME"
 labels: ["category:new-port", "info:good-first-issue"]
 
 body:

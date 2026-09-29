@@ -4,7 +4,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO GreycLab/CImg
     # Using commit id becuase upstream likes to change tags
     REF 4022e625c5481854070d5f33e940ff623ecfc193
-    SHA512 6b4b248e3674b7f9f2b7e39feaa5581b4d1c7c1a4a480245d6f1a858cc36414728ed5ac3484d7bafdbbafae45bf4e0a384251744221b188c025567b908124d44
+    SHA512 318ce258d75f99d1fe58e46407fde09b83b74ac380ed99eb07422208d6bfe3f59516279b0e889ab17fc53ae5600d753b4e9b4656cab5f623cb97fce085fa0f8c
     HEAD_REF master
 )
 
