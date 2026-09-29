@@ -33,6 +33,12 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/lemon/cmake PACKAGE_NAME lemon)
 
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    foreach(config IN ITEMS "" "debug/")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${config}lib/pkgconfig/lemon.pc" " -lemon" " -llemon")
+    endforeach()
+endif()
+
 file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
 file(COPY ${EXE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/liblemon/")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/liblemon")
