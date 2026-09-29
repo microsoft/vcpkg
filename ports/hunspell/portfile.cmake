@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hunspell/hunspell
     REF "v${VERSION}"
-    SHA512 f279ae2c7cd71edc2a1a5977e27426205d58f6520011dfdce702073e4ca6ab439b4618dde4482cdb5b8176650d7b97c1275038b6c749134251094a59ef5a919a
+    SHA512 70b90d93419e9c99c94c0825b077aa5b46dadc16831ced54b46cf0898b3102d8374e237b9a63ab8ee4b47f2db40222af15e4def7626aa3945450128885ce261d
     HEAD_REF master
     PATCHES
         0005-autotools-subdirs.patch
+        ax_cxx_compile_stdcxx.patch # https://github.com/hunspell/hunspell/pull/1151
 )
 
 file(REMOVE "${SOURCE_PATH}/README") #README is a symlink

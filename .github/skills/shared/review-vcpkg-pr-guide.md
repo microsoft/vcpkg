@@ -51,9 +51,9 @@ The report considers the following in particular:
     - Is an official component of something else meeting that criteria
     - Some other reason explained by the contributor
 9. Ports and port features are correctly named by meeting one of:
-    - The port packages the same content as indexed at https://repology.org/project/<PORT NAME>/versions
-    - The port is amongst the first web search results for "<PORT NAME>" or "<PORT NAME> C++"
-    - The port packages a GitHub project and is in "<GitHub Org>-<GitHub Repo>" form
+    - The port packages the same content as indexed at https://repology.org/project/REPLACE_WITH_PORT_NAME/versions
+    - The port is amongst the first web search results for "REPLACE_WITH_PORT_NAME" or "REPLACE_WITH_PORT_NAME C++"
+    - The port packages a GitHub project and is in "GitHubOrg-GitHubRepo" form
     - Some other reason explained by the contributor
 10. The port deterministically resolves every optional build dependency that upstream probes for, so the result does not depend on packages already installed in the build environment. Each such dependency is either declared unconditionally in `vcpkg.json` or explicitly disabled through patches or arguments such as [CMAKE_DISABLE_FIND_PACKAGE_Xxx](https://cmake.org/cmake/help/latest/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) or [VCPKG_LOCK_FIND_PACKAGE](https://learn.microsoft.com/vcpkg/users/buildsystems/cmake-integration#vcpkg_lock_find_package_pkg). A dependency choice fixed by upstream, including an upstream default that does not probe for availability, is already resolved and need not be repeated in `portfile.cmake`. Search sources for:
     - `find_package(...)`
