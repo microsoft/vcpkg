@@ -5265,8 +5265,8 @@
       "port-version": 0
     },
     "libjxl": {
-      "baseline": "0.11.2",
-      "port-version": 1
+      "baseline": "0.12.0",
+      "port-version": 0
     },
     "libkeyfinder": {
       "baseline": "2.2.8",
@@ -6398,6 +6398,10 @@
     },
     "lzokay": {
       "baseline": "2023-10-22",
+      "port-version": 0
+    },
+    "mach": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "maddy": {
@@ -9413,7 +9417,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.6.11",
+      "baseline": "5.0.1",
       "port-version": 0
     },
     "simdutf": {
@@ -9481,7 +9485,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "2.1.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "slick-net": {
@@ -9754,7 +9758,7 @@
     },
     "sqlite3": {
       "baseline": "3.53.4",
-      "port-version": 1
+      "port-version": 2
     },
     "sqlitecpp": {
       "baseline": "3.3.3",
@@ -10121,7 +10125,7 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.5.2",
+      "baseline": "5.5.3",
       "port-version": 0
     },
     "tesults-cpp": {
@@ -10702,7 +10706,7 @@
     },
     "vcpkg-make": {
       "baseline": "2026-07-09",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
@@ -11366,6 +11370,10 @@
     },
     "zfp": {
       "baseline": "1.0.1",
+      "port-version": 0
+    },
+    "zimg": {
+      "baseline": "3.0.6",
       "port-version": 0
     },
     "zimpl": {
