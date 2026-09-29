@@ -23,6 +23,7 @@
     "eigen3",
     "faiss",
     "gflags",
+    "glew",
     "glog",
     {
       "name": "jasper",
@@ -51,15 +52,13 @@
     "cuda": {
       "description": "Build with CUDA support for the native architecture.",
       "dependencies": [
-        "cuda",
-        "glew"
+        "cuda"
       ]
     },
     "cuda-redist": {
       "description": "Build with redistributable CUDA support for common supported compute architectures.",
       "dependencies": [
-        "cuda",
-        "glew"
+        "cuda"
       ]
     },
     "download": {
@@ -85,7 +84,6 @@
     "gui": {
       "description": "Build with GUI support.",
       "dependencies": [
-        "glew",
         "qtbase",
         "qtsvg"
       ]
