@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 109975c..a51de0c 100644
+index 109975c..eb1839d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -116,18 +116,18 @@ if(USE_SWIG)
@@ -83,3 +83,12 @@ index 109975c..a51de0c 100644
  endif()
  
  if(BUILD_STATIC_LIB)
+@@ -604,7 +601,7 @@ if(USE_OPENMP)
+ endif()
+ 
+ if(USE_GPU)
+-  target_link_libraries(lightgbm_objs PUBLIC ${OpenCL_LIBRARY} ${Boost_LIBRARIES})
++  target_link_libraries(lightgbm_objs PUBLIC OpenCL::OpenCL ${Boost_LIBRARIES})
+ endif()
+ 
+ if(USE_CUDA)
