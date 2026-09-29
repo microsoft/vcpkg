@@ -462,7 +462,7 @@
     },
     "avro-cpp": {
       "baseline": "1.12.2",
-      "port-version": 0
+      "port-version": 1
     },
     "awlib": {
       "baseline": "2026-08-07",
@@ -3950,6 +3950,10 @@
     },
     "iausofa": {
       "baseline": "20231011",
+      "port-version": 0
+    },
+    "iceberg-cpp": {
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "icecream-cpp": {
