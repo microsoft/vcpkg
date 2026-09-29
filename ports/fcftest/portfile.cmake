@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fcf-framework/fcfTest
     REF "v1.2.6"
-    SHA512 cf459fa890b8de8c590f8860ef2ee78135bd79befb2ae48d3c87b3e481707c51
+    SHA512 331f3409a39ef74e61c71c5550fd08915926fcecc3d2ade0a063ceeab068734c033593503a1bd2850e09ced70038a2912d55bb7776026b9011ae7aad5251df9f
 )
 
 file(INSTALL "${SOURCE_PATH}/test.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/fcfTest")
