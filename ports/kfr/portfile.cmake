@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-audiotoolbox-link.patch
+        fix-x86-windows-bitscan.patch
 )
 
 vcpkg_check_features(
