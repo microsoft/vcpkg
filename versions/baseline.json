@@ -9693,7 +9693,7 @@
       "port-version": 4
     },
     "spirv-cross": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "spirv-headers": {
