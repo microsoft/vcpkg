@@ -1,6 +1,7 @@
 {
   "name": "vvdec",
   "version": "3.2.0",
+  "port-version": 1,
   "description": "VVdeC is a fast and efficient H.266/VVC decoder implementation.",
   "homepage": "https://github.com/fraunhoferhhi/vvdec",
   "license": "BSD-3-Clause-Clear",
