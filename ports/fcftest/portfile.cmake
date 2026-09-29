@@ -17,16 +17,28 @@ vcpkg_cmake_build(
     TARGET fcf-test-test
 )
 
+
 if(NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_IOS AND (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL CMAKE_HOST_SYSTEM_NAME))
-    message(STATUS "Running internal fcfTest tests...")
+    set(EXECUTABLE_SUFFIX "")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(EXECUTABLE_SUFFIX ".exe")
+    endif()
+
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/fcf-test-test${EXECUTABLE_SUFFIX}")
+        set(TEST_EXE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    else()
+        set(TEST_EXE_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    endif()
+
+    message(STATUS "Running internal fcfTest tests from: ${TEST_EXE_DIR}")
     vcpkg_execute_build_process(
-        COMMAND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/fcf-test-test"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME "test-run-${TARGET_TRIPLET}-dbg"
+        COMMAND "${TEST_EXE_DIR}/fcf-test-test${EXECUTABLE_SUFFIX}"
+        WORKING_DIRECTORY "${TEST_EXE_DIR}"
+        LOGNAME "test-run-${TARGET_TRIPLET}"
     )
 
-    if(EXISTS "${CURRENT_BUILDTREES_DIR}/test-run-${TARGET_TRIPLET}-dbg-out.log")
-        file(READ "${CURRENT_BUILDTREES_DIR}/test-run-${TARGET_TRIPLET}-dbg-out.log" TEST_OUTPUT_LOG)
+    if(EXISTS "${CURRENT_BUILDTREES_DIR}/test-run-${TARGET_TRIPLET}-out.log")
+        file(READ "${CURRENT_BUILDTREES_DIR}/test-run-${TARGET_TRIPLET}-out.log" TEST_OUTPUT_LOG)
         message(STATUS "=== INTERNAL TESTS LOG OUTPUT BEGIN ===")
         message(STATUS "${TEST_OUTPUT_LOG}")
         message(STATUS "=== INTERNAL TESTS LOG OUTPUT END ===")
