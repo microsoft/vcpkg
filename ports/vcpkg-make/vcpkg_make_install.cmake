@@ -89,6 +89,7 @@ function(vcpkg_make_install)
         message(STATUS "Building/Installing ${TARGET_TRIPLET}-${short_buildtype}")
 
         # Setup environment
+        vcpkg_prepare_pkgconfig("${cmake_buildtype}")
         z_vcpkg_make_prepare_env("${cmake_buildtype}" ${prepare_env_opts})
         z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${cmake_buildtype}")
 
@@ -122,6 +123,7 @@ function(vcpkg_make_install)
         endforeach()
 
         z_vcpkg_make_restore_env()
+        vcpkg_restore_pkgconfig()
 
         vcpkg_restore_env_variables(VARS LIB LIBPATH LIBRARY_PATH)
     endforeach()

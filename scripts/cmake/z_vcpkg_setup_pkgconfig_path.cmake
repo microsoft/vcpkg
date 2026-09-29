@@ -17,16 +17,31 @@ function(z_vcpkg_setup_pkgconfig_path)
     endforeach()
 
     vcpkg_find_acquire_program(PKGCONFIG)
-    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
-    cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
-    cmake_path(CONVERT "${pkgconfig_path}" TO_CMAKE_PATH_LIST pkgconfig_path NORMALIZE)
-    if(NOT "${pkgconfig_path}" IN_LIST path_list)
-      vcpkg_add_to_path("${pkgconfig_path}")
+    cmake_path(GET PKGCONFIG PARENT_PATH pkgconfig_path)
+    string(FIND "${pkgconfig_path}" "${DOWNLOADS}/tools/" index)
+    if(PKGCONFIG MATCHES " " AND index EQUAL "0")
+        # *** Keep this in sync with ports/vcpkg-make/vcpkg_scripts.cmake ***
+        # autotools builds may stumble over space in ENV{PKG_CONFIG}.
+        # Unfortunately, the unpacked pkgconf 3.0.6 MSI has this property.
+        # Mitigate by creating a sufficiently unique name to be found robustly via PATH
+        # despite the presence of the incompatible msys /usr/bin/pkgconf.exe.
+        # However, we can leave PKGCONFIG unchanged.
+        cmake_path(GET PKGCONFIG FILENAME pkgconfig_filename)
+        set(vcpkg_pkgconfig_filename "vcpkg-${pkgconfig_filename}")
+        set(vcpkg_pkgconfig_filepath "${pkgconfig_path}/${vcpkg_pkgconfig_filename}")
+        if(NOT EXISTS "${vcpkg_pkgconfig_filepath}")
+            file(COPY_FILE "${PKGCONFIG}" "${vcpkg_pkgconfig_filepath}")
+        endif()
+        set(ENV{PKG_CONFIG} "${vcpkg_pkgconfig_filename}")
+    else()
+        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     endif()
-    unset(path_list)
-    unset(pkgconfig_path)
 
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+    cmake_path(CONVERT "${pkgconfig_path}" TO_CMAKE_PATH_LIST pkgconfig_path NORMALIZE)
+    cmake_path(CONVERT "$ENV{PATH}" TO_CMAKE_PATH_LIST path_list NORMALIZE)
+    if(NOT "${pkgconfig_path}" IN_LIST path_list)
+        vcpkg_add_to_path("${pkgconfig_path}")
+    endif()
 
     foreach(prefix IN ITEMS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
         vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${prefix}/share/pkgconfig")
