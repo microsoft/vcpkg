@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
+        fix-msvc-pdb-install.patch
 )
 
 vcpkg_from_github(
