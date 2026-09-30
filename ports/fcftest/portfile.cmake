@@ -10,7 +10,7 @@ file(INSTALL "${SOURCE_PATH}/test.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/incl
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
-        "-DFCF_TEST_INCLUDE_DIR=${SOURCE_PATH}"
+        "-DCMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES=${CURRENT_PACKAGES_DIR}/include\\;${SOURCE_PATH}"
 )
 
 vcpkg_cmake_build(
@@ -34,7 +34,6 @@ if(NOT VCPKG_CROSSCOMPILING)
         COMMAND "${TEST_EXE_DIR}/fcf-test-test${EXECUTABLE_SUFFIX}"
         WORKING_DIRECTORY "${TEST_EXE_DIR}"
         LOGNAME "test-run-${TARGET_TRIPLET}"
-        TIMEOUT 120
     )
 
     if(EXISTS "${CURRENT_BUILDTREES_DIR}/test-run-${TARGET_TRIPLET}-out.log")
@@ -51,11 +50,12 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/fcftest/fcftestConfig.cmake" "
   if(NOT TARGET fcf::fcftest)
     add_library(fcf::fcftest INTERFACE IMPORTED)
     set_target_properties(fcf::fcftest PROPERTIES
-      INTERFACE_INCLUDE_DIRECTORIES \"\-- \${CMAKE_CURRENT_LIST_DIR}/../../include\"
+      INTERFACE_INCLUDE_DIRECTORIES \"\${CMAKE_CURRENT_LIST_DIR}/../../include\"
     )
   endif()
 ")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
