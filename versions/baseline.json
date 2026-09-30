@@ -29,7 +29,7 @@
       "port-version": 1
     },
     "ace": {
-      "baseline": "8.0.7",
+      "baseline": "8.0.8",
       "port-version": 0
     },
     "acl": {
@@ -501,7 +501,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "1.2.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -2073,7 +2073,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.17.0",
+      "baseline": "1.18.0",
       "port-version": 0
     },
     "cpp-pinyin": {
@@ -2737,7 +2737,7 @@
       "port-version": 0
     },
     "earcut-hpp": {
-      "baseline": "3.2.3",
+      "baseline": "3.2.4",
       "port-version": 0
     },
     "eastl": {
@@ -4073,7 +4073,7 @@
       "port-version": 0
     },
     "ini-cpp": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "inih": {
@@ -6185,7 +6185,7 @@
       "port-version": 1
     },
     "lightgbm": {
-      "baseline": "4.5.0",
+      "baseline": "4.7.0",
       "port-version": 0
     },
     "lightningscanner": {
@@ -9697,7 +9697,7 @@
       "port-version": 4
     },
     "spirv-cross": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "spirv-headers": {
@@ -10545,7 +10545,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "5.1.0",
+      "baseline": "5.2.0",
       "port-version": 0
     },
     "unqlite": {
