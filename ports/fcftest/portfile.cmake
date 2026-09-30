@@ -10,7 +10,7 @@ file(INSTALL "${SOURCE_PATH}/test.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/incl
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
-        "-DCMAKE_INCLUDE_PATH=${CURRENT_PACKAGES_DIR}/include"
+        "-DCMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES=${CURRENT_PACKAGES_DIR}/include;${SOURCE_PATH}"
 )
 
 vcpkg_cmake_build(
@@ -43,9 +43,8 @@ if(NOT VCPKG_CROSSCOMPILING)
         message(STATUS "=== INTERNAL TESTS LOG OUTPUT END ===")
     endif()
 else()
-    message(STATUS "Skipping internal tests execution due to cross-architecture target (Target: ${VCPKG_TARGET_ARCHITECTURE}, Host: ${VCPKG_HOST_ARCHITECTURE})")
+    message(STATUS "Skipping internal tests execution due to cross-compilation target.")
 endif()
-
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/fcftest/fcftestConfig.cmake" "
   if(NOT TARGET fcf::fcftest)
