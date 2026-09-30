@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 109975c..eb1839d 100644
+index 109975c..a4e855a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -116,18 +116,18 @@ if(USE_SWIG)
+@@ -116,18 +116,16 @@ if(USE_SWIG)
    file(MAKE_DIRECTORY "${LGBM_SWIG_DESTINATION_DIR}")
  endif()
  
@@ -21,12 +21,10 @@ index 109975c..eb1839d 100644
 -set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
 -include_directories(${FMT_INCLUDE_DIR})
 +find_package(fmt CONFIG REQUIRED)
-+get_target_property(VCPKG_INCLUDE_DIR fmt::fmt INTERFACE_INCLUDE_DIRECTORIES)
-+set(FMT_INCLUDE_DIR ${VCPKG_INCLUDE_DIR}/fmt)
  
  if(BUILD_CPP_TEST AND MSVC)
    # Use /MT flag to statically link the C runtime. Must be set before
-@@ -142,10 +142,7 @@ endif()
+@@ -142,10 +140,7 @@ endif()
  # subdirectory keeps the package tarball free of nanoarrow sources, which
  # would otherwise trigger CRAN warnings about diagnostic-suppressing pragmas.
  if(NOT __BUILD_FOR_R)
@@ -38,7 +36,7 @@ index 109975c..eb1839d 100644
  endif()
  
  if(__BUILD_FOR_R)
-@@ -213,15 +210,13 @@ if(USE_OPENMP)
+@@ -213,15 +208,13 @@ if(USE_OPENMP)
  endif()
  
  if(USE_GPU)
@@ -55,7 +53,7 @@ index 109975c..eb1839d 100644
      if(WIN32)
          # disable autolinking in boost
          add_definitions(-DBOOST_ALL_NO_LIB)
-@@ -489,13 +484,14 @@ if(USE_ROCM)
+@@ -489,13 +482,14 @@ if(USE_ROCM)
  endif()
  
  add_library(lightgbm_objs OBJECT ${LGBM_SOURCES})
@@ -72,7 +70,7 @@ index 109975c..eb1839d 100644
  endif()
  
  set(API_SOURCES "src/c_api.cpp")
-@@ -506,8 +502,9 @@ if(__BUILD_FOR_R)
+@@ -506,8 +500,9 @@ if(__BUILD_FOR_R)
  endif()
  
  add_library(lightgbm_capi_objs OBJECT ${API_SOURCES})
@@ -83,7 +81,7 @@ index 109975c..eb1839d 100644
  endif()
  
  if(BUILD_STATIC_LIB)
-@@ -604,7 +601,7 @@ if(USE_OPENMP)
+@@ -604,7 +599,7 @@ if(USE_OPENMP)
  endif()
  
  if(USE_GPU)
@@ -92,3 +90,17 @@ index 109975c..eb1839d 100644
  endif()
  
  if(USE_CUDA)
+@@ -854,13 +849,4 @@ if(INSTALL_HEADERS)
+       DIRECTORY ${LightGBM_HEADER_DIR}/LightGBM
+       DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+     )
+-    install(
+-      FILES ${FAST_DOUBLE_PARSER_INCLUDE_DIR}/fast_double_parser.h
+-      DESTINATION ${CMAKE_INSTALL_PREFIX}/include/LightGBM/utils
+-    )
+-    install(
+-      DIRECTORY ${FMT_INCLUDE_DIR}/
+-      DESTINATION ${CMAKE_INSTALL_PREFIX}/include/LightGBM/utils
+-      FILES_MATCHING PATTERN "*.h"
+-    )
+ endif()
