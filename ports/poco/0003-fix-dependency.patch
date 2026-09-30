@@ -75,8 +75,18 @@ index 2386590..81b2c8e 100644
  	#endif
  #endif
  
+diff --git a/Data/ODBC/cmake/PocoDataODBCConfig.cmake b/Data/ODBC/cmake/PocoDataODBCConfig.cmake
+index 64b525e..c1fb697 100644
+--- a/Data/ODBC/cmake/PocoDataODBCConfig.cmake
++++ b/Data/ODBC/cmake/PocoDataODBCConfig.cmake
+@@ -1,4 +1,5 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(PocoFoundation)
+ find_dependency(PocoData)
++find_dependency(ODBC)
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoDataODBCTargets.cmake")
 diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
-index 31d0a52..090ec6a 100644
+index adf0b06..6778952 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
 @@ -32,13 +32,15 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
