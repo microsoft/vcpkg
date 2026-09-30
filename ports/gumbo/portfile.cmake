@@ -33,4 +33,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/COPYING" "${SOURCE_PATH}/src/utf8.c")
