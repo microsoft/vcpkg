@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VowpalWabbit/vowpal_wabbit
     REF "${VERSION}"
-    SHA512 d31fb47e0d137d7f63daed7f8e20c41901416632fc5c3c9e9063ff4b003a784b3964418ef321bb670275c6463d1082e7523a8b5f3d09093c84565ec2ba6b913b
+    SHA512 ee4aee1b61760c40bd25a240edd5a830bc32f9d982c38c28efa873b8935db8c2f754b872955a0554643b3a3be471fac44af30cba7a47cd8a08650dacbe5a2613
     HEAD_REF master
     PATCHES
         fix-android-build.patch

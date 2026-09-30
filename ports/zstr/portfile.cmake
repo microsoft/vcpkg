@@ -1,19 +1,17 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO mateidavid/zstr
   REF "v${VERSION}"
-  SHA512 21778d2b07c30da4fb9ee35832f39b02c95e54478c6610e28cece98908c51bcee6aed0754ec3948b71aa1e671a3d15ff2b555369379dc4583048c76d2b8305e8
+  SHA512 3f38761b9724fdcd8e3c1641cd37f0497fb6173a80817ac6c26a53853fd6673f39ca54893917b68b90036b6c86656853ada997851c2966a814ca2f01966a0524
   HEAD_REF master
 )
 
-# Install source files
 file(INSTALL "${SOURCE_PATH}/src/strict_fstream.hpp"
      "${SOURCE_PATH}/src/zstr.hpp"
      DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Install license
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-# Install usage
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
