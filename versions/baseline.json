@@ -29,7 +29,7 @@
       "port-version": 1
     },
     "ace": {
-      "baseline": "8.0.7",
+      "baseline": "8.0.8",
       "port-version": 0
     },
     "acl": {
@@ -501,7 +501,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "1.2.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -2073,7 +2073,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.17.0",
+      "baseline": "1.18.0",
       "port-version": 0
     },
     "cpp-pinyin": {
@@ -2737,7 +2737,7 @@
       "port-version": 0
     },
     "earcut-hpp": {
-      "baseline": "3.2.3",
+      "baseline": "3.2.4",
       "port-version": 0
     },
     "eastl": {
@@ -4077,7 +4077,7 @@
       "port-version": 0
     },
     "ini-cpp": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "inih": {
@@ -5269,8 +5269,8 @@
       "port-version": 0
     },
     "libjxl": {
-      "baseline": "0.11.2",
-      "port-version": 1
+      "baseline": "0.12.0",
+      "port-version": 0
     },
     "libkeyfinder": {
       "baseline": "2.2.8",
@@ -6189,7 +6189,7 @@
       "port-version": 1
     },
     "lightgbm": {
-      "baseline": "4.5.0",
+      "baseline": "4.7.0",
       "port-version": 0
     },
     "lightningscanner": {
@@ -6402,6 +6402,10 @@
     },
     "lzokay": {
       "baseline": "2023-10-22",
+      "port-version": 0
+    },
+    "mach": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "maddy": {
@@ -8865,8 +8869,8 @@
       "port-version": 0
     },
     "redisx": {
-      "baseline": "1.0.4",
-      "port-version": 1
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "refl-cpp": {
       "baseline": "0.12.4",
@@ -9417,7 +9421,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.6.11",
+      "baseline": "5.0.1",
       "port-version": 0
     },
     "simdutf": {
@@ -9485,7 +9489,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "2.1.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "slick-net": {
@@ -9697,7 +9701,7 @@
       "port-version": 4
     },
     "spirv-cross": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "spirv-headers": {
@@ -9758,7 +9762,7 @@
     },
     "sqlite3": {
       "baseline": "3.53.4",
-      "port-version": 1
+      "port-version": 2
     },
     "sqlitecpp": {
       "baseline": "3.3.3",
@@ -10125,7 +10129,7 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.5.2",
+      "baseline": "5.5.3",
       "port-version": 0
     },
     "tesults-cpp": {
@@ -10378,7 +10382,7 @@
     },
     "tracy": {
       "baseline": "0.14.1",
-      "port-version": 0
+      "port-version": 1
     },
     "transwarp": {
       "baseline": "2.2.3",
@@ -10545,7 +10549,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "5.1.0",
+      "baseline": "5.2.0",
       "port-version": 0
     },
     "unqlite": {
@@ -10706,7 +10710,7 @@
     },
     "vcpkg-make": {
       "baseline": "2026-07-09",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
@@ -11370,6 +11374,10 @@
     },
     "zfp": {
       "baseline": "1.0.1",
+      "port-version": 0
+    },
+    "zimg": {
+      "baseline": "3.0.6",
       "port-version": 0
     },
     "zimpl": {
