@@ -31,10 +31,18 @@ set_target_properties(gumbo PROPERTIES
     PUBLIC_HEADER "${gumbo_public_headers}"
 )
 
+# More readable than:
+# $<BUILD_INTERFACE:$<$<OR:$<C_COMPILER_ID:MSVC>,$<STREQUAL:$<CMAKE_C_COMPILER_FRONTEND_VARIANT>,MSVC>>:${CMAKE_CURRENT_SOURCE_DIR}/visualc/include>>
+if(MSVC)
+    set(VISUALC_INCLUDE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/visualc/include>")
+else()
+    set(VISUALC_INCLUDE "")
+endif()
+
 target_include_directories(gumbo PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:$<$<C_COMPILER_ID:MSVC>:${CMAKE_CURRENT_SOURCE_DIR}/visualc/include>>
+    ${VISUALC_INCLUDE}
     $<INSTALL_INTERFACE:include/>
 )
 
