@@ -10,7 +10,7 @@ file(INSTALL "${SOURCE_PATH}/test.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/incl
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
-        "-DCMAKE_CXX_FLAGS=-I${CURRENT_PACKAGES_DIR}/include"
+        "-DCMAKE_INCLUDE_PATH=${CURRENT_PACKAGES_DIR}/include"
 )
 
 vcpkg_cmake_build(
