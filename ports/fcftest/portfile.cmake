@@ -17,7 +17,7 @@ vcpkg_cmake_build(
     TARGET fcf-test-test
 )
 
-if(NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_IOS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+if(NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_IOS AND VCPKG_TARGET_ARCHITECTURE STREQUAL VCPKG_HOST_ARCHITECTURE)
     set(EXECUTABLE_SUFFIX "")
     if(VCPKG_TARGET_IS_WINDOWS)
         set(EXECUTABLE_SUFFIX ".exe")
@@ -43,8 +43,9 @@ if(NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_IOS AND VCPKG_TARGET_ARCH
         message(STATUS "=== INTERNAL TESTS LOG OUTPUT END ===")
     endif()
 else()
-    message(STATUS "Skipping internal tests execution due to cross-architecture target (${TARGET_TRIPLET})")
+    message(STATUS "Skipping internal tests execution due to cross-architecture target (Target: ${VCPKG_TARGET_ARCHITECTURE}, Host: ${VCPKG_HOST_ARCHITECTURE})")
 endif()
+
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/fcftest/fcftestConfig.cmake" "
   if(NOT TARGET fcf::fcftest)
