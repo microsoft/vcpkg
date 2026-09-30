@@ -3850,7 +3850,7 @@
     },
     "hexl": {
       "baseline": "1.2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "hffix": {
       "baseline": "1.4.1",
