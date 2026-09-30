@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/openzl
@@ -6,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+        fix-runtime.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/src/openzl/shared/xxhash.h")
