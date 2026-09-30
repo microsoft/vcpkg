@@ -83,9 +83,10 @@ block(SCOPE_FOR VARIABLES)
   vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenPit)
 endblock()
 
-# The engine is released in one flavour. A triplet that builds both
-# configurations gets the same binary under debug/ as well, so Debug consumers
-# link and deploy it too.
+# The engine is released in one flavour: it links its C runtime statically,
+# and nothing CRT-owned crosses its C ABI, so the same binary serves Debug
+# consumers. A triplet that builds both configurations gets it under debug/
+# as well.
 set(openpit_install_prefixes "${CURRENT_PACKAGES_DIR}")
 if(NOT VCPKG_BUILD_TYPE)
   list(APPEND openpit_install_prefixes "${CURRENT_PACKAGES_DIR}/debug")
