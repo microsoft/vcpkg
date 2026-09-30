@@ -14,7 +14,7 @@ index 1868049..14bd0c2 100644
          if (NOT CMAKE_SYSTEM STRLESS "Darwin-18.0.0")
              add_definitions(-DGL_SILENCE_DEPRECATION)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 5e5dd91..97508f7 100644
+index 5e5dd91..0c5a73f 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -48,6 +48,11 @@ endif ()
@@ -29,7 +29,7 @@ index 5e5dd91..97508f7 100644
  if (SUPPORT_MODULE_RAUDIO)
      MESSAGE(STATUS "Audio Backend: miniaudio")
  else ()
-@@ -99,6 +104,20 @@ endif ()
+@@ -99,6 +104,29 @@ endif ()
  target_link_libraries(raylib PRIVATE $<BUILD_INTERFACE:${LIBS_PRIVATE}>)
  target_link_libraries(raylib PUBLIC ${LIBS_PUBLIC})
  
@@ -40,6 +40,15 @@ index 5e5dd91..97508f7 100644
 +
 +    if (NOT glfw3_FOUND)
 +        list(REMOVE_ITEM raylib_install_private_libs glfw)
++    endif()
++
++    if (UNIX AND NOT APPLE AND PLATFORM STREQUAL "Desktop" AND TARGET OpenGL::GL)
++        list(REMOVE_ITEM raylib_install_private_libs ${OPENGL_LIBRARIES})
++        list(APPEND raylib_install_private_libs OpenGL::GL)
++        if (TARGET OpenGL::GLU)
++            list(APPEND raylib_install_private_libs OpenGL::GLU)
++        endif()
++        set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(OpenGL)")
 +    endif()
 +
 +    foreach(lib IN LISTS raylib_install_private_libs)
