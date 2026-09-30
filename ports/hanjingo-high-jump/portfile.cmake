@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO hanjingo/high-jump
     REF v${VERSION}
     SHA512 debd9b975691290c37382acb78838adbd391d18ce0f108ebbd7f3d4ab374f5da8ec886ef1dd5bc460855bcca223c8505afaf77875ebed3c0eb1dfe7433d14945
+    PATCHES
+        fix-https-consumer-headers.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

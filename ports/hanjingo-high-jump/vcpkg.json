@@ -7,7 +7,7 @@
   ],
   "description": "Modern C++ library framework implemented by C++17. High-jump(hj) is a comprehensive C++ library providing utilities for algorithms, compression, cryptography, databases, encoding, hardware, I/O, logging, math, networking, OS operations, synchronization, testing, time handling, types, and more.",
   "homepage": "https://github.com/hanjingo/high-jump",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "bext-sml",
