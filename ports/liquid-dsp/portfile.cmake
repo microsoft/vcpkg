@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jgaeddert/liquid-dsp
     REF "v${VERSION}"
-    SHA512 83c55bf80bd61c1bca7c198e7ff8ce3dd06b2ff0ce27d7211e5437f17fe191bc742bd03c40f4a2c98f364dc6c28d39a89371cccb80624815cce0b23199aaddf0
+    SHA512 d67a5dbbc4caf8027bfdc0616ddf6749d0ffe5356d60065cd8a7a8d77bd88461b844f0c94c1d800828063d90f819dca78f7141d675217743644c1365ccc99799
     HEAD_REF master
     PATCHES
         fix-fftw3.patch
@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         -DBUILD_AUTOTESTS=OFF
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_SANDBOX=OFF
+        -DBUILD_TIMESTAMPS=OFF
         -DBUILD_DOC=OFF
         -DCOVERAGE=OFF
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}

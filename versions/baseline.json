@@ -6209,7 +6209,7 @@
       "port-version": 0
     },
     "liquid-dsp": {
-      "baseline": "1.8.0",
+      "baseline": "1.8.3",
       "port-version": 0
     },
     "litehtml": {
