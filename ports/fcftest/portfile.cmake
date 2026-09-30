@@ -10,7 +10,7 @@ file(INSTALL "${SOURCE_PATH}/test.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/incl
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
-        "-DCMAKE_CXX_FLAGS=-I${SOURCE_PATH}"
+        "-DCMAKE_CXX_FLAGS=-I${CURRENT_PACKAGES_DIR}/include"
 )
 
 vcpkg_cmake_build(
@@ -57,4 +57,3 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/fcftest/fcftestConfig.cmake" "
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
