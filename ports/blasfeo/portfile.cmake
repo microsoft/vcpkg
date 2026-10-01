@@ -15,7 +15,6 @@ vcpkg_cmake_configure(
     OPTIONS
         # Portable C kernels: the only target buildable everywhere (and the only one MSVC accepts)
         -DTARGET=GENERIC
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
         -DBLASFEO_EXAMPLES=OFF
         -DBLASFEO_TESTING=OFF
         -DBLASFEO_BENCHMARKS=OFF
