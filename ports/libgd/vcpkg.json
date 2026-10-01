@@ -1,7 +1,7 @@
 {
   "name": "libgd",
   "version-semver": "2.3.3",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Open source code library for the dynamic creation of images by programmers.",
   "homepage": "https://github.com/libgd/libgd",
   "license": "GD",
@@ -12,10 +12,10 @@
     }
   ],
   "default-features": [
-    "avif",
     "fontconfig",
     "freetype",
     "jpeg",
+    "libavif-aom",
     "png",
     "tiff",
     "webp"
@@ -49,6 +49,198 @@
       "description": "Support for JPEG",
       "dependencies": [
         "libjpeg-turbo"
+      ]
+    },
+    "libavif-aom": {
+      "description": "Support for AVIF using the aom codec",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "default-features": false,
+          "features": [
+            "aom"
+          ]
+        },
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
+    "libavif-dav1d": {
+      "description": "Support for AVIF decoding using the dav1d codec",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "default-features": false,
+          "features": [
+            "dav1d"
+          ]
+        },
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
+    "libavif-svt": {
+      "description": "Support for AVIF encoding using the SVT-AV1 codec",
+      "supports": "!x86 & !arm32 & !uwp",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "default-features": false,
+          "features": [
+            "svt"
+          ]
+        },
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
+    "libheif-aom": {
+      "description": "Support for HEIF AVIF decoding and encoding via the aom codec",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "aom"
+          ]
+        }
+      ]
+    },
+    "libheif-h264-decoder": {
+      "description": "Support for HEIF AVC decoding via the OpenH264 codec",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "h264-decoder"
+          ]
+        }
+      ]
+    },
+    "libheif-hevc": {
+      "description": "Support for HEIF HEVC encoding via the x265 codec",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "hevc"
+          ]
+        }
+      ]
+    },
+    "libheif-jpeg": {
+      "description": "Support for HEIF JPEG decoding and encoding via libjpeg-turbo",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "jpeg"
+          ]
+        }
+      ]
+    },
+    "libheif-openjpeg": {
+      "description": "Support for HEIF JPEG-2000 decoding and encoding via OpenJPEG",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "openjpeg"
+          ]
+        }
+      ]
+    },
+    "libheif-uvg266": {
+      "description": "Support for HEIF VVC encoding via the uvg266 codec",
+      "supports": "!x86",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "uvg266"
+          ]
+        }
+      ]
+    },
+    "libheif-x264": {
+      "description": "Support for HEIF AVC encoding via the x264 codec",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "x264"
+          ]
+        }
       ]
     },
     "png": {
