@@ -11,7 +11,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         no-glu.diff
-        use-cryptopp-config.patch
+        fix-dependencies.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindCryptoPP.cmake")
 
@@ -34,7 +34,9 @@ set(CUDA_ENABLED OFF)
 if("cuda" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
     set(CUDA_ARCHITECTURES "native")
-elseif("cuda-redist" IN_LIST FEATURES)
+endif()
+
+if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
     set(CUDA_ARCHITECTURES "all-major")
 endif()

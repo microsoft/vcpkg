@@ -24,6 +24,24 @@ index b0ca7c1..7e52ca6 100644
    Packages/FindSoftimage.cmake
  )
  if (WIN32)
+diff --git a/CMake/ConfigureBuild.cmake b/CMake/ConfigureBuild.cmake
+index 171fe8f..90f1b49 100644
+--- a/CMake/ConfigureBuild.cmake
++++ b/CMake/ConfigureBuild.cmake
+@@ -258,12 +258,10 @@ if (UNIX)
+   endif ()
+ 
+   if (OGRE_STATIC)
+-    # there is no pkgconfig file for freeimage, so we need to add that lib manually
+-    set(OGRE_ADDITIONAL_LIBS "${OGRE_ADDITIONAL_LIBS} -lfreeimage")
+     configure_file(${OGRE_TEMPLATES_DIR}/OGREStatic.pc.in ${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc @ONLY)
+     if(NOT X11_FOUND)
+       file(READ "${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc" ogre_pc)
+-      string(REPLACE ", x11, xt, xaw7, gl" "" ogre_pc "${ogre_pc}")
++      string(REPLACE ", x11, xt, xaw7, gl, xrandr" "" ogre_pc "${ogre_pc}")
+       file(WRITE "${OGRE_BINARY_DIR}/pkgconfig/${OGRE_NEXT_PREFIX}.pc" "${ogre_pc}")
+     endif()
+   else ()
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
 index 7dd36f2..f00e891 100644
 --- a/CMake/Dependencies.cmake
@@ -71,6 +89,47 @@ index 7dd36f2..f00e891 100644
  macro_log_feature(Rapidjson_FOUND "rapidjson" "C++ JSON parser" "https://rapidjson.org/" FALSE "" "")
  
  find_package(RenderDoc)
+diff --git a/CMake/Templates/OGREStatic.pc.in b/CMake/Templates/OGREStatic.pc.in
+index ee2d5cf..397f4c0 100644
+--- a/CMake/Templates/OGREStatic.pc.in
++++ b/CMake/Templates/OGREStatic.pc.in
+@@ -8,6 +8,6 @@ Name: @OGRE_NEXT_PREFIX@ (static lib)
+ Description: Object-Oriented Graphics Rendering Engine
+ Version: @OGRE_VERSION@
+ URL: http://www.ogre3d.org
+-Requires: freetype2, zziplib, x11, xt, xaw7, gl
++Requires: freetype2, zziplib, x11, xt, xaw7, gl, xrandr
+ Libs: -L${libdir} -L${plugindir} -l@OGRE_NEXT@Main@OGRE_LIB_SUFFIX@ @OGRE_ADDITIONAL_LIBS@
+ Cflags: -I${includedir} -I${includedir}/@OGRE_NEXT_PREFIX@ @OGRE_CFLAGS@
+diff --git a/OgreMain/CMakeLists.txt b/OgreMain/CMakeLists.txt
+index 8d5bf42..97c30cf 100644
+--- a/OgreMain/CMakeLists.txt
++++ b/OgreMain/CMakeLists.txt
+@@ -396,6 +396,11 @@ else ()
+ 	# exclude OgreAlignedAllocator.cpp from unity builds; causes problems on Linux
+ 	ogre_add_library(${OGRE_NEXT}Main ${OGRE_LIB_TYPE} ${PREC_HEADER} ${HEADER_FILES} ${SOURCE_FILES} ${PLATFORM_HEADERS} ${PLATFORM_SOURCE_FILES} ${THREAD_HEADER_FILES} ${THREAD_SOURCE_FILES} SEPARATE "src/OgreAlignedAllocator.cpp")
+ endif ()
++if(OGRE_CONFIG_ENABLE_STBI)
++  find_package(Stb REQUIRED)
++  target_include_directories(${OGRE_NEXT}Main PRIVATE "${Stb_INCLUDE_DIR}")
++endif()
++
+ # In visual studio 2010 - 64 bit we get this error: "LINK : fatal error LNK1210: exceeded internal ILK size limit; link with /INCREMENTAL:NO"
+ if(WIN32 AND MSVC10 AND CMAKE_CL_64)
+   set_target_properties(${OGRE_NEXT}Main PROPERTIES
+diff --git a/OgreMain/src/OgreSTBICodec.cpp b/OgreMain/src/OgreSTBICodec.cpp
+index dfdd6a1..c1a39aa 100644
+--- a/OgreMain/src/OgreSTBICodec.cpp
++++ b/OgreMain/src/OgreSTBICodec.cpp
+@@ -42,7 +42,7 @@ THE SOFTWARE.
+ #define STBI_NO_STDIO
+ #define STB_IMAGE_IMPLEMENTATION
+ #define STB_IMAGE_STATIC
+-#include "stbi/stb_image.h"
++#include <stb_image.h>
+ 
+ #include <sstream>
+ 
 diff --git a/RenderSystems/Vulkan/CMakeLists.txt b/RenderSystems/Vulkan/CMakeLists.txt
 index 2fc1859..ae8e4e2 100644
 --- a/RenderSystems/Vulkan/CMakeLists.txt

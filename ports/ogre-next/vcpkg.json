@@ -12,6 +12,7 @@
       "default-features": false
     },
     "rapidjson",
+    "stb",
     "tinyxml",
     {
       "name": "vcpkg-cmake",
