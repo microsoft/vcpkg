@@ -47,6 +47,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${OPTIONS}
         -DBUILD_TESTING=OFF
+        -DCMake_ENABLE_DEBUGGER=OFF
         -DCMAKE_USE_SYSTEM_LIBRARIES=ON
 )
 
