@@ -4,6 +4,12 @@ vcpkg_download_distfile(BUMPAVIF
     SHA512 1550959aaa9828a129698b94991743281500db2eb8601c67dd52d62c2652174023240065aab1c1c0a2c0ce196e19fc60bdb83216577f217a135e534d4209a55c
 )
 
+vcpkg_download_distfile(FIXHEIF
+    URLS "https://github.com/libgd/libgd/commit/eaa48c3616ee81644cdd8ff1e1a1109205d0e306.patch?full_index=1"
+    FILENAME "fix-heif.patch"
+    SHA512 37bacf874c267630bd043e33eb87a1fb4ee678d7f481ad326bc1fa623c82f8233e62b67057b0182116d9ca19c55420dd8784ea92fab693cff6d9e16ee235ce29
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
@@ -16,6 +22,7 @@ vcpkg_from_github(
         fix_msvc_build.patch
         fix-static-usage.patch
         "${BUMPAVIF}"
+        "${FIXHEIF}"
 )
 
 # Delete vendored Find modules

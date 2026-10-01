@@ -1,7 +1,7 @@
 {
   "name": "libgd",
   "version-semver": "2.3.3",
-  "port-version": 5,
+  "port-version": 4,
   "description": "Open source code library for the dynamic creation of images by programmers.",
   "homepage": "https://github.com/libgd/libgd",
   "license": "GD",
@@ -128,25 +128,6 @@
         }
       ]
     },
-    "libheif-h264-decoder": {
-      "description": "Support for HEIF AVC decoding via the OpenH264 codec",
-      "dependencies": [
-        {
-          "name": "libgd",
-          "default-features": false,
-          "features": [
-            "heif"
-          ]
-        },
-        {
-          "name": "libheif",
-          "default-features": false,
-          "features": [
-            "h264-decoder"
-          ]
-        }
-      ]
-    },
     "libheif-hevc": {
       "description": "Support for HEIF HEVC encoding via the x265 codec",
       "dependencies": [
@@ -162,83 +143,6 @@
           "default-features": false,
           "features": [
             "hevc"
-          ]
-        }
-      ]
-    },
-    "libheif-jpeg": {
-      "description": "Support for HEIF JPEG decoding and encoding via libjpeg-turbo",
-      "dependencies": [
-        {
-          "name": "libgd",
-          "default-features": false,
-          "features": [
-            "heif"
-          ]
-        },
-        {
-          "name": "libheif",
-          "default-features": false,
-          "features": [
-            "jpeg"
-          ]
-        }
-      ]
-    },
-    "libheif-openjpeg": {
-      "description": "Support for HEIF JPEG-2000 decoding and encoding via OpenJPEG",
-      "dependencies": [
-        {
-          "name": "libgd",
-          "default-features": false,
-          "features": [
-            "heif"
-          ]
-        },
-        {
-          "name": "libheif",
-          "default-features": false,
-          "features": [
-            "openjpeg"
-          ]
-        }
-      ]
-    },
-    "libheif-uvg266": {
-      "description": "Support for HEIF VVC encoding via the uvg266 codec",
-      "supports": "!x86",
-      "dependencies": [
-        {
-          "name": "libgd",
-          "default-features": false,
-          "features": [
-            "heif"
-          ]
-        },
-        {
-          "name": "libheif",
-          "default-features": false,
-          "features": [
-            "uvg266"
-          ]
-        }
-      ]
-    },
-    "libheif-x264": {
-      "description": "Support for HEIF AVC encoding via the x264 codec",
-      "dependencies": [
-        {
-          "name": "libgd",
-          "default-features": false,
-          "features": [
-            "heif"
-          ]
-        },
-        {
-          "name": "libheif",
-          "default-features": false,
-          "features": [
-            "x264"
           ]
         }
       ]
