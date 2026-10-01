@@ -8,8 +8,12 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-audiotoolbox-link.patch
-        fix-x86-windows-bitscan.patch
+        fix-x86-windows-bitscan.patch # kfrlib/kfr#279
 )
+
+# Use the minimp3 port instead of the bundled copy of minimp3
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/thirdparty/minimp3")
+file(COPY "${CURRENT_INSTALLED_DIR}/include/minimp3" DESTINATION "${SOURCE_PATH}/src/thirdparty")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
