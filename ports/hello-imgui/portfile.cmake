@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthom/hello_imgui
     REF "v${VERSION}"
-    SHA512 a81faf70a564147cf9c4587de54e46965b744ce93afadf7c9ce8a4868a9a584eea0c8f8df0c7f701e0404b4984f95ecfa3f5aa36a94ef2a84eaadbcc1e80c9b7
+    SHA512 73f7e20a8af57ddfc3cb415d68781c847ff1b4f5bfc24b30d397e61e8b51f5dd7122178ab620c17eec39f24bb587f249903cfcdba1912fe4bb4072732b9b1bad
     HEAD_REF master
     PATCHES
         cmake-config.diff
