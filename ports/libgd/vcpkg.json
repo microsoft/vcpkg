@@ -42,7 +42,10 @@
     "heif": {
       "description": "Support for HEIF",
       "dependencies": [
-        "libheif"
+        {
+          "name": "libheif",
+          "default-features": false
+        }
       ]
     },
     "jpeg": {
