@@ -152,7 +152,6 @@ eathread:x64-android=fail
 ecal:arm-neon-android=fail
 ecal:arm64-android=fail
 ecal:x64-android=fail
-ethindp-prism[core]=feature-fail
 faad2:arm64-linux=fail
 faiss:arm64-osx=fail # No openmp on default osx toolchain
 ffmpeg:arm64-linux=fail
