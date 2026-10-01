@@ -23,6 +23,7 @@ vcpkg_from_github(
         pkgconfig.patch
         same-install-rules-all-platforms.patch
         cmake4.patch
+        assimp-cxx17.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
