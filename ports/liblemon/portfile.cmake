@@ -34,9 +34,10 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/lemon/cmake PACKAGE_NAME lemon)
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    foreach(config IN ITEMS "" "debug/")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${config}lib/pkgconfig/lemon.pc" " -lemon" " -llemon")
-    endforeach()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lemon.pc" " -lemon" " -llemon")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lemon.pc" " -lemon" " -llemon")
+    endif()
 endif()
 
 file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
