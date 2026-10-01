@@ -84,4 +84,30 @@ if(BUILD_OPENNI2_BINDINGS)
 endif()
 
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(copyright_files
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/third-party/rapidxml/LICENSE"
+    "${SOURCE_PATH}/third-party/rapidxml/rapidxml_utils.hpp"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/header.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/datatypes.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/cpp_common_decl.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/macros.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/msgs/sensor_msgs/point_field_conversion.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/roslz4/include/roslz4/lz4s.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/roslz4/src/xxhash.h"
+)
+if(VCPKG_TARGET_IS_OSX)
+    # Upstream's aggregate notice contains the BSD license selected for HIDAPI.
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/NOTICE.md"
+        "${SOURCE_PATH}/third-party/hidapi/hidapi.h"
+    )
+endif()
+if(BUILD_TOOLS)
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/third-party/tclap/COPYING"
+        "${SOURCE_PATH}/third-party/tclap/include/tclap/MultiSwitchArg.h"
+        "${SOURCE_PATH}/third-party/tclap/include/tclap/ArgTraits.h"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
