@@ -55,4 +55,5 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/src/threadwrapper/LICENSE"
         "${SOURCE_PATH}/src/extras/getopt.h"
         "${SOURCE_PATH}/src/extras/libmd5.h"
+        "${SOURCE_PATH}/src/extras/libmd5.c"
 )
