@@ -8,10 +8,17 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tool   BUILD_KVAZAAR_BINARY
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DGIT_SUBMODULE=OFF
@@ -21,8 +28,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tools(TOOL_NAMES kvazaar AUTO_CLEAN)
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/kvazaar")
+if(BUILD_KVAZAAR_BINARY)
+    vcpkg_copy_tools(TOOL_NAMES kvazaar AUTO_CLEAN)
+endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(

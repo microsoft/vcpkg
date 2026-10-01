@@ -3,11 +3,18 @@
   "version": "2.3.2",
   "description": "An open-source HEVC encoder licensed under 3-clause BSD",
   "homepage": "https://github.com/ultravideo/kvazaar",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND BSD-2-Clause AND ISC AND LicenseRef-Public-Domain",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tool": {
+      "description": "Build kvazaar tool",
+      "supports": "!uwp",
+      "license": "BSD-2-Clause"
+    }
+  }
 }
