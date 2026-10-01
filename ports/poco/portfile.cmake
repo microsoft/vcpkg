@@ -67,6 +67,10 @@ if(NOT "mysql" IN_LIST FEATURES)
     # Use libmariadb even if libmysql happens to be installed
     list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_unofficial-libmysql=ON")
 endif()
+if(ENABLE_DATA_ODBC)
+    # Do not pick up an undeclared SQL Server driver header from the host.
+    list(APPEND FEATURE_OPTIONS "-D_msodbc_h:FILEPATH=")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -83,7 +87,7 @@ vcpkg_cmake_configure(
         -DENABLE_SAMPLES=OFF
         -DENABLE_APACHECONNECTOR=OFF
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}
-        -DENABLE_DATA_SQL_SERVER_BIG_STRINGS=${ENABLE_DATA_ODBC}
+        -DENABLE_DATA_SQL_SERVER_BIG_STRINGS=OFF
         # FastLogger would compile a bundled copy of quill into PocoFoundation
         -DENABLE_FASTLOGGER=OFF
     MAYBE_UNUSED_VARIABLES
@@ -154,4 +158,5 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/dependencies/tessil/include/Poco/ordered_hash.h"
         "${SOURCE_PATH}/dependencies/pcre2/src/pcre2_ucd.c"
+        "${SOURCE_PATH}/dependencies/wepoll/src/wepoll.h"
 )
