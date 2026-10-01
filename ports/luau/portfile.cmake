@@ -3,12 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO luau-lang/luau
-    REF ${VERSION}
-    SHA512 7db10d6fae15336642a2a4f9ec36c2b7ee195b30b0e34304551791719e9b83d88b6c151a4a36e7f2fded54a991caf84f9f789d5ebeb5eb15fa646f44dce9e96e
+    REF "${VERSION}"
+    SHA512 368f6055704e723371e6c315a114141541d5d06d702efedf8289bd495c6bb45410519b5e52bc49185cad9fdba99735702f418f844c6b284fafc77fdd2cd103de
     HEAD_REF master
     PATCHES
         cmake-config-export.patch
-        fix-unittest.patch
 )
 
 vcpkg_check_features(

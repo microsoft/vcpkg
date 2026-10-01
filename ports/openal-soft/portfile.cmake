@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
     REF ${VERSION}
-    SHA512 47eccb317ed6040c549f2b51d2d45afcdcd03d56d8cb0ea9ef8a98d2c61c9629ffad39596cffa2ad848dd3b65a227a6591406dc483ebd3a3e03bb0a4d0f112b1
+    SHA512 d3790aedce0bdb0b348b35f917dec0626de2486f5967c9160cf2d50d5c2a00ff264ff73133ac6a0aa9207e8e5042e5d4fcc663c1e733df8e733647e843c39b25
     HEAD_REF master
     PATCHES
-        pkgconfig-cxx.diff
-        devendor-fmt.diff
-        fix-fmt-header.patch
+        001-devendor-fmt.patch
+        002-fix-non-blocking.patch
+        003-fix-fmt-header.patch
+        004-fix-libcxx-compatibility.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -52,6 +53,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DALSOFT_ENABLE_MODULES=OFF
         -DALSOFT_CPUEXT_NEON=${ALSOFT_CPUEXT_NEON}
         -DALSOFT_EXAMPLES=OFF
         -DALSOFT_INSTALL_AMBDEC_PRESETS=OFF
@@ -81,6 +83,7 @@ vcpkg_cmake_configure(
         -DALSOFT_REQUIRE_OPENSL=${VCPKG_TARGET_IS_ANDROID}
         -DALSOFT_BACKEND_PORTAUDIO=OFF
         -DALSOFT_BACKEND_WAVE=ON
+        -DALSOFT_RTKIT=OFF
     MAYBE_UNUSED_VARIABLES
         # NOT WIN32
         ALSOFT_BACKEND_ALSA
@@ -88,6 +91,7 @@ vcpkg_cmake_configure(
         ALSOFT_BACKEND_OSS
         ALSOFT_BACKEND_SOLARIS
         ALSOFT_BACKEND_SNDIO
+        ALSOFT_RTKIT
         # WIN32
         ALSOFT_BACKEND_WINMM
         ALSOFT_BACKEND_DSOUND
@@ -110,7 +114,10 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(READ "${SOURCE_PATH}/common/pffft.cpp" pffft_license)
-string(REGEX REPLACE "[*]/.*" "*/\n" pffft_license "${pffft_license}")
-file(WRITE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pffft Notice" "${pffft_license}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pffft Notice")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/BSD-3Clause"
+    "${SOURCE_PATH}/LICENSE-pffft"
+    "${SOURCE_PATH}/core/bs2b.h"
+    "${SOURCE_PATH}/gsl/LICENSE"
+)

@@ -1,0 +1,90 @@
+diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
+index d8a8e76..e8fcc85 100644
+--- a/cmake/config.cmake.in
++++ b/cmake/config.cmake.in
+@@ -15,16 +15,16 @@ set(MUMPS_LAPACK_VENDOR @LAPACK_VENDOR@)
+ set(MUMPS_SCALAPACK_VENDOR @SCALAPACK_VENDOR@)
+ set(MUMPS_scalapack @MUMPS_scalapack@)
+ 
+-set(MUMPS_s_FOUND @BUILD_SINGLE@)
++set(unofficial-mumps-solver_s_FOUND @BUILD_SINGLE@)
+ set(MUMPS_SINGLE @BUILD_SINGLE@)
+ 
+-set(MUMPS_d_FOUND @BUILD_DOUBLE@)
++set(unofficial-mumps-solver_d_FOUND @BUILD_DOUBLE@)
+ set(MUMPS_DOUBLE @BUILD_DOUBLE@)
+ 
+-set(MUMPS_c_FOUND @BUILD_COMPLEX@)
++set(unofficial-mumps-solver_c_FOUND @BUILD_COMPLEX@)
+ set(MUMPS_COMPLEX @BUILD_COMPLEX@)
+ 
+-set(MUMPS_z_FOUND @BUILD_COMPLEX16@)
++set(unofficial-mumps-solver_z_FOUND @BUILD_COMPLEX16@)
+ set(MUMPS_COMPLEX16 @BUILD_COMPLEX16@)
+ 
+ if(MUMPS_parallel)
+@@ -46,13 +46,9 @@ else()
+   find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
+   find_dependency(BLAS)
+ 
+-  # This is used in place of find_dependency(MPI) in MUMPS when MUMPS_parallel is OFF
+-  # may not have ALIAS of ALIAS so we do INTERFACE IMPORTED of ALIAS
+-  add_library(MPI::MPI_C INTERFACE IMPORTED)
+-  target_link_libraries(MPI::MPI_C INTERFACE MUMPS::mpiseq_c)
+-
+-  add_library(MPI::MPI_Fortran INTERFACE IMPORTED)
+-  target_link_libraries(MPI::MPI_Fortran INTERFACE MUMPS::mpiseq_fortran)
++  # vcpkg: no global MPI::MPI_C or MPI::MPI_Fortran here. The exported targets
++  # reference the mpiseq stubs directly, and defining MPI:: targets breaks a
++  # repeated find_package() and any project that also uses a real MPI.
+ endif()
+ 
+ set(MUMPS_scotch @MUMPS_scotch@)
+@@ -89,6 +85,6 @@ if(MUMPS_openmp)
+ endif()
+ 
+ # all dependencies must be determined before this project's targets
+-include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake)
++include(${CMAKE_CURRENT_LIST_DIR}/@MUMPS_PACKAGE_NAME@-targets.cmake)
+ 
+-check_required_components(@PROJECT_NAME@)
++check_required_components(@MUMPS_PACKAGE_NAME@)
+diff --git a/cmake/install.cmake b/cmake/install.cmake
+index d6062b2..3af3a44 100644
+--- a/cmake/install.cmake
++++ b/cmake/install.cmake
+@@ -2,24 +2,29 @@
+ 
+ include(CMakePackageConfigHelpers)
+ 
++# vcpkg: this CMake package is not provided by MUMPS itself, so it is exported
++# under the unofficial- name as vcpkg requires.
++set(MUMPS_PACKAGE_NAME unofficial-mumps-solver)
++
+ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/config.cmake.in
+-${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
++${CMAKE_CURRENT_BINARY_DIR}/cmake/${MUMPS_PACKAGE_NAME}-config.cmake
+ INSTALL_DESTINATION cmake
+ )
+ 
+ write_basic_package_version_file(
+-${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
++${CMAKE_CURRENT_BINARY_DIR}/cmake/${MUMPS_PACKAGE_NAME}-config-version.cmake
+ COMPATIBILITY SameMajorVersion
+ )
+ 
+ install(EXPORT ${PROJECT_NAME}-targets
+-NAMESPACE ${PROJECT_NAME}::
++FILE ${MUMPS_PACKAGE_NAME}-targets.cmake
++NAMESPACE unofficial::mumps-solver::
+ DESTINATION cmake
+ )
+ 
+ install(FILES
+-${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+-${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
++${CMAKE_CURRENT_BINARY_DIR}/cmake/${MUMPS_PACKAGE_NAME}-config.cmake
++${CMAKE_CURRENT_BINARY_DIR}/cmake/${MUMPS_PACKAGE_NAME}-config-version.cmake
+ DESTINATION cmake
+ )
+ 

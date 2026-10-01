@@ -1,6 +1,6 @@
 {
   "name": "ki18n",
-  "version": "6.29.0",
+  "version": "6.30.0",
   "description": "Advanced internationalization framework",
   "homepage": "https://invent.kde.org/frameworks/ki18n",
   "documentation": "https://api.kde.org/ki18n-index.html",
@@ -29,6 +29,12 @@
     }
   ],
   "features": {
+    "iso-codes": {
+      "description": "Build with support of iso-codes",
+      "dependencies": [
+        "iso-codes"
+      ]
+    },
     "qml": {
       "description": "Build with support for scripted translations",
       "dependencies": [

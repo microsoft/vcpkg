@@ -7,9 +7,26 @@ vcpkg_from_github(
     SHA512 747bda9276c02a87511c2d3275ec8894db1b7b99dcc9ab9a48497659c2eb512c555cc5f5f2c0269b00237e7177aa3790a5c7cf635ee695f2d440f0ddcb8672ab
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Windows consumers not using CMake need to define SECP256K1_STATIC
+    # to prevent the public headers from declaring imported symbols.
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/include/secp256k1.h"
+        "#define SECP256K1_H"
+        "#define SECP256K1_H\n\n#define SECP256K1_STATIC"
+    )
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        recovery SECP256K1_ENABLE_MODULE_RECOVERY
+)
+
 vcpkg_cmake_configure(
-	SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
+        -DSECP256K1_VALGRIND=OFF
         -DSECP256K1_BUILD_BENCHMARK=OFF
         -DSECP256K1_BUILD_TESTS=OFF
         -DSECP256K1_BUILD_EXHAUSTIVE_TESTS=OFF

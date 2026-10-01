@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/SuiteSparse
-    REF v7.14.0
-    SHA512 4cd00b0625ef8081703139cf15c45c32a90e101bcd9c6ba38b87b988c2e76f51a73da0c312581b87e0892098c717d14782edfd6f19c92b0b0db196044cfe8337
+    REF v7.14.1
+    SHA512 7a3eba199f89bb6badcca93afbf792e09bb32df8c477ffc56d3d40b75adb1573bd2a3ffcd9d615d7718594f316a091d0b5bae00f78b853b5062f869661d61ae1
     HEAD_REF dev
     PATCHES
         001-dont-override-cuda-architectures.patch

@@ -1,0 +1,15 @@
+diff --git a/winpr/WinPRConfig.cmake.in b/winpr/WinPRConfig.cmake.in
+index 05d7732..580e0c4 100644
+--- a/winpr/WinPRConfig.cmake.in
++++ b/winpr/WinPRConfig.cmake.in
+@@ -4,8 +4,8 @@ if(NOT "@BUILD_SHARED_LIBS@")
+ 	if(NOT "@WITH_JSON_DISABLED@")
+ 	    if("@JSONC_FOUND@" AND NOT "@WITH_CJSON_REQUIRED@")
+ 	        find_dependency(JSONC)
+-	    elseif("@CJSON_FOUND@")
+-	        find_dependency(cJSON)
++	    elseif("@cJSON_FOUND@" OR "@WITH_CJSON_REQUIRED@")
++	        find_dependency(cJSON CONFIG)
+ 	    endif()
+ 	endif()
+ 

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b80f74acbc..47aff80f70 100644
+index 2a0af39..12afb7f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -10,9 +10,12 @@ endif()
@@ -15,7 +15,7 @@ index b80f74acbc..47aff80f70 100644
  
  if (WIN32)
    set(BUNGEE_EXPORT "__declspec(dllexport)")
-@@ -28,7 +32,7 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
+@@ -28,7 +31,7 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
  else()
    add_library(bungee_library STATIC ${BUNGEE_LIBRARY_HEADERS} ${BUNGEE_SOURCE_FILES})
  endif()  
@@ -24,7 +24,7 @@ index b80f74acbc..47aff80f70 100644
  target_compile_definitions(bungee_library PRIVATE
    BUNGEE_VISIBILITY=${BUNGEE_EXPORT}
    BUNGEE_SELF_TEST=${BUNGEE_SELF_TEST}
-@@ -38,27 +42,13 @@ target_compile_definitions(bungee_library PRIVATE
+@@ -38,30 +41,15 @@ target_compile_definitions(bungee_library PRIVATE
  )
  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp PROPERTIES COMPILE_DEFINITIONS BUNGEE_VERSION=\"${BUNGEE_VERSION}\")
  target_compile_options(bungee_library PRIVATE $<$<CXX_COMPILER_ID:GNU,Clang>:-fwrapv>)
@@ -53,28 +53,40 @@ index b80f74acbc..47aff80f70 100644
 -target_compile_options(pffft PRIVATE -ffast-math -fno-finite-math-only -fno-exceptions)
  
  # Installation
- if (BUNGEE_BUILD_SHARED_LIBRARY)
-@@ -76,34 +75,30 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
-       MACOSX_PACKAGE_LOCATION Headers/bungee
-     )
+-if (BUNGEE_BUILD_SHARED_LIBRARY)
+   if (BUNGEE_INSTALL_FRAMEWORK)
+     set_target_properties(bungee_library PROPERTIES
+       FRAMEWORK TRUE
+@@ -78,32 +66,21 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
    endif()
--  install(FILES 
--    ${BUNGEE_LIBRARY_HEADERS}
+   install(FILES 
+     ${BUNGEE_LIBRARY_HEADERS}
 -    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/bungee
--  )
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bungee
+   )
 -  install(TARGETS bungee_library bungee_executable
 -    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
 -    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
 -    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
 -    BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
 -    FRAMEWORK DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
--  )
++  install(TARGETS bungee_library
++    EXPORT unofficial-bungee-targets
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+   )
 -  install(FILES 
 -    cmd/main.cpp  
 -    submodules/cxxopts/include/cxxopts.hpp
--     DESTINATION ${CMAKE_INSTALL_PREFIX}/sample
--  )
--
+-    DESTINATION ${CMAKE_INSTALL_PREFIX}/sample
++  install(
++      EXPORT unofficial-bungee-targets
++      NAMESPACE unofficial::bungee::
++      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-bungee
+   )
+ 
 -get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)
 -
 -if (APPLE)
@@ -82,36 +94,28 @@ index b80f74acbc..47aff80f70 100644
 -  set(PKGCONFIG_LINK_FLAG "-framework ")
 -else()
 -  set(PKGCONFIG_LINK_PATH -L)
--  set(PKGCONFIG_LINK_FLAG "-I")
- endif()
--configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libbungee.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc @ONLY)
+-  set(PKGCONFIG_LINK_FLAG "-l")
+-endif()
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libbungee.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc @ONLY)
  
 -install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}/pkgconfig)
 -
 -endif()
-+install(FILES
-+  ${BUNGEE_LIBRARY_HEADERS}
-+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bungee
-+)
-+install(TARGETS bungee_library
-+  EXPORT unofficial-bungee-targets
-+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-+)
-+
-+install(
-+    EXPORT unofficial-bungee-targets
-+    NAMESPACE unofficial::bungee::
-+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-bungee
-+)
-+
-+get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)
-+
-+  set(PKGCONFIG_LINK_PATH -L)
-+  set(PKGCONFIG_LINK_FLAG "-l")
-+
-+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libbungee.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc @ONLY)
-+
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+diff --git a/libbungee.pc.in b/libbungee.pc.in
+index a121863..d21ca98 100644
+--- a/libbungee.pc.in
++++ b/libbungee.pc.in
+@@ -1,5 +1,10 @@
++prefix=${pcfiledir}/../..
++libdir=${prefix}/lib
++includedir=${prefix}/include
++
+ Name: bungee
+ Description: Bungee audio time-stretch and pitch-shift library
+ Version: @BUNGEE_VERSION@
+-Libs: @PKGCONFIG_LINK_PATH@${pcfiledir}/.. @PKGCONFIG_LINK_FLAG@@BUNGEE_LIBRARY_OUTPUT_NAME@
+-Cflags: -I${pcfiledir}/../../include
++Libs: -L${libdir} -lbungee
++Libs.private: -lpffft
++Cflags: -I${includedir}

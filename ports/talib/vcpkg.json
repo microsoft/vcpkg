@@ -1,8 +1,8 @@
 {
   "name": "talib",
-  "version-semver": "0.7.1",
+  "version-semver": "0.8.1",
   "description": "TA-Lib - Technical Analysis Library",
-  "homepage": "https://ta-lib.github.io/",
+  "homepage": "https://ta-lib.org/",
   "license": "BSD-3-Clause",
   "supports": "linux | osx | (windows & !uwp)",
   "dependencies": [

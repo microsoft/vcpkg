@@ -1,5 +1,5 @@
 diff --git a/cmake/llama-config.cmake.in b/cmake/llama-config.cmake.in
-index 90cbec5..884938f 100644
+index 6db7357..ade840c 100644
 --- a/cmake/llama-config.cmake.in
 +++ b/cmake/llama-config.cmake.in
 @@ -6,10 +6,10 @@ set(LLAMA_SHARED_LIB   @BUILD_SHARED_LIBS@)
@@ -7,12 +7,11 @@ index 90cbec5..884938f 100644
  
  set_and_check(LLAMA_INCLUDE_DIR "@PACKAGE_LLAMA_INCLUDE_INSTALL_DIR@")
 -set_and_check(LLAMA_LIB_DIR     "@PACKAGE_LLAMA_LIB_INSTALL_DIR@")
--set_and_check(LLAMA_BIN_DIR     "@PACKAGE_LLAMA_BIN_INSTALL_DIR@")
-+#set_and_check(LLAMA_LIB_DIR     "@PACKAGE_LLAMA_LIB_INSTALL_DIR@")
-+#set_and_check(LLAMA_BIN_DIR     "@PACKAGE_LLAMA_BIN_INSTALL_DIR@")
+ set(LLAMA_BIN_DIR "@PACKAGE_LLAMA_BIN_INSTALL_DIR@")
  
 -find_package(ggml REQUIRED HINTS ${LLAMA_LIB_DIR}/cmake)
-+find_package(ggml REQUIRED CONFIG)
++include(CMakeFindDependencyMacro)
++find_dependency(ggml CONFIG)
  
  find_library(llama_LIBRARY llama
      REQUIRED
@@ -24,10 +23,10 @@ index 90cbec5..884938f 100644
  add_library(llama UNKNOWN IMPORTED)
  set_target_properties(llama
      PROPERTIES
-@@ -26,5 +27,6 @@ set_target_properties(llama
-         IMPORTED_LOCATION "${llama_LIBRARY}"
+@@ -27,4 +28,6 @@ set_target_properties(llama
          INTERFACE_COMPILE_FEATURES c_std_90
          POSITION_INDEPENDENT_CODE ON)
-+endif()
  
++endif()
++
  check_required_components(Llama)

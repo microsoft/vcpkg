@@ -1,22 +1,25 @@
 {
   "name": "apsi",
-  "version-semver": "0.11.0",
-  "port-version": 3,
+  "version-semver": "1.0.1",
   "description": "APSI is a research library for asymmetric private set intersection.",
   "homepage": "https://github.com/microsoft/APSI",
-  "license": "MIT",
+  "license": "MIT AND Zlib",
   "dependencies": [
     "flatbuffers",
-    "jsoncpp",
+    {
+      "name": "jsoncpp",
+      "version>=": "1.9.5"
+    },
     "kuku",
+    "ms-gsl",
     {
       "name": "seal",
       "default-features": false,
       "features": [
-        "ms-gsl",
         "no-throw-tran",
         "zstd"
-      ]
+      ],
+      "version>=": "4.4.5"
     },
     {
       "name": "vcpkg-cmake",
@@ -28,7 +31,6 @@
     }
   ],
   "default-features": [
-    "log4cplus",
     "zeromq"
   ],
   "features": {
@@ -42,12 +44,6 @@
           ],
           "platform": "x64"
         }
-      ]
-    },
-    "log4cplus": {
-      "description": "Use log4cplus for logging.",
-      "dependencies": [
-        "log4cplus"
       ]
     },
     "zeromq": {

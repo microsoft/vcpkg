@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c265436..14867ca 100644
+index 1caea39..6f86bc1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -10,9 +10,9 @@ set(CMAKE_CXX_STANDARD 20)
+@@ -10,9 +10,9 @@ project(slick-stream-buffer-multiplexer
  # Options:
  option(BUILD_SLICK_STREAM_BUFFER_MULTIPLEXER_TESTS "Build tests" ${PROJECT_IS_TOP_LEVEL})
  
--find_package(slick-stream-buffer 1.0.5 CONFIG QUIET)
+-find_package(slick-stream-buffer 2.0.0 CONFIG QUIET)
 +find_package(slick-stream-buffer CONFIG REQUIRED)
  
 -if (NOT slick-stream-buffer_FOUND)
@@ -15,10 +15,10 @@ index c265436..14867ca 100644
  
      # Disable slick-stream-buffer tests and examples, but allow installation
 @@ -27,9 +27,9 @@ else()
-     message(STATUS "slick-stream-buffer: ${slick-stream-buffer_VERSION}")
+     message(STATUS "Found slick-stream-buffer ${slick-stream-buffer_VERSION}: ${slick-stream-buffer_DIR}")
  endif()
  
--find_package(slick-queue 1.5.0 CONFIG QUIET)
+-find_package(slick-queue 2.0.0 CONFIG QUIET)
 +find_package(slick-queue CONFIG REQUIRED)
  
 -if (NOT slick-queue_FOUND)
@@ -27,28 +27,17 @@ index c265436..14867ca 100644
  
      # Disable slick-queue tests and examples, but allow installation
 diff --git a/cmake/slick-stream-buffer-multiplexerConfig.cmake.in b/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
-index b7f5032..96461bf 100644
+index cb98a71..abc7e79 100644
 --- a/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
 +++ b/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
-@@ -3,8 +3,8 @@
- # Find dependencies
+@@ -8,8 +8,8 @@
+ # this package was built and installed against. A missing dependency is reported as a hard error
+ # instead. Mirrors what slick-stream-buffer and slick-queue do in their own config files.
  include(CMakeFindDependencyMacro)
- 
--find_dependency(slick-stream-buffer 1.0.5 CONFIG QUIET)
--if (NOT slick-stream-buffer_FOUND)
+-find_dependency(slick-stream-buffer 2.0.0 CONFIG)
+-find_dependency(slick-queue 2.0.0 CONFIG)
 +find_dependency(slick-stream-buffer CONFIG)
-+if (FALSE)
-     include(FetchContent)
- 
-     set(BUILD_SLICK_STREAM_BUFFER_TESTS OFF CACHE BOOL "" FORCE)
-@@ -16,8 +16,8 @@ if (NOT slick-stream-buffer_FOUND)
-     FetchContent_MakeAvailable(slick-stream-buffer)
- endif()
- 
--find_dependency(slick-queue 1.5.0 CONFIG QUIET)
--if (NOT slick-queue_FOUND)
 +find_dependency(slick-queue CONFIG)
-+if (FALSE)
-     include(FetchContent)
  
-     set(BUILD_SLICK_QUEUE_TESTS OFF CACHE BOOL "" FORCE)
+ include("${CMAKE_CURRENT_LIST_DIR}/slick-stream-buffer-multiplexerTargets.cmake")
+ 

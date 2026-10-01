@@ -20,7 +20,7 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: PrWin-WUS
-    demands: ImageVersionOverride -equals 2026.08.13
+    demands: ImageVersionOverride -equals 2026.09.08
   timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
@@ -101,14 +101,14 @@ jobs:
       targetType: inline
       script: |
         cd scripts/azure-pipelines/owners-db
-        npm ci -s
+        npm ci -s --omit=dev
         if ($env:BUILD_REASON -eq 'PullRequest') {
           Write-Host 'Running file_script_from_cache for PR'
           $blob = "https://vcpkgbinarycachewus.blob.core.windows.net/cache?$env:BCACHE_SAS_TOKEN"
-          npx --yes ts-node ./file_script_from_cache.ts --pr-hashes "$env:BUILD_ARTIFACTSTAGINGDIRECTORY/pr-hashes.json" --blob-base-url "$blob" --target-branch "origin/master" --out-dir ../../list_files
+          npx --yes tsx ./file_script_from_cache.ts --pr-hashes "$env:BUILD_ARTIFACTSTAGINGDIRECTORY/pr-hashes.json" --blob-base-url "$blob" --target-branch "origin/master" --out-dir ../../list_files
         } else {
           Write-Host 'Running file_script for CI'
-          npx --yes ts-node ./file_script.ts --info-dir D:\installed\vcpkg\info\ --out-dir ../../list_files
+          npx --yes tsx ./file_script.ts --info-dir D:\installed\vcpkg\info\ --out-dir ../../list_files
         }
       pwsh: true
     env:
