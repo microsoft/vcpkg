@@ -9742,7 +9742,7 @@
     },
     "sqlgen": {
       "baseline": "0.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlite-flux": {
       "baseline": "1.1.1",
