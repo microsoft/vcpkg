@@ -2,6 +2,7 @@
   "name": "sf2cute",
   "version-date": "2026-03-21",
   "description": "C++14 Library for SoundFont 2",
+  "license": "Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
