@@ -292,6 +292,10 @@
         "libjxl"
       ]
     },
+    "kleidicv": {
+      "description": "Use the ARM KleidiCV acceleration library",
+      "supports": "arm64 & !windows"
+    },
     "msmf": {
       "description": "Microsoft Media Foundation support for opencv",
       "supports": "windows & !uwp & !mingw"
@@ -381,6 +385,7 @@
     "python": {
       "description": "Python wrapper support for opencv",
       "dependencies": [
+        "dlpack",
         {
           "name": "python3",
           "default-features": false,

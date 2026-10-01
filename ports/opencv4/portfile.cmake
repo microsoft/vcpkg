@@ -23,12 +23,13 @@ vcpkg_from_github(
       0025-fix-cuda-host-std-flag-forwarding.patch
       0026-cuda-msvc-preprocessor.patch
       0028-ffmpeg9-support.patch
+      0029-dlpack-find-package.patch
+      0030-kleidicv-install-license.patch
 )
 
 # Disallow accidental build of vendored copies
 file(GLOB third_party "${SOURCE_PATH}/3rdparty/*")
 list(FILTER third_party EXCLUDE REGEX "/ippicv\$")
-list(FILTER third_party EXCLUDE REGEX "/dlpack\$")
 file(REMOVE_RECURSE ${third_party})
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
@@ -106,6 +107,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
  "jpegxl"     WITH_JPEGXL
+ "kleidicv"   WITH_KLEIDICV
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
@@ -177,16 +179,7 @@ if("cuda" IN_LIST FEATURES)
   )
 endif()
 
-# ARM KleidiCV HAL.
-# OpenCV >= 4.14.0 raises this from an Android-only extra to the general ARM HAL:
-#   OCV_OPTION(WITH_KLEIDICV ... (NOT CV_DISABLE_OPTIMIZATION)
-#     VISIBLE_IF (AARCH64 AND (ANDROID OR UNIX)))
-# so on every AArch64 target it defaults to ON and hal/kleidicv/kleidicv.cmake
-# fetches kleidicv-${KLEIDICV_SRC_COMMIT} at configure time, which the port
-# forbids (0001-disable-downloading.patch). The pinned commit is 26.03 and the
-# cache key must match the HASH that OpenCV passes to ocv_download, otherwise
-# the download is not recognised and configure still fails.
-if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
+if("kleidicv" IN_LIST FEATURES)
   vcpkg_download_distfile(OCV_DOWNLOAD
     URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/26.03/kleidicv-26.03.tar.gz"
     FILENAME "opencv-cache/kleidicv/b85a745bfe0e87e67e30be9533eb6b24-kleidicv-26.03.tar.gz"
