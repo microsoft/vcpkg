@@ -82,7 +82,7 @@ vcpkg_build_nmake(
     PREFER_JOM
     CL_LANGUAGE NONE
     PRERUN_SHELL_RELEASE "${PERL}" Configure
-        ${CONFIGURE_OPTIONS} 
+        ${CONFIGURE_OPTIONS}
         ${OPENSSL_ARCH}
         "AS=${as}"
         "CC=${cc}"
