@@ -272,7 +272,6 @@ elements:arm64-linux=cascade
 ensmallen:arm64-linux=cascade
 ensmallen[openmp]:arm64-osx=feature-fails # No openmp on default osx toolchain
 entt[experimental]=skip # required head build
-ethindp-prism[core]=fail
 f3d:arm64-linux=cascade
 faad2:arm64-linux=fail
 faiss:arm64-osx=fail # No openmp on default osx toolchain
