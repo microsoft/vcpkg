@@ -36,8 +36,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/tools"
 )
 
-vcpkg_install_copyright(
-    FILE_LIST
-        "${SOURCE_PATH}/LICENSE-APACHE"
-        "${SOURCE_PATH}/LICENSE-MIT"
+set(COPYRIGHT_FILES
+    "${SOURCE_PATH}/LICENSE-APACHE"
+    "${SOURCE_PATH}/LICENSE-MIT"
+    "${SOURCE_PATH}/include/simdutf/internal/isadetection.h"
 )
+if("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND COPYRIGHT_FILES "${CURRENT_INSTALLED_DIR}/share/libiconv/copyright")
+endif()
+vcpkg_install_copyright(FILE_LIST ${COPYRIGHT_FILES})
