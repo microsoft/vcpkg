@@ -8,7 +8,7 @@
     "concurrentqueue",
     "fmt",
     {
-      "name": "glib",
+      "name": "glibmm",
       "platform": "linux | freebsd | openbsd"
     },
     {
