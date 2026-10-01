@@ -1,0 +1,31 @@
+diff --git a/cmake/OpenCVDetectCUDA.cmake b/cmake/OpenCVDetectCUDA.cmake
+index c2179da..1023a44 100644
+--- a/cmake/OpenCVDetectCUDA.cmake
++++ b/cmake/OpenCVDetectCUDA.cmake
+@@ -67,6 +67,9 @@ include(cmake/OpenCVDetectCUDAUtils.cmake)
+ 
+ if(WITH_NVCUVID OR WITH_NVCUVENC)
+   set(cuda_toolkit_dirs "${CUDA_TOOLKIT_TARGET_DIR}" "${CUDA_TOOLKIT_ROOT_DIR}")
++  if(NVIDIA_VIDEO_CODEC_SDK_DIR)
++    set(cuda_toolkit_dirs "${NVIDIA_VIDEO_CODEC_SDK_DIR}" ${cuda_toolkit_dirs})
++  endif()
+   ocv_check_for_nvidia_video_codec_sdk("${cuda_toolkit_dirs}")
+ endif()
+ 
+diff --git a/cmake/OpenCVDetectCUDALanguage.cmake b/cmake/OpenCVDetectCUDALanguage.cmake
+index bc40134..d691384 100644
+--- a/cmake/OpenCVDetectCUDALanguage.cmake
++++ b/cmake/OpenCVDetectCUDALanguage.cmake
+@@ -72,7 +72,11 @@ if(WITH_CUDNN)
+ endif()
+ 
+ if(WITH_NVCUVID OR WITH_NVCUVENC)
+-  ocv_check_for_nvidia_video_codec_sdk("${CUDAToolkit_LIBRARY_ROOT}")
++  set(cuda_toolkit_dirs "${CUDAToolkit_LIBRARY_ROOT}")
++  if(NVIDIA_VIDEO_CODEC_SDK_DIR)
++    set(cuda_toolkit_dirs "${NVIDIA_VIDEO_CODEC_SDK_DIR}" ${cuda_toolkit_dirs})
++  endif()
++  ocv_check_for_nvidia_video_codec_sdk("${cuda_toolkit_dirs}")
+ endif()
+ 
+ ocv_check_for_cmake_cuda_architectures()
