@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     # configure_file() writes include/blasfeo_target.h into the source tree
