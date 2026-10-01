@@ -10885,7 +10885,7 @@
       "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "vulkan-loader": {
