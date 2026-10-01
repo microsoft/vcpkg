@@ -9321,8 +9321,8 @@
       "port-version": 2
     },
     "sf2cute": {
-      "baseline": "0.2.0",
-      "port-version": 4
+      "baseline": "2026-03-20",
+      "port-version": 0
     },
     "sfcgal": {
       "baseline": "2.3.0",

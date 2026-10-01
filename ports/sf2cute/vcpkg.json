@@ -1,7 +1,6 @@
 {
   "name": "sf2cute",
-  "version": "0.2.0",
-  "port-version": 4,
+  "version-date": "2026-03-20",
   "description": "C++14 Library for SoundFont 2",
   "dependencies": [
     {
