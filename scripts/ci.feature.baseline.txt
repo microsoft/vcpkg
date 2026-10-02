@@ -888,6 +888,7 @@ opencv3[world]=skip # fails in combinations with "viz"
 opencv4[ade,aravis,calib3d,carotene,contrib,eigen,ffmpeg,freetype,fs,gapi,gdcm,gstreamer,hdf,highgui,intrinsics](!linux & !(arm64 & android))=no-separate-feature-test # a-i
 opencv4[aravis]:arm64-linux=cascade
 opencv4[aravis](xbox)=cascade
+opencv4[core,ade,aravis,calib3d,carotene,contrib,cuda,cudnn,directml,dnn,dnn-cuda,dshow,eigen,ffmpeg,freetype,fs,gapi,gdcm,gstreamer,hdf,highgui,intrinsics,ipp,jpeg,jpegxl,msmf,nonfree,opencl,openexr,openjpeg,openmp,openvino,png,python,qt,quality,quirc,rgbd,sfm,text,thread,tiff,vtk,vulkan,webp,win32ui]:x64-windows-static-md=combination-fails
 opencv4[core,cuda,world](windows)=options
 opencv4[cuda]:arm64-linux=cascade
 opencv4[cuda](!((windows & x64 & !xbox) | (linux & x64) | (linux & arm64)))=cascade
