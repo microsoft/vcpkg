@@ -1,0 +1,11 @@
+{
+  "name": "fcftest-test",
+  "version": "1.2.6",
+  "description": "Integration tests for the fcfTest library",
+  "homepage": "https://github.com/fcf-framework/fcfTest",
+  "dependencies": [
+    "fcftest",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}

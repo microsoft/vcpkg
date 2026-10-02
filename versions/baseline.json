@@ -3052,6 +3052,10 @@
       "baseline": "1.2.6",
       "port-version": 0
     },
+    "fcftest-test": {
+      "baseline": "1.2.6",
+      "port-version": 0
+    },
     "fcl": {
       "baseline": "0.7.0",
       "port-version": 5
