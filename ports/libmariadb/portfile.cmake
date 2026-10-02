@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
     REF "v${VERSION}"
-    SHA512 7283ade71a80fb577558e36405621c51caf268ea96b501c9d98c1bb40c474e037a66fccca61a274b358ee2dbb5133e2458cb12dda3a349a3390ef40eb9f3c4b1
+    SHA512 47d6fa55a9d562c11fdf9783972d0f745236e8d671db90cf132fa6d9cf9c4761f6ac03b14cd7eefb97d339603b903e19409b5bce56a1b5463e4c2479fb3b096f
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
@@ -65,11 +65,11 @@ vcpkg_cmake_configure(
         -DCLIENT_PLUGIN_MYSQL_CLEAR_PASSWORD=${plugin_type}
         -DCLIENT_PLUGIN_MYSQL_OLD_PASSWORD=OFF
         -DCLIENT_PLUGIN_SHA256_PASSWORD=${plugin_type}
-        # plugins/compress 
+        # plugins/compress
         -DCLIENT_PLUGIN_ZSTD=${zstd_plugin_type}
         # don't add system include dirs
         -DAUTH_GSSAPI_PLUGIN_TYPE=OFF
-        -DREMOTEIO_PLUGIN_TYPE=OFF 
+        -DREMOTEIO_PLUGIN_TYPE=OFF
     MAYBE_UNUSED_VARIABLES
         AUTH_GSSAPI_PLUGIN_TYPE
         CLIENT_PLUGIN_AUTH_GSSAPI_CLIENT
@@ -82,11 +82,10 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
 vcpkg_fixup_pkgconfig()
 
 set(link_lib " -lmariadb")
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(link_lib " -llibmariadb")
-endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(APPEND link_lib "client")
+    set(link_lib " -lmariadbclient")
+elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(link_lib " -llibmariadb")
 endif()
 if(NOT link_lib STREQUAL " -lmariadb")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmariadb.pc" " -lmariadb" "${link_lib}")
