@@ -26,6 +26,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libdwarf")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES dwarfdump AUTO_CLEAN)
+file(COPY_FILE "${CURRENT_PACKAGES_DIR}/share/libdwarf/dwarfdump.conf" "${CURRENT_PACKAGES_DIR}/tools/libdwarf/dwarfdump.conf")
 
 if(BUILD_STATIC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libdwarf/libdwarf.h" "ifndef LIBDWARF_STATIC" "if 0")
@@ -48,5 +49,6 @@ vcpkg_install_copyright(FILE_LIST
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dwarfdump COPYING"
     "${SOURCE_PATH}/src/bin/dwarfdump/DWARFDUMPCOPYRIGHT"
     "${SOURCE_PATH}/src/bin/dwarfdump/GPL.txt"
+    "${SOURCE_PATH}/src/bin/dwarfdump/dd_getopt.h"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/dwarfgen COPYING"
 )
