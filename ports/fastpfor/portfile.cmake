@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         remove-cpm.patch
         fix-arm-checker.patch
+        fix-windows-namespace.patch
 )
 
 file(REMOVE
