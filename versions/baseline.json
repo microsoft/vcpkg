@@ -9432,6 +9432,10 @@
       "baseline": "2020-06-14",
       "port-version": 2
     },
+    "simple-websocket-server": {
+      "baseline": "2.0.2",
+      "port-version": 0
+    },
     "simpleamqpclient": {
       "baseline": "2.5.1",
       "port-version": 0
