@@ -10,9 +10,9 @@ set(TEST_CMAKE_FILE "${SOURCE_PATH}/test/CMakeLists.txt")
 file(READ "${TEST_CMAKE_FILE}" CMAKE_CONTENTS)
 
 # Robustly remove target_include_directories using regex and append proper integration
-string(REGEX REPLACE 
-    "target_include_directories\\s*\\(\\s*fcf-test-test[^\\)]*\\)" 
-    "" 
+string(REGEX REPLACE
+    "target_include_directories\\s*\\(\\s*fcf-test-test[^\\)]*\\)"
+    ""
     CMAKE_CONTENTS "${CMAKE_CONTENTS}"
 )
 
