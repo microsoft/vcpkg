@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d6ae962..a6ea44d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -140,6 +140,14 @@ set(RE2_HEADERS
+     re2/re2.h
+     re2/set.h
+     re2/stringpiece.h
++
++    # low-level headers that are not part of the public API but are needed for other google libraries that depend on RE2, such as fuzztest.
++    #see: https://github.com/google/fuzztest/blob/b73724d4866c22d9b64c152a2d7ac22c7ca94168/fuzztest/internal/domains/regexp_dfa.cc
++    re2/prog.h
++    re2/regexp.h
++    re2/pod_array.h
++    re2/sparse_array.h
++    re2/sparse_set.h
+     )
+ 
+ add_library(re2 ${RE2_SOURCES})
+@@ -259,6 +267,7 @@ if(RE2_INSTALL)
+           FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re2
+           INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++  install(FILES util/utf.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/re2/util)
+   install(EXPORT re2Targets
+           DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/re2
+           NAMESPACE re2::)
