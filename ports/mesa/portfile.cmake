@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         001-windows-gles-dispatch.patch
+        002-fix-lavapipe-msvc-release.patch # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/44850
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako pyyaml)
@@ -56,7 +57,17 @@ if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURE
     )
 endif()
 
-if("llvm" IN_LIST FEATURES OR VCPKG_TARGET_IS_WINDOWS)
+if("lavapipe" IN_LIST FEATURES)
+    list(APPEND MESA_ADDITIONAL_BINARIES
+        "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
+    )
+    list(APPEND MESA_OPTIONS
+        -Dvulkan-drivers=['swrast']
+        -Dvulkan-manifest-per-architecture=false
+    )
+endif()
+
+if("llvm" IN_LIST FEATURES OR "lavapipe" IN_LIST FEATURES OR VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
     set(LLVM_CONFIG_DEBUG_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-debug.ini")
     set(LLVM_CONFIG_RELEASE_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-release.ini")
@@ -176,6 +187,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
     endif()
+endif()
+
+if("lavapipe" IN_LIST FEATURES)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/lavapipe-usage"
+         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+         RENAME usage)
 endif()
 
 vcpkg_install_copyright(
