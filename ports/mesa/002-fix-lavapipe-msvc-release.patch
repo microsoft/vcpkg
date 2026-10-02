@@ -1,5 +1,5 @@
-﻿diff --git a/src/gallium/frontends/lavapipe/nir/lvp_nir_lower_cooperative_matrix.c b/src/gallium/frontends/lavapipe/nir/lvp_nir_lower_cooperative_matrix.c
-index 474a260..20aaccb 100644
+diff --git a/src/gallium/frontends/lavapipe/nir/lvp_nir_lower_cooperative_matrix.c b/src/gallium/frontends/lavapipe/nir/lvp_nir_lower_cooperative_matrix.c
+index 474a26010af..20aaccb969e 100644
 --- a/src/gallium/frontends/lavapipe/nir/lvp_nir_lower_cooperative_matrix.c
 +++ b/src/gallium/frontends/lavapipe/nir/lvp_nir_lower_cooperative_matrix.c
 @@ -453,14 +453,13 @@ static bool

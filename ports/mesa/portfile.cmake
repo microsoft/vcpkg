@@ -13,7 +13,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         001-windows-gles-dispatch.patch
-        002-fix-lavapipe-msvc-release.patch
+        002-fix-lavapipe-msvc-release.patch # https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/44850
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako pyyaml)
