@@ -1,0 +1,14 @@
+{
+  "name": "argobots",
+  "version": "1.2",
+  "description": "A lightweight low-level threading and tasking framework",
+  "homepage": "https://www.argobots.org/",
+  "license": "BSD-3-Clause",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}
