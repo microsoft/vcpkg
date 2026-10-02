@@ -10,7 +10,7 @@
   ],
   "features": {
     "boost-asio": {
-      "description": "Enable Boost.Asio as the WebSocket backend",
+      "description": "Add the Boost.Asio dependency for consumers using the Boost.Asio backend",
       "dependencies": [
         "boost-asio"
       ]
