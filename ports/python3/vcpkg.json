@@ -3,7 +3,7 @@
   "version": "3.14.8",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
-  "license": "Python-2.0",
+  "license": "Python-2.0 AND MIT",
   "supports": "!uwp & !mingw",
   "dependencies": [
     {

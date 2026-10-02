@@ -348,7 +348,11 @@ else()
     endif()
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/Modules/_hacl/Hacl_Hash_SHA2.h"
+    "${SOURCE_PATH}/Modules/_hacl/include/krml/internal/target.h"
+)
 
 file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
 if(VCPKG_TARGET_IS_WINDOWS)
