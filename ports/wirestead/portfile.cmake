@@ -26,7 +26,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME wirestead
     CONFIG_PATH "lib/cmake/wirestead"
-    DO_NOT_DELETE_PARENT_CONFIG_PATH
 )
 
 vcpkg_fixup_pkgconfig()
