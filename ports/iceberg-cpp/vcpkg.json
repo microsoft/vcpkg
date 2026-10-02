@@ -1,6 +1,7 @@
 {
   "name": "iceberg-cpp",
   "version": "0.4.0",
+  "port-version": 1,
   "description": "C++ implementation of Apache Iceberg",
   "homepage": "https://github.com/apache/iceberg-cpp",
   "license": "Apache-2.0",

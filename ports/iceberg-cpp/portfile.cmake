@@ -36,6 +36,9 @@ vcpkg_cmake_configure(
         -DICEBERG_SPDLOG=ON
         -DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=ALWAYS
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_zstd=OFF
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_zstd
 )
 
 vcpkg_cmake_install()
