@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 043a0d3a81790ae3f3fe5b01be20f45c0e81fc0757689075fbccb953861293199cb4947f7761c234ed8b635b85bf2e27a77f7487364a0f1b7496d58d8c96233c
     HEAD_REF master
+    PATCHES
+        fix-version.patch
 )
 
 vcpkg_cmake_configure(
@@ -13,6 +15,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/flatbush)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # The configured FLATBUSH_SPAN setting must also apply to consumers that include the header directly.
