@@ -33,6 +33,7 @@ vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-dependency-tracking
+        --disable-sphinx
         "--with-hwloc=${CURRENT_INSTALLED_DIR}"
         "--with-hwloc-libdir=${CURRENT_INSTALLED_DIR}/lib"
         "--with-libevent=${CURRENT_INSTALLED_DIR}"
