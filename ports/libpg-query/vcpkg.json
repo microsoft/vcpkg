@@ -1,12 +1,12 @@
 {
   "name": "libpg-query",
-  "version": "18.0.0",
+  "version": "18.1.0",
   "description": "C library for accessing the PostgreSQL parser outside of the server",
   "homepage": "https://github.com/pganalyze/libpg_query",
   "license": "BSD-3-Clause",
   "supports": "!android",
   "dependencies": [
-    "protobuf-c",
+    "utf8-range",
     {
       "name": "vcpkg-make",
       "host": true
