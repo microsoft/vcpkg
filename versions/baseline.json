@@ -8318,7 +8318,7 @@
     },
     "qt3d": {
       "baseline": "6.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5": {
       "baseline": "5.15.19",
@@ -8506,7 +8506,7 @@
     },
     "qtbase": {
       "baseline": "6.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.11.2",
