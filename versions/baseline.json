@@ -3073,7 +3073,7 @@
       "port-version": 0
     },
     "ffnvcodec": {
-      "baseline": "13.0.19.0",
+      "baseline": "13.1.15.0",
       "port-version": 0
     },
     "fftw3": {
