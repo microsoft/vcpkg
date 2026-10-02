@@ -3,7 +3,7 @@
   "version": "1.43",
   "description": "The QuantLib C++ library",
   "homepage": "https://www.quantlib.org/",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND Minpack",
   "supports": "!(windows & !static)",
   "dependencies": [
     "boost-accumulators",

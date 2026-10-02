@@ -33,5 +33,8 @@ endif()
 # Install custom usage
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.TXT"
+    "${SOURCE_PATH}/ql/math/optimization/lmdif.cpp"
+    "${SOURCE_PATH}/ql/math/randomnumbers/mt19937uniformrng.cpp"
+)
