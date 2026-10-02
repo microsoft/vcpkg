@@ -75,6 +75,7 @@
     },
     "libavif-dav1d": {
       "description": "Support for AVIF decoding using the dav1d codec",
+      "supports": "!((android | linux) & !static)",
       "dependencies": [
         {
           "name": "libavif",
