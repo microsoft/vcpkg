@@ -1,0 +1,96 @@
+{
+  "name": "iceberg-cpp",
+  "version": "0.4.0",
+  "description": "C++ implementation of Apache Iceberg",
+  "homepage": "https://github.com/apache/iceberg-cpp",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "nanoarrow",
+    "nlohmann-json",
+    "roaring",
+    "spdlog",
+    "utf8proc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "bundle"
+  ],
+  "features": {
+    "bundle": {
+      "description": "Build the bundle library with Arrow, Parquet and Avro file format support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "filesystem",
+            "json",
+            "parquet"
+          ]
+        },
+        "avro-cpp"
+      ]
+    },
+    "rest": {
+      "description": "Build the REST catalog client",
+      "dependencies": [
+        "cpr"
+      ]
+    },
+    "s3": {
+      "description": "Build with S3 file IO support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "s3"
+          ]
+        },
+        {
+          "name": "aws-sdk-cpp",
+          "default-features": false,
+          "features": [
+            "config",
+            "identity-management",
+            "s3",
+            "sts",
+            "transfer"
+          ]
+        },
+        {
+          "name": "iceberg-cpp",
+          "default-features": false,
+          "features": [
+            "bundle"
+          ]
+        }
+      ]
+    },
+    "sigv4": {
+      "description": "Build SigV4 request signing for the REST catalog client",
+      "dependencies": [
+        {
+          "name": "aws-sdk-cpp",
+          "default-features": false
+        },
+        {
+          "name": "iceberg-cpp",
+          "default-features": false,
+          "features": [
+            "rest"
+          ]
+        }
+      ]
+    }
+  }
+}
