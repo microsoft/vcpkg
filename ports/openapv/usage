@@ -1,0 +1,9 @@
+openapv provides CMake targets:
+
+  find_package(oapv CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE oapv)
+
+openapv provides pkg-config modules:
+
+  # OpenAPV library
+  oapv

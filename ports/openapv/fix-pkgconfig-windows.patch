@@ -1,0 +1,33 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0000000..1111111 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -163,24 +163,24 @@ if(OAPV_BUILD_SHARED_LIB)
+   set_target_properties(${LIB_NAME_BASE}_dynamic PROPERTIES PUBLIC_HEADER "${OAPV_PUBLIC_HEADERS}")
+   install(TARGETS ${LIB_NAME_BASE}_dynamic
+           RUNTIME COMPONENT Libraries DESTINATION ${CMAKE_INSTALL_BINDIR}
+           LIBRARY
+             COMPONENT Libraries DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             NAMELINK_COMPONENT Development DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-          ARCHIVE COMPONENT Development DESTINATION ${CMAKE_INSTALL_LIBDIR}/${LIB_NAME_BASE}/import
++          ARCHIVE COMPONENT Development DESTINATION ${CMAKE_INSTALL_LIBDIR}
+           PUBLIC_HEADER COMPONENT Development DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME_BASE}
+   )
+ 
+   install(FILES
+     ${PROJECT_BINARY_DIR}/include/oapv/oapv_exports.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${LIB_NAME_BASE}
+   )
+ endif()
+ 
+-if(NOT MSVC)
++if(TRUE)
+     if(OAPV_BUILD_SHARED_LIB)
+         set(EXTRA_CFLAGS "")
+         set(EXTRA_CFLAGS_PRIVATE "-DOAPV_STATIC_DEFINE")
+     else()
+         set(EXTRA_CFLAGS "-DOAPV_STATIC_DEFINE")
+         set(EXTRA_CFLAGS_PRIVATE "")
+     endif()
+     configure_file(
+
+
