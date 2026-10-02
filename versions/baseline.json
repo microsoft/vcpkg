@@ -121,7 +121,7 @@
       "port-version": 0
     },
     "amd-amf": {
-      "baseline": "1.5.2",
+      "baseline": "1.5.3",
       "port-version": 0
     },
     "ampl-asl": {
@@ -477,7 +477,7 @@
       "port-version": 0
     },
     "aws-c-common": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "aws-c-compression": {
@@ -509,7 +509,7 @@
       "port-version": 0
     },
     "aws-checksums": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "aws-crt-cpp": {
@@ -641,8 +641,8 @@
       "port-version": 1
     },
     "backward-cpp": {
-      "baseline": "2023-11-24",
-      "port-version": 1
+      "baseline": "2025-04-14",
+      "port-version": 0
     },
     "baresip-libre": {
       "baseline": "4.10.0",
@@ -3029,7 +3029,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "26.9",
+      "baseline": "26.10",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -3701,7 +3701,7 @@
       "port-version": 0
     },
     "gumbo": {
-      "baseline": "0.14.0",
+      "baseline": "0.14.1",
       "port-version": 0
     },
     "gz-cmake": {
@@ -5337,7 +5337,7 @@
       "port-version": 0
     },
     "libmariadb": {
-      "baseline": "3.4.8",
+      "baseline": "3.4.11",
       "port-version": 0
     },
     "libmatio-cpp": {
@@ -7509,7 +7509,7 @@
       "port-version": 9
     },
     "openexr": {
-      "baseline": "3.4.15",
+      "baseline": "3.5.1",
       "port-version": 0
     },
     "openfbx": {
@@ -7654,7 +7654,7 @@
     },
     "orange-math": {
       "baseline": "5.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "orange-vmprotect-sdk": {
       "baseline": "1.1.0",
@@ -7809,8 +7809,8 @@
       "port-version": 7
     },
     "pcre2": {
-      "baseline": "10.47",
-      "port-version": 1
+      "baseline": "10.49",
+      "port-version": 0
     },
     "pdal": {
       "baseline": "2.10.1",
@@ -9785,8 +9785,8 @@
       "port-version": 0
     },
     "srpc": {
-      "baseline": "0.10.4",
-      "port-version": 2
+      "baseline": "0.10.5",
+      "port-version": 0
     },
     "sse2neon": {
       "baseline": "1.9.1",
@@ -10241,7 +10241,7 @@
       "port-version": 0
     },
     "tinyexif": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "tinyexpr": {

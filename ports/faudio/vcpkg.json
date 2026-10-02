@@ -1,8 +1,8 @@
 {
   "name": "faudio",
-  "version": "26.9",
+  "version": "26.10",
   "description": "FAudio - accuracy-focused XAudio reimplementation for open platforms",
-  "homepage": "https://fna-xna.github.io/",
+  "homepage": "https://fna-xna.github.io",
   "license": "Zlib AND MIT",
   "supports": "!uwp",
   "dependencies": [

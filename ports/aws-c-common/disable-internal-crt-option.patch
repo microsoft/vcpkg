@@ -1,8 +1,8 @@
 diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
-index c0acbba8..05cd2105 100644
+index a85a86ba..1b851824 100644
 --- a/cmake/AwsCFlags.cmake
 +++ b/cmake/AwsCFlags.cmake
-@@ -81,15 +81,6 @@ function(aws_set_common_properties target)
+@@ -91,15 +91,6 @@ function(aws_set_common_properties target)
              list(APPEND AWS_C_FLAGS /DAWS_SUPPORT_WIN7=1)
          endif()
  
@@ -15,6 +15,6 @@ index c0acbba8..05cd2105 100644
 -            list(APPEND AWS_C_FLAGS "/MD$<$<CONFIG:Debug>:d>")
 -        endif()
 -
-     else()
-         list(APPEND AWS_C_FLAGS -Wall -Wstrict-prototypes)
- 
+         # Warning disables always go last, since clang takes the last flag that
+         # mentions a diagnostic. clang-cl maps /W4 to -Wall -Wextra, so it turns on
+         # clang warnings that real MSVC does not have, and that the /wdNNNN
