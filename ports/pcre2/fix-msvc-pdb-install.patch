@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 701233a..9173b3d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1090,7 +1090,7 @@ if(PCRE2_BUILD_PCRE2_16)
+       set_target_properties(pcre2-16-shared PROPERTIES LINK_DEPENDS ${PROJECT_BINARY_DIR}/src/libpcre2-16.sym)
+     endif()
+     list(APPEND TARGETS pcre2-16-shared)
+-    list(APPEND DLL_PDB_FILES $<TARGET_PDB_FILE_DIR:pcre2-16-shared>)
++    list(APPEND DLL_PDB_FILES $<TARGET_PDB_FILE:pcre2-16-shared>)
+ 
+     if(MINGW)
+       if(NON_STANDARD_LIB_PREFIX)
+@@ -1167,7 +1167,7 @@ if(PCRE2_BUILD_PCRE2_32)
+       set_target_properties(pcre2-32-shared PROPERTIES LINK_DEPENDS ${PROJECT_BINARY_DIR}/src/libpcre2-32.sym)
+     endif()
+     list(APPEND TARGETS pcre2-32-shared)
+-    list(APPEND DLL_PDB_FILES $<TARGET_PDB_FILE_DIR:pcre2-32-shared>)
++    list(APPEND DLL_PDB_FILES $<TARGET_PDB_FILE:pcre2-32-shared>)
+ 
+     if(MINGW)
+       if(NON_STANDARD_LIB_PREFIX)
