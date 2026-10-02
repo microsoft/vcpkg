@@ -1,15 +1,11 @@
 {
   "name": "fastpfor",
-  "version": "0.3.1",
+  "version": "0.5.0",
   "description": "Fast integer compression",
   "homepage": "https://github.com/fast-pack/FastPFOR",
   "license": "Apache-2.0",
   "supports": "!(arm & !arm64)",
   "dependencies": [
-    {
-      "name": "simde",
-      "platform": "arm"
-    },
     "snappy",
     {
       "name": "vcpkg-cmake",
