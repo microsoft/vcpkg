@@ -12,10 +12,10 @@
     }
   ],
   "default-features": [
+    "avif-aom",
     "fontconfig",
     "freetype",
     "jpeg",
-    "libavif-aom",
     "png",
     "tiff",
     "webp"
@@ -27,34 +27,7 @@
         "libavif"
       ]
     },
-    "fontconfig": {
-      "description": "Support for Fontconfig",
-      "dependencies": [
-        "fontconfig"
-      ]
-    },
-    "freetype": {
-      "description": "Support for FreeType",
-      "dependencies": [
-        "freetype"
-      ]
-    },
-    "heif": {
-      "description": "Support for HEIF",
-      "dependencies": [
-        {
-          "name": "libheif",
-          "default-features": false
-        }
-      ]
-    },
-    "jpeg": {
-      "description": "Support for JPEG",
-      "dependencies": [
-        "libjpeg-turbo"
-      ]
-    },
-    "libavif-aom": {
+    "avif-aom": {
       "description": "Support for AVIF using the aom codec",
       "dependencies": [
         {
@@ -73,9 +46,8 @@
         }
       ]
     },
-    "libavif-dav1d": {
+    "avif-dav1d": {
       "description": "Support for AVIF decoding using the dav1d codec",
-      "supports": "!((android | linux) & !static)",
       "dependencies": [
         {
           "name": "libavif",
@@ -93,7 +65,7 @@
         }
       ]
     },
-    "libavif-svt": {
+    "avif-svt": {
       "description": "Support for AVIF encoding using the SVT-AV1 codec",
       "supports": "!x86 & !arm32 & !uwp",
       "dependencies": [
@@ -113,7 +85,29 @@
         }
       ]
     },
-    "libheif-aom": {
+    "fontconfig": {
+      "description": "Support for Fontconfig",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "freetype": {
+      "description": "Support for FreeType",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "heif": {
+      "description": "Support for HEIF",
+      "supports": "!(android | linux)",
+      "dependencies": [
+        {
+          "name": "libheif",
+          "default-features": false
+        }
+      ]
+    },
+    "heif-aom": {
       "description": "Support for HEIF AVIF decoding and encoding via the aom codec",
       "dependencies": [
         {
@@ -132,7 +126,7 @@
         }
       ]
     },
-    "libheif-hevc": {
+    "heif-hevc": {
       "description": "Support for HEIF HEVC encoding via the x265 codec",
       "dependencies": [
         {
@@ -149,6 +143,12 @@
             "hevc"
           ]
         }
+      ]
+    },
+    "jpeg": {
+      "description": "Support for JPEG",
+      "dependencies": [
+        "libjpeg-turbo"
       ]
     },
     "png": {
