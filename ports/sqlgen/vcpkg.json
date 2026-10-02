@@ -41,12 +41,6 @@
       "dependencies": [
         "libpq"
       ]
-    },
-    "tests": {
-      "description": "Build the tests",
-      "dependencies": [
-        "gtest"
-      ]
     }
   }
 }
