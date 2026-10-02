@@ -9505,7 +9505,7 @@
       "port-version": 3
     },
     "small-gicp": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "smf": {

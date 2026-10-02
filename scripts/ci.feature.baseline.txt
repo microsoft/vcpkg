@@ -1301,6 +1301,7 @@ sleef[dft]:arm64-osx=feature-fails # openmp setup needed
 sleepy-discord[voice]:arm64-linux=cascade
 sleepy-discord(android)=fail
 slikenet:arm64-linux=fail
+small-gicp[openmp]:arm64-osx=feature-fails # No openmp on osx
 smpeg2:arm64-linux=cascade
 soci[odbc]:arm64-linux=feature-fails # Could NOT find ODBC
 soem:arm64-windows=cascade
