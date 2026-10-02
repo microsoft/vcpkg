@@ -19,8 +19,20 @@ elseif(VCPKG_TARGET_IS_LINUX)
         triplet "x86_64-linux-gnu"
     )
 
-elseif(VPCKG_TARGET_IS_OSX)
-    # tbd
+elseif(VCPKG_TARGET_IS_OSX)
+    z_vcpkg_make_determine_target_arch(target_arch)
+    unit_test_check_variable_equal(
+        [[ z_vcpkg_make_determine_target_triplet(triplet COMPILER_NAME "cc") ]]
+        triplet "${target_arch}-apple-darwin"
+    )
+
+elseif(VCPKG_TARGET_IS_IOS)
+    # Must differ from the build triplet (*-apple-darwin) to enable cross builds.
+    z_vcpkg_make_determine_target_arch(target_arch)
+    unit_test_check_variable_equal(
+        [[ z_vcpkg_make_determine_target_triplet(triplet COMPILER_NAME "cc") ]]
+        triplet "${target_arch}-apple-ios"
+    )
 
 elseif(VCPKG_TARGET_IS_UWP)
     # tbd
