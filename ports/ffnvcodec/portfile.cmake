@@ -58,4 +58,4 @@ vcpkg_fixup_pkgconfig()
 
 # Install the files to their default vcpkg locations
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
-vcpkg_install_copyright(FILE_LIST "${CURRENT_PORT_DIR}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/include/ffnvcodec/dynlink_nvcuvid.h")
