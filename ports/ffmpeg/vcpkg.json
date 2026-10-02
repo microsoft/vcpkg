@@ -697,7 +697,7 @@
       ]
     },
     "vulkan": {
-      "description": "Vulkan video de/encoding (H.264, HEVC, AV1, FFV1, ProRes) and Vulkan filters",
+      "description": "Vulkan video de/encoding (H.264, HEVC, AV1), Vulkan encoding (FFV1, ProRes), and Vulkan filters",
       "dependencies": [
         {
           "name": "shaderc",
