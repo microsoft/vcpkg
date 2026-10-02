@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1ab7ea7..2219211 100644
+index 09eb3b0..95c1dbe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -161,12 +161,9 @@ if (WITH_TESTS)
+@@ -163,12 +163,9 @@ if (WITH_TESTS)
  endif()
  add_subdirectory(dimbuilder)
  add_subdirectory(vendor/arbiter)
@@ -15,7 +15,7 @@ index 1ab7ea7..2219211 100644
  add_subdirectory(tools)
  add_subdirectory(apps)
  
-@@ -230,12 +227,13 @@ add_library(PDAL::PDAL ALIAS ${PDAL_LIB_NAME})
+@@ -232,12 +229,13 @@ add_library(PDAL::PDAL ALIAS ${PDAL_LIB_NAME})
  
  
  
@@ -31,7 +31,15 @@ index 1ab7ea7..2219211 100644
  target_include_directories(${PDAL_LIB_NAME}
      PRIVATE
          ${ROOT_DIR}
-@@ -270,6 +268,9 @@ target_link_libraries(${PDAL_LIB_NAME}
+@@ -264,6 +262,7 @@ target_link_libraries(${PDAL_LIB_NAME}
+         ${PDAL_LEPCC_LIB_NAME}
+         ${PDAL_LAZPERF_LIB_NAME}
+         ${BACKTRACE_LIBRARIES}
++        ${UTFCPP_LIB_NAME}
+        "$<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:-lstdc++fs>"
+     PUBLIC
+         ${WINSOCK_LIBRARY}
+@@ -272,6 +271,9 @@ target_link_libraries(${PDAL_LIB_NAME}
          ${WINSOCK_LIBRARY}
  )
  
@@ -41,7 +49,7 @@ index 1ab7ea7..2219211 100644
  if (ZSTD_FOUND)
      target_link_libraries(${PDAL_LIB_NAME}
          PRIVATE
-@@ -304,9 +305,6 @@ target_include_directories(${PDAL_LIB_NAME}
+@@ -306,9 +308,6 @@ target_include_directories(${PDAL_LIB_NAME}
      INTERFACE
          $<INSTALL_INTERFACE:include>)
  
@@ -51,6 +59,7 @@ index 1ab7ea7..2219211 100644
  
  if(WIN32)
      target_compile_definitions(${PDAL_LIB_NAME}
+
 diff --git a/cmake/h3.cmake b/cmake/h3.cmake
 index 398ad6d..fb3c9ad 100644
 --- a/cmake/h3.cmake
@@ -76,7 +85,7 @@ index 1f9f996..aeb598c 100644
 +find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
 +set(JSON_SCHEMA_LIB_NAME nlohmann_json_schema_validator::validator)
 diff --git a/cmake/utfcpp.cmake b/cmake/utfcpp.cmake
-index 6543ff6..dc6fac8 100644
+index 6543ff6..e7ab077 100644
 --- a/cmake/utfcpp.cmake
 +++ b/cmake/utfcpp.cmake
 @@ -1,6 +1,7 @@
@@ -84,9 +93,10 @@ index 6543ff6..dc6fac8 100644
  # UTF CPP
  #
 -set(UTFCPP_INCLUDE_DIR ${PDAL_VENDOR_DIR}/utfcpp/source)
+-set(UTFCPP_LIB_NAME utf8::cpp)
 +find_package(utf8cpp CONFIG REQUIRED)
-+set(UTFCPP_INCLUDE_DIR "")
- set(UTFCPP_LIB_NAME utf8::cpp)
++set(UTFCPP_INCLUDE_DIR "${utf8cpp_INCLUDE_DIRS}")
++set(UTFCPP_LIB_NAME utf8::cpp utf8cpp::utf8cpp)
  
 diff --git a/pdal/JsonFwd.hpp b/pdal/JsonFwd.hpp
 index 507c456..6b502d0 100644
@@ -187,7 +197,7 @@ index a328f34..bedb367 100644
          params.sorted = true;
  
 diff --git a/plugins/e57/CMakeLists.txt b/plugins/e57/CMakeLists.txt
-index a94ab26..1d15330 100644
+index 5358575..7ec9e05 100644
 --- a/plugins/e57/CMakeLists.txt
 +++ b/plugins/e57/CMakeLists.txt
 @@ -7,7 +7,7 @@ if (STANDALONE)
