@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice/libplist
-    REF ${VERSION}
-    SHA512 0477202686fb2f88684af30a97d53fd023ada470dfc7c5d8b32c0d80e09a4641e679522a53c5ad32eae61b21a2d0f1f0c660acd8482ba7951d728b42e4cf5eab
+    REF "${VERSION}"
+    SHA512 144bfc8a6b7db6d50a4e23d892504964a9634f6b64135f5287b231f9216ee142474149d948a448ded8f99c588f5bee455ba6ab850e496e14db764b6646954817
     HEAD_REF master
     PATCHES
         001_fix_static_build.patch
