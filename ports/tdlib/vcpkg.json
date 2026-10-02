@@ -4,7 +4,7 @@
   "maintainers": "luadebug <lin@sz.cn.eu.org>",
   "description": "Cross-platform library for building Telegram clients",
   "homepage": "https://github.com/tdlib/td",
-  "license": "BSL-1.0",
+  "license": "BSL-1.0 AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "gperf",
@@ -31,7 +31,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Install source-generator executables (tl-parser, generate_mtproto, etc.) required for cross-compilation"
+      "description": "Install source-generator executables (tl-parser, generate_mtproto, etc.) required for cross-compilation",
+      "license": "GPL-2.0-or-later AND LGPL-2.1-or-later"
     }
   }
 }
