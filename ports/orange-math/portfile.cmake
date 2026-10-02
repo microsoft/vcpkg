@@ -5,7 +5,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://git.libomath.org/orange/omath/archive/v${VERSION}.tar.gz"
     FILENAME "omath-${VERSION}.tar.gz"
-    SHA512 f7c69b5698ef7e66cc49019f315cda9f65cc75a3b3b204546fd4c08a0edb74fd7d3bbe39e6ef7aacb3765d73addecb24d92b8c9cae7ac7cb9c35a0f9c14156e3
+    SHA512 5cd4d18220a6d233ac16dce3e03a6bf128b2552887a9616fcfb1c0b287ef95a6871912f19be462871d0eb408d1abbd11aa370e506495ec67e8554e28a9184484
 )
 
 vcpkg_extract_source_archive(
