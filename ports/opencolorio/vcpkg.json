@@ -33,7 +33,6 @@
   "features": {
     "tools": {
       "description": "Installs tools",
-      "license": null,
       "dependencies": [
         {
           "name": "directx-dxc",
