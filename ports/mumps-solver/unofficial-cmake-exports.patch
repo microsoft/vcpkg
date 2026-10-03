@@ -1,5 +1,5 @@
 diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
-index d8a8e76..e8fcc85 100644
+index 2ec9b67..5cea7b3 100644
 --- a/cmake/config.cmake.in
 +++ b/cmake/config.cmake.in
 @@ -15,16 +15,16 @@ set(MUMPS_LAPACK_VENDOR @LAPACK_VENDOR@)
@@ -40,7 +40,7 @@ index d8a8e76..e8fcc85 100644
  endif()
  
  set(MUMPS_scotch @MUMPS_scotch@)
-@@ -89,6 +85,6 @@ if(MUMPS_openmp)
+@@ -140,6 +136,6 @@ if(MUMPS_openmp)
  endif()
  
  # all dependencies must be determined before this project's targets
