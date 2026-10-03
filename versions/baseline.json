@@ -3020,6 +3020,10 @@
       "baseline": "2024-08-02",
       "port-version": 1
     },
+    "fastnoiselite": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "fastor": {
       "baseline": "0.6.4",
       "port-version": 0
