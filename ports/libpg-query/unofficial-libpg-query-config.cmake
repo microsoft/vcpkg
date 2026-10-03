@@ -1,5 +1,5 @@
 include(CMakeFindDependencyMacro)
-find_dependency(protobuf-c CONFIG REQUIRED)
+find_dependency(utf8_range CONFIG REQUIRED)
 find_dependency(xxHash CONFIG REQUIRED)
 
 if(NOT TARGET unofficial::libpg-query::libpg-query)
@@ -11,7 +11,7 @@ if(NOT TARGET unofficial::libpg-query::libpg-query)
     add_library(unofficial::libpg-query::libpg-query UNKNOWN IMPORTED)
     set_target_properties(unofficial::libpg-query::libpg-query PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-        INTERFACE_LINK_LIBRARIES "protobuf-c::protobuf-c;xxHash::xxhash"
+        INTERFACE_LINK_LIBRARIES "utf8_range::utf8_range;xxHash::xxhash"
     )
 
     find_library(LIBPG_QUERY_LIBRARY_DEBUG NAMES pg_query
