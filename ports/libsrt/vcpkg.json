@@ -3,7 +3,7 @@
   "version": "1.5.7",
   "description": "Secure Reliable Transport (SRT) is an open source transport technology that optimizes streaming performance across unpredictable networks, such as the Internet.",
   "homepage": "https://github.com/Haivision/srt",
-  "license": "MPL-2.0",
+  "license": "MPL-2.0 AND BSD-3-Clause AND Zlib AND Unlicense",
   "supports": "!uwp & !xbox",
   "dependencies": [
     "openssl",
