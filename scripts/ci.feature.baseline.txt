@@ -1275,6 +1275,7 @@ seal[hexl]:arm64-linux=cascade
 seal[hexl]:arm64-osx=cascade
 seal[hexl]:arm64-windows=cascade
 seal[hexl]:x86-windows=cascade
+sfgui(android)=fail # find_package(OpenGL REQUIRED)
 sfgui:arm64-linux=cascade
 sfml[graphics]:arm64-linux=feature-fails
 sfml[window]:arm64-linux=feature-fails
