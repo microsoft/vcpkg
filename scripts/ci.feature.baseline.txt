@@ -627,7 +627,6 @@ libosmscout[svg]:arm64-linux=feature-fails # can't find iconv despite libiconv b
 libotd[sdl]:arm64-linux=cascade
 libp7-baical:arm64-osx=cascade
 libp7-baical:arm64-windows=cascade
-libplist:x64-windows-static=fail
 libpmemobj-cpp[benchmark]:arm64-linux=cascade
 libpmemobj-cpp[benchmark]:arm64-osx=cascade
 libpmemobj-cpp[benchmark]:arm64-windows=cascade
