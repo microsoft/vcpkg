@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7689975..2a559ff 100755
+index aa942ed..a576890 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -517,7 +517,7 @@ install(
+@@ -533,7 +533,7 @@ install(
      FILE ${OCIO_TARGETS_EXPORT_NAME}
  )
  
@@ -12,7 +12,7 @@ index 7689975..2a559ff 100755
      install(FILES
          ${CMAKE_CURRENT_LIST_DIR}/share/cmake/macros/VersionUtils.cmake
 diff --git a/share/cmake/modules/FindExtPackages.cmake b/share/cmake/modules/FindExtPackages.cmake
-index 9bf17cf..8376ac5 100644
+index 8896ee3..533196f 100644
 --- a/share/cmake/modules/FindExtPackages.cmake
 +++ b/share/cmake/modules/FindExtPackages.cmake
 @@ -55,6 +55,7 @@ message(STATUS "Checking for mandatory dependencies...")
@@ -21,15 +21,15 @@ index 9bf17cf..8376ac5 100644
  ocio_handle_dependency(  expat REQUIRED ALLOW_INSTALL
 +                         CONFIG
                           MIN_VERSION 2.6.0
-                          RECOMMENDED_VERSION 2.7.2
-                          RECOMMENDED_VERSION_REASON "CVE fixes and Latest version tested with OCIO")
+                          RECOMMENDED_VERSION 2.8.4
+                          RECOMMENDED_VERSION_REASON "CVE fixes and latest version tested with OCIO")
 @@ -62,6 +63,7 @@ ocio_handle_dependency(  expat REQUIRED ALLOW_INSTALL
  # yaml-cpp
  # https://github.com/jbeder/yaml-cpp
  ocio_handle_dependency(  yaml-cpp REQUIRED ALLOW_INSTALL
 +                         CONFIG
                           MIN_VERSION 0.8.0
-                          RECOMMENDED_VERSION 0.8.0
+                          RECOMMENDED_VERSION 0.9.0
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
 @@ -69,13 +71,13 @@ ocio_handle_dependency(  yaml-cpp REQUIRED ALLOW_INSTALL
  # pystring
@@ -45,15 +45,15 @@ index 9bf17cf..8376ac5 100644
  ocio_handle_dependency(  Imath REQUIRED ALLOW_INSTALL
 +                         CONFIG
                           MIN_VERSION 3.1.1
-                          RECOMMENDED_VERSION 3.2.1
+                          RECOMMENDED_VERSION 3.2.3
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
 @@ -111,6 +113,7 @@ ocio_handle_dependency(  ZLIB REQUIRED ALLOW_INSTALL
  # minizip-ng
  # https://github.com/zlib-ng/minizip-ng
  ocio_handle_dependency(  minizip-ng REQUIRED ALLOW_INSTALL
 +                         CONFIG
-                          MIN_VERSION 4.0.0
-                          RECOMMENDED_VERSION 4.0.10
+                          MIN_VERSION 4.0.5
+                          RECOMMENDED_VERSION 4.2.2
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
 @@ -132,8 +135,7 @@ if(OCIO_BUILD_APPS)
      # lcms2

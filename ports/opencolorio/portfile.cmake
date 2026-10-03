@@ -33,6 +33,7 @@ vcpkg_cmake_configure(
         -DOCIO_BUILD_OPENFX:BOOL=OFF
         -DOCIO_BUILD_PYTHON:BOOL=OFF
         -DOCIO_BUILD_TESTS:BOOL=OFF
+        -DOCIO_DIRECTX_ENABLED:BOOL=OFF
         -DOCIO_INSTALL_EXT_PACKAGES=NONE
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenImageIO=ON
@@ -41,6 +42,7 @@ vcpkg_cmake_configure(
         # only used for OCIO_BUILD_APPS
         CMAKE_DISABLE_FIND_PACKAGE_GLUT
         CMAKE_DISABLE_FIND_PACKAGE_OpenImageIO
+        OCIO_DIRECTX_ENABLED
         VCPKG_LOCK_FIND_PACKAGE_OpenGL
 
 )
@@ -73,4 +75,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/ocio"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/ext/xxHash/src/include/xxhash.h"
+    "${SOURCE_PATH}/ext/sampleicc/src/include/iccProfileReader.h"
+    "${SOURCE_PATH}/ext/sampleicc/src/include/icProfileHeader.h"
+)
