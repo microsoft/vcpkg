@@ -13,6 +13,9 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
+# The release archive's VERSION file can lag behind its tag.
+file(WRITE "${SOURCE_PATH}/VERSION" "${VERSION}")
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
