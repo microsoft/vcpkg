@@ -20,4 +20,7 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYRIGHT"
+    "${SOURCE_PATH}/src/arch/fcontext/LICENSE_1_0.txt"
+)
