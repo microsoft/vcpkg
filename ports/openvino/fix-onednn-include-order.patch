@@ -1,5 +1,5 @@
 diff --git a/src/plugins/intel_gpu/src/graph/CMakeLists.txt b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
-index c864f02..2358264 100644
+index 7a19ab6a5e..7fd672fa0c 100644
 --- a/src/plugins/intel_gpu/src/graph/CMakeLists.txt
 +++ b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
 @@ -92,7 +92,7 @@ macro(ov_gpu_add_backend_target)
@@ -10,8 +10,8 @@ index c864f02..2358264 100644
 +        target_include_directories(${ARG_NAME} BEFORE PRIVATE $<TARGET_PROPERTY:onednn_gpu_tgt,INTERFACE_INCLUDE_DIRECTORIES>)
          add_dependencies(openvino_intel_gpu_${IMPL_TYPE}_obj onednn_gpu_tgt)
      endif()
- endmacro()
-@@ -146,6 +146,11 @@ ov_add_target(
+ 
+@@ -151,6 +151,11 @@ ov_add_target(
  
  ov_build_target_faster(${TARGET_NAME} PCH)
  
@@ -24,7 +24,7 @@ index c864f02..2358264 100644
  
  ov_set_threading_interface_for(${TARGET_NAME})
 diff --git a/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt b/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt
-index 3078ac0..8b47fdf 100644
+index 0108a9002f..ceb6430b27 100644
 --- a/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt
 +++ b/src/plugins/intel_gpu/src/kernel_selector/CMakeLists.txt
 @@ -67,6 +67,9 @@ target_compile_options(${TARGET_NAME} PRIVATE
