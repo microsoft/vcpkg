@@ -1,0 +1,35 @@
+diff --git a/src/SFGUI/Engine.cpp b/src/SFGUI/Engine.cpp
+index 0e9818d..afacddd 100644
+--- a/src/SFGUI/Engine.cpp
++++ b/src/SFGUI/Engine.cpp
+@@ -132,7 +132,7 @@ sf::Vector2f Engine::GetTextStringMetrics( const std::u32string& string, const s
+ 
+ 	const static auto tab_spaces = 2.f;
+ 
+-	std::uint32_t previous_character = 0;
++	char32_t previous_character = 0;
+ 
+ 	auto longest_line = 0.f;
+ 
+@@ -178,7 +178,7 @@ sf::Vector2f Engine::GetTextStringMetrics( const sf::String& string, const sf::F
+ 
+ 	const static auto tab_spaces = 2.f;
+ 
+-	std::uint32_t previous_character = 0;
++	char32_t previous_character = 0;
+ 
+ 	auto longest_line = 0.f;
+ 
+diff --git a/src/SFGUI/Renderer.cpp b/src/SFGUI/Renderer.cpp
+index 0cf5a6a..df0ca0a 100644
+--- a/src/SFGUI/Renderer.cpp
++++ b/src/SFGUI/Renderer.cpp
+@@ -122,7 +122,7 @@ Primitive::Ptr Renderer::CreateText( const sf::Text& text ) {
+ 
+ 	const static auto tab_spaces = 2.f;
+ 
+-	std::uint32_t previous_character = 0;
++	char32_t previous_character = 0;
+ 
+ 	auto primitive = std::make_shared<Primitive>( str.getSize() * 4 );
+ 

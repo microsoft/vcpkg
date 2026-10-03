@@ -1,6 +1,7 @@
 {
   "name": "sfgui",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "Simple and Fast Graphical User Interface Library",
   "homepage": "https://github.com/TankOs/SFGUI",
   "license": "Zlib",
