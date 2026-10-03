@@ -57,7 +57,7 @@
       "port-version": 0
     },
     "advobfuscator": {
-      "baseline": "2.1.2",
+      "baseline": "2.1.3",
       "port-version": 0
     },
     "aeron": {
