@@ -1,0 +1,18 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -176,6 +176,7 @@ set(RDKit_CodeDir "${CMAKE_CURRENT_SOURCE_DIR}/Code")
+ set(RDKit_ExternalDir "${CMAKE_CURRENT_SOURCE_DIR}/External")
+ set(RDKit_DataDir "${CMAKE_CURRENT_SOURCE_DIR}/Data")
+ 
++if(RDK_BUILD_CPP_TESTS)
+ #include catch
+ find_package(Catch2 3 QUIET)
+ if(NOT Catch2_FOUND)
+@@ -189,6 +190,7 @@ if(NOT Catch2_FOUND)
+ 
+   FetchContent_MakeAvailable(Catch2)
+ endif()
++endif()
+ 
+ # make sure we have better_enums
+ Include(FetchContent)
