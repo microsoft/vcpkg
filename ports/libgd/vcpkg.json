@@ -1,7 +1,7 @@
 {
   "name": "libgd",
   "version-semver": "2.3.3",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Open source code library for the dynamic creation of images by programmers.",
   "homepage": "https://github.com/libgd/libgd",
   "license": "GD",
@@ -12,6 +12,7 @@
     }
   ],
   "default-features": [
+    "avif-aom",
     "fontconfig",
     "freetype",
     "jpeg",
@@ -20,6 +21,70 @@
     "webp"
   ],
   "features": {
+    "avif": {
+      "description": "Support for AVIF",
+      "dependencies": [
+        "libavif"
+      ]
+    },
+    "avif-aom": {
+      "description": "Support for AVIF using the aom codec",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "default-features": false,
+          "features": [
+            "aom"
+          ]
+        },
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
+    "avif-dav1d": {
+      "description": "Support for AVIF decoding using the dav1d codec",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "default-features": false,
+          "features": [
+            "dav1d"
+          ]
+        },
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
+    "avif-svt": {
+      "description": "Support for AVIF encoding using the SVT-AV1 codec",
+      "supports": "!x86 & !arm32 & !uwp",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "default-features": false,
+          "features": [
+            "svt"
+          ]
+        },
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
     "fontconfig": {
       "description": "Support for Fontconfig",
       "dependencies": [
@@ -30,6 +95,54 @@
       "description": "Support for FreeType",
       "dependencies": [
         "freetype"
+      ]
+    },
+    "heif": {
+      "description": "Support for HEIF",
+      "supports": "!(android | linux)",
+      "dependencies": [
+        {
+          "name": "libheif",
+          "default-features": false
+        }
+      ]
+    },
+    "heif-aom": {
+      "description": "Support for HEIF AVIF decoding and encoding via the aom codec",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "aom"
+          ]
+        }
+      ]
+    },
+    "heif-hevc": {
+      "description": "Support for HEIF HEVC encoding via the x265 codec",
+      "dependencies": [
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "heif"
+          ]
+        },
+        {
+          "name": "libheif",
+          "default-features": false,
+          "features": [
+            "hevc"
+          ]
+        }
       ]
     },
     "jpeg": {
