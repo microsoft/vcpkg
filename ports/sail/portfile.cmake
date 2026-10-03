@@ -89,8 +89,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 
-# Fix pkg-config files
-vcpkg_fixup_pkgconfig()
+# Remove pkg-config files
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 # Unused because SAIL_COMBINE_CODECS is ON, removes an absolute path from the output
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH [^\r\n]+[\r\n]*" "" REGEX)
