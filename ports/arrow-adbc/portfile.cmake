@@ -2,11 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow-adbc
     REF apache-arrow-adbc-${VERSION}
-    SHA512 48f3e5663ae59d3910f0e545f0bad68778151017e7a67804143832a5812126ff5796db18e9584be75dcedae751f294f13457600964bb84c1038f65eb285c2d05
+    SHA512 2c325413c4af45642d956263f6a3e56012d7468cc3edf7a4dad325d85aab9469d066af42036983d770f2d8fc366841652455c63cb242ecc4b57b35481795c1cf
     HEAD_REF main
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor/fmt")
-file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor/nanoarrow")
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/c/vendor/fmt"
+    "${SOURCE_PATH}/c/vendor/nanoarrow"
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -61,9 +63,11 @@ if("sqlite" IN_LIST FEATURES)
 endif()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/lib/cmake"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
