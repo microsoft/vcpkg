@@ -3,5 +3,5 @@
   "version": "1.2.0",
   "description": "A general-purpose lightweight C++ graph library",
   "homepage": "https://bobluppes.github.io/graaf/",
-  "license": "MIT"
+  "license": "MIT AND BSL-1.0"
 }
