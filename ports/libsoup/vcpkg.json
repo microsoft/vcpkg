@@ -21,6 +21,7 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    }
+    },
+    "zstd"
   ]
 }

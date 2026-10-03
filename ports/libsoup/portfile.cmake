@@ -14,6 +14,7 @@ vcpkg_configure_meson(
     OPTIONS
         -Dgssapi=disabled
         -Dbrotli=disabled
+        -Dzstd=enabled
         -Dtls_check=false
         -Dintrospection=disabled
         -Dvapi=disabled
