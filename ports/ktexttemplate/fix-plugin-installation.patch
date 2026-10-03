@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 92aa429..036f9d0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,7 +52,7 @@ ecm_set_disabled_deprecation_versions(
+ 
+ kde_enable_exceptions()
+ 
+-set( KTextTemplate_INSTALL_PLUGINDIR ${KDE_INSTALL_PLUGINDIR}/kf6/ktexttemplate )
++set( KTextTemplate_INSTALL_PLUGINDIR bin )
+ 
+ include("${KTextTemplate_MODULE_DIR}/KF6TextTemplateMacros.cmake")
+ 
