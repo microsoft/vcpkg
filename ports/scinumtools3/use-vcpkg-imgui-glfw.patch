@@ -1,0 +1,75 @@
+diff --git a/apps/snt-view/CMakeLists.txt b/apps/snt-view/CMakeLists.txt
+index 99f45a8..70a39ad 100644
+--- a/apps/snt-view/CMakeLists.txt
++++ b/apps/snt-view/CMakeLists.txt
+@@ -1,22 +1,5 @@
+-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+-set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+-
+-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/external/glfw/CMakeLists.txt" OR
+-   NOT EXISTS "${PROJECT_SOURCE_DIR}/external/imgui/imgui.cpp")
+-  message(FATAL_ERROR "snt view requires the imgui and glfw submodules. Run git submodule update --init external/imgui external/glfw.")
+-endif()
+-
+-if(UNIX AND NOT APPLE AND (NOT DEFINED CACHE{GLFW_BUILD_X11} OR GLFW_BUILD_X11))
+-  find_package(X11 QUIET)
+-  if(NOT X11_FOUND)
+-    set(GLFW_BUILD_X11 OFF CACHE BOOL "Build GLFW with X11 support" FORCE)
+-    message(STATUS "X11 development library unavailable; building GLFW without X11 support")
+-  endif()
+-endif()
+-
+-add_subdirectory("${PROJECT_SOURCE_DIR}/external/glfw" "${CMAKE_CURRENT_BINARY_DIR}/glfw")
++find_package(glfw3 CONFIG REQUIRED)
++find_package(imgui CONFIG REQUIRED)
+ if(UNIX AND NOT APPLE)
+   find_package(PkgConfig REQUIRED)
+   pkg_check_modules(SNT_VIEW_GL REQUIRED IMPORTED_TARGET gl)
+@@ -26,19 +9,6 @@ else()
+   set(SNT_VIEW_OPENGL_TARGET OpenGL::GL)
+ endif()
+ 
+-add_library(snt-view-imgui STATIC
+-  "${PROJECT_SOURCE_DIR}/external/imgui/imgui.cpp"
+-  "${PROJECT_SOURCE_DIR}/external/imgui/imgui_draw.cpp"
+-  "${PROJECT_SOURCE_DIR}/external/imgui/imgui_tables.cpp"
+-  "${PROJECT_SOURCE_DIR}/external/imgui/imgui_widgets.cpp"
+-  "${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_glfw.cpp"
+-  "${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.cpp"
+-)
+-target_include_directories(snt-view-imgui PUBLIC
+-  "${PROJECT_SOURCE_DIR}/external/imgui"
+-  "${PROJECT_SOURCE_DIR}/external/imgui/backends")
+-target_link_libraries(snt-view-imgui PUBLIC glfw ${SNT_VIEW_OPENGL_TARGET})
+-
+ add_subdirectory("${PROJECT_SOURCE_DIR}/docs/dipl/highlight/cpp"
+                  "${CMAKE_CURRENT_BINARY_DIR}/dipl-highlighter")
+ 
+@@ -49,7 +19,7 @@ target_sources(snt PRIVATE
+   "${CMAKE_CURRENT_SOURCE_DIR}/inspector_view.cpp"
+   "${CMAKE_CURRENT_SOURCE_DIR}/source_view.cpp"
+   "${CMAKE_CURRENT_SOURCE_DIR}/viewer_model.cpp")
+-target_link_libraries(snt PRIVATE snt-view-imgui snt-dipl-highlighter)
++target_link_libraries(snt PRIVATE imgui::imgui glfw ${SNT_VIEW_OPENGL_TARGET} snt-dipl-highlighter)
+ 
+ if(APPLE)
+   # The snt CLI is not an .app bundle, so embed the macOS Retina capability.
+diff --git a/cmake/snt-config.cmake.in b/cmake/snt-config.cmake.in
+index b6a1828..b125689 100644
+--- a/cmake/snt-config.cmake.in
++++ b/cmake/snt-config.cmake.in
+@@ -20,7 +20,11 @@ include("${CMAKE_CURRENT_LIST_DIR}/snt-executables.cmake" OPTIONAL)
+ 
+ # An explicit SNT_EXECUTABLE selects a host tool, including when cross-compiling.
+ if(NOT DEFINED SNT_EXECUTABLE AND NOT CMAKE_CROSSCOMPILING)
+-    set(_snt_cli "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_BINDIR@/snt@CMAKE_EXECUTABLE_SUFFIX@")
++    if(TARGET snt::snt)
++        get_target_property(_snt_cli snt::snt IMPORTED_LOCATION_RELEASE)
++    else()
++        set(_snt_cli "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_BINDIR@/snt@CMAKE_EXECUTABLE_SUFFIX@")
++    endif()
+     if(EXISTS "${_snt_cli}")
+         set(SNT_EXECUTABLE "${_snt_cli}")
+     endif()
