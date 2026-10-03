@@ -1,0 +1,71 @@
+diff --git a/configure b/configure
+index b4aae60..ca07d04 100644
+--- a/configure
++++ b/configure
+@@ -6932,10 +6932,7 @@ if test x"$have_map_hugetlb" = x"yes"; then
+         if test x"$huge_page_size" != x"0"; then
+             if test "$cross_compiling" = yes
+ then :
+-  { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in '$ac_pwd':" >&5
+-printf "%s\n" "$as_me: error: in '$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See 'config.log' for more details" "$LINENO" 5; }
++  use_huge_page=no
+ else case e in #(
+   e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+@@ -6977,10 +6974,7 @@ fi
+             # Maybe 2 megabytes (= 2097152)
+             if test "$cross_compiling" = yes
+ then :
+-  { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in '$ac_pwd':" >&5
+-printf "%s\n" "$as_me: error: in '$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See 'config.log' for more details" "$LINENO" 5; }
++  use_huge_page=no
+ else case e in #(
+   e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+@@ -7042,10 +7036,7 @@ SAVE_CFLAGS="$CFLAGS"
+ CFLAGS="-I$srcdir $CFLAGS"
+ if test "$cross_compiling" = yes
+ then :
+-  { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in '$ac_pwd':" >&5
+-printf "%s\n" "$as_me: error: in '$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See 'config.log' for more details" "$LINENO" 5; }
++  :
+ else case e in #(
+   e) cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+diff --git a/configure.ac b/configure.ac
+index 9c5e473..e7e897f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1075,7 +1075,7 @@ if test x"$have_map_hugetlb" = x"yes"; then
+                 *page = 0;
+                 int ret = munmap(page, ${huge_page_size});
+                 assert(ret == 0); /* This munmap() fails if huge_page_size is wrong. */
+-            ])],[use_huge_page=yes])
++            ])],[use_huge_page=yes],[],[use_huge_page=no])
+         fi
+         if test x"$use_huge_page" != x"yes" -a x"$huge_page_size" != x"2097152"; then
+             # Maybe 2 megabytes (= 2097152)
+@@ -1095,7 +1095,7 @@ if test x"$have_map_hugetlb" = x"yes"; then
+                 int ret = munmap(page, 2097152);
+                 assert(ret == 0); /* This munmap() fails if huge_page_size is wrong. */
+             ])],[use_huge_page=yes
+-                 huge_page_size=2097152],[])
++                 huge_page_size=2097152],[],[use_huge_page=no])
+         fi
+     fi
+ fi
+@@ -1121,7 +1121,7 @@ ret1 = ABTD_asm_bool_cas_weak_int128(&val, old, neu) && (val == 1);
+ val = 0, old = 1, neu = 1;
+ ret2 = !ABTD_asm_bool_cas_weak_int128(&val, old, neu) && (val == 0);
+ return !(ret1 && ret2);
+-])], [AC_DEFINE(ABT_CONFIG_HAVE_ATOMIC_INT128, 1, [Define if 128-bit CAS is supported.])])
++])], [AC_DEFINE(ABT_CONFIG_HAVE_ATOMIC_INT128, 1, [Define if 128-bit CAS is supported.])], [], [:])
+ CFLAGS="$SAVE_CFLAGS"
+ 
+ AM_CONDITIONAL([ABT_USE_INT128_ATOMIC], [test "x$ABT_CONFIG_HAVE_ATOMIC_INT128" != "x"])
