@@ -1,5 +1,5 @@
 diff --git a/lang/c++/CMakeLists.txt b/lang/c++/CMakeLists.txt
-index 6800d330f..c9ec221d9 100644
+index 6800d33..c9ec221 100644
 --- a/lang/c++/CMakeLists.txt
 +++ b/lang/c++/CMakeLists.txt
 @@ -70,12 +70,12 @@ if (WIN32 AND NOT CYGWIN AND NOT MSYS)
@@ -18,3 +18,24 @@ index 6800d330f..c9ec221d9 100644
  endif ()
  
  if (AVRO_BUILD_TESTS OR AVRO_USE_BOOST)
+diff --git a/lang/c++/cmake/avro-cpp-config.cmake.in b/lang/c++/cmake/avro-cpp-config.cmake.in
+index c943f33..7e7f150 100644
+--- a/lang/c++/cmake/avro-cpp-config.cmake.in
++++ b/lang/c++/cmake/avro-cpp-config.cmake.in
+@@ -58,7 +58,14 @@ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/avro-cpp-targets.cmake")
+ 
+-add_library(avro-cpp::avrocpp_static ALIAS avro-cpp::avrocpp_s)
+-add_library(avro-cpp::avrocpp_shared ALIAS avro-cpp::avrocpp)
++if(TARGET avro-cpp::avrocpp)
++    add_library(avro-cpp::avrocpp_shared ALIAS avro-cpp::avrocpp)
++endif()
++if(TARGET avro-cpp::avrocpp_s)
++    add_library(avro-cpp::avrocpp_static ALIAS avro-cpp::avrocpp_s)
++    if(NOT TARGET avro-cpp::avrocpp)
++        add_library(avro-cpp::avrocpp ALIAS avro-cpp::avrocpp_s)
++    endif()
++endif()
+ 
+ check_required_components(avro-cpp)

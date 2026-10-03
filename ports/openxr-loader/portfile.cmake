@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenXR-SDK-Source
     REF "release-${VERSION}"
-    SHA512 339ae24974caffa58cabe4e7144a34d5a8c81933ea7f20d142d2af62a19584b466958e3744c45fceb1a33f810a685a64082fa8af20681155a9fbff55e3640131
+    SHA512 0f0c1eeaf7f50974ad078da70246be284fc2c9e41c07e3ec0314012c1cab2dc76b2f8d72f13e1c7ebc0ded145841a74aa4bc2f86993ad28af77aeb6882c09dfb
     HEAD_REF master
     PATCHES
         fix-openxr-sdk-jsoncpp.patch
@@ -68,4 +68,5 @@ file(REMOVE_RECURSE
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
     "${SOURCE_PATH}/src/external/jnipp/LICENSE"
+    "${SOURCE_PATH}/src/external/android-jni-wrappers/wrap/android.content.h"
 )

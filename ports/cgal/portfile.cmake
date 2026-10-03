@@ -1,16 +1,13 @@
-set(VCPKG_BUILD_TYPE release)  # header-only
+set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF v${VERSION}
-    SHA512 d49b046ca87ef467efad066a4574aa04faa43941c65f2bc5b0b5e530b1d738d5bdc0f1d8c8a339f5ec49b3567d19fd959239ebe0bc6530bea41a1d4066c63f18
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 6c94b58302454315ad5abce08484d93d38d7772e44d28051ec2188bdbc88852c45ff67ccdcd214d8872d2df92e47751d658f96a4d5b8c0ed167be8e6165ef667
+    HEAD_REF main
     PATCHES
-        # upstream commit from the 6.2.x-branch (planned for CGAL version 6.2.1):
-        # https://github.com/CGAL/cgal/commit/eb2257df4da4c52c75fe384e803d9a6376057b8a
-        # > fix <CGAL/gdb_autoload.h>: end the section with a null byte
-        CGAL-6.2.0-gdb_autoload.patch
+        progbits.patch # https://github.com/CGAL/cgal/pull/9634
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -46,16 +43,18 @@ else()
     endforeach()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/man")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+)
 
-set(LICENSES
-    "${SOURCE_PATH}/Installation/LICENSE"
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/Installation/LICENSE"
         "${SOURCE_PATH}/Installation/LICENSE.BSL"
         "${SOURCE_PATH}/Installation/LICENSE.RFL"
         "${SOURCE_PATH}/Installation/LICENSE.GPL"
         "${SOURCE_PATH}/Installation/LICENSE.LGPL"
 )
-
-vcpkg_install_copyright(FILE_LIST ${LICENSES})
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

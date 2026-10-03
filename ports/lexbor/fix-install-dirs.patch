@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1ce77bb..3c8236f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -110,12 +110,12 @@ ENDIF()
+ ################
+ ## RPATH
+ #########################
++include(GNUInstallDirs)
++
+ IF(APPLE)
+     set(CMAKE_MACOSX_RPATH ON)
+ 
+     set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_FULL_LIBDIR})
+-ELSEIF(UNIX)
+-    include(GNUInstallDirs)
+ ENDIF()
+ 
+ ################

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wirestead/wirestead
     REF v${VERSION}
-    SHA512 324e440b2665f791dcf849f6508eb40500f708de2135e5700f9110cc9e004f7c2823dab3048acd80ef6977619bf9523cc111f391410c27b791bb0b86b7a393fd
+    SHA512 93b6bc0e85397f6d5d434dbabe2af7010305e51377682200c67692d58bf07e948b2955841399891c9eaa3f8d379318ff020fd9f483a7171cd8a0ed3a0eef08d2
     HEAD_REF main
 )
 
@@ -26,12 +26,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME wirestead
     CONFIG_PATH "lib/cmake/wirestead"
-    DO_NOT_DELETE_PARENT_CONFIG_PATH
-)
-
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME unilink
-    CONFIG_PATH "lib/cmake/unilink"
 )
 
 vcpkg_fixup_pkgconfig()
@@ -39,9 +33,7 @@ vcpkg_fixup_pkgconfig()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     foreach(_pc_file IN ITEMS
         "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wirestead.pc"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wirestead.pc"
-        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unilink.pc"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/unilink.pc")
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wirestead.pc")
         if(EXISTS "${_pc_file}")
             file(READ "${_pc_file}" _wirestead_pc_contents)
             string(REGEX REPLACE "([ \t]+)-lboost_system" "\\1" _wirestead_pc_contents "${_wirestead_pc_contents}")

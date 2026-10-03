@@ -5,3 +5,11 @@ libraw provides CMake targets:
     target_link_libraries(main PRIVATE libraw::raw)
     # thread-safe
     target_link_libraries(main PRIVATE libraw::raw_r)
+
+libraw provides pkg-config modules:
+
+  # Raw image decoder library (non-thread-safe)
+  libraw
+
+  # Raw image decoder library (thread-safe)
+  libraw_r

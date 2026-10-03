@@ -8,14 +8,14 @@ if("tao" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
         FILENAME "ACE-TAO-src-${VERSION}.tar.gz"
-        SHA512 955fa4de8df23fb0b91c3d7b3d6a23c2e16b15d16305efda874688bfa1cd3c9f6f7997d2cc19585daab1781bba7daca397179453d652edfc06b513f6028518c6
+        SHA512 5a6d3ad22264c25ab7aebe2027eeb9aced8eb7067b8afc8b304b1073979c41f6dc054b034eb5775e2e261d7d61fc746980ac5d41805ad1d3cd545200c681a6ab
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 eb7ac914438136cf98a3952bdd1d43543729019812b13509a6d805465f9016ec866dc6f07aed0a489555d3ac54c1ebe931ffd74a0687e29086bc5b063ab25cbc
+        SHA512 c7a10d76e137ef812a099899176eef5caee5787a569904f703e0e29faede168c60acd5094e39412cde7d977913bf8cf50e11b7b870ace6f314280240110caee7
     )
 endif()
 

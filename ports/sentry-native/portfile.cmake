@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 2ce19c7705c9297beadb79067716f7bf67ecdb1839d2599c63fc49e1c23622e645a346fe51b0b296b81ee78f63b316d40134cc6c7075b3707405d24bb00a97b8
+    SHA512 391e95e95d1b1c06032889b13354359d8bcd6de61ef37044bfb25821fdbbac9b2bd2715a6910e05956190e95f9745d4d69d263dbf7327ff956447ff27df079bc
 )
 
 vcpkg_extract_source_archive(
@@ -67,6 +67,14 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/sentry.h"
+        "#define SENTRY_H_INCLUDED"
+        "#define SENTRY_H_INCLUDED\n\n#define SENTRY_BUILD_STATIC"
+    )
+endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 

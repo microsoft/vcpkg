@@ -1,0 +1,4 @@
+kalshi-cpp provides CMake targets:
+
+  find_package(kalshi CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE kalshi::kalshi)

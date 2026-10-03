@@ -5,7 +5,7 @@ if("cmake-current" IN_LIST FEATURES)
     list(APPEND cmake_commands "${CMAKE_COMMAND}")
 endif()
 if("cmake-3-16" IN_LIST FEATURES)
-    # For convenient updates, use 
+    # For convenient updates, use
     # vcpkg install ... --cmake-args=-DVCPKG_CMAKE_USER_UPDATE=1
     set(cmake_version 3.16.3)
     set(legacy_cmake_archive NOTFOUND)
@@ -47,7 +47,7 @@ if("cmake-3-16" IN_LIST FEATURES)
         message(STATUS "All downloads are up-to-date.")
         message(FATAL_ERROR "Stopping due to VCPKG_CMAKE_USER_UPDATE being enabled.")
     endif()
-    
+
     vcpkg_extract_source_archive(legacy_cmake
         ARCHIVE "${legacy_cmake_archive}"
         SOURCE_BASE "${cmake_version}"
@@ -147,7 +147,7 @@ function(test_cmake_project)
         # Interface: scripts/toolchains/xbox.cmake
         list(APPEND base_options "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         list(APPEND base_options -DBUILD_SHARED_LIBS=ON)
     else()

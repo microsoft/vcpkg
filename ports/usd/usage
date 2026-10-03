@@ -1,0 +1,39 @@
+usd provides CMake targets:
+
+  find_package(pxr CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE usd sdf usdGeom)
+
+  # pxr exports many library targets (usd, sdf, tf, gf, usdGeom, usdShade,
+  # usdLux, ...) without a namespace prefix. Link only the libraries your
+  # application needs.
+
+USD discovers plugins at runtime via plugInfo.json registries. When deploying
+an application, copy the USD libraries and plugin directories from the vcpkg
+installed tree. The paths below are the release paths; the debug artifacts are
+installed under debug/ (debug/bin/*.dll, debug/lib/usd/, debug/plugin/usd/,
+...):
+
+  Windows:
+    bin/*.dll         (USD libraries you linked against, and their dependencies)
+    bin/usd/          (top-level plugInfo.json and core library resource registries)
+    plugin/usd/       (MODULE plugin DLLs)
+
+  Unix:
+    lib/*.so*         (USD libraries you linked against, and their dependencies;
+                       .dylib on macOS)
+    lib/usd/          (top-level plugInfo.json and core library resource registries)
+    plugin/usd/       (MODULE plugin shared objects)
+
+Keep the relative layout of these directories intact: Plug anchors its default
+search paths to the directory holding the loaded USD libraries and looks for
+"<that directory>/usd/" and "<that directory>/../plugin/usd/". Set the
+PXR_PLUGINPATH_NAME environment variable if your application uses a different
+layout.
+
+On Windows, the top-level plugInfo.json must be deployed under bin/usd/ next to
+the USD libraries so Plug can discover core library plugins.
+
+Optional port features install additional MODULE plugins under plugin/usd/.
+For example, imaging adds Hydra and imaging plugins, and usd[imaging,openimageio]
+adds the hioOiio image I/O plugin. The hioOiio plugin is only built when imaging
+is enabled, so openimageio alone does not install it.

@@ -1,0 +1,34 @@
+diff --git a/include/dpp/json.h b/include/dpp/json.h
+index 14f95ff..694d636 100644
+--- a/include/dpp/json.h
++++ b/include/dpp/json.h
+@@ -19,11 +19,7 @@
+  * limitations under the License.
+  *
+  ************************************************************************************/
+-#ifdef DPP_USE_EXTERNAL_JSON
+-	#include <nlohmann/json.hpp>
+-#else
+-	#include <dpp/nlohmann/json.hpp>
+-#endif
++#include <nlohmann/json.hpp>
+ 
+ namespace dpp {
+ 
+diff --git a/include/dpp/json_fwd.h b/include/dpp/json_fwd.h
+index 6f4ecb3..ce18121 100644
+--- a/include/dpp/json_fwd.h
++++ b/include/dpp/json_fwd.h
+@@ -19,11 +19,7 @@
+  * limitations under the License.
+  *
+  ************************************************************************************/
+-#ifdef DPP_USE_EXTERNAL_JSON
+-	#include <nlohmann/json_fwd.hpp>
+-#else
+-	#include <dpp/nlohmann/json_fwd.hpp>
+-#endif
++#include <nlohmann/json_fwd.hpp>
+ 
+ namespace dpp {
+ 

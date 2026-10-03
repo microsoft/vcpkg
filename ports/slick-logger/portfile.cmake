@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-logger
     REF "v${VERSION}"
-    SHA512 00159e819ac974fa568aab0475d539ac8949fe999ec280c21ace271e510204a2413edc298281dfc51c699e2eb8be8ace5003e3daa7e88e394cf13bc0f6da2bce
+    SHA512 463f97e08ae8d71ec69874a33d7d4e63b942e610d9ea24230c7b6e950f29c221cd69663ccc4f4e4d0481ca5bfe7b3aeb2023b9de607b5de91ca6bdf756d1dfc5
     HEAD_REF main
     PATCHES
       slick-queue.patch

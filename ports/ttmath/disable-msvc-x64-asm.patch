@@ -1,0 +1,15 @@
+diff --git a/ttmath/ttmathtypes.h b/ttmath/ttmathtypes.h
+index 3d9ddbe..c6b07d1 100644
+--- a/ttmath/ttmathtypes.h
++++ b/ttmath/ttmathtypes.h
+@@ -39,6 +39,10 @@
+ #ifndef headerfilettmathtypes
+ #define headerfilettmathtypes
+ 
++#if defined(_MSC_VER) && defined(_M_X64)
++#define TTMATH_NOASM
++#endif
++
+ /*!
+ 	\file ttmathtypes.h
+     \brief constants used in the library
