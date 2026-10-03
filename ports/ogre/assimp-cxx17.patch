@@ -1,0 +1,12 @@
+diff --git a/Tools/AssimpConverter/CMakeLists.txt b/Tools/AssimpConverter/CMakeLists.txt
+index 8f40b84..00a6f0f 100644
+--- a/Tools/AssimpConverter/CMakeLists.txt
++++ b/Tools/AssimpConverter/CMakeLists.txt
+@@ -8,6 +8,7 @@
+ #-------------------------------------------------------------------
+ 
+ add_executable(OgreAssimpConverter main.cpp)
++target_compile_features(OgreAssimpConverter PRIVATE cxx_std_17)
+ target_link_libraries(OgreAssimpConverter OgreMain OgreRTShaderSystem)
+ target_include_directories(OgreAssimpConverter PRIVATE $<TARGET_PROPERTY:fix::assimp,INTERFACE_INCLUDE_DIRECTORIES>)
+ if (OGRE_PROJECT_FOLDERS)
