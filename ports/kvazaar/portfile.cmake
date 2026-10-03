@@ -23,8 +23,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_TESTS=OFF
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-        -DGIT_SUBMODULE=OFF
-    MAYBE_UNUSED_VARIABLES GIT_SUBMODULE
 )
 
 vcpkg_cmake_install()
@@ -47,15 +45,18 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endif()
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(
-    FILE_LIST
+list(APPEND COPYRIGHT
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/LICENSE.EXT.greatest"
         "${SOURCE_PATH}/src/threadwrapper/LICENSE"
-        "${SOURCE_PATH}/src/extras/getopt.h"
         "${SOURCE_PATH}/src/extras/libmd5.h"
-        "${SOURCE_PATH}/src/extras/libmd5.c"
+        "${SOURCE_PATH}/src/extras/libmd5.c")
+if(BUILD_KVAZAAR_BINARY)
+    list(APPEND COPYRIGHT "${SOURCE_PATH}/src/extras/getopt.h")
+endif()
+vcpkg_install_copyright(
+    FILE_LIST
+        ${COPYRIGHT}
 )
