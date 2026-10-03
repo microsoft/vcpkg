@@ -7669,7 +7669,7 @@
       "port-version": 0
     },
     "ormpp": {
-      "baseline": "0.2.1",
+      "baseline": "0.2.2",
       "port-version": 0
     },
     "orocos-kdl": {
