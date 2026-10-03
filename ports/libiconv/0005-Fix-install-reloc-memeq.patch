@@ -1,0 +1,20 @@
+diff --git a/build-aux/install-reloc b/build-aux/install-reloc
+index 0e550ff..bb01254 100755
+--- a/build-aux/install-reloc
++++ b/build-aux/install-reloc
+@@ -282,6 +282,7 @@ func_verbose $compile_command \
+                "$srcdir"/relocwrapper.c \
+                "$srcdir"/progname.c \
+                "$srcdir"/progreloc.c \
++               "$srcdir"/memeq.c \
+                "$srcdir"/areadlink.c \
+                "$srcdir"/careadlinkat.c \
+                "$srcdir"/allocator.c \
+@@ -308,6 +309,7 @@ func_verbose $compile_command \
+   # compilers on Solaris, HP-UX.
+   rm -f relocwrapper.o \
+         progname.o \
++        memeq.o \
+         progreloc.o \
+         areadlink.o \
+         careadlinkat.o \
