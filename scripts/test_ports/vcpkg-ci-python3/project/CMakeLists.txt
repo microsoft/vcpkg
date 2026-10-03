@@ -48,7 +48,7 @@ function(check_find_python_results)
 
     string(FIND "${EXPECTED_LIBRARY_KEYWORD};${${arg_EXPECTED}_LIBRARIES}" "${EXPECTED_LIBRARY_KEYWORD};${EXPECTED_LIBRARY_PREFIX}" prefix_index)
     if("${prefix_index}" EQUAL "-1")
-        message(SEND_ERROR 
+        message(SEND_ERROR
             "Actual ${arg_EXPECTED} libraries: ${${arg_EXPECTED}_LIBRARIES}\n"
             "Expected ${CMAKE_BUILD_TYPE} location: ${EXPECTED_LIBRARY_PREFIX}"
         )

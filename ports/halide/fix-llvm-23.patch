@@ -1,0 +1,117 @@
+diff --git a/src/CodeGen_ARM.cpp b/src/CodeGen_ARM.cpp
+index 126dd5c..3499b48 100644
+--- a/src/CodeGen_ARM.cpp
++++ b/src/CodeGen_ARM.cpp
+@@ -1513,6 +1513,9 @@ void CodeGen_ARM::visit(const Store *op) {
+                       << (intrin_type.lanes() / target_vscale())
+                       << (t.is_float() ? 'f' : 'i')
+                       << t.bits();
++#if LLVM_VERSION >= 230
++                instr << ".p0";
++#endif
+                 arg_types = vector<llvm::Type *>(num_vecs, intrin_llvm_type);
+                 arg_types.emplace_back(get_vector_type(i1_t, intrin_type.lanes() / target_vscale(), VectorTypeConstraint::VScale));  // predicate
+                 arg_types.emplace_back(ptr_t);
+@@ -1646,6 +1649,9 @@ void CodeGen_ARM::visit(const Store *op) {
+                   << vscale_natural_lanes
+                   << (elt == Float(32) || elt == Float(64) ? 'f' : 'i')
+                   << elt.bits();
++#if LLVM_VERSION >= 230
++            instr << ".p0";
++#endif
+ 
+             vector<llvm::Type *> arg_types{slice_type, pred_type, elt_ptr->getType(), slice_index_type};
+             llvm::FunctionType *fn_type = FunctionType::get(void_t, arg_types, false);
+@@ -1888,6 +1894,9 @@ void CodeGen_ARM::visit(const Load *op) {
+                   << vscale_natural_lanes
+                   << (elt == Float(32) || elt == Float(64) ? 'f' : 'i')
+                   << elt.bits();
++#if LLVM_VERSION >= 230
++            instr << ".p0";
++#endif
+ 
+             llvm::FunctionType *fn_type = FunctionType::get(slice_type, {pred_type, elt_ptr->getType(), slice_index_type}, false);
+             FunctionCallee fn = module->getOrInsertFunction(instr.str(), fn_type);
+diff --git a/src/CodeGen_Internal.cpp b/src/CodeGen_Internal.cpp
+index d9ad0f6..5968576 100644
+--- a/src/CodeGen_Internal.cpp
++++ b/src/CodeGen_Internal.cpp
+@@ -612,9 +612,10 @@ void get_target_options(const llvm::Module &module, llvm::TargetOptions &options
+ 
+     options = llvm::TargetOptions();
+     options.AllowFPOpFusion = per_instruction_fast_math_flags ? llvm::FPOpFusion::Strict : llvm::FPOpFusion::Fast;
+-    options.UnsafeFPMath = !per_instruction_fast_math_flags;
++#if LLVM_VERSION < 230
+     options.NoInfsFPMath = !per_instruction_fast_math_flags;
+     options.NoNaNsFPMath = !per_instruction_fast_math_flags;
++#endif
+     options.HonorSignDependentRoundingFPMathOption = !per_instruction_fast_math_flags;
+     options.NoZerosInBSS = false;
+     options.GuaranteedTailCallOpt = false;
+diff --git a/src/CodeGen_LLVM.cpp b/src/CodeGen_LLVM.cpp
+index 07cc3ea..0b9b03c 100644
+--- a/src/CodeGen_LLVM.cpp
++++ b/src/CodeGen_LLVM.cpp
+@@ -1980,7 +1980,7 @@ Value *CodeGen_LLVM::codegen_buffer_pointer(Value *base_address, Halide::Type ty
+     llvm::Type *load_type = llvm_type_of(type);
+ 
+     llvm::Constant *constant_index = dyn_cast<llvm::Constant>(index);
+-    if (constant_index && constant_index->isZeroValue()) {
++    if (constant_index && constant_index->isNullValue()) {
+         return base_address;
+     }
+ 
+diff --git a/src/CodeGen_PTX_Dev.cpp b/src/CodeGen_PTX_Dev.cpp
+index 17f9a5a..db8a78a 100644
+--- a/src/CodeGen_PTX_Dev.cpp
++++ b/src/CodeGen_PTX_Dev.cpp
+@@ -609,14 +609,15 @@ vector<char> CodeGen_PTX_Dev::compile_to_src() {
+     // Allocate target machine
+ 
+     std::string err_str;
+-    const llvm::Target *llvm_target = TargetRegistry::lookupTarget(triple.str(), err_str);
++    const llvm::Target *llvm_target = TargetRegistry::lookupTarget(triple, err_str);
+     internal_assert(llvm_target) << err_str << "\n";
+ 
+     TargetOptions options;
+     options.AllowFPOpFusion = FPOpFusion::Fast;
+-    options.UnsafeFPMath = true;
++#if LLVM_VERSION < 230
+     options.NoInfsFPMath = true;
+     options.NoNaNsFPMath = true;
++#endif
+     options.HonorSignDependentRoundingFPMathOption = false;
+     options.NoZerosInBSS = false;
+     options.GuaranteedTailCallOpt = false;
+diff --git a/src/JITModule.cpp b/src/JITModule.cpp
+index 3aa30a8..5fd4865 100644
+--- a/src/JITModule.cpp
++++ b/src/JITModule.cpp
+@@ -321,7 +321,13 @@ void JITModule::compile_module(std::unique_ptr<llvm::Module> m, const string &fu
+ // i386: "JIT session error: Unsupported i386 relocation:4" (R_386_PLT32)
+ // ARM 32bit: Unsupported target machine architecture in ELF object shared runtime-jitted-objectbuffer
+ // Windows 64-bit: JIT session error: could not register eh-frame: __register_frame function not found
+-#if LLVM_VERSION >= 210
++#if LLVM_VERSION >= 230
++        linkerBuilder = [&](llvm::orc::ExecutionSession &session, llvm::jitlink::JITLinkMemoryManager &) {
++            return std::make_unique<llvm::orc::RTDyldObjectLinkingLayer>(session, [&](const llvm::MemoryBuffer &) {
++                return std::make_unique<HalideJITMemoryManager>(dependencies);
++            });
++        };
++#elif LLVM_VERSION >= 210
+         linkerBuilder = [&](llvm::orc::ExecutionSession &session) {
+             return std::make_unique<llvm::orc::RTDyldObjectLinkingLayer>(session, [&](const llvm::MemoryBuffer &) {
+                 return std::make_unique<HalideJITMemoryManager>(dependencies);
+@@ -335,7 +341,11 @@ void JITModule::compile_module(std::unique_ptr<llvm::Module> m, const string &fu
+         };
+ #endif
+     } else {
+-#if LLVM_VERSION >= 210
++#if LLVM_VERSION >= 230
++        linkerBuilder = [](llvm::orc::ExecutionSession &session, llvm::jitlink::JITLinkMemoryManager &memMgr) {
++            return std::make_unique<llvm::orc::ObjectLinkingLayer>(session, memMgr);
++        };
++#elif LLVM_VERSION >= 210
+         linkerBuilder = [](llvm::orc::ExecutionSession &session) {
+             return std::make_unique<llvm::orc::ObjectLinkingLayer>(session);
+         };

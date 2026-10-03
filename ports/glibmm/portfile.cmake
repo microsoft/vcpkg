@@ -3,14 +3,12 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIBMM_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIBMM_ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/glibmm/${GLIBMM_MAJOR_MINOR}/glibmm-${VERSION}.tar.xz"
     FILENAME "glibmm-${VERSION}.tar.xz"
-    SHA512 af05171b4651e94f4ef0d8e06a27160cd1a7b0a4e596ba7b6584567564829a60031f27ab96a25ba7fefb6395026f4cb40a5eaf1c5bc2e15428c18fd4d52b9328
+    SHA512 ac5972b9f42972aac36064a2aa2d9fd085b25836d91b3c8b06bc0fb6f6d600366d0e2d24be7d8e88fd7984c6d51b5ae4546463b502d0b73676de50931ad065f9
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${GLIBMM_ARCHIVE}"
-    PATCHES
-        glib_2_90_compatibility.patch # Backport from glibmm 2.89.0 (devel version)
 )
 
 vcpkg_configure_meson(

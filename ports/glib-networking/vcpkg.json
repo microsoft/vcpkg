@@ -1,10 +1,10 @@
 {
   "name": "glib-networking",
-  "version": "2.80.1",
+  "version": "2.90.0",
   "description": "Network extensions for GLib",
   "homepage": "https://gitlab.gnome.org/GNOME/glib-networking",
   "license": "LGPL-2.1-only",
-  "supports": "!uwp",
+  "supports": "!uwp & !static",
   "dependencies": [
     "glib",
     {

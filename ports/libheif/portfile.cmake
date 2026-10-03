@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 f33b216fd550ad1f7d65c76977bea77e4447875e1c84a868d620406bc2530ce8425e781e8052f4cddab49b87e2a6184a58edcd3782bb12ec6414a99bf8663e58
+    SHA512 a7b4a7ecc093f6b453939e093abef391f88bb371303183a91e431cba8f4b590131c05cc80a28733ac4822cce4a69ca1475251b2d4679890330a603de04c6c77c
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff

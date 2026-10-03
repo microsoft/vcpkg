@@ -1,0 +1,120 @@
+--- a/src/modbus-tcp.c
++++ b/src/modbus-tcp.c
+@@ -305,10 +305,12 @@
+ 
+         /* Wait to be available in writing */
+         FD_ZERO(&wset);
++#if !defined(_WIN32)
+         if (sockfd >= FD_SETSIZE) {
+             errno = EINVAL;
+             return -1;
+         }
++#endif
+         FD_SET(sockfd, &wset);
+         rc = select(sockfd + 1, NULL, &wset, NULL, &tv);
+         if (rc < 0) {
+@@ -363,6 +365,7 @@
+         return -1;
+     }
+ 
++#if !defined(_WIN32)
+     if (s >= FD_SETSIZE) {
+         if (ctx->debug) {
+             fprintf(
+@@ -375,6 +378,7 @@
+         errno = EINVAL;
+         return -1;
+     }
++#endif
+ 
+     rc = _modbus_tcp_set_ipv4_options(s);
+     if (rc == -1) {
+@@ -471,6 +475,7 @@
+         if (s < 0)
+             continue;
+ 
++#if !defined(_WIN32)
+         if (s >= FD_SETSIZE) {
+             if (ctx->debug) {
+                 fprintf(
+@@ -482,6 +487,7 @@
+             close(s);
+             continue;
+         }
++#endif
+ 
+         if (ai_ptr->ai_family == AF_INET)
+             _modbus_tcp_set_ipv4_options(s);
+@@ -550,7 +556,11 @@
+         tv.tv_sec = 0;
+         tv.tv_usec = 0;
+         FD_ZERO(&rset);
+-        if (ctx->s < 0 || ctx->s >= FD_SETSIZE) {
++        if (ctx->s < 0
++#if !defined(_WIN32)
++            || ctx->s >= FD_SETSIZE
++#endif
++        ) {
+             errno = EINVAL;
+             return -1;
+         }
+@@ -805,6 +815,7 @@
+         return -1;
+     }
+ 
++#if !defined(_WIN32)
+     if (ctx->s >= FD_SETSIZE) {
+         if (ctx->debug) {
+             fprintf(
+@@ -818,6 +829,7 @@
+         errno = EINVAL;
+         return -1;
+     }
++#endif
+ 
+     if (ctx->debug) {
+         char buf[INET_ADDRSTRLEN];
+@@ -853,6 +865,7 @@
+         return -1;
+     }
+ 
++#if !defined(_WIN32)
+     if (ctx->s >= FD_SETSIZE) {
+         if (ctx->debug) {
+             fprintf(
+@@ -866,6 +879,7 @@
+         errno = EINVAL;
+         return -1;
+     }
++#endif
+ 
+     if (ctx->debug) {
+         char buf[INET6_ADDRSTRLEN];
+@@ -890,7 +904,11 @@
+             }
+             /* Necessary after an error */
+             FD_ZERO(rset);
+-            if (ctx->s < 0 || ctx->s >= FD_SETSIZE) {
++            if (ctx->s < 0
++#if !defined(_WIN32)
++                || ctx->s >= FD_SETSIZE
++#endif
++            ) {
+                 errno = EINVAL;
+                 return -1;
+             }
+--- a/src/modbus.c
++++ b/src/modbus.c
+@@ -392,7 +392,11 @@
+ 
+     /* Add a file descriptor to the set */
+     FD_ZERO(&rset);
+-    if (ctx->s < 0 || ctx->s >= FD_SETSIZE) {
++    if (ctx->s < 0
++#if !defined(_WIN32)
++        || ctx->s >= FD_SETSIZE
++#endif
++    ) {
+         if (ctx->debug) {
+             fprintf(stderr, "ERROR Invalid socket descriptor %d\n", ctx->s);
+         }

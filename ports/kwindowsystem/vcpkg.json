@@ -1,6 +1,7 @@
 {
   "name": "kwindowsystem",
   "version": "6.30.0",
+  "port-version": 1,
   "description": "Access to the windowing system",
   "homepage": "https://invent.kde.org/frameworks/kwindowsystem",
   "documentation": "https://api.kde.org/kwindowsystem-index.html",
@@ -12,7 +13,15 @@
     },
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "future",
+        "gui",
+        {
+          "name": "xcb",
+          "platform": "linux"
+        }
+      ]
     },
     {
       "name": "qtwayland",
