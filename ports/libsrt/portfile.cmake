@@ -39,7 +39,6 @@ if(ENABLE_APPS)
         vcpkg_copy_tools(TOOL_NAMES srt-tunnel AUTO_CLEAN)
     endif()
     vcpkg_copy_tools(TOOL_NAMES srt-file-transmit srt-live-transmit AUTO_CLEAN)
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/srt-ffplay" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/srt-ffplay")
 endif()
 if(KEYSTONE_BUILD_STATIC OR NOT VCPKG_TARGET_IS_WINDOWS)
@@ -54,4 +53,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/srtcore/udt.h"
+    "${SOURCE_PATH}/srtcore/md5.h"
+    "${SOURCE_PATH}/srtcore/atomic.h"
+)
