@@ -1,0 +1,30 @@
+{
+  "name": "exyokioffice",
+  "version": "1.0.0",
+  "description": [
+    "C++20 library for reading, writing and editing Office Open XML documents",
+    "ExyokiOffice reads and writes Word, Excel and PowerPoint packages through a generated, typed OOXML DOM, high-level document editors, an OPC packaging layer, package and DOM validation, digital signatures, and format conversion. It has no external dependencies."
+  ],
+  "homepage": "https://github.com/JakubMelka/ExyokiOffice",
+  "documentation": "https://github.com/JakubMelka/ExyokiOffice/blob/master/docs/README.md",
+  "license": "MIT",
+  "supports": "!uwp & !android & !ios & !emscripten",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "mcp": {
+      "description": "Build the exyoki Word, Excel and PowerPoint MCP servers"
+    },
+    "tools": {
+      "description": "Build the exyoki command-line utility"
+    }
+  }
+}
