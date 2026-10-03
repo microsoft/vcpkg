@@ -9,6 +9,7 @@
       "name": "cpp-httplib",
       "default-features": false
     },
+    "glfw3",
     {
       "name": "hdf5",
       "default-features": false
