@@ -9137,7 +9137,7 @@
       "port-version": 0
     },
     "scinumtools3": {
-      "baseline": "0.8.0",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "sciplot": {
