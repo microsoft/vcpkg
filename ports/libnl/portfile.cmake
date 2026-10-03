@@ -7,15 +7,12 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
 # flex and bison are required to generate lib/route/{pktloc_*,ematch_*}.c
-find_program(FLEX NAMES flex)
-find_program(BISON NAMES bison)
-if(NOT FLEX OR NOT BISON)
-    message(FATAL_ERROR
-        "libnl requires flex and bison to build its route parser.\n"
-        "On Debian and Ubuntu derivatives: sudo apt install flex bison\n"
-        "On recent Red Hat and Fedora derivatives: sudo dnf install flex bison\n"
-        "On Arch Linux and derivatives: sudo pacman -S flex bison")
-endif()
+vcpkg_find_acquire_program(FLEX)
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+vcpkg_find_acquire_program(BISON)
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 if("cli" IN_LIST FEATURES)
     set(CLI_OPTION --enable-cli)
@@ -45,7 +42,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/etc"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/etc"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
