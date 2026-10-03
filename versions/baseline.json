@@ -4557,7 +4557,7 @@
       "port-version": 0
     },
     "kfr": {
-      "baseline": "6.3.1",
+      "baseline": "7.1.0",
       "port-version": 0
     },
     "kglobalaccel": {
