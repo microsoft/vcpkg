@@ -9249,8 +9249,8 @@
       "port-version": 0
     },
     "sdl3-image": {
-      "baseline": "3.4.4",
-      "port-version": 1
+      "baseline": "3.4.6",
+      "port-version": 0
     },
     "sdl3-mixer": {
       "baseline": "3.2.4",
