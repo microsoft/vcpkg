@@ -6,7 +6,7 @@
     "Note that at least one renderer backend and at least one platform backend must be chosen."
   ],
   "homepage": "https://pthom.github.io/hello_imgui/",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0 AND OFL-1.1",
   "dependencies": [
     {
       "name": "imgui",

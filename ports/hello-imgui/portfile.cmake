@@ -109,4 +109,12 @@ if (no_rendering_backend OR no_platform_backend)
     ")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/hello_imgui_assets/fonts/LICENSE-DroidSans.txt"
+    "${SOURCE_PATH}/hello_imgui_assets/fonts/LICENSE-FontAwesome.txt"
+    "${SOURCE_PATH}/src/hello_imgui/internal/whereami/LICENSE.MIT"
+    "${SOURCE_PATH}/src/hello_imgui/internal/inicpp_LICENSE.txt"
+    "${SOURCE_PATH}/src/hello_imgui/internal/pnm.h"
+    "${SOURCE_PATH}/src/hello_imgui/internal/imguial_term.h"
+)
