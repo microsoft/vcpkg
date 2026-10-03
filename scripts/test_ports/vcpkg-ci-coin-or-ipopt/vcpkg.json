@@ -4,11 +4,9 @@
   "description": "Validation port",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
+  "supports": "!android & !ios & !emscripten & !uwp & !(windows & arm) & !(windows & !mingw & static)",
   "dependencies": [
-    {
-      "name": "coin-or-ipopt",
-      "default-features": false
-    },
+    "coin-or-ipopt",
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -3,4 +3,14 @@ The C++/WinRT package provides CMake targets:
     find_package(cppwinrt CONFIG REQUIRED)
     target_link_libraries(main PRIVATE Microsoft::CppWinRT)
 
-The CMake variable CPPWINRT_TOOL is also set to point to the .winmd to header command-line tool.
+In addition, three variables are also exported: CPPWINRT_TOOL points to cppwinrt.exe; CPPWINRT_MODULE_FILES lists of paths to all module files; CPPWINRT_MODULE_BASE_DIR points to the directory of the module files.
+
+When installed with the "modules" feature, CPPWINRT_MODULE_FILES lists the generated C++20 module interface files (.ixx). Add them to your target:
+
+    target_sources(main
+        PRIVATE
+            FILE_SET cxx_modules
+            TYPE CXX_MODULES
+            BASE_DIRS ${CPPWINRT_MODULE_BASE_DIR}
+            FILES ${CPPWINRT_MODULE_FILES}
+    )

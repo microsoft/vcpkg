@@ -33,7 +33,7 @@ jobs:
             }
 
             let issue_body = issue.data.body.replaceAll("\r\n", "\n");
-              
+
             // missing-windows-sdk-issue
             let reg = /RC Pass 1: command "rc .*" failed \(exit code 0\) with the following output:/;
             if (reg.test(issue_body)){

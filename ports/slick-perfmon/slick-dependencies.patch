@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49c17ec..24fa8ac 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,8 +30,8 @@ find_package(Threads REQUIRED)
+ # two dependencies whose code it does not contain, contradicting the whole point
+ # of the switch.
+ if(SLICK_PERFMON_ENABLED)
+-    find_package(slick-queue 2.0.0 CONFIG QUIET)
+-    if (NOT slick-queue_FOUND)
++    find_package(slick-queue CONFIG REQUIRED)
++    if (FALSE)
+         message(STATUS "Fetching slick-queue...")
+         include(FetchContent)
+         set(BUILD_SLICK_QUEUE_TESTS OFF CACHE BOOL "" FORCE)
+@@ -47,8 +47,8 @@ if(SLICK_PERFMON_ENABLED)
+ 
+     # slick-queue pulls this in transitively, but slick-perfmon uses it directly
+     # for the control block, so it is a first-class dependency here.
+-    find_package(slick-shm CONFIG QUIET)
+-    if (NOT slick-shm_FOUND)
++    find_package(slick-shm CONFIG REQUIRED)
++    if (FALSE)
+         message(STATUS "Fetching slick-shm...")
+         include(FetchContent)
+         set(SLICK_SHM_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+diff --git a/cmake/slick-perfmonConfig.cmake.in b/cmake/slick-perfmonConfig.cmake.in
+index 849d6a8..afd998e 100644
+--- a/cmake/slick-perfmonConfig.cmake.in
++++ b/cmake/slick-perfmonConfig.cmake.in
+@@ -15,7 +15,7 @@ find_dependency(Threads)
+ # A disabled package contains no ring and no control block, so it must not make
+ # its consumers go and install the two libraries that back them.
+ if(slick-perfmon_ENABLED)
+-    find_dependency(slick-queue 2.0.0 CONFIG)
++    find_dependency(slick-queue CONFIG)
+     find_dependency(slick-shm CONFIG)
+ endif()
+ 

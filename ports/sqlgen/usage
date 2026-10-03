@@ -1,4 +1,0 @@
-sqlgen provides CMake targets:
-
-    find_package(sqlgen CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sqlgen::sqlgen)

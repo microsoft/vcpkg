@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 6c8970b8795df724c9e44e95a484278f9da7ddbc830f73d0c8678bce0752272af9f23d04e528bd51e9007db007150ec678072d4d76f89fd41dec579630758971
+    SHA512 0e088442279c67a8f4c29bba979efe7e68bb1885a26da292035efc86425c462d1894476ea0e8bb4a08b5ad884f3eb3980782540a1cba89af5773852109af0ceb
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -94,7 +94,6 @@ vcpkg_install_copyright(
 )
 
 set(TOOL_NAMES gtk4-builder-tool
-               gtk4-encode-symbolic-svg
                gtk4-path-tool
                gtk4-query-settings
                gtk4-rendernode-tool

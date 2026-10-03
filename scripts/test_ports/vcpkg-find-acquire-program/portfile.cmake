@@ -73,7 +73,7 @@ endif()
 
 # The postcondition of `vcpkg_find_acquire_program` is that there is a regular
 # variable of the requested name with a non-false value in the calling scope.
-# 
+#
 # Normally, it searches for the requested program and sets a regular variable
 # in the calling scope. However, it does nothing if a variable with that name
 # is already set to a value which CMake regards as true.

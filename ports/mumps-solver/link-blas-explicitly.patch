@@ -1,0 +1,46 @@
+diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
+index 8e59599..d8a8e76 100644
+--- a/cmake/config.cmake.in
++++ b/cmake/config.cmake.in
+@@ -32,6 +32,7 @@ if(MUMPS_parallel)
+ 
+   if(NOT MUMPS_LAPACK_VENDOR MATCHES "^MKL")
+     find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
++    find_dependency(BLAS)
+   endif()
+ 
+   if(DEFINED MUMPS_SCALAPACK_VENDOR)
+@@ -43,6 +44,7 @@ if(MUMPS_parallel)
+   endif()
+ else()
+   find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
++  find_dependency(BLAS)
+ 
+   # This is used in place of find_dependency(MPI) in MUMPS when MUMPS_parallel is OFF
+   # may not have ALIAS of ALIAS so we do INTERFACE IMPORTED of ALIAS
+diff --git a/cmake/lapack.cmake b/cmake/lapack.cmake
+index 4201b0e..19b5f68 100644
+--- a/cmake/lapack.cmake
++++ b/cmake/lapack.cmake
+@@ -9,3 +9,9 @@ if(MUMPS_find_static)
+ endif()
+ 
+ find_package(LAPACK REQUIRED COMPONENTS ${LAPACK_VENDOR})
++
++# MUMPS calls BLAS (dgemm and friends) directly, so it links BLAS::BLAS itself
++# rather than relying on LAPACK::LAPACK to carry it: vcpkg's FindLAPACK drops
++# BLAS from LAPACK::LAPACK when BLAS_LIBRARIES has a single entry, as in shared
++# builds, and Windows DLLs cannot link without it.
++find_package(BLAS REQUIRED)
+diff --git a/cmake/mumps.cmake b/cmake/mumps.cmake
+index d7b98ea..936e944 100644
+--- a/cmake/mumps.cmake
++++ b/cmake/mumps.cmake
+@@ -145,6 +145,7 @@ foreach(t IN ITEMS mumps_common mumps_common_C mumps_common_Fortran)
+   pord
+   $<$<AND:$<BOOL:${MUMPS_scalapack}>,$<BOOL:${MUMPS_parallel}>>:SCALAPACK::SCALAPACK>
+   LAPACK::LAPACK
++  BLAS::BLAS
+   "$<$<BOOL:${MUMPS_gpu}>:CUDA::cublas;CUDA::cudart>"
+   $<$<BOOL:${MUMPS_xkblas}>:xkblas::xkblas>
+   $<$<BOOL:${IMPI_LIB64}>:${IMPI_LIB64}>

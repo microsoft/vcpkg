@@ -1,0 +1,61 @@
+diff --git a/cmake/mumps.cmake b/cmake/mumps.cmake
+index 936e944..7464805 100644
+--- a/cmake/mumps.cmake
++++ b/cmake/mumps.cmake
+@@ -348,3 +348,56 @@ TYPE INCLUDE
+ install(TARGETS MUMPS EXPORT ${PROJECT_NAME}-targets)
+ 
+ add_library(MUMPS::MUMPS ALIAS MUMPS)
++
++# vcpkg: a pkg-config file for consumers that do not use CMake, such as Ipopt.
++# Neither MUMPS nor this build system provides one, hence the unofficial- name.
++# Library names come from the targets, and the Fortran runtime from the same
++# computation as the exported CMake targets, so the two cannot disagree.
++set(mumps_pc_lib_prefix "")
++if(CMAKE_GNUtoMS)
++  # MSVC consumers link the GNUtoMS import library, which keeps the lib prefix.
++  set(mumps_pc_lib_prefix "${CMAKE_SHARED_LIBRARY_PREFIX}")
++endif()
++set(mumps_pc_libs "")
++foreach(t IN ITEMS smumps dmumps cmumps zmumps mumps_common pord mpiseq_fortran mpiseq_c)
++  if(TARGET ${t})
++    string(APPEND mumps_pc_libs " -l${mumps_pc_lib_prefix}$<TARGET_LINKER_FILE_BASE_NAME:${t}>")
++  endif()
++endforeach()
++set(mumps_pc_private "${CMAKE_THREAD_LIBS_INIT}")
++foreach(d IN LISTS mumps_fortran_runtime_dirs)
++  string(APPEND mumps_pc_private " -L${d}")
++endforeach()
++foreach(l IN LISTS mumps_fortran_runtime_libs)
++  if(l MATCHES "^-" OR IS_ABSOLUTE "${l}")
++    string(APPEND mumps_pc_private " ${l}")
++  else()
++    string(APPEND mumps_pc_private " -l${l}")
++  endif()
++endforeach()
++string(STRIP "${mumps_pc_private}" mumps_pc_private)
++set(mumps_pc_link "Libs: -L\${libdir}${mumps_pc_libs}")
++if(BUILD_SHARED_LIBS)
++  string(APPEND mumps_pc_link "\n")
++  if(NOT mumps_pc_private STREQUAL "")
++    string(APPEND mumps_pc_link "Libs.private: ${mumps_pc_private}\n")
++  endif()
++  string(APPEND mumps_pc_link "Requires.private: lapack blas\n")
++else()
++  if(NOT mumps_pc_private STREQUAL "")
++    string(APPEND mumps_pc_link " ${mumps_pc_private}")
++  endif()
++  string(APPEND mumps_pc_link "\nRequires: lapack blas\n")
++endif()
++file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mumps-solver.pc" CONTENT
++"prefix=${CMAKE_INSTALL_PREFIX}
++exec_prefix=\${prefix}
++libdir=\${prefix}/${CMAKE_INSTALL_LIBDIR}
++includedir=\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}
++
++Name: unofficial-mumps-solver
++Description: MUMPS sparse direct solver, sequential build
++Version: ${MUMPS_ACTUAL_VERSION}
++${mumps_pc_link}Cflags: -I\${includedir} -I\${includedir}/mumps_seq
++")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mumps-solver.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
