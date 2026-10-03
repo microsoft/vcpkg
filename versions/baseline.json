@@ -5561,7 +5561,7 @@
       "port-version": 0
     },
     "libplist": {
-      "baseline": "2.7.0",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "libpmemobj-cpp": {
