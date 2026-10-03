@@ -5452,6 +5452,10 @@
       "baseline": "2025.10.0",
       "port-version": 0
     },
+    "libnl": {
+      "baseline": "3.12.0",
+      "port-version": 0
+    },
     "libnoise": {
       "baseline": "1.0.0",
       "port-version": 3
