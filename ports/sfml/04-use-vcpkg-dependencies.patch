@@ -1,0 +1,124 @@
+diff --git a/src/SFML/Graphics/CMakeLists.txt b/src/SFML/Graphics/CMakeLists.txt
+index c0d2140..7c42679 100644
+--- a/src/SFML/Graphics/CMakeLists.txt
++++ b/src/SFML/Graphics/CMakeLists.txt
+@@ -111,7 +111,7 @@ endif()
+ 
+ if(SFML_USE_SYSTEM_DEPS)
+     find_package(Freetype REQUIRED)
+-    find_package(HarfBuzz REQUIRED)
++    find_package(harfbuzz CONFIG REQUIRED)
+ else()
+     # use a block to scope option variables we have to set
+     block()
+@@ -235,46 +235,10 @@ else()
+     add_library(HarfBuzz::HarfBuzz ALIAS harfbuzz)
+ endif()
+ 
+-target_link_libraries(sfml-graphics PRIVATE Freetype::Freetype HarfBuzz::HarfBuzz)
++target_link_libraries(sfml-graphics PRIVATE Freetype::Freetype harfbuzz::harfbuzz)
+ 
+-# we have to build SheenBidi ourselves in both cases since there is no system package for it
+-# use a block to scope option variables we have to set
+-block()
+-    include(FetchContent)
+-
+-    set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+-    set(BUILD_SHARED_LIBS OFF)
+-
+-    FetchContent_Declare(SheenBidi
+-        GIT_REPOSITORY https://github.com/Tehreer/SheenBidi.git
+-        GIT_TAG v3.0.0
+-        GIT_SHALLOW ON
+-        # patch out parts we don't want of the SheenBidi CMake configuration
+-        # - disable installation
+-        # - turn the library into an object library so we can merge it into sfml-graphics
+-        PATCH_COMMAND ${CMAKE_COMMAND} -DSHEENBIDI_DIR=${FETCHCONTENT_BASE_DIR}/sheenbidi-src -P ${PROJECT_SOURCE_DIR}/tools/sheenbidi/PatchSheenBidi.cmake)
+-    FetchContent_MakeAvailable(SheenBidi)
+-endblock()
+-
+-set_target_properties(SheenBidi PROPERTIES FOLDER "Dependencies")
+-
+-# disable building SheenBidi as part of our unity build, it has its own internal unity build system
+-set_target_properties(SheenBidi PROPERTIES UNITY_BUILD OFF)
+-
+-sfml_set_stdlib(SheenBidi)
+-
+-# add SheenBidi object library and headers to our own target
+-target_sources(sfml-graphics PRIVATE $<TARGET_OBJECTS:SheenBidi>)
+-target_include_directories(sfml-graphics SYSTEM PRIVATE "${SheenBidi_SOURCE_DIR}/Headers")
+-
+-# Disable all warnings
+-target_compile_options(SheenBidi PRIVATE -w)
+-
+-# if building SFML as a shared library or on android (where exes are shared libs) and linking our dependencies in
+-# as static libraries we need to build them with -fPIC
+-if(BUILD_SHARED_LIBS OR SFML_OS_ANDROID)
+-    set_target_properties(SheenBidi PROPERTIES POSITION_INDEPENDENT_CODE ON)
+-endif()
++find_package(SheenBidi CONFIG REQUIRED)
++target_link_libraries(sfml-graphics PRIVATE SheenBidi::SheenBidi)
+ 
+ # add preprocessor symbols
+ target_compile_definitions(sfml-graphics PRIVATE "STBI_FAILURE_USERMSG")
+diff --git a/src/SFML/Graphics/Dependencies.cmake.in b/src/SFML/Graphics/Dependencies.cmake.in
+index f4b0be7..18de058 100644
+--- a/src/SFML/Graphics/Dependencies.cmake.in
++++ b/src/SFML/Graphics/Dependencies.cmake.in
+@@ -10,7 +10,7 @@ set(FIND_SFML_DEPENDENCIES_NOTFOUND)
+ 
+ if(SFML_BUILT_USING_SYSTEM_DEPS)
+     find_dependency(Freetype)
+-    find_dependency(HarfBuzz)
++    find_dependency(harfbuzz CONFIG)
+ else()
+     set(Freetype_DIR "${CMAKE_CURRENT_LIST_DIR}/../freetype")
+     find_dependency(Freetype CONFIG REQUIRED NO_DEFAULT_PATH)
+@@ -22,6 +22,8 @@ else()
+     set_target_properties(freetype PROPERTIES INTERFACE_LINK_LIBRARIES "harfbuzz::harfbuzz")
+ endif()
+ 
++find_dependency(SheenBidi CONFIG)
++
+ if(FIND_SFML_DEPENDENCIES_NOTFOUND)
+     set(FIND_SFML_ERROR "SFML found but some of its dependencies are missing (${FIND_SFML_DEPENDENCIES_NOTFOUND})")
+     set(SFML_FOUND OFF)
+diff --git a/src/SFML/Network/CMakeLists.txt b/src/SFML/Network/CMakeLists.txt
+index cf77462..9809f83 100644
+--- a/src/SFML/Network/CMakeLists.txt
++++ b/src/SFML/Network/CMakeLists.txt
+@@ -57,8 +57,8 @@ elseif(SFML_OS_LINUX OR SFML_OS_IOS OR SFML_OS_MACOS)
+ endif()
+ 
+ if(SFML_USE_SYSTEM_DEPS)
+-    find_package(MbedTLS REQUIRED)
+-    find_package(Libssh2 REQUIRED)
++    find_package(MbedTLS CONFIG REQUIRED)
++    find_package(libssh2 CONFIG REQUIRED)
+ else()
+     include(FetchContent)
+ 
+@@ -130,7 +130,7 @@ else()
+     target_compile_options(libssh2_static PRIVATE -w)
+ endif()
+ 
+-target_link_libraries(sfml-network PRIVATE libssh2::libssh2 mbedtls mbedcrypto mbedx509)
++target_link_libraries(sfml-network PRIVATE libssh2::libssh2 MbedTLS::mbedtls MbedTLS::mbedcrypto MbedTLS::mbedx509)
+ 
+ if(SFML_OS_WINDOWS)
+     target_include_directories(sfml-network SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/wepoll")
+diff --git a/src/SFML/Network/Dependencies.cmake.in b/src/SFML/Network/Dependencies.cmake.in
+index 929f538..76ec881 100644
+--- a/src/SFML/Network/Dependencies.cmake.in
++++ b/src/SFML/Network/Dependencies.cmake.in
+@@ -9,8 +9,8 @@ set(SFML_BUILT_USING_SYSTEM_DEPS @SFML_USE_SYSTEM_DEPS@)
+ set(FIND_SFML_DEPENDENCIES_NOTFOUND)
+ 
+ if(SFML_BUILT_USING_SYSTEM_DEPS)
+-    find_dependency(MbedTLS)
+-    find_dependency(Libssh2)
++    find_dependency(MbedTLS CONFIG)
++    find_dependency(libssh2 CONFIG)
+ else()
+     set(MbedTLS_DIR "${CMAKE_CURRENT_LIST_DIR}/../MbedTLS")
+     find_dependency(MbedTLS CONFIG REQUIRED NO_DEFAULT_PATH)

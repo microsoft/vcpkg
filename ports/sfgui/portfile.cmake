@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 1.0.0
     SHA512 cc543cd44cf7d922d086748eea57d75069682649aa5f788bfc6ec3baa7bf7f9a010b4314d1a1875648cfaabf8d9efef130843ac1848d1112b5d53fd508768e41
     HEAD_REF master
+    PATCHES
+        fix-sfml-3.1-kerning.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SFGUI_BUILD_SHARED_LIBS)
