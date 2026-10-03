@@ -110,3 +110,29 @@ index 4e2367b..fc0e483 100644
      endif()
  
      # Remove OCIO custom find module path.
+diff --git a/src/libutils/oglapphelpers/CMakeLists.txt b/src/libutils/oglapphelpers/CMakeLists.txt
+index 88e53c3..c9afa12 100644
+--- a/src/libutils/oglapphelpers/CMakeLists.txt
++++ b/src/libutils/oglapphelpers/CMakeLists.txt
+@@ -164,10 +164,11 @@ endif()
+ 
+ if(WIN32 AND OCIO_DIRECTX_ENABLED)
+     include(ocio_handle_dependency)
+-    ocio_handle_dependency(DirectX-Headers REQUIRED ALLOW_INSTALL
++    ocio_handle_dependency(DirectX-Headers CONFIG REQUIRED ALLOW_INSTALL
+                            MIN_VERSION 1.606.0
+                            RECOMMENDED_VERSION 1.619.1
+                            RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
++    find_package(directx-dxc CONFIG REQUIRED)
+     target_compile_definitions(oglapphelpers
+         PUBLIC
+             OCIO_DIRECTX_ENABLED
+@@ -178,7 +179,7 @@ if(WIN32 AND OCIO_DIRECTX_ENABLED)
+         PRIVATE
+             d3d12
+             dxgi
+-            dxcompiler
++            Microsoft::DirectXShaderCompiler
+             dxguid
+     )
+ endif()
