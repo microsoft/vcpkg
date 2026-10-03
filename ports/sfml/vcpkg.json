@@ -1,6 +1,6 @@
 {
   "name": "sfml",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
@@ -39,17 +39,37 @@
           "default-features": false
         },
         {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
+        {
           "name": "sfml",
           "default-features": false,
           "features": [
             "window"
           ]
         },
+        "sheenbidi",
         "stb"
       ]
     },
     "network": {
-      "description": "Use sfml-network library"
+      "description": "Use sfml-network library",
+      "dependencies": [
+        {
+          "name": "libssh2",
+          "default-features": false
+        },
+        {
+          "name": "mbedtls",
+          "features": [
+            "pthreads"
+          ]
+        }
+      ]
     },
     "window": {
       "description": "Use sfml-window library",
