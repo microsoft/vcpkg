@@ -33,7 +33,16 @@
   "features": {
     "tools": {
       "description": "Installs tools",
+      "license": null,
       "dependencies": [
+        {
+          "name": "directx-dxc",
+          "platform": "windows & !arm32 & !xbox"
+        },
+        {
+          "name": "directx-headers",
+          "platform": "windows & !arm32 & !xbox"
+        },
         {
           "name": "glew",
           "platform": "!ios & !osx"

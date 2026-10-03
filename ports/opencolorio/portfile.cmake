@@ -23,6 +23,12 @@ if(NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
     list(APPEND FEATURE_OPTIONS -DOCIO_USE_SSE2NEON=OFF)
 endif()
 
+set(directx_enabled OFF)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_XBOX
+   AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64|arm64)$")
+    set(directx_enabled ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -33,7 +39,7 @@ vcpkg_cmake_configure(
         -DOCIO_BUILD_OPENFX:BOOL=OFF
         -DOCIO_BUILD_PYTHON:BOOL=OFF
         -DOCIO_BUILD_TESTS:BOOL=OFF
-        -DOCIO_DIRECTX_ENABLED:BOOL=OFF
+        -DOCIO_DIRECTX_ENABLED:BOOL=${directx_enabled}
         -DOCIO_INSTALL_EXT_PACKAGES=NONE
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenImageIO=ON
@@ -67,6 +73,13 @@ if(OCIO_BUILD_APPS)
         TOOL_NAMES ociomergeconfigs ocioarchive ociobakelut ociocheck ociochecklut ocioconvert ociocpuinfo ociolutimage ociomakeclf ocioperf ociowrite
         AUTO_CLEAN
     )
+    if(directx_enabled)
+        # The DirectX backend and its dynamically loaded DXIL validator are not import dependencies of every tool.
+        file(COPY
+            "${CURRENT_INSTALLED_DIR}/bin/dxcompiler.dll"
+            "${CURRENT_INSTALLED_DIR}/bin/dxil.dll"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
 endif()
 
 file(REMOVE_RECURSE
@@ -75,9 +88,16 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/ocio"
 )
 
-vcpkg_install_copyright(FILE_LIST
+set(copyright_files
     "${SOURCE_PATH}/LICENSE"
     "${SOURCE_PATH}/ext/xxHash/src/include/xxhash.h"
     "${SOURCE_PATH}/ext/sampleicc/src/include/iccProfileReader.h"
     "${SOURCE_PATH}/ext/sampleicc/src/include/icProfileHeader.h"
 )
+if(OCIO_BUILD_APPS AND directx_enabled)
+    list(APPEND copyright_files
+        "${CURRENT_INSTALLED_DIR}/share/directx-headers/copyright"
+        "${CURRENT_INSTALLED_DIR}/share/directx-dxc/copyright"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
