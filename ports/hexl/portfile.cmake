@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 11cfbfbea70d8bb70bb1d5c5d741c18ce87adc9d1904ca30f603cd878eb6b29be0eaf78ca76a05ed2bdacab0370f89494851309cff1e847488d28ca79b891bce
     HEAD_REF development
+    PATCHES
+        hexl-debug-override.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HEXL_SHARED)
@@ -16,6 +18,8 @@ vcpkg_cmake_configure(
     OPTIONS
         -DHEXL_BENCHMARK=OFF
         -DHEXL_COVERAGE=OFF
+        # HEXL_DEBUG would make Debug consumers link easyloggingpp and, on Unix, AddressSanitizer.
+        -DHEXL_DEBUG=OFF
         -DHEXL_TESTING=OFF
         -DHEXL_SHARED_LIB=${HEXL_SHARED}
 )

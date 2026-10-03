@@ -1,5 +1,5 @@
 diff --git a/PCbuild/_ssl.vcxproj b/PCbuild/_ssl.vcxproj
-index 0283725..72ef544 100644
+index ce21f99..d1529dd 100644
 --- a/PCbuild/_ssl.vcxproj
 +++ b/PCbuild/_ssl.vcxproj
 @@ -108,7 +108,7 @@
@@ -12,10 +12,10 @@ index 0283725..72ef544 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
-index 035fe82..4604839 100644
+index 7a5327b..6976adc 100644
 --- a/PCbuild/pcbuild.proj
 +++ b/PCbuild/pcbuild.proj
-@@ -60,19 +60,19 @@
+@@ -62,19 +62,19 @@
      <!-- python3.dll -->
      <Projects Include="python3dll.vcxproj" />
      <!-- py[w].exe -->
@@ -25,10 +25,10 @@ index 035fe82..4604839 100644
 -    <Projects Include="pyshellext.vcxproj" />
 +    <Projects Include="pyshellext.vcxproj" Condition="false" />
      <!-- Extension modules -->
-     <ExtensionModules Include="_asyncio;_zoneinfo;_decimal;_elementtree;_multiprocessing;_overlapped;pyexpat;_queue;select;unicodedata;winsound;_uuid;_wmi" />
+     <ExtensionModules Include="_asyncio;_decimal;_elementtree;_multiprocessing;_overlapped;pyexpat;_queue;_remote_debugging;select;unicodedata;winsound;_uuid;_wmi;_zoneinfo" />
      <ExtensionModules Include="_ctypes" Condition="$(IncludeCTypes)" />
      <!-- Extension modules that require external sources -->
-     <ExternalModules Include="_bz2;_lzma;_sqlite3" />
+     <ExternalModules Include="_bz2;_lzma;_sqlite3;_zstd" />
      <!-- venv launchers -->
 -    <Projects Include="venvlauncher.vcxproj;venvwlauncher.vcxproj" />
 -    <!-- _ssl will build _socket as well, which may cause conflicts in parallel builds -->

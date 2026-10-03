@@ -1,8 +1,9 @@
 {
   "name": "orange-math",
   "version": "5.6.0",
+  "port-version": 1,
   "description": "General purpose math library",
-  "homepage": "https://github.com/orange-cpp/omath",
+  "homepage": "https://git.libomath.org/orange/omath/",
   "documentation": "https://libomath.org",
   "license": "Zlib",
   "dependencies": [

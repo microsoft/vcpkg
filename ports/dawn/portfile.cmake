@@ -45,6 +45,7 @@ vcpkg_from_github(
         003-force-disable-cxx-module.patch
         004-deps.patch
         005-bsd-support.patch
+        006-fix-header-bsd.patch
         008-wrong-dxcapi-include.patch
         009-fix-tint-install.patch
 )

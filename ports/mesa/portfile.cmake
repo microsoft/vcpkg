@@ -7,13 +7,15 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-${VERSION}
-    SHA512 202b2b20ffe7d357570a0d0bf0b53dc246b3e903738e8c8a000c5f61109ab5233d62de217444f49fd62927f8c418d929e5a2a5a800d1e39e334d50eb090e850c
+    REF "mesa-${VERSION}"
+    SHA512 30db1edd20581f9e94189c13302974dacd110792e4b65db6d2936c17a39d3f48ac0d32293e6e7d46dc7daef82f10d8f15c5903ec25f6274541859a7abd9571cc
     FILE_DISAMBIGUATOR 1
     HEAD_REF master
+    PATCHES
+        001-windows-gles-dispatch.patch
 )
 
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako)
+x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako pyyaml)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 
@@ -44,6 +46,7 @@ endif()
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more.
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
+list(APPEND MESA_OPTIONS -Ddisplay-info=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
 
@@ -53,13 +56,7 @@ if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURE
     )
 endif()
 
-if("offscreen" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dosmesa=true)
-else()
-    list(APPEND MESA_OPTIONS -Dosmesa=false)
-endif()
-
-if("llvm" IN_LIST FEATURES)
+if("llvm" IN_LIST FEATURES OR VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
     set(LLVM_CONFIG_DEBUG_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-debug.ini")
     set(LLVM_CONFIG_RELEASE_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-release.ini")
@@ -78,24 +75,15 @@ else()
     endif()
 endif()
 
-set(use_gles OFF)
 if("gles1" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles1=enabled)
-    set(use_gles ON)
 else()
     list(APPEND MESA_OPTIONS -Dgles1=disabled)
 endif()
 if("gles2" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles2=enabled)
-    set(use_gles ON)
 else()
     list(APPEND MESA_OPTIONS -Dgles2=disabled)
-endif()
-
-if(use_gles OR "egl" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  # shared GLAPI required when building two or more of the following APIs - gles1 gles2
-else()
-    list(APPEND MESA_OPTIONS -Dshared-glapi=auto)
 endif()
 
 if("egl" IN_LIST FEATURES)
@@ -119,10 +107,15 @@ elseif(VCPKG_TARGET_IS_ANDROID)
     list(APPEND MESA_ADDITIONAL_PROPERTIES
         "pkg_config_libdir = ['${MESA_EMPTY_PKG_CONFIG_DIR}']"
     )
+    if("llvm" IN_LIST FEATURES)
+        set(MESA_ANDROID_GALLIUM_DRIVER llvmpipe)
+    else()
+        set(MESA_ANDROID_GALLIUM_DRIVER softpipe)
+    endif()
     list(APPEND MESA_OPTIONS
         -Dplatforms=['android']
         -Dandroid-stub=true
-        -Dgallium-drivers=['swrast']
+        "-Dgallium-drivers=['${MESA_ANDROID_GALLIUM_DRIVER}']"
     )
 endif()
 
@@ -137,8 +130,8 @@ vcpkg_configure_meson(
     OPTIONS_RELEASE
         ${MESA_OPTIONS_RELEASE}
     ADDITIONAL_BINARIES
-        python=['${PYTHON3}','-I']
-        python3=['${PYTHON3}','-I']
+        python=['${PYTHON3}','-E','-s']
+        python3=['${PYTHON3}','-E','-s']
         ${MESA_ADDITIONAL_BINARIES}
     ADDITIONAL_PROPERTIES
         ${MESA_ADDITIONAL_PROPERTIES}
@@ -165,15 +158,31 @@ if(NOT remaining)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
 endif()
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug")
+    file(GLOB debug_remaining "${CURRENT_PACKAGES_DIR}/debug/*")
+    if(NOT debug_remaining)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     # opengl32.lib is already installed by port opengl.
     # Mesa claims to provide a drop-in replacement of opengl32.dll.
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
-    if(NOT VCPKG_BUILD_TYPE)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/lib/manual-link/opengl32.lib")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib")
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/opengl32.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link/opengl32.lib")
     endif()
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/license.rst")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/docs/license.rst"
+        "${SOURCE_PATH}/licenses/Apache-2.0"
+        "${SOURCE_PATH}/licenses/BSL-1.0"
+        "${SOURCE_PATH}/licenses/MIT"
+        "${SOURCE_PATH}/licenses/SGI-B-2.0"
+)

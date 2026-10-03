@@ -1,0 +1,13 @@
+diff --git a/al/auxeffectslot.cpp b/al/auxeffectslot.cpp
+index 77cfa5793..71fe17715 100644
+--- a/al/auxeffectslot.cpp
++++ b/al/auxeffectslot.cpp
+@@ -211,7 +211,7 @@ void AddActiveEffectSlots(std::span<gsl::not_null<al::EffectSlot*> const> const
+         newarray = EffectSlotBase::CreatePtrArray(newcount<<1);
+         std::ranges::copy(*oldarray | std::views::take(newcount), newarray->begin());
+     }
+-    std::ranges::fill(*newarray | std::views::drop(newcount), nullptr);
++    std::ranges::fill(std::span{*newarray}.subspan(newcount), nullptr);
+ 
+     auto oldarray = context->mActiveAuxSlots.exchange(std::move(newarray),
+         std::memory_order_acq_rel);
