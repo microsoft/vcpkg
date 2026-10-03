@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b47613c..514d1a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -77,11 +77,13 @@ endif ()
+ include_directories (BEFORE ${LIBMESHB_SRC})
+ include_directories (BEFORE ${LIBMESHB_UTILS})
+ add_subdirectory (sources)
++if(0)
+ add_subdirectory (examples)
+ add_subdirectory (utilities)
++endif()
+ 
+-install (FILES LICENSE.txt copyright.txt DESTINATION share/libMeshb)
+-install (DIRECTORY sample_meshes DESTINATION share/libMeshb)
++#install (FILES LICENSE.txt copyright.txt DESTINATION share/libMeshb)
++#install (DIRECTORY sample_meshes DESTINATION share/libMeshb)
+ 
+ 
+ #############################
