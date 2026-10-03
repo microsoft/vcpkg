@@ -776,6 +776,10 @@
       "baseline": "2023-04-14",
       "port-version": 6
     },
+    "blasfeo": {
+      "baseline": "2026-09-22",
+      "port-version": 0
+    },
     "blaze": {
       "baseline": "3.8.2",
       "port-version": 1
