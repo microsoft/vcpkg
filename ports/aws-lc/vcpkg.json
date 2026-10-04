@@ -1,10 +1,11 @@
 {
   "name": "aws-lc",
   "version": "5.11.0",
-  "homepage": "https://github.com/aws/aws-lc",
   "description": "AWS-LC is a general-purpose cryptographic library maintained by the AWS Cryptography team for AWS and their customers. It іs based on code from the Google BoringSSL project and the OpenSSL project.",
+  "homepage": "https://github.com/aws/aws-lc",
   "license": "Apache-2.0",
-  "dependencies": [ {
+  "dependencies": [
+    {
       "name": "vcpkg-cmake",
       "host": true
     }
