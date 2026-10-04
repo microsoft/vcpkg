@@ -1,8 +1,12 @@
 unicode-ranges provides the CMake target:
 
     find_package(unicode_ranges CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unicode_ranges::unicode_ranges)
+    target_link_libraries(your_target PRIVATE unicode_ranges::unicode_ranges)
 
-Enable ICU-backed locale-aware casing with the `icu` feature:
+The package declares simdutf as a transitive dependency. When the `icu` feature
+is enabled, installed headers expose the ICU APIs without a consumer-defined
+compile macro.
+
+Enable the optional ICU-backed locale APIs with the `icu` feature:
 
     vcpkg install unicode-ranges[icu]
