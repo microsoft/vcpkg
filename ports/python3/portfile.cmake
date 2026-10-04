@@ -63,7 +63,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${VERSION}
-    SHA512 e02e73a249227b8ff23e4edd68d1a98b92d98dcce220a2100d79f9c86088e21775e3650d7d184e189ab6e6cc4a720ecaab049c729f3b6be1c71fd0acf9d82776
+    SHA512 9f5ff464802eac50815a52dae51614f0d3a714816c8e7a47c12e2c01cc51f749518cbe4b4d0a37c0455fe128949edc70a7ae28040ba8515eb997ebad1c54e02e
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -348,7 +348,11 @@ else()
     endif()
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/Modules/_hacl/Hacl_Hash_SHA2.h"
+    "${SOURCE_PATH}/Modules/_hacl/include/krml/internal/target.h"
+)
 
 file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
 if(VCPKG_TARGET_IS_WINDOWS)
