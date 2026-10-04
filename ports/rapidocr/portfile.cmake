@@ -1,15 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RapidAI/RapidOcrOnnx
-    REF de302828f42b087783b094c1f2fcb4507894c3d8
-    SHA512 9d05b8e38503bd8866c5618c8bb00bba89e2631543182bf6960905b611b4627070e0bb5bc22c8c034baacedec19acc905c761b8b88389bf5ca580eee55561d97
+    REF 675e73fe4c8b9e1d0be558bb5959a1b37696ed90
+    SHA512 b126aa3906c05a14eec596a543893554f241356bf426e864e320944fd5526f5d21677ca91f6115065e6ed6116b30516ecc02e20888747c51e5b5cffb54cedb67
     HEAD_REF main
     PATCHES
-        # Still present on main: DbNet/CrnnNet/AngleNet leave Ort::Session*
-        # indeterminate until initModel() and delete it in the destructor.
-        # OcrLite always constructs those nets via pImpl, so a default
-        # OcrLite still faults on destroy. Upstream is unmaintained.
-        fix-uninitialized-session.patch
+        # DbNet/CrnnNet/AngleNet's Ort::Session* nullptr-init (previously
+        # carried as fix-uninitialized-session.patch) was merged upstream
+        # directly: https://github.com/RapidAI/RapidOcrOnnx/pull/43
         use-vcpkg-deps.patch
         cmake-system-deps.patch
 )
