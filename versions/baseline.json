@@ -5645,7 +5645,7 @@
       "port-version": 0
     },
     "libressl": {
-      "baseline": "4.2.1",
+      "baseline": "4.3.3",
       "port-version": 0
     },
     "librsvg": {
