@@ -733,8 +733,8 @@
       "port-version": 0
     },
     "bgfx": {
-      "baseline": "1.129.8940-496",
-      "port-version": 1
+      "baseline": "1.162.9524-580",
+      "port-version": 0
     },
     "bigint": {
       "baseline": "2010.04.30",
