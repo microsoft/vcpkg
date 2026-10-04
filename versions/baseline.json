@@ -9817,8 +9817,8 @@
       "port-version": 3
     },
     "stb": {
-      "baseline": "2024-07-29",
-      "port-version": 1
+      "baseline": "2026-08-02",
+      "port-version": 0
     },
     "stc": {
       "baseline": "5.0",
