@@ -21,7 +21,20 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
+    }
+  ],
+  "features": {
+    "brotli": {
+      "description": "Build with Brotli decompression support",
+      "dependencies": [
+        "brotli"
+      ]
     },
-    "zstd"
-  ]
+    "zstd": {
+      "description": "Build with Zstandard decompression support",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }

@@ -9,21 +9,33 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
+set(meson_options)
+if("zstd" IN_LIST FEATURES)
+    list(APPEND meson_options "-Dzstd=enabled")
+else()
+    list(APPEND meson_options "-Dzstd=disabled")
+endif()
+if("brotli" IN_LIST FEATURES)
+    list(APPEND meson_options "-Dbrotli=enabled")
+else()
+    list(APPEND meson_options "-Dbrotli=disabled")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Dgssapi=disabled
-        -Dbrotli=disabled
-        -Dzstd=enabled
-        -Dtls_check=false
-        -Dintrospection=disabled
-        -Dvapi=disabled
-        -Ddocs=disabled
-        -Ddoc_tests=false
-        -Dtests=false
         -Dautobahn=disabled
-        -Dsysprof=disabled
+        -Ddoc_tests=false
+        -Ddocs=disabled
+        -Dgssapi=disabled
+        -Dintrospection=disabled
+        -Dntlm=disabled
         -Dpkcs11_tests=disabled
+        -Dsysprof=disabled
+        -Dtests=false
+        -Dtls_check=false
+        -Dvapi=disabled
+        ${meson_options}
     ADDITIONAL_BINARIES
         "gio-querymodules = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gio-querymodules${CMAKE_EXECUTABLE_SUFFIX}'"
         "glib-compile-schemas = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${CMAKE_EXECUTABLE_SUFFIX}'"
