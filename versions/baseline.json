@@ -7844,6 +7844,10 @@
       "baseline": "2.8.3",
       "port-version": 3
     },
+    "perf-cpp": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "perfetto": {
       "baseline": "53.0",
       "port-version": 0
