@@ -1,10 +1,10 @@
 diff --git a/src/OpenColorIO/Config.cpp b/src/OpenColorIO/Config.cpp
-index 7072c50..e2908b6 100644
+index 331f211..4bc7fbf 100644
 --- a/src/OpenColorIO/Config.cpp
 +++ b/src/OpenColorIO/Config.cpp
-@@ -12,7 +12,7 @@
- #include <regex>
+@@ -13,7 +13,7 @@
  #include <functional>
+ #include <filesystem>
  
 -#include <pystring.h>
 +#include <pystring/pystring.h>
@@ -12,7 +12,7 @@ index 7072c50..e2908b6 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/ConfigUtils.cpp b/src/OpenColorIO/ConfigUtils.cpp
-index 9a5ecfc..d07ef7d 100644
+index f91b5b9..ad7dc19 100644
 --- a/src/OpenColorIO/ConfigUtils.cpp
 +++ b/src/OpenColorIO/ConfigUtils.cpp
 @@ -1,7 +1,7 @@
@@ -38,7 +38,7 @@ index b7e71ae..a5a9627 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/OCIOYaml.cpp b/src/OpenColorIO/OCIOYaml.cpp
-index c936157..21e3e0c 100644
+index 8209bf7..f9c5744 100644
 --- a/src/OpenColorIO/OCIOYaml.cpp
 +++ b/src/OpenColorIO/OCIOYaml.cpp
 @@ -4,7 +4,7 @@
@@ -51,25 +51,12 @@ index c936157..21e3e0c 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/OCIOZArchive.cpp b/src/OpenColorIO/OCIOZArchive.cpp
-index 982fce6..43cb147 100644
+index e1a1da7..84c650f 100644
 --- a/src/OpenColorIO/OCIOZArchive.cpp
 +++ b/src/OpenColorIO/OCIOZArchive.cpp
 @@ -8,7 +8,7 @@
  #include <set>
  #include <limits>
- 
--#include <pystring.h>
-+#include <pystring/pystring.h>
- 
- #include <OpenColorIO/OpenColorIO.h>
- 
-diff --git a/src/OpenColorIO/Op.cpp b/src/OpenColorIO/Op.cpp
-index 7e95bae..c6c1993 100755
---- a/src/OpenColorIO/Op.cpp
-+++ b/src/OpenColorIO/Op.cpp
-@@ -4,7 +4,7 @@
- #include <cstring>
- #include <sstream>
  
 -#include <pystring.h>
 +#include <pystring/pystring.h>
@@ -90,7 +77,7 @@ index 3a68d36..ea6c036 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp b/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp
-index ab74ed9..1692451 100644
+index 1342d53..22ce299 100644
 --- a/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp
 +++ b/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp
 @@ -8,7 +8,7 @@
@@ -103,7 +90,7 @@ index ab74ed9..1692451 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp b/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp
-index 3afddf3..8be58de 100644
+index f431c4c..587ae4d 100644
 --- a/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp
 +++ b/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp
 @@ -5,7 +5,7 @@
@@ -116,7 +103,7 @@ index 3afddf3..8be58de 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp b/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp
-index 33c41f2..a98c66b 100644
+index 1421a55..a3f97b4 100644
 --- a/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp
 +++ b/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp
 @@ -8,7 +8,7 @@
@@ -129,10 +116,10 @@ index 33c41f2..a98c66b 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/fileformats/FileFormatCTF.cpp b/src/OpenColorIO/fileformats/FileFormatCTF.cpp
-index b1f0393..9efb98f 100644
+index 1373ba6..7dcb6d8 100644
 --- a/src/OpenColorIO/fileformats/FileFormatCTF.cpp
 +++ b/src/OpenColorIO/fileformats/FileFormatCTF.cpp
-@@ -6,7 +6,7 @@
+@@ -7,7 +7,7 @@
  #include <fstream>
  #include <sstream>
  
@@ -142,7 +129,7 @@ index b1f0393..9efb98f 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/fileformats/FileFormatDiscreet1DL.cpp b/src/OpenColorIO/fileformats/FileFormatDiscreet1DL.cpp
-index 6a76d96..63613dc 100755
+index d22de1b..a7028d1 100755
 --- a/src/OpenColorIO/fileformats/FileFormatDiscreet1DL.cpp
 +++ b/src/OpenColorIO/fileformats/FileFormatDiscreet1DL.cpp
 @@ -8,7 +8,7 @@
@@ -155,7 +142,7 @@ index 6a76d96..63613dc 100755
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/fileformats/FileFormatICC.cpp b/src/OpenColorIO/fileformats/FileFormatICC.cpp
-index 4768101..16cc9ec 100755
+index be105bf..314bc90 100755
 --- a/src/OpenColorIO/fileformats/FileFormatICC.cpp
 +++ b/src/OpenColorIO/fileformats/FileFormatICC.cpp
 @@ -5,7 +5,7 @@
@@ -168,11 +155,11 @@ index 4768101..16cc9ec 100755
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/fileformats/FileFormatIridasLook.cpp b/src/OpenColorIO/fileformats/FileFormatIridasLook.cpp
-index 0ba209a..c7ec254 100755
+index db9b93f..13115fb 100755
 --- a/src/OpenColorIO/fileformats/FileFormatIridasLook.cpp
 +++ b/src/OpenColorIO/fileformats/FileFormatIridasLook.cpp
-@@ -5,7 +5,7 @@
- #include <cstring>
+@@ -6,7 +6,7 @@
+ #include <exception>
  #include <iterator>
  
 -#include <pystring.h>
@@ -181,7 +168,7 @@ index 0ba209a..c7ec254 100755
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/transforms/FileTransform.cpp b/src/OpenColorIO/transforms/FileTransform.cpp
-index 33da5f3..7609dda 100755
+index 6fd1549..97b4e16 100755
 --- a/src/OpenColorIO/transforms/FileTransform.cpp
 +++ b/src/OpenColorIO/transforms/FileTransform.cpp
 @@ -9,7 +9,7 @@

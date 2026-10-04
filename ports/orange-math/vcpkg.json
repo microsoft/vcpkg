@@ -1,7 +1,6 @@
 {
   "name": "orange-math",
-  "version": "5.6.0",
-  "port-version": 1,
+  "version": "5.7.0",
   "description": "General purpose math library",
   "homepage": "https://git.libomath.org/orange/omath/",
   "documentation": "https://libomath.org",
