@@ -73,6 +73,14 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(
+    COMMENT [[
+PCG and base64 reference Apache-2.0 and BSD terms without including the full texts.
+libc_time only names musl's MIT license; parse_num includes MIT terms but no copyright holder.
+The OPC Foundation schema is installed and also generates the library's standard data types.
+]]
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE-CC0"
+        "${SOURCE_PATH}/deps/README.md"
+        "${SOURCE_PATH}/tools/schema/Opc.Ua.Types.bsd"
 )
