@@ -9561,7 +9561,7 @@
       "port-version": 0
     },
     "snmalloc": {
-      "baseline": "0.7.4",
+      "baseline": "0.7.6",
       "port-version": 0
     },
     "snowhouse": {
