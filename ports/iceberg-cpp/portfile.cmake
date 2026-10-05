@@ -8,7 +8,7 @@ vcpkg_from_github(
         avro-1.12.patch
         fix-avro-dependency.patch
         int128-namespace.patch # https://github.com/apache/iceberg-cpp/pull/972
-        msvc-14.42-compat.patch
+        msvc-14.42-compat.patch # https://github.com/apache/iceberg-cpp/pull/986
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ICEBERG_BUILD_STATIC)

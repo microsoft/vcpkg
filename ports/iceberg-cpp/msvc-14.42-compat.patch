@@ -1,5 +1,6 @@
 Compatibility fixes for MSVC 14.42 (VS 2022 17.12), which cannot compile some C++ constructs
 used by iceberg-cpp 0.4.0. No functional change.
+Library-source part of https://github.com/apache/iceberg-cpp/pull/986. Drop this patch once a release contains it.
 
 diff --git a/src/iceberg/manifest/manifest_group.cc b/src/iceberg/manifest/manifest_group.cc
 index 87ee857..ccb82f0 100644
@@ -60,7 +61,7 @@ index d6a1066..cdf8a65 100644
          const size_t offset = group_index * group_size;
          return files.subspan(offset, std::min(group_size, files.size() - offset));
 diff --git a/src/iceberg/util/executor_util_internal.h b/src/iceberg/util/executor_util_internal.h
-index 9e8ac37..f20fcbd 100644
+index 9e8ac37..61c03dd 100644
 --- a/src/iceberg/util/executor_util_internal.h
 +++ b/src/iceberg/util/executor_util_internal.h
 @@ -82,6 +82,19 @@ concept ParallelCollectible =
@@ -83,7 +84,7 @@ index 9e8ac37..f20fcbd 100644
  }  // namespace internal
  
  template <typename... Args>
-@@ -157,82 +170,83 @@ struct ParallelReduce<std::tuple<Ts...>> {
+@@ -157,82 +170,87 @@ struct ParallelReduce<std::tuple<Ts...>> {
    }
  };
  
@@ -93,9 +94,10 @@ index 9e8ac37..f20fcbd 100644
 +
 +template <typename ArgsTuple, std::size_t... I>
 +auto MakeParallelCollectValues(ArgsTuple& args_tuple, std::index_sequence<I...>) {
-+  return std::tuple{std::vector<ParallelCollectValueT<std::tuple_element_t<I * 2, ArgsTuple>,
-+                                                      std::tuple_element_t<I * 2 + 1, ArgsTuple>>>(
-+      std::ranges::size(std::get<I * 2>(args_tuple)))...};
++  return std::tuple{
++      std::vector<ParallelCollectValueT<std::tuple_element_t<I * 2, ArgsTuple>,
++                                        std::tuple_element_t<I * 2 + 1, ArgsTuple>>>(
++          std::ranges::size(std::get<I * 2>(args_tuple)))...};
 +}
 +
 +template <auto... Options, typename ValuesTuple, std::size_t... I>
@@ -111,14 +113,16 @@ index 9e8ac37..f20fcbd 100644
 +}
 +
 +template <std::size_t I, typename Group, typename ArgsTuple, typename ValuesTuple>
-+void SubmitParallelCollectPair(Group& group, ArgsTuple& args_tuple, ValuesTuple& values_tuple) {
++void SubmitParallelCollectPair(Group& group, ArgsTuple& args_tuple,
++                               ValuesTuple& values_tuple) {
 +  using item_ref = std::ranges::range_reference_t<std::tuple_element_t<I * 2, ArgsTuple>>;
 +
 +  for (auto&& [item, value] :
 +       std::views::zip(std::get<I * 2>(args_tuple), std::get<I>(values_tuple))) {
 +    if constexpr (std::is_lvalue_reference_v<item_ref>) {
 +      group.Submit([&]() -> Status {
-+        ICEBERG_ASSIGN_OR_RAISE(value, std::invoke(std::get<I * 2 + 1>(args_tuple), item));
++        ICEBERG_ASSIGN_OR_RAISE(value,
++                                std::invoke(std::get<I * 2 + 1>(args_tuple), item));
 +        return {};
 +      });
 +    } else {
@@ -132,15 +136,15 @@ index 9e8ac37..f20fcbd 100644
 +}
 +
 +template <typename Group, typename ArgsTuple, typename ValuesTuple, std::size_t... I>
-+void SubmitParallelCollectTasks(Group& group, ArgsTuple& args_tuple, ValuesTuple& values_tuple,
-+                                std::index_sequence<I...>) {
++void SubmitParallelCollectTasks(Group& group, ArgsTuple& args_tuple,
++                                ValuesTuple& values_tuple, std::index_sequence<I...>) {
 +  (SubmitParallelCollectPair<I>(group, args_tuple, values_tuple), ...);
 +}
 +
 +}  // namespace internal
 +
  template <auto... Options, typename... Args>
-   requires(sizeof...(Args) >= 2 && sizeof...(Args) % 2 == 0 &&
+-  requires(sizeof...(Args) >= 2 && sizeof...(Args) % 2 == 0 &&
 -           []<std::size_t... I>(std::index_sequence<I...>) consteval {
 -             return (internal::ParallelCollectible<
 -                         typename internal::ParallelCollectTraits<I, Args...>::input_type,
@@ -148,8 +152,10 @@ index 9e8ac37..f20fcbd 100644
 -                         Options...> &&
 -                     ...);
 -           }(std::make_index_sequence<sizeof...(Args) / 2>{}))
-+           internal::ParallelCollectibleArgs<std::make_index_sequence<sizeof...(Args) / 2>,
-+                                             std::tuple<Args...>, Options...>::value)
++  requires(
++      sizeof...(Args) >= 2 && sizeof...(Args) % 2 == 0 &&
++      internal::ParallelCollectibleArgs<std::make_index_sequence<sizeof...(Args) / 2>,
++                                        std::tuple<Args...>, Options...>::value)
  auto ParallelCollect(OptionalExecutor executor, Args&&... args) {
    constexpr std::size_t pair_count = sizeof...(Args) / 2;
    using indices = std::make_index_sequence<pair_count>;
@@ -182,8 +188,8 @@ index 9e8ac37..f20fcbd 100644
 -  };
 -
 -  using result_type = decltype(reduce_all(indices{}));
-+  using result_type =
-+      decltype(internal::ReduceParallelCollectValues<Options...>(values_tuple, indices{}));
++  using result_type = decltype(internal::ReduceParallelCollectValues<Options...>(
++      values_tuple, indices{}));
  
    TaskGroup group;
    group.SetExecutor(executor);
