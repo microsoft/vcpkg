@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers
     REF "n${VERSION}"
-    SHA512 103381914daf92ae11a409b2c9d0a9036bd40e3f7f244fa05202ed19c863f0630818c72e09e829b336754d727672b75d2789978a5875b355c3bc107fa9ca3ec6
+    SHA512 9ef86af73e39bffee3ca5df8954c03a793120fafa1742ff07a763ce4247c579e4eb4b5c53356faa436a3caa6d8317402e22651a5e89766256c74e8030d0f1111
     HEAD_REF master
 )
 
@@ -39,14 +39,14 @@ else()
     IF (NOT MAKE)
         MESSAGE(FATAL_ERROR "MAKE not found")
     ENDIF ()
-    
+
     vcpkg_execute_required_process(
         COMMAND make PREFIX=$${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME make-${TARGET_TRIPLET}
     )
 
-    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
+    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where
     # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
     if(NOT VCPKG_BUILD_TYPE)
@@ -58,4 +58,4 @@ vcpkg_fixup_pkgconfig()
 
 # Install the files to their default vcpkg locations
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
-vcpkg_install_copyright(FILE_LIST "${CURRENT_PORT_DIR}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/include/ffnvcodec/dynlink_nvcuvid.h")
