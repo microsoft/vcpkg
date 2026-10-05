@@ -1,26 +1,13 @@
 {
   "name": "scinumtools3",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "SciNumTools3: C++ toolkit for unit-aware scientific computation with runtime expressions and validated parameters.",
   "homepage": "https://github.com/vrtulka23/scinumtools3",
   "license": "MIT",
   "dependencies": [
     {
-      "name": "cpp-httplib",
-      "default-features": false
-    },
-    "glfw3",
-    {
       "name": "hdf5",
       "default-features": false
-    },
-    {
-      "name": "imgui",
-      "default-features": false,
-      "features": [
-        "glfw-binding",
-        "opengl3-binding"
-      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -30,5 +17,34 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "report": {
+      "description": "Enable DIP report generation and the snt report command"
+    },
+    "server": {
+      "description": "Enable the snt server REST API",
+      "dependencies": [
+        {
+          "name": "cpp-httplib",
+          "default-features": false
+        }
+      ]
+    },
+    "viewer": {
+      "description": "Enable the snt view graphical parameter viewer",
+      "supports": "!android",
+      "dependencies": [
+        "glfw3",
+        {
+          "name": "imgui",
+          "default-features": false,
+          "features": [
+            "glfw-binding",
+            "opengl3-binding"
+          ]
+        }
+      ]
+    }
+  }
 }
