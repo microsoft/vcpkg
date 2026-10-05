@@ -1,7 +1,6 @@
 {
   "name": "libfort",
-  "version-semver": "0.4.2",
-  "port-version": 1,
+  "version-semver": "0.5.1",
   "description": "A simple crossplatform library to create formatted text tables",
   "homepage": "https://github.com/seleznevae/libfort",
   "license": "MIT",
