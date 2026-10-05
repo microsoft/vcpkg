@@ -1,46 +1,37 @@
 cmake_minimum_required(VERSION 3.24)
-project(fastlowess-vcpkg VERSION 4.1.0 LANGUAGES NONE)
+project(fastlowess-vcpkg VERSION 4.1.0 LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(cargo_profile debug)
-    set(cargo_flags)
-else()
-    set(cargo_profile release)
-    set(cargo_flags --release)
+if(NOT MSVC OR NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(FATAL_ERROR "This prebuilt package requires the x64 MSVC ABI.")
 endif()
-set(cargo_target x86_64-pc-windows-msvc)
-set(cargo_dir "${CMAKE_CURRENT_BINARY_DIR}/cargo")
-set(cargo_output "${cargo_dir}/${cargo_target}/${cargo_profile}")
-
-add_custom_target(fastlowess-native ALL
-    COMMAND "${CMAKE_COMMAND}" -E env
-        "RUSTC=${FASTLOWESS_RUSTC}"
-        "RUSTFLAGS=-Ctarget-feature=-crt-static"
-        "${FASTLOWESS_CARGO}" rustc
-        --manifest-path "${FASTLOWESS_SOURCE_DIR}/bindings/cpp/Cargo.toml"
-        --package fastlowess-cpp --lib --locked
-        --target "${cargo_target}" --target-dir "${cargo_dir}"
-        ${cargo_flags} --crate-type=cdylib
-    BYPRODUCTS
-        "${cargo_output}/fastlowess_cpp.dll"
-        "${cargo_output}/fastlowess_cpp.dll.lib"
-        "${cargo_output}/fastlowess_cpp.pdb"
-    WORKING_DIRECTORY "${FASTLOWESS_SOURCE_DIR}"
+set(import_library "${CMAKE_CURRENT_BINARY_DIR}/fastlowess_cpp.dll.lib")
+add_custom_command(
+    OUTPUT "${import_library}"
+    COMMAND
+        "${CMAKE_AR}" /nologo /machine:x64
+        "/def:${CMAKE_CURRENT_SOURCE_DIR}/fastlowess.def"
+        "/out:${import_library}"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/fastlowess.def"
     VERBATIM
 )
+add_custom_target(fastlowess-import-library ALL DEPENDS "${import_library}")
 
-install(FILES "${cargo_output}/fastlowess_cpp.dll" DESTINATION bin)
-install(FILES "${cargo_output}/fastlowess_cpp.dll.lib" DESTINATION lib)
-install(FILES "${cargo_output}/fastlowess_cpp.pdb" DESTINATION bin OPTIONAL)
-install(FILES
-    "${FASTLOWESS_SOURCE_DIR}/bindings/cpp/include/fastlowess.h"
-    "${FASTLOWESS_SOURCE_DIR}/bindings/cpp/include/fastlowess.hpp"
+install(FILES "${FASTLOWESS_BINARY}" DESTINATION bin)
+install(FILES "${import_library}" DESTINATION lib)
+install(
+    FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/fastlowess.h"
+        "${FASTLOWESS_SOURCE_DIR}/bindings/cpp/include/fastlowess.hpp"
     DESTINATION include
 )
 if(EXISTS "${FASTLOWESS_SOURCE_DIR}/bindings/cpp/include/fastlowess_version.h")
-    install(FILES "${FASTLOWESS_SOURCE_DIR}/bindings/cpp/include/fastlowess_version.h" DESTINATION include)
+    install(
+        FILES
+            "${FASTLOWESS_SOURCE_DIR}/bindings/cpp/include/fastlowess_version.h"
+        DESTINATION include
+    )
 endif()
 
 configure_package_config_file(
@@ -53,8 +44,9 @@ write_basic_package_version_file(
     VERSION "${PROJECT_VERSION}"
     COMPATIBILITY SameMajorVersion
 )
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfigVersion.cmake"
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfigVersion.cmake"
     DESTINATION share/fastlowess
 )

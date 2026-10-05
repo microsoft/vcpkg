@@ -5,11 +5,10 @@ if(NOT TARGET fastlowess::fastlowess)
     set_target_properties(fastlowess::fastlowess PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
         INTERFACE_COMPILE_FEATURES cxx_std_17
-        IMPORTED_CONFIGURATIONS "Release;Debug"
-        IMPORTED_LOCATION_RELEASE "${PACKAGE_PREFIX_DIR}/bin/fastlowess_cpp.dll"
+        IMPORTED_CONFIGURATIONS Release
+        IMPORTED_LOCATION_RELEASE "${PACKAGE_PREFIX_DIR}/bin/fastlowess-win32-x64.dll"
         IMPORTED_IMPLIB_RELEASE "${PACKAGE_PREFIX_DIR}/lib/fastlowess_cpp.dll.lib"
-        IMPORTED_LOCATION_DEBUG "${PACKAGE_PREFIX_DIR}/debug/bin/fastlowess_cpp.dll"
-        IMPORTED_IMPLIB_DEBUG "${PACKAGE_PREFIX_DIR}/debug/lib/fastlowess_cpp.dll.lib"
+        MAP_IMPORTED_CONFIG_DEBUG Release
         MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
         MAP_IMPORTED_CONFIG_MINSIZEREL Release
     )

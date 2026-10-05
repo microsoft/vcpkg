@@ -3,5 +3,6 @@ fastlowess provides the upstream CMake target:
     find_package(fastlowess CONFIG REQUIRED)
     target_link_libraries(main PRIVATE fastlowess::fastlowess)
 
-This overlay currently supports x64-windows shared libraries with the dynamic
-MSVC runtime. Rust 1.89+ is required to build the port, not to consume it.
+This port installs a checksum-pinned upstream CPU DLL. Rust and Cargo are not
+required. Debug and Release consumers use the same Release DLL and release CRT.
+Only x64 Windows with the dynamic MSVC runtime is supported.
