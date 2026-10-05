@@ -60,19 +60,11 @@ if("tools" IN_LIST FEATURES)
         "${CURRENT_PACKAGES_DIR}/debug/bin/sz3_smoke_test${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
     )
     vcpkg_copy_tools(TOOL_NAMES sz3 AUTO_CLEAN)
-    # libSZ3c has no CMake target upstream (its export is never installed), so a consumer could not get
-    # its SZ3/Zstd/C++ dependencies. The sz3 tool does not link it.
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/SZ3c")
-    file(GLOB sz3c_libs "${CURRENT_PACKAGES_DIR}/lib/*SZ3c*" "${CURRENT_PACKAGES_DIR}/debug/lib/*SZ3c*"
-                        "${CURRENT_PACKAGES_DIR}/bin/*SZ3c*" "${CURRENT_PACKAGES_DIR}/debug/bin/*SZ3c*")
-    if(sz3c_libs)
-        file(REMOVE ${sz3c_libs})
-    endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-if(NOT "hdf5" IN_LIST FEATURES)
-    # nothing left but empty directories: the tool is under tools/, libSZ3c is not shipped
+if(NOT "hdf5" IN_LIST FEATURES AND NOT "tools" IN_LIST FEATURES)
+    # header-only: nothing left but empty directories
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
