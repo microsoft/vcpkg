@@ -7545,7 +7545,7 @@
       "port-version": 15
     },
     "openpit": {
-      "baseline": "0.8.3",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "openscap": {

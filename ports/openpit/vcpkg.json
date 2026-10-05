@@ -1,6 +1,6 @@
 {
   "name": "openpit",
-  "version": "0.8.3",
+  "version": "0.9.0",
   "description": "C++17 binding for the OpenPit pre-trade risk SDK",
   "homepage": "https://openpit.dev",
   "license": "Apache-2.0 AND MIT AND Unicode-3.0",
