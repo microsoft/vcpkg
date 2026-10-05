@@ -52,4 +52,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/COPYING"
+    COMMENT [[
+LibreSSL code: BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT AND OpenSSL.
+Upstream's files do not declare a license for the installed CA bundle, so the package license is null.
+Consumers supplying their own CA bundle can use the code expression above for LibreSSL
+and account for their bundle's license separately.
+]]
+)

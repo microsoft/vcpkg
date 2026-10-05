@@ -7,7 +7,7 @@
     "LibreSSL provides much of the OpenSSL 1.1 API. Incompatibilities between the projects exist and are unavoidable since both evolve with different goals and priorities."
   ],
   "homepage": "https://www.libressl.org",
-  "license": "ISC",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",
