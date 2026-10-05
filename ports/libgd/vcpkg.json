@@ -46,6 +46,25 @@
         }
       ]
     },
+    "avif-dav1d": {
+      "description": "Support for AVIF decoding using the dav1d codec",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "default-features": false,
+          "features": [
+            "dav1d"
+          ]
+        },
+        {
+          "name": "libgd",
+          "default-features": false,
+          "features": [
+            "avif"
+          ]
+        }
+      ]
+    },
     "fontconfig": {
       "description": "Support for Fontconfig",
       "dependencies": [
