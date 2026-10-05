@@ -1,0 +1,26 @@
+--- a/SZ3Config.cmake.in
++++ b/SZ3Config.cmake.in
+@@ -5,13 +5,7 @@
+ # Every search that can decline runs before any SZ3:: target exists, so a decline leaves none behind
+ # for a consumer's own copy of SZ3 to collide with.
+ if(NOT "@SZ3_USE_BUNDLED_ZSTD@")
+-  # Found again, not taken from the export: the build machine's path need not exist here.
+-  find_library(SZ3_ZSTD_LIBRARY NAMES zstd)
+-  if(NOT SZ3_ZSTD_LIBRARY)
+-    set(SZ3_NOT_FOUND_MESSAGE "SZ3 was built against the system Zstd and no libzstd was found here. Install Zstd's development package, or set SZ3_ZSTD_LIBRARY.")
+-    set(SZ3_FOUND FALSE)
+-    return()
+-  endif()
++  find_dependency(zstd CONFIG)
+ endif()
+ 
+ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/HDF5SZ3.cmake")
+@@ -54,7 +48,7 @@
+   include("${CMAKE_CURRENT_LIST_DIR}/HDF5SZ3.cmake")
+ endif()
+ if(NOT "@SZ3_USE_BUNDLED_ZSTD@")
+-  set_property(TARGET SZ3::SZ3core APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${SZ3_ZSTD_LIBRARY}")
++  set_property(TARGET SZ3::SZ3core APPEND PROPERTY INTERFACE_LINK_LIBRARIES zstd::libzstd)
+ endif()
+ if(sz3_openmp)
+   set_property(TARGET SZ3::SZ3 APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${sz3_openmp})

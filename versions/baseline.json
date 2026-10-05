@@ -10048,6 +10048,10 @@
       "baseline": "3.0.2",
       "port-version": 1
     },
+    "sz": {
+      "baseline": "3.4.0",
+      "port-version": 0
+    },
     "tabulate": {
       "baseline": "1.5",
       "port-version": 0

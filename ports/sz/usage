@@ -1,0 +1,14 @@
+sz provides CMake targets:
+
+  find_package(SZ3 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE SZ3::SZ3)
+
+With the hdf5 feature, the HDF5 filter library:
+
+  find_package(SZ3 CONFIG REQUIRED COMPONENTS hdf5sz3)
+  target_link_libraries(main PRIVATE SZ3::hdf5sz3)
+
+In a dynamic build, a copy of the filter for HDF5 to load as a plugin is in
+  lib/plugin  (Linux, macOS)
+  bin/plugin  (Windows)
+under the installed prefix; set HDF5_PLUGIN_PATH to that directory.
