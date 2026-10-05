@@ -13,4 +13,8 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/FindStb.cmake" DESTINATION "${CURRENT_PA
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+# See https://github.com/nothings/stb/issues/2008
+vcpkg_install_copyright(
+    COMMENT "stb libraries are single files and licensed individually, please refer comments in each individual file for licensing."
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
+)
