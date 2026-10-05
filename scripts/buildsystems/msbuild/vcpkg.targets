@@ -219,7 +219,8 @@
   </Target>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput"
-          Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true' and '@(Link)' != ''">
+          Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true' and '@(Link)' != ''
+                     and Exists('$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)bin')">
     <Message Text="[vcpkg] Starting VcpkgApplocalDeps" Importance="low" />
     <PropertyGroup>
       <_ZVcpkgApplocalInstalledBinDir>$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)bin</_ZVcpkgApplocalInstalledBinDir>
