@@ -1,3 +1,9 @@
+#include <stdint.h>
+#include <stddef.h>
+
+#ifndef FASTLOWESS_H
+#define FASTLOWESS_H
+
 struct fastlowess_CppLowess;
 
 struct fastlowess_CppOnlineLowess;
@@ -47,15 +53,15 @@ struct fastlowess_CppLowessResult {
   double aicc;
   double effective_df;
   double residual_sd;
-  /// Opaque handle for `cpp_predict()`, non-NULL only if `retain_model` was set
-  /// to 1. Must eventually be freed via `cpp_predict_handle_free`.
+  /// Opaque handle for `cpp_predict()`, non-NULL only if `retain_model` was set to 1.
+  /// Must eventually be freed via `cpp_predict_handle_free`.
   fastlowess_CppPredictHandle *predict_handle;
   /// Error message (NULL if no error)
   char *error;
 };
 
-/// Result of `cpp_predict()`. All arrays are allocated by Rust and must be
-/// freed via `cpp_predict_free_result`.
+/// Result of `cpp_predict()`. All arrays are allocated by Rust and must be freed via
+/// `cpp_predict_free_result`.
 struct fastlowess_CppPredictResult {
   /// Predicted y values, one per query point (length = n)
   double *y;
@@ -101,8 +107,7 @@ extern "C" {
 
 const char *cpp_last_error_message();
 
-/// Returns 1 if this library was built with the `gpu` Cargo feature enabled, 0
-/// otherwise.
+/// Returns 1 if this library was built with the `gpu` Cargo feature enabled, 0 otherwise.
 int cpp_gpu_enabled();
 
 /// Returns the crate version as a static, null-terminated C string.
@@ -111,20 +116,32 @@ const char *cpp_version();
 /// C++ wrapper constructor.
 ///
 /// # Safety
-/// Pointers must be valid null-terminated strings or null. Arrays must be
-/// valid.
-fastlowess_CppLowess *
-cpp_lowess_new(double fraction, int iterations, double delta,
-               const char *weight_function, const char *robustness_method,
-               const char *scaling_method, const char *boundary_policy,
-               double confidence_intervals, double prediction_intervals,
-               int return_diagnostics, int return_residuals,
-               int return_robustness_weights, int return_derivative,
-               const char *zero_weight_fallback, double auto_converge,
-               const double *cv_fractions, unsigned long cv_fractions_len,
-               const char *cv_method, int cv_k, int parallel, int return_se,
-               int return_sorted, const char *backend, const char *missing,
-               int retain_model);
+/// Pointers must be valid null-terminated strings or null. Arrays must be valid.
+fastlowess_CppLowess *cpp_lowess_new(double fraction,
+                                     int iterations,
+                                     double delta,
+                                     const char *weight_function,
+                                     const char *robustness_method,
+                                     const char *scaling_method,
+                                     const char *boundary_policy,
+                                     double confidence_intervals,
+                                     double prediction_intervals,
+                                     int return_diagnostics,
+                                     int return_residuals,
+                                     int return_robustness_weights,
+                                     int return_derivative,
+                                     const char *zero_weight_fallback,
+                                     double auto_converge,
+                                     const double *cv_fractions,
+                                     unsigned long cv_fractions_len,
+                                     const char *cv_method,
+                                     int cv_k,
+                                     int parallel,
+                                     int return_se,
+                                     int return_sorted,
+                                     const char *backend,
+                                     const char *missing,
+                                     int retain_model);
 
 /// Set CV seed for reproducible K-fold splits.
 ///
@@ -136,12 +153,13 @@ void cpp_lowess_set_cv_seed(fastlowess_CppLowess *ptr, unsigned long seed);
 ///
 /// # Safety
 /// `ptr` must be a valid CppLowess pointer. `x_values` and `y_values` must be
-/// valid arrays of length `n`. `custom_weights` is optional: pass null and 0 to
-/// omit.
-fastlowess_CppLowessResult
-cpp_lowess_fit(fastlowess_CppLowess *ptr, const double *x_values,
-               const double *y_values, unsigned long n,
-               const double *custom_weights, unsigned long custom_weights_len);
+/// valid arrays of length `n`. `custom_weights` is optional: pass null and 0 to omit.
+fastlowess_CppLowessResult cpp_lowess_fit(fastlowess_CppLowess *ptr,
+                                          const double *x_values,
+                                          const double *y_values,
+                                          unsigned long n,
+                                          const double *custom_weights,
+                                          unsigned long custom_weights_len);
 
 /// Free batch model.
 ///
@@ -149,20 +167,23 @@ cpp_lowess_fit(fastlowess_CppLowess *ptr, const double *x_values,
 /// `ptr` must be a valid pointer returned by `cpp_lowess_new` or null.
 void cpp_lowess_free(fastlowess_CppLowess *ptr);
 
-/// Evaluate a fitted model (retained via `retain_model = 1`) at out-of-sample
-/// query points not in the training set.
+/// Evaluate a fitted model (retained via `retain_model = 1`) at out-of-sample query
+/// points not in the training set.
 ///
 /// # Safety
-/// `handle` must be a valid pointer returned via
-/// `CppLowessResult::predict_handle`. `new_x` must be a valid array of length
-/// `new_x_len`. `extrapolation` must be a valid null-terminated string or null
-/// (defaults to "clamp").
-fastlowess_CppPredictResult
-cpp_predict(fastlowess_CppPredictHandle *handle, const double *new_x,
-            unsigned long new_x_len, int return_se, double confidence_level,
-            double prediction_level, int return_derivative,
-            const char *extrapolation, double max_extrapolation_distance,
-            double max_neighbor_distance);
+/// `handle` must be a valid pointer returned via `CppLowessResult::predict_handle`.
+/// `new_x` must be a valid array of length `new_x_len`. `extrapolation` must be a
+/// valid null-terminated string or null (defaults to "clamp").
+fastlowess_CppPredictResult cpp_predict(fastlowess_CppPredictHandle *handle,
+                                        const double *new_x,
+                                        unsigned long new_x_len,
+                                        int return_se,
+                                        double confidence_level,
+                                        double prediction_level,
+                                        int return_derivative,
+                                        const char *extrapolation,
+                                        double max_extrapolation_distance,
+                                        double max_neighbor_distance);
 
 /// Free a CppPredictResult's heap-allocated buffers.
 ///
@@ -173,40 +194,50 @@ void cpp_predict_free_result(fastlowess_CppPredictResult *result);
 /// Free a `CppPredictHandle` returned via `CppLowessResult::predict_handle`.
 ///
 /// # Safety
-/// `ptr` must be a valid pointer returned via
-/// `CppLowessResult::predict_handle`, or null.
+/// `ptr` must be a valid pointer returned via `CppLowessResult::predict_handle`, or null.
 void cpp_predict_handle_free(fastlowess_CppPredictHandle *ptr);
 
 /// Create a new Streaming Lowess model.
 ///
 /// # Safety
 /// Pointers must be valid null-terminated strings or null.
-fastlowess_CppStreamingLowess *cpp_streaming_new(
-    double fraction, int iterations, double delta, const char *weight_function,
-    const char *robustness_method, const char *scaling_method,
-    const char *boundary_policy, int return_diagnostics, int return_residuals,
-    int return_robustness_weights, int return_derivative,
-    const char *zero_weight_fallback, double auto_converge, int parallel,
-    int chunk_size, int overlap, const char *merge_strategy,
-    const char *missing, int return_se, double confidence_intervals,
-    double prediction_intervals);
+fastlowess_CppStreamingLowess *cpp_streaming_new(double fraction,
+                                                 int iterations,
+                                                 double delta,
+                                                 const char *weight_function,
+                                                 const char *robustness_method,
+                                                 const char *scaling_method,
+                                                 const char *boundary_policy,
+                                                 int return_diagnostics,
+                                                 int return_residuals,
+                                                 int return_robustness_weights,
+                                                 int return_derivative,
+                                                 const char *zero_weight_fallback,
+                                                 double auto_converge,
+                                                 int parallel,
+                                                 int chunk_size,
+                                                 int overlap,
+                                                 const char *merge_strategy,
+                                                 const char *missing,
+                                                 int return_se,
+                                                 double confidence_intervals,
+                                                 double prediction_intervals);
 
 /// Process a chunk of data.
 ///
 /// # Safety
 /// `ptr` must be valid. `x_values` and `y_values` must be valid arrays of
 /// length `n`.
-fastlowess_CppLowessResult
-cpp_streaming_process(fastlowess_CppStreamingLowess *ptr,
-                      const double *x_values, const double *y_values,
-                      unsigned long n);
+fastlowess_CppLowessResult cpp_streaming_process(fastlowess_CppStreamingLowess *ptr,
+                                                 const double *x_values,
+                                                 const double *y_values,
+                                                 unsigned long n);
 
 /// Finalize the streaming process.
 ///
 /// # Safety
 /// `ptr` must be valid.
-fastlowess_CppLowessResult
-cpp_streaming_finalize(fastlowess_CppStreamingLowess *ptr);
+fastlowess_CppLowessResult cpp_streaming_finalize(fastlowess_CppStreamingLowess *ptr);
 
 /// Free streaming model.
 ///
@@ -218,15 +249,24 @@ void cpp_streaming_free(fastlowess_CppStreamingLowess *ptr);
 ///
 /// # Safety
 /// Pointers must be valid null-terminated strings or null.
-fastlowess_CppOnlineLowess *
-cpp_online_new(double fraction, int iterations, double delta,
-               const char *weight_function, const char *robustness_method,
-               const char *scaling_method, const char *boundary_policy,
-               int return_robustness_weights, int return_derivative,
-               const char *zero_weight_fallback, double auto_converge,
-               int window_capacity, int min_points, const char *update_mode,
-               const char *missing, int return_se, double confidence_intervals,
-               double prediction_intervals);
+fastlowess_CppOnlineLowess *cpp_online_new(double fraction,
+                                           int iterations,
+                                           double delta,
+                                           const char *weight_function,
+                                           const char *robustness_method,
+                                           const char *scaling_method,
+                                           const char *boundary_policy,
+                                           int return_robustness_weights,
+                                           int return_derivative,
+                                           const char *zero_weight_fallback,
+                                           double auto_converge,
+                                           int window_capacity,
+                                           int min_points,
+                                           const char *update_mode,
+                                           const char *missing,
+                                           int return_se,
+                                           double confidence_intervals,
+                                           double prediction_intervals);
 
 /// Add a single point to the model and return its smoothed value.
 /// `has_value = 0` in the result means the window is still filling.
@@ -234,13 +274,13 @@ cpp_online_new(double fraction, int iterations, double delta,
 /// # Safety
 /// `ptr` must be a valid `CppOnlineLowess` pointer.
 fastlowess_CppOnlineOutput cpp_online_add_point(fastlowess_CppOnlineLowess *ptr,
-                                                double x, double y);
+                                                double x,
+                                                double y);
 
 /// Free the error string in a CppOnlineOutput (call only when error != NULL).
 ///
 /// # Safety
-/// `output` must be a valid pointer and `output->error` must have been
-/// allocated by Rust.
+/// `output` must be a valid pointer and `output->error` must have been allocated by Rust.
 void cpp_online_free_output(fastlowess_CppOnlineOutput *output);
 
 /// Free online model.
@@ -255,4 +295,6 @@ void cpp_online_free(fastlowess_CppOnlineLowess *ptr);
 /// `result` must be a valid pointer to a CppLowessResult struct.
 void cpp_lowess_free_result(fastlowess_CppLowessResult *result);
 
-} // extern "C"
+}  // extern "C"
+
+#endif  // FASTLOWESS_H

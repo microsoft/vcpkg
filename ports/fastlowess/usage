@@ -3,6 +3,11 @@ fastlowess provides the upstream CMake target:
     find_package(fastlowess CONFIG REQUIRED)
     target_link_libraries(main PRIVATE fastlowess::fastlowess)
 
-This port installs a checksum-pinned upstream CPU DLL. Rust and Cargo are not
-required. Debug and Release consumers use the same Release DLL and release CRT.
-Only x64 Windows with the dynamic MSVC runtime is supported.
+This port installs a checksum-pinned upstream CPU library for Windows x64/ARM64,
+Linux x64/ARM64, or macOS x64/ARM64. Linux triplets containing `musl` select the
+musl build; other Linux triplets select the glibc build. Shared linkage is
+required. Use dynamic-linkage triplets such as `x64-linux-dynamic`,
+`arm64-linux-dynamic`, `x64-osx-dynamic`, or `arm64-osx-dynamic`; default static
+Linux/macOS triplets are unsupported. Windows uses the dynamic MSVC runtime and
+generates its import library from the verified export list. Debug and Release
+consumers both use the upstream Release library. Rust and Cargo are not required.

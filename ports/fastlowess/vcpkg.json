@@ -1,10 +1,11 @@
 {
   "name": "fastlowess",
   "version": "4.1.0",
+  "port-version": 1,
   "description": "Prebuilt Rust-backed C++17 LOWESS smoothing with batch, streaming, and online adapters",
   "homepage": "https://thisisamirv.github.io/lowess-project/cpp/",
   "license": "MIT OR Apache-2.0",
-  "supports": "windows & x64 & !uwp & !mingw & !static & !staticcrt",
+  "supports": "(windows & (x64 | arm64) & !uwp & !mingw & !static & !staticcrt) | (linux & (x64 | arm64) & !static) | (osx & (x64 | arm64) & !static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
