@@ -2053,7 +2053,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.58.0",
+      "baseline": "0.59.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2073,7 +2073,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.19.1",
+      "baseline": "1.20.0",
       "port-version": 0
     },
     "cpp-pinyin": {
@@ -2985,7 +2985,7 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "8.3.0",
+      "baseline": "8.3.1",
       "port-version": 0
     },
     "fast-obj": {
@@ -3066,7 +3066,7 @@
     },
     "ffmpeg": {
       "baseline": "9.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ffmpeg-bin2c": {
       "baseline": "9.0.2",
@@ -4081,7 +4081,7 @@
       "port-version": 1
     },
     "iniparser": {
-      "baseline": "4.3.0",
+      "baseline": "4.3.2",
       "port-version": 0
     },
     "inipp": {
@@ -7844,6 +7844,10 @@
       "baseline": "2.8.3",
       "port-version": 3
     },
+    "perf-cpp": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "perfetto": {
       "baseline": "53.0",
       "port-version": 0
@@ -7925,11 +7929,11 @@
       "port-version": 0
     },
     "plf-colony": {
-      "baseline": "7.7.11",
+      "baseline": "7.7.15",
       "port-version": 0
     },
     "plf-hive": {
-      "baseline": "2026-09-06",
+      "baseline": "1.55.0",
       "port-version": 0
     },
     "plf-indiesort": {
@@ -7937,7 +7941,7 @@
       "port-version": 0
     },
     "plf-list": {
-      "baseline": "7.6.21",
+      "baseline": "7.6.36",
       "port-version": 0
     },
     "plf-nanotimer": {
@@ -7945,15 +7949,15 @@
       "port-version": 0
     },
     "plf-queue": {
-      "baseline": "2.0.21",
+      "baseline": "2.0.36",
       "port-version": 0
     },
     "plf-stack": {
-      "baseline": "2.0.21",
+      "baseline": "2.0.37",
       "port-version": 0
     },
     "plf-tools": {
-      "baseline": "1.0.4",
+      "baseline": "1.0.8",
       "port-version": 0
     },
     "plib": {
@@ -9417,7 +9421,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "5.0.1",
+      "baseline": "5.0.2",
       "port-version": 0
     },
     "simdutf": {
@@ -9497,7 +9501,7 @@
       "port-version": 0
     },
     "slick-perfmon": {
-      "baseline": "0.1.0",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "slick-queue": {
@@ -9509,7 +9513,7 @@
       "port-version": 0
     },
     "slick-socket": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "slick-stream-buffer": {
@@ -10460,10 +10464,6 @@
       "baseline": "0.7.0",
       "port-version": 0
     },
-    "ttmath": {
-      "baseline": "2019-10-23",
-      "port-version": 0
-    },
     "tuplet": {
       "baseline": "2.1.1",
       "port-version": 0
@@ -10545,7 +10545,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "5.2.0",
+      "baseline": "5.3.0",
       "port-version": 0
     },
     "unqlite": {
@@ -11407,6 +11407,10 @@
     "zlmediakit": {
       "baseline": "2024-09-29",
       "port-version": 1
+    },
+    "zmij": {
+      "baseline": "1.2",
+      "port-version": 0
     },
     "zoe": {
       "baseline": "3.6",

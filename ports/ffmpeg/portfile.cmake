@@ -554,6 +554,8 @@ endif()
 
 if("vulkan" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-vulkan")
+    # configure probes for a glslc executable to compile Vulkan shaders at build time
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc")
 else()
     set(OPTIONS "${OPTIONS} --disable-vulkan")
 endif()
