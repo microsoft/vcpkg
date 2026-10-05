@@ -1,12 +1,11 @@
 {
   "name": "libheif",
-  "version": "1.23.5",
+  "version": "1.23.6",
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
   "license": "LGPL-3.0-only AND MIT",
   "supports": "!xbox",
   "dependencies": [
-    "libde265",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,7 +16,8 @@
     }
   ],
   "default-features": [
-    "hevc"
+    "hevc",
+    "libde265"
   ],
   "features": {
     "aom": {
@@ -25,6 +25,13 @@
       "license": "BSD-2-Clause",
       "dependencies": [
         "aom"
+      ]
+    },
+    "dav1d": {
+      "description": "AVIF decoding and encoding via dav1d",
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        "dav1d"
       ]
     },
     "gdk-pixbuf": {
@@ -71,6 +78,12 @@
         "libjpeg-turbo"
       ]
     },
+    "libde265": {
+      "description": "libde265 HEVC decoder",
+      "dependencies": [
+        "libde265"
+      ]
+    },
     "openjpeg": {
       "description": "JPEG-2000 decoding and encoding via OpenJPEG",
       "license": "BSD-2-Clause",
@@ -84,6 +97,13 @@
       "license": "BSD-3-Clause",
       "dependencies": [
         "uvg266"
+      ]
+    },
+    "vvdec": {
+      "description": "vvdec VVC decoder",
+      "license": "BSD-3-Clause",
+      "dependencies": [
+        "vvdec"
       ]
     },
     "x264": {
