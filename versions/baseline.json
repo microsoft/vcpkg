@@ -7929,7 +7929,7 @@
       "port-version": 0
     },
     "plf-hive": {
-      "baseline": "2026-09-06",
+      "baseline": "1.55.0",
       "port-version": 0
     },
     "plf-indiesort": {
