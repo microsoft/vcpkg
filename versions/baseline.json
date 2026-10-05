@@ -8770,7 +8770,7 @@
     },
     "rapidjson": {
       "baseline": "2025-02-26",
-      "port-version": 0
+      "port-version": 1
     },
     "rapidobj": {
       "baseline": "1.1",
