@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
     REF "release-${VERSION}"
-    SHA512 a20269e064e68dd892084d8d6d6f3d5d44a6a75994808a1579ed7deeedc22c4230ec982d1166a0b85aca0b9a3625ac84e6fe9093dccebb78bf0b7cc01bc6c711
+    SHA512 c1fe49063c55f4a261e5e493d47dbd4071f4a03d958ed3c272e7064abbcc8643355dfc7f113186b91abb9358b0dc7c1921c260c47752862ad92e27e58e5d8580
     HEAD_REF main
     PATCHES
         dependencies.diff
@@ -49,4 +49,10 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/src/qoi.h"
+    "${SOURCE_PATH}/src/nanosvg.h"
+    "${SOURCE_PATH}/src/nanosvgrast.h"
+    "${SOURCE_PATH}/src/tiny_jpeg.h"
+)
