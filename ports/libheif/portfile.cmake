@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 a7b4a7ecc093f6b453939e093abef391f88bb371303183a91e431cba8f4b590131c05cc80a28733ac4822cce4a69ca1475251b2d4679890330a603de04c6c77c
+    SHA512 60a3b974a6c8d2d053098bc3cd36da78c6aa1d4d3282ce0055263fb4120e8390316d63bc3f2312f20c5d97f1cc35afaf89fa7321c0cb163c778883bae6dbb5e6
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff
@@ -16,6 +16,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         aom         WITH_AOM_DECODER
         aom         WITH_AOM_ENCODER
         aom         VCPKG_LOCK_FIND_PACKAGE_AOM
+		dav1d       WITH_DAV1D
+        dav1d       VCPKG_LOCK_FIND_PACKAGE_DAV1D
         gdk-pixbuf  WITH_GDK_PIXBUF
         hevc        WITH_X265
         hevc        VCPKG_LOCK_FIND_PACKAGE_X265
@@ -24,11 +26,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
         jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
+		libde265    WITH_LIBDE265
+		libde265    VCPKG_LOCK_FIND_PACKAGE_LIBDE265
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
         uvg266      WITH_UVG266
         uvg266      VCPKG_LOCK_FIND_PACKAGE_UVG266
+		vvdec       WITH_VVDEC
+		vvdec       VCPKG_LOCK_FIND_PACKAGE_VVDEC
         x264        WITH_X264
         h264-decoder WITH_OpenH264_DECODER
         h264-decoder VCPKG_LOCK_FIND_PACKAGE_OpenH264
@@ -53,13 +59,10 @@ vcpkg_cmake_configure(
         -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DPLUGIN_DIRECTORY=  # empty
-        -DWITH_DAV1D=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_EXAMPLE_HEIF_THUMB=OFF
         -DWITH_EXAMPLE_HEIF_VIEW=OFF
         -DWITH_LIBSHARPYUV=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=${VCPKG_LOCK_FIND_PACKAGE_ZLIB}
         -DVCPKG_LOCK_FIND_PACKAGE_Brotli=${VCPKG_LOCK_FIND_PACKAGE_Brotli}
         ${FEATURE_OPTIONS}
