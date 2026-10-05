@@ -7,7 +7,10 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
-    "slick-queue",
+    {
+      "name": "slick-queue",
+      "version>=": "2.1.0"
+    },
     "slick-shm",
     {
       "name": "vcpkg-cmake",
