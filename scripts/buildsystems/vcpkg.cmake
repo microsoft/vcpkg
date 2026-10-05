@@ -624,6 +624,8 @@ function(vcpkg_add_sourcelink_link_options target)
 
             # Incorporate the contents of each sourcelink JSON file (produced by vcpkg_write_sourcelink_file).
             set(sourcelink_fragments "")
+            # Tracked separately so --trace-expand doesn't dump sourcelink_fragments (which grows exponentially during the vcpkg ci build)
+            set(sourcelink_separator " ")
 
             foreach(sourcelink_file ${sourcelink_files})
                 file(READ ${sourcelink_file} sourcelink_contents)
@@ -655,18 +657,16 @@ function(vcpkg_add_sourcelink_link_options target)
                     # manually instead of setting the string using CMake's JSON capabilities
                     string(REGEX REPLACE "\\\\" "\\\\\\\\" entry_key "${entry_key}")
 
-                    if ("${sourcelink_fragments}" STREQUAL "")
-                        set(sourcelink_fragments " \"${entry_key}\" : \"${entry_value}\"\n")
-                    else()
-                        string(APPEND sourcelink_fragments ",\"${entry_key}\" : \"${entry_value}\"\n")
-                    endif()
+                    string(APPEND sourcelink_fragments "${sourcelink_separator}\"${entry_key}\" : \"${entry_value}\"\n")
+                    set(sourcelink_separator ",")
                 endforeach()
             endforeach()
 
             # Output the combined sourcelink JSON file
             # - The new contents are produced into a temporary file and then compared to the existing contents (if any),
             #   which avoids unnecessary updates if nothing changed.
-            if (NOT "${sourcelink_fragments}" STREQUAL "")
+            # - The separator is used to determine if any entries were added, as is a more efficient check than checking for an empty string
+            if(sourcelink_separator STREQUAL ",")
                 if(EXISTS "${Z_VCPKG_SOURCELINK_JSON}")
                     file(MD5 "${Z_VCPKG_SOURCELINK_JSON}" sourcelink_json_hash)
                 else()
