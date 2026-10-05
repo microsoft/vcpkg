@@ -3016,6 +3016,10 @@
       "baseline": "2024-12-05",
       "port-version": 0
     },
+    "fastlowess": {
+      "baseline": "4.1.0",
+      "port-version": 0
+    },
     "fastlz": {
       "baseline": "2024-08-02",
       "port-version": 1
