@@ -46,45 +46,6 @@
         }
       ]
     },
-    "avif-dav1d": {
-      "description": "Support for AVIF decoding using the dav1d codec",
-      "dependencies": [
-        {
-          "name": "libavif",
-          "default-features": false,
-          "features": [
-            "dav1d"
-          ]
-        },
-        {
-          "name": "libgd",
-          "default-features": false,
-          "features": [
-            "avif"
-          ]
-        }
-      ]
-    },
-    "avif-svt": {
-      "description": "Support for AVIF encoding using the SVT-AV1 codec",
-      "supports": "!x86 & !arm32 & !uwp",
-      "dependencies": [
-        {
-          "name": "libavif",
-          "default-features": false,
-          "features": [
-            "svt"
-          ]
-        },
-        {
-          "name": "libgd",
-          "default-features": false,
-          "features": [
-            "avif"
-          ]
-        }
-      ]
-    },
     "fontconfig": {
       "description": "Support for Fontconfig",
       "dependencies": [
@@ -99,7 +60,6 @@
     },
     "heif": {
       "description": "Support for HEIF",
-      "supports": "!(android | linux)",
       "dependencies": [
         {
           "name": "libheif",
