@@ -49,4 +49,10 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/src/qoi.h"
+    "${SOURCE_PATH}/src/nanosvg.h"
+    "${SOURCE_PATH}/src/nanosvgrast.h"
+    "${SOURCE_PATH}/src/tiny_jpeg.h"
+)
