@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cginternals/glbinding
-    REF v3.1.0
-    SHA512 d7294c9a0dc47a7c107b134e5dfa78c5812fc6bf739b9fd778fa7ce946d5ea971839a65c3985e0915fd75311e4a85fb221d33a71856c460199eab0e7622f7151
+    REF "v${VERSION}"
+    SHA512 50a290be60c62572f03b0d605848a167536d55700b3ee833b719317a632d3a023b017217348ca5974ceda17a62ef9a91fa4169f191d766b1879337439fe1ba60
     HEAD_REF master
     PATCHES
-        0001_force-system-install.patch
         0002_fix-uwpmacro.patch
         0003_fix-cmake-configs-paths.patch
         0004_fix-config-expected-paths.patch
@@ -17,7 +16,7 @@ vcpkg_cmake_configure(
         -DOPTION_BUILD_TESTS=OFF
         -DOPTION_BUILD_TOOLS=OFF
         -DOPTION_BUILD_EXAMPLES=OFF
-        -DGIT_REV=0
+        -DOPTION_USE_GIT_INFORMATION=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_cpplocate=ON
         -DOPTION_BUILD_EXAMPLES=OFF
     MAYBE_UNUSED_VARIABLES
