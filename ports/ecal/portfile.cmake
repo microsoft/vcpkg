@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=${CMAKE_CURRENT_LIST_DIR}/dependencies.cmake"
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DECAL_USE_HDF5=ON
         -DECAL_USE_QT=OFF
         -DECAL_USE_CURL=OFF
