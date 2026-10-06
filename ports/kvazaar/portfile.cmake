@@ -41,7 +41,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 
     if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/kvazaar.pc" "-lkvazaar" "-llibkvazaar")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/kvazaar.pc" "-lkvazaar" "-llibkvazaar")
+        if(NOT VCPKG_BUILD_TYPE)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/kvazaar.pc" "-lkvazaar" "-llibkvazaar")
+        endif()
     endif()
 endif()
 
