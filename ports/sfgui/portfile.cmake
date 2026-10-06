@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 1.0.1
     SHA512 dc09f0d903c71b8a5e67204155cbd79cbb8bc9f84c52c331d7843e0641ac3c04ace176b1000e8435b5e0e978ba0d04c549665ba36189282db0a11eafc39c72e5
     HEAD_REF master
+    PATCHES
+        fix-cmake-version.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SFGUI_BUILD_SHARED_LIBS)
