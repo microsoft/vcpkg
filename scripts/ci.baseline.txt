@@ -119,7 +119,6 @@ cppmicroservices:arm64-windows-static-md=fail
 cppmicroservices:arm64-windows=fail
 cppmicroservices:x64-android=fail
 ctbench:arm64-osx=fail
-ctp:x64-android=fail
 cuda:arm64-linux=fail
 dawn:arm64-linux=fail
 daxa:arm64-linux=fail
