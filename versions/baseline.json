@@ -2272,10 +2272,6 @@
       "baseline": "2024-11-16",
       "port-version": 0
     },
-    "ctp": {
-      "baseline": "6.6.1_P1_20210406_se",
-      "port-version": 4
-    },
     "ctpg": {
       "baseline": "1.3.7",
       "port-version": 2
