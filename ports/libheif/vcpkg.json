@@ -28,7 +28,7 @@
       ]
     },
     "dav1d": {
-      "description": "AVIF decoding and encoding via dav1d",
+      "description": "AVIF decoding via dav1d",
       "license": "BSD-2-Clause",
       "dependencies": [
         "dav1d"
@@ -101,9 +101,16 @@
     },
     "vvdec": {
       "description": "vvdec VVC decoder",
-      "license": "BSD-3-Clause",
+      "license": "BSD-3-Clause-Clear",
       "dependencies": [
         "vvdec"
+      ]
+    },
+    "vvenc": {
+      "description": "vvenc VVC decoder",
+      "license": "BSD-3-Clause-Clear",
+      "dependencies": [
+        "vvenc"
       ]
     },
     "x264": {
