@@ -180,7 +180,7 @@
   -->
   <Import Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgAutoBootstrap)' == 'true' and $([MSBuild]::IsOSPlatform('Windows')) and Exists('$(_ZVcpkgRoot)bootstrap-vcpkg.bat')"
           Project="$(MSBuildThisFileDirectory)\support\Bootstrap.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task" 
+  <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
   />
   <Import Project="$(MSBuildThisFileDirectory)support\GetGlobalProperties.task"
