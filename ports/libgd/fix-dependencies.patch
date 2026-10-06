@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bab784a..76c20e8 100644
+index 38b87cf7..459a600d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -134,7 +134,10 @@ else (USE_EXT_GD)
+@@ -130,11 +130,15 @@ else (USE_EXT_GD)
  	endif (ENABLE_ICONV)
  
  	IF (ENABLE_WEBP)
@@ -14,7 +14,20 @@ index bab784a..76c20e8 100644
  	ENDIF (ENABLE_WEBP)
  
  	IF (ENABLE_HEIF)
-@@ -173,7 +176,9 @@ else (USE_EXT_GD)
+ 		FIND_PACKAGE(HEIF REQUIRED)
++		list(APPEND PKG_REQUIRES_PRIVATES libheif)
+ 	ENDIF (ENABLE_HEIF)
+ 
+ 	IF (ENABLE_AVIF)
+@@ -142,6 +146,7 @@ else (USE_EXT_GD)
+ 		SET(HAVE_LIBAVIF 1)
+ 		SET(AVIF_LIBRARIES avif)
+ 		SET(AVIF_FOUND 1)
++		list(APPEND PKG_REQUIRES_PRIVATES libavif)
+ 	ENDIF (ENABLE_AVIF)
+ 
+ 	IF (ENABLE_LIQ)
+@@ -169,7 +174,9 @@ else (USE_EXT_GD)
  	endif (ENABLE_XPM)
  
  	if (ENABLE_FONTCONFIG)
@@ -26,10 +39,10 @@ index bab784a..76c20e8 100644
  
  	if (ENABLE_RAQM)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4cb56eb..74fa26b 100644
+index f0fc956d..e111c1aa 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -125,7 +125,6 @@ endif()
+@@ -130,7 +130,6 @@ endif()
  SET(LIBS_PRIVATES
  	${ICONV_LIBRARIES}
  	${LIQ_LIBRARIES}
