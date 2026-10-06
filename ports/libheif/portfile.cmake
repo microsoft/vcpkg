@@ -34,7 +34,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         uvg266      WITH_UVG266
         uvg266      VCPKG_LOCK_FIND_PACKAGE_UVG266
 		vvdec       WITH_VVDEC
-		vvdec       VCPKG_LOCK_FIND_PACKAGE_VVDEC
+		vvdec       VCPKG_LOCK_FIND_PACKAGE_vvdec
+		vvenc       WITH_VVENC
+		vvenc       VCPKG_LOCK_FIND_PACKAGE_vvenc
         x264        WITH_X264
         h264-decoder WITH_OpenH264_DECODER
         h264-decoder VCPKG_LOCK_FIND_PACKAGE_OpenH264
@@ -87,6 +89,12 @@ vcpkg_fixup_pkgconfig()
 set(config_dependencies "include(CMakeFindDependencyMacro)\n")
 if ("aom" IN_LIST FEATURES)
     string(APPEND config_dependencies "find_dependency(AOM CONFIG)\n")
+endif()
+if ("vvdec" IN_LIST FEATURES)
+    string(APPEND config_dependencies "find_dependency(vvdec CONFIG)\n")
+endif()
+if ("vvenc" IN_LIST FEATURES)
+    string(APPEND config_dependencies "find_dependency(vvenc CONFIG)\n")
 endif()
 if (("header-compression" IN_LIST FEATURES) OR ("iso23001-17" IN_LIST FEATURES))
     string(APPEND config_dependencies "find_dependency(ZLIB)\n")
