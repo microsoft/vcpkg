@@ -1,0 +1,28 @@
+Move the int128_t and uint128_t aliases into namespace iceberg so consumers can name ::iceberg::int128_t.
+Same change as https://github.com/apache/iceberg-cpp/pull/972. Drop this patch once a release contains it.
+
+diff --git a/src/iceberg/util/int128.h b/src/iceberg/util/int128.h
+--- a/src/iceberg/util/int128.h
++++ b/src/iceberg/util/int128.h
+@@ -24,11 +24,18 @@
+ 
+ #if defined(_MSC_VER)
+ #  include <__msvc_int128.hpp>
++#elif !defined(__GNUC__) && !defined(__clang__)
++#  error "128-bit integer type is not supported on this platform"
++#endif
++
++namespace iceberg {
++
++#if defined(_MSC_VER)
+ using int128_t = std::_Signed128;
+ using uint128_t = std::_Unsigned128;
+-#elif defined(__GNUC__) || defined(__clang__)
++#else
+ using int128_t = __int128;
+ using uint128_t = unsigned __int128;
+-#else
+-#  error "128-bit integer type is not supported on this platform"
+ #endif
++
++}  // namespace iceberg
