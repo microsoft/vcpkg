@@ -3,7 +3,7 @@
   "version": "3.4.0",
   "description": "SZ3: a modular error-bounded lossy compressor for scientific floating-point data. Header-only C++17 library, with an optional command-line tool and HDF5 filter.",
   "homepage": "https://github.com/szcompressor/SZ3",
-  "license": "LicenseRef-SZ3-BSD AND LGPL-2.1-or-later",
+  "license": "LicenseRef-SZ3-BSD",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
