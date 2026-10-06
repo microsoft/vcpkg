@@ -10918,7 +10918,7 @@
     },
     "vvenc": {
       "baseline": "1.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vxl": {
       "baseline": "3.5.0",
