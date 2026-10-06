@@ -1,3 +1,5 @@
+# The build-only KHR target and removal of installed KHR discovery are vcpkg-specific:
+# egl-registry and glbinding share the include directory already exported by glbinding.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cginternals/glbinding
@@ -8,6 +10,7 @@ vcpkg_from_github(
         0002_fix-uwpmacro.patch
         0003_fix-cmake-configs-paths.patch
         0004_fix-config-expected-paths.patch
+        0005_fix-khr-interface.patch
 )
 
 vcpkg_cmake_configure(
@@ -26,6 +29,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindKHR.cmake")
 
 ## _IMPORT_PREFIX needs to go up one extra level in the directory tree.
 file(GLOB_RECURSE TARGET_CMAKES "${CURRENT_PACKAGES_DIR}/*-export.cmake")
@@ -50,9 +54,5 @@ endforeach()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Remove files already published by egl-registry
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR")
-
-# Handle copyright
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
