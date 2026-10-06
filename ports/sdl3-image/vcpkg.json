@@ -1,6 +1,6 @@
 {
   "name": "sdl3-image",
-  "version": "3.4.6",
+  "version": "3.4.8",
   "description": "SDL_image is an image file loading library. It loads images as SDL surfaces and textures, and supports the following formats: AVIF, BMP, GIF, JPEG, JPEG XL, LBM, PCX, PNG, PNM, TGA, TIFF, WEBP, XCF, XPM, XV",
   "homepage": "https://github.com/libsdl-org/SDL_image",
   "license": "Zlib AND MIT",
