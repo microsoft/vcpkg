@@ -1,0 +1,6 @@
+The fastloess C++ library is available through the unofficial CMake package:
+
+    find_package(unofficial-fastloess CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::fastloess::fastloess)
+
+Include <fastloess.hpp> to use the C++17 interface.

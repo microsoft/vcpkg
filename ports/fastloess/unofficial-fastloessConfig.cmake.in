@@ -1,0 +1,21 @@
+@PACKAGE_INIT@
+
+if(NOT TARGET unofficial::fastloess::fastloess)
+    add_library(unofficial::fastloess::fastloess SHARED IMPORTED)
+    set_target_properties(unofficial::fastloess::fastloess PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+        INTERFACE_COMPILE_FEATURES cxx_std_17
+        IMPORTED_CONFIGURATIONS Release
+        IMPORTED_LOCATION_RELEASE "${PACKAGE_PREFIX_DIR}/@FASTLOESS_LIBRARY_DIR@/@FASTLOESS_BINARY_NAME@"
+        MAP_IMPORTED_CONFIG_DEBUG Release
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+        MAP_IMPORTED_CONFIG_MINSIZEREL Release
+    )
+    if(WIN32)
+        set_target_properties(unofficial::fastloess::fastloess PROPERTIES
+            IMPORTED_IMPLIB_RELEASE "${PACKAGE_PREFIX_DIR}/lib/@FASTLOESS_IMPORT_LIBRARY_NAME@"
+        )
+    endif()
+endif()
+
+check_required_components(unofficial-fastloess)
