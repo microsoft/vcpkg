@@ -10,11 +10,5 @@
       "name": "vcpkg-make",
       "host": true
     }
-  ],
-  "features": {
-    "cli": {
-      "description": "Build the command line utilities and the libnl-cli-3 library (nl-route-list, nl-addr-list, nf-ct-list, ...) plus the tc-style cls/qdisc plugins they load.",
-      "supports": "!static"
-    }
-  }
+  ]
 }

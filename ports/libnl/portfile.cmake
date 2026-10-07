@@ -9,7 +9,6 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-static-tc-kind-registration.patch
-        make-plugin-dir-relocatable.patch
         install-headers-into-include.patch
 )
 
@@ -21,25 +20,16 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-if("cli" IN_LIST FEATURES)
-    set(CLI_OPTION --enable-cli)
-else()
-    set(CLI_OPTION --disable-cli)
-endif()
-
+# Upstream defaults to --enable-cli, whose plugin loader bakes an absolute
+# pkglibdir into the binary; the port ships the libraries only.
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${CLI_OPTION}
+        --disable-cli
         --disable-dependency-tracking
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
-
-if("cli" IN_LIST FEATURES)
-    # vcpkg-make installs the executables into tools/${PORT}/bin; drop the debug copies.
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
-endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/etc"
