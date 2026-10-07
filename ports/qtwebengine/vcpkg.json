@@ -1,7 +1,7 @@
 {
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
-  "version": "6.11.2",
+  "version-semver": "6.140.0-rc",
   "description": "Qt modules for rendering web and PDF content.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -26,7 +26,7 @@
       "description": "Build with Geolocation",
       "dependencies": [
         {
-          "name": "qtlocation",
+          "name": "qtpositioning",
           "default-features": false
         },
         {
@@ -136,10 +136,6 @@
           "default-features": false
         },
         {
-          "name": "qttools",
-          "default-features": false
-        },
-        {
           "$comment": "Provides the port's custom GN host tool",
           "name": "qtwebengine",
           "host": true,
@@ -230,6 +226,10 @@
         {
           "name": "opus",
           "platform": "!windows"
+        },
+        {
+          "name": "qttools",
+          "default-features": false
         },
         {
           "name": "qtwebengine",

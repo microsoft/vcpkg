@@ -16,6 +16,12 @@ INVERTED_FEATURES
     "assimp"  CMAKE_DISABLE_FIND_PACKAGE_WrapQuick3DAssimp
     )
 
+if("openxr" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DINPUT_openxr=system)
+else()
+    list(APPEND FEATURE_OPTIONS -DINPUT_openxr=no -DCMAKE_DISABLE_FIND_PACKAGE_WrapSystemOpenXR=ON)
+endif()
+
 if("assimp" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system -DTEST_quick3d_assimp=ON)
 else()

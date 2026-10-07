@@ -16,7 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      )
 
 if("jasper" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_jasper=system)
+    list(APPEND FEATURE_OPTIONS -DINPUT_jasper=yes)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_jasper=no)
 endif()

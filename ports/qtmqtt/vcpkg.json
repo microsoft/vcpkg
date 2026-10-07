@@ -1,6 +1,6 @@
 {
   "name": "qtmqtt",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "The Qt MQTT module provides a standard compliant implementation of the MQTT protocol specification.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -12,5 +12,16 @@
         "network"
       ]
     }
-  ]
+  ],
+  "features": {
+    "websockets": {
+      "description": "Enable MQTT over WebSockets",
+      "dependencies": [
+        {
+          "name": "qtwebsockets",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

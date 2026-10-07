@@ -6,8 +6,10 @@
 ## 5. Fix any intermediate failures by adding the module into QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, or QT_FROM_QT_GIT as appropriate
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
+## Note: Since Qt 6.12, qtwebengine is released separately (versioned after Chromium, e.g. 6.140.0).
+##       It is not part of QT_PORTS; update ports/qtwebengine/port.data.cmake and its vcpkg.json manually.
 
-set(QT_VERSION 6.11.2)
+set(QT_VERSION 6.12.0)
 
 set(QT_DEV_BRANCH 0)
 
@@ -93,6 +95,16 @@ if(QT_VERSION VERSION_GREATER_EQUAL 6.6.0)
              #qtinsighttracker
              )
 endif()
+if(QT_VERSION VERSION_GREATER_EQUAL 6.12.0)
+    list(APPEND QT_PORTS
+             ## Added to vcpkg with 6.12.0
+             qtcanvaspainter
+             qttasktree
+             #qtopenapi # requires JDK, Maven (downloads from Maven Central) and the upstream openapi-generator-cli jar
+             )
+    # Released separately since 6.12; see QT_FROM_GITHUB_REF.
+    list(REMOVE_ITEM QT_PORTS qtwebengine)
+endif()
 #qtinsighttracker
 #qtvncserver
 #qtgraphs
@@ -104,6 +116,8 @@ set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager qtinterfaceframewo
 set(QT_FROM_GITHUB_BRANCH qtdeviceutilities)
 # 4. These modules are not mirrored to github and not part of the release
 set(QT_FROM_QT_GIT "")
+# 5. These modules are released separately and fetched from github at <module>_REF given in their port.data.cmake
+set(QT_FROM_GITHUB_REF qtwebengine)
 # For beta releases uncomment the next two lines and comment the lines with QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, QT_FROM_QT_GIT
 #set(QT_FROM_QT_GIT ${QT_PORTS})
 #list(POP_FRONT QT_FROM_QT_GIT)
