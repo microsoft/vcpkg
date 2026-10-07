@@ -1,0 +1,6 @@
+The header-only target is available through CMake:
+
+  find_package(BetaCalendarsCalendarLayout CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE BetaCalendars::CalendarLayout)
+
+To install the optional command-line utility, request the `tools` feature.

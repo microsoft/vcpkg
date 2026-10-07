@@ -700,6 +700,10 @@
       "baseline": "4.8.30",
       "port-version": 9
     },
+    "betacalendars-calendar-layout": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "better-enums": {
       "baseline": "0.11.3",
       "port-version": 0
