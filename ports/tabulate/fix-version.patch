@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d65dec9..db13828 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ cmake_minimum_required(VERSION 3.10)
+-project(tabulate VERSION 1.5.0 LANGUAGES CXX)
++project(tabulate VERSION 2.0.0 LANGUAGES CXX)
+ option(tabulate_BUILD_TESTS "Build Tests" OFF)
+ option(SAMPLES "Build Samples" OFF)
+ 
+diff --git a/include/tabulate/tabulate.hpp b/include/tabulate/tabulate.hpp
+index 37a771e..3c879f6 100644
+--- a/include/tabulate/tabulate.hpp
++++ b/include/tabulate/tabulate.hpp
+@@ -50,8 +50,8 @@ SOFTWARE.
+ // #endif
+ 
+ // Project version
+-#define TABULATE_VERSION_MAJOR 1
+-#define TABULATE_VERSION_MINOR 5
++#define TABULATE_VERSION_MAJOR 2
++#define TABULATE_VERSION_MINOR 0
+ #define TABULATE_VERSION_PATCH 0
+ 
+ // Composing the protocol version string from major, and minor
+diff --git a/single_include/tabulate/tabulate.hpp b/single_include/tabulate/tabulate.hpp
+index a2f29c3..52aacfd 100644
+--- a/single_include/tabulate/tabulate.hpp
++++ b/single_include/tabulate/tabulate.hpp
+@@ -10148,8 +10148,8 @@ SOFTWARE.
+ // #endif
+ 
+ // Project version
+-#define TABULATE_VERSION_MAJOR 1
+-#define TABULATE_VERSION_MINOR 5
++#define TABULATE_VERSION_MAJOR 2
++#define TABULATE_VERSION_MINOR 0
+ #define TABULATE_VERSION_PATCH 0
+ 
+ // Composing the protocol version string from major, and minor
