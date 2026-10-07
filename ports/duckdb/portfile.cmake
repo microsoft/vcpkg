@@ -29,7 +29,10 @@ if("excel" IN_LIST FEATURES)
         PATCHES
             library-linkage-excel.diff
     )
-    list(APPEND extension_dirs "${DUCKDB_EXCEL_SOURCE_PATH}")
+    list(APPEND extension_dirs
+        "${DUCKDB_EXCEL_SOURCE_PATH}"
+        "${DUCKDB_EXCEL_SOURCE_PATH}/src/excel/numformat"
+    )
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/excel.cmake" "
 duckdb_extension_load(excel
     SOURCE_DIR \"${DUCKDB_EXCEL_SOURCE_PATH}\"
@@ -53,23 +56,6 @@ if("httpfs" IN_LIST FEATURES)
 duckdb_extension_load(httpfs
     SOURCE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}\"
     INCLUDE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}/src/include\"
-)
-")
-endif()
-
-if("iceberg" IN_LIST FEATURES)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH DUCKDB_ICEBERG_SOURCE_PATH
-        REPO duckdb/duckdb-iceberg
-        REF 890b78a9cfae380396b435b033c27cdbdad04e42
-        SHA512 191caf06bd1b693e51d5d7e175721e63c415a17753da3007ea2cdee4a3904aaa14c2dcf6ec9c5b2b2212a4fa0797348bad15d090685a8d48f3bac4921519f292
-        HEAD_REF main
-    )
-    list(APPEND extension_dirs "${DUCKDB_ICEBERG_SOURCE_PATH}")
-    file(WRITE "${SOURCE_PATH}/.github/config/extensions/iceberg.cmake" "
-duckdb_extension_load(iceberg
-    SOURCE_DIR \"${DUCKDB_ICEBERG_SOURCE_PATH}\"
-    INCLUDE_DIR \"${DUCKDB_ICEBERG_SOURCE_PATH}/src/include\"
 )
 ")
 endif()
@@ -164,5 +150,6 @@ separate license terms.
 ]]
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/third_party/tdigest/NOTICES"
         ${third_party_licenses}
 )

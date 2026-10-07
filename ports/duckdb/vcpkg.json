@@ -21,6 +21,7 @@
     },
     "excel": {
       "description": "Statically link the excel extension into DuckDB",
+      "license": "MIT AND Apache-2.0",
       "dependencies": [
         "expat",
         {
@@ -41,12 +42,6 @@
           "name": "zlib",
           "platform": "mingw"
         }
-      ]
-    },
-    "iceberg": {
-      "description": "Statically link the iceberg extension into DuckDB",
-      "dependencies": [
-        "roaring"
       ]
     },
     "icu": {
