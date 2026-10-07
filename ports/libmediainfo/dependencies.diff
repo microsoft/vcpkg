@@ -1,5 +1,5 @@
 diff --git a/Project/CMake/CMakeLists.txt b/Project/CMake/CMakeLists.txt
-index 76612e2..089e1d0 100644
+index 1c74d70..5db8cb6 100644
 --- a/Project/CMake/CMakeLists.txt
 +++ b/Project/CMake/CMakeLists.txt
 @@ -97,7 +97,7 @@ endif()
@@ -11,9 +11,9 @@ index 76612e2..089e1d0 100644
  
  # use system curl if is present
  find_package(CURL)
-@@ -425,8 +425,7 @@ target_compile_definitions(mediainfo PRIVATE FMT_UNICODE=0)
- if(NOT CURL_FOUND)
-   target_compile_definitions(mediainfo PRIVATE MEDIAINFO_LIBCURL_DLL_RUNTIME)
+@@ -427,8 +427,7 @@ if(NOT CURL_FOUND AND NOT curl_FOUND)
+ elseif(TARGET curl::curl_static)
+   target_link_libraries(mediainfo curl::curl_static)
  else()
 -  include_directories(${CURL_INCLUDE_DIRS})
 -  target_link_libraries(mediainfo ${CURL_LIBRARIES})
@@ -21,7 +21,7 @@ index 76612e2..089e1d0 100644
    set(CURL_PC " libcurl")
    set(CURL_LIB " -lcurl")
  endif()
-@@ -447,14 +446,14 @@ target_include_directories(mediainfo PRIVATE
+@@ -449,14 +448,14 @@ target_include_directories(mediainfo PRIVATE
  if(NOT TinyXML_FOUND)
    target_include_directories(mediainfo PRIVATE ${MediaInfoLib_SOURCES_PATH}/ThirdParty/tinyxml2/)
  else()
