@@ -1,6 +1,6 @@
 {
   "name": "rohit-singh-gautam-serializer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "C++20 schema compiler and serialization runtime with multi-language output, JSON, binary, Protobuf codecs, and optional compression.",
   "homepage": "https://github.com/rohit-singh-gautam/Serializer",
   "license": "GPL-3.0-or-later",
