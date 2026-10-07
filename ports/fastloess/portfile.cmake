@@ -40,7 +40,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "fastloess does not support Linux architecture ${VCPKG_TARGET_ARCHITECTURE}."
         )
     endif()
-    if(VCPKG_TARGET_TRIPLET MATCHES "musl")
+    if(TARGET_TRIPLET MATCHES "musl")
         set(FASTLOESS_LIBC_SUFFIX -musl)
     else()
         set(FASTLOESS_LIBC_SUFFIX "")
