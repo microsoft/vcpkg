@@ -1,5 +1,5 @@
 {
-  "name": "betacalendars-calendar-layout",
+  "name": "mateopedersen-betacalendars-calendar-layout",
   "version": "0.1.0",
   "description": "Offline Gregorian calendar grids and printable page geometry in a C++17 header-only library.",
   "homepage": "https://www.betacalendars.com/",
