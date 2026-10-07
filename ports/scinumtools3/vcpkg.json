@@ -2,7 +2,7 @@
   "name": "scinumtools3",
   "version": "0.9.1",
   "description": "SciNumTools3: C++ toolkit for unit-aware scientific computation with runtime expressions and validated parameters.",
-  "homepage": "https://github.com/vrtulka23/scinumtools3",
+  "homepage": "https://github.com/scinumtools/snt3",
   "license": "MIT",
   "dependencies": [
     {
