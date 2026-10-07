@@ -1,24 +1,12 @@
 {
   "name": "cpp-client-telemetry",
-  "version": "3.10.267.1",
+  "version": "3.10.279.1",
   "description": "Microsoft 1DS C/C++ Client Telemetry Library",
   "homepage": "https://github.com/microsoft/cpp_client_telemetry",
   "license": "Apache-2.0",
   "supports": "((windows & !mingw) | linux | osx | ios | android) & !uwp",
   "dependencies": [
-    {
-      "name": "curl",
-      "default-features": false,
-      "features": [
-        "openssl"
-      ],
-      "platform": "linux"
-    },
     "nlohmann-json",
-    {
-      "name": "sqlite3",
-      "default-features": false
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -27,6 +15,100 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
-  ]
+    {
+      "name": "zlib",
+      "platform": "!osx & !ios"
+    }
+  ],
+  "default-features": [
+    "curl-openssl",
+    "device-id",
+    "system-sqlite"
+  ],
+  "features": {
+    "android-capi-http-client": {
+      "description": "Allow Android C API consumers to provide custom HTTP send/cancel callbacks.",
+      "supports": "android"
+    },
+    "android-curl-mbedtls": {
+      "description": "On Android, explicitly build the native libcurl HTTP client with the mbedTLS backend instead of the default Java/JNI HttpClient_Android bridge.",
+      "supports": "android",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "mbedtls"
+          ],
+          "platform": "android"
+        }
+      ]
+    },
+    "android-curl-openssl": {
+      "description": "On Android, explicitly build the native libcurl HTTP client with the OpenSSL backend instead of the default Java/JNI HttpClient_Android bridge.",
+      "supports": "android",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "android"
+        }
+      ]
+    },
+    "curl-mbedtls": {
+      "description": "Built-in libcurl HTTP client with the mbedTLS backend instead of OpenSSL (smaller footprint). Affects Linux only. Use [core,curl-mbedtls,system-sqlite] to drop the default OpenSSL curl; the [core,...] form drops all defaults (including system-sqlite), so also re-select system-sqlite or minimal-sqlite.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "mbedtls"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "curl-openssl": {
+      "description": "Built-in libcurl HTTP client with the OpenSSL TLS backend (default). Affects Linux only; Android uses the Java/JNI bridge unless an android-curl-* feature is selected, Windows uses WinHTTP by default, and Apple uses NSURLSession.",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "device-id": {
+      "description": "Collect a device ID using the SDK's platform-specific implementation (default). Omit this feature with default-features=false to supply your own DeviceInfo.Id without native device-ID collection."
+    },
+    "minimal-sqlite": {
+      "description": "Build a private, feature-stripped SQLite compiled from the SDK's vendored amalgamation instead of linking the external sqlite3 package. Smaller footprint; combine with [core,minimal-sqlite] to also drop the sqlite3 dependency."
+    },
+    "no-exceptions": {
+      "description": "Compile the native SDK without C++ exception support. Does not change consumer or dependency compiler flags."
+    },
+    "no-logging": {
+      "description": "Compile out internal SDK diagnostics without disabling telemetry event collection."
+    },
+    "system-sqlite": {
+      "description": "Link the external vcpkg sqlite3 package for the offline storage cache (default). On macOS/iOS the SDK links the system libsqlite3 instead, so this dependency is not pulled there.",
+      "dependencies": [
+        {
+          "name": "sqlite3",
+          "default-features": false,
+          "platform": "!osx & !ios"
+        }
+      ]
+    },
+    "wininet": {
+      "description": "On Windows, explicitly use WinInet instead of the default WinHTTP transport for IE-integrated proxy or cookie behavior.",
+      "supports": "windows & !mingw"
+    }
+  }
 }
