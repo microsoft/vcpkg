@@ -267,7 +267,6 @@ dpdk:arm64-linux=fail
 dpdk[gpu-cuda]:arm64-linux=cascade
 dv-processing:arm64-linux=cascade
 dv-processing[tools]:arm64-osx=feature-fails # Broke with compiler version. See https://github.com/microsoft/vcpkg/issues/39852
-ecal(android)=fail
 elements:arm64-linux=cascade
 ensmallen:arm64-linux=cascade
 ensmallen[openmp]:arm64-osx=feature-fails # No openmp on default osx toolchain
