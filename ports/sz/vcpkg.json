@@ -30,7 +30,7 @@
       "supports": "!osx"
     },
     "tools": {
-      "description": "Build the sz3 command-line tool"
+      "description": "Build the sz3 command-line tool and C API library (SZ3::SZ3c)"
     }
   }
 }

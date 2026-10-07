@@ -45,14 +45,26 @@ vcpkg_cmake_configure(
         -DBUILD_PARAVIEW_PLUGIN=OFF
         -DSZ3_DEBUG_TIMINGS=OFF
     MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_OpenMP
-        CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
-        H5Z_SZ3_PLUGIN_INSTALL_DIR
+        H5Z_SZ3_PLUGIN_INSTALL_DIR # Only inspected when the hdf5 feature is enabled.
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME sz3 CONFIG_PATH lib/cmake/SZ3)
 vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Direct consumers must not need build-system definitions for static linkage.
+    # The C API header is only installed with the tools feature.
+    if(VCPKG_TARGET_IS_WINDOWS AND "tools" IN_LIST FEATURES)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/SZ3c/sz3c.h"
+            "#define SZ3C_API __declspec(dllimport)" "#define SZ3C_API")
+    endif()
+    if("hdf5" IN_LIST FEATURES)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/hdf5_sz3/H5Z_SZ3.hpp"
+            "#if defined(HDF5SZ3_STATIC)"
+            "#ifndef HDF5SZ3_STATIC\n#define HDF5SZ3_STATIC\n#endif\n#if defined(HDF5SZ3_STATIC)")
+    endif()
+endif()
 
 if("tools" IN_LIST FEATURES)
     file(REMOVE
