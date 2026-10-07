@@ -5,9 +5,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rohit-singh-gautam/Serializer
-    REF f535f0230207143a167cf3b5aebcb762623cb36c
-    SHA512 19092a34dc560e7b37f4cb4cdb793aaddbc1efeff5c4c42d782000037a7ad94d3301862f43cd25db451798c20ee5b0e1eddedc1ed15c1a7d1e0f5b942f11a18f
+    REF 6f4631edbe2f11c2f5de61abf4fb0a34f4a7a591
+    SHA512 9ffba52c37f8d819708272d9fb2cccb2bf3395c60c18622d3227b6668c614fb5e52cfe0e574cac70fc83b0d15035557743a00b2ea40a2835050707c18d07ce45
     HEAD_REF main
+    PATCHES
+        managed-host-generator.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -17,11 +19,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zstd SERIALIZER_WITH_ZSTD
 )
 
+set(managed_options "")
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND managed_options
+        "-DSERIALIZER_MANAGED_GENERATOR=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/serializer${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DSERIALIZER_BUILD_MANAGED=OFF
+        ${managed_options}
+        -DSERIALIZER_BUILD_MANAGED=ON
         -DSERIALIZER_BUILD_MANAGED_EXAMPLES=OFF
         -DSERIALIZER_BUILD_TESTS=OFF
         -DSERIALIZER_BUILD_PROTOBUF_INTEROP_TESTS=OFF
