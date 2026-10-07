@@ -10865,7 +10865,7 @@
       "port-version": 0
     },
     "vst3sdk": {
-      "baseline": "v3.8.0_build_66",
+      "baseline": "v3.8.1_build_84",
       "port-version": 0
     },
     "vtk": {
