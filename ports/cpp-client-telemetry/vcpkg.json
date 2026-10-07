@@ -6,7 +6,19 @@
   "license": "Apache-2.0",
   "supports": "((windows & !mingw) | linux | osx | ios | android) & !uwp",
   "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ],
+      "platform": "linux"
+    },
     "nlohmann-json",
+    {
+      "name": "sqlite3",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,15 +27,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "zlib",
-      "platform": "!osx & !ios"
-    }
+    "zlib"
   ],
   "default-features": [
-    "curl-openssl",
-    "device-id",
-    "system-sqlite"
+    "device-id"
   ],
   "features": {
     "android-capi-http-client": {
@@ -31,7 +38,7 @@
       "supports": "android"
     },
     "android-curl-mbedtls": {
-      "description": "On Android, explicitly build the native libcurl HTTP client with the mbedTLS backend instead of the default Java/JNI HttpClient_Android bridge.",
+      "description": "On Android, enable the native libcurl HTTP client and its mbedTLS backend instead of the default Java/JNI bridge. Can be combined with android-curl-openssl.",
       "supports": "android",
       "dependencies": [
         {
@@ -45,7 +52,7 @@
       ]
     },
     "android-curl-openssl": {
-      "description": "On Android, explicitly build the native libcurl HTTP client with the OpenSSL backend instead of the default Java/JNI HttpClient_Android bridge.",
+      "description": "On Android, enable the native libcurl HTTP client and its OpenSSL backend instead of the default Java/JNI bridge. Can be combined with android-curl-mbedtls.",
       "supports": "android",
       "dependencies": [
         {
@@ -59,7 +66,7 @@
       ]
     },
     "curl-mbedtls": {
-      "description": "Built-in libcurl HTTP client with the mbedTLS backend instead of OpenSSL (smaller footprint). Affects Linux only. Use [core,curl-mbedtls,system-sqlite] to drop the default OpenSSL curl; the [core,...] form drops all defaults (including system-sqlite), so also re-select system-sqlite or minimal-sqlite.",
+      "description": "Add the mbedTLS backend to the Linux libcurl HTTP client alongside its required OpenSSL backend. Affects Linux only.",
       "dependencies": [
         {
           "name": "curl",
@@ -72,7 +79,7 @@
       ]
     },
     "curl-openssl": {
-      "description": "Built-in libcurl HTTP client with the OpenSSL TLS backend (default). Affects Linux only; Android uses the Java/JNI bridge unless an android-curl-* feature is selected, Windows uses WinHTTP by default, and Apple uses NSURLSession.",
+      "description": "Compatibility feature for the Linux libcurl OpenSSL backend, which is always included in the core package. Android uses the Java/JNI bridge unless an android-curl-* feature is selected, Windows uses WinHTTP by default, and Apple uses NSURLSession.",
       "dependencies": [
         {
           "name": "curl",
@@ -87,9 +94,6 @@
     "device-id": {
       "description": "Collect a device ID using the SDK's platform-specific implementation (default). Omit this feature with default-features=false to supply your own DeviceInfo.Id without native device-ID collection."
     },
-    "minimal-sqlite": {
-      "description": "Build a private, feature-stripped SQLite compiled from the SDK's vendored amalgamation instead of linking the external sqlite3 package. Smaller footprint; combine with [core,minimal-sqlite] to also drop the sqlite3 dependency."
-    },
     "no-exceptions": {
       "description": "Compile the native SDK without C++ exception support. Does not change consumer or dependency compiler flags."
     },
@@ -97,14 +101,7 @@
       "description": "Compile out internal SDK diagnostics without disabling telemetry event collection."
     },
     "system-sqlite": {
-      "description": "Link the external vcpkg sqlite3 package for the offline storage cache (default). On macOS/iOS the SDK links the system libsqlite3 instead, so this dependency is not pulled there.",
-      "dependencies": [
-        {
-          "name": "sqlite3",
-          "default-features": false,
-          "platform": "!osx & !ios"
-        }
-      ]
+      "description": "Compatibility feature for the external vcpkg sqlite3 package, which is always included in the core package on every supported platform."
     },
     "wininet": {
       "description": "On Windows, explicitly use WinInet instead of the default WinHTTP transport for IE-integrated proxy or cookie behavior.",
