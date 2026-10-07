@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
     REF "v${VERSION}"
-    SHA512 4da6f6264c060f34bd25413637fe8bc77618f484558e64ec22ae54c1adf268d5f46dd5738e16a3f2ea13a0e0127c623911d10dc6eb5bca92b038b8221368ce5f
+    SHA512 08587eae3b05f53cca8fefb2967e60abcc22fa84a16558f9d533c20543e231e47f15510430218dbdb9cd22cc24a2387a237d0a367ca6ff6b8fcc2fccddcffdea
     HEAD_REF main
     PATCHES
         shared-zstd.patch
