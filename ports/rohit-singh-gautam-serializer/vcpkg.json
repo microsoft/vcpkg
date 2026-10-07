@@ -8,7 +8,8 @@
   "dependencies": [
     {
       "name": "rohit-singh-gautam-serializer",
-      "host": true
+      "host": true,
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
