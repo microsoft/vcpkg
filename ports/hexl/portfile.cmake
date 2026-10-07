@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF development
     PATCHES
         hexl-debug-override.patch
+        pkgconfig-cpu-features.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HEXL_SHARED)
