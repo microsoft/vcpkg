@@ -1,5 +1,5 @@
 diff --git a/PCbuild/_bz2.vcxproj b/PCbuild/_bz2.vcxproj
-index 90db6a8..73ab37f 100644
+index e0dc6ec187a..6f0570ddfbe 100644
 --- a/PCbuild/_bz2.vcxproj
 +++ b/PCbuild/_bz2.vcxproj
 @@ -101,6 +101,8 @@
@@ -21,7 +21,7 @@ index 90db6a8..73ab37f 100644
      <ClInclude Include="$(bz2Dir)\bzlib_private.h" />
    </ItemGroup>
 diff --git a/PCbuild/_elementtree.vcxproj b/PCbuild/_elementtree.vcxproj
-index 21a4961..58556f8 100644
+index c102da85e9c..8df02e3b64a 100644
 --- a/PCbuild/_elementtree.vcxproj
 +++ b/PCbuild/_elementtree.vcxproj
 @@ -92,12 +92,12 @@
@@ -39,7 +39,7 @@ index 21a4961..58556f8 100644
      <ClInclude Include="..\Modules\expat\ascii.h" />
      <ClInclude Include="..\Modules\expat\asciitab.h" />
      <ClInclude Include="..\Modules\expat\expat.h" />
-@@ -117,6 +117,8 @@
+@@ -118,6 +118,8 @@
    </ItemGroup>
    <ItemGroup>
      <ClCompile Include="..\Modules\_elementtree.c" />
@@ -49,7 +49,7 @@ index 21a4961..58556f8 100644
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
      <ClCompile Include="..\Modules\expat\xmltok.c" />
 diff --git a/PCbuild/_lzma.vcxproj b/PCbuild/_lzma.vcxproj
-index 98e551e..b01c80f 100644
+index 40107d4b76c..222fcae33c2 100644
 --- a/PCbuild/_lzma.vcxproj
 +++ b/PCbuild/_lzma.vcxproj
 @@ -94,10 +94,9 @@
@@ -74,7 +74,7 @@ index 98e551e..b01c80f 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/_sqlite3.vcxproj b/PCbuild/_sqlite3.vcxproj
-index 5a8a850..adb0037 100644
+index 9ae0a0fc3a0..564d7424f25 100644
 --- a/PCbuild/_sqlite3.vcxproj
 +++ b/PCbuild/_sqlite3.vcxproj
 @@ -127,7 +127,7 @@
@@ -87,7 +87,7 @@ index 5a8a850..adb0037 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/pyexpat.vcxproj b/PCbuild/pyexpat.vcxproj
-index 2f9c05c..8638ed9 100644
+index 92ecac2f7a2..ca2c2a3a254 100644
 --- a/PCbuild/pyexpat.vcxproj
 +++ b/PCbuild/pyexpat.vcxproj
 @@ -89,12 +89,12 @@
@@ -103,9 +103,9 @@ index 2f9c05c..8638ed9 100644
 -  <ItemGroup>
 +  <ItemGroup Condition="false">
      <ClInclude Include="..\Modules\expat\fallthrough.h" />
+     <ClInclude Include="..\Modules\expat\hash_table.h" />
      <ClInclude Include="..\Modules\expat\memory_sanitizer.h" />
-     <ClInclude Include="..\Modules\expat\xmlrole.h" />
-@@ -102,6 +102,8 @@
+@@ -103,6 +103,8 @@
    </ItemGroup>
    <ItemGroup>
      <ClCompile Include="..\Modules\pyexpat.c" />

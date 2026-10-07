@@ -7,6 +7,8 @@ vcpkg_from_github(
     PATCHES
         avro-1.12.patch
         fix-avro-dependency.patch
+        int128-namespace.patch # https://github.com/apache/iceberg-cpp/pull/972
+        msvc-14.42-compat.patch # https://github.com/apache/iceberg-cpp/pull/986
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ICEBERG_BUILD_STATIC)
@@ -36,11 +38,24 @@ vcpkg_cmake_configure(
         -DICEBERG_SPDLOG=ON
         -DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=ALWAYS
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_zstd=OFF
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_zstd
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME iceberg CONFIG_PATH lib/cmake/iceberg)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Let consumers that do not use the CMake targets (for example MSBuild) link without defining *_STATIC themselves.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/iceberg/iceberg_export.h" "#  ifdef ICEBERG_STATIC" "#  if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/iceberg/iceberg_bundle_export.h" "#  ifdef ICEBERG_BUNDLE_STATIC" "#  if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/iceberg/iceberg_data_export.h" "#  ifdef ICEBERG_DATA_STATIC" "#  if 1")
+    if("rest" IN_LIST FEATURES)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/iceberg/catalog/rest/iceberg_rest_export.h" "#  ifdef ICEBERG_REST_STATIC" "#  if 1")
+    endif()
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

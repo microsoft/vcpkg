@@ -1,16 +1,17 @@
 diff --git a/cmake/mumps.cmake b/cmake/mumps.cmake
-index 936e944..7464805 100644
+index 5815e88..b751ec2 100644
 --- a/cmake/mumps.cmake
 +++ b/cmake/mumps.cmake
-@@ -348,3 +348,56 @@ TYPE INCLUDE
+@@ -351,3 +351,57 @@ TYPE INCLUDE
  install(TARGETS MUMPS EXPORT ${PROJECT_NAME}-targets)
  
  add_library(MUMPS::MUMPS ALIAS MUMPS)
 +
 +# vcpkg: a pkg-config file for consumers that do not use CMake, such as Ipopt.
 +# Neither MUMPS nor this build system provides one, hence the unofficial- name.
-+# Library names come from the targets, and the Fortran runtime from the same
-+# computation as the exported CMake targets, so the two cannot disagree.
++# Library names come from the targets. The Fortran runtime keeps the building
++# machine's link directories, because pkg-config cannot locate it when read;
++# the CMake package resolves it on the consumer instead.
 +set(mumps_pc_lib_prefix "")
 +if(CMAKE_GNUtoMS)
 +  # MSVC consumers link the GNUtoMS import library, which keeps the lib prefix.
