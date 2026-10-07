@@ -1,0 +1,87 @@
+diff --git a/Makefile.am b/Makefile.am
+index 2bd0c06..1b50e51 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -56,7 +56,7 @@ defines_cppflags = \
+ 
+ ###############################################################################
+ 
+-libnlincludedir = $(includedir)/libnl@MAJ_VERSION@
++libnlincludedir = $(includedir)
+ 
+ libnlinclude_netlinkdir = $(libnlincludedir)/netlink
+ libnlinclude_netlink_HEADERS = \
+diff --git a/Makefile.in b/Makefile.in
+index b93158a..06c13bb 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -1697,7 +1697,7 @@ defines_cppflags = \
+ 
+ 
+ ###############################################################################
+-libnlincludedir = $(includedir)/libnl@MAJ_VERSION@
++libnlincludedir = $(includedir)
+ libnlinclude_netlinkdir = $(libnlincludedir)/netlink
+ libnlinclude_netlink_HEADERS = \
+ 	include/netlink/addr.h \
+diff --git a/libnl-3.0.pc.in b/libnl-3.0.pc.in
+index ddbc999..e8df97e 100644
+--- a/libnl-3.0.pc.in
++++ b/libnl-3.0.pc.in
+@@ -8,4 +8,4 @@ Description: Convenience library for netlink sockets
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -lnl-@MAJ_VERSION@
+ Libs.private: @LIBS@
+-Cflags: -I${includedir}/libnl@MAJ_VERSION@
++Cflags: -I${includedir}
+diff --git a/libnl-genl-3.0.pc.in b/libnl-genl-3.0.pc.in
+index d6b69b8..834416d 100644
+--- a/libnl-genl-3.0.pc.in
++++ b/libnl-genl-3.0.pc.in
+@@ -8,4 +8,4 @@ Description: Generic Netlink Library
+ Version: @PACKAGE_VERSION@
+ Requires: libnl-3.0
+ Libs: -L${libdir} -lnl-genl-@MAJ_VERSION@
+-Cflags: -I${includedir}/libnl@MAJ_VERSION@
++Cflags: -I${includedir}
+diff --git a/libnl-idiag-3.0.pc.in b/libnl-idiag-3.0.pc.in
+index 9ce5100..016f3f9 100644
+--- a/libnl-idiag-3.0.pc.in
++++ b/libnl-idiag-3.0.pc.in
+@@ -8,5 +8,5 @@ Description: Netlink Inet Diag Family Library
+ Version: @PACKAGE_VERSION@
+ Requires: libnl-3.0
+ Libs: -L${libdir} -lnl-idiag-@MAJ_VERSION@
+-Cflags: -I${includedir}/libnl@MAJ_VERSION@
++Cflags: -I${includedir}
+ 
+diff --git a/libnl-nf-3.0.pc.in b/libnl-nf-3.0.pc.in
+index d82e1a6..cd99295 100644
+--- a/libnl-nf-3.0.pc.in
++++ b/libnl-nf-3.0.pc.in
+@@ -8,4 +8,4 @@ Description: Netfilter Netlink Library
+ Version: @PACKAGE_VERSION@
+ Requires: libnl-route-3.0
+ Libs: -L${libdir} -lnl-nf-@MAJ_VERSION@
+-Cflags: -I${includedir}/libnl@MAJ_VERSION@
++Cflags: -I${includedir}
+diff --git a/libnl-route-3.0.pc.in b/libnl-route-3.0.pc.in
+index 372a4f4..8f647b7 100644
+--- a/libnl-route-3.0.pc.in
++++ b/libnl-route-3.0.pc.in
+@@ -8,4 +8,4 @@ Description: Netlink Routing Family Library
+ Version: @PACKAGE_VERSION@
+ Requires: libnl-3.0
+ Libs: -L${libdir} -lnl-route-@MAJ_VERSION@
+-Cflags: -I${includedir}/libnl@MAJ_VERSION@
++Cflags: -I${includedir}
+diff --git a/libnl-xfrm-3.0.pc.in b/libnl-xfrm-3.0.pc.in
+index 48ffb70..8fea57e 100644
+--- a/libnl-xfrm-3.0.pc.in
++++ b/libnl-xfrm-3.0.pc.in
+@@ -8,4 +8,4 @@ Description: Netlink Routing Family Library
+ Version: @PACKAGE_VERSION@
+ Requires: libnl-3.0
+ Libs: -L${libdir} -lnl-xfrm-@MAJ_VERSION@
+-Cflags: -I${includedir}/libnl@MAJ_VERSION@
++Cflags: -I${includedir}

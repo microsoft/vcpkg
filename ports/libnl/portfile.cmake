@@ -4,7 +4,14 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 6230b8cab608355346030cf32f37c43983b1d1b632cb7677ae383d4f2369b4a3773b35d2d51007d3b9c16f333aaf351682c4602b3d229cd602eec5ad53efd6f3
 )
 
-vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-static-tc-kind-registration.patch
+        make-plugin-dir-relocatable.patch
+        install-headers-into-include.patch
+)
 
 # flex and bison are required to generate lib/route/{pktloc_*,ematch_*}.c
 vcpkg_find_acquire_program(FLEX)
@@ -30,12 +37,8 @@ vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if("cli" IN_LIST FEATURES)
-    file(GLOB cli_tools "${CURRENT_PACKAGES_DIR}/bin/*")
-    if(cli_tools)
-        list(TRANSFORM cli_tools GET NAME)
-        vcpkg_copy_tools(TOOL_NAMES ${cli_tools} AUTO_CLEAN)
-    endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+    # vcpkg-make installs the executables into tools/${PORT}/bin; drop the debug copies.
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
 
 file(REMOVE_RECURSE

@@ -1,0 +1,630 @@
+diff --git a/lib/route/act/gact.c b/lib/route/act/gact.c
+index 2e04c5a..3134aa6 100644
+--- a/lib/route/act/gact.c
++++ b/lib/route/act/gact.c
+@@ -149,14 +149,9 @@ static struct rtnl_tc_ops gact_ops = {
+ 	},
+ };
+ 
+-static void _nl_init gact_init(void)
++void _nl_tc_init_gact(void)
+ {
+ 	rtnl_tc_register(&gact_ops);
+ }
+ 
+-static void _nl_exit gact_exit(void)
+-{
+-	rtnl_tc_unregister(&gact_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/act/mirred.c b/lib/route/act/mirred.c
+index 72ead6b..9062739 100644
+--- a/lib/route/act/mirred.c
++++ b/lib/route/act/mirred.c
+@@ -209,14 +209,9 @@ static struct rtnl_tc_ops mirred_ops = {
+ 	},
+ };
+ 
+-static void _nl_init mirred_init(void)
++void _nl_tc_init_mirred(void)
+ {
+ 	rtnl_tc_register(&mirred_ops);
+ }
+ 
+-static void _nl_exit mirred_exit(void)
+-{
+-	rtnl_tc_unregister(&mirred_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/act/nat.c b/lib/route/act/nat.c
+index 5d3f8d9..71ec736 100644
+--- a/lib/route/act/nat.c
++++ b/lib/route/act/nat.c
+@@ -274,16 +274,11 @@ static struct rtnl_tc_ops nat_ops = {
+ 	},
+ };
+ 
+-static void _nl_init nat_init(void)
++void _nl_tc_init_nat(void)
+ {
+ 	rtnl_tc_register(&nat_ops);
+ }
+ 
+-static void _nl_exit nat_exit(void)
+-{
+-	rtnl_tc_unregister(&nat_ops);
+-}
+-
+ /**
+  * @}
+  */
+diff --git a/lib/route/act/skbedit.c b/lib/route/act/skbedit.c
+index 32a3506..8eb24cd 100644
+--- a/lib/route/act/skbedit.c
++++ b/lib/route/act/skbedit.c
+@@ -271,14 +271,9 @@ static struct rtnl_tc_ops skbedit_ops = {
+ 	},
+ };
+ 
+-static void _nl_init skbedit_init(void)
++void _nl_tc_init_skbedit(void)
+ {
+ 	rtnl_tc_register(&skbedit_ops);
+ }
+ 
+-static void _nl_exit skbedit_exit(void)
+-{
+-	rtnl_tc_unregister(&skbedit_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/act/vlan.c b/lib/route/act/vlan.c
+index 71f16e5..f9fcb01 100644
+--- a/lib/route/act/vlan.c
++++ b/lib/route/act/vlan.c
+@@ -410,14 +410,9 @@ static struct rtnl_tc_ops vlan_ops = {
+ 	},
+ };
+ 
+-static void _nl_init vlan_init(void)
++void _nl_tc_init_vlan(void)
+ {
+ 	rtnl_tc_register(&vlan_ops);
+ }
+ 
+-static void _nl_exit vlan_exit(void)
+-{
+-	rtnl_tc_unregister(&vlan_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/cls/basic.c b/lib/route/cls/basic.c
+index dc19256..5100d1d 100644
+--- a/lib/route/cls/basic.c
++++ b/lib/route/cls/basic.c
+@@ -282,14 +282,9 @@ static struct rtnl_tc_ops basic_ops = {
+ 	},
+ };
+ 
+-static void _nl_init basic_init(void)
++void _nl_tc_init_basic(void)
+ {
+ 	rtnl_tc_register(&basic_ops);
+ }
+ 
+-static void _nl_exit basic_exit(void)
+-{
+-	rtnl_tc_unregister(&basic_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/cls/cgroup.c b/lib/route/cls/cgroup.c
+index 3534281..23fc930 100644
+--- a/lib/route/cls/cgroup.c
++++ b/lib/route/cls/cgroup.c
+@@ -186,14 +186,9 @@ static struct rtnl_tc_ops cgroup_ops = {
+ 	},
+ };
+ 
+-static void _nl_init cgroup_init(void)
++void _nl_tc_init_cgroup(void)
+ {
+ 	rtnl_tc_register(&cgroup_ops);
+ }
+ 
+-static void _nl_exit cgroup_exit(void)
+-{
+-	rtnl_tc_unregister(&cgroup_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/cls/flower.c b/lib/route/cls/flower.c
+index 0bed22e..ced658e 100644
+--- a/lib/route/cls/flower.c
++++ b/lib/route/cls/flower.c
+@@ -910,12 +910,8 @@ static struct rtnl_tc_ops flower_ops = {
+ 	},
+ };
+ 
+-static void _nl_init flower_init(void)
++void _nl_tc_init_flower(void)
+ {
+ 	rtnl_tc_register(&flower_ops);
+ }
+ 
+-static void _nl_exit flower_exit(void)
+-{
+-	rtnl_tc_unregister(&flower_ops);
+-}
+diff --git a/lib/route/cls/fw.c b/lib/route/cls/fw.c
+index 01be33f..d7cc2b7 100644
+--- a/lib/route/cls/fw.c
++++ b/lib/route/cls/fw.c
+@@ -213,14 +213,9 @@ static struct rtnl_tc_ops fw_ops = {
+ 	},
+ };
+ 
+-static void _nl_init fw_init(void)
++void _nl_tc_init_fw(void)
+ {
+ 	rtnl_tc_register(&fw_ops);
+ }
+ 
+-static void _nl_exit fw_exit(void)
+-{
+-	rtnl_tc_unregister(&fw_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/cls/mall.c b/lib/route/cls/mall.c
+index 030eaa8..010b798 100644
+--- a/lib/route/cls/mall.c
++++ b/lib/route/cls/mall.c
+@@ -294,14 +294,9 @@ static struct rtnl_tc_ops mall_ops = {
+ 	},
+ };
+ 
+-static void _nl_init mall_init(void)
++void _nl_tc_init_mall(void)
+ {
+ 	rtnl_tc_register(&mall_ops);
+ }
+ 
+-static void _nl_exit mall_exit(void)
+-{
+-	rtnl_tc_unregister(&mall_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/cls/u32.c b/lib/route/cls/u32.c
+index 9821c77..6f963e9 100644
+--- a/lib/route/cls/u32.c
++++ b/lib/route/cls/u32.c
+@@ -897,14 +897,9 @@ static struct rtnl_tc_ops u32_ops = {
+ 	},
+ };
+ 
+-static void _nl_init u32_init(void)
++void _nl_tc_init_u32(void)
+ {
+ 	rtnl_tc_register(&u32_ops);
+ }
+ 
+-static void _nl_exit u32_exit(void)
+-{
+-	rtnl_tc_unregister(&u32_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/blackhole.c b/lib/route/qdisc/blackhole.c
+index 8d8f4ba..a187ca2 100644
+--- a/lib/route/qdisc/blackhole.c
++++ b/lib/route/qdisc/blackhole.c
+@@ -20,14 +20,9 @@ static struct rtnl_tc_ops blackhole_ops = {
+ 	.to_type		= RTNL_TC_TYPE_QDISC,
+ };
+ 
+-static void _nl_init blackhole_init(void)
++void _nl_tc_init_blackhole(void)
+ {
+ 	rtnl_tc_register(&blackhole_ops);
+ }
+ 
+-static void _nl_exit blackhole_exit(void)
+-{
+-	rtnl_tc_unregister(&blackhole_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/cbq.c b/lib/route/qdisc/cbq.c
+index b9a6696..9474654 100644
+--- a/lib/route/qdisc/cbq.c
++++ b/lib/route/qdisc/cbq.c
+@@ -193,16 +193,10 @@ static struct rtnl_tc_ops cbq_class_ops = {
+ 	},
+ };
+ 
+-static void _nl_init cbq_init(void)
++void _nl_tc_init_cbq(void)
+ {
+ 	rtnl_tc_register(&cbq_qdisc_ops);
+ 	rtnl_tc_register(&cbq_class_ops);
+ }
+ 
+-static void _nl_exit cbq_exit(void)
+-{
+-	rtnl_tc_unregister(&cbq_qdisc_ops);
+-	rtnl_tc_unregister(&cbq_class_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/dsmark.c b/lib/route/qdisc/dsmark.c
+index f5718f9..8dab2dc 100644
+--- a/lib/route/qdisc/dsmark.c
++++ b/lib/route/qdisc/dsmark.c
+@@ -406,16 +406,10 @@ static struct rtnl_tc_ops dsmark_class_ops = {
+ 	.to_msg_fill		= dsmark_class_msg_fill,
+ };
+ 
+-static void _nl_init dsmark_init(void)
++void _nl_tc_init_dsmark(void)
+ {
+ 	rtnl_tc_register(&dsmark_qdisc_ops);
+ 	rtnl_tc_register(&dsmark_class_ops);
+ }
+ 
+-static void _nl_exit dsmark_exit(void)
+-{
+-	rtnl_tc_unregister(&dsmark_qdisc_ops);
+-	rtnl_tc_unregister(&dsmark_class_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/fifo.c b/lib/route/qdisc/fifo.c
+index 9976803..138fb94 100644
+--- a/lib/route/qdisc/fifo.c
++++ b/lib/route/qdisc/fifo.c
+@@ -154,16 +154,10 @@ static struct rtnl_tc_ops bfifo_ops = {
+ 	.to_msg_fill		= fifo_msg_fill,
+ };
+ 
+-static void _nl_init fifo_init(void)
++void _nl_tc_init_fifo(void)
+ {
+ 	rtnl_tc_register(&pfifo_ops);
+ 	rtnl_tc_register(&bfifo_ops);
+ }
+ 
+-static void _nl_exit fifo_exit(void)
+-{
+-	rtnl_tc_unregister(&pfifo_ops);
+-	rtnl_tc_unregister(&bfifo_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/fq_codel.c b/lib/route/qdisc/fq_codel.c
+index a44ab22..89bace3 100644
+--- a/lib/route/qdisc/fq_codel.c
++++ b/lib/route/qdisc/fq_codel.c
+@@ -369,14 +369,9 @@ static struct rtnl_tc_ops fq_codel_ops = {
+ 	.to_msg_fill		= fq_codel_msg_fill,
+ };
+ 
+-static void _nl_init fq_codel_init(void)
++void _nl_tc_init_fq_codel(void)
+ {
+ 	rtnl_tc_register(&fq_codel_ops);
+ }
+ 
+-static void _nl_exit fq_codel_exit(void)
+-{
+-	rtnl_tc_unregister(&fq_codel_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/hfsc.c b/lib/route/qdisc/hfsc.c
+index 49c24c7..11a606d 100644
+--- a/lib/route/qdisc/hfsc.c
++++ b/lib/route/qdisc/hfsc.c
+@@ -343,16 +343,10 @@ static struct rtnl_tc_ops hfsc_class_ops = {
+ 	.to_msg_fill		= hfsc_class_msg_fill,
+ };
+ 
+-static void _nl_init hfsc_init(void)
++void _nl_tc_init_hfsc(void)
+ {
+ 	rtnl_tc_register(&hfsc_qdisc_ops);
+ 	rtnl_tc_register(&hfsc_class_ops);
+ }
+ 
+-static void _nl_exit hfsc_exit(void)
+-{
+-	rtnl_tc_unregister(&hfsc_qdisc_ops);
+-	rtnl_tc_unregister(&hfsc_class_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/htb.c b/lib/route/qdisc/htb.c
+index 28061b9..0203c2f 100644
+--- a/lib/route/qdisc/htb.c
++++ b/lib/route/qdisc/htb.c
+@@ -746,16 +746,10 @@ static struct rtnl_tc_ops htb_class_ops = {
+ 	.to_msg_fill		= htb_class_msg_fill,
+ };
+ 
+-static void _nl_init htb_init(void)
++void _nl_tc_init_htb(void)
+ {
+ 	rtnl_tc_register(&htb_qdisc_ops);
+ 	rtnl_tc_register(&htb_class_ops);
+ }
+ 
+-static void _nl_exit htb_exit(void)
+-{
+-	rtnl_tc_unregister(&htb_qdisc_ops);
+-	rtnl_tc_unregister(&htb_class_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/ingress.c b/lib/route/qdisc/ingress.c
+index 5363c26..a445ff6 100644
+--- a/lib/route/qdisc/ingress.c
++++ b/lib/route/qdisc/ingress.c
+@@ -46,14 +46,9 @@ static struct rtnl_tc_ops ingress_ops = {
+ 	.to_msg_fill		= dumb_msg_fill,
+ };
+ 
+-static void _nl_init ingress_init(void)
++void _nl_tc_init_ingress(void)
+ {
+ 	rtnl_tc_register(&ingress_ops);
+ }
+ 
+-static void _nl_exit ingress_exit(void)
+-{
+-	rtnl_tc_unregister(&ingress_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/mqprio.c b/lib/route/qdisc/mqprio.c
+index 5e9d08f..acf8169 100644
+--- a/lib/route/qdisc/mqprio.c
++++ b/lib/route/qdisc/mqprio.c
+@@ -605,14 +605,9 @@ static struct rtnl_tc_ops mqprio_ops = {
+ 	.to_msg_fill            = mqprio_msg_fill,
+ };
+ 
+-static void _nl_init mqprio_init(void)
++void _nl_tc_init_mqprio(void)
+ {
+ 	rtnl_tc_register(&mqprio_ops);
+ }
+ 
+-static void _nl_exit mqprio_exit(void)
+-{
+-	rtnl_tc_unregister(&mqprio_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/netem.c b/lib/route/qdisc/netem.c
+index 8ced034..91b8acf 100644
+--- a/lib/route/qdisc/netem.c
++++ b/lib/route/qdisc/netem.c
+@@ -1014,14 +1014,9 @@ static struct rtnl_tc_ops netem_ops = {
+ 	.to_msg_fill_raw	= netem_msg_fill_raw,
+ };
+ 
+-static void _nl_init netem_init(void)
++void _nl_tc_init_netem(void)
+ {
+ 	rtnl_tc_register(&netem_ops);
+ }
+ 
+-static void _nl_exit netem_exit(void)
+-{
+-	rtnl_tc_unregister(&netem_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/plug.c b/lib/route/qdisc/plug.c
+index f010802..6b5bee2 100644
+--- a/lib/route/qdisc/plug.c
++++ b/lib/route/qdisc/plug.c
+@@ -164,14 +164,9 @@ static struct rtnl_tc_ops plug_ops = {
+ 	.to_msg_fill		= plug_msg_fill,
+ };
+ 
+-static void _nl_init plug_init(void)
++void _nl_tc_init_plug(void)
+ {
+ 	rtnl_tc_register(&plug_ops);
+ }
+ 
+-static void _nl_exit plug_exit(void)
+-{
+-	rtnl_tc_unregister(&plug_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/prio.c b/lib/route/qdisc/prio.c
+index e733845..f7f17e3 100644
+--- a/lib/route/qdisc/prio.c
++++ b/lib/route/qdisc/prio.c
+@@ -280,16 +280,10 @@ static struct rtnl_tc_ops pfifo_fast_ops = {
+ 	.to_msg_fill		= prio_msg_fill,
+ };
+ 
+-static void _nl_init prio_init(void)
++void _nl_tc_init_prio(void)
+ {
+ 	rtnl_tc_register(&prio_ops);
+ 	rtnl_tc_register(&pfifo_fast_ops);
+ }
+ 
+-static void _nl_exit prio_exit(void)
+-{
+-	rtnl_tc_unregister(&prio_ops);
+-	rtnl_tc_unregister(&pfifo_fast_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/red.c b/lib/route/qdisc/red.c
+index e793b78..cb0797c 100644
+--- a/lib/route/qdisc/red.c
++++ b/lib/route/qdisc/red.c
+@@ -183,14 +183,9 @@ static struct rtnl_tc_ops red_ops = {
+ 	.to_msg_fill		= red_msg_fill,
+ };
+ 
+-static void _nl_init red_init(void)
++void _nl_tc_init_red(void)
+ {
+ 	rtnl_tc_register(&red_ops);
+ }
+ 
+-static void _nl_exit red_exit(void)
+-{
+-	rtnl_tc_unregister(&red_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/sfq.c b/lib/route/qdisc/sfq.c
+index 4379889..f88497a 100644
+--- a/lib/route/qdisc/sfq.c
++++ b/lib/route/qdisc/sfq.c
+@@ -247,14 +247,9 @@ static struct rtnl_tc_ops sfq_ops = {
+ 	.to_msg_fill		= sfq_msg_fill,
+ };
+ 
+-static void _nl_init sfq_init(void)
++void _nl_tc_init_sfq(void)
+ {
+ 	rtnl_tc_register(&sfq_ops);
+ }
+ 
+-static void _nl_exit sfq_exit(void)
+-{
+-	rtnl_tc_unregister(&sfq_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/qdisc/tbf.c b/lib/route/qdisc/tbf.c
+index a054a14..0476841 100644
+--- a/lib/route/qdisc/tbf.c
++++ b/lib/route/qdisc/tbf.c
+@@ -453,14 +453,9 @@ static struct rtnl_tc_ops tbf_tc_ops = {
+ 	.to_msg_fill		= tbf_msg_fill,
+ };
+ 
+-static void _nl_init tbf_init(void)
++void _nl_tc_init_tbf(void)
+ {
+ 	rtnl_tc_register(&tbf_tc_ops);
+ }
+ 
+-static void _nl_exit tbf_exit(void)
+-{
+-	rtnl_tc_unregister(&tbf_tc_ops);
+-}
+-
+ /** @} */
+diff --git a/lib/route/tc-api.h b/lib/route/tc-api.h
+index 43c4a28..dbc0818 100644
+--- a/lib/route/tc-api.h
++++ b/lib/route/tc-api.h
+@@ -99,6 +99,38 @@ extern void			rtnl_tc_type_unregister(struct rtnl_tc_type_ops *);
+ extern int rtnl_tc_build_rate_table(struct rtnl_tc *tc, struct rtnl_ratespec *,
+ 				    uint32_t *);
+ 
++/*
++ * Initializers of the individual traffic control kinds.  tc.c calls them
++ * from a constructor so that the object files of the kinds are always
++ * linked in, even when building a static library.
++ */
++extern void _nl_tc_init_gact(void);
++extern void _nl_tc_init_mirred(void);
++extern void _nl_tc_init_nat(void);
++extern void _nl_tc_init_skbedit(void);
++extern void _nl_tc_init_vlan(void);
++extern void _nl_tc_init_basic(void);
++extern void _nl_tc_init_cgroup(void);
++extern void _nl_tc_init_flower(void);
++extern void _nl_tc_init_fw(void);
++extern void _nl_tc_init_mall(void);
++extern void _nl_tc_init_u32(void);
++extern void _nl_tc_init_blackhole(void);
++extern void _nl_tc_init_cbq(void);
++extern void _nl_tc_init_dsmark(void);
++extern void _nl_tc_init_fifo(void);
++extern void _nl_tc_init_fq_codel(void);
++extern void _nl_tc_init_hfsc(void);
++extern void _nl_tc_init_htb(void);
++extern void _nl_tc_init_ingress(void);
++extern void _nl_tc_init_mqprio(void);
++extern void _nl_tc_init_netem(void);
++extern void _nl_tc_init_plug(void);
++extern void _nl_tc_init_prio(void);
++extern void _nl_tc_init_red(void);
++extern void _nl_tc_init_sfq(void);
++extern void _nl_tc_init_tbf(void);
++
+ /*****************************************************************************/
+ 
+ #endif
+diff --git a/lib/route/tc.c b/lib/route/tc.c
+index bbb2f8c..4eed404 100644
+--- a/lib/route/tc.c
++++ b/lib/route/tc.c
+@@ -988,6 +988,50 @@ uint64_t rtnl_tc_compare(struct nl_object *aobj, struct nl_object *bobj,
+ 
+ /** @} */
+ 
++/*
++ * The traffic control kinds register themselves from constructors in
++ * their own translation units, but the static linker only includes
++ * archive members that resolve an undefined symbol.  The kind object
++ * files export no other symbol, so referencing the initializers here
++ * forces the linker to always include them and registration also works
++ * for static builds.
++ */
++static void _nl_init tc_kinds_init(void)
++{
++	static void (*const init_funcs[])(void) = {
++		_nl_tc_init_gact,
++		_nl_tc_init_mirred,
++		_nl_tc_init_nat,
++		_nl_tc_init_skbedit,
++		_nl_tc_init_vlan,
++		_nl_tc_init_basic,
++		_nl_tc_init_cgroup,
++		_nl_tc_init_flower,
++		_nl_tc_init_fw,
++		_nl_tc_init_mall,
++		_nl_tc_init_u32,
++		_nl_tc_init_blackhole,
++		_nl_tc_init_cbq,
++		_nl_tc_init_dsmark,
++		_nl_tc_init_fifo,
++		_nl_tc_init_fq_codel,
++		_nl_tc_init_hfsc,
++		_nl_tc_init_htb,
++		_nl_tc_init_ingress,
++		_nl_tc_init_mqprio,
++		_nl_tc_init_netem,
++		_nl_tc_init_plug,
++		_nl_tc_init_prio,
++		_nl_tc_init_red,
++		_nl_tc_init_sfq,
++		_nl_tc_init_tbf,
++	};
++	size_t i;
++
++	for (i = 0; i < ARRAY_SIZE(init_funcs); i++)
++		init_funcs[i]();
++}
++
+ /**
+  * @name Modules API
+  */
