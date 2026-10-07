@@ -214,9 +214,11 @@
       <_ZVcpkgPassToInstallProperties Include="_ZVcpkgManifestRoot" Value="$(_ZVcpkgManifestRoot)" />
       <_ZVcpkgPassToInstallProperties Include="VcpkgAdditionalInstallOptions" Value="$(VcpkgAdditionalInstallOptions)" />
       <_ZVcpkgPassToInstallProperties Include="_ZVcpkgEnvVars" Value="$(_ZVcpkgEnvVars)" />
+
       <_ZVcpkgPassToInstallProperties>
         <EscapedValue>$([MSBuild]::Escape('%(_ZVcpkgPassToInstallProperties.Value)'))</EscapedValue>
       </_ZVcpkgPassToInstallProperties>
+
       <_ZVcpkgRemoveFromInstallProperties Include="$([MSBuild]::Unescape($(_ZVcpkgGlobalPropertyNames)))" />
       <_ZVcpkgRemoveFromInstallProperties Remove="@(_ZVcpkgPassToInstallProperties)" />
     </ItemGroup>
