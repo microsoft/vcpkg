@@ -29,6 +29,10 @@ else()
     vcpkg_cmake_config_fixup(CONFIG_PATH share/SFGUI/cmake)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/SFGUI/Config.hpp" "defined( SFGUI_SYSTEM_WINDOWS ) && !defined( SFGUI_STATIC )" "0")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
