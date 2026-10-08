@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO seleznevae/libfort
-    REF b1c32b67511f4612996b287a1ef4a9df012521d2 # v0.4.2
-    SHA512 56d3bd00b8a72a5f9deb9bca9a325e100319aed55e10321d04243d8a2a94c0fa513ada1b13bc59957af01b1f2c5f1655304a4a608e118cbeb65d2b4527f102d0
+    REF "v${VERSION}"
+    SHA512 2e71b6c1308c5ced48621df1fb391a1fcf6a1eb6a17c31fc1911cb4483bea267c3531da07c3a319a6371937aae8c9ad10ac6c9f972029bbc579831cfc0f52326
     HEAD_REF main
 )
 
@@ -21,6 +21,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libfort)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 vcpkg_fixup_pkgconfig()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

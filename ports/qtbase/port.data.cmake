@@ -1,3 +1,3 @@
-set(qtbase_HASH "b5608b6cefd483ecdc5e4fa3536acfc31116c8dfb698257f945180a8e412ee444dc670d754d4f6145649170f7d55637a70820188337a6c6b79193fbfbcd6a3fc")
-set(qtbase_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtbase-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtbase-everywhere-src-6.11.1.tar.xz")
-set(qtbase_FILENAME "qtbase-everywhere-src-6.11.1.tar.xz")
+set(qtbase_HASH "8dc4dbb4b3aac9e478361193ed8f8540dc70f1c22f25c91bdc5b6e6e574ea7f8c228800bc54e9a527baaa3334d106b4ecd882d05dc61ab7dcc4cdbe7b4fdb715")
+set(qtbase_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtbase-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtbase-everywhere-src-6.11.2.tar.xz")
+set(qtbase_FILENAME "qtbase-everywhere-src-6.11.2.tar.xz")

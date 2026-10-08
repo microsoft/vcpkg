@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 44516b3..c915233 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -143,7 +143,7 @@ if(OPENGL_FOUND)
+   set_target_properties(gl2ps PROPERTIES
+     VERSION ${GL2PS_MAJOR_VERSION}.${GL2PS_MINOR_VERSION}.${GL2PS_PATCH_VERSION}
+     SOVERSION ${GL2PS_MAJOR_VERSION})
+-  if(WIN32 OR CYGWIN)
++  if((WIN32 OR CYGWIN) AND BUILD_SHARED_LIBS)
+     set_target_properties(gl2ps PROPERTIES
+         COMPILE_FLAGS "-DGL2PSDLL -DGL2PSDLL_EXPORTS")
+   endif()

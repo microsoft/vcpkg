@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO artem-ogre/CDT
     REF "${VERSION}"
-    SHA512 4bfe678af447b7cb70ba1784412b1a406bd89c4b1cc6c5613add7d5540f13ba67d036d63ea0416b7829cd33a25243ea5166a9a318dfde4d5aa99c0b4aa78d945
+    SHA512 23461a24dce11716feb6ceb3b681decb7fe69a62dc7427cfc1f52fc156f9b777cf8f15fa22fa88732f0c0a1814a11ba179269f0826ea6555c4c66fb4a0856f94
     HEAD_REF master
 )
 
@@ -32,5 +32,6 @@ endif()
 
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/CDT/include/portable_nth_element.hpp"
     "${SOURCE_PATH}/CDT/include/predicates.h"
 )

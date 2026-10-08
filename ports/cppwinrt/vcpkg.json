@@ -1,9 +1,21 @@
 {
   "name": "cppwinrt",
   "version": "3.0.260818.1",
+  "port-version": 1,
   "description": "C++/WinRT is a standard C++ language projection for the Windows Runtime.",
   "homepage": "https://github.com/microsoft/cppwinrt",
   "documentation": "https://docs.microsoft.com/windows/uwp/cpp-and-winrt-apis/",
   "license": "MIT",
-  "supports": "windows"
+  "supports": "windows",
+  "features": {
+    "fastabi": {
+      "description": "Enables Fast ABI feature for both consuming and producing projections."
+    },
+    "modules": {
+      "description": "Provides C++ modules for C++/WinRT. The modules are named winrt.Ns.X."
+    },
+    "windowsapp": {
+      "description": "Links the WindowsApp.lib umbrella library for Windows Runtime."
+    }
+  }
 }

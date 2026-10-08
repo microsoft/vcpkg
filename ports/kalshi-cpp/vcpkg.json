@@ -1,0 +1,23 @@
+{
+  "name": "kalshi-cpp",
+  "version": "0.6.2",
+  "description": "C++23 client for Kalshi's Predictions API: every REST operation and WebSocket channel.",
+  "homepage": "https://github.com/Reddimus/kalshi-cpp",
+  "documentation": "https://reddimus.github.io/kalshi-cpp/",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "curl",
+    "glaze",
+    "libwebsockets",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
     REF "v${VERSION}"
-    SHA512 8b0f88075581b0c6efac2b374cf73f433f700d3ee1468019e150c422640f3f3c224dfc0bca40f8e90c95348d265fc7c8d840cfaf87ab2c6e1d31621083b23974
+    SHA512 5e2c0c14d3f180ad92188484a64fa534e488574112af1d8651ac4b6043b4aab270b0103422c60b57ea816bd02fa64736dbb1f8db1221b8f1da39d66b59bec5e4
     HEAD_REF master
 )
 
@@ -33,5 +33,8 @@ endif()
 # Install custom usage
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.TXT"
+    "${SOURCE_PATH}/ql/math/optimization/lmdif.cpp"
+    "${SOURCE_PATH}/ql/math/randomnumbers/mt19937uniformrng.cpp"
+)

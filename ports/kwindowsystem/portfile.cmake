@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001_guard_ecm_qml_module_include.patch
+        002_use_wayland_xml_from_qt.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -36,6 +37,7 @@ vcpkg_cmake_configure(
         -DKDE_INSTALL_QMLDIR=qml
         -DKWINDOWSYSTEM_X11=${KWINDOWSYSTEM_X11}
         -DKWINDOWSYSTEM_WAYLAND=${KWINDOWSYSTEM_WAYLAND}
+        "-DVCPKG_QT_WAYLAND_DATADIR=${CURRENT_INSTALLED_DIR}/share/qt6/wayland/protocols/wayland"
         ${FEATURE_OPTIONS}
 )
 
