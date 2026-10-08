@@ -9,10 +9,10 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTING OFF
-        -DBUILD_TOOL OFF
-        -DDISABLE_PERL ON
-        -DDISABLE_GO ON
+        -DBUILD_TESTING=OFF
+        -DBUILD_TOOL=OFF
+        -DDISABLE_PERL=ON
+        -DDISABLE_GO=ON
 )
 
 vcpkg_cmake_install()
