@@ -1,8 +1,10 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO vrtulka23/scinumtools3
+    REPO scinumtools/snt3
     REF v0.9.1
-    SHA512 4461662145e8790ad521d2ac60b9d10edf18ac6ab869a72669651c77bf84305cef842a8311843ee72424c3d8e180ed3e308c830770afbe95a91bb3b45fa8302e
+    SHA512 117218c3949c67a00aace7d5a5aefd75303985763d1fcdfb150633e7545331ce2e51cdde729e08568290caed644ba3802a3502acca5a67521090504e2535c1dd
     PATCHES
         use-vcpkg-imgui-glfw.patch
 )
