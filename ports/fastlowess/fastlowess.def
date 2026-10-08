@@ -6,7 +6,8 @@ EXPORTS
     cpp_lowess_free
     cpp_lowess_free_result
     cpp_lowess_new
-    cpp_lowess_set_cv_seed
+    cpp_lowess_set_bootstrap
+    cpp_lowess_set_seed
     cpp_online_add_point
     cpp_online_free
     cpp_online_free_output

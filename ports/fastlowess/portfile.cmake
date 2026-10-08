@@ -1,91 +1,122 @@
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(FASTLOWESS_ARCH x64)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    set(FASTLOWESS_ARCH arm64)
-else()
-    message(
-        FATAL_ERROR
-        "fastlowess does not support ${VCPKG_TARGET_ARCHITECTURE}."
-    )
-endif()
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
-    set(FASTLOWESS_BINARY_NAME "fastlowess-win32-${FASTLOWESS_ARCH}.dll")
-    if(FASTLOWESS_ARCH STREQUAL "x64")
-        set(FASTLOWESS_BINARY_SHA512
-            f497eaa4e5fd9b7dc480022416a8182cd57f9ac2cf1e05d8d18ab636e9b96a3cb3150f762ed132cd49aa810dd21e2b23086a13e33f5ca3ba21883b4a1a15ff75
+    if(VCPKG_TARGET_IS_MINGW)
+        message(
+            FATAL_ERROR
+            "fastlowess prebuilt Windows archives require the MSVC ABI."
+        )
+    endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(FASTLOWESS_PLATFORM windows-x64-msvc)
+        set(FASTLOWESS_BINARY_NAME fastlowess-win32-x64.dll)
+        set(FASTLOWESS_ARCHIVE_SHA512
+            433c5f2afb6792d7633e8c74f17569876d755f13f68cb912b17578447085e8d5a5e90cde0b9817b8056a9d092b904082de63f3d7e91506a90d516fc0f2f287e2
+        )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(FASTLOWESS_PLATFORM windows-arm64)
+        set(FASTLOWESS_BINARY_NAME fastlowess-win32-arm64.dll)
+        set(FASTLOWESS_ARCHIVE_SHA512
+            ddd07612614521b76a019ae8b926416cd57d2a7338d462128954ad5f1b4ae4d1951dcdbed9331c22e7204b5a36567d2373bedf16d149f64bc9172b0a14ce58c4
         )
     else()
-        set(FASTLOWESS_BINARY_SHA512
-            fdf9b4d7851e7dc599a6bf6141e347fa2f43b525f0d05e9ca66e7527fc1e84bbcc4e0462e44b880c1717e442c2e67124494bfd1f807e538ba9bae174cd38b657
+        message(
+            FATAL_ERROR
+            "fastlowess does not support Windows architecture ${VCPKG_TARGET_ARCHITECTURE}."
         )
     endif()
+    set(FASTLOWESS_LIBRARY_DIR bin)
 elseif(VCPKG_TARGET_IS_LINUX)
-    if(VCPKG_TARGET_TRIPLET MATCHES "musl")
-        set(FASTLOWESS_LIBC_SUFFIX "-musl")
+    if(TARGET_TRIPLET MATCHES "musl")
+        set(FASTLOWESS_LIBC_SUFFIX -musl)
+    else()
+        set(FASTLOWESS_LIBC_SUFFIX "")
     endif()
-    set(FASTLOWESS_BINARY_NAME
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(FASTLOWESS_ARCH x64)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(FASTLOWESS_ARCH arm64)
+    else()
+        message(
+            FATAL_ERROR
+            "fastlowess does not support Linux architecture ${VCPKG_TARGET_ARCHITECTURE}."
+        )
+    endif()
+    set(FASTLOWESS_PLATFORM "linux-${FASTLOWESS_ARCH}${FASTLOWESS_LIBC_SUFFIX}")
+    set(
+        FASTLOWESS_BINARY_NAME
         "libfastlowess-linux-${FASTLOWESS_ARCH}${FASTLOWESS_LIBC_SUFFIX}.so"
     )
-    if(
-        FASTLOWESS_ARCH STREQUAL "x64"
-        AND FASTLOWESS_LIBC_SUFFIX STREQUAL "-musl"
-    )
-        set(FASTLOWESS_BINARY_SHA512
-            fd39485553b73de74d8330aeb282e83ccaffcfb2e1a842218cffeddb465ef2934601a6b1584b7522dc49da573ab75265e419cd4446ac660fa81c64cd60bd1b72
-        )
-    elseif(
-        FASTLOWESS_ARCH STREQUAL "arm64"
-        AND FASTLOWESS_LIBC_SUFFIX STREQUAL "-musl"
-    )
-        set(FASTLOWESS_BINARY_SHA512
-            00a8c78bdfbe4db300ae7dc08966c1e81f74c7b13716515a8fe0dd658bf5939fbb692c7ec0aa7f3761615c73aff4edbc8457721745da3b1876d77b349b092a7b
-        )
+    set(FASTLOWESS_LIBRARY_DIR lib)
+    if(FASTLOWESS_LIBC_SUFFIX STREQUAL "-musl")
+        if(FASTLOWESS_ARCH STREQUAL "x64")
+            set(FASTLOWESS_ARCHIVE_SHA512
+                90b02361fe33d51128fd132f075c6736a8aa4160a74b883225b550bf22bf1839e4b2e45bdc06b0faa19922011021e05ae1709a1348cf7873c402e1dc62272af0
+            )
+        else()
+            set(FASTLOWESS_ARCHIVE_SHA512
+                6f351982917e3506432a2a06673d423edbf25fc557232f90ebb5274b1434f19f79148977a5c4660db29e2467952549452053180c0b9ad40c69806e4e0735cc1a
+            )
+        endif()
     elseif(FASTLOWESS_ARCH STREQUAL "x64")
-        set(FASTLOWESS_BINARY_SHA512
-            10df22a7a417ca4c66aaa026cfa07832fee48501ab523778a803d840683830e73b0c1f52afb2b423b5afc1badef24a6d9cd795bc0e30ebd3e5cae5a361e658e4
+        set(FASTLOWESS_ARCHIVE_SHA512
+            89176a4f0364746b5bc8fd463bacaf172a21eb03047b56a8dbf61d1a0d5f4243b0cdae7bde6136ceec71afa0817b92e532bd6edf74bda26f501f6bce655de3ad
         )
     else()
-        set(FASTLOWESS_BINARY_SHA512
-            a17f2d0845c30b171d3bc2a4719ed6b327965c7208cf42ccf1602a5d17a018fc539e50b9e2aec01a57bb1aac1df5da54045336988645be403463ab2a9ea1acf6
+        set(FASTLOWESS_ARCHIVE_SHA512
+            f9cbffbbae2c21d901d7df095f18de0a4a3fd610487b767ccb61ea31a663ee7e06a789412b1b3a1c645b58f0c9fe92682169b0240ad496dc8aa296df5d4230d8
         )
     endif()
 elseif(VCPKG_TARGET_IS_OSX)
-    set(FASTLOWESS_BINARY_NAME "libfastlowess-macos-${FASTLOWESS_ARCH}.dylib")
-    if(FASTLOWESS_ARCH STREQUAL "x64")
-        set(FASTLOWESS_BINARY_SHA512
-            7d256f084cf096cdffce786397fb7295be8a2972535129ee42016c050aacd50d7965108cbab73df2a2190dc2adc737b7b864c21061742fb119069f9734815683
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(FASTLOWESS_ARCH x64)
+        set(FASTLOWESS_ARCHIVE_SHA512
+            b354096320f3ad64c59d6c64d15acf5d160e9bba469bd5648db3ebc0c374d93446ded55f18751442e9157f3ca51ed72acdb126628421846ae7a4950e67237ec0
+        )
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(FASTLOWESS_ARCH arm64)
+        set(FASTLOWESS_ARCHIVE_SHA512
+            aeb4f5dab984af559d7b7772e8c9f270faa9d949b04f3e85b2c3d0aa9f11642333473e098f7cf46335fe9d5190a450863942eb96cc39af7158f08f618aa2b789
         )
     else()
-        set(FASTLOWESS_BINARY_SHA512
-            79191477309f931e93a307c0c0a76472c9317486ac3da009763c165cfa4abe24c1c4b07dd932e6cde9ed7585689bc345e57538d52e70ecf3506ca7d0526acf95
+        message(
+            FATAL_ERROR
+            "fastlowess does not support macOS architecture ${VCPKG_TARGET_ARCHITECTURE}."
         )
     endif()
+    set(FASTLOWESS_PLATFORM "macos-${FASTLOWESS_ARCH}")
+    set(FASTLOWESS_BINARY_NAME "libfastlowess-macos-${FASTLOWESS_ARCH}.dylib")
+    set(FASTLOWESS_LIBRARY_DIR lib)
 else()
     message(FATAL_ERROR "fastlowess does not support this target platform.")
 endif()
 
 vcpkg_download_distfile(
-    FASTLOWESS_BINARY
-    URLS "https://github.com/thisisamirv/lowess-project/releases/download/v${VERSION}/${FASTLOWESS_BINARY_NAME}"
-    FILENAME "fastlowess-v${VERSION}/${FASTLOWESS_BINARY_NAME}"
-    SHA512 "${FASTLOWESS_BINARY_SHA512}"
+    FASTLOWESS_ARCHIVE
+    URLS "https://github.com/thisisamirv/lowess-project/releases/download/v${VERSION}/libfastlowess-${FASTLOWESS_PLATFORM}.tar"
+    FILENAME "fastlowess-v${VERSION}/libfastlowess-${FASTLOWESS_PLATFORM}.tar"
+    SHA512 "${FASTLOWESS_ARCHIVE_SHA512}"
+)
+vcpkg_extract_source_archive(
+    FASTLOWESS_PACKAGE_DIR
+    ARCHIVE "${FASTLOWESS_ARCHIVE}"
+    NO_REMOVE_ONE_LEVEL
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thisisamirv/lowess-project
     REF "v${VERSION}"
-    SHA512 23fcff5a20a4f8182b5b9015449e59aeedefc806be4646934a203264cc3336e207ef2f7fbf694b72210fbfb52f1be2581a12c0399821d3e49209202c653657c8
+    SHA512 275ab96c8a7dd7498025b9c6602135c243f5860b833a12147f54fb95ad3beaf82c10ddd39aeb82c2d5c9018375753e1046b60eda0a7a5776dc42bbe0de4397a6
 )
 set(FASTLOWESS_CMAKE_OPTIONS
-    "-DFASTLOWESS_SOURCE_DIR=${SOURCE_PATH}"
-    "-DFASTLOWESS_BINARY=${FASTLOWESS_BINARY}"
+    "-DFASTLOWESS_VERSION=${VERSION}"
+    "-DFASTLOWESS_PACKAGE_DIR=${FASTLOWESS_PACKAGE_DIR}"
+    "-DFASTLOWESS_BINARY_NAME=${FASTLOWESS_BINARY_NAME}"
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FASTLOWESS_CMAKE_OPTIONS "-DFASTLOWESS_ARCH=${FASTLOWESS_ARCH}")
+    list(APPEND FASTLOWESS_CMAKE_OPTIONS "-DFASTLOWESS_ARCH=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${CURRENT_PORT_DIR}"
@@ -99,7 +130,6 @@ file(
 )
 vcpkg_install_copyright(
     FILE_LIST "${SOURCE_PATH}/LICENSE-MIT" "${SOURCE_PATH}/LICENSE-APACHE"
-    COMMENT "The prebuilt native library statically links Rust dependencies. Dependency license manifests and notices can be obtained by checking out lowess-project v${VERSION} and running cargo-about against bindings/cpp/Cargo.toml. This release does not publish the original binary build's Cargo.lock; exact dependency-version provenance is therefore not provided by this port."
 )
 file(
     INSTALL "${CURRENT_PORT_DIR}/usage"
