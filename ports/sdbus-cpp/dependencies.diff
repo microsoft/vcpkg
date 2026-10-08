@@ -17,7 +17,7 @@ index 8730086..0d7c288 100644
  #----------------------------------
  # TESTS
 diff --git a/cmake/sdbus-c++-config.cmake.in b/cmake/sdbus-c++-config.cmake.in
-index 035dc0f..974ef27 100644
+index 035dc0f..bd53402 100644
 --- a/cmake/sdbus-c++-config.cmake.in
 +++ b/cmake/sdbus-c++-config.cmake.in
 @@ -1,4 +1,11 @@
@@ -27,7 +27,7 @@ index 035dc0f..974ef27 100644
 +    include(CMakeFindDependencyMacro)
 +    find_dependency(Threads)
 +    find_dependency(PkgConfig)
-+    pkg_check_modules(Systemd IMPORTED_TARGET)
++    pkg_check_modules(Systemd IMPORTED_TARGET libsystemd)
 +endif()
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")

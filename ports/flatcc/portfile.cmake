@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dvidelabs/flatcc
-    REF 29201734bf2d12713a7a1a035d31e5123aac9c93
-    SHA512 8c69259b3f314b9ce63e8930f4de9bcd38b164b96d77ad57c748a73510a606749ef40d2b5115c494f7806f8fe86c31b68e5fc3c476f7bca8d7fd70cfcefbe9ce
+    REF "v${VERSION}"
+    SHA512 2beae74098a57d5e42fc7d99deb66c9463e49c7ef4795ed017e2767a601dad5cc516b71a383a4cade38eb457c1bb677cfc252f30e1f5eff34646c6d21eba1e98
     HEAD_REF master
     PATCHES
         fix_install_dir.patch

@@ -1,5 +1,5 @@
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index ea22103e..c6dbbe9f 100644
+index 4647b5e..c1da170 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
 @@ -31,8 +31,9 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/highway/CMakeLists.txt" AND
@@ -27,7 +27,7 @@ index ea22103e..c6dbbe9f 100644
    if (NOT Brotli_FOUND)
      message(FATAL_ERROR
          "Brotli not found, install brotli-dev or download brotli source code to"
-@@ -106,7 +111,8 @@ if (JPEGXL_ENABLE_SKCMS)
+@@ -107,7 +112,8 @@ if (JPEGXL_ENABLE_SKCMS)
  endif ()
  if (JPEGXL_ENABLE_VIEWERS OR NOT JPEGXL_ENABLE_SKCMS OR JPEGXL_ENABLE_PLUGINS)
    if( NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lcms/.git" OR JPEGXL_FORCE_SYSTEM_LCMS2 )
@@ -35,5 +35,5 @@ index ea22103e..c6dbbe9f 100644
 +    find_package(LCMS2 NAMES lcms2 REQUIRED)
 +    add_library(lcms2 ALIAS lcms2::lcms2)
      if ( NOT LCMS2_FOUND )
-       message(FATAL_ERROR "Please install lcms2 or run git submodule update --init")
+       message(FATAL_ERROR "Please provide lcms2 or run git submodule update --init")
      endif ()

@@ -22,7 +22,7 @@ endif()
 
 if (ENABLE_SSL)
     find_package(OpenSSL REQUIRED)
-    target_compile_options(mongoose PRIVATE -DMG_ENABLE_SSL)
+    target_compile_definitions(mongoose PRIVATE MG_TLS=MG_TLS_OPENSSL)
     target_link_libraries(mongoose PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 endif()
 

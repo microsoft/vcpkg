@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # header-only, no debug artifacts to build
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO unum-cloud/usearch
@@ -7,11 +9,11 @@ vcpkg_from_github(
     PATCHES
         use-vcpkg-ports.patch
         fix-map-failed.patch # official fix: https://github.com/unum-cloud/USearch/pull/720 , remove this patch in the next release
+        fix-numkong-dynamic-dispatch.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fp16     USEARCH_USE_FP16LIB
         jemalloc USEARCH_USE_JEMALLOC
         numkong  USEARCH_USE_NUMKONG
 )
@@ -29,7 +31,5 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/usearch)
 
 vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

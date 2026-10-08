@@ -1,7 +1,6 @@
 {
   "name": "gz-msgs",
-  "version": "11.1.0",
-  "port-version": 1,
+  "version": "11.2.0",
   "description": "Protobuf messages and functions for robot applications",
   "license": "Apache-2.0",
   "supports": "!uwp",
@@ -16,10 +15,15 @@
       "name": "ignition-modularscripts",
       "host": true
     },
-    "protobuf",
     {
       "name": "protobuf",
       "host": true
+    },
+    {
+      "name": "protobuf",
+      "features": [
+        "libprotoc"
+      ]
     },
     "tinyxml2"
   ]

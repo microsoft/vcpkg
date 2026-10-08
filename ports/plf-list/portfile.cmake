@@ -1,14 +1,18 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_list
-    REF b60676915e82f9e686de2550d68a1866617cbf42
-    SHA512 af9e9278604caa06075ca989f082d57ea33122958fa13b45a47242c36ae588769e1b15a27ea4676e361aeff3cef69429d0cf2bbab5a782d97f90e06b00198192
+    REF 96cc0e01d82533a05f130a2eef3447ae3e68b0fd
+    SHA512 8befc67bd1eda8949dc4e8fbe91b762c400050f368a98b56c58ca0ec4f7ac38a824166b07fd973f802e7e6dafe6a973d8f3c4f33b296775b5aeaf142e4a267f6
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/plf_list.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+# Do not copy "plf_tools.h" and "plf_tools_undef.h" here - they get installed
+# via plf-tools to avoid conflicts other ports of the same maintainer
+file(COPY "${SOURCE_PATH}/plf_list.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.md"
+)

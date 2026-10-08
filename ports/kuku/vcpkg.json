@@ -1,9 +1,9 @@
 {
   "name": "kuku",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Kuku is a compact and convenient cuckoo hashing library written in C++.",
   "homepage": "https://github.com/microsoft/Kuku",
-  "license": "MIT",
+  "license": "MIT AND CC0-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

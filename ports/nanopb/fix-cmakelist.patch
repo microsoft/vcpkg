@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 301501d..c7e8e42 100644
+index c7e7c19..a190b71 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -16,12 +16,6 @@ option(nanopb_MSVC_STATIC_RUNTIME "Link static runtime libraries" ON)
@@ -15,17 +15,17 @@ index 301501d..c7e8e42 100644
  if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
      set(CMAKE_DEBUG_POSTFIX "d")
  endif()
-@@ -44,7 +38,6 @@ endif()
- 
- # Determine Python module installation path
- if (NOT nanopb_PYTHON_INSTDIR_OVERRIDE)
--    find_package(Python REQUIRED COMPONENTS Interpreter)
-     file(TO_CMAKE_PATH "${Python_SITELIB}" PYTHON_INSTDIR)
- else()
-     set(PYTHON_INSTDIR ${nanopb_PYTHON_INSTDIR_OVERRIDE})
-@@ -54,6 +47,10 @@ message(STATUS "Python install dir: ${PYTHON_INSTDIR}")
- # Package nanopb generator as Python module 'nanopb'
+@@ -46,7 +40,6 @@ endif()
  if(nanopb_BUILD_GENERATOR)
+     # Determine Python module installation path
+     if (NOT nanopb_PYTHON_INSTDIR_OVERRIDE)
+-        find_package(Python REQUIRED COMPONENTS Interpreter)
+         file(TO_CMAKE_PATH "${Python_SITELIB}" PYTHON_INSTDIR)
+     else()
+         set(PYTHON_INSTDIR ${nanopb_PYTHON_INSTDIR_OVERRIDE})
+@@ -54,6 +47,10 @@ if(nanopb_BUILD_GENERATOR)
+     message(STATUS "Python install dir: ${PYTHON_INSTDIR}")
+ 
      # Copy Python code files related to the generator
 +    if(NOT EXISTS ${nanopb_PROTOC_PATH})
 +        message(FATAL_ERROR "protoc compiler not found")

@@ -6,7 +6,7 @@ ignition_modular_library(
     NAME "${PACKAGE_NAME}"
     REF "${PORT}${VERSION_MAJOR}_${VERSION}"
     VERSION "${VERSION}"
-    SHA512 c22d942880acdd9de5613e7ebf71395d3b1bc9b70543fbcf284ccf271f593e198c9918a1c6883288d39b4c022fcb206d8b4f626fb11460d421efc2751b2e8d7c
+    SHA512 1419a5d6ea161f3115f15ca69eb09401c25e6ac4a0d4f4844cfde2ed4746d567c4d95643a4ad07467b720deda6cd0add5296613c27b067701b0d3afe162ffeba
     PATCHES
         find-modules.diff
         gz-find-package.diff

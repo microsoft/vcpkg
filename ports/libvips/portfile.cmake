@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libvips/libvips
     REF v${VERSION}
-    SHA512 6861bc7a65137817613448c2e5e44def7845e5537d68e43d245bf3b45eb0fad7ea297bc3864905ae4e33dbf11bc21ec6f76626ff92d15ee1aac6959768fbd256
+    SHA512 4b8684a199b08118bf68c6286bca8390ea6d618c4f2373816beb420d16a954b4f51bd90d86143dc59ac5cb302bf41f92c1afc7d8fc20d4a9c951642703b5dcb3
     HEAD_REF master
 )
 
@@ -72,7 +72,7 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-## tools are built by default, uncomment this for next libvips version where 
+## tools are built by default, uncomment this for next libvips version where
 ## there's a tools option in the FEATURES and MESON OPTIONS file.
 ## Also, the tools feature should be added in the vcpkg.json file:
 ##   ,

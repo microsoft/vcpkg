@@ -1,0 +1,7 @@
+{
+  "name": "gif-load",
+  "version-date": "2019-01-06",
+  "description": "A slim, fast and header-only GIF loader written in C",
+  "homepage": "https://github.com/hidefromkgb/gif_load",
+  "license": "Unlicense"
+}

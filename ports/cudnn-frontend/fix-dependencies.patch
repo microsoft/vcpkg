@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10bc801..2600934 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,11 +47,9 @@ target_include_directories(
+ 
+ # Find the cuda compiler
+ find_package(CUDAToolkit REQUIRED)
++find_package(CUDNN REQUIRED)
+ 
+-target_include_directories(
+-    cudnn_frontend INTERFACE
+-    ${CUDAToolkit_INCLUDE_DIRS}
+-)
++target_link_libraries(cudnn_frontend INTERFACE CUDA::toolkit CuDNN::CuDNN)
+ 
+ target_compile_features(cudnn_frontend INTERFACE cxx_std_17)
+ 
+diff --git a/cudnn_frontend-config.cmake.in b/cudnn_frontend-config.cmake.in
+index c2bfbee..9de9b89 100644
+--- a/cudnn_frontend-config.cmake.in
++++ b/cudnn_frontend-config.cmake.in
+@@ -3,4 +3,8 @@
+ 
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(CUDAToolkit)
++find_dependency(CUDNN)
++
+ include(${CMAKE_CURRENT_LIST_DIR}/cudnn_frontend-targets.cmake)

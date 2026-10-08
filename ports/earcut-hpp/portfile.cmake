@@ -2,14 +2,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapbox/earcut.hpp
     REF "v${VERSION}"
-    SHA512 87f52bf99273dc47f78ebacd4ee0ccbab4edd3f9b85d97aed1c0d1165b3e2523e1a71f3a37a118e82170e79d57a2e09644d4115facb63dc6f704affb9c428e6b
+    SHA512 6628d1bdc20c8c19b4ee50ddf1e7eb7c055e4f1925006cf691043b4fb74f5574c4c648e51d68034f606ad2432cd3bb67f5a956bb34ed472b7408d9839dab3e94
     HEAD_REF master
     PATCHES
-        include-cstdint.patch # this patch is alread merged. remove it once the next version is released.
+        disable-tools.patch
 )
 
-# This is a header only library
-file(INSTALL "${SOURCE_PATH}/include/mapbox/earcut.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/mapbox")
+set(VCPKG_BUILD_TYPE release) # header-only
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DEARCUT_BUILD_TESTS=OFF
+        -DEARCUT_BUILD_BENCH=OFF
+        -DEARCUT_BUILD_VIZ=OFF
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME earcut_hpp
+    CONFIG_PATH share/cmake/earcut_hpp
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

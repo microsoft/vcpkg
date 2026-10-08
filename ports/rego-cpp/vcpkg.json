@@ -1,10 +1,9 @@
 {
   "name": "rego-cpp",
-  "version": "1.4.1",
-  "port-version": 1,
+  "version": "1.5.2",
   "description": "A C++ interpreter for the OPA Rego policy language",
   "homepage": "https://github.com/microsoft/rego-cpp",
-  "license": "MIT",
+  "license": "MIT AND Zlib",
   "supports": "!x86",
   "dependencies": [
     {

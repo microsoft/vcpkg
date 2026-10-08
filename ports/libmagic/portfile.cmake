@@ -4,6 +4,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0001-Use-libtre.patch"
         "0003-Fix-WIN32-macro-checks.patch"
         "0004-Typedef-POSIX-types-on-Windows.patch"
+        "fix-public-ssize-t.diff"
         "0005-Include-dirent.h-for-S_ISREG-and-S_ISDIR.patch"
         "0006-Remove-Wrap-POSIX-headers.patch"
         "0007-Substitute-unistd-macros-for-MSVC.patch"
@@ -22,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
     REF "${FILE_REF}"
-    SHA512 9ef8d1efd744115b0f28a7bef1a6b3e25c6feb71f6e37590bc18fe49e77d55adddb712527fd3c4080e0b70f13c5f33cdce3ce932e99a751e6de6a0e8b381c30a
+    SHA512 40568ddef1bd2cedb468f032bf07aaabf1756d20fe8bcba3b4f3fd42be13ed3242768a825db1456b7c0a12c6e549c3e714e1ea182bf5065d1d06e88cdd7a9363
     HEAD_REF master
     PATCHES
         0002-Change-zlib-lib-name-to-match-CMake-output.patch

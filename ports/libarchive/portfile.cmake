@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 de485dbca636803fce6720dede7d0a6c3315cb209489c94167dd9388ebe56ba8819d3118045308f05b935c954950202d0adb0485bc074bc04ca8c47877f1fe60
+    SHA512 c5d85564b70e3af24edc69f34829c70ba3abcaf042ba444e9344e54e594ac88a9cc22dcd21c806e2650f1ffde71e16aeaf70e9748d7ba124207ee832938656da
     HEAD_REF master
     PATCHES
         fix-buildsystem.patch
@@ -53,6 +53,14 @@ else()
     )
 endif()
 
+# archive_random.c and archive_util.c always call BCrypt* on Windows, bcrypt must be linked.
+# ref. https://github.com/libarchive/libarchive/issues/3375
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ENABLE_CNG ON)
+else()
+    set(ENABLE_CNG OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -65,7 +73,7 @@ vcpkg_cmake_configure(
         -DENABLE_NETTLE=OFF
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
-        -DENABLE_CNG=OFF
+        -DENABLE_CNG=${ENABLE_CNG}
         -DENABLE_UNZIP=OFF
         -DENABLE_TAR=OFF
         -DENABLE_CPIO=OFF
@@ -105,4 +113,7 @@ foreach(header "include/archive.h" "include/archive_entry.h")
 endforeach()
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/libarchive/archive_blake2.h"
+)

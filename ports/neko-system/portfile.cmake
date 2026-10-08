@@ -1,8 +1,8 @@
 ﻿vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO moehoshio/NekoSystem
-    REF v1.0.1
-    SHA512 6ae5af6be464c7e0cfada4a87ac349537d0083dfaa8c02f421917525ceb62331632c3c203baedadaff44a7129817311cf5c72045e6b99e97b7bc17efeb2f475e
+    REPO hoshimoe/NekoSystem
+    REF v1.0.3
+    SHA512 347fc13cabb7fd90f6cbcca2a025eb1bd6ae48fd80aeeb74ce1d58b8a5651d70605cfaf38a265b6ee6325a47b4f6eb2eec7b1332d692bafd71d0906898f84493
     HEAD_REF main
 )
 

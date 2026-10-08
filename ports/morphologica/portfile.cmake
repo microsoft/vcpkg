@@ -7,6 +7,8 @@ vcpkg_from_github(
 
 set(VCPKG_BUILD_TYPE release) # header-only port
 
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "find_package(glfw3 3.2...3.4 REQUIRED)" "find_package(glfw3 REQUIRED)")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

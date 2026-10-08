@@ -1,6 +1,6 @@
 {
   "name": "libaribcaption",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Portable ARIB STD-B24 caption decoder/renderer",
   "homepage": "https://github.com/xqq/libaribcaption",
   "license": "MIT",

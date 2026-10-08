@@ -1,13 +1,19 @@
 {
   "name": "libtorch",
-  "version": "2.12.0",
+  "version": "2.13.0",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
+    "concurrentqueue",
     "cpp-httplib",
-    "cpuinfo",
+    {
+      "name": "cpuinfo",
+      "features": [
+        "clog"
+      ]
+    },
     "eigen3",
     {
       "name": "fbgemm",
@@ -56,8 +62,7 @@
     {
       "name": "vcpkg-get-python-packages",
       "host": true
-    },
-    "xnnpack"
+    }
   ],
   "default-features": [
     "blas"

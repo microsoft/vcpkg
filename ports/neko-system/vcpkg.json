@@ -1,8 +1,8 @@
 {
   "name": "neko-system",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "A cross-platform C++20 system information library providing memory information, platform detection, and system utilities.",
-  "homepage": "https://github.com/moehoshio/NekoSystem",
+  "homepage": "https://github.com/hoshimoe/NekoSystem",
   "license": "MIT OR Apache-2.0",
   "supports": "windows | linux | osx",
   "dependencies": [

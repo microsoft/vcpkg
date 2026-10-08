@@ -1,9 +1,9 @@
 {
   "name": "libraw",
-  "version": "0.22.1",
+  "version": "0.22.2",
   "description": "raw image decoder library",
   "homepage": "https://www.libraw.org",
-  "license": "LGPL-2.1-only OR CDDL-1.0",
+  "license": "(LGPL-2.1-only OR CDDL-1.0) AND BSD-3-Clause",
   "supports": "!uwp & !xbox",
   "dependencies": [
     {

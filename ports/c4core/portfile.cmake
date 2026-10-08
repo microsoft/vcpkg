@@ -5,20 +5,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
     REF "v${VERSION}"
-    SHA512 dd7847b7aad705edf41c6ece246c345ccd92ce38344ade582d5c5e14a99c7cc94e732bea20ea5594b7a572225f7ad1820cc2cd003ee21a682e3102d9d0c8a6c5
+    SHA512 c485fa36a27e97e597ab069322eb712780577c91b4d924cf12a9acc5f59f0ec925d5f9b09dfe74a756fb456c835eb6a226f9e63e9f412c5b1248d244380074a4
     HEAD_REF master
     PATCHES
         disable-cpack.patch
 )
 
-set(CM_COMMIT_HASH 469017f6ddab72e860aa80221736c00d3dae0587)
+set(CM_COMMIT_HASH 2db93235c6c3e53aac09a99e106f0a26ba4ef007)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 858200265b335297fefacf23780d2db596f09fe71dd04088ec34fa29d6d962dc04ece3429108ad3332289cbf41da2cae6991ac6211ff12f6c796ca4e25b7ceef
+    SHA512 9e48f23391bbc08a40997d372aac9bffa32bebd9f8fd71fec59322881adc31ba7c5ac9856c7df2a368cd5c1b594d6d3ac88aa00a074ad81c18c8e9260f7c3c50
 )
 
 vcpkg_extract_source_archive(
@@ -48,13 +48,13 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/debugbreak")
 file(RENAME "${SOURCE_PATH_DEBUGBREAK}" "${SOURCE_PATH}/src/c4/ext/debugbreak")
 
-set(FF_COMMIT_HASH d28a3320c2de0963b6e469b8ca3bbc36496de684)
+set(FF_COMMIT_HASH 34164f547b7df3f5d794ff67e9f885c36819ebfc)
 
 vcpkg_download_distfile(
     FAST_FLOAT_ARCHIVE
-    URLS "https://github.com/biojppm/fast_float/archive/${FF_COMMIT_HASH}.zip"
+    URLS "https://github.com/fastfloat/fast_float/archive/${FF_COMMIT_HASH}.zip"
     FILENAME "fast_float-${FF_COMMIT_HASH}.zip"
-    SHA512 7642badc0af2e57303667de4fe6dbd61b633d82e9a42571f241a2e4ae8e385529096b4dcf22e7beb6998bf36f28eec10f7af396032db41f6a59ab6a8bffaf34a
+    SHA512 6d2d126035d565f7f8dd6893955fbed38e6345f67e596a7f8ca3b1e17f8dec5327d4ba6d76acf3b71a2c23397612d8a549afe9b2ce8aca11dd802961fc6a2718
 )
 
 vcpkg_extract_source_archive(
@@ -87,4 +87,10 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" "${_content
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST 
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/LICENSE-BOOST.txt"
+    "${SOURCE_PATH}/src/c4/ext/debugbreak/COPYING"
+    "${SOURCE_PATH}/src/c4/ext/fast_float/LICENSE-MIT"
+    "${SOURCE_PATH}/src/c4/ext/rng/rng.hpp"
+)

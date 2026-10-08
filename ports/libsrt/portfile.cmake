@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Haivision/srt
     REF "v${VERSION}"
-    SHA512 afb35de76be5c1b8558b3956586b8b7b044aa7709d7ce1b99b6b55e54f72c604eea50ae44962985c68ef681a69accb0a2a7f6a8678b8165e2aeee93632a0ff2f
+    SHA512 7a7f4281339279db72f1327e83a358156d2161b30992918836f1de140cb753ab9959c3b0960765db8941c10f77152d8f82a227e96b78c548f40d3c5e715cbe02
     HEAD_REF master
     PATCHES
         fix-static.patch
@@ -39,7 +39,6 @@ if(ENABLE_APPS)
         vcpkg_copy_tools(TOOL_NAMES srt-tunnel AUTO_CLEAN)
     endif()
     vcpkg_copy_tools(TOOL_NAMES srt-file-transmit srt-live-transmit AUTO_CLEAN)
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/srt-ffplay" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/srt-ffplay")
 endif()
 if(KEYSTONE_BUILD_STATIC OR NOT VCPKG_TARGET_IS_WINDOWS)
@@ -54,4 +53,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/srtcore/udt.h"
+    "${SOURCE_PATH}/srtcore/md5.h"
+    "${SOURCE_PATH}/srtcore/atomic.h"
+)

@@ -2,7 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanjingo/high-jump
     REF v${VERSION}
-    SHA512 768d17fe0dbd4c1aec90c2b3b61984937f0afaa210749b34be5e4d85e830191e70e40d2aacfa8a1f317ebefeb56ef796f3e1da633c21e49148f60e900cb69b67
+    SHA512 debd9b975691290c37382acb78838adbd391d18ce0f108ebbd7f3d4ab374f5da8ec886ef1dd5bc460855bcca223c8505afaf77875ebed3c0eb1dfe7433d14945
+    PATCHES
+        fix-https-consumer-headers.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -12,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         singleton       HJ_ENABLE_SINGLETON
         timer           HJ_ENABLE_TIMER
         http            HJ_ENABLE_HTTP
+        https           HJ_ENABLE_HTTPS
         zmq             HJ_ENABLE_ZMQ
         test            HJ_ENABLE_UNIT_TEST
         bench           HJ_ENABLE_BENCHMARK
@@ -38,6 +41,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qrcode          HJ_ENABLE_QRCODE
         vector-index    HJ_ENABLE_VECTOR_INDEX
         llama           HJ_ENABLE_LLAMA
+        asr             HJ_ENABLE_ASR
 )
 
 vcpkg_cmake_configure(
@@ -47,6 +51,7 @@ vcpkg_cmake_configure(
         -DBUILD_LIB=OFF
         -DBUILD_TEST=OFF
         -DBUILD_BENCH=OFF
+        -DHJ_VERSION=${VERSION}
 )
 
 vcpkg_cmake_install()
@@ -54,3 +59,12 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage"
+[[The package hanjingo-high-jump provides CMake targets:
+
+    find_package(hj CONFIG REQUIRED)
+    # Note: The 'hj' target provides include paths only.
+    # You MUST link the feature libraries via ${hj_LIBRARIES}.
+    target_link_libraries(main PRIVATE hj ${hj_LIBRARIES})
+]])

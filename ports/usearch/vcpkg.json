@@ -1,6 +1,7 @@
 {
   "name": "usearch",
   "version": "2.25.3",
+  "port-version": 1,
   "description": "Fastest Search & Clustering engine × for Vectors & Strings",
   "homepage": "https://github.com/unum-cloud/usearch",
   "license": "Apache-2.0",
@@ -15,12 +16,6 @@
     }
   ],
   "features": {
-    "fp16": {
-      "description": "Use software emulation for half-precision types",
-      "dependencies": [
-        "fp16"
-      ]
-    },
     "jemalloc": {
       "description": "Use JeMalloc for faster memory allocations",
       "dependencies": [

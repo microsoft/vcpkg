@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a3abd0f..c37c36b 100644
+index a46b4f4..1b410bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -12,6 +12,10 @@ include(GNUInstallDirs)
@@ -49,7 +49,7 @@ index a3abd0f..c37c36b 100644
 +    NAMESPACE unofficial::ada-idna::
 +    DESTINATION share/unofficial-ada-idna)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e48bcda..3e7ba16 100644
+index d4218c7..0bed819 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -12,7 +12,7 @@ target_include_directories(ada-idna PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SO

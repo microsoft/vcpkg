@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-nghttp3",
+  "version-string": "ci",
+  "description": "Validates nghttp3",
+  "dependencies": [
+    "nghttp3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

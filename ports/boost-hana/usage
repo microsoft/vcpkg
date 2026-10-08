@@ -1,0 +1,4 @@
+boost-hana provides CMake targets:
+
+    find_package(Boost CONFIG REQUIRED COMPONENTS hana)
+    target_link_libraries(main PRIVATE Boost::hana)

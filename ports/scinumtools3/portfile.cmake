@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrtulka23/scinumtools3
-    REF v0.5.11
-    SHA512 301484eb60e70baf703b97291f5ca668a0c74f7986641aa0ae09e57489e195cfa1e49c85d03bc37b566bfec849bb3f247a285b49a680f4a4a28e5133ac2f76d5
+    REF v0.8.0
+    SHA512 185745f10fd603671c054d41e0351f4d8b16994955dfbe5fb35f4b25c34820fbacbf0e430d74701c5bf99f94eae1b7aedbff3e2fba3b1082bc9c8f83718fa396
 )
 
 vcpkg_cmake_configure(
@@ -11,7 +11,7 @@ vcpkg_cmake_configure(
         -DENABLE_UNIT_TESTS=OFF
         -DENABLE_BINDING_PYTHON=OFF
 
-        -DENABLE_SNT=ON
+        -DENABLE_CORE=ON
         -DENABLE_EXS=ON
         -DENABLE_VAL=ON
         -DENABLE_PUQ=ON
@@ -40,6 +40,7 @@ vcpkg_cmake_config_fixup(
 # Headers should only be installed once.
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 file(INSTALL

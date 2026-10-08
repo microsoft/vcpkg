@@ -89,4 +89,11 @@ if (DEFINED VCPKG_HEAD_VERSION)
     string(APPEND "Z_BUILD_INFO_FILE_CONTENTS" "Version: ${VCPKG_HEAD_VERSION}\n")
 endif()
 
+get_property(Z_VCPKG_SPDX_OBJECTS GLOBAL PROPERTY Z_VCPKG_SPDX_OBJECTS)
+if(Z_VCPKG_SPDX_OBJECTS)
+    string(JOIN ",\n" Z_VCPKG_SPDX_PACKAGES ${Z_VCPKG_SPDX_OBJECTS})
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-spdx-resources.json"
+        "{\n  \"packages\": [\n${Z_VCPKG_SPDX_PACKAGES}\n  ]\n}\n")
+endif()
+
 file(WRITE "${CURRENT_PACKAGES_DIR}/BUILD_INFO" "${Z_BUILD_INFO_FILE_CONTENTS}")

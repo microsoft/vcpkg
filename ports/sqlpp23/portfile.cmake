@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp23
     REF ${VERSION}
-    SHA512 6bb53a211b9345409183a4f1d91b2300a9ab8c34622b592e29f525e57c069ecd605182a6f2b779022e2371a363c5f4bf2da13f0e611ae636df4981573e6e6ea7
+    SHA512 1e2229a39f5fabcaa597c3d6a86d6457703c3e69309b93dc7cba4e3bad7540d23be3c1a225205dec0ab526cfbc8bf7e819ce1dbebf123bfaa78dbae85f060ab8
     HEAD_REF main
     PATCHES
         dependencies.patch

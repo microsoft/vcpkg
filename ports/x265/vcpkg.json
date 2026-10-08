@@ -1,8 +1,8 @@
 {
   "name": "x265",
-  "version": "4.2",
+  "version": "4.3",
   "description": "x265 is a H.265 / HEVC video encoder application library, designed to encode video or images into an H.265 / HEVC encoded bitstream.",
-  "homepage": "https://bitbucket.org/multicoreware/x265_git/",
+  "homepage": "https://x265.org",
   "license": "GPL-2.0-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [

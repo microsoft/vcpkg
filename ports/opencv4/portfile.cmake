@@ -1,25 +1,10 @@
 set(USE_QT_VERSION "6")
 
-# fix to get version from eigen after v3.4.0
-vcpkg_download_distfile(
-    PATCH1_FILE
-    URLS "https://github.com/opencv/opencv/commit/468de9b36740b3355f0d5cd8be2ce28b340df120.patch?full_index=1"
-    SHA512 09ee552fcd9a96359230104d7bf8610a63e05d743a3b51d58c6469331729a6440444e05c616464380dbebaefdd7ee6fb06cac5fc70694af85f9c8d40201aad10
-    FILENAME "468de9b36740b3355f0d5cd8be2ce28b340df120.patch"
-)
-
-vcpkg_download_distfile(
-    CUDA_13_SUPPORT_PATCH
-    URLS "https://github.com/opencv/opencv/commit/f0888a10e8266b2202d930c6974433a421e6f9a7.diff?full_index=1"
-    SHA512 6efbc9f7e4ad158e648632060bac6ecb542239f1f656774378e6a2beaa42f094784c3b2755b44d599fe4eed69dd9f1f461e0be1ebcd57f9ebc261ead739ed7d5
-    FILENAME "opencv4-support-cuda-13-f0888a10e8266b2202d930c6974433a421e6f9a7.diff"
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 8ac63ddd61e22cc0eaeafee4f30ae6e1cab05fc4929e2cea29070203b9ca8dfead12cc0fd7c4a87b65c1e20ec6b9ab4865a1b83fad33d114fc0708fdf107c51b
+    SHA512 4f1e606cd24f74b49227a32bd1558882d3b01dbbadca8b49a0e07dd9fc6291b4c584d7f2c3951409758c3128dc53d38d84c4c7642c7a6f6a054a5eb9d5c6f91e
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -33,15 +18,13 @@ vcpkg_from_github(
       0012-miss-openexr.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
-      0023-ffmpeg8-support.patch
-      0024-openvino-const-tensor-data.patch
       0025-fix-cuda-host-std-flag-forwarding.patch
       0026-cuda-msvc-preprocessor.patch
-      "${PATCH1_FILE}"
-      "${CUDA_13_SUPPORT_PATCH}"
+      0028-ffmpeg9-support.patch
+      0029-dlpack-find-package.patch
+      0030-kleidicv-install-license.patch
 )
 
 # Disallow accidental build of vendored copies
@@ -124,6 +107,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
  "jpegxl"     WITH_JPEGXL
+ "kleidicv"   WITH_KLEIDICV
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
@@ -153,15 +137,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  INVERTED_FEATURES
  "fs"         OPENCV_DISABLE_FILESYSTEM_SUPPORT
 )
-
-if("dnn" IN_LIST FEATURES)
-  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-  vcpkg_execute_required_process(
-    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
-    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
-    LOGNAME flatc-${TARGET_TRIPLET}
-  )
-endif()
 
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
@@ -204,41 +179,27 @@ if("cuda" IN_LIST FEATURES)
   )
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID AND (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
+if("kleidicv" IN_LIST FEATURES)
   vcpkg_download_distfile(OCV_DOWNLOAD
-    URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/0.5.0/kleidicv-0.5.0.tar.gz"
-    FILENAME "opencv-cache/kleidicv/ba5648f8df678548f337d19d8ac607d6-kleidicv-0.5.0.tar.gz"
-    SHA512 81b3bd441dae10407ce2646b7bc2f099cdfb72600429040d78d1b53fae44d527b37c5191a29a0e29985717d52a27e8d1e6d2fbc559e616aa612ace30ec82fe6e
+    URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/26.03/kleidicv-26.03.tar.gz"
+    FILENAME "opencv-cache/kleidicv/b85a745bfe0e87e67e30be9533eb6b24-kleidicv-26.03.tar.gz"
+    SHA512 f5963dd7a4eae810afc580581a2c5319a03e2ec4735cef0c928b767f77806f0d98c7617c0b2b18dc9e371b2328dd89f3754b02c9fd7e430da439dc5cca491b6d
   )
 endif()
 
 if("contrib" IN_LIST FEATURES)
-  vcpkg_download_distfile(CONTRIB_CUDA_NAMESPACE_FIX
-    URLS "https://github.com/opencv/opencv_contrib/commit/f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff?full_index=1"
-    FILENAME "opencv4-contrib-cuda13-namespace-fix-f2854f4f5e7b67d4e073ea002ae0174d437e2962.diff"
-    SHA512 1065406fef35ffdfa4d27e991cd96df915e61b1ff4d17df391658a5eb069755b437a6546aaf05eac7b04b616882eb52b121ebe36c7f0af63e3040bda574ca3ed
-  )
-
-  vcpkg_download_distfile(CONTRIB_CUDA_NOT1_FIX
-    URLS "https://github.com/opencv/opencv_contrib/commit/f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff?full_index=1"
-    FILENAME "opencv4-contrib-cuda13-not1-fix-f49f0aef3c8d654c5dc2cf00884ca4f1baf43547.diff"
-    SHA512 b1e46be570417a26aec4b2a6e1824008f92c404fb67f307218fdf386074b51ca3ea063516517449631a8dd2ca487b0736c1978a3a5e38f88686c25802af4f300
-  )
-
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF "${VERSION}"
-    SHA512 574121ca57328671741413df91fbf600cc04bb9a9beeacfb7bc20c15b2b4e8c9e031df30aafbcc34f82d85edfb098e5d008a744f4e6d833d6e47537a042045c6
+    SHA512 7fa7ecaacc2ef4e8634f0e4558dae94fed862cdf7c6a3ab1724598a9b9a33a39d73f587b0bcd377201c0f96ebaf6708c884dc33afbcaa2cd95d376b9d62eaead
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
-      0027-contrib-cuda-tuple.patch # https://github.com/opencv/opencv_contrib/commit/054007b78c8288ef2fd040e77dc0cf2e45f70c15
-      "${CONTRIB_CUDA_NAMESPACE_FIX}"
-      "${CONTRIB_CUDA_NOT1_FIX}"
+      0019-contrib-cout.diff
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
@@ -331,36 +292,36 @@ if("ipp" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_WINDOWS)
   elseif(VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/767426b2a40a011eb2fa7f44c677c13e60e205ad/ippicv/ippicv_2022.1.0_win_intel64_20250130_general.zip"
-        FILENAME "opencv-cache/ippicv/67a611ab22410f392239bddff6f91df7-ippicv_2022.1.0_win_intel64_20250130_general.zip"
-        SHA512 3a3d8a0aa4279dcbede489039eee3effea5263575fdd0a2d79dd14c0af48f90680fa7ce8567cbc47e9fec88e21d3d674a53c5939ded2d065b07e25fdefa690aa
+        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+        FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+        SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
     )
   elseif(VCPKG_TARGET_IS_LINUX)
     set(key "linux-${VCPKG_TARGET_ARCHITECTURE}")
   endif()
 
-  # For convenient updates, use 
+  # For convenient updates, use
   # vcpkg install opencv4[core,ipp] --cmake-args=-DVCPKG_OPENCV4_UPDATE=1
   if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_OPENCV4_UPDATE)
     if(VCPKG_TARGET_IS_APPLE OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
           URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
-          FILENAME "opencv-cache/ippicv/67a611ab22410f392239bddff6f91df7-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+          FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
           SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
       )
     endif()
     if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
-          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/767426b2a40a011eb2fa7f44c677c13e60e205ad/ippicv/ippicv_2022.1.0_win_intel64_20250130_general.zip"
-          FILENAME "opencv-cache/ippicv/67a611ab22410f392239bddff6f91df7-ippicv_2022.1.0_win_intel64_20250130_general.zip"
-          SHA512 3a3d8a0aa4279dcbede489039eee3effea5263575fdd0a2d79dd14c0af48f90680fa7ce8567cbc47e9fec88e21d3d674a53c5939ded2d065b07e25fdefa690aa
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8338862a733cb3980d8b51d8e14917fe0e695f71/ippicv/ippicv_2026.0.0_win_intel64_20260630_general.zip"
+          FILENAME "opencv-cache/ippicv/d81c8b7d40da2867df82f0077a40afa1-ippicv_2026.0.0_win_intel64_20260630_general.zip"
+          SHA512 db82b3489a8d755d758fafdcfdcd2e516ec0c25a2ecb3539b40cbfeaa1c4aef9c3c556a7e357d55eb79c8e307c6bad74f50a3a2505bdddecca1711a986862916
       )
     endif()
     if(NOT (VCPKG_TARGET_IS_APPLE OR VCPKG_TARGET_IS_WINDOWS) OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
-          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/767426b2a40a011eb2fa7f44c677c13e60e205ad/ippicv/ippicv_2022.1.0_lnx_intel64_20250130_general.tgz"
-          FILENAME "opencv-cache/ippicv/98ff71fc242d52db9cc538388e502f57-ippicv_2022.1.0_lnx_intel64_20250130_general.tgz"
-          SHA512 4fe385d3b589ebac7f319c48d05214fad8f3c52fb5c8cf1fc40807a2ad7a7e9019949ad8832dd8b84f9200a5c51071175a873358eab2cb8f75ef00fbd162ad73
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8338862a733cb3980d8b51d8e14917fe0e695f71/ippicv/ippicv_2026.0.0_lnx_intel64_20260630_general.tgz"
+          FILENAME "opencv-cache/ippicv/a77e60db544e07a126ae98f5ffe83be1-ippicv_2026.0.0_lnx_intel64_20260630_general.tgz"
+          SHA512 2f5a844a1bd5d374ae4e1acc85da12c32dc513b61f7fbd7b9fe882b91a15681534bc86c47100de951cc70adf0cffe46a67ed403bce624b0743378115861848b2
       )
     endif()
   endif()
@@ -388,10 +349,22 @@ if("ipp" IN_LIST FEATURES)
     endif()
   endif()
 
-  if(VCPKG_OPENCV4_UPDATE)
-    message(STATUS "All downloads are up-to-date.")
-    message(FATAL_ERROR "Stopping due to VCPKG_OPENCV4_UPDATE being enabled.")
-  endif()
+endif()
+
+if(VCPKG_OPENCV4_UPDATE)
+  message(STATUS "All downloads are up-to-date.")
+  message(FATAL_ERROR "Stopping due to VCPKG_OPENCV4_UPDATE being enabled.")
+endif()
+
+# ^^^ downloads ^^^ | vvv after downloads vvv
+
+if("dnn" IN_LIST FEATURES)
+  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+  vcpkg_execute_required_process(
+    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
+    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
+    LOGNAME flatc-${TARGET_TRIPLET}
+  )
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)

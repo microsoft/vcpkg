@@ -1,7 +1,6 @@
 {
   "name": "osgearth",
-  "version": "3.8",
-  "port-version": 1,
+  "version": "3.8.1",
   "description": "osgEarth - 3D Maps for OpenSceneGraph",
   "homepage": "https://github.com/pelicanmapping/osgearth",
   "license": "MIT",
@@ -24,6 +23,7 @@
         "opengl3-binding"
       ]
     },
+    "lerc",
     "libwebp",
     "meshoptimizer",
     "opengl",
@@ -43,6 +43,12 @@
   "features": {
     "controls": {
       "description": "Support for the old Controls API (superceded by imgui)"
+    },
+    "stb": {
+      "description": "build optional STB DXT image compressor",
+      "dependencies": [
+        "stb"
+      ]
     },
     "tools": {
       "description": "Build command-line tools"

@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://download.savannah.nongnu.org/releases/attr/attr-${VERSION}.tar.xz"
          "https://www.mirrorservice.org/sites/download.savannah.gnu.org/releases/attr/attr-${VERSION}.tar.xz"
     FILENAME "attr-${VERSION}.tar.xz"
-    SHA512 f587ea544effb7cfed63b3027bf14baba2c2dbe3a9b6c0c45fc559f7e8cb477b3e9a4a826eae30f929409468c50d11f3e7dc6d2500f41e1af8662a7e96a30ef3
+    SHA512 870d0c34fbaa7520aad058ecd6509fe8eddd17430781a16d1e80484d4947307a7c641f0449183cbac1da611a85f82c9bee2d2d7bff76170fc2195b123100d22e
 )
 
 vcpkg_extract_source_archive(

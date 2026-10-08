@@ -1,0 +1,27 @@
+diff --git a/src/aaudio/AAudioLoader.cpp b/src/aaudio/AAudioLoader.cpp
+index f20f84e..a492001 100644
+--- a/src/aaudio/AAudioLoader.cpp
++++ b/src/aaudio/AAudioLoader.cpp
+@@ -589,7 +589,8 @@ AAudioLoader::signature_I_PSCPM AAudioLoader::load_I_PSCPM(const char *functionN
+ // which is the first version to support Android B (API 36).
+ #if __NDK_MAJOR__ >= 30
+ 
+-    ASSERT_INT32(AAudio_DeviceType);
++    static_assert(sizeof(AAudio_DeviceType) == sizeof(int32_t),
++                  "AAudio_DeviceType must be 32 bits");
+     static_assert((int32_t)DeviceType::BuiltinEarpiece == AAUDIO_DEVICE_BUILTIN_EARPIECE, ERRMSG);
+     static_assert((int32_t)DeviceType::BuiltinSpeaker == AAUDIO_DEVICE_BUILTIN_SPEAKER, ERRMSG);
+     static_assert((int32_t)DeviceType::WiredHeadset == AAUDIO_DEVICE_WIRED_HEADSET, ERRMSG);
+diff --git a/src/aaudio/AAudioLoader.h b/src/aaudio/AAudioLoader.h
+index 2c4a791..45f223d 100644
+--- a/src/aaudio/AAudioLoader.h
++++ b/src/aaudio/AAudioLoader.h
+@@ -113,7 +113,7 @@ typedef int32_t aaudio_policy_t;
+ #endif
+ 
+ // TODO: find the first NDK version containing the following values
+-#if OBOE_USING_NDK && __NDK_MAJOR__ <= 30
++#if OBOE_USING_NDK && __NDK_MAJOR__ < 30
+ typedef enum AAudio_FallbackMode : int32_t {
+     AAUDIO_FALLBACK_MODE_DEFAULT = 0,
+     AAUDIO_FALLBACK_MODE_MUTE = 1,

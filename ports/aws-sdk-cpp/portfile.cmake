@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-sdk-cpp
     REF "${VERSION}"
-    SHA512 0dcf532c21f8c9cb71aff138673d59a3707b1ce093f14c6389780a15f93de5bbe5af2e09eacee4f4b2b42d63a77f8a4eaaa8d61084e2c3533ecd44856f22b638
+    SHA512 d91c720c219e7ea733880a167499ac12610343f405d3477240347ca7efafaf0f0bb6fd23605d6ad6e2c090b4990d9af10c2f76249fcdf3b92a73563d656fe37b
     PATCHES
         fix-aws-root.patch
         lock-curl-http-and-tls-settings.patch
@@ -99,4 +99,9 @@ endif()
 
 configure_file("${CURRENT_PORT_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/src/aws-cpp-sdk-core/include/aws/core/external/cjson/cJSON.h"
+        "${SOURCE_PATH}/src/aws-cpp-sdk-core/include/aws/core/external/tinyxml2/tinyxml2.h"
+)

@@ -1,18 +1,44 @@
+diff --git a/cmake/GitVersion.cmake b/cmake/GitVersion.cmake
+index f0b44a97..5d0623e6 100644
+--- a/cmake/GitVersion.cmake
++++ b/cmake/GitVersion.cmake
+@@ -13,7 +13,7 @@
+ 
+ set(_OPENCC_FALLBACK_MAJOR 1)
+ set(_OPENCC_FALLBACK_MINOR 4)
+-set(_OPENCC_FALLBACK_REVISION 0)
++set(_OPENCC_FALLBACK_REVISION 1)
+ 
+ find_package(Git QUIET)
+ 
+diff --git a/OpenCCConfig.cmake.in b/OpenCCConfig.cmake.in
+index 7596d8d1..d747372e 100644
+--- a/OpenCCConfig.cmake.in
++++ b/OpenCCConfig.cmake.in
+@@ -1,5 +1,8 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(RapidJSON CONFIG)
++
+ include(${CMAKE_CURRENT_LIST_DIR}/@OPENCC_TARGETS_EXPORT_NAME@.cmake)
+ 
+ set_and_check(OPENCC_INCLUDE_DIR @PACKAGE_DIR_INCLUDE@/opencc)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7768c89..70292d6 100644
+index 17538302..826a30ee 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -115,7 +115,7 @@ add_library(libopencc ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
- add_library(OpenCC::OpenCC ALIAS libopencc)
- set_target_properties(libopencc PROPERTIES POSITION_INDEPENDENT_CODE ON)
- source_group(libopencc FILES ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
+@@ -146,7 +146,7 @@ source_group(libopencc FILES
+   ${LIBOPENCC_HEADERS}
+   ${LIBOPENCC_PRIVATE_HEADERS}
+ )
 -target_link_libraries(libopencc marisa)
 +target_link_libraries(libopencc ${LIBMARISA})
- target_include_directories(libopencc PUBLIC
-     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-     $<INSTALL_INTERFACE:${DIR_INCLUDE}/opencc>
-@@ -144,6 +144,21 @@ set_target_properties(
-       ${OPENCC_VERSION_MAJOR}.${OPENCC_VERSION_MINOR}
+ if (NOT BUILD_SHARED_LIBS)
+   target_compile_definitions(libopencc PUBLIC Opencc_BUILT_AS_STATIC)
+ endif()
+@@ -187,6 +187,21 @@ set_target_properties(
+       ${OPENCC_ABI_VERSION}
  )
  
 +if(USE_SYSTEM_RAPIDJSON)

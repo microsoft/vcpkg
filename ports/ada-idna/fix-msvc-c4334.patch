@@ -1,0 +1,20 @@
+diff --git a/src/validity.cpp b/src/validity.cpp
+index 6bc533a..bc4aef4 100644
+--- a/src/validity.cpp
++++ b/src/validity.cpp
+@@ -793,12 +793,12 @@ inline static size_t find_last_not_of_nsm(
+ // An RTL label is a label that contains at least one character of type R, AL,
+ // or AN. https://www.rfc-editor.org/rfc/rfc5893#section-2
+ inline static bool is_rtl_label(const std::u32string_view label) noexcept {
+-  const size_t mask =
+-      (1u << direction::R) | (1u << direction::AL) | (1u << direction::AN);
++  const size_t mask = (size_t{1} << direction::R) |
++                      (size_t{1} << direction::AL) | (size_t{1} << direction::AN);
+ 
+   size_t directions = 0;
+   for (size_t i = 0; i < label.size(); i++) {
+-    directions |= 1u << find_direction(label[i]);
++    directions |= size_t{1} << find_direction(label[i]);
+   }
+   return (directions & mask) != 0;
+ }

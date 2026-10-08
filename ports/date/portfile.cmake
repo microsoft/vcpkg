@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO HowardHinnant/date
-  REF "v${VERSION}"
-  SHA512 9bffca5c7cfd1769f66bef330fe4ef0ad2512a8afd229ddb4043a4f166741e697c7a5fbdddf29f7157b3fc2c2c2a80fa7cff45078f1d8ab248d3b07e14518fcf
+  REF c05cd34119d62f96deed28c803d2fd0b59548d8f
+  SHA512 b756494d97c719d947ba79db478811c17b1aea4dc8e32efc8eba73b7feebe05b02d3042af91fe2134360a9d5b0ae6c320ef008134d1ace55af03e6a973d6bd77
   HEAD_REF master
 )
 

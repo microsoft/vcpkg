@@ -7,11 +7,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LunarG/VulkanTools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 f9724dacf5a9be1241f7414cf6eb7159bc75779650441a68c20f29b7bfbb3472418bf7611ae034f16ff80708e30c1ce62b088af429c408d57273a3b3628a57ed
+    SHA512 b8d1a20a64fe36ddacc2c68298e7a73bbac2030439eaab7de228b6df480348fee5a0a1d72708d5b70aee7c58700b76a41f78b781ef5c9c74a7d59f6675f53e83
     HEAD_REF main
     PATCHES
         disable-qtdeploy.patch
         static-linkage.patch
+        # Backport of https://github.com/LunarG/VulkanTools/pull/2707
+        0001-apidump-Add-missing-calling-convention-attributes.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES jsonschema OUT_PYTHON_VAR PYTHON3)

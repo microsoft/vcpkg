@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         static-deps.diff
         define-des-zeroblock.diff
+        autoconf-2.72.patch # https://github.com/krb5/krb5/commit/b7290e0cab5b7e39cd4aa7c098beb18a886d4a1d
 )
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

@@ -10,7 +10,7 @@ vcpkg_download_distfile(GLIB_ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "${PORT}-${VERSION}.tar.xz"
-    SHA512 d6f40d1ff0f73faccdff8060fabd29b8217cc46139cf33e5792fee05af0665f96cd04e7866995bd84fcd99c9e40c40367d1326f8417bad99c1242dd841ec72a5
+    SHA512 5ca18b4e89d0efef40d6921c33903cad242ac664e4125e8161fa7d0f0c9c65c9a7ff61d9e3ac3eb7b780b7e113392a87d12b402000f8af76b8050ddae26d0a01
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH

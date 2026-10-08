@@ -13,5 +13,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "cmake")
+
+# upstream installs enchantumConfig.cmake into <prefix>/cmake but enchantumTargets.cmake
+# into <prefix>/share/enchantum/cmake; merge them so the config's include() resolves
+file(RENAME "${CURRENT_PACKAGES_DIR}/cmake/enchantumConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/enchantumConfig.cmake")
+file(RENAME "${CURRENT_PACKAGES_DIR}/cmake/enchantumConfigVersion.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/cmake/enchantumConfigVersion.cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/${PORT}/cmake")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

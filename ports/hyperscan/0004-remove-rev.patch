@@ -1,0 +1,24 @@
+diff --git a/cmake/build_wrapper.sh b/cmake/build_wrapper.sh
+index 895610c..ec2db5f 100755
+--- a/cmake/build_wrapper.sh
++++ b/cmake/build_wrapper.sh
+@@ -9,7 +9,18 @@ PREFIX=$1
+ KEEPSYMS_IN=$2
+ shift 2
+ # $@ contains the actual build command
+-OUT=$(echo "$@" | rev | cut -d ' ' -f 2- | rev | sed 's/.* -o \(.*\.o\).*/\1/')
++PREVIOUS=
++for ARG in "$@"; do
++    if test "${PREVIOUS}" = "-o"; then
++        OUT="${ARG}"
++        break
++    fi
++    PREVIOUS="${ARG}"
++done
++if test -z "${OUT}"; then
++    echo "Unable to determine the compiler output path" >&2
++    exit 1
++fi
+ trap cleanup INT QUIT EXIT
+ SYMSFILE=$(mktemp -p /tmp ${PREFIX}_rename.syms.XXXXX)
+ KEEPSYMS=$(mktemp -p /tmp keep.syms.XXXXX)

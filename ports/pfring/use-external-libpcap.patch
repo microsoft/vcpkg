@@ -1,0 +1,66 @@
+diff --git a/userland/configure b/userland/configure
+index ad2a4a7..96277db 100755
+--- a/userland/configure
++++ b/userland/configure
+@@ -4182,7 +4182,7 @@ fi
+ 
+ if test "x$enable_bpf" != "xno"
+ then :
+-  HAVE_BPF="-D ENABLE_BPF"; BPF_INCLUDE="-I../libpcap-$LIBPCAP_VER"; BPF_LIB="-L../libpcap-$LIBPCAP_VER -lpcap"
++  HAVE_BPF="-D ENABLE_BPF"; BPF_LIB="-lpcap"
+ fi
+ 
+ 
+diff --git a/userland/configure.in b/userland/configure.in
+index f33acd8..bcf6244 100644
+--- a/userland/configure.in
++++ b/userland/configure.in
+@@ -269,7 +269,7 @@ fi
+ 
+ dnl> BPF - Default enabled
+ AC_ARG_ENABLE([bpf], AS_HELP_STRING([--disable-bpf], [Disable BPF support in PF_RING]))
+-AS_IF([test "x$enable_bpf" != "xno"], [HAVE_BPF="-D ENABLE_BPF"; BPF_INCLUDE="-I../libpcap-$LIBPCAP_VER"; BPF_LIB="-L../libpcap-$LIBPCAP_VER -lpcap"])
++AS_IF([test "x$enable_bpf" != "xno"], [HAVE_BPF="-D ENABLE_BPF"; BPF_LIB="-lpcap"])
+ 
+ dnl> AC_MSG_CHECKING([nDPI support])
+ 
+diff --git a/userland/lib/pfring_mod.c b/userland/lib/pfring_mod.c
+index ab77a9c..7dbf309 100644
+--- a/userland/lib/pfring_mod.c
++++ b/userland/lib/pfring_mod.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <pcap/pcap.h>
+ #include <pcap/bpf.h>
+-#include <pcap-int.h>
+ #include <linux/types.h>
+ #include <linux/filter.h>
+ #endif
+@@ -967,10 +966,6 @@ int pfring_mod_set_bpf_filter(pfring *ring, const char *filter_buffer) {
+   pcap_t *p;
+   struct bpf_program filter;
+   struct sock_fprog  fcode = { 0 };
+-#ifdef SKF_AD_VLAN_TAG_PRESENT
+-  int bpf_extensions;
+-  socklen_t len = sizeof(bpf_extensions);
+-#endif
+ 
+   if (!filter_buffer)
+     return -1;
+@@ -985,16 +980,6 @@ int pfring_mod_set_bpf_filter(pfring *ring, const char *filter_buffer) {
+     goto pfring_mod_set_bpf_filter_exit;
+   }
+ 
+-#ifdef SKF_AD_VLAN_TAG_PRESENT
+-  rc = getsockopt(ring->fd, 0, SO_GET_BPF_EXTENSIONS, &bpf_extensions, &len);
+-
+-  if (rc == -1)
+-    goto pfring_mod_set_bpf_filter_exit;
+-
+-  if (bpf_extensions >= SKF_AD_VLAN_TAG_PRESENT)
+-    p->bpf_codegen_flags |= BPF_SPECIAL_VLAN_HANDLING;
+-#endif
+-
+   rc = pcap_compile(p, &filter, filter_buffer, 1, 0);
+ 
+   pcap_close(p);

@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO iboB/picobench
     REF "v${VERSION}"
-    SHA512 b09de960f88c6acf0257bc0276afa783b475f42c75c8429f32554df0c100a7dcfeb0f6d8f7a98fc1f10eaab3bcd04b38e382dce5cc05630fdf9ecfc1bcda449b
+    SHA512 d45160c4c15b9b1f90c2263e76b51aa9d675d7f782b7c41c00725a3faf45d2105624594dd149e85c74e6d9d37a358d92dc26841a813fa7ef43990afdbb8c2b8c
     HEAD_REF main
 )
 

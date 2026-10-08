@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7788ff4..5706966 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -130,6 +130,7 @@ list(TRANSFORM TR1_SOURCES APPEND ".cpp")
+ 
+ foreach(type IN LISTS types)
+   add_library(boost_math_tr1${type} ${TR1_SOURCES${type}})
++  # Boost-Exclude: Boost::math_tr1
+   add_library(Boost::math_tr1${type} ALIAS boost_math_tr1${type})
+   if(NOT BOOST_MATH_STANDALONE)
+     target_link_libraries(boost_math_tr1${type} PUBLIC Boost::config)
+@@ -138,6 +139,7 @@ foreach(type IN LISTS types)
+   target_include_directories(boost_math_tr1${type} PRIVATE include)
+ 
+   add_library(boost_math_c99${type} ${C99_SOURCES${type}})
++  # Boost-Exclude: Boost::math_c99
+   add_library(Boost::math_c99${type} ALIAS boost_math_c99${type})
+   if(NOT BOOST_MATH_STANDALONE)
+     target_link_libraries(boost_math_c99${type} PUBLIC Boost::config)

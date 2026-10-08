@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO acoustid/chromaprint
     REF "v${VERSION}"
-    SHA512 c556b3e9b67affaabadadaabc0a26fbbf32f89e271cde0843057166d0b02f054cbe44a6707c6c8cc9eb70d808821295ce4ea526a293f345e0b98af035a24234b
+    SHA512 ea9bf6c2542ac3648496c4a3f736b5707d98be03a4c882fb4eac00d67ea51df288b7663f31c7ae9677a02ca56db90d79619c1850a3882aaa725a260799af676b
     HEAD_REF master
     PATCHES
         pkgconfig-dependencies.diff
         pkgconfig-cxx-linkage.diff
+        static-windows-dependencies.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/3rdparty")
 
