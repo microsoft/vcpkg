@@ -78,6 +78,13 @@
         "libjpeg-turbo"
       ]
     },
+    "kvazaar": {
+      "description": "HEVC encoding via kvazaar",
+      "license": "BSD-3-Clause",
+      "dependencies": [
+        "kvazaar"
+      ]
+    },
     "libde265": {
       "description": "libde265 HEVC decoder",
       "dependencies": [
