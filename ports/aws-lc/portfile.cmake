@@ -24,6 +24,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/AWSLC)
+vcpkg_cmake_config_fixup(PACKAGE_NAME AWSLC CONFIG_PATH lib/cmake/AWSLC)
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
