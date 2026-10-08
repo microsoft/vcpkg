@@ -16,27 +16,29 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         aom         WITH_AOM_DECODER
         aom         WITH_AOM_ENCODER
         aom         VCPKG_LOCK_FIND_PACKAGE_AOM
-		dav1d       WITH_DAV1D
+        dav1d       WITH_DAV1D
         dav1d       VCPKG_LOCK_FIND_PACKAGE_DAV1D
         gdk-pixbuf  WITH_GDK_PIXBUF
         hevc        WITH_X265
         hevc        VCPKG_LOCK_FIND_PACKAGE_X265
         iso23001-17 WITH_UNCOMPRESSED_CODEC
+        kvazaar     WITH_KVAZAAR
+        kvazaar     VCPKG_LOCK_FIND_PACKAGE_KVAZAAR
         header-compression WITH_HEADER_COMPRESSION
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
         jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
-		libde265    WITH_LIBDE265
-		libde265    VCPKG_LOCK_FIND_PACKAGE_LIBDE265
+        libde265    WITH_LIBDE265
+        libde265    VCPKG_LOCK_FIND_PACKAGE_LIBDE265
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
         uvg266      WITH_UVG266
         uvg266      VCPKG_LOCK_FIND_PACKAGE_UVG266
-		vvdec       WITH_VVDEC
-		vvdec       VCPKG_LOCK_FIND_PACKAGE_vvdec
-		vvenc       WITH_VVENC
-		vvenc       VCPKG_LOCK_FIND_PACKAGE_vvenc
+        vvdec       WITH_VVDEC
+        vvdec       VCPKG_LOCK_FIND_PACKAGE_vvdec
+        vvenc       WITH_VVENC
+        vvenc       VCPKG_LOCK_FIND_PACKAGE_vvenc
         x264        WITH_X264
         h264-decoder WITH_OpenH264_DECODER
         h264-decoder VCPKG_LOCK_FIND_PACKAGE_OpenH264
@@ -75,9 +77,15 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         VCPKG_LOCK_FIND_PACKAGE_AOM
         VCPKG_LOCK_FIND_PACKAGE_Brotli
+        VCPKG_LOCK_FIND_PACKAGE_DAV1D
+        VCPKG_LOCK_FIND_PACKAGE_JPEG
+        VCPKG_LOCK_FIND_PACKAGE_KVAZAAR
+        VCPKG_LOCK_FIND_PACKAGE_LIBDE265
         VCPKG_LOCK_FIND_PACKAGE_OpenH264
         VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
         VCPKG_LOCK_FIND_PACKAGE_UVG266
+        VCPKG_LOCK_FIND_PACKAGE_vvdec
+        VCPKG_LOCK_FIND_PACKAGE_vvenc
         VCPKG_LOCK_FIND_PACKAGE_X265
         VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
@@ -90,13 +98,13 @@ set(config_dependencies "include(CMakeFindDependencyMacro)\n")
 if ("aom" IN_LIST FEATURES)
     string(APPEND config_dependencies "find_dependency(AOM CONFIG)\n")
 endif()
-if ("vvdec" IN_LIST FEATURES)
-    string(APPEND config_dependencies "find_dependency(vvdec CONFIG)\n")
+if (WITH_VVDEC)
+    string(APPEND config_dependencies "find_dependency(vvdec 3.2.0 CONFIG)\n")
 endif()
-if ("vvenc" IN_LIST FEATURES)
-    string(APPEND config_dependencies "find_dependency(vvenc CONFIG)\n")
+if (WITH_VVENC)
+    string(APPEND config_dependencies "find_dependency(vvenc 1.12.0 CONFIG)\n")
 endif()
-if (("header-compression" IN_LIST FEATURES) OR ("iso23001-17" IN_LIST FEATURES))
+if (WITH_UNCOMPRESSED_CODEC OR WITH_HEADER_COMPRESSION)
     string(APPEND config_dependencies "find_dependency(ZLIB)\n")
 endif()
 vcpkg_replace_string(
