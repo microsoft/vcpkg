@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TankOs/SFGUI
-    REF 1.0.0
-    SHA512 cc543cd44cf7d922d086748eea57d75069682649aa5f788bfc6ec3baa7bf7f9a010b4314d1a1875648cfaabf8d9efef130843ac1848d1112b5d53fd508768e41
+    REF 1.0.1
+    SHA512 dc09f0d903c71b8a5e67204155cbd79cbb8bc9f84c52c331d7843e0641ac3c04ace176b1000e8435b5e0e978ba0d04c549665ba36189282db0a11eafc39c72e5
     HEAD_REF master
+    PATCHES
+        fix-cmake-version.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SFGUI_BUILD_SHARED_LIBS)
@@ -25,6 +27,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE ${SFGUI_DOC_RELEASE} ${SFGUI_DOC_DEBUG})
 else()
     vcpkg_cmake_config_fixup(CONFIG_PATH share/SFGUI/cmake)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/SFGUI/Config.hpp" "defined( SFGUI_SYSTEM_WINDOWS ) && !defined( SFGUI_STATIC )" "0")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
