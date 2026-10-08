@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 # Public immutable SDK tarball: never pull source from the private commercial repository.
 vcpkg_download_distfile(ARCHIVE
     URLS "https://snapforge.web-tasarimci.com/cpp-releases/snapforge-0.2.0.tar.gz"
