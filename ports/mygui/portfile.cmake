@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO MyGUI/mygui
     REF v${VERSION}
     HEAD_REF master
-    SHA512 c1ab781b7777a3d991ea74cf06b91527d83736f97947fabb16b12d1089372015c783c3bc4afb2ce64c4e2e11659598dfc58b0e23c3653f50b1bb115e726eb539
+    SHA512 6deaf4496f956d1ac02db662818a66c5d199cf05ae1da1f04f1a9ab7ea309a58436d37098c3205a635744ef6502afb505c3c7f49d34082736275c41493d9deb6
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,7 +23,9 @@ vcpkg_cmake_configure(
         -DMYGUI_BUILD_WRAPPER=FALSE
         -DMYGUI_BUILD_DOCS=FALSE
         -DMYGUI_BUILD_TOOLS=FALSE
+        -DMYGUI_BUILD_ADVANCED_DEMOS=FALSE
         -DMYGUI_USE_SYSTEM_PUGIXML=TRUE
+        -DMYGUI_USE_SYSTEM_UTF8CPP=TRUE
         -DMYGUI_RENDERSYSTEM=1 # Use an overlay port to change the render system. Read the discussion at: https://github.com/microsoft/vcpkg/pull/52862
         ${FEATURE_OPTIONS}
 )
