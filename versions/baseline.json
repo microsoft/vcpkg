@@ -462,7 +462,7 @@
     },
     "avro-cpp": {
       "baseline": "1.12.2",
-      "port-version": 2
+      "port-version": 3
     },
     "awlib": {
       "baseline": "2026-08-07",
@@ -1933,7 +1933,7 @@
       "port-version": 1
     },
     "coinbase-advanced-cpp": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "coinutils": {
@@ -2765,8 +2765,8 @@
       "port-version": 0
     },
     "ecal": {
-      "baseline": "5.13.4",
-      "port-version": 2
+      "baseline": "6.1.1",
+      "port-version": 0
     },
     "ecaludp": {
       "baseline": "0.1.2",
@@ -3570,7 +3570,7 @@
     },
     "gperf": {
       "baseline": "3.3",
-      "port-version": 0
+      "port-version": 1
     },
     "gperftools": {
       "baseline": "2.18.1",
@@ -6614,7 +6614,7 @@
     },
     "mesa": {
       "baseline": "26.2.4",
-      "port-version": 0
+      "port-version": 1
     },
     "meschach": {
       "baseline": "1.2b",
@@ -7575,6 +7575,10 @@
     "openni2": {
       "baseline": "2.2.0.33",
       "port-version": 15
+    },
+    "openpit": {
+      "baseline": "0.9.0",
+      "port-version": 0
     },
     "openscap": {
       "baseline": "1.4.2",
@@ -9305,7 +9309,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.17.1",
+      "baseline": "0.17.2",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9825,8 +9829,8 @@
       "port-version": 3
     },
     "stb": {
-      "baseline": "2024-07-29",
-      "port-version": 1
+      "baseline": "2026-08-02",
+      "port-version": 0
     },
     "stc": {
       "baseline": "5.0",
@@ -10056,6 +10060,10 @@
       "baseline": "3.0.2",
       "port-version": 1
     },
+    "sz": {
+      "baseline": "3.4.0",
+      "port-version": 0
+    },
     "tabulate": {
       "baseline": "1.5",
       "port-version": 0
@@ -10109,7 +10117,7 @@
       "port-version": 0
     },
     "tcp-pubsub": {
-      "baseline": "1.0.3",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "tdlib": {
@@ -10861,7 +10869,7 @@
       "port-version": 0
     },
     "vst3sdk": {
-      "baseline": "v3.8.0_build_66",
+      "baseline": "v3.8.1_build_84",
       "port-version": 0
     },
     "vtk": {
