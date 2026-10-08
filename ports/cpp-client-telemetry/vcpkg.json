@@ -1,6 +1,6 @@
 {
   "name": "cpp-client-telemetry",
-  "version": "3.10.279.1",
+  "version": "3.10.281.1",
   "description": "Microsoft 1DS C/C++ Client Telemetry Library",
   "homepage": "https://github.com/microsoft/cpp_client_telemetry",
   "license": "Apache-2.0",
@@ -37,75 +37,8 @@
       "description": "Allow Android C API consumers to provide custom HTTP send/cancel callbacks.",
       "supports": "android"
     },
-    "android-curl-mbedtls": {
-      "description": "On Android, enable the native libcurl HTTP client and its mbedTLS backend instead of the default Java/JNI bridge. Can be combined with android-curl-openssl.",
-      "supports": "android",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "mbedtls"
-          ],
-          "platform": "android"
-        }
-      ]
-    },
-    "android-curl-openssl": {
-      "description": "On Android, enable the native libcurl HTTP client and its OpenSSL backend instead of the default Java/JNI bridge. Can be combined with android-curl-mbedtls.",
-      "supports": "android",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "openssl"
-          ],
-          "platform": "android"
-        }
-      ]
-    },
-    "curl-mbedtls": {
-      "description": "Add the mbedTLS backend to the Linux libcurl HTTP client alongside its required OpenSSL backend. Affects Linux only.",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "mbedtls"
-          ],
-          "platform": "linux"
-        }
-      ]
-    },
-    "curl-openssl": {
-      "description": "Compatibility feature for the Linux libcurl OpenSSL backend, which is always included in the core package. Android uses the Java/JNI bridge unless an android-curl-* feature is selected, Windows uses WinHTTP by default, and Apple uses NSURLSession.",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "openssl"
-          ],
-          "platform": "linux"
-        }
-      ]
-    },
     "device-id": {
-      "description": "Collect a device ID using the SDK's platform-specific implementation (default). Omit this feature with default-features=false to supply your own DeviceInfo.Id without native device-ID collection."
-    },
-    "no-exceptions": {
-      "description": "Compile the native SDK without C++ exception support. Does not change consumer or dependency compiler flags."
-    },
-    "no-logging": {
-      "description": "Compile out internal SDK diagnostics without disabling telemetry event collection."
-    },
-    "system-sqlite": {
-      "description": "Compatibility feature for the external vcpkg sqlite3 package, which is always included in the core package on every supported platform."
-    },
-    "wininet": {
-      "description": "On Windows, explicitly use WinInet instead of the default WinHTTP transport for IE-integrated proxy or cookie behavior.",
-      "supports": "windows & !mingw"
+      "description": "Collect a native device ID (default). Omit with default-features=false to provide your own DeviceInfo.Id."
     }
   }
 }
