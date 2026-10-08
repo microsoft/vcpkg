@@ -1,3 +1,9 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/openssl/copyright"
+   OR "${CURRENT_INSTALLED_DIR}/share/boringssl/copyright"
+   OR "${CURRENT_INSTALLED_DIR}/share/libressl/copyright")
+  message(FATAL_ERROR "Can't build aws-lc if openssl/boringssl/libressl is installed. Please remove these libraries, and try to install aws-lc again if you need it.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aws/aws-lc
