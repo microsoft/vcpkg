@@ -79,18 +79,18 @@ else()
 endif()
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-fastlowessConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfig.cmake"
-    INSTALL_DESTINATION share/unofficial-fastlowess
+    "${CMAKE_CURRENT_SOURCE_DIR}/fastlowessConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfig.cmake"
+    INSTALL_DESTINATION share/fastlowess
 )
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfigVersion.cmake"
     VERSION "${PROJECT_VERSION}"
     COMPATIBILITY SameMajorVersion
 )
 install(
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfigVersion.cmake"
-    DESTINATION share/unofficial-fastlowess
+        "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfigVersion.cmake"
+    DESTINATION share/fastlowess
 )

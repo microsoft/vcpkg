@@ -1,4 +1,20 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FASTLOWESS_FEATURE_OPTIONS
+    FEATURES
+        glibc FASTLOWESS_USE_GLIBC
+        musl FASTLOWESS_USE_MUSL
+)
+
+if(
+    (FASTLOWESS_USE_GLIBC OR FASTLOWESS_USE_MUSL)
+    AND NOT VCPKG_TARGET_IS_LINUX
+)
+    message(FATAL_ERROR "The glibc and musl features are only supported on Linux.")
+endif()
+if(FASTLOWESS_USE_GLIBC AND FASTLOWESS_USE_MUSL)
+    message(FATAL_ERROR "Select only one of the glibc and musl features.")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
@@ -28,10 +44,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     set(FASTLOWESS_LIBRARY_DIR bin)
 elseif(VCPKG_TARGET_IS_LINUX)
-    if(TARGET_TRIPLET MATCHES "musl")
+    if(FASTLOWESS_USE_MUSL)
         set(FASTLOWESS_LIBC_SUFFIX -musl)
-    else()
+    elseif(FASTLOWESS_USE_GLIBC)
         set(FASTLOWESS_LIBC_SUFFIX "")
+    else()
+        message(
+            FATAL_ERROR
+            "Select a Linux libc explicitly with the glibc or musl feature."
+        )
     endif()
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(FASTLOWESS_ARCH x64)
@@ -103,6 +124,17 @@ vcpkg_extract_source_archive(
     ARCHIVE "${FASTLOWESS_ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
+if(VCPKG_TARGET_IS_OSX)
+    vcpkg_execute_required_process(
+        COMMAND
+            install_name_tool
+            -id
+            "@rpath/${FASTLOWESS_BINARY_NAME}"
+            "${FASTLOWESS_PACKAGE_DIR}/${FASTLOWESS_BINARY_NAME}"
+        WORKING_DIRECTORY "${FASTLOWESS_PACKAGE_DIR}"
+        LOGNAME "install-name-${FASTLOWESS_PLATFORM}"
+    )
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

@@ -1,9 +1,12 @@
-The fastlowess C++ library is available through the unofficial CMake package:
+fastlowess provides the upstream CMake target:
 
-    find_package(unofficial-fastlowess CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::fastlowess::fastlowess)
+    find_package(fastlowess CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fastlowess::fastlowess)
 
 Include <fastlowess.hpp> to use the C++17 interface. The port supports Windows
-x64/ARM64 with MSVC, Linux x64/ARM64 with glibc or musl, and macOS x64/ARM64.
-Shared linkage is required; Windows uses the release CRT. Debug and Release
-consumers both use the upstream Release library. Rust and Cargo are not required.
+x64/ARM64 with MSVC, Linux x64/ARM64, and macOS x64/ARM64. Shared linkage is
+required. Select the Linux runtime explicitly with either the `glibc` or `musl`
+feature, for example `fastlowess[glibc]:x64-linux-dynamic` or
+`fastlowess[musl]:x64-linux-dynamic`; the triplet must also target that libc.
+Windows uses the release CRT. Debug and Release consumers both use the upstream
+Release library. Rust and Cargo are not required.

@@ -10,5 +10,15 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "glibc": {
+      "description": "Use the upstream Linux glibc binary",
+      "supports": "linux & (x64 | arm64) & !static"
+    },
+    "musl": {
+      "description": "Use the upstream Linux musl binary",
+      "supports": "linux & (x64 | arm64) & !static"
+    }
+  }
 }
