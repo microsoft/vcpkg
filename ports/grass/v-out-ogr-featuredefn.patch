@@ -1,0 +1,37 @@
+diff --git a/vector/v.out.ogr/main.c b/vector/v.out.ogr/main.c
+index 07bd538..32e2b57 100644
+--- a/vector/v.out.ogr/main.c
++++ b/vector/v.out.ogr/main.c
+@@ -559,8 +559,8 @@ int main(int argc, char *argv[])
+     found = FALSE;
+     for (i = 0; i < GDALDatasetGetLayerCount(hDS); i++) {
+         Ogr_layer = GDALDatasetGetLayer(hDS, i);
+-        Ogr_field = OGR_L_GetLayerDefn(Ogr_layer);
+-        if (G_strcasecmp(OGR_FD_GetName(Ogr_field), options.layer->answer))
++        Ogr_featuredefn = OGR_L_GetLayerDefn(Ogr_layer);
++        if (G_strcasecmp(OGR_FD_GetName(Ogr_featuredefn), options.layer->answer))
+             continue;
+ 
+         found = TRUE;
+@@ -689,8 +689,8 @@ int main(int argc, char *argv[])
+             }
+ 
+             if (flags.append->answer) {
+-                Ogr_field = OGR_L_GetLayerDefn(Ogr_layer);
+-                if (OGR_FD_GetFieldIndex(Ogr_field, GV_KEY_COLUMN) > -1)
++                Ogr_featuredefn = OGR_L_GetLayerDefn(Ogr_layer);
++                if (OGR_FD_GetFieldIndex(Ogr_featuredefn, GV_KEY_COLUMN) > -1)
+                     create_field = FALSE;
+                 else
+                     G_warning(_("New attribute column <%s> added to the table"),
+@@ -761,8 +761,8 @@ int main(int argc, char *argv[])
+                     continue;
+ 
+                 if (flags.append->answer) {
+-                    Ogr_field = OGR_L_GetLayerDefn(Ogr_layer);
+-                    if (OGR_FD_GetFieldIndex(Ogr_field, colname[i]) > -1)
++                    Ogr_featuredefn = OGR_L_GetLayerDefn(Ogr_layer);
++                    if (OGR_FD_GetFieldIndex(Ogr_featuredefn, colname[i]) > -1)
+                         /* skip existing fields */
+                         continue;
+                     else
