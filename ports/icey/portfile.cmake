@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nilstate/icey
     REF ${VERSION}
-    SHA512 666f3f3151b855d7463690fbf42380d31b5b9998dd4e4b99cf0e7a24d3dc7fdcf7bca2bea8e1e08f5704194734379281dc034103b02a9e60812ce3ee568a0b02
+    SHA512 fc1bde42a1d7c05fff029595b973582a5e992a9f15fa9e04e68a51fa0efb00be954c9174db9dd2badd70636c0f715d0d5c1f3b5ced9f0c1b39363cbf4c9bff3a
     HEAD_REF main
     PATCHES
         fix-minizip-config.diff
@@ -33,6 +33,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/icey)
+# The tagged source omits the Windows Debug postfix from pkg-config metadata.
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug"))
+    set(debug_pkgconfig "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/icey.pc")
+    file(READ "${debug_pkgconfig}" contents)
+    string(REGEX REPLACE "-licy_([A-Za-z0-9_]+)" "-licy_\\1d" contents "${contents}")
+    file(WRITE "${debug_pkgconfig}" "${contents}")
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
