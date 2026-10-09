@@ -15,10 +15,5 @@
     },
     "vsg",
     "vsgxchange"
-  ],
-  "features": {
-    "examples": {
-      "description": "Build the example applications for vsgPoints."
-    }
-  }
+  ]
 }
