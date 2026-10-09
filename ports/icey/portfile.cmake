@@ -33,6 +33,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/icey)
+# The tagged source omits the Windows Debug postfix from pkg-config metadata.
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug"))
+    set(debug_pkgconfig "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/icey.pc")
+    file(READ "${debug_pkgconfig}" contents)
+    string(REGEX REPLACE "-licy_([A-Za-z0-9_]+)" "-licy_\\1d" contents "${contents}")
+    file(WRITE "${debug_pkgconfig}" "${contents}")
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
