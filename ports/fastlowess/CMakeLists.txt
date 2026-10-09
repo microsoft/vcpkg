@@ -3,6 +3,17 @@ project(fastlowess-vcpkg VERSION "${FASTLOWESS_VERSION}" LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    include(CheckCXXSourceCompiles)
+    check_cxx_source_compiles(
+        "#include <features.h>\n#ifndef __GLIBC__\n#error Target libc is not glibc\n#endif\nint main() { return 0; }"
+        FASTLOWESS_TARGET_USES_GLIBC
+    )
+    if(NOT FASTLOWESS_TARGET_USES_GLIBC)
+        message(FATAL_ERROR "The curated fastlowess port supports glibc Linux targets only.")
+    endif()
+endif()
+
 if(NOT FASTLOWESS_PACKAGE_DIR OR NOT FASTLOWESS_BINARY_NAME)
     message(
         FATAL_ERROR

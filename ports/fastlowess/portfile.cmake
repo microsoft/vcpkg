@@ -1,20 +1,4 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FASTLOWESS_FEATURE_OPTIONS
-    FEATURES
-        glibc FASTLOWESS_USE_GLIBC
-        musl FASTLOWESS_USE_MUSL
-)
-
-if(
-    (FASTLOWESS_USE_GLIBC OR FASTLOWESS_USE_MUSL)
-    AND NOT VCPKG_TARGET_IS_LINUX
-)
-    message(FATAL_ERROR "The glibc and musl features are only supported on Linux.")
-endif()
-if(FASTLOWESS_USE_GLIBC AND FASTLOWESS_USE_MUSL)
-    message(FATAL_ERROR "Select only one of the glibc and musl features.")
-endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_ONLY_RELEASE_CRT enabled)
@@ -44,16 +28,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     set(FASTLOWESS_LIBRARY_DIR bin)
 elseif(VCPKG_TARGET_IS_LINUX)
-    if(FASTLOWESS_USE_MUSL)
-        set(FASTLOWESS_LIBC_SUFFIX -musl)
-    elseif(FASTLOWESS_USE_GLIBC)
-        set(FASTLOWESS_LIBC_SUFFIX "")
-    else()
-        message(
-            FATAL_ERROR
-            "Select a Linux libc explicitly with the glibc or musl feature."
-        )
-    endif()
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(FASTLOWESS_ARCH x64)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -64,23 +38,13 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "fastlowess does not support Linux architecture ${VCPKG_TARGET_ARCHITECTURE}."
         )
     endif()
-    set(FASTLOWESS_PLATFORM "linux-${FASTLOWESS_ARCH}${FASTLOWESS_LIBC_SUFFIX}")
+    set(FASTLOWESS_PLATFORM "linux-${FASTLOWESS_ARCH}")
     set(
         FASTLOWESS_BINARY_NAME
-        "libfastlowess-linux-${FASTLOWESS_ARCH}${FASTLOWESS_LIBC_SUFFIX}.so"
+        "libfastlowess-linux-${FASTLOWESS_ARCH}.so"
     )
     set(FASTLOWESS_LIBRARY_DIR lib)
-    if(FASTLOWESS_LIBC_SUFFIX STREQUAL "-musl")
-        if(FASTLOWESS_ARCH STREQUAL "x64")
-            set(FASTLOWESS_ARCHIVE_SHA512
-                90b02361fe33d51128fd132f075c6736a8aa4160a74b883225b550bf22bf1839e4b2e45bdc06b0faa19922011021e05ae1709a1348cf7873c402e1dc62272af0
-            )
-        else()
-            set(FASTLOWESS_ARCHIVE_SHA512
-                6f351982917e3506432a2a06673d423edbf25fc557232f90ebb5274b1434f19f79148977a5c4660db29e2467952549452053180c0b9ad40c69806e4e0735cc1a
-            )
-        endif()
-    elseif(FASTLOWESS_ARCH STREQUAL "x64")
+    if(FASTLOWESS_ARCH STREQUAL "x64")
         set(FASTLOWESS_ARCHIVE_SHA512
             89176a4f0364746b5bc8fd463bacaf172a21eb03047b56a8dbf61d1a0d5f4243b0cdae7bde6136ceec71afa0817b92e532bd6edf74bda26f501f6bce655de3ad
         )
