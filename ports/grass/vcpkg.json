@@ -1,0 +1,36 @@
+{
+  "name": "grass",
+  "version": "8.5.0",
+  "description": "GRASS, Geographic Resources Analysis Support System, is a powerful computational engine for raster, vector, and geospatial processing. It supports terrain and ecosystem modeling, hydrology, data management, and imagery processing. With a built-in temporal framework and Python API, it enables advanced time series analysis and rapid geospatial programming, optimized for large-scale analysis on various hardware configurations.",
+  "homepage": "https://grass.osgeo.org/",
+  "license": "GPL-2.0-or-later",
+  "supports": "(x64 | arm64) & (linux | windows | osx)",
+  "dependencies": [
+    "bzip2",
+    "cairo",
+    "fftw",
+    "freetype2",
+    "gdal",
+    "geos",
+    "glu",
+    "libgl",
+    "libpng",
+    "libsvm",
+    "libtiff",
+    "pdal",
+    "proj",
+    "readline",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "x11": {
+      "description": "Build with X11 support",
+      "supports": "linux"
+    }
+  }
+}
