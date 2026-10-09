@@ -1,7 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.20",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -91,6 +91,9 @@
       "dependencies": [
         "eigen3"
       ]
+    },
+    "fast-math": {
+      "description": "Enable compiler options for fast math optimizations on FP computations (not recommended)"
     },
     "flann": {
       "description": "opencv_flann module",

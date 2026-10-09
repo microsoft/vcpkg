@@ -1,6 +1,7 @@
 {
   "name": "opencv",
   "version": "4.14.0",
+  "port-version": 1,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://opencv.org/",
   "documentation": "https://docs.opencv.org/4.14.0/",
@@ -68,6 +69,18 @@
           "default-features": false,
           "features": [
             "cuda"
+          ]
+        }
+      ]
+    },
+    "cuda-fast-math": {
+      "description": "Enable --use_fast_math for CUDA compiler",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cuda-fast-math"
           ]
         }
       ]
@@ -152,6 +165,18 @@
           "default-features": false,
           "features": [
             "eigen"
+          ]
+        }
+      ]
+    },
+    "fast-math": {
+      "description": "Enable compiler options for fast math optimizations on FP computations (not recommended)",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "fast-math"
           ]
         }
       ]
