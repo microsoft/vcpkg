@@ -6562,7 +6562,7 @@
     },
     "mbedtls": {
       "baseline": "3.6.5",
-      "port-version": 0
+      "port-version": 1
     },
     "mcap": {
       "baseline": "2.1.3",
