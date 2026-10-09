@@ -8,7 +8,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        device-id MATSDK_ENABLE_DEVICE_ID
         android-capi-http-client MATSDK_ENABLE_CAPI_HTTP_CLIENT
 )
 
