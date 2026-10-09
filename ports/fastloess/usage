@@ -1,6 +1,7 @@
-The fastloess C++ library is available through the unofficial CMake package:
+The fastloess C++ library is available through the upstream CMake package:
 
-    find_package(unofficial-fastloess CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::fastloess::fastloess)
+    find_package(fastloess CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fastloess::fastloess)
 
 Include <fastloess.hpp> to use the C++17 interface.
+The curated Linux port selects glibc binaries and checks the target compiler during configuration. Musl users need an overlay port.

@@ -40,28 +40,12 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "fastloess does not support Linux architecture ${VCPKG_TARGET_ARCHITECTURE}."
         )
     endif()
-    if(TARGET_TRIPLET MATCHES "musl")
-        set(FASTLOESS_LIBC_SUFFIX -musl)
-    else()
-        set(FASTLOESS_LIBC_SUFFIX "")
-    endif()
-    set(FASTLOESS_PLATFORM "linux-${FASTLOESS_ARCH}${FASTLOESS_LIBC_SUFFIX}")
+    set(FASTLOESS_PLATFORM "linux-${FASTLOESS_ARCH}")
     set(FASTLOESS_BINARY_NAME
-        "libfastloess-linux-${FASTLOESS_ARCH}${FASTLOESS_LIBC_SUFFIX}.so"
+        "libfastloess-linux-${FASTLOESS_ARCH}.so"
     )
     set(FASTLOESS_LIBRARY_DIR lib)
-    if(FASTLOESS_ARCH STREQUAL "x64" AND FASTLOESS_LIBC_SUFFIX STREQUAL "-musl")
-        set(FASTLOESS_ARCHIVE_SHA512
-            aacfe267bc7747ec1de7c2e3dafc9037c3021358aad802103faf820544e0efbc79ae77ad5db5f5d3720d1248682217d8e85f0f268822b53276d6ff9806c36417
-        )
-    elseif(
-        FASTLOESS_ARCH STREQUAL "arm64"
-        AND FASTLOESS_LIBC_SUFFIX STREQUAL "-musl"
-    )
-        set(FASTLOESS_ARCHIVE_SHA512
-            b01f06c10793c6d3581d65a31b1708c4bf3b20af2a9282cf30739e833639ef6093de6681f3ff1e05350a6a98f1caf23e276d85b8ed1b630d6170703153795940
-        )
-    elseif(FASTLOESS_ARCH STREQUAL "x64")
+    if(FASTLOESS_ARCH STREQUAL "x64")
         set(FASTLOESS_ARCHIVE_SHA512
             d4aa56432c36db5367b80c55a6a1d872c7d41e694948ed6188d1ae9ca3ad06a7f3b3184983df6c2267c9bf714f27da946d06afe6df4089f402bc398702192685
         )
@@ -105,6 +89,17 @@ vcpkg_extract_source_archive(
     ARCHIVE "${FASTLOESS_ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
+if(VCPKG_TARGET_IS_OSX)
+    vcpkg_execute_required_process(
+        COMMAND
+            install_name_tool
+            -id
+            "@rpath/${FASTLOESS_BINARY_NAME}"
+            "${FASTLOESS_PACKAGE_DIR}/${FASTLOESS_BINARY_NAME}"
+        WORKING_DIRECTORY "${FASTLOESS_PACKAGE_DIR}"
+        LOGNAME "install-name-${FASTLOESS_PLATFORM}"
+    )
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

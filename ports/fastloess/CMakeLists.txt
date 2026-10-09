@@ -10,6 +10,17 @@ if(NOT FASTLOESS_PACKAGE_DIR OR NOT FASTLOESS_BINARY_NAME)
     )
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    include(CheckCXXSourceCompiles)
+    check_cxx_source_compiles(
+        "#include <features.h>\n#ifndef __GLIBC__\n#error Target libc is not glibc\n#endif\nint main() { return 0; }"
+        FASTLOESS_TARGET_USES_GLIBC
+    )
+    if(NOT FASTLOESS_TARGET_USES_GLIBC)
+        message(FATAL_ERROR "The curated fastloess port supports glibc Linux targets only.")
+    endif()
+endif()
+
 install(
     FILES
         "${FASTLOESS_PACKAGE_DIR}/fastloess.hpp"
@@ -78,19 +89,20 @@ else()
     set(FASTLOESS_LIBRARY_DIR lib)
 endif()
 
+set(FASTLOESS_MACOS_RPATH_PREFIX "@rpath/")
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-fastloessConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastloessConfig.cmake"
-    INSTALL_DESTINATION share/unofficial-fastloess
+    "${CMAKE_CURRENT_SOURCE_DIR}/fastloessConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/fastloessConfig.cmake"
+    INSTALL_DESTINATION share/fastloess
 )
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastloessConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/fastloessConfigVersion.cmake"
     VERSION "${PROJECT_VERSION}"
     COMPATIBILITY SameMajorVersion
 )
 install(
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastloessConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastloessConfigVersion.cmake"
-    DESTINATION share/unofficial-fastloess
+        "${CMAKE_CURRENT_BINARY_DIR}/fastloessConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/fastloessConfigVersion.cmake"
+    DESTINATION share/fastloess
 )

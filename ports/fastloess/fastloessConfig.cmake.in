@@ -1,8 +1,8 @@
 @PACKAGE_INIT@
 
-if(NOT TARGET unofficial::fastloess::fastloess)
-    add_library(unofficial::fastloess::fastloess SHARED IMPORTED)
-    set_target_properties(unofficial::fastloess::fastloess PROPERTIES
+if(NOT TARGET fastloess::fastloess)
+    add_library(fastloess::fastloess SHARED IMPORTED)
+    set_target_properties(fastloess::fastloess PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
         INTERFACE_COMPILE_FEATURES cxx_std_17
         IMPORTED_CONFIGURATIONS Release
@@ -11,11 +11,18 @@ if(NOT TARGET unofficial::fastloess::fastloess)
         MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
         MAP_IMPORTED_CONFIG_MINSIZEREL Release
     )
+    if(UNIX AND NOT APPLE)
+        set_property(TARGET fastloess::fastloess PROPERTY IMPORTED_NO_SONAME TRUE)
+    elseif(APPLE)
+        set_target_properties(fastloess::fastloess PROPERTIES
+            IMPORTED_SONAME_RELEASE "@FASTLOESS_MACOS_RPATH_PREFIX@@FASTLOESS_BINARY_NAME@"
+        )
+    endif()
     if(WIN32)
-        set_target_properties(unofficial::fastloess::fastloess PROPERTIES
+        set_target_properties(fastloess::fastloess PROPERTIES
             IMPORTED_IMPLIB_RELEASE "${PACKAGE_PREFIX_DIR}/lib/@FASTLOESS_IMPORT_LIBRARY_NAME@"
         )
     endif()
 endif()
 
-check_required_components(unofficial-fastloess)
+check_required_components(fastloess)
