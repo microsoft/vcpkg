@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vsg-dev/vsgPoints
     REF "v${VERSION}"
-    SHA512 ca9fd8f54e13f0f64ef46d9d3ddd7bae5e95f879c9c3a9b4da8f101e4292711e20d7e31f11c1911fc0f066654b0ef63eec69b28ccf3eaeaa4c5ccb8be307c36b                  # 初始设为 0，首次安装失败时 vcpkg 会提示正确的哈希值
+    SHA512 ca9fd8f54e13f0f64ef46d9d3ddd7bae5e95f879c9c3a9b4da8f101e4292711e20d7e31f11c1911fc0f066654b0ef63eec69b28ccf3eaeaa4c5ccb8be307c36b
     HEAD_REF master
 )
 file(WRITE "${SOURCE_PATH}/applications/CMakeLists.txt" "# skipped by vcpkg\n")
