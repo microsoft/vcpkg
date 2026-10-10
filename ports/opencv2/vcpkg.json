@@ -1,7 +1,7 @@
 {
   "name": "opencv2",
   "version": "2.4.13.7",
-  "port-version": 25,
+  "port-version": 26,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -39,6 +39,9 @@
       "dependencies": [
         "eigen3"
       ]
+    },
+    "fast-math": {
+      "description": "Enable -ffast-math (not recommended for GCC 4.6.x)"
     },
     "jasper": {
       "description": "JPEG 2000 support for opencv",

@@ -60,6 +60,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "dc1394"          WITH_1394
  "dnn"             BUILD_opencv_dnn
  "eigen"           WITH_EIGEN
+ "fast-math"       ENABLE_FAST_MATH
  "flann"           BUILD_opencv_flann
  "flann"           PROTOBUF_UPDATE_FILES
  "flann"           UPDATE_PROTO_FILES

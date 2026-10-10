@@ -29,17 +29,18 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
- "eigen"    WITH_EIGEN
- "jasper"   WITH_JASPER
- "jpeg"     WITH_JPEG
- "msmf"     WITH_MSMF
- "openexr"  WITH_OPENEXR
- "opengl"   WITH_OPENGL
- "png"      WITH_PNG
- "qt"       WITH_QT
- "tiff"     WITH_TIFF
- "world"    BUILD_opencv_world
- "dc1394"   WITH_1394
+ "eigen"     WITH_EIGEN
+ "fast-math" ENABLE_FAST_MATH
+ "jasper"    WITH_JASPER
+ "jpeg"      WITH_JPEG
+ "msmf"      WITH_MSMF
+ "openexr"   WITH_OPENEXR
+ "opengl"    WITH_OPENGL
+ "png"       WITH_PNG
+ "qt"        WITH_QT
+ "tiff"      WITH_TIFF
+ "world"     BUILD_opencv_world
+ "dc1394"    WITH_1394
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT_LNK)
