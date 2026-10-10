@@ -6,6 +6,7 @@
   "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
+    "cpp-unicodelib",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,6 +26,7 @@
     "audio": {
       "description": "Use sfml-audio library",
       "dependencies": [
+        "drlibs",
         "libflac",
         "libogg",
         "libvorbis",
@@ -45,6 +47,7 @@
             "freetype"
           ]
         },
+        "qoi",
         {
           "name": "sfml",
           "default-features": false,
@@ -68,6 +71,10 @@
           "features": [
             "pthreads"
           ]
+        },
+        {
+          "name": "wepoll",
+          "platform": "windows"
         }
       ]
     },

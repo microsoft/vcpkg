@@ -1,8 +1,32 @@
+diff --git a/src/SFML/Audio/CMakeLists.txt b/src/SFML/Audio/CMakeLists.txt
+index 779170960..b24945161 100644
+--- a/src/SFML/Audio/CMakeLists.txt
++++ b/src/SFML/Audio/CMakeLists.txt
+@@ -217,7 +217,8 @@ endif()
+ target_include_directories(sfml-audio SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/miniaudio")
+ 
+ # dr_mp3 sources
+-target_include_directories(sfml-audio SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/dr_mp3")
++find_path(DR_MP3_INCLUDE_DIR dr_mp3.h REQUIRED)
++target_include_directories(sfml-audio SYSTEM PRIVATE "${DR_MP3_INCLUDE_DIR}")
+ 
+ if(SFML_OS_ANDROID)
+     target_link_libraries(sfml-audio PRIVATE android OpenSLES)
 diff --git a/src/SFML/Graphics/CMakeLists.txt b/src/SFML/Graphics/CMakeLists.txt
-index c0d2140..7c42679 100644
+index c0d214031..e879b38a1 100644
 --- a/src/SFML/Graphics/CMakeLists.txt
 +++ b/src/SFML/Graphics/CMakeLists.txt
-@@ -111,7 +111,7 @@ endif()
+@@ -100,7 +100,8 @@ target_include_directories(sfml-graphics SYSTEM PRIVATE "${STB_INCLUDE_DIR}")
+ target_include_directories(sfml-graphics SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/glad/include")
+ 
+ # qoi sources
+-target_include_directories(sfml-graphics SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/qoi")
++find_path(QOI_INCLUDE_DIR qoi.h REQUIRED)
++target_include_directories(sfml-graphics SYSTEM PRIVATE "${QOI_INCLUDE_DIR}")
+ 
+ # find external libraries
+ if(SFML_OS_ANDROID)
+@@ -111,7 +112,7 @@ endif()
  
  if(SFML_USE_SYSTEM_DEPS)
      find_package(Freetype REQUIRED)
@@ -11,7 +35,7 @@ index c0d2140..7c42679 100644
  else()
      # use a block to scope option variables we have to set
      block()
-@@ -235,46 +235,10 @@ else()
+@@ -235,46 +236,10 @@ else()
      add_library(HarfBuzz::HarfBuzz ALIAS harfbuzz)
  endif()
  
@@ -62,7 +86,7 @@ index c0d2140..7c42679 100644
  # add preprocessor symbols
  target_compile_definitions(sfml-graphics PRIVATE "STBI_FAILURE_USERMSG")
 diff --git a/src/SFML/Graphics/Dependencies.cmake.in b/src/SFML/Graphics/Dependencies.cmake.in
-index f4b0be7..18de058 100644
+index f4b0be70e..18de05804 100644
 --- a/src/SFML/Graphics/Dependencies.cmake.in
 +++ b/src/SFML/Graphics/Dependencies.cmake.in
 @@ -10,7 +10,7 @@ set(FIND_SFML_DEPENDENCIES_NOTFOUND)
@@ -84,7 +108,7 @@ index f4b0be7..18de058 100644
      set(FIND_SFML_ERROR "SFML found but some of its dependencies are missing (${FIND_SFML_DEPENDENCIES_NOTFOUND})")
      set(SFML_FOUND OFF)
 diff --git a/src/SFML/Network/CMakeLists.txt b/src/SFML/Network/CMakeLists.txt
-index cf77462..9809f83 100644
+index cf7746218..731fb2633 100644
 --- a/src/SFML/Network/CMakeLists.txt
 +++ b/src/SFML/Network/CMakeLists.txt
 @@ -57,8 +57,8 @@ elseif(SFML_OS_LINUX OR SFML_OS_IOS OR SFML_OS_MACOS)
@@ -98,7 +122,7 @@ index cf77462..9809f83 100644
  else()
      include(FetchContent)
  
-@@ -130,7 +130,7 @@ else()
+@@ -130,10 +130,17 @@ else()
      target_compile_options(libssh2_static PRIVATE -w)
  endif()
  
@@ -106,9 +130,20 @@ index cf77462..9809f83 100644
 +target_link_libraries(sfml-network PRIVATE libssh2::libssh2 MbedTLS::mbedtls MbedTLS::mbedcrypto MbedTLS::mbedx509)
  
  if(SFML_OS_WINDOWS)
-     target_include_directories(sfml-network SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/wepoll")
+-    target_include_directories(sfml-network SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/wepoll")
++    find_path(WEPOLL_INCLUDE_DIR wepoll.h REQUIRED)
++    find_library(WEPOLL_LIBRARY wepoll REQUIRED)
++    add_library(wepoll::wepoll UNKNOWN IMPORTED)
++    set_target_properties(wepoll::wepoll PROPERTIES
++        IMPORTED_LOCATION "${WEPOLL_LIBRARY}"
++        INTERFACE_INCLUDE_DIRECTORIES "${WEPOLL_INCLUDE_DIR}"
++        INTERFACE_LINK_LIBRARIES ws2_32)
++    target_link_libraries(sfml-network PRIVATE wepoll::wepoll)
+ endif()
+ 
+ if(SFML_OS_MACOS)
 diff --git a/src/SFML/Network/Dependencies.cmake.in b/src/SFML/Network/Dependencies.cmake.in
-index 929f538..76ec881 100644
+index 929f538f1..9e8ca2214 100644
 --- a/src/SFML/Network/Dependencies.cmake.in
 +++ b/src/SFML/Network/Dependencies.cmake.in
 @@ -9,8 +9,8 @@ set(SFML_BUILT_USING_SYSTEM_DEPS @SFML_USE_SYSTEM_DEPS@)
@@ -122,3 +157,50 @@ index 929f538..76ec881 100644
  else()
      set(MbedTLS_DIR "${CMAKE_CURRENT_LIST_DIR}/../MbedTLS")
      find_dependency(MbedTLS CONFIG REQUIRED NO_DEFAULT_PATH)
+@@ -18,6 +18,28 @@ else()
+     find_dependency(libssh2 CONFIG REQUIRED NO_DEFAULT_PATH)
+ endif()
+ 
++if(WIN32 AND NOT TARGET wepoll::wepoll)
++    # look up both configurations explicitly, a plain find_library picks whichever comes first
++    find_library(WEPOLL_LIBRARY_RELEASE wepoll PATHS "${CMAKE_CURRENT_LIST_DIR}/../../lib" NO_DEFAULT_PATH)
++    find_library(WEPOLL_LIBRARY_DEBUG wepoll PATHS "${CMAKE_CURRENT_LIST_DIR}/../../debug/lib" NO_DEFAULT_PATH)
++    if(WEPOLL_LIBRARY_RELEASE)
++        add_library(wepoll::wepoll UNKNOWN IMPORTED)
++        set_target_properties(wepoll::wepoll PROPERTIES
++            IMPORTED_CONFIGURATIONS RELEASE
++            IMPORTED_LOCATION "${WEPOLL_LIBRARY_RELEASE}"
++            IMPORTED_LOCATION_RELEASE "${WEPOLL_LIBRARY_RELEASE}"
++            MAP_IMPORTED_CONFIG_MINSIZEREL Release
++            MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
++            INTERFACE_LINK_LIBRARIES ws2_32)
++        if(WEPOLL_LIBRARY_DEBUG)
++            set_property(TARGET wepoll::wepoll APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
++            set_target_properties(wepoll::wepoll PROPERTIES IMPORTED_LOCATION_DEBUG "${WEPOLL_LIBRARY_DEBUG}")
++        endif()
++    else()
++        list(APPEND FIND_SFML_DEPENDENCIES_NOTFOUND wepoll)
++    endif()
++endif()
++
+ if(FIND_SFML_DEPENDENCIES_NOTFOUND)
+     set(FIND_SFML_ERROR "SFML found but some of its dependencies are missing (${FIND_SFML_DEPENDENCIES_NOTFOUND})")
+     set(SFML_FOUND OFF)
+diff --git a/src/SFML/System/CMakeLists.txt b/src/SFML/System/CMakeLists.txt
+index 3827b8998..6d79be7d5 100644
+--- a/src/SFML/System/CMakeLists.txt
++++ b/src/SFML/System/CMakeLists.txt
+@@ -76,7 +76,12 @@ sfml_add_library(System
+                  DEPENDENCIES "Dependencies.cmake.in")
+ 
+ # cpp-unicodelib sources
+-target_include_directories(sfml-system SYSTEM PRIVATE "${PROJECT_SOURCE_DIR}/extlibs/headers/cpp-unicodelib")
++find_path(CPP_UNICODELIB_INCLUDE_DIR unicodelib.h REQUIRED)
++target_include_directories(sfml-system SYSTEM PRIVATE "${CPP_UNICODELIB_INCLUDE_DIR}")
++# newer cpp-unicodelib versions only check __cplusplus, which MSVC doesn't set correctly by default
++if(SFML_COMPILER_MSVC)
++    target_compile_options(sfml-system PRIVATE /Zc:__cplusplus)
++endif()
+ 
+ # enable precompiled headers
+ if (SFML_ENABLE_PCH)
