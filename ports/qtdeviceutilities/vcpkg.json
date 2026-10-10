@@ -1,17 +1,21 @@
 {
   "name": "qtdeviceutilities",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "Qt Device Utilities provides functionality that is useful for controlling settings in embedded applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "supports": "linux",
   "dependencies": [
     {
-      "name": "qtdeclarative",
-      "default-features": false
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus",
+        "network"
+      ]
     },
     {
-      "name": "qttools",
+      "name": "qtdeclarative",
       "default-features": false
     }
   ]

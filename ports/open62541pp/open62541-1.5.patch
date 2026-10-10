@@ -1,0 +1,677 @@
+diff --git a/include/open62541pp/config.hpp.in b/include/open62541pp/config.hpp.in
+index 67522ab..362dfcd 100644
+--- a/include/open62541pp/config.hpp.in
++++ b/include/open62541pp/config.hpp.in
+@@ -59,7 +59,8 @@
+ #define UAPP_HAS_DATAACCESS 0
+ #endif
+ 
+-#define UAPP_HAS_ASYNC_OPERATIONS UAPP_OPEN62541_VER_GE(1, 1) && UA_MULTITHREADING >= 100
++#define UAPP_HAS_ASYNC_OPERATIONS \
++    UAPP_OPEN62541_VER_GE(1, 1) && UAPP_OPEN62541_VER_LE(1, 4) && UA_MULTITHREADING >= 100
+ 
+ #ifdef UA_ENABLE_SUBSCRIPTIONS
+ #define UAPP_HAS_ASYNC_SUBSCRIPTIONS UAPP_OPEN62541_VER_GE(1, 1)
+diff --git a/include/open62541pp/datatype.hpp b/include/open62541pp/datatype.hpp
+index 8457315..bc443a0 100644
+--- a/include/open62541pp/datatype.hpp
++++ b/include/open62541pp/datatype.hpp
+@@ -598,7 +598,11 @@ void deallocate(const UA_DataTypeArray* head) noexcept;
+ [[nodiscard]] UA_DataTypeMember copy(const UA_DataTypeMember& src);
+ [[nodiscard]] UA_DataType copy(const UA_DataType& src);
+ 
++#if UAPP_OPEN62541_VER_GE(1, 5)
++void addDataTypes(UA_DataTypeArray*& head, Span<const DataType> types);
++#else
+ void addDataTypes(const UA_DataTypeArray*& head, Span<const DataType> types);
++#endif
+ 
+ }  // namespace detail
+ 
+diff --git a/include/open62541pp/event.hpp b/include/open62541pp/event.hpp
+index 244d754..41301c3 100644
+--- a/include/open62541pp/event.hpp
++++ b/include/open62541pp/event.hpp
+@@ -3,6 +3,7 @@
+ #include <cstdint>
+ #include <string_view>
+ 
++#include "open62541pp/config.hpp"
+ #include "open62541pp/types.hpp"
+ #include "open62541pp/ua/nodeids.hpp"
+ 
+@@ -72,6 +73,11 @@ public:
+ private:
+     Server* connection_;
+     NodeId id_;
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    UA_KeyValueMap eventFields_{};
++    uint16_t severity_{0};
++    LocalizedText message_;
++#endif
+ };
+ 
+ /// @relates Event
+diff --git a/include/open62541pp/services/detail/client_service.hpp b/include/open62541pp/services/detail/client_service.hpp
+index 4c230ae..282dc9d 100644
+--- a/include/open62541pp/services/detail/client_service.hpp
++++ b/include/open62541pp/services/detail/client_service.hpp
+@@ -7,6 +7,7 @@
+ #include <utility>  // forward
+ 
+ #include "open62541pp/async.hpp"
++#include "open62541pp/config.hpp"
+ #include "open62541pp/detail/client_utils.hpp"
+ #include "open62541pp/detail/exceptioncatcher.hpp"
+ #include "open62541pp/detail/open62541/client.h"
+@@ -22,13 +23,13 @@ template <typename Response>
+ struct AsyncServiceAdapter {
+     using ExceptionCatcher = opcua::detail::ExceptionCatcher;
+ 
+-    template <typename Context>
++    template <typename Context, typename Callback>
+     struct CallbackAndContext {
+-        UA_ClientAsyncServiceCallback callback;
++        Callback callback;
+         std::unique_ptr<Context> context;
+     };
+ 
+-    template <typename CompletionHandler>
++    template <typename Callback = UA_ClientAsyncServiceCallback, typename CompletionHandler>
+     static auto makeCallbackAndContext(
+         ExceptionCatcher& exceptionCatcher, CompletionHandler&& handler
+     ) {
+@@ -39,8 +40,8 @@ struct AsyncServiceAdapter {
+             std::decay_t<CompletionHandler> handler;
+         };
+ 
+-        const auto callback =
+-            [](UA_Client*, void* userdata, uint32_t /* reqId */, void* responsePtr) {
++        Callback callback =
++            [](UA_Client*, void* userdata, uint32_t /* reqId */, auto* responsePtr) {
+                 std::unique_ptr<Context> context{static_cast<Context*>(userdata)};
+                 assert(context != nullptr);
+                 assert(context->catcher != nullptr);
+@@ -48,11 +49,15 @@ struct AsyncServiceAdapter {
+                     if (responsePtr == nullptr) {
+                         throw BadStatus{UA_STATUSCODE_BADUNEXPECTEDERROR};
+                     }
+-                    std::invoke(context->handler, *static_cast<Response*>(responsePtr));
++                    if constexpr (std::is_void_v<std::remove_pointer_t<decltype(responsePtr)>>) {
++                        std::invoke(context->handler, *static_cast<Response*>(responsePtr));
++                    } else {
++                        std::invoke(context->handler, asWrapper<Response>(*responsePtr));
++                    }
+                 });
+             };
+ 
+-        return CallbackAndContext<Context>{
++        return CallbackAndContext<Context, Callback>{
+             callback,
+             std::make_unique<Context>(
+                 Context{&exceptionCatcher, std::forward<CompletionHandler>(handler)}
+@@ -72,20 +77,22 @@ struct AsyncServiceAdapter {
+      *                   ```
+      * @param token Completion token
+      */
+-    template <typename Initiation, typename CompletionToken, typename... Args>
++    template <
++        typename Callback = UA_ClientAsyncServiceCallback,
++        typename Initiation,
++        typename CompletionToken,
++        typename... Args>
+     static auto initiate(
+         Client& client, Initiation&& initiation, CompletionToken&& token, Args&&... args
+     ) {
+-        static_assert(
+-            std::is_invocable_v<Initiation, UA_ClientAsyncServiceCallback, void*, Args&&...>
+-        );
++        static_assert(std::is_invocable_v<Initiation, Callback, void*, Args&&...>);
+ 
+         return asyncInitiate<Response>(
+             [&client](auto&& handler, auto&& innerInitiation, auto&&... innerArgs) {
+                 auto& catcher = opcua::detail::getExceptionCatcher(client);
+                 try {
+                     // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks), false positive?
+-                    auto callbackAndContext = makeCallbackAndContext(
++                    auto callbackAndContext = makeCallbackAndContext<Callback>(
+                         catcher, std::forward<decltype(handler)>(handler)
+                     );
+                     std::invoke(
+@@ -134,6 +141,43 @@ auto sendRequestAsync(Client& client, const Request& request, CompletionToken&&
+ /// Sync client service requests.
+ template <typename Request, typename Response>
+ Response sendRequest(Client& client, const Request& request) noexcept {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    if constexpr (std::is_same_v<Request, UA_ReadRequest>) {
++        return Response{UA_Client_Service_read(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_WriteRequest>) {
++        return Response{UA_Client_Service_write(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_CallRequest>) {
++        return Response{UA_Client_Service_call(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_AddNodesRequest>) {
++        return Response{UA_Client_Service_addNodes(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_AddReferencesRequest>) {
++        return Response{
++            UA_Client_Service_addReferences(opcua::detail::getHandle(client), request)
++        };
++    } else if constexpr (std::is_same_v<Request, UA_DeleteNodesRequest>) {
++        return Response{UA_Client_Service_deleteNodes(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_DeleteReferencesRequest>) {
++        return Response{
++            UA_Client_Service_deleteReferences(opcua::detail::getHandle(client), request)
++        };
++    } else if constexpr (std::is_same_v<Request, UA_BrowseRequest>) {
++        return Response{UA_Client_Service_browse(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_BrowseNextRequest>) {
++        return Response{UA_Client_Service_browseNext(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_TranslateBrowsePathsToNodeIdsRequest>) {
++        return Response{UA_Client_Service_translateBrowsePathsToNodeIds(
++            opcua::detail::getHandle(client), request
++        )};
++    } else if constexpr (std::is_same_v<Request, UA_RegisterNodesRequest>) {
++        return Response{UA_Client_Service_registerNodes(opcua::detail::getHandle(client), request)};
++    } else if constexpr (std::is_same_v<Request, UA_UnregisterNodesRequest>) {
++        return Response{
++            UA_Client_Service_unregisterNodes(opcua::detail::getHandle(client), request)
++        };
++    } else {
++        static_assert(!std::is_same_v<Request, Request>, "Unsupported client service request");
++    }
++#else
+     Response response{};
+     __UA_Client_Service(
+         opcua::detail::getHandle(client),
+@@ -143,6 +187,7 @@ Response sendRequest(Client& client, const Request& request) noexcept {
+         &getDataType<Response>()
+     );
+     return response;
++#endif
+ }
+ 
+ }  // namespace opcua::services::detail
+diff --git a/include/open62541pp/services/detail/monitoreditem_context.hpp b/include/open62541pp/services/detail/monitoreditem_context.hpp
+index 5590442..42960d3 100644
+--- a/include/open62541pp/services/detail/monitoreditem_context.hpp
++++ b/include/open62541pp/services/detail/monitoreditem_context.hpp
+@@ -1,8 +1,12 @@
+ #pragma once
+ 
++#include <algorithm>
+ #include <cstdint>
+ #include <functional>
++#include <iterator>
++#include <vector>
+ 
++#include "open62541pp/config.hpp"
+ #include "open62541pp/services/detail/callbackadapter.hpp"
+ #include "open62541pp/span.hpp"
+ #include "open62541pp/ua/types.hpp"  // DataValue, IntegerId, Variant
+@@ -62,20 +66,36 @@ struct MonitoredItemContext : CallbackAdapter {
+         [[maybe_unused]] void* subContext,
+         IntegerId monId,
+         void* monContext,
++#if UAPP_OPEN62541_VER_GE(1, 5)
++        const UA_KeyValueMap eventFields
++#else
+         size_t nEventFields,
+         UA_Variant* eventFields
++#endif
+     ) noexcept {
+         if (monContext != nullptr) {
+             auto* self = static_cast<MonitoredItemContext*>(monContext);
+             if (!self->inserted) {
+                 return;  // avoid immediate callbacks before insertion
+             }
++#if UAPP_OPEN62541_VER_GE(1, 5)
++            std::vector<Variant> fields;
++            fields.reserve(eventFields.mapSize);
++            std::transform(
++                eventFields.map,
++                eventFields.map + eventFields.mapSize,  // NOLINT(*pointer-arithmetic)
++                std::back_inserter(fields),
++                [](const auto& field) { return Variant{field.value}; }
++            );
++            self->invoke(self->eventCallback, subId, monId, Span<const Variant>{fields});
++#else
+             self->invoke(
+                 self->eventCallback,
+                 subId,
+                 monId,
+                 Span<const Variant>{asWrapper<Variant>(eventFields), nEventFields}
+             );
++#endif
+         }
+     }
+ 
+diff --git a/include/open62541pp/services/monitoreditem.hpp b/include/open62541pp/services/monitoreditem.hpp
+index 9a19e57..edac047 100644
+--- a/include/open62541pp/services/monitoreditem.hpp
++++ b/include/open62541pp/services/monitoreditem.hpp
+@@ -108,6 +108,16 @@ using EventNotificationCallback =
+     std::function<void(IntegerId subId, IntegerId monId, Span<const Variant> eventFields)>;
+ 
+ namespace detail {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++using CreateMonitoredItemsAsyncCallback = UA_ClientAsyncCreateMonitoredItemsCallback;
++using ModifyMonitoredItemsAsyncCallback = UA_ClientAsyncModifyMonitoredItemsCallback;
++using DeleteMonitoredItemsAsyncCallback = UA_ClientAsyncDeleteMonitoredItemsCallback;
++#else
++using CreateMonitoredItemsAsyncCallback = UA_ClientAsyncServiceCallback;
++using ModifyMonitoredItemsAsyncCallback = UA_ClientAsyncServiceCallback;
++using DeleteMonitoredItemsAsyncCallback = UA_ClientAsyncServiceCallback;
++#endif
++
+ std::vector<std::unique_ptr<MonitoredItemContext>> makeMonitoredItemContexts(
+     Client& connection,
+     const CreateMonitoredItemsRequest& request,
+@@ -168,15 +178,16 @@ auto createMonitoredItemsDataChangeAsync(
+         connection, request, std::move(dataChangeCallback), {}, std::move(deleteCallback)
+     );
+     std::vector<void*> contextsPtr{contexts.size()};
+-    std::vector<UA_Client_DataChangeNotificationCallback> dataChangeCallbacks{contexts.size()};
+-    std::vector<UA_Client_DeleteMonitoredItemCallback> deleteCallbacks{contexts.size()};
++    std::vector<UA_Client_DataChangeNotificationCallback> dataChangeCallbacks(contexts.size());
++    std::vector<UA_Client_DeleteMonitoredItemCallback> deleteCallbacks(contexts.size());
+     detail::convertMonitoredItemContexts(
+         contexts, contextsPtr, dataChangeCallbacks, {}, deleteCallbacks
+     );
+-    return detail::AsyncServiceAdapter<CreateMonitoredItemsResponse>::initiate(
++    return detail::AsyncServiceAdapter<CreateMonitoredItemsResponse>::
++        template initiate<detail::CreateMonitoredItemsAsyncCallback>(
+         connection,
+         [&connection](
+-            UA_ClientAsyncServiceCallback callback,
++            detail::CreateMonitoredItemsAsyncCallback callback,
+             void* userdata,
+             const CreateMonitoredItemsRequest& innerRequest,
+             Span<void* const> innerContextsPtr,
+@@ -312,15 +323,16 @@ auto createMonitoredItemsEventAsync(
+         connection, request, {}, std::move(eventCallback), std::move(deleteCallback)
+     );
+     std::vector<void*> contextsPtr{contexts.size()};
+-    std::vector<UA_Client_EventNotificationCallback> eventCallbacks{contexts.size()};
+-    std::vector<UA_Client_DeleteMonitoredItemCallback> deleteCallbacks{contexts.size()};
++    std::vector<UA_Client_EventNotificationCallback> eventCallbacks(contexts.size());
++    std::vector<UA_Client_DeleteMonitoredItemCallback> deleteCallbacks(contexts.size());
+     detail::convertMonitoredItemContexts(
+         contexts, contextsPtr, {}, eventCallbacks, deleteCallbacks
+     );
+-    return detail::AsyncServiceAdapter<CreateMonitoredItemsResponse>::initiate(
++    return detail::AsyncServiceAdapter<CreateMonitoredItemsResponse>::
++        template initiate<detail::CreateMonitoredItemsAsyncCallback>(
+         connection,
+         [&connection](
+-            UA_ClientAsyncServiceCallback callback,
++            detail::CreateMonitoredItemsAsyncCallback callback,
+             void* userdata,
+             const CreateMonitoredItemsRequest& innerRequest,
+             Span<void* const> innerContextsPtr,
+@@ -443,10 +455,11 @@ template <typename CompletionToken>
+ auto modifyMonitoredItemsAsync(
+     Client& connection, const ModifyMonitoredItemsRequest& request, CompletionToken&& token
+ ) {
+-    return detail::AsyncServiceAdapter<ModifyMonitoredItemsResponse>::initiate(
++    return detail::AsyncServiceAdapter<ModifyMonitoredItemsResponse>::
++        template initiate<detail::ModifyMonitoredItemsAsyncCallback>(
+         connection,
+         [&connection](
+-            UA_ClientAsyncServiceCallback callback,
++            detail::ModifyMonitoredItemsAsyncCallback callback,
+             void* userdata,
+             const ModifyMonitoredItemsRequest& innerRequest
+         ) {
+@@ -657,10 +670,11 @@ template <typename CompletionToken>
+ auto deleteMonitoredItemsAsync(
+     Client& connection, const DeleteMonitoredItemsRequest& request, CompletionToken&& token
+ ) {
+-    return detail::AsyncServiceAdapter<DeleteMonitoredItemsResponse>::initiate(
++    return detail::AsyncServiceAdapter<DeleteMonitoredItemsResponse>::
++        template initiate<detail::DeleteMonitoredItemsAsyncCallback>(
+         connection,
+         [&connection](
+-            UA_ClientAsyncServiceCallback callback,
++            detail::DeleteMonitoredItemsAsyncCallback callback,
+             void* userdata,
+             const DeleteMonitoredItemsRequest& innerRequest
+         ) {
+diff --git a/include/open62541pp/services/subscription.hpp b/include/open62541pp/services/subscription.hpp
+index f08bade..a13868e 100644
+--- a/include/open62541pp/services/subscription.hpp
++++ b/include/open62541pp/services/subscription.hpp
+@@ -79,6 +79,16 @@ using StatusChangeNotificationCallback =
+     std::function<void(IntegerId subId, StatusChangeNotification& notification)>;
+ 
+ namespace detail {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++using CreateSubscriptionAsyncCallback = UA_ClientAsyncCreateSubscriptionCallback;
++using ModifySubscriptionAsyncCallback = UA_ClientAsyncModifySubscriptionCallback;
++using DeleteSubscriptionsAsyncCallback = UA_ClientAsyncDeleteSubscriptionsCallback;
++#else
++using CreateSubscriptionAsyncCallback = UA_ClientAsyncServiceCallback;
++using ModifySubscriptionAsyncCallback = UA_ClientAsyncServiceCallback;
++using DeleteSubscriptionsAsyncCallback = UA_ClientAsyncServiceCallback;
++#endif
++
+ std::unique_ptr<SubscriptionContext> createSubscriptionContext(
+     Client& connection,
+     StatusChangeNotificationCallback&& statusChangeCallback,
+@@ -132,10 +142,11 @@ auto createSubscriptionAsync(
+         connection, std::move(statusChangeCallback), std::move(deleteCallback)
+     );
+     auto* contextPtr = context.get();
+-    return detail::AsyncServiceAdapter<CreateSubscriptionResponse>::initiate(
++    return detail::AsyncServiceAdapter<CreateSubscriptionResponse>::
++        template initiate<detail::CreateSubscriptionAsyncCallback>(
+         connection,
+         [&connection](
+-            UA_ClientAsyncServiceCallback callback,
++            detail::CreateSubscriptionAsyncCallback callback,
+             void* userdata,
+             const CreateSubscriptionRequest& innerRequest,
+             detail::SubscriptionContext* innerContextPtr
+@@ -222,10 +233,11 @@ template <typename CompletionToken>
+ auto modifySubscriptionAsync(
+     Client& connection, const ModifySubscriptionRequest& request, CompletionToken&& token
+ ) {
+-    return detail::AsyncServiceAdapter<ModifySubscriptionResponse>::initiate(
++    return detail::AsyncServiceAdapter<ModifySubscriptionResponse>::
++        template initiate<detail::ModifySubscriptionAsyncCallback>(
+         connection,
+         [&connection](
+-            UA_ClientAsyncServiceCallback callback,
++            detail::ModifySubscriptionAsyncCallback callback,
+             void* userdata,
+             const ModifySubscriptionRequest& innerRequest
+         ) {
+@@ -354,10 +366,11 @@ template <typename CompletionToken>
+ auto deleteSubscriptionsAsync(
+     Client& connection, const DeleteSubscriptionsRequest& request, CompletionToken&& token
+ ) {
+-    return detail::AsyncServiceAdapter<DeleteSubscriptionsResponse>::initiate(
++    return detail::AsyncServiceAdapter<DeleteSubscriptionsResponse>::
++        template initiate<detail::DeleteSubscriptionsAsyncCallback>(
+         connection,
+         [&connection](
+-            UA_ClientAsyncServiceCallback callback,
++            detail::DeleteSubscriptionsAsyncCallback callback,
+             void* userdata,
+             const DeleteSubscriptionsRequest& innerRequest
+         ) {
+diff --git a/src/datatype.cpp b/src/datatype.cpp
+index 6a61e5b..208e31a 100644
+--- a/src/datatype.cpp
++++ b/src/datatype.cpp
+@@ -111,7 +111,11 @@ UA_DataType* copyArray(const UA_DataType* src, size_t size) {
+     return dst;
+ }
+ 
++#if UAPP_OPEN62541_VER_GE(1, 5)
++void addDataTypes(UA_DataTypeArray*& head, Span<const DataType> types) {
++#else
+ void addDataTypes(const UA_DataTypeArray*& head, Span<const DataType> types) {
++#endif
+     auto* item = allocate<UA_DataTypeArray>();
+     new (item) UA_DataTypeArray{
+         const_cast<UA_DataTypeArray*>(head),  // NOLINT(*const-cast), non-const since v1.5
+diff --git a/src/event.cpp b/src/event.cpp
+index 6b8c6dc..601acc4 100644
+--- a/src/event.cpp
++++ b/src/event.cpp
+@@ -12,13 +12,21 @@ namespace opcua {
+ 
+ Event::Event(Server& connection, const NodeId& eventType)
+     : connection_{&connection} {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    id_ = eventType;
++#else
+     throwIfBad(UA_Server_createEvent(connection.handle(), eventType, id_.handle()));
++#endif
+ }
+ 
+ Event::~Event() {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    UA_KeyValueMap_clear(&eventFields_);
++#else
+     if (!id().isNull()) {
+         UA_Server_deleteNode(connection().handle(), id(), true /* deleteReferences */);
+     }
++#endif
+ }
+ 
+ Event& Event::writeSourceName(std::string_view sourceName) {
+@@ -30,23 +38,45 @@ Event& Event::writeTime(DateTime time) {  // NOLINT(performance-unnecessary-valu
+ }
+ 
+ Event& Event::writeSeverity(uint16_t severity) {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    severity_ = severity;
++#endif
+     return writeProperty({0, "Severity"}, Variant{severity});
+ }
+ 
+ Event& Event::writeMessage(const LocalizedText& message) {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    message_ = message;
++#endif
+     return writeProperty({0, "Message"}, Variant{message});
+ }
+ 
+ Event& Event::writeProperty(const QualifiedName& propertyName, const Variant& value) {
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    throwIfBad(UA_KeyValueMap_set(&eventFields_, propertyName, value.handle()));
++#else
+     const auto status = UA_Server_writeObjectProperty(
+         connection().handle(), id(), propertyName, value
+     );
+     throwIfBad(status);
++#endif
+     return *this;
+ }
+ 
+ ByteString Event::trigger(const NodeId& originId) {
+     ByteString eventId;
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    const auto status = UA_Server_createEvent(
++        connection().handle(),
++        originId,
++        id(),
++        severity_,
++        message_,
++        &eventFields_,
++        nullptr,
++        eventId.handle()
++    );
++#else
+     const auto status = UA_Server_triggerEvent(
+         connection().handle(),
+         id(),
+@@ -54,6 +84,7 @@ ByteString Event::trigger(const NodeId& originId) {
+         eventId.handle(),
+         false  // deleteEventNode
+     );
++#endif
+     throwIfBad(status);
+     return eventId;
+ }
+diff --git a/src/plugin/log.cpp b/src/plugin/log.cpp
+index d79eda3..10f6094 100644
+--- a/src/plugin/log.cpp
++++ b/src/plugin/log.cpp
+@@ -11,6 +11,14 @@ namespace opcua {
+ 
+ static void toString(std::string& buffer, const char* format, va_list args) {
+     buffer.clear();
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    UA_String str{};
++    const auto status = UA_String_vformat(&str, format, args);
++    if (status == UA_STATUSCODE_GOOD) {
++        buffer.assign(reinterpret_cast<const char*>(str.data), str.length);  // NOLINT
++    }
++    UA_String_clear(&str);
++#else
+     // NOLINTBEGIN
+     va_list argsCopy{};
+     va_copy(argsCopy, args);
+@@ -25,6 +33,7 @@ static void toString(std::string& buffer, const char* format, va_list args) {
+     if (charsWritten < 0 || charsWritten > charsToWrite) {
+         buffer.clear();
+     }
++#endif
+ }
+ 
+ static void logNative(
+diff --git a/src/server.cpp b/src/server.cpp
+index 0e681a9..2a4e19e 100644
+--- a/src/server.cpp
++++ b/src/server.cpp
+@@ -484,9 +484,14 @@ static void setVariableNodeValueCallbackImpl(
+     auto* nodeContext = detail::getContext(server).nodeContexts[id];
+     nodeContext->valueCallback = std::move(callback);
+     throwIfBad(UA_Server_setNodeContext(server.handle(), id, nodeContext));
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    auto valueCallback = nodeContext->valueCallback->create(false);
++    throwIfBad(UA_Server_setVariableNode_valueCallback(server.handle(), id, valueCallback));
++#else
+     throwIfBad(UA_Server_setVariableNode_valueCallback(
+         server.handle(), id, nodeContext->valueCallback->create(false)
+     ));
++#endif
+ }
+ 
+ void setVariableNodeValueCallback(Server& server, const NodeId& id, ValueCallbackBase& callback) {
+diff --git a/src/services_nodemanagement.cpp b/src/services_nodemanagement.cpp
+index 47ba180..f97600b 100644
+--- a/src/services_nodemanagement.cpp
++++ b/src/services_nodemanagement.cpp
+@@ -45,6 +45,122 @@ Result<NodeId> addNode<Server>(
+     const NodeId& referenceType
+ ) noexcept {
+     NodeId addedNodeId;
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    const UA_QualifiedName qualifiedName{id.namespaceIndex(), opcua::detail::toNativeString(browseName)};
++    const auto* attributes = static_cast<const UA_NodeAttributes*>(nodeAttributes.decodedData());
++    StatusCode status{};
++    switch (nodeClass) {
++    case NodeClass::Object:
++        status = UA_Server_addObjectNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            typeDefinition,
++            *reinterpret_cast<const UA_ObjectAttributes*>(attributes),  // NOLINT
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++    case NodeClass::Variable:
++        status = UA_Server_addVariableNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            typeDefinition,
++            *reinterpret_cast<const UA_VariableAttributes*>(attributes),  // NOLINT
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++#ifdef UA_ENABLE_METHODCALLS
++    case NodeClass::Method:
++        status = UA_Server_addMethodNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            *reinterpret_cast<const UA_MethodAttributes*>(attributes),  // NOLINT
++            nullptr,
++            0,
++            nullptr,
++            0,
++            nullptr,
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++#endif
++    case NodeClass::ObjectType:
++        status = UA_Server_addObjectTypeNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            *reinterpret_cast<const UA_ObjectTypeAttributes*>(attributes),  // NOLINT
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++    case NodeClass::VariableType:
++        status = UA_Server_addVariableTypeNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            typeDefinition,
++            *reinterpret_cast<const UA_VariableTypeAttributes*>(attributes),  // NOLINT
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++    case NodeClass::ReferenceType:
++        status = UA_Server_addReferenceTypeNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            *reinterpret_cast<const UA_ReferenceTypeAttributes*>(attributes),  // NOLINT
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++    case NodeClass::DataType:
++        status = UA_Server_addDataTypeNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            *reinterpret_cast<const UA_DataTypeAttributes*>(attributes),  // NOLINT
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++    case NodeClass::View:
++        status = UA_Server_addViewNode(
++            connection.handle(),
++            id,
++            parentId,
++            referenceType,
++            qualifiedName,
++            *reinterpret_cast<const UA_ViewAttributes*>(attributes),  // NOLINT
++            nullptr,
++            addedNodeId.handle()
++        );
++        break;
++    default:
++        status = UA_STATUSCODE_BADNODECLASSINVALID;
++        break;
++    }
++#else
+     const StatusCode status = __UA_Server_addNode(
+         connection.handle(),
+         static_cast<UA_NodeClass>(nodeClass),
+@@ -58,6 +174,7 @@ Result<NodeId> addNode<Server>(
+         nullptr,  // nodeContext
+         addedNodeId.handle()
+     );
++#endif
+     if (status.isBad()) {
+         return BadResult{status};
+     }

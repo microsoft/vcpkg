@@ -4,9 +4,18 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES "hunspell_include_path_fix.patch")
 
 if("hunspell" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_vkb_hunspell:STRING=system)
+    # FindHunspell.cmake only uses pkg-config
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+    list(APPEND FEATURE_OPTIONS -DINPUT_vkb_hunspell:STRING=system -DFEATURE_system_hunspell=ON)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_vkb_hunspell=no)
+endif()
+
+if("sound-effects" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DFEATURE_vkb_sound_effects=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DFEATURE_vkb_sound_effects=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Multimedia=ON)
 endif()
 
 #

@@ -1,3 +1,3 @@
-set(qtquick3dphysics_HASH "a6f867651aa017ad22e1c813a5f21c53c4ef2134147ce343111ed2996c829719bf051a4f936d267f9ea36ad1f4eac8c669261b4caf468685ff87471830ff73a5")
-set(qtquick3dphysics_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtquick3dphysics-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtquick3dphysics-everywhere-src-6.11.2.tar.xz")
-set(qtquick3dphysics_FILENAME "qtquick3dphysics-everywhere-src-6.11.2.tar.xz")
+set(qtquick3dphysics_HASH "5ccea3bc57c971dcf7609870c094effe94824ff5fdf41198bd3ba331c9df5d07a1e10d781f4845e046507b1f3d3dfa9eeef2259b8b788aac9e7a4d73bfcebc85")
+set(qtquick3dphysics_URL "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtquick3dphysics-everywhere-src-6.12.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.12/6.12.0/submodules/qtquick3dphysics-everywhere-src-6.12.0.tar.xz")
+set(qtquick3dphysics_FILENAME "qtquick3dphysics-everywhere-src-6.12.0.tar.xz")

@@ -1,6 +1,6 @@
 {
   "name": "qtapplicationmanager",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "Qt component for application lifecycle management",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -11,8 +11,18 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "concurrent"
+        "concurrent",
+        "gui",
+        "network"
       ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ],
+      "platform": "!windows & !osx & !ios"
     },
     {
       "name": "qtdeclarative",
