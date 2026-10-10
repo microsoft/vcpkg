@@ -1,5 +1,5 @@
 diff --git a/LIBRARY/src/bid_functions.h b/LIBRARY/src/bid_functions.h
-index a2d0cd7..a92481d 100644
+index cbcb1c6..d356f26 100644
 --- a/LIBRARY/src/bid_functions.h
 +++ b/LIBRARY/src/bid_functions.h
 @@ -36,13 +36,12 @@
@@ -18,7 +18,7 @@ index a2d0cd7..a92481d 100644
  typedef int   wchar_t;
  #endif
  
-@@ -150,23 +149,6 @@ typedef BID_UINT128 _Quad;
+@@ -154,27 +153,6 @@ typedef BID_UINT128 _Quad;
  ///////////////////////////////////////////////////////
  //  This section may move to fenv_support.h
  
@@ -34,11 +34,15 @@ index a2d0cd7..a92481d 100644
 -#ifdef __QNX__
 -#include <fenv.h>
 -#else
+-#if (defined(_WIN32) || defined(_WIN64))
+-typedef unsigned long fexcept_t;
+-#else
 -typedef unsigned short int fexcept_t;
 -#endif
 -#endif
 -#endif
+-#endif
 -
- #define DEC_FE_INVALID      0x01
- #define DEC_FE_UNNORMAL     0x02
- #define DEC_FE_DIVBYZERO    0x04
+ typedef enum class_types {
+   signalingNaN,
+   quietNaN,

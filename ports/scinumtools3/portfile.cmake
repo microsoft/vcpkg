@@ -1,9 +1,34 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO vrtulka23/scinumtools3
-    REF v0.8.0
-    SHA512 185745f10fd603671c054d41e0351f4d8b16994955dfbe5fb35f4b25c34820fbacbf0e430d74701c5bf99f94eae1b7aedbff3e2fba3b1082bc9c8f83718fa396
+    REPO scinumtools/snt3
+    REF v0.9.1
+    SHA512 117218c3949c67a00aace7d5a5aefd75303985763d1fcdfb150633e7545331ce2e51cdde729e08568290caed644ba3802a3502acca5a67521090504e2535c1dd
+    PATCHES
+        use-vcpkg-imgui-glfw.patch
 )
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        report ENABLE_SNT_REPORT
+        server ENABLE_SNT_SERVER
+        viewer ENABLE_SNT_VIEW
+)
+
+if("report" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH BRIEFPP_SOURCE_PATH
+        REPO vrtulka23/briefpp
+        REF 624aa478149a0fa0e7213bb7cfb6d19615d6e771
+        SHA512 1697cef47f04dd2105f0026ff36ee200ea86e450e38f58403d11f5eb213e82bba2b5b16d1d887599b518f0e1906a1cc56aebc6f76bb5cc7e150603b6a55476a1
+    )
+    set(SNT_BRIEFPP_OPTION -DSNT_BRIEFPP_INCLUDE_DIR=${BRIEFPP_SOURCE_PATH}/include)
+endif()
+
+if("server" IN_LIST FEATURES)
+    set(SNT_HTTPLIB_OPTION -DSNT_HTTPLIB_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -19,18 +44,26 @@ vcpkg_cmake_configure(
         -DENABLE_MAT=OFF
         -DENABLE_API=ON
 
-        -DENABLE_EXEC_APPS_DMAP=OFF
+        -DENABLE_EXEC_APPS=ON
+        -DENABLE_EXEC_APPS_SNT=ON
+        ${FEATURE_OPTIONS}
+        -DENABLE_SNT_DMAP=OFF
+        ${SNT_BRIEFPP_OPTION}
         -DENABLE_EXEC_EXAMPLES=OFF
         -DENABLE_EXEC_BENCHMARKS=OFF
+    OPTIONS_RELEASE
+        ${SNT_HTTPLIB_OPTION}
+    OPTIONS_DEBUG
+        -DENABLE_EXEC_APPS=OFF
+        -DENABLE_EXEC_APPS_SNT=OFF
+        -DENABLE_SNT_SERVER=OFF
+        -DENABLE_SNT_VIEW=OFF
+        -DENABLE_SNT_DMAP=OFF
 )
 
 vcpkg_cmake_install()
 
-# Copy executables to tools
-vcpkg_copy_tools(
-    TOOL_NAMES snt
-    AUTO_CLEAN
-)
+vcpkg_copy_tools(TOOL_NAMES snt AUTO_CLEAN)
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME snt
