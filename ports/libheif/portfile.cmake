@@ -18,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         aom         VCPKG_LOCK_FIND_PACKAGE_AOM
         dav1d       WITH_DAV1D
         dav1d       VCPKG_LOCK_FIND_PACKAGE_DAV1D
+        ffmpeg      WITH_FFMPEG_DECODER
         gdk-pixbuf  WITH_GDK_PIXBUF
         hevc        WITH_X265
         hevc        VCPKG_LOCK_FIND_PACKAGE_X265
