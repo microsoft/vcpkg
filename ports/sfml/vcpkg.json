@@ -1,11 +1,12 @@
 {
   "name": "sfml",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
+    "cpp-unicodelib",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,6 +26,7 @@
     "audio": {
       "description": "Use sfml-audio library",
       "dependencies": [
+        "drlibs",
         "libflac",
         "libogg",
         "libvorbis",
@@ -39,17 +41,42 @@
           "default-features": false
         },
         {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
+        "qoi",
+        {
           "name": "sfml",
           "default-features": false,
           "features": [
             "window"
           ]
         },
+        "sheenbidi",
         "stb"
       ]
     },
     "network": {
-      "description": "Use sfml-network library"
+      "description": "Use sfml-network library",
+      "dependencies": [
+        {
+          "name": "libssh2",
+          "default-features": false
+        },
+        {
+          "name": "mbedtls",
+          "features": [
+            "pthreads"
+          ]
+        },
+        {
+          "name": "wepoll",
+          "platform": "windows"
+        }
+      ]
     },
     "window": {
       "description": "Use sfml-window library",

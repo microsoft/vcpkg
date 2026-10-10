@@ -1,0 +1,129 @@
+diff --git a/cmake/Macros.cmake b/cmake/Macros.cmake
+index 3dfcc4ed6..0ea52baf3 100644
+--- a/cmake/Macros.cmake
++++ b/cmake/Macros.cmake
+@@ -242,6 +242,15 @@ macro(sfml_add_library module)
+ 
+     # install pkgconfig
+     if(SFML_INSTALL_PKGCONFIG_FILES AND NOT ${target} STREQUAL "sfml-main")
++        # pkg-config files only describe one configuration, so use the postfix of the one being built
++        set(SFML_PKGCONFIG_POSTFIX "")
++        if(NOT BUILD_SHARED_LIBS OR THIS_STATIC)
++            set(SFML_PKGCONFIG_POSTFIX "-s")
++        endif()
++        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++            string(APPEND SFML_PKGCONFIG_POSTFIX "-d")
++        endif()
++
+         configure_file(
+             "${PROJECT_SOURCE_DIR}/tools/pkg-config/${target}.pc.in"
+             "${CMAKE_CURRENT_BINARY_DIR}/tools/pkg-config/${target}.pc"
+diff --git a/src/SFML/Network/CMakeLists.txt b/src/SFML/Network/CMakeLists.txt
+index 731fb2633..2eb122861 100644
+--- a/src/SFML/Network/CMakeLists.txt
++++ b/src/SFML/Network/CMakeLists.txt
+@@ -43,6 +43,11 @@ endif()
+ 
+ source_group("" FILES ${SRC})
+ 
++# system libraries for the pkg-config file, which sfml_add_library generates
++if(SFML_OS_LINUX)
++    set(SFML_PKGCONFIG_LIBS_PRIVATE "-lresolv")
++endif()
++
+ # define the sfml-network target
+ sfml_add_library(Network
+                  SOURCES ${SRC}
+diff --git a/src/SFML/Window/CMakeLists.txt b/src/SFML/Window/CMakeLists.txt
+index 9328d71a5..4e0c698ef 100644
+--- a/src/SFML/Window/CMakeLists.txt
++++ b/src/SFML/Window/CMakeLists.txt
+@@ -267,6 +267,22 @@ elseif(SFML_OS_ANDROID)
+     source_group("android" FILES ${PLATFORM_SRC})
+ endif()
+ 
++# system libraries for the pkg-config file, which sfml_add_library generates
++if(SFML_OS_LINUX OR SFML_OS_FREEBSD OR SFML_OS_OPENBSD OR SFML_OS_NETBSD)
++    if(SFML_USE_DRM)
++        set(SFML_PKGCONFIG_REQUIRES_PRIVATE "libdrm, gbm")
++    else()
++        set(SFML_PKGCONFIG_REQUIRES_PRIVATE "x11, xrandr, xcursor, xi")
++    endif()
++
++    if(SFML_OS_LINUX)
++        string(APPEND SFML_PKGCONFIG_REQUIRES_PRIVATE ", libudev")
++        set(SFML_PKGCONFIG_LIBS_PRIVATE "-ldl")
++    elseif(SFML_OS_FREEBSD)
++        set(SFML_PKGCONFIG_LIBS_PRIVATE "-lusbhid")
++    endif()
++endif()
++
+ # define the sfml-window target
+ sfml_add_library(Window
+                  SOURCES ${SRC} ${PLATFORM_SRC}
+diff --git a/tools/pkg-config/sfml-audio.pc.in b/tools/pkg-config/sfml-audio.pc.in
+index f2faf6ebc..4cb303db2 100644
+--- a/tools/pkg-config/sfml-audio.pc.in
++++ b/tools/pkg-config/sfml-audio.pc.in
+@@ -9,5 +9,5 @@ URL: http://www.sfml-dev.org
+ Version: @PROJECT_VERSION@
+ Requires: sfml-system
+ Requires.private: vorbisenc, vorbisfile, vorbis, ogg, flac
+-Libs: -L${libdir} -lsfml-audio
++Libs: -L${libdir} -lsfml-audio@SFML_PKGCONFIG_POSTFIX@
+ Cflags: -I${includedir}
+diff --git a/tools/pkg-config/sfml-graphics.pc.in b/tools/pkg-config/sfml-graphics.pc.in
+index de796a514..6bfb8c992 100644
+--- a/tools/pkg-config/sfml-graphics.pc.in
++++ b/tools/pkg-config/sfml-graphics.pc.in
+@@ -8,8 +8,8 @@ Description: The Simple and Fast Multimedia Library, graphics module.
+ URL: http://www.sfml-dev.org
+ Version: @PROJECT_VERSION@
+ Requires: sfml-window
+-Requires.private: sfml-system, freetype2
+-Libs: -L${libdir} -lsfml-graphics
++Requires.private: sfml-system, freetype2, harfbuzz, sheenbidi
++Libs: -L${libdir} -lsfml-graphics@SFML_PKGCONFIG_POSTFIX@
+ # gl may not be in pkg-config
+-Libs.private: @OPENGL_gl_LIBRARY@ @OPENGL_glu_LIBRARY@
++Libs.private: @OPENGL_gl_LIBRARY@
+ Cflags: -I${includedir}
+diff --git a/tools/pkg-config/sfml-network.pc.in b/tools/pkg-config/sfml-network.pc.in
+index 5a00d38a5..e33d4b5f7 100644
+--- a/tools/pkg-config/sfml-network.pc.in
++++ b/tools/pkg-config/sfml-network.pc.in
+@@ -8,5 +8,7 @@ Description: The Simple and Fast Multimedia Library, network module.
+ URL: http://www.sfml-dev.org
+ Version: @PROJECT_VERSION@
+ Requires: sfml-system
+-Libs: -L${libdir} -lsfml-network
++Requires.private: mbedtls, mbedx509, mbedcrypto, libssh2
++Libs: -L${libdir} -lsfml-network@SFML_PKGCONFIG_POSTFIX@
++Libs.private: @SFML_PKGCONFIG_LIBS_PRIVATE@
+ Cflags: -I${includedir}
+diff --git a/tools/pkg-config/sfml-system.pc.in b/tools/pkg-config/sfml-system.pc.in
+index 5cc76ef1b..ac7fde487 100644
+--- a/tools/pkg-config/sfml-system.pc.in
++++ b/tools/pkg-config/sfml-system.pc.in
+@@ -7,5 +7,5 @@ Name: SFML-system
+ Description: The Simple and Fast Multimedia Library, system module.
+ URL: http://www.sfml-dev.org
+ Version: @PROJECT_VERSION@
+-Libs: -L${libdir} -lsfml-system
++Libs: -L${libdir} -lsfml-system@SFML_PKGCONFIG_POSTFIX@
+ Cflags: -I${includedir}
+diff --git a/tools/pkg-config/sfml-window.pc.in b/tools/pkg-config/sfml-window.pc.in
+index 2041ec50e..52562eb7e 100644
+--- a/tools/pkg-config/sfml-window.pc.in
++++ b/tools/pkg-config/sfml-window.pc.in
+@@ -8,7 +8,8 @@ Description: The Simple and Fast Multimedia Library, window module.
+ URL: http://www.sfml-dev.org
+ Version: @PROJECT_VERSION@
+ Requires: sfml-system
+-Libs: -L${libdir} -lsfml-window
++Requires.private: @SFML_PKGCONFIG_REQUIRES_PRIVATE@
++Libs: -L${libdir} -lsfml-window@SFML_PKGCONFIG_POSTFIX@
+ # gl may not be in pkg-config
+-Libs.private: @OPENGL_gl_LIBRARY@ @OPENGL_glu_LIBRARY@
++Libs.private: @OPENGL_gl_LIBRARY@ @SFML_PKGCONFIG_LIBS_PRIVATE@
+ Cflags: -I${includedir}
