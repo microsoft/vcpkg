@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 87e554c..c6fd3d0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,6 +35,7 @@ include(CTest)
+ include(GNUInstallDirs)
+ 
+ set(INSTALL_ENABLED 1)
++option(BORINGSSL_INSTALL_DECREPIT "Install the decrepit library" OFF)
+ 
+ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT CMAKE_CROSSCOMPILING AND
+    BUILD_TESTING)
+@@ -874,6 +875,9 @@ endif()
+ 
+ if(INSTALL_ENABLED)
+   install(TARGETS crypto ssl EXPORT OpenSSLTargets)
++  if(BORINGSSL_INSTALL_DECREPIT)
++    install(TARGETS decrepit EXPORT OpenSSLTargets)
++  endif()
+   install(TARGETS bssl)
+   install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+   install(EXPORT OpenSSLTargets
