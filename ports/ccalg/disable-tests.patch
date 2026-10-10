@@ -1,0 +1,43 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,7 @@
+ cmake_minimum_required(VERSION 3.10)
+ project(ccalg LANGUAGES C CXX)
++option(BUILD_TESTING "Build tests and benchmarks" ON)
++option(BUILD_DOCS "Build HTML documentation" ON)
+ 
+ # ── include directory ────────────────────────────────────────────────────
+ set(CCALG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
+@@ -16,7 +18,8 @@ else()
+ endif()
+ 
+ # ── ctest integration ────────────────────────────────────────────────────
+-enable_testing()
++if(BUILD_TESTING)
++  enable_testing()
+ 
+ # ── test targets (C) ─────────────────────────────────────────────────────
+ macro(add_ccalg_test name)
+@@ -113,6 +116,8 @@ add_custom_target(bench
+   USES_TERMINAL
+   COMMENT "Running all benchmarks"
+ )
++endif()
++if(BUILD_DOCS)
+ 
+ # ── docs → HTML ──────────────────────────────────────────────────────────
+ find_program(PYTHON3 python3)
+@@ -125,12 +130,9 @@ if(PYTHON3)
+ else()
+   message(STATUS "python3 not found — `docs-html` target disabled")
+ endif()
++endif()
+ 
+ # ── install ──────────────────────────────────────────────────────────────
+ include(GNUInstallDirs)
+ install(DIRECTORY include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ccalg"
+         FILES_MATCHING PATTERN "*.h")
+-install(FILES LICENSE DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/doc/ccalg"
+-        OPTIONAL)
+-install(FILES README.md DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/doc/ccalg"
+-        OPTIONAL)
