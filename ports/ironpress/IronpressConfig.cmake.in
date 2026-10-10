@@ -1,0 +1,75 @@
+get_filename_component(_ironpress_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+
+if(NOT TARGET Ironpress::C)
+    add_library(Ironpress::C @IRONPRESS_LIBRARY_TYPE@ IMPORTED)
+    set_target_properties(
+        Ironpress::C
+        PROPERTIES
+            IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+            INTERFACE_INCLUDE_DIRECTORIES "${_ironpress_prefix}/include"
+            MAP_IMPORTED_CONFIG_MINSIZEREL RELEASE
+            MAP_IMPORTED_CONFIG_RELWITHDEBINFO RELEASE
+    )
+
+    if(WIN32 AND "@IRONPRESS_LIBRARY_TYPE@" STREQUAL "SHARED")
+        set_target_properties(
+            Ironpress::C
+            PROPERTIES
+                IMPORTED_LOCATION_RELEASE "${_ironpress_prefix}/bin/ironpress_ffi.dll"
+                IMPORTED_LOCATION_DEBUG "${_ironpress_prefix}/debug/bin/ironpress_ffi.dll"
+                IMPORTED_IMPLIB_RELEASE "${_ironpress_prefix}/lib/ironpress_ffi.dll.lib"
+                IMPORTED_IMPLIB_DEBUG "${_ironpress_prefix}/debug/lib/ironpress_ffi.dll.lib"
+        )
+    elseif(WIN32)
+        set_target_properties(
+            Ironpress::C
+            PROPERTIES
+                IMPORTED_LOCATION_RELEASE "${_ironpress_prefix}/lib/ironpress_ffi.lib"
+                IMPORTED_LOCATION_DEBUG "${_ironpress_prefix}/debug/lib/ironpress_ffi.lib"
+                INTERFACE_LINK_LIBRARIES "kernel32;ntdll;userenv;ws2_32;dbghelp"
+        )
+    elseif(APPLE AND "@IRONPRESS_LIBRARY_TYPE@" STREQUAL "SHARED")
+        set_target_properties(
+            Ironpress::C
+            PROPERTIES
+                IMPORTED_LOCATION_RELEASE "${_ironpress_prefix}/lib/libironpress_ffi.dylib"
+                IMPORTED_LOCATION_DEBUG "${_ironpress_prefix}/debug/lib/libironpress_ffi.dylib"
+        )
+    elseif(APPLE)
+        set_target_properties(
+            Ironpress::C
+            PROPERTIES
+                IMPORTED_LOCATION_RELEASE "${_ironpress_prefix}/lib/libironpress_ffi.a"
+                IMPORTED_LOCATION_DEBUG "${_ironpress_prefix}/debug/lib/libironpress_ffi.a"
+                INTERFACE_LINK_LIBRARIES "iconv;m"
+        )
+    elseif("@IRONPRESS_LIBRARY_TYPE@" STREQUAL "SHARED")
+        set_target_properties(
+            Ironpress::C
+            PROPERTIES
+                IMPORTED_LOCATION_RELEASE "${_ironpress_prefix}/lib/libironpress_ffi.so"
+                IMPORTED_LOCATION_DEBUG "${_ironpress_prefix}/debug/lib/libironpress_ffi.so"
+        )
+    else()
+        find_package(Threads REQUIRED)
+        set_target_properties(
+            Ironpress::C
+            PROPERTIES
+                IMPORTED_LOCATION_RELEASE "${_ironpress_prefix}/lib/libironpress_ffi.a"
+                IMPORTED_LOCATION_DEBUG "${_ironpress_prefix}/debug/lib/libironpress_ffi.a"
+                INTERFACE_LINK_LIBRARIES "${CMAKE_DL_LIBS};Threads::Threads;m"
+        )
+    endif()
+endif()
+
+if(NOT TARGET Ironpress::CXX)
+    add_library(Ironpress::CXX INTERFACE IMPORTED)
+    set_target_properties(
+        Ironpress::CXX
+        PROPERTIES
+            INTERFACE_COMPILE_FEATURES cxx_std_17
+            INTERFACE_LINK_LIBRARIES Ironpress::C
+    )
+endif()
+
+unset(_ironpress_prefix)
