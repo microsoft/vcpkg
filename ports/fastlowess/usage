@@ -1,0 +1,11 @@
+fastlowess provides the upstream CMake target:
+
+    find_package(fastlowess CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fastlowess::fastlowess)
+
+Include <fastlowess.hpp> to use the C++17 interface. The port supports Windows
+x64/ARM64 with MSVC, glibc Linux x64/ARM64, and macOS x64/ARM64. Shared linkage
+is required. The Linux target compiler is checked for glibc during configuration;
+musl targets are not supported by this curated port and require an overlay.
+Windows uses the release CRT. Debug and Release consumers both use the upstream
+Release library. Rust and Cargo are not required.
