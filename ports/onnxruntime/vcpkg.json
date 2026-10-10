@@ -1,7 +1,6 @@
 {
   "name": "onnxruntime",
-  "version-semver": "1.23.2",
-  "port-version": 1,
+  "version-semver": "1.31.0",
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",
@@ -33,21 +32,24 @@
       "name": "flatbuffers",
       "version>=": "23.5.26"
     },
-    "ms-gsl",
+    {
+      "name": "ms-gsl",
+      "version>=": "4.2.1"
+    },
     "nlohmann-json",
     {
       "name": "onnx",
-      "version>=": "1.19.0"
+      "version>=": "1.22.0"
     },
     "optional-lite",
     {
       "name": "protobuf",
-      "version>=": "3.21.12"
+      "version>=": "6.33.4"
     },
     {
       "name": "protobuf",
       "host": true,
-      "version>=": "3.21.12"
+      "version>=": "6.33.4"
     },
     "re2",
     "safeint",
