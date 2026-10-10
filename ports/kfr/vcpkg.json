@@ -1,11 +1,13 @@
 {
   "name": "kfr",
-  "version-semver": "6.3.1",
+  "version-semver": "7.1.0",
   "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
   "license": null,
   "supports": "!(arm64 & windows) & !xbox",
   "dependencies": [
+    "boost-math",
+    "minimp3",
     {
       "name": "vcpkg-cmake",
       "host": true
