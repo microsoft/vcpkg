@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 87b3c80e..051eeb2a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,18 +123,6 @@ if(WITH_ZLIB)
+   endif()
+ endif()
+ 
+-if(NOT WIN32)
+-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/taglib-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/taglib-config" @ONLY)
+-  install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/taglib-config" DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-          RENAME "taglib${TAGLIB_INSTALL_SUFFIX}-config")
+-endif()
+-
+-if(WIN32)
+-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/taglib-config.cmd.cmake" "${CMAKE_CURRENT_BINARY_DIR}/taglib-config.cmd")
+-  install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/taglib-config.cmd" DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-          RENAME "taglib${TAGLIB_INSTALL_SUFFIX}-config.cmd")
+-endif()
+-
+ if(NOT BUILD_FRAMEWORK)
+   if(IS_ABSOLUTE ${CMAKE_INSTALL_INCLUDEDIR})
+     set(CMAKE_PC_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
