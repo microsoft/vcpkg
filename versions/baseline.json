@@ -10860,6 +10860,10 @@
       "baseline": "0.7.0",
       "port-version": 1
     },
+    "vsgpoints": {
+      "baseline": "0.7.0",
+      "port-version": 0
+    },
     "vsgqt": {
       "baseline": "0.4.0",
       "port-version": 1
