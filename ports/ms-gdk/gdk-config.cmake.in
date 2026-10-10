@@ -116,4 +116,26 @@ if (@BUILD_PLAYFAB_SERVICES@ AND (EXISTS "${_msgdk_root}/lib/PlayFabCore.lib"))
     target_link_libraries(Xbox::PlayFabPartyLIVE INTERFACE Xbox::PlayFabParty)
 endif()
 
+set(_msgdk_targets
+    Xbox::GameRuntime
+    Xbox::XCurl
+    Xbox::XSAPI
+    Xbox::HTTPClient
+    Xbox::GameChat2
+    Xbox::PlayFabMultiplayer
+    Xbox::PlayFabServices
+    Xbox::PlayFabCore
+    Xbox::PlayFabGameSave
+    Xbox::PlayFabParty
+    Xbox::PlayFabPartyLIVE
+)
+foreach(_msgdk_target IN LISTS _msgdk_targets)
+    if(TARGET "${_msgdk_target}")
+        set_property(TARGET "${_msgdk_target}" APPEND PROPERTY
+            INTERFACE_COMPILE_DEFINITIONS _GAMING_DESKTOP)
+    endif()
+endforeach()
+
+unset(_msgdk_target)
+unset(_msgdk_targets)
 unset(_msgdk_root)
