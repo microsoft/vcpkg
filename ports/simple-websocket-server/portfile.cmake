@@ -1,12 +1,10 @@
 set(VCPKG_BUILD_TYPE release) # header-only library
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.com
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO eidheim/Simple-WebSocket-Server
-    REF v2.0.2
-    SHA512 647238bb1dc69e816846c777fd7b4cb2c1ce7d4e899791b72ce1acd9704ec7d8d6598e4d094ffb3da4ac4b100a55663d9c71ff8e8b829caec0a2f39d333d0775
-    HEAD_REF master
+    REPO LimiNode/Simple-WebSocket-Server
+    REF v2.0.3-ln.1
+    SHA512 bf66f797f7e00d89a42ad5ffb53d9e3c91695479739f8617c5d29d716eaa803321f153fb4cbd2644470ac69858f8f09f727a988631acab05d4956fe5c1ba39ed
 )
 
 file(COPY
