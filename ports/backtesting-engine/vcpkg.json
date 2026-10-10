@@ -1,0 +1,23 @@
+{
+  "name": "backtesting-engine",
+  "version": "1.2.0",
+  "description": "C++20 backtesting engine with CMake package exports and an optional C API wrapper",
+  "homepage": "https://github.com/Vins-z/Backtesting-Engine",
+  "license": "MIT",
+  "supports": "!windows",
+  "dependencies": [
+    "curl",
+    "eigen3",
+    "nlohmann-json",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "yaml-cpp"
+  ]
+}

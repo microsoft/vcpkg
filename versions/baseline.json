@@ -640,6 +640,10 @@
       "baseline": "0.1.128",
       "port-version": 1
     },
+    "backtesting-engine": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "backward-cpp": {
       "baseline": "2025-04-14",
       "port-version": 0
