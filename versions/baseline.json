@@ -9308,6 +9308,10 @@
       "baseline": "0.2.1",
       "port-version": 0
     },
+    "sentil": {
+      "baseline": "0.3.0",
+      "port-version": 0
+    },
     "sentry-native": {
       "baseline": "0.17.2",
       "port-version": 0
