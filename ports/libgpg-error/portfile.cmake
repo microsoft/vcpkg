@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
         mingw.diff
         pkgconfig-libintl.patch
         win32-nls.diff
+        msvc.diff
 )
 
 vcpkg_list(SET options)
@@ -44,7 +45,7 @@ vcpkg_make_configure(
 )
 
 vcpkg_make_install()
-vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 if(NOT VCPKG_CROSSCOMPILING)
