@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF sparsehash-2.0.4
     SHA512 40C007BC5814DD5F2BDACD5EC884BC5424F7126F182D4C7B34371F88B674456FC193B947FDD283DBD0C7EB044D8F06BAF8CAEC6C93E73B1B587282B9026EA877
     HEAD_REF master
+		PATCHES
+			support-cpp20.patch # https://github.com/sparsehash/sparsehash/pull/165
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -29,8 +31,8 @@ else()
 endif()
 
 configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in 
-    ${CURRENT_PACKAGES_DIR}/share/sparsehash/sparsehash-config.cmake 
+    ${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in
+    ${CURRENT_PACKAGES_DIR}/share/sparsehash/sparsehash-config.cmake
     @ONLY
 )
 
