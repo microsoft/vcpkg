@@ -7,6 +7,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
         01-fix-dependency-resolve.patch
         03-fix-android-install-path.patch
         04-use-vcpkg-dependencies.patch
+        05-fix-pkgconfig-files.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
