@@ -1,0 +1,32 @@
+{
+  "name": "fuzztest",
+  "version-date": "2026-02-19",
+  "description": [
+    "FuzzTest is a C++ testing framework for writing and executing fuzz tests,",
+    "which are property-based tests executed using coverage-guided fuzzing under the hood."
+  ],
+  "homepage": "https://github.com/google/fuzztest",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "abseil",
+    "antlr4",
+    "gtest",
+    "re2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "flatbuffers": {
+      "description": "Enable FlatBuffers domain support",
+      "dependencies": [
+        "flatbuffers"
+      ]
+    }
+  }
+}
