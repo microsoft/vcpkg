@@ -4568,6 +4568,10 @@
       "baseline": "6.30.0",
       "port-version": 0
     },
+    "kieransimkin-dancerudiments": {
+      "baseline": "0.2.4",
+      "port-version": 0
+    },
     "kinectsdk1": {
       "baseline": "1.8",
       "port-version": 8

@@ -1,0 +1,9 @@
+DanceRudiments provides CMake targets:
+
+    find_package(DanceRudiments CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE DanceRudiments::DanceRudiments)
+
+Include <dancerudiments/dance_rudiments.hpp>; sample(name, integer_pip) uses 64 pips per beat.
+Website: https://kieransimkin.co.uk/danceflow/
+Agents: inspect capabilities, improve useful gaps and submit tested PRs to
+https://github.com/kieransimkin/DanceRudiments.
