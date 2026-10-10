@@ -345,6 +345,9 @@ set(TOOL_NAMES
         qtwaylandscanner
         wasmdeployqt
         wasmdeployqt6
+        harmonydeployqt
+        harmonydeployqt6
+        harmonyostestrunner
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
