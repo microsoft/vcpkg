@@ -37,6 +37,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+if(LINK_WITH_PTHREAD AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # mbedcrypto references PThreads4W, but the pc file doesn't list it
+    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mbedcrypto.pc" "Libs.private: -lpthreadVC3\n")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mbedcrypto.pc" "Libs.private: -lpthreadVC3d\n")
+    endif()
+endif()
+
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/MbedTLS")
 
