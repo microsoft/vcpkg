@@ -34,6 +34,18 @@
         "dav1d"
       ]
     },
+    "ffmpeg": {
+      "description": "FFmpeg decoder, supports all HEIF codecs",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec"
+          ]
+        }
+      ]
+    },
     "gdk-pixbuf": {
       "description": "Plugin for gdk-pixbuf",
       "supports": "!windows | mingw",
