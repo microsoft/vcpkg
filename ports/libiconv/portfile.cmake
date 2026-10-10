@@ -1,6 +1,6 @@
 if(NOT DEFINED X_VCPKG_BUILD_GNU_LIBICONV)
     set(X_VCPKG_BUILD_GNU_LIBICONV 0)
-    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_BSD)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_BSD OR VCPKG_TARGET_IS_APPLE)
         set(X_VCPKG_BUILD_GNU_LIBICONV 1)
     elseif(VCPKG_TARGET_IS_ANDROID)
         vcpkg_cmake_get_vars(cmake_vars_file)
@@ -33,6 +33,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0002-Config-for-MSVC.patch
         0003-Add-export.patch
         0004-ModuleFileName.patch
+        0005-Fix-install-reloc-memeq.patch
 )
 
 vcpkg_list(SET OPTIONS)
