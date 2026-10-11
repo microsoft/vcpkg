@@ -78,4 +78,14 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference/ops"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference"
+    # empty dirs new in onnx 1.22's generated-header install
+    "${CURRENT_PACKAGES_DIR}/include/onnx/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/common/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/preview"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/tensor/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/inliner/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/shape_inference/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/adapters/CMakeFiles"
 )
