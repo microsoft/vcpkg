@@ -836,6 +836,7 @@ onnx-optimizer[pybind11]:x64-windows-static-md=cascade
 onnx-optimizer[pybind11]:x64-windows-static=cascade
 onnx-optimizer[pybind11]:x86-windows=cascade
 onnxruntime[cuda]((x64 & windows & !static) | (x64 & linux))=feature-fails
+onnxruntime[kleidiai](arm64)=feature-fails # needs KleidiAI 1.30.0, catalog has 1.25.0
 onnxruntime[openvino](!x64 | osx | uwp) = cascade
 onnxruntime[tensorrt](!((x64 & windows & !static) | (x64 & linux)))=cascade
 onnxruntime[tensorrt]((x64 & windows & !static) | (x64 & linux))=feature-fails # requires TensorRT installation
