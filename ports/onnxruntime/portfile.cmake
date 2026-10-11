@@ -117,6 +117,8 @@ vcpkg_cmake_configure(
         -Donnxruntime_ENABLE_LAZY_TENSOR=OFF
         -Donnxruntime_DISABLE_RTTI=OFF
         -Donnxruntime_DISABLE_ABSEIL=OFF
+        # onnx from vcpkg links the full protobuf runtime, so match it (1.31 checks this)
+        -Donnxruntime_USE_FULL_PROTOBUF=ON
         # some other customizations ...
         --compile-no-warning-as-error
     OPTIONS_DEBUG
