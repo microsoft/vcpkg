@@ -7409,12 +7409,12 @@
       "port-version": 6
     },
     "ompl": {
-      "baseline": "1.7.0",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "omplapp": {
       "baseline": "1.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "onednn": {
       "baseline": "3.12",
