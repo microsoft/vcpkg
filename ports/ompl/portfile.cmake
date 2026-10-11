@@ -32,7 +32,6 @@ vcpkg_cmake_configure(
         -DOMPL_BUILD_VAMP=OFF
         -DOMPL_BUILD_PYTHON_BINDINGS=OFF
         -DOMPL_VERSIONED_INSTALL=OFF
-        -DOMPL_REGISTRATION=OFF
         -DOMPL_BUILD_DEMOS=OFF
         -DOMPL_BUILD_TESTS=OFF
         -DR_EXEC=R_EXEC-NOTFOUND
@@ -47,14 +46,20 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/ompl/cmake)
 
 file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/bin/ompl_benchmark_statistics.py"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/ompl_benchmark_statistics.py"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/share/ompl/demos"
 )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 # Install CMake modules (used by port omplapp)
 file(GLOB cmake_modules "${SOURCE_PATH}/CMakeModules/*.cmake")
 file(COPY ${cmake_modules} DESTINATION "${CURRENT_PACKAGES_DIR}/share/ompl/CMakeModules")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
