@@ -1,15 +1,9 @@
-set(patches)
-if(NOT VCPKG_USE_HEAD_VERSION)
-    list(APPEND patches fix-unofficial-sodium-discovery.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO imakris/mexce
     REF "${VERSION}"
-    SHA512 75edb2621c775e9fc7cb6a294974dcf41eae589935950c6117eaaff0a598667ba64b266b73ebb4eaa053e4a876b604a445e592c93eb669cff887b91314afdbe7
+    SHA512 ae852c2128475111f5e2c897004ac81bb7bc4011537ad44643176d0241517bbca9fa9045751ad47b0e4dfa376ee69612a361ab64fc2ead4c65dd9a38d896bf21
     HEAD_REF master
-    PATCHES ${patches}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
