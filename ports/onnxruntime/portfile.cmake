@@ -94,6 +94,12 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
+# onnxruntime only consumes vcpkg cpuinfo on non-Apple; forcing it on Apple breaks the disconnected fetch
+set(ENABLE_CPUINFO ON)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(ENABLE_CPUINFO OFF)
+endif()
+
 # see tools/ci_build/build.py
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
@@ -108,7 +114,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_USE_EXTENSIONS=OFF
         -Donnxruntime_USE_NNAPI_BUILTIN=${VCPKG_TARGET_IS_ANDROID}
         -Donnxruntime_USE_VCPKG=ON
-        -Donnxruntime_ENABLE_CPUINFO=ON
+        -Donnxruntime_ENABLE_CPUINFO=${ENABLE_CPUINFO}
         -Donnxruntime_ENABLE_MICROSOFT_INTERNAL=OFF
         -Donnxruntime_ENABLE_BITCODE=OFF
         -Donnxruntime_ENABLE_PYTHON=OFF
