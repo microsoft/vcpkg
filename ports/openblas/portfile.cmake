@@ -10,6 +10,7 @@ vcpkg_from_github(
         system-check-msvc.diff
         win32-uwp.diff
         android-exclude-sme.diff
+        arm64-generic-omatcopy.diff # https://github.com/OpenMathLib/OpenBLAS/pull/5977
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -19,7 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         dynamic-arch   DYNAMIC_ARCH
 )
 
-# If not explicitly configured for a cross build, OpenBLAS wants to run 
+# If not explicitly configured for a cross build, OpenBLAS wants to run
 # getarch executables in order to optimize for the target.
 # Adapting this to vcpkg triplets:
 # - install-getarch.diff introduces and uses GETARCH_BINARY_DIR,
@@ -77,7 +78,7 @@ vcpkg_fixup_pkgconfig()
 # Required from native builds, optional from cross builds.
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(
-        TOOL_NAMES getarch getarch_2nd 
+        TOOL_NAMES getarch getarch_2nd
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${SYSTEM_KEY}"
         AUTO_CLEAN
     )
