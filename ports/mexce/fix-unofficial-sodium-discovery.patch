@@ -1,0 +1,13 @@
+diff --git a/cmake/mexce-sodium.cmake b/cmake/mexce-sodium.cmake
+--- a/cmake/mexce-sodium.cmake
++++ b/cmake/mexce-sodium.cmake
+@@ -9,7 +9,8 @@ function(mexce_find_sodium adapter_target)
+     if(TARGET libsodium::libsodium)
+         set(provider_target libsodium::libsodium)
+     else()
+-        find_package(unofficial-sodium 1.0.22 EXACT CONFIG QUIET)
++        # vcpkg supplies this config without package-version metadata.
++        find_package(unofficial-sodium CONFIG QUIET)
+         if(TARGET unofficial-sodium::sodium)
+             set(provider_target unofficial-sodium::sodium)
+         else()
