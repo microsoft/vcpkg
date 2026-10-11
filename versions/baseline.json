@@ -3437,7 +3437,7 @@
       "port-version": 0
     },
     "ggml": {
-      "baseline": "0.24.0",
+      "baseline": "0.26.0",
       "port-version": 0
     },
     "ghc-filesystem": {
@@ -6229,7 +6229,7 @@
       "port-version": 0
     },
     "llama-cpp": {
-      "baseline": "0.4.1",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "llfio": {
