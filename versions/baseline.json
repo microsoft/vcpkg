@@ -7502,7 +7502,7 @@
     },
     "opencv3": {
       "baseline": "3.4.20",
-      "port-version": 4
+      "port-version": 5
     },
     "opencv4": {
       "baseline": "4.14.0",
