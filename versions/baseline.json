@@ -2873,7 +2873,7 @@
       "port-version": 6
     },
     "entt": {
-      "baseline": "3.16.0",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "epoll-shim": {
