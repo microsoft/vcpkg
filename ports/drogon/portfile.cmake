@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO drogonframework/drogon
     REF "v${VERSION}"
-    SHA512 b76455116d453711052fae418b7a95934fa0822b1db9a85c567a9cf5d1fdf8c59df852bef0a481515d9eb4ce8267d1882e080c1bd003e4102234f4a7b51f77b5
+    SHA512 19108DC00CFE0CA46EB45E1C47808BA742F41626407CED322202C417A1CE159E787FBE54C435C6543790DF6EE97447875555D4A81CFCFD55BB82A2778E57CF4B
     HEAD_REF master
     PATCHES
          0001-vcpkg.patch
          0002-drogon-config.patch
          0003-deps-redis.patch
          0004-drogon-ctl.patch
-         0005-fix-1.9.13-chunked-encoding-close-connection.patch
 )
 
 vcpkg_check_features(
