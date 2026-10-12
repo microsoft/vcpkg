@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b07a426..7815d3e 100644
+index b07a426..79cf0ca 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -93,7 +93,8 @@ endif()
@@ -107,7 +107,7 @@ index b07a426..7815d3e 100644
  else()
      if(WITH_MESALINK)
          list(APPEND DYNAMIC_LIB ${OPENSSL_CRYPTO_LIBRARY})
-@@ -375,16 +373,17 @@ if(WITH_UBRING)
+@@ -375,7 +373,8 @@ if(WITH_UBRING)
      list(APPEND DYNAMIC_LIB ${UB_LIB})
  endif()
  
@@ -117,17 +117,6 @@ index b07a426..7815d3e 100644
  
  if(WITH_GLOG)
      set(DYNAMIC_LIB ${GLOG_LIB} ${DYNAMIC_LIB})
--    set(BRPC_PRIVATE_LIBS "-lglog ${BRPC_PRIVATE_LIBS}")
-+    set(BRPC_PRIVATE_REQUIRES "${BRPC_PRIVATE_REQUIRES} libglog")
- endif()
- 
- if(WITH_SNAPPY)
-     set(DYNAMIC_LIB ${DYNAMIC_LIB} ${SNAPPY_LIB})
--    set(BRPC_PRIVATE_LIBS "${BRPC_PRIVATE_LIBS} -lsnappy")
-+    set(BRPC_PRIVATE_REQUIRES "${BRPC_PRIVATE_REQUIRES} snappy")
- endif()
- 
- if (WITH_BTHREAD_TRACER)
 @@ -628,6 +627,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
                                      "${PROTO_FILES}")
  add_library(PROTO_LIB OBJECT ${PROTO_SRCS} ${PROTO_HDRS})
