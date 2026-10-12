@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-build.patch
         fix-warnings.patch
+        disable-ubshm-without-ubring.patch
 )
 
 vcpkg_cmake_configure(
