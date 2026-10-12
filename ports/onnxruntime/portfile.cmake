@@ -19,6 +19,12 @@ vcpkg_from_github(
         fix-cmake-mlas.patch
 )
 
+# Accept ms-gsl 5; its config version file uses SameMajorVersion.
+vcpkg_replace_string("${SOURCE_PATH}/cmake/external/onnxruntime_external_deps.cmake"
+    "FIND_PACKAGE_ARGS 4.0 NAMES Microsoft.GSL"
+    "FIND_PACKAGE_ARGS NAMES Microsoft.GSL"
+)
+
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
 message(STATUS "Using protoc: ${PROTOC}")
 

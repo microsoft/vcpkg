@@ -20,6 +20,12 @@ vcpkg_replace_string(
     "check_cxx_source_compiles"
 )
 
+# Accept ms-gsl 5; its config version file uses SameMajorVersion.
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+    "find_package(Microsoft.GSL 4 CONFIG)"
+    "find_package(Microsoft.GSL CONFIG)"
+)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ms-gsl SEAL_USE_MSGSL
