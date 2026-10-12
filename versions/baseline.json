@@ -10800,6 +10800,10 @@
       "baseline": "5.3.0",
       "port-version": 0
     },
+    "vins-z-backtesting-engine": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "visit-struct": {
       "baseline": "1.2.0",
       "port-version": 0
