@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cleishm/thermo-cpp
     REF "v${VERSION}"
-    SHA512 25e71945580c35b9161cba6a8c9c84f4473b17bd258fc95c18c99f0bd7fb9fcd11a40ce70404cec0a6823f7989af374789b14f5bc6588fc82f374fd4a105fa87
+    SHA512 c55cb9e470aa3f60d94fa9ed9cba6fddf3bbce15c161826a4e2c88c28a9c7855d746033ffb1a16897b6efc365e462bb969f769c5cb35c620659ae21272804332
     HEAD_REF main
-    PATCHES
-        001-fix-flags.patch
 )
 
 vcpkg_cmake_configure(
@@ -22,7 +20,5 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"
     "${CURRENT_PACKAGES_DIR}/lib"
 )
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
