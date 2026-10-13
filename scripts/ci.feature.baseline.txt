@@ -438,7 +438,6 @@ hello-imgui[metal-binding](!osx)=cascade
 hidapi:arm64-linux=cascade
 highfive[opencv]:arm64-linux=cascade
 hpx[cuda](!(windows & x64 & !xbox) & !(linux & x64) & !(linux & arm64))=cascade
-hpx[mpi]:arm64-linux=cascade
 hpx[mpi](windows & !(x64 | x86))=cascade
 hypre:arm64-linux=cascade
 hypre:arm64-windows=cascade
