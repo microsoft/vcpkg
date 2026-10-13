@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rohit-singh-gautam/Serializer
-    REF c4344254c33dc998d6a0eb949f2d1cb6384f5a68
-    SHA512 66faaf715f84b47dc05992468a72dca0a5fc346fca21b60d7e7b77f864e215848cd7ac793ddfe70b0d909858de2683ee23925cbbcbf1e61bc55b1a193349f98c
+    REF d39fc06efa005bbd88896975e40309c71abe7ec1
+    SHA512 1f928919d76f85178b6aec6c8fcd8e7ef0581f508ca178a46182e1f6fe20854793055d32021c0edb1d450738aa14ee816cf326dd99885a0097c956a251a5b03f
     HEAD_REF main
     PATCHES
         managed-host-generator.patch
