@@ -9,6 +9,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 bf22add7a97087f68bd49fe0ae5b2bfbd7ba01d4018872c3934ebd81a632e2559e6144c5aa06779db971c642d5a41b16c8c48108af2c4069be6d9f9b72985182
     HEAD_REF master
+    PATCHES
+        fix-asio-1.33.patch # https://github.com/STEllAR-GROUP/hpx/commit/f073c54f9c69
 )
 
 vcpkg_check_features(

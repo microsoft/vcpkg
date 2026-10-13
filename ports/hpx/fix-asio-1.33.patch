@@ -1,0 +1,466 @@
+diff --git a/components/iostreams/src/server/output_stream.cpp b/components/iostreams/src/server/output_stream.cpp
+index dd0a519b27f8..40f8ee0758a3 100644
+--- a/components/iostreams/src/server/output_stream.cpp
++++ b/components/iostreams/src/server/output_stream.cpp
+@@ -34,7 +34,7 @@ namespace hpx::iostreams::detail {
+         ar << valid;
+         if (valid)
+         {
+-            ar& data_;
++            ar & data_;
+         }
+     }
+ 
+@@ -44,7 +44,7 @@ namespace hpx::iostreams::detail {
+         ar >> valid;
+         if (valid)
+         {
+-            ar& data_;
++            ar & data_;
+         }
+     }
+ }    // namespace hpx::iostreams::detail
+@@ -53,23 +53,29 @@ namespace hpx::iostreams::server {
+     ///////////////////////////////////////////////////////////////////////////
+     void output_stream::call_write_async(std::uint32_t locality_id,
+         std::uint64_t count, detail::buffer const& in, hpx::id_type /*this_id*/)
+-    {    // {{{
++    {
+         // Perform the IO operation.
+         pending_output_.output(locality_id, count, in, write_f, mtx_);
+-    }    // }}}
++    }
+ 
+     void output_stream::write_async(std::uint32_t locality_id,
+         std::uint64_t count, detail::buffer const& buf_in)
+-    {    // {{{
++    {
+         // Perform the IO in another OS thread.
+         detail::buffer in(buf_in);
+         // we need to capture the GID of the component to keep it alive long
+         // enough.
+         hpx::id_type this_id = this->get_id();
++#if ASIO_VERSION >= 103400
++        asio::post(hpx::get_thread_pool("io_pool")->get_io_service(),
++            hpx::bind_front(&output_stream::call_write_async, this, locality_id,
++                count, HPX_MOVE(in), HPX_MOVE(this_id)));
++#else
+         hpx::get_thread_pool("io_pool")->get_io_service().post(
+             hpx::bind_front(&output_stream::call_write_async, this, locality_id,
+                 count, HPX_MOVE(in), HPX_MOVE(this_id)));
+-    }    // }}}
++#endif
++    }
+ 
+     ///////////////////////////////////////////////////////////////////////////
+     void output_stream::call_write_sync(std::uint32_t locality_id,
+@@ -86,16 +92,22 @@ namespace hpx::iostreams::server {
+ 
+     void output_stream::write_sync(std::uint32_t locality_id,
+         std::uint64_t count, detail::buffer const& buf_in)
+-    {    // {{{
++    {
+         // Perform the IO in another OS thread.
+         detail::buffer in(buf_in);
++#if ASIO_VERSION >= 103400
++        asio::post(hpx::get_thread_pool("io_pool")->get_io_service(),
++            hpx::bind_front(&output_stream::call_write_sync, this, locality_id,
++                count, std::ref(in),
++                threads::thread_id_ref_type(threads::get_outer_self_id())));
++#else
+         hpx::get_thread_pool("io_pool")->get_io_service().post(
+             hpx::bind_front(&output_stream::call_write_sync, this, locality_id,
+                 count, std::ref(in),
+                 threads::thread_id_ref_type(threads::get_outer_self_id())));
+-
++#endif
+         // Sleep until the worker thread wakes us up.
+         this_thread::suspend(threads::thread_schedule_state::suspended,
+             "output_stream::write_sync");
+-    }    // }}}
++    }
+ }    // namespace hpx::iostreams::server
+diff --git a/examples/async_io/async_io_low_level.cpp b/examples/async_io/async_io_low_level.cpp
+index 75312984bf7f..153e5d124930 100644
+--- a/examples/async_io/async_io_low_level.cpp
++++ b/examples/async_io/async_io_low_level.cpp
+@@ -39,7 +39,12 @@ hpx::future<int> async_io(char const* string_to_write)
+         hpx::get_runtime().get_thread_pool("io_pool");
+ 
+     // ... and schedule the handler to run on one of its OS-threads.
++#if ASIO_VERSION >= 103400
++    asio::post(
++        pool->get_io_service(), hpx::bind(&do_async_io, string_to_write, p));
++#else
+     pool->get_io_service().post(hpx::bind(&do_async_io, string_to_write, p));
++#endif
+ 
+     return p->get_future();
+ }
+diff --git a/libs/core/asio/include/hpx/asio/asio_util.hpp b/libs/core/asio/include/hpx/asio/asio_util.hpp
+index 286536692102..e79bb15c4cb1 100644
+--- a/libs/core/asio/include/hpx/asio/asio_util.hpp
++++ b/libs/core/asio/include/hpx/asio/asio_util.hpp
+@@ -17,6 +17,7 @@
+ #endif
+ #include <asio/io_context.hpp>
+ #include <asio/ip/tcp.hpp>
++#include <asio/version.hpp>
+ 
+ /* The asio support includes termios.h.
+  * The termios.h file on ppc64le defines these macros, which
+@@ -50,7 +51,12 @@ namespace hpx::util {
+     [[nodiscard]] HPX_CORE_EXPORT std::string cleanup_ip_address(
+         std::string const& addr);
+ 
++#if ASIO_VERSION >= 103400
++    using endpoint_iterator_type =
++        asio::ip::basic_resolver_iterator<asio::ip::tcp>;
++#else
+     using endpoint_iterator_type = asio::ip::tcp::resolver::iterator;
++#endif
+ 
+     [[nodiscard]] endpoint_iterator_type HPX_CORE_EXPORT connect_begin(
+         std::string const& address, std::uint16_t port,
+diff --git a/libs/core/asio/src/asio_util.cpp b/libs/core/asio/src/asio_util.cpp
+index b5443e5dfa4e..bd248f3345d0 100644
+--- a/libs/core/asio/src/asio_util.cpp
++++ b/libs/core/asio/src/asio_util.cpp
+@@ -54,8 +54,13 @@ namespace hpx::util {
+     {
+         using namespace asio::ip;
+         std::error_code ec;
++#if ASIO_VERSION >= 103400
++        address_v4 const addr4 =    //-V821
++            make_address_v4(addr.c_str(), ec);
++#else
+         address_v4 const addr4 =    //-V821
+             address_v4::from_string(addr.c_str(), ec);
++#endif
+         if (!ec)
+         {    // it's an IPV4 address
+             ep = tcp::endpoint(address(addr4), port);
+@@ -64,8 +69,13 @@ namespace hpx::util {
+ 
+         if (!force_ipv4)
+         {
++#if ASIO_VERSION >= 103400
++            address_v6 const addr6 =    //-V821
++                make_address_v6(addr.c_str(), ec);
++#else
+             address_v6 const addr6 =    //-V821
+                 address_v6::from_string(addr.c_str(), ec);
++#endif
+             if (!ec)
+             {    // it's an IPV6 address
+                 ep = tcp::endpoint(address(addr6), port);
+@@ -108,8 +118,26 @@ namespace hpx::util {
+         {
+             // resolve the given address
+             tcp::resolver resolver(io_service);
+-            tcp::resolver::query query(hostname, std::to_string(port));
+ 
++#if ASIO_VERSION >= 103400
++            auto resolver_results = resolver.resolve(
++                asio::ip::tcp::v4(), hostname, std::to_string(port));
++
++            auto it = resolver_results.begin();
++            auto end = resolver_results.begin();
++
++            // skip ipv6 results, if required
++            if (it == end && !force_ipv4)
++            {
++                resolver_results = resolver.resolve(
++                    asio::ip::tcp::v6(), hostname, std::to_string(port));
++                it = resolver_results.begin();
++            }
++
++            HPX_ASSERT(it != end);
++            return *it;
++#else
++            tcp::resolver::query query(hostname, std::to_string(port));
+             asio::ip::tcp::resolver::iterator it = resolver.resolve(query);
+ 
+             // skip ipv6 results, if required
+@@ -121,9 +149,9 @@ namespace hpx::util {
+                     ++it;
+                 }
+             }
+-
+             HPX_ASSERT(it != asio::ip::tcp::resolver::iterator());
+             return *it;
++#endif
+         }
+         catch (std::system_error const&)
+         {
+@@ -149,8 +177,21 @@ namespace hpx::util {
+         {
+             asio::io_context io_service;
+             tcp::resolver resolver(io_service);
++
++#if ASIO_VERSION >= 103400
++            auto resolver_results = resolver.resolve(
++                asio::ip::tcp::v4(), asio::ip::host_name(), "");
++            auto it = resolver_results.begin();
++            if (it == resolver_results.end())
++            {
++                resolver_results = resolver.resolve(
++                    asio::ip::tcp::v6(), asio::ip::host_name(), "");
++                it = resolver_results.begin();
++            }
++#else
+             tcp::resolver::query query(asio::ip::host_name(), "");
+             tcp::resolver::iterator it = resolver.resolve(query);
++#endif
+             tcp::endpoint endpoint = *it;
+             return endpoint.address().to_string();
+         }
+@@ -230,8 +271,14 @@ namespace hpx::util {
+             tcp::endpoint ep;
+             if (util::get_endpoint(address, port, ep))
+             {
++#if ASIO_VERSION >= 103400
++                auto resolver_results =
++                    tcp::resolver::results_type::create(ep, address, port_str);
++                return resolver_results.begin();
++#else
+                 return {
+                     tcp::resolver::results_type::create(ep, address, port_str)};
++#endif
+             }
+         }
+         catch (std::system_error const&)
+@@ -244,10 +291,24 @@ namespace hpx::util {
+         {
+             // resolve the given address
+             tcp::resolver resolver(io_service);
++
++#if ASIO_VERSION >= 103400
++            auto resolver_results = resolver.resolve(asio::ip::tcp::v4(),
++                !address.empty() ? address : asio::ip::host_name(), port_str);
++            auto it = resolver_results.begin();
++            if (it == resolver_results.end())
++            {
++                resolver_results = resolver.resolve(asio::ip::tcp::v6(),
++                    !address.empty() ? address : asio::ip::host_name(),
++                    port_str);
++                it = resolver_results.begin();
++            }
++            return it;
++#else
+             tcp::resolver::query query(
+                 !address.empty() ? address : asio::ip::host_name(), port_str);
+-
+             return {resolver.resolve(query)};
++#endif
+         }
+         catch (std::system_error const&)
+         {
+@@ -276,8 +337,14 @@ namespace hpx::util {
+             tcp::endpoint ep;
+             if (util::get_endpoint(address, port, ep))
+             {
++#if ASIO_VERSION >= 103400
++                auto resolver_results =
++                    tcp::resolver::results_type::create(ep, address, port_str);
++                return resolver_results.begin();
++#else
+                 return {
+                     tcp::resolver::results_type::create(ep, address, port_str)};
++#endif
+             }
+         }
+         catch (std::system_error const&)
+@@ -290,9 +357,21 @@ namespace hpx::util {
+         {
+             // resolve the given address
+             tcp::resolver resolver(io_service);
++#if ASIO_VERSION >= 103400
++            auto resolver_results =
++                resolver.resolve(asio::ip::tcp::v4(), address, port_str);
++            auto it = resolver_results.begin();
++            if (it == resolver_results.end())
++            {
++                resolver_results =
++                    resolver.resolve(asio::ip::tcp::v6(), address, port_str);
++                it = resolver_results.begin();
++            }
++            return it;
++#else
+             tcp::resolver::query query(address, port_str);
+-
+             return {resolver.resolve(query)};
++#endif
+         }
+         catch (std::system_error const&)
+         {
+@@ -306,9 +385,22 @@ namespace hpx::util {
+         {
+             // resolve the given address
+             tcp::resolver resolver(io_service);
+-            tcp::resolver::query query(asio::ip::host_name(), port_str);
+ 
++#if ASIO_VERSION >= 103400
++            auto resolver_results = resolver.resolve(
++                asio::ip::tcp::v4(), asio::ip::host_name(), port_str);
++            auto it = resolver_results.begin();
++            if (it == resolver_results.end())
++            {
++                resolver_results = resolver.resolve(
++                    asio::ip::tcp::v6(), asio::ip::host_name(), port_str);
++                it = resolver_results.begin();
++            }
++            return it;
++#else
++            tcp::resolver::query query(asio::ip::host_name(), port_str);
+             return {resolver.resolve(query)};
++#endif
+         }
+         catch (std::system_error const&)
+         {
+diff --git a/libs/core/executors/src/service_executors.cpp b/libs/core/executors/src/service_executors.cpp
+index 4e3ba88a2392..3e39e59ede45 100644
+--- a/libs/core/executors/src/service_executors.cpp
++++ b/libs/core/executors/src/service_executors.cpp
+@@ -1,4 +1,4 @@
+-//  Copyright (c) 2023 Hartmut Kaiser
++//  Copyright (c) 2023-2025 Hartmut Kaiser
+ //
+ //  SPDX-License-Identifier: BSL-1.0
+ //  Distributed under the Boost Software License, Version 1.0. (See accompanying
+@@ -10,12 +10,20 @@
+ #include <hpx/io_service/io_service_pool.hpp>
+ 
+ #include <asio/io_context.hpp>
++#include <asio/version.hpp>
++#if ASIO_VERSION >= 103400
++#include <asio/post.hpp>
++#endif
+ 
+ namespace hpx::parallel::execution::detail {
+ 
+     void service_executor::post(
+         hpx::util::io_service_pool* pool, hpx::function<void()>&& f)
+     {
++#if ASIO_VERSION >= 103400
++        asio::post(pool->get_io_service(), HPX_MOVE(f));
++#else
+         pool->get_io_service().post(HPX_MOVE(f));
++#endif
+     }
+ }    // namespace hpx::parallel::execution::detail
+diff --git a/libs/core/io_service/include/hpx/io_service/io_service_pool.hpp b/libs/core/io_service/include/hpx/io_service/io_service_pool.hpp
+index 8d800f36d18d..8441886b9a1d 100644
+--- a/libs/core/io_service/include/hpx/io_service/io_service_pool.hpp
++++ b/libs/core/io_service/include/hpx/io_service/io_service_pool.hpp
+@@ -19,6 +19,10 @@
+ #endif
+ #include <asio/executor_work_guard.hpp>
+ #include <asio/io_context.hpp>
++#include <asio/version.hpp>
++#if ASIO_VERSION >= 103400
++#include <asio/post.hpp>
++#endif
+ 
+ // The boost asio support includes termios.h. The termios.h file on ppc64le
+ // defines these macros, which are also used by blaze, blaze_tensor as Template
+diff --git a/libs/core/io_service/src/io_service_pool.cpp b/libs/core/io_service/src/io_service_pool.cpp
+index 44eb3318c04b..ca2fe443e219 100644
+--- a/libs/core/io_service/src/io_service_pool.cpp
++++ b/libs/core/io_service/src/io_service_pool.cpp
+@@ -259,7 +259,11 @@ namespace hpx::util {
+             for (std::size_t i = 0; i < pool_size_; ++i)
+             {
+                 work_.emplace_back(initialize_work(*io_services_[i]));
++#if ASIO_VERSION >= 103400
++                io_services_[i]->restart();
++#else
+                 io_services_[i]->reset();
++#endif
+             }
+ 
+             continue_barrier_->wait();
+diff --git a/libs/core/runtime_local/src/pool_timer.cpp b/libs/core/runtime_local/src/pool_timer.cpp
+index 7487b5a72692..d2723d2452e8 100644
+--- a/libs/core/runtime_local/src/pool_timer.cpp
++++ b/libs/core/runtime_local/src/pool_timer.cpp
+@@ -146,7 +146,7 @@ namespace hpx::util::detail {
+             }
+ 
+             HPX_ASSERT(timer_ != nullptr);
+-            timer_->expires_from_now(time_duration.value());
++            timer_->expires_at(time_duration.from_now());
+             timer_->async_wait(hpx::bind_front(    //-V779
+                 &pool_timer::timer_handler, this->shared_from_this()));
+ 
+diff --git a/libs/full/parcelport_gasnet/src/parcelport_gasnet.cpp b/libs/full/parcelport_gasnet/src/parcelport_gasnet.cpp
+index 77da0c839b16..16160af101b7 100644
+--- a/libs/full/parcelport_gasnet/src/parcelport_gasnet.cpp
++++ b/libs/full/parcelport_gasnet/src/parcelport_gasnet.cpp
+@@ -142,8 +142,14 @@ namespace hpx::parcelset {
+ 
+                 for (std::size_t i = 0; i != io_service_pool_.size(); ++i)
+                 {
++#if ASIO_VERSION >= 103400
++                    asio::post(
++                        io_service_pool_.get_io_service(static_cast<int>(i)),
++                        hpx::bind(&parcelport::io_service_work, this));
++#else
+                     io_service_pool_.get_io_service(int(i)).post(
+                         hpx::bind(&parcelport::io_service_work, this));
++#endif
+                 }
+                 return true;
+             }
+diff --git a/libs/full/parcelport_lci/src/parcelport_lci.cpp b/libs/full/parcelport_lci/src/parcelport_lci.cpp
+index d9083191376a..40cf14faba5c 100644
+--- a/libs/full/parcelport_lci/src/parcelport_lci.cpp
++++ b/libs/full/parcelport_lci/src/parcelport_lci.cpp
+@@ -98,8 +98,13 @@ namespace hpx::parcelset::policies::lci {
+         sender_p->run();
+         for (std::size_t i = 0; i != io_service_pool_.size(); ++i)
+         {
++#if ASIO_VERSION >= 103400
++            asio::post(io_service_pool_.get_io_service(static_cast<int>(i)),
++                hpx::bind(&parcelport::io_service_work, this));
++#else
+             io_service_pool_.get_io_service(int(i)).post(
+                 hpx::bind(&parcelport::io_service_work, this));
++#endif
+         }
+         return true;
+     }
+@@ -167,10 +172,10 @@ namespace hpx::parcelset::policies::lci {
+                         static_cast<int>(hpx::get_local_worker_thread_num());
+                     HPX_ASSERT(prg_thread_id < config_t::progress_thread_num);
+                     for (int i = prg_thread_id * config_t::ndevices /
+-                             config_t::progress_thread_num;
+-                         i < (prg_thread_id + 1) * config_t::ndevices /
+-                             config_t::progress_thread_num;
+-                         ++i)
++                            config_t::progress_thread_num;
++                        i < (prg_thread_id + 1) * config_t::ndevices /
++                            config_t::progress_thread_num;
++                        ++i)
+                     {
+                         devices_to_progress.push_back(&devices[i]);
+                     }
+diff --git a/libs/full/parcelport_mpi/src/parcelport_mpi.cpp b/libs/full/parcelport_mpi/src/parcelport_mpi.cpp
+index e30025899e76..c319c54df7ef 100644
+--- a/libs/full/parcelport_mpi/src/parcelport_mpi.cpp
++++ b/libs/full/parcelport_mpi/src/parcelport_mpi.cpp
+@@ -181,8 +181,14 @@ namespace hpx::parcelset {
+ 
+                 for (std::size_t i = 0; i != io_service_pool_.size(); ++i)
+                 {
++#if ASIO_VERSION >= 103400
++                    asio::post(
++                        io_service_pool_.get_io_service(static_cast<int>(i)),
++                        hpx::bind(&parcelport::io_service_work, this));
++#else
+                     io_service_pool_.get_io_service(static_cast<int>(i))
+                         .post(hpx::bind(&parcelport::io_service_work, this));
++#endif
+                 }
+                 return true;
+             }

@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
+        fix-asio-1.33.patch # https://github.com/cycfi/elements/commit/c8c6a0d14b8d
 )
 
 vcpkg_from_github(
