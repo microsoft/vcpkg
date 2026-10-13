@@ -1,6 +1,6 @@
 {
   "name": "smax-clib",
-  "version": "1.1.0-rc1",
+  "version": "1.1.0-rc2",
   "description": "A free C/C++ client library and toolkit for the SMA-X structured database",
   "homepage": "https://sigmyne.github.io/smax-clib/",
   "documentation": "https://sigmyne.github.io/smax-clib/doc/html/",
