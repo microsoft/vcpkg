@@ -35,5 +35,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/strategy/machine_learning_strategy.h"
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

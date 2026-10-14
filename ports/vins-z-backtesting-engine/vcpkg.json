@@ -1,7 +1,7 @@
 {
   "name": "vins-z-backtesting-engine",
   "version": "1.2.0",
-  "description": "C++20 backtesting engine with CMake package exports and an optional C API wrapper",
+  "description": "C++20 backtesting engine with CMake package exports and a C API wrapper",
   "homepage": "https://github.com/Vins-z/Backtesting-Engine",
   "license": "MIT",
   "supports": "!windows & !(static & staticcrt)",
