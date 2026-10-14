@@ -3,7 +3,7 @@
   "version-semver": "1.5.29",
   "description": "A non-blocking I/O cross-platform TCP network library, using C++14",
   "homepage": "https://github.com/an-tao/trantor",
-  "license": "BSD-2-Clause",
+  "license": "BSD-3-Clause AND BSD-2-Clause",
   "dependencies": [
     "c-ares",
     "openssl",
