@@ -24,7 +24,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         hevc        VCPKG_LOCK_FIND_PACKAGE_X265
         iso23001-17 WITH_UNCOMPRESSED_CODEC
         kvazaar     WITH_KVAZAAR
-        kvazaar     VCPKG_LOCK_FIND_PACKAGE_KVAZAAR
+        kvazaar     VCPKG_LOCK_FIND_PACKAGE_kvazaar
         header-compression WITH_HEADER_COMPRESSION
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
@@ -76,11 +76,12 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/debug/plugins/libheif"
     MAYBE_UNUSED_VARIABLES
+        # Discovery locks are consumed only when the corresponding codec or compression feature is enabled.
         VCPKG_LOCK_FIND_PACKAGE_AOM
         VCPKG_LOCK_FIND_PACKAGE_Brotli
         VCPKG_LOCK_FIND_PACKAGE_DAV1D
         VCPKG_LOCK_FIND_PACKAGE_JPEG
-        VCPKG_LOCK_FIND_PACKAGE_KVAZAAR
+        VCPKG_LOCK_FIND_PACKAGE_kvazaar
         VCPKG_LOCK_FIND_PACKAGE_LIBDE265
         VCPKG_LOCK_FIND_PACKAGE_OpenH264
         VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
@@ -100,9 +101,10 @@ if ("aom" IN_LIST FEATURES)
     string(APPEND config_dependencies "find_dependency(AOM CONFIG)\n")
 endif()
 if (WITH_VVDEC)
-    string(APPEND config_dependencies "find_dependency(vvdec 3.2.0 CONFIG)\n")
+    string(APPEND config_dependencies "find_dependency(vvdec CONFIG)\n")
 endif()
 if (WITH_VVENC)
+    # vvenc's version file rejects requests without a version.
     string(APPEND config_dependencies "find_dependency(vvenc 1.12.0 CONFIG)\n")
 endif()
 if (WITH_UNCOMPRESSED_CODEC OR WITH_HEADER_COMPRESSION)

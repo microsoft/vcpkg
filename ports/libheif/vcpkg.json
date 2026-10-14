@@ -114,7 +114,7 @@
       ]
     },
     "vvenc": {
-      "description": "vvenc VVC decoder",
+      "description": "vvenc VVC encoder",
       "license": "BSD-3-Clause-Clear",
       "dependencies": [
         "vvenc"
