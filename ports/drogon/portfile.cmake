@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DUSE_SUBMODULE=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         ${FEATURE_OPTIONS}
 )
 
