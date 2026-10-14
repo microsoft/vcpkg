@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
+    PATCHES fix-row-status-delete.patch
 )
 
 file(INSTALL "${SOURCE_PATH}/otlv${OTL_VERSION}.h"
