@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         000-fix-deps.patch
         001-disable-werror.patch
+        002-export-certificate.patch
 )
 
 set(feature_options)
