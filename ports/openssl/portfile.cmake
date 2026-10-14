@@ -1,6 +1,7 @@
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libressl/copyright"
-    OR EXISTS "${CURRENT_INSTALLED_DIR}/share/boringssl/copyright")
-    message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
+    OR EXISTS "${CURRENT_INSTALLED_DIR}/share/boringssl/copyright"
+    OR EXISTS "${CURRENT_INSTALLED_DIR}/share/aws-lc/copyright")
+    message(FATAL_ERROR "Can't build openssl if libressl/boringssl/aws-lc is installed. Please remove libressl/boringssl/aws-lc, and try install openssl again if you need it.")
 endif()
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
