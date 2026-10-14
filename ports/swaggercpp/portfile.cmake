@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.4.0
     SHA512 39641e620b159c5e0bd50ab41b7451a13373e4086d0889f4c355871b1d2ca94b320a22706a2757b98101df038dea6918cf060822f17430e9454b40956b3a1961
     HEAD_REF master
+    PATCHES
+        fix-pkgconfig-dependencies.patch
 )
 
 vcpkg_check_features(
