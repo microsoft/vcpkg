@@ -4,14 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
     REF "v${VERSION}"
-    SHA512 ef8fa2732d8f59cd335cb97306d05cd7f2373aa6686aab6c4eebdf687301ce51728fc01b06632bfc616aeaadc61c7eb4fcc4100fbc38fce6b6abed189c7a3579
+    SHA512 1e01f2ba5b2853a2f3856ae05c2b92e16e266e13d95d5e4e96a0cb167f175087e222e7dc856df8ecfe497425aca5fff8564594ab7db59c1fbd93ca79449e4ecb
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openssl   USE_OPEN_SSL
-        mbedtls   USE_MBED_TLS
-        sectransp USE_SECURE_TRANSPORT
+        mbedtls           USE_MBED_TLS
+        network-framework USE_NETWORK_FRAMEWORK
+        openssl           USE_OPEN_SSL
+        sectransp         USE_SECURE_TRANSPORT
 )
 
 string(COMPARE NOTEQUAL "${FEATURES}" "core" USE_TLS)
@@ -35,6 +36,16 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ixwebsocket)
+# Static pkg-config consumers need the native backend's definitions and frameworks.
+if("network-framework" IN_LIST FEATURES)
+    foreach(lib_dir IN ITEMS lib debug/lib)
+        set(pc_file "${CURRENT_PACKAGES_DIR}/${lib_dir}/pkgconfig/ixwebsocket.pc")
+        if(EXISTS "${pc_file}")
+            vcpkg_replace_string("${pc_file}" "Cflags:" "Cflags: -DIXWEBSOCKET_USE_TLS -DIXWEBSOCKET_USE_NETWORK_FRAMEWORK -DIXWEBSOCKET_USE_ZLIB")
+            file(APPEND "${pc_file}" "\nLibs.private: -framework Network -framework Security -framework CoreFoundation\nRequires.private: zlib\n")
+        endif()
+    endforeach()
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
