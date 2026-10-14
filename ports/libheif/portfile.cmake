@@ -56,6 +56,8 @@ endif()
 vcpkg_find_acquire_program(PKGCONFIG)
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DAV1D_PLUGIN)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -68,6 +70,7 @@ vcpkg_cmake_configure(
         -DWITH_EXAMPLE_HEIF_THUMB=OFF
         -DWITH_EXAMPLE_HEIF_VIEW=OFF
         -DWITH_LIBSHARPYUV=OFF
+        -DWITH_DAV1D_PLUGIN=${DAV1D_PLUGIN}
         -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=${VCPKG_LOCK_FIND_PACKAGE_ZLIB}
         -DVCPKG_LOCK_FIND_PACKAGE_Brotli=${VCPKG_LOCK_FIND_PACKAGE_Brotli}
         ${FEATURE_OPTIONS}
