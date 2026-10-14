@@ -29,7 +29,7 @@
     },
     "dav1d": {
       "description": "AVIF decoding via dav1d",
-      "license": "BSD-2-Clause",
+      "license": "BSD-2-Clause AND ISC",
       "dependencies": [
         "dav1d"
       ]
@@ -80,7 +80,7 @@
     },
     "kvazaar": {
       "description": "HEVC encoding via kvazaar",
-      "license": "BSD-3-Clause",
+      "license": "BSD-3-Clause AND ISC AND LicenseRef-Public-Domain",
       "dependencies": [
         "kvazaar"
       ]
