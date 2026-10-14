@@ -104,6 +104,7 @@ if (WITH_VVDEC)
     string(APPEND config_dependencies "find_dependency(vvdec CONFIG)\n")
 endif()
 if (WITH_VVENC)
+    string(APPEND config_dependencies "find_dependency(Threads)\n")
     # vvenc's version file rejects requests without a version.
     string(APPEND config_dependencies "find_dependency(vvenc 1.12.0 CONFIG)\n")
 endif()
