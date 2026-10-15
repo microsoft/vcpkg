@@ -74,6 +74,7 @@ vcpkg_cmake_configure(
         -DGGML_BUILD_EXAMPLES=OFF
         -DGGML_HIP=OFF
         -DGGML_SYCL=OFF
+        -DGGML_CUDA_NCCL=OFF
         -DGGML_NATIVE=OFF
         -DGGML_AVX=OFF
         -DGGML_AVX2=OFF
