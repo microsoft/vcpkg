@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hellobertrand/zxc
     REF "v${VERSION}"
-    SHA512 cc043a64afdc954cdf51c14c0878fbf7e741004758024cf7de2b0d909fdd5acd441eebb4d2023486bcb06026cc8a146211adfba27c516831e89a1a1f5eec5820
+    SHA512 b674a8602c9fe26f279d913adf75b8c6d936727324a68c3e5f8a70f8cf8b499dc6c4182f324c9bb104af8c10349a74a6be3783f9a792eb75dfdcc5b857645608
     HEAD_REF main
 )
 
@@ -35,16 +35,35 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
+# Upstream installs a zxc(1) man page (and aliases) on POSIX
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
+
 if ("util" IN_LIST FEATURES)
+    # Upstream installs POSIX-only helpers next to zxc: the "unzxc" (zxc -d) and
+    # "zxccat" (zxc -dc) symlinks, and the "zxcless" and "zxcgrep" shell scripts.
+    # Relocate them alongside the tool (skipped on Windows).
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        file(COPY
+            "${CURRENT_PACKAGES_DIR}/bin/zxcless"
+            "${CURRENT_PACKAGES_DIR}/bin/zxcgrep"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+        )
+        foreach(helper IN ITEMS unzxc zxccat zxcless zxcgrep)
+            file(REMOVE
+                "${CURRENT_PACKAGES_DIR}/bin/${helper}"
+                "${CURRENT_PACKAGES_DIR}/debug/bin/${helper}"
+            )
+        endforeach()
+    endif()
     vcpkg_copy_tools(
         TOOL_NAMES
             zxc
         AUTO_CLEAN
     )
-    # Upstream installs "unzxc" as a POSIX-only symlink to zxc that defaults to
-    # decompression. Recreate it alongside the relocated tool (skipped on Windows).
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(CREATE_LINK "zxc" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/unzxc" SYMBOLIC)
+        foreach(alias IN ITEMS unzxc zxccat)
+            file(CREATE_LINK "zxc" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${alias}" SYMBOLIC)
+        endforeach()
     endif()
 endif()
 
