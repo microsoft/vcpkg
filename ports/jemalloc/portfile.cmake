@@ -8,6 +8,10 @@ vcpkg_from_github(
         fix-configure-ac.patch
         preprocessor.patch
 )
+
+# Allow jemalloc to obtain the version without relying on Git tags
++file(WRITE "${SOURCE_PATH}/VERSION" "${VERSION}")
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(opts "ac_cv_search_log=none required" "--without-private-namespace")
 endif()
