@@ -8860,6 +8860,10 @@
       "baseline": "1.6.0",
       "port-version": 1
     },
+    "rectpack2d": {
+      "baseline": "2026-08-09",
+      "port-version": 0
+    },
     "recycle": {
       "baseline": "8.0.0",
       "port-version": 0
