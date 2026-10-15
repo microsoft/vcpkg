@@ -5,7 +5,7 @@
   "description": "Network extensions for GLib",
   "homepage": "https://gitlab.gnome.org/GNOME/glib-networking",
   "license": "LGPL-2.1-only",
-  "supports": "!uwp & !(static & staticcrt)",
+  "supports": "!uwp & !(static & (windows | staticcrt))",
   "dependencies": [
     "glib",
     {
