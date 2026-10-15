@@ -10,6 +10,10 @@ target_include_directories(cspice PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
+# f2c-generated code uses implicit int for functions, which is forbidden in C99.
+# Clang (at least) raises an error for this, unless C90 is explicitly selected.
+set_target_properties(cspice PROPERTIES C_STANDARD 90)
+
 if (WIN32)
     # cf. src/cspice/mkprodct.bat
     target_compile_definitions(cspice PRIVATE "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO;_CRT_SECURE_NO_WARNINGS")
@@ -19,7 +23,6 @@ if (WIN32)
     endif()
 elseif (UNIX)
     target_compile_definitions(cspice PRIVATE "NON_UNIX_STDIO")
-    set_target_properties(cspice PROPERTIES C_STANDARD 90)
     target_compile_options(cspice PRIVATE -Wno-error=implicit-function-declaration)
 endif ()
 
