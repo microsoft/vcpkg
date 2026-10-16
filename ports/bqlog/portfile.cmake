@@ -5,6 +5,7 @@ vcpkg_from_github(
     # Placeholder: bump.sh writes the SHA512 of the published tag here.
     SHA512 9edd0781857577089e417a1d858b5b13ca198fa1d2416f9ceed0cd338c60eadfe22dc0b6a73cd1ab4f6d46c465e37280351d3391becf83c9495ae6fee76c990b
     HEAD_REF main
+    PATCHES fix-msvc-pkgconfig.patch
 )
 
 # vcpkg decides static or shared through the triplet, so the port must follow it instead of
