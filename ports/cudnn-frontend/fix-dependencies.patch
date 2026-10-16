@@ -12,7 +12,7 @@ index 91f25e4..4618f1c 100644
 -    cudnn_frontend INTERFACE
 -    ${CUDAToolkit_INCLUDE_DIRS}
 -)
-+target_link_libraries(cudnn_frontend INTERFACE CUDA::toolkit CUDA::cudart CuDNN::CuDNN)
++target_link_libraries(cudnn_frontend INTERFACE CUDA::toolkit CUDA::cudart Cuda::nvrtc CuDNN::CuDNN)
  
  target_compile_features(cudnn_frontend INTERFACE cxx_std_17)
  
