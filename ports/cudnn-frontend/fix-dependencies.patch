@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 91f25e4..4618f1c 100644
+index 0dd1a58..c601976 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -47,11 +47,9 @@ target_include_directories(
@@ -12,12 +12,12 @@ index 91f25e4..4618f1c 100644
 -    cudnn_frontend INTERFACE
 -    ${CUDAToolkit_INCLUDE_DIRS}
 -)
-+target_link_libraries(cudnn_frontend INTERFACE CUDA::toolkit CUDA::cudart Cuda::nvrtc CuDNN::CuDNN)
++target_link_libraries(cudnn_frontend INTERFACE CUDA::toolkit CUDA::cudart CUDA::nvrtc CuDNN::CuDNN)
  
  target_compile_features(cudnn_frontend INTERFACE cxx_std_17)
  
 diff --git a/cudnn_frontend-config.cmake.in b/cudnn_frontend-config.cmake.in
-index c2bfbee..9de9b89 100644
+index 2f63670..cd913ce 100644
 --- a/cudnn_frontend-config.cmake.in
 +++ b/cudnn_frontend-config.cmake.in
 @@ -3,4 +3,8 @@
