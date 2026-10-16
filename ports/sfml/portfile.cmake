@@ -8,6 +8,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
         03-fix-android-install-path.patch
         04-use-vcpkg-dependencies.patch
         05-fix-pkgconfig-files.patch
+        06-isolate-dr-mp3.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -62,4 +63,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 vcpkg_fixup_pkgconfig()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.md")
+set(copyright_files "${SOURCE_PATH}/license.md")
+if("window" IN_LIST FEATURES OR "graphics" IN_LIST FEATURES)
+    list(APPEND copyright_files "${SOURCE_PATH}/extlibs/headers/glad/include/glad/egl.h")
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
