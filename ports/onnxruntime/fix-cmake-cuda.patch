@@ -33,7 +33,9 @@ index 91707c4..243783b 100644
    if(WIN32)
      # FILE_NAME preprocessor definition is used in onnxruntime_providers_cuda.rc
      target_compile_definitions(onnxruntime_providers_cuda PRIVATE FILE_NAME=\"onnxruntime_providers_cuda.dll\")
-@@ -241,8 +244,8 @@
+@@ -240,9 +240,9 @@
+-      target_link_libraries(${target} PRIVATE CUDA::cublasLt CUDA::cublas CUDNN::cudnn_all cudnn_frontend CUDA::curand CUDA::cufft CUDA::cudart
++      target_link_libraries(${target} PRIVATE CUDA::cublasLt CUDA::cublas CUDNN::cudnn_all cudnn_frontend CUDA::curand CUDA::cufft CUDA::cudart CUDA::nvrtc
                ${ABSEIL_LIBS} ${ONNXRUNTIME_PROVIDERS_SHARED} Boost::mp11 safeint_interface)
      endif()
  
