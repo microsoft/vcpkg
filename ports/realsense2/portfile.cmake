@@ -1,19 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO IntelRealSense/librealsense
+    REPO realsenseai/librealsense
     REF "v${VERSION}"
-    SHA512 e38350be3eba6fec97096abfff652a36d0e37ba95baf1b40841cc180e2d650c9abfa53d99e1c0a7767fa0c91ac4d9780702b51078f9c1564848121c1048749f4
+    SHA512 2c627d62c21ab4e5c81bd3a1c44c60a3f5e2233c99cc1461a63609ef92f7ada128737cabe8a56bb6f3c761a569747820e4b05e7b8f0f4ec75e3b617154a971fa
     HEAD_REF master
     PATCHES
         android-config.diff
-        build.diff
-        devendor-lz4.diff # https://github.com/IntelRealSense/librealsense/pull/13803#issuecomment-3072432118
-        devendor-nlohmann-json.diff
+        devendor-lz4.diff
         devendor-stb.diff
         fix_openni2.patch
         libusb.diff
-        using-firmware.diff
-        add-stdexcept.diff # https://github.com/IntelRealSense/librealsense/pull/14299
+        disable-network-check.diff
+        # This pkg-config fix targets vcpkg's external dependencies and disabled DDS/rosbag2.
+        # Upstreaming requires handling bundled dependencies and enabled DDS/rosbag2,
+        # preserving CMake 3.10 compatibility, and supporting multi-config generators.
+        fix-pkgconfig.diff
 )
 file(GLOB extern "${SOURCE_PATH}/CMake/extern_*.cmake")
 file(REMOVE_RECURSE
@@ -23,15 +24,6 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/third-party/stb_easy_font.h"
     "${SOURCE_PATH}/third-party/stb_image.h"
     "${SOURCE_PATH}/third-party/stb_image_write.h"
-)
-
-file(READ "${SOURCE_PATH}/common/fw/firmware-version.h" firmware_version_h)
-string(REGEX MATCH "D4XX_RECOMMENDED_FIRMWARE_VERSION \"([0-9]+.[0-9]+.[0-9]+.[0-9]+)\"" unused "${firmware_version_h}")
-set(firmware_filename "D4XX_FW_Image-${CMAKE_MATCH_1}.bin")
-vcpkg_download_distfile(firmware_distfile
-    URLS "https://librealsense.intel.com/Releases/RS4xx/FW/${firmware_filename}"
-    SHA512 1098738b754d14bcf529541986e0c39c9efd481cae3954f5f01233b12859e289bfa62b97c06ce644b7ce704ed8cab066f1bd91cbe2287cc6cc20a671213cdcff
-    FILENAME "IntelRealSense-${firmware_filename}"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -56,14 +48,15 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_GRAPHICAL_EXAMPLES=OFF
         -DBUILD_RS2_ALL=NO
+        -DBUILD_ROSBAG2=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DENABLE_CCACHE=OFF
         -DENFORCE_METADATA=ON
-        "-DFIRMWARE_DISTFILE=${firmware_distfile}"
         "-DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2"
         -DUSE_EXTERNAL_LZ4=ON
+        -DUSE_EXTERNAL_NLOHMANN_JSON=ON
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
@@ -91,4 +84,30 @@ if(BUILD_OPENNI2_BINDINGS)
 endif()
 
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(copyright_files
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/third-party/rapidxml/LICENSE"
+    "${SOURCE_PATH}/third-party/rapidxml/rapidxml_utils.hpp"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/header.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/datatypes.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/cpp_common_decl.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/cpp_common/include/ros/macros.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/msgs/sensor_msgs/point_field_conversion.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/roslz4/include/roslz4/lz4s.h"
+    "${SOURCE_PATH}/third-party/realsense-file/rosbag/roslz4/src/xxhash.h"
+)
+if(VCPKG_TARGET_IS_OSX)
+    # Upstream's aggregate notice contains the BSD license selected for HIDAPI.
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/NOTICE.md"
+        "${SOURCE_PATH}/third-party/hidapi/hidapi.h"
+    )
+endif()
+if(BUILD_TOOLS)
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/third-party/tclap/COPYING"
+        "${SOURCE_PATH}/third-party/tclap/include/tclap/MultiSwitchArg.h"
+        "${SOURCE_PATH}/third-party/tclap/include/tclap/ArgTraits.h"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})

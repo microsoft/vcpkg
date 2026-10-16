@@ -8,6 +8,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove-cpm.patch
+        # Upstream bug, unreleased fix: workers can race to release a binary_semaphore
+        # past its max count of 1, which is UB. Same fix tracy carries locally.
+        fix-semaphore-overflow.patch
 )
 
 # Replace CPM and download PackageProject directly to avoid issues with FETCHCONTENT_FULLY_DISCONNECTED

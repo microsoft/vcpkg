@@ -1,0 +1,8 @@
+shader-slang provides CMake targets:
+
+  find_package(slang CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE slang::slang)
+
+Slang loads standard modules and host API bindings beside its runtime library.
+For app-local deployment, copy slang-standard-module-*, slang.slang, and gfx.slang
+from bin or debug/bin (lib or debug/lib on non-Windows) beside the deployed library.

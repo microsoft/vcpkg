@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephane/libmodbus
     REF "v${VERSION}"
-    SHA512 63f9a4ae2096f684a0adcc1d33f1b9090d0d531934944ef506106d11da760141b27d5916d59b3e1aa0d78def5c2673984b2aa43ebe4521aaa55f439f32dd7475
+    SHA512 39135c318d4785e9a3493ba37f13b8da5addb55ac0914990247fac08a332f22a8d6a38023849618db32af19ce5c7831042a212c4d43c9e355aa27e23e85d65be
     HEAD_REF master
     PATCHES
         cflags.diff
         library-linkage.diff
         pkgconfig.diff
         ssize_t.diff
+        fdsetsize-win32.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -30,7 +31,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/modbus/modbus.h" "defined(STATIC_LIBMODBUS)" "1")
 endif()
 
- file(REMOVE_RECURSE
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )

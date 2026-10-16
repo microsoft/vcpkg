@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4631864..080285c 100644
+index 363723a..c7eba7d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,7 +4,7 @@ project(ZIMPL
-     VERSION 3.7.1
+     VERSION 3.8.0
      LANGUAGES C)
  
 -if(CMAKE_BUILD_TYPE STREQUAL "Debug")

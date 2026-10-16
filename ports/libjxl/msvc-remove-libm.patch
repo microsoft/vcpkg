@@ -1,8 +1,8 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index f80cbfb..f746bc1 100644
+index b814b33..0f67109 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -159,6 +159,14 @@ elseif(LIBCXX)
+@@ -178,6 +178,14 @@ elseif(LIBCXX)
    set(PKGCONFIG_CXX_LIB "-lc++")
  endif()
  
@@ -17,28 +17,11 @@ index f80cbfb..f746bc1 100644
  # The jxl_cms library definition.
  include(jxl_cms.cmake)
  # The jxl library definition.
-diff --git a/lib/jxl.cmake b/lib/jxl.cmake
-index 59b2cca..b5db0c8 100644
---- a/lib/jxl.cmake
-+++ b/lib/jxl.cmake
-@@ -271,10 +271,10 @@ set(JPEGXL_LIBRARY_REQUIRES
- 
- if (BUILD_SHARED_LIBS)
-   set(JPEGXL_REQUIRES_TYPE "Requires.private")
--  set(JPEGXL_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  set(JPEGXL_PRIVATE_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
- else()
-   set(JPEGXL_REQUIRES_TYPE "Requires")
--  set(JPEGXL_PUBLIC_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  set(JPEGXL_PUBLIC_LIBS "${PKGCONFIG_MATH_LIB} ${PKGCONFIG_CXX_LIB}")
- endif()
- 
- configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl.pc.in"
 diff --git a/lib/jxl_cms.cmake b/lib/jxl_cms.cmake
-index 62d5b65..a50b441 100644
+index 582b842..8e8287e 100644
 --- a/lib/jxl_cms.cmake
 +++ b/lib/jxl_cms.cmake
-@@ -62,10 +62,10 @@ install(TARGETS jxl_cms
+@@ -70,10 +70,10 @@ install(TARGETS jxl_cms
  
  if (BUILD_SHARED_LIBS)
    set(JPEGXL_REQUIRES_TYPE "Requires.private")

@@ -1,5 +1,5 @@
 diff --git a/cmake/Modules/HandleCompilerRT.cmake b/cmake/Modules/HandleCompilerRT.cmake
-index 6865f45175..33dda44d18 100644
+index 9398d99..84d9353 100644
 --- a/cmake/Modules/HandleCompilerRT.cmake
 +++ b/cmake/Modules/HandleCompilerRT.cmake
 @@ -20,25 +20,25 @@ function(get_component_name name variable)
@@ -37,10 +37,10 @@ index 6865f45175..33dda44d18 100644
    else()
      set(component_name "${name}")
 diff --git a/libcxxabi/src/CMakeLists.txt b/libcxxabi/src/CMakeLists.txt
-index f4722c3b35..a553615ebc 100644
+index dd23e9b..46c5857 100644
 --- a/libcxxabi/src/CMakeLists.txt
 +++ b/libcxxabi/src/CMakeLists.txt
-@@ -134,7 +134,7 @@ if ( APPLE )
+@@ -140,7 +140,7 @@ if ( APPLE )
    # Make sure we link in CrashReporterClient if we find it -- it's used by
    # abort() on Apple platforms when building the system dylib.
    find_library(CrashReporterClient NAMES libCrashReporterClient.a
@@ -50,10 +50,10 @@ index f4722c3b35..a553615ebc 100644
      message(STATUS "Linking with CrashReporterClient at ${CrashReporterClient}")
      add_library_flags("${CrashReporterClient}")
 diff --git a/lldb/tools/debugserver/source/CMakeLists.txt b/lldb/tools/debugserver/source/CMakeLists.txt
-index f0b9756bec..0c784545c4 100644
+index 3c1ddf8..0aa4fd3 100644
 --- a/lldb/tools/debugserver/source/CMakeLists.txt
 +++ b/lldb/tools/debugserver/source/CMakeLists.txt
-@@ -125,17 +125,17 @@ if(APPLE)
+@@ -152,17 +152,17 @@ if(APPLE)
    set(LIBCOMPRESSION compression)
    if(APPLE_EMBEDDED)
      find_library(BACKBOARD_LIBRARY BackBoardServices
@@ -76,25 +76,27 @@ index f0b9756bec..0c784545c4 100644
      endif()
  
      if(NOT BACKBOARD_LIBRARY)
-@@ -158,7 +158,7 @@ endif()
+@@ -187,8 +187,8 @@ add_definitions(-DLLDB_USE_OS_LOG)
  
- add_definitions(-DLLDB_USE_OS_LOG)
+ # Make sure we have the macOS SDK root as mig needs it and will silently
+ # fail to generate its output files without it.
+-if(CMAKE_OSX_SYSROOT)
+-  set(MIG_SYSROOT ${CMAKE_OSX_SYSROOT})
++if(_CMAKE_OSX_SYSROOT_PATH)
++  set(MIG_SYSROOT ${_CMAKE_OSX_SYSROOT_PATH})
+ else()
+   execute_process(COMMAND xcrun --show-sdk-path
+     OUTPUT_VARIABLE MIG_SYSROOT
+@@ -200,7 +200,7 @@ if(NOT MIG_SYSROOT)
+   message(FATAL_ERROR "Unable to obtain sysroot required by mig (Mach Interface Generator). Set CMAKE_OSX_SYSROOT to explicitly specify a sysroot.")
+ endif()
  
 -if(${CMAKE_OSX_SYSROOT} MATCHES ".Internal.sdk$")
 +if(${_CMAKE_OSX_SYSROOT_PATH} MATCHES ".Internal.sdk$")
    message(STATUS "LLDB debugserver energy support is enabled")
    add_definitions(-DLLDB_ENERGY)
    set(ENERGY_LIBRARY -lpmenergy -lpmsample)
-@@ -181,7 +181,7 @@ endif()
- separate_arguments(MIG_ARCH_FLAGS_SEPARTED NATIVE_COMMAND "${MIG_ARCH_FLAGS}")
- 
- add_custom_command(OUTPUT ${generated_mach_interfaces}
--  VERBATIM COMMAND mig ${MIG_ARCH_FLAGS_SEPARTED} -isysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CURRENT_SOURCE_DIR}/MacOSX/dbgnub-mig.defs
-+  VERBATIM COMMAND mig ${MIG_ARCH_FLAGS_SEPARTED} -isysroot ${_CMAKE_OSX_SYSROOT_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/MacOSX/dbgnub-mig.defs
-   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/MacOSX/dbgnub-mig.defs
-   )
- 
-@@ -305,7 +305,7 @@ if(APPLE_EMBEDDED)
+@@ -346,7 +346,7 @@ if(APPLE_EMBEDDED)
      WITH_BKS
      )
    set_property(TARGET lldbDebugserverCommon APPEND PROPERTY COMPILE_FLAGS
@@ -104,10 +106,10 @@ index f0b9756bec..0c784545c4 100644
  
    add_lldb_library(lldbDebugserverCommon_NonUI ${lldbDebugserverCommonSources})
 diff --git a/llvm/test/CMakeLists.txt b/llvm/test/CMakeLists.txt
-index 6127b76db0..0a810db531 100644
+index 201f0ee..c08ee13 100644
 --- a/llvm/test/CMakeLists.txt
 +++ b/llvm/test/CMakeLists.txt
-@@ -33,6 +33,7 @@ configure_lit_site_cfg(
+@@ -40,6 +40,7 @@ configure_lit_site_cfg(
    MAIN_CONFIG
    ${CMAKE_CURRENT_SOURCE_DIR}/lit.cfg.py
    PATHS

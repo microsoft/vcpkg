@@ -26,7 +26,7 @@ int main()
     /* API Extensions, https://luajit.org/ext_c_api.html */
     int result = luaJIT_setmode(L, 0, LUAJIT_MODE_ENGINE | LUAJIT_MODE_FLUSH);
     if (result != LUAJIT_SETMODE_SUCCESS) {
-        printf("luaJIT_setmode failed\n");        
+        printf("luaJIT_setmode failed\n");
     }
     else if (luaL_dostring(L, "print('luaJIT_setmode succeeded')\nprint(package.path)") == LUA_OK) {
         lua_pop(L, lua_gettop(L));

@@ -1,0 +1,17 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 3f1f32a..149dc11 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -15,6 +15,12 @@ if(WIN32 AND BUILD_SHARED_LIBS)
+ endif()
+ 
+ add_library(nfs ${SOURCES})
++target_include_directories(nfs
++    PUBLIC
++        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++        $<INSTALL_INTERFACE:include>
++)
++
+ target_link_libraries(nfs PRIVATE ${CORE_LIBRARIES} PUBLIC ${SYSTEM_LIBRARIES})
+ 
+ # Set version properties for the library

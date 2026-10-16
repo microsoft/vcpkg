@@ -1,16 +1,21 @@
+vcpkg_download_distfile(ANDROID_PTHREAD_PATCH
+    URLS https://github.com/Unidata/netcdf-c/commit/0afb69e1467cbaf6b37bbbd08ba6fcf83e498826.patch?full_index=1
+    FILENAME netcdf-c-android-pthread-0afb69e1467cbaf6b37bbbd08ba6fcf83e498826.patch
+    SHA512 46d9d80e1bb042838ecac33f3ea2545003f4bfb8945f0da93c0d8f1b76b6a2587cb9c9197daf6ab8fdf5c9bf0971dc963dd2d09c4b427c4e68e6fb5a8849ec12
+)
 vcpkg_download_distfile(WINDOWS_STAT1_PATCH
     URLS https://github.com/Unidata/netcdf-c/commit/02ba4e90a8b7683277e353c92a6b1627bb8e3dfd.patch?full_index=1
-    FILENAME windows-stat1-02ba4e90a8b7683277e353c92a6b1627bb8e3dfd.patch
+    FILENAME netcdf-c-windows-stat1-02ba4e90a8b7683277e353c92a6b1627bb8e3dfd.patch
     SHA512 a4b74b3f93c12696aaeb500ed27e65676f06cc14f0e1cd43664af344ce5b294409e26d68190a1c6ce9050f231902901d7afba2a5718b9759beaf069cb3d91bf0
 )
 vcpkg_download_distfile(WINDOWS_STAT2_PATCH
     URLS https://github.com/Unidata/netcdf-c/commit/d97667994ecc8ac30d4f5ea59b440b4187ab5328.patch?full_index=1
-    FILENAME windows-stat2-d97667994ecc8ac30d4f5ea59b440b4187ab5328.patch
+    FILENAME netcdf-c-windows-stat2-d97667994ecc8ac30d4f5ea59b440b4187ab5328.patch
     SHA512 dc1f4370ea65a35a2e99bdeed721b584fca9440733fed4b7a618e12b8338422bbd1fe586acd44623da7b686de17b7c2103735cc14be38ae332a13187f6855474
 )
 vcpkg_download_distfile(WINDOWS_STAT3_PATCH
     URLS https://github.com/Unidata/netcdf-c/commit/22a370fcf1332674f718395c889524b50ddb836a.patch?full_index=1
-    FILENAME windows-stat3-22a370fcf1332674f718395c889524b50ddb836a.patch
+    FILENAME netcdf-c-windows-stat3-22a370fcf1332674f718395c889524b50ddb836a.patch
     SHA512 de289c0d7afd2c0463d6719b2fadb2ecaddbcea4b94ea0d255d4c41cc3efc9cd30af92a56ae693a65465a9e98b59ca830d51994e30f71179ef50f61c61efd41d
 )
 
@@ -28,7 +33,7 @@ vcpkg_from_github(
         plugin-install-dir.diff
         fstat.patch
         backport-d7895f6.diff  # cf. https://github.com/Unidata/netcdf-c/pull/3237
-        android-pthread.diff
+        "${ANDROID_PTHREAD_PATCH}"
         "${WINDOWS_STAT1_PATCH}"
         "${WINDOWS_STAT2_PATCH}"
         "${WINDOWS_STAT3_PATCH}"

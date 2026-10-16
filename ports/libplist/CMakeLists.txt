@@ -68,7 +68,6 @@ install(
 )
 
 set(PACKAGE_NAME libplist)
-set(PACKAGE_VERSION 2.0)
 set(prefix "")
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")

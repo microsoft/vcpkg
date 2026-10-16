@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/snmalloc
     REF "${VERSION}"
-    SHA512 ef15272dc488f87e59d273b7db780f2bdfdea9d539c9d7a56987dffd62cd4e0daaf46d6138a3aa1f7c77ab14a71c47d66d1250248e1e87060c5bb8e1ede709ba
+    SHA512 eb49ebd8eea6d7639cbcedb795469c8ed47f4324ad86cec50ddca76c187f612b5588df6d3316c5d292ead31e96956f5556611fde8fee38f436d5e97b1449a979
     HEAD_REF main
 )
 

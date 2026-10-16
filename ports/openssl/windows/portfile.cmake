@@ -24,6 +24,12 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     else()
         set(OPENSSL_ARCH VC-WIN64-CLANGASM-ARM)
     endif()
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64ec")
+    # OpenSSL has no ARM64EC target (https://github.com/openssl/openssl/issues/16482).
+    # The toolchain flags (/arm64EC, /machine:ARM64EC) make this ARM64 target build ARM64EC code.
+    # OpenSSL's ARM64 assembly uses registers that the ARM64EC ABI reserves, so it must stay disabled.
+    set(OPENSSL_ARCH VC-WIN64-ARM)
+    vcpkg_list(APPEND CONFIGURE_OPTIONS no-asm)
 else()
     message(FATAL_ERROR "Unsupported target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
@@ -82,7 +88,7 @@ vcpkg_build_nmake(
     PREFER_JOM
     CL_LANGUAGE NONE
     PRERUN_SHELL_RELEASE "${PERL}" Configure
-        ${CONFIGURE_OPTIONS} 
+        ${CONFIGURE_OPTIONS}
         ${OPENSSL_ARCH}
         "AS=${as}"
         "CC=${cc}"

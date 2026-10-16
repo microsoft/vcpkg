@@ -5,7 +5,7 @@ block(SCOPE_FOR VARIABLES)
     add_executable(main main.cpp)
 
     find_package(unofficial-subversion CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE 
+    target_link_libraries(main PRIVATE
         unofficial::subversion::svn_client
         unofficial::subversion::svn_delta
         unofficial::subversion::svn_diff

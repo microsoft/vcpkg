@@ -1,7 +1,7 @@
 {
   "name": "bitmagic",
-  "version": "9.2.1",
+  "version": "9.3.2",
   "description": "Algorithms and tools for Algebra of Sets for information retrieval, indexing of databases, scientific algorithms, ranking, clustering, unsupervised machine learning and signal processing.",
-  "homepage": "http://bitmagic.io",
-  "license": null
+  "homepage": "https://bitmagic.io",
+  "license": "Apache-2.0 AND LicenseRef-BitMagic-Attribution AND MIT"
 }

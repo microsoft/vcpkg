@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hunspell/hunspell
     REF "v${VERSION}"
-    SHA512 f279ae2c7cd71edc2a1a5977e27426205d58f6520011dfdce702073e4ca6ab439b4618dde4482cdb5b8176650d7b97c1275038b6c749134251094a59ef5a919a
+    SHA512 0d9e81e432bd41ca7c751a2d2fa5d285816f3ffd128196fd53e4e72a4777720fe6e4b092483e39fe9a44a66b0afabbefa49446b2d38bf2e154421a64b8f363e4
     HEAD_REF master
     PATCHES
         0005-autotools-subdirs.patch

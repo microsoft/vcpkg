@@ -1,5 +1,3 @@
-string(REGEX REPLACE "^([0-9]+\\.[0-9]+)\\..*$" "\\1" VERSION_MAJOR_MINOR "${VERSION}")
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
@@ -8,16 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
     REF "v${VERSION}"
-    SHA512 2e043f69569fe8e2b596d8606399934fd33eb9bea96793655482676a16319a732a3238f72605f2b4fecb37417f86215da3fbbdc9a5604ca1b7731ac944c7c610
+    SHA512 fc4f7d02de22527492ebc8aa16a91447b0edaba4ce1f242dbdfc3fdda67dc9fe4403b04d59bb30346c1411aa75b552ec34db26b291cbf3fbc764b936d0abe226
     HEAD_REF main
     PATCHES
         shared-zstd.patch
-)
-
-vcpkg_replace_string(
-    "${SOURCE_PATH}/cmake/CheckCXXIntrinsicsSpecific.cmake"
-    "check_cxx_source_runs"
-    "check_cxx_source_compiles"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -43,9 +35,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL-${VERSION_MAJOR_MINOR})
-
-file(COPY "${CURRENT_PACKAGES_DIR}/include/SEAL-${VERSION_MAJOR_MINOR}/seal" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SEAL)
 
 # Provides pkg-config files only on UNIX.
 if(NOT VCPKG_TARGET_IS_WINDOWS)

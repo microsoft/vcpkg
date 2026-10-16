@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-cmake.patch
+        fix-fmt12-include.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -39,6 +40,22 @@ if(AVRO_BUILD_EXECUTABLES)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# The build defines the codec macros with directory-scoped add_definitions(), so installed headers never see them and
+# DataFile.hh hides SNAPPY_CODEC/ZSTD_CODEC from consumers. Record the enabled codecs in the installed Config.hh.
+set(codec_definitions "")
+foreach(codec IN ITEMS snappy zstd)
+    if(codec IN_LIST FEATURES)
+        string(TOUPPER "${codec}" codec_upper)
+        string(APPEND codec_definitions "\n#ifndef ${codec_upper}_CODEC_AVAILABLE\n#define ${codec_upper}_CODEC_AVAILABLE\n#endif\n")
+    endif()
+endforeach()
+if(codec_definitions)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/avro/Config.hh"
+        "#define avro_Config_hh\n"
+        "#define avro_Config_hh\n${codec_definitions}"
+    )
+endif()
 
 vcpkg_install_copyright(
     FILE_LIST

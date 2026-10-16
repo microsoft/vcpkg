@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PCRE2Project/pcre2
     REF "pcre2-${VERSION}"
-    SHA512 4deef8ce95711e65fe07624e6b2aace794594adb15e8363a0279a7b947bf5c75a5858fbdc5251d0a28a7ca97ae8bba561aa5f85805d5c07d417d3e7b3b3486a4
+    SHA512 8257285809a9a4afb441869936740ae5ff04cc4bd95f86c8e4b9fd41f3b6a194e88d0aaa1c2cfc01b8845984993736fa5e77201c82021842acc87451d8f62f8b
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
+        fix-msvc-pdb-install.patch
 )
 
 vcpkg_from_github(

@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index ef899b881d..9ed1836608 100644
+index 30cad5a..75a57fc 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -6712,7 +6712,7 @@ done
+@@ -7485,7 +7485,7 @@ done
  
  # check if OpenSSL libraries work as expected
  WITH_SAVE_ENV([
@@ -11,7 +11,7 @@ index ef899b881d..9ed1836608 100644
    CFLAGS="$CFLAGS $OPENSSL_INCLUDES"
    LDFLAGS="$LDFLAGS $OPENSSL_LDFLAGS $OPENSSL_LDFLAGS_RPATH"
  
-@@ -6737,7 +6737,7 @@ WITH_SAVE_ENV([
+@@ -7510,7 +7510,7 @@ WITH_SAVE_ENV([
  ])
  
  WITH_SAVE_ENV([

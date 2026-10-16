@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7ebc9480a..dbf1ddcca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -231,7 +231,7 @@ if (BUILD_TESTING)
+ endif()
+ 
+ if (NOT CMAKE_CROSSCOMPILING)
+-  add_subdirectory(benchmark)
++  add_subdirectory(benchmark EXCLUDE_FROM_ALL)
+ endif()
+ 
+ 
+@@ -1474,7 +1474,7 @@ if (EMSCRIPTEN)
+ endif()
+ 
+ if (NOT CMAKE_CROSSCOMPILING)
+-  add_executable(tg_cli td/telegram/cli.cpp ${TL_TD_JSON_SOURCE})
++  add_executable(tg_cli EXCLUDE_FROM_ALL td/telegram/cli.cpp ${TL_TD_JSON_SOURCE})
+ 
+   if (NOT READLINE_FOUND)
+     find_package(Readline QUIET)
+diff --git a/td/generate/CMakeLists.txt b/td/generate/CMakeLists.txt
+index 9e71ad2a1..078ee1740 100644
+--- a/td/generate/CMakeLists.txt
++++ b/td/generate/CMakeLists.txt
+@@ -138,7 +138,7 @@ set(TL_GENERATE_JSON_SOURCE
+ )
+ 
+ if (NOT CMAKE_CROSSCOMPILING)
+-  find_program(PHP_EXECUTABLE php)
++  set(PHP_EXECUTABLE OFF)
+ 
+   if ((CMAKE_SYSTEM_NAME MATCHES "FreeBSD") AND (CMAKE_SYSTEM_VERSION MATCHES "HBSD"))
+     set(PHP_EXECUTABLE "PHP_EXECUTABLE-NOTFOUND")

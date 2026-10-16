@@ -70,6 +70,16 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventTargets-${_t
 )
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libevent/LibeventConfig.cmake "${SOURCE_PATH}/include;${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include" "")
 vcpkg_fixup_pkgconfig()
+
+if(NOT VCPKG_BUILD_TYPE AND (VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_WINDOWS))
+    file(GLOB debug_pkgconfig_files "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+    foreach(debug_pkgconfig_file IN LISTS debug_pkgconfig_files)
+        file(READ "${debug_pkgconfig_file}" contents)
+        string(REGEX REPLACE "-levent(_[A-Za-z0-9]+)?" "-levent\\1d" contents "${contents}")
+        file(WRITE "${debug_pkgconfig_file}" "${contents}")
+    endforeach()
+endif()
+
 vcpkg_copy_pdbs()
 
 #Handle copyright

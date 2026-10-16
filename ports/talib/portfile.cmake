@@ -1,52 +1,30 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO "TA-Lib/ta-lib"
-    REF "v${VERSION}"
-    SHA512 c8b9daf922cc98119e96a5bdb54187669e2f26be53fded8c7056630496b1410848fca7d37ff895f1ce8d6449853174ce2b5d2b3153ddbdc854af69c9c8ea68c7
-    PATCHES
-        fix-forced-install-prefix.patch
-        no-system-cleanup.patch
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/TA-Lib/ta-lib/releases/download/v${VERSION}/ta-lib-${VERSION}-src.tar.gz"
+    FILENAME "ta-lib-${VERSION}-src.tar.gz"
+    SHA512 bc75fba8915c774b37d7456e4a0739549e691ba56cb92b2cccb73a14351ba0eef15118333868ffe24c919f11cfb76977a0b10feaf472b40eaa2c2df0a43e8f8c
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TALIB_BUILD_STATIC)
 
-# Since upstream 0.6.1 the only supported build systems are CMake and
-# autotools on every platform; the make/ msvc tree this port used to
-# drive on Windows no longer exists in the source archive.
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_DEV_TOOLS=OFF
+        -DBUILD_STATIC_LIBS=${TALIB_BUILD_STATIC}
 )
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-# Upstream always builds and installs both the shared and the static
-# library. Keep only what matches the triplet's linkage.
-if(VCPKG_TARGET_IS_WINDOWS)
-    # Static-only on Windows: drop the DLL and its import library, and
-    # let the static library take the canonical name.
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/ta-lib.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib.lib")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/ta-lib-static.lib" "${CURRENT_PACKAGES_DIR}/lib/ta-lib.lib")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib-static.lib")
+    if(NOT VCPKG_BUILD_TYPE)
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/ta-lib.lib")
     endif()
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(GLOB _talib_shared
-        "${CURRENT_PACKAGES_DIR}/lib/libta-lib*.so*"
-        "${CURRENT_PACKAGES_DIR}/lib/libta-lib*.dylib"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libta-lib*.so*"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libta-lib*.dylib")
-    if(_talib_shared)
-        file(REMOVE ${_talib_shared})
-    endif()
-else()
-    file(REMOVE
-        "${CURRENT_PACKAGES_DIR}/lib/libta-lib.a"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/libta-lib.a")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -56,5 +34,4 @@ file(INSTALL
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
-# License file
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

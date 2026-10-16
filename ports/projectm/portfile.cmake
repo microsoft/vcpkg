@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO projectM-visualizer/projectm
     REF "v${VERSION}"
-    SHA512 "dbb3088c5a0db9eaabd4d2c3232df2dd939a4b1ce5928916a63e7b10cd4321b749d779a5e39a883a12318c613f91f3b4241973958edf52291d53e1b3dc348c77"
+    SHA512 "8b3bb6c0503493fbef455b644e57f4f8c56a92f4217f6914baacb19222412a45a5b45531e22609c81f479c46776164103450e3873f121dc859dc023a8139ae4d"
     HEAD_REF master
     PATCHES
         macos-pkgconfig.patch

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF "v${VERSION}"
-    SHA512 8471e97cbcdcddae7bac5350bec56527c35018a5cbe75474544edf212424529987dd5f74479d6274911db7aaeac355bcf911fe9fdd170b0cc54de70f8aa3549e
+    SHA512 09288151e2ca10678b239606c6bb99fefcbb63a7f5a4ce8c01f8727dd91449919aedae5ec593a75ea6816418c07c48ea5b3066628ceca50e406c08c41d5772fd
     HEAD_REF master
     PATCHES
       android.patch
@@ -73,6 +73,14 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(
+    COMMENT [[
+PCG and base64 reference Apache-2.0 and BSD terms without including the full texts.
+libc_time only names musl's MIT license; parse_num includes MIT terms but no copyright holder.
+The OPC Foundation schema is installed and also generates the library's standard data types.
+]]
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE-CC0"
+        "${SOURCE_PATH}/deps/README.md"
+        "${SOURCE_PATH}/tools/schema/Opc.Ua.Types.bsd"
 )

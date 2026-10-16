@@ -9,6 +9,7 @@ vcpkg_from_github(
         protobuf-6.patch
         levelzero-prepareheaders.patch
         android-ignore-onetbb-warning.patch
+        fix-onednn-include-order.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

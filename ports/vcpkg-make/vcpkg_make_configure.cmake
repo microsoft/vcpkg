@@ -31,7 +31,7 @@ function(vcpkg_make_configure)
 
     set(prepare_flags_opts "")
     if(arg_DISABLE_MSVC_WRAPPERS)
-        list(APPEND prepare_flags_opts "DISABLE_MSVC_WRAPPERS")        
+        list(APPEND prepare_flags_opts "DISABLE_MSVC_WRAPPERS")
     endif()
     if(arg_DISABLE_CPPFLAGS)
         list(APPEND prepare_flags_opts "DISABLE_CPPFLAGS")
@@ -70,7 +70,7 @@ function(vcpkg_make_configure)
     set(cm_FLAGS AR AS CC C CCAS CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R RC UPC Y)
 
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
-    vcpkg_backup_env_variables(VARS 
+    vcpkg_backup_env_variables(VARS
         ${cm_FLAGS}
     # General backup
         PATH
@@ -120,20 +120,20 @@ function(vcpkg_make_configure)
                                     "${configure_env}"
                                  CONFIGURE_PATH
                                     "${configure_path_from_wd}"
-                                 OPTIONS 
+                                 OPTIONS
                                     ${BUILD_TRIPLET}
                                     ${arg_OPTIONS}
                                     ${opts}
                                     ${arg_OPTIONS_${configup}}
-                                 WORKING_DIRECTORY 
-                                    "${target_dir}" 
+                                 WORKING_DIRECTORY
+                                    "${target_dir}"
                                  ${extra_configure_opts}
                                 )
     endforeach()
 
     # Restore environment
-    vcpkg_restore_env_variables(VARS 
-        ${cm_FLAGS} 
+    vcpkg_restore_env_variables(VARS
+        ${cm_FLAGS}
         C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
         INCLUDE LIB LIBPATH _CL_ _LINK_
         EMMAKEN_JUST_CONFIGURE

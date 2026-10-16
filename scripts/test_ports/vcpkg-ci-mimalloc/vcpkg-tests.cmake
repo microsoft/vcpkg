@@ -50,7 +50,7 @@ if(NOT CMAKE_CROSSCOMPILING)
         get_target_property(type ${target} TYPE)
         if(type STREQUAL "EXECUTABLE")
             add_custom_target(run-${target} ALL COMMAND ${target})
-        endif()       
+        endif()
     endforeach()
 endif()
 

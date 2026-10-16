@@ -21,7 +21,7 @@ else()
     list(APPEND FEATURE_OPTIONS -DINPUT_open62541=no)
 endif()
 
-set(TOOL_NAMES 
+set(TOOL_NAMES
         qopcuaxmldatatypes2cpp
 )
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

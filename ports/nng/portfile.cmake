@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
     REF "v${VERSION}"
-    SHA512 15f659805ea8a66a6dc4273a0f28ab1593ef82038ef0870207b1b5ab8c621df15d27253f1fd9c87e5a705f3198ef5eebe9ecaa0e2479af8bc5bb847fcebf2d06
+    SHA512 b271eccb3f422df878c3c51161eb1eb3e8c483974e7d34913212c30bd2f4c72dd8cc6d45015828a769544e6a7b0cb8d103887d2b709f803ca5be4bcf302bd4e7
     HEAD_REF master
+    PATCHES
+        fix-static-mbedtls-export.patch
 )
 
 vcpkg_check_features(

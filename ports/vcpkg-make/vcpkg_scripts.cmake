@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 function(vcpkg_insert_into_path)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "" 
+        ""
         "PATH_OUT;APPENDED_OUT"
         "BEFORE;INSERT"
     )
@@ -51,7 +51,7 @@ endfunction()
 
 function(vcpkg_insert_msys_into_path msys_out)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "" 
+        ""
         "PATH_OUT"
         "PACKAGES"
     )
@@ -61,7 +61,7 @@ function(vcpkg_insert_msys_into_path msys_out)
     cmake_path(CONVERT "$ENV{LOCALAPPDATA}" TO_CMAKE_PATH_LIST local_app_data NORMALIZE)
     file(REAL_PATH "${system_root}" system_root)
 
-    vcpkg_list(SET find_system_dirs 
+    vcpkg_list(SET find_system_dirs
         "${system_root}/system32"
         "${system_root}/System32"
         "${system_root}/system32/"
@@ -156,7 +156,7 @@ function(vcpkg_prepare_pkgconfig config)
     vcpkg_find_acquire_program(PKGCONFIG)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
-    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH}
                             # After installation, (merged) 'lib' is always searched before 'share'.
                             "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig"
                             "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig"

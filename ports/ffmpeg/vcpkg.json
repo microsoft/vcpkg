@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "port-version": 1,
   "description": [
     "A library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -176,14 +176,6 @@
             "opengl"
           ],
           "platform": "!uwp & !(arm64 & windows)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "tensorflow"
-          ],
-          "platform": "x64 & !static & !uwp & !windows"
         },
         {
           "name": "ffmpeg",
@@ -652,13 +644,6 @@
     "swscale": {
       "description": "Build the swscale library"
     },
-    "tensorflow": {
-      "description": "TensorFlow as a DNN module backend for DNN based filters like sr",
-      "supports": "!static",
-      "dependencies": [
-        "tensorflow"
-      ]
-    },
     "tesseract": {
       "description": "Tesseract, needed for ocr filter",
       "supports": "!static",
@@ -712,8 +697,13 @@
       ]
     },
     "vulkan": {
-      "description": "H.264, HEVC and AV1 de/encoding via Vulkan",
+      "description": "Vulkan video de/encoding (H.264, HEVC, AV1), Vulkan encoding (FFV1, ProRes), and Vulkan filters",
       "dependencies": [
+        {
+          "name": "shaderc",
+          "host": true
+        },
+        "spirv-headers",
         "vulkan-headers"
       ]
     },

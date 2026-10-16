@@ -17,7 +17,7 @@ string(REPLACE "/" "_" logname "make_rpath_absolute-${lib_dir}")
         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
         LOGNAME "${logname}-id"
     )
-    
+
     vcpkg_execute_required_process(
         COMMAND "install_name_tool" -change @rpath/librpath-macho-backend-lib++.dylib ${CURRENT_INSTALLED_DIR}/${lib_dir}/librpath-macho-backend-lib++.dylib ${CURRENT_PACKAGES_DIR}/${lib_dir}/librpath-macho-test-lib.dylib
         WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"

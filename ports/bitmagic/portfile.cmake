@@ -1,9 +1,10 @@
-# Header-only library
+set(VCPKG_BUILD_TYPE "release") # header-only port
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tlk00/BitMagic
     REF "v${VERSION}"
-    SHA512 2a7ac70a62a25662221afd9c6ff2e978492e7ecf913b480567ce0a105e46bcf3a9efe13e7c9276825ea0ea8d59ba9764ac2658bff6f52aefa7590d9decbc8fd0
+    SHA512 0efc2b8e0e6b4c10b71ea5a5f41756ef82fa213631a850155c7e427b6a2d18a9f5cbe58fbea81b4a59ae5ccba996bc9880b73069ac459fe54bdb25a13fdf689a
     HEAD_REF master
 )
 

@@ -1,18 +1,8 @@
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 61ad0a6..bbad89a 100644
+index 4b3f23fa..8fb1b1d7 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -494,7 +494,9 @@ IF(WITH_MYSQLCOMPAT)
-   ENDIF()
- ENDIF()
- 
-+if(NOT BUILD_SHARED_LIBS)
- create_symlink(libmariadb${CMAKE_STATIC_LIBRARY_SUFFIX} mariadbclient ${INSTALL_LIBDIR})
-+endif()
- 
- SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION
-  ${CPACK_PACKAGE_VERSION_MAJOR}
-@@ -502,27 +504,44 @@ SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION
+@@ -472,21 +472,38 @@ SET_TARGET_PROPERTIES(libmariadb PROPERTIES VERSION
  
  IF(NOT WIN32)
    SET_TARGET_PROPERTIES(mariadbclient PROPERTIES OUTPUT_NAME "${LIBMARIADB_STATIC_NAME}")
@@ -40,17 +30,11 @@ index 61ad0a6..bbad89a 100644
 +        ARCHIVE
          DESTINATION ${INSTALL_LIBDIR})
  ELSE()
- # in cmake 3.12+ we can use
- #INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
- #        COMPONENT SharedLibraries NAMELINK_COMPONENT Development)
- # but as long as we build on CentOS 7 with its cmake 2.8.12.2 we have to use
 -INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
 +INSTALL(TARGETS libmariadb
 +        EXPORT unofficial-libmariadb-targets
 +        LIBRARY DESTINATION ${INSTALL_LIBDIR}
-         COMPONENT SharedLibraries NAMELINK_SKIP)
- INSTALL(TARGETS libmariadb LIBRARY DESTINATION ${INSTALL_LIBDIR}
-         COMPONENT Development NAMELINK_ONLY)
+         COMPONENT SharedLibraries NAMELINK_COMPONENT Development)
  ENDIF()
 +endif()
  

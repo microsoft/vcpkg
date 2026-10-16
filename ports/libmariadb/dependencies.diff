@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9ccfacb..4e28b38 100644
+index d4c62802..f3cf4c42 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -219,7 +219,12 @@ INCLUDE(${CC_SOURCE_DIR}/cmake/SearchLibrary.cmake)
+@@ -295,7 +295,12 @@ INCLUDE(${CC_SOURCE_DIR}/cmake/SearchLibrary.cmake)
  
  # Compression plugins: ZSTD, ZLIB
  
@@ -15,26 +15,17 @@ index 9ccfacb..4e28b38 100644
 +endif()
  
  IF(WITH_EXTERNAL_ZLIB)
-   IF(NOT ZLIB_FOUND)
-@@ -250,7 +255,7 @@ IF(UNIX)
-   SEARCH_LIBRARY(LIBNSL gethostbyname_r "nsl_r;nsl")
-   SEARCH_LIBRARY(LIBSOCKET setsockopt socket)
-   FIND_PACKAGE(Threads)
--  SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${LIBNSL} ${LIBBIND} ${LIBICONV} ${ZLIB_LIBRARY} 
-+  SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${LIBNSL} ${LIBBIND} ${LIBICONV} ${ZLIB_LIBRARIES}
-       ${LIBSOCKET} ${CMAKE_DL_LIBS} ${LIBM} ${LIBPTHREAD})
-   SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBNSL} ${LIBBIND} ${LIBICONV} 
-     ${LIBSOCKET} ${CMAKE_DL_LIBS} ${LIBM} ${LIBPTHREAD})
-@@ -307,7 +312,7 @@ IF(NOT WITH_SSL STREQUAL "OFF")
-       ADD_DEFINITIONS(-DHAVE_OPENSSL -DHAVE_TLS)
-       SET(SSL_SOURCES "${CC_SOURCE_DIR}/libmariadb/secure/openssl.c"
-                       "${CC_SOURCE_DIR}/libmariadb/secure/openssl_crypt.c")
--      SET(SSL_LIBRARIES ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY})
-+      SET(SSL_LIBRARIES ${OPENSSL_LIBRARIES})
-       IF(WIN32 AND EXISTS ${OPENSSL_INCLUDE_DIR}/openssl/applink.c)
-        SET(HAVE_OPENSSL_APPLINK_C 1)
-       ENDIF()
-@@ -371,7 +376,12 @@ ENDIF()
+   IF(TARGET MariaDB::zlib)
+@@ -389,7 +394,7 @@ IF(WITH_SSL STREQUAL "OPENSSL")
+     add_compile_definitions(HAVE_OPENSSL HAVE_TLS)
+     SET(SSL_SOURCES "${CC_SOURCE_DIR}/libmariadb/secure/openssl.c"
+                     "${CC_SOURCE_DIR}/libmariadb/secure/openssl_crypt.c")
+-    SET(SSL_LIBRARIES ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY})
++    SET(SSL_LIBRARIES ${OPENSSL_LIBRARIES})
+     IF(WIN32 AND EXISTS ${OPENSSL_INCLUDE_DIR}/openssl/applink.c)
+      SET(HAVE_OPENSSL_APPLINK_C 1)
+     ENDIF()
+@@ -462,7 +467,12 @@ ENDIF()
  
  IF(WITH_ICONV)
    IF(NOT WIN32)
@@ -48,7 +39,7 @@ index 9ccfacb..4e28b38 100644
    ENDIF()
  ENDIF()
  
-@@ -431,7 +441,7 @@ ENDIF()
+@@ -522,7 +532,7 @@ ENDIF()
  INCLUDE(${CC_SOURCE_DIR}/plugins/CMakeLists.txt)
  ADD_SUBDIRECTORY(include)
  ADD_SUBDIRECTORY(libmariadb)
@@ -58,20 +49,20 @@ index 9ccfacb..4e28b38 100644
  ENDIF()
  
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 852be8d..61ad0a6 100644
+index 4b3f23fa..bed55b79 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -293,7 +293,7 @@ SET(MARIADB_NONBLOCK_SYMBOLS
+@@ -263,7 +263,7 @@ SET(MARIADB_NONBLOCK_SYMBOLS
  
  # handle static plugins
  SET(LIBMARIADB_SOURCES ${LIBMARIADB_SOURCES} ${LIBMARIADB_PLUGIN_SOURCES})
--SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBMARIADB_PLUGIN_LIBS} ${ZSTD_LIBRARY} ${ZLIB_LIBRARY})
+-SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBMARIADB_PLUGIN_LIBS} ${ZSTD_LIBRARY} ${ZLIB_LIBRARIES})
 +SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBMARIADB_PLUGIN_LIBS} ${ZSTD_LIBRARIES} ${ZLIB_LIBRARIES})
  MESSAGE(STATUS "SYSTEM_LIBS: ${SYSTEM_LIBS}")
  INCLUDE_DIRECTORIES(${LIBMARIADB_PLUGIN_INCLUDES})
- ADD_DEFINITIONS(${LIBMARIADB_PLUGIN_DEFS})
+ FOREACH(plugin ${PLUGINS_STATIC})
 diff --git a/mariadb_config/CMakeLists.txt b/mariadb_config/CMakeLists.txt
-index 4cb0ba9..c15838a 100644
+index f0dc60af..e1edbc9d 100644
 --- a/mariadb_config/CMakeLists.txt
 +++ b/mariadb_config/CMakeLists.txt
 @@ -30,6 +30,22 @@ IF(${rllength} GREATER 0)
@@ -98,7 +89,7 @@ index 4cb0ba9..c15838a 100644
    GET_LIB_NAME(${LIB_NAME} LIB_OUT)
    SET(extra_dynamic_LDFLAGS "${extra_dynamic_LDFLAGS} ${LIB_OUT}")
 diff --git a/mariadb_config/libmariadb.pc.in b/mariadb_config/libmariadb.pc.in
-index 968181a..3f0410d 100644
+index 968181a1..3f0410d5 100644
 --- a/mariadb_config/libmariadb.pc.in
 +++ b/mariadb_config/libmariadb.pc.in
 @@ -16,5 +16,6 @@ Description: MariaDB Connector/C dynamic library

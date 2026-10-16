@@ -1,3 +1,3 @@
-set(qtserialbus_HASH "bb655d719ad753fe06bfe89f1cc02a5b5fa64edf560b9529817b09a9a701b9952806bc18e98f58ebabe78d8207336db250baf613df3e15f8f380d1ebef320ee3")
-set(qtserialbus_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtserialbus-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtserialbus-everywhere-src-6.11.1.tar.xz")
-set(qtserialbus_FILENAME "qtserialbus-everywhere-src-6.11.1.tar.xz")
+set(qtserialbus_HASH "7a81dd4229beffb897570aedde599c3fefa6eabdd86a3b1cbd83bad2c8dbb489353bb01b720f6477e95a7c524210177ea562c93d2a0ec61b34e81f3c295157de")
+set(qtserialbus_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtserialbus-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtserialbus-everywhere-src-6.11.2.tar.xz")
+set(qtserialbus_FILENAME "qtserialbus-everywhere-src-6.11.2.tar.xz")

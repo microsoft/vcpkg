@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Cyan4973/xxHash
     REF "v${VERSION}"
-    SHA512 8b5c8b9aad4e869f28310b12cc314037feda81d92f26c23eaecdb35dc65042ca2e65f2e9606033e62a31bcc737a9a950500ffcbdb8677d6ab20e820ea14f2b79
+    SHA512 1585ae3f3feded2492e43f4dd5dd43183329c57ffe92afa907f71eb26deaf34beab4434458a2d87e8795a4226339c5b0b493bd8a9186bb6f0c752fa1fdef10e3
     HEAD_REF dev
 )
 
@@ -11,7 +11,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/cmake_unofficial"
+    SOURCE_PATH "${SOURCE_PATH}/build/cmake"
     OPTIONS ${FEATURE_OPTIONS}
 )
 
@@ -28,4 +28,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(LICENSE_FILES "${SOURCE_PATH}/LICENSE")
+if("xxhsum" IN_LIST FEATURES)
+    list(APPEND LICENSE_FILES "${SOURCE_PATH}/cli/COPYING")
+endif()
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

@@ -1,5 +1,5 @@
 diff --git a/lang/c++/CMakeLists.txt b/lang/c++/CMakeLists.txt
-index 6800d33..c9ec221 100644
+index 6800d33..8bed2cb 100644
 --- a/lang/c++/CMakeLists.txt
 +++ b/lang/c++/CMakeLists.txt
 @@ -70,12 +70,12 @@ if (WIN32 AND NOT CYGWIN AND NOT MSYS)
@@ -18,8 +18,17 @@ index 6800d33..c9ec221 100644
  endif ()
  
  if (AVRO_BUILD_TESTS OR AVRO_USE_BOOST)
+@@ -149,7 +149,7 @@ function (setup_avro_lib target lib_type)
+     endif ()
+     set_target_properties (${target} PROPERTIES VERSION ${AVRO_VERSION})
+     target_link_libraries (${target} PUBLIC
+-      $<BUILD_INTERFACE:fmt::fmt-header-only>
++      fmt::fmt
+       $<BUILD_INTERFACE:ZLIB::ZLIB>
+       $<BUILD_INTERFACE:$<TARGET_NAME_IF_EXISTS:Snappy::snappy>>
+       $<$<BOOL:${zstd_FOUND}>:$<BUILD_INTERFACE:$<TARGET_NAME_IF_EXISTS:${ZSTD_TARGET}>>>
 diff --git a/lang/c++/cmake/avro-cpp-config.cmake.in b/lang/c++/cmake/avro-cpp-config.cmake.in
-index c943f33..7e7f150 100644
+index c943f33..9d7d809 100644
 --- a/lang/c++/cmake/avro-cpp-config.cmake.in
 +++ b/lang/c++/cmake/avro-cpp-config.cmake.in
 @@ -58,7 +58,14 @@ endif()
@@ -28,10 +37,10 @@ index c943f33..7e7f150 100644
  
 -add_library(avro-cpp::avrocpp_static ALIAS avro-cpp::avrocpp_s)
 -add_library(avro-cpp::avrocpp_shared ALIAS avro-cpp::avrocpp)
-+if(TARGET avro-cpp::avrocpp)
++if(TARGET avro-cpp::avrocpp AND NOT TARGET avro-cpp::avrocpp_shared AND NOT TARGET avro-cpp::avrocpp_static)
 +    add_library(avro-cpp::avrocpp_shared ALIAS avro-cpp::avrocpp)
 +endif()
-+if(TARGET avro-cpp::avrocpp_s)
++if(TARGET avro-cpp::avrocpp_s AND NOT TARGET avro-cpp::avrocpp_static)
 +    add_library(avro-cpp::avrocpp_static ALIAS avro-cpp::avrocpp_s)
 +    if(NOT TARGET avro-cpp::avrocpp)
 +        add_library(avro-cpp::avrocpp ALIAS avro-cpp::avrocpp_s)

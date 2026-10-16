@@ -1,0 +1,14 @@
+diff --git a/build-scripts/cmake/OpenZLCompilerMSVC.cmake b/build-scripts/cmake/OpenZLCompilerMSVC.cmake
+index 1db86e8..f8a37fd 100644
+--- a/build-scripts/cmake/OpenZLCompilerMSVC.cmake
++++ b/build-scripts/cmake/OpenZLCompilerMSVC.cmake
+@@ -2,9 +2,6 @@
+ 
+ # MSVC and clang-cl compiler configuration for OpenZL
+ 
+-# Use static CRT (/MT) to match xgboost and other static dependencies
+-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+-
+ # Detect ClangCL toolset (the standard way)
+ set(USING_CLANG_CL FALSE)
+ if (CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")

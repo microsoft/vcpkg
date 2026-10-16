@@ -1,8 +1,8 @@
 {
   "name": "libsoup",
-  "version": "3.6.6",
+  "version": "3.8.0",
   "description": "HTTP Library for GLib",
-  "homepage": "https://libsoup.gnome.org/",
+  "homepage": "https://libsoup.gnome.org",
   "license": "LGPL-2.0-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
@@ -22,5 +22,19 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "brotli": {
+      "description": "Build with Brotli decompression support",
+      "dependencies": [
+        "brotli"
+      ]
+    },
+    "zstd": {
+      "description": "Build with Zstandard decompression support",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }

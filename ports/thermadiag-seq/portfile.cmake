@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Thermadiag/seq
     REF "v${VERSION}"
-    SHA512 2f5e791f6dcc59985c89b83e43e360cd545a24a94f317fb20e744c985ed93a30579885539d11b446d8b90edc8860394e4dd073f20c751ceeb94dc43367c17459
+    SHA512 e76468c46f95200fdb4f6e8b7389a86b25702c702096e4c8b1022e086141f91e695dd8b2cb072be0b8ed2e68de1c753d1b69758a466301e609d5b11e99fa13b1
     HEAD_REF main
 )
 
@@ -22,4 +22,9 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/seq.pc" "${CURRENT_PACKAGES
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSES/komihash.txt"
+        "${SOURCE_PATH}/LICENSES/sse2neon.txt"
+)

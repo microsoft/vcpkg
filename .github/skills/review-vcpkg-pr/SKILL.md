@@ -8,7 +8,7 @@ description: Review a microsoft/vcpkg pull request end-to-end.
 | Input | Required | Meaning |
 |---|---|---|
 | `pr` | Yes | Pull request number to review. Substituted for `{{PR_NUMBER}}` throughout this skill and the shared guide. |
-| `investigation-root` | No | Directory for large temporary artifacts such as worktrees, sources, builds, examples, and installs. Final deliverables still go under `reviews/` in the caller's current directory. If omitted, infer a short same-drive path when clear; otherwise ask. Never use the Copilot session directory or an arbitrary long temp path. |
+| `investigation-root` | No | Directory for workspaces and intermediate artifacts: sources, builds, installs, logs, and examples. If omitted, infer a short same-drive path when clear; otherwise ask. Never use the Copilot session directory or an arbitrary long temp path. |
 | `review-depth` | No | One of `no-examples`, `examples`, or `examples-and-patches`. Default to `no-examples`. |
 
 ### Example invocations
@@ -18,15 +18,19 @@ description: Review a microsoft/vcpkg pull request end-to-end.
 
 ## Review requirements
 
-Read all of `.github/skills/shared/review-vcpkg-pr-guide.md` before reviewing; every instruction in it is mandatory.
+Before changing directories, resolve `investigation-root` and `reviews/pr-{{PR_NUMBER}}` against the caller's original directory to absolute paths. Use the resolved report directory as `{{REPORT_DIR}}` throughout this skill and the shared guide; never rebase it onto the review workspace.
 
-Review the PR in a detached worktree or equivalent detached-HEAD workspace, with `vcpkg.exe` (Windows) or `vcpkg` (non-Windows) copied into it. For example, after `git worktree add D:\vcpkg2 origin/master`, copy `.\vcpkg.exe` to `D:\vcpkg2`. Do **not** switch branches or run mutable review steps in the caller's current working tree.
+Before leaving the caller's directory, read all of `.github/skills/shared/review-vcpkg-pr-guide.md`; every instruction in it is mandatory.
+
+Review the PR in a detached worktree or equivalent detached-HEAD workspace. Copy the caller's `vcpkg.exe` (Windows) or `vcpkg` (non-Windows) into its root. Do **not** switch branches or run mutable review steps in the caller's working tree.
+
+If `VCPKG_DOWNLOADS` is already nonempty, preserve it for all review commands and subagents. Use that shared directory only through vcpkg; never clean or delete it. Otherwise, do not set it.
 
 ## Required outputs
 
-Write all final deliverables under `reviews/pr-{{PR_NUMBER}}` in the caller's current directory, not under `investigation-root`. The shared guide defines their contents.
+Write only final deliverables in `{{REPORT_DIR}}`, not under `investigation-root`. The shared guide defines their contents:
 
-1. `reviews/pr-{{PR_NUMBER}}/report.md`
-2. `reviews/pr-{{PR_NUMBER}}/patches/*.patch` — only expected if review-depth is `examples-and-patches` and patches were produced
+1. `report.md`, including the guide's self-contained `## Fix handoff` for use without this session's chat history.
+2. `patches/*.patch` -- only for `examples-and-patches`; omit if no patches were produced and explain any unpatched issues in the report.
 
-Do not stop until `reviews/pr-{{PR_NUMBER}}/report.md` exists and is complete.
+Do not stop until `report.md` exists in `{{REPORT_DIR}}` and is complete.

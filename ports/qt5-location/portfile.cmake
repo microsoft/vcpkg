@@ -7,4 +7,5 @@ qt_submodule_installation(
         add-stdint.diff
         add-float-cast.diff
         fix-boost-mpl-constant-expression.patch
+        fix-rapidjson-assignment.patch
 )

@@ -2,9 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lcm-proj/lcm
     REF "v${VERSION}"
-    SHA512 3da9739a03769e609d44a93ae0f6790a604ca05c93639860bdc67843738452894582ca5eccabc3ade61afe519f40d3147f6bf2fe6ec5abcb03c8dd74dd22fb9c
+    SHA512 a9629cf4810def4d29ee427c36c09cf19d3b7b824c3dba7e32efbd79e66771c11bb4e32b6adacc24bc6510e3039bf61e303a33fdcd6494b4329c8e0724939050
     HEAD_REF master
-    PATCHES 
+    PATCHES
         only-install-one-flavor.patch
         glib.link.patch
         disable-docs.patch
@@ -46,4 +46,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/WinSpecific/getopt/getopt.c"
+    "${SOURCE_PATH}/WinSpecific/getopt/getopt_long.c"
+)

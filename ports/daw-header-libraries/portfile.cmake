@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/header_libraries
     REF "v${VERSION}"
-    SHA512 eb09fb16f9b75335d36f4d58e0d10f34ce791e8136e1e7e9c79b2fbeb521eac0f145170e69d6f73f7d223bed4a4f887f67cbe686b3957006484dd99ed4bc4e0a
+    SHA512 0472ef6f244eb764fb3743b0c17b5f77a6bebad5eb845f7310a0df5b98bc85ba4142c7c64fd92f81dc1d4d31cb951625854b81bc1372f7c9b2879235c1efe5a6
     HEAD_REF master
 )
 
@@ -18,4 +18,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.md"
+        "${SOURCE_PATH}/include/daw/compressed_pair.h"
 )

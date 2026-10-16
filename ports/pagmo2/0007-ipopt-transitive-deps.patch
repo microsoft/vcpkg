@@ -1,9 +1,9 @@
 diff --git a/cmake_modules/Findpagmo_IPOPT.cmake b/cmake_modules/Findpagmo_IPOPT.cmake
-index 626c33a..46136bd 100644
+index cfe7bb99..a447101e 100644
 --- a/cmake_modules/Findpagmo_IPOPT.cmake
 +++ b/cmake_modules/Findpagmo_IPOPT.cmake
-@@ -53,5 +53,8 @@ if ("libipopt" IN_LIST pagmo_IPOPT_FIND_COMPONENTS)
-         message(STATUS "Path to libipopt: ${PAGMO_IPOPT_LIBRARY}")
+@@ -58,5 +58,8 @@ if ("libipopt" IN_LIST pagmo_IPOPT_FIND_COMPONENTS)
+         endif ()
          add_library(pagmo::IPOPT::libipopt UNKNOWN IMPORTED)
          set_target_properties(pagmo::IPOPT::libipopt PROPERTIES IMPORTED_LOCATION "${PAGMO_IPOPT_LIBRARY}")
 +        find_package(LAPACK REQUIRED)
