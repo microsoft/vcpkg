@@ -33,4 +33,10 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/unofficial-brpc/unofficial-b
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/butil/third_party/superfasthash")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/NOTICE"
+    "${SOURCE_PATH}/src/butil/third_party/snappy/snappy.h"
+    "${SOURCE_PATH}/src/butil/third_party/snappy/snappy-stubs-internal.h"
+    "${SOURCE_PATH}/src/butil/third_party/symbolize/LICENSE"
+)
