@@ -185,7 +185,7 @@
       "port-version": 0
     },
     "aom": {
-      "baseline": "3.15.1",
+      "baseline": "3.15.2",
       "port-version": 0
     },
     "apache-datasketches": {
@@ -9189,7 +9189,7 @@
       "port-version": 0
     },
     "scintilla": {
-      "baseline": "5.5.8",
+      "baseline": "5.6.7",
       "port-version": 0
     },
     "scinumtools3": {
@@ -9293,7 +9293,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.5.0",
+      "baseline": "4.7.0",
       "port-version": 0
     },
     "seasocks": {
