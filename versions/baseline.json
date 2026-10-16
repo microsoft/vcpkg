@@ -9289,7 +9289,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.5.0",
+      "baseline": "4.7.0",
       "port-version": 0
     },
     "seasocks": {
