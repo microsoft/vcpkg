@@ -8909,7 +8909,7 @@
       "port-version": 1
     },
     "reproc": {
-      "baseline": "14.2.7",
+      "baseline": "14.2.8",
       "port-version": 0
     },
     "rerun-sdk": {
