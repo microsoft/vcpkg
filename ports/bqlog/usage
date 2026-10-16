@@ -1,8 +1,0 @@
-bqlog provides CMake targets:
-
-    find_package(BqLog CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE bqlog::BqLog)
-
-and a pkg-config module:
-
-    pkg-config --cflags --libs bqlog
