@@ -1,0 +1,6 @@
+copacabana provides CMake modules, not a library. Point the consumer at them:
+
+    cmake -DCPM_COPACABANA_SOURCE=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/jfalcou-copacabana ...
+
+or, without CPM, set COPACABANA_SOURCE_DIR to that directory and include
+${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake from your CMakeLists.txt.
