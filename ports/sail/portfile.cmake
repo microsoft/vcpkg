@@ -6,11 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-always-nanosvg.diff
+        fix-android-log.patch
         fix-heif.patch
         fix-include-directory.patch
-        fix-jpegxl-log-android.patch
         fix-libraw-cmake.patch
-        fix-video-log-android.patch
 )
 
 # Enable selected codecs

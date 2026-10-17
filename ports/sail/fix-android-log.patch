@@ -1,0 +1,37 @@
+diff --git a/src/sail-codecs/jpegxl/CMakeLists.txt b/src/sail-codecs/jpegxl/CMakeLists.txt
+index b78e1c39..3cab18d4 100644
+--- a/src/sail-codecs/jpegxl/CMakeLists.txt
++++ b/src/sail-codecs/jpegxl/CMakeLists.txt
+@@ -35,10 +35,14 @@ set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "pkg_config,l
+ # the link through sail-codecs, which exists when codecs are combined into an archive.
+ #
+ if (ANDROID)
+-    set(JPEGXL_SYSTEM_LIBRARIES log)
++    # set(JPEGXL_SYSTEM_LIBRARIES log)
+ 
+-    list(JOIN JPEGXL_SYSTEM_LIBRARIES " " JPEGXL_SYSTEM_LIBRARIES_JOINED)
+-    set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${JPEGXL_SYSTEM_LIBRARIES_JOINED}")
++    # list(JOIN JPEGXL_SYSTEM_LIBRARIES " " JPEGXL_SYSTEM_LIBRARIES_JOINED)
++    # set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${JPEGXL_SYSTEM_LIBRARIES_JOINED}")
++
++    find_library(ANDROID_LOG_LIB log REQUIRED)
++    set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_library,log,log")
++    set(JPEGXL_SYSTEM_LIBRARIES ${ANDROID_LOG_LIB})
+ endif()
+ 
+ set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} PARENT_SCOPE)
+diff --git a/src/sail-codecs/video/CMakeLists.txt b/src/sail-codecs/video/CMakeLists.txt
+index 01cf4f15..7a6079b8 100644
+--- a/src/sail-codecs/video/CMakeLists.txt
++++ b/src/sail-codecs/video/CMakeLists.txt
+@@ -39,6 +39,10 @@ elseif (ANDROID)
+ 
+     list(JOIN VIDEO_SYSTEM_LIBRARIES " " VIDEO_SYSTEM_LIBRARIES_JOINED)
+     set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${VIDEO_SYSTEM_LIBRARIES_JOINED}")
++
++    find_library(ANDROID_LOG_LIB log REQUIRED)
++    set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_library,log,log")
++    list(APPEND VIDEO_SYSTEM_LIBRARIES ${ANDROID_LOG_LIB})
+ endif()
+ 
+ set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} PARENT_SCOPE)
