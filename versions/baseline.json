@@ -9501,7 +9501,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "2.2.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "slick-net": {
