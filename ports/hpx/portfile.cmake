@@ -3,12 +3,21 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HPX_WITH_STATIC_LINKING)
 
+vcpkg_download_distfile(ASIO_1_34_PATCH
+    URLS https://github.com/STEllAR-GROUP/hpx/commit/f073c54f9c69108707dc477c890592049fcd95db.patch?full_index=1
+    FILENAME STEllAR-GROUP-hpx-f073c54f9c69108707dc477c890592049fcd95db.patch
+    SHA512 f7c0020d13e1a9fc67ca70488c0bd4b06449a9013be972d6c2d0d2fdb42b6a646176440acbb13c04441461c2a5251da75384112102fe4308a40f11313c02e4b7
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
     REF "v${VERSION}"
     SHA512 bf22add7a97087f68bd49fe0ae5b2bfbd7ba01d4018872c3934ebd81a632e2559e6144c5aa06779db971c642d5a41b16c8c48108af2c4069be6d9f9b72985182
     HEAD_REF master
+    PATCHES
+        "${ASIO_1_34_PATCH}"
+        fix-asio-resolver.patch
 )
 
 vcpkg_check_features(

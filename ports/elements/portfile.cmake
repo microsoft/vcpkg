@@ -1,5 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+vcpkg_download_distfile(ASIO_1_36_PATCH
+    URLS https://github.com/cycfi/elements/commit/c8c6a0d14b8deb79f6b0f56fff716285e2298395.patch?full_index=1
+    FILENAME cycfi-elements-c8c6a0d14b8deb79f6b0f56fff716285e2298395.patch
+    SHA512 8c6ce837d69622d8f8e3d897fe23419110008061274a7c3bb2ba5947ffc476606eddf5dbfd261de840e1748cd4fa7efe6308014a7e48e2104a5cb49209a7219a
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cycfi/elements
@@ -7,6 +13,7 @@ vcpkg_from_github(
     SHA512 4ab2952d64a6c19de15b24db9bf4523ba26c274847dedf7f1d36b09e5fda0656d0b83d9aa310cc0a81b23c894a8ad00c6a88afc9b0b6c1e76b6469f8bb01603c
     HEAD_REF master
     PATCHES
+        "${ASIO_1_36_PATCH}"
         fix-dependencies.patch
 )
 

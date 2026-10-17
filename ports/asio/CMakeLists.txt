@@ -21,7 +21,7 @@ install(EXPORT asio
 )
 
 install(DIRECTORY
-    asio/include/asio
+    include/asio
     DESTINATION include/
     FILES_MATCHING
         PATTERN "*.hpp"
@@ -29,11 +29,11 @@ install(DIRECTORY
 )
 
 install(FILES
-    asio/include/asio.hpp
+    include/asio.hpp
     DESTINATION include/
 )
 
 set(exec_prefix [[${prefix}]])
 set(package_name [[asio]])
-configure_file(asio/asio.pc.in "${PROJECT_BINARY_DIR}/asio.pc" @ONLY)
+configure_file(asio.pc.in "${PROJECT_BINARY_DIR}/asio.pc" @ONLY)
 install(FILES "${PROJECT_BINARY_DIR}/asio.pc" DESTINATION share/pkgconfig)

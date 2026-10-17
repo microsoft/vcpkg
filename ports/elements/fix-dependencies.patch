@@ -1,8 +1,8 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index e84ca98..7a06ed2 100644
+index 70543b6..5845fdc 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -226,14 +226,7 @@ endif()
+@@ -222,14 +222,7 @@ endif()
  ###############################################################################
  # Cycfi Infra
  
@@ -18,14 +18,14 @@ index e84ca98..7a06ed2 100644
  target_link_libraries(elements PUBLIC cycfi::infra)
  
  ###############################################################################
-@@ -272,15 +265,8 @@ endif()
+@@ -268,15 +261,8 @@ endif()
  ###############################################################################
  # Asio headers
  
 -FetchContent_Declare(
 -  asio
 -  GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
--  GIT_TAG asio-1-29-0
+-  GIT_TAG asio-1-36-0
 -  GIT_SHALLOW TRUE
 -)
 -FetchContent_MakeAvailable(asio)
