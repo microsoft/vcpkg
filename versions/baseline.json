@@ -644,6 +644,10 @@
       "baseline": "2025-04-14",
       "port-version": 0
     },
+    "ball-lang": {
+      "baseline": "1.64.0",
+      "port-version": 0
+    },
     "baresip-libre": {
       "baseline": "4.10.0",
       "port-version": 0
