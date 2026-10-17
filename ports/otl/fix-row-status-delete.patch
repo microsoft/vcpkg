@@ -1,0 +1,13 @@
+diff --git a/otlv40508.h b/otlv40508.h
+index e829e8b..305987b 100644
+--- a/otlv40508.h
++++ b/otlv40508.h
+@@ -13395,7 +13395,7 @@ public:
+       row_status_arr_size = array_size;
+       memset(row_status, 0, sizeof(OTL_SQLUSMALLINT) * OTL_SCAST(size_t,array_size));
+     } else if (row_status != nullptr && array_size != row_status_arr_size) {
+-      delete[] row_status;
++      OTL_DELETE_ARRAY(row_status);
+       row_status = OTL_NEW_ARRAY(OTL_SQLUSMALLINT,OTL_SCAST(size_t,array_size));
+       row_status_arr_size = array_size;
+       memset(row_status, 0, sizeof(OTL_SQLUSMALLINT) * OTL_SCAST(size_t,array_size));
