@@ -1,11 +1,15 @@
 {
   "name": "frei0r",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "A large collection of free and portable video plugins",
   "homepage": "https://frei0r.dyne.org/",
   "license": "GPL-2.0-or-later",
   "supports": "!(static & windows)",
   "dependencies": [
+    {
+      "name": "egl",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
