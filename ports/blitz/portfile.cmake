@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blitzpp/blitz
-    REF 839fc5e0f35b1c38a01cfd7a94e83de81e8a6b55
-    SHA512 efb6b19691e23c95cf6abd59607bce299b0c02a12ce6be105a35ad8509ab564b8dac8d6363f048e547d199e117d2bdd0e4ef3046d3c411f669c0a453a0b75627
-    HEAD_REF master
+    REF f24a250a43dff88c31ad92916da828b7ea9a98b7
+    SHA512 82a175b8912bd80f9b22fae57acc116f7e0f594662ce4ca4d294e97a0174b233d9f2e71238d8771112fdd998314ef52b6f9193292bee560095c95d803b04372c
+    HEAD_REF main
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -35,5 +35,4 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/matuops.h" "${SOURCE
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/mathfunc.h" "${SOURCE_PATH}" "" IGNORE_UNCHANGED)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blitz/promote-old.h" "${SOURCE_PATH}" "" IGNORE_UNCHANGED)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
