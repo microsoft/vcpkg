@@ -1,0 +1,19 @@
+{
+  "name": "simple-websocket-server",
+  "version-semver": "2.0.3-ln.1",
+  "description": "Header-only WebSocket (WS) and WebSocket Secure (WSS) client and server library",
+  "homepage": "https://github.com/LimiNode/Simple-WebSocket-Server",
+  "license": "MIT",
+  "dependencies": [
+    "asio",
+    "openssl"
+  ],
+  "features": {
+    "boost-asio": {
+      "description": "Add the Boost.Asio dependency for consumers using the Boost.Asio backend",
+      "dependencies": [
+        "boost-asio"
+      ]
+    }
+  }
+}
