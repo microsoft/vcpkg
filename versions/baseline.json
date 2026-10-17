@@ -5553,7 +5553,7 @@
       "port-version": 2
     },
     "libpg-query": {
-      "baseline": "18.0.0",
+      "baseline": "18.1.0",
       "port-version": 0
     },
     "libphonenumber": {

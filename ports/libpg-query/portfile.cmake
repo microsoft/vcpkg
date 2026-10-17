@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pganalyze/libpg_query
     REF "${VERSION}"
-    SHA512 6b58ba3ac7f8b0cf16baa4bbe0d8184eb727c20b74158013c2f2790521c65e996f6545302d9c7f7dc4edf7ffc4d57657ced3cb5e7b1179696093c94c4e8bf43b
+    SHA512 799354fe9b455e7dca289c4078759f782dd5b0ecc124ed38a6c83b98e32eef2438fb5a8cf2759152b1e9f27f7a4436908f575d1bcf1b37c18cd5329730001aaa
     HEAD_REF master
     PATCHES
         0001-use-system-deps.patch
@@ -63,7 +63,9 @@ endif()
 
 file(INSTALL "${SOURCE_PATH}/pg_query.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/postgres_deparse.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(INSTALL "${SOURCE_PATH}/protobuf/pg_query.pb-c.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/protobuf")
+file(INSTALL "${SOURCE_PATH}/protobuf/pg_query.upb.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/protobuf")
+file(INSTALL "${SOURCE_PATH}/protobuf/pg_query.upb_minitable.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/protobuf")
+file(INSTALL "${SOURCE_PATH}/vendor/upb/generated_code_support.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/upb")
 file(INSTALL "${SOURCE_PATH}/protobuf/pg_query.proto" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libpg-query-config.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
