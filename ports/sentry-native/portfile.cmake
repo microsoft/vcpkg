@@ -85,6 +85,7 @@ endif()
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/vendor/jsmn.h"
         "${SOURCE_PATH}/vendor/mpack.h"
         "${SOURCE_PATH}/vendor/stb_sprintf.h"
         "${SOURCE_PATH}/external/libunwindstack-ndk/LICENSE"
