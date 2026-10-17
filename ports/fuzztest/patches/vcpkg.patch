@@ -1,0 +1,299 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f9f71df..4058fba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -56,10 +56,11 @@ include(cmake/CompatibilityModeLinkLibFuzzer.cmake)
+ if (FUZZTEST_BUILD_TESTING)
+   enable_testing()
+ 
+-  set(protobuf_PROTOC_EXE "${protobuf_BINARY_DIR}/protoc")
+-  include(${protobuf_SOURCE_DIR}/cmake/protobuf-generate.cmake)
++  include(protobuf-generate)
+ endif ()
+ 
++include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third_party")
++
+ add_subdirectory(common)
+ add_subdirectory(fuzztest)
+ add_subdirectory(fuzztest/grammars)
+@@ -74,3 +75,128 @@ if (FUZZTEST_BUILD_TESTING)
+   add_subdirectory(e2e_tests)
+   add_subdirectory(e2e_tests/testdata)
+ endif ()
++
++include(GNUInstallDirs)
++
++install(DIRECTORY fuzztest common centipede
++        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++        FILES_MATCHING
++        PATTERN "*.h"
++        PATTERN "*.inc"
++        PATTERN "*_test.cc" EXCLUDE
++        PATTERN "testdata" EXCLUDE
++        PATTERN "testing" EXCLUDE
++        PATTERN "puzzles" EXCLUDE
++        PATTERN "doc" EXCLUDE
++)
++
++install(DIRECTORY grammar_codegen
++        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++        FILES_MATCHING
++        PATTERN "*.h"
++        PATTERN "*_test.cc" EXCLUDE
++)
++
++set(FUZZTEST_PUBLIC_TARGETS
++
++  fuzztest_bazel
++  fuzztest_blob_file
++  fuzztest_crashing_input_filename
++  fuzztest_defs
++  fuzztest_hash
++  fuzztest_common_logging
++  fuzztest_remote_file
++  fuzztest_sha1
++  fuzztest_status_macros
++  fuzztest_temp_dir
++
++  fuzztest_any
++  fuzztest_compatibility_mode
++  fuzztest_configuration
++  fuzztest_corpus_database
++  fuzztest_coverage
++  fuzztest_escaping
++  fuzztest_fixture_driver
++  fuzztest_flag_name
++  fuzztest_googletest_adaptor
++  fuzztest_io
++  fuzztest_logging
++  fuzztest_meta
++  fuzztest_printer
++  fuzztest_register_fuzzing_mocks
++  fuzztest_registration
++  fuzztest_registry
++  fuzztest_runtime
++  fuzztest_sanitizer_interface
++  fuzztest_seed_seq
++  fuzztest_serialization
++  fuzztest_status
++  fuzztest_subprocess
++  fuzztest_table_of_recent_compares
++  fuzztest_type_support
++
++  fuzztest_absl_helpers
++  fuzztest_core_domains_impl
++  fuzztest_domains_impl
++  fuzztest_in_grammar_impl
++  fuzztest_in_regexp_impl
++  fuzztest_protobuf_domain_impl
++  fuzztest_regexp_dfa
++  fuzztest_utf
++
++  fuzztest_domain
++  fuzztest_domain_core
++  fuzztest_fuzzing_bit_gen
++  fuzztest_fuzztest
++  fuzztest_fuzztest_core
++  fuzztest_fuzztest_gtest_main
++  fuzztest_fuzztest_macros
++  fuzztest_googletest_fixture_adapter
++  fuzztest_init_fuzztest
++  fuzztest_llvm_fuzzer_main
++  fuzztest_llvm_fuzzer_wrapper
++)
++
++foreach(target ${FUZZTEST_PUBLIC_TARGETS})
++  if(TARGET ${target})
++    install(TARGETS ${target}
++            EXPORT fuzztest-targets
++            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++    )
++  endif()
++endforeach()
++
++if(TARGET grammar_domain_code_generator)
++  install(TARGETS grammar_domain_code_generator
++          RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++  )
++endif()
++
++install(EXPORT fuzztest-targets
++        FILE fuzztest-targets.cmake
++        NAMESPACE fuzztest::
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/fuzztest"
++)
++
++include(CMakePackageConfigHelpers)
++
++configure_package_config_file(
++  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fuzztest-config.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/fuzztest-config.cmake"
++  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/fuzztest"
++)
++
++write_basic_package_version_file(
++  "${CMAKE_CURRENT_BINARY_DIR}/fuzztest-config-version.cmake"
++  VERSION "2026-02-19"
++  COMPATIBILITY SameMajorVersion
++)
++
++install(FILES
++  "${CMAKE_CURRENT_BINARY_DIR}/fuzztest-config.cmake"
++  "${CMAKE_CURRENT_BINARY_DIR}/fuzztest-config-version.cmake"
++  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/fuzztest"
++)
+diff --git a/cmake/BuildDependencies.cmake b/cmake/BuildDependencies.cmake
+index 25696b8..c12ee26 100644
+--- a/cmake/BuildDependencies.cmake
++++ b/cmake/BuildDependencies.cmake
+@@ -14,107 +14,18 @@
+ 
+ cmake_minimum_required(VERSION 3.19)
+ 
+-include(FetchContent)
++find_package(absl CONFIG REQUIRED)
++find_package(re2 CONFIG REQUIRED)
++find_package(GTest CONFIG REQUIRED)
+ 
+-set(absl_URL https://github.com/abseil/abseil-cpp.git)
+-set(absl_TAG 20260107.1)
++find_package(antlr4-runtime CONFIG REQUIRED)
+ 
+-set(re2_URL https://github.com/google/re2.git)
+-set(re2_TAG 2025-11-05)
+-
+-set(gtest_URL https://github.com/google/googletest.git)
+-set(gtest_TAG v1.17.0)
+-
+-# From https://www.antlr.org/download.html
+-set(antlr_cpp_URL https://www.antlr.org/download/antlr4-cpp-runtime-4.13.2-source.zip)
+-set(antlr_cpp_MD5 bac8aef215ffd7b23a1dde2fcfe3c842)
+-
+-set(proto_URL https://github.com/protocolbuffers/protobuf.git)
+-set(proto_TAG v33.5)
+-
+-set(nlohmann_json_URL https://github.com/nlohmann/json.git)
+-set(nlohmann_json_TAG v3.12.0)
+-
+-set(flatbuffers_URL https://github.com/google/flatbuffers.git)
+-set(flatbuffers_TAG v25.12.19)
+-
+-if(POLICY CMP0135)
+-	cmake_policy(SET CMP0135 NEW)
+-	set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
++if(FUZZTEST_BUILD_FLATBUFFERS)
++  find_package(flatbuffers CONFIG REQUIRED)
+ endif()
+ 
+-FetchContent_Declare(
+-  abseil-cpp
+-  GIT_REPOSITORY ${absl_URL}
+-  GIT_TAG        ${absl_TAG}
+-)
+-
+-FetchContent_Declare(
+-  re2
+-  GIT_REPOSITORY ${re2_URL}
+-  GIT_TAG        ${re2_TAG}
+-)
+-
+-FetchContent_Declare(
+-  googletest
+-  GIT_REPOSITORY ${gtest_URL}
+-  GIT_TAG        ${gtest_TAG}
+-)
+-
+-FetchContent_Declare(
+-  antlr_cpp
+-  URL      ${antlr_cpp_URL}
+-  URL_HASH MD5=${antlr_cpp_MD5}
+-)
+-
+-if (FUZZTEST_BUILD_FLATBUFFERS)
+-  FetchContent_Declare(
+-    flatbuffers
+-    GIT_REPOSITORY ${flatbuffers_URL}
+-    GIT_TAG        ${flatbuffers_TAG}
+-  )
++if(FUZZTEST_BUILD_TESTING)
++  find_package(protobuf CONFIG REQUIRED)
++  find_package(nlohmann_json CONFIG REQUIRED)
+ endif()
+ 
+-if (FUZZTEST_BUILD_TESTING)
+-
+-  FetchContent_Declare(
+-    protobuf
+-    GIT_REPOSITORY ${proto_URL}
+-    GIT_TAG        ${proto_TAG}
+-  )
+-
+-  FetchContent_Declare(
+-    nlohmann_json
+-    GIT_REPOSITORY ${nlohmann_json_URL}
+-    GIT_TAG        ${nlohmann_json_TAG}
+-  )
+-
+-endif ()
+-
+-set(ABSL_PROPAGATE_CXX_STD ON)
+-set(ABSL_ENABLE_INSTALL ON)
+-FetchContent_MakeAvailable(abseil-cpp)
+-
+-set(RE2_BUILD_TESTING OFF)
+-FetchContent_MakeAvailable(re2)
+-
+-set(GTEST_HAS_ABSL ON)
+-FetchContent_MakeAvailable(googletest)
+-
+-FetchContent_MakeAvailable(antlr_cpp)
+-
+-if (FUZZTEST_BUILD_TESTING)
+-
+-  set(protobuf_BUILD_TESTS OFF)
+-  set(protobuf_INSTALL OFF)
+-  FetchContent_MakeAvailable(protobuf)
+-
+-  FetchContent_MakeAvailable(nlohmann_json)
+-
+-endif ()
+-
+-if (FUZZTEST_BUILD_FLATBUFFERS)
+-  set(FLATBUFFERS_BUILD_TESTS OFF)
+-  set(FLATBUFFERS_BUILD_INSTALL OFF)
+-  FetchContent_MakeAvailable(flatbuffers)
+-endif()
+diff --git a/fuzztest/internal/CMakeLists.txt b/fuzztest/internal/CMakeLists.txt
+index 1a674bc..93220b6 100644
+--- a/fuzztest/internal/CMakeLists.txt
++++ b/fuzztest/internal/CMakeLists.txt
+@@ -535,9 +535,11 @@ if (FUZZTEST_BUILD_FLATBUFFERS)
+       --bfbs-gen-embed --gen-name-strings
+     TESTONLY
+   )
+-  add_dependencies(fuzztest_test_flatbuffers_headers
+-    fuzztest_GENERATE_test_flatbuffers_headers
+-  )
++  if(BUILD_TESTING AND FUZZTEST_BUILD_TESTING)
++    add_dependencies(fuzztest_test_flatbuffers_headers
++      fuzztest_GENERATE_test_flatbuffers_headers
++    )
++  endif()
+ endif()
+ 
+ fuzztest_cc_library(
+diff --git a/grammar_codegen/generated_antlr_parser/CMakeLists.txt b/grammar_codegen/generated_antlr_parser/CMakeLists.txt
+index 736c6ef..13bc5e0 100644
+--- a/grammar_codegen/generated_antlr_parser/CMakeLists.txt
++++ b/grammar_codegen/generated_antlr_parser/CMakeLists.txt
+@@ -16,6 +16,5 @@ target_link_libraries(
+ target_include_directories(
+   generated_antlr_parser
+   PUBLIC
+-  ${antlr_cpp_SOURCE_DIR}/runtime/src
+   ${CMAKE_CURRENT_SOURCE_DIR}
+ )
+\ No newline at end of file
