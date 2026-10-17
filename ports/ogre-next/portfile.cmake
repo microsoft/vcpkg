@@ -1,5 +1,5 @@
 if(NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message("${PORT} currently requires the following library from the system package manager:\n    Xaw\n\nIt can be installed on Ubuntu systems via apt-get install libxaw7-dev")
+    message("${PORT} currently requires the following libraries from the system package manager:\n    Xaw\n    Xrandr\n\nThey can be installed on Ubuntu systems via apt-get install libxaw7-dev libxrandr-dev")
 endif()
 
 vcpkg_from_github(
@@ -20,6 +20,7 @@ file(REMOVE
     "${SOURCE_PATH}/CMake/Packages/FindZLIB.cmake"
     "${SOURCE_PATH}/CMake/Packages/FindZZip.cmake"
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/OgreMain/include/stbi")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -46,6 +47,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_AMDAGS=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_CppUnit=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_FreeImage=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLSLOptimizer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_HLSL2GLSL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenVR=ON
@@ -66,6 +68,7 @@ vcpkg_cmake_configure(
         -DOGRE_BUILD_SAMPLES2=OFF
         -DOGRE_BUILD_TESTS=OFF
         -DOGRE_BUILD_TOOLS=OFF
+        -DOGRE_CONFIG_ENABLE_STBI=ON
         -DOGRE_COPY_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DEPENDENCIES=OFF
         -DOGRE_INSTALL_DOCS=OFF
@@ -96,4 +99,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${CURRENT_INSTALLED_DIR}/share/stb/copyright"
+)

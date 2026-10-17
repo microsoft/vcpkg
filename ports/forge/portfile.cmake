@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DFG_BUILD_DOCS=OFF
         -DFG_BUILD_EXAMPLES=OFF
+        -DFG_WITH_FREEIMAGE=OFF
         -DFG_INSTALL_BIN_DIR=bin
         -DFG_INSTALL_CMAKE_DIR=share/forge
 )
@@ -21,7 +22,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/bin/* ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/bin/*" "${CURRENT_PACKAGES_DIR}/debug/bin/*")
 list(FILTER DLLS EXCLUDE REGEX "forge\\.dll\$")
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
