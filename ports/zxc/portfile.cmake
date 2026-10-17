@@ -27,6 +27,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zxc)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB pkgconfig_files
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libzxc.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libzxc.pc"
+    )
+    foreach(pkgconfig_file IN LISTS pkgconfig_files)
+        vcpkg_replace_string("${pkgconfig_file}" "-lzxc" "-llibzxc")
+    endforeach()
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
