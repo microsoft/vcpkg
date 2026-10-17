@@ -21,6 +21,7 @@ PORT_LIST = [
     "ecm",
     "karchive",
     "kauth",
+    "kbookmarks",
     "kbreezeicons",
     "kcodecs",
     "kconfig",
