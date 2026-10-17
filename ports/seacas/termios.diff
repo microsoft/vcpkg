@@ -1,0 +1,13 @@
+diff --git a/packages/seacas/libraries/ioss/src/Ioss_Getline.C b/packages/seacas/libraries/ioss/src/Ioss_Getline.C
+index b6f862e..d05427f 100644
+--- a/packages/seacas/libraries/ioss/src/Ioss_Getline.C
++++ b/packages/seacas/libraries/ioss/src/Ioss_Getline.C
+@@ -129,6 +129,8 @@ namespace {
+ #if defined(__EMSCRIPTEN__) || (defined(__unix__) && !defined(NO_TERMIOS))
+ #ifdef __EMSCRIPTEN__
+ #include <termios.h>
++#elif defined(__ANDROID__)
++#include <termios.h>
+ #elif __unix__
+ #include <sys/termios.h>
+ #endif
