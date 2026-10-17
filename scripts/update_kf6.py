@@ -40,6 +40,7 @@ PORT_LIST = [
     "kitemviews",
     "knotifications",
     "kplotting",
+    "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
     "syntax-highlighting",
