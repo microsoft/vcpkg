@@ -1,14 +1,10 @@
-string(REGEX REPLACE "(release-[0-9][.][0-9])[.]([0-9])\$" "\\1.0\\2" git_tag "release-${VERSION}")
+string(APPEND git_tag "release-" "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BIC-MNI/libminc
     REF ${git_tag}
-    SHA512 78d5c14b82c8da5de7651de22fe47ae934925b27a626b8685b19554b7a35240eb5ab6d4da6232ce046e9e0f25619bbfae1d7c0fc34994d935986dc151d7b93a0
+    SHA512 d44213a0525f34c60ef4bd93c5ff7dfc1b8a73eebed6a27492816c6a30f573f404c0bae1f6c054fedb60bb8401fe8e6b723238177e254376d4cef9f44d85a1da
     HEAD_REF master
-    PATCHES
-        avoid-try-run.diff
-        build.patch
-        cmake-config.patch
 )
 
 vcpkg_check_features(
