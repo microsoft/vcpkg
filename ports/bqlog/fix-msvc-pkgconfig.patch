@@ -1,0 +1,27 @@
+diff --git a/pack/bqlog.pc.in b/pack/bqlog.pc.in
+index 3bf0027..70138b6 100644
+--- a/pack/bqlog.pc.in
++++ b/pack/bqlog.pc.in
+@@ -17,5 +17,5 @@ Description: Lightweight, high-performance, cross-language logging library
+ URL: https://github.com/Tencent/BqLog
+ Version: @PROJECT_VERSION@
+ Libs: -L${libdir} -lBqLog
+-Libs.private: -lpthread
++Libs.private: @BQ_PC_LIBS_PRIVATE@
+ Cflags: -I${includedir}
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b3c1887..ae2dfec 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -578,6 +578,11 @@ install(FILES
+     DESTINATION "${_bq_package_cmake_dir}"
+ )
+ 
++set(BQ_PC_LIBS_PRIVATE "-lpthread")
++if(MSVC)
++    set(BQ_PC_LIBS_PRIVATE "")
++endif()
++
+ configure_file(
+     "${CMAKE_CURRENT_SOURCE_DIR}/../pack/bqlog.pc.in"
+     "${CMAKE_CURRENT_BINARY_DIR}/bqlog.pc"
