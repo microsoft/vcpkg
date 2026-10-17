@@ -2,13 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 7a129b275c78aa6edcb00095aabf85aefb6e726f95742dc15c4b2c32d51f0baa71c22c1f50641b2a0dadde111d6d93aff615829d2387aac22b49720a5c971361
+    SHA512 ffb9b0c089e8b0acd10df8cee0675e0b41b8e9ccb11f9efb74d91d9c9acf04c4e61fa97abff1948d2b6495398848418f34105aad6cbd01494cec624d306892af
     HEAD_REF master
     PATCHES
         fix-always-nanosvg.diff
         fix-heif.patch
         fix-include-directory.patch
-        fix-video-zlib-and-linking.patch
+        fix-libraw-cmake.patch
 )
 
 # Enable selected codecs
