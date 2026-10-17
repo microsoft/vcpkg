@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/fbgemm
     REF "v${VERSION}"
-    SHA512 c10c6839bff2a37374646559310e39f0c68fb5a5e72211f85dbd1984de2aad7c38fb161b1f56bc7c549080fd2140bf682e5acbf7c9f78c7c073dd8e66d5f5a92
+    SHA512 9bfa7ceac02604723085805d66e01df2cb2cfccde4830ed0ff822d0add78f71d75aa19365d86212c841a428be73922b0f027cab9ca2942847e96ae9ef3f25771
     PATCHES
         fix-cmakelists.patch
 )
@@ -58,5 +58,7 @@ endif()
 # this internal header is required by pytorch
 file(INSTALL     "${SOURCE_PATH}/src/RefImplementations.h"
      DESTINATION "${CURRENT_PACKAGES_DIR}/include/fbgemm/src")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
