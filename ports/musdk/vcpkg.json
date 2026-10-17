@@ -1,0 +1,38 @@
+{
+  "name": "musdk",
+  "version": "11.22.12",
+  "description": "Marvell User-Space SDK",
+  "homepage": "https://github.com/MarvellEmbeddedProcessors/musdk-marvell",
+  "license": "BSD-3-Clause",
+  "supports": "linux & arm64",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "giu",
+    "neta",
+    "nmp",
+    "pp2"
+  ],
+  "features": {
+    "giu": {
+      "description": "GIU driver"
+    },
+    "neta": {
+      "description": "NETA driver"
+    },
+    "nmp": {
+      "description": "NMP driver"
+    },
+    "pp2": {
+      "description": "PP2 driver"
+    },
+    "sam": {
+      "description": "SAM driver",
+      "license": null
+    }
+  }
+}
