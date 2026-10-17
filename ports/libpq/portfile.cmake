@@ -70,6 +70,14 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
+if(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpq.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpq.pc")
+    foreach(file IN LISTS pc_files)
+        vcpkg_replace_string("${file}" " -lm([ \n])" "\\1" REGEX IGNORE_UNCHANGED)
+        vcpkg_replace_string("${file}" "(Libs:[^\n]*)" "\\1 -lm" REGEX)
+    endforeach()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpq.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpq.pc")
     foreach(file IN LISTS pc_files)
