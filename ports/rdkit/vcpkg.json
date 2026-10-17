@@ -1,0 +1,74 @@
+{
+  "name": "rdkit",
+  "version-string": "2026.03.5",
+  "description": "Open-source C++ cheminformatics and machine-learning toolkit (RDKit).",
+  "homepage": "https://www.rdkit.org/",
+  "license": "BSD-3-Clause AND MIT AND Apache-2.0 AND OFL-1.1",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "better-enums",
+    "boost-algorithm",
+    "boost-any",
+    "boost-assert",
+    "boost-assign",
+    "boost-bind",
+    "boost-config",
+    "boost-core",
+    "boost-crc",
+    "boost-dynamic-bitset",
+    "boost-flyweight",
+    "boost-foreach",
+    "boost-format",
+    "boost-function",
+    "boost-functional",
+    "boost-graph",
+    "boost-headers",
+    "boost-integer",
+    "boost-iostreams",
+    "boost-iterator",
+    "boost-json",
+    "boost-lexical-cast",
+    "boost-math",
+    "boost-multi-array",
+    "boost-multiprecision",
+    "boost-optional",
+    "boost-parameter",
+    "boost-property-map",
+    "boost-property-tree",
+    "boost-random",
+    "boost-range",
+    "boost-rational",
+    "boost-regex",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-spirit",
+    "boost-static-assert",
+    "boost-system",
+    "boost-thread",
+    "boost-tokenizer",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-utility",
+    "boost-variant",
+    "eigen3",
+    "freetype",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "cairo": {
+      "description": "Enable Cairo-based 2D molecule drawing",
+      "dependencies": [
+        "cairo"
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-ci-rdkit",
+  "version-string": "ci",
+  "description": "Validates the RDKit Cairo CMake integration",
+  "dependencies": [
+    {
+      "name": "rdkit",
+      "features": [
+        "cairo"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+--- a/CMakeLists.txt	2026-08-01 00:58:31
++++ b/CMakeLists.txt	2026-08-24 04:56:52
+@@ -416,7 +416,10 @@
+   find_package(Boost ${RDK_BOOST_VERSION} REQUIRED CONFIG)
+ endif(RDK_BUILD_PYTHON_WRAPPERS)
+ 
+-find_package(Eigen3)
++find_package(Eigen3 CONFIG)
++if(TARGET Eigen3::Eigen)
++  set(EIGEN3_FOUND TRUE)
++endif()
+ if(RDK_BUILD_DESCRIPTORS3D)
+   if(NOT EIGEN3_FOUND)
+     add_subdirectory(External/Eigen)
