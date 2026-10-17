@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
     PATCHES
         fix-crashpad-wer.patch
+        fix-wer-define.patch
         fix-usage-runtime.patch
         fix-cmake4.patch
 )
