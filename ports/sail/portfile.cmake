@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-include-directory.patch
         fix-jpegxl-log-android.patch
         fix-libraw-cmake.patch
+        fix-video-log-android.patch
 )
 
 # Enable selected codecs
