@@ -1,6 +1,6 @@
 {
   "name": "qtgraphs",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "The Qt Graphs module enables you to visualize data in 3D as bar, scatter, and surface graphs.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -22,5 +22,16 @@
       "name": "qtquick3d",
       "default-features": false
     }
-  ]
+  ],
+  "features": {
+    "canvaspainter": {
+      "description": "Qt Canvas Painter based high-performance 2D rendering backend",
+      "dependencies": [
+        {
+          "name": "qtcanvaspainter",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

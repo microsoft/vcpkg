@@ -61,6 +61,40 @@ function(qt_download_submodule_impl)
                 file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
             endif()
         endif()
+    elseif("${_qarg_SUBMODULE}" IN_LIST QT_FROM_GITHUB_REF)
+        if(PORT STREQUAL "qtwebengine")
+            vcpkg_from_github(
+                OUT_SOURCE_PATH SOURCE_PATH
+                REPO "qt/${_qarg_SUBMODULE}"
+                REF "${${_qarg_SUBMODULE}_REF}"
+                SHA512 "${${_qarg_SUBMODULE}_HASH}"
+                HEAD_REF dev
+            )
+            # Patches touch the chromium submodule, so they are applied after merging it.
+            if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
+                vcpkg_from_github(
+                    OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
+                    REPO qt/qtwebengine-chromium
+                    REF "${${PORT}_chromium_REF}"
+                    SHA512 "${${PORT}_chromium_HASH}"
+                    HEAD_REF "${${PORT}_chromium_HEAD_REF}"
+                )
+                file(MAKE_DIRECTORY "${SOURCE_PATH}/src/3rdparty")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/chromium" "${SOURCE_PATH}/src/3rdparty/chromium")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
+                file(REMOVE_RECURSE "${SOURCE_PATH_WEBENGINE}")
+                vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}" PATCHES ${_qarg_PATCHES})
+            endif()
+        else()
+            vcpkg_from_github(
+                OUT_SOURCE_PATH SOURCE_PATH
+                REPO "qt/${_qarg_SUBMODULE}"
+                REF "${${_qarg_SUBMODULE}_REF}"
+                SHA512 "${${_qarg_SUBMODULE}_HASH}"
+                HEAD_REF dev
+                PATCHES ${_qarg_PATCHES}
+            )
+        endif()
     else()
         if(VCPKG_USE_HEAD_VERSION)
             set(sha512 SKIP_SHA512)

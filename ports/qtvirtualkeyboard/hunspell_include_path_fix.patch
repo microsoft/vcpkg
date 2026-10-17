@@ -1,23 +1,10 @@
-diff --git a/src/plugins/hunspell/module/hunspellworker_p.h b/src/plugins/hunspell/module/hunspellworker_p.h
-index b79354429..a843bdfa6 100644
---- a/src/plugins/hunspell/module/hunspellworker_p.h
-+++ b/src/plugins/hunspell/module/hunspellworker_p.h
-@@ -50,7 +50,7 @@
- #include <QLoggingCategory>
- #include <QStringDecoder>
- #include <QStringEncoder>
--#include <hunspell/hunspell.h>
-+#include <hunspell.h>
- #include "hunspellwordlist_p.h"
- 
- QT_BEGIN_NAMESPACE
 diff --git a/config.tests/hunspell/main.cpp b/config.tests/hunspell/main.cpp
-index 76f2cb3df..91906bc48 100644
---- a/config.tests/hunspell/main.cpp	
+index 4598b35..0a0ed40 100644
+--- a/config.tests/hunspell/main.cpp
 +++ b/config.tests/hunspell/main.cpp
-@@ -1,7 +1,7 @@
- // Copyright (C) 2020 The Qt Company Ltd.
+@@ -2,7 +2,7 @@
  // SPDX-License-Identifier: BSD-3-Clause
+ // Qt-Security score:insignificant reason:build-system
  
 -#include <hunspell/hunspell.h>
 +#include <hunspell.h>
@@ -25,10 +12,10 @@ index 76f2cb3df..91906bc48 100644
  int main(int argc, char** argv)
  {
 diff --git a/src/plugins/hunspell/module/hunspellwordlist.cpp b/src/plugins/hunspell/module/hunspellwordlist.cpp
-index ec55d4d3b..846af4726 100644
---- a/src/plugins/hunspell/module/hunspellwordlist.cpp	
+index cd7fd65..c5a7376 100644
+--- a/src/plugins/hunspell/module/hunspellwordlist.cpp
 +++ b/src/plugins/hunspell/module/hunspellwordlist.cpp
-@@ -3,7 +3,7 @@
+@@ -4,7 +4,7 @@
  
  #include "hunspellwordlist_p.h"
  #include <QtAlgorithms>
@@ -37,3 +24,16 @@ index ec55d4d3b..846af4726 100644
  
  QT_BEGIN_NAMESPACE
  namespace QtVirtualKeyboard {
+diff --git a/src/plugins/hunspell/module/hunspellworker_p.h b/src/plugins/hunspell/module/hunspellworker_p.h
+index 1dd93d5..318c671 100644
+--- a/src/plugins/hunspell/module/hunspellworker_p.h
++++ b/src/plugins/hunspell/module/hunspellworker_p.h
+@@ -25,7 +25,7 @@
+ #include <QLoggingCategory>
+ #include <QStringDecoder>
+ #include <QStringEncoder>
+-#include <hunspell/hunspell.h>
++#include <hunspell.h>
+ #include "hunspellwordlist_p.h"
+ 
+ QT_BEGIN_NAMESPACE

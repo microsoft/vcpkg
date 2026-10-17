@@ -1,6 +1,6 @@
 {
   "name": "qtopcua",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "The Qt OPC UA module implements a Qt API to interact with OPC UA on top of a 3rd party OPC UA stack.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -19,13 +19,26 @@
     }
   ],
   "default-features": [
-    "gds",
+    {
+      "name": "gds",
+      "platform": "!osx & !ios & !uwp"
+    },
     "ns0idnames",
     "open62541"
   ],
   "features": {
     "gds": {
-      "description": "Support for global discovery server"
+      "description": "Support for global discovery server",
+      "supports": "!osx & !ios & !uwp",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
+      ]
     },
     "ns0idgenerator": {
       "description": "Namespace 0 NodeIds generator from the NodeIds.csv file.",
@@ -41,6 +54,7 @@
           "name": "open62541",
           "default-features": false,
           "features": [
+            "discovery",
             "historizing",
             "openssl"
           ]

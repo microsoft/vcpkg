@@ -1,0 +1,17 @@
+{
+  "name": "qttasktree",
+  "version": "6.12.0",
+  "description": "Qt TaskTree provides a declarative way to compose and execute asynchronous tasks.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "network"
+      ]
+    }
+  ]
+}
