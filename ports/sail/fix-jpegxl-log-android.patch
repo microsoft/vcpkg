@@ -1,0 +1,18 @@
+diff --git a/src/sail-codecs/jpegxl/CMakeLists.txt b/src/sail-codecs/jpegxl/CMakeLists.txt
+index b78e1c39..7847b439 100644
+--- a/src/sail-codecs/jpegxl/CMakeLists.txt
++++ b/src/sail-codecs/jpegxl/CMakeLists.txt
+@@ -35,10 +35,10 @@ set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "pkg_config,l
+ # the link through sail-codecs, which exists when codecs are combined into an archive.
+ #
+ if (ANDROID)
+-    set(JPEGXL_SYSTEM_LIBRARIES log)
++    # set(JPEGXL_SYSTEM_LIBRARIES log)
+ 
+-    list(JOIN JPEGXL_SYSTEM_LIBRARIES " " JPEGXL_SYSTEM_LIBRARIES_JOINED)
+-    set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${JPEGXL_SYSTEM_LIBRARIES_JOINED}")
++    # list(JOIN JPEGXL_SYSTEM_LIBRARIES " " JPEGXL_SYSTEM_LIBRARIES_JOINED)
++    # set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${JPEGXL_SYSTEM_LIBRARIES_JOINED}")
+ endif()
+ 
+ set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} PARENT_SCOPE)
