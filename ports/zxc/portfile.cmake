@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         -DZXC_NATIVE_ARCH=OFF
         -DZXC_ENABLE_LTO=OFF
         -DZXC_BUILD_TESTS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
