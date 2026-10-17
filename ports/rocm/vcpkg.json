@@ -1,0 +1,8 @@
+{
+  "name": "rocm",
+  "version": "5.0",
+  "description": "AMD ROCm platform",
+  "homepage": "https://rocm.docs.amd.com/",
+  "license": null,
+  "supports": "linux"
+}
