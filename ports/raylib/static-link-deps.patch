@@ -1,0 +1,61 @@
+diff --git a/cmake/LibraryConfigurations.cmake b/cmake/LibraryConfigurations.cmake
+index 1868049..14bd0c2 100644
+--- a/cmake/LibraryConfigurations.cmake
++++ b/cmake/LibraryConfigurations.cmake
+@@ -16,8 +16,8 @@ if (${PLATFORM} STREQUAL "Desktop")
+         # Need to force OpenGL 3.3 on OS X
+         # See: https://github.com/raysan5/raylib/issues/341
+         set(GRAPHICS "GRAPHICS_API_OPENGL_33")
+-        find_library(OPENGL_LIBRARY OpenGL)
+-        set(LIBS_PRIVATE ${OPENGL_LIBRARY})
++        # Link the framework by name, so that the absolute SDK path doesn't end up in the exported targets
++        set(LIBS_PRIVATE "-framework OpenGL")
+         link_libraries("${LIBS_PRIVATE}")
+         if (NOT CMAKE_SYSTEM STRLESS "Darwin-18.0.0")
+             add_definitions(-DGL_SILENCE_DEPRECATION)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 5e5dd91..0c5a73f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -48,6 +48,11 @@ endif ()
+ # Produces a variable LIBS_PRIVATE that will be used later
+ include(LibraryConfigurations)
+ 
++# Installed consumers of a static raylib need to find the external GLFW too.
++if (glfw3_FOUND)
++    set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(glfw3 3.4)")
++endif ()
++
+ if (SUPPORT_MODULE_RAUDIO)
+     MESSAGE(STATUS "Audio Backend: miniaudio")
+ else ()
+@@ -99,6 +104,29 @@ endif ()
+ target_link_libraries(raylib PRIVATE $<BUILD_INTERFACE:${LIBS_PRIVATE}>)
+ target_link_libraries(raylib PUBLIC ${LIBS_PUBLIC})
+ 
++# Static libraries must export their private link dependencies for installed consumers.
++# LINK_ONLY keeps those dependencies out of the compile interface.
++if (NOT BUILD_SHARED_LIBS)
++    set(raylib_install_private_libs ${LIBS_PRIVATE})
++
++    if (NOT glfw3_FOUND)
++        list(REMOVE_ITEM raylib_install_private_libs glfw)
++    endif()
++
++    if (UNIX AND NOT APPLE AND PLATFORM STREQUAL "Desktop" AND TARGET OpenGL::GL)
++        list(REMOVE_ITEM raylib_install_private_libs ${OPENGL_LIBRARIES})
++        list(APPEND raylib_install_private_libs OpenGL::GL)
++        if (TARGET OpenGL::GLU)
++            list(APPEND raylib_install_private_libs OpenGL::GLU)
++        endif()
++        set(RAYLIB_DEPENDENCIES "${RAYLIB_DEPENDENCIES}\nfind_dependency(OpenGL)")
++    endif()
++
++    foreach(lib IN LISTS raylib_install_private_libs)
++        target_link_libraries(raylib INTERFACE $<INSTALL_INTERFACE:$<LINK_ONLY:${lib}>>)
++    endforeach()
++endif()
++
+ # Sets some compile time definitions for the pre-processor
+ # If CUSTOMIZE_BUILD option is on you will not use config.h by default
+ # and you will be able to select more build options
