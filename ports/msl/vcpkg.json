@@ -1,0 +1,17 @@
+{
+  "name": "msl",
+  "version": "1.0.0",
+  "description": "Melkam Standard Library (MSL) - A modern, high-performance, header-only C++20 standard utility and math library.",
+  "homepage": "https://github.com/Alazar42/MSL",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
