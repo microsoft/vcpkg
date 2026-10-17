@@ -1,9 +1,9 @@
 {
   "name": "simdutf",
-  "version-semver": "9.1.1",
+  "version-semver": "9.2.1",
   "description": "Unicode validation and transcoding at billions of characters per second",
   "homepage": "https://github.com/simdutf/simdutf",
-  "license": "Apache-2.0 OR MIT",
+  "license": "(Apache-2.0 OR MIT) AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -17,6 +17,7 @@
   "features": {
     "tools": {
       "description": "Build the fastbase64 and simdutf command line tools for transcoding strings",
+      "license": "LGPL-2.1-or-later",
       "dependencies": [
         {
           "name": "libiconv",
