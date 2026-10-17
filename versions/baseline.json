@@ -3641,11 +3641,11 @@
       "port-version": 0
     },
     "gst-rtsp-server": {
-      "baseline": "1.28.7",
+      "baseline": "1.28.8",
       "port-version": 0
     },
     "gstreamer": {
-      "baseline": "1.28.7",
+      "baseline": "1.28.8",
       "port-version": 0
     },
     "gtest": {
