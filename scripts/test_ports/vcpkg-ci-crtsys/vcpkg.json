@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-crtsys",
+  "version-string": "ci",
+  "description": "Validates installed crtsys CMake consumption by linking a kernel driver",
+  "supports": "windows & !uwp & !mingw & static & staticcrt & x64",
+  "dependencies": [
+    "crtsys",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

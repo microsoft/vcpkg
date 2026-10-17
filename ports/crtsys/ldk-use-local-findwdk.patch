@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 338ea90..a8b1b1c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,8 @@ pkg_get_version(LDK ${CMAKE_CURRENT_SOURCE_DIR}/include/ldk/internal/version.h V
+ project(Ldk VERSION "${VERSION}" LANGUAGES C)
+ 
+ option(LDK_ENABLE_DIAGNOSTIC_BREAKPOINTS "Opt in to LDK diagnostic KdBreakPoint calls" OFF)
++set(LDK_FINDWDK_SOURCE_DIR "" CACHE PATH
++    "Use a local FindWDK source tree instead of CPM")
+ 
+ if ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+     option(LDK_USE_RAISE_EXCEPTION  "Set to ON to use ldk!RaiseException" ON)
+@@ -21,9 +23,17 @@ else()
+     option(LDK_USE_RTL_RAISE_EXCEPTION  "Set to ON to use ldk!RtlRaiseExceptionn" OFF)
+ endif()
+ 
+-include(CPM)
+-
+-CPMAddPackage("gh:ntoskrnl7/FindWDK#master")
++if(LDK_FINDWDK_SOURCE_DIR)
++    if(NOT EXISTS "${LDK_FINDWDK_SOURCE_DIR}/cmake/FindWdk.cmake")
++        message(FATAL_ERROR
++            "LDK_FINDWDK_SOURCE_DIR does not contain cmake/FindWdk.cmake: "
++            "${LDK_FINDWDK_SOURCE_DIR}")
++    endif()
++    set(FindWDK_SOURCE_DIR "${LDK_FINDWDK_SOURCE_DIR}")
++else()
++    include(CPM)
++    CPMAddPackage("gh:ntoskrnl7/FindWDK#master")
++endif()
+ if(CMAKE_VS_PLATFORM_NAME AND CMAKE_GENERATOR_PLATFORM MATCHES ",")
+     # FindWDK derives library names from CMAKE_GENERATOR_PLATFORM and does not
+     # understand Visual Studio's ",version=..." platform option.
