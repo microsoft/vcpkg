@@ -4,7 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-messaging-eventhubs-checkpointstore-blob-cpp",
-  "version-semver": "1.0.0-beta.2",
+  "version-semver": "1.0.0-beta.5",
   "description": [
     "Microsoft Azure Messaging Event Hubs Blob Checkpoint Store SDK for C++",
     "This library provides an Azure-Storage-Blobs based implementation of an Azure Messaging Event Hubs SDK Checkpoint Store."
@@ -15,12 +15,12 @@
     {
       "name": "azure-core-amqp-cpp",
       "default-features": false,
-      "version>=": "1.0.0-beta.12"
+      "version>=": "1.0.0-beta.13"
     },
     {
       "name": "azure-messaging-eventhubs-cpp",
       "default-features": false,
-      "version>=": "1.0.0-beta.11"
+      "version>=": "1.0.0-beta.15"
     },
     {
       "name": "azure-storage-blobs-cpp",
