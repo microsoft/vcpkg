@@ -1,0 +1,20 @@
+{
+  "name": "motus",
+  "version": "1.0.0",
+  "description": "Transport-agnostic messaging seam for C++17 with a per-backend conformance suite and a Windows-safe AMQP-CPP connection handler over Boost.Asio",
+  "homepage": "https://github.com/mertefesensoy/motus",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "amqpcpp",
+    "boost-asio",
+    "boost-system",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
