@@ -88,11 +88,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME sailmanip  CONFIG_PATH lib/cmake/sailmanip
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
-
-# Remove pkg-config files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-
 # Unused because SAIL_COMBINE_CODECS is ON, removes an absolute path from the output
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH [^\r\n]+[\r\n]*" "" REGEX)
 
