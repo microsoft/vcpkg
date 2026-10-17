@@ -11061,7 +11061,7 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "8.0.0",
+      "baseline": "10.0.0",
       "port-version": 0
     },
     "winsock2": {
