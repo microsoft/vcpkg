@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         cxx-fix.patch # from https://github.com/dmlc/dmlc-core/pull/676
+        add-config-deps.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

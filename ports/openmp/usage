@@ -1,0 +1,4 @@
+Use the standard FindOpenMP module to find OpenMP and link against it:
+
+    find_package(OpenMP REQUIRED)
+    target_link_libraries(my_target PRIVATE OpenMP::OpenMP_CXX)
