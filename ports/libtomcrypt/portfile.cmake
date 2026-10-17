@@ -86,12 +86,11 @@ else()
         COMMAND make -j${VCPKG_CONCURRENCY} -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR} install
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
-    
 endif()
 
 #Copy license
 file(
-    INSTALL 
+    INSTALL
     ${SOURCE_PATH}/LICENSE
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright
 )
