@@ -4212,6 +4212,10 @@
       "baseline": "5.6.0",
       "port-version": 1
     },
+    "jona62-taskdaemon-handlers": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "josuttis-jthread": {
       "baseline": "2020-07-21",
       "port-version": 3
