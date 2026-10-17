@@ -8,6 +8,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-install-include-dir.patch
+        fix-pkgconfig-zlib.patch
 )
 
 vcpkg_cmake_configure(
