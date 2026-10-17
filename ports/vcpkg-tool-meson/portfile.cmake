@@ -9,7 +9,7 @@ set(patches
   adjust-python-dep.patch
   adjust-args.patch
   remove-pkgconfig-specialization.patch
-  meson-56879d5.diff  # Remove with 1.9.1
+  rc-args.patch
 )
 set(scripts
   vcpkg-port-config.cmake
@@ -17,7 +17,7 @@ set(scripts
   vcpkg_install_meson.cmake
   meson.template.in
 )
-set(to_hash 
+set(to_hash
   "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json"
   "${CMAKE_CURRENT_LIST_DIR}/portfile.cmake"
 )
