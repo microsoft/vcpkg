@@ -50,6 +50,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -61,6 +63,7 @@ vcpkg_cmake_configure(
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
         ${SAIL_WINDOWS_STATIC_CRT_FLAG}
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_cmake_install()
