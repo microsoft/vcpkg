@@ -1,0 +1,39 @@
+diff --git a/viskores/cont/CMakeLists.txt b/viskores/cont/CMakeLists.txt
+index 76df7b4..ac16740 100644
+--- a/viskores/cont/CMakeLists.txt
++++ b/viskores/cont/CMakeLists.txt
+@@ -323,3 +323,5 @@ endif()
+ 
+ target_link_libraries(viskores_cont PUBLIC viskores_compiler_flags ${backends})
+ target_link_libraries(viskores_cont PUBLIC Threads::Threads)
++find_package(fmt REQUIRED)
++target_link_libraries(viskores_cont PRIVATE fmt::fmt)
+diff --git a/viskores/thirdparty/diy/viskoresdiy/CMakeLists.txt b/viskores/thirdparty/diy/viskoresdiy/CMakeLists.txt
+index ec63e8f..6abe396 100644
+--- a/viskores/thirdparty/diy/viskoresdiy/CMakeLists.txt
++++ b/viskores/thirdparty/diy/viskoresdiy/CMakeLists.txt
+@@ -237,6 +237,9 @@ elseif (NOT build_diy_nompi_lib)
+     endif()
+ endif()
+ 
++find_package(fmt REQUIRED)
++target_link_libraries(${diy_prefix} INTERFACE fmt::fmt)
++
+ list(APPEND diy_targets ${diy_prefix} diy_developer_flags)
+ 
+ # libraries used by examples and tests
+diff --git a/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/log.hpp b/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/log.hpp
+index 05d2b3e..f61b91e 100644
+--- a/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/log.hpp
++++ b/viskores/thirdparty/diy/viskoresdiy/include/viskoresdiy/log.hpp
+@@ -4,8 +4,8 @@
+ #ifndef VISKORESDIY_USE_SPDLOG
+ 
+ #include <memory>
+-#include "thirdparty/fmt/format.h"
+-#include "thirdparty/fmt/ostream.h"
++#include <fmt/format.h>
++#include <fmt/ostream.h>
+ 
+ namespace diy
+ {
