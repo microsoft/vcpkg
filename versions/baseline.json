@@ -4668,6 +4668,10 @@
       "baseline": "2.3.2",
       "port-version": 0
     },
+    "kwallet": {
+      "baseline": "6.30.0",
+      "port-version": 0
+    },
     "kwidgetsaddons": {
       "baseline": "6.30.0",
       "port-version": 0
