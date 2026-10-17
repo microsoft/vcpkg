@@ -1,0 +1,34 @@
+rapidocr provides CMake targets:
+
+    find_package(unofficial-rapidocr CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::rapidocr::rapidocr)
+
+This port packages the C++ library RapidOcrOnnx (snapshot 2024-10-22), not
+the Python RapidOCR project at https://github.com/RapidAI/RapidOCR.
+
+Two interfaces are installed under include/rapidocr/:
+
+  * The C++ API (#include <rapidocr/OcrLite.h>) exposes cv::Mat and other
+    OpenCV types, so it must be consumed through the CMake target above, which
+    propagates OpenCV's include directory. It does not resolve from the triplet
+    include root alone, because OpenCV itself is installed under include/opencv4.
+
+  * The C API (#include <rapidocr/OcrLiteCApi.h>) is a C header (extern "C"
+    when compiled as C++) with no OpenCV types, so it can be consumed from C
+    or C++ with only the triplet include root on the search path.
+
+On Windows a shared build of this port uses dllimport in the C API header.
+A static build defines RAPIDOCR_STATIC on the imported target so the header
+does not use a storage class.
+
+The recognition dictionary is installed with the port:
+
+    ${CURRENT_INSTALLED_DIR}/share/rapidocr/models/ppocr_keys_v1.txt
+
+The ONNX model weights are not redistributed and must be obtained separately:
+
+    ch_PP-OCRv3_det_infer.onnx
+    ch_PP-OCRv3_rec_infer.onnx
+    ch_ppocr_mobile_v2.0_cls_infer.onnx
+
+See https://github.com/RapidAI/RapidOcrOnnx for details.

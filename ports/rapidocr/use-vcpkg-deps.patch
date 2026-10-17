@@ -1,0 +1,151 @@
+diff --git a/include/AngleNet.h b/include/AngleNet.h
+index d14503c0ae..df5d613a3f 100644
+--- a/include/AngleNet.h
++++ b/include/AngleNet.h
+@@ -2,7 +2,7 @@
+ #define __OCR_ANGLENET_H__
+ 
+ #include "OcrStruct.h"
+-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
++#include <onnxruntime/onnxruntime_cxx_api.h>
+ #include <opencv2/opencv.hpp>
+ 
+ class AngleNet {
+diff --git a/include/CrnnNet.h b/include/CrnnNet.h
+index 2b4cdbe6ed..53259b55c4 100644
+--- a/include/CrnnNet.h
++++ b/include/CrnnNet.h
+@@ -2,7 +2,7 @@
+ #define __OCR_CRNNNET_H__
+ 
+ #include "OcrStruct.h"
+-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
++#include <onnxruntime/onnxruntime_cxx_api.h>
+ #include <opencv2/opencv.hpp>
+ 
+ class CrnnNet {
+diff --git a/include/DbNet.h b/include/DbNet.h
+index e2b9a17a95..86839f225d 100644
+--- a/include/DbNet.h
++++ b/include/DbNet.h
+@@ -2,7 +2,7 @@
+ #define __OCR_DBNET_H__
+ 
+ #include "OcrStruct.h"
+-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
++#include <onnxruntime/onnxruntime_cxx_api.h>
+ #include <opencv2/opencv.hpp>
+ 
+ class DbNet {
+diff --git a/include/OcrLite.h b/include/OcrLite.h
+index 2d03a164dc..8feb9d9133 100644
+--- a/include/OcrLite.h
++++ b/include/OcrLite.h
+@@ -34,7 +34,7 @@ public:
+                      float boxScoreThresh, float boxThresh, float unClipRatio, bool doAngle, bool mostAngle);
+ 
+ private:
+-    OcrLiteImpl* pImpl;
++    OcrLiteImpl* pImpl = nullptr;
+ };
+ 
+ #endif //__OCR_LITE_H__
+diff --git a/include/OcrLiteCApi.h b/include/OcrLiteCApi.h
+index e469630c0f..aabadce98a 100644
+--- a/include/OcrLiteCApi.h
++++ b/include/OcrLiteCApi.h
+@@ -1,18 +1,22 @@
+-#ifdef __cplusplus
+ #ifndef __OCR_LITE_C_API_H__
+ #define __OCR_LITE_C_API_H__
+-#include "stdint.h"
+-extern "C"
+-{
+ 
+-#ifdef WIN32
+-#ifdef __CLIB__
+-#define _QM_OCR_API __declspec(dllexport)
+-#else
+-#define _QM_OCR_API __declspec(dllimport)
++#include <stdint.h>
++
++#ifdef __cplusplus
++extern "C" {
+ #endif
++
++#if defined(_WIN32)
++#  if defined(RAPIDOCR_STATIC)
++#    define _QM_OCR_API
++#  elif defined(__CLIB__)
++#    define _QM_OCR_API __declspec(dllexport)
++#  else
++#    define _QM_OCR_API __declspec(dllimport)
++#  endif
+ #else
+-#define _QM_OCR_API
++#  define _QM_OCR_API
+ #endif
+ 
+ typedef void *OCR_HANDLE;
+@@ -30,8 +34,8 @@ typedef struct __ocr_param {
+     float boxScoreThresh;
+     float boxThresh;
+     float unClipRatio;
+-    int doAngle; // 1 means do
+-    int mostAngle; // 1 means true
++    int doAngle; /* 1 means do */
++    int mostAngle; /* 1 means true */
+ } OCR_PARAM;
+ typedef struct {
+     double x;
+@@ -87,6 +91,8 @@ _QM_OCR_API OCR_BOOL OcrGetResult(OCR_HANDLE handle, char *szBuf, int nLen);
+ 
+ _QM_OCR_API void OcrDestroy(OCR_HANDLE handle);
+ 
+-};
+-#endif //__OCR_LITE_C_API_H__
+-#endif //__cplusplus
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* __OCR_LITE_C_API_H__ */
+diff --git a/include/OcrLiteImpl.h b/include/OcrLiteImpl.h
+index 113751deb1..6c7fc87492 100644
+--- a/include/OcrLiteImpl.h
++++ b/include/OcrLiteImpl.h
+@@ -2,7 +2,7 @@
+ #define __OCR_LITE_IMPL_H__
+ 
+ #include "opencv2/core.hpp"
+-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
++#include <onnxruntime/onnxruntime_cxx_api.h>
+ #include "OcrStruct.h"
+ #include "DbNet.h"
+ #include "AngleNet.h"
+diff --git a/include/OcrUtils.h b/include/OcrUtils.h
+index 227ec9ab1b..8b5f00842a 100644
+--- a/include/OcrUtils.h
++++ b/include/OcrUtils.h
+@@ -3,7 +3,7 @@
+ 
+ #include <opencv2/core.hpp>
+ #include "OcrStruct.h"
+-#include <onnxruntime/core/session/onnxruntime_cxx_api.h>
++#include <onnxruntime/onnxruntime_cxx_api.h>
+ #include <numeric>
+ #include <sys/stat.h>
+ 
+diff --git a/src/OcrUtils.cpp b/src/OcrUtils.cpp
+index 7c3ea3f49c..90a8e44da7 100644
+--- a/src/OcrUtils.cpp
++++ b/src/OcrUtils.cpp
+@@ -2,7 +2,7 @@
+ #include <opencv2/imgcodecs.hpp>
+ #include <numeric>
+ #include "OcrUtils.h"
+-#include "clipper.hpp"
++#include <polyclipping/clipper.hpp>
+ 
+ double getCurrentTime() {
+     return (static_cast<double>(cv::getTickCount())) / cv::getTickFrequency() * 1000;//单位毫秒
