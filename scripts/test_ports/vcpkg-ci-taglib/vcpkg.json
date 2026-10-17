@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-taglib",
+  "version-string": "ci",
+  "description": "Validates taglib",
+  "dependencies": [
+    "taglib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 87b3c80e..a2606697 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -146,6 +146,10 @@ if(NOT BUILD_FRAMEWORK)
+   else()
+     set(CMAKE_PC_LIBDIR "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
+   endif()
++  set(TAGLIB_CFLAGS "")
++  if(NOT BUILD_SHARED_LIBS)
++    set(TAGLIB_CFLAGS "-DTAGLIB_STATIC")
++  endif()
+   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/taglib.pc.cmake" "${CMAKE_CURRENT_BINARY_DIR}/taglib.pc" @ONLY)
+   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/taglib.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+           RENAME "taglib${TAGLIB_INSTALL_SUFFIX}.pc")
+diff --git a/bindings/c/CMakeLists.txt b/bindings/c/CMakeLists.txt
+index d825fde8..85e51497 100644
+--- a/bindings/c/CMakeLists.txt
++++ b/bindings/c/CMakeLists.txt
+@@ -151,6 +151,10 @@ if(NOT BUILD_FRAMEWORK)
+   else()
+     set(CMAKE_PC_LIBDIR "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
+   endif()
++  set(TAGLIB_C_CFLAGS "")
++  if(NOT BUILD_SHARED_LIBS)
++    set(TAGLIB_C_CFLAGS "-DTAGLIB_STATIC")
++  endif()
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/taglib_c.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/taglib_c.pc @ONLY)
+   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/taglib_c.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+           RENAME taglib${TAGLIB_INSTALL_SUFFIX}_c.pc)
+diff --git a/bindings/c/taglib_c.pc.cmake b/bindings/c/taglib_c.pc.cmake
+index 86d4e27d..6cc8438a 100644
+--- a/bindings/c/taglib_c.pc.cmake
++++ b/bindings/c/taglib_c.pc.cmake
+@@ -8,4 +8,4 @@ Description: Audio meta-data library (C bindings)
+ Requires: taglib
+ Version: @TAGLIB_LIB_VERSION_STRING@
+ Libs: -L${libdir} -ltag_c@TAGLIB_INSTALL_SUFFIX@
+-Cflags: -I${includedir}/taglib@TAGLIB_INSTALL_SUFFIX@
++Cflags: -I${includedir}/taglib@TAGLIB_INSTALL_SUFFIX@ @TAGLIB_CFLAGS@
+diff --git a/taglib.pc.cmake b/taglib.pc.cmake
+index d20176f9..a1d43adf 100644
+--- a/taglib.pc.cmake
++++ b/taglib.pc.cmake
+@@ -9,4 +9,4 @@ Requires:
+ Requires.private: zlib
+ Version: @TAGLIB_LIB_VERSION_STRING@
+ Libs: -L${libdir} -ltag@TAGLIB_INSTALL_SUFFIX@
+-Cflags: -I${includedir} -I${includedir}/taglib@TAGLIB_INSTALL_SUFFIX@
++Cflags: -I${includedir} -I${includedir}/taglib@TAGLIB_INSTALL_SUFFIX@ @TAGLIB_CFLAGS@
