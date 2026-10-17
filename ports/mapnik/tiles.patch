@@ -1,0 +1,22 @@
+diff --git a/plugins/input/tiles/CMakeLists.txt b/plugins/input/tiles/CMakeLists.txt
+index 61008c9d5..721401d36 100644
+--- a/plugins/input/tiles/CMakeLists.txt
++++ b/plugins/input/tiles/CMakeLists.txt
+@@ -7,11 +7,15 @@ if(WIN32)
+ endif()
+ 
+ add_plugin_target(input-tiles "tiles")
+-add_compile_definitions(MAPNIK_VECTOR_TILE_LIBRARY=1)
++target_compile_definitions(input-tiles ${_plugin_visibility}
++    MAPNIK_VECTOR_TILE_LIBRARY=1
++)
+ 
+ if(USE_PLUGIN_INPUT_TILES_SSL)
+     mapnik_pkg_check_modules(OpenSSL REQUIRED IMPORTED_TARGET openssl)
+-    add_compile_definitions(MAPNIK_HAS_OPENSSL)
++    target_compile_definitions(input-tiles ${_plugin_visibility}
++        MAPNIK_HAS_OPENSSL
++    )
+ endif()
+ 
+ target_sources(input-tiles ${_plugin_visibility}
