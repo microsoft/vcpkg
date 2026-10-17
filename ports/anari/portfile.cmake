@@ -1,12 +1,12 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO KhronosGroup/ANARI-SDK
-  REF "v${VERSION}"
-  SHA512 504be3b6e8b33def5c43e0c59927da0fccd8c9356f384ceab20740e49a26f6e2e62b142893afec028ce61207741de9e72d9a496b7981109f290bb580552a0965
-  HEAD_REF next_release
-  PATCHES anari-lib-maybe-static-lib.patch
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KhronosGroup/ANARI-SDK
+    REF "v${VERSION}"
+    SHA512 c5827d637f51267454ccd905aa5349f99e7c8347b412bcbedbe4c552657812b544a7be88737d2d4cd3cfcc8f8a23550365d128a47536425e3f4a6442e11841ca
+    HEAD_REF next_release
+    PATCHES anari-lib-maybe-static-lib.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -28,25 +28,26 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-file(GLOB ANARI_CMAKE_CONFIG_FILE RELATIVE ${CURRENT_PACKAGES_DIR} "${CURRENT_PACKAGES_DIR}/lib/cmake/*/anariConfig.cmake")
+file(GLOB ANARI_CMAKE_CONFIG_FILE RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/cmake/*/anariConfig.cmake")
 cmake_path(GET ANARI_CMAKE_CONFIG_FILE PARENT_PATH ANARI_CMAKE_CONFIG_DIR)
 vcpkg_cmake_config_fixup(
-  CONFIG_PATH ${ANARI_CMAKE_CONFIG_DIR}
+    CONFIG_PATH "${ANARI_CMAKE_CONFIG_DIR}"
 )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 vcpkg_replace_string(
-  "${CURRENT_PACKAGES_DIR}/share/anari/anariConfig.cmake"
-  "  \${CMAKE_CURRENT_LIST_DIR}/../../../share/anari"
-  "  \${CMAKE_CURRENT_LIST_DIR}/../../share/anari"
+    "${CURRENT_PACKAGES_DIR}/share/anari/anariConfig.cmake"
+    "  \${CMAKE_CURRENT_LIST_DIR}/../../../share/anari"
+    "  \${CMAKE_CURRENT_LIST_DIR}/../../share/anari"
 )
 
 file(REMOVE_RECURSE
-  "${CURRENT_PACKAGES_DIR}/debug/include"
-  "${CURRENT_PACKAGES_DIR}/debug/share"
-  "${CURRENT_PACKAGES_DIR}/share/anari/code_gen/__pycache__"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/anari/code_gen/__pycache__"
 )
 
 vcpkg_install_copyright(
-  FILE_LIST "${SOURCE_PATH}/LICENSE"
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
 )
