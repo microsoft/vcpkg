@@ -1,0 +1,28 @@
+@PACKAGE_INIT@
+
+if(NOT TARGET fastlowess::fastlowess)
+    add_library(fastlowess::fastlowess SHARED IMPORTED)
+    set_target_properties(fastlowess::fastlowess PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include"
+        INTERFACE_COMPILE_FEATURES cxx_std_17
+        IMPORTED_CONFIGURATIONS Release
+        IMPORTED_LOCATION_RELEASE "${PACKAGE_PREFIX_DIR}/@FASTLOWESS_LIBRARY_DIR@/@FASTLOWESS_BINARY_NAME@"
+        MAP_IMPORTED_CONFIG_DEBUG Release
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+        MAP_IMPORTED_CONFIG_MINSIZEREL Release
+    )
+    if(UNIX AND NOT APPLE)
+        set_property(TARGET fastlowess::fastlowess PROPERTY IMPORTED_NO_SONAME TRUE)
+    elseif(APPLE)
+        set_target_properties(fastlowess::fastlowess PROPERTIES
+            IMPORTED_SONAME_RELEASE "@rpath/@FASTLOWESS_BINARY_NAME@"
+        )
+    endif()
+    if(WIN32)
+        set_target_properties(fastlowess::fastlowess PROPERTIES
+            IMPORTED_IMPLIB_RELEASE "${PACKAGE_PREFIX_DIR}/lib/@FASTLOWESS_IMPORT_LIBRARY_NAME@"
+        )
+    endif()
+endif()
+
+check_required_components(fastlowess)
