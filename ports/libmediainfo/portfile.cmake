@@ -35,4 +35,14 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/Source/ThirdParty/aes-gladman/aes.h"
+    "${SOURCE_PATH}/Source/ThirdParty/sha1-gladman/sha1.h"
+    "${SOURCE_PATH}/Source/ThirdParty/sha2-gladman/sha2.h"
+    "${SOURCE_PATH}/Source/ThirdParty/hmac-gladman/hmac.h"
+    "${SOURCE_PATH}/Source/ThirdParty/md5/md5.c"
+    "${SOURCE_PATH}/Source/ThirdParty/tfsxml/tfsxml.h"
+    "${SOURCE_PATH}/Source/ThirdParty/fmt/format.h"
+    "${SOURCE_PATH}/Source/ThirdParty/base64/base64.h"
+)

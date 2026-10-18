@@ -3,6 +3,7 @@
   "version": "26.10",
   "description": "Get most relevant technical and tag data from video and audio files",
   "homepage": "https://github.com/MediaArea/MediaInfoLib",
+  "license": "BSD-2-Clause AND MIT AND Brian-Gladman-2-Clause AND Brian-Gladman-3-Clause AND LicenseRef-Public-Domain",
   "dependencies": [
     "libzen",
     "tinyxml2",
