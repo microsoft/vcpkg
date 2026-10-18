@@ -1,15 +1,13 @@
 diff --git a/src/sail-codecs/video/CMakeLists.txt b/src/sail-codecs/video/CMakeLists.txt
-index 01cf4f15..7a6079b8 100644
+index 01cf4f1..cf13a03 100644
 --- a/src/sail-codecs/video/CMakeLists.txt
 +++ b/src/sail-codecs/video/CMakeLists.txt
-@@ -39,6 +39,10 @@ elseif (ANDROID)
+@@ -35,7 +35,7 @@ elseif (APPLE)
+         list(APPEND VIDEO_SYSTEM_LIBRARIES "-framework ${VIDEO_SYSTEM_FRAMEWORK}")
+     endforeach()
+ elseif (ANDROID)
+-    set(VIDEO_SYSTEM_LIBRARIES mediandk android)
++    set(VIDEO_SYSTEM_LIBRARIES mediandk android log)
  
      list(JOIN VIDEO_SYSTEM_LIBRARIES " " VIDEO_SYSTEM_LIBRARIES_JOINED)
      set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${VIDEO_SYSTEM_LIBRARIES_JOINED}")
-+
-+    find_library(ANDROID_LOG_LIB log REQUIRED)
-+    set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_library,log,log")
-+    list(APPEND VIDEO_SYSTEM_LIBRARIES ${ANDROID_LOG_LIB})
- endif()
- 
- set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} PARENT_SCOPE)
