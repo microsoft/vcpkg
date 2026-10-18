@@ -297,7 +297,7 @@
       "port-version": 10
     },
     "arrow": {
-      "baseline": "25.0.1",
+      "baseline": "26.0.0",
       "port-version": 0
     },
     "arrow-adbc": {
@@ -7413,12 +7413,12 @@
       "port-version": 6
     },
     "ompl": {
-      "baseline": "1.7.0",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "omplapp": {
       "baseline": "1.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "onednn": {
       "baseline": "3.12",
@@ -10726,7 +10726,7 @@
     },
     "vcpkg-make": {
       "baseline": "2026-07-09",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
@@ -11065,7 +11065,7 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "8.0.0",
+      "baseline": "10.0.0",
       "port-version": 0
     },
     "winsock2": {
