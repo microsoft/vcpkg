@@ -1,8 +1,8 @@
 diff --git a/include/open62541pp/config.hpp.in b/include/open62541pp/config.hpp.in
-index 67522ab..362dfcd 100644
+index 2f3ed47..93c7a1e 100644
 --- a/include/open62541pp/config.hpp.in
 +++ b/include/open62541pp/config.hpp.in
-@@ -59,7 +59,8 @@
+@@ -61,7 +61,8 @@
  #define UAPP_HAS_DATAACCESS 0
  #endif
  
@@ -29,7 +29,7 @@ index 8457315..bc443a0 100644
  }  // namespace detail
  
 diff --git a/include/open62541pp/event.hpp b/include/open62541pp/event.hpp
-index 244d754..41301c3 100644
+index 244d754..eaea11f 100644
 --- a/include/open62541pp/event.hpp
 +++ b/include/open62541pp/event.hpp
 @@ -3,6 +3,7 @@
@@ -40,7 +40,21 @@ index 244d754..41301c3 100644
  #include "open62541pp/types.hpp"
  #include "open62541pp/ua/nodeids.hpp"
  
-@@ -72,6 +73,11 @@ public:
+@@ -24,8 +25,13 @@ public:
+     /// Delete the node representation of the event.
+     ~Event();
+ 
++#if UAPP_OPEN62541_VER_GE(1, 5)
++    Event(const Event& other);
++    Event(Event&& other) noexcept;
++#else
+     Event(const Event&) = default;
+     Event(Event&&) noexcept = default;
++#endif
+ 
+     Event& operator=(const Event&) = delete;
+     Event& operator=(Event&&) noexcept = delete;
+@@ -72,6 +78,11 @@ public:
  private:
      Server* connection_;
      NodeId id_;
@@ -415,10 +429,18 @@ index 6a61e5b..208e31a 100644
      new (item) UA_DataTypeArray{
          const_cast<UA_DataTypeArray*>(head),  // NOLINT(*const-cast), non-const since v1.5
 diff --git a/src/event.cpp b/src/event.cpp
-index 6b8c6dc..601acc4 100644
+index 6b8c6dc..50a3e70 100644
 --- a/src/event.cpp
 +++ b/src/event.cpp
-@@ -12,13 +12,21 @@ namespace opcua {
+@@ -1,5 +1,7 @@
+ #include "open62541pp/event.hpp"
+ 
++#include <utility>  // exchange, move
++
+ #include "open62541pp/config.hpp"  // UA_ENABLE_SUBSCRIPTIONS_EVENTS
+ #include "open62541pp/detail/open62541/server.h"
+ #include "open62541pp/exception.hpp"
+@@ -12,13 +14,38 @@ namespace opcua {
  
  Event::Event(Server& connection, const NodeId& eventType)
      : connection_{&connection} {
@@ -427,8 +449,25 @@ index 6b8c6dc..601acc4 100644
 +#else
      throwIfBad(UA_Server_createEvent(connection.handle(), eventType, id_.handle()));
 +#endif
++}
++
++#if UAPP_OPEN62541_VER_GE(1, 5)
++Event::Event(const Event& other)
++    : connection_{other.connection_},
++      id_{other.id_},
++      severity_{other.severity_},
++      message_{other.message_} {
++    throwIfBad(UA_KeyValueMap_copy(&other.eventFields_, &eventFields_));
  }
  
++Event::Event(Event&& other) noexcept
++    : connection_{other.connection_},
++      id_{std::move(other.id_)},
++      eventFields_{std::exchange(other.eventFields_, {})},
++      severity_{other.severity_},
++      message_{std::move(other.message_)} {}
++#endif
++
  Event::~Event() {
 +#if UAPP_OPEN62541_VER_GE(1, 5)
 +    UA_KeyValueMap_clear(&eventFields_);
@@ -440,7 +479,7 @@ index 6b8c6dc..601acc4 100644
  }
  
  Event& Event::writeSourceName(std::string_view sourceName) {
-@@ -30,23 +38,45 @@ Event& Event::writeTime(DateTime time) {  // NOLINT(performance-unnecessary-valu
+@@ -30,23 +57,55 @@ Event& Event::writeTime(DateTime time) {  // NOLINT(performance-unnecessary-valu
  }
  
  Event& Event::writeSeverity(uint16_t severity) {
@@ -459,7 +498,17 @@ index 6b8c6dc..601acc4 100644
  
  Event& Event::writeProperty(const QualifiedName& propertyName, const Variant& value) {
 +#if UAPP_OPEN62541_VER_GE(1, 5)
-+    throwIfBad(UA_KeyValueMap_set(&eventFields_, propertyName, value.handle()));
++    // open62541 v1.5 expects the keys to be SimpleAttributeOperand paths, e.g. `/2:Name`
++    UA_SimpleAttributeOperand operand{};
++    operand.typeDefinitionId = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEEVENTTYPE);
++    operand.browsePathSize = 1;
++    operand.browsePath = const_cast<UA_QualifiedName*>(propertyName.handle());  // NOLINT
++    operand.attributeId = UA_ATTRIBUTEID_VALUE;
++    String path;
++    throwIfBad(UA_SimpleAttributeOperand_print(&operand, path.handle()));
++    throwIfBad(
++        UA_KeyValueMap_set(&eventFields_, UA_QualifiedName{0, *path.handle()}, value.handle())
++    );
 +#else
      const auto status = UA_Server_writeObjectProperty(
          connection().handle(), id(), propertyName, value
@@ -486,7 +535,7 @@ index 6b8c6dc..601acc4 100644
      const auto status = UA_Server_triggerEvent(
          connection().handle(),
          id(),
-@@ -54,6 +84,7 @@ ByteString Event::trigger(const NodeId& originId) {
+@@ -54,6 +113,7 @@ ByteString Event::trigger(const NodeId& originId) {
          eventId.handle(),
          false  // deleteEventNode
      );
@@ -540,138 +589,3 @@ index 0e681a9..2a4e19e 100644
  }
  
  void setVariableNodeValueCallback(Server& server, const NodeId& id, ValueCallbackBase& callback) {
-diff --git a/src/services_nodemanagement.cpp b/src/services_nodemanagement.cpp
-index 47ba180..f97600b 100644
---- a/src/services_nodemanagement.cpp
-+++ b/src/services_nodemanagement.cpp
-@@ -45,6 +45,122 @@ Result<NodeId> addNode<Server>(
-     const NodeId& referenceType
- ) noexcept {
-     NodeId addedNodeId;
-+#if UAPP_OPEN62541_VER_GE(1, 5)
-+    const UA_QualifiedName qualifiedName{id.namespaceIndex(), opcua::detail::toNativeString(browseName)};
-+    const auto* attributes = static_cast<const UA_NodeAttributes*>(nodeAttributes.decodedData());
-+    StatusCode status{};
-+    switch (nodeClass) {
-+    case NodeClass::Object:
-+        status = UA_Server_addObjectNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            typeDefinition,
-+            *reinterpret_cast<const UA_ObjectAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+    case NodeClass::Variable:
-+        status = UA_Server_addVariableNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            typeDefinition,
-+            *reinterpret_cast<const UA_VariableAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+#ifdef UA_ENABLE_METHODCALLS
-+    case NodeClass::Method:
-+        status = UA_Server_addMethodNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            *reinterpret_cast<const UA_MethodAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            0,
-+            nullptr,
-+            0,
-+            nullptr,
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+#endif
-+    case NodeClass::ObjectType:
-+        status = UA_Server_addObjectTypeNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            *reinterpret_cast<const UA_ObjectTypeAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+    case NodeClass::VariableType:
-+        status = UA_Server_addVariableTypeNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            typeDefinition,
-+            *reinterpret_cast<const UA_VariableTypeAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+    case NodeClass::ReferenceType:
-+        status = UA_Server_addReferenceTypeNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            *reinterpret_cast<const UA_ReferenceTypeAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+    case NodeClass::DataType:
-+        status = UA_Server_addDataTypeNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            *reinterpret_cast<const UA_DataTypeAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+    case NodeClass::View:
-+        status = UA_Server_addViewNode(
-+            connection.handle(),
-+            id,
-+            parentId,
-+            referenceType,
-+            qualifiedName,
-+            *reinterpret_cast<const UA_ViewAttributes*>(attributes),  // NOLINT
-+            nullptr,
-+            addedNodeId.handle()
-+        );
-+        break;
-+    default:
-+        status = UA_STATUSCODE_BADNODECLASSINVALID;
-+        break;
-+    }
-+#else
-     const StatusCode status = __UA_Server_addNode(
-         connection.handle(),
-         static_cast<UA_NodeClass>(nodeClass),
-@@ -58,6 +174,7 @@ Result<NodeId> addNode<Server>(
-         nullptr,  // nodeContext
-         addedNodeId.handle()
-     );
-+#endif
-     if (status.isBad()) {
-         return BadResult{status};
-     }
