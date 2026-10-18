@@ -10,7 +10,7 @@ vcpkg_from_github(
         fix-heif.patch
         fix-include-directory.patch
         fix-jpegxl-pkg-config.patch # https://github.com/microsoft/vcpkg/issues/54477
-        fix-libraw-cmake.patch
+        fix-libraw-cmake.patch # https://github.com/microsoft/vcpkg/issues/54471
 )
 
 # Enable selected codecs
