@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-stream-buffer-multiplexer
     REF "v${VERSION}"
-    SHA512 ce3fdfb24ea5b9b1ac3e6598570e71bbd5a794807f217203ae2d1a66a73c6872b5c4038a92b8946b7c1c9b91effe1de8c79a9242ff8c1e6d298d494ebcecbeca
+    SHA512 767afff658aa57ec14df5e62bfe8c313e9c1383f939bfa96130e3d38bdac99f7e1dbeae578840ba6dc401ce9dd2bac146351c1fdb6682ad22ad8f723c64400d4
     HEAD_REF main
     PATCHES
         slick-dependencies-fetching.patch
