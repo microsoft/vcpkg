@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
     PATCHES
         fix-crashpad-wer.patch
+        fix-wer-define.patch
         fix-usage-runtime.patch
         fix-cmake4.patch
 )
@@ -85,6 +86,7 @@ endif()
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/vendor/jsmn.h"
         "${SOURCE_PATH}/vendor/mpack.h"
         "${SOURCE_PATH}/vendor/stb_sprintf.h"
         "${SOURCE_PATH}/external/libunwindstack-ndk/LICENSE"
