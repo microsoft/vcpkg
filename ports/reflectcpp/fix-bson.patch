@@ -17,35 +17,37 @@ index a1ba068..6562aaf 100644
 +++ b/reflectcpp-config.cmake.in
 @@ -28,26 +28,26 @@ if (NOT REFLECTCPP_USE_BUNDLED_DEPENDENCIES)
  endif()
-
+ 
  if ((REFLECTCPP_JSON OR REFLECTCPP_AVRO OR REFLECTCPP_CBOR OR REFLECTCPP_UBJSON) AND NOT REFLECTCPP_USE_BUNDLED_DEPENDENCIES)
--  find_dependency(yyjson)
+-  find_dependency(yyjson)  
 +  find_dependency(yyjson)
  endif()
-
--if (REFLECTCPP_BOOST_SERIALIZATION)
+ 
+-if (REFLECTCPP_BOOST_SERIALIZATION)  
 +if (REFLECTCPP_BOOST_SERIALIZATION)
    find_dependency(Boost COMPONENTS serialization)
  endif ()
-
--if (REFLECTCPP_BSON)
+ 
+-if (REFLECTCPP_BSON)  
 -  find_dependency(bson-1.0)
 +if (REFLECTCPP_BSON)
 +  find_dependency(bson)
  endif ()
-
--if (REFLECTCPP_CAPNPROTO)
+ 
+-if (REFLECTCPP_CAPNPROTO)  
 +if (REFLECTCPP_CAPNPROTO)
    find_dependency(CapnProto)
  endif ()
-
--if (REFLECTCPP_CBOR OR REFLECTCPP_UBJSON)
+ 
+-if (REFLECTCPP_CBOR OR REFLECTCPP_UBJSON)  
 +if (REFLECTCPP_CBOR OR REFLECTCPP_UBJSON)
    find_dependency(jsoncons)
  endif ()
-
--if (REFLECTCPP_CEREAL)
+ 
+-if (REFLECTCPP_CEREAL)  
 +if (REFLECTCPP_CEREAL)
    find_dependency(cereal)
  endif ()
+ 
+
 
