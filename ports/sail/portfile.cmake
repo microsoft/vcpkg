@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-jpegxl-pkg-config.patch # https://github.com/microsoft/vcpkg/issues/54477
         fix-libraw-cmake.patch # https://github.com/microsoft/vcpkg/issues/54471
         fix-release-only-triplet.patch
+        fix-swscale-link-order.patch
 )
 
 # Enable selected codecs
