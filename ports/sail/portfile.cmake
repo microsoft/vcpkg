@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-always-nanosvg.diff
         fix-android-log.patch
+        fix-ffmpeg-opencl.patch
         fix-heif.patch
         fix-include-directory.patch
         fix-jpegxl-pkg-config.patch # https://github.com/microsoft/vcpkg/issues/54477
