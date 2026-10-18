@@ -1,5 +1,33 @@
+diff --git a/src/sail-codecs/CMakeLists.txt b/src/sail-codecs/CMakeLists.txt
+index 0e9532a..480ec99 100644
+--- a/src/sail-codecs/CMakeLists.txt
++++ b/src/sail-codecs/CMakeLists.txt
+@@ -149,9 +149,22 @@ if (NOT BUILD_SHARED_LIBS)
+             list(GET dependency 1 dependency_name)
+             list(GET dependency 2 dependency_link_target)
+ 
++            # Optional extra find_package() arguments, like CONFIG. Needed when a package
++            # ships a find module whose name only differs in case from the package name:
++            # on case insensitive file systems the module wins over the config file and
++            # sets differently spelled result variables.
++            #
++            list(LENGTH dependency dependency_length)
++
++            if (dependency_length GREATER 3)
++                list(GET dependency 3 dependency_extra_args)
++            else()
++                set(dependency_extra_args "")
++            endif()
++
+             set(SAIL_CODECS_FIND_DEPENDENCIES_EXPANDED "${SAIL_CODECS_FIND_DEPENDENCIES_EXPANDED}
+ # ${dependency_name}
+-find_dependency(${dependency_name} REQUIRED)
++find_dependency(${dependency_name} ${dependency_extra_args} REQUIRED)
+ target_link_libraries(SAIL::sail-codecs INTERFACE ${dependency_link_target})
+ ")
+         elseif(dependency_search_mechanism STREQUAL "pkg_config")
 diff --git a/src/sail-codecs/raw/CMakeLists.txt b/src/sail-codecs/raw/CMakeLists.txt
-index 72fd0aa4..d9cd7da9 100644
+index 72fd0aa..324519e 100644
 --- a/src/sail-codecs/raw/CMakeLists.txt
 +++ b/src/sail-codecs/raw/CMakeLists.txt
 @@ -1,36 +1,19 @@
@@ -30,7 +58,7 @@ index 72fd0aa4..d9cd7da9 100644
  # For static builds, export dependencies.
  #
 -set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "pkg_config,${RAW_MODULE}" PARENT_SCOPE)
-+set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_dependency,libraw,libraw::raw_r" PARENT_SCOPE)
++set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_dependency,libraw,libraw::raw_r,CONFIG" PARENT_SCOPE)
  
  # Common codec configuration
  #
