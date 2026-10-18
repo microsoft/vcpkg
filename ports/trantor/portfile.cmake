@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         000-fix-deps.patch
         001-disable-werror.patch
+        002-export-certificate.patch
 )
 
 set(feature_options)
@@ -19,6 +20,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         ${feature_options}
 )
 
@@ -30,6 +32,9 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/License"
+    "${SOURCE_PATH}/third_party/wepoll/LICENSE"
+)
 
 vcpkg_copy_pdbs()
