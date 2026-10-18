@@ -1,10 +1,15 @@
-The simple-websocket-server port provides headers under the
-<simple-websocket-server/...> include path.
+The package simple-websocket-server is header-only and can be used from CMake via:
 
-For the v2.0.3-ln.1 headers, define ASIO_STANDALONE before including a
-Simple-WebSocket-Server header to use standalone Asio. This is the public
-compile definition consumed by the headers; it is distinct from the
-upstream CMake option `USE_STANDALONE_ASIO`. The default installation
-includes the standalone Asio dependency. The `boost-asio` feature is
-additive: install it to provide Boost.Asio to consumers, and omit
-`ASIO_STANDALONE` when using the Boost.Asio backend.
+find_path(
+    SIMPLE_WEBSOCKET_SERVER_INCLUDE_DIRS
+    "simple-websocket-server/server_ws.hpp"
+)
+
+target_include_directories(main PRIVATE
+    ${SIMPLE_WEBSOCKET_SERVER_INCLUDE_DIRS}
+)
+
+target_compile_definitions(main PRIVATE ASIO_STANDALONE)
+
+This port uses standalone Asio. ASIO_STANDALONE is the public header-selection
+macro; it is distinct from the upstream CMake option USE_STANDALONE_ASIO.

@@ -1,5 +1,8 @@
 set(VCPKG_BUILD_TYPE release) # header-only library
 
+# Use the maintained downstream release because Kurlyk requires its verified
+# ScopeRunner TLS cleanup fix, which is not present in the current upstream
+# master. The downstream preserves the upstream history and public API.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LimiNode/Simple-WebSocket-Server
