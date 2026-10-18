@@ -35,7 +35,7 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/VulkanLoader" PACKAGE_NAME VulkanLoader)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/loader/cJSON.h")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
