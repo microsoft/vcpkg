@@ -3105,7 +3105,7 @@
       "port-version": 0
     },
     "fkyaml": {
-      "baseline": "0.4.4",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "flann": {
