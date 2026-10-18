@@ -480,6 +480,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
 
+if(NOT VCPKG_TARGET_IS_ANDROID)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/android")
+endif()
 if(NOT VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
 endif()
