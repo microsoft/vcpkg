@@ -1,13 +1,16 @@
 diff --git a/src/sail-codecs/video/CMakeLists.txt b/src/sail-codecs/video/CMakeLists.txt
-index 01cf4f1..cf13a03 100644
+index 01cf4f1..bfb40c2 100644
 --- a/src/sail-codecs/video/CMakeLists.txt
 +++ b/src/sail-codecs/video/CMakeLists.txt
-@@ -35,7 +35,7 @@ elseif (APPLE)
+@@ -35,7 +35,10 @@ elseif (APPLE)
          list(APPEND VIDEO_SYSTEM_LIBRARIES "-framework ${VIDEO_SYSTEM_FRAMEWORK}")
      endforeach()
  elseif (ANDROID)
 -    set(VIDEO_SYSTEM_LIBRARIES mediandk android)
-+    set(VIDEO_SYSTEM_LIBRARIES mediandk android log)
++    # -llog rather than a bare 'log': the tests add an executable target named 'log',
++    # and a bare name would resolve to it instead of the NDK system library.
++    #
++    set(VIDEO_SYSTEM_LIBRARIES mediandk android -llog)
  
      list(JOIN VIDEO_SYSTEM_LIBRARIES " " VIDEO_SYSTEM_LIBRARIES_JOINED)
      set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${VIDEO_SYSTEM_LIBRARIES_JOINED}")
