@@ -23,6 +23,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-spirv-reflect)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/spirv-reflect/spirv_reflect.h" "./include/spirv/unified1/spirv.h" "spirv.h")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/spirv_reflect.h" "./include/spirv/unified1/spirv.h" "spirv-reflect/spirv.h")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
