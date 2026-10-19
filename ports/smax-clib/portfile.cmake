@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Sigmyne/smax-clib
     REF "v${VERSION}"
-    SHA512 87a6ebb165356d3cc2bdcd865d0da21a60a7bc5169931904d78f27f5dd59c89531f64f00d0f18fb7bdddee18186096e6d1933d7ecaa9202ce7da20b5acc3e1e0
+    SHA512 1acc8c63e11c522c5cdc6e6b2c22aea974812efd640f6a23bb6bbf5f0716f2b745a3ca03aab2ef9856322934274af21bf92a22ba943eaa8c85d4cb255bb260fd
     HEAD_REF main
 )
 
