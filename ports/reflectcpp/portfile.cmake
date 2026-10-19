@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO getml/reflect-cpp
+    REPO munich-data-engineering/reflect-cpp
     REF "v${VERSION}"
-    SHA512 527b8962754b2a5c48e63df72fe5030bceaa40c10762c4fd2ec1d084d9ced5726129cac9f1045fd818888e8468283f6867a5cbdd11bae290a4111b4a67eb573f
+    SHA512 5ff4ac951f014477c306fc19b0c393c1a5b1ecfb7fbed2fcf0aa5a6d8671c13bd5e5ef9d3fe501284829c7104e1b4142a66867ccbd7a7987b1e66a1bac1fe2b9
     HEAD_REF main
     PATCHES
         fix-bson.patch
