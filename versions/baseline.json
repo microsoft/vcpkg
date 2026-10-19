@@ -4348,6 +4348,10 @@
       "baseline": "6.31.0",
       "port-version": 1
     },
+    "kconfigwidgets": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kcoreaddons": {
       "baseline": "6.31.0",
       "port-version": 1
