@@ -1481,7 +1481,7 @@
       "port-version": 0
     },
     "box2d": {
-      "baseline": "3.1.1",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "box3d": {
