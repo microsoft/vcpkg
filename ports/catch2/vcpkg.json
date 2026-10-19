@@ -3,7 +3,7 @@
   "version-semver": "3.16.1",
   "description": "A modern, C++-native, test framework for unit-tests, TDD and BDD.",
   "homepage": "https://github.com/catchorg/Catch2",
-  "license": "BSL-1.0",
+  "license": "BSL-1.0 AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

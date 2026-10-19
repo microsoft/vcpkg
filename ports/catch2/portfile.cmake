@@ -43,4 +43,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/generators/internal"
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch_all.hpp>")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_download_distfile(CMAKE_LICENSE
+    URLS "https://raw.githubusercontent.com/Kitware/CMake/af7ecc8c294d153b0120813776e1fa11c5bfe4a1/LICENSE.rst"
+    FILENAME "cmake-license-af7ecc8c294d153b0120813776e1fa11c5bfe4a1.rst"
+    SHA512 87a33d2a87dc68aac424b56089c6a41176f5db49c7192fa34b4311212a609db8b52554a0857fea19dcb96a6296087b146cecb675c1653ffaf95a48a0678658fb
+)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${CMAKE_LICENSE}")
