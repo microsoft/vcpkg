@@ -3,7 +3,7 @@
   "version": "15.6.2",
   "description": "Armadillo is a high quality linear algebra library (matrix maths) for the C++ language, aiming towards a good balance between speed and ease of use",
   "homepage": "https://arma.sourceforge.net",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 AND BSD-3-Clause",
   "dependencies": [
     "blas",
     "lapack",

@@ -57,4 +57,6 @@ vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.txt"
         "${SOURCE_PATH}/NOTICE.txt"
+        "${SOURCE_PATH}/include/armadillo_bits/fft_engine_kissfft.hpp"
+        "${SOURCE_PATH}/include/armadillo_bits/include_superlu.hpp"
 )
