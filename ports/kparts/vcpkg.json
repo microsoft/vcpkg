@@ -1,0 +1,56 @@
+{
+  "name": "kparts",
+  "version": "6.31.0",
+  "description": "Plugin framework for user interface components",
+  "homepage": "https://invent.kde.org/frameworks/kparts",
+  "documentation": "https://api.kde.org/kparts-index.html",
+  "license": "LGPL-2.0-or-later AND LGPL-2.1-or-later AND GPL-2.0-or-later",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kconfig",
+    "kcoreaddons",
+    "ki18n",
+    "kio",
+    "kjobwidgets",
+    "kservice",
+    "kwidgetsaddons",
+    "kxmlgui",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "translations": {
+      "description": "Build translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
