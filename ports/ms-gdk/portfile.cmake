@@ -57,7 +57,7 @@ foreach(t IN LISTS HEADERS)
     list(APPEND CORE_INCLUDES ${h})
 endforeach()
 
-set(INCLUDE_DIRS httpClient Xal xsapi-c xsapi-cpp)
+set(INCLUDE_DIRS cpprest httpClient pplx Xal xsapi-c xsapi-cpp)
 
 file(INSTALL "${WINDOWS_PATH}/bin/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.C.Thunks.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/Microsoft.Xbox.Services.C.Thunks.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
