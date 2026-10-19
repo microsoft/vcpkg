@@ -6,8 +6,8 @@ if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
 }
 
 # See https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history
-# 18.10.0
-$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/af2bf19c-59e9-48c4-bac6-019f173389ac/e21cd5dc076844266c9a9bc23eb3573fcca92a14ed5da088dc1a62f796b03171/vs_BuildTools.exe'
+# 18.11.0
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/4ee8a2e7-bc71-435a-8180-6703ab4d2017/89341fb2edf12ef29977078fdc72a9e47767ce6895cc297f274bc4a379db4c71/vs_BuildTools.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.VCTools',
   'Microsoft.VisualStudio.Workload.MSBuildTools',
