@@ -1,0 +1,19 @@
+diff --git a/cmake/QtJavaHelpers.cmake b/cmake/QtJavaHelpers.cmake
+index 5c4c49a..c16c9ed 100644
+--- a/cmake/QtJavaHelpers.cmake
++++ b/cmake/QtJavaHelpers.cmake
+@@ -39,6 +39,14 @@ function(qt_internal_add_jar target)
+     set(multiValueArgs INCLUDE_JARS SOURCES)
+     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+ 
++    # vcpkg: The Gradle JAR build needs to download Gradle and the Android Gradle Plugin.
++    _qt_internal_add_jar_with_javac("${target}"
++        SOURCES ${arg_SOURCES}
++        INCLUDE_JARS ${arg_INCLUDE_JARS}
++        OUTPUT_DIR "${arg_OUTPUT_DIR}"
++    )
++    return()
++
+     # Valid Gradle project files
+     if(arg_GRADLE_PROJECT_DIR)
+         get_filename_component(gradle_source_dir "${arg_GRADLE_PROJECT_DIR}" ABSOLUTE)

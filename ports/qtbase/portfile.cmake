@@ -30,6 +30,7 @@ set(${PORT}_PATCHES
         fix-libresolv-test.patch
         silence-winrtbase-coroutine-warnings.diff
         md4c.diff
+        android-jar-javac.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
