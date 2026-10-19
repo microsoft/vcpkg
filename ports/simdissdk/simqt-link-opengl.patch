@@ -1,0 +1,14 @@
+diff --git a/SDK/simQt/CMakeLists.txt b/SDK/simQt/CMakeLists.txt
+index d84ee63..0d74fc4 100644
+--- a/SDK/simQt/CMakeLists.txt
++++ b/SDK/simQt/CMakeLists.txt
+@@ -390,6 +390,9 @@ if(TARGET simVis)
+ endif()
+ if(Qt${SIMQT_QT_VERSION}OpenGL_FOUND)
+     target_link_libraries(simQt PUBLIC Qt::OpenGL)
++    if(TARGET OpenGL::GL)
++        target_link_libraries(simQt PUBLIC OpenGL::GL)
++    endif()
+ endif()
+ 
+ # Link against OpenGL if OSGQT is found to support simQt::ViewWidget
