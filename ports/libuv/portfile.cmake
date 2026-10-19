@@ -26,6 +26,15 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libuv)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(GLOB libuv_pc_files
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc"
+    )
+    foreach(libuv_pc_file IN LISTS libuv_pc_files)
+        vcpkg_replace_string("${libuv_pc_file}" "-l:libuv.a" "-llibuv")
+    endforeach()
+endif()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -37,4 +46,11 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/LICENSE-extra"
+    "${SOURCE_PATH}/include/uv/tree.h"
+    "${SOURCE_PATH}/src/heap-inl.h"
+    "${SOURCE_PATH}/src/idna.h"
+    "${SOURCE_PATH}/src/inet.c"
+)
