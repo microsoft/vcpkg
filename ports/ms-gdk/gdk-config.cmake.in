@@ -40,7 +40,7 @@ set_target_properties(Xbox::HTTPClient PROPERTIES
     MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
     INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include")
 
-target_link_libraries(Xbox::XSAPI INTERFACE Xbox::HTTPClient Xbox::XCurl appnotify.lib winhttp.lib crypt32.lib)
+target_link_libraries(Xbox::XSAPI INTERFACE Xbox::GameRuntime Xbox::HTTPClient Xbox::XCurl appnotify.lib winhttp.lib crypt32.lib)
 
 # GameChat2
 add_library(Xbox::GameChat2 SHARED IMPORTED)
@@ -81,6 +81,7 @@ if (@BUILD_PLAYFAB_SERVICES@ AND (EXISTS "${_msgdk_root}/lib/PlayFabCore.lib"))
         IMPORTED_IMPLIB "${_msgdk_root}/lib/PlayFabCore.lib"
         MAP_IMPORTED_CONFIG_MINSIZEREL ""
         MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include"
         IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
 
     target_link_libraries(Xbox::PlayFabServices INTERFACE Xbox::PlayFabCore Xbox::XCurl)
@@ -92,6 +93,7 @@ if (@BUILD_PLAYFAB_SERVICES@ AND (EXISTS "${_msgdk_root}/lib/PlayFabCore.lib"))
         IMPORTED_IMPLIB "${_msgdk_root}/lib/PlayFabGameSave.lib"
         MAP_IMPORTED_CONFIG_MINSIZEREL ""
         MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include"
         IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
 
     # PlayFab Party
