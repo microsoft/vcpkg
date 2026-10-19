@@ -4620,6 +4620,10 @@
       "baseline": "6.31.0",
       "port-version": 0
     },
+    "kjobwidgets": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kleidiai": {
       "baseline": "1.25.0",
       "port-version": 0

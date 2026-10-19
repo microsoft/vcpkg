@@ -36,6 +36,7 @@ PORT_LIST = [
     "ki18n",
     "kitemmodels",
     "kitemviews",
+    "kjobwidgets",
     "knotifications",
     "kwidgetsaddons",
     "kwindowsystem",
