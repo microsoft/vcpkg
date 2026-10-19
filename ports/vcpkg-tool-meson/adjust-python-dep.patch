@@ -1,5 +1,5 @@
 diff --git a/mesonbuild/dependencies/python.py b/mesonbuild/dependencies/python.py
-index 3b02bad..f747d30 100644
+index 3b02bad..cc344e3 100644
 --- a/mesonbuild/dependencies/python.py
 +++ b/mesonbuild/dependencies/python.py
 @@ -388,8 +388,10 @@ class _PythonDependencyBase(_Base):
@@ -49,7 +49,7 @@ index 3b02bad..f747d30 100644
              inc_paths = mesonlib.OrderedSet([
                  self.variables.get('INCLUDEPY'),
 -                self.paths.get('include'),
-+                self.paths.get('include') + f'/../../../include/python${verdot}',
++                self.paths.get('include') + f'/../../../include/python{verdot}',
                  self.paths.get('platinclude')])
  
          self.compile_args += ['-I' + path for path in inc_paths if path]
