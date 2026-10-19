@@ -1,30 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 87097e3..c90fd3e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -178,6 +178,26 @@ endif()
+@@ -178,6 +178,21 @@ endif()
  find_package(OpenGL QUIET)
  find_package(OpenSceneGraph COMPONENTS osgAnimation osgDB osgGA osgSim osgText osgUtil osgViewer QUIET)
  find_package(GDAL CONFIG)
 +
-+# osgEarth's exported CMake config references several of its transitive private
-+# dependencies (spdlog, protobuf, Fontconfig, SQLite3, ...) in the link interface
-+# of the osgEarth::osgEarth target but does not call find_dependency() for them.
-+# Load those packages here, before find_package(osgEarth), so the imported
-+# target interface can be resolved by the configure step.
++# osgEarth's exported CMake config leaks several of its transitive PRIVATE
++# dependencies into the INTERFACE_LINK_LIBRARIES of the osgEarth::osgEarth
++# target but does not call find_dependency() for them. Load those packages
++# here, before find_package(osgEarth), so the imported target interface can
++# be resolved during the configure step. (spdlog, protobuf, blend2d, GEOS and
++# meshoptimizer are linked PRIVATE by osgEarth yet surface in its interface.)
 +find_package(spdlog CONFIG QUIET)
 +find_package(Protobuf CONFIG QUIET)
-+find_package(Fontconfig QUIET)
++find_package(blend2d CONFIG QUIET)
++# geos ships its CMake config as GEOSConfig.cmake (uppercase); reference the
++# exact file name so the lookup succeeds on case-sensitive filesystems.
++find_package(GEOS CONFIG QUIET)
++find_package(meshoptimizer CONFIG QUIET)
 +find_package(CURL QUIET)
-+# SQLite3: vcpkg ships it as unofficial::sqlite3::sqlite3; provide the
-+# SQLite3::SQLite3 alias that osgEarth's interface expects.
-+find_package(SQLite3 QUIET)
-+if(NOT SQLite3_FOUND)
-+    find_package(unofficial-sqlite3 CONFIG QUIET)
-+    if(unofficial-sqlite3_FOUND)
-+        add_library(SQLite3::SQLite3 ALIAS unofficial::sqlite3::sqlite3)
-+        set(SQLite3_FOUND TRUE)
-+    endif()
-+endif()
  find_package(osgEarth)
  find_package(osgQOpenGL 4.0 QUIET)
  
