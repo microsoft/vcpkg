@@ -1,6 +1,6 @@
 {
   "name": "swaggercpp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Professional C++23 library for Swagger/OpenAPI parsing, validation, traversal, and serialization.",
   "homepage": "https://github.com/stescobedo92/swagger-cpp",
   "license": "MIT",
@@ -16,5 +16,10 @@
       "host": true
     },
     "yaml-cpp"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build the swaggercpp command-line tool for validation, conversion, bundling, and documentation serving"
+    }
+  }
 }

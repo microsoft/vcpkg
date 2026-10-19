@@ -1,5 +1,5 @@
 diff --git a/cmake/llama-config.cmake.in b/cmake/llama-config.cmake.in
-index 6db7357..ade840c 100644
+index 6500203..84a876d 100644
 --- a/cmake/llama-config.cmake.in
 +++ b/cmake/llama-config.cmake.in
 @@ -6,10 +6,10 @@ set(LLAMA_SHARED_LIB   @BUILD_SHARED_LIBS@)
@@ -15,18 +15,3 @@ index 6db7357..ade840c 100644
  
  find_library(llama_LIBRARY llama
      REQUIRED
-@@ -17,6 +17,7 @@ find_library(llama_LIBRARY llama
-     NO_CMAKE_FIND_ROOT_PATH
- )
- 
-+if(NOT TARGET llama)
- add_library(llama UNKNOWN IMPORTED)
- set_target_properties(llama
-     PROPERTIES
-@@ -27,4 +28,6 @@ set_target_properties(llama
-         INTERFACE_COMPILE_FEATURES c_std_90
-         POSITION_INDEPENDENT_CODE ON)
- 
-+endif()
-+
- check_required_components(Llama)
