@@ -33,5 +33,6 @@ vcpkg_copy_pdbs()
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
         "${SOURCE_PATH}/THIRD-PARTY-LICENSES.txt"
 )
