@@ -8885,7 +8885,7 @@
       "port-version": 0
     },
     "reflectcpp": {
-      "baseline": "0.25.0",
+      "baseline": "0.26.2",
       "port-version": 0
     },
     "refprop-headers": {
