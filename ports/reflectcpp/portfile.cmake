@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 5ff4ac951f014477c306fc19b0c393c1a5b1ecfb7fbed2fcf0aa5a6d8671c13bd5e5ef9d3fe501284829c7104e1b4142a66867ccbd7a7987b1e66a1bac1fe2b9
     HEAD_REF main
-    PATCHES
-        fix-bson.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
