@@ -1,0 +1,23 @@
+{
+  "name": "bqlog",
+  "version": "2.7.0",
+  "description": "Lightweight, high-performance, cross-language logging library",
+  "homepage": "https://github.com/Tencent/BqLog",
+  "license": "Apache-2.0",
+  "supports": "!(windows & x86) & !android",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build and install the BqLog_CategoryLogGenerator and BqLog_LogDecoder command line tools"
+    }
+  }
+}
