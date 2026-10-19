@@ -10,7 +10,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
         FASTLOWESS_TARGET_USES_GLIBC
     )
     if(NOT FASTLOWESS_TARGET_USES_GLIBC)
-        message(FATAL_ERROR "The curated fastlowess port supports glibc Linux targets only.")
+        message(
+            FATAL_ERROR
+            "The curated fastlowess port supports glibc Linux targets only."
+        )
     endif()
 endif()
 
@@ -76,10 +79,7 @@ if(WIN32)
         FILES "${FASTLOWESS_PACKAGE_DIR}/${FASTLOWESS_BINARY_NAME}"
         DESTINATION bin
     )
-    install(
-        FILES "${import_library}"
-        DESTINATION lib
-    )
+    install(FILES "${import_library}" DESTINATION lib)
     set(FASTLOWESS_LIBRARY_DIR bin)
 else()
     install(
@@ -90,18 +90,18 @@ else()
 endif()
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/fastlowessConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfig.cmake"
-    INSTALL_DESTINATION share/fastlowess
+    "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-fastlowessConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfig.cmake"
+    INSTALL_DESTINATION share/unofficial-fastlowess
 )
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfigVersion.cmake"
     VERSION "${PROJECT_VERSION}"
     COMPATIBILITY SameMajorVersion
 )
 install(
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/fastlowessConfigVersion.cmake"
-    DESTINATION share/fastlowess
+        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/unofficial-fastlowessConfigVersion.cmake"
+    DESTINATION share/unofficial-fastlowess
 )

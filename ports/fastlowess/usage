@@ -1,7 +1,7 @@
-fastlowess provides the upstream CMake target:
+fastlowess provides a vcpkg-specific CMake package:
 
-    find_package(fastlowess CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE fastlowess::fastlowess)
+    find_package(unofficial-fastlowess CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::fastlowess::fastlowess)
 
 Include <fastlowess.hpp> to use the C++17 interface. The port supports Windows
 x64/ARM64 with MSVC, glibc Linux x64/ARM64, and macOS x64/ARM64. Shared linkage
