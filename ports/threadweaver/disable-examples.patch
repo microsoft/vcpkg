@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ba5ff9a..349180a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,7 +41,9 @@ if (BUILD_TESTING)
+     add_subdirectory(autotests)
+     add_subdirectory(benchmarks)
+ endif()
+-add_subdirectory(examples)
++if(FALSE)
++    add_subdirectory(examples)
++endif()
+ 
+ # create a Config.cmake and a ConfigVersion.cmake file and install them
+ set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF6ThreadWeaver")
