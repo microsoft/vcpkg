@@ -36,6 +36,7 @@ PORT_LIST = [
     "kguiaddons",
     "kholidays",
     "ki18n",
+    "kiconthemes",
     "kitemmodels",
     "kitemviews",
     "knotifications",
