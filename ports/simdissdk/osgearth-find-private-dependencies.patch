@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 87097e3..c90fd3e 100644
+index 87097e3..72a7838 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -178,6 +178,21 @@ endif()
+@@ -178,6 +178,23 @@ endif()
  find_package(OpenGL QUIET)
  find_package(OpenSceneGraph COMPONENTS osgAnimation osgDB osgGA osgSim osgText osgUtil osgViewer QUIET)
  find_package(GDAL CONFIG)
@@ -11,8 +11,9 @@ index 87097e3..c90fd3e 100644
 +# dependencies into the INTERFACE_LINK_LIBRARIES of the osgEarth::osgEarth
 +# target but does not call find_dependency() for them. Load those packages
 +# here, before find_package(osgEarth), so the imported target interface can
-+# be resolved during the configure step. (spdlog, protobuf, blend2d, GEOS and
-+# meshoptimizer are linked PRIVATE by osgEarth yet surface in its interface.)
++# be resolved during the configure step. (spdlog, protobuf, blend2d,
++# Fontconfig, GEOS and meshoptimizer are linked PRIVATE by osgEarth yet
++# surface in its interface.)
 +find_package(spdlog CONFIG QUIET)
 +find_package(Protobuf CONFIG QUIET)
 +find_package(blend2d CONFIG QUIET)
@@ -21,6 +22,8 @@ index 87097e3..c90fd3e 100644
 +find_package(GEOS CONFIG QUIET)
 +find_package(meshoptimizer CONFIG QUIET)
 +find_package(CURL QUIET)
++find_package(Fontconfig QUIET)
  find_package(osgEarth)
  find_package(osgQOpenGL 4.0 QUIET)
  
+
