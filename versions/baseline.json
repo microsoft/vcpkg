@@ -4720,6 +4720,10 @@
       "baseline": "6.31.0",
       "port-version": 0
     },
+    "kparts": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kplotting": {
       "baseline": "6.31.0",
       "port-version": 1
