@@ -33,6 +33,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # osgQOpenGL's install step still creates bin/debug/bin even when built
+    # static (no DLL is actually produced); remove them so the static
+    # post-build check does not flag the spurious directories.
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

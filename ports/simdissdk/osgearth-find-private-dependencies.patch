@@ -1,17 +1,30 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 87097e3..92431b6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -178,6 +178,12 @@ endif()
+@@ -178,6 +178,26 @@ endif()
  find_package(OpenGL QUIET)
  find_package(OpenSceneGraph COMPONENTS osgAnimation osgDB osgGA osgSim osgText osgUtil osgViewer QUIET)
  find_package(GDAL CONFIG)
-+# osgEarth's package configuration file does not call find_dependency() for its
-+# private dependencies (OSGEARTH_PUBLIC_DEPENDENCIES is never set upstream).  In
-+# static builds those private dependencies leak into the link interface of the
-+# osgEarth::osgEarth target, so load them here first to satisfy that interface.
++
++# osgEarth's exported CMake config references several of its transitive private
++# dependencies (spdlog, protobuf, Fontconfig, SQLite3, ...) in the link interface
++# of the osgEarth::osgEarth target but does not call find_dependency() for them.
++# Load those packages here, before find_package(osgEarth), so the imported
++# target interface can be resolved by the configure step.
++find_package(spdlog CONFIG QUIET)
 +find_package(Protobuf QUIET)
 +find_package(Fontconfig QUIET)
++find_package(CURL QUIET)
++# SQLite3: vcpkg ships it as unofficial::sqlite3::sqlite3; provide the
++# SQLite3::SQLite3 alias that osgEarth's interface expects.
++find_package(SQLite3 QUIET)
++if(NOT SQLite3_FOUND)
++    find_package(unofficial-sqlite3 CONFIG QUIET)
++    if(unofficial-sqlite3_FOUND)
++        add_target(SQLite3::SQLite3 ALIAS unofficial::sqlite3::sqlite3)
++        set(SQLite3_FOUND TRUE)
++    endif()
++endif()
  find_package(osgEarth)
  find_package(osgQOpenGL 4.0 QUIET)
  
