@@ -3,7 +3,7 @@
 # header), which breaks vcpkg_download_distfile. The same release sources are
 # published as version tags of the upstream repository
 # (https://github.com/chennes/med), so the tarball is fetched from there.
-# med-fichier is needed to build all libraries of the https://www.salome-platform.org/ since it is the io 
+# med-fichier is needed to build all libraries of the https://www.salome-platform.org/ since it is the io
 # entry point to open and read .med files.
 vcpkg_download_distfile(ARCHIVE
   URLS "https://codeload.github.com/chennes/med/tar.gz/refs/tags/v${VERSION}"
@@ -14,7 +14,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
   SOURCE_PATH
   ARCHIVE "${ARCHIVE}"
-  PATCHES 
+  PATCHES
     hdf5.patch
     include-io.patch
     quote-paths-in-install-code.diff # Required when CMake is in a path with spaces, e.g. C:\Program Files\CMake\bin\cmake.exe
