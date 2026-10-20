@@ -493,7 +493,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -1488,6 +1488,10 @@
       "baseline": "0.1.0",
       "port-version": 0
     },
+    "bqlog": {
+      "baseline": "2.7.0",
+      "port-version": 0
+    },
     "braft": {
       "baseline": "2021-26-04",
       "port-version": 7
@@ -2053,7 +2057,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.59.0",
+      "baseline": "0.62.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2073,7 +2077,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.20.0",
+      "baseline": "1.22.0",
       "port-version": 0
     },
     "cpp-pinyin": {
@@ -2185,7 +2189,7 @@
       "port-version": 0
     },
     "cpr": {
-      "baseline": "1.14.2",
+      "baseline": "1.15.1",
       "port-version": 0
     },
     "cpu-features": {
@@ -2241,7 +2245,7 @@
       "port-version": 3
     },
     "crow": {
-      "baseline": "1.3.4",
+      "baseline": "1.3.5",
       "port-version": 0
     },
     "cryptopp": {
@@ -2873,7 +2877,7 @@
       "port-version": 6
     },
     "entt": {
-      "baseline": "3.16.0",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "epoll-shim": {
@@ -2981,7 +2985,7 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "8.3.1",
+      "baseline": "8.3.2",
       "port-version": 0
     },
     "fast-obj": {
@@ -3105,7 +3109,7 @@
       "port-version": 0
     },
     "fkyaml": {
-      "baseline": "0.4.4",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "flann": {
@@ -5941,7 +5945,7 @@
       "port-version": 17
     },
     "libuv": {
-      "baseline": "1.52.1",
+      "baseline": "1.53.0",
       "port-version": 0
     },
     "libuvc": {
@@ -7021,7 +7025,7 @@
       "port-version": 0
     },
     "nanoflann": {
-      "baseline": "1.14.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "nanogui": {
@@ -7717,7 +7721,7 @@
       "port-version": 0
     },
     "otl": {
-      "baseline": "4.0.504",
+      "baseline": "4.0.509",
       "port-version": 0
     },
     "outcome": {
@@ -9509,7 +9513,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "2.2.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "slick-net": {
@@ -9533,7 +9537,7 @@
       "port-version": 0
     },
     "slick-socket": {
-      "baseline": "1.2.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "slick-stream-buffer": {
@@ -11373,7 +11377,7 @@
       "port-version": 0
     },
     "yunsmall-usbipdcpp": {
-      "baseline": "1.0.9",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "yyjson": {
@@ -11497,7 +11501,7 @@
       "port-version": 0
     },
     "zxc": {
-      "baseline": "0.14.1",
+      "baseline": "0.15.0",
       "port-version": 0
     },
     "zycore": {
