@@ -8,6 +8,10 @@
   "dependencies": [
     "cjson",
     {
+      "name": "cpu-features",
+      "platform": "android"
+    },
+    {
       "name": "epoll-shim",
       "platform": "bsd"
     },

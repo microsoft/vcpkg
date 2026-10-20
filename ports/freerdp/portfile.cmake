@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dependencies.patch
+        android-cpu-features.patch
         ffmpeg.diff
         fix-aom-target.patch
         fix-cjson-config.patch
@@ -170,6 +171,4 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/channels/audin/client/opensles/opensl_io.c"
         "${SOURCE_PATH}/winpr/libwinpr/crypto/md4.c"
         "${SOURCE_PATH}/winpr/libwinpr/crypto/md5.c"
-        "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/NOTICE"
-        "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/cpu-features.h"
 )
