@@ -1,0 +1,4 @@
+The package qcustomplot provides CMake targets:
+
+    find_package(unofficial-qcustomplot CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::qcustomplot::qcustomplot)

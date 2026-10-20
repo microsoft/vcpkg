@@ -30,5 +30,38 @@ vcpkg_qmake_install()
 
 vcpkg_copy_pdbs()
 
+# Upstream does not provide a CMake config
+if(VCPKG_TARGET_IS_MINGW)
+    set(library_glob "libqcustomplot*.a")
+    set(debug_library_glob "libqcustomplotd*.a")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    set(library_glob "qcustomplot*.lib")
+    set(debug_library_glob "qcustomplotd*.lib")
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(library_glob "libqcustomplot${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+    set(debug_library_glob "libqcustomplotd${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+else()
+    set(library_glob "libqcustomplot${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    set(debug_library_glob "libqcustomplotd${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+endif()
+file(GLOB QCUSTOMPLOT_LIBRARY_RELEASE RELATIVE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/lib/${library_glob}")
+file(GLOB QCUSTOMPLOT_LIBRARY_DEBUG RELATIVE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_library_glob}")
+list(LENGTH QCUSTOMPLOT_LIBRARY_RELEASE release_libraries)
+list(LENGTH QCUSTOMPLOT_LIBRARY_DEBUG debug_libraries)
+if(NOT release_libraries EQUAL 1 OR debug_libraries GREATER 1)
+    message(FATAL_ERROR "Unexpected libraries: '${QCUSTOMPLOT_LIBRARY_RELEASE}' '${QCUSTOMPLOT_LIBRARY_DEBUG}'")
+endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" QCUSTOMPLOT_SHARED)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-qcustomplot-config.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/unofficial-qcustomplot/unofficial-qcustomplot-config.cmake" @ONLY)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("${CURRENT_PACKAGES_DIR}/share/unofficial-qcustomplot/unofficial-qcustomplot-config-version.cmake"
+    VERSION "${VERSION}"
+    COMPATIBILITY SameMajorVersion
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 # Handle copyright
 configure_file(${SOURCE_PATH}/GPL.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
