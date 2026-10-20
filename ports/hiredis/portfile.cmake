@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redis/hiredis
     REF "v${VERSION}"
-    SHA512 2f7a826032bedb85473b06684e075d9e57105068c44f21b00217f94a7ebbefaa8700c7bf4675c382060a7b00aceb01c90023fdfbe4024a412e05432b852d6dc2
+    SHA512 d0b902eaeee681202ce96126180facca7534160d556d2713a272c933ec9c20a51f551aec157b1c53a4cec0dd63c226ddb67f718d98e8dc9e7d1d08bbc446db86
     HEAD_REF master
     PATCHES
         fix-timeval.patch
         support-static.patch
         fix-cmake-conf-install-dir.patch
-        fix-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
