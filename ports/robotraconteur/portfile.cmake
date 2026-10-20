@@ -22,8 +22,6 @@ vcpkg_cmake_install()
 
 vcpkg_copy_tools(TOOL_NAMES RobotRaconteurGen AUTO_CLEAN)
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/robotraconteur)
-
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME RobotRaconteur
     CONFIG_PATH "lib/cmake/RobotRaconteur"
@@ -35,5 +33,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
