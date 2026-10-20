@@ -10033,7 +10033,7 @@
       "port-version": 0
     },
     "supernovas": {
-      "baseline": "1.7.2",
+      "baseline": "1.8.0-rc3",
       "port-version": 0
     },
     "sushant-wayal-stringhash": {
