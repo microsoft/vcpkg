@@ -2036,6 +2036,10 @@
       "baseline": "1.0",
       "port-version": 0
     },
+    "countly-sdk-cpp": {
+      "baseline": "26.8.1",
+      "port-version": 0
+    },
     "cpp-async": {
       "baseline": "1.2.0",
       "port-version": 0
