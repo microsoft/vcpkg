@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-parsers/jsoncpp
     REF "${VERSION}"
-    SHA512 006d81f9f723dcfe875ebc2147449c07c5246bf97dd7b9eee1909decc914b051d6f3f06feb5c3dfa143d28773fb310aabb04a81dc447cc61513309df8eba8b08
+    SHA512 849957d9c87edc1d375698a9ea2709b7304cabc2b05ba180dc09f68653e32316e1ae4fe0108ab63ec7b56d255ccbc6ccf8715cf8396c1438edda775bec74b05b
     HEAD_REF master
 )
 
