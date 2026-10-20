@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index deeaae7d..c0c84275 100644
+index 3e73a1f..de39a94 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -689,7 +689,7 @@ install (TARGETS ${targets} EXPORT aziotsharedutilTargets
+@@ -831,7 +831,7 @@ install (TARGETS ${targets} EXPORT aziotsharedutilTargets
      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azureiot
+     INCLUDES DESTINATION ${exported_include_dirs}
  )
 -install (FILES ${source_h_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azure_c_shared_utility)
 +install (FILES ${source_h_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azureiot/azure_c_shared_utility)
+ install (DIRECTORY DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azureiot)
  install (FILES ${micromock_h_files_full_path} ${INSTALL_H_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/azureiot)
- 
  

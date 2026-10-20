@@ -1,11 +1,12 @@
 {
   "name": "azure-c-shared-utility",
-  "version-date": "2025-03-31",
+  "version-date": "2026-10-15",
   "description": "Azure C SDKs common code",
   "homepage": "https://github.com/Azure/azure-c-shared-utility",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    "azure-c-logging",
     "azure-macro-utils-c",
     {
       "name": "curl",

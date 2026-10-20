@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-uhttp-c
-    REF 01dc7139d3da3141aa2017dff927db1dbbe86e49
-    SHA512 16ba75ced10efcea14073eb21d6dd46d1f00997b588aac64c1bcfd14c5176513a677d1adaa3c2ae6890f6d3576473ac9bc80eb32df551bd5cdf9345ed7e910be
+    REF fac2213db5f0a9d86038e012015c6251e1848ebd
+    SHA512 72498d9a39931e6dd481eb1db29038427bcd6adab851985d8ba7f20ec19ebfd63f9bd4ceb95e8788de04cfd01becdaf4756b982b53a7ae5127c582acb513a12b
     HEAD_REF master
 )
 

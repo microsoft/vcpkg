@@ -1,0 +1,13 @@
+diff --git a/adapters/httpapi_curl.c b/adapters/httpapi_curl.c
+index 3667234..1228e25 100644
+--- a/adapters/httpapi_curl.c
++++ b/adapters/httpapi_curl.c
+@@ -813,7 +813,7 @@ HTTPAPI_RESULT HTTPAPI_ExecuteRequest(HTTP_HANDLE handle, HTTPAPI_REQUEST_TYPE r
+                                 if (requestType != HTTPAPI_REQUEST_GET)
+                                 {
+                                     if ((curl_easy_setopt(httpHandleData->curl, CURLOPT_POSTFIELDS, (void*)NULL) != CURLE_OK) ||
+-                                        (curl_easy_setopt(httpHandleData->curl, CURLOPT_POSTFIELDSIZE, 0) != CURLE_OK))
++                                        (curl_easy_setopt(httpHandleData->curl, CURLOPT_POSTFIELDSIZE, 0L) != CURLE_OK))
+                                     {
+                                         result = HTTPAPI_SET_OPTION_FAILED;
+                                         LogError("(result = %" PRI_MU_ENUM ")", MU_ENUM_VALUE(HTTPAPI_RESULT, result));

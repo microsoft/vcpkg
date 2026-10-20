@@ -532,8 +532,12 @@
       "baseline": "2025-11-30",
       "port-version": 0
     },
+    "azure-c-logging": {
+      "baseline": "2026-05-01",
+      "port-version": 0
+    },
     "azure-c-shared-utility": {
-      "baseline": "2025-03-31",
+      "baseline": "2026-10-15",
       "port-version": 0
     },
     "azure-core-amqp-cpp": {
@@ -557,7 +561,7 @@
       "port-version": 1
     },
     "azure-iot-sdk-c": {
-      "baseline": "2025-03-31",
+      "baseline": "2026-10-19",
       "port-version": 0
     },
     "azure-kinect-depth-engine": {
@@ -566,11 +570,11 @@
     },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-macro-utils-c": {
-      "baseline": "2022-01-21",
-      "port-version": 1
+      "baseline": "2026-05-01",
+      "port-version": 0
     },
     "azure-messaging-eventhubs-checkpointstore-blob-cpp": {
       "baseline": "1.0.0-beta.2",
@@ -621,15 +625,15 @@
       "port-version": 0
     },
     "azure-uamqp-c": {
-      "baseline": "2025-03-31",
+      "baseline": "2026-10-16",
       "port-version": 0
     },
     "azure-uhttp-c": {
-      "baseline": "2025-03-31",
+      "baseline": "2026-10-16",
       "port-version": 0
     },
     "azure-umqtt-c": {
-      "baseline": "2025-03-31",
+      "baseline": "2026-10-16",
       "port-version": 0
     },
     "b64": {
@@ -10525,8 +10529,8 @@
       "port-version": 0
     },
     "umock-c": {
-      "baseline": "2022-01-21",
-      "port-version": 1
+      "baseline": "2026-05-01",
+      "port-version": 0
     },
     "unarr": {
       "baseline": "1.1.1",
