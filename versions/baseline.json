@@ -10577,7 +10577,7 @@
       "port-version": 0
     },
     "upa-url": {
-      "baseline": "2.5.0",
+      "baseline": "2.6.0",
       "port-version": 0
     },
     "urdfdom": {
