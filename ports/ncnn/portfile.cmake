@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
     REF "${VERSION}"
-    SHA512 515c6b6adda0b57b84427314c75375312e2e1f8a7c47900ca1419735cbf956b1dab14cd3caad008bda7269578e01cae2dda8b49565c6e0eceff724bbc11f6c55
+    SHA512 f49f5990cf6269fb67ea5aa766949eb27c961d7403276fe1f0ddef108584ff1c8c25c54266737b0d1ed7793c79eb4a37b14add05ed6594ca814a23160d6989cc
     HEAD_REF master
 )
 
@@ -35,7 +35,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ncnn)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
