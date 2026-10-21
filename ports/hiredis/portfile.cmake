@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-timeval.patch
         support-static.patch
         fix-cmake-conf-install-dir.patch
+        fix-ssl-cmake-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
