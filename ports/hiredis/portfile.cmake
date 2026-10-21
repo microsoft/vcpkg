@@ -27,6 +27,21 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
+if("ssl" IN_LIST FEATURES)
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hiredis_ssl.pc"
+        "Libs.private: -lssl -lcrypto"
+        "Requires.private: openssl"
+    )
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string(
+            "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hiredis_ssl.pc"
+            "Libs.private: -lssl -lcrypto"
+            "Requires.private: openssl"
+        )
+    endif()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_BUILD_TYPE)
