@@ -214,9 +214,11 @@ endblock()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
+file(GLOB third_party_notices LIST_DIRECTORIES false "${BINDIST_PATH}/third-party-notices/*")
 vcpkg_install_copyright(
 	FILE_LIST
 		"${BINDIST_PATH}/LICENSE"
+		${third_party_notices}
 		"${BINDIST_PATH}/LICENSES/Apache-2.0.txt"
 		"${BINDIST_PATH}/LICENSES/BSL-1.0.txt"
 		"${BINDIST_PATH}/LICENSES/CC-BY-4.0.txt"
