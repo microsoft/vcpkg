@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 75614c8e912840d0d1c312f591129336cbdce4944d2c51e62e09928b49a593c0895862facf418351fa865dc7af06a96421484d770fa35af3d95e6b6fd7d8349d
+    SHA512 2f036908fc96650fcec0810c05cf7fbad08f7c47a27aa7951b25e4bc1f390eb47223eaeaf622715bf2df6bd056e7f245502a3af57e606fd53d214c121a862a7e
     HEAD_REF master
     PATCHES
         dependencies.patch
+        android-cpu-features.patch
         ffmpeg.diff
         fix-aom-target.patch
         fix-cjson-config.patch
@@ -170,6 +171,4 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/channels/audin/client/opensles/opensl_io.c"
         "${SOURCE_PATH}/winpr/libwinpr/crypto/md4.c"
         "${SOURCE_PATH}/winpr/libwinpr/crypto/md5.c"
-        "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/NOTICE"
-        "${SOURCE_PATH}/winpr/libwinpr/sysinfo/cpufeatures/cpu-features.h"
 )
