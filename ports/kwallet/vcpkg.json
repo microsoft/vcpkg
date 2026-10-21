@@ -4,7 +4,7 @@
   "description": "Safe desktop-wide storage for passwords",
   "homepage": "https://invent.kde.org/frameworks/kwallet",
   "documentation": "https://api.kde.org/kwallet-index.html",
-  "license": "LGPL-2.0-or-later",
+  "license": "LGPL-2.0-or-later AND GPL-2.0-or-later",
   "dependencies": [
     "ecm",
     "kconfig",
