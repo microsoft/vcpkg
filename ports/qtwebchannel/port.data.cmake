@@ -1,3 +1,3 @@
-set(qtwebchannel_HASH "10abce7057752c75a363cddc673df1f5386e5141b61bda1aaf49486d1eb4b8a44beb8aa1f6319a90aa128c494cd8e1ef5904cfa8e30524e00ed4ef45556cde2e")
-set(qtwebchannel_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtwebchannel-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtwebchannel-everywhere-src-6.11.2.tar.xz")
-set(qtwebchannel_FILENAME "qtwebchannel-everywhere-src-6.11.2.tar.xz")
+set(qtwebchannel_HASH "e3e749c9aa3c1e8cb09e636e011e98a4a3e012315c002ddb31a62216f99c9ddcd6c7a0447a34d63c8d41f9eccbf76479c1ff5ddbad896a3feed4fe91434f757b")
+set(qtwebchannel_URL "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtwebchannel-everywhere-src-6.12.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.12/6.12.0/submodules/qtwebchannel-everywhere-src-6.12.0.tar.xz")
+set(qtwebchannel_FILENAME "qtwebchannel-everywhere-src-6.12.0.tar.xz")

@@ -1,17 +1,13 @@
 {
   "name": "qtlanguageserver",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "An implementation of the Language Server Protocol.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
     {
       "name": "qtbase",
-      "default-features": false,
-      "features": [
-        "concurrent",
-        "network"
-      ]
+      "default-features": false
     },
     {
       "name": "qtbase",

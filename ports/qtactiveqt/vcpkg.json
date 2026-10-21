@@ -1,6 +1,6 @@
 {
   "name": "qtactiveqt",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "ActiveQt",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -23,13 +23,7 @@
   ],
   "features": {
     "qml": {
-      "description": "Build QML imports",
-      "dependencies": [
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
+      "description": "(deprecated) No effect: Qt ActiveQt does not use QML"
     }
   }
 }

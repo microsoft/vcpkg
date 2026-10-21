@@ -12,11 +12,9 @@ set(TOOL_NAMES)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "flite"         FEATURE_flite
-    "flite-alsa"    FEATURE_flite-alsa
     "speechd"       FEATURE_speechd
 INVERTED_FEATURES
     "flite"         CMAKE_DISABLE_FIND_PACKAGE_Flite
-    "flite-alsa"    CMAKE_DISABLE_FIND_PACKAGE_Alsa
     "speechd"       CMAKE_DISABLE_FIND_PACKAGE_SpeechDispatcher
 )
 

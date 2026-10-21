@@ -8,6 +8,3 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

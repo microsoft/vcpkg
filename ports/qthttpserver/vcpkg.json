@@ -1,6 +1,6 @@
 {
   "name": "qthttpserver",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "Qt HTTP Server supports building HTTP server functionality into an application.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -9,9 +9,20 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "concurrent",
+        "future",
         "network"
       ]
     }
-  ]
+  ],
+  "features": {
+    "websockets": {
+      "description": "Enable WebSocket support (QHttpServer::addWebSocketUpgradeVerifier etc.)",
+      "dependencies": [
+        {
+          "name": "qtwebsockets",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

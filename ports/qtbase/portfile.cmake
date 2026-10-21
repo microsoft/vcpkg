@@ -28,9 +28,9 @@ set(${PORT}_PATCHES
         fix-ioring-32bit.patch
         fix-liburing-config-test.patch
         fix-libresolv-test.patch
-        use_inotify_on_freebsd.patch
         silence-winrtbase-coroutine-warnings.diff
         md4c.diff
+        android-jar-javac.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -178,7 +178,7 @@ list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_pkg_config:BOOL=ON)
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
-    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolve
+    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolv
     )
 
 if("openssl" IN_LIST FEATURES)
@@ -210,8 +210,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xcb-sm"              FEATURE_xcb_sm
     "xcb-xlib"            FEATURE_xcb_xlib
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
-    "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled.
-    "xrender"             FEATURE_xcb_native_painting # experimental
     "gles2"               FEATURE_opengles2
     "gles3"               FEATURE_opengles3
     #Cannot be required since Qt will look in CONFIG mode first but is controlled via CMAKE_DISABLE_FIND_PACKAGE_Vulkan below
@@ -227,7 +225,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"xcb"                 CMAKE_REQUIRE_FIND_PACKAGE_XCB
     #"xcb-xlib"            CMAKE_REQUIRE_FIND_PACKAGE_X11_XCB
     #"xkbcommon-x11"       CMAKE_REQUIRE_FIND_PACKAGE_XKB_COMMON_X11
-    #"xrender"             CMAKE_REQUIRE_FIND_PACKAGE_XRender
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "opengl"              CMAKE_DISABLE_FIND_PACKAGE_WrapOpenGL
@@ -245,7 +242,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "xcb"                 CMAKE_DISABLE_FIND_PACKAGE_XCB
     "xcb-xlib"            CMAKE_DISABLE_FIND_PACKAGE_X11_XCB
     "xkbcommon-x11"       CMAKE_DISABLE_FIND_PACKAGE_XKB_COMMON_X11
-    "xrender"             CMAKE_DISABLE_FIND_PACKAGE_XRender
     # There are more X features but I am unsure how to safely disable them! Most of them seem to be found automaticall with find_package(X11)
      )
 
@@ -282,6 +278,9 @@ list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_gbm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libinput:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Mtdev:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
+# XRender is still searched but no longer used by any target (xcb-native-painting was removed)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XRender:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_RenderDoc:BOOL=ON)
 # sql-drivers features:
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
@@ -347,6 +346,9 @@ set(TOOL_NAMES
         qtwaylandscanner
         wasmdeployqt
         wasmdeployqt6
+        harmonydeployqt
+        harmonydeployqt6
+        harmonyostestrunner
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -479,6 +481,9 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
 
+if(NOT VCPKG_TARGET_IS_ANDROID)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/android")
+endif()
 if(NOT VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
 endif()
