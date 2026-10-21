@@ -6621,8 +6621,8 @@
       "port-version": 0
     },
     "mesa": {
-      "baseline": "26.2.4",
-      "port-version": 1
+      "baseline": "26.2.5",
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b",
