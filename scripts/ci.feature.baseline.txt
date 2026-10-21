@@ -1253,6 +1253,7 @@ rtaudio[pulse]:arm64-linux=cascade
 rtlsdr:arm64-linux=cascade
 ryml:arm64-windows=cascade
 s2n=skip # builds too slow
+sail[bmp]=options # At least one codec is required, including when testing openmp.
 sail[jpegxl]:arm-neon-android=cascade
 salome-medcoupling(arm | !(linux | windows))=cascade
 saucer:arm64-linux=cascade
