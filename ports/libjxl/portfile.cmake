@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        msvc-remove-libm.patch
+        fix-pkgconfig.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

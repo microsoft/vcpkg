@@ -5278,7 +5278,7 @@
     },
     "libjxl": {
       "baseline": "0.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libkeyfinder": {
       "baseline": "2.2.8",
