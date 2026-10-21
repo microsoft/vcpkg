@@ -1,6 +1,6 @@
 {
   "name": "krpc-cnano",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "kRPC C-nano client — control Kerbal Space Program from C programs via RPC",
   "homepage": "https://krpc.github.io/krpc",
   "license": "LGPL-3.0-or-later AND Zlib",
@@ -14,5 +14,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "localsocket": {
+      "description": "Communicate with a server on the same machine over a unix domain socket rather than a serial port. Needs Windows 10 1803 or later on Windows"
+    },
+    "tcp": {
+      "description": "Communicate with the server over TCP/IP rather than a serial port"
+    }
+  }
 }
