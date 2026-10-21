@@ -23,6 +23,7 @@ PORT_LIST = [
     "kauth",
     "kbreezeicons",
     "kcodecs",
+    "kcompletion",
     "kconfig",
     "kcoreaddons",
     "kcrash",
