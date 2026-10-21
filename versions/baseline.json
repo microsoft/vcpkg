@@ -10949,7 +10949,7 @@
       "port-version": 0
     },
     "vvdec": {
-      "baseline": "3.2.0",
+      "baseline": "3.2.1",
       "port-version": 0
     },
     "vvenc": {
