@@ -26,10 +26,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
