@@ -764,6 +764,7 @@ morcules-swiftnet:arm64-linux=fail
 morphologica:arm64-linux=cascade
 mpi:arm64-windows=cascade
 mpir:x64-android=fail
+mpss(linux)=cascade # yubico-piv-tool requires system libpcsclite-dev
 ms-gdkx:x64-windows-release=skip
 ms-gdkx:x64-windows-static-md=skip
 ms-gdkx:x64-windows-static=skip
