@@ -17,7 +17,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "${ASIO_1_34_PATCH}"
-        fix-asio-resolver.patch
+        fix-asio-resolver.patch # https://github.com/TheHPXProject/hpx/pull/7816
 )
 
 vcpkg_check_features(
