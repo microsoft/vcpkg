@@ -9202,7 +9202,7 @@
     },
     "scinumtools3": {
       "baseline": "0.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "sciplot": {
       "baseline": "0.3.1",
