@@ -220,6 +220,12 @@
         "liblzma"
       ]
     },
+    "muparser": {
+      "description": "Enable muparser support for VRT expressions",
+      "dependencies": [
+        "muparser"
+      ]
+    },
     "mysql-libmariadb": {
       "description": "Add mysql support using libmariadb",
       "dependencies": [
