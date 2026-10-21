@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(OPTIONS ac_cv_prog_cc_c99= # To avoid the compiler check for C99 which will fail for MSVC
-                --disable-plugin-dlopen) 
+                --disable-plugin-dlopen)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -23,7 +23,7 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-        ${OPTIONS} 
+        ${OPTIONS}
         --disable-libxml2
         --disable-opencl
         --disable-cairo
