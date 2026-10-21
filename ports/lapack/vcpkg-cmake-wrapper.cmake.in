@@ -2,7 +2,9 @@
 # * https://cmake.org/cmake/help/latest/module/FindBLAS.html
 # * https://cmake.org/cmake/help/latest/module/FindLAPACK.html
 
-_find_package(BLAS) # Find BLAS before setting BLA_VENDOR (Will set/unset BLA_VENDOR itself)
+# Use the BLAS wrapper so its imported target matches the selected provider.
+# Find it before setting BLA_VENDOR, which the BLAS wrapper sets/unsets itself.
+find_package(BLAS)
 set(BLA_VENDOR @BLA_VENDOR@)
 if(APPLE AND "@BLA_STATIC@" AND CMAKE_VERSION VERSION_LESS "3.17.0")
     # avoid `-Wl,--(start|end)-group` and wrong lib suffix
