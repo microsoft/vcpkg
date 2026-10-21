@@ -27,9 +27,6 @@ vcpkg_cmake_configure(
         -DBUILD_KWALLETD=OFF
         -DBUILD_KSECRETD=OFF
         -DBUILD_KWALLET_QUERY=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_KF6DocTools=ON
-    MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_KF6DocTools
 )
 
 vcpkg_cmake_install()
