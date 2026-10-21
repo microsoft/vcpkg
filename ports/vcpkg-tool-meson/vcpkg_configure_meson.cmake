@@ -513,6 +513,7 @@ function(vcpkg_configure_meson)
             COMMAND ${MESON} setup ${cmd_args} ${arg_SOURCE_PATH}
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix_${buildtype}}"
             LOGNAME config-${TARGET_TRIPLET}-${suffix_${buildtype}}
+            FAILURE_HINT "If available, inspect meson-log.txt first for Meson's detailed dependency and compiler/linker diagnostics."
             SAVE_LOG_FILES
                 meson-logs/meson-log.txt
                 meson-info/intro-dependencies.json
