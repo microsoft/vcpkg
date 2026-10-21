@@ -3,7 +3,7 @@
   "version": "20261020",
   "description": "ncnn is a high-performance neural network inference computing framework.",
   "homepage": "https://github.com/Tencent/ncnn",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND Zlib",
   "supports": "!(windows & arm)",
   "dependencies": [
     {

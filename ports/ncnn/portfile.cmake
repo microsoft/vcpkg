@@ -31,6 +31,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ncnn.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ncnn.pc" "-lncnn" "-lncnnd")
+endif()
+
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ncnn)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
