@@ -3,24 +3,62 @@ vcpkg_from_github(
     REPO PCRE2Project/pcre2
     REF "pcre2-${VERSION}"
     SHA512 8257285809a9a4afb441869936740ae5ff04cc4bd95f86c8e4b9fd41f3b6a194e88d0aaa1c2cfc01b8845984993736fa5e77201c82021842acc87451d8f62f8b
-    HEAD_REF master
+    HEAD_REF main
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
         fix-msvc-pdb-install.patch
 )
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SLJIT_SOURCE_PATH
-    REPO zherczeg/sljit
-    REF 45f910b78c6605ebf5b53d3ec7cb00f2312fe417
-    SHA512 c05c83cc762f430c01e2aaf876aaac41a70b67ed8b91bc81102ad527c8921c5e75b41bab35bb8237dd5f53fecd7b8f31206865efffce2ea0a1aa9c87079fc643
-    HEAD_REF main
-)
+if("jit" IN_LIST FEATURES)
+    # GitHub source snapshots omit gitlinks; .gitmodules only records paths and URLs.
+    if(VCPKG_USE_HEAD_VERSION)
+        set(pcre2_ref "${VCPKG_HEAD_VERSION}")
+        set(sljit_gitlink_hash SKIP_SHA512)
+    else()
+        set(pcre2_ref "pcre2-${VERSION}")
+        set(sljit_gitlink_hash SHA512 719fa1d8d8e1e749ce6f7370db32818268f84b1376ed9367fd5290ab440d8bea7a6a25a68e55045a45da68b0ce7a55daa0d7acd2f1b11774319b50268c02441c)
+    endif()
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/deps/sljit")
-file(MAKE_DIRECTORY "${SOURCE_PATH}/deps")
-file(RENAME "${SLJIT_SOURCE_PATH}" "${SOURCE_PATH}/deps/sljit")
+    # The key here is that our portfile is hardcoding SHA validation hashes, but not hardcoding the sljit commit
+    # to fetch. The 'pcre2-${VERSION}' tag chooses the sljit commit that ought to be fetched.
+    # This ensures that a vcpkg maintainer only has to update the SHA hashes until everything passes, when bumping
+    # to a new PCRE2 tag. There should be no risk of accidentally specifying mismatched pcre2 and sljit commits.
+    vcpkg_download_distfile(sljit_gitlink
+        URLS "https://api.github.com/repos/PCRE2Project/pcre2/contents/deps/sljit?ref=${pcre2_ref}"
+        FILENAME "pcre2-${pcre2_ref}-sljit-gitlink.json"
+        ${sljit_gitlink_hash}
+    )
+    file(READ "${sljit_gitlink}" sljit_gitlink_contents)
+    string(JSON sljit_ref GET "${sljit_gitlink_contents}" sha)
+    string(JSON sljit_url GET "${sljit_gitlink_contents}" submodule_git_url)
+    string(LENGTH "${sljit_ref}" sljit_ref_length)
+    if(NOT sljit_ref MATCHES "^[0-9a-f]+$" OR NOT sljit_ref_length EQUAL 40
+        OR NOT sljit_url STREQUAL "https://github.com/zherczeg/sljit.git")
+        message(FATAL_ERROR "Unexpected deps/sljit gitlink in PCRE2 ${pcre2_ref}: ${sljit_url} at ${sljit_ref}")
+    endif()
+
+    if(VCPKG_USE_HEAD_VERSION)
+        # Fetch PCRE2's resolved gitlink, not an independently moving SLJIT HEAD.
+        vcpkg_download_distfile(sljit_archive
+            URLS "https://github.com/zherczeg/sljit/archive/${sljit_ref}.tar.gz"
+            FILENAME "zherczeg-sljit-${sljit_ref}.tar.gz"
+            SKIP_SHA512
+        )
+        vcpkg_extract_source_archive(SLJIT_SOURCE_PATH ARCHIVE "${sljit_archive}")
+    else()
+        vcpkg_from_github(
+            OUT_SOURCE_PATH SLJIT_SOURCE_PATH
+            REPO zherczeg/sljit
+            REF "${sljit_ref}"
+            SHA512 e5cc01f941877558f19859aedc9079c155f752a92e6d94fc5fb716e483b8fcb3a8495a5974bbb545d6d9a947ca97ebb36bfe278c4dc083afeb48b8ccab36895b
+        )
+    endif()
+
+    file(REMOVE_RECURSE "${SOURCE_PATH}/deps/sljit")
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/deps")
+    file(RENAME "${SLJIT_SOURCE_PATH}" "${SOURCE_PATH}/deps/sljit")
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_MSVC_PDB)
