@@ -1,9 +1,11 @@
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Morwenn/cpp-sort
-    REF "${VERSION}"
-    SHA512 85d9f68ff64ff23769c66d28153273e2072b2c12f2f94bb058afebc1fb68d852734d3907a51704212d795bff71f327de3497232ba3619179bbaa141ab55b2452
-    HEAD_REF 1.x.y-develop
+    REF "v${VERSION}"
+    SHA512 7fe263485b0b01516620bc28fa6ea8a2788dbd13516e5bacdfaa980300e107b74f0c31662766b30ddef40fc7817123c39946876c86565ee7b9acb3d359e953ec
+    HEAD_REF 2.x.y-develop
 )
 
 vcpkg_cmake_configure(
@@ -19,4 +21,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/cpp-sort")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE.txt")

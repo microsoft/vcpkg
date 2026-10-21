@@ -1,6 +1,6 @@
 {
   "name": "gdk-pixbuf",
-  "version": "2.42.12",
+  "version": "2.44.8",
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
@@ -9,6 +9,7 @@
     {
       "name": "gettext",
       "host": true,
+      "default-features": false,
       "features": [
         "tools"
       ]
@@ -18,6 +19,11 @@
     {
       "name": "glib",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true,
+      "platform": "android"
     },
     {
       "name": "vcpkg-tool-meson",
@@ -31,7 +37,8 @@
   ],
   "features": {
     "introspection": {
-      "description": "build with introspection",
+      "description": "Build with introspection",
+      "supports": "!static",
       "dependencies": [
         "gobject-introspection"
       ]
@@ -41,6 +48,9 @@
       "dependencies": [
         "libjpeg-turbo"
       ]
+    },
+    "others": {
+      "description": "Enable other loaders, which are weakly maintained (ani, bmp, icns, ico, pnm, qtif, tga, xbm, xpm)"
     },
     "png": {
       "description": "Enable PNG loader (requires libpng)",

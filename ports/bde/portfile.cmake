@@ -5,11 +5,12 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 
 # Acquire BDE Tools and add them to PATH
+set (BDE_TOOLS_VER "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
-    REF "${VERSION}"
-    SHA512 e5c5a0639e06a554f0f3ba7d18db8947f84a3645494b6dd5642be4bb9457d65e5d1ad1f047bb2f5fd61553fa10ae93a6a9573e5c799e9baab1b943be1000b7e2
+    REF "${BDE_TOOLS_VER}"
+    SHA512 3d15bb0aff27facd167e243a5c5c77c33e1c27e340c84e7deb870c98525a1e653f8d25b82ea7d89c703b87c82b61bc39a94da406b94654d211739618a89d8293
     HEAD_REF main
 )
 
@@ -22,8 +23,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 f35fdfbae64d8405264420f0e7c983e628adbba1219b3f75ae99c6a58d91bf8bc7f8690b56a891798d3e32620cb9e98ac6234e55d6227caf52d622b0ce05456c
+    SHA512 d895d11de518eb67805baaa50ef08d2c8c872375a23134c55dd9db8c790436143823ac8dd5707e1cce583f23a5e455fe9f13d7907d92cc2e86b85c3f3d0a5309
     HEAD_REF main
+    PATCHES
+        fix-bdlar-target.patch
+        use-vcpkg-pcre2.patch
 )
 
 vcpkg_cmake_configure(
@@ -34,11 +38,8 @@ vcpkg_cmake_configure(
         -DCMAKE_CXX_STANDARD_REQUIRED=ON
         -DCMAKE_CXX_EXTENSIONS=OFF
         -DBBS_BUILD_SYSTEM=1
+        -DBDE_USE_EXTERNAL_PCRE2=1
         "-DBdeBuildSystem_DIR:PATH=${TOOLS_PATH}/BdeBuildSystem"
-    OPTIONS_RELEASE
-        -DBDE_BUILD_TARGET_OPT=1
-    OPTIONS_DEBUG
-        -DBDE_BUILD_TARGET_DBG=1
 )
 
 # Build release
@@ -47,13 +48,17 @@ vcpkg_cmake_build()
 # Install release
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-list(APPEND SUBPACKAGES "ryu" "inteldfp" "pcre2" "s_baltst" "bsl" "bdl" "bal")
+list(APPEND SUBPACKAGES "inteldfp" "s_baltst" "bsl" "bbryu" "bdl" "bbl" "bal")
 include(GNUInstallDirs) # needed for CMAKE_INSTALL_LIBDIR
 foreach(subpackage IN LISTS SUBPACKAGES)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME ${subpackage} CONFIG_PATH /${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "${subpackage}" CONFIG_PATH "/${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endforeach()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${CMAKE_INSTALL_LIBDIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/${CMAKE_INSTALL_LIBDIR}/cmake")
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/thirdparty/bbryu/LICENSE-Boost"
+        "${SOURCE_PATH}/thirdparty/inteldfp/eula.txt"
+)
 vcpkg_fixup_pkgconfig()

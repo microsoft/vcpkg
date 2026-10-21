@@ -1,0 +1,173 @@
+--- a/bindings/python/pyslang.h
++++ b/bindings/python/pyslang.h
+@@ -5,7 +5,7 @@
+ //------------------------------------------------------------------------------
+ #pragma once
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <pybind11/cast.h>
+ #include <pybind11/native_enum.h>
+ #include <pybind11/operators.h>
+--- a/include/slang/util/CommandLine.h
++++ b/include/slang/util/CommandLine.h
+@@ -8,7 +8,7 @@
+ #pragma once
+ 
+ #include <cctype>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <functional>
+ #include <map>
+ #include <optional>
+--- a/source/analysis/AbstractFlowAnalysis.cpp
++++ b/source/analysis/AbstractFlowAnalysis.cpp
+@@ -7,7 +7,7 @@
+ //------------------------------------------------------------------------------
+ #include "slang/analysis/AbstractFlowAnalysis.h"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "slang/analysis/CaseDecisionDag.h"
+ #include "slang/diagnostics/AnalysisDiags.h"
+--- a/source/ast/Compilation.cpp
++++ b/source/ast/Compilation.cpp
+@@ -9,7 +9,7 @@
+ 
+ #include "ElabVisitors.h"
+ #include "builtins/Builtins.h"
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <mutex>
+ 
+ #include "slang/ast/ScriptSession.h"
+--- a/source/ast/statements/ConditionalStatements.cpp
++++ b/source/ast/statements/ConditionalStatements.cpp
+@@ -7,7 +7,6 @@
+ //------------------------------------------------------------------------------
+ #include "slang/ast/statements/ConditionalStatements.h"
+ 
+-#include <fmt/core.h>
+ 
+ #include "slang/ast/ASTSerializer.h"
+ #include "slang/ast/ASTVisitor.h"
+--- a/source/ast/symbols/MemberSymbols.cpp
++++ b/source/ast/symbols/MemberSymbols.cpp
+@@ -8,7 +8,6 @@
+ #include "slang/ast/symbols/MemberSymbols.h"
+ 
+ #include "../FmtHelpers.h"
+-#include "fmt/core.h"
+ 
+ #include "slang/ast/ASTSerializer.h"
+ #include "slang/ast/ASTVisitor.h"
+--- a/source/driver/SourceLoader.cpp
++++ b/source/driver/SourceLoader.cpp
+@@ -8,7 +8,7 @@
+ #include "slang/driver/SourceLoader.h"
+ 
+ #include <BS_thread_pool.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "slang/parsing/Preprocessor.h"
+ #include "slang/syntax/AllSyntax.h"
+--- a/source/numeric/SVInt.cpp
++++ b/source/numeric/SVInt.cpp
+@@ -9,7 +9,7 @@
+ 
+ #include "SVIntHelpers.h"
+ #include <cmath>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <ostream>
+ #include <stdexcept>
+ 
+--- a/source/numeric/Time.cpp
++++ b/source/numeric/Time.cpp
+@@ -8,7 +8,7 @@
+ #include "slang/numeric/Time.h"
+ 
+ #include <cmath>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <ostream>
+ 
+ #include "slang/util/String.h"
+--- a/source/parsing/Lexer.cpp
++++ b/source/parsing/Lexer.cpp
+@@ -8,7 +8,7 @@
+ #include "slang/parsing/Lexer.h"
+ 
+ #include <cmath>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "slang/diagnostics/LexerDiags.h"
+ #include "slang/diagnostics/NumericDiags.h"
+--- a/source/util/CommandLine.cpp
++++ b/source/util/CommandLine.cpp
+@@ -9,7 +9,7 @@
+ 
+ #include <charconv>
+ #include <filesystem>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "slang/text/CharInfo.h"
+ #include "slang/util/OS.h"
+--- a/source/util/TimeTrace.cpp
++++ b/source/util/TimeTrace.cpp
+@@ -8,7 +8,7 @@
+ #include "slang/util/TimeTrace.h"
+ 
+ #include <chrono>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <mutex>
+ #include <ostream>
+ #include <thread>
+--- a/source/util/Util.cpp
++++ b/source/util/Util.cpp
+@@ -7,7 +7,7 @@
+ //------------------------------------------------------------------------------
+ #include "slang/util/Util.h"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #if defined(SLANG_USE_MIMALLOC)
+ #    include <mimalloc-new-delete.h>
+--- a/tests/unittests/DriverTests.cpp
++++ b/tests/unittests/DriverTests.cpp
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: MIT
+ 
+ #include "Test.h"
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fstream>
+ #include <regex>
+ 
+--- a/tests/unittests/analysis/CaseAnalysisTests.cpp
++++ b/tests/unittests/analysis/CaseAnalysisTests.cpp
+@@ -3,7 +3,7 @@
+ 
+ #include "AnalysisTests.h"
+ #include "Test.h"
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "slang/analysis/CaseDecisionDag.h"
+ 
+--- a/tests/unittests/parsing/VisitorTests.cpp
++++ b/tests/unittests/parsing/VisitorTests.cpp
+@@ -3,7 +3,6 @@
+ 
+ #include "Test.h"
+ #include "catch2/catch_test_macros.hpp"
+-#include <fmt/core.h>
+ #include <fmt/format.h>
+ 
+ #include "slang/analysis/AnalysisManager.h"

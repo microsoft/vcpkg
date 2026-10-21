@@ -7,21 +7,23 @@ if("tao" IN_LIST FEATURES)
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
-        FILENAME "ACE-TAO-${VERSION}.tar.gz"
-        SHA512 ee46897e13ba943c48d7b04c0792cef8ff48403b048af4eeced4bbfd874dece5ec1130a18216fd31fdbd610e3947673e56e306ab52ee3f1124975b1adaf21838
+        FILENAME "ACE-TAO-src-${VERSION}.tar.gz"
+        SHA512 5a6d3ad22264c25ab7aebe2027eeb9aced8eb7067b8afc8b304b1073979c41f6dc054b034eb5775e2e261d7d61fc746980ac5d41805ad1d3cd545200c681a6ab
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 a29f8009e8f9e12c7c6d4ad9f39f76a62245baeb9fcfe08e346c1a004aedb5ab9d808a2390cde2dc71013be1b0de2ddd9d0dea26144536061e6416554233f547
+        SHA512 c7a10d76e137ef812a099899176eef5caee5787a569904f703e0e29faede168c60acd5094e39412cde7d977913bf8cf50e11b7b870ace6f314280240110caee7
     )
 endif()
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        zlib.patch
 )
 
 set(ACE_ROOT "${SOURCE_PATH}")
@@ -63,6 +65,9 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -87,6 +92,13 @@ elseif(VCPKG_TARGET_IS_OSX)
   set(SOLUTION_TYPE gnuace)
   set(config_h_contents "#include \"ace/config-macosx.h\"\n")
   file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
+elseif (VCPKG_TARGET_IS_ANDROID)
+  set(SOLUTION_TYPE gnuace)
+  set(config_h_contents "#include \"ace/config-android.h\"\n")
+  file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_android.GNU")
+  set(ENV{ANDROID_ABI} "${VCPKG_DETECTED_CMAKE_ANDROID_ARCH_ABI}")
+  set(ENV{android_ndk} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
+  set(ENV{android_api} "${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 endif()
 
 if("wchar" IN_LIST FEATURES)
@@ -118,6 +130,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH "${PROJECT_SUBPATH}"
+    OPTIONS "/p:UseMultiToolTask=false" # tao_idl uses static temp file buffers; parallel custom builds cause mkstemp name collisions on Windows
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -274,7 +287,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb")
     endif()
   endif()
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
@@ -346,7 +359,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     )
   endif()
 endif()
-  
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
@@ -381,7 +394,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   endif()
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 endif()
-  
+
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 

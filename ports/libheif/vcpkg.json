@@ -1,17 +1,11 @@
 {
   "name": "libheif",
-  "version": "1.17.6",
-  "port-version": 2,
+  "version": "1.23.6",
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
-  "license": "LGPL-3.0-only",
+  "license": "LGPL-3.0-only AND MIT",
   "supports": "!xbox",
   "dependencies": [
-    {
-      "name": "gdk-pixbuf",
-      "platform": "!windows"
-    },
-    "libde265",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -22,14 +16,115 @@
     }
   ],
   "default-features": [
-    "hevc"
+    "hevc",
+    "libde265"
   ],
   "features": {
+    "aom": {
+      "description": "AVIF decoding and encoding via aom",
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        "aom"
+      ]
+    },
+    "dav1d": {
+      "description": "AVIF decoding via dav1d",
+      "license": "BSD-2-Clause AND ISC",
+      "dependencies": [
+        "dav1d"
+      ]
+    },
+    "gdk-pixbuf": {
+      "description": "Plugin for gdk-pixbuf",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "gdk-pixbuf"
+      ]
+    },
+    "h264-decoder": {
+      "description": "OpenH264 AVC decoder",
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        "openh264"
+      ]
+    },
+    "header-compression": {
+      "description": "Support for HEIF header compression",
+      "license": "LGPL-3.0-only",
+      "dependencies": [
+        "brotli",
+        "zlib"
+      ]
+    },
     "hevc": {
       "description": "HEVC encoding via x265",
       "license": "GPL-2.0-or-later",
       "dependencies": [
         "x265"
+      ]
+    },
+    "iso23001-17": {
+      "description": "Support for ISO23001-17 (uncompressed) codec",
+      "license": "LGPL-3.0-only",
+      "dependencies": [
+        "brotli",
+        "zlib"
+      ]
+    },
+    "jpeg": {
+      "description": "JPEG decoding and encoding via libjpeg-turbo",
+      "license": "BSD-3-Clause",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "kvazaar": {
+      "description": "HEVC encoding via kvazaar",
+      "license": "BSD-3-Clause AND ISC AND LicenseRef-Public-Domain",
+      "dependencies": [
+        "kvazaar"
+      ]
+    },
+    "libde265": {
+      "description": "libde265 HEVC decoder",
+      "dependencies": [
+        "libde265"
+      ]
+    },
+    "openjpeg": {
+      "description": "JPEG-2000 decoding and encoding via OpenJPEG",
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },
+    "uvg266": {
+      "description": "uvg266 VVC encoder",
+      "supports": "!x86",
+      "license": "BSD-3-Clause",
+      "dependencies": [
+        "uvg266"
+      ]
+    },
+    "vvdec": {
+      "description": "vvdec VVC decoder",
+      "license": "BSD-3-Clause-Clear",
+      "dependencies": [
+        "vvdec"
+      ]
+    },
+    "vvenc": {
+      "description": "vvenc VVC encoder",
+      "license": "BSD-3-Clause-Clear",
+      "dependencies": [
+        "vvenc"
+      ]
+    },
+    "x264": {
+      "description": "x264 AVC encoder",
+      "license": "GPL-2.0-or-later",
+      "dependencies": [
+        "x264"
       ]
     }
   }

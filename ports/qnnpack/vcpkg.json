@@ -1,13 +1,18 @@
 {
   "name": "qnnpack",
   "version-date": "2021-02-26",
-  "port-version": 3,
+  "port-version": 5,
   "description": "Quantized Neural Network PACKage - mobile-optimized implementation of quantized neural network operators",
   "homepage": "https://github.com/pytorch/QNNPACK",
   "license": "BSD-3-Clause",
   "supports": "!windows",
   "dependencies": [
-    "cpuinfo",
+    {
+      "name": "cpuinfo",
+      "features": [
+        "clog"
+      ]
+    },
     "fp16",
     "fxdiv",
     "psimd",

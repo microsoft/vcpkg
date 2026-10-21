@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2ba2667..9204ba9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,7 +25,10 @@ include(ECMQtDeclareLoggingCategory)
+ include(ECMDeprecationSettings)
+ include(ECMPoQmTools)
+ include(ECMGeneratePkgConfigFile)
+-include(ECMQmlModule)
++option(KWINDOWSYSTEM_QML "Build QML bindings" ON)
++if(KWINDOWSYSTEM_QML)
++    include(ECMQmlModule)
++endif()
+ include(ECMGenerateQDoc)
+ include(ECMInstalledLibraryCheck)
+ 
+@@ -45,8 +48,6 @@ if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
+     find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+ endif()
+ 
+-option(KWINDOWSYSTEM_QML "Build QML bindings" ON)
+-
+ if (KWINDOWSYSTEM_QML)
+     find_package(Qt6Qml ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+ endif()

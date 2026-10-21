@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO karastojko/mailio
     REF "${VERSION}"
-    SHA512 e1eee9f5b80dab16017af475b8c13f8278fa3d73e1c446e507dc122cb3df5b984b41c04d753e36cf848dd15029524f95cf48e050cee265c8933b0be1ea500a5d
+    SHA512 5a63eb87fdb2a583aaa1de5f8a02facceacaf4174cdb96faafed992899396921eb3b232359ca49bf40ce2cdb414113cb88bf8a71c69bbc2e74f56dab9e8ee06c
     HEAD_REF master
-    PATCHES fix-library-type-and-remove-boost-test-deps.patch
 )
 
 vcpkg_cmake_configure(
@@ -16,7 +15,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-     CONFIG_PATH share/mailio/cmake
+     CONFIG_PATH lib/cmake/mailio
 )
 
 vcpkg_fixup_pkgconfig()

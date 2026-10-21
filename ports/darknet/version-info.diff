@@ -1,0 +1,18 @@
+diff --git a/CM_version.cmake b/CM_version.cmake
+index 95f29db2..115cb043 100644
+--- a/CM_version.cmake
++++ b/CM_version.cmake
+@@ -6,7 +6,6 @@
+ #
+ #		v1.99-63-gc5c3569
+ #
+-EXECUTE_PROCESS (COMMAND git describe --tags --dirty --long OUTPUT_VARIABLE DARKNET_VERSION_STRING OUTPUT_STRIP_TRAILING_WHITESPACE)
+ MESSAGE (STATUS "Darknet ${DARKNET_VERSION_STRING}")
+ 
+ STRING (REGEX MATCH "v([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-fA-F]+)" _ ${DARKNET_VERSION_STRING})
+@@ -14,5 +13,4 @@ STRING (REGEX MATCH "v([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-fA-F]+)" _ ${DARKNET_V
+ 
+ SET (DARKNET_VERSION_SHORT ${CMAKE_MATCH_1}.${CMAKE_MATCH_2}.${CMAKE_MATCH_3})
+ 
+-EXECUTE_PROCESS (COMMAND git branch --show-current OUTPUT_VARIABLE DARKNET_BRANCH_NAME OUTPUT_STRIP_TRAILING_WHITESPACE)
+ MESSAGE (STATUS "Darknet branch name: ${DARKNET_BRANCH_NAME}")

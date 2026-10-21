@@ -9,7 +9,7 @@ if(VCPKG_TARGET_ARCHITECTURE MATCHES "^arm" AND VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(NOT NO_BIN_AND_TOOLS)
-    set(TOOL_NAMES 
+    set(TOOL_NAMES
             dumpcpp
             dumpdoc
             idc

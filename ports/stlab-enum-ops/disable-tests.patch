@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5a9878f..6ff9562 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,15 +8,10 @@ cpp_library_enable_dependency_tracking()
+ # Now declare project
+ project(enum-ops)
+ 
+-# Enable CTest infrastructure (required for tests/examples to work)
+-include(CTest)
+-
+ # Let cpp-library handle the project declaration and version detection
+ cpp_library_setup(
+     DESCRIPTION "Type-safe operators for enums"
+     NAMESPACE stlab
+     HEADERS enum_ops.hpp
+-    EXAMPLES enum_ops_example_test.cpp enum_ops_example_fail.cpp
+-    TESTS enum_ops_tests.cpp
+     DOCS_EXCLUDE_SYMBOLS "stlab::implementation"
+ )

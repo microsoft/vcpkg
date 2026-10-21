@@ -1,0 +1,104 @@
+diff --git a/compiler-launcher/compiler-launcher.cpp b/compiler-launcher/compiler-launcher.cpp
+index f106ff5..faa88ff 100644
+--- a/compiler-launcher/compiler-launcher.cpp
++++ b/compiler-launcher/compiler-launcher.cpp
+@@ -25,7 +25,7 @@
+ 
+ #include <nlohmann/json.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ /// Concatenates an argument list into a command string
+ /// in which the arguments are separated by whitespaces.
+diff --git a/grapher/include/grapher/utils/error.hpp b/grapher/include/grapher/utils/error.hpp
+index 2ba3be0..085d8e2 100644
+--- a/grapher/include/grapher/utils/error.hpp
++++ b/grapher/include/grapher/utils/error.hpp
+@@ -7,7 +7,7 @@
+ 
+ #include <llvm/Support/raw_ostream.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace grapher {
+ 
+diff --git a/grapher/include/grapher/utils/json.hpp b/grapher/include/grapher/utils/json.hpp
+index 9a1993f..076c8da 100644
+--- a/grapher/include/grapher/utils/json.hpp
++++ b/grapher/include/grapher/utils/json.hpp
+@@ -7,7 +7,7 @@
+ 
+ #include <llvm/Support/raw_ostream.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <sciplot/sciplot.hpp>
+ 
+diff --git a/grapher/lib/grapher/plotters/compare.cpp b/grapher/lib/grapher/plotters/compare.cpp
+index 0de0bd4..eee5626 100644
+--- a/grapher/lib/grapher/plotters/compare.cpp
++++ b/grapher/lib/grapher/plotters/compare.cpp
+@@ -5,7 +5,7 @@
+ 
+ #include <llvm/Support/raw_ostream.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <nlohmann/json.hpp>
+ 
+diff --git a/grapher/lib/grapher/plotters/compare_by.cpp b/grapher/lib/grapher/plotters/compare_by.cpp
+index ea3cd89..6899095 100644
+--- a/grapher/lib/grapher/plotters/compare_by.cpp
++++ b/grapher/lib/grapher/plotters/compare_by.cpp
+@@ -5,7 +5,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <boost/container/small_vector.hpp>
+ 
+diff --git a/grapher/lib/grapher/plotters/stack.cpp b/grapher/lib/grapher/plotters/stack.cpp
+index 7bf5a9c..f4597e9 100644
+--- a/grapher/lib/grapher/plotters/stack.cpp
++++ b/grapher/lib/grapher/plotters/stack.cpp
+@@ -4,7 +4,7 @@
+ 
+ #include <llvm/Support/raw_ostream.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <sciplot/Plot2D.hpp>
+ #include <sciplot/sciplot.hpp>
+diff --git a/grapher/lib/grapher/predicates.cpp b/grapher/lib/grapher/predicates.cpp
+index a10e32c..069fe8f 100644
+--- a/grapher/lib/grapher/predicates.cpp
++++ b/grapher/lib/grapher/predicates.cpp
+@@ -5,7 +5,7 @@
+ 
+ #include <llvm/Support/raw_ostream.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <grapher/core.hpp>
+ #include <grapher/predicates.hpp>
+diff --git a/grapher/lib/grapher/utils/cli.cpp b/grapher/lib/grapher/utils/cli.cpp
+index a9b1711..c28e5a0 100644
+--- a/grapher/lib/grapher/utils/cli.cpp
++++ b/grapher/lib/grapher/utils/cli.cpp
+@@ -5,7 +5,7 @@
+ 
+ #include <llvm/Support/raw_ostream.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <grapher/utils/cli.hpp>
+ #include <grapher/utils/error.hpp>

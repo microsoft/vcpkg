@@ -1,0 +1,56 @@
+--- a/src/FTVectoriser.h
++++ b/src/FTVectoriser.h
+@@ -296,7 +296,7 @@
+         /**
+          * The number of contours reported by Freetype
+          */
+-        short ftContourCount;
++        unsigned short ftContourCount;
+ 
+         /**
+          * A flag indicating the tesselation rule for the glyph
+--- a/src/FTVectoriser.cpp
++++ b/src/FTVectoriser.cpp
+@@ -159,16 +159,16 @@
+ 
+ void FTVectoriser::ProcessContours()
+ {
+-    short contourLength = 0;
+-    short startIndex = 0;
+-    short endIndex = 0;
++    unsigned short contourLength = 0;
++    unsigned short startIndex = 0;
++    unsigned short endIndex = 0;
+ 
+     contourList = new FTContour*[ftContourCount];
+ 
+     for(int i = 0; i < ftContourCount; ++i)
+     {
+         FT_Vector* pointList = &outline.points[startIndex];
+-        char* tagList = &outline.tags[startIndex];
++        unsigned char* tagList = &outline.tags[startIndex];
+ 
+         endIndex = outline.contours[i];
+         contourLength =  (endIndex - startIndex) + 1;
+--- a/src/FTContour.h
++++ b/src/FTContour.h
+@@ -52,7 +52,7 @@
+          * @param pointTags
+          * @param numberOfPoints
+          */
+-        FTContour(FT_Vector* contour, char* pointTags, unsigned int numberOfPoints);
++        FTContour(FT_Vector* contour, unsigned char* pointTags, unsigned int numberOfPoints);
+ 
+         /**
+          * Destructor
+--- a/src/FTContour.cpp
++++ b/src/FTContour.cpp
+@@ -174,7 +174,7 @@
+ }
+ 
+ 
+-FTContour::FTContour(FT_Vector* contour, char* tags, unsigned int n)
++FTContour::FTContour(FT_Vector* contour, unsigned char* tags, unsigned int n)
+ {
+     FTPoint prev, cur(contour[(n - 1) % n]), next(contour[0]);
+     double olddir, dir = atan2((next - cur).Y(), (next - cur).X());

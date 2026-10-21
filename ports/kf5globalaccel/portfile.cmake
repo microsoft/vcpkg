@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kglobalaccel
-    REF v5.98.0
-    SHA512 a8846538ced248ee537b90136bbb45cabff60088daba7a19e48d6ab63ce388353e83770cf6bad7b0c700b7404e1f4aa88f71f202dde8cdc3064456da73241050
+    REF "v${VERSION}"
+    SHA512 afcf4609d6e4f3182088caccbecd71e5826c19716d2f9b22f5674a37771f082691a1b3e246b59837bbada8427d027c173d46233f1f817f2951e7a96562251fc5
     HEAD_REF master
 )
 
@@ -20,7 +20,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5GlobalAccel CONFIG_PATH lib/cmake/KF5GlobalAccel)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5GlobalAccel)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES kglobalaccel5 AUTO_CLEAN)
@@ -34,4 +34,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

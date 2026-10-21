@@ -1,4 +1,4 @@
 cuda-api-wrappers provides CMake targets:
 
   find_package(cuda-api-wrappers CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE cuda-api-wrappers::rtc cuda-api-wrappers::nvtx cuda-api-wrappers::runtime-and-driver)
+  target_link_libraries(main PRIVATE cuda-api-wrappers::rtc cuda-api-wrappers::nvtx cuda-api-wrappers::runtime-and-driver cuda-api-wrappers::fatbin)

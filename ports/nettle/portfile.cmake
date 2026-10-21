@@ -1,13 +1,14 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://git.lysator.liu.se/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO nettle/nettle
-    REF nettle_3.9.1_release_20230601
-    SHA512 4938d31d9183fd143c6d43a43bda8372bd8899c51c18dfb8640065bffd4c5928006481d16679b1ad057404697f7af06bf1630de4b8072592c38cbb7113d16b21
-    HEAD_REF master
-    PATCHES 
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://ftpmirror.gnu.org/gnu/nettle/nettle-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/pub/gnu/nettle/nettle-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/nettle/nettle-${VERSION}.tar.gz"
+    FILENAME "nettle-${VERSION}.tar.gz"
+    SHA512 833303d94f5a67094011ad4dd931fffdb9adf679b4df241a544a08194a66e6e449398b704ba5b29d52c1c3b5ada6f6dc18b24d1adb3382a68470a11645bf13cd
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
         subdirs.patch
-        fix-libdir.patch
         compile.patch
         host-tools.patch
         ccas.patch
@@ -38,6 +39,7 @@ set(disable_assembly OFF)
 set(ccas "")
 set(asmflags "")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    vcpkg_list(APPEND OPTIONS "CFLAGS=-std:c11 \$CFLAGS")  # for alignas
     vcpkg_list(APPEND OPTIONS ac_cv_func_memset=yes)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         string(APPEND asmflags " --target=i686-pc-windows-msvc -m32")

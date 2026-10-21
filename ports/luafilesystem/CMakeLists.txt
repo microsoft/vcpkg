@@ -10,6 +10,7 @@ add_library(lfs src/lfs.h src/lfs.c src/lfs.def)
 
 target_include_directories(lfs PRIVATE ${LFS_INCLUDES})
 target_link_libraries(lfs PRIVATE ${LFS_LIBRARIES})
+target_include_directories(lfs INTERFACE $<INSTALL_INTERFACE:include/luafilesystem>) 
 
 install(TARGETS lfs
     EXPORT "unofficial-${PROJECT_NAME}-targets"
@@ -31,6 +32,8 @@ write_basic_package_version_file(
   VERSION       "${LFS_VERSION}"
   COMPATIBILITY SameMajorVersion
 )
+
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/lfs.h" DESTINATION "include/luafilesystem")
 
 install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}-config.cmake"

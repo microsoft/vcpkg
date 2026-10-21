@@ -1,0 +1,32 @@
+diff --git a/cmake/OpenCVDetectVulkan.cmake b/cmake/OpenCVDetectVulkan.cmake
+index b6ef0f2..2350dad 100644
+--- a/cmake/OpenCVDetectVulkan.cmake
++++ b/cmake/OpenCVDetectVulkan.cmake
+@@ -1,9 +1,11 @@
+-set(VULKAN_INCLUDE_DIRS "${OpenCV_SOURCE_DIR}/3rdparty/include" CACHE PATH "Vulkan include directory")
++find_package(VulkanHeaders CONFIG)
++set(VULKAN_INCLUDE_DIRS "")
+ set(VULKAN_LIBRARIES "" CACHE PATH "Path to Vulkan Libraries.")
+ 
+ try_compile(VALID_VULKAN
+       "${OpenCV_BINARY_DIR}"
+       "${OpenCV_SOURCE_DIR}/cmake/checks/vulkan.cpp"
++      LINK_LIBRARIES Vulkan::Headers
+       CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${VULKAN_INCLUDE_DIRS}"
+       OUTPUT_VARIABLE TRY_OUT
+       )
+diff --git a/modules/dnn/CMakeLists.txt b/modules/dnn/CMakeLists.txt
+index 382379c..6341731 100644
+--- a/modules/dnn/CMakeLists.txt
++++ b/modules/dnn/CMakeLists.txt
+@@ -110,6 +110,10 @@ ocv_warnings_disable(CMAKE_CXX_FLAGS
+ set(include_dirs "")
+ set(libs "")
+ 
++if(HAVE_VULKAN)
++  list(APPEND libs "$<COMPILE_ONLY:Vulkan::Headers>")
++endif()
++
+ if(HAVE_PROTOBUF)
+   ocv_target_compile_definitions(${the_module} PRIVATE "HAVE_PROTOBUF=1")
+ 

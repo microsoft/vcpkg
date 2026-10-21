@@ -1,0 +1,19 @@
+{
+  "name": "red0124-ssp",
+  "version": "1.8.0",
+  "description": "A header only CSV parser which is fast and versatile with modern C++ API.",
+  "homepage": "https://github.com/red0124/ssp",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "fast-float",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

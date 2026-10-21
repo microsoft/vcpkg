@@ -1,0 +1,36 @@
+diff --git a/aui.views/src/AUI/GL/OpenGLRenderer.cpp b/aui.views/src/AUI/GL/OpenGLRenderer.cpp
+index 42fafa0..b33409b 100644
+--- a/aui.views/src/AUI/GL/OpenGLRenderer.cpp
++++ b/aui.views/src/AUI/GL/OpenGLRenderer.cpp
+@@ -33,6 +33,7 @@
+ #include "ShaderUniforms.h"
+ #include "AUI/Render/IRenderer.h"
+ #include "glm/fwd.hpp"
++#include <glm/ext/matrix_clip_space.hpp>
+ #include "AUI/Util/GaussianKernel.h"
+ #include "AUI/Traits/bit.h"
+ #include <AUI/Traits/callables.h>
+diff --git a/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp b/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp
+index 05ed0b0..39fc651 100644
+--- a/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp
++++ b/aui.views/src/AUI/Platform/AGLEmbedAuiWrap.cpp
+@@ -16,6 +16,7 @@
+ #include "AGLEmbedAuiWrap.h"
+ #include "AUI/GL/State.h"
+ #include "AUI/GL/OpenGLRenderer.h"
++#include <glm/ext/matrix_clip_space.hpp>
+ 
+ void AGLEmbedAuiWrap::render(ARenderContext context) {
+     windowMakeCurrent();
+diff --git a/aui.views/src/AUI/Render/IRenderer.h b/aui.views/src/AUI/Render/IRenderer.h
+index f726865..f173190 100644
+--- a/aui.views/src/AUI/Render/IRenderer.h
++++ b/aui.views/src/AUI/Render/IRenderer.h
+@@ -12,6 +12,7 @@
+ #pragma once
+ 
+ #include <glm/glm.hpp>
++#include <glm/ext/matrix_transform.hpp>
+ #include <AUI/Reflect/AEnumerate.h>
+ #include <AUI/Common/ASide.h>
+ #include <AUI/Common/AColor.h>

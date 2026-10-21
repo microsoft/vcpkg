@@ -4,13 +4,15 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 65f8260213faab1965ff97e38b890d85f5599c5db5f50f09ab1ed2d73d7008d2e93693145d66a4d9af6342666817204736c3b0384885fa50402850f1dc5dceae
     HEAD_REF develop
+    PATCHES
+        0001-support-eigen3-5.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-        FEATURES
-            cuda       CCTAG_WITH_CUDA
-            apps       CCTAG_BUILD_APPS
-)
+    FEATURES
+        cuda CCTAG_WITH_CUDA
+        apps CCTAG_BUILD_APPS
+  )
 
 if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)

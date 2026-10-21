@@ -21,6 +21,8 @@ vcpkg_extract_source_archive(SOURCE_PATH
         subdirs.patch
         msvc_symbol.patch
         arm64-coff.patch
+        remove_compiler_info.patch
+        c23.patch
 )
 
 vcpkg_list(SET OPTIONS)
@@ -62,6 +64,9 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     vcpkg_list(APPEND OPTIONS "ABI=32")
     string(APPEND asmflags " -m32")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    # Let vcpkg-make set CCAS/AS so Android --target/--sysroot flags are preserved.
+    set(ccas "")
 else()
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
@@ -72,16 +77,29 @@ elseif(ccas)
     cmake_path(GET ccas PARENT_PATH ccas_dir)
     vcpkg_add_to_path("${ccas_dir}")
     cmake_path(GET ccas FILENAME ccas_command)
+    vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 endif()
-vcpkg_list(APPEND OPTIONS "CCAS=${ccas_command}" "ASMFLAGS=${asmflags}")
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_configure_make(
+if(VCPKG_HOST_IS_WINDOWS AND (NOT DEFINED VCPKG_MAKE_ACQUIRE_MSYS OR VCPKG_MAKE_ACQUIRE_MSYS))
+    # dumpbin detection fails with autoconf 2.72
+    set(ENV{WANT_AUTOCONF} 2.71)
+    vcpkg_acquire_msys(MSYS_ROOT
+        PACKAGES autoconf-wrapper automake-wrapper autoconf-archive binutils libtool make which
+        DIRECT_PACKAGES
+            "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-4-any.pkg.tar.zst"
+            c93b791eb55893cbe7c425e764074837355fd165deb7b1775f652c8e25d9d1f0cdd4120ab710d56fb859b7df55c4f971eccda7c112448f60615bff8a2dc81166
+    )
+    vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
+    set(VCPKG_MAKE_ACQUIRE_MSYS FALSE)
+endif()
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
+    LANGUAGES ASM C CXX
     OPTIONS
         ${OPTIONS}
         --enable-cxx
@@ -89,7 +107,7 @@ vcpkg_configure_make(
         --with-readline=no
         "gmp_cv_prog_exeext_for_build=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)

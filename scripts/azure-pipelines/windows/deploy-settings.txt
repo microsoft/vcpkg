@@ -1,9 +1,8 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
-
-Write-Host 'Disabling pagefile...'
-wmic computersystem set AutomaticManagedPagefile=False
-wmic pagefileset delete
 
 $av = Get-Command Add-MPPreference -ErrorAction SilentlyContinue
 if ($null -eq $av) {

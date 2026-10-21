@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75830b44..39cc039e 100644
+index 4d843b4d..257b41c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -390,10 +390,14 @@ add_custom_target(spirv-tools-shared-pkg-config ALL
+@@ -406,10 +406,14 @@ add_custom_target(spirv-tools-pkg-config
  
  # Install pkg-config file
  if (ENABLE_SPIRV_TOOLS_INSTALL)
 +  set(shared_pc "")
-+  if(BUILD_SHARED_LIBS)
++  if (BUILD_SHARED_LIBS)
 +    set(shared_pc "${CMAKE_CURRENT_BINARY_DIR}/SPIRV-Tools-shared.pc")
 +  endif()
    install(
@@ -19,17 +19,17 @@ index 75830b44..39cc039e 100644
        ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
  endif()
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index acfa0c12..b3286db3 100644
+index 641bc1f7..f6dff6c6 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -425,6 +425,10 @@ if (ANDROID)
+@@ -386,6 +386,10 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
  endif()
  
  if(ENABLE_SPIRV_TOOLS_INSTALL)
-+  if(NOT BUILD_SHARED_LIBS)
++  if (NOT BUILD_SHARED_LIBS)
 +    set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES EXCLUDE_FROM_ALL 1)
 +    list(REMOVE_ITEM SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-shared)
 +  endif()
-   install(TARGETS ${SPIRV_TOOLS_TARGETS} EXPORT ${SPIRV_TOOLS}Targets)
-   export(EXPORT ${SPIRV_TOOLS}Targets FILE ${SPIRV_TOOLS}Target.cmake)
- 
+   if (SPIRV_TOOLS_USE_MIMALLOC AND (NOT SPIRV_TOOLS_BUILD_STATIC OR SPIRV_TOOLS_USE_MIMALLOC_IN_STATIC_BUILD))
+     list(APPEND SPIRV_TOOLS_TARGETS mimalloc-static)
+   endif()

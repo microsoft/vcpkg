@@ -1,6 +1,7 @@
 {
   "name": "antlr4",
-  "version": "4.13.1",
+  "version": "4.13.2",
+  "port-version": 1,
   "description": "ANother Tool for Language Recognition",
   "homepage": "https://www.antlr.org",
   "license": "BSD-3-Clause",

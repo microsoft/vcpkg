@@ -1,0 +1,18 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index dbc41b1..9ae252d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -87,6 +87,13 @@ target_include_directories(box2d
+ 
+ set(CMAKE_DEBUG_POSTFIX "d")
+ 
++if(NOT WIN32)
++	find_library(HAVE_LIBM m)
++	if(HAVE_LIBM)
++		target_link_libraries(box2d PRIVATE m)
++	endif()
++endif()
++
+ # Box2D uses C17 for _Static_assert and anonymous unions
+ set_target_properties(box2d PROPERTIES
+ 	C_STANDARD 17

@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Detours
-    REF v4.0.1
-    SHA512 0a9c21b8222329add2de190d2e94d99195dfa55de5a914b75d380ffe0fb787b12e016d0723ca821001af0168fd1643ffd2455298bf3de5fdc155b3393a3ccc87
-    HEAD_REF master
-    PATCHES 
-        find-jmp-bounds-arm64.patch
+    REF 9764cebcb1a75940e68fa83d6730ffaf0f669401
+    SHA512 30f689a7f7dd3d762f1194ad8d7e05517678b754d6c0db297220f946485a8c8ec8a07cf5f3f893aabcc5623f64c81ee358e2a1c3ba23ba1fbd5856f6b3dd9eb7
+    HEAD_REF main
 )
 
 vcpkg_build_nmake(

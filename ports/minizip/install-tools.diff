@@ -1,0 +1,41 @@
+diff --git a/contrib/minizip/CMakeLists.txt b/contrib/minizip/CMakeLists.txt
+index e9e03b9..775129f 100644
+--- a/contrib/minizip/CMakeLists.txt
++++ b/contrib/minizip/CMakeLists.txt
+@@ -220,8 +220,13 @@ endif(MINIZIP_BUILD_STATIC)
+ 
+ if(MINIZIP_INSTALL)
+     if(MINIZIP_BUILD_SHARED)
++        set(executables minizip miniunzip)
++        if(DISABLE_INSTALL_TOOLS)
++            set_target_properties(${executables} PROPERTIES EXCLUDE_FROM_ALL 1)
++            set(executables "")
++        endif()
+         install(
+-            TARGETS libminizip minizip miniunzip
++            TARGETS libminizip ${executables}
+             COMPONENT Runtime
+             EXPORT minizipSharedExport
+             RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+@@ -244,11 +249,18 @@ if(MINIZIP_INSTALL)
+     endif(MINIZIP_BUILD_SHARED)
+ 
+     if(MINIZIP_BUILD_STATIC)
++        set(executables minizipstatic miniunzipstatic)
++        if(DISABLE_INSTALL_TOOLS)
++            set_target_properties(${executables} PROPERTIES EXCLUDE_FROM_ALL 1)
++            set(executables "")
++        else()
++            # Deliberately renaming the tools for uniform install names
++            set_target_properties(minizipstatic PROPERTIES OUTPUT_NAME minizip)
++            set_target_properties(miniunzipstatic PROPERTIES OUTPUT_NAME miniunzip)
++        endif()
+         install(
+             TARGETS libminizipstatic
+-            COMPONENT Development
+-            TARGETS minizipstatic miniunzipstatic
+-            COMPONENT Runtime
++                    ${executables}
+             EXPORT minizipStaticExport
+             RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+             ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"

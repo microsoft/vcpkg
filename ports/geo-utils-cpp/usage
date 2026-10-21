@@ -1,0 +1,4 @@
+The package geo-utils-cpp provides CMake targets:
+
+    find_package(GeoUtilsCpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE geo::utils)

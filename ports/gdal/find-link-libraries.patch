@@ -1,5 +1,5 @@
 diff --git a/cmake/modules/packages/FindFreeXL.cmake b/cmake/modules/packages/FindFreeXL.cmake
-index 6c86fb8..0634412 100644
+index 2cdb29b..af2bab0 100644
 --- a/cmake/modules/packages/FindFreeXL.cmake
 +++ b/cmake/modules/packages/FindFreeXL.cmake
 @@ -37,7 +37,15 @@ include(SelectLibraryConfigurations)
@@ -20,7 +20,7 @@ index 6c86fb8..0634412 100644
  
  find_path(FREEXL_INCLUDE_DIR
 diff --git a/cmake/modules/packages/FindOpenJPEG.cmake b/cmake/modules/packages/FindOpenJPEG.cmake
-index c697484..6e83222 100644
+index 986c674..7e4bb3c 100644
 --- a/cmake/modules/packages/FindOpenJPEG.cmake
 +++ b/cmake/modules/packages/FindOpenJPEG.cmake
 @@ -32,9 +32,18 @@ endfunction()
@@ -44,7 +44,7 @@ index c697484..6e83222 100644
  
  find_path(OPENJPEG_INCLUDE_DIR opj_config.h
 diff --git a/cmake/modules/packages/FindPoppler.cmake b/cmake/modules/packages/FindPoppler.cmake
-index 3807ec0..8059eb4 100644
+index 0d3fd5e..602d349 100644
 --- a/cmake/modules/packages/FindPoppler.cmake
 +++ b/cmake/modules/packages/FindPoppler.cmake
 @@ -42,11 +42,19 @@ This module defines the following variables:
@@ -85,10 +85,10 @@ index 3807ec0..8059eb4 100644
                NAMES ${Poppler_${_comp}_header}
                PATH_SUFFIXES poppler
 diff --git a/cmake/modules/packages/FindSPATIALITE.cmake b/cmake/modules/packages/FindSPATIALITE.cmake
-index 00612b0..6388719 100644
+index b7f9ade..d53d511 100644
 --- a/cmake/modules/packages/FindSPATIALITE.cmake
 +++ b/cmake/modules/packages/FindSPATIALITE.cmake
-@@ -38,9 +38,17 @@ endif()
+@@ -33,9 +33,17 @@ This module defines the following variables:
  
  find_package(PkgConfig QUIET)
  if(PKG_CONFIG_FOUND)

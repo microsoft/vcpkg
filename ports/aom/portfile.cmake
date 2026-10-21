@@ -1,23 +1,21 @@
-# NASM is required to build AOM
-vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_add_to_path(${NASM_EXE_PATH})
-
-# Perl is required to build AOM
-vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_PATH})
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF bb6430482199eaefbeaaa396600935082bc43f66
+    REF af3dc9aadc793c1b00edc003e3fc19a44fdeb574
+    FETCH_REF "v${VERSION}"
+    HEAD_REF main
     PATCHES
         aom-rename-static.diff
-        aom-uninitialized-pointer.diff
-        # Can be dropped when https://bugs.chromium.org/p/aomedia/issues/detail?id=3029 is merged into the upstream
-        aom-install.diff
 )
+
+vcpkg_find_acquire_program(PERL)
+
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)$")
+    # Upstream AOM only uses NASM on x86-family targets. Non-x86 targets such as
+    # Apple Silicon configure with ENABLE_NASM=OFF and should not require nasm.
+    vcpkg_find_acquire_program(NASM)
+    set(aom_nasm_compiler "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+endif()
 
 set(aom_target_cpu "")
 if(VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
@@ -27,41 +25,38 @@ if(VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE
 endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_TARGET_IS_LINUX)
-  set(aom_target_cpu "-DENABLE_NEON=OFF")
+    set(aom_target_cpu "-DENABLE_NEON=OFF")
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${aom_target_cpu}
+        -DENABLE_APPS=OFF
         -DENABLE_DOCS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTDATA=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_TOOLS=OFF
+        -DTHREADS_PREFER_PTHREAD_FLAG=ON
+        ${aom_nasm_compiler}
+        "-DPERL_EXECUTABLE=${PERL}"
 )
 
 vcpkg_cmake_install()
-
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/AOM)
 vcpkg_copy_pdbs()
-
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/aom.pc" " -lm" "")
-  if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/aom.pc" " -lm" "")
-  endif()
-endif()
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-# Move cmake configs
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-
-# Remove duplicate files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/PATENTS"
+    "${SOURCE_PATH}/third_party/fastfeat/LICENSE"
+    "${SOURCE_PATH}/third_party/vector/LICENSE"
+    "${SOURCE_PATH}/third_party/x86inc/LICENSE"
+)

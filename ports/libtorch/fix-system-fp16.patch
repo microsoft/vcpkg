@@ -1,0 +1,11 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -753,6 +753,8 @@
+ endif()
+ 
+ # ---[ Caffe2 depends on FP16 library for half-precision conversions
++find_package(unofficial-fp16 CONFIG REQUIRED)
++add_library(fp16 ALIAS unofficial::fp16::fp16)
+ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
+   set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
+   # PSIMD is required by FP16

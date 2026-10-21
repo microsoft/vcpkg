@@ -1,0 +1,34 @@
+diff --git a/modules/viz/src/precomp.hpp b/modules/viz/src/precomp.hpp
+index 4c4bf7c..78933f7 100644
+--- a/modules/viz/src/precomp.hpp
++++ b/modules/viz/src/precomp.hpp
+@@ -51,6 +51,7 @@
+ #include <list>
+ #include <vector>
+ #include <iomanip>
++#include <iostream>
+ #include <limits>
+ 
+ #include <vtkVersionMacros.h>
+diff --git a/modules/viz/src/vtk/vtkVizInteractorStyle.cpp b/modules/viz/src/vtk/vtkVizInteractorStyle.cpp
+index e2d3380..26f3ca2 100644
+--- a/modules/viz/src/vtk/vtkVizInteractorStyle.cpp
++++ b/modules/viz/src/vtk/vtkVizInteractorStyle.cpp
+@@ -96,7 +96,7 @@ void cv::viz::vtkVizInteractorStyle::saveScreenshot(const String &file)
+     snapshot_writer->SetFileName(file.c_str());
+     snapshot_writer->Write();
+ 
+-    cout << "Screenshot successfully captured (" << file.c_str() << ")" << endl;
++    std::cout << "Screenshot successfully captured (" << file.c_str() << ")" << endl;
+ }
+ 
+ //////////////////////////////////////////////////////////////////////////////////////////////
+@@ -118,7 +118,7 @@ void cv::viz::vtkVizInteractorStyle::exportScene(const String &file)
+     exporter->SetInput(Interactor->GetRenderWindow());
+     exporter->Write();
+ 
+-    cout << "Scene successfully exported (" << file.c_str() << ")" << endl;
++    std::cout << "Scene successfully exported (" << file.c_str() << ")" << endl;
+ }
+ 
+ void cv::viz::vtkVizInteractorStyle::exportScene()

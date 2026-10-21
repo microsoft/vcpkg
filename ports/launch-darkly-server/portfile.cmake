@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO launchdarkly/c-server-sdk
-    REF a79f743bda933af3c45ab6ca5c6448df4b815667 # 2.8.6
-    SHA512 5f5982def5d2e9272751f35cbc0891ef967ae189d56da996e00410205ab0d57c196b66f7be0ba918ee6f82a584e5d75257e77f03c9b644c3174c35ea015802f7 
+    REF 66c24c874d623338636083f81ed258bc5101f504 # 2.9.3
+    SHA512 38dd411da0cae016f781efc467a9c230236160e3db737550809f5c7b799c2946deec191d6abcf2f677d6452ad0c273c864e9a78674f6c547d1fd8a88d9d73bcc 
     HEAD_REF master
     PATCHES
         findPCRE.patch
         FixStrictPrototypes.patch # required with clang-15
         removeWarningAsError.patch
-        fix-depend-clib.patch
 )
 
 
@@ -39,7 +38,7 @@ vcpkg_from_github(
     SHA512 fd7dfbed4ac10e2c482da1cd460dabf0a53965e6fa17fab97156becb8214e435ee3605b2748705141380e254de7c32ab42da5e42cd6e4494f7ecaafb3b9e19f0
     HEAD_REF master
     PATCHES
-        fix-confilct-with-openssl.patch
+        ${SOURCE_PATH}/patches/sha1.patch
 )
 
 vcpkg_from_github(
@@ -77,6 +76,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
 	CONFIG_PATH lib/cmake/ldserverapi
+	PACKAGE_NAME ldserverapi
 )
 
 file(REMOVE_RECURSE
@@ -86,8 +86,8 @@ file(REMOVE_RECURSE
 vcpkg_copy_pdbs()
 
 set(shareDir "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# legacy vcpkg, unofficial
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/launch-darkly-server-config.cmake DESTINATION ${shareDir})
-file(RENAME ${shareDir}/ldserverapiTargets.cmake ${shareDir}/ldserverapi-targets.cmake)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

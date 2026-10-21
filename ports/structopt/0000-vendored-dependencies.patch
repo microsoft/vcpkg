@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8c6f3dd..a85803b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,6 +36,9 @@ option(STRUCTOPT_SAMPLES "Build structopt samples")
+ include(CMakePackageConfigHelpers)
+ include(GNUInstallDirs)
+ 
++find_package(magic_enum REQUIRED)
++find_package(unofficial-visit_struct REQUIRED)
++
+ add_library(structopt INTERFACE)
+ add_library(structopt::structopt ALIAS structopt)
+ 
+@@ -43,6 +46,9 @@ target_compile_features(structopt INTERFACE cxx_std_17)
+ target_include_directories(structopt INTERFACE
+   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
++target_link_libraries(structopt INTERFACE
++  magic_enum::magic_enum
++  unofficial::visit_struct::visit_struct)
+ 
+ if(STRUCTOPT_SAMPLES)
+   add_subdirectory(samples)
+diff --git a/include/structopt/app.hpp b/include/structopt/app.hpp
+index b60cc29..c89aa5d 100644
+--- a/include/structopt/app.hpp
++++ b/include/structopt/app.hpp
+@@ -6,7 +6,7 @@
+ #include <string>
+ #include <structopt/is_stl_container.hpp>
+ #include <structopt/parser.hpp>
+-#include <structopt/third_party/visit_struct/visit_struct.hpp>
++#include <visit_struct/visit_struct.hpp>
+ #include <type_traits>
+ #include <vector>
+ 
+diff --git a/include/structopt/parser.hpp b/include/structopt/parser.hpp
+index 5ef391c..1cbfc71 100644
+--- a/include/structopt/parser.hpp
++++ b/include/structopt/parser.hpp
+@@ -13,8 +13,8 @@
+ #include <structopt/is_number.hpp>
+ #include <structopt/is_specialization.hpp>
+ #include <structopt/sub_command.hpp>
+-#include <structopt/third_party/magic_enum/magic_enum.hpp>
+-#include <structopt/third_party/visit_struct/visit_struct.hpp>
++#include <magic_enum/magic_enum.hpp>
++#include <visit_struct/visit_struct.hpp>
+ #include <tuple>
+ #include <type_traits>
+ #include <utility>
+diff --git a/include/structopt/visitor.hpp b/include/structopt/visitor.hpp
+index f36c155..dbaa619 100644
+--- a/include/structopt/visitor.hpp
++++ b/include/structopt/visitor.hpp
+@@ -7,7 +7,7 @@
+ #include <string>
+ #include <structopt/is_specialization.hpp>
+ #include <structopt/string.hpp>
+-#include <structopt/third_party/visit_struct/visit_struct.hpp>
++#include <visit_struct/visit_struct.hpp>
+ #include <type_traits>
+ #include <vector>
+ 
+diff --git a/structoptConfig.cmake.in b/structoptConfig.cmake.in
+index 8f4580f..c272fe6 100644
+--- a/structoptConfig.cmake.in
++++ b/structoptConfig.cmake.in
+@@ -2,6 +2,9 @@
+ 
+ include(CMakeFindDependencyMacro)
+ 
++find_dependency(magic_enum)
++find_dependency(unofficial-visit_struct)
++
+ if (NOT TARGET structopt::structopt)
+   include(${CMAKE_CURRENT_LIST_DIR}/structoptTargets.cmake)
+ endif ()

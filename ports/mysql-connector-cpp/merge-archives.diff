@@ -1,0 +1,25 @@
+diff --git a/cmake/libutils/merge_archives.cmake.in b/cmake/libutils/merge_archives.cmake.in
+index 33094a6..5b256c6 100644
+--- a/cmake/libutils/merge_archives.cmake.in
++++ b/cmake/libutils/merge_archives.cmake.in
+@@ -299,7 +299,7 @@ function(merge_libraries_gcc)
+ 
+     get_filename_component(name "${lib}" NAME_WE)
+     # Make sure path is absolute
+-    get_filename_component(lib "${lib}" ABSOLUTE)
++    get_filename_component(lib "${lib}" ABSOLUTE BASE_DIR "@PROJECT_BINARY_DIR@")
+ 
+     #message("-- processing lib: ${name} (${lib})")
+ 
+@@ -564,6 +564,11 @@ function(process_deps)
+     # ninja, for example.
+ 
+     get_filename_component(libpath "${lib}" ABSOLUTE BASE_DIR "${BUILD_DIR}")
++    string(FIND "${libpath}/" "@PROJECT_BINARY_DIR@/" index)
++    if(NOT index STREQUAL "0")
++      message( "! Omitting ${lib}")
++      continue()
++    endif()
+ 
+     if(
+       lib MATCHES "${libext}$"

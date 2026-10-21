@@ -1,5 +1,6 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceware.org/pub/bzip2/bzip2-${VERSION}.tar.gz"
+         "https://www.mirrorservice.org/sites/sourceware.org/pub/bzip2/bzip2-${VERSION}.tar.gz"
     FILENAME "bzip2-${VERSION}.tar.gz"
     SHA512 083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3
 )

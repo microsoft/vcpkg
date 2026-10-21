@@ -1,4 +1,0 @@
-libe57format provides CMake targets:
-
-    find_package(e57format CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE E57Format)

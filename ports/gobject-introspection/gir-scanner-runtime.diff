@@ -1,0 +1,12 @@
+diff --git a/meson.build b/meson.build
+index ea3ae94..9cd88fe 100644
+--- a/meson.build
++++ b/meson.build
+@@ -220,6 +220,7 @@ current_library_path = run_command(
+ g_ir_scanner_env.set(var, current_library_path.stdout().strip())
+ if host_system in ['windows', 'cygwin']
+   g_ir_scanner_env.prepend(var, gio_dep.get_variable('giomoduledir'))
++  g_ir_scanner_env.prepend(var, glib_dep.get_variable('bindir'))
+ endif
+ 
+ configure_file(

@@ -4,14 +4,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/asio
     REF boost-${VERSION}
-    SHA512 bbde7c60f208733d48713d2dcfe5be0e18b8372ecaae51055225e5da6bf3e4671e53da8917d27c17f84e34be858d3002c3ac62cdecfd8e3e3861edf365256bee
+    SHA512 9660b986c164597d571c0acbf5b2de98f8c3876b748a7053c32ad04bfd5e2e6d2f216edeec9f92298522ea7004fd0911bfbc75e868fa9e22a949821dc7378442
     HEAD_REF master
     PATCHES
-        windows_alloca_header.patch
-        opt-dep.diff
+        0001-add-options.patch
 )
 
 set(FEATURE_OPTIONS "")
+include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}

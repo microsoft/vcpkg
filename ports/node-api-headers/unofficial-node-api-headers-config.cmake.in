@@ -5,7 +5,7 @@ if(NOT TARGET unofficial::node-api-headers::node-api-headers)
     add_library(unofficial::node-api-headers::node-api-headers INTERFACE IMPORTED)
   endif()
 
-  set(node-api-headers_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../include/node)
+  set(node-api-headers_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../include)
 
   set_target_properties(unofficial::node-api-headers::node-api-headers PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${node-api-headers_INCLUDE_DIR}"

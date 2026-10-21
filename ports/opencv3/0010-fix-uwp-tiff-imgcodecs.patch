@@ -1,6 +1,6 @@
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
-@@ -9,6 +9,10 @@ ocv_add_module(imgcodecs opencv_imgproc WRAP java objc python)
+@@ -9,6 +9,10 @@ ocv_add_module(imgcodecs opencv_imgproc WRAP java python)
  
  ocv_clear_vars(GRFMT_LIBS)
  

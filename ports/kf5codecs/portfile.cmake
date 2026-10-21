@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcodecs
-    REF v5.98.0
-    SHA512 0fc58451a3e2774ea2626bcbdd0a9838bdcce5f8c75ffe30b67dc08255729f802b1cc0a5fc9f821058eb9496c4cabe40c988300b0cfbed4302d35b262c4c3610
+    REF "v${VERSION}"
+    SHA512 aebbbe10d0a7cfdffc910cc2b2650240519aebfd0f7dbc2a014e2912b4835b46c6a5f4e1357ddde6a0ebb143587284d766d47169f11870c21938705a6fb99678
     HEAD_REF master
 )
 
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Codecs CONFIG_PATH lib/cmake/KF5Codecs)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Codecs)
 
 vcpkg_copy_pdbs()
 
@@ -30,4 +30,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

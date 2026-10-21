@@ -1,0 +1,29 @@
+diff --git a/src/net/tcp_transport.cpp b/src/net/tcp_transport.cpp
+index 4046b03..b675ed3 100644
+--- a/src/net/tcp_transport.cpp
++++ b/src/net/tcp_transport.cpp
+@@ -1,4 +1,9 @@
+ #include "net/tcp_transport.hpp"
++
++// For UWP applications
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++#define ASIO_WINDOWS_APP
++#endif
+ #include "core/enum_reflection.inl"
+ #include <asio.hpp>
+ #include <chrono>
+diff --git a/src/net/udp_transport.cpp b/src/net/udp_transport.cpp
+index a2c4bda..9720353 100644
+--- a/src/net/udp_transport.cpp
++++ b/src/net/udp_transport.cpp
+@@ -1,5 +1,10 @@
+ #include "net/udp_transport.hpp"
+ #include "core/enum_reflection.inl"
++
++// For UWP applications
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
++#define ASIO_WINDOWS_APP
++#endif
+ #include <asio.hpp>
+ #include <chrono>
+ #include <functional>

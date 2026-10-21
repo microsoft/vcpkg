@@ -1,8 +1,17 @@
-diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
-index ff8e1d6cc..306dac51f 100644
---- a/c10/util/Logging.cpp	
+--- a/c10/util/logging_is_google_glog.h
++++ b/c10/util/logging_is_google_glog.h
+@@ -52,7 +52,7 @@
+
+ namespace c10 {
+
+-[[noreturn]] void ThrowEnforceNotMet(
++[[noreturn]] C10_API void ThrowEnforceNotMet(
+     const char* file,
+     const int line,
+     const char* condition,
+--- a/c10/util/Logging.cpp
 +++ b/c10/util/Logging.cpp
-@@ -218,24 +218,11 @@ C10_DEFINE_int(
+@@ -327,23 +327,13 @@
      google::GLOG_WARNING,
      "The minimum log level that caffe2 will output.");
  
@@ -20,11 +29,49 @@ index ff8e1d6cc..306dac51f 100644
  namespace {
  
  void initGoogleLogging(char const* name) {
--#if !defined(_MSC_VER)
--  // This trick can only be used on UNIX platforms
+ #if !defined(_MSC_VER)
+   // This trick can only be used on UNIX platforms
 -  if (!::google::glog_internal_namespace_::IsGoogleLoggingInitialized())
--#endif
 +  if (!::google::IsGoogleLoggingInitialized())
+ #endif
    {
      ::google::InitGoogleLogging(name);
- #if !defined(_MSC_VER)
+@@ -394,7 +384,7 @@
+ 
+ void ShowLogInfoToStderr() {
+   FLAGS_logtostderr = 1;
+-  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::GLOG_INFO);
++  FLAGS_minloglevel = std::min<int>(FLAGS_minloglevel, google::GLOG_INFO);
+ }
+ } // namespace c10
+ 
+--- a/c10/util/Exception.cpp
++++ b/c10/util/Exception.cpp
+@@ -9,18 +9,6 @@
+ #include <string>
+ #include <utility>
+ 
+-// Google glog's api does not have an external function that allows one to check
+-// if glog is initialized or not. It does have an internal function - so we are
+-// declaring it here. This is a hack but has been used by a bunch of others too
+-// (e.g. Torch, common/init). See also Logging.cpp in this directory.
+-#ifdef C10_USE_GLOG
+-namespace google {
+-namespace glog_internal_namespace_ {
+-bool IsGoogleLoggingInitialized();
+-} // namespace glog_internal_namespace_
+-} // namespace google
+-#endif
+-
+ namespace c10 {
+ 
+ Error::Error(std::string msg, Backtrace backtrace, const void* caller)
+@@ -265,7 +253,7 @@
+   // During static initialization (before InitGoogleLogging), glog's global
+   // flags may not be constructed yet. Accessing them causes SIOF crashes
+   // (T253115013, D96553733). Fall back to stderr in that case.
+-  if (!::google::glog_internal_namespace_::IsGoogleLoggingInitialized()) {
++  if (!::google::IsGoogleLoggingInitialized()) {
+     std::cerr << warning.source_location().file << ':'
+               << warning.source_location().line
+               << ": Warning: " << warning.msg() << " (function "

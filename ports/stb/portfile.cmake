@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nothings/stb
-    REF 5736b15f7ea0ffb08dd38af21067c314d6a3aae9 # committed on 2023-04-11
-    SHA512 55bc75284cf8a092c527d1ae18c461c9d0ab6aacdcf3b873abde54c06d9b8a0ae249ce47c7ad25809e075bfbb58e9c879d43e1df2708083860c07ac3bbb30d60
+    REF 2c980bb59875b0d32144a71867fbdebb2f77cd20 # committed on 2026-08-02
+    SHA512 93db78589d836b5a8924ed0e980c6fd8d1dbc7e2d0489bc5a0fa4dedd73ed94332e5c814adc2976e89fab3f4cd96b5c46beae7b5dd55bc8374a91390d774b2b0
     HEAD_REF master
 )
 
@@ -13,4 +13,8 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/FindStb.cmake" DESTINATION "${CURRENT_PA
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+# See https://github.com/nothings/stb/issues/2008
+vcpkg_install_copyright(
+    COMMENT "stb libraries are single files and licensed individually, please refer comments in each individual file for licensing."
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
+)

@@ -7,7 +7,7 @@ index 8ddb128..52b9ad6 100644
        my $deps = join(" \\\n" . ' ' x (length($lib) + 2),
                        fill_lines(' ', $COLUMNS - length($lib) - 2, @objs));
 -      my $max_per_call = 500;
-+      my $max_per_call = ($^O eq 'msys') ? 80 : 500;
++      my $max_per_call = ($^O eq 'msys' || $^O eq 'cygwin') ? 80 : 500;
        my @objs_grouped;
        push @objs_grouped, join(" ", splice @objs, 0, $max_per_call) while @objs;
        my $fill_lib =

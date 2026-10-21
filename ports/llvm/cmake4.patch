@@ -1,0 +1,119 @@
+diff --git a/cmake/Modules/HandleCompilerRT.cmake b/cmake/Modules/HandleCompilerRT.cmake
+index 9398d99..84d9353 100644
+--- a/cmake/Modules/HandleCompilerRT.cmake
++++ b/cmake/Modules/HandleCompilerRT.cmake
+@@ -20,25 +20,25 @@ function(get_component_name name variable)
+     if(NOT name MATCHES "builtins.*")
+       set(component_name "${name}_")
+     endif()
+-    if (CMAKE_OSX_SYSROOT MATCHES ".+MacOSX.+")
++    if (_CMAKE_OSX_SYSROOT_PATH MATCHES ".+MacOSX.+")
+       set(component_name "${component_name}osx")
+ 
+-    elseif (CMAKE_OSX_SYSROOT MATCHES ".+iPhoneOS.+")
++    elseif (_CMAKE_OSX_SYSROOT_PATH MATCHES ".+iPhoneOS.+")
+       set(component_name "${component_name}ios")
+-    elseif (CMAKE_OSX_SYSROOT MATCHES ".+iPhoneSimulator.+")
++    elseif (_CMAKE_OSX_SYSROOT_PATH MATCHES ".+iPhoneSimulator.+")
+       set(component_name "${component_name}iossim")
+ 
+-      elseif (CMAKE_OSX_SYSROOT MATCHES ".+AppleTVOS.+")
++      elseif (_CMAKE_OSX_SYSROOT_PATH MATCHES ".+AppleTVOS.+")
+       set(component_name "${component_name}tvos")
+-    elseif (CMAKE_OSX_SYSROOT MATCHES ".+AppleTVSimulator.+")
++    elseif (_CMAKE_OSX_SYSROOT_PATH MATCHES ".+AppleTVSimulator.+")
+       set(component_name "${component_name}tvossim")
+ 
+-    elseif (CMAKE_OSX_SYSROOT MATCHES ".+WatchOS.+")
++    elseif (_CMAKE_OSX_SYSROOT_PATH MATCHES ".+WatchOS.+")
+       set(component_name "${component_name}watchos")
+-    elseif (CMAKE_OSX_SYSROOT MATCHES ".+WatchSimulator.+")
++    elseif (_CMAKE_OSX_SYSROOT_PATH MATCHES ".+WatchSimulator.+")
+       set(component_name "${component_name}watchossim")
+     else()
+-      message(WARNING "Unknown Apple SDK ${CMAKE_OSX_SYSROOT}, we don't know which compiler-rt library suffix to use.")
++      message(WARNING "Unknown Apple SDK ${_CMAKE_OSX_SYSROOT_PATH}, we don't know which compiler-rt library suffix to use.")
+     endif()
+   else()
+     set(component_name "${name}")
+diff --git a/libcxxabi/src/CMakeLists.txt b/libcxxabi/src/CMakeLists.txt
+index dd23e9b..46c5857 100644
+--- a/libcxxabi/src/CMakeLists.txt
++++ b/libcxxabi/src/CMakeLists.txt
+@@ -140,7 +140,7 @@ if ( APPLE )
+   # Make sure we link in CrashReporterClient if we find it -- it's used by
+   # abort() on Apple platforms when building the system dylib.
+   find_library(CrashReporterClient NAMES libCrashReporterClient.a
+-                                   PATHS "${CMAKE_OSX_SYSROOT}/usr/local/lib")
++                                   PATHS "${_CMAKE_OSX_SYSROOT_PATH}/usr/local/lib")
+   if (CrashReporterClient)
+     message(STATUS "Linking with CrashReporterClient at ${CrashReporterClient}")
+     add_library_flags("${CrashReporterClient}")
+diff --git a/lldb/tools/debugserver/source/CMakeLists.txt b/lldb/tools/debugserver/source/CMakeLists.txt
+index 3c1ddf8..0aa4fd3 100644
+--- a/lldb/tools/debugserver/source/CMakeLists.txt
++++ b/lldb/tools/debugserver/source/CMakeLists.txt
+@@ -152,17 +152,17 @@ if(APPLE)
+   set(LIBCOMPRESSION compression)
+   if(APPLE_EMBEDDED)
+     find_library(BACKBOARD_LIBRARY BackBoardServices
+-      PATHS ${CMAKE_OSX_SYSROOT}/System/Library/PrivateFrameworks)
++      PATHS ${_CMAKE_OSX_SYSROOT_PATH}/System/Library/PrivateFrameworks)
+     find_library(FRONTBOARD_LIBRARY FrontBoardServices
+-      PATHS ${CMAKE_OSX_SYSROOT}/System/Library/PrivateFrameworks)
++      PATHS ${_CMAKE_OSX_SYSROOT_PATH}/System/Library/PrivateFrameworks)
+     find_library(SPRINGBOARD_LIBRARY SpringBoardServices
+-      PATHS ${CMAKE_OSX_SYSROOT}/System/Library/PrivateFrameworks)
++      PATHS ${_CMAKE_OSX_SYSROOT_PATH}/System/Library/PrivateFrameworks)
+     find_library(MOBILESERVICES_LIBRARY MobileCoreServices
+-      PATHS ${CMAKE_OSX_SYSROOT}/System/Library/PrivateFrameworks)
++      PATHS ${_CMAKE_OSX_SYSROOT_PATH}/System/Library/PrivateFrameworks)
+     find_library(LOCKDOWN_LIBRARY lockdown)
+     if (APPLE_EMBEDDED STREQUAL "watchos")
+       find_library(CAROUSELSERVICES_LIBRARY CarouselServices
+-        PATHS ${CMAKE_OSX_SYSROOT}/System/Library/PrivateFrameworks)
++        PATHS ${_CMAKE_OSX_SYSROOT_PATH}/System/Library/PrivateFrameworks)
+     endif()
+ 
+     if(NOT BACKBOARD_LIBRARY)
+@@ -187,8 +187,8 @@ add_definitions(-DLLDB_USE_OS_LOG)
+ 
+ # Make sure we have the macOS SDK root as mig needs it and will silently
+ # fail to generate its output files without it.
+-if(CMAKE_OSX_SYSROOT)
+-  set(MIG_SYSROOT ${CMAKE_OSX_SYSROOT})
++if(_CMAKE_OSX_SYSROOT_PATH)
++  set(MIG_SYSROOT ${_CMAKE_OSX_SYSROOT_PATH})
+ else()
+   execute_process(COMMAND xcrun --show-sdk-path
+     OUTPUT_VARIABLE MIG_SYSROOT
+@@ -200,7 +200,7 @@ if(NOT MIG_SYSROOT)
+   message(FATAL_ERROR "Unable to obtain sysroot required by mig (Mach Interface Generator). Set CMAKE_OSX_SYSROOT to explicitly specify a sysroot.")
+ endif()
+ 
+-if(${CMAKE_OSX_SYSROOT} MATCHES ".Internal.sdk$")
++if(${_CMAKE_OSX_SYSROOT_PATH} MATCHES ".Internal.sdk$")
+   message(STATUS "LLDB debugserver energy support is enabled")
+   add_definitions(-DLLDB_ENERGY)
+   set(ENERGY_LIBRARY -lpmenergy -lpmsample)
+@@ -346,7 +346,7 @@ if(APPLE_EMBEDDED)
+     WITH_BKS
+     )
+   set_property(TARGET lldbDebugserverCommon APPEND PROPERTY COMPILE_FLAGS
+-    -F${CMAKE_OSX_SYSROOT}/System/Library/PrivateFrameworks
++    -F${_CMAKE_OSX_SYSROOT_PATH}/System/Library/PrivateFrameworks
+     )
+ 
+   add_lldb_library(lldbDebugserverCommon_NonUI ${lldbDebugserverCommonSources})
+diff --git a/llvm/test/CMakeLists.txt b/llvm/test/CMakeLists.txt
+index 201f0ee..c08ee13 100644
+--- a/llvm/test/CMakeLists.txt
++++ b/llvm/test/CMakeLists.txt
+@@ -40,6 +40,7 @@ configure_lit_site_cfg(
+   MAIN_CONFIG
+   ${CMAKE_CURRENT_SOURCE_DIR}/lit.cfg.py
+   PATHS
++  "_CMAKE_OSX_SYSROOT_PATH"
+   "CMAKE_OSX_SYSROOT"
+   "LLVM_SOURCE_DIR"
+   "LLVM_BINARY_DIR"

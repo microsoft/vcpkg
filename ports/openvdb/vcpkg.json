@@ -1,9 +1,9 @@
 {
   "name": "openvdb",
-  "version": "11.0.0",
+  "version": "12.0.1",
   "description": "Sparse volume data structure and tools",
-  "homepage": "https://github.com/dreamworksanimation/openvdb",
-  "license": "MPL-2.0",
+  "homepage": "https://www.openvdb.org",
+  "license": "Apache-2.0",
   "supports": "!xbox",
   "dependencies": [
     "blosc",
@@ -42,6 +42,17 @@
       "description": "A lightweight GPU friendly version of VDB initially targeting rendering applications",
       "dependencies": [
         "cuda"
+      ]
+    },
+    "nanovdb-tools": {
+      "description": "NanoVDB tools: print, validate, and convert.",
+      "dependencies": [
+        {
+          "name": "openvdb",
+          "features": [
+            "nanovdb"
+          ]
+        }
       ]
     },
     "tools": {

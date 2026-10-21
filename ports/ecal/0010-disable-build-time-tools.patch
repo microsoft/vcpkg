@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7aa2d29..e2cce36 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -211,11 +211,7 @@ option(ECAL_USE_CLOCKLOCK_MUTEX                     "Use native mutex with monot
+ # ecal core configuration
+ # --------------------------------------------------------
+ set(ECAL_CORE_USE_PROTOBUF                                                                            ${ECAL_USE_PROTOBUF})
+-if (CMAKE_CROSSCOMPILING)
+-set(ECAL_CORE_GENERATE_PBFTAGS                                                                                         OFF)
+-else()
+-set(ECAL_CORE_GENERATE_PBFTAGS                                                                                          ON)
+-endif()
++set(ECAL_CORE_GENERATE_PBFTAGS OFF)
+ set(ECAL_CORE_BUILD_SAMPLES                                                                          ${ECAL_BUILD_SAMPLES})
+ set(ECAL_CORE_BUILD_TESTS                                                                              ${ECAL_BUILD_TESTS})
+ set(ECAL_CORE_CONFIGURATION                                                                                             ON)
+diff --git a/ecal/CMakeLists.txt b/ecal/CMakeLists.txt
+index 1cfc2cf..b154cc2 100644
+--- a/ecal/CMakeLists.txt
++++ b/ecal/CMakeLists.txt
+@@ -36,9 +36,7 @@ endif()
+ # --------------------------------------------------------
+ # core config
+ # --------------------------------------------------------
+-if(NOT CMAKE_CROSSCOMPILING)
+-  add_subdirectory(core/cfg)
+-endif()
++# The SDK uses built-in defaults; do not build or run ecal_generate_config.
+ 
+ # --------------------------------------------------------
+ # services

@@ -1,20 +1,14 @@
-set(UNRAR_VERSION "7.0.7")
-set(UNRAR_SHA512 7151a42742d4c34a8f03c58dae471f80788b76adbb52188759b7fc7357757f88fa9d980de006ce48732c40f326b92b79fb069e807c2b66d4387ee60433a8accb)
-set(UNRAR_FILENAME unrarsrc-${UNRAR_VERSION}.tar.gz)
-set(UNRAR_URL https://www.rarlab.com/rar/${UNRAR_FILENAME})
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-#SRC
 vcpkg_download_distfile(ARCHIVE
-    URLS ${UNRAR_URL}
-    FILENAME ${UNRAR_FILENAME}
-    SHA512 ${UNRAR_SHA512}
+    URLS "https://www.rarlab.com/rar/unrarsrc-${VERSION}.tar.gz"
+    FILENAME "unrarsrc-${VERSION}.tar.gz"
+    SHA512 f772ef9e67d4828eef1ff7270ca875e9b0447f146b9e609c50594bb46754e7cce9e7ad8c05f6c026d5ba430c110483bfbc880ad2fbd081cff7939ee5ea21a521
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    SOURCE_BASE ${UNRAR_VERSION}
+    SOURCE_BASE ${VERSION}
 )
 
 vcpkg_msbuild_install(
@@ -28,4 +22,8 @@ file(INSTALL "${SOURCE_PATH}/dll.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/inclu
 configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-unrar/unofficial-unrar-config.cmake" @ONLY)
 
 #COPYRIGHT
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/acknow.txt"
+)

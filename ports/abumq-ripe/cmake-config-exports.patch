@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 803fb6a..ad7ae72 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -97,9 +97,35 @@ target_compile_definitions(ripe PRIVATE
+     ELPP_NO_DEFAULT_LOG_FILE
+     ELPP_DEFAULT_LOGGING_FLAGS=4096
+ )
+-install (TARGETS ripe DESTINATION lib)
++
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
++
++write_basic_package_version_file(
++  ${CMAKE_CURRENT_BINARY_DIR}/unofficial-ripe-config-version.cmake
++  VERSION "${RIPE_VERSION}"
++  COMPATIBILITY AnyNewerVersion
++)
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/unofficial-ripe-config-version.cmake
++  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/unofficial-ripe-config.cmake
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-ripe
++)
++    
++install (TARGETS ripe
++  EXPORT unofficial-ripe-targets
++  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++)
+ install (FILES include/Ripe.h DESTINATION "include")
+ 
++install(
++    EXPORT unofficial-ripe-targets
++    NAMESPACE unofficial::ripe::
++    DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-ripe"
++)
++
+ ################################################ RIPE ##############################################
+ 
+ add_executable (ripe-bin src/ripe.cc lib/Ripe.cc)

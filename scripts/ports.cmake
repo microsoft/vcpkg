@@ -1,4 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
+if(POLICY CMP0174)
+    # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
+    cmake_policy(SET CMP0174 NEW)
+endif()
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0")
+    set(ENV{CMAKE_POLICY_VERSION_MINIMUM} 3.5)
+endif()
 
 # Remove CMAKE_ variables from the script call
 foreach(i RANGE 0 "${CMAKE_ARGC}")
@@ -27,6 +34,9 @@ list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 # Increment this number if we intentionally need to invalidate all binary caches due a change in
 # the following scripts: 1
 include("${SCRIPTS}/cmake/execute_process.cmake")
+include("${SCRIPTS}/cmake/vcpkg_execute_in_download_mode.cmake")
+include("${SCRIPTS}/cmake/z_vcpkg_spdx.cmake")
+
 include("${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake")
 include("${SCRIPTS}/cmake/vcpkg_add_to_path.cmake")
 include("${SCRIPTS}/cmake/vcpkg_apply_patches.cmake")
@@ -120,8 +130,15 @@ file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
 
 set(CURRENT_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}" CACHE PATH "Location to install final packages")
 
-if(PORT)
+if(DEFINED CURRENT_BUILDTREES_DIR)
+    file(TO_CMAKE_PATH "${CURRENT_BUILDTREES_DIR}" CURRENT_BUILDTREES_DIR)
+elseif(PORT)
     set(CURRENT_BUILDTREES_DIR "${BUILDTREES_DIR}/${PORT}")
+endif()
+
+if(DEFINED CURRENT_PACKAGES_DIR)
+    file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CURRENT_PACKAGES_DIR)
+elseif(PORT)
     set(CURRENT_PACKAGES_DIR "${PACKAGES_DIR}/${PORT}_${TARGET_TRIPLET}")
 endif()
 
@@ -190,9 +207,15 @@ target system or to the host system. Use a prefixed variable instead.
     file(REMOVE "${Z_VCPKG_ERROR_LOG_COLLECTION_FILE}")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
+
+    foreach(z_post_portfile_include IN LISTS Z_VCPKG_POST_PORTFILE_INCLUDES)
+        include("${z_post_portfile_include}")
+    endforeach()
+    unset(z_post_portfile_include)
+
     if(DEFINED PORT)
-        # Always fixup RPATH on linux and osx unless explicitly disabled.
-        if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
+        # Always fixup RPATH on linux, osx and bsds unless explicitly disabled.
+        if(VCPKG_FIXUP_ELF_RPATH OR ((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD) AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
             z_vcpkg_fixup_rpath_in_dir()
         endif()
         if(VCPKG_FIXUP_MACHO_RPATH OR (VCPKG_TARGET_IS_OSX AND NOT DEFINED VCPKG_FIXUP_MACHO_RPATH))
@@ -228,7 +251,7 @@ elseif(CMD STREQUAL "CREATE")
         message(STATUS "Downloading ${URL} -> ${FILENAME}...")
         file(DOWNLOAD "${URL}" "${DOWNLOAD_PATH}" STATUS download_status)
         list(GET download_status 0 status_code)
-        if(NOT "${download_status}" EQUAL "0")
+        if(NOT "${status_code}" EQUAL "0")
             message(FATAL_ERROR "Downloading ${URL}... Failed. Status: ${download_status}")
         endif()
     endif()

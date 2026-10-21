@@ -1,0 +1,7 @@
+{
+  "name": "rectpack2d",
+  "version-date": "2026-08-09",
+  "description": "A header-only 2D rectangle packing library",
+  "homepage": "https://github.com/TeamHypersomnia/rectpack2D",
+  "license": "MIT"
+}

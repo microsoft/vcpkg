@@ -1,0 +1,24 @@
+diff --git a/cmake/cpp-highs.cmake b/cmake/cpp-highs.cmake
+index ddbb7fa..736270f 100644
+--- a/cmake/cpp-highs.cmake
++++ b/cmake/cpp-highs.cmake
+@@ -141,6 +141,19 @@ install(
+   COMPONENT Devel)
+
+ if (NOT HIPO_PYTHON)
++  # highs_extras is always linked statically into highs (BUILD_SHARED_EXTRAS_LIB
++  # controls only how highs_extras itself is built; see highs/CMakeLists.txt),
++  # so consumers that resolve highs.pc as a static dependency (Libs.private)
++  # need highs_extras and its BLAS dependency to satisfy the remaining symbols.
++  # The BLAS backend itself (OpenBLAS vs. Apple Accelerate) is left to the
++  # "blas" pkg-config module so this file does not need to hardcode a vendor.
++  set(HIGHS_PC_LIBS_PRIVATE "")
++  set(HIGHS_PC_EXTRAS_REQUIRES "")
++  if(HIPO)
++    set(HIGHS_PC_LIBS_PRIVATE "-lhighs_extras")
++    set(HIGHS_PC_EXTRAS_REQUIRES ", blas")
++  endif()
++
+   # Configure the pkg-config file for the install
+   configure_file(${PROJECT_SOURCE_DIR}/highs.pc.in
+     "${HIGHS_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/highs.pc" @ONLY)

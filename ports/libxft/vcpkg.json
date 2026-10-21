@@ -1,15 +1,19 @@
 {
   "name": "libxft",
-  "version": "2.3.4",
+  "version": "2.3.9",
+  "port-version": 1,
   "description": "X FreeType library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxft",
   "license": null,
   "dependencies": [
-    "bzip2",
     "fontconfig",
     "freetype",
     "libx11",
     "libxrender",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xorg-macros",
     "xproto"
   ]

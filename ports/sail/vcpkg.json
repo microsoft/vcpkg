@@ -1,12 +1,19 @@
 {
   "name": "sail",
-  "version-semver": "0.9.5",
-  "port-version": 1,
+  "version-semver": "1.2.0",
+  "port-version": 2,
   "description": "The missing small and fast image decoding library for humans (not for machines)",
   "homepage": "https://github.com/HappySeaFox/sail",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "swscale"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -38,11 +45,19 @@
     "avif": {
       "description": "Enable AVIF codec",
       "dependencies": [
-        "libavif"
+        {
+          "name": "libavif",
+          "features": [
+            "aom"
+          ]
+        }
       ]
     },
     "bmp": {
       "description": "Enable BMP codec"
+    },
+    "fli": {
+      "description": "Enable FLI codec"
     },
     "gif": {
       "description": "Enable GIF codec",
@@ -50,14 +65,23 @@
         "giflib"
       ]
     },
+    "hdr": {
+      "description": "Enable HDR codec"
+    },
+    "heif": {
+      "description": "Enable HEIF codec",
+      "dependencies": [
+        "libheif"
+      ]
+    },
     "high-priority-codecs": {
-      "description": "Enable high priority codecs such as BMP",
+      "description": "Enable high priority codecs such as AVIF",
       "dependencies": [
         {
           "name": "sail",
           "features": [
-            "bmp",
-            "svg"
+            "avif",
+            "ico"
           ]
         }
       ]
@@ -71,13 +95,20 @@
             "gif",
             "jpeg",
             "png",
-            "tiff"
+            "svg",
+            "webp"
           ]
         }
       ]
     },
     "ico": {
       "description": "Enable ICO codec"
+    },
+    "jbig": {
+      "description": "Enable JBIG codec",
+      "dependencies": [
+        "jbigkit"
+      ]
     },
     "jpeg": {
       "description": "Enable JPEG codec",
@@ -88,7 +119,7 @@
     "jpeg2000": {
       "description": "Enable JPEG2000 codec",
       "dependencies": [
-        "jasper"
+        "openjpeg"
       ]
     },
     "jpegxl": {
@@ -103,9 +134,11 @@
         {
           "name": "sail",
           "features": [
-            "ico",
-            "pcx",
-            "psd",
+            "bmp",
+            "hdr",
+            "jpeg2000",
+            "jpegxl",
+            "pnm",
             "qoi",
             "tga"
           ]
@@ -118,24 +151,37 @@
         {
           "name": "sail",
           "features": [
+            "fli",
+            "jbig",
+            "pcx",
             "wal",
-            "xbm"
+            "xbm",
+            "xpm",
+            "xwd"
           ]
         }
       ]
     },
     "medium-priority-codecs": {
-      "description": "Enable medium priority codecs such as AVIF",
+      "description": "Enable medium priority codecs such as TIFF",
       "dependencies": [
         {
           "name": "sail",
           "features": [
-            "avif",
-            "jpeg2000",
-            "jpegxl",
-            "webp"
+            "heif",
+            "openexr",
+            "psd",
+            "raw",
+            "tiff",
+            "video"
           ]
         }
+      ]
+    },
+    "openexr": {
+      "description": "Enable OPENEXR codec",
+      "dependencies": [
+        "openexr"
       ]
     },
     "openmp": {
@@ -150,16 +196,39 @@
         "libpng"
       ]
     },
+    "pnm": {
+      "description": "Enable PNM codec"
+    },
     "psd": {
       "description": "Enable PSD codec"
     },
     "qoi": {
-      "description": "Enable QOI codec"
+      "description": "Enable QOI codec",
+      "dependencies": [
+        "qoi"
+      ]
+    },
+    "raw": {
+      "description": "Enable RAW codec",
+      "dependencies": [
+        "libraw"
+      ]
     },
     "svg": {
       "description": "Enable SVG codec",
       "dependencies": [
         "nanosvg"
+      ]
+    },
+    "test": {
+      "description": "Build and run tests",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "all"
+          ]
+        }
       ]
     },
     "tga": {
@@ -174,6 +243,23 @@
         }
       ]
     },
+    "video": {
+      "description": "Enable VIDEO codec",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "features": [
+            "avcodec",
+            "avformat",
+            "bzip2",
+            "lzma",
+            "swresample",
+            "swscale",
+            "zlib"
+          ]
+        }
+      ]
+    },
     "wal": {
       "description": "Enable WAL codec"
     },
@@ -185,6 +271,12 @@
     },
     "xbm": {
       "description": "Enable XBM codec"
+    },
+    "xpm": {
+      "description": "Enable XPM codec"
+    },
+    "xwd": {
+      "description": "Enable XWD codec"
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "restclient-cpp",
-  "version-date": "2022-02-09",
+  "version-date": "2024-01-09",
   "description": "Simple REST client for C++. It wraps libcurl for HTTP requests.",
   "homepage": "https://code.mrtazz.com/restclient-cpp/",
   "license": "MIT",

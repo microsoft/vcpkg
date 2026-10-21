@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 2129e048d8dee027dc1ba789d9901e017b7d698465e15236802ef68639161e1cc7c8665d5f50079333801717fd41ffbe2cb90fa2165b9a85629e8ced8f2b3cd8
     HEAD_REF master
     PATCHES destination.patch
+            fix-gcc15-build.patch
 )
 
 vcpkg_cmake_configure(

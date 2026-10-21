@@ -1,10 +1,10 @@
 {
   "name": "cpuid",
-  "version": "0.6.4",
+  "version": "0.8.2",
   "description": "Provides CPU identification for the x86 (and x86_64)",
   "homepage": "https://github.com/anrieff/libcpuid",
-  "license": "MIT",
-  "supports": "(x86 | x64) & !uwp",
+  "license": "BSD-2-Clause",
+  "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

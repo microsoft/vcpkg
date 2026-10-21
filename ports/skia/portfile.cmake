@@ -3,50 +3,56 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "e7bf161ff959268a2a2f37530a6ea61c27019d33"
-    SHA512 9cb0c39c6721c5e27a24bee97c93925b7b1f4dd774c08520384ccdf736ab5097e49692529a9fe46f50ae799e6aa9f3e8d7ec43cf9177914fcd6f6f01b76a52c4
+    REF e7c90ecca9444fe09598f1630ab7cee2c0ee027a
+    SHA512 f52286fcac1d1b2b45046d7df72cee384b664f0b512c4b4a76bca743747f2113fef6991059b4e71ad804d0209103003ba0f01aa90afac786de20a52e8484018d
     PATCHES
-        disable-msvc-env-setup.patch
-        disable-dev-test.patch
-        skia-include-string.patch
-        bentleyottmann-build.patch
-        graphite.patch
-        vulkan-headers.patch
+        001-bentleyottmann-build.patch
+        002-graphite.patch
+        003-vulkan-headers.patch
+        004-pdfsubsetfont-uwp.patch
+        005-skparagraph-dllexport.patch
+        006-use-pkgconfig-to-find-gl.patch
+        007-dont-use-response-file.patch
+        008-fix-bsd.patch
+        009-allow-disabling-lib-dl.patch
+        010-always-build-pathops.patch
+        011-skstrendswith-dllexport.patch
+        012-dawn.patch
+        013-skcms-dllexport.patch
+
+        # Used in src/gpu/ganesh/d3d/GrD3DBackendSurface.cpp:118, next time we update skia port, check if this patch is still needed
+        014-fix-direct3d.patch
 )
 
 # De-vendor
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/dawn")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
-declare_external_from_git(abseil-cpp
-    URL "https://github.com/abseil/abseil-cpp.git"
-    REF "334aca32051ef6ede2711487acf45d959e9bdffc"
-    LICENSE_FILE LICENSE
-)
 declare_external_from_git(d3d12allocator
     URL "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
     REF "169895d529dfce00390a20e69c2f516066fe7a3b"
     LICENSE_FILE LICENSE.txt
 )
-declare_external_from_git(dawn
-    URL "https://dawn.googlesource.com/dawn.git"
-    REF "bac513d0ae286600ea0f75a75223a5b52a198b9b"
-    LICENSE_FILE LICENSE
-)
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
-    REF "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+    REF "dbe0a676450d9b8c71bf00688bb306409b779e90"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(jinja2
     URL "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
-    REF "e2d024354e11cc6b041b0cff032d73f0c7e43a07"
+    REF "c3027d884967773057bf74b957e3fea87e5df4d7"
     LICENSE_FILE LICENSE.rst
 )
 declare_external_from_git(markupsafe
     URL "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
-    REF "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
+    REF "4256084ae14175d38a3ff7d739dca83ae49ccec6"
+    LICENSE_FILE LICENSE
+)
+declare_external_from_git(partition_alloc
+    URL "https://chromium.googlesource.com/chromium/src/base/allocator/partition_allocator.git"
+    REF "b8c0688f577c1bbce6c2c1ce4753cd685ca0f634"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(piex
@@ -61,12 +67,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "8b246ff75c6615ba4532fe4fde20f1be090c3764"
+    REF "6dd7ba990830f7c15ac1345ff3b43ef6ffdad216"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "f20663ca7fec48fdc88e4c4d7c5889f8b4cc5664"
+    REF "2d14d2e76aa7de72404b17078eda15c20a6a0389"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
@@ -75,11 +81,14 @@ declare_external_from_git(wuffs
     LICENSE_FILE LICENSE
 )
 
+declare_external_from_pkgconfig(abseil-cpp)
 declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
 declare_external_from_pkgconfig(freetype2)
+declare_external_from_pkgconfig(gl)
 declare_external_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
 declare_external_from_pkgconfig(icu MODULES icu-uc)
+declare_external_from_pkgconfig(libavif)
 declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
 declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
@@ -99,7 +108,6 @@ string(JOIN " " OPTIONS
     skia_enable_tools=false
     skia_enable_gpu_debug_layers=false
     skia_use_jpeg_gainmaps=false
-    skia_use_libheif=false
     skia_use_lua=false
 )
 set(OPTIONS_DBG "is_debug=true")
@@ -118,9 +126,10 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false")
     endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(APPEND OPTIONS " skia_enable_skparagraph=false")
         string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
+    string(APPEND OPTIONS " target_os=\"linux\"")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -129,16 +138,25 @@ else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
 
+if (VCPKG_TARGET_IS_BSD AND NOT VCPKG_TARGET_IS_FREEBSD)
+    string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=false")
+else()
+    string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=true")
+endif()
+
 set(required_externals
-    dng_sdk
     expat
-    libjpeg
-    libpng
-    libwebp
     piex
     zlib
     wuffs
 )
+
+if("dng" IN_LIST FEATURES)
+    list(APPEND required_externals dng_sdk)
+    string(APPEND OPTIONS " skia_use_dng_sdk=true")
+else()
+    string(APPEND OPTIONS " skia_use_dng_sdk=false")
+endif()
 
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND required_externals fontconfig)
@@ -166,12 +184,16 @@ endif()
 
 if("icu" IN_LIST FEATURES)
     list(APPEND required_externals icu)
-    string(APPEND OPTIONS " skia_use_icu=true")
+    string(APPEND OPTIONS " skia_use_icu=true skia_use_system_icu=true")
 else()
     string(APPEND OPTIONS " skia_use_icu=false")
 endif()
 
 if("gl" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
+        list(APPEND required_externals gl)
+        string(APPEND OPTIONS " skia_use_egl=true")
+    endif()
     string(APPEND OPTIONS " skia_use_gl=true")
 else()
     string(APPEND OPTIONS " skia_use_gl=false")
@@ -182,9 +204,13 @@ if("metal" IN_LIST FEATURES)
 endif()
 
 if("vulkan" IN_LIST FEATURES)
-    list(APPEND required_externals
-        vulkan_headers
-    )
+    list(APPEND required_externals vulkan_headers)
+    if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        list(APPEND required_externals
+            spirv-tools
+            spirv-headers
+        )
+    endif()
     string(APPEND OPTIONS " skia_use_vulkan=true skia_vulkan_memory_allocator_dir=\"${CURRENT_INSTALLED_DIR}\"")
 endif()
 
@@ -192,7 +218,6 @@ if("direct3d" IN_LIST FEATURES)
     list(APPEND required_externals
         spirv-cross
         spirv-headers
-        spirv-tools
         d3d12allocator
     )
     string(APPEND OPTIONS " skia_use_direct3d=true")
@@ -200,51 +225,56 @@ endif()
 
 if("graphite" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_enable_graphite=true")
+else()
+    string(APPEND OPTIONS " skia_enable_graphite=false")
 endif()
 
 if("dawn" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_LINUX)
-        message(WARNING
-[[
-dawn support requires the following libraries from the system package manager:
+    string(APPEND OPTIONS " skia_use_dawn=true")
+    declare_external_from_pkgconfig(dawn PATH "third_party/dawn" MODULES unofficial_webgpu_dawn)
+    list(APPEND required_externals dawn)
+endif()
 
-    libx11-xcb-dev mesa-common-dev
+if("pdf" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_enable_pdf=true")
+else()
+    string(APPEND OPTIONS " skia_enable_pdf=false")
+endif()
 
-They can be installed on Debian based systems via
+if("jpeg" IN_LIST FEATURES)
+    list(APPEND required_externals libjpeg)
+    string(APPEND OPTIONS " skia_use_libjpeg_turbo_decode=true skia_use_libjpeg_turbo_encode=true skia_use_no_jpeg_encode=false")
+else()
+    string(APPEND OPTIONS " skia_use_libjpeg_turbo_decode=false skia_use_libjpeg_turbo_encode=false skia_use_no_jpeg_encode=true")
+endif()
 
-    apt-get install libx11-xcb-dev mesa-common-dev
-]]
-        )
-    endif()
+if("png" IN_LIST FEATURES)
+    list(APPEND required_externals libpng)
+    string(APPEND OPTIONS " skia_use_libpng_decode=true skia_use_libpng_encode=true skia_use_no_png_encode=false")
+else()
+    string(APPEND OPTIONS " skia_use_libpng_decode=false skia_use_libpng_encode=false skia_use_no_png_encode=true")
+endif()
 
-    list(APPEND required_externals
-        spirv-cross
-        spirv-headers
-        spirv-tools
-        jinja2
-        markupsafe
-        vulkan_headers
-## Remove
-        abseil-cpp
-## REMOVE ^
-        dawn
-    )
-    file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/externals/opengl-registry")
-    file(INSTALL "${CURRENT_INSTALLED_DIR}/share/opengl/" DESTINATION "${SOURCE_PATH}/third_party/externals/opengl-registry/xml")
-    # cf. external dawn/src/dawn/native/BUILD.gn
-    string(APPEND OPTIONS " skia_use_dawn=true dawn_use_swiftshader=false")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        string(APPEND OPTIONS " dawn_complete_static_libs=true")
-    endif()
+if("webp" IN_LIST FEATURES)
+    list(APPEND required_externals libwebp)
+    string(APPEND OPTIONS " skia_use_libwebp_decode=true skia_use_libwebp_encode=true skia_use_no_webp_encode=false")
+else()
+    string(APPEND OPTIONS " skia_use_libwebp_decode=false skia_use_libwebp_encode=false skia_use_no_webp_encode=true")
+endif()
+
+if("avif" IN_LIST FEATURES)
+    list(APPEND required_externals libavif)
+    string(APPEND OPTIONS " skia_use_libavif=true")
+else()
+    string(APPEND OPTIONS " skia_use_libavif=false")
 endif()
 
 get_externals(${required_externals})
-if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn")
-    vcpkg_find_acquire_program(GIT)
-    vcpkg_replace_string("${SOURCE_PATH}/third_party/externals/dawn/generator/dawn_version_generator.py"
-        "get_git(),"
-        "\"${GIT}\","
-    )
+if("icu" IN_LIST FEATURES)
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/icu/BUILD.gn"
+        [[config("vcpkg_icu") {]]
+        [[import("icu.gni")
+config("vcpkg_icu")  {]])
 endif()
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -253,9 +283,12 @@ vcpkg_replace_string("${SOURCE_PATH}/gn/toolchain/BUILD.gn" "python3 " "\\\"${PY
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+
 if(VCPKG_TARGET_IS_WINDOWS)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
+    string(REGEX REPLACE "[\\]\$" "" WIN_SDK "$ENV{WindowsSdkDir}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
+    string(APPEND OPTIONS " win_sdk=\"${WIN_SDK}\"")
 elseif(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " ndk=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\" ndk_api=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 else()
@@ -269,11 +302,13 @@ string_to_gn_list(SKIA_CXX_FLAGS_DBG "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
 string(APPEND OPTIONS_DBG " \
     extra_cflags_c=${SKIA_C_FLAGS_DBG} \
     extra_cflags_cc=${SKIA_CXX_FLAGS_DBG}")
+
 string_to_gn_list(SKIA_C_FLAGS_REL "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
 string_to_gn_list(SKIA_CXX_FLAGS_REL "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
 string(APPEND OPTIONS_REL " \
     extra_cflags_c=${SKIA_C_FLAGS_REL} \
     extra_cflags_cc=${SKIA_CXX_FLAGS_REL}")
+
 if(VCPKG_TARGET_IS_UWP)
     string_to_gn_list(SKIA_LD_FLAGS "-APPCONTAINER WindowsApp.lib")
     string(APPEND OPTIONS " extra_ldflags=${SKIA_LD_FLAGS}")
@@ -299,9 +334,6 @@ file(COPY "${SOURCE_PATH}/include"
     FILES_MATCHING PATTERN "*.h"
 )
 auto_clean("${CURRENT_PACKAGES_DIR}/include/skia")
-set(skia_dll_static "0")
-set(skia_dll_dynamic "1")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}" IGNORE_UNCHANGED)
 
 # vcpkg legacy layout omits "include/" component. Just duplicate.
 file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")
@@ -311,6 +343,8 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/skiaConfig.cmake" DESTINATION "${CURRENT
 
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/example/CMakeLists.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/example/skcms.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/example/skpathediting.cpp"
     "${SOURCE_PATH}/tools/convert-to-nia.cpp"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example"
 )

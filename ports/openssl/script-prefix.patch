@@ -18,5 +18,5 @@ index 343cdc1..e48038e 100644
 -$ENV{PATH} = "$prefix/bin" . ($ENV{PATH} ? $path_delim . $ENV{PATH} : "");
 +$ENV{PATH} = "$FindBin::Bin" . ($ENV{PATH} ? $path_delim . $ENV{PATH} : "");
  
- if (! -x $openssl) {
+ if (!(-f $openssl && -x $openssl)) {
      my $found = 0;

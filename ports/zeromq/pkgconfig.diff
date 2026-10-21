@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0346227..56d34e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -569,6 +569,23 @@ else()
+   check_cxx_symbol_exists(SO_BUSY_POLL sys/socket.h ZMQ_HAVE_BUSY_POLL)
+ endif()
+ 
++if(WITH_LIBSODIUM)
++  string(APPEND pkg_config_names_private " libsodium")
++endif()
++if(WIN32)
++  string(APPEND pkg_config_libs_private " -ladvapi32 -liphlpapi -lrpcrt4 -lws2_32")
++endif()
++string(APPEND pkg_config_libs_private " ${CMAKE_THREAD_LIBS_INIT}")
++foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++  if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++    continue()
++  elseif(EXISTS "${lib}")
++    string(APPEND pkg_config_libs_private " ${lib}")
++  else()
++    string(APPEND pkg_config_libs_private " -l${lib}")
++  endif()
++endforeach()
++
+ if(NOT MINGW)
+   find_library(RT_LIBRARY rt)
+   if(RT_LIBRARY)
+diff --git a/src/libzmq.pc.in b/src/libzmq.pc.in
+index 233bc3a..3c2bf0d 100644
+--- a/src/libzmq.pc.in
++++ b/src/libzmq.pc.in
+@@ -7,6 +7,6 @@ Name: libzmq
+ Description: 0MQ c++ library
+ Version: @VERSION@
+ Libs: -L${libdir} -lzmq
+-Libs.private: -lstdc++ @pkg_config_libs_private@
++Libs.private: @pkg_config_libs_private@
+ Requires.private: @pkg_config_names_private@
+ Cflags: -I${includedir} @pkg_config_defines@

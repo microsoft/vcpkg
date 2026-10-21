@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiaoyeli/superlu
     REF "v${VERSION}"
-    SHA512 6dd2baeff9ca7ed4761845b9a30c6dca4e19ca498e10ea7360013b3aece576ca996a8bf31c4479321feda6f5266235d68ea9a2e256f0ffe91f804d4cdecd3847
+    SHA512 8e9a7e5bcd10d7ff878f1ac9af43e5c25f9102b1895e191749e0ccf6400da1b71054ecd2fcf58e99c608f8fa26c5b8a0fa37f79dfa7fe8795c9f2505c99d8c87
     HEAD_REF master
     PATCHES
         remove-make.inc.patch

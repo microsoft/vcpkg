@@ -1,10 +1,12 @@
 {
   "name": "hello-imgui",
-  "version": "1.4.2",
-  "port-version": 1,
-  "description": "Hello ImGui: unleash your creativity in app development and prototyping",
+  "version": "1.92.901",
+  "description": [
+    "Hello ImGui: unleash your creativity in app development and prototyping",
+    "Note that at least one renderer backend and at least one platform backend must be chosen."
+  ],
   "homepage": "https://pthom.github.io/hello_imgui/",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0 AND OFL-1.1",
   "dependencies": [
     {
       "name": "imgui",
@@ -12,6 +14,7 @@
         "docking-experimental"
       ]
     },
+    "nlohmann-json",
     "stb",
     {
       "name": "vcpkg-cmake",
@@ -56,18 +59,6 @@
         }
       ]
     },
-    "freetype-lunasvg": {
-      "description": "Improve font rendering and use colored fonts with freetype and lunasvg",
-      "dependencies": [
-        {
-          "name": "imgui",
-          "features": [
-            "freetype",
-            "freetype-lunasvg"
-          ]
-        }
-      ]
-    },
     "glfw-binding": {
       "description": "Use GLFW platform backend (default)",
       "dependencies": [
@@ -107,13 +98,13 @@
         }
       ]
     },
-    "sdl2-binding": {
-      "description": "Use SDL2 platform backend",
+    "test-engine": {
+      "description": "Build test engine",
       "dependencies": [
         {
           "name": "imgui",
           "features": [
-            "sdl2-binding"
+            "test-engine"
           ]
         }
       ]

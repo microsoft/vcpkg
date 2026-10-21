@@ -1,0 +1,12 @@
+diff --git a/src/configure.ac b/src/configure.ac
+index 4325fae..2865a26 100644
+--- a/src/configure.ac
++++ b/src/configure.ac
+@@ -1,4 +1,6 @@
+-K5_AC_INIT([aclocal.m4])
++AC_INIT(Kerberos 5, K5_VERSION, K5_BUGADDR, krb5)
++AC_CONFIG_SRCDIR([aclocal.m4])
++build_dynobj=no
+ 
+ # If $runstatedir isn't set by autoconf (<2.70), set it manually.
+ if test x"$runstatedir" = x; then

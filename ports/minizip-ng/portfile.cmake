@@ -6,32 +6,32 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zlib-ng/minizip-ng
     REF "${VERSION}"
-    SHA512 760c540ccedd04c21d72ec7b41bc31a16e4291776580a6febb9400198440b3a64f39d4ba26be2608abf47b9dcc1ed266dad8bc0a8cacb607e4885c9dd05be0d6
+    SHA512 9ea5dde14acd2f7d1efd0e38b11017b679d3aaabac61552f9c5f4c7f45f2563543e0fbb2d74429c6b1b9c37d8728ebc4f1cf0efad5f71807c11bb8a2a681a556
     HEAD_REF master
     PATCHES
-        fix_find_zstd.patch
+        dependencies.diff
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         pkcrypt MZ_PKCRYPT
-        wzaes MZ_WZAES
+        wzaes   MZ_WZAES
         openssl MZ_OPENSSL
-        bzip2 MZ_BZIP2
-        lzma MZ_LZMA
-        zlib MZ_ZLIB
-        zstd MZ_ZSTD
+        bzip2   MZ_BZIP2
+        lzma    MZ_LZMA
+        zlib    MZ_ZLIB
+        zstd    MZ_ZSTD
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
-    OPTIONS 
+    OPTIONS
         ${FEATURE_OPTIONS}
         -DMZ_FETCH_LIBS=OFF
         -DMZ_LIB_SUFFIX=-ng
         -DMZ_ICONV=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIBNG=ON # minizip-ng 4.0.10 searches for zlib-ng first before zlib - we provide zlib
 )
 
 vcpkg_cmake_install()

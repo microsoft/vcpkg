@@ -3,8 +3,10 @@ vcpkg_from_github(
     GITHUB_HOST https://codeberg.org
     REPO soundtouch/soundtouch
     REF ${VERSION}
-    SHA512 9cc507e15be065fe404e3f9ac71cdc596474c4a86b04a4b969c6c3ed4aff865cdf6aee24929046818a7d3791f005778aea112d74ef4d8f60b05460755a08dbe3
+    SHA512 da289a53c155188b6a0d696838b9711030594df2746a026288aa58ed029bfccb114f588d53f40d0e6b6f23c6e550e6e7f3b64aa21bfebc9b5a508f126be30a5d
     HEAD_REF master
+    PATCHES
+        fix-install-includes.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

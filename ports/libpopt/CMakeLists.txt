@@ -52,6 +52,8 @@ include_directories(${CMAKE_BINARY_DIR})
 add_library(popt ${SOURCES})
 if (MSVC)
     target_compile_options(popt PRIVATE /wd4996)
+else()
+    target_compile_options(popt PRIVATE -Wno-error=implicit-function-declaration)
 endif()
 
 install(TARGETS popt

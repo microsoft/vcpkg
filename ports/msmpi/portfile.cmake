@@ -1,19 +1,19 @@
-set(MSMPI_VERSION "10.1.12498")
+set(MSMPI_VERSION "10.1.12498.52")
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION}")
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisdk.msi"
-    FILENAME "msmpisdk-${MSMPI_VERSION}-b0087dfd.msi"
-    SHA512 b0087dfd21423bf87b94b17d7cb03576838585371bbf8b03cca95c3ad73670108c7bc6517b0de852ef595072cc4143be2011636e7242bcb080394d94294848a7
+    URLS "https://download.microsoft.com/download/7/2/7/72731ebb-b63c-4170-ade7-836966263a8f/msmpisdk.msi"
+    FILENAME "msmpisdk-${MSMPI_VERSION}-5083f186.msi"
+    SHA512 5083f186b463895e804ae73bb36a16f7d5706340a6dc929c0c511b510ad80bd89d97bdde58d2dd836ebab032258c262f0601a9950f9f26f7c05f9b9ea0073cd0
 )
 
 
 #to enable CI, you should modify the following URL also in ${VCPKG_ROOT}/scripts/azure-pipelines/windows/provision-image.ps1
 macro(download_msmpi_redistributable_package)
     vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe"
-        FILENAME "msmpisetup-${MSMPI_VERSION}.exe"
-        SHA512 1ee463e7dfc3e55a7ac048fdfde13fef09a5eea4b74d8fd7c22a7aad667a025b467ce939e5de308e25bbc186c3fe66e0e24ac03a3741656fc7558f2af2fa132a
+        URLS "https://download.microsoft.com/download/7/2/7/72731ebb-b63c-4170-ade7-836966263a8f/msmpisetup.exe"
+        FILENAME "msmpisetup-${MSMPI_VERSION}-d09862be.exe"
+        SHA512 d09862be9fec0fe5377e2c472dd8c9aff9fbc2db7f2c1f4880a59ed64d51339bdfe3cd70af0f3443ba864bfedf42d684c943ba8c805774816c7760f70749d0f0
     )
 endmacro()
 
@@ -32,7 +32,7 @@ if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
     )
     file(READ "${CURRENT_BUILDTREES_DIR}/${MPIEXEC_VERSION_LOGNAME}-out.log" MPIEXEC_OUTPUT)
 
-    if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+)\\.[0-9]+\\]")
+    if(MPIEXEC_OUTPUT MATCHES "\\[Version ([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)\\]")
         if(NOT CMAKE_MATCH_1 STREQUAL MSMPI_VERSION)
             download_msmpi_redistributable_package()
 
@@ -41,6 +41,7 @@ if(EXISTS "${SYSTEM_MPIEXEC_FILEPATH}")
                 "    Expected version: ${MSMPI_VERSION}\n"
                 "    Found version: ${CMAKE_MATCH_1}\n"
                 "  Please upgrade the installed version on your system.\n"
+                "  You may need to remove the already installed version before installing a new one.\n"
                 "  The appropriate installer for the expected version has been downloaded to:\n"
                 "    ${REDIST_ARCHIVE}\n")
         endif()

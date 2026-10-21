@@ -1,0 +1,18 @@
+{
+  "name": "retropak",
+  "version": "1.0.0",
+  "description": "A modern container format for retro software preservation. Provides JSON schema and metadata specification for Retropak software containers.",
+  "homepage": "https://retropak.org",
+  "license": "CC0-1.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -6,37 +6,43 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 91c2406ed4198509ac0d5360b3da6898fa4f40f459eb6fff541faa44cc238eed98fd7489e7ef7a80a6f4a318bc5b9130eaa0ba1beaa358d1c074fc82825648ff
+    SHA512 2fcc219bf91de49607ed1f74243c2d43c0fb0def4944e48fbd4b382033d648f0e0b8551426993d04db49b9cae8d8b9efe20a817f6985ed3c72f086bf8ea2e26e 
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
         00002-static-linking-in-linux.patch
-        00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
-        00009-use-system-upb.patch
+        00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
-        00017-abseil.patch
+)
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/third_party/abseil-cpp"
+    "${SOURCE_PATH}/third_party/cares"
+    "${SOURCE_PATH}/third_party/protobuf"
+    "${SOURCE_PATH}/third_party/re2"
+    "${SOURCE_PATH}/third_party/utf8_range"
+    "${SOURCE_PATH}/third_party/zlib"
 )
 
-if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" gRPC_MSVC_STATIC_RUNTIME)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" gRPC_STATIC_LINKING)
 
+set(cares_CARES_PROVIDER "package")
 if(VCPKG_TARGET_IS_UWP)
-    set(cares_CARES_PROVIDER OFF)
-else()
-    set(cares_CARES_PROVIDER "package")
+    set(cares_CARES_PROVIDER "OFF")
 endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        codegen gRPC_BUILD_CODEGEN
+        codegen     gRPC_BUILD_CODEGEN
+        systemd     gRPC_USE_SYSTEMD
 )
 
 vcpkg_cmake_configure(
@@ -59,13 +65,22 @@ vcpkg_cmake_configure(
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
         "-D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        -DgRPC_BUILD_GRPCPP_OTEL_PLUGIN=OFF
+        -DgRPC_DOWNLOAD_ARCHIVES=OFF
     MAYBE_UNUSED_VARIABLES
         gRPC_MSVC_STATIC_RUNTIME
+        gRPC_USE_SYSTEMD
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+else()
+    vcpkg_fixup_pkgconfig()
+endif()
 
 if (gRPC_BUILD_CODEGEN)
     vcpkg_copy_tools(
@@ -84,12 +99,5 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/debug/include")
-
-vcpkg_copy_pdbs()
-if (VCPKG_TARGET_IS_WINDOWS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-else()
-    vcpkg_fixup_pkgconfig()
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

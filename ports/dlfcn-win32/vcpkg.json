@@ -1,6 +1,6 @@
 {
   "name": "dlfcn-win32",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "dlfcn-win32 is an implementation of dlfcn for Windows.",
   "homepage": "https://github.com/dlfcn-win32/dlfcn-win32",
   "license": "MIT",

@@ -1,11 +1,9 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO akheron/jansson
-  REF 684e18c927e89615c2d501737e90018f4930d6c5 # v2.14
-  SHA512 e2cac3567bc860d10d9aa386ce370876cb21ff083a970abeb48112b6586b91cd101694a98cb05a06795fb04498e6bc2df3615fedb86635f5a998b68e5670e5b3
+  REF v${VERSION}
+  SHA512 233f154e1f55f395bffa7c946e56995913248138541fa093abc5317a23096d1f58b8e594fcff94918d0db2f15a96652554bb429949661534b65d0569c29b52d9
   HEAD_REF master
-  PATCHES
-    fix-linker-flags.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" JANSSON_STATIC_CRT)
@@ -36,5 +34,10 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
+    # Upstream sets CMAKE_DEBUG_POSTFIX=_d on Windows, but jansson.pc keeps -ljansson
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/jansson.pc" "-ljansson" "-ljansson_d")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

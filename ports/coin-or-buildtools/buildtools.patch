@@ -7,7 +7,7 @@ index 46501b207..a0ff20a6f 100644
      AC_CHECK_HEADER([zlib.h],[coin_has_zlib=yes])
      if test x$coin_has_zlib = xyes ; then
 -      AC_CHECK_LIB([z],[gzopen],[],[coin_has_zlib=no])
-+      AC_SEARCH_LIBS([gzopen],[z zlib zlibd],[],[coin_has_zlib=no])
++      AC_SEARCH_LIBS([gzopen],[z zs zlib zd zsd zlibd],[],[coin_has_zlib=no])
      fi
      if test x$coin_has_zlib = xyes ; then
        m4_foreach_w([myvar],[$1],

@@ -1,0 +1,13 @@
+{
+  "name": "stc",
+  "version": "5.0",
+  "description": "A modern, user friendly, generic, type-safe and fast C99 container library.",
+  "homepage": "https://github.com/stclib/STC",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

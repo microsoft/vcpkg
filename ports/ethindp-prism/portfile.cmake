@@ -1,0 +1,47 @@
+if(EMSCRIPTEN)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO ethindp/prism
+  REF v0.18.3
+  SHA512 a6cec5e04cf332dbe4ad75e8353559931fff6885b16f41304f73489f6dd236a8c014dc6b32f7d8c8838e4e39f2969c095403c5c8a5b8fd2218197f9eb35225fd
+  HEAD_REF master
+)
+vcpkg_check_features(
+  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    speech-dispatcher PRISM_ENABLE_SPEECH_DISPATCHER_BACKEND
+)
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -DPRISM_ENABLE_TESTS=OFF
+    -DPRISM_ENABLE_DEMOS=OFF
+    -DPRISM_ENABLE_LINTING=OFF
+    -DPRISM_ENABLE_GDEXTENSION=OFF
+    -DPRISM_ENABLE_LEGACY_BACKENDS=ON
+    -DPRISM_ENABLE_POWER_MANAGEMENT=ON
+    -DPRISM_ENABLE_SPIEL_BACKEND=OFF
+    ${FEATURE_OPTIONS}
+    -DPRISM_DEPENDENCY_PROVIDER=SYSTEM
+)
+vcpkg_cmake_install()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+  vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/include/prism.h"
+    "#if defined(_WIN32)\n#if defined(PRISM_STATIC)"
+    "#if defined(_WIN32)\n#ifndef PRISM_STATIC\n#define PRISM_STATIC\n#endif\n#if defined(PRISM_STATIC)"
+  )
+endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME prism CONFIG_PATH share/prism)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_copy_pdbs()
+vcpkg_install_copyright(FILE_LIST
+  "${SOURCE_PATH}/LICENSE"
+  "${SOURCE_PATH}/LICENSES/djinni/LICENSE"
+  "${SOURCE_PATH}/LICENSES/dr_wav/LICENSE"
+  "${SOURCE_PATH}/LICENSES/moderncom/LICENSE"
+)

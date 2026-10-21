@@ -1,0 +1,32 @@
+diff --git a/wpimath/src/main/native/include/units/base.h b/wpimath/src/main/native/include/units/base.h
+index 3c939f3..09c56e5 100644
+--- a/wpimath/src/main/native/include/units/base.h
++++ b/wpimath/src/main/native/include/units/base.h
+@@ -183,9 +183,10 @@ namespace units
+ 	struct fmt::formatter<units::namespaceName::nameSingular ## _t> \
+ 		: fmt::formatter<double> \
+ 	{\
+-		template <typename FormatContext>\
+-		auto format(const units::namespaceName::nameSingular ## _t& obj,\
+-								FormatContext& ctx) -> decltype(ctx.out()) \
++		template <typename FmtContext>\
++		auto format(\
++				const units::namespaceName::nameSingular ## _t& obj,\
++				FmtContext& ctx) const\
+ 		{\
+ 			auto out = ctx.out();\
+ 			out = fmt::formatter<double>::format(obj(), ctx);\
+@@ -2890,9 +2891,10 @@ namespace units
+ template <>
+ struct fmt::formatter<units::dimensionless::dB_t> : fmt::formatter<double>
+ {
+-	template <typename FormatContext>
+-	auto format(const units::dimensionless::dB_t& obj,
+-							FormatContext& ctx) -> decltype(ctx.out())
++	template <typename FmtContext>
++	auto format(
++			const units::dimensionless::dB_t& obj,
++			FmtContext& ctx) const
+ 	{
+ 		auto out = ctx.out();
+ 		out = fmt::formatter<double>::format(obj(), ctx);

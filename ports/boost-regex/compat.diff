@@ -1,37 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ccd422301..0959c5ab1 100644
---- a/CMakeLists.txt	
+index ccd4223..a0f58a3 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -8,17 +8,25 @@ cmake_minimum_required(VERSION 3.5...3.16)
- 
- project(boost_regex VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
- 
--add_library(boost_regex INTERFACE)
-+set(regex_compat_sources
-+ "src/posix_api.cpp"
-+ "src/wide_posix_api.cpp"
-+ "src/regex.cpp"
-+ "src/regex_debug.cpp"
-+ "src/static_mutex.cpp"
-+)
-+
-+add_library(boost_regex "${regex_compat_sources}")
- add_library(Boost::regex ALIAS boost_regex)
- 
--target_include_directories(boost_regex INTERFACE include)
-+target_include_directories(boost_regex PUBLIC include)
- 
- option(BOOST_REGEX_STANDALONE "Boost.Regex: Enable Standalone Mode (i.e. no Boost dependencies)")
- 
- if(NOT BOOST_REGEX_STANDALONE)
- 
-    target_link_libraries(boost_regex
--     INTERFACE
-+     PUBLIC
-        Boost::config
-        Boost::throw_exception
-        Boost::predef
-@@ -34,9 +42,9 @@ else()
+@@ -34,9 +34,9 @@ else()
  endif()
  
  find_package(ICU COMPONENTS data i18n uc QUIET)

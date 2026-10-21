@@ -13,8 +13,9 @@ vcpkg_from_github(
     REF c5ae539abddcef43ef64fa130555e2d521098369
     SHA512 a1b35d2a524a23c367180574f7ddbcad73161c7fda6c3e7973273ab86092d9c6d89df28925a8e53691cd894f2d6588832604a0dbdba478557695806907bf36eb
     PATCHES
-      "${REMOVE_DYNAMIC_EXCEPTION_SPECS}"
-      fix_cmake.patch
+        "${REMOVE_DYNAMIC_EXCEPTION_SPECS}"
+        fix_cmake.patch
+        add-cstdint.diff # https://github.com/rmsalinas/DBow3/pull/55
 )
 
 vcpkg_cmake_configure(

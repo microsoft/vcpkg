@@ -1,0 +1,61 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c32c332..a72eada 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,7 +13,6 @@ set(CMAKE_C_STANDARD_REQUIRED True)
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
+ include(AppendCompilerFlags)
+ 
+-include(cmake/CPM.cmake)
+ 
+ project(FastPFOR CXX C)
+ set(PROJECT_URL "https://github.com/fast-pack/FastPFOR")
+@@ -40,7 +39,6 @@ if( SUPPORT_SSE42 )
+     MESSAGE( STATUS "SSE 4.2 support detected" )
+ else()
+     if (SUPPORT_NEON)
+-        include(simde)
+         MESSAGE(STATUS "USING SIMDE FOR SIMD OPERATIONS")
+     else ()
+         MESSAGE(STATUS "SIMDE and SSE 4.2 support not detected")
+@@ -112,10 +110,9 @@ add_executable(csv2maropu src/csv2maropu.cpp)
+ target_link_libraries(csv2maropu PRIVATE FastPFOR)
+ 
+ if (SUPPORT_NEON)
+-    target_link_libraries(FastPFOR PUBLIC simde)
+-    target_link_libraries(gapstats PUBLIC simde)
+-    target_link_libraries(partitionbylength PUBLIC simde)
+-    target_link_libraries(csv2maropu PUBLIC simde)
++    find_path(SIMDE_INCLUDE_DIRS "simde/arm/neon.h")
++    target_include_directories(FastPFOR PUBLIC ${SIMDE_INCLUDE_DIRS})
++    target_compile_definitions(FastPFOR PUBLIC SIMDE_ENABLE_NATIVE_ALIASES)
+ else()
+     message(STATUS "SIMDE not used")
+ endif()
+@@ -128,21 +125,21 @@ if( SUPPORT_SSE42 )
+     target_link_libraries(benchbitpacking FastPFOR)
+ endif()
+ 
+-find_package(snappy)
+-if(NOT ${snappy_FOUND})
++find_package(Snappy CONFIG)
++if(NOT ${Snappy_FOUND})
+     message(STATUS "Snappy was not found. codecssnappy and "
+                    "inmemorybenchmarksnappy targets are not available.")
+ else()
+     message(STATUS "Snappy was found. Building additional targets "
+                    "codecssnappy and inmemorybenchmarksnappy.")
+-    include_directories(${snappy_INCLUDE_DIRS})
++    include_directories(${Snappy_INCLUDE_DIRS})
+     add_executable(codecssnappy src/codecs.cpp)
+     set_target_properties(codecssnappy PROPERTIES DEFINE_SYMBOL USESNAPPY)
+-    target_link_libraries(codecssnappy FastPFOR ${snappy_LIBRARIES})
++    target_link_libraries(codecssnappy FastPFOR ${Snappy_LIBRARIES})
+ 
+     add_executable(inmemorybenchmarksnappy src/inmemorybenchmark.cpp)
+     set_target_properties(inmemorybenchmarksnappy PROPERTIES DEFINE_SYMBOL USESNAPPY)
+-    target_link_libraries(inmemorybenchmarksnappy FastPFOR ${snappy_LIBRARIES})
++    target_link_libraries(inmemorybenchmarksnappy FastPFOR ${Snappy_LIBRARIES})
+ endif()
+ 
+ option(FASTPFOR_WITH_TEST "Build with Google Test" ON)

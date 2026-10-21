@@ -1,0 +1,9 @@
+sqlitemap is header-only and can be used from CMake via:
+
+  find_path(SQLITEMAP_INCLUDE_DIRS "bw/sqlitemap/sqlitemap.hpp")
+  target_include_directories(main PRIVATE ${SQLITEMAP_INCLUDE_DIRS})
+
+However it requires
+
+  find_package(unofficial-sqlite3 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::sqlite3::sqlite3)

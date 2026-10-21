@@ -1,0 +1,45 @@
+{
+  "name": "vcpkg-ci-qtwebengine",
+  "version-string": "ci",
+  "description": "Testing qtwebengine",
+  "license": null,
+  "dependencies": [
+    "qtwebengine",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "ci"
+  ],
+  "features": {
+    "ci": {
+      "description": "Default CI configuration",
+      "dependencies": [
+        {
+          "name": "vcpkg-ci-qtwebengine",
+          "default-features": false,
+          "features": [
+            "pdf"
+          ],
+          "platform": "android | ios | (linux & !x86) | osx | (windows & x64 & !static)"
+        },
+        {
+          "name": "vcpkg-ci-qtwebengine",
+          "default-features": false,
+          "features": [
+            "webengine"
+          ],
+          "platform": "!static & ((linux & !x86) | osx | (windows & x64 & !static))"
+        }
+      ]
+    },
+    "pdf": {
+      "description": "Test PDF module"
+    },
+    "webengine": {
+      "description": "Test WebEngine module"
+    }
+  }
+}

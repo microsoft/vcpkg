@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 89c2bed..225ca3b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+-PROJECT(CCfits)
+ CMAKE_MINIMUM_REQUIRED(VERSION 3.8)
++PROJECT(CCfits)
+ 
+ # Allow the developer to select whether to build Dynamic or Static libraries
+ OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
+@@ -57,10 +57,9 @@ SET(SRC_FILES
+ # Dependencies:
+ #==============================================================================
+ 
+-# Try to get CFITSIO info (incl. dependencies) using pkg-config:
+-SET (PKG_CONFIG_USE_CMAKE_PREFIX_PATH "on")
+-FIND_PACKAGE(PkgConfig)
+-IF (${PkgConfig_FOUND})
++if(1)
++   find_package(CFITSIO NAMES cfitsio REQUIRED)
++elseif(0)
+    PKG_CHECK_MODULES(CFITSIO REQUIRED cfitsio)
+    IF (CFITSIO_FOUND)
+       MESSAGE(STATUS "Found CFITSIO:")
+@@ -101,7 +100,9 @@ IF (MSVC)
+ ENDIF(MSVC)
+ 
+ # Add link dependencies:
+-IF (${PkgConfig_FOUND})
++if(1)
++   target_link_libraries(${LIB_NAME} PRIVATE CFITSIO::cfitsio)
++elseif(0)
+    # pkg-config supplies the CFITSIO dependencies (zlib, curl)
+    IF (CFITSIO_FOUND)
+       TARGET_LINK_LIBRARIES(${LIB_NAME} ${CFITSIO_LIBRARIES})

@@ -8,6 +8,7 @@
     {
       "name": "gdal",
       "features": [
+        "archive",
         "freexl"
       ]
     },
@@ -30,6 +31,15 @@
     {
       "name": "gdal",
       "features": [
+        "arrow",
+        "arrow-adbc",
+        "parquet"
+      ],
+      "platform": "(arm64 | x64) & !linux"
+    },
+    {
+      "name": "gdal",
+      "features": [
         "mysql-libmariadb"
       ],
       "platform": "windows & x86"
@@ -40,6 +50,15 @@
         "aws-ec2-windows"
       ],
       "platform": "windows & !mingw"
+    },
+    {
+      "name": "tiff",
+      "features": [
+        "lerc",
+        "libdeflate",
+        "webp",
+        "zstd"
+      ]
     }
   ]
 }

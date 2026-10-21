@@ -1,4 +1,0 @@
-etcd-cpp-apiv3 provides CMake targets:
-
-  find_package(etcd-cpp-api CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE etcd-cpp-api)

@@ -1,0 +1,26 @@
+diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
+index 6a565e8..ebf4230 100644
+--- a/CMake/ITKConfig.cmake.in
++++ b/CMake/ITKConfig.cmake.in
+@@ -56,7 +56,7 @@ set(ITK_BUILD_SHARED "@ITK_BUILD_SHARED_LIBS@")
+ set(ITK_LIBRARY_BUILD_TYPE "@ITK_LIBRARY_BUILD_TYPE@")
+ 
+ # Whether ITK links to MSVC's static CRT (/MT and /MTd).
+-set(ITK_MSVC_STATIC_CRT "@ITK_MSVC_STATIC_RUNTIME_LIBRARY_value@")
++set(ITK_MSVC_STATIC_CRT "@ITK_MSVC_STATIC_CRT@")
+ 
+ # Whether ITK examples were built.
+ set(ITK_BUILD_EXAMPLES "@BUILD_EXAMPLES@")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1267b1a..da4bbb8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -130,7 +130,7 @@ if(MSVC) #-- Configure MSVC_STATIC_RUNTIME only if using MSVC environment
+   option(ITK_MSVC_STATIC_RUNTIME_LIBRARY "Link to MSVC's static CRT (/MT and /MTd).
+ OFF (default) means link to regular, dynamic CRT (/MD and /MDd)." OFF)
+   mark_as_advanced(ITK_MSVC_STATIC_RUNTIME_LIBRARY)
+-  set(ITK_MSVC_STATIC_RUNTIME_LIBRARY_value ${ITK_MSVC_STATIC_RUNTIME_LIBRARY})
++  set(ITK_MSVC_STATIC_CRT ${ITK_MSVC_STATIC_RUNTIME_LIBRARY})
+   if(ITK_MSVC_STATIC_RUNTIME_LIBRARY)
+     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+     message(STATUS "Using MSVC's static CRT (/MT and /MTd)")

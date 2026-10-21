@@ -1,0 +1,22 @@
+{
+  "name": "deniskovalchuk-libftp",
+  "version": "1.5.0",
+  "maintainers": "Denis Kovalchuk <denis.kovalchuk.main@gmail.com>",
+  "description": "A cross-platform FTP/FTPS client library based on Boost.Asio.",
+  "homepage": "https://github.com/deniskovalchuk/libftp",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-asio",
+    "boost-format",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,42 +1,60 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aed0d85..b5f36e2 100644
+index 24b71ba..5cd7446 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -63,21 +63,21 @@ PROJECT (CLICKHOUSE-CLIENT)
-     ENDIF ()
+@@ -78,28 +78,28 @@ IF (CLANG_WITH_LIB_STDCXX)
+ ENDIF ()
  
-     IF (WITH_SYSTEM_ABSEIL)
--        FIND_PACKAGE(absl REQUIRED)
-+        FIND_PACKAGE(absl CONFIG REQUIRED)
-     ELSE ()
-         INCLUDE_DIRECTORIES (contrib/absl)
-         SUBDIRS (contrib/absl/absl)
-     ENDIF ()
+ IF (WITH_SYSTEM_ABSEIL)
+-    FIND_PACKAGE(absl REQUIRED)
++    FIND_PACKAGE(absl CONFIG REQUIRED)
+ ELSE ()
+     INCLUDE_DIRECTORIES (contrib/absl)
+     SUBDIRS (contrib/absl/absl)
+ ENDIF ()
  
-     IF (WITH_SYSTEM_LZ4)
--        FIND_PACKAGE(lz4 REQUIRED)
-+        FIND_PACKAGE(lz4 CONFIG REQUIRED)
-     ELSE ()
-         INCLUDE_DIRECTORIES (contrib/lz4/lz4)
-         SUBDIRS (contrib/lz4/lz4)
-     ENDIF ()
+ IF (WITH_SYSTEM_LZ4)
+-    FIND_PACKAGE(lz4 REQUIRED)
++    FIND_PACKAGE(lz4 CONFIG REQUIRED)
+ ELSE ()
+     INCLUDE_DIRECTORIES (contrib/lz4/lz4)
+     SUBDIRS (contrib/lz4/lz4)
+ ENDIF ()
  
-     IF (WITH_SYSTEM_CITYHASH)
--        FIND_PACKAGE(cityhash REQUIRED)
-+        FIND_PACKAGE(cityhash CONFIG REQUIRED)
-     ELSE ()
-         INCLUDE_DIRECTORIES (contrib/cityhash/cityhash)
-         SUBDIRS (contrib/cityhash/cityhash)
+ IF (WITH_SYSTEM_CITYHASH)
+-    FIND_PACKAGE(cityhash REQUIRED)
++    FIND_PACKAGE(cityhash CONFIG REQUIRED)
+ ELSE ()
+     INCLUDE_DIRECTORIES (contrib/cityhash/cityhash)
+     SUBDIRS (contrib/cityhash/cityhash)
+ ENDIF ()
+ 
+ IF (WITH_SYSTEM_ZSTD)
+-    FIND_PACKAGE(zstd REQUIRED)
++    FIND_PACKAGE(zstd CONFIG REQUIRED)
+ ELSE ()
+     INCLUDE_DIRECTORIES (contrib/zstd/zstd)
+     SUBDIRS (contrib/zstd/zstd)
+@@ -153,5 +153,5 @@ if(DEBUG_DEPENDENCIES)
+     print_target_debug_info(absl::int128)
+     print_target_debug_info(cityhash::cityhash)
+     print_target_debug_info(lz4::lz4)
+-    print_target_debug_info(zstd::zstd)
++    print_target_debug_info(zstd::libzstd)
+ endif()
 diff --git a/clickhouse/CMakeLists.txt b/clickhouse/CMakeLists.txt
-index 67663ec..e67ba81 100644
+index 7669420..9a566ec 100644
 --- a/clickhouse/CMakeLists.txt
 +++ b/clickhouse/CMakeLists.txt
-@@ -42,7 +42,7 @@ ADD_LIBRARY (clickhouse-cpp-lib ${clickhouse-cpp-lib-src})
- SET_TARGET_PROPERTIES (clickhouse-cpp-lib PROPERTIES LINKER_LANGUAGE CXX)
+@@ -111,9 +111,9 @@ SET_TARGET_PROPERTIES (clickhouse-cpp-lib
+ )
  TARGET_LINK_LIBRARIES (clickhouse-cpp-lib
      absl::int128
 -    cityhash::cityhash
 +    cityhash
      lz4::lz4
+-    zstd::zstd
++    zstd::libzstd
  )
  TARGET_INCLUDE_DIRECTORIES (clickhouse-cpp-lib
+     PUBLIC ${PROJECT_SOURCE_DIR}

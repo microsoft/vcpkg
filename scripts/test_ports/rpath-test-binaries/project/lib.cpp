@@ -1,4 +1,6 @@
+extern const char* getTestStringBackend();
+
 const char* getTestString()
 {
-    return TEST_STRING;
+    return getTestStringBackend();
 }

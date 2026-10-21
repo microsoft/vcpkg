@@ -1,5 +1,5 @@
 diff --git a/include/X11/ICE/ICElib.h b/include/X11/ICE/ICElib.h
-index 402cbc8bd..506c18baf 100644
+index 402cbc8..506c18b 100644
 --- a/include/X11/ICE/ICElib.h
 +++ b/include/X11/ICE/ICElib.h
 @@ -32,8 +32,8 @@ Author: Ralph Mor, X Consortium

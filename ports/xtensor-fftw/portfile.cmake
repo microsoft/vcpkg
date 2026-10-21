@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor-fftw
-    REF 29f0442c98f1a219e970c96e99d7be8a42954a0b
-    SHA512 09b02fe6b906cde2a7f9071673a140c994316d50aaf639eb402706aaa52b66e73bc77fa1beb683d3740914ff5157283891634a806809c03f12c1def85b49595a
+    REF "${VERSION}"
+    SHA512 278676eb92767677622bac961b65be599804ea86eba4df4cd72f237f9c9f8f2d20b7daec045bde6c09d7c72e29f5c5e01e6abda7350ac706543f34434c8d40f2
     HEAD_REF master
 )
 
@@ -23,10 +23,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

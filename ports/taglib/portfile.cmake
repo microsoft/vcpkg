@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
     REF "v${VERSION}"
-    SHA512 099d02b2eab033f5702a8cb03e70752d7523c6f8c2f3eebdd0bcd939eafbdca3f2a6c82452983904b5822cfa45f2707ed866c3419508df9d43bf5c0b3a476f6c
+    SHA512 f3988a78692527af0cb006c2cf5767f2ca624a35eaf75a594ce29f26f8b8f233d9e79c7925305cb362fa600491a9b5f34a81b622b6456e62e32d94d769be3762
     HEAD_REF master
-    PATCHES
-        disable-wchar-t-check-emscripten.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -40,7 +38,14 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/taglib-config.cmd" "${CURRENT_PACKAGES_
 
 # remove bin directory for static builds (taglib creates a cmake batch file there)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/taglib/taglib-config.cmake"
+[[include("${CMAKE_CURRENT_LIST_DIR}/taglib-targets.cmake")]]
+[[include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+include("${CMAKE_CURRENT_LIST_DIR}/taglib-targets.cmake")]]
+    )
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/taglib/taglib_export.h" "defined(TAGLIB_STATIC)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/taglib/tag_c.h" "defined(TAGLIB_STATIC)" "1")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 

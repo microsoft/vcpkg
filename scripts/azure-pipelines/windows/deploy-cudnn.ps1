@@ -1,28 +1,21 @@
-# REPLACE WITH UTILITY-PREFIX.ps1
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
 
-# REPLACE WITH CudnnUrl
-
-$destination = "$env:ProgramFiles\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
-
-$CudnnLocalZipPath = "$PSScriptRoot\cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip"
-
-try {
-  if (Test-Path $CudnnLocalZipPath) {
-    $cudnnZipPath = $CudnnLocalZipPath
-  } else {
-    Write-Host 'Attempting to download cudnn. If this fails, you need to agree to NVidia''s EULA, download cudnn, and place it next to this script.'
-    $cudnnZipPath = Get-TempFilePath -Extension 'zip'
-    & curl.exe -L -o $cudnnZipPath $CudnnUrl
-    if ($LASTEXITCODE -ne 0) {
-      throw 'Failed to download cudnn!'
-    }
-  }
-
-  Write-Host "Installing CUDNN to $destination..."
-  tar.exe -xvf "$cudnnZipPath" --strip 1 --directory "$destination"
-  Write-Host 'Installation successful!'
+if (Test-Path -LiteralPath "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
 }
-catch {
-  Write-Error "Failed to install CUDNN! $($_.Exception.Message)"
-  throw
+
+$CudnnUrl = Get-AssetUrl `
+  -InternetUrl 'https://developer.download.nvidia.com/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-9.25.1.1_cuda13-archive.zip' `
+  -BlobAssetName 'cudnn-windows-x86_64-9.25.1.1_cuda13-archive.zip'
+
+[System.IO.DirectoryInfo]$CudnnInstallDir = "$env:ProgramFiles\NVIDIA GPU Computing Toolkit\CUDA\v13.3"
+
+DownloadAndUnzip -Url $CudnnUrl -Destination $CudnnInstallDir -StripRootDirectory
+
+$CudnnHeaderPath = Join-Path $CudnnInstallDir "include\cudnn.h"
+if (Test-Path -LiteralPath $CudnnHeaderPath) {
+    Write-Host 'cudnn appears correctly installed'
+} else {
+    Write-Error 'cudnn appears broken!'
 }

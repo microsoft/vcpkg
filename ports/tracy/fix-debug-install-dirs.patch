@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 073fb6f..5661481 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -229,16 +229,16 @@ set(common_includes
+ 
+ install(TARGETS TracyClient
+         EXPORT TracyConfig
+-        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}/$<IF:$<CONFIG:Release>,,$<CONFIG>>
+-        LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}/$<IF:$<CONFIG:Release>,,$<CONFIG>>
+-        ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}/$<IF:$<CONFIG:Release>,,$<CONFIG>>
++        RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
++        LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         COMPONENT lib)
+ if(TRACY_Fortran)
+     install(TARGETS TracyClientF90
+             EXPORT TracyConfig
+-            RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}/$<IF:$<CONFIG:Release>,,$<CONFIG>>
+-            LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}/$<IF:$<CONFIG:Release>,,$<CONFIG>>
+-            ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}/$<IF:$<CONFIG:Release>,,$<CONFIG>>
++            RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
++            LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             COMPONENT lib)
+ endif()
+ # Export targets to build tree root

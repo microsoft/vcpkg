@@ -6,7 +6,7 @@
    unset(Protobuf_VERSION CACHE)
 -  find_package(Protobuf QUIET)
 +  find_package(Protobuf CONFIG REQUIRED)
-
+ 
    # Backwards compatibility
    # Define camel case versions of input variables
 @@ -76,6 +76,7 @@ if(HAVE_PROTOBUF)

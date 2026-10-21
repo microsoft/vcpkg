@@ -2,17 +2,25 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO systemd/systemd
   REF "v${VERSION}"
-  SHA512 51728de604c2169d8643718ac72acb8f70f613cfcca9e9abb7dac519f291fa26a16d48f24cae6897356319096cfe8f4d9377743e7870127374f98d432e0c557c
+  SHA512 63d15da49e7580952a48a0b50df20c1b398e4b77edf259510b0cdb9022e919387baadf2190194a50f1f582b83e0768c13997a4189cf0fb6a61b65015496d9c80
   PATCHES
     disable-warning-nonnull.patch
     only-libsystemd.patch
     pkgconfig.patch
+    fix-2604-build.patch
 )
 
 set(static false)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(static pic)
 endif()
+
+vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(
+    PYTHON_VERSION 3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PACKAGES "jinja2"
+)
 
 vcpkg_configure_meson(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -62,7 +70,7 @@ vcpkg_configure_meson(
     -Dxz=enabled
     -Dzstd=enabled
   ADDITIONAL_BINARIES
-    "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${HOST_EXECUTABLE_SUFFIX}']"
+    "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
 )
 
 vcpkg_install_meson()

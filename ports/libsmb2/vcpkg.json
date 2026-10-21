@@ -1,6 +1,7 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "libsmb2",
-  "version-date": "2023-08-11",
+  "version": "6.2",
   "description": "SMB2/3 Userspace Client",
   "homepage": "https://github.com/sahlberg/libsmb2",
   "license": "LGPL-2.1-or-later",
@@ -13,5 +14,17 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "krb5": {
+      "description": "SMB2/3 with krb5 support",
+      "supports": "linux | ios",
+      "dependencies": [
+        {
+          "name": "krb5",
+          "platform": "linux"
+        }
+      ]
+    }
+  }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "libbpf",
+  "version": "1.7.0",
+  "description": "Supports loading compiled BPF object files into the Linux Kernel",
+  "license": "LGPL-2.1-only OR BSD-2-Clause",
+  "supports": "linux",
+  "dependencies": [
+    "elfutils",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    "zlib"
+  ]
+}

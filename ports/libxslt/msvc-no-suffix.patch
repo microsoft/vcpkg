@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d8679fb..6dc6501 100644
+index fb352475..a4bb094e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -244,7 +249,7 @@ set_target_properties(
- 	VERSION ${PROJECT_VERSION}
+@@ -247,7 +247,7 @@ set_target_properties(
+ 	SOVERSION ${LIBXSLT_MAJOR_VERSION}
  )
  
 -if(MSVC)
@@ -11,8 +11,8 @@ index d8679fb..6dc6501 100644
  	if(BUILD_SHARED_LIBS)
  		set_target_properties(
  			LibXslt
-@@ -327,7 +332,7 @@ set_target_properties(
- 	VERSION ${LIBEXSLT_VERSION}
+@@ -340,7 +340,7 @@ set_target_properties(
+ 	SOVERSION ${LIBEXSLT_MAJOR_VERSION}
  )
  
 -if(MSVC)

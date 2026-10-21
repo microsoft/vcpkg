@@ -1,0 +1,53 @@
+diff --git a/lib/src/HttpResponseImpl.cc b/lib/src/HttpResponseImpl.cc
+index 7a36cee..90a18d6 100644
+--- a/lib/src/HttpResponseImpl.cc
++++ b/lib/src/HttpResponseImpl.cc
+@@ -750,7 +750,7 @@ void HttpResponseImpl::makeHeaderString(trantor::MsgBuffer &buffer)
+         {
+             // When the headers are created, it is time to set the transfer
+             // encoding to chunked if the contents size is not specified
+-            if (!ifCloseConnection() &&
++            if (version_ != Version::kHttp10 &&
+                 headers_.find("content-length") == headers_.end())
+             {
+                 LOG_DEBUG << "send stream with transfer-encoding chunked";
+diff --git a/lib/src/HttpServer.cc b/lib/src/HttpServer.cc
+index f6e4bff..e666e26 100644
+--- a/lib/src/HttpServer.cc
++++ b/lib/src/HttpServer.cc
+@@ -985,7 +985,7 @@ void HttpServer::sendResponse(const TcpConnectionPtr &conn,
+         auto &asyncStreamCallback = respImplPtr->asyncStreamCallback();
+         if (asyncStreamCallback)
+         {
+-            if (!respImplPtr->ifCloseConnection())
++            if (respImplPtr->version() != Version::kHttp10)
+             {
+                 asyncStreamCallback(
+                     std::make_unique<ResponseStream>(conn->sendAsyncStream(
+@@ -993,7 +993,7 @@ void HttpServer::sendResponse(const TcpConnectionPtr &conn,
+             }
+             else
+             {
+-                LOG_INFO << "Chunking Set CloseConnection !!!";
++                LOG_INFO << "Async stream not supported for HTTP/1.0";
+             }
+         }
+         auto &streamCallback = respImplPtr->streamCallback();
+@@ -1069,7 +1069,7 @@ void HttpServer::sendResponses(
+             {
+                 conn->send(buffer);
+                 buffer.retrieveAll();
+-                if (!respImplPtr->ifCloseConnection())
++                if (respImplPtr->version() != Version::kHttp10)
+                 {
+                     asyncStreamCallback(
+                         std::make_unique<ResponseStream>(conn->sendAsyncStream(
+@@ -1077,7 +1077,7 @@ void HttpServer::sendResponses(
+                 }
+                 else
+                 {
+-                    LOG_INFO << "Chunking Set CloseConnection !!!";
++                    LOG_INFO << "Async stream not supported for HTTP/1.0";
+                 }
+             }
+             auto &streamCallback = respImplPtr->streamCallback();

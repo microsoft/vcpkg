@@ -9,5 +9,5 @@ index 686be4f..28d0a7f 100644
 -	@$(MAKE) -C test
 -	@$(MAKE) -C examples
  
- .PHONY: all install default clean test
- .PHONY: FORCE cscope
+ library:
+ 	@$(MAKE) -C src

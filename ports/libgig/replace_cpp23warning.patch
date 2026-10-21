@@ -1,0 +1,15 @@
+diff --git "a/src/RIFF.h" "b/src/RIFF.h"
+index f6e7fc8..7746609 100644
+--- "a/src/RIFF.h"
++++ "b/src/RIFF.h"
+@@ -24,8 +24,8 @@
+ #ifndef __RIFF_H__
+ #define __RIFF_H__
+ 
+-#if __cplusplus < 201103L
+-# warning C++11 or higher required for libgig
++#if __cplusplus < 201103L && !defined(_MSC_VER)
++# pragma message("C++11 or higher required for libgig")
+ #endif
+ 
+ #include <string>

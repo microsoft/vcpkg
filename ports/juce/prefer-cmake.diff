@@ -1,0 +1,45 @@
+diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
+index e89cc5d..afefe2d 100644
+--- a/extras/Build/CMake/JUCEModuleSupport.cmake
++++ b/extras/Build/CMake/JUCEModuleSupport.cmake
+@@ -390,10 +390,40 @@ function(_juce_create_pkgconfig_target name)
+         return()
+     endif()
+ 
++    # Prefer CMake over pkg-config
++    set(link_libs "")
++    if("alsa" IN_LIST JUCE_ARG_UNPARSED_ARGUMENTS)
++        list(REMOVE_ITEM JUCE_ARG_UNPARSED_ARGUMENTS "alsa")
++        find_package(ALSA REQUIRED)
++        list(APPEND link_libs ALSA::ALSA)
++    endif()
++    if("fontconfig" IN_LIST JUCE_ARG_UNPARSED_ARGUMENTS)
++        list(REMOVE_ITEM JUCE_ARG_UNPARSED_ARGUMENTS "fontconfig")
++        find_package(Fontconfig REQUIRED)
++        list(APPEND link_libs Fontconfig::Fontconfig)
++    endif()
++    if("freetype2" IN_LIST JUCE_ARG_UNPARSED_ARGUMENTS)
++        list(REMOVE_ITEM JUCE_ARG_UNPARSED_ARGUMENTS "freetype2")
++        find_package(Freetype REQUIRED)
++        list(APPEND link_libs Freetype::Freetype)
++    endif()
++    if("gl" IN_LIST JUCE_ARG_UNPARSED_ARGUMENTS)
++        list(REMOVE_ITEM JUCE_ARG_UNPARSED_ARGUMENTS "gl")
++        find_package(OpenGL REQUIRED)
++        list(APPEND link_libs OpenGL::GL)
++    endif()
++    if("libcurl" IN_LIST JUCE_ARG_UNPARSED_ARGUMENTS)
++        list(REMOVE_ITEM JUCE_ARG_UNPARSED_ARGUMENTS "libcurl")
++        find_package(CURL REQUIRED)
++        list(APPEND link_libs CURL::libcurl)
++    endif()
++    if(JUCE_ARG_UNPARSED_ARGUMENTS)
+     find_package(PkgConfig REQUIRED)
+     pkg_check_modules(${name} ${JUCE_ARG_UNPARSED_ARGUMENTS})
++    endif()
+ 
+     add_library(pkgconfig_${name} INTERFACE)
++    set_target_properties(pkgconfig_${name} PROPERTIES INTERFACE_LINK_LIBRARIES "${link_libs}")
+     add_library(juce::pkgconfig_${name} ALIAS pkgconfig_${name})
+     install(TARGETS pkgconfig_${name} EXPORT JUCE)
+ 

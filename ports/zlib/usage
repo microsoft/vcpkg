@@ -1,4 +1,9 @@
-The package zlib is compatible with built-in CMake targets:
+zlib is compatible with built-in CMake targets:
 
-    find_package(ZLIB REQUIRED)
-    target_link_libraries(main PRIVATE ZLIB::ZLIB)
+  find_package(ZLIB REQUIRED)
+  target_link_libraries(main PRIVATE ZLIB::ZLIB)
+
+zlib provides pkg-config modules:
+
+  # zlib compression library
+  zlib

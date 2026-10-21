@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ddiakopoulos/tinyply
-    REF 40aa4a0ae9e9c203e11893f78b8bcaf8a50e65f0 # 2.3.4
-    SHA512 c99bdfcfbcbb13af2e662763f15771d7d5905267fb72ad93b40aad83785e8fbb48feb2359ce2542fe838fcb22a42f8a65cebd9c22963a383638be1ef0100269a
+    REF c9bb690dfe5e9105961e9e28120c48c9ae084bc6 # 3.0
+    SHA512 4df803db4494e04a3f3bd7bc47d59a18d0c6dd8b0984b36e4ef38722590fbd441f226e284108c3971eea7733e3740f0e688ebd848bff493fc9f8c56426d1dab4
     HEAD_REF master
 )
 
@@ -24,7 +24,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # License
-file(READ "${SOURCE_PATH}/readme.md" readme_contents)
+file(READ "${SOURCE_PATH}/README.md" readme_contents)
 string(FIND "${readme_contents}" "## License" license_pos)
 string(SUBSTRING "${readme_contents}" ${license_pos} -1 license_contents)
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "${license_contents}")

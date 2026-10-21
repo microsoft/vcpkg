@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO agauniyal/rang
-    REF v3.2
-    SHA512 f579aaf3bddbfa2325dd31bdbe7c32598af8a340fee62c3a1e7ed1cf189af2808b7838a5fb13b3765279ddd1e7481f6229da72e72218a4916455cf3ae12b5a68
+    REF v${VERSION}
+    SHA512 b5211f2f1a026a5232b9289d4d6444f1e28b4d3f42602af6fb4cedc1dfff0f5c357f9de33855d1ebcdc878de7531e69b6ecd2c97583cfd6a22a99c15589bfe3e
     HEAD_REF master
 )
 

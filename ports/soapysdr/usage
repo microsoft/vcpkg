@@ -1,0 +1,9 @@
+soapysdr provides CMake targets:
+
+  find_package(SoapySDR CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE SoapySDR)
+
+soapysdr provides pkg-config modules:
+
+  # Vendor and platform neutral SDR interface library.
+  SoapySDR

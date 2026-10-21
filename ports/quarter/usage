@@ -1,0 +1,4 @@
+The package quarter provides CMake targets:
+
+    find_package(Quarter CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Quarter::Quarter)

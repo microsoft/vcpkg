@@ -1,0 +1,14 @@
+--- 3b0b581ab2-3f513bfb0c.clean/conf/gkbuild.cmake.old	2026-02-07 18:50:18.944623000 +0100
++++ 3b0b581ab2-3f513bfb0c.clean/conf/gkbuild.cmake	2026-02-07 18:51:19.086997000 +0100
+@@ -16,9 +16,9 @@ option(GKRAND "enable GKRAND support" OF
+ 
+ # Add compiler flags.
+ if(MSVC)
+-  set(GK_COPTIONS "-DWIN32 -DMSC -D_CRT_SECURE_NO_DEPRECATE -DUSE_GKREGEX")
++  set(GK_COPTIONS "-DWIN32 -DMSC -D_CRT_SECURE_NO_DEPRECATE")
+ elseif(MINGW)
+-  set(GK_COPTS "-DUSE_GKREGEX")
++#  set(GK_COPTS "-DUSE_GKREGEX")
+ else()
+   set(GK_COPTIONS "-DLINUX -D_FILE_OFFSET_BITS=64")
+ endif(MSVC)

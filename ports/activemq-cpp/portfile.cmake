@@ -20,15 +20,15 @@ vcpkg_extract_source_archive(
 )
 
 if (VCPKG_TARGET_IS_LINUX)
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             "--with-openssl=${CURRENT_INSTALLED_DIR}"
             "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
 
     file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/activemq" "${CURRENT_PACKAGES_DIR}/include/activemq")
     file(RENAME "${CURRENT_PACKAGES_DIR}/include/activemq-cpp-${VERSION}/cms" "${CURRENT_PACKAGES_DIR}/include/cms")

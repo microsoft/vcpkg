@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8efec25..3fedb02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -407,10 +407,12 @@ else ()
+                            OUTPUT_NAME ${LIB_NAME} )
+ 
+ endif ()
++set_target_properties(${name} PROPERTIES EXPORT_NAME tidy)
++target_include_directories( ${name} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
+ if (NOT TIDY_CONSOLE_SHARED) # user wants default static linkage
+     list ( APPEND add_LIBS ${name} )
+ endif ()    
+-install(TARGETS ${name}
++install(TARGETS ${name} EXPORT unofficial-tidy-html5Config
+         RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+         ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+         LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+@@ -440,7 +442,9 @@ if (BUILD_SHARED_LIB)
+                                    NO_SONAME ${NO_SONAME} )
+     set_target_properties( ${name} PROPERTIES 
+                                    COMPILE_FLAGS "-DBUILD_SHARED_LIB -DBUILDING_SHARED_LIB")
+-    install(TARGETS ${name}
++    set_target_properties(${name} PROPERTIES EXPORT_NAME tidy)
++    target_include_directories( ${name} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
++    install(TARGETS ${name} EXPORT unofficial-tidy-html5Config
+         RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+         ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+         LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+@@ -450,6 +454,13 @@ if (BUILD_SHARED_LIB)
+     endif ()    
+ endif ()
+ 
++#------------------------------------------------------------------------
++# CMake FIND_PACKAGE() Support
++#------------------------------------------------------------------------
++install(EXPORT unofficial-tidy-html5Config
++	DESTINATION ${LIB_INSTALL_DIR}/cmake/unofficial-tidy-html5
++	NAMESPACE unofficial::tidy-html5::)
++
+ 
+ #------------------------------------------------------------------------
+ # Main Executable

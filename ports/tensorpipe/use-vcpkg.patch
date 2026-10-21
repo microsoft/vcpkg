@@ -43,7 +43,7 @@ index b722381..688886a 100644
 -endif()
 +find_package(pybind11 CONFIG REQUIRED)
  
- set(PYBIND11_CPP_STANDARD -std=c++14)
+ set(PYBIND11_CPP_STANDARD -std=c++17)
  pybind11_add_module(pytensorpipe tensorpipe.cc)
 -target_link_libraries(pytensorpipe PRIVATE tensorpipe)
 +target_link_libraries(pytensorpipe PRIVATE tensorpipe pybind11::module)

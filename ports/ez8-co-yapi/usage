@@ -1,0 +1,4 @@
+ez8-co-yapi is header-only and can be used from CMake via:
+
+  find_path(EZ8_CO_YAPI_INCLUDE_DIRS "ez8-co-yapi/yapi.hpp")
+  target_include_directories(main PRIVATE "${EZ8_CO_YAPI_INCLUDE_DIRS}")

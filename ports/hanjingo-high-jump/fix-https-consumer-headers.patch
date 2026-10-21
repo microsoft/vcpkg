@@ -1,0 +1,47 @@
+diff --git a/hj/net/http/http_client.hpp b/hj/net/http/http_client.hpp
+index 3815f84..821aff9 100644
+--- a/hj/net/http/http_client.hpp
++++ b/hj/net/http/http_client.hpp
+@@ -29,6 +29,7 @@
+ #ifndef NOMINMAX
+ #define NOMINMAX
+ #endif
++#include <WinSock2.h>
+ #include <Windows.h>
+ #endif
+ 
+diff --git a/hj/net/http/http_server.hpp b/hj/net/http/http_server.hpp
+index 120f6bb..9d2b2f3 100644
+--- a/hj/net/http/http_server.hpp
++++ b/hj/net/http/http_server.hpp
+@@ -802,7 +802,7 @@ class http_ssl_server
+ 
+     SSL_CTX *ssl_context() noexcept
+     {
+-        return _server ? _server->ssl_context() : nullptr;
++        return _server ? static_cast<SSL_CTX *>(_server->tls_context()) : nullptr;
+     }
+ 
+   private:
+@@ -975,7 +975,7 @@ class http_ssl_server
+         if(!_server)
+             throw std::runtime_error("SSLServer instance is null");
+ 
+-        SSL_CTX *ctx = _server->ssl_context();
++        SSL_CTX *ctx = static_cast<SSL_CTX *>(_server->tls_context());
+         if(!ctx)
+             throw std::runtime_error(
+                 "Failed to acquire SSL_CTX from SSLServer");
+diff --git a/hj/net/net.hpp b/hj/net/net.hpp
+index 87f899e..d075a36 100644
+--- a/hj/net/net.hpp
++++ b/hj/net/net.hpp
+@@ -5,7 +5,7 @@
+ #include <hj/net/grpc.hpp>
+ #endif
+ 
+-#ifdef HJ_ENABLE_HTTP
++#if defined(HJ_ENABLE_HTTP) || defined(HJ_ENABLE_HTTPS)
+ #include <hj/net/http.hpp>
+ #endif
+ 

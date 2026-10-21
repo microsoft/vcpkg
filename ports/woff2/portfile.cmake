@@ -10,6 +10,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     0001-unofficial-brotli.patch
+    0002-stdint-include.patch
 )
 
 vcpkg_cmake_configure(

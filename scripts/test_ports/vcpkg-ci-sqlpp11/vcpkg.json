@@ -1,0 +1,36 @@
+{
+  "name": "vcpkg-ci-sqlpp11",
+  "version-string": "ci",
+  "description": "Port to force features of sqlpp11 within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "sqlpp11",
+      "features": [
+        "sqlite3"
+      ]
+    },
+    {
+      "name": "sqlpp11",
+      "features": [
+        "postgresql"
+      ],
+      "platform": "!uwp"
+    },
+    {
+      "name": "sqlpp11",
+      "features": [
+        "mariadb"
+      ],
+      "platform": "android | (x86 & windows)"
+    },
+    {
+      "name": "sqlpp11",
+      "features": [
+        "mysql"
+      ],
+      "platform": "!android & !uwp & !(x86 & windows)"
+    }
+  ]
+}

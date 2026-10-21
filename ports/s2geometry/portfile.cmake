@@ -5,9 +5,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/s2geometry
-    REF v0.11.1
-    SHA512 c500029c6e9cc412a29a8a74961688b0a504f60b1a7698ef84c0d0ae760e3c3f05e7068fb1154c9755d907f82e3bc09f8bf1d0ff629cbd3bad6e70169187dd37
+    REF v${VERSION}
+    SHA512 4ddfff2f44c0e98b2a110da57335fe119788f32e3924c8bdbe9afffbad5e037fdfe64f88f664b025a86134e17f14f6195107035b258fde06f946972f1f0456a8
     HEAD_REF main
+    PATCHES
+        fix-msvc-build.patch
 )
 
 vcpkg_cmake_configure(

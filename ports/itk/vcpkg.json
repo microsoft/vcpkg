@@ -1,7 +1,7 @@
 {
   "name": "itk",
-  "version-string": "5.3rc02",
-  "port-version": 1,
+  "version": "5.4.4",
+  "port-version": 2,
   "description": "Insight Segmentation and Registration Toolkit (ITK) is used for image processing and analysis.",
   "homepage": "https://github.com/InsightSoftwareConsortium/ITK",
   "license": "Apache-2.0",
@@ -9,19 +9,15 @@
     "double-conversion",
     "eigen3",
     "expat",
-    {
-      "name": "fftw3",
-      "default-features": false
-    },
     "gdcm",
     {
       "name": "hdf5",
       "default-features": false,
       "features": [
-        "cpp"
+        "cpp",
+        "hl"
       ]
     },
-    "icu",
     "libjpeg-turbo",
     "libpng",
     "minc",
@@ -41,6 +37,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    "vxl",
     "zlib"
   ],
   "features": {
@@ -63,6 +60,17 @@
         "cuda"
       ]
     },
+    "fftw": {
+      "description": "Enable the FFTW backend",
+      "dependencies": [
+        {
+          "name": "fftw3",
+          "features": [
+            "threads"
+          ]
+        }
+      ]
+    },
     "opencl": {
       "description": "Use OpenCL",
       "dependencies": [
@@ -72,23 +80,23 @@
     "opencv": {
       "description": "Build ITKVideoBridgeOpenCV module.",
       "dependencies": [
-        {
-          "name": "opencv",
-          "default-features": false,
-          "features": [
-            "default-features"
-          ]
-        }
+        "opencv"
       ]
     },
     "python": {
       "description": "Python functionality for ITK",
       "dependencies": [
-        "python3"
+        "python3",
+        {
+          "name": "vcpkg-tool-castxml",
+          "host": true
+        }
       ]
     },
     "rtk": {
-      "description": "Build RTK Module"
+      "description": "Build RTK Module",
+      "supports": "!x86",
+      "license": null
     },
     "tbb": {
       "description": "Build TBB Module",

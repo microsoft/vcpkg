@@ -1,10 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" VERSION ${VERSION})
+set(VERSION "${CMAKE_MATCH_2}.${CMAKE_MATCH_3}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 ce81add9d978a6b63d4205715eac5084e81a6753da1f6c6bad6493e60253215901bffc4a60d704a873333f2b9f94fd86cb7eb5b293035f2268c12692bd808bac
+    SHA512 540059a93721447cf4723bcca06e91c43a4399cb366c05bf84e9d8e2c439f3107ba17803f9d912549b54c471f2dcc4c9fc834145ec441dff31ca24f9a3543aa9
     HEAD_REF main
     PATCHES
         fix-cmake.patch
@@ -14,6 +17,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/third_party/utf8_range"
     OPTIONS
         "-Dutf8_range_ENABLE_TESTS=off"
+        "-Dprotobuf_VERSION=${VERSION}"
 )
 
 vcpkg_cmake_install()

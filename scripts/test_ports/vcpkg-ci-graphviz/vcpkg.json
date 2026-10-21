@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-ci-graphviz",
+  "version-string": "ci",
+  "description": "Validation port",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "graphviz",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

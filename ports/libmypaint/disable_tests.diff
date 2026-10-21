@@ -1,0 +1,23 @@
+diff --git a/Makefile.am b/Makefile.am
+index 144a5ac..7c0c2d9 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -154,5 +154,4 @@ SUBDIRS = \
+ 	.			\
+ 	doc			\
+ 	gegl		\
+-	tests		\
+ 	$(PODIRS)
+diff --git a/configure.ac b/configure.ac
+index 86e586b..dfd69c0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -313,8 +313,6 @@ AC_CONFIG_FILES([
+   libmypaint.pc:libmypaint.pc.in
+   Makefile
+   po/Makefile.in
+-  tests/Makefile
+-  tests/gegl/Makefile
+ ])
+ 
+ AC_OUTPUT

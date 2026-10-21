@@ -1,0 +1,12 @@
+The package aui provides CMake targets:
+
+    find_package(aui CONFIG REQUIRED COMPONENTS core views ...)
+
+    # Configure an application using AUI helper functions:
+    aui_executable(${PROJECT_NAME})
+    # Link against AUI component targets
+    aui_link(${PROJECT_NAME} PRIVATE aui::core aui::views)
+    aui_compile_assets(${PROJECT_NAME})
+    aui_app(TARGET ${PROJECT_NAME} NAME "My App" VENDOR "vcpkg"
+            ICON "assets/img/icon.svg"
+            ANDROID_PACKAGE "org.vcpkg.auitest")

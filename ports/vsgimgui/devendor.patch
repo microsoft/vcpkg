@@ -1,47 +1,33 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a9e6265..96a2ecb 100644
+index a1c83a3..bba4c19 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,34 +22,13 @@ if (VULKAN_SDK)
+@@ -22,11 +22,14 @@ if (VULKAN_SDK)
      set(ENV{VULKAN_SDK} ${VULKAN_SDK})
  endif()
  
--find_package(vsg 1.0.5)
-+find_package(vsg REQUIRED)
-+find_package(imgui REQUIRED)
-+find_package(implot REQUIRED)
+-find_package(vsg 1.1.10)
++find_package(vsg CONFIG REQUIRED)
++find_package(imgui CONFIG REQUIRED)
++find_package(implot CONFIG REQUIRED)
  
  vsg_setup_dir_vars()
  vsg_setup_build_vars()
  
--if ( (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/imgui/imgui.h) OR
--     (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/implot/implot.h) )
--    find_package(Git QUIET)
--
--    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
--                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
--                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
--
--    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
--        message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
--    endif()
--endif()
--
--vsg_copy_imgui_headers(
--    FILES
--        ${VSGIMGUI_SOURCE_DIR}/src/imgui/imgui.h
--        ${VSGIMGUI_SOURCE_DIR}/src/imgui/imconfig.h
--        ${VSGIMGUI_SOURCE_DIR}/src/imgui/imgui_internal.h
--        ${VSGIMGUI_SOURCE_DIR}/src/imgui/imstb_textedit.h
--        ${VSGIMGUI_SOURCE_DIR}/src/imgui//misc/cpp/imgui_stdlib.h
--        ${VSGIMGUI_SOURCE_DIR}/src/implot/implot.h
--        ${VSGIMGUI_SOURCE_DIR}/src/implot/implot_internal.h
--)
++if(0)
+ if ( (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/imgui/imgui.h) OR
+      (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/src/implot/implot.h) )
+     find_package(Git QUIET)
+@@ -50,6 +53,7 @@ vsg_copy_imgui_headers(
+         ${VSGIMGUI_SOURCE_DIR}/src/implot/implot.h
+         ${VSGIMGUI_SOURCE_DIR}/src/implot/implot_internal.h
+ )
++endif(0)
  
  vsg_add_target_clang_format(
      FILES
 diff --git a/include/vsgImGui/RenderImGui.h b/include/vsgImGui/RenderImGui.h
-index b4210d2..33198e4 100644
+index 9eddd36..656d0b1 100644
 --- a/include/vsgImGui/RenderImGui.h
 +++ b/include/vsgImGui/RenderImGui.h
 @@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -54,51 +40,20 @@ index b4210d2..33198e4 100644
  namespace vsgImGui
  {
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 41d749d..919159e 100644
+index 41d749d..b895225 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -6,40 +6,21 @@ set(EXTRA_INCLUDES)
- SET(HEADER_PATH ${VSGIMGUI_SOURCE_DIR}/include/vsgImGui)
- 
- set(HEADERS
--    ${HEADER_PATH}/imgui.h
-     ${HEADER_PATH}/SendEventsToImGui.h
-     ${HEADER_PATH}/RenderImGui.h
-     ${HEADER_PATH}/Texture.h
--    imgui/imconfig.h
--    imgui/imgui_internal.h
--    imgui/imstb_rectpack.h
--    imgui/imstb_textedit.h
--    imgui/imstb_truetype.h
--    imgui/misc/cpp/imgui_stdlib.h
--    implot/implot.h
--    implot/implot_internal.h
+@@ -34,6 +34,9 @@ set(SOURCES
+     implot/implot_items.cpp
  )
  
- set(SOURCES
-     vsgImGui/RenderImGui.cpp
-     vsgImGui/SendEventsToImGui.cpp
-     vsgImGui/Texture.cpp
--    imgui/imgui.cpp
--    imgui/imgui_draw.cpp
--    imgui/imgui_tables.cpp
--    imgui/imgui_widgets.cpp
--    imgui/backends/imgui_impl_vulkan.cpp
--    imgui/misc/cpp/imgui_stdlib.cpp
--    implot/implot.cpp
--    implot/implot_items.cpp
- )
- 
++list(FILTER HEADERS EXCLUDE REGEX "^imgui/|^implot/|/imgui.h\$")
++list(FILTER SOURCES EXCLUDE REGEX "^imgui/|^implot/")
++
  OPTION(SHOW_DEMO_WINDOW "Toggle the build of the ImGui::ShowDemoWindow(bool*) and ImPlot::ShadowDemoWindow(bool*)" ON)
  
  if (SHOW_DEMO_WINDOW)
-     set(SOURCES ${SOURCES}
--        imgui/imgui_demo.cpp
--        implot/implot_demo.cpp
-     )
- else()
-     set(SOURCES ${SOURCES}
-@@ -73,6 +54,8 @@ target_include_directories(vsgImGui PUBLIC
+@@ -73,6 +76,8 @@ target_include_directories(vsgImGui PUBLIC
  target_link_libraries(vsgImGui
      PUBLIC
          vsg::vsg
@@ -108,7 +63,7 @@ index 41d749d..919159e 100644
          ${EXTRA_LIBRARIES}
  )
 diff --git a/src/vsgImGui/RenderImGui.cpp b/src/vsgImGui/RenderImGui.cpp
-index 5d7cf06..dac2227 100644
+index 31780eb..fd70a6f 100644
 --- a/src/vsgImGui/RenderImGui.cpp
 +++ b/src/vsgImGui/RenderImGui.cpp
 @@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -122,9 +77,9 @@ index 5d7cf06..dac2227 100644
 +#include <imgui_impl_vulkan.h>
  
  #include <vsg/io/Logger.h>
- #include <vsg/vk/State.h>
+ #include <vsg/maths/color.h>
 diff --git a/src/vsgImGui/SendEventsToImGui.cpp b/src/vsgImGui/SendEventsToImGui.cpp
-index 4e83e4c..b1f4d83 100644
+index 11de226..ef784fc 100644
 --- a/src/vsgImGui/SendEventsToImGui.cpp
 +++ b/src/vsgImGui/SendEventsToImGui.cpp
 @@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
@@ -137,14 +92,16 @@ index 4e83e4c..b1f4d83 100644
  #include <vsg/ui/KeyEvent.h>
  #include <vsg/ui/PointerEvent.h>
 diff --git a/src/vsgImGuiConfig.cmake.in b/src/vsgImGuiConfig.cmake.in
-index e2c14f2..5cf8bd9 100644
+index e2c14f2..e0dcc98 100644
 --- a/src/vsgImGuiConfig.cmake.in
 +++ b/src/vsgImGuiConfig.cmake.in
-@@ -2,5 +2,7 @@ include(CMakeFindDependencyMacro)
+@@ -1,6 +1,8 @@
+ include(CMakeFindDependencyMacro)
  
  find_dependency(Vulkan)
- find_dependency(vsg)
-+find_dependency(imgui)
-+find_dependency(implot)
+-find_dependency(vsg)
++find_dependency(vsg CONFIG)
++find_dependency(imgui CONFIG)
++find_dependency(implot CONFIG)
  
  include("${CMAKE_CURRENT_LIST_DIR}/vsgImGuiTargets.cmake")

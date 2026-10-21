@@ -1,0 +1,12 @@
+diff --git a/frontends/yasm/CMakeLists.txt b/frontends/yasm/CMakeLists.txt
+index b11d7f8..b8306b1 100644
+--- a/frontends/yasm/CMakeLists.txt
++++ b/frontends/yasm/CMakeLists.txt
+@@ -19,6 +19,7 @@ IF(BUILD_SHARED_LIBS)
+         yasm-plugin.c
+         )
+     TARGET_LINK_LIBRARIES(yasm libyasm ${LIBDL})
++    set_target_properties(yasm PROPERTIES PDB_NAME "yasm-tool")
+ ELSE(BUILD_SHARED_LIBS)
+     ADD_EXECUTABLE(yasm
+         yasm.c

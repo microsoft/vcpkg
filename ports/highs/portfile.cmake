@@ -1,28 +1,67 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ERGO-Code/HiGHS
-    REF "v${VERSION}"
-    SHA512 9229d2e960354b8b8fd45588cd4eec7e54826ee6f3939ac691d7b2b6eb0580a66a3a2649c940a3869f58dbbcf08fdd9641919fc92666948c62e70c4bce8ac130
+    REF v${VERSION}
+    SHA512 0ea407784bc6c8e31c72fbcdcab201e8a7cc7debbca57504e74177658208151e90637e5fb1e0cdf1b1ae6b677e7865e77771ec025b17f8223f74d00fc6420546
     HEAD_REF master
     PATCHES
-        fix-hconfig-path.patch
-        fix-cmake-output.patch
-        fix-threads.patch
-        fix-compiler.patch
+        respect-user-selected-compiler.patch
+        fix-pkgconfig.patch
+        fix-extras-metadata.patch
 )
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        extras HIPO
+)
+
+set(HIGHS_EXTRAS_BLAS_OPTIONS "")
+if("extras" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
+    # HiGHS's own BLAS discovery (cmake/FindHipoDeps.cmake) prefers OpenBLAS's
+    # own CMake package over the generic find_package(BLAS) module whenever
+    # it can find one, which would leave highs_extras linked against
+    # OpenBLAS::OpenBLAS instead of the BLAS::BLAS target that vcpkg's "blas"
+    # port (and thus any consumer's find_package(highs)) resolves. Forcing a
+    # non-empty BLA_VENDOR here skips that preferential lookup so the build
+    # goes through find_package(BLAS) instead, which the "blas" port's
+    # vcpkg-cmake-wrapper.cmake intercepts and resolves consistently.
+    list(APPEND HIGHS_EXTRAS_BLAS_OPTIONS -DBLA_VENDOR=OpenBLAS)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        ${HIGHS_EXTRAS_BLAS_OPTIONS}
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+        -DBUILD_SHARED_EXTRAS_LIB=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(TOOL_NAMES highs AUTO_CLEAN)
+
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/highs")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(HIGHS_COPYRIGHT_FILES
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/THIRD_PARTY_NOTICES.md"
+    "${SOURCE_PATH}/extern/cli11/CLI11.hpp"
+    "${SOURCE_PATH}/extern/pdqsort/license.txt"
+    "${SOURCE_PATH}/extern/zstr/LICENSE"
+)
+if("extras" IN_LIST FEATURES)
+    # amd, metis/GKlib, and rcm are only compiled in when HIPO (the "extras" feature) is enabled.
+    list(APPEND HIGHS_COPYRIGHT_FILES
+        "${SOURCE_PATH}/extern/amd/License.txt"
+        "${SOURCE_PATH}/extern/metis/LICENSE.txt"
+        "${SOURCE_PATH}/extern/rcm/LICENSE"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${HIGHS_COPYRIGHT_FILES})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

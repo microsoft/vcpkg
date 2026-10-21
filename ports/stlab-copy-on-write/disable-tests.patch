@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e4e9d4..79671d3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,14 +10,9 @@ cpp_library_enable_dependency_tracking()
+ # Now declare project
+ project(copy-on-write)
+ 
+-# Enable testing infrastructure (required for TESTS and EXAMPLES)
+-include(CTest)
+-
+ # Let cpp-library handle the project declaration and version detection
+ cpp_library_setup(
+     DESCRIPTION "Copy-on-write wrapper for any type"
+     NAMESPACE stlab
+     HEADERS copy_on_write.hpp
+-    EXAMPLES basic_usage_test.cpp
+-    TESTS copy_on_write_tests.cpp
+ )

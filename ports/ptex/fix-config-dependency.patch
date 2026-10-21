@@ -1,0 +1,13 @@
+diff --git a/src/build/ptex-config.cmake b/src/build/ptex-config.cmake
+index 5e63f07..3a57683 100644
+--- a/src/build/ptex-config.cmake
++++ b/src/build/ptex-config.cmake
+@@ -8,7 +8,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ 
+ find_dependency(Threads REQUIRED)
+ 
+-find_package(ZLIB REQUIRED)
++find_dependency(libdeflate CONFIG REQUIRED)
+ 
+ set_and_check(Ptex_DIR @PACKAGE_CMAKE_INSTALL_PREFIX@)
+ set_and_check(Ptex_LIBRARY_DIRS @PACKAGE_CMAKE_INSTALL_LIBDIR@)

@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/process
     REF boost-${VERSION}
-    SHA512 f8a5d146d07aad83a2aff1e565026836c833b77daa9697f7680956423e7d8b450b41831c77047afff1e9f716c87d2f9ade6194c21e80cfec33d686a608241c32
+    SHA512 bc15c4cfc9cb24d46457e16e44352e569b638b99e1c88220cf51131c4d18c4e74e3629ae06dc405a1872f7042704c7e76da4e38637e1fbf528c478caefb4b0e5
     HEAD_REF master
     PATCHES
-        opt-filesystem.patch
-        
+        fix-filesystem.patch
 )
 
 set(FEATURE_OPTIONS "")

@@ -82,6 +82,7 @@ You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disa
 passing --disable-metrics to vcpkg on the command line,
 or by setting the VCPKG_DISABLE_METRICS environment variable.
 
-Read more about vcpkg telemetry at docs/about/privacy.md
+Read more about vcpkg telemetry at https://learn.microsoft.com/vcpkg/about/privacy
+Read the Microsoft Privacy Statement at https://go.microsoft.com/fwlink/?LinkId=521839
 "@
 }

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SanderMertens/flecs
     REF "v${VERSION}"
-    SHA512 9e4a0dc17ba0cb092f3be055c589146e44b2e258d534420f4914e4ce4926371dab07660cb7d186a62cbbae32c121dc9838af78a8a46138cfc0efe3cb14383713
+    SHA512 a2843d72a4a7f7577e047eac60d492c8a6677dae404d9ec6a23a498f5d37f745897a0892a3a5ef7b66de5c5f862e55cf9ae6b50dc33d0bd7a674707ca93f2b30
     HEAD_REF master
 )
 
@@ -35,4 +35,12 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_D
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
+    COMMENT [[
+Beyond the main MIT LICENSE, some compiled sources bundle third-party notices:
+  src/addons/http/http.c        EmbeddableWebServer (BSD-2-Clause)
+  src/datastructures/hash.c     wyhash (Unlicense / public domain)
+  src/datastructures/strbuf.c   stm32tpl float formatting (Anton B. Gusev)
+]]
+)

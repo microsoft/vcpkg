@@ -1,28 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7f3dd0f..168742c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -152,7 +152,7 @@ # LZ4 {
+@@ -169,7 +169,8 @@ endif()
  option(ENABLE_LZ4_EXT "Enable external LZ4 library support" ON)
  set(WITH_LZ4_EXT OFF)
--if(ENABLE_LZ4_EXT)
+ if(ENABLE_LZ4_EXT)
 -  find_package(LZ4)
--  if(LZ4_FOUND)
-+if(1)
-+  find_package(lz4 CONFIG REQUIRED)
-+  if(1)
++  find_package(LZ4 NAMES lz4 REQUIRED)
++  add_library(LZ4::LZ4 ALIAS lz4::lz4)
+   if(LZ4_FOUND)
      set(WITH_LZ4_EXT ON)
      list(APPEND BUILT_WITH "LZ4_EXT")
-@@ -248,4 +248,4 @@ # LZ4 {
- install(
--    FILES "${project_config}" "${project_version}" "packaging/cmake/Modules/FindLZ4.cmake"
-+    FILES "${project_config}" "${project_version}"
-     DESTINATION "${config_install_dir}"
- )
-
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -241,4 +241,3 @@
- if(WITH_LZ4_EXT)
--  target_include_directories(rdkafka PRIVATE ${LZ4_INCLUDE_DIRS})
--  target_link_libraries(rdkafka PUBLIC LZ4::LZ4)
-+  target_link_libraries(rdkafka PUBLIC lz4::lz4)
+diff --git a/packaging/cmake/Config.cmake.in b/packaging/cmake/Config.cmake.in
+index 8a6522b..5f0bf25 100644
+--- a/packaging/cmake/Config.cmake.in
++++ b/packaging/cmake/Config.cmake.in
+@@ -28,7 +28,7 @@ if(@WITH_SSL@)
  endif()
+ 
+ if(@WITH_LZ4_EXT@)
+-  find_dependency(LZ4)
++  find_dependency(LZ4 NAMES lz4)
+ endif()
+ 
+ find_dependency(Threads)

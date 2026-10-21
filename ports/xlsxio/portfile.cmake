@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brechtsanders/xlsxio
     REF "${VERSION}"
-    SHA512 67b9a4e275446f3ca08e91d31f05236855e761c06ed84ea3aea8c25a7cd6729191f6c95b9efe07392775a75e2713e7ec2c6d216b8d310e7b46bee531cccba8be
+    SHA512 81b6d25728ba14a2cee72ff196751a47f4399b45a993f5f91f970b76eb13a235a7c43bb7fb389205d5867cc7efc25654375fb9f341dc97c44542d88f3420af83
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_PC_FILES=OFF
         -DBUILD_TOOLS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
@@ -33,5 +34,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    foreach(header IN ITEMS xlsxio_read.h xlsxio_write.h)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${header}"
+            "#ifndef DLL_EXPORT_XLSXIO"
+            "#ifndef BUILD_XLSXIO_STATIC\n#define BUILD_XLSXIO_STATIC\n#endif\n#ifndef DLL_EXPORT_XLSXIO"
+        )
+    endforeach()
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

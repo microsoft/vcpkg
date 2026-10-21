@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexif/libexif
     REF "v${VERSION}"
-    SHA512 eac1b5220ca0e02370837a0d78a6d38e91c5afa0956d4196b26a8d2a8a2c5dea18d58c0e473285f278653c3863923241651b7dff4d007cc46385eb29ea188330
+    SHA512 c586cf0b31bcdae126943453af8b2631c96a6854c10e6370772f61d1e38a8f8353536ff50c4222956e5bb5908c687c58e8ceb092e105bd0e5325994a34f28324
     HEAD_REF master
     PATCHES
         fix-ssize.patch
@@ -15,16 +15,16 @@ else()
     vcpkg_list(APPEND options "--disable-nls")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${options}
         --enable-internal-docs=no
         --enable-ship-binaries=no
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libexif-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")

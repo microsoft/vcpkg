@@ -2,12 +2,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 3692bea4a7..29ee7adb1c 100644
 --- a/CMakeLists.txt	
 +++ b/CMakeLists.txt
-@@ -24,7 +24,7 @@ target_link_libraries(boost_numeric_odeint
-     Boost::fusion
-     Boost::iterator
-     Boost::math
--    Boost::mpi
-+    $<TARGET_NAME_IF_EXISTS:Boost::mpi>
-     Boost::mpl
-     Boost::multi_array
-     Boost::numeric_ublas
+@@ -61,7 +61,7 @@ target_link_libraries(boost_numeric_odeint
+   if(BOOST_ENABLE_MPI)
+     target_link_libraries(boost_numeric_odeint
+       INTERFACE
+-        Boost::mpi
++        $<TARGET_NAME_IF_EXISTS:Boost::mpi>
+     )
+   endif()
+ 

@@ -1,0 +1,17 @@
+diff --git a/cmake/llama-config.cmake.in b/cmake/llama-config.cmake.in
+index 6500203..84a876d 100644
+--- a/cmake/llama-config.cmake.in
++++ b/cmake/llama-config.cmake.in
+@@ -6,10 +6,10 @@ set(LLAMA_SHARED_LIB   @BUILD_SHARED_LIBS@)
+ @PACKAGE_INIT@
+ 
+ set_and_check(LLAMA_INCLUDE_DIR "@PACKAGE_LLAMA_INCLUDE_INSTALL_DIR@")
+-set_and_check(LLAMA_LIB_DIR     "@PACKAGE_LLAMA_LIB_INSTALL_DIR@")
+ set(LLAMA_BIN_DIR "@PACKAGE_LLAMA_BIN_INSTALL_DIR@")
+ 
+-find_package(ggml REQUIRED HINTS ${LLAMA_LIB_DIR}/cmake)
++include(CMakeFindDependencyMacro)
++find_dependency(ggml CONFIG)
+ 
+ find_library(llama_LIBRARY llama
+     REQUIRED

@@ -1,21 +1,19 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
-if(NOT VCPKG_HOST_IS_WINDOWS)
-    message(WARNING "${PORT} currently requires the following programs from the system package manager:
-    autoconf automake autoconf-archive
-On Debian and Ubuntu derivatives:
-    sudo apt-get install autoconf automake autoconf-archive
-On recent Red Hat and Fedora derivatives:
-    sudo dnf install autoconf automake autoconf-archive
-On Arch Linux and derivatives:
-    sudo pacman -S autoconf automake autoconf-archive
-On Alpine:
-    apk add autoconf automake autoconf-archive
-On macOS:
-    brew install autoconf automake autoconf-archive\n")
+if("extensions" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    endif()
+    set(PYTHON_HAS_EXTENSIONS ON)
+else()
+    set(PYTHON_HAS_EXTENSIONS OFF)
 endif()
 
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
@@ -30,33 +28,25 @@ set(PATCHES
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
-    0012-force-disable-modules.patch
-    0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
+    0019-fix-ssl-linkage.patch
+    0021-use-system-libmpdec.patch
+    0022-use-system-zstd.patch
+    0023-regenerate-configure.patch # Generated with Autoconf 2.72 after the configure.ac patches.
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES 0002-static-library.patch)
 endif()
 
-# Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
-endif()
-
-# Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
-# required to build this port on Windows 7 itself due to Python using itself in its own build system.
-if("deprecated-win7-support" IN_LIST FEATURES)
-    list(APPEND PATCHES 0006-restore-support-for-windows-7.patch)
-    message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
-elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
-    message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PYTHON_ALLOW_EXTENSIONS)
+    if(PYTHON_HAS_EXTENSIONS AND NOT PYTHON_ALLOW_EXTENSIONS)
+        # This should never be reached due to vcpkg_check_linkage above
+        message(FATAL_ERROR "Cannot build python extensions! Python extensions on windows can only be built if python is a dynamic library!")
+    endif()
     # The Windows 11 SDK has a problem that causes it to error on the resource files, so we patch that.
     vcpkg_get_windows_sdk(WINSDK_VERSION)
     if("${WINSDK_VERSION}" VERSION_GREATER_EQUAL "10.0.22000")
@@ -72,8 +62,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
-    REF v${PYTHON_VERSION}
-    SHA512 c2ebe72ce53dd2d59750a7b0bdaf15ebb7ecb6f67d2913a457bf5d32bd0f640815f9496f2fa3ebeac0722264d000735d90d3ffaeac2de1f066b7aee994bf9b24
+    REF v${VERSION}
+    SHA512 9f5ff464802eac50815a52dae51614f0d3a714816c8e7a47c12e2c01cc51f749518cbe4b4d0a37c0455fe128949edc70a7ae28040ba8515eb997ebad1c54e02e
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -102,7 +92,7 @@ endfunction()
 if(VCPKG_TARGET_IS_WINDOWS)
     # Due to the way Python handles C extension modules on Windows, a static python core cannot
     # load extension modules.
-    if(PYTHON_ALLOW_EXTENSIONS)
+    if(PYTHON_HAS_EXTENSIONS)
         find_library(BZ2_RELEASE NAMES bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(BZ2_DEBUG NAMES bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_RELEASE NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -113,21 +103,25 @@ if(VCPKG_TARGET_IS_WINDOWS)
         find_library(FFI_DEBUG NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(SQLITE_DEBUG NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(ZSTD_RELEASE NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(ZSTD_DEBUG NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(MPDECIMAL_RELEASE NAMES libmpdec PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(MPDECIMAL_DEBUG NAMES libmpdec PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
+        separate_arguments(SQLITE3_LIBRARIES_DEBUG UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_DEBUG}")
+        separate_arguments(SQLITE3_LIBRARIES_RELEASE UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_RELEASE}")
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE}")
-        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG}")
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE3_LIBRARIES_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE3_LIBRARIES_DEBUG}")
     else()
-        message(STATUS "WARNING: Static builds of Python will not have C extension modules available.")
+        message(STATUS "WARNING: Extensions have been disabled. No C extension modules will be available.")
     endif()
-    find_library(ZLIB_RELEASE NAMES zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(ZLIB_DEBUG NAMES zlib zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    find_library(ZLIB_RELEASE NAMES z zs zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+    find_library(ZLIB_DEBUG NAMES zd zsd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
     list(APPEND add_libs_rel "${ZLIB_RELEASE}")
     list(APPEND add_libs_dbg "${ZLIB_DEBUG}")
 
-    configure_file("${SOURCE_PATH}/PC/pyconfig.h" "${SOURCE_PATH}/PC/pyconfig.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/python_vcpkg.props.in" "${SOURCE_PATH}/PCbuild/python_vcpkg.props")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/openssl.props.in" "${SOURCE_PATH}/PCbuild/openssl.props")
     file(WRITE "${SOURCE_PATH}/PCbuild/libffi.props"
@@ -136,7 +130,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_SET_CHARSET_FLAG=OFF")
-    if(PYTHON_ALLOW_EXTENSIONS)
+    if(PYTHON_HAS_EXTENSIONS)
         set(OPTIONS
             "/p:IncludeExtensions=true"
             "/p:IncludeExternals=true"
@@ -189,7 +183,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     # The extension modules must be placed in the DLLs directory, so we can't use vcpkg_copy_tools()
-    if(PYTHON_ALLOW_EXTENSIONS)
+    if(PYTHON_HAS_EXTENSIONS)
         file(GLOB_RECURSE PYTHON_EXTENSIONS_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.pyd")
         file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
@@ -205,6 +199,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         FILES_MATCHING PATTERN *.h
     )
     file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    foreach(launcher IN ITEMS venvlauncher venvwlauncher)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${launcher}.exe"
+            "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/venv/scripts/nt/${launcher}.exe")
+    endforeach()
+
 
     # Remove any extension libraries and other unversioned binaries that could conflict with the python2 port.
     # You don't need to link against these anyway.
@@ -254,14 +253,35 @@ else()
 
     set(OPTIONS
         "--with-openssl=${CURRENT_INSTALLED_DIR}"
+        "--with-system-libmpdec"
         "--without-ensurepip"
         "--with-suffix="
         "--with-system-expat"
-        "--without-readline"
         "--disable-test-modules"
     )
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_BSD)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
+    endif()
+
+    if("readline" IN_LIST FEATURES)
+        list(APPEND OPTIONS "--with-readline")
+    else()
+        list(APPEND OPTIONS "--without-readline")
+    endif()
+
+    if(VCPKG_TARGET_IS_ANDROID)
+        list(APPEND OPTIONS "--without-static-libpython" )
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DANDROID_NO_UNDEFINED=OFF")
+    endif()
+
+    if(VCPKG_CROSSCOMPILING)
+        # Cannot not run target executables during configure
+        if(NOT PYTHON3_BUGGY_GETADDRINFO)
+            list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
+        endif()
+        if(NOT PYTHON3_NO_PTMX)
+            list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
+        endif()
     endif()
 
     # The version of the build Python must match the version of the cross compiled host Python.
@@ -271,18 +291,21 @@ else()
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
+            py_cv_module__curses=n/a
+            py_cv_module__curses_panel=n/a
+            py_cv_module__tkinter=n/a
         OPTIONS_DEBUG
             "--with-pydebug"
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"
         OPTIONS_RELEASE
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
     )
-    vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
+    vcpkg_make_install(TARGETS altinstall)
 
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
@@ -325,11 +348,15 @@ else()
     endif()
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/Modules/_hacl/Hacl_Hash_SHA2.h"
+    "${SOURCE_PATH}/Modules/_hacl/include/krml/internal/target.h"
+)
 
 file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(PYTHON_ALLOW_EXTENSIONS)
+    if(PYTHON_HAS_EXTENSIONS)
         file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.win" usage_extra)
     else()
         set(usage_extra "")
@@ -341,7 +368,7 @@ string(REPLACE "@PYTHON_VERSION_MINOR@" "${PYTHON_VERSION_MINOR}" usage_extra "$
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
-    cmake_parse_arguments(PythonFinder "NO_OVERRIDE" "DIRECTORY;PREFIX" "" ${ARGN})
+    cmake_parse_arguments(PythonFinder "NO_OVERRIDE;SUPPORTS_ARTIFACTS_PREFIX" "DIRECTORY;PREFIX" "" ${ARGN})
     configure_file(
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
         "${CURRENT_PACKAGES_DIR}/share/${PythonFinder_DIRECTORY}/vcpkg-cmake-wrapper.cmake"
@@ -350,8 +377,8 @@ function(_generate_finder)
 endfunction()
 
 message(STATUS "Installing cmake wrappers")
-_generate_finder(DIRECTORY "python" PREFIX "Python")
-_generate_finder(DIRECTORY "python3" PREFIX "Python3")
+_generate_finder(DIRECTORY "python" PREFIX "Python" SUPPORTS_ARTIFACTS_PREFIX)
+_generate_finder(DIRECTORY "python3" PREFIX "Python3" SUPPORTS_ARTIFACTS_PREFIX)
 _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
@@ -377,17 +404,16 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/distutils/command/build_ext.py" "'libs'" "'../../lib'")
-else()
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/python3.${PYTHON_VERSION_MINOR}/distutils/command/build_ext.py" "'libs'" "'../../lib'")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
   file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
 endif()
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/python3/vcpkg-port-config.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 
 # For testing
 block()
+  include("${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake")
   set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
+  set(CURRENT_INSTALLED_DIR "${CURRENT_PACKAGES_DIR}")
   vcpkg_get_vcpkg_installed_python(VCPKG_PYTHON3)
-endblocK()
+endblock()

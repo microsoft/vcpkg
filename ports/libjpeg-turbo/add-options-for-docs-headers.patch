@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7a43187..04bd824 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -795,9 +795,6 @@ if(WITH_TURBOJPEG)
+         target_link_libraries(tjbench m)
+       endif()
+     endif()
+-
+-    add_custom_target(tjdoc COMMAND doxygen -s ../doc/doxygen.config
+-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src)
+   endif()
+ 
+   if(ENABLE_STATIC)

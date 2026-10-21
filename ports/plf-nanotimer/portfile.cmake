@@ -1,14 +1,16 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_nanotimer
-    REF bc8b44d2befc4395f63701c923ece89835d8415c
-    SHA512 ec816e82ab855dd7029b03931ffb1e945d3e77f7bb446c4985c4a8404afe20e9de8fac02f64459c47c34e31c06fa8838dba310263197d309e39ec1b0b5da0b6d
+    REF 84f93c76df71500689835897e8ad119c1aeb5e68
+    SHA512 34c8a194c32b3745591965da2fa5a49332b46eeb6ecc0e1de7f149a687bc21dede8b0c4bb502228fcb4299de1af0c8381c95809a0365a69a63fd8bb0c6604bd7
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/plf_nanotimer.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY "${SOURCE_PATH}/plf_nanotimer.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.md"
+)

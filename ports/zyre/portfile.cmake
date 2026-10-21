@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/zyre
-    REF 2648b7eb806a2494d6eb4177f0941232d83c5294
-    SHA512 8940e82ccdc427734711d63dc01c81fe86c4ca6b7e97a69df979f4d48a4711df1ccaee6a3b6aa394f9ef91d719cb95851c4eb87dfa9ed6426e2577b95e0fb464
+    REF f2fd7252322b1b52be248b9ef96f8981de3b86ff
+    SHA512 64502b4d1ca4296eb979a67f6058a80e931bb6db0cb29b94f6cb3285efe9a216e0014ea379a4018004f9354369bb98e5160474263568a825842e1e4d83a74225
     HEAD_REF master
+    PATCHES
+        disable-examples-tests.patch
 )
 
 configure_file(
@@ -23,6 +25,15 @@ endforeach()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYRE_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZYRE_BUILD_STATIC)
 
+set(RUNTIME_FLAGS)
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        list(APPEND RUNTIME_FLAGS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
+    else()
+        list(APPEND RUNTIME_FLAGS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -30,6 +41,7 @@ vcpkg_cmake_configure(
         -DZYRE_BUILD_SHARED=${ZYRE_BUILD_SHARED}
         -DZYRE_BUILD_STATIC=${ZYRE_BUILD_STATIC}
         -DENABLE_DRAFTS=OFF
+        ${RUNTIME_FLAGS}
 )
 
 vcpkg_cmake_install()
@@ -40,6 +52,8 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/share/cmake/${PORT}")
     vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
+elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
 file(COPY
@@ -60,6 +74,6 @@ if(ZYRE_BUILD_STATIC)
 endif()
 
 # Handle copyright
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()

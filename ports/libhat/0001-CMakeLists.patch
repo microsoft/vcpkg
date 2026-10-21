@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d04055c..ade5ce6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -81,12 +81,12 @@ target_compile_features(libhat PUBLIC cxx_std_20)
+ 
+ if (MSVC)
+     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+-        target_compile_options(libhat PRIVATE /clang:-Wall /clang:-Wextra /clang:-Wconversion /clang:-Werror)
++        target_compile_options(libhat PRIVATE /clang:-Wall /clang:-Wextra /clang:-Wconversion)
+     else()
+         target_compile_options(libhat PRIVATE /W3 /WX)
+     endif()
+ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+-    target_compile_options(libhat PRIVATE -Wall -Wextra -Wconversion -Werror
++    target_compile_options(libhat PRIVATE -Wall -Wextra -Wconversion
+             # temp fix for macOS CI failing due to incorrect LIBHAT_COMPILER_X86_OPTIONS value
+             -Wno-unused-command-line-argument
+     )
+@@ -155,10 +155,24 @@ if(LIBHAT_TESTING)
+ endif()
+ 
+ if(LIBHAT_INSTALL_TARGET)
++    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/libhat" DESTINATION "include")
+     install(TARGETS libhat
+         EXPORT libhat-targets
+         RUNTIME DESTINATION "bin"
+         ARCHIVE DESTINATION "lib"
+         LIBRARY DESTINATION "lib"
+     )
++    install(EXPORT libhat-targets NAMESPACE libhat:: DESTINATION "share/libhat")
++    include(CMakePackageConfigHelpers)
++    configure_package_config_file(
++        "${CMAKE_CURRENT_LIST_DIR}/libhat-config.cmake.in"
++        "${CMAKE_CURRENT_BINARY_DIR}/libhat-config.cmake"
++        INSTALL_DESTINATION "share/libhat"
++    )
++    write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/libhat-config-version.cmake" VERSION "${VERSION}" COMPATIBILITY SameMajorVersion)
++    install(FILES
++        "${CMAKE_CURRENT_BINARY_DIR}/libhat-config.cmake"
++        "${CMAKE_CURRENT_BINARY_DIR}/libhat-config-version.cmake"
++        DESTINATION "share/libhat"
++    )
+ endif()

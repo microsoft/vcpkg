@@ -1,6 +1,6 @@
 {
   "name": "si",
-  "version": "2.5.1",
+  "version": "2.5.3",
   "description": "A header only C++ library that provides type safety and user defined literals for physical units",
   "homepage": "https://si.dominikberner.ch/doc/",
   "license": "MIT",

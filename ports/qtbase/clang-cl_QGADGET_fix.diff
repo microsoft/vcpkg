@@ -3,8 +3,8 @@ index e40cd85..ba68a01 100644
 --- a/src/corelib/kernel/qmetatype.h
 +++ b/src/corelib/kernel/qmetatype.h
 @@ -18,6 +18,7 @@
- #endif
  #include <QtCore/qscopeguard.h>
+ #include <QtCore/qttypetraits.h>
  
 +#include <type_traits>
  #include <array>

@@ -1,0 +1,34 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "osqp/osqp"
+    REF "v${VERSION}"
+    SHA512 00ead2c476aca935202c2a02e5a0309efee6db65ec4e7c56f3597324a2f224a16502a34e7552cd5600c085d327c308317894718f9ac825ec669895ac19a45c41
+    PATCHES
+        osqp.patch
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OSQP_BUILD_STATIC_LIB)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OSQP_BUILD_SHARED_LIB)
+
+vcpkg_list(SET options)
+if(NOT (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS))
+    list(APPEND options "-DOSQP_ENABLE_INTERRUPT=OFF")
+endif()
+
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    ${options}
+    -DOSQP_BUILD_SHARED_LIB=${OSQP_BUILD_SHARED_LIB}
+    -DOSQP_BUILD_STATIC_LIB=${OSQP_BUILD_STATIC_LIB}
+    -DOSQP_BUILD_DEMO_EXE=OFF
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/osqp")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

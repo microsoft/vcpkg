@@ -1,31 +1,5 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eeb0bb0b8f..6a5e0a747a 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -310,10 +309,17 @@ if (MAGMA_ENABLE_CUDA)
-         )
-     else()
-         # No Position Independent Code on Windows. Compiler will complain if you add that flag.
--        target_compile_options(magma_nvcc_flags
--            INTERFACE
--            $<$<COMPILE_LANGUAGE:CUDA>:--compiler-options;${FORTRAN_CONVENTION}>
--        )
-+        if(NOT CMAKE_CUDA_COMPILER_ID STREQUAL "Clang")
-+          target_compile_options(magma_nvcc_flags
-+              INTERFACE
-+              $<$<COMPILE_LANGUAGE:CUDA>:--compiler-options;${FORTRAN_CONVENTION}>
-+          )
-+        else()
-+          target_compile_options(magma_nvcc_flags
-+              INTERFACE
-+              $<$<COMPILE_LANGUAGE:CUDA>:${FORTRAN_CONVENTION}>
-+          )
-+        endif()
-     endif(COMPILER_SUPPORTS_FPIC)
- 
-     set(MAGMA_HAVE_CUDA "1")
 diff --git a/control/magma_internal.h b/control/magma_internal.h
-index 2310659235..c4d0eb8f6b 100644
+index 7af16a5..0133e44 100644
 --- a/control/magma_internal.h
 +++ b/control/magma_internal.h
 @@ -33,7 +33,7 @@
@@ -37,11 +11,10 @@ index 2310659235..c4d0eb8f6b 100644
  
          #include <float.h>
          #define copysign(x,y) _copysign(x,y)
-@@ -42,7 +42,9 @@
-         #define isfinite(x)   _finite(x)
+@@ -43,6 +43,9 @@
          // note _snprintf has slightly different semantics than snprintf
          #define snprintf _snprintf
--
+ 
 +    #elif !defined(__NVCC__)
 +        // make sure this actually uses the C version and not the C++ overloads
 +        #define copysign(x,y) copysign((double)x,(double)y)

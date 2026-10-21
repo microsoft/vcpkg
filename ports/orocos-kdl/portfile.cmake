@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orocos/orocos_kinematics_dynamics
-    REF "v${VERSION}"
-    SHA512 9774b76b755ea81168390643813789783f60d0b1cdb46cd250e3e0d27f75a6cf2fd3bfd2081c04e30a14ff4fc70d0080c9b43b82ee181c2dda82f23f052b338d
+    REF "${VERSION}"
+    SHA512 5d2b3329c1015c1ed2f91860cc95f933f3fd42405e42dfe06f6c117c0c64bde8f8b1f49b2399555ee70782dfbf1da4d4a7a92a1860aee10e5bceff95a892b4a2
     HEAD_REF master
-    PATCHES export-include-dir.patch
 )
 
 vcpkg_cmake_configure(

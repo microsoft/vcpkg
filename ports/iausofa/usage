@@ -1,0 +1,4 @@
+iausofa provides CMake targets:
+
+  find_package(unofficial-iausofa CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::iausofa::iausofa)

@@ -1,20 +1,14 @@
-vcpkg_download_distfile(
-    android-alooper-patch
-    URLS https://github.com/realm/realm-core/commit/50a9895544a195afab0450d0c87730e8a31cf667.diff?full_index=1
-    FILENAME realm-core-android-alooper-50a989.diff
-    SHA512 7c10f166ab61f4ea7a46473aa04eb1b5f440edd81c2997cc10b84b9890eb6dfe7b77d51364fe2d4c537c7809ce03dd8b269309d7da2eede72be8dec3b71c2485
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realm/realm-core
-    REF "${VERSION}"
-    SHA512 474f5c6d62e42b221f7b934ca2d8070f83e92eeeeb1271594b7d750fc6f4d186889e04722e0f26ca725cf4f3130c5e1851e82e4ab944a05e25465f3115ffe8ce
+    REF "v${VERSION}"
+    SHA512 b95fbccdddcad2a4ad68fe5fe5358a67f668bdd2cd4bef68f8fc74f9d11690c317156ba28942c4c9db446c796a0d760387c8154209f6039d92a880d7e64e3847
     HEAD_REF master
     PATCHES 
         UWP_index_set.patch
         fix-zlib.patch
-        ${android-alooper-patch}
+        cstdlib.diff
+        fix-s2-is-pod.patch # Based on https://github.com/realm/realm-core/commit/d8f21f9b98cae76e8dc235558c2f71ea27997f10
 )
 
 vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)
@@ -45,7 +39,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "realm" CONFIG_PATH "share/cmake/Realm")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/Realm")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

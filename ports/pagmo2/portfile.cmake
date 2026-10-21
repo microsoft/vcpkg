@@ -1,18 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO esa/pagmo2
-    REF 27ae9159f4fcd11bb93de0ae8189d15352655b0a # v2.19.0
-    SHA512 9f85fe5dbce0542bf3c52918562da9632ec64ee2839d1d2404bf5a6caa4c854c654ca1735c617a15208a597a79a8c28431378e6968335b1c3e9e8d86b6d7d237
+    REF "v${VERSION}"
+    SHA512 3d0d171f8069b845016f3604f4054aaf6cab09dd55212a8ac317ba3d9454b4f2c81ee0cc835b1946838c97081da9ed9e6c80dba8e75c11c6ba210a0643dcf13f
     HEAD_REF master
     PATCHES
-        doxygen.patch
-        find-tbb.patch
-        disable-werror.patch
+        0001-doxygen.patch
+        0003-disable-werror.patch
+        0006-config-find-libipopt.patch
+        0007-ipopt-transitive-deps.patch # coin-or-ipopt provides no cmake config
+        0008-ipopt-header-search.patch
+        0009-ipopt-mumps-transitive.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-   FEATURES
-   nlopt PAGMO_WITH_NLOPT
+    FEATURES
+        ipopt PAGMO_WITH_IPOPT
+        nlopt PAGMO_WITH_NLOPT
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAGMO_BUILD_STATIC_LIBRARY)
 vcpkg_cmake_configure(

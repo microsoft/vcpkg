@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO json-c/json-c
-    REF b4c371fa0cbc4dcbaccc359ce9e957a22988fb34
-    SHA512 1338271a6f9ffb3b8a8d4f2ec36a374ed84b3c91f789b607693c08cbeb38c4fdd813593f530ff94e841a095ff367a3ae8c5f5e7dbcb64e8f9044f6affdf24505
+    REF "json-c-${VERSION}"
+
+    SHA512 3be9058351acb3d9a66c7ae850391ebaa80472b42ee3f013f8b655743eb41b55513e0546c6798399af98ed049b80d11c93286ea3f5af26dc5f199905a28c4db1
     HEAD_REF master
-    PATCHES pkgconfig.patch
-            fix-clang-cl.patch
+    PATCHES
+        json_object_put-leak.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSON_BUILD_STATIC)
@@ -17,6 +18,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DBUILD_STATIC_LIBS=${JSON_BUILD_STATIC}
         -DBUILD_SHARED_LIBS=${JSON_BUILD_SHARED}
+        -DDISABLE_EXTRA_LIBS=ON
 )
 
 vcpkg_cmake_install()

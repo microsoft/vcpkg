@@ -1,0 +1,19 @@
+{
+  "name": "libtwolame",
+  "version": "0.4.0",
+  "description": "TwoLAME is an optimised MPEG Audio Layer 2 (MP2) encoder",
+  "homepage": "https://www.twolame.org",
+  "license": "LGPL-2.1-or-later",
+  "features": {
+    "tool": {
+      "description": "Build the twolame command-line frontend",
+      "dependencies": [
+        {
+          "name": "getopt-win32",
+          "platform": "windows & !mingw"
+        },
+        "libsndfile"
+      ]
+    }
+  }
+}

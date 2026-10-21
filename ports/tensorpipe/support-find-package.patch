@@ -48,7 +48,7 @@ index ce494722f..b722381f8 100644
 --- a/tensorpipe/python/CMakeLists.txt
 +++ b/tensorpipe/python/CMakeLists.txt
 @@ -14,3 +14,8 @@ endif()
- set(PYBIND11_CPP_STANDARD -std=c++14)
+ set(PYBIND11_CPP_STANDARD -std=c++17)
  pybind11_add_module(pytensorpipe tensorpipe.cc)
  target_link_libraries(pytensorpipe PRIVATE tensorpipe)
 +

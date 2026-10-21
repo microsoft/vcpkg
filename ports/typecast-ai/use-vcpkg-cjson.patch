@@ -1,0 +1,66 @@
+--- a/typecast-c/CMakeLists.txt
++++ b/typecast-c/CMakeLists.txt
+@@ -44,16 +44,15 @@
+ 
+ # Find CURL
+ find_package(CURL REQUIRED)
++find_package(cJSON CONFIG REQUIRED)
+ 
+ # Source files
+ set(TYPECAST_SOURCES
+     src/typecast.c
+-    src/cJSON.c
+ )
+ 
+ set(TYPECAST_HEADERS
+     include/typecast.h
+-    src/cJSON.h
+ )
+ 
+ # Shared library
+@@ -63,10 +62,8 @@
+         PUBLIC
+             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+             $<INSTALL_INTERFACE:include>
+-        PRIVATE
+-            ${CMAKE_CURRENT_SOURCE_DIR}/src
+     )
+-    target_link_libraries(typecast PRIVATE CURL::libcurl)
++    target_link_libraries(typecast PRIVATE CURL::libcurl cjson)
+     target_compile_definitions(typecast PRIVATE TYPECAST_BUILDING_DLL)
+     
+     # Set library version
+@@ -91,10 +88,8 @@
+         PUBLIC
+             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+             $<INSTALL_INTERFACE:include>
+-        PRIVATE
+-            ${CMAKE_CURRENT_SOURCE_DIR}/src
+     )
+-    target_link_libraries(typecast_static PRIVATE CURL::libcurl)
++    target_link_libraries(typecast_static PRIVATE CURL::libcurl cjson)
+     target_compile_definitions(typecast_static PUBLIC TYPECAST_STATIC)
+     
+     set_target_properties(typecast_static PROPERTIES
+--- a/typecast-c/src/typecast.c
++++ b/typecast-c/src/typecast.c
+@@ -29,7 +29,7 @@
+ #include <curl/curl.h>
+ 
+ #include "typecast.h"
+-#include "cJSON.h"
++#include <cjson/cJSON.h>
+ 
+ /* ============================================
+  * Internal Structures
+--- a/typecast-c/cmake/typecastConfig.cmake.in
++++ b/typecast-c/cmake/typecastConfig.cmake.in
+@@ -1,4 +1,8 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(CURL REQUIRED)
++find_dependency(cJSON CONFIG REQUIRED)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/typecastTargets.cmake")
+ check_required_components(typecast)

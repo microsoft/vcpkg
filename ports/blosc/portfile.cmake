@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc
     REF "v${VERSION}"
-    SHA512 01e6d80e1114d76c4bd1b413778c293d0455879ec38e1e1ec46e8e7eaf2997b47cc2de35bc52cdc4c2c70341b6f87d70626a9a9c24ffc8b7b170d760efa60c07
+    SHA512 f32ac9ca7dd473f32201cdf4b7bb61a89e8bc3e3d16e027d2c6dc1aa838cb47c42dfed6942c9108532b3920ed22a8c662e7451890177c9bbe6ec5b8ab65362b3
     HEAD_REF master
     PATCHES
       0001-fix-CMake-config.patch

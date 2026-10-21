@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO seladb/PcapPlusPlus
     REF "v${PCAPPLUSPLUS_VERSION}"
-    SHA512 e7dc1dbd85c9f0d2f9c5d3e436456c2cd183fb508c869fa8fb83f46aac99b868a16283204e5d57a0bfd7587f6ac2582b3e14c6098683fad4501708c8fededd6a
+    SHA512 06c1440a7f88cbef13e5cd2bfbd3c2c1be73f859fc778a25760e0af9ff988b2814a0888d6fadbb3771dfc155dacda5860aa865d8ec5f2cf348d1a1aa29d1cdf4
     HEAD_REF master
 )
 
@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPCAPPP_BUILD_EXAMPLES=OFF
+        -DPCAPPP_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()

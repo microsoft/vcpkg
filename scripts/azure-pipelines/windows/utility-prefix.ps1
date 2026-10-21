@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
+$UseManagedIdentity = $false
+
 <#
 .SYNOPSIS
 Gets a random file path in the temp directory.
@@ -17,109 +19,242 @@ Function Get-TempFilePath {
     [String]$Extension
   )
 
-  if ([String]::IsNullOrWhiteSpace($Extension)) {
-    throw 'Missing Extension'
-  }
-
   $tempPath = [System.IO.Path]::GetTempPath()
-  $tempName = [System.IO.Path]::GetRandomFileName() + '.' + $Extension
+  $tempName = [System.IO.Path]::GetRandomFileName()
+  if (-not [String]::IsNullOrWhiteSpace($Extension)) {
+    $tempName = $tempName + '.' + $Extension
+  }
   return Join-Path $tempPath $tempName
 }
 
 <#
 .SYNOPSIS
-Writes a message to the screen depending on ExitCode.
+Gets the download URL for an image asset.
 
 .DESCRIPTION
-Since msiexec can return either 0 or 3010 successfully, in both cases
-we write that installation succeeded, and which exit code it exited with.
-If msiexec returns anything else, we write an error.
+Get-AssetUrl returns the upstream URL unless UseManagedIdentity is specified,
+in which case it returns the corresponding vcpkgimageminting asset URL.
 
-.PARAMETER ExitCode
-The exit code that msiexec returned.
+.PARAMETER InternetUrl
+The upstream download URL.
+
+.PARAMETER BlobAssetName
+The asset file name in the vcpkgimageminting blob container.
 #>
-Function PrintMsiExitCodeMessage {
+Function Get-AssetUrl {
+  [CmdletBinding(PositionalBinding=$false)]
   Param(
-    $ExitCode
+    [Parameter(Mandatory)][uri]$InternetUrl,
+    [Parameter(Mandatory)][String]$BlobAssetName
   )
 
-  # 3010 is probably ERROR_SUCCESS_REBOOT_REQUIRED
-  if ($ExitCode -eq 0 -or $ExitCode -eq 3010) {
-    Write-Host "Installation successful! Exited with $ExitCode."
+  if (-not $UseManagedIdentity) {
+    return $InternetUrl
   }
-  else {
-    Write-Error "Installation failed! Exited with $ExitCode."
-    throw
+
+  return [uri]"https://vcpkgimageminting.blob.core.windows.net/assets/$([uri]::EscapeDataString($BlobAssetName))"
+}
+
+<#
+.SYNOPSIS
+Describes where installation content will be sourced from.
+
+.DESCRIPTION
+Get-ContentSourceDescription returns $null for a local copy, or a short string
+describing the remote source when the content must be downloaded.
+
+.PARAMETER LocalPath
+The path to a local copy of the content, if present.
+
+.PARAMETER Url
+The URL to download when no local copy is available.
+#>
+Function Get-ContentSourceDescription {
+  [CmdletBinding(PositionalBinding=$false)]
+  Param(
+    [Parameter(Mandatory)][System.IO.FileInfo]$LocalPath,
+    [Parameter(Mandatory)][uri]$Url
+  )
+
+  if (Test-Path -LiteralPath $LocalPath) {
+    return $null
+  }
+
+  if ($Url.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
+    return 'vcpkgimageminting using managed identity'
+  }
+
+  return 'the internet'
+}
+
+<#
+.SYNOPSIS
+Gets a local file path for an asset, downloading it if necessary.
+
+.DESCRIPTION
+Get-LocalOrDownloadedFile returns a local file when it exists next to the
+script, or downloads the content to a temporary location and returns that
+path instead.
+
+.PARAMETER Url
+The URL of the asset to acquire.
+
+.PARAMETER LocalName
+The optional local file name to look for next to the script.
+#>
+Function Get-LocalOrDownloadedFile {
+  [CmdletBinding(PositionalBinding=$false)]
+  Param(
+    [Parameter(Mandatory)][uri]$Url,
+    [String]$LocalName = $null
+  )
+
+  if ([string]::IsNullOrWhiteSpace($LocalName)) {
+    $LocalName = Split-Path -Leaf ($Url.LocalPath)
+  }
+
+  [string]$LocalPath = Join-Path $PSScriptRoot $LocalName
+  $contentSource = Get-ContentSourceDescription -LocalPath $LocalPath -Url $Url
+  if ($contentSource) {
+    Write-Host "Downloading $LocalName from $contentSource..."
+    $tempPath = Get-TempFilePath
+    New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
+    $downloadPath = Join-Path $tempPath $LocalName
+
+    if ($Url.Host -ieq 'vcpkgimageminting.blob.core.windows.net') {
+      $tokenResponseJson = curl.exe `
+        --fail `
+        --silent `
+        --show-error `
+        --noproxy '*' `
+        --header 'Metadata: true' `
+        'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fstorage.azure.com%2F'
+      if ($LASTEXITCODE -ne 0) {
+        throw 'Failed to acquire an Azure Storage access token from IMDS.'
+      }
+
+      $storageAccessToken = ($tokenResponseJson | ConvertFrom-Json).access_token
+      if ([string]::IsNullOrWhiteSpace($storageAccessToken)) {
+        throw 'IMDS returned an empty Azure Storage access token.'
+      }
+
+      curl.exe `
+        --fail `
+        --location `
+        --show-error `
+        --header "Authorization: Bearer $storageAccessToken" `
+        --header 'x-ms-version: 2023-11-03' `
+        --output $downloadPath `
+        $Url
+    } else {
+      curl.exe --fail --location --show-error --output $downloadPath $Url
+    }
+
+    if ($LASTEXITCODE -ne 0) {
+      throw "Failed to download $LocalName."
+    }
+
+    return [pscustomobject]@{
+      Path = $downloadPath
+      Temporary = $true
+    }
+  }
+
+  Write-Host "Using local copy of $LocalName..."
+  return [pscustomobject]@{
+    Path = $LocalPath
+    Temporary = $false
   }
 }
 
 <#
 .SYNOPSIS
-Install a .msi file.
+Download and install a component.
 
 .DESCRIPTION
-InstallMSI takes a url where an .msi lives, and installs that .msi to the system.
-
-.PARAMETER Name
-The name of the thing to install.
+DownloadAndInstall downloads an executable from the given URL, and runs it with the given command-line arguments.
 
 .PARAMETER Url
-The URL at which the .msi lives.
+The URL of the installer.
+
+.PARAMETER Args
+The command-line arguments to pass to the installer.
 #>
-Function InstallMSI {
+Function DownloadAndInstall {
+  [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [String]$Name,
-    [String]$Url
+    [Parameter(Mandatory)][uri]$Url,
+    [Parameter(Mandatory)][String[]]$Args,
+    [String]$LocalName = $null
   )
 
   try {
-    Write-Host "Downloading $Name..."
-    [string]$msiPath = Get-TempFilePath -Extension 'msi'
-    curl.exe -L -o $msiPath -s -S $Url
-    Write-Host "Installing $Name..."
-    $args = @('/i', $msiPath, '/norestart', '/quiet', '/qn')
-    $proc = Start-Process -FilePath 'msiexec.exe' -ArgumentList $args -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install $Name! $($_.Exception.Message)"
-    throw
+    $installer = Get-LocalOrDownloadedFile -Url $Url -LocalName $LocalName
+    $installerName = Split-Path -Path $installer.Path -Leaf
+
+    Write-Host "Installing $installerName..."
+    $proc = Start-Process -FilePath $installer.Path -ArgumentList $Args -Wait -PassThru
+    $exitCode = $proc.ExitCode
+
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    } elseif ($exitCode -eq 3010) {
+      Write-Host 'Installation successful! Exited with 3010 (ERROR_SUCCESS_REBOOT_REQUIRED).'
+    } else {
+      Write-Error "Installation failed! Exited with $exitCode."
+    }
+
+    if ($installer.Temporary) {
+      Remove-Item -LiteralPath $installer.Path -Force
+    }
+  } catch {
+    Write-Error "Installation failed! Exception: $($_.Exception.Message)"
   }
 }
 
 <#
 .SYNOPSIS
-Unpacks a zip file to $Dir.
+Download and install a zip file component.
 
 .DESCRIPTION
-InstallZip takes a URL of a zip file, and unpacks the zip file to the directory
-$Dir.
-
-.PARAMETER Name
-The name of the tool being installed.
+DownloadAndUnzip downloads a zip from the given URL, and extracts it to the indicated path.
 
 .PARAMETER Url
-The URL of the zip file to unpack.
+The URL of the zip to download.
 
-.PARAMETER Dir
-The directory to unpack the zip file to.
+.PARAMETER Destination
+The location to which the zip should be extracted
 #>
-Function InstallZip {
+Function DownloadAndUnzip {
+  [CmdletBinding(PositionalBinding=$false)]
   Param(
-    [String]$Name,
-    [String]$Url,
-    [String]$Dir
+    [Parameter(Mandatory)][uri]$Url,
+    [Parameter(Mandatory)][System.IO.DirectoryInfo]$Destination,
+    [switch]$StripRootDirectory,
+    [String]$LocalName = $null
   )
 
   try {
-    Write-Host "Downloading $Name..."
-    [string]$zipPath = Get-TempFilePath -Extension 'zip'
-    curl.exe -L -o $zipPath -s -S $Url
-    Write-Host "Installing $Name..."
-    Expand-Archive -Path $zipPath -DestinationPath $Dir -Force
-  }
-  catch {
-    Write-Error "Failed to install $Name! $($_.Exception.Message)"
-    throw
+    $zip = Get-LocalOrDownloadedFile -Url $Url -LocalName $LocalName
+    $zipName = Split-Path -Path $zip.Path -Leaf
+
+    Write-Host "Installing $zipName to $Destination..."
+    if ($StripRootDirectory) {
+      & tar.exe -xvf $zip.Path --strip 1 --directory $Destination
+    } else {
+      & tar.exe -xvf $zip.Path --directory $Destination
+    }
+
+    if ($LASTEXITCODE -eq 0) {
+      Write-Host 'Installation successful!'
+    } else {
+      Write-Error "Installation failed! Exited with $LASTEXITCODE."
+    }
+
+    if ($zip.Temporary) {
+      Remove-Item -LiteralPath $zip.Path -Force
+    }
+  } catch {
+    Write-Error "Installation failed! Exception: $($_.Exception.Message)"
   }
 }

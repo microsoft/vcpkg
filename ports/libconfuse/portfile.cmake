@@ -1,39 +1,36 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO martinh/libconfuse
-    REF 67e1207c8de440525a3fdde1448a586791ebc052
-    SHA512 15d4eb0640fe74cc90910820715a70b2f944d2ed9753cca3be90f0ac6840beeda6a370b0624588d81ed2def2f8463e404473721351a685af711cf1d59efb870a
-    HEAD_REF master
+# Don't change to vcpkg_from_github: The raw repo lacks gettext macros.
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/libconfuse/libconfuse/releases/download/v${VERSION}/confuse-${VERSION}.tar.xz"
+    FILENAME "libconfuse-confuse-${VERSION}.tar.xz"
+    SHA512 3b53b8bbda339f8af479219f39a14b0772e33236b2f3cd6f2cf022b03bd8a580d2dd7595232cf0524b03a5d8884ca7481bdb33c49d15b5d0ee044af5add4011f
 )
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/config.h.in" DESTINATION "${SOURCE_PATH}")
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+)
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
 vcpkg_add_to_path("${FLEX_DIR}")
 
-vcpkg_cmake_configure(
+set(ENV{AUTOPOINT} true) # true, the program
+
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
+    OPTIONS
+        --disable-examples
+        --disable-nls
 )
-
-vcpkg_cmake_install()
-
+vcpkg_make_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/confuse.h"
-        "ifdef BUILDING_STATIC"
-        "if 1 // ifdef BUILDING_STATIC"
-    )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/confuse.h" "ifdef BUILDING_STATIC" "if 1")
 endif()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
+file(INSTALL "${CURRENT_PORT_DIR}/unofficial-libconfuse-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libconfuse")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -2,14 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/cppgraphqlgen
     REF "v${VERSION}"
-    SHA512 8079b2690ef4fba491e96ef2ed3da61d0c0b7bee3f61fa6d1fb95c771f1a8220a7b15b489b21bf9b1627e8616f95c65b43b8f63ee93cb0193edac4cb54307b3a
+    SHA512 eb26e6b9b51eabeb84ab82035097579dcdc5f44cc1d50ae85303bbab8fcc2a3da0749cef4e15bf09adb62a4783446bb8b661666db52517b2e98543177f662eb5
     HEAD_REF main
+    PATCHES
+        356.patch # https://patch-diff.githubusercontent.com/raw/microsoft/cppgraphqlgen/pull/356.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        clientgen   GRAPHQL_BUILD_CLIENTGEN
         rapidjson   GRAPHQL_USE_RAPIDJSON
+        schemagen   GRAPHQL_BUILD_SCHEMAGEN
 )
 
 vcpkg_cmake_configure(
@@ -32,9 +36,19 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
-vcpkg_copy_tools(
-    TOOL_NAMES schemagen clientgen
-    SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/cppgraphqlgen)
+set(tools "")
+if ("clientgen" IN_LIST FEATURES)
+    list(APPEND tools clientgen)
+endif()
+if ("schemagen" IN_LIST FEATURES)
+    list(APPEND tools schemagen)
+endif()
+list(LENGTH tools num_tools)
+if (num_tools GREATER 0)
+    vcpkg_copy_tools(
+        TOOL_NAMES ${tools}
+        SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/cppgraphqlgen)
+endif()
 
 vcpkg_copy_pdbs()
 

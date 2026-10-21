@@ -1,19 +1,14 @@
-# Header only
-vcpkg_buildpath_length_warning(37)
+set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF v5.6.1
-    SHA512 943413bf3b94da066d47051b22f1c1b66a39a43dad865dd0e4912a9ae6508d9a490bcfe4ef7d662844e9a1ba6e552748fad785b52b2cce98133c2dfdfbfe1a4d
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 6c94b58302454315ad5abce08484d93d38d7772e44d28051ec2188bdbc88852c45ff67ccdcd214d8872d2df92e47751d658f96a4d5b8c0ed167be8e6165ef667
+    HEAD_REF main
+    PATCHES
+        progbits.patch # https://github.com/CGAL/cgal/pull/9634
 )
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        qt WITH_CGAL_Qt5
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -26,7 +21,6 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         CGAL_BUILD_THREE_DOC
         CGAL_HEADER_ONLY
-        WITH_CGAL_Qt5
 )
 
 vcpkg_cmake_install()
@@ -49,16 +43,18 @@ else()
     endforeach()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/man")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+)
 
-set(LICENSES
-    "${SOURCE_PATH}/Installation/LICENSE"
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/Installation/LICENSE"
         "${SOURCE_PATH}/Installation/LICENSE.BSL"
         "${SOURCE_PATH}/Installation/LICENSE.RFL"
         "${SOURCE_PATH}/Installation/LICENSE.GPL"
         "${SOURCE_PATH}/Installation/LICENSE.LGPL"
 )
-
-vcpkg_install_copyright(FILE_LIST ${LICENSES})
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

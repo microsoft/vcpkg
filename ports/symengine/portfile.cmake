@@ -1,16 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symengine/symengine
-    REF 450a0277e1116ab8c52582df9c77d42f9db3092a # unreleased version with LLVM 18 support
-    SHA512 fb9bfe3cf6d48051b86f28c749cfdc19a2d5c1fc750f3c45c422559e9b8b9736d1cb542af5023a876640d917ad2198b24385fd085d8e20ff97e7ee660e056605
+    REF "v${VERSION}"
+    SHA512 4d9945e13274c8115864836dec08382d8e925e299df32a2745feb58c721cff109aed12cdab92f3f0fcd41e18df022ad1b05d8e279de6adaec467f4c94de057d4
     HEAD_REF master
+    PATCHES
+        fix-series-division.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         arb WITH_ARB
-        flint WITH_FLINT 
+        flint WITH_FLINT
         mpfr WITH_MPFR
         tcmalloc WITH_TCMALLOC
         llvm WITH_LLVM

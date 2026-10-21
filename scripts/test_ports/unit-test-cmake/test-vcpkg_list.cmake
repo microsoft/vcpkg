@@ -615,7 +615,7 @@ unit_test_check_variable_equal(
 set(lst [[a\;b;a\;b]])
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_DUPLICATES lst)]]
-    lst [[a\;b]] 
+    lst [[a\;b]]
 )
 
 set(lst [[c;a\;b;c]])
@@ -649,7 +649,7 @@ unit_test_check_variable_equal(
 set(lst [[a\;b;a\;b\\;c]])
 unit_test_check_variable_equal(
     [[vcpkg_list(REVERSE lst)]]
-    lst [[a\;b\\;c;a\;b]] 
+    lst [[a\;b\\;c;a\;b]]
 )
 set(lst [[c;a\;b]])
 unit_test_check_variable_equal(
@@ -713,7 +713,7 @@ unit_test_check_variable_equal(
 set(lst [[e;a\;b;c\;d]])
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_ITEM lst "a;b")]]
-    lst [[e;c\;d]] 
+    lst [[e;c\;d]]
 )
 
 set(lst [[c;a\;b;c]])
@@ -779,15 +779,15 @@ unit_test_check_variable_equal(
 set(lst [[e;a\;b;c\;d]])
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_AT lst 0)]]
-    lst [[a\;b;c\;d]] 
+    lst [[a\;b;c\;d]]
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_AT lst 1)]]
-    lst [[e;c\;d]] 
+    lst [[e;c\;d]]
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_AT lst -1)]]
-    lst [[e;a\;b]] 
+    lst [[e;a\;b]]
 )
 
 set(lst [[c;a\\;b;c\;d;e]])

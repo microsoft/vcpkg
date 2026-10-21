@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO slirp/libslirp
     REF "v${VERSION}"
-    SHA512 eef9d77f1588c4e3dcf91cd53e54db235d624998fc64df75d389657411635f28bfcbe0c81cd3b0ede7792eea1eb7ef716b8a87a199a6be1e9a29da27ca4a1df4
+    SHA512 cdb66f6280a9982de3c32269aee352bdf225db918590255abaed9bcd0aee4e996d2d8c2c3f62473f57485603ec29fd35723b0649d3ec3c41cc28b22ce913f63b
     HEAD_REF master
 )
 

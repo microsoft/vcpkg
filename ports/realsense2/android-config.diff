@@ -1,0 +1,12 @@
+diff --git a/CMake/android_config.cmake b/CMake/android_config.cmake
+index 203003e..487e60a 100644
+--- a/CMake/android_config.cmake
++++ b/CMake/android_config.cmake
+@@ -10,7 +10,6 @@ macro(os_set_flags)
+     set(BUILD_TOOLS OFF)
+     set(BUILD_WITH_OPENMP OFF)    
+     set(BUILD_GRAPHICAL_EXAMPLES OFF)
+-    set(ANDROID_STL "c++_static")
+     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC -pedantic -g -D_DEFAULT_SOURCE")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pedantic -g -Wno-missing-field-initializers")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-switch -Wno-multichar")

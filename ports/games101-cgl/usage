@@ -1,7 +1,0 @@
-The package games101-cgl provides CMake targets:
-
-    find_package(games101-cgl CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE games101-cgl)
-    
-    And include header file like:
-        #include <CGL/CGL.h>

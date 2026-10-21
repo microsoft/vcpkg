@@ -1,5 +1,0 @@
-The package plibsys provides CMake targets:
-
-    find_package(plibsys CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${PLIBSYS_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${PLIBSYS_LIBRARIES})

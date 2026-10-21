@@ -4,9 +4,9 @@ endif()
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO ccxvii/mujs
+  REPO ArtifexSoftware/mujs
   REF "${VERSION}"
-  SHA512 0806684be5e6dc3cb7305355ab7c7babbfd3fd5bbd22515659a88a82c25f3f4b6af14f7ca07bacd154823b19110b749bba68311c9f317dd684e0fd5628ece573
+  SHA512 52954ec5a8a7ca91c818936c24b7fb757bfb14e75f2311a5550b76838c8a6caf6d8c18dc599e77fc5b774b1ced671b30fec1330ad400b89ea3b355fcb0b581b8
   HEAD_REF master
 )
 
@@ -26,5 +26,8 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-mujs)
 vcpkg_copy_pdbs()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+  FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/SpecialCasing.txt"
+)

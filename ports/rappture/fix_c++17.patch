@@ -1,0 +1,15 @@
+diff --git a/src/core/RpUnits.h b/src/core/RpUnits.h
+index e697424..fb9b3b5 100644
+--- a/src/core/RpUnits.h
++++ b/src/core/RpUnits.h
+@@ -393,9 +393,7 @@ class RpUnits
+             return true;
+ 
+         }
+-        struct _key_compare:
+-            public
+-            std::binary_function<std::string,std::string,bool> {
++        struct _key_compare {
+ 
+                 bool operator() (   const std::string& lhs,
+                                     const std::string& rhs ) const

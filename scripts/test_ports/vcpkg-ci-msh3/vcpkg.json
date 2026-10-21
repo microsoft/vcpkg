@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-msh3",
+  "version-string": "ci",
+  "description": "Validates msh3",
+  "dependencies": [
+    "msh3",
+    {
+      "name": "msquic",
+      "features": [
+        "0-rtt"
+      ],
+      "platform": "windows & !static"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

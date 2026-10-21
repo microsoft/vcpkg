@@ -1,0 +1,18 @@
+diff --git a/meson.build b/meson.build
+index 9633c63..12a803f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -66,6 +66,13 @@ else
+   )
+ endif
+ 
++import('pkgconfig').generate(
++  stc_lib,
++  name: 'stc',
++  description: 'A modern, user friendly, generic, type-safe and fast C99 container library.',
++  url: 'https://github.com/stclib/STC',
++)
++
+ install_headers(
+   'include/stc/algorithm.h',
+   'include/stc/arc.h',

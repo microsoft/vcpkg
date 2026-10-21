@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 79ef1f0..6790d5c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,15 +6,6 @@
+ # policies up to CMake 3.27
+ cmake_minimum_required(VERSION 3.15...3.27)
+ 
+-# set preference for clang compiler and intel compiler over gcc and other compilers
+-include(Platform/${CMAKE_SYSTEM_NAME}-Determine-C OPTIONAL)
+-include(Platform/${CMAKE_SYSTEM_NAME}-C OPTIONAL)
+-set(CMAKE_C_COMPILER_NAMES clang gcc icx cc ${CMAKE_C_COMPILER_NAMES})
+-
+-include(Platform/${CMAKE_SYSTEM_NAME}-Determine-CXX OPTIONAL)
+-include(Platform/${CMAKE_SYSTEM_NAME}-CXX OPTIONAL)
+-set(CMAKE_CXX_COMPILER_NAMES clang++ g++ icpx c++ ${CMAKE_CXX_COMPILER_NAMES})
+-
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+ 
+ option(HIGHS_VCPKG "Vcpkg integration: " OFF)

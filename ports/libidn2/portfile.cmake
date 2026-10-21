@@ -1,8 +1,8 @@
 set(IDN2_FILENAME "libidn2-${VERSION}.tar.gz")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
+    URLS "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
+         "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
     SHA512 eab5702bc0baed45492f8dde43a4d2ea3560ad80645e5f9e0cfa8d3b57bccd7fd782d04638e000ba07924a5d9f85e760095b55189188c4017b94705bef9b4a66
 )
@@ -28,11 +28,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 set(ENV{GTKDOCIZE} true)
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     COPY_SOURCE # include dir order problem
-    USE_WRAPPERS
     OPTIONS
         ${options}
         --disable-gtk-doc
@@ -47,7 +46,7 @@ vcpkg_configure_make(
         "CFLAGS=\$CFLAGS -I${CURRENT_INSTALLED_DIR}/include"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 

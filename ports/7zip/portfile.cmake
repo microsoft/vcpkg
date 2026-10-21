@@ -1,9 +1,14 @@
+string(REGEX REPLACE "[.]([0-9])\$" ".0\\1" upstream_version "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ip7z/7zip
-    REF "${VERSION}"
-    SHA512 9ce8acdbbb44045c5c9983db1093b6abc78439ee2b0ba57820a44a08d0787cb5ab34e25fd3ff33a93f274cc006684ce6013d4e98b47e7834318898e9d10d2259
+    REF "${upstream_version}"
+    SHA512 3037cdebf29b1a44e123aee3daec168e8b8ec97b58446c1ba1a54aa1b306d48c2f9fb16bb5ad48ec1cd415e6cd035461cb900de7d848a6bc19a21dd077175935
     HEAD_REF main
+    PATCHES
+        sort-asm.diff
+        fix_timespec_get_broken_on_android.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -11,6 +16,8 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/7zip-config.cmake.in" DESTINATION "${SOURCE
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
 )
 
 vcpkg_cmake_install()

@@ -1,0 +1,107 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d8e02fcec..e6e6d66e6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,8 @@ project(boost_asio VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
+ 
+ add_library(boost_asio_core INTERFACE)
+ add_library(Boost::asio_core ALIAS boost_asio_core)
++set(boost_asio_install_targets boost_asio_core)
++set(boost_asio_aliases Boost::asio_core)
+ 
+ target_include_directories(boost_asio_core INTERFACE include)
+ 
+@@ -27,47 +29,60 @@ target_link_libraries(boost_asio_core
+ target_compile_features(boost_asio_core INTERFACE cxx_std_11)
+ 
+ # deadline_timer support
++option(BOOST_ASIO_SUPPORT_DEADLINE_TIMER "Support deadline_timer" ON)
+ 
+-add_library(boost_asio_deadline_timer INTERFACE)
+-add_library(Boost::asio_deadline_timer ALIAS boost_asio_deadline_timer)
++if (BOOST_ASIO_SUPPORT_DEADLINE_TIMER)
++  add_library(boost_asio_deadline_timer INTERFACE)
++  add_library(Boost::asio_deadline_timer ALIAS boost_asio_deadline_timer)
++  list(APPEND boost_asio_install_targets boost_asio_deadline_timer)
++  list(APPEND boost_asio_aliases Boost::asio_deadline_timer)
+ 
+-target_include_directories(boost_asio_deadline_timer INTERFACE include)
++  target_include_directories(boost_asio_deadline_timer INTERFACE include)
+ 
+-target_link_libraries(boost_asio_deadline_timer
+-  INTERFACE
+-    Boost::asio_core
+-    Boost::date_time
+-)
++  target_link_libraries(boost_asio_deadline_timer
++    INTERFACE
++      Boost::asio_core # Internal dependency (this comment disables adding the internal library to the dependency list in BoostRoot.cmake)
++      $<TARGET_NAME_IF_EXISTS:Boost::date_time>
++  )
+ 
+-target_compile_features(boost_asio_deadline_timer INTERFACE cxx_std_11)
++  target_compile_features(boost_asio_deadline_timer INTERFACE cxx_std_11)
++else()
++  target_compile_definitions(boost_asio_core INTERFACE BOOST_ASIO_DISABLE_BOOST_DATE_TIME)
++endif()
+ 
+ # spawn (stackful coroutines) support
++option(BOOST_ASIO_SUPPORT_SPAWN "Support spawn (stackful coroutines)" ON)
+ 
+-add_library(boost_asio_spawn INTERFACE)
+-add_library(Boost::asio_spawn ALIAS boost_asio_spawn)
++if (BOOST_ASIO_SUPPORT_SPAWN)
++  add_library(boost_asio_spawn INTERFACE)
++  add_library(Boost::asio_spawn ALIAS boost_asio_spawn)
++  list(APPEND boost_asio_install_targets boost_asio_spawn)
++  list(APPEND boost_asio_aliases Boost::asio_spawn)
+ 
+-target_include_directories(boost_asio_spawn INTERFACE include)
++  target_include_directories(boost_asio_spawn INTERFACE include)
+ 
+-target_link_libraries(boost_asio_spawn
+-  INTERFACE
+-    Boost::asio_core
+-    Boost::context
+-)
++  target_link_libraries(boost_asio_spawn
++    INTERFACE
++      Boost::asio_core # Internal dependency
++      $<TARGET_NAME_IF_EXISTS:Boost::context>
++  )
+ 
+-target_compile_features(boost_asio_spawn INTERFACE cxx_std_11)
++  target_compile_features(boost_asio_spawn INTERFACE cxx_std_11)
++else()
++  target_compile_definitions(boost_asio_core INTERFACE BOOST_ASIO_DISABLE_BOOST_CONTEXT_FIBER)
++endif()
+ 
+ # the works
+ 
+ add_library(boost_asio INTERFACE)
+ add_library(Boost::asio ALIAS boost_asio)
++list(APPEND boost_asio_install_targets boost_asio)
+ 
+ target_include_directories(boost_asio INTERFACE include)
+ 
+ target_link_libraries(boost_asio
+   INTERFACE
+-    Boost::asio_core
+-    Boost::asio_deadline_timer
+-    Boost::asio_spawn
++    ${boost_asio_aliases}
+ )
+ 
+ target_compile_features(boost_asio INTERFACE cxx_std_11)
+@@ -75,10 +90,7 @@ target_compile_features(boost_asio INTERFACE cxx_std_11)
+ if (BOOST_SUPERPROJECT_VERSION AND NOT CMAKE_VERSION VERSION_LESS 3.13)
+   boost_install(
+     TARGETS
+-      boost_asio_core
+-      boost_asio_deadline_timer
+-      boost_asio_spawn
+-      boost_asio
++      ${boost_asio_install_targets}
+     VERSION
+       "${BOOST_SUPERPROJECT_VERSION}"
+     HEADER_DIRECTORY

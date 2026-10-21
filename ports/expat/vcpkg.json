@@ -1,10 +1,9 @@
 {
   "name": "expat",
-  "version": "2.6.2",
-  "port-version": 1,
+  "version": "2.9.0",
   "description": "XML parser library written in C",
   "homepage": "https://github.com/libexpat/libexpat",
-  "license": "MIT",
+  "license": "MIT AND CC0-1.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

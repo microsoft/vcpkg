@@ -1,10 +1,11 @@
-diff -u -r a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index 6f786ab..5af9c2e 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -193,6 +193,11 @@
- else ()
-     set (OpenColorIO_FOUND 0)
+@@ -146,6 +146,11 @@ if (NOT OPENCOLORIO_INCLUDES)
+     get_target_property(OPENCOLORIO_INCLUDES OpenColorIO::OpenColorIO INTERFACE_INCLUDE_DIRECTORIES)
  endif ()
+ include_directories(BEFORE ${OPENCOLORIO_INCLUDES})
 +if(USE_OPENCOLORIO AND TARGET Imath::Imath AND OIIO_USING_IMATH STREQUAL "2")
 +    message(FATAL_ERROR
 +        "OpenColorIO and OpenEXR use incompatible versions of Imath. "

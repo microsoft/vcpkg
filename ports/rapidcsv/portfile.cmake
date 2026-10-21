@@ -2,15 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO d99kris/rapidcsv
     REF "v${VERSION}"
-    SHA512 721e82306315481dbec88a1c150568d038ab57f50dd2d8fd13bfe66cc55f62bedcca1392610ff678ef06fa7908a876a6d38a8fb7afd5c17f2b3d1b3a57661d26
+    SHA512 5fb55ecac8d3f55e6a81ee60b1f72bad1bc6d4ac51b45abacc14b3974b7cc9dd6f015db8b234d112cac1d625db542c603fff17a33765aa91aa43b9567aef696b
     HEAD_REF master
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

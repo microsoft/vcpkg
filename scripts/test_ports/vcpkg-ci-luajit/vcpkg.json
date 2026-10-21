@@ -1,0 +1,27 @@
+{
+  "name": "vcpkg-ci-luajit",
+  "version-string": "ci",
+  "description": "Validate port luajit",
+  "dependencies": [
+    {
+      "name": "luajit",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "$comment": "The platform expression is tuned for vcpkg CI.",
+      "name": "run-programs",
+      "platform": "native | (!android & !arm64)"
+    }
+  ],
+  "features": {
+    "run-programs": {
+      "description": "Run luajit and user program"
+    }
+  }
+}

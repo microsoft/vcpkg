@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4c7c2d2..e1b4ba6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,6 +21,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ add_library(thermo INTERFACE)
+ add_library(thermo::thermo ALIAS thermo)
+ 
++target_compile_options(thermo INTERFACE
++    "$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>"
++    "$<$<CXX_COMPILER_ID:MSVC>:/utf-8>"
++)
++
+ target_include_directories(thermo INTERFACE
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:include>

@@ -63,11 +63,11 @@ function(vcpkg_configure_qmake)
         vcpkg_list(APPEND arg_OPTIONS "CONFIG-=shared" "CONFIG*=static")
     else()
         vcpkg_list(APPEND arg_OPTIONS "CONFIG-=static" "CONFIG*=shared")
-        vcpkg_list(APPEND arg_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
+    vcpkg_list(APPEND arg_OPTIONS "CONFIG*=force_debug_info")
 
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static-runtime")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static_runtime")
     endif()
 
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)

@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2b9ca8ed6..1881eb221 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,6 +13,7 @@ endif()
+ 
+ # Project
+ project(protobuf C CXX)
++include(GNUInstallDirs)
+ 
+ if(CMAKE_CXX_STANDARD AND CMAKE_CXX_STANDARD LESS 17)
+   message(FATAL_ERROR "The minimum supported C++ standard is C++ 17")

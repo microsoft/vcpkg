@@ -1,0 +1,38 @@
+diff --git a/libnfb/CMakeLists.txt b/libnfb/CMakeLists.txt
+index 3c64d30..b78ece9 100644
+--- a/libnfb/CMakeLists.txt
++++ b/libnfb/CMakeLists.txt
+@@ -41,6 +41,12 @@ if (NOT NFB_DRIVER_INCLUDE_DIRS)
+ 	message(FATAL_ERROR "NFB driver headers not found, cannot continue")
+ endif ()
+ 
++find_path(FPGA_IMAGE_LOAD_INCLUDE_DIRS
++    NAMES fpga-image-load.h
++	 PATH_SUFFIXES uapi/linux
++	 REQUIRED
++)
++
+ set(LIBNFB_SOURCES
+ 	src/bus/mi.c src/nfb.c src/ndp/ndp.c src/info.c
+ 	src/boot/mtd.c src/boot/boot.c src/boot/filetype_mcs.c src/boot/filetype_bit.c src/boot/filetype_rpd.c src/boot/bit_reverse_table.c
+@@ -55,6 +61,7 @@ target_include_directories(nfb
+ 	PRIVATE src ${NFB_DRIVER_INCLUDE_DIRS}/../..
+ 		${FDT_INCLUDE_DIRS}
+ 		${NUMA_INCLUDE_DIRS}
++		${FPGA_IMAGE_LOAD_INCLUDE_DIRS}
+ )
+ set_target_properties(nfb PROPERTIES
+ 	OUTPUT_NAME nfb
+diff --git a/libnfb/src/boot/boot.c b/libnfb/src/boot/boot.c
+index 3f26187..b7769e8 100644
+--- a/libnfb/src/boot/boot.c
++++ b/libnfb/src/boot/boot.c
+@@ -19,7 +19,7 @@
+ 
+ #include <libfdt.h>
+ 
+-#include <uapi/linux/nfb-fpga-image-load.h>
++#include <uapi/linux/fpga-image-load.h>
+ 
+ #include <linux/nfb/boot.h>
+ #include <nfb/nfb.h>

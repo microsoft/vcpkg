@@ -1,0 +1,16 @@
+{
+  "name": "vcpkg-ci-subversion",
+  "version-string": "ci",
+  "description": "Validates subversion",
+  "dependencies": [
+    "subversion",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

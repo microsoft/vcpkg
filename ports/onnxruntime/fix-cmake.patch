@@ -1,0 +1,24 @@
+diff --git a/cmake/onnxruntime_framework.cmake b/cmake/onnxruntime_framework.cmake
+index c875cac..f1eeeac 100644
+--- a/cmake/onnxruntime_framework.cmake
++++ b/cmake/onnxruntime_framework.cmake
+@@ -129,5 +129,5 @@ else()
+             ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
+-            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
+diff --git a/cmake/onnxruntime_webassembly.cmake b/cmake/onnxruntime_webassembly.cmake
+index 4213b9c..14c5516 100644
+--- a/cmake/onnxruntime_webassembly.cmake
++++ b/cmake/onnxruntime_webassembly.cmake
+@@ -94,7 +94,7 @@ if (NOT onnxruntime_ENABLE_WEBASSEMBLY_THREADS)
+   )
+ 
+   # Override re2 compiler options to remove -pthread
+-  set_property(TARGET re2 PROPERTY COMPILE_OPTIONS )
++  # set_property(TARGET re2 PROPERTY COMPILE_OPTIONS )
+ endif()
+ 
+ if (NOT onnxruntime_USE_VCPKG)

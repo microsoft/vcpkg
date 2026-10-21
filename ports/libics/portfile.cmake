@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO svi-opensource/libics
     REF "${VERSION}"
-    SHA512 290d6d7bd3f5611d0b46aa6406ef10449ee768bc14d0b34f0bb365ca46f98b7fd4065c94fd9594e357427a4d0644f2724a1f773c7f3b43adc3db2389b94ee88e
+    SHA512 6f09d0ece4a5db425ded3b2012fc328e75ab1f750e91fe2eb191b91b7cf2da69a9a5e523adf31db0dd887f96229afec722d5411cf96d451bdf2f7e6646a96323
     HEAD_REF master
-    PATCHES fix-integral-include.patch
 )
 
 vcpkg_cmake_configure(
@@ -18,4 +17,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/GNU_LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/GNU_LICENSE")

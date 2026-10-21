@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaanDeMeyer/reproc
-    REF "v${VERSION}"
-    SHA512 c592521960f1950d626261738091d25efdf764ee1a0c72a58c28c66eaebf6073b2c978f1dc2c8dbe89b0be7ec1629a3a45cb1fafa0ebe21b5df8d4d27c992675
+    REF "${VERSION}"
+    SHA512 d0f630ab1a9c43bbbda3ab4fbe7909966845be7b146ed5306ee1f864b6c29751e71a636d3414d3e8ff3f3a31054bbb69298b26f45a6c3b7b22191eed70e9d380
     HEAD_REF main
-    PATCHES
-        fix-gcc13-build-error.patch #Please remove it in the next release version
 )
 
 vcpkg_cmake_configure(

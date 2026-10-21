@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jbaldwin/libcoro
     REF "v${VERSION}"
-    SHA512 fd3eb22a055db9567da482182a90d44c79ee8ccb641490945cb45b07686a32a31b7b37aa35b1f3f676a6ede366db01c9cd7b5f7ded899cb1133cdd1aac510154
+    SHA512 d5b1a089f55a19d7c58fac5e1b6471e1835c712eb0ec3c452cc219ed0553fbf64c86a453d32553dc5a7a4b841fd58c3d18563ec4ea9474b1e60f73d8339c5505
     HEAD_REF master
+    PATCHES
+        add-experimental-library.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

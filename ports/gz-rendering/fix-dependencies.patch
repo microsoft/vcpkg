@@ -1,0 +1,73 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96ce8913..4ef6b63c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,13 +55,13 @@ set(GZ_UTILS_VER ${gz-utils3_VERSION_MAJOR})
+ if (APPLE)
+   gz_find_package(OpenGL
+     REQUIRED_BY ogre ogre2
+-    PKGCONFIG gl)
++    )
+ else()
+   gz_find_package(OpenGL REQUIRED
+     COMPONENTS OpenGL
+     OPTIONAL_COMPONENTS EGL
+     REQUIRED_BY ogre ogre2
+-    PKGCONFIG gl)
++    PKGCONFIG opengl)
+ endif()
+ 
+ if (OpenGL_FOUND)
+@@ -70,6 +70,7 @@ endif()
+ 
+ #--------------------------------------
+ # Find OGRE
++if(0)
+ list(APPEND gz_ogre_components "RTShaderSystem" "Terrain" "Overlay" "Paging")
+ 
+ gz_find_package(GzOGRE VERSION 1.9.0
+@@ -87,6 +88,7 @@ if (NOT USE_UNOFFICIAL_OGRE_VERSIONS)
+                       "could be reduced to accepting patches for newer versions")
+   endif()
+ endif()
++endif()
+ 
+ if (OGRE_FOUND)
+   # find boost - mainly needed on macOS and also by the terrain component
+diff --git a/ogre2/src/terrain/Terra/CMakeLists.txt b/ogre2/src/terrain/Terra/CMakeLists.txt
+--- a/ogre2/src/terrain/Terra/CMakeLists.txt
++++ b/ogre2/src/terrain/Terra/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ 
+-project(terra)
++project(terra9)
+ 
+ file( GLOB_RECURSE TERRA_SOURCES
+   ${CMAKE_CURRENT_LIST_DIR}/include/*.h
+   ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp
+@@ -32,8 +32,10 @@
+     # we must add this one manually for this to build correctly
+     ${OGRE2_INCLUDE}/Hlms/Pbs
+     ${OGRE2_INCLUDE}/Hlms/Common
+   PUBLIC
+-    ${CMAKE_CURRENT_LIST_DIR}/include
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>  
++    $<INSTALL_INTERFACE:include>
+ )
+ 
+ target_link_libraries(${PROJECT_NAME} PRIVATE GzOGRE2::GzOGRE2)
++install(TARGETS ${PROJECT_NAME} EXPORT gz-rendering9-ogre2)
+diff --git a/ogre2/src/CMakeLists.txt b/ogre2/src/CMakeLists.txt
+--- a/ogre2/src/CMakeLists.txt
++++ b/ogre2/src/CMakeLists.txt
+@@ -58,9 +58,9 @@
+     gz-math${GZ_MATH_VER}::eigen3
+   PRIVATE
+     gz-plugin${GZ_PLUGIN_VER}::register
+     ${OPENGL_LIBRARIES}
+-    terra
++    terra9
+     GzOGRE2::GzOGRE2)
+ 
+ 
+ if (TARGET OpenGL::EGL)

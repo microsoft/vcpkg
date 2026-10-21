@@ -1,81 +1,82 @@
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "force-build" FORCE_BUILD
+        "scanner" BUILD_SCANNER
 )
 
-if(NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT FORCE_BUILD)
+if(NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT BUILD_SCANNER)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
 
-if (NOT FORCE_BUILD OR NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES)
+if(FORCE_BUILD AND NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES)
+    message(FATAL_ERROR "To build wayland libraries with the `force-build` feature, the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")
+endif()
+if(X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES AND NOT FORCE_BUILD AND NOT BUILD_SCANNER)
     message(FATAL_ERROR "To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.")
+endif()
+if(BUILD_SCANNER AND NOT FORCE_BUILD)
+    # wayland[scanner] is a tool-only build; headers are installed only with the libraries.
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wayland/wayland
-    REF  8135e856ebd79872f886466e9cee39affb7d9ee8
-    SHA512 c4115187826083e5f01a24dad0c4377458b7ca22973ea161ec9d4aeeb21869bdb9acd7ba7e89aba964571ce2fde319cb01808e94e502ff09061bf5fbd3a60079
+    REF  ${VERSION}
+    SHA512 24c8cb42598d0d0d78831b200630cb2254c81241661b7977f30d4d733f6efceac91768784db64d0991e2044adf04049a6d3f5b27a5d9ceab8605dd89589abb68
     HEAD_REF master
+    PATCHES
+        cross-build.diff
 )
 
-if(VCPKG_CROSSCOMPILING)
-    set(OPTIONS -Dscanner=false)
-else()
-    set(OPTIONS -Dscanner=true)
+set(BINARIES "")
+
+# vcpkg feature variables are CMake booleans (ON/OFF), but Meson boolean options
+# require true/false. Translate them here before passing them to meson setup.
+set(MESON_BUILD_LIBRARIES false)
+if(FORCE_BUILD)
+    set(MESON_BUILD_LIBRARIES true)
 endif()
+
+set(MESON_BUILD_SCANNER false)
+if(BUILD_SCANNER OR (FORCE_BUILD AND NOT VCPKG_CROSSCOMPILING))
+    set(MESON_BUILD_SCANNER true)
+endif()
+if(FORCE_BUILD AND VCPKG_CROSSCOMPILING)
+    list(APPEND BINARIES "wayland_scanner = ['${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/wayland-scanner${VCPKG_HOST_EXECUTABLE_SUFFIX}']")
+    set(MESON_BUILD_SCANNER false)
+endif()
+set(OPTIONS
+    -Dlibraries=${MESON_BUILD_LIBRARIES}
+    -Dscanner=${MESON_BUILD_SCANNER}
+)
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -Ddtd_validation=false
-            -Ddocumentation=false
-            -Dtests=false
-            ${OPTIONS}
+    OPTIONS
+        ${OPTIONS}
+        -Ddocumentation=false
+        -Ddtd_validation=false
+        -Dtests=false
+    ADDITIONAL_BINARIES
+        ${BINARIES}
 )
 vcpkg_install_meson()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/" AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-private${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
-                 DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-util${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
-             DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/" AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-private${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
-                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}wayland-util${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}"
-                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-endif()
 vcpkg_fixup_pkgconfig()
+
+if(MESON_BUILD_SCANNER)
+    vcpkg_copy_tools(TOOL_NAMES wayland-scanner AUTO_CLEAN)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wayland-scanner.pc" "bindir=\${prefix}/bin" "bindir=\${prefix}/tools/${PORT}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wayland-scanner.pc" "bindir=\${prefix}/bin" "bindir=\${prefix}/../tools/${PORT}")
+    endif()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/bin/wayland-scanner${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wayland-scanner${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-file(MAKE_DIRECTORY  "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/aclocal" "${CURRENT_PACKAGES_DIR}/share/${PORT}/aclocal")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static OR NOT VCPKG_TARGET_IS_WINDOWS)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wayland-scanner.pc")
-if(EXISTS "${_file}")
-    file(READ "${_file}" _contents)
-    string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/tools/${PORT}" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
-endif()
-
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wayland-scanner.pc")
-if(EXISTS "${_file}")
-    file(READ "${_file}" _contents)
-    string(REPLACE "bindir=\${prefix}/bin" "bindir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
-endif()
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

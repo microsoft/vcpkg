@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO skystrife/cpptoml
+    REPO chadaustin/cpptoml
     REF "v${VERSION}"
-    SHA512 14edce576514d53a7e13562d7f8d2b66ea2b95f44038396c0e26232ec81783042ebecec31ee272a99afef96d5c8582a8e81ea5167a787844b98de6ee6f545cc5
+    SHA512 80fa659b529b242e02ae233d2870b666c3c7cfd9d6d6bb9d07cd5539d7778c8809e614b46a3d4cf97f9a2b0b5d5f953bba170fb1d95b5b920c395f3df52f2c9a
     HEAD_REF master
 )
 

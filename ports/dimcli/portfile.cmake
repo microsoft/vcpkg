@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gknowles/dimcli
     REF "v${VERSION}"
-    SHA512 2d475e80e91e10244fd4c7ffeefb1f9fc84a786e2e7885d42295850e7c2dddc6572ad09a610b65e19639da9adca6ac6b6b3e6038cfed803fc2c59ae3818b4281
+    SHA512 e536e589c3e384a6a1899bfe6c6306a70d2e7614902f0beb487f00ae37181d208cb85d293e350353049dd3003c7096fcb5f187b31e4a3bb39767cc8bb85d48f3
     HEAD_REF master
+    PATCHES
+        fix-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" staticCrt)

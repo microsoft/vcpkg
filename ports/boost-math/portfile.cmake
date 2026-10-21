@@ -4,10 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
     REF boost-${VERSION}
-    SHA512 760b9c45ccf79209505cb028dbd70ae78c5d46f1b8bc422c453035ef50b438a13cfc9352b6efeb9ca5fa0b10f305bfa59f8aecc93fed080ef47ffd124eff2a78
+    SHA512 4cf430682081fd978a630d5140bebeb1d7a2c01285bb88df030022cc5abe60cca6e0b9c6b633d6c3d4b109a511815897e370fec4362f30111e9c6d5529e34068
     HEAD_REF master
     PATCHES
-        build-old-libs.patch
+        fix-cmake-dependency-scanning.patch
         opt-random.diff
 )
 

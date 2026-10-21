@@ -2,20 +2,22 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 28975f59e1fdde2dba4afaf4a5ba934b63db3a7f27656e2aa0af0f0d2a046c9dbfa9a6082de94629c36d03809b296566a37ea65ec5a2fc17fedac7d21e272d31
+    SHA512 c8769d4198f1c8e309e1e02e3d7e1db82706d98a7b500ae4e563d0ab504373c26de5141a5efa695541275fc95e8f4ef6a245a95f9ada7958f754e8e82145f9fd
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
-        android.patch
-        msvc-static-name.patch
-        utf8proc.patch
-        thrift.patch
-        remove-dll-suffix.patch #Upstream PR: https://github.com/apache/arrow/pull/41341
-        add-include-string.patch
+        0001-msvc-static-name.patch
+        0003-android-musl.patch
+        0004-android-datetime.patch
+        0005-cmake-msvcruntime.patch
+        0007-use-vcpkg-mimalloc.patch
+        0008-msvc-no-sse2-define.patch
 )
 
+# Check cpp/cmake_modules/DefineOptions.cmake for option dependencies -
+# they must be modeled as feature dependencies in vcpkg.json.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         acero       ARROW_ACERO
@@ -40,6 +42,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND FEATURE_OPTIONS "-DARROW_USE_NATIVE_INT128=OFF")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND FEATURE_OPTIONS "-DARROW_SIMD_LEVEL=NONE")
+endif()
+
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_DEPENDENCY_USE_SHARED)
@@ -58,10 +64,10 @@ vcpkg_cmake_configure(
         -DARROW_WITH_BZ2=ON
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
+        -DARROW_WITH_UTF8PROC=ON
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
         -DBUILD_WARNING_LEVEL=PRODUCTION
-        -DCMAKE_SYSTEM_PROCESSOR=${VCPKG_TARGET_ARCHITECTURE}
         -DZSTD_MSVC_LIB_PREFIX=
     MAYBE_UNUSED_VARIABLES
         ZSTD_MSVC_LIB_PREFIX
@@ -92,9 +98,17 @@ if("acero" IN_LIST FEATURES)
     )
 endif()
 
+if("compute" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrowcompute
+        CONFIG_PATH lib/cmake/ArrowCompute
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("flight" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
-        PACKAGE_NAME ArrowFlight
+        PACKAGE_NAME arrowflight
         CONFIG_PATH lib/cmake/ArrowFlight
         DO_NOT_DELETE_PARENT_CONFIG_PATH
     )
@@ -102,7 +116,7 @@ endif()
 
 if("flightsql" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
-        PACKAGE_NAME ArrowFlightSql
+        PACKAGE_NAME arrowflightsql
         CONFIG_PATH lib/cmake/ArrowFlightSql
         DO_NOT_DELETE_PARENT_CONFIG_PATH
     )
@@ -115,31 +129,33 @@ if("parquet" IN_LIST FEATURES)
         DO_NOT_DELETE_PARENT_CONFIG_PATH
     )
 endif()
+
+if("s3" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrows3
+        CONFIG_PATH lib/cmake/ArrowS3
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
+file(GLOB main_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/Arrow/*onfig.cmake")
+file(GLOB extra_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/*/*onfig.cmake")
+list(REMOVE_ITEM extra_configs ${main_configs})
+if(NOT "${extra_configs}" STREQUAL "")
+    message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}"
+        "Unhandled CMake config: ${extra_configs}\n"
+        "This might be caused by insufficient feature dependencies in ports/arrow/vcpkg.json."
+    )
+endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Arrow)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-if("parquet" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-parquet" usage-parquet)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-parquet}")
-endif()
-if("dataset" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-dataset" usage-dataset)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-dataset}")
-endif()
-if("acero" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-acero" usage-acero)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-acero}")
-endif()
-
-if("flight" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flight" usage-flight)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flight}")
-endif()
-
-if("flightsql" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flightsql" usage-flightsql)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flightsql}")
-endif()
+foreach(feature IN ITEMS parquet dataset acero compute flight flightsql s3)
+    if(feature IN_LIST FEATURES)
+        file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-${feature}" feature_usage)
+        file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${feature_usage}")
+    endif()
+endforeach()
 
 if("example" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/cpp/examples/minimal_build/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example")
@@ -149,4 +165,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/NOTICE.txt"
+)

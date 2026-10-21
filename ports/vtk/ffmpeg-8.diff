@@ -1,0 +1,37 @@
+diff --git a/IO/FFMPEG/vtkFFMPEGVideoSource.cxx b/IO/FFMPEG/vtkFFMPEGVideoSource.cxx
+index f2366e71..93c67d26 100644
+--- a/IO/FFMPEG/vtkFFMPEGVideoSource.cxx
++++ b/IO/FFMPEG/vtkFFMPEGVideoSource.cxx
+@@ -72,12 +72,18 @@ public:
+     }
+     if (this->VideoDecodeContext)
+     {
++#if defined(LIBAVCODEC_VERSION_MAJOR) && LIBAVCODEC_VERSION_MAJOR < 60
+       avcodec_close(this->VideoDecodeContext);
++#endif
++      avcodec_free_context(&this->VideoDecodeContext);
+       this->VideoDecodeContext = nullptr;
+     }
+     if (this->AudioDecodeContext)
+     {
++#if defined(LIBAVCODEC_VERSION_MAJOR) && LIBAVCODEC_VERSION_MAJOR < 60
+       avcodec_close(this->AudioDecodeContext);
++#endif
++      avcodec_free_context(&this->AudioDecodeContext);
+       this->AudioDecodeContext = nullptr;
+     }
+     if (this->FormatContext)
+diff --git a/IO/FFMPEG/vtkFFMPEGWriter.cxx b/IO/FFMPEG/vtkFFMPEGWriter.cxx
+index 2cb8083f..0d024643 100644
+--- a/IO/FFMPEG/vtkFFMPEGWriter.cxx
++++ b/IO/FFMPEG/vtkFFMPEGWriter.cxx
+@@ -363,7 +363,9 @@ void vtkFFMPEGWriterInternal::End()
+ 
+   if (this->avCodecContext)
+   {
++#if defined(LIBAVCODEC_VERSION_MAJOR) && LIBAVCODEC_VERSION_MAJOR < 60
+     avcodec_close(this->avCodecContext);
++#endif
+     avcodec_free_context(&this->avCodecContext);
+     this->avCodecContext = nullptr;
+   }

@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 50fae46..b33815c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,14 +8,6 @@ set(LIBDXFRW_BUILD_DOC TRUE CACHE BOOL "Build the documentation")
+ set(LIBDXFRW_BUILD_DWG2DXF TRUE CACHE BOOL "Build the dwg2dxf application")
+ 
+ 
+-# set compiler warnings
+-if (MSVC)
+-    add_compile_options(/W3)
+-else()
+-    add_compile_options(-Wall -Wextra -pedantic -Werror)
+-endif()
+-
+-
+ include(GNUInstallDirs)
+ 
+ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)

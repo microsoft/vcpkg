@@ -1,0 +1,4 @@
+jsonrpcpp is a header-only library and can be used from CMake via:
+
+  find_package(unofficial-jsonrpcpp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::jsonrpcpp::jsonrpcpp)

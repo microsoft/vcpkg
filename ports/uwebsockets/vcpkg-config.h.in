@@ -1,0 +1,5 @@
+#pragma once
+
+#cmakedefine UWS_NO_ZLIB
+#cmakedefine UWS_USE_LIBDEFLATE
+#cmakedefine UWS_USE_SIMDUTF

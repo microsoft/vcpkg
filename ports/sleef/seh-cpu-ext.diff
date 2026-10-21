@@ -1,0 +1,27 @@
+diff --git a/src/libm/dispatcher.h b/src/libm/dispatcher.h
+index f9de604..ccbc786 100644
+--- a/src/libm/dispatcher.h
++++ b/src/libm/dispatcher.h
+@@ -27,6 +27,14 @@ static int cpuSupportsExt(void (*tryExt)()) {
+   static int cache = -1;
+   if (cache != -1) return cache;
+ 
++#ifdef _MSC_VER
++  __try {
++    (*tryExt)();
++    cache = 1;
++  } __except(1) {
++    cache = 0;
++  }
++#else
+   void (*org);
+   org = signal(SIGILL, sighandler);
+ 
+@@ -38,6 +46,7 @@ static int cpuSupportsExt(void (*tryExt)()) {
+   }
+ 
+   signal(SIGILL, org);
++#endif
+   return cache;
+ }
+ 

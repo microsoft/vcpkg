@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/boostorg/nowide/releases/download/v${VERSION}/nowide_standalone_v${VERSION}.tar.gz"
     FILENAME "nowide_standalone_v${VERSION}.tar.gz"
-    SHA512 68e4d4b11db7265bf91e90b16e35ef2ea3a8ad80031b122067393a4cb89e20e26bacff81c7abddfc7a84d22c0d545875d7ba40b0288c665fb82028f08f957524
+    SHA512 81bd088024a4682f4caf7524358982cdbdd4657b7533f4bb5135a88d228a74c4c3afee7ca2e13af8ead291450b6ef5f6849685875ef0f2aabe8eb9f0cab20688
 )
 
 vcpkg_extract_source_archive(
@@ -11,7 +11,8 @@ vcpkg_extract_source_archive(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DBUILD_TESTING=OFF
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

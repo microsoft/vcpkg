@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 fcd6b804876a5899ec8c21aa349b7ec3e8e0b87537e93d237cb14da2ecb162410ae9ad39212c5ab01e4408191768b806d84e55934616de094a696bf6f02fe1de
     HEAD_REF master
+    PATCHES fix-build-error-with-fmt11.patch
 )
 
 set(WASMEDGE_CMAKE_OPTIONS "")

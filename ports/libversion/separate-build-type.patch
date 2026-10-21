@@ -1,0 +1,18 @@
+diff --git a/libversion/CMakeLists.txt b/libversion/CMakeLists.txt
+index 52a6ba7..71760dc 100644
+--- a/libversion/CMakeLists.txt
++++ b/libversion/CMakeLists.txt
+@@ -89,8 +89,11 @@ install(FILES
+ 	${CMAKE_CURRENT_BINARY_DIR}/export.h
+ 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libversion
+ )
+-install(TARGETS libversion libversion_static EXPORT libversion)
+-
++if(BUILD_SHARED_LIBS)
++install(TARGETS libversion EXPORT libversion)
++else()
++install(TARGETS libversion_static EXPORT libversion)
++endif()
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libversion.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+ install(EXPORT libversion NAMESPACE libversion:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libversion FILE libversionConfig.cmake)

@@ -1,0 +1,14 @@
+diff --git a/cmake/helpers/CheckDependentLibraries.cmake b/cmake/helpers/CheckDependentLibraries.cmake
+index ba99a00a67..8501773e7d 100644
+--- a/cmake/helpers/CheckDependentLibraries.cmake
++++ b/cmake/helpers/CheckDependentLibraries.cmake
+@@ -30,8 +30,7 @@ gdal_check_package(CURL "Enable drivers to use web API" CAN_DISABLE RECOMMENDED
+ 
+ gdal_check_package(Iconv "Character set recoding (used in GDAL portability library)" CAN_DISABLE)
+ if (Iconv_FOUND)
+-  set(CMAKE_REQUIRED_INCLUDES ${Iconv_INCLUDE_DIR})
+-  set(CMAKE_REQUIRED_LIBRARIES ${Iconv_LIBRARY})
++  set(CMAKE_REQUIRED_LIBRARIES Iconv::Iconv)
+ 
+   set(ICONV_CONST_TEST_CODE
+       "#include <stdlib.h>

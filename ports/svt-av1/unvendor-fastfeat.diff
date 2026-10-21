@@ -1,0 +1,105 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c0c9767..93ec320 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -719,4 +719,3 @@ if(BUILD_TESTING)
+     add_subdirectory(third_party/googletest)
+ endif()
+ 
+-add_subdirectory(third_party/fastfeat)
+diff --git a/Source/Lib/CMakeLists.txt b/Source/Lib/CMakeLists.txt
+index 6a2c57d..6c12992 100644
+--- a/Source/Lib/CMakeLists.txt
++++ b/Source/Lib/CMakeLists.txt
+@@ -24,7 +24,7 @@ endif()
+ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Codec/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ 
+ add_library(SvtAv1Enc)
+ # Required for cmake to be able to tell Xcode how to link all of the object files
+@@ -75,7 +75,6 @@ endif()
+ 
+ # Encoder Lib Source Files
+ target_sources(SvtAv1Enc PRIVATE
+-    $<TARGET_OBJECTS:FASTFEAT>
+     $<TARGET_OBJECTS:GLOBALS>
+     $<TARGET_OBJECTS:CODEC>
+     $<TARGET_OBJECTS:C_DEFAULT>)
+@@ -110,6 +109,14 @@ if(common_lib_source)
+     target_sources(SvtAv1Enc PRIVATE ${common_lib_source})
+ endif()
+ 
++find_library(FASTFEAT REQUIRED
++    NAMES fastfeat
++    PATHS "${FASTFEAT_LIB_DIR}"
++    NO_DEFAULT_PATH
++)
++list(APPEND PLATFORM_LIBS ${FASTFEAT})
++list(APPEND PC_LIBS_PRIVATE -lfastfeat)
++
+ if(BUILD_SHARED_LIBS)
+     set(SVT_AV1_TARGET SVT-AV1-shared)
+ else()
+diff --git a/Source/Lib/Codec/CMakeLists.txt b/Source/Lib/Codec/CMakeLists.txt
+index 26b0562..2f72464 100644
+--- a/Source/Lib/Codec/CMakeLists.txt
++++ b/Source/Lib/Codec/CMakeLists.txt
+@@ -39,7 +39,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSE4_1/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX2/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX512/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ elseif(NOT COMPILE_C_ONLY AND HAVE_ARM_PLATFORM)
+ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Globals/
+@@ -50,14 +50,14 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_NEON_I8MM/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SVE/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SVE2/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ else ()
+ # Include Encoder Subdirectories
+ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Globals/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Codec/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ endif ()
+ 
+ set(all_files
+@@ -298,3 +298,4 @@ set(all_files
+         )
+ 
+ add_library(CODEC OBJECT ${all_files})
++target_include_directories(CODEC PRIVATE "${FASTFEAT_INCLUDE_DIR}")
+diff --git a/Source/Lib/Codec/corner_detect.c b/Source/Lib/Codec/corner_detect.c
+index 3060670..2b93b1f 100644
+--- a/Source/Lib/Codec/corner_detect.c
++++ b/Source/Lib/Codec/corner_detect.c
+@@ -19,7 +19,7 @@
+ 
+ int svt_av1_fast_corner_detect(unsigned char* buf, int width, int height, int stride, int* points, int max_points) {
+     int       num_points;
+-    xy* const frm_corners_xy = svt_aom_fast9_detect_nonmax(buf, width, height, stride, FAST_BARRIER, &num_points);
++    xy* const frm_corners_xy = fast9_detect_nonmax(buf, width, height, stride, FAST_BARRIER, &num_points);
+     num_points               = (num_points <= max_points ? num_points : max_points);
+     if (num_points > 0 && frm_corners_xy) {
+         svt_memcpy(points, frm_corners_xy, sizeof(*frm_corners_xy) * num_points);
+diff --git a/Source/Lib/Globals/CMakeLists.txt b/Source/Lib/Globals/CMakeLists.txt
+index 5d1c2da..854cace 100644
+--- a/Source/Lib/Globals/CMakeLists.txt
++++ b/Source/Lib/Globals/CMakeLists.txt
+@@ -15,7 +15,6 @@
+ include_directories(${PROJECT_SOURCE_DIR}/Source/Lib/API
+         ${PROJECT_BINARY_DIR}/Source/Lib/Codec/
+         ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
+-        ${PROJECT_SOURCE_DIR}/third_party/fastfeat/
+         )
+ 
+ if(NOT COMPILE_C_ONLY AND HAVE_X86_PLATFORM)

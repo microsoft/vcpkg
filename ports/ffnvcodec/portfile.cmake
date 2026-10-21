@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers
     REF "n${VERSION}"
-    SHA512 3c7d06e6a859cab5b915035544cb0103b1b1413c69ac418bc668145445498e1f9cb6ec597c4071f6198e378f6cea60e5a7b0be44b0de3191d65609d50dfdad4a
+    SHA512 9ef86af73e39bffee3ca5df8954c03a793120fafa1742ff07a763ce4247c579e4eb4b5c53356faa436a3caa6d8317402e22651a5e89766256c74e8030d0f1111
     HEAD_REF master
 )
 
@@ -11,7 +11,7 @@ vcpkg_from_github(
 # ====================================================
 
 # Windows
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS)
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make pkg-config)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
@@ -28,8 +28,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
         LOGNAME build-${TARGET_TRIPLET}
     )
-    
-    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+
+    if(NOT VCPKG_BUILD_TYPE)
+      file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    endif()
 
 # Linux, etc.
 else()
@@ -37,21 +39,23 @@ else()
     IF (NOT MAKE)
         MESSAGE(FATAL_ERROR "MAKE not found")
     ENDIF ()
-    
+
     vcpkg_execute_required_process(
         COMMAND make PREFIX=$${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME make-${TARGET_TRIPLET}
     )
 
-    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
+    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where
     # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()
 
 # Install the files to their default vcpkg locations
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
-file(INSTALL "${CURRENT_PORT_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/include/ffnvcodec/dynlink_nvcuvid.h")

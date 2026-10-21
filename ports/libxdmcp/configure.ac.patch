@@ -1,8 +1,16 @@
 diff --git a/configure.ac b/configure.ac
-index 7aedf3424..43ab8dbaf 100644
---- a/configure.ac	
+index 61df441..3fc6d53 100644
+--- a/configure.ac
 +++ b/configure.ac
-@@ -56,7 +56,7 @@ AC_PROG_LN_S
+@@ -26,7 +26,6 @@ AC_INIT([libXdmcp], [1.1.5],
+         [https://gitlab.freedesktop.org/xorg/lib/libxdmcp/-/issues], [libXdmcp])
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AC_CONFIG_HEADERS([config.h])
+-AC_CONFIG_MACRO_DIRS([m4])
+ 
+ # Set common system defines for POSIX extensions, such as _GNU_SOURCE
+ # Must be called before any macros that run the compiler (like LT_INIT)
+@@ -60,7 +59,7 @@ AC_CHECK_HEADERS([sys/random.h])
  AC_SEARCH_LIBS([recvfrom],[socket])
  
  case $host_os in

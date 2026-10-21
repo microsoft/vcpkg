@@ -6,6 +6,9 @@ vcpkg_from_github(
     REF v2.3.0
     SHA512 9C65AE5D000CD66E39498667DC826A4E8A2C28EB4138CFFE3AA09D5DDC22575551B9FA6CE9D951343213B9583F947899CB18B58130AEAEE36DAB5881EA496272
     HEAD_REF master
+    PATCHES
+        avoid-stdext-checked-array-iterator.diff # https://github.com/rpclib/rpclib/pull/325
+        fix-arm64-windows.diff # https://github.com/rpclib/rpclib/pull/326
 )
 
 vcpkg_cmake_configure(

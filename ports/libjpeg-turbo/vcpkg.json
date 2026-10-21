@@ -1,11 +1,12 @@
 {
   "name": "libjpeg-turbo",
-  "version": "3.0.2",
+  "version": "3.2.0",
   "port-version": 1,
   "description": "libjpeg-turbo is a JPEG image codec that uses SIMD instructions (MMX, SSE2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression on x86, x86-64, ARM, and PowerPC systems.",
-  "homepage": "https://github.com/libjpeg-turbo/libjpeg-turbo",
-  "license": "BSD-3-Clause",
+  "homepage": "https://libjpeg-turbo.org/",
+  "license": "BSD-3-Clause AND IJG",
   "dependencies": [
+    "libspng",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,7 +14,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "features": {
     "jpeg7": {
@@ -21,6 +23,9 @@
     },
     "jpeg8": {
       "description": "Emulate libjpeg v8 API/ABI (this makes libjpeg-turbo backward-incompatible with libjpeg v6b!)"
+    },
+    "tools": {
+      "description": "Build executables"
     }
   }
 }

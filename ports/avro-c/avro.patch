@@ -1,5 +1,5 @@
 diff --git a/lang/c/CMakeLists.txt b/lang/c/CMakeLists.txt
-index aa923e1..9ee7937 100644
+index 123676b..d5797b4 100644
 --- a/lang/c/CMakeLists.txt
 +++ b/lang/c/CMakeLists.txt
 @@ -22,6 +22,9 @@ enable_testing()
@@ -20,7 +20,7 @@ index aa923e1..9ee7937 100644
 -if (SNAPPY_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
 +find_package(Snappy CONFIG REQUIRED)
 +if (Snappy_FOUND AND ZLIB_FOUND)  # Snappy borrows crc32 from zlib
-     set(SNAPPY_PKG libsnappy)
+     set(SNAPPY_PKG snappy)
      add_definitions(-DSNAPPY_CODEC)
 +    set(SNAPPY_LIBRARIES Snappy::snappy)
 +    if (UNIX)
@@ -45,7 +45,7 @@ index aa923e1..9ee7937 100644
      set(LZMA_PKG liblzma)
      add_definitions(-DLZMA_CODEC)
 @@ -179,20 +187,26 @@ set(CODEC_LIBRARIES ${ZLIB_LIBRARIES} ${LZMA_LIBRARIES} ${SNAPPY_LIBRARIES})
- set(CODEC_PKG "@ZLIB_PKG@ @LZMA_PKG@ @SNAPPY_PKG@")
+ set(CODEC_PKG "${ZLIB_PKG} ${LZMA_PKG} ${SNAPPY_PKG}")
  
  # Jansson JSON library
 -pkg_check_modules(JANSSON jansson>=2.3)

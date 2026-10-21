@@ -1,0 +1,9 @@
+diff --git a/src/cmake/DawnCompilerChecks.cmake b/src/cmake/DawnCompilerChecks.cmake
+index 3db8c7ac0e..14a244b1f5 100644
+--- a/src/cmake/DawnCompilerChecks.cmake
++++ b/src/cmake/DawnCompilerChecks.cmake
+@@ -77,3 +77,4 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.28
+ else()
+   set(DAWN_SUPPORTS_CXX_MODULES False)
+ endif()
++set(DAWN_SUPPORTS_CXX_MODULES False)

@@ -1,0 +1,4 @@
+sdl3-net provides CMake targets:
+
+  find_package(SDL3_net CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SDL3_net::SDL3_net>,SDL3_net::SDL3_net,SDL3_net::SDL3_net-static>)

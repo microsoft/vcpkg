@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kafeg/ptyqt
-    REF 0.6.5
-    SHA512 0deb12be6c0e7bb44775daef3d4361c5d22143bc32cbf251ef99f10784b8996c4aa8e2806f1e08c3b39749ada6e85be91d721830ceee5d6ff86eaf714ef4c928
+    REF "${VERSION}"
+    SHA512 fe24dcbc3f7f94af2af5b47e78090ef1557626921012e9b5ec44334ea10873374df17e43c76b34e1693f26f40b0d20020c11bc1369a565ccb6f49bfce054c7b9
     HEAD_REF master
 )
 
@@ -11,13 +11,13 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -lrt")
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        file(READ ${SOURCE_PATH}/core/CMakeLists.txt filedata)
+        file(READ "${SOURCE_PATH}/core/CMakeLists.txt" filedata)
         string(REPLACE "-static-libstdc++" "-static-libstdc++ -lglib-2.0" filedata "${filedata}")
-        file(WRITE ${SOURCE_PATH}/core/CMakeLists.txt "${filedata}")
+        file(WRITE "${SOURCE_PATH}/core/CMakeLists.txt" "${filedata}")
     else()
-        file(READ ${SOURCE_PATH}/core/CMakeLists.txt filedata)
+        file(READ "${SOURCE_PATH}/core/CMakeLists.txt" filedata)
         string(REPLACE "-static-libstdc++ -lglib-2.0" "-static-libstdc++" filedata "${filedata}")
-        file(WRITE ${SOURCE_PATH}/core/CMakeLists.txt "${filedata}")
+        file(WRITE "${SOURCE_PATH}/core/CMakeLists.txt" "${filedata}")
     endif()
 endif()
 
@@ -38,5 +38,5 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

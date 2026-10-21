@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b9891b1..0cf864f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -324,9 +324,11 @@ if(HAVE_SOUND)
+     if(OpenAL_FOUND)
+       set(HAVE_OPENAL 1)
+       # Checks specific OpenAL configurations
+-      set(CMAKE_REQUIRED_INCLUDES ${OPENGL_INCLUDE_DIR})
++      set(CMAKE_REQUIRED_INCLUDES "")
++      set(CMAKE_REQUIRED_LIBRARIES OpenAL::OpenAL)
+       check_include_file(AL/al.h HAVE_AL_AL_H)
+       check_include_file(OpenAL/al.h HAVE_OPENAL_AL_H)
++      set(CMAKE_REQUIRED_LIBRARIES)
+       set(CMAKE_REQUIRED_INCLUDES)
+       if(NOT TARGET OpenAL::OpenAL)
+         add_library(OpenAL::OpenAL UNKNOWN IMPORTED)
+diff --git a/src/glue/openal_wrapper.cpp b/src/glue/openal_wrapper.cpp
+index 7ffd12c..25e745b 100644
+--- a/src/glue/openal_wrapper.cpp
++++ b/src/glue/openal_wrapper.cpp
+@@ -62,6 +62,9 @@
+ #elif defined HAVE_OPENAL_AL_H
+ #include <OpenAL/al.h>
+ #include <OpenAL/alc.h>
++#else
++#include <al.h>
++#include <alc.h>
+ #endif
+ #endif /* OPENALWRAPPER_ASSUME_OPENAL */
+ 

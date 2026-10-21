@@ -1,0 +1,25 @@
+diff --git a/dart/gui/osg/ImGuiHandler.cpp b/dart/gui/osg/ImGuiHandler.cpp
+index 39b1005..05e252c 100644
+--- a/dart/gui/osg/ImGuiHandler.cpp
++++ b/dart/gui/osg/ImGuiHandler.cpp
+@@ -128,16 +128,16 @@ ConvertedKey convertFromOSGKey(int key)
+       return ImGuiKey_Escape;
+     case KeySymbol::KEY_Control_L:
+     case KeySymbol::KEY_Control_R:
+-      return ImGuiKey_ModCtrl;
++      return ImGuiMod_Ctrl;
+     case KeySymbol::KEY_Shift_L:
+     case KeySymbol::KEY_Shift_R:
+-      return ImGuiKey_ModShift;
++      return ImGuiMod_Shift;
+     case KeySymbol::KEY_Alt_L:
+     case KeySymbol::KEY_Alt_R:
+-      return ImGuiKey_ModAlt;
++      return ImGuiMod_Alt;
+     case KeySymbol::KEY_Super_L:
+     case KeySymbol::KEY_Super_R:
+-      return ImGuiKey_ModSuper;
++      return ImGuiMod_Super;
+     case KeySymbol::KEY_A:
+       return ImGuiKey_A;
+     case KeySymbol::KEY_C:

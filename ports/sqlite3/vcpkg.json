@@ -1,10 +1,10 @@
 {
   "name": "sqlite3",
-  "version": "3.46.0",
-  "port-version": 1,
+  "version": "3.54.1",
   "description": "SQLite is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine.",
-  "homepage": "https://sqlite.org/",
+  "homepage": "https://sqlite.org",
   "license": "blessing",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -19,6 +19,9 @@
     "json1"
   ],
   "features": {
+    "dbpage-vtab": {
+      "description": "Enable the recovery extension"
+    },
     "dbstat": {
       "description": "Enable the DBSTAT virtual table"
     },
@@ -52,6 +55,9 @@
     "omit-load-extension": {
       "description": "Enable loading of external extensions"
     },
+    "percentile": {
+      "description": "Enable the aggregate functions percentile, percentile_cont, percentile_disc, and median"
+    },
     "rtree": {
       "description": "Enable the RTREE extension"
     },
@@ -67,6 +73,12 @@
     "tool": {
       "description": "Build sqlite3 executable",
       "supports": "!uwp"
+    },
+    "unicode": {
+      "description": "Enable unicode support",
+      "dependencies": [
+        "icu"
+      ]
     },
     "zlib": {
       "description": "Build sqlite3 command line tool with zlib support; has no effect on the library itself",

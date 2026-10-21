@@ -1,0 +1,20 @@
+--- a/config/compiler/BUILD.gn
++++ b/config/compiler/BUILD.gn
+@@ -1925,16 +1925,7 @@
+ # `NOTREACHED()` at the end of such functions.
+ config("sanitize_return") {
+   if (!is_ubsan && is_clang) {
+-    cflags = [
+-      "-fsanitize=return",
+-      "-fsanitize-trap=return",
+-
+-      # Some code users feature detection to determine if UBSAN (or any
+-      # sanitizer) is enabled, they then do expensive debug like operations. We
+-      # want to suppress this behaviour since we want to keep performance costs
+-      # as low as possible while having these checks.
+-      "-fsanitize-ignore-for-ubsan-feature=return",
+-    ]
++    cflags = []
+   }
+ }
+ 

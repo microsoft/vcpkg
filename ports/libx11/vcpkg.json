@@ -1,7 +1,7 @@
 {
   "name": "libx11",
   "version": "1.8.1",
-  "port-version": 2,
+  "port-version": 6,
   "description": "The X Window System is a network-transparent window system that was designed at MIT.",
   "homepage": "https://www.x.org/wiki/",
   "license": "MIT",
@@ -11,11 +11,15 @@
       "name": "libx11",
       "host": true
     },
+    "libxcb",
     {
       "name": "libxslt",
       "host": true
     },
-    "xcb",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xproto",
     "xtrans"
   ]

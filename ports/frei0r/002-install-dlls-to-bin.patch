@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9bb5b8c..faac2b1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,10 @@ if (NOT CMAKE_BUILD_TYPE)
+       FORCE)
+ endif (NOT CMAKE_BUILD_TYPE)
+ 
+-set (LIBDIR "${CMAKE_INSTALL_LIBDIR}/frei0r-1")
++if(WIN32)
++    set(LIBDIR "${CMAKE_INSTALL_BINDIR}/frei0r-1")
++else()
++    set(LIBDIR "${CMAKE_INSTALL_LIBDIR}/frei0r-1")
++endif()
+ set (FREI0R_DEF "${CMAKE_SOURCE_DIR}/msvc/frei0r_1_0.def")
+ set (FREI0R_1_1_DEF "${CMAKE_SOURCE_DIR}/msvc/frei0r_1_1.def")

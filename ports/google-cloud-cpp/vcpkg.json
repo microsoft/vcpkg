@@ -1,10 +1,11 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.25.0",
+  "version": "2.37.0",
+  "port-version": 1,
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !android",
   "dependencies": [
     "abseil",
     {
@@ -260,6 +261,19 @@
         }
       ]
     },
+    "bigquerycontrol": {
+      "description": "Cloud BigQuery Control API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "rest-common"
+          ]
+        }
+      ]
+    },
     "bigtable": {
       "description": "The Google Cloud Bigtable C++ client library",
       "dependencies": [
@@ -312,6 +326,18 @@
     "channel": {
       "description": "Cloud Channel API C++ Client Library",
       "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "chronicle": {
+      "description": "Chronicle API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -577,6 +603,30 @@
         }
       ]
     },
+    "developerconnect": {
+      "description": "Developer Connect API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "devicestreaming": {
+      "description": "Device Streaming API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dialogflow-cx": {
       "description": "Cloud Dialogflow CX API C++ Client Library",
       "dependencies": [
@@ -697,21 +747,20 @@
         }
       ]
     },
-    "experimental-storage-grpc": {
-      "description": "The GCS+gRPC plugin",
+    "filestore": {
+      "description": "Cloud Filestore API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
-            "grpc-common",
-            "storage"
+            "grpc-common"
           ]
         }
       ]
     },
-    "filestore": {
-      "description": "Cloud Filestore API C++ Client Library",
+    "financialservices": {
+      "description": "Financial Services API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -742,6 +791,19 @@
           "default-features": false,
           "features": [
             "grpc-common"
+          ]
+        }
+      ]
+    },
+    "gkeconnect": {
+      "description": "GKE Connect Gateway API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "rest-common"
           ]
         }
       ]
@@ -871,6 +933,18 @@
     },
     "managedidentities": {
       "description": "Managed Service for Microsoft Active Directory API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "managedkafka": {
+      "description": "Manage Apache Kafka clusters and resources.",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1076,6 +1150,30 @@
         }
       ]
     },
+    "parallelstore": {
+      "description": "Cloud Parallel Store API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "parametermanager": {
+      "description": "Cloud Parameter Manager API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "policysimulator": {
       "description": "Policy Simulator API C++ Client Library",
       "dependencies": [
@@ -1102,6 +1200,18 @@
     },
     "privateca": {
       "description": "Certificate Authority API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "privilegedaccessmanager": {
+      "description": "Privileged Access Manager API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1446,6 +1556,32 @@
           "default-features": false,
           "features": [
             "rest-common"
+          ]
+        }
+      ]
+    },
+    "storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "opentelemetry",
+            "storage"
+          ]
+        }
+      ]
+    },
+    "storagebatchoperations": {
+      "description": "Cloud Storage Batch Operations API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
           ]
         }
       ]

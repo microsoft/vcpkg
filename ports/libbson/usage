@@ -1,4 +1,4 @@
 libbson provides CMake targets:
 
-    find_package(bson-1.0 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mongo::bson_static>,mongo::bson_static,mongo::bson_shared>)
+    find_package(bson CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:bson::static>,bson::static,bson::shared>)

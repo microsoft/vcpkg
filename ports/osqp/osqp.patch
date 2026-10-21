@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d2346fe..270f93d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,6 +29,8 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+   set(IS_MAC ON)
+ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+   set(IS_WINDOWS ON)
++elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
++  set(IS_WINDOWS ON)
+ endif()
+ 
+ # OSQP Versioning
+diff --git a/algebra/_common/lin_sys/qdldl/qdldl.cmake b/algebra/_common/lin_sys/qdldl/qdldl.cmake
+index ac777bd..79a813c 100644
+--- a/algebra/_common/lin_sys/qdldl/qdldl.cmake
++++ b/algebra/_common/lin_sys/qdldl/qdldl.cmake
+@@ -17,8 +17,8 @@ set(QDLDL_LONG ${OSQP_USE_LONG} CACHE BOOL "QDLDL Integer type")
+ set(QDLDL_BUILD_STATIC_LIB OFF CACHE BOOL "Build QDLDL static library")
+ set(QDLDL_BUILD_SHARED_LIB OFF CACHE BOOL "Build QDLDL shared library")
+ 
+-FetchContent_MakeAvailable(qdldl)
+-FetchContent_GetProperties(qdldl)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/empty.c" "/* replaced by external qdldl lib */")
++add_library(qdldlobject OBJECT "${CMAKE_CURRENT_BINARY_DIR}/empty.c")
+ 
+ list(POP_BACK CMAKE_MESSAGE_INDENT)
+ 
+diff --git a/algebra/builtin/CMakeLists.txt b/algebra/builtin/CMakeLists.txt
+index e542897..1c23ab3 100644
+--- a/algebra/builtin/CMakeLists.txt
++++ b/algebra/builtin/CMakeLists.txt
+@@ -42,9 +42,13 @@ if( OSQP_CODEGEN )
+        ${OSQP_ALGEBRA_ROOT}/_common/kkt.c
+        ${OSQP_ALGEBRA_ROOT}/_common/lin_sys/qdldl/qdldl_interface.h
+        ${OSQP_ALGEBRA_ROOT}/_common/lin_sys/qdldl/qdldl_interface.c
+-       ${qdldl_SOURCE_DIR}/src/qdldl.c
+-       ${qdldl_SOURCE_DIR}/include/qdldl.h
+-       ${qdldl_BINARY_DIR}/include/qdldl_version.h )
++  )
++  find_package(qdldl CONFIG REQUIRED GLOBAL)
++  target_link_libraries(OSQPLIB PRIVATE $<IF:$<TARGET_EXISTS:qdldl::qdldl>,qdldl::qdldl,qdldl::qdldlstatic>)
++  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/../../osqp-findAlgebraDependency.cmake" [[
++include(CMakeFindDependencyMacro)
++find_dependency(qdldl CONFIG)
++]])
+ 
+   foreach( f ${EMBEDDED_LINALG} )
+     get_filename_component( fname ${f} NAME )

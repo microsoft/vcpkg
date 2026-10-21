@@ -1,0 +1,23 @@
+{
+  "name": "vcpkg-ci-rocksdb",
+  "version-string": "ci",
+  "description": "Validates rocksdb",
+  "dependencies": [
+    {
+      "name": "rocksdb",
+      "features": [
+        "bzip2",
+        "liburing",
+        "lz4",
+        "numa",
+        "snappy",
+        "zlib",
+        "zstd"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

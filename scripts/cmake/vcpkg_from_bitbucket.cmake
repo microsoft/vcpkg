@@ -57,7 +57,7 @@ function(vcpkg_from_bitbucket)
 
     # exports VCPKG_HEAD_VERSION to the caller. This will get picked up by ports.cmake after the build.
     if(VCPKG_USE_HEAD_VERSION)
-        vcpkg_download_distfile(archive_version
+        z_vcpkg_download_distfile(archive_version
             URLS "https://api.bitbucket.com/2.0/repositories/${org_name}/${repo_name}/refs/branches/${arg_HEAD_REF}"
             FILENAME "${downloaded_file_name}.version"
             SKIP_SHA512
@@ -76,7 +76,7 @@ ${version_contents}
     endif()
 
     # download the file information from bitbucket.
-    vcpkg_download_distfile(archive
+    z_vcpkg_download_distfile(archive
         URLS "https://bitbucket.com/${org_name}/${repo_name}/get/${ref_to_use}.tar.gz"
         FILENAME "${downloaded_file_name}"
         ${sha512_param}
@@ -88,6 +88,11 @@ ${version_contents}
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         ${working_directory_param}
+    )
+    z_vcpkg_add_spdx_resource(
+        NAME "${arg_REPO}"
+        DOWNLOAD_LOCATION "git+https://bitbucket.com/${arg_REPO}@${ref_to_use}"
+        SHA512 "${arg_SHA512}"
     )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

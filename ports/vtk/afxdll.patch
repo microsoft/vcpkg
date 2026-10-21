@@ -1,5 +1,5 @@
 diff --git a/GUISupport/MFC/CMakeLists.txt b/GUISupport/MFC/CMakeLists.txt
-index 66b52f1f6..7fbfef908 100644
+index b59b5309..c0818ad3 100644
 --- a/GUISupport/MFC/CMakeLists.txt
 +++ b/GUISupport/MFC/CMakeLists.txt
 @@ -10,7 +10,7 @@ endif ()

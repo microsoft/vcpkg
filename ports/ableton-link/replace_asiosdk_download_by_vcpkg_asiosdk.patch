@@ -46,3 +46,26 @@ diff --git "a/examples/CMakeLists.txt" "b/examples/CMakeLists.txt"
  endif()
  
  #     _             _ _
+@@ -102,7 +96,20 @@ function(configure_linkhut_audio_sources target)
+         -DLINKHUT_AUDIO_PLATFORM_JACK=1
+       )
+     else()
+-      target_link_libraries(${target} asound portaudio)
++      if(LinkHut)
++        find_package(ALSA REQUIRED)
++        find_package(portaudio CONFIG REQUIRED)
++        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++          set(PORTAUDIO_LIB "${portaudio_DIR}/../../debug/lib/libportaudio.a")
++        else()
++          set(PORTAUDIO_LIB "${portaudio_DIR}/../../lib/libportaudio.a")
++        endif()
++        # PortAudio built with JACK support needs JACK library
++        find_library(JACK_LIB NAMES jack)
++        if(JACK_LIB)
++          target_link_libraries(${target} ALSA::ALSA ${PORTAUDIO_LIB} ${JACK_LIB})
++        endif()
++      endif()
+       target_compile_definitions(${target} PRIVATE
+         -DLINKHUT_AUDIO_PLATFORM_PORTAUDIO=1
+       )
+ 

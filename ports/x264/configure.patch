@@ -1,5 +1,5 @@
 diff --git a/configure b/configure
-index e242e73c..e0d1df76 100755
+index 5116bb97..e4ff41cc 100755
 --- a/configure
 +++ b/configure
 @@ -1,4 +1,7 @@
@@ -11,7 +11,7 @@ index e242e73c..e0d1df76 100755
  
  if test x"$1" = x"-h" -o x"$1" = x"--help" ; then
  cat <<EOF
-@@ -837,6 +840,7 @@ case $host_cpu in
+@@ -865,6 +868,7 @@ case $host_cpu in
              AS="${AS-${SRCPATH}/tools/gas-preprocessor.pl -arch aarch64 -as-type armasm -- armasm64 -nologo}"
          else
              AS="${AS-${CC}}"
@@ -19,7 +19,7 @@ index e242e73c..e0d1df76 100755
          fi
          ;;
      arm*)
-@@ -855,6 +859,7 @@ case $host_cpu in
+@@ -883,6 +887,7 @@ case $host_cpu in
              AS="${AS-${SRCPATH}/tools/gas-preprocessor.pl -arch arm -as-type clang -force-thumb -- ${CC} -mimplicit-it=always}"
          else
              AS="${AS-${CC}}"
@@ -27,14 +27,3 @@ index e242e73c..e0d1df76 100755
          fi
          ;;
      s390|s390x)
-@@ -1354,8 +1359,10 @@ if [ $SYS = WINDOWS -a $ARCH = X86 -a $compiler = GNU ] ; then
- fi
- 
- if cc_check "stdio.h" "" "fseeko(stdin,0,0);" ; then
-+  if cc_check "" "" "#if defined(__ANDROID_API__) && __ANDROID_API__ < 24\n#error\n#endif\n" ; then
-     define fseek fseeko
-     define ftell ftello
-+  fi
- elif cc_check "stdio.h" "" "fseeko64(stdin,0,0);" ; then
-     define fseek fseeko64
-     define ftell ftello64

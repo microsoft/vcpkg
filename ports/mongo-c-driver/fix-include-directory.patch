@@ -1,13 +1,13 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 4675313..847e073 100644
+index 9b2c2f845d..2231d76edc 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -1255,7 +1255,7 @@ else ()
- endif ()
+@@ -28,7 +28,7 @@ set (MONGOC_ENABLE_COMPRESSION_ZLIB 0)
+ set (MONGOC_ENABLE_COMPRESSION_ZSTD 0)
  
- set (MONGOC_HEADER_INSTALL_DIR
--   "${CMAKE_INSTALL_INCLUDEDIR}/libmongoc-${MONGOC_API_VERSION}"
-+   "${CMAKE_INSTALL_INCLUDEDIR}"
- )
- 
- install (
+ if(NOT DEFINED MONGOC_INSTALL_INCLUDEDIR)
+-   set(MONGOC_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/mongoc-${PROJECT_VERSION}")
++   set(MONGOC_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}")
+ endif()
+ if(NOT DEFINED MONGOC_INSTALL_CMAKEDIR)
+    set(MONGOC_INSTALL_CMAKEDIR "${MONGO_C_DRIVER_INSTALL_CMAKEDIR}/mongoc-${PROJECT_VERSION}")

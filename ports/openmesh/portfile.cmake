@@ -2,7 +2,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openmesh.org/media/Releases/${VERSION}/OpenMesh-${VERSION}.0.tar.gz"
     FILENAME "OpenMesh-${VERSION}.tar.gz"
-    SHA512 b895e5eaabdf5d3671625df5314e1f95921ac672e9d9d945a5cf0973e20b4e395aac6517d86269a2e8c103f32bc9c8c2ecf57d811a260bbc69f592043e1307ba
+    SHA512 f6d082c58d31be4baff8f42f02a471fd655f0485da6a0a93fbb05c02670b86c9b9238e6d7bebb065a20e6e7264da4eb7c60f95ade590c752e0e3eb656e5835b1
 )
 
 vcpkg_extract_source_archive(
@@ -11,11 +11,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-library-install-path.patch
         fix-pkgconfig.patch
-
-        # This patch is a combination of these two:
-        # https://gitlab.vci.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/commit/1d4a866282ace376c8e3ba05c21ce3bcc6643040
-        # https://gitlab.vci.rwth-aachen.de:9000/OpenMesh/OpenMesh/-/commit/a7f30b6f70447932444f5b518840ca26e9461fa9
-        restore-c++11-compatibility.patch
+        support-arm64-win.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

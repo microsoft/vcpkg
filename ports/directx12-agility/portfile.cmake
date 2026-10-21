@@ -1,12 +1,12 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # headers are provided by the directx-headers port
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # DX12 SDK Debug Layer is an extra DLL
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.D3D12/${VERSION}"
     FILENAME "Microsoft.Direct3D.D3D12.${VERSION}.zip"
-    SHA512 aab78de3a9db35b1b11b2c2498d2dd19e66a71cdcd1cb426f0469d551fcd6917f4d80734be8b6d0c0b20f7f6ae4b5b9936b0b0aedb229ea49265932b36aee11e
+    SHA512 f7c0a819610066d7cf03d18a4349f51b4f1e9b4f1b3f8ff5f7fbd9490e683471696e6fe50a11f8639efe3247c16ae18799f30bd36096160797dd880a0fceb47f
 )
 
 vcpkg_extract_source_archive(
@@ -15,10 +15,12 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    set(REDIST_ARCH arm64)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(REDIST_ARCH win32)
 else()
-    set(REDIST_ARCH ${VCPKG_TARGET_ARCHITECTURE})
+    set(REDIST_ARCH x64)
 endif()
 
 file(COPY "${PACKAGE_PATH}/build/native/bin/${REDIST_ARCH}/D3D12Core.dll" "${PACKAGE_PATH}/build/native/bin/${REDIST_ARCH}/D3D12Core.pdb"
@@ -39,5 +41,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${PACKAGE_PATH}/LICENSE.txt")
+
+message(STATUS "BY USING THE SOFTWARE, YOU ACCEPT THESE TERMS: https://www.nuget.org/packages/Microsoft.Direct3D.D3D12/${VERSION}/License")
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/directx12-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" @ONLY)

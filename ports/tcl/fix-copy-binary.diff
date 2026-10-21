@@ -1,0 +1,104 @@
+diff --git a/pkgs/itcl4.3.5/win/makefile.vc b/pkgs/itcl4.3.5/win/makefile.vc
+index c25a68d..1082f21 100644
+--- a/pkgs/itcl4.3.5/win/makefile.vc
++++ b/pkgs/itcl4.3.5/win/makefile.vc
+@@ -64,7 +64,7 @@ PRJ_HEADERS_PUBLIC = \
+    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\itclUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\itclUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\itclUuid.h
++	copy /B $(WIN_DIR)\itclUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\itclUuid.h
+ 
+ (TMP_DIR)\itclBase.obj: $(TMP_DIR)\itclUuid.h
+ 
+diff --git a/pkgs/sqlite3.51.0/win/makefile.vc b/pkgs/sqlite3.51.0/win/makefile.vc
+index 191aee4..d409acf 100644
+--- a/pkgs/sqlite3.51.0/win/makefile.vc
++++ b/pkgs/sqlite3.51.0/win/makefile.vc
+@@ -31,7 +31,7 @@ $(ROOT)\manifest.uuid:
+    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\sqlite3Uuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\sqlite3Uuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\sqlite3Uuid.h
++	copy /B $(WIN_DIR)\sqlite3Uuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\sqlite3Uuid.h
+ 
+ # Preprocessor macros specific to sqlite3.
+ PRJ_DEFINES = -I"$(ROOT)\.." -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE \
+diff --git a/pkgs/tdbc1.1.13/win/makefile.vc b/pkgs/tdbc1.1.13/win/makefile.vc
+index d84bb0f..91003b0 100644
+--- a/pkgs/tdbc1.1.13/win/makefile.vc
++++ b/pkgs/tdbc1.1.13/win/makefile.vc
+@@ -78,7 +78,7 @@ $(ROOT)\manifest.uuid:
+    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\tdbcUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\tdbcUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcUuid.h
++	copy /B $(WIN_DIR)\tdbcUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcUuid.h
+ 
+ .PHONY: $(OUT_DIR)\tdbcConfig.sh
+ 
+diff --git a/pkgs/tdbcmysql1.1.13/win/makefile.vc b/pkgs/tdbcmysql1.1.13/win/makefile.vc
+index 16e228c..663b865 100644
+--- a/pkgs/tdbcmysql1.1.13/win/makefile.vc
++++ b/pkgs/tdbcmysql1.1.13/win/makefile.vc
+@@ -107,7 +107,7 @@ $(ROOT)\manifest.uuid:
+    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\tdbcMysqlUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\tdbcMysqlUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcMysqlUuid.h
++	copy /B $(WIN_DIR)\tdbcMysqlUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcMysqlUuid.h
+ 
+ .PHONY: $(OUT_DIR)\tdbcConfig.sh
+ 
+diff --git a/pkgs/tdbcodbc1.1.13/win/makefile.vc b/pkgs/tdbcodbc1.1.13/win/makefile.vc
+index 92b6098..13be31d 100644
+--- a/pkgs/tdbcodbc1.1.13/win/makefile.vc
++++ b/pkgs/tdbcodbc1.1.13/win/makefile.vc
+@@ -109,7 +109,7 @@ $(ROOT)\manifest.uuid:
+    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\tdbcOdbcUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\tdbcOdbcUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcOdbcUuid.h
++	copy /B $(WIN_DIR)\tdbcOdbcUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcOdbcUuid.h
+ 
+ test: test-jet test-sqlserver test-sqlite
+ 
+diff --git a/pkgs/tdbcpostgres1.1.13/win/makefile.vc b/pkgs/tdbcpostgres1.1.13/win/makefile.vc
+index 76d49ef..8ad14ca 100644
+--- a/pkgs/tdbcpostgres1.1.13/win/makefile.vc
++++ b/pkgs/tdbcpostgres1.1.13/win/makefile.vc
+@@ -107,7 +107,7 @@ $(ROOT)\manifest.uuid:
+    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\tdbcPostgresUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\tdbcPostgresUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcPostgresUuid.h
++	copy /B $(WIN_DIR)\tdbcPostgresUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tdbcPostgresUuid.h
+ 
+ test: setup $(PROJECT)
+ 	@set TCL_LIBRARY=$(TCL_LIBRARY:\=/)
+diff --git a/pkgs/thread3.0.4/win/makefile.vc b/pkgs/thread3.0.4/win/makefile.vc
+index 6fcaf10..6b61742 100644
+--- a/pkgs/thread3.0.4/win/makefile.vc
++++ b/pkgs/thread3.0.4/win/makefile.vc
+@@ -56,7 +56,7 @@ $(ROOT)\manifest.uuid:
+    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\threadUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\threadUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\threadUuid.h
++	copy /B $(WIN_DIR)\threadUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\threadUuid.h
+ 
+ # Explicit dependency rules
+ $(GENERICDIR)\psGdbm.c: $(GENERICDIR)\psGdbm.h
+diff --git a/win/makefile.vc b/win/makefile.vc
+index 66c69f8..7aad026 100644
+--- a/win/makefile.vc
++++ b/win/makefile.vc
+@@ -886,7 +886,7 @@ $(ROOT)\manifest.uuid:
+ 	git rev-parse HEAD >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\tclUuid.h:	$(ROOT)\manifest.uuid
+-	copy $(WIN_DIR)\tclUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tclUuid.h
++	copy /B $(WIN_DIR)\tclUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tclUuid.h
+ 
+ $(TMP_DIR)\tclEvent.obj: $(GENERICDIR)\tclEvent.c $(TMP_DIR)\tclUuid.h
+ 	$(cc32) $(pkgcflags) -I$(COMPATDIR)\zlib -I$(TMP_DIR) \

@@ -1,0 +1,15 @@
+diff --git a/src/pdf/CMakeLists.txt b/src/pdf/CMakeLists.txt
+index 95931a261..61806ee08 100644
+--- a/src/pdf/CMakeLists.txt
++++ b/src/pdf/CMakeLists.txt
+@@ -215,6 +215,10 @@ foreach(arch ${archs})
+             ARGS pdfium_use_system_libtiff
+             CONDITION QT_FEATURE_webengine_system_libtiff
+         )
++        extend_gn_list(gnArgArg
++            ARGS use_system_libjpeg
++            CONDITION QT_FEATURE_webengine_system_libjpeg
++        )
+         extend_gn_list(gnArgArg
+             ARGS use_qt_libjpeg
+             CONDITION QT_FEATURE_webengine_qt_libjpeg

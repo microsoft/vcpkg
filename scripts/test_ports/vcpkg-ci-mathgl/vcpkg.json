@@ -9,7 +9,10 @@
       "features": [
         "arma",
         "examples",
-        "fltk",
+        {
+          "name": "fltk",
+          "platform": "!(x64 & linux)"
+        },
         "gif",
         "glut",
         "gsl",

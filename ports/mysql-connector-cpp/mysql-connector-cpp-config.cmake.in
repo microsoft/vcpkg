@@ -1,9 +1,48 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-
-find_dependency(OpenSSL)
 find_dependency(Protobuf CONFIG)
+if(NOT "@BUILD_SHARED_LIBS@")
+    find_dependency(Threads)
+    find_dependency(OpenSSL)
+    find_dependency(RapidJSON CONFIG)
+    find_dependency(ZLIB)
+    find_dependency(lz4)
+    find_dependency(zstd)
+    if("@WITH_JDBC@")
+        find_dependency(unofficial-libmysql)
+    endif()
+endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-mysql-connector-cpp-targets.cmake")
+
+if(NOT UNOFFICIAL_MYSQL_CONNECTOR_CPP_INITIALIZED)
+    if(NOT "@BUILD_SHARED_LIBS@")
+        set_target_properties(unofficial::mysql-connector-cpp::connector PROPERTIES
+            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:Threads::Threads>;$<LINK_ONLY:OpenSSL::SSL>;$<LINK_ONLY:rapidjson>;$<LINK_ONLY:ZLIB::ZLIB>;$<LINK_ONLY:>;$<LINK_ONLY:lz4::lz4>;$<LINK_ONLY:zstd::libzstd>"
+        )
+        # Cf. mysql-concpp-config.cmake.in
+        if(WIN32)
+            set_property(TARGET unofficial::mysql-connector-cpp::connector APPEND PROPERTY INTERFACE_LINK_LIBRARIES "dnsapi")
+        elseif(NOT CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+            set_property(TARGET unofficial::mysql-connector-cpp::connector APPEND PROPERTY INTERFACE_LINK_LIBRARIES "resolv;dl")
+        endif()
+        if("@WITH_JDBC@")
+            set_target_properties(unofficial::mysql-connector-cpp::connector-jdbc PROPERTIES
+                INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:unofficial::libmysql::libmysql>"
+            )
+            # Cf. jdbc/driver/CMakeLists.txt
+            if(WIN32)
+                set_property(TARGET unofficial::mysql-connector-cpp::connector-jdbc APPEND PROPERTY INTERFACE_LINK_LIBRARIES "dnsapi")
+            elseif(NOT CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+                set_property(TARGET unofficial::mysql-connector-cpp::connector-jdbc APPEND PROPERTY INTERFACE_LINK_LIBRARIES "resolv;dl")
+            endif()
+        endif()
+    endif()
+    set_property(TARGET unofficial::mysql-connector-cpp::connector APPEND PROPERTY
+        INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:protobuf::libprotobuf-lite>"
+    )
+    set(UNOFFICIAL_MYSQL_CONNECTOR_CPP_INITIALIZED 1 CACHE INTERNAL "")
+endif()
+
 check_required_components(mysql-connector-cpp)

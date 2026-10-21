@@ -1,0 +1,13 @@
+{
+  "name": "abcmake",
+  "version": "6.4.0",
+  "description": "Simple, component-first CMake helper for small & medium C/C++ projects",
+  "homepage": "https://github.com/an-dr/abcmake",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,5 +1,0 @@
-The package bext-mp provides CMake targets:
-
-    find_package(mp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Boost::mp)
-    set_property(TARGET main PROPERTY CXX_EXTENSIONS OFF)

@@ -1,0 +1,50 @@
+diff --git a/CMake/FindMySQL.cmake b/CMake/FindMySQL.cmake
+index cc0679b..330326c 100644
+--- a/CMake/FindMySQL.cmake
++++ b/CMake/FindMySQL.cmake
+@@ -1,3 +1,5 @@
++
++if(0)
+ #[==[
+ Provides the following variables:
+ 
+@@ -110,3 +112,10 @@ else ()
+   endif ()
+ endif ()
+ unset(_MySQL_use_pkgconfig)
++endif()
++
++if(NOT TARGET MySQL::MySQL)
++  find_package(MySQL NAMES unofficial-libmysql REQUIRED)
++  add_library(MySQL::MySQL INTERFACE IMPORTED)
++  target_link_libraries(MySQL::MySQL INTERFACE unofficial::libmysql::libmysql)
++endif()
+diff --git a/IO/MySQL/vtkMySQLDatabasePrivate.h b/IO/MySQL/vtkMySQLDatabasePrivate.h
+index 82bc5c5..76256bc 100644
+--- a/IO/MySQL/vtkMySQLDatabasePrivate.h
++++ b/IO/MySQL/vtkMySQLDatabasePrivate.h
+@@ -8,7 +8,8 @@
+ #endif
+ 
+ #include "vtkIOMySQLModule.h" // For export macro
+-#include <mysql.h>            // needed for MYSQL typedefs
++#include <mysql/mysql.h>      // needed for MYSQL typedefs
++using my_bool = bool;         // removed in libmysql 8.0
+ 
+ VTK_ABI_NAMESPACE_BEGIN
+ class VTKIOMYSQL_EXPORT vtkMySQLDatabasePrivate
+diff --git a/IO/MySQL/vtkMySQLQuery.cxx b/IO/MySQL/vtkMySQLQuery.cxx
+index 38a9ec9..c5cc785 100644
+--- a/IO/MySQL/vtkMySQLQuery.cxx
++++ b/IO/MySQL/vtkMySQLQuery.cxx
+@@ -9,8 +9,8 @@
+ #include "vtkVariant.h"
+ #include "vtkVariantArray.h"
+ 
+-#include <errmsg.h>
+-#include <mysql.h>
++#include <mysql/errmsg.h>
++#include <mysql/mysql.h>
+ 
+ #if defined(_WIN32)
+ #include <locale.h>

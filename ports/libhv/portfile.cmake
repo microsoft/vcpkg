@@ -1,9 +1,17 @@
+vcpkg_download_distfile(patch780
+    URLS "https://patch-diff.githubusercontent.com/raw/ithewei/libhv/pull/780.diff?full_index=1"
+    FILENAME "ithewei-libhv-780.diff"
+    SHA512 8915aec64d31cc94b54002d6a0b6b9f69908cde7a24b6036900b24cb8111d6ef8bbaddf707289e54b2c4e4c782cdca9c619adfd11233bf56571e805529d488e6
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ithewei/libhv
     REF "v${VERSION}"
-    SHA512 9dffb6e844df8ba825df88ef984c280923fbf1d50edcbbbe0b36927172ad82c057d65b9b752163c3e2383eb44db0261fd4e3623e3630a55a3f8987088bef0bd7
+    SHA512 5b1b1552b31331279030c5f6ea087ee9ca3bb3911938bc6ce14c90297151adeb6e30f413eea9591092783e0e745e78e6b6f957e4a26fe0e3c050fdad08d470ad
     HEAD_REF master
+    PATCHES
+        "${patch780}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
@@ -28,6 +36,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libhv)
+vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,12 @@
+cpp-pinyin provides CMake targets:
+
+  find_package(cpp-pinyin CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE cpp-pinyin::cpp-pinyin)
+
+To use the library, you need to copy the dictionary files to the binary directory.
+
+  add_custom_command(TARGET main POST_BUILD
+      COMMAND "${CMAKE_COMMAND}" -E copy_directory
+        "${cpp-pinyin_DIR}/dict"
+        "$<TARGET_FILE_DIR:main>/dict"
+  )

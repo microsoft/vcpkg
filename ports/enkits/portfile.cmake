@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dougbinks/enkiTS
-    REF "v${VERSION}"
-    SHA512 72a05058caef8d6a33cd70500aeaf05cc61521721697969d4845279b5a79b63e7a6a3f3971c5eff2776e5575720b58252e9d251ef565c2123275a3e8540948db
+    REF v${VERSION}
+    SHA512 6fa1f9b44c1bce36ea5b477f3f92e31c832d85183a52b3802ac983eb4fcf6f8bc5507bbdc025aa0c071a4a831601a15993aa4fe86c46576b78c4806524f0ec45
     HEAD_REF master
     PATCHES
-        update_install.patch
+        fix_shared_install.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -22,9 +22,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-# Must specify args due to case sensitivity on some filesystems
-vcpkg_cmake_config_fixup(PACKAGE_NAME enkiTS CONFIG_PATH share/enkiTS)
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/enkiTS/enkiTS-config.cmake" "${CURRENT_PACKAGES_DIR}/share/enkiTS/enkiTSConfig.cmake")
+vcpkg_cmake_config_fixup(PACKAGE_NAME enkiTS CONFIG_PATH lib/cmake/enkiTS)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

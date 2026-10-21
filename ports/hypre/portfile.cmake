@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hypre-space/hypre
     REF "v${VERSION}"
-    SHA512 fe92d09b56107845e3a4b7f0e7bbba5f319a7ebdaaecab3e6b89fae1fe2a79a9dd712806823ea518f5960f0eaa1088f6b82ebac63d3940478d36690f3adec4f2
+    SHA512 c1b09a31781ce4e1a411c486424cf7a4df1275d53445ed83d0e4e210dcc87e9c09e17e26cc5ee736aebbd70618674cd3b7dba6736f8e725ba1c3d981869ada24
     HEAD_REF master
 )
 

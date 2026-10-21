@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO codeplea/genann
-    REF 122243f9449b3e33a4e11450b70c10576d4559d7
-    SHA512 d70cb8bc678d80ed3e790866f6060850cf9309eefe90d3ca4d77e28538639a927333d49c4d1af3e81123b8e88224f2f51b74ec41ca22639a276359568652ed15
+    REF v${VERSION}
+    SHA512 69c186d10a5bf484cb13c469571a84480a755719ed64050480d3a5906dcacd23b9b30db971ff695e9d85b0958dcd0b10cff347c2c4c0cd5d1dbfc7745f57dd32
     HEAD_REF master
 )
 
@@ -18,6 +18,4 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

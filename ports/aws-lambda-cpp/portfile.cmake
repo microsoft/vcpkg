@@ -2,12 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-lambda-cpp
     REF "v${VERSION}"
-    SHA512 a7be4a5c194139f4bd246b9212ea2b1718508a23b8650537fa5dc97873b4d58ce3d340740ba980958957c7f56d3f7aff535bd465ac48dae121b07d9a5be00d02
+    SHA512 88d31c23b94f0ff4d08303f918482542fd54d188ee53cf42431fbb1054a754fc7d0ec82efb1f616da5b73412ec75e98df36c9bd6fa3cb203ffd252ec3ab5500f
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DAWS_LAMBDA_CPP_VERSION=${VERSION}"
+        -DCMAKE_DISABLE_FIND_PACKAGE_Backtrace=ON
 )
 
 vcpkg_cmake_install()

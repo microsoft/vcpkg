@@ -1,30 +1,20 @@
 diff --git a/mesonbuild/dependencies/python.py b/mesonbuild/dependencies/python.py
-index 38e3d5f..6427980 100644
+index 3b02bad..cc344e3 100644
 --- a/mesonbuild/dependencies/python.py
 +++ b/mesonbuild/dependencies/python.py
-@@ -208,7 +208,8 @@ class PythonSystemDependency(SystemDependency, _PythonDependencyBase):
-         # compile args
-+        verdot = self.variables.get('py_version_short')
-         inc_paths = mesonlib.OrderedSet([
-             self.variables.get('INCLUDEPY'),
--            self.paths.get('include'),
-+            self.paths.get('include') + f'/../../../include/python${verdot}',
-             self.paths.get('platinclude')])
- 
-         self.compile_args += ['-I' + path for path in inc_paths if path]
-@@ -279,9 +279,9 @@ class PythonSystemDependency(SystemDependency, _PythonDependencyBase):
-                     else:
-                         libpath = Path(f'python{vernum}.dll')
+@@ -388,8 +388,10 @@ class _PythonDependencyBase(_Base):
                  else:
-                     if limited_api:
-                         vernum = vernum[0]
--                    libpath = Path('libs') / f'python{vernum}.lib'
-+                    libpath = Path('libs') / f'..' / f'..' / f'..' / f'lib' / f'python{vernum}.lib'
+                     if self.is_freethreaded:
+                         libpath = Path('libs') / f'python{vernum}t.lib'
++                        libpath = Path('libs') / f'..' / f'..' / f'..' / f'lib' / f'python{vernum}t.lib'
+                     else:
+                         libpath = Path('libs') / f'python{vernum}.lib'
++                        libpath = Path('libs') / f'..' / f'..' / f'..' / f'lib' / f'python{vernum}.lib'
                      # For a debug build, pyconfig.h may force linking with
                      # pythonX_d.lib (see meson#10776). This cannot be avoided
                      # and won't work unless we also have a debug build of
-@@ -296,6 +296,8 @@ class PythonSystemDependency(SystemDependency, _PythonDependencyBase):
-                         vscrt = self.env.coredata.options[mesonlib.OptionKey('b_vscrt')].value
+@@ -406,6 +408,8 @@ class _PythonDependencyBase(_Base):
+                         vscrt = self.env.coredata.optstore.get_value_for('b_vscrt')
                          if vscrt in {'mdd', 'mtd', 'from_buildtype', 'static_from_buildtype'}:
                              vscrt_debug = True
 +                    if is_debug_build:
@@ -32,15 +22,34 @@ index 38e3d5f..6427980 100644
                      if is_debug_build and vscrt_debug and not self.variables.get('Py_DEBUG'):
                          mlog.warning(textwrap.dedent('''\
                              Using a debug build type with MSVC or an MSVC-compatible compiler
-@@ -390,10 +390,7 @@ def python_factory(env: 'Environment', for_machine: 'MachineChoice', 
-                     set_env('PKG_CONFIG_PATH', old_pkg_path)
- 
-             candidates.append(functools.partial(wrap_in_pythons_pc_dir, pkg_name, env, kwargs, installation))
-+            candidates.append(functools.partial(PythonPkgConfigDependency, pkg_name, env, kwargs, installation))
--            # We only need to check both, if a python install has a LIBPC. It might point to the wrong location,
--            # e.g. relocated / cross compilation, but the presence of LIBPC indicates we should definitely look for something.
--            if pkg_libdir is not None:
--                candidates.append(functools.partial(PythonPkgConfigDependency, pkg_name, env, kwargs, installation))
+@@ -475,17 +479,9 @@ class PythonPkgConfigDependency(PkgConfigDependency, _PythonDependencyBase):
          else:
-             candidates.append(functools.partial(PkgConfigDependency, 'python3', env, kwargs))
+             pkg_libdir = installation.info['variables'].get('LIBPC')
+             pkg_libdir_origin = 'LIBPC'
+-        if pkg_libdir is None:
+-            # we do not fall back to system directories, since this could lead
+-            # to using pkg-config of another Python installation, for example
+-            # we could end up using CPython .pc file for PyPy
+-            mlog.debug(f'Skipping pkgconfig lookup, {pkg_libdir_origin} is unset')
+-            self.is_found = False
+-            return
+-
+         for_machine = kwargs['native']
+         sysroot = environment.properties[for_machine].get_sys_root()
+-        if sysroot and not path_is_in_root(Path(pkg_libdir), Path(sysroot)):
++        if pkg_libdir is not None and sysroot and not path_is_in_root(Path(pkg_libdir), Path(sysroot)):
+             pkg_libdir = destdir_join(sysroot, pkg_libdir)
  
+         mlog.debug(f'Searching for {pkg_libdir!r} via pkgconfig lookup in {pkg_libdir_origin}')
+@@ -553,9 +549,10 @@ class PythonSystemDependency(SystemDependency, _PythonDependencyBase):
+                 path = destdir_join(sysroot, path)
+             inc_paths = mesonlib.OrderedSet([path])
+         else:
++            verdot = self.variables.get('py_version_short')
+             inc_paths = mesonlib.OrderedSet([
+                 self.variables.get('INCLUDEPY'),
+-                self.paths.get('include'),
++                self.paths.get('include') + f'/../../../include/python{verdot}',
+                 self.paths.get('platinclude')])
+ 
+         self.compile_args += ['-I' + path for path in inc_paths if path]

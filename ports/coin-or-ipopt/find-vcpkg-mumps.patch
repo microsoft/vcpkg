@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index f577d35..e183f86 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -122,7 +122,7 @@ fi
+ # MUMPS #
+ #########
+ 
+-AC_COIN_CHK_PKG(Mumps,[IpoptLib],[coinmumps])
++AC_COIN_CHK_PKG(Mumps,[IpoptLib],[unofficial-mumps-solver])
+ 
+ # Check whether MPI_Initialized is available
+ #   we assume that MPI_Finalized is present if MPI_Initialized is present

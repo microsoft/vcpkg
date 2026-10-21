@@ -64,7 +64,7 @@ diff --git a/scripts/CMakeLists.txt b/scripts/CMakeLists.txt
 index c4ef5694..8e933877 100644
 --- a/scripts/CMakeLists.txt
 +++ b/scripts/CMakeLists.txt
-@@ -315,10 +315,14 @@ MACRO(EXTRACT_LINK_LIBRARIES target var)
+@@ -321,6 +321,8 @@ MACRO(EXTRACT_LINK_LIBRARIES target var)
      FOREACH(lib ${TARGET_LIB_DEPENDS})
        IF (lib MATCHES "^\\-l")
          SET(${var} "${${var}} ${lib} ")
@@ -73,13 +73,16 @@ index c4ef5694..8e933877 100644
        ELSEIF (lib MATCHES "^ext::")
          STRING(REGEX MATCH "ext::([a-z]+)" MATCH_LIB "${lib}")
          SET(SYSTEM_LIB ${CMAKE_MATCH_1})
-         SET(${var} "${${var}} -l${SYSTEM_LIB} ")
+@@ -330,6 +332,8 @@ MACRO(EXTRACT_LINK_LIBRARIES target var)
+         ELSE()
+           SET(${var} "${${var}} ${SYSTEM_LINK_FLAG} ")
+         ENDIF()
 +      elseif(TARGET "${lib}" AND NOT WIN32)
 +        # merged or shared, not external
        ELSEIF (lib MATCHES "^\\-L")
          # Search directory. Test on FreeBSD: -L/usr/local/lib -lunwind
          SET(${var} "${${var}} ${lib} ")
-@@ -354,6 +358,7 @@ IF(MSVC)
+@@ -365,6 +369,7 @@ IF(MSVC)
    GET_TARGET_PROPERTY(LIBMYSQL_OS_SHLIB_VERSION mysqlclient VERSION)
    GET_TARGET_PROPERTY(LIBMYSQL_OS_OUTPUT_NAME mysqlclient OUTPUT_NAME)
  ELSE()
@@ -87,7 +90,7 @@ index c4ef5694..8e933877 100644
    GET_TARGET_PROPERTY(LIBMYSQL_OS_SHLIB_VERSION libmysql VERSION)
    GET_TARGET_PROPERTY(LIBMYSQL_OS_OUTPUT_NAME libmysql OUTPUT_NAME)
  ENDIF()
-@@ -373,6 +378,10 @@ IF (WITH_SSL STREQUAL "system")
+@@ -384,6 +389,10 @@ IF (WITH_SSL STREQUAL "system")
        "${CONFIG_LIBS_PRIVATE}")
    ENDIF()
  ENDIF()

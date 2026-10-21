@@ -1,0 +1,23 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1322,7 +1322,7 @@ if(USE_MIMALLOC)
+   set(MI_BUILD_OBJECT OFF)
+   set(MI_BUILD_TESTS OFF)
+   add_definitions(-DUSE_MIMALLOC)
+-  add_subdirectory(third_party/mimalloc)
++  find_package(mimalloc CONFIG QUIET)
+   include_directories(third_party/mimalloc/include)
+ endif()
+
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -120,8 +120,7 @@ if(NOT BUILD_LIBTORCHLESS)
+   endif()
+
+   if(USE_MIMALLOC)
+-    target_link_libraries(c10 PRIVATE "mimalloc-static")
+-    add_dependencies(c10 mimalloc-static)
++    target_link_libraries(c10 PRIVATE "mimalloc")
+   endif()
+
+   if(LINUX)

@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AngusJohnson/Clipper2
     REF "Clipper2_${VERSION}"
-    SHA512 64028ab0610dc2b44e48a299d8498de59807f36d8471c4758e3bbf87de682b0d0a29d027a495f36dd5432737cedc44f09a8336f0d620846d58616244c72e226c
+    SHA512 ce753ae3752b7516a9e0cb23c9788d9533c204819d5451ee50cf3b69a06e24165fa9f5270781764c036ad597eef83cf80532a5bebce5c96f5230179dc3ed499a
     HEAD_REF main
 )
 
@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         -DCLIPPER2_UTILS=ON
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -1,0 +1,35 @@
+{
+  "name": "vcpkg-ci-octave",
+  "version": "0.0.0",
+  "description": "Test the octave feature",
+  "dependencies": [
+    {
+      "name": "octave",
+      "features": [
+        "amd",
+        "arpack",
+        "bz2",
+        "camd",
+        "ccolamd",
+        "cholmod",
+        "colamd",
+        "curl",
+        "cxsparse",
+        {
+          "name": "fltk",
+          "platform": "!(x64 & linux)"
+        },
+        "fontconfig",
+        "freetype",
+        "graphicsmagick",
+        "gui",
+        "hdf5",
+        "klu",
+        "portaudio",
+        "qhull",
+        "spqr",
+        "umfpack"
+      ]
+    }
+  ]
+}

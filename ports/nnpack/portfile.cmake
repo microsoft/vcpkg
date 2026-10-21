@@ -14,9 +14,12 @@ vcpkg_cmake_configure(
         -DNNPACK_BUILD_TESTS=OFF
         -DNNPACK_BUILD_BENCHMARKS=OFF
         -DNNPACK_CUSTOM_THREADPOOL=OFF
+    MAYBE_UNUSED_VARIABLES
+        NNPACK_BUILD_BENCHMARKS
+
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

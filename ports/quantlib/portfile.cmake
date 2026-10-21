@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
     REF "v${VERSION}"
-    SHA512 b99051ec5b621e9bfd91851487d3dd2153618785b458fbe039b7ab58de8f6da0a36eb0240182a11696ab8ab67788069fc2c4e7efa347ddf3bb77fafe5b190a05
+    SHA512 42a504d0bdce89709a8f3ebcf9b79433ca1629a0281c75e7c948808ede012166b89fbfa0a50345c330e106a2239e5e4cc5dfcf9912ace8a90aeb8be3ed6bcfff
     HEAD_REF master
 )
 
@@ -14,7 +14,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DQL_BUILD_BENCHMARK=OFF
         -DQL_BUILD_EXAMPLES=OFF
         -DQL_BUILD_TEST_SUITE=OFF
 )
@@ -22,6 +21,17 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME QuantLib CONFIG_PATH lib/cmake/QuantLib)
 vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    foreach(config IN ITEMS "" "/debug")
+        set(pkgconfig_file "${CURRENT_PACKAGES_DIR}${config}/lib/pkgconfig/quantlib.pc")
+        if(EXISTS "${pkgconfig_file}")
+            file(GLOB quantlib_libraries "${CURRENT_PACKAGES_DIR}${config}/lib/QuantLib*.lib")
+            list(GET quantlib_libraries 0 quantlib_library)
+            get_filename_component(quantlib_library_name "${quantlib_library}" NAME_WE)
+            vcpkg_replace_string("${pkgconfig_file}" "-lQuantLib" "-l${quantlib_library_name}")
+        endif()
+    endforeach()
+endif()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -34,5 +44,8 @@ endif()
 # Install custom usage
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.TXT"
+    "${SOURCE_PATH}/ql/math/optimization/lmdif.cpp"
+    "${SOURCE_PATH}/ql/math/randomnumbers/mt19937uniformrng.cpp"
+)

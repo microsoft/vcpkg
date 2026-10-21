@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 29ec70f..95ea616 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,9 +13,9 @@ option(BUILD_SLICK_STREAM_BUFFER_MULTIPLEXER_TESTS "Build tests" ${PROJECT_IS_TO
+ set(SLICK_STREAM_BUFFER_MIN_VERSION 2.1.0)
+ set(SLICK_QUEUE_MIN_VERSION 2.3.0)
+ 
+-find_package(slick-stream-buffer ${SLICK_STREAM_BUFFER_MIN_VERSION} CONFIG QUIET)
++find_package(slick-stream-buffer CONFIG REQUIRED)
+ 
+-if (NOT slick-stream-buffer_FOUND)
++if (FALSE)
+     include(FetchContent)
+ 
+     # Disable slick-stream-buffer tests and examples, but allow installation
+@@ -30,9 +30,9 @@ else()
+     message(STATUS "Found slick-stream-buffer ${slick-stream-buffer_VERSION}: ${slick-stream-buffer_DIR}")
+ endif()
+ 
+-find_package(slick-queue ${SLICK_QUEUE_MIN_VERSION} CONFIG QUIET)
++find_package(slick-queue CONFIG REQUIRED)
+ 
+-if (NOT slick-queue_FOUND)
++if (FALSE)
+     include(FetchContent)
+ 
+     # Disable slick-queue tests and examples, but allow installation
+diff --git a/cmake/slick-stream-buffer-multiplexerConfig.cmake.in b/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
+index 5222907..abc7e79 100644
+--- a/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
++++ b/cmake/slick-stream-buffer-multiplexerConfig.cmake.in
+@@ -8,8 +8,8 @@
+ # this package was built and installed against. A missing dependency is reported as a hard error
+ # instead. Mirrors what slick-stream-buffer and slick-queue do in their own config files.
+ include(CMakeFindDependencyMacro)
+-find_dependency(slick-stream-buffer @SLICK_STREAM_BUFFER_MIN_VERSION@ CONFIG)
+-find_dependency(slick-queue @SLICK_QUEUE_MIN_VERSION@ CONFIG)
++find_dependency(slick-stream-buffer CONFIG)
++find_dependency(slick-queue CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/slick-stream-buffer-multiplexerTargets.cmake")
+ 

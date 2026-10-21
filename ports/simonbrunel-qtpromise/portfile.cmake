@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS 
         -DQTPROMISE_HEADER_INSTALL_DESTINATION="${CURRENT_PACKAGES_DIR}/include/${PORT}"
         -DQTPROMISE_HEADER_INSTALL_COMPONENTS="Release"
+        -DSUBPROJECT=ON # do not build tests
 )
 vcpkg_cmake_install()
 

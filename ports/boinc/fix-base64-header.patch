@@ -1,0 +1,17 @@
+diff --git a/lib/base64.h b/lib/base64.h
+index 0a4ad0e220d..9c8ea95d045 100644
+--- a/lib/base64.h
++++ b/lib/base64.h
+@@ -18,11 +18,8 @@
+ #ifndef BOINC_BASE64_H
+ #define BOINC_BASE64_H
+ 
+-#ifndef _WIN32
+-#include <cstdio>
+-#include <cstdlib>
++#include <stddef.h>
+ #include <string>
+-#endif
+ 
+ class InvalidBase64Exception
+ {

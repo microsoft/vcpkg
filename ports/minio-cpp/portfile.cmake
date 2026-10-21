@@ -1,8 +1,12 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Unable to build shared library on Windows yet
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO minio/minio-cpp
     REF "v${VERSION}"
-    SHA512 543dc1ab5bc23cdd5e2ea18c75280ed910a0336e3ab09627849afc256711db8e31885032a4bfa67420cb98db08ee8a4ee0852fe36b875ff4f7784fcf4353e044
+    SHA512 4ae6b3a3206b263f767a4c1461e07702eb66120e8a9f87c36bc7f0789538e8238cf0a1e8caf0a039e58bfb94ab782d642deacef84419bdad47496761a216c4b2
     HEAD_REF main
 )
 

@@ -1,0 +1,3 @@
+
+    find_package(ArrowCompute CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,ArrowCompute::arrow_compute_static,ArrowCompute::arrow_compute_shared>")

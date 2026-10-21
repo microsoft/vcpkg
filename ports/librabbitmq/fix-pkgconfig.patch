@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cbe638e..c9bef46 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -211,6 +211,8 @@ foreach (lib ${SOCKET_LIBRARIES})
+     set(libs_private "${libs_private} -l${lib}")
+ endforeach(lib)
+-set(libs_private "${libs_private} -l${LIBRT}")
++if(LIBRT)
++  set(libs_private "${libs_private} -l${LIBRT}")
++endif()
+ if (ENABLE_SSL_SUPPORT)
+   set(libs_private "${libs_private} -lssl -lcrypto ${CMAKE_THREAD_LIBS_INIT}")
+ endif()
+@@ -222,5 +224,14 @@ cmake_path(APPEND includedir "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
+ 
+ configure_file(cmake/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/librabbitmq/config.h)
++
++set(RMQ_LIBRARY_NAME rabbitmq)
++if(WIN32)
++  if(BUILD_SHARED_LIBS)
++    set(RMQ_LIBRARY_NAME "rabbitmq.${RMQ_SOVERSION}")
++  else()
++    set(RMQ_LIBRARY_NAME "librabbitmq.${RMQ_SOVERSION}")
++  endif()
++endif()
+ configure_file(librabbitmq.pc.in ${CMAKE_CURRENT_BINARY_DIR}/librabbitmq.pc @ONLY)
+ 
+ include(CMakePackageConfigHelpers)
+diff --git a/librabbitmq.pc.in b/librabbitmq.pc.in
+index 4c42775..8230963 100644
+--- a/librabbitmq.pc.in
++++ b/librabbitmq.pc.in
+@@ -7,6 +7,6 @@ Description: An AMQP 0-9-1 client library
+ Version: @RMQ_VERSION@
+ URL: https://github.com/alanxz/rabbitmq-c
+ Requires.private: @requires_private@
+-Libs: -L${libdir} -lrabbitmq
++Libs: -L${libdir} -l@RMQ_LIBRARY_NAME@
+ Libs.private: @libs_private@
+ Cflags: -I${includedir}

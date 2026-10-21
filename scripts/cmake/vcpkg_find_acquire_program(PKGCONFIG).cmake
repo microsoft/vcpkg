@@ -1,17 +1,17 @@
 macro(z_vcpkg_find_acquire_pkgconfig_msys_declare_packages)
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~2.2.0-1-any.pkg.tar.zst"
-        SHA512 c19bd55e42def33107b52816f7c49827467681d05a173a36d73789a58194bc7e4af04807e4902b62184f32012a2d75f41d8fb3bfddf8b20e2a8f14955c05e99d
+        URL "https://mirror.msys2.org/mingw/clangarm64/mingw-w64-clang-aarch64-pkgconf-1~3.0.7-1-any.pkg.tar.zst"
+        SHA512 55858bc65e3be564a43ac255f8c1fec4586a51afcba2cb0aba528c9909aa530a0f3d257de537d1c316b2695e86cbfd568fccb312f0bd91a4623c7cdbf4295220
         PROVIDES mingw-w64-clang-aarch64-pkg-config
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~2.2.0-1-any.pkg.tar.zst"
-        SHA512 eb6ba49d56b0edc4f605ad896ac9deb2202c853c821f1c28a26e3c71a5083e893c8697d174b141da9dc6561620ea218166bd041664d54a0ab51b93bad246ed7a
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-pkgconf-1~3.0.7-1-any.pkg.tar.zst"
+        SHA512 27a88825f334d8fe2477f193eaa30785f3b79aa03e07f5793611fe29c9b7dc552338216a4a1f24d2801a467dd453295c077fa07a9c6b83b882afd6bb3928ddec
         PROVIDES mingw-w64-x86_64-pkg-config
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~2.2.0-1-any.pkg.tar.zst"
-        SHA512 388788997a09bc394019aa4c2f0181a35a9aa8605b3bcf6b39f4bd0588f4e185573b6149ca54916677834059b0ccc75bf40db3fe6e7326ab268ea37f37346e22
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-pkgconf-1~3.0.7-1-any.pkg.tar.zst"
+        SHA512 a9a39bd4f4efd1d15f48ab9a1ea50b5eee7a56496bb187d792fb76e93181797e3803e6e78b8e8a1ec376020a8d2bdb6a4fb7db7dbccc88c8a1eea669cc39a1b4
         PROVIDES mingw-w64-i686-pkg-config
     )
 endmacro()
@@ -22,16 +22,6 @@ if(DEFINED "ENV{PKG_CONFIG}")
     set(PKGCONFIG "$ENV{PKG_CONFIG}" CACHE INTERNAL "")
     set(PKGCONFIG "${PKGCONFIG}" PARENT_SCOPE)
     return()
-elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
-    # As of 6.8, the OpenBSD specific pkg-config doesn't support {pcfiledir}
-    set(rename_binary_to "pkg-config")
-    set(program_version 0.29.2.1)
-    set(raw_executable ON)
-    set(download_filename "pkg-config.openbsd")
-    set(tool_subdirectory "openbsd")
-    set(download_urls "https://raw.githubusercontent.com/jgilje/pkg-config-openbsd/master/pkg-config")
-    set(download_sha512 b7ec9017b445e00ae1377e36e774cf3f5194ab262595840b449832707d11e443a102675f66d8b7e8b2e2f28cebd6e256835507b1e0c69644cc9febab8285080b)
-    set(version_command --version)
 elseif(CMAKE_HOST_WIN32)
     if(NOT EXISTS "${PKGCONFIG}")
         set(program_version 2.1.0)

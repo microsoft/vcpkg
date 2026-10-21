@@ -3,14 +3,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF 6097093ab329fcd19aed03a8fe67949f6971a65d #v19.24
-    SHA512 4bdcecdf0f986abc748245d21616bf2c304461e9a37572c66743f69141fc3f37eb846fdaedc6c910135d986534f7989cbcc52a884ae7a52464fbb2a07b16a327
+    REF "v${VERSION}"
+    SHA512 5104f12395a48ad2a9c196faab1b92d8ed5aaa026fff67f9a915ffd9a3c132ee2f68ce8b50a3c0bd3138ac4b42435bf6c0c5aa641bfabac47cde39ca465fe2f4
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
-        find_blas.patch
+        fix-flags.patch
 )
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,13 +35,17 @@ vcpkg_cmake_configure(
         ${COMMON_OPTIONS}
         -DDLIB_PNG_SUPPORT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
+        -Dtest_for_libpng_worked=TRUE # try_compile ignores vcpkg setup
         -DDLIB_JPEG_SUPPORT=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
+        -Dtest_for_libjpeg_worked=TRUE # try_compile ignores vcpkg setup
         -DDLIB_USE_BLAS=ON
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
+        -DDLIB_USE_FFMPEG=OFF
+        -DDLIB_NO_GUI_SUPPORT=ON
     OPTIONS_DEBUG
         ${dbg_opts}
         #-DDLIB_ENABLE_STACK_TRACE=ON
@@ -78,6 +81,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_a
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_sse4")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libjpeg")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libpng")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libjxl")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_libwebp")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm")
 
-file(INSTALL "${SOURCE_PATH}/dlib/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/dlib/LICENSE.txt")

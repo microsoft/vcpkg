@@ -1,0 +1,21 @@
+{
+  "name": "libdxfrw",
+  "version-date": "2025-09-25",
+  "description": "libdxfrw is a free C++ library to read and write DXF files in both formats, ascii and binary form. It also has rudimentary capabilities to read DWG files.",
+  "license": "GPL-2.0-only",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "dwg2dxf": {
+      "description": "Build the dwg2dxf tool to convert DWG files to DXF format"
+    }
+  }
+}

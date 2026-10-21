@@ -1,0 +1,19 @@
+diff --git a/src/Makefile b/src/Makefile
+index 91cc02a..fe30a96 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -62,12 +62,13 @@ OBJS := bpf.o btf.o libbpf.o libbpf_utils.o netlink.o 			\
+ SHARED_OBJS := $(addprefix $(SHARED_OBJDIR)/,$(OBJS))
+ STATIC_OBJS := $(addprefix $(STATIC_OBJDIR)/,$(OBJS))
+ 
+-STATIC_LIBS := $(OBJDIR)/libbpf.a
+ ifndef BUILD_STATIC_ONLY
+ 	SHARED_LIBS := $(OBJDIR)/libbpf.so \
+ 		       $(OBJDIR)/libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+ 		       $(OBJDIR)/libbpf.so.$(LIBBPF_VERSION)
+ 	VERSION_SCRIPT := libbpf.map
++else
++	STATIC_LIBS := $(OBJDIR)/libbpf.a
+ endif
+ 
+ HEADERS := bpf.h libbpf.h btf.h libbpf_common.h libbpf_legacy.h \

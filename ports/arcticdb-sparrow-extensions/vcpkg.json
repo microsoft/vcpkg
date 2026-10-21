@@ -1,0 +1,20 @@
+{
+  "name": "arcticdb-sparrow-extensions",
+  "version": "1.2.0",
+  "description": "Apache Arrow canonical extensions for Sparrow",
+  "homepage": "https://github.com/QuantStack/sparrow-extensions",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "arcticdb-sparrow",
+    "simdjson",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

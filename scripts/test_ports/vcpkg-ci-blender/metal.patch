@@ -1,0 +1,13 @@
+diff --git a/intern/ghost/GHOST_Types.h b/intern/ghost/GHOST_Types.h
+index 0c51c3de..48142496 100644
+--- a/intern/ghost/GHOST_Types.h
++++ b/intern/ghost/GHOST_Types.h
+@@ -226,7 +226,7 @@ typedef enum {
+ #ifdef WIN32
+   GHOST_kDrawingContextTypeD3D,
+ #endif
+-#if defined(__APPLE__) && defined(WITH_METAL_BACKEND)
++#if defined(__APPLE__)
+   GHOST_kDrawingContextTypeMetal,
+ #endif
+ #ifdef WITH_VULKAN_BACKEND

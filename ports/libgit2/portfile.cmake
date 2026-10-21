@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v1.8.0
-    SHA512 e5634267bd9c6a594c9a954d09c657e7b8aadf213609bf7dd83b99863d0d0c7109a5277617dd508abc2da54ea3f12c2af1908d1aeb73c000e94056e2f3653144
+    REF "v${VERSION}"
+    SHA512 96924a4fd87669ad91d40669946cd249b646f3ce85380fc12b553b6c20338ff3c1df5faa6f168b2ca12ed20c8309116a05021f9710ee7ff61e5b8a249172b0ba
     HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
-        unofficial-config-export.diff
+        no-static-whole-program-optimization.diff # don't /GL a static lib; it forces /LTCG on consumers
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"
@@ -72,6 +72,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
     FEATURES
         tools   BUILD_CLI
+        sha256  EXPERIMENTAL_SHA256
 )
 
 vcpkg_cmake_configure(
@@ -94,18 +95,18 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-git2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-git2")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libgit2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libgit2")
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libgit2 CONFIG_PATH share/unofficial-libgit2)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 if("tools" IN_LIST FEATURES)
+    # Since SHA256 is considered an "experimental" feature, it renames the executable. This renames it back.
+    if("sha256" IN_LIST FEATURES)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/git2-experimental${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/bin/git2${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    endif()
+
     vcpkg_copy_tools(TOOL_NAMES git2 AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 set(file_list "${SOURCE_PATH}/COPYING")
 if(NOT VCPKG_TARGET_IS_WINDOWS)

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f000be0..6e74ebe 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -238,9 +238,6 @@ endif ()
+ 
+ # main library
+ if (BUILD_STATIC)
+-  if (WIN32)
+-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+-  endif()
+   set(ISMRMRD_PUGIXML_LIBRARIES pugixml::static)
+   add_library(ismrmrd STATIC ${ISMRMRD_TARGET_SOURCES})
+ else()

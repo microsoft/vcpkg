@@ -1,8 +1,10 @@
+string(REPLACE "." "_" VERSION "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO munt/munt
-    REF libmt32emu_2_7_1
-    SHA512 369d1c5f16b37f3d8544ad30a30c3aa9d0796f67fcf5988e789958bff14bba119f7c5fd4c43816eb369a14b56f22f0c7eb3016ff838cd36d1d6f22ed84a2e8b9
+    REF libmt32emu_${VERSION}
+    SHA512 380f564dfe1e9754c40d1ba8f9ebe409bedd813accc166dce3783944d3c172e1afd68bdf536e3cc476d1362710eddea44b3457d26ba9aeb7f0cb5ed70efd3c3d
     HEAD_REF master
 )
 
@@ -12,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/mt32emu"
     OPTIONS
         -Dlibmt32emu_SHARED:BOOL=${BUILD_SHARED}
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

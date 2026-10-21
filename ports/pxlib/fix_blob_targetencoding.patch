@@ -1,0 +1,43 @@
+diff --git a/src/paradox.c b/src/paradox.c
+index 0000000..0000000 100644
+--- a/src/paradox.c
++++ b/src/paradox.c
+@@ -2037,6 +2037,38 @@
+ 						ret = PX_get_data_blob(pxdoc, &data[offset], pxf->px_flen, &mod_nr, &size, &blobdata);
+ 					if(ret > 0) {
+ 						if(blobdata) {
++#if PX_USE_ICONV
++							/* Memo BLObs are text in the DB's source codepage;
++							 * convert to targetencoding here, mirroring
++							 * PX_get_data_alpha. Other blob types
++							 * (pxfBLOb, pxfGraphic, pxfOLE) stay binary. */
++							if((pxf->px_ftype == pxfMemoBLOb || pxf->px_ftype == pxfFmtMemoBLOb)
++							   && pxdoc->targetencoding != NULL
++							   && pxdoc->out_iconvcd != (iconv_t)-1 && size > 0) {
++								char *obuf, *iptr = blobdata, *optr;
++								size_t olen = 2*(size_t)size + 1, ilen = (size_t)size;
++								int res;
++								optr = obuf = (char *) malloc(olen);
++								if(obuf != NULL) {
++									res = (int)iconv(pxdoc->out_iconvcd, &iptr, &ilen, &optr, &olen);
++									if(0 <= res) {
++										char *nb;
++										*optr = '\0';
++										olen = optr - obuf;
++										nb = (char *) pxdoc->malloc(pxdoc, olen+1,
++											_("Allocate memory for re-encoded memo data."));
++										if(nb) {
++											memcpy(nb, obuf, olen);
++											nb[olen] = '\0';
++											pxdoc->free(pxdoc, blobdata);
++											blobdata = nb;
++											size = (int)olen;
++										}
++									}
++									free(obuf);
++								}
++							}
++#endif
+ 							dataptr[i]->value.str.val = blobdata;
+ 							dataptr[i]->value.str.len = size;
+ 						} else {

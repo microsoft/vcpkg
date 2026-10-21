@@ -1,0 +1,22 @@
+diff --git a/src/timezone/meson.build b/src/timezone/meson.build
+index ad9f6f6..bb06082 100644
+--- a/src/timezone/meson.build
++++ b/src/timezone/meson.build
+@@ -27,7 +27,7 @@ if get_option('system_tzdata') == ''
+   # FIXME: For cross builds, it would need a native built libpgport/pgcommon to
+   # build our zic. But for that we'd need to run a good chunk of the configure
+   # tests both natively and cross. Unclear if it's worth it.
+-  if meson.is_cross_build()
++  if meson.is_cross_build() or get_option('ZIC') != 'zic'
+     zic = find_program(get_option('ZIC'), native: true, required: true)
+   else
+     if host_system == 'windows'
+@@ -38,7 +38,7 @@ if get_option('system_tzdata') == ''
+ 
+     zic = executable('zic', zic_sources,
+                      dependencies: [frontend_code],
+-                     kwargs: default_bin_args + {'install': false}
++                     kwargs: default_bin_args + {'install': true}
+                     )
+   endif
+ 

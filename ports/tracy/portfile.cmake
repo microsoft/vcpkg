@@ -1,105 +1,90 @@
-
-# It is possible to run into some issues when profiling when we uses Tracy client as a shared client
-# As as safety measure let's build Tracy as a static library for now
-# More details on Tracy Discord (e.g. https://discord.com/channels/585214693895962624/585214693895962630/953599951328403506)
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
-    REF v0.10
-    SHA512 3fc406a42380f6ebe671d560482733f3cdbca16dd7721ac2fce8f1cdefb96ba87701714c2ee8161d65d9e185bc5f9a0fe587a3843eb75f851b10eb895358cb64
+    REF "v${VERSION}"
+    SHA512 53912d7563e595812b37bc55fd40508cfd8e5c42d48d957a73b6b7d18bf1287b3f795c10c9a986bf7b906d5b5bebe13b02216e563e794d0a82b2783e8ce5510b
     HEAD_REF master
     PATCHES
-        001-fix-vcxproj-vcpkg.patch
-        002-use-internal-imgui.patch
+        fix-debug-install-dirs.patch # vcpkg splits debug/release prefixes; upstream nests non-Release output in a $<CONFIG> subdir (microsoft/vcpkg#52343)
+        build-tools.patch
+        fix-vendor-versions.patch
+        downgrade-capstone-5.patch # tracy wants capstone-6-alpha but vcpkg ships the most recent production capstone, 5.0.9 as of 2026-09-07
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         on-demand TRACY_ON_DEMAND
         fibers	  TRACY_FIBERS
+        verbose   TRACY_VERBOSE
     INVERTED_FEATURES
         crash-handler TRACY_NO_CRASH_HANDLER
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS TOOLS_OPTIONS
+    FEATURES
+        cli-tools VCPKG_CLI_TOOLS
+        gui-tools VCPKG_GUI_TOOLS
+)
+
+if ("gui-tools" IN_LIST FEATURES)
+   vcpkg_from_github(
+       OUT_SOURCE_PATH tracy_imgui_path
+       REPO ocornut/imgui
+       REF "v1.92.9b-docking"
+       SHA512 7eddcdb475f1db1fc8242d918533b955c964d2267abe713bdf23f8e2444770946d3c79c7855e360bab6168e36231b95bd05a84106c08f876dcd53daac9caccac
+       PATCHES
+           "${SOURCE_PATH}/cmake/imgui-emscripten.patch"
+           "${CURRENT_PORT_DIR}/imgui-loader.patch" # upstream's copy has stale line numbers that git apply rejects
+           "${SOURCE_PATH}/cmake/imgui-no-samplers.patch"
+           "${SOURCE_PATH}/cmake/imgui-no-default-font.patch"
+           "${SOURCE_PATH}/cmake/imgui-macos-clipboard.patch"
+           "${SOURCE_PATH}/cmake/imgui-phantom-column.patch"
+   )
+   list(APPEND TOOLS_OPTIONS "-DImGui_SOURCE_DIR=${tracy_imgui_path}")
+
+   # tracy-profiler statically links imgui
+   list(APPEND extra_copyright "${tracy_imgui_path}/LICENSE.txt")
+endif()
+
+if("cli-tools" IN_LIST FEATURES OR "gui-tools" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND TOOLS_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        -DTRACY_ENABLE=ON # upstream default changed to OFF in 0.14.0
+        -DLEGACY=ON
+        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON # embeds a git hash in the binaries; see build-tools.patch
+        ${FEATURE_OPTIONS}
+    OPTIONS_RELEASE
+        ${TOOLS_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        LEGACY
+        CMAKE_DISABLE_FIND_PACKAGE_Git
+        ImGui_SOURCE_DIR
 )
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy CONFIG_PATH "lib/cmake/Tracy")
 
-function(tracy_tool_install_unix tracy_TOOL tracy_TOOL_NAME)
-    foreach(buildtype IN ITEMS "debug" "release")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "${buildtype}")
-            if("${buildtype}" STREQUAL "debug")
-                set(short_buildtype "-dbg")
-                set(path_suffix "/debug")
-            else()
-                set(short_buildtype "-rel")
-                set(path_suffix "")
-            endif()
-
-            file(COPY "${SOURCE_PATH}/${tracy_TOOL}/build/unix" DESTINATION "${SOURCE_PATH}/${tracy_TOOL}/_build")
-            file(RENAME "${SOURCE_PATH}/${tracy_TOOL}/_build/unix" "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
-            file(REMOVE_RECURSE "${SOURCE_PATH}/${tracy_TOOL}/_build")
-
-            set(path_makefile_dir "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}")
-            cmake_path(RELATIVE_PATH path_makefile_dir 
-                BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${short_buildtype}"
-                OUTPUT_VARIABLE relative_path_makefile_dir)
-
-            set(ENV{LEGACY} 1)
-            vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-            vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}${path_suffix}/lib/pkgconfig")
-
-            message(STATUS "Building ${tracy_TOOL_NAME} ${TARGET_TRIPLET}${short_buildtype}")
-            vcpkg_build_make(
-                BUILD_TARGET ${buildtype}
-                SUBPATH ${relative_path_makefile_dir}
-                LOGFILE_ROOT "build-${tracy_TOOL}"
-            )
-            vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
-
-            file(INSTALL "${SOURCE_PATH}/${tracy_TOOL}/build/unix${short_buildtype}/${tracy_TOOL_NAME}-${buildtype}"
-                DESTINATION "${CURRENT_PACKAGES_DIR}${path_suffix}/tools/${PORT}"
-                RENAME "${tracy_TOOL_NAME}"
-                USE_SOURCE_PERMISSIONS)
-        endif()
-    endforeach()
-endfunction()
-
-function(tracy_tool_install_win32 tracy_TOOL tracy_TOOL_NAME)
-    vcpkg_install_msbuild(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "${tracy_TOOL}/build/win32/${tracy_TOOL_NAME}.sln"
-        USE_VCPKG_INTEGRATION
-    )
-endfunction()
-
-function(tracy_tool_install tracy_TOOL tracy_TOOL_NAME)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        tracy_tool_install_win32("${tracy_TOOL}" "${tracy_TOOL_NAME}")
-    else()
-        tracy_tool_install_unix("${tracy_TOOL}" "${tracy_TOOL_NAME}")
-    endif()
-endfunction()
-
+set(TOOLS)
 if("cli-tools" IN_LIST FEATURES)
-    tracy_tool_install(capture capture)
-    tracy_tool_install(csvexport csvexport)
-    tracy_tool_install(import-chrome import-chrome)
-    tracy_tool_install(update update)
+    list(APPEND TOOLS tracy-capture tracy-capture-daemon tracy-csvexport tracy-merge tracy-update)
+    # tracy-import-* have no install() rule upstream; take them from the build tree.
+    vcpkg_copy_tools(
+        TOOL_NAMES tracy-import-chrome tracy-import-fuchsia
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/import"
+    )
 endif()
 if("gui-tools" IN_LIST FEATURES)
-    tracy_tool_install(profiler Tracy)
+    list(APPEND TOOLS tracy-profiler)
 endif()
 
-vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
-vcpkg_fixup_pkgconfig()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if(TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
+endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra_copyright})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

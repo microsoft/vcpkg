@@ -1,0 +1,61 @@
+{
+    "HotReload": {
+        "clearLog": false,
+        "deletePatchFiles": true,
+        "hotReloadShortcutModifiers": 3,
+        "hotReloadShortcutVirtualKeyCode": 122,
+        "loadIncompleteCompilands ": false,
+        "loadIncompleteModules": false,
+        "timeout": 3000
+    },
+    "HotRestart": {
+        "hotRestartShortcutModifiers": 3,
+        "hotRestartShortcutVirtualKeyCode": 82,
+        "timeout": 10000
+    },
+    "IDE": {
+        "keepBreakpointsEnabled": false,
+        "showModalDialog": false,
+        "toggleOptimizationsShortcutModifiers": 3,
+        "toggleOptimizationsShortcutVirtualKeyCode": 79
+    },
+    "Licensing": {
+        "enableLicenseExpirationWarning": true,
+        "licenseExpirationWarningDays": 14
+    },
+    "Logging": {
+        "colorError": -65536,
+        "colorInfo": -1,
+        "colorPanic": -11141121,
+        "colorPlatform": -88543,
+        "colorSuccess": -16711936,
+        "colorTimeAndDate": -6250336,
+        "colorWarning": -256,
+        "enableWordWrap": false,
+        "font": "Courier New,10,-1,2,400,0,0,0,0,0,0,0,0,0,0,1",
+        "printTimestamps": true,
+        "verbosity": 0
+    },
+    "Network": {
+        "hostOrIP": "127.0.0.1",
+        "port": 12216,
+        "timeout": 2000
+    },
+    "Notifications": {
+        "areEnabled": true,
+        "focusType": 0,
+        "playSoundOnError": false,
+        "playSoundOnSuccess": false,
+        "soundOnError": "",
+        "soundOnSuccess": ""
+    },
+    "UI": {
+        "initialState": 0,
+        "language": 65535,
+        "showAnimatedIcon": true,
+        "showColorizedIcon": true,
+        "showErrorOnVersionMismatch": true,
+        "showTaskBarProgress": true,
+        "style": 1
+    }
+}

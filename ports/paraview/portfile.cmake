@@ -60,6 +60,9 @@ vcpkg_from_github(
         fix-build.patch
         fix-configure.patch
         protobuf-version.patch
+        plugin.patch
+        explicit_int_cast_2.patch
+        fix-fmt-header.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -88,6 +91,8 @@ vcpkg_from_gitlab(
     REPO paraview/qttesting
     REF 375c33053704e2d99dda4d2e1dfc9f6f85b3e73f
     SHA512  4d42352394017f4a07ed96dea6b5c0caf3bc6b22bbe0c8f5df6d2740cb7b2946e0b04ac7b79b88bc7c4281bb8d48071878f42c41c042de8ef6979818d26490e5
+    PATCHES
+      explicit_int_cast.patch
 )
 
 vcpkg_from_gitlab(
@@ -103,17 +108,15 @@ file(COPY "${QTTESTING_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/QtT
 file(COPY "${ICET_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/ThirdParty/IceT/vtkicet")
 
 if("python" IN_LIST FEATURES)
+    # This sections relies on target package python3.
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
-        string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
-        set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
-        set(python_ver "3.${PYTHON_VERSION_MINOR}")
+        set(python_ver "3")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
-        -DPARAVIEW_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        "-DPARAVIEW_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}" # from vcpkg-port-config.cmake
         -DVTK_MODULE_ENABLE_ParaView_PythonCatalyst:STRING=YES
         )
 endif()

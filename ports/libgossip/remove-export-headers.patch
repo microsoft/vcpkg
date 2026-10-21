@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dd29ed7..271b03a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -112,7 +112,6 @@ configure_package_config_file(
+ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/libgossipConfig.cmake
+         ${CMAKE_CURRENT_BINARY_DIR}/libgossipConfigVersion.cmake
+-        ${CMAKE_CURRENT_BINARY_DIR}/libgossip_export.h
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libgossip)
+ 
+ # Process examples if enabled

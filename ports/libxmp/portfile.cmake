@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libxmp/libxmp
     REF libxmp-${VERSION}
-    SHA512 5f7690e274f3857bd6889cd2ba637473f4a85359a6ef87c76313f87d0c725e3880ba6e428b542dbbf0c8a7725a87b5019289b3f19d2c5bb49527b380f1b4f7e4
+    SHA512 d38106075419a2931fcf83d8b81cc799e850f0a81fc4e327e940c39d50c621686580c88986e962111c706175ec9b6188dac3c53a507f020c3d6a9b4dc5fe492f
     PATCHES
         fix-cmake-config-dir.patch
 )
@@ -35,8 +35,23 @@ vcpkg_cmake_config_fixup(
 
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS
+    AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxmp.pc"
+    AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libxmp-static.lib")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxmp.pc" " -lxmp" " -lxmp-static")
+endif()
+if(VCPKG_TARGET_IS_WINDOWS
+    AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxmp.pc"
+    AND EXISTS "${CURRENT_PACKAGES_DIR}/lib/libxmp-static.lib")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxmp.pc" " -lxmp" " -lxmp-static")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xmp.h" "defined(LIBXMP_STATIC)" "1")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/COPYING.LIB")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/COPYING" "${SOURCE_PATH}/docs/CREDITS")

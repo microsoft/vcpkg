@@ -1,4 +1,0 @@
-node-addon-api provides CMake targets:
-
-    find_package(unofficial-node-addon-api CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::node-addon-api::node-addon-api)

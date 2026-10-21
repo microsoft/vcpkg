@@ -4,11 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/cobalt
     REF boost-${VERSION}
-    SHA512 805c9ddadf2f66adb2b594c234bfd1f69d398dacdbef3b0d3d03f7e4d4110d8bf8fc5fa3fb707eb9f2c41d039ffd77c27df17185ea94be4a172419c82f642b3a
+    SHA512 a12b0758f464cda4a2b3e9a4ac6961ad662a2e058ec3be3e72a7a1a7759926499150081abef130c53a974e3f839a2407158b017412e97a305a9cd19af7bf8a87
     HEAD_REF master
+    PATCHES
+        fail-on-compiler-not-supported.patch
+        install-cobalt-io.patch
 )
 
 set(FEATURE_OPTIONS "")
+include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}

@@ -1,0 +1,52 @@
+diff --git a/common/rendering.h b/common/rendering.h
+index 20ad5b3..ebaf6d3 100644
+--- a/common/rendering.h
++++ b/common/rendering.h
+@@ -234,7 +234,7 @@ namespace rs2
+     // Simple font loading code //
+     //////////////////////////////
+ 
+-#include "../third-party/stb_easy_font.h"
++#include <stb_easy_font.h>
+ 
+     inline void draw_text(int x, int y, const char * text)
+     {
+diff --git a/src/proc/color-formats-converter.cpp b/src/proc/color-formats-converter.cpp
+index 6bfdd99..a362221 100644
+--- a/src/proc/color-formats-converter.cpp
++++ b/src/proc/color-formats-converter.cpp
+@@ -9,7 +9,7 @@
+ 
+ #define STB_IMAGE_STATIC
+ #define STB_IMAGE_IMPLEMENTATION
+-#include "../third-party/stb_image.h"
++#include <stb_image.h>
+ 
+ #ifdef RS2_USE_CUDA
+ #include "cuda/cuda-conversion.cuh"
+diff --git a/tools/convert/converters/converter-png.hpp b/tools/convert/converters/converter-png.hpp
+index a2a26c1..4153361 100644
+--- a/tools/convert/converters/converter-png.hpp
++++ b/tools/convert/converters/converter-png.hpp
+@@ -7,7 +7,7 @@
+ 
+ // 3rd party header for writing png files
+ #define STB_IMAGE_WRITE_IMPLEMENTATION
+-#include <third-party/stb_image_write.h>
++#include <stb_image_write.h>
+ 
+ #include "../converter.hpp"
+ 
+diff --git a/tools/embed/CMakeLists.txt b/tools/embed/CMakeLists.txt
+index f76ce44..a1d9fbf 100644
+--- a/tools/embed/CMakeLists.txt
++++ b/tools/embed/CMakeLists.txt
+@@ -18,6 +18,8 @@ target_include_directories(rs-embed PRIVATE ../../third-party)
+ target_link_libraries( rs-embed PRIVATE tclap rs_lz4 )
+ set_target_properties (rs-embed PROPERTIES FOLDER Tools)
+ 
++find_package(Stb REQUIRED)
++target_include_directories(rs-embed PRIVATE "${Stb_INCLUDE_DIR}")
+ 
+ install(
+     TARGETS

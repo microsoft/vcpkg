@@ -1,0 +1,10 @@
+diff --git a/LICENSE.txt b/LICENSE.txt
+index 50ea704..bf81343 100644
+--- a/LICENSE.txt
++++ b/LICENSE.txt
+@@ -11,4 +11,4 @@ available under any license.
+ Various other freely distributable files are contained in the unittests
+ and are not used in the library code itself.
+ 
+-See the full license texts in the LICENSES folder.
++See the full license texts provided below in this file.

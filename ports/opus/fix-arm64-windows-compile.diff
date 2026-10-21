@@ -1,0 +1,13 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -563,7 +563,9 @@
+         target_compile_definitions(opus PRIVATE OPUS_HAVE_RTCD)
+         add_sources_group(opus celt ${celt_sources_arm_rtcd})
+         add_sources_group(opus silk ${silk_sources_arm_rtcd})
+-        add_sources_group(opus lpcnet ${dnn_sources_arm_rtcd})
++        if (OPUS_DNN)
++          add_sources_group(opus lpcnet ${dnn_sources_arm_rtcd})
++        endif()
+       else()
+         message(ERROR "Runtime cpu capability detection needed for MAY_HAVE_NEON")
+       endif()

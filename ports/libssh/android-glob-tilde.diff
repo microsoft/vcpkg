@@ -1,0 +1,28 @@
+diff --git a/src/bind_config.c b/src/bind_config.c
+index 27c42c9..9e9c5f0 100644
+--- a/src/bind_config.c
++++ b/src/bind_config.c
+@@ -248,6 +248,9 @@ static void local_parse_glob(ssh_bind bind,
+     int rt;
+     u_int i;
+ 
++#if defined(__ANDROID__) && !defined(GLOB_TILDE)
++    const int GLOB_TILDE = 0;
++#endif
+     rt = glob(fileglob, GLOB_TILDE, NULL, &globbuf);
+     if (rt == GLOB_NOMATCH) {
+         globfree(&globbuf);
+diff --git a/src/config.c b/src/config.c
+index c5c4012..72a9bdd 100644
+--- a/src/config.c
++++ b/src/config.c
+@@ -249,6 +249,9 @@ static void local_parse_glob(ssh_session session,
+     int rt;
+     size_t i;
+ 
++#if defined(__ANDROID__) && !defined(GLOB_TILDE)
++    const int GLOB_TILDE = 0;
++#endif
+     rt = glob(fileglob, GLOB_TILDE, NULL, &globbuf);
+     if (rt == GLOB_NOMATCH) {
+         globfree(&globbuf);

@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tukaani-project/xz
     REF "v${VERSION}"
-    SHA512 ec708bcddc64285b0c36b89c9e6413994af4c15bb6865a7bc243a048ce86afccd0df88d46d55aa23fb8071d137dcc19cf357117adc92f030919540f8993cacf9
+    SHA512 6a0e9c3b05f9c20255c5e35c06fdcd44b9e201f4ed566d1dec052b6cfda6cdfb42f73ffd258eaad2d8b7737c66b78ae353aebd44502e24a3d89d8765d698dcae
     HEAD_REF master
     PATCHES
-        win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
         build-tools.patch
 )
 
@@ -13,6 +12,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools BUILD_TOOLS
 )
+
+if("tools" IN_LIST FEATURES)
+    set(XZ_SANDBOX "auto")
+else()
+    set(XZ_SANDBOX "no")
+endif()
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     set(WASM_OPTIONS -DCMAKE_C_BYTE_ORDER=LITTLE_ENDIAN -DCMAKE_CXX_BYTE_ORDER=LITTLE_ENDIAN)
@@ -28,11 +33,15 @@ vcpkg_cmake_configure(
         -DCREATE_LZMA_SYMLINKS=OFF
         -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=   # using flags from (vcpkg) toolchain
         -DENABLE_NLS=OFF # nls is not supported by this port, yet
+        -DXZ_NLS=OFF
+        -DXZ_SANDBOX:STRING=${XZ_SANDBOX}
     MAYBE_UNUSED_VARIABLES
         CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
         ENABLE_NLS
+        # Only used with the tools feature.
+        XZ_SANDBOX
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -47,7 +56,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 set(prefix "${CURRENT_INSTALLED_DIR}")
 configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" @ONLY)
-if (NOT VCPKG_BUILD_TYPE)
+if(NOT VCPKG_BUILD_TYPE)
   set(prefix "${CURRENT_INSTALLED_DIR}/debug")
   configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" @ONLY)
 endif()
@@ -83,4 +92,5 @@ endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

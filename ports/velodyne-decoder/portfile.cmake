@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO valgur/velodyne_decoder
     REF "v${VERSION}"
-    SHA512 f09dd173cdea6b651a023d799bed7047ee2ac8518446d57e289a6eed9a92ff1ec2644ec49b78bd29ecfebb2046cb89455910bcb476db852a14e42e106b9881ce
+    SHA512 aba310e06ded29699233dabb7588a0044661754777d0811b735ef92184ce1499680aa39cf1ad28e813330a89ea59d73882ec9a148b45b461433ce140b3dae680
     HEAD_REF develop
     PATCHES
         0001-fix-msvc-flags.patch

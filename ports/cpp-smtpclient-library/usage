@@ -1,0 +1,4 @@
+cpp-smtpclient-library provides CMake targets:
+
+  find_package(smtpclient CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE smtpclient::smtpclient)

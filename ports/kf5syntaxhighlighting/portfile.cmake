@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/syntax-highlighting
-    REF v5.98.0
-    SHA512 05dd4d33c54b092629669a24d378002b24b140b767ed52e7f6d90aea5f5b6a30ce04ea1c87d534bd9ed239ae7bb334b65ce13a2b9af5ebef5272467fd44828bd
+    REF "v${VERSION}"
+    SHA512 e9145d74dd8cd35d18d25dd1237f7c188dcdaa3f00187833188b1a8312a595175b6d5eb40341e5014b37cfa372e2b21f351737cd4af4ac4006403a928f8f3963
     HEAD_REF master
 )
 
@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5SyntaxHighlighting CONFIG_PATH lib/cmake/KF5SyntaxHighlighting)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5SyntaxHighlighting)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
@@ -38,4 +38,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

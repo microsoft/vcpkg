@@ -1,0 +1,94 @@
+diff --git a/src/libutil/strutil.cpp b/src/libutil/strutil.cpp
+index 844275c..3c3b67b 100644
+--- a/src/libutil/strutil.cpp
++++ b/src/libutil/strutil.cpp
+@@ -29,6 +29,9 @@ OIIO_PRAGMA_WARNING_POP
+ #if defined(__APPLE__) || defined(__FreeBSD__)
+ #    include <xlocale.h>
+ #endif
++#ifdef __EMSCRIPTEN__
++#    include <strings.h>
++#endif
+ #ifdef _WIN32
+ #    include <windows.h>
+ #endif
+@@ -51,7 +54,7 @@ OIIO_PRAGMA_WARNING_POP
+ #endif
+ #define stbsp__uintptr std::uintptr_t
+ 
+-#ifdef OpenImageIO_SANITIZE
++#if defined(OpenImageIO_SANITIZE) || defined(__EMSCRIPTEN__)
+ #    define STB_SPRINTF_NOUNALIGNED
+ #endif
+ 
+@@ -539,6 +542,8 @@ strcasecmp(const char* a, const char* b)
+         if (*us1++ == '\0')
+             return (0);
+     return (tolower_l(*us1, c_loc) - tolower_l(*--us2, c_loc));
++#elif defined(__EMSCRIPTEN__)
++    return ::strcasecmp(a, b);
+ #else
+ #    error("need equivalent of strcasecmp_l on this platform");
+ #endif
+@@ -567,6 +572,8 @@ strncasecmp(const char* a, const char* b, size_t size)
+         } while (--size != 0);
+     }
+     return (0);
++#elif defined(__EMSCRIPTEN__)
++    return ::strncasecmp(a, b, size);
+ #else
+ #    error("need equivalent of strncasecmp_l on this platform");
+ #endif
+diff --git a/src/libutil/sysutil.cpp b/src/libutil/sysutil.cpp
+index 03e9127..e3075ea 100644
+--- a/src/libutil/sysutil.cpp
++++ b/src/libutil/sysutil.cpp
+@@ -62,6 +62,11 @@
+ #    include <unistd.h>
+ #endif
+ 
++#ifdef __EMSCRIPTEN__
++#    include <chrono>
++#    include <unistd.h>
++#endif
++
+ #include <OpenImageIO/dassert.h>
+ #include <OpenImageIO/filesystem.h>
+ #include <OpenImageIO/strutil.h>
+@@ -132,6 +137,8 @@ Sysutil::memory_used(bool resident)
+     // FIXME -- does somebody know a good method for figuring this out for
+     // FreeBSD?
+     return 0;  // Punt
++#elif defined(__EMSCRIPTEN__)
++    return 0;
+ #else
+     // No idea what platform this is
+     OIIO_ASSERT(0 && "Need to implement Sysutil::memory_used on this platform");
+@@ -204,6 +211,8 @@ Sysutil::physical_memory()
+     sysctl(mib, 2, &physical_memory, &length, NULL, 0);
+     return physical_memory;
+ 
++#elif defined(__EMSCRIPTEN__)
++    return 0;
+ #else
+     // No idea what platform this is
+     OIIO_ASSERT(
+@@ -270,7 +279,8 @@ Sysutil::this_program_path()
+     size_t cb = sizeof(filename);
+     int r     = 1;
+     sysctl(mib, 4, filename, &cb, NULL, 0);
+-#elif defined(__GNU__) || defined(__OpenBSD__) || defined(_WIN32)
++#elif defined(__GNU__) || defined(__OpenBSD__) || defined(_WIN32) \
++    || defined(__EMSCRIPTEN__)
+     int r = 0;
+ #else
+     // No idea what platform this is
+@@ -301,6 +311,8 @@ Sysutil::usleep(unsigned long useconds)
+ {
+ #ifdef _WIN32
+     Sleep(useconds / 1000);  // Win32 Sleep() is milliseconds, not micro
++#elif defined(__EMSCRIPTEN__)
++    std::this_thread::sleep_for(std::chrono::microseconds(useconds));
+ #else
+     ::usleep(useconds);  // *nix usleep() is in microseconds
+ #endif

@@ -1,0 +1,13 @@
+diff --git a/src/Fourier.cpp b/src/Fourier.cpp
+index 9f9220a28c..81ae37fdea 100644
+--- a/src/Fourier.cpp
++++ b/src/Fourier.cpp
+@@ -4,7 +4,7 @@
+ #include "Fourier.h"
+ #include "Assert.h"
+ 
+-#include "../submodules/pffft/pffft.h"
++#include "pffft/pffft.h"
+ namespace Bungee::Fourier {
+ 
+ #ifndef BUNGEE_USE_PFFFT

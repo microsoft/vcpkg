@@ -1,0 +1,54 @@
+{
+  "name": "vcpkg-ci-dartsim",
+  "version-string": "ci",
+  "description": "Validates dartsim within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "dartsim",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all features",
+      "dependencies": [
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "collision-bullet",
+            "collision-ode",
+            "spdlog",
+            "utils"
+          ]
+        },
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "utils-urdf"
+          ],
+          "platform": "!staticcrt"
+        },
+        {
+          "name": "dartsim",
+          "default-features": false,
+          "features": [
+            "gui",
+            "gui-osg"
+          ],
+          "platform": "!arm & !android"
+        }
+      ]
+    }
+  }
+}

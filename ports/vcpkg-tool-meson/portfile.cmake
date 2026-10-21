@@ -8,8 +8,8 @@ set(patches
   meson-intl.patch
   adjust-python-dep.patch
   adjust-args.patch
-  remove-freebsd-pcfile-specialization.patch
-  meson-1.4-llvm-18.diff
+  remove-pkgconfig-specialization.patch
+  rc-args.patch
 )
 set(scripts
   vcpkg-port-config.cmake
@@ -17,7 +17,7 @@ set(scripts
   vcpkg_install_meson.cmake
   meson.template.in
 )
-set(to_hash 
+set(to_hash
   "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json"
   "${CMAKE_CURRENT_LIST_DIR}/portfile.cmake"
 )
@@ -39,6 +39,14 @@ list(TRANSFORM patches REPLACE [[^(..*)$]] [["${CMAKE_CURRENT_LIST_DIR}/\0"]])
 list(JOIN patches "\n            " PATCHES)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 
-vcpkg_install_copyright(FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt")
+vcpkg_download_distfile(meson_license
+    URLS "https://raw.githubusercontent.com/mesonbuild/meson/70598bb7825f0f804fb31ec2795de5e79e7692a0/COPYING"
+    FILENAME "meson-1.12.1-COPYING"
+    SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
+)
+vcpkg_install_copyright(
+    FILE_LIST "${VCPKG_ROOT_DIR}/LICENSE.txt" "${meson_license}"
+    COMMENT "vcpkg helper scripts: MIT; Meson source fragments in patches and the acquired Meson tool: Apache-2.0."
+)
 
 include("${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake")

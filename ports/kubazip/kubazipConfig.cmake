@@ -1,0 +1,7 @@
+file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
+message(AUTHOR_WARNING "find_package(kubazip) is deprecated.\n${usage}")
+include(CMakeFindDependencyMacro)
+find_dependency(zip CONFIG)
+if(NOT TARGET kubazip::kubazip)
+    add_library(kubazip::kubazip ALIAS zip::zip)
+endif()

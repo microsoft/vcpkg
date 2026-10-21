@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kxmlgui
-    REF v5.98.0
-    SHA512 a1dcbe8ba1b5a227e3fed07933cdfa26557a10cce3beaf41fde0a9ac4808dd17882ad6362fc4108bc6c3953ed58375dd71a3afa4cac445a798acae8b4eac56e4
+    REF "v${VERSION}"
+    SHA512 be36d5f554ce952379518e995570121632c8e1d43d2527b37c94a3cfc6009de05c1d54a8b8e88634da08a2c5112aaab07cbf3e1f4efbd77e3e0db96a9b27a77a
     HEAD_REF master
 )
 
@@ -25,7 +25,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5XmlGui CONFIG_PATH lib/cmake/KF5XmlGui)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5XmlGui)
 vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -44,4 +44,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

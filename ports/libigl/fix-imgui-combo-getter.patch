@@ -1,0 +1,48 @@
+diff --git a/include/igl/opengl/glfw/imgui/ImGuiHelpers.h b/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
+index f35f097..8dcb3af 100644
+--- a/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
++++ b/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
+@@ -25,28 +25,25 @@
+ namespace ImGui
+ {
+
+-static auto vector_getter = [](void* vec, int idx, const char** out_text)
++static auto vector_getter = [](void* vec, int idx) -> const char*
+ {
+   auto& vector = *static_cast<std::vector<std::string>*>(vec);
+-  if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+-  *out_text = vector.at(idx).c_str();
+-  return true;
++  if (idx < 0 || idx >= static_cast<int>(vector.size())) { return nullptr; }
++  return vector.at(idx).c_str();
+ };
+
+ inline bool Combo(const char* label, int* idx, std::vector<std::string>& values)
+ {
+   if (values.empty()) { return false; }
+   return Combo(label, idx, vector_getter,
+-    static_cast<void*>(&values), values.size());
++    static_cast<void*>(&values), static_cast<int>(values.size()));
+ }
+
+ inline bool Combo(const char* label, int* idx, std::function<const char *(int)> getter, int items_count)
+ {
+-  auto func = [](void* data, int i, const char** out_text) {
++  auto func = [](void* data, int i) -> const char* {
+     auto &getter = *reinterpret_cast<std::function<const char *(int)> *>(data);
+-    const char *s = getter(i);
+-    if (s) { *out_text = s; return true; }
+-    else { return false; }
++    return getter(i);
+   };
+   return Combo(label, idx, func, reinterpret_cast<void *>(&getter), items_count);
+ }
+@@ -55,7 +52,7 @@ inline bool ListBox(const char* label, int* idx, std::vector<std::string>& value
+ {
+   if (values.empty()) { return false; }
+   return ListBox(label, idx, vector_getter,
+-    static_cast<void*>(&values), values.size());
++    static_cast<void*>(&values), static_cast<int>(values.size()));
+ }
+
+ inline bool InputText(const char* label, std::string &str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL)

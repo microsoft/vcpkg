@@ -1,0 +1,67 @@
+diff --git a/build_files/cmake/Modules/FindOpenEXR.cmake b/build_files/cmake/Modules/FindOpenEXR.cmake
+--- a/build_files/cmake/Modules/FindOpenEXR.cmake
++++ b/build_files/cmake/Modules/FindOpenEXR.cmake
+@@ -22,6 +22,54 @@
+ # also defined, but not for general use are
+ #  OPENEXR_LIBRARY, where to find the OpenEXR library.
+ 
++block(SCOPE_FOR VARIABLES)
++  find_package(OpenEXR CONFIG REQUIRED)
++
++  set(_openexr_libraries OpenEXR::OpenEXR)
++  if(TARGET OpenEXR::OpenEXRUtil)
++    list(APPEND _openexr_libraries OpenEXR::OpenEXRUtil)
++  endif()
++
++  if(TARGET OpenEXR::OpenEXRConfig)
++    get_target_property(_openexr_include_dirs OpenEXR::OpenEXRConfig INTERFACE_INCLUDE_DIRECTORIES)
++  else()
++    get_target_property(_openexr_include_dirs OpenEXR::OpenEXR INTERFACE_INCLUDE_DIRECTORIES)
++  endif()
++
++  if(TARGET Imath::ImathConfig)
++    get_target_property(_imath_include_dirs Imath::ImathConfig INTERFACE_INCLUDE_DIRECTORIES)
++  elseif(TARGET Imath::Imath)
++    get_target_property(_imath_include_dirs Imath::Imath INTERFACE_INCLUDE_DIRECTORIES)
++  endif()
++
++  set(_openexr_include_dir "")
++  foreach(_openexr_dir IN LISTS _openexr_include_dirs)
++    if(EXISTS "${_openexr_dir}/OpenEXR/OpenEXRConfig.h")
++      set(_openexr_include_dir "${_openexr_dir}")
++      break()
++    endif()
++  endforeach()
++  if(NOT _openexr_include_dir)
++    list(GET _openexr_include_dirs 0 _openexr_include_dir)
++  endif()
++
++  if(TARGET Imath::Imath)
++    set(IMATH_LIBRARIES Imath::Imath PARENT_SCOPE)
++  endif()
++  if(_imath_include_dirs)
++    set(IMATH_INCLUDE_DIRS "${_imath_include_dirs}" PARENT_SCOPE)
++    list(GET _imath_include_dirs 0 _imath_include_dir)
++    set(IMATH_INCLUDE_DIR "${_imath_include_dir}" PARENT_SCOPE)
++  endif()
++
++  set(OpenEXR_FOUND TRUE PARENT_SCOPE)
++  set(OPENEXR_FOUND TRUE PARENT_SCOPE)
++  set(OPENEXR_LIBRARIES "${_openexr_libraries}" PARENT_SCOPE)
++  set(OPENEXR_INCLUDE_DIRS "${_openexr_include_dirs}" PARENT_SCOPE)
++  set(OPENEXR_INCLUDE_DIR "${_openexr_include_dir}" PARENT_SCOPE)
++endblock()
++
++if(0)
+ # If `OPENEXR_ROOT_DIR` was defined in the environment, use it.
+ if(DEFINED OPENEXR_ROOT_DIR)
+   # Pass.
+@@ -204,6 +252,8 @@
+   set(IMATH_INCLUDE_DIRS
+     ${IMATH_INCLUDE_DIR})
+ endif()
++
++endif()
+ 
+ mark_as_advanced(
+   OPENEXR_INCLUDE_DIR

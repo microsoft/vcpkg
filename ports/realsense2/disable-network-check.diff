@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 349d07a..345b262 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,6 @@ set(REPO_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+ include_directories(${REPO_ROOT})
+ 
+ include(CMake/lrs_options.cmake)
+-include(CMake/connectivity_check.cmake)
+ #Deprecation message, should be removed in future releases
+ if(${FORCE_LIBUVC} OR ${FORCE_WINUSB_UVC} OR ${ANDROID_USB_HOST_UVC})
+     MESSAGE(DEPRECATION "FORCE_LIBUVC, FORCE_WINUSB_UVC and ANDROID_USB_HOST_UVC are deprecated, use FORCE_RSUSB_BACKEND instead")

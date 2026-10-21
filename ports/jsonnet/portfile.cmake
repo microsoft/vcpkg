@@ -6,12 +6,11 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/jsonnet
   REF "v${VERSION}"
-  SHA512 d46d2521d4389d05f91a16ecd9f181be1853f674a9264e9fac23e413f1084dee947e80682af59603e15e443061a0beb50a30c14c858853e10ed1ae7187d09730
+  SHA512 4fc39bd5e138623ba1ac7cf88594ea7957e9c3bcb952f0e9e346059a9de08eac3f60788376c31a70b34d6d522737a67ad4a122fadcd9621868722c23d9361d05
   HEAD_REF master
   PATCHES
     001-enable-msvc.patch
     002-fix-dependency-and-install.patch
-    0003-use-upstream-nlohmann-json.patch
     0004-incorporate-md5.patch
     0005-use-upstream-rapidyaml.patch
     0006-use-cxx17.patch

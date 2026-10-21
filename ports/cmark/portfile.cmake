@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commonmark/cmark
     REF "${VERSION}"
-    SHA512 27383bfef95ae1390c26aff0dd2cbca33704e7d20116bf29da4695d2c9a4146b86daba0da1e91bdb9eab95671702f885e832b3d31d51601731f1dc630df5237b
+    SHA512 8dcf4f25b53e84a16afa506214f17c3d2d7b0cc78d9d289b469ad8d1e481c4b355263eca3fb1e2b595c30734bc2d617fd38e00d17a14dcfa9de8c71580916265
     HEAD_REF master
     PATCHES
         add-feature-tools.patch
@@ -20,7 +20,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMARK_TESTS=OFF
+        -DBUILD_TESTING=OFF
         -DCMARK_SHARED=${CMARK_SHARED}
         -DCMARK_STATIC=${CMARK_STATIC}
 )
@@ -41,4 +41,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

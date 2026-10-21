@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/MaterialX
     REF "v${VERSION}"
-    SHA512 e527c2d160502b79edc33e801351d2d40b6419b853aa6b3e8c4a54787006baed236829ec8e4db32469daffec8bc1aa1ba35588a49d414fb38feee36fac7e3fb7
+    SHA512 a9af568dd2918a2679de1727295178a3155cb63a1b1a58eec0ff2bf804031e716918c036546916cfdab2ef1fcbe3cc2edc34037a082f7a50f0c6852236b8e449
     HEAD_REF main
 )
 
@@ -13,7 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         osl-generator  MATERIALX_BUILD_GEN_OSL
         render         MATERIALX_BUILD_RENDER
 )
-if ((VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_LINUX) AND MATERIALX_BUILD_RENDER)
+if (VCPKG_TARGET_IS_LINUX AND MATERIALX_BUILD_RENDER)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev.")
 endif()
 
@@ -27,10 +27,6 @@ vcpkg_cmake_configure(
         "-DMATERIALX_BUILD_PYTHON:BOOL=NO"
         "-DMATERIALX_BUILD_VIEWER:BOOL=NO"
         "-DMATERIALX_BUILD_DOCS:BOOL=NO"
-        "-DMATERIALX_BUILD_GEN_GLSL:BOOL=NO"
-        "-DMATERIALX_BUILD_GEN_OSL:BOOL=NO"
-        "-DMATERIALX_BUILD_GEN_MDL:BOOL=NO"
-        "-DMATERIALX_BUILD_RENDER:BOOL=NO"
         "-DMATERIALX_BUILD_OIIO:BOOL=NO"
         "-DMATERIALX_BUILD_TESTS:BOOL=NO"
         "-DMATERIALX_PYTHON_LTO:BOOL=NO"
@@ -58,8 +54,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
 
     # MaterialXGenShader explicitely install resources
-    "${CURRENT_PACKAGES_DIR}/resources"
-    "${CURRENT_PACKAGES_DIR}/debug/resources"
     "${CURRENT_PACKAGES_DIR}/include/MaterialXRender/External/OpenImageIO" 
 
     # Based on how OSL does it, it could be that those `.mdl` source would be better located inside `libraries/pbrlib/genmdl/**`

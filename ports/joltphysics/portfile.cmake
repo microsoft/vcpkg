@@ -1,20 +1,19 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
     REF "v${VERSION}"
-    SHA512 802f6e1a50270c7348fd3740e0cd3f6e9c05d6f1ba52e1c2c890172897a33f34761165f6eabc4d6f36d6d5055017e9e9bd06b165239269634299f0674c0aaa26
+    SHA512 bc6f2436bef91a6ffd09eee98186be645f6e9a9b3f65a7a645abf00432ac40ada03320c1fe946661817a94eda372cf8d88e4889991cdd25f1c16ecf9a4486677
     HEAD_REF master
-    PATCHES
-      fix-export.diff
 )
 
-# Need to provide this library a config
-# The fix-export.diff should install this
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-joltphysics-config.cmake" DESTINATION "${SOURCE_PATH}/Build")
-
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_CRT)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        debugrenderer       DEBUG_RENDERER_IN_DEBUG_AND_RELEASE
+        profiler            PROFILER_IN_DEBUG_AND_RELEASE
+        rtti                CPP_RTTI_ENABLED
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Build"
@@ -29,10 +28,12 @@ vcpkg_cmake_configure(
         -DUSE_STATIC_MSVC_RUNTIME_LIBRARY=${USE_STATIC_CRT}
         -DENABLE_ALL_WARNINGS=OFF
         -DOVERRIDE_CXX_FLAGS=OFF
+        -DJPH_USE_DX12=OFF
+        -DJPH_USE_VK=OFF
+        -DJPH_USE_MTL=OFF
+        ${FEATURE_OPTIONS}
     OPTIONS_RELEASE
         -DGENERATE_DEBUG_SYMBOLS=OFF
-        -DDEBUG_RENDERER_IN_DEBUG_AND_RELEASE=OFF
-        -DPROFILER_IN_DEBUG_AND_RELEASE=OFF
 )
 
 vcpkg_cmake_install()
@@ -40,8 +41,27 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-${PORT} PACKAGE_NAME unofficial-${PORT})
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_cmake_config_fixup(PACKAGE_NAME Jolt CONFIG_PATH "lib/cmake/Jolt")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/Jolt/Core/Core.h"
+        "#pragma once"
+        [=[#pragma once
+
+#ifndef JPH_SHARED_LIBRARY
+#define JPH_SHARED_LIBRARY
+#endif
+#ifndef JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
+#define JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
+#endif
+#ifndef JPH_USE_CPU_COMPUTE
+#define JPH_USE_CPU_COMPUTE
+#endif
+#ifndef JPH_OBJECT_STREAM
+#define JPH_OBJECT_STREAM
+#endif]=]
+    )
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

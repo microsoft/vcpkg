@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 35a4bf8..7528834 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -287,7 +287,6 @@ if(MUMPS_metis OR MUMPS_parmetis)
+ endif()
+ 
+ install(FILES
+-${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindLAPACK.cmake
+ ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCALAPACK.cmake
+ ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMETIS.cmake
+ ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindSCOTCH.cmake

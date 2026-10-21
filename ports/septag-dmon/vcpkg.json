@@ -1,7 +1,7 @@
 {
   "name": "septag-dmon",
-  "version-date": "2022-02-08",
-  "description": "a tiny C library that monitors changes in a directory",
+  "version-date": "2026-02-23",
+  "description": "A tiny C library that monitors changes in a directory",
   "homepage": "https://github.com/septag/dmon",
   "license": "BSD-2-Clause",
   "supports": "!uwp",

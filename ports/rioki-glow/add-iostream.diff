@@ -1,0 +1,13 @@
+diff --git a/glow/util.cpp b/glow/util.cpp
+index 005df9d..e8a5747 100644
+--- a/glow/util.cpp
++++ b/glow/util.cpp
+@@ -25,6 +25,8 @@
+ #ifdef _WIN32
+ #define NOMINMAX
+ #include <Windows.h>
++#else
++#include <iostream>
+ #endif
+ 
+ namespace glow

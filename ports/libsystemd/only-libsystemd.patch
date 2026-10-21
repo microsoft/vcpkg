@@ -1,23 +1,25 @@
 diff --git a/meson.build b/meson.build
-index 7419e2b..687450e 100644
+index 3672005..a39e0df 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -1909,12 +1909,11 @@ libsystemd_includes = [basic_includes, include_directories(
+@@ -2090,14 +2090,13 @@ libsystemd_includes = [basic_includes, include_directories(
  includes = [libsystemd_includes, include_directories('src/shared')]
  
  subdir('po')
 -subdir('catalog')
-+support_url=''
++support_url='https://github.com/microsoft/vcpkg/issues'
+ subdir('src/include')
+ subdir('src/libc')
  subdir('src/fundamental')
  subdir('src/basic')
  subdir('src/libsystemd')
 -subdir('src/shared')
 -subdir('src/libudev')
-+subdir('src/systemd') # headers
++static_libudev='unused'
  
  libsystemd = shared_library(
          'systemd',
-@@ -1930,7 +1929,8 @@ libsystemd = shared_library(
+@@ -2115,7 +2114,8 @@ libsystemd = shared_library(
                          threads,
                          userspace],
          link_depends : libsystemd_sym,
@@ -27,36 +29,30 @@ index 7419e2b..687450e 100644
          install_tag: 'libsystemd',
          install_dir : libdir)
  
-@@ -1963,6 +1963,8 @@ install_libsystemd_static = static_library(
-                         userspace],
-         c_args : libsystemd_c_args + (static_libsystemd_pic ? [] : ['-fno-PIC']))
+@@ -2148,6 +2148,8 @@ else
+         alias_target('libsystemd', libsystemd)
+ endif
  
 +if false
 +
  libudev = shared_library(
          'udev',
          version : libudev_version,
-@@ -1974,7 +1976,8 @@ libudev = shared_library(
-         dependencies : [threads,
-                         userspace],
-         link_depends : libudev_sym,
--        install : true,
-+        build_by_default : static_libudev == 'false',
-+        install : static_libudev == 'false',
-         install_tag: 'libudev',
-         install_dir : libdir)
- 
-@@ -2661,6 +2664,13 @@ if not meson.is_cross_build()
-                 command : [export_dbus_interfaces_py, '@OUTPUT@', dbus_programs])
+@@ -3006,6 +3008,17 @@ if conf.get('ENABLE_HWDB') == 1
+         alias_target('hwdb', auto_suspend_rules, executables_by_name.get('systemd-hwdb'), hwdb_units)
  endif
  
-+endif # false
-+static_libudev='unused'
-+bashcompletiondir='no'
-+zshcompletiondir='no'
-+want_html=false
-+want_man=false
++else
++  # headers
++  subdir('src/systemd')
++  # subdir man
++  want_html=false
++  want_man=false
++  # subdir shell-completion/*
++  bashcompletiondir='no'
++  zshcompletiondir='no'
++endif
 +
- ############################################################
- 
- alt_time_epoch = run_command('date', '-Is', '-u', '-d', '@@0@'.format(time_epoch),
+ alt_time_epoch = run_command('date', '-Is', '-u', '-d', f'@@time_epoch@', check : false)
+ if alt_time_epoch.returncode() != 0
+         # If the above fails, maybe the date(1) uses BSD-style syntax

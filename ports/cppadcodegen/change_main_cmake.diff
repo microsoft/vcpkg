@@ -1,0 +1,30 @@
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision 656d23e3c06e0e3d573f02336eb457e1f30896f2)
++++ b/CMakeLists.txt	(date 1766635625297)
+@@ -167,16 +167,16 @@
+ # Currently building tests as normal executables
+ # ----------------------------------------------------------------------------
+ ADD_SUBDIRECTORY(include)
+-ADD_SUBDIRECTORY(example EXCLUDE_FROM_ALL)
++#ADD_SUBDIRECTORY(example EXCLUDE_FROM_ALL)
+ #ADD_SUBDIRECTORY(introduction EXCLUDE_FROM_ALL)
+-ADD_SUBDIRECTORY(speed EXCLUDE_FROM_ALL)
+-ADD_SUBDIRECTORY(python)
++#ADD_SUBDIRECTORY(speed EXCLUDE_FROM_ALL)
++#ADD_SUBDIRECTORY(python)
+ ADD_SUBDIRECTORY(pkgconfig)
+-ADD_SUBDIRECTORY(doc)
++#ADD_SUBDIRECTORY(doc)
+
+ # enable testing must be called here in order for the target test to be created
+ ENABLE_TESTING()
+-ADD_SUBDIRECTORY(test EXCLUDE_FROM_ALL)
++#ADD_SUBDIRECTORY(test EXCLUDE_FROM_ALL)
+
+ # =============================================================================
+ # uninstall procedure

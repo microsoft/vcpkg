@@ -1,9 +1,9 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 25,
+  "port-version": 29,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
-  "homepage": "https://www.openscenegraph.com/",
+  "homepage": "https://openscenegraph.github.io/openscenegraph.io/",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
@@ -28,8 +28,19 @@
     "zlib"
   ],
   "default-features": [
-    "default-features",
+    {
+      "name": "fontconfig",
+      "platform": "!android & !ios & !uwp"
+    },
     "freetype",
+    {
+      "name": "nvtt",
+      "platform": "x64 & (linux | osx | windows) & !uwp"
+    },
+    {
+      "name": "openexr",
+      "platform": "!uwp"
+    },
     "plugins"
   ],
   "features": {
@@ -39,40 +50,12 @@
         "collada-dom"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "openexr"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "!android & !ios & !uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "nvtt"
-          ],
-          "platform": "!x86 & !(windows & arm64) & !uwp"
-        }
-      ]
-    },
     "docs": {
       "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads"
     },
     "examples": {
       "description": "Enable to build OSG Examples",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "libiconv",
@@ -162,14 +145,15 @@
         }
       ]
     },
-    "sdl1": {
-      "description": "Build SDL 1 plugin, and enable SDL 1 app features",
+    "sdl": {
+      "description": "Build SDL plugin, and enable SDL app features",
       "dependencies": [
-        "sdl1"
+        "sdl2"
       ]
     },
     "tools": {
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "curl",

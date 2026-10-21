@@ -1,20 +1,24 @@
 diff --git a/contrib/ecalhdf5/CMakeLists.txt b/contrib/ecalhdf5/CMakeLists.txt
-index c167bacd4..45e754340 100644
+index 6241f36..91c65e5 100644
 --- a/contrib/ecalhdf5/CMakeLists.txt
 +++ b/contrib/ecalhdf5/CMakeLists.txt
-@@ -18,9 +18,14 @@
+@@ -18,14 +18,12 @@
  
  project(hdf5 LANGUAGES C CXX)
  
 -if(NOT CMAKE_CROSSCOMPILING)
-+if(1)
-   find_package(HDF5 COMPONENTS C REQUIRED)
-   find_package(Threads REQUIRED)
-+  if (TARGET hdf5::hdf5-shared)
-+    set(ECAL_LINK_HDF5_SHARED 1)
-+  else()
-+    set(ECAL_LINK_HDF5_SHARED 0)
-+  endif()
+-  find_package(HDF5 COMPONENTS C REQUIRED)
+-  find_package(Threads REQUIRED)
++find_package(HDF5 CONFIG COMPONENTS C REQUIRED)
++find_package(Threads REQUIRED)
++if(TARGET hdf5::hdf5-shared)
++  set(ECAL_LINK_HDF5_SHARED ON)
  else()
-   find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
-   find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  
+-  find_library(hdf5_path NAMES hdf5 REQUIRED PATH_SUFFIXES hdf5/serial)
+-  find_path(hdf5_include NAMES hdf5.h PATH_SUFFIXES hdf5/serial REQUIRED)  
+-  set(HDF5_LIBRARIES "${hdf5_path};m;dl;z;sz;pthread")
+-  set(HDF5_INCLUDE_DIRS "${hdf5_include}")
++  set(ECAL_LINK_HDF5_SHARED OFF)
+ endif()
+ 
+ set(ecalhdf5_src

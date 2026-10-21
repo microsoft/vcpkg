@@ -1,7 +1,7 @@
 {
   "name": "iir1",
-  "version": "1.9.4",
-  "description": "Realtime C++ filter library",
+  "version": "1.10.0",
+  "description": "An infinite impulse response (IIR) filter library for realtime processing. It implements Butterworth, RBJ, Chebychev filters.",
   "homepage": "https://github.com/berndporr/iir1",
   "license": "MIT",
   "supports": "!uwp",

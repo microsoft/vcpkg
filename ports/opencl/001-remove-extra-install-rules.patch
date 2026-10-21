@@ -1,0 +1,36 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index dfb336d..ef97f82 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -114,13 +114,6 @@ foreach(UTIL_LIB_NAME IN ITEMS Utils UtilsCpp)
+     DESTINATION ${config_package_location}
+     COMPONENT binary
+   )
+-
+-  # For packaging the utils libraries
+-  install(
+-    TARGETS ${UTIL_LIB_TARGET}
+-    DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    COMPONENT binary
+-  )
+ endforeach()
+ 
+ if(OPENCL_SDK_BUILD_SAMPLES)
+diff --git a/lib/src/Extensions/CMakeLists.txt b/lib/src/Extensions/CMakeLists.txt
+index e05d4e7..017f7ad 100644
+--- a/lib/src/Extensions/CMakeLists.txt
++++ b/lib/src/Extensions/CMakeLists.txt
+@@ -151,13 +151,6 @@ if (OPENCL_EXTENSION_LOADER_INSTALL)
+         DESTINATION ${OPENCL_EXTENSION_LOADER_CONFIG_PATH}
+         COMPONENT binary
+     )
+-
+-    # For packaging the extensions library
+-    install(
+-        TARGETS OpenCLExt
+-        DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        COMPONENT binary
+-    )
+ endif()
+ 
+ if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)

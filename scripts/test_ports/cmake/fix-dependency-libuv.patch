@@ -1,28 +1,18 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fdfe456..ef2d329 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -647,16 +647,16 @@ macro (CMAKE_BUILD_UTILITIES)
-   #---------------------------------------------------------------------
-   # Build libuv library.
-   if(CMAKE_USE_SYSTEM_LIBUV)
--    if(WIN32)
--      find_package(LibUV 1.38.0)
--    else()
--      find_package(LibUV 1.10.0)
--    endif()
--    if(NOT LIBUV_FOUND)
-+    find_package(libuv CONFIG REQUIRED)
-+    if(0)
-       message(FATAL_ERROR
-         "CMAKE_USE_SYSTEM_LIBUV is ON but a libuv is not found!")
-     endif()
--    set(CMAKE_LIBUV_LIBRARIES LibUV::LibUV)
-+    if (TARGET libuv::uv)
-+    set(CMAKE_LIBUV_LIBRARIES libuv::uv)
-+    else()
-+    set(CMAKE_LIBUV_LIBRARIES libuv::uv_a)
-+    endif()
+diff --git a/Source/Modules/CMakeBuildUtilities.cmake b/Source/Modules/CMakeBuildUtilities.cmake
+index dba9d506..225779cd 100644
+--- a/Source/Modules/CMakeBuildUtilities.cmake
++++ b/Source/Modules/CMakeBuildUtilities.cmake
+@@ -328,6 +328,13 @@ endif()
+ #---------------------------------------------------------------------
+ # Build libuv library.
+ if(CMAKE_USE_SYSTEM_LIBUV)
++  find_package(libuv CONFIG REQUIRED)
++  if (TARGET libuv::uv)
++    add_library(LibUV::LibUV ALIAS libuv::uv)
++  else()
++    add_library(LibUV::LibUV ALIAS libuv::uv_a)
++  endif()
++elseif(0)
+   if(WIN32)
+     find_package(LibUV 1.38.0)
    else()
-     set(CMAKE_LIBUV_LIBRARIES cmlibuv)
-     add_subdirectory(Utilities/cmlibuv)
