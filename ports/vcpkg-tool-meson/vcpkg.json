@@ -1,10 +1,9 @@
 {
   "name": "vcpkg-tool-meson",
-  "version": "1.9.0",
-  "port-version": 10,
+  "version": "1.12.1",
   "description": "Meson build system",
   "homepage": "https://github.com/mesonbuild/meson",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 AND MIT",
   "supports": "native",
   "dependencies": [
     "vcpkg-cmake-get-vars"
