@@ -3366,7 +3366,7 @@
     },
     "gdal": {
       "baseline": "3.12.4",
-      "port-version": 2
+      "port-version": 3
     },
     "gdbm": {
       "baseline": "1.26",
