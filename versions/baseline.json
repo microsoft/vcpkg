@@ -3156,6 +3156,10 @@
       "baseline": "0.6.4",
       "port-version": 0
     },
+    "flatironinstitute-poet": {
+      "baseline": "0.0.3",
+      "port-version": 0
+    },
     "flecs": {
       "baseline": "4.1.6",
       "port-version": 0
