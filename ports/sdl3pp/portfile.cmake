@@ -25,6 +25,19 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+# Header auto-detection must not enable integrations outside the selected features.
+set(SDL3PP_FEATURE_DEFINES "// Optional integrations configured by vcpkg.\n")
+foreach(integration IN ITEMS IMAGE MIXER TTF)
+    if(SDL3PP_ENABLE_${integration})
+        string(APPEND SDL3PP_FEATURE_DEFINES "#define SDL3PP_ENABLE_${integration}\n")
+    else()
+        string(APPEND SDL3PP_FEATURE_DEFINES "#define SDL3PP_DISABLE_${integration}\n")
+    endif()
+endforeach()
+set(SDL3PP_VERSION_HEADER ${CURRENT_PACKAGES_DIR}/include/SDL3pp/SDL3pp_version.h")
+file(READ "${SDL3PP_VERSION_HEADER}" SDL3PP_VERSION_CONTENT)
+file(WRITE "${SDL3PP_VERSION_HEADER}" ${SDL3PP_FEATURE_DEFINES}${SDL3PP_VERSION_CONTENT}")
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME SDL3pp
     CONFIG_PATH lib/cmake/SDL3pp
