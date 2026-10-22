@@ -15,6 +15,7 @@ vcpkg_check_features(
         qml        BUILD_WITH_QML
         iso-codes  CMAKE_REQUIRE_FIND_PACKAGE_IsoCodes
     INVERTED_FEATURES
+        qml        CMAKE_DISABLE_FIND_PACKAGE_Qt6Qml
         iso-codes  CMAKE_DISABLE_FIND_PACKAGE_IsoCodes
 )
 
