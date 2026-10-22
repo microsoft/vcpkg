@@ -30,7 +30,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME alpaca-cpp CONFIG_PATH lib/cmake/alpaca-cp
     DO_NOT_DELETE_PARENT_CONFIG_PATH)
 
 if ("options-streaming" IN_LIST FEATURES)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME alpaca-options-streaming-cpp 
+    vcpkg_cmake_config_fixup(PACKAGE_NAME alpaca-options-streaming-cpp
         CONFIG_PATH lib/cmake/alpaca-options-streaming-cpp)
 endif()
 
