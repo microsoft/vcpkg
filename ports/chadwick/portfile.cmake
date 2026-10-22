@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO chadwickbureau/chadwick
     REF "v${VERSION}"
     SHA512 c0d96d86646d3e1f679debb6dc8c20f8ed52c20818cf4df299b16df62643c03b23a1ba1cb1aa54f0d5a9746a50f4183e86d0646acfe84bfcd1a227b89cca1670
-    HEAD_REF main
+    HEAD_REF master
 )
 
 set(OPTIONS "CFLAGS=\$CFLAGS -fgnu89-inline")
