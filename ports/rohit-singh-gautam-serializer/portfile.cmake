@@ -5,11 +5,12 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rohit-singh-gautam/Serializer
-    REF 1f15cb06cf136c65855c8bce5afe05c6e3c34fd9
-    SHA512 151d2757623088dfc43d49a2fc5018d35730b12de10e5078c11e1857c6d07edf36f1da1b46baa8de83406f9a080153ad5fc3cd9b4a6305276bb118cac98fbd6a
+    REF d39fc06efa005bbd88896975e40309c71abe7ec1
+    SHA512 1f928919d76f85178b6aec6c8fcd8e7ef0581f508ca178a46182e1f6fe20854793055d32021c0edb1d450738aa14ee816cf326dd99885a0097c956a251a5b03f
     HEAD_REF main
     PATCHES
         managed-host-generator.patch
+        fix-extent-width.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -56,4 +57,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/licenses"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/LICENSE-RUNTIME"
+    "${SOURCE_PATH}/LICENSE-GENERATED"
+)
