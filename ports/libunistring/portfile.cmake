@@ -32,6 +32,11 @@ vcpkg_extract_source_archive(SOURCE_PATH
         msvc-use-stdint.patch
 )
 
+# When targeting a MinGW toolchain, the quotes around the version string passed to windres on the
+# command line get eaten by some level of shell interpolation which breaks the resource files, so
+# we patch the version directly into the resource files ourselves.
+vcpkg_replace_string("${SOURCE_PATH}/lib/libunistring.rc" "PACKAGE_VERSION_STRING" "\"${VERSION}\"")
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG

@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         find-rhash.patch
+        c89stringutils-0.0.3.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindLibRHash.cmake")

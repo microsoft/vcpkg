@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ValveSoftware/GameNetworkingSockets
-    REF "2cb93a06350bb065db53abdb0d87cf297e0bfd34" # v1.6.0
-    SHA512 c2deaa3aab42cd840dd13560ca4da40faa375ab846ea15af38d55eb7acc48cfe8cbdbe0c76b9c3484d26f9e1163e36ac1eb73a317e5c19cefe60d0b861d19e06
+    REF "v${VERSION}"
+    SHA512 b044010aad017804e1b16b5664431e56f59feb35284adaedfd35f518251e8d8abeb3a29d3d273dea57bde63af63b4b3dd54d2cb2712d28975373b54b640da611
     HEAD_REF master
 )
 
@@ -23,11 +23,7 @@ endif()
 
 # Link the MSVC CRT statically when the CRT linkage is static.
 # Not used on non-MSVC platforms; listed in MAYBE_UNUSED_VARIABLES accordingly.
-if("${VCPKG_CRT_LINKAGE}" STREQUAL "static")
-    set(MSVC_CRT_STATIC ON)
-else()
-    set(MSVC_CRT_STATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_CRT_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -48,8 +44,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/GameNetworkingSockets")
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
