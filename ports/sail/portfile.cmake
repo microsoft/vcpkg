@@ -32,6 +32,10 @@ foreach(CODEC ${HIGHEST_PRIORITY_CODECS} ${HIGH_PRIORITY_CODECS} ${MEDIUM_PRIORI
     endif()
 endforeach()
 
+if (NOT ONLY_CODECS)
+    message(FATAL_ERROR "At least one codec feature must be selected, for example sail[bmp] or sail[png].")
+endif()
+
 list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 
 # Enable OpenMP
@@ -103,4 +107,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#de
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/LICENSE.INIH.txt"
+)
