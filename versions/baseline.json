@@ -7553,8 +7553,8 @@
       "port-version": 0
     },
     "openh264": {
-      "baseline": "2.6.0",
-      "port-version": 4
+      "baseline": "2.7.0",
+      "port-version": 0
     },
     "openigtlink": {
       "baseline": "3.0",
