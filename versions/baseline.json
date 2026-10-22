@@ -1585,7 +1585,7 @@
       "port-version": 0
     },
     "c89stringutils": {
-      "baseline": "0.0.2",
+      "baseline": "0.0.3",
       "port-version": 0
     },
     "c9y": {
@@ -8982,7 +8982,7 @@
     },
     "rhasheq": {
       "baseline": "2023-06-17",
-      "port-version": 0
+      "port-version": 1
     },
     "riffcpp": {
       "baseline": "2.2.4",
