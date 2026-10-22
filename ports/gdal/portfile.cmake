@@ -112,6 +112,7 @@ vcpkg_cmake_configure(
         -DBUILD_DOCS=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_TESTING=OFF
+        -DBASH_COMPLETIONS_DIR:STRING=share/bash-completion/completions
         -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
