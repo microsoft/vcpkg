@@ -9552,6 +9552,10 @@
       "baseline": "2.2.0",
       "port-version": 0
     },
+    "slickquant-alpaca-cpp": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "slickquant-hyperliquid-cpp": {
       "baseline": "0.4.0",
       "port-version": 0
