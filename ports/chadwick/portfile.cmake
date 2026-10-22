@@ -7,8 +7,9 @@ vcpkg_from_github(
 )
 
 set(OPTIONS "CFLAGS=\$CFLAGS -fgnu89-inline")
+set(MAKE_OPTIONS)
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS "LDFLAGS=\$LDFLAGS -no-undefined")
+    list(APPEND MAKE_OPTIONS "AM_LDFLAGS=-no-undefined")
 endif()
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS "LDFLAGS=\$LDFLAGS -Wl,-headerpad_max_install_names")
@@ -21,7 +22,7 @@ vcpkg_configure_make(
         ${OPTIONS}
 )
 
-vcpkg_install_make()
+vcpkg_install_make(OPTIONS ${MAKE_OPTIONS})
 
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
