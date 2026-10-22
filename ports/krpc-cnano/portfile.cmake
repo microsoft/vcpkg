@@ -9,21 +9,12 @@ vcpkg_extract_source_archive(SOURCE_PATH
     SOURCE_BASE "krpc-cnano-${VERSION}"
 )
 
-# Which transport the library talks to the server over. Each is a feature rather than the default
-# because a program using the library is built for the same transport it is, so asking for one is
-# what tells vcpkg to hand out a library that speaks it.
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        tcp         KRPC_COMMUNICATION_TCP
-        localsocket KRPC_COMMUNICATION_LOCALSOCKET
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DKRPC_FETCH_NANOPB=OFF
         -DKRPC_REGENERATE_PROTO=OFF
-        ${FEATURE_OPTIONS}
+        -DKRPC_COMMUNICATION_TCP=ON
 )
 
 vcpkg_cmake_install()
