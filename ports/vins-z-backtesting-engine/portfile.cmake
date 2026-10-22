@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Vins-z/Backtesting-Engine
     REF "v${VERSION}"
-    SHA512 141f697b347c9bfc41a1834b51893b04a31cc880d4333dcaa7679cb9c538bc46aa8c6befea11f29041a92a237147a7b07c82d75ff059ebaaa7e7c76c6a7449de
+    SHA512 126fa41f74dcd7d7cd8e2718a45e4249aab21f42d7ac52031cc2d81b53b8a9f68c08d3f659ed728f44258ad18f71ac3355a143c54365a1e08dc958edbcee1734
     HEAD_REF master
 )
 
@@ -26,13 +26,5 @@ vcpkg_copy_tools(TOOL_NAMES backtest_engine backtest_server AUTO_CLEAN)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-# These interfaces are unimplemented or private to the executable targets.
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/cli"
-    "${CURRENT_PACKAGES_DIR}/include/data/multi_source_data_handler.h"
-    "${CURRENT_PACKAGES_DIR}/include/execution/enhanced_execution_handler.h"
-    "${CURRENT_PACKAGES_DIR}/include/strategy/machine_learning_strategy.h"
-)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
