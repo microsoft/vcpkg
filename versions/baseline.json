@@ -8312,10 +8312,6 @@
       "baseline": "2024-10-31",
       "port-version": 0
     },
-    "qnnpack": {
-      "baseline": "2021-02-26",
-      "port-version": 5
-    },
     "qoi": {
       "baseline": "2025-05-09",
       "port-version": 0
