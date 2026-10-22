@@ -7,6 +7,9 @@ vcpkg_from_github(
 )
 
 set(OPTIONS "CFLAGS=\$CFLAGS -fgnu89-inline")
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS "LDFLAGS=\$LDFLAGS -no-undefined")
+endif()
 if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS "LDFLAGS=\$LDFLAGS -Wl,-headerpad_max_install_names")
 endif()
