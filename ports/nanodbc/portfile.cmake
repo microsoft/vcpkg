@@ -8,10 +8,18 @@ vcpkg_from_github(
     REF f212bcb6ce61029e96cc18b98a4cc05198749ada # v2.20.0
     SHA512 4a3c27b31a03db90b6b7cbe21adbc9ee519af43c9bce78aba2d9fe624eea1c689fffa71b791b3c0bc0a77a7f70d2f0ba2f2c685235f01498f88a189956fc9722
     HEAD_REF master
+	PATCHES
+		use-vcpkg-unixodbc.patch
 )
 
+vcpkg_list(SET options)
+
 if(DEFINED NANODBC_ODBC_VERSION)
-    set(NANODBC_ODBC_VERSION -DNANODBC_ODBC_VERSION=${NANODBC_ODBC_VERSION})
+    list(APPEND options -DNANODBC_ODBC_VERSION=${NANODBC_ODBC_VERSION})
+endif()
+
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+	list(APPEND options -DNANODBC_USE_VCPKG_UNIXODBC=ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -20,7 +28,7 @@ vcpkg_cmake_configure(
         -DNANODBC_BUILD_EXAMPLES=OFF
         -DNANODBC_BUILD_TESTS=OFF
         -DNANODBC_ENABLE_UNICODE=OFF
-        ${NANODBC_ODBC_VERSION}
+        ${options}
 )
 
 vcpkg_cmake_install()
