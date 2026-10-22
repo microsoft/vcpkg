@@ -27,6 +27,7 @@ vcpkg_configure_make(
         --disable-libxml2
         --disable-opencl
         --disable-cairo
+        --disable-gl
         --disable-cuda
         --disable-libudev
         --disable-levelzero
