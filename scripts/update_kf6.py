@@ -15,14 +15,16 @@ import time
 # ============================================================
 # CONFIGURATION - Set version, port list, and paths here
 # ============================================================
-NEW_VERSION = "6.30.0"           # <-- TARGET VERSION
+NEW_VERSION = "6.31.0"           # <-- TARGET VERSION
 
 PORT_LIST = [
     "ecm",
     "karchive",
     "kauth",
+    "kbookmarks",
     "kbreezeicons",
     "kcodecs",
+    "kcompletion",
     "kconfig",
     "kcoreaddons",
     "kcrash",
@@ -33,6 +35,7 @@ PORT_LIST = [
     "ki18n",
     "kitemmodels",
     "kitemviews",
+    "knotifications",
     "kwidgetsaddons",
     "kwindowsystem",
     "syntax-highlighting",

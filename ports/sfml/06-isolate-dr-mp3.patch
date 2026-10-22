@@ -1,0 +1,16 @@
+diff --git a/src/SFML/Audio/SoundFileReaderMp3.cpp b/src/SFML/Audio/SoundFileReaderMp3.cpp
+index 1ee6cd1..a81ed1f 100644
+--- a/src/SFML/Audio/SoundFileReaderMp3.cpp
++++ b/src/SFML/Audio/SoundFileReaderMp3.cpp
+@@ -25,9 +25,11 @@
+ ////////////////////////////////////////////////////////////
+ // Headers
+ ////////////////////////////////////////////////////////////
++#define DRMP3_API static inline
+ #define DR_MP3_IMPLEMENTATION
+ #define DR_MP3_NO_STDIO
+ #include <dr_mp3.h>
++#undef DRMP3_API
+ #undef DR_MP3_NO_STDIO
+ 
+ #include <SFML/Audio/SoundFileReaderMp3.hpp>

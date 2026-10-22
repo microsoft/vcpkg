@@ -1,6 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2ba2667..9204ba9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,7 +26,10 @@
+@@ -25,7 +25,10 @@ include(ECMQtDeclareLoggingCategory)
  include(ECMDeprecationSettings)
  include(ECMPoQmTools)
  include(ECMGeneratePkgConfigFile)
@@ -10,9 +12,9 @@
 +    include(ECMQmlModule)
 +endif()
  include(ECMGenerateQDoc)
+ include(ECMInstalledLibraryCheck)
  
- set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
-@@ -45,8 +48,6 @@
+@@ -45,8 +48,6 @@ if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
      find_package(Qt6GuiPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
  endif()
  
