@@ -1573,7 +1573,7 @@
       "port-version": 6
     },
     "bzip3": {
-      "baseline": "1.5.4",
+      "baseline": "1.5.5",
       "port-version": 0
     },
     "c-ares": {
