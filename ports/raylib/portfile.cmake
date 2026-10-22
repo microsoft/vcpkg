@@ -14,7 +14,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
     REF "${VERSION}"
-    SHA512 dfdb2578859e28d424b6f318669579ab2361c35c4d45e0fee5a80b4c1d7d487a0e084ec2bafffad149b3dd96d34d092586fc3d30c8de6a211b0a2a038a959c07
+    SHA512 706fdef061ed8412ec241f9e49f1badf57dd73ef9d7fadbd6612a78f1c42f03c8ab03251fb91d0523bfee757fcf8932b8bafc274c6bc42f0bfc4c17304af1ef0
     HEAD_REF master
     PATCHES
         android.diff
