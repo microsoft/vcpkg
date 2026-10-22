@@ -1,6 +1,6 @@
 {
   "name": "aws-crt-cpp",
-  "version": "0.43.7",
+  "version": "0.44.1",
   "description": "C++ wrapper around the aws-c-* libraries. Provides Cross-Platform Transport Protocols and SSL/TLS implementations for C++.",
   "homepage": "https://github.com/awslabs/aws-crt-cpp",
   "license": "Apache-2.0",
@@ -12,7 +12,10 @@
     "aws-c-event-stream",
     "aws-c-http",
     "aws-c-io",
-    "aws-c-mqtt",
+    {
+      "name": "aws-c-mqtt",
+      "version>=": "1.1.2"
+    },
     "aws-c-s3",
     "aws-checksums",
     {
