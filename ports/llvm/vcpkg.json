@@ -3,7 +3,7 @@
   "version": "23.1.4",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
-  "license": "Apache-2.0 WITH LLVM-exception",
+  "license": "Apache-2.0 WITH LLVM-exception AND BSD-2-Clause AND (CC0-1.0 OR Apache-2.0)",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [
     {
