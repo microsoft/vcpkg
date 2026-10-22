@@ -20,6 +20,7 @@ vcpkg_from_github(
         android.diff
         # Once the next version of cgltf is released, this patch will no longer be necessary.
         fix-cgltf.patch
+        fix-static-dependencies.patch
 )
 file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/cgltf.h"
@@ -93,4 +94,26 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/raylib.h" "defined(USE_LIBTYPE_SHARED)" "1")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(copyright_files
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/src/external/glad.h"
+    "${SOURCE_PATH}/src/external/glad_gles2.h"
+    "${SOURCE_PATH}/src/external/m3d.h"
+    "${SOURCE_PATH}/src/external/par_shapes.h"
+    "${SOURCE_PATH}/src/external/rltexgpu.h"
+    "${SOURCE_PATH}/src/external/rprand.h"
+    "${SOURCE_PATH}/src/external/tinyobj_loader_c.h"
+    "${SOURCE_PATH}/src/external/vox_loader.h"
+)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND copyright_files "${SOURCE_PATH}/src/external/dirent.h")
+endif()
+if("audio" IN_LIST FEATURES)
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/src/external/jar_mod.h"
+        "${SOURCE_PATH}/src/external/jar_xm.h"
+        "${SOURCE_PATH}/src/external/qoa.h"
+        "${SOURCE_PATH}/src/external/qoaplay.c"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
