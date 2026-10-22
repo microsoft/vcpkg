@@ -26,18 +26,28 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Header auto-detection must not enable integrations outside the selected features.
-set(SDL3PP_FEATURE_DEFINES "// Optional integrations configured by vcpkg.\n")
+# SDL3pp_version.h enables optional integrations through __has_include, so an
+# unrelated installed sdl3-image/sdl3-mixer/sdl3-ttf/sdl3-net would leak into
+# the wrapper's API without the exported target linking it. Pin the integration
+# macros to the features selected by this port; net is not exposed as a feature.
+set(sdl3pp_feature_defines "// Optional integrations configured by vcpkg.\n")
 foreach(integration IN ITEMS IMAGE MIXER TTF)
     if(SDL3PP_ENABLE_${integration})
-        string(APPEND SDL3PP_FEATURE_DEFINES "#define SDL3PP_ENABLE_${integration}\n")
+        string(APPEND sdl3pp_feature_defines
+            "#define SDL3PP_ENABLE_${integration}\n")
     else()
-        string(APPEND SDL3PP_FEATURE_DEFINES "#define SDL3PP_DISABLE_${integration}\n")
+        string(APPEND sdl3pp_feature_defines
+            "#define SDL3PP_DISABLE_${integration}\n")
     endif()
 endforeach()
-set(SDL3PP_VERSION_HEADER ${CURRENT_PACKAGES_DIR}/include/SDL3pp/SDL3pp_version.h")
-file(READ "${SDL3PP_VERSION_HEADER}" SDL3PP_VERSION_CONTENT)
-file(WRITE "${SDL3PP_VERSION_HEADER}" ${SDL3PP_FEATURE_DEFINES}${SDL3PP_VERSION_CONTENT}")
+string(APPEND sdl3pp_feature_defines "#define SDL3PP_DISABLE_NET\n")
+
+set(sdl3pp_version_header
+    "${CURRENT_PACKAGES_DIR}/include/SDL3pp/SDL3pp_version.h")
+file(READ "${sdl3pp_version_header}" sdl3pp_version_content)
+file(WRITE "${sdl3pp_version_header}"
+    "${sdl3pp_feature_defines}${sdl3pp_version_content}")
+
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME SDL3pp
     CONFIG_PATH lib/cmake/SDL3pp
@@ -46,10 +56,6 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"
     "${CURRENT_PACKAGES_DIR}/lib"
-)
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

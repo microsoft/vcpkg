@@ -1,4 +1,0 @@
-sdl3pp provides CMake targets:
-
-    find_package(SDL3pp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE SDL3pp::SDL3pp)
