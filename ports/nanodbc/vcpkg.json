@@ -8,7 +8,7 @@
   "dependencies": [
     {
       "name": "unixodbc",
-      "platform": "linux | osx"
+      "platform": "!windows"
     },
     {
       "name": "vcpkg-cmake",
