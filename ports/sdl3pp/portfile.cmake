@@ -6,21 +6,12 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-# SDL3pp turns SDL3_image on by default. Keep optional integrations disabled
-# unless the matching vcpkg feature is requested.
-set(SDL3PP_ENABLE_IMAGE OFF)
-set(SDL3PP_ENABLE_MIXER OFF)
-set(SDL3PP_ENABLE_TTF OFF)
-
-if("image" IN_LIST FEATURES)
-    set(SDL3PP_ENABLE_IMAGE ON)
-endif()
-if("mixer" IN_LIST FEATURES)
-    set(SDL3PP_ENABLE_MIXER ON)
-endif()
-if("ttf" IN_LIST FEATURES)
-    set(SDL3PP_ENABLE_TTF ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    image SDL3PP_ENABLE_IMAGE
+    mixer SDL3PP_ENABLE_MIXER
+    ttf SDL3PP_ENABLE_TTF
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
