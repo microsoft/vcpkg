@@ -8962,7 +8962,7 @@
     },
     "rhasheq": {
       "baseline": "2023-06-17",
-      "port-version": 0
+      "port-version": 1
     },
     "riffcpp": {
       "baseline": "2.2.4",
