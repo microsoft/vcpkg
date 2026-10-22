@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index edca49a..0dd0f51 100644
+index edca49a..5c745bf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -21,7 +21,9 @@ endif()
@@ -13,6 +13,15 @@ index edca49a..0dd0f51 100644
  if(NOT EXISTS "${_ompl_cmake_modules_path}")
      message(FATAL_ERROR "Missing ${_ompl_cmake_modules_path}. Did you check out the submodules (\"git submodule update --init --recursive\"?")
  endif()
+@@ -33,7 +35,7 @@ set(CMAKE_MODULE_PATH
+     "${_ompl_cmake_modules_path}")
+ include(GNUInstallDirs)
+ include(FeatureSummary)
+-include(CompilerSettings)
++include(OMPLCompilerSettings)
+ include(OMPLUtils)
+ 
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 @@ -49,7 +51,6 @@ set(OMPL_CMAKE_UTIL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ompl/CMakeModules"
  
  if(MSVC)
@@ -35,7 +44,7 @@ index edca49a..0dd0f51 100644
  
  # ROS installs fcl in /usr. In /usr/include/fcl/config.h it says octomap was
  # enabled. Octomap is installed in /opt/ros/${ROS_DISTRO}/include (most
-@@ -174,13 +170,19 @@ endif()
+@@ -174,13 +170,21 @@ endif()
  
  set(OMPLAPP_MODULE_LIBRARIES
      ${OPENGL_LIBRARIES}
@@ -43,6 +52,7 @@ index edca49a..0dd0f51 100644
 -    ${FCL_LIBRARIES})
 +    ccd
 +    ompl::ompl
++    Boost::filesystem
 +    Eigen3::Eigen
 +    assimp::assimp
 +    fcl)
@@ -53,6 +63,7 @@ index edca49a..0dd0f51 100644
 -link_directories(${ASSIMP_LIBRARY_DIRS} ${CCD_LIBRARY_DIRS} ${OCTOMAP_LIBRARY_DIRS} ${FCL_LIBRARY_DIRS})
 +    ccd
 +    ompl::ompl
++    Boost::filesystem
 +    Eigen3::Eigen
 +    assimp::assimp
 +    fcl)
@@ -60,7 +71,7 @@ index edca49a..0dd0f51 100644
  
  if (OPENGL_INCLUDE_DIR)
      include_directories("${OPENGL_INCLUDE_DIR}")
-@@ -221,18 +223,15 @@ if(PQP_FOUND)
+@@ -221,18 +225,15 @@ if(PQP_FOUND)
      set(OMPLAPP_LIBRARIES ${OMPLAPP_LIBRARIES} ${PQP_LIBRARY})
  endif()
  
@@ -83,7 +94,7 @@ index edca49a..0dd0f51 100644
  
  install(DIRECTORY resources
      DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/ompl"
-@@ -259,6 +258,8 @@ if(OMPL_BUILD_PYBINDINGS)
+@@ -259,6 +260,8 @@ if(OMPL_BUILD_PYBINDINGS)
      endif()
  endif()
  

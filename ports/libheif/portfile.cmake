@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 a7b4a7ecc093f6b453939e093abef391f88bb371303183a91e431cba8f4b590131c05cc80a28733ac4822cce4a69ca1475251b2d4679890330a603de04c6c77c
+    SHA512 60a3b974a6c8d2d053098bc3cd36da78c6aa1d4d3282ce0055263fb4120e8390316d63bc3f2312f20c5d97f1cc35afaf89fa7321c0cb163c778883bae6dbb5e6
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff
         find-modules.diff
         gdk-pixbuf.patch
         symbol-exports.diff
+        vvc-pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,19 +17,29 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         aom         WITH_AOM_DECODER
         aom         WITH_AOM_ENCODER
         aom         VCPKG_LOCK_FIND_PACKAGE_AOM
+        dav1d       WITH_DAV1D
+        dav1d       VCPKG_LOCK_FIND_PACKAGE_DAV1D
         gdk-pixbuf  WITH_GDK_PIXBUF
         hevc        WITH_X265
         hevc        VCPKG_LOCK_FIND_PACKAGE_X265
         iso23001-17 WITH_UNCOMPRESSED_CODEC
+        kvazaar     WITH_KVAZAAR
+        kvazaar     VCPKG_LOCK_FIND_PACKAGE_kvazaar
         header-compression WITH_HEADER_COMPRESSION
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
         jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
+        libde265    WITH_LIBDE265
+        libde265    VCPKG_LOCK_FIND_PACKAGE_LIBDE265
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
         uvg266      WITH_UVG266
         uvg266      VCPKG_LOCK_FIND_PACKAGE_UVG266
+        vvdec       WITH_VVDEC
+        vvdec       VCPKG_LOCK_FIND_PACKAGE_vvdec
+        vvenc       WITH_VVENC
+        vvenc       VCPKG_LOCK_FIND_PACKAGE_vvenc
         x264        WITH_X264
         h264-decoder WITH_OpenH264_DECODER
         h264-decoder VCPKG_LOCK_FIND_PACKAGE_OpenH264
@@ -45,6 +56,8 @@ endif()
 vcpkg_find_acquire_program(PKGCONFIG)
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DAV1D_PLUGIN)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -53,13 +66,11 @@ vcpkg_cmake_configure(
         -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DPLUGIN_DIRECTORY=  # empty
-        -DWITH_DAV1D=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_EXAMPLE_HEIF_THUMB=OFF
         -DWITH_EXAMPLE_HEIF_VIEW=OFF
         -DWITH_LIBSHARPYUV=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
+        -DWITH_DAV1D_PLUGIN=${DAV1D_PLUGIN}
         -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=${VCPKG_LOCK_FIND_PACKAGE_ZLIB}
         -DVCPKG_LOCK_FIND_PACKAGE_Brotli=${VCPKG_LOCK_FIND_PACKAGE_Brotli}
         ${FEATURE_OPTIONS}
@@ -68,11 +79,18 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/debug/plugins/libheif"
     MAYBE_UNUSED_VARIABLES
+        # Discovery locks are consumed only when the corresponding codec or compression feature is enabled.
         VCPKG_LOCK_FIND_PACKAGE_AOM
         VCPKG_LOCK_FIND_PACKAGE_Brotli
+        VCPKG_LOCK_FIND_PACKAGE_DAV1D
+        VCPKG_LOCK_FIND_PACKAGE_JPEG
+        VCPKG_LOCK_FIND_PACKAGE_kvazaar
+        VCPKG_LOCK_FIND_PACKAGE_LIBDE265
         VCPKG_LOCK_FIND_PACKAGE_OpenH264
         VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
         VCPKG_LOCK_FIND_PACKAGE_UVG266
+        VCPKG_LOCK_FIND_PACKAGE_vvdec
+        VCPKG_LOCK_FIND_PACKAGE_vvenc
         VCPKG_LOCK_FIND_PACKAGE_X265
         VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
@@ -85,7 +103,13 @@ set(config_dependencies "include(CMakeFindDependencyMacro)\n")
 if ("aom" IN_LIST FEATURES)
     string(APPEND config_dependencies "find_dependency(AOM CONFIG)\n")
 endif()
-if (("header-compression" IN_LIST FEATURES) OR ("iso23001-17" IN_LIST FEATURES))
+if (WITH_VVDEC)
+    string(APPEND config_dependencies "find_dependency(vvdec CONFIG)\n")
+endif()
+if (WITH_VVENC)
+    string(APPEND config_dependencies "find_dependency(vvenc CONFIG)\n")
+endif()
+if (WITH_UNCOMPRESSED_CODEC OR WITH_HEADER_COMPRESSION)
     string(APPEND config_dependencies "find_dependency(ZLIB)\n")
 endif()
 vcpkg_replace_string(

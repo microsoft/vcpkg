@@ -15,7 +15,7 @@ import time
 # ============================================================
 # CONFIGURATION - Set version, port list, and paths here
 # ============================================================
-NEW_VERSION = "6.30.0"           # <-- TARGET VERSION
+NEW_VERSION = "6.31.0"           # <-- TARGET VERSION
 
 PORT_LIST = [
     "ecm",
@@ -23,6 +23,7 @@ PORT_LIST = [
     "kauth",
     "kbreezeicons",
     "kcodecs",
+    "kcompletion",
     "kconfig",
     "kcoreaddons",
     "kcrash",
