@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 caa52cbc73e9b6096c5ba4066d85d34ea63e81573c36d06ccd3f54ba34d95b133b5c507fc6e1ba81552673de01bed50c35de4b90428b4da9942ade442bd47a13
     PATCHES
         001-add-bsds-to-meson.patch
+        002-disable-console.patch # console programs not installed by vcpkg
 )
 
 set(cxx_link_libraries "")
