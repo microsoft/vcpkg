@@ -14,6 +14,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(EXPORT CImgExport FILE ${PROJECT_NAME}Config.cmake NAMESPACE ${PROJECT_NAME}:: DESTINATION share/cimg)
+install(EXPORT CImgExport FILE unofficial-cimg-config.cmake NAMESPACE unofficial::cimg:: DESTINATION share/unofficial-cimg)
 
 install(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/CImg.h
