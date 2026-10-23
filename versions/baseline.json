@@ -9652,6 +9652,10 @@
       "baseline": "4.0.2",
       "port-version": 0
     },
+    "sonnet": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "sophus": {
       "baseline": "1.24.6",
       "port-version": 0

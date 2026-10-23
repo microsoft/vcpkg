@@ -38,6 +38,7 @@ PORT_LIST = [
     "knotifications",
     "kwidgetsaddons",
     "kwindowsystem",
+    "sonnet",
     "syntax-highlighting",
     "threadweaver"
 ]
