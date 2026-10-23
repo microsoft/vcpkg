@@ -1,3 +1,9 @@
+vcpkg_download_distfile(OPENSSL_COMPAT_PATCH
+    URLS https://github.com/ZLMediaKit/ZLMediaKit/commit/bb83e697a60ad9dde679afcd7b85feeafdf7514b.patch?full_index=1
+    FILENAME zlmediakit-openssl-compat.patch
+    SHA512 191cd0eca2928bfe3e19e138aa29fe2dff89354103ab796677c9f26498c97df772c71c0c955d7f184c9b10b26ca4ecc8e91a2fbe2e8d4fa7acc1004d2b40dd6c
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZLMediaKit/ZLMediaKit
@@ -7,6 +13,7 @@ vcpkg_from_github(
     PATCHES 
         fix-dependency.patch
         fix-android.patch
+        "${OPENSSL_COMPAT_PATCH}"
 )
 
 vcpkg_from_github(
