@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankosterfeld/qtkeychain
     REF "${VERSION}"
-    SHA512 d1d87553db94bf54da1373016a847476e6cd608db6d427ed72532658e2272501daf45d7c9976efdde2f26ab3810ba9dbfec2518d46dee5a76ecaa369bfee2e4a
+    SHA512 7a9c6a4f5b19c36283c18b426ee057e08250266411eaa7012af54d2453b9a91edcfba17be2508405fab9b42732bc33202fc708cc59f2ee9e650d978782e49703
     HEAD_REF master
-    PATCHES
-        dbus-emscripten.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
