@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f82410c..01dd9bc 100644
+index 38bfe85..f64f419 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -25,7 +25,7 @@ project(Ppconsul VERSION ${VERSION})
@@ -15,7 +15,7 @@ index f82410c..01dd9bc 100644
  
  
  if (NOT ${USE_BOOST_REGEX})
--    find_package(Boost ${BOOST_MIN_VERSION} REQUIRED)
+-    find_package(Boost ${BOOST_MIN_VERSION} CONFIG REQUIRED)
 +    find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS
 +        fusion
 +        mpl
@@ -24,7 +24,7 @@ index f82410c..01dd9bc 100644
 +        variant
 +    )
  else ()
-     find_package(Boost ${BOOST_MIN_VERSION} REQUIRED COMPONENTS regex)
+     find_package(Boost ${BOOST_MIN_VERSION} CONFIG REQUIRED COMPONENTS regex)
      add_definitions(-DPPCONSUL_USE_BOOST_REGEX)
 @@ -82,8 +88,8 @@ if (NOT ${CURL_ROOT} STREQUAL "")
  endif ()
@@ -56,13 +56,13 @@ index 199395a..abeb1dc 100644
  Version: @Ppconsul_VERSION@
 +Requires.private: libcurl
  Libs: -L${libdir} @ppconsul_libs@
-+Libs.prvate: -lb64
++Libs.private: -lb64
  Cflags: -I${includedir}
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1318433..8400172 100644
+index 1318433..fd134e0 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -66,18 +66,22 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_auto_type cxx_decltype cxx_st
+@@ -66,18 +66,21 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_auto_type cxx_decltype cxx_st
  target_include_directories(${PROJECT_NAME}
      PUBLIC
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
@@ -73,7 +73,7 @@ index 1318433..8400172 100644
 -        ${Boost_INCLUDE_DIRS}
 -        ${CMAKE_CURRENT_SOURCE_DIR}/../ext
  )
- 
+-
 +target_include_directories(${PROJECT_NAME} PRIVATE ${JSON11_INCLUDE_DIRS})
  target_link_libraries(${PROJECT_NAME}
      PRIVATE

@@ -1,6 +1,6 @@
 {
   "name": "ppconsul",
-  "version-date": "2022-02-15",
+  "version": "0.2.4",
   "description": "A C++ client library for Consul. Consul is a distributed tool for discovering and configuring services in your infrastructure.",
   "homepage": "https://github.com/oliora/ppconsul",
   "dependencies": [
