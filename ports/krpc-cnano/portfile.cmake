@@ -21,10 +21,18 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/krpc_cnano PACKAGE_NAME krpc_cnano)
 vcpkg_copy_pdbs()
 
+# The installed headers must select the same fixed transport as the library, without CMake usage requirements.
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/krpc_cnano/communication.h"
+    "#pragma once"
+    "#pragma once\n\n#ifndef KRPC_COMMUNICATION_TCP\n#define KRPC_COMMUNICATION_TCP\n#endif"
+)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/COPYING"
     "${SOURCE_PATH}/COPYING.LESSER"
     "${CURRENT_INSTALLED_DIR}/share/nanopb/copyright"
 )
