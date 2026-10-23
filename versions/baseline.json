@@ -4588,6 +4588,10 @@
       "baseline": "6.31.0",
       "port-version": 0
     },
+    "kholidays": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "ki18n": {
       "baseline": "6.31.0",
       "port-version": 1
