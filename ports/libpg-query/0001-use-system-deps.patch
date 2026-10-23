@@ -1,42 +1,53 @@
+diff --git a/Makefile b/Makefile
+index 861f3a4..9615acc 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -31,10 +31,11 @@
- 	SOFLAG = -soname
+@@ -33,13 +33,14 @@ else
  endif
  
--SRC_FILES := $(wildcard src/*.c src/postgres/*.c) vendor/protobuf-c/protobuf-c.c vendor/xxhash/xxhash.c protobuf/pg_query.pb-c.c
-+SRC_FILES := $(wildcard src/*.c src/postgres/*.c) protobuf/pg_query.pb-c.c
-+LIBS += -lprotobuf-c -lxxhash
+ UPB_DIR := vendor/upb
+-UPB_INCLUDES := -I./$(UPB_DIR) -I./$(UPB_DIR)/third_party/utf8_range
+-UPB_SRC_FILES := $(UPB_DIR)/upb.c $(UPB_DIR)/third_party/utf8_range/utf8_range.c protobuf/pg_query.upb_minitable.c
++UPB_INCLUDES := -I./$(UPB_DIR)
++UPB_SRC_FILES := $(UPB_DIR)/upb.c protobuf/pg_query.upb_minitable.c
+ 
+-SRC_FILES := $(wildcard src/*.c src/postgres/*.c) vendor/xxhash/xxhash.c $(UPB_SRC_FILES)
++SRC_FILES := $(wildcard src/*.c src/postgres/*.c) $(UPB_SRC_FILES)
++LIBS += -lxxhash
  OBJ_FILES := $(SRC_FILES:.c=.o)
  
--override CFLAGS += -g -I. -I./vendor -I./src/include -I./src/postgres/include -Wall -Wno-unused-function -Wno-unused-value -Wno-unused-variable -fno-strict-aliasing -fwrapv -fPIC
-+override CFLAGS += -g -I. -I./src/include -I./src/postgres/include -Wall -Wno-unused-function -Wno-unused-value -Wno-unused-variable -fno-strict-aliasing -fwrapv -fPIC
+-override CFLAGS += -g -I. -I./vendor $(UPB_INCLUDES) -I./src/include -I./src/postgres/include -Wall -Wno-unused-function -Wno-unused-value -Wno-unused-variable -fno-strict-aliasing -fwrapv -fPIC
++override CFLAGS += -g -I. $(UPB_INCLUDES) -I./src/include -I./src/postgres/include -Wall -Wno-unused-function -Wno-unused-value -Wno-unused-variable -fno-strict-aliasing -fwrapv -fPIC
  
  ifeq ($(OS),Windows_NT)
  override CFLAGS += -I./src/postgres/include/port/win32
-@@ -43,7 +44,7 @@
+@@ -48,7 +49,7 @@ endif
  
  override PG_CONFIGURE_FLAGS += -q --without-readline --without-zlib --without-icu
  
--override TEST_CFLAGS += -g -I. -I./vendor -Wall
-+override TEST_CFLAGS += -g -I. -Wall
+-override TEST_CFLAGS += -g -I. -I./vendor $(UPB_INCLUDES) -Wall
++override TEST_CFLAGS += -g -I. $(UPB_INCLUDES) -Wall
  override TEST_LDFLAGS += -pthread
  
  CFLAGS_OPT_LEVEL = -O3
+diff --git a/Makefile.msvc b/Makefile.msvc
+index b2b8944..3e3d578 100644
 --- a/Makefile.msvc
 +++ b/Makefile.msvc
 @@ -3,9 +3,9 @@
  TARGET = pg_query
  ARLIB = $(TARGET).lib
  
--SRC_FILES = src/*.c src/postgres/*.c vendor/protobuf-c/protobuf-c.c vendor/xxhash/xxhash.c protobuf/pg_query.pb-c.c
-+SRC_FILES = src/*.c src/postgres/*.c protobuf/pg_query.pb-c.c
+-SRC_FILES = src/*.c src/postgres/*.c vendor/xxhash/xxhash.c vendor/upb/upb.c vendor/upb/third_party/utf8_range/utf8_range.c protobuf/pg_query.upb_minitable.c
++SRC_FILES = src/*.c src/postgres/*.c vendor/xxhash/xxhash.c vendor/upb/upb.c protobuf/pg_query.upb_minitable.c
  
--CFLAGS = -I. -I./vendor -I./src/postgres/include -I./src/include -I./src/postgres/include/port/win32 -I./src/postgres/include/port/win32_msvc
-+CFLAGS = -I. -I./src/postgres/include -I./src/include -I./src/postgres/include/port/win32 -I./src/postgres/include/port/win32_msvc
+-CFLAGS = -I. -I./vendor -I./vendor/upb -I./vendor/upb/third_party/utf8_range -I./src/postgres/include -I./src/include -I./src/postgres/include/port/win32 -I./src/postgres/include/port/win32_msvc
++CFLAGS = -I. -I./vendor/upb -I./src/postgres/include -I./src/include -I./src/postgres/include/port/win32 -I./src/postgres/include/port/win32_msvc
  
  RM = del
  
+diff --git a/src/pg_query_fingerprint.c b/src/pg_query_fingerprint.c
+index d13651d..e6146ae 100644
 --- a/src/pg_query_fingerprint.c
 +++ b/src/pg_query_fingerprint.c
 @@ -5,7 +5,7 @@
