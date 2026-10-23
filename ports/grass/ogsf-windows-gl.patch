@@ -1,0 +1,78 @@
+diff --git a/include/grass/ogsf.h b/include/grass/ogsf.h
+index 90e9209..7194f64 100644
+--- a/include/grass/ogsf.h
++++ b/include/grass/ogsf.h
+@@ -19,6 +19,11 @@
+ 
+ #include <grass/config.h>
+ #include <grass/bitmap.h>
++#if defined(OPENGL_WINDOWS)
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#undef WIN32_LEAN_AND_MEAN
++#endif
+ #if defined(OPENGL_X11) || defined(OPENGL_WINDOWS)
+ #include <GL/gl.h>
+ #endif
+diff --git a/lib/ogsf/gs2.c b/lib/ogsf/gs2.c
+index a0cd217..eb63e1b 100644
+--- a/lib/ogsf/gs2.c
++++ b/lib/ogsf/gs2.c
+@@ -35,6 +35,11 @@
+ 
+ #include <grass/config.h>
+ 
++#if defined(OPENGL_WINDOWS)
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#undef WIN32_LEAN_AND_MEAN
++#endif
+ #if defined(OPENGL_X11) || defined(OPENGL_WINDOWS)
+ #include <GL/gl.h>
+ #include <GL/glu.h>
+diff --git a/lib/ogsf/gsd_legend.c b/lib/ogsf/gsd_legend.c
+index 81a5636..cfe00fe 100644
+--- a/lib/ogsf/gsd_legend.c
++++ b/lib/ogsf/gsd_legend.c
+@@ -23,6 +23,11 @@
+ 
+ #include <grass/config.h>
+ 
++#if defined(OPENGL_WINDOWS)
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#undef WIN32_LEAN_AND_MEAN
++#endif
+ #if defined(OPENGL_X11) || defined(OPENGL_WINDOWS)
+ #include <GL/gl.h>
+ #include <GL/glu.h>
+diff --git a/lib/ogsf/gsd_prim.c b/lib/ogsf/gsd_prim.c
+index a61c62b..a4466f1 100644
+--- a/lib/ogsf/gsd_prim.c
++++ b/lib/ogsf/gsd_prim.c
+@@ -34,6 +34,9 @@
+ #include <AGL/agl.h>
+ #endif
+ #elif defined(OPENGL_WINDOWS)
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#undef WIN32_LEAN_AND_MEAN
+ #include <GL/gl.h>
+ #include <GL/glu.h>
+ #include <wingdi.h>
+diff --git a/lib/ogsf/gsd_views.c b/lib/ogsf/gsd_views.c
+index f391313..0c58c1c 100644
+--- a/lib/ogsf/gsd_views.c
++++ b/lib/ogsf/gsd_views.c
+@@ -18,6 +18,11 @@
+ 
+ #include <grass/config.h>
+ 
++#if defined(OPENGL_WINDOWS)
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#undef WIN32_LEAN_AND_MEAN
++#endif
+ #if defined(OPENGL_X11) || defined(OPENGL_WINDOWS)
+ #include <GL/gl.h>
+ #include <GL/glu.h>
