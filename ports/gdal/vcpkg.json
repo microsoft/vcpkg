@@ -45,6 +45,7 @@
       "platform": "!uwp"
     },
     "iconv",
+    "libaec",
     "libkml",
     {
       "name": "libspatialite",
@@ -179,6 +180,12 @@
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
+      ]
+    },
+    "libaec":{
+      "description": "Enable AEC support",
+      "dependencies": [
+        "libaec"
       ]
     },
     "libkml": {
