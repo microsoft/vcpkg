@@ -12,6 +12,8 @@ vcpkg_from_github(
         fix-calibration-c.patch
         fix-build-imgui.patch
         fix-header.patch
+        fix-preprocessor-va-args.patch
+        fix-tool-build.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

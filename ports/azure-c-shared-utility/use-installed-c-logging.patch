@@ -1,0 +1,36 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b8fe311..2f1a603 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -50,6 +50,10 @@ if (use_installed_dependencies AND NOT TARGET macro_utils_c)
+     find_package(macro_utils_c CONFIG REQUIRED)
+ endif()
+ 
++if (use_installed_dependencies AND NOT TARGET c_logging_v2)
++    find_package(c_logging CONFIG REQUIRED)
++endif()
++
+ if ((NOT TARGET macro_utils_c) AND (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/macro-utils-c/CMakeLists.txt))
+     add_subdirectory(deps/macro-utils-c)
+ endif()
+@@ -812,7 +816,7 @@ endif(${build_as_dynamic})
+ # Re-export c_logging_v2 (and c_logging_v2_core) via aziotsharedutilTargets so
+ # downstream installed-deps consumers can resolve the c_logging_v2 imported
+ # target referenced by aziotsharedutil's INTERFACE_LINK_LIBRARIES.
+-if(TARGET c_logging_v2 AND TARGET c_logging_v2_core)
++if(TARGET c_logging_v2 AND TARGET c_logging_v2_core AND NOT use_installed_dependencies)
+     list(APPEND targets c_logging_v2 c_logging_v2_core)
+ endif()
+ 
+diff --git a/configs/azure_c_shared_utilityConfig.cmake b/configs/azure_c_shared_utilityConfig.cmake
+index 13708e8..9c28e24 100644
+--- a/configs/azure_c_shared_utilityConfig.cmake
++++ b/configs/azure_c_shared_utilityConfig.cmake
+@@ -6,6 +6,7 @@ include(CMakeFindDependencyMacro)
+ # aziotsharedutil's exported targets reference macro_utils_c via INTERFACE_LINK_LIBRARIES,
+ # so consumers must be able to resolve it before the targets file is included.
+ find_dependency(macro_utils_c)
++find_dependency(c_logging)
+ 
+ if("@use_openssl@")
+     find_dependency(OpenSSL)

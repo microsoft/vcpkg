@@ -1,6 +1,6 @@
 {
   "name": "azure-umqtt-c",
-  "version-date": "2025-03-31",
+  "version-date": "2026-10-16",
   "description": "General purpose library for communication over the mqtt protocol",
   "homepage": "https://github.com/Azure/azure-umqtt-c",
   "license": "MIT",

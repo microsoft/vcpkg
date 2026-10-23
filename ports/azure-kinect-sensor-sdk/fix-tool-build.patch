@@ -1,0 +1,49 @@
+diff --git a/tools/k4aviewer/k4amicrophone.cpp b/tools/k4aviewer/k4amicrophone.cpp
+index 2e5b97b..bb63571 100644
+--- a/tools/k4aviewer/k4amicrophone.cpp
++++ b/tools/k4aviewer/k4amicrophone.cpp
+@@ -8,6 +8,7 @@
+ // System headers
+ //
+ #include <algorithm>
++#include <cstring>
+ 
+ // Library headers
+ //
+diff --git a/tools/k4aviewer/k4amicrophonelistener.cpp b/tools/k4aviewer/k4amicrophonelistener.cpp
+index 8baa05c..1835138 100644
+--- a/tools/k4aviewer/k4amicrophonelistener.cpp
++++ b/tools/k4aviewer/k4amicrophonelistener.cpp
+@@ -7,6 +7,7 @@
+ 
+ // System headers
+ //
++#include <cstring>
+ #include <regex>
+ #include <string>
+ 
+diff --git a/tools/k4aviewer/k4awindowsizehelpers.h b/tools/k4aviewer/k4awindowsizehelpers.h
+index 329a978..34c0dc1 100644
+--- a/tools/k4aviewer/k4awindowsizehelpers.h
++++ b/tools/k4aviewer/k4awindowsizehelpers.h
+@@ -20,17 +20,17 @@ inline float GetStandardVerticalSliderWidth()
+ {
+     // Width of the slider is 1 character, plus half the normal padding
+     //
+-    return ImGui::GetFont()->FontSize + ImGui::GetStyle().FramePadding.x;
++    return ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.x;
+ }
+ 
+ inline float GetTitleBarHeight()
+ {
+-    return ImGui::GetFont()->FontSize + ImGui::GetStyle().FramePadding.y * 2;
++    return ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+ }
+ 
+ inline float GetDefaultButtonHeight()
+ {
+-    return ImGui::GetFont()->FontSize + ImGui::GetStyle().FramePadding.y * 2 + ImGui::GetStyle().ItemSpacing.y;
++    return ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2 + ImGui::GetStyle().ItemSpacing.y;
+ }
+ 
+ // Gets the maximum dimensions that an image of size imageDimensions can be scaled to in order
