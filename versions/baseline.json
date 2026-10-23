@@ -4372,6 +4372,10 @@
       "baseline": "2.5.0",
       "port-version": 0
     },
+    "kdeclarative": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kdgpu": {
       "baseline": "0.10.0",
       "port-version": 1
