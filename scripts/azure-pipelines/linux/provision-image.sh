@@ -11,6 +11,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "24.04") and format to "2404"
 UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
+UBUNTU_CODENAME=$(. /etc/os-release && echo "$VERSION_CODENAME")
 NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
 DEBIAN_ARCHITECTURE=$(dpkg --print-architecture)
 
@@ -37,6 +38,17 @@ apt-get --no-install-recommends -y install ca-certificates curl apt-transport-ht
 curl -L -o cuda-keyring.deb "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-keyring_1.1-1_all.deb"
 dpkg -i cuda-keyring.deb
 rm -f cuda-keyring.deb
+
+## ROCm
+# AMD publishes ROCm packages for Ubuntu amd64 only; there is no arm64 repository.
+# Update the apt suite when the image moves to a newer Ubuntu release.
+if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key |
+      gpg --dearmor -o /etc/apt/keyrings/rocm.gpg
+  echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/latest ${UBUNTU_CODENAME} main" |
+      tee /etc/apt/sources.list.d/rocm.list
+fi
 
 ## PowerShell
 curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
@@ -192,6 +204,14 @@ APT_PACKAGES="$APT_PACKAGES cccl-13-3 cuda-command-line-tools-13-3 cuda-compiler
 
 if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
   APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-3"
+fi
+
+## ROCm
+# rocm-core provides /opt/rocm/.info/version, which the rocm vcpkg port probes.
+# Ports that depend on ROCm may need more of the stack (for example rocm-hip-sdk)
+# installed here as well.
+if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
+  APT_PACKAGES="$APT_PACKAGES rocm-core"
 fi
 
 ## PowerShell + Azure
