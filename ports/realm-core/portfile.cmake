@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 b95fbccdddcad2a4ad68fe5fe5358a67f668bdd2cd4bef68f8fc74f9d11690c317156ba28942c4c9db446c796a0d760387c8154209f6039d92a880d7e64e3847
     HEAD_REF master
-    PATCHES 
+    PATCHES
         UWP_index_set.patch
         fix-zlib.patch
         cstdlib.diff
