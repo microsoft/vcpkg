@@ -20,6 +20,7 @@ vcpkg_from_github(
         android.diff
         # Once the next version of cgltf is released, this patch will no longer be necessary.
         fix-cgltf.patch
+        static-link-deps.patch # raysan5/raylib#5990 and vcpkg-specific fixes
 )
 file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/cgltf.h"
