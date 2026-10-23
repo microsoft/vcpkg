@@ -1,0 +1,23 @@
+{
+  "name": "mateopedersen-betacalendars-calendar-layout",
+  "version": "0.1.0",
+  "description": "Offline Gregorian calendar grids and printable page geometry in a C++17 header-only library.",
+  "homepage": "https://www.betacalendars.com/",
+  "documentation": "https://github.com/mateopedersen/betacalendars-calendar-layout/blob/v0.1.0/README.md",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build and install the optional betacal-layout command-line utility."
+    }
+  }
+}
