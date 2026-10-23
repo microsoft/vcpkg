@@ -1,6 +1,6 @@
 {
   "name": "ixwebsocket",
-  "version-semver": "12.0.1",
+  "version-semver": "12.1.0",
   "description": "Lightweight WebSocket Client and Server + HTTP Client and Server",
   "homepage": "https://github.com/machinezone/IXWebSocket",
   "license": "BSD-3-Clause",
@@ -24,6 +24,10 @@
       "dependencies": [
         "mbedtls"
       ]
+    },
+    "network-framework": {
+      "description": "Native macOS TLS support using Network.framework (macOS 10.15+)",
+      "supports": "osx"
     },
     "openssl": {
       "description": "SSL support (OpenSSL)",

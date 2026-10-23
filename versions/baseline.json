@@ -4169,7 +4169,7 @@
       "port-version": 0
     },
     "ixwebsocket": {
-      "baseline": "12.0.1",
+      "baseline": "12.1.0",
       "port-version": 0
     },
     "jack2": {
