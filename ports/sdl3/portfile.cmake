@@ -98,7 +98,11 @@ endif()
 
 # option for not need to show windows
 list(APPEND FEATURE_OPTIONS -DSDL_UNIX_CONSOLE_BUILD=ON)
-if (VCPKG_TARGET_IS_LINUX AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES AND NOT "kmsdrm" IN_LIST FEATURES)
+if (VCPKG_TARGET_IS_LINUX AND NOT (
+        "x11" IN_LIST FEATURES OR
+        "wayland" IN_LIST FEATURES OR
+        "kmsdrm" IN_LIST FEATURES
+    ))
     message(WARNING "The selected features don't allow sdl3 to create windows, which is usually unintentional. You can get video support by installing the x11, wayland and/or kmsdrm features.")
 endif()
 
@@ -120,6 +124,7 @@ vcpkg_cmake_configure(
         -DSDL_RPI=OFF # Requires the legacy Broadcom bcm_host/brcmegl graphics stack.
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
+        -DSDL_WAYLAND_SHARED=OFF # Link Wayland dependencies with the linkage supplied by their providers.
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         -DSDL_REVISION=vcpkg # Skip invoking git to determine the revision.
     MAYBE_UNUSED_VARIABLES
