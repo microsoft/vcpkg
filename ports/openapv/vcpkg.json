@@ -1,0 +1,27 @@
+{
+  "name": "openapv",
+  "version": "0.2.1.0",
+  "description": "Open Advanced Professional Video (APV) codec implementation.",
+  "homepage": "https://github.com/AcademySoftwareFoundation/openapv",
+  "license": "BSD-3-Clause",
+  "supports": "!x86",
+  "dependencies": [
+    {
+      "name": "pthreads",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build and install the tools"
+    }
+  }
+}
