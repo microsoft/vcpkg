@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-cmake-intl.patch
+        fix-qml-dependencies.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
