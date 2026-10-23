@@ -3,14 +3,20 @@ if(VCPKG_TARGET_IS_LINUX)
     if("x11" IN_LIST FEATURES)
         list(APPEND system_packages
             libx11-dev libxext-dev libxcursor-dev libxi-dev libxfixes-dev
-            libxrandr-dev libxrender-dev libxtst-dev libthai-dev
+            libxrandr-dev libxrender-dev libxtst-dev
         )
+    endif()
+    if("x11-libthai" IN_LIST FEATURES)
+        list(APPEND system_packages libthai-dev)
     endif()
     if("x11-xscrnsaver" IN_LIST FEATURES)
         list(APPEND system_packages libxss-dev)
     endif()
     if("wayland" IN_LIST FEATURES)
-        list(APPEND system_packages libwayland-dev libxkbcommon-dev libegl-dev libdecor-0-dev)
+        list(APPEND system_packages libwayland-dev libxkbcommon-dev libegl-dev)
+    endif()
+    if("wayland-libdecor" IN_LIST FEATURES)
+        list(APPEND system_packages libdecor-0-dev)
     endif()
     if("kmsdrm" IN_LIST FEATURES)
         list(APPEND system_packages libdrm-dev libgbm-dev libegl-dev)
@@ -53,32 +59,32 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        alsa           SDL_ALSA
-        dbus           SDL_DBUS
-        ibus           SDL_IBUS
-        jack           SDL_JACK
-        kmsdrm         SDL_KMSDRM
-        liburing       SDL_LIBURING
-        libusb         SDL_HIDAPI_LIBUSB
-        pipewire       SDL_PIPEWIRE
-        pulseaudio     SDL_PULSEAUDIO
-        sndio          SDL_SNDIO
-        udev           SDL_LIBUDEV
-        vulkan         SDL_VULKAN
-        wayland        SDL_WAYLAND
-        wayland        SDL_WAYLAND_LIBDECOR
-        x11            SDL_FRIBIDI
-        x11            SDL_LIBTHAI
-        x11            SDL_X11
-        x11            SDL_X11_XCURSOR
-        x11            SDL_X11_XDBE
-        x11            SDL_X11_XFIXES
-        x11            SDL_X11_XINPUT
-        x11            SDL_X11_XRANDR
-        x11            SDL_X11_XSHAPE
-        x11            SDL_X11_XSYNC
-        x11            SDL_X11_XTEST
-        x11-xscrnsaver SDL_X11_XSCRNSAVER
+        alsa             SDL_ALSA
+        dbus             SDL_DBUS
+        ibus             SDL_IBUS
+        jack             SDL_JACK
+        kmsdrm           SDL_KMSDRM
+        liburing         SDL_LIBURING
+        libusb           SDL_HIDAPI_LIBUSB
+        pipewire         SDL_PIPEWIRE
+        pulseaudio       SDL_PULSEAUDIO
+        sndio            SDL_SNDIO
+        udev             SDL_LIBUDEV
+        vulkan           SDL_VULKAN
+        wayland          SDL_WAYLAND
+        wayland-libdecor SDL_WAYLAND_LIBDECOR
+        x11              SDL_FRIBIDI
+        x11              SDL_X11
+        x11              SDL_X11_XCURSOR
+        x11              SDL_X11_XDBE
+        x11              SDL_X11_XFIXES
+        x11              SDL_X11_XINPUT
+        x11              SDL_X11_XRANDR
+        x11              SDL_X11_XSHAPE
+        x11              SDL_X11_XSYNC
+        x11              SDL_X11_XTEST
+        x11-libthai      SDL_LIBTHAI
+        x11-xscrnsaver   SDL_X11_XSCRNSAVER
 )
 
 if (VCPKG_TARGET_IS_EMSCRIPTEN)

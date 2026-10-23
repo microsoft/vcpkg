@@ -22,7 +22,7 @@
       "platform": "linux"
     },
     {
-      "name": "ibus",
+      "name": "dbus",
       "platform": "linux"
     },
     {
@@ -155,6 +155,19 @@
         "wayland"
       ]
     },
+    "wayland-libdecor": {
+      "description": "Support Wayland window decorations through system libdecor",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "sdl3",
+          "default-features": false,
+          "features": [
+            "wayland"
+          ]
+        }
+      ]
+    },
     "x11": {
       "description": "Build with X11 support",
       "supports": "linux | bsd",
@@ -167,6 +180,19 @@
         "libxrandr",
         "libxrender",
         "libxtst"
+      ]
+    },
+    "x11-libthai": {
+      "description": "Support Thai text rendering in X11 message boxes through system libthai",
+      "supports": "linux | bsd",
+      "dependencies": [
+        {
+          "name": "sdl3",
+          "default-features": false,
+          "features": [
+            "x11"
+          ]
+        }
       ]
     },
     "x11-xscrnsaver": {
