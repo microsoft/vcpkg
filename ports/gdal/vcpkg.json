@@ -1,7 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.12.4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -209,6 +209,12 @@
       "description": "Use LZMA library",
       "dependencies": [
         "liblzma"
+      ]
+    },
+    "muparser": {
+      "description": "Enable muparser support for VRT expressions",
+      "dependencies": [
+        "muparser"
       ]
     },
     "mysql-libmariadb": {
