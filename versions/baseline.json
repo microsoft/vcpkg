@@ -1721,7 +1721,7 @@
       "port-version": 0
     },
     "cgns": {
-      "baseline": "4.5.1",
+      "baseline": "4.5.2",
       "port-version": 0
     },
     "chadwick": {
@@ -9309,8 +9309,8 @@
       "port-version": 1
     },
     "seacas": {
-      "baseline": "2022-11-22",
-      "port-version": 10
+      "baseline": "2025-10-14",
+      "port-version": 0
     },
     "seal": {
       "baseline": "4.7.1",
