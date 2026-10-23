@@ -4648,6 +4648,10 @@
       "baseline": "5.34",
       "port-version": 0
     },
+    "kplotting": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "krabsetw": {
       "baseline": "4.3.2",
       "port-version": 0
