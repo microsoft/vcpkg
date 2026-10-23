@@ -31,6 +31,7 @@ PORT_LIST = [
     "kcoreaddons",
     "kcrash",
     "kdbusaddons",
+    "kdeclarative",
     "kf6-solid",
     "kglobalaccel",
     "kguiaddons",
