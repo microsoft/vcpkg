@@ -1,6 +1,7 @@
 {
   "name": "kwidgetsaddons",
-  "version": "6.30.0",
+  "version": "6.31.0",
+  "port-version": 1,
   "description": "Addons to QtWidgets",
   "homepage": "https://invent.kde.org/frameworks/kwidgetsaddons",
   "documentation": "https://api.kde.org/kwidgetsaddons-index.html",
@@ -9,7 +10,11 @@
     "ecm",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "future",
+        "widgets"
+      ]
     },
     {
       "name": "vcpkg-cmake",

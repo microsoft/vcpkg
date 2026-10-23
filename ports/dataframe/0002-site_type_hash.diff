@@ -1,0 +1,26 @@
+diff --git a/include/DataFrame/Utils/FixedSizeString.h b/include/DataFrame/Utils/FixedSizeString.h
+index eed0a522..05b0eca2 100644
+--- a/include/DataFrame/Utils/FixedSizeString.h
++++ b/include/DataFrame/Utils/FixedSizeString.h
+@@ -285,11 +285,20 @@ public:
+     //
+     [[nodiscard]] inline size_type hash() const noexcept {
+ 
+-        size_type   h { 14695981039346656037UL }; // offset basis
++        if constexpr(sizeof(size_type) == 4) {
++            // https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
++            size_type   h { 2166136261U }; // offset basis
++
++            for (const_pointer s { string_ }; *s; ++s)
++                h = (h ^ static_cast<unsigned char>(*s)) * 16777619U;
++            return (h);
++        } else {
++        size_type   h = 14695981039346656037UL; // offset basis
+ 
+         for (const_pointer s { string_ }; *s; ++s)
+             h = (h ^ static_cast<unsigned char>(*s)) * 1099511628211UL;
+         return (h);
++        }
+     }
+ 
+ protected:

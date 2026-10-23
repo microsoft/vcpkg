@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcoreaddons
     REF "v${VERSION}"
-    SHA512 982a67f4cae80b8ff6b4ca548122e9feddb78ff3db0dbcbd48217497c21ad82a77c22a26c007510660f7498ec8b16baab5a014d49d1f24eae60b5292632fd4bd
+    SHA512 ab1e46f743c2deca88696d03b59cad3d10dae4f54fc05561920bb8979614681a4d7d5e5cc78fbaee8f2e3abd51509259bdc9edaa1f65446e300da8f6ae6367e9
     HEAD_REF master
 )
 

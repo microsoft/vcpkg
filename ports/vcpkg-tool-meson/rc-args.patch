@@ -1,0 +1,69 @@
+diff --git a/mesonbuild/modules/windows.py b/mesonbuild/modules/windows.py
+index 8686dda02ceb..875888da13fd 100644
+--- a/mesonbuild/modules/windows.py
++++ b/mesonbuild/modules/windows.py
+@@ -191,10 +191,11 @@ def get_names() -> T.Iterable[T.Tuple[str, str, T.Union[mesonlib.File, build.Cus
+ 
+             if rescomp_type == ResourceCompilerType.rc:
+                 compiler = self.detect_compiler(state.environment.coredata.compilers[MachineChoice.HOST])
++                compiler_exe, *compiler_args = compiler.get_exelist(False)
+                 command.extend(state.environment.get_build_command())
+                 command.extend(['--internal', 'rc',
+-                                '--rc', *rescomp.get_command(),
+-                                '--cl', *compiler.get_exelist(False)])
++                                '--cl', compiler_exe,
++                                *(f'--Xarg={x}' for x in compiler_args)])
+ 
+                 if compiler.id in {'msvc', 'clang-cl', 'intel-cl'}:
+                     depfile_type = 'msvc'
+@@ -214,9 +215,9 @@ def get_names() -> T.Iterable[T.Tuple[str, str, T.Union[mesonlib.File, build.Cus
+                                     '--Xarg=-MF@DEPFILE@',
+                                     '--Xarg=-DRC_INVOKED',
+                                     ])
+-            else:
+-                command.extend(rescomp.get_command())
++                command.append('--rc')
+ 
++            command.extend(rescomp.get_command())
+             command.extend(res_args)
+ 
+             # instruct binutils windres to generate a preprocessor depfile
+diff --git a/mesonbuild/scripts/rc.py b/mesonbuild/scripts/rc.py
+index 877425c40f0d..b74e72d1756a 100644
+--- a/mesonbuild/scripts/rc.py
++++ b/mesonbuild/scripts/rc.py
+@@ -11,21 +11,20 @@
+ 
+ 
+ parser = argparse.ArgumentParser()
+-parser.add_argument('--rc', nargs='+', required=True)
+-parser.add_argument('--cl', nargs='+', required=True)
++parser.add_argument('--cl', required=True)
+ parser.add_argument('--Xarg', action='append')
+ 
+ 
+ def run(args: T.List[str]) -> int:
+-    options, rc_args = parser.parse_known_args(args)
++    # --rc is not a real argument, everything after it is kept verbatim
++    sep = args.index('--rc')
++    options = parser.parse_args(args[:sep])
++    rc, *rc_args = args[sep + 1:]
+     target = rc_args[-1] if rc_args else None
+ 
+-    rc = options.rc
+-    cl = options.cl
+-
+     # Use preprocessor to display include files
+     include_args = [a for a in rc_args if a.startswith(('/I', '-I'))]
+-    cmd = [*cl, *include_args, *options.Xarg]
++    cmd = [options.cl, *include_args, *options.Xarg]
+     if target:
+         cmd += [target]
+     result = subprocess.call(cmd, stdout=subprocess.DEVNULL)
+@@ -33,5 +32,5 @@ def run(args: T.List[str]) -> int:
+         print('Error running preprocessor to find resource dependencies', file=sys.stderr)
+         # continue anyway. the resource compiler should catch the error later
+ 
+-    cmd = [*rc, *rc_args]
++    cmd = [rc, *rc_args]
+     return subprocess.call(cmd)
