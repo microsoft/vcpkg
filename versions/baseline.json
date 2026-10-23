@@ -7842,7 +7842,7 @@
     },
     "pcre2": {
       "baseline": "10.49",
-      "port-version": 0
+      "port-version": 1
     },
     "pdal": {
       "baseline": "2.10.1",
