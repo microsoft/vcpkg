@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hyperrealm/libconfig
     REF "v${VERSION}"
-    SHA512 c3ed6c8f500b449c4d94976745a3acba1c7176f87497d5cb0deb05e62f2ff009ca0636c7c9848601f6d92dd113d82983cbd1132735f0f2d4e40b32d257f4aaa7
+    SHA512 c9e6e77e5f89e7ddc866c6fd22f5a4d968b55e07b55875757c48ad381d0236240f49a99f2b639d585cb72f2f938dfcfe7bbca46ac7f02f8dedf5593cea791c7f
     HEAD_REF master
     PATCHES
         static-build.diff
