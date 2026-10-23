@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO robotology/idyntree
+    REPO gbionics/idyntree
     REF "v${VERSION}"
-    SHA512 bfcdddebb2ae3d5b9e75cea799d4dfb6ad745d26eb220419c9795c30397ee400dce7669546fe78aadbab49e29be48b3ecece7bb972c1032d04f6b621a1d5bcf0
+    SHA512 089a94786391821faf51276e098b9d5d140f863cf7e8ef435003f5625e27964ec98e99af98089f88832068e9c494cbf63fbec2d3e82b711c259e3d6105f9c56d
     HEAD_REF master
 )
 
@@ -12,10 +12,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "irrlicht" IDYNTREE_USES_IRRLICHT
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Static targets reference both header-only dependencies in their link interfaces.
+    vcpkg_list(APPEND FEATURE_OPTIONS "-D_IDYNTREE_EXPORTED_DEPENDENCIES=Eigen3;nlohmann_json")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DIDYNTREE_USES_NLOHMANN_JSON:BOOL=ON
+        -DIDYNTREE_USES_SYSTEM_ResolveRoboticsURICpp:BOOL=ON
         -DIDYNTREE_USES_IPOPT:BOOL=OFF
         -DIDYNTREE_USES_OSQPEIGEN:BOOL=OFF
         -DIDYNTREE_USES_MATLAB:BOOL=OFF
@@ -34,7 +41,7 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/iDynTree)
 vcpkg_copy_pdbs()
 
-set(TOOL_NAMES_LIST idyntree-model-info)
+set(TOOL_NAMES_LIST idyntree-model-info idyntree-model-convert)
 if ("assimp" IN_LIST FEATURES)
     list(APPEND TOOL_NAMES_LIST idyntree-model-simplify-shapes)
 endif()

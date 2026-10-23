@@ -1,13 +1,15 @@
 {
   "name": "idyntree",
-  "version": "15.0.0",
+  "version": "15.1.0",
   "description": "Multibody Dynamics Library designed for Free Floating Robots.",
-  "homepage": "https://github.com/robotology/idyntree",
+  "homepage": "https://github.com/gbionics/idyntree",
   "license": "BSD-3-Clause",
   "supports": "!xbox",
   "dependencies": [
     "eigen3",
+    "gbionics-resolve-robotics-uri-cpp",
     "libxml2",
+    "nlohmann-json",
     {
       "name": "vcpkg-cmake",
       "host": true
