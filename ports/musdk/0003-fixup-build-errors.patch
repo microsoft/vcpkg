@@ -1,0 +1,26 @@
+diff --git a/src/lib/file_utils.c b/src/lib/file_utils.c
+index f81c876d..a52a7795 100644
+--- a/src/lib/file_utils.c
++++ b/src/lib/file_utils.c
+@@ -11,10 +11,11 @@
+  ***********************/
+ int write_buf_to_file(char *file_name, char *buff, u32 size)
+ {
++	const mode_t mode = S_IWUSR | S_IROTH;
+ 	size_t	s;
+ 	int	fd;
+ 
+-	fd = open(file_name, O_RDWR | O_CREAT);
++	fd = open(file_name, O_RDWR | O_CREAT, mode);
+ 	if (fd == -1) {
+ 		pr_err("Failed to open file %s\n", file_name);
+ 		return -EIO;
+@@ -34,7 +35,7 @@ int write_buf_to_file(char *file_name, char *buff, u32 size)
+ 
+ 	sync();
+ 
+-	chmod(file_name, S_IWUSR | S_IROTH);
++	chmod(file_name, mode);
+ 
+ 	return 0;
+ }
