@@ -42,4 +42,11 @@ endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+# The port's top-level LICENSE.txt is the OpenSceneGraph Public License, but
+# the renderer sources (OSGRenderer.h / OSGRenderer.cpp) carry an explicit
+# GPL-2.0-or-later notice. Install a representative header alongside the
+# license so the GPL grant shipped in the source is preserved in the package.
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/include/osgQOpenGL/OSGRenderer.h"
+)

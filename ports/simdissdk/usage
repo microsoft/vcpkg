@@ -1,19 +1,22 @@
 simdissdk provides CMake targets:
 
-  find_package(simCore CONFIG REQUIRED)
+  find_package(simCore CONFIG REQUIRED)    # always available (core)
   target_link_libraries(main PRIVATE VSI::simCore)
 
-  find_package(simData CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE VSI::simData)
-
-  find_package(simNotify CONFIG REQUIRED)
+  find_package(simNotify CONFIG REQUIRED)  # always available (core)
   target_link_libraries(main PRIVATE VSI::simNotify)
 
-  find_package(simQt CONFIG REQUIRED)
+The following components are opt-in and are only built when the matching
+feature of simdissdk is enabled (e.g. `vcpkg install simdissdk[simdata,simvis]`):
+
+  find_package(simData CONFIG REQUIRED)    # feature: simdata
+  target_link_libraries(main PRIVATE VSI::simData)
+
+  find_package(simQt CONFIG REQUIRED)      # feature: simqt (also pulls qtbase, opengl)
   target_link_libraries(main PRIVATE VSI::simQt)
 
-  find_package(simUtil CONFIG REQUIRED)
+  find_package(simUtil CONFIG REQUIRED)    # feature: simutil (also enables simvis)
   target_link_libraries(main PRIVATE VSI::simUtil)
 
-  find_package(simVis CONFIG REQUIRED)
+  find_package(simVis CONFIG REQUIRED)     # feature: simvis (also pulls osgearth, entt, simdata)
   target_link_libraries(main PRIVATE VSI::simVis)

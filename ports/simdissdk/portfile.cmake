@@ -48,6 +48,54 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# F3 (review): the upstream export header SDK/simCore/Common/Export.h defaults to
+# __declspec(dllimport) on Windows when none of the *_LIB_EXPORT_* macros are
+# defined, which yields unresolved __imp_ symbols for consumers linking the
+# static libraries. Because a vcpkg install is either fully static or fully
+# dynamic, encode the linkage directly into the installed (shared) header for
+# static builds: force every component export macro to expand to nothing so
+# static consumers need no package-specific export macros.
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(_export_h "${CURRENT_PACKAGES_DIR}/include/SDK/simCore/Common/Export.h")
+    if(NOT EXISTS "${_export_h}")
+        set(_export_h "${CURRENT_PACKAGES_DIR}/include/simCore/Common/Export.h")
+    endif()
+    if(EXISTS "${_export_h}")
+        file(READ "${_export_h}" _export_h_contents)
+        set(_static_export_block [==[
+#ifndef SIMDIS_SDK_VCPKG_STATIC_EXPORT_FIX
+#define SIMDIS_SDK_VCPKG_STATIC_EXPORT_FIX
+/* Patched by vcpkg for static linkage: force every component export macro to
+   expand to nothing so consumers linking the static libraries do not reference
+   __imp_ symbols. See https://github.com/microsoft/vcpkg/pull/54484 review. */
+#ifndef simNotify_LIB_EXPORT_STATIC
+#define simNotify_LIB_EXPORT_STATIC
+#endif
+#ifndef simCore_LIB_EXPORT_STATIC
+#define simCore_LIB_EXPORT_STATIC
+#endif
+#ifndef simData_LIB_EXPORT_STATIC
+#define simData_LIB_EXPORT_STATIC
+#endif
+#ifndef simVis_LIB_EXPORT_STATIC
+#define simVis_LIB_EXPORT_STATIC
+#endif
+#ifndef simUtil_LIB_EXPORT_STATIC
+#define simUtil_LIB_EXPORT_STATIC
+#endif
+#ifndef simQt_LIB_EXPORT_STATIC
+#define simQt_LIB_EXPORT_STATIC
+#endif
+#endif
+]==])
+        file(WRITE "${_export_h}" "${_static_export_block}${_export_h_contents}")
+    else()
+        message(WARNING
+            "simdissdk static export header not found at the expected path; "
+            "the F3 static-linkage fix was skipped. Inspect the installed include tree.")
+    endif()
+endif()
+
 # Each SDK component installs its export set to lib/cmake/<component>. Fix up
 # each component into its own share/<component> directory so that
 # find_package(<component>) resolves through the vcpkg prefix path

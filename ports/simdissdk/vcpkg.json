@@ -18,10 +18,6 @@
   "default-features": [
     "entt",
     "osgqopengl",
-    "simdata",
-    "simqt",
-    "simutil",
-    "simvis",
     "wbp"
   ],
   "features": {
