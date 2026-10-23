@@ -32,6 +32,7 @@ PORT_LIST = [
     "kf6-solid",
     "kglobalaccel",
     "kguiaddons",
+    "kholidays",
     "ki18n",
     "kitemmodels",
     "kitemviews",
