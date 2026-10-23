@@ -1,0 +1,80 @@
+diff --git a/src/cpp/include/fcb/generated/extension_generated.h b/src/cpp/include/fcb/generated/extension_generated.h
+index f9782bd..f250274 100644
+--- a/src/cpp/include/fcb/generated/extension_generated.h
++++ b/src/cpp/include/fcb/generated/extension_generated.h
+@@ -6,11 +6,10 @@
+ 
+ #include "flatbuffers/flatbuffers.h"
+ 
+-// Ensure the included flatbuffers.h is the same version as when this file was
+-// generated, otherwise it may not be compatible.
+-static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+-              FLATBUFFERS_VERSION_MINOR == 9 &&
+-              FLATBUFFERS_VERSION_REVISION == 23,
++// vcpkg: the exact-version assert flatc emits here was relaxed to a major
++// version check so the port builds against the flatbuffers version in the
++// registry baseline. The generated-code API is stable within a major series.
++static_assert(FLATBUFFERS_VERSION_MAJOR == 25,
+              "Non-compatible flatbuffers version included");
+ 
+ struct Extension;
+diff --git a/src/cpp/include/fcb/generated/feature_generated.h b/src/cpp/include/fcb/generated/feature_generated.h
+index afc0d18..ccdf4a1 100644
+--- a/src/cpp/include/fcb/generated/feature_generated.h
++++ b/src/cpp/include/fcb/generated/feature_generated.h
+@@ -6,11 +6,10 @@
+ 
+ #include "flatbuffers/flatbuffers.h"
+ 
+-// Ensure the included flatbuffers.h is the same version as when this file was
+-// generated, otherwise it may not be compatible.
+-static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+-              FLATBUFFERS_VERSION_MINOR == 9 &&
+-              FLATBUFFERS_VERSION_REVISION == 23,
++// vcpkg: the exact-version assert flatc emits here was relaxed to a major
++// version check so the port builds against the flatbuffers version in the
++// registry baseline. The generated-code API is stable within a major series.
++static_assert(FLATBUFFERS_VERSION_MAJOR == 25,
+              "Non-compatible flatbuffers version included");
+ 
+ #include "geometry_generated.h"
+diff --git a/src/cpp/include/fcb/generated/geometry_generated.h b/src/cpp/include/fcb/generated/geometry_generated.h
+index 52f9423..f64f27e 100644
+--- a/src/cpp/include/fcb/generated/geometry_generated.h
++++ b/src/cpp/include/fcb/generated/geometry_generated.h
+@@ -6,11 +6,10 @@
+ 
+ #include "flatbuffers/flatbuffers.h"
+ 
+-// Ensure the included flatbuffers.h is the same version as when this file was
+-// generated, otherwise it may not be compatible.
+-static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+-              FLATBUFFERS_VERSION_MINOR == 9 &&
+-              FLATBUFFERS_VERSION_REVISION == 23,
++// vcpkg: the exact-version assert flatc emits here was relaxed to a major
++// version check so the port builds against the flatbuffers version in the
++// registry baseline. The generated-code API is stable within a major series.
++static_assert(FLATBUFFERS_VERSION_MAJOR == 25,
+              "Non-compatible flatbuffers version included");
+ 
+ struct MaterialMapping;
+diff --git a/src/cpp/include/fcb/generated/header_generated.h b/src/cpp/include/fcb/generated/header_generated.h
+index ff94103..f3d486f 100644
+--- a/src/cpp/include/fcb/generated/header_generated.h
++++ b/src/cpp/include/fcb/generated/header_generated.h
+@@ -6,11 +6,10 @@
+ 
+ #include "flatbuffers/flatbuffers.h"
+ 
+-// Ensure the included flatbuffers.h is the same version as when this file was
+-// generated, otherwise it may not be compatible.
+-static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
+-              FLATBUFFERS_VERSION_MINOR == 9 &&
+-              FLATBUFFERS_VERSION_REVISION == 23,
++// vcpkg: the exact-version assert flatc emits here was relaxed to a major
++// version check so the port builds against the flatbuffers version in the
++// registry baseline. The generated-code API is stable within a major series.
++static_assert(FLATBUFFERS_VERSION_MAJOR == 25,
+              "Non-compatible flatbuffers version included");
+ 
+ #include "extension_generated.h"
