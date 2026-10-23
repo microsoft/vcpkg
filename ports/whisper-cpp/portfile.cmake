@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/whisper.cpp
     REF "v${VERSION}"
-    SHA512 f686f7e4cb7a0c8d5734c21bbe7ba5225c559007a8ab91a14a140e22f9fbe2353ae19df6a4306fb85737ff2dc698804e4c626085bf951cde60123cfd2d0ae8a1
+    SHA512 5e01ca94a49438b71e38c3cab710cf75a7aa76a1ae03fe8f81b1a5beb794becb1ae1c6e078e3eea5526e4ad89ae4cc0306d17974541050afb3a7ac1d09f94768
     HEAD_REF master
     PATCHES
-        cmake-config.diff
-        pkgconfig.diff
+        pkgconfig-static.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/ggml")
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -28,6 +27,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME parakeet CONFIG_PATH "lib/cmake/parakeet" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/whisper")
 vcpkg_fixup_pkgconfig()
 
