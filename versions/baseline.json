@@ -3364,6 +3364,10 @@
       "baseline": "2024-11-03",
       "port-version": 0
     },
+    "gbionics-resolve-robotics-uri-cpp": {
+      "baseline": "0.6.0",
+      "port-version": 0
+    },
     "gcem": {
       "baseline": "1.18.0",
       "port-version": 0
@@ -3989,7 +3993,7 @@
       "port-version": 0
     },
     "idyntree": {
-      "baseline": "15.0.0",
+      "baseline": "15.1.0",
       "port-version": 0
     },
     "if97": {
