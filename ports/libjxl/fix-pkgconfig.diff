@@ -1,5 +1,5 @@
 diff --git a/lib/jxl.cmake b/lib/jxl.cmake
-index 839e7f00..122d8070 100644
+index 30785c01..261dea1e 100644
 --- a/lib/jxl.cmake
 +++ b/lib/jxl.cmake
 @@ -291,6 +291,11 @@ else()
@@ -13,9 +13,9 @@ index 839e7f00..122d8070 100644
 +  endif()
  endif()
  
- configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl.pc.in"
+ set(JPEGXL_LIBRARY_MAIN jxl)
 diff --git a/lib/jxl_cms.cmake b/lib/jxl_cms.cmake
-index 582b842a..dce75bdb 100644
+index 582b842a..b910df7b 100644
 --- a/lib/jxl_cms.cmake
 +++ b/lib/jxl_cms.cmake
 @@ -40,6 +40,7 @@ else()
@@ -26,14 +26,11 @@ index 582b842a..dce75bdb 100644
  
  set_target_properties(jxl_cms PROPERTIES
          VERSION ${JPEGXL_LIBRARY_VERSION}
-@@ -70,10 +71,20 @@ install(TARGETS jxl_cms
+@@ -70,10 +71,17 @@ install(TARGETS jxl_cms
  
  if (BUILD_SHARED_LIBS)
    set(JPEGXL_REQUIRES_TYPE "Requires.private")
 -  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  if(NOT MSVC AND NOT APPLE)
-+    set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
  else()
    set(JPEGXL_REQUIRES_TYPE "Requires")
 -  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
@@ -50,43 +47,32 @@ index 582b842a..dce75bdb 100644
  
  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl_cms.pc.in"
 diff --git a/lib/jxl_threads.cmake b/lib/jxl_threads.cmake
-index a7ed011c..4c86baa1 100644
+index a7ed011c..b2f2b8f1 100644
 --- a/lib/jxl_threads.cmake
 +++ b/lib/jxl_threads.cmake
-@@ -85,13 +85,21 @@ else()
-     set(PKGCONFIG_TARGET_LIBS "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
- endif()
- 
-+set(JPEGXL_THREADS_LIBRARY_REQUIRES "")
-+
-+# MSVCRT bundles math functions so no explicit libm dependency is required
- if (BUILD_SHARED_LIBS)
+@@ -89,6 +89,12 @@ if (BUILD_SHARED_LIBS)
    set(JPEGXL_REQUIRES_TYPE "Requires.private")
-+  if(NOT MSVC AND NOT APPLE)
-+    set(JPEGXL_THREADS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
-+  endif()
  else()
    set(JPEGXL_REQUIRES_TYPE "Requires")
 +  if(NOT MSVC AND NOT APPLE)
-+    set(JPEGXL_THREADS_PUBLIC_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
++    set(JPEGXL_THREADS_PUBLIC_LIBS "-lm")
++  endif()
++  if(NOT APPLE)
++    string(APPEND JPEGXL_THREADS_PUBLIC_LIBS " ${PKGCONFIG_CXX_LIB}")
 +  endif()
  endif()
  
--set(JPEGXL_THREADS_LIBRARY_REQUIRES "")
- configure_file("${CMAKE_CURRENT_SOURCE_DIR}/threads/libjxl_threads.pc.in"
-                "libjxl_threads.pc" @ONLY)
- install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libjxl_threads.pc"
+ set(JPEGXL_THREADS_LIBRARY_REQUIRES "")
 diff --git a/lib/threads/libjxl_threads.pc.in b/lib/threads/libjxl_threads.pc.in
-index dfbaa3ff..184aa92f 100644
+index dfbaa3ff..55d48574 100644
 --- a/lib/threads/libjxl_threads.pc.in
 +++ b/lib/threads/libjxl_threads.pc.in
-@@ -7,7 +7,7 @@ Name: libjxl_threads
+@@ -7,7 +7,6 @@ Name: libjxl_threads
  Description: JPEG XL multi-thread runner using std::threads.
  Version: @JPEGXL_LIBRARY_VERSION@
  @JPEGXL_REQUIRES_TYPE@: @JPEGXL_THREADS_LIBRARY_REQUIRES@
 -Libs: -L${libdir} -ljxl_threads
 -Libs.private: -lm
 +Libs: -L${libdir} -ljxl_threads @JPEGXL_THREADS_PUBLIC_LIBS@
-+Libs.private: @JPEGXL_THREADS_PRIVATE_LIBS@
  Cflags: -I${includedir}
  Cflags.private: -DJXL_THREADS_STATIC_DEFINE
