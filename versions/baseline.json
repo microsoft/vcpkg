@@ -2266,7 +2266,7 @@
     },
     "cspice": {
       "baseline": "67",
-      "port-version": 5
+      "port-version": 6
     },
     "ctbench": {
       "baseline": "1.3.4",
