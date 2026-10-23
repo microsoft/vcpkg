@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-zlib.patch
         cstdlib.diff
         fix-s2-is-pod.patch # Based on https://github.com/realm/realm-core/commit/d8f21f9b98cae76e8dc235558c2f71ea27997f10
+        fix-s2-comparison.patch # https://github.com/realm/realm-core/commit/f8752e180b7f288feadffafdef818068755efe0a
 )
 
 vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)
