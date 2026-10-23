@@ -1,7 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.12.4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -45,6 +45,7 @@
       "platform": "!uwp"
     },
     "iconv",
+    "libaec",
     "libkml",
     {
       "name": "libspatialite",
@@ -179,6 +180,12 @@
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
+      ]
+    },
+    "libaec": {
+      "description": "Enable AEC support",
+      "dependencies": [
+        "libaec"
       ]
     },
     "libkml": {
