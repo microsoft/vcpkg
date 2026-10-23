@@ -1,6 +1,7 @@
 {
   "name": "sdl3",
   "version": "3.4.18",
+  "port-version": 1,
   "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
   "homepage": "https://www.libsdl.org",
   "license": "Zlib AND MIT AND Apache-2.0 AND BSD-3-Clause",
@@ -17,7 +18,27 @@
   ],
   "default-features": [
     {
+      "name": "alsa",
+      "platform": "linux"
+    },
+    {
       "name": "ibus",
+      "platform": "linux"
+    },
+    {
+      "name": "liburing",
+      "platform": "linux"
+    },
+    {
+      "name": "pipewire",
+      "platform": "linux"
+    },
+    {
+      "name": "pulseaudio",
+      "platform": "linux"
+    },
+    {
+      "name": "udev",
       "platform": "linux"
     },
     {
@@ -66,6 +87,27 @@
         }
       ]
     },
+    "jack": {
+      "description": "Build with JACK audio support",
+      "supports": "linux",
+      "dependencies": [
+        "jack2"
+      ]
+    },
+    "kmsdrm": {
+      "description": "Build with KMS/DRM video support (requires system libdrm and GBM development packages)",
+      "supports": "linux",
+      "dependencies": [
+        "egl"
+      ]
+    },
+    "liburing": {
+      "description": "Build with io_uring asynchronous I/O support",
+      "supports": "linux",
+      "dependencies": [
+        "liburing"
+      ]
+    },
     "libusb": {
       "description": "Use libusb for joystick support",
       "dependencies": [
@@ -76,16 +118,70 @@
       "description": "Let SDL_SetWindowKeyboardGrab() capture system keyboard shortcuts on macOS (uses private API, so it is not suitable for sandboxed apps)",
       "supports": "osx"
     },
+    "pipewire": {
+      "description": "Build with PipeWire audio and camera support",
+      "supports": "linux",
+      "dependencies": [
+        "pipewire"
+      ]
+    },
+    "pulseaudio": {
+      "description": "Build with PulseAudio support",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "pulseaudio",
+          "default-features": false
+        }
+      ]
+    },
+    "sndio": {
+      "description": "Build with sndio audio support (requires system sndio development packages)",
+      "supports": "linux"
+    },
+    "udev": {
+      "description": "Build with udev device discovery (requires system libudev development packages)",
+      "supports": "linux"
+    },
     "vulkan": {
       "description": "Vulkan functionality for SDL"
     },
     "wayland": {
       "description": "Build with Wayland support",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        "egl",
+        "libxkbcommon",
+        "wayland"
+      ]
     },
     "x11": {
       "description": "Build with X11 support",
-      "supports": "!windows"
+      "supports": "!windows",
+      "dependencies": [
+        "fribidi",
+        "libx11",
+        "libxext",
+        "libxfixes",
+        "libxi",
+        "libxrandr",
+        "libxrender",
+        "libxtst"
+      ]
+    },
+    "x11-xscrnsaver": {
+      "description": "Support X11 screensaver inhibition through the XScreenSaver extension",
+      "supports": "!windows",
+      "dependencies": [
+        "libxscrnsaver",
+        {
+          "name": "sdl3",
+          "default-features": false,
+          "features": [
+            "x11"
+          ]
+        }
+      ]
     }
   }
 }

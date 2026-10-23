@@ -1,3 +1,40 @@
+if(VCPKG_TARGET_IS_LINUX)
+    set(system_packages "")
+    if("x11" IN_LIST FEATURES)
+        list(APPEND system_packages
+            libx11-dev libxext-dev libxcursor-dev libxi-dev libxfixes-dev
+            libxrandr-dev libxrender-dev libxtst-dev libthai-dev
+        )
+    endif()
+    if("x11-xscrnsaver" IN_LIST FEATURES)
+        list(APPEND system_packages libxss-dev)
+    endif()
+    if("wayland" IN_LIST FEATURES)
+        list(APPEND system_packages libwayland-dev libxkbcommon-dev libegl-dev libdecor-0-dev)
+    endif()
+    if("kmsdrm" IN_LIST FEATURES)
+        list(APPEND system_packages libdrm-dev libgbm-dev libegl-dev)
+    endif()
+    if("sndio" IN_LIST FEATURES)
+        list(APPEND system_packages libsndio-dev)
+    endif()
+    if("udev" IN_LIST FEATURES)
+        list(APPEND system_packages libudev-dev)
+    endif()
+    if("ibus" IN_LIST FEATURES)
+        list(APPEND system_packages libibus-1.0-dev)
+    endif()
+    if(system_packages)
+        list(REMOVE_DUPLICATES system_packages)
+        list(JOIN system_packages " " system_packages)
+        message(STATUS
+            "${PORT} currently requires the following development packages from the system package manager.\n"
+            "These can be installed on Ubuntu systems via:\n"
+            "    sudo apt install ${system_packages}"
+        )
+    endif()
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
@@ -6,6 +43,8 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-freebsd.patch
+        libusb-pkgconfig.patch
+        require-dependencies.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -14,13 +53,32 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        alsa     SDL_ALSA
-        dbus     SDL_DBUS
-        ibus     SDL_IBUS
-        vulkan   SDL_VULKAN
-        wayland  SDL_WAYLAND
-        x11      SDL_X11
-        libusb   SDL_HIDAPI_LIBUSB
+        alsa           SDL_ALSA
+        dbus           SDL_DBUS
+        ibus           SDL_IBUS
+        jack           SDL_JACK
+        kmsdrm         SDL_KMSDRM
+        liburing       SDL_LIBURING
+        libusb         SDL_HIDAPI_LIBUSB
+        pipewire       SDL_PIPEWIRE
+        pulseaudio     SDL_PULSEAUDIO
+        sndio          SDL_SNDIO
+        udev           SDL_LIBUDEV
+        vulkan         SDL_VULKAN
+        wayland        SDL_WAYLAND
+        wayland        SDL_WAYLAND_LIBDECOR
+        x11            SDL_FRIBIDI
+        x11            SDL_LIBTHAI
+        x11            SDL_X11
+        x11            SDL_X11_XCURSOR
+        x11            SDL_X11_XDBE
+        x11            SDL_X11_XFIXES
+        x11            SDL_X11_XINPUT
+        x11            SDL_X11_XRANDR
+        x11            SDL_X11_XSHAPE
+        x11            SDL_X11_XSYNC
+        x11            SDL_X11_XTEST
+        x11-xscrnsaver SDL_X11_XSCRNSAVER
 )
 
 if (VCPKG_TARGET_IS_EMSCRIPTEN)
@@ -38,28 +96,10 @@ if ("macos-keyboard-grab" IN_LIST FEATURES)
     string(APPEND VCPKG_CXX_FLAGS " -DSDL_MAC_NO_SANDBOX")
 endif()
 
-if ("x11" IN_LIST FEATURES)
-    message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
-endif()
-if ("wayland" IN_LIST FEATURES)
-    message(WARNING "You will need to install Wayland dependencies to use feature wayland:\nsudo apt install libwayland-dev libxkbcommon-dev libegl1-mesa-dev\n")
-endif()
-if ("ibus" IN_LIST FEATURES)
-    message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
-endif()
-
-if ("libusb" IN_LIST FEATURES)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        vcpkg_list(APPEND FEATURE_OPTIONS "-DSDL_HIDAPI_LIBUSB_SHARED=ON")
-    else()
-        vcpkg_list(APPEND FEATURE_OPTIONS "-DSDL_HIDAPI_LIBUSB_SHARED=OFF")
-    endif()
-endif()
-
 # option for not need to show windows
 list(APPEND FEATURE_OPTIONS -DSDL_UNIX_CONSOLE_BUILD=ON)
-if (VCPKG_TARGET_IS_LINUX AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES)
-    message(WARNING "The selected features don't allow sdl3 to create windows, which is usually unintentional. You can get windowing support by installing the x11 and/or wayland features.")
+if (VCPKG_TARGET_IS_LINUX AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES AND NOT "kmsdrm" IN_LIST FEATURES)
+    message(WARNING "The selected features don't allow sdl3 to create windows, which is usually unintentional. You can get video support by installing the x11, wayland and/or kmsdrm features.")
 endif()
 
 vcpkg_cmake_configure(
@@ -70,33 +110,18 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
-        # Prevent host-installed Unix libraries from silently changing SDL's capabilities.
-        -DSDL_FRIBIDI=OFF
-        -DSDL_JACK=OFF
-        -DSDL_KMSDRM=OFF
-        -DSDL_LIBTHAI=OFF
-        -DSDL_LIBUDEV=OFF
-        -DSDL_LIBURING=OFF
-        -DSDL_PIPEWIRE=OFF
-        -DSDL_PULSEAUDIO=OFF
-        -DSDL_ROCKCHIP=OFF
-        -DSDL_RPI=OFF
-        -DSDL_SNDIO=OFF
-        -DSDL_WAYLAND_LIBDECOR=OFF
+        -DSDL_ALSA_SHARED=OFF # Link the dependency supplied by the alsa port.
+        -DSDL_FRIBIDI_SHARED=OFF # Link the dependency supplied by the fribidi port.
+        -DSDL_HIDAPI_LIBUSB_SHARED=OFF # The libusb port controls libusb's linkage.
+        -DSDL_JACK_SHARED=OFF # The jack2 port supplies a shim that loads the system JACK implementation.
+        -DSDL_PIPEWIRE_SHARED=OFF # The pipewire port controls PipeWire's linkage.
+        -DSDL_PULSEAUDIO_SHARED=OFF # The pulseaudio port controls PulseAudio's linkage.
+        -DSDL_ROCKCHIP=OFF # Requires a device-specific vendor Mali graphics stack.
+        -DSDL_RPI=OFF # Requires the legacy Broadcom bcm_host/brcmegl graphics stack.
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
-        -DSDL_X11_XCURSOR=OFF
-        -DSDL_X11_XDBE=OFF
-        -DSDL_X11_XFIXES=OFF
-        -DSDL_X11_XINPUT=OFF
-        -DSDL_X11_XRANDR=OFF
-        -DSDL_X11_XSHAPE=OFF
-        -DSDL_X11_XSCRNSAVER=OFF
-        -DSDL_X11_XSYNC=OFF
-        -DSDL_X11_XTEST=OFF
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
-        # Specifying the revision skips the need to use git to determine a version
-        -DSDL_REVISION=vcpkg
+        -DSDL_REVISION=vcpkg # Skip invoking git to determine the revision.
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
