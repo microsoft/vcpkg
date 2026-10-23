@@ -100,7 +100,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_NAME "Makefile"
-        PREFER_JOM
         PRERUN_SHELL_RELEASE
             "${PYTHON3}" "${SOURCE_PATH}/configure.py"
             ${configure_arguments}
