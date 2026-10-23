@@ -1,4 +1,4 @@
-set(GDK_EDITION_NUMBER 260404)
+set(GDK_EDITION_NUMBER 260405)
 
 # The GDK contains a combination of static C++ libraries and DLL-based extension libraries.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -6,13 +6,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE_CORE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.Core/${VERSION}"
     FILENAME "ms-gdk-core.${VERSION}.zip"
-    SHA512 0ed0bef7a8e306f50514fd8c18091c84360cae097cfbdc166bd6756977812067b2fbefd802dd51093716c09249eeead4f0b6fb698e34d843a66e70c9b03b0c4a
+    SHA512 e7e7948e23c68639cd41c30f092369f8896245f719d9a6d456db7384cce51cd76e43e36df2dbc28f432fc9d4ad79a17b67a0564ada4c04c4a827bd248a38c4e4
 )
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.Windows/${VERSION}"
     FILENAME "ms-gdk-windows.${VERSION}.zip"
-    SHA512 350d001f236dd5c0b25a9fa6fc13281d489eb5f4e280e55fc5ad94d616cd0a80cb88f1839059b76dc0e393d8f3049b3002a81c0beefdc199d5890ebc231df343
+    SHA512 6d3c9a22bc3d3ce824cc46979bcddb996d175b351e07a1fcf34027d9555e2c395d67af839f1739262e4b4afa9bc01b1624a4a0bb24d4e52947a3819848baed76
 )
 
 vcpkg_extract_source_archive(
@@ -81,6 +81,19 @@ endforeach()
 foreach(t IN LISTS INCLUDE_DIRS)
     file(INSTALL "${WINDOWS_PATH}/include/${t}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 endforeach()
+
+# The bundled cpprest headers use stdext::checked_array_iterator, which current MSVC no longer provides.
+# Use the unchecked std::copy that cpprest already uses on other platforms; each range is already bounded.
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpprest/containerstream.h"
+    "stdext::checked_array_iterator<_CharType *>(ptr, count)" "ptr")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpprest/producerconsumerstream.h"
+    "stdext::checked_array_iterator<_CharType *>(dest, count)" "dest")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpprest/producerconsumerstream.h"
+    "stdext::checked_array_iterator<_CharType *>(wbegin(), static_cast<size_t>(avail))" "wbegin()")
+
+# The XSAPI C++ headers use assert without including <assert.h>; current MSVC STL headers no longer provide it transitively.
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/xsapi-cpp/services.h"
+    "#include \"xsapi-c/services_c.h\"" "#include <assert.h>\n#include \"xsapi-c/services_c.h\"")
 
 foreach(t IN LISTS CORE_LIBS)
     file(INSTALL "${WINDOWS_PATH}/lib/${VCPKG_TARGET_ARCHITECTURE}/${t}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")

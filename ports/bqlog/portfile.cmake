@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/BqLog
     REF "Release_${VERSION}"
-    SHA512 9edd0781857577089e417a1d858b5b13ca198fa1d2416f9ceed0cd338c60eadfe22dc0b6a73cd1ab4f6d46c465e37280351d3391becf83c9495ae6fee76c990b
+    SHA512 e7443bfa926a4ba0c8e110313f8e3a5906e2fc6f908bcf01f05cb937f714c2caa44398de7eba0c82d48c30e31ea7125ea84063ae2aa45286d38168440c9a1e68
     HEAD_REF main
-    PATCHES fix-msvc-pkgconfig.patch
 )
 
 # vcpkg decides static or shared through the triplet, so the port must follow it instead of

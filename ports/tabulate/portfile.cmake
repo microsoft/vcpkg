@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO p-ranav/tabulate
     REF "v${VERSION}"
-    SHA512 50508ac58fdb7542a095b02e04da32f87ae6595b5c0de143b5071878ea819db01b71b21d8aed1a99c6fd22342bbd5fa531d9a354723ba2e5513a8e858233ee09
+    SHA512 bebea94c524e905332a05f58117074ef3897e8c3cfd15dc297098549acaca79778b3648cc6bd30f298328b7805429d7f41642a75b9dbc725e3a37058ccf5660a
     HEAD_REF master
-    PATCHES
-        fix-version.patch
 )
 
 vcpkg_cmake_configure(

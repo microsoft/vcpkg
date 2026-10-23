@@ -2,13 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 7a129b275c78aa6edcb00095aabf85aefb6e726f95742dc15c4b2c32d51f0baa71c22c1f50641b2a0dadde111d6d93aff615829d2387aac22b49720a5c971361
+    SHA512 ffb9b0c089e8b0acd10df8cee0675e0b41b8e9ccb11f9efb74d91d9c9acf04c4e61fa97abff1948d2b6495398848418f34105aad6cbd01494cec624d306892af
     HEAD_REF master
     PATCHES
         fix-always-nanosvg.diff
+        fix-android-log.patch
+        fix-ffmpeg-opencl.patch
         fix-heif.patch
         fix-include-directory.patch
-        fix-video-zlib-and-linking.patch
+        fix-jpegxl-pkg-config.patch # https://github.com/microsoft/vcpkg/issues/54477
+        fix-libraw-cmake.patch # https://github.com/microsoft/vcpkg/issues/54471
+        fix-release-only-triplet.patch
+        fix-swscale-link-order.patch
 )
 
 # Enable selected codecs
@@ -26,6 +31,10 @@ foreach(CODEC ${HIGHEST_PRIORITY_CODECS} ${HIGH_PRIORITY_CODECS} ${MEDIUM_PRIORI
         list(APPEND ONLY_CODECS "${CODEC}")
     endif()
 endforeach()
+
+if (NOT ONLY_CODECS)
+    message(FATAL_ERROR "At least one codec feature must be selected, for example sail[bmp] or sail[png].")
+endif()
 
 list(JOIN ONLY_CODECS "\;" ONLY_CODECS_ESCAPED)
 
@@ -49,6 +58,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -60,6 +71,7 @@ vcpkg_cmake_configure(
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
         ${SAIL_WINDOWS_STATIC_CRT_FLAG}
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_cmake_install()
@@ -88,11 +100,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME sailmanip  CONFIG_PATH lib/cmake/sailmanip
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
-
-# Remove pkg-config files
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-
 # Unused because SAIL_COMBINE_CODECS is ON, removes an absolute path from the output
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH [^\r\n]+[\r\n]*" "" REGEX)
 
@@ -100,4 +107,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#de
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/LICENSE.INIH.txt"
+)
