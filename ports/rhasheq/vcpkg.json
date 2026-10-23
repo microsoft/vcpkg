@@ -1,11 +1,15 @@
 {
   "name": "rhasheq",
   "version-date": "2023-06-17",
+  "port-version": 1,
   "description": "Simple header-only librhash wrapper for verifying hashes from a file to a given `const char *`.",
   "homepage": "https://github.com/offscale/rhasheq",
   "license": "0BSD",
   "dependencies": [
-    "c89stringutils",
+    {
+      "name": "c89stringutils",
+      "version>=": "0.0.3"
+    },
     "rhash",
     {
       "name": "vcpkg-cmake",
