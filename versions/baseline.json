@@ -793,8 +793,8 @@
       "port-version": 1
     },
     "blitz": {
-      "baseline": "2020-03-25",
-      "port-version": 7
+      "baseline": "2024-04-01",
+      "port-version": 0
     },
     "bloomberg-quantum": {
       "baseline": "2023-02-03",
