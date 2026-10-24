@@ -20,7 +20,7 @@ pkg_check_modules(libraw_r REQUIRED IMPORTED_TARGET libraw_r)
 
 add_executable(main-c-pkgconfig main.c)
 target_link_libraries(main-c-pkgconfig PRIVATE PkgConfig::libraw)
-# libraw is a C++ library, pkg-config cannot carry the C++ runtime requirement
+# libraw.pc does not carry the C++ runtime requirement
 set_target_properties(main-c-pkgconfig PROPERTIES LINKER_LANGUAGE CXX)
 
 add_executable(main-cpp-pkgconfig main.cpp)
