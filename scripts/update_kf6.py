@@ -18,6 +18,7 @@ import time
 NEW_VERSION = "6.31.0"           # <-- TARGET VERSION
 
 PORT_LIST = [
+    "attica",
     "ecm",
     "karchive",
     "kauth",
