@@ -1,0 +1,52 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO emminizer/osgQOpenGL
+    HEAD_REF main
+    REF "v4.1.2"
+    SHA512 d3d6d1e879ed6c08ab83c2a88fff5ba1668dddff174518d4c46dae5355c2ab69caf1a0dd20a25c6d355f68c0f75022f7fad3dfb4013b099a51418cc37b63ded0
+)
+
+# Upstream defaults DYNAMIC_OPENSCENEGRAPH to ON and builds SHARED libraries
+# unconditionally; honor VCPKG_LIBRARY_LINKAGE so static triplets get static libs.
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" _DYNAMIC_OSGQOPENGL)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DDESIRED_QT_VERSION=6
+        -DBUILD_OSG_EXAMPLES=OFF
+        -DOSG_MSVC_VERSIONED_DLL=OFF
+        -DDYNAMIC_OPENSCENEGRAPH=${_DYNAMIC_OSGQOPENGL}
+    MAYBE_UNUSED_VARIABLES
+        OSG_MSVC_VERSIONED_DLL
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME osgQOpenGL
+    CONFIG_PATH share/cmake/osgQOpenGL
+)
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # osgQOpenGL's install step still creates bin/debug/bin even when built
+    # static (no DLL is actually produced); remove them so the static
+    # post-build check does not flag the spurious directories.
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# The port's top-level LICENSE.txt is the OpenSceneGraph Public License, but
+# the renderer sources (OSGRenderer.h / OSGRenderer.cpp) carry an explicit
+# GPL-2.0-or-later notice. Install a representative header alongside the
+# license so the GPL grant shipped in the source is preserved in the package.
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/include/osgQOpenGL/OSGRenderer.h"
+)
