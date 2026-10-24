@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_THIRDPARTY_LIBRARIES=OFF # use vcpkg packages
-        -DGENERATE_PKGCONFIG=OFF
+        -DGENERATE_PKGCONFIG=ON
         ${FEATURE_OPTIONS}
 )
 
@@ -30,6 +30,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/prometheus-cpp")
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
