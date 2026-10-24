@@ -1,0 +1,14 @@
+diff --git a/src/api/KWallet/KF6WalletConfig.cmake.in b/src/api/KWallet/KF6WalletConfig.cmake.in
+index 6190023..4e8fa67 100644
+--- a/src/api/KWallet/KF6WalletConfig.cmake.in
++++ b/src/api/KWallet/KF6WalletConfig.cmake.in
+@@ -7,4 +7,9 @@ set(KWALLET_KCFG_FILE "@PACKAGE_KDE_INSTALL_KCFGDIR@/kwalletsettings.kcfg")
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt6Gui @REQUIRED_QT_VERSION@)
+ 
++if(NOT "@BUILD_SHARED_LIBS@")
++    find_dependency(Qt6DBus)
++    find_dependency(KF6Config)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6WalletTargets.cmake")
