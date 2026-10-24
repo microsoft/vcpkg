@@ -1,0 +1,17 @@
+crtsys provides CMake helpers for Windows kernel-mode drivers:
+
+  find_package(crtsys CONFIG REQUIRED)
+  crtsys_add_driver(my_driver src/main.cpp)
+
+The curated port currently supports x64 static-CRT builds with Microsoft
+Visual Studio and a system-installed Windows Driver Kit (WDK).
+
+The installed headers and manual-link archives are implementation details of
+the CMake integration. Direct include-directory and manual-link consumption is
+not a supported package contract; use the CMake functions above so the target
+receives the required WDK include paths, architecture definitions, compile
+options, entry point, and libraries.
+
+Visual Studio property pages and project initializers are intentionally not
+part of the curated vcpkg port. They remain available from the upstream crtsys
+NuGet package.

@@ -1,0 +1,96 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 41bab7d..7b61df2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,8 @@ option(CRTSYS_ENABLE_DIAGNOSTIC_BREAKPOINTS "Set to ON to enable crtsys diagnost
+ option(CRTSYS_ENABLE_INSTALL "Enable crtsys install rules" ${CRTSYS_IS_TOP_LEVEL})
+ option(CRTSYS_BUILD_NTL_KERNEL_CONTENT_CODECS
+   "Build the optional PASSIVE_LEVEL NTL kernel zlib/Brotli libraries" OFF)
++option(CRTSYS_REQUIRE_LOCAL_DEPENDENCIES
++  "Require local dependency source trees and do not use CPM while building crtsys" OFF)
+ set(CRTSYS_LDK_SOURCE_DIR "" CACHE PATH "Use a local LDK source tree instead of fetching the default LDK release")
+ set(CRTSYS_RAW_PDB_SOURCE_DIR "" CACHE PATH "Use a local raw_pdb source tree instead of fetching the pinned revision")
+ set(CRTSYS_UCXXRT_SOURCE_DIR "" CACHE PATH "Use a local ucxxrt source tree instead of fetching the pinned revision")
+@@ -257,18 +259,28 @@ else()
+   )
+ endif()
+ 
+-include(cmake/CPM.cmake)
++if(CRTSYS_REQUIRE_LOCAL_DEPENDENCIES)
++  foreach(_crtsys_local_dependency IN ITEMS
++      CRTSYS_LDK_SOURCE_DIR
++      CRTSYS_RAW_PDB_SOURCE_DIR)
++    if("${${_crtsys_local_dependency}}" STREQUAL "")
++      message(FATAL_ERROR
++        "${_crtsys_local_dependency} is required when "
++        "CRTSYS_REQUIRE_LOCAL_DEPENDENCIES=ON")
++    endif()
++  endforeach()
++else()
++  include(cmake/CPM.cmake)
++endif()
+ 
+ if(NOT EXISTS "${CRTSYS_FINDWDK_SOURCE_DIR}/cmake/FindWdk.cmake")
+   message(FATAL_ERROR
+     "CRTSYS_FINDWDK_SOURCE_DIR does not contain cmake/FindWdk.cmake: "
+     "${CRTSYS_FINDWDK_SOURCE_DIR}")
+ endif()
+-CPMAddPackage(
+-  NAME FindWDK
+-  SOURCE_DIR "${CRTSYS_FINDWDK_SOURCE_DIR}"
+-  DOWNLOAD_ONLY YES
+-)
++# The pinned FindWDK module is already part of the crtsys source tree. It is a
++# CMake module rather than a build target, so CPM is not needed to expose it.
++set(FindWDK_SOURCE_DIR "${CRTSYS_FINDWDK_SOURCE_DIR}")
+ 
+ if(CRTSYS_NATIVE_ARCH STREQUAL "x64" AND
+     NOT CRTSYS_USE_LIBCNTPR)
+@@ -289,7 +301,14 @@ endif()
+ if (NOT CRTSYS_ENABLE_DIAGNOSTIC_BREAKPOINTS)
+   set(LDK_ENABLE_DIAGNOSTIC_BREAKPOINTS OFF CACHE BOOL "Set to OFF to suppress LDK diagnostic KdBreakPoint calls")
+ endif()
+-if(CRTSYS_LDK_SOURCE_DIR)
++if(CRTSYS_REQUIRE_LOCAL_DEPENDENCIES)
++  set(Ldk_SOURCE_DIR "${CRTSYS_LDK_SOURCE_DIR}")
++  if(NOT TARGET Ldk)
++    add_subdirectory(
++      "${Ldk_SOURCE_DIR}"
++      "${CMAKE_CURRENT_BINARY_DIR}/_deps/ldk-build")
++  endif()
++elseif(CRTSYS_LDK_SOURCE_DIR)
+   CPMAddPackage(NAME Ldk SOURCE_DIR "${CRTSYS_LDK_SOURCE_DIR}")
+ else()
+   CPMAddPackage("gh:ntoskrnl7/Ldk@0.7.25")
+@@ -328,7 +347,14 @@ function(crtsys_set_kernel_static_msvc_runtime target_name)
+ endfunction()
+ 
+ crtsys_set_kernel_static_msvc_runtime(Ldk)
+-if(CRTSYS_RAW_PDB_SOURCE_DIR)
++if(CRTSYS_REQUIRE_LOCAL_DEPENDENCIES)
++  set(raw_pdb_SOURCE_DIR "${CRTSYS_RAW_PDB_SOURCE_DIR}")
++  if(NOT EXISTS "${raw_pdb_SOURCE_DIR}/src/PDB.h")
++    message(FATAL_ERROR
++      "CRTSYS_RAW_PDB_SOURCE_DIR does not contain src/PDB.h: "
++      "${raw_pdb_SOURCE_DIR}")
++  endif()
++elseif(CRTSYS_RAW_PDB_SOURCE_DIR)
+   CPMAddPackage(
+     NAME raw_pdb
+     SOURCE_DIR "${CRTSYS_RAW_PDB_SOURCE_DIR}"
+@@ -407,7 +433,14 @@ if (UCXXRT_ENABLED)
+   list(APPEND SOURCE_FILES src/custom/msvc/common/crt/src/stl/winapisupp.cpp)
+   list(REMOVE_ITEM SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/crt/math/ftol3.c)
+ 
+-  if(CRTSYS_UCXXRT_SOURCE_DIR)
++  if(CRTSYS_REQUIRE_LOCAL_DEPENDENCIES)
++    if(NOT CRTSYS_UCXXRT_SOURCE_DIR)
++      message(FATAL_ERROR
++        "CRTSYS_UCXXRT_SOURCE_DIR is required for toolsets older than v142 "
++        "when CRTSYS_REQUIRE_LOCAL_DEPENDENCIES=ON")
++    endif()
++    set(ucxxrt_SOURCE_DIR "${CRTSYS_UCXXRT_SOURCE_DIR}")
++  elseif(CRTSYS_UCXXRT_SOURCE_DIR)
+     CPMAddPackage(
+       NAME ucxxrt
+       SOURCE_DIR "${CRTSYS_UCXXRT_SOURCE_DIR}"
