@@ -1,0 +1,14 @@
+ereliastudio-sparkle installs Sparkle Core by default:
+
+    find_package(sparkle CONFIG REQUIRED COMPONENTS Core)
+    target_link_libraries(main PRIVATE sparkle::core)
+
+Enable the graphics feature for the full graphical Sparkle library:
+
+    find_package(sparkle CONFIG REQUIRED COMPONENTS Core Graphics)
+    target_link_libraries(main PRIVATE sparkle::sparkle)
+
+The optional test-library feature also enables graphics and provides reusable test utilities:
+
+    find_package(sparkle CONFIG REQUIRED COMPONENTS Core Graphics TestLibrary)
+    target_link_libraries(tests PRIVATE Sparkle::TestLibrary)

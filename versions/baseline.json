@@ -2896,6 +2896,10 @@
       "baseline": "0.0.20240608",
       "port-version": 0
     },
+    "ereliastudio-sparkle": {
+      "baseline": "0.1.3",
+      "port-version": 0
+    },
     "esaxx": {
       "baseline": "ca7cb332011ec37",
       "port-version": 1
