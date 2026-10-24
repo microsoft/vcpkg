@@ -267,6 +267,7 @@ dpdk[gpu-cuda]:arm64-linux=cascade
 dv-processing:arm64-linux=cascade
 dv-processing[tools]:arm64-osx=feature-fails # Broke with compiler version. See https://github.com/microsoft/vcpkg/issues/39852
 elements:arm64-linux=cascade
+elements[cairo](!osx & !windows)=options # Requires cairo as backend
 ensmallen:arm64-linux=cascade
 ensmallen[openmp]:arm64-osx=feature-fails # No openmp on default osx toolchain
 entt[experimental]=skip # required head build
