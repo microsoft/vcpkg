@@ -1,10 +1,11 @@
 {
   "name": "kauth",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Execute actions as privileged user",
   "homepage": "https://invent.kde.org/frameworks/kauth",
   "documentation": "https://api.kde.org/kauth-index.html",
-  "license": "LGPL-2.1-or-later",
+  "license": "LGPL-2.1-or-later AND BSD-3-Clause",
   "supports": "!android & !windows",
   "dependencies": [
     "ecm",

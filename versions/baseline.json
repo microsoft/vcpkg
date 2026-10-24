@@ -109,7 +109,7 @@
       "port-version": 0
     },
     "alpaka": {
-      "baseline": "2.1.1",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "alsa": {
@@ -317,7 +317,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.32.0",
+      "baseline": "1.38.2",
       "port-version": 0
     },
     "asio-grpc": {
@@ -398,6 +398,10 @@
     },
     "atomic-queue": {
       "baseline": "1.9.4",
+      "port-version": 0
+    },
+    "attica": {
+      "baseline": "6.31.0",
       "port-version": 0
     },
     "attr": {
@@ -513,7 +517,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.44.1",
+      "baseline": "0.44.2",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -1505,7 +1509,7 @@
       "port-version": 3
     },
     "brotli": {
-      "baseline": "1.2.0",
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "brpc": {
@@ -1573,7 +1577,7 @@
       "port-version": 6
     },
     "bzip3": {
-      "baseline": "1.5.4",
+      "baseline": "1.5.5",
       "port-version": 0
     },
     "c-ares": {
@@ -2085,7 +2089,7 @@
       "port-version": 0
     },
     "cpp-peglib": {
-      "baseline": "1.24.0",
+      "baseline": "1.25.0",
       "port-version": 0
     },
     "cpp-pinyin": {
@@ -2842,7 +2846,7 @@
     },
     "elements": {
       "baseline": "2025-11-18",
-      "port-version": 0
+      "port-version": 1
     },
     "elfio": {
       "baseline": "3.12",
@@ -3633,7 +3637,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.81.1",
+      "baseline": "1.84.0",
       "port-version": 0
     },
     "grppi": {
@@ -3910,7 +3914,7 @@
     },
     "hpx": {
       "baseline": "1.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "htscodecs": {
       "baseline": "1.6.7",
@@ -4013,7 +4017,7 @@
       "port-version": 0
     },
     "iir1": {
-      "baseline": "1.10.0",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "im3d": {
@@ -4318,7 +4322,7 @@
     },
     "kauth": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kbookmarks": {
       "baseline": "6.31.0",
@@ -5654,7 +5658,7 @@
     },
     "libraw": {
       "baseline": "0.22.2",
-      "port-version": 0
+      "port-version": 1
     },
     "librdkafka": {
       "baseline": "2.15.1",
@@ -6885,7 +6889,7 @@
       "port-version": 0
     },
     "mpss": {
-      "baseline": "2.1.0",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "mqtt-cpp": {
@@ -7385,7 +7389,7 @@
       "port-version": 2
     },
     "obfuscxx": {
-      "baseline": "1.3.6",
+      "baseline": "1.3.7",
       "port-version": 0
     },
     "oboe": {
@@ -7842,7 +7846,7 @@
     },
     "pcre2": {
       "baseline": "10.49",
-      "port-version": 1
+      "port-version": 2
     },
     "pdal": {
       "baseline": "2.10.1",
@@ -8589,12 +8593,12 @@
       "port-version": 0
     },
     "qtkeychain": {
-      "baseline": "0.14.3",
+      "baseline": "0.17.0",
       "port-version": 0
     },
     "qtkeychain-qt6": {
-      "baseline": "0.14.3",
-      "port-version": 1
+      "baseline": "0.17.0",
+      "port-version": 0
     },
     "qtlanguageserver": {
       "baseline": "6.11.2",
@@ -8821,7 +8825,7 @@
       "port-version": 0
     },
     "raylib": {
-      "baseline": "6.0",
+      "baseline": "6.2",
       "port-version": 0
     },
     "raylib-cpp": {
@@ -8909,7 +8913,7 @@
       "port-version": 0
     },
     "reflectcpp": {
-      "baseline": "0.25.0",
+      "baseline": "0.26.2",
       "port-version": 0
     },
     "refprop-headers": {
@@ -8938,7 +8942,7 @@
     },
     "rest-rpc": {
       "baseline": "0.12",
-      "port-version": 1
+      "port-version": 2
     },
     "restbed": {
       "baseline": "5.0.0",
@@ -10593,7 +10597,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "5.3.2",
+      "baseline": "5.3.3",
       "port-version": 0
     },
     "unqlite": {
