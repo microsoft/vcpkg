@@ -1,0 +1,10 @@
+mpss provides CMake targets:
+
+  find_package(mpss CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mpss::mpss>,mpss::mpss,mpss::mpss_static>)
+
+  # OpenSSL provider (mpss[openssl]):
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mpss::mpss_openssl>,mpss::mpss_openssl,mpss::mpss_openssl_static>)
+
+On Android, add lib/mpss.jar to the application, and call mpss::initialize_android
+(or mpss_initialize_android from mpss[openssl]) in the application's JNI_OnLoad.

@@ -1,23 +1,23 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1cb9fc9..8acb3b0 100644
+index 6d41c71..c23bbe5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -43,8 +43,8 @@ endif()
- find_package(Boost CONFIG REQUIRED COMPONENTS beast context)
- find_package(OpenSSL CONFIG REQUIRED)
+@@ -49,8 +49,8 @@ find_package(OpenSSL CONFIG REQUIRED)
+ set(SLICK_NET_STREAM_BUFFER_MULTIPLEXER_MIN_VERSION 2.2.0)
+ set(SLICK_NET_DYNAMIC_BUFFER_MIN_VERSION 1.0.2)
  
--find_package(slick-stream-buffer-multiplexer 2.0.0 CONFIG QUIET)
+-find_package(slick-stream-buffer-multiplexer ${SLICK_NET_STREAM_BUFFER_MULTIPLEXER_MIN_VERSION} CONFIG QUIET)
 -if (NOT slick-stream-buffer-multiplexer_FOUND)
 +find_package(slick-stream-buffer-multiplexer CONFIG REQUIRED)
 +if (FALSE)
      message(STATUS "Fetching slick-stream-buffer-multiplexer...")
      include(FetchContent)
      set(BUILD_SLICK_STREAM_BUFFER_MULTIPLEXER_TESTS OFF CACHE BOOL "" FORCE)
-@@ -75,8 +75,8 @@ if (slick-stream-buffer_FOUND)
+@@ -81,8 +81,8 @@ if (slick-stream-buffer_FOUND)
      message(STATUS "Found slick-stream-buffer ${slick-stream-buffer_VERSION}: ${slick-stream-buffer_DIR}")
  endif()
  
--find_package(slick-dynamic-buffer 1.0.2 CONFIG QUIET)
+-find_package(slick-dynamic-buffer ${SLICK_NET_DYNAMIC_BUFFER_MIN_VERSION} CONFIG QUIET)
 -if (NOT slick-dynamic-buffer_FOUND)
 +find_package(slick-dynamic-buffer CONFIG REQUIRED)
 +if (FALSE)
@@ -25,15 +25,15 @@ index 1cb9fc9..8acb3b0 100644
      include(FetchContent)
      set(BUILD_SLICK_DYNAMIC_BUFFER_TESTS OFF CACHE BOOL "" FORCE)
 diff --git a/cmake/slick-net-config.cmake.in b/cmake/slick-net-config.cmake.in
-index 1e852f3..f8cd2c1 100644
+index 760b3f1..f8cd2c1 100644
 --- a/cmake/slick-net-config.cmake.in
 +++ b/cmake/slick-net-config.cmake.in
 @@ -5,8 +5,8 @@ include(CMakeFindDependencyMacro)
  # Find required dependencies
  find_dependency(Boost CONFIG COMPONENTS beast context)
  find_dependency(OpenSSL CONFIG)
--find_dependency(slick-stream-buffer-multiplexer 2.0.0 CONFIG)
--find_dependency(slick-dynamic-buffer 1.0.2 CONFIG)
+-find_dependency(slick-stream-buffer-multiplexer @SLICK_NET_STREAM_BUFFER_MULTIPLEXER_MIN_VERSION@ CONFIG)
+-find_dependency(slick-dynamic-buffer @SLICK_NET_DYNAMIC_BUFFER_MIN_VERSION@ CONFIG)
 +find_dependency(slick-stream-buffer-multiplexer CONFIG)
 +find_dependency(slick-dynamic-buffer CONFIG)
  

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/sobjectizer
     REF "v${VERSION}"
-    SHA512 d4a90b2765bac75055f4602a0b169f204f183779de231c40bf7d4db3b70dd9ff21e6e09f90419c2e0c4cddd9335e4e184c47a7acdca50c28a3e1256989fa05c0
+    SHA512 8ebfcdbe2a18b0ba658c5ce126d96659b8737ae929f3d2dffb7dc12ed3fcbc0420f26472fa075e27a3c5c13408cbe7bf1b70e7c395e5004acd9571851074233c
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SOBJECTIZER_BUILD_STATIC )
@@ -17,9 +17,12 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/so_5/declspec.hpp" "defined( SO_5_STATIC_LIB )" "1")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sobjectizer)
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-

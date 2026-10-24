@@ -19,7 +19,7 @@ index bc86c00463..e675fb3e5e 100644
 +  if(_gRPC_PLATFORM_UWP)
 +    add_definitions(-DGRPC_ARES=0)
 +  endif()
-   # Silences thousands of trucation warnings
+   # Silences thousands of truncation warnings
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4503")
    # Tell MSVC to build grpc using utf-8
 @@ -563,6 +569,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
