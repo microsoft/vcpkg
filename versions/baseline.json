@@ -4322,7 +4322,7 @@
     },
     "kauth": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kbookmarks": {
       "baseline": "6.31.0",
