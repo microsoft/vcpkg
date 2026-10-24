@@ -1,0 +1,28 @@
+diff --git a/KF6I18nConfig.cmake.in b/KF6I18nConfig.cmake.in
+--- a/KF6I18nConfig.cmake.in
++++ b/KF6I18nConfig.cmake.in
+@@ -5,6 +5,9 @@ find_dependency(Qt6Core @REQUIRED_QT_VERSION@)
+ if (@BUILD_WITH_QML@ AND NOT @BUILD_SHARED_LIBS@)
+     find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
+ endif()
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Intl)
++endif()
+ 
+ # This is no longer used by the macros, but we should keep it in case
+ # something else is using it.
+diff --git a/src/i18n/CMakeLists.txt b/src/i18n/CMakeLists.txt
+--- a/src/i18n/CMakeLists.txt
++++ b/src/i18n/CMakeLists.txt
+@@ -60,8 +60,9 @@ target_include_directories(KF6I18n
+ )
+ 
+ target_link_libraries(KF6I18n PUBLIC Qt6::Core)
+-# This is only required for platforms which don't use glibc (with glibc LibIntl_LIBRARIES will be empty)
+-target_link_libraries(KF6I18n PRIVATE ${LibIntl_LIBRARIES})
++# Intl::Intl has no libraries when libintl is part of the C library (e.g. glibc)
++find_package(Intl REQUIRED)
++target_link_libraries(KF6I18n PRIVATE Intl::Intl)
+ if (ANDROID)
+     target_link_libraries(KF6I18n PRIVATE android)
+ endif()
