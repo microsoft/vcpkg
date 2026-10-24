@@ -2,7 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "ereliastudio-sparkle",
   "version": "0.1.3",
-  "port-version": 0,
   "description": "Sparkle C++23 engine core with optional UI, OpenGL rendering, and application runtime",
   "homepage": "https://github.com/EreliaStudio/Sparkle",
   "license": "MIT AND OFL-1.1",
