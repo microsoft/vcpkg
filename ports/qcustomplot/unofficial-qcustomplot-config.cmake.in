@@ -1,0 +1,27 @@
+include(CMakeFindDependencyMacro)
+find_dependency(Qt6 COMPONENTS Widgets PrintSupport)
+
+if(NOT TARGET unofficial::qcustomplot::qcustomplot)
+    get_filename_component(_qcustomplot_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+
+    add_library(unofficial::qcustomplot::qcustomplot UNKNOWN IMPORTED)
+    set_target_properties(unofficial::qcustomplot::qcustomplot PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_qcustomplot_prefix}/include"
+        INTERFACE_LINK_LIBRARIES "Qt6::Widgets;Qt6::PrintSupport"
+        IMPORTED_CONFIGURATIONS RELEASE
+        IMPORTED_LOCATION_RELEASE "${_qcustomplot_prefix}/lib/@QCUSTOMPLOT_LIBRARY_RELEASE@"
+    )
+    if(NOT "@QCUSTOMPLOT_LIBRARY_DEBUG@" STREQUAL "")
+        set_property(TARGET unofficial::qcustomplot::qcustomplot APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+        set_target_properties(unofficial::qcustomplot::qcustomplot PROPERTIES
+            IMPORTED_LOCATION_DEBUG "${_qcustomplot_prefix}/debug/lib/@QCUSTOMPLOT_LIBRARY_DEBUG@"
+        )
+    endif()
+    if(@QCUSTOMPLOT_SHARED@)
+        set_target_properties(unofficial::qcustomplot::qcustomplot PROPERTIES
+            INTERFACE_COMPILE_DEFINITIONS QCUSTOMPLOT_USE_LIBRARY
+        )
+    endif()
+
+    unset(_qcustomplot_prefix)
+endif()
