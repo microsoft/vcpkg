@@ -1,0 +1,7 @@
+include(CMakeFindDependencyMacro)
+if(WIN32)
+    find_dependency(ODBC)
+else()
+    find_dependency(unofficial-unixodbc CONFIG)
+endif()
+_find_package(${ARGS})
