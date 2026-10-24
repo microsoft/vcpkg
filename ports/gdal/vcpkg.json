@@ -183,7 +183,7 @@
       ]
     },
     "libaec": {
-      "description": "Enable AEC support",
+      "description": "Enable Adaptive Entropy Coding support (used by GRIB)",
       "dependencies": [
         "libaec"
       ]
