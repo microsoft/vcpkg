@@ -93,9 +93,9 @@ function(get_packages out_packages cmake_version)
 endfunction()
 
 function(test_cmake_project)
-    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "CMAKE_COMMAND;NAME" "OPTIONS")
-    if(NOT arg_NAME)
-        message(FATAL_ERROR "The NAME argument is mandatory.")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "BUILD_TYPE;CMAKE_COMMAND" "OPTIONS")
+    if(NOT arg_BUILD_TYPE MATCHES "^(Debug|Release)\$")
+        message(FATAL_ERROR "The BUILD_TYPE argument must be 'Debug' or 'Release'.")
     endif()
     if(NOT arg_CMAKE_COMMAND)
         set(arg_CMAKE_COMMAND "${CMAKE_COMMAND}")
@@ -111,10 +111,27 @@ function(test_cmake_project)
         message(FATAL_ERROR "Unable to determine version for '${arg_CMAKE_COMMAND}'.")
     endif()
 
-    set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-${arg_NAME}")
-    set(base_options
+    vcpkg_list(SET base_options)
+    vcpkg_list(SET build_options)
+    if(VCPKG_BUILD_TYPE OR cmake_version VERSION_LESS "3.17")
+        message(STATUS "Running CMake ${cmake_version} single-config tests for ${arg_BUILD_TYPE}")
+        vcpkg_list(APPEND base_options -G "Ninja" "-DCMAKE_BUILD_TYPE=${arg_BUILD_TYPE}")
+    else()
+        message(STATUS "Running CMake ${cmake_version} multi-config tests for ${arg_BUILD_TYPE}")
+        vcpkg_list(APPEND base_options -G "Ninja Multi-Config" "-DCMAKE_CONFIGURATION_TYPES=Debug;Release")
+        vcpkg_list(APPEND build_options --config "${arg_BUILD_TYPE}")
+        # Make the CMAKE_DEFAULT_BUILD_TYPE differ from the effective build type
+        # in order to detect debug config items in release builds and vice versa.
+        if(arg_BUILD_TYPE STREQUAL "Release")
+            vcpkg_list(APPEND base_options "-DCMAKE_DEFAULT_BUILD_TYPE=Debug")
+        else()
+            vcpkg_list(APPEND base_options "-DCMAKE_DEFAULT_BUILD_TYPE=Release")
+        endif()
+    endif()
+
+    set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-${arg_BUILD_TYPE}")
+    vcpkg_list(APPEND base_options
         # Interface: CMake
-        -G "Ninja"
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
@@ -154,7 +171,6 @@ function(test_cmake_project)
         list(APPEND base_options -DBUILD_SHARED_LIBS=OFF)
     endif()
 
-    message(STATUS "Running tests with CMake ${cmake_version} for '${arg_NAME}'")
     file(REMOVE_RECURSE "${build_dir}")
     file(MAKE_DIRECTORY "${build_dir}")
     vcpkg_execute_required_process(
@@ -163,13 +179,13 @@ function(test_cmake_project)
             ${base_options}
             ${arg_OPTIONS}
         WORKING_DIRECTORY "${build_dir}"
-        LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${arg_NAME}-config"
+        LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${arg_BUILD_TYPE}-config"
     )
     vcpkg_execute_required_process(
         COMMAND
             "${arg_CMAKE_COMMAND}" --build . --target install
         WORKING_DIRECTORY "${build_dir}"
-        LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${arg_NAME}-build"
+        LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${arg_BUILD_TYPE}-build"
     )
     # To produce better error messages for failing wrappers,
     # we run execute_process directly here, for each wrapper.
@@ -185,9 +201,9 @@ function(test_cmake_project)
     get_packages(packages "${cmake_version}")
     foreach(package IN LISTS packages)
         string(MAKE_C_IDENTIFIER "${package}" package_string)
-        set(find_package_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}")
-        set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}-out.log")
-        set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}-err.log")
+        set(find_package_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}")
+        set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-out.log")
+        set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-err.log")
 
         message(STATUS "  find_package(${package})")
         file(REMOVE_RECURSE "${find_package_build_dir}")
@@ -209,11 +225,12 @@ function(test_cmake_project)
             string(CONFIGURE "${message}" package_message @ONLY)
             message(SEND_ERROR "${package_message}")
         else()
-            set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}-build-out.log")
-            set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_NAME}-build-err.log")
+            set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-build-out.log")
+            set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-build-err.log")
             execute_process(
                 COMMAND
                     "${arg_CMAKE_COMMAND}" --build .
+                    ${build_options}
                 OUTPUT_FILE "${log_out}"
                 ERROR_FILE "${log_err}"
                 RESULT_VARIABLE package_result
@@ -233,16 +250,14 @@ if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
 endif()
 
 foreach(executable IN LISTS cmake_commands)
-    test_cmake_project(NAME "release"
+    test_cmake_project(
+        BUILD_TYPE    "Release"
         CMAKE_COMMAND "${executable}"
-        OPTIONS
-            "-DCMAKE_BUILD_TYPE=Release"
     )
-    if (NOT VCPKG_BUILD_TYPE)
-        test_cmake_project(NAME "debug"
+    if(NOT VCPKG_BUILD_TYPE)
+        test_cmake_project(
+            BUILD_TYPE    "Debug"
             CMAKE_COMMAND "${executable}"
-            OPTIONS
-                "-DCMAKE_BUILD_TYPE=Debug"
         )
     endif()
 endforeach()
