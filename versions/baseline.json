@@ -8674,7 +8674,7 @@
     },
     "qtspeech": {
       "baseline": "6.11.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qtsvg": {
       "baseline": "6.11.2",
