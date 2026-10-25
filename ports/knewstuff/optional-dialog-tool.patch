@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index be1ffd3..49939a6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,6 +63,7 @@ set_package_properties(KF6Syndication PROPERTIES
+ 
+ cmake_dependent_option(BUILD_DESIGNERPLUGIN "Build plugin for Qt Designer" ON "NOT CMAKE_CROSSCOMPILING" OFF)
+ add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Build plugin for Qt Designer")
++option(BUILD_KNEWSTUFF_DIALOG "Build the knewstuff-dialog6 tool" ON)
+ 
+ set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d8366e9..2fe5131 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -4,7 +4,9 @@
+ add_subdirectory(core)
+ 
+ add_subdirectory(qtquick)
+-add_subdirectory(tools)
++if(BUILD_KNEWSTUFF_DIALOG)
++    add_subdirectory(tools)
++endif()
+ 
+ add_subdirectory(widgets)
+ ecm_qt_install_logging_categories(
