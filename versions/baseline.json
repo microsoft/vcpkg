@@ -4309,7 +4309,7 @@
       "port-version": 1
     },
     "kalshi-cpp": {
-      "baseline": "0.6.2",
+      "baseline": "0.7.0",
       "port-version": 0
     },
     "kangaru": {
