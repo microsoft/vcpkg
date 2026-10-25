@@ -6677,7 +6677,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "3.5.3",
+      "baseline": "3.5.4",
       "port-version": 0
     },
     "mimicpp": {
