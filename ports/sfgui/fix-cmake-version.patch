@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eeebb86..edae4de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required( VERSION 3.22 )
+ 
+ set( SFGUI_MAJOR_VERSION 1 )
+ set( SFGUI_MINOR_VERSION 0 )
+-set( SFGUI_REVISION_VERSION 0 )
++set( SFGUI_REVISION_VERSION 1 )
+ set( SFGUI_VERSION ${SFGUI_MAJOR_VERSION}.${SFGUI_MINOR_VERSION}.${SFGUI_REVISION_VERSION} )
+ 
+ project( SFGUI LANGUAGES CXX VERSION ${SFGUI_VERSION} )

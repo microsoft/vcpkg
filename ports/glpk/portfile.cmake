@@ -14,6 +14,15 @@ vcpkg_extract_source_archive(
         configure.ac.patch
 )
 
+# GLPK ships a handwritten config.h.in containing only configuration substitutions, with no custom code that needs to
+# be preserved. Our configure.ac patch adds the `__WOE__` Windows-platform definition, but the shipped template has no
+# slot for it. Before 2.73, `autoreconf -vfi` regenerated the template with autoheader, but now preserves handwritten
+# templates unless `--replace-handwritten` is passed, so configure detects `__WOE__` without emitting it in `config.h`.
+# With TLS enabled, this makes GLPK select POSIX `gmtime_r`/`strerror_r`/`strtok_r` implementations, which do not link
+# with MSVC. Remove the template so autoheader regenerates all substitutions from the patched configure.ac without
+# requiring `--replace-handwritten` unsupported by older Autoconf versions or changing the shared helper's behavior.
+file(REMOVE "${SOURCE_PATH}/config.h.in")
+
 vcpkg_list(SET CONFIGURE_OPTIONS ac_cv_prog_cc_c23=no)
 if("dl" IN_LIST FEATURES)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-dl=dlfcn "LIBS=-ldl \$LIBS")

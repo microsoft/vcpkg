@@ -1,16 +1,22 @@
+diff --git a/ofstd/libsrc/ofwhere.c b/ofstd/libsrc/ofwhere.c
+index 1fa7c42b6..1d5bc0f89 100644
 --- a/ofstd/libsrc/ofwhere.c
 +++ b/ofstd/libsrc/ofwhere.c
-@@ -33,5 +33,5 @@
-
+@@ -32,7 +32,7 @@
+ #include "dcmtk/ofstd/ofwhere.h"
+ #include "dcmtk/ofstd/ofdiag.h"        /* for DCMTK_DIAGNOSTIC_PUSH etc. */
+ 
 -#if defined(__linux__) || defined(__CYGWIN__)
 +#if defined(__linux__) || defined(__CYGWIN__) || defined(__EMSCRIPTEN__)
  #undef _DEFAULT_SOURCE
  #define _DEFAULT_SOURCE
  #elif defined(__APPLE__)
-@@ -166,5 +166,5 @@
+@@ -166,7 +166,7 @@ int OFgetExecutablePath(char* out, int capacity, int* dirname_length)
+   return OFgetModulePath_(NULL, out, capacity, dirname_length);
  }
-
--#elif defined(__linux__) || defined(__CYGWIN__) || defined(__sun) || defined(WAI_USE_PROC_SELF_EXE)
-+#elif defined(__linux__) || defined(__CYGWIN__) || defined(__sun) || defined(WAI_USE_PROC_SELF_EXE) || defined(__EMSCRIPTEN__)
-
+ 
+-#elif defined(__linux__) || defined(__CYGWIN__) || defined(__sun) || defined(__GNU__) || defined(WAI_USE_PROC_SELF_EXE)
++#elif defined(__linux__) || defined(__CYGWIN__) || defined(__sun) || defined(__GNU__) || defined(WAI_USE_PROC_SELF_EXE) || defined(__EMSCRIPTEN__)
+ 
  #include <stdio.h>
+ #include <stdlib.h>

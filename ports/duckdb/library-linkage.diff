@@ -1,41 +1,36 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3246265..295da5f 100644
+index a07fe50..e4c9824 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -420,7 +420,6 @@ option(EXTENSION_STATIC_BUILD
-         FALSE)
+@@ -59,7 +59,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ set(CMAKE_VERBOSE_MAKEFILE OFF)
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ set(CMAKE_MACOSX_RPATH 1)
+-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
  
- if(WIN32 OR ZOS)
+ if(NOT DEFINED CMAKE_C_COMPILER_LAUNCHER)
+     find_program(COMPILER_LAUNCHER NAMES ccache sccache)
+@@ -441,11 +440,9 @@ option(EXTENSION_STATIC_BUILD
+         TRUE)
+ 
+ if(ZOS)
+-  set(EXTENSION_STATIC_BUILD TRUE)
+ endif()
+ 
+ if(WIN32)
 -  set(EXTENSION_STATIC_BUILD TRUE)
    add_definitions(-D_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS=1)
  endif()
  
-@@ -863,6 +862,7 @@ if (NOT ${EXTENSION_CONFIG_BUILD} AND NOT ${EXTENSION_TESTS_ONLY} AND NOT CLANG_
-     message(STATUS "Extensions will be deployed to: ${LOCAL_EXTENSION_REPO_DIR}")
-   endif()
- endif()
-+set_target_properties(duckdb_local_extension_repo PROPERTIES EXCLUDE_FROM_ALL 1)
- 
- function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTENSION_VERSION CAPI_VERSION PARAMETERS)
-   set(TARGET_NAME ${NAME}_loadable_extension)
-@@ -881,6 +881,8 @@ function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTEN
- 
-   if(EMSCRIPTEN)
-      add_library(${TARGET_NAME} STATIC ${FILES})
-+  elseif(WIN32)
-+     add_library(${TARGET_NAME} MODULE ${FILES})
-   else()
-      add_library(${TARGET_NAME} SHARED ${FILES})
-   endif()
 diff --git a/DuckDBConfig.cmake.in b/DuckDBConfig.cmake.in
-index 7c5ce31..bc4f40d 100644
+index 1b039ce..5abf24f 100644
 --- a/DuckDBConfig.cmake.in
 +++ b/DuckDBConfig.cmake.in
-@@ -6,8 +6,24 @@
+@@ -9,8 +9,24 @@ set(DuckDB_EXTENSIONS "@DUCKDB_EXTENSION_NAMES@")
  
  include(CMakeFindDependencyMacro)
  find_dependency(Threads)
--if(NOT @WITH_INTERNAL_ICU@)
+-if("icu" IN_LIST DuckDB_EXTENSIONS AND NOT @WITH_INTERNAL_ICU@)
 -    find_dependency(ICU COMPONENTS i18n uc data)
 +if(NOT "@BUILD_SHARED_LIBS@")
 +    set(z_vcpkg_duckdb_extensions_names "@DUCKDB_EXTENSION_NAMES@")
@@ -58,7 +53,7 @@ index 7c5ce31..bc4f40d 100644
  endif()
  
  # Compute paths
-@@ -18,7 +34,7 @@ if(NOT TARGET duckdb AND NOT DuckDB_BINARY_DIR)
+@@ -21,7 +37,7 @@ if(NOT TARGET duckdb AND NOT DuckDB_BINARY_DIR)
      include("${DuckDB_CMAKE_DIR}/DuckDBExports.cmake")
  endif()
  
@@ -67,11 +62,30 @@ index 7c5ce31..bc4f40d 100644
      set(DuckDB_LIBRARIES duckdb_static)
  else()
      set(DuckDB_LIBRARIES duckdb)
+diff --git a/extension/CMakeLists.txt b/extension/CMakeLists.txt
+index 4bf7784..9364824 100644
+--- a/extension/CMakeLists.txt
++++ b/extension/CMakeLists.txt
+@@ -98,6 +98,14 @@ add_definitions(-DDUCKDB_MINOR_VERSION=${DUCKDB_MINOR_VERSION})
+ add_definitions(-DDUCKDB_PATCH_VERSION=${DUCKDB_PATCH_VERSION})
+ 
+ add_library(duckdb_generated_extension_loader STATIC ${GENERATED_CPP_FILE})
++if(NOT BUILD_SHARED_LIBS)
++  foreach(EXT_NAME IN LISTS STATICALLY_LINKED_EXTENSIONS)
++    string(TOUPPER ${EXT_NAME} EXT_NAME_UPPERCASE)
++    if(${DUCKDB_EXTENSION_${EXT_NAME_UPPERCASE}_SHOULD_LINK})
++      target_link_libraries(duckdb_generated_extension_loader PUBLIC ${EXT_NAME}_extension)
++    endif()
++  endforeach()
++endif()
+ 
+ set(ALL_OBJECT_FILES
+     ${ALL_OBJECT_FILES} $<TARGET_OBJECTS:duckdb_generated_extension_loader>
 diff --git a/extension/autocomplete/CMakeLists.txt b/extension/autocomplete/CMakeLists.txt
-index 544e65a..a8e1e43 100644
+index 7419753..dac3e03 100644
 --- a/extension/autocomplete/CMakeLists.txt
 +++ b/extension/autocomplete/CMakeLists.txt
-@@ -13,6 +13,10 @@ set(PARAMETERS "-warnings")
+@@ -16,6 +16,10 @@ set(PARAMETERS "-warnings")
  build_loadable_extension(autocomplete ${PARAMETERS}
                           ${AUTOCOMPLETE_EXTENSION_FILES})
  
@@ -97,6 +111,27 @@ index c97cd77..0827683 100644
  install(
    TARGETS core_functions_extension
    EXPORT "${DUCKDB_EXPORT_SET}"
+diff --git a/extension/extension_build_tools.cmake b/extension/extension_build_tools.cmake
+index 6a05070..0db8fbe 100644
+--- a/extension/extension_build_tools.cmake
++++ b/extension/extension_build_tools.cmake
+@@ -96,6 +96,7 @@ if (NOT ${EXTENSION_CONFIG_BUILD} AND NOT ${EXTENSION_TESTS_ONLY} AND NOT CLANG_
+         message(STATUS "Extensions will be deployed to: ${LOCAL_EXTENSION_REPO_DIR}")
+     endif()
+ endif()
++set_target_properties(duckdb_local_extension_repo PROPERTIES EXCLUDE_FROM_ALL 1)
+ 
+ function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTENSION_VERSION CAPI_VERSION PARAMETERS)
+     set(TARGET_NAME ${NAME}_loadable_extension)
+@@ -114,6 +115,8 @@ function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTEN
+ 
+     if(EMSCRIPTEN)
+         add_library(${TARGET_NAME} STATIC ${FILES})
++    elseif(WIN32)
++        add_library(${TARGET_NAME} MODULE ${FILES})
+     else()
+         add_library(${TARGET_NAME} SHARED ${FILES})
+     endif()
 diff --git a/extension/icu/CMakeLists.txt b/extension/icu/CMakeLists.txt
 index a5bb58a..8edff2b 100644
 --- a/extension/icu/CMakeLists.txt
@@ -112,20 +147,6 @@ index a5bb58a..8edff2b 100644
 +endif()
  install(
    TARGETS icu_extension
-   EXPORT "${DUCKDB_EXPORT_SET}"
-diff --git a/extension/jemalloc/CMakeLists.txt b/extension/jemalloc/CMakeLists.txt
-index 38be497..75cb8fb 100644
---- a/extension/jemalloc/CMakeLists.txt
-+++ b/extension/jemalloc/CMakeLists.txt
-@@ -12,6 +12,9 @@ set(JEMALLOC_EXTENSION_FILES jemalloc_extension.cpp ${JEMALLOC_OBJECT_FILES})
- build_static_extension(jemalloc ${JEMALLOC_EXTENSION_FILES})
- # we do not do build_loadable_extension here because jemalloc is static-only
- 
-+if(BUILD_SHARED_LIBS)
-+  return()
-+endif()
- install(
-   TARGETS jemalloc_extension
    EXPORT "${DUCKDB_EXPORT_SET}"
 diff --git a/extension/json/CMakeLists.txt b/extension/json/CMakeLists.txt
 index 80b4af4..81055de 100644
@@ -143,10 +164,10 @@ index 80b4af4..81055de 100644
    TARGETS json_extension
    EXPORT "${DUCKDB_EXPORT_SET}"
 diff --git a/extension/parquet/CMakeLists.txt b/extension/parquet/CMakeLists.txt
-index a8335d8..ef2ea3f 100644
+index 047a841..07e9bc2 100644
 --- a/extension/parquet/CMakeLists.txt
 +++ b/extension/parquet/CMakeLists.txt
-@@ -82,6 +82,10 @@ set(PARAMETERS "-warnings")
+@@ -86,6 +86,10 @@ set(PARAMETERS "-warnings")
  build_loadable_extension(parquet ${PARAMETERS} ${PARQUET_EXTENSION_FILES})
  target_link_libraries(parquet_loadable_extension duckdb_mbedtls duckdb_zstd)
  
@@ -188,12 +209,20 @@ index 46dcb12..46b9950 100644
    TARGETS tpch_extension
    EXPORT "${DUCKDB_EXPORT_SET}"
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1915e92..83da5f4 100644
+index a5519a3..552997a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -172,8 +172,15 @@ else()
+@@ -96,6 +96,7 @@ endforeach(LINK_LIB)
+ add_library(duckdb_static STATIC ${ALL_OBJECT_FILES} ${LINK_OBJECTS})
+ target_link_libraries(duckdb_static PUBLIC ${DUCKDB_SYSTEM_LIBS})
+ link_threads(duckdb_static PUBLIC)
++link_extension_libraries(duckdb_static PUBLIC)
  
- endif()
+ #
+ # FIXME file(COPY ${CMAKE_SOURCE_DIR}/libduckdb_static.a  DESTINATION
+@@ -149,9 +150,17 @@ install(
+         "${PROJECT_SOURCE_DIR}/src/include/duckdb_extension.h"
+   DESTINATION "${INSTALL_INCLUDE_DIR}")
  
 +if(BUILD_SHARED_LIBS)
 +  set(INSTALL_TARGET duckdb)
@@ -208,3 +237,5 @@ index 1915e92..83da5f4 100644
    EXPORT "${DUCKDB_EXPORT_SET}"
    LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
    ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
++  INCLUDES DESTINATION "${INSTALL_INCLUDE_DIR}"
+   RUNTIME DESTINATION "${INSTALL_BIN_DIR}")

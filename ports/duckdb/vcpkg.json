@@ -1,7 +1,6 @@
 {
   "name": "duckdb",
-  "version": "1.4.4",
-  "port-version": 1,
+  "version": "1.5.6",
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
   "license": null,
@@ -22,6 +21,7 @@
     },
     "excel": {
       "description": "Statically link the excel extension into DuckDB",
+      "license": "MIT AND Apache-2.0",
       "dependencies": [
         "expat",
         {
@@ -42,12 +42,6 @@
           "name": "zlib",
           "platform": "mingw"
         }
-      ]
-    },
-    "iceberg": {
-      "description": "Statically link the iceberg extension into DuckDB",
-      "dependencies": [
-        "roaring"
       ]
     },
     "icu": {

@@ -1,4 +1,4 @@
-The package stb provides CMake targets:
+The package stb provides a CMake module to locate its headers:
 
     find_package(Stb REQUIRED)
     target_include_directories(main PRIVATE ${Stb_INCLUDE_DIR})

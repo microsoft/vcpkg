@@ -1,6 +1,6 @@
 {
   "name": "cpp-client-telemetry",
-  "version": "3.10.267.1",
+  "version": "3.10.281.1",
   "description": "Microsoft 1DS C/C++ Client Telemetry Library",
   "homepage": "https://github.com/microsoft/cpp_client_telemetry",
   "license": "Apache-2.0",
@@ -28,5 +28,11 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "android-capi-http-client": {
+      "description": "Allow Android C API consumers to provide custom HTTP send/cancel callbacks.",
+      "supports": "android"
+    }
+  }
 }
