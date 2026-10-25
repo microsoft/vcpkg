@@ -3,7 +3,7 @@
   "version": "1.4.363.0",
   "description": "Utility libraries for Vulkan developers",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Utility-Libraries",
-  "license": null,
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
