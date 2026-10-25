@@ -54,6 +54,7 @@
           "platform": "!mingw & !uwp"
         },
         {
+          "$multi-config": false,
           "$package": "GLUT",
           "name": "freeglut",
           "platform": "!android & !osx & !uwp"
@@ -121,6 +122,7 @@
           "platform": "!uwp & !mingw"
         },
         {
+          "$multi-config": false,
           "$package": "LibXml2",
           "name": "libxml2",
           "default-features": false,
@@ -129,6 +131,7 @@
           ]
         },
         {
+          "$multi-config": false,
           "$package": "LibXslt",
           "name": "libxslt",
           "default-features": false,

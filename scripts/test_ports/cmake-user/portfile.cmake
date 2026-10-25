@@ -190,7 +190,7 @@ function(test_cmake_project)
         if(NOT packages)
             continue()
         endif()
-    
+
         set(build_dir "${${config_type}_config_build_dir}")
         file(REMOVE_RECURSE "${build_dir}")
         file(MAKE_DIRECTORY "${build_dir}")
