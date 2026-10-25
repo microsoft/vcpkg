@@ -5,6 +5,6 @@ find_dependency(OpenCV)
 find_dependency(onnxruntime CONFIG)
 find_dependency(polyclipping CONFIG)
 
-include("${CMAKE_CURRENT_LIST_DIR}/unofficial-rapidocr-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-rapidocronnx-targets.cmake")
 
-check_required_components(unofficial-rapidocr)
+check_required_components(unofficial-rapidocronnx)

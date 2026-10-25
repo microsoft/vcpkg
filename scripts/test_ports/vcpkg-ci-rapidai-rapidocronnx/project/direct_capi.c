@@ -1,6 +1,6 @@
-#include <rapidocr/OcrLiteCApi.h>
+#include <rapidocronnx/OcrLiteCApi.h>
 
-int rapidocr_capi_root_include_ok(void)
+int rapidocronnx_capi_root_include_ok(void)
 {
     OCR_PARAM param;
     param.padding = 0;
@@ -15,5 +15,5 @@ int rapidocr_capi_root_include_ok(void)
 
 int main(void)
 {
-    return rapidocr_capi_root_include_ok();
+    return rapidocronnx_capi_root_include_ok();
 }
