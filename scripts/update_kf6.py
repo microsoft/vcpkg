@@ -48,6 +48,7 @@ PORT_LIST = [
     "kitemmodels",
     "kitemviews",
     "kjobwidgets",
+    "knewstuff",
     "knotifications",
     "kpackage",
     "kplotting",
