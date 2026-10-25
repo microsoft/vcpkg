@@ -1,0 +1,29 @@
+{
+  "name": "coremltools",
+  "version": "9.0",
+  "description": "C++ model specification and model package helper libraries (mlmodel) from Apple's Core ML Tools",
+  "homepage": "https://github.com/apple/coremltools",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "fp16",
+    {
+      "name": "libuuid",
+      "platform": "linux | android"
+    },
+    "nlohmann-json",
+    "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
