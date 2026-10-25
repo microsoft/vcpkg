@@ -5749,7 +5749,7 @@
       "port-version": 0
     },
     "libslirp": {
-      "baseline": "4.9.1",
+      "baseline": "4.9.6",
       "port-version": 0
     },
     "libsm": {
