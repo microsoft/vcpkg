@@ -12,6 +12,8 @@ vcpkg_from_github(
 
 # The VERSION file in the v2.1.0 tag still carries the "-dev" suffix
 file(WRITE "${SOURCE_PATH}/VERSION" "${VERSION}\n")
+# Version.hpp.in refers to XAD_VERSION_* while the project defines xad_VERSION_*, which leaves the numeric macros empty
+vcpkg_replace_string("${SOURCE_PATH}/src/XAD/Version.hpp.in" "@XAD_VERSION_" "@xad_VERSION_")
 
 # Build the compiled part of the library for the baseline instruction set of the target.
 # The headers are compiled with the consumer's own flags.
