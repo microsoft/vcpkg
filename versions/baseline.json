@@ -5821,7 +5821,7 @@
       "port-version": 0
     },
     "libssh": {
-      "baseline": "0.12.0",
+      "baseline": "0.12.2",
       "port-version": 0
     },
     "libssh2": {
