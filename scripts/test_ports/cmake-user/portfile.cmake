@@ -58,7 +58,7 @@ endif()
 
 vcpkg_find_acquire_program(NINJA)
 
-function(get_packages out_packages cmake_version)
+function(get_packages out_packages cmake_version config_type)
     set(packages "")
     if("find-package" IN_LIST FEATURES)
         file(READ "${CMAKE_CURRENT_LIST_DIR}/vcpkg.json" vcpkg_json)
@@ -78,15 +78,18 @@ function(get_packages out_packages cmake_version)
                 if(since AND cmake_version VERSION_LESS since)
                     continue()
                 endif()
-                if(NOT EXISTS "${CURRENT_INSTALLED_DIR}/share/${port}/vcpkg_abi_info.txt")
-                    continue()
+                if(config_type STREQUAL "multi")
+                    string(JSON multi_config ERROR_VARIABLE multi_config_not_found GET "${packages_json}" "${i}" "\$multi-config")
+                    if(multi_config STREQUAL "OFF")
+                        continue()
+                    endif()
                 endif()
                 string(JSON package GET "${packages_json}" "${i}" "\$package")
                 list(APPEND packages "${package}")
             endforeach()
         endif()
     endif()
-    if("pkg-check-modules" IN_LIST FEATURES)
+    if("pkg-check-modules" IN_LIST FEATURES AND NOT config_type STREQUAL "multi")
         list(APPEND packages "ZLIBviaPkgConfig")
     endif()
     set("${out_packages}" "${packages}" PARENT_SCOPE)
@@ -111,30 +114,39 @@ function(test_cmake_project)
         message(FATAL_ERROR "Unable to determine version for '${arg_CMAKE_COMMAND}'.")
     endif()
 
-    vcpkg_list(SET base_options)
-    vcpkg_list(SET build_options)
-    if(VCPKG_BUILD_TYPE OR cmake_version VERSION_LESS "3.17")
-        message(STATUS "Running CMake ${cmake_version} single-config tests for ${arg_BUILD_TYPE}")
-        vcpkg_list(APPEND base_options -G "Ninja" "-DCMAKE_BUILD_TYPE=${arg_BUILD_TYPE}")
-    else()
-        message(STATUS "Running CMake ${cmake_version} multi-config tests for ${arg_BUILD_TYPE}")
-        vcpkg_list(APPEND base_options -G "Ninja Multi-Config" "-DCMAKE_CONFIGURATION_TYPES=Debug;Release")
-        vcpkg_list(APPEND build_options --config "${arg_BUILD_TYPE}")
+    set(config_types "single")
+    set(single_config_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-single-${arg_BUILD_TYPE}")
+    vcpkg_list(SET single_config_options
+        -G "Ninja"
+        "-DCMAKE_BUILD_TYPE=${arg_BUILD_TYPE}"
+        "-DCMAKE_INSTALL_PREFIX=${single_config_build_dir}/install"
+    )
+    vcpkg_list(SET single_build_options)
+
+    if(NOT VCPKG_BUILD_TYPE AND NOT cmake_version VERSION_LESS "3.17")
+        list(APPEND config_types "multi")
+        set(multi_config_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-multi-${arg_BUILD_TYPE}")
+        vcpkg_list(SET multi_config_options
+            -G "Ninja Multi-Config"
+            "-DCMAKE_CONFIGURATION_TYPES=Debug;Release"
+            "-DCMAKE_INSTALL_PREFIX=${multi_config_build_dir}/install"
+        )
         # Make the CMAKE_DEFAULT_BUILD_TYPE differ from the effective build type
         # in order to detect debug config items in release builds and vice versa.
         if(arg_BUILD_TYPE STREQUAL "Release")
-            vcpkg_list(APPEND base_options "-DCMAKE_DEFAULT_BUILD_TYPE=Debug")
+            vcpkg_list(APPEND multi_config_options "-DCMAKE_DEFAULT_BUILD_TYPE=Debug")
         else()
-            vcpkg_list(APPEND base_options "-DCMAKE_DEFAULT_BUILD_TYPE=Release")
+            vcpkg_list(APPEND multi_config_options "-DCMAKE_DEFAULT_BUILD_TYPE=Release")
         endif()
+        vcpkg_list(SET multi_build_options
+            --config "${arg_BUILD_TYPE}"
+        )
     endif()
 
-    set(build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-${arg_BUILD_TYPE}")
-    vcpkg_list(APPEND base_options
+    vcpkg_list(SET base_options
         # Interface: CMake
         "-DCMAKE_MAKE_PROGRAM=${NINJA}"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
-        "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
         # Interface: vcpkg.cmake and scripts/toolchains/*.cmake
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
@@ -171,78 +183,89 @@ function(test_cmake_project)
         list(APPEND base_options -DBUILD_SHARED_LIBS=OFF)
     endif()
 
-    file(REMOVE_RECURSE "${build_dir}")
-    file(MAKE_DIRECTORY "${build_dir}")
-    vcpkg_execute_required_process(
-        COMMAND
-            "${arg_CMAKE_COMMAND}" "${CMAKE_CURRENT_LIST_DIR}/project"
-            ${base_options}
-            ${arg_OPTIONS}
-        WORKING_DIRECTORY "${build_dir}"
-        LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${arg_BUILD_TYPE}-config"
-    )
-    vcpkg_execute_required_process(
-        COMMAND
-            "${arg_CMAKE_COMMAND}" --build . --target install
-        WORKING_DIRECTORY "${build_dir}"
-        LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${arg_BUILD_TYPE}-build"
-    )
-    # To produce better error messages for failing wrappers,
-    # we run execute_process directly here, for each wrapper.
-    string(REPLACE " OFF:" ":" message
-    "  CMake ${cmake_version}: @step@ with `find_package(@package@)` failed.\n"
-    "  See logs for more information:\n"
-    "    @log_out@\n"
-    "    @log_err@\n"
-    )
-    if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
-        string(REPLACE "  CMake" "##vso[task.logissue type=error]CMake" message "${message}")
-    endif()
-    get_packages(packages "${cmake_version}")
-    foreach(package IN LISTS packages)
-        string(MAKE_C_IDENTIFIER "${package}" package_string)
-        set(find_package_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}")
-        set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-out.log")
-        set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-err.log")
-
-        message(STATUS "  find_package(${package})")
-        file(REMOVE_RECURSE "${find_package_build_dir}")
-        file(MAKE_DIRECTORY "${find_package_build_dir}")
-        execute_process(
+    foreach(config_type IN LISTS config_types)
+        get_packages(packages "${cmake_version}" "${config_type}")
+        #message(STATUS "${cmake_version}," "${config_type}," "${packages}")
+        message(STATUS "Running CMake ${cmake_version} ${config_type}-config tests for ${arg_BUILD_TYPE}")
+        if(NOT packages)
+            continue()
+        endif()
+    
+        set(build_dir "${${config_type}_config_build_dir}")
+        file(REMOVE_RECURSE "${build_dir}")
+        file(MAKE_DIRECTORY "${build_dir}")
+        vcpkg_execute_required_process(
             COMMAND
                 "${arg_CMAKE_COMMAND}" "${CMAKE_CURRENT_LIST_DIR}/project"
+                ${${config_type}_config_options}
                 ${base_options}
                 ${arg_OPTIONS}
-                "-DFIND_PACKAGES=${package}"
-                --trace-expand
-            OUTPUT_FILE "${log_out}"
-            ERROR_FILE "${log_err}"
-            RESULT_VARIABLE package_result
-            WORKING_DIRECTORY "${find_package_build_dir}"
+            WORKING_DIRECTORY "${build_dir}"
+            LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${config_type}-${arg_BUILD_TYPE}-config"
         )
-        if(package_result)
-            set(step "configuration")
-            string(CONFIGURE "${message}" package_message @ONLY)
-            message(SEND_ERROR "${package_message}")
-        else()
-            set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-build-out.log")
-            set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${arg_BUILD_TYPE}-build-err.log")
+        vcpkg_execute_required_process(
+            COMMAND
+                "${arg_CMAKE_COMMAND}" --build . --target install
+            WORKING_DIRECTORY "${build_dir}"
+            LOGNAME "${TARGET_TRIPLET}-${cmake_version}-${config_type}-${arg_BUILD_TYPE}-build"
+        )
+        # To produce better error messages for failing wrappers,
+        # we run execute_process directly here, for each wrapper.
+        string(REPLACE " OFF:" ":" message
+            "  CMake ${cmake_version}: @step@ with `find_package(@package@)` failed.\n"
+            "  See logs for more information:\n"
+            "    @log_out@\n"
+            "    @log_err@\n"
+        )
+        if(DEFINED ENV{BUILD_REASON}) # On Azure Pipelines, add extra markup.
+            string(REPLACE "  CMake" "##vso[task.logissue type=error]CMake" message "${message}")
+        endif()
+        foreach(package IN LISTS packages)
+            string(MAKE_C_IDENTIFIER "${package}" package_string)
+            set(find_package_build_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${config_type}-${arg_BUILD_TYPE}")
+            set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${config_type}-${arg_BUILD_TYPE}-out.log")
+            set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${config_type}-${arg_BUILD_TYPE}-err.log")
+
+            message(STATUS "  find_package(${package})")
+            file(REMOVE_RECURSE "${find_package_build_dir}")
+            file(MAKE_DIRECTORY "${find_package_build_dir}")
             execute_process(
                 COMMAND
-                    "${arg_CMAKE_COMMAND}" --build .
-                    ${build_options}
+                    "${arg_CMAKE_COMMAND}" "${CMAKE_CURRENT_LIST_DIR}/project"
+                    ${${config_type}_config_options}
+                    ${base_options}
+                    ${arg_OPTIONS}
+                    "-DFIND_PACKAGES=${package}"
+                    --trace-expand
                 OUTPUT_FILE "${log_out}"
                 ERROR_FILE "${log_err}"
                 RESULT_VARIABLE package_result
                 WORKING_DIRECTORY "${find_package_build_dir}"
             )
             if(package_result)
-                set(step "build")
+                set(step "configuration")
                 string(CONFIGURE "${message}" package_message @ONLY)
                 message(SEND_ERROR "${package_message}")
+            else()
+                set(log_out "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${config_type}-${arg_BUILD_TYPE}-build-out.log")
+                set(log_err "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${cmake_version}-find-package-${package_string}-${config_type}-${arg_BUILD_TYPE}-build-err.log")
+                execute_process(
+                    COMMAND
+                        "${arg_CMAKE_COMMAND}" --build .
+                        ${${config_type}_build_options}
+                    OUTPUT_FILE "${log_out}"
+                    ERROR_FILE "${log_err}"
+                    RESULT_VARIABLE package_result
+                    WORKING_DIRECTORY "${find_package_build_dir}"
+                )
+                if(package_result)
+                    set(step "build")
+                    string(CONFIGURE "${message}" package_message @ONLY)
+                    message(SEND_ERROR "${package_message}")
+                endif()
             endif()
-        endif()
-    endforeach()
+        endforeach(package)
+    endforeach(config_type)
 endfunction()
 
 if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
