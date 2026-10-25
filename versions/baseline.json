@@ -8269,7 +8269,7 @@
       "port-version": 7
     },
     "python3": {
-      "baseline": "3.14.8",
+      "baseline": "3.14.9",
       "port-version": 0
     },
     "qca": {
