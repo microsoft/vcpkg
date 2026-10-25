@@ -8,6 +8,7 @@ vcpkg_from_github(
 	HEAD_REF main
 	PATCHES
 		fix-cross-platform-build.patch
+		remove-unimplemented-bf16-conversions.patch
 )
 
 vcpkg_cmake_configure(

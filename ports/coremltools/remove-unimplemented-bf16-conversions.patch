@@ -1,0 +1,16 @@
+diff --git a/mlmodel/src/MILBlob/Bf16.hpp b/mlmodel/src/MILBlob/Bf16.hpp
+--- a/mlmodel/src/MILBlob/Bf16.hpp
++++ b/mlmodel/src/MILBlob/Bf16.hpp
+@@ -19,10 +19,8 @@ struct Bf16 {
+     explicit Bf16(uint16_t bs) : bytes(bs) {}
+     Bf16() : bytes(0) {}
+ 
+-    static Bf16 FromFloat(float f);
+-
+-    float GetFloat() const;
+-    void SetFloat(float f);
++    // FromFloat/GetFloat/SetFloat are declared upstream but never defined,
++    // so they are not exposed.
+ 
+     // NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
+     uint16_t bytes;

@@ -21,7 +21,8 @@ endif()
 # CoreML protobuf specification
 set(PROTO_ROOT "${COREMLTOOLS_SOURCE_DIR}/mlmodel/format")
 file(GLOB COREML_PROTOS "${PROTO_ROOT}/*.proto")
-set(PROTO_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/coreml_proto")
+set(PROTO_GEN_ROOT "${CMAKE_CURRENT_BINARY_DIR}/generated")
+set(PROTO_OUT_DIR "${PROTO_GEN_ROOT}/coremltools/coreml_proto")
 file(MAKE_DIRECTORY "${PROTO_OUT_DIR}")
 
 add_library(coreml_proto STATIC ${COREML_PROTOS})
@@ -32,8 +33,8 @@ protobuf_generate(
 	PROTOC_OUT_DIR "${PROTO_OUT_DIR}"
 )
 target_include_directories(coreml_proto PUBLIC
-	"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
-	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/coremltools>"
+	"$<BUILD_INTERFACE:${PROTO_GEN_ROOT}>"
+	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 target_link_libraries(coreml_proto PUBLIC protobuf::libprotobuf)
 
@@ -55,10 +56,7 @@ target_include_directories(mlmodel
 	PUBLIC
 		"$<BUILD_INTERFACE:${MLMODEL_SRC}>"
 		"$<BUILD_INTERFACE:${MODELPACKAGE_SRC}>"
-		"$<BUILD_INTERFACE:${COREMLTOOLS_SOURCE_DIR}>"
-		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/coremltools>"
-		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/coremltools/mlmodel/src>"
-		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/coremltools/modelpackage/src>"
+		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 get_target_property(NLOHMANN_JSON_INCLUDE_DIRS nlohmann_json::nlohmann_json INTERFACE_INCLUDE_DIRECTORIES)
 foreach(dir IN LISTS NLOHMANN_JSON_INCLUDE_DIRS)
@@ -68,6 +66,8 @@ endforeach()
 target_link_libraries(mlmodel PRIVATE nlohmann_json::nlohmann_json unofficial::fp16::fp16)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
 	target_link_libraries(mlmodel PRIVATE unofficial::UUID::uuid)
+elseif(WIN32)
+ 	target_link_libraries(mlmodel PRIVATE rpcrt4)
 endif()
 
 install(
@@ -80,14 +80,14 @@ install(
 
 install(
 	DIRECTORY "${MLMODEL_SRC}/MILBlob"
-	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/coremltools/mlmodel/src"
+	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 	FILES_MATCHING PATTERN "*.hpp"
 	PATTERN "MMapFileReader*" EXCLUDE
 	PATTERN "StorageReader*" EXCLUDE
 )
 install(
 	FILES "${MODELPACKAGE_SRC}/ModelPackage.hpp"
-	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/coremltools/modelpackage/src"
+	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/coremltools"
 )
 install(
 	DIRECTORY "${PROTO_OUT_DIR}"

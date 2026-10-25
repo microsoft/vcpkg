@@ -1,5 +1,5 @@
 diff --git a/mlmodel/src/MILBlob/Blob/FileWriter.cpp b/mlmodel/src/MILBlob/Blob/FileWriter.cpp
-index adc7bfcf..7b2bf9cc 100644
+index f30e735..2908444 100644
 --- a/mlmodel/src/MILBlob/Blob/FileWriter.cpp
 +++ b/mlmodel/src/MILBlob/Blob/FileWriter.cpp
 @@ -8,8 +8,12 @@
@@ -16,7 +16,7 @@ index adc7bfcf..7b2bf9cc 100644
  using namespace MILBlob;
  using namespace MILBlob::Blob;
 diff --git a/mlmodel/src/MILBlob/Blob/FileWriter.hpp b/mlmodel/src/MILBlob/Blob/FileWriter.hpp
-index 2bc99403..49239513 100644
+index 2bc9940..b89eee5 100644
 --- a/mlmodel/src/MILBlob/Blob/FileWriter.hpp
 +++ b/mlmodel/src/MILBlob/Blob/FileWriter.hpp
 @@ -6,7 +6,8 @@
@@ -30,7 +30,7 @@ index 2bc99403..49239513 100644
  #include <string>
  #include <type_traits>
 diff --git a/mlmodel/src/MILBlob/Fp16.cpp b/mlmodel/src/MILBlob/Fp16.cpp
-index ae1e71a1..77a7161f 100644
+index ae1e71a..431b1ce 100644
 --- a/mlmodel/src/MILBlob/Fp16.cpp
 +++ b/mlmodel/src/MILBlob/Fp16.cpp
 @@ -5,6 +5,8 @@
@@ -52,8 +52,21 @@ index ae1e71a1..77a7161f 100644
  
  using namespace MILBlob;
  
+diff --git a/mlmodel/src/MILBlob/Util/Span.hpp b/mlmodel/src/MILBlob/Util/Span.hpp
+index 9ce9a85..f98645c 100644
+--- a/mlmodel/src/MILBlob/Util/Span.hpp
++++ b/mlmodel/src/MILBlob/Util/Span.hpp
+@@ -539,7 +539,7 @@ public:
+         if (nonConstSubByteType::MIN < 0) {                                                                           \
+             uint8_t sign_bit = (restoredElement_uint8 >> (bitSize - 1)) & 1;                                          \
+             if (sign_bit == 1) {                                                                                      \
+-                for (size_t i = 0; i < 8 - bitSize; ++i) {                                                            \
++                for (size_t i = 0; i < static_cast<size_t>(8 - bitSize); ++i) {                                       \
+                     restoredElement_uint8 |= 1 << (i + bitSize);                                                      \
+                 }                                                                                                     \
+             }                                                                                                         \
 diff --git a/modelpackage/src/ModelPackage.cpp b/modelpackage/src/ModelPackage.cpp
-index 8fee56b9..5508e316 100644
+index 8fee56b..ee55a9f 100644
 --- a/modelpackage/src/ModelPackage.cpp
 +++ b/modelpackage/src/ModelPackage.cpp
 @@ -26,7 +26,14 @@ namespace std {
@@ -82,7 +95,7 @@ index 8fee56b9..5508e316 100644
  
  ModelPackageImpl::ModelPackageImpl(const std::filesystem::path& path, bool createIfNecessary, bool readOnly)
  : m_packagePath(path),
-@@ -372,6 +382,20 @@ std::filesystem::path ModelPackageImpl::getItemPath(const std::string& name, con
+@@ -372,6 +382,22 @@ std::filesystem::path ModelPackageImpl::getItemPath(const std::string& name, con
  }
  
  std::string ModelPackageImpl::generateIdentifier() const {
@@ -92,7 +105,9 @@ index 8fee56b9..5508e316 100644
 +    UuidCreate(&uuid);
 +
 +    RPC_CSTR uuidStr;
-+    UuidToStringA(&uuid, &uuidStr);
++    if (UuidToStringA(&uuid, &uuidStr) != RPC_S_OK) {
++        throw std::runtime_error("Failed to format model package UUID.");
++    }
 +
 +    std::string uuidStrCpp(reinterpret_cast<char*>(uuidStr));
 +
@@ -103,7 +118,7 @@ index 8fee56b9..5508e316 100644
      uuid_t uuid;
      
      // uuid_unparse generates a 36-character null-terminated string (37 bytes).
-@@ -383,6 +407,7 @@ std::string ModelPackageImpl::generateIdentifier() const {
+@@ -383,6 +409,7 @@ std::string ModelPackageImpl::generateIdentifier() const {
      uuid_unparse(uuid, buf);
          
      return std::string(buf);
@@ -111,7 +126,25 @@ index 8fee56b9..5508e316 100644
  }
  
  ModelPackageItemInfo ModelPackageImpl::createFile(const std::string& name, const std::string& author, const std::string& description) {
-@@ -468,7 +493,14 @@ std::shared_ptr<ModelPackageItemInfo> ModelPackageImpl::findItem(const std::stri
+@@ -402,7 +429,7 @@ ModelPackageItemInfo ModelPackageImpl::createFile(const std::string& name, const
+     }
+     
+     auto identifier = generateIdentifier();
+-    createItemInfoEntry(identifier, filePath.string(), name, author, description);
++    createItemInfoEntry(identifier, filePath.generic_string(), name, author, description);
+     return *(findItem(identifier));
+ }
+ 
+@@ -419,7 +446,7 @@ std::string ModelPackageImpl::addItem(const std::filesystem::path& path, const s
+     std::filesystem::copy(path, dstPath);
+     
+     auto identifier = generateIdentifier();
+-    createItemInfoEntry(identifier, filePath.string(), name, author, description);
++    createItemInfoEntry(identifier, filePath.generic_string(), name, author, description);
+     return identifier;
+ }
+ 
+@@ -468,7 +495,14 @@ std::shared_ptr<ModelPackageItemInfo> ModelPackageImpl::findItem(const std::stri
      auto author = itemInfoEntry->getString(kModelPackageItemInfoAuthorKey);
      auto description = itemInfoEntry->getString(kModelPackageItemInfoDescriptionKey);
      
@@ -126,7 +159,7 @@ index 8fee56b9..5508e316 100644
  }
  
  std::shared_ptr<ModelPackageItemInfo> ModelPackageImpl::findItem(const std::string& name, const std::string& author) const
-@@ -514,7 +546,9 @@ void ModelPackageImpl::removeItem(const std::string& identifier)
+@@ -514,7 +548,9 @@ void ModelPackageImpl::removeItem(const std::string& identifier)
      }
      
      auto path = m_packageDataDirPath / itemInfoEntry->getString(kModelPackageItemInfoPathKey);
@@ -137,7 +170,7 @@ index 8fee56b9..5508e316 100644
          throw std::runtime_error("Failed to remove file at path: " + path.string());
      }
      
-@@ -525,13 +559,16 @@ bool ModelPackageImpl::isValid(const std::filesystem::path& path)
+@@ -525,13 +561,16 @@ bool ModelPackageImpl::isValid(const std::filesystem::path& path)
  {
      try {
          ModelPackageImpl(path, false, true);
@@ -155,7 +188,7 @@ index 8fee56b9..5508e316 100644
  
  ModelPackage::ModelPackage(const std::string& packagePath, bool createIfNecessary, bool readOnly)
  : m_modelPackageImpl(std::make_shared<ModelPackageImpl>(packagePath, createIfNecessary, readOnly))
-@@ -544,7 +581,12 @@ ModelPackage::~ModelPackage()
+@@ -544,7 +583,12 @@ ModelPackage::~ModelPackage()
  
  std::string ModelPackage::path() const
  {
@@ -168,15 +201,3 @@ index 8fee56b9..5508e316 100644
  }
  
  std::string ModelPackage::setRootModel(const std::string& path, const std::string& name, const std::string& author, const std::string& description)
-diff --git a/mlmodel/src/MILBlob/Util/Span.hpp b/mlmodel/src/MILBlob/Util/Span.hpp
---- a/mlmodel/src/MILBlob/Util/Span.hpp
-+++ b/mlmodel/src/MILBlob/Util/Span.hpp
-@@ -539,7 +539,7 @@ public:
-          if (nonConstSubByteType::MIN < 0) {                                                                           \
-              uint8_t sign_bit = (restoredElement_uint8 >> (bitSize - 1)) & 1;                                          \
-              if (sign_bit == 1) {                                                                                      \
--                for (size_t i = 0; i < 8 - bitSize; ++i) {                                                            \
-+                for (size_t i = 0; i < static_cast<size_t>(8 - bitSize); ++i) {                                       \
-                      restoredElement_uint8 |= 1 << (i + bitSize);                                                      \
-                  }                                                                                                     \
-              }                                                                                                         \
