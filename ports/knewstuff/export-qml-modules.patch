@@ -1,0 +1,48 @@
+diff --git a/src/qtquick/CMakeLists.txt b/src/qtquick/CMakeLists.txt
+index f08c39e..c4b1688 100644
+--- a/src/qtquick/CMakeLists.txt
++++ b/src/qtquick/CMakeLists.txt
+@@ -12,6 +12,7 @@ target_sources(knewstuff_qml_STATIC PRIVATE
+     searchpresetmodel.cpp
+     categoriesmodel.cpp
+     commentsmodel.cpp
++    downloadlinkinfo.cpp
+ )
+ ecm_qt_declare_logging_category(knewstuff_qml_STATIC
+     HEADER knewstuffquick_debug.h
+@@ -32,13 +33,12 @@ target_link_libraries(knewstuff_qml_STATIC PUBLIC
+     KF6::NewStuffCore
+ )
+ 
+-ecm_add_qml_module(newstuffqmlplugin URI "org.kde.newstuff" VERSION 1.0)
++ecm_add_qml_module(newstuffqmlplugin URI "org.kde.newstuff" CLASS_NAME QmlPlugins VERSION 1.0)
+ 
+ target_sources(newstuffqmlplugin PRIVATE
+     qmlplugin.cpp
+ 
+     author.cpp
+-    downloadlinkinfo.cpp
+ )
+ 
+ ecm_target_qml_sources(newstuffqmlplugin VERSION 1.1 SOURCES
+@@ -78,6 +78,9 @@ ecm_target_qml_sources(newstuffqmlplugin PRIVATE PATH private/entrygriddelegates
+ 
+ target_link_libraries (newstuffqmlplugin PRIVATE knewstuff_qml_STATIC)
+ 
+-ecm_finalize_qml_module(newstuffqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(newstuffqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6NewStuffTargets)
++if (NOT BUILD_SHARED_LIBS)
++    install(TARGETS knewstuff_qml_STATIC EXPORT KF6NewStuffTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
++endif()
+ 
+ ecm_generate_qdoc(newstuffqmlplugin knewstuffqml.qdocconf)
+diff --git a/src/qtquick/private/CMakeLists.txt b/src/qtquick/private/CMakeLists.txt
+index fbb6faf..c37b5ad 100644
+--- a/src/qtquick/private/CMakeLists.txt
++++ b/src/qtquick/private/CMakeLists.txt
+@@ -12,4 +12,4 @@ ecm_qt_declare_logging_category(newstuffqmlpluginprivate
+     EXPORT KNEWSTUFF
+ )
+ target_link_libraries(newstuffqmlpluginprivate PRIVATE Qt::Quick)
+-ecm_finalize_qml_module(newstuffqmlpluginprivate DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(newstuffqmlpluginprivate DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6NewStuffTargets)
