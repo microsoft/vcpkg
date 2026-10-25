@@ -106,7 +106,6 @@ elseif(VCPKG_TARGET_IS_MINGW)
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
-        no-engine
         no-asm
         no-sse2
         no-srtp
@@ -147,8 +146,6 @@ vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/c_rehash" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/c_rehash")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/c_rehash")
     vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

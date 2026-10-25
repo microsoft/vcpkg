@@ -1,12 +1,12 @@
 diff --git a/Configurations/unix-Makefile.tmpl b/Configurations/unix-Makefile.tmpl
-index fc982df..10f1c54 100644
+index f8a5b1612e..46f184b7ae 100644
 --- a/Configurations/unix-Makefile.tmpl
 +++ b/Configurations/unix-Makefile.tmpl
-@@ -713,6 +713,7 @@ install_dev: install_runtime_libs
- 	done
+@@ -877,6 +877,7 @@ install_dev: install_runtime_libs
+ 		$(SRCDIR)/include/openssl/*.h $(BLDDIR)/include/openssl/*.h
  	@$(PERL) $(SRCDIR)/util/mkdir-p.pl "$(DESTDIR)$(libdir)"
  	@set -e; for l in $(INSTALL_LIBS); do \
-+        if [ -n "$(INSTALL_SHLIBS)" ] ; then continue ; fi ; \
++		if [ -n "$(INSTALL_SHLIBS)" ] ; then continue ; fi ; \
  		fn=`basename $$l`; \
- 		$(ECHO) "install $$l -> $(DESTDIR)$(libdir)/$$fn"; \
  		cp $$l "$(DESTDIR)$(libdir)/$$fn.new"; \
+ 		$(RANLIB) "$(DESTDIR)$(libdir)/$$fn.new"; \

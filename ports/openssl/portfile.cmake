@@ -11,11 +11,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 40f0b346a9a5cf4cb37f1ecebdc74750c39a95783710061bfac58964883b0831543ecee0aee9f747ea093781b13c58a543b0b935d222519e3cb19648d77a0276
+    SHA512 05160a10cdd6ad769a579b7e671d061d2763256cef281fb6e7d4fea03f3a20136657e86eb19934e3fa11f9b28a22712f43516fe81f90da31fe00b18e357ce942
     PATCHES
         cmake-config.patch
         command-line-length.patch
-        script-prefix.patch
+        configure-apps.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
         windows/install-programs.diff # https://github.com/openssl/openssl/issues/28744
@@ -26,8 +26,6 @@ vcpkg_from_github(
 )
 
 vcpkg_list(SET CONFIGURE_OPTIONS
-    enable-static-engine
-    enable-capieng
     no-tests
     no-docs
 )
@@ -58,11 +56,6 @@ endif()
 
 if("weak-ssl-ciphers" IN_LIST FEATURES)
     vcpkg_list(APPEND CONFIGURE_OPTIONS enable-weak-ssl-ciphers)
-endif()
-
-if("ssl3" IN_LIST FEATURES)
-    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ssl3)
-    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ssl3-method)
 endif()
 
 if(DEFINED OPENSSL_USE_NOPINSHARED)

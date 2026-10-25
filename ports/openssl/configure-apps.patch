@@ -1,0 +1,15 @@
+diff --git a/configdata.pm.in b/configdata.pm.in
+index a21fe686d9..3f55ca7779 100644
+--- a/configdata.pm.in
++++ b/configdata.pm.in
+@@ -218,8 +218,10 @@ _____
+         $create_configuration->($configuration_h, $configuration_h_in);
+         $update_configuration->($configuration_h, $configuration_h_in);
+ 
++        unless ($disabled{'apps'}) {
+         $create_configuration->($apps_configuration_h, $apps_configuration_h_in);
+         $update_configuration->($apps_configuration_h, $apps_configuration_h_in);
++        }
+ 
+         exit(0);
+     }

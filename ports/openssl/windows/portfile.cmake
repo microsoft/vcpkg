@@ -156,10 +156,9 @@ if(NOT VCPKG_BUILD_TYPE)
     z_rearrange_openssl_dirs(FLAVOR_PREFIX "/debug" OUT_PROGRAM_FILES_DIR debug_programfiles)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${debug_programfiles}")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/c_rehash.pl")
 endif()
 
-set(scripts "bin/c_rehash.pl" "misc/CA.pl" "misc/tsget.pl")
+set(scripts "misc/CA.pl" "misc/tsget.pl")
 if("tools" IN_LIST FEATURES)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(COPY_FILE "${release_programfiles}/Common Files/SSL/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/openssl.cnf")
@@ -167,13 +166,11 @@ if("tools" IN_LIST FEATURES)
 	    file(COPY_FILE "${release_programfiles}/Common Files/SSL/fipsmodule.cnf" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fipsmodule.cnf")
     endif()
 
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/c_rehash.pl" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/c_rehash.pl")
     file(RENAME "${release_programfiles}/Common Files/SSL/misc/CA.pl" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/CA.pl")
     file(RENAME "${release_programfiles}/Common Files/SSL/misc/tsget.pl" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/tsget.pl")
     vcpkg_copy_tools(TOOL_NAMES openssl AUTO_CLEAN)
 else()
     file(REMOVE
-        "${CURRENT_PACKAGES_DIR}/bin/c_rehash.pl"
         "${release_programfiles}/Common Files/SSL/misc/CA.pl"
         "${release_programfiles}/Common Files/SSL/misc/tsget.pl"
         )
