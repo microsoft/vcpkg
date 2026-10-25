@@ -178,7 +178,6 @@ cgns[hdf5]:arm64-linux=cascade
 cgns[mpi]:arm64-linux=cascade
 chakracore:arm64-linux=skip
 chartdir=skip # chartdir does not offer stable download URLs
-chmlib:arm64-linux=fail
 chronoengine:arm64-linux=fail
 clamav:arm64-windows=fail
 clapack:arm64-linux=fail # needs target configuration data

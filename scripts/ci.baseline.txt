@@ -79,7 +79,6 @@ ccd:arm64-linux=fail
 cctag:x64-windows-static-md=fail
 chakracore:arm64-linux=skip
 chakracore:x64-linux=skip
-chmlib:arm64-linux=fail
 chronoengine:arm64-linux=fail
 clamav:arm64-windows=fail
 clapack:arm-neon-android=skip # These skips/pass need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
