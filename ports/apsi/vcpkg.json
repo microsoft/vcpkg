@@ -1,6 +1,6 @@
 {
   "name": "apsi",
-  "version-semver": "1.0.1",
+  "version-semver": "2.0.0",
   "description": "APSI is a research library for asymmetric private set intersection.",
   "homepage": "https://github.com/microsoft/APSI",
   "license": "MIT AND Zlib",
@@ -17,9 +17,10 @@
       "default-features": false,
       "features": [
         "no-throw-tran",
+        "zlib",
         "zstd"
       ],
-      "version>=": "4.4.5"
+      "version>=": "4.7.0"
     },
     {
       "name": "vcpkg-cmake",
@@ -29,9 +30,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "zeromq"
   ],
   "features": {
     "hexl": {

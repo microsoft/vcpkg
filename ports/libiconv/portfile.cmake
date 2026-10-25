@@ -35,6 +35,12 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0004-ModuleFileName.patch
 )
 
+# When targeting *some* MinGW toolchains, the quotes around the version string passed to windres
+# on the command line get eaten by some level of shell interpolation which breaks the resource
+# files, so we patch the version directly into the resource files ourselves.
+vcpkg_replace_string("${SOURCE_PATH}/windows/iconv.rc" "PACKAGE_VERSION_STRING" "\"${VERSION}\"")
+vcpkg_replace_string("${SOURCE_PATH}/windows/libiconv.rc" "PACKAGE_VERSION_STRING" "\"${VERSION}\"")
+
 vcpkg_list(SET OPTIONS)
 if (NOT VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND OPTIONS --enable-relocatable)
