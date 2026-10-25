@@ -61,6 +61,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    {
+      "name": "vcpkg-qt-android-gradle",
+      "host": true,
+      "platform": "android"
+    },
     "zlib"
   ],
   "default-features": [

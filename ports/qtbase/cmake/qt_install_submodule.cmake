@@ -397,6 +397,22 @@ function(qt_install_submodule)
         # It requires libc++_shared, cf. <qtbase>/cmake/QtPlatformAndroid.cmake
         # and https://developer.android.com/ndk/guides/cpp-support#sr
         vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
+        # Qt builds its Java parts with Gradle, which must not download anything.
+        if(COMMAND vcpkg_qt_android_gradle_setup)
+            vcpkg_qt_android_gradle_setup(SOURCE_PATH "${SOURCE_PATH}")
+        else()
+            file(GLOB_RECURSE gradle_files LIST_DIRECTORIES false "${SOURCE_PATH}/src/*.gradle")
+            foreach(gradle_file IN LISTS gradle_files)
+                get_filename_component(gradle_project "${gradle_file}" DIRECTORY)
+                if(gradle_file MATCHES "/settings\\.gradle$"
+                    AND EXISTS "${gradle_project}/gradle/libs.versions.toml"
+                    AND NOT gradle_project MATCHES "/templates(/|$)")
+                    message(FATAL_ERROR "${PORT} builds Android JARs with Gradle and requires the dependency "
+                        "{ \"name\": \"vcpkg-qt-android-gradle\", \"host\": true, \"platform\": \"android\" }.")
+                endif()
+            endforeach()
+        endif()
     endif()
 
     if(_qis_DISABLE_NINJA)

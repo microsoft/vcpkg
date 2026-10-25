@@ -20,6 +20,11 @@
         "dbus"
       ],
       "platform": "!(windows & static) & !android & !ios"
+    },
+    {
+      "name": "vcpkg-qt-android-gradle",
+      "host": true,
+      "platform": "android"
     }
   ]
 }

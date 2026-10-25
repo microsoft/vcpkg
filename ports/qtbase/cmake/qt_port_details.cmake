@@ -5,6 +5,8 @@
 ## 4. Run a build of `qtbase`
 ## 5. Fix any intermediate failures by adding the module into QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, or QT_FROM_QT_GIT as appropriate
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
+##    If it also warns about "The Gradle setup of qtbase", run the printed generate-in-docker.sh
+##    command to update ports/vcpkg-qt-android-gradle and bump that port's version.
 ## 7. Set QT_UPDATE_VERSION back to 0
 ## Note: Since Qt 6.12, qtwebengine is released separately (versioned after Chromium, e.g. 6.140.0).
 ##       It is not part of QT_PORTS; update ports/qtwebengine/port.data.cmake and its vcpkg.json manually.
@@ -186,6 +188,9 @@ if(QT_UPDATE_VERSION)
                 SKIP_SHA512
             )
             file(SHA512 "${archive}" hash)
+            if(qt_port STREQUAL "qtbase")
+                set(qtbase_archive "${archive}")
+            endif()
             string(APPEND msg "set(${qt_port}_HASH \"${hash}\")\n")
             string(APPEND port_data "set(${qt_port}_HASH \"${hash}\")\n")
             string(APPEND port_data "set(${qt_port}_URL \"${urls}\")\n")
@@ -196,6 +201,30 @@ if(QT_UPDATE_VERSION)
     endforeach()
     message("${msg}")
     file(WRITE "${CMAKE_CURRENT_LIST_DIR}/qt_port_data_new.cmake" "${msg}")
+
+    # The offline Gradle artifacts for Android depend on the Gradle setup of qtbase.
+    if(qtbase_archive)
+        include("${CMAKE_CURRENT_LIST_DIR}/../../vcpkg-qt-android-gradle/vcpkg-qt-android-gradle-inputs.cmake")
+        set(gradle_inputs_dir "${CURRENT_BUILDTREES_DIR}/gradle-inputs")
+        file(REMOVE_RECURSE "${gradle_inputs_dir}")
+        file(ARCHIVE_EXTRACT INPUT "${qtbase_archive}" DESTINATION "${gradle_inputs_dir}"
+            PATTERNS "*.gradle" "*.properties" "*.toml"
+        )
+        file(GLOB qtbase_gradle_dir LIST_DIRECTORIES true "${gradle_inputs_dir}/*")
+        z_vcpkg_qt_android_gradle_compare_qtbase(gradle_differences "${qtbase_gradle_dir}")
+        file(REMOVE_RECURSE "${gradle_inputs_dir}")
+        if(gradle_differences)
+            list(JOIN gradle_differences "\n  " gradle_differences)
+            z_vcpkg_qt_android_gradle_regenerate_hint(gradle_hint "${qtbase_archive}")
+            message(WARNING "The Gradle setup of qtbase ${QT_VERSION} changed:\n  ${gradle_differences}\n${gradle_hint}")
+        else()
+            message(STATUS "vcpkg-qt-android-gradle is up to date for qtbase ${QT_VERSION}.")
+        endif()
+    else()
+        message(WARNING "qtbase is not built from a release archive. Check whether "
+            "ports/vcpkg-qt-android-gradle/gradle-artifacts.cmake must be regenerated.")
+    endif()
+
     message(FATAL_ERROR "Done downloading version and emitting hashes.")
 endif()
 

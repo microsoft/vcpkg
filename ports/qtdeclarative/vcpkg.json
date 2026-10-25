@@ -24,6 +24,11 @@
       "name": "qtshadertools",
       "default-features": false
     },
-    "qtsvg"
+    "qtsvg",
+    {
+      "name": "vcpkg-qt-android-gradle",
+      "host": true,
+      "platform": "android"
+    }
   ]
 }

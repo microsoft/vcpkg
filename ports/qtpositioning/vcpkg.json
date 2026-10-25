@@ -25,6 +25,11 @@
       "name": "qtserialport",
       "default-features": false,
       "platform": "!ios"
+    },
+    {
+      "name": "vcpkg-qt-android-gradle",
+      "host": true,
+      "platform": "android"
     }
   ],
   "features": {
