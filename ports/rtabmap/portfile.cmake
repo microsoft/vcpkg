@@ -1,3 +1,4 @@
+# When updating this port, also update rtabmap-res-tool to avoid downloading the archive twice
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
