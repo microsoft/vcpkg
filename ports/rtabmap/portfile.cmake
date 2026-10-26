@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-cmakelists-fixes.patch
         0002-fix-link.patch
+        0003-multi-definition.patch
         0004-remove-apple-sys-path.patch
 )
 # Will use vcpkg to find these packages
@@ -116,7 +117,7 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.23)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.24)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
