@@ -1,0 +1,34 @@
+diff --git a/utils/lstopo/Makefile.am b/utils/lstopo/Makefile.am
+index 67652df..1e3b807 100644
+--- a/utils/lstopo/Makefile.am
++++ b/utils/lstopo/Makefile.am
+@@ -39,6 +39,7 @@ lstopo_no_graphics_SOURCES += lstopo-shmem.c
+ endif
+ 
+ lstopo_no_graphics_CFLAGS = $(AM_CFLAGS)
++lstopo_no_graphics_CPPFLAGS = $(AM_CPPFLAGS) -DHWLOC_LSTOPO_NO_JNI
+ lstopo_no_graphics_LDADD = $(LDADD) -lm $(HWLOC_TERMCAP_LIBS)
+ 
+ lstopo_SOURCES = $(lstopo_no_graphics_SOURCES)
+diff --git a/utils/lstopo/lstopo.c b/utils/lstopo/lstopo.c
+index 63a91f9..60ee6db 100644
+--- a/utils/lstopo/lstopo.c
++++ b/utils/lstopo/lstopo.c
+@@ -60,7 +60,7 @@
+ # endif
+ #endif
+ 
+-#ifdef ANDROID
++#if defined(ANDROID) && !defined(HWLOC_LSTOPO_NO_JNI)
+ extern void setJNIEnv();
+ #endif
+ 
+@@ -1663,7 +1663,7 @@ main (int argc, char *argv[])
+       output_format = LSTOPO_OUTPUT_CONSOLE;
+     }
+ #endif
+-#ifdef ANDROID
++#if defined(ANDROID) && !defined(HWLOC_LSTOPO_NO_JNI)
+     setJNIEnv();
+     output_func = output_android;
+     output_format = LSTOPO_OUTPUT_WINDOW;
