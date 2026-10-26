@@ -10710,7 +10710,7 @@
     },
     "vcpkg-get-python-packages": {
       "baseline": "2025-04-05",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-gfortran": {
       "baseline": "3",
