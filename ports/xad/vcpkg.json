@@ -4,6 +4,7 @@
   "description": "Comprehensive C++ library for automatic differentiation: forward and adjoint modes, higher-order derivatives, checkpointing and vector modes.",
   "homepage": "https://auto-differentiation.github.io",
   "license": "AGPL-3.0-or-later",
+  "supports": "!mingw",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

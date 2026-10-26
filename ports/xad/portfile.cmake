@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-install-pdb.patch # no .pdb is produced with /Z7
+        fix-msvc-stl-145.patch # Visual Studio 2026 removed stdext::checked_array_iterator
+        fix-libcxx-21.patch # upstream 5d8a3b9
 )
 
 # The VERSION file in the v2.1.0 tag still carries the "-dev" suffix
