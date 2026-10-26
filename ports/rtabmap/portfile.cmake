@@ -2,14 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
     REF ${VERSION}
-    SHA512 92c7709b189886e8de772bcf68b0e04ad79a411f0886c2bf8319d001a6015f197b6fb04ae1b3e9e90a2fbc83f5ecf4e607a631644dfa9453073315344c23ee73
+    SHA512 b630896016a5cbec700d5199c7c4cb1ef4ded33af081bedfe4cdbfdff0bc560053052afd8f4a1b27f6e2f28df9ce6d7bc06fcefc3c724c667f512b281c41224c
     HEAD_REF master
     PATCHES
         0001-cmakelists-fixes.patch
         0002-fix-link.patch
-        0003-multi-definition.patch
         0004-remove-apple-sys-path.patch
-        0005-fix-report-without-qt.patch
 )
 # Will use vcpkg to find these packages
 file(REMOVE_RECURSE
@@ -49,6 +47,7 @@ vcpkg_cmake_configure(
         -DRTABMAP_QT_VERSION=6
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
+		-DBUILD_TESTING=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_SQLite3=ON
         ## always on feats
         -DWITH_G2O=ON  -DVCPKG_LOCK_FIND_PACKAGE_g2o=ON
