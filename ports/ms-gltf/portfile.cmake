@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix-install.patch
         fix-osx-deployment-target.patch
+        samples-cxx17.patch
 )
 
 # note: Test/Sample executables won't be installed
