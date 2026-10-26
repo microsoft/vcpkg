@@ -11,11 +11,10 @@ index 67652df..1e3b807 100644
  
  lstopo_SOURCES = $(lstopo_no_graphics_SOURCES)
 diff --git a/utils/lstopo/lstopo.c b/utils/lstopo/lstopo.c
-index 63a91f9..60ee6db 100644
+index d2e85e4..1d4cee8 100644
 --- a/utils/lstopo/lstopo.c
 +++ b/utils/lstopo/lstopo.c
-@@ -60,7 +60,7 @@
- # endif
+@@ -65,6 +65,6 @@
  #endif
  
 -#ifdef ANDROID
@@ -23,7 +22,7 @@ index 63a91f9..60ee6db 100644
  extern void setJNIEnv();
  #endif
  
-@@ -1663,7 +1663,7 @@ main (int argc, char *argv[])
+@@ -1667,7 +1667,7 @@ main (int argc, char *argv[])
        output_format = LSTOPO_OUTPUT_CONSOLE;
      }
  #endif
