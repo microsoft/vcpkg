@@ -809,7 +809,7 @@
       "port-version": 0
     },
     "blosc2": {
-      "baseline": "3.3.5",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "blpapi": {
