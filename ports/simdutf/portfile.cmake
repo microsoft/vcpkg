@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdutf/simdutf
     REF "v${VERSION}"
-    SHA512 ea2defb4854b87bb53fad2a9119fca005f758c35b1403bf73021c4426e433d445a5117f08f33853b4a1bc5c731951ad67be42b428624ec86f630949f5afbbe16
+    SHA512 b3d375bbdf1b3ea6bec0940838932a8c4e7867e991e15366a35bb95d543e24a3769c546353bbc2bd6c723c7680013da407b69ee5c62316365c0d0cf481a1743f
     HEAD_REF master
     PATCHES
         bindir.patch
@@ -36,8 +36,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/tools"
 )
 
-vcpkg_install_copyright(
-    FILE_LIST
-        "${SOURCE_PATH}/LICENSE-APACHE"
-        "${SOURCE_PATH}/LICENSE-MIT"
+set(COPYRIGHT_FILES
+    "${SOURCE_PATH}/LICENSE-APACHE"
+    "${SOURCE_PATH}/LICENSE-MIT"
+    "${SOURCE_PATH}/include/simdutf/internal/isadetection.h"
 )
+if("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND COPYRIGHT_FILES "${CURRENT_INSTALLED_DIR}/share/libiconv/copyright")
+endif()
+vcpkg_install_copyright(FILE_LIST ${COPYRIGHT_FILES})
