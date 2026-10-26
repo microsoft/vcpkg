@@ -80,6 +80,12 @@ if(WITH_GENEVA OR WITH_USER_EVENTS)
     endif()
 endif()
 
+# Retain a warning level in native MSVC objects for BinSkim BA2007.
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    string(APPEND VCPKG_C_FLAGS " /W3")
+    string(APPEND VCPKG_CXX_FLAGS " /W3")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
