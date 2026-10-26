@@ -1,19 +1,19 @@
 diff --git a/include/open62541pp/config.hpp.in b/include/open62541pp/config.hpp.in
-index 2f3ed47..93c7a1e 100644
+index 2db231de4..772a65605 100644
 --- a/include/open62541pp/config.hpp.in
 +++ b/include/open62541pp/config.hpp.in
-@@ -61,7 +61,8 @@
- #define UAPP_HAS_DATAACCESS 0
- #endif
+@@ -63,7 +63,8 @@
  
+ #ifdef UA_ENABLE_METHODCALLS
+ // async operations are only used to process method calls
 -#define UAPP_HAS_ASYNC_OPERATIONS UAPP_OPEN62541_VER_GE(1, 1) && UA_MULTITHREADING >= 100
 +#define UAPP_HAS_ASYNC_OPERATIONS \
 +    UAPP_OPEN62541_VER_GE(1, 1) && UAPP_OPEN62541_VER_LE(1, 4) && UA_MULTITHREADING >= 100
- 
- #ifdef UA_ENABLE_SUBSCRIPTIONS
- #define UAPP_HAS_ASYNC_SUBSCRIPTIONS UAPP_OPEN62541_VER_GE(1, 1)
+ #else
+ #define UAPP_HAS_ASYNC_OPERATIONS 0
+ #endif
 diff --git a/include/open62541pp/datatype.hpp b/include/open62541pp/datatype.hpp
-index 8457315..bc443a0 100644
+index 845731552..bc443a08d 100644
 --- a/include/open62541pp/datatype.hpp
 +++ b/include/open62541pp/datatype.hpp
 @@ -598,7 +598,11 @@ void deallocate(const UA_DataTypeArray* head) noexcept;
@@ -29,7 +29,7 @@ index 8457315..bc443a0 100644
  }  // namespace detail
  
 diff --git a/include/open62541pp/event.hpp b/include/open62541pp/event.hpp
-index 244d754..eaea11f 100644
+index 244d7546b..eaea11f9f 100644
 --- a/include/open62541pp/event.hpp
 +++ b/include/open62541pp/event.hpp
 @@ -3,6 +3,7 @@
@@ -67,7 +67,7 @@ index 244d754..eaea11f 100644
  
  /// @relates Event
 diff --git a/include/open62541pp/services/detail/client_service.hpp b/include/open62541pp/services/detail/client_service.hpp
-index 4c230ae..282dc9d 100644
+index d4abb3200..282dc9ddf 100644
 --- a/include/open62541pp/services/detail/client_service.hpp
 +++ b/include/open62541pp/services/detail/client_service.hpp
 @@ -7,6 +7,7 @@
@@ -124,7 +124,7 @@ index 4c230ae..282dc9d 100644
              callback,
              std::make_unique<Context>(
                  Context{&exceptionCatcher, std::forward<CompletionHandler>(handler)}
-@@ -72,20 +77,22 @@ struct AsyncServiceAdapter {
+@@ -72,22 +77,22 @@ struct AsyncServiceAdapter {
       *                   ```
       * @param token Completion token
       */
@@ -137,9 +137,11 @@ index 4c230ae..282dc9d 100644
      static auto initiate(
          Client& client, Initiation&& initiation, CompletionToken&& token, Args&&... args
      ) {
--        static_assert(
--            std::is_invocable_v<Initiation, UA_ClientAsyncServiceCallback, void*, Args&&...>
--        );
+-        static_assert(std::is_invocable_v<
+-                      Initiation,
+-                      UA_ClientAsyncServiceCallback,
+-                      void*,
+-                      Args&&...>);
 +        static_assert(std::is_invocable_v<Initiation, Callback, void*, Args&&...>);
  
          return asyncInitiate<Response>(
@@ -152,7 +154,7 @@ index 4c230ae..282dc9d 100644
                          catcher, std::forward<decltype(handler)>(handler)
                      );
                      std::invoke(
-@@ -134,6 +141,43 @@ auto sendRequestAsync(Client& client, const Request& request, CompletionToken&&
+@@ -136,6 +141,43 @@ auto sendRequestAsync(Client& client, const Request& request, CompletionToken&&
  /// Sync client service requests.
  template <typename Request, typename Response>
  Response sendRequest(Client& client, const Request& request) noexcept {
@@ -196,7 +198,7 @@ index 4c230ae..282dc9d 100644
      Response response{};
      __UA_Client_Service(
          opcua::detail::getHandle(client),
-@@ -143,6 +187,7 @@ Response sendRequest(Client& client, const Request& request) noexcept {
+@@ -145,6 +187,7 @@ Response sendRequest(Client& client, const Request& request) noexcept {
          &getDataType<Response>()
      );
      return response;
@@ -205,7 +207,7 @@ index 4c230ae..282dc9d 100644
  
  }  // namespace opcua::services::detail
 diff --git a/include/open62541pp/services/detail/monitoreditem_context.hpp b/include/open62541pp/services/detail/monitoreditem_context.hpp
-index 5590442..42960d3 100644
+index 5590442f4..42960d3df 100644
 --- a/include/open62541pp/services/detail/monitoreditem_context.hpp
 +++ b/include/open62541pp/services/detail/monitoreditem_context.hpp
 @@ -1,8 +1,12 @@
@@ -259,7 +261,7 @@ index 5590442..42960d3 100644
      }
  
 diff --git a/include/open62541pp/services/monitoreditem.hpp b/include/open62541pp/services/monitoreditem.hpp
-index 9a19e57..edac047 100644
+index 0f87a0ac2..424bd3bcf 100644
 --- a/include/open62541pp/services/monitoreditem.hpp
 +++ b/include/open62541pp/services/monitoreditem.hpp
 @@ -108,6 +108,16 @@ using EventNotificationCallback =
@@ -300,7 +302,7 @@ index 9a19e57..edac047 100644
              void* userdata,
              const CreateMonitoredItemsRequest& innerRequest,
              Span<void* const> innerContextsPtr,
-@@ -312,15 +323,16 @@ auto createMonitoredItemsEventAsync(
+@@ -311,15 +322,16 @@ auto createMonitoredItemsEventAsync(
          connection, request, {}, std::move(eventCallback), std::move(deleteCallback)
      );
      std::vector<void*> contextsPtr{contexts.size()};
@@ -321,7 +323,7 @@ index 9a19e57..edac047 100644
              void* userdata,
              const CreateMonitoredItemsRequest& innerRequest,
              Span<void* const> innerContextsPtr,
-@@ -443,10 +455,11 @@ template <typename CompletionToken>
+@@ -442,10 +454,11 @@ template <typename CompletionToken>
  auto modifyMonitoredItemsAsync(
      Client& connection, const ModifyMonitoredItemsRequest& request, CompletionToken&& token
  ) {
@@ -335,7 +337,7 @@ index 9a19e57..edac047 100644
              void* userdata,
              const ModifyMonitoredItemsRequest& innerRequest
          ) {
-@@ -657,10 +670,11 @@ template <typename CompletionToken>
+@@ -656,10 +669,11 @@ template <typename CompletionToken>
  auto deleteMonitoredItemsAsync(
      Client& connection, const DeleteMonitoredItemsRequest& request, CompletionToken&& token
  ) {
@@ -350,7 +352,7 @@ index 9a19e57..edac047 100644
              const DeleteMonitoredItemsRequest& innerRequest
          ) {
 diff --git a/include/open62541pp/services/subscription.hpp b/include/open62541pp/services/subscription.hpp
-index f08bade..a13868e 100644
+index f08bade2a..a13868e01 100644
 --- a/include/open62541pp/services/subscription.hpp
 +++ b/include/open62541pp/services/subscription.hpp
 @@ -79,6 +79,16 @@ using StatusChangeNotificationCallback =
@@ -413,10 +415,10 @@ index f08bade..a13868e 100644
              const DeleteSubscriptionsRequest& innerRequest
          ) {
 diff --git a/src/datatype.cpp b/src/datatype.cpp
-index 6a61e5b..208e31a 100644
+index 447a6227b..2d7821101 100644
 --- a/src/datatype.cpp
 +++ b/src/datatype.cpp
-@@ -111,7 +111,11 @@ UA_DataType* copyArray(const UA_DataType* src, size_t size) {
+@@ -112,7 +112,11 @@ UA_DataType* copyArray(const UA_DataType* src, size_t size) {
      return dst;
  }
  
@@ -429,7 +431,7 @@ index 6a61e5b..208e31a 100644
      new (item) UA_DataTypeArray{
          const_cast<UA_DataTypeArray*>(head),  // NOLINT(*const-cast), non-const since v1.5
 diff --git a/src/event.cpp b/src/event.cpp
-index 6b8c6dc..50a3e70 100644
+index 6b8c6dc6d..50a3e70da 100644
 --- a/src/event.cpp
 +++ b/src/event.cpp
 @@ -1,5 +1,7 @@
@@ -544,7 +546,7 @@ index 6b8c6dc..50a3e70 100644
      return eventId;
  }
 diff --git a/src/plugin/log.cpp b/src/plugin/log.cpp
-index d79eda3..10f6094 100644
+index d79eda328..10f60947d 100644
 --- a/src/plugin/log.cpp
 +++ b/src/plugin/log.cpp
 @@ -11,6 +11,14 @@ namespace opcua {
@@ -571,7 +573,7 @@ index d79eda3..10f6094 100644
  
  static void logNative(
 diff --git a/src/server.cpp b/src/server.cpp
-index 0e681a9..2a4e19e 100644
+index d2484e258..cd9c9a5fd 100644
 --- a/src/server.cpp
 +++ b/src/server.cpp
 @@ -484,9 +484,14 @@ static void setVariableNodeValueCallbackImpl(

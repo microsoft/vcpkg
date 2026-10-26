@@ -1,14 +1,3 @@
-vcpkg_download_distfile(REPLACE_INTERNAL_ADD_NODE_PATCH
-    URLS https://github.com/open62541pp/open62541pp/commit/a4adbf3b3837d1206fa920fb2ce0759ba835749f.patch?full_index=1
-    FILENAME open62541pp-replace-internal-add-node-a4adbf3b.patch
-    SHA512 ab99735e019723cbc54726e46244878bb89319630b2843ac2668e2f5af12bd862fcb9a1ea5e6a671f2562efca50343208ea276e406fae287e20efb45961e8908
-)
-vcpkg_download_distfile(FIX_VERSION_MACROS_PATCH
-    URLS https://github.com/open62541pp/open62541pp/commit/b3156a0dba8e060ed1a9e3c62c0a5602624d9b66.patch?full_index=1
-    FILENAME open62541pp-fix-version-macros-b3156a0d.patch
-    SHA512 03954e8a3a2fb7e669387966ed81bd73f70fe143c3541aded83141fee1230297f0f1be6bdaa7617f8a322762e28fefdb161378d5a44a3464d32bb491c72a6b98
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541pp/open62541pp
@@ -16,8 +5,6 @@ vcpkg_from_github(
     SHA512 66fd895116bc616d4152a42bbe0f1a535a065d1fc1acef1c99b302e391c92b0bce42279bcb27b7b8b21a358d6752905c7c7105d2feb3313018b404a67b0b1405
     HEAD_REF master
     PATCHES
-        "${REPLACE_INTERNAL_ADD_NODE_PATCH}" # https://github.com/open62541pp/open62541pp/pull/721
-        "${FIX_VERSION_MACROS_PATCH}" # https://github.com/open62541pp/open62541pp/pull/732
         open62541-1.5.patch
 )
 
