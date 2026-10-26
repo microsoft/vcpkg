@@ -1,0 +1,14 @@
+{
+  "name": "chadwick",
+  "version": "0.11.0",
+  "description": "Suite of tools and C library for parsing Retrosheet baseball play-by-play and event files",
+  "homepage": "http://www.chadwick-bureau.com",
+  "license": "GPL-2.0-or-later",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

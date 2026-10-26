@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/APSI
     REF "v${VERSION}"
-    SHA512 4abee66e646b2ff9cd020bbb6949bb9f2a409a2ef7f4aeb2b07966486f90f5a0f4e904503647a5d7ac4d8e37e933c1a9335b114a99ea0571c2ee0427d701e1a6
+    SHA512 c3fb58ce96f3c11b1f1e511fa649006935a75022e9818a871c606ff60c7fbf1aaae2c469e6190b32a23562e319cd1c07d97223153fdd9faeaba55655d1a35fe9
     HEAD_REF main
 )
 
@@ -32,9 +32,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/APSI-1.0")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/APSI")
 
-# Upstream installs LICENSE and NOTICE under share/licenses/APSI-1.0. vcpkg's canonical
+# Upstream installs LICENSE and NOTICE under share/licenses/APSI. vcpkg's canonical
 # location is share/apsi/copyright, which vcpkg_install_copyright writes from those same two
 # files below, so drop upstream's copy along with the debug/share it would otherwise leave.
 file(REMOVE_RECURSE
