@@ -36,13 +36,19 @@ cd /work/dl
 curl -fsSLO https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip
 curl -fsSLO https://dl.google.com/android/repository/build-tools_r37_linux.zip
 curl -fsSLO https://dl.google.com/android/repository/platform-36_r02.zip
+curl -fsSLO https://dl.google.com/android/repository/platform-tools_r37.0.1-linux.zip
 unzip -q commandlinetools-linux-16111833_latest.zip -d /android-sdk
+unzip -q platform-tools_r37.0.1-linux.zip -d /android-sdk
 unzip -q build-tools_r37_linux.zip -d /android-sdk/build-tools
 mv /android-sdk/build-tools/android-37.0 /android-sdk/build-tools/37.0.0
 unzip -q platform-36_r02.zip -d /android-sdk/platforms
 yes | /android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/android-sdk --licenses > /dev/null || true
 
-python3 /port/generate-artifacts.py \
+# Like vcpkg CI: run as a user without passwd entry, so Java sees no home directory.
+chmod -R a+rwX /work /android-sdk
+chmod a+rw /port/gradle-artifacts.cmake
+setpriv --reuid=4242 --regid=4242 --clear-groups env HOME=/nonexistent \
+    python3 /port/generate-artifacts.py \
     --qtbase-source "$qtbase" \
     --android-sdk /android-sdk \
     --work-dir /work/run

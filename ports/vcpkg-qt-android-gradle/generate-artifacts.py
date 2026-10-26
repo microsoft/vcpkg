@@ -164,6 +164,9 @@ def write_gradle_home(gradle_home, repository_dir=None, block_network=False):
 def gradle_env(args, gradle_home, block_network):
     env = dict(os.environ)
     env["GRADLE_USER_HOME"] = str(gradle_home)
+    # Same as vcpkg_qt_android_gradle_setup(): there may be no usable ~/.android.
+    env["ANDROID_USER_HOME"] = str(gradle_home / "android-user-home")
+    (gradle_home / "android-user-home").mkdir(parents=True, exist_ok=True)
     env["ANDROID_SDK_ROOT"] = str(args.android_sdk)
     env["ANDROID_HOME"] = str(args.android_sdk)
     if block_network:

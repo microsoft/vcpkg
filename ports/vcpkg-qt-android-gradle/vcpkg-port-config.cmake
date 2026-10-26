@@ -9,7 +9,8 @@ set(Z_VCPKG_QT_ANDROID_GRADLE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 # Points GRADLE_USER_HOME to a fresh directory in the buildtree which contains
 # - the Gradle distribution expected by Qt's Gradle wrapper, so the wrapper doesn't download it,
 # - an init script redirecting all repositories to the offline Maven repository of this port,
-# - a gradle.properties disabling the Gradle daemon.
+# - a gradle.properties disabling the Gradle daemon,
+# and points ANDROID_USER_HOME to the same directory.
 # SOURCE_PATH are the sources of the Qt module being built. For qtbase they must match the
 # sources the artifacts were generated from; other modules are checked for JAR projects with
 # different dependencies.
@@ -72,5 +73,10 @@ function(vcpkg_qt_android_gradle_setup)
     )
     file(COPY "${Z_VCPKG_QT_ANDROID_GRADLE_DIR}/gradle.properties" DESTINATION "${gradle_home}")
 
+    # The Android Gradle Plugin falls back to ~/.android, which doesn't exist
+    # when building as a user without home directory (e.g. in CI containers).
+    file(MAKE_DIRECTORY "${gradle_home}/android-user-home")
+
     set(ENV{GRADLE_USER_HOME} "${gradle_home}")
+    set(ENV{ANDROID_USER_HOME} "${gradle_home}/android-user-home")
 endfunction()
