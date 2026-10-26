@@ -40,21 +40,21 @@ endif()
 
 if(NOT TARGET brazier::brazier)
     add_library(brazier::brazier INTERFACE IMPORTED GLOBAL)
-
-    set(_brazier_libs)
-    if(TARGET brazier::logger)
-        list(APPEND _brazier_libs brazier::logger)
-    endif()
-    if(TARGET brazier::core)
-        list(APPEND _brazier_libs brazier::core)
-    endif()
-    if(TARGET brazier::orm)
-        list(APPEND _brazier_libs brazier::orm)
-    endif()
-
-    set_target_properties(brazier::brazier PROPERTIES
-        INTERFACE_LINK_LIBRARIES "${_brazier_libs}"
-    )
 endif()
+
+set(_brazier_libs)
+if(TARGET brazier::logger)
+    list(APPEND _brazier_libs brazier::logger)
+endif()
+if(TARGET brazier::core)
+    list(APPEND _brazier_libs brazier::core)
+endif()
+if(TARGET brazier::orm)
+    list(APPEND _brazier_libs brazier::orm)
+endif()
+
+set_target_properties(brazier::brazier PROPERTIES
+    INTERFACE_LINK_LIBRARIES "${_brazier_libs}"
+)
 
 check_required_components(brazier)
