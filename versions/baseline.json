@@ -1717,7 +1717,7 @@
       "port-version": 2
     },
     "cglm": {
-      "baseline": "0.9.6",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "cgltf": {
