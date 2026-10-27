@@ -1,0 +1,47 @@
+{
+  "name": "kholidays",
+  "version": "6.31.0",
+  "description": "Holiday calculation library",
+  "homepage": "https://invent.kde.org/frameworks/kholidays",
+  "documentation": "https://api.kde.org/kholidays-index.html",
+  "license": "LGPL-2.0-or-later AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND GPL-2.0-or-later AND BSD-2-Clause AND BSD-3-Clause",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build the QML module",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "translations": {
+      "description": "Build and install translation files",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
