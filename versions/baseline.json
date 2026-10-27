@@ -11244,6 +11244,10 @@
       "baseline": "7.0",
       "port-version": 0
     },
+    "xad": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "xapian": {
       "baseline": "1.4.22",
       "port-version": 3
