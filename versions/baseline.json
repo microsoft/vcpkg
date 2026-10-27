@@ -4201,7 +4201,7 @@
       "port-version": 7
     },
     "jemalloc": {
-      "baseline": "5.3.1",
+      "baseline": "5.4.0",
       "port-version": 0
     },
     "jhasse-poly2tri": {
