@@ -8594,11 +8594,11 @@
     },
     "qtkeychain": {
       "baseline": "0.17.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain-qt6": {
       "baseline": "0.17.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qtlanguageserver": {
       "baseline": "6.11.2",
