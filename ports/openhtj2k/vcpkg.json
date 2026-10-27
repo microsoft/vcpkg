@@ -1,6 +1,6 @@
 {
   "name": "openhtj2k",
-  "version": "0.20.0",
+  "version": "0.20.1",
   "description": "JPEG 2000 Part 1 and High-Throughput JPEG 2000 (HTJ2K, Part 15) encoder and decoder library",
   "homepage": "https://github.com/osamu620/OpenHTJ2K",
   "license": "BSD-3-Clause",

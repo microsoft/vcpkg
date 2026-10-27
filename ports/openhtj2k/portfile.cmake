@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osamu620/OpenHTJ2K
     REF "v${VERSION}"
-    SHA512 20e69b6b03b5ff4253e8e7bc1fefc165db6c1e0685c6479d76fb9421b7af59e0db0d6cb887aee26f5883c60ffb4a72132a7655186112cb79520e485b32aceb80
+    SHA512 028f17a3e492db38380b10eeebbfee5464ae411d7c2b4c33779dc9c93369ef122167c9b5d82a297c8cecea032e5d550baa0cf74dfd65ee4e8bdd14d7cd64ce3b
     HEAD_REF main
-    PATCHES
-        fix-sse41-include.patch # https://github.com/osamu620/OpenHTJ2K/pull/474
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -55,16 +53,4 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES open_htj2k_dec open_htj2k_enc AUTO_CLEAN)
 endif()
 
-# ThreadPool.hpp, compiled into the library, carries a second copyright
-# holder that LICENSE does not name in this release (added upstream by
-# https://github.com/osamu620/OpenHTJ2K/pull/474): install its notice too.
-file(READ "${SOURCE_PATH}/source/core/common/ThreadPool.hpp" threadpool_source)
-string(FIND "${threadpool_source}" "\n\n" threadpool_notice_end)
-string(SUBSTRING "${threadpool_source}" 0 ${threadpool_notice_end} threadpool_notice)
-string(REGEX REPLACE "(^|\n)// ?" "\\1" threadpool_notice "${threadpool_notice}")
-file(WRITE "${CURRENT_BUILDTREES_DIR}/ThreadPool-notice.txt"
-    "source/core/common/ThreadPool.hpp:\n\n${threadpool_notice}\n")
-vcpkg_install_copyright(FILE_LIST
-    "${SOURCE_PATH}/LICENSE"
-    "${CURRENT_BUILDTREES_DIR}/ThreadPool-notice.txt"
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
