@@ -4336,6 +4336,10 @@
       "baseline": "6.31.0",
       "port-version": 1
     },
+    "kcolorscheme": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kcompletion": {
       "baseline": "6.31.0",
       "port-version": 1
