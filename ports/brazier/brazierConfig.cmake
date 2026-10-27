@@ -57,15 +57,14 @@ if(NOT TARGET brazier::brazier)
     add_library(brazier::brazier INTERFACE IMPORTED)
 endif()
 
-set(_brazier_libs)
 if(TARGET brazier::logger)
-    list(APPEND _brazier_libs brazier::logger)
+    target_link_libraries(brazier::brazier INTERFACE brazier::logger)
 endif()
 if(TARGET brazier::core)
-    list(APPEND _brazier_libs brazier::core)
+    target_link_libraries(brazier::brazier INTERFACE brazier::core)
 endif()
 if(TARGET brazier::orm)
-    list(APPEND _brazier_libs brazier::orm)
+    target_link_libraries(brazier::brazier INTERFACE brazier::orm)
 endif()
 
 set_target_properties(brazier::brazier PROPERTIES
