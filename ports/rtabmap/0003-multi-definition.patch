@@ -1,5 +1,5 @@
 diff --git a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
-index 60b1d792..74b4fb97 100644
+index 60b1d79..74b4fb9 100644
 --- a/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
 +++ b/corelib/include/rtabmap/core/stereo/stereoRectifyFisheye.h
 @@ -48,6 +48,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -85,14 +85,29 @@ index 60b1d792..74b4fb97 100644
  }
  
 diff --git a/corelib/src/StereoCameraModel.cpp b/corelib/src/StereoCameraModel.cpp
-index b2ca00b2..47285fa2 100644
+index b2ca00b..319cf82 100644
 --- a/corelib/src/StereoCameraModel.cpp
 +++ b/corelib/src/StereoCameraModel.cpp
-@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@@ -33,7 +33,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <rtabmap/utilite/UConversion.h>
  #include <opencv2/imgproc/imgproc.hpp>
  
- #if (CV_MAJOR_VERSION > 2 and CV_MAJOR_VERSION < 5) or (CV_MAJOR_VERSION == 2 and (CV_MINOR_VERSION >4 or (CV_MINOR_VERSION == 4 and CV_SUBMINOR_VERSION >=10)))
+-#if (CV_MAJOR_VERSION > 2 and CV_MAJOR_VERSION < 5) or (CV_MAJOR_VERSION == 2 and (CV_MINOR_VERSION >4 or (CV_MINOR_VERSION == 4 and CV_SUBMINOR_VERSION >=10)))
++#if (CV_MAJOR_VERSION > 2 && CV_MAJOR_VERSION < 5) || (CV_MAJOR_VERSION == 2 && (CV_MINOR_VERSION >4 || (CV_MINOR_VERSION == 4 && CV_SUBMINOR_VERSION >=10)))
 +#define RTABMAP_STEREORECTIFIYFISHEYE_IMPLEMENTATION
+ #include <rtabmap/core/stereo/stereoRectifyFisheye.h>
+ #endif
+ 
+diff --git a/guilib/src/CalibrationDialog.cpp b/guilib/src/CalibrationDialog.cpp
+index 3fd4530..f23fdbf 100644
+--- a/guilib/src/CalibrationDialog.cpp
++++ b/guilib/src/CalibrationDialog.cpp
+@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <opencv2/calib3d/calib3d.hpp>
+ #endif
+ #include <opencv2/highgui/highgui.hpp>
+-#if (CV_MAJOR_VERSION > 2 and CV_MAJOR_VERSION < 5) or (CV_MAJOR_VERSION == 2 and (CV_MINOR_VERSION >4 or (CV_MINOR_VERSION == 4 and CV_SUBMINOR_VERSION >=10)))
++#if (CV_MAJOR_VERSION > 2 && CV_MAJOR_VERSION < 5) || (CV_MAJOR_VERSION == 2 && (CV_MINOR_VERSION >4 || (CV_MINOR_VERSION == 4 && CV_SUBMINOR_VERSION >=10)))
  #include <rtabmap/core/stereo/stereoRectifyFisheye.h>
  #endif
  
