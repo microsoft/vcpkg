@@ -14,6 +14,6 @@ ssh-copy-id -i "$SSH_PUBLIC_KEY" builduser@buildusers-Virtual-Machine.local
 echo "Enter the guest builduser password to enable passwordless sudo"
 ssh -t -i "$SSH_KEY" builduser@buildusers-Virtual-Machine.local \
     "printf 'builduser\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee /etc/sudoers.d/builduser >/dev/null && sudo chmod 0440 /etc/sudoers.d/builduser"
-scp -i "$SSH_KEY" "$HOME/Xcode_26.6_Apple_silicon.xip" builduser@buildusers-Virtual-Machine.local:Xcode.xip
+scp -i "$SSH_KEY" "$HOME/Xcode_27.1.xip" builduser@buildusers-Virtual-Machine.local:Xcode.xip
 ssh -i "$SSH_KEY" builduser@buildusers-Virtual-Machine.local \
     "sudo mdutil -ad && xip --expand Xcode.xip && sudo mv Xcode.app /Applications/Xcode.app && rm Xcode.xip"
