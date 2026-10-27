@@ -8870,7 +8870,7 @@
     },
     "readerwriterqueue": {
       "baseline": "1.0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "readline": {
       "baseline": "0",
