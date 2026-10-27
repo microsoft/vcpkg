@@ -18,6 +18,7 @@ import time
 NEW_VERSION = "6.31.0"           # <-- TARGET VERSION
 
 PORT_LIST = [
+    "attica",
     "ecm",
     "karchive",
     "kauth",
@@ -139,7 +140,8 @@ def update_port(port_dir: Path):
                 updated_cmake = re.sub(
                     pattern,
                     f'SHA512 {new_hash}',
-                    cmake_content
+                    cmake_content,
+                    count=1 # Replace only the first occurrence of "SHA512" in the file
                 )
                 # Force Unix line endings (LF) and UTF-8 without BOM
                 updated_cmake = updated_cmake.replace('\r\n', '\n')
