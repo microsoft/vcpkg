@@ -10117,7 +10117,7 @@
       "port-version": 0
     },
     "taar": {
-      "baseline": "2026-10-27",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "tabulate": {
