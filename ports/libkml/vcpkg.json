@@ -4,7 +4,7 @@
   "port-version": 15,
   "description": "Reference implementation of OGC KML 2.2",
   "homepage": "https://github.com/libkml/libkml",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND Zlib AND Info-ZIP",
   "dependencies": [
     "boost-smart-ptr",
     "expat",
