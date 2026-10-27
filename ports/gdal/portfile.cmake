@@ -11,11 +11,14 @@ vcpkg_from_github(
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
+        pkgconfig-msvc.patch
+        external-fast-float.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindZSTD.cmake")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/fast_float")
 
 # Avoid abseil, no matter if vcpkg or system
 vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base.h" [[__has_include("absl/strings/string_view.h")]] "(0)")
@@ -180,5 +183,4 @@ endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")

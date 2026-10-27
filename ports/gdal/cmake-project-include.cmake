@@ -1,3 +1,6 @@
+find_package(FastFloat CONFIG REQUIRED)
+include_directories("$<TARGET_PROPERTY:FastFloat::fast_float,INTERFACE_INCLUDE_DIRECTORIES>")
+
 if(GDAL_USE_KEA)
     find_package(Kealib CONFIG REQUIRED)
     add_library(KEA::KEA ALIAS Kealib::Kealib)

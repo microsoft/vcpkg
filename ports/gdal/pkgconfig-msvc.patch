@@ -1,0 +1,51 @@
+diff --git a/cmake/helpers/GdalGenerateConfig.cmake b/cmake/helpers/GdalGenerateConfig.cmake
+index debddd7..68dcffe 100644
+--- a/cmake/helpers/GdalGenerateConfig.cmake
++++ b/cmake/helpers/GdalGenerateConfig.cmake
+@@ -265,6 +265,9 @@ function(gdal_get_lflags _result)
+                 gdal_split_library_to_lflags(_lib _other "${_lib}")
+             endif()
+         else()
++            if(MSVC)
++                string(REGEX REPLACE "\\.lib$" "" _lib "${_lib}")
++            endif()
+             set(_lib "${CMAKE_LINK_LIBRARY_FLAG}${_lib}")
+         endif()
+         if(_other AND NOT _other IN_LIST _libs_out)
+@@ -283,6 +286,13 @@ function(gdal_generate_config)
+     set(one_value_keywords "TARGET;GLOBAL_PROPERTY;GDAL_CONFIG;PKG_CONFIG")
+     cmake_parse_arguments(PARSE_ARGV 0 arg "" "${one_value_keywords}" "")
+ 
++    if(MSVC)
++        # pkgconf translates portable flags to the compiler's native syntax.
++        set(CMAKE_LINK_LIBRARY_FLAG "-l")
++        set(CMAKE_LIBRARY_PATH_FLAG "-L")
++        set(GDAL_SPLIT_EXPORTED_LIBS ON)
++    endif()
++
+     if (ENABLE_GNM)
+         set(CONFIG_GNM_ENABLED "yes")
+     else ()
+@@ -303,6 +313,9 @@ function(gdal_generate_config)
+     gdal_join_and_quote(CONFIG_CFLAGS)
+ 
+     get_property(target_lib_name TARGET "${arg_TARGET}" PROPERTY OUTPUT_NAME)
++    string(TOUPPER "${CMAKE_BUILD_TYPE}" config)
++    get_property(target_lib_postfix TARGET "${arg_TARGET}" PROPERTY "${config}_POSTFIX")
++    string(APPEND target_lib_name "${target_lib_postfix}")
+     set(CONFIG_LIBS "${CMAKE_LINK_LIBRARY_FLAG}${target_lib_name}")
+     if(NOT CONFIG_PREFIX IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
+         list(INSERT CONFIG_LIBS 0 "${CMAKE_LIBRARY_PATH_FLAG}${CMAKE_INSTALL_FULL_LIBDIR}")
+diff --git a/cmake/template/gdal.pc.in b/cmake/template/gdal.pc.in
+index 9aefa4b..d1a6ba1 100644
+--- a/cmake/template/gdal.pc.in
++++ b/cmake/template/gdal.pc.in
+@@ -12,6 +12,6 @@ datadir=${CONFIG_INST_DATA}
+ Name: libgdal
+ Description: Geospatial Data Abstraction Library
+ Version: ${CONFIG_VERSION}
+-Libs: ${CONFIG_INST_LIBS}
++Libs: @CONFIG_LIBS@
+ Libs.private: @CONFIG_DEP_LIBS@
+-Cflags: ${CONFIG_INST_CFLAGS}
++Cflags: @CONFIG_CFLAGS@
