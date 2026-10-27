@@ -67,8 +67,4 @@ if(TARGET brazier::orm)
     target_link_libraries(brazier::brazier INTERFACE brazier::orm)
 endif()
 
-set_target_properties(brazier::brazier PROPERTIES
-    INTERFACE_LINK_LIBRARIES "${_brazier_libs}"
-)
-
 check_required_components(brazier)
