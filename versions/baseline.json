@@ -8981,8 +8981,8 @@
       "port-version": 0
     },
     "rhasheq": {
-      "baseline": "2023-06-17",
-      "port-version": 1
+      "baseline": "0.0.3",
+      "port-version": 0
     },
     "riffcpp": {
       "baseline": "2.2.4",
