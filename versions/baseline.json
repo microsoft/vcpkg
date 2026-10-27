@@ -7564,6 +7564,10 @@
       "baseline": "2.7.0",
       "port-version": 0
     },
+    "openhtj2k": {
+      "baseline": "0.20.0",
+      "port-version": 0
+    },
     "openigtlink": {
       "baseline": "3.0",
       "port-version": 4
