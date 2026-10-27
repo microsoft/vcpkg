@@ -457,7 +457,7 @@ function(vcpkg_configure_meson)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_PKG_CONFIG"
         "SOURCE_PATH"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;LANGUAGES;ADDITIONAL_BINARIES;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES;ADDITIONAL_PROPERTIES"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;LANGUAGES;ADDITIONAL_BINARIES;ADDITIONAL_BINARIES_DEBUG;ADDITIONAL_BINARIES_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES;ADDITIONAL_PROPERTIES"
     )
 
     if(DEFINED arg_ADDITIONAL_NATIVE_BINARIES OR DEFINED arg_ADDITIONAL_CROSS_BINARIES)
@@ -492,6 +492,7 @@ function(vcpkg_configure_meson)
         vcpkg_list(APPEND buildtypes "${buildname}")
         set(path_suffix_${buildname} "debug/")
         set(suffix_${buildname} "dbg")
+        set(additional_binaries_${buildname} ${arg_ADDITIONAL_BINARIES} ${arg_ADDITIONAL_BINARIES_DEBUG})
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(buildname "RELEASE")
@@ -499,6 +500,7 @@ function(vcpkg_configure_meson)
         vcpkg_list(APPEND buildtypes "${buildname}")
         set(path_suffix_${buildname} "")
         set(suffix_${buildname} "rel")
+        set(additional_binaries_${buildname} ${arg_ADDITIONAL_BINARIES} ${arg_ADDITIONAL_BINARIES_RELEASE})
     endif()
 
     # configure build
@@ -511,7 +513,7 @@ function(vcpkg_configure_meson)
           CONFIG ${buildtype}
           LANGUAGES ${arg_LANGUAGES}
           OPTIONS ${arg_OPTIONS} ${arg_OPTIONS_${buildtype}}
-          ADDITIONAL_BINARIES ${arg_ADDITIONAL_BINARIES}
+          ADDITIONAL_BINARIES ${additional_binaries_${buildtype}}
           ADDITIONAL_PROPERTIES ${arg_ADDITIONAL_PROPERTIES}
         )
 
