@@ -1,0 +1,23 @@
+{
+  "name": "openhtj2k",
+  "version": "0.20.1",
+  "description": "JPEG 2000 Part 1 and High-Throughput JPEG 2000 (HTJ2K, Part 15) encoder and decoder library",
+  "homepage": "https://github.com/osamu620/OpenHTJ2K",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build the open_htj2k_dec and open_htj2k_enc command-line tools",
+      "supports": "!uwp"
+    }
+  }
+}
