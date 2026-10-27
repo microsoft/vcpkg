@@ -1,5 +1,17 @@
 include(CMakeFindDependencyMacro)
 
+if(NOT COMMAND check_required_components)
+    macro(check_required_components _NAME)
+        foreach(_comp IN LISTS ${_NAME}_FIND_COMPONENTS)
+            if(NOT ${_NAME}_${_comp}_FOUND)
+                if(${_NAME}_FIND_REQUIRED_${_comp})
+                    set(${_NAME}_FOUND FALSE)
+                endif()
+            endif()
+        endforeach()
+    endmacro()
+endif()
+
 set(brazier_known_components logger core orm)
 
 foreach(_comp IN LISTS brazier_FIND_COMPONENTS)
