@@ -7,7 +7,6 @@ vcpkg_from_github(
 	SHA512 87f90835e214738fdb8d61143732be04f9a9bc68b9cb06ccbfe27c77828174d58da5118d0a1adf52326477ff8b8047c3ae4cede5ecd0b937809d20dc68917970
 	HEAD_REF main
 	PATCHES
-		fix-cross-platform-build.patch
 		remove-unimplemented-bf16-conversions.patch
 )
 
