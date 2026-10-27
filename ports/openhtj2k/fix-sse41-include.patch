@@ -1,0 +1,17 @@
+diff --git a/source/apps/decoder/main_dec.cpp b/source/apps/decoder/main_dec.cpp
+index b8578ff..3d3ed03 100644
+--- a/source/apps/decoder/main_dec.cpp
++++ b/source/apps/decoder/main_dec.cpp
+@@ -46,8 +46,10 @@
+ // App-level SIMD in this file is gated on the same CMake flags the library
+ // uses (OPENHTJ2K_TRY_AVX2 / OPENHTJ2K_ENABLE_ARM_NEON).  Passing
+ // -DENABLE_AVX2=OFF -DENABLE_ARM_NEON=OFF takes the scalar path everywhere,
+-// so the library and app stay coherent in scalar-only builds.
+-#if defined(OPENHTJ2K_TRY_AVX2) && defined(__AVX2__)
++// so the library and app stay coherent in scalar-only builds.  The x86 packing
++// helpers below need only SSE4.1, which some baseline targets (x86-64 Android)
++// enable without AVX2.
++#if defined(OPENHTJ2K_TRY_AVX2) && (defined(__SSE4_1__) || defined(__AVX2__))
+   #include <immintrin.h>
+ #elif defined(OPENHTJ2K_ENABLE_ARM_NEON) \
+     && (defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(_M_ARM64))
