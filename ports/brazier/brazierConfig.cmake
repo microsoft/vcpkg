@@ -4,10 +4,13 @@ set(brazier_known_components logger core orm)
 
 foreach(_comp IN LISTS brazier_FIND_COMPONENTS)
     if(NOT _comp IN_LIST brazier_known_components)
-        set(brazier_FOUND FALSE)
-        set(brazier_NOT_FOUND_MESSAGE
-            "Unknown component '${_comp}'. Known: ${brazier_known_components}")
-        return()
+        set(brazier_${_comp}_FOUND FALSE)
+        if(brazier_FIND_REQUIRED_${_comp})
+            set(brazier_FOUND FALSE)
+            set(brazier_NOT_FOUND_MESSAGE
+                "Unknown required component '${_comp}'. Known: ${brazier_known_components}")
+            return()
+        endif()
     endif()
 endforeach()
 
@@ -39,7 +42,7 @@ if("orm" IN_LIST brazier_FIND_COMPONENTS)
 endif()
 
 if(NOT TARGET brazier::brazier)
-    add_library(brazier::brazier INTERFACE IMPORTED GLOBAL)
+    add_library(brazier::brazier INTERFACE IMPORTED)
 endif()
 
 set(_brazier_libs)

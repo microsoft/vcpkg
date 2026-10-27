@@ -1,6 +1,6 @@
 {
   "name": "brazier-logger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Logging library for the brazier framework",
   "homepage": "https://github.com/brazier-tech/brazier-logger",
   "license": "LGPL-3.0-or-later",
