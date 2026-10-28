@@ -1584,6 +1584,10 @@
       "baseline": "1.34.9",
       "port-version": 0
     },
+    "c-str-span": {
+      "baseline": "0.0.3",
+      "port-version": 0
+    },
     "c4core": {
       "baseline": "0.6.0",
       "port-version": 0
