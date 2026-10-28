@@ -4350,7 +4350,7 @@
     },
     "kcoreaddons": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kcp": {
       "baseline": "2.1.1",
