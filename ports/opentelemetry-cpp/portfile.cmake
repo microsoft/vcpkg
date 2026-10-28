@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         fix-span-limits-32-bit.patch
         fix-missing-cstdint.patch
+        enable-msvc-warnings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -78,12 +79,6 @@ if(WITH_GENEVA OR WITH_USER_EVENTS)
             set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/user_events")
         endif()
     endif()
-endif()
-
-# Retain a warning level in native MSVC objects for BinSkim BA2007.
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    string(APPEND VCPKG_C_FLAGS " /W3")
-    string(APPEND VCPKG_CXX_FLAGS " /W3")
 endif()
 
 vcpkg_cmake_configure(
