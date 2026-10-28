@@ -1,3 +1,25 @@
+diff --git a/cmake/blpapiConfig.cmake b/cmake/blpapiConfig.cmake
+index 67cbf3e..bcc9b24 100644
+--- a/cmake/blpapiConfig.cmake
++++ b/cmake/blpapiConfig.cmake
+@@ -52,7 +52,7 @@ include("${_BLPAPI_CONFIG_CMAKE_DIR}/blpapiTargets.cmake")
+ check_required_components(${_TARGETS})
+ 
+ # Directory containing all blpapi public headers.
+-set(blpapi_INCLUDE_DIR "${_BLPAPI_CONFIG_CMAKE_DIR}/../include")
++set(blpapi_INCLUDE_DIR "${_BLPAPI_CONFIG_CMAKE_DIR}/../../include")
+ 
+ # C++20 named module interface.  Requires CMake 3.28+ and a module-capable
+ # generator (Ninja or Visual Studio 17.4+).  The .ixx source file is shipped
+@@ -65,7 +65,7 @@ set(blpapi_INCLUDE_DIR "${_BLPAPI_CONFIG_CMAKE_DIR}/../include")
+ #       BASE_DIRS "${blpapi_INCLUDE_DIR}"
+ #       FILES "${blpapi_MODULE_INTERFACE}")
+ set(blpapi_MODULE_INTERFACE
+-    "${_BLPAPI_CONFIG_CMAKE_DIR}/../include/blpapi.ixx")
++    "${_BLPAPI_CONFIG_CMAKE_DIR}/../../include/blpapi.ixx")
+ 
+ # Clean up internal variables.
+ unset(_TARGETS)
 diff --git a/cmake/blpapiTargets-release.cmake b/cmake/blpapiTargets-release.cmake
 index 12bcaa6..af5c135 100644
 --- a/cmake/blpapiTargets-release.cmake
