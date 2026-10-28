@@ -1,14 +1,17 @@
-# The official release files at files.salome-platform.org reject non-browser
-# downloads (HTTP 403 for any non-Mozilla User-Agent, even with a Referer
-# header), which breaks vcpkg_download_distfile. The same release sources are
-# published as version tags of the upstream repository
-# (https://github.com/chennes/med), so the tarball is fetched from there.
+# files.salome-platform.org rejects any download whose User-Agent does not
+# look like a browser (HTTP 403), which breaks vcpkg_download_distfile out of
+# the box. The official website publishes MED only on that server and links
+# its "Git Repositories" to github.com/SalomePlatform, which hosts no
+# med-fichier mirror, so the port keeps the official URL and sends a browser
+# User-Agent.
 # med-fichier is needed to build all libraries of the https://www.salome-platform.org/ since it is the io
 # entry point to open and read .med files.
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://codeload.github.com/chennes/med/tar.gz/refs/tags/v${VERSION}"
+  URLS "https://files.salome-platform.org/Salome/medfile/med-${VERSION}.tar.gz"
   FILENAME "med-${VERSION}.tar.gz"
-  SHA512 d3e8820bf9d203f4978a5b7b4bf48286ece30d4f48149adcbe4205470bfe5155cafa7112f5a145f36d3675316ccc4ce8b45c17f406ffafbaf59902c1238479c4
+  SHA512 f211fa82750a7cc935baa3a50a55d16e40117a0f2254b482492ba8396d82781ca84960995da7a16b2b5be0b93ce76368bf4b311bb8af0e5f0243e7051c9c554c
+  HEADERS
+    "User-Agent: Mozilla/5.0"
 )
 
 vcpkg_extract_source_archive(
