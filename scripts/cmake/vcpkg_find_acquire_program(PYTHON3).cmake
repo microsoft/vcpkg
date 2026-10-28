@@ -1,6 +1,6 @@
 if(CMAKE_HOST_WIN32)
     set(program_name python)
-    set(program_version 3.15.0)
+    set(program_version 3.15.2)
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(build_arch $ENV{PROCESSOR_ARCHITEW6432})
     else()
@@ -8,22 +8,22 @@ if(CMAKE_HOST_WIN32)
     endif()
     if(build_arch MATCHES "^(ARM|arm)64$")
         set(tool_subdirectory "python-${program_version}-arm64")
-        # https://www.python.org/ftp/python/3.15.0/python-3.15.0-embed-arm64.zip
+        # https://www.python.org/ftp/python/3.15.2/python-3.15.2-embed-arm64.zip
         set(download_urls "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-arm64.zip")
         set(download_filename "python-${program_version}-embed-arm64.zip")
-        set(download_sha512 a65f9da8da8bfbfcfce0ee47d0086318b0b99ccc455dc2cddd3be437f2ae423783a1cb59537ace6faba0f0e3ab4f9e789f7fc14d66454513d5e366d499ae0ce3)
+        set(download_sha512 3765f7c60e82ab7c8b4e5ae164b3a5ae3fc5110bd2a897e2131322bef492cc2a30e4daeb33f92b12b1946afbd919dbd1c09af07b91070442cfcfc50fba09dd8f)
     elseif(build_arch MATCHES "(amd|AMD)64")
         set(tool_subdirectory "python-${program_version}-x64")
-        # https://www.python.org/ftp/python/3.15.0/python-3.15.0-embed-amd64.zip
+        # https://www.python.org/ftp/python/3.15.2/python-3.15.2-embed-amd64.zip
         set(download_urls "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-amd64.zip")
         set(download_filename "python-${program_version}-embed-amd64.zip")
-        set(download_sha512 9732fc79dcb923924bcdfca4e95913df377a2ec167afe890b9eb67ca6ded22bcf230a2af1376f3ffb8a5b333f3ac47de4ea355733c27a280b46fae8af73ef7ee)
+        set(download_sha512 d03cfd58fe9aedd5bf8612c0a17f25a7ef82557a2ef5fe3703827ac98f69b153236a1acd4c817fcbea4ccece1990cbf0e2cf3eb5880ff39226f1ebaef8fcc02c)
     else()
         set(tool_subdirectory "python-${program_version}-x86")
-        # https://www.python.org/ftp/python/3.15.0/python-3.15.0-embed-win32.zip
+        # https://www.python.org/ftp/python/3.15.2/python-3.15.2-embed-win32.zip
         set(download_urls "https://www.python.org/ftp/python/${program_version}/python-${program_version}-embed-win32.zip")
         set(download_filename "python-${program_version}-embed-win32.zip")
-        set(download_sha512 7dec549b433bff0420fcddd8feec59af919877020a7b2f9634246b0ea1336236d6d2e250e8703de9393fc7b585e761548795b9771dedac4f60d2c428c3020329)
+        set(download_sha512 539c9abae4000021a987f11d8e5a6d746e3456536fc29e8b6d1f869da225396cf0b0fe3f384812cafdc4dfc1a4155af06a78938f1942b33d403365f0a003773e)
     endif()
 
     set(paths_to_search "${DOWNLOADS}/tools/python/${tool_subdirectory}")
