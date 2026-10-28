@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9728ead..3f176e4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -158,6 +158,9 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
+ 
+ add_subdirectory(src)
+ 
++if(WIN32)
++  set(LIBKML_PC_SYSTEM_LIBS "-ladvapi32")
++endif()
+ configure_file("${CMAKE_SOURCE_DIR}/cmake/libkml.pc.in"
+   "${CMAKE_BINARY_DIR}/libkml.pc" @ONLY)
+ 
+diff --git a/cmake/libkml.pc.in b/cmake/libkml.pc.in
+index 377529d..c06e8ac 100644
+--- a/cmake/libkml.pc.in
++++ b/cmake/libkml.pc.in
+@@ -8,8 +8,8 @@ includedir=${prefix}/include
+ Name: LibKML
+ Description: Reference implementation of OGC KML 2.2
+ Version: @VERSION_STRING@
+-##Requires: expat zlib boost
+-##minizip 
++Requires.private: expat minizip zlib
+ Conflicts:
+-Libs: -L${libdir} -lkmlbase -lkmldom -lkmlengine -lkmlxsd -lkmlregionator
++Libs: -L${libdir} -lkmlregionator -lkmlconvenience -lkmlengine -lkmldom -lkmlxsd -lkmlbase
++Libs.private: -luriparser @LIBKML_PC_SYSTEM_LIBS@
+ Cflags: -I${includedir}
