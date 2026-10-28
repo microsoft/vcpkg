@@ -37,6 +37,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DFT_DISABLE_HARFBUZZ=ON
+        -DFT_DISABLE_HVF=ON
         ${FEATURE_OPTIONS}
 )
 
