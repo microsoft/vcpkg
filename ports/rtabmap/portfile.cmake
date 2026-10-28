@@ -16,7 +16,7 @@ vcpkg_from_github(
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
     "${SOURCE_PATH}/cmake_modules/FindRealSense2.cmake"
-    "${SOURCE_PATH}/src/sqlite3"
+    "${SOURCE_PATH}/corelib/src/sqlite3"
     "${SOURCE_PATH}/corelib/src/nanoflann/nanoflann.h"
 )
 
