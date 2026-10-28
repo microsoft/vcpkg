@@ -10,12 +10,14 @@ vcpkg_from_github(
         0002-fix-link.patch
         0003-multi-definition.patch
         0004-remove-apple-sys-path.patch
+        0005-use-vcpkg-nanoflann.patch
 )
 # Will use vcpkg to find these packages
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
     "${SOURCE_PATH}/cmake_modules/FindRealSense2.cmake"
     "${SOURCE_PATH}/src/sqlite3"
+    "${SOURCE_PATH}/corelib/src/nanoflann/nanoflann.h"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

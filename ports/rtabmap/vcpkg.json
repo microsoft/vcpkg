@@ -8,6 +8,7 @@
     "boost-crc",
     "ceres",
     "g2o",
+    "nanoflann",
     {
       "name": "opencv",
       "default-features": false,
