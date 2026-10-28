@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d0cac5c..7b36d9b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -86,7 +86,7 @@ if(BUILD_ASAN)
+ endif()
+ 
+ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+-    add_compile_options(-Wall -Wextra -Werror)
++    add_compile_options(-Wall -Wextra)
+     # error: ISO C++ prohibits anonymous structs
+     # add_compile_options(-Wpedantic)
+     # ignore "parentheses" warning for custom "picojson" fork
+@@ -94,9 +94,9 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+     add_compile_options(-Wno-null-pointer-arithmetic)
+     add_compile_options(-Wno-null-pointer-subtraction)
+     if(CMAKE_COMPILER_IS_GNUCC)
+-        add_compile_options(-Werror=maybe-uninitialized)
++        add_compile_options(-Wmaybe-uninitialized)
+     endif()
+-    add_compile_options(-Werror=vla)
++    add_compile_options(-Wvla)
+ endif()
+ 
+ #######################################################

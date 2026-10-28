@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 01f1c68..295c8d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -591,6 +591,14 @@ foreach(v ${EXCLUDE_SOURCES})
+     list(REMOVE_ITEM BRPC_SOURCES ${v})
+ endforeach()
+ 
++if(NOT WITH_UBRING)
++    # ubshm is Linux-only and unused unless WITH_UBRING is enabled
++    file(GLOB_RECURSE UBSHM_SOURCES CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/brpc/ubshm/*.cpp")
++    foreach(v ${UBSHM_SOURCES})
++        list(REMOVE_ITEM BRPC_SOURCES ${v})
++    endforeach()
++endif()
++
+ set(MCPACK2PB_SOURCES
+     ${PROJECT_SOURCE_DIR}/src/mcpack2pb/field_type.cpp
+     ${PROJECT_SOURCE_DIR}/src/mcpack2pb/mcpack2pb.cpp

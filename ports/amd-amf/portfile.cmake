@@ -2,7 +2,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/GPUOpen-LibrariesAndSDKs/AMF/releases/download/v${VERSION}/AMF-headers-v${VERSION}.tar.gz"
     FILENAME "AMF-headers-v${VERSION}.tar.gz"
-    SHA512 9841bffd15786a8baf115fb736b8ed0bbc1076ef59757a3676a7d509116690cb9775de41e25a63bac364a200192d6abbabe9203425392fddf112274335293f24
+    SHA512 06fbb2269f15d9f0c98bc6158782a12d8a82e8b6a6335b42def14198476191a20ba85f72694fc91c7659ab7cec45c2a97c9e4dc3fd11c83c4ff9cdeaad33d112
 )
 
 vcpkg_extract_source_archive(

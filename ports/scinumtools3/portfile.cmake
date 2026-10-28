@@ -30,9 +30,12 @@ if("server" IN_LIST FEATURES)
     set(SNT_HTTPLIB_OPTION -DSNT_HTTPLIB_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include)
 endif()
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DENABLE_UNIT_TESTS=OFF
         -DENABLE_BINDING_PYTHON=OFF
 

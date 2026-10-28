@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fraunhoferhhi/vvdec
     REF v${VERSION}
-    SHA512 bb0085fbcd02fc22fe4e3a277907da8ca2b84b6e0769680a6792eb558fff62d1e7ae0a15a1377967562bb06513046e5eb38749dd08ee06f8badb5b8c246af17e
+    SHA512 35c9fa714530985cece58c76aa09a2e73abb192ae3bcb2780c0bd01baca3bddaeeda8e643c9c350ecd315b024f9322e4cedf9a05f4965172226d14aa513e2525
     HEAD_REF master
     PATCHES
         fix-dependency.patch
