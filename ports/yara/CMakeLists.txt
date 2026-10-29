@@ -173,7 +173,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libyara-config.cmake DESTIN
 if(NOT DISABLE_INSTALL_TOOLS)
   install (
     TARGETS yarac yara
-    RUNTIME DESTINATION tools/yara
+    RUNTIME DESTINATION bin
   )
 endif()
 

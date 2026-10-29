@@ -31,6 +31,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libyara)
 
+vcpkg_copy_tools(TOOL_NAMES yara yarac AUTO_CLEAN)
+
 set(
     copyright_files
     "${SOURCE_PATH}/COPYING"
