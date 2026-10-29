@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_SLICK_LOGGER_TESTING=OFF
         -DBUILD_SLICK_LOGGER_EXAMPLES=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
