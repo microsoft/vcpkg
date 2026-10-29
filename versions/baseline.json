@@ -5798,7 +5798,7 @@
     },
     "libsoup": {
       "baseline": "3.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libspatialindex": {
       "baseline": "2.1.0",
