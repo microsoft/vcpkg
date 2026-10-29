@@ -9333,7 +9333,7 @@
       "port-version": 10
     },
     "seal": {
-      "baseline": "4.7.1",
+      "baseline": "4.7.2",
       "port-version": 0
     },
     "seasocks": {
