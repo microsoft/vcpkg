@@ -1,0 +1,5 @@
+The package drekar-launch-process-cpp is compatible with built-in CMake targets:
+
+    find_package(drekar-launch-process-cpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE drekar-launch-process-cpp)
+    

@@ -1,0 +1,146 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5ecd2df..d26aa34 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,8 +12,6 @@ SET_PROPERTY(CACHE NNPACK_BACKEND PROPERTY STRINGS auto psimd scalar)
+ OPTION(NNPACK_CONVOLUTION_ONLY "Build only NNPACK functions for convolutional layer" OFF)
+ OPTION(NNPACK_INFERENCE_ONLY "Build only NNPACK functions for inference" OFF)
+ OPTION(NNPACK_CUSTOM_THREADPOOL "Build NNPACK for custom thread pool" OFF)
+-SET(NNPACK_LIBRARY_TYPE "default" CACHE STRING "Type of library (shared, static, or default) to build")
+-SET_PROPERTY(CACHE NNPACK_LIBRARY_TYPE PROPERTY STRINGS default static shared)
+ OPTION(NNPACK_BUILD_TESTS "Build NNPACK unit tests" ON)
+ 
+ # ---[ CMake options
+@@ -176,7 +174,7 @@ IF(NNPACK_BACKEND STREQUAL "x86-64")
+     SET(PEACHPY_PYTHONPATH "${PYTHON_SIX_SOURCE_DIR}:${PYTHON_PEACHPY_SOURCE_DIR}")
+   ENDIF()
+ ENDIF()
+-
++IF(FALSE)
+ IF(NOT DEFINED CPUINFO_SOURCE_DIR)
+   MESSAGE(STATUS "Downloading cpuinfo to ${CONFU_DEPENDENCIES_SOURCE_DIR}/cpuinfo (define CPUINFO_SOURCE_DIR to avoid it)")
+   CONFIGURE_FILE(cmake/DownloadCpuinfo.cmake "${CONFU_DEPENDENCIES_BINARY_DIR}/cpuinfo-download/CMakeLists.txt")
+@@ -226,7 +224,7 @@ IF(NOT DEFINED PTHREADPOOL_SOURCE_DIR)
+     WORKING_DIRECTORY "${CONFU_DEPENDENCIES_BINARY_DIR}/pthreadpool-download")
+   SET(PTHREADPOOL_SOURCE_DIR "${CONFU_DEPENDENCIES_SOURCE_DIR}/pthreadpool" CACHE STRING "pthreadpool source directory")
+ ENDIF()
+-
++ENDIF()
+ IF(NNPACK_BUILD_TESTS AND NOT DEFINED GOOGLETEST_SOURCE_DIR)
+   MESSAGE(STATUS "Downloading Google Test to ${CONFU_DEPENDENCIES_SOURCE_DIR}/googletest (define GOOGLETEST_SOURCE_DIR to avoid it)")
+   CONFIGURE_FILE(cmake/DownloadGoogleTest.cmake "${CONFU_DEPENDENCIES_BINARY_DIR}/googletest-download/CMakeLists.txt")
+@@ -442,15 +440,7 @@ ELSE()
+   SET(NNPACK_BACKEND_C_SRCS ${NNPACK_BACKEND_SRCS})
+ ENDIF()
+ 
+-IF(NNPACK_LIBRARY_TYPE STREQUAL "default")
+-  ADD_LIBRARY(nnpack ${NNPACK_INIT_SRCS} ${NNPACK_LAYER_SRCS} ${NNPACK_BACKEND_C_SRCS} ${NNPACK_BACKEND_PEACHPY_OBJS})
+-ELSEIF(NNPACK_LIBRARY_TYPE STREQUAL "shared")
+-  ADD_LIBRARY(nnpack SHARED ${NNPACK_INIT_SRCS} ${NNPACK_LAYER_SRCS} ${NNPACK_BACKEND_C_SRCS} ${NNPACK_BACKEND_PEACHPY_OBJS})
+-ELSEIF(NNPACK_LIBRARY_TYPE STREQUAL "static")
+-  ADD_LIBRARY(nnpack STATIC ${NNPACK_INIT_SRCS} ${NNPACK_LAYER_SRCS} ${NNPACK_BACKEND_C_SRCS} ${NNPACK_BACKEND_PEACHPY_OBJS})
+-ELSE()
+-  MESSAGE(FATAL_ERROR "Unsupported NNPACK library type \"${NNPACK_LIBRARY_TYPE}\". Must be \"static\", \"shared\", or \"default\"")
+-ENDIF()
++ADD_LIBRARY(nnpack ${NNPACK_INIT_SRCS} ${NNPACK_LAYER_SRCS} ${NNPACK_BACKEND_C_SRCS} ${NNPACK_BACKEND_PEACHPY_OBJS})
+ NNPACK_TARGET_ENABLE_C99(nnpack)
+ IF(IOS OR CMAKE_SYSTEM_PROCESSOR MATCHES "^(armv5te|armv7-a|armv7l)$")
+   IF(IOS AND NNPACK_BACKEND STREQUAL "neon")
+@@ -472,7 +462,7 @@ ENDIF()
+ IF(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+   SET_PROPERTY(SOURCE ${NNPACK_BACKEND_SRCS} APPEND_STRING PROPERTY COMPILE_FLAGS " -O3 ")
+ ENDIF()
+-TARGET_INCLUDE_DIRECTORIES(nnpack PUBLIC include)
++TARGET_INCLUDE_DIRECTORIES(nnpack PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+ TARGET_INCLUDE_DIRECTORIES(nnpack PRIVATE src)
+ IF(NNPACK_BACKEND STREQUAL "psimd")
+   TARGET_COMPILE_DEFINITIONS(nnpack PRIVATE NNP_BACKEND_PSIMD=1)
+@@ -496,6 +486,8 @@ NNPACK_TARGET_ENABLE_C99(nnpack_reference_layers)
+ TARGET_INCLUDE_DIRECTORIES(nnpack_reference_layers PUBLIC include)
+ 
+ # ---[ Configure cpuinfo
++find_package(cpuinfo CONFIG REQUIRED)
++add_library(cpuinfo ALIAS cpuinfo::cpuinfo)
+ IF(NOT TARGET cpuinfo)
+   SET(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
+   SET(CPUINFO_BUILD_UNIT_TESTS OFF CACHE BOOL "")
+@@ -506,8 +498,10 @@ IF(NOT TARGET cpuinfo)
+     "${CONFU_DEPENDENCIES_BINARY_DIR}/cpuinfo")
+ ENDIF()
+ TARGET_LINK_LIBRARIES(nnpack PRIVATE cpuinfo)
+-
++  
+ # ---[ Configure pthreadpool
++find_package(unofficial-pthreadpool CONFIG REQUIRED)
++add_library(pthreadpool ALIAS unofficial::pthreadpool)
+ IF(NOT TARGET pthreadpool)
+   SET(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
+   SET(PTHREADPOOL_BUILD_BENCHMARKS OFF CACHE BOOL "")
+@@ -525,6 +519,8 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(nnpack_reference_layers PUBLIC pthreadpool)
+ 
+ # ---[ Configure FXdiv
++find_package(unofficial-fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
+ IF(NOT TARGET fxdiv)
+   SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+   SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+@@ -535,6 +531,8 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(nnpack PRIVATE fxdiv)
+ 
+ # ---[ Configure psimd
++find_package(unofficial-psimd CONFIG REQUIRED)
++add_library(psimd ALIAS unofficial::psimd::psimd)
+ IF(NOT TARGET psimd)
+   ADD_SUBDIRECTORY(
+     "${PSIMD_SOURCE_DIR}"
+@@ -543,6 +541,8 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(nnpack PRIVATE psimd)
+ 
+ # ---[ Configure FP16
++find_package(unofficial-fp16 CONFIG REQUIRED)
++add_library(fp16 ALIAS unofficial::fp16::fp16)
+ IF(NOT TARGET fp16)
+   SET(FP16_BUILD_TESTS OFF CACHE BOOL "")
+   SET(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
+@@ -554,10 +554,24 @@ TARGET_LINK_LIBRARIES(nnpack PRIVATE fp16)
+ TARGET_LINK_LIBRARIES(nnpack_reference_layers PUBLIC fp16)
+ 
+ INSTALL(TARGETS nnpack
++    EXPORT unofficial-nnpack-config-targets
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
++install(EXPORT unofficial-nnpack-config-targets NAMESPACE unofficial::nnpack::
++  FILE unofficial-nnpack-config-targets.cmake
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-nnpack) # share/nnpack
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/unofficial-nnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-nnpack)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-nnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-nnpack)
++
++
++
++
++
+ IF(NNPACK_BUILD_TESTS)
+   # ---[ Build google test
+   IF(NOT TARGET gtest)
+diff --git a/Config.cmake.in b/Config.cmake.in
+new file mode 100644
+index 0000000..1724d5a
+--- /dev/null
++++ b/Config.cmake.in
+@@ -0,0 +1,10 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++find_dependency(unofficial-fp16)
++find_dependency(unofficial-fxdiv)
++find_dependency(cpuinfo)
++find_dependency(unofficial-pthreadpool)
++
++
++include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-nnpack-config-targets.cmake" )

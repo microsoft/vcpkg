@@ -1,0 +1,12 @@
+diff --git a/src/vmaware.hpp b/src/vmaware.hpp
+index 764adc8..6d29f4a 100644
+--- a/src/vmaware.hpp
++++ b/src/vmaware.hpp
+@@ -400,6 +400,7 @@
+     #pragma comment(lib, "powrprof.lib")
+     #pragma comment(lib, "advapi32.lib")
+     #pragma comment(lib, "gdi32.lib")
++    #pragma comment(lib, "user32.lib")
+ #elif (LINUX)
+     #if (x86)
+         #include <cpuid.h>

@@ -1,0 +1,8 @@
+libfn provides CMake targets:
+
+    find_package(libfn CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libfn::pfn)  # C++20 standard-library polyfills
+    target_link_libraries(main PRIVATE libfn::fn)   # the functional library (C++20)
+
+    # C++26 mode (std::type_order); use instead of libfn::fn, never both:
+    target_link_libraries(main PRIVATE libfn::fn_cxx26)

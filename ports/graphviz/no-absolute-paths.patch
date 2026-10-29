@@ -1,0 +1,13 @@
+diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
+index 100df84cf..2885417f0 100644
+--- a/lib/gvc/CMakeLists.txt
++++ b/lib/gvc/CMakeLists.txt
+@@ -15,7 +15,7 @@ add_library(gvc
+ )
+ 
+ target_compile_definitions(gvc
+-  PRIVATE GVC_EXPORTS GVLIBDIR="${LIBRARY_INSTALL_DIR}/graphviz"
++  PRIVATE GVC_EXPORTS GVLIBDIR=""
+ )
+ 
+ target_include_directories(gvc

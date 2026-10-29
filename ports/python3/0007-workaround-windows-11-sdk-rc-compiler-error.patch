@@ -1,0 +1,15 @@
+diff --git a/PC/python_ver_rc.h b/PC/python_ver_rc.h
+index 08509f9..a394c67 100644
+--- a/PC/python_ver_rc.h
++++ b/PC/python_ver_rc.h
+@@ -1,3 +1,10 @@
++// Temporarily workaround bug in Windows SDK 10.0.22000.0 winnt.h
++#ifdef RC_INVOKED
++#   ifndef SYSTEM_CACHE_ALIGNMENT_SIZE
++#       define SYSTEM_CACHE_ALIGNMENT_SIZE 64
++#   endif
++#endif
++
+ // Resource script for Python core DLL.
+ // Currently only holds version information.
+ //

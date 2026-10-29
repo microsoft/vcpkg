@@ -1,0 +1,106 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 109975c..a4e855a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -116,18 +116,16 @@ if(USE_SWIG)
+   file(MAKE_DIRECTORY "${LGBM_SWIG_DESTINATION_DIR}")
+ endif()
+ 
+-set(EIGEN_DIR "${PROJECT_SOURCE_DIR}/external_libs/eigen")
+-include_directories(${EIGEN_DIR})
++find_package(Eigen3 CONFIG REQUIRED)
+ 
+ # See https://gitlab.com/libeigen/eigen/-/blob/master/COPYING.README
+ add_definitions(-DEIGEN_MPL2_ONLY)
+ add_definitions(-DEIGEN_DONT_PARALLELIZE)
+ 
+-set(FAST_DOUBLE_PARSER_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fast_double_parser/include")
++find_path(FAST_DOUBLE_PARSER_INCLUDE_DIR fast_double_parser.h REQUIRED)
+ include_directories(${FAST_DOUBLE_PARSER_INCLUDE_DIR})
+ 
+-set(FMT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/external_libs/fmt/include")
+-include_directories(${FMT_INCLUDE_DIR})
++find_package(fmt CONFIG REQUIRED)
+ 
+ if(BUILD_CPP_TEST AND MSVC)
+   # Use /MT flag to statically link the C runtime. Must be set before
+@@ -142,10 +140,7 @@ endif()
+ # subdirectory keeps the package tarball free of nanoarrow sources, which
+ # would otherwise trigger CRAN warnings about diagnostic-suppressing pragmas.
+ if(NOT __BUILD_FOR_R)
+-  add_subdirectory("${PROJECT_SOURCE_DIR}/external_libs/nanoarrow" EXCLUDE_FROM_ALL)
+-  if(NOT BUILD_STATIC_LIB)
+-    set_target_properties(nanoarrow_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+-  endif()
++  find_package(nanoarrow CONFIG REQUIRED)
+ endif()
+ 
+ if(__BUILD_FOR_R)
+@@ -213,15 +208,13 @@ if(USE_OPENMP)
+ endif()
+ 
+ if(USE_GPU)
+-    set(BOOST_COMPUTE_HEADER_DIR ${PROJECT_SOURCE_DIR}/external_libs/compute/include)
+-    include_directories(${BOOST_COMPUTE_HEADER_DIR})
+     find_package(OpenCL REQUIRED)
+     include_directories(${OpenCL_INCLUDE_DIRS})
+     message(STATUS "OpenCL include directory: " ${OpenCL_INCLUDE_DIRS})
+     if(WIN32)
+         set(Boost_USE_STATIC_LIBS ON)
+     endif()
+-    find_package(Boost 1.56.0 COMPONENTS filesystem system REQUIRED)
++    find_package(Boost COMPONENTS filesystem compute REQUIRED)
+     if(WIN32)
+         # disable autolinking in boost
+         add_definitions(-DBOOST_ALL_NO_LIB)
+@@ -489,13 +482,14 @@ if(USE_ROCM)
+ endif()
+ 
+ add_library(lightgbm_objs OBJECT ${LGBM_SOURCES})
++target_link_libraries(lightgbm_objs PUBLIC Eigen3::Eigen fmt::fmt)
+ if(NOT __BUILD_FOR_R)
+-  target_link_libraries(lightgbm_objs PRIVATE nanoarrow_static)
++  target_link_libraries(lightgbm_objs PUBLIC nanoarrow::nanoarrow)
+ endif()
+ 
+ if(BUILD_CLI)
+     add_executable(lightgbm src/main.cpp src/application/application.cpp)
+-    target_link_libraries(lightgbm PRIVATE lightgbm_objs)
++    target_link_libraries(lightgbm PRIVATE lightgbm_objs Eigen3::Eigen fmt::fmt)
+ endif()
+ 
+ set(API_SOURCES "src/c_api.cpp")
+@@ -506,8 +500,9 @@ if(__BUILD_FOR_R)
+ endif()
+ 
+ add_library(lightgbm_capi_objs OBJECT ${API_SOURCES})
++target_link_libraries(lightgbm_capi_objs PUBLIC Eigen3::Eigen fmt::fmt)
+ if(NOT __BUILD_FOR_R)
+-  target_link_libraries(lightgbm_capi_objs PRIVATE nanoarrow_static)
++  target_link_libraries(lightgbm_capi_objs PUBLIC nanoarrow::nanoarrow)
+ endif()
+ 
+ if(BUILD_STATIC_LIB)
+@@ -604,7 +599,7 @@ if(USE_OPENMP)
+ endif()
+ 
+ if(USE_GPU)
+-  target_link_libraries(lightgbm_objs PUBLIC ${OpenCL_LIBRARY} ${Boost_LIBRARIES})
++  target_link_libraries(lightgbm_objs PUBLIC OpenCL::OpenCL ${Boost_LIBRARIES})
+ endif()
+ 
+ if(USE_CUDA)
+@@ -854,13 +849,4 @@ if(INSTALL_HEADERS)
+       DIRECTORY ${LightGBM_HEADER_DIR}/LightGBM
+       DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+     )
+-    install(
+-      FILES ${FAST_DOUBLE_PARSER_INCLUDE_DIR}/fast_double_parser.h
+-      DESTINATION ${CMAKE_INSTALL_PREFIX}/include/LightGBM/utils
+-    )
+-    install(
+-      DIRECTORY ${FMT_INCLUDE_DIR}/
+-      DESTINATION ${CMAKE_INSTALL_PREFIX}/include/LightGBM/utils
+-      FILES_MATCHING PATTERN "*.h"
+-    )
+ endif()

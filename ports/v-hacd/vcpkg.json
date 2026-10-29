@@ -1,0 +1,7 @@
+{
+  "name": "v-hacd",
+  "version": "4.1.0",
+  "description": "The V-HACD library decomposes a 3D surface into a set of \"near\" convex parts.",
+  "homepage": "https://github.com/kmammou/v-hacd",
+  "supports": "!arm"
+}

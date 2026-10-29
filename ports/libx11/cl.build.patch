@@ -1,0 +1,147 @@
+diff --git a/include/X11/Xlibint.h b/include/X11/Xlibint.h
+index 844571688..e46c4ec5d 100644
+--- a/include/X11/Xlibint.h	
++++ b/include/X11/Xlibint.h
+@@ -1351,11 +1351,14 @@ extern int _XOpenFile(
+     int			/* flags */
+ );
+ 
++#if defined(_MSC_VER) && !defined(mode_t) 
++typedef int mode_t;
++#endif
+ extern int _XOpenFileMode(
+     _Xconst char*	/* path */,
+     int			/* flags */,
+     mode_t              /* mode */
+ );
+ 
+ extern void* _XFopenFile(
+     _Xconst char*	/* path */,
+diff --git a/modules/im/ximcp/imLcLkup.c b/modules/im/ximcp/imLcLkup.c
+index 56dba9673..d10de825e 100644
+--- a/modules/im/ximcp/imLcLkup.c	
++++ b/modules/im/ximcp/imLcLkup.c
+@@ -61,27 +61,37 @@ _XimLocalMbLookupString(XIC xic, XKeyEvent *ev, char *buffer, int bytes,
+ 	    ||(ic->private.local.brl_committed != 0))) {
+ 	if (ic->private.local.brl_committed != 0) { /* Braille Event */
+ 	    unsigned char pattern = ic->private.local.brl_committed;
++#ifndef _MSC_VER
+ 	    char mb2[XLC_PUBLIC(ic->core.im->core.lcd, mb_cur_max)];
++#else
++        char *mb2 = (char*)malloc(XLC_PUBLIC(ic->core.im->core.lcd, mb_cur_max)*sizeof(char));
++#endif
+ 	    ret = _Xlcwctomb(ic->core.im->core.lcd, mb2, BRL_UC_ROW | pattern);
+ 	    if(ret > bytes) {
+ 		if(status) *status = XBufferOverflow;
++#ifdef _MSC_VER
++		free(mb2);
++#endif
+ 		return(ret);
+ 	    }
+ 	    if(keysym) *keysym = XK_braille_blank | pattern;
+ 	    if(ret > 0) {
+ 		if (keysym) {
+ 		    if(status) *status = XLookupBoth;
+ 		} else {
+ 		    if(status) *status = XLookupChars;
+ 		}
+ 		memcpy(buffer, mb2, ret);
+ 	    } else {
+ 		if(keysym) {
+ 		    if(status) *status = XLookupKeySym;
+ 		} else {
+ 		    if(status) *status = XLookupNone;
+ 		}
+ 	    }
++#ifdef _MSC_VER
++        free(mb2);
++#endif
+ 	} else { /* Composed Event */
+ 	    ret = strlen(&mb[b[ic->private.local.composed].mb]);
+ 	    if(ret > bytes) {
+diff --git a/src/XlibInt.c b/src/XlibInt.c
+index e4fb4e5f2..4cfa1aeab 100644
+--- a/src/XlibInt.c	
++++ b/src/XlibInt.c
+@@ -60,6 +60,8 @@ from The Open Group.
+ /* Needed for ioctl() on Solaris */
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#else
++    #define F_OK 0
+ #endif
+ 
+ #ifdef XTHREADS
+@@ -985,7 +987,7 @@ _XWireToEvent(
+ 	      case KeymapNotify:
+ 		{
+ 			register XKeymapEvent *ev = (XKeymapEvent *) re;
+-			ev->window	= None;
++			ev->window	= 0;
+ 			memcpy(&ev->key_vector[1],
+ 			       (char *)((xKeymapEvent *) event)->map,
+ 			       sizeof (((xKeymapEvent *) event)->map));
+@@ -1919,7 +1925,11 @@ int _XOpenFileMode(path, flags, mode)
+     UINT olderror = SetErrorMode (SEM_FAILCRITICALERRORS);
+ 
+     if (AccessFile (path, buf, MAX_PATH, &bufp))
++#ifndef _MSC_VER
+ 	ret = open (bufp, flags, mode);
++#else
++    ret = _open (bufp, flags, mode);
++#endif
+ 
+     (void) SetErrorMode (olderror);
+ 
+diff --git a/src/xlibi18n/XDefaultOMIF.c b/src/xlibi18n/XDefaultOMIF.c
+index 9345547c3..77d914fe1 100644
+--- a/src/xlibi18n/XDefaultOMIF.c	
++++ b/src/xlibi18n/XDefaultOMIF.c
+@@ -70,6 +70,14 @@ Sun Microsystems, Inc. or its licensors is granted.
+ #include <X11/Xatom.h>
+ #include <stdio.h>
+ 
++#if !defined(ssize_t)
++    #ifdef _WIN64
++    #define ssize_t long long
++    #else
++    #define ssize_t long
++    #endif
++#endif
++
+ #define MAXFONTS		100
+ 
+ #define XOM_GENERIC(om)		(&((XOMGeneric) om)->gen)
+diff --git a/src/xlibi18n/lcDB.c b/src/xlibi18n/lcDB.c
+index e04a5d89f..fa46f8ecc 100644
+--- a/src/xlibi18n/lcDB.c	
++++ b/src/xlibi18n/lcDB.c
+@@ -65,6 +65,14 @@
+ 
+ #include <stdio.h>
+ 
++#if !defined(ssize_t)
++    #ifdef _WIN64
++    #define ssize_t long long
++    #else
++    #define ssize_t long
++    #endif
++#endif
++
+ typedef struct _DatabaseRec {
+     char *category;
+     char *name;
+diff --git a/src/xlibi18n/lcFile.c b/src/xlibi18n/lcFile.c
+index e43ac2c0e..d9f49b725 100644
+--- a/src/xlibi18n/lcFile.c	
++++ b/src/xlibi18n/lcFile.c
+@@ -32,7 +32,9 @@
+ #include "Xlibint.h"
+ #include "XlcPubI.h"
+ #include <X11/Xos.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ 
+ /************************************************************************/
+ 

@@ -1,0 +1,52 @@
+diff --git a/modules/videoio/src/cap_ffmpeg_hw.hpp b/modules/videoio/src/cap_ffmpeg_hw.hpp
+index e9d9fb4..1678f80 100644
+--- a/modules/videoio/src/cap_ffmpeg_hw.hpp
++++ b/modules/videoio/src/cap_ffmpeg_hw.hpp
+@@ -700,9 +700,18 @@ AVCodec *hw_find_codec(AVCodecID id, AVHWDeviceType hw_type, int (*check_catego
+ #endif
+             if (hw_type == AV_HWDEVICE_TYPE_CUDA) // CUDA encoders don't support avcodec_get_hw_config()
+                 hw_native_fmt = AV_PIX_FMT_CUDA;
+-            if (av_codec_is_encoder(c) && hw_native_fmt != AV_PIX_FMT_NONE && c->pix_fmts) {
+-                for (int i = 0; c->pix_fmts[i] != AV_PIX_FMT_NONE; i++) {
+-                    if (c->pix_fmts[i] == hw_native_fmt) {
++#if LIBAVCODEC_VERSION_MICRO >= 100 && \
++    LIBAVCODEC_BUILD >= CALC_FFMPEG_VERSION(61, 13, 100)
++            const enum AVPixelFormat *pix_fmts = NULL;
++            if (avcodec_get_supported_config(NULL, c, AV_CODEC_CONFIG_PIX_FORMAT, 0,
++                                             (const void **)&pix_fmts, NULL) < 0)
++                pix_fmts = NULL;
++#else
++            const enum AVPixelFormat *pix_fmts = c->pix_fmts;
++#endif
++            if (av_codec_is_encoder(c) && hw_native_fmt != AV_PIX_FMT_NONE && pix_fmts) {
++                for (int i = 0; pix_fmts[i] != AV_PIX_FMT_NONE; i++) {
++                    if (pix_fmts[i] == hw_native_fmt) {
+                         *hw_pix_fmt = hw_native_fmt;
+                         if (hw_check_codec(c, hw_type, disabled_codecs))
+                             return c;
+diff --git a/modules/videoio/src/cap_ffmpeg_impl.hpp b/modules/videoio/src/cap_ffmpeg_impl.hpp
+index d2359b0..93d65aa 100644
+--- a/modules/videoio/src/cap_ffmpeg_impl.hpp
++++ b/modules/videoio/src/cap_ffmpeg_impl.hpp
+@@ -2193,9 +2193,19 @@ static AVCodecContext * icv_configure_video_stream_FFMPEG(AVFormatContext *oc,
+     }
+     c->time_base.den = frame_rate;
+     c->time_base.num = frame_rate_base;
++    const AVRational *supported_framerates = NULL;
++#if LIBAVCODEC_VERSION_MICRO >= 100 && \
++    LIBAVCODEC_BUILD >= CALC_FFMPEG_VERSION(61, 13, 100)
++    if (codec && avcodec_get_supported_config(c, codec, AV_CODEC_CONFIG_FRAME_RATE, 0,
++                                              (const void **)&supported_framerates, NULL) < 0)
++        supported_framerates = NULL;
++#else
++    if (codec)
++        supported_framerates = codec->supported_framerates;
++#endif
+     /* adjust time base for supported framerates */
+-    if(codec && codec->supported_framerates){
+-        const AVRational *p= codec->supported_framerates;
++    if(supported_framerates){
++        const AVRational *p = supported_framerates;
+         AVRational req = {frame_rate, frame_rate_base};
+         const AVRational *best=NULL;
+         AVRational best_error= {INT_MAX, 1};

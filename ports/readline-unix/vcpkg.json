@@ -1,0 +1,15 @@
+{
+  "name": "readline-unix",
+  "version": "8.3",
+  "description": "The GNU Readline library provides a set of functions for use by applications that allow users to edit command lines as they are typed in.",
+  "homepage": "https://tiswww.case.edu/php/chet/readline/rltop.html",
+  "license": "GPL-3.0-or-later",
+  "supports": "!windows",
+  "dependencies": [
+    "ncurses",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

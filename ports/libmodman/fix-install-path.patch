@@ -1,0 +1,39 @@
+diff --git a/libmodman/CMakeLists.txt b/libmodman/CMakeLists.txt
+index 0aff593..9e419ce 100644
+--- a/libmodman/CMakeLists.txt
++++ b/libmodman/CMakeLists.txt
+@@ -30,15 +30,15 @@ if(NOT WIN32 AND NOT APPLE)
+   configure_file(libmodman-2.0.pc.in
+                  ${CMAKE_CURRENT_BINARY_DIR}/libmodman-2.0.pc @ONLY)
+   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libmodman-2.0.pc
+-          DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
++          DESTINATION lib/pkgconfig)
+ endif()
+ 
+ # CMake Find helper
+-if (NOT WIN32 AND NOT APPLE)
++if (1)
+   configure_file(Findlibmodman.cmake.in
+                  ${CMAKE_CURRENT_BINARY_DIR}/Findlibmodman.cmake @ONLY)
+   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Findlibmodman.cmake
+-          DESTINATION ${SHARE_INSTALL_DIR}/cmake/Modules)
++          DESTINATION share/${PROJECT_NAME})
+ endif()
+ 
+ # Define the library itself
+@@ -50,8 +50,13 @@ if(NOT WIN32)
+   target_link_libraries(modman dl)
+ endif()
+ set_target_properties(modman PROPERTIES PREFIX "lib" VERSION 1.0.0 SOVERSION 1)
+-install(TARGETS modman DESTINATION ${LIB_INSTALL_DIR})
+-install(FILES   module_manager.hpp module.hpp DESTINATION ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME})
++install(
++    TARGETS modman
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++)
++install(FILES   module_manager.hpp module.hpp DESTINATION include/${PROJECT_NAME})
+ 
+ ### Tests
+ add_testdirectory(test)

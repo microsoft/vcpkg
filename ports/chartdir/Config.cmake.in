@@ -1,0 +1,21 @@
+
+get_filename_component(_chartdir_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_chartdir_root "${_chartdir_root}" PATH)
+get_filename_component(_chartdir_root "${_chartdir_root}" PATH)
+
+set(_chartdir_lib "${_chartdir_root}/lib/@CHARTDIR_LIB@")
+if (EXISTS "${_chartdir_lib}")
+
+    add_library(chartdir UNKNOWN IMPORTED)
+    set_target_properties(chartdir PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${_chartdir_root}/include")
+    set_target_properties(chartdir PROPERTIES IMPORTED_LOCATION "${_chartdir_lib}")
+    set_property(TARGET chartdir APPEND PROPERTY IMPORTED_CONFIGURATIONS)
+
+else()
+
+    set(chartdir_FOUND FALSE)
+
+endif()
+unset(_chartdir_lib)
+
+unset(_chartdir_root)

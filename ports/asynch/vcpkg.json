@@ -1,0 +1,6 @@
+{
+  "name": "asynch",
+  "version-date": "2022-03-16",
+  "description": "Async.h - asynchronous, stackless subroutines.",
+  "homepage": "https://github.com/naasking/async.h"
+}

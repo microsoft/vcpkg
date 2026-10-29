@@ -1,0 +1,6 @@
+{
+  "name": "hedley",
+  "version": "15",
+  "description": "A C/C++ header to help move #ifdefs out of your code",
+  "homepage": "https://nemequ.github.io/hedley/"
+}

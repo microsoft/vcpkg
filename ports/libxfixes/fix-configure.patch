@@ -1,0 +1,21 @@
+diff --git a/Makefile.am b/Makefile.am
+index c626eaa..54252e7 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -37,4 +37,3 @@ ChangeLog:
+ dist-hook: ChangeLog INSTALL
+ 
+ EXTRA_DIST = README.md meson.build
+-ACLOCAL_AMFLAGS = -I m4
+diff --git a/configure.ac b/configure.ac
+index f70529a..8e3be3f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -37,7 +37,6 @@ AC_INIT(libXfixes, [6.0.2],
+ 	[libXfixes])
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AC_CONFIG_HEADERS([config.h])
+-AC_CONFIG_MACRO_DIRS([m4])
+ 
+ # Initialize Automake
+ AM_INIT_AUTOMAKE([foreign dist-xz])

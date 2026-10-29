@@ -1,0 +1,14 @@
+diff --git a/cpp/src/arrow/vendored/musl/strptime.c b/cpp/src/arrow/vendored/musl/strptime.c
+index 41912fd..0ea36e9 100644
+--- a/cpp/src/arrow/vendored/musl/strptime.c
++++ b/cpp/src/arrow/vendored/musl/strptime.c
+@@ -18,7 +18,9 @@
+ #undef HAVE_LANGINFO
+
+ #ifndef _WIN32
++# if !(defined(__ANDROID__) && __ANDROID_API__ < 26)
+ #define HAVE_LANGINFO 1
++# endif
+ #endif
+
+ #ifdef HAVE_LANGINFO

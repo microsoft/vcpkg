@@ -1,0 +1,7 @@
+{
+  "name": "josuttis-jthread",
+  "version-date": "2020-07-21",
+  "port-version": 3,
+  "description": "C++ class for a joining and cooperative interruptible thread (std::jthread) with stop_token helper",
+  "homepage": "https://github.com/josuttis/jthread"
+}

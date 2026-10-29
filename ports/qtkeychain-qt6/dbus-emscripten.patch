@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -222,7 +222,7 @@ ecm_setup_version("${QTKEYCHAIN_VERSION}" VARIABLE_PREFIX SNORE
+   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/Qt${QTKEYCHAIN_VERSION_INFIX}KeychainConfigVersion.cmake"
+   SOVERSION ${QTKEYCHAIN_VERSION})
+ 
+-if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU)
++if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU AND NOT EMSCRIPTEN)
+     set(PRI_EXTRA_DEPS "dbus")
+ endif()
+ ecm_generate_pri_file(BASE_NAME Qt${QTKEYCHAIN_VERSION_INFIX}Keychain

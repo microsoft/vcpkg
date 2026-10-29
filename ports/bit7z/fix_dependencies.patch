@@ -1,0 +1,111 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 1e787070..0c2cda4c 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1,45 +1,45 @@
+-# Downloading the CPM.cmake package manager
+-set( CPM_DOWNLOAD_VERSION 0.42.3 )
+-set( CPM_DOWNLOAD_HASH "a609e875fd532b067174250f6abbc3dac22fe2d64869783fb1e80bda1625c844" )
+-if( CPM_SOURCE_CACHE )
+-    set( CPM_DOWNLOAD_LOCATION "${CPM_SOURCE_CACHE}/cpm/CPM_${CPM_DOWNLOAD_VERSION}.cmake" )
+-elseif( DEFINED ENV{CPM_SOURCE_CACHE} )
+-    set( CPM_DOWNLOAD_LOCATION "$ENV{CPM_SOURCE_CACHE}/cpm/CPM_${CPM_DOWNLOAD_VERSION}.cmake" )
+-else()
+-    set( CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake" )
+-endif()
+-get_filename_component( CPM_DOWNLOAD_LOCATION ${CPM_DOWNLOAD_LOCATION} ABSOLUTE )
+-set( CPM_USE_NAMED_CACHE_DIRECTORIES ON )
+-if( NOT ( EXISTS ${CPM_DOWNLOAD_LOCATION} ) )
+-    message( STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}" )
+-    file( DOWNLOAD
+-          https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake
+-          ${CPM_DOWNLOAD_LOCATION}
+-          SHOW_PROGRESS
+-          EXPECTED_HASH SHA256=${CPM_DOWNLOAD_HASH}
+-    )
+-endif()
+-include( ${CPM_DOWNLOAD_LOCATION} )
+-
+-# When enabled, dependencies are resolved with find_package() first (e.g., as provided by a package
+-# manager such as vcpkg) and only downloaded via CPM if not found. Disabled by default so that a
+-# plain checkout builds out-of-the-box by fetching its pinned dependencies.
+-option( BIT7Z_USE_SYSTEM_DEPENDENCIES "Resolve dependencies via find_package when available" OFF )
++# When enabled, every dependency is resolved exclusively via find_package() (e.g., as provided by a
++# package manager such as vcpkg): CPM is not bootstrapped and nothing is downloaded during configure.
++# Disabled by default so that a plain checkout builds out-of-the-box by fetching its pinned dependencies.
++option( BIT7Z_USE_SYSTEM_DEPENDENCIES "Resolve all dependencies via find_package (no CPM, no downloads)" OFF )
+ message( STATUS "Use system dependencies: ${BIT7Z_USE_SYSTEM_DEPENDENCIES}" )
+-if( BIT7Z_USE_SYSTEM_DEPENDENCIES )
+-    set( CPM_USE_LOCAL_PACKAGES ON )
++
++# Bootstrap the CPM.cmake package manager only when a dependency may actually be downloaded. With
++# system dependencies enabled, every dependency is resolved via find_package, so we skip the in-build
++# download entirely (e.g. package managers such as vcpkg forbid network access during configure/build).
++if( NOT BIT7Z_USE_SYSTEM_DEPENDENCIES )
++    # Downloading the CPM.cmake package manager
++    set( CPM_DOWNLOAD_VERSION 0.42.3 )
++    set( CPM_DOWNLOAD_HASH "a609e875fd532b067174250f6abbc3dac22fe2d64869783fb1e80bda1625c844" )
++    if( CPM_SOURCE_CACHE )
++        set( CPM_DOWNLOAD_LOCATION "${CPM_SOURCE_CACHE}/cpm/CPM_${CPM_DOWNLOAD_VERSION}.cmake" )
++    elseif( DEFINED ENV{CPM_SOURCE_CACHE} )
++        set( CPM_DOWNLOAD_LOCATION "$ENV{CPM_SOURCE_CACHE}/cpm/CPM_${CPM_DOWNLOAD_VERSION}.cmake" )
++    else()
++        set( CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake" )
++    endif()
++    get_filename_component( CPM_DOWNLOAD_LOCATION ${CPM_DOWNLOAD_LOCATION} ABSOLUTE )
++    set( CPM_USE_NAMED_CACHE_DIRECTORIES ON )
++    if( NOT ( EXISTS ${CPM_DOWNLOAD_LOCATION} ) )
++        message( STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}" )
++        file( DOWNLOAD
++              https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake
++              ${CPM_DOWNLOAD_LOCATION}
++              SHOW_PROGRESS
++              EXPECTED_HASH SHA256=${CPM_DOWNLOAD_HASH}
++        )
++    endif()
++    include( ${CPM_DOWNLOAD_LOCATION} )
+ endif()
+ 
+ # No custom path to 7-Zip's source code was specified by the user, so we resolve it ourselves.
+ if( BIT7Z_CUSTOM_7ZIP_PATH STREQUAL "" )
+     if( BIT7Z_USE_SYSTEM_DEPENDENCIES )
+-        # When using system dependencies, look for a 7-Zip package via find_package first. Unlike the
+-        # other dependencies, 7-Zip is searched for *without* a version: bit7z compiles against a specific
+-        # pinned 7-Zip source for the download path, but a system 7-Zip package (e.g., vcpkg's) may expose
+-        # a different version and may not even ship a config version file, in which case a versioned
+-        # find_package would be rejected. We therefore accept whatever 7-Zip the integrator provides.
+-        # (This is why 7-Zip cannot ride the generic CPM_USE_LOCAL_PACKAGES path, which would forward the
+-        # CPMAddPackage VERSION to find_package.)
++        # When using system dependencies, resolve 7-Zip via find_package. It is searched for *without*
++        # a version: bit7z compiles against a specific pinned 7-Zip source for the download path, but a
++        # system 7-Zip package (e.g., vcpkg's) may expose a different version and may not even ship a
++        # config version file, in which case a versioned find_package would be rejected. We therefore
++        # accept whatever 7-Zip the integrator provides.
+         find_package( 7zip CONFIG REQUIRED )
+     elseif ( BIT7Z_BUILD_FOR_P7ZIP )
+         # p7zip source code (calling the package as 7-zip just for simplify the code).
+@@ -79,13 +79,17 @@ endif()
+ # ghc::filesystem library
+ # Note: the public API tests app compiles using the C++11 standard, so it always needs ghc::filesystem.
+ if( NOT USE_STANDARD_FILESYSTEM OR BIT7Z_BUILD_TESTS )
+-    CPMAddPackage(
+-        NAME ghc_filesystem
+-        GITHUB_REPOSITORY rikyoz/filesystem
+-        GIT_TAG b99c2aebd5ddd6fb2f190731ba80b949fc3842b5
+-        GIT_PROGRESS ON
+-        DOWNLOAD_ONLY YES
+-    )
++    if( BIT7Z_USE_SYSTEM_DEPENDENCIES )
++        find_package( ghc_filesystem CONFIG REQUIRED )
++    else()
++        CPMAddPackage(
++            NAME ghc_filesystem
++            GITHUB_REPOSITORY rikyoz/filesystem
++            GIT_TAG b99c2aebd5ddd6fb2f190731ba80b949fc3842b5
++            GIT_PROGRESS ON
++            DOWNLOAD_ONLY YES
++        )
++    endif()
+ 
+     # Normalize to a plain "ghc_filesystem" target that the rest of the build and the tests link,
+     # regardless of whether it came from the downloaded sources or from find_package.

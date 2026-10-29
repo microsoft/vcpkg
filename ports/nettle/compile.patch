@@ -1,0 +1,26 @@
+diff --git a/Makefile.in b/Makefile.in
+index 165e56f..c12d406 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -347,7 +347,7 @@ $(LIBHOGWEED_FORLINK): $(hogweed_OBJS) $(LIBNETTLE_FORLINK)
+ 
+ # For building the various *data.c programs. -lm needed for shadata.
+ %$(EXEEXT_FOR_BUILD): %.c
+-	$(CC_FOR_BUILD) $< -lm -o $@
++	$(COMPILE) $(PRE_LDFLAGS) $(LDFLAGS) $(LIBS) $< -o $@
+ 
+ # Explicit dependency.
+ eccdata$(EXEEXT_FOR_BUILD): mini-gmp.c mini-gmp.h
+diff --git a/streebog.c b/streebog.c
+index 002fd4d..5ccb3ba 100644
+--- a/streebog.c
++++ b/streebog.c
+@@ -1233,7 +1233,7 @@ streebog512_compress (struct streebog512_ctx *ctx, const uint8_t *input, uint64_
+ static void
+ streebog_final (struct streebog512_ctx *ctx)
+ {
+-  uint64_t Z[8] = {};
++  uint64_t Z[8] = {0,0,0,0,0,0,0,0};
+   unsigned int i;
+ 
+   /* PAD. It does not count towards message length */

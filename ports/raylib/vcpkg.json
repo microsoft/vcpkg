@@ -1,0 +1,41 @@
+{
+  "name": "raylib",
+  "version": "6.2",
+  "description": "A simple and easy-to-use library to enjoy videogames programming",
+  "homepage": "https://github.com/raysan5/raylib",
+  "license": "Zlib AND MIT AND Apache-2.0 AND (WTFPL OR CC0-1.0) AND LicenseRef-dirent",
+  "supports": "!arm32 & !uwp",
+  "dependencies": [
+    "cgltf",
+    "dirent",
+    {
+      "name": "glfw3",
+      "platform": "!(android | emscripten)"
+    },
+    "mmx",
+    "nanosvg",
+    "qoi",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "audio"
+  ],
+  "features": {
+    "audio": {
+      "description": "Build audio module",
+      "license": "MIT AND WTFPL",
+      "dependencies": [
+        "drlibs",
+        "miniaudio"
+      ]
+    }
+  }
+}

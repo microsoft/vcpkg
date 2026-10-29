@@ -1,0 +1,60 @@
+From 5f482a64c642f830f1d25f8abae7cae6dd2c6c2b Mon Sep 17 00:00:00 2001
+From: Stanislav Ershov <digital.stream.of.mind@gmail.com>
+Date: Mon, 8 Jan 2018 03:16:07 +0300
+Subject: [PATCH] enable shared build
+
+---
+ gl3w_gen.py | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/gl3w_gen.py b/gl3w_gen.py
+index 611331a..3515cf9 100755
+--- a/gl3w_gen.py
++++ b/gl3w_gen.py
+@@ -130,6 +130,10 @@ with open(os.path.join(args.root, 'include/GL/gl3w.h'), 'wb') as f:
+ 
+ #include <GL/glcorearb.h>
+ 
++#ifndef GL3W_API
++    #define GL3W_API
++#endif
++
+ #ifndef __gl_h_
+ #define __gl_h_
+ #endif
+@@ -147,10 +151,10 @@ typedef void (*GL3WglProc)(void);
+ typedef GL3WglProc (*GL3WGetProcAddressProc)(const char *proc);
+ 
+ /* gl3w api */
+-int gl3wInit(void);
+-int gl3wInit2(GL3WGetProcAddressProc proc);
+-int gl3wIsSupported(int major, int minor);
+-GL3WglProc gl3wGetProcAddress(const char *proc);
++GL3W_API int gl3wInit(void);
++GL3W_API int gl3wInit2(GL3WGetProcAddressProc proc);
++GL3W_API int gl3wIsSupported(int major, int minor);
++GL3W_API GL3WglProc gl3wGetProcAddress(const char *proc);
+ 
+ /* gl3w internal state */
+ ''')
+@@ -162,7 +168,7 @@ GL3WglProc gl3wGetProcAddress(const char *proc);
+     write(f, r'''	} gl;
+ };
+ 
+-extern union GL3WProcs gl3wProcs;
++GL3W_API extern union GL3WProcs gl3wProcs;
+ 
+ /* OpenGL functions */
+ ''')
+@@ -329,7 +333,7 @@ static const char *proc_names[] = {
+         write(f, '\t"{0}",\n'.format(proc))
+     write(f, r'''};
+ 
+-union GL3WProcs gl3wProcs;
++GL3W_API union GL3WProcs gl3wProcs;
+ 
+ static void load_procs(GL3WGetProcAddressProc proc)
+ {
+-- 
+2.15.0.windows.1
+

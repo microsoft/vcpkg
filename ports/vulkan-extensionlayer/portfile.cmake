@@ -1,0 +1,35 @@
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KhronosGroup/Vulkan-ExtensionLayer
+    REF "vulkan-sdk-${VERSION}"
+    SHA512 365741d6f2a06864422a33ac98c3b1defa8d4b7054172232ffe5ef7518510db88d61136d27b4a37d3349318cfdfa91323a2e5dad7beb22387b2d8131679d367a
+    HEAD_REF main
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_TESTS:BOOL=OFF
+)
+vcpkg_cmake_install()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_TARGET_IS_ANDROID)
+    set(VCPKG_POLICY_SKIP_USAGE_INSTALL_CHECK enabled)
+else()
+    file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
+
+file(GLOB LICENSE_FILES
+     LIST_DIRECTORIES false
+     "${SOURCE_PATH}/LICENSES/*")
+if(EXISTS "${SOURCE_PATH}/LICENSE")
+    list(APPEND LICENSE_FILES "${SOURCE_PATH}/LICENSE")
+endif()
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})

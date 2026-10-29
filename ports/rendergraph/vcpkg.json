@@ -1,0 +1,19 @@
+{
+  "name": "rendergraph",
+  "version": "2.1.0",
+  "description": "Vulkan render graph implementation.",
+  "homepage": "https://github.com/DragonJoker/RenderGraph",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vulkan-headers"
+  ]
+}

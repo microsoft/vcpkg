@@ -1,0 +1,13 @@
+diff --git a/src/rmodels.c b/src/rmodels.c
+index 6d3169e..4010287 100644
+--- a/src/rmodels.c
++++ b/src/rmodels.c
+@@ -5279,7 +5279,7 @@ static cgltf_result LoadFileGLTFCallback(const struct cgltf_memory_options *memo
+ }
+ 
+ // Release file data callback for cgltf
+-static void ReleaseFileGLTFCallback(const struct cgltf_memory_options *memoryOptions, const struct cgltf_file_options *fileOptions, void *data, cgltf_size size)
++static void ReleaseFileGLTFCallback(const struct cgltf_memory_options *memoryOptions, const struct cgltf_file_options *fileOptions, void *data)
+ {
+     UnloadFileData((unsigned char *)data);
+ }

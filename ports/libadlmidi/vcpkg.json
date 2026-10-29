@@ -1,0 +1,17 @@
+{
+  "name": "libadlmidi",
+  "version": "1.6.2.1",
+  "description": "libADLMIDI is a free Software MIDI synthesizer library with OPL3 emulation",
+  "homepage": "https://github.com/Wohlstand/libADLMIDI",
+  "license": "GPL-3.0-or-later AND LGPL-2.1-or-later AND LGPL-2.0-or-later AND GPL-2.0-or-later AND MIT AND BSD-3-Clause AND BSL-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

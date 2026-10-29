@@ -1,0 +1,19 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0cba691..51e47a3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,3 +1,13 @@
+ file(GLOB GASol_SRC *.cpp)
+ add_library(GASol STATIC ${GASol_SRC})
+ 
++file(GLOB GASol_INCLUDES *.h)
++
++install(FILES ${GASol_INCLUDES} DESTINATION include)
++
++install(
++  TARGETS GASol
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
+\ No newline at end of file

@@ -1,0 +1,19 @@
+{
+  "name": "nspr",
+  "version": "4.36",
+  "port-version": 1,
+  "description": "Netscape portable runtime",
+  "homepage": "https://releases.mozilla.org/pub/nspr/",
+  "license": "MPL-2.0",
+  "supports": "!uwp & !xbox & !(windows & static & staticcrt)",
+  "dependencies": [
+    {
+      "name": "nspr",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

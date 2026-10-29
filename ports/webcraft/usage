@@ -1,0 +1,4 @@
+WebCraft provides CMake targets:
+
+  find_package(WebCraft CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE WebCraft::WebCraft)

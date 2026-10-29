@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e08df91..7c02adf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,6 +28,7 @@ option(lib_utc_datetime "Build library with UTC date/time logging" OFF)
+ option(no_default_logfile "Do not write to default log file \"myeasylog.log\" (define ELPP_NO_DEFAULT_LOG_FILE)" OFF)
+ option(thread_safe "Build easyloggingpp thread safe (define ELPP_THREAD_SAFE)" OFF)
+ option(use_std_threads "Use standard library thread synchronization (define ELPP_FORCE_USE_STD_THREAD)" OFF)
++option(is_uwp "The compilation platform is uwp." OFF)
+ 
+ set(ELPP_MAJOR_VERSION "9")
+ set(ELPP_MINOR_VERSION "96")
+@@ -76,6 +77,9 @@ if (build_static_lib)
+         require_cpp14()
+         add_library(easyloggingpp STATIC src/easylogging++.cc)
+         set_property(TARGET easyloggingpp PROPERTY POSITION_INDEPENDENT_CODE ON)
++        if(is_uwp)
++            target_compile_definitions(easyloggingpp PUBLIC WIN32_LEAN_AND_MEAN ELPP_WINSOCK2)
++        endif()
+ 
+         install(TARGETS
+             easyloggingpp

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7815d3e..2e84a29 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -192,8 +192,7 @@ endif()
+ list(APPEND BRPC_COMMON_COMPILE_OPTIONS
+     -O2
+     -pipe
+-    -Wall
+-    -W
++    -w
+     -fPIC
+     -fstrict-aliasing
+     -Wno-unused-parameter

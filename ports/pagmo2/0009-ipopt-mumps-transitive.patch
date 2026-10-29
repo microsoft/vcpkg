@@ -1,0 +1,16 @@
+diff --git a/cmake_modules/Findpagmo_IPOPT.cmake b/cmake_modules/Findpagmo_IPOPT.cmake
+index a447101..e5f462a 100644
+--- a/cmake_modules/Findpagmo_IPOPT.cmake
++++ b/cmake_modules/Findpagmo_IPOPT.cmake
+@@ -61,5 +61,11 @@ if ("libipopt" IN_LIST pagmo_IPOPT_FIND_COMPONENTS)
+         find_package(LAPACK REQUIRED)
+         set_property(TARGET pagmo::IPOPT::libipopt APPEND PROPERTY
+             INTERFACE_LINK_LIBRARIES LAPACK::LAPACK ${CMAKE_DL_LIBS})
++        # A static libipopt built with MUMPS leaves the solver to the final link.
++        find_package(unofficial-mumps-solver CONFIG QUIET)
++        if(unofficial-mumps-solver_FOUND)
++            set_property(TARGET pagmo::IPOPT::libipopt APPEND PROPERTY
++                INTERFACE_LINK_LIBRARIES unofficial::mumps-solver::DMUMPS)
++        endif()
+     endif()
+ endif()

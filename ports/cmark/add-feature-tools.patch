@@ -1,0 +1,36 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 523b2cb..fac823e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -51,6 +51,7 @@ generate_export_header(cmark
+ # path for OSS Fuzz.
+ add_custom_target(cmark_static DEPENDS cmark)
+ 
++if (BUILD_TOOLS)
+ add_executable(cmark_exe
+   main.c)
+ cmark_add_compile_options(cmark_exe)
+@@ -59,14 +60,22 @@ set_target_properties(cmark_exe PROPERTIES
+   INSTALL_RPATH "${Base_rpath}")
+ target_link_libraries(cmark_exe PRIVATE
+   cmark)
++endif()
+ 
+-install(TARGETS cmark_exe cmark
++install(TARGETS cmark
+   EXPORT cmark-targets
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   )
+ 
++if (BUILD_TOOLS)
++    install(TARGETS cmark_exe
++        EXPORT cmark-targets
++        RUNTIME DESTINATION tools/cmark
++    )
++endif()
++
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libcmark.pc
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 

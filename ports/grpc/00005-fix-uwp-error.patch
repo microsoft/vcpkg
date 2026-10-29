@@ -1,0 +1,47 @@
+diff --git a/src/core/ext/transport/chttp2/transport/hpack_parser.cc b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
+index 84b4e86279..4921002887 100644
+--- a/src/core/ext/transport/chttp2/transport/hpack_parser.cc
++++ b/src/core/ext/transport/chttp2/transport/hpack_parser.cc
+@@ -688,7 +688,7 @@ class HPackParser::Parser {
+   }
+ 
+   void GPR_ATTRIBUTE_NOINLINE LogHeader(const HPackTable::Memento& memento) {
+-    const char* type;
++    const char* type = nullptr;
+     switch (log_info_.type) {
+       case LogInfo::kHeaders:
+         type = "HDR";
+diff --git a/src/core/lib/slice/slice.cc b/src/core/lib/slice/slice.cc
+index f2d49e0bf4..c86a75f1a3 100644
+--- a/src/core/lib/slice/slice.cc
++++ b/src/core/lib/slice/slice.cc
+@@ -189,6 +189,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
+                                         size_t len) {
+   uint8_t* ptr = reinterpret_cast<uint8_t*>(p.get());
+   grpc_slice slice;
++  memset(&slice, 0, sizeof(grpc_slice));
+   if (len <= sizeof(slice.data.inlined.bytes)) {
+     slice.refcount = nullptr;
+     slice.data.inlined.length = len;
+@@ -207,7 +208,7 @@ grpc_slice grpc_slice_from_moved_string(grpc_core::UniquePtr<char> p) {
+ }
+ 
+ grpc_slice grpc_slice_from_cpp_string(std::string str) {
+-  grpc_slice slice;
++  grpc_slice slice = { 0 };
+   if (str.size() <= sizeof(slice.data.inlined.bytes)) {
+     slice.refcount = nullptr;
+     slice.data.inlined.length = str.size();
+diff --git a/src/core/server/server.cc b/src/core/server/server.cc
+index c4796d6ae9..6a0289d180 100644
+--- a/src/core/server/server.cc
++++ b/src/core/server/server.cc
+@@ -1284,7 +1284,7 @@ grpc_call_error Server::QueueRequestedCall(size_t cq_idx, RequestedCall* rc) {
+     FailCall(cq_idx, rc, GRPC_ERROR_CREATE("Server Shutdown"));
+     return GRPC_CALL_OK;
+   }
+-  RequestMatcherInterface* rm;
++  RequestMatcherInterface* rm = nullptr;
+   switch (rc->type) {
+     case RequestedCall::Type::BATCH_CALL:
+       rm = unregistered_request_matcher_.get();

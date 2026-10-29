@@ -1,0 +1,100 @@
+{
+  "name": "vcpkg-ci-libigl",
+  "version-string": "ci",
+  "description": "Port to force features of libigl within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "libigl",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "cgal",
+      "platform": "!android & !(x86 & windows)"
+    },
+    {
+      "name": "embree",
+      "platform": "linux | osx | (windows & !uwp & !arm)"
+    },
+    {
+      "name": "glfw",
+      "platform": "!android"
+    },
+    {
+      "name": "imgui",
+      "platform": "!android"
+    },
+    "xml"
+  ],
+  "features": {
+    "cgal": {
+      "description": "libigl[cgal]",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "cgal",
+            "glfw"
+          ]
+        }
+      ]
+    },
+    "embree": {
+      "description": "libigl[embree]",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "embree",
+            "glfw"
+          ]
+        }
+      ]
+    },
+    "glfw": {
+      "description": "libigl[glfw] and stb",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "glfw"
+          ]
+        }
+      ]
+    },
+    "imgui": {
+      "description": "libigl[imgui] and stb",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "imgui"
+          ]
+        }
+      ]
+    },
+    "xml": {
+      "description": "libigl[xml]",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "xml"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index e57d066..9a810b0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1878,7 +1878,7 @@ fi
+ [enable_uaf_detection="0"]
+ )
+ if test "x$enable_uaf_detection" = "x1" ; then
+-  AC_DEFINE([JEMALLOC_UAF_DETECTION], [ ], [ ])
++  AC_DEFINE([JEMALLOC_UAF_DETECTION], [ ], ["enable UAF"])
+ fi
+ AC_SUBST([enable_uaf_detection])
+ 

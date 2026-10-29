@@ -1,0 +1,22 @@
+diff --git a/src/px_encode.c b/src/px_encode.c
+index 112ef43..0000000 100644
+--- a/src/px_encode.c
++++ b/src/px_encode.c
+@@ -46,7 +46,7 @@ int px_set_targetencoding(pxdoc_t *pxdoc) {
+ #if PX_USE_ICONV
+ 		char buffer[30];
+ 		sprintf(buffer, "CP%d", pxdoc->px_head->px_doscodepage);
+-		if(pxdoc->out_iconvcd > 0)
++		if(pxdoc->out_iconvcd != (iconv_t) -1)
+ 			iconv_close(pxdoc->out_iconvcd);
+ 		if((iconv_t)(-1) == (pxdoc->out_iconvcd = iconv_open(pxdoc->targetencoding, buffer))) {
+ 			return -1;
+@@ -74,7 +74,7 @@ int px_set_inputencoding(pxdoc_t *pxdoc) {
+ #if PX_USE_ICONV
+ 		char buffer[30];
+ 		sprintf(buffer, "CP%d", pxdoc->px_head->px_doscodepage);
+-		if(pxdoc->in_iconvcd > 0)
++		if(pxdoc->in_iconvcd != (iconv_t) -1)
+ 			iconv_close(pxdoc->in_iconvcd);
+ 		if((iconv_t)(-1) == (pxdoc->in_iconvcd = iconv_open(buffer, pxdoc->inputencoding))) {
+ 			return -1;

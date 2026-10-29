@@ -1,0 +1,14 @@
+diff --git a/cmake/lib3mfConfig.cmake.in b/cmake/lib3mfConfig.cmake.in
+index 589422b3..2dbcbf95 100644
+--- a/cmake/lib3mfConfig.cmake.in
++++ b/cmake/lib3mfConfig.cmake.in
+@@ -23,8 +23,8 @@ if(NOT TARGET lib3mf::lib3mf)
+   return()
+ endif()
+ 
+ get_filename_component(_lib3mf_package_dir "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+-get_filename_component(LIB3MF_ROOT_DIR "${_lib3mf_package_dir}/../../.." ABSOLUTE)
++get_filename_component(LIB3MF_ROOT_DIR "${_lib3mf_package_dir}/../.." ABSOLUTE)
+ set(LIB3MF_CDYNAMIC_ADDITIONAL_SOURCE "${LIB3MF_ROOT_DIR}/include/Bindings/CDynamic/lib3mf_dynamic.cc")
+ 
+ set(_lib3mf_library_location_definition "LIB3MF_LIBRARY_LOCATION=\"$<TARGET_FILE:lib3mf::lib3mf>\"")

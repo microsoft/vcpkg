@@ -1,0 +1,14 @@
+string(REGEX MATCH "^[0-9]+" VERSION_MAJOR "${VERSION}")
+string(REGEX MATCH "^gz-([a-z-]+)" MATCHED_VALUE "${PORT}")
+set(PACKAGE_NAME "${CMAKE_MATCH_1}")
+
+ignition_modular_library(
+    NAME "${PACKAGE_NAME}"
+    REF "${PORT}${VERSION_MAJOR}_${VERSION}"
+    VERSION "${VERSION}"
+    SHA512 d4c5012259a17b673aeb8216e2fa86d96d544df78493ac5985b7cc5d52eff1edb8d81c5914619634ef834fc7dddb87466a1de08cd9ed41f58a7aa3c090c51c6f
+    OPTIONS
+        -DSKIP_SWIG=ON
+        -DSKIP_PYBIND11=ON
+        -DBUILD_DOCS=OFF
+)

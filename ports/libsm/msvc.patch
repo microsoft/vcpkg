@@ -1,0 +1,15 @@
+diff --git a/src/sm_genid.c b/src/sm_genid.c
+index 9a52e1d..3a7d1e4 100644
+--- a/src/sm_genid.c
++++ b/src/sm_genid.c
+@@ -64,7 +64,9 @@ in this Software without prior written authorization from The Open Group.
+ # include <X11/Xthreads.h>
+ #endif
+ #include <stdio.h>
+-#include <unistd.h>
++#ifdef HAVE_UNISTD_H
++ #include <unistd.h>
++#endif
+ 
+ #include <time.h>
+ #define Time_t time_t

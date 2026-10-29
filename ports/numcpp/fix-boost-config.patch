@@ -1,0 +1,13 @@
+diff --git a/cmake/NumCppConfig.cmake.in b/cmake/NumCppConfig.cmake.in
+index dcbc2d0..164b446 100644
+--- a/cmake/NumCppConfig.cmake.in
++++ b/cmake/NumCppConfig.cmake.in
+@@ -21,7 +21,7 @@ if(NOT TARGET @PROJECT_NAME@::@PROJECT_NAME@)
+     set_and_check(@PROJECT_NAME@_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
+     check_required_components("@PROJECT_NAME@")
+ 
+-    if(NUMCPP_NO_USE_BOOST)
++    if(@NUMCPP_NO_USE_BOOST@)
+         set_property(TARGET @PROJECT_NAME@::@PROJECT_NAME@ APPEND 
+             PROPERTY 
+             INTERFACE_COMPILE_DEFINITIONS

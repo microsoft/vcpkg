@@ -1,0 +1,72 @@
+diff --git a/src/glcanvas.cpp b/src/glcanvas.cpp
+index ec1ca4f..6ebf5a9 100644
+--- a/src/glcanvas.cpp
++++ b/src/glcanvas.cpp
+@@ -18,6 +18,7 @@
+ #include <nanogui/theme.h>
+ #include <nanogui/opengl.h>
+ #include <nanogui/serializer/core.h>
++#include <cassert>
+ 
+ NAMESPACE_BEGIN(nanogui)
+ 
+diff --git a/src/imageview.cpp b/src/imageview.cpp
+index 80cdf9b..f0ebbaf 100644
+--- a/src/imageview.cpp
++++ b/src/imageview.cpp
+@@ -15,6 +15,7 @@
+ #include <nanogui/window.h>
+ #include <nanogui/screen.h>
+ #include <nanogui/theme.h>
++#include <cassert>
+ #include <cmath>
+ 
+ NAMESPACE_BEGIN(nanogui)
+diff --git a/src/stackedwidget.cpp b/src/stackedwidget.cpp
+index 0b56b31..16b07cc 100644
+--- a/src/stackedwidget.cpp
++++ b/src/stackedwidget.cpp
+@@ -13,6 +13,7 @@
+ */
+ 
+ #include <nanogui/stackedwidget.h>
++#include <cassert>
+ 
+ NAMESPACE_BEGIN(nanogui)
+ 
+diff --git a/src/tabheader.cpp b/src/tabheader.cpp
+index e3a24ff..86e1493 100644
+--- a/src/tabheader.cpp
++++ b/src/tabheader.cpp
+@@ -14,6 +14,7 @@
+ #include <nanogui/tabheader.h>
+ #include <nanogui/theme.h>
+ #include <nanogui/opengl.h>
++#include <cassert>
+ #include <numeric>
+ 
+ NAMESPACE_BEGIN(nanogui)
+diff --git a/src/tabwidget.cpp b/src/tabwidget.cpp
+index e01b5c3..0a3f76c 100644
+--- a/src/tabwidget.cpp
++++ b/src/tabwidget.cpp
+@@ -19,6 +19,7 @@
+ #include <nanogui/opengl.h>
+ #include <nanogui/window.h>
+ #include <nanogui/screen.h>
++#include <cassert>
+ #include <algorithm>
+ 
+ NAMESPACE_BEGIN(nanogui)
+diff --git a/src/widget.cpp b/src/widget.cpp
+index 03af6b1..68318a8 100644
+--- a/src/widget.cpp
++++ b/src/widget.cpp
+@@ -16,6 +16,7 @@
+ #include <nanogui/opengl.h>
+ #include <nanogui/screen.h>
+ #include <nanogui/serializer/core.h>
++#include <cassert>
+ 
+ NAMESPACE_BEGIN(nanogui)
+ 

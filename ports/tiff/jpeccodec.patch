@@ -1,0 +1,24 @@
+diff --git a/cmake/JPEGCodec.cmake b/cmake/JPEGCodec.cmake
+index 2a26c432..d8fb5ae7 100644
+--- a/cmake/JPEGCodec.cmake
++++ b/cmake/JPEGCodec.cmake
+@@ -53,6 +53,19 @@ if(NOT jpeg-prefer-standard)
+                 set(JPEG_INCLUDE_DIRS "")
+             endif()
+             unset(_jpeg_includes)
++        elseif(TARGET libjpeg-turbo::jpeg-static AND NOT TARGET JPEG::JPEG)
++            add_library(JPEG::JPEG ALIAS libjpeg-turbo::jpeg-static)
++            set(JPEG_FOUND TRUE)
++            # Set JPEG_LIBRARIES to the target name
++            set(JPEG_LIBRARIES libjpeg-turbo::jpeg-static)
++            # For JPEG_INCLUDE_DIRS, try to get the property, but it's OK if it's not set
++            get_target_property(_jpeg_includes libjpeg-turbo::jpeg-static INTERFACE_INCLUDE_DIRECTORIES)
++            if(_jpeg_includes)
++                set(JPEG_INCLUDE_DIRS "${_jpeg_includes}")
++            else()
++                set(JPEG_INCLUDE_DIRS "")
++            endif()
++            unset(_jpeg_includes)
+         elseif(TARGET libjpeg-turbo::turbojpeg AND NOT TARGET JPEG::JPEG)
+             # Only use turbojpeg as a fallback if jpeg target doesn't exist
+             # This is unlikely to work correctly but better than nothing

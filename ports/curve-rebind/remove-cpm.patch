@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52e60bd..6f9eb7e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,7 +12,6 @@ option(rebind_tests "Run tests" OFF)
+ # --------------------------------------------------------------------------------------------------------
+ 
+ add_library(${PROJECT_NAME} INTERFACE)
+-add_library(cr::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+ 
+ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_23)
+ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 23 CXX_EXTENSIONS OFF CXX_STANDARD_REQUIRED ON)
+@@ -39,13 +38,7 @@ endif()
+ # Install Targets
+ # --------------------------------------------------------------------------------------------------------
+ 
+-include("cmake/cpm.cmake")
+-
+-CPMFindPackage(
+-  NAME           PackageProject
+-  VERSION        1.13.0
+-  GIT_REPOSITORY "https://github.com/TheLartians/PackageProject.cmake"
+-)
++add_subdirectory(cmake/packageproject.cmake)
+ 
+ packageProject(
+   NAMESPACE cr

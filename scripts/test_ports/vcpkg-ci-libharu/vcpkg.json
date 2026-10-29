@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-libharu",
+  "version-string": "ci",
+  "description": "Validates libharu",
+  "dependencies": [
+    "libharu",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

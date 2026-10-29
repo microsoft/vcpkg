@@ -1,0 +1,2 @@
+include(CMakeFindDependencyMacro)
+find_dependency(directPackageX)

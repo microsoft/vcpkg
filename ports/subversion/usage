@@ -1,0 +1,23 @@
+The package subversion provides the following libraries:
+
+  * libsvn_client
+  * libsvn_delta
+  * libsvn_diff
+  * libsvn_fs
+  * libsvn_fs_fs
+  * libsvn_fs_util
+  * libsvn_fs_x
+  * libsvn_ra
+  * libsvn_ra_local
+  * libsvn_ra_serf
+  * libsvn_ra_svn
+  * libsvn_repos
+  * libsvn_subr
+  * libsvn_wc
+
+To use the libraries in your CMake project:
+
+    find_package(unofficial-subversion CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::subversion::svn_client)
+
+Or link directly against the libraries you need.

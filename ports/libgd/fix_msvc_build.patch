@@ -1,0 +1,12 @@
+diff --git a/src/gd_webp.c b/src/gd_webp.c
+index e9ad802..7631f27 100644
+--- a/src/gd_webp.c
++++ b/src/gd_webp.c
+@@ -16,6 +16,7 @@
+ #include "gd.h"
+ #include "gd_errors.h"
+ #include "gdhelpers.h"
++#include "gd_intern.h" # for ssize_t
+ 
+ #ifdef HAVE_LIBWEBP
+ #include "webp/decode.h"

@@ -1,0 +1,50 @@
+diff --git a/cmake/install-rules.cmake b/cmake/install-rules.cmake
+--- a/cmake/install-rules.cmake
++++ b/cmake/install-rules.cmake
+@@ -20,12 +20,13 @@
+ 
+ # Package export / installation rules
+ set(SLANG_CMAKECONFIG_INSTALL_DIR
+-    "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
++    "${CMAKE_INSTALL_LIBDIR}/cmake/slang-verilog"
+     CACHE STRING "install path for slangConfig.cmake")
+ 
+ install(
+   EXPORT slangTargets
+-  NAMESPACE "slang::"
++  FILE slang-verilogTargets.cmake
++  NAMESPACE "slang-verilog::"
+   DESTINATION ${SLANG_CMAKECONFIG_INSTALL_DIR}
+   COMPONENT slang_Development)
+ 
+@@ -44,17 +45,17 @@
+ 
+ configure_package_config_file(
+   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/slangConfig.cmake.in
+-  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++  "${CMAKE_CURRENT_BINARY_DIR}/slang-verilogConfig.cmake"
+   INSTALL_DESTINATION ${SLANG_CMAKECONFIG_INSTALL_DIR})
+ 
+ write_basic_package_version_file(
+-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/slang-verilogConfigVersion.cmake
+   VERSION ${PROJECT_VERSION}
+   COMPATIBILITY SameMajorVersion)
+ 
+ install(
+-  FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+-        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
++  FILES ${CMAKE_CURRENT_BINARY_DIR}/slang-verilogConfig.cmake
++        ${CMAKE_CURRENT_BINARY_DIR}/slang-verilogConfigVersion.cmake
+   DESTINATION ${SLANG_CMAKECONFIG_INSTALL_DIR}
+   COMPONENT slang_Development)
+ 
+diff --git a/cmake/slangConfig.cmake.in b/cmake/slangConfig.cmake.in
+--- a/cmake/slangConfig.cmake.in
++++ b/cmake/slangConfig.cmake.in
+@@ -7,4 +7,4 @@
+ @MIMALLOC_FIND_DEP@
+ @CPPTRACE_FIND_DEP@
+ 
+-include("${CMAKE_CURRENT_LIST_DIR}/slangTargets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/slang-verilogTargets.cmake")

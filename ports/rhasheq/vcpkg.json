@@ -1,0 +1,22 @@
+{
+  "name": "rhasheq",
+  "version": "0.0.3",
+  "description": "Simple header-only librhash wrapper for verifying hashes from a file to a given `const char *`.",
+  "homepage": "https://github.com/offscale/rhasheq",
+  "license": "0BSD",
+  "dependencies": [
+    {
+      "name": "c89stringutils",
+      "version>=": "0.0.3"
+    },
+    "rhash",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "qmex",
+  "version-date": "2024-10-31",
+  "description": "QMEX - Query & Map & Evaluation & eXecution for Tabular Data",
+  "homepage": "https://github.com/huangqinjin/QMEX",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "lua",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "QMEX cli tools"
+    }
+  }
+}

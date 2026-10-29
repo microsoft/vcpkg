@@ -1,0 +1,8 @@
+async-simple provides CMake targets:
+
+find_package(async_simple CONFIG REQUIRED)
+target_link_libraries(main PRIVATE async_simple::async_simple_static)
+# Or you can use header-only version(async_simple::uthread is not allowed to use in this version)
+target_link_libraries(main PRIVATE async_simple::async_simple_header_only)
+# Or you can also use dynamic linkage:
+target_link_libraries(main PRIVATE async_simple::async_simple)

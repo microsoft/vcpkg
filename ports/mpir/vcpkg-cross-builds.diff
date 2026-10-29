@@ -1,0 +1,26 @@
+diff --git a/configure.ac b/configure.ac
+index 5b363fb..cf8fdc5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1718,11 +1718,21 @@ GMP_H_ANSI
+ 
+ 
+ # The C compiler on the build system, and associated tests.
++if test "$cross_compiling" == "no" ; then
++# native build, native tools
+ GMP_PROG_CC_FOR_BUILD
+ GMP_PROG_CPP_FOR_BUILD
+ GMP_PROG_EXEEXT_FOR_BUILD
+ GMP_C_FOR_BUILD_ANSI
+ GMP_CHECK_LIBM_FOR_BUILD
++else
++# cross build, <TOOL>_FOR_BUILD disabled by vcpkg
++AC_SUBST(CC_FOR_BUILD,"false")
++AC_SUBST(CPP_FOR_BUILD,"false")
++AC_SUBST(EXEEXT_FOR_BUILD,"")
++AC_SUBST(U_FOR_BUILD,"")
++AC_SUBST(LIBM_FOR_BUILD,"")
++fi
+ 
+ # How to assemble, used with CFLAGS etc, see mpn/Makeasm.am.
+ # Using the compiler is a lot easier than figuring out how to invoke the

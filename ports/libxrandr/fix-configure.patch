@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 99e3944..d6e6159 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -34,7 +34,6 @@ AC_INIT([libXrandr], [1.5.4],
+         [libXrandr])
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AC_CONFIG_HEADERS([config.h])
+-AC_CONFIG_MACRO_DIRS([m4])
+ 
+ # Initialize Automake
+ AM_INIT_AUTOMAKE([foreign dist-xz])

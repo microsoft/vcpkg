@@ -1,0 +1,27 @@
+diff --git a/configure.ac b/configure.ac
+index f0f9723..9e79db9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -55,7 +55,7 @@ AC_DEFINE_UNQUOTED([LIB_VERSION_REVISION],
+   [Library revision])
+ 
+ AM_CPPFLAGS="-I\$(top_srcdir)/include"
+-AM_CFLAGS="-Wall -Wno-parentheses"
++AM_CFLAGS="-Wall"
+ AM_CXXFLAGS="$AM_CFLAGS"
+ AC_SUBST([AM_CPPFLAGS])
+ AC_SUBST([AM_CFLAGS])
+diff --git a/zbar/processor.h b/zbar/processor.h
+index a8289e0..8a7e33c 100644
+--- a/zbar/processor.h
++++ b/zbar/processor.h
+@@ -29,7 +29,9 @@
+ #endif
+ #include <stdlib.h>
+ #include <string.h>
++#ifndef WIN32
+ #include <unistd.h>
++#endif
+ 
+ #include <zbar.h>
+ #include "error.h"

@@ -1,0 +1,10 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 36c7356..d30bde0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -64,3 +64,5 @@ if (BUILD_EXAMPLES)
+     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT commandline_test)
+ endif ()
+
++set_target_properties(commandline PROPERTIES PUBLIC_HEADER "src/commandline.h")
++install(TARGETS commandline RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)

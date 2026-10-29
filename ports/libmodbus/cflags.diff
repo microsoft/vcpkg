@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 920612f..06d5dfa 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -153,6 +153,7 @@ AC_CHECK_TYPES([struct termios2], [], [], [[#include <asm/termbits.h>]])
+ # Check for termios2 support
+ AC_CHECK_TYPES([struct termios2], [], [], [[#include <asm/termbits.h>]])
+ 
++test -n "$WARNING_CFLAGS" || \
+ WARNING_CFLAGS="-Wall \
+ -Wmissing-declarations -Wmissing-prototypes \
+ -Wnested-externs -Wpointer-arith \

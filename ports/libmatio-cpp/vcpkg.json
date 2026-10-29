@@ -1,0 +1,20 @@
+{
+  "name": "libmatio-cpp",
+  "version": "0.3.0",
+  "description": "matio-cpp is a C++ wrapper for the matio library, automatically dealing with memory allocation and deallocation. It can be used for reading and writing binary MATLAB .mat files from C++, without the need to access or rely on MATLAB's own shared libraries.",
+  "homepage": "https://github.com/ami-iit/matio-cpp",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    "eigen3",
+    "matio",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "visit-struct"
+  ]
+}

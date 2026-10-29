@@ -1,0 +1,24 @@
+diff --git a/src/eastasianwidthdef.h b/src/eastasianwidthdef.h
+index ba89040..0f82d37 100644
+--- a/src/eastasianwidthdef.h
++++ b/src/eastasianwidthdef.h
+@@ -26,6 +26,10 @@
+ 
+ #include "unibreakdef.h"
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ /**
+  * East Asian Width (ea) class.  This is defined in Unicode Standard
+  * Annex 11.
+@@ -64,4 +68,8 @@ enum EastAsianWidthClass ub_get_char_eaw_class(utf32_t ch);
+ */
+ bool ub_is_op_east_asian(utf32_t ch);
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ #endif /* EASTASIANWIDTHDEF_H */

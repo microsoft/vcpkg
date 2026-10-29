@@ -1,0 +1,13 @@
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index fbe1ec5..387b45e 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -732,7 +732,7 @@
+   <Target Name="_CopyVCRuntime" AfterTargets="Build" Inputs="@(VCRuntimeDLL)" Outputs="$(OutDir)%(Filename)%(Extension)" DependsOnTargets="FindVCRuntime">
+     <!-- bpo-38597: When we switch to another VCRuntime DLL, include vcruntime140.dll as well -->
+     <Warning Text="A copy of vcruntime140.dll is also required" Condition="!$(VCToolsRedistVersion.StartsWith(`14.`))" />
+-    <Copy SourceFiles="%(VCRuntimeDLL.FullPath)" DestinationFolder="$(OutDir)" />
++    <Copy Condition="false" SourceFiles="%(VCRuntimeDLL.FullPath)" DestinationFolder="$(OutDir)" />
+   </Target>
+   <Target Name="_CleanVCRuntime" AfterTargets="Clean">
+     <Delete Files="@(VCRuntimeDLL->'$(OutDir)%(Filename)%(Extension)')" />

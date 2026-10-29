@@ -1,0 +1,47 @@
+diff --git a/src/inc/CMakeLists.txt b/src/inc/CMakeLists.txt
+index 48edebd..0a59ee6 100644
+--- a/src/inc/CMakeLists.txt
++++ b/src/inc/CMakeLists.txt
+@@ -40,7 +40,7 @@ endif()
+ 
+ if(WIN32)
+     if(QUIC_UWP_BUILD)
+-        target_link_libraries(base_link INTERFACE OneCore ws2_32 ntdll)
++        target_link_libraries(base_link INTERFACE OneCoreUap ws2_32 ntdll)
+     elseif(QUIC_GAMECORE_BUILD)
+         target_link_libraries(base_link INTERFACE ntdll advapi32)
+         if(NOT QUIC_EXTERNAL_TOOLCHAIN)
+diff --git a/src/platform/CMakeLists.txt b/src/platform/CMakeLists.txt
+index 4a573ae..6fb5887 100644
+--- a/src/platform/CMakeLists.txt
++++ b/src/platform/CMakeLists.txt
+@@ -60,7 +60,9 @@ if("${CX_PLATFORM}" STREQUAL "windows")
+         msquic_platform
+         PUBLIC
+         wbemuuid)
++    if(NOT QUIC_UWP_BUILD)
+     target_link_libraries(msquic_platform PUBLIC winmm)
++    endif()
+ elseif(QUIC_LINUX_XDP_ENABLED)
+     find_library(NL_LIB nl-3)
+     find_library(NL_ROUTE_LIB nl-route-3)
+diff --git a/submodules/CMakeLists.txt b/submodules/CMakeLists.txt
+index 4bf8117..4468b19 100644
+--- a/submodules/CMakeLists.txt
++++ b/submodules/CMakeLists.txt
+@@ -59,13 +59,13 @@ if (WIN32)
+     if (QUIC_UWP_BUILD)
+         # Translate target architecture into corresponding OpenSSL build flag
+         if (${SYSTEM_PROCESSOR} STREQUAL "arm64")
+-            set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64-ARM")
++            set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64-ARM-UWP")
+         elseif (${SYSTEM_PROCESSOR} STREQUAL "arm")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN32-ARM")
+         elseif (${SYSTEM_PROCESSOR} STREQUAL "x86")
+             set(QUIC_OPENSSL_WIN_ARCH "VC-WIN32-ONECORE")
+         elseif (${SYSTEM_PROCESSOR} STREQUAL "x64" OR ${SYSTEM_PROCESSOR} STREQUAL "amd64")
+-            set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64A-ONECORE")
++            set(QUIC_OPENSSL_WIN_ARCH "VC-WIN64A-UWP")
+         else()
+             message(FATAL_ERROR "Unknown Generator Platform ${SYSTEM_PROCESSOR}")
+         endif()

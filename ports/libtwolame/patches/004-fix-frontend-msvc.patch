@@ -1,0 +1,17 @@
+--- a/frontend/frontend.c
++++ b/frontend/frontend.c
+@@ -20,7 +20,14 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <getopt.h>
+ 

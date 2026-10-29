@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-msys2",
+  "version": "1",
+  "description": "Test vcpkg msys2 freshness",
+  "license": "MIT",
+  "supports": "(windows | mingw) & native",
+  "features": {
+    "update-all": {
+      "description": "Update all outdated packages in vcpkg_acquire_msys.cmake"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+﻿diff --git a/src/ccd/ccd_export.h b/src/ccd/ccd_export.h
+index e898d41..c6aa5fb 100644
+--- a/src/ccd/ccd_export.h
++++ b/src/ccd/ccd_export.h
+@@ -1,7 +1,7 @@
+ #ifndef CCD_EXPORT_H
+ #define CCD_EXPORT_H
+ 
+-#ifdef CCD_STATIC_DEFINE
++#if 1
+ #  define CCD_EXPORT
+ #else
+ #  ifdef _MSC_VER

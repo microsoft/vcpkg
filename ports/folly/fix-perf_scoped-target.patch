@@ -1,0 +1,14 @@
+diff --git a/folly/detail/CMakeLists.txt b/folly/detail/CMakeLists.txt
+index 521983f..7bbfb6d 100644
+--- a/folly/detail/CMakeLists.txt
++++ b/folly/detail/CMakeLists.txt
+@@ -182,6 +182,9 @@ folly_add_library(
+   EXTERNAL_DEPS
+     Boost::regex
+ )
++if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++  target_link_libraries(folly_detail_perf_scoped PUBLIC folly_subprocess)
++endif()
+ 
+ folly_add_library(
+   NAME poly_detail

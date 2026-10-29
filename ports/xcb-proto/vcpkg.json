@@ -1,0 +1,21 @@
+{
+  "name": "xcb-proto",
+  "version": "1.17.0",
+  "description": "XML-XCB protocol descriptions used by libxcb for the X11 protocol & extensions",
+  "homepage": "https://xcb.freedesktop.org/",
+  "license": "MIT AND MIT-open-group AND X11-distribute-modifications-variant",
+  "dependencies": [
+    {
+      "name": "libxml2",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    "xorg-macros"
+  ]
+}

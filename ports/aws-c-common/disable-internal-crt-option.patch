@@ -1,0 +1,20 @@
+diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
+index a85a86ba..1b851824 100644
+--- a/cmake/AwsCFlags.cmake
++++ b/cmake/AwsCFlags.cmake
+@@ -91,15 +91,6 @@ function(aws_set_common_properties target)
+             list(APPEND AWS_C_FLAGS /DAWS_SUPPORT_WIN7=1)
+         endif()
+ 
+-        # Set MSVC runtime library.
+-        # Note: there are other ways of doing this if we bump our CMake minimum to 3.14+
+-        # See: https://cmake.org/cmake/help/latest/policy/CMP0091.html
+-        if (AWS_STATIC_MSVC_RUNTIME_LIBRARY OR STATIC_CRT)
+-            list(APPEND AWS_C_FLAGS "/MT$<$<CONFIG:Debug>:d>")
+-        else()
+-            list(APPEND AWS_C_FLAGS "/MD$<$<CONFIG:Debug>:d>")
+-        endif()
+-
+         # Warning disables always go last, since clang takes the last flag that
+         # mentions a diagnostic. clang-cl maps /W4 to -Wall -Wextra, so it turns on
+         # clang warnings that real MSVC does not have, and that the /wdNNNN

@@ -1,0 +1,11 @@
+The package geotrans provides CMake targets:
+
+    find_package(geotrans CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE geotrans::MSPdtcc geotrans::MSPCoordinateConversionService)
+
+
+The geotrans library depends on being able to read it's model data so you'll need to
+set an environment variable to let geotrans know where the models are installed:
+
+export MSPCCS_DATA=<path_to_vcpkg_installed>/share/@PORT@/data
+

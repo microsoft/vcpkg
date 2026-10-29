@@ -1,0 +1,15 @@
+{
+  "name": "snap7",
+  "version": "1.4.2",
+  "port-version": 2,
+  "description": "Snap7",
+  "homepage": "https://snap7.sourceforge.net/",
+  "license": "LGPL-3.0",
+  "supports": "!android & !uwp & !static",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

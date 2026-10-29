@@ -1,0 +1,22 @@
+diff --git a/cmake/install.cmake b/cmake/install.cmake
+index e65c9bb..0d2b43d 100644
+--- a/cmake/install.cmake
++++ b/cmake/install.cmake
+@@ -63,7 +63,7 @@ if (protobuf_BUILD_PROTOC_BINARIES)
+   install(TARGETS protoc EXPORT protobuf-targets
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc
+     BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT protoc)
+-  if (protobuf_BUILD_LIBUPB)
++  if (0)
+     foreach (generator upb upbdefs upb_minitable)
+       list(APPEND _protobuf_binaries protoc-gen-${generator})
+       install(TARGETS protoc-gen-${generator} EXPORT protobuf-targets
+@@ -101,7 +101,7 @@ set(protobuf_HEADERS
+   ${plugin_proto_proto_srcs}
+   ${release_all_options_protos_files}
+ )
+-if (protobuf_BUILD_LIBUPB)
++if (0)
+   list(APPEND protobuf_HEADERS ${libupb_hdrs})
+   # Manually install the bootstrap headers
+   install(

@@ -1,0 +1,6 @@
+soci provides CMake targets:
+
+    # Not specifying a component implies linkage against all available components
+    # Core component is always implied
+    find_package(SOCI 4.1 COMPONENTS Core CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE SOCI::SOCI)

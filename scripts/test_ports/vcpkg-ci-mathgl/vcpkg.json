@@ -1,0 +1,29 @@
+{
+  "name": "vcpkg-ci-mathgl",
+  "version-date": "2022-12-28",
+  "description": "Ensures that the vcpkg CI build of mathgl tests all features and examples",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "mathgl",
+      "features": [
+        "arma",
+        "examples",
+        {
+          "name": "fltk",
+          "platform": "!(x64 & linux)"
+        },
+        "gif",
+        "glut",
+        "gsl",
+        "hdf5",
+        "jpeg",
+        "opengl",
+        "png",
+        "qt5",
+        "wx",
+        "zlib"
+      ]
+    }
+  ]
+}

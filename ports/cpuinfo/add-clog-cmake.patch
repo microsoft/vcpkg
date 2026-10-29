@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b260162..d63e180 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -929,3 +929,7 @@ IF(CPUINFO_BUILD_PKG_CONFIG)
+   DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ 
+ ENDIF()
++
++IF(CPUINFO_BUILD_CLOG)
++add_subdirectory(deps/clog)
++ENDIF()
+\ No newline at end of file

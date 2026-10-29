@@ -1,0 +1,68 @@
+diff --git a/CMake/FindFFTW.cmake b/CMake/FindFFTW.cmake
+index 709c0cd..64baa8e 100644
+--- a/CMake/FindFFTW.cmake
++++ b/CMake/FindFFTW.cmake
+@@ -30,7 +30,27 @@
+ ## to set the initial value of the CMake variable `MKLROOT` (see
+ ## https://software.intel.com/en-us/mkl-linux-developer-guide-scripts-to-set-environment-variables).
+ 
+-if(ITK_USE_FFTWD OR ITK_USE_FFTWF)
++set(FFTW_INCLUDE "")
++if(ITK_USE_CUFFTW)
++  find_package(CUDAToolkit REQUIRED)
++  find_path(CUFFTW_INCLUDE_PATH cufftw.h PATHS ${CUDAToolkit_INCLUDE_DIRS} NO_DEFAULT_PATH REQUIRED)
++  set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
++  set(FFTWD_LIBRARIES CUDA::cufftw)
++  set(FFTWD_FOUND 1)
++  set(FFTWF_LIBRARIES CUDA::cufftw)
++  set(FFTWF_FOUND 1)
++elseif(ITK_USE_FFTWD OR ITK_USE_FFTWF)
++  find_path(FFTW_INCLUDE_PATH fftw3.h REQUIRED)
++  set(FFTW_INCLUDE ${CUFFTW_INCLUDE_PATH})
++  if(ITK_USE_FFTWD)
++    find_package(FFTWD NAMES FFTW3 CONFIG REQUIRED)
++    set(FFTWD_LIBRARIES FFTW3::fftw3)
++  endif()
++  if(ITK_USE_FFTWF)
++    find_package(FFTWF NAMES FFTW3f CONFIG REQUIRED)
++    set(FFTWF_LIBRARIES FFTW3::fftw3f)
++  endif()
++elseif(0)
+ 
+   if(ITK_USE_MKL)
+     # If the user has provided the MKL include path then search nearby for library files
+diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
+index 9066d4f..4ec0266 100644
+--- a/CMake/ITKConfig.cmake.in
++++ b/CMake/ITKConfig.cmake.in
+@@ -3,6 +3,16 @@ include(CMakeFindDependencyMacro)
+ find_dependency(OpenJPEG CONFIG)
+ find_dependency(VXL CONFIG)
+ include("${VXL_CMAKE_DIR}/UseVXL.cmake")
++if("@ITK_USE_CUFFTW@")
++  find_dependency(CUDAToolkit)
++else()
++  if("@ITK_USE_FFTWD@")
++    find_dependency(FFTW3 CONFIG)
++  endif()
++  if("@ITK_USE_FFTWF@")
++    find_dependency(FFTW3f CONFIG)
++  endif()
++endif()
+ #-----------------------------------------------------------------------------
+ #
+ # ITKConfig.cmake - ITK CMake configuration file for external projects.
+diff --git a/Modules/Filtering/FFT/src/CMakeLists.txt b/Modules/Filtering/FFT/src/CMakeLists.txt
+index 83b176c..b51bc48 100644
+--- a/Modules/Filtering/FFT/src/CMakeLists.txt
++++ b/Modules/Filtering/FFT/src/CMakeLists.txt
+@@ -10,6 +10,9 @@ endif()
+ itk_module_add_library(ITKFFT ${ITKFFT_SRCS})
+ 
+ # this library is only needed if FFTW is used
++if(ITK_USE_CUFFTW)
++  target_link_libraries(ITKFFT LINK_PUBLIC CUDA::cufftw)
++endif()
+ if(ITK_USE_FFTWF
+    OR ITK_USE_FFTWD
+    AND NOT ITK_USE_CUFFTW)

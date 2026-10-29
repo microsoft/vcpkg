@@ -1,0 +1,26 @@
+diff --git a/meson.build b/meson.build
+index 600cdf908..5a4cf6011 100644
+--- a/meson.build
++++ b/meson.build
+@@ -46,7 +46,7 @@ cc = meson.get_compiler('c')
+ 
+ # Compiler flags
+ cflags = []
+-if cc.get_id() != 'msvc'
++if cc.get_argument_syntax() != 'msvc'
+   cflags += [
+     '-Wmissing-declarations',
+     '-Werror-implicit-function-declaration',
+diff --git a/util/cairo-script/cairo-script-objects.c b/util/cairo-script/cairo-script-objects.c
+index 2d7937be3..4d55ca848 100644
+--- a/util/cairo-script/cairo-script-objects.c
++++ b/util/cairo-script/cairo-script-objects.c
+@@ -127,7 +127,7 @@ csi_array_append (csi_t *ctx,
+     return _csi_stack_push (ctx, &array->stack, csi_object_reference (obj));
+ }
+ 
+-inline csi_status_t
++csi_status_t
+ _csi_array_execute (csi_t *ctx, csi_array_t *array)
+ {
+     csi_integer_t i;

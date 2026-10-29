@@ -1,0 +1,4 @@
+The package idyntree provides CMake targets:
+
+    find_package(iDynTree CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE iDynTree::idyntree-core iDynTree::idyntree-model iDynTree::idyntree-modelio iDynTree::idyntree-modelio iDynTree::idyntree-high-level iDynTree::idyntree-estimation)

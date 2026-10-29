@@ -1,0 +1,13 @@
+snmalloc provides CMake integration via:
+
+    find_package(snmalloc CONFIG REQUIRED)
+    target_link_libraries(<your-target> PRIVATE snmalloc::snmalloc)
+
+If installed with the "static-shim" feature, a compiled static library is also
+available that replaces malloc/free with a "sn_" prefix (e.g. sn_malloc, sn_free):
+
+    target_link_libraries(<your-target> PRIVATE snmalloc::snmallocshim-static)
+
+On non-Windows, the "static-shim" feature also installs shared library shims
+(snmalloc::snmallocshim, snmalloc::snmallocshim-checks, snmalloc::snmalloc-minimal)
+that can be used for LD_PRELOAD-based allocator replacement.

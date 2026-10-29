@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10961f8..357a13d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -88,10 +88,9 @@ set_package_properties(OpenSSL PROPERTIES
+ )
+ 
+ 
+-find_package(PkgConfig ${PKGCONFIG_REQUIRED_TYPE})
+ if (PkgConfig_FOUND)
+-    pkg_check_modules(LibZstd ${LIBZSTD_REQUIRED_TYPE} IMPORTED_TARGET "libzstd")
+ endif()
++find_package(LibZstd NAMES zstd)
+ add_feature_info(LibZstd LibZstd_FOUND
+                 "Support for zstd compressed files and data streams"
+ )
+diff --git a/KF6ArchiveConfig.cmake.in b/KF6ArchiveConfig.cmake.in
+index 0b8d98c..cd4bd78 100644
+--- a/KF6ArchiveConfig.cmake.in
++++ b/KF6ArchiveConfig.cmake.in
+@@ -28,8 +28,7 @@ if (NOT @BUILD_SHARED_LIBS@)
+     endif()
+ 
+     if (@LibZstd_FOUND@)
+-        find_package(PkgConfig)
+-        pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
++        find_dependency(zstd CONFIG)
+     endif()
+ endif()
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 30ba462..46d4128 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -36,7 +36,7 @@ endif()
+ 
+ if (LibZstd_FOUND)
+     target_sources(KF6Archive PRIVATE kzstdfilter.cpp)
+-    target_link_libraries(KF6Archive PRIVATE PkgConfig::LibZstd)
++    target_link_libraries(KF6Archive PRIVATE zstd::libzstd)
+ endif()
+ 
+ 

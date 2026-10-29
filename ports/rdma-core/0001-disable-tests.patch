@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 718b7d2dd..533860ed6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -718,7 +718,6 @@ configure_file("${BUILDLIB}/config.h.in" "${BUILD_INCLUDE}/config.h" ESCAPE_QUOT
+ # Sub-directories
+ add_subdirectory(ccan)
+ add_subdirectory(util)
+-add_subdirectory(util/tests)
+ add_subdirectory(Documentation)
+ add_subdirectory(kernel-boot)
+ add_subdirectory(kernel-headers)
+@@ -768,7 +767,6 @@ add_subdirectory(infiniband-diags/man)
+ 
+ if (CYTHON_EXECUTABLE)
+   add_subdirectory(pyverbs)
+-  add_subdirectory(tests)
+ endif()
+ 
+ # Binaries
+@@ -779,7 +777,6 @@ endif()
+ if (NOT NL_KIND EQUAL 0)
+   add_subdirectory(iwpmd)
+ endif()
+-add_subdirectory(libibumad/tests)
+ add_subdirectory(libibverbs/examples)
+ add_subdirectory(librdmacm/examples)
+ if (UDEV_FOUND)

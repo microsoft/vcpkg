@@ -1,0 +1,6 @@
+{
+  "name": "sigslot",
+  "version": "1.0.0",
+  "port-version": 5,
+  "description": "Portable C++ type-safe, thread-safe signal/slot library for ISO C++, Unix/BSD/Linux and Win32. Sigslot allows C++ code to use the signal/slot paradigm made popular by, for example, Qt."
+}

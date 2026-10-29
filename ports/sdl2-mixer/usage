@@ -1,0 +1,4 @@
+sdl2-mixer provides CMake targets:
+
+    find_package(SDL2_mixer CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>)

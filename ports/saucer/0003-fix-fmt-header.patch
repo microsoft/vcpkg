@@ -1,0 +1,195 @@
+diff --git a/include/saucer/serializers/generic/generic.inl b/include/saucer/serializers/generic/generic.inl
+index 3e22654..b8f7bab 100644
+--- a/include/saucer/serializers/generic/generic.inl
++++ b/include/saucer/serializers/generic/generic.inl
+@@ -5,7 +5,7 @@
+ #include "../../utils/tuple.hpp"
+ #include "../../utils/traits.hpp"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ namespace saucer::serializers::generic
+diff --git a/src/gtk.window.cpp b/src/gtk.window.cpp
+index 0466501..74760b8 100644
+--- a/src/gtk.window.cpp
++++ b/src/gtk.window.cpp
+@@ -3,7 +3,7 @@
+ #include "instantiate.hpp"
+ #include "gtk.app.impl.hpp"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <rebind/enum.hpp>
+ #include <flagpp/flags.hpp>
+ 
+diff --git a/src/qt.webview.cpp b/src/qt.webview.cpp
+index 9ecb5e8..e3b98f7 100644
+--- a/src/qt.webview.cpp
++++ b/src/qt.webview.cpp
+@@ -4,7 +4,7 @@
+ #include "qt.icon.impl.hpp"
+ #include "qt.window.impl.hpp"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/xchar.h>
+ 
+ #include <QWebEngineScriptCollection>
+diff --git a/src/qt.webview.impl.cpp b/src/qt.webview.impl.cpp
+index 0ab8da7..e47f11b 100644
+--- a/src/qt.webview.impl.cpp
++++ b/src/qt.webview.impl.cpp
+@@ -8,7 +8,7 @@
+ #include <cassert>
+ #include <optional>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <QFile>
+ #include <QBuffer>
+diff --git a/src/qt.window.cpp b/src/qt.window.cpp
+index 4c2747b..dcd16e2 100644
+--- a/src/qt.window.cpp
++++ b/src/qt.window.cpp
+@@ -7,7 +7,7 @@
+ 
+ #include <flagpp/flags.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/xchar.h>
+ 
+ #include <QWindow>
+diff --git a/src/qt5.webview.cpp b/src/qt5.webview.cpp
+index 1dda4f8..e777c0a 100644
+--- a/src/qt5.webview.cpp
++++ b/src/qt5.webview.cpp
+@@ -5,7 +5,7 @@
+ #include <QWebEngineScript>
+ #include <QWebEngineScriptCollection>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace saucer
+ {
+diff --git a/src/qt6.webview.cpp b/src/qt6.webview.cpp
+index 49fb09e..b19ad36 100644
+--- a/src/qt6.webview.cpp
++++ b/src/qt6.webview.cpp
+@@ -5,7 +5,7 @@
+ #include <QWebEngineScript>
+ #include <QWebEngineScriptCollection>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace saucer
+ {
+diff --git a/src/smartview.cpp b/src/smartview.cpp
+index e02d4a3..b4f823c 100644
+--- a/src/smartview.cpp
++++ b/src/smartview.cpp
+@@ -3,7 +3,7 @@
+ #include "scripts.hpp"
+ 
+ #include <lockpp/lock.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace saucer
+ {
+diff --git a/src/webview.cpp b/src/webview.cpp
+index 3c8e716..b3d86f5 100644
+--- a/src/webview.cpp
++++ b/src/webview.cpp
+@@ -4,7 +4,7 @@
+ 
+ #include <algorithm>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace saucer
+ {
+diff --git a/src/wk.webview.impl.mm b/src/wk.webview.impl.mm
+index 4646288..c621d7a 100644
+--- a/src/wk.webview.impl.mm
++++ b/src/wk.webview.impl.mm
+@@ -5,7 +5,7 @@
+ #include "cocoa.window.impl.hpp"
+ #include "wk.navigation.impl.hpp"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <flagpp/flags.hpp>
+ 
+ #import <objc/objc-runtime.h>
+diff --git a/src/wk.webview.mm b/src/wk.webview.mm
+index 038b35d..ce7b244 100644
+--- a/src/wk.webview.mm
++++ b/src/wk.webview.mm
+@@ -5,7 +5,7 @@
+ 
+ #include <algorithm>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #import <objc/objc-runtime.h>
+ #import <CoreImage/CoreImage.h>
+diff --git a/src/wkg.webview.cpp b/src/wkg.webview.cpp
+index 87a6448..ee81889 100644
+--- a/src/wkg.webview.cpp
++++ b/src/wkg.webview.cpp
+@@ -7,7 +7,7 @@
+ #include "handle.hpp"
+ #include "instantiate.hpp"
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace saucer
+ {
+diff --git a/src/wkg.webview.impl.cpp b/src/wkg.webview.impl.cpp
+index c8c983d..adc6a3d 100644
+--- a/src/wkg.webview.impl.cpp
++++ b/src/wkg.webview.impl.cpp
+@@ -9,7 +9,7 @@
+ #include <optional>
+ #include <charconv>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace saucer
+ {
+diff --git a/src/wv2.webview.cpp b/src/wv2.webview.cpp
+index bab9cf1..b8528d7 100644
+--- a/src/wv2.webview.cpp
++++ b/src/wv2.webview.cpp
+@@ -12,7 +12,7 @@
+ #include <cassert>
+ #include <filesystem>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/xchar.h>
+ 
+ #include <shlobj.h>
+diff --git a/src/wv2.webview.impl.cpp b/src/wv2.webview.impl.cpp
+index c2c2e39..347fd26 100644
+--- a/src/wv2.webview.impl.cpp
++++ b/src/wv2.webview.impl.cpp
+@@ -10,7 +10,7 @@
+ 
+ #include <rebind/utils/enum.hpp>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/xchar.h>
+ 
+ #include <windows.h>

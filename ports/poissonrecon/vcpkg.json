@@ -1,0 +1,19 @@
+{
+  "name": "poissonrecon",
+  "version-date": "2021-09-26",
+  "description": "Adaptive Multigrid Solvers",
+  "homepage": "https://github.com/mkazhdan/PoissonRecon",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libpng",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

@@ -1,0 +1,46 @@
+diff --git a/libmpdec/Makefile.vc b/libmpdec/Makefile.vc
+index 48bead3..5ccbcab 100644
+--- a/libmpdec/Makefile.vc
++++ b/libmpdec/Makefile.vc
+@@ -31,11 +31,11 @@ CONFIG = /DCONFIG_32 /DANSI
+ !endif
+ 
+ !if "$(DEBUG)" == "1"
+-OPT = /MTd /Od /Zi /EHsc
+-OPT_SHARED = /MDd /Od /Zi /EHsc
++OPT = /Od /Zi /EHsc
++OPT_SHARED = /Od /Zi /EHsc
+ !else
+-OPT = /MT /O2 /GS /EHsc /DNDEBUG
+-OPT_SHARED = /MD /O2 /GS /EHsc /DNDEBUG
++OPT = /O2 /GS /EHsc /DNDEBUG
++OPT_SHARED = /O2 /GS /EHsc /DNDEBUG
+ !endif
+ 
+ !if "$(CC)" == "clang-cl"
+diff --git a/libmpdec/mpdecimal32vc.h b/libmpdec/mpdecimal32vc.h
+index d5cb6ac..f7bcb50 100644
+--- a/libmpdec/mpdecimal32vc.h
++++ b/libmpdec/mpdecimal32vc.h
+@@ -59,7 +59,7 @@ extern "C" {
+ #if defined (BUILD_LIBMPDEC)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllexport)
+-#elif defined(_DLL)
++#elif defined(MPDECIMAL_DLL)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllimport)
+ #endif
+diff --git a/libmpdec/mpdecimal64vc.h b/libmpdec/mpdecimal64vc.h
+index dce6ebb..4d3dd45 100644
+--- a/libmpdec/mpdecimal64vc.h
++++ b/libmpdec/mpdecimal64vc.h
+@@ -59,7 +59,7 @@ extern "C" {
+ #if defined (BUILD_LIBMPDEC)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllexport)
+-#elif defined(_DLL)
++#elif defined(MPDECIMAL_DLL)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllimport)
+ #endif

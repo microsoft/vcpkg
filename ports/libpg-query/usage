@@ -1,0 +1,6 @@
+The package libpg-query provides C headers and a library for the PostgreSQL parser.
+
+Example CMake usage:
+
+  find_package(unofficial-libpg-query CONFIG REQUIRED)
+  target_link_libraries(your_target PRIVATE unofficial::libpg-query::libpg-query)

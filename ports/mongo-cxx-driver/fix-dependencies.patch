@@ -1,0 +1,26 @@
+diff --git a/src/bsoncxx/CMakeLists.txt b/src/bsoncxx/CMakeLists.txt
+index 10e090c1d1..0759b8af2a 100644
+--- a/src/bsoncxx/CMakeLists.txt
++++ b/src/bsoncxx/CMakeLists.txt
+@@ -65,7 +65,7 @@ if(TARGET bson_shared OR TARGET bson_static)
+         set(bson_target bson::shared)
+     endif()
+ else()
+-    find_package(bson ${BSON_REQUIRED_VERSION} REQUIRED)
++    find_package(bson REQUIRED)
+ 
+     message(STATUS "Found bson: ${bson_DIR} (found version \"${bson_VERSION}\")")
+ 
+diff --git a/src/mongocxx/CMakeLists.txt b/src/mongocxx/CMakeLists.txt
+index 8b40ce7b72..4c75fb114f 100644
+--- a/src/mongocxx/CMakeLists.txt
++++ b/src/mongocxx/CMakeLists.txt
+@@ -40,7 +40,7 @@ if(TARGET mongoc_shared OR TARGET mongoc_static)
+         set(mongoc_target mongoc::shared)
+     endif()
+ else()
+-    find_package(mongoc ${MONGOC_REQUIRED_VERSION} REQUIRED)
++    find_package(mongoc REQUIRED)
+ 
+     message(STATUS "Found mongoc: ${mongoc_DIR} (found version \"${mongoc_VERSION}\")")
+ 

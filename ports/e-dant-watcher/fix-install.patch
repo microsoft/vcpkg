@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b9872dc..86cb5fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -109,10 +109,11 @@ if(ANDROID)
+   # Android's stdlib ("bionic") doesn't need to be linked with (p)threads.
+   set(LINK_LIBRARIES "${LINK_LIBRARIES}")
+ else()
++  set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+   find_package(Threads REQUIRED)
+   set(LINK_LIBRARIES
+     "${LINK_LIBRARIES}"
+-    "Threads::Threads"
++    "${CMAKE_THREAD_LIBS_INIT}"
+   )
+   if(APPLE)
+     list(APPEND LINK_LIBRARIES
+@@ -409,7 +410,7 @@ wtr_add_hdr_target(
+   "wtr.hdr_watcher"
+   "include/wtr/watcher.hpp"
+ )
+-
++if(0)
+ wtr_add_hdr_target(
+   "watcher-c-hdr"
+   "watcher-c/include/wtr/watcher-c.h"
+@@ -468,17 +469,17 @@ wtr_add_bin_target(
+   ""
+   ""
+ )
+-
++endif()
+ set(PC_WATCHER_LIBS_PRIVATE "${LINK_LIBRARIES}")
+ set(PC_WATCHER_LIBDIR "${CMAKE_INSTALL_LIBDIR}")
+-set(PC_WATCHER_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/wtr")
++set(PC_WATCHER_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include/wtr")
+ wtr_add_pkg_config_target("watcher.pc" "watcher.pc.in")
+-
++if(0)
+ set(PC_LIBWATCHER_C_LIBS_PRIVATE "${LINK_LIBRARIES}")
+ set(PC_LIBWATCHER_C_LIBDIR "${CMAKE_INSTALL_LIBDIR}")
+ set(PC_LIBWATCHER_C_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/wtr")
+ wtr_add_pkg_config_target("watcher-c.pc" "watcher-c/watcher-c.pc.in")
+-
++endif()
+ if(BUILD_TESTING)
+   message(STATUS "wtr.test_tool_test_all: Added (BUILD_TESTING=${BUILD_TESTING})")
+   add_test(

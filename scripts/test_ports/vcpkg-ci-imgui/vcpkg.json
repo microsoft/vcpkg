@@ -1,0 +1,28 @@
+{
+  "name": "vcpkg-ci-imgui",
+  "version-string": "ci",
+  "description": "Port to validate imgui features within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "glfw3",
+      "features": [
+        "wayland"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "imgui",
+      "features": [
+        "glfw-binding",
+        "test-engine",
+        "webgpu-binding"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

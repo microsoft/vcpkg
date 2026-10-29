@@ -1,0 +1,14 @@
+--- a/libtwolame/psycho_2.c
++++ b/libtwolame/psycho_2.c
+@@ -54,10 +54,7 @@
+                                 4.5, 4.5, 4.5, 3.5, 3.5, 3.5
+                               };
+ 
+-static void psycho_2_read_absthr(absthr, table)
+-FLOAT *absthr;
+-int table;
+-{
++static void psycho_2_read_absthr(FLOAT *absthr, int table) {
+     int j;
+ #include "psycho_2_absthr.h"
+ 

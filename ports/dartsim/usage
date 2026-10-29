@@ -1,0 +1,9 @@
+dartsim provides CMake targets:
+
+  find_package(DART CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE dart) # main library
+
+dartsim provides pkg-config modules:
+
+  # Dynamic Animation and Robotics Toolkit.
+  dart

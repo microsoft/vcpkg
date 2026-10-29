@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14d12d0..5b9ff9c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -546,7 +546,6 @@ if (CORRECT_PCRE_VERSION AND PCRE_BUILD_SOURCE AND BUILD_STATIC_LIBS)
+     set(BUILD_CHIMERA TRUE)
+ endif()
+ 
+-add_subdirectory(unit)
+ if (EXISTS ${CMAKE_SOURCE_DIR}/tools/CMakeLists.txt)
+     add_subdirectory(tools)
+ endif()

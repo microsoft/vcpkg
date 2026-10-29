@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f4ba0d7..1d1bccf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1289,7 +1289,7 @@ macro(set_astc_dependencies target)
+         add_dependencies(${target} ${ASTCENC_LIB_TARGET})
+         add_custom_command( TARGET ${target}
+             POST_BUILD
+-            COMMAND libtool -static -o $<TARGET_FILE:${target}> $<TARGET_FILE:ktx> $<TARGET_FILE:${ASTCENC_LIB_TARGET}>
++            COMMAND libtool -static -o $<TARGET_FILE:${target}> $<TARGET_FILE:${target}> $<TARGET_FILE:${ASTCENC_LIB_TARGET}>
+         )
+ 
+         # Don't know libtool equivalent on Windows or Emscripten. Applications

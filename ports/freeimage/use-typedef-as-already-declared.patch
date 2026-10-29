@@ -1,0 +1,15 @@
+diff --git a/Source/FreeImage.h b/Source/FreeImage.h
+index 1fd9c2f..59de277 100644
+--- a/Source/FreeImage.h
++++ b/Source/FreeImage.h
+@@ -160,8 +160,8 @@ typedef uint8_t BYTE;
+ typedef uint16_t WORD;
+ typedef uint32_t DWORD;
+ typedef int32_t LONG;
+-typedef int64_t INT64;
+-typedef uint64_t UINT64;
++typedef long long int INT64;
++typedef long long unsigned int UINT64;
+ #else
+ // MS is not C99 ISO compliant
+ typedef long BOOL;

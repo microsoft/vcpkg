@@ -1,0 +1,4 @@
+ini-cpp is header-only and can be used from CMake via:
+
+    find_path(INI_CPP_INCLUDE_DIRS "ini/ini.h")
+    target_include_directories(main PRIVATE ${INI_CPP_INCLUDE_DIRS})

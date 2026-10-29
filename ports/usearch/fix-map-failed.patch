@@ -1,0 +1,14 @@
+diff --git a/include/usearch/index.hpp b/include/usearch/index.hpp
+index 8d03324..a6e40c6 100644
+--- a/include/usearch/index.hpp
++++ b/include/usearch/index.hpp
+@@ -77,6 +77,9 @@
+ #endif
+ #include <Windows.h>
+ #include <sys/stat.h> // `fstat` for file size
++#if !defined(MAP_FAILED)
++#define MAP_FAILED ((void *) -1)
++#endif
+ #undef NOMINMAX
+ #undef _USE_MATH_DEFINES
+ #else

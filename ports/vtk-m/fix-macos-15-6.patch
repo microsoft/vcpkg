@@ -1,0 +1,14 @@
+diff --git a/CMake/VTKmCompilerFlags.cmake b/CMake/VTKmCompilerFlags.cmake
+index b9be520..d29b672 100644
+--- a/CMake/VTKmCompilerFlags.cmake
++++ b/CMake/VTKmCompilerFlags.cmake
+@@ -149,6 +149,9 @@ elseif(VTKM_COMPILER_IS_ICC)
+ elseif(VTKM_COMPILER_IS_GNU OR VTKM_COMPILER_IS_CLANG)
+   set(cxx_flags -Wall -Wcast-align -Wextra -Wpointer-arith -Wformat -Wformat-security -Wshadow -Wunused -fno-common -Wno-unused-function)
+   set(cuda_flags -Xcompiler=-Wall,-Wcast-align,-Wpointer-arith,-Wformat,-Wformat-security,-Wshadow,-fno-common,-Wunused,-Wno-unknown-pragmas,-Wno-unused-local-typedefs,-Wno-unused-function)
++  if(APPLE)
++    list(APPEND cxx_flags -Wno-missing-template-arg-list-after-template-kw)
++  endif()
+ 
+   #Clang does not support the -Wchar-subscripts flag for warning if an array
+   #subscript has a char type.

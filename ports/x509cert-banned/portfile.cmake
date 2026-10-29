@@ -1,0 +1,16 @@
+# header-only library
+set(VCPKG_BUILD_TYPE release)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO x509cert/banned
+    REF 8b631004dd1465971f8ee33354d29d7fd59b9896
+    SHA512 e51a4eeafd5d8e07b8bc9dd1b7ad52243acc94009ef4e8e65aa2472c8289258e0a8300a1a5702888d1bd4ea3d84b6532b4c97b23f3347f70226c4072e5804991
+    HEAD_REF master
+)
+
+file(INSTALL "${SOURCE_PATH}/banned.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/x509cert")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

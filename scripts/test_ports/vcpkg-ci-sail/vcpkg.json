@@ -1,0 +1,35 @@
+{
+  "name": "vcpkg-ci-sail",
+  "version-string": "ci",
+  "description": "Port to validate sail within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "sail",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all codecs and run the upstream test suite",
+      "dependencies": [
+        {
+          "name": "sail",
+          "features": [
+            "all",
+            "test"
+          ]
+        }
+      ]
+    }
+  }
+}

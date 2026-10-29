@@ -1,0 +1,14 @@
+diff --git a/source/Lib/vvenc/CMakeLists.txt b/source/Lib/vvenc/CMakeLists.txt
+index 621bb27..2b667da 100644
+--- a/source/Lib/vvenc/CMakeLists.txt
++++ b/source/Lib/vvenc/CMakeLists.txt
+@@ -80,7 +80,8 @@ add_compile_definitions( ${LIB_NAME_UC}_SOURCE )
+ # set PRIVATE include directories for all targets in this directory
+ include_directories( $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../include> $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}> )
+ include_directories( . .. ../DecoderLib ../EncoderLib ../CommonLib ../CommonLib/x86 ../CommonLib/arm ../apputils )
+-include_directories( SYSTEM ../../../thirdparty )
++find_path(SIMDE_INCLUDE_DIRS "simde/arm/neon.h")
++include_directories(SYSTEM ${SIMDE_INCLUDE_DIRS})
+ 
+ # set common warning flags
+ add_compile_options( "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wall;-Wno-deprecated-register;-Wno-unused-const-variable;-Wno-unknown-attributes>" )

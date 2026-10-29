@@ -1,0 +1,19 @@
+{
+  "name": "clfft",
+  "version": "2.12.2",
+  "port-version": 7,
+  "description": "clFFT is an OpenCL 1.2 accelerated Fast Fourier Transform library.",
+  "homepage": "https://github.com/clMathLibraries/clFFT",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "opencl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

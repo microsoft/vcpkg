@@ -1,0 +1,14 @@
+{
+  "name": "wepoll",
+  "version": "1.5.8",
+  "port-version": 3,
+  "description": "Fast epoll for windows",
+  "homepage": "https://github.com/piscisaureus/wepoll",
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

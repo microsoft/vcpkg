@@ -1,0 +1,688 @@
+diff --git a/cmake/FindBLAS.cmake b/cmake/FindBLAS.cmake
+index 6a8f0f9..c44f92e 100644
+--- a/cmake/FindBLAS.cmake
++++ b/cmake/FindBLAS.cmake
+@@ -487,7 +487,7 @@ if (BLA_VENDOR MATCHES "Intel" OR BLA_VENDOR STREQUAL "All")
+  endif ()
+  if (CMAKE_C_COMPILER_LOADED OR CMAKE_CXX_COMPILER_LOADED)
+   if(BLAS_FIND_QUIETLY OR NOT BLAS_FIND_REQUIRED)
+-    find_package(Threads)
++    find_package(Threads REQUIRED)
+   else()
+     find_package(Threads REQUIRED)
+   endif()
+diff --git a/cmake/FindEigen3.cmake b/cmake/FindEigen3.cmake
+index 0d2b3ce..4154783 100644
+--- a/cmake/FindEigen3.cmake
++++ b/cmake/FindEigen3.cmake
+@@ -1,96 +1,163 @@
+-# - Try to find Eigen3 lib
++# Try to find Eigen3 lib
+ #
+ # This module supports requiring a minimum version, e.g. you can do
+ #   find_package(Eigen3 3.1.2)
+ # to require version 3.1.2 or newer of Eigen3.
+ #
+-# Once done this will define
++# If successful, this will define
+ #
+-#  EIGEN3_FOUND - system has eigen lib with correct version
+-#  EIGEN3_INCLUDE_DIR - the eigen include directory
+-#  EIGEN3_VERSION - eigen version
++#  Eigen3_FOUND - system has Eigen3 lib with correct version
++#  EIGEN3_INCLUDE_DIR - the Eigen3 include directory
++#  EIGEN3_VERSION - Eigen3 version
+ #
+-# This module reads hints about search locations from 
+-# the following enviroment variables:
++# and the following imported target:
+ #
+-# EIGEN3_ROOT
+-# EIGEN3_ROOT_DIR
++#  Eigen3::Eigen - The header-only Eigen library
++#
++# This module reads hints about search locations from the following environment variables:
++#   EIGEN3_ROOT
++#   EIGEN3_ROOT_DIR
+ 
++# Based on:
+ # Copyright (c) 2006, 2007 Montel Laurent, <montel@kde.org>
+ # Copyright (c) 2008, 2009 Gael Guennebaud, <g.gael@free.fr>
+ # Copyright (c) 2009 Benoit Jacob <jacob.benoit.1@gmail.com>
+ # Redistribution and use is allowed according to the terms of the 2-clause BSD license.
+ 
++
+ if(NOT Eigen3_FIND_VERSION)
+   if(NOT Eigen3_FIND_VERSION_MAJOR)
+-    set(Eigen3_FIND_VERSION_MAJOR 2)
+-  endif(NOT Eigen3_FIND_VERSION_MAJOR)
++    set(Eigen3_FIND_VERSION_MAJOR 3)
++  endif()
+   if(NOT Eigen3_FIND_VERSION_MINOR)
+-    set(Eigen3_FIND_VERSION_MINOR 91)
+-  endif(NOT Eigen3_FIND_VERSION_MINOR)
++    set(Eigen3_FIND_VERSION_MINOR 3)
++  endif()
+   if(NOT Eigen3_FIND_VERSION_PATCH)
+     set(Eigen3_FIND_VERSION_PATCH 0)
+-  endif(NOT Eigen3_FIND_VERSION_PATCH)
++  endif()
+ 
+   set(Eigen3_FIND_VERSION "${Eigen3_FIND_VERSION_MAJOR}.${Eigen3_FIND_VERSION_MINOR}.${Eigen3_FIND_VERSION_PATCH}")
+-endif(NOT Eigen3_FIND_VERSION)
++endif()
+ 
+-macro(_eigen3_check_version)
+-  file(READ "${EIGEN3_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h" _eigen3_version_header)
++# ------------------------------------------------------------------------------
+ 
+-  string(REGEX MATCH "define[ \t]+EIGEN_WORLD_VERSION[ \t]+([0-9]+)" _eigen3_world_version_match "${_eigen3_version_header}")
+-  set(EIGEN3_WORLD_VERSION "${CMAKE_MATCH_1}")
+-  string(REGEX MATCH "define[ \t]+EIGEN_MAJOR_VERSION[ \t]+([0-9]+)" _eigen3_major_version_match "${_eigen3_version_header}")
+-  set(EIGEN3_MAJOR_VERSION "${CMAKE_MATCH_1}")
+-  string(REGEX MATCH "define[ \t]+EIGEN_MINOR_VERSION[ \t]+([0-9]+)" _eigen3_minor_version_match "${_eigen3_version_header}")
+-  set(EIGEN3_MINOR_VERSION "${CMAKE_MATCH_1}")
++macro(_eigen3_check_version)
++  if(EXISTS "${EIGEN3_INCLUDE_DIR}/Eigen/Version")
++      # Eigen version >= 5.0.0
++      file(READ "${EIGEN3_INCLUDE_DIR}/Eigen/Version" _eigen3_version_header)
++      
++      string(REGEX MATCH "define[ \t]+EIGEN_MAJOR_VERSION[ \t]+([0-9]+)" _eigen3_major_version_match "${_eigen3_version_header}")
++      set(EIGEN3_MAJOR_VERSION "${CMAKE_MATCH_1}")
++      string(REGEX MATCH "define[ \t]+EIGEN_MINOR_VERSION[ \t]+([0-9]+)" _eigen3_minor_version_match "${_eigen3_version_header}")
++      set(EIGEN3_MINOR_VERSION "${CMAKE_MATCH_1}")
++      string(REGEX MATCH "define[ \t]+EIGEN_PATCH_VERSION[ \t]+([0-9]+)" _eigen3_patch_version_match "${_eigen3_version_header}")
++      set(EIGEN3_PATCH_VERSION "${CMAKE_MATCH_1}")
++      
++      set(EIGEN3_VERSION ${EIGEN3_MAJOR_VERSION}.${EIGEN3_MINOR_VERSION}.${EIGEN3_PATCH_VERSION})
++  elseif(EXISTS "${EIGEN3_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h")
++      # Eigen version <= 3.4.1
++      file(READ "${EIGEN3_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h" _eigen3_version_header)
++      
++      string(REGEX MATCH "define[ \t]+EIGEN_WORLD_VERSION[ \t]+([0-9]+)" _eigen3_world_version_match "${_eigen3_version_header}")
++      set(EIGEN3_WORLD_VERSION "${CMAKE_MATCH_1}")
++      string(REGEX MATCH "define[ \t]+EIGEN_MAJOR_VERSION[ \t]+([0-9]+)" _eigen3_major_version_match "${_eigen3_version_header}")
++      set(EIGEN3_MAJOR_VERSION "${CMAKE_MATCH_1}")
++      string(REGEX MATCH "define[ \t]+EIGEN_MINOR_VERSION[ \t]+([0-9]+)" _eigen3_minor_version_match "${_eigen3_version_header}")
++      set(EIGEN3_MINOR_VERSION "${CMAKE_MATCH_1}")
++      
++      set(EIGEN3_VERSION ${EIGEN3_WORLD_VERSION}.${EIGEN3_MAJOR_VERSION}.${EIGEN3_MINOR_VERSION})
++  endif()
++
++  if(EIGEN3_VERSION)
++      if(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
++          set(EIGEN3_VERSION_OK FALSE)
++          message("WARNING: Eigen3 version ${EIGEN3_VERSION} found in ${EIGEN3_INCLUDE_DIR}, "
++                  "but at least version ${Eigen3_FIND_VERSION} is required")
++      else()
++          set(EIGEN3_VERSION_OK TRUE)
++      endif()
++  else()
++      message("ERROR: cannot find Eigen3 version information")
++  endif()
++
++endmacro()
++
++# ------------------------------------------------------------------------------
++
++if(EIGEN3_INCLUDE_DIR)
++
++    if(NOT Eigen3_FIND_QUIETLY)
++      message(STATUS "  EIGEN3_INCLUDE_DIR found in cache.")
++      message(STATUS "  Eigen3 include dir: ${EIGEN3_INCLUDE_DIR}")
++    endif()
+ 
+-  set(EIGEN3_VERSION ${EIGEN3_WORLD_VERSION}.${EIGEN3_MAJOR_VERSION}.${EIGEN3_MINOR_VERSION})
+-  if(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
+-    set(EIGEN3_VERSION_OK FALSE)
+-  else(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
+-    set(EIGEN3_VERSION_OK TRUE)
+-  endif(${EIGEN3_VERSION} VERSION_LESS ${Eigen3_FIND_VERSION})
++    _eigen3_check_version()
++    set(EIGEN3_FOUND ${EIGEN3_VERSION_OK})
++    set(Eigen3_FOUND ${EIGEN3_VERSION_OK})
+ 
+-  if(NOT EIGEN3_VERSION_OK)
++else()
+ 
+-    message(STATUS "Eigen3 version ${EIGEN3_VERSION} found in ${EIGEN3_INCLUDE_DIR}, "
+-                   "but at least version ${Eigen3_FIND_VERSION} is required")
+-  endif(NOT EIGEN3_VERSION_OK)
+-endmacro(_eigen3_check_version)
++    if(NOT Eigen3_FIND_QUIETLY)
++      message(STATUS "  EIGEN3_INCLUDE_DIR NOT found in cache.")
++      message(STATUS "  Looking for Eigen3Config.cmake.")
++    endif()
++  
++    # Check if Eigen3Config.cmake is available
++    if(Eigen3_FIND_QUIETLY)
++      find_package(Eigen3 ${Eigen3_FIND_VERSION} NO_MODULE QUIET)
++    else()
++      find_package(Eigen3 ${Eigen3_FIND_VERSION} NO_MODULE)
++    endif()
+ 
+-if (EIGEN3_INCLUDE_DIR)
++    if(Eigen3_FOUND)
+ 
+-  # in cache already
+-  _eigen3_check_version()
+-  set(EIGEN3_FOUND ${EIGEN3_VERSION_OK})
++        get_target_property(EIGEN3_INCLUDE_DIR Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+ 
+-else (EIGEN3_INCLUDE_DIR)
++        if(NOT Eigen3_FIND_QUIETLY)
++          message(STATUS "  Eigen3 found with Eigen3Config.cmake.")
++          message(STATUS "  Eigen3 include dir: ${EIGEN3_INCLUDE_DIR}")
++        endif()
+   
+-  # search first if an Eigen3Config.cmake is available in the system,
+-  # if successful this would set EIGEN3_INCLUDE_DIR and the rest of
+-  # the script will work as usual
+-  find_package(Eigen3 ${Eigen3_FIND_VERSION} NO_MODULE QUIET)
++    else()
++  
++        if(NOT Eigen3_FIND_QUIETLY)
++          message(STATUS "  Eigen3 NOT found through Eigen3Config.cmake.")
++          message(STATUS "  Searching paths EIGEN3_ROOT, EIGEN3_ROOT_DIR.")
++        endif()
+ 
+-  if(NOT EIGEN3_INCLUDE_DIR)
+-    find_path(EIGEN3_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
++        find_path(EIGEN3_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
+         HINTS
+-        ENV EIGEN3_ROOT 
+-        ENV EIGEN3_ROOT_DIR
++        ENV Eigen3_ROOT 
++        ENV Eigen3_ROOT_DIR
+         PATHS
+         ${CMAKE_INSTALL_PREFIX}/include
+         ${KDE4_INCLUDE_DIR}
+         PATH_SUFFIXES eigen3 eigen
+-      )
+-  endif(NOT EIGEN3_INCLUDE_DIR)
++        )
+ 
+-  if(EIGEN3_INCLUDE_DIR)
+-    _eigen3_check_version()
+-  endif(EIGEN3_INCLUDE_DIR)
++        if(NOT EIGEN3_INCLUDE_DIR)
++           if(NOT Eigen3_FIND_QUIETLY)
++             message(STATUS "  EIGEN3_INCLUDE_DIR NOT found through find_path.")
++           endif()
++        endif()
++
++    endif()
++
++    if(EIGEN3_INCLUDE_DIR)
++      _eigen3_check_version()
++    endif()
++
++    include(FindPackageHandleStandardArgs)
++    find_package_handle_standard_args(Eigen3 DEFAULT_MSG EIGEN3_INCLUDE_DIR EIGEN3_VERSION_OK)
++
++    mark_as_advanced(EIGEN3_INCLUDE_DIR)
+ 
+-  include(FindPackageHandleStandardArgs)
+-  find_package_handle_standard_args(Eigen3 DEFAULT_MSG EIGEN3_INCLUDE_DIR EIGEN3_VERSION_OK)
++endif()
+ 
+-  mark_as_advanced(EIGEN3_INCLUDE_DIR)
++# ------------------------------------------------------------------------------
+ 
+-endif(EIGEN3_INCLUDE_DIR)
++if(Eigen3_FOUND AND NOT TARGET Eigen3::Eigen)
++    add_library(Eigen3::Eigen INTERFACE IMPORTED)
++    set_target_properties(Eigen3::Eigen PROPERTIES
++                          INTERFACE_INCLUDE_DIRECTORIES "${EIGEN3_INCLUDE_DIR}")
++endif()
+diff --git a/cmake/FindMKL.cmake b/cmake/FindMKL.cmake
+index 6f8a274..acf43af 100644
+--- a/cmake/FindMKL.cmake
++++ b/cmake/FindMKL.cmake
+@@ -7,7 +7,7 @@
+ #
+ # Usage example:
+ #   set(MKL_USE_STATIC_LIBS ON)
+-#   find_package(MKL)
++#   find_package(MKL REQUIRED)
+ #   if (MKL_FOUND)
+ #      include_directories(${MKL_INCLUDE_DIRS})
+ #      link_directories(${MKL_LIBRARY_DIRS})
+diff --git a/cmake/FindMyGUI.cmake b/cmake/FindMyGUI.cmake
+index b5563c8..2fc9912 100644
+--- a/cmake/FindMyGUI.cmake
++++ b/cmake/FindMyGUI.cmake
+@@ -81,7 +81,7 @@ IF (WIN32) #Windows
+     ENDIF (OGRESOURCE)
+ ELSE (WIN32) #Unix
+     CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
+-    FIND_PACKAGE(PkgConfig)
++    find_package(PkgConfig REQUIRED)
+     IF(MYGUI_STATIC)
+         # don't use pkgconfig on OS X, find freetype & append it's libs to resulting MYGUI_LIBRARIES
+         IF (NOT APPLE)
+@@ -101,7 +101,7 @@ ELSE (WIN32) #Unix
+             ENDIF (MYGUI_INCLUDE_DIRS)
+         ELSE (NOT APPLE)
+             SET(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${MYGUI_DEPENDENCIES_DIR} ${OGRE_DEPENDENCIES_DIR})
+-            FIND_PACKAGE(freetype)
++            find_package(freetype REQUIRED)
+             FIND_PATH(MYGUI_INCLUDE_DIRS MyGUI.h PATHS /usr/local/include /usr/include PATH_SUFFIXES MyGUI MYGUI)
+             FIND_LIBRARY(MYGUI_LIBRARIES MyGUIEngineStatic PATHS /usr/lib /usr/local/lib)
+             SET(MYGUI_PLATFORM_LIBRARIES "MyGUI.OgrePlatform")
+diff --git a/cmake/FindOgre.cmake b/cmake/FindOgre.cmake
+index 9e2081a..950ba01 100644
+--- a/cmake/FindOgre.cmake
++++ b/cmake/FindOgre.cmake
+@@ -262,17 +262,17 @@ endif ()
+ # look for required Ogre dependencies in case of static build and/or threading
+ if (OGRE_STATIC)
+   set(OGRE_DEPS_FOUND TRUE)
+-  find_package(Cg QUIET)
+-  find_package(DirectX QUIET)
+-  find_package(FreeImage QUIET)
+-  find_package(Freetype QUIET)
+-  find_package(OpenGL QUIET)
+-  find_package(OpenGLES QUIET)
+-  find_package(OpenGLES2 QUIET)
+-  find_package(ZLIB QUIET)
+-  find_package(ZZip QUIET)
++  find_package(Cg REQUIRED)
++  find_package(DirectX REQUIRED)
++  find_package(FreeImage REQUIRED)
++  find_package(Freetype REQUIRED)
++  find_package(OpenGL REQUIRED)
++  find_package(OpenGLES REQUIRED)
++  find_package(OpenGLES2 REQUIRED)
++  find_package(ZLIB REQUIRED)
++  find_package(ZZip REQUIRED)
+   if (UNIX AND NOT APPLE AND NOT ANDROID)
+-    find_package(X11 QUIET)
++    find_package(X11 REQUIRED)
+     find_library(XAW_LIBRARY NAMES Xaw Xaw7 PATHS ${DEP_LIB_SEARCH_DIR} ${X11_LIB_SEARCH_PATH})
+     if (NOT XAW_LIBRARY OR NOT X11_Xt_FOUND)
+       set(X11_FOUND FALSE)
+@@ -310,7 +310,7 @@ endif()
+       endif()
+       
+       set(OGRE_BOOST_COMPONENTS thread date_time)
+-      find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} QUIET)
++      find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} REQUIRED)
+       if(Boost_FOUND AND Boost_VERSION GREATER 104900)
+         if(Boost_VERSION GREATER 105300)
+             set(OGRE_BOOST_COMPONENTS thread date_time system atomic chrono)
+@@ -319,7 +319,7 @@ endif()
+         endif()
+       endif()
+ 
+-      find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} QUIET)
++      find_package(Boost COMPONENTS ${OGRE_BOOST_COMPONENTS} REQUIRED)
+       if (NOT Boost_THREAD_FOUND)
+         set(OGRE_DEPS_FOUND FALSE)
+       else ()
+@@ -327,7 +327,7 @@ endif()
+         set(OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+       endif ()
+     elseif (OGRE_CONFIG_THREAD_PROVIDER EQUAL 2)
+-      find_package(POCO QUIET)
++      find_package(POCO REQUIRED)
+       if (NOT POCO_FOUND)
+         set(OGRE_DEPS_FOUND FALSE)
+       else ()
+@@ -335,7 +335,7 @@ endif()
+         set(OGRE_INCLUDE_DIRS ${OGRE_INCLUDE_DIRS} ${POCO_INCLUDE_DIRS})
+       endif ()
+     elseif (OGRE_CONFIG_THREAD_PROVIDER EQUAL 3)
+-      find_package(TBB QUIET)
++      find_package(TBB REQUIRED)
+       if (NOT TBB_FOUND)
+         set(OGRE_DEPS_FOUND FALSE)
+       else ()
+diff --git a/cmake/FindPkgMacros.cmake b/cmake/FindPkgMacros.cmake
+index 53111e0..2f6881c 100644
+--- a/cmake/FindPkgMacros.cmake
++++ b/cmake/FindPkgMacros.cmake
+@@ -70,7 +70,7 @@ endmacro(clear_if_changed)
+ # Try to get some hints from pkg-config, if available
+ macro(use_pkgconfig PREFIX PKGNAME)
+   if(NOT ANDROID)
+-    find_package(PkgConfig)
++    find_package(PkgConfig REQUIRED)
+     if (PKG_CONFIG_FOUND)
+       pkg_check_modules(${PREFIX} ${PKGNAME})
+     endif ()
+diff --git a/cmake/FindSDL2.cmake b/cmake/FindSDL2.cmake
+index 4b8f7e9..e27895a 100644
+--- a/cmake/FindSDL2.cmake
++++ b/cmake/FindSDL2.cmake
+@@ -112,7 +112,7 @@ ENDIF(NOT SDL2_BUILDING_LIBRARY)
+ # frameworks may already provide it.
+ # But for non-OSX systems, I will use the CMake Threads package.
+ IF(NOT APPLE)
+-	FIND_PACKAGE(Threads)
++	find_package(Threads REQUIRED)
+ ENDIF(NOT APPLE)
+ 
+ # MinGW needs an additional library, mwindows
+diff --git a/cmake/GetGitRevisionDescription.cmake b/cmake/GetGitRevisionDescription.cmake
+index 319f307..68ec2da 100644
+--- a/cmake/GetGitRevisionDescription.cmake
++++ b/cmake/GetGitRevisionDescription.cmake
+@@ -82,7 +82,7 @@ endfunction()
+ 
+ function(git_describe _var)
+ 	if(NOT GIT_FOUND)
+-		find_package(Git QUIET)
++		find_package(Git REQUIRED)
+ 	endif()
+ 	get_git_head_revision(refspec hash)
+ 	if(NOT GIT_FOUND)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d75ce10..3603db6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -96,7 +96,7 @@ endif()
+ 
+ message(STATUS "Searching for Threads...")
+ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+-find_package(Threads)
++find_package(Threads REQUIRED)
+ 
+ message(STATUS "  Thread library:      ${CMAKE_THREAD_LIBS_INIT}")
+ message(STATUS "  Using Win32 threads? ${CMAKE_USE_WIN32_THREADS_INIT}")
+@@ -112,7 +112,7 @@ set(CH_C_FLAGS "${CH_C_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+ # main ChronoEngine library, regardless on whether or not OpenMP is found.
+ 
+ message(STATUS "Searching for OpenMP...")
+-find_package(OpenMP)
++# find_package(OpenMP)
+ 
+ # Determine OpenMP version. Prepare substitution variables that can be used in
+ # generating configuration header files.
+@@ -177,7 +177,7 @@ if(USE_SIMD)
+ 	
+    # Figure out SIMD support
+    message(STATUS "Testing SIMD capabilities...")
+-   find_package(SIMD)
++   find_package(SIMD REQUIRED)
+    
+    # Set substitution variables for configuration file
+    if(SIMD_SSE)
+@@ -249,22 +249,28 @@ endif()
+ # Eigen library
+ #-----------------------------------------------------------------------------
+ 
+-message(STATUS "Searching for Eigen3...")
+-find_package(Eigen3 3.3.0)
+-if(EIGEN3_FOUND)
+-  message(STATUS "  Eigen3 version: ${EIGEN3_VERSION}")
+-  message(STATUS "  Eigen3 include directory: ${EIGEN3_INCLUDE_DIR}")
++message(STATUS "Searching for Eigen3")
++find_package(Eigen3 3.3 REQUIRED)
++if(Eigen3_FOUND)
++  message(STATUS "Eigen3 found")
++  message(STATUS "  Eigen3 version:     ${EIGEN3_VERSION}")
++  message(STATUS "  Eigen3 include dir: ${EIGEN3_INCLUDE_DIR}")
++  mark_as_advanced(FORCE EIGEN3_INCLUDE_DIR)
++  mark_as_advanced(FORCE Eigen3_DIR)
+ else()
++  message(ERROR "Eigen3 cannot be found.\n"
++          "  Provide Eigen3_DIR (location of Eigen3Config.cmake) or else\n" 
++          "  set either EIGEN3_INCLUDE_DIR or the envvar Eigen3_ROOT to the location of Eigen library.")
++  set(EIGEN3_INCLUDE_DIR "" CACHE PATH "Path to Eigen3 directory (should contain a subfolder named \"Eigen\"")
++  set(Eigen3_DIR "" CACHE PATH "Path to Eigen3 config file (should contain the \"Eigen3Config.cmake\" file")
+   mark_as_advanced(CLEAR EIGEN3_INCLUDE_DIR)
+-  mark_as_advanced(FORCE Eigen3_DIR)
+-  message(FATAL_ERROR "  Eigen3 not found. Specify EIGEN3_INCLUDE_DIR")
++  mark_as_advanced(CLEAR Eigen3_DIR)
++  return()
+ endif()
+ 
+ # Fix for VS 2017 15.8 and newer to handle alignment specification with Eigen.
+-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+-	if(MSVC AND ${MSVC_VERSION} GREATER_EQUAL 1915)
+-	  add_definitions( "-D_ENABLE_EXTENDED_ALIGNED_STORAGE" )
+-	endif()
++if((${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND MSVC AND "${MSVC_VERSION}" GREATER_EQUAL 1915) OR NOT CH_USE_EIGEN_OPENMP)
++    target_compile_definitions(Eigen3::Eigen INTERFACE "_ENABLE_EXTENDED_ALIGNED_STORAGE")
+ endif()
+ 
+ cmake_dependent_option(USE_EIGEN_OPENMP "Compile Chrono with OpenMP support in Eigen" ON "ENABLE_OPENMP" OFF)
+@@ -293,7 +299,7 @@ endif()
+ #-----------------------------------------------------------------------------
+ 
+ message(STATUS "Searching for MPI...")
+-find_package(MPI)
++# find_package(MPI)
+ if(MPI_FOUND)
+   message(STATUS "  MPI compiler:      ${MPI_CXX_COMPILER}")
+   message(STATUS "  MPI compile flags: ${MPI_CXX_COMPILE_FLAGS}")
+@@ -313,7 +319,7 @@ endif()
+ 
+ message(STATUS "Searching for CUDA...")
+ 
+-find_package(CUDA QUIET)
++# find_package(CUDA)
+ 
+ if(CUDA_FOUND)
+   set(CUDA_BINARY_DIR "${CUDA_TOOLKIT_ROOT_DIR}/bin")
+@@ -383,7 +389,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+     set(${THRUST_FOUND} FALSE)
+   endif()
+ else()
+-  find_package(Thrust)
++#  find_package(Thrust)
+ endif()
+ 
+ if(THRUST_FOUND)
+@@ -500,14 +506,14 @@ if(ENABLE_HDF5)
+     #    HDF5_INCLUDE_DIRS
+     #    HDF5_C_LIBRARIES
+     #    HDF5_CXX_LIBRARIES
+-    find_package(HDF5 COMPONENTS CXX)
++    find_package(HDF5 COMPONENTS CXX REQUIRED)
+ 
+     if(NOT HDF5_FOUND)
+         # Look for a package configuration file
+         # LIB_TYPE can be one of STATIC or SHARED.
+         set(LIB_TYPE SHARED) # STATIC or SHARED
+         string(TOLOWER ${LIB_TYPE} SEARCH_TYPE)
+-        find_package(HDF5 NAMES hdf5 COMPONENTS CXX ${SEARCH_TYPE})
++        find_package(HDF5 NAMES hdf5 COMPONENTS CXX ${SEARCH_TYPE} REQUIRED)
+ 
+         if (HDF5_FOUND)
+             set(HDF5_INCLUDE_DIRS ${HDF5_INCLUDE_DIR})
+diff --git a/src/chrono/CMakeLists.txt b/src/chrono/CMakeLists.txt
+index 88f970f..917452c 100644
+--- a/src/chrono/CMakeLists.txt
++++ b/src/chrono/CMakeLists.txt
+@@ -1405,9 +1405,9 @@ endif()
+ # Add the ChronoEngine library to the project
+ add_library(ChronoEngine SHARED ${ChronoEngine_FILES})
+ 
+-target_link_libraries(ChronoEngine ${OPENMP_LIBRARIES} ${CH_SOCKET_LIB})
++target_link_libraries(ChronoEngine ${OPENMP_LIBRARIES} ${CH_SOCKET_LIB} TBB::tbb TBB::tbbmalloc)
+ if (UNIX)
+-  target_link_libraries(ChronoEngine pthread)
++  target_link_libraries(ChronoEngine pthread TBB::tbb TBB::tbbmalloc)
+ endif()
+ 
+ # Set some custom properties of this target
+diff --git a/src/chrono_cascade/CMakeLists.txt b/src/chrono_cascade/CMakeLists.txt
+index 3d38c87..f9558ba 100644
+--- a/src/chrono_cascade/CMakeLists.txt
++++ b/src/chrono_cascade/CMakeLists.txt
+@@ -50,7 +50,7 @@ source_group("" FILES
+ #-----------------------------------------------------------------------------	
+ # Find OpenCASCADE
+ 
+-find_package(OpenCASCADE CONFIG)
++find_package(OpenCASCADE CONFIG REQUIRED)
+ 
+ if (NOT OpenCASCADE_FOUND)
+   message("Could not find OpenCASCADE or one of its required modules")
+diff --git a/src/chrono_irrlicht/CMakeLists.txt b/src/chrono_irrlicht/CMakeLists.txt
+index acffe0c..bc0e938 100644
+--- a/src/chrono_irrlicht/CMakeLists.txt
++++ b/src/chrono_irrlicht/CMakeLists.txt
+@@ -54,7 +54,7 @@ SOURCE_GROUP("" FILES
+ 
+ set(CH_IRRLICHT_CXX_FLAGS "")
+ set(CH_IRRLICHT_C_FLAGS "")
+-
++if(0)
+ IF(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+   SET(IRRLICHT_ROOT "C:/irrlicht-1.8.1"  CACHE PATH   "Path to Irrlicht SDK installation.")
+   IF("${CH_COMPILER}" STREQUAL "COMPILER_MSVC")
+@@ -84,7 +84,8 @@ else()
+   FIND_LIBRARY(IRRLICHT_LIBRARY NAMES Irrlicht PATHS ${IRRLICHT_ROOT}/../../lib)
+   set(IRRLICHT_LIBRARY "${IRRLICHT_LIBRARY}")
+ ENDIF()
+-
++endif()
++find_package(irrlicht REQUIRED)
+ # If using MSVC, disable warning 4275 (non-DLL-interface class used as base for DLL-interface class)
+ if(MSVC)
+   add_compile_options(/wd4275)
+@@ -93,7 +94,7 @@ if(MSVC)
+ endif()
+ 
+ # Add path to IRRLICHT headers
+-
++if(0)
+ IF(EXISTS "${IRRLICHT_ROOT}/include/irrlicht")
+   SET(CH_IRRLICHTINC "${IRRLICHT_ROOT}/include/irrlicht")
+ ELSEIF(EXISTS "${IRRLICHT_ROOT}/include")
+@@ -103,7 +104,7 @@ ELSE()
+ ENDIF()
+ 
+ INCLUDE_DIRECTORIES( ${CH_IRRLICHTINC} )
+-
++endif(0)
+ 
+ # Let some variables be visible also from outside this directory
+ 
+@@ -119,7 +120,7 @@ set(COMPILER_FLAGS "${CH_CXX_FLAGS} ${CH_IRRLICHT_CXX_FLAGS}")
+ set(LINKER_FLAGS "${CH_LINKERFLAG_SHARED}")
+ set(LIBRARIES 
+     ChronoEngine
+-    ${IRRLICHT_LIBRARY}
++    Irrlicht
+     )
+ 
+ if (ENABLE_MODULE_POSTPROCESS)
+@@ -168,7 +169,7 @@ endif()
+ # appropriate directory (depending on the build type); however, we use
+ # copy_if_different.
+ 
+-IF(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
++IF(0)
+ 
+   IF(DEFINED ENV{CONDA_BUILD})
+     SET(CH_IRRLICHT_DLL "$ENV{PREFIX}/Library/bin/Irrlicht.dll")
+diff --git a/src/chrono_mumps/CMakeLists.txt b/src/chrono_mumps/CMakeLists.txt
+index d856460..a2e1ea2 100644
+--- a/src/chrono_mumps/CMakeLists.txt
++++ b/src/chrono_mumps/CMakeLists.txt
+@@ -88,7 +88,7 @@ unset(BLAS_FOUND)
+ unset(BLAS_LIBRARIES)
+ message(STATUS "Searching for BLAS...")
+ 
+-find_package(BLAS)
++find_package(BLAS REQUIRED)
+ 
+ set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH_BKP}) # restore original CMAKE_LIBRARY_PATH
+ 
+diff --git a/src/chrono_mumps/building_Mumps/CMakeLists_5.0.2.txt b/src/chrono_mumps/building_Mumps/CMakeLists_5.0.2.txt
+index e179a68..5a6852e 100644
+--- a/src/chrono_mumps/building_Mumps/CMakeLists_5.0.2.txt
++++ b/src/chrono_mumps/building_Mumps/CMakeLists_5.0.2.txt
+@@ -78,7 +78,7 @@ endif()
+ SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${BLAS_LIBRARIES_USER} ${INTEL_LIBRARIES_DIRS} )
+ 
+ 
+-find_package(BLAS)
++find_package(BLAS REQUIRED)
+ SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH_BKP}) # restore original CMAKE_LIBRARY_PATH
+ 
+ if (NOT BLAS_FOUND)
+@@ -101,7 +101,7 @@ SET(GENERIC_COMPILER_FLAGS_C #aka OPTC
+ 			"-MD")
+ 			
+ 
+-find_package(OpenMP)
++find_package(OpenMP REQUIRED)
+ if (ENABLE_OPENMP AND OPENMP_FOUND)
+ 	SET(GENERIC_COMPILER_FLAGS_FORTRAN "${GENERIC_COMPILER_FLAGS_FORTRAN} ${OpenMP_Fortran_FLAGS}")
+ 	SET(GENERIC_COMPILER_FLAGS_C "${GENERIC_COMPILER_FLAGS_C} ${OpenMP_C_FLAGS}")
+diff --git a/src/chrono_mumps/building_Mumps/CMakeLists_5.1.1.txt b/src/chrono_mumps/building_Mumps/CMakeLists_5.1.1.txt
+index 1c3a3b3..115d337 100644
+--- a/src/chrono_mumps/building_Mumps/CMakeLists_5.1.1.txt
++++ b/src/chrono_mumps/building_Mumps/CMakeLists_5.1.1.txt
+@@ -78,7 +78,7 @@ endif()
+ SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${BLAS_LIBRARIES_USER} ${INTEL_LIBRARIES_DIRS} )
+ 
+ # Looking for valid BLAS libraries
+-find_package(BLAS)
++find_package(BLAS REQUIRED)
+ SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH_BKP}) # restore original CMAKE_LIBRARY_PATH
+ 
+ if (NOT BLAS_FOUND)
+@@ -121,7 +121,7 @@ SET(GENERIC_COMPILER_FLAGS_C #aka OPTC
+ 			"-MD")
+ 			
+ 
+-find_package(OpenMP)
++find_package(OpenMP REQUIRED)
+ if (ENABLE_OPENMP AND OPENMP_FOUND)
+ 	SET(GENERIC_COMPILER_FLAGS_FORTRAN "${GENERIC_COMPILER_FLAGS_FORTRAN} ${OpenMP_Fortran_FLAGS}")
+ 	SET(GENERIC_COMPILER_FLAGS_C "${GENERIC_COMPILER_FLAGS_C} ${OpenMP_C_FLAGS}")
+diff --git a/src/chrono_opengl/CMakeLists.txt b/src/chrono_opengl/CMakeLists.txt
+index a7b60f1..9b76134 100644
+--- a/src/chrono_opengl/CMakeLists.txt
++++ b/src/chrono_opengl/CMakeLists.txt
+@@ -41,10 +41,10 @@ endif()
+ 
+ cmake_policy(SET CMP0072 NEW)
+ 
+-find_package(OpenGL)
+-find_package(GLM)
+-find_package(GLEW)
+-find_package(GLFW)
++find_package(OpenGL REQUIRED)
++find_package(GLM REQUIRED)
++find_package(GLEW REQUIRED)
++find_package(GLFW REQUIRED)
+ 
+ # On windows, ask for the GLEW and GLFW DLLs so that we can copy. This is
+ # optional.  If not specified, it is the user's responsibility to make them
+diff --git a/src/chrono_pardisomkl/CMakeLists.txt b/src/chrono_pardisomkl/CMakeLists.txt
+index 8c35c5d..8313af4 100644
+--- a/src/chrono_pardisomkl/CMakeLists.txt
++++ b/src/chrono_pardisomkl/CMakeLists.txt
+@@ -27,7 +27,7 @@ message(STATUS "Find MKL libraries")
+ 
+ #set(MKL_USE_STATIC_LIBS ON)
+ #set(MKL_FIND_DEBUG ON)
+-find_package(MKL)
++find_package(MKL REQUIRED)
+ 
+ message(STATUS "   MKL include dirs:   ${MKL_INCLUDE_DIRS}")
+ message(STATUS "   MKL libraries:      ${MKL_LIBRARIES}")
+diff --git a/src/chrono_sensor/CMakeLists.txt b/src/chrono_sensor/CMakeLists.txt
+index 2b4102d..14c2f15 100644
+--- a/src/chrono_sensor/CMakeLists.txt
++++ b/src/chrono_sensor/CMakeLists.txt
+@@ -29,9 +29,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+   mark_as_advanced(CLEAR GLFW_DLL)
+ endif()
+ 
+-find_package(GLFW OPTIONAL_COMPONENTS)
+-find_package(OpenGL OPTIONAL_COMPONENTS)
+-find_package(GLEW OPTIONAL_COMPONENTS)
++find_package(GLFW REQUIRED)
++find_package(OpenGL REQUIRED)
++find_package(GLEW REQUIRED)
+ 
+ message(STATUS "OpenGL libraries: ${OPENGL_LIBRARIES}")
+ message(STATUS "GLEW libraries:   ${GLEW_LIBRARY}")

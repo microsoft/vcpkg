@@ -1,0 +1,68 @@
+diff --git a/libvpl/cmake/VPLConfig.cmake.in b/libvpl/cmake/VPLConfig.cmake.in
+index 7a60974..c480561 100644
+--- a/libvpl/cmake/VPLConfig.cmake.in
++++ b/libvpl/cmake/VPLConfig.cmake.in
+@@ -12,26 +12,26 @@
+ option(VPL_SHARED "Use shared instead of static version of dispatcher."
+        @BUILD_SHARED_LIBS@)
+ 
++get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++if(_IMPORT_PREFIX STREQUAL "/")
++  set(_IMPORT_PREFIX "")
++endif()
++
+ # Initialize to default values
+ set(VPL_INTERFACE_VERSION @API_VERSION_MAJOR@)
+-get_filename_component(_vpl_config_file
+-                       "${CMAKE_CURRENT_LIST_DIR}/VPLConfig.cmake" REALPATH)
+-get_filename_component(_vpl_config_dir "${_vpl_config_file}" DIRECTORY)
+-get_filename_component(_vpl_install_prefix
+-                       "${_vpl_config_dir}/@cmake_rel_prefix@" REALPATH)
+ 
+-get_filename_component(VPL_LIB_DIR "${_vpl_config_dir}/@cmake_rel_libdir@"
++get_filename_component(VPL_LIB_DIR "${_IMPORT_PREFIX}/lib"
+                        ABSOLUTE)
+-get_filename_component(VPL_INCLUDE_DIR "${_vpl_config_dir}/@cmake_rel_incdir@"
++get_filename_component(VPL_DEBUG_LIB_DIR "${_IMPORT_PREFIX}/debug/lib"
+                        ABSOLUTE)
+-get_filename_component(VPL_BIN_DIR "${_vpl_config_dir}/@cmake_rel_bindir@"
++get_filename_component(VPL_INCLUDE_DIR "${_IMPORT_PREFIX}/include"
++                       ABSOLUTE)
++get_filename_component(VPL_BIN_DIR "${_IMPORT_PREFIX}/bin"
++                       ABSOLUTE)
++get_filename_component(VPL_DEBUG_BIN_DIR "${_IMPORT_PREFIX}/debug/bin"
+                        ABSOLUTE)
+-
+-if(CMAKE_SYSTEM_NAME MATCHES Windows)
+-  set(VPL_SHLIB_DIR ${VPL_BIN_DIR})
+-else()
+-  set(VPL_SHLIB_DIR ${VPL_LIB_DIR})
+-endif()
+ 
+ if(NOT VPL_IMPORTED_TARGETS)
+   set(VPL_IMPORTED_TARGETS "")
+@@ -47,18 +47,18 @@ endif()
+ # VPL::dispatcher
+ set(VPL_dispatcher_FOUND 0)
+ 
+-get_filename_component(_dispatcher_shlib "${VPL_SHLIB_DIR}/@SHLIB_FILE_NAME@"
++get_filename_component(_dispatcher_shlib "${VPL_BIN_DIR}/@SHLIB_FILE_NAME@"
+                        ABSOLUTE)
+ get_filename_component(_dispatcher_debug_shlib
+-                       "${VPL_SHLIB_DIR}/@SHLIB_FILE_NAME_DEBUG@" ABSOLUTE)
++                       "${VPL_DEBUG_BIN_DIR}/@SHLIB_FILE_NAME_DEBUG@" ABSOLUTE)
+ get_filename_component(_dispatcher_lib "${VPL_LIB_DIR}/@LIB_FILE_NAME@"
+                        ABSOLUTE)
+ get_filename_component(_dispatcher_debug_lib
+-                       "${VPL_LIB_DIR}/@LIB_FILE_NAME_DEBUG@" ABSOLUTE)
++                       "${VPL_DEBUG_LIB_DIR}/@LIB_FILE_NAME_DEBUG@" ABSOLUTE)
+ get_filename_component(_dispatcher_implib "${VPL_LIB_DIR}/@LIB_FILE_NAME@"
+                        ABSOLUTE)
+ get_filename_component(_dispatcher_debug_implib
+-                       "${VPL_LIB_DIR}/@LIB_FILE_NAME_DEBUG@" ABSOLUTE)
++                       "${VPL_DEBUG_LIB_DIR}/@LIB_FILE_NAME_DEBUG@" ABSOLUTE)
+ 
+ if(TARGET VPL::dispatcher)
+   list(APPEND VPL_IMPORTED_TARGETS VPL::dispatcher)

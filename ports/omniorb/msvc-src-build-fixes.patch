@@ -1,0 +1,13 @@
+diff --git a/include/omnithread/atomic.h b/include/omnithread/atomic.h
+index 3fed8df..e1b6a71 100644
+--- a/include/omnithread/atomic.h
++++ b/include/omnithread/atomic.h
+@@ -27,7 +27,7 @@
+ #define __omnithread_atomic_h_
+ 
+ 
+-#ifdef OMNI_HAVE_SYNC_ADD_AND_FETCH
++#if defined(OMNI_HAVE_SYNC_ADD_AND_FETCH) && !defined(_MSC_VER)
+ 
+ #  define OMNI_REFCOUNT_DEFINED
+ 

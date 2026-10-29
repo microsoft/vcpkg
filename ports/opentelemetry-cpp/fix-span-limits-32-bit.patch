@@ -1,0 +1,29 @@
+diff --git a/sdk/src/trace/span_limits.cc b/sdk/src/trace/span_limits.cc
+index aba19b1..b3c01ee 100644
+--- a/sdk/src/trace/span_limits.cc
++++ b/sdk/src/trace/span_limits.cc
+@@ -31,21 +31,13 @@ static constexpr const char *kLinkAttributeCountLimitEnv  = "OTEL_LINK_ATTRIBUTE
+ namespace
+ {
+ 
+-void UpdateFromEnv(const char *env_var_name, std::uint32_t &limit)
++template <typename LimitType>
++void UpdateFromEnv(const char *env_var_name, LimitType &limit)
+ {
+   std::uint32_t value{};
+   if (opentelemetry::sdk::common::GetUintEnvironmentVariable(env_var_name, value))
+   {
+-    limit = value;
+-  }
+-}
+-
+-void UpdateFromEnv(const char *env_var_name, std::size_t &limit)
+-{
+-  std::uint32_t value{};
+-  if (opentelemetry::sdk::common::GetUintEnvironmentVariable(env_var_name, value))
+-  {
+-    limit = static_cast<std::size_t>(value);
++    limit = static_cast<LimitType>(value);
+   }
+ }
+ 

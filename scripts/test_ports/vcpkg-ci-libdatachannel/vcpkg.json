@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-libdatachannel",
+  "version-string": "ci",
+  "description": "Validates libdatachannel",
+  "dependencies": [
+    {
+      "name": "libdatachannel",
+      "features": [
+        "srtp",
+        "ws"
+      ]
+    },
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

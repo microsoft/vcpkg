@@ -1,0 +1,4 @@
+bfgroup-lyra provides CMake targets:
+
+    find_package(lyra CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE bfg::lyra)

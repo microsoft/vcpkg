@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 68da6c5..781fb97 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -820,7 +820,8 @@ target_include_directories(
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/textord>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/viewer>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/wordrec>
+-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/training>)
++         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/training>
++         $<INSTALL_INTERFACE:include>)
+ if(BUILD_SHARED_LIBS)
+   target_compile_definitions(
+     libtesseract

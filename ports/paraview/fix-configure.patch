@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1b9fd80..94ad133 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -557,7 +557,16 @@ if (PARAVIEW_USE_EXTERNAL_VTK)
+     endforeach()
+   endmacro()
+   search_dependent_targets(${vtk_modules})
+-  find_package(VTK CONFIG REQUIRED COMPONENTS "${vtk_components}")  
++
++  if (PARAVIEW_USE_PYTHON)
++    get_target_property(vtk_python_modules VTK::vtkpythonmodules "INTERFACE_LINK_LIBRARIES")
++    list(TRANSFORM vtk_python_modules REPLACE "Python$" "" OUTPUT_VARIABLE vtk_modules_wrapped)
++    list(TRANSFORM vtk_modules_wrapped REPLACE "^VTK::vtk" "" OUTPUT_VARIABLE vtk_components_wrapped)
++    list(APPEND vtk_components ${vtk_components_wrapped})
++    list(REMOVE_DUPLICATES vtk_components)
++  endif()
++
++  find_package(VTK CONFIG REQUIRED COMPONENTS "${vtk_components}")
+   if (PARAVIEW_USE_PYTHON)
+     find_package(Python3 3.3 QUIET REQUIRED COMPONENTS Interpreter)
+     set(PYTHON_VERSION_MAJOR "${Python3_VERSION_MAJOR}")
+diff --git a/Qt/Python/vtk.module b/Qt/Python/vtk.module
+index f82f076..86dbafd 100644
+--- a/Qt/Python/vtk.module
++++ b/Qt/Python/vtk.module
+@@ -12,7 +12,7 @@ GROUPS
+   PARAVIEW_CANONICAL
+ DEPENDS
+   ParaView::pqCore
+-  ParaView::PythonInitializer
++  #ParaView::PythonInitializer <- Creates a cycle
+   VTK::PythonInterpreter
+   VTK::WrappingPythonCore
+ TEST_LABELS

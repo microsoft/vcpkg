@@ -1,0 +1,56 @@
+diff --git a/loader/unknown_ext_chain_marmasm.asm b/loader/unknown_ext_chain_marmasm.asm
+index 61f0182..6e9ee40 100644
+--- a/loader/unknown_ext_chain_marmasm.asm
++++ b/loader/unknown_ext_chain_marmasm.asm
+@@ -25,18 +25,11 @@
+ ; jump to the next function in the call chain
+ 
+ 
+-#if defined(_ARM64EC_)
+-; arm64ec needs the SDK macros, which ksarm64.h gates on _M_ARM64EC. MARMASM
+-; doesn't set that, so derive it from the _ARM64EC_ it does set.
+-#define _M_ARM64EC 1
+-#include "ksarm64.h"
+-#endif
+-
+     GET gen_defines.asm
+ 
+     EXTERN loader_log_asm_function_not_supported
+ 
+-#if defined(_ARM64EC_)
++    IF :DEF: _ARM64EC_
+ 
+ ; arm64ec apps can reach these through emulated x64, so each trampoline is an
+ ; adjustor thunk: an entry thunk for x64 callers (jumps via __os_arm64x_x64_jump)
+@@ -137,7 +130,7 @@ terminError$num
+     NESTED_END
+     MEND
+ 
+-#else
++    ELSE
+ 
+     IF AARCH_64==1
+ 
+@@ -244,18 +237,18 @@ vkdev_ext$num FUNCTION
+ 
+     ENDIF
+ 
+-#endif
++    ENDIF
+ 
+     AREA terminator_string_data, DATA, READONLY
+ 
+ termin_error_string DCB "Function %s not supported for this physical device", 0
+ 
+-#if defined(_ARM64EC_)
++    IF :DEF: _ARM64EC_
+ ; the entry-thunk pointer wants 16-byte aligned functions, so set .text alignment here
+     AREA |.text|, CODE, READONLY, ALIGN=4
+-#else
++    ELSE
+     AREA UnknownFunctionImpl, CODE, READONLY
+-#endif
++    ENDIF
+ 
+     PhysDevExtTramp 0
+     PhysDevExtTramp 1

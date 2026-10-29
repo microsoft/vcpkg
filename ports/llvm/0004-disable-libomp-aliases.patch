@@ -1,0 +1,29 @@
+diff --git a/openmp/runtime/src/CMakeLists.txt b/openmp/runtime/src/CMakeLists.txt
+index 4272967..ba1a260 100644
+--- a/openmp/runtime/src/CMakeLists.txt
++++ b/openmp/runtime/src/CMakeLists.txt
+@@ -260,7 +260,7 @@ set(LIBOMP_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR})
+ set(LIBOMP_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR} PARENT_SCOPE)
+ 
+ # Add symbolic links to libomp
+-if(NOT WIN32)
++if(0)
+   if(AIX)
+     # On AIX, libomp.a is the name for both static and shared objects.
+     set(LIBOMP_AIX_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
+@@ -419,6 +419,7 @@ if(WIN32)
+   endif()
+   install(TARGETS ${LIBOMP_IMP_LIB_TARGET} ARCHIVE DESTINATION "${OPENMP_INSTALL_LIBDIR}" COMPONENT openmp)
+   # Create aliases (regular copies) of the library for backwards compatibility
++  if(0)
+   set(LIBOMP_ALIASES "libiomp5md")
+   foreach(alias IN LISTS LIBOMP_ALIASES)
+     install(CODE "execute_process(COMMAND \"\${CMAKE_COMMAND}\" -E copy \"${LIBOMP_LIB_FILE}\"
+@@ -427,6 +428,7 @@ if(WIN32)
+     install(CODE "execute_process(COMMAND \"\${CMAKE_COMMAND}\" -E copy \"${LIBOMP_IMP_LIB_FILE}\"
+       \"${alias}${CMAKE_STATIC_LIBRARY_SUFFIX}\" WORKING_DIRECTORY \"${outdir}\")" COMPONENT openmp)
+   endforeach()
++  endif()
+ else()
+ 
+   install(TARGETS omp ${export_to_llvmexports} ${LIBOMP_INSTALL_KIND} DESTINATION "${OPENMP_INSTALL_LIBDIR}" COMPONENT openmp)

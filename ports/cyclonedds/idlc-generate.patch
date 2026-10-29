@@ -1,0 +1,35 @@
+diff --git a/cmake/Modules/Generate.cmake b/cmake/Modules/Generate.cmake
+index 0ed67d63..9037fe05 100644
+--- a/cmake/Modules/Generate.cmake
++++ b/cmake/Modules/Generate.cmake
+@@ -157,11 +157,25 @@ function(IDLC_GENERATE_GENERIC)
+     endforeach()
+ 
+     list(APPEND _outputs ${_file_outputs})
+-    add_custom_command(
+-      OUTPUT   ${_file_outputs}
+-      COMMAND  ${_idlc_executable}
+-      ARGS     ${_language} ${IDLC_ARGS} ${IDLC_INCLUDE_DIRS} ${_file}
+-      DEPENDS  ${_files} ${_depends})
++    if(APPLE)
++      add_custom_command(
++        OUTPUT   ${_file_outputs}
++        COMMAND  ${CMAKE_COMMAND}
++        ARGS     -E env "DYLD_LIBRARY_PATH=$<TARGET_FILE_DIR:${_idlc_executable}>/../../lib" $<TARGET_FILE:${_idlc_executable}> ${_language} ${IDLC_ARGS} ${IDLC_INCLUDE_DIRS} ${_file}
++        DEPENDS  ${_files} ${_depends})
++    elseif(UNIX)
++      add_custom_command(
++        OUTPUT   ${_file_outputs}
++        COMMAND  ${CMAKE_COMMAND}
++        ARGS     -E env "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:${_idlc_executable}>/../../lib" $<TARGET_FILE:${_idlc_executable}> ${_language} ${IDLC_ARGS} ${IDLC_INCLUDE_DIRS} ${_file}
++        DEPENDS  ${_files} ${_depends})
++    else()
++      add_custom_command(
++        OUTPUT   ${_file_outputs}
++        COMMAND  ${_idlc_executable}
++        ARGS     ${_language} ${IDLC_ARGS} ${IDLC_INCLUDE_DIRS} ${_file}
++        DEPENDS  ${_files} ${_depends})
++    endif()
+   endforeach()
+ 
+   add_custom_target("${_target}_generate" DEPENDS "${_outputs}")

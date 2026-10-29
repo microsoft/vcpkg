@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 707e3bb..839f34e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -972,7 +972,6 @@ set(DOCUMENTATION_FILES
+         VERSION.txt
+ )
+ 
+-install(FILES ${DOCUMENTATION_FILES} DESTINATION ${MISC_PREFIX})
+ 
+ ###############################################################################
+ #

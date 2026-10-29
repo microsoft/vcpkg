@@ -1,0 +1,33 @@
+diff --git a/cmake/libseq.cmake b/cmake/libseq.cmake
+index 5054e3a..2face8a 100644
+--- a/cmake/libseq.cmake
++++ b/cmake/libseq.cmake
+@@ -3,7 +3,7 @@ mumps_get_src(mpiseq_c_sources mpiseq c)
+ add_library(mpiseq_c ${mpiseq_c_sources})
+ target_include_directories(mpiseq_c PUBLIC
+ "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+-$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/mumps_seq>
+ )
+ target_compile_options(mpiseq_c PRIVATE ${mumps_cflags})
+ target_compile_definitions(mpiseq_c PRIVATE ${mumps_cdefs})
+@@ -15,7 +15,7 @@ add_library(mpiseq_fortran ${mpiseq_fortran_sources} $<TARGET_OBJECTS:mpiseq_c>)
+ # BUILD_SHARED_LIBS=on reveals that $<TARGET_OBJECTS:mpiseq_c> is needed in the Fortran target
+ target_include_directories(mpiseq_fortran PUBLIC
+ "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+-$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/mumps_seq>
+ )
+ target_compile_options(mpiseq_fortran PRIVATE ${mumps_fflags})
+ target_link_libraries(mpiseq_fortran INTERFACE mpiseq_c)
+@@ -37,7 +37,9 @@ ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib
+ install(TARGETS mpiseq mpiseq_c mpiseq_fortran EXPORT ${PROJECT_NAME}-targets)
+ 
+ # mpi.f doesn't have Fortran module
+-install(FILES elapse.h mpi.h mpif.h TYPE INCLUDE)
++# Install the sequential MPI stub headers in a subdirectory so that mpi.h does not
++# collide with or shadow a real MPI implementation.
++install(FILES elapse.h mpi.h mpif.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mumps_seq)
+ 
+ # This is used in place of find_package(MPI) in MUMPS when MUMPS_parallel is OFF
+ add_library(MPI::MPI_C ALIAS mpiseq_c)

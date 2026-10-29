@@ -1,0 +1,116 @@
+diff --git a/PCbuild/_bz2.vcxproj b/PCbuild/_bz2.vcxproj
+index e0dc6ec187a..6f0570ddfbe 100644
+--- a/PCbuild/_bz2.vcxproj
++++ b/PCbuild/_bz2.vcxproj
+@@ -101,6 +101,8 @@
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_bz2module.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="$(bz2Dir)\blocksort.c" />
+     <ClCompile Include="$(bz2Dir)\bzlib.c" />
+     <ClCompile Include="$(bz2Dir)\compress.c" />
+@@ -109,7 +111,7 @@
+     <ClCompile Include="$(bz2Dir)\huffman.c" />
+     <ClCompile Include="$(bz2Dir)\randtable.c" />
+   </ItemGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="$(bz2Dir)\bzlib.h" />
+     <ClInclude Include="$(bz2Dir)\bzlib_private.h" />
+   </ItemGroup>
+diff --git a/PCbuild/_elementtree.vcxproj b/PCbuild/_elementtree.vcxproj
+index cd8c1ff1731..b6af3f2132d 100644
+--- a/PCbuild/_elementtree.vcxproj
++++ b/PCbuild/_elementtree.vcxproj
+@@ -92,12 +92,12 @@
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+-    <ClCompile>
++    <ClCompile Condition="false">
+       <AdditionalIncludeDirectories>..\Modules\expat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+   </ItemDefinitionGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="..\Modules\expat\ascii.h" />
+     <ClInclude Include="..\Modules\expat\asciitab.h" />
+     <ClInclude Include="..\Modules\expat\expat.h" />
+@@ -119,6 +119,8 @@
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_elementtree.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="..\Modules\expat\xcs.c" />
+     <ClCompile Include="..\Modules\expat\xmlparse.c" />
+     <ClCompile Include="..\Modules\expat\xmlrole.c" />
+diff --git a/PCbuild/_lzma.vcxproj b/PCbuild/_lzma.vcxproj
+index 40107d4b76c..222fcae33c2 100644
+--- a/PCbuild/_lzma.vcxproj
++++ b/PCbuild/_lzma.vcxproj
+@@ -94,10 +94,9 @@
+   <ItemDefinitionGroup>
+     <ClCompile>
+       <AdditionalIncludeDirectories>$(lzmaDir)src/liblzma/api;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <PreprocessorDefinitions>WIN32;_FILE_OFFSET_BITS=64;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;LZMA_API_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>WIN32;_FILE_OFFSET_BITS=64;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>$(OutDir)liblzma$(PyDebugExt).lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+@@ -111,7 +110,7 @@
+       <Project>{cf7ac3d1-e2df-41d2-bea6-1e2556cdea26}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+-    <ProjectReference Include="liblzma.vcxproj">
++    <ProjectReference Condition="false" Include="liblzma.vcxproj">
+       <Project>{12728250-16eC-4dc6-94d7-e21dd88947f8}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+diff --git a/PCbuild/_sqlite3.vcxproj b/PCbuild/_sqlite3.vcxproj
+index 9ae0a0fc3a0..564d7424f25 100644
+--- a/PCbuild/_sqlite3.vcxproj
++++ b/PCbuild/_sqlite3.vcxproj
+@@ -127,7 +127,7 @@
+       <Project>{cf7ac3d1-e2df-41d2-bea6-1e2556cdea26}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+-    <ProjectReference Include="sqlite3.vcxproj">
++    <ProjectReference Condition="false" Include="sqlite3.vcxproj">
+       <Project>{a1a295e5-463c-437f-81ca-1f32367685da}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+diff --git a/PCbuild/pyexpat.vcxproj b/PCbuild/pyexpat.vcxproj
+index 57d565fa289..010fe544698 100644
+--- a/PCbuild/pyexpat.vcxproj
++++ b/PCbuild/pyexpat.vcxproj
+@@ -89,12 +89,12 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <ItemDefinitionGroup>
+-    <ClCompile>
++    <ClCompile Condition="false">
+       <AdditionalIncludeDirectories>$(PySourcePath)Modules\expat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;PYEXPAT_EXPORTS;XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+   </ItemDefinitionGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="..\Modules\expat\fallthrough.h" />
+     <ClInclude Include="..\Modules\expat\hash_table.h" />
+     <ClInclude Include="..\Modules\expat\memory_sanitizer.h" />
+@@ -104,6 +104,8 @@
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\pyexpat.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="..\Modules\expat\xcs.c" />
+     <ClCompile Include="..\Modules\expat\xmlparse.c" />
+     <ClCompile Include="..\Modules\expat\xmlrole.c" />

@@ -1,0 +1,13 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO bobluppes/graaf
+    REF "v${VERSION}"
+    SHA512 9be4a55168289d9724cb4eda203227a64637dc332e3443288a1df0ff5755ca4cf912b5f706f344d712a9f381e531f62f0846f2a98e0325cc2f263086c41b872c
+)
+
+file(COPY "${SOURCE_PATH}/include/graaflib" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.md"
+    "${SOURCE_PATH}/include/graaflib/types.h"
+)

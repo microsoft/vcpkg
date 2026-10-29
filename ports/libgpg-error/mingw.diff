@@ -1,0 +1,15 @@
+diff --git a/configure.ac b/configure.ac
+index 4de263a..9aa0f69 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -200,6 +200,10 @@ esac
+ AX_CC_FOR_BUILD
+ 
+ AH_BOTTOM([
++#if defined(__MINGW32__) && !defined(_WIN32_WINNT)
++#define _WIN32_WINNT 0x0600  /* for STARTUPINFOEX */
++#endif
++
+ /* Force using of NLS for W32 even if no libintl has been found.  This is
+    okay because we have our own gettext implementation for W32.  */
+ #if defined(HAVE_W32_SYSTEM) && !defined(ENABLE_NLS)

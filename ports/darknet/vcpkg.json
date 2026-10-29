@@ -1,0 +1,52 @@
+{
+  "name": "darknet",
+  "version-date": "2025-10-24",
+  "description": "Darknet is an open source neural network framework written in C and CUDA for processing images or video frames in computer vision.",
+  "homepage": "https://darknetcv.ai/",
+  "license": "Apache-2.0 AND BSD-2-Clause",
+  "supports": "!android & !uwp & !(static & staticcrt)",
+  "dependencies": [
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "highgui"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build darknet with support for CUDA",
+      "dependencies": [
+        "cuda",
+        {
+          "name": "opencv",
+          "default-features": false
+        }
+      ]
+    },
+    "cudnn": {
+      "description": "Build darknet with support for cuDNN",
+      "dependencies": [
+        "cudnn",
+        {
+          "name": "darknet",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "openmp": {
+      "description": "Build darknet with support for OpenMP"
+    }
+  }
+}

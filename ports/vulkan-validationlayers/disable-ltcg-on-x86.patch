@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8d20036..03eb7a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -201,7 +201,9 @@ elseif(MSVC)
+     add_link_options("$<$<CONFIG:Release>:/DEBUG:FULL>")
+ 
+     # Enable /LTCG (Link-time code generation)
+-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
++    if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
++        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
++    endif()
+     # Remove unreferenced code/data.
+     add_link_options("$<$<CONFIG:Release>:/OPT:REF>")
+     # Merge duplicate data/functions

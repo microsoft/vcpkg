@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4631864..d5f6756 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -158,6 +158,8 @@ include(CheckSymbolExists)
+ find_library(libm m)
+ if(NOT libm)
+   set(libm "")
++else()
++  set(libm m)
+ endif()
+ 
+ set(libs ${libs} ${libm})

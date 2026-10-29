@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 122fe93..b66ebe4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,26 +144,21 @@ IF(WIN32)
+ 
+   SET(PA_LIBRARY_DEPENDENCIES ${PA_LIBRARY_DEPENDENCIES} winmm)
+ 
+-  # Try to find ASIO SDK (assumes that portaudio and asiosdk folders are side-by-side, see
+-  # http://www.portaudio.com/trac/wiki/TutorialDir/Compile/WindowsASIOMSVC)
+-  FIND_PACKAGE(ASIOSDK)
+-  IF(ASIOSDK_FOUND)
+-    OPTION(PA_USE_ASIO "Enable support for ASIO" ON)
+-  ELSE()
+-    OPTION(PA_USE_ASIO "Enable support for ASIO" OFF)
+-  ENDIF()
++  OPTION(PA_USE_ASIO "Enable support for ASIO" OFF)
+   IF(PA_USE_ASIO)
+-    SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/common)
+-    SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/host)
+-    SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/host/pc)
++    find_package(unofficial-asiosdk CONFIG REQUIRED)
++    get_target_property(PA_ASIOSDK_SOURCES unofficial::asiosdk::host INTERFACE_SOURCES)
++    get_target_property(PA_ASIOSDK_PRIVATE_INCLUDE_PATHS unofficial::asiosdk::host INTERFACE_INCLUDE_DIRECTORIES)
++    get_target_property(PA_ASIOSDK_LINK_LIBRARIES unofficial::asiosdk::host INTERFACE_LINK_LIBRARIES)
++
+     SET(PA_ASIO_SOURCES src/hostapi/asio/pa_asio.cpp src/hostapi/asio/iasiothiscallresolver.cpp)
+-    SET(PA_ASIOSDK_SOURCES ${ASIOSDK_ROOT_DIR}/common/asio.cpp ${ASIOSDK_ROOT_DIR}/host/pc/asiolist.cpp ${ASIOSDK_ROOT_DIR}/host/asiodrivers.cpp)
++    set(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${PA_ASIOSDK_PRIVATE_INCLUDE_PATHS})
+     SOURCE_GROUP("hostapi\\ASIO" FILES ${PA_ASIO_SOURCES})
+     SOURCE_GROUP("hostapi\\ASIO\\ASIOSDK" FILES ${PA_ASIOSDK_SOURCES})
+     SET(PA_PUBLIC_INCLUDES ${PA_PUBLIC_INCLUDES} include/pa_asio.h)
+     SET(PA_SOURCES ${PA_SOURCES} ${PA_ASIO_SOURCES})
+     SET(PA_NON_UNICODE_SOURCES ${PA_NON_UNICODE_SOURCES} ${PA_ASIOSDK_SOURCES})
+-    SET(PA_LIBRARY_DEPENDENCIES ${PA_LIBRARY_DEPENDENCIES} ole32 uuid)
++    SET(PA_LIBRARY_DEPENDENCIES ${PA_LIBRARY_DEPENDENCIES} ${PA_ASIOSDK_LINK_LIBRARIES})
+   ELSE()
+     # Set variables for DEF file expansion
+     SET(DEF_EXCLUDE_ASIO_SYMBOLS ";")

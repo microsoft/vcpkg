@@ -1,0 +1,7 @@
+
+For the 'xbox' feature, it defaults to targeting Xbox Series X|S. To set it to Xbox One,
+create a custom triplet from x64-windows with the addition of the following:
+
+    if (PORT STREQUAL "directxtex")
+        set(DIRECTXTEX_XBOX_CONSOLE_TARGET "xboxone")
+    endif()

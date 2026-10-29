@@ -1,0 +1,16 @@
+{
+  "name": "fastor",
+  "version": "0.6.4",
+  "description": "a high performance tensor library for modern C++",
+  "homepage": "https://github.com/romeric/Fastor",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

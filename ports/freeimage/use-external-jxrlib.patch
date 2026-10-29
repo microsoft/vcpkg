@@ -1,0 +1,14 @@
+diff --git a/Source/FreeImage/PluginJXR.cpp b/Source/FreeImage/PluginJXR.cpp
+index 0e14e09..8eb9d5d 100644
+--- a/Source/FreeImage/PluginJXR.cpp
++++ b/Source/FreeImage/PluginJXR.cpp
+@@ -23,7 +23,8 @@
+ #include "Utilities.h"
+ #include "../Metadata/FreeImageTag.h"
+ 
+-#include "../LibJXR/jxrgluelib/JXRGlue.h"
++#define INITGUID
++#include <JXRGlue.h>
+ 
+ // ==========================================================
+ // Plugin Interface

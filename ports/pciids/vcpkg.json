@@ -1,0 +1,8 @@
+{
+  "name": "pciids",
+  "version-date": "2023-04-11",
+  "description": "Maintainer function to acquire a PCI ID Repository database snapshot",
+  "homepage": "https://pci-ids.ucw.cz/",
+  "license": "GPL-2.0-or-later OR BSD-3-Clause",
+  "supports": "native"
+}

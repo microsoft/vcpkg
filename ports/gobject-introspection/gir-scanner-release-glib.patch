@@ -1,0 +1,36 @@
+diff --git a/giscanner/sourcescanner.py b/giscanner/sourcescanner.py
+index aadd6c9..2498cfe 100644
+--- a/giscanner/sourcescanner.py
++++ b/giscanner/sourcescanner.py
+@@ -26,6 +26,31 @@ from .ccompiler import CCompiler
+ from .utils import have_debug_flag, dll_dirs
+ 
+ 
++if os.name == 'nt':
++    # _giscanner is always a release build, but add_dll_dirs() below resolves
++    # gio-2.0.pc, so a debug build points the loader at the debug GLib.
++    # gi_source_scanner_parse_file() then reads and closes a FILE* that
++    # g_fopen() created in the debug CRT, and the release CRT fast-fails on
++    # the foreign stream (0xC0000409). Preloading by full path works because
++    # the loader reuses loaded modules; add_dll_directory() has no fixed order.
++    def _preload_release_glib():
++        import ctypes
++        import glob
++
++        # <prefix>/lib/gobject-introspection/giscanner -> <prefix>/bin
++        bindir = os.path.abspath(
++            os.path.join(os.path.dirname(__file__), '..', '..', '..', 'bin'))
++        if not os.path.isdir(bindir):
++            return
++        for pattern in ('glib-2.0-*.dll', 'gobject-2.0-*.dll', 'gio-2.0-*.dll'):
++            for dll in glob.glob(os.path.join(bindir, pattern)):
++                try:
++                    ctypes.WinDLL(dll)
++                except OSError:
++                    pass
++
++    _preload_release_glib()
++
+ dlldirs = dll_dirs()
+ dlldirs.add_dll_dirs(['gio-2.0'])
+ from giscanner._giscanner import SourceScanner as CSourceScanner

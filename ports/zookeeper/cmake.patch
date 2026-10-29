@@ -1,0 +1,56 @@
+diff --git a/zookeeper-client/zookeeper-client-c/CMakeLists.txt b/zookeeper-client/zookeeper-client-c/CMakeLists.txt
+index ccba3ee..14384c0 100644
+--- a/zookeeper-client/zookeeper-client-c/CMakeLists.txt
++++ b/zookeeper-client/zookeeper-client-c/CMakeLists.txt
+@@ -169,7 +169,11 @@ configure_file(cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
+ # hashtable library
+ set(hashtable_sources src/hashtable/hashtable_itr.c src/hashtable/hashtable.c)
+ add_library(hashtable STATIC ${hashtable_sources})
+-target_include_directories(hashtable PUBLIC include)
++target_include_directories(hashtable PUBLIC
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++  $<INSTALL_INTERFACE:include>
++)
++set_target_properties(hashtable PROPERTIES OUTPUT_NAME zookeeper_hashtable)
+ target_link_libraries(hashtable PUBLIC $<$<OR:$<PLATFORM_ID:Linux>,$<PLATFORM_ID:FreeBSD>>:m>)
+ 
+ # zookeeper library
+@@ -196,7 +200,12 @@ if(WIN32)
+ endif()
+ 
+ add_library(zookeeper STATIC ${zookeeper_sources})
+-target_include_directories(zookeeper PUBLIC include ${CMAKE_CURRENT_BINARY_DIR}/include generated)
++target_include_directories(zookeeper PUBLIC
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++  $<INSTALL_INTERFACE:include>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated>
++)
+ target_link_libraries(zookeeper PUBLIC
+   hashtable
+   $<$<PLATFORM_ID:Linux>:rt> # clock_gettime
+@@ -291,3 +300,24 @@ if(WANT_CPPUNIT)
+     "ZKROOT=${CMAKE_CURRENT_SOURCE_DIR}/../.."
+     "CLASSPATH=$CLASSPATH:$CLOVER_HOME/lib/clover*.jar")
+ endif()
++
++if(WIN32)
++  target_compile_definitions(zookeeper PRIVATE _CRT_SECURE_NO_WARNINGS _WINSOCK_DEPRECATED_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
++  target_compile_definitions(cli PRIVATE _CRT_SECURE_NO_WARNINGS)
++endif()
++
++file(GLOB ZOOKEEPER_HEADERS include/*.h)
++install(FILES ${ZOOKEEPER_HEADERS} generated/zookeeper.jute.h DESTINATION include/zookeeper)
++
++install(TARGETS zookeeper hashtable
++    EXPORT unofficial-zookeeperTargets
++    RUNTIME DESTINATION bin
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++)
++install(EXPORT unofficial-zookeeperTargets
++  NAMESPACE unofficial::zookeeper::
++  DESTINATION share/unofficial-zookeeper
++)
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/unofficial-zookeeperConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/unofficial-zookeeperConfig.cmake" @ONLY)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-zookeeperConfig.cmake" DESTINATION share/unofficial-zookeeper)

@@ -1,0 +1,35 @@
+diff --git a/src/sysc/datatypes/int/sc_int64_io.cpp b/src/sysc/datatypes/int/sc_int64_io.cpp
+index 92148f477..f97b03135 100644
+--- a/src/sysc/datatypes/int/sc_int64_io.cpp
++++ b/src/sysc/datatypes/int/sc_int64_io.cpp
+@@ -151,17 +151,17 @@ write_uint64(::std::ostream& os, uint64 val, int sign)
+                 goto fail;
+         }
+     }
+-    os.osfx();
+     return;
+ fail:
+     //os.set(::std::ios::badbit);
+-    os.osfx();
++    return;
+ }
+ 
+ ::std::ostream&
+ operator << ( ::std::ostream& os, int64 n )
+ {
+-    if (os.opfx()) {
++    ::std::ostream::sentry sentry(os);
++    if (sentry) {
+         int sign = 1;
+         uint64 abs_n = (uint64) n;
+         if (n < 0 && (os.flags() & (::std::ios::oct|::std::ios::hex)) == 0) {
+@@ -176,7 +176,8 @@ operator << ( ::std::ostream& os, int64 n )
+ ::std::ostream&
+ operator << ( ::std::ostream& os, uint64 n )
+ {
+-    if (os.opfx()) {
++    ::std::ostream::sentry sentry(os);
++    if (sentry) {
+         sc_dt::write_uint64(os, n, 0);
+     }
+     return os;

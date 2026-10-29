@@ -1,0 +1,14 @@
+diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
+index 6e1cd02..712ed1b 100644
+--- a/cmake/config.cmake.in
++++ b/cmake/config.cmake.in
+@@ -1,6 +1,9 @@
+ 
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Threads)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+ 
+ set_and_check(@PROJECT_NAME@_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")

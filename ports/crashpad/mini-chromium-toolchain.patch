@@ -1,0 +1,100 @@
+diff --git a/build/compiler.gni b/build/compiler.gni
+index 7e2b3ce..06638b8 100644
+--- a/build/compiler.gni
++++ b/build/compiler.gni
+@@ -4,7 +4,7 @@
+ 
+ import("platform.gni")
+ 
+-if (mini_chromium_is_win) {
++if (mini_chromium_is_win || mini_chromium_is_linux) {
+   declare_args() {
+     mini_chromium_is_clang = mini_chromium_is_posix ||
+                              mini_chromium_is_fuchsia || mini_chromium_is_win
+diff --git a/build/config/BUILD.gn b/build/config/BUILD.gn
+index b621dc1..95c07f6 100644
+--- a/build/config/BUILD.gn
++++ b/build/config/BUILD.gn
+@@ -51,6 +51,11 @@ if (mini_chromium_is_mac) {
+ }
+ 
+ declare_args() {
++  # Optional compiler and archiver commands. If any is set, all must be set.
++  mini_chromium_cc = ""
++  mini_chromium_cxx = ""
++  mini_chromium_ar = ""
++
+   # Extra flags passed to the C compiler.
+   # Space-separated string of flags.
+   # "cflags" are passed to all invocations of the C, C++, Objective-C, and
+@@ -297,9 +302,13 @@ config("default") {
+     } else if (current_cpu == "x64") {
+       common_flags += [ "-m64" ]
+     } else if (current_cpu == "arm64") {
+-      common_flags += [ "--target=aarch64-linux-gnu" ]
++      if (mini_chromium_is_clang) {
++        common_flags += [ "--target=aarch64-linux-gnu" ]
++      }
+     } else if (current_cpu == "riscv64") {
+-      common_flags += [ "--target=riscv64-linux-gnu" ]
++      if (mini_chromium_is_clang) {
++        common_flags += [ "--target=riscv64-linux-gnu" ]
++      }
+     } else {
+       assert(false, "Unsupported architecture")
+     }
+@@ -355,15 +364,20 @@ config("default") {
+     cflags += [
+       "-Wendif-labels",
+       "-Wextra-semi",
+-      "-Wheader-hygiene",
+-      "-Wnewline-eof",
+       "-Wno-missing-field-initializers",
+       "-Wno-unused-parameter",
+       "-Wsign-compare",
+-      "-Wstring-conversion",
+       "-Wvla",
+     ]
+ 
++    if (mini_chromium_is_clang) {
++      cflags += [
++        "-Wheader-hygiene",
++        "-Wnewline-eof",
++        "-Wstring-conversion",
++      ]
++    }
++
+     if (mini_chromium_is_win) {
+       # TODO: These should be cleaned up and enabled.
+       cflags += [
+@@ -475,9 +489,7 @@ toolchain("gcc_like_toolchain") {
+                                 "",
+                               ])
+ 
+-    if (target_cpu == "arm") {
+-      tool_prefix = "arm-linux-androideabi"
+-    } else if (target_cpu == "arm64") {
++    if (target_cpu == "arm64") {
+       tool_prefix = "aarch64-linux-android"
+     } else if (target_cpu == "x86") {
+       tool_prefix = "i686-linux-android"
+@@ -510,6 +522,19 @@ toolchain("gcc_like_toolchain") {
+     }
+   }
+ 
++  if (mini_chromium_cc != "" || mini_chromium_cxx != "" ||
++      mini_chromium_ar != "") {
++    assert(
++        mini_chromium_cc != "" && mini_chromium_cxx != "" &&
++            mini_chromium_ar != "",
++        "mini_chromium_cc, mini_chromium_cxx, and mini_chromium_ar must be set together")
++    cc = mini_chromium_cc
++    cxx = mini_chromium_cxx
++    asm = cxx
++    ar = mini_chromium_ar
++    ld = cxx
++  }
++
+   if (defined(extra_cflags) && extra_cflags != "") {
+     extra_cflags = " " + extra_cflags
+   } else {

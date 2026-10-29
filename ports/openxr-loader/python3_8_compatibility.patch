@@ -1,0 +1,13 @@
+diff --git a/scripts/hpp_genxr.py b/scripts/hpp_genxr.py
+index ce419b0..23e1d3d 100644
+--- a/scripts/hpp_genxr.py
++++ b/scripts/hpp_genxr.py
+@@ -36,7 +36,7 @@ from xrconventions import OpenXRConventions
+ from data import EXCLUDED_EXTENSIONS
+
+
+-def makeREstring(strings: Iterable[str], default: typing.Optional[str] = None) -> str:
++def makeREstring(strings, default: typing.Optional[str] = None) -> str:
+     """Turn a list of strings into a regexp string matching exactly those strings."""
+     if strings or default is None:
+         return f"^({'|'.join(re.escape(s) for s in strings)})$"

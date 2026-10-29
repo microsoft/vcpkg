@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ffa784de1..45d736147 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -776,7 +776,6 @@ endif()
+ if (UDEV_FOUND)
+   add_subdirectory(rdma-ndd)
+ endif()
+-add_subdirectory(srp_daemon)
+ 
+ ibverbs_finalize()
+ rdma_finalize_libs()

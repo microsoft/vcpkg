@@ -1,0 +1,13 @@
+{
+    "name": "vcpkg-ci-unicorn",
+    "version-string": "ci",
+    "description": "Testing packages which provide unicorn",
+    "license": null,
+    "dependencies": [
+    "unicorn",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+diff --git a/src/MEDPartitioner/CMakeLists.txt b/src/MEDPartitioner/CMakeLists.txt
+index e088a0ed4..048505267 100644
+--- a/src/MEDPartitioner/CMakeLists.txt
++++ b/src/MEDPartitioner/CMakeLists.txt
+@@ -114,8 +114,12 @@ SET(medpartitionercpp_LDFLAGS
+   interpkernel
+   medcouplingcpp
+   medloader
+-  -lpthread
+ )
++
++if(NOT WIN32)
++    list(APPEND medpartitionercpp_LDFLAGS -lpthread)
++endif()
++
+ IF(MEDCOUPLING_PARTITIONER_PARMETIS)
+   SET(medpartitionercpp_HEADERS_HXX ${medpartitionercpp_HEADERS_HXX} MEDPARTITIONER_ParMetisGraph.hxx)
+   SET(medpartitionercpp_SOURCES ${medpartitionercpp_SOURCES} MEDPARTITIONER_ParMetisGraph.cxx MEDPARTITIONER_MetisGraph.cxx)

@@ -1,0 +1,13 @@
+diff --git a/usrsctplib/usrsctp.h b/usrsctplib/usrsctp.h
+index b719290..3a4759c 100644
+--- a/usrsctplib/usrsctp.h
++++ b/usrsctplib/usrsctp.h
+@@ -61,6 +61,8 @@ extern "C" {
+ #ifdef _WIN32
+ #if defined(_MSC_VER) && _MSC_VER >= 1600
+ #include <stdint.h>
++#elif __MINGW32__
++#include <stdint.h>
+ #elif defined(SCTP_STDINT_INCLUDE)
+ #include SCTP_STDINT_INCLUDE
+ #else

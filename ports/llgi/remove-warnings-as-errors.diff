@@ -1,0 +1,60 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4f2ff23..1672568 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -93,9 +93,9 @@ else()
+ endif()
+ 
+ if(MSVC)
+-  target_compile_options(LLGI PRIVATE /W4 /WX /wd4100)
++  target_compile_options(LLGI PRIVATE /W4)
+ else()
+-  target_compile_options(LLGI PRIVATE -Wall -Werror)
++  target_compile_options(LLGI PRIVATE -Wall)
+ endif()
+ 
+ # --------------------
+diff --git a/src_test/CMakeLists.txt b/src_test/CMakeLists.txt
+index a256422..d353b49 100644
+--- a/src_test/CMakeLists.txt
++++ b/src_test/CMakeLists.txt
+@@ -45,7 +45,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Shaders
+ clang_format(LLGI_Test)
+ 
+ if(MSVC)
+-  target_compile_options(LLGI_Test PRIVATE /W4 /WX /wd4100)
++  target_compile_options(LLGI_Test PRIVATE /W4)
+ else()
+-  target_compile_options(LLGI_Test PRIVATE -Wall -Werror)
++  target_compile_options(LLGI_Test PRIVATE -Wall)
+ endif()
+diff --git a/tools/ShaderTranspiler/CMakeLists.txt b/tools/ShaderTranspiler/CMakeLists.txt
+index 4252485..f42f0a4 100644
+--- a/tools/ShaderTranspiler/CMakeLists.txt
++++ b/tools/ShaderTranspiler/CMakeLists.txt
+@@ -10,7 +10,7 @@ target_include_directories(ShaderTranspiler PUBLIC ../ShaderTranspilerCore)
+ target_link_libraries(ShaderTranspiler PUBLIC ShaderTranspilerCore)
+ 
+ if(MSVC)
+-  target_compile_options(ShaderTranspiler PRIVATE /W4 /WX /wd4100)
++  target_compile_options(ShaderTranspiler PRIVATE /W4)
+ else()
+-  target_compile_options(ShaderTranspiler PRIVATE -Wall -Werror)
++  target_compile_options(ShaderTranspiler PRIVATE -Wall)
+ endif()
+diff --git a/tools/ShaderTranspilerCore/CMakeLists.txt b/tools/ShaderTranspilerCore/CMakeLists.txt
+index 1c565fc..c8b0ee7 100644
+--- a/tools/ShaderTranspilerCore/CMakeLists.txt
++++ b/tools/ShaderTranspilerCore/CMakeLists.txt
+@@ -32,9 +32,9 @@ if(USE_THIRDPARTY_DIRECTORY)
+ endif()
+ 
+ if(MSVC)
+-  target_compile_options(ShaderTranspilerCore PRIVATE /W4 /WX /wd4100)
++  target_compile_options(ShaderTranspilerCore PRIVATE /W4)
+ else()
+-  target_compile_options(ShaderTranspilerCore PRIVATE -Wall -Werror)
++  target_compile_options(ShaderTranspilerCore PRIVATE -Wall)
+ endif()
+ 
+ if(GLSLANG_WITHOUT_INSTALL)

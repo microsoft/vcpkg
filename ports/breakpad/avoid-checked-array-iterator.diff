@@ -1,0 +1,13 @@
+diff --git a/src/client/windows/crash_generation/minidump_generator.cc b/src/client/windows/crash_generation/minidump_generator.cc
+index a0454cf..a977fc3 100644
+--- a/src/client/windows/crash_generation/minidump_generator.cc
++++ b/src/client/windows/crash_generation/minidump_generator.cc
+@@ -179,7 +179,7 @@ bool HandleTraceData::CollectHandleData(
+   stream_data->Reserved = 0;
+   std::copy(operations_.begin(),
+             operations_.end(),
+-#if defined(_MSC_VER) && !defined(_LIBCPP_STD_VER)
++#if defined(_MSC_VER) && !defined(_LIBCPP_STD_VER) && _MSC_VER < 1951
+             stdext::checked_array_iterator<AVRF_HANDLE_OPERATION*>(
+                 reinterpret_cast<AVRF_HANDLE_OPERATION*>(stream_data + 1),
+                 operations_.size())

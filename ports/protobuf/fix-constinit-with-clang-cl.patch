@@ -1,0 +1,13 @@
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index f1432d5..346f172 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -428,7 +428,7 @@
+ // https://github.com/protocolbuffers/protobuf/pull/13240. Work around this by
+ // suppressing `constinit`.
+ #define PROTOBUF_CONSTINIT
+-#elif defined(_MSC_VER) && !defined(__clang__)
++#elif defined(_MSC_VER)
+ // On MSVC, but not clang-cl, the above workaround must extend to static library
+ // builds too. MSVC can avoid a global constructor when initializing structures
+ // containing pointers to same-dll symbols, it relies on the optimizer for this,

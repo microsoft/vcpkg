@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-libxlsxwriter",
+  "version-string": "ci",
+  "description": "Validates libxlsxwriter",
+  "dependencies": [
+    "libxlsxwriter",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

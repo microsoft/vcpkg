@@ -1,0 +1,43 @@
+diff --git a/cmake/FindDirectXShaderCompiler.cmake b/cmake/FindDirectXShaderCompiler.cmake
+index 788805c..e9480bf 100644
+--- a/cmake/FindDirectXShaderCompiler.cmake
++++ b/cmake/FindDirectXShaderCompiler.cmake
+@@ -1,8 +1,7 @@
+ set(required_vars)
+ 
+ if(WIN32)
+-    find_path(DirectXShaderCompiler_INCLUDE_PATH NAMES "dxcapi.h" PATH_SUFFIXES "inc" "windows/inc" HINTS ${DirectXShaderCompiler_ROOT})
+     if(SDL_CPU_ARM64)
+         set(extra_bin_suffix "bin/arm64" "windows/bin/arm64")
+         set(extra_lib_suffix "lib/arm64" "windows/lib/arm64")
+     elseif(SDL_CPU_X86)
+@@ -15,19 +14,16 @@ if(WIN32)
+     find_file(DirectXShaderCompiler_dxcompiler_BINARY NAMES "dxcompiler.dll" PATH_SUFFIXES "bin" ${extra_bin_suffix} HINTS ${DirectXShaderCompiler_ROOT})
+     find_library(DirectXShaderCompiler_dxcompiler_LIBRARY NAMES "dxcompiler" "dxcompiler.lib" PATH_SUFFIXES "lib" ${extra_lib_suffix} HINTS ${DirectXShaderCompiler_ROOT})
+     find_file(DirectXShaderCompiler_dxil_BINARY NAMES "dxil.dll" PATH_SUFFIXES "bin" ${extra_bin_suffix} HINTS ${DirectXShaderCompiler_ROOT})
+     set(required_vars
+-        DirectXShaderCompiler_INCLUDE_PATH
+         DirectXShaderCompiler_dxcompiler_BINARY
+         DirectXShaderCompiler_dxcompiler_LIBRARY
+         DirectXShaderCompiler_dxil_BINARY
+     )
+ else()
+-    find_path(DirectXShaderCompiler_INCLUDE_PATH NAMES "dxcapi.h" PATH_SUFFIXES "include" "include/dxc" "linux/include" "linux/include/dxc")
+     find_library(DirectXShaderCompiler_dxcompiler_LIBRARY NAMES "dxcompiler" PATH_SUFFIXES "lib" "linux/lib" HINTS ${DirectXShaderCompiler_ROOT})
+     find_library(DirectXShaderCompiler_dxil_LIBRARY NAMES "dxil" PATH_SUFFIXES "lib" "linux/lib" HINTS ${DirectXShaderCompiler_ROOT})
+     set(required_vars
+-        DirectXShaderCompiler_INCLUDE_PATH
+         DirectXShaderCompiler_dxcompiler_LIBRARY
+         DirectXShaderCompiler_dxil_LIBRARY
+     )
+ endif()
+@@ -40,9 +36,8 @@ find_package_handle_standard_args(DirectXShaderCompiler
+ 
+ if(DirectXShaderCompiler_FOUND)
+     if(NOT TARGET DirectXShaderCompiler::dxcompiler)
+         add_library(DirectXShaderCompiler::dxcompiler IMPORTED SHARED)
+-        set_property(TARGET DirectXShaderCompiler::dxcompiler PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${DirectXShaderCompiler_INCLUDE_PATH}")
+         if(WIN32)
+             set_property(TARGET DirectXShaderCompiler::dxcompiler PROPERTY IMPORTED_LOCATION "${DirectXShaderCompiler_dxcompiler_BINARY}")
+             set_property(TARGET DirectXShaderCompiler::dxcompiler PROPERTY IMPORTED_IMPLIB "${DirectXShaderCompiler_dxcompiler_LIBRARY}")
+         else()

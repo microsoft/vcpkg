@@ -1,0 +1,39 @@
+diff --git a/configure.ac b/configure.ac
+index b44fabdf..c0017be0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -238,7 +238,7 @@ if test "$enable_landlock" != "no"; then
+     AC_CHECK_HEADERS(linux/landlock.h)
+ fi
+ if test "$MINGW" = 1; then
+-  AC_CHECK_LIB(gnurx,regexec,,AC_MSG_ERROR([libgnurx is required to build file(1) with MinGW]))
++  AC_SEARCH_LIBS(tre_regexec,tre,,AC_MSG_ERROR([libtre is required to build file(1) with MinGW]))
+ fi
+ 
+ dnl See if we are cross-compiling
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 2d5df53e..09b5be26 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -14,7 +14,7 @@ libmagic_la_SOURCES = buffer.c magic.c apprentice.c softmagic.c ascmagic.c \
+ 	swap.c swap.h
+ libmagic_la_LDFLAGS = -no-undefined -version-info 1:0:0
+ if MINGW
+-MINGWLIBS = -lgnurx -lshlwapi
++MINGWLIBS = -lshlwapi
+ else
+ MINGWLIBS =
+ endif
+diff --git a/src/file.h b/src/file.h
+index 6a39801e..81542659 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -79,7 +79,7 @@
+ #include <stdio.h>	/* Include that here, to make sure __P gets defined */
+ #include <errno.h>
+ #include <fcntl.h>	/* For open and flags */
+-#include <regex.h>
++#include <tre/regex.h>
+ #include <time.h>
+ #include <sys/types.h>
+ #ifndef WIN32

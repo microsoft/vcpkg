@@ -1,0 +1,47 @@
+diff --git a/src/dlmisc.c b/src/dlmisc.c
+index f64c716..a413233 100644
+--- a/src/dlmisc.c
++++ b/src/dlmisc.c
+@@ -34,6 +34,9 @@
+ #endif
+ #include <limits.h>
+ 
++#include <sys/types.h>
++#include <dirent.h>
++
+ #if defined(HAVE_LIBDL) && defined(__GLIBC__) && !defined(__UCLIBC__)
+ #define DL_ORIGIN_AVAILABLE 1
+ #endif
+@@ -79,6 +82,16 @@ static void snd_dlinfo_origin(char *path, size_t path_len)
+ #endif
+ }
+ 
++static unsigned int checkExist(const char* dirName) {
++    DIR* dir = opendir(dirName);
++    if(dir) {
++        closedir(dir);
++        return 1;
++    } else {
++        return 0;
++    }
++}
++
+ /**
+  *
+  * \brief Compose the dynamic path
+@@ -94,8 +107,14 @@ int snd_dlpath(char *path, size_t path_len, const char *name)
+ 		const char *env = getenv("ALSA_PLUGIN_DIR");
+ 		if (env) {
+ 			snd_plugin_dir = strdup(env);
++		} else if(checkExist(ALSA_PLUGIN_DIR) ) {
++			snd_plugin_dir = strdup(ALSA_PLUGIN_DIR);
++		} else if(sizeof(void*) == 8 && checkExist("/usr/lib64/alsa-lib") ) {
++			snd_plugin_dir = strdup("/usr/lib64/alsa-lib");
++		} else if(sizeof(void*) == 4 && checkExist("/usr/lib32/alsa-lib") ) {
++			snd_plugin_dir = strdup("/usr/lib32/alsa-lib");
+ 		} else {
+-			snd_dlinfo_origin(path, path_len);
++			snd_plugin_dir = strdup("/usr/lib/alsa-lib");
+ 		}
+ 		snd_plugin_dir_set = 1;
+ 	}

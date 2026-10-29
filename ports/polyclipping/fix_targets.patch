@@ -1,0 +1,17 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index f0ed7e8..a5ed444 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -19,3 +19,12 @@ INSTALL (TARGETS polyclipping LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ INSTALL (FILES "${PCFILE}" DESTINATION "${CMAKE_INSTALL_PKGCONFIGDIR}")
+ 
+ SET_TARGET_PROPERTIES(polyclipping PROPERTIES VERSION 22.0.0 SOVERSION 22 )
++
++install(TARGETS polyclipping EXPORT polyclippingConfig)
++
++install(
++    EXPORT polyclippingConfig
++    NAMESPACE polyclipping::
++    DESTINATION share/polyclipping
++)
++target_include_directories(polyclipping PUBLIC $<INSTALL_INTERFACE:include>)

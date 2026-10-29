@@ -1,0 +1,10 @@
+{
+  "name": "gzip-hpp",
+  "version": "0.1.0",
+  "port-version": 2,
+  "description": "Gzip header-only C++ library",
+  "homepage": "https://github.com/mapbox/gzip-hpp/",
+  "dependencies": [
+    "zlib"
+  ]
+}

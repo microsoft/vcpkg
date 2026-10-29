@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e787bbb..de4159d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -355,6 +355,8 @@ foreach(LIB ${LIBS_PRIVATE})
+   endif()
+   set(LIBS "${LIBS} -l${LIB}")
+ endforeach()
++list(FILTER LIBS EXCLUDE REGEX "::")
++if(0)
+ STRING(CONCAT zlib_link_name "-l" ${ZLIB_LINK_LIBRARY_NAME})
+ string(REGEX REPLACE "-lBZip2::BZip2" "-lbz2" LIBS ${LIBS})
+ string(REGEX REPLACE "-lLibLZMA::LibLZMA" "-llzma" LIBS ${LIBS})
+@@ -365,6 +367,8 @@ string(REGEX REPLACE "-lOpenSSL::Crypto" "-lssl -lcrypto" LIBS ${LIBS})
+ string(REGEX REPLACE "-lZLIB::ZLIB" ${zlib_link_name} LIBS ${LIBS})
+ string(REGEX REPLACE "-lGnuTLS::GnuTLS" "-lgnutls" LIBS ${LIBS})
+ string(REGEX REPLACE "-lNettle::Nettle" "-lnettle" LIBS ${LIBS})
++endif()
++list(JOIN REQUIRES " " REQUIRES)
+ configure_file(libzip.pc.in libzip.pc @ONLY)
+ if(LIBZIP_DO_INSTALL)
+   install(FILES ${PROJECT_BINARY_DIR}/libzip.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 556b82af..b1fc3b36 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -142,16 +142,19 @@ endif(WIN32)
+ if(HAVE_LIBBZ2)
+   target_sources(zip PRIVATE zip_algorithm_bzip2.c)
+   target_link_libraries(zip PRIVATE BZip2::BZip2)
++  list(APPEND REQUIRES bzip2)
+ endif()
+ 
+ if(HAVE_LIBLZMA)
+   target_sources(zip PRIVATE zip_algorithm_xz.c)
+   target_link_libraries(zip PRIVATE LibLZMA::LibLZMA)
++  list(APPEND REQUIRES liblzma)
+ endif()
+ 
+ if(HAVE_LIBZSTD)
+   target_sources(zip PRIVATE zip_algorithm_zstd.c)
+   target_link_libraries(zip PRIVATE ${zstd_TARGET})
++  list(APPEND REQUIRES libzstd)
+ endif()
+ 
+ if(HAVE_COMMONCRYPTO)
+@@ -165,9 +168,11 @@ elseif(HAVE_GNUTLS)
+ elseif(HAVE_OPENSSL)
+   target_sources(zip PRIVATE zip_crypto_openssl.c)
+   target_link_libraries(zip PRIVATE OpenSSL::Crypto)
++  list(APPEND REQUIRES openssl)
+ elseif(HAVE_MBEDTLS)
+   target_sources(zip PRIVATE zip_crypto_mbedtls.c)
+   target_link_libraries(zip PRIVATE MbedTLS::MbedTLS)
++  list(APPEND REQUIRES mbedtls)
+ endif()
+ 
+ if(HAVE_CRYPTO)
+@@ -180,6 +185,8 @@ if(SHARED_LIB_VERSIONNING)
+ endif()
+ 
+ target_link_libraries(zip PRIVATE ZLIB::ZLIB)
++list(APPEND REQUIRES zlib)
++set(REQUIRES "${REQUIRES}" PARENT_SCOPE)
+ target_include_directories(zip
+   PUBLIC
+   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
+diff --git a/libzip.pc.in b/libzip.pc.in
+index d51b0ab6..07b3b505 100644
+--- a/libzip.pc.in
++++ b/libzip.pc.in
+@@ -9,6 +9,7 @@ zipcmp=${bindir}/zipcmp
+ Name: libzip
+ Description: library for handling zip archives
+ Version: @PROJECT_VERSION@
++Requires.private: @REQUIRES@
+ Libs: @PKG_CONFIG_RPATH@ -L${libdir} -lzip
+ Libs.private: @LIBS@
+ Cflags: -I${includedir}

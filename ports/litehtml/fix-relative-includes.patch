@@ -1,0 +1,24 @@
+diff --git a/include/litehtml.h b/include/litehtml.h
+index 5687703d..1e52b073 100644
+--- a/include/litehtml.h
++++ b/include/litehtml.h
+@@ -1,12 +1,12 @@
+ #ifndef LITEHTML_H
+ #define LITEHTML_H
+ 
+-#include <litehtml/html.h>
+-#include <litehtml/document.h>
+-#include <litehtml/html_tag.h>
+-#include <litehtml/stylesheet.h>
+-#include <litehtml/element.h>
+-#include <litehtml/utf8_strings.h>
+-#include <litehtml/document_container.h>
++#include "html.h"
++#include "document.h"
++#include "html_tag.h"
++#include "stylesheet.h"
++#include "element.h"
++#include "utf8_strings.h"
++#include "document_container.h"
+ 
+ #endif  // LITEHTML_H

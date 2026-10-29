@@ -1,0 +1,40 @@
+diff --git a/Source/FreeImage/PluginPNG.cpp b/Source/FreeImage/PluginPNG.cpp
+index ba2ef17..c3c5cd6 100644
+--- a/Source/FreeImage/PluginPNG.cpp
++++ b/Source/FreeImage/PluginPNG.cpp
+@@ -40,8 +40,8 @@
+ 
+ // ----------------------------------------------------------
+ 
+-#include "../ZLib/zlib.h"
+-#include "../LibPNG/png.h"
++#include <zlib.h>
++#include <libpng16/png.h>
+ 
+ // ----------------------------------------------------------
+ 
+diff --git a/Source/FreeImage/ZLibInterface.cpp b/Source/FreeImage/ZLibInterface.cpp
+index 3ab6d32..725618b 100644
+--- a/Source/FreeImage/ZLibInterface.cpp
++++ b/Source/FreeImage/ZLibInterface.cpp
+@@ -19,10 +19,9 @@
+ // Use at your own risk!
+ // ==========================================================
+ 
+-#include "../ZLib/zlib.h"
++#include <zlib.h>
+ #include "FreeImage.h"
+ #include "Utilities.h"
+-#include "../ZLib/zutil.h"	/* must be the last header because of error C3163 in VS2008 (_vsnprintf defined in stdio.h) */
+ 
+ /**
+ Compresses a source buffer into a target buffer, using the ZLib library. 
+@@ -115,7 +114,7 @@ FreeImage_ZLibGZip(BYTE *target, DWORD target_size, BYTE *source, DWORD source_s
+ 			return 0;
+         case Z_OK: {
+             // patch header, setup crc and length (stolen from mod_trace_output)
+-            BYTE *p = target + 8; *p++ = 2; *p = OS_CODE; // xflags, os_code
++            BYTE *p = target + 8; *p++ = 2; *p = 0x03; // xflags, os_code
+  	        crc = crc32(crc, source, source_size);
+ 	        memcpy(target + 4 + dest_len, &crc, 4);
+ 	        memcpy(target + 8 + dest_len, &source_size, 4);

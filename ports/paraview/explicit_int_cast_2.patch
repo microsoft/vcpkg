@@ -1,0 +1,50 @@
+diff --git a/Qt/Core/pqFlatTreeViewEventTranslator.cxx b/Qt/Core/pqFlatTreeViewEventTranslator.cxx
+index 52775c6f0f..3a62c534b9 100644
+--- a/Qt/Core/pqFlatTreeViewEventTranslator.cxx
++++ b/Qt/Core/pqFlatTreeViewEventTranslator.cxx
+@@ -73,8 +73,8 @@ bool pqFlatTreeViewEventTranslator::translateEvent(QObject* Object, QEvent* Even
+ 
+       QString info = QString("%1,%2,%3,%4,%5,%6")
+                        .arg(mouseEvent->button())
+-                       .arg(mouseEvent->buttons())
+-                       .arg(mouseEvent->modifiers())
++                       .arg(static_cast<int>(mouseEvent->buttons()))
++                       .arg(static_cast<int>(mouseEvent->modifiers()))
+                        .arg(relPt.x())
+                        .arg(relPt.y())
+                        .arg(idxStr);
+diff --git a/Qt/Core/pqQVTKWidgetEventTranslator.cxx b/Qt/Core/pqQVTKWidgetEventTranslator.cxx
+index e6fffabb12..74a25bd3da 100644
+--- a/Qt/Core/pqQVTKWidgetEventTranslator.cxx
++++ b/Qt/Core/pqQVTKWidgetEventTranslator.cxx
+@@ -85,8 +85,8 @@ bool pqQVTKWidgetEventTranslator::translateEvent(
+               .arg(normalized_x)
+               .arg(normalized_y)
+               .arg(mouseEvent->button())
+-              .arg(mouseEvent->buttons())
+-              .arg(mouseEvent->modifiers()));
++              .arg(static_cast<int>(mouseEvent->buttons()))
++              .arg(static_cast<int>(mouseEvent->modifiers())));
+         }
+         return true;
+         break;
+@@ -108,15 +108,15 @@ bool pqQVTKWidgetEventTranslator::translateEvent(
+               .arg(normalized_x)
+               .arg(normalized_y)
+               .arg(mouseEvent->button())
+-              .arg(mouseEvent->buttons())
+-              .arg(mouseEvent->modifiers()));
++              .arg(static_cast<int>(mouseEvent->buttons()))
++              .arg(static_cast<int>(mouseEvent->modifiers())));
+           Q_EMIT recordEvent(widget, "mouseRelease",
+             QString("(%1,%2,%3,%4,%5)")
+               .arg(normalized_x)
+               .arg(normalized_y)
+               .arg(mouseEvent->button())
+-              .arg(mouseEvent->buttons())
+-              .arg(mouseEvent->modifiers()));
++              .arg(static_cast<int>(mouseEvent->buttons()))
++              .arg(static_cast<int>(mouseEvent->modifiers())));
+         }
+         return true;
+         break;

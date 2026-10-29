@@ -1,0 +1,47 @@
+{
+  "name": "wayland",
+  "version": "1.25.0",
+  "port-version": 1,
+  "description": "Core Wayland window system code and protocol",
+  "homepage": "https://wayland.freedesktop.org",
+  "license": "MIT",
+  "supports": "!(windows | osx)",
+  "features": {
+    "force-build": {
+      "description": [
+        "Build wayland libraries instead of depending on system ones.",
+        "Requires triplet variable X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES to be set."
+      ],
+      "dependencies": [
+        {
+          "name": "expat",
+          "platform": "native"
+        },
+        "libffi",
+        {
+          "name": "vcpkg-tool-meson",
+          "host": true
+        },
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "scanner"
+          ],
+          "platform": "!native"
+        }
+      ]
+    },
+    "scanner": {
+      "description": "Build the wayland-scanner host tool without building the Wayland libraries.",
+      "supports": "native",
+      "dependencies": [
+        "expat",
+        {
+          "name": "vcpkg-tool-meson",
+          "host": true
+        }
+      ]
+    }
+  }
+}

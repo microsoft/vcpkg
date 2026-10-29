@@ -1,0 +1,25 @@
+diff --git a/include/ideep/tensor.hpp b/include/ideep/tensor.hpp
+index 7617b49..f80f8a2 100644
+--- a/include/ideep/tensor.hpp
++++ b/include/ideep/tensor.hpp
+@@ -1,6 +1,8 @@
+ #ifndef IDEEP_TENSOR_HPP
+ #define IDEEP_TENSOR_HPP
+ 
++#include <cassert>
++
+ #include "attributes.hpp"
+ #include "utils.hpp"
+ 
+diff --git a/include/ideep/utils.hpp b/include/ideep/utils.hpp
+index 83d9545..9b3f487 100644
+--- a/include/ideep/utils.hpp
++++ b/include/ideep/utils.hpp
+@@ -3,6 +3,7 @@
+ 
+ #include <algorithm>
+ #include <atomic>
++#include <cassert>
+ #include <chrono>
+ #include <climits>
+ #include <cstring>

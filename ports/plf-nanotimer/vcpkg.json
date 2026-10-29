@@ -1,0 +1,7 @@
+{
+  "name": "plf-nanotimer",
+  "version": "1.0.10",
+  "description": "A simple C++ 03/11/etc timer class for ~microsecond-precision cross-platform benchmarking",
+  "homepage": "https://www.plflib.org",
+  "license": "Zlib"
+}

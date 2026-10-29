@@ -1,0 +1,14 @@
+diff --git a/src/XpmI.h b/src/XpmI.h
+index 4360ad3b9..a8d78b0ba 100644
+--- a/src/XpmI.h
++++ b/src/XpmI.h
+@@ -332,7 +332,9 @@ FUNC(xpmstrcasecmp, int, (char *s1, char *s2));
+ #else
+ #undef xpmstrcasecmp
+ #define xpmstrcasecmp strcasecmp
++# if !defined(_MSC_VER)
+ #include <strings.h>
++# endif
+ #endif
+ 
+ HFUNC(xpmatoui, unsigned int,

@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a793bba..585ef78 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,17 +29,17 @@ check_and_add_c_compiler_flag("-Wall" CMAKE_C_FLAGS)
+ add_definitions("-D_FILE_OFFSET_BITS=64")
+ add_definitions("-DDUMB_DECLARE_DEPRECATED")
+ 
+-set(CMAKE_C_FLAGS_DEBUG "-DDEBUGMODE=1 -D_DEBUG")
++set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUGMODE=1 -D_DEBUG")
+ check_and_add_c_compiler_flag("-ggdb" CMAKE_C_FLAGS_DEBUG)
+ check_and_add_c_compiler_flag("-Zi" CMAKE_C_FLAGS_DEBUG)
+ 
+-set(CMAKE_C_FLAGS_RELEASE "-ffast-math -O2 -DNDEBUG")
++set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -ffast-math -O2 -DNDEBUG")
+ 
+-set(CMAKE_C_FLAGS_RELWITHDEBINFO "-ffast-math -O2 -DNDEBUG")
++set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -ffast-math -O2 -DNDEBUG")
+ check_and_add_c_compiler_flag("-g" CMAKE_C_FLAGS_RELWITHDEBINFO)
+ check_and_add_c_compiler_flag("-Zi" CMAKE_C_FLAGS_RELWITHDEBINFO)
+ 
+-set(CMAKE_C_FLAGS_MINSIZEREL "-ffast-math -Os -DNDEBUG")
++set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} -ffast-math -Os -DNDEBUG")
+ 
+ if(USE_SSE)
+     check_c_compiler_flag("-msse" "CC_HAS_MSSE")

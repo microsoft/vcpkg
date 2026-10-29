@@ -1,0 +1,20 @@
+diff --git a/Misc/python-embed.pc.in b/Misc/python-embed.pc.in
+index 2be9df8..92142df 100644
+--- a/Misc/python-embed.pc.in
++++ b/Misc/python-embed.pc.in
+@@ -10,4 +10,4 @@ Requires:
+ Version: @VERSION@
+ Libs.private: @LIBS@
+ Libs: -L${libdir} -lpython@VERSION@@ABIFLAGS@
+-Cflags: -I${includedir}/python@VERSION@@ABIFLAGS@
++Cflags: -I${includedir}/python@VERSION@
+diff --git a/Misc/python.pc.in b/Misc/python.pc.in
+index 027dba3..e67762f 100644
+--- a/Misc/python.pc.in
++++ b/Misc/python.pc.in
+@@ -10,4 +10,4 @@ Requires:
+ Version: @VERSION@
+ Libs.private: @LIBS@
+ Libs: -L${libdir} @LIBPYTHON@
+-Cflags: -I${includedir}/python@VERSION@@ABIFLAGS@
++Cflags: -I${includedir}/python@VERSION@

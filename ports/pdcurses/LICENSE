@@ -1,0 +1,7 @@
+The core package is in the public domain, but small portions of PDCurses are subject to copyright under various licenses.
+
+The win32 files are released to the public domain.
+
+If you use PDCurses in an application, an acknowledgement would be appreciated, but is not mandatory. If you make corrections or enhancements to PDCurses, please forward them to the current maintainer for the benefit of other users.
+
+This software is provided AS IS with NO WARRANTY whatsoever.

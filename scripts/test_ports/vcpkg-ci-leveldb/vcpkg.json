@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-leveldb",
+  "version-string": "ci",
+  "description": "Validates leveldb",
+  "dependencies": [
+    {
+      "name": "leveldb",
+      "features": [
+        "crc32c",
+        "snappy",
+        "zstd"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

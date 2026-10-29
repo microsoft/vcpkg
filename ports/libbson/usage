@@ -1,0 +1,4 @@
+libbson provides CMake targets:
+
+    find_package(bson CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:bson::static>,bson::static,bson::shared>)

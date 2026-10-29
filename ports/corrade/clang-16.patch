@@ -1,0 +1,32 @@
+diff --git a/src/Corrade/Utility/StlForwardArray.h b/src/Corrade/Utility/StlForwardArray.h
+index 0e78d61..363fafb 100644
+--- a/src/Corrade/Utility/StlForwardArray.h
++++ b/src/Corrade/Utility/StlForwardArray.h
+@@ -55,7 +55,11 @@ possible or is unknown is equivalent to @cpp #include <array> @ce.
+ 
+ #ifdef CORRADE_TARGET_LIBCXX
+ /* https://github.com/llvm-mirror/libcxx/blob/73d2eccc78ac83d5947243c4d26a53f668b4f432/include/__tuple#L223 */
++#if _LIBCPP_VERSION < 160000
+ #include <__tuple>
++#else
++#include <__fwd/array.h>
++#endif
+ #elif defined(CORRADE_TARGET_DINKUMWARE)
+ /* MSVC has it defined next to std::pair */
+ #include <utility>
+diff --git a/src/Corrade/Utility/StlForwardTuple.h b/src/Corrade/Utility/StlForwardTuple.h
+index 5701bc0..3292ec8 100644
+--- a/src/Corrade/Utility/StlForwardTuple.h
++++ b/src/Corrade/Utility/StlForwardTuple.h
+@@ -55,7 +55,11 @@ is equivalent to @cpp #include <tuple> @ce.
+ 
+ #ifdef CORRADE_TARGET_LIBCXX
+ /* https://github.com/llvm-mirror/libcxx/blob/73d2eccc78ac83d5947243c4d26a53f668b4f432/include/__tuple#L163 */
++#if _LIBCPP_VERSION < 160000
+ #include <__tuple>
++#else
++#include <__fwd/tuple.h>
++#endif
+ #elif defined(CORRADE_TARGET_LIBSTDCXX)
+ /* https://github.com/gcc-mirror/gcc/blob/c014d57d57a03e6061a57fa8534e90979567392b/libstdc%2B%2B-v3/include/std/type_traits#L2465-L2466 */
+ #include <type_traits>

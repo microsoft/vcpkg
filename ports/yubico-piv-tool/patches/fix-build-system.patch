@@ -1,0 +1,111 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,10 +63,12 @@
+ endif()
+
+ if(MSVC)
+-    if((NOT GETOPT_LIB_DIR) OR (NOT GETOPT_INCLUDE_DIR))
+-        message(FATAL_ERROR "please provide definitions for "
+-                "GETOPT_LIB_DIR and GETOPT_INCLUDE_DIR when building "
+-                "under msvc")
++    if(NOT BUILD_ONLY_LIB)
++        if((NOT GETOPT_LIB_DIR) OR (NOT GETOPT_INCLUDE_DIR))
++            message(FATAL_ERROR "please provide definitions for "
++                    "GETOPT_LIB_DIR and GETOPT_INCLUDE_DIR when building "
++                    "under msvc")
++        endif()
+     endif()
+     if(SUPRESS_MSVC_WARNINGS)
+         set(MSVC_DISABLED_WARNINGS_LIST
+@@ -93,7 +95,7 @@
+ else()
+     find_package (PkgConfig REQUIRED)
+
+-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror")
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-missing-braces")
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wformat -Wformat-security")
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wshadow -Wpointer-arith")
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -79,38 +79,43 @@
+ endif(BUILD_STATIC_LIB)
+
+ # dynamic library
+-add_library(ykpiv_shared SHARED ${SOURCE})
+-target_link_libraries(ykpiv_shared ${LIBCRYPTO_LIBRARIES} ${PCSC_LIBRARIES} ${ZLIB_LIBS} ${ADDITIONAL_LIBRARY})
+-set_target_properties(ykpiv_shared PROPERTIES SOVERSION ${SO_VERSION} VERSION ${VERSION})
+-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-    set_target_properties(ykpiv_shared PROPERTIES INSTALL_RPATH "${YKPIV_INSTALL_LIB_DIR}")
+-endif()
+-if(WIN32)
+-    set_target_properties(ykpiv_shared PROPERTIES OUTPUT_NAME libykpiv)
+-else(WIN32)
+-    set_target_properties(ykpiv_shared PROPERTIES OUTPUT_NAME ykpiv)
+-endif(WIN32)
+-add_coverage(ykpiv_shared)
++if(NOT BUILD_STATIC_LIB)
++    add_library(ykpiv_shared SHARED ${SOURCE})
++    target_link_libraries(ykpiv_shared ${LIBCRYPTO_LIBRARIES} ${PCSC_LIBRARIES} ${ZLIB_LIBS} ${ADDITIONAL_LIBRARY})
++    set_target_properties(ykpiv_shared PROPERTIES SOVERSION ${SO_VERSION} VERSION ${VERSION})
++    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
++        set_target_properties(ykpiv_shared PROPERTIES INSTALL_RPATH "${YKPIV_INSTALL_LIB_DIR}")
++    endif()
++    if(WIN32)
++        set_target_properties(ykpiv_shared PROPERTIES OUTPUT_NAME libykpiv)
++    else(WIN32)
++        set_target_properties(ykpiv_shared PROPERTIES OUTPUT_NAME ykpiv)
++    endif(WIN32)
++    add_coverage(ykpiv_shared)
++endif()
+
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ykpiv.pc.in ${CMAKE_CURRENT_SOURCE_DIR}/ykpiv.pc @ONLY)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ykpiv-config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/ykpiv-config.h @ONLY)
+
+-install(
+-        TARGETS ykpiv_shared
+-        ARCHIVE DESTINATION ${YKPIV_INSTALL_LIB_DIR}
+-        LIBRARY DESTINATION ${YKPIV_INSTALL_LIB_DIR}
+-        RUNTIME DESTINATION ${YKPIV_INSTALL_BIN_DIR})
+-if(BUILD_STATIC_LIB)
+-    install(
++if(NOT BUILD_STATIC_LIB)
++    install(
++            TARGETS ykpiv_shared
++            ARCHIVE DESTINATION ${YKPIV_INSTALL_LIB_DIR}
++            LIBRARY DESTINATION ${YKPIV_INSTALL_LIB_DIR}
++            RUNTIME DESTINATION ${YKPIV_INSTALL_BIN_DIR})
++else()
++    install(
+         TARGETS ykpiv
+         ARCHIVE DESTINATION ${YKPIV_INSTALL_LIB_DIR}
+         LIBRARY DESTINATION ${YKPIV_INSTALL_LIB_DIR}
+         RUNTIME DESTINATION ${YKPIV_INSTALL_BIN_DIR})
+-endif(BUILD_STATIC_LIB)
++endif()
+
+ install(FILES ykpiv.h DESTINATION ${YKPIV_INSTALL_INC_DIR}/ykpiv)
+ install(FILES ykpiv-config.h DESTINATION ${YKPIV_INSTALL_INC_DIR}/ykpiv)
+
+ install(FILES ykpiv.pc DESTINATION ${YKPIV_INSTALL_PKGCONFIG_DIR})
+
+-add_subdirectory(tests)
++if(NOT DEFINED SKIP_TESTS)
++    add_subdirectory(tests)
++endif()
+diff --git a/lib/ykpiv.pc.in b/lib/ykpiv.pc.in
+--- a/lib/ykpiv.pc.in
++++ b/lib/ykpiv.pc.in
+@@ -26,8 +26,8 @@
+
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=@CMAKE_INSTALL_PREFIX@
+-libdir=@YKPIV_INSTALL_LIB_DIR@
+-includedir=@YKPIV_INSTALL_INC_DIR@
++libdir=${prefix}/@YKPIV_INSTALL_LIB_DIR@
++includedir=${prefix}/@YKPIV_INSTALL_INC_DIR@
+
+ Name: @CMAKE_PROJECT_NAME@
+ Description: Yubico PIV C Library

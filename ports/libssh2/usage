@@ -1,0 +1,9 @@
+libssh2 provides CMake targets:
+
+  find_package(libssh2 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE libssh2::libssh2)
+
+libssh2 provides pkg-config modules:
+
+  # Library for SSH-based communication
+  libssh2

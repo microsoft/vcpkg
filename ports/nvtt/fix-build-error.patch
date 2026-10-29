@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 668cd7e..72d6e61 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,9 +7,17 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${NV_CMAKE_DIR}")
+ 
+ # Compiler check (needs -std:c++11 flag)
+ include(CheckCXXCompilerFlag)
++if(MSVC)
++CHECK_CXX_COMPILER_FLAG("/std:c++14" COMPILER_SUPPORTS_CXX14)
++else()
+ CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+-if(COMPILER_SUPPORTS_CXX11)
++endif()
++if(COMPILER_SUPPORTS_CXX11 OR COMPILER_SUPPORTS_CXX14)
++    if(COMPILER_SUPPORTS_CXX11)
+     set(CMAKE_CXX_STANDARD 11)
++    else()
++    set(CMAKE_CXX_STANDARD 14)
++    endif()
+     set(CMAKE_CXX_STANDARD_REQUIRED ON)
+     set(CMAKE_CXX_EXTENSIONS OFF)
+ else()
+diff --git a/extern/CMP_Core/source/cmp_math_func.h b/extern/CMP_Core/source/cmp_math_func.h
+index c2f8908..b652497 100644
+--- a/extern/CMP_Core/source/cmp_math_func.h
++++ b/extern/CMP_Core/source/cmp_math_func.h
+@@ -32,6 +32,7 @@
+ // Core API which have have GPU equivalents, defined here for HPC_CPU usage
+ //============================================================================
+ 
++#include <cmath>
+ #include <algorithm>
+ using namespace std;
+ 
+diff --git a/src/nvtt/CMakeLists.txt b/src/nvtt/CMakeLists.txt
+index 8285f99..9688c9c 100644
+--- a/src/nvtt/CMakeLists.txt
++++ b/src/nvtt/CMakeLists.txt
+@@ -63,5 +63,5 @@ INSTALL(TARGETS nvtt
+ INSTALL(FILES nvtt.h nvtt_wrapper.h DESTINATION include/nvtt)
+ 
+ 
+-ADD_SUBDIRECTORY(tools)
+-ADD_SUBDIRECTORY(tests)
++#ADD_SUBDIRECTORY(tools)
++#ADD_SUBDIRECTORY(tests)

@@ -1,0 +1,14 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index 2e3beaaf3..371b0bbfa 100755
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -1130,6 +1130,9 @@ if(X265_LATEST_TAG OR NOT GIT_FOUND)
+     endif(PLIBLIST)
+ 
+     # Produce a pkg-config file
++    if(WIN32)
++        string(APPEND PRIVATE_LIBS " -ladvapi32")
++    endif()
+     configure_file("x265.pc.in" "x265.pc" @ONLY)
+     install(FILES       "${CMAKE_CURRENT_BINARY_DIR}/x265.pc"
+             DESTINATION "${LIB_INSTALL_DIR}/pkgconfig")

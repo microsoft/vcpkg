@@ -1,0 +1,30 @@
+diff --git a/pqAbstractItemViewEventTranslator.cxx b/pqAbstractItemViewEventTranslator.cxx
+index 07f7b42071..859a94fd2a 100644
+--- a/pqAbstractItemViewEventTranslator.cxx
++++ b/pqAbstractItemViewEventTranslator.cxx
+@@ -118,8 +118,8 @@ bool pqAbstractItemViewEventTranslator::translateEvent(QObject* Object, QEvent*
+ 
+       QString info = QString("%1,%2,%3,%4,%5,%6")
+                        .arg(mouseEvent->button())
+-                       .arg(mouseEvent->buttons())
+-                       .arg(mouseEvent->modifiers())
++                       .arg(static_cast<int>(mouseEvent->buttons()))
++                       .arg(static_cast<int>(mouseEvent->modifiers()))
+                        .arg(relPt.x())
+                        .arg(relPt.y())
+                        .arg(idxStr);
+diff --git a/pqBasicWidgetEventTranslator.cxx b/pqBasicWidgetEventTranslator.cxx
+index 0421853f4e..d58db24546 100644
+--- a/pqBasicWidgetEventTranslator.cxx
++++ b/pqBasicWidgetEventTranslator.cxx
+@@ -78,8 +78,8 @@ bool pqBasicWidgetEventTranslator::translateEvent(
+         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+         QString info = QString("%1,%2,%3,%4,%5")
+                          .arg(mouseEvent->button())
+-                         .arg(mouseEvent->buttons())
+-                         .arg(mouseEvent->modifiers())
++                         .arg(static_cast<int>(mouseEvent->buttons()))
++                         .arg(static_cast<int>(mouseEvent->modifiers()))
+                          .arg(mouseEvent->x())
+                          .arg(mouseEvent->y());
+ 

@@ -1,0 +1,24 @@
+{
+  "name": "libsodium",
+  "version": "1.0.22",
+  "port-version": 1,
+  "description": "A modern and easy-to-use crypto library",
+  "homepage": "https://libsodium.org/",
+  "license": "ISC",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true,
+      "platform": "windows & !mingw"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows & !mingw"
+    }
+  ]
+}

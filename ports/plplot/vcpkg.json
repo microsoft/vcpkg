@@ -1,0 +1,50 @@
+{
+  "name": "plplot",
+  "version-semver": "5.15.0",
+  "port-version": 6,
+  "description": "PLplot is a cross-platform software package for creating scientific plots whose (UTF-8) plot symbols and text are limited in practice only by what Unicode-aware system fonts are installed on a user's computer.",
+  "homepage": "https://plplot.sourceforge.net/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "freetype",
+      "default-features": false
+    },
+    "pango",
+    {
+      "name": "plplot",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "wxwidgets": {
+      "description": "Enable wxWidgets GUI binding",
+      "dependencies": [
+        {
+          "name": "wxwidgets",
+          "default-features": false
+        }
+      ]
+    },
+    "x11": {
+      "description": "Enable X11 support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "features": [
+            "x11"
+          ]
+        },
+        "libx11"
+      ]
+    }
+  }
+}

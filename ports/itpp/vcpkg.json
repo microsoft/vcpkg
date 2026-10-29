@@ -1,0 +1,13 @@
+{
+  "name": "itpp",
+  "version-semver": "4.3.1",
+  "port-version": 13,
+  "description": "IT++ is a C++ library of mathematical, signal processing and communication classes and functions. Its main use is in simulation of communication systems and for performing research in the area of communications.",
+  "homepage": "https://itpp.sourceforge.net",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

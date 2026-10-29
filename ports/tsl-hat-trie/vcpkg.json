@@ -1,0 +1,7 @@
+{
+  "name": "tsl-hat-trie",
+  "version": "0.7.1",
+  "description": "C++ implementation of a fast and memory efficient HAT-trie",
+  "homepage": "https://github.com/Tessil/hat-trie",
+  "license": "MIT"
+}

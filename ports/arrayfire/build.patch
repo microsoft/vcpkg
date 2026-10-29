@@ -1,0 +1,267 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 682f416..a8cbec8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -104,8 +104,6 @@ mark_as_advanced(
+   CUDA_HOST_COMPILER
+   CUDA_USE_STATIC_CUDA_RUNTIME
+   CUDA_rt_LIBRARY
+-  SPDLOG_BUILD_EXAMPLES
+-  SPDLOG_BUILD_TESTING
+   ADDR2LINE_PROGRAM
+   Backtrace_LIBRARY
+   AF_WITH_STATIC_MKL
+@@ -159,9 +157,7 @@ if(NOT LAPACK_FOUND)
+     endif()
+ endif()
+ 
+-set(SPDLOG_BUILD_TESTING OFF CACHE INTERNAL "Disable testing in spdlog")
+-add_subdirectory(extern/spdlog EXCLUDE_FROM_ALL)
+-add_subdirectory(extern/glad)
++find_package(spdlog CONFIG REQUIRED)
+ add_subdirectory(src/backend/common)
+ add_subdirectory(src/api/c)
+ add_subdirectory(src/api/cpp)
+@@ -269,10 +265,6 @@ install(DIRECTORY examples/ #NOTE The slash at the end is important
+     DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
+     COMPONENT examples)
+ 
+-install(DIRECTORY assets/examples/ #NOTE The slash at the end is important
+-    DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
+-    COMPONENT examples)
+-
+ install(DIRECTORY "${ArrayFire_SOURCE_DIR}/LICENSES/"
+     DESTINATION LICENSES
+     COMPONENT licenses)
+diff --git a/CMakeModules/AFInstallDirs.cmake b/CMakeModules/AFInstallDirs.cmake
+index 2c7b96e..b5006ee 100644
+--- a/CMakeModules/AFInstallDirs.cmake
++++ b/CMakeModules/AFInstallDirs.cmake
+@@ -7,8 +7,12 @@ include(GNUInstallDirs)
+ # NOTE: These paths are all relative to the project installation prefix.
+ 
+ # Executables
+-if(NOT DEFINED AF_INSTALL_BIN_DIR)
+-  set(AF_INSTALL_BIN_DIR "lib" CACHE PATH "Installation path for executables")
++if(CMAKE_BUILD_TYPE MATCHES Debug)
++    set(AF_INSTALL_BIN_DIR "${AF_BIN_DIR}/debug/bin")
++    message(STATUS " Setting install to debug path ${AF_INSTALL_BIN_DIR}")
++else()
++    set(AF_INSTALL_BIN_DIR "${AF_BIN_DIR}/bin")
++    message(STATUS " Setting install to release path ${AF_INSTALL_BIN_DIR}")
+ endif()
+ 
+ # Libraries
+diff --git a/CMakeModules/AFconfigure_forge_submodule.cmake b/CMakeModules/AFconfigure_forge_submodule.cmake
+index d16849f..36ab01b 100644
+--- a/CMakeModules/AFconfigure_forge_submodule.cmake
++++ b/CMakeModules/AFconfigure_forge_submodule.cmake
+@@ -39,13 +39,13 @@ if(AF_BUILD_FORGE)
+       COMPONENT common_backend_dependencies)
+   set_property(TARGET forge APPEND_STRING PROPERTY COMPILE_FLAGS " -w")
+ else(AF_BUILD_FORGE)
+-  set(FG_VERSION "1.0.0")
++  set(FG_VERSION "1.0.5")
+   set(FG_VERSION_MAJOR 1)
+   set(FG_VERSION_MINOR 0)
+-  set(FG_VERSION_PATCH 0)
++  set(FG_VERSION_PATCH 5)
+   set(FG_API_VERSION_CURRENT 10)
+   configure_file(
+-    ${PROJECT_SOURCE_DIR}/extern/forge/CMakeModules/version.h.in
+-    ${PROJECT_BINARY_DIR}/extern/forge/include/fg/version.h
++    ${AF_FORGE_PATH}/CMakeModules/version.h.in
++    ${AF_FORGE_PATH}/include/fg/version.h
+     )
+ endif(AF_BUILD_FORGE)
+diff --git a/src/api/unified/CMakeLists.txt b/src/api/unified/CMakeLists.txt
+index 967eaa6..16bb633 100644
+--- a/src/api/unified/CMakeLists.txt
++++ b/src/api/unified/CMakeLists.txt
+@@ -96,7 +96,8 @@ target_include_directories(af
+ target_link_libraries(af
+   PRIVATE
+     cpp_api_interface
+-    spdlog
++    spdlog::spdlog
++    spdlog::spdlog_header_only
+     Threads::Threads
+     Boost::boost
+     ${CMAKE_DL_LIBS}
+diff --git a/src/backend/common/CMakeLists.txt b/src/backend/common/CMakeLists.txt
+index c9fe088..8c128fa 100644
+--- a/src/backend/common/CMakeLists.txt
++++ b/src/backend/common/CMakeLists.txt
+@@ -77,12 +77,15 @@ else()
+   target_sources(afcommon_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/module_loading_unix.cpp)
+ endif()
+ 
++find_package(glad CONFIG REQUIRED)
++
+ target_link_libraries(afcommon_interface
+   INTERFACE
+-    spdlog
++    spdlog::spdlog
++    spdlog::spdlog_header_only
+     Boost::boost
+-    af_glad_interface
+     ${CMAKE_DL_LIBS}
++    glad::glad
+ )
+ 
+ if(AF_BUILD_FORGE)
+@@ -93,10 +96,9 @@ target_include_directories(afcommon_interface
+   INTERFACE
+     ${ArrayFire_SOURCE_DIR}/src/backend
+     ${ArrayFire_BINARY_DIR}
++    ${AF_FORGE_PATH}/include # passed via vcpkg
+   SYSTEM INTERFACE
+     $<$<PLATFORM_ID:Darwin>:${OPENGL_INCLUDE_DIR}>
+-    ${ArrayFire_SOURCE_DIR}/extern/forge/include
+-    ${ArrayFire_BINARY_DIR}/extern/forge/include
+   )
+ 
+ if(APPLE AND NOT USE_MKL)
+diff --git a/src/backend/cpu/CMakeLists.txt b/src/backend/cpu/CMakeLists.txt
+index 170bb0f..c6e2017 100644
+--- a/src/backend/cpu/CMakeLists.txt
++++ b/src/backend/cpu/CMakeLists.txt
+@@ -266,9 +266,10 @@ endif(AF_WITH_CPUID)
+ 
+ target_sources(afcpu
+   PRIVATE
+-    ${CMAKE_CURRENT_SOURCE_DIR}/threads/async_queue.hpp
+-    ${CMAKE_CURRENT_SOURCE_DIR}/threads/event.hpp
++    ${AF_CPU_THREAD_PATH}/include/threads/async_queue.hpp
++    ${AF_CPU_THREAD_PATH}/include/threads/event.hpp
+   )
++target_include_directories(afcpu PRIVATE ${AF_CPU_THREAD_PATH}/include)
+ 
+ arrayfire_set_default_cxx_flags(afcpu)
+ 
+diff --git a/src/backend/cuda/CMakeLists.txt b/src/backend/cuda/CMakeLists.txt
+index 7e3e408..2edaacd 100644
+--- a/src/backend/cuda/CMakeLists.txt
++++ b/src/backend/cuda/CMakeLists.txt
+@@ -110,7 +110,11 @@ cuda_include_directories(
+   ${COMMON_INTERFACE_DIRS}
+   )
+ if(CUDA_VERSION_MAJOR VERSION_LESS 11)
+-  cuda_include_directories(${ArrayFire_SOURCE_DIR}/extern/cub)
++  find_path(CUB_INCLUDE_DIRS "cub/agent/agent_histogram.cuh")
++  if (${CUB_INCLUDE_DIRS} EQUAL "CUB_INCLUDE_DIRS-NOTFOUND")
++    set(CUB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/cub)
++  endif()
++  cuda_include_directories(${CUB_INCLUDE_DIRS})
+ endif()
+ 
+ file(GLOB jit_src "kernel/jit.cuh")
+@@ -242,7 +246,7 @@ endif()
+ 
+ if(CUDA_VERSION_MAJOR VERSION_GREATER 10 OR
+    (UNIX AND
+-    CUDA_VERSION_MAJOR VERSION_EQUAL 10 AND CUDA_VERSION_MINOR VERSION_GREATER 0))
++    CUDA_VERSION_MAJOR VERSION_EQUAL 10 AND CUDA_VERSION_MINOR VERSION_GREATER 1))
+   list(APPEND cxx_definitions -DAF_USE_NEW_CUSPARSE_API)
+ endif()
+ 
+@@ -301,7 +305,7 @@ set_target_properties(af_cuda_static_cuda_library
+ 
+ if(CUDA_VERSION_MAJOR VERSION_GREATER 10 OR
+    (UNIX AND
+-    CUDA_VERSION_MAJOR VERSION_EQUAL 10 AND CUDA_VERSION_MINOR VERSION_GREATER 0))
++    CUDA_VERSION_MAJOR VERSION_EQUAL 10 AND CUDA_VERSION_MINOR VERSION_GREATER 1))
+   target_compile_definitions(af_cuda_static_cuda_library PRIVATE AF_USE_NEW_CUSPARSE_API)
+ endif()
+ 
+diff --git a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
+index 9a796c9..d9864b0 100644
+--- a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
++++ b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
+@@ -27,6 +27,7 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
+     add_dependencies(opencl_scan_by_key_${SBK_BINARY_OP}
+                         ${cl_kernel_targets} OpenCL::cl2hpp Boost::boost)
+ 
++    find_package(glad CONFIG REQUIRED)
+     target_include_directories(opencl_scan_by_key_${SBK_BINARY_OP}
+       PRIVATE
+         .
+@@ -39,9 +40,7 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
+         $<TARGET_PROPERTY:OpenCL::OpenCL,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:OpenCL::cl2hpp,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:Boost::boost,INTERFACE_INCLUDE_DIRECTORIES>
+-        $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
+-        ${ArrayFire_SOURCE_DIR}/extern/forge/include
+-        ${ArrayFire_BINARY_DIR}/extern/forge/include
++        $<TARGET_PROPERTY:glad::glad,INTERFACE_INCLUDE_DIRECTORIES>
+       )
+ 
+     set_target_properties(opencl_scan_by_key_${SBK_BINARY_OP}
+diff --git a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
+index d618ff2..9f51739 100644
+--- a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
++++ b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
+@@ -32,14 +32,13 @@ foreach(SBK_TYPE ${SBK_TYPES})
+         ../../../include
+         ${CMAKE_CURRENT_BINARY_DIR})
+ 
++    find_package(glad CONFIG REQUIRED)
+     target_include_directories(opencl_sort_by_key_${SBK_TYPE}
+       SYSTEM PRIVATE
+         $<TARGET_PROPERTY:OpenCL::OpenCL,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:OpenCL::cl2hpp,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:Boost::boost,INTERFACE_INCLUDE_DIRECTORIES>
+-        $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
+-        ${ArrayFire_SOURCE_DIR}/extern/forge/include
+-        ${ArrayFire_BINARY_DIR}/extern/forge/include
++        $<TARGET_PROPERTY:glad::glad,INTERFACE_INCLUDE_DIRECTORIES>
+       )
+ 
+     set_target_properties(opencl_sort_by_key_${SBK_TYPE}
+diff --git a/src/backend/opencl/CMakeLists.txt b/src/backend/opencl/CMakeLists.txt
+index b543433..9b5923b 100644
+--- a/src/backend/opencl/CMakeLists.txt
++++ b/src/backend/opencl/CMakeLists.txt
+@@ -432,12 +432,9 @@ if(AF_OPENCL_BLAS_LIBRARY STREQUAL "clBLAS")
+     PRIVATE
+       clBLAS::clBLAS)
+ elseif(AF_OPENCL_BLAS_LIBRARY STREQUAL "CLBlast")
+-  include(build_CLBlast)
++  find_package(CLBlast CONFIG REQUIRED)
+   target_compile_definitions(afopencl PRIVATE USE_CLBLAST)
+-  target_link_libraries(afopencl
+-    PRIVATE
+-      CLBlast)
+-    add_dependencies(afopencl CLBlast-ext)
++  target_link_libraries(afopencl PRIVATE clblast)
+ endif()
+
+
+diff --git a/src/backend/opencl/homography.cpp b/src/backend/opencl/homography.cpp
+index 3b598b0..2815923 100644
+--- a/src/backend/opencl/homography.cpp
++++ b/src/backend/opencl/homography.cpp
+@@ -39,7 +39,7 @@ int homography(Array<T> &bestH, const Array<float> &x_src,
+             ::std::min(iter, static_cast<unsigned>(
+                                  log(1.f - LMEDSConfidence) /
+                                  log(1.f - pow(1.f - LMEDSOutlierRatio, 4.f))));
+-        err = createValueArray<float>(af::dim4(nsamples, iter), FLT_MAX);
++        err = createValueArray<float>(af::dim4(nsamples, iter), std::numeric_limits<float>::max());
+     } else {
+         // Avoid passing "null" cl_mem object to kernels
+         err = createEmptyArray<float>(af::dim4(1));
+diff --git a/src/backend/opencl/kernel/homography.hpp b/src/backend/opencl/kernel/homography.hpp
+index b84e599..90d0c80 100644
+--- a/src/backend/opencl/kernel/homography.hpp
++++ b/src/backend/opencl/kernel/homography.hpp
+@@ -39,7 +39,9 @@ std::array<Kernel, 5> getHomographyKernels(const af_homography_type htype) {
+     };
+     options.emplace_back(getTypeBuildDefinition<T>());
+     options.emplace_back(DefineKeyValue(
+-        EPS, (std::is_same<T, double>::value ? DBL_EPSILON : FLT_EPSILON)));
++        EPS, (std::is_same<T, double>::value
++                                 ? std::numeric_limits<double>::epsilon()
++                                 : std::numeric_limits<float>::epsilon())));
+     if (htype == AF_HOMOGRAPHY_RANSAC) {
+         options.emplace_back(DefineKey(RANSAC));
+     }

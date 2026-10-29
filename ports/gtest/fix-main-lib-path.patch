@@ -1,0 +1,60 @@
+diff --git a/googlemock/CMakeLists.txt b/googlemock/CMakeLists.txt
+index 33ec9636..e8bba555 100644
+--- a/googlemock/CMakeLists.txt
++++ b/googlemock/CMakeLists.txt
+@@ -113,7 +113,8 @@ target_include_directories(gmock_main SYSTEM INTERFACE
+ ########################################################################
+ #
+ # Install rules.
+-install_project(gmock gmock_main)
++install_project(gmock)
++install_project(gmock_main)
+ 
+ ########################################################################
+ #
+diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
+index 64c0510c..84fde724 100644
+--- a/googletest/CMakeLists.txt
++++ b/googletest/CMakeLists.txt
+@@ -152,7 +152,8 @@ target_link_libraries(gtest_main PUBLIC gtest)
+ ########################################################################
+ #
+ # Install rules.
+-install_project(gtest gtest_main)
++install_project(gtest)
++install_project(gtest_main)
+ 
+ ########################################################################
+ #
+diff --git a/googletest/cmake/internal_utils.cmake b/googletest/cmake/internal_utils.cmake
+index 10c55955..ec78cc9a 100644
+--- a/googletest/cmake/internal_utils.cmake
++++ b/googletest/cmake/internal_utils.cmake
+@@ -324,12 +324,16 @@ function(install_project)
+       COMPONENT "${PROJECT_NAME}"
+       DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+     # Install the project targets.
++    set (LIB_INSTALL_DST ${CMAKE_INSTALL_LIBDIR})
++    if (${ARGN} MATCHES "_main")
++      set (LIB_INSTALL_DST ${CMAKE_INSTALL_LIBDIR}/manual-link)
++    endif()
+     install(TARGETS ${ARGN}
+       EXPORT ${targets_export_name}
+       COMPONENT "${PROJECT_NAME}"
+       RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++      ARCHIVE DESTINATION "${LIB_INSTALL_DST}"
++      LIBRARY DESTINATION "${LIB_INSTALL_DST}")
+     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+       # Install PDBs.
+       foreach(t ${ARGN})
+@@ -343,7 +347,7 @@ function(install_project)
+           "$<$<STREQUAL:$<TARGET_PROPERTY:${t},TYPE>,STATIC_LIBRARY>:${t_pdb_output_directory}/\${CMAKE_INSTALL_CONFIG_NAME}/$<IF:$<CONFIG:Debug>,${t_pdb_name_debug},${t_pdb_name}>.pdb>"
+           "$<$<STREQUAL:$<TARGET_PROPERTY:${t},TYPE>,SHARED_LIBRARY>:${t_shared_pdb_output_directory}/\${CMAKE_INSTALL_CONFIG_NAME}/$<IF:$<CONFIG:Debug>,${t_shared_pdb_name_debug},${t_shared_pdb_name}>.pdb>"
+           COMPONENT "${PROJECT_NAME}"
+-          DESTINATION $<IF:$<STREQUAL:$<TARGET_PROPERTY:${t},TYPE>,STATIC_LIBRARY>,${CMAKE_INSTALL_LIBDIR},${CMAKE_INSTALL_BINDIR}>
++          DESTINATION ${LIB_INSTALL_DST}
+           OPTIONAL)
+       endforeach()
+     endif()

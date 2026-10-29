@@ -1,0 +1,177 @@
+diff --git a/designer/designer.pro b/designer/designer.pro
+index fa4d8c7fd..ce3f82081 100644
+--- a/designer/designer.pro
++++ b/designer/designer.pro
+@@ -23,8 +23,8 @@ CONFIG( debug_and_release ) {
+ 
+     message("debug_and_release: building the Qwt designer plugin in release mode only")
+ 
+-    CONFIG -= debug_and_release
+-    CONFIG += release
++    # CONFIG -= debug_and_release
++    # CONFIG += release
+ }
+ 
+ contains(QWT_CONFIG, QwtDesigner ) {
+diff --git a/qwtbuild.pri b/qwtbuild.pri
+index 9306b6ed0..5b51218b6 100644
+--- a/qwtbuild.pri
++++ b/qwtbuild.pri
+@@ -54,12 +54,12 @@ win32 {
+     # might need a debug version.
+     # Enable debug_and_release + build_all if you want to build both.
+ 
+-    CONFIG           += debug_and_release
+-    CONFIG           += build_all
++    # CONFIG           += debug_and_release
++    # CONFIG           += build_all
+ }
+ else {
+ 
+-    CONFIG           += release
++    # CONFIG           += release
+ 
+     VER_MAJ           = $${QWT_VER_MAJ}
+     VER_MIN           = $${QWT_VER_MIN}
+diff --git a/qwtconfig.pri b/qwtconfig.pri
+index 7da1485a0..b69b5ca71 100644
+--- a/qwtconfig.pri
++++ b/qwtconfig.pri
+@@ -19,18 +19,19 @@ QWT_VERSION      = $${QWT_VER_MAJ}.$${QWT_VER_MIN}.$${QWT_VER_PAT}
+ QWT_INSTALL_PREFIX = $$[QT_INSTALL_PREFIX]
+ 
+ unix {
+-    QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION
++    # QWT_INSTALL_PREFIX    = /usr/local/qwt-$$QWT_VERSION
+     # QWT_INSTALL_PREFIX = /usr/local/qwt-$$QWT_VERSION-qt-$$QT_VERSION
+ }
+ 
+ win32 {
+-    QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION
++    # QWT_INSTALL_PREFIX    = C:/Qwt-$$QWT_VERSION
+     # QWT_INSTALL_PREFIX = C:/Qwt-$$QWT_VERSION-qt-$$QT_VERSION
+ }
+ 
+-QWT_INSTALL_DOCS      = $${QWT_INSTALL_PREFIX}/doc
++QWT_INSTALL_DOCS      = $$[QT_INSTALL_DOCS]/doc
+-QWT_INSTALL_HEADERS   = $${QWT_INSTALL_PREFIX}/include
++QWT_INSTALL_HEADERS   = $${QWT_INSTALL_PREFIX}/include/qwt
+-QWT_INSTALL_LIBS      = $${QWT_INSTALL_PREFIX}/lib
++QWT_INSTALL_LIBS      = $$[QT_INSTALL_LIBS]
++QWT_INSTALL_BINS      = $$[QT_INSTALL_BINS]
+ 
+ ######################################################################
+ # Designer plugin
+@@ -42,7 +43,7 @@ QWT_INSTALL_LIBS      = $${QWT_INSTALL_PREFIX}/lib
+ # runtime environment of designer/creator.
+ ######################################################################
+ 
+-QWT_INSTALL_PLUGINS   = $${QWT_INSTALL_PREFIX}/plugins/designer
++QWT_INSTALL_PLUGINS   = $$[QT_INSTALL_PLUGINS]/designer
+ 
+ # linux distributors often organize the Qt installation
+ # their way and QT_INSTALL_PREFIX doesn't offer a good
+@@ -63,7 +64,7 @@ QWT_INSTALL_PLUGINS   = $${QWT_INSTALL_PREFIX}/plugins/designer
+ # with every Qt upgrade.
+ ######################################################################
+ 
+-QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
++QWT_INSTALL_FEATURES  = $$[QT_INSTALL_DATA]/mkspecs/features
+ # QWT_INSTALL_FEATURES  = $$[QT_INSTALL_PREFIX]/features
+ 
+ ######################################################################
+@@ -72,7 +73,7 @@ QWT_INSTALL_FEATURES  = $${QWT_INSTALL_PREFIX}/features
+ # it will be a static library.
+ ######################################################################
+ 
+-QWT_CONFIG           += QwtDll
++# QWT_CONFIG           += QwtDll
+ 
+ ######################################################################
+ # QwtPlot enables all classes, that are needed to use the QwtPlot
+@@ -114,7 +115,7 @@ QWT_CONFIG     += QwtOpenGL
+ # Otherwise you have to build it from the designer directory.
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtDesigner
++# QWT_CONFIG     += QwtDesigner
+ 
+ ######################################################################
+ # Compile all Qwt classes into the designer plugin instead
+@@ -137,7 +138,7 @@ win32 {
+ # Otherwise you have to build them from the examples directory.
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtExamples
++# QWT_CONFIG     += QwtExamples
+ 
+ ######################################################################
+ # The playground is primarily intended for the Qwt development
+@@ -148,14 +149,14 @@ QWT_CONFIG     += QwtExamples
+ # Otherwise you have to build them from the playground directory.
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtPlayground
++# QWT_CONFIG     += QwtPlayground
+ 
+ ######################################################################
+ # If you want to auto build the tests, enable the line below
+ # Otherwise you have to build them from the tests directory.
+ ######################################################################
+ 
+-QWT_CONFIG     += QwtTests
++# QWT_CONFIG     += QwtTests
+ 
+ ######################################################################
+ # When Qt has been built as framework qmake wants
+diff --git a/src/src.pro b/src/src.pro
+index 762e4c49b..d70a1b62b 100644
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -49,27 +50,27 @@ contains(QWT_CONFIG, QwtFramework) {
+ include ( $${PWD}/src.pri )
+ 
+ # Install directives
+ 
+ target.path    = $${QWT_INSTALL_LIBS}
+ INSTALLS       = target 
+ 
+ CONFIG(lib_bundle) {
+ 
+     FRAMEWORK_HEADERS.version = Versions
+     FRAMEWORK_HEADERS.files = $${HEADERS}
+     FRAMEWORK_HEADERS.path = Headers
+     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
+ }
+ else {
+ 
+     headers.files  = $${HEADERS}
+     headers.path   = $${QWT_INSTALL_HEADERS}
+     INSTALLS += headers
+ }
+ 
+ contains(QWT_CONFIG, QwtPkgConfig) {
+ 
+-    CONFIG     += create_pc create_prl no_install_prl
++    CONFIG     += create_pc create_prl
+ 
+     QMAKE_PKGCONFIG_NAME = Qwt$${QWT_VER_MAJ}
+     QMAKE_PKGCONFIG_DESCRIPTION = Qt Widgets for Technical Applications
+@@ -82,14 +81,14 @@ contains(QWT_CONFIG, QwtPkgConfig) {
+     greaterThan(QT_MAJOR_VERSION, 4) {
+ 
+         QMAKE_PKGCONFIG_FILE = Qt$${QT_MAJOR_VERSION}$${QMAKE_PKGCONFIG_NAME}
+-        QMAKE_PKGCONFIG_REQUIRES = Qt5Widgets Qt5Concurrent Qt5PrintSupport
++        QMAKE_PKGCONFIG_REQUIRES = Qt$${QT_MAJOR_VERSION}Widgets Qt$${QT_MAJOR_VERSION}Concurrent Qt$${QT_MAJOR_VERSION}PrintSupport
+ 
+         contains(QWT_CONFIG, QwtSvg) {
+-            QMAKE_PKGCONFIG_REQUIRES += Qt5Svg
++            QMAKE_PKGCONFIG_REQUIRES += Qt$${QT_MAJOR_VERSION}Svg
+         }
+ 
+         contains(QWT_CONFIG, QwtOpenGL) {
+-            QMAKE_PKGCONFIG_REQUIRES += Qt5OpenGL
++            QMAKE_PKGCONFIG_REQUIRES += Qt$${QT_MAJOR_VERSION}OpenGL
+         }
+ 
+         QMAKE_DISTCLEAN += $${DESTDIR}/$${QMAKE_PKGCONFIG_DESTDIR}/$${QMAKE_PKGCONFIG_FILE}.pc

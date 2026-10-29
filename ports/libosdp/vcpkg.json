@@ -1,0 +1,19 @@
+{
+  "name": "libosdp",
+  "version": "3.2.7",
+  "description": "An cross-platform open source implementation of IEC 60839-11-5 Open Supervised Device Protocol (OSDP)",
+  "homepage": "https://github.com/osdp-dev/libosdp",
+  "documentation": "https://doc.osdp.dev",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

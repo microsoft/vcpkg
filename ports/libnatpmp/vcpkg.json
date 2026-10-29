@@ -1,0 +1,14 @@
+{
+  "name": "libnatpmp",
+  "version-date": "2025-04-03",
+  "description": "A client-side NAT traversal library implementing the NAT-PMP protocol",
+  "homepage": "http://miniupnp.free.fr/libnatpmp.html",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

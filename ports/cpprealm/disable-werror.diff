@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f8b0675..e7dd3f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -119,7 +119,7 @@ target_link_libraries(cpprealm PUBLIC Realm::ObjectStore)
+ set(CMAKE_OSX_SYSROOT ${CMAKE_OSX_SYSROOT_PATH})
+ 
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+-    target_compile_options(cpprealm PRIVATE -Wall -Wextra -pedantic -Werror)
++    target_compile_options(cpprealm PRIVATE -Wall -Wextra -pedantic -Wno-changes-meaning)
+ endif()
+ 
+ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)

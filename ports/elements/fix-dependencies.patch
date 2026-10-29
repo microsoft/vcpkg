@@ -1,0 +1,38 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 70543b6..5845fdc 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -222,14 +222,7 @@ endif()
+ ###############################################################################
+ # Cycfi Infra
+ 
+-FetchContent_Declare(
+-  cycfi_infra
+-  GIT_REPOSITORY https://github.com/cycfi/infra.git
+-  GIT_TAG master
+-  GIT_SUBMODULES_RECURSE ON
+-)
+-
+-FetchContent_MakeAvailable(cycfi_infra)
++add_subdirectory(infra)
+ target_link_libraries(elements PUBLIC cycfi::infra)
+ 
+ ###############################################################################
+@@ -268,15 +261,8 @@ endif()
+ ###############################################################################
+ # Asio headers
+ 
+-FetchContent_Declare(
+-  asio
+-  GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+-  GIT_TAG asio-1-36-0
+-  GIT_SHALLOW TRUE
+-)
+-FetchContent_MakeAvailable(asio)
+-
+-target_include_directories(elements PUBLIC ${asio_SOURCE_DIR}/asio/include)
++find_package(asio CONFIG REQUIRED)
++target_include_directories(elements PUBLIC ${ASIO_INCLUDE_DIR})
+ 
+ ###############################################################################
+ # Global options

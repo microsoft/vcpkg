@@ -1,0 +1,17 @@
+diff --git a/src/sail-codecs/svg/CMakeLists.txt b/src/sail-codecs/svg/CMakeLists.txt
+index 5d8c7383..08e1fedc 100644
+--- a/src/sail-codecs/svg/CMakeLists.txt
++++ b/src/sail-codecs/svg/CMakeLists.txt
+@@ -1,3 +1,4 @@
++if (FALSE)
+ find_library(RESVG_LIBRARY resvg)
+ find_path(RESVG_INCLUDE_DIRS resvg.h)
+ 
+@@ -53,6 +54,7 @@ if (RESVG_LIBRARY AND RESVG_INCLUDE_DIRS)
+         set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_library,resvg,resvg" PARENT_SCOPE)
+     endif()
+ endif()
++endif() # if (FALSE)
+ 
+ # Fall back to NanoSVG
+ #

@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 773f1ebb92..56fc94794f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -321,10 +321,10 @@ if (USE_SYSTEM_LIBBSON)
+ 
+    set (USING_SYSTEM_BSON TRUE)
+    if (NOT TARGET bson::shared)
+-      message (FATAL_ERROR "System libbson built without shared library target")
++
+    endif ()
+    if (NOT TARGET bson::static)
+-      message (FATAL_ERROR "System libbson built without static library target")
++
+    endif ()
+ endif ()
+ 
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index 9b2c2f845d..65617c1736 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -862,7 +862,7 @@ set (
+    "${mongo-c-driver_SOURCE_DIR}/src/uthash"
+ )
+ 
+-if (ENABLE_SHARED)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+    add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS})
+    add_library(mongoc::shared ALIAS mongoc_shared)
+    set_property(TARGET mongoc_shared PROPERTY EXPORT_NAME mongoc::shared)
+@@ -929,7 +929,7 @@ if (ENABLE_SHARED)
+                RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    endif () # ENABLE_SHM_COUNTERS
+ 
+-endif () # ENABLE_SHARED
++endif () # NOT MONGOC_ENABLE_STATIC_BUILD
+ 
+ if (MONGOC_ENABLE_STATIC_BUILD)
+    add_library (mongoc_static STATIC ${SOURCES} ${HEADERS})
+@@ -1338,7 +1338,7 @@ if (MONGOC_ENABLE_STATIC_INSTALL)
+    list (APPEND TARGETS_TO_INSTALL mongoc_static)
+ endif ()
+ 
+-if (ENABLE_SHARED)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+    list (APPEND TARGETS_TO_INSTALL mongoc_shared)
+ endif ()
+ 

@@ -1,0 +1,7 @@
+{
+  "name": "bext-mp",
+  "version": "2.0.11",
+  "description": "C++20 Meta-Programming library",
+  "homepage": "https://github.com/qlibs/mp",
+  "license": "MIT"
+}

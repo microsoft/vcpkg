@@ -1,0 +1,31 @@
+diff --git a/tcp_pubsub/CMakeLists.txt b/tcp_pubsub/CMakeLists.txt
+index 2ef4582..ea6857a 100644
+--- a/tcp_pubsub/CMakeLists.txt
++++ b/tcp_pubsub/CMakeLists.txt
+@@ -10,8 +10,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+ 
+ find_package(Threads REQUIRED)
+-find_package(asio REQUIRED)
+-find_package(recycle REQUIRED)
++find_package(asio CONFIG REQUIRED)
++find_path(RECYCLE_INCLUDE_DIRS "recycle/no_locking_policy.hpp")
+ 
+ # Include GenerateExportHeader that will create export macros for us
+ include(GenerateExportHeader)
+@@ -73,7 +73,6 @@ target_link_libraries(${PROJECT_NAME}
+         # Link header-only libs (asio & recycle) as described in this workaround:
+         # https://gitlab.kitware.com/cmake/cmake/-/issues/15415#note_633938
+         $<BUILD_INTERFACE:asio::asio>
+-        $<BUILD_INTERFACE:steinwurf::recycle>
+ )
+ 
+ target_compile_definitions(${PROJECT_NAME}
+@@ -110,6 +109,7 @@ target_include_directories(${PROJECT_NAME}
+     $<INSTALL_INTERFACE:include>
+   PRIVATE
+     src/
++    ${RECYCLE_INCLUDE_DIRS}
+ )
+ 
+ set_target_properties(${PROJECT_NAME} PROPERTIES

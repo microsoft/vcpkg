@@ -1,0 +1,6 @@
+{
+  "name": "quaternions",
+  "version-date": "2024-12-10",
+  "description": "A C++11 library to work with quaternions, as a single header file.",
+  "homepage": "https://github.com/ferd36/quaternions"
+}

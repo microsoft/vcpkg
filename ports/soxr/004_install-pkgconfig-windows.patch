@@ -1,0 +1,22 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index bb01a0d..82ef7f7 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -87,7 +87,7 @@
+ if (BUILD_FRAMEWORK)
+   set_target_properties (${PROJECT_NAME} PROPERTIES FRAMEWORK TRUE)
+-elseif (NOT WIN32)
++else ()
+   set (TARGET_PCS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc)
+   configure_file (${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.in ${TARGET_PCS})
+   install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+ endif ()
+@@ -111,7 +111,7 @@
+   if (BUILD_FRAMEWORK)
+     set_target_properties (${LSR} PROPERTIES FRAMEWORK TRUE)
+-  elseif (NOT WIN32)
++  else ()
+     set (TARGET_PCS "${TARGET_PCS} ${CMAKE_CURRENT_BINARY_DIR}/${LSR}.pc")
+     configure_file (${CMAKE_CURRENT_SOURCE_DIR}/${LSR}.pc.in ${CMAKE_CURRENT_BINARY_DIR}/${LSR}.pc)
+     install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${LSR}.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+   endif ()

@@ -1,0 +1,17 @@
+{
+  "name": "vcpkg-ci-box2d",
+  "version-string": "ci",
+  "description": "Port to validate box2d",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "box2d",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+diff --git a/lib/crc32.c b/lib/crc32.c
+index eae6582..3064c65 100644
+--- a/lib/crc32.c
++++ b/lib/crc32.c
+@@ -90,6 +90,10 @@ static const uint32_t crc32_table[256] =
+   0x2d02ef8d
+ };
+ 
++/* crc32 is owned by zlib. */
++#ifndef crc32
++#define crc32 eu_crc32
++#endif
+ uint32_t
+ crc32 (uint32_t crc, unsigned char *buf, size_t len)
+ {
+diff --git a/lib/libeu.h b/lib/libeu.h
+index e849a79..522fc74 100644
+--- a/lib/libeu.h
++++ b/lib/libeu.h
+@@ -42,6 +42,8 @@ extern char *xstrndup (const char *, size_t) __attribute__ ((__malloc__));
+ extern char *xasprintf(const char *fmt, ...)
+ 	__attribute__ ((format (printf, 1, 2))) __attribute__ ((__malloc__));
+ 
++/* crc32 is owned by zlib. */
++#define crc32 eu_crc32
+ extern uint32_t crc32 (uint32_t crc, unsigned char *buf, size_t len);
+ extern int crc32_file (int fd, uint32_t *resp);
+ 

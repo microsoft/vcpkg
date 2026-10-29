@@ -1,0 +1,4 @@
+NekoEvent provides CMake targets:
+
+    find_package(NekoEvent CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Neko::Event)

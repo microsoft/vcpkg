@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 03b5354..a9e04a6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,8 +46,8 @@ set_package_properties(LibLZMA PROPERTIES
+ 
+ find_package(PkgConfig)
+ if (PkgConfig_FOUND)
+-    pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
+ endif()
++find_package(LibZstd NAMES zstd)
+ add_feature_info(LibZstd LibZstd_FOUND
+                 "Support for zstd compressed files and data streams"
+ )
+diff --git a/KF5ArchiveConfig.cmake.in b/KF5ArchiveConfig.cmake.in
+index ea63b92..b7ddf23 100644
+--- a/KF5ArchiveConfig.cmake.in
++++ b/KF5ArchiveConfig.cmake.in
+@@ -23,8 +23,7 @@ if (NOT @BUILD_SHARED_LIBS@)
+         find_dependency(LibLZMA)
+     endif()
+ 
+     if (@LibZstd_FOUND@)
+-        find_package(PkgConfig)
+-        pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
++        find_dependency(zstd CONFIG)
+     endif()
+ endif()
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 97bb61b..334f9b6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -26,7 +26,7 @@ endif()
+ 
+ if (LibZstd_FOUND)
+     target_sources(KF5Archive PRIVATE kzstdfilter.cpp)
+-    target_link_libraries(KF5Archive PRIVATE PkgConfig::LibZstd)
++    target_link_libraries(KF5Archive PRIVATE zstd::libzstd)
+ endif()
+ 
+ 

@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,7 +38,7 @@
+       Boost::integer
+       Boost::lexical_cast
+       Boost::predef
+-      Boost::random
++      $<TARGET_NAME_IF_EXISTS:Boost::random>
+       Boost::throw_exception
+   )
+ 

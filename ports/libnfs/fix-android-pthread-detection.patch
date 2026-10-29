@@ -1,0 +1,14 @@
+diff --git a/cmake/ConfigureChecks.cmake b/cmake/ConfigureChecks.cmake
+--- a/cmake/ConfigureChecks.cmake
++++ b/cmake/ConfigureChecks.cmake
+@@ -95,7 +95,9 @@ endif()
+ #
+ # Test for pthread availability.
+ #
+-set(CMAKE_REQUIRED_LIBRARIES pthread)
++if(NOT ANDROID)
++  set(CMAKE_REQUIRED_LIBRARIES pthread)
++endif()
+ check_c_source_compiles("#include <pthread.h>
+                          int main()
+                          {

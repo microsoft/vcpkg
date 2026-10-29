@@ -1,0 +1,11 @@
+diff --git a/include/exec/libdispatch_queue.hpp b/include/exec/libdispatch_queue.hpp
+--- a/include/exec/libdispatch_queue.hpp
++++ b/include/exec/libdispatch_queue.hpp
+@@ -29,6 +29,7 @@
+ #  include "../stdexec/execution.hpp"
+ #  include "sender_for.hpp"
+ #  include <dispatch/dispatch.h>
++#  include <vector>
+ 
+ namespace experimental::execution
+ {

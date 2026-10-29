@@ -1,0 +1,15 @@
+diff --git i/CMakeLists.txt w/CMakeLists.txt
+index ca05777..c47bce3 100644
+--- i/CMakeLists.txt
++++ w/CMakeLists.txt
+@@ -144,10 +144,6 @@ xyz_add_object_library(
+ 
+ if (${XYZ_VALUE_TYPES_IS_NOT_SUBPROJECT})
+ 
+-    add_subdirectory(benchmarks)
+-    add_subdirectory(compile_checks)
+-    add_subdirectory(exploration)
+-
+     if (${BUILD_TESTING})
+         FetchContent_Declare(
+           googletest

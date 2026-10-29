@@ -1,0 +1,4 @@
+openvino provides CMake targets:
+
+  find_package(OpenVINO REQUIRED)
+  target_link_libraries(main PRIVATE openvino::runtime)

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 981de80..65aa1da 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,6 +35,10 @@ target_link_libraries(${EXTENSION_NAME} EXPAT::EXPAT MINIZIP::minizip-ng
+ target_link_libraries(${LOADABLE_EXTENSION_NAME} EXPAT::EXPAT
+                       MINIZIP::minizip-ng ZLIB::ZLIB)
+ 
++set_target_properties(${LOADABLE_EXTENSION_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
++if(BUILD_SHARED_LIBS)
++  return()
++endif()
+ install(
+   TARGETS ${EXTENSION_NAME}
+   EXPORT "${DUCKDB_EXPORT_SET}"

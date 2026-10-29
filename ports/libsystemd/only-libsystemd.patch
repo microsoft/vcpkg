@@ -1,0 +1,58 @@
+diff --git a/meson.build b/meson.build
+index 3672005..a39e0df 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2090,14 +2090,13 @@ libsystemd_includes = [basic_includes, include_directories(
+ includes = [libsystemd_includes, include_directories('src/shared')]
+ 
+ subdir('po')
+-subdir('catalog')
++support_url='https://github.com/microsoft/vcpkg/issues'
+ subdir('src/include')
+ subdir('src/libc')
+ subdir('src/fundamental')
+ subdir('src/basic')
+ subdir('src/libsystemd')
+-subdir('src/shared')
+-subdir('src/libudev')
++static_libudev='unused'
+ 
+ libsystemd = shared_library(
+         'systemd',
+@@ -2115,7 +2114,8 @@ libsystemd = shared_library(
+                         threads,
+                         userspace],
+         link_depends : libsystemd_sym,
+-        install : true,
++        build_by_default : static_libsystemd == 'false',
++        install : static_libsystemd == 'false',
+         install_tag: 'libsystemd',
+         install_dir : libdir)
+ 
+@@ -2148,6 +2148,8 @@ else
+         alias_target('libsystemd', libsystemd)
+ endif
+ 
++if false
++
+ libudev = shared_library(
+         'udev',
+         version : libudev_version,
+@@ -3006,6 +3008,17 @@ if conf.get('ENABLE_HWDB') == 1
+         alias_target('hwdb', auto_suspend_rules, executables_by_name.get('systemd-hwdb'), hwdb_units)
+ endif
+ 
++else
++  # headers
++  subdir('src/systemd')
++  # subdir man
++  want_html=false
++  want_man=false
++  # subdir shell-completion/*
++  bashcompletiondir='no'
++  zshcompletiondir='no'
++endif
++
+ alt_time_epoch = run_command('date', '-Is', '-u', '-d', f'@@time_epoch@', check : false)
+ if alt_time_epoch.returncode() != 0
+         # If the above fails, maybe the date(1) uses BSD-style syntax

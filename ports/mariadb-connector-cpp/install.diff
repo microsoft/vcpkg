@@ -1,0 +1,53 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5a10e1e..4a4732b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -690,14 +690,16 @@ IF(MINGW)
+ ENDIF()
+ 
+ INCLUDE(symlink)
++if(NOT BUILD_SHARED_LIBS)
+ CREATE_SYMLINK(lib${LIBRARY_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX} ${STATIC_LIBRARY_NAME} ${INSTALL_LIBDIR})
++endif()
+ 
+ ADD_DEPENDENCIES(${LIBRARY_NAME} DEPENDENCIES_FOR_PACKAGE)
+ 
+ ########## Packaging ##########
+ 
+ # MSI
+-IF(WIN32)
++IF(0)
+   IF(WITH_MSI)
+     ADD_CUSTOM_COMMAND(TARGET ${LIBRARY_NAME} POST_BUILD
+       COMMAND ${CMAKE_COMMAND} ARGS -DDRIVER_LIB_DIR=$<TARGET_FILE_DIR:${LIBRARY_NAME}>
+@@ -714,13 +716,30 @@ ELSE()
+     #MESSAGE(STATUS "Configuring to generate PKG package")
+     #ADD_SUBDIRECTORY(osxinstall)
+   ENDIF()
++  if(BUILD_SHARED_LIBS)
++  set_target_properties(${STATIC_LIBRARY_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
++  target_include_directories(${LIBRARY_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+   INSTALL(TARGETS ${LIBRARY_NAME}
++          EXPORT unofficial-mariadb-connector-cpp
++          RUNTIME DESTINATION ${INSTALL_BINDIR}
+           LIBRARY DESTINATION ${INSTALL_LIBDIR}
++          ARCHIVE DESTINATION ${INSTALL_LIBDIR}
+           COMPONENT SharedLibraries)
++  else()
++  set_target_properties(${LIBRARY_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
++  set_target_properties(${STATIC_LIBRARY_NAME} PROPERTIES EXPORT_NAME ${LIBRARY_NAME})
++  target_include_directories(${STATIC_LIBRARY_NAME} INTERFACE $<INSTALL_INTERFACE:include>)
+   INSTALL(TARGETS
+           ${STATIC_LIBRARY_NAME}
++          EXPORT unofficial-mariadb-connector-cpp
+           ARCHIVE DESTINATION ${INSTALL_LIBDIR}
+           COMPONENT Development)
++  endif()
++  install(EXPORT unofficial-mariadb-connector-cpp
++    DESTINATION share/unofficial-mariadb-connector-cpp
++    NAMESPACE unofficial::mariadb-connector-cpp::
++    FILE unofficial-mariadb-connector-cpp-targets.cmake
++  )
+ 
+   MESSAGE(STATUS "Documentation installed to ${INSTALL_DOCDIR}")
+   MESSAGE(STATUS "License file installed to ${INSTALL_LICENSEDIR}")

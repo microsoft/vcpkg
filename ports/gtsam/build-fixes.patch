@@ -1,0 +1,15 @@
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index c9abd3a5e..e9eb4e653 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -35,6 +35,10 @@ if(@GTSAM_USE_SYSTEM_EIGEN@)
+ find_dependency(Eigen3 REQUIRED)
+ endif()
+ 
++if(@GTSAM_USE_SYSTEM_METIS@)
++find_dependency(metis REQUIRED)
++endif()
++
+ # The vcpkg MKL interface exports MKL::MKL, which consumers must recreate.
+ if("@GTSAM_MKL_USES_CONFIG@")
+   find_dependency(MKL CONFIG)

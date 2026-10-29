@@ -1,0 +1,27 @@
+{
+  "name": "lmdb",
+  "version": "1.0.1",
+  "description": "LMDB is an extraordinarily fast, memory-efficient database.",
+  "homepage": "https://www.symas.com/mdb",
+  "documentation": "http://www.lmdb.tech/doc/",
+  "license": "OLDAP-2.8",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools",
+      "supports": "!uwp",
+      "dependencies": [
+        "getopt"
+      ]
+    }
+  }
+}

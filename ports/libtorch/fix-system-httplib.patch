@@ -1,0 +1,10 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1658,5 +1658,5 @@
+ # Include cpp-httplib
+-add_library(httplib INTERFACE IMPORTED)
+-target_include_directories(httplib SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/third_party/cpp-httplib)
++find_package(httplib REQUIRED)
++add_library(httplib ALIAS httplib::httplib)
+
+ # Include nlohmann-json

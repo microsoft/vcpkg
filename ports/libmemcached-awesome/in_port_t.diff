@@ -1,0 +1,15 @@
+diff --git a/include/libmemcached-1.0/struct/server.h b/include/libmemcached-1.0/struct/server.h
+index 9a27c9c9..69d9696d 100644
+--- a/include/libmemcached-1.0/struct/server.h
++++ b/include/libmemcached-1.0/struct/server.h
+@@ -21,6 +21,10 @@
+ #  include <netdb.h>
+ #endif
+ 
++#ifdef HAVE_IN_PORT_T
++#  include <netinet/in.h>
++#endif
++
+ #ifdef NI_MAXHOST
+ #  define MEMCACHED_NI_MAXHOST NI_MAXHOST
+ #else

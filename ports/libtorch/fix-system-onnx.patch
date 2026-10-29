@@ -1,0 +1,13 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1379,3 +1379,3 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+     list(APPEND Caffe2_DEPENDENCY_WHOLE_LINK_LIBS onnx_library)
+-  else()
++  elseif(FALSE)
+     add_library(onnx SHARED IMPORTED)
+@@ -1395,3 +1395,5 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+   endif()
++  find_package(ONNX CONFIG REQUIRED)
++  list(APPEND Caffe2_DEPENDENCY_LIBS ONNX::onnx ONNX::onnx_proto)
+   # Recover the build shared libs option.
+   set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})

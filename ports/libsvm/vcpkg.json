@@ -1,0 +1,23 @@
+{
+  "name": "libsvm",
+  "version": "3.37",
+  "description": "A library for Support Vector Machines.",
+  "homepage": "https://www.csie.ntu.edu.tw/~cjlin/libsvm/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "build libsvm CLI tools.",
+      "supports": "!uwp"
+    }
+  }
+}

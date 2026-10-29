@@ -1,0 +1,7 @@
+{
+  "name": "meekrosoft-fff",
+  "version": "1.1",
+  "description": "A testing micro framework for creating function test doubles",
+  "homepage": "https://github.com/meekrosoft/fff",
+  "license": "MIT"
+}

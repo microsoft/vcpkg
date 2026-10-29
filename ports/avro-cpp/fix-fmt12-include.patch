@@ -1,0 +1,13 @@
+diff --git a/lang/c++/include/avro/Exception.hh b/lang/c++/include/avro/Exception.hh
+index 234a1c9..f7a2558 100644
+--- a/lang/c++/include/avro/Exception.hh
++++ b/lang/c++/include/avro/Exception.hh
+@@ -20,7 +20,7 @@
+ #define avro_Exception_hh__
+ 
+ #include "Config.hh"
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <stdexcept>
+ 
+ namespace avro {

@@ -1,0 +1,16 @@
+diff --git "a/AbletonLinkConfig.cmake" "b/AbletonLinkConfig.cmake"
+index 43b66e7..1e84fa5 100644
+--- "a/cmake_include/ConfigureAbletonLink.cmake"
++++ "b/cmake_include/ConfigureAbletonLink.cmake"
+@@ -30,6 +30,11 @@ function(ConfigureAbletonLink PATH_TO_LINK)
+       INTERFACE_COMPILE_DEFINITIONS
+       LINK_PLATFORM_WINDOWS=1
+     )
++  elseif(CMAKE_SYSTEM_NAME MATCHES "Android")
++    set_property(TARGET Ableton::Link APPEND PROPERTY
++      INTERFACE_COMPILE_DEFINITIONS
++      LINK_PLATFORM_LINUX=1
++    )
+     elseif(CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD|GNU")
+       set_property(TARGET Ableton::Link APPEND PROPERTY
+         INTERFACE_COMPILE_DEFINITIONS

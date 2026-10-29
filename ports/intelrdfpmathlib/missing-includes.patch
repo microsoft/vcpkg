@@ -1,0 +1,24 @@
+diff --git a/LIBRARY/float128/dpml_exception.c b/LIBRARY/float128/dpml_exception.c
+index 6afe7d0..1ec508e 100644
+--- a/LIBRARY/float128/dpml_exception.c
++++ b/LIBRARY/float128/dpml_exception.c
+@@ -135,6 +135,7 @@ extern int raise(int);
+     !defined(wnt)
+ 
+ #   include <sys/signal.h>
++#include <signal.h>
+ #   define DPML_SIGNAL(p)	 raise(SIGFPE)
+ 
+ #else
+diff --git a/LIBRARY/src/bid_internal.h b/LIBRARY/src/bid_internal.h
+index add91a0..ea7f33e 100644
+--- a/LIBRARY/src/bid_internal.h
++++ b/LIBRARY/src/bid_internal.h
+@@ -37,6 +37,7 @@
+ 
+ #include "bid_conf.h"
+ #include "bid_functions.h"
++#include <stdlib.h>
+ 
+ #define __BID_INLINE__ static __inline
+ 

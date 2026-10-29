@@ -1,0 +1,79 @@
+diff --git a/src/api.h b/src/api.h
+index 24f1a02..db7b729 100644
+--- a/src/api.h
++++ b/src/api.h
+@@ -216,3 +216,3 @@ private:
+    pthread_key_t m_TLSError;                         // thread local error record (last error)
+-   #ifndef WIN32
++   #ifndef _WIN32
+       static void TLSDestroy(void* e) {if (NULL != e) delete (CUDTException*)e;}
+@@ -248,3 +248,3 @@ private:
+    pthread_t m_GCThread;
+-   #ifndef WIN32
++   #ifndef _WIN32
+       static void* garbageCollect(void*);
+diff --git a/src/common.h b/src/common.h
+index 3782d61..205b090 100644
+--- a/src/common.h
++++ b/src/common.h
+@@ -44,3 +44,3 @@ written by
+ 
+-#ifndef WIN32
++#ifndef _WIN32
+    #include <sys/time.h>
+@@ -55,3 +55,3 @@ written by
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+    // Windows compability
+diff --git a/src/packet.h b/src/packet.h
+index 76cc951..216505a 100644
+--- a/src/packet.h
++++ b/src/packet.h
+@@ -46,3 +46,3 @@ written by
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+    struct iovec
+diff --git a/src/queue.h b/src/queue.h
+index 9feff18..1062a0c 100644
+--- a/src/queue.h
++++ b/src/queue.h
+@@ -399,3 +399,3 @@ public:
+ private:
+-#ifndef WIN32
++#ifndef _WIN32
+    static void* worker(void* param);
+@@ -459,3 +459,3 @@ public:
+ private:
+-#ifndef WIN32
++#ifndef _WIN32
+    static void* worker(void* param);
+diff --git a/src/udt.h b/src/udt.h
+index 6436363..8e00091 100644
+--- a/src/udt.h
++++ b/src/udt.h
+@@ -44,3 +44,3 @@ written by
+ 
+-#ifndef WIN32
++#ifndef _WIN32
+    #include <sys/types.h>
+@@ -70,3 +70,3 @@ written by
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+    #ifndef __MINGW__
+@@ -97,3 +97,3 @@ written by
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+    #ifndef __MINGW__
+diff --git a/src/window.h b/src/window.h
+index f118a26..565aeb6 100644
+--- a/src/window.h
++++ b/src/window.h
+@@ -44,3 +44,3 @@ written by
+ 
+-#ifndef WIN32
++#ifndef _WIN32
+    #include <sys/time.h>

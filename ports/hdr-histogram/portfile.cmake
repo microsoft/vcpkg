@@ -1,0 +1,53 @@
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO HdrHistogram/HdrHistogram_c
+    REF ${VERSION}
+    SHA512 f631876dd1871d5e90989523f198d93b8dc561c513e86724149fefd52603064c3687d57e60c77e5ccbdc5a54ab9e7397a8db7a34e23cc68948c6c1361de62031
+    HEAD_REF main
+    PATCHES
+        001-fix-pkgconfig.patch
+)
+
+if("log" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DHDR_LOG_REQUIRED=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DHDR_LOG_REQUIRED=DISABLED")
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_STATIC:BOOL=OFF")
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_INSTALL_STATIC:BOOL=OFF")
+else()
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_SHARED:BOOL=OFF")
+    list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_INSTALL_SHARED:BOOL=OFF")
+endif()
+
+# Do not build tests and examples
+list(APPEND FEATURE_OPTIONS "-DHDR_HISTOGRAM_BUILD_PROGRAMS:BOOL=OFF")
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME hdr_histogram
+    CONFIG_PATH lib/cmake/hdr_histogram
+)
+
+vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/COPYING.txt")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

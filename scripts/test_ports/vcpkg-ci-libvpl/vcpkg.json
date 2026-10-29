@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-libvpl",
+  "version-string": "ci",
+  "description": "Validates libvpl",
+  "license": null,
+  "dependencies": [
+    "libvpl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

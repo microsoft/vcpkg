@@ -1,0 +1,28 @@
+diff --git a/headers/ztimer.h b/headers/ztimer.h
+index 46441f9..29a4cab 100644
+--- a/headers/ztimer.h
++++ b/headers/ztimer.h
+@@ -8,6 +8,12 @@
+ 
+ #include "common.h"
+ 
++#ifdef _WIN32
++#define NOMINMAX
++#define WINDOWS_LEAN_AND_MEAN
++#include <windows.h>
++#endif
++
+ namespace FastPForLib {
+ 
+ //
+@@ -19,10 +25,6 @@ namespace FastPForLib {
+ // http://stackoverflow.com/questions/13263277/difference-between-stdsystem-clock-and-stdsteady-clock
+ //
+ #ifdef _WIN32
+-#define NOMINMAX
+-#define WINDOWS_LEAN_AND_MEAN
+-#include <windows.h>
+-
+ struct qpc_clock {
+   typedef std::chrono::nanoseconds duration;
+   typedef duration::rep rep;

@@ -1,0 +1,12 @@
+diff --git a/libs/Common/Types.h b/libs/Common/Types.h
+index 1ae23ce..38bd9f7 100644
+--- a/libs/Common/Types.h
++++ b/libs/Common/Types.h
+@@ -33,6 +33,7 @@
+ #else
+ #include <cstdint>
+ #endif
++#include <bitset>
+ #include <cstddef>
+ #include <type_traits>
+ #include <initializer_list>

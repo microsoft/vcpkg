@@ -1,0 +1,195 @@
+diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
+index 2c69a29..46aeedf 100644
+--- a/dlib/CMakeLists.txt
++++ b/dlib/CMakeLists.txt
+@@ -816,13 +816,12 @@ if (NOT TARGET dlib)
+    endif()
+ 
+    target_compile_features(dlib PUBLIC cxx_std_14)
+-   if((MSVC AND CMAKE_VERSION VERSION_LESS 3.11))
+-      target_compile_options(dlib PUBLIC ${active_compile_opts})
+-      target_compile_options(dlib PRIVATE ${active_compile_opts_private})
+-   else()
+-      target_compile_options(dlib PUBLIC $<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts}>)
+-      target_compile_options(dlib PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts_private}>)
+-   endif()
++   # Build-tree clients share dlib's compiler, so forward the options detected
++   # above to them. Do not put those options in the installed target, where
++   # dlibConfig.cmake recreates them for the consuming compiler's frontend.
++   target_compile_options(dlib INTERFACE "$<BUILD_INTERFACE:$<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts}>>")
++   target_compile_options(dlib PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts}>)
++   target_compile_options(dlib PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts_private}>)
+ 
+    # Install the library
+    if (NOT DLIB_IN_PROJECT_BUILD)
+diff --git a/dlib/cmake_utils/dlibConfig.cmake.in b/dlib/cmake_utils/dlibConfig.cmake.in
+index 24755ce..bcf5fe4 100644
+--- a/dlib/cmake_utils/dlibConfig.cmake.in
++++ b/dlib/cmake_utils/dlibConfig.cmake.in
+@@ -27,7 +27,7 @@ endif()
+ 
+  
+ # Our library dependencies (contains definitions for IMPORTED targets)
+-if(NOT TARGET dlib-shared AND NOT dlib_BINARY_DIR)
++if(NOT TARGET dlib::dlib AND NOT TARGET dlib-shared AND NOT dlib_BINARY_DIR)
+    # Compute paths
+    get_filename_component(dlib_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    include("${dlib_CMAKE_DIR}/dlib.cmake")
+@@ -41,6 +41,73 @@ if(NOT TARGET dlib-shared AND NOT dlib_BINARY_DIR)
+    endif()
+    unset(dlib_deps_threads_idx)
+    unset(dlib_deps_threads_check)
++
++   # Compiler options on an imported target are evaluated in the consuming
++   # project, not in the project that built dlib.  Select them here so an
++   # installed package never passes (for example) cl-style options to the
++   # clang++ driver.  MSVC is intentionally used instead of the compiler ID:
++   # CMake also sets it for compilers such as clang-cl that accept cl syntax.
++   set(_dlib_compile_options)
++   set(_dlib_compile_definitions)
++   set(_dlib_simd_level "@DLIB_SIMD_LEVEL@")
++
++   if(MSVC)
++      list(APPEND _dlib_compile_options /bigobj)
++
++      if(_dlib_simd_level STREQUAL "AVX")
++         list(APPEND _dlib_compile_options /arch:AVX)
++      elseif(_dlib_simd_level STREQUAL "SSE4")
++         if(CMAKE_SIZEOF_VOID_P EQUAL 4)
++            list(APPEND _dlib_compile_options /arch:SSE2)
++         endif()
++         list(APPEND _dlib_compile_definitions DLIB_HAVE_SSE2 DLIB_HAVE_SSE3 DLIB_HAVE_SSE41)
++      elseif(_dlib_simd_level STREQUAL "SSE2")
++         if(CMAKE_SIZEOF_VOID_P EQUAL 4)
++            list(APPEND _dlib_compile_options /arch:SSE2)
++         endif()
++         list(APPEND _dlib_compile_definitions DLIB_HAVE_SSE2)
++      endif()
++
++      if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++         if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 3.3)
++            list(APPEND _dlib_compile_options -Xclang -fcxx-exceptions)
++         endif()
++         if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0.0)
++            list(APPEND _dlib_compile_options -ftemplate-depth=500)
++         endif()
++      endif()
++   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
++          CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR
++          CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR
++          CMAKE_CXX_COMPILER_ID STREQUAL "Intel" OR
++          CMAKE_CXX_COMPILER_ID STREQUAL "IntelLLVM")
++      if(_dlib_simd_level STREQUAL "AVX")
++         list(APPEND _dlib_compile_options -mavx)
++      elseif(_dlib_simd_level STREQUAL "SSE4")
++         list(APPEND _dlib_compile_options -msse4)
++      elseif(_dlib_simd_level STREQUAL "SSE2")
++         list(APPEND _dlib_compile_options -msse2)
++      elseif(_dlib_simd_level STREQUAL "NEON")
++         list(APPEND _dlib_compile_options -mfpu=neon)
++      endif()
++
++      if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
++         list(APPEND _dlib_compile_options -Wreturn-type)
++      elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0.0)
++         list(APPEND _dlib_compile_options -ftemplate-depth=500)
++      endif()
++   endif()
++
++   if(_dlib_compile_options)
++      target_compile_options(dlib::dlib INTERFACE "$<$<COMPILE_LANGUAGE:CXX>:${_dlib_compile_options}>")
++   endif()
++   if(_dlib_compile_definitions)
++      target_compile_definitions(dlib::dlib INTERFACE "$<$<COMPILE_LANGUAGE:CXX>:${_dlib_compile_definitions}>")
++   endif()
++
++   unset(_dlib_compile_definitions)
++   unset(_dlib_compile_options)
++   unset(_dlib_simd_level)
+ endif()
+ 
+ set(dlib_LIBRARIES dlib::dlib)
+@@ -60,6 +127,3 @@ endfunction()
+ variable_watch(dlib_LIBRARIES __deprecated_var)
+ variable_watch(dlib_LIBS __deprecated_var)
+ variable_watch(dlib_INCLUDE_DIRS __deprecated_var)
+-
+-
+-
+diff --git a/dlib/cmake_utils/set_compiler_specific_options.cmake b/dlib/cmake_utils/set_compiler_specific_options.cmake
+index 6e2682d..be05c88 100644
+--- a/dlib/cmake_utils/set_compiler_specific_options.cmake
++++ b/dlib/cmake_utils/set_compiler_specific_options.cmake
+@@ -24,25 +24,29 @@ endif()
+ 
+ set(gcc_like_compilers GNU Clang  Intel)
+ set(intel_archs x86_64 i386 i686 AMD64 amd64 x86)
++set(DLIB_SIMD_LEVEL NONE)
+ 
+ 
+-# Setup some options to allow a user to enable SSE and AVX instruction use.  
++# Setup some options to allow a user to enable SSE and AVX instruction use.
+ if ((";${gcc_like_compilers};" MATCHES ";${CMAKE_CXX_COMPILER_ID};")  AND
+    (";${intel_archs};"        MATCHES ";${CMAKE_SYSTEM_PROCESSOR};") AND NOT USE_AUTO_VECTOR)
+    option(USE_SSE2_INSTRUCTIONS "Compile your program with SSE2 instructions" OFF)
+    option(USE_SSE4_INSTRUCTIONS "Compile your program with SSE4 instructions" OFF)
+    option(USE_AVX_INSTRUCTIONS  "Compile your program with AVX instructions"  OFF)
+    if(USE_AVX_INSTRUCTIONS)
++      set(DLIB_SIMD_LEVEL AVX)
+       list(APPEND active_compile_opts -mavx)
+       message(STATUS "Enabling AVX instructions")
+    elseif (USE_SSE4_INSTRUCTIONS)
++      set(DLIB_SIMD_LEVEL SSE4)
+       list(APPEND active_compile_opts -msse4)
+       message(STATUS "Enabling SSE4 instructions")
+    elseif(USE_SSE2_INSTRUCTIONS)
++      set(DLIB_SIMD_LEVEL SSE2)
+       list(APPEND active_compile_opts -msse2)
+       message(STATUS "Enabling SSE2 instructions")
+    endif()
+-elseif (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # else if using Visual Studio 
++elseif (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # else if using Visual Studio
+    # Use SSE2 by default when using Visual Studio.
+    option(USE_SSE2_INSTRUCTIONS "Compile your program with SSE2 instructions" ON)
+    option(USE_SSE4_INSTRUCTIONS "Compile your program with SSE4 instructions" OFF)
+@@ -51,9 +55,11 @@ elseif (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # else if using Visu
+    include(CheckTypeSize)
+    check_type_size( "void*" SIZE_OF_VOID_PTR)
+    if(USE_AVX_INSTRUCTIONS)
++      set(DLIB_SIMD_LEVEL AVX)
+       list(APPEND active_compile_opts /arch:AVX)
+       message(STATUS "Enabling AVX instructions")
+    elseif (USE_SSE4_INSTRUCTIONS)
++      set(DLIB_SIMD_LEVEL SSE4)
+       # Visual studio doesn't have an /arch:SSE2 flag when building in 64 bit modes.
+       # So only give it when we are doing a 32 bit build.
+       if (SIZE_OF_VOID_PTR EQUAL 4)
+@@ -64,6 +70,7 @@ elseif (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") # else if using Visu
+       list(APPEND active_preprocessor_switches "-DDLIB_HAVE_SSE3")
+       list(APPEND active_preprocessor_switches "-DDLIB_HAVE_SSE41")
+    elseif(USE_SSE2_INSTRUCTIONS)
++      set(DLIB_SIMD_LEVEL SSE2)
+       # Visual studio doesn't have an /arch:SSE2 flag when building in 64 bit modes.
+       # So only give it when we are doing a 32 bit build.
+       if (SIZE_OF_VOID_PTR EQUAL 4)
+@@ -77,6 +84,7 @@ elseif((";${gcc_like_compilers};" MATCHES ";${CMAKE_CXX_COMPILER_ID};")  AND
+         ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "^arm"))
+    option(USE_NEON_INSTRUCTIONS "Compile your program with ARM-NEON instructions" OFF)
+    if(USE_NEON_INSTRUCTIONS)
++      set(DLIB_SIMD_LEVEL NEON)
+       list(APPEND active_compile_opts -mfpu=neon)
+       message(STATUS "Enabling ARM-NEON instructions")
+    endif()
+@@ -110,11 +118,10 @@ if (MSVC)
+    # RAM.
+    list(APPEND active_compile_opts_private "/MP")
+ 
+-   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 3.3) 
++   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 3.3)
+       # Clang can compile all Dlib's code at Windows platform. Tested with Clang 5
+       list(APPEND active_compile_opts -Xclang)
+       list(APPEND active_compile_opts -fcxx-exceptions)
+    endif()
+ endif()
+ 
+-

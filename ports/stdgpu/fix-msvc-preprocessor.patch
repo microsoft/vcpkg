@@ -1,0 +1,13 @@
+diff --git a/src/stdgpu/CMakeLists.txt b/src/stdgpu/CMakeLists.txt
+index 937b60d..3a49dd2 100644
+--- a/src/stdgpu/CMakeLists.txt
++++ b/src/stdgpu/CMakeLists.txt
+@@ -145,6 +145,8 @@ target_compile_features(stdgpu PUBLIC cxx_std_17)
+ target_compile_options(stdgpu PRIVATE ${STDGPU_DEVICE_FLAGS}
+                                       ${STDGPU_HOST_FLAGS})
+ 
++target_compile_options(stdgpu PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/Zc:preprocessor>)
++
+ target_compile_definitions(stdgpu PRIVATE $<$<PLATFORM_ID:Windows>:NOMINMAX>)
+ 
+ target_link_libraries(stdgpu PUBLIC thrust::thrust)

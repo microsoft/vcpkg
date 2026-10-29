@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 82653db..bf5eb59 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,11 +63,12 @@ else ()
+ endif ()
+ 
+ # Global compiler flags for debug and release
++if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+ set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=address")
+ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+ set(CMAKE_C_FLAGS_DEBUG "-g -fsanitize=address")
+ set(CMAKE_C_FLAGS_RELEASE "-O3")
+-
++endif()
+ # Compiler-specific flags
+ if (CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
+     if (NOT APPLE)

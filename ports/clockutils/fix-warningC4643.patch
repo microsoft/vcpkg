@@ -1,0 +1,29 @@
+diff --git a/include/clockUtils/sockets/TcpSocket.h b/include/clockUtils/sockets/TcpSocket.h
+index 6e0d9c8..3bb97a9 100644
+--- a/include/clockUtils/sockets/TcpSocket.h
++++ b/include/clockUtils/sockets/TcpSocket.h
+@@ -57,9 +57,6 @@
+ 	#define INVALID_SOCKET -1
+ #endif
+ 
+-namespace std {
+-	class thread;
+-} /* namespace std */
+ namespace clockUtils {
+ 	enum class ClockError;
+ namespace sockets {
+diff --git a/include/clockUtils/sockets/UdpSocket.h b/include/clockUtils/sockets/UdpSocket.h
+index 31eeeb5..c5da451 100644
+--- a/include/clockUtils/sockets/UdpSocket.h
++++ b/include/clockUtils/sockets/UdpSocket.h
+@@ -60,10 +60,6 @@
+ 	#define INVALID_SOCKET -1
+ #endif
+ 
+-namespace std {
+-	class thread;
+-} /* namespace std */
+-
+ namespace clockUtils {
+ 	enum class ClockError;
+ namespace sockets {

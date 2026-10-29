@@ -1,0 +1,12 @@
+diff --git a/NativeWinApi.h b/NativeWinApi.h
+index 63fced1..582306b 100644
+--- a/NativeWinApi.h
++++ b/NativeWinApi.h
+@@ -1,6 +1,7 @@
+ #pragma once
+ 
+ #include <windows.h>
++#include <string>
+ 
+ #define STATUS_INFO_LENGTH_MISMATCH ((NTSTATUS)0xC0000004L)
+ #define STATUS_SUCCESS   ((NTSTATUS)0x00000000L)

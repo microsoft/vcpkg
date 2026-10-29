@@ -1,0 +1,13 @@
+diff --git a/thrift/lib/cpp2/server/RoundRobinRequestPile.h b/thrift/lib/cpp2/server/RoundRobinRequestPile.h
+index 3a06c5b..bae9387 100644
+--- a/thrift/lib/cpp2/server/RoundRobinRequestPile.h
++++ b/thrift/lib/cpp2/server/RoundRobinRequestPile.h
+@@ -21,6 +21,8 @@
+ #include <limits>
+ #include <memory>
+ 
++#include <fmt/ranges.h>
++
+ #include <folly/Executor.h>
+ #include <folly/concurrency/UnboundedQueue.h>
+ #include <folly/io/async/AtomicNotificationQueue.h>

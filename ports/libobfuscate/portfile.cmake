@@ -1,0 +1,11 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO adamyaxley/Obfuscate
+    REF "v${VERSION}"
+    SHA512 5b8b2e1acb9723557c159a4971eb774c3b6871c51d248388c75198d541a2569aaf1050530523925b159b952744a16248495b2a1be5345afcf710f21a05a44bc2
+    HEAD_REF master
+)
+
+file(INSTALL ${SOURCE_PATH}/obfuscate.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,8 @@
+{
+  "name": "vcpkg-get-python-packages",
+  "version-date": "2025-04-05",
+  "port-version": 1,
+  "documentation": "https://learn.microsoft.com/en-us/vcpkg/maintainers/functions/vcpkg_get_python_packages",
+  "license": "MIT",
+  "supports": "native"
+}

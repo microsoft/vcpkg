@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 080cefa..b73072a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,9 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ add_library(msgpack11 STATIC msgpack11.cpp)
+ target_include_directories(msgpack11 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+ target_compile_options(msgpack11 PRIVATE -fno-rtti)
+-if(NOT MSVC)
+-  target_compile_options(msgpack11 PRIVATE -Wall -Wextra -Werror)
+-endif()
+ configure_file("msgpack11.pc.in" "msgpack11.pc" @ONLY)
+ 
+ if (MSGPACK11_BUILD_TESTS)

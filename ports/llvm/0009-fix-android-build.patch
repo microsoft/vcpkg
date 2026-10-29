@@ -1,0 +1,23 @@
+diff --git a/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt b/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt
+index a6af1e6..015bd71 100644
+--- a/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt
++++ b/clang/lib/ScalableStaticAnalysis/Plugins/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND NOT WIN32)
++if(CLANG_PLUGIN_SUPPORT AND LLVM_ENABLE_PLUGINS AND NOT WIN32 AND NOT ANDROID)
+   # Plugins must never bring LLVM or Clang libraries in statically.
+   # clang-ssaf-analyzer already loads clangScalableStaticAnalysisCore
+   # and LLVM into the process; a second static copy would produce duplicate
+diff --git a/llvm/cmake/modules/LLVMExternalProjectUtils.cmake b/llvm/cmake/modules/LLVMExternalProjectUtils.cmake
+index ee270d7..afde33c 100644
+--- a/llvm/cmake/modules/LLVMExternalProjectUtils.cmake
++++ b/llvm/cmake/modules/LLVMExternalProjectUtils.cmake
+@@ -346,7 +346,7 @@ function(llvm_ExternalProject_Add name source_dir)
+       else()
+         set(resource_dir "${LLVM_LIBRARY_DIR}/clang/${CLANG_VERSION_MAJOR}")
+       endif()
+-      set(flag_types ASM C CXX MODULE_LINKER SHARED_LINKER EXE_LINKER)
++      set(flag_types ASM C CXX CLC MODULE_LINKER SHARED_LINKER EXE_LINKER)
+       foreach(type ${flag_types})
+         set(${type}_flag -DCMAKE_${type}_FLAGS_INIT=-resource-dir=${resource_dir})
+       endforeach()

@@ -1,0 +1,17 @@
+ecm provides CMake files:
+
+    # Selecting particular find modules
+    find_package(ECM CONFIG REQUIRED)
+    ecm_use_find_modules(
+        DIR "${CMAKE_BINARY_DIR}/cmake"
+        MODULES FindEGL.cmake
+        NO_OVERRIDE
+    )
+    list(PREPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/cmake")
+
+    # Everything, via find_package() and include()
+    find_package(ECM CONFIG REQUIRED)
+    list(PREPEND CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+    include(KDEInstallDirs)
+    include(KDECompilerSettings)
+    include(KDECMakeSettings)

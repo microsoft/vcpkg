@@ -1,0 +1,29 @@
+diff --git a/cfg/CMakeLists.txt b/cfg/CMakeLists.txt
+index b4d7898..2374cee 100644
+--- a/cfg/CMakeLists.txt
++++ b/cfg/CMakeLists.txt
+@@ -3,8 +3,4 @@
+ 
+ FILE (GLOB CFG *.cfg *.names)
+ 
+-IF (UNIX)
+-	INSTALL (FILES ${CFG} DESTINATION /opt/darknet/cfg/)
+-ELSE ()
+-	INSTALL (FILES ${CFG} DESTINATION cfg/)
+-ENDIF ()
++INSTALL (FILES ${CFG} DESTINATION share/darknet/cfg/)
+diff --git a/src-cli/CMakeLists.txt b/src-cli/CMakeLists.txt
+index 4124877..e23ed14 100644
+--- a/src-cli/CMakeLists.txt
++++ b/src-cli/CMakeLists.txt
+@@ -32,10 +32,6 @@ ELSE ()
+ 	# https://stackoverflow.com/a/72088102/13022
+ 	INSTALL (TARGETS darknetcli
+ 		DESTINATION bin
+-		RUNTIME_DEPENDENCIES
+-			PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-" "wpaxholder" "HvsiFileTrust" "PdmUtilities"
+-			POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
+-			DIRECTORIES ${CMAKE_BINARY_DIR}/bin
+ 		RUNTIME DESTINATION bin
+ 		)
+ ENDIF ()

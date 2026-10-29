@@ -1,0 +1,14 @@
+diff --git a/src/bc7/CMakeLists.txt b/src/bc7/CMakeLists.txt
+index 566fe1f..d0d4e8a 100644
+--- a/src/bc7/CMakeLists.txt
++++ b/src/bc7/CMakeLists.txt
+@@ -23,3 +23,8 @@ SET(BC7_SRCS
+ 
+ ADD_LIBRARY(bc7 STATIC ${BC7_SRCS})
+ TARGET_LINK_LIBRARIES(bc7 nvcore nvmath)
++
++INSTALL(TARGETS bc7 
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib/static)
+\ No newline at end of file

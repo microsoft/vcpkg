@@ -1,0 +1,17 @@
+{
+  "name": "libyaml",
+  "version": "0.2.5",
+  "port-version": 5,
+  "description": "A C library for parsing and emitting YAML.",
+  "homepage": "https://github.com/yaml/libyaml",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

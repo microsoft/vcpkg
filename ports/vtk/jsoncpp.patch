@@ -1,0 +1,12 @@
+diff --git a/ThirdParty/jsoncpp/CMakeLists.txt b/ThirdParty/jsoncpp/CMakeLists.txt
+index 420cdf5c..bb5bbafc 100644
+--- a/ThirdParty/jsoncpp/CMakeLists.txt
++++ b/ThirdParty/jsoncpp/CMakeLists.txt
+@@ -12,7 +12,6 @@ vtk_module_third_party(
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+     PACKAGE JsonCpp
+-    VERSION 0.7.0
+     TARGETS JsonCpp::JsonCpp
+     STANDARD_INCLUDE_DIRS)
+ 

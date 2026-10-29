@@ -1,0 +1,18 @@
+{
+  "name": "libfs",
+  "version": "1.0.10",
+  "port-version": 1,
+  "description": "X Font Service client library",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libfs",
+  "license": null,
+  "supports": "!windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    "xorg-macros",
+    "xproto",
+    "xtrans"
+  ]
+}

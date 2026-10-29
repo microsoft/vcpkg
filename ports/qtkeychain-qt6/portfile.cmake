@@ -1,0 +1,50 @@
+message(WARNING "qtkeychain is a third-party extension to Qt and is not affiliated with The Qt Company")
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO frankosterfeld/qtkeychain
+    REF "${VERSION}"
+    SHA512 7a9c6a4f5b19c36283c18b426ee057e08250266411eaa7012af54d2453b9a91edcfba17be2508405fab9b42732bc33202fc708cc59f2ee9e650d978782e49703
+    HEAD_REF master
+    PATCHES
+        dbus-emscripten.patch
+)
+
+if(VCPKG_CROSSCOMPILING)
+   list(APPEND QTKEYCHAIN_OPTIONS -DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR})
+   list(APPEND QTKEYCHAIN_OPTIONS -DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share)
+   # remove when https://github.com/microsoft/vcpkg/pull/16111 is merged
+   if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 AND VCPKG_TARGET_IS_WINDOWS)
+       list(APPEND QTKEYCHAIN_OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
+   endif()
+endif()
+
+list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TEST_APPLICATION:BOOL=OFF)
+list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TESTING:BOOL=OFF)
+
+# FIXME: Why does build translations fail on arm64-windows?
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+     list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TRANSLATIONS:BOOL=OFF)
+else()
+     list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TRANSLATIONS:BOOL=ON)
+endif()
+
+vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DBUILD_WITH_QT5=OFF
+         ${QTKEYCHAIN_OPTIONS}
+)
+vcpkg_cmake_install()
+
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Qt6Keychain PACKAGE_NAME Qt6Keychain)
+
+# Remove unneeded dirs
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

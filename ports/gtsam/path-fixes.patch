@@ -1,0 +1,31 @@
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index c9abd3a5e..7a5de5591 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -8,13 +8,8 @@ endif()
+ 
+ # Compute paths
+ get_filename_component(OUR_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-if(EXISTS "${OUR_CMAKE_DIR}/CMakeCache.txt")
+-  # In build tree
+-  set(@PACKAGE_NAME@_INCLUDE_DIR @GTSAM_SOURCE_DIR@ CACHE PATH "@PACKAGE_NAME@ include directory")
+-else()
+   # Find installed library
+   set(@PACKAGE_NAME@_INCLUDE_DIR "${OUR_CMAKE_DIR}/@CONF_REL_INCLUDE_DIR@" CACHE PATH "@PACKAGE_NAME@ include directory")
+-endif()
+ 
+ # Find dependencies, required by cmake exported targets:
+ include(CMakeFindDependencyMacro)
+diff --git a/gtsam/config.h.in b/gtsam/config.h.in
+index 553f0f29f..485a9690e 100644
+--- a/gtsam/config.h.in
++++ b/gtsam/config.h.in
+@@ -25,7 +25,7 @@
+ #define GTSAM_VERSION_STRING "@GTSAM_VERSION_STRING@"
+ 
+ // Paths to example datasets distributed with GTSAM
+-#define GTSAM_SOURCE_TREE_DATASET_DIR "@GTSAM_SOURCE_DIR@/examples/Data"
++#define GTSAM_SOURCE_TREE_DATASET_DIR ""
+ #if !defined(__QNX__) 
+ #define GTSAM_INSTALLED_DATASET_DIR "@GTSAM_TOOLBOX_INSTALL_PATH@/gtsam_examples/Data"
+ #else

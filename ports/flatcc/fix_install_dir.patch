@@ -1,0 +1,14 @@
+diff --git a/src/runtime/CMakeLists.txt b/src/runtime/CMakeLists.txt
+index 68c0feb..925da41 100644
+--- a/src/runtime/CMakeLists.txt
++++ b/src/runtime/CMakeLists.txt
+@@ -11,5 +11,8 @@ target_include_directories(flatccrt PUBLIC
+     "${PROJECT_SOURCE_DIR}/include")
+ 
+ if (FLATCC_INSTALL)
+-    install(TARGETS flatccrt DESTINATION ${lib_dir})
++    install(TARGETS flatccrt
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()

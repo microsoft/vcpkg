@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 481ddd0e86..a1a806ce99 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -40,7 +40,10 @@ check_type_size("int" SIZEOF_INT)
+ check_type_size("long" SIZEOF_LONG)
+ check_type_size("short" SIZEOF_SHORT)
+ 
+-test_big_endian(HOST_BIG_ENDIAN)
++set(HOST_BIG_ENDIAN OFF)
++if(CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
++    set(HOST_BIG_ENDIAN ON)
++endif()
+ 
+ check_c_compiler_flag(-std=c99 has_c99)
+ 

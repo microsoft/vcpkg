@@ -1,0 +1,149 @@
+diff --git a/generic/tclStubInit.c b/generic/tclStubInit.c
+index d3f6969..2c7ad8d 100644
+--- a/generic/tclStubInit.c
++++ b/generic/tclStubInit.c
+@@ -10,7 +10,7 @@
+  */
+ 
+ #include "tclInt.h"
+-#include "tommath_private.h"
++#define MP_MIN(x, y) (((x) < (y)) ? (x) : (y))
+ #include "tclTomMath.h"
+ 
+ #ifdef __CYGWIN__
+diff --git a/generic/tclZipfs.c b/generic/tclZipfs.c
+index aa43e3d..31dbafc 100644
+--- a/generic/tclZipfs.c
++++ b/generic/tclZipfs.c
+@@ -76,10 +76,8 @@
+ 	}								\
+     } while (0)
+ 
+-#include "zlib.h"
+-#include "crypt.h"
+-#include "zutil.h"
+-#include "crc32.h"
++#include <zlib.h>
++#include <minizip/crypt.h>
+ 
+ static const z_crc_t* crc32tab;
+ 
+diff --git a/pkgs/sqlite3.51.0/Makefile.in b/pkgs/sqlite3.51.0/Makefile.in
+index 20ab0fd..3f650e4 100644
+--- a/pkgs/sqlite3.51.0/Makefile.in
++++ b/pkgs/sqlite3.51.0/Makefile.in
+@@ -148,7 +148,7 @@ SHARED_BUILD	= @SHARED_BUILD@
+ INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ -I. -I$(srcdir)/..
+ #INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
+ 
+-PKG_CFLAGS	= @PKG_CFLAGS@ -DSQLITE_EXTERN=
++PKG_CFLAGS	= @PKG_CFLAGS@
+ 
+ # TCL_DEFS is not strictly need here, but if you remove it, then you
+ # must make sure that configure.ac checks for the necessary components
+diff --git a/pkgs/sqlite3.51.0/configure b/pkgs/sqlite3.51.0/configure
+index e8bf713..c8299a6 100755
+--- a/pkgs/sqlite3.51.0/configure
++++ b/pkgs/sqlite3.51.0/configure
+@@ -601,8 +601,9 @@ MAKEFLAGS=
+ # Identity of this package.
+ PACKAGE_NAME='sqlite'
+ PACKAGE_TARNAME='sqlite'
+-PACKAGE_VERSION='3.51.0'
+-PACKAGE_STRING='sqlite 3.51.0'
++printf "%s\n" "Using ${PKG_CONFIG} for sqlite3" >&6
++PACKAGE_VERSION="$(${PKG_CONFIG} --modversion sqlite3)"
++PACKAGE_STRING="sqlite $PACKAGE_VERSION"
+ PACKAGE_BUGREPORT=''
+ PACKAGE_URL=''
+ 
+@@ -5736,6 +5737,7 @@ else case e in #(
+ esac
+ fi
+ 
++CFLAGS="$CFLAGS $(${PKG_CONFIG} --cflags sqlite3)"
+ if test x$with_system_sqlite != xno; then
+  ac_fn_c_check_header_compile "$LINENO" "sqlite3.h" "ac_cv_header_sqlite3_h" "$ac_includes_default"
+ if test "x$ac_cv_header_sqlite3_h" = xyes
+@@ -5747,7 +5749,7 @@ then :
+   printf %s "(cached) " >&6
+ else case e in #(
+   e) ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lsqlite3  $LIBS"
++LIBS="$(${PKG_CONFIG} --libs sqlite3) $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -5787,7 +5789,7 @@ if test "x$ac_cv_lib_sqlite3_sqlite3_initialize" = xyes
+ then :
+   printf "%s\n" "#define USE_SYSTEM_SQLITE 1" >>confdefs.h
+ 
+-      LIBS="$LIBS -lsqlite3"
++      LIBS="$LIBS $(${PKG_CONFIG:pkg-config} --libs sqlite3)"
+ fi
+ 
+ fi
+diff --git a/pkgs/thread3.0.4/Makefile.in b/pkgs/thread3.0.4/Makefile.in
+index 5bdae04..33f6536 100644
+--- a/pkgs/thread3.0.4/Makefile.in
++++ b/pkgs/thread3.0.4/Makefile.in
+@@ -152,7 +152,7 @@ PKG_ENV		= TCL_THREAD_LIBRARY=`@CYGPATH@ $(srcdir)/lib` \
+ 		  TCLLIBPATH="$(TCLLIBPATH) $(top_builddir)/../lib"
+ 
+ TCLSH_PROG	= @TCLSH_PROG@
+-TCLSH		= $(TCLSH_ENV) $(PKG_ENV) $(TCLSH_PROG)
++TCLSH		= $(TCLSH_ENV) $(PKG_ENV) $${HOST_TCLSH:-$(TCLSH_PROG)}
+ 
+ #WISH_ENV	= TK_LIBRARY=`@CYGPATH@ $(TK_SRC_DIR)/library`
+ #WISH_PROG	= @WISH_PROG@
+diff --git a/unix/Makefile.in b/unix/Makefile.in
+index 53f7c28..6b7f739 100644
+--- a/unix/Makefile.in
++++ b/unix/Makefile.in
+@@ -1,3 +1,5 @@
++PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ #
+ # This file is a Makefile for Tcl. If it has the name "Makefile.in" then it is
+ # a template for a Makefile; to generate the actual Makefile, run
+diff --git a/unix/configure.ac b/unix/configure.ac
+index 80d676d..5eff9a2 100644
+--- a/unix/configure.ac
++++ b/unix/configure.ac
+@@ -158,10 +158,11 @@ AC_CHECK_HEADER([zlib.h],[
+   AC_CHECK_TYPE([gz_header],[],[zlib_ok=no],[#include <zlib.h>])],[
+   zlib_ok=no])
+ AS_IF([test $zlib_ok = yes], [
+-  AC_SEARCH_LIBS([deflateSetHeader],[z],[],[
++  AC_SEARCH_LIBS([deflateSetHeader],[z zs zlib zd zsd zlibd],[],[
+     zlib_ok=no
+   ])])
+ AS_IF([test $zlib_ok = no], [
++  AC_MSG_ERROR([zlib not found])
+   AC_SUBST(ZLIB_OBJS,[\${ZLIB_OBJS}])
+   AC_SUBST(ZLIB_SRCS,[\${ZLIB_SRCS}])
+   AC_SUBST(ZLIB_INCLUDE,[-I\${ZLIB_DIR}])
+@@ -185,10 +186,11 @@ if test x"${libtommath_ok}" = x -o x"${libtommath_ok}" != xno; then
+     libtommath_ok=no])])
+ fi
+ AS_IF([test $libtommath_ok = yes], [
+-  AC_SUBST(TCL_PC_REQUIRES_PRIVATE, ['libtommath >= 1.2.0,'])
++  AC_SUBST(TCL_PC_REQUIRES_PRIVATE, ['']) # -ltommath in Libs
+   AC_SUBST(TCL_PC_CFLAGS, ['-DTCL_WITH_EXTERNAL_TOMMATH'])
+   AC_DEFINE(TCL_WITH_EXTERNAL_TOMMATH, 1, [Tcl with external libtommath])
+ ], [
++  AC_MSG_ERROR([libtommath not found])
+   AC_SUBST(TOMMATH_OBJS,[\${TOMMATH_OBJS}])
+   AC_SUBST(TOMMATH_SRCS,[\${TOMMATH_SRCS}])
+   AC_SUBST(TOMMATH_INCLUDE,[-I\${TOMMATH_DIR}])
+@@ -964,6 +966,10 @@ AC_SUBST(EXTRA_TCLSH_LIBS)
+ AC_SUBST(DLTEST_LD)
+ AC_SUBST(DLTEST_SUFFIX)
+ 
++# For delayed configuration of extensions
++AC_SUBST(PKG_CONFIG)
++AC_SUBST(PKG_CONFIG_PATH)
++
+ dnl	Disable the automake-friendly normalization of LIBOBJS
+ dnl	performed by autoconf 2.53 and later.  It's not correct for us.
+ define([_AC_LIBOBJS_NORMALIZE],[])

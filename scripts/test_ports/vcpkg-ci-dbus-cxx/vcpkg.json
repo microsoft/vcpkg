@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-dbus-cxx",
+  "version-string": "ci",
+  "description": "Validates dbus-cxx",
+  "dependencies": [
+    "dbus-cxx",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

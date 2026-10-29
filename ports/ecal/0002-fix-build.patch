@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e2cce36..b5603b4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,8 +26,7 @@ if (POLICY CMP0077)
+ endif (POLICY CMP0077)
+ 
+ list(APPEND CMAKE_MODULE_PATH
+-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
++  ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+   
+ set(eCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+ 
+diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
+index 4d44da2..25c869f 100644
+--- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
++++ b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
+@@ -5,12 +5,7 @@ include(cmake_functions.cmake)
+ project(CMakeFunctions VERSION 0.4.1)
+ 
+ include(GNUInstallDirs)
+-if (MSVC)
+-# Variable definitions
+-set(cmake_functions_install_cmake_dir   cmake)
+-else (MSVC)
+-set(cmake_functions_install_cmake_dir   "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION}")
+-endif (MSVC)
++set(cmake_functions_install_cmake_dir "share/CMakeFunctions")
+ set(cmake_functions_config              ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake)
+ set(cmake_functions_config_version      ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake)
+ 

@@ -1,0 +1,8 @@
+libnfs provides a CMake package:
+
+    find_package(libnfs CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE libnfs::nfs)
+
+Headers are available under the nfsc directory, for example:
+
+    #include <nfsc/libnfs.h>

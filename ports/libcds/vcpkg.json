@@ -1,0 +1,21 @@
+{
+  "name": "libcds",
+  "version": "2.3.3",
+  "port-version": 4,
+  "description": "a collection of concurrent containers that don't require external (manual) synchronization for shared access, and safe memory reclamation (SMR) algorithms like Hazard Pointer and user-space RCU that is used as an epoch-based SMR.",
+  "homepage": "https://github.com/khizmax/libcds",
+  "license": "BSL-1.0",
+  "supports": "!(arm & (osx | windows)) & !uwp",
+  "dependencies": [
+    "boost-system",
+    "boost-thread",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

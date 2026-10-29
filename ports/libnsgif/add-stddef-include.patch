@@ -1,0 +1,12 @@
+diff --git a/include/nsgif.h b/include/nsgif.h
+index 9c9e13d..1b72c18 100644
+--- a/include/nsgif.h
++++ b/include/nsgif.h
+@@ -16,6 +16,7 @@
+ #ifndef NSNSGIF_H
+ #define NSNSGIF_H
+ 
++#include <stddef.h>
+ #include <stdint.h>
+ #include <stdbool.h>
+ #include <inttypes.h>

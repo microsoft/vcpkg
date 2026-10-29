@@ -1,0 +1,19 @@
+The package retropak provides JSON schema files for validating Retropak software containers.
+
+Schema files are installed to: ${RETROPAK_SCHEMA_DIR}
+Locale files are installed to: ${RETROPAK_LOCALE_DIR}
+
+In your CMakeLists.txt:
+
+    find_package(retropak CONFIG REQUIRED)
+    
+    # Access schema files
+    message(STATUS "Retropak schemas: ${RETROPAK_SCHEMA_DIR}")
+    message(STATUS "Retropak locales: ${RETROPAK_LOCALE_DIR}")
+    
+    # Example: Copy schema to build directory
+    configure_file(
+        "${RETROPAK_SCHEMA_DIR}/v1/retropak.schema.json"
+        "${CMAKE_BINARY_DIR}/retropak.schema.json"
+        COPYONLY
+    )

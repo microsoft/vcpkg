@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2738060..4f3aedd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -236,6 +236,13 @@ if (FIXED_CONTAINERS_OPT_INSTALL)
+     target_include_directories(fixed_containers INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+     include(CMakePackageConfigHelpers)
++
++    configure_package_config_file(
++      ${PROJECT_NAME}Config.cmake.in
++      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++      INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}/
++      NO_CHECK_REQUIRED_COMPONENTS_MACRO)
++
+     write_basic_package_version_file(${PROJECT_NAME}ConfigVersion.cmake
+             VERSION "0.0.0"
+             COMPATIBILITY AnyNewerVersion
+@@ -249,11 +256,14 @@ if (FIXED_CONTAINERS_OPT_INSTALL)
+ 
+     install(EXPORT ${PROJECT_NAME}Config
+             NAMESPACE ${PROJECT_NAME}::
++            FILE ${PROJECT_NAME}-targets.cmake
+             DESTINATION lib/cmake/${PROJECT_NAME})
+ 
+     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+             DESTINATION .)
+ 
+-    export(EXPORT ${PROJECT_NAME}Config
+-            NAMESPACE ${PROJECT_NAME}::)
++    install(
++      FILES
++      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
++      DESTINATION lib/cmake/${PROJECT_NAME})
+ endif()

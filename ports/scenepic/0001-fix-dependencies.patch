@@ -1,0 +1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6df6915..de73c67 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -100,13 +100,11 @@ FetchContent_Declare(
+ 
+ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW) 
+ 
+-if(NOT TARGET Eigen3::Eigen)
+-  FetchContent_GetProperties(eigen)
+-  if(NOT eigen_POPULATED)
+-    FetchContent_Populate(eigen)
+-    set( BUILD_TESTING OFF )
+-    add_subdirectory(${eigen_SOURCE_DIR} ${eigen_BINARY_DIR} EXCLUDE_FROM_ALL)
+-  endif()
++find_package(Eigen3 REQUIRED)
++
++if(Eigen3_FOUND)
++  set( BUILD_TESTING OFF )
++  include_directories(${EIGEN3_INCLUDE_DIR})
+   if(NOT TARGET Eigen3::Eigen)
+     add_library(Eigen3::Eigen ALIAS eigen)
+   endif()
+@@ -194,8 +192,8 @@ endif()
+ # -------------------- Install ------------------------------------
+ 
+ set(INSTALL_CONFIGDIR cmake)
+-set(INSTALL_LIBDIR build/native/lib)
+-set(INSTALL_INCLUDEDIR build/native/include)
++set(INSTALL_LIBDIR lib)
++set(INSTALL_INCLUDEDIR include)
+ 
+ install(TARGETS scenepic 
+   EXPORT scenepic-targets
+@@ -203,7 +201,7 @@ install(TARGETS scenepic
+   LIBRARY DESTINATION ${INSTALL_LIBDIR}
+ )
+ 
+-if( WIN32 )
++if( 0 )
+   if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+     install(FILES
+       $<TARGET_FILE_DIR:scenepic>/scenepic.pdb
+diff --git a/src/include/scenepic/matrix.h b/src/include/scenepic/matrix.h
+index c93e3c5..0e723da 100644
+--- a/src/include/scenepic/matrix.h
++++ b/src/include/scenepic/matrix.h
+@@ -9,6 +9,7 @@
+ 
+ #include <Eigen/Core>
+ #include <Eigen/Sparse>
++#include <cassert>
+ #include <cstdint>
+ #include <limits>
+ #include <string>
+diff --git a/src/scenepic/CMakeLists.txt b/src/scenepic/CMakeLists.txt
+index f3d9673..916ab28 100644
+--- a/src/scenepic/CMakeLists.txt
++++ b/src/scenepic/CMakeLists.txt
+@@ -47,7 +47,7 @@ target_compile_features(scenepic PRIVATE cxx_std_14)
+ 
+ target_include_directories( scenepic
+   PUBLIC
+-    $<INSTALL_INTERFACE:build/native/include>
++    $<INSTALL_INTERFACE:include>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/scenepic>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+   PRIVATE

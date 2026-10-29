@@ -1,0 +1,15 @@
+diff --git a/faiss/gpu/utils/MergeNetworkWarp.cuh b/faiss/gpu/utils/MergeNetworkWarp.cuh
+index 39b3008..06d0c91 100644
+--- a/faiss/gpu/utils/MergeNetworkWarp.cuh
++++ b/faiss/gpu/utils/MergeNetworkWarp.cuh
+@@ -13,6 +13,10 @@
+ #include <faiss/gpu/utils/PtxUtils.cuh>
+ #include <faiss/gpu/utils/WarpShuffles.cuh>
+ 
++#ifdef small
++#undef small
++#endif
++
+ namespace faiss {
+ namespace gpu {
+ 

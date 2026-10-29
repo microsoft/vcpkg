@@ -1,0 +1,4 @@
+manif provides CMake targets:
+
+    find_package(manif CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE MANIF::manif)

@@ -1,0 +1,77 @@
+diff --git a/lib/jxl.cmake b/lib/jxl.cmake
+index 30785c01..261dea1e 100644
+--- a/lib/jxl.cmake
++++ b/lib/jxl.cmake
+@@ -291,6 +291,11 @@ else()
+   if(NOT MSVC AND NOT APPLE)
+     set(JPEGXL_PUBLIC_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
+   endif()
++  if(CMAKE_SYSTEM_NAME STREQUAL "Android")
++    if(log-lib)
++      string(APPEND JPEGXL_PUBLIC_LIBS " -llog")
++    endif()
++  endif()
+ endif()
+ 
+ set(JPEGXL_LIBRARY_MAIN jxl)
+diff --git a/lib/jxl_cms.cmake b/lib/jxl_cms.cmake
+index 582b842a..62c12548 100644
+--- a/lib/jxl_cms.cmake
++++ b/lib/jxl_cms.cmake
+@@ -40,6 +40,7 @@ else()
+ endif()
+ 
+ target_link_libraries(jxl_cms PRIVATE hwy)
++string(APPEND JPEGXL_CMS_LIBRARY_REQUIRES " libhwy")
+ 
+ set_target_properties(jxl_cms PROPERTIES
+         VERSION ${JPEGXL_LIBRARY_VERSION}
+@@ -70,10 +71,18 @@ install(TARGETS jxl_cms
+ 
+ if (BUILD_SHARED_LIBS)
+   set(JPEGXL_REQUIRES_TYPE "Requires.private")
+-  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
+ else()
+   set(JPEGXL_REQUIRES_TYPE "Requires")
+-  set(JPEGXL_CMS_PRIVATE_LIBS "-lm ${PKGCONFIG_CXX_LIB}")
++  set(JPEGXL_CMS_PUBLIC_LIBS "${PKGCONFIG_CXX_LIB}")
++  if(NOT MSVC AND NOT APPLE)
++    string(APPEND JPEGXL_CMS_PUBLIC_LIBS " -lm")
++  endif()
++  if(CMAKE_SYSTEM_NAME STREQUAL "Android")
++    find_library(log-lib log)
++    if(log-lib)
++      string(APPEND JPEGXL_CMS_PUBLIC_LIBS " -llog")
++    endif()
++  endif()
+ endif()
+ 
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/jxl/libjxl_cms.pc.in"
+diff --git a/lib/jxl_threads.cmake b/lib/jxl_threads.cmake
+index a7ed011c..46bb2f4e 100644
+--- a/lib/jxl_threads.cmake
++++ b/lib/jxl_threads.cmake
+@@ -89,6 +89,10 @@ if (BUILD_SHARED_LIBS)
+   set(JPEGXL_REQUIRES_TYPE "Requires.private")
+ else()
+   set(JPEGXL_REQUIRES_TYPE "Requires")
++  set(JPEGXL_THREADS_PUBLIC_LIBS "${PKGCONFIG_CXX_LIB}")
++  if(NOT MSVC AND NOT APPLE)
++    string(APPEND JPEGXL_THREADS_PUBLIC_LIBS " -lm")
++  endif()
+ endif()
+ 
+ set(JPEGXL_THREADS_LIBRARY_REQUIRES "")
+diff --git a/lib/threads/libjxl_threads.pc.in b/lib/threads/libjxl_threads.pc.in
+index dfbaa3ff..55d48574 100644
+--- a/lib/threads/libjxl_threads.pc.in
++++ b/lib/threads/libjxl_threads.pc.in
+@@ -7,7 +7,6 @@ Name: libjxl_threads
+ Description: JPEG XL multi-thread runner using std::threads.
+ Version: @JPEGXL_LIBRARY_VERSION@
+ @JPEGXL_REQUIRES_TYPE@: @JPEGXL_THREADS_LIBRARY_REQUIRES@
+-Libs: -L${libdir} -ljxl_threads
+-Libs.private: -lm
++Libs: -L${libdir} -ljxl_threads @JPEGXL_THREADS_PUBLIC_LIBS@
+ Cflags: -I${includedir}
+ Cflags.private: -DJXL_THREADS_STATIC_DEFINE

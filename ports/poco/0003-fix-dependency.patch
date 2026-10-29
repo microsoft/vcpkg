@@ -1,0 +1,226 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b732000..a16f5b2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -462,13 +462,27 @@ if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
+ endif()
+ 
+ if(ENABLE_DATA_MYSQL)
+-	find_package(MySQL REQUIRED)
++	find_package(unofficial-libmysql CONFIG)
++	if(unofficial-libmysql_FOUND)
++		set(POCO_MYSQL_PACKAGE unofficial-libmysql)
++		set(MYSQL_LIBRARIES unofficial::libmysql::libmysql)
++	else()
++		find_package(unofficial-libmariadb CONFIG REQUIRED)
++		set(POCO_MYSQL_PACKAGE unofficial-libmariadb)
++		set(MYSQL_LIBRARIES unofficial::libmariadb)
++		# The target's include directory is <prefix>/include/mysql, but Poco includes <mysql/mysql.h>
++		find_path(MYSQL_INCLUDE_DIR NAMES mysql/mysql.h REQUIRED)
++	endif()
++	set(MYSQL_FOUND TRUE)
+ endif()
+ 
+ if(ENABLE_DATA_POSTGRESQL)
+ 	find_package(PostgreSQL REQUIRED)
+ endif()
+ 
++# Do not declare the link library in the code!
++add_definitions(-DPOCO_NO_AUTOMATIC_LIBS)
++
+ if(ENABLE_DATA_ODBC)
+ 	find_package(ODBC REQUIRED)
+ endif()
+diff --git a/Data/MySQL/CMakeLists.txt b/Data/MySQL/CMakeLists.txt
+index 0ea8701..1dcb834 100644
+--- a/Data/MySQL/CMakeLists.txt
++++ b/Data/MySQL/CMakeLists.txt
+@@ -21,12 +21,15 @@ set_target_properties(DataMySQL
+ 	DEFINE_SYMBOL MySQL_EXPORTS
+ )
+ 
+-target_link_libraries(DataMySQL PUBLIC Poco::Data MySQL::client)
++target_link_libraries(DataMySQL PUBLIC Poco::Data ${MYSQL_LIBRARIES})
+ target_include_directories(DataMySQL
+ 	PUBLIC
+ 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+ 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
++if(MYSQL_INCLUDE_DIR)
++	target_include_directories(DataMySQL PRIVATE "${MYSQL_INCLUDE_DIR}")
++endif()
+ target_compile_definitions(DataMySQL PUBLIC THREADSAFE NO_TCL)
+ 
+ if(WIN32)
+diff --git a/Data/MySQL/cmake/PocoDataMySQLConfig.cmake b/Data/MySQL/cmake/PocoDataMySQLConfig.cmake
+index 092774b..9042656 100644
+--- a/Data/MySQL/cmake/PocoDataMySQLConfig.cmake
++++ b/Data/MySQL/cmake/PocoDataMySQLConfig.cmake
+@@ -1,4 +1,5 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(PocoFoundation)
+ find_dependency(PocoData)
++find_dependency(@POCO_MYSQL_PACKAGE@ CONFIG)
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoDataMySQLTargets.cmake")
+diff --git a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+index 2386590..81b2c8e 100644
+--- a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
++++ b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+@@ -57,8 +57,6 @@
+ 	#endif
+ 	#if defined(LIBMARIADB)
+ 		#pragma comment(lib, "libmariadb")
+-	#else
+-		#pragma comment(lib, "libmysql")
+ 	#endif
+ #endif
+ 
+diff --git a/Data/ODBC/cmake/PocoDataODBCConfig.cmake b/Data/ODBC/cmake/PocoDataODBCConfig.cmake
+index 64b525e..c1fb697 100644
+--- a/Data/ODBC/cmake/PocoDataODBCConfig.cmake
++++ b/Data/ODBC/cmake/PocoDataODBCConfig.cmake
+@@ -1,4 +1,5 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(PocoFoundation)
+ find_dependency(PocoData)
++find_dependency(ODBC)
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoDataODBCTargets.cmake")
+diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
+index adf0b06..6778952 100644
+--- a/Foundation/CMakeLists.txt
++++ b/Foundation/CMakeLists.txt
+@@ -32,13 +32,15 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if(POCO_UNBUNDLED)
++	find_package(PCRE2 CONFIG REQUIRED COMPONENTS 8BIT)
++	find_package(utf8proc CONFIG REQUIRED)
+ 
+ 	# pcre2 source files are linked with Foundation when shared library pcre2 is linked.
+ 	# When linking pcre2 as static library the symbols are accessible.
+ 	# CONFIG-mode packages (e.g. Conan, vcpkg) may expose Pcre2::Pcre2 as an
+ 	# INTERFACE_LIBRARY aggregator; the PCRE2_STATIC compile definition is the
+ 	# canonical marker that the underlying build is static.
+-	get_target_property(_PCRE2TYPE Pcre2::Pcre2 TYPE)
++	get_target_property(_PCRE2TYPE PCRE2::8BIT TYPE)
+ 	if("${_PCRE2TYPE}" STREQUAL "SHARED_LIBRARY")
+ 		# HACK: Unicode.cpp requires functions from these files.
+ 		# They can't be used directly from the library
+@@ -46,7 +48,7 @@ if(POCO_UNBUNDLED)
+ 	elseif ("${_PCRE2TYPE}" STREQUAL "STATIC_LIBRARY")
+ 		message(STATUS "PCRE2: linking static library.")
+ 	elseif("${_PCRE2TYPE}" STREQUAL "INTERFACE_LIBRARY" OR "${_PCRE2TYPE}" STREQUAL "UNKNOWN_LIBRARY")
+-		get_target_property(_PCRE2DEFS Pcre2::Pcre2 INTERFACE_COMPILE_DEFINITIONS)
++		get_target_property(_PCRE2DEFS PCRE2::8BIT INTERFACE_COMPILE_DEFINITIONS)
+ 		if(_PCRE2DEFS MATCHES "PCRE2_STATIC")
+ 			message(STATUS "PCRE2: linking ${_PCRE2TYPE} (PCRE2_STATIC set).")
+ 		else()
+@@ -63,7 +65,7 @@ endif(POCO_UNBUNDLED)
+ 
+ add_library(Foundation ${SRCS})
+ if (POCO_UNBUNDLED)
+-	target_link_libraries(Foundation PRIVATE ZLIB::ZLIB Pcre2::Pcre2 Utf8Proc::Utf8Proc)
++	target_link_libraries(Foundation PRIVATE ZLIB::ZLIB PCRE2::8BIT utf8proc::utf8proc)
+ 	# Only Unicode.cpp and the embedded tables need pcre2's internal headers;
+ 	# RegularExpression.cpp must see the system pcre2.h it links against.
+ 	set_source_files_properties(src/Unicode.cpp ${EMBEDDED_PCRE2_SOURCES}
+diff --git a/Foundation/cmake/PocoFoundationConfig.cmake b/Foundation/cmake/PocoFoundationConfig.cmake
+index 7cfe6fa..abba9cd 100644
+--- a/Foundation/cmake/PocoFoundationConfig.cmake
++++ b/Foundation/cmake/PocoFoundationConfig.cmake
+@@ -1 +1,8 @@
++if(@POCO_UNBUNDLED@)
++	include(CMakeFindDependencyMacro)
++	find_dependency(ZLIB)
++	find_dependency(PCRE2 CONFIG COMPONENTS 8BIT)
++	find_dependency(utf8proc CONFIG)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoFoundationTargets.cmake")
+diff --git a/PDF/CMakeLists.txt b/PDF/CMakeLists.txt
+index da4a365..b1334e1 100644
+--- a/PDF/CMakeLists.txt
++++ b/PDF/CMakeLists.txt
+@@ -17,11 +17,11 @@ add_library(PDF ${SRCS})
+ # TODO: Currently only bundled is supported, in future this should also be possible
+ # with an unbundled version of hpdf
+ 
+-target_link_libraries(PDF PRIVATE "$<BUILD_LOCAL_INTERFACE:HPDF::HPDF>")
+-
+ if (POCO_UNBUNDLED)
+-	target_link_libraries(PDF PRIVATE PNG::PNG ZLIB::ZLIB)
++	find_package(unofficial-libharu CONFIG REQUIRED)
++	target_link_libraries(PDF PRIVATE unofficial::libharu::hpdf)
+ else()
++	target_link_libraries(PDF PRIVATE "$<BUILD_LOCAL_INTERFACE:HPDF::HPDF>")
+ 	target_link_libraries(PDF PRIVATE "$<BUILD_LOCAL_INTERFACE:PNG::PNG>")
+ 	if (NOT BUILD_SHARED_LIBS OR WIN32)
+ 		target_link_libraries(PDF PRIVATE "$<BUILD_LOCAL_INTERFACE:ZLIB::ZLIB>")
+diff --git a/PDF/cmake/PocoPDFConfig.cmake b/PDF/cmake/PocoPDFConfig.cmake
+index 36bae9b..7d3adf5 100644
+--- a/PDF/cmake/PocoPDFConfig.cmake
++++ b/PDF/cmake/PocoPDFConfig.cmake
+@@ -1,8 +1,7 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(PocoFoundation)
+ if(@POCO_UNBUNDLED@)
+-	find_dependency(ZLIB REQUIRED)
+-	find_dependency(PNG REQUIRED)
++	find_dependency(unofficial-libharu CONFIG)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoPDFTargets.cmake")
+diff --git a/XML/cmake/PocoXMLConfig.cmake b/XML/cmake/PocoXMLConfig.cmake
+index fd050cf..9520e5c 100644
+--- a/XML/cmake/PocoXMLConfig.cmake
++++ b/XML/cmake/PocoXMLConfig.cmake
+@@ -1,3 +1,6 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(PocoFoundation)
++if(@POCO_UNBUNDLED@)
++	find_dependency(EXPAT)
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoXMLTargets.cmake")
+diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
+index 173eacd..8b77d7a 100644
+--- a/cmake/PocoConfig.cmake.in
++++ b/cmake/PocoConfig.cmake.in
+@@ -23,7 +23,7 @@ set(_Poco_NOTFOUND_MESSAGE)
+ 
+ # Let components find each other, but don't overwrite CMAKE_PREFIX_PATH
+ set(_Poco_CMAKE_PREFIX_PATH_old ${CMAKE_PREFIX_PATH})
+-set(CMAKE_PREFIX_PATH ${_Poco_install_prefix})
++set(CMAKE_PREFIX_PATH ${_Poco_install_prefix} ${CMAKE_PREFIX_PATH})
+ 
+ foreach(module ${Poco_FIND_COMPONENTS})
+     find_package(Poco${module}
+diff --git a/dependencies/pcre2/CMakeLists.txt b/dependencies/pcre2/CMakeLists.txt
+index 7006fd3..2858955 100644
+--- a/dependencies/pcre2/CMakeLists.txt
++++ b/dependencies/pcre2/CMakeLists.txt
+@@ -3,9 +3,6 @@
+ # Source: https://github.com/PCRE2Project/pcre2/releases/tag/pcre2-10.48
+ 
+ if(POCO_UNBUNDLED)
+-	find_package(PCRE2 REQUIRED)
+-	set_target_properties(Pcre2::Pcre2 PROPERTIES IMPORTED_GLOBAL TRUE)
+-
+ 	# HACK: Foundation Unicode.cpp requires functions from these files.
+ 	# They can't be used directly from the library
+ 	set(
+diff --git a/dependencies/utf8proc/CMakeLists.txt b/dependencies/utf8proc/CMakeLists.txt
+index b70dac9..bfb5072 100644
+--- a/dependencies/utf8proc/CMakeLists.txt
++++ b/dependencies/utf8proc/CMakeLists.txt
+@@ -2,10 +2,7 @@
+ # Version: 2.11.3
+ # Source: https://github.com/JuliaStrings/utf8proc/releases/tag/v2.11.3
+ 
+-if(POCO_UNBUNDLED)
+-	find_package(Utf8Proc REQUIRED)
+-	set_target_properties(Utf8Proc::Utf8Proc PROPERTIES IMPORTED_GLOBAL TRUE)
+-else()
++if(NOT POCO_UNBUNDLED)
+ 
+ 	# Sources
+ 	file(GLOB SRCS_G "src/*.c")

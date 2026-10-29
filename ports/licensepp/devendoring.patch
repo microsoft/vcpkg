@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8581813..46e1565 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,7 +48,7 @@ include_directories (${CRYPTOPP_INCLUDE_DIRS})
+ 
+ # Ripe (static)
+ set(RIPE_USE_STATIC_LIBS OFF)
+-find_package(Ripe REQUIRED)
++find_package(unofficial-ripe REQUIRED)
+ 
+ include_directories (${EXTERNAL_INCLUDE_DIR})
+ 
+@@ -87,7 +87,7 @@ target_include_directories (licensepp-lib PUBLIC
+ 
+ target_link_libraries (licensepp-lib
+     ${CRYPTOPP_LIBRARIES}
+-    ${RIPE_LIBRARY}
++    unofficial::ripe::ripe
+ )
+ 
+ set_target_properties (licensepp-lib PROPERTIES OUTPUT_NAME "licensepp")

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6eb1a68..610c0bc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,7 +71,7 @@ endmacro(addExternalPackageGTC)
+ # Add subdirectory
+ 
+ add_subdirectory(gli)
+-add_subdirectory(test)
++#add_subdirectory(test)
+ #add_subdirectory(doc)
+ 
+ ################################

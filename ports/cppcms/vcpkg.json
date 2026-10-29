@@ -1,0 +1,18 @@
+{
+  "name": "cppcms",
+  "version": "2.0.1",
+  "description": "CppCMS is a Free High Performance Web Development Framework (not a CMS) aimed at Rapid Web Application Development",
+  "homepage": "https://github.com/artyom-beilis/cppcms",
+  "license": null,
+  "supports": "!uwp",
+  "dependencies": [
+    "icu",
+    "openssl",
+    "pcre",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "zlib"
+  ]
+}

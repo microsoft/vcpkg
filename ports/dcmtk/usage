@@ -1,0 +1,9 @@
+dcmtk provides CMake targets:
+
+  find_package(DCMTK CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE DCMTK::DCMTK)
+  # You may also select specific modules using DCMTK::<module>.
+
+dcmtk provides pkg-config modules:
+
+  dcmtk

@@ -1,0 +1,12 @@
+{
+  "name": "sparsepp",
+  "version": "1.23",
+  "description": "A fast, memory efficient hash map for C++",
+  "homepage": "https://github.com/greg7mdp/sparsepp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

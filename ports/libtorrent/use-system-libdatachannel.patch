@@ -1,0 +1,103 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 63f903c..2f7286d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -846,30 +846,10 @@ else()
+ endif()
+ 
+ if (webtorrent)
+-	option(NO_WEBSOCKET "Disable WebSocket support in libdatachannel" ON)
+-	option(NO_MEDIA "Disable media transport support in libdatachannel" ON)
+-	if(GNUTLS_FOUND)
+-		option(USE_GNUTLS "Use GnuTLS instead of OpenSSL for libdatachannel" ON)
++	if (BUILD_SHARED_LIBS)
++		find_package(LibDataChannel CONFIG REQUIRED)
+ 	else()
+-		option(USE_GNUTLS "Use GnuTLS instead of OpenSSL for libdatachannel" OFF)
+-	endif()
+-
+-    set(LIBDATACHANNEL_STATIC ON CACHE BOOL "" FORCE)
+-    set(LIBDATACHANNEL_EXPORT OFF CACHE BOOL "" FORCE)
+-    set(LIBDATACHANNEL_INSTALL OFF CACHE BOOL "" FORCE)
+-    set(PLOG_INSTALL OFF CACHE BOOL "" FORCE)
+-    set(JUICE_INSTALL OFF CACHE BOOL "" FORCE)
+-    set(NO_EXAMPLES ON CACHE BOOL "" FORCE)
+-    set(NO_TESTS ON CACHE BOOL "" FORCE)
+-
+-	add_subdirectory(deps/libdatachannel EXCLUDE_FROM_ALL)
+-	set_target_properties(datachannel-static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+-
+-	if(CMAKE_CXX_COMPILER_ID MATCHES Clang|GNU)
+-		target_compile_options(datachannel-static PRIVATE
+-			-Wno-pedantic
+-			-Wno-unused-parameter
+-			-Wno-unused-variable)
++		find_public_dependency(LibDataChannel CONFIG REQUIRED)
+ 	endif()
+ endif()
+ 
+@@ -960,19 +940,14 @@ include(CheckCXXCompilerFlag)
+ add_subdirectory(bindings)
+ 
+ if(webtorrent)
+-    set(USRSCTP_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/libdatachannel/deps/usrsctp/usrsctplib")
+-    target_include_directories(datachannel-static PRIVATE "${USRSCTP_INCLUDE_DIR}")
+-    target_include_directories(torrent-rasterbar PRIVATE
+-        "${USRSCTP_INCLUDE_DIR}"
+-        deps/libdatachannel/include
+-        deps/libdatachannel/include/rtc
+-    )
+     if (BUILD_SHARED_LIBS)
+-        target_link_libraries(torrent-rasterbar PRIVATE datachannel-static)
++        target_link_libraries(torrent-rasterbar PRIVATE LibDataChannel::LibDataChannel)
+     else()
+-        target_link_libraries(torrent-rasterbar PUBLIC datachannel-static)
++        target_link_libraries(torrent-rasterbar PUBLIC LibDataChannel::LibDataChannel)
+     endif()
+-    target_compile_definitions(torrent-rasterbar PRIVATE BOOST_JSON_HEADER_ONLY)
++    target_compile_definitions(torrent-rasterbar PRIVATE
++        BOOST_JSON_HEADER_ONLY
++        BOOST_JSON_STATIC_LINK)
+ endif()
+ 
+ if(IS_ABSOLUTE "${CMAKE_INSTALL_LIBDIR}")
+@@ -980,16 +955,6 @@ if(IS_ABSOLUTE "${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+ set(LIBTORRENT_EXPORT_TARGETS torrent-rasterbar)
+-if (webtorrent AND NOT BUILD_SHARED_LIBS)
+-    # these are only linked PUBLIC (and therefore need to be installed and
+-    # part of the export set) when torrent-rasterbar itself is static; for a
+-    # shared build they're linked PRIVATE and are already embedded in
+-    # libtorrent-rasterbar.so, so consumers never need them
+-    list(APPEND LIBTORRENT_EXPORT_TARGETS datachannel-static juice-static plog usrsctp)
+-	if (TARGET usrsctp)
+-        set_target_properties(usrsctp PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "")
+-    endif()
+-endif()
+ 
+ install(TARGETS ${LIBTORRENT_EXPORT_TARGETS}
+     EXPORT LibtorrentRasterbarTargets
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 885818c..e7f7a7b 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -44,17 +44,7 @@ foreach(TARGET_SRC ${tests})
+ endforeach()
+ 
+ if (webtorrent AND TARGET test_rtc)
+-	# torrent-rasterbar links datachannel-static privately when building
+-	# shared libs (so its include directories aren't propagated to
+-	# consumers), and test_rtc.cpp includes <rtc/rtc.hpp> directly; only
+-	# the include path is needed here, NOT a
+-	# direct link -- datachannel-static is a static library, so linking it
+-	# into test_rtc directly would give test_rtc its own separate copy of
+-	# everything in it (ThreadPool, Init, and any other global/static state),
+-	# disconnected from the copy torrent-rasterbar's own compiled code
+-	# (rtc_signaling.cpp) actually uses
+-	target_include_directories(test_rtc PRIVATE
+-		$<TARGET_PROPERTY:datachannel-static,INTERFACE_INCLUDE_DIRECTORIES>)
++	target_link_libraries(test_rtc LibDataChannel::LibDataChannel)
+ endif()
+ 
+ file(GLOB GZIP_ASSETS "${CMAKE_CURRENT_SOURCE_DIR}/*.gz")

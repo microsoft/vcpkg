@@ -1,0 +1,21 @@
+{
+  "name": "iso-codes",
+  "version": "4.20.1",
+  "description": "Lists of the country, language, and currency names",
+  "homepage": "https://salsa.debian.org/iso-codes-team/iso-codes",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

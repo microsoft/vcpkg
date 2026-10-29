@@ -1,0 +1,108 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 92426e9..f96152a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -16,6 +16,8 @@ add_library(project_options INTERFACE)
+ include(../cmake/Sanitizers.cmake)
+ enable_sanitizers(project_options)
+ 
++include(GNUInstallDirs)
++
+ set(mgclient_src_files
+         mgallocator.c
+         mgclient.c
+@@ -50,6 +52,7 @@ else()
+     find_package(OpenSSL REQUIRED)
+     include(GenerateExportHeader)
+ 
++    if(NOT BUILD_SHARED_LIBS)
+     add_library(mgclient-static STATIC ${mgclient_src_files})
+ 
+     generate_export_header(mgclient-static
+@@ -62,18 +65,22 @@ else()
+     target_include_directories(mgclient-static
+             PRIVATE
+             "${PROJECT_SOURCE_DIR}/src"
+-            PUBLIC
+-            "${PROJECT_SOURCE_DIR}/include"
+             "${CMAKE_CURRENT_BINARY_DIR}"
+-            "${OPENSSL_INCLUDE_DIR}")
++            "${OPENSSL_INCLUDE_DIR}"
++            PUBLIC
++            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++            )
+     target_link_libraries(mgclient-static
+             PRIVATE
+-            ${OPENSSL_LIBRARIES} project_options project_c_warnings)
+-
++            ${OPENSSL_LIBRARIES})
++    target_compile_options(mgclient-static PRIVATE
++            $<TARGET_PROPERTY:project_options,INTERFACE_COMPILE_OPTIONS>
++            $<TARGET_PROPERTY:project_c_warnings,INTERFACE_COMPILE_OPTIONS>)
+     if(MGCLIENT_ON_WINDOWS)
+         target_link_libraries(mgclient-static PUBLIC ws2_32 crypt32 gdi32)
+     endif()
+-
++    else()
+     add_library(mgclient-shared SHARED ${mgclient_src_files})
+ 
+     generate_export_header(mgclient-shared
+@@ -87,32 +94,44 @@ else()
+     target_include_directories(mgclient-shared
+             PRIVATE
+             "${PROJECT_SOURCE_DIR}/src"
+-            PUBLIC
+-            "${PROJECT_SOURCE_DIR}/include"
+             "${CMAKE_CURRENT_BINARY_DIR}"
+-            "${OPENSSL_INCLUDE_DIR}")
++            "${OPENSSL_INCLUDE_DIR}"
++            PUBLIC
++            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++            )
+     target_link_libraries(mgclient-shared
+             PRIVATE
+-            ${OPENSSL_LIBRARIES} project_options project_c_warnings)
+-
++            ${OPENSSL_LIBRARIES})
++    target_compile_options(mgclient-shared PRIVATE
++            $<TARGET_PROPERTY:project_options,INTERFACE_COMPILE_OPTIONS>
++            $<TARGET_PROPERTY:project_c_warnings,INTERFACE_COMPILE_OPTIONS>)
+     if(MGCLIENT_ON_WINDOWS)
+         target_link_libraries(mgclient-shared PUBLIC ws2_32 crypt32 gdi32)
+     endif()
++    endif()
+ 
+-    generate_export_header(mgclient-shared
+-            BASE_NAME "mgclient"
+-            EXPORT_FILE_NAME "mgclient-export.h")
+-
+-    include(GNUInstallDirs)
+-
+-    install(TARGETS mgclient-static mgclient-shared
++    if(BUILD_SHARED_LIBS)
++    install(TARGETS mgclient-shared
++            EXPORT unofficial-mgclient-export
++            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++    else()
++    install(TARGETS mgclient-static
++            EXPORT unofficial-mgclient-export
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
++            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++    endif()
+     install(DIRECTORY
+             "${PROJECT_SOURCE_DIR}/include/"
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+     install(FILES
+             "${CMAKE_CURRENT_BINARY_DIR}/mgclient-export.h"
+             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++    install(EXPORT unofficial-mgclient-export
++            FILE unofficial-mgclient-config.cmake
++            NAMESPACE unofficial::mgclient::
++            DESTINATION share/unofficial-mgclient)
+ endif()

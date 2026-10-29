@@ -1,0 +1,4 @@
+The package discreture is header only and can be used from CMake via:
+
+	find_path(DISCRETURE_INCLUDE_DIRS "discreture.hpp")
+	target_include_directories(main PRIVATE ${DISCRETURE_INCLUDE_DIRS})

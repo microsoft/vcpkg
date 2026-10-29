@@ -1,0 +1,44 @@
+--- a/Source/GmmLib/inc/External/Common/GmmHw.h
++++ b/Source/GmmLib/inc/External/Common/GmmHw.h
+@@ -22,7 +22,7 @@
+ 
+ 
+ #pragma once
+-#include "gfxmacro.h"
++#include "../../../../inc/common/gfxmacro.h"
+ 
+ 
+ 
+--- a/Source/GmmLib/inc/External/Common/GmmInternal.h
++++ b/Source/GmmLib/inc/External/Common/GmmInternal.h
+@@ -30,7 +30,7 @@
+ //#pragma message(__LOC2__ "Header Message")
+ 
+ #ifndef _WIN32
+-#include <portable_compiler.h>
++#include "../../../../inc/portable_compiler.h"
+ #endif
+ 
+ #if !defined(GMM_DIAG_APP_DIRECTIVE)
+--- a/Source/GmmLib/inc/GmmLib.h
++++ b/Source/GmmLib/inc/GmmLib.h
+@@ -27,7 +27,7 @@
+ #endif /*__cplusplus*/
+ 
+ #ifndef _WIN32
+-#include <portable_compiler.h>
++#include "../../inc/portable_compiler.h"
+ #endif
+ 
+ #if defined(LHDM) && !defined(__GMM_KMD__) && defined(_WIN32)
+--- a/Source/GmmLib/inc/External/Common/GmmResourceInfoExt.h
++++ b/Source/GmmLib/inc/External/Common/GmmResourceInfoExt.h
+@@ -192,7 +192,7 @@
+ //---------------------------------------------------------------------------
+ #include "GmmResourceFlags.h"
+ #if defined __linux__
+-    #include "External/Linux/GmmResourceInfoLinExt.h"
++    #include "../Linux/GmmResourceInfoLinExt.h"
+ #endif
+ 
+ //==========================================================================

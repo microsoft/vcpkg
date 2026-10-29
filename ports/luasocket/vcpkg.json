@@ -1,0 +1,15 @@
+{
+  "name": "luasocket",
+  "version": "3.1.0",
+  "port-version": 1,
+  "description": "LuaSocket is a Lua extension library that is composed by two parts: a C core that provides support for the TCP and UDP transport layers, and a set of Lua modules that add support for functionality commonly needed by applications that deal with the Internet.",
+  "homepage": "https://lunarmodules.github.io/luasocket/",
+  "license": "MIT",
+  "dependencies": [
+    "lua",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "linux-dfl-uapi-headers",
+  "version-string": "intel-1.12.0-3",
+  "description": "User space API headers of the linux-dfl (Device Feature List) kernel driver for FPGA devices",
+  "license": "GPL-2.0 WITH Linux-syscall-note AND GPL-2.0-only",
+  "supports": "linux"
+}

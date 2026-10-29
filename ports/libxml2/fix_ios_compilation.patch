@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b952d7bf..d555d25a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,7 +134,12 @@ check_c_source_compiles("
+     f(void) {}
+     int main(void) { return 0; }
+ " HAVE_FUNC_ATTRIBUTE_DESTRUCTOR)
+-check_symbol_exists(getentropy "sys/random.h" HAVE_DECL_GETENTROPY)
++if (APPLE)
++    # In old macOS SDKs (ex: 10.15), sys/random.h fails to include header files it needs, so add them here.
++    check_symbol_exists(getentropy "Availability.h;stddef.h;sys/random.h" HAVE_GETENTROPY)
++else()
++    check_symbol_exists(getentropy sys/random.h HAVE_GETENTROPY)
++endif()
+ check_symbol_exists(glob "glob.h" HAVE_DECL_GLOB)
+ check_symbol_exists(mmap "sys/mman.h" HAVE_DECL_MMAP)
+ check_include_files(stdint.h HAVE_STDINT_H)

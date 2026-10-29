@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b3ff9e7..a2b51c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,7 +55,10 @@ if(BOOST_PROCESS_USE_STD_FS)
+   target_compile_definitions(boost_process PUBLIC BOOST_PROCESS_USE_STD_FS)
+   target_compile_features(boost_process PUBLIC cxx_std_17)
+ else()
+-  target_link_libraries(boost_process PUBLIC Boost::filesystem)
++  target_link_libraries(boost_process
++      PUBLIC
++      Boost::filesystem
++  )
+ endif()
+ 
+ if(WIN32)
