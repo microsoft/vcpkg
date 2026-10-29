@@ -28,6 +28,7 @@ PORT_LIST = [
     "kcolorscheme",
     "kcompletion",
     "kconfig",
+    "kconfigwidgets",
     "kcoreaddons",
     "kcrash",
     "kdbusaddons",
