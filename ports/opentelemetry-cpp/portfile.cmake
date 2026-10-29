@@ -8,11 +8,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 f3e8603d55bca5d5eb96d01cab82470a7c2cca8fb1db48fc0e328af3f4e40928c31f76e5ab61b557bb84d61238b1bceec986d19c7fec9a4a2191d523c49f29a4
+    SHA512 90da456bc83929e486a85d3976a0c18fecbb83ade950f0c970f781bc92651f3f053adb6440d8bb8a4c8dcf137c38f80315c5349283a0c233f4d1a56c0828fe73
     HEAD_REF main
-    PATCHES
-        fix-span-limits-32-bit.patch
-        fix-missing-cstdint.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

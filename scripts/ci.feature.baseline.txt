@@ -1064,7 +1064,6 @@ poco[pdf]:arm64-linux=cascade
 poppler[qt]:arm64-linux=cascade
 ppqsort[openmp]:arm64-osx=feature-fails # No openmp on osx
 projectm:arm64-linux=fail
-prometheus-cpp[pull]:arm64-windows=cascade
 protobuf-c[test]:arm64-linux=feature-fails
 proxygen:arm64-linux=cascade
 ptyqt:arm64-linux=cascade
