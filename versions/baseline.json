@@ -8190,7 +8190,7 @@
     },
     "protobuf": {
       "baseline": "7.36.2",
-      "port-version": 0
+      "port-version": 1
     },
     "protobuf-c": {
       "baseline": "1.5.2",
