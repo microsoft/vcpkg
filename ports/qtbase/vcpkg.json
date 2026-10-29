@@ -1,8 +1,8 @@
 {
   "name": "qtbase",
-  "version": "6.11.2",
+  "version": "6.11.3",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
