@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthom/hello_imgui
     REF "v${VERSION}"
-    SHA512 a81faf70a564147cf9c4587de54e46965b744ce93afadf7c9ce8a4868a9a584eea0c8f8df0c7f701e0404b4984f95ecfa3f5aa36a94ef2a84eaadbcc1e80c9b7
+    SHA512 30c870c4b48fb82587359e397d8ca9c07fa07348991864013694d0b44a7b70da31bc8e04ca2ba157a04541038a84c1b6b9a48012160a37aef44e2b9828b55bed
     HEAD_REF master
     PATCHES
         cmake-config.diff
@@ -109,4 +109,12 @@ if (no_rendering_backend OR no_platform_backend)
     ")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/hello_imgui_assets/fonts/LICENSE-DroidSans.txt"
+    "${SOURCE_PATH}/hello_imgui_assets/fonts/LICENSE-FontAwesome.txt"
+    "${SOURCE_PATH}/src/hello_imgui/internal/whereami/LICENSE.MIT"
+    "${SOURCE_PATH}/src/hello_imgui/internal/inicpp_LICENSE.txt"
+    "${SOURCE_PATH}/src/hello_imgui/internal/pnm.h"
+    "${SOURCE_PATH}/src/hello_imgui/internal/imguial_term.h"
+)

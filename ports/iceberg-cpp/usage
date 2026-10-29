@@ -1,0 +1,9 @@
+iceberg-cpp provides CMake targets:
+
+  find_package(iceberg CONFIG REQUIRED)
+  # Core library
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:iceberg::iceberg_shared>,iceberg::iceberg_shared,iceberg::iceberg_static>)
+  # Arrow, Parquet and Avro support (feature "bundle")
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:iceberg::iceberg_bundle_shared>,iceberg::iceberg_bundle_shared,iceberg::iceberg_bundle_static>)
+  # REST catalog client (feature "rest")
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:iceberg::iceberg_rest_shared>,iceberg::iceberg_rest_shared,iceberg::iceberg_rest_static>)

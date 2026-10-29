@@ -1,0 +1,16 @@
+diff --git a/cpp/cmake_modules/SetupCxxFlags.cmake b/cpp/cmake_modules/SetupCxxFlags.cmake
+index e7a4a3e..b6ced97 100644
+--- a/cpp/cmake_modules/SetupCxxFlags.cmake
++++ b/cpp/cmake_modules/SetupCxxFlags.cmake
+@@ -53,7 +53,10 @@ if(ARROW_CPU_FLAG STREQUAL "x86")
+     # These definitions are needed for xsimd to consider the corresponding instruction
+     # sets available, but they are not set by MSVC (unlike other compilers).
+     # See https://github.com/AcademySoftwareFoundation/OpenImageIO/issues/4265
+-    add_definitions(-D__SSE2__ -D__SSE4_1__ -D__SSE4_2__)
++    # __SSE2__ is not defined: xsimd already infers SSE2 from _M_X64 on MSVC, and
++    # simdjson >= 5 uses GCC builtins when __SSE2__ is defined.
++    # See https://github.com/apache/arrow/issues/51690
++    add_definitions(-D__SSE4_1__ -D__SSE4_2__)
+     set(ARROW_AVX2_FLAGS "/arch:AVX2")
+     # MSVC has no specific flag for BMI2, it seems to be enabled with AVX2
+     set(ARROW_BMI2_FLAGS "/arch:AVX2")

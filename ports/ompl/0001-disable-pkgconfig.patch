@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cc81419..88046b3 100644
+index 45c9b07..d16cc5d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -183,7 +183,7 @@ add_subdirectory(demos)
- add_subdirectory(scripts)
- add_subdirectory(doc)
+@@ -107,7 +107,7 @@ add_subdirectory(doc)
  
--if(NOT MSVC)
-+if(0)
-     target_link_flags(ompl)
-     set(PKG_NAME "ompl")
-     set(PKG_DESC "The Open Motion Planning Library")
+ ## Packaging and Installation. Does not apply to python wheel builds with scikit-build
+ if(NOT SKBUILD)
+-    if(NOT MSVC)
++    if(0)
+         target_link_flags(ompl)
+         set(PKG_NAME "ompl")
+         set(PKG_DESC "The Open Motion Planning Library")

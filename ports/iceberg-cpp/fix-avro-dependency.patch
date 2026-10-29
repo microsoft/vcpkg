@@ -1,0 +1,13 @@
+diff --git a/cmake_modules/IcebergThirdpartyToolchain.cmake b/cmake_modules/IcebergThirdpartyToolchain.cmake
+index c38d960..7631f0e 100644
+--- a/cmake_modules/IcebergThirdpartyToolchain.cmake
++++ b/cmake_modules/IcebergThirdpartyToolchain.cmake
+@@ -350,7 +350,7 @@ function(resolve_avro_dependency)
+     endif()
+   else()
+     set(AVRO_VENDORED FALSE)
+-    list(APPEND ICEBERG_SYSTEM_DEPENDENCIES Avro)
++    list(APPEND ICEBERG_SYSTEM_DEPENDENCIES avro-cpp)
+   endif()
+ 
+   set(ICEBERG_SYSTEM_DEPENDENCIES

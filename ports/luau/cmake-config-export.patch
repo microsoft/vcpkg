@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bfbda9a..4ccd3bd 100644
+index d2ae4a7..b341867 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -89,51 +89,51 @@ add_library(Luau.VM.Internals INTERFACE)
+@@ -93,51 +93,51 @@ add_library(Luau.VM.Internals INTERFACE)
  include(Sources.cmake)
  
  target_compile_features(Luau.Common PUBLIC cxx_std_17)
@@ -10,8 +10,7 @@ index bfbda9a..4ccd3bd 100644
 +target_include_directories(Luau.Common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common/include> $<INSTALL_INTERFACE:include/luau>)
  
  target_compile_features(Luau.CLI.lib PUBLIC cxx_std_17)
--target_include_directories(Luau.CLI.lib PUBLIC CLI/include)
-+target_include_directories(Luau.CLI.lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CLI/include> $<INSTALL_INTERFACE:include/luau>)
+ target_include_directories(Luau.CLI.lib PUBLIC CLI/include)
  target_link_libraries(Luau.CLI.lib PRIVATE Luau.Common Luau.Config)
  
  target_compile_features(Luau.Ast PUBLIC cxx_std_17)
@@ -67,7 +66,7 @@ index bfbda9a..4ccd3bd 100644
  target_link_libraries(Luau.Require PUBLIC Luau.Config Luau.VM)
  
  target_include_directories(isocline PUBLIC extern/isocline/include)
-@@ -240,7 +240,7 @@ if(MSVC AND LUAU_BUILD_TESTS)
+@@ -254,7 +254,7 @@ if(MSVC AND LUAU_BUILD_TESTS)
  endif()
  
  # embed .natvis inside the library debug information
@@ -76,7 +75,7 @@ index bfbda9a..4ccd3bd 100644
      target_link_options(Luau.Ast INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Ast.natvis)
      target_link_options(Luau.Analysis INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Analysis.natvis)
      target_link_options(Luau.CodeGen INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/CodeGen.natvis)
-@@ -248,7 +248,7 @@ if(MSVC)
+@@ -262,7 +262,7 @@ if(MSVC)
  endif()
  
  # make .natvis visible inside the solution
@@ -85,7 +84,7 @@ index bfbda9a..4ccd3bd 100644
      target_sources(Luau.Ast PRIVATE tools/natvis/Ast.natvis)
      target_sources(Luau.Analysis PRIVATE tools/natvis/Analysis.natvis)
      target_sources(Luau.CodeGen PRIVATE tools/natvis/CodeGen.natvis)
-@@ -348,3 +348,58 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.V
+@@ -384,3 +384,58 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.V
          endif()
      endif()
  endforeach()
@@ -107,7 +106,7 @@ index bfbda9a..4ccd3bd 100644
 +)
 +
 +install(
-+  TARGETS Luau.Common Luau.Ast Luau.Bytecode Luau.Inliner Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.VM Luau.CLI.lib Luau.Require
++  TARGETS Luau.Common Luau.Ast Luau.Bytecode Luau.Inliner Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.VM Luau.Require
 +  EXPORT unofficial-luau-targets
 +  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 +  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -144,7 +143,7 @@ index bfbda9a..4ccd3bd 100644
 +    NAMESPACE unofficial::luau::
 +    DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-luau"
 +)
-diff --git b/cmake/unofficial-luau-config.cmake b/cmake/unofficial-luau-config.cmake
+diff --git a/cmake/unofficial-luau-config.cmake b/cmake/unofficial-luau-config.cmake
 new file mode 100644
 index 0000000..2680ef3
 --- /dev/null

@@ -4,7 +4,7 @@
   "description": "Port to force features of gobject-introspection within CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
-  
+
   "dependencies": [
     {
       "name": "gobject-introspection",

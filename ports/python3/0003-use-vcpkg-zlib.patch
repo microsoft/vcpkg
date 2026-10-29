@@ -1,5 +1,5 @@
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index df3d557..ba23333 100644
+index 5099e44020e..887dec1b2f9 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -101,7 +101,6 @@
@@ -18,7 +18,7 @@ index df3d557..ba23333 100644
      </Link>
    </ItemDefinitionGroup>
    <ItemGroup>
-@@ -672,7 +670,7 @@
+@@ -675,7 +673,7 @@
      <ClCompile Include="..\Python\tracemalloc.c" />
      <ClCompile Include="..\Python\uniqueid.c" />
    </ItemGroup>
@@ -27,7 +27,7 @@ index df3d557..ba23333 100644
      <ClCompile Include="..\Modules\zlibmodule.c" />
    </ItemGroup>
    <ItemGroup>
-@@ -682,7 +680,7 @@
+@@ -685,7 +683,7 @@
      <ResourceCompile Include="..\PC\python_nt.rc" />
    </ItemGroup>
    <ItemGroup>
@@ -36,8 +36,8 @@ index df3d557..ba23333 100644
        <Project>{fb91c8b2-6fbc-3a01-b644-1637111f902d}</Project>
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
-@@ -719,7 +717,7 @@
-   <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v141' and $(PlatformToolset) != 'v142' and $(PlatformToolset) != 'v143'">
+@@ -722,7 +720,7 @@
+   <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v143' and $(PlatformToolset) != 'v145'">
      <Warning Text="Toolset $(PlatformToolset) is not used for official builds. Your build may have errors or incompatibilities." />
    </Target>
 -  <Target Name="_WarnAboutZlib" BeforeTargets="PrepareForBuild" Condition="!$(IncludeExternals)">

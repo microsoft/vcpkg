@@ -2,15 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
     REF v${VERSION}
-    SHA512 9559545fea9606a5d9cd87fdd7ef1352ade4695305dfe27327abdc6cf598a8f159875f05992864cfd55405589b58ea3598181b64b3600bd5aa287a320c14d0b3
+    SHA512 d786cdb4b8251c68c37b15196102b909509d04991102c20323513c8dc288bfa6d0ef838bb5d87d87b7eec6e5763c516b7cfd53b189928f783182bff5cced4645
     HEAD_REF master
     PATCHES
         cmake-config.diff
         pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
-        fix-dequant_funcs.diff
-        fix-vk-32bit.diff
+        fix-vulkan-buffer-stream.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -75,6 +74,7 @@ vcpkg_cmake_configure(
         -DGGML_BUILD_EXAMPLES=OFF
         -DGGML_HIP=OFF
         -DGGML_SYCL=OFF
+        -DGGML_CUDA_NCCL=OFF
         -DGGML_NATIVE=OFF
         -DGGML_AVX=OFF
         -DGGML_AVX2=OFF

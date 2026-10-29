@@ -54,7 +54,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "qml"    CMAKE_DISABLE_FIND_PACKAGE_Qt6QuickWidgets
     )
 
- set(TOOL_NAMES 
+ set(TOOL_NAMES
         assistant
         designer
         lcheck
@@ -148,12 +148,12 @@ if(VCPKG_TARGET_IS_OSX)
         list(APPEND OSX_APP_FOLDERS qdbusviewer.app)
     endif()
     foreach(_appfolder IN LISTS OSX_APP_FOLDERS)
-        # Folders are only existing in case of native builds 
+        # Folders are only existing in case of native builds
         if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}")
             message(STATUS "Moving: ${_appfolder}")
             file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}")
             file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}/" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}/")
-        endif()    
+        endif()
     endforeach()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()

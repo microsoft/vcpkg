@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ndevilla/iniparser
     REF v${VERSION}
-    SHA512 30bf5f9358429d66013b299159ffe22a8d4b677eb6e6a1136742f92f61389bfdea01e30366143299ce33f3257b56507b27c3dd20c234acf85e3255af3d6a4ce5
+    SHA512 5a7b64e948b4aeb5e7eab41f107433e24ea82e398a2da26ecd02abedbc0d11cf1f57b3ececaf31989daa7af8a274ef019746b4e7a972cc8be7c39fbaf8de33a4
     HEAD_REF master
 )
 

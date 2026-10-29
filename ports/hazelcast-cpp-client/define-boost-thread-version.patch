@@ -1,0 +1,15 @@
+diff --git a/hazelcast/include/hazelcast/client/hazelcast_client.h b/hazelcast/include/hazelcast/client/hazelcast_client.h
+index 129fdcd..f525741 100644
+--- a/hazelcast/include/hazelcast/client/hazelcast_client.h
++++ b/hazelcast/include/hazelcast/client/hazelcast_client.h
+@@ -15,6 +15,10 @@
+  */
+ #pragma once
+ 
++#ifndef BOOST_THREAD_VERSION
++#define BOOST_THREAD_VERSION 5
++#endif
++
+ #include <boost/utility/string_view.hpp>
+ 
+ #include "hazelcast/client/impl/hazelcast_client_instance_impl.h"

@@ -3,8 +3,8 @@ set(VCPKG_BUILD_TYPE release) # header-only port
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_tools
-    REF 52f9bc70ad4d435f055fde8f22a3b6d9a227e44c
-    SHA512 87450933f62acfe49822d156cde2ca59bafc7501beba1dba805a63d5a040d4af77f584e186fb7538659befb601d195a5bba3e37d10dab9714848efe05a7409b5
+    REF 6460c9d22ba67fe39bb9203ffddc429b04fbeac1
+    SHA512 d1854419799ba336db8c4e58695d973988993a43caed797b5282747d5f1b06b8b0c00ab8228163e6915486fad64aaea19c1275a0a86cd01d7b1e49eb6b717b79
     HEAD_REF main
 )
 

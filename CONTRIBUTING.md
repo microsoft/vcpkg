@@ -5,7 +5,7 @@ Vcpkg is a community driven effort to build a productive and robust ecosystem of
 ## Issues
 
 The easiest way to contribute is by reporting issues with either `vcpkg.exe` or an existing package on [GitHub](https://github.com/Microsoft/vcpkg). When reporting an issue with `vcpkg.exe`, make sure to clearly state:
-- The machine setup: "I'm using Windows 10 Anniversary Update. My machine is using the fr-fr locale. I successfully ran 'install boost'." 
+- The machine setup: "I'm using Windows 10 Anniversary Update. My machine is using the fr-fr locale. I successfully ran 'install boost'."
 - The steps to reproduce: "I run 'vcpkg list'"
 - The outcome you expected: "I expected to see 'boost:x86-windows'"
 - The actual outcome: "I get no output at all" or "I get a crash dialog"
@@ -22,7 +22,7 @@ We are happy to accept pull requests for fixes, features, new packages, and upda
 ### New package Guidelines
 
 We're glad you're interested in submitting a new package! Here are some guidelines to help you author an excellent portfile:
-- Avoid functional patches. Patches should be considered a last resort to implement compatibility when there's no other way. 
+- Avoid functional patches. Patches should be considered a last resort to implement compatibility when there's no other way.
 - When patches can't be avoided, do not modify the default behavior. The ideal lifecycle of a patch is to get merged upstream and no longer be needed. Try to keep this goal in mind when deciding how to patch something.
 - Prefer to use the `vcpkg_xyz` functions over raw `execute_command` calls. This makes long term maintenance easier when new features (such as custom compiler flags or generators) are added.
 

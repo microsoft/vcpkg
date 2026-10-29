@@ -1,13 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6cbc9ee..b5f3d7a 100644
+index 000ccee..8a7fdb3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 20)
- # Options:
- option(BUILD_SLICK_QUEUE_TESTS "Build tests" ${PROJECT_IS_TOP_LEVEL})
+@@ -19,9 +19,9 @@ if(SLICK_QUEUE_ENABLE_ASAN AND NOT BUILD_SLICK_QUEUE_TESTS)
+                     "with BUILD_SLICK_QUEUE_TESTS=OFF")
+ endif()
  
 -find_package(slick-shm CONFIG QUIET)
 +find_package(slick-shm CONFIG REQUIRED)
  
- if (NOT slick-shm_FOUND)
+-if (NOT slick-shm_FOUND)
++if (FALSE)
      include(FetchContent)
+ 
+     # Disable slick-shm tests and examples, but allow installation

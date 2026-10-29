@@ -1,0 +1,15 @@
+diff --git a/winpr/CMakeLists.txt b/winpr/CMakeLists.txt
+index 42d3408..1c4ad80 100644
+--- a/winpr/CMakeLists.txt
++++ b/winpr/CMakeLists.txt
+@@ -393,7 +393,9 @@ list(JOIN WINPR_PC_REQUIRES_PRIVATE " " WINPR_PC_REQUIRES_PRIVATE)
+ 
+ set(WINPR_PC_LIBRARY_PRIVATE "")
+ include(PkgConfigAddThreads)
+-if(OPENBSD)
++if(WIN32)
++  set(WINPR_PC_LIBRARY_PRIVATE "")
++elseif(OPENBSD)
+   pkg_config_add_threads(WINPR_PC_LIBRARY_PRIVATE m)
+ else()
+   pkg_config_add_threads(WINPR_PC_LIBRARY_PRIVATE ${CMAKE_DL_LIBS} rt m)

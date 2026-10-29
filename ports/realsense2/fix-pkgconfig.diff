@@ -1,0 +1,58 @@
+diff --git a/CMake/install_config.cmake b/CMake/install_config.cmake
+index 9f56666..7c2186b 100644
+--- a/CMake/install_config.cmake
++++ b/CMake/install_config.cmake
+@@ -15,7 +15,30 @@ configure_package_config_file(CMake/realsense2Config.cmake.in realsense2Config.c
+ )
+ 
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake" "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
+-configure_file(config/librealsense.pc.in config/realsense2.pc @ONLY)
++set(LRS_PKG_DEPS "liblz4")
++if(NOT WIN32)
++    string(APPEND LRS_PKG_DEPS " libusb-1.0")
++endif()
++if(NOT BUILD_SHARED_LIBS)
++    set(LRS_PKG_LIBS "-l$<TARGET_FILE_BASE_NAME:realsense-file> -l$<TARGET_FILE_BASE_NAME:rsutils>")
++    if(NOT WIN32)
++        string(APPEND LRS_PKG_LIBS " -pthread")
++        foreach(lib IN LISTS CMAKE_DL_LIBS)
++            string(APPEND LRS_PKG_LIBS " -l${lib}")
++        endforeach()
++        if(APPLE)
++            string(APPEND LRS_PKG_LIBS " -framework CoreFoundation -framework IOKit")
++        elseif(ANDROID)
++            string(APPEND LRS_PKG_LIBS " -llog")
++        endif()
++        if(UDEV_FOUND)
++            string(APPEND LRS_PKG_LIBS " -ludev")
++        endif()
++    endif()
++endif()
++configure_file(config/librealsense.pc.in config/realsense2.pc.in @ONLY)
++file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/config/realsense2.pc"
++    INPUT "${CMAKE_CURRENT_BINARY_DIR}/config/realsense2.pc.in")
+ 
+ install(TARGETS ${LRS_TARGET}
+     EXPORT realsense2Targets
+diff --git a/config/librealsense.pc.in b/config/librealsense.pc.in
+index 2c4cb3e..d8a26fa 100644
+--- a/config/librealsense.pc.in
++++ b/config/librealsense.pc.in
+@@ -1,15 +1,14 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+ exec_prefix=${prefix}
+ includedir=${prefix}/include
+-#TODO: libdir=${exec_prefix}/lib@MULTI_ARCH_SUFFIX@
+-libdir= ${prefix}/lib/x86_64-linux-gnu
++libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ 
+ Name:
+ Description: Intel(R) RealSense(tm) Cross Platform API
+ Version: @REALSENSE_VERSION_STRING@
+ URL: https://github.com/realsenseai/librealsense
+ Requires.private: @LRS_PKG_DEPS@
+-Libs: -L${libdir} -l@LRS_LIB_NAME@
++Libs: -L${libdir} -l$<TARGET_FILE_BASE_NAME:realsense2>
+ Libs.private: @LRS_PKG_LIBS@
+ Cflags: -I${includedir}
+ 

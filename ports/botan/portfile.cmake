@@ -1,13 +1,20 @@
+vcpkg_download_distfile(REMOVE_CLI_SANDBOX_PATCH
+    URLS https://github.com/randombit/botan/commit/1a0c4477865809a181a5fd0f73132b2df2685d1a.patch?full_index=1
+    FILENAME botan-remove-cli-sandbox.patch
+    SHA512 f1585c9d070addd81158394889813147e84fdb3e8e32f48075db90c2c635bdd7b0d4ca2c7ad3c47fce043b99fb23eb1251f47d2e9af75ed63b66e3a84636e014
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 33a47e5733aedc29704652bf16704a2cd080cdcebd01c95879b5db3af3186debbef711c53ef131a9cb7defe3dd8ffae49d6efe7e75aef9107473b92dc6b3f101
+    SHA512 e6b36338ddf709641ff20c737927c5f2d1ac6881ebbda2279e5ff436c8756d6c62e9c5d97e3f8156f3b79bd10465485fdb77e7910fc512568d2b4f1b04dc3198
     HEAD_REF master
     PATCHES
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
+        "${REMOVE_CLI_SANDBOX_PATCH}"
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
     REF "DCMTK-${VERSION}"
-    SHA512 6c7699d222b3a26f2bf52fddbf3278946429f9b4b5cdd0607fb3c3fa82f5a13c6289c831d7a584700c9f59ae4244d94ea678a22a34aee988399056436f600a95
+    SHA512 6093132eb137f134fe3991c75a0a8c1a4716852e3080d9d5878cb2fc8d01a6a95a0d8af84fe4d47298da0e2a8cf595113b0e9aad95ee043c9a15698417035a91
     HEAD_REF master
     PATCHES
         dcmtk.patch
@@ -90,8 +90,8 @@ vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
     set(_tools
-        dcm2cda
         cda2dcm
+        dcm2cda
         dcm2img
         dcm2json
         dcm2pdf
@@ -133,6 +133,7 @@ if ("tools" IN_LIST FEATURES)
         dcmscale
         dcmsend
         dcmsign
+        dcmtk
         dcod2lum
         dconvlum
         drtdump

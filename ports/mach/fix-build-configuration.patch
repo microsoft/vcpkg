@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0b4ad75..712ecb5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,10 +7,6 @@ project(
+     LANGUAGES CXX
+ )
+ 
+-if(MSVC)
+-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+-endif()
+-
+ include(GNUInstallDirs)
+ include(CMakePackageConfigHelpers)
+ 
+@@ -203,7 +199,13 @@ if(MACH_CAN_INSTALL)
+ 
+ endif()
+ 
+-if(MACH_CAN_INSTALL)
++option(
++    MACH_BUILD_PACKAGE
++    "Enable Mach standalone package generation"
++    OFF
++)
++
++if(MACH_CAN_INSTALL AND MACH_BUILD_PACKAGE)
+ 
+     set(
+         MACH_CLI_EXECUTABLE

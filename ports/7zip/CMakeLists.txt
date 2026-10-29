@@ -11,7 +11,7 @@ project(7zip LANGUAGES C CXX)
 # CPP/7zip/Bundles/Alone2/makefile : nmake (MSVC)
 # -> CPP/7zip/Bundles/Format7zF/Arc.mak
 # -> CPP/7zip/Bundles/7zip.mak
-# 
+#
 # CPP/7zip/Bundles/Alone2/(makefile.gcc|../../cmpl_<variant>.mak) : other
 # -> CPP/7zip/Bundles/Format7zF/Arc_gcc.mak
 # -> CPP/7zip/Bundles/7zip_gcc.mak

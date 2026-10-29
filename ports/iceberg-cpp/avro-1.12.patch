@@ -1,0 +1,57 @@
+diff --git a/src/iceberg/avro/avro_writer.cc b/src/iceberg/avro/avro_writer.cc
+index 01d8cb3..6f9272b 100644
+--- a/src/iceberg/avro/avro_writer.cc
++++ b/src/iceberg/avro/avro_writer.cc
+@@ -62,14 +62,22 @@ Result<::avro::Codec> ParseCodec(const WriterProperties& properties) {
+   } else if (codec_name == "gzip") {
+     codec = ::avro::DEFLATE_CODEC;
+   } else if (codec_name == "snappy") {
++#ifdef SNAPPY_CODEC_AVAILABLE
+     codec = ::avro::SNAPPY_CODEC;
++#else
++    return InvalidArgument("Avro codec {} is not available in the current build",
++                           codec_name);
++#endif
+   } else if (codec_name == "zstd") {
++#ifdef ZSTD_CODEC_AVAILABLE
+     codec = ::avro::ZSTD_CODEC;
++#else
++    return InvalidArgument("Avro codec {} is not available in the current build",
++                           codec_name);
++#endif
+   } else {
+     return InvalidArgument("Unsupported Avro codec: {}", codec_name);
+   }
+-  ICEBERG_PRECHECK(::avro::isCodecAvailable(codec),
+-                   "Avro codec {} is not available in the current build", codec_name);
+   return codec;
+ }
+ 
+@@ -103,9 +111,11 @@ class DirectEncoderBackend : public AvroWriteBackend {
+               const ::avro::ValidSchema& avro_schema, int64_t sync_interval,
+               ::avro::Codec codec, std::optional<int32_t> compression_level,
+               const std::map<std::string, std::vector<uint8_t>>& metadata) override {
++    if (compression_level.has_value()) {
++      return NotSupported("Avro compression level requires Avro C++ newer than 1.12.2");
++    }
+     writer_ = std::make_unique<::avro::DataFileWriterBase>(
+-        std::move(output_stream), avro_schema, sync_interval, codec, metadata,
+-        compression_level);
++        std::move(output_stream), avro_schema, sync_interval, codec, metadata);
+     avro_root_node_ = avro_schema.root();
+     return {};
+   }
+@@ -145,9 +155,11 @@ class GenericDatumBackend : public AvroWriteBackend {
+               const ::avro::ValidSchema& avro_schema, int64_t sync_interval,
+               ::avro::Codec codec, std::optional<int32_t> compression_level,
+               const std::map<std::string, std::vector<uint8_t>>& metadata) override {
++    if (compression_level.has_value()) {
++      return NotSupported("Avro compression level requires Avro C++ newer than 1.12.2");
++    }
+     writer_ = std::make_unique<::avro::DataFileWriter<::avro::GenericDatum>>(
+-        std::move(output_stream), avro_schema, sync_interval, codec, metadata,
+-        compression_level);
++        std::move(output_stream), avro_schema, sync_interval, codec, metadata);
+     datum_ = std::make_unique<::avro::GenericDatum>(avro_schema);
+     return {};
+   }

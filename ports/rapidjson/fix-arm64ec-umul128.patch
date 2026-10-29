@@ -1,0 +1,26 @@
+diff --git a/include/rapidjson/internal/biginteger.h b/include/rapidjson/internal/biginteger.h
+index 4930043dc..7a53e8f62 100644
+--- a/include/rapidjson/internal/biginteger.h
++++ b/include/rapidjson/internal/biginteger.h
+@@ -19,7 +19,7 @@
+ 
+ #if defined(_MSC_VER) && !defined(__INTEL_COMPILER) && defined(_M_AMD64)
+ #include <intrin.h> // for _umul128
+-#if !defined(_ARM64EC_)
++#if !defined(_M_ARM64EC)
+ #pragma intrinsic(_umul128)
+ #else
+ #pragma comment(lib,"softintrin")
+diff --git a/include/rapidjson/internal/diyfp.h b/include/rapidjson/internal/diyfp.h
+index 1f60fb60c..56244aec1 100644
+--- a/include/rapidjson/internal/diyfp.h
++++ b/include/rapidjson/internal/diyfp.h
+@@ -25,7 +25,7 @@
+ 
+ #if defined(_MSC_VER) && defined(_M_AMD64) && !defined(__INTEL_COMPILER)
+ #include <intrin.h>
+-#if !defined(_ARM64EC_)
++#if !defined(_M_ARM64EC)
+ #pragma intrinsic(_umul128)
+ #else
+ #pragma comment(lib,"softintrin")

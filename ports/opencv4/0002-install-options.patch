@@ -2,13 +2,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 150a018..36d3019 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -638,7 +638,7 @@ set(OPENCV_EXTRA_MODULES_PATH "" CACHE PATH "Where to look for additional OpenCV
+@@ -641,8 +641,8 @@ ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
 -if(NOT IOS AND NOT XROS)
 +if(WITH_PYTHON)
    include(cmake/OpenCVDetectPython.cmake)
+   include(cmake/OpenCVDetectDLPack.cmake)
  endif()
  
 @@ -701,6 +701,7 @@ endif()
@@ -20,7 +21,7 @@ index 150a018..36d3019 100644
    if(NOT APPLE_FRAMEWORK OR OPENCV_ENABLE_PKG_CONFIG)
      if(CMAKE_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG_LIBDIR} AND NOT DEFINED ENV{PKG_CONFIG_SYSROOT_DIR}
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index 512e6d1..fd02b6b 100644
+index 5a0cb3d..fc2edfe 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
 @@ -306,7 +306,6 @@ if(MSVC)

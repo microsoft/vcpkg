@@ -1,6 +1,7 @@
 {
   "name": "fastpfor",
   "version": "0.3.1",
+  "port-version": 1,
   "description": "Fast integer compression",
   "homepage": "https://github.com/fast-pack/FastPFOR",
   "license": "Apache-2.0",

@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-span-limits-32-bit.patch
+        fix-missing-cstdint.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

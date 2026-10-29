@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2d35adb..943c208 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,10 +32,12 @@ if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+ endif()
+ 
+-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+-  set(HEXL_DEBUG ON)
+-else()
+-  set(HEXL_DEBUG OFF)
++if (NOT DEFINED HEXL_DEBUG)
++  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++    set(HEXL_DEBUG ON)
++  else()
++    set(HEXL_DEBUG OFF)
++  endif()
+ endif()
+ 
+ set(CMAKE_CXX_STANDARD 17)

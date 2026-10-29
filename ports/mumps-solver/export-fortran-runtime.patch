@@ -1,0 +1,104 @@
+diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
+index 8e59599..2a56124 100644
+--- a/cmake/config.cmake.in
++++ b/cmake/config.cmake.in
+@@ -72,6 +72,57 @@ endif()
+ 
+ set(MUMPS_xkblas @MUMPS_xkblas@)
+ 
++# vcpkg: a static MUMPS needs the Fortran runtime at the final link. Locate it
++# with GNU Fortran on this machine, rather than exporting the build machine's
++# paths. Libraries that cannot be located are linked by name.
++if(NOT TARGET unofficial::mumps-solver::fortran_runtime)
++  add_library(unofficial::mumps-solver::fortran_runtime INTERFACE IMPORTED)
++  set(_mumps_runtime_libs "@MUMPS_FORTRAN_RUNTIME_LIBS@")
++  set(_mumps_gfortran "")
++  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
++    set(_mumps_gfortran "${CMAKE_Fortran_COMPILER}")
++  elseif(_mumps_runtime_libs AND NOT "@MUMPS_FORTRAN_RUNTIME_COMPILER@" STREQUAL "")
++    find_program(MUMPS_SOLVER_GFORTRAN NAMES "@MUMPS_FORTRAN_RUNTIME_COMPILER@")
++    mark_as_advanced(MUMPS_SOLVER_GFORTRAN)
++    set(_mumps_gfortran "${MUMPS_SOLVER_GFORTRAN}")
++  endif()
++  set(_mumps_runtime "")
++  set(_mumps_unresolved "")
++  foreach(_mumps_lib IN LISTS _mumps_runtime_libs)
++    set(_mumps_files "")
++    if(CMAKE_IMPORT_LIBRARY_SUFFIX)
++      list(APPEND _mumps_files "${CMAKE_IMPORT_LIBRARY_PREFIX}${_mumps_lib}${CMAKE_IMPORT_LIBRARY_SUFFIX}")
++    endif()
++    list(APPEND _mumps_files
++      "${CMAKE_SHARED_LIBRARY_PREFIX}${_mumps_lib}${CMAKE_SHARED_LIBRARY_SUFFIX}"
++      "${CMAKE_STATIC_LIBRARY_PREFIX}${_mumps_lib}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++    set(_mumps_path "")
++    if(_mumps_gfortran)
++      foreach(_mumps_file IN LISTS _mumps_files)
++        execute_process(COMMAND "${_mumps_gfortran}" "-print-file-name=${_mumps_file}"
++          OUTPUT_VARIABLE _mumps_out OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
++        if(IS_ABSOLUTE "${_mumps_out}" AND EXISTS "${_mumps_out}")
++          set(_mumps_path "${_mumps_out}")
++          break()
++        endif()
++      endforeach()
++    endif()
++    if(_mumps_path)
++      list(APPEND _mumps_runtime "${_mumps_path}")
++    else()
++      list(APPEND _mumps_runtime "${_mumps_lib}")
++      list(APPEND _mumps_unresolved "${_mumps_lib}")
++    endif()
++  endforeach()
++  if(_mumps_unresolved)
++    message(WARNING "unofficial-mumps-solver: could not locate the Fortran runtime "
++      "libraries ${_mumps_unresolved}, so they are linked by name. Put GNU "
++      "Fortran on PATH or set MUMPS_SOLVER_GFORTRAN.")
++  endif()
++  set_property(TARGET unofficial::mumps-solver::fortran_runtime
++    PROPERTY INTERFACE_LINK_LIBRARIES "${_mumps_runtime}")
++endif()
++
+ set(MUMPS_HAVE_GEMMT @BLAS_HAVE_GEMMT@)
+ 
+ set(MUMPS_HAVE_AVX512VBMI @MUMPS_HAVE_AVX512VBMI@)
+diff --git a/cmake/mumps.cmake b/cmake/mumps.cmake
+index fbf80db..2a78673 100644
+--- a/cmake/mumps.cmake
++++ b/cmake/mumps.cmake
+@@ -166,6 +166,37 @@ if(BUILD_SHARED_LIBS AND APPLE AND CMAKE_Fortran_COMPILER_ID STREQUAL "LLVMFlang
+   set_property(TARGET mumps_common PROPERTY LINKER_LANGUAGE C)
+ endif()
+ 
++# A static MUMPS leaves the Fortran runtime unresolved for consumers that do not
++# enable Fortran themselves. The installed package resolves it on the
++# consumer's machine (see config.cmake.in), so no paths from the building
++# machine are exported. Only the libraries Fortran adds over C/C++ are used, so
++# libc/libm are not duplicated.
++if(NOT BUILD_SHARED_LIBS)
++  set(mumps_fortran_runtime_libs ${CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES})
++  set(mumps_fortran_runtime_dirs ${CMAKE_Fortran_IMPLICIT_LINK_DIRECTORIES})
++  if(CMAKE_C_IMPLICIT_LINK_LIBRARIES OR CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    list(REMOVE_ITEM mumps_fortran_runtime_libs
++      ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
++  endif()
++  if(CMAKE_C_IMPLICIT_LINK_DIRECTORIES OR CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES)
++    list(REMOVE_ITEM mumps_fortran_runtime_dirs
++      ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
++  endif()
++  # Keep the last occurrence of each library so static link order holds, as
++  # lapack-reference does.
++  list(REVERSE mumps_fortran_runtime_libs)
++  list(REMOVE_DUPLICATES mumps_fortran_runtime_libs)
++  list(REVERSE mumps_fortran_runtime_libs)
++  list(REMOVE_DUPLICATES mumps_fortran_runtime_dirs)
++  target_link_libraries(mumps_common INTERFACE
++    "$<INSTALL_INTERFACE:unofficial::mumps-solver::fortran_runtime>")
++  set(MUMPS_FORTRAN_RUNTIME_LIBS "${mumps_fortran_runtime_libs}" PARENT_SCOPE)
++  if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
++    get_filename_component(mumps_fortran_compiler_name "${CMAKE_Fortran_COMPILER}" NAME)
++    set(MUMPS_FORTRAN_RUNTIME_COMPILER "${mumps_fortran_compiler_name}" PARENT_SCOPE)
++  endif()
++endif()
++
+ set_target_properties(mumps_common PROPERTIES
+ EXPORT_NAME COMMON
+ VERSION ${MUMPS_ACTUAL_VERSION}

@@ -1,12 +1,12 @@
 {
   "name": "hello-imgui",
-  "version": "1.92.5",
+  "version": "1.92.901",
   "description": [
     "Hello ImGui: unleash your creativity in app development and prototyping",
-    "Note that at least on renderer backend and at least one platform backend must be chosen."
+    "Note that at least one renderer backend and at least one platform backend must be chosen."
   ],
   "homepage": "https://pthom.github.io/hello_imgui/",
-  "license": "MIT",
+  "license": "MIT AND Apache-2.0 AND OFL-1.1",
   "dependencies": [
     {
       "name": "imgui",

@@ -42,7 +42,7 @@ if(APPLE)
     find_library(APPLICATIONSERVICES_LIBRARY ApplicationServices)
     if(APPLICATIONSERVICES_LIBRARY)
         target_link_libraries(harfbuzz INTERFACE ${APPLICATIONSERVICES_LIBRARY})
-    endif()    
+    endif()
 endif()
 
 if ("freetype" IN_LIST HARFBUZZ_FEATURES)
@@ -77,15 +77,15 @@ endif()
 
 add_library(harfbuzz::harfbuzz-subset UNKNOWN IMPORTED)
 
-find_library(HARFBUZZ_SUBSET_LIBRARY_DEBUG 
-    NAMES harfbuzz-subset 
-    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" 
+find_library(HARFBUZZ_SUBSET_LIBRARY_DEBUG
+    NAMES harfbuzz-subset
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
     PATH_SUFFIXES lib NO_DEFAULT_PATH)
-find_library(HARFBUZZ_SUBSET_LIBRARY_RELEASE 
-    NAMES harfbuzz-subset 
-    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" 
+find_library(HARFBUZZ_SUBSET_LIBRARY_RELEASE
+    NAMES harfbuzz-subset
+    PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
     PATH_SUFFIXES lib NO_DEFAULT_PATH)
-    
+
 if(NOT HARFBUZZ_LIBRARY_DEBUG)
     set_target_properties(harfbuzz::harfbuzz-subset PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${HARFBUZZ_INCLUDE_DIR}"

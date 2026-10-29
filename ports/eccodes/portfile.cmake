@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ecmwf/eccodes
     REF "${VERSION}"
-    SHA512 c3cdc078cf8eea1a6c49a473c51456df94c00db5b2232828ae069529394f4d301ab4e2a011a9c64016202a6a2755b55fd0ef38855a5c494a1947de3dac9602b8
+    SHA512 a07195c58c0b094ac9453315808bd420e77b80f8ca0d90b29322ae543a173ff1a58063dc226cff9f6a16a05b9e77c72c4f7bca20cdf9f3a493886a44b9e86af5
     HEAD_REF develop
     PATCHES
         fix-netcdf-linkage.patch
@@ -101,7 +101,7 @@ vcpkg_fixup_pkgconfig()
 set(_eccodes_pkgconfig_private_libraries -leccodes_memfs)
 set(_eccodes_pkgconfig_private_requires libopenjp2)
 if("aec" IN_LIST FEATURES OR "netcdf" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND _eccodes_pkgconfig_private_libraries -laec-static)
     else()
         list(APPEND _eccodes_pkgconfig_private_libraries -laec)

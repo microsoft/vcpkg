@@ -1,0 +1,16 @@
+diff --git a/include/ppqsort/parallel/cpp/thread_pool.h b/include/ppqsort/parallel/cpp/thread_pool.h
+index bcb042c..b17fce8 100644
+--- a/include/ppqsort/parallel/cpp/thread_pool.h
++++ b/include/ppqsort/parallel/cpp/thread_pool.h
+@@ -134,7 +134,10 @@ namespace ppqsort::impl::cpp {
+             alignas(parameters::cacheline_size) std::atomic<std::size_t> pending_tasks_{0};
+             alignas(parameters::cacheline_size) std::atomic<std::size_t> total_tasks_{0};
+             alignas(parameters::cacheline_size) std::atomic<bool> to_stop_{false};
+-            std::binary_semaphore threads_done_semaphore_{0};   // used to wait for all tasks to finish
++            // Several workers can observe total_tasks_ == 0 at the same time and each
++            // call release(); binary_semaphore (max count 1) makes that undefined behaviour.
++            // counting_semaphore absorbs the surplus releases.
++            std::counting_semaphore<> threads_done_semaphore_{0};   // used to wait for all tasks to finish
+             std::mutex mtx_priority_;
+             bool stopped = false;
+     };

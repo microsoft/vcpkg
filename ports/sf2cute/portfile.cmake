@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gocha/sf2cute
-    REF v0.2
+    REF 3c5fc83b6ba3d1feb377f9c86021fd77499eb7c0
     HEAD_REF master
-    SHA512 721762556c392a134500fa110ec849a60d1285a57e4e8d9cacb6281bed02f5658a14694efcccb8248719558b45db89da5ad53c56990bb9c263a9760fe0d99b8f
+    SHA512 54db9c9e5703b3efb156d5fa8ffd2f90b966318002c12aa1ddfcea9c5b4119caf1e47d823ac971b0f94ab4dc76daa1e9d5f24a8ac94fa7c2bfebb592a2a1afe1
 )
 
 set(BUILD_EXAMPLE OFF)
@@ -31,5 +31,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/sf2cute" RENAME copyright)
 
 if(BUILD_EXAMPLE)
-  vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/sf2cute")
+    vcpkg_copy_tools(TOOL_NAMES write_sf2 SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/sf2cute")
 endif()

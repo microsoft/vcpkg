@@ -14,6 +14,7 @@ description: >
   When requested analysis lacks local evidence, run fetch-vcpkg-ci-logs as the acquisition stage first.
 
   **ANALYSIS SKILL** USES: locally collected CI logs, vcpkg baselines, Azure DevOps metadata.
+disable-model-invocation: true
 ---
 
 # vcpkg CI Failures Analyzer
@@ -70,7 +71,7 @@ Before analysis, read `.\.github\skills\shared\azure-vcpkg-ci-notes.md`.
    - Post-build check failures (file path issues, misplaced files)
    - Version validation errors
    - Platform-specific feature guard messages
-   
+
    Report each feature failure individually. Dependency ports that fail get their own entry.
 4. **Version validation** — Inspect the `"Validate version files"` evidence for version database errors.
 5. **Write report immediately** — Generate and save `report.md` using the step-log evidence.
