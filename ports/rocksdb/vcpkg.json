@@ -1,8 +1,8 @@
 {
   "name": "rocksdb",
-  "version": "11.8.1",
+  "version": "11.12",
   "description": "A library that provides an embeddable, persistent key-value store for fast storage",
-  "homepage": "https://github.com/facebook/rocksdb",
+  "homepage": "https://github.com/meta/rocksdb",
   "license": "GPL-2.0-only OR Apache-2.0",
   "supports": "!uwp & !(arm & !arm64 & android)",
   "dependencies": [

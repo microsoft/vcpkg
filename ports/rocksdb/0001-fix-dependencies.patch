@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7b684311d..a71c14ed5 100644
+index ca3bc58..74e35ba 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -111,7 +111,7 @@ endif()
@@ -72,7 +72,7 @@ index 7b684311d..a71c14ed5 100644
  endif()
  
  # Stall notifications eat some performance from inserts
-@@ -1393,7 +1387,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
+@@ -1398,7 +1392,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
      endforeach()
    endforeach()
  
@@ -81,7 +81,7 @@ index 7b684311d..a71c14ed5 100644
    install(
      TARGETS ${ROCKSDB_STATIC_LIB}
 diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
-index bab7e8ea6..4c28d5303 100644
+index bab7e8e..4c28d53 100644
 --- a/cmake/RocksDBConfig.cmake.in
 +++ b/cmake/RocksDBConfig.cmake.in
 @@ -33,15 +33,20 @@ if(@WITH_BZ2@)
