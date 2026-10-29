@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
     REF "v${VERSION}"
-    SHA512 63a6c793261690500876edf8bd31011700ab077554533efaf613372edd8cdc44a0e348b6e82723ab88be969764d41d031b58fcfbf993e447ef1a280fe90e3f80
+    SHA512 620ad17a8107996dd518a2bb0ece8468325d2c04fdd40a60ef5f2cb2f4b07f752b77c875ca5c2b18532d9533c36dd784e599541d15b2a48d570882f63bd031cf
     HEAD_REF master
-    PATCHES
-        backport_409369a.patch # Fix Ninja + MSVC issue
 )
 
 vcpkg_download_distfile(GHC_ARCHIVE

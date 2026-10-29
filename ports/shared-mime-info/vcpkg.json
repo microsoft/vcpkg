@@ -1,6 +1,6 @@
 {
   "name": "shared-mime-info",
-  "version": "2.4",
+  "version": "2.5.1",
   "description": "Shared MIME information from Freedesktop.org",
   "homepage": "https://gitlab.freedesktop.org/xdg/shared-mime-info",
   "license": "GPL-2.0-or-later",

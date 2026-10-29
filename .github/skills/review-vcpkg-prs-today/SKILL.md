@@ -1,6 +1,7 @@
 ---
 name: review-vcpkg-prs-today
 description: Review open non-draft microsoft/vcpkg pull requests updated in the last 30 days. Use when asked for batch triage, per-PR review reports, an index grouped by verdict, or grouping competing PRs that modify the same port.
+disable-model-invocation: true
 ---
 
 ## Inputs
