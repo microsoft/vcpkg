@@ -25,10 +25,6 @@
         "mbedtls"
       ]
     },
-    "network-framework": {
-      "description": "Native macOS TLS support using Network.framework (macOS 10.15+)",
-      "supports": "osx"
-    },
     "openssl": {
       "description": "SSL support (OpenSSL)",
       "supports": "!uwp",

@@ -9,10 +9,9 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        mbedtls           USE_MBED_TLS
-        network-framework USE_NETWORK_FRAMEWORK
-        openssl           USE_OPEN_SSL
-        sectransp         USE_SECURE_TRANSPORT
+        openssl   USE_OPEN_SSL
+        mbedtls   USE_MBED_TLS
+        sectransp USE_SECURE_TRANSPORT
 )
 
 string(COMPARE NOTEQUAL "${FEATURES}" "core" USE_TLS)
@@ -36,16 +35,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ixwebsocket)
-# Static pkg-config consumers need the native backend's definitions and frameworks.
-if("network-framework" IN_LIST FEATURES)
-    foreach(lib_dir IN ITEMS lib debug/lib)
-        set(pc_file "${CURRENT_PACKAGES_DIR}/${lib_dir}/pkgconfig/ixwebsocket.pc")
-        if(EXISTS "${pc_file}")
-            vcpkg_replace_string("${pc_file}" "Cflags:" "Cflags: -DIXWEBSOCKET_USE_TLS -DIXWEBSOCKET_USE_NETWORK_FRAMEWORK -DIXWEBSOCKET_USE_ZLIB")
-            file(APPEND "${pc_file}" "\nLibs.private: -framework Network -framework Security -framework CoreFoundation\nRequires.private: zlib\n")
-        endif()
-    endforeach()
-endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
