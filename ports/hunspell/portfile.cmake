@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hunspell/hunspell
     REF "v${VERSION}"
-    SHA512 0d9e81e432bd41ca7c751a2d2fa5d285816f3ffd128196fd53e4e72a4777720fe6e4b092483e39fe9a44a66b0afabbefa49446b2d38bf2e154421a64b8f363e4
+    SHA512 b078c65c9ba0dd0016e1cd36e8e185c8707ec5d979177b91c93dff2ec5190f5cceb09a678580b5098cece8bf7cee4fd09ae4a3500dfe3c95a0a0345511afc433
     HEAD_REF master
-    PATCHES
-        0005-autotools-subdirs.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/README") #README is a symlink
@@ -20,6 +18,8 @@ vcpkg_list(SET options)
 
 if("tools" IN_LIST FEATURES)
     vcpkg_list(APPEND options "--enable-tools")
+else()
+    vcpkg_list(APPEND options "--disable-tools")
 endif()
 
 if("nls" IN_LIST FEATURES)
@@ -55,8 +55,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${HUNSPELL_EXPORT_HDR}" "#if defined(HUNSPELL_STATIC)" "#if 1")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+	"${CURRENT_PACKAGES_DIR}/share"
+)
 
 vcpkg_install_copyright(
     COMMENT "Hunspell is licensed under LGPL/GPL/MPL tri-license."
