@@ -14,6 +14,13 @@ vcpkg_from_github(
 )
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindZSTD.cmake")
+file(GLOB third_party "${SOURCE_PATH}/third_party/*")
+list(REMOVE_ITEM third_party "${SOURCE_PATH}/third_party/libertiff") # keep
+if(third_party)
+    file(REMOVE_RECURSE ${third_party})
+endif()
+file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/libdivide")
+file(WRITE "${SOURCE_PATH}/third_party/libdivide/libdivide.h" "#pragma once\n#include <libdivide.h>\n")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 

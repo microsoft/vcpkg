@@ -1,3 +1,11 @@
+find_package(FastFloat CONFIG REQUIRED)
+cmake_language(DEFER DIRECTORY . CALL target_link_libraries GDAL PRIVATE "$<COMPILE_ONLY:FastFloat::fast_float>")
+cmake_language(DEFER DIRECTORY . CALL target_link_libraries ogr_GeoJSON PRIVATE "$<COMPILE_ONLY:FastFloat::fast_float>")
+add_definitions(-DUSE_SYSTEM_FAST_FLOAT)
+
+find_package(libdivide CONFIG REQUIRED)
+cmake_language(DEFER DIRECTORY . CALL target_link_libraries gdal_vrt PRIVATE "$<COMPILE_ONLY:libdivide::libdivide>")
+
 if(GDAL_USE_KEA)
     find_package(Kealib CONFIG REQUIRED)
     add_library(KEA::KEA ALIAS Kealib::Kealib)
