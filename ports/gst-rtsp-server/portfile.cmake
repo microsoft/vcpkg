@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 58c666b3e298a7836dc13f87665d841dc11397d7e86cec53fcb36375041c4f7bec1eafb91190627c9cdc6a29495dbe8bbb5789ab15889e671aa03f4c004b6927
+    SHA512 8b50a6be64df31dbdaecabad3efe8fa6b2de5be3acd5bc77813bc8ee92f42c1645ef297199ee1225768804498b1326fb83ae8060f54f54b93689b09f66714097
     HEAD_REF main
 )
 
@@ -37,12 +37,12 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     if(NOT VCPKG_BUILD_TYPE)
-        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        file(GLOB DBG_BINS "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
                            "${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/*.pdb"
         )
         file(COPY ${DBG_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/gstreamer")
     endif()
-    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${CMAKE_SHARED_LIBRARY_PREFIX}*${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    file(GLOB REL_BINS "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}*${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
                        "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/*.pdb"
     )
     file(COPY ${REL_BINS} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/gstreamer")
