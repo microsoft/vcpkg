@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-fcftest",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "description": "Integration tests for the fcfTest library",
   "homepage": "https://github.com/fcf-framework/fcfTest",
   "license": "MIT",

@@ -1,6 +1,7 @@
 ---
 name: review-vcpkg-pr
 description: Review a microsoft/vcpkg pull request end-to-end.
+disable-model-invocation: true
 ---
 
 ## Inputs
