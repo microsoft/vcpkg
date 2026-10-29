@@ -4078,7 +4078,7 @@
     },
     "indicators": {
       "baseline": "2.3",
-      "port-version": 0
+      "port-version": 1
     },
     "indirect-value": {
       "baseline": "2023-06-01",
@@ -7798,11 +7798,11 @@
     },
     "paho-mqtt": {
       "baseline": "1.3.16",
-      "port-version": 0
+      "port-version": 1
     },
     "paho-mqttpp3": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "palsigslot": {
       "baseline": "1.2.3",
