@@ -10120,6 +10120,10 @@
       "baseline": "3.4.0",
       "port-version": 0
     },
+    "taar": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "tabulate": {
       "baseline": "2.2",
       "port-version": 0
