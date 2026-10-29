@@ -1,0 +1,30 @@
+{
+  "name": "taar",
+  "version": "1.1.0",
+  "description": "Boost.Taar: a C++20 header-only library for HTTP services on Boost.Asio, Boost.Beast, Boost.JSON and Boost.URL (REST, JSON-RPC, MCP, OpenAPI)",
+  "homepage": "https://github.com/rjahanbakhshi/boost.taar",
+  "documentation": "https://rjahanbakhshi.github.io/boost.taar/",
+  "license": "BSL-1.0",
+  "supports": "!emscripten",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-asio",
+    "boost-assert",
+    "boost-beast",
+    "boost-core",
+    "boost-describe",
+    "boost-json",
+    "boost-mp11",
+    "boost-optional",
+    "boost-system",
+    "boost-url",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
