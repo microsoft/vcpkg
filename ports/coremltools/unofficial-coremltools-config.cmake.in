@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Protobuf CONFIG)
+find_dependency(nlohmann_json CONFIG)
+find_dependency(unofficial-fp16 CONFIG)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Android")
+	find_dependency(unofficial-libuuid CONFIG)
+	endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-coremltools-targets.cmake")

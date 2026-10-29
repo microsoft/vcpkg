@@ -2032,6 +2032,10 @@
       "baseline": "0.3.0",
       "port-version": 0
     },
+    "coremltools": {
+      "baseline": "9.0",
+      "port-version": 0
+    },
     "coroutine": {
       "baseline": "1.5.0",
       "port-version": 5
