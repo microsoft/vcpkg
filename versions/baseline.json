@@ -2621,8 +2621,8 @@
       "port-version": 0
     },
     "docopt": {
-      "baseline": "2022-03-15",
-      "port-version": 1
+      "baseline": "2025-10-03",
+      "port-version": 0
     },
     "docraft": {
       "baseline": "v1.0.0",
