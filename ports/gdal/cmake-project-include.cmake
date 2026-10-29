@@ -7,6 +7,7 @@ find_package(libdivide CONFIG REQUIRED)
 cmake_language(DEFER DIRECTORY . CALL target_link_libraries gdal_vrt PRIVATE "$<COMPILE_ONLY:libdivide::libdivide>")
 
 if(GDAL_USE_KEA)
+    set(FIND_PACKAGE2_KEA_ENABLED OFF CACHE INTERNAL "vcpkg")
     find_package(Kealib CONFIG REQUIRED)
     add_library(KEA::KEA ALIAS Kealib::Kealib)
     set(GDAL_CHECK_PACKAGE_KEA_NAMES Kealib CACHE INTERNAL "vcpkg")
