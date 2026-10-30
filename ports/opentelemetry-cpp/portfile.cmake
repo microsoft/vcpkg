@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         fix-span-limits-32-bit.patch
         fix-missing-cstdint.patch
+        enable-msvc-warnings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
