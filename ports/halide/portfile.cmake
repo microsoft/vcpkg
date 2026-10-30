@@ -4,11 +4,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
     REF "v${VERSION}"
-    SHA512 474fe321f28dd88f8c681d41b9f4d828230e3db5ed69d6a0e08fa3e5143d6cebb294f226f34b0d4c1c5fa276e53401fbbfb33555c20ee07a01f8048d8ca170de
+    SHA512 f3c66eb5e3e9a2f811947231d571d755919bbc07c83dcdafcc379cb7540b5816f3e3192523b2a3ac60832e50ae94a0a87ca92a1ac75cc6617405d13ab9507c93
     HEAD_REF main
-    PATCHES
-        fix-llvm-23.patch
 )
+
+# The autoscheduler plugins are loaded at run time. On Windows they go next to
+# Halide.dll; elsewhere, keep them out of bin/, which vcpkg_cmake_config_fixup
+# treats as the tools directory.
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(plugin_dir bin)
+else ()
+    set(plugin_dir lib)
+endif ()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -23,8 +30,9 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_LIBDIR=bin
         "-DCMAKE_INSTALL_DATADIR=share/${PORT}"
         "-DHalide_INSTALL_CMAKEDIR=share/${PORT}"
-        -DHalide_INSTALL_HELPERSDIR=share/HalideHelpers
-        -DHalide_INSTALL_PLUGINDIR=bin
+        -DHalide_INSTALL_COMPILERDIR=share/HalideCompiler
+        -DHalide_INSTALL_AUTOSCHEDULERSDIR=share/HalideAutoschedulers
+        "-DHalide_INSTALL_PLUGINDIR=${plugin_dir}"
         -DCMAKE_DISABLE_FIND_PACKAGE_PNG=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_JPEG=JPEG
 )
@@ -43,7 +51,8 @@ vcpkg_copy_pdbs(
 )
 
 vcpkg_cmake_config_fixup()
-vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
+vcpkg_cmake_config_fixup(PACKAGE_NAME HalideCompiler)
+vcpkg_cmake_config_fixup(PACKAGE_NAME HalideAutoschedulers)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
