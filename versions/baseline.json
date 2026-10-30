@@ -4620,6 +4620,10 @@
       "baseline": "6.31.0",
       "port-version": 0
     },
+    "kidletime": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kinectsdk1": {
       "baseline": "1.8",
       "port-version": 8
