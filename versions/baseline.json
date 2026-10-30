@@ -4666,7 +4666,7 @@
     },
     "knncolle-kmknn": {
       "baseline": "0.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "knotifications": {
       "baseline": "6.31.0",
