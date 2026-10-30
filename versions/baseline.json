@@ -820,6 +820,10 @@
       "baseline": "2024-08-17",
       "port-version": 0
     },
+    "bluez-qt": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "boinc": {
       "baseline": "8.2.15",
       "port-version": 0
