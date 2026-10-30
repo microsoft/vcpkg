@@ -17,8 +17,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME knncolle_annoy
-    CONFIG_PATH lib/cmake/knncolle_annoy
+    PACKAGE_NAME knncolle_knncolle_annoy
+    CONFIG_PATH lib/cmake/knncolle_knncolle_annoy
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
