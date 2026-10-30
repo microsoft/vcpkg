@@ -9,6 +9,7 @@ vcpkg_from_github(
         iconv.diff
         libarchive.diff
         libkml.patch
+        pkgconfig.diff
         sqlite3.diff
         target-is-valid.patch
 )
@@ -102,6 +103,7 @@ vcpkg_cmake_configure(
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
+        -DGDAL_SPLIT_EXPORTED_LIBS=ON
         -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
         -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
         -DMYSQL_LIBRARIES=unofficial::libmariadb
