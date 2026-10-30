@@ -50,10 +50,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         core             GDAL_USE_JSONC
         kea              GDAL_USE_KEA
         lerc             GDAL_USE_LERC
+        libaec           GDAL_USE_LIBAEC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
-        mysql-libmariadb GDAL_USE_MYSQL 
+        mysql-libmariadb GDAL_USE_MYSQL
         netcdf           GDAL_USE_NETCDF
         odbc             GDAL_USE_ODBC
         openjpeg         GDAL_USE_OPENJPEG

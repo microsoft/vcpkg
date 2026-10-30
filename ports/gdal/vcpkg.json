@@ -47,6 +47,7 @@
       "platform": "!uwp"
     },
     "iconv",
+    "libaec",
     "libkml",
     {
       "name": "libspatialite",
@@ -181,6 +182,12 @@
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
+      ]
+    },
+    "libaec": {
+      "description": "Enable Adaptive Entropy Coding support (used by GRIB)",
+      "dependencies": [
+        "libaec"
       ]
     },
     "libkml": {
