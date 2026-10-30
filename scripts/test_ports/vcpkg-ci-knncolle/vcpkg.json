@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-ci-knncolle",
   "version-string": "ci",
-  "description": "Validates knncolle its bindings",
+  "description": "Validates knncolle and its bindings",
   "dependencies": [
     "knncolle",
     "knncolle-annoy",
