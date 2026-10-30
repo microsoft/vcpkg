@@ -70,13 +70,13 @@ if(NOT TARGET brazier::brazier)
 endif()
 
 if(TARGET brazier::logger)
-    target_link_libraries(brazier::brazier INTERFACE brazier::logger)
+    set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES brazier::logger)
 endif()
 if(TARGET brazier::core)
-    target_link_libraries(brazier::brazier INTERFACE brazier::core)
+    set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES brazier::core)
 endif()
 if(TARGET brazier::orm)
-    target_link_libraries(brazier::brazier INTERFACE brazier::orm)
+    set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES brazier::orm)
 endif()
 
 
