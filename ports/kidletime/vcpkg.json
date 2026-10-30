@@ -1,0 +1,50 @@
+{
+  "name": "kidletime",
+  "version": "6.31.0",
+  "description": "Monitoring user activity",
+  "homepage": "https://invent.kde.org/frameworks/kidletime",
+  "documentation": "https://api.kde.org/kidletime-index.html",
+  "license": "LGPL-2.1-or-later AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND MIT",
+  "supports": "!static & !android & !ios",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "plasma-wayland-protocols",
+      "platform": "linux"
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus",
+        "wayland",
+        "xcb"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "qtwayland",
+      "default-features": false,
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "wayland-protocols",
+      "platform": "linux"
+    }
+  ]
+}
