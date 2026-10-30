@@ -8,7 +8,7 @@ find_package(knncolle_knncolle_kmknn CONFIG REQUIRED)
 
 add_executable(main main.cpp)
 
-target_link_libraries(main PRIVATE 
+target_link_libraries(main PRIVATE
     knncolle::knncolle
     knncolle::knncolle_annoy
     knncolle::knncolle_hnsw
