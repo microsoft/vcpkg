@@ -4336,6 +4336,10 @@
       "baseline": "6.31.0",
       "port-version": 0
     },
+    "kcalendarcore": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kcenon-common-system": {
       "baseline": "0.2.0",
       "port-version": 0
