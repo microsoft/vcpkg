@@ -216,3 +216,17 @@ index 92ce44f..8dd5c68 100644
  endif()
  
  if(onnxruntime_USE_XNNPACK)
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 3a3bda1..8259589 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -2054,6 +2054,9 @@ else()
+         target_include_directories(safeint_interface INTERFACE ${safeint_SOURCE_DIR})\n\
+         ")
+     include("${CMAKE_CURRENT_LIST_DIR}/onnxruntime_telemetry_config.cmake")
++    if(onnxruntime_USE_COREML)
++      string(APPEND PROJECT_CONFIG_CONTENT "find_dependency(unofficial-coremltools CONFIG)\n")
++    endif()
+   endif()
+ 
+   string(APPEND PROJECT_CONFIG_CONTENT
