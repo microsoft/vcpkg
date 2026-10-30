@@ -1,0 +1,218 @@
+diff --git a/cmake/external/onnxruntime_external_deps.cmake b/cmake/external/onnxruntime_external_deps.cmake
+index b7bc9af..07ec0dd 100644
+--- a/cmake/external/onnxruntime_external_deps.cmake
++++ b/cmake/external/onnxruntime_external_deps.cmake
+@@ -1007,26 +1007,8 @@ if (onnxruntime_USE_WEBGPU)
+ endif()
+ 
+ if(onnxruntime_USE_COREML)
+-  # Setup coremltools fp16 and json dependencies for creating an mlpackage.
+-  #
+-  # fp16 depends on psimd
+-  onnxruntime_fetchcontent_declare(psimd URL ${DEP_URL_psimd} URL_HASH SHA1=${DEP_SHA1_psimd} EXCLUDE_FROM_ALL)
+-  onnxruntime_fetchcontent_makeavailable(psimd)
+-  set(PSIMD_SOURCE_DIR ${psimd_SOURCE_DIR})
+-  onnxruntime_fetchcontent_declare(fp16 URL ${DEP_URL_fp16} URL_HASH SHA1=${DEP_SHA1_fp16} EXCLUDE_FROM_ALL)
+-  set(FP16_BUILD_TESTS OFF CACHE INTERNAL "")
+-  set(FP16_BUILD_BENCHMARKS OFF CACHE INTERNAL "")
+-  onnxruntime_fetchcontent_makeavailable(fp16)
+-
+-  onnxruntime_fetchcontent_declare(
+-    coremltools
+-    URL ${DEP_URL_coremltools}
+-    URL_HASH SHA1=${DEP_SHA1_coremltools}
+-    PATCH_COMMAND ${Patch_EXECUTABLE} --binary --ignore-whitespace -p1 < ${PROJECT_SOURCE_DIR}/patches/coremltools/crossplatformbuild.patch
+-    EXCLUDE_FROM_ALL
+-  )
+-  # we don't build directly so use Populate. selected files are built from onnxruntime_providers_coreml.cmake
+-  FetchContent_Populate(coremltools)
++  # coremltools (CoreML proto, MILBlob and model package helpers) and its fp16/json dependencies come from vcpkg
++  find_package(unofficial-coremltools CONFIG REQUIRED)
+ 
+ endif()
+ 
+diff --git a/cmake/onnxruntime_providers_coreml.cmake b/cmake/onnxruntime_providers_coreml.cmake
+index f3425b9..32887b0 100644
+--- a/cmake/onnxruntime_providers_coreml.cmake
++++ b/cmake/onnxruntime_providers_coreml.cmake
+@@ -19,48 +19,6 @@ if(LINUX)
+   endif()
+ endif()
+ 
+-# Compile CoreML proto definition to ${CMAKE_CURRENT_BINARY_DIR}/coreml_proto
+-set(COREML_PROTO_ROOT ${coremltools_SOURCE_DIR}/mlmodel/format)
+-file(GLOB coreml_proto_srcs "${COREML_PROTO_ROOT}/*.proto")
+-
+-onnxruntime_add_static_library(coreml_proto ${coreml_proto_srcs})
+-target_include_directories(coreml_proto
+-                           PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_INCLUDE_DIRECTORIES>
+-                           $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+-target_compile_definitions(coreml_proto
+-                           PUBLIC $<TARGET_PROPERTY:${PROTOBUF_LIB},INTERFACE_COMPILE_DEFINITIONS>)
+-set_target_properties(coreml_proto PROPERTIES COMPILE_FLAGS "-fvisibility=hidden")
+-set_target_properties(coreml_proto PROPERTIES COMPILE_FLAGS "-fvisibility-inlines-hidden")
+-
+-set(_src_sub_dir "coreml_proto/")
+-onnxruntime_protobuf_generate(
+-  APPEND_PATH
+-  GEN_SRC_SUB_DIR ${_src_sub_dir}
+-  IMPORT_DIRS ${COREML_PROTO_ROOT}
+-  TARGET coreml_proto
+-)
+-
+-if (NOT onnxruntime_BUILD_SHARED_LIB)
+-  install(TARGETS coreml_proto
+-          EXPORT ${PROJECT_NAME}Targets
+-          ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-          LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-          RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
+-          FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR}
+-  )
+-endif()
+-
+-# Add the .proto and generated .cc/.h files to the External/coreml_proto folder in Visual Studio.
+-# Separate source_group for each as the .proto files are in the repo and the .cc/.h files are generated in the build
+-# output directory.
+-set_target_properties(coreml_proto PROPERTIES FOLDER "External")
+-source_group(TREE ${COREML_PROTO_ROOT} PREFIX coreml_proto FILES ${coreml_proto_srcs})
+-
+-# filter to the generated .cc/.h files
+-get_target_property(coreml_proto_generated_srcs coreml_proto SOURCES)
+-list(FILTER coreml_proto_generated_srcs INCLUDE REGEX "\.pb\.(h|cc)$")
+-source_group(TREE ${CMAKE_CURRENT_BINARY_DIR} PREFIX coreml_proto_generated FILES ${coreml_proto_generated_srcs})
+-
+ # These are shared utils,
+ # TODO, move this to a separate lib when used by EPs other than NNAPI and CoreML
+ file(GLOB onnxruntime_providers_shared_utils_cc_srcs CONFIGURE_DEPENDS
+@@ -85,33 +43,6 @@ file(GLOB_RECURSE
+   "${ONNXRUNTIME_ROOT}/core/providers/coreml/builders/*.cc"
+ )
+ 
+-  # Add helpers to create mlpackage weights. limit to just the files we need to minimize the changes to make them
+-  # build on Windows and Linux.
+-file(GLOB
+-    onnxruntime_providers_coreml_milblob_cc_srcs CONFIGURE_DEPENDS
+-    "${coremltools_SOURCE_DIR}/mlmodel/src/MILBlob/*.hpp"
+-    "${coremltools_SOURCE_DIR}/mlmodel/src/MILBlob/*.cpp"
+-    "${coremltools_SOURCE_DIR}/mlmodel/src/MILBlob/Util/*.hpp"
+-    "${coremltools_SOURCE_DIR}/mlmodel/src/MILBlob/Blob/BlobDataType.hpp"
+-    "${coremltools_SOURCE_DIR}/mlmodel/src/MILBlob/Blob/StorageFormat.hpp"
+-    "${coremltools_SOURCE_DIR}/mlmodel/src/MILBlob/Blob/FileWriter.?pp"
+-    "${coremltools_SOURCE_DIR}/mlmodel/src/MILBlob/Blob/StorageWriter.?pp"
+-)
+-
+-# Add helpers to create mlpackage
+-file(GLOB
+-    onnxruntime_providers_coreml_modelpackage_cc_srcs CONFIGURE_DEPENDS
+-    "${coremltools_SOURCE_DIR}/modelpackage/src/ModelPackage.?pp"
+-    "${coremltools_SOURCE_DIR}/modelpackage/src/utils/JsonMap.?pp"
+-)
+-
+-set(coremltools_srcs
+-    ${onnxruntime_providers_coreml_milblob_cc_srcs}
+-    ${onnxruntime_providers_coreml_modelpackage_cc_srcs}
+-)
+-
+-source_group(TREE ${coremltools_SOURCE_DIR} PREFIX coremltools FILES ${coremltools_srcs})
+-
+ # Add CoreML objective c++ source code
+ if (APPLE)
+   file(GLOB
+@@ -148,7 +79,6 @@ source_group(TREE ${ONNXRUNTIME_INCLUDE_DIR} FILES ${onnxruntime_providers_corem
+ onnxruntime_add_static_library(onnxruntime_providers_coreml
+   ${onnxruntime_providers_coreml_public_headers}
+   ${onnxruntime_providers_coreml_cc_srcs}
+-  ${coremltools_srcs}
+ )
+ 
+ onnxruntime_add_include_to_target(onnxruntime_providers_coreml
+@@ -176,9 +106,7 @@ else()
+ endif()
+ target_include_directories(onnxruntime_providers_coreml PRIVATE ${FP16_INCLUDE_DIRS})
+ 
+-onnxruntime_add_include_to_target(onnxruntime_providers_coreml coreml_proto)
+-target_link_libraries(onnxruntime_providers_coreml PRIVATE coreml_proto)
+-add_dependencies(onnxruntime_providers_coreml coreml_proto)
++target_link_libraries(onnxruntime_providers_coreml PRIVATE unofficial::coremltools::coreml_proto unofficial::coremltools::mlmodel)
+ 
+ if (APPLE)
+   target_compile_definitions(onnxruntime_providers_coreml PRIVATE __APPLE__)
+@@ -186,13 +114,6 @@ endif()
+ 
+ 
+ 
+-# need to tweak the include paths to match what the coreml source code expects
+-target_include_directories(onnxruntime_providers_coreml PRIVATE
+-                            ${coremltools_SOURCE_DIR}
+-                            ${coremltools_SOURCE_DIR}/mlmodel/src/
+-                            ${coremltools_SOURCE_DIR}/modelpackage/src/
+-)
+-
+ if (LINUX)
+   target_include_directories(onnxruntime_providers_coreml PRIVATE ${LibUUID_INCLUDE_DIR})
+   target_link_libraries(onnxruntime_providers_coreml PRIVATE ${LibUUID_LIBRARY})
+diff --git a/onnxruntime/core/providers/coreml/builders/coreml_spec.h b/onnxruntime/core/providers/coreml/builders/coreml_spec.h
+index 9448f11..f428dfb 100644
+--- a/onnxruntime/core/providers/coreml/builders/coreml_spec.h
++++ b/onnxruntime/core/providers/coreml/builders/coreml_spec.h
+@@ -24,7 +24,7 @@
+ 
+ // Model.pb.h is generated in the build output directory from the CoreML protobuf files in
+ // <build output directory>/_deps/coremltools-src/mlmodel/format
+-#include "coreml_proto/Model.pb.h"
++#include "coremltools/coreml_proto/Model.pb.h"
+ 
+ #if defined(__GNUC__)
+ #pragma GCC diagnostic pop
+diff --git a/onnxruntime/core/providers/coreml/builders/model_builder.cc b/onnxruntime/core/providers/coreml/builders/model_builder.cc
+index 87dca12..49abe6a 100644
+--- a/onnxruntime/core/providers/coreml/builders/model_builder.cc
++++ b/onnxruntime/core/providers/coreml/builders/model_builder.cc
+@@ -19,8 +19,8 @@
+ #include "core/optimizer/initializer.h"
+ 
+ // includes from coremltools-src in _deps
+-#include "modelpackage/src/ModelPackage.hpp"
+-#include "mlmodel/src/MILBlob/Blob/StorageWriter.hpp"
++#include <coremltools/ModelPackage.hpp>
++#include <MILBlob/Blob/StorageWriter.hpp>
+ using MILBlob::Blob::StorageWriter;
+ using namespace CoreML::Specification;
+ 
+diff --git a/cmake/onnxruntime_providers.cmake b/cmake/onnxruntime_providers.cmake
+index 0270be7..5f2f018 100644
+--- a/cmake/onnxruntime_providers.cmake
++++ b/cmake/onnxruntime_providers.cmake
+@@ -66,7 +66,7 @@ if(onnxruntime_USE_CUDA AND NOT onnxruntime_BUILD_CUDA_EP_AS_PLUGIN)
+   set(PROVIDERS_CUDA onnxruntime_providers_cuda)
+ endif()
+ if(onnxruntime_USE_COREML)
+-  set(PROVIDERS_COREML onnxruntime_providers_coreml coreml_proto)
++  set(PROVIDERS_COREML onnxruntime_providers_coreml)
+ endif()
+ if(onnxruntime_USE_NNAPI_BUILTIN)
+   set(PROVIDERS_NNAPI onnxruntime_providers_nnapi)
+diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
+index 92ce44f..8dd5c68 100644
+--- a/cmake/onnxruntime_unittests.cmake
++++ b/cmake/onnxruntime_unittests.cmake
+@@ -718,7 +718,7 @@ if(onnxruntime_USE_MIGRAPHX)
+ endif()
+ 
+ if(onnxruntime_USE_COREML)
+-  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml coreml_proto)
++  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml)
+ endif()
+ 
+ if(onnxruntime_USE_ACL)
+@@ -854,8 +854,8 @@ if(onnxruntime_USE_COREML)
+   if(APPLE)
+     list(APPEND onnxruntime_test_framework_src_patterns ${TEST_SRC_DIR}/providers/coreml/*.mm)
+   endif()
+-  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml coreml_proto)
+-  list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_coreml coreml_proto)
++  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml)
++  list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_coreml)
+ endif()
+ 
+ if(onnxruntime_USE_XNNPACK)
