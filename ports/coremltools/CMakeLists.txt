@@ -3,10 +3,6 @@ project(coremltools-mlmodel LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 if(NOT COREMLTOOLS_SOURCE_DIR)
 	message(FATAL_ERROR "COREMLTOOLS_SOURCE_DIR must point to the coremltools sources.")
 endif()
@@ -93,6 +89,11 @@ install(
 	DIRECTORY "${PROTO_OUT_DIR}"
 	DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/coremltools"
 	FILES_MATCHING PATTERN "*.h"
+)
+
+install(
+	FILES ${COREML_PROTOS}
+	DESTINATION "${CMAKE_INSTALL_DATADIR}/coremltools/mlmodel/format"
 )
 
 install(

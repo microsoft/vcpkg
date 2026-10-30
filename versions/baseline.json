@@ -2034,7 +2034,7 @@
     },
     "coremltools": {
       "baseline": "9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "coroutine": {
       "baseline": "1.5.0",
@@ -7490,7 +7490,7 @@
     },
     "onnxruntime": {
       "baseline": "1.31.1",
-      "port-version": 0
+      "port-version": 1
     },
     "onnxruntime-gpu": {
       "baseline": "1.23.2",
