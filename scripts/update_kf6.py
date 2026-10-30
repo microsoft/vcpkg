@@ -25,6 +25,7 @@ PORT_LIST = [
     "kauth",
     "kbookmarks",
     "kbreezeicons",
+    "kcalendarcore",
     "kcodecs",
     "kcolorscheme",
     "kcompletion",
