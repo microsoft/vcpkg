@@ -4658,15 +4658,15 @@
     },
     "knncolle-annoy": {
       "baseline": "0.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "knncolle-hnsw": {
       "baseline": "0.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "knncolle-kmknn": {
       "baseline": "0.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "knotifications": {
       "baseline": "6.31.0",
