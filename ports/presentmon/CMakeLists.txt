@@ -74,9 +74,9 @@ target_link_libraries(PresentData PUBLIC cereal::cereal)
 
 # Install targets
 install(TARGETS PresentData
-	RUNTIME DESTINATION bin 
-	LIBRARY DESTINATION lib 
-	ARCHIVE DESTINATION lib 
+	RUNTIME DESTINATION bin
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
 )
 
 if (BUILD_TOOLS)
@@ -116,12 +116,12 @@ if (BUILD_TOOLS)
         IntelPresentMon/CommonUtilities/mc/SwapChainState.cpp
         IntelPresentMon/CommonUtilities/mc/UnifiedSwapChain.cpp
     )
-    
+
     add_executable(PresentMon ${PresentMon_SRCS} "${CMAKE_CURRENT_BINARY_DIR}/ddETWExternalEvents.rc")
     target_include_directories(PresentMon PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/PresentMon ${CMAKE_BINARY_DIR})
     target_compile_definitions(PresentMon PRIVATE UNICODE)
     target_link_libraries(PresentMon PRIVATE PresentData Tdh Shlwapi)
-    
+
     install(TARGETS PresentMon
         RUNTIME DESTINATION bin
     )
