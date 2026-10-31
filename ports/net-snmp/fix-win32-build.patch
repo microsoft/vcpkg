@@ -3,25 +3,25 @@ index 37f597f..99bb3c3 100644
 --- a/win32/Configure
 +++ b/win32/Configure
 @@ -222,8 +222,8 @@ my %makefile_subs = (
-                                "/Zi " .
-                                "/nologo " .
-                ($config eq "release" ?
+                                 "/Zi " .
+                                 "/nologo " .
+                 ($config eq "release" ?
 -                "/MD  /D NDEBUG /O2 " :
 -                "/MDd /D _DEBUG /Od /Gm ")
 +                "/D NDEBUG /O2 " :
 +                "/D _DEBUG /Od /Gm ")
               ],
-     "lfl" => [ "^LDFLAGS=",    "LDFLAGS=" .
-                                ($config eq "debug" ? "/debug " : "") .
+      "lfl" => [ "^LDFLAGS=",    "LDFLAGS=" .
+                                 ($config eq "debug" ? "/debug " : "") .
 @@ -263,9 +263,6 @@ my %net_snmp_config_subs = (
-     "ver" => [ "^#define PACKAGE_VERSION.*",
-                "#define PACKAGE_VERSION \"$version\"" ]
-     );
+      "ver" => [ "^#define PACKAGE_VERSION.*",
+                 "#define PACKAGE_VERSION \"$version\"" ]
+      );
 -if ($prefix ne "") {
 -    $net_snmp_config_subs{"pfx"} = [ "^#define INSTALL_BASE.*", "#define INSTALL_BASE \"$prefix\"" ];
 -}
  if ($linktype eq "dynamic") {
-     $net_snmp_config_subs{"dll"} = [ "^.*#undef NETSNMP_USE_DLL.*", "#define NETSNMP_USE_DLL 1" ];
+      $net_snmp_config_subs{"dll"} = [ "^.*#undef NETSNMP_USE_DLL.*", "#define NETSNMP_USE_DLL 1" ];
  }
 diff --git a/win32/Makefile.in b/win32/Makefile.in
 index 6c5138a..80ec131 100644
@@ -47,87 +47,56 @@ index 6c5138a..80ec131 100644
 -
          cd win32
  
-diff --git a/win32/local/Makefile.in b/win32/local/Makefile.in
-index 6293379..a1e8d71 100644
+ diff --git a/win32/local/Makefile.in b/win32/local/Makefile.in
+ index 6293379..a1e8d71 100644
 --- a/win32/local/Makefile.in
 +++ b/win32/local/Makefile.in
 @@ -11,13 +11,13 @@ ALL: snmpconf mib2c traptoemail
      if not exist "..\bin\$(OUTDIR)/$(NULL)" mkdir "..\bin\$(OUTDIR)"
  
- snmpconf: "..\..\local\snmpconf" "..\bin\$(OUTDIR)"
+  snmpconf: "..\..\local\snmpconf" "..\bin\$(OUTDIR)"
 -	perl -p -e "s#/usr/local#$(PREFIX)#g;" ..\..\local\snmpconf > ..\bin\$(OUTDIR)\snmpconf
 +	perl -p -e "s#/usr/local/etc/snmp#../../share/snmp#g; s#/usr/local#../..#g;" ..\..\local\snmpconf > ..\bin\$(OUTDIR)\snmpconf
  
- mib2c: "..\..\local\mib2c" "..\bin\$(OUTDIR)"
+  mib2c: "..\..\local\mib2c" "..\bin\$(OUTDIR)"
 -	perl -p -e "s#/usr/local#$(PREFIX)#g;" ..\..\local\mib2c > ..\bin\$(OUTDIR)\mib2c
 +	perl -p -e "s#/usr/local#../..#g;" ..\..\local\mib2c > ..\bin\$(OUTDIR)\mib2c
  
- traptoemail: "..\..\local\traptoemail" "..\bin\$(OUTDIR)"
+  traptoemail: "..\..\local\traptoemail" "..\bin\$(OUTDIR)"
 -	perl -p -e "s#/usr/local#$(PREFIX)#g;" ..\..\local\traptoemail > ..\bin\$(OUTDIR)\traptoemail
 +	perl -p -e "s#/usr/local/bin/##g;" ..\..\local\traptoemail > ..\bin\$(OUTDIR)\traptoemail
  
- CLEAN: snmpconf_clean mib2c_clean traptoemail_clean
+  CLEAN: snmpconf_clean mib2c_clean traptoemail_clean
  
-diff --git a/win32/local/mib2c.bat b/win32/local/mib2c.bat
-index d7809da..d0987f5 100644
---- a/win32/local/mib2c.bat
-+++ b/win32/local/mib2c.bat
+ diff --git a/win32/local/mib2c.bat b/win32/local/mib2c.bat
 @@ -1,5 +1,5 @@
- @echo off
+  @echo off
 -set MYPERLPROGRAM=c:\usr\bin\mib2c
 +set MYPERLPROGRAM=%~dp0mib2c
  
- perl -v > NUL 2>&1
- if ERRORLEVEL 1 goto no_perl
-diff --git a/win32/local/snmpconf.bat b/win32/local/snmpconf.bat
-index e0bbb2b..425c2b8 100644
---- a/win32/local/snmpconf.bat
-+++ b/win32/local/snmpconf.bat
+  perl -v > NUL 2>&1
+  if ERRORLEVEL 1 goto no_perl
 @@ -1,5 +1,5 @@
- @echo off
+  @echo off
 -set MYPERLPROGRAM=c:\usr\bin\snmpconf
 +set MYPERLPROGRAM=%~dp0snmpconf
  
- perl -v > NUL 2>&1
- if ERRORLEVEL 1 goto no_perl
-diff --git a/win32/local/traptoemail.bat b/win32/local/traptoemail.bat
-index 0d38fde..f628849 100644
---- a/win32/local/traptoemail.bat
-+++ b/win32/local/traptoemail.bat
+  perl -v > NUL 2>&1
+  if ERRORLEVEL 1 goto no_perl
 @@ -1,5 +1,5 @@
- @echo off
+  @echo off
 -set MYPERLPROGRAM=c:\usr\bin\traptoemail
 +set MYPERLPROGRAM=%~dp0traptoemail
  
- perl -v > NUL 2>&1
- if ERRORLEVEL 1 goto no_perl
-diff --git a/win32/net-snmp/net-snmp-config.h.in b/win32/net-snmp/net-snmp-config.h.in
-index d2d0074..5763a50 100644
---- a/win32/net-snmp/net-snmp-config.h.in
-+++ b/win32/net-snmp/net-snmp-config.h.in
+  perl -v > NUL 2>&1
+  if ERRORLEVEL 1 goto no_perl
+ diff --git a/win32/net-snmp/net-snmp-config.h.in b/win32/net-snmp/net-snmp-config.h.in
 @@ -51,7 +51,7 @@
- #endif
- #endif
- 
+  #endif
+  #endif
+  
 -#define INSTALL_BASE "c:/usr"
-+#define INSTALL_BASE "/../../"
++#define INSTALL_BASE "../.."
  
- /* config.h:  a general config file */
- 
-@@ -1777,13 +1777,9 @@ enum {
- /* MSVC OpenSSL linker settings. */
- #if defined(_MSC_VER)
- #  if defined(NETSNMP_USE_OPENSSL)
--#    ifdef _DLL
--#      pragma comment(lib, "libcrypto.lib")
--#      pragma comment(lib, "libssl.lib")
--#    else
--#      pragma comment(lib, "libcrypto_static.lib")
--#      pragma comment(lib, "libssl_static.lib")
--#    endif
-+#    pragma comment(lib, "libcrypto.lib")
-+#    pragma comment(lib, "libssl.lib")
-+#    pragma comment(lib, "crypt32.lib")
- #    pragma comment(lib, "gdi32.lib")
- #    pragma comment(lib, "user32.lib")
- #  endif
+  /* config.h:  a general config file */
+*** End Patch

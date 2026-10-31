@@ -83,9 +83,18 @@ if("tools" IN_LIST FEATURES)
     set(NET_SNMP_TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(MAKE_DIRECTORY "${NET_SNMP_TOOL_DIR}")
 
-    foreach(_tool IN ITEMS mib2c mib2c.bat snmpconf snmpconf.bat traptoemail traptoemail.bat)
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_tool}" "${NET_SNMP_TOOL_DIR}/${_tool}")
-    endforeach()
+    # The helper scripts shipped by net-snmp assume a Windows install layout and
+    # a Perl SNMP module that vcpkg does not currently package. Avoid shipping them
+    # as part of the vcpkg toolset because they are not usable as-is in a portable
+    # package layout.
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/bin/mib2c"
+        "${CURRENT_PACKAGES_DIR}/bin/mib2c.bat"
+        "${CURRENT_PACKAGES_DIR}/bin/snmpconf"
+        "${CURRENT_PACKAGES_DIR}/bin/snmpconf.bat"
+        "${CURRENT_PACKAGES_DIR}/bin/traptoemail"
+        "${CURRENT_PACKAGES_DIR}/bin/traptoemail.bat"
+    )
 
     vcpkg_copy_tools(
         TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
@@ -94,14 +103,7 @@ if("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
 else()
-    file(REMOVE
-        "${CURRENT_PACKAGES_DIR}/bin/mib2c.bat"
-        "${CURRENT_PACKAGES_DIR}/bin/snmpconf.bat"
-        "${CURRENT_PACKAGES_DIR}/bin/traptoemail.bat"
-    )
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    endif()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

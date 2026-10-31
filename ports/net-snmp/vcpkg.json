@@ -3,7 +3,7 @@
   "version": "5.9.5.2",
   "description": "A SNMP application library, tools and daemon",
   "homepage": "https://www.net-snmp.org/",
-  "license": "BSD-4-Clause",
+  "license": null,
   "supports": "windows & !mingw & !uwp",
   "features": {
     "ssl": {
