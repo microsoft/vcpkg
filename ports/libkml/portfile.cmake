@@ -14,6 +14,18 @@ vcpkg_from_github(
         fix-mingw.patch
         fix-minizip.patch
         add-target-include-directories.patch
+        fix-cxx20-intrusive-ptr.patch # libkml/libkml#284
+        fix-pkgconfig.patch
+)
+
+# The customized ZIP reader retains Info-ZIP-derived decryption code.
+vcpkg_download_distfile(INFOZIP_ARCHIVE
+    URLS "https://downloads.sourceforge.net/infozip/unzip60.tar.gz"
+    FILENAME "infozip-unzip60.tar.gz"
+    SHA512 0694e403ebc57b37218e00ec1a406cae5cc9c5b52b6798e0d4590840b6cdbf9ddc0d9471f67af783e960f8fa2e620394d51384257dca23d06bcd90224a80ce5d
+)
+vcpkg_extract_source_archive(INFOZIP_SOURCE_PATH
+    ARCHIVE "${INFOZIP_ARCHIVE}"
 )
 
 file(REMOVE
@@ -44,4 +56,10 @@ else()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/src/kml/base/contrib/minizip/unzip.h"
+    "${SOURCE_PATH}/src/kml/base/contrib/minizip/iomem_simple.c"
+    "${CURRENT_INSTALLED_DIR}/include/minizip/crypt.h"
+    "${INFOZIP_SOURCE_PATH}/LICENSE"
+)
