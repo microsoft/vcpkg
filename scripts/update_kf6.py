@@ -41,6 +41,7 @@ PORT_LIST = [
     "kitemviews",
     "kjobwidgets",
     "knotifications",
+    "kpackage",
     "kplotting",
     "kwidgetsaddons",
     "kwindowsystem",

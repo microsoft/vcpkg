@@ -4676,6 +4676,10 @@
       "baseline": "5.34",
       "port-version": 0
     },
+    "kpackage": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kplotting": {
       "baseline": "6.31.0",
       "port-version": 0
