@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -128,7 +128,7 @@
+     string(APPEND OPENCL_LIBS_PRIVATE_PC " -lcfgmgr32 -lole32 -lruntimeobject")
+ 
+     # Generate a DLL without a "lib" prefix for mingw.
+-    if (MINGW OR MSYS OR CYGWIN)
++    if ((MINGW OR MSYS OR CYGWIN) AND OPENCL_ICD_LOADER_BUILD_SHARED_LIBS)
+         set_target_properties(OpenCL PROPERTIES PREFIX "")
+         set_target_properties(OpenCL PROPERTIES LINK_FLAGS "-Wl,-disable-stdcall-fixup")
+     endif()
