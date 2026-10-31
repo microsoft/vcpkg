@@ -1,6 +1,6 @@
 {
   "name": "mapnik",
-  "version": "4.0.7",
+  "version": "4.3.2",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
@@ -50,9 +50,10 @@
       "platform": "osx"
     },
     "icu",
+    "libavif",
     "mapbox-geometry",
-    "mapbox-polylabel",
     "mapbox-variant",
+    "mapnik-polylabel",
     "protozero",
     {
       "name": "vcpkg-cmake",
@@ -90,8 +91,8 @@
         "boost-algorithm"
       ]
     },
-    "input-gdal": {
-      "description": "GDAL input plugin",
+    "input-gdal-ogr": {
+      "description": "GDAL+OGR input plugin",
       "dependencies": [
         "gdal"
       ]
@@ -105,20 +106,8 @@
     "input-geojson": {
       "description": "GEOJSON input plugin"
     },
-    "input-ogr": {
-      "description": "OGR input plugin",
-      "dependencies": [
-        "gdal"
-      ]
-    },
-    "input-pgraster": {
-      "description": "PGRASTER input plugin",
-      "dependencies": [
-        "libpq"
-      ]
-    },
-    "input-postgis": {
-      "description": "POSTGIS input plugin",
+    "input-postgis-pgraster": {
+      "description": "POSTGIS+PGRASTER input plugin",
       "dependencies": [
         "libpq"
       ]
@@ -136,6 +125,34 @@
       "description": "SQLITE input plugin",
       "dependencies": [
         "sqlite3"
+      ]
+    },
+    "input-tiles": {
+      "description": "Tiles input plugin",
+      "license": "BSD-3-Clause",
+      "dependencies": [
+        "boost-beast",
+        "boost-context",
+        {
+          "name": "boost-json",
+          "platform": "windows"
+        },
+        "boost-lockfree",
+        "boost-url",
+        "sqlite3"
+      ]
+    },
+    "input-tiles-ssl": {
+      "description": "SSL support in plugin input tiles",
+      "dependencies": [
+        {
+          "name": "mapnik",
+          "default-features": false,
+          "features": [
+            "input-tiles"
+          ]
+        },
+        "openssl"
       ]
     },
     "input-topojson": {
