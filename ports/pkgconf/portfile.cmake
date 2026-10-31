@@ -1,18 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pkgconf/pkgconf
-    REF "pkgconf-${VERSION}"
-    SHA512 53244f372ea21125a1d97c5b89a84299740b55a66165782e807ed23adab3a07408a1547f1f40156e3060359660d07f49846c8b4893beef10ac9440ab7e8611cc
+    REF pkgconf-${VERSION}
+    SHA512 4e49bb7b10c6fdebfa1175b4c33138b8aeca2582e49adb5c7ba66d08e8614771ef060b0c2673bd098c1aed821c8ade1a6dd276c1f4ac6e29bd7efcb8f4c0402e
     HEAD_REF master
-    PATCHES
-        001-unveil-fixes.patch # https://github.com/pkgconf/pkgconf/pull/430
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     NO_PKG_CONFIG
-    OPTIONS
-        -Dtests=disabled
 )
 
 set(systemsuffix "")
@@ -51,6 +47,12 @@ if(NOT VCPKG_CROSSCOMPILING)
         set(SYSTEM_LIBDIR "/lib:/lib/riscv64-linux-gnu:/usr/lib:/usr/lib/riscv64-linux-gnu")
         set(PKG_DEFAULT_PATH "/usr/local/lib/riscv64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/riscv64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
         set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
+    elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        # These defaults are obtained from pkgconf/pkg-config on Ubuntu
+        set(SYSTEM_INCLUDEDIR "/usr/include")
+        set(SYSTEM_LIBDIR "/lib:/lib/aarch64-linux-gnu:/lib64:/usr/lib:/usr/lib/aarch64-linux-gnu:/usr/lib64")
+        set(PKG_DEFAULT_PATH "/usr/local/lib/aarch64-linux-gnu/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/aarch64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+        set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
     endif()
 endif()
 
@@ -88,7 +90,7 @@ if(EXISTS "${pkgconfig_file}")
 endif()
 
 vcpkg_install_meson()
-vcpkg_fixup_pkgconfig(SKIP_CHECK)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -99,6 +101,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pkgconf/libpkgconf/libpkgconf-api.h" "#if defined(PKGCONFIG_IS_STATIC)" "#if 1")
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf pccritic spdxtool AUTO_CLEAN)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/cli/getopt_long.c"
+        "${SOURCE_PATH}/cli/getopt_long.h"
+        "${SOURCE_PATH}/cli/spdxtool/main.c"
+        "${SOURCE_PATH}/pkg.m4"
+)

@@ -1,0 +1,11 @@
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1530,4 +1530,8 @@
+   if(USE_KLEIDIAI)
++    find_package(KleidiAI CONFIG REQUIRED)
++    set(AT_KLEIDIAI_ENABLED 1)
++    list(APPEND Caffe2_DEPENDENCY_LIBS KleidiAI::kleidiai)
++  elseif(FALSE)
+     set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+     set(AT_KLEIDIAI_ENABLED 1)

@@ -1,0 +1,17 @@
+diff --git a/aui.views/src/AUI/GL/gl.h b/aui.views/src/AUI/GL/gl.h
+index 64209c64..afd734e3 100644
+--- a/aui.views/src/AUI/GL/gl.h
++++ b/aui.views/src/AUI/GL/gl.h
+@@ -10,7 +10,6 @@
+  */
+ 
+ #pragma once
+-extern "C" {
+ #if AUI_PLATFORM_ANDROID
+ #include <GLES3/gl3.h>
+ #include <GLES3/gl31.h>
+@@ -27,4 +26,3 @@ extern "C" {
+ #include <GL/glew.h>
+ #include <GL/gl.h>
+ #endif
+-}

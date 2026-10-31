@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-deps.patch
         folly-has-liburing.diff
         fix-fmt-include.patch
+        fix-fmt-header.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")

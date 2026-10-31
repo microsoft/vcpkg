@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 711bbe3..a8b9efd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -128,7 +128,16 @@ endif ()
+ target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "USEARCH_USE_OPENMP=$<BOOL:${USEARCH_USE_OPENMP}>")
+ 
+ # Supplementary compilation settings affecting "index_plugins.hpp"
+-target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "USEARCH_USE_NUMKONG=$<BOOL:${USEARCH_USE_NUMKONG}>")
++set(USEARCH_USE_NUMKONG_SHARED OFF)
++if (USEARCH_USE_NUMKONG)
++    find_package(unofficial-numkong CONFIG QUIET)
++    if (TARGET unofficial::numkong::nk_shared)
++        set(USEARCH_USE_NUMKONG_SHARED ON)
++        target_link_libraries(${USEARCH_TARGET_NAME} INTERFACE unofficial::numkong::nk_shared)
++        target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "NK_DYNAMIC_DISPATCH=1")
++    endif ()
++endif ()
++target_compile_definitions(${USEARCH_TARGET_NAME} INTERFACE "USEARCH_USE_NUMKONG=$<BOOL:${USEARCH_USE_NUMKONG_SHARED}>")
+ 
+ # Define which types can be compiled
+ target_compile_definitions(
+@@ -148,7 +157,7 @@ target_include_directories(
+     ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE} INTERFACE $<BUILD_INTERFACE:${USEARCH_INCLUDE_BUILD_DIR}>
+                                                                $<INSTALL_INTERFACE:include>
+ )
+-if (USEARCH_USE_NUMKONG)
++if (USEARCH_USE_NUMKONG_SHARED)
+     find_path(NUMKONG_INCLUDE_DIRS "numkong/attention.h")
+     target_include_directories(
+         ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE}
+diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
+index 7bba80c..8198810 100644
+--- a/cmake/config.cmake.in
++++ b/cmake/config.cmake.in
+@@ -3,6 +3,10 @@ set(${CMAKE_FIND_PACKAGE_NAME}_CONFIG ${CMAKE_CURRENT_LIST_FILE})
+ find_package_handle_standard_args(@PROJECT_NAME@ CONFIG_MODE)
+ 
+ if(NOT TARGET @PROJECT_NAME@::@USEARCH_TARGET_NAME@)
++    if(@USEARCH_USE_NUMKONG_SHARED@)
++        include(CMakeFindDependencyMacro)
++        find_dependency(unofficial-numkong CONFIG)
++    endif()
+     include("${CMAKE_CURRENT_LIST_DIR}/@USEARCH_TARGETS_EXPORT_NAME@.cmake")
+     if((NOT TARGET @USEARCH_TARGET_NAME@) AND
+        (NOT @PROJECT_NAME@_FIND_VERSION OR

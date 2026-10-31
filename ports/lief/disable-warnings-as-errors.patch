@@ -1,0 +1,46 @@
+diff --git a/cmake/LIEFCompilerFlags.cmake b/cmake/LIEFCompilerFlags.cmake
+index e19c8ae..6e6dd65 100644
+--- a/cmake/LIEFCompilerFlags.cmake
++++ b/cmake/LIEFCompilerFlags.cmake
+@@ -27,17 +27,8 @@ if((CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"
+     -Wextra
+     -Wpedantic
+     -Wno-expansion-to-defined
+-    # Promote this warning into an error as error management
+-    # where the result is 'result<void>' might miss the "return {}"
+-    -Werror=return-type
+-    -fdiagnostics-color=always
+   )
+   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+-    if(CMAKE_GENERATOR MATCHES "Ninja")
+-      target_compile_options(LIB_LIEF PRIVATE
+-        -fcolor-diagnostics
+-      )
+-    endif()
+   else(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+     # GCC specific flags
+   endif()
+@@ -101,23 +92,10 @@ if(MSVC)
+     # avoid unwanted alignment warnings.
+     -wd4324 # Suppress 'structure was padded due to __declspec(align())'
+ 
+-    # Promoted warnings.
+-    -w14062 # Promote 'enumerator in switch of enum is not handled' to level 1 warning.
+-
+-    # Promoted warnings to errors.
+-    -we4238 # Promote 'nonstandard extension used : class rvalue used as lvalue' to error.
+ 
+     -wd4530 # Supress C++ exception handler used, but unwind semantics are not enabled
+     -wd4251 # remove: needs to have dll-interface to be used by clients of class
+   )
+-
+-  set(msvc_warning_flags "/W4 ${msvc_warning_flags}")
+-  string(REGEX REPLACE " /W[0-4]" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+-  string(REGEX REPLACE " /W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+-  foreach(flag ${msvc_warning_flags})
+-    append("${flag}" CMAKE_C_FLAGS CMAKE_CXX_FLAGS)
+-  endforeach(flag)
+-
+   if (LIEF_DISABLE_EXCEPTIONS)
+       string(REGEX REPLACE " /EHsc" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+       string(REGEX REPLACE " /EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

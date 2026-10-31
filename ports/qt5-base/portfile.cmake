@@ -45,11 +45,6 @@ endif()
 ## Downloading Qt5-Base
 
 set(PATCHES
-    # CVE fixes from https://download.qt.io/archive/qt/5.15/
-    patches/CVE-2025-4211-qtbase-5.15.diff
-    patches/CVE-2025-5455-qtbase-5.15.patch
-    patches/CVE-2025-30348-qtbase-5.15.diff
-
     patches/winmain_pro.patch          #Moves qtmain to manual-link
     patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
     patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
@@ -260,6 +255,20 @@ endif()
 
 if("icu" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -icu)
+
+    # ICU 78's public headers require C++17 (std::u16string_view, nested namespace
+    # definitions, inline variables), but Qt 5.15's mkspecs default to an earlier
+    # standard. -c++std only affects the final build, not configure's own
+    # feature-detection compiles, so the flag must also be forced directly for
+    # the icu config test to succeed.
+    list(APPEND CORE_OPTIONS -c++std c++17)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND RELEASE_OPTIONS "QMAKE_CXXFLAGS_RELEASE+=/std:c++17")
+        list(APPEND DEBUG_OPTIONS "QMAKE_CXXFLAGS_DEBUG+=/std:c++17")
+    else()
+        list(APPEND RELEASE_OPTIONS "QMAKE_CXXFLAGS_RELEASE+=-std=c++17")
+        list(APPEND DEBUG_OPTIONS "QMAKE_CXXFLAGS_DEBUG+=-std=c++17")
+    endif()
 
     # This if/else corresponds to icu setup in src/corelib/configure.json.
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")

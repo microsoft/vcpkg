@@ -1,3 +1,5 @@
+diff --git a/PC/launcher.c b/PC/launcher.c
+index 8e60ab9..750222e 100644
 --- a/PC/launcher.c
 +++ b/PC/launcher.c
 @@ -1,3 +1,6 @@
@@ -7,3 +9,14 @@
  /*
   * Copyright (C) 2011-2013 Vinay Sajip.
   * Licensed to PSF under a contributor agreement.
+diff --git a/PC/venvlauncher.c b/PC/venvlauncher.c
+index b6bb021..ffc6765 100644
+--- a/PC/venvlauncher.c
++++ b/PC/venvlauncher.c
+@@ -1,3 +1,6 @@
++#if defined(_CONSOLE)
++#undef _WINDOWS
++#endif
+ /*
+  * venv redirector for Windows
+  *

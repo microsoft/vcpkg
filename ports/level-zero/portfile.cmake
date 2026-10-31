@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/level-zero
     REF "v${VERSION}"
-    SHA512 3d97c903c23efccca7c9e2d652db8c0e263be87b1e823b79612effac0432836b1a538b263740fbd464687f88ced5402a6d3883206e30a70375d6ae82fd6da2c3
+    SHA512 9420b8dd115c6e509d5f9b381656615bfcda920ad589f184645f522e88352b380d27a15c8c148a02591221d6c57bff4fd90482a5c8b18e3a85227b454ba9a6ec
     HEAD_REF master
-    PATCHES spdlog_include.patch
 )
 
 vcpkg_list(SET options)
@@ -15,8 +14,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DSYSTEM_SPDLOG=ON
         ${options}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )
 
 vcpkg_cmake_install()
@@ -25,5 +24,8 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/third_party/xla/LICENSE"
+)

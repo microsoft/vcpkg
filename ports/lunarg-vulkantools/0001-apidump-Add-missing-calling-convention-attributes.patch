@@ -1,0 +1,52 @@
+From 0c662b624f8514f1e987885600ca0a1a3a700352 Mon Sep 17 00:00:00 2001
+From: Charles Giessen <charles@lunarg.com>
+Date: Tue, 21 Jul 2026 15:40:25 -0500
+Subject: [PATCH] apidump: Add missing calling convention attributes
+
+And moves extern "C" to be consistent between the declaration and the
+definition.
+---
+ layersvt/api_dump.h                        | 4 ++--
+ layersvt/api_dump_handwritten_dispatch.cpp | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/layersvt/api_dump.h b/layersvt/api_dump.h
+index d0b78e594..d061f754b 100644
+--- a/layersvt/api_dump.h
++++ b/layersvt/api_dump.h
+@@ -94,8 +94,8 @@
+ 
+ extern "C" {
+ // Forward declarations for dispatch
+-PFN_vkVoidFunction layer_vkGetInstanceProcAddr(VkInstance instance, const char* pName);
+-PFN_vkVoidFunction layer_vkGetDeviceProcAddr(VkDevice device, const char* pName);
++VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL layer_vkGetInstanceProcAddr(VkInstance instance, const char* pName);
++VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL layer_vkGetDeviceProcAddr(VkDevice device, const char* pName);
+ }
+ 
+ #define MAX_STRING_LENGTH 1024
+diff --git a/layersvt/api_dump_handwritten_dispatch.cpp b/layersvt/api_dump_handwritten_dispatch.cpp
+index 070dd599d..f2175401e 100644
+--- a/layersvt/api_dump_handwritten_dispatch.cpp
++++ b/layersvt/api_dump_handwritten_dispatch.cpp
+@@ -27,6 +27,8 @@
+ 
+ #include "generated/api_dump_dispatch.h"
+ 
++extern "C" {
++
+ VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL layer_vkGetInstanceProcAddr(VkInstance instance, const char* pName) {
+     PFN_vkVoidFunction instance_func = nullptr;
+     switch (ApiDumpInstance::current().settings().format()) {
+@@ -84,8 +86,6 @@ VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL layer_vkGetDeviceProcAddr(VkDevice devi
+     return device_dispatch_table(device)->GetDeviceProcAddr(device, pName);
+ }
+ 
+-extern "C" {
+-
+ EXPORT_FUNCTION VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(VkInstance instance, const char* funcName) {
+     return layer_vkGetInstanceProcAddr(instance, funcName);
+ }
+-- 
+2.53.0.windows.3
+

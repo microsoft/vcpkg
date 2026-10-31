@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 7539e32a56309ce61c4178dad38ac8aae82ebab37398e1a7b6d1e2d5abd0af73ae7af35358e655a935666c7e6fde30885a0d6e4b7ad8b129ab02f6aad8f18dd0
+    SHA512 5c46421ba17559cb826fb2e6b8002b3459c910ff2ebd6d75c55f3139bea58487ddb4ac8da71c6bb72bc5af9590e11752b3d88a8e41170b8e41f228e9a08257cd
     HEAD_REF master
     PATCHES
         fix-gcem.patch
@@ -23,9 +23,9 @@ file(REMOVE
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        libinstpatch enable-libinstpatch
         sndfile      enable-libsndfile
         pulseaudio   enable-pulseaudio
+        pipewire     enable-pipewire
 )
 
 # enable platform-specific features, force the build to fail if the required libraries are not found,
@@ -35,8 +35,8 @@ set(MACOS_OPTIONS enable-coreaudio enable-coremidi COREAUDIO_FOUND COREMIDI_FOUN
 set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
 set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack
-    enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
-    enable-profiling enable-readline enable-sdl3 enable-systemd enable-trap-on-fpe enable-ubsan)
+    enable-midishare enable-oboe enable-openmp enable-oss enable-portaudio
+    enable-profiling enable-readline enable-sdl3 enable-signalsmith enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS_TO_ENABLE ${WINDOWS_OPTIONS})

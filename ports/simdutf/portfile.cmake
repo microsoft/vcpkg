@@ -2,20 +2,24 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdutf/simdutf
     REF "v${VERSION}"
-    SHA512 fe872845b5a873bacb5748f8c75e36e4b341b177db53104829ee1f93601fc11feffa27034b78b7dd4fb77cf489cd6db25037e2590a74f5748580d81768c87d77
+    SHA512 cba5850d7182305da9f4e4f6029c3f1b46a1b407d54ae2661c805e734490cb435ad2a641e44bcfcf05726f5d927b0ac37d510b858e61c352118e0e63c323d980
     HEAD_REF master
+    PATCHES
+        bindir.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "tools" SIMDUTF_TOOLS
+    "tools" SIMDUTF_ICONV
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
         -DSIMDUTF_TESTS=OFF
         -DSIMDUTF_BENCHMARKS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -26,5 +30,18 @@ if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES fastbase64 sutf AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-APACHE")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/tools"
+)
+
+set(COPYRIGHT_FILES
+    "${SOURCE_PATH}/LICENSE-APACHE"
+    "${SOURCE_PATH}/LICENSE-MIT"
+    "${SOURCE_PATH}/include/simdutf/internal/isadetection.h"
+)
+if("tools" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND COPYRIGHT_FILES "${CURRENT_INSTALLED_DIR}/share/libiconv/copyright")
+endif()
+vcpkg_install_copyright(FILE_LIST ${COPYRIGHT_FILES})

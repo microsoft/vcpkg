@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Cross
     REF vulkan-sdk-${VERSION}
-    SHA512 57904efacecb1e5266caa27f34f5d8693d4f357233c727b2e0e58d182287dfea5a71b1ac81fb33b9e30e5eb1c4cbf5aeeb7ca2f0865a74e32347b96f9f453ee6
+    SHA512 10d1888cc430bb2bf39683d68054ab57e92b9474b3ddddbff4dd171a5c5da4dc332dd65b2d10f1a54dbbb1dd2e01d7c7735cbff97cd9512c2995673362c58cec
     HEAD_REF master
 )
 

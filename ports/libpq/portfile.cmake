@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
          "https://www.mirrorservice.org/sites/ftp.postgresql.org/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
     FILENAME "postgresql-${VERSION}.tar.bz2"
-    SHA512 fdbe6d726f46738cf14acab96e5c05f7d65aefe78563281b416bb14a27c7c42e4df921e26b32816a5030ddbe506b95767e2c74a35afc589916504df38d1cb11c
+    SHA512 1a7606b5b2460a4fc817d491e1e03262df17ece6869fa3d2b80647baffcfb790fbcfa019c3b10fab9f9a14218651b6a358864e40a5d8c5ddc796db2d6e5b469c
 )
 
 vcpkg_extract_source_archive(
@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
         windows/macro-def.patch
         windows/spin_delay.patch
         windows/getopt.patch
+        windows/pthread-symbols.patch
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
@@ -68,6 +69,21 @@ vcpkg_configure_meson(
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpq.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpq.pc")
+    foreach(file IN LISTS pc_files)
+        vcpkg_replace_string("${file}" " -lm([ \n])" "\\1" REGEX IGNORE_UNCHANGED)
+        vcpkg_replace_string("${file}" "(Libs:[^\n]*)" "\\1 -lm" REGEX)
+    endforeach()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpq.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpq.pc")
+    foreach(file IN LISTS pc_files)
+        vcpkg_replace_string("${file}" " -lsecur32" " -lsecur32 -ladvapi32 -lshell32")
+    endforeach()
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")

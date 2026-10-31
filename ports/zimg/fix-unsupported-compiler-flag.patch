@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index 8727ca4..b58965a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
+ 
+ SUBDIRS = $(CONFIG_SUBDIRS)
+ 
+-warningflags = -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
++warningflags = -Wall
+ commonflags = -O2 $(warningflags) $(DEBUGCFLAGS) $(PTHREAD_CFLAGS)
+ AM_CXXFLAGS = -std=$(CXXSTD) $(commonflags)
+ AM_CFLAGS = -std=c89 $(commonflags)

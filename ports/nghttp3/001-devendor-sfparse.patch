@@ -1,0 +1,53 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 7dbfde4..1d244f2 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -63,7 +63,6 @@ set(nghttp3_SOURCES
+   nghttp3_settings.c
+   nghttp3_callbacks.c
+   nghttp3_ratelim.c
+-  sfparse/sfparse.c
+ )
+ 
+ set(NGHTTP3_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+@@ -85,9 +84,12 @@ install(
+   FILES "${NGHTTP3_PROJECT_CONFIG}" "${NGHTTP3_VERSION_CONFIG}"
+   DESTINATION "${NGHTTP3_CONFIG_INSTALL_DIR}")
+ 
++find_package(unofficial-sfparse CONFIG REQUIRED)
++
+ # Public shared library
+ if(ENABLE_SHARED_LIB)
+   add_library(nghttp3 SHARED ${nghttp3_SOURCES})
++  target_link_libraries(nghttp3 PRIVATE unofficial::sfparse::sfparse)
+   set_target_properties(nghttp3 PROPERTIES
+     COMPILE_FLAGS "${WARNCFLAGS}"
+     VERSION ${LT_VERSION} SOVERSION ${LT_SOVERSION}
+@@ -106,6 +108,7 @@ endif()
+ if(ENABLE_STATIC_LIB)
+   # Public static library
+   add_library(nghttp3_static STATIC ${nghttp3_SOURCES})
++  target_link_libraries(nghttp3_static PRIVATE unofficial::sfparse::sfparse)
+   set_target_properties(nghttp3_static PROPERTIES
+     COMPILE_FLAGS "${WARNCFLAGS}"
+     VERSION ${LT_VERSION} SOVERSION ${LT_SOVERSION}
+diff --git a/lib/libnghttp3.pc.in b/lib/libnghttp3.pc.in
+--- a/lib/libnghttp3.pc.in
++++ b/lib/libnghttp3.pc.in
+@@ -30,5 +30,6 @@ Name: libnghttp3
+ Description: nghttp3 library
+ URL: https://github.com/ngtcp2/nghttp3
+ Version: @VERSION@
+ Libs: -L${libdir} -lnghttp3
++Libs.private: -lsfparse
+ Cflags: -I${includedir}
+diff --git a/lib/config.cmake.in b/lib/config.cmake.in
+index fc691dd..bc991b1 100644
+--- a/lib/config.cmake.in
++++ b/lib/config.cmake.in
+@@ -1,3 +1,5 @@
+ include(CMakeFindDependencyMacro)
+ 
++find_dependency(unofficial-sfparse)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@NGHTTP3_TARGETS_EXPORT_NAME@.cmake")

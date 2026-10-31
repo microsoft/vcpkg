@@ -1,0 +1,22 @@
+diff --git a/src/c_writer.cpp b/src/c_writer.cpp
+index 054e834..fa36dc5 100644
+--- a/src/c_writer.cpp
++++ b/src/c_writer.cpp
+@@ -467,7 +467,7 @@ class c_emitter {
+   }
+   // Decode any typed owning collection, including a nested generic array or map.
+   void read_collection(const std::string& dst, const std::string& n, const type_name& t,
+-                       bool map, const type_name& key_type, std::size_t fixed_extent) {
++                       bool map, const type_name& key_type, std::uint64_t fixed_extent) {
+     line(n + "_clear(&" + dst + ");");
+     line("const size_t count = srl_read_array(in);");
+     if (fixed_extent != 0) {
+@@ -606,7 +606,7 @@ class c_emitter {
+   }
+   // Encode nested or member collections with the same ordering and ownership contract.
+   void write_collection(const std::string& src, const std::string& n, const type_name& t,
+-                        bool map, const type_name& key_type, std::size_t fixed_extent) {
++                        bool map, const type_name& key_type, std::uint64_t fixed_extent) {
+     line("if (" + src + ".size && !" + src + ".data) { out->status = srl_invalid; return; }");
+     if (!map) {
+       if (fixed_extent != 0) {

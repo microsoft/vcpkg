@@ -5,37 +5,42 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanodbc/nanodbc
-    REF 7404a4dd7697e188df5724ab95a7553d2fc404eb # v2.13.0
-    SHA512 35ca098e783d771f3df611bce84e9b8207a6a5b72c492d2f3909977bc91a7c22bb262c34768b0d97ebfbdf12eeda0214064a8ea171e7bdda7b759f93ff346f45
+    REF f212bcb6ce61029e96cc18b98a4cc05198749ada # v2.20.0
+    SHA512 4a3c27b31a03db90b6b7cbe21adbc9ee519af43c9bce78aba2d9fe624eea1c689fffa71b791b3c0bc0a77a7f70d2f0ba2f2c685235f01498f88a189956fc9722
     HEAD_REF master
-    PATCHES
-        rename-version.patch
-        add-missing-include.patch
-        find-unixodbc.patch
-        no-werror.patch
+	PATCHES
+		use-vcpkg-unixodbc.patch
 )
-file(RENAME "${SOURCE_PATH}/VERSION" "${SOURCE_PATH}/VERSION.txt")
+
+vcpkg_list(SET options)
 
 if(DEFINED NANODBC_ODBC_VERSION)
-    set(NANODBC_ODBC_VERSION -DNANODBC_ODBC_VERSION=${NANODBC_ODBC_VERSION})
+    list(APPEND options -DNANODBC_ODBC_VERSION=${NANODBC_ODBC_VERSION})
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DNANODBC_DISABLE_EXAMPLES=ON
-        -DNANODBC_DISABLE_TESTS=ON
+        -DNANODBC_BUILD_EXAMPLES=OFF
+        -DNANODBC_BUILD_TESTS=OFF
         -DNANODBC_ENABLE_UNICODE=OFF
-        ${NANODBC_ODBC_VERSION}
+        ${options}
 )
 
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" PORT_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" "
+include(CMakeFindDependencyMacro)
+if(WIN32)
+    find_dependency(ODBC)
+else()
+    find_dependency(unofficial-unixodbc CONFIG)
+endif()
+${PORT_CONFIG}
+")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

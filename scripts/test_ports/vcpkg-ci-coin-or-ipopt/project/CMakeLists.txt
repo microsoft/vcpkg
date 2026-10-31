@@ -9,3 +9,4 @@ add_executable(simple-pkgconfig
     "${IPOPT_PATH}/examples/Cpp_example/MyNLP.cpp"
 )
 target_link_libraries(simple-pkgconfig PRIVATE PkgConfig::PC_ipopt)
+install(TARGETS simple-pkgconfig RUNTIME DESTINATION "bin/vcpkg-ci-coin-or-ipopt")

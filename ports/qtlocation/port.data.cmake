@@ -1,3 +1,3 @@
-set(qtlocation_HASH "dc5dd1e7e44048873b1a857dc80027b525199a63198f8725586a03f3ea87b4bab410d2ea6c8e46ccc27047b0000049119cfa6a1dba7f05589ae0ac7e9e5fcc93")
-set(qtlocation_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtlocation-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtlocation-everywhere-src-6.10.3.tar.xz")
-set(qtlocation_FILENAME "qtlocation-everywhere-src-6.10.3.tar.xz")
+set(qtlocation_HASH "a402ac772bb94c180e72910fa5ab7fb6070f8d2203eb8497ee3efd98fbe098178f3d803446ce9ee33703e9037e6c89a7ffd0e5d66141666cadde3916620fd745")
+set(qtlocation_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtlocation-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtlocation-everywhere-src-6.11.2.tar.xz")
+set(qtlocation_FILENAME "qtlocation-everywhere-src-6.11.2.tar.xz")

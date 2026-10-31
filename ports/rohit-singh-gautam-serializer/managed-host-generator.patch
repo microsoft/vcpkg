@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 99bbd3e..8294cbc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,6 +20,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+ option(SERIALIZER_BUILD_TESTS "Build Serializer's tests" ${PROJECT_IS_TOP_LEVEL})
+ option(SERIALIZER_BUILD_MANAGED "Build the C++ managed snapshot runtime records" ON)
++set(SERIALIZER_MANAGED_GENERATOR "Serializer::serializer" CACHE STRING
++  "Executable target or host compiler path used to generate managed runtime records")
+ option(SERIALIZER_BUILD_MANAGED_EXAMPLES "Build C++ managed runtime examples without the test suite" OFF)
+ option(SERIALIZER_BUILD_PROTOBUF_INTEROP_TESTS "Verify codecs against the official Protobuf runtime" OFF)
+ option(SERIALIZER_BUILD_BENCHMARKS "Build separate codec timing and allocation tools" OFF)
+@@ -159,7 +161,8 @@ if(SERIALIZER_BUILD_MANAGED)
+     schemas/collaboration_records.serializer
+     CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/schemas/runtime_records.ini"
+     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/managed/include/rohit"
+-    CODING_STANDARD serializer)
++    CODING_STANDARD serializer
++    GENERATOR "${SERIALIZER_MANAGED_GENERATOR}")
+   # Generate installed records even when no examples or consumers link the interface target.
+   add_custom_target(serializer_managed_records ALL)
+   add_dependencies(serializer_managed_records serializer_managed_serializer_headers)

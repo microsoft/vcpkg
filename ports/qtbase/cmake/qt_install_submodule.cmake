@@ -162,7 +162,7 @@ function(qt_cmake_configure)
             -DQT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK=ON
             -DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON
             -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to mess with users toolchain settings.
-            -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Because Qt doesn't correctly scope find_package calls. 
+            -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Because Qt doesn't correctly scope find_package calls.
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
             #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
@@ -184,6 +184,7 @@ function(qt_cmake_configure)
             -DINSTALL_DESCRIPTIONSDIR:STRING=share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=share/Qt6/mkspecs
             -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_CMAKEDIR:STRING=share
         OPTIONS_DEBUG
             # -DFEATURE_debug:BOOL=ON only needed by qtbase and auto detected?
             -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
@@ -191,6 +192,7 @@ function(qt_cmake_configure)
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_DESCRIPTIONSDIR:STRING=../share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
+            -DINSTALL_CMAKEDIR:STRING=share
             ${_qarg_OPTIONS_DEBUG}
         MAYBE_UNUSED_VARIABLES
             INSTALL_BINDIR
@@ -270,11 +272,11 @@ function(qt_fixup_and_cleanup)
     foreach(_comp IN LISTS COMPONENTS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
             vcpkg_cmake_config_fixup(PACKAGE_NAME "Qt6${_comp}" CONFIG_PATH "share/Qt6${_comp}" TOOLS_PATH "tools/Qt6/bin")
-            # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_cmake_config_fixup is working against that.
         else()
             message(STATUS "WARNING: Qt component ${_comp} not found/built!")
         endif()
     endforeach()
+
     #fix debug plugin paths (should probably be fixed in vcpkg_cmake_config_fixup)
     file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
     debug_message("DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
@@ -328,9 +330,8 @@ function(qt_fixup_and_cleanup)
             endif()
         endforeach()
     endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
+    file(REMOVE_RECURSE
                         "${CURRENT_PACKAGES_DIR}/debug/share"
-                        "${CURRENT_PACKAGES_DIR}/lib/cmake/"
                         "${CURRENT_PACKAGES_DIR}/debug/include"
                         )
 

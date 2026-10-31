@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3f08b6a..88e636b 100644
+index 4933de2..861c43e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1026,20 +1026,7 @@ endif()
+@@ -1175,20 +1175,7 @@ endif()
  
  if (srt_libspec_static)
  	add_library(${TARGET_srt}_static STATIC ${OBJECT_LIB_SUPPORT} ${VIRTUAL_srt})

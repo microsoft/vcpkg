@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO neosapience/typecast-sdk
-    REF "v${VERSION}"
-    SHA512 4b38880d8a22e2b7384f73991648a246c8430d9e44e608abc5489d2e1a594db87ef81fa6b99c780b44b40806a80c1fef856b12223d8e3ae856a03cf7b3d92cae
+    REF "typecast-c/v${VERSION}"
+    SHA512 290fcb33d398286d404bdffeea5c970d9cb8ef34840b98b3db1f98e31fe24eb071553b6ad2e90b8848673adbc1db3880719d1846532b1d8f6fe5181183bb3b5a
     HEAD_REF main
+    PATCHES
+        use-vcpkg-cjson.patch
 )
 
 # The C SDK is in the typecast-c subdirectory

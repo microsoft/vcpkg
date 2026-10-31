@@ -2,10 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolftpm
     REF v${VERSION}
-    SHA512 d78203ba0a1d6550f133e4236c254e9f3d6fe4c80a6f35ab978862d2694620e6511bdf36829f136d0d4ed26fd8c77ce89941e35c212ac82c7e84754bb19babb3
+    SHA512 c095d4a15e5f5f04b75f09ab6b55ad6323850eaf2b6432dfbbcf10fab7a759c12f57008dade5821fced1f6603c5f48f9c0f698400c517c61a788111d0fc4005e
     HEAD_REF master
     PATCHES
-        fix-cmake-export.patch
+        fix-static-consumer.patch
     )
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}

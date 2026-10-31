@@ -1,0 +1,15 @@
+diff --git a/src/StormLib.h b/src/StormLib.h
+index 023d045..6e6d8bd 100644
+--- a/src/StormLib.h
++++ b/src/StormLib.h
+@@ -102,6 +102,10 @@ extern "C" {
+ //  Z - S for static-linked CRT library, D for multithreaded DLL CRT library
+ //
+ 
++#ifndef __STORMLIB_NO_STATIC_LINK__
++#define __STORMLIB_NO_STATIC_LINK__
++#endif
++
+ #if defined(__STORMLIB_SELF__) && !defined(__STORMLIB_NO_STATIC_LINK__)
+ #define __STORMLIB_NO_STATIC_LINK__ // Define this if you don't want to link using pragmas when using msvc
+ #endif

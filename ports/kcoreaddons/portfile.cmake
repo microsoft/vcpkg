@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcoreaddons
     REF "v${VERSION}"
-    SHA512 296101ad8edc2912158f5b20ae91820154d5dc0dd3be3d041d332b83217e5f3e90ae9a6fb9bf572d5bbfcee3225f20cc6f656638548ccb87d39075417de91ad8
+    SHA512 ab1e46f743c2deca88696d03b59cad3d10dae4f54fc05561920bb8979614681a4d7d5e5cc78fbaee8f2e3abd51509259bdc9edaa1f65446e300da8f6ae6367e9
     HEAD_REF master
 )
 
@@ -21,6 +21,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DBUILD_PYTHON_BINDINGS=OFF
         -DKDE_INSTALL_QMLDIR=qml
         ${FEATURE_OPTIONS}
@@ -31,6 +33,14 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME kf6coreaddons
     CONFIG_PATH lib/cmake/KF6CoreAddons
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6coreaddons/KF6CoreAddonsTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/qml/]]
+        [[${_IMPORT_PREFIX}/debug/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig(SKIP_CHECK)
 

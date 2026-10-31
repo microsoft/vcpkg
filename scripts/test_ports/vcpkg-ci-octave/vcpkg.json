@@ -15,7 +15,10 @@
         "colamd",
         "curl",
         "cxsparse",
-        "fltk",
+        {
+          "name": "fltk",
+          "platform": "!(x64 & linux)"
+        },
         "fontconfig",
         "freetype",
         "graphicsmagick",

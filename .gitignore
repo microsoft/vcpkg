@@ -12,6 +12,7 @@
 *.sln.docstates
 /vcpkg.json
 /vcpkg-configuration.json
+reviews*
 
 # fuzzing
 sync_dir*

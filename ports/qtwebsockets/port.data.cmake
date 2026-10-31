@@ -1,3 +1,3 @@
-set(qtwebsockets_HASH "6e335c47b5d283d40f2a75f8b36a34524a9c7c18906007471cf12b8e4ea9a35fc7693aec1dc2c9c87921495806699ccab958d5ce6170ae1409de92bb643aad09")
-set(qtwebsockets_URL "https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtwebsockets-everywhere-src-6.10.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.3/submodules/qtwebsockets-everywhere-src-6.10.3.tar.xz")
-set(qtwebsockets_FILENAME "qtwebsockets-everywhere-src-6.10.3.tar.xz")
+set(qtwebsockets_HASH "2a65e5076759fe7cc0d9f66bc689a6644842f78388d08968f6e3890bd500c4ebead3e970c248e8d805ee6f69eae3e77fdb3386f678c509beebd784944192c31e")
+set(qtwebsockets_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtwebsockets-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtwebsockets-everywhere-src-6.11.2.tar.xz")
+set(qtwebsockets_FILENAME "qtwebsockets-everywhere-src-6.11.2.tar.xz")

@@ -1,4 +1,4 @@
-call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
+call "C:\Program Files (x86)\Microsoft Visual Studio\2026\Build Tools\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
 git clone --depth 1 https://github.com/microsoft/vcpkg-tool vcpkg-tool
 git -C vcpkg-tool fetch --depth 1 origin %1
 git -C vcpkg-tool switch -d FETCH_HEAD

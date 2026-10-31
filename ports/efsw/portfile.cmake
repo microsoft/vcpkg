@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SpartanJ/efsw
     REF "${VERSION}"
-    SHA512 6bf39c6b77c08fa42395c6bcbc595978e67917db48ea6577639e354f71ec1eaa49b7d97018ebb4aa6cda3a5bf67ddd4fea66f1920f1bc3af5b6d6212b3c3d342
+    SHA512 6614314b96efe983647f3bd21870165e9c26ecf555bea0916f993f93221a491d997a16e847b34bc6db097599667917e71f570f591899e650a510a82297f7b6ad
     HEAD_REF master
 )
 
@@ -27,4 +27,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/src/efsw/String.hpp"
+)

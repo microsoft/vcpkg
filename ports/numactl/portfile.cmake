@@ -15,6 +15,8 @@ vcpkg_make_configure(
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-numa-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-numa")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md" "${SOURCE_PATH}/LICENSE.LGPL2.1" "${SOURCE_PATH}/LICENSE.GPL2")

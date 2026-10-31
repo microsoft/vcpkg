@@ -2,13 +2,19 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO orange-cpp/omath
-    REF "v${VERSION}"
-    SHA512 5393159d060d0bf08ef50fb77996f994f149110a43b0420fb45c599f7269ed247270068cca2813ba3fb743cfd9c4541073e0ecf60bf584c59133b009bf73b087
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://git.libomath.org/orange/omath/archive/v${VERSION}.tar.gz"
+    FILENAME "omath-${VERSION}.tar.gz"
+    SHA512 5cd4d18220a6d233ac16dce3e03a6bf128b2552887a9616fcfb1c0b287ef95a6871912f19be462871d0eb408d1abbd11aa370e506495ec67e8554e28a9184484
 )
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+)
+
+# The release archive's VERSION file can lag behind its tag.
+file(WRITE "${SOURCE_PATH}/VERSION" "${VERSION}")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
 

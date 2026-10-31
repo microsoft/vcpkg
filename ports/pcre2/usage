@@ -1,6 +1,21 @@
-The package pcre2 is compatible with built-in CMake targets:
+pcre2 provides CMake targets:
 
-    # Each component imports a target:
-    # TARGETS: PCRE2::8BIT PCRE2::16BIT PCRE2::32BIT PCRE2::POSIX
-    find_package(pcre2 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE PCRE2::8BIT PCRE2::16BIT PCRE2::32BIT PCRE2::POSIX)
+  find_package(pcre2 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE PCRE2::8BIT)
+  target_compile_definitions(main PRIVATE PCRE2_CODE_UNIT_WIDTH=8)
+
+Choose the interface your application uses:
+  PCRE2::8BIT  - 8-bit code units (including UTF-8)
+  PCRE2::16BIT - 16-bit code units (including UTF-16)
+  PCRE2::32BIT - 32-bit code units (including UTF-32)
+  PCRE2::POSIX - POSIX wrapper around the 8-bit library
+
+For the native API, define PCRE2_CODE_UNIT_WIDTH to match the chosen library
+before including <pcre2.h>, either in your source or as shown above.
+The POSIX interface uses <pcre2posix.h> and needs no code-unit width definition.
+
+pcre2 provides matching pkg-config modules:
+  libpcre2-8
+  libpcre2-16
+  libpcre2-32
+  libpcre2-posix

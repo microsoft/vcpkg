@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-libusb",
+  "version-string": "ci",
+  "description": "Validates libusb",
+  "dependencies": [
+    {
+      "name": "libusb"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

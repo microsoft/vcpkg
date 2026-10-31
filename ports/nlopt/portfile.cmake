@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevengj/nlopt
     REF "v${VERSION}"
-    SHA512 c7bc34c3fc00cb714473f5612329291dd3b7f2748a08c83ac0ab1fc719e9ce88c730eeeac88367273dd6e5f78e7afa0bed818374ae50b326fcd25f370abc1909
+    SHA512 72dfb5374f89f6a507f0a22317fd76b4fc26795d7868842e02dc67a76fbbaf04fb769cec7b366774f5d2a1ed0c2305878c9d82e0ef85e449f9350cdcaa58c262
     HEAD_REF master
 )
 vcpkg_check_features(

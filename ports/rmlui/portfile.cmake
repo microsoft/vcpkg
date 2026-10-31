@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mikke89/RmlUi
     REF ${VERSION}
-    SHA512 f08c126d3727850724072fb88b1c95cb6c5dcc160082bffcba42d2236950b651e39d71f7c0eecf5a5a047f68ad5cc7f1968d2334c5b72c019d2aefb3fb55e246
+    SHA512 b66d2a3621ca2690d6e826661203fc3a4babe16243ed01b2f884d149f5b7ee598241f1f743262c7a8fbf8ae98641d5c5526fc63d8a6283638b6dc021d23e103e
     HEAD_REF master
     PATCHES
         add-itlib-and-robin-hood.patch

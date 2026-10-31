@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcrash
     REF "v${VERSION}"
-    SHA512 0e7b13409133c175427486da4fa4428e106d7a209d0fe0f3b869a29cf157234f44a5b6461a0064cf977e4eab072c786d8e5a54c263418fdfc23ae621b4d467fa
+    SHA512 6b13e9e6e492bce210c6dbe277a9da946fb5b1d8c9b87b7826748ab455050aa06bd847ac1e289b99bbbb784b2098fe646c598a0ec1dafd71460803eaba5316d4
     HEAD_REF master
 )
 
@@ -13,6 +13,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
 )
 
 vcpkg_cmake_install()

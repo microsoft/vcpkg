@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
     REF "v${VERSION}"
-    SHA512 34efcb6df333ce37a90b22ae833b5516bad2e5bbf04cffbe43005f157499be8d8ba6c788fe84715a8535d80a23dea16d2bf1096ec217899fa5637750638159d7
+    SHA512 1ad5f49d3acca059486e5360c2ccd2c98a1ffd077714b5934e263780b876bac75b775d832f56786648aa07d49035e81d126cb3972ce1f6476edb3a34e858c2a5
     HEAD_REF master
     PATCHES
         001_guard_ecm_qml_module_include.patch
+        002_use_wayland_xml_from_qt.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -17,7 +18,7 @@ set(KWINDOWSYSTEM_WAYLAND OFF)
 if(VCPKG_TARGET_IS_LINUX)
     set(KWINDOWSYSTEM_X11 ON)
     set(KWINDOWSYSTEM_WAYLAND ON)
-    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev\n    libwayland-dev wayland-protocols libxkbcommon-dev libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev libwayland-dev wayland-protocols libxkbcommon-dev libxkbcommon-x11-dev")
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev\n    libwayland-dev libxkbcommon-dev libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev libwayland-dev libxkbcommon-dev libxkbcommon-x11-dev")
 endif()
 
 vcpkg_check_features(
@@ -32,10 +33,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DKDE_INSTALL_PLUGINDIR=plugins
         -DKDE_INSTALL_QMLDIR=qml
         -DKWINDOWSYSTEM_X11=${KWINDOWSYSTEM_X11}
         -DKWINDOWSYSTEM_WAYLAND=${KWINDOWSYSTEM_WAYLAND}
+        "-DVCPKG_QT_WAYLAND_DATADIR=${CURRENT_INSTALLED_DIR}/share/qt6/wayland/protocols/wayland"
         ${FEATURE_OPTIONS}
 )
 

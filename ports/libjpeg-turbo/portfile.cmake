@@ -8,12 +8,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
     REF "${VERSION}"
-    SHA512 5c67fa6a528e35963736e0361ae6952f6f253b74cd31e8795de60a80287b123c4f35a333ca03934011b01f72110c13b26d13320fce2969287428cebde153c730
+    SHA512 1ce063e9e126d55019385da3a6ff4521a9a3958edeab15e2465ae3435026dac6e598277eea066173ada47da37159d0f7812b2227869c10dd141dcfe2ddeab720
     HEAD_REF master
     PATCHES
         add-options-for-docs-headers.patch
         # workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
+        # apply libjpeg-turbo patches for dependency issues https://github.com/libjpeg-turbo/libjpeg-turbo/issues/901
+        # This patch file contains changes from the following upstream commits:
+        # https://github.com/libjpeg-turbo/libjpeg-turbo/commit/95156233739078e7d4de0aeeacc4b0595630f393
+        # https://github.com/libjpeg-turbo/libjpeg-turbo/commit/240e20d87c0b7d17614687ddc55ccd1fc631daf9
+        # https://github.com/libjpeg-turbo/libjpeg-turbo/commit/204e5c2bed4401309c26dc6ed95001e2fc50f833
+        system-dependency-fixes-pr-901.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -48,6 +54,8 @@ vcpkg_cmake_configure(
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
+        -DWITH_SYSTEM_SPNG=ON
+        -DWITH_SYSTEM_ZLIB=ON
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
     MAYBE_UNUSED_VARIABLES

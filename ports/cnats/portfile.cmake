@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nats-io/nats.c
     REF "v${VERSION}"
-    SHA512 d1243cd3ea2bc4cffb50b12acb745a3b573eacdc30457dc59ae33def0217ec090df6c706c67cba4ee75ade6db5adf3742affed771aeb77305048a18d8bbac695
+    SHA512 8c482b6daed5e64dc6194b4de77ae5267ff1a02309f4f15d57ea56c937643a71de08dd6646243822f0a3c507b30adf7a1a03c0891c74c3090c9b06e5364d358b
     HEAD_REF main
     PATCHES
         fix-sodium-dep.patch

@@ -1,0 +1,12 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO SSARCandy/ini-cpp
+    REF "v${VERSION}"
+    SHA512 ce7f332dbb03b4a5f928d22dcead35c0f5b8339230ad44534d2bd2dfa3ec4e44ab9822d516a00fa160b8f7d832eb6bb7936e65285320a595a5043b691059280a
+    HEAD_REF master
+)
+
+file(INSTALL "${SOURCE_PATH}/ini/ini.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/ini")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

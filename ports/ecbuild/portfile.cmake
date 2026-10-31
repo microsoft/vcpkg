@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ecmwf/ecbuild
     REF "${VERSION}"
-    SHA512 eeebf2174df9b20dbff38e877b4eb62a82823262f7d8d5f83370324c2019b46d9b04781b74ec3bab06626190f8478f044a2a942f3612e238061f69262aad2511
+    SHA512 937f3777acdd1890069e9d7b3d51e9bb24ce26e7180433bd74be4790772e393af98907fbeae34dbec9f2f2410acb35211e93c63807ed6c57539c192c7d3e4180
     HEAD_REF develop
 )
 
@@ -39,4 +39,5 @@ file(INSTALL
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
     "${SOURCE_PATH}/NOTICE"
+    "${SOURCE_PATH}/cmake/contrib/GetGitRevisionDescription.cmake"
 )

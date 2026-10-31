@@ -1,12 +1,12 @@
 {
   "name": "open-dis-cpp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": [
     "DIS v6/v7 Library",
     "C++ implementation of the IEEE-1278.1 Distributed Interactive Simulation (DIS) application protocol v6 and v7"
   ],
   "homepage": "https://open-dis.org",
-  "license": "BSD-2-Clause",
+  "license": "BSD-2-Clause AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

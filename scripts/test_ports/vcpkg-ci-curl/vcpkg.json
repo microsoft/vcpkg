@@ -132,7 +132,7 @@
           "features": [
             "gnutls"
           ],
-          "platform": "!android & !uwp & !xbox & !arm"
+          "platform": "!android & !windows & !arm"
         }
       ]
     }

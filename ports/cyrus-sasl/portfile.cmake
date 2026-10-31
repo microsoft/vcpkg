@@ -93,6 +93,7 @@ else()
             --with-dblib=lmdb
             --with-gss_impl=mit
             --disable-macos-framework
+            ac_cv_prog_cc_c23=no
     )
     vcpkg_make_install()
 endif()

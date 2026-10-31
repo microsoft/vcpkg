@@ -62,6 +62,7 @@ vcpkg_from_github(
         protobuf-version.patch
         plugin.patch
         explicit_int_cast_2.patch
+        fix-fmt-header.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

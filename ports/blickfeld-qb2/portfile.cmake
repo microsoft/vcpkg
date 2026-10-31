@@ -6,12 +6,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blickfeld/blickfeld-qb2
     REF "v${VERSION}"
-    SHA512 d0d37bde53f1219207c20bba21614a63bdcf63b36532cdab810fc0c16aead0cb42f2b3642508812d31bc52e9d4e7a25160ef022edc18ce4d83a14728553ce3fa
+    SHA512 83c24064067934ed082967c920113dfbc3db385ed5ee20ff155066719d01b0b105edda2a439528258f97270e29c947874817f3dfdca7df21ed0f5ac859cbe115
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBF_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

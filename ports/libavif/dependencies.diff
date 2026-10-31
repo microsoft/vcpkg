@@ -10,7 +10,7 @@ index a28e6c3..aaeb5d2 100644
      set(AVIF_LIB_USE_CXX ON)
  endif(AVIF_LIBYUV_ENABLED)
  
-@@ -849,13 +850,38 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+@@ -849,13 +850,43 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
  
      # Enable CMake configs in VCPKG mode
      if(BUILD_SHARED_LIBS OR VCPKG_TARGET_TRIPLET)
@@ -24,6 +24,11 @@ index a28e6c3..aaeb5d2 100644
 +                find_package(AOM CONFIG REQUIRED)
 +                list(APPEND avif_static_link_libs AOM::aom)
 +                string(APPEND avif_find_dependencies "find_dependency(AOM CONFIG)\n")
++            endif()
++            if(AVIF_CODEC_SVT_ENABLED)
++                find_package(SVT-AV1 CONFIG REQUIRED)
++                list(APPEND avif_static_link_libs SVT-AV1::SVT-AV1)
++                string(APPEND avif_find_dependencies "find_dependency(SVT-AV1 CONFIG)\n")
 +            endif()
 +            if(AVIF_CODEC_DAV1D_ENABLED)
 +                list(APPEND avif_static_link_libs ${DAV1D_LIBRARIES} ${CMAKE_DL_LIBS})

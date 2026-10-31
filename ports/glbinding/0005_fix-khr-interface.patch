@@ -1,0 +1,13 @@
+diff --git a/source/glbinding/CMakeLists.txt b/source/glbinding/CMakeLists.txt
+index 1c06fe2..ef9fde5 100644
+--- a/source/glbinding/CMakeLists.txt
++++ b/source/glbinding/CMakeLists.txt
+@@ -261,7 +261,7 @@ target_link_libraries(${target}
+ 
+     PUBLIC
+     ${DEFAULT_LIBRARIES}
+-    ${KHR_TARGET}
++    $<BUILD_INTERFACE:${KHR_TARGET}>
+ 
+     INTERFACE
+ )

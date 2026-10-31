@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2e97c6..5f5418d 100644
+index b2e97c6..442ff7e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -435,8 +435,9 @@ set(LIBSBML_XML_LIBRARY_LIBS)
@@ -42,7 +42,66 @@ index b2e97c6..5f5418d 100644
  set(ZLIB_INITIAL_VALUE)
  if (NOT LIBZ_LIBRARY)
  find_library(LIBZ_LIBRARY
-@@ -628,7 +633,6 @@ valid. It should contain the file zlib.h, but it does not.")
+@@ -569,66 +574,12 @@ option(WITH_ZLIB     "Enable the use of zip compression."    ${ZLIB_INITIAL_VALU
+ 
+ set(USE_ZLIB OFF)
+ if(WITH_ZLIB)
+-
+-  if (NOT LIBZ_INCLUDE_DIR)
+-    find_path(LIBZ_INCLUDE_DIR
+-        NAMES zlib.h zlib/zlib.h
+-        PATHS ${CMAKE_OSX_SYSROOT}/usr/include
+-              /usr/include /usr/local/include
+-              ${LIBSBML_DEPENDENCY_DIR}/include
+-              NO_DEFAULT_PATH
+-        DOC "The directory containing the zlib include files."
+-              )
+-  endif()
+-    if (NOT LIBZ_INCLUDE_DIR)
+-        find_path(LIBZ_INCLUDE_DIR
+-        NAMES zlib.h zlib/zlib.h
+-        PATHS ${CMAKE_OSX_SYSROOT}/usr/include
+-              /usr/include /usr/local/include
+-              ${LIBSBML_DEPENDENCY_DIR}/include
+-        DOC "The directory containing the zlib include files."
+-              )
+-    endif()
+     set(USE_ZLIB ON)
+     add_definitions( -DUSE_ZLIB )
+   list(APPEND SWIG_EXTRA_ARGS -DUSE_ZLIB)
+-
+-    # make sure that we have a valid zip library
+-    file(TO_CMAKE_PATH "${LIBZ_LIBRARY}" LIBZ_CMAKE_PATH)
+-    check_library_exists("${LIBZ_CMAKE_PATH}" "gzopen" "" LIBZ_FOUND_SYMBOL)
+-    if(NOT LIBZ_FOUND_SYMBOL)
+-        # this is odd, but on windows this check always fails! must be a
+-        # bug in the current cmake version so for now only issue this
+-        # warning on linux
+-        if(UNIX)
+-            message(WARNING
+-"The chosen zlib library does not appear to be valid because it is
+-missing certain required symbols. Please check that ${LIBZ_LIBRARY} is
+-the correct zlib library. For details about the error, please see
+-${LIBSBML_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log")
+-        endif()
+-    endif()
+-
+-    if(NOT EXISTS "${LIBZ_INCLUDE_DIR}/zlib.h")
+-        message(FATAL_ERROR
+-"The include directory specified for zlib does not appear to be
+-valid. It should contain the file zlib.h, but it does not.")
+-    endif()
+-
+-  if(NOT TARGET ZLIB::ZLIB)
+-    add_library(ZLIB::ZLIB UNKNOWN IMPORTED)
+-    set_target_properties(ZLIB::ZLIB PROPERTIES
+-      IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+-      IMPORTED_LOCATION "${LIBZ_LIBRARY}"
+-      INTERFACE_INCLUDE_DIRECTORIES "${LIBZ_INCLUDE_DIR}")
+-  endif()
+-
+-  list(APPEND LIBSBML_FIND_MODULES "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/FindZLIB.cmake")
+-
  endif(WITH_ZLIB)
  
  # install find scripts only for used dependencies
@@ -50,7 +109,7 @@ index b2e97c6..5f5418d 100644
  
  ###############################################################################
  #
-@@ -685,7 +689,12 @@ if(WITH_CHECK)
+@@ -685,7 +636,12 @@ if(WITH_CHECK)
  
    enable_testing()
  
@@ -64,7 +123,7 @@ index b2e97c6..5f5418d 100644
  
    if (UNIX)
        # setup valgrind
-@@ -1018,18 +1027,29 @@ install(FILES ${DOCUMENTATION_FILES} DESTINATION ${MISC_PREFIX})
+@@ -1018,18 +974,29 @@ install(FILES ${DOCUMENTATION_FILES} DESTINATION ${MISC_PREFIX})
  # Write libsbml.pc
  #
  
@@ -74,9 +133,9 @@ index b2e97c6..5f5418d 100644
 +    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
 +        continue()
 +    elseif(EXISTS "${lib}")
-+        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++        string(APPEND FAKE_CXX_LINKAGE " ${lib}")
 +    else()
-+        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++        string(APPEND FAKE_CXX_LINKAGE " -l${lib}")
 +    endif()
 +endforeach()
 +set (PRIVATE_LIBS "${FAKE_CXX_LINKAGE}")
@@ -99,7 +158,7 @@ index b2e97c6..5f5418d 100644
  endif()
  if (WITH_XERCES)
  set (PRIVATE_LIBS "${XERCES_LIBRARY} ${PRIVATE_LIBS}")
-@@ -1051,9 +1071,7 @@ if (WITH_XERCES)
+@@ -1051,9 +1018,7 @@ if (WITH_XERCES)
  file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/libsbml.pc" "Conflicts: xerces-c = 2.6.0\n")
  endif()
  
@@ -111,7 +170,7 @@ index b2e97c6..5f5418d 100644
  if (UNIX OR MINGW)
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libsbml.pc"
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 79301a6..0957d29 100644
+index 79301a6..db54d8c 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -311,7 +311,7 @@ if(WITH_BZIP2)
@@ -123,7 +182,20 @@ index 79301a6..0957d29 100644
  
  endif()
  
-@@ -405,7 +405,7 @@ if(WITH_EXPAT)
+@@ -344,7 +344,11 @@ set(COMPRESS_SOURCES ${COMPRESS_SOURCES}
+         )
+     endif()
+ 
+-    set(LIBSBML_LIBS ${LIBSBML_LIBS} ZLIB::ZLIB)
++    if(TARGET ZLIB::ZLIB_STATIC)
++        set(LIBSBML_LIBS ${LIBSBML_LIBS} ZLIB::ZLIB_STATIC)
++    else()
++        set(LIBSBML_LIBS ${LIBSBML_LIBS} ZLIB::ZLIB)
++    endif()
+ 
+ endif()
+ 
+@@ -405,7 +409,7 @@ if(WITH_EXPAT)
          sbml/xml/ExpatHandler.h
          sbml/xml/ExpatParser.h
      )
@@ -132,7 +204,7 @@ index 79301a6..0957d29 100644
  
  endif(WITH_EXPAT)
  
-@@ -423,7 +423,7 @@ if(WITH_LIBXML)
+@@ -423,7 +427,7 @@ if(WITH_LIBXML)
          sbml/xml/LibXMLParser.h
          sbml/xml/LibXMLTranscode.h
      )

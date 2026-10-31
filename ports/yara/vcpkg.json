@@ -1,9 +1,9 @@
 {
   "name": "yara",
-  "version": "4.5.5",
+  "version": "4.5.8",
   "description": "The pattern matching swiss knife",
   "homepage": "https://github.com/VirusTotal/yara",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND MIT",
   "supports": "!uwp",
   "dependencies": [
     "openssl",
@@ -24,7 +24,8 @@
       ]
     },
     "dotnet": {
-      "description": "The dotnet module allows you to create more fine-grained rules for .NET files by using attributes and features of the .NET file format."
+      "description": "The dotnet module allows you to create more fine-grained rules for .NET files by using attributes and features of the .NET file format.",
+      "license": "Apache-2.0"
     }
   }
 }

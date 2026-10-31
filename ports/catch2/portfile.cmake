@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
     REF v${VERSION}
-    SHA512 09df8b291d0c756c492871ce0a4fb5c703162d1364a9864470b227d4d19d9865a0ba5293a5f38d0117cbc7c230f42be35db9f6e0ca5d889dff02f1745807f380
+    SHA512 a6b0f1d1bd9178382f06de9773b31e3efdcdfb20fc3b65b23d9675e0838da6f64c417a75e062bda918dd28781e5d11a78e7130cef2394e676c7bc2da9e49106b
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
@@ -43,22 +43,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/generators/internal"
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch_all.hpp>")
 
-# Copy pdb files to lib folders
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-  # Catch2 builds static libraries even when shared libraries are requested.
-  # We thus cannot use vcpkg_copy_pdbs which only works for dlls but have to search for the pdbs manually.
-  file(GLOB_RECURSE catch2_pdb_files "${CURRENT_BUILDTREES_DIR}/*.pdb")
-  list(FILTER catch2_pdb_files INCLUDE REGEX ".*${TARGET_TRIPLET}.*")
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    set(catch2_release_pdb_files ${catch2_pdb_files})
-    list(FILTER catch2_release_pdb_files INCLUDE REGEX ".*${TARGET_TRIPLET}-rel.*")
-    file(COPY ${catch2_release_pdb_files} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-  endif()
-  if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    set(catch2_debug_pdb_files ${catch2_pdb_files})
-    list(FILTER catch2_debug_pdb_files INCLUDE REGEX ".*${TARGET_TRIPLET}-dbg.*")
-    file(COPY ${catch2_debug_pdb_files} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-  endif()
-endif()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_download_distfile(CMAKE_LICENSE
+    URLS "https://raw.githubusercontent.com/Kitware/CMake/af7ecc8c294d153b0120813776e1fa11c5bfe4a1/LICENSE.rst"
+    FILENAME "cmake-license-af7ecc8c294d153b0120813776e1fa11c5bfe4a1.rst"
+    SHA512 87a33d2a87dc68aac424b56089c6a41176f5db49c7192fa34b4311212a609db8b52554a0857fea19dcb96a6296087b146cecb675c1653ffaf95a48a0678658fb
+)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${CMAKE_LICENSE}")

@@ -3,7 +3,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIBMM_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(GLIBMM_ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/glibmm/${GLIBMM_MAJOR_MINOR}/glibmm-${VERSION}.tar.xz"
     FILENAME "glibmm-${VERSION}.tar.xz"
-    SHA512 550c9087ead950de3d7de2eac29ea7cab23c70ce1a0081c162df0369765d547d754dc296a0f06ab494df01f43f7bab29dfb88b6d2fdf920eebc3aef896dff1f0
+    SHA512 ac5972b9f42972aac36064a2aa2d9fd085b25836d91b3c8b06bc0fb6f6d600366d0e2d24be7d8e88fd7984c6d51b5ae4546463b502d0b73676de50931ad065f9
 )
 
 vcpkg_extract_source_archive(
@@ -29,7 +29,7 @@ file(REMOVE_RECURSE
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright and readmes
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME readme.txt)
-file(INSTALL "${SOURCE_PATH}/README.win32.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+)

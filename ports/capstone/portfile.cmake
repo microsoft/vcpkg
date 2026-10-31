@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "capstone-engine/capstone"
     REF "${VERSION}"
-    SHA512 e09788d7dfca281f8f3773323d72e1157df777878d59ace6a8996495d505dec10051ce002f473fa5ff8aa60d5e6bb4cff5e55faffb074643cae7c4515e324994
+    SHA512 e4fe24002aed02cdbc0626dafee5211646e5da6a208c8ef99cd2d4f08beb0022999684af55cd80214aea4067fad427abb5ed5b1f5433b42a1f9047092481c039
     HEAD_REF next
     PATCHES
         001-silence-windows-crt-secure-warnings.patch

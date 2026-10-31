@@ -1,11 +1,10 @@
 {
   "name": "mxml",
-  "version": "4.0.4",
-  "port-version": 1,
+  "version": "4.0.6",
   "description": "A tiny xml parsing library",
   "homepage": "https://github.com/michaelrsweet/mxml",
   "license": "Apache-2.0",
-  "supports": "!(windows & (uwp | static | arm))",
+  "supports": "!(windows & (uwp | static | arm32))",
   "dependencies": [
     {
       "name": "vcpkg-make",

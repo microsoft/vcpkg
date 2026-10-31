@@ -1,12 +1,11 @@
 diff --git a/modules/highgui/CMakeLists.txt b/modules/highgui/CMakeLists.txt
-index f0a668e..6fafa33 100644
+index ae9c49c..ec037a3 100644
 --- a/modules/highgui/CMakeLists.txt
 +++ b/modules/highgui/CMakeLists.txt
-@@ -125,8 +125,6 @@ elseif(HAVE_QT)
-     endif()
+@@ -126,7 +126,6 @@ elseif(HAVE_QT)
  
      foreach(dt_dep ${qt_deps})
--      add_definitions(${Qt${QT_VERSION_MAJOR}${dt_dep}_DEFINITIONS})
+       link_libraries(${Qt${QT_VERSION_MAJOR}${dt_dep}})
 -      include_directories(${Qt${QT_VERSION_MAJOR}${dt_dep}_INCLUDE_DIRS})
        list(APPEND HIGHGUI_LIBRARIES ${Qt${QT_VERSION_MAJOR}${dt_dep}_LIBRARIES})
      endforeach()

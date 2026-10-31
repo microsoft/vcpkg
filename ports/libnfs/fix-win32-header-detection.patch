@@ -1,0 +1,53 @@
+diff --git a/include/nfsc/libnfs-zdr.h b/include/nfsc/libnfs-zdr.h
+index 499ea27..b7f0713 100644
+--- a/include/nfsc/libnfs-zdr.h
++++ b/include/nfsc/libnfs-zdr.h
+@@ -30,7 +30,7 @@
+ #ifndef _LIBNFS_ZDR_H_
+ #define _LIBNFS_ZDR_H_
+ 
+-#ifdef WIN32
++#if defined(_WIN32) || defined(WIN32)
+ #ifndef CADDR_T_DEFINED
+ #define CADDR_T_DEFINED
+ typedef char *caddr_t;
+diff --git a/include/nfsc/libnfs.h b/include/nfsc/libnfs.h
+index 4f0166b..d672ea8 100755
+--- a/include/nfsc/libnfs.h
++++ b/include/nfsc/libnfs.h
+@@ -72,7 +72,7 @@ struct nfs_url {
+ 	char *file;
+ };
+ 
+-#if defined(WIN32) && defined(libnfs_EXPORTS)
++#if (defined(_WIN32) || defined(WIN32)) && defined(libnfs_EXPORTS)
+ #define EXTERN __declspec( dllexport )
+ #else
+ #ifndef EXTERN
+@@ -80,7 +80,7 @@ struct nfs_url {
+ #endif
+ #endif
+ 
+-#ifdef WIN32
++#if defined(_WIN32) || defined(WIN32)
+ #include <winsock2.h>
+ #ifdef HAVE_FUSE_H
+ #include <fuse.h>
+@@ -522,7 +522,7 @@ EXTERN int nfs_stat_async(struct nfs_context *nfs, const char *path, nfs_cb cb,
+  * -errno : The command failed.
+  */
+ /* This function is deprecated. Use nfs_stat64() instead */
+-#ifdef WIN32
++#if defined(_WIN32) || defined(WIN32)
+ EXTERN int nfs_stat(struct nfs_context *nfs, const char *path,
+                     struct __stat64 *st);
+ #else
+@@ -642,7 +642,7 @@ EXTERN int nfs_fstat_async(struct nfs_context *nfs, struct nfsfh *nfsfh,
+  *      0 : The operation was successful.
+  * -errno : The command failed.
+  */
+-#ifdef WIN32
++#if defined(_WIN32) || defined(WIN32)
+ EXTERN int nfs_fstat(struct nfs_context *nfs, struct nfsfh *nfsfh,
+                      struct __stat64 *st);
+ #else

@@ -6,7 +6,7 @@ set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # DX12 SDK Debug Layer i
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.D3D12/${VERSION}"
     FILENAME "Microsoft.Direct3D.D3D12.${VERSION}.zip"
-    SHA512 fd6ed5a200c1589d91c85b35bb0018117695ac2c3858e8dd4fb3247e4cba94bc3c09325ccbf246aac9a37754f0bf9fb69f94199dc9a2ad42d534ad6e2d367770
+    SHA512 f7c0a819610066d7cf03d18a4349f51b4f1e9b4f1b3f8ff5f7fbd9490e683471696e6fe50a11f8639efe3247c16ae18799f30bd36096160797dd880a0fceb47f
 )
 
 vcpkg_extract_source_archive(

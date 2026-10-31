@@ -1,9 +1,9 @@
 {
   "name": "libmaxminddb",
-  "version": "1.13.3",
+  "version": "1.14.0",
   "description": "C library for the MaxMind DB file format",
   "homepage": "https://github.com/maxmind/libmaxminddb",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 AND BSD-3-Clause AND BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

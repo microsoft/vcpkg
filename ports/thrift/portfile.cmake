@@ -12,7 +12,7 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/thrift/${VERSION}/thrift-${VERSION}.tar.gz"
     FILENAME "thrift-${VERSION}.tar.gz"
-    SHA512 a57c6fa645852f22ca10380621facc193393b19d1d760e113baa0f964365839043f2b527bd8cd3c03808380e9f09e9a8f707f8abbd931c51632e9d5181a459cf
+    SHA512 0570486bd6e4aa95a2eb329ad01a867a7999f7a936248e8fa3312a2dd20e247b7677d58f84a8e05e82de6bbb09647da2fe0e6aa720e825468e9f9b479831e76a
 )
 
 vcpkg_extract_source_archive(
@@ -92,4 +92,7 @@ if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/NOTICE"
+)

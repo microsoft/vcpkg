@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c1cc95a..1481750 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -175,6 +175,7 @@ IF(ENABLE_SSL)
+         ssl.c)
+     ADD_LIBRARY(hiredis_ssl ${hiredis_ssl_sources})
+     ADD_LIBRARY(hiredis::hiredis_ssl ALIAS hiredis_ssl)
++    TARGET_INCLUDE_DIRECTORIES(hiredis_ssl PUBLIC $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+     ADD_LIBRARY(hiredis_ssl_static STATIC ${hiredis_ssl_sources})
+     SET_TARGET_PROPERTIES(hiredis_ssl_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
+ 
+diff --git a/hiredis_ssl-config.cmake.in b/hiredis_ssl-config.cmake.in
+index eeb19d1..3d58060 100644
+--- a/hiredis_ssl-config.cmake.in
++++ b/hiredis_ssl-config.cmake.in
+@@ -4,6 +4,7 @@ set_and_check(hiredis_ssl_INCLUDEDIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(OpenSSL)
++find_dependency(hiredis CONFIG)
+ 
+ IF (NOT TARGET hiredis::hiredis_ssl)
+ 	INCLUDE(${CMAKE_CURRENT_LIST_DIR}/hiredis_ssl-targets.cmake)

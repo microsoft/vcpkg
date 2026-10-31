@@ -44,5 +44,5 @@ index c2a2c62..80285b5 100644
 +endif()
 +
  find_package(PkgConfig)
- pkg_check_modules(pc_libyaml yaml-0.1>=0.2.2 IMPORTED_TARGET)
+ pkg_check_modules(pc_libyaml yaml-0.1>=0.2.4 IMPORTED_TARGET)
  

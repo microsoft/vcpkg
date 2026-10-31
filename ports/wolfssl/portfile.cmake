@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
     REF "v${VERSION}-stable"
-    SHA512 84adcc41fc07dc89467b7f1bda32ab49f61cb15bb7b5ce3f3b5263346534a3af179bcb402c348a438a4de91a2b76b269db26110ad5c3f0e1bd5b8d234dfaf516
+    SHA512 a37624080dabb789f1f78acce758e9bdbbfad278bc73ab9ff3cdcd24d4aa9633daea1b82002bdf756219cd1d30da8083bdf1dfdc0c00d32565578ae288eb7e69
     HEAD_REF master
-    PATCHES
-        have-limits-h.diff
 )
 
 if ("asio" IN_LIST FEATURES)

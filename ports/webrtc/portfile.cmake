@@ -33,6 +33,13 @@ set(BUILD_PATCHES
     build-0006-skip-local-vs-debugger-copy.patch
     build-0007-fix-windows-pdb-commands.patch
     build-0008-disable-crel-on-linux-arm64.patch
+    build-0009-disable-copying-msvc-dlls.patch
+    # ERROR at //build/toolchain/win/win_toolchain_data.gni:13:21: This is not a string.
+    #                     visual_studio_runtime_dirs,
+    #                     ^-------------------------
+    # Instead I see a list = []
+    build-0010-use-none.patch
+    build-0011-do-not-detect-vs-path.patch
 )
 
 set(WEBRTC_SOURCE_URL "https://webrtc.googlesource.com/src")
@@ -196,6 +203,38 @@ function(setup_webrtc_windows_toolchain build_config)
     vcpkg_cmake_get_vars(cmake_vars_file)
     include("${cmake_vars_file}")
 
+    string(REGEX REPLACE "/VC/Tools/MSVC/.*" "" WEBRTC_VISUAL_STUDIO_PATH "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+    if(WEBRTC_VISUAL_STUDIO_PATH STREQUAL VCPKG_DETECTED_CMAKE_CXX_COMPILER OR NOT EXISTS "${WEBRTC_VISUAL_STUDIO_PATH}/VC/Auxiliary/Build/vcvarsall.bat")
+        message(FATAL_ERROR "Failed to derive Visual Studio installation path from '${VCPKG_DETECTED_CMAKE_CXX_COMPILER}'.")
+    endif()
+
+    string(REGEX REPLACE "/bin/([^/]+)/[^/]+/rc\\.exe$" "/include/\\1" WEBRTC_WINDOWS_SDK_INCLUDE_PATH "${VCPKG_DETECTED_CMAKE_RC_COMPILER}")
+    if(WEBRTC_WINDOWS_SDK_INCLUDE_PATH STREQUAL VCPKG_DETECTED_CMAKE_RC_COMPILER OR NOT EXISTS "${WEBRTC_WINDOWS_SDK_INCLUDE_PATH}")
+        message(FATAL_ERROR "Failed to derive Windows SDK include path from '${VCPKG_DETECTED_CMAKE_RC_COMPILER}'.")
+    endif()
+    get_filename_component(WEBRTC_WINDOWS_SDK_VERSION "${WEBRTC_WINDOWS_SDK_INCLUDE_PATH}" NAME)
+    get_filename_component(WEBRTC_WINDOWS_SDK_PATH "${WEBRTC_WINDOWS_SDK_INCLUDE_PATH}" DIRECTORY)
+    get_filename_component(WEBRTC_WINDOWS_SDK_PATH "${WEBRTC_WINDOWS_SDK_PATH}" DIRECTORY)
+
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/build/toolchain/win/setup_toolchain.py"
+        "SDK_VERSION = '10.0.26100.0'"
+        "SDK_VERSION = '${WEBRTC_WINDOWS_SDK_VERSION}'"
+        IGNORE_UNCHANGED # if non release only, the second replacement is a no-op
+    )
+
+    if(VCPKG_DETECTED_MSVC_VERSION GREATER_EQUAL 1950)
+        set(WEBRTC_VISUAL_STUDIO_VERSION "2026")
+    elseif(VCPKG_DETECTED_MSVC_VERSION GREATER_EQUAL 1930)
+        set(WEBRTC_VISUAL_STUDIO_VERSION "2022")
+    elseif(VCPKG_DETECTED_MSVC_VERSION GREATER_EQUAL 1920)
+        set(WEBRTC_VISUAL_STUDIO_VERSION "2019")
+    elseif(VCPKG_DETECTED_MSVC_VERSION GREATER_EQUAL 1910)
+        set(WEBRTC_VISUAL_STUDIO_VERSION "2017")
+    else()
+        message(FATAL_ERROR "Unsupported MSVC version '${VCPKG_DETECTED_MSVC_VERSION}'.")
+    endif()
+
     if("${build_config}" STREQUAL "debug")
         set(WEBRTC_EXTRA_CFLAGS_C "${VCPKG_COMBINED_C_FLAGS_DEBUG}" PARENT_SCOPE)
         set(WEBRTC_EXTRA_CFLAGS_CC "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}" PARENT_SCOPE)
@@ -207,6 +246,10 @@ function(setup_webrtc_windows_toolchain build_config)
         set(WEBRTC_EXTRA_LDFLAGS "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}" PARENT_SCOPE)
         set(WEBRTC_EXTRA_ARFLAGS "${VCPKG_COMBINED_STATIC_LINKER_FLAGS_RELEASE}" PARENT_SCOPE)
     endif()
+    set(WEBRTC_VISUAL_STUDIO_PATH "${WEBRTC_VISUAL_STUDIO_PATH}" PARENT_SCOPE)
+    set(WEBRTC_VISUAL_STUDIO_VERSION "${WEBRTC_VISUAL_STUDIO_VERSION}" PARENT_SCOPE)
+    set(WEBRTC_WINDOWS_SDK_PATH "${WEBRTC_WINDOWS_SDK_PATH}" PARENT_SCOPE)
+    set(WEBRTC_WINDOWS_SDK_VERSION "${WEBRTC_WINDOWS_SDK_VERSION}" PARENT_SCOPE)
 endfunction()
 
 function(setup_webrtc_host_xcode_toolchain)
@@ -499,6 +542,12 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
             "extra_cflags_cc=\"${WEBRTC_EXTRA_CFLAGS_CC}\""
             "extra_ldflags=\"${WEBRTC_EXTRA_LDFLAGS}\""
             "extra_arflags=\"${WEBRTC_EXTRA_ARFLAGS}\""
+            "visual_studio_path=\"${WEBRTC_VISUAL_STUDIO_PATH}\""
+            "visual_studio_version=\"${WEBRTC_VISUAL_STUDIO_VERSION}\""
+            "visual_studio_runtime_dirs=\"None\""
+            "windows_sdk_path=\"${WEBRTC_WINDOWS_SDK_PATH}\""
+            "windows_sdk_version=\"${WEBRTC_WINDOWS_SDK_VERSION}\""
+            "wdk_path=\"${WEBRTC_WINDOWS_SDK_PATH}\""
         )
         if("${BUILD_CONFIG}" STREQUAL "debug")
             list(APPEND WEBRTC_GN_ARGS "enable_iterator_debugging=true")

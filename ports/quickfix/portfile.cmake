@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 fbd45940334ea4d9f6e1f4164b0dfc0f509bd75689aa39b80ab5303b9be4f2123428e71d967f46bc5bc47ae1a521180af5ba7b619daff5f835c3dfb6dec03d50
     HEAD_REF master
     PATCHES
-        00001-fix-build.patch
+        00001-devendor-double-conversion.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" QUICKFIX_SHARED_LIBS)
@@ -27,6 +27,14 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/quickfix)
+
+set(quickfix_config "${CURRENT_PACKAGES_DIR}/share/${PORT}/quickfix-config.cmake")
+file(READ "${quickfix_config}" quickfix_config_contents)
+file(WRITE "${quickfix_config}"
+    "include(CMakeFindDependencyMacro)\n"
+    "find_dependency(double-conversion CONFIG)\n"
+    "${quickfix_config_contents}"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

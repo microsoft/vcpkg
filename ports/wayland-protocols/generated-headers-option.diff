@@ -1,0 +1,41 @@
+diff --git a/meson.build b/meson.build
+index 25d42ce..d1b7369 100644
+--- a/meson.build
++++ b/meson.build
+@@ -10,12 +10,14 @@ fs = import('fs')
+ 
+ dep_scanner = dependency('wayland-scanner',
+     version: get_option('tests') ? '>=1.25.0' : '>=1.22.90',
+-    required: get_option('tests'),
++    required: get_option('tests'),
+     native: true,
+     fallback: 'wayland'
+ )
+ if dep_scanner.found()
+ 	prog_scanner = find_program(dep_scanner.get_variable(pkgconfig: 'wayland_scanner', internal: 'wayland_scanner'))
++elif get_option('generated_headers')
++	prog_scanner = find_program('wayland_scanner', 'wayland-scanner')
+ endif
+ 
+ stable_protocols = {
+@@ -178,7 +180,7 @@ foreach protocol_file : installed_protocol_files
+ 
+ include_dirs = []
+ headers = []
+-if dep_scanner.found()
++if get_option('generated_headers')
+ 	subdir('include/wayland-protocols')
+ 	include_dirs = ['include']
+ endif
+diff --git a/meson_options.txt b/meson_options.txt
+index 6f2f158..4c7d39e 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -2,3 +2,7 @@ option('tests',
+        type: 'boolean',
+        value: true,
+        description: 'Build the tests')
++option('generated_headers',
++       type: 'boolean',
++       value: false,
++       description: 'Generate protocol helper headers with wayland-scanner')

@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e1b6a1..270b86f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -102,8 +102,8 @@ find_package(OpenSSL CONFIG REQUIRED)
+ 
+ set(SLICK_NET_MIN_VERSION 4.1.1)
+ 
+-find_package(slick-net ${SLICK_NET_MIN_VERSION} CONFIG QUIET)
+-if (NOT slick-net_FOUND)
++find_package(slick-net CONFIG REQUIRED)
++if (FALSE)
+     message(STATUS "Fetching slick-net...")
+     include(FetchContent)
+     set(BUILD_SLICK_NET_EXAMPLES OFF CACHE BOOL "" FORCE)
+diff --git a/cmake/alpaca-cppConfig.cmake.in b/cmake/alpaca-cppConfig.cmake.in
+index f51319b..b3b6d84 100644
+--- a/cmake/alpaca-cppConfig.cmake.in
++++ b/cmake/alpaca-cppConfig.cmake.in
+@@ -4,7 +4,7 @@ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(nlohmann_json CONFIG)
+ find_dependency(OpenSSL CONFIG)
+-find_dependency(slick-net @SLICK_NET_MIN_VERSION@ CONFIG)
++find_dependency(slick-net CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/alpaca-cppTargets.cmake")
+ 
+diff --git a/options-streaming/CMakeLists.txt b/options-streaming/CMakeLists.txt
+index e8a4031..dea0067 100644
+--- a/options-streaming/CMakeLists.txt
++++ b/options-streaming/CMakeLists.txt
+@@ -4,8 +4,8 @@ if (NOT TARGET slick::alpaca-cpp)
+     find_package(alpaca-cpp CONFIG REQUIRED)
+ endif()
+ 
+-find_package(msgpack-cxx CONFIG QUIET)
+-if (msgpack-cxx_FOUND)
++find_package(msgpack-cxx CONFIG REQUIRED)
++if (TRUE)
+     message(STATUS "Found msgpack-cxx ${msgpack-cxx_VERSION}: ${msgpack-cxx_DIR}")
+ else()
+     message(STATUS "Fetching msgpack-cxx...")

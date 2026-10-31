@@ -1,0 +1,27 @@
+diff --git a/include/osdp_export.h b/include/osdp_export.h
+index 9f50e8d..a9267d9 100644
+--- a/include/osdp_export.h
++++ b/include/osdp_export.h
+@@ -22,7 +22,9 @@
+ 
+ /* ---------- Export / Import / Visibility ---------- */
+ #if defined(_WIN32) || defined(__CYGWIN__)
+-  #if defined(BUILDING_API)
++  #if defined(OSDP_STATIC_DEFINE)
++    #define API_EXPORT
++  #elif defined(BUILDING_API)
+     #if defined(__GNUC__)
+       #define API_EXPORT __attribute__ ((dllexport))
+     #else
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index da73539..1112a0a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -205,6 +205,7 @@ endif()
+ set(LIB_OSDP_UTILS_SRC ${LIB_OSDP_UTILS_SRC} PARENT_SCOPE)
+ 
+ add_library(${LIB_OSDP_SHARED} SHARED ${LIB_OSDP_SOURCES} ${LIB_OSDP_UTILS_SRC})
++target_compile_definitions(${LIB_OSDP_SHARED} PRIVATE BUILDING_API)
+ if (OpenSSL_FOUND)
+ 	target_link_libraries(${LIB_OSDP_SHARED} PUBLIC OpenSSL::Crypto)
+ elseif (MbedTLS_FOUND)

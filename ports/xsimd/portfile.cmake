@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xsimd
     REF "${VERSION}"
-    SHA512 5a93511719b5460fa27248d7bbfda61a72fd32d67c9dbffee26686d57b54042957e9ed8a7b55923677122e04f0c2f4ba5f92b54028cfb2f4328d45f2858b3bd6
+    SHA512 a8ba9b60eb12fcd8af63af2ec0184cb44c4fd92774fd16ad370505c6b793727d4da917b72ee993174adb51f5fa6c0b0aee74bfb8b16db37ae201e916b9a6c91d
     HEAD_REF master
+    PATCHES
+        fix-pkgconfig-xcomplex.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

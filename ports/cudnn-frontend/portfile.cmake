@@ -2,20 +2,22 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cudnn-frontend
     REF "v${VERSION}"
-    SHA512 75943654652bbde8dc90cf52b58078a8c8250940827cebfe96c36750bc41047d016a94f1201f9e4069cdac56e0804c2f5a534ca86d4dc0f0ba4e65a97792a7a7
+    SHA512 20c369bcf31c3aa11909d2509d31bc147c9752f630855394d76524cc8be9dc95865e722015784af404aa22534fbac1362cad427e94f28611730817dfe211936e
     HEAD_REF main
+    PATCHES
+        fix-dependencies.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/cudnn_frontend/thirdparty")
 
 set(VCPKG_BUILD_TYPE release) # header only, INTERFACE library
 
-vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
+vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}" 
-        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}" 
+        "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
         -DCUDNN_FRONTEND_BUILD_PYTHON_BINDINGS=OFF
         -DCUDNN_FRONTEND_BUILD_TESTS=OFF
         -DCUDNN_FRONTEND_BUILD_SAMPLES=OFF
@@ -36,4 +38,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"
     "${CURRENT_PACKAGES_DIR}/lib"
 )
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/cudnn_frontend/AGENTS.md")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/LICENSE-MIT.txt"
+        "${SOURCE_PATH}/LICENSING.md"
+        "${SOURCE_PATH}/NOTICE"
+        "${SOURCE_PATH}/THIRD_PARTY_LICENSES.txt"
+)

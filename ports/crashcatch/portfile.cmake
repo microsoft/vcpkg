@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO keithpotz/CrashCatch
     REF "v${VERSION}"
-    SHA512 ba3f431b1c1da9f8ead4038ff8073df3010394ce84a6976ba6b9e9f50842a3aacb367b443a92fef75317ee49cf08384a39d76b944bf1e2735d3e2a3647c63f01
+    SHA512 97b5397b358d3f36c00209785f01a00d5119600267343f6d6bcbd8c4282e46d0c5709f420734e5a54009fe239f5e954ad489f4e05bd506111cc921aac851fd12
     HEAD_REF main
     PATCHES
         fix-disable-examples-tests.patch

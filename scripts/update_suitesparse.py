@@ -32,9 +32,9 @@ def sha512(data):
 
 
 def extract_version(content):
-    major = re.search(r"^set *\( *(\w+)_VERSION_MAJOR +(\d+) ", content, re.M).group(2)
-    minor = re.search(r"^set *\( *(\w+)_VERSION_MINOR +(\d+) ", content, re.M).group(2)
-    sub = re.search(r"^set *\( *(\w+)_VERSION_(?:SUB|PATCH|UPDATE) +(\d+) ", content, re.M).group(2)
+    major = re.search(r"^set *\( *(\w+)_VER(?:SION)?_MAJOR +(\d+) ", content, re.M).group(2)
+    minor = re.search(r"^set *\( *(\w+)_VER(?:SION)?_MINOR +(\d+) ", content, re.M).group(2)
+    sub = re.search(r"^set *\( *(\w+)_VER(?:SION)?_(?:SUB|PATCH|UPDATE) +(\d+) ", content, re.M).group(2)
     return f"{major}.{minor}.{sub}"
 
 
@@ -62,10 +62,20 @@ def update_manifest(pkg_name, version):
     manifest_path = port_dir / "vcpkg.json"
     manifest = json.loads(manifest_path.read_text("utf8"))
     if manifest["version-semver"] == version:
-        return False
-    manifest["version-semver"] = version
-    if "port-version" in manifest:
-        del manifest["port-version"]
+        if "port-version" in manifest:
+            manifest["port-version"] = manifest["port-version"] + 1
+        else:
+            # Need to rebuild manifest so we can insert "port-version" directly after "version-semver"
+            new_manifest = {}
+            for key, val in manifest.items():
+                new_manifest[key] = val
+                if key == "version-semver":
+                    new_manifest["port-version"] = 1
+            manifest = new_manifest
+    else:
+        manifest["version-semver"] = version
+        if "port-version" in manifest:
+            del manifest["port-version"]
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     return True
 

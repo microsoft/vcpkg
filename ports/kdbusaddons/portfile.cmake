@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
     REF "v${VERSION}"
-    SHA512 7915cd009526909c3c71fe09994874eab97e02a2bf7bfe23694c10f46b7c915c21d3efe1317c4d4eb7cfc387e15c135d6a65668b9a180f5b7095f9bd2de7cfd4
+    SHA512 8bddcfa87a9a1b69c1dace226b59b1deec1fbcb5ee0aba31539cb8db52ae411588fda681429fd10485b9ab108f370920da650d65c5e0b513a21c651599e988f9
     HEAD_REF master
 )
 
@@ -19,6 +19,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         ${FEATURE_OPTIONS}
 )
 

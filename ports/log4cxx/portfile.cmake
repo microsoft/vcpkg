@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/logging/log4cxx/${VERSION}/apache-log4cxx-${VERSION}.tar.gz"
     FILENAME "apache-log4cxx-${VERSION}.tar.gz"
-    SHA512 0e94946457423689af6d85074ab97b717e0cec85a4f548e6650b060e8f98b780f980b7d4a7780410fa64681376fb4bc62fab6ed9068fc944e07f9f32ac0413af
+    SHA512 2647b930c3d8d3f55b586943d691f0b40ef1c96276a95bbcb72a49db4130d690703d4f755faee2f5835684587a66ab04a0f715d1e4bfb1ae43da466804e7a879
 )
 
 vcpkg_extract_source_archive(
@@ -21,6 +21,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DLOG4CXX_INSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
+        -DLOG4CXX_ENABLE_ESMTP=OFF
+        -DLOG4CXX_ENABLE_ODBC=OFF
         -DBUILD_TESTING=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_fmt=${VCPKG_LOCK_FIND_PACKAGE_fmt}
 )
@@ -43,4 +45,8 @@ ${_contents}"
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)

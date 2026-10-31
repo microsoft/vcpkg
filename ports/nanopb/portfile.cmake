@@ -4,9 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanopb/nanopb
     REF ${VERSION}
-    SHA512 1580c94d558f707c88d8d2ddf4aa3bf4ef244ddc07b13e02de7124da8d156fb30a6999bb3c54ff0497abb033e498fb85ea671774f2fb817f55fa64937f537c77
+    SHA512 7829ecd42243c194e4c00dd1722288af38630fcc85b77b83c599dc3b1e14d5c4e5b62de24dff07ca724c1f5bd623ee5a31815311823eb80791da84ee8c5ab232
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix-cmakelist.patch
 )
 

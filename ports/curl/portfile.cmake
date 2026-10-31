@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 452a76a238b6fa63d579eea37551cab9a02003fd542895905cf5ddc6b01b845697d30ebf5bf7b74db2c73113da3dcaf88d09093c9e2bdf8b4958690625d8800c
+    SHA512 e1003f374675a6ae50463995a6c705208c4247120093f1fcccf030847161235b3dfc0e40927114ccbc5b4530893990ccb96ec15400ffe4bcb275d26a0499f10e
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -43,7 +43,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
-        non-http    HTTP_ONLY
         websockets  CURL_DISABLE_WEBSOCKETS
 )
 
@@ -74,6 +73,11 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS -DENABLE_UNICODE=ON)
+endif()
+
+if(VCPKG_TARGET_IS_APPLE AND
+    ("openssl" IN_LIST FEATURES OR "gnutls" IN_LIST FEATURES))
+    list(APPEND OPTIONS -DUSE_APPLE_SECTRUST=ON)
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)

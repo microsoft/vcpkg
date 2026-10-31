@@ -190,6 +190,7 @@ function(vcpkg_find_acquire_program program)
             VERSION_COMMAND ${version_command}
         )
     endif()
+
     if(NOT ${program})
         if("${download_urls}" STREQUAL "" AND "${sourceforge_args}" STREQUAL "")
             set(example ".")
@@ -202,7 +203,7 @@ function(vcpkg_find_acquire_program program)
         endif()
 
         if("${sourceforge_args}" STREQUAL "")
-            vcpkg_download_distfile(archive_path
+            z_vcpkg_download_distfile(archive_path
                 URLS ${download_urls}
                 SHA512 "${download_sha512}"
                 FILENAME "${download_filename}"

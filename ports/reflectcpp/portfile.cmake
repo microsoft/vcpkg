@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO getml/reflect-cpp
+    REPO munich-data-engineering/reflect-cpp
     REF "v${VERSION}"
-    SHA512 4be84fc69efd6f4ce766d38cedc8b1d0fd0fa8170e69293383f7dbd59c6bce45797f0e7cf653ef9c839b15fd7da702c9daf30efd34c779555fe4e5bd5eb29481 
+    SHA512 95698bdc8695d3c72cc22aa2572b09e36d132adc8c6eb9f95a507ff57bc18fa329c05ed6e5ec878181e44fb227877c63479b71f75c68a9d40f13a97f46e41590
     HEAD_REF main
 )
 
@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCMAKE_DISABLE_FIND_PACKAGE_ament_cmake=ON
         -DREFLECTCPP_BUILD_TESTS=OFF
         -DREFLECTCPP_BUILD_SHARED=${REFLECTCPP_BUILD_SHARED}
         -DREFLECTCPP_USE_BUNDLED_DEPENDENCIES=OFF
@@ -47,4 +48,3 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)

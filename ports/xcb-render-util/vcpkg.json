@@ -1,15 +1,15 @@
 {
   "name": "xcb-render-util",
   "version": "0.3.10",
-  "port-version": 1,
+  "port-version": 2,
   "description": "XCB convenience functions for the Render extension.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": null,
   "dependencies": [
+    "libxcb",
     {
       "name": "vcpkg-make",
       "host": true
-    },
-    "xcb"
+    }
   ]
 }

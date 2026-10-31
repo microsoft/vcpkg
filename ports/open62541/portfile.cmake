@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF v${VERSION}
-    SHA512 521e29921d7aed6ee9766a1781c28071447ec0046f02a23376798ac35c18feba37cc0f4c217df41abb1c4470b7bf7aae26cf88da0ec8136f64a969be9ff56426
+    REF "v${VERSION}"
+    SHA512 09288151e2ca10678b239606c6bb99fefcbb63a7f5a4ce8c01f8727dd91449919aedae5ec593a75ea6816418c07c48ea5b3066628ceca50e406c08c41d5772fd
     HEAD_REF master
     PATCHES
       android.patch
@@ -66,8 +66,21 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/open62541")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/open62541/tools")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/open62541/tools"
+)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    COMMENT [[
+PCG and base64 reference Apache-2.0 and BSD terms without including the full texts.
+libc_time only names musl's MIT license; parse_num includes MIT terms but no copyright holder.
+The OPC Foundation schema is installed and also generates the library's standard data types.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE-CC0"
+        "${SOURCE_PATH}/deps/README.md"
+        "${SOURCE_PATH}/tools/schema/Opc.Ua.Types.bsd"
+)

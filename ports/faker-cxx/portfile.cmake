@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cieslarmichal/faker-cxx
     REF "v${VERSION}"
-    SHA512 994f46d2d6b45ee1dba9f0f7693addb401fd7467b3d05bb213056dabfba7beaae636724658f80f262cb52ef1d03455161ca69a9228e1c9b4138c8f4dae7623be
+    SHA512 7996116664f05af95c91afc8ffb42d8610580e76572d089843fabbbf3756e0db6abf3ebca2b950e5ee29f40b30355a6a7d2c68ac4d0cdbffc953e0d392864e32
     HEAD_REF main
 )
 
@@ -22,6 +22,10 @@ vcpkg_cmake_config_fixup(
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig"
 )
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/LICENSES.md")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSES.md"
+        "${SOURCE_PATH}/src/modules/ulid_struct.h"
+)

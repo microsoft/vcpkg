@@ -137,6 +137,14 @@
           "name": "ffmpeg",
           "default-features": false,
           "features": [
+            "svt-av1"
+          ],
+          "platform": "!x86 & !arm32 & !uwp"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
             "aom"
           ],
           "platform": "!(windows & arm) & !uwp"
@@ -148,6 +156,14 @@
             "x265"
           ],
           "platform": "!uwp & !(arm & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ],
+          "platform": "(linux | windows) & !arm & !uwp"
         },
         {
           "name": "ffmpeg",
@@ -188,14 +204,6 @@
             "nvcodec"
           ],
           "platform": "!android & !osx & !uwp & !(arm64 & windows)"
-        },
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "vulkan"
-          ],
-          "platform": "(linux | windows) & !arm & !uwp"
         }
       ]
     }

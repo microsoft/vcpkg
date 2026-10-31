@@ -1,0 +1,17 @@
+diff --git a/tools/Report/CMakeLists.txt b/tools/Report/CMakeLists.txt
+index 790a6a61..9e5f2ab2 100644
+--- a/tools/Report/CMakeLists.txt
++++ b/tools/Report/CMakeLists.txt
+@@ -11,8 +11,11 @@ TARGET_LINK_LIBRARIES(report ${LIBRARIES})
+ 
+ SET_TARGET_PROPERTIES(report PROPERTIES 
+     OUTPUT_NAME ${PROJECT_PREFIX}-report
+-    COMPILE_DEFINITIONS "WITH_QT"
+ )
++
++IF(WITH_QT AND (QT4_FOUND OR Qt5_FOUND OR Qt6_FOUND))
++    SET_TARGET_PROPERTIES(report PROPERTIES COMPILE_DEFINITIONS "WITH_QT")
++ENDIF(WITH_QT AND (QT4_FOUND OR Qt5_FOUND OR Qt6_FOUND))
+     
+ INSTALL(TARGETS report
+ 	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime

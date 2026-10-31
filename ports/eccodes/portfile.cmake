@@ -2,10 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ecmwf/eccodes
     REF "${VERSION}"
-    SHA512 8d6d1dfa366f41bf1c7fe129540a02183a9e117e26793b9e17b102cde1bd2277ece9c9b7958daf88a4a6cf21997f55793d8a52b5b62c827b7a4a4b2ac1dd3344
+    SHA512 a07195c58c0b094ac9453315808bd420e77b80f8ca0d90b29322ae543a173ff1a58063dc226cff9f6a16a05b9e77c72c4f7bca20cdf9f3a493886a44b9e86af5
     HEAD_REF develop
     PATCHES
         fix-netcdf-linkage.patch
+        fix-png-linkage.patch
+        use-external-tl-expected.patch
+        fix-static-dependencies.patch
 )
 
 if(VCPKG_HOST_IS_WINDOWS)
@@ -13,7 +16,6 @@ if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
 endif()
 
-vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
 get_filename_component(PYTHON3_ROOT "${PYTHON3_PATH}" DIRECTORY)
@@ -42,7 +44,6 @@ set(ECCODES_OPTIONS
     -DBUILD_TESTING=OFF
     -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
     -DVCPKG_LOCK_FIND_PACKAGE_Jasper=OFF
-    -DVCPKG_LOCK_FIND_PACKAGE_OpenMP=OFF
     -DENABLE_MEMFS=ON
     -DENABLE_INSTALL_ECCODES_DEFINITIONS=ON
     -DENABLE_INSTALL_ECCODES_SAMPLES=ON
@@ -74,7 +75,6 @@ vcpkg_cmake_configure(
         ${ECCODES_OPTIONS}
         -DCMAKE_REQUIRE_FIND_PACKAGE_ecbuild=ON
         -Decbuild_ROOT=${CURRENT_HOST_INSTALLED_DIR}
-        -DPERL_EXECUTABLE=${PERL}
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DPython_EXECUTABLE=${PYTHON3}
         -DPython3_EXECUTABLE=${PYTHON3}
@@ -97,6 +97,46 @@ vcpkg_replace_string(
 )
 
 vcpkg_fixup_pkgconfig()
+
+set(_eccodes_pkgconfig_private_libraries -leccodes_memfs)
+set(_eccodes_pkgconfig_private_requires libopenjp2)
+if("aec" IN_LIST FEATURES OR "netcdf" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND _eccodes_pkgconfig_private_libraries -laec-static)
+    else()
+        list(APPEND _eccodes_pkgconfig_private_libraries -laec)
+    endif()
+endif()
+if("png" IN_LIST FEATURES)
+    list(APPEND _eccodes_pkgconfig_private_requires libpng)
+endif()
+string(JOIN " " _eccodes_pkgconfig_private_libraries ${_eccodes_pkgconfig_private_libraries})
+string(JOIN " " _eccodes_pkgconfig_private_requires ${_eccodes_pkgconfig_private_requires})
+
+function(_eccodes_fix_pkgconfig_file _file _libraries)
+    file(READ "${_file}" _contents)
+    set(_libs_line "libs=\"-L\${libdir}\" ${_libraries}")
+    set(_libs_private_line "libs_private=${_eccodes_pkgconfig_private_libraries}")
+    set(_requires_private_line "Requires.private: ${_eccodes_pkgconfig_private_requires}")
+    string(REGEX REPLACE "(^|\n)libs=[^\n]*" "\\1${_libs_line}" _contents "${_contents}")
+    string(REGEX REPLACE "(^|\n)libs_private=[^\n]*" "\\1${_libs_private_line}" _contents "${_contents}")
+    if(_contents MATCHES "(^|\n)Requires\\.private:")
+        string(REGEX REPLACE "(^|\n)Requires\\.private:[^\n]*" "\\1${_requires_private_line}" _contents "${_contents}")
+    else()
+        string(REGEX REPLACE "(\n### Features:)" "\n${_requires_private_line}\\1" _contents "${_contents}")
+    endif()
+    file(WRITE "${_file}" "${_contents}")
+endfunction()
+
+foreach(_prefix IN ITEMS "" "debug/")
+    set(_eccodes_pc_dir "${CURRENT_PACKAGES_DIR}/${_prefix}lib/pkgconfig")
+    if(EXISTS "${_eccodes_pc_dir}/eccodes.pc")
+        _eccodes_fix_pkgconfig_file("${_eccodes_pc_dir}/eccodes.pc" "-leccodes")
+    endif()
+    if(EXISTS "${_eccodes_pc_dir}/eccodes_f90.pc")
+        _eccodes_fix_pkgconfig_file("${_eccodes_pc_dir}/eccodes_f90.pc" "-leccodes_f90 -leccodes")
+    endif()
+endforeach()
 
 set(_eccodes_tool_names
     codes_bufr_filter
@@ -199,4 +239,7 @@ foreach(_file IN LISTS _eccodes_files_to_scrub)
     endif()
 endforeach()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/NOTICE"
+)

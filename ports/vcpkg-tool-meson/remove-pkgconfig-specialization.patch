@@ -1,14 +1,23 @@
 diff --git a/mesonbuild/modules/pkgconfig.py b/mesonbuild/modules/pkgconfig.py
-index bef14e9..fec595f 100644
+index 57c6392..6ac94fc 100644
 --- a/mesonbuild/modules/pkgconfig.py
 +++ b/mesonbuild/modules/pkgconfig.py
-@@ -715,6 +715,9 @@ class PkgConfigModule(NewExtensionModule):
-         pcfile = filebase + '.pc'
-         pkgroot = pkgroot_name = kwargs['install_dir'] or default_install_dir
+@@ -779,16 +779,8 @@ class PkgConfigModule(NewExtensionModule):
+         if isinstance(pkgroot, OptionString):
+             pkgroot_name = pkgroot.optname
          if pkgroot is None:
+-            m = state.environment.machines.host
+-            if m.is_freebsd():
+-                pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('prefix'))), 'libdata', 'pkgconfig')
+-                pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
+-            elif m.is_haiku():
+-                pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('prefix'))), 'develop', 'lib', 'pkgconfig')
+-                pkgroot_name = os.path.join('{prefix}', 'develop', 'lib', 'pkgconfig')
+-            else:
+-                pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('libdir'))), 'pkgconfig')
+-                pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
 +            pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('libdir'))), 'pkgconfig')
 +            pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
-+        elif False:
-             m = state.environment.machines.host
-             if m.is_freebsd():
-                 pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('prefix'))), 'libdata', 'pkgconfig')
+         relocatable = state.get_option('pkgconfig.relocatable')
+         self._generate_pkgconfig_file(state, deps, subdirs, name, description, url,
+                                       version, license, pcfile, conflicts, variables,

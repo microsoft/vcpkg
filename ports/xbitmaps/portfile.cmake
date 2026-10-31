@@ -1,24 +1,22 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO data/bitmaps
-    REF  "xbitmaps-${VERSION}"
-    SHA512 e9a90555cf38c9c8800f58e1ec92bae3c44cedc491fb6184ad6da575e7fbaf3ee380a3fc2d33072d0ef5f313204588ff9c3668a58726b1251dbb2a4ad362d119
-    HEAD_REF master
+set(VCPKG_BUILD_TYPE release) # header only library
+
+vcpkg_download_distfile(
+    XBITMAPS_ARCHIVE
+    URLS "https://xorg.freedesktop.org/archive/individual/data/xbitmaps-${VERSION}.tar.xz"
+    FILENAME "xbitmaps-${VERSION}.tar.xz"
+    SHA512 7da5e506effdfcf7344fc8209f47c1ec4c2e9f639e677f8701c36e1e5728037357478af3dd030ca93f3e36a3e1eaad1bb97596aba85868f01b52b420b825a10f
 )
 
-set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${XBITMAPS_ARCHIVE}"
+)
 
-vcpkg_make_configure(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTORECONF
 )
-vcpkg_make_install()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/pkgconfig/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/xbitmaps.pc" "${CURRENT_PACKAGES_DIR}/share/pkgconfig/xbitmaps.pc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")

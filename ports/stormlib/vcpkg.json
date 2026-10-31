@@ -1,7 +1,9 @@
 {
   "name": "stormlib",
-  "version": "9.31",
+  "version": "9.40",
   "description": "StormLib is a library for opening and manipulating Blizzard MPQ files",
+  "homepage": "http://www.zezula.net/en/mpq/stormlib.html",
+  "license": null,
   "dependencies": [
     "bzip2",
     {

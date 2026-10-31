@@ -1,10 +1,9 @@
 {
   "name": "poco",
-  "version": "1.14.1",
-  "port-version": 2,
+  "version": "1.15.4",
   "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
   "homepage": "https://github.com/pocoproject/poco",
-  "license": "BSL-1.0",
+  "license": "BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT AND Zlib",
   "supports": "!uwp",
   "dependencies": [
     "pcre2",
@@ -185,6 +184,7 @@
     },
     "pdf": {
       "description": "Haru support for POCO",
+      "supports": "!windows | static",
       "dependencies": [
         "libharu",
         {

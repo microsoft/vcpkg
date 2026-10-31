@@ -2,15 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-mqtt
     REF "v${VERSION}"
-    SHA512 7c3f142c1a8631e50f0dc92cbc3a24aa87c8dedc4c667f0d60d5f6fb73072cb22e186e654547f1a76a2fffeb9d9c2450b1ce7ce91d30a2d47dbd081c0b4dfe17
-    HEAD_REF master
+    SHA512 9ebde586573d6ed87230579859c4c07f6fc62f4a708e6dd0c80d55f7cdc83a1845167778b3b55e48d42008cdc2ed06644498d52fe3d5e7365f8fd0ceb58466b9
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
-         -DBUILD_TESTING=FALSE
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common/modules" # use extra cmake files
+        -DBUILD_TESTING=FALSE
 )
 
 vcpkg_cmake_install()
@@ -29,4 +29,8 @@ file(REMOVE_RECURSE
 
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/NOTICE"
+)

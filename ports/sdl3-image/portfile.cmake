@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
     REF "release-${VERSION}"
-    SHA512 a20269e064e68dd892084d8d6d6f3d5d44a6a75994808a1579ed7deeedc22c4230ec982d1166a0b85aca0b9a3625ac84e6fe9093dccebb78bf0b7cc01bc6c711
+    SHA512 500b06d5c971231f9759d3702058f71155e62b37a3c1eacc8431757e8544c3eecb8d92f65d0f21053ab41437a5f6babfee0315c249dae629019c7492835cd764
     HEAD_REF main
     PATCHES
         dependencies.diff
@@ -12,14 +12,12 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        avif    SDLIMAGE_AVIF
         jpeg    SDLIMAGE_JPG
+        jxl     SDLIMAGE_JXL
         png     SDLIMAGE_PNG
         tiff    SDLIMAGE_TIF
         webp    SDLIMAGE_WEBP
-    INVERTED_FEATURES
-        # Disabled capabilities: Needing dependencies.
-        core    SDLIMAGE_AVIF
-        core    SDLIMAGE_JXL
 )
 
 vcpkg_cmake_configure(
@@ -51,4 +49,10 @@ file(REMOVE_RECURSE
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/src/qoi.h"
+    "${SOURCE_PATH}/src/nanosvg.h"
+    "${SOURCE_PATH}/src/nanosvgrast.h"
+    "${SOURCE_PATH}/src/tiny_jpeg.h"
+)

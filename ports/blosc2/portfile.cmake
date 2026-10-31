@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc2
     REF "v${VERSION}"
-    SHA512 c6dd74c6f31649d361395b4817a2ca2e0da5353c5cd3ef7ce5f3969251b3393aaf3c2941cc77dd41a9672efb8acc7f68a9e5e8acf86b978123eed13a1225f827
+    SHA512 df517f3ee1e2c5936f862f8408af3868d017eab0b42aae5aed0572739d248589a695d94124b0fb713729cc0d05f277e409010e39f21b7eac9a986037ba3f394e
     HEAD_REF main
+    PATCHES
+        pkgconfig-dependencies.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC2_STATIC)
@@ -16,6 +18,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zlib DEACTIVATE_ZLIB
         zstd DEACTIVATE_ZSTD
 )
+
+set(BLOSC2_PC_REQUIRES_PRIVATE "liblz4")
+if("zlib" IN_LIST FEATURES)
+    string(APPEND BLOSC2_PC_REQUIRES_PRIVATE " zlib")
+endif()
+if("zstd" IN_LIST FEATURES)
+    string(APPEND BLOSC2_PC_REQUIRES_PRIVATE " libzstd")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -34,6 +44,9 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC=${BLOSC2_STATIC}
         -DBUILD_SHARED=${BLOSC2_SHARED}
+        -DBLOSC_DEPENDENCY_MODE=EXTERNAL
+        "-DBLOSC2_PC_REQUIRES_PRIVATE=${BLOSC2_PC_REQUIRES_PRIVATE}"
+        -DBLOSC2_PC_LIBS_PRIVATE=-lzfp
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_ZLIB_NG
         CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
@@ -49,7 +62,13 @@ else()
 endif()
 vcpkg_fixup_pkgconfig()
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/LICENSES/FASTLZ.txt"
+        "${SOURCE_PATH}/LICENSES/BITSHUFFLE.txt"
+        "${SOURCE_PATH}/plugins/codecs/ndlz/xxhash.c"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/Modules") # Find modules that should not be used by vcpkg.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 ffbac0c198c74f26b2ac173aa2b054cfd3902927ca3db36fbbae25353e8696c32b744e805c25801ced22641af71a5a8ea441202d8d3494aa803b797995d9d408
+    SHA512 c8769d4198f1c8e309e1e02e3d7e1db82706d98a7b500ae4e563d0ab504373c26de5141a5efa695541275fc95e8f4ef6a245a95f9ada7958f754e8e82145f9fd
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0004-android-datetime.patch
         0005-cmake-msvcruntime.patch
         0007-use-vcpkg-mimalloc.patch
+        0008-msvc-no-sse2-define.patch
 )
 
 # Check cpp/cmake_modules/DefineOptions.cmake for option dependencies -
@@ -63,6 +64,7 @@ vcpkg_cmake_configure(
         -DARROW_WITH_BZ2=ON
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
+        -DARROW_WITH_UTF8PROC=ON
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
         -DBUILD_WARNING_LEVEL=PRODUCTION
@@ -128,6 +130,14 @@ if("parquet" IN_LIST FEATURES)
     )
 endif()
 
+if("s3" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrows3
+        CONFIG_PATH lib/cmake/ArrowS3
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 file(GLOB main_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/Arrow/*onfig.cmake")
 file(GLOB extra_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/*/*onfig.cmake")
 list(REMOVE_ITEM extra_configs ${main_configs})
@@ -140,7 +150,7 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Arrow)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-foreach(feature IN ITEMS parquet dataset acero compute flight flightsql)
+foreach(feature IN ITEMS parquet dataset acero compute flight flightsql s3)
     if(feature IN_LIST FEATURES)
         file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-${feature}" feature_usage)
         file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${feature_usage}")
@@ -155,4 +165,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/NOTICE.txt"
+)

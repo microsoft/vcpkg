@@ -1,28 +1,59 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b496f7a..6bfce73 100644
+index b496f7a..85bd21d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -229,7 +229,7 @@ target_link_libraries(${BTCPP_LIBRARY}
+@@ -226,24 +226,24 @@ target_link_libraries(${BTCPP_LIBRARY}
+     PRIVATE
          Threads::Threads
          ${CMAKE_DL_LIBS}
-         $<BUILD_INTERFACE:minitrace::minitrace>
+-        $<BUILD_INTERFACE:minitrace::minitrace>
++        minitrace::minitrace
 -        $<BUILD_INTERFACE:tinyxml2::tinyxml2>
 +        tinyxml2::tinyxml2
          $<BUILD_INTERFACE:minicoro::minicoro>
-         $<BUILD_INTERFACE:flatbuffers::flatbuffers>
+-        $<BUILD_INTERFACE:flatbuffers::flatbuffers>
++        flatbuffers::flatbuffers
      PUBLIC
+         ${BTCPP_EXTRA_LIBRARIES}
+ )
+ 
+ if(BTCPP_GROOT_INTERFACE)
+     target_link_libraries(${BTCPP_LIBRARY}
+         PUBLIC
+-            $<BUILD_INTERFACE:cppzmq>
++            cppzmq
+     )
+ endif()
+ 
+ if(BTCPP_SQLITE_LOGGING)
+     target_link_libraries(${BTCPP_LIBRARY}
+         PRIVATE
+-            $<BUILD_INTERFACE:SQLite::SQLite3>
++            SQLite3::SQLite3
+     )
+ endif()
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
 index eaed471..73c3d4c 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
-@@ -1,5 +1,10 @@
+@@ -1,5 +1,18 @@
  @PACKAGE_INIT@
  
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(Threads)
++find_dependency(flatbuffers CONFIG)
++find_dependency(minitrace CONFIG)
 +find_dependency(tinyxml2 CONFIG)
++if(@BTCPP_GROOT_INTERFACE@)
++    find_dependency(cppzmq CONFIG)
++endif()
++if(@BTCPP_SQLITE_LOGGING@)
++    find_dependency(SQLite3)
++endif()
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
  
  set(@PROJECT_NAME@_TARGETS "BT::@PROJECT_NAME@")
+
+

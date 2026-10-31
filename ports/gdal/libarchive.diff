@@ -1,0 +1,29 @@
+diff --git a/cmake/helpers/CheckDependentLibraries.cmake b/cmake/helpers/CheckDependentLibraries.cmake
+index ba99a00a67..d24ece6055 100644
+--- a/cmake/helpers/CheckDependentLibraries.cmake
++++ b/cmake/helpers/CheckDependentLibraries.cmake
+@@ -423,7 +423,10 @@ gdal_check_package(LZ4 "LZ4 compression" CAN_DISABLE)
+ gdal_check_package(Blosc "Blosc compression" CAN_DISABLE)
+ 
+ define_find_package2(ARCHIVE archive.h archive)
+-gdal_check_package(ARCHIVE "Multi-format archive and compression library library (used for /vsi7z/" CAN_DISABLE)
++set(GDAL_USE_LIBARCHIVE "${GDAL_USE_ARCHIVE}" CACHE BOOL "")
++gdal_check_package(LibArchive "Multi-format archive and compression library library (used for /vsi7z/" CAN_DISABLE
++  TARGETS LibArchive::LibArchive
++)
+ 
+ define_find_package2(LIBAEC libaec.h aec)
+ gdal_check_package(LIBAEC "Adaptive Entropy Coding implementing Golomb-Rice algorithm (used by GRIB)" CAN_DISABLE)
+diff --git a/port/CMakeLists.txt b/port/CMakeLists.txt
+index 1f5d653d30..b71ef2fef0 100644
+--- a/port/CMakeLists.txt
++++ b/port/CMakeLists.txt
+@@ -209,7 +209,7 @@ endif ()
+ 
+ if (GDAL_USE_ARCHIVE)
+   target_compile_definitions(cpl PRIVATE -DHAVE_LIBARCHIVE)
+-  gdal_target_link_libraries(cpl PRIVATE ARCHIVE::ARCHIVE)
++  gdal_target_link_libraries(cpl PRIVATE LibArchive::LibArchive)
+ endif ()
+ 
+ if (GDAL_USE_CURL)

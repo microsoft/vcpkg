@@ -1,6 +1,6 @@
 {
   "name": "argus",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Argus is a cross-platform modern feature-rich command-line argument parser for C",
   "homepage": "https://github.com/lucocozz/argus",
   "license": "MIT",

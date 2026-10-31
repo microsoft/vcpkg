@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 6338448d7c0fc78c38480f1fafd7605d031b600a702df3771a9d1b1236da7bf97a93dbdbc2d93d12d395411dc2f2ac57587ad1b697c4b2a5ac56fb8af1184501 
+    SHA512 59134070566c0f9964ee80d376162ff07c3627d3fc7e6bd4c238018fd798a1d2adbade1a413997ecbff040b2f8df0fd0a04fdc0c20e6d40b376d73ea4fd77570
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -16,8 +16,17 @@ vcpkg_from_github(
         00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
-        00017-add-missing-include-file.patch
 )
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH GRPC_PROTO_SOURCE_PATH
+    REPO grpc/grpc-proto
+    REF ec30f589e2519d595688b9a42f88a91bdd6b733f
+    SHA512 03673c402e9a06183dabe9581b7de6e2329a99530509ec26b1f7e30dfdc1722554a226d573655cbdda65700f85456495c45ef6ef829b0d1c21a5b1bb3b414358
+    HEAD_REF master
+)
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/grpc-proto")
+file(COPY "${GRPC_PROTO_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/third_party/grpc-proto")
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/third_party/abseil-cpp"
     "${SOURCE_PATH}/third_party/cares"

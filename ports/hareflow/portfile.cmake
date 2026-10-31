@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coveooss/hareflow
     REF "v${VERSION}"
-    SHA512 96138675a37e381db97d963b339ab2d6472573d0e1d215bb485141d1a92be0c9658db1abb849d6e7849b396e9a877e5f0ed2ce332b68b44b7dda21536733158a
+    SHA512 c261d963c1f0c4d8da9921d68f1a81a016c04354f4a4a7faff55e8215376941efe4e6871e8d5e9d5487ddf17645f4ccfdd910d9d6abb3d0cdb15894b5d38a2ae
     HEAD_REF main
-    PATCHES
-        fix-asio-error.patch
-        fix-missing-headers.diff
 )
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)

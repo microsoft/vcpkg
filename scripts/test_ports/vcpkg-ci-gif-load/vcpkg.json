@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-gif-load",
+  "version-string": "ci",
+  "description": "Validates gif-load",
+  "dependencies": [
+    "gif-load",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

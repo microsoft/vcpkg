@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenColorIO
     REF "v${VERSION}"
-    SHA512 99f222158a67ff8ba981f01a908915a9e08a76b1eb73c667ff38990b31dd9a4c1f5934e924daaff18eef2fc96dd10928b77be18c97489b1aff631409631122e3
+    SHA512 fa7a8b2d909ff754b591be2d5dffa6056bdcfc58738876cb7358e329187a30d46cf27c2b1387d57d58cc02248cf07e46f17bb27a532c6b3523c82ef8367f66bf
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -23,6 +23,12 @@ if(NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
     list(APPEND FEATURE_OPTIONS -DOCIO_USE_SSE2NEON=OFF)
 endif()
 
+set(directx_enabled OFF)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_XBOX
+   AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64|arm64)$")
+    set(directx_enabled ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -33,6 +39,7 @@ vcpkg_cmake_configure(
         -DOCIO_BUILD_OPENFX:BOOL=OFF
         -DOCIO_BUILD_PYTHON:BOOL=OFF
         -DOCIO_BUILD_TESTS:BOOL=OFF
+        -DOCIO_DIRECTX_ENABLED:BOOL=${directx_enabled}
         -DOCIO_INSTALL_EXT_PACKAGES=NONE
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenImageIO=ON
@@ -41,6 +48,7 @@ vcpkg_cmake_configure(
         # only used for OCIO_BUILD_APPS
         CMAKE_DISABLE_FIND_PACKAGE_GLUT
         CMAKE_DISABLE_FIND_PACKAGE_OpenImageIO
+        OCIO_DIRECTX_ENABLED
         VCPKG_LOCK_FIND_PACKAGE_OpenGL
 
 )
@@ -65,6 +73,13 @@ if(OCIO_BUILD_APPS)
         TOOL_NAMES ociomergeconfigs ocioarchive ociobakelut ociocheck ociochecklut ocioconvert ociocpuinfo ociolutimage ociomakeclf ocioperf ociowrite
         AUTO_CLEAN
     )
+    if(directx_enabled)
+        # The DirectX backend and its dynamically loaded DXIL validator are not import dependencies of every tool.
+        file(COPY
+            "${CURRENT_INSTALLED_DIR}/bin/dxcompiler.dll"
+            "${CURRENT_INSTALLED_DIR}/bin/dxil.dll"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
 endif()
 
 file(REMOVE_RECURSE
@@ -73,4 +88,16 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/ocio"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(copyright_files
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/ext/xxHash/src/include/xxhash.h"
+    "${SOURCE_PATH}/ext/sampleicc/src/include/iccProfileReader.h"
+    "${SOURCE_PATH}/ext/sampleicc/src/include/icProfileHeader.h"
+)
+if(OCIO_BUILD_APPS AND directx_enabled)
+    list(APPEND copyright_files
+        "${CURRENT_INSTALLED_DIR}/share/directx-headers/copyright"
+        "${CURRENT_INSTALLED_DIR}/share/directx-dxc/copyright"
+    )
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})
