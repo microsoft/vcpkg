@@ -1,0 +1,29 @@
+{
+  "name": "ac3forge",
+  "version-semver": "0.8.0-beta.2",
+  "description": "Clean-room AC-3 (ATSC A/52) encoder and decoder with a spatial object layer, in C++23.",
+  "homepage": "https://github.com/iainchesworthlabs/ac3forge",
+  "license": "GPL-3.0-or-later",
+  "supports": "!(android & !arm64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "matroska": {
+      "description": "Standalone Matroska (.mkv) container writer (matroska::matroska) - depends on nothing in ac3::forge"
+    },
+    "mp4": {
+      "description": "Standalone MP4/ISOBMFF container writer, plus fMP4/CMAF segmenting and HLS/DASH signaling (mp4::mp4) - depends on nothing in ac3::forge"
+    },
+    "mpegts": {
+      "description": "Standalone MPEG-2 Transport Stream container writer (mpegts::mpegts) - depends on nothing in ac3::forge"
+    }
+  }
+}
