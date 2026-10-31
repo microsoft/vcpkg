@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c2c84a09..f12a42f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -421,7 +421,6 @@ unset ( DARWIN CACHE )
+ unset ( MACOSX_FRAMEWORK CACHE )
+ if ( CMAKE_SYSTEM_NAME MATCHES "Darwin|iOS|tvOS" )
+   set ( DARWIN 1 )
+-  set ( CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_FULL_LIBDIR} )
+   if ( enable-coreaudio )
+     check_include_file ( CoreAudio/CoreAudioTypes.h COREAUDIO_FOUND )
+     if ( COREAUDIO_FOUND )
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index b3749119..34871953 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -385,7 +385,6 @@ if ( MACOSX_FRAMEWORK )
+         MACOSX_FRAMEWORK_BUNDLE_VERSION "${VERSION}"
+         MACOSX_FRAMEWORK_SHORT_VERSION_STRING "${VERSION}"
+         MACOSX_FRAMEWORK_IDENTIFIER "org.fluidsynth.FluidSynth"
+-        INSTALL_NAME_DIR ""
+         VERSION ${LIB_VERSION_INFO}
+         SOVERSION ${LIB_VERSION_CURRENT}
+     )
