@@ -125,7 +125,7 @@
       "port-version": 1
     },
     "ampl-asl": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.2",
       "port-version": 0
     },
     "ampl-mp": {
