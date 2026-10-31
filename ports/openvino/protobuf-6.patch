@@ -1,5 +1,5 @@
 diff --git a/thirdparty/dependencies.cmake b/thirdparty/dependencies.cmake
-index 5e1073d802..6e3faaa3e1 100644
+index 457f9300d2..fefec6b5bd 100644
 --- a/thirdparty/dependencies.cmake
 +++ b/thirdparty/dependencies.cmake
 @@ -376,7 +376,7 @@ if(ENABLE_OV_PADDLE_FRONTEND OR ENABLE_OV_ONNX_FRONTEND OR ENABLE_OV_TF_FRONTEND
@@ -9,5 +9,5 @@ index 5e1073d802..6e3faaa3e1 100644
 -        find_package(Protobuf 5.26.0 QUIET CONFIG)
 +        find_package(Protobuf QUIET CONFIG)
          if(NOT Protobuf_FOUND)
-             find_package(Protobuf 4.22.0 QUIET CONFIG)
+             find_package(Protobuf 5.26.0 QUIET CONFIG)
          endif()
