@@ -4716,6 +4716,10 @@
       "baseline": "2.3.5",
       "port-version": 1
     },
+    "lemon-ng": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "lemon-parser-generator": {
       "baseline": "3.53.4",
       "port-version": 0

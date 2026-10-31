@@ -1,0 +1,4 @@
+lemon-ng provides the CMake target LEMON::lemon:
+
+  find_package(LEMON CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE LEMON::lemon)
