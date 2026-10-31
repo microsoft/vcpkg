@@ -1,0 +1,13 @@
+diff --git a/tools/internalgenerator/CMakeLists.txt b/tools/internalgenerator/CMakeLists.txt
+index 376548f..4187085 100644
+--- a/tools/internalgenerator/CMakeLists.txt
++++ b/tools/internalgenerator/CMakeLists.txt
+@@ -11,3 +11,8 @@ qt_internal_add_tool(${target_name}
+         main.cpp
+ )
+ qt_internal_return_unless_building_tools()
++
++# main.cpp was not ported to QT_NO_CAST_FROM_ASCII from QT_EXTRA_INTERNAL_TARGET_DEFINES
++get_target_property(defs ${target_name} COMPILE_DEFINITIONS)
++list(REMOVE_ITEM defs "QT_NO_CAST_FROM_ASCII=1")
++set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS "${defs}")

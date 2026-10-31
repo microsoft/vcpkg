@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -42,10 +42,17 @@
       "default-features": false
     },
     {
+      "name": "qtcanvaspainter",
+      "default-features": false,
+      "features": [
+        "qml",
+        "widgets"
+      ]
+    },
+    {
       "name": "qtcharts",
       "default-features": false,
       "features": [
-        "designer",
         "qml"
       ]
     },
@@ -59,8 +66,18 @@
       "platform": "linux"
     },
     "qtdoc",
-    "qtgraphs",
-    "qtgrpc",
+    {
+      "name": "qtgraphs",
+      "features": [
+        "canvaspainter"
+      ]
+    },
+    {
+      "name": "qtgrpc",
+      "features": [
+        "qml"
+      ]
+    },
     {
       "name": "qtimageformats",
       "default-features": false,
@@ -70,7 +87,12 @@
         "webp"
       ]
     },
-    "qtinterfaceframework",
+    {
+      "name": "qtinterfaceframework",
+      "features": [
+        "mqtt"
+      ]
+    },
     "qtlanguageserver",
     {
       "name": "qtlottie",
@@ -79,7 +101,12 @@
         "qml"
       ]
     },
-    "qtmqtt",
+    {
+      "name": "qtmqtt",
+      "features": [
+        "websockets"
+      ]
+    },
     {
       "name": "qtmultimedia",
       "default-features": false,
@@ -148,7 +175,13 @@
       "default-features": false,
       "platform": "!(windows & x86)"
     },
-    "qtsvg",
+    {
+      "name": "qtsvg",
+      "features": [
+        "widgets"
+      ]
+    },
+    "qttasktree",
     {
       "name": "qttools",
       "default-features": false,
@@ -211,9 +244,6 @@
       "dependencies": [
         {
           "name": "qtactiveqt",
-          "features": [
-            "qml"
-          ],
           "platform": "windows"
         },
         {

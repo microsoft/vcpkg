@@ -13,15 +13,17 @@ FEATURES
     "logic"         FEATURE_qt3d_logic
     "extras"        FEATURE_qt3d_extras
     "animation"     FEATURE_qt3d_animation
+    "assimp"        FEATURE_qt3d_assimp
+    "assimp"        FEATURE_qt3d_system_assimp
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "vulkan"        CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    "assimp"        CMAKE_DISABLE_FIND_PACKAGE_WrapQt3DAssimp
     )
 
+# qt3d-system-assimp reads INPUT_assimp, not the declared INPUT_qt3d_assimp
 if("assimp" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DINPUT_assimp=system)
-else()
-    list(APPEND FEATURE_OPTIONS -DINPUT_assimp=no)
 endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

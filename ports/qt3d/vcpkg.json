@@ -1,11 +1,10 @@
 {
   "name": "qt3d",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "Qt 3D provides a fully configurable renderer that enables developers to quickly implement any rendering pipeline that they need.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
-    "assimp",
     {
       "name": "qtbase",
       "default-features": false,
@@ -13,8 +12,7 @@
         "concurrent",
         "gui",
         "network",
-        "opengl",
-        "widgets"
+        "opengl"
       ]
     }
   ],

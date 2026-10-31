@@ -14,6 +14,7 @@ set(${PORT}_PATCHES
       "rpath.diff"
       "include-dir-order.diff"
       "node-wrapper-diagnostics.diff"
+      "chromium-missing-includes.diff" # non-jumbo build fixes
 )
 
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")
@@ -80,7 +81,7 @@ endif()
 # webengine-extensions
 # webengine-printing-and-pdf
 # webengine-pepper-plugins
-set(deactivated_features   webengine_webrtc_pipewire)
+set(deactivated_features   webengine_rust_build webengine_webrtc_pipewire)
 foreach(_feat IN LISTS deactivated_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=OFF")
 endforeach()
@@ -98,7 +99,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_OSX)
         list(APPEND system_libs icu)
     endif()
-    if("pdfium" IN_LIST FEATURES)
+    if("pdf" IN_LIST FEATURES)
         list(APPEND system_libs lcms2 libopenjpeg2)
     endif()
     if("webengine" IN_LIST FEATURES)

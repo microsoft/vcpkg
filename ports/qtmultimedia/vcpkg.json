@@ -1,6 +1,6 @@
 {
   "name": "qtmultimedia",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -18,6 +18,11 @@
     {
       "name": "qtshadertools",
       "default-features": false
+    },
+    {
+      "name": "vcpkg-qt-android-gradle",
+      "host": true,
+      "platform": "android"
     }
   ],
   "default-features": [
@@ -45,7 +50,6 @@
           "default-features": false,
           "features": [
             "avcodec",
-            "avdevice",
             "avformat",
             "swresample",
             "swscale"

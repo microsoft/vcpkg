@@ -1,6 +1,6 @@
 {
   "name": "qtcharts",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "The Qt Charts module provides a set of easy-to-use chart components. It uses the Qt Graphics View Framework to integrate charts with modern user interfaces.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -16,13 +16,7 @@
   ],
   "features": {
     "designer": {
-      "description": "Build Designer plugin",
-      "dependencies": [
-        {
-          "name": "qttools",
-          "default-features": false
-        }
-      ]
+      "description": "(deprecated) No effect: the Qt Designer plugin is not built upstream since Qt 6"
     },
     "qml": {
       "description": "Build QML imports",

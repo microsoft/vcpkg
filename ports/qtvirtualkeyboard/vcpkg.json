@@ -1,6 +1,6 @@
 {
   "name": "qtvirtualkeyboard",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "The Qt Virtual Keyboard project provides an input framework and reference keyboard frontend for Qt 6 on Linux Desktop/X11, Windows Desktop, and Boot2Qt targets.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -29,6 +29,15 @@
       "description": "Use hunspell",
       "dependencies": [
         "hunspell"
+      ]
+    },
+    "sound-effects": {
+      "description": "Keyboard sound effects (uses Qt Multimedia)",
+      "dependencies": [
+        {
+          "name": "qtmultimedia",
+          "default-features": false
+        }
       ]
     }
   }

@@ -1,0 +1,45 @@
+{
+  "name": "qtcanvaspainter",
+  "version": "6.12.0",
+  "description": "Qt Canvas Painter provides a hardware-accelerated imperative 2D painting API on QRhi for Qt Quick and Qt Widgets.",
+  "homepage": "https://www.qt.io/",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    },
+    {
+      "name": "qtcanvaspainter",
+      "host": true,
+      "default-features": false
+    },
+    "qtshadertools"
+  ],
+  "features": {
+    "qml": {
+      "description": "Build Qt Quick integration and QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "widgets": {
+      "description": "Build Qt Widgets integration",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
+    }
+  }
+}

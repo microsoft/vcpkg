@@ -61,6 +61,40 @@ function(qt_download_submodule_impl)
                 file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
             endif()
         endif()
+    elseif("${_qarg_SUBMODULE}" IN_LIST QT_FROM_GITHUB_REF)
+        if(PORT STREQUAL "qtwebengine")
+            vcpkg_from_github(
+                OUT_SOURCE_PATH SOURCE_PATH
+                REPO "qt/${_qarg_SUBMODULE}"
+                REF "${${_qarg_SUBMODULE}_REF}"
+                SHA512 "${${_qarg_SUBMODULE}_HASH}"
+                HEAD_REF dev
+            )
+            # Patches touch the chromium submodule, so they are applied after merging it.
+            if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
+                vcpkg_from_github(
+                    OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
+                    REPO qt/qtwebengine-chromium
+                    REF "${${PORT}_chromium_REF}"
+                    SHA512 "${${PORT}_chromium_HASH}"
+                    HEAD_REF "${${PORT}_chromium_HEAD_REF}"
+                )
+                file(MAKE_DIRECTORY "${SOURCE_PATH}/src/3rdparty")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/chromium" "${SOURCE_PATH}/src/3rdparty/chromium")
+                file(RENAME "${SOURCE_PATH_WEBENGINE}/gn" "${SOURCE_PATH}/src/3rdparty/gn")
+                file(REMOVE_RECURSE "${SOURCE_PATH_WEBENGINE}")
+                vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}" PATCHES ${_qarg_PATCHES})
+            endif()
+        else()
+            vcpkg_from_github(
+                OUT_SOURCE_PATH SOURCE_PATH
+                REPO "qt/${_qarg_SUBMODULE}"
+                REF "${${_qarg_SUBMODULE}_REF}"
+                SHA512 "${${_qarg_SUBMODULE}_HASH}"
+                HEAD_REF dev
+                PATCHES ${_qarg_PATCHES}
+            )
+        endif()
     else()
         if(VCPKG_USE_HEAD_VERSION)
             set(sha512 SKIP_SHA512)
@@ -363,6 +397,22 @@ function(qt_install_submodule)
         # It requires libc++_shared, cf. <qtbase>/cmake/QtPlatformAndroid.cmake
         # and https://developer.android.com/ndk/guides/cpp-support#sr
         vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
+        # Qt builds its Java parts with Gradle, which must not download anything.
+        if(COMMAND vcpkg_qt_android_gradle_setup)
+            vcpkg_qt_android_gradle_setup(SOURCE_PATH "${SOURCE_PATH}")
+        else()
+            file(GLOB_RECURSE gradle_files LIST_DIRECTORIES false "${SOURCE_PATH}/src/*.gradle")
+            foreach(gradle_file IN LISTS gradle_files)
+                get_filename_component(gradle_project "${gradle_file}" DIRECTORY)
+                if(gradle_file MATCHES "/settings\\.gradle$"
+                    AND EXISTS "${gradle_project}/gradle/libs.versions.toml"
+                    AND NOT gradle_project MATCHES "/templates(/|$)")
+                    message(FATAL_ERROR "${PORT} builds Android JARs with Gradle and requires the dependency "
+                        "{ \"name\": \"vcpkg-qt-android-gradle\", \"host\": true, \"platform\": \"android\" }.")
+                endif()
+            endforeach()
+        endif()
     endif()
 
     if(_qis_DISABLE_NINJA)

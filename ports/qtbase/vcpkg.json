@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.11.2",
+  "version": "6.12.0",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -61,12 +61,17 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    {
+      "name": "vcpkg-qt-android-gradle",
+      "host": true,
+      "platform": "android"
+    },
     "zlib"
   ],
   "default-features": [
     {
       "name": "appstore-compliant",
-      "platform": "uwp"
+      "platform": "android | ios"
     },
     "async-io",
     "brotli",
@@ -134,10 +139,6 @@
     },
     {
       "name": "xcb-xlib",
-      "platform": "linux"
-    },
-    {
-      "name": "xrender",
       "platform": "linux"
     },
     "zstd"
@@ -702,19 +703,6 @@
           "default-features": false,
           "features": [
             "gui"
-          ]
-        }
-      ]
-    },
-    "xrender": {
-      "description": "XRender for native painting",
-      "dependencies": [
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "fontconfig",
-            "xcb-xlib"
           ]
         }
       ]

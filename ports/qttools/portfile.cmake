@@ -41,6 +41,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "linguist" FEATURE_linguist
     "qdbus" FEATURE_qdbus
     "qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_Clang
+    "qdoc"   FEATURE_qdoc
     #"qdoc"   CMAKE_REQUIRE_FIND_PACKAGE_WrapLibClang
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
     "qml"    CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
@@ -60,30 +61,22 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lcheck
         lconvert
         linguist
-        lprodump
         lrelease-pro
         lrelease
         ltext2id
         lupdate-pro
         lupdate
         pixeltool
-        qcollectiongenerator
         qdistancefieldgenerator
         qhelpgenerator
         qtattributionsscanner
         qtdiag
         qtdiag6
-        qtpaths
         qtplugininfo
         qdbus
         qdbusviewer
         qdoc
     )
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND TOOL_NAMES windeployqt)
-elseif(VCPKG_TARGET_IS_OSX)
-    list(APPEND TOOL_NAMES macdeployqt)
-endif()
 
 set(unused "")
 if(NOT "assistant" IN_LIST FEATURES)
