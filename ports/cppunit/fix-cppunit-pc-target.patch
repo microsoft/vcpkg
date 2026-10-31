@@ -1,0 +1,12 @@
+diff --git a/cppunit.pc.in b/cppunit.pc.in
+index e5a36e3..0d94a83 100644
+--- a/cppunit.pc.in
++++ b/cppunit.pc.in
+@@ -6,6 +6,6 @@ includedir=@includedir@
+ Name: CppUnit
+ Description: The C++ Unit Test Library
+ Version: @VERSION@
+-Libs: -L${libdir} -lcppunit
++Libs: -L${libdir} -l@CPPUNIT_TARGET@
+ Libs.private: @LIBADD_DL@
+ Cflags: -I${includedir}
