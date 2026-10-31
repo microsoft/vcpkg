@@ -39,8 +39,8 @@
         {
           "$comment": "CMake 3.17 for non-global ALIAS target",
           "$package": "CURL",
-          "name": "curl",
           "$since": "3.18",
+          "name": "curl",
           "default-features": false
         },
         {
@@ -48,11 +48,13 @@
           "name": "expat"
         },
         {
+          "$multi-config": false,
           "$package": "Fontconfig",
           "name": "fontconfig",
           "platform": "!mingw & !uwp"
         },
         {
+          "$multi-config": false,
           "$package": "GLUT",
           "name": "freeglut",
           "platform": "!android & !osx & !uwp"
@@ -65,12 +67,13 @@
         {
           "$comment": "CMake 3.22 for (transitive) FindMPI looking at pkg-config",
           "$package": "GDAL",
-          "name": "gdal",
           "$since": "3.22",
+          "name": "gdal",
           "default-features": false,
           "platform": "!uwp"
         },
         {
+          "$multi-config": false,
           "$package": "Intl",
           "name": "gettext-libintl"
         },
@@ -84,16 +87,19 @@
           "platform": "!uwp"
         },
         {
+          "$multi-config": false,
           "$package": "LAPACK",
           "name": "lapack",
           "platform": "!android & !(uwp & arm) & !(linux & arm)"
         },
         {
+          "$multi-config": false,
           "$package": "GnuTLS",
           "name": "libgnutls",
           "platform": "!android & (!windows | mingw)"
         },
         {
+          "$multi-config": false,
           "$package": "Iconv",
           "name": "libiconv"
         },
@@ -116,6 +122,7 @@
           "platform": "!uwp & !mingw"
         },
         {
+          "$multi-config": false,
           "$package": "LibXml2",
           "name": "libxml2",
           "default-features": false,
@@ -124,6 +131,7 @@
           ]
         },
         {
+          "$multi-config": false,
           "$package": "LibXslt",
           "name": "libxslt",
           "default-features": false,
@@ -134,6 +142,7 @@
           "name": "lua"
         },
         {
+          "$multi-config": false,
           "$package": "Curses",
           "name": "ncurses",
           "platform": "!windows | mingw"
@@ -143,6 +152,7 @@
           "name": "physfs"
         },
         {
+          "$multi-config": false,
           "$package": "SQLite3",
           "name": "sqlite3",
           "default-features": false,
@@ -161,6 +171,7 @@
           ]
         },
         {
+          "$multi-config": false,
           "$package": "wxWidgets",
           "name": "wxwidgets",
           "default-features": false,
