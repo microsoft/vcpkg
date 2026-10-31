@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 90b368d..a5a994a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4388,5 +4388,23 @@ endif()
+ ##### Fix Objective C builds #####
+ string(APPEND CMAKE_OBJC_FLAGS " ${CMAKE_C_FLAGS}")
+ 
++if(LINUX)
++  foreach(dependency
++      ALSA DBUS IBUS JACK KMSDRM LIBUDEV LIBURING PIPEWIRE PULSEAUDIO SNDIO
++      WAYLAND WAYLAND_LIBDECOR)
++    if(SDL_${dependency} AND NOT HAVE_${dependency})
++      SDL_missing_dependency("${dependency}" "SDL_${dependency}")
++    endif()
++  endforeach()
++endif()
++
++foreach(dependency
++    FRIBIDI LIBTHAI X11 X11_XCURSOR X11_XDBE X11_XFIXES X11_XINPUT
++    X11_XRANDR X11_XSHAPE X11_XSCRNSAVER X11_XSYNC X11_XTEST)
++  if(SDL_${dependency} AND NOT HAVE_${dependency})
++    SDL_missing_dependency("${dependency}" "SDL_${dependency}")
++  endif()
++endforeach()
++
+ SDL_PrintSummary()
+ debug_show_sdl_deps()
