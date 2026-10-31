@@ -44,6 +44,7 @@ PORT_LIST = [
     "kplotting",
     "kwidgetsaddons",
     "kwindowsystem",
+    "sonnet",
     "syntax-highlighting",
     "threadweaver"
 ]
