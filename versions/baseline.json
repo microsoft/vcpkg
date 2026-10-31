@@ -8812,6 +8812,10 @@
       "baseline": "0.12.0",
       "port-version": 5
     },
+    "rapidai-rapidocronnx": {
+      "baseline": "2026-10-04",
+      "port-version": 0
+    },
     "rapidcheck": {
       "baseline": "2023-12-14",
       "port-version": 0

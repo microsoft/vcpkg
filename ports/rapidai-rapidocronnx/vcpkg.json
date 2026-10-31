@@ -1,0 +1,29 @@
+{
+  "name": "rapidai-rapidocronnx",
+  "version-date": "2026-10-04",
+  "description": "OCR library running PaddleOCR detection, classification and recognition models with ONNX Runtime",
+  "homepage": "https://github.com/RapidAI/RapidOcrOnnx",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "onnxruntime",
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "jpeg",
+        "png",
+        "tiff"
+      ]
+    },
+    "polyclipping",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
