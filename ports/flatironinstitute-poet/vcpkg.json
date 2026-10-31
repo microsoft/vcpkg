@@ -1,0 +1,17 @@
+{
+  "name": "flatironinstitute-poet",
+  "version": "0.0.3",
+  "description": "Header-only C++17 library for compile-time unrolled loops (static_for, dynamic_for) and runtime-to-compile-time dispatch.",
+  "homepage": "https://github.com/flatironinstitute/poet",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
