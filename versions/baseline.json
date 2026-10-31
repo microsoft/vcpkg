@@ -9121,11 +9121,11 @@
       "port-version": 5
     },
     "rtabmap": {
-      "baseline": "0.23.7",
+      "baseline": "0.24.2",
       "port-version": 0
     },
     "rtabmap-res-tool": {
-      "baseline": "0.23.8",
+      "baseline": "0.24.2",
       "port-version": 0
     },
     "rtaudio": {
