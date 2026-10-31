@@ -1,0 +1,63 @@
+diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
+index e0cae43..4c47cbc 100644
+--- a/cmake/FindDependencies.cmake
++++ b/cmake/FindDependencies.cmake
+@@ -107,15 +107,17 @@ if(DOWNLOAD_ENABLED)
+     # and curl[openssl] otherwise.
+     find_package(CURL QUIET)
+     set(CRYPTO_FOUND FALSE)
+-    if(IS_MSVC AND IS_ARM64)
++    if(NOT DEFINED COLMAP_DOWNLOAD_USE_CRYPTOPP)
++        set(COLMAP_DOWNLOAD_USE_CRYPTOPP OFF)
++        if(IS_MSVC AND IS_ARM64)
++            set(COLMAP_DOWNLOAD_USE_CRYPTOPP ON)
++        endif()
++    endif()
++    if(COLMAP_DOWNLOAD_USE_CRYPTOPP)
+         # OpenSSL crashes for ARM64 under Windows. We therefore fall back to
+         # CryptoPP as an alternative to OpenSSL for SHA256 computation.
+-        find_package(CryptoPP QUIET)
+-        if(CryptoPP_FOUND)
+-            set(CRYPTO_FOUND TRUE)
+-        else()
+-            message(STATUS "CryptoPP not found")
+-        endif()
++        find_package(cryptopp CONFIG REQUIRED)
++        set(CRYPTO_FOUND TRUE)
+     else()
+         find_package(OpenSSL QUIET COMPONENTS Crypto)
+         if(OpenSSL_FOUND)
+@@ -450,7 +452,7 @@ if(TARGET onnxruntime::onnxruntime)
+ endif()
+ 
+ if(GUI_ENABLED)
+-    find_package(QT NAMES Qt5 Qt6 REQUIRED)
++    find_package(QT NAMES Qt6 REQUIRED)
+     set(COLMAP_QT_COMPONENTS Core OpenGL Svg Widgets)
+     if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+         list(APPEND COLMAP_QT_COMPONENTS OpenGLWidgets)
+diff --git a/cmake/colmap-config.cmake.in b/cmake/colmap-config.cmake.in
+index c03d7b3..28d5ff8 100644
+--- a/cmake/colmap-config.cmake.in
++++ b/cmake/colmap-config.cmake.in
+@@ -74,6 +74,7 @@ set(CUDA_MIN_VERSION @CUDA_MIN_VERSION@)
+ set(ONNX_ENABLED @ONNX_ENABLED@)
+ 
+ set(DOWNLOAD_ENABLED @DOWNLOAD_ENABLED@)
++set(COLMAP_DOWNLOAD_USE_CRYPTOPP "@COLMAP_DOWNLOAD_USE_CRYPTOPP@")
+ 
+ set(GUI_ENABLED @GUI_ENABLED@)
+ 
+diff --git a/src/colmap/feature/CMakeLists.txt b/src/colmap/feature/CMakeLists.txt
+index 56b4445..3a65e86 100644
+--- a/src/colmap/feature/CMakeLists.txt
++++ b/src/colmap/feature/CMakeLists.txt
+@@ -82,7 +82,7 @@ if(OPENMP_FOUND)
+ endif()
+ 
+ if(ONNX_ENABLED)
+-    target_link_libraries(colmap_feature PRIVATE onnxruntime::onnxruntime)
++    target_link_libraries(colmap_feature PUBLIC onnxruntime::onnxruntime)
+ endif()
+ 
+ if(ONNX_ENABLED)
