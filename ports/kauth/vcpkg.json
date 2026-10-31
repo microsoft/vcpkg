@@ -1,7 +1,7 @@
 {
   "name": "kauth",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Execute actions as privileged user",
   "homepage": "https://invent.kde.org/frameworks/kauth",
   "documentation": "https://api.kde.org/kauth-index.html",

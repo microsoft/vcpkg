@@ -1,6 +1,6 @@
 {
   "name": "krpc-cnano",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "kRPC C-nano client — control Kerbal Space Program from C programs via RPC",
   "homepage": "https://krpc.github.io/krpc",
   "license": "LGPL-3.0-or-later AND Zlib",

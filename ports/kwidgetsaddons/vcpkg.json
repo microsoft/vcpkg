@@ -1,7 +1,7 @@
 {
   "name": "kwidgetsaddons",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Addons to QtWidgets",
   "homepage": "https://invent.kde.org/frameworks/kwidgetsaddons",
   "documentation": "https://api.kde.org/kwidgetsaddons-index.html",

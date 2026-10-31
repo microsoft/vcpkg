@@ -6,9 +6,7 @@ set(${PORT}_PATCHES
 )
 set(TOOL_NAMES)
 
-# Note: none of these features are implemented in the manifest yet
-# flite -> Missing port for flite
-# speechd -> missing port for speechd
+# Note: flite is not implemented in the manifest yet (missing port for flite)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "flite"         FEATURE_flite
@@ -17,6 +15,12 @@ INVERTED_FEATURES
     "flite"         CMAKE_DISABLE_FIND_PACKAGE_Flite
     "speechd"       CMAKE_DISABLE_FIND_PACKAGE_SpeechDispatcher
 )
+
+if("speechd" IN_LIST FEATURES)
+    # FindSpeechDispatcher.cmake uses pkg-config
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

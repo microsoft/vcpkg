@@ -26,5 +26,20 @@
       "host": true,
       "platform": "android"
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "speechd",
+      "platform": "linux | freebsd"
+    }
+  ],
+  "features": {
+    "speechd": {
+      "description": "Speech Dispatcher text-to-speech engine",
+      "supports": "linux | freebsd",
+      "dependencies": [
+        "libspeechd"
+      ]
+    }
+  }
 }

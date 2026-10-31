@@ -1,6 +1,7 @@
 {
   "name": "pangolin",
   "version": "0.9.5",
+  "port-version": 1,
   "description": "Lightweight GUI Library",
   "homepage": "https://github.com/stevenlovegrove/Pangolin",
   "license": "MIT",

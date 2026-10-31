@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,7 +41,10 @@ ecm_set_disabled_deprecation_versions(
+ )
+ 
+ add_subdirectory(src)
+-add_subdirectory(examples)
++option(BUILD_EXAMPLES "Build the examples" OFF)
++if(BUILD_EXAMPLES)
++    add_subdirectory(examples)
++endif()
+ if(BUILD_TESTING)
+     add_subdirectory(autotests)
+ endif()

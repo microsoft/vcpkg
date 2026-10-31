@@ -1,0 +1,13 @@
+diff --git a/KF6ColorSchemeConfig.cmake.in b/KF6ColorSchemeConfig.cmake.in
+--- a/KF6ColorSchemeConfig.cmake.in
++++ b/KF6ColorSchemeConfig.cmake.in
+@@ -8,6 +8,9 @@ find_dependency(KF6Config "@KF_DEP_VERSION@")
+ 
+ if (NOT @BUILD_SHARED_LIBS@)
+     find_dependency(Qt6Gui @REQUIRED_QT_VERSION@)
++    if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
++        find_dependency(Qt6GuiPrivate @REQUIRED_QT_VERSION@)
++    endif()
+     find_dependency(KF6GuiAddons "@KF_DEP_VERSION@")
+     find_dependency(KF6I18n "@KF_DEP_VERSION@")
+ endif()
