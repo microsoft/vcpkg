@@ -1,0 +1,14 @@
+diff --git a/src/api/c++/z3++.h b/src/api/c++/z3++.h
+index 597e82b..6b19ab9 100644
+--- a/src/api/c++/z3++.h
++++ b/src/api/c++/z3++.h
+@@ -4154,7 +4154,9 @@ namespace z3 {
+         case RNE: return expr(*this, Z3_mk_fpa_rne(m_ctx));
+         case RTP: return expr(*this, Z3_mk_fpa_rtp(m_ctx));
+         case RTN: return expr(*this, Z3_mk_fpa_rtn(m_ctx));
+         case RTZ: return expr(*this, Z3_mk_fpa_rtz(m_ctx));
+         }
++        assert(false);
++        return expr(*this, Z3_mk_fpa_rne(m_ctx));
+     }
+ 
