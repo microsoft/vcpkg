@@ -1,0 +1,60 @@
+diff --git a/ctx.h b/ctx.h
+index 1b8a774..abf324c 100644
+--- a/ctx.h
++++ b/ctx.h
+@@ -14721,8 +14721,10 @@ struct _CtxTermGlyph
+   uint8_t  rgba_fg[4];
+ };
+ 
++#ifndef _WIN32
+ #include <sys/select.h>
+ #endif
++#endif
+ 
+ void ctx_update_current_path (Ctx *ctx, const CtxEntry *entry);
+ #define CTX_RGBA8_R_SHIFT  0
+@@ -43399,20 +43401,25 @@ Ctx *ctx_new_ui (float width, float height, const char *backend)
+ #endif
+ 
+ #if CTX_SDL
+-  if (!ret && getenv ("DISPLAY"))
++#ifdef _WIN32
++  int have_display = 1;
++#else
++  int have_display = getenv ("DISPLAY") != NULL;
++#endif
++  if (!ret && have_display)
+   {
+     if ((backend==NULL) || (!ctx_strcmp (backend, "sdl-cb"))
+                         || (!ctx_strcmp (backend, "sdl")))
+       ret = ctx_new_sdl_cb (width, height, flags);
+   }
+ 
+-  if (!ret && getenv ("DISPLAY"))
++  if (!ret && have_display)
+   {
+     if ((backend==NULL) || (!ctx_strcmp (backend, "sdl-fb")))
+       ret = ctx_new_sdl_cb_fb (width, height, flags);
+   }
+ 
+-  if (!ret && getenv ("DISPLAY"))
++  if (!ret && have_display)
+   {
+     if ((backend==NULL) || (!ctx_strcmp (backend, "sdl-fb-full")))
+       ret = ctx_new_sdl_cb_fb_full (width, height, flags);
+@@ -46490,6 +46497,7 @@ EvSource *ctx_evsource_kb_term_new (void)
+ }
+ #endif
+ 
++#ifndef _WIN32
+ int ctx_fd_has_data (int fd)
+ {
+   struct timeval tv;
+@@ -46503,6 +46511,7 @@ int ctx_fd_has_data (int fd)
+ 
+   return retval == 1;
+ }
++#endif
+ 
+ #if CTX_RAW_KB_EVENTS
+ 
