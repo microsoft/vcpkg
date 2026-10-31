@@ -82,7 +82,6 @@ aliyun-oss-c-sdk:arm64-windows=cascade
 aliyun-oss-cpp-sdk:arm64-linux=fail
 allegro5:arm64-linux=fail
 allegro5:arm64-windows=fail # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
-ampl-asl:arm64-linux=fail
 ampl-mp:arm64-linux=cascade
 anari:arm64-linux=cascade
 appstream-glib:arm64-linux=cascade
