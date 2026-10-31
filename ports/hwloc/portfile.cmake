@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         fix_shared_win_build.patch
         stdout_fileno.patch
+        fix-lstopo-android-cli.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
