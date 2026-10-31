@@ -6,7 +6,7 @@ index a1617d0..1bbcafb 100644
  
  if (WIN32)
      target_link_libraries (OpenCL PRIVATE cfgmgr32.lib runtimeobject.lib)
-+    string(APPEND OPENCL_LIBS_PRIVATE_PC " -lcfgmgr32 -lruntimeobject")
++    string(APPEND OPENCL_LIBS_PRIVATE_PC " -lcfgmgr32 -lole32 -lruntimeobject")
  
      # Generate a DLL without a "lib" prefix for mingw.
      if (MINGW OR MSYS OR CYGWIN)
