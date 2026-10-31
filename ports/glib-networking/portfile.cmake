@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR "${VERSION}")
@@ -11,7 +9,12 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 9d5ef7bfaa9ee00b10c65959528def32a48212fc4abf835aab940f893c0bde2c023c916ae4b714c21e2038ec7bd27795b3c8ea62b8ef75cdef4b10571e1c74f6
 )
 
-vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        declaration-after-statement.patch
+)
 
 vcpkg_list(SET FEATURE_OPTIONS)
 if (gnutls IN_LIST FEATURES)
@@ -43,26 +46,48 @@ vcpkg_configure_meson(
     OPTIONS
         ${FEATURE_OPTIONS}
         -Dgnome_proxy=disabled
-    ADDITIONAL_BINARIES
-        "gio-querymodules = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gio-querymodules${CMAKE_EXECUTABLE_SUFFIX}'"
+    ADDITIONAL_BINARIES_DEBUG
+        "gio-querymodules = '${CURRENT_HOST_INSTALLED_DIR}/debug/tools/glib/gio-querymodules${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+    ADDITIONAL_BINARIES_RELEASE
+        "gio-querymodules = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gio-querymodules${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
 )
 
 vcpkg_install_meson()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/gio/modules/pkgconfig")
-file(GLOB MODULE_FILES "${CURRENT_PACKAGES_DIR}/lib/gio/modules/*")
-file(COPY ${MODULE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules/pkgconfig")
-file(GLOB MODULE_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules/*")
-file(COPY ${MODULE_DEBUG_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    foreach(config IN ITEMS "" "/debug")
+        file(GLOB MODULE_PKGCONFIG_FILES "${CURRENT_PACKAGES_DIR}${config}/lib/gio/modules/pkgconfig/*.pc")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            # Meson interprets the retrieved giomodulesdir path as a relative
+            # Unix-style path instead of an absolute Windows path, so fix it
+            # here before we pass it to vcpkg_fixup_pkgconfig
+            foreach(pc IN LISTS MODULE_PKGCONFIG_FILES)
+                vcpkg_replace_string("${pc}" "-L\${prefix}/${CURRENT_PACKAGES_DIR}" "-L\${prefix}")
+            endforeach()
+        endif()
+        file(COPY ${MODULE_PKGCONFIG_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}${config}/lib/pkgconfig")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}${config}/lib/gio/modules/pkgconfig")
+    endforeach()
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/gio/modules/pkgconfig")
+    file(GLOB MODULE_FILES "${CURRENT_PACKAGES_DIR}/lib/gio/modules/*")
+    file(COPY ${MODULE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/plugins/${PORT}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules/pkgconfig")
+    file(GLOB MODULE_DEBUG_FILES "${CURRENT_PACKAGES_DIR}/debug/lib/gio/modules/*")
+    file(COPY ${MODULE_DEBUG_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/plugins/${PORT}")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 
 if(libproxy IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES glib-pacrunner SEARCH_DIR "${CURRENT_PACKAGES_DIR}/libexec")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/libexec" "${CURRENT_PACKAGES_DIR}/debug/libexec")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/dbus-1/services/org.gtk.GLib.PACRunner.service" "${CURRENT_PACKAGES_DIR}/libexec/glib-pacrunner" "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/glib-pacrunner")
 endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
