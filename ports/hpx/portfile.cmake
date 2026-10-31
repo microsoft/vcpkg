@@ -3,21 +3,39 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HPX_WITH_STATIC_LINKING)
 
-vcpkg_download_distfile(ASIO_1_34_PATCH
-    URLS https://github.com/STEllAR-GROUP/hpx/commit/f073c54f9c69108707dc477c890592049fcd95db.patch?full_index=1
-    FILENAME STEllAR-GROUP-hpx-f073c54f9c69108707dc477c890592049fcd95db.patch
-    SHA512 f7c0020d13e1a9fc67ca70488c0bd4b06449a9013be972d6c2d0d2fdb42b6a646176440acbb13c04441461c2a5251da75384112102fe4308a40f11313c02e4b7
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO STEllAR-GROUP/hpx
+    REPO TheHPXProject/hpx
     REF "v${VERSION}"
-    SHA512 bf22add7a97087f68bd49fe0ae5b2bfbd7ba01d4018872c3934ebd81a632e2559e6144c5aa06779db971c642d5a41b16c8c48108af2c4069be6d9f9b72985182
+    SHA512 28fdd63afbc6bf5f66af3860f415b6204ade31bb8c075a37e9303db47816f53b72f86db2ef1404b92a77b71da0559f044589ead4dcd366a016a2e07a7922b93a
     HEAD_REF master
     PATCHES
-        "${ASIO_1_34_PATCH}"
-        fix-asio-resolver.patch # https://github.com/TheHPXProject/hpx/pull/7816
+        fix-streamsize-include.patch # https://github.com/TheHPXProject/hpx/pull/7958
+)
+
+# HPX uses the headers of this stdexec commit (HPX_WITH_STDEXEC_TAG), which is
+# newer than the stdexec port, and applies the same fixes to it as when it fetches
+# stdexec itself (see cmake/HPX_SetupStdexec.cmake)
+vcpkg_from_github(
+    OUT_SOURCE_PATH STDEXEC_SOURCE_PATH
+    REPO NVIDIA/stdexec
+    REF 04de75de5807e73a229acf047c6976575e313359
+    SHA512 0adc77624b852dd0a936f275b6c575defea342b04f1aabaf3eb345373da2c7aef666040520a3c07c38e664f135c09f6b911aa1e8a368b3f605929ab3a79ff2d6
+    HEAD_REF main
+    PATCHES
+        "${SOURCE_PATH}/cmake/HPX_StdexecNvccWorkarounds.patch"
+        "${SOURCE_PATH}/cmake/HPX_StdexecInlineSchedulerNvcc.patch"
+        "${SOURCE_PATH}/cmake/HPX_StdexecAsyncScopeNvcc.patch"
+        "${SOURCE_PATH}/cmake/HPX_StdexecNvccGcc13.patch"
+        "${SOURCE_PATH}/cmake/HPX_StdexecNvccDiagnostics.patch"
+        "${SOURCE_PATH}/cmake/HPX_StdexecCudaStdAtomic.patch"
+)
+vcpkg_execute_required_process(
+    COMMAND "${CMAKE_COMMAND}"
+        "-DHPX_STDEXEC_SPIN_LOOP_PAUSE_FILE=${STDEXEC_SOURCE_PATH}/include/stdexec/__detail/__spin_loop_pause.hpp"
+        -P "${SOURCE_PATH}/cmake/HPX_PatchStdexecSpinLoopPause.cmake"
+    WORKING_DIRECTORY "${STDEXEC_SOURCE_PATH}"
+    LOGNAME patch-stdexec
 )
 
 vcpkg_check_features(
@@ -53,6 +71,8 @@ vcpkg_cmake_configure(
         -DHPX_WITH_THREAD_TARGET_ADDRESS=ON
         -DHPX_WITH_CHECK_MODULE_DEPENDENCIES=ON
         -DHPX_WITH_THREAD_IDLE_RATES=ON
+        -DHPX_WITH_FETCH_STDEXEC=ON
+        "-DFETCHCONTENT_SOURCE_DIR_STDEXEC=${STDEXEC_SOURCE_PATH}"
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
 )
 vcpkg_cmake_install()
@@ -84,9 +104,21 @@ vcpkg_replace_string(
     "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH}"
     "list(APPEND CMAKE_MODULE_PATH")
 
-file(INSTALL
+# HPXConfig.cmake uses Stdexec_ROOT only if stdexec was not installed alongside HPX
+# (https://github.com/TheHPXProject/hpx/pull/7959)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/HPXConfig.cmake"
+    "set(Stdexec_ROOT \"${STDEXEC_SOURCE_PATH}\")"
+    "set(Stdexec_ROOT \"\")")
+
+# nvexec holds CUDA headers (*.cuh) only, which HPX does not install
+# (https://github.com/TheHPXProject/hpx/pull/7959)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/nvexec")
+
+# HPX installs the stdexec headers alongside its own
+vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE_1_0.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+    "${STDEXEC_SOURCE_PATH}/LICENSE.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
