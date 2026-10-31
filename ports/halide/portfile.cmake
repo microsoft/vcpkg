@@ -37,7 +37,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_JPEG=JPEG
 )
 
-# ADD_BIN_TO_PATH needed to compile autoschedulers, 
+# ADD_BIN_TO_PATH needed to compile autoschedulers,
 # which use Halide.dll (and deps) during the build.
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_tools(TOOL_NAMES gengen AUTO_CLEAN)
@@ -46,7 +46,7 @@ vcpkg_copy_tools(TOOL_NAMES gengen AUTO_CLEAN)
 # Exclude those to avoid warning with default globs.
 vcpkg_copy_pdbs(
     BUILD_PATHS
-        "${CURRENT_PACKAGES_DIR}/bin/Halide.dll" 
+        "${CURRENT_PACKAGES_DIR}/bin/Halide.dll"
         "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
 )
 
