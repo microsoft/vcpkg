@@ -9,11 +9,19 @@ vcpkg_from_github(
         iconv.diff
         libarchive.diff
         libkml.patch
+        pkgconfig.diff
         sqlite3.diff
         target-is-valid.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindZSTD.cmake")
+file(GLOB third_party "${SOURCE_PATH}/third_party/*")
+list(REMOVE_ITEM third_party "${SOURCE_PATH}/third_party/libertiff") # keep
+if(third_party)
+    file(REMOVE_RECURSE ${third_party})
+endif()
+file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/libdivide")
+file(WRITE "${SOURCE_PATH}/third_party/libdivide/libdivide.h" "#pragma once\n#include <libdivide.h>\n")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
@@ -42,10 +50,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         core             GDAL_USE_JSONC
         kea              GDAL_USE_KEA
         lerc             GDAL_USE_LERC
+        libaec           GDAL_USE_LIBAEC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
-        mysql-libmariadb GDAL_USE_MYSQL 
+        mysql-libmariadb GDAL_USE_MYSQL
         netcdf           GDAL_USE_NETCDF
         odbc             GDAL_USE_ODBC
         openjpeg         GDAL_USE_OPENJPEG
@@ -95,7 +104,7 @@ vcpkg_cmake_configure(
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
-        -DFIND_PACKAGE2_KEA_ENABLED=OFF
+        -DGDAL_SPLIT_EXPORTED_LIBS=ON
         -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
         -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
         -DMYSQL_LIBRARIES=unofficial::libmariadb

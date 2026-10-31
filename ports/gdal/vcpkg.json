@@ -1,13 +1,15 @@
 {
   "name": "gdal",
   "version-semver": "3.12.4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
+    "fast-float",
     "json-c",
+    "libdivide",
     "libgeotiff",
     {
       "name": "pkgconf",
@@ -45,6 +47,7 @@
       "platform": "!uwp"
     },
     "iconv",
+    "libaec",
     "libkml",
     {
       "name": "libspatialite",
@@ -179,6 +182,12 @@
       "description": "Enable LERC support",
       "dependencies": [
         "lerc"
+      ]
+    },
+    "libaec": {
+      "description": "Enable Adaptive Entropy Coding support (used by GRIB)",
+      "dependencies": [
+        "libaec"
       ]
     },
     "libkml": {
