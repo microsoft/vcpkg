@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-gcem.patch
         cxx-linkage-pkgconfig.diff
+        install-name-osx-dynamic.patch
 )
 # Do not use or install FindSndFileLegacy.cmake and its deps
 file(REMOVE
