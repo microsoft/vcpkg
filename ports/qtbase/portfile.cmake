@@ -30,7 +30,6 @@ set(${PORT}_PATCHES
         fix-libresolv-test.patch
         use_inotify_on_freebsd.patch
         silence-winrtbase-coroutine-warnings.diff
-        md4c.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)

@@ -1,8 +1,8 @@
 {
   "name": "qt3d",
-  "version": "6.11.2",
+  "version": "6.11.3",
   "description": "Qt 3D provides a fully configurable renderer that enables developers to quickly implement any rendering pipeline that they need.",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "dependencies": [
     "assimp",

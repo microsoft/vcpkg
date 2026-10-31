@@ -1,3 +1,3 @@
-set(qtnetworkauth_HASH "c24ef83e9e77f886dbc8d0d991769f585287b1721adae6df9593af7923d08cdd157314655772e904d8c7f55474e6ec1fb0af98ce89b18383868fe00d1f5cf098")
-set(qtnetworkauth_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtnetworkauth-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtnetworkauth-everywhere-src-6.11.2.tar.xz")
-set(qtnetworkauth_FILENAME "qtnetworkauth-everywhere-src-6.11.2.tar.xz")
+set(qtnetworkauth_HASH "9342f10275426bfc645132cf51340d58b4cfc41cfbcae4d3b3bd02fed459828ec2742bb0696700fef240436f5f6cb654e110b2db3646796f69b407f6d95c6b8d")
+set(qtnetworkauth_URL "https://download.qt.io/archive/qt/6.11/6.11.3/submodules/qtnetworkauth-everywhere-src-6.11.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.3/submodules/qtnetworkauth-everywhere-src-6.11.3.tar.xz")
+set(qtnetworkauth_FILENAME "qtnetworkauth-everywhere-src-6.11.3.tar.xz")
