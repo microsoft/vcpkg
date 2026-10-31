@@ -1,0 +1,14 @@
+diff --git a/src/audio/CMakeLists.txt b/src/audio/CMakeLists.txt
+index dc02584..5faae8b 100644
+--- a/src/audio/CMakeLists.txt
++++ b/src/audio/CMakeLists.txt
+@@ -80,8 +80,7 @@ if (WIN32)
+ endif ()
+ 
+ if (APPLE)
+-    find_library(AUDIOTOOLBOX_FRAMEWORK AudioToolbox REQUIRED)
+-    target_link_libraries(kfr_audio PUBLIC ${AUDIOTOOLBOX_FRAMEWORK})
++    target_link_libraries(kfr_audio PUBLIC "-framework AudioToolbox")
+ endif ()
+ 
+ if (KFR_INSTALL_LIBRARIES)
