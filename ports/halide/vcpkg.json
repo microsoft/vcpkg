@@ -1,6 +1,6 @@
 {
   "name": "halide",
-  "version": "21.0.0",
+  "version": "22.1.0",
   "description": "Halide is a programming language designed to make it easier to write high-performance image and array processing code on modern machines.",
   "homepage": "https://github.com/halide/Halide",
   "license": "MIT",
@@ -43,7 +43,6 @@
       "features": [
         "clang",
         "enable-rtti",
-        "lld",
         "target-webassembly",
         "target-x86",
         "tools"
