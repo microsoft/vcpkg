@@ -45,7 +45,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
-        mysql-libmariadb GDAL_USE_MYSQL 
+        muparser         GDAL_USE_MUPARSER
+        mysql-libmariadb GDAL_USE_MYSQL
         netcdf           GDAL_USE_NETCDF
         odbc             GDAL_USE_ODBC
         openjpeg         GDAL_USE_OPENJPEG
