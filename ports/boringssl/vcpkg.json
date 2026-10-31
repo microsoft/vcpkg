@@ -1,6 +1,7 @@
 {
   "name": "boringssl",
   "version-date": "2026-08-13",
+  "port-version": 1,
   "description": "BoringSSL is a fork of OpenSSL developed by Google",
   "homepage": "https://boringssl.googlesource.com/boringssl",
   "license": "Apache-2.0",
@@ -13,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "decrepit": {
+      "description": "Build and install BoringSSL decrepit legacy cryptography library"
+    }
+  }
 }
