@@ -42,6 +42,7 @@ PORT_LIST = [
     "kjobwidgets",
     "knotifications",
     "kplotting",
+    "kservice",
     "kwidgetsaddons",
     "kwindowsystem",
     "syntax-highlighting",

@@ -1,0 +1,12 @@
+diff --git a/KF6ServiceConfig.cmake.in b/KF6ServiceConfig.cmake.in
+--- a/KF6ServiceConfig.cmake.in
++++ b/KF6ServiceConfig.cmake.in
+@@ -4,4 +4,8 @@ include(CMakeFindDependencyMacro)
+ find_dependency(KF6Config "@KF_DEP_VERSION@")
+ find_dependency(KF6CoreAddons "@KF_DEP_VERSION@")
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Qt6Xml "@REQUIRED_QT_VERSION@")
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6ServiceTargets.cmake")

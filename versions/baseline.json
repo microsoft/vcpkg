@@ -4696,6 +4696,10 @@
       "baseline": "0.7.0",
       "port-version": 0
     },
+    "kservice": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "ktx": {
       "baseline": "4.4.2",
       "port-version": 0
