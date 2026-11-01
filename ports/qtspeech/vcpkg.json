@@ -1,6 +1,7 @@
 {
   "name": "qtspeech",
   "version": "6.11.2",
+  "port-version": 1,
   "description": "The Qt Speech module enables a Qt application to support accessibility features such as text-to-speech, which is useful for end-users who are visually challenged or cannot access the application for whatever reason.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -22,5 +23,20 @@
       "name": "qtmultimedia",
       "default-features": false
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "speechd",
+      "platform": "linux | freebsd"
+    }
+  ],
+  "features": {
+    "speechd": {
+      "description": "Speech Dispatcher text-to-speech engine",
+      "supports": "linux | freebsd",
+      "dependencies": [
+        "libspeechd"
+      ]
+    }
+  }
 }

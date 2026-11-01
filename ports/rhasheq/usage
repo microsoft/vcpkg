@@ -1,0 +1,4 @@
+rhasheq provides CMake targets:
+
+    find_package(rhasheq CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE rhasheq)

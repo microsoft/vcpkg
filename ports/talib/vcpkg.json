@@ -1,6 +1,6 @@
 {
   "name": "talib",
-  "version-semver": "0.8.1",
+  "version-semver": "0.8.3",
   "description": "TA-Lib - Technical Analysis Library",
   "homepage": "https://ta-lib.org/",
   "license": "BSD-3-Clause",
@@ -8,6 +8,10 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

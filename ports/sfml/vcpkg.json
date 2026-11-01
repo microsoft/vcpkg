@@ -1,11 +1,12 @@
 {
   "name": "sfml",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
-  "license": "Zlib",
+  "license": "Zlib AND MIT AND Unicode-3.0",
   "supports": "!uwp",
   "dependencies": [
+    "cpp-unicodelib",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -24,7 +25,9 @@
   "features": {
     "audio": {
       "description": "Use sfml-audio library",
+      "license": "(Unlicense OR MIT-0) AND CC0-1.0",
       "dependencies": [
+        "drlibs",
         "libflac",
         "libogg",
         "libvorbis",
@@ -33,11 +36,20 @@
     },
     "graphics": {
       "description": "Use sfml-graphics library",
+      "license": "MIT AND (WTFPL OR CC0-1.0) AND Apache-2.0",
       "dependencies": [
         {
           "name": "freetype",
           "default-features": false
         },
+        {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        },
+        "qoi",
         {
           "name": "sfml",
           "default-features": false,
@@ -45,14 +57,32 @@
             "window"
           ]
         },
+        "sheenbidi",
         "stb"
       ]
     },
     "network": {
-      "description": "Use sfml-network library"
+      "description": "Use sfml-network library",
+      "dependencies": [
+        {
+          "name": "libssh2",
+          "default-features": false
+        },
+        {
+          "name": "mbedtls",
+          "features": [
+            "pthreads"
+          ]
+        },
+        {
+          "name": "wepoll",
+          "platform": "windows"
+        }
+      ]
     },
     "window": {
       "description": "Use sfml-window library",
+      "license": "MIT AND (WTFPL OR CC0-1.0) AND Apache-2.0",
       "dependencies": [
         "opengl"
       ]

@@ -1,6 +1,6 @@
 {
   "name": "bqlog",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Lightweight, high-performance, cross-language logging library",
   "homepage": "https://github.com/Tencent/BqLog",
   "license": "Apache-2.0",

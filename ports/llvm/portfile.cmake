@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 e4dea4619a73cdbbd96b96b1bb9776470a42645f16e8a4559c885f545c094589765c81a0e5c849bc02695afe9de0cd06264582ac0cf67fac0256f0df6d7dbd73
+    SHA512 311d7d45a89dd46e32fb586b76f4fe756d0e0e5df07f7656060a66d903c5fa41759005f36f1d6bb0686ee9b4497a0efec29e6107771e4ee30c0c649720e82b3f
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
@@ -146,8 +146,20 @@ if("lld" IN_LIST FEATURES)
 endif()
 if("lldb" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lldb")
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS LLDB_FEATURE_OPTIONS
+        FEATURES
+            enable-libxml2 LLDB_ENABLE_LIBXML2
+    )
     list(APPEND FEATURE_OPTIONS
+        ${LLDB_FEATURE_OPTIONS}
         -DLLDB_ENABLE_CURSES=OFF
+        -DLLDB_ENABLE_LIBEDIT=OFF
+        -DLLDB_ENABLE_LZMA=OFF
+        -DLLDB_ENABLE_LUA=OFF
+        -DLLDB_ENABLE_PYTHON=OFF
+        -DLLDB_ENABLE_SWIG=OFF
+        -DLLDB_ENABLE_TREESITTER=OFF
     )
 endif()
 if("mlir" IN_LIST FEATURES)
@@ -419,7 +431,32 @@ llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("llvm")
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/llvm/LICENSE.TXT"
+    "${SOURCE_PATH}/llvm/include/llvm/Support/xxhash.h"
+    "${SOURCE_PATH}/llvm/lib/Support/BLAKE3/LICENSE"
+)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if("lldb" IN_LIST FEATURES)
+        # App-local dependency scanning does not discover LLDB's delay-loaded library.
+        file(COPY "${CURRENT_PACKAGES_DIR}/bin/liblldb.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
+    # Upstream already installs tools here; copy in place to deploy their DLL dependencies.
+    file(GLOB llvm_tools LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/tools/${PORT}/*.exe")
+    set(llvm_tool_names)
+    foreach(llvm_tool IN LISTS llvm_tools)
+        get_filename_component(llvm_tool_name "${llvm_tool}" NAME_WLE)
+        list(APPEND llvm_tool_names "${llvm_tool_name}")
+    endforeach()
+    if(llvm_tool_names)
+        vcpkg_copy_tools(
+            TOOL_NAMES ${llvm_tool_names}
+            SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+        )
+    endif()
+endif()
 
 # Move Clang's runtime libraries from bin/lib to tools/${PORT}/lib
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
@@ -471,9 +508,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(debug_llvm_config "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     if(EXISTS "${debug_llvm_config}")
         set(debug_llvm_config_staging "${CURRENT_PACKAGES_DIR}/debug/llvm-config-staging")
-        file(MAKE_DIRECTORY "${debug_llvm_config_staging}")
-        file(RENAME "${debug_llvm_config}" "${debug_llvm_config_staging}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-        vcpkg_copy_tool_dependencies("${debug_llvm_config_staging}")
+        vcpkg_copy_tools(
+            TOOL_NAMES llvm-config
+            SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
+            DESTINATION "${debug_llvm_config_staging}"
+        )
     endif()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
