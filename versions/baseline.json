@@ -4305,8 +4305,8 @@
       "port-version": 0
     },
     "jxrlib": {
-      "baseline": "2019.10.9",
-      "port-version": 7
+      "baseline": "2026.10.9",
+      "port-version": 0
     },
     "kaitai-struct-cpp-stl-runtime": {
       "baseline": "0.11",
