@@ -497,7 +497,7 @@
       ]
     },
     "network": {
-      "description": "Enable networking and the network protocols (HTTP, RTMP, TLS, etc.). Without it, only the local protocols (file, pipe, etc.) are built and no TLS library (schannel, OpenSSL) is linked."
+      "description": "Enable networking and the network protocols (HTTP, RTMP, TLS, etc.). Without it, only the local protocols (file, pipe, etc.) are built and no TLS library (schannel, SecureTransport, OpenSSL) is linked. With it, TLS uses schannel on Windows and SecureTransport on macOS/iOS unless the openssl feature is selected."
     },
     "nonfree": {
       "description": "Allow use of nonfree code, the resulting libs and binaries will be unredistributable"
