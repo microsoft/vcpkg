@@ -103,7 +103,17 @@ if("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
 else()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/bin/mib2c"
+        "${CURRENT_PACKAGES_DIR}/bin/mib2c.bat"
+        "${CURRENT_PACKAGES_DIR}/bin/snmpconf"
+        "${CURRENT_PACKAGES_DIR}/bin/snmpconf.bat"
+        "${CURRENT_PACKAGES_DIR}/bin/traptoemail"
+        "${CURRENT_PACKAGES_DIR}/bin/traptoemail.bat"
+    )
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    endif()
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
