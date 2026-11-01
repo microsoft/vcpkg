@@ -15,11 +15,27 @@ vcpkg_from_github(
 )
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindZSTD.cmake")
-file(GLOB third_party "${SOURCE_PATH}/third_party/*")
-list(REMOVE_ITEM third_party "${SOURCE_PATH}/third_party/libertiff") # keep
-if(third_party)
-    file(REMOVE_RECURSE ${third_party})
-endif()
+file(GLOB third_party
+    "${SOURCE_PATH}/frmts/zlib/*"
+    "${SOURCE_PATH}/frmts/zlib/contrib/*"
+    "${SOURCE_PATH}/third_party/*"
+)
+list(REMOVE_ITEM third_party
+    "${SOURCE_PATH}/third_party/libertiff" # not in vcpkg
+    "${SOURCE_PATH}/frmts/zlib/contrib"
+    "${SOURCE_PATH}/frmts/zlib/contrib/infback9" # modified deflate
+)
+file(REMOVE_RECURSE
+    ${third_party}
+    "${SOURCE_PATH}/frmts/gtiff/libgeotiff"
+    # libertiff relies on vendored libtiff sources
+    #"${SOURCE_PATH}/frmts/gtiff/libtiff"
+    # 12 bit JPEG support derived from vendored libjpeg sources
+    #"${SOURCE_PATH}/frmts/jpeg/libjpeg"
+    #"${SOURCE_PATH}/frmts/jpeg/libjpeg12"
+    "${SOURCE_PATH}/frmts/png/libpng"
+    "${SOURCE_PATH}/ogr/ogrsf_frmts/geojson/libjson"
+)
 file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/libdivide")
 file(WRITE "${SOURCE_PATH}/third_party/libdivide/libdivide.h" "#pragma once\n#include <libdivide.h>\n")
 # `vcpkg clean` stumbles over one subdir
@@ -112,6 +128,7 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_NetCDF_TARGETS=netCDF::netcdf
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
+        -DGDAL_USE_JPEG_INTERNAL=OFF
         "-DQHULL_LIBRARY=${qhull_target}"
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
