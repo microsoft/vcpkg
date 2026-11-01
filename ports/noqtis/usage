@@ -1,0 +1,9 @@
+noqtis provides CMake targets:
+
+  find_package(noqtis CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE noqtis::noqtis)
+
+noqtis provides pkg-config modules:
+
+  # Post-quantum signing, KEMs and sealed input records in C11
+  noqtis

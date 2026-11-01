@@ -7292,6 +7292,10 @@
       "baseline": "0.3.0",
       "port-version": 0
     },
+    "noqtis": {
+      "baseline": "0.1.4",
+      "port-version": 0
+    },
     "nowide": {
       "baseline": "11.3.1",
       "port-version": 0

@@ -1,0 +1,22 @@
+{
+  "name": "noqtis",
+  "version": "0.1.4",
+  "description": "Post-quantum signing, KEMs and sealed input records in C11",
+  "homepage": "https://github.com/rootcoder007/noqtis",
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tool": {
+      "description": "Build and install the noqtis command-line tool"
+    }
+  }
+}
