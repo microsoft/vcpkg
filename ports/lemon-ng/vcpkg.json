@@ -3,7 +3,8 @@
   "version": "1.4.0",
   "description": "lemon-ng, a maintained fork of LEMON, the Library for Efficient Modeling and Optimization in Networks",
   "homepage": "https://github.com/dmeoli/lemon-ng",
-  "license": "BSL-1.0",
+  "license": "BSL-1.0 AND BSD-3-Clause",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
