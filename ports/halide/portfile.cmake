@@ -54,6 +54,22 @@ vcpkg_cmake_config_fixup()
 vcpkg_cmake_config_fixup(PACKAGE_NAME HalideCompiler)
 vcpkg_cmake_config_fixup(PACKAGE_NAME HalideAutoschedulers)
 
+# GenGen defines main and must not be linked automatically.
+set(gengen_library "${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}Halide_GenGen${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+foreach(config IN ITEMS "" "debug/")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/${config}lib/${gengen_library}")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/${config}lib/manual-link")
+        file(RENAME
+            "${CURRENT_PACKAGES_DIR}/${config}lib/${gengen_library}"
+            "${CURRENT_PACKAGES_DIR}/${config}lib/manual-link/${gengen_library}"
+        )
+    endif()
+endforeach()
+file(GLOB compiler_targets "${CURRENT_PACKAGES_DIR}/share/HalideCompiler/HalideCompiler-*-targets-*.cmake")
+foreach(targets_file IN LISTS compiler_targets)
+    vcpkg_replace_string("${targets_file}" "lib/${gengen_library}" "lib/manual-link/${gengen_library}")
+endforeach()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
