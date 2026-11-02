@@ -9077,7 +9077,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "11.8.1",
+      "baseline": "11.12",
       "port-version": 0
     },
     "rohit-singh-gautam-serializer": {
