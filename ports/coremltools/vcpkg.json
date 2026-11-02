@@ -1,6 +1,7 @@
 {
   "name": "coremltools",
   "version": "9.0",
+  "port-version": 1,
   "description": "C++ model specification and model package helper libraries (mlmodel) from Apple's Core ML Tools",
   "homepage": "https://github.com/apple/coremltools",
   "license": "BSD-3-Clause",
