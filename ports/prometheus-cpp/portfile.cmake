@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e397f25c7a62d410d19be5e926cfb38175c89755e4ff9d67f06b905036daa82b0dfbe21fcc69438fc1c1e5d04f120ef7ff983ca9411ab198a3911992efb00093
     HEAD_REF master
+    PATCHES
+        fix-pkgconfig-civetweb.patch
 )
 
 vcpkg_check_features(
