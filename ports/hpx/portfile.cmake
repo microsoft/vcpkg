@@ -11,31 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-streamsize-include.patch # https://github.com/TheHPXProject/hpx/pull/7958
-)
-
-# HPX uses the headers of this stdexec commit (HPX_WITH_STDEXEC_TAG), which is
-# newer than the stdexec port, and applies the same fixes to it as when it fetches
-# stdexec itself (see cmake/HPX_SetupStdexec.cmake)
-vcpkg_from_github(
-    OUT_SOURCE_PATH STDEXEC_SOURCE_PATH
-    REPO NVIDIA/stdexec
-    REF 04de75de5807e73a229acf047c6976575e313359
-    SHA512 0adc77624b852dd0a936f275b6c575defea342b04f1aabaf3eb345373da2c7aef666040520a3c07c38e664f135c09f6b911aa1e8a368b3f605929ab3a79ff2d6
-    HEAD_REF main
-    PATCHES
-        "${SOURCE_PATH}/cmake/HPX_StdexecNvccWorkarounds.patch"
-        "${SOURCE_PATH}/cmake/HPX_StdexecInlineSchedulerNvcc.patch"
-        "${SOURCE_PATH}/cmake/HPX_StdexecAsyncScopeNvcc.patch"
-        "${SOURCE_PATH}/cmake/HPX_StdexecNvccGcc13.patch"
-        "${SOURCE_PATH}/cmake/HPX_StdexecNvccDiagnostics.patch"
-        "${SOURCE_PATH}/cmake/HPX_StdexecCudaStdAtomic.patch"
-)
-vcpkg_execute_required_process(
-    COMMAND "${CMAKE_COMMAND}"
-        "-DHPX_STDEXEC_SPIN_LOOP_PAUSE_FILE=${STDEXEC_SOURCE_PATH}/include/stdexec/__detail/__spin_loop_pause.hpp"
-        -P "${SOURCE_PATH}/cmake/HPX_PatchStdexecSpinLoopPause.cmake"
-    WORKING_DIRECTORY "${STDEXEC_SOURCE_PATH}"
-    LOGNAME patch-stdexec
+        remove-stdexec-tag-invoke.patch # current stdexec no longer provides tag_invoke
 )
 
 vcpkg_check_features(
@@ -44,7 +20,6 @@ vcpkg_check_features(
     "zlib"              HPX_WITH_COMPRESSION_ZLIB
     "snappy"            HPX_WITH_COMPRESSION_SNAPPY
     "bzip2"             HPX_WITH_COMPRESSION_BZIP2
-    "cuda"              HPX_WITH_CUDA
     "mpi"               HPX_WITH_PARCELPORT_MPI
     "mpi"               HPX_WITH_PARCELPORT_MPI_MULTITHREADED
 )
@@ -71,8 +46,8 @@ vcpkg_cmake_configure(
         -DHPX_WITH_THREAD_TARGET_ADDRESS=ON
         -DHPX_WITH_CHECK_MODULE_DEPENDENCIES=ON
         -DHPX_WITH_THREAD_IDLE_RATES=ON
-        -DHPX_WITH_FETCH_STDEXEC=ON
-        "-DFETCHCONTENT_SOURCE_DIR_STDEXEC=${STDEXEC_SOURCE_PATH}"
+        -DHPX_WITH_CUDA=OFF
+        -DHPX_WITH_FETCH_STDEXEC=OFF
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
 )
 vcpkg_cmake_install()
@@ -104,21 +79,7 @@ vcpkg_replace_string(
     "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH}"
     "list(APPEND CMAKE_MODULE_PATH")
 
-# HPXConfig.cmake uses Stdexec_ROOT only if stdexec was not installed alongside HPX
-# (https://github.com/TheHPXProject/hpx/pull/7959)
-vcpkg_replace_string(
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/HPXConfig.cmake"
-    "set(Stdexec_ROOT \"${STDEXEC_SOURCE_PATH}\")"
-    "set(Stdexec_ROOT \"\")")
-
-# nvexec holds CUDA headers (*.cuh) only, which HPX does not install
-# (https://github.com/TheHPXProject/hpx/pull/7959)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/nvexec")
-
-# HPX installs the stdexec headers alongside its own
-vcpkg_install_copyright(FILE_LIST
-    "${SOURCE_PATH}/LICENSE_1_0.txt"
-    "${STDEXEC_SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
