@@ -1,0 +1,10 @@
+coremltools provides the C++ parts of Core ML Tools (CoreML protobuf specification, MILBlob writer and model package support):
+
+    find_package(unofficial-coremltools CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::coremltools::mlmodel unofficial::coremltools::coreml_proto)
+
+Headers are available as:
+
+    #include <MILBlob/Blob/StorageWriter.hpp>
+    #include <coremltools/ModelPackage.hpp>
+    #include <coremltools/coreml_proto/Model.pb.h>

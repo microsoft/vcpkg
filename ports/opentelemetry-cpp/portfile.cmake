@@ -10,6 +10,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 90da456bc83929e486a85d3976a0c18fecbb83ade950f0c970f781bc92651f3f053adb6440d8bb8a4c8dcf137c38f80315c5349283a0c233f4d1a56c0828fe73
     HEAD_REF main
+    PATCHES
+        enable-msvc-warnings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

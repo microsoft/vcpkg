@@ -62,7 +62,6 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_MSVC_PDB)
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" PCRE2_STATIC_RUNTIME)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -79,7 +78,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
-        -DPCRE2_STATIC_RUNTIME=${PCRE2_STATIC_RUNTIME}
         -DPCRE2_BUILD_PCRE2_8=ON
         -DPCRE2_BUILD_PCRE2_16=ON
         -DPCRE2_BUILD_PCRE2_32=ON
@@ -91,8 +89,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
         -DINSTALL_MSVC_PDB=${INSTALL_MSVC_PDB}
-    MAYBE_UNUSED_VARIABLES
-        PCRE2_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install()
@@ -107,10 +103,9 @@ else()
 endif()
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/man"
+    "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/share/doc"
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/man"
     "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/pcre2")
@@ -125,4 +120,8 @@ endif()
 vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+set(copyright_files "${SOURCE_PATH}/LICENCE.md")
+if(PCRE2_SUPPORT_JIT)
+    list(APPEND copyright_files "${SOURCE_PATH}/deps/sljit/LICENSE")
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files})

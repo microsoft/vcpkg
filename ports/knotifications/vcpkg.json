@@ -1,6 +1,7 @@
 {
   "name": "knotifications",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Desktop notifications",
   "homepage": "https://invent.kde.org/frameworks/knotifications",
   "documentation": "https://api.kde.org/knotifications-index.html",

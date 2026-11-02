@@ -1,10 +1,11 @@
 {
   "name": "ki18n",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Advanced internationalization framework",
   "homepage": "https://invent.kde.org/frameworks/ki18n",
   "documentation": "https://api.kde.org/ki18n-index.html",
+  "license": "LGPL-2.0-or-later AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND BSD-3-Clause AND CC0-1.0 AND ODbL-1.0",
   "supports": "!android",
   "dependencies": [
     "ecm",
