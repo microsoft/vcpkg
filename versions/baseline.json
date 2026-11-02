@@ -6013,8 +6013,8 @@
       "port-version": 0
     },
     "libversion": {
-      "baseline": "3.0.4",
-      "port-version": 1
+      "baseline": "3.0.5",
+      "port-version": 0
     },
     "libvhdi": {
       "baseline": "20251119",
