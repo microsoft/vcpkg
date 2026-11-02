@@ -114,6 +114,15 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # Upstream emits native MSVC flags and omits the debug library postfix.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdal.pc" "-LIBPATH:" "-L")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdal.pc" " gdal" " -lgdal")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc" "-LIBPATH:" "-L")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc" " gdal" " -lgdald")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"
