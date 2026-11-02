@@ -1,0 +1,19 @@
+diff --git a/src/google/protobuf/port.h b/src/google/protobuf/port.h
+index 7347203..8fe5ed4 100644
+--- a/src/google/protobuf/port.h
++++ b/src/google/protobuf/port.h
+@@ -907,9 +907,11 @@ class alignas(8) GlobalEmptyStringDynamicInit {
+   alignas(std::string) char buffer_[sizeof(std::string)];
+ };
+ 
+-using GlobalEmptyString = std::conditional_t<
+-    GlobalEmptyStringConstexpr::HasConstexprDefaultConstructor(0),
+-    const GlobalEmptyStringConstexpr, GlobalEmptyStringDynamicInit>;
++// vcpkg: the library is built as C++17, so it always defines
++// fixed_address_empty_string as GlobalEmptyStringDynamicInit. Do not select the
++// type based on the consumer's language standard, otherwise C++20 consumers
++// reference an undefined GlobalEmptyStringConstexpr symbol.
++using GlobalEmptyString = GlobalEmptyStringDynamicInit;
+ 
+ PROTOBUF_EXPORT extern GlobalEmptyString fixed_address_empty_string;
+ 
