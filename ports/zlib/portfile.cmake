@@ -7,6 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-no-version-script-on-ohos.patch
+        CVE-2026-76844.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZLIB_BUILD_SHARED)
