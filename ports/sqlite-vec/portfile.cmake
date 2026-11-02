@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 1c51e3542823bc46385ef96edd4a0ca37e615458ba31e88515418e067bbaffc043e45b806d63bbb710fae905ec575555653f79e3a740188ebd210e9c6f8da4f8
     HEAD_REF main
+    PATCHES
+        fix-popcount.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

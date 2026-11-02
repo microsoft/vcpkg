@@ -22,7 +22,7 @@ target_compile_definitions(sqlite-vec PRIVATE SQLITE_CORE SQLITE_VEC_STATIC)
 target_link_libraries(sqlite-vec PUBLIC unofficial::sqlite3::sqlite3)
 find_library(MATH_LIBRARY m)
 if(MATH_LIBRARY)
-    target_link_libraries(sqlite-vec PRIVATE ${MATH_LIBRARY})
+    target_link_libraries(sqlite-vec PRIVATE m)
 endif()
 
 install(TARGETS sqlite-vec EXPORT unofficial-sqlite-vec-targets
