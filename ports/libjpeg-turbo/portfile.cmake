@@ -11,6 +11,7 @@ vcpkg_from_github(
     SHA512 680b97652a51846e1965e70b5498f74ebf9e6eaa31c122546ba7b8eff9fa6b6eb85972802970e94cce4f539518ad421395eaffe121bce7ad7b8f23a9ab9731ef
     HEAD_REF master
     PATCHES
+        workaround_cmake_system_processor.patch
         add-options-for-docs-headers.patch
 )
 
