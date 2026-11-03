@@ -32,6 +32,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage-accurate")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE"
                              "${SOURCE_PATH}/lemon/random.h")
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage-accurate")
