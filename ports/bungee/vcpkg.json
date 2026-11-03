@@ -1,10 +1,11 @@
 {
   "name": "bungee",
-  "version": "2.4.30",
+  "version": "2.4.35",
   "description": "C++ library for time-stretching and pitch-shifting audio with high quality in realtime or offline",
-  "homepage": "https://bungee.parabolaresearch.com/",
+  "homepage": "https://bungee.parabolaresearch.com",
   "license": "MPL-2.0",
   "dependencies": [
+    "cxxopts",
     "eigen3",
     "pffft",
     {

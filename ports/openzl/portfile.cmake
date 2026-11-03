@@ -1,11 +1,16 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/openzl
     REF v${VERSION}
-    SHA512 faac20161316b9d0383101c6ddc54a2e42bab75036a3a4ca0a8aa54a0860890723011078532adb199696d532d3b84811912fd6842e8824b716a7d1a4db5aca19
+    SHA512 6ae7bb6a5cdc40b18ac6ae00dd6132df54870cd1986e65773864be510d021cd1594851b7e80b690dbe8eda523fadb3223a6f98cdf09d2590f8943695ff81dfec
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+        fix-runtime.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/src/openzl/shared/xxhash.h")

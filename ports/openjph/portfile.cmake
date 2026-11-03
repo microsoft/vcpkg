@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         xsi-strerror_r.patch
         fix-pkgconfig-library-name.patch
+        fix-msvc-x86-ice.patch
 )
 
 vcpkg_check_features(

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-mpi/hwloc
     REF "hwloc-${VERSION}"
-    SHA512 1ed47955d4a3ecf66636f1c5a89648ef055aa4f26fac9b9bc64d6f7715d671dc823337ebf38df53d60b50d697eccadfbd48d28b4540a5153c59d7eecd347f91c
+    SHA512 6ca5c264d937ce92a5ef9bf93676932ed23fd2bc3a23584eedb19db4557088785644464924cff51403041bed147a9f7611d6a9d9b24a27156495cfdd96fe2586
     PATCHES
         fix_shared_win_build.patch
         stdout_fileno.patch
@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(OPTIONS ac_cv_prog_cc_c99= # To avoid the compiler check for C99 which will fail for MSVC
-                --disable-plugin-dlopen) 
+                --disable-plugin-dlopen)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -23,10 +23,11 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-        ${OPTIONS} 
+        ${OPTIONS}
         --disable-libxml2
         --disable-opencl
         --disable-cairo
+        --disable-gl
         --disable-cuda
         --disable-libudev
         --disable-levelzero
@@ -58,8 +59,10 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/hwloc/debug/bin/hwloc-gather-topology")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/hwloc/debug/bin/hwloc-gather-topology" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../..")
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/hwloc/base64.c"
+)
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/COPYING.txt"
             "${CURRENT_PACKAGES_DIR}/debug/README.txt"

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c83f7b6..958fba5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -136,6 +136,9 @@ if(BUILD_HELPER)
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+     $<INSTALL_INTERFACE:include>
+   )
++  if(MSVC)
++    target_compile_definitions(small_gicp PUBLIC _USE_MATH_DEFINES)
++  endif()
+   target_link_libraries(small_gicp PUBLIC
+     Eigen3::Eigen
+     $<TARGET_NAME_IF_EXISTS:OpenMP::OpenMP_CXX>

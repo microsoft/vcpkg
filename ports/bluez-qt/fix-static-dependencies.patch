@@ -1,0 +1,13 @@
+diff --git a/KF6BluezQtConfig.cmake.in b/KF6BluezQtConfig.cmake.in
+index c94742f..19b99f7 100644
+--- a/KF6BluezQtConfig.cmake.in
++++ b/KF6BluezQtConfig.cmake.in
+@@ -4,4 +4,8 @@ include(CMakeFindDependencyMacro)
+ find_dependency(Qt6Core @REQUIRED_QT_VERSION@)
+ find_dependency(Qt6DBus @REQUIRED_QT_VERSION@)
+ 
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Qt6Network @REQUIRED_QT_VERSION@)
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6BluezQtTargets.cmake")

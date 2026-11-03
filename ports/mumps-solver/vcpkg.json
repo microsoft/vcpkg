@@ -1,6 +1,7 @@
 {
   "name": "mumps-solver",
   "version": "5.9.1",
+  "port-version": 1,
   "description": "MUMPS (MUltifrontal Massively Parallel sparse direct Solver) solves systems of linear equations Ax = b where A is a square sparse matrix",
   "homepage": "https://mumps-solver.org/",
   "license": "CECILL-C AND BSD-3-Clause AND LicenseRef-Public-Domain AND MIT",

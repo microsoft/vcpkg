@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectX-Headers
     REF v${VERSION}
-    SHA512 7f7705ddcf95ce1e81fcacfa1dc60288dcaeabbea6538bdd10acdab2a4a944724bb285b4549b4ae5c8f01a8940e2a4e725eb0efb5ccaa9f48483a57c7a0ee239
+    SHA512 a802e548b0e5a332ac42e843020d16f6797bd5e85945d10115f9017ef85f1fedbadcb2b07437320eab3924970e7ea72792e43a8aa020545b31e5ea38556163be
     HEAD_REF main
 )
 

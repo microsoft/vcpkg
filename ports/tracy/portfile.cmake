@@ -54,6 +54,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DTRACY_ENABLE=ON # upstream default changed to OFF in 0.14.0
         -DLEGACY=ON
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON # embeds a git hash in the binaries; see build-tools.patch

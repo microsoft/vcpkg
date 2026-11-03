@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
     REF "v${VERSION}"
-    SHA512 79e58072cd8893a50af351feb7c7f9f5c1c21064c87358b5794b9913c310438f1338728b4ae75dc4969e576fe1cf56b02e07dfe570fef7ee54d5f4f28ade2387
+    SHA512 76a6dbe451f5d33f983eb3e76dde0607060519d01946d71f164cf776b7643408013ca37226cd6cfe43b831a51676c918eab8b5b84244ab8c34793078b9b0c174
     HEAD_REF master
+    PATCHES
+        use-cmake-intl.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -15,6 +17,7 @@ vcpkg_check_features(
         qml        BUILD_WITH_QML
         iso-codes  CMAKE_REQUIRE_FIND_PACKAGE_IsoCodes
     INVERTED_FEATURES
+        qml        CMAKE_DISABLE_FIND_PACKAGE_Qt6Qml
         iso-codes  CMAKE_DISABLE_FIND_PACKAGE_IsoCodes
 )
 
@@ -29,6 +32,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DPython3_EXECUTABLE=${PYTHON3}
         -DFALLBACK_KI18N_PYTHON_EXECUTABLE=${PYTHON3}
         -DKDE_INSTALL_PLUGINDIR=plugins

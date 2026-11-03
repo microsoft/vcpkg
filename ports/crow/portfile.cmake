@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CrowCpp/crow
     REF "v${VERSION}"
-    SHA512 1d12cfe1a6c2c928d9397e2e3bdb57c5bc425f1509a388d5b3bd68f52aaeb3950f564cd6c5612331cb389165feb0d2a1c6e593ea8f14f68072658376e71f14c3
+    SHA512 08f8fbd6d8201ef905723f7ef57de411ca09f158c8171c2bc46a0cf202d0e5af84ff588b03b03ade80409cf7cc8c6b6d7ad883831cb1a05e881d52fe1b90fca8
     HEAD_REF master
     PATCHES remove-cpm.patch
 )

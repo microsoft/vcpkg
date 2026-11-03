@@ -2,23 +2,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
     REF "v${VERSION}"
-    SHA512 a7e1f7d060b358f4382e84367d66aa2850aef3b4524a0fdfe3f22dd258fb9e35dda7540f859d8bf4c32f31c61a7a03db677f4490a9f472cd25869a9d00797336
+    SHA512 71d45123e47588c8028c0e01a7820c7a18d98df05c29b5318ab6858eaff5f249879763907201ba19a93f817c6ef75c393c1974d2a0cc8e461c4e2709ca6fa45f
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        avoid-exe-linker-flags.patch # https://github.com/libjxl/libjxl/pull/4229
-        msvc-remove-libm.patch
-        disambiguate-pow-calls.patch
+        fix-jxl-static.diff
+        fix-pkgconfig.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools JPEGXL_ENABLE_TOOLS
-    INVERTED_FEATURES
-        tools CMAKE_DISABLE_FIND_PACKAGE_GIF
-        tools CMAKE_DISABLE_FIND_PACKAGE_JPEG
-        tools CMAKE_DISABLE_FIND_PACKAGE_PNG
-        tools CMAKE_DISABLE_FIND_PACKAGE_ZLIB
+        tools VCPKG_LOCK_FIND_PACKAGE_GIF
+        tools VCPKG_LOCK_FIND_PACKAGE_JPEG
+        tools VCPKG_LOCK_FIND_PACKAGE_PNG
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -32,7 +29,6 @@ vcpkg_cmake_configure(
         "-DJPEGXL_VERSION=${JPEGXL_VERSION}"
         -DJPEGXL_FORCE_SYSTEM_HWY=ON
         -DJPEGXL_FORCE_SYSTEM_BROTLI=ON
-        -DJPEGXL_FORCE_SYSTEM_HWY=ON
         -DJPEGXL_FORCE_SYSTEM_LCMS2=ON
         ${FEATURE_OPTIONS}
         -DJPEGXL_ENABLE_BENCHMARK=OFF
@@ -50,10 +46,8 @@ vcpkg_cmake_configure(
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
         -DJPEGXL_BUNDLE_LIBPNG=OFF
     MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_GIF
-        CMAKE_DISABLE_FIND_PACKAGE_JPEG
-        CMAKE_DISABLE_FIND_PACKAGE_PNG
-        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
+        VCPKG_LOCK_FIND_PACKAGE_GIF
+        VCPKG_LOCK_FIND_PACKAGE_JPEG
 )
 
 vcpkg_cmake_install()
@@ -61,11 +55,13 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if(JPEGXL_ENABLE_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES cjxl djxl jxlinfo AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cjxl djxl jxlinfo jxltran AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_export.h" "ifdef JXL_STATIC_DEFINE" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_cms_export.h" "ifdef JXL_CMS_STATIC_DEFINE" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_threads_export.h" "ifdef JXL_THREADS_STATIC_DEFINE" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

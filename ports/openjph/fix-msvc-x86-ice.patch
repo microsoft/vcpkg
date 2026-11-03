@@ -1,0 +1,12 @@
+--- a/src/core/coding/ojph_block_encoder_avx2.cpp
++++ b/src/core/coding/ojph_block_encoder_avx2.cpp
+@@ -1195,7 +1195,8 @@
+             tmp = proc_cq2(x, cx_val_vec, rho_vec, right_shift);
+ 
+         auto cq_vec = _mm256_permutevar8x32_epi32(tmp, left_shift);
+-        cq_vec = _mm256_insert_epi32(cq_vec, prev_cq, 0);
++        ui32 cq0 = prev_cq;
++        cq_vec = _mm256_insert_epi32(cq_vec, (int)cq0, 0);
+         prev_cq = (ui32)_mm256_extract_epi32(tmp, 7);
+ 
+         update_lep(x, prev_e_val_vec, eq_vec, e_val_vec, left_shift);
