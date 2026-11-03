@@ -92,7 +92,12 @@
       "description": "Build with ONNX support.",
       "supports": "windows",
       "dependencies": [
-        "onnxruntime-gpu"
+        {
+          "name": "onnxruntime",
+          "features": [
+            "cuda"
+          ]
+        }
       ]
     }
   }
