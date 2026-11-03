@@ -10,7 +10,8 @@
     "glib",
     {
       "name": "glib",
-      "host": true
+      "host": true,
+      "version>=": "2.90.1#1"
     },
     {
       "name": "vcpkg-tool-meson",
