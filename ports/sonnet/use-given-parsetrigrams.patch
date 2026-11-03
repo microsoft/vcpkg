@@ -1,0 +1,11 @@
+diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ include(ECMMarkNonGuiExecutable)
+ 
+-if(NOT CMAKE_CROSSCOMPILING)
++if(NOT CMAKE_CROSSCOMPILING AND NOT PARSETRIGRAMS_EXECUTABLE)
+     add_executable(parsetrigrams parsetrigrams.cpp)
+     set_target_properties(parsetrigrams PROPERTIES OUTPUT_NAME parsetrigrams6)
+     add_executable(gentrigrams gentrigrams.cpp)
