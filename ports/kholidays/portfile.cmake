@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         optional-qml.patch
+        generate-flexlexer-header.patch
+        detect-flex-types.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -22,26 +24,6 @@ vcpkg_check_features(
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
-
-# The bundled FlexLexer.h declares LexerInput() and LexerOutput() with int parameters, like GNU flex,
-# but some flex versions (e.g. Apple's) generate them with size_t: make it match the flex in use
-file(WRITE "${CURRENT_BUILDTREES_DIR}/flex-check.l" "%option c++ noyywrap\n%%\n%%\n")
-vcpkg_execute_required_process(
-    COMMAND "${FLEX}" -o flex-check.cpp flex-check.l
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-    LOGNAME flex-check
-)
-file(READ "${CURRENT_BUILDTREES_DIR}/flex-check.cpp" flex_check)
-if(flex_check MATCHES "size_t yyFlexLexer::LexerInput")
-    vcpkg_replace_string("${SOURCE_PATH}/src/parsers/plan2/FlexLexer.h"
-        "virtual int LexerInput(char *buf, int max_size);"
-        "virtual size_t LexerInput(char *buf, size_t max_size);"
-    )
-    vcpkg_replace_string("${SOURCE_PATH}/src/parsers/plan2/FlexLexer.h"
-        "virtual void LexerOutput(const char *buf, int size);"
-        "virtual void LexerOutput(const char *buf, size_t size);"
-    )
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

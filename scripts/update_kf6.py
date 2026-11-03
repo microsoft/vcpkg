@@ -19,6 +19,7 @@ NEW_VERSION = "6.31.0"           # <-- TARGET VERSION
 
 PORT_LIST = [
     "attica",
+    "bluez-qt",
     "ecm",
     "karchive",
     "kauth",
@@ -37,8 +38,10 @@ PORT_LIST = [
     "kguiaddons",
     "kholidays",
     "ki18n",
+    "kiconthemes",
     "kitemmodels",
     "kitemviews",
+    "kjobwidgets",
     "knotifications",
     "kplotting",
     "kwidgetsaddons",

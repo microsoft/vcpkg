@@ -16,6 +16,7 @@ vcpkg_from_github(
         fix-cmake.patch # .framework install dir, wasm re2 workaround
         fix-cmake-cuda.patch
         fix-cmake-mlas.patch
+        use-vcpkg-coremltools.patch # use the coremltools port instead of building its sources
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
@@ -91,6 +92,7 @@ if("tensorrt" IN_LIST FEATURES)
         message(WARNING "Define TENSORRT_HOME for onnxruntime_TENSORRT_HOME")
     endif()
 endif()
+
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 

@@ -1,6 +1,7 @@
 {
   "name": "kholidays",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Holiday calculation library",
   "homepage": "https://invent.kde.org/frameworks/kholidays",
   "documentation": "https://api.kde.org/kholidays-index.html",
