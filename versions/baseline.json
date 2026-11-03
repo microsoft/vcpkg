@@ -9092,12 +9092,12 @@
       "baseline": "0.4.3",
       "port-version": 0
     },
-    "rocm": {
-      "baseline": "5.0",
-      "port-version": 0
-    },
     "rocksdb": {
       "baseline": "11.12",
+      "port-version": 0
+    },
+    "rocm": {
+      "baseline": "5.0",
       "port-version": 0
     },
     "rp-ntuples": {
