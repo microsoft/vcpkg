@@ -139,6 +139,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc" " -lgdal" " -lgdald")
+endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"
     "include(CMakeFindDependencyMacro)"
