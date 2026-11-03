@@ -45,6 +45,7 @@ PORT_LIST = [
     "knotifications",
     "kpackage",
     "kplotting",
+    "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
     "sonnet",
