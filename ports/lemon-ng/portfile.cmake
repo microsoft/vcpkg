@@ -1,7 +1,5 @@
 # lemon-ng at the tag of its version, built without the LP and MIP backends,
-# the tests, the demos, the tools and the documentation, and always as a
-# static library, since LEMON declares no symbol for a DLL
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+# the tests, the demos, the tools and the documentation
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
