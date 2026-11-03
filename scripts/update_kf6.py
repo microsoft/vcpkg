@@ -43,9 +43,12 @@ PORT_LIST = [
     "kitemviews",
     "kjobwidgets",
     "knotifications",
+    "kpackage",
     "kplotting",
+    "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
+    "sonnet",
     "syntax-highlighting",
     "threadweaver"
 ]

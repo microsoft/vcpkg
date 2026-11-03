@@ -3817,7 +3817,7 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "14.6.0",
+      "baseline": "15.0.0",
       "port-version": 0
     },
     "hash-library": {
@@ -4684,6 +4684,10 @@
       "baseline": "5.34",
       "port-version": 0
     },
+    "kpackage": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kplotting": {
       "baseline": "6.31.0",
       "port-version": 0
@@ -4726,6 +4730,10 @@
     },
     "kvazaar": {
       "baseline": "2.3.2",
+      "port-version": 0
+    },
+    "kwallet": {
+      "baseline": "6.31.0",
       "port-version": 0
     },
     "kwidgetsaddons": {
@@ -9700,6 +9708,10 @@
       "baseline": "4.0.2",
       "port-version": 0
     },
+    "sonnet": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "sophus": {
       "baseline": "1.24.6",
       "port-version": 0
@@ -10997,7 +11009,7 @@
       "port-version": 0
     },
     "vulkan-memory-allocator-hpp": {
-      "baseline": "3.4.0",
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "vulkan-sdk-components": {
