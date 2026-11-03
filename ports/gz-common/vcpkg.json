@@ -6,7 +6,6 @@
   "homepage": "https://gazebosim.org/libs/common/",
   "license": "Apache-2.0",
   "dependencies": [
-    "assimp",
     {
       "name": "dlfcn-win32",
       "platform": "windows | uwp"
@@ -21,10 +20,6 @@
         "swscale"
       ]
     },
-    {
-      "name": "gdal",
-      "default-features": false
-    },
     "gz-cmake",
     "gz-math",
     "gz-utils",
@@ -35,7 +30,6 @@
     {
       "name": "libuuid",
       "platform": "!windows & !osx"
-    },
-    "tinyxml2"
+    }
   ]
 }
