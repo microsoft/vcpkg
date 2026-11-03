@@ -1,5 +1,5 @@
 diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
-index e0cae43..4c47cbc 100644
+index e0cae43..264a90f 100644
 --- a/cmake/FindDependencies.cmake
 +++ b/cmake/FindDependencies.cmake
 @@ -107,15 +107,17 @@ if(DOWNLOAD_ENABLED)
@@ -9,7 +9,7 @@ index e0cae43..4c47cbc 100644
 -    if(IS_MSVC AND IS_ARM64)
 +    if(NOT DEFINED COLMAP_DOWNLOAD_USE_CRYPTOPP)
 +        set(COLMAP_DOWNLOAD_USE_CRYPTOPP OFF)
-+        if(IS_MSVC AND IS_ARM64)
++        if(WIN32 AND IS_ARM64)
 +            set(COLMAP_DOWNLOAD_USE_CRYPTOPP ON)
 +        endif()
 +    endif()
@@ -61,3 +61,16 @@ index 56b4445..3a65e86 100644
  endif()
  
  if(ONNX_ENABLED)
+diff --git a/src/colmap/util/CMakeLists.txt b/src/colmap/util/CMakeLists.txt
+index 2be58bc..a0e6a73 100644
+--- a/src/colmap/util/CMakeLists.txt
++++ b/src/colmap/util/CMakeLists.txt
+@@ -61,7 +61,7 @@ COLMAP_ADD_LIBRARY(
+ )
+ if(DOWNLOAD_ENABLED)
+     target_link_libraries(colmap_util PRIVATE CURL::libcurl)
+-    if(TARGET cryptopp::cryptopp)
++    if(COLMAP_DOWNLOAD_USE_CRYPTOPP)
+         target_link_libraries(colmap_util PRIVATE cryptopp::cryptopp)
+         target_compile_definitions(colmap_util PRIVATE COLMAP_USE_CRYPTOPP)
+     else()

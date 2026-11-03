@@ -87,6 +87,17 @@ foreach(TOOL_FILENAME IN LISTS TOOL_FILENAMES)
 endforeach()
 vcpkg_copy_tools(TOOL_NAMES ${COLMAP_TOOL_NAMES} AUTO_CLEAN)
 
+if(VCPKG_TARGET_IS_WINDOWS AND "onnx" IN_LIST FEATURES AND CUDA_ENABLED
+   AND EXISTS "${CURRENT_INSTALLED_DIR}/bin/onnxruntime.dll")
+    # ONNX Runtime loads these providers dynamically, so applocal cannot discover them.
+    file(COPY
+        "${CURRENT_INSTALLED_DIR}/bin/onnxruntime_providers_shared.dll"
+        "${CURRENT_INSTALLED_DIR}/bin/onnxruntime_providers_cuda.dll"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+    )
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+endif()
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
