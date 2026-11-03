@@ -1,8 +1,18 @@
-diff --git a/magick/magick_types.h.in b/magick/magick_types.h.in
-index 106ac97..a9f8a9a 100644
 --- a/magick/magick_types.h.in
 +++ b/magick/magick_types.h.in
-@@ -108,8 +108,6 @@ extern "C" {
+@@ -93,8 +93,9 @@
+ 
+   typedef magick_uint64_t magick_uintmax_t;
+ 
+-#  if defined(WIN64)
+-  /* WIN64 uses the LLP64 model */
++#  if defined(WIN64) || defined(_WIN64)
++  /* WIN64 uses the LLP64 model. MSVC itself only defines _WIN64; WIN64 comes
++     from GraphicsMagick's VisualMagick projects, not autotools builds. */
+   typedef unsigned long long magick_uintptr_t;
+ #  define MAGICK_SIZE_T_F "I64"
+ #  define MAGICK_SIZE_T unsigned __int64
+@@ -108,8 +109,6 @@
  #  define MAGICK_SIZE_T unsigned long
  #  define MAGICK_SSIZE_T_F ""
  #  define MAGICK_SSIZE_T int
