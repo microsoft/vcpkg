@@ -9945,7 +9945,7 @@
       "port-version": 1
     },
     "stellar-cpp-sdk": {
-      "baseline": "0.1.1",
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "stescobedo92-stellar": {
