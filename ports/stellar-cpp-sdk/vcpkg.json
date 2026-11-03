@@ -1,6 +1,6 @@
 {
   "name": "stellar-cpp-sdk",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "C++20 SDK for the Stellar network: XDR codec, keys/strkeys, transactions, Soroban contract clients, Horizon/RPC",
   "homepage": "https://github.com/Olvisgil/stellar-cpp-sdk",
   "license": "Apache-2.0",
