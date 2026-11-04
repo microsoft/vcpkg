@@ -1,0 +1,31 @@
+include(CMakeFindDependencyMacro)
+find_dependency(Qt6 COMPONENTS Widgets PrintSupport)
+
+if(NOT TARGET unofficial::qcustomplot::qcustomplot)
+    get_filename_component(_qcustomplot_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+
+    # On Windows, the DLL import library names include the major version
+    find_library(QCUSTOMPLOT_LIBRARY_RELEASE NAMES qcustomplot qcustomplot2 PATHS "${_qcustomplot_prefix}/lib" NO_DEFAULT_PATH REQUIRED)
+    find_library(QCUSTOMPLOT_LIBRARY_DEBUG NAMES qcustomplotd qcustomplotd2 PATHS "${_qcustomplot_prefix}/debug/lib" NO_DEFAULT_PATH)
+
+    add_library(unofficial::qcustomplot::qcustomplot UNKNOWN IMPORTED)
+    set_target_properties(unofficial::qcustomplot::qcustomplot PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_qcustomplot_prefix}/include"
+        INTERFACE_LINK_LIBRARIES "Qt6::Widgets;Qt6::PrintSupport"
+        IMPORTED_CONFIGURATIONS RELEASE
+        IMPORTED_LOCATION_RELEASE "${QCUSTOMPLOT_LIBRARY_RELEASE}"
+    )
+    if(QCUSTOMPLOT_LIBRARY_DEBUG)
+        set_property(TARGET unofficial::qcustomplot::qcustomplot APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+        set_target_properties(unofficial::qcustomplot::qcustomplot PROPERTIES
+            IMPORTED_LOCATION_DEBUG "${QCUSTOMPLOT_LIBRARY_DEBUG}"
+        )
+    endif()
+    if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "dynamic")
+        set_target_properties(unofficial::qcustomplot::qcustomplot PROPERTIES
+            INTERFACE_COMPILE_DEFINITIONS QCUSTOMPLOT_USE_LIBRARY
+        )
+    endif()
+
+    unset(_qcustomplot_prefix)
+endif()

@@ -1,6 +1,7 @@
 {
   "name": "kbookmarks",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Bookmarks management library",
   "homepage": "https://invent.kde.org/frameworks/kbookmarks",
   "documentation": "https://api.kde.org/kbookmarks-index.html",

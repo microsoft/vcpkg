@@ -1,6 +1,7 @@
 {
   "name": "kcompletion",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Text completion helpers and widgets",
   "homepage": "https://invent.kde.org/frameworks/kcompletion",
   "documentation": "https://api.kde.org/kcompletion-index.html",

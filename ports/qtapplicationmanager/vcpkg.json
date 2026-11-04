@@ -1,8 +1,8 @@
 {
   "name": "qtapplicationmanager",
-  "version": "6.11.2",
+  "version": "6.11.3",
   "description": "Qt component for application lifecycle management",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "supports": "android | ios | linux | osx | qnx | (windows & !uwp & (arm64 | x64))",
   "dependencies": [
