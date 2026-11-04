@@ -5213,7 +5213,7 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.26.10",
+      "baseline": "1.28.5",
       "port-version": 0
     },
     "libmypaint": {
