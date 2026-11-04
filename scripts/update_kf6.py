@@ -48,6 +48,7 @@ PORT_LIST = [
     "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
+    "prison",
     "sonnet",
     "syntax-highlighting",
     "threadweaver"
