@@ -6429,7 +6429,7 @@
       "port-version": 0
     },
     "luajit": {
-      "baseline": "2026-10-21",
+      "baseline": "2026-10-30",
       "port-version": 0
     },
     "luasec": {
@@ -9345,7 +9345,7 @@
       "port-version": 0
     },
     "sdl3": {
-      "baseline": "3.4.18",
+      "baseline": "3.4.20",
       "port-version": 0
     },
     "sdl3-image": {
