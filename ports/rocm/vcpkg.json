@@ -4,5 +4,5 @@
   "description": "AMD ROCm platform",
   "homepage": "https://rocm.docs.amd.com/",
   "license": null,
-  "supports": "linux"
+  "supports": "linux & x64"
 }
