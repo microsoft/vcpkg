@@ -11,11 +11,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/onnxruntime
     REF "v${VERSION}"
-    SHA512 27bd751f68ccf5ae8057f9d2e04a36963d1c6bac85be557cb62d330a8564fa92f74170c673dbab614b034a609a1ad99af53b329dbb378842bd2b7ceb917a07d6
+    SHA512 7fa5cb459c4d7d3146974db2ddae084f8c689e6b22dca3aad031aaf33b013dfa7b1ad1b116ec7a675a8c42ad6dd73873759d2129dab1301a5d885b1e34bf9568
     PATCHES
         fix-cmake.patch # .framework install dir, wasm re2 workaround
         fix-cmake-cuda.patch
         fix-cmake-mlas.patch
+        use-vcpkg-coremltools.patch # use the coremltools port instead of building its sources
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
@@ -91,6 +92,7 @@ if("tensorrt" IN_LIST FEATURES)
         message(WARNING "Define TENSORRT_HOME for onnxruntime_TENSORRT_HOME")
     endif()
 endif()
+
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 

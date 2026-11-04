@@ -4,12 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenSCAP/openscap
     REF ${VERSION}
-    SHA512 7d94ad18d456d8fcbe9f46e88d797cdd749b72cd3afd20087dc6d46aad16dfb380f667586343e7334e4d1e59d0d10cee7b5f1fac7a03598a1dd49629514cfc75
+    SHA512 2a2e1a954b40caa878291ef74ba860c7dd961cc61ad503d95f586f0d37af77374424624974af6b176d702264533d03248bdd40000ea2d1b090fddca7b23e3cd9
     HEAD_REF main
     PATCHES
         dependencies.diff
         install-dirs.diff
-        python-win32.diff
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindThreads.cmake")
 
