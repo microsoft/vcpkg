@@ -1,0 +1,29 @@
+diff --git a/cmake/FindLibUSB.cmake b/cmake/FindLibUSB.cmake
+index 50988ad..1afa85d 100644
+--- a/cmake/FindLibUSB.cmake
++++ b/cmake/FindLibUSB.cmake
+@@ -6,7 +6,7 @@ set(LibUSB_MIN_API_VERSION 0x01000102)
+ find_package(PkgConfig QUIET)
+ 
+ if(PKG_CONFIG_FOUND)
+-  pkg_check_modules(PC_LibUSB ${LibUSB_PKG_CONFIG_SPEC})
++  pkg_check_modules(PC_LibUSB IMPORTED_TARGET ${LibUSB_PKG_CONFIG_SPEC})
+ endif()
+ 
+ find_library(LibUSB_LIBRARY
+@@ -60,6 +60,15 @@ find_package_handle_standard_args(LibUSB
+ )
+ 
+ if(LibUSB_FOUND AND NOT TARGET LibUSB::LibUSB)
++  if(PC_LibUSB_FOUND)
++    add_library(LibUSB::LibUSB INTERFACE IMPORTED)
++    set_target_properties(LibUSB::LibUSB PROPERTIES
++      INTERFACE_LINK_LIBRARIES "PkgConfig::PC_LibUSB;${LibUSB_LINK_LIBRARIES}"
++      INTERFACE_COMPILE_OPTIONS "${LibUSB_COMPILE_OPTIONS}"
++      INTERFACE_LINK_OPTIONS "${LibUSB_LINK_OPTIONS}"
++    )
++    return()
++  endif()
+   add_library(LibUSB::LibUSB IMPORTED UNKNOWN)
+   set_target_properties(LibUSB::LibUSB
+     PROPERTIES
