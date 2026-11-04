@@ -1,6 +1,6 @@
 {
   "name": "ablemon",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "abLEMON, a maintained fork of LEMON, the Library for Efficient Modeling and Optimization in Networks",
   "homepage": "https://github.com/dmeoli/abLEMON",
   "license": "BSL-1.0 AND BSD-3-Clause",
