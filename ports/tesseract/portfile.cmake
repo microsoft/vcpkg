@@ -22,6 +22,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
+# Prevent upstream from replacing vcpkg's pkg-config paths with Homebrew paths.
+unset(ENV{HOMEBREW_PREFIX})
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
