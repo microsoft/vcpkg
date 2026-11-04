@@ -31,4 +31,8 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/doc"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/mt32emu/COPYING.txt")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/mt32emu/COPYING.txt"
+    "${SOURCE_PATH}/mt32emu/COPYING.LESSER.txt"
+    "${SOURCE_PATH}/mt32emu/src/sha1/sha1.h"
+)

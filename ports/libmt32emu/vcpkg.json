@@ -3,7 +3,7 @@
   "version": "2.8.4",
   "description": "A MT-32 emulator",
   "homepage": "https://github.com/munt/munt",
-  "license": "GPL-2.0-or-later",
+  "license": "LGPL-2.1-or-later AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
