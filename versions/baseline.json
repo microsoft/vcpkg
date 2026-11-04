@@ -473,7 +473,7 @@
       "port-version": 0
     },
     "aws-c-auth": {
-      "baseline": "1.0.2",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -505,7 +505,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "1.4.1",
+      "baseline": "1.5.1",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -517,7 +517,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.44.2",
+      "baseline": "0.44.3",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -525,7 +525,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.900",
+      "baseline": "1.11.920",
       "port-version": 0
     },
     "ayush272002-dotenv": {
@@ -2202,7 +2202,7 @@
     },
     "cppunit": {
       "baseline": "1.15.1",
-      "port-version": 5
+      "port-version": 6
     },
     "cpputest": {
       "baseline": "4.0",
@@ -2341,7 +2341,7 @@
       "port-version": 17
     },
     "cudnn-frontend": {
-      "baseline": "1.32.0",
+      "baseline": "1.32.1",
       "port-version": 0
     },
     "cunit": {
@@ -2429,7 +2429,7 @@
       "port-version": 5
     },
     "d3d12-memory-allocator": {
-      "baseline": "3.2.0",
+      "baseline": "3.2.1",
       "port-version": 0
     },
     "d3dx12": {
@@ -3065,7 +3065,7 @@
       "port-version": 1
     },
     "faudio": {
-      "baseline": "26.10",
+      "baseline": "26.11",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -3102,7 +3102,7 @@
     },
     "ffmpeg": {
       "baseline": "9.0.2",
-      "port-version": 3
+      "port-version": 4
     },
     "ffmpeg-bin2c": {
       "baseline": "9.0.2",
@@ -3205,7 +3205,7 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.6.1",
+      "baseline": "2.6.2",
       "port-version": 0
     },
     "flux": {
@@ -4113,8 +4113,8 @@
       "port-version": 0
     },
     "inih": {
-      "baseline": "62",
-      "port-version": 1
+      "baseline": "63",
+      "port-version": 0
     },
     "iniparser": {
       "baseline": "4.3.2",
@@ -4626,7 +4626,7 @@
     },
     "ki18n": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "kiconthemes": {
       "baseline": "6.31.0",
@@ -4825,7 +4825,7 @@
       "port-version": 0
     },
     "level-zero": {
-      "baseline": "1.33.1",
+      "baseline": "1.35.0",
       "port-version": 0
     },
     "leveldb": {
@@ -6445,7 +6445,7 @@
       "port-version": 0
     },
     "lunarg-vulkantools": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "lunasvg": {
@@ -6717,7 +6717,7 @@
       "port-version": 5
     },
     "mexce": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "mfl": {
@@ -6777,7 +6777,7 @@
       "port-version": 0
     },
     "miniaudio": {
-      "baseline": "0.11.25",
+      "baseline": "0.11.26",
       "port-version": 0
     },
     "minifb": {
@@ -7249,7 +7249,7 @@
       "port-version": 0
     },
     "nghttp2": {
-      "baseline": "1.70.0",
+      "baseline": "1.71.0",
       "port-version": 0
     },
     "nghttp3": {
@@ -7597,7 +7597,7 @@
       "port-version": 0
     },
     "openexr": {
-      "baseline": "3.5.2",
+      "baseline": "3.5.3",
       "port-version": 0
     },
     "openfbx": {
@@ -7621,7 +7621,7 @@
       "port-version": 0
     },
     "openhtj2k": {
-      "baseline": "0.23.4",
+      "baseline": "0.25.0",
       "port-version": 0
     },
     "openigtlink": {
@@ -9521,7 +9521,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "5.1.0",
+      "baseline": "5.1.1",
       "port-version": 0
     },
     "simdutf": {
@@ -9817,15 +9817,15 @@
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "spix": {
@@ -11009,7 +11009,7 @@
       "port-version": 0
     },
     "vulkan-extensionlayer": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "vulkan-headers": {
@@ -11017,7 +11017,7 @@
       "port-version": 0
     },
     "vulkan-loader": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
@@ -11029,19 +11029,19 @@
       "port-version": 0
     },
     "vulkan-sdk-components": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "vulkan-tools": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "vulkan-utility-libraries": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "vulkan-validationlayers": {
-      "baseline": "1.4.357.0",
+      "baseline": "1.4.363.0",
       "port-version": 0
     },
     "vvdec": {
@@ -11357,8 +11357,8 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.3.12",
-      "port-version": 1
+      "baseline": "1.3.13",
+      "port-version": 0
     },
     "xnnpack": {
       "baseline": "2024-08-20",

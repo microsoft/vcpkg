@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-cmake-intl.patch
+        fix-qml-dependencies.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -46,6 +47,13 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME kf6i18n
     CONFIG_PATH lib/cmake/KF6I18n
 )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6i18n/KF6I18nTargets-debug.cmake"
+        "\${_IMPORT_PREFIX}/qml/"
+        "\${_IMPORT_PREFIX}/debug/qml/"
+    )
+endif()
 vcpkg_copy_pdbs()
 
 # KF6I18nMacros.cmake embeds the Python executable path used at build time as a
