@@ -1,11 +1,11 @@
-# lemon-ng at the tag of its version, built without the LP and MIP backends,
+# abLEMON at the tag of its version, built without the LP and MIP backends,
 # the tests, the demos, the tools and the documentation
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO dmeoli/lemon-ng
+    REPO dmeoli/abLEMON
     REF ${VERSION}
-    SHA512 b25818af3631049270e5471e7ed383514c1857850c76e68131949d5e3af691ca988ce13337f29ba02478e32872153a5a67db9e74a00efb8a112cdd40c4c8ea73
+    SHA512 ff451270c8817015931b83a769e0cf78bd4d0d6b361cde59f43010c1a429fef4cff429793038143ea808ac00737646a45097cc7d90e4eaefa4995df1fb6f5c4a
     HEAD_REF master
 )
 
@@ -32,4 +32,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE"
                              "${SOURCE_PATH}/lemon/random.h")
+# after the copyright, which makes share/${PORT}
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage-accurate")
