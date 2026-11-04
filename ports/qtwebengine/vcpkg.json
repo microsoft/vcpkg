@@ -3,7 +3,7 @@
   "name": "qtwebengine",
   "version-semver": "6.140.0-rc",
   "description": "Qt modules for rendering web and PDF content.",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "dependencies": [
     {

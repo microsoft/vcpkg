@@ -2,7 +2,7 @@
   "name": "qtcanvaspainter",
   "version": "6.12.0",
   "description": "Qt Canvas Painter provides a hardware-accelerated imperative 2D painting API on QRhi for Qt Quick and Qt Widgets.",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "dependencies": [
     {

@@ -2,7 +2,7 @@
   "name": "qtwayland",
   "version": "6.12.0",
   "description": "A toolbox for making Qt based Wayland compositors",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "supports": "!windows",
   "dependencies": [
