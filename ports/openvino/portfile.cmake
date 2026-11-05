@@ -145,7 +145,11 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FEATURE_OPTIONS "-DENABLE_PDB_IN_RELEASE=ON")
+    list(APPEND FEATURE_OPTIONS
+        "-DENABLE_PDB_IN_RELEASE=ON"
+        # Static CPU builds rename hundreds of oneDNN symbols, exceeding Windows' command-line limit.
+        "-DCMAKE_NINJA_FORCE_RESPONSE_FILE=ON"
+    )
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -168,6 +172,8 @@ vcpkg_cmake_configure(
         "-DENABLE_PROFILING_ITT=OFF"
         "-DENABLE_OV_JAX_FRONTEND=OFF"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_NINJA_FORCE_RESPONSE_FILE # CMake complains about variables only used by generators
 )
 
 vcpkg_cmake_install()
