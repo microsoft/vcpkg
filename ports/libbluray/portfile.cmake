@@ -2,10 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/libbluray
-    REF ${VERSION}
-    SHA512 e728f8d93b311d540a3883ba869fdc2c10e91b4009bf1796947b510d3646088dfd7aeabaebb3a1dcbf49d5afee48743bfa620fd93aa54bf948238510e7e7719f
-    PATCHES
-        msvc.diff
+    REF "${VERSION}"
+    SHA512 d643db1e9fdc5f3b31ea44b7fc5725dbb2824d2bd8e1ef516ead76a42e92192cb7c332340c43de628158b867835259ad27f07fd7da8a3b0992608177908a0530
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

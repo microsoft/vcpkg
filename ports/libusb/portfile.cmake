@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/libusb
     REF "v${VERSION}"
-    SHA512 98c5f7940ff06b25c9aa65aa98e23de4c79a4c1067595f4c73cc145af23a1c286639e1ba11185cd91bab702081f307b973f08a4c9746576dc8d01b3620a3aeb5
+    SHA512 3251c9f41e900efa13caf981483f46886c8434bf4c30f3fd3073921b06be9977cebcf4a18f7bc46db86e33d7f19752296377be9050abfb8d887ffeb377864647
     HEAD_REF master
 )
 
@@ -31,11 +31,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(prefix "")
   set(exec_prefix [[${prefix}]])
   set(libdir [[${prefix}/lib]])
-  set(includedir [[${prefix}/include]])  
+  set(includedir [[${prefix}/include]])
   configure_file("${SOURCE_PATH}/libusb-1.0.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libusb-1.0.pc" @ONLY)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libusb-1.0.pc" " -lusb-1.0" " -llibusb-1.0")
   if(NOT VCPKG_BUILD_TYPE)
-      set(includedir [[${prefix}/../include]])  
+      set(includedir [[${prefix}/../include]])
       configure_file("${SOURCE_PATH}/libusb-1.0.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" @ONLY)
       vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" " -lusb-1.0" " -llibusb-1.0")
   endif()
@@ -51,7 +51,7 @@ else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTORECONF
-        OPTIONS 
+        OPTIONS
             ${MAKE_OPTIONS}
             "--enable-examples-build=no"
             "--enable-tests-build=no"

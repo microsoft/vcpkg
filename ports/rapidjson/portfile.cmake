@@ -6,6 +6,8 @@ vcpkg_from_github(
     SHA512 50f8723414a6e63eadd45f97be5c44e9fff2d06216c8cc4df802f5bfc2a9416a039f2c69e9bb1882f7e756cd38a7097eea05cab76c739f45805dc41617140799
     FILE_DISAMBIGUATOR 2
     HEAD_REF master
+    PATCHES
+        fix-arm64ec-umul128.patch # https://github.com/Tencent/rapidjson/pull/2399
 )
 
 # Use RapidJSON's own build process, skipping examples and tests

@@ -1,0 +1,19 @@
+diff --git i/CMakeLists.txt w/CMakeLists.txt
+index e103c40..1330c0d 100644
+--- i/CMakeLists.txt
++++ w/CMakeLists.txt
+@@ -187,6 +187,7 @@ if(ZLIB_BUILD_SHARED)
+     if(UNIX
+         AND NOT APPLE
+         AND NOT (CMAKE_SYSTEM_NAME STREQUAL AIX)
++        AND NOT (CMAKE_SYSTEM_NAME STREQUAL OHOS)
+         AND NOT (CMAKE_SYSTEM_NAME STREQUAL SunOS))
+         # On unix-like platforms the library is almost always called libz
+         set_target_properties(
+@@ -197,5 +198,6 @@ if(ZLIB_BUILD_SHARED)
+         UNIX
+         AND NOT APPLE
+         AND NOT (CMAKE_SYSTEM_NAME STREQUAL AIX)
++        AND NOT (CMAKE_SYSTEM_NAME STREQUAL OHOS)
+         AND NOT (CMAKE_SYSTEM_NAME STREQUAL SunOS))
+ endif(ZLIB_BUILD_SHARED)

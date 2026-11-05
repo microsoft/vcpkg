@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebookincubator/gloo
-  REF 81925d1c674c34f0dc34dd9a0f2151c1b6f701eb
-  SHA512 2783908e7e0d6bd7f8cf59f4e6a94c84908e459f394c294cdf34aa8d1943a193fb25d15a8662f5a32a82b23a2657e63b1aa562f3ad8953ef79c9f502d04fed20
+  REF bcd1672ee07538123ea8f4fac76832efc58fb8ef
+  SHA512 3724c14b715aad9b7f72c3b576c7395d2285e8b55ff3a2cf5263c1df4c8275f04e8854696588977501384cbd0a75e0156f406b7d2465e439cd02bd3214df9bf0
   HEAD_REF master
 )
 
@@ -17,11 +17,13 @@ vcpkg_check_features(
   )
 
 if ("cuda" IN_LIST FEATURES)
-  vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
+  vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
   list(APPEND GLOO_FEATURE_OPTIONS
     "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}"
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
-  ) 
+    "-DCMAKE_CUDA_STANDARD=20"
+    "-DGLOO_USE_CUDA_TOOLKIT=ON"
+  )
 endif()
 
 vcpkg_cmake_configure(

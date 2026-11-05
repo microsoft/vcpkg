@@ -1,5 +1,0 @@
-The package robotraconteur is compatible with built-in CMake targets:
-
-    find_package(RobotRaconteur REQUIRED)
-    target_link_libraries(main PRIVATE RobotRaconteurCore)
-    

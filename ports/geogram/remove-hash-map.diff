@@ -1,0 +1,218 @@
+diff --git a/src/bin/fpg/FPG/SymbolEnvironment.h b/src/bin/fpg/FPG/SymbolEnvironment.h
+index b0c0265..b0b77ff 100644
+--- a/src/bin/fpg/FPG/SymbolEnvironment.h
++++ b/src/bin/fpg/FPG/SymbolEnvironment.h
+@@ -3,7 +3,6 @@
+ 
+ #include <string>
+ #include <vector>
+-//#include <ext/hash_map>
+ #include <map>
+ 
+ #include <FPG/Symbol.h>
+diff --git a/src/lib/geogram/basic/memory.h b/src/lib/geogram/basic/memory.h
+index 73335a6..17b7e9d 100644
+--- a/src/lib/geogram/basic/memory.h
++++ b/src/lib/geogram/basic/memory.h
+@@ -487,9 +487,15 @@ namespace GEO {
+             template <class U>
+             struct rebind {
+                 /** Equivalent allocator type to allocate elements of type \p U*/
+-                typedef aligned_allocator<U> other;
++                typedef aligned_allocator<U, ALIGN> other;
+             };
+ 
++            /* default constructor */
++            constexpr aligned_allocator() noexcept = default;
++
++            /* conversion copy constructor */
++            template <class U, int A2> constexpr aligned_allocator(const aligned_allocator<U, A2>&) noexcept { }
++
+             /**
+              * \brief Gets the address of an object
+              * \param[in] x a reference to an object of type T
+@@ -613,14 +619,6 @@ namespace GEO {
+                 (void) p; // to avoid a "unreferenced variable" warning
+ #endif
+             }
+-
+-            /**
+-             * \brief Conversion operator to different aligned_allocator
+-             * \details Required when compiling under MSVC version <= 2010
+-             */
+-            template <class T2, int A2> operator aligned_allocator<T2, A2>() {
+-                return aligned_allocator<T2,A2>();
+-            }
+         };
+ 
+         /**
+diff --git a/src/lib/geogram/third_party/PoissonRecon/Geometry.h b/src/lib/geogram/third_party/PoissonRecon/Geometry.h
+index 746d480..0661846 100644
+--- a/src/lib/geogram/third_party/PoissonRecon/Geometry.h
++++ b/src/lib/geogram/third_party/PoissonRecon/Geometry.h
+@@ -31,8 +31,9 @@ DAMAGE.
+ 
+ #include <math.h>
+ #include <vector>
++#include <unordered_map>
+ #include <stdlib.h>
+-#include "Hash.h"
++#include <stdio.h>
+ 
+ template<class Real>
+ Real Random(void);
+@@ -280,7 +281,7 @@ public:
+         int addTriangle( int p1 , int p2 , int p3 );
+ 
+ protected:
+-        hash_map<long long,int> edgeMap;
++        std::unordered_map<long long,int> edgeMap;
+         static long long EdgeIndex( int p1 , int p2 );
+         double area(const Triangle& t);
+ };
+diff --git a/src/lib/geogram/third_party/PoissonRecon/Geometry.inl b/src/lib/geogram/third_party/PoissonRecon/Geometry.inl
+index f3cd508..cc1457b 100644
+--- a/src/lib/geogram/third_party/PoissonRecon/Geometry.inl
++++ b/src/lib/geogram/third_party/PoissonRecon/Geometry.inl
+@@ -324,7 +324,7 @@ double Triangulation<Real>::area(void){
+ }
+ template<class Real>
+ int Triangulation<Real>::addTriangle(int p1,int p2,int p3){
+-        hash_map<long long,int>::iterator iter;
++        std::unordered_map<long long,int>::iterator iter;
+         int tIdx,eIdx,p[3];
+         p[0]=p1;
+         p[1]=p2;
+diff --git a/src/lib/geogram/third_party/PoissonRecon/Hash.h b/src/lib/geogram/third_party/PoissonRecon/Hash.h
+deleted file mode 100644
+index 93ee1a5..0000000
+--- a/src/lib/geogram/third_party/PoissonRecon/Hash.h
++++ /dev/null
+@@ -1,30 +0,0 @@
+-#ifndef HASH_INCLUDED
+-#define HASH_INCLUDED
+-
+-#ifdef _MSC_VER
+-#include <hash_map>
+-using stdext::hash_map;
+-#else // !WIN32
+-#include <ext/hash_map>
+-using namespace __gnu_cxx;
+-
+-namespace __gnu_cxx
+-{
+-  template<> struct hash<long long> {
+-    size_t operator()(long long __x) const { return __x; }
+-  };
+-  template<> struct hash<const long long> {
+-    size_t operator()(const long long __x) const { return __x; }
+-  };
+-  
+-  
+-  template<> struct hash<unsigned long long> {
+-    size_t operator()(unsigned long long __x) const { return __x; }
+-  };
+-  template<> struct hash<const unsigned long long> {
+-    size_t operator()(const unsigned long long __x) const { return __x; }
+-  };
+-}
+-#endif // WIN32
+-#endif // HASH_INCLUDED
+-
+diff --git a/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.IsoSurface.inl b/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.IsoSurface.inl
+index 2eedd51..1449193 100644
+--- a/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.IsoSurface.inl
++++ b/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.IsoSurface.inl
+@@ -738,7 +738,7 @@ void Octree< Real >::SetSliceIsoEdges( int depth , int slice , int z , std::vect
+ #pragma omp critical( add_iso_edge_access )
+                                                 {
+                                                         typename Octree::template SliceValues< Vertex >& _sValues = slabValues[_depth].sliceValues( _slice );
+-                                                        typename hash_map< long long , std::vector< IsoEdge > >::iterator iter = _sValues.faceEdgeMap.find(key);
++                                                        typename std::unordered_map< long long , std::vector< IsoEdge > >::iterator iter = _sValues.faceEdgeMap.find(key);
+                                                         if( iter==_sValues.faceEdgeMap.end() ) _sValues.faceEdgeMap[key] = edges;
+                                                         else for( int j=0 ; j<fe.count ; j++ ) iter->second.push_back( fe.edges[j] );
+                                                 }
+@@ -817,7 +817,7 @@ void Octree< Real >::SetXSliceIsoEdges( int depth , int slab , std::vector< Slab
+ #pragma omp critical( add_x_iso_edge_access )
+                                                         {
+                                                                 typename Octree::template XSliceValues< Vertex >& _xValues = slabValues[_depth].xSliceValues( _slab );
+-                                                                typename hash_map< long long , std::vector< IsoEdge > >::iterator iter = _xValues.faceEdgeMap.find(key);
++                                                                typename std::unordered_map< long long , std::vector< IsoEdge > >::iterator iter = _xValues.faceEdgeMap.find(key);
+                                                                 if( iter==_xValues.faceEdgeMap.end() ) _xValues.faceEdgeMap[key] = edges;
+                                                                 else for( int j=0 ; j<fe.count ; j++ ) iter->second.push_back( fe.edges[j] );
+                                                         }
+@@ -871,7 +871,7 @@ void Octree< Real >::SetIsoSurface( int depth , int offset , const SliceValues<
+                                                 else
+                                                 {
+                                                         long long key = VertexData::FaceIndex( leaf , f , _sNodes.levels() );
+-                                                        typename hash_map< long long , std::vector< IsoEdge > >::const_iterator iter = sValues.faceEdgeMap.find( key );
++                                                        typename std::unordered_map< long long , std::vector< IsoEdge > >::const_iterator iter = sValues.faceEdgeMap.find( key );
+                                                         if( iter!=sValues.faceEdgeMap.end() )
+                                                         {
+                                                                 const std::vector< IsoEdge >& _edges = iter->second;
+@@ -891,7 +891,7 @@ void Octree< Real >::SetIsoSurface( int depth , int offset , const SliceValues<
+                                                 else
+                                                 {
+                                                         long long key = VertexData::FaceIndex( leaf , f , _sNodes.levels() );
+-                                                        typename hash_map< long long , std::vector< IsoEdge > >::const_iterator iter = xValues.faceEdgeMap.find( key );
++                                                        typename std::unordered_map< long long , std::vector< IsoEdge > >::const_iterator iter = xValues.faceEdgeMap.find( key );
+                                                         if( iter!=xValues.faceEdgeMap.end() )
+                                                         {
+                                                                 const std::vector< IsoEdge >& _edges = iter->second;
+@@ -915,7 +915,7 @@ void Octree< Real >::SetIsoSurface( int depth , int offset , const SliceValues<
+                                                 for( idx=0 ; idx<(int)edges.size() ; idx++ ) if( edges[idx][0]==current ) break;
+                                                 if( idx==edges.size() )
+                                                 {
+-                                                        typename hash_map< long long , long long >::const_iterator iter;
++                                                        typename std::unordered_map< long long , long long >::const_iterator iter;
+                                                         if     ( (iter=bValues.vertexPairMap.find(current))!=bValues.vertexPairMap.end() ) loops.back().push_back( current ) , current = iter->second;
+                                                         else if( (iter=fValues.vertexPairMap.find(current))!=fValues.vertexPairMap.end() ) loops.back().push_back( current ) , current = iter->second;
+                                                         else if( (iter=xValues.vertexPairMap.find(current))!=xValues.vertexPairMap.end() ) loops.back().push_back( current ) , current = iter->second;
+@@ -943,7 +943,7 @@ void Octree< Real >::SetIsoSurface( int depth , int offset , const SliceValues<
+                                         for( size_t k=0 ; k<loops[j].size() ; k++ )
+                                         {
+                                                 long long key = loops[j][k];
+-                                                typename hash_map< long long , std::pair< int , Vertex > >::const_iterator iter;
++                                                typename std::unordered_map< long long , std::pair< int , Vertex > >::const_iterator iter;
+                                                 if     ( ( iter=bValues.edgeVertexMap.find( key ) )!=bValues.edgeVertexMap.end() ) polygon[k] = iter->second;
+                                                 else if( ( iter=fValues.edgeVertexMap.find( key ) )!=fValues.edgeVertexMap.end() ) polygon[k] = iter->second;
+                                                 else if( ( iter=xValues.edgeVertexMap.find( key ) )!=xValues.edgeVertexMap.end() ) polygon[k] = iter->second;
+diff --git a/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.h b/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.h
+index be48702..f235434 100644
+--- a/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.h
++++ b/src/lib/geogram/third_party/PoissonRecon/MultiGridOctreeData.h
+@@ -91,7 +91,7 @@ DAMAGE.
+ #pragma message( "[WARNING] Not zeroing out normal component on boundary" )
+ #endif // !FORCE_NEUMANN_FIELD
+ 
+-#include "Hash.h"
++#include <unordered_map>
+ #include "BSplineData.h"
+ #include "PointStream.h"
+ 
+@@ -582,9 +582,9 @@ public:
+                 Pointer( long long ) edgeKeys ; Pointer( char ) edgeSet;
+                 Pointer( FaceEdges ) faceEdges ; Pointer( char ) faceSet;
+                 Pointer( char ) mcIndices;
+-                hash_map< long long , std::vector< IsoEdge > > faceEdgeMap;
+-                hash_map< long long , std::pair< int , Vertex > > edgeVertexMap;
+-                hash_map< long long , long long > vertexPairMap;
++                std::unordered_map< long long , std::vector< IsoEdge > > faceEdgeMap;
++                std::unordered_map< long long , std::pair< int , Vertex > > edgeVertexMap;
++                std::unordered_map< long long , long long > vertexPairMap;
+ 
+                 SliceValues( void );
+                 ~SliceValues( void );
+@@ -598,9 +598,9 @@ public:
+                 typename SortedTreeNodes::XSliceTableData xSliceData;
+                 Pointer( long long ) edgeKeys ; Pointer( char ) edgeSet;
+                 Pointer( FaceEdges ) faceEdges ; Pointer( char ) faceSet;
+-                hash_map< long long , std::vector< IsoEdge > > faceEdgeMap;
+-                hash_map< long long , std::pair< int , Vertex > > edgeVertexMap;
+-                hash_map< long long , long long > vertexPairMap;
++                std::unordered_map< long long , std::vector< IsoEdge > > faceEdgeMap;
++                std::unordered_map< long long , std::pair< int , Vertex > > edgeVertexMap;
++                std::unordered_map< long long , long long > vertexPairMap;
+ 
+                 XSliceValues( void );
+                 ~XSliceValues( void );

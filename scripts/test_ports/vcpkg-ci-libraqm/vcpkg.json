@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-libraqm",
+  "version-string": "ci",
+  "description": "Validates libraqm's pkg-config integration",
+  "license": null,
+  "dependencies": [
+    "libraqm",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -11,10 +11,6 @@ vcpkg_from_gitlab(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/msvc/include/inttypes.h")
 
-vcpkg_find_acquire_program(PKGCONFIG)
-cmake_path(GET PKGCONFIG PARENT_PATH pkgconfig_dir)
-vcpkg_add_to_path("${pkgconfig_dir}")
-
 set(cppflags "")
 if(VCPKG_TARGET_IS_WINDOWS)
     # PATH_MAX from msvc/libdvdcss.vcxproj
@@ -25,13 +21,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${cppflags}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

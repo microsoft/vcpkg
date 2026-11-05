@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Utility-Libraries
     REF "vulkan-sdk-${VERSION}"
-    SHA512 ed46883cf35c888f9fd77c433a5b612a81c267b263c0e6ac4441ea677112584375529485767f69ec3628664b2ffe4005bc1f90e1f0c1a53d27b2998a8552564a
+    SHA512 65ec2e2e45bd892f8964cb9397e202777dc04051e33cb78278292cb32f955b77d8b9f0615170bca7a181aa808fe1d06717601d1cc955af21550d06f7b4f58be6
     HEAD_REF main
 )
 
@@ -19,6 +19,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/VulkanUtilityLibraries/Vulka
     [[${CMAKE_CURRENT_LIST_DIR}/VulkanUtilityLibraries-targets.cmake]]
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md" "${SOURCE_PATH}/LICENSES/Apache-2.0.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

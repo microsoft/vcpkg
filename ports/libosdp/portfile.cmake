@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO goToMain/libosdp
+    REPO osdp-dev/libosdp
     REF "v${VERSION}"
-    SHA512 ebfc2010a89eb1bca9c47c283016750805f38bd5996d478105782bc54add184d0aa7e0f1b8b2f145e6b3af9584c0635522af6191167eeade88a4d878a0552fa0
+    SHA512 1035146f7527d405210e908b494e2d7bfc69216515ac59a05c502abf62c32451d13ef76549ca205b291cb3ccfddd42205c3d70b593dd1baf2351019a1732600f
     HEAD_REF master
+    PATCHES
+        fix-export-macros.patch
 )
 
 # Download and extract the c-utils submodule at ${SOURCE_PATH}/utils as
@@ -12,9 +14,9 @@ vcpkg_from_github(
 # Note: During package upgrade, the submodule ref needs to be updated.
 vcpkg_from_github(
     OUT_SOURCE_PATH UTILS_SOURCE_PATH
-    REPO goToMain/c-utils
-    REF "d295048d0362674e2a4b489b689d029b8f1f3d01"
-    SHA512 a0902a504fe6ffd1ce0f32d0a16decf0e113d1211d19e63f4fb539082254769f0a6484414a49f52956e45ed802b2c2f8430e87a06c24ac84205421cdffb4d3f0
+    REPO osdp-dev/c-utils
+    REF "86de31f9b3bf08ffbd1bde3e8cf66614e58a66f4"
+    SHA512 e5ffe68d9c7f102bcacd12167aa9c73f3012c2ec194ac6c8aeb4681f8384cf403fdc1ee4f8e4c198ce23acd1510504fa67c76bfb5da26fb0eea3d674d1bf253e
     HEAD_REF master
 )
 
@@ -28,9 +30,9 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCONFIG_OSDP_LIB_ONLY=ON
-        -DCONFIG_BUILD_SHARED=${BUILD_SHARED}
-        -DCONFIG_BUILD_STATIC=${BUILD_STATIC}
+        -DOPT_OSDP_LIB_ONLY=ON
+        -DOPT_BUILD_SHARED=${BUILD_SHARED}
+        -DOPT_BUILD_STATIC=${BUILD_STATIC}
 )
 
 vcpkg_cmake_install()
@@ -39,5 +41,14 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libosdp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(BUILD_STATIC)
+    # Bake the define OSDP_STATIC_DEFINE into the installed header to ensure consumers get it.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libosdp/osdp_export.h"
+        "#define _OSDP_EXPORT_H_"
+        "#define _OSDP_EXPORT_H_\n\n#define OSDP_STATIC_DEFINE"
+    )
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

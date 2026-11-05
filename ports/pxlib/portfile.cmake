@@ -7,6 +7,9 @@ vcpkg_from_github(
     PATCHES
         add_cmake_config.patch
         add_extern_c.patch
+        use_modern_find_iconv.patch
+        fix_iconv_handle_check.patch
+        fix_blob_targetencoding.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,8 +1,8 @@
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO multicoreware/x265_git
+    REPO Multicorewareinc/x265
     REF "${VERSION}"
-    SHA512 4b7d71f22f0a7f12ff93f9a01e361df2b80532cd8dac01b5465e63b5d8182f1a05c0289ad95f3aa972c963aa6cd90cb3d594f8b9a96f556a006cf7e1bdd9edda
+    SHA512 270d0db180ecebfc5c2f1fe6451be66042fab69273d073428f4af00420fa0f8b792ecdc71ec1a15ee2860e3b6a325c56295143f117e94fa3616f0ccecb2ded75
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
@@ -12,7 +12,7 @@ vcpkg_from_bitbucket(
         pthread.diff
         compiler-target.diff
         neon.diff
-        fix-cmake-4.patch
+        advapi32.patch # Required since v4.2 as it is now using RegOpenKeyExA, RegQueryValueExA & RegCloseKey
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_PIC=ON
         -DENABLE_LIBNUMA=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_VLD=ON
         "-DVERSION=${VERSION}"
     OPTIONS_DEBUG
         -DENABLE_CLI=OFF

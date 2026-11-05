@@ -1,10 +1,16 @@
 {
   "name": "libmount",
-  "version": "2.41.3",
+  "version": "2.42.4",
   "description": "Block device identification library from util-linux",
   "homepage": "https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git/about/",
   "license": null,
   "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ],
   "features": {
     "nls": {
       "description": "Enable native language support",

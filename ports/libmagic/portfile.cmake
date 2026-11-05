@@ -1,9 +1,10 @@
+set(extra_patches "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES
+    list(APPEND extra_patches
         "0001-Use-libtre.patch"
-        "0002-Change-zlib-lib-name-to-match-CMake-output.patch"
         "0003-Fix-WIN32-macro-checks.patch"
         "0004-Typedef-POSIX-types-on-Windows.patch"
+        "fix-public-ssize-t.diff"
         "0005-Include-dirent.h-for-S_ISREG-and-S_ISDIR.patch"
         "0006-Remove-Wrap-POSIX-headers.patch"
         "0007-Substitute-unistd-macros-for-MSVC.patch"
@@ -14,17 +15,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
         "0016-Fix-file_famagic-function.patch"
-        "0017-Change-bzlib-name-to-match-CMake-output.patch"
     )
 endif()
 
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)$" "FILE\\1_\\2" FILE_REF "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
-    REF FILE5_46
-    SHA512 fb8157ee8065feaf57412ccdeee57cd8fc853b54ac49b0ddc818eeb1ca3555a7cfd25dea08996503f7c565dcba8c57fd7e4dc5fe3452872c617f5612a94a8f0e
+    REF "${FILE_REF}"
+    SHA512 40568ddef1bd2cedb468f032bf07aaabf1756d20fe8bcba3b4f3fd42be13ed3242768a825db1456b7c0a12c6e549c3e714e1ea182bf5065d1d06e88cdd7a9363
     HEAD_REF master
-    PATCHES ${PATCHES}
+    PATCHES
+        0002-Change-zlib-lib-name-to-match-CMake-output.patch
+        0017-Change-bzlib-name-to-match-CMake-output.patch
+        ${extra_patches}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -54,8 +58,8 @@ enable_feature("zlib" "zlib")
 enable_feature("lzma" "xzlib")
 enable_feature("zstd" "zstdlib")
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
@@ -66,10 +70,10 @@ vcpkg_configure_make(
 if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/libmagic/bin")
 elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(EXTRA_ARGS "ADD_BIN_TO_PATH")
+    vcpkg_add_to_path(PREPEND "${CURRENT_PACKAGES_DIR}/tools/libmagic/bin")
 endif()
 
-vcpkg_install_make(${EXTRA_ARGS})
+vcpkg_make_install()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 vcpkg_fixup_pkgconfig()

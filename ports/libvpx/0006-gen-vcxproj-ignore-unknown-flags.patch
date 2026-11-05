@@ -1,0 +1,11 @@
+--- a/build/make/gen_msvs_vcxproj.sh
++++ b/build/make/gen_msvs_vcxproj.sh
+@@ -209,7 +209,7 @@
+         ;;
+         -l*) libs="${libs}${libs:+ }${opt##-l}.lib"
+         ;;
+-        -*) die_unknown $opt
++        -*) : # Ignore unknown flags (e.g. -O3 leaked from GCC CFLAGS)
+         ;;
+         *)
+             # The paths in file_list are fixed outside of the loop.

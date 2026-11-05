@@ -1,0 +1,13 @@
+diff --git a/pull/CMakeLists.txt b/pull/CMakeLists.txt
+index 101772f..1ad4074 100644
+--- a/pull/CMakeLists.txt
++++ b/pull/CMakeLists.txt
+@@ -96,7 +96,7 @@ if(GENERATE_PKGCONFIG)
+   set(PKGCONFIG_REQUIRES)
+ 
+   if(NOT USE_THIRDPARTY_LIBRARIES)
+-    string(APPEND PKGCONFIG_LIBS " -lcivetweb-cpp -lcivetweb")
++    string(APPEND PKGCONFIG_REQUIRES " civetweb-cpp civetweb")
+   endif()
+ 
+   if(ENABLE_COMPRESSION)

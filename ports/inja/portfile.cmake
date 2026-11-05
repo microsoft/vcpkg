@@ -13,16 +13,11 @@ vcpkg_cmake_configure(
     OPTIONS
         -DINJA_USE_EMBEDDED_JSON=OFF
         -DBUILD_TESTING=OFF
-        -DBUILD_BENCHMARK=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/inja")
-vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-# Don't need built-in nlohmann-json as this package depends on nlohmann-json
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/inja/json")
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

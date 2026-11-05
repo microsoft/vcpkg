@@ -1,13 +1,11 @@
- openmp/tools/Modules/CMakeLists.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/openmp/tools/Modules/CMakeLists.txt b/openmp/tools/Modules/CMakeLists.txt
-index 22d818eea72d..75aacc4468d4 100644
+index 7739b9d..5f29e54 100644
 --- a/openmp/tools/Modules/CMakeLists.txt
 +++ b/openmp/tools/Modules/CMakeLists.txt
-@@ -12,4 +12,4 @@
+@@ -12,5 +12,5 @@
  
  
  install(FILES "FindOpenMPTarget.cmake"
--              DESTINATION "${OPENMP_INSTALL_LIBDIR}/cmake/openmp")
-+              DESTINATION "share/openmp")
+-              DESTINATION "${OPENMP_INSTALL_LIBDIR}/cmake/openmp"
++              DESTINATION "share/openmp"
+               COMPONENT openmp)

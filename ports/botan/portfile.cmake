@@ -1,16 +1,20 @@
+vcpkg_download_distfile(REMOVE_CLI_SANDBOX_PATCH
+    URLS https://github.com/randombit/botan/commit/1a0c4477865809a181a5fd0f73132b2df2685d1a.patch?full_index=1
+    FILENAME botan-remove-cli-sandbox.patch
+    SHA512 f1585c9d070addd81158394889813147e84fdb3e8e32f48075db90c2c635bdd7b0d4ca2c7ad3c47fce043b99fb23eb1251f47d2e9af75ed63b66e3a84636e014
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 83e8d9c877a7e1c253efb94953758dde141ef23f74c727294c3a9af60db02401e1aef92368908b297bad1fc005d155e6c63bd726ccc48ea831f46cc5c1915633
+    SHA512 e6b36338ddf709641ff20c737927c5f2d1ac6881ebbda2279e5ff436c8756d6c62e9c5d97e3f8156f3b79bd10465485fdb77e7910fc512568d2b4f1b04dc3198
     HEAD_REF master
     PATCHES
-        embed-debug-info.patch
-        pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
-        fix-x86-msvc-amalgamation.patch
+        "${REMOVE_CLI_SANDBOX_PATCH}"
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -32,11 +36,14 @@ vcpkg_list(SET configure_arguments
     "--distribution-info=vcpkg ${TARGET_TRIPLET}"
     --disable-cc-tests
     --with-pkg-config
+    --with-cmake-config
     --link-method=copy
     --with-debug-info
+    --without-include-namespace
     --includedir=include
     --bindir=bin
     --libdir=lib
+    --cmakeconfigdir=share/${PORT}
     --without-documentation
     "--with-external-includedir=${CURRENT_INSTALLED_DIR}/include"
 )
@@ -142,6 +149,13 @@ else()
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         vcpkg_list(APPEND configure_arguments --cc=clang)
     endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_list(APPEND configure_arguments --build-targets=shared,cli)
+    else()
+        vcpkg_list(APPEND configure_arguments --build-targets=static,cli)
+    endif()
+
     # botan's install.py doesn't handle DESTDIR on windows host,
     # so we must avoid the standard '--prefix' and 'DESTDIR' install.
     vcpkg_configure_make(
@@ -170,9 +184,7 @@ else()
     endif()
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Botan-${VERSION}")
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
+vcpkg_cmake_config_fixup()
 
 if(pkgconfig_requires)
     list(JOIN pkgconfig_requires ", " pkgconfig_requires)
@@ -186,7 +198,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/include/botan-3"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

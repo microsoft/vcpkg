@@ -1,0 +1,35 @@
+diff --git a/cmake/SourceFiles.cmake b/cmake/SourceFiles.cmake
+index e4f0c9a1..9db52a9b 100644
+--- a/cmake/SourceFiles.cmake
++++ b/cmake/SourceFiles.cmake
+@@ -59,7 +59,6 @@ set(lslsources
+         src/util/strfuns.hpp
+         src/util/strfuns.cpp
+         src/util/uuid.hpp
+-        thirdparty/loguru/loguru.cpp
+         $<$<BOOL:${LSL_LEGACY_CPP_ABI}>:src/legacy/legacy_abi.cpp src/legacy/legacy_abi.h>
+ )
+ set(lslheaders
+diff --git a/cmake/TargetObjLib.cmake b/cmake/TargetObjLib.cmake
+index bd4f5558..ace4ac6a 100644
+--- a/cmake/TargetObjLib.cmake
++++ b/cmake/TargetObjLib.cmake
+@@ -63,15 +63,9 @@ if(WIN32)
+     endif(BUILD_SHARED_LIBS)
+ endif()
+ 
+-# Link in 3rd party dependencies
+-# - loguru and asio header-only
+-target_include_directories(lslobj
+-    # Note: We use `SYSTEM` to suppress warnings from 3rd party headers and put these at the end of the include path.
+-    # Note: We use `PUBLIC` because 'internal tests' import individual source files and link lslobj.
+-    SYSTEM PUBLIC
+-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/loguru>
+-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/asio>
+-)
++find_package(loguru CONFIG REQUIRED)
++find_package(asio CONFIG REQUIRED)
++target_link_libraries(lslobj PUBLIC loguru::loguru asio::asio)
+ if(NOT LSL_OPTIMIZATIONS)
+     # build one object file for Asio instead of once every time an Asio function is called. See
+     # https://think-async.com/Asio/asio-1.18.2/doc/asio/using.html#asio.using.optional_separate_compilation

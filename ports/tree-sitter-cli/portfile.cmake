@@ -21,7 +21,7 @@ if(key STREQUAL "Linux-arm64" OR VCPKG_TREE_SITTER_UPDATE)
     vcpkg_download_distfile(archive_path
         URLS "https://github.com/tree-sitter/tree-sitter/releases/download/v${VERSION}/tree-sitter-linux-arm64.gz"
         FILENAME "${filename}"
-        SHA512 da03ba55087a13233e014b8034697dad1d0106f676e6e60fc805477cd10e9671af56e3845d49ad692f9f2d0ea33e242c09e526c247ceb5094bb105834381ae35
+        SHA512 aeb55a6ed3e69c11c24cfa9406af2600a519ec5753fc91d173a617ec0c3d19734fdfcd5f45e581abf82da13937e37871d7a8ba2e5d114448df3235e7624e2154
     )
 endif()
 if(key STREQUAL "Linux-x64" OR VCPKG_TREE_SITTER_UPDATE)
@@ -29,7 +29,7 @@ if(key STREQUAL "Linux-x64" OR VCPKG_TREE_SITTER_UPDATE)
     vcpkg_download_distfile(archive_path
         URLS "https://github.com/tree-sitter/tree-sitter/releases/download/v${VERSION}/tree-sitter-linux-x64.gz"
         FILENAME "${filename}"
-        SHA512 86caf799166ad945b8ed4ddf2b48b9d9acb5ae3e5536244f069467f2996da584a7fe23d45edb37ad7e63a7db8be02525971357fa0a7e7868e3136da68567c578
+        SHA512 4d6a52eb1bab7b30d1c366ccfcd51b8bb8dd2e58efd0adca0d7cdaecbaaedac2442b0f8e0a6e05b943349443818ee3e2b18870ab2fda7f4c1839b869161b938c
     )
 endif()
 if(key STREQUAL "Darwin-arm64" OR VCPKG_TREE_SITTER_UPDATE)
@@ -37,7 +37,7 @@ if(key STREQUAL "Darwin-arm64" OR VCPKG_TREE_SITTER_UPDATE)
     vcpkg_download_distfile(archive_path
         URLS "https://github.com/tree-sitter/tree-sitter/releases/download/v${VERSION}/tree-sitter-macos-arm64.gz"
         FILENAME "${filename}"
-        SHA512 3b088390950f48745ea9afc4caea394abaf0ee445530252e6e5a9784a3ea85d7339a664f38cb337e4e6bbb2d3f05189cfa79316c616ee2c25c724e3a068ef4eb
+        SHA512 300e20ef74dcaf6ce41bc31086d0a436448ac397e72c048f885ba5f827f7c664eab45682dbc80c05d08f66a1ca91f10f287054660943ae9a891b464d6b586cd3
     )
     # Avoid breaking the code signature.
     set(VCPKG_FIXUP_MACHO_RPATH OFF)
@@ -47,7 +47,7 @@ if(key STREQUAL "Darwin-x64" OR VCPKG_TREE_SITTER_UPDATE)
     vcpkg_download_distfile(archive_path
         URLS "https://github.com/tree-sitter/tree-sitter/releases/download/v${VERSION}/tree-sitter-macos-x64.gz"
         FILENAME "${filename}"
-        SHA512 b641e8bf21ee66c40f7d9a748fbed3239ac2617be24b0deaf1fdb24e1c9baa5f54bcc9311d4c6a7425cd87032ec9b635deefc62058cbd456839e4e6a52df621a
+        SHA512 e01bec89a91ed704d9f333b767766899f73347572cf3249f57b5172f20026e2b46196ae02f5a3809e1378ded066c3893a43c18b642d0d775a20f80641f623beb
     )
     # Avoid breaking the code signature.
     set(VCPKG_FIXUP_MACHO_RPATH OFF)
@@ -57,7 +57,7 @@ if(key STREQUAL "Windows-arm64" OR VCPKG_TREE_SITTER_UPDATE)
     vcpkg_download_distfile(archive_path
         URLS "https://github.com/tree-sitter/tree-sitter/releases/download/v${VERSION}/tree-sitter-windows-arm64.gz"
         FILENAME "${filename}"
-        SHA512 1d5e78ada1a4fd6f313b1115a97ac3b0e380de190ddbfb4879045cdfc95eefdff9f676aeb53d59ae788f86bf58360cc27c90698e5243ceb25c6b1febec596f1f
+        SHA512 a1cbb94a5fcb7cf1bbb1cbc3427874829269325cc36931f1ddf100d524aade6f75b229709e28ddef47290a50ec9d4a66ff42a5c28803033b8c5c8d48ccc6fe60
     )
 endif()
 if(key STREQUAL "Windows-x64" OR VCPKG_TREE_SITTER_UPDATE)
@@ -65,7 +65,7 @@ if(key STREQUAL "Windows-x64" OR VCPKG_TREE_SITTER_UPDATE)
     vcpkg_download_distfile(archive_path
         URLS "https://github.com/tree-sitter/tree-sitter/releases/download/v${VERSION}/tree-sitter-windows-x64.gz"
         FILENAME "${filename}"
-        SHA512 d59a933adc82818570444e09394d28261a416887d12c5fc11839807f01fcd3719ef982344bb4827ffd5c1b72462ed625520803aff86fd24f4f566873fbd9dcd8
+        SHA512 612bf850788ee635c09aa78e400168e5d7f5a8952c954e4116722127426a1b0e2bd0cdb2c4e04d803ffd03e743c9236b708f6b0779743f549267e6eca66c0bfb
     )
 endif()
 if(NOT archive_path)

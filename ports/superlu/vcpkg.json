@@ -1,6 +1,6 @@
 {
   "name": "superlu",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Supernodal sparse direct solver.",
   "homepage": "https://github.com/xiaoyeli/superlu",
   "license": "BSD-3-Clause-LBNL",

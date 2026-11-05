@@ -1,8 +1,10 @@
+set(VCPKG_BUILD_TYPE release) # header only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-queue
     REF "v${VERSION}"
-    SHA512 f68aefa611905e4f425741e7854caaed6746a4f9a8d9399ef6795881d62308acf758eaecc622ec6e34e942d5cd5a6ddf290975ccb42e0fb2889b1c576cc73559
+    SHA512 427865965798e8d02047f8cc3cda29b7b384e0cc6cebe5d5cd77faca290d6380d494a48dc354740804d53c94227938af684b26b2a3f64f91a288a0be41849b09
     HEAD_REF main
     PATCHES
         slick-shm.patch
@@ -17,7 +19,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME slick-queue
     CONFIG_PATH lib/cmake/slick-queue
 )
 
@@ -36,7 +37,7 @@ file(RENAME
      "${slick_queue_share}/slick_queueConfigVersion.cmake")
 
 # Header-only library - remove lib directory
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

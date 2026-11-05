@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 36b9731..ead5de5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -132,6 +132,8 @@ else()
+   set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${DIME_SO_VERSION}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" SOVERSION ${DIME_SO_VERSION})
+ endif()
+ 
++target_compile_options(${PROJECT_NAME} PRIVATE $<$<CXX_COMPILER_ID:Clang>:-Wno-register>)
++
+ target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CONFIG_H DIME_INTERNAL DIME_DEBUG=$<CONFIG:Debug>)
+ 
+ if(WIN32)

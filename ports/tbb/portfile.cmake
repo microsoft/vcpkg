@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
     REF "v${VERSION}"
-    SHA512 fdc50589785b1949ca1dd4429bbcedb180be4b8966da5243ddd1f8e9f97310dd603681e0bb83c1d6c2d3e27932f577ef6739e4e82f3c54af147f4d6d906b39f1
+    SHA512 4a960b9a8011e30887c71ce6bc7be429d57bc0de22435b5d6c3247e6b3d783c0a053adc6fa189a41076c6e913733bab417456a21d98633cc2f33283e1be58c87
     HEAD_REF master
     PATCHES
 )
@@ -13,12 +13,14 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
-        hwloc TBB_DISABLE_HWLOC_AUTOMATIC_SEARCH)
+        hwloc TBB_DISABLE_HWLOC_AUTOMATIC_SEARCH
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DTCM_BUILD=OFF # Disabled due to platform-specific build issues
         -DTBB_TEST=OFF
         -DTBB_STRICT=OFF
 )

@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-graphite2",
+  "version-string": "ci",
+  "description": "Validates graphite2",
+  "dependencies": [
+    "graphite2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

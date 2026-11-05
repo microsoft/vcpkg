@@ -1,13 +1,13 @@
-# Header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO mackron/miniaudio
   REF "${VERSION}"
-  SHA512 35f64a5888e9d83c6fb5bb3c0bcdce27499f021aa9118b64f03b5fa8b04736547d804d7e37acf9687b203e0e4282b4741971752e5d81f64e82e39a903e76baf6
+  SHA512 5b5031bc41e57c8f46a3a27c240bc69a7e2e3180d914329c0b73122ad7d678a77dfb5e5018042ef36ccd25bf00151802908dc8166c906edbf739029bf6017c29
   HEAD_REF master
 )
 
 file(INSTALL "${SOURCE_PATH}/miniaudio.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

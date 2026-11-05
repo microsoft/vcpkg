@@ -81,17 +81,34 @@ index 1242bba..eba5242 100644
        USE_PKGCONFIG(UNZIP minizip)
      ENDIF()
    ENDIF ()
+@@ -717,9 +715,8 @@ ELSE()
+     SET(DRACO_TESTS OFF CACHE BOOL "" FORCE)
+ 
+-    IF(ASSIMP_HUNTER_ENABLED)
+-      hunter_add_package(draco)
+-      find_package(draco CONFIG REQUIRED)
+-      SET(draco_LIBRARIES draco::draco)
+-    ELSE()
++    IF(1)
++      find_package(draco CONFIG REQUIRED)
++      SET(draco_LIBRARIES draco::draco)
++    ELSE()
+       # Draco 1.4.1 has many warnings and will not build with /WX or -Werror
+       # See https://github.com/google/draco/issues/672
 diff --git a/cmake-modules/assimp-plain-config.cmake.in b/cmake-modules/assimp-plain-config.cmake.in
 index 6551dcb..dd65b0b 100644
 --- a/cmake-modules/assimp-plain-config.cmake.in
 +++ b/cmake-modules/assimp-plain-config.cmake.in
-@@ -1,5 +1,17 @@
+@@ -1,5 +1,20 @@
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
  
 +if(NOT "@BUILD_SHARED_LIBS@")
 +    find_dependency(zip CONFIG)
-+    find_dependency(unofficial-minizip CONFIG)
++    if(@ASSIMP_BUILD_DRACO@)
++        find_dependency(draco CONFIG)
++    endif()
++    find_dependency(minizip CONFIG)
 +    find_dependency(pugixml CONFIG)
 +    find_dependency(poly2tri CONFIG)
 +    find_dependency(polyclipping CONFIG)
@@ -144,6 +161,19 @@ index d3666d5..795f366 100644
  
  #include <iterator>
  #include <memory>
+diff --git a/code/AssetLib/IFC/IFCLoader.cpp b/code/AssetLib/IFC/IFCLoader.cpp
+index 8c1e658..e8155a9 100644
+--- a/code/AssetLib/IFC/IFCLoader.cpp
++++ b/code/AssetLib/IFC/IFCLoader.cpp
+@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #ifdef ASSIMP_USE_HUNTER
+ #include <minizip/unzip.h>
+ #else
+-#include <unzip.h>
++#include <minizip/unzip.h>
+ #endif
+ #endif
+ 
 diff --git a/code/AssetLib/IFC/IFCOpenings.cpp b/code/AssetLib/IFC/IFCOpenings.cpp
 index 068ef40..be116f8 100644
 --- a/code/AssetLib/IFC/IFCOpenings.cpp
@@ -373,7 +403,7 @@ index de2f650..e605bf8 100644
 +      polyclipping::polyclipping
 +      ${OPENDDL_PARSER_LIBRARIES}
 +      poly2tri::poly2tri
-+      unofficial::minizip::minizip
++      $<IF:$<TARGET_EXISTS:MINIZIP::minizip>,MINIZIP::minizip,MINIZIP::minizipstatic>
 +      ZLIB::ZLIB
 +      rapidjson
 +      utf8cpp::utf8cpp

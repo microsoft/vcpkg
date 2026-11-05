@@ -2,22 +2,23 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 f31769a7ed52865165e7db4a03e9378b3376012b7aaf0bbc022aa76c3e999e71c3927e6eb8639d8681e04e33362dd73eafa9e7c62a3c71599ff78da09f5cee0a
+    SHA512 21bf3fbcdfd2f41ea6edeab40433fecfe362b09ecaa177a652471b54f9357011b4f74dab18245ab1c26f1a473b94205490baecb42289afd2effd603cd0b22b59
     HEAD_REF master
     PATCHES
-        0001-create-lib-libraries.patch
-        0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
         0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0013-define-WINVER.patch
-        0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
-        0044-fix-vulkan-debug-callback-abi.patch
         0045-use-prebuilt-bin2c.patch
         0046-fix-msvc-detection.patch
+        0047-fix-msvc-utf8.patch
+        0049-fix-twolame-pkgconfig.patch
+        0050-fix-test-ld-absolute-lib-paths.patch
+        0051-fix-msvc-undef-flags.patch
+        0052-fix-disable-unstable-swscale-link.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -35,11 +36,12 @@ endif()
 set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect")
 
 if(VCPKG_TARGET_IS_MINGW)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         string(APPEND OPTIONS " --target-os=mingw32")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
+    string(APPEND OPTIONS " --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_LINUX)
     string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 elseif(VCPKG_TARGET_IS_UWP)
@@ -54,6 +56,12 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
     string(APPEND OPTIONS " --target-os=android --enable-jni --enable-mediacodec")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "QNX")
     string(APPEND OPTIONS " --target-os=qnx")
+elseif(VCPKG_TARGET_IS_OHOS)
+    # OHOS kernel is Linux/musl; ffmpeg configure has no "ohos" target-os,
+    # so without this it falls back to the host (e.g. darwin) and injects
+    # host-specific LDFLAGS (-Wl,-dynamic,-search_paths_first) that lld rejects,
+    # which also corrupts the memalign/posix_memalign link probes.
+    string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 endif()
 
 if(VCPKG_TARGET_IS_OSX)
@@ -84,6 +92,19 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
+
+    # FFmpeg 9.0 builds a native helper for the unstable AArch64 swscale
+    # backend. Using the target cl.exe as HOSTCC produces an ARM64 executable
+    # that cannot run on the x64 build host. Disable only that unstable backend
+    # for Windows ARM64; 0052 keeps the legacy swscale path linkable.
+    if(VCPKG_HOST_IS_WINDOWS AND VCPKG_DETECTED_MSVC)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            string(APPEND OPTIONS " --disable-unstable")
+        else()
+            string(APPEND OPTIONS " --host-cc=${CC_filename}")
+        endif()
+    endif()
+
     list(APPEND prog_env "${CC_path}")
 endif()
 
@@ -103,7 +124,11 @@ if(VCPKG_DETECTED_CMAKE_RC_COMPILER)
     list(APPEND prog_env "${RC_path}")
 endif()
 
-if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+# A GNU-frontend clang links through the compiler driver (the detected
+# CMAKE_LINKER flags are driver-style, not lld-link-style), so leave
+# configure's default LD=CC in place there.
+if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW
+   AND NOT VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "clang(-[0-9]+)?(\\.exe)?$")
     get_filename_component(LD_path "${VCPKG_DETECTED_CMAKE_LINKER}" DIRECTORY)
     get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
     set(ENV{LD} "${LD_filename}")
@@ -304,6 +329,14 @@ else()
     set(WITH_DAV1D OFF)
 endif()
 
+if("svt-av1" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsvtav1")
+    set(WITH_SVTAV1 ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsvtav1")
+    set(WITH_SVTAV1 OFF)
+endif()
+
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
     set(WITH_AAC ON)
@@ -480,11 +513,7 @@ else()
     set(WITH_SSH OFF)
 endif()
 
-if("tensorflow" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libtensorflow")
-else()
-    set(OPTIONS "${OPTIONS} --disable-libtensorflow")
-endif()
+set(OPTIONS "${OPTIONS} --disable-libtensorflow")
 
 if("tesseract" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libtesseract")
@@ -498,6 +527,14 @@ if("theora" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-libtheora")
     set(WITH_THEORA OFF)
+endif()
+
+if("twolame" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtwolame")
+    set(WITH_TWOLAME ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtwolame")
+    set(WITH_TWOLAME OFF)
 endif()
 
 if("vorbis" IN_LIST FEATURES)
@@ -518,6 +555,8 @@ endif()
 
 if("vulkan" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-vulkan")
+    # configure probes for a glslc executable to compile Vulkan shaders at build time
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc")
 else()
     set(OPTIONS "${OPTIONS} --disable-vulkan")
 endif()
@@ -569,11 +608,11 @@ else()
 endif()
 
 if ("qsv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libmfx --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
-    set(WITH_MFX ON)
+    set(OPTIONS "${OPTIONS} --enable-libvpl --enable-encoder=h264_qsv --enable-decoder=h264_qsv")
+    set(WITH_VPL ON)
 else()
-    set(OPTIONS "${OPTIONS} --disable-libmfx")
-    set(WITH_MFX OFF)
+    set(OPTIONS "${OPTIONS} --disable-libvpl")
+    set(WITH_VPL OFF)
 endif()
 
 if ("vaapi" IN_LIST FEATURES)
@@ -626,6 +665,7 @@ endif()
 if(VCPKG_TARGET_IS_UWP)
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     string(APPEND OPTIONS " --disable-programs")
+    string(APPEND OPTIONS " --disable-filter=gfxcapture")
     string(APPEND OPTIONS " --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
     string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib --extra-ldflags=dxguid.lib")
 endif()
@@ -654,8 +694,15 @@ if (VCPKG_TARGET_IS_IOS)
         set(simulator "-simulator")
     endif ()
 
-    set(OPTIONS "${OPTIONS} --extra-cflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
-    set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
+    if (VCPKG_OSX_ARCHITECTURES)
+        list(JOIN VCPKG_OSX_ARCHITECTURES " " OSX_ARCHS)
+        list(LENGTH VCPKG_OSX_ARCHITECTURES OSX_ARCH_COUNT)
+        set(OPTIONS "${OPTIONS} --extra-cflags=-mios${simulator}-version-min=${vcpkg_osx_deployment_target}")
+        set(OPTIONS "${OPTIONS} --extra-ldflags=-mios${simulator}-version-min=${vcpkg_osx_deployment_target}")
+    else ()
+        set(OPTIONS "${OPTIONS} --extra-cflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
+        set(OPTIONS "${OPTIONS} --extra-ldflags=--target=${vcpkg_target_arch}-apple-ios${vcpkg_osx_deployment_target}${simulator}")
+    endif ()
 
     set(vcpkg_osx_sysroot "${VCPKG_OSX_SYSROOT}")
     # only on x64 for some reason you need to specify the sdk path, otherwise it will try to build with the MacOS sdk
@@ -691,6 +738,18 @@ endif ()
 
 set(OPTIONS_DEBUG "--disable-optimizations --enable-debug")
 set(OPTIONS_RELEASE "--enable-optimizations")
+
+if(VCPKG_DETECTED_MSVC)
+    # Determine base linkage (MT or MD)
+    set(FFMPEG_CRT_PREFIX "-MT")
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(FFMPEG_CRT_PREFIX "-MD")
+    endif()
+    # Append Release flags
+    string(APPEND OPTIONS_RELEASE " --extra-cflags=${FFMPEG_CRT_PREFIX}")
+    # Append Debug flags (adding the 'd' suffix for the debug runtime)
+    string(APPEND OPTIONS_DEBUG " --extra-cflags=${FFMPEG_CRT_PREFIX}d")
+endif()
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
 
@@ -739,10 +798,14 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_C_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
     file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_RELEASE_SANITIZED}")
+    set(cxxrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cxxflags.rsp")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_CXX_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+    file(WRITE "${cxxrsp}" "${VCPKG_COMBINED_CXX_FLAGS_RELEASE_SANITIZED}")
     set(ldrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ldflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
     file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE_SANITIZED}")
     set(ENV{CFLAGS} "@${crsp}")
+    set(ENV{CXXFLAGS} "@${cxxrsp}")
     # All tools except the msvc arm{,64} assembler accept @... as response file syntax.
     # For that assembler, there is no known way to pass in flags. We must hope that not passing flags will work acceptably.
     if(NOT VCPKG_DETECTED_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
@@ -782,10 +845,14 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_C_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
     file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_DEBUG_SANITIZED}")
+    set(cxxrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cxxflags.rsp")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_CXX_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+    file(WRITE "${cxxrsp}" "${VCPKG_COMBINED_CXX_FLAGS_DEBUG_SANITIZED}")
     set(ldrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/ldflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
     file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG_SANITIZED}")
     set(ENV{CFLAGS} "@${crsp}")
+    set(ENV{CXXFLAGS} "@${cxxrsp}")
     if(NOT VCPKG_DETECTED_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()
@@ -826,15 +893,33 @@ if(VCPKG_TARGET_IS_WINDOWS)
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
 
+        # llvm-lib implements the lib.exe interface; use it when building on
+        # a host without the MSVC tools
+        if(CMAKE_HOST_WIN32)
+            set(LIB_TOOL lib.exe)
+        else()
+            find_program(LIB_TOOL NAMES llvm-lib llvm-lib-22 llvm-lib-19 REQUIRED)
+        endif()
         foreach(DEF_FILE ${DEF_FILES})
             get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
             get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
             string(REGEX REPLACE "-[0-9]*\\.def" "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" OUT_FILE_NAME "${DEF_FILE_NAME}")
+            if(NOT CMAKE_HOST_WIN32)
+                # ffmpeg's makedef emits no LIBRARY statement; lib.exe infers the
+                # DLL name from the def filename but llvm-lib leaves it EMPTY,
+                # producing import entries no Windows loader can resolve.
+                get_filename_component(DEF_BASE_NAME "${DEF_FILE}" NAME_WE)
+                file(READ "${DEF_FILE}" DEF_CONTENTS)
+                if(NOT DEF_CONTENTS MATCHES "LIBRARY")
+                    file(WRITE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}" "LIBRARY ${DEF_BASE_NAME}\n${DEF_CONTENTS}")
+                    set(DEF_FILE "${CURRENT_BUILDTREES_DIR}/${DEF_FILE_NAME}")
+                endif()
+            endif()
             file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
             file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
             message(STATUS "Generating ${OUT_FILE_NATIVE}")
             vcpkg_execute_required_process(
-                COMMAND lib.exe "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
+                COMMAND "${LIB_TOOL}" "/def:${DEF_FILE_NATIVE}" "/out:${OUT_FILE_NATIVE}" ${LIB_MACHINE_ARG}
                 WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
                 LOGNAME "libconvert-${TARGET_TRIPLET}"
             )
@@ -1030,4 +1115,8 @@ you may need to add the following link option for your library:
 ")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/${LICENSE_FILE}"
+        "${SOURCE_PATH}/LICENSE.md"
+)

@@ -2,11 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 "cc52f70be7ce34989be4fbdf172ed90b65978986de2e8b97c77d3a04bfc4fa79738b15a7adb71c1fa980e1f1ab8336022594a1032e91d9102bcb66d36ced62a9"
+    SHA512 2f036908fc96650fcec0810c05cf7fbad08f7c47a27aa7951b25e4bc1f390eb47223eaeaf622715bf2df6bd056e7f245502a3af57e606fd53d214c121a862a7e
     HEAD_REF master
     PATCHES
         dependencies.patch
+        android-cpu-features.patch
         ffmpeg.diff
+        fix-aom-target.patch
+        fix-cjson-config.patch
+        fix-windows-pkgconfig.patch
         install-layout.patch
         windows-linkage.patch
 )
@@ -19,6 +23,8 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        av1         WITH_AOM
+        av1         WITH_GFX_AV1
         client      WITH_CLIENT
         ffmpeg      WITH_DSP_FFMPEG
         ffmpeg      WITH_FFMPEG
@@ -76,6 +82,7 @@ vcpkg_cmake_configure(
         -DWITH_MANPAGES=OFF
         -DWITH_OPENSSL=ON
         -DWITH_SAMPLE=OFF
+        -DWITH_SNDIO=OFF
         -DWITH_UNICODE_BUILTIN=ON
         "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
@@ -91,7 +98,7 @@ vcpkg_cmake_configure(
         -DWITH_CUPS=OFF
         -DWITH_FUSE=OFF
         -DWITH_KRB5=OFF
-        -DWITH_LIBSYSTEMD=OFF
+        -DWITH_SYSTEMD=OFF
         -DWITH_OPUS=OFF
         -DWITH_OSS=OFF
         -DWITH_PCSC=OFF
@@ -106,6 +113,7 @@ vcpkg_cmake_configure(
         USE_UNWIND
         VCPKG_LOCK_FIND_PACKAGE_X11
         WITH_CLIENT_WINDOWS
+        WITH_SNDIO
 )
 
 vcpkg_cmake_install()
@@ -124,7 +132,6 @@ if("server" IN_LIST FEATURES)
         vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
         list(APPEND tools freerdp-shadow-cli)
     endif()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdtk0 PACKAGE_NAME rdtk0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 if("winpr-tools" IN_LIST FEATURES)
     list(APPEND tools winpr-hash winpr-makecert)
@@ -142,10 +149,13 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/winpr3/winpr/build-config.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # They build static with dllexport, so it must be used with dllexport. Proper fix needs invasive patching.
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
-    if(WITH_SERVER)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rdtk0/rdtk/api.h" "#ifdef RDTK_EXPORTS" "#if 1")
-    endif()
 endif()
+
+file(COPY
+    "${CURRENT_PACKAGES_DIR}/include/freerdp3/"
+    "${CURRENT_PACKAGES_DIR}/include/winpr3/"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
 
 file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
 file(REMOVE_RECURSE
@@ -155,4 +165,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/channels/audin/client/opensles/opensl_io.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md4.c"
+        "${SOURCE_PATH}/winpr/libwinpr/crypto/md5.c"
+)

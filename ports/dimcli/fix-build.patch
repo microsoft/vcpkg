@@ -1,0 +1,26 @@
+diff --git a/libs/dimcli/cli.h b/libs/dimcli/cli.h
+index 5fe5f5b..b5c649d 100644
+--- a/libs/dimcli/cli.h
++++ b/libs/dimcli/cli.h
+@@ -29,6 +29,7 @@
+ #include "cppconf/dimcli_userconfig.h"
+ #endif
+ #endif
++#include <algorithm>
+ 
+ //---------------------------------------------------------------------------
+ // Configuration of this installation, these are options that must be the
+@@ -1264,10 +1265,10 @@ void Cli::addAction(
+     auto where = std::upper_bound(
+         actions.begin(),
+         actions.end(),
+-        priority,
+-        [](int priority, auto && iter) {
++        std::pair<std::function<Fn>, int>{{}, priority},
++        [](auto && priority, auto && iter) {
+             // stable sort, numerically highest priority first
+-            return priority > iter.second;
++            return priority.second > iter.second;
+         }
+     );
+     actions.insert(where, std::make_pair(std::move(fn), priority));

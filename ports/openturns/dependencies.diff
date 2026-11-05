@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e2f0f5b..61cc8b9 100644
+index b424686..cd7fb81 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -128,6 +128,12 @@ if (NOT DEFINED LAPACK_LIBRARIES)
+@@ -72,6 +72,12 @@ if (NOT DEFINED LAPACK_LIBRARIES)
  endif ()
  list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${LAPACK_LIBRARIES})
  
@@ -15,26 +15,16 @@ index e2f0f5b..61cc8b9 100644
  if (USE_SPECTRA)
    find_package (Spectra 1.0 CONFIG)
  endif ()
-@@ -183,7 +189,8 @@ if (TBB_FOUND)
+@@ -147,6 +153,8 @@ if (muparser_FOUND)
  endif ()
  
- if (USE_MUPARSER)
--  find_package (muParser 2.2.3 QUIET)
-+  find_package (MUPARSER NAMES muparser REQUIRED)
-+  set(MUPARSER_LIBRARIES muparser::muparser)
- endif ()
- if (MUPARSER_FOUND)
-   set (OPENTURNS_HAVE_MUPARSER TRUE)
-@@ -194,6 +201,8 @@ if (MUPARSER_FOUND)
-   set (SYMBOLICPARSER_DEFAULT_BACKEND MuParser)
- endif ()
  if (USE_EXPRTK)
 +  find_path(EXPRTK_INCLUDE_DIRS "exprtk.hpp" REQUIRED)
 +  list(APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${EXPRTK_INCLUDE_DIRS})
    set (OPENTURNS_HAVE_EXPRTK TRUE)
    set (OPENTURNS_HAVE_ANALYTICAL_PARSER TRUE)
    set (SYMBOLICPARSER_DEFAULT_BACKEND ExprTk)
-@@ -262,7 +271,9 @@ if (USE_BOOST)
+@@ -211,7 +219,9 @@ if (USE_BOOST)
        endif ()
      endif ()
      if (USE_MPFR)
@@ -45,18 +35,54 @@ index e2f0f5b..61cc8b9 100644
        if (MPFR_FOUND)
          set (OPENTURNS_HAVE_MPFR TRUE)
          list (APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${MPFR_INCLUDE_DIRS})
-@@ -435,9 +446,8 @@ check_include_file (dlfcn.h       OPENTURNS_HAVE_DLFCN_H      )
+@@ -260,8 +270,8 @@ if (USE_CERES)
+     set (Ceres_FOUND FALSE)
+   endif ()
+   if (Ceres_FOUND AND "SuiteSparse" IN_LIST CERES_COMPILED_COMPONENTS)
+-    message (STATUS "Ceres was built with SuiteSparse GPL components, disabling.")
+-    set (Ceres_FOUND FALSE)
++    # https://github.com/openturns/openturns/issues/3170
++    message (WARNING "Ceres was built with SuiteSparse GPL components.")
+   endif ()
+   if (Ceres_FOUND)
+     set (OPENTURNS_HAVE_CERES TRUE)
+@@ -547,6 +557,36 @@ set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
  
- include (CheckFunctionExists)
- if (OPENTURNS_HAVE_DLFCN_H AND UNIX)
--  find_library (LIBDL_LIBRARIES NAMES dl)
--  mark_as_advanced (LIBDL_LIBRARIES)
--  if (LIBDL_LIBRARIES)
-+  set(LIBDL_LIBRARIES "${CMAKE_DL_LIBS}")
-+  if(1)
-     set (CMAKE_REQUIRED_LIBRARIES ${LIBDL_LIBRARIES})
-     check_function_exists (dladdr OPENTURNS_HAVE_DLADDR)
-     set (CMAKE_REQUIRED_LIBRARIES)
+ set (OPENTURNS_SWIG_INCLUDE_DIRS ${INCLUDE_PATH}/openturns/swig)
+ 
++# Subdirs and OpenTURNSConfig.cmake.in rely on <Pkg>_FOUND variables.
++# Force strict control of *direct* dependencies via USE_<PKG>
++# *and* catch new USE_<PKG> variables during port updates.
++get_directory_property(vars_to_check CACHE_VARIABLES)
++list(FILTER vars_to_check INCLUDE REGEX "^USE_")
++list(REMOVE_ITEM vars_to_check
++  USE_EXPRTK        # find_path
++  USE_EXTERNAL_LIBS # special
++  USE_MPFR          # pkgconfig
++  USE_SPHINX        # find_program
++  USE_OPENBLAS      # disables OpenBLAS threading when TBB is active and LAPACK uses OpenBLAS 
++)
++foreach(package IN ITEMS Bonmin Boost Ceres CMinpack Cuba dlib Eigen3 HDF5 highs HMAT Ipopt LibXml2
++                         MPC muparser nanoflann NLopt OpenMP Pagmo primesieve Spectra TBB)
++  set(package_found_var "${package}_FOUND")
++  string(TOUPPER "USE_${package}" use_package_var)
++  string(REPLACE "USE_EIGEN3" "USE_SPECTRA" use_package_var "${use_package_var}")
++  if(NOT "${${use_package_var}}")
++    set("${package_found_var}" FALSE) # no accidental use
++  elseif(NOT DEFINED "${package_found_var}")
++    message(SEND_ERROR "${use_package_var} was set to ${${use_package_var}}, but ${package_found_var} is not set.")
++  elseif(NOT "${${package_found_var}}")
++    message(SEND_ERROR "${use_package_var} was set to ${${use_package_var}}, but ${package} was not found.")
++  endif()
++  list(REMOVE_ITEM vars_to_check "${use_package_var}")
++endforeach()
++if(vars_to_check)
++  message(SEND_ERROR "New input variables must be integrated into the check: ${vars_to_check}")
++endif()
++
+ add_subdirectory (lib)
+ 
+ if (Python_FOUND AND SWIG_FOUND)
 diff --git a/LICENSE b/LICENSE
 index 2bd2cde..3148f78 100644
 --- a/LICENSE
@@ -74,32 +100,28 @@ index 2bd2cde..3148f78 100644
  - Gauss Legendre quadrature from FastGL library (lib/src/Base/Algo/fastgl*) under BSD license, see COPYING.fastGL
 -- Rapidcsv parser library (lib/src/Base/Stat/rapidcsv.h) under BSD license, see COPYING.rapidcsv
 diff --git a/lib/OpenTURNSConfig.cmake.in b/lib/OpenTURNSConfig.cmake.in
-index 096490b..307faaa 100644
+index bce893e..a74da31 100644
 --- a/lib/OpenTURNSConfig.cmake.in
 +++ b/lib/OpenTURNSConfig.cmake.in
-@@ -47,7 +47,7 @@ set_and_check ( OPENTURNS_INCLUDE_DIR        "@PACKAGE_OPENTURNS_INCLUDE_DIR@" )
- set ( OPENTURNS_INCLUDE_DIRS "@PACKAGE_OPENTURNS_INCLUDE_DIRS@" )
- set ( OPENTURNS_LIBRARY      "@OPENTURNS_LIBRARY@" )
- set ( OPENTURNS_LIBRARIES    "@OPENTURNS_LIBRARIES@" )
--set ( OPENTURNS_LIBRARY_DIRS "@PACKAGE_OPENTURNS_LIBRARY_DIRS@" )
-+set ( OPENTURNS_LIBRARY_DIRS "" )
- set_and_check ( OPENTURNS_ROOT_DIR   "@PACKAGE_OPENTURNS_ROOT_DIR@" )
+@@ -44,7 +44,7 @@ set_and_check (OPENTURNS_INCLUDE_DIR "@PACKAGE_OPENTURNS_INCLUDE_DIR@")
+ set (OPENTURNS_INCLUDE_DIRS "@PACKAGE_OPENTURNS_INCLUDE_DIRS@")
+ set (OPENTURNS_LIBRARY      "@OPENTURNS_LIBRARY@")
+ set (OPENTURNS_LIBRARIES    "@OPENTURNS_LIBRARIES@")
+-set (OPENTURNS_LIBRARY_DIRS "@PACKAGE_OPENTURNS_LIBRARY_DIRS@")
++set (OPENTURNS_LIBRARY_DIRS "")
+ set_and_check (OPENTURNS_ROOT_DIR "@PACKAGE_OPENTURNS_ROOT_DIR@")
  
- set ( OPENTURNS_VERSION_STRING "@OPENTURNS_VERSION_STRING@" )
-@@ -62,6 +62,11 @@ set (OPENTURNS_PYTHON_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
+ set (OPENTURNS_VERSION_STRING "@OPENTURNS_VERSION_STRING@")
+@@ -59,6 +59,7 @@ set (OPENTURNS_PYTHON_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
  # static libraries dependencies are transitive so imported targets must be defined
  if (NOT @BUILD_SHARED_LIBS@)
-   include(CMakeFindDependencyMacro)
+   include (CMakeFindDependencyMacro)
 +  find_dependency(kissfft CONFIG)
-+  find_dependency(nanoflann CONFIG)
-+  if("@MUPARSER_FOUND@")
-+    find_dependency(muparser CONFIG)
-+  endif()
  
-   if ("1" STREQUAL "@Ceres_FOUND@")
-     find_dependency(Ceres CONFIG)
+   if ("@Boost_FOUND@")
+     find_dependency (Boost CONFIG QUIET)
 diff --git a/lib/src/Base/Func/SymbolicParserExprTk.cxx b/lib/src/Base/Func/SymbolicParserExprTk.cxx
-index 38e818b..8f926da 100644
+index bb8b95d..19427f6 100644
 --- a/lib/src/Base/Func/SymbolicParserExprTk.cxx
 +++ b/lib/src/Base/Func/SymbolicParserExprTk.cxx
 @@ -27,7 +27,7 @@

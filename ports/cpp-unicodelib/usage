@@ -1,0 +1,7 @@
+cpp-unicodelib is header-only and can be used from CMake via:
+
+    find_path(CPP_UNICODELIB_INCLUDE_DIRS "unicodelib.h")
+    target_include_directories(main PRIVATE ${CPP_UNICODELIB_INCLUDE_DIRS})
+
+unicodelib.h contains non-ASCII UTF-8 encoded source characters, so consumers
+building with MSVC must compile with the /utf-8 flag.

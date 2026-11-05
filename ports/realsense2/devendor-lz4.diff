@@ -1,3 +1,17 @@
+diff --git a/CMake/realsense2Config.cmake.in b/CMake/realsense2Config.cmake.in
+index 4b9b2b1..ce067e6 100644
+--- a/CMake/realsense2Config.cmake.in
++++ b/CMake/realsense2Config.cmake.in
+@@ -4,6 +4,9 @@
+ 
+ @REALSENSE2_JSON_DEPENDENCIES@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(lz4 CONFIG REQUIRED)
++
+ set(realsense2_VERSION_MAJOR "@REALSENSE_VERSION_MAJOR@")
+ set(realsense2_VERSION_MINOR "@REALSENSE_VERSION_MINOR@")
+ set(realsense2_VERSION_PATCH "@REALSENSE_VERSION_PATCH@")
 diff --git a/third-party/realsense-file/rosbag/roslz4/include/roslz4/lz4s.h b/third-party/realsense-file/rosbag/roslz4/include/roslz4/lz4s.h
 index 30dce1a..6d8dd27 100644
 --- a/third-party/realsense-file/rosbag/roslz4/include/roslz4/lz4s.h
@@ -11,23 +25,3 @@ index 30dce1a..6d8dd27 100644
  
  #ifdef __cplusplus
  extern "C" {
-diff --git a/tools/embed/CMakeLists.txt b/tools/embed/CMakeLists.txt
-index 77b1b9b..4fd9aa1 100644
---- a/tools/embed/CMakeLists.txt
-+++ b/tools/embed/CMakeLists.txt
-@@ -10,13 +10,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
- 
- add_executable(rs-embed
-    rs-embed.cpp
--   ${LZ4_DIR}/lz4.h
--   ${LZ4_DIR}/lz4.c
- )
- 
- set_property(TARGET rs-embed PROPERTY CXX_STANDARD 11)
- 
--include_directories(rs-embed ${LZ4_DIR} ../../third-party)
-+find_package(lz4 CONFIG REQUIRED)
-+target_link_libraries(rs-embed PRIVATE lz4::lz4)
- target_link_libraries( rs-embed PRIVATE tclap )
- set_target_properties (rs-embed PROPERTIES FOLDER Tools)
- 

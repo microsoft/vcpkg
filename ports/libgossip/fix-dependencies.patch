@@ -1,28 +1,40 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5d6f2f9..fd8d384 100644
+index 0f19760..1eaca89 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -30,7 +30,7 @@ add_library(libgossip ${LIBGOSSIP_CORE_SRC})
- add_library(libgossip::core ALIAS libgossip)
- 
+@@ -66,7 +66,7 @@ add_library(libgossip::core ALIAS libgossip)
+ # ============================================
  # Handle ASIO dependency
+ # ============================================
 -setup_bundled_asio()
 +find_package(asio CONFIG REQUIRED)
  
+ # ============================================
  # Network library
- set(LIBGOSSIP_NET_SRC src/net/udp_transport.cpp src/net/tcp_transport.cpp
-@@ -41,10 +41,10 @@ add_library(libgossip_net ${LIBGOSSIP_NET_SRC})
- add_library(libgossip::network ALIAS libgossip_net)
- 
- # Find and link ASIO
+@@ -82,10 +82,10 @@ add_library(libgossip::network ALIAS libgossip_net)
+ # ============================================
+ # ASIO dependency
+ # ============================================
 -if(ASIO_FOUND)
--  target_include_directories(
--    libgossip_net PUBLIC $<BUILD_INTERFACE:${ASIO_INCLUDE_DIR}>
--                         $<INSTALL_INTERFACE:include>)
+-    target_include_directories(
+-        libgossip_net PUBLIC $<BUILD_INTERFACE:${ASIO_INCLUDE_DIR}>
+-                             $<INSTALL_INTERFACE:include>)
 +if(1)
 +  target_link_libraries(
 +    libgossip_net PUBLIC $<BUILD_INTERFACE:asio::asio>
 +  )
  else()
-   message(FATAL_ERROR "ASIO is required for the network library")
+     message(FATAL_ERROR 
+         "ASIO is required for the network library but was not found.\n"
+@@ -104,9 +104,8 @@ elseif(NOT LIBGOSSIP_VCPKG_MODE)
+         "Please run: cd third_party && git clone --depth 1 --branch v3.11.2 https://github.com/nlohmann/json.git\n"
+         "Or install nlohmann-json via your package manager.")
+ else()
+-    message(FATAL_ERROR 
+-        "nlohmann/json not found.\n"
+-        "In VCPKG mode, please ensure nlohmann-json is installed via vcpkg.")
++    find_package(nlohmann_json CONFIG REQUIRED)
++    target_link_libraries(libgossip_net PUBLIC nlohmann_json::nlohmann_json)
  endif()
+ 
+ target_link_libraries(libgossip_net PUBLIC libgossip)

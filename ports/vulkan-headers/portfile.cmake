@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Headers
     REF "vulkan-sdk-${VERSION}"
-    SHA512 1ec6aabf2267137dfe661fdc36bc25cc44b7c3ac3c6f0bbd8a1a1f5da30619e244ebfb905620c30002b914525d37ac7933f5a7dfd10117888f66d7c1b129612f
+    SHA512 262e4fabdcea0e13c18aac831b2ad6d99d17c83ae0e740d658792a5f48985befe128e9cd6e69309b21580eda17aecf564359379344300bf2a352a95830f9f944
     HEAD_REF main
 )
 
@@ -15,5 +15,9 @@ vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_cmake_install()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.md"
+    "${SOURCE_PATH}/LICENSES/Apache-2.0.txt"
+    "${SOURCE_PATH}/LICENSES/MIT.txt"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

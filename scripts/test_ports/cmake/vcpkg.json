@@ -5,7 +5,6 @@
   "homepage": "https://cmake.org/",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "cppdap",
     {
       "name": "curl",
       "default-features": false
@@ -32,7 +31,8 @@
       "default-features": false,
       "features": [
         "widgets"
-      ]
+      ],
+      "platform": "!(arm & linux)"
     },
     "rhash",
     {

@@ -1,6 +1,7 @@
 {
   "name": "coinutils",
   "version-date": "2024-04-08",
+  "port-version": 1,
   "description": "CoinUtils (Coin-or Utilities) is an open-source collection of classes and functions that are generally useful to more than one COIN-OR project",
   "homepage": "https://www.coin-or.org/",
   "license": "EPL-2.0",
@@ -9,6 +10,10 @@
     "bzip2",
     "coin-or-buildtools",
     "lapack",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "zlib"
   ],
   "features": {

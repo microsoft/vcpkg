@@ -1,18 +1,34 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3a2434c..ae2b342 100644
+index 387fc02..a16af04 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -13,7 +13,6 @@ option(coco_exceptions "Enable exception support (Respects -fno-exceptions even
+@@ -1,5 +1,5 @@
+ cmake_minimum_required(VERSION 3.25)
+-project(coco LANGUAGES CXX VERSION 4.7.1)
++project(coco LANGUAGES CXX VERSION 4.7.2)
+ 
+ # +-------------------------------------------------------------------------------------------------------+
+ # | Library Options                                                                                       |
+@@ -14,7 +14,6 @@ option(coco_exceptions "Enable exception support (Respects -fno-exceptions even
  # +-------------------------------------------------------------------------------------------------------+
  
- add_library(${PROJECT_NAME} STATIC "src/latch.cpp" "src/stray.cpp")
+ add_library(${PROJECT_NAME} STATIC "src/latch.cpp" "src/stray.cpp" "src/courier.cpp")
 -add_library(cr::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
  
  target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
  set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20 CXX_EXTENSIONS OFF CXX_STANDARD_REQUIRED ON)
-@@ -50,13 +49,7 @@ endif()
- # | Package Config                                                                                        |
+@@ -33,7 +32,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE "include/coco")
+ 
+ target_include_directories(
+   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+-                         $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
++                         $<INSTALL_INTERFACE:include>
+ )
+ 
  # +-------------------------------------------------------------------------------------------------------+
+@@ -55,13 +54,7 @@ if (NOT coco_install)
+   return()
+ endif()
  
 -include("cmake/cpm.cmake")
 -
@@ -25,3 +41,12 @@ index 3a2434c..ae2b342 100644
  
  packageProject(
    NAMESPACE cr
+@@ -69,5 +62,7 @@ packageProject(
+   VERSION ${PROJECT_VERSION}
+   BINARY_DIR ${PROJECT_BINARY_DIR}
+   INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include
+-  INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
++  INCLUDE_DESTINATION include
++  DISABLE_VERSION_SUFFIX YES
++  RUNTIME_DESTINATION "."
+ )

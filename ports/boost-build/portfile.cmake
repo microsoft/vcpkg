@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${VERSION}
-    SHA512 7244e0e775b20bd8ed48d7da6c4bcaa529743b4f5a2eae65ac0b743491efe32820f8d4ec9dc6d6408c899e217c28712713239af7ec881a6405d818af936da050
+    SHA512 aa08fd8d9648f0f7f4b3117600c75e49910c8bce909111c5aafd18821adb9d5d1cb77bf1d9b1212cd3935c1c6d269e925e2cd665c64f5bf17f0b21b48b678642
     HEAD_REF master
     PATCHES
         0001-fix-get-version.patch

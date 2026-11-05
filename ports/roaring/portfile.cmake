@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RoaringBitmap/CRoaring
     REF "v${VERSION}"
-    SHA512 201e769de027d7cb467d27f756013a4ce4fd8cff82a2048efa0a4b177ea633ca7a4b8a8c53dd22d03883f25275394cd22dfac57d87ed06486ac8c4b5998b4d0f
+    SHA512 422deae76cde76732040a25938689eeccc177c9aa94aaf2faafbd4439a0d4c26ae9008dd4e9f8946495c5d35f72a17419383e12ed1795aec2d90a3b021ff17e7
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DROARING_BUILD_STATIC=${ROARING_BUILD_STATIC}
         -DENABLE_ROARING_TESTS=OFF
+        -DROARING_USE_CPM=OFF
 )
 
 vcpkg_cmake_install()
@@ -26,4 +27,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+  "${SOURCE_PATH}/LICENSE"
+  "${SOURCE_PATH}/src/isadetection.c"
+)

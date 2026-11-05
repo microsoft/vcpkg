@@ -1,11 +1,18 @@
+vcpkg_download_distfile(FIX_CPP17_HEADERS
+    URLS https://github.com/assimp/assimp/commit/9a486a72e43f92222969bfac7054554f97dd253f.patch?full_index=1
+    SHA512 209d79e2366567cc8090e06684ef2da795a317c81d17694590e95051a62123219ab9b700bd0640e5ae0dd0d8bb9d8c9377dadc9168f08968d3b970244dbdc353
+    FILENAME assimp_pr_6627.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
     REF "v${VERSION}"
-    SHA512 f3639e3964ea8ef41ce684eb1b764ece79f64a15ecae068846c5bc0853780e39f600776027d8843e6a3f47988daf067a164161a58f76ec6de13027ae1e473bfb
+    SHA512 57326194bf3a8e2ae793c739878231067fdd6d031531e910d4d20fc8a673eacf48f75e11bd21ca2e6421682f78585d445bffb647bdcb52e01b2cd4d3ff0e2c62
     HEAD_REF master
     PATCHES
         build_fixes.patch
+        "${FIX_CPP17_HEADERS}"
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake-modules/FindZLIB.cmake")
@@ -27,6 +34,11 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/zlib")
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        draco   ASSIMP_BUILD_DRACO
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -37,6 +49,7 @@ vcpkg_cmake_configure(
         -DASSIMP_WARNINGS_AS_ERRORS=OFF
         -DASSIMP_IGNORE_GIT_HASH=ON
         -DASSIMP_INSTALL_PDB=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -45,7 +58,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/assimp")
 vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCVER vc140 vc141 vc142 vc143)
+    set(VCVER vc140 vc141 vc142 vc143 vc145)
     set(CRT mt md)
     set(DBG_NAMES)
     set(REL_NAMES)
@@ -71,7 +84,10 @@ if(ASSIMP_DBG)
 endif()
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
+    set(assimp_PC_REQUIRES "polyclipping pugixml minizip")
+    if("draco" IN_LIST FEATURES)
+        string(APPEND assimp_PC_REQUIRES " draco")
+    endif()
     set(assimp_LIBS_REQUIRES "-lpoly2tri")
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "Libs:" "Requires.private: ${assimp_PC_REQUIRES}\nLibs:")
@@ -87,4 +103,11 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/contrib/earcut-hpp/LICENSE"
+        "${SOURCE_PATH}/contrib/openddlparser/LICENSE"
+        "${SOURCE_PATH}/contrib/Open3DGC/o3dgcCommon.h"
+        "${SOURCE_PATH}/contrib/Open3DGC/o3dgcArithmeticCodec.cpp"
+)

@@ -8,10 +8,12 @@ vcpkg_from_github(
     HEAD_REF dev
     PATCHES
         0001-use-local-packages.patch
+        0002-fix-glaze-opts.patch
+        0003-fix-fmt-header.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH} 
+    SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -Dsaucer_no_polyfill=ON

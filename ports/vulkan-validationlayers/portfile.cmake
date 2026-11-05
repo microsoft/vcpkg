@@ -4,10 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-ValidationLayers
     REF "vulkan-sdk-${VERSION}"
-    SHA512 5088bfb212595d5c1bd052f3e2e7d52ffa1c329625576116876a248daba51c9ba86297ebf8ffb6bd1e8f78bf161409a603aa4d145032664623292d53ed541514
+    SHA512 00e8429e5f9d4c6a20f99591c1f7964eec3ce48fa56b258961df3704394ae202e755078eb0f6766e134462493d7de62db8140bbe6ff8eadf3af9f9b8122ac1c8
     HEAD_REF main
     PATCHES
         disable_vendored_phmap.diff
+        disable-ltcg-on-x86.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/layers/external/parallel_hashmap") # ensure that we use vcpkg's parallel-hashmap instead of upstream's vendored copy
@@ -20,6 +21,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBUILD_TESTS:BOOL=OFF
+    -DUPDATE_DEPS:BOOL=OFF
 )
 vcpkg_cmake_install()
 

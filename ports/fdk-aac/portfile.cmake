@@ -13,6 +13,8 @@ if(HE_AAC)
         OUT_SOURCE_PATH SOURCE_PATH
         PATCHES
             cxx-linkage-pkgconfig.patch
+            # https://github.com/mstorsjo/fdk-aac/commit/1844f0170c8917fe3cd09d662f171908042c0c9c
+            fix-android.patch
     )
 else()
     list(PREPEND legal_notes "README.fedora")

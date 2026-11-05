@@ -1,13 +1,18 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_colony
-    REF d0f4a9306237cc0b030a7ae981b52b6fa83dc788  # v7.6.01
-    SHA512 9553d6db71b67d5e1a13a7b14c61b69e1f76c313eda3061f92679f787f3fd0158468304c34633a84976213d0674ce4d93449f6f091a4047b652e27ae52b1e608
+    REF 207cfda6168e866e64fdc015a2aced8000c3af66
+    SHA512 c58fdf8af149a6cda0d0f8b584e2fe21496101c6015a34fdaa98b86e281e0cc58b99e23dc72f6108314959a7a59578a8557dd80844777264a10241a1444dae34
     HEAD_REF master
 )
 
+# Do not copy "plf_tools.h" and "plf_tools_undef.h" here - they get installed
+# via plf-tools to avoid conflicts other ports of the same maintainer
 file(COPY "${SOURCE_PATH}/plf_colony.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.md"
+)

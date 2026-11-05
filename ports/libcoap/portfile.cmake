@@ -3,21 +3,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_download_distfile(DLLEXPORT_PATCH
-    URLS https://github.com/obgm/libcoap/commit/0bd03b658ed2d75fdb7cb8f6add201b39b428298.patch?full_index=1
-    FILENAME obgm-remove-self-configure-file-0bd03b658ed2d75fdb7cb8f6add201b39b428298.patch
-    SHA512 6c120dc278a5d73d0b9bd2f66468c822ccde80513262201119cdceb9ed6fdf2f84d473926373f18ef69d709d4e95212e484079072a52d5c65d09e4ccb82368e5
-)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO obgm/libcoap
   REF "v${VERSION}"
-  SHA512 9f46f8293e0cfd2c6c3300693ffc8de1c2217f1cad4cd05e59ea6b6995f42d5d31ea02d4fadddd9b071f711cf651b711c2a26e4b826244fc80e014ed66f368a7
+  SHA512 b8fc435412cd1909bc9ba5683cfa138a3ea08a76fecab78739ceedc7bb903d15d50d4362f702f7380fd047e5b6df3c76dfb75dd30bb20670a62205e6bc85021d
   HEAD_REF main
   PATCHES
-      "${DLLEXPORT_PATCH}"
-      remove-hardcoded-tinydtls-path.patch)
+      obgm-remove-self-configure-file.patch # https://github.com/obgm/libcoap/pull/1736
+      remove-hardcoded-tinydtls-path.patch
+)
 
 vcpkg_check_features(
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS

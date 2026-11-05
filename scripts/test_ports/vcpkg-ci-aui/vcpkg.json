@@ -1,0 +1,16 @@
+{
+  "name": "vcpkg-ci-aui",
+  "version-string": "ci",
+  "description": "Validates aui",
+  "dependencies": [
+    "aui",
+    {
+      "name": "aui-toolbox",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

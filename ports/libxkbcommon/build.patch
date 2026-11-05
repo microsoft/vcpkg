@@ -1,9 +1,24 @@
+diff --git a/src/x11/keymap.c b/src/x11/keymap.c
+index 541ed217..c090ce2b 100644
+--- a/src/x11/keymap.c
++++ b/src/x11/keymap.c
+@@ -8,8 +8,10 @@
+ #include <assert.h>
+ 
+ #include "xkbcommon/xkbcommon.h"
++#ifndef _WIN32
+ #include "atom.h"
+ #include "keymap.h"
++#endif
+ #include "x11-priv.h"
+ 
+ /*
 diff --git a/tools/how-to-type.c b/tools/how-to-type.c
-index 72aea1b..783373a 100644
+index de170ace..9e5194ba 100644
 --- a/tools/how-to-type.c
 +++ b/tools/how-to-type.c
-@@ -26,7 +26,9 @@
- #include <getopt.h>
+@@ -9,7 +9,9 @@
+ #include <locale.h>
  #include <stdbool.h>
  #include <stdlib.h>
 +#ifdef HAVE_UNISTD_H
@@ -12,15 +27,3 @@ index 72aea1b..783373a 100644
  #include <errno.h>
  
  #include "xkbcommon/xkbcommon.h"
-diff --git a/tools/tools-common.c b/tools/tools-common.c
-index 8eb3f4b..8b22307 100644
---- a/tools/tools-common.c
-+++ b/tools/tools-common.c
-@@ -42,6 +42,7 @@
- #ifdef _WIN32
- #include <io.h>
- #include <windows.h>
-+#include <process.h>
- #else
- #include <unistd.h>
- #include <termios.h>

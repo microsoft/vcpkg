@@ -1,13 +1,13 @@
 diff --git a/meson.build b/meson.build
-index 8206d36..095e024 100644
+index e8b4d39..e613b48 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -578,7 +578,7 @@ if build_docs
+@@ -611,7 +611,7 @@ if build_docs or build_gi_docgen
  endif
  subdir('bin')
  
--if not platform_win32 and not platform_osx
+-if host_machine.system() != 'emscripten'
 +if false
-   # Verify .def files for Windows.
-   # Ironically we only check this on non-Windows platform, since the
-   # script expects .so libraries, and I'm not sure that the `nm` tool is
+   nm = find_program('nm', required: false)
+ 
+   # Verify .def files for Windows linking (and for macOS too when -Wl,-exported_symbols_list is used).

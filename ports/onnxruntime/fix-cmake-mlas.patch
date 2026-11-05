@@ -1,0 +1,38 @@
+diff --git a/cmake/onnxruntime_mlas.cmake b/cmake/onnxruntime_mlas.cmake
+index 02168b4..1f92501 100644
+--- a/cmake/onnxruntime_mlas.cmake
++++ b/cmake/onnxruntime_mlas.cmake
+@@ -367,6 +367,7 @@ function(setup_mlas_source_for_windows)
+ endfunction()
+ 
+ function(setup_kleidiai)
++  find_package(KleidiAI CONFIG REQUIRED)
+   target_sources(onnxruntime_mlas PRIVATE
+     ${MLAS_SRC_DIR}/kleidiai/kai_ukernel_interface.cpp
+     ${MLAS_SRC_DIR}/kleidiai/sgemm_kleidiai.cpp
+@@ -377,8 +378,8 @@ function(setup_kleidiai)
+     ${MLAS_SRC_DIR}/kleidiai/qgemm_kleidiai.cpp
+     ${MLAS_SRC_DIR}/kleidiai/qnbitgemm_kleidiai.cpp
+   )
+-  target_link_libraries(onnxruntime_mlas PRIVATE kleidiai)
+-  list(APPEND onnxruntime_EXTERNAL_LIBRARIES kleidiai)
++  target_link_libraries(onnxruntime_mlas PRIVATE KleidiAI::kleidiai)
++  list(APPEND onnxruntime_EXTERNAL_LIBRARIES KleidiAI::kleidiai)
+   if(onnxruntime_USE_QMX_KLEIDIAI_COEXIST)
+           target_link_libraries(onnxruntime_mlas PRIVATE  kleidiai-qmx)
+           target_compile_definitions(onnxruntime_mlas PRIVATE ENABLE_QMX_KERNELS=1)
+@@ -395,14 +396,6 @@ function(setup_kleidiai)
+     target_compile_definitions(onnxruntime_mlas PRIVATE KLEIDIAI_KERNEL_LOGGING=1)
+   endif()
+ 
+-  if (NOT onnxruntime_BUILD_SHARED_LIB)
+-    install(TARGETS kleidiai EXPORT ${PROJECT_NAME}Targets
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-    FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
+-  endif()
+-
+   if(onnxruntime_USE_QMX_KLEIDIAI_COEXIST)
+     install(TARGETS kleidiai-qmx EXPORT ${PROJECT_NAME}Targets
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

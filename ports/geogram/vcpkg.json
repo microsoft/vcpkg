@@ -1,6 +1,7 @@
 {
   "name": "geogram",
   "version": "1.9.3",
+  "port-version": 1,
   "description": "Geogram is a programming library of geometric algorithms.",
   "homepage": "https://github.com/BrunoLevy/geogram",
   "license": "BSD-3-Clause",

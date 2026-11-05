@@ -1,0 +1,14 @@
+diff --git a/bin/CMakeLists.txt b/bin/CMakeLists.txt
+index ea69ce3..94fc75a 100644
+--- a/bin/CMakeLists.txt
++++ b/bin/CMakeLists.txt
+@@ -13,7 +13,8 @@ if(NOT MSVC)
+ 
+   target_compile_definitions(mmdblookup PRIVATE PACKAGE_VERSION="${PROJECT_VERSION}")
+ 
+-  target_link_libraries(mmdblookup maxminddb pthread)
++  find_package(Threads)
++  target_link_libraries(mmdblookup maxminddb Threads::Threads)
+ 
+   if (MAXMINDDB_INSTALL)
+     install(

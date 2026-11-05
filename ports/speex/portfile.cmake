@@ -15,13 +15,13 @@ elseif(VCPKG_TARGET_IS_LINUX)
       message("${PORT} currently requires the following libraries from the system package manager:\n    autoconf\n    automake\n    libtool\n\nIt can be installed with apt-get install autoconf automake libtool")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         --disable-binaries # no example programs (GPL, require libogg)
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

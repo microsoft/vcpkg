@@ -1,0 +1,14 @@
+diff --git a/include/cudnn_frontend_version.h b/include/cudnn_frontend_version.h
+index f8378b59..db8cf81c 100644
+--- a/include/cudnn_frontend_version.h
++++ b/include/cudnn_frontend_version.h
+@@ -6,7 +6,7 @@
+ #pragma once
+ 
+ #define CUDNN_FRONTEND_MAJOR_VERSION 1
+-#define CUDNN_FRONTEND_MINOR_VERSION 33
+-#define CUDNN_FRONTEND_PATCH_VERSION 0
++#define CUDNN_FRONTEND_MINOR_VERSION 32
++#define CUDNN_FRONTEND_PATCH_VERSION 1
+ #define CUDNN_FRONTEND_VERSION \
+     ((CUDNN_FRONTEND_MAJOR_VERSION * 10000) + (CUDNN_FRONTEND_MINOR_VERSION * 100) + CUDNN_FRONTEND_PATCH_VERSION)

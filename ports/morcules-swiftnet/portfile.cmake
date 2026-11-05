@@ -2,13 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO morcules/SwiftNet
     REF "${VERSION}"
-    SHA512 086166fe976e52ae78a1b9a33db4cb5ef95efca022c9198585e7cf1c2129134050ceba8b4ef6c9234ac29535568e20e8d775f6811b772b68301c2e231b8b7987
+    SHA512 46a9b18a2479ccb94814af85e403d00aee3befe9c15c85be75862c23b4bac4a9e9cbc5bbf7b54906ee2f9a2ec0fa1db1e60259dd968b6c102e5ea2f65ff2cc14
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
-    OPTIONS
-        -DSANITIZER=none
 )
 
 vcpkg_cmake_install()

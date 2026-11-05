@@ -51,7 +51,9 @@ set(
   src/bid128_hypot.c
   src/bid128_ldexp.c
   src/bid128_lgamma.c
+  src/bid128_llquantexpd.c
   src/bid128_llrintd.c
+  src/bid128_llround.c
   src/bid128_log.c
   src/bid128_log10.c
   src/bid128_log1p.c
@@ -70,6 +72,7 @@ set(
   src/bid128_pow.c
   src/bid128_quantexpd.c
   src/bid128_quantize.c
+  src/bid128_quantumd.c
   src/bid128_rem.c
   src/bid128_round_integral.c
   src/bid128_scalb.c
@@ -115,7 +118,9 @@ set(
   src/bid32_hypot.c
   src/bid32_ldexp.c
   src/bid32_lgamma.c
+  src/bid32_llquantexpd.c
   src/bid32_llrintd.c
+  src/bid32_llround.c
   src/bid32_log.c
   src/bid32_log10.c
   src/bid32_log1p.c
@@ -134,6 +139,7 @@ set(
   src/bid32_pow.c
   src/bid32_quantexpd.c
   src/bid32_quantize.c
+  src/bid32_quantumd.c
   src/bid32_rem.c
   src/bid32_round_integral.c
   src/bid32_scalb.c
@@ -182,7 +188,9 @@ set(
   src/bid64_hypot.c
   src/bid64_ldexp.c
   src/bid64_lgamma.c
+  src/bid64_llquantexpd.c
   src/bid64_llrintd.c
+  src/bid64_llround.c
   src/bid64_log.c
   src/bid64_log10.c
   src/bid64_log1p.c
@@ -201,6 +209,7 @@ set(
   src/bid64_pow.c
   src/bid64_quantexpd.c
   src/bid64_quantize.c
+  src/bid64_quantumd.c
   src/bid64_rem.c
   src/bid64_round_integral.c
   src/bid64_scalb.c
@@ -258,10 +267,18 @@ else()
   add_compile_options(-Defi2=1 -DEFI2=1)
 endif()
 
-
-include_directories(. src float128)
-
 add_library(intel_decimal128 ${intelrdfpmathlib_SOURCES})
+
+set_target_properties(intel_decimal128 PROPERTIES EXPORT_NAME decimal128)
+
+target_include_directories(
+  intel_decimal128
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/float128>
+    $<INSTALL_INTERFACE:include>
+)
 
 target_compile_definitions(
   intel_decimal128 PRIVATE -DDECIMAL_CALL_BY_REFERENCE=0 -DDECIMAL_GLOBAL_ROUNDING=0 -DDECIMAL_GLOBAL_EXCEPTION_FLAGS=0
@@ -278,12 +295,19 @@ else()
 endif()
 
 install(
-  TARGETS  intel_decimal128
+  TARGETS intel_decimal128
+  EXPORT unofficial-intelrdfpmathlib-config
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
+install(
+  EXPORT unofficial-intelrdfpmathlib-config
+  NAMESPACE unofficial::intelrdfpmathlib::
+  DESTINATION share/unofficial-intelrdfpmathlib
+)
+
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES src/dfp754.h DESTINATION include)
+  install(FILES src/dfp754.h src/bid_conf.h src/bid_functions.h DESTINATION include)
 endif()

@@ -4,13 +4,25 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 907d98ea2bd2e2a43604243fc7fd6c252aa02c3fdd79e21f2a784adf821cb18107e6e23a25ad0c64329fbe84e859da5c807272759a8bcd85a37b929c80af4a13
 )
 
-vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
-
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
-vcpkg_install_make()
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
+    OPTIONS
+        ac_cv_prog_cc_c23=no
+)
+
+set(install_options)
+if(VCPKG_CROSSCOMPILING)
+    # Avoid using the host strip tool on cross-compiled target binaries.
+    list(APPEND install_options "INSTALL_PROGRAM='$(INSTALL)'")
+endif()
+
+vcpkg_make_install(OPTIONS ${install_options})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"  "${CURRENT_PACKAGES_DIR}/debug/share")
 

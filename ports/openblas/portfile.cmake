@@ -2,13 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 046316b4297460bffca09c890ecad17ea39d8b3db92ff445d03b547dd551663d37e40f38bce8ae11e2994374ff01e622b408da27aa8e40f4140185ee8f001a60
+    SHA512 b40b5a3b5062ea196b3e48363db584ef91aef21c61becf4f4d6616ba5e413d770c22445c357d06dcf0992dd4666c18cced44cd5d09d8cb884c0d8f62e6940422
     HEAD_REF develop
     PATCHES
         disable-testing.diff
         getarch.diff
         system-check-msvc.diff
         win32-uwp.diff
+        android-exclude-sme.diff
+        arm64-generic-omatcopy.diff # https://github.com/OpenMathLib/OpenBLAS/pull/5977
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -18,7 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         dynamic-arch   DYNAMIC_ARCH
 )
 
-# If not explicitly configured for a cross build, OpenBLAS wants to run 
+# If not explicitly configured for a cross build, OpenBLAS wants to run
 # getarch executables in order to optimize for the target.
 # Adapting this to vcpkg triplets:
 # - install-getarch.diff introduces and uses GETARCH_BINARY_DIR,
@@ -59,12 +61,24 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
+
+#fix for libm linking on non-windows platforms
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(PCFILE IN ITEMS
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
+        if(EXISTS "${PCFILE}")
+            file(APPEND "${PCFILE}" "Libs.private: -lm\n")
+        endif()
+    endforeach()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 # Required from native builds, optional from cross builds.
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(
-        TOOL_NAMES getarch getarch_2nd 
+        TOOL_NAMES getarch getarch_2nd
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${SYSTEM_KEY}"
         AUTO_CLEAN
     )

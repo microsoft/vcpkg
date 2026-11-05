@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bbbc3005..051ce80b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -86,10 +86,6 @@ add_subdirectory(src)
+ if (BUILD_TESTING)
+     add_subdirectory(tests)
+ endif()
+-add_subdirectory(doc)
+-if (NOT GRAPHITE2_NFILEFACE)
+-    add_subdirectory(gr2fonttest)
+-endif()
+ 
+ get_property(version DIRECTORY src PROPERTY lib_so_version)
+ set(libdir ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})

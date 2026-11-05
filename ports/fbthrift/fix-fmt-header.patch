@@ -1,0 +1,1738 @@
+diff --git a/thrift/common/test/universal_name_test.cc b/thrift/common/test/universal_name_test.cc
+index 3c18f966dc..74322ae2a0 100644
+--- a/thrift/common/test/universal_name_test.cc
++++ b/thrift/common/test/universal_name_test.cc
+@@ -17,7 +17,7 @@
+ #include <thrift/common/universal_name.h>
+ 
+ #include <regex>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+ 
+diff --git a/thrift/common/tree_printer.h b/thrift/common/tree_printer.h
+index f79ea4474c..93b6c33e3d 100644
+--- a/thrift/common/tree_printer.h
++++ b/thrift/common/tree_printer.h
+@@ -23,7 +23,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::tree_printer {
+ 
+diff --git a/thrift/common/universal_name.cc b/thrift/common/universal_name.cc
+index 58aa53d68b..f0ba741048 100644
+--- a/thrift/common/universal_name.cc
++++ b/thrift/common/universal_name.cc
+@@ -19,7 +19,6 @@
+ #include <cctype>
+ #include <stdexcept>
+ #include <boost/container/small_vector.hpp>
+-#include <fmt/core.h>
+ #include <fmt/format.h>
+ 
+ namespace apache::thrift {
+diff --git a/thrift/compiler/ast/scope_identifier.cc b/thrift/compiler/ast/scope_identifier.cc
+index 67eb249d74..261bfc1806 100644
+--- a/thrift/compiler/ast/scope_identifier.cc
++++ b/thrift/compiler/ast/scope_identifier.cc
+@@ -15,7 +15,7 @@
+  */
+ 
+ #include <cassert>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/compiler/ast/scope_identifier.h>
+ 
+diff --git a/thrift/compiler/ast/t_const.cc b/thrift/compiler/ast/t_const.cc
+index 98b0f58f53..5b180c622a 100644
+--- a/thrift/compiler/ast/t_const.cc
++++ b/thrift/compiler/ast/t_const.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <algorithm>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/t_const.h>
+ #include <thrift/compiler/ast/t_const_value.h>
+ 
+diff --git a/thrift/compiler/ast/t_include.h b/thrift/compiler/ast/t_include.h
+index 78b0645e3f..6b2ccff4d7 100644
+--- a/thrift/compiler/ast/t_include.h
++++ b/thrift/compiler/ast/t_include.h
+@@ -16,7 +16,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/t_node.h>
+ 
+ namespace apache::thrift::compiler {
+diff --git a/thrift/compiler/ast/t_named.cc b/thrift/compiler/ast/t_named.cc
+index d912ca796b..5e6add765e 100644
+--- a/thrift/compiler/ast/t_named.cc
++++ b/thrift/compiler/ast/t_named.cc
+@@ -21,7 +21,7 @@
+ #include <thrift/compiler/ast/t_type.h>
+ #include <thrift/compiler/ast/uri.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::compiler {
+ 
+diff --git a/thrift/compiler/ast/t_program.h b/thrift/compiler/ast/t_program.h
+index 7f99da6bc4..f0e60d7bcd 100644
+--- a/thrift/compiler/ast/t_program.h
++++ b/thrift/compiler/ast/t_program.h
+@@ -26,7 +26,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/compiler/ast/node_list.h>
+ #include <thrift/compiler/ast/program_scope.h>
+diff --git a/thrift/compiler/ast/thrift_ast_debug_tree_utils.cc b/thrift/compiler/ast/thrift_ast_debug_tree_utils.cc
+index efdfcadc27..7199174f6c 100644
+--- a/thrift/compiler/ast/thrift_ast_debug_tree_utils.cc
++++ b/thrift/compiler/ast/thrift_ast_debug_tree_utils.cc
+@@ -17,7 +17,7 @@
+ #include "thrift/compiler/ast/thrift_ast_debug_tree_utils.h"
+ 
+ #include <string>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "thrift/common/tree_printer.h"
+ #include "thrift/compiler/ast/t_program_bundle.h"
+diff --git a/thrift/compiler/codemod/annotate_allow_legacy_missing_uris.cc b/thrift/compiler/codemod/annotate_allow_legacy_missing_uris.cc
+index 8756abd000..5e747bf43c 100644
+--- a/thrift/compiler/codemod/annotate_allow_legacy_missing_uris.cc
++++ b/thrift/compiler/codemod/annotate_allow_legacy_missing_uris.cc
+@@ -18,7 +18,7 @@
+ #include <optional>
+ #include <string>
+ #include <string_view>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/ast/t_program_bundle.h>
+diff --git a/thrift/compiler/codemod/annotate_allow_unsafe_non_sealed_key_type.cc b/thrift/compiler/codemod/annotate_allow_unsafe_non_sealed_key_type.cc
+index 254636c93f..a6b888b11a 100644
+--- a/thrift/compiler/codemod/annotate_allow_unsafe_non_sealed_key_type.cc
++++ b/thrift/compiler/codemod/annotate_allow_unsafe_non_sealed_key_type.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <optional>
+ #include <string_view>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/ast/t_map.h>
+ #include <thrift/compiler/ast/t_program_bundle.h>
+diff --git a/thrift/compiler/codemod/annotate_custom_default_optional_fields.cc b/thrift/compiler/codemod/annotate_custom_default_optional_fields.cc
+index ce0f991d5b..9c1fb59b53 100644
+--- a/thrift/compiler/codemod/annotate_custom_default_optional_fields.cc
++++ b/thrift/compiler/codemod/annotate_custom_default_optional_fields.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <string>
+ #include <string_view>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/ast/t_program_bundle.h>
+ #include <thrift/compiler/ast/t_struct.h>
+diff --git a/thrift/compiler/codemod/annotate_deprecated_terse_writes_fields.cc b/thrift/compiler/codemod/annotate_deprecated_terse_writes_fields.cc
+index 9206e40bfe..f0df930f24 100644
+--- a/thrift/compiler/codemod/annotate_deprecated_terse_writes_fields.cc
++++ b/thrift/compiler/codemod/annotate_deprecated_terse_writes_fields.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <string>
+ #include <string_view>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/ast/t_program_bundle.h>
+ #include <thrift/compiler/ast/t_struct.h>
+diff --git a/thrift/compiler/codemod/annotate_non_optional_cpp_ref_fields.cc b/thrift/compiler/codemod/annotate_non_optional_cpp_ref_fields.cc
+index cc2cde0ea2..82c4cbe1a5 100644
+--- a/thrift/compiler/codemod/annotate_non_optional_cpp_ref_fields.cc
++++ b/thrift/compiler/codemod/annotate_non_optional_cpp_ref_fields.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <string>
+ #include <string_view>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/ast/t_program_bundle.h>
+ #include <thrift/compiler/ast/t_struct.h>
+diff --git a/thrift/compiler/codemod/annotate_required_fields.cc b/thrift/compiler/codemod/annotate_required_fields.cc
+index fd24846a07..02a367c90c 100644
+--- a/thrift/compiler/codemod/annotate_required_fields.cc
++++ b/thrift/compiler/codemod/annotate_required_fields.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <string>
+ #include <string_view>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/ast/t_program_bundle.h>
+ #include <thrift/compiler/ast/t_struct.h>
+diff --git a/thrift/compiler/codemod/codemod.cc b/thrift/compiler/codemod/codemod.cc
+index 60696bad78..20b29e996d 100644
+--- a/thrift/compiler/codemod/codemod.cc
++++ b/thrift/compiler/codemod/codemod.cc
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/codemod/codemod.h>
+ #include <thrift/compiler/compiler.h>
+ #include <thrift/compiler/parse/parse_ast.h>
+diff --git a/thrift/compiler/codemod/file_manager.cc b/thrift/compiler/codemod/file_manager.cc
+index a665de62d4..f394880ef9 100644
+--- a/thrift/compiler/codemod/file_manager.cc
++++ b/thrift/compiler/codemod/file_manager.cc
+@@ -15,7 +15,7 @@
+  */
+ 
+ #include <string>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ #include <folly/FileUtil.h>
+ 
+diff --git a/thrift/compiler/codemod/file_manager.h b/thrift/compiler/codemod/file_manager.h
+index 8fcfa9ee05..d5abb14bab 100644
+--- a/thrift/compiler/codemod/file_manager.h
++++ b/thrift/compiler/codemod/file_manager.h
+@@ -20,7 +20,7 @@
+ #include <optional>
+ #include <set>
+ #include <unordered_set>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/FileUtil.h>
+ 
+diff --git a/thrift/compiler/codemod/package_generator.h b/thrift/compiler/codemod/package_generator.h
+index 30b1b77ace..7b1f1702f5 100644
+--- a/thrift/compiler/codemod/package_generator.h
++++ b/thrift/compiler/codemod/package_generator.h
+@@ -21,7 +21,6 @@
+ #include <utility>
+ 
+ #include <boost/algorithm/string.hpp>
+-#include <fmt/core.h>
+ #include <fmt/format.h>
+ #include <re2/re2.h>
+ #include <thrift/compiler/ast/t_program.h>
+diff --git a/thrift/compiler/codemod/relative_include.cc b/thrift/compiler/codemod/relative_include.cc
+index 0c3dbc92ef..667abd0d1a 100644
+--- a/thrift/compiler/codemod/relative_include.cc
++++ b/thrift/compiler/codemod/relative_include.cc
+@@ -18,7 +18,7 @@
+ #include <set>
+ #include <string>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/t_include.h>
+ #include <thrift/compiler/ast/t_program.h>
+ #include <thrift/compiler/ast/uri.h>
+diff --git a/thrift/compiler/codemod/specify_implicit_field_id.cc b/thrift/compiler/codemod/specify_implicit_field_id.cc
+index 023c54f401..3ef4d5354d 100644
+--- a/thrift/compiler/codemod/specify_implicit_field_id.cc
++++ b/thrift/compiler/codemod/specify_implicit_field_id.cc
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/codemod/codemod.h>
+diff --git a/thrift/compiler/codemod/specify_implicit_func_param_id.cc b/thrift/compiler/codemod/specify_implicit_func_param_id.cc
+index aed3849e49..55e4937891 100644
+--- a/thrift/compiler/codemod/specify_implicit_func_param_id.cc
++++ b/thrift/compiler/codemod/specify_implicit_func_param_id.cc
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/compiler/ast/ast_visitor.h>
+ #include <thrift/compiler/codemod/codemod.h>
+diff --git a/thrift/compiler/codemod/structure_annotations.cc b/thrift/compiler/codemod/structure_annotations.cc
+index 7432291c63..76bf268c9c 100644
+--- a/thrift/compiler/codemod/structure_annotations.cc
++++ b/thrift/compiler/codemod/structure_annotations.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <string>
+ #include <string_view>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <range/v3/view.hpp>
+ 
+ #include <thrift/compiler/ast/ast_visitor.h>
+diff --git a/thrift/compiler/diagnostic.h b/thrift/compiler/diagnostic.h
+index 162e570f5e..b63ce670fc 100644
+--- a/thrift/compiler/diagnostic.h
++++ b/thrift/compiler/diagnostic.h
+@@ -27,7 +27,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ #include <thrift/compiler/detail/pluggable_functions.h>
+ #include <thrift/compiler/metrics/metrics.h>
+diff --git a/thrift/compiler/generate/cpp/orderable_type_utils.cc b/thrift/compiler/generate/cpp/orderable_type_utils.cc
+index e4eb1feb4e..2923fca21d 100644
+--- a/thrift/compiler/generate/cpp/orderable_type_utils.cc
++++ b/thrift/compiler/generate/cpp/orderable_type_utils.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <unordered_set>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/t_program.h>
+ #include <thrift/compiler/ast/t_structured.h>
+ #include <thrift/compiler/ast/uri.h>
+diff --git a/thrift/compiler/generate/cpp/util.cc b/thrift/compiler/generate/cpp/util.cc
+index 41ef05d502..404ea8ee91 100644
+--- a/thrift/compiler/generate/cpp/util.cc
++++ b/thrift/compiler/generate/cpp/util.cc
+@@ -25,7 +25,7 @@
+ #include <openssl/evp.h>
+ #include <openssl/sha.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/compiler/ast/t_field.h>
+ #include <thrift/compiler/ast/t_list.h>
+diff --git a/thrift/compiler/generate/go/util.cc b/thrift/compiler/generate/go/util.cc
+index 0384948940..8e1acb47f5 100644
+--- a/thrift/compiler/generate/go/util.cc
++++ b/thrift/compiler/generate/go/util.cc
+@@ -17,7 +17,7 @@
+ #include <cctype>
+ #include <utility>
+ #include <boost/algorithm/string.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/t_type.h>
+ #include <thrift/compiler/generate/go/util.h>
+ 
+diff --git a/thrift/compiler/generate/json.cc b/thrift/compiler/generate/json.cc
+index 7973328282..8348ece7d4 100644
+--- a/thrift/compiler/generate/json.cc
++++ b/thrift/compiler/generate/json.cc
+@@ -17,7 +17,7 @@
+ #include <thrift/compiler/ast/t_const_value.h>
+ #include <thrift/compiler/generate/json.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <algorithm>
+ #include <cstdint>
+diff --git a/thrift/compiler/generate/mstch_objects.cc b/thrift/compiler/generate/mstch_objects.cc
+index 88c59264aa..7c6db37d56 100644
+--- a/thrift/compiler/generate/mstch_objects.cc
++++ b/thrift/compiler/generate/mstch_objects.cc
+@@ -17,7 +17,7 @@
+ #include <thrift/compiler/generate/common.h>
+ #include <thrift/compiler/generate/mstch_objects.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/compiler/ast/uri.h>
+ 
+ namespace apache::thrift::compiler {
+diff --git a/thrift/compiler/generate/t_concat_generator.cc b/thrift/compiler/generate/t_concat_generator.cc
+index d1501966f3..6c3033f64b 100644
+--- a/thrift/compiler/generate/t_concat_generator.cc
++++ b/thrift/compiler/generate/t_concat_generator.cc
+@@ -18,6 +18,7 @@
+ 
+ #include <cinttypes>
+ #include <cstdio>
++#include <cstring>
+ #include <fstream>
+ #include <iterator>
+ 
+diff --git a/thrift/compiler/generate/t_generator.cc b/thrift/compiler/generate/t_generator.cc
+index f0881900a7..1d04a2e0e9 100644
+--- a/thrift/compiler/generate/t_generator.cc
++++ b/thrift/compiler/generate/t_generator.cc
+@@ -19,7 +19,7 @@
+ #include <stdexcept>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::compiler {
+ 
+diff --git a/thrift/compiler/generate/t_mstch_cpp2_generator.cc b/thrift/compiler/generate/t_mstch_cpp2_generator.cc
+index d678847f94..4b553abd4b 100644
+--- a/thrift/compiler/generate/t_mstch_cpp2_generator.cc
++++ b/thrift/compiler/generate/t_mstch_cpp2_generator.cc
+@@ -26,7 +26,7 @@
+ 
+ #include <boost/algorithm/string/replace.hpp>
+ #include <boost/algorithm/string/split.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/compiler/ast/t_field.h>
+ #include <thrift/compiler/ast/type_visitor.h>
+diff --git a/thrift/compiler/parse/lexer.h b/thrift/compiler/parse/lexer.h
+index 2f5b71bef2..775ca41108 100644
+--- a/thrift/compiler/parse/lexer.h
++++ b/thrift/compiler/parse/lexer.h
+@@ -19,7 +19,7 @@
+ #include <functional>
+ #include <optional>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/compiler/parse/token.h>
+ #include <thrift/compiler/source_location.h>
+diff --git a/thrift/compiler/parse/token.cc b/thrift/compiler/parse/token.cc
+index cd5da73a81..55a236c7c1 100644
+--- a/thrift/compiler/parse/token.cc
++++ b/thrift/compiler/parse/token.cc
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/compiler/parse/token.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <algorithm>
+ #include <cassert>
+diff --git a/thrift/compiler/sema/schematizer.cc b/thrift/compiler/sema/schematizer.cc
+index e5d8189ecc..efa159ab73 100644
+--- a/thrift/compiler/sema/schematizer.cc
++++ b/thrift/compiler/sema/schematizer.cc
+@@ -20,7 +20,7 @@
+ #include <string>
+ #include <string_view>
+ #include <utility>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <openssl/evp.h>
+ #include <openssl/md5.h>
+ #include <openssl/sha.h>
+diff --git a/thrift/compiler/source_location.cc b/thrift/compiler/source_location.cc
+index 60c3cc9d31..1fa58e44d5 100644
+--- a/thrift/compiler/source_location.cc
++++ b/thrift/compiler/source_location.cc
+@@ -17,7 +17,7 @@
+ #include <thrift/compiler/detail/system.h>
+ #include <thrift/compiler/source_location.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/std.h>
+ 
+ #include <algorithm>
+diff --git a/thrift/compiler/test/token_test.cc b/thrift/compiler/test/token_test.cc
+index a9158c052d..162fe3097f 100644
+--- a/thrift/compiler/test/token_test.cc
++++ b/thrift/compiler/test/token_test.cc
+@@ -17,7 +17,7 @@
+ #include <gtest/gtest.h>
+ #include <thrift/compiler/parse/token.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ using namespace apache::thrift::compiler; // NOLINT
+ 
+diff --git a/thrift/compiler/whisker/ast.cc b/thrift/compiler/whisker/ast.cc
+index ce858796fa..78f44923cb 100644
+--- a/thrift/compiler/whisker/ast.cc
++++ b/thrift/compiler/whisker/ast.cc
+@@ -18,7 +18,7 @@
+ #include <thrift/compiler/whisker/detail/overload.h>
+ #include <thrift/compiler/whisker/detail/string.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ #include <cassert>
+diff --git a/thrift/compiler/whisker/dsl.h b/thrift/compiler/whisker/dsl.h
+index 53d26ef0dc..c43d5ec747 100644
+--- a/thrift/compiler/whisker/dsl.h
++++ b/thrift/compiler/whisker/dsl.h
+@@ -20,7 +20,7 @@
+ #include <thrift/compiler/whisker/managed_ptr.h>
+ #include <thrift/compiler/whisker/object.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <algorithm>
+ #include <concepts>
+diff --git a/thrift/compiler/whisker/eval_context.cc b/thrift/compiler/whisker/eval_context.cc
+index 014654ee48..a1e5947e4a 100644
+--- a/thrift/compiler/whisker/eval_context.cc
++++ b/thrift/compiler/whisker/eval_context.cc
+@@ -20,7 +20,7 @@
+ #include <iterator>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace w = whisker::make;
+ 
+diff --git a/thrift/compiler/whisker/lexer.h b/thrift/compiler/whisker/lexer.h
+index 961766bdc8..b689cfdd88 100644
+--- a/thrift/compiler/whisker/lexer.h
++++ b/thrift/compiler/whisker/lexer.h
+@@ -27,7 +27,7 @@
+ #include <utility>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace whisker {
+ 
+diff --git a/thrift/compiler/whisker/mstch_compat.cc b/thrift/compiler/whisker/mstch_compat.cc
+index c520dd2bc8..9b36042410 100644
+--- a/thrift/compiler/whisker/mstch_compat.cc
++++ b/thrift/compiler/whisker/mstch_compat.cc
+@@ -25,7 +25,7 @@
+ #include <stdexcept>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::mstch {
+ node::node(std::size_t i) : base(static_cast<int>(i)) {
+diff --git a/thrift/compiler/whisker/object.cc b/thrift/compiler/whisker/object.cc
+index 59063edc27..bc4261e5ea 100644
+--- a/thrift/compiler/whisker/object.cc
++++ b/thrift/compiler/whisker/object.cc
+@@ -23,7 +23,7 @@
+ #include <ostream>
+ #include <type_traits>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ #include <boost/core/demangle.hpp>
+diff --git a/thrift/compiler/whisker/object.h b/thrift/compiler/whisker/object.h
+index 98e88859de..cf535306f5 100644
+--- a/thrift/compiler/whisker/object.h
++++ b/thrift/compiler/whisker/object.h
+@@ -42,7 +42,7 @@
+ #include <thrift/compiler/whisker/source_location.h>
+ #include <thrift/compiler/whisker/tree_printer.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <boost/core/demangle.hpp>
+ 
+diff --git a/thrift/compiler/whisker/parser.cc b/thrift/compiler/whisker/parser.cc
+index cdcbffba22..60cbe5c8d6 100644
+--- a/thrift/compiler/whisker/parser.cc
++++ b/thrift/compiler/whisker/parser.cc
+@@ -20,7 +20,7 @@
+ #include <thrift/compiler/whisker/lexer.h>
+ #include <thrift/compiler/whisker/parser.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <cassert>
+ #include <iterator>
+diff --git a/thrift/compiler/whisker/print_ast.cc b/thrift/compiler/whisker/print_ast.cc
+index dab589e9f6..480cc4705a 100644
+--- a/thrift/compiler/whisker/print_ast.cc
++++ b/thrift/compiler/whisker/print_ast.cc
+@@ -22,7 +22,7 @@
+ #include <concepts>
+ #include <ostream>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace whisker {
+ 
+diff --git a/thrift/compiler/whisker/render.cc b/thrift/compiler/whisker/render.cc
+index 623a1e0204..bbb729f9bd 100644
+--- a/thrift/compiler/whisker/render.cc
++++ b/thrift/compiler/whisker/render.cc
+@@ -31,7 +31,7 @@
+ #include <unordered_map>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ namespace whisker {
+diff --git a/thrift/compiler/whisker/standard_library.cc b/thrift/compiler/whisker/standard_library.cc
+index 2346ca379b..3248767bb4 100644
+--- a/thrift/compiler/whisker/standard_library.cc
++++ b/thrift/compiler/whisker/standard_library.cc
+@@ -18,7 +18,7 @@
+ 
+ #include <thrift/compiler/whisker/dsl.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <iterator>
+ 
+diff --git a/thrift/compiler/whisker/test/eval_context_test.cc b/thrift/compiler/whisker/test/eval_context_test.cc
+index c9717d478c..b8ac267646 100644
+--- a/thrift/compiler/whisker/test/eval_context_test.cc
++++ b/thrift/compiler/whisker/test/eval_context_test.cc
+@@ -19,7 +19,7 @@
+ 
+ #include <thrift/compiler/whisker/eval_context.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace w = whisker::make;
+ 
+diff --git a/thrift/compiler/whisker/test/lexer_test.cc b/thrift/compiler/whisker/test/lexer_test.cc
+index 8e52515e54..5966283a6b 100644
+--- a/thrift/compiler/whisker/test/lexer_test.cc
++++ b/thrift/compiler/whisker/test/lexer_test.cc
+@@ -27,7 +27,7 @@
+ #include <string>
+ #include <variant>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace whisker {
+ 
+diff --git a/thrift/compiler/whisker/test/parser_test.cc b/thrift/compiler/whisker/test/parser_test.cc
+index 8c54a2d9b6..b91717e050 100644
+--- a/thrift/compiler/whisker/test/parser_test.cc
++++ b/thrift/compiler/whisker/test/parser_test.cc
+@@ -28,7 +28,7 @@
+ #include <string>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace whisker {
+ 
+diff --git a/thrift/compiler/whisker/test/render_test_helpers.h b/thrift/compiler/whisker/test/render_test_helpers.h
+index 7b8c98aca8..d12955ad20 100644
+--- a/thrift/compiler/whisker/test/render_test_helpers.h
++++ b/thrift/compiler/whisker/test/render_test_helpers.h
+@@ -34,7 +34,7 @@
+ #include <unordered_map>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ namespace whisker {
+diff --git a/thrift/compiler/whisker/token.cc b/thrift/compiler/whisker/token.cc
+index df8289e97c..e43779828d 100644
+--- a/thrift/compiler/whisker/token.cc
++++ b/thrift/compiler/whisker/token.cc
+@@ -24,7 +24,7 @@
+ #include <stdexcept>
+ #include <type_traits>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <fmt/ranges.h>
+ 
+ // clang-format off
+diff --git a/thrift/compiler/whisker/token.h b/thrift/compiler/whisker/token.h
+index 95de6f1dae..417acef55e 100644
+--- a/thrift/compiler/whisker/token.h
++++ b/thrift/compiler/whisker/token.h
+@@ -26,7 +26,7 @@
+ #include <unordered_map>
+ #include <variant>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace whisker {
+ 
+diff --git a/thrift/compiler/whisker/tools/ast-check.cc b/thrift/compiler/whisker/tools/ast-check.cc
+index 5bc29b7a09..39e7092ca1 100644
+--- a/thrift/compiler/whisker/tools/ast-check.cc
++++ b/thrift/compiler/whisker/tools/ast-check.cc
+@@ -24,7 +24,7 @@
+ #include <optional>
+ #include <string_view>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ using namespace std::literals;
+ 
+diff --git a/thrift/compiler/whisker/tools/ast-dump.cc b/thrift/compiler/whisker/tools/ast-dump.cc
+index bddbbd1e5e..7014263c4a 100644
+--- a/thrift/compiler/whisker/tools/ast-dump.cc
++++ b/thrift/compiler/whisker/tools/ast-dump.cc
+@@ -28,7 +28,7 @@
+ #include <string>
+ #include <string_view>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ using namespace std::literals;
+ 
+diff --git a/thrift/conformance/cpp2/Testing.cpp b/thrift/conformance/cpp2/Testing.cpp
+index 9b76a00a88..aa32d4cf9d 100644
+--- a/thrift/conformance/cpp2/Testing.cpp
++++ b/thrift/conformance/cpp2/Testing.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/conformance/cpp2/Testing.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <gtest/gtest.h>
+ #include <folly/lang/Exception.h>
+ #include <thrift/conformance/if/gen-cpp2/any_constants.h>
+diff --git a/thrift/conformance/cpp2/internal/TestValue.h b/thrift/conformance/cpp2/internal/TestValue.h
+index 1ac1040ee1..43514c76cf 100644
+--- a/thrift/conformance/cpp2/internal/TestValue.h
++++ b/thrift/conformance/cpp2/internal/TestValue.h
+@@ -18,7 +18,7 @@
+ 
+ #include <stdexcept>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Utility.h>
+ #include <folly/io/IOBuf.h>
+ #include <folly/lang/Exception.h>
+diff --git a/thrift/conformance/data/CompatibilityGenerator.cpp b/thrift/conformance/data/CompatibilityGenerator.cpp
+index 0923828ad8..26f7f04915 100644
+--- a/thrift/conformance/data/CompatibilityGenerator.cpp
++++ b/thrift/conformance/data/CompatibilityGenerator.cpp
+@@ -24,7 +24,7 @@
+ #include <vector>
+ 
+ #include <boost/mp11.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/container/Foreach.h>
+ #include <thrift/conformance/cpp2/Protocol.h>
+ #include <thrift/conformance/data/ValueGenerator.h>
+diff --git a/thrift/conformance/data/PatchGenerator.cpp b/thrift/conformance/data/PatchGenerator.cpp
+index bb974e4446..710e641170 100644
+--- a/thrift/conformance/data/PatchGenerator.cpp
++++ b/thrift/conformance/data/PatchGenerator.cpp
+@@ -21,7 +21,7 @@
+ #include <unordered_map>
+ #include <thrift/conformance/data/PatchGenerator.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/conformance/data/ValueGenerator.h>
+ #include <thrift/lib/cpp/util/SaturatingMath.h>
+diff --git a/thrift/conformance/data/TestGenerator.cpp b/thrift/conformance/data/TestGenerator.cpp
+index 35a9ac51b9..1aa6939e07 100644
+--- a/thrift/conformance/data/TestGenerator.cpp
++++ b/thrift/conformance/data/TestGenerator.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/conformance/data/TestGenerator.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/conformance/data/TestUtil.h>
+ #include <thrift/conformance/data/ValueGenerator.h>
+diff --git a/thrift/conformance/data/ToleranceGenerator.cpp b/thrift/conformance/data/ToleranceGenerator.cpp
+index a6f8940705..ea46a76946 100644
+--- a/thrift/conformance/data/ToleranceGenerator.cpp
++++ b/thrift/conformance/data/ToleranceGenerator.cpp
+@@ -17,7 +17,7 @@
+ #include <thrift/conformance/data/ToleranceGenerator.h>
+ 
+ #include <boost/mp11.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ #include <thrift/conformance/cpp2/Protocol.h>
+diff --git a/thrift/conformance/data/ValueGenerator.h b/thrift/conformance/data/ValueGenerator.h
+index 1833678de2..a35d31847c 100644
+--- a/thrift/conformance/data/ValueGenerator.h
++++ b/thrift/conformance/data/ValueGenerator.h
+@@ -23,7 +23,7 @@
+ #include <unordered_set>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/CPortability.h>
+ #include <thrift/lib/cpp2/type/NativeType.h>
+ #include <thrift/lib/cpp2/type/Tag.h>
+diff --git a/thrift/conformance/rpcclient/GTestHarnessRPCClient.cpp b/thrift/conformance/rpcclient/GTestHarnessRPCClient.cpp
+index 73cf159ccb..405ee52742 100644
+--- a/thrift/conformance/rpcclient/GTestHarnessRPCClient.cpp
++++ b/thrift/conformance/rpcclient/GTestHarnessRPCClient.cpp
+@@ -21,7 +21,7 @@
+ #include <stdexcept>
+ #include <string_view>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Subprocess.h>
+ #include <folly/coro/AsyncGenerator.h>
+ #include <folly/coro/BlockingWait.h>
+diff --git a/thrift/conformance/stresstest/client/TestRunner.cpp b/thrift/conformance/stresstest/client/TestRunner.cpp
+index 528b49b3b2..c293334c9f 100644
+--- a/thrift/conformance/stresstest/client/TestRunner.cpp
++++ b/thrift/conformance/stresstest/client/TestRunner.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/conformance/stresstest/client/TestRunner.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <gflags/gflags.h>
+ 
+ #include <thrift/conformance/stresstest/client/ClientRunner.h>
+diff --git a/thrift/conformance/stresstest/common/StressTestStats.cpp b/thrift/conformance/stresstest/common/StressTestStats.cpp
+index 1b41fbe3c1..5dd770e6fc 100644
+--- a/thrift/conformance/stresstest/common/StressTestStats.cpp
++++ b/thrift/conformance/stresstest/common/StressTestStats.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/conformance/stresstest/common/StressTestStats.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ namespace apache::thrift::stress {
+diff --git a/thrift/lib/cpp/protocol/TProtocolException.cpp b/thrift/lib/cpp/protocol/TProtocolException.cpp
+index cd6791d48d..3514910e45 100644
+--- a/thrift/lib/cpp/protocol/TProtocolException.cpp
++++ b/thrift/lib/cpp/protocol/TProtocolException.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp/protocol/TProtocolException.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::protocol {
+ 
+diff --git a/thrift/lib/cpp/protocol/TType.h b/thrift/lib/cpp/protocol/TType.h
+index 902698d922..e53220e5e8 100644
+--- a/thrift/lib/cpp/protocol/TType.h
++++ b/thrift/lib/cpp/protocol/TType.h
+@@ -18,7 +18,7 @@
+ 
+ #include <stdint.h>
+ #include <string>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::protocol {
+ 
+diff --git a/thrift/lib/cpp/server/test/TrackingTServerEventHandler.cpp b/thrift/lib/cpp/server/test/TrackingTServerEventHandler.cpp
+index 36eab3bcd4..d2beec21e8 100644
+--- a/thrift/lib/cpp/server/test/TrackingTServerEventHandler.cpp
++++ b/thrift/lib/cpp/server/test/TrackingTServerEventHandler.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp/server/test/TrackingTServerEventHandler.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/ExceptionString.h>
+ 
+ namespace apache::thrift::server::test {
+diff --git a/thrift/lib/cpp/transport/THeader.cpp b/thrift/lib/cpp/transport/THeader.cpp
+index 0b4c19a231..a208627b55 100644
+--- a/thrift/lib/cpp/transport/THeader.cpp
++++ b/thrift/lib/cpp/transport/THeader.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp/transport/THeader.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Conv.h>
+ #include <folly/MapUtil.h>
+ #include <folly/String.h>
+diff --git a/thrift/lib/cpp/transport/TTransportException.cpp b/thrift/lib/cpp/transport/TTransportException.cpp
+index f718d883d4..2f5467caac 100644
+--- a/thrift/lib/cpp/transport/TTransportException.cpp
++++ b/thrift/lib/cpp/transport/TTransportException.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp/transport/TTransportException.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/String.h>
+ 
+diff --git a/thrift/lib/cpp/util/THttpParser.cpp b/thrift/lib/cpp/util/THttpParser.cpp
+index 5216912150..41ee56d5a6 100644
+--- a/thrift/lib/cpp/util/THttpParser.cpp
++++ b/thrift/lib/cpp/util/THttpParser.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <thrift/lib/cpp/transport/TTransportException.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Conv.h>
+ #include <folly/String.h>
+ #include <folly/container/F14Map.h>
+diff --git a/thrift/lib/cpp/util/test/THttpParserTest.cpp b/thrift/lib/cpp/util/test/THttpParserTest.cpp
+index 59b9d965bb..993699bc04 100644
+--- a/thrift/lib/cpp/util/test/THttpParserTest.cpp
++++ b/thrift/lib/cpp/util/test/THttpParserTest.cpp
+@@ -17,7 +17,7 @@
+ #include <thrift/lib/cpp/transport/THeader.h>
+ #include <thrift/lib/cpp/util/THttpParser.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+diff --git a/thrift/lib/cpp2/FieldRef.cpp b/thrift/lib/cpp2/FieldRef.cpp
+index fc08528051..d13d15ee07 100644
+--- a/thrift/lib/cpp2/FieldRef.cpp
++++ b/thrift/lib/cpp2/FieldRef.cpp
+@@ -17,7 +17,7 @@
+ #include <thrift/lib/cpp2/BadFieldAccess.h>
+ #include <thrift/lib/cpp2/FieldRef.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ [[noreturn]] void apache::thrift::detail::throw_on_bad_optional_field_access() {
+   throw bad_optional_field_access();
+diff --git a/thrift/lib/cpp2/GeneratedCodeHelper.h b/thrift/lib/cpp2/GeneratedCodeHelper.h
+index 2064fcc797..b63f4c8921 100644
+--- a/thrift/lib/cpp2/GeneratedCodeHelper.h
++++ b/thrift/lib/cpp2/GeneratedCodeHelper.h
+@@ -25,7 +25,7 @@
+ #include <folly/Memory.h>
+ #include <folly/Portability.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Traits.h>
+ #include <folly/Utility.h>
+ #include <folly/coro/FutureUtil.h>
+diff --git a/thrift/lib/cpp2/async/AsyncProcessorFactory.cpp b/thrift/lib/cpp2/async/AsyncProcessorFactory.cpp
+index 1dd782fe0a..79557d6079 100644
+--- a/thrift/lib/cpp2/async/AsyncProcessorFactory.cpp
++++ b/thrift/lib/cpp2/async/AsyncProcessorFactory.cpp
+@@ -16,7 +16,6 @@
+ 
+ #include <thrift/lib/cpp2/async/AsyncProcessorFactory.h>
+ 
+-#include <fmt/core.h>
+ #include <fmt/format.h>
+ 
+ namespace apache::thrift {
+diff --git a/thrift/lib/cpp2/async/AsyncProcessorHelper.cpp b/thrift/lib/cpp2/async/AsyncProcessorHelper.cpp
+index 840325e2ff..e0be856187 100644
+--- a/thrift/lib/cpp2/async/AsyncProcessorHelper.cpp
++++ b/thrift/lib/cpp2/async/AsyncProcessorHelper.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp2/async/AsyncProcessorHelper.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/lib/cpp/TApplicationException.h>
+ 
+ namespace apache::thrift {
+diff --git a/thrift/lib/cpp2/async/ClientInterceptorBase.cpp b/thrift/lib/cpp2/async/ClientInterceptorBase.cpp
+index b4a8d4293f..292ef31eaf 100644
+--- a/thrift/lib/cpp2/async/ClientInterceptorBase.cpp
++++ b/thrift/lib/cpp2/async/ClientInterceptorBase.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <folly/lang/SafeAssert.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift {
+ 
+diff --git a/thrift/lib/cpp2/async/HTTPClientChannel.cpp b/thrift/lib/cpp2/async/HTTPClientChannel.cpp
+index 636ff31853..1ab4ad05d5 100644
+--- a/thrift/lib/cpp2/async/HTTPClientChannel.cpp
++++ b/thrift/lib/cpp2/async/HTTPClientChannel.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/base64.h>
+ #include <proxygen/lib/http/HTTPCommonHeaders.h>
+ #include <proxygen/lib/http/HTTPMethod.h>
+diff --git a/thrift/lib/cpp2/async/RocketClientChannelBase.cpp b/thrift/lib/cpp2/async/RocketClientChannelBase.cpp
+index d151c528ef..9063c57c3b 100644
+--- a/thrift/lib/cpp2/async/RocketClientChannelBase.cpp
++++ b/thrift/lib/cpp2/async/RocketClientChannelBase.cpp
+@@ -19,7 +19,7 @@
+ #include <memory>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/ExceptionString.h>
+ #include <folly/Memory.h>
+ #include <folly/Range.h>
+diff --git a/thrift/lib/cpp2/async/tests/ClientInterceptorTest.cpp b/thrift/lib/cpp2/async/tests/ClientInterceptorTest.cpp
+index e329835b9f..c172919e28 100644
+--- a/thrift/lib/cpp2/async/tests/ClientInterceptorTest.cpp
++++ b/thrift/lib/cpp2/async/tests/ClientInterceptorTest.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include <folly/coro/GtestHelpers.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/lib/cpp/StreamEventHandler.h>
+ #include <thrift/lib/cpp2/async/ClientInterceptor.h>
+diff --git a/thrift/lib/cpp2/dynamic/DynamicValue.cpp b/thrift/lib/cpp2/dynamic/DynamicValue.cpp
+index d58ce962d5..0ff81ad145 100644
+--- a/thrift/lib/cpp2/dynamic/DynamicValue.cpp
++++ b/thrift/lib/cpp2/dynamic/DynamicValue.cpp
+@@ -27,7 +27,7 @@
+ #include <thrift/lib/cpp2/protocol/DebugProtocol.h>
+ #include <thrift/lib/cpp2/protocol/SimpleJSONProtocol.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Overload.h>
+ 
+ #include <iostream>
+diff --git a/thrift/lib/cpp2/dynamic/List.h b/thrift/lib/cpp2/dynamic/List.h
+index beaf7f8b1d..c3cddcb689 100644
+--- a/thrift/lib/cpp2/dynamic/List.h
++++ b/thrift/lib/cpp2/dynamic/List.h
+@@ -25,7 +25,7 @@
+ #include <thrift/lib/cpp2/dynamic/detail/ListIteratorBase.h>
+ #include <thrift/lib/cpp2/dynamic/fwd.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <stddef.h>
+ #include <compare>
+diff --git a/thrift/lib/cpp2/dynamic/Path.h b/thrift/lib/cpp2/dynamic/Path.h
+index 9368c883d1..aa1f279738 100644
+--- a/thrift/lib/cpp2/dynamic/Path.h
++++ b/thrift/lib/cpp2/dynamic/Path.h
+@@ -20,7 +20,7 @@
+ #include <thrift/lib/cpp2/op/Encode.h>
+ #include <thrift/lib/cpp2/protocol/SimpleJSONProtocol.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/io/IOBufQueue.h>
+ #include <folly/lang/Exception.h>
+ 
+diff --git a/thrift/lib/cpp2/dynamic/SerializableRecord.cpp b/thrift/lib/cpp2/dynamic/SerializableRecord.cpp
+index a9fd4daf2f..4aa2a67de6 100644
+--- a/thrift/lib/cpp2/dynamic/SerializableRecord.cpp
++++ b/thrift/lib/cpp2/dynamic/SerializableRecord.cpp
+@@ -25,7 +25,7 @@
+ #include <folly/hash/Hash.h>
+ #include <folly/lang/Assume.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <ostream>
+ 
+diff --git a/thrift/lib/cpp2/dynamic/Struct.cpp b/thrift/lib/cpp2/dynamic/Struct.cpp
+index 1a7d2765e4..b6a084dcb9 100644
+--- a/thrift/lib/cpp2/dynamic/Struct.cpp
++++ b/thrift/lib/cpp2/dynamic/Struct.cpp
+@@ -19,7 +19,7 @@
+ #include <thrift/lib/cpp2/dynamic/DynamicValue.h>
+ #include <thrift/lib/cpp2/dynamic/detail/Datum.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::dynamic {
+ 
+diff --git a/thrift/lib/cpp2/dynamic/TypeId.cpp b/thrift/lib/cpp2/dynamic/TypeId.cpp
+index a1082b3cb3..a4d3ba1b9f 100644
+--- a/thrift/lib/cpp2/dynamic/TypeId.cpp
++++ b/thrift/lib/cpp2/dynamic/TypeId.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp2/dynamic/TypeId.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <ostream>
+ 
+diff --git a/thrift/lib/cpp2/dynamic/TypeSystem.cpp b/thrift/lib/cpp2/dynamic/TypeSystem.cpp
+index b44642b693..4bd353320b 100644
+--- a/thrift/lib/cpp2/dynamic/TypeSystem.cpp
++++ b/thrift/lib/cpp2/dynamic/TypeSystem.cpp
+@@ -19,7 +19,7 @@
+ 
+ #include <folly/Memory.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <functional>
+ #include <memory>
+diff --git a/thrift/lib/cpp2/dynamic/TypeSystem.h b/thrift/lib/cpp2/dynamic/TypeSystem.h
+index 4e5fa95532..a7c6cb60a8 100644
+--- a/thrift/lib/cpp2/dynamic/TypeSystem.h
++++ b/thrift/lib/cpp2/dynamic/TypeSystem.h
+@@ -33,7 +33,7 @@
+ #include <folly/lang/SafeAssert.h>
+ #include <folly/memory/not_null.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <memory>
+ #include <optional>
+diff --git a/thrift/lib/cpp2/dynamic/Union.cpp b/thrift/lib/cpp2/dynamic/Union.cpp
+index 18e311a91c..2ba09a7192 100644
+--- a/thrift/lib/cpp2/dynamic/Union.cpp
++++ b/thrift/lib/cpp2/dynamic/Union.cpp
+@@ -19,7 +19,7 @@
+ #include <thrift/lib/cpp2/dynamic/DynamicValue.h>
+ #include <thrift/lib/cpp2/dynamic/detail/Datum.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::dynamic {
+ 
+diff --git a/thrift/lib/cpp2/dynamic/Union.h b/thrift/lib/cpp2/dynamic/Union.h
+index 9160b4ef1d..b091ee1e8b 100644
+--- a/thrift/lib/cpp2/dynamic/Union.h
++++ b/thrift/lib/cpp2/dynamic/Union.h
+@@ -21,7 +21,7 @@
+ #include <thrift/lib/cpp2/dynamic/TypeSystem.h>
+ #include <thrift/lib/cpp2/dynamic/fwd.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <memory_resource>
+ #include <string_view>
+diff --git a/thrift/lib/cpp2/dynamic/detail/Datum.cpp b/thrift/lib/cpp2/dynamic/detail/Datum.cpp
+index a280654ec5..f064f67338 100644
+--- a/thrift/lib/cpp2/dynamic/detail/Datum.cpp
++++ b/thrift/lib/cpp2/dynamic/detail/Datum.cpp
+@@ -18,7 +18,7 @@
+ #include <thrift/lib/cpp2/dynamic/detail/DatumHash.h>
+ #include <thrift/lib/cpp2/protocol/DebugProtocol.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::dynamic::detail {
+ 
+diff --git a/thrift/lib/cpp2/dynamic/detail/Datum.h b/thrift/lib/cpp2/dynamic/detail/Datum.h
+index 10a43ab41d..5089e9c2ea 100644
+--- a/thrift/lib/cpp2/dynamic/detail/Datum.h
++++ b/thrift/lib/cpp2/dynamic/detail/Datum.h
+@@ -31,7 +31,7 @@
+ #include <thrift/lib/cpp2/dynamic/Union.h>
+ #include <thrift/lib/cpp2/dynamic/fwd.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/CPortability.h>
+ #include <folly/Overload.h>
+ #include <folly/Traits.h>
+diff --git a/thrift/lib/cpp2/frozen/test/CompatibilityTest.cpp b/thrift/lib/cpp2/frozen/test/CompatibilityTest.cpp
+index 4186adc577..62a68fb445 100644
+--- a/thrift/lib/cpp2/frozen/test/CompatibilityTest.cpp
++++ b/thrift/lib/cpp2/frozen/test/CompatibilityTest.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <glog/logging.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <gtest/gtest.h>
+ 
+ #include <thrift/lib/cpp2/frozen/FrozenUtil.h>
+diff --git a/thrift/lib/cpp2/op/Patch.h b/thrift/lib/cpp2/op/Patch.h
+index c9e7994b4d..f56b0524ea 100644
+--- a/thrift/lib/cpp2/op/Patch.h
++++ b/thrift/lib/cpp2/op/Patch.h
+@@ -16,7 +16,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/lib/cpp2/Thrift.h>
+ #include <thrift/lib/cpp2/op/Encode.h>
+ #include <thrift/lib/cpp2/op/PatchTraits.h>
+diff --git a/thrift/lib/cpp2/protocol/DebugProtocol.h b/thrift/lib/cpp2/protocol/DebugProtocol.h
+index 52425c921a..35e2efde8b 100644
+--- a/thrift/lib/cpp2/protocol/DebugProtocol.h
++++ b/thrift/lib/cpp2/protocol/DebugProtocol.h
+@@ -17,7 +17,7 @@
+ #ifndef CPP2_PROTOCOL_DEBUGPROTOCOL_H_
+ #define CPP2_PROTOCOL_DEBUGPROTOCOL_H_
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/io/Cursor.h>
+ #include <folly/io/IOBuf.h>
+ #include <folly/portability/GFlags.h>
+diff --git a/thrift/lib/cpp2/protocol/JSONProtocolCommon.cpp b/thrift/lib/cpp2/protocol/JSONProtocolCommon.cpp
+index ec6a626433..57e14b17f0 100644
+--- a/thrift/lib/cpp2/protocol/JSONProtocolCommon.cpp
++++ b/thrift/lib/cpp2/protocol/JSONProtocolCommon.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <type_traits>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/String.h>
+ #include <folly/json.h>
+diff --git a/thrift/lib/cpp2/protocol/Patch.cpp b/thrift/lib/cpp2/protocol/Patch.cpp
+index 4ad9ef2cbe..84c3d57b0a 100644
+--- a/thrift/lib/cpp2/protocol/Patch.cpp
++++ b/thrift/lib/cpp2/protocol/Patch.cpp
+@@ -20,7 +20,7 @@
+ #include <limits>
+ #include <stdexcept>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/MapUtil.h>
+ #include <folly/io/IOBufQueue.h>
+ #include <folly/lang/Exception.h>
+diff --git a/thrift/lib/cpp2/schema/SyntaxGraph.cpp b/thrift/lib/cpp2/schema/SyntaxGraph.cpp
+index 67706d76d6..ccaa58eabc 100644
+--- a/thrift/lib/cpp2/schema/SyntaxGraph.cpp
++++ b/thrift/lib/cpp2/schema/SyntaxGraph.cpp
+@@ -24,7 +24,7 @@
+ #include <folly/String.h>
+ #include <folly/lang/SafeAssert.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <queue>
+ #include <stdexcept>
+diff --git a/thrift/lib/cpp2/schema/test/SyntaxGraphTest.cpp b/thrift/lib/cpp2/schema/test/SyntaxGraphTest.cpp
+index d2c3ce9158..f6fc63ef1a 100644
+--- a/thrift/lib/cpp2/schema/test/SyntaxGraphTest.cpp
++++ b/thrift/lib/cpp2/schema/test/SyntaxGraphTest.cpp
+@@ -32,7 +32,7 @@
+ #include <thrift/lib/cpp2/schema/test/gen-cpp2/syntax_graph_handlers.h>
+ #include <thrift/lib/cpp2/schema/test/gen-cpp2/syntax_graph_types.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <algorithm>
+ 
+diff --git a/thrift/lib/cpp2/server/CPUConcurrencyController.cpp b/thrift/lib/cpp2/server/CPUConcurrencyController.cpp
+index d683917b11..ecdb6129d6 100644
+--- a/thrift/lib/cpp2/server/CPUConcurrencyController.cpp
++++ b/thrift/lib/cpp2/server/CPUConcurrencyController.cpp
+@@ -19,7 +19,7 @@
+ 
+ #include <algorithm>
+ #include <chrono>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Overload.h>
+ #include <folly/lang/Assume.h>
+ 
+diff --git a/thrift/lib/cpp2/server/LazyDynamicArguments.cpp b/thrift/lib/cpp2/server/LazyDynamicArguments.cpp
+index ac10923755..179dc02296 100644
+--- a/thrift/lib/cpp2/server/LazyDynamicArguments.cpp
++++ b/thrift/lib/cpp2/server/LazyDynamicArguments.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <glog/logging.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/container/F14Map.h>
+ 
+diff --git a/thrift/lib/cpp2/server/RequestsRegistry.h b/thrift/lib/cpp2/server/RequestsRegistry.h
+index bd1a048a09..dadd039ed8 100644
+--- a/thrift/lib/cpp2/server/RequestsRegistry.h
++++ b/thrift/lib/cpp2/server/RequestsRegistry.h
+@@ -18,7 +18,7 @@
+ 
+ #include <array>
+ #include <chrono>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/IntrusiveList.h>
+ #include <folly/SocketAddress.h>
+ #include <folly/executors/QueueObserver.h>
+diff --git a/thrift/lib/cpp2/server/ThriftServer.h b/thrift/lib/cpp2/server/ThriftServer.h
+index 4b5a5a314e..5a226d270a 100644
+--- a/thrift/lib/cpp2/server/ThriftServer.h
++++ b/thrift/lib/cpp2/server/ThriftServer.h
+@@ -52,7 +52,7 @@
+ #include <folly/observer/Observer.h>
+ #include <folly/synchronization/CallOnce.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <thrift/lib/cpp/concurrency/PosixThreadFactory.h>
+ #include <thrift/lib/cpp/concurrency/Thread.h>
+diff --git a/thrift/lib/cpp2/server/test/ResourcePoolSetTest.cpp b/thrift/lib/cpp2/server/test/ResourcePoolSetTest.cpp
+index c3a49730cf..6dbddf00a5 100644
+--- a/thrift/lib/cpp2/server/test/ResourcePoolSetTest.cpp
++++ b/thrift/lib/cpp2/server/test/ResourcePoolSetTest.cpp
+@@ -19,7 +19,7 @@
+ #include <atomic>
+ #include <thread>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/executors/CPUThreadPoolExecutor.h>
+ #include <folly/synchronization/Latch.h>
+ #include <thrift/lib/cpp2/server/ParallelConcurrencyController.h>
+diff --git a/thrift/lib/cpp2/test/CompactProtocolBench.cpp b/thrift/lib/cpp2/test/CompactProtocolBench.cpp
+index 9435dd6f46..a0254ca186 100644
+--- a/thrift/lib/cpp2/test/CompactProtocolBench.cpp
++++ b/thrift/lib/cpp2/test/CompactProtocolBench.cpp
+@@ -21,7 +21,7 @@
+ #include <iostream>
+ #include <vector>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ #include <folly/Benchmark.h>
+ #include <folly/Optional.h>
+diff --git a/thrift/lib/cpp2/test/SerializationTest.cpp b/thrift/lib/cpp2/test/SerializationTest.cpp
+index a87dd109dc..9fdda601a1 100644
+--- a/thrift/lib/cpp2/test/SerializationTest.cpp
++++ b/thrift/lib/cpp2/test/SerializationTest.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <memory>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/lib/cpp2/protocol/Serializer.h>
+ #include <thrift/lib/cpp2/test/gen-cpp2/TestService.h>
+ 
+diff --git a/thrift/lib/cpp2/test/ThriftServerExceptionTest.cpp b/thrift/lib/cpp2/test/ThriftServerExceptionTest.cpp
+index 1c130682da..489a156846 100644
+--- a/thrift/lib/cpp2/test/ThriftServerExceptionTest.cpp
++++ b/thrift/lib/cpp2/test/ThriftServerExceptionTest.cpp
+@@ -18,7 +18,7 @@
+ #include <thrift/lib/cpp2/test/gen-cpp2/Raiser.h>
+ #include <thrift/lib/cpp2/util/ScopedServerInterfaceThread.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <gtest/gtest.h>
+ #include <folly/coro/BlockingWait.h>
+ 
+diff --git a/thrift/lib/cpp2/test/server/ThriftServerTest.cpp b/thrift/lib/cpp2/test/server/ThriftServerTest.cpp
+index 94770e2709..17c87f93df 100644
+--- a/thrift/lib/cpp2/test/server/ThriftServerTest.cpp
++++ b/thrift/lib/cpp2/test/server/ThriftServerTest.cpp
+@@ -22,7 +22,7 @@
+ #include <utility>
+ 
+ #include <boost/cast.hpp>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <common/services/cpp/security/FizzThriftFactory.h>
+ #include <gmock/gmock.h>
+diff --git a/thrift/lib/cpp2/test/util/TestHandler.cpp b/thrift/lib/cpp2/test/util/TestHandler.cpp
+index dd1c87571a..568a494e0b 100644
+--- a/thrift/lib/cpp2/test/util/TestHandler.cpp
++++ b/thrift/lib/cpp2/test/util/TestHandler.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp2/test/util/TestHandler.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/io/Cursor.h>
+ 
+ const std::string kEchoSuffix(45, 'c');
+diff --git a/thrift/lib/cpp2/transport/rocket/client/RequestContext.cpp b/thrift/lib/cpp2/transport/rocket/client/RequestContext.cpp
+index 840e4d6928..a32ea42076 100644
+--- a/thrift/lib/cpp2/transport/rocket/client/RequestContext.cpp
++++ b/thrift/lib/cpp2/transport/rocket/client/RequestContext.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <glog/logging.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Likely.h>
+ #include <folly/io/IOBuf.h>
+ #include <folly/lang/Assume.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/client/RocketClient.cpp b/thrift/lib/cpp2/transport/rocket/client/RocketClient.cpp
+index c2fc04bc43..e59b765397 100644
+--- a/thrift/lib/cpp2/transport/rocket/client/RocketClient.cpp
++++ b/thrift/lib/cpp2/transport/rocket/client/RocketClient.cpp
+@@ -21,7 +21,7 @@
+ #include <string>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Conv.h>
+ #include <folly/ExceptionWrapper.h>
+ #include <folly/GLog.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/framing/Flags.h b/thrift/lib/cpp2/transport/rocket/framing/Flags.h
+index 114d65eef7..be4edb2b6f 100644
+--- a/thrift/lib/cpp2/transport/rocket/framing/Flags.h
++++ b/thrift/lib/cpp2/transport/rocket/framing/Flags.h
+@@ -18,7 +18,7 @@
+ 
+ #include <stdint.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ 
+ namespace apache::thrift::rocket {
+diff --git a/thrift/lib/cpp2/transport/rocket/framing/Frames.cpp b/thrift/lib/cpp2/transport/rocket/framing/Frames.cpp
+index 0948a3f5be..17d9dbfeb8 100644
+--- a/thrift/lib/cpp2/transport/rocket/framing/Frames.cpp
++++ b/thrift/lib/cpp2/transport/rocket/framing/Frames.cpp
+@@ -22,7 +22,7 @@
+ 
+ #include <glog/logging.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/CPortability.h>
+ #include <folly/Likely.h>
+ #include <folly/Range.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/RefactoredRocketServerConnection.cpp b/thrift/lib/cpp2/transport/rocket/server/RefactoredRocketServerConnection.cpp
+index 641d2c41ab..af343cebfb 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/RefactoredRocketServerConnection.cpp
++++ b/thrift/lib/cpp2/transport/rocket/server/RefactoredRocketServerConnection.cpp
+@@ -22,7 +22,7 @@
+ // Ensure RocketServerHandler is fully defined before template instantiation
+ #include <thrift/lib/cpp2/transport/rocket/server/RocketServerHandler.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/ExceptionString.h>
+ #include <folly/ExceptionWrapper.h>
+ #include <folly/GLog.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/RefactoredThriftRocketServerHandler.cpp b/thrift/lib/cpp2/transport/rocket/server/RefactoredThriftRocketServerHandler.cpp
+index df102db631..6781c345d3 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/RefactoredThriftRocketServerHandler.cpp
++++ b/thrift/lib/cpp2/transport/rocket/server/RefactoredThriftRocketServerHandler.cpp
+@@ -22,7 +22,7 @@
+ #include <folly/ExceptionWrapper.h>
+ #include <folly/stop_watch.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/ExceptionString.h>
+ #include <thrift/lib/cpp2/Flags.h>
+ #include <thrift/lib/cpp2/server/Cpp2ConnContext.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/RocketServerConnection.cpp b/thrift/lib/cpp2/transport/rocket/server/RocketServerConnection.cpp
+index 42cece3768..0bdf04ec33 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/RocketServerConnection.cpp
++++ b/thrift/lib/cpp2/transport/rocket/server/RocketServerConnection.cpp
+@@ -19,7 +19,7 @@
+ #include <memory>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/ExceptionString.h>
+ #include <folly/ExceptionWrapper.h>
+ #include <folly/GLog.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/RocketStreamClientCallback.cpp b/thrift/lib/cpp2/transport/rocket/server/RocketStreamClientCallback.cpp
+index 74763da35e..02067b91d4 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/RocketStreamClientCallback.cpp
++++ b/thrift/lib/cpp2/transport/rocket/server/RocketStreamClientCallback.cpp
+@@ -16,7 +16,7 @@
+ 
+ #include <thrift/lib/cpp2/transport/rocket/server/RocketStreamClientCallback.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ THRIFT_FLAG_DEFINE_bool(rocket_server_disable_send_callback, false);
+ 
+diff --git a/thrift/lib/cpp2/transport/rocket/server/ThriftRocketServerHandler.cpp b/thrift/lib/cpp2/transport/rocket/server/ThriftRocketServerHandler.cpp
+index d94d21b1b3..f340dca010 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/ThriftRocketServerHandler.cpp
++++ b/thrift/lib/cpp2/transport/rocket/server/ThriftRocketServerHandler.cpp
+@@ -19,7 +19,7 @@
+ #include <memory>
+ #include <utility>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/ExceptionString.h>
+ #include <folly/ExceptionWrapper.h>
+ #include <folly/GLog.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/detail/ExistingStreamFrameHandler.h b/thrift/lib/cpp2/transport/rocket/server/detail/ExistingStreamFrameHandler.h
+index 88e6843af3..729c656097 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/detail/ExistingStreamFrameHandler.h
++++ b/thrift/lib/cpp2/transport/rocket/server/detail/ExistingStreamFrameHandler.h
+@@ -16,7 +16,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Likely.h>
+ #include <folly/Overload.h>
+ #include <folly/io/Cursor.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/detail/IncomingFrameHandler.h b/thrift/lib/cpp2/transport/rocket/server/detail/IncomingFrameHandler.h
+index 792f3357e8..46e8e47b1e 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/detail/IncomingFrameHandler.h
++++ b/thrift/lib/cpp2/transport/rocket/server/detail/IncomingFrameHandler.h
+@@ -16,7 +16,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Overload.h>
+ #include <folly/String.h>
+ #include <folly/io/Cursor.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/detail/RocketRequestOrchestrator.h b/thrift/lib/cpp2/transport/rocket/server/detail/RocketRequestOrchestrator.h
+index 482e60a009..1d3b8adfbb 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/detail/RocketRequestOrchestrator.h
++++ b/thrift/lib/cpp2/transport/rocket/server/detail/RocketRequestOrchestrator.h
+@@ -19,7 +19,7 @@
+ #include <chrono>
+ #include <memory>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <folly/io/async/AsyncTransport.h>
+ #include <folly/synchronization/CallOnce.h>
+diff --git a/thrift/lib/cpp2/transport/rocket/server/detail/RocketSetupProcessor.cpp b/thrift/lib/cpp2/transport/rocket/server/detail/RocketSetupProcessor.cpp
+index bc46d54cff..0ef37d30dd 100644
+--- a/thrift/lib/cpp2/transport/rocket/server/detail/RocketSetupProcessor.cpp
++++ b/thrift/lib/cpp2/transport/rocket/server/detail/RocketSetupProcessor.cpp
+@@ -19,7 +19,7 @@
+ #include <algorithm>
+ #include <cstdint>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <glog/logging.h>
+ #include <folly/ExceptionString.h>
+ #include <folly/ExceptionWrapper.h>
+diff --git a/thrift/lib/cpp2/type/AlignedPtr.h b/thrift/lib/cpp2/type/AlignedPtr.h
+index 29be40b8a8..1a78b7bcb4 100644
+--- a/thrift/lib/cpp2/type/AlignedPtr.h
++++ b/thrift/lib/cpp2/type/AlignedPtr.h
+@@ -18,7 +18,7 @@
+ 
+ #include <stdexcept>
+ #include <type_traits>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/ConstexprMath.h>
+ #include <folly/lang/Bits.h>
+ #include <folly/lang/Exception.h>
+diff --git a/thrift/lib/cpp2/type/Id.h b/thrift/lib/cpp2/type/Id.h
+index 7621caeaa3..764e3534aa 100644
+--- a/thrift/lib/cpp2/type/Id.h
++++ b/thrift/lib/cpp2/type/Id.h
+@@ -27,7 +27,7 @@
+ #include <stdexcept>
+ #include <type_traits>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Traits.h>
+ #include <folly/Utility.h>
+ #include <folly/lang/Exception.h>
+diff --git a/thrift/lib/cpp2/type/UniversalName.cpp b/thrift/lib/cpp2/type/UniversalName.cpp
+index 451fcde357..45a393b73a 100644
+--- a/thrift/lib/cpp2/type/UniversalName.cpp
++++ b/thrift/lib/cpp2/type/UniversalName.cpp
+@@ -21,7 +21,7 @@
+ 
+ #include <openssl/evp.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/Range.h>
+ #include <folly/lang/Exception.h>
+ #include <folly/portability/OpenSSL.h>
+diff --git a/thrift/lib/cpp2/type/UniversalNameTest.cpp b/thrift/lib/cpp2/type/UniversalNameTest.cpp
+index 8e46869adf..5aa16b5bf9 100644
+--- a/thrift/lib/cpp2/type/UniversalNameTest.cpp
++++ b/thrift/lib/cpp2/type/UniversalNameTest.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include <openssl/evp.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <gtest/gtest.h>
+ #include <folly/Demangle.h>
+ #include <folly/FBString.h>
+diff --git a/thrift/lib/cpp2/type/detail/Name.h b/thrift/lib/cpp2/type/detail/Name.h
+index b0298c0318..2347485bcd 100644
+--- a/thrift/lib/cpp2/type/detail/Name.h
++++ b/thrift/lib/cpp2/type/detail/Name.h
+@@ -16,7 +16,7 @@
+ 
+ #pragma once
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/lang/Pretty.h>
+ #include <thrift/lib/cpp2/Thrift.h>
+ #include <thrift/lib/cpp2/type/NativeType.h>
+diff --git a/thrift/lib/cpp2/util/DebugString.cpp b/thrift/lib/cpp2/util/DebugString.cpp
+index 2027122f9d..bed9cc9939 100644
+--- a/thrift/lib/cpp2/util/DebugString.cpp
++++ b/thrift/lib/cpp2/util/DebugString.cpp
+@@ -17,7 +17,7 @@
+ #include <thrift/lib/cpp2/util/DebugString.h>
+ 
+ #include <unordered_map>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <folly/MapUtil.h>
+ #include <folly/String.h>
+ #include <thrift/lib/cpp2/protocol/BinaryProtocol.h>
+diff --git a/thrift/lib/thrift/detail/TypeIdAdapter.cpp b/thrift/lib/thrift/detail/TypeIdAdapter.cpp
+index 785c0d0eba..d57399b59c 100644
+--- a/thrift/lib/thrift/detail/TypeIdAdapter.cpp
++++ b/thrift/lib/thrift/detail/TypeIdAdapter.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <thrift/lib/thrift/gen-cpp2/type_id_types.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ namespace apache::thrift::type_system::detail {
+ 
+diff --git a/thrift/lib/thrift/detail/TypeIdAdapter.h b/thrift/lib/thrift/detail/TypeIdAdapter.h
+index d0186d1d06..82053a6531 100644
+--- a/thrift/lib/thrift/detail/TypeIdAdapter.h
++++ b/thrift/lib/thrift/detail/TypeIdAdapter.h
+@@ -25,7 +25,7 @@
+ #include <folly/lang/Assume.h>
+ #include <folly/lang/Exception.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <stdexcept>
+ #include <string>
+diff --git a/thrift/lib/thrift/detail/TypeSystemAdapter.cpp b/thrift/lib/thrift/detail/TypeSystemAdapter.cpp
+index fe1566dc92..18ac7280b5 100644
+--- a/thrift/lib/thrift/detail/TypeSystemAdapter.cpp
++++ b/thrift/lib/thrift/detail/TypeSystemAdapter.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include <folly/hash/Hash.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ using apache::thrift::type_system::FieldId;
+ using apache::thrift::type_system::FieldIdentity;
+diff --git a/thrift/lib/thrift/detail/TypeSystemAdapter.h b/thrift/lib/thrift/detail/TypeSystemAdapter.h
+index d0672fda36..fe25cbaa8c 100644
+--- a/thrift/lib/thrift/detail/TypeSystemAdapter.h
++++ b/thrift/lib/thrift/detail/TypeSystemAdapter.h
+@@ -23,7 +23,7 @@
+ 
+ #include <folly/lang/Exception.h>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include <string_view>
+ #include <type_traits>
+diff --git a/thrift/test/python_capi/adapter.h b/thrift/test/python_capi/adapter.h
+index 9f398ae023..206923e54a 100644
+--- a/thrift/test/python_capi/adapter.h
++++ b/thrift/test/python_capi/adapter.h
+@@ -18,7 +18,7 @@
+ 
+ #include <string>
+ 
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <thrift/lib/cpp2/op/Get.h>
+ 
+ namespace thrift::test::lib {

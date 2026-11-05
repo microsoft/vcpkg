@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO luau-lang/luau
-    REF ${VERSION}
-    SHA512 e4febe2afc102b9f1eda70ef0e1f07ee9f61e4b444a09d2a3d1390f6a7e0edfb73b5716273409006c8d7138492d0e7b9ff0d470b60ec96e66577dccc3dfaef6e
+    REF "${VERSION}"
+    SHA512 c18e3a8609f410ad937d56b9b6f247c52baffe559591b45a329e02abdada843896b2b48a0e3e8c901ec69ad7e3df04e2cf40f8fc1387845d0b23b86fb2b9660a
     HEAD_REF master
     PATCHES
         cmake-config-export.patch
@@ -37,4 +37,8 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/extern/isocline/LICENSE"
+)

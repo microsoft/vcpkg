@@ -6,10 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ClickHouse/clickhouse-cpp
     REF "v${VERSION}"
-    SHA512 4199ac2848b0544a2a9c4e03ca62f9a14e13652b09df62b2c95eda59c567cb8227099b9cb027f18d7bdb3a25ee41f01301a551f1bf98727bf89766f5e1cac3f5
+    SHA512 3b6d76a541d75e3565b3d196193ac04baa7e99c54fd175deeb5bb143f9192243966c7d82a5c3159760d8b77f9e3d6b88254bce9ee58af53505dc0c5dc6e429a6
     HEAD_REF master
     PATCHES
         fix-deps-and-build-type.patch
+        werror.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

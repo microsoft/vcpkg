@@ -15,7 +15,7 @@ index 2520e4e..93034ef 100644
  endif()
  
  if(NOT JWT_DISABLE_PICOJSON AND JWT_EXTERNAL_PICOJSON)
--  target_link_libraries(jwt-cpp INTERFACE picojson::picojson>)
+-  target_link_libraries(jwt-cpp INTERFACE picojson::picojson)
 +  target_include_directories(jwt-cpp INTERFACE "${PICOJSON_INCLUDE_DIR}")
  endif()
  

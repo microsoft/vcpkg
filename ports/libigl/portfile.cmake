@@ -24,6 +24,7 @@ vcpkg_from_github(
         imgui-impl.diff
         install-extra-targets.patch
         instantiations.diff # Fix size_t and ptrdiff_t issues in 32 bit builds (arm32, x86)
+        fix-imgui-combo-getter.patch # imgui 1.92.7 changed Combo/ListBox getter callback signature
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 

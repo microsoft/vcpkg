@@ -3,8 +3,8 @@ string(REPLACE "." "_" VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO munt/munt
-    REF libmt32emu_${VERSION}
-    SHA512 9ec78d57d93bdac9ec7097b03eef7efb79bfa8837a9f04746a89f508adc6482f2da0977db3f7e5def6629cc613fa58c4bf23c752af251e417a5303cf14fe96ad
+    REF "libmt32emu_${VERSION}"
+    SHA512 91fc919e107b6985489386d960f84f2a72919fe088ab2e47e7f5c794a0781592f372428da6d17778eb9fd974d05ff2f9d2e70676477ae553642dff39209426bf
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/mt32emu"
     OPTIONS
         -Dlibmt32emu_SHARED:BOOL=${BUILD_SHARED}
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
@@ -24,9 +25,14 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
-
-file(INSTALL "${SOURCE_PATH}/mt32emu/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/mt32emu/COPYING.txt"
+    "${SOURCE_PATH}/mt32emu/COPYING.LESSER.txt"
+    "${SOURCE_PATH}/mt32emu/src/sha1/sha1.h"
+)

@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hazelcast/hazelcast-cpp-client
     REF "v${VERSION}"
-    SHA512 bc37aae5fbd4272b7e3f1c489c05661c1c771e96fc3f0344ee02be8fe705e98a64234772e679e635f10a64788b8d62e069bc5eb119884b7eb9a78ccd66da62c4
+    SHA512 658e008d0df68d1eea95583d0619665aaa28af9169508e5487d8f25cb964a9edd8da6e4f404eb84e08fb3eee7b1fc48e4b97d5b05ad1ff6f1edf34c3a9ac9415
     HEAD_REF master
+    PATCHES
+        define-boost-thread-version.patch
 )
 
 vcpkg_check_features(

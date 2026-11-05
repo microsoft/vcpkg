@@ -1,0 +1,19 @@
+diff --git a/eccodes-import.cmake.in b/eccodes-import.cmake.in
+index d51cba1..1e72769 100644
+--- a/eccodes-import.cmake.in
++++ b/eccodes-import.cmake.in
+@@ -1,5 +1,14 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(tl-expected CONFIG)
++if(@HAVE_PNG@)
++    find_dependency(PNG)
++endif()
++if(@libaec_FOUND@)
++    find_dependency(libaec CONFIG)
++endif()
++if(NOT @BUILD_SHARED_LIBS@ AND @HAVE_ECCODES_OMP_THREADS@)
++    find_dependency(OpenMP COMPONENTS CXX)
++endif()
+ 
+ set( ECCODES_DEFINITION_PATH  ${eccodes_BASE_DIR}/@ECCODES_DEFINITION_SUFF@ )
+ set( ECCODES_SAMPLES_PATH     ${eccodes_BASE_DIR}/@ECCODES_SAMPLES_SUFF@ )

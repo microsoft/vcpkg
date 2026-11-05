@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/getsentry/sentry-native/releases/download/${VERSION}/sentry-native.zip"
     FILENAME "sentry-native-${VERSION}.zip"
-    SHA512 4f2e7cfd519d37b4b15c97161826e71e796b89cf849597cb37d6515f9913fd216fd5dca3f7d10b32df5a0f9e500b2b3407fb5b2479251c0f3c4dea2861d32aaa
+    SHA512 afe412aed32aff2098b2e260e6ab5733034c0fb272e022b9f060ab8af595b57a31ffe5f5bb228f89dff39dd6b6bb042da69707d6bf500289cfbc8573cf79ca38
 )
 
 vcpkg_extract_source_archive(
@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
     PATCHES
         fix-crashpad-wer.patch
+        fix-wer-define.patch
         fix-usage-runtime.patch
         fix-cmake4.patch
 )
@@ -38,6 +39,13 @@ if("compression" IN_LIST FEATURES)
     vcpkg_list(APPEND options "-DSENTRY_TRANSPORT_COMPRESSION=ON")
 endif()
 
+# sentry-native only looks for pkg-config on Linux, to locate the system libunwind for
+# SENTRY_LIBUNWIND_SYSTEM. Acquire it directly instead of depending on the pkgconf port.
+if(VCPKG_TARGET_IS_LINUX)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    vcpkg_list(APPEND options "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
     set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
@@ -50,6 +58,7 @@ vcpkg_cmake_configure(
         -DSENTRY_BUILD_TESTS=OFF
         -DSENTRY_BUILD_EXAMPLES=OFF
         -DCRASHPAD_ZLIB_SYSTEM=ON
+        -DSENTRY_LIBUNWIND_SYSTEM=ON
     MAYBE_UNUSED_VARIABLES
         CRASHPAD_ZLIB_SYSTEM
 )
@@ -60,11 +69,32 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/sentry.h"
+        "#define SENTRY_H_INCLUDED"
+        "#define SENTRY_H_INCLUDED\n\n#define SENTRY_BUILD_STATIC"
+    )
+endif()
+
 vcpkg_cmake_config_fixup(PACKAGE_NAME sentry CONFIG_PATH lib/cmake/sentry)
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/crashpad_handler${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES crashpad_handler AUTO_CLEAN)
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/vendor/jsmn.h"
+        "${SOURCE_PATH}/vendor/mpack.h"
+        "${SOURCE_PATH}/vendor/stb_sprintf.h"
+        "${SOURCE_PATH}/external/libunwindstack-ndk/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/getopt/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/lss/lss/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/mini_chromium/mini_chromium/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/mini_chromium/mini_chromium/base/third_party/icu/LICENSE"
+        "${SOURCE_PATH}/external/crashpad/third_party/mpack/LICENSE"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO memononen/nanovg
-    REF f93799c078fa11ed61c078c65a53914c8782c00b
-    SHA512 06f55e574ac3f73f2abe6cc614e13f29d27f2e05b2a035a19084fbf69f73cc0571d808a323cd07d25f0f1cb3097bef83d10d4315999ff21d6d3c8eee494dd7fb
+    REF ce3bf745eb2d2dbc14a50bf2446783f691ac4353
+    SHA512 1eae11ec484fb184a3497ba7a7b84e9d298c9bef5353c1d13691660e848f218b5e3e3d2259c83d8475196c791e7433aed302931799bc0f5f3c4666b3b07236d3
     HEAD_REF master
 )
 
@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/nanovg)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

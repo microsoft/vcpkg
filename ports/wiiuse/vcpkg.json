@@ -1,6 +1,6 @@
 {
   "name": "wiiuse",
-  "version": "0.15.6",
+  "version": "0.15.7",
   "description": "WiiUse \"feature complete\" cross-platform Wii Remote access library",
   "homepage": "https://github.com/wiiuse/wiiuse",
   "license": "GPL-3.0-only",

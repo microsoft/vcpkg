@@ -1,5 +1,5 @@
 diff --git a/CMake/options.cmake b/CMake/options.cmake
-index d1e299f..d20e9c8 100644
+index d1e299f..3c996f8 100644
 --- a/CMake/options.cmake
 +++ b/CMake/options.cmake
 @@ -101,11 +101,14 @@ endif ()
@@ -56,6 +56,30 @@ index d1e299f..d20e9c8 100644
  
    if (CMAKE_HAVE_THREADS_LIBRARY)
      add_definitions ("-D_THREAD_SAFE -D_REENTRANT")
+@@ -432,9 +436,9 @@ if (OPTION_USE_THREADS)
+   if (CMAKE_USE_PTHREADS_INIT AND NOT WIN32)
+     set (HAVE_PTHREAD 1)
+     if (NOT APPLE)
+-      set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
++      set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+     endif (NOT APPLE)
+-    list (APPEND FLTK_LDLIBS -lpthread)
++    list (APPEND FLTK_LDLIBS "${CMAKE_THREAD_LIBS_INIT}")
+     list (APPEND FLTK_CFLAGS -D_THREAD_SAFE -D_REENTRANT)
+     set (FLTK_PTHREADS_FOUND TRUE)
+   else()
+@@ -511,7 +515,10 @@ if (X11_Xft_FOUND)
+ endif (X11_Xft_FOUND)
+ 
+ if (OPTION_USE_XFT)
+-  set (USE_XFT X11_Xft_FOUND)
++  if (NOT X11_Xft_FOUND)
++    message(FATAL_ERROR "OPTION_USE_XFT is ON, but X11_Xft_FOUND is false.")
++  endif()
++  set (USE_XFT TRUE)
+   list (APPEND FLTK_LDLIBS -lXft)
+   set (FLTK_XFT_FOUND TRUE)
+ else()
 diff --git a/CMake/resources.cmake b/CMake/resources.cmake
 index a763fb6..5fdb3d5 100644
 --- a/CMake/resources.cmake
@@ -95,3 +119,40 @@ index a763fb6..5fdb3d5 100644
  find_library (LIB_GL GL)
  find_library (LIB_MesaGL MesaGL)
  find_library (LIB_GLEW NAMES GLEW glew32)
+diff --git a/CMake/variables.cmake b/CMake/variables.cmake
+index 0360d06..606bb1f 100644
+--- a/CMake/variables.cmake
++++ b/CMake/variables.cmake
+@@ -82,8 +82,8 @@ if (FLTK_BUILTIN_JPEG_FOUND)
+   list (APPEND STATICIMAGELIBS \$libdir/libfltk_jpeg.a)
+ else ()
+   if (LIB_jpeg)
+-    list (APPEND IMAGELIBS -ljpeg)
+-    list (APPEND STATICIMAGELIBS -ljpeg)
++    list (APPEND IMAGELIBS "\$(\${PKG_CONFIG:-pkg-config} --libs libjpeg)")
++    list (APPEND STATICIMAGELIBS "\$(\${PKG_CONFIG:-pkg-config} --libs libjpeg)")
+   endif (LIB_jpeg)
+ endif (FLTK_BUILTIN_JPEG_FOUND)
+ 
+@@ -92,8 +92,8 @@ if (FLTK_BUILTIN_PNG_FOUND)
+   list (APPEND STATICIMAGELIBS \$libdir/libfltk_png.a)
+ else ()
+   if (LIB_png)
+-    list (APPEND IMAGELIBS -lpng)
+-    list (APPEND STATICIMAGELIBS -lpng)
++    list (APPEND IMAGELIBS "\$(\${PKG_CONFIG:-pkg-config} --libs libpng)")
++    list (APPEND STATICIMAGELIBS "\$(\${PKG_CONFIG:-pkg-config} --libs libpng)")
+   endif (LIB_png)
+ endif (FLTK_BUILTIN_PNG_FOUND)
+ 
+@@ -102,8 +102,8 @@ if (FLTK_BUILTIN_ZLIB_FOUND)
+   list (APPEND STATICIMAGELIBS \$libdir/libfltk_z.a)
+ else ()
+   if (LIB_zlib)
+-    list (APPEND IMAGELIBS -lz)
+-    list (APPEND STATICIMAGELIBS -lz)
++    list (APPEND IMAGELIBS "\$(\${PKG_CONFIG:-pkg-config} --libs zlib)")
++    list (APPEND STATICIMAGELIBS "\$(\${PKG_CONFIG:-pkg-config} --libs zlib)")
+   endif (LIB_zlib)
+ endif (FLTK_BUILTIN_ZLIB_FOUND)
+ 

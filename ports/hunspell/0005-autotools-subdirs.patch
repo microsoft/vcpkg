@@ -11,11 +11,11 @@ index c0aae53..769aef5 100644
  pkgconfdir = $(libdir)/pkgconfig
  pkgconf_DATA = hunspell.pc
 diff --git a/configure.ac b/configure.ac
-index 358cb1d..152adef 100644
+index 698d118..961802a 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -38,6 +38,9 @@ dnl internationalization macros
- AM_GNU_GETTEXT_VERSION(0.18)
+@@ -49,6 +49,9 @@ dnl internationalization macros
+ AM_GNU_GETTEXT_VERSION(0.20)
  AM_GNU_GETTEXT([external])
  
 +AC_ARG_ENABLE(tools,[])
@@ -23,7 +23,7 @@ index 358cb1d..152adef 100644
 +
  AC_ARG_WITH(warnings,[  --with-warnings         compile with warning messages],[
  	AC_DEFINE(HUNSPELL_WARNING_ON,1,"Define if you need warning messages")
- ])
+ 	CPPFLAGS="$CPPFLAGS -DHUNSPELL_WARNING_ON"
 diff --git a/src/Makefile.am b/src/Makefile.am
 index 45b7703..27700af 100644
 --- a/src/Makefile.am

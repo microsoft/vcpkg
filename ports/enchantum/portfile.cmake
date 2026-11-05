@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZXShady/enchantum
     REF ${VERSION}
-    SHA512 7d44b63415c02c5ee02c4c3cf800e084cdb6dbf516a93f4cc37457b935fa5d563ffd29cca58db4ecee5afc007c3be638574d7fe9337b36354a0db9ecd4f24d2d
+    SHA512 97e9cdfc238293b2f9e694df1d29db0a4f1bad1f96e4c861e6ea8f2d1805f0a95b69c82c5ad9720cc1b2868572e8299269f85c9730aa34b6e78bd70cf1367843
     HEAD_REF main
 )
 
@@ -13,5 +13,6 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "cmake")
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/enchantum/cmake")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

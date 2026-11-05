@@ -5,7 +5,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 68f9e5bec3aa6686fd3319cc9c88a5cc44e2a75144049fc9de5fb55fef2241b4e16996af4be5dd48308abbee8cfaed6c862903f6bb89aff5dfa5410075bd7386
+    SHA512 71bf189a836fd18d58b9e995d4bfcecdb0aae6129dfd44247b98422b2f127dd868f9905d28fad2ca05afd919a0e6b3c8eebb6b95804067d3a8dab31ebdc72453
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
@@ -41,6 +41,7 @@ set(ENV{YACC} false)     # false, the program - not used here
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
+    LANGUAGES ASM C CXX
     OPTIONS
         --disable-dependency-tracking
         --disable-doc
@@ -62,7 +63,17 @@ vcpkg_make_configure(
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+vcpkg_copy_tools(
+    TOOL_NAMES
+        certtool
+        gnutls-cli
+        gnutls-cli-debug
+        gnutls-serv
+        ocsptool
+        psktool
+    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
+)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
@@ -79,4 +90,5 @@ unless otherwise specified in the indivual source files.
     FILE_LIST
         "${SOURCE_PATH}/COPYING.LESSERv2"
         "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/lib/inih/LICENSE.txt"
 )

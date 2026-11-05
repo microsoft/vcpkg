@@ -1,17 +1,17 @@
 # highfive should be updated together with hdf5
 
-string(REPLACE "." "." hdf5_ref "hdf5_${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
-    REF "${hdf5_ref}"
-    SHA512 609e129f78c6777a0e64694de8ec638326a616ff9cbd916f310dc6f78435ef67194c5ab59faedda09c85c045c15ebe2ec4ce04fa905d5f74801600e067c27fcc
+    REF "${VERSION}"
+    SHA512 b009572b70eba02fa0963119f202da202cdcf20a3b4c01a94c5618e8b612033c0b8dc23664ccb0c2a2ebbdab427ad96ba8163ff8eb0356bb093617d37a9932f8
     HEAD_REF develop
     PATCHES
         default-plugin-dir.diff # avoid absolute path
         libaec-config.diff
-        pkgconfig.patch
+        mpi-flags.diff
         win-compile-flags.diff
+        arm64-msvc-ice.diff
 )
 
 set(HDF5_ALLOW_UNSUPPORTED OFF)
@@ -137,8 +137,10 @@ foreach(script IN ITEMS h5cc h5c++ h5hlcc h5hlc++ h5pcc h5fuse.sh)
 endforeach()
 vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+)
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 if("parallel" IN_LIST FEATURES)
@@ -149,4 +151,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/H5public.h" "#define H5public_H" "#define H5public_H\n#ifndef H5_BUILT_AS_DYNAMIC_LIB\n#define H5_BUILT_AS_DYNAMIC_LIB\n#endif\n")
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

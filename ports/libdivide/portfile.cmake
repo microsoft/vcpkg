@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ridiculousfish/libdivide
     REF "v${VERSION}"
-    SHA512 1a429b436e545360fb898e059ce689f5123d3fce25242d5a54e52588b75c97008918c1dc5e43f537eb8b2e61577339955ca66d9bbb0eb4440a00500a8a146ccf
+    SHA512 df2e0b0f1b5a84e8e1ab2a362d21a77f5d07412619722ab4c0c7eeb7d039c056acdd45006b1049cdd1fe2abb39ea460c1626f6a8279ea2091de8ef4446ac8ea6
     HEAD_REF master
     PATCHES
         no-werror.patch

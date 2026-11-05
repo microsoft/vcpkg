@@ -1,29 +1,40 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b30d554..d8ab4fc 100644
+index 5b8e604..14c6904 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -115,6 +115,23 @@ endif ()
+@@ -140,22 +140,29 @@ endif ()
  if (SIMSIMD_BUILD_SHARED)
      set(SIMSIMD_SOURCES ${SIMSIMD_SOURCES} c/lib.c)
      add_library(simsimd_shared SHARED ${SIMSIMD_SOURCES})
 -    target_include_directories(simsimd_shared PUBLIC "${PROJECT_SOURCE_DIR}/include")
 +    target_include_directories(simsimd_shared PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
      set_target_properties(simsimd_shared PROPERTIES OUTPUT_NAME simsimd)
-+
-+    install(TARGETS simsimd_shared EXPORT unofficial-simsimd-config
-+        LIBRARY DESTINATION lib
+ 
+     install(
+         TARGETS simsimd_shared
+-        ARCHIVE
++        EXPORT unofficial-simsimd-config
 +        ARCHIVE DESTINATION lib
-+        RUNTIME DESTINATION bin)
+         BUNDLE
+         FRAMEWORK
+-        LIBRARY
++        LIBRARY DESTINATION lib
+         OBJECTS
+         PRIVATE_HEADER
+         PUBLIC_HEADER
+         RESOURCE
+-        RUNTIME
++        RUNTIME DESTINATION bin
++    )
 +
 +    install(EXPORT unofficial-simsimd-config
 +        FILE unofficial-simsimd-config.cmake
 +        NAMESPACE unofficial::simsimd::
 +        DESTINATION share/unofficial-simsimd
-+    )
+     )
  endif ()
+ 
+-install(DIRECTORY include/ DESTINATION include)
+-install(DIRECTORY c/ DESTINATION share/doc/${PROJECT_NAME}/src)
++install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN *.h)
 +
-+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
-+   DESTINATION include
-+   FILES_MATCHING
-+   PATTERN *.h
-+)

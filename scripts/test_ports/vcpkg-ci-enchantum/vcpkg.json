@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-enchantum",
+  "version-string": "ci",
+  "description": "Validates enchantum CMake integration",
+  "dependencies": [
+    "enchantum",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -2,15 +2,16 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION}/icu4c-${VERSION}-sources.tgz"
     FILENAME "icu4c-${VERSION}-sources.tgz"
-    SHA512 92feddfe81c57336f386c7cbc9f6d976bf349db148a77a247c4559676f51116115c8c52c4d907feb50933f72ab75fd8e48be092bf9c8ca33a3e8fabc9372a5d6
+    SHA512 9098adf9ba7fbe11d92963415cc80bf09de39ce1372414dbc2561e5f8ef57479a9fe4b6f7abc61911e4659e5953be987c459297d29e61b064d1931a16195a973
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
-        fix_bsd_and_solaris.patch
         fix_parallel_build_on_windows.patch
+        fix-python-path-with-spaces.patch
+        fix-using-install-sh.diff
         mh-darwin.patch
         mh-mingw.patch
         mh-msys-msvc.patch

@@ -1,8 +1,13 @@
+# cli/2.7.2 has no dllexport annotations, so shared build yields a DLL without exports.
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CLIUtils/CLI11
     REF "v${VERSION}"
-    SHA512 28ff846ca0b736c784d1660b4d1470f34f55fed650c80fb6a2ec26519eaacbb80dd1aa951a4517097579f4aa0cf9527a13f3359744e589e31f852d1bea0ecfc8
+    SHA512 437cd9d704c1b0de0516bdc8cb115befb2e7170417375a64845a2bc2385fa07948c4af724ec615d27fbc102dbe13a7117f33873d6776fe9b17f293d42fe64dd9
     HEAD_REF main
     PATCHES
         revert-1012-pkgconfig.diff

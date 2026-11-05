@@ -1,14 +1,12 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO facebook/rocksdb
+  REPO meta/rocksdb
   REF "v${VERSION}"
-  SHA512 73751e946e47deec7c3df8b77a22ddadb51434474ca0587c1deab36cb4ddfe00736f6402b747508debd36db0727989bc72330f96b3f1a54f09dcc72ecc03e83f
+  SHA512 94658fea825a5cbe95ab9bf6ff6945a0f57353f3ce69ac77f045e737a53860c9ba380c25954af312cf9783275bd016fdb6ee7a56a10a2d634f50477029cc7f4d
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
     0002-fix-android.patch
-    # TODO: This patch should be deleted after following PR will be merged. https://github.com/facebook/rocksdb/pull/13573
-    0003-include_cstdint.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
@@ -23,8 +21,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "zstd" WITH_ZSTD
     "bzip2" WITH_BZ2
     "numa" WITH_NUMA
-    "tbb" WITH_TBB
 )
+
+if(WITH_LIBURING)
+  vcpkg_find_acquire_program(PKGCONFIG)
+  vcpkg_list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -33,6 +35,8 @@ vcpkg_cmake_configure(
     -DWITH_TESTS=OFF
     -DWITH_BENCHMARK_TOOLS=OFF
     -DWITH_TOOLS=OFF
+    -DWITH_CORE_TOOLS=OFF
+    -DWITH_TRACE_TOOLS=OFF
     -DUSE_RTTI=ON
     -DROCKSDB_INSTALL_ON_WINDOWS=ON
     -DFAIL_ON_WARNINGS=OFF

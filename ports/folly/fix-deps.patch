@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 0b96f0a..d5a200f 100644
+index 5fc83ac..7efb0fc 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -29,10 +29,31 @@ endif()
+@@ -34,10 +34,31 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -31,13 +31,13 @@ index 0b96f0a..d5a200f 100644
 +endif()
  
  set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
--find_dependency(Boost 1.51.0 MODULE
-+find_dependency(Boost
+-find_package(Boost 1.69.0 REQUIRED
++find_dependency(Boost 1.69.0
    COMPONENTS
      context
      filesystem
 diff --git a/CMake/folly-config.h.cmake b/CMake/folly-config.h.cmake
-index 9a309fb..7e6e05f 100644
+index 1da1cc1..701ec99 100644
 --- a/CMake/folly-config.h.cmake
 +++ b/CMake/folly-config.h.cmake
 @@ -16,6 +16,9 @@
@@ -51,24 +51,11 @@ index 9a309fb..7e6e05f 100644
  #include <TargetConditionals.h> // @manual
  #endif
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 6ce4c67..a347cf0 100644
+index 1c41750..6ab485c 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
-@@ -35,7 +35,7 @@ else()
- endif()
- set(Boost_USE_STATIC_LIBS "${FOLLY_BOOST_LINK_STATIC}")
- 
--find_package(Boost 1.51.0 MODULE
-+find_package(Boost
-   COMPONENTS
-     context
-     filesystem
-@@ -45,17 +45,21 @@ find_package(Boost 1.51.0 MODULE
-     thread
-   REQUIRED
- )
-+set(Boost_LIBRARIES Boost::boost Boost::context Boost::filesystem Boost::program_options Boost::regex Boost::system Boost::thread)
- list(APPEND FOLLY_LINK_LIBRARIES ${Boost_LIBRARIES})
+@@ -57,14 +57,17 @@ find_package(Boost 1.69.0 REQUIRED
+ # Per-target Boost dependencies are specified via EXTERNAL_DEPS
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
  
 -find_package(DoubleConversion MODULE REQUIRED)
@@ -89,7 +76,7 @@ index 6ce4c67..a347cf0 100644
  set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
  if(LIBGFLAGS_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
-@@ -64,16 +68,22 @@ if(LIBGFLAGS_FOUND)
+@@ -73,7 +76,8 @@ if(LIBGFLAGS_FOUND)
    set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
  endif()
  
@@ -97,8 +84,11 @@ index 6ce4c67..a347cf0 100644
 +find_package(GLOG NAMES glog REQUIRED)
 +set(GLOG_LIBRARY glog::glog)
  set(FOLLY_HAVE_LIBGLOG ${GLOG_FOUND})
- list(APPEND FOLLY_LINK_LIBRARIES ${GLOG_LIBRARY})
+ list(APPEND FOLLY_LINK_LIBRARIES glog::glog)
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${GLOG_INCLUDE_DIR})
+@@ -83,11 +87,16 @@ if (EXISTS "${GLOG_INCLUDE_DIR}/glog/export.h")
+   list(APPEND FOLLY_CXX_FLAGS -DGLOG_USE_GLOG_EXPORT)
+ endif()
  
 -find_package(LibEvent MODULE REQUIRED)
 +find_package(LIBEVENT NAMES Libevent REQUIRED)
@@ -114,7 +104,7 @@ index 6ce4c67..a347cf0 100644
  set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
  if (ZLIB_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
-@@ -106,21 +116,24 @@ if (LIBLZMA_FOUND)
+@@ -120,21 +129,24 @@ if (LIBLZMA_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
  endif()
  
@@ -142,7 +132,7 @@ index 6ce4c67..a347cf0 100644
  set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
  if (SNAPPY_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
-@@ -136,14 +149,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
+@@ -150,14 +162,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
  
  find_package(LibAIO)
@@ -163,7 +153,7 @@ index 6ce4c67..a347cf0 100644
  list(APPEND FOLLY_LINK_LIBRARIES ${LIBSODIUM_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBSODIUM_INCLUDE_DIRS})
  
-@@ -160,6 +178,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
+@@ -174,6 +191,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
  if (LIBUNWIND_FOUND)
    set(FOLLY_HAVE_LIBUNWIND ON)
@@ -172,8 +162,32 @@ index 6ce4c67..a347cf0 100644
  endif()
  if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
    list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49dd964..b84f338 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -273,7 +273,8 @@ folly_resolve_deferred_dependencies()
+ # This points to the SSL test certificates used by TestSSLServer and related tests
+ if(TARGET folly_testing_test_util)
+   target_compile_definitions(folly_testing_test_util INTERFACE
+-    FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
++    $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
++    $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly/">
+   )
+ endif()
+ 
+@@ -285,7 +286,8 @@ add_library(folly_test_util
+   ${FOLLY_DIR}/json/JsonTestUtil.cpp
+ )
+ target_compile_definitions(folly_test_util PUBLIC
+-  FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
++  $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
++  $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly">
+ )
+ set_property(TARGET folly_test_util PROPERTY VERSION ${PACKAGE_VERSION})
+ target_link_libraries(folly_test_util
 diff --git a/folly/io/async/AsyncIO.cpp b/folly/io/async/AsyncIO.cpp
-index 93cda44..ac090bb 100644
+index 2760e0f..a51c16c 100644
 --- a/folly/io/async/AsyncIO.cpp
 +++ b/folly/io/async/AsyncIO.cpp
 @@ -35,7 +35,7 @@
@@ -186,12 +200,12 @@ index 93cda44..ac090bb 100644
  // debugging helpers
  namespace {
 diff --git a/folly/io/async/AsyncIO.h b/folly/io/async/AsyncIO.h
-index b1a6f52..ba84609 100644
+index 36c6df2..02ff518 100644
 --- a/folly/io/async/AsyncIO.h
 +++ b/folly/io/async/AsyncIO.h
 @@ -18,7 +18,7 @@
  
- #include <folly/experimental/io/AsyncBase.h>
+ #include <folly/io/async/AsyncBase.h>
  
 -#if __has_include(<libaio.h>)
 +#if FOLLY_HAS_LIBAIO
@@ -211,7 +225,7 @@ index 8e81aaa..c7f4a67 100644
 -#define FOLLY_HAS_LIBURING 0
  #endif
 diff --git a/folly/io/async/SimpleAsyncIO.cpp b/folly/io/async/SimpleAsyncIO.cpp
-index 807a2be..551a003 100644
+index cceb964..9f97e36 100644
 --- a/folly/io/async/SimpleAsyncIO.cpp
 +++ b/folly/io/async/SimpleAsyncIO.cpp
 @@ -25,7 +25,7 @@

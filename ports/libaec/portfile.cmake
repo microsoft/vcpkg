@@ -1,11 +1,9 @@
-vcpkg_from_gitlab(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.dkrz.de
-    REPO k202009/libaec
+    REPO Deutsches-Klimarechenzentrum/libaec
     REF "v${VERSION}"
-    SHA512 09f6fde3e767fe67865a86d8802eaf63b313ef6f2aaf6bf5e7edef5f405e58d40f2a01132bb290ee176741f3924a6ee2e9a2641cf5e80c3d036d4f5c69142c4f
-    PATCHES
-        fix_export_target.patch
+    SHA512 55bd605590015e0f903a231268265051336c172c18935fdfecead5630454a99811f3f196117556ad1b62f3052d54894fd8e257a9ea9f45cc03f59c93cde00cda
+    HEAD_REF main
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

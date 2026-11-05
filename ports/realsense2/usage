@@ -6,3 +6,5 @@ realsense2 provides CMake targets:
 realsense2 provides pkg-config modules:
 
   realsense2
+
+ROS bag v2 (.db3) support is disabled; recording uses the legacy .bag format.

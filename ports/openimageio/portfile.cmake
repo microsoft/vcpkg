@@ -3,7 +3,6 @@ set(PATCHES
     fix-static-ffmpeg.patch
     imath-version-guard.patch
     fix-openimageio_include_dir.patch
-    fix-openexr-target-missing.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -24,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 cee6ddfbd825022a45a46b041c894a18718a474a32da8715fe08f918c7387505e81f3220c0ad79d3ec160b9c224bdeafbbb8a2b67a47cd845dca492582607c22
+    SHA512 49dfbc38350403cec072a6c976544d10e4402c2c416677acb1048537f67288f4cf5f458f2c3adeea26eb8c92f59e039a62f6c23ef75f61fc62534fdb439b40f6
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -63,7 +62,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("pybind11" IN_LIST FEATURES)
     vcpkg_get_vcpkg_installed_python(PYTHON3)
-    list(APPEND FEATURE_OPTIONS "-DPython3_EXECUTABLE=${PYTHON3}")
+    list(APPEND FEATURE_OPTIONS
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+        -DOIIO_PYTHON_BINDINGS_BACKEND=pybind11
+    )
 endif()
 
 vcpkg_cmake_configure(

@@ -41,12 +41,20 @@ if(NOT cuda_common_git_tag MATCHES "${cuda_common_ref}")
     message(FATAL_ERROR "cuda_common_ref/sha must be updated, new ${cuda_common_git_tag}")
 endif()
 if("cuda" IN_LIST FEATURES)
+    vcpkg_download_distfile(FIX_CUDA_DEPRECATED_cudaDeviceProp_clockRate
+        URLS https://github.com/RTKConsortium/ITKCudaCommon/commit/3e2fcd022191194b4bb3d3419ddcd77656f6d9ee.diff?full_index=1
+        FILENAME itk-cuda-common-fix-deprecated-cudaDevicePro-clockrate-3e2fcd022191194b4bb3d3419ddcd77656f6d9ee.diff
+        SHA512 878152dea720b0c0d163266a1798b8c2461bbdea14996f306659f80a7c5a5abe809ac96c01ccd07b820fa97ca54b168a7f6de34fabdee23856efe4af0dd53432
+    )
+
     vcpkg_from_github(
         OUT_SOURCE_PATH RTK_SOURCE_PATH
         REPO RTKConsortium/ITKCudaCommon
         REF "${cuda_common_ref}"
         SHA512 "${cuda_common_sha}"
         HEAD_REF master
+        PATCHES
+            "${FIX_CUDA_DEPRECATED_cudaDeviceProp_clockRate}"
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/CudaCommon")
     file(RENAME "${RTK_SOURCE_PATH}" "${SOURCE_PATH}/Modules/Remote/CudaCommon")
@@ -62,6 +70,12 @@ endif()
 if("rtk" IN_LIST FEATURES)
     # (old hint, not verified) RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes.
     # RTK's ITK module must be built with ITK.
+    vcpkg_download_distfile(FIX_ITK_RTK_CUDA_13
+        URLS https://github.com/RTKConsortium/RTK/commit/fbe55e45f42820ed1cce444481a0b91327e0c72c.diff?full_index=1
+        FILENAME itk-rtk-cuda13-fbe55e45f42820ed1cce444481a0b91327e0c72c.diff
+        SHA512 18eb817f446548bf1ab077f45aa18848bd047e1528de672c20039f50cf75e7cbb614b6a9051f090f31691f767a2b3eb1f410347d920b2bf2f18e7f9cf2d943af
+    )
+
     vcpkg_from_github(
         OUT_SOURCE_PATH RTK_SOURCE_PATH
         REPO RTKConsortium/RTK
@@ -71,6 +85,7 @@ if("rtk" IN_LIST FEATURES)
         PATCHES
             rtk/cmp0153.diff
             rtk/getopt-win32.diff
+            "${FIX_ITK_RTK_CUDA_13}"
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
     file(RENAME "${RTK_SOURCE_PATH}" "${SOURCE_PATH}/Modules/Remote/RTK")
@@ -195,6 +210,11 @@ endif()
 set(USE_64BITS_IDS OFF)
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
     set(USE_64BITS_IDS ON)
+endif()
+
+if(NOT DEFINED ENV{CUDAARCHS})
+    # ITK defaults to 52 which is no longer supported in CUDA 13.2 as used in vcpkg's test lab.
+    set(ENV{CUDAARCHS} 75)
 endif()
 
 vcpkg_cmake_configure(

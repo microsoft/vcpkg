@@ -1,0 +1,13 @@
+diff --git a/include/boost/text/line_break.hpp b/include/boost/text/line_break.hpp
+index c22f621..3ef2109 100644
+--- a/include/boost/text/line_break.hpp
++++ b/include/boost/text/line_break.hpp
+@@ -2776,7 +2776,7 @@ namespace boost { namespace text { BOOST_TEXT_NAMESPACE_V1 {
+         {
+             template<typename T>
+             using does_arithmetic =
+-                decltype(-declval<T>() + declval<T>() / declval<T>() * declval<T>());
++                decltype(-std::declval<T>() + std::declval<T>() / std::declval<T>() * std::declval<T>());
+ 
+             template<
+                 typename CPIter,

@@ -1,0 +1,9 @@
+diff --git a/Makefile.am b/Makefile.am
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,4 +1,4 @@
+-SUBDIRS = doc examples src
++SUBDIRS = src
+ 
+ pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = dotconf.pc

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
     REF "v${VERSION}"
-    SHA512 a762a61c6ebe677b84397aabb1873f16b53de7b2da63556804038266174ff01c34633071ea2fda4b3c4498d95a6c9ef7477dd2e4ce3b23f12129b517b110f82f
+    SHA512 f3988a78692527af0cb006c2cf5767f2ca624a35eaf75a594ce29f26f8b8f233d9e79c7925305cb362fa600491a9b5f34a81b622b6456e62e32d94d769be3762
     HEAD_REF master
 )
 
@@ -38,7 +38,14 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/taglib-config.cmd" "${CURRENT_PACKAGES_
 
 # remove bin directory for static builds (taglib creates a cmake batch file there)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/taglib/taglib-config.cmake"
+[[include("${CMAKE_CURRENT_LIST_DIR}/taglib-targets.cmake")]]
+[[include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+include("${CMAKE_CURRENT_LIST_DIR}/taglib-targets.cmake")]]
+    )
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/taglib/taglib_export.h" "defined(TAGLIB_STATIC)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/taglib/tag_c.h" "defined(TAGLIB_STATIC)" "1")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 

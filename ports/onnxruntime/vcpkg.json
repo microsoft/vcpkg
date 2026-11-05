@@ -1,6 +1,7 @@
 {
   "name": "onnxruntime",
-  "version-semver": "1.23.2",
+  "version-semver": "1.31.1",
+  "port-version": 1,
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",
@@ -32,21 +33,24 @@
       "name": "flatbuffers",
       "version>=": "23.5.26"
     },
-    "ms-gsl",
+    {
+      "name": "ms-gsl",
+      "version>=": "4.2.1"
+    },
     "nlohmann-json",
     {
       "name": "onnx",
-      "version>=": "1.19.0"
+      "version>=": "1.22.0"
     },
     "optional-lite",
     {
       "name": "protobuf",
-      "version>=": "3.21.12"
+      "version>=": "6.33.4"
     },
     {
       "name": "protobuf",
       "host": true,
-      "version>=": "3.21.12"
+      "version>=": "6.33.4"
     },
     "re2",
     "safeint",
@@ -65,6 +69,13 @@
     }
   ],
   "features": {
+    "coreml": {
+      "description": "Build with CoreML support",
+      "supports": "osx | ios",
+      "dependencies": [
+        "coremltools"
+      ]
+    },
     "cuda": {
       "description": "Build with CUDA support",
       "supports": "(x64 & windows & !static) | (x64 & linux)",
@@ -79,9 +90,16 @@
       "description": "Build a macOS/iOS framework, Objective-C library",
       "supports": "osx | ios"
     },
+    "kleidiai": {
+      "description": "Build kleidiai support",
+      "supports": "arm64",
+      "dependencies": [
+        "kleidiai"
+      ]
+    },
     "openvino": {
       "description": "Build with OpenVINO support",
-      "supports": "!(osx | ios | android | emscripten)",
+      "supports": "!(osx | ios | android | emscripten) & !static",
       "dependencies": [
         {
           "name": "openvino",

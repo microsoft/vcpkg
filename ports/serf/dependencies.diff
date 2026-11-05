@@ -1,0 +1,67 @@
+diff --git a/SConstruct b/SConstruct
+index a96a94d..8b53af6 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -324,13 +324,21 @@ if sys.platform == 'win32':
+   if aprstatic:
+     apr_libs='apr-1.lib'
+     apu_libs='aprutil-1.lib'
+-    env.Append(LIBS=['shell32.lib', 'xml.lib'])
++    env.Append(LIBS=['shell32.lib'])
++    if debug:
++      env.Append(LIBS=['libexpatdMD.lib'])
++    else:
++      env.Append(LIBS=['libexpatMD.lib'])
+   else:
+     apr_libs='libapr-1.lib'
+     apu_libs='libaprutil-1.lib'
+ 
+   env.Append(LIBS=[apr_libs, apu_libs])
+   if not env.get('SOURCE_LAYOUT', None):
++   if debug:
++    env.Append(LIBPATH=['$APR/lib', '$APU/lib'],
++               CPPPATH=['$APR/../include/apr-1', '$APU/../include/apr-1'])
++   else:
+     env.Append(LIBPATH=['$APR/lib', '$APU/lib'],
+                CPPPATH=['$APR/include/apr-1', '$APU/include/apr-1'])
+   elif aprstatic:
+@@ -341,8 +349,15 @@ if sys.platform == 'win32':
+                CPPPATH=['$APR/include', '$APU/include'])
+ 
+   # zlib
+-  env.Append(LIBS=['zlib.lib'])
++  if debug:
++    env.Append(LIBS=[os.environ.get('ZLIB_BASENAME','zlib')+'d.lib'])
++  else:
++    env.Append(LIBS=[os.environ.get('ZLIB_BASENAME','zlib')+'.lib'])
+   if not env.get('SOURCE_LAYOUT', None):
++   if debug:
++    env.Append(CPPPATH=['$ZLIB/../include'],
++               LIBPATH=['$ZLIB/lib'])
++   else:
+     env.Append(CPPPATH=['$ZLIB/include'],
+                LIBPATH=['$ZLIB/lib'])
+   else:
+@@ -351,6 +366,10 @@ if sys.platform == 'win32':
+ 
+   # openssl
+   if not env.get('SOURCE_LAYOUT', None):
++   if debug:
++    env.Append(CPPPATH=['$OPENSSL/../include/openssl'],
++               LIBPATH=['$OPENSSL/debug/lib'])
++   else:
+     env.Append(CPPPATH=['$OPENSSL/include/openssl'],
+                LIBPATH=['$OPENSSL/lib'])
+   elif 0: # opensslstatic:
+@@ -392,7 +411,10 @@ else:
+     apr_libs = ''
+     apu_libs = ''
+ 
+-  env.Append(CPPPATH=['$OPENSSL/include'])
++  if debug:
++    env.Append(CPPPATH=['$OPENSSL/../include/openssl'])
++  else:
++    env.Append(CPPPATH=['$OPENSSL/include/openssl'])
+   env.Append(LIBPATH=['$OPENSSL/lib'])
+ 
+ 

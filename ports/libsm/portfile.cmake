@@ -16,16 +16,17 @@ vcpkg_extract_source_archive(
     ARCHIVE "${LIBSM_ARCHIVE}"
     PATCHES
         msvc.patch
+        xtrans.patch # https://gitlab.freedesktop.org/xorg/lib/libsm/-/commit/d65819505c31f74ffc731003029702576eb9811d
 )
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

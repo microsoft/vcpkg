@@ -1,8 +1,8 @@
 diff --git a/meson.build b/meson.build
-index 8436d1dff8..5e704e37d5 100644
+index b01010f..ea800ee 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -89,13 +89,6 @@ subdir('app')
+@@ -99,13 +99,6 @@ subdir('app')
  # build docs
  subdir('doc')
  

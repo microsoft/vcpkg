@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df52d29..fd3044f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,10 +57,3 @@ install(FILES
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+ )
+ 
+-# only build tests when top level
+-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+-	include(CTest)
+-	if(BUILD_TESTING)
+-		add_subdirectory(tests)
+-	endif()
+-endif()

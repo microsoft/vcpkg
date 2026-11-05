@@ -2,20 +2,30 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vanillapdf/vanillapdf
     REF "v${VERSION}"
-    SHA512 f15d9a290de0eebac9073503ac555cbf389484aa3ff6385697ba879c336ed9cd4277af180f9d842b5bd8cca69bf6ef4dcfbedba07a6a76014e3974fe09fc6190
-    PATCHES
-        disable-autosubscribe.diff
+    SHA512 2d076c6acf159e4fd9ea998053afe2600d2261233aa5e9e7275334044bbaf5fdd519f4774751e83ac1c444a378b40eb6a06bb2ba87c12296c0539075bd31930f
+    HEAD_REF main
 )
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" VANILLAPDF_USE_STATIC_CRT)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      -DVANILLAPDF_STANDALONE=OFF
-      -DVANILLAPDF_ENABLE_TESTS=OFF
-      -DVANILLAPDF_ENABLE_BENCHMARK=OFF
+      -DVANILLAPDF_INTERNAL_VCPKG=OFF
+      -DVANILLAPDF_USE_STATIC_CRT=${VANILLAPDF_USE_STATIC_CRT}
 )
 
 vcpkg_cmake_install()
+
+vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/vanillapdf/c_export.h"
+        "#if defined(VANILLAPDF_CONFIGURATION_DLL) && defined(COMPILER_MICROSOFT_VISUAL_STUDIO)"
+        "#if defined(COMPILER_MICROSOFT_VISUAL_STUDIO)"
+    )
+endif()
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "vanillapdf"
@@ -24,9 +34,7 @@ vcpkg_cmake_config_fixup(
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/debug")
 
 vcpkg_install_copyright(
     FILE_LIST

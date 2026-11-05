@@ -3,18 +3,19 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
     REF "v${VERSION}"
-    SHA512 dcdabe2598db33a973d06f0009dd528aa1f38813bd6015e2595097b838a42240f9ccbe7524b5235ea2f4207a10d5d706339c7a6f4772b531e00a20281a00f67b
+    SHA512 c4dcde3c79e5d69c7231f8862e2e5a83d90d9cce694fb2a4804800b2f8f1bc9db504b9252d81dce872eec8358b33a3a1dbdddcbb6181f6fb8d1d7fc0e9a9fc6a
     HEAD_REF master
     PATCHES
         FindCMath.patch
         prefer-config.diff
+        jpeccodec.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cxx     tiff-cxx
         jpeg    jpeg
-        jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
+        jpeg    CMAKE_REQUIRE_FIND_PACKAGE_libjpeg-turbo
         libdeflate libdeflate
         libdeflate CMAKE_REQUIRE_FIND_PACKAGE_Deflate
         lerc    lerc
@@ -38,14 +39,14 @@ vcpkg_cmake_configure(
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
-        -Djpeg12=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_JPEG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
         -DZSTD_HAVE_DECOMPRESS_STREAM=ON
-        -DHAVE_JPEGTURBO_DUAL_MODE_8_12=OFF
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_JPEG # find_package(JPEG) only called when libjpeg-turbo was not found
         CMAKE_DISABLE_FIND_PACKAGE_GLUT
         CMAKE_DISABLE_FIND_PACKAGE_OpenGL
         ZSTD_HAVE_DECOMPRESS_STREAM

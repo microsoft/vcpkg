@@ -1,0 +1,185 @@
+diff --git a/configure.cmake b/configure.cmake
+index 0000000..0000000 100644
+--- a/configure.cmake
++++ b/configure.cmake
+@@ -660,6 +660,11 @@ qt_feature("webengine-qt-libjpeg" PRIVATE
+     CONDITION QT_FEATURE_static
+         AND TARGET Qt::Gui
+         AND QT_FEATURE_jpeg
+         AND NOT QT_FEATURE_system_jpeg
+ )
++qt_feature("webengine-system-abseil" PRIVATE
++    LABEL "abseil"
++    AUTODETECT FALSE
++    CONDITION UNIX
++)
+ qt_feature("webengine-system-harfbuzz" PRIVATE
+@@ -830,4 +835,5 @@ if(UNIX)
+     qt_configure_add_summary_entry(ARGS "webengine-system-libtiff")
+     qt_configure_add_summary_entry(ARGS "webengine-system-libjpeg")
++    qt_configure_add_summary_entry(ARGS "webengine-system-abseil")
+     qt_configure_add_summary_entry(ARGS "webengine-system-libopenjpeg2")
+     qt_configure_add_summary_entry(ARGS "webengine-system-harfbuzz")
+diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
+index 0000000..0000000 100644
+--- a/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
++++ b/src/3rdparty/chromium/third_party/abseil-cpp/BUILD.gn
+@@ -8,9 +8,46 @@
+ import("//build/config/c++/c++.gni")
+ import("//build/config/sanitizers/sanitizers.gni")
+ import("//build/toolchain/toolchain.gni")
++import("//build/config/linux/pkg_config.gni")
+ import("//build_overrides/build.gni")
+ import("//third_party/abseil-cpp/absl.gni")
+ 
++if (use_system_abseil) {
++  # When use_system_abseil=true, provide include and link information for the
++  # system-installed Abseil (e.g. from vcpkg).  Each pkg_config package pulls
++  # in its transitive Requires: entries, so the union of these "hub" packages
++  # covers the full absl_component_deps closure used by Chromium.
++  pkg_config("absl_from_pkgconfig") {
++    packages = [
++      # Base and synchronization (many transitive deps: int128, time, mutex...)
++      "absl_base",
++      "absl_synchronization",
++      # Debugging (stacktrace, symbolize, demangle, failure_signal_handler)
++      "absl_failure_signal_handler",
++      # Logging subsystem
++      "absl_log_initialize",
++      # Hashing
++      "absl_hash",
++      # Strings (cord, str_format, string_view, ...)
++      "absl_cord",
++      "absl_str_format",
++      # Status / error handling
++      "absl_statusor",
++      # Random number generation
++      "absl_random_distributions",
++      # Containers (flat_hash_map pulls in btree, inlined_vector, ...)
++      "absl_flat_hash_map",
++      "absl_node_hash_map",
++    ]
++  }
++
++  config("absl_bundled_headers") { include_dirs = [ "." ] }
++
++  group("system_absl") {
++    public_configs = [ ":absl_bundled_headers", ":absl_from_pkgconfig" ]
++  }
++}
++
+ config("absl_component_build") {
+   defines = [ "ABSL_CONSUME_DLL" ]
+ }
+@@ -19,3 +56,7 @@
+ component("absl") {
+-  public_deps = [ ":absl_component_deps" ]
++  if (use_system_abseil) {
++    public_deps = [ ":system_absl" ]
++  } else {
++    public_deps = [ ":absl_component_deps" ]
++  }
+   if (is_component_build) {
+@@ -54,3 +95,4 @@
+ group("absl_component_deps") {
++  if (!use_system_abseil) {
+   public_deps = [
+     "//third_party/abseil-cpp/absl/algorithm",
+@@ -128,4 +170,5 @@
+     public_deps += [ ":absl_full_deps" ]
+   }
+ 
++  }
+   visibility = [ ":absl" ]
+@@ -147,3 +190,3 @@
+-  if (!is_component_build) {
++  if (!is_component_build && !use_system_abseil) {
+     public_deps += [ ":absl_full_deps" ]
+   }
+@@ -163,30 +206,32 @@
+   }
+ }
+ 
++if (!use_system_abseil) {
+ group("absl_full_deps") {
+   public_deps = [
+     # Banned because each flag registration generates a static initializer, and
+     # the flag registration mechanism is problematic in component builds.
+     "//third_party/abseil-cpp/absl/flags:config",
+     "//third_party/abseil-cpp/absl/flags:flag",
+     "//third_party/abseil-cpp/absl/flags:marshalling",
+     "//third_party/abseil-cpp/absl/flags:parse",
+     "//third_party/abseil-cpp/absl/flags:reflection",
+     "//third_party/abseil-cpp/absl/flags:usage",
+ 
+     # Banned because the LOG and CHECK macros conflict with Chrome's version of
+     # those macros.
+     "//third_party/abseil-cpp/absl/log",
+     "//third_party/abseil-cpp/absl/log:check",
+   ]
+ 
+   visibility = [
+     ":absl_component_deps",
+     ":absl_full",
+   ]
+ 
+   public_configs = [ "//third_party/abseil-cpp/absl/flags:absl_flags_config" ]
+ }
++}
+ 
+ config("absl_include_config") {
+   include_dirs = [ "." ]
+@@ -238,7 +283,7 @@
+   }
+ }
+ 
+-if (absl_build_tests) {
++if (absl_build_tests && !use_system_abseil) {
+   import("//testing/test.gni")
+ 
+   if (!is_component_build) {
+diff --git a/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni b/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
+index 0000000..0000000 100644
+--- a/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
++++ b/src/3rdparty/chromium/third_party/abseil-cpp/absl.gni
+@@ -19,11 +19,16 @@ import("//build_overrides/build.gni")
+ 
+ declare_args() {
+   absl_build_tests = build_with_chromium
++  use_system_abseil = false
+ }
+ 
+ template("absl_source_set") {
+   source_set(target_name) {
+-    if (defined(invoker.testonly) && invoker.testonly && !absl_build_tests) {
++    if ((defined(invoker.testonly) && invoker.testonly && !absl_build_tests) ||
++        use_system_abseil) {
+       not_needed(invoker, "*")
++      if (use_system_abseil) {
++        public_deps = [ "//third_party/abseil-cpp:system_absl" ]
++      }
+     } else {
+       forward_variables_from(invoker, "*")
+@@ -85,5 +90,5 @@ template("absl_source_set") {
+ template("absl_test") {
+   source_set(target_name) {
+-    if (!absl_build_tests) {
++    if (!absl_build_tests || use_system_abseil) {
+       not_needed(invoker, "*")
+     } else {
+diff --git a/src/pdf/CMakeLists.txt b/src/pdf/CMakeLists.txt
+index 00621491e..0000000 100644
+--- a/src/pdf/CMakeLists.txt
++++ b/src/pdf/CMakeLists.txt
+@@ -220,7 +220,11 @@ foreach(arch ${archs})
+         extend_gn_list(gnArgArg
+             ARGS use_system_libjpeg
+             CONDITION QT_FEATURE_webengine_system_libjpeg
+         )
++        extend_gn_list(gnArgArg
++            ARGS use_system_abseil
++            CONDITION QT_FEATURE_webengine_system_abseil
++        )
+         extend_gn_list(gnArgArg
+             ARGS use_qt_libjpeg
+             CONDITION QT_FEATURE_webengine_qt_libjpeg

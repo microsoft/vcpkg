@@ -1,16 +1,15 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-string(REGEX REPLACE "^([0-9]+)[.]([0-9]+)[.]([0-9]+)\$" "v\\1_\\2_\\3" git_ref "${VERSION}")
+string(REPLACE "." "_" git_ref "${VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BinomialLLC/basis_universal
-    REF "${git_ref}"
-    SHA512 5dec1498ba61ca117d554a26463272d0b12547f8bd92fb5e60a37d4bc004c802535ca719a3c8d2968ab0dc8aeeb40760e3598897c87e62aa5f1ab3b5e882e66c
+    REF "v${git_ref}"
+    SHA512 d0ed371c2fc20d0ecff075fec60203e6992393a127c99fd52330fe519ffb27ce5786520998d87e055d47bab09b23c6afc3267db8f1aa633a8ed4f596c92627f9
     HEAD_REF master
     PATCHES
         export-cmake-config.diff
-        devendor-zstd.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/zstd")
 

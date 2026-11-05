@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9d830c6..90bb680 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,7 +20,7 @@ set(CPACK_GENERATOR "DEB")
+ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "IOhannes m zmölnig")
+ set(CPACK_PACKAGE_VERSION_MAJOR "1")
+ set(CPACK_PACKAGE_VERSION_MINOR "3")
+-set(CPACK_PACKAGE_VERSION_PATCH "3")
++set(CPACK_PACKAGE_VERSION_PATCH "5")
+ set(CPACK_DEBIAN_PACKAGE_DEPENDS "zlib1g")
+ 
+ set(PKG_CONFIG_PRIVATELIBS "")

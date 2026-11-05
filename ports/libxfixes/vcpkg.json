@@ -1,11 +1,16 @@
 {
   "name": "libxfixes",
   "version": "6.0.2",
+  "port-version": 1,
   "description": "Xlib-based library for the XFIXES Extension",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxfixes",
   "license": null,
   "dependencies": [
     "libx11",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xorg-macros",
     "xproto"
   ]

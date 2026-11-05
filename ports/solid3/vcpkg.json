@@ -1,7 +1,7 @@
 {
   "name": "solid3",
   "version": "3.5.8",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Software Library for Interference Detection",
   "homepage": "https://github.com/dtecta/solid3",
   "license": "GPL-2.0-only OR QPL-1.0",

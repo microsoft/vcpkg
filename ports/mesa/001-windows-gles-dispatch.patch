@@ -1,0 +1,14 @@
+diff --git a/src/meson.build b/src/meson.build
+index c36f44b..a1f87dc 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -131,7 +131,8 @@ if with_gallium_or_lvp
+   subdir('gallium')
+ endif
+ # These require libgallium (shared_glapi_lib)
+-if with_gallium and (with_glx != 'disabled' or with_egl)
++if with_gallium and (with_glx != 'disabled' or with_egl or
++                     (with_platform_windows and with_opengl))
+   if with_gles1 and not with_glvnd
+     subdir('mesa/glapi/es1api')
+   endif

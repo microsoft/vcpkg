@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO YaaZ/VulkanMemoryAllocator-Hpp
-    REF "v${VERSION}+2"
-    SHA512 72fccbba9ad422baa0f9e9389a72ccf4aa760ea1f15ecdf6d08604d60c25969938a300db6350363841ba66a40ca7804265477faeb601e142de9d7211da08ada2
+    REF "v${VERSION}+1"
+    SHA512 3b94742406aa7c20bc7bacd29c1c5a01686c9b15fb45d261e65707f4a009d3f0c97bc7121a5f0ea6fb9eebaecf3b8ba0e9d2d99a7adb86f8d7071fb5b0257085
     HEAD_REF master
 )
 

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tbeu/matio
     REF "v${VERSION}"
-    SHA512 170a97fa639f16f1290c1fa7b15f4b10296db216a35d901ebd75141c462db9cf4243b4fffa6aa823eed0a33aa8c5a927f562487a1558867c53f11f343d673f10
+    SHA512 22fbc6d9013d0897daaff53bdeddfe224eeea55f5b4991aca655b62a3e6287b654e2bd79fa2a11f1009ca63d36c898ecbdc9a32ae91489a246c823fc89fc8ecc
     HEAD_REF master
     PATCHES
         cmake-config.diff

@@ -1,0 +1,13 @@
+diff --git a/toolchain/win/BUILD.gn b/toolchain/win/BUILD.gn
+index 87d1e4a..c3a47ea 100644
+--- a/toolchain/win/BUILD.gn
++++ b/toolchain/win/BUILD.gn
+@@ -15,7 +15,7 @@ assert(is_win, "Should only be running on Windows")
+ 
+ # Copy the VS runtime DLL for the default toolchain to the root build directory
+ # so things will run.
+-if (current_toolchain == default_toolchain) {
++if (false) {
+   if (is_debug) {
+     configuration_name = "Debug"
+   } else {

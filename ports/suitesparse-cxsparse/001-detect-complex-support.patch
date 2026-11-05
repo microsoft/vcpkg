@@ -5,7 +5,7 @@ which are required for complex data type support in CXSparse.
 +++ b/CXSparse/CMakeLists.txt
 @@ -45,7 +45,7 @@
  # MS Visual Studio does not support the complex type for ANSI C11.
- # FIXME: see GraphBLAS for how to use complex types in MS Visual Studio.
+ # Fixme: see GraphBLAS for how to use complex types in MS Visual Studio.
  
 -if ( MSVC OR ("${CMAKE_C_SIMULATE_ID}" STREQUAL "MSVC") )
 +if ( MSVC OR CMAKE_C_SIMULATE_ID STREQUAL "MSVC" OR (CMAKE_SYSTEM_NAME STREQUAL "Android" AND CMAKE_SYSTEM_VERSION VERSION_LESS 23) )

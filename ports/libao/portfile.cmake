@@ -17,13 +17,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
   set(ENV{LIBS} "-lwinmm -lksuser")
 endif()
 
-vcpkg_configure_make(
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+  # The Windows logging macros require MSVC's legacy preprocessor.
+  list(APPEND OPTIONS ac_cv_prog_cc_c11=no ac_cv_prog_cc_c23=no)
+endif()
+
+vcpkg_make_configure(
   SOURCE_PATH ${SOURCE_PATH}
-  AUTOCONFIG
+  AUTORECONF
   OPTIONS  --disable-binaries
            ${NO_DLFCN}
+           ${OPTIONS}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

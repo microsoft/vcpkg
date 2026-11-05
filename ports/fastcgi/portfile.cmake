@@ -15,15 +15,15 @@ elseif(NOT VCPKG_TARGET_IS_WINDOWS)
   message("${PORT} currently requires the following library from the system package manager:\n    gettext\n    automake\n    libtool\n    libtool-bin\n\nIt can be installed with apt-get install gettext automake libtool libtool-bin")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     COPY_SOURCE
     OPTIONS
         --disable-examples
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 # switch ${PORT} into /${PORT}
 file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/include2")

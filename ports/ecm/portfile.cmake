@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
     REF "v${VERSION}"
-    SHA512 317300082441ee01d447fd89dc43e858b270d7d645a1286ed9d85dd669eb11c9e66fe44513ce7f0ee4c9ca5bd803d5f168a8847cbe6ad241b3008068679868b0
+    SHA512 0ff491b235502036b23a7bef272c97d850b8e75a2f2cb4c8662676c56d041333a51e911f81768e8b46c2025e1649c250e4b78c7ab7170db37c094525289adfe4
     HEAD_REF master
     PATCHES
         fix_generateqmltypes.patch # https://invent.kde.org/frameworks/extra-cmake-modules/-/merge_requests/201
@@ -33,4 +33,10 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/ECM/cmake)
 
 file(COPY "${CURRENT_PORT_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING-CMAKE-SCRIPTS")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSES/BSD-2-Clause.txt"
+    "${SOURCE_PATH}/LICENSES/BSD-3-Clause.txt"
+    "${SOURCE_PATH}/LICENSES/CC0-1.0.txt"
+    "${SOURCE_PATH}/toolchain/generate-fastlane-metadata.py"
+    "${SOURCE_PATH}/LICENSES/MIT.txt"
+)

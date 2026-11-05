@@ -1,35 +1,41 @@
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://flintlib.org/download/flint-${VERSION}.zip"
-    FILENAME "flint-${VERSION}.zip"
-    SHA512 3dd9a4e79e08ab6bc434a786c8d4398eba6cb04e57bcb8d01677f4912cddf20ed3a971160a3e2d533d9a07b728678b0733cc8315bcb39a3f13475b6efa240062
-)
-
-vcpkg_find_acquire_program(PYTHON3)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO flintlib/flint
+    REF v${VERSION}
+    SHA512 f1057affd37d2460522fbd4620454616571d3a8220d53fa6ee668d8cec25f7996275ec00decaf4b4d9a799db117419192b68f4c3b720f094d12d9b4cf2aa977a
+    HEAD_REF master
     PATCHES
-        fix-cmakelists.patch
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DPYTHON_EXECUTABLE=${PYTHON3}
-        -DWITH_NTL=OFF
-        -DWITH_CBLAS=OFF
-)
-
-vcpkg_cmake_install()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/flint/flint-config.h"
-        "#elif defined(MSC_USE_DLL)" "#elif 1"
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_PARALLEL_CONFIGURE # see configure_file(${CMAKE_CURRENT_SOURCE_DIR} ...
+        OPTIONS
+            "-DPython_EXECUTABLE=${PYTHON3}"
+            -DVCPKG_LOCK_FIND_PACKAGE_CBLAS=OFF
+            -DWITH_NTL=OFF
     )
+    vcpkg_cmake_install()
+    vcpkg_copy_pdbs()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/flint)
+else()
+    vcpkg_make_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTORECONF
+        OPTIONS
+            --with-ntl=no
+            --with-blas=no
+    )
+    vcpkg_make_install()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/gpl-2.0.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

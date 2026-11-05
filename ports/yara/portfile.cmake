@@ -4,7 +4,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO VirusTotal/yara
   REF "v${VERSION}"
-  SHA512 e71d6e435cb2ad7b5875ccabcfe3abe42e2f37187a22e778867c5c5762134961369c2cbd4bea8da9193d5381af4569e39a50156d4077dc3a23b9a2240b741b60
+  SHA512 ce8abb01d76d88e413fbbca5e977fb75250bffb26410724e76ddd874fba73bb888efd2898531bd6abf8dc963eb37a314e90c32bbc7a1bb2b1fc1bb4fa92b4773
   HEAD_REF master
   PATCHES
     # Module elf request new library tlshc(https://github.com/avast/tlshc), the related upstream PR: https://github.com/VirusTotal/yara/pull/1624.
@@ -23,13 +23,28 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
       ${FEATURE_OPTIONS}
-  OPTIONS_DEBUG 
-      -DDISABLE_INSTALL_HEADERS=ON 
+  OPTIONS_DEBUG
+      -DDISABLE_INSTALL_HEADERS=ON
       -DDISABLE_INSTALL_TOOLS=ON
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libyara)
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_copy_tools(TOOL_NAMES yara yarac AUTO_CLEAN)
+
+set(
+    copyright_files
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/libyara/modules/pe/authenticode-parser/authenticode.c"
+)
+if("dotnet" IN_LIST FEATURES)
+    vcpkg_install_copyright(
+        FILE_LIST
+            ${copyright_files}
+            "${SOURCE_PATH}/libyara/modules/dotnet/dotnet.c"
+        COMMENT "The .NET module is licensed under Apache-2.0; see https://www.apache.org/licenses/LICENSE-2.0."
+    )
+else()
+    vcpkg_install_copyright(FILE_LIST ${copyright_files})
+endif()

@@ -1,0 +1,13 @@
+diff --git a/src/cmake/ov_parallel.cmake b/src/cmake/ov_parallel.cmake
+index 2f2efc00b7..67d67ff17e 100644
+--- a/src/cmake/ov_parallel.cmake
++++ b/src/cmake/ov_parallel.cmake
+@@ -77,7 +77,7 @@ endfunction()
+ 
+ macro(ov_find_package_tbb)
+     if((THREADING STREQUAL "TBB" OR THREADING STREQUAL "TBB_AUTO" OR THREADING STREQUAL "TBB_ADAPTIVE") AND NOT TBB_FOUND)
+-        if(ANDROID)
++        if(FALSE)
+             if(NOT DEFINED TBB_DIR AND NOT DEFINED ENV{TBB_DIR})
+                 message(FATAL_ERROR
+                     "Android build with TBB threading requires a separately built oneTBB package. "

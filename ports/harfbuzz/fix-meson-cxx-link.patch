@@ -1,0 +1,36 @@
+diff --git a/util/meson.build b/util/meson.build
+index 8b188a259..b895d0aea 100644
+--- a/util/meson.build
++++ b/util/meson.build
+@@ -124,6 +124,7 @@ if conf.get('HAVE_GLIB', 0) == 1
+     cpp_args: cpp_args,
+     include_directories: [incconfig, incsrc],
+     link_with: [libharfbuzz],
++    link_language: 'cpp',
+     install: false,
+   )
+ 
+@@ -132,6 +133,7 @@ if conf.get('HAVE_GLIB', 0) == 1
+       cpp_args: cpp_args,
+       include_directories: [incconfig, incsrc],
+       link_with: [libharfbuzz, libharfbuzz_vector],
++      link_language: 'cpp',
+       install: false,
+     )
+   endif
+@@ -140,6 +142,7 @@ if conf.get('HAVE_GLIB', 0) == 1
+     cpp_args: cpp_args,
+     include_directories: [incconfig, incsrc],
+     link_with: [libharfbuzz],
++    link_language: 'cpp',
+     install: false,
+   )
+ 
+@@ -199,6 +202,7 @@ if conf.get('HAVE_GLIB', 0) == 1
+           include_directories: [incconfig, incsrc],
+           dependencies: util_deps,
+           link_with: [libharfbuzz, libharfbuzz_subset],
++          link_language: 'cpp',
+           install: false,
+       ),
+       workdir : meson.current_source_dir(),

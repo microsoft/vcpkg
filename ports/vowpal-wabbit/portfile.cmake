@@ -4,12 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VowpalWabbit/vowpal_wabbit
     REF "${VERSION}"
-    SHA512 f87229caf65c6c32fb863fa426a39592d41990a43ce4d79f0a076323e47cd3d1a8bd02884afceb662527c87d290e68c51df6263d6a97f3a044f3f7254a38f86a
+    SHA512 ee4aee1b61760c40bd25a240edd5a830bc32f9d982c38c28efa873b8935db8c2f754b872955a0554643b3a3be471fac44af30cba7a47cd8a08650dacbe5a2613
     HEAD_REF master
     PATCHES
-        cmake_remove_bin_targets.patch
-        fix-build-error-with-fmt11.patch
-        fix-external-libraries.patch
         fix-android-build.patch
 )
 
@@ -24,6 +21,7 @@ vcpkg_cmake_configure(
         -DVW_ZLIB_SYS_DEP=ON
         -DVW_EIGEN_SYS_DEP=ON
         -DVW_BUILD_VW_C_WRAPPER=OFF
+        -DVW_BUILD_EXECUTABLES=OFF
         -DBUILD_TESTING=OFF
         -DVW_STRING_VIEW_LITE_SYS_DEP=ON
         -DVW_SSE2NEON_SYS_DEP=ON

@@ -15,7 +15,7 @@ z_vcpkg_make_prepare_compile_flags(
     LANGUAGES "C" "CXX"
 )
 
-set(expected_cflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")  
+set(expected_cflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")
 set(expected_cxxflags "-Xcompiler -O2 -Xcompiler -DNDEBUG")
 set(expected_ldflags "-Xlinker -Xlinker -Xlinker -L/mylibpath")
 
@@ -34,7 +34,7 @@ z_vcpkg_make_prepare_compile_flags(
 )
 
 # Expected Debug flags
-set(expected_cflags "-Xcompiler -g -Xcompiler -O0 -Xcompiler -DDEBUG")  
+set(expected_cflags "-Xcompiler -g -Xcompiler -O0 -Xcompiler -DDEBUG")
 set(expected_cxxflags "-Xcompiler -g -Xcompiler -O0 -Xcompiler -DDEBUG")
 set(expected_ldflags "-Xlinker -Xlinker -Xlinker -L/debuglibpath")
 
@@ -56,7 +56,7 @@ z_vcpkg_make_prepare_compile_flags(
     LANGUAGES "C" "CXX"
 )
 
-set(expected_cflags "-g -O0 -DDEBUG")  
+set(expected_cflags "-g -O0 -DDEBUG")
 set(expected_cxxflags "-g -O0 -DDEBUG")
 set(expected_ldflags "-L/debuglibpath")
 

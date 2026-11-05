@@ -3,7 +3,7 @@ vcpkg_from_sourceforge(
     REPO mpg123/mpg123
     REF "${VERSION}"
     FILENAME "mpg123-${VERSION}.tar.bz2"
-    SHA512 9b7aa93b692132da7eb8dcfef12ce91bf66bf8475af50e9c57d7b80225f96c0e74264e518e558371af1f4cf6d2afda5b3dfc844949fd747db7ac7c44d0e9f6ad
+    SHA512 694743802bb7be0f4a39bf62e681ae0bfed769cb87dc6c5b6fb5f9245966631efb5c5b9bd58588f7af55ced5d020f97c8a54993e71b5295bc45ebd152473f40e
     PATCHES
         have-fpu.diff
         pkgconfig.diff

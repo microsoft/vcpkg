@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 a71d212a1c8682eb662ef6bb8bdcb124bc13c353e76ac236b01e544bddb975740c36be54c05305e1114e4daf20fec56642ffa319a6426c87c5538ea2225c156b
     PATCHES
         build-fixes.patch
+        fix-tls-check.patch
 )
 
 vcpkg_cmake_configure(

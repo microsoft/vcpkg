@@ -47,6 +47,7 @@ mark_as_advanced(VCPKG_VERBOSE)
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
+option(VCPKG_USE_LEGACY_APPLOCAL "Use applocal.ps1 instead of vcpkg z-applocal." OFF)
 
 # requires CMake 3.14
 option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables. Requires CMake 3.14." OFF)
@@ -382,6 +383,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HO
     set(Z_VCPKG_TARGET_TRIPLET_PLAT solaris)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Android" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Android"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT android)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "OHOS")
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT ohos)
 endif()
 
 if(EMSCRIPTEN)
@@ -575,27 +578,45 @@ set(VCPKG_CAN_USE_HOST_TOOLS OFF)
 if(DEFINED VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL "")
     set(VCPKG_CAN_USE_HOST_TOOLS ON)
 endif()
-cmake_dependent_option(VCPKG_USE_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use host tools" ON "VCPKG_CAN_USE_HOST_TOOLS" OFF)
+cmake_dependent_option(VCPKG_USE_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use only host tools" OFF "VCPKG_CAN_USE_HOST_TOOLS" OFF)
+# Tools such as wxrc from wxwidgets are only installed for the target triplet,
+# so fall back to the target tools after the host tools.
+cmake_dependent_option(VCPKG_PREFER_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use host tools, then target tools" ON "VCPKG_CAN_USE_HOST_TOOLS" OFF)
 unset(VCPKG_CAN_USE_HOST_TOOLS)
 
 if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
-    set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools")
     if(VCPKG_USE_HOST_TOOLS)
-        set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools")
+        set(Z_VCPKG_TOOLS_TRIPLETS "${VCPKG_HOST_TRIPLET}")
+    elseif(VCPKG_PREFER_HOST_TOOLS)
+        set(Z_VCPKG_TOOLS_TRIPLETS "${VCPKG_HOST_TRIPLET}" "${VCPKG_TARGET_TRIPLET}")
+        list(REMOVE_DUPLICATES Z_VCPKG_TOOLS_TRIPLETS)
+        # The target triplet's tree is in CMAKE_FIND_ROOT_PATH, and in the default BOTH
+        # mode find_program() searches inside it first, which would find the target
+        # copy of a tool installed for both triplets.
+        if(NOT VCPKG_HOST_TRIPLET STREQUAL VCPKG_TARGET_TRIPLET AND NOT DEFINED CMAKE_FIND_ROOT_PATH_MODE_PROGRAM)
+            set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+        endif()
+    else()
+        set(Z_VCPKG_TOOLS_TRIPLETS "${VCPKG_TARGET_TRIPLET}")
     endif()
-    list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
-    file(GLOB Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
-    file(GLOB Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
-    file(GLOB Z_VCPKG_TOOLS_DIRS_BIN LIST_DIRECTORIES true "${tools_base_path}/*/bin")
-    file(GLOB Z_VCPKG_TOOLS_FILES_BIN LIST_DIRECTORIES false "${tools_base_path}/*/bin")
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS_BIN ${Z_VCPKG_TOOLS_FILES_BIN} "")
-    string(REPLACE "/bin" "" Z_VCPKG_TOOLS_DIRS_TO_REMOVE "${Z_VCPKG_TOOLS_DIRS_BIN}")
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_TO_REMOVE} "")
-    list(APPEND Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_BIN})
-    foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
-        list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
+    foreach(Z_VCPKG_TOOLS_TRIPLET IN LISTS Z_VCPKG_TOOLS_TRIPLETS)
+        set(tools_base_path "${VCPKG_INSTALLED_DIR}/${Z_VCPKG_TOOLS_TRIPLET}/tools")
+        list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
+        file(GLOB Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
+        file(GLOB Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
+        file(GLOB Z_VCPKG_TOOLS_DIRS_BIN LIST_DIRECTORIES true "${tools_base_path}/*/bin")
+        file(GLOB Z_VCPKG_TOOLS_FILES_BIN LIST_DIRECTORIES false "${tools_base_path}/*/bin")
+        list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
+        list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS_BIN ${Z_VCPKG_TOOLS_FILES_BIN} "")
+        string(REPLACE "/bin" "" Z_VCPKG_TOOLS_DIRS_TO_REMOVE "${Z_VCPKG_TOOLS_DIRS_BIN}")
+        list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_TO_REMOVE} "")
+        list(APPEND Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_BIN})
+        foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
+            list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
+        endforeach()
     endforeach()
+    unset(Z_VCPKG_TOOLS_TRIPLET)
+    unset(Z_VCPKG_TOOLS_TRIPLETS)
     unset(Z_VCPKG_TOOLS_DIR)
     unset(Z_VCPKG_TOOLS_DIRS)
     unset(Z_VCPKG_TOOLS_FILES)
@@ -618,19 +639,29 @@ function(add_executable)
     if(IMPORTED_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         if(VCPKG_APPLOCAL_DEPS)
             if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox")
-                z_vcpkg_set_powershell_path()
                 set(EXTRA_OPTIONS "")
                 if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
                     set(EXTRA_OPTIONS USES_TERMINAL)
                 endif()
-                add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
-                        -targetBinary "$<TARGET_FILE:${target_name}>"
-                        -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
-                        -OutVariable out
-                    VERBATIM
-                    ${EXTRA_OPTIONS}
-                )
+                if(VCPKG_USE_LEGACY_APPLOCAL)
+                    z_vcpkg_set_powershell_path()
+                    add_custom_command(TARGET "${target_name}" POST_BUILD
+                        COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
+                            -targetBinary "$<TARGET_FILE:${target_name}>"
+                            -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                            -OutVariable out
+                        VERBATIM
+                        ${EXTRA_OPTIONS}
+                    )
+                else()
+                    add_custom_command(TARGET "${target_name}" POST_BUILD
+                        COMMAND "${Z_VCPKG_EXECUTABLE}" z-applocal
+                            "--target-binary=$<TARGET_FILE:${target_name}>"
+                            "--installed-bin-dir=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                        VERBATIM
+                        ${EXTRA_OPTIONS}
+                    )
+                endif()
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL "-1")
                     find_package(Python COMPONENTS Interpreter)
@@ -659,14 +690,23 @@ function(add_library)
     if(IMPORTED_IDX EQUAL "-1" AND INTERFACE_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         get_target_property(IS_LIBRARY_SHARED "${target_name}" TYPE)
         if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
-            z_vcpkg_set_powershell_path()
-            add_custom_command(TARGET "${target_name}" POST_BUILD
-                COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
-                    -targetBinary "$<TARGET_FILE:${target_name}>"
-                    -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
-                    -OutVariable out
+            if(VCPKG_USE_LEGACY_APPLOCAL)
+                z_vcpkg_set_powershell_path()
+                add_custom_command(TARGET "${target_name}" POST_BUILD
+                    COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
+                        -targetBinary "$<TARGET_FILE:${target_name}>"
+                        -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                        -OutVariable out
+                        VERBATIM
+                )
+            else()
+                add_custom_command(TARGET "${target_name}" POST_BUILD
+                    COMMAND "${Z_VCPKG_EXECUTABLE}" z-applocal
+                        "--target-binary=$<TARGET_FILE:${target_name}>"
+                        "--installed-bin-dir=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     VERBATIM
-            )
+                )
+            endif()
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
         set_target_properties("${target_name}" PROPERTIES VS_GLOBAL_VcpkgEnabled false)
@@ -703,7 +743,6 @@ function(x_vcpkg_install_local_dependencies)
         # Install CODE|SCRIPT allow the use of generator expressions
         cmake_policy(SET CMP0087 NEW) # CMake 3.14
 
-        z_vcpkg_set_powershell_path()
         if(NOT IS_ABSOLUTE "${arg_DESTINATION}")
             set(arg_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${arg_DESTINATION}")
         endif()
@@ -717,13 +756,23 @@ function(x_vcpkg_install_local_dependencies)
         foreach(target IN LISTS arg_TARGETS)
             get_target_property(target_type "${target}" TYPE)
             if(target_type IN_LIST allowed_target_types)
-                install(CODE "message(\"-- Installing app dependencies for ${target}...\")
-                    execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                        -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
-                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)"
-                    ${component_param}
-                )
+                if(VCPKG_USE_LEGACY_APPLOCAL)
+                    z_vcpkg_set_powershell_path()
+                    install(CODE "message(\"-- Installing app dependencies for ${target}...\")
+                        execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                            -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
+                            -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                            -OutVariable out)"
+                        ${component_param}
+                    )
+                else()
+                    install(CODE "message(\"-- Installing app dependencies for ${target}...\")
+                        execute_process(COMMAND \"${Z_VCPKG_EXECUTABLE}\" z-applocal
+                            \"--target-binary=${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
+                            \"--installed-bin-dir=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\")"
+                        ${component_param}
+                    )
+                endif()
             endif()
         endforeach()
     endif()

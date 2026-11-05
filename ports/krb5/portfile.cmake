@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         static-deps.diff
         define-des-zeroblock.diff
+        autoconf-2.72.patch # https://github.com/krb5/krb5/commit/b7290e0cab5b7e39cd4aa7c098beb18a886d4a1d
 )
 
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -79,15 +80,15 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         endforeach()    
     endif()
 else()
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}/src"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             --disable-nls
             --with-tls-impl=no
             "CFLAGS=-fcommon \$CFLAGS"
     )
-    vcpkg_install_make()
+    vcpkg_make_install()
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/krb5-config" "${CURRENT_INSTALLED_DIR}" [[$(cd "$(dirname "$0")/../../.."; pwd -P)]])
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/compile_et" "${CURRENT_INSTALLED_DIR}" [[$(cd "$(dirname "$0")/../../.."; pwd -P)]])

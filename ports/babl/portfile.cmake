@@ -3,13 +3,14 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gimp.org/pub/babl/${VERSION_MAJOR_MINOR}/babl-${VERSION}.tar.xz"
     FILENAME "babl-${VERSION}.tar.xz"
-    SHA512 061b8d62a618129c9f08fc04ca1e86145873cf15fcde643be60b52393316275ca6d98bb44ac86b7b26264bc3a9b2fd54db39d78b2b56fe069daf678b28ded59f
+    SHA512 ce295226f9a0c98c22e1564306741e0588235dd3f420899978469949b3ddfd107c3c009e85279aed82055ece1689de7ded0a0f04974de89cff0ed585007b6290
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        support-plugins.patch
         remove-consistency-check.patch
 )
 
@@ -36,9 +37,11 @@ vcpkg_configure_meson(
         "g-ir-compiler='${GIR_COMPILER}'"
         "g-ir-scanner='${GIR_SCANNER}'"
 )
-vcpkg_install_meson()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_tools(TOOL_NAMES babl AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

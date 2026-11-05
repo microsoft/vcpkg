@@ -19,6 +19,7 @@ vcpkg_from_github(
         fix-glog.patch
         protobuf.patch
         protobuf-6.patch
+        fix-bvar-detail-sample.patch
 )
 
 vcpkg_cmake_configure(

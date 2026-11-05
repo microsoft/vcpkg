@@ -2,9 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xsco/libdjinterop
     REF "${VERSION}"
-    SHA512 45969510c2a2c863bd9627ddc73f404c84d12cc0eea922c23a04dc3486420188936ef556e6a5372e3cc390b3b12d748d64d0cae82a845d6306a4da18227bb435
+    SHA512 3d10815725b4f7c9ae835609c1aaca5373d9b1ce010d0fdd64f8116847d90cbdcf50f160f73b590be95db49632e93bd82c4133be0bbdc84c34e543bc29573494
     HEAD_REF master
+    PATCHES
+        devendor_libs.diff
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

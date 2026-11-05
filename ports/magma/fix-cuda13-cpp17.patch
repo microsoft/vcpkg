@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a59abcd..1c8fe87 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -603,7 +603,6 @@ include_directories( testing )
+ 
+ if (MAGMA_ENABLE_CUDA)
+   add_library( magma_sparse ${libsparse_all} )
+-  set_property(TARGET magma_sparse PROPERTY CUDA_STANDARD 14)
+   target_link_libraries( magma_sparse
+     magma
+     ${blas_fix}

@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HOST-Oman/libraqm
     REF v${VERSION}
-    SHA512 5b32753b000fa30fe6bb997b8719328c13d68e0ed74207436eff6f1d2932e02c53df424dbf9721cedb308efd355e00036dcfb2d26d7fd89f545273f0e3c24d72
+    SHA512 636193a92233d4b76e0343927a6adabe770bac1338317e59d12537fd31c41cb988dfa049bd76bf83778b5f8cdc1ca5a7eba06bfcc085f8d2e5b25bdf38b0a711
     HEAD_REF master
+    PATCHES
+        prefer-pkgconfig-freetype.patch
 )
 
 vcpkg_configure_meson(

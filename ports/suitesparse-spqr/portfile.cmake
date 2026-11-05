@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DrTimothyAldenDavis/SuiteSparse
-    REF v7.8.3
-    SHA512 fc0fd0aaf55a6712a3b8ca23bf7536a31d52033e090370ebbf291f05d0e073c7dcfd991a80b037f54663f524804582b87af86522c2e4435091527f0d3c189244
+    REF v7.14.1
+    SHA512 7a3eba199f89bb6badcca93afbf792e09bb32df8c477ffc56d3d40b75adb1573bd2a3ffcd9d615d7718594f316a091d0b5bae00f78b853b5062f869661d61ae1
     HEAD_REF dev
     PATCHES
         001-dont-override-cuda-architectures.patch
@@ -29,7 +29,6 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
-        -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
         -DSUITESPARSE_USE_STRICT=ON
         -DSUITESPARSE_USE_FORTRAN=OFF
         -DSUITESPARSE_DEMOS=OFF
@@ -57,5 +56,6 @@ vcpkg_cmake_config_fixup(
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${PACKAGE_NAME}/Doc/License.txt")

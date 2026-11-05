@@ -1,0 +1,13 @@
+diff --git a/src/utils.cpp b/src/utils.cpp
+index 356d4ad..b5c2ecf 100644
+--- a/src/utils.cpp
++++ b/src/utils.cpp
+@@ -37,7 +37,7 @@ template <typename octet_iterator>
+ result<uint32_t> next(octet_iterator& it, octet_iterator end) {
+   using namespace utf8;
+   utfchar32_t cp = 0;
+-  internal::utf_error err_code = internal::validate_next(it, end, cp);
++  internal::utf_error err_code = internal::decode_next(it, end, cp);
+   switch (err_code) {
+     case internal::UTF8_OK :
+       break;

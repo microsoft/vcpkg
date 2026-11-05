@@ -2,7 +2,7 @@ diff --git a/configure.ac b/configure.ac
 index 9f30d29..29737da 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -120,6 +120,14 @@ AC_C_INLINE
+@@ -121,6 +121,14 @@ # libtool
  # libtool
  AC_PROG_CXX
  

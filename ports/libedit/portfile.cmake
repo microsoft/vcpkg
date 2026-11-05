@@ -23,11 +23,11 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
 )
-vcpkg_install_make()
+vcpkg_make_install()
 
 vcpkg_fixup_pkgconfig()
 

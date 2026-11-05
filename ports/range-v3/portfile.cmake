@@ -1,12 +1,20 @@
 if(EXISTS "${CURRENT_INSTALLED_DIR}/share/range-v3-vs2015/copyright")
     message(FATAL_ERROR "'${PORT}' conflicts with 'range-v3-vs2015'. Please remove range-v3-vs2015:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
+vcpkg_download_distfile(LIBCXX_PATCH
+    URLS https://github.com/ericniebler/range-v3/commit/bef4198ccababd6d130e1f56aa015faaaddd1f1d.patch?full_index=1
+    FILENAME range-v3-libcxx-22.patch
+    SHA512 aca4999f661ef7c6ed8d47cf4c9a00ff63b4ccda9ba7b95f1cfdb2e1df82967ef9e8182d04f47a4cfb9f603294f2974cb904d20f66ca4a94ed49df684b49ec41
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ericniebler/range-v3
     REF a81477931a8aa2ad025c6bda0609f38e09e4d7ec # Dude, where's my bored ape? (0.12.0)
     SHA512 e58030bc7c281e90298025dc21fed9bdabda358cd847b59e5b58feb3e0b93fcf6398e3b8e2912e45deeed67f454c08d4fc4df7f8d0dc378b437612f15c0832fe
     HEAD_REF master
+    PATCHES
+        "${LIBCXX_PATCH}"
 )
 
 vcpkg_cmake_configure(

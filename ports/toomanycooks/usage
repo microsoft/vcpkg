@@ -1,0 +1,8 @@
+toomanycooks provides CMake targets:
+
+  find_package(TooManyCooks CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE TooManyCooks::TooManyCooks)
+
+Additional configurations, including replacing the boost-asio backend with standalone asio,
+are available via the overlay port located in the library repo:
+https://github.com/tzcnt/TooManyCooks/tree/main/ports/toomanycooks

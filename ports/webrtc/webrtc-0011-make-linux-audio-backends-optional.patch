@@ -1,0 +1,144 @@
+diff --git a/modules/audio_device/BUILD.gn b/modules/audio_device/BUILD.gn
+--- a/modules/audio_device/BUILD.gn
++++ b/modules/audio_device/BUILD.gn
+@@ -338,33 +338,37 @@ rtc_library("audio_device_impl") {
+       defines += [ "WEBRTC_DUMMY_FILE_DEVICES" ]
+     } else {
+       if (is_linux || is_chromeos) {
+-        sources += [
+-          "linux/alsasymboltable_linux.cc",
+-          "linux/alsasymboltable_linux.h",
+-          "linux/audio_device_alsa_linux.cc",
+-          "linux/audio_device_alsa_linux.h",
+-          "linux/audio_mixer_manager_alsa_linux.cc",
+-          "linux/audio_mixer_manager_alsa_linux.h",
+-          "linux/latebindingsymboltable_linux.cc",
+-          "linux/latebindingsymboltable_linux.h",
+-        ]
+-        defines += [ "WEBRTC_ENABLE_LINUX_ALSA" ]
+         libs = [ "dl" ]
+         if (rtc_use_x11) {
+           libs += [ "X11" ]
+           defines += [ "WEBRTC_USE_X11" ]
+         }
++        if (rtc_include_alsa_audio) {
++          configs += [ "//third_party/alsa:headers" ]
++          sources += [
++            "linux/alsasymboltable_linux.cc",
++            "linux/alsasymboltable_linux.h",
++            "linux/audio_device_alsa_linux.cc",
++            "linux/audio_device_alsa_linux.h",
++            "linux/audio_mixer_manager_alsa_linux.cc",
++            "linux/audio_mixer_manager_alsa_linux.h",
++            "linux/latebindingsymboltable_linux.cc",
++            "linux/latebindingsymboltable_linux.h",
++          ]
++          defines += [ "WEBRTC_ENABLE_LINUX_ALSA" ]
++        }
+         if (rtc_include_pulse_audio) {
++          configs += [ "//third_party/pulseaudio:headers" ]
+           defines += [ "WEBRTC_ENABLE_LINUX_PULSE" ]
++          sources += [
++            "linux/audio_device_pulse_linux.cc",
++            "linux/audio_device_pulse_linux.h",
++            "linux/audio_mixer_manager_pulse_linux.cc",
++            "linux/audio_mixer_manager_pulse_linux.h",
++            "linux/pulseaudiosymboltable_linux.cc",
++            "linux/pulseaudiosymboltable_linux.h",
++          ]
+         }
+-        sources += [
+-          "linux/audio_device_pulse_linux.cc",
+-          "linux/audio_device_pulse_linux.h",
+-          "linux/audio_mixer_manager_pulse_linux.cc",
+-          "linux/audio_mixer_manager_pulse_linux.h",
+-          "linux/pulseaudiosymboltable_linux.cc",
+-          "linux/pulseaudiosymboltable_linux.h",
+-        ]
+       }
+       if (is_mac) {
+         sources += [
+diff --git a/modules/audio_device/audio_device_impl.cc b/modules/audio_device/audio_device_impl.cc
+--- a/modules/audio_device/audio_device_impl.cc
++++ b/modules/audio_device/audio_device_impl.cc
+@@ -191,40 +191,41 @@ AudioDeviceModuleImpl::CreatePlatformSpecificObjects(const Environment& env) {
+ #endif
+ 
+ // Linux ADM implementation.
+-// Note that, WEBRTC_ENABLE_LINUX_ALSA is always defined by default when
+-// WEBRTC_LINUX is defined. WEBRTC_ENABLE_LINUX_PULSE depends on the
+-// 'rtc_include_pulse_audio' build flag.
+-// TODO(bugs.webrtc.org/9127): improve support and make it more clear that
+-// PulseAudio is the default selection.
++// WEBRTC_ENABLE_LINUX_ALSA depends on the 'rtc_include_alsa_audio' build flag.
++// WEBRTC_ENABLE_LINUX_PULSE depends on the 'rtc_include_pulse_audio' build
++// flag. PulseAudio remains the default selection when both backends are
++// enabled.
+ #if !defined(WEBRTC_ANDROID) && defined(WEBRTC_LINUX)
+-#if !defined(WEBRTC_ENABLE_LINUX_PULSE)
+-  // Build flag 'rtc_include_pulse_audio' is set to false. In this mode:
+-  // - kPlatformDefaultAudio => ALSA, and
+-  // - kLinuxAlsaAudio => ALSA, and
+-  // - kLinuxPulseAudio => Invalid selection.
+-  RTC_LOG(LS_WARNING) << "PulseAudio is disabled using build flag.";
+-  if ((audio_layer == kLinuxAlsaAudio) ||
+-      (audio_layer == kPlatformDefaultAudio)) {
+-    audio_device_.reset(new AudioDeviceLinuxALSA());
+-    RTC_LOG(LS_INFO) << "Linux ALSA APIs will be utilized.";
+-  }
+-#else
+-  // Build flag 'rtc_include_pulse_audio' is set to true (default). In this
+-  // mode:
+-  // - kPlatformDefaultAudio => PulseAudio, and
+-  // - kLinuxPulseAudio => PulseAudio, and
+-  // - kLinuxAlsaAudio => ALSA (supported but not default).
++#if defined(WEBRTC_ENABLE_LINUX_PULSE)
+   RTC_LOG(LS_INFO) << "PulseAudio support is enabled.";
+   if ((audio_layer == kLinuxPulseAudio) ||
+       (audio_layer == kPlatformDefaultAudio)) {
+-    // Linux PulseAudio implementation is default.
+     audio_device_.reset(new AudioDeviceLinuxPulse());
+     RTC_LOG(LS_INFO) << "Linux PulseAudio APIs will be utilized";
+-  } else if (audio_layer == kLinuxAlsaAudio) {
++  }
++#endif
++
++#if defined(WEBRTC_ENABLE_LINUX_ALSA)
++  if (!audio_device_ &&
++      ((audio_layer == kLinuxAlsaAudio) ||
++       (audio_layer == kPlatformDefaultAudio))) {
+     audio_device_.reset(new AudioDeviceLinuxALSA());
+-    RTC_LOG(LS_WARNING) << "Linux ALSA APIs will be utilized.";
++    RTC_LOG(LS_INFO) << "Linux ALSA APIs will be utilized.";
+   }
+-#endif  // #if !defined(WEBRTC_ENABLE_LINUX_PULSE)
++#endif
++
++#if !defined(WEBRTC_ENABLE_LINUX_ALSA) && !defined(WEBRTC_ENABLE_LINUX_PULSE)
++  RTC_LOG(LS_WARNING)
++      << "Linux audio backends are disabled; falling back to dummy audio.";
++  if (audio_layer == kPlatformDefaultAudio) {
++    audio_device_.reset(new AudioDeviceDummy());
++    RTC_LOG(LS_INFO) << "Dummy Audio APIs will be utilized.";
++  }
++#elif !defined(WEBRTC_ENABLE_LINUX_PULSE)
++  RTC_LOG(LS_WARNING) << "PulseAudio is disabled using build flag.";
++#elif !defined(WEBRTC_ENABLE_LINUX_ALSA)
++  RTC_LOG(LS_WARNING) << "ALSA is disabled using build flag.";
++#endif
+ #endif  // #if defined(WEBRTC_LINUX)
+ 
+ // iOS ADM implementation.
+diff --git a/webrtc.gni b/webrtc.gni
+--- a/webrtc.gni
++++ b/webrtc.gni
+@@ -274,6 +274,9 @@ declare_args() {
+   rtc_build_opus = !build_with_mozilla
+   rtc_build_ssl = !build_with_mozilla
+ 
++  # Excluded in Chromium since its prerequisites don't require ALSA.
++  rtc_include_alsa_audio = !build_with_chromium
++
+   # Excluded in Chromium since its prerequisites don't require Pulse Audio.
+   rtc_include_pulse_audio = !build_with_chromium
+ 

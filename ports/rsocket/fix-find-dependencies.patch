@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f69e907..22570b5 100644
+index c736ccb..0fa98c9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -124,7 +124,7 @@ option(BUILD_BENCHMARKS "Build benchmarks" ON)
+@@ -129,7 +129,7 @@ option(BUILD_BENCHMARKS "Build benchmarks" ON)
  option(BUILD_EXAMPLES "Build examples" ON)
  option(BUILD_TESTS "Build tests" ON)
  
@@ -11,7 +11,7 @@ index f69e907..22570b5 100644
  
  include(ExternalProject)
  include(CTest)
-@@ -172,7 +172,9 @@ endif()
+@@ -177,7 +177,9 @@ endif()
  
  if("${BUILD_TYPE_LOWER}" MATCHES "debug")
    message("debug mode was set")
@@ -21,7 +21,7 @@ index f69e907..22570b5 100644
  else()
    message("release mode was set")
  endif()
-@@ -181,18 +183,25 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+@@ -186,18 +188,22 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
    set(TEST_CXX_FLAGS ${TEST_CXX_FLAGS} -Wno-inconsistent-missing-override)
  endif()
  
@@ -32,28 +32,23 @@ index f69e907..22570b5 100644
  
 -find_package(Gflags REQUIRED)
 +find_package(gflags CONFIG REQUIRED)
++set(gflags gflags::gflags)
  
--# find glog::glog to satisfy the folly dep.
+ # find glog::glog to satisfy the folly dep.
 -find_package(Glog REQUIRED)
++find_package(glog CONFIG REQUIRED)
++find_package(folly CONFIG REQUIRED)
 +find_package(ZLIB REQUIRED)
  
--find_package(fmt CONFIG REQUIRED)
-+if (BUILD_SHARED_LIBS)
-+    set(gflags gflags_shared)
-+else()
-+    set(gflags gflags_static)
-+endif()
+ find_package(fmt CONFIG REQUIRED)
  
 -include_directories(SYSTEM ${OPENSSL_INCLUDE_DIR})
-+# find glog::glog to satisfy the folly dep.
-+find_package(folly CONFIG REQUIRED)
-+#find_package(glog CONFIG REQUIRED)
++
 +#
-+#find_package(fmt CONFIG REQUIRED)
  
  include_directories(SYSTEM ${GFLAGS_INCLUDE_DIR})
  
-@@ -327,7 +336,7 @@ target_compile_options(
+@@ -332,7 +338,7 @@ target_compile_options(
    ReactiveSocket
    PRIVATE ${EXTRA_CXX_FLAGS})
  
@@ -62,7 +57,7 @@ index f69e907..22570b5 100644
  
  install(TARGETS ReactiveSocket EXPORT rsocket-exports DESTINATION lib)
  install(DIRECTORY rsocket DESTINATION include FILES_MATCHING PATTERN "*.h")
-@@ -470,7 +479,7 @@ if(BUILD_TESTS)
+@@ -475,7 +481,7 @@ if(BUILD_TESTS)
      ${GMOCK_LIBS}  # This also needs the preceding `add_dependencies`
      glog::glog
      gflags
@@ -72,23 +67,34 @@ index f69e907..22570b5 100644
  # Download the latest TCK drivers JAR.
    set(TCK_DRIVERS_JAR rsocket-tck-drivers-0.9.10.jar)
 diff --git a/yarpl/CMakeLists.txt b/yarpl/CMakeLists.txt
-index f4159b8..8c01ffb 100644
+index f4159b8..65974e3 100644
 --- a/yarpl/CMakeLists.txt
 +++ b/yarpl/CMakeLists.txt
-@@ -53,8 +53,14 @@ endif()
+@@ -10,7 +10,6 @@ set(CMAKE_MODULE_PATH
+ )
+ 
+ add_definitions(-std=c++14)
+-option(BUILD_TESTS "BUILD_TESTS" ON)
+ 
+ # Generate compilation database
+ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+@@ -53,8 +52,8 @@ endif()
  # Using NDEBUG in Release builds.
  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
  
 -find_package(Gflags REQUIRED)
 -find_package(Glog REQUIRED)
-+find_package(gflags CONFIG REQUIRED)
-+if (BUILD_SHARED_LIBS)
-+    set(gflags gflags_shared)
-+else()
-+    set(gflags gflags_static)
-+endif()
-+
-+find_package(glog CONFIG REQUIRED)
++#find_package(Gflags REQUIRED)
++#find_package(Glog REQUIRED)
  find_package(fmt CONFIG REQUIRED)
  
  IF(NOT FOLLY_VERSION)
+@@ -125,7 +124,7 @@ target_link_libraries(
+   yarpl
+   PUBLIC Folly::folly glog::glog gflags
+   INTERFACE ${EXTRA_LINK_FLAGS})
+-
++target_compile_definitions(yarpl PUBLIC GLOG_USE_GLOG_EXPORT)
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+     cmake/yarpl-config.cmake.in

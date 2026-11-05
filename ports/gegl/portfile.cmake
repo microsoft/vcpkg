@@ -3,7 +3,7 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS https://download.gimp.org/pub/gegl/${VERSION_MAJOR_MINOR}/gegl-${VERSION}.tar.xz
     FILENAME "gegl-${VERSION}.tar.xz"
-    SHA512 ed1f809aaea8768b1eff2a6adcf66b3ef7c11e03d410ef8952051822017f9a6bcee0e29dd32708dd6937d49416c6db55cd8d34458619022ea750311253899ae9
+    SHA512 94bdc545a7647491adb6371779ce128d5d03120ae58c849bd76cd2acaab58fd00a0579ce28f0e46d4c171a1f2796ab09d4633c24bd01eabd8b959400cbe6e650
 )
 
 vcpkg_extract_source_archive(
@@ -11,8 +11,8 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         disable_tests.patch
-        remove_execinfo_support.patch
         remove-consistency-check.patch
+        use-bundled-opencl-headers.patch
 )
 
 if("introspection" IN_LIST FEATURES)
@@ -56,6 +56,7 @@ vcpkg_configure_meson(
         -Dpoppler=disabled
         -Dpygobject=disabled
         -Dsdl2=disabled
+        -Dsdl3=disabled
         -Dumfpack=disabled
         -Dwebp=disabled
     ADDITIONAL_BINARIES
@@ -69,6 +70,12 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    COMMENT [[
+Bundled libnsgif is licensed under MIT, ctx under ISC, and the Khronos OpenCL
+headers under Apache-2.0.
+]]
+    FILE_LIST "${SOURCE_PATH}/docs/copyright.adoc"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

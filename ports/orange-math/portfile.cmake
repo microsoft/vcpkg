@@ -2,13 +2,19 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO orange-cpp/omath
-    REF "v${VERSION}"
-    SHA512 fdcd4394ff132bc690a2be6ba275da36d037bf3edbe3d6cdeabbbb4a42ee9657f876af9b8e99a9c77bb44a6dce64f0906f9d28bde04c8b608fb2d44dd6ca8134
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://git.libomath.org/orange/omath/archive/v${VERSION}.tar.gz"
+    FILENAME "omath-${VERSION}.tar.gz"
+    SHA512 5cd4d18220a6d233ac16dce3e03a6bf128b2552887a9616fcfb1c0b287ef95a6871912f19be462871d0eb408d1abbd11aa370e506495ec67e8554e28a9184484
 )
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+)
+
+# The release archive's VERSION file can lag behind its tag.
+file(WRITE "${SOURCE_PATH}/VERSION" "${VERSION}")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
 
@@ -17,6 +23,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "avx2"      OMATH_USE_AVX2
         "imgui"     OMATH_IMGUI_INTEGRATION
         "inline"    OMATH_ENABLE_FORCE_INLINE
+        "hooking"   OMATH_ENABLE_HOOKING
+        "lua"       OMATH_ENABLE_LUA
 )
 
 vcpkg_cmake_configure(

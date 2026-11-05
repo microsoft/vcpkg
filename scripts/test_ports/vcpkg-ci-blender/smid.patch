@@ -1,0 +1,13 @@
+diff --git a/source/blender/blenlib/BLI_simd.hh b/source/blender/blenlib/BLI_simd.hh
+index f7f0fd40..821957d8 100644
+--- a/source/blender/blenlib/BLI_simd.hh
++++ b/source/blender/blenlib/BLI_simd.hh
+@@ -27,7 +27,7 @@
+ #elif defined(__SSE2__)
+ /* Native SSE2 on Intel/AMD. */
+ #  include <emmintrin.h>
+-#  define BLI_HAVE_SSE2 1
++#  define BLI_HAVE_SSE2 0
+ #else
+ #  define BLI_HAVE_SSE2 0
+ #endif

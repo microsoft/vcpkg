@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cameron314/concurrentqueue
     REF v${VERSION}
-    SHA512 a27306d1a7ad725daf5155a8e33a93efd29839708b2147ba703d036c4a92e04cbd8a505d804d2596ccb4dd797e88aca030b1cb34a4eaf09c45abb0ab55e604ea
+    SHA512 7a58f237a38b3faed778fbe8508eadd9e5b282bd38ef4a0f40118498cf578fe96f1d4272c0b839bd290150e6ff25c6d44fe7362e3fc046b04d44ade8edd091ea
     HEAD_REF master
 )
 

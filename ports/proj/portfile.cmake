@@ -1,13 +1,19 @@
+vcpkg_download_distfile(PROJ_BACKPORT_4863_PATCH
+    URLS https://github.com/OSGeo/PROJ/commit/010d62c2daae01a70247a3e4d6b99bee39879195.patch?full=1
+    FILENAME proj-backport-4863.patch
+    SHA512 4aa309d6f3f41e5152a0c75364a79ffb13e35344507b5d7ce9c6d289d341c4a0bc98dc874120ccc0d02d1966fe89a9b5ce9d1abceb31ce5b61f0bb17b5a49b72
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 c5ca62e34612a764cf5cef15e7313ac9e3dccf698e045ac09f8d24e4c109ebf9ee207bcd9d5d698b3f6ecb35d98ec621672f58d130e0eefce74705c3152f374c
+    SHA512 8dc3709cbc30f028a50ed9cc80a7236854c007ea2d93f6d8d49e9528d76c9ec744e2da78022375f1fac328acd8959e0b6bac30d2a18cadd44abf4bce150a5bf6
     HEAD_REF master
     PATCHES
-        fix-proj4-targets-cmake.patch
+        pkgconfig.diff
         remove_toolset_restriction.patch
-        sqlite.diff
+        "${PROJ_BACKPORT_4863_PATCH}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -44,10 +50,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME proj4 CONFIG_PATH lib/cmake/proj4 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proj)
 vcpkg_fixup_pkgconfig()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/proj.pc" " -lproj" " -lproj_d")
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # Enforce consistency with src/lib_proj.cmake build time configuration.

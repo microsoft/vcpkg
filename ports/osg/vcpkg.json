@@ -1,9 +1,9 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 27,
+  "port-version": 29,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
-  "homepage": "https://www.openscenegraph.com/",
+  "homepage": "https://openscenegraph.github.io/openscenegraph.io/",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
@@ -145,10 +145,10 @@
         }
       ]
     },
-    "sdl1": {
-      "description": "Build SDL 1 plugin, and enable SDL 1 app features",
+    "sdl": {
+      "description": "Build SDL plugin, and enable SDL app features",
       "dependencies": [
-        "sdl1"
+        "sdl2"
       ]
     },
     "tools": {

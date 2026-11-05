@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-algorithm-1.patch
+        avoid-checked-array-iterator.diff
 )
 
 if(VCPKG_HOST_IS_LINUX OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)

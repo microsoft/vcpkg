@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
     REF "client_release/${MAJOR_MINOR}/${VERSION}"
-    SHA512 5d38adcaefc99bd79d54e7e47bcc38099844157802852b9de9eb910ce80e2f6d6b333b3ece3f6c619e3c66d9dda9a9c5a8290ce583f77e1727bd7064e81b11af
+    SHA512 e3984f66e37f8d677696a15b9c6fa363e55c6cd4895a0d39580f2cae02049c1ac494c70603ef5b5d15df1228d7bd322fffdbde6a2cf5ec60a3c968e82dcd647a
     HEAD_REF master
+    PATCHES
+        fix-base64-header.patch # https://github.com/BOINC/boinc/pull/7205
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
