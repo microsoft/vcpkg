@@ -41,8 +41,8 @@ function(x_vcpkg_get_python_packages)
                     vcpkg_from_github(
                         OUT_SOURCE_PATH PYFILE_PATH
                         REPO pypa/get-pip
-                        REF 24.2
-                        SHA512 7bcbc841564b7fc3cd2c109b9d3cfd34d853508edc9e040e9615fc0f9f18f74c7826d53671f65fa1abda3fd29a0a3f9f6114d9e9bdd6d120175ac207fd7ce321
+                        REF 26.2.2
+                        SHA512 0e2ae12f15b34cf8c52069e62b0174b0579e8a3c573b6d99706b61708f51ecba80d6b93db56635206e01052d3786e8937c028d5bab64083b5e3aee54005883ac
                     )
                     vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/public/get-pip.py" --no-warn-script-location
                                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"

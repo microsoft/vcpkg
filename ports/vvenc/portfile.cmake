@@ -38,9 +38,22 @@ endif()
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vvenc)
-
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/vvenc/vvencConfig.cmake"
+    "# get current directory"
+    "include(CMakeFindDependencyMacro)\nfind_dependency(Threads)\n\n# get current directory"
+)
+
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/vvenc/vvencConfigVersion.cmake"
+    [=[if( "${PACKAGE_FIND_VERSION_MAJOR}" EQUAL "1" )]=]
+    [=[if( NOT PACKAGE_FIND_VERSION )
+  set( PACKAGE_VERSION_COMPATIBLE TRUE )
+elseif( "${PACKAGE_FIND_VERSION_MAJOR}" EQUAL "1" )]=]
+)
 
 if(BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES vvencFFapp vvencapp AUTO_CLEAN)

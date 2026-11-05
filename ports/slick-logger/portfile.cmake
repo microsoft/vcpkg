@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-logger
     REF "v${VERSION}"
-    SHA512 2db5c4f94ef65ec22925e179abc8310ae4594739dfff8268f1de2e3ff754450b0810be7b4bfb45d5daec82c3cbafd3fbc6a1e40a1dc55670ed126c5a6d9f53f5
+    SHA512 5aea3b41adae4b066312d6801c6be2d98bf2e28a31db1c47669e96764cc5577014a6dd4f394e58945fd71628f242fb069b6367a069a99b0b44374ca76aee384a
     HEAD_REF main
     PATCHES
       slick-queue.patch
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_SLICK_LOGGER_TESTING=OFF
         -DBUILD_SLICK_LOGGER_EXAMPLES=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()

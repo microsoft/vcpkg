@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nonstd-lite/string-view-lite
     REF "v${VERSION}"
-    SHA512 8bcdd8d47be22613821f96a1cb292a4037fccff99ee492cbfb96a32c3432748471f7586f80b1f23171374043769d591d02fd4f02616b28d3b689e0520236617b
+    SHA512 6e8cb47ce95ba5fb8bc5396c11a65c70beabbeaedf15ebbfee8c347ed317056497737f114af595d6b0242228326e2948bcf7de611170a3e993a0f529d0a7e626
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
