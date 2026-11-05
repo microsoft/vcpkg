@@ -51,7 +51,7 @@ vcpkg_cmake_configure(
         -DSTDEXEC_BUILD_PARALLEL_SCHEDULER=ON
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
-        CPM_SOURCE_CACHE
+        CPM_SOURCE_CACHE # only used when asio or taskflow are enabled
 )
 
 vcpkg_cmake_install()
