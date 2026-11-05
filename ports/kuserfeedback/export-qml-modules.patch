@@ -1,0 +1,31 @@
+diff --git a/KF6UserFeedbackConfig.cmake.in b/KF6UserFeedbackConfig.cmake.in
+index 435b17f..6f7b54e 100644
+--- a/KF6UserFeedbackConfig.cmake.in
++++ b/KF6UserFeedbackConfig.cmake.in
+@@ -2,5 +2,8 @@
+ 
+ find_package(Qt6 @Qt6Core_VERSION_MAJOR@.@Qt6Core_VERSION_MINOR@ NO_MODULE REQUIRED COMPONENTS Core Network)
+ find_package(Qt6 @Qt6Core_VERSION_MAJOR@.@Qt6Core_VERSION_MINOR@ NO_MODULE COMPONENTS Widgets)
++if (NOT @BUILD_SHARED_LIBS@ AND "@Qt6Qml_FOUND@")
++    find_package(Qt6 @Qt6Core_VERSION_MAJOR@.@Qt6Core_VERSION_MINOR@ NO_MODULE REQUIRED COMPONENTS Qml)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6UserFeedbackTarget.cmake")
+diff --git a/src/provider/qml/CMakeLists.txt b/src/provider/qml/CMakeLists.txt
+index 280cad2..04dd5a9 100644
+--- a/src/provider/qml/CMakeLists.txt
++++ b/src/provider/qml/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-ecm_add_qml_module(KF6UserFeedbackQml URI "org.kde.userfeedback")
++ecm_add_qml_module(KF6UserFeedbackQml URI "org.kde.userfeedback" CLASS_NAME QmlPlugin)
+ 
+ target_sources(KF6UserFeedbackQml PRIVATE
+     qmlabstractdatasource.cpp
+@@ -21,6 +21,6 @@ target_link_libraries(KF6UserFeedbackQml PRIVATE
+     Qt6::Qml
+ )
+ 
+-ecm_finalize_qml_module(KF6UserFeedbackQml)
++ecm_finalize_qml_module(KF6UserFeedbackQml EXPORT KF6UserFeedbackTargets)
+ 
+ ecm_generate_qdoc(KF6UserFeedbackQml kuserfeedbackqml.qdocconf)

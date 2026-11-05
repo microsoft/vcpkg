@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5a953cf..e8a52c5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,7 +51,7 @@ ecm_setup_version(PROJECT
+ 
+ # Dependencies
+ set(REQUIRED_QT_VERSION 6.10.0)
+-find_package(Qt6 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED COMPONENTS Core Network)
++find_package(Qt6 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED COMPONENTS Core Gui Network)
+ find_package(Qt6 ${REQUIRED_QT_VERSION} NO_MODULE QUIET OPTIONAL_COMPONENTS Widgets Charts Test Qml Svg PrintSupport)
+ find_package(QmlLint)
+ 
+diff --git a/KF6UserFeedbackConfig.cmake.in b/KF6UserFeedbackConfig.cmake.in
+index 6f7b54e..4417776 100644
+--- a/KF6UserFeedbackConfig.cmake.in
++++ b/KF6UserFeedbackConfig.cmake.in
+@@ -2,6 +2,9 @@
+ 
+ find_package(Qt6 @Qt6Core_VERSION_MAJOR@.@Qt6Core_VERSION_MINOR@ NO_MODULE REQUIRED COMPONENTS Core Network)
+ find_package(Qt6 @Qt6Core_VERSION_MAJOR@.@Qt6Core_VERSION_MINOR@ NO_MODULE COMPONENTS Widgets)
++if (NOT @BUILD_SHARED_LIBS@)
++    find_package(Qt6 @Qt6Core_VERSION_MAJOR@.@Qt6Core_VERSION_MINOR@ NO_MODULE REQUIRED COMPONENTS Gui)
++endif()
+ if (NOT @BUILD_SHARED_LIBS@ AND "@Qt6Qml_FOUND@")
+     find_package(Qt6 @Qt6Core_VERSION_MAJOR@.@Qt6Core_VERSION_MINOR@ NO_MODULE REQUIRED COMPONENTS Qml)
+ endif()
