@@ -1,14 +1,13 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://oligarchy.co.uk/xapian/${VERSION}/xapian-core-${VERSION}.tar.xz"
     FILENAME "xapian-core-${VERSION}.tar.xz"
-    SHA512 60d66adbacbd59622d25e392060984bd1dc6c870f9031765f54cb335fb29f72f6d006d27af82a50c8da2cfbebd08dac4503a8afa8ad51bc4e6fa9cb367a59d29
+    SHA512 a3c650de333a0b6ba81f47df01d433a8fb86007a33e61509c7ceead822aa5104261fc539619054be8bed8721eff3cdd70a33bb06f6180a1fd7995642133d5ee9
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        configure.diff
         msvc-no-debug.diff
 )
 
