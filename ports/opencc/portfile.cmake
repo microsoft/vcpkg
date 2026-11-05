@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BYVoid/OpenCC
-    REF "ver.${VERSION}"
-    SHA512 8638e5ca665c3451d716e5a65ddd998c5312975d0f69e5d0d72910104c9bc44a4989562468605db66f5f92e5ca1bf21815266dfe21a0d130bf5f02ebcbb7cba7
+    REF fae2a0a911c30764e669a7d8b0591cd8e852934a
+    SHA512 e56fbf2fad399edd631e4aaca1d64ebcc3f691dfcc74f3765864e6b60bd138be2fcfcd76b8117a9a8d61b28bcb41d6314f2f8fc069f128fc79d230f6f4c3ae95
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -12,18 +12,38 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
+# Darts is intentionally not a dependency: OpenCC always compiles its vendored
+# darts-clone, which carries OpenCC-specific patches (validate() and
+# copy_array()) that the darts-clone port does not provide, and upstream
+# removed the USE_SYSTEM_DARTS branch (BYVoid/OpenCC#1374).
+set(opencc_options
+    -DBUILD_DOCUMENTATION=OFF
+    -DBUILD_OPENCC_JIEBA_PLUGIN=OFF
+    -DBUILD_PYTHON=OFF
+    -DENABLE_BENCHMARK=OFF
+    -DENABLE_GTEST=OFF
+    -DUSE_SYSTEM_RAPIDJSON=ON
+    -DUSE_SYSTEM_TCLAP=ON
+    -DUSE_SYSTEM_MARISA=ON
+)
+
+if(VCPKG_CROSSCOMPILING)
+    # Generating the dictionaries runs the just-built tools, which the host
+    # cannot execute for another target architecture. The host build of this
+    # port (see the host dependency in vcpkg.json) provides matching tools;
+    # dictionaries are architecture-independent data, so building them with
+    # the host tools yields the same result.
+    set(opencc_host_tools "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+    list(APPEND opencc_options
+        "-DOPENCC_DICT_EXECUTABLE=${opencc_host_tools}/opencc_dict${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DOPENCC_CLI_EXECUTABLE=${opencc_host_tools}/opencc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_DOCUMENTATION=OFF
-        -DBUILD_OPENCC_JIEBA_PLUGIN=OFF
-        -DBUILD_PYTHON=OFF
-        -DENABLE_BENCHMARK=OFF
-        -DENABLE_GTEST=OFF
-        -DUSE_SYSTEM_RAPIDJSON=ON
-        -DUSE_SYSTEM_TCLAP=ON
-        -DUSE_SYSTEM_DARTS=ON
-        -DUSE_SYSTEM_MARISA=ON
+        ${opencc_options}
 )
 
 vcpkg_cmake_install(
@@ -55,4 +75,9 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    # OpenCC compiles its vendored darts-clone, whose BSD-2-Clause notice must
+    # be reproduced in binary distributions.
+    "${SOURCE_PATH}/deps/darts-clone-0.32h/COPYING.md"
+)
