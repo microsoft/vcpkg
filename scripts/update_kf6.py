@@ -33,6 +33,7 @@ PORT_LIST = [
     "kcoreaddons",
     "kcrash",
     "kdbusaddons",
+    "kdeclarative",
     "kf6-solid",
     "kglobalaccel",
     "kguiaddons",
@@ -43,9 +44,13 @@ PORT_LIST = [
     "kitemviews",
     "kjobwidgets",
     "knotifications",
+    "kpackage",
     "kplotting",
+    "kservice",
+    "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
+    "sonnet",
     "syntax-highlighting",
     "threadweaver"
 ]
