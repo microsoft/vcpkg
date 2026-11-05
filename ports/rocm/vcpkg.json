@@ -1,6 +1,6 @@
 {
   "name": "rocm",
-  "version": "5.0",
+  "version-date": "2026-11-05",
   "description": "AMD ROCm platform",
   "homepage": "https://rocm.docs.amd.com/",
   "license": null,

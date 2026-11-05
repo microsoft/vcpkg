@@ -9097,7 +9097,7 @@
       "port-version": 0
     },
     "rocm": {
-      "baseline": "5.0",
+      "baseline": "2026-11-05",
       "port-version": 0
     },
     "rp-ntuples": {
