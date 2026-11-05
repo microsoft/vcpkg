@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dmeoli/abLEMON
     REF ${VERSION}
-    SHA512 0b29be9edfdd6481f4169e9efa8afe2b668abe57209b6229bc359bfe0221711a1d36fe2f1fe7ff9e7e868d6ab4aba57df1b958469ed1effc282f53c2b838435f
+    SHA512 afedbfd1ce4c95b26198b8aa66f6136a6559722aa8274e7f0500c028b8aec8abc5031b66f0e9a23eab4e775f8b32b7b3e4ee9d3abbbd5cb9dbce11a8918eeb46
     HEAD_REF master
 )
 
