@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # upstream always builds a static library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tomwillow/tomsolver
