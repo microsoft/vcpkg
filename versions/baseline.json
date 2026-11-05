@@ -297,7 +297,7 @@
       "port-version": 10
     },
     "arrow": {
-      "baseline": "26.0.0",
+      "baseline": "26.0.1",
       "port-version": 0
     },
     "arrow-adbc": {
@@ -437,7 +437,7 @@
       "port-version": 2
     },
     "aurora-au": {
-      "baseline": "0.6.0",
+      "baseline": "0.6.1",
       "port-version": 0
     },
     "autodiff": {
@@ -497,7 +497,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "1.1.1",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -553,8 +553,8 @@
       "port-version": 7
     },
     "azure-data-tables-cpp": {
-      "baseline": "1.0.0-beta.6",
-      "port-version": 2
+      "baseline": "1.0.0-beta.7",
+      "port-version": 0
     },
     "azure-identity-cpp": {
       "baseline": "1.13.3",
@@ -3086,7 +3086,7 @@
     },
     "ffmpeg": {
       "baseline": "9.0.2",
-      "port-version": 4
+      "port-version": 5
     },
     "ffmpeg-bin2c": {
       "baseline": "9.0.2",
@@ -3501,7 +3501,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "9.0.0",
+      "baseline": "9.1.0",
       "port-version": 0
     },
     "glbinding": {
@@ -3629,8 +3629,8 @@
       "port-version": 6
     },
     "graphicsmagick": {
-      "baseline": "1.3.45",
-      "port-version": 1
+      "baseline": "1.3.49",
+      "port-version": 0
     },
     "graphite2": {
       "baseline": "1.3.15",
@@ -4392,6 +4392,10 @@
       "baseline": "2.5.1",
       "port-version": 0
     },
+    "kdeclarative": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kdgpu": {
       "baseline": "0.10.0",
       "port-version": 1
@@ -4708,6 +4712,10 @@
       "baseline": "0.7.0",
       "port-version": 0
     },
+    "kservice": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "ktx": {
       "baseline": "4.4.2",
       "port-version": 0
@@ -4917,7 +4925,7 @@
       "port-version": 0
     },
     "libbson": {
-      "baseline": "2.5.7",
+      "baseline": "2.5.8",
       "port-version": 0
     },
     "libcaer": {
@@ -5325,8 +5333,8 @@
       "port-version": 2
     },
     "libjpeg-turbo": {
-      "baseline": "3.2.0",
-      "port-version": 1
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "libjuice": {
       "baseline": "1.7.4",
@@ -5473,7 +5481,7 @@
       "port-version": 0
     },
     "libmt32emu": {
-      "baseline": "2.8.3",
+      "baseline": "2.8.4",
       "port-version": 0
     },
     "libmtp": {
@@ -5485,7 +5493,7 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.26.10",
+      "baseline": "1.28.5",
       "port-version": 0
     },
     "libmypaint": {
@@ -5638,7 +5646,7 @@
     },
     "libpng": {
       "baseline": "1.6.59",
-      "port-version": 0
+      "port-version": 1
     },
     "libpopcnt": {
       "baseline": "4.2",
@@ -6025,8 +6033,8 @@
       "port-version": 0
     },
     "libversion": {
-      "baseline": "3.0.4",
-      "port-version": 1
+      "baseline": "3.0.5",
+      "port-version": 0
     },
     "libvhdi": {
       "baseline": "20251119",
@@ -6325,7 +6333,7 @@
       "port-version": 0
     },
     "llvm": {
-      "baseline": "23.1.4",
+      "baseline": "23.1.5",
       "port-version": 0
     },
     "lmdb": {
@@ -6841,7 +6849,7 @@
       "port-version": 2
     },
     "mongo-c-driver": {
-      "baseline": "2.5.7",
+      "baseline": "2.5.8",
       "port-version": 0
     },
     "mongo-cxx-driver": {
@@ -7237,7 +7245,7 @@
       "port-version": 0
     },
     "nghttp3": {
-      "baseline": "1.18.0",
+      "baseline": "1.19.0",
       "port-version": 0
     },
     "ngspice": {
@@ -7245,8 +7253,8 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.25.0",
-      "port-version": 1
+      "baseline": "1.26.0",
+      "port-version": 0
     },
     "nifly": {
       "baseline": "1.0.0",
@@ -7673,8 +7681,8 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.29.0",
-      "port-version": 2
+      "baseline": "1.30.0",
+      "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
       "baseline": "2026-07-09",
@@ -8214,7 +8222,7 @@
     },
     "prometheus-cpp": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "promise-cpp": {
       "baseline": "2.1.5",
@@ -9445,7 +9453,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2026.20",
+      "baseline": "2026.21",
       "port-version": 0
     },
     "shaderc": {
@@ -9933,8 +9941,8 @@
       "port-version": 0
     },
     "stdexec": {
-      "baseline": "2026-05-25",
-      "port-version": 1
+      "baseline": "2026-11-02",
+      "port-version": 0
     },
     "stdgpu": {
       "baseline": "2026-07-08",
@@ -10201,7 +10209,7 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2023.1.0",
+      "baseline": "2023.2.0",
       "port-version": 0
     },
     "tcb-span": {
@@ -10242,7 +10250,7 @@
     },
     "tesseract": {
       "baseline": "5.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "tesults-cpp": {
       "baseline": "1.0.2",
@@ -10513,7 +10521,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.26.12",
+      "baseline": "0.27.1",
       "port-version": 0
     },
     "tree-sitter-c": {
@@ -11526,7 +11534,7 @@
     },
     "zlib": {
       "baseline": "1.3.2",
-      "port-version": 2
+      "port-version": 3
     },
     "zlib-ng": {
       "baseline": "2.3.3",

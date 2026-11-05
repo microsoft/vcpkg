@@ -38,7 +38,6 @@
 # Add new items alphabetically
 aliyun-oss-cpp-sdk:arm64-linux=fail
 allegro5:arm64-linux=fail # No cross x11
-ampl-asl:arm64-linux=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:arm64-linux=fail
