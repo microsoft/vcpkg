@@ -1,19 +1,38 @@
-# Update all three, literally.
-set(COLMAP_REF 4.1.1 "a0d785fba74b2664f31edc4a29026a8b27c00f67" "2026-07-17")
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/poselib/copyright")
+    message(FATAL_ERROR "'${PORT}' conflicts with 'poselib'. Please remove poselib:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # colmap does not export its symbols (no dllexport, no export header): it cannot be built as a DLL on Windows.
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+# Update all three, literally.
+set(COLMAP_REF 4.2.1 "bd1fcf654d2dd8fefa1466999c190a246f83f4b9" "2026-09-29")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF "${VERSION}"
-    SHA512 0e0da65dfe422872ce0802e062226b38f36e6276f293156f7c16fe106eef785bab5816fb63b4c0a61ccd5b0a5848b19f7efbe8283bd0fa6acd941c70e4e643d1
+    SHA512 53a49264eb1d43a8cd7fb5c734d7c2fe279d5d62875eb7f0f0a396ef8de2d02e72646c3e6d89c98affd2c044f7e26646e6cb67b0067b01773562fe6235c58fa3
     HEAD_REF main
     PATCHES
         no-glu.diff
-        fix-dependencies.patch
+        qt6-only.diff
+        optional-opengl.diff
+        cryptopp-config.diff
+        caspar-msvc-force-include.diff
 )
-file(REMOVE "${SOURCE_PATH}/cmake/FindCryptoPP.cmake")
+
+# FETCHCONTENT_FULLY_DISCONNECTED is set by vcpkg: PoseLib must be downloaded here.
+# Update both with colmap: src/thirdparty/CMakeLists.txt (FETCH_POSELIB).
+vcpkg_from_github(
+    OUT_SOURCE_PATH POSELIB_SOURCE_PATH
+    REPO PoseLib/PoseLib
+    REF fa7280fee27f97aff31ae7f98bab7f583fac7d08
+    SHA512 624c8789bf99113ef23b987736eabc9b7844afdb2fd4d39e0bae086bcb59375f29e011d1bec82c8aff53df5515f4e84d6ec79ec0714e0c04db45992db56050e8
+    HEAD_REF master
+)
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
     message(FATAL_ERROR "Features cuda and cuda-redist require an x64 triplet.")
@@ -30,6 +49,12 @@ else()
 endif()
 
 set(CUDA_ENABLED OFF)
+set(GUI_ENABLED OFF)
+set(CGAL_ENABLED OFF)
+set(ONNX_ENABLED OFF)
+set(DOWNLOAD_ENABLED OFF)
+set(CASPAR_ENABLED OFF)
+set(OPENMP_ENABLED ON)
 
 if("cuda" IN_LIST FEATURES)
     set(CUDA_ENABLED ON)
@@ -41,17 +66,36 @@ if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ARCHITECTURES "all-major")
 endif()
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        cgal      CGAL_ENABLED
-        download  DOWNLOAD_ENABLED
-        gui       GUI_ENABLED
-        onnx      ONNX_ENABLED
-)
+if("gui" IN_LIST FEATURES)
+    set(GUI_ENABLED ON)
+endif()
 
-set(OPENMP_ENABLED ON)
-if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+if("cgal" IN_LIST FEATURES)
+    set(CGAL_ENABLED ON)
+endif()
+
+if("download" IN_LIST FEATURES)
+    set(DOWNLOAD_ENABLED ON)
+endif()
+
+if("onnx" IN_LIST FEATURES)
+    set(ONNX_ENABLED ON)
+    # With CUDA, colmap selects the CUDA execution provider of onnxruntime.
+    if(CUDA_ENABLED AND NOT "onnx-cuda" IN_LIST FEATURES)
+        message(WARNING "Features cuda/cuda-redist and onnx without onnx-cuda: onnxruntime has no CUDA execution provider, run the ONNX-based tools with use_gpu=false.")
+    endif()
+endif()
+
+if("caspar" IN_LIST FEATURES)
+    if("cuda-redist" IN_LIST FEATURES)
+        # Feature cuda enables caspar, but caspar needs the native architectures (compute capability >= 7.0).
+        message(WARNING "Feature caspar is disabled with feature cuda-redist.")
+    else()
+        set(CASPAR_ENABLED ON)
+    endif()
+endif()
+
+if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     set(OPENMP_ENABLED OFF)
 endif()
 
@@ -60,44 +104,71 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(APPEND VCPKG_CXX_FLAGS " /bigobj")
 endif()
 
+if(CUDA_ENABLED)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND CUDA_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
+endif()
+
+if(CUDA_ENABLED AND VCPKG_TARGET_IS_WINDOWS)
+    # CCCL >= 3.2 requires the conforming MSVC preprocessor
+    list(APPEND CUDA_OPTIONS "-DCMAKE_CUDA_FLAGS_INIT=-Xcompiler=/Zc:preprocessor")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        ${FEATURE_OPTIONS}
-        -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+        ${CUDA_OPTIONS}
         -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
         -DCUDA_ENABLED=${CUDA_ENABLED}
+        -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
+        -DGUI_ENABLED=${GUI_ENABLED}
+        -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
+        -DGIT_COMMIT_DATE=${GIT_COMMIT_DATE}
+        -DOPENMP_ENABLED=${OPENMP_ENABLED}
+        -DCGAL_ENABLED=${CGAL_ENABLED}
+        -DONNX_ENABLED=${ONNX_ENABLED}
+        -DDOWNLOAD_ENABLED=${DOWNLOAD_ENABLED}
+        -DCASPAR_ENABLED=${CASPAR_ENABLED}
+        -DCOLMAP_HASH_MAP_BACKEND=STD
+        -DCCACHE_ENABLED=OFF
+        -DUNINSTALL_ENABLED=OFF
+        -DTESTS_ENABLED=OFF
+        -DFETCH_POSELIB=ON
+        -DFETCHCONTENT_SOURCE_DIR_POSELIB=${POSELIB_SOURCE_PATH}
         -DFETCH_FAISS=OFF
         -DFETCH_ONNX=OFF
-        -DFETCH_POSELIB=OFF
-        -DGIT_COMMIT_DATE=${GIT_COMMIT_DATE}
-        -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
-        -DOPENMP_ENABLED=${OPENMP_ENABLED}
-        -DTESTS_ENABLED=OFF
 )
 
 vcpkg_cmake_install()
+
 vcpkg_cmake_config_fixup()
 
 file(GLOB TOOL_FILENAMES "${CURRENT_PACKAGES_DIR}/bin/*")
-foreach(TOOL_FILENAME IN LISTS TOOL_FILENAMES)
-    get_filename_component(TEST_TOOL_NAME "${TOOL_FILENAME}" NAME_WLE)
+foreach(TOOL_FILENAME ${TOOL_FILENAMES})
+    get_filename_component(TEST_TOOL_NAME ${TOOL_FILENAME} NAME_WLE)
     list(APPEND COLMAP_TOOL_NAMES "${TEST_TOOL_NAME}")
 endforeach()
+
 vcpkg_copy_tools(TOOL_NAMES ${COLMAP_TOOL_NAMES} AUTO_CLEAN)
 
-if(VCPKG_TARGET_IS_WINDOWS AND "onnx" IN_LIST FEATURES AND CUDA_ENABLED
-   AND EXISTS "${CURRENT_INSTALLED_DIR}/bin/onnxruntime.dll")
-    # ONNX Runtime loads these providers dynamically, so applocal cannot discover them.
-    file(COPY
-        "${CURRENT_INSTALLED_DIR}/bin/onnxruntime_providers_shared.dll"
-        "${CURRENT_INSTALLED_DIR}/bin/onnxruntime_providers_cuda.dll"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
-    )
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+if(ONNX_ENABLED AND VCPKG_TARGET_IS_WINDOWS)
+    # onnxruntime loads its providers with LoadLibrary: they are not detected by the dependency scan of vcpkg_copy_tools.
+    file(GLOB ONNX_PROVIDER_DLLS "${CURRENT_INSTALLED_DIR}/bin/onnxruntime_providers_*.dll")
+    if(ONNX_PROVIDER_DLLS)
+        file(COPY ${ONNX_PROVIDER_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
 endif()
 
+if(GUI_ENABLED AND VCPKG_TARGET_IS_WINDOWS)
+    # The tools are moved to tools/colmap: Qt must find its plugins (platforms/qwindows.dll) in the installed tree.
+    file(WRITE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "[Paths]\nPrefix = ../..\nPlugins = Qt6/plugins\n")
+endif()
+
+# remove empty folders and unused files
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -110,8 +181,19 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/COLMAP.bat"
     "${CURRENT_PACKAGES_DIR}/debug/RUN_TESTS.bat"
     "${CURRENT_PACKAGES_DIR}/debug/bin"
+    "${CURRENT_PACKAGES_DIR}/share/colmap/cmake/vcpkg"
 )
 
+# Headers of the vendored PoseLib, required by the installed headers of colmap.
+file(INSTALL "${POSELIB_SOURCE_PATH}/PoseLib" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_deps/poselib-build/generated_headers/PoseLib" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+
 vcpkg_copy_pdbs()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")
+
+set(COPYRIGHT_FILES "${SOURCE_PATH}/COPYING.txt" "${POSELIB_SOURCE_PATH}/LICENSE")
+if(CASPAR_ENABLED)
+    list(APPEND COPYRIGHT_FILES "${SOURCE_PATH}/src/thirdparty/Symforce-Caspar/LICENSE")
+endif()
+vcpkg_install_copyright(FILE_LIST ${COPYRIGHT_FILES})
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

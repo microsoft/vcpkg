@@ -1,0 +1,119 @@
+diff --git a/absl/container/flat_hash_map.h b/absl/container/flat_hash_map.h
+index 7ce3353..003e9a2 100644
+--- a/absl/container/flat_hash_map.h
++++ b/absl/container/flat_hash_map.h
+@@ -129,14 +129,14 @@ struct FlatHashMapPolicy;
+ //   }
+ template <
+     class K, class V,
+-    class Hash =
++    class HashT =
+         typename container_internal::FlatHashMapPolicy<K, V>::DefaultHash,
+-    class Eq = typename container_internal::FlatHashMapPolicy<K, V>::DefaultEq,
++    class EqT = typename container_internal::FlatHashMapPolicy<K, V>::DefaultEq,
+     class Allocator =
+         typename container_internal::FlatHashMapPolicy<K, V>::DefaultAlloc>
+ class ABSL_ATTRIBUTE_OWNER flat_hash_map
+     : public absl::container_internal::InstantiateRawHashMap<
+-          absl::container_internal::FlatHashMapPolicy<K, V>, Hash, Eq,
++          absl::container_internal::FlatHashMapPolicy<K, V>, HashT, EqT,
+           Allocator>::type {
+   using Base = typename flat_hash_map::raw_hash_map;
+ 
+diff --git a/absl/container/flat_hash_set.h b/absl/container/flat_hash_set.h
+index a469fa0..0a91dfb 100644
+--- a/absl/container/flat_hash_set.h
++++ b/absl/container/flat_hash_set.h
+@@ -126,13 +126,13 @@ struct FlatHashSetPolicy;
+ //   }
+ template <
+     class T,
+-    class Hash = typename container_internal::FlatHashSetPolicy<T>::DefaultHash,
+-    class Eq = typename container_internal::FlatHashSetPolicy<T>::DefaultEq,
++    class HashT = typename container_internal::FlatHashSetPolicy<T>::DefaultHash,
++    class EqT = typename container_internal::FlatHashSetPolicy<T>::DefaultEq,
+     class Allocator =
+         typename container_internal::FlatHashSetPolicy<T>::DefaultAlloc>
+ class ABSL_ATTRIBUTE_OWNER flat_hash_set
+     : public absl::container_internal::InstantiateRawHashSet<
+-          absl::container_internal::FlatHashSetPolicy<T>, Hash, Eq,
++          absl::container_internal::FlatHashSetPolicy<T>, HashT, EqT,
+           Allocator>::type {
+   using Base = typename flat_hash_set::raw_hash_set;
+ 
+diff --git a/absl/container/node_hash_map.h b/absl/container/node_hash_map.h
+index 580a044..946c795 100644
+--- a/absl/container/node_hash_map.h
++++ b/absl/container/node_hash_map.h
+@@ -124,16 +124,16 @@ class NodeHashMapPolicy;
+ //   }
+ template <
+     class Key, class Value,
+-    class Hash =
++    class HashT =
+         typename container_internal::NodeHashMapPolicy<Key, Value>::DefaultHash,
+-    class Eq =
++    class EqT =
+         typename container_internal::NodeHashMapPolicy<Key, Value>::DefaultEq,
+-    class Alloc = typename container_internal::NodeHashMapPolicy<
++    class AllocT = typename container_internal::NodeHashMapPolicy<
+         Key, Value>::DefaultAlloc>
+ class ABSL_ATTRIBUTE_OWNER node_hash_map
+     : public absl::container_internal::InstantiateRawHashMap<
+-          absl::container_internal::NodeHashMapPolicy<Key, Value>, Hash, Eq,
+-          Alloc>::type {
++          absl::container_internal::NodeHashMapPolicy<Key, Value>, HashT, EqT,
++          AllocT>::type {
+   using Base = typename node_hash_map::raw_hash_map;
+ 
+  public:
+diff --git a/absl/container/node_hash_set.h b/absl/container/node_hash_set.h
+index f69c6ab..d46c999 100644
+--- a/absl/container/node_hash_set.h
++++ b/absl/container/node_hash_set.h
+@@ -120,14 +120,14 @@ struct NodeHashSetPolicy;
+ //   }
+ template <
+     class T,
+-    class Hash = typename container_internal::NodeHashSetPolicy<T>::DefaultHash,
+-    class Eq = typename container_internal::NodeHashSetPolicy<T>::DefaultEq,
+-    class Alloc =
++    class HashT = typename container_internal::NodeHashSetPolicy<T>::DefaultHash,
++    class EqT = typename container_internal::NodeHashSetPolicy<T>::DefaultEq,
++    class AllocT =
+         typename container_internal::NodeHashSetPolicy<T>::DefaultAlloc>
+ class ABSL_ATTRIBUTE_OWNER node_hash_set
+     : public absl::container_internal::InstantiateRawHashSet<
+-          absl::container_internal::NodeHashSetPolicy<T>, Hash, Eq,
+-          Alloc>::type {
++          absl::container_internal::NodeHashSetPolicy<T>, HashT, EqT,
++          AllocT>::type {
+   using Base = typename node_hash_set::raw_hash_set;
+ 
+  public:
+diff --git a/absl/hash/hash.h b/absl/hash/hash.h
+index 23f4e9d..3448c58 100644
+--- a/absl/hash/hash.h
++++ b/absl/hash/hash.h
+@@ -368,7 +368,7 @@ class HashState : public hash_internal::HashStateBase<HashState> {
+  private:
+   HashState() = default;
+ 
+-  friend class HashState::HashStateBase;
++  friend class hash_internal::HashStateBase<HashState>;
+   friend struct hash_internal::CombineRaw;
+ 
+   template <typename T>
+diff --git a/absl/hash/internal/hash.h b/absl/hash/internal/hash.h
+index 8b0f94a..5da47ed 100644
+--- a/absl/hash/internal/hash.h
++++ b/absl/hash/internal/hash.h
+@@ -1369,7 +1369,7 @@ class ABSL_DLL MixingHashState : public HashStateBase<MixingHashState> {
+   }
+ 
+  private:
+-  friend class MixingHashState::HashStateBase;
++  friend class HashStateBase<MixingHashState>;
+   template <typename H>
+   friend H absl::hash_internal::hash_weakly_mixed_integer(H,
+                                                           WeaklyMixedInteger);
