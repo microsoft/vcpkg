@@ -813,7 +813,7 @@
       "port-version": 0
     },
     "blpapi": {
-      "baseline": "3.25.1",
+      "baseline": "3.26.9",
       "port-version": 0
     },
     "bluescarni-tanuki": {
