@@ -37,10 +37,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "APU=${CURRENT_INSTALLED_DIR}"
         "APR_STATIC=${APR_STATIC}"
     )
-    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/zs.lib")
-        set(ENV{ZLIB_BASENAME} "zs")
-    elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/z.lib")
-        set(ENV{ZLIB_BASENAME} "z")
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libzs.lib")
+        set(ENV{ZLIB_BASENAME} "libzs")
+    elseif(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libz.lib")
+        set(ENV{ZLIB_BASENAME} "libz")
     endif()
 else()
     SET(apr_opts

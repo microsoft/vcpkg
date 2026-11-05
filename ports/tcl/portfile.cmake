@@ -36,7 +36,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(OPTS ${OPTS},nomsvcrt)
         string(APPEND TCLSH_SUFFIX "x")
     endif()
-    
+
     if("profile" IN_LIST FEATURES)
         set(OPTS ${OPTS},profile)
     endif()
@@ -58,9 +58,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         )
     endif()
 
-    set(ZLIB_BASENAME "z")
-    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/zs.lib")
-        set(ZLIB_BASENAME "zs")
+    set(ZLIB_BASENAME "libz")
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/libzs.lib")
+        set(ZLIB_BASENAME "libzs")
     endif()
 
     vcpkg_install_nmake(
@@ -113,7 +113,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             file(REMOVE ${extensions})
         endif()
     endif()
-    
+
     file(GLOB_RECURSE tclconfigs "${CURRENT_PACKAGES_DIR}/lib/*Config.sh")
     foreach(file IN LISTS tclconfigs)
         cmake_path(GET file FILENAME filename)
@@ -139,7 +139,7 @@ else()
     )
     vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
-    
+
     file(GLOB_RECURSE config_scripts "${CURRENT_PACKAGES_DIR}/lib/*Config.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/*Config.sh")
     file(REMOVE ${config_scripts})
 
