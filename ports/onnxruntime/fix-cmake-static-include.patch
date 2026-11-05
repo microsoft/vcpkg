@@ -1,0 +1,12 @@
+diff --git a/cmake/onnxruntime.cmake b/cmake/onnxruntime.cmake
+index a977141..d952c03 100644
+--- a/cmake/onnxruntime.cmake
++++ b/cmake/onnxruntime.cmake
+@@ -238,6 +238,7 @@ endif()
+ 
+ if (NOT onnxruntime_BUILD_SHARED_LIB)
+   add_library(onnxruntime INTERFACE)
++  target_include_directories(onnxruntime INTERFACE "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/onnxruntime>")
+ endif()
+ 
+ set(onnxruntime_INTERNAL_PROVIDER_LIBRARIES

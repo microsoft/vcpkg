@@ -1,0 +1,14 @@
+diff --git a/include/libssh/priv.h b/include/libssh/priv.h
+index 375436af..3948cff9 100644
+--- a/include/libssh/priv.h
++++ b/include/libssh/priv.h
+@@ -57,6 +57,9 @@ extern "C" {
+ #endif
+ 
+ #if !defined(HAVE_STRNDUP)
++/* Keep the replacement private: a public strndup conflicts with the one of
++ * other static libraries (e.g. gnulib in gsasl) */
++#define strndup ssh_strndup
+ char *strndup(const char *s, size_t n);
+ #endif /* ! HAVE_STRNDUP */
+ 

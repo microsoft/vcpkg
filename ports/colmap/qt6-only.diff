@@ -1,0 +1,13 @@
+diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
+index e26d5e9..ead0895 100644
+--- a/cmake/FindDependencies.cmake
++++ b/cmake/FindDependencies.cmake
+@@ -579,7 +579,7 @@ if(TARGET onnxruntime::onnxruntime)
+ endif()
+ 
+ if(GUI_ENABLED)
+-    find_package(QT NAMES Qt5 Qt6 REQUIRED)
++    find_package(QT NAMES Qt6 REQUIRED)
+     set(COLMAP_QT_COMPONENTS Core OpenGL Svg Widgets)
+     if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+         list(APPEND COLMAP_QT_COMPONENTS OpenGLWidgets)
