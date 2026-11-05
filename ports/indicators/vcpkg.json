@@ -1,8 +1,10 @@
 {
   "name": "indicators",
   "version": "2.3",
+  "port-version": 1,
   "description": "Activity indicators for modern C++",
   "homepage": "https://github.com/p-ranav/indicators",
+  "license": "MIT AND BSD-3-Clause AND HPND-Markus-Kuhn",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

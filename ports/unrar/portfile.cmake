@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.rarlab.com/rar/unrarsrc-${VERSION}.tar.gz"
     FILENAME "unrarsrc-${VERSION}.tar.gz"
-    SHA512 f772ef9e67d4828eef1ff7270ca875e9b0447f146b9e609c50594bb46754e7cce9e7ad8c05f6c026d5ba430c110483bfbc880ad2fbd081cff7939ee5ea21a521
+    SHA512 3ad68c69f7ab1e566e2146196055c85546bbf1d3ac56c51b24bb990a656f28540d52bd62b1a00d6bad2631d06d62208a447450107f9c404afbff68c244fd4427
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -21,7 +21,6 @@ file(INSTALL "${SOURCE_PATH}/dll.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/inclu
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/unofficial-unrar/unofficial-unrar-config.cmake" @ONLY)
 
-#COPYRIGHT
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.txt"

@@ -1,19 +1,17 @@
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index 4647b5e..c1da170 100644
+index 4647b5e..eb48956 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
-@@ -31,8 +31,9 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/highway/CMakeLists.txt" AND
+@@ -31,7 +31,8 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/highway/CMakeLists.txt" AND
    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/highway/LICENSE"
                   ${PROJECT_BINARY_DIR}/LICENSE.highway COPYONLY)
  else()
 -  find_package(HWY 1.0.7)
--  if (NOT HWY_FOUND)
 +  find_package(HWY NAMES hwy REQUIRED)
 +  add_library(hwy ALIAS hwy::hwy)
-+  if (NOT TARGET hwy::hwy)
+   if (NOT HWY_FOUND)
      message(FATAL_ERROR
          "Highway library (hwy) not found. Install libhwy-dev or download it "
-         "to third_party/highway from https://github.com/google/highway . "
 @@ -48,7 +49,11 @@ endif()
  # brotli
  if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/brotli/c/include/brotli/decode.h" OR
