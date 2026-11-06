@@ -1,15 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae93578..026f571 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -234,6 +234,7 @@ IF(APPLE)
+         ENDIF()
+ 
+         # Apple iOS: Find OpenGLES
++        set(_OSGQOPENGL_USE_DESKTOP_OPENGL OFF)
+         FIND_LIBRARY(OPENGLES_LIBRARY OpenGLES)
+     ELSE ()
+         FIND_LIBRARY(CARBON_LIBRARY Carbon)
+@@ -265,6 +266,7 @@ IF(APPLE)
+           FIND_LIBRARY(AGL_LIBRARY AGL)
+         ENDIF()
+ 
++        set(_OSGQOPENGL_USE_DESKTOP_OPENGL ON)
+         FIND_PACKAGE(OpenGL)
+         add_definitions(-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED)
+     ENDIF ()
+@@ -273,6 +275,7 @@ IF(APPLE)
+     SET(OSG_COMPILE_FRAMEWORKS_INSTALL_NAME_DIR "@executable_path/../Frameworks" CACHE STRING "install name dir for compiled frameworks")
+ ELSE()
+     # Non-Apple: Find OpenGL
++    set(_OSGQOPENGL_USE_DESKTOP_OPENGL ON)
+     FIND_PACKAGE(OpenGL)
+ ENDIF()
+ 
 diff --git a/src/osgQOpenGL/CMakeLists.txt b/src/osgQOpenGL/CMakeLists.txt
-index 41c7594..72d72ee 100644
+index 41c7594..6dfef7b 100644
 --- a/src/osgQOpenGL/CMakeLists.txt
 +++ b/src/osgQOpenGL/CMakeLists.txt
-@@ -95,6 +95,15 @@ install(EXPORT ${LIB_NAME}-targets
+@@ -95,6 +95,11 @@ install(EXPORT ${LIB_NAME}-targets
  
  include(CMakePackageConfigHelpers)
  
-+set(_OSGQOPENGL_USE_DESKTOP_OPENGL ON)
-+if(APPLE AND (OSG_BUILD_PLATFORM_IPHONE OR OSG_BUILD_PLATFORM_IPHONE_SIMULATOR))
-+    set(_OSGQOPENGL_USE_DESKTOP_OPENGL OFF)
-+endif()
 +set(_OSGQOPENGL_USE_EGL OFF)
 +if(OSG_GLES1_AVAILABLE OR OSG_GLES2_AVAILABLE)
 +    set(_OSGQOPENGL_USE_EGL ON)
