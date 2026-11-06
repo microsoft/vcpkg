@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         pkgconfig.diff
         third-party.diff
+        CVE-2026-6192.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
