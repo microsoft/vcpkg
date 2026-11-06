@@ -553,8 +553,8 @@
       "port-version": 7
     },
     "azure-data-tables-cpp": {
-      "baseline": "1.0.0-beta.6",
-      "port-version": 2
+      "baseline": "1.0.0-beta.7",
+      "port-version": 0
     },
     "azure-identity-cpp": {
       "baseline": "1.13.3",
@@ -813,7 +813,7 @@
       "port-version": 0
     },
     "blpapi": {
-      "baseline": "3.25.1",
+      "baseline": "3.26.9",
       "port-version": 0
     },
     "bluescarni-tanuki": {
@@ -3086,7 +3086,7 @@
     },
     "ffmpeg": {
       "baseline": "9.0.2",
-      "port-version": 4
+      "port-version": 5
     },
     "ffmpeg-bin2c": {
       "baseline": "9.0.2",
@@ -5333,8 +5333,8 @@
       "port-version": 2
     },
     "libjpeg-turbo": {
-      "baseline": "3.2.0",
-      "port-version": 1
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "libjuice": {
       "baseline": "1.7.4",
@@ -5493,7 +5493,7 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.26.10",
+      "baseline": "1.28.5",
       "port-version": 0
     },
     "libmypaint": {
@@ -5646,7 +5646,7 @@
     },
     "libpng": {
       "baseline": "1.6.59",
-      "port-version": 0
+      "port-version": 1
     },
     "libpopcnt": {
       "baseline": "4.2",
@@ -8642,7 +8642,7 @@
     },
     "qtinterfaceframework": {
       "baseline": "6.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtkeychain": {
       "baseline": "0.17.0",
@@ -9933,8 +9933,8 @@
       "port-version": 0
     },
     "stdexec": {
-      "baseline": "2026-05-25",
-      "port-version": 1
+      "baseline": "2026-11-02",
+      "port-version": 0
     },
     "stdgpu": {
       "baseline": "2026-07-08",
@@ -10513,7 +10513,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.26.12",
+      "baseline": "0.27.1",
       "port-version": 0
     },
     "tree-sitter-c": {
