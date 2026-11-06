@@ -1,10 +1,10 @@
 {
   "name": "libmupdf",
-  "version": "1.26.10",
+  "version": "1.28.5",
   "description": "A lightweight PDF, XPS, and E-book library",
   "homepage": "https://mupdf.com/core",
   "documentation": "https://mupdf.readthedocs.io/",
-  "license": "AGPL-3.0-only",
+  "license": "AGPL-3.0-or-later",
   "dependencies": [
     "freetype",
     "gumbo",

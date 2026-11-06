@@ -26,7 +26,7 @@ set_target_properties(unofficial::inih::libinih PROPERTIES
 if(INIH_WITH_DEBUG)
   set_property(TARGET unofficial::inih::libinih APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
   find_library(INIH_INIHLIB_DEBUG NAMES inih PATHS "${_IMPORT_PREFIX}/debug/lib/" REQUIRED NO_DEFAULT_PATH)
-  set_target_properties(unofficial::inih::libinih PROPERTIES 
+  set_target_properties(unofficial::inih::libinih PROPERTIES
     IMPORTED_LOCATION_DEBUG "${INIH_INIHLIB_DEBUG}"
   )
 endif()
@@ -50,7 +50,7 @@ if(INIH_WITH_INI_READER)
   if(INIH_WITH_DEBUG)
     set_property(TARGET unofficial::inih::inireader APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
     find_library(INIH_INIREADER_DEBUG NAMES INIReader PATHS "${_IMPORT_PREFIX}/debug/lib/" NO_DEFAULT_PATH)
-    set_target_properties(unofficial::inih::inireader PROPERTIES 
+    set_target_properties(unofficial::inih::inireader PROPERTIES
       IMPORTED_LOCATION_DEBUG "${INIH_INIREADER_DEBUG}"
     )
   endif()

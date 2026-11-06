@@ -1,0 +1,24 @@
+diff --git a/scripts/cmake/genout.cmake.in b/scripts/cmake/genout.cmake.in
+index 242aa8a..cf5bb4c 100644
+--- a/scripts/cmake/genout.cmake.in
++++ b/scripts/cmake/genout.cmake.in
+@@ -19,6 +19,8 @@ set(BINDIR "@CMAKE_CURRENT_BINARY_DIR@")
+ set(APPLE "@APPLE@")
+ set(AWK "@AWK@")
+ set(CMAKE_C_COMPILER "@CMAKE_C_COMPILER@")
++set(CMAKE_C_COMPILER_ID "@CMAKE_C_COMPILER_ID@")
++set(CMAKE_C_COMPILER_TARGET "@CMAKE_C_COMPILER_TARGET@")
+ set(CMAKE_C_FLAGS @CMAKE_C_FLAGS@)
+ set(CMAKE_SYSROOT @CMAKE_SYSROOT@)
+ set(INCDIR "@CMAKE_CURRENT_BINARY_DIR@")
+@@ -44,6 +46,10 @@ if(CMAKE_SYSROOT)
+   set(PLATFORM_C_FLAGS ${PLATFORM_C_FLAGS} "--sysroot=${CMAKE_SYSROOT}")
+ endif()
+ 
++if(CMAKE_C_COMPILER_TARGET AND CMAKE_C_COMPILER_ID MATCHES "Clang")
++  set(PLATFORM_C_FLAGS ${PLATFORM_C_FLAGS} "--target=${CMAKE_C_COMPILER_TARGET}")
++endif()
++
+ get_filename_component(INPUTEXT "${INPUT}" EXT)
+ get_filename_component(OUTPUTEXT "${OUTPUT}" EXT)
+ get_filename_component(INPUTBASE "${INPUT}" NAME_WE)
