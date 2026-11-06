@@ -4,7 +4,7 @@
   "description": "Game Asset Conditioning Library - improves Zstandard compression of game assets such as BCn textures using shuffle transforms and rate-distortion optimization",
   "homepage": "https://github.com/microsoft/Game-Asset-Conditioning-Library",
   "license": "MIT",
-  "supports": "windows & x64 & !uwp & !xbox",
+  "supports": "windows & x64 & !mingw & !uwp & !xbox",
   "dependencies": [
     "directx-headers",
     "directxmath",
