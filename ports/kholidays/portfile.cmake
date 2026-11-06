@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         "-DFLEX_EXECUTABLE=${FLEX}"
         "-DBISON_EXECUTABLE=${BISON}"
         ${FEATURE_OPTIONS}
