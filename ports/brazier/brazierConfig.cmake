@@ -69,7 +69,11 @@ if(NOT TARGET brazier::brazier)
     add_library(brazier::brazier INTERFACE IMPORTED)
 endif()
 
-get_target_property(_brazier_dir brazier::brazier DIRECTORY)
+if(NOT TARGET brazier::brazier)
+    add_library(brazier::brazier INTERFACE IMPORTED)
+endif()
+
+get_target_property(_brazier_dir brazier::brazier SOURCE_DIR)
 if(_brazier_dir STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     get_target_property(_brazier_links brazier::brazier INTERFACE_LINK_LIBRARIES)
     if(NOT _brazier_links)
