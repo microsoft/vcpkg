@@ -40,6 +40,7 @@ PORT_LIST = [
     "kholidays",
     "ki18n",
     "kiconthemes",
+    "kirigami",
     "kitemmodels",
     "kitemviews",
     "kjobwidgets",

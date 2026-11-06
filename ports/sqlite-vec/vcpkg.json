@@ -1,0 +1,18 @@
+{
+  "name": "sqlite-vec",
+  "version": "0.1.9",
+  "description": "A vector search SQLite extension that runs anywhere.",
+  "homepage": "https://github.com/asg017/sqlite-vec",
+  "license": "MIT OR Apache-2.0",
+  "dependencies": [
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -813,7 +813,7 @@
       "port-version": 0
     },
     "blpapi": {
-      "baseline": "3.25.1",
+      "baseline": "3.26.9",
       "port-version": 0
     },
     "bluescarni-tanuki": {
@@ -4153,7 +4153,7 @@
       "port-version": 0
     },
     "ipgeolocation-cpp-sdk": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "irrlicht": {
@@ -4646,6 +4646,10 @@
     },
     "kineto": {
       "baseline": "2026-06-03",
+      "port-version": 0
+    },
+    "kirigami": {
+      "baseline": "6.31.0",
       "port-version": 0
     },
     "kissfft": {
@@ -5298,7 +5302,7 @@
     },
     "libical": {
       "baseline": "3.0.20",
-      "port-version": 0
+      "port-version": 1
     },
     "libice": {
       "baseline": "1.1.2",
@@ -5349,8 +5353,8 @@
       "port-version": 2
     },
     "libjpeg-turbo": {
-      "baseline": "3.2.0",
-      "port-version": 1
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "libjuice": {
       "baseline": "1.7.4",
@@ -5497,7 +5501,7 @@
       "port-version": 0
     },
     "libmt32emu": {
-      "baseline": "2.8.4",
+      "baseline": "2.8.5",
       "port-version": 0
     },
     "libmtp": {
@@ -6961,7 +6965,7 @@
       "port-version": 0
     },
     "ms-gdk": {
-      "baseline": "2604.5.7903",
+      "baseline": "2610.0.9661",
       "port-version": 0
     },
     "ms-gdkx": {
@@ -9409,7 +9413,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.17.5",
+      "baseline": "0.17.6",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9741,8 +9745,8 @@
       "port-version": 0
     },
     "soqt": {
-      "baseline": "1.6.0",
-      "port-version": 4
+      "baseline": "1.6.4",
+      "port-version": 0
     },
     "sord": {
       "baseline": "0.16.22",
@@ -9878,6 +9882,10 @@
     },
     "sqlite-orm": {
       "baseline": "1.9.1",
+      "port-version": 0
+    },
+    "sqlite-vec": {
+      "baseline": "0.1.9",
       "port-version": 0
     },
     "sqlite3": {
@@ -10257,8 +10265,8 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.5.3",
-      "port-version": 1
+      "baseline": "5.5.4",
+      "port-version": 0
     },
     "tesults-cpp": {
       "baseline": "1.0.2",
