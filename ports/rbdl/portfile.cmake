@@ -4,10 +4,8 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO rbdl/rbdl
   REF "v${VERSION}"
-  SHA512 85128dd7184a876d541278ebe0f986774c7c891b4925f320e14932f6809f8bbd07ef4b5d915afe9b49c2245bd494012993ae6643631f4157e3d217e9eccb6e48
+  SHA512 d03d4401edfa3e0fb63045bd89547188048ccbcc477810e67b552a49e9ec63ee25daf55e8bf45bcc7bd6b1eef7d3025535faed60780f832af5d4248bb118c468
   HEAD_REF master
-  PATCHES
-      0001-fix-eigen3.patch
 )
 
 if(NOT EXISTS "${SOURCE_PATH}/addons/urdfreader/thirdparty/urdfparser/CMakeLists.txt")
