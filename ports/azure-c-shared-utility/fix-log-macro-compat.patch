@@ -1,0 +1,14 @@
+diff --git a/inc/azure_c_shared_utility/xlogging.h b/inc/azure_c_shared_utility/xlogging.h
+index 0fb4f30..6b65b2e 100644
+--- a/inc/azure_c_shared_utility/xlogging.h
++++ b/inc/azure_c_shared_utility/xlogging.h
+@@ -84,7 +84,8 @@ typedef void(*LOGGER_LOG_GETLASTERROR)(const char* file, const char* func, int l
+ 
+ // Legacy LOG(category, options, format, ...) macro used by uamqp.
+ // Map to LogInfo since c-logging handles severity internally.
+-#define LOG(log_category, log_options, format, ...) LogInfo(format, ##__VA_ARGS__)
++// Braced like the original LOG so call sites without a trailing semicolon still compile.
++#define LOG(log_category, log_options, format, ...) { LogInfo(format, ##__VA_ARGS__); }
+ 
+ // LogError, LogInfo, LogVerbose, LogLastError, LogCritical, LogWarning
+ // are now provided by c_logging/logger_v1_v2.h (included via logger.h)
