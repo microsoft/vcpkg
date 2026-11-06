@@ -73,7 +73,7 @@
       "port-version": 1
     },
     "aklomp-base64": {
-      "baseline": "0.5.2",
+      "baseline": "0.5.3",
       "port-version": 0
     },
     "alac": {
