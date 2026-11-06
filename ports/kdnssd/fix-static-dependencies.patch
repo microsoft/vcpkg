@@ -1,0 +1,14 @@
+diff --git a/KF6DNSSDConfig.cmake.in b/KF6DNSSDConfig.cmake.in
+index 0169b65..3203c0d 100644
+--- a/KF6DNSSDConfig.cmake.in
++++ b/KF6DNSSDConfig.cmake.in
+@@ -3,5 +3,9 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt6Network @REQUIRED_QT_VERSION@)
+ 
++if (NOT @BUILD_SHARED_LIBS@ AND "@AVAHI_FOUND@")
++    find_dependency(Qt6DBus @REQUIRED_QT_VERSION@)
++endif()
++
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6DNSSDTargets.cmake")

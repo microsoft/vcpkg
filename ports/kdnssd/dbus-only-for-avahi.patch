@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6174832..36a7aca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -62,7 +62,7 @@ if(NOT AVAHI_FOUND)
+                           )
+ endif( )
+ 
+-if(AVAHI_FOUND OR DNSSD_FOUND)
++if(AVAHI_FOUND)
+     find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED DBus)
+ endif()
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index fa03bc1..1198661 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -68,7 +68,7 @@ target_include_directories(KF6DNSSD INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL
+ 
+ target_link_libraries(KF6DNSSD PUBLIC Qt6::Network)
+ 
+-if (AVAHI_FOUND OR DNSSD_FOUND)
++if (AVAHI_FOUND)
+     target_link_libraries(KF6DNSSD PRIVATE Qt6::DBus)
+ endif ()
+ 
