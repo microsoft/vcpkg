@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e397f25c7a62d410d19be5e926cfb38175c89755e4ff9d67f06b905036daa82b0dfbe21fcc69438fc1c1e5d04f120ef7ff983ca9411ab198a3911992efb00093
     HEAD_REF master
+    PATCHES
+        fix-pkgconfig-civetweb.patch
 )
 
 vcpkg_check_features(
@@ -21,7 +23,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_THIRDPARTY_LIBRARIES=OFF # use vcpkg packages
-        -DGENERATE_PKGCONFIG=OFF
+        -DGENERATE_PKGCONFIG=ON
         ${FEATURE_OPTIONS}
 )
 
@@ -30,6 +32,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/prometheus-cpp")
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

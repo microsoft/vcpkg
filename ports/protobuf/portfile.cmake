@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-install-dirs.patch
         fix-constinit-with-clang-cl.patch
         fix-upb.patch
+        fix-global-empty-string-abi.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)

@@ -1,0 +1,62 @@
+{
+  "name": "kirigami",
+  "version": "6.31.0",
+  "description": "QtQuick plugins to build user interfaces based on the KDE human interface guidelines",
+  "homepage": "https://invent.kde.org/frameworks/kirigami",
+  "documentation": "https://api.kde.org/kirigami-index.html",
+  "license": "LGPL-2.0-or-later AND LGPL-2.1-or-later AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND MIT AND BSD-2-Clause AND GPL-2.0-or-later AND BSD-3-Clause AND CC0-1.0 AND FSFAP",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "concurrent",
+        "gui"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtshadertools",
+      "default-features": false
+    },
+    {
+      "name": "qtsvg",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "translations": {
+      "description": "Build and install translation files",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
