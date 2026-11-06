@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arximboldi/zug
-    REF 7c22cc138e2a9a61620986d1a7e1e9730123f22b
-    SHA512 ecf88ca56ae70ca87391ed34d6d6561e7da9810bba71e6abce2cd150b07cbb7180a7b90db96d0dc5f761fdeb43d75f5f0b47cbf45d78694c3177155d2005fe89
+    REF v${VERSION}
+    SHA512 ffe55f2c0f026da4c5384f4f2cc7fbd661f38d7dfc3ad50cccf8010f78df9c6a81a9bf4b157c5d85104dc9fcc13fb51fb2c93a86a7a6a7e0ae87d1f14b0d3155
     HEAD_REF master
 )
 

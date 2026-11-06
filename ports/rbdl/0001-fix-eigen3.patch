@@ -1,0 +1,155 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d25936d..3a26204 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -69,15 +69,9 @@ OPTION (RBDL_USE_PYTHON_2 "Use python 2 instead of python 3" OFF)
+ OPTION (RBDL_BUILD_CASADI "Use the CasADi backend" OFF)
+ OPTION (RBDL_VCPKG_BUILD "Building RBDL in vcpkg environment" OFF)
+ 
+-
+ # Find and use the system's Eigen3 library
+-FIND_PACKAGE (Eigen3 3.0.0)
+-
+-IF (NOT EIGEN3_FOUND)
+-    MESSAGE (WARNING "Could not find Eigen3 on your system. Please install it!")
+-ENDIF (NOT EIGEN3_FOUND)
+-
+-INCLUDE_DIRECTORIES (${EIGEN3_INCLUDE_DIR})
++FIND_PACKAGE (Eigen3 REQUIRED)
++LINK_LIBRARIES (Eigen3::Eigen)
+ 
+ # Addons
+ IF (RBDL_BUILD_ADDON_URDFREADER)
+diff --git a/addons/urdfreader/thirdparty/CMakeLists.txt b/addons/urdfreader/thirdparty/CMakeLists.txt
+index a57f5a7..77a36dd 100644
+--- a/addons/urdfreader/thirdparty/CMakeLists.txt
++++ b/addons/urdfreader/thirdparty/CMakeLists.txt
+@@ -1,7 +1,9 @@
+-FIND_FILE(URDF_MODULE CMakeLists.txt PATHS ${CMAKE_CURRENT_SOURCE_DIR}/urdfparser NO_DEFAULT_PATH)
+-IF (URDF_MODULE STREQUAL URDF_MODULE-NOTFOUND)
+-  MESSAGE(FATAL_ERROR "The urdfreader module was not initalized correctly! Please make sure that you recursively cloned rbdl. For more information take a closer look at the README!")
+-ENDIF(URDF_MODULE STREQUAL URDF_MODULE-NOTFOUND)
++SET(URDF_MODULE "${CMAKE_CURRENT_SOURCE_DIR}/urdfparser/CMakeLists.txt")
++IF (NOT EXISTS "${URDF_MODULE}")
++  MESSAGE(FATAL_ERROR "The urdfreader module was not initialized correctly!\n"
++    "The required file '${URDF_MODULE}' does not exist.\n"
++    "Please make sure that you recursively cloned rbdl. For more information take a closer look at the README!")
++ENDIF()
+ ADD_SUBDIRECTORY(
+ 	urdfparser
+ )
+diff --git a/include/rbdl/rbdl_eigenmath.h b/include/rbdl/rbdl_eigenmath.h
+index 917eb41..8cf2f8c 100644
+--- a/include/rbdl/rbdl_eigenmath.h
++++ b/include/rbdl/rbdl_eigenmath.h
+@@ -44,15 +44,11 @@ class RBDL_TEMPLATE_DLLAPI Vector2_t : public Eigen::Vector2d
+         const double& v0, const double& v1
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1;
+     }
+ 
+     void set(const double& v0, const double& v1)
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1;
+     }
+ };
+@@ -81,15 +77,11 @@ class RBDL_TEMPLATE_DLLAPI Vector3_t : public Eigen::Vector3d
+         const double& v0, const double& v1, const double& v2
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1, v2;
+     }
+ 
+     void set(const double& v0, const double& v1, const double& v2)
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1, v2;
+     }
+ };
+@@ -120,8 +112,6 @@ class RBDL_TEMPLATE_DLLAPI Matrix3_t : public Eigen::Matrix3d
+         const double& m20, const double& m21, const double& m22
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this)
+         << m00, m01, m02,
+         m10, m11, m12,
+@@ -154,15 +144,11 @@ class RBDL_TEMPLATE_DLLAPI Vector4_t : public Eigen::Vector4d
+         const double& v0, const double& v1, const double& v2, const double& v3
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1, v2, v3;
+     }
+ 
+     void set(const double& v0, const double& v1, const double& v2, const double& v3)
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1, v2, v3;
+     }
+ };
+@@ -192,8 +178,6 @@ class RBDL_TEMPLATE_DLLAPI SpatialVector_t : public Eigen::Matrix<double, 6, 1>
+         const double& v3, const double& v4, const double& v5
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1, v2, v3, v4, v5;
+     }
+ 
+@@ -202,8 +186,6 @@ class RBDL_TEMPLATE_DLLAPI SpatialVector_t : public Eigen::Matrix<double, 6, 1>
+         const double& v3, const double& v4, const double& v5
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this) << v0, v1, v2, v3, v4, v5;
+     }
+ };
+@@ -235,8 +217,6 @@ class RBDL_TEMPLATE_DLLAPI Matrix4_t : public Eigen::Matrix<double, 4, 4>
+         const Scalar& m30, const Scalar& m31, const Scalar& m32, const Scalar& m33
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this)
+         << m00, m01, m02, m03
+         , m10, m11, m12, m13
+@@ -252,8 +232,6 @@ class RBDL_TEMPLATE_DLLAPI Matrix4_t : public Eigen::Matrix<double, 4, 4>
+         const Scalar& m30, const Scalar& m31, const Scalar& m32, const Scalar& m33
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this)
+         << m00, m01, m02, m03
+         , m10, m11, m12, m13
+@@ -292,8 +270,6 @@ class RBDL_TEMPLATE_DLLAPI SpatialMatrix_t : public Eigen::Matrix<double, 6, 6>
+         const Scalar& m50, const Scalar& m51, const Scalar& m52, const Scalar& m53, const Scalar& m54, const Scalar& m55
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this)
+         << m00, m01, m02, m03, m04, m05
+         , m10, m11, m12, m13, m14, m15
+@@ -313,8 +289,6 @@ class RBDL_TEMPLATE_DLLAPI SpatialMatrix_t : public Eigen::Matrix<double, 6, 6>
+         const Scalar& m50, const Scalar& m51, const Scalar& m52, const Scalar& m53, const Scalar& m54, const Scalar& m55
+         )
+     {
+-      Base::_check_template_params();
+-
+       (*this)
+         << m00, m01, m02, m03, m04, m05
+         , m10, m11, m12, m13, m14, m15

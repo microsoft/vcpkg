@@ -1,0 +1,13 @@
+--- 71aac9f2f8-6ab87cd67d.clean/CMakeLists.txt.old	2026-02-05 23:01:42.685830600 +0100
++++ 71aac9f2f8-6ab87cd67d.clean/CMakeLists.txt	2026-02-05 23:02:00.820495600 +0100
+@@ -109,6 +109,10 @@ if(NOT HAVE_PCREPOSIX_H)
+   check_include_file(regex.h HAVE_REGEX_H)
+   if(NOT HAVE_REGEX_H)
+     set(USE_GKREGEX ON)
++  else()
++    if(MINGW)
++      target_link_libraries(${PROJECT_NAME} PUBLIC regex)
++    endif()
+   endif()
+ endif()
+ 

@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bw-hro/webthing-cpp
     REF "v${VERSION}"
-    SHA512 a4df3424721542ea4a7951ffc643905d31d906bcf87bed613b422ba8c0babb406f842459ba6c6df73c332c70c6fdd639413dc42272fd3b27fdf96b2cee528d36
+    SHA512 f4b854d9d363c4b3590232da31a150b3b4a3fb9150cd32558240b02ccf9c8453e79d2330c04076332927c5d488cc5b09ff28a40f225af21f52bd1eac7a4c421a
     HEAD_REF master
-    PATCHES
-        dependencies.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

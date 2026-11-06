@@ -3,14 +3,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND EXTRA_PATCHES fix_clang-cl_build.patch)
 endif()
 
-vcpkg_from_gitlab(
-    OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.freedesktop.org
-    REPO cairo/cairo
-    REF "${VERSION}"
-    SHA512 5731eaa48857561aad023214ebb7be70344579a4bc75d00c46f8c622b4d34be7f79ab02e2cd54a419086490a3bf31aafa2418d873833b475b9824e3f2f5b17b6
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.cairographics.org/releases/cairo-${VERSION}.tar.xz"
+    FILENAME "cairo-${VERSION}.tar.xz"
+    SHA512 a38bc075ef562a8cc027a3389490f970ed0af3d1c914cfafc91203f7fc8c9d2f6b44b0976d861655f346a2dc51d95a2abceb88e02d0e4999ecb19febf87c4ea6
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
-        cairo_add_lzo_feature_option.patch
         msvc-convenience.diff
         ${EXTRA_PATCHES}
 )
@@ -46,10 +48,6 @@ if("lzo" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dlzo=enabled)
 else()
     list(APPEND OPTIONS -Dlzo=disabled)
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CPP} "cl_cpp_wrapper")
 endif()
 
 vcpkg_configure_meson(

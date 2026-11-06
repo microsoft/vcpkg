@@ -1,0 +1,15 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a2718bd..0496589 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -49,6 +49,10 @@ if(USE_AVFFT)
+   )
+ endif(USE_AVFFT)
+ 
++if(WIN32 AND NOT BUILD_SHARED_LIBS AND (USE_AVTX OR USE_AVFFT))
++  list(APPEND chromaprint_LINK_LIBS bcrypt)
++endif()
++
+ if(USE_FFTW3)
+   set(chromaprint_SOURCES fft_lib_fftw3.cpp ${chromaprint_SOURCES})
+   set(chromaprint_LINK_LIBS ${FFTW3_LIBRARIES})

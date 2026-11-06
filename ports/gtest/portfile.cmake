@@ -1,12 +1,12 @@
 if (EXISTS "${CURRENT_BUILDTREES_DIR}/src/.git")
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/src)
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/src")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
     REF "v${VERSION}"
-    SHA512 9046841044a2bf7edfd96854ad9c44ffae4fcb9fb59a075b367507c0762a98eb32cb6968d46663228272e26321e96f4dd287c95baa22c6af9bad902b8b6ede4e
+    SHA512 ba0f5769ccf34acf1bc72d1f7e9ffb8202176d02b64f6f3d9047accfc0cf9026ff5a653d24935e2705fff8709566676452616c93ca0ca6277f1e21d79b58a10a
     HEAD_REF main
     PATCHES
         001-fix-UWP-death-test.patch
@@ -17,7 +17,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_GMOCK=ON
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
@@ -41,13 +41,13 @@ file(
         "${SOURCE_PATH}/googletest/src/gtest-test-part.cc"
         "${SOURCE_PATH}/googletest/src/gtest-typed-test.cc"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/src
+        "${CURRENT_PACKAGES_DIR}/src"
 )
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_pkgconfig()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gmock_main.pc" "libdir=\${prefix}/lib" "libdir=\${prefix}/lib/manual-link")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gtest_main.pc" "libdir=\${prefix}/lib" "libdir=\${prefix}/lib/manual-link")
 endif()
@@ -57,6 +57,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,6 +1,6 @@
 {
   "name": "libgig",
-  "version": "4.4.1",
+  "version": "4.5.2",
   "description": "C++ library for loading Gigasampler files and DLS Level 1/2 files",
   "homepage": "https://www.linuxsampler.org/libgig/",
   "license": "GPL-2.0-or-later",
@@ -16,12 +16,6 @@
     }
   ],
   "features": {
-    "tests": {
-      "description": "Build test cases",
-      "dependencies": [
-        "cppunit"
-      ]
-    },
     "tools": {
       "description": "Build extra tools",
       "dependencies": [

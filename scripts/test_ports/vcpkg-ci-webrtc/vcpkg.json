@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-ci-webrtc",
+  "version-string": "ci",
+  "description": "Validates webrtc",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "supports": "(linux & (arm64 | x64)) | (osx & (arm64 | x64)) | (windows & (arm64 | x86 | x64))",
+  "dependencies": [
+    "webrtc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

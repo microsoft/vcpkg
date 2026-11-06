@@ -1,0 +1,12 @@
+diff --git a/modules/highgui/src/cap_msmf.hpp b/modules/highgui/src/cap_msmf.hpp
+index 9ce2a9c..b72c7f4 100644
+--- a/modules/highgui/src/cap_msmf.hpp
++++ b/modules/highgui/src/cap_msmf.hpp
+@@ -2312,6 +2312,7 @@ public:
+     }
+ 
+ protected:
++    using Node = typename List<T*>::Node;
+     HRESULT InsertAfter(Ptr item, Node *pBefore)
+     {
+         // Do not allow nullptr item pointers unless NULLABLE is true.

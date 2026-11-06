@@ -2,26 +2,39 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/trantor
     REF "v${VERSION}"
-    SHA512 03e7d76f0817209ba0886c78ea30c537345699fa8aa2e531b03a7a261deddda73bdd030e513bfc63d2ad55a32c94a2742d872a07d24eb8bcd938615131173d68
+    SHA512 2c690c3613f8d3cbc0834881d2f731c3d935e5b9002ddcbca4a298a6fc7c2cb81d72f25516b5dc8b367208fb4e3ae1544af9f1046eade5acc52f144490f7b615
     HEAD_REF master
     PATCHES
         000-fix-deps.patch
         001-disable-werror.patch
+        002-export-certificate.patch
 )
+
+set(feature_options)
+if("spdlog" IN_LIST FEATURES)
+    list(APPEND feature_options "-DUSE_SPDLOG=ON")
+else()
+    list(APPEND feature_options "-DUSE_SPDLOG=OFF")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        ${feature_options}
 )
 
 vcpkg_cmake_install()
 
-# Fix CMake files
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Trantor)
 
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/License" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/License"
+    "${SOURCE_PATH}/third_party/wepoll/LICENSE"
+)
 
 vcpkg_copy_pdbs()

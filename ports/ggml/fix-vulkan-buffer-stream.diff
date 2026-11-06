@@ -1,0 +1,30 @@
+diff --git a/src/ggml-vulkan/ggml-vulkan-common.h b/src/ggml-vulkan/ggml-vulkan-common.h
+index a642c55..134078b 100644
+--- a/src/ggml-vulkan/ggml-vulkan-common.h
++++ b/src/ggml-vulkan/ggml-vulkan-common.h
+@@ -1,6 +1,10 @@
+ #pragma once
+ #include "ggml-vulkan-push-constants.h"
+ 
++inline std::ostream & operator<<(std::ostream & os, vk::Buffer buffer) {
++    return os << static_cast<VkBuffer>(buffer);
++}
++
+ // shared globals
+ extern ggml_backend_buffer_type_i ggml_backend_vk_buffer_type_interface;
+ extern bool vk_memory_logger_enabled;
+diff --git a/src/ggml-vulkan/ggml-vulkan.cpp b/src/ggml-vulkan/ggml-vulkan.cpp
+index 5587dfc..cdf3b44 100644
+--- a/src/ggml-vulkan/ggml-vulkan.cpp
++++ b/src/ggml-vulkan/ggml-vulkan.cpp
+@@ -1,10 +1,5 @@
+ #include "ggml-vulkan-common.h"
+ 
+-namespace {
+-inline std::ostream & operator<<(std::ostream & os, vk::Buffer buffer) {
+-    return os << static_cast<VkBuffer>(buffer);
+-}
+-}
+ static vk_device_architecture get_device_architecture(const vk::PhysicalDevice& device) {
+     vk::PhysicalDeviceProperties props = device.getProperties();
+ 

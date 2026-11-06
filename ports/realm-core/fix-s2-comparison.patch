@@ -1,0 +1,42 @@
+diff --git a/src/external/s2/s2polyline.cc b/src/external/s2/s2polyline.cc
+index e74aaa7..99c9b1a 100644
+--- a/src/external/s2/s2polyline.cc
++++ b/src/external/s2/s2polyline.cc
+@@ -438,27 +438,22 @@ struct SearchState {
+   inline SearchState(int i_val, int j_val, bool i_in_progress_val)
+       : i(i_val), j(j_val), i_in_progress(i_in_progress_val) {}
+ 
++  // This operator is needed for storing SearchStates in a set.  The ordering
++  // chosen has no special meaning.
++  inline bool operator<(SearchState const& rhs) const {
++    if (i < rhs.i) return true;
++    if (i > rhs.i) return false;
++    if (j < rhs.j) return true;
++    if (j > rhs.j) return false;
++    return !i_in_progress && rhs.i_in_progress;
++  }
++
+   int i;
+   int j;
+   bool i_in_progress;
+ };
+ }  // namespace
+ 
+-namespace std {
+-template<>
+-struct less<SearchState> {
+-  // This operator is needed for storing SearchStates in a set.  The ordering
+-  // chosen has no special meaning.
+-  inline bool operator()(SearchState const& lhs, SearchState const& rhs) const {
+-    if (lhs.i < rhs.i) return true;
+-    if (lhs.i > rhs.i) return false;
+-    if (lhs.j < rhs.j) return true;
+-    if (lhs.j > rhs.j) return false;
+-    return !lhs.i_in_progress && rhs.i_in_progress;
+-  }
+-};
+-}  // namespace std
+-
+ bool S2Polyline::NearlyCoversPolyline(S2Polyline const& covered,
+                                       S1Angle const& max_error) const {
+   // NOTE: This algorithm is described assuming that adjacent vertices in a

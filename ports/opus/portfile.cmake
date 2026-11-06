@@ -2,9 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
     REF "v${VERSION}"
-    SHA512 4ffefd9c035671024f9720c5129bfe395dea04f0d6b730041c2804e89b1db6e4d19633ad1ae58855afc355034233537361e707f26dc53adac916554830038fab
+    SHA512 b9a504f8576c977df57caee808412ab95e7424e9a64e3dd4045f05616c3ed58706bc3549195b61e25721e299547509d15206d246d96f1a307b82562b703b412c
     HEAD_REF main
-    PATCHES fix-pkgconfig-version.patch
+    PATCHES
+        fix-pkgconfig-version.patch
+        fix-arm64-windows-compile.diff # https://github.com/xiph/opus/pull/471
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -12,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         avx2 AVX2_SUPPORTED
 )
 
+set(STACK_PROTECTOR ON)
 set(ADDITIONAL_OPUS_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
     set(STACK_PROTECTOR OFF)
@@ -27,8 +30,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(STACK_PROTECTOR OFF)
-else()
-    set(STACK_PROTECTOR ON)
 endif()
 
 vcpkg_cmake_configure(

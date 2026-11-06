@@ -1,0 +1,37 @@
+{
+  "name": "spix",
+  "version": "0.14",
+  "description": "A minimally invasive UI testing library for Qt/QML applications. Control your application and verify its behavior using a simple C++ API.",
+  "homepage": "https://github.com/faaxm/spix",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "anyrpc",
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "qtwidgets": {
+      "description": "Build the QtWidgets scene library.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "dbus",
-  "version": "1.15.8",
+  "version": "1.16.2",
   "port-version": 5,
   "description": "D-Bus specification and reference implementation, including libdbus and dbus-daemon",
   "homepage": "https://gitlab.freedesktop.org/dbus/dbus",
@@ -20,7 +20,7 @@
   "default-features": [
     {
       "name": "systemd",
-      "platform": "linux"
+      "platform": "linux & !arm"
     }
   ],
   "features": {
@@ -36,6 +36,7 @@
     },
     "x11": {
       "description": "Build with X11 autolaunch support",
+      "supports": "!windows",
       "dependencies": [
         "libx11"
       ]

@@ -1,25 +1,40 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("Warning: `glaze` requires Clang15+ or GCC 12+ on Linux")
+    message("Warning: `glaze` requires Clang 17+ or GCC 13+ on Linux")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 10f5fd082cc9d45a886b340d5d17c177ebe547a021f708790d5157ed615168b75bb2c9d86b8ec90b61417fd297b7828f03080d58feea7386d5087abd17abeba2
+    SHA512 220c4648ffe06959f3a524df632f972c92c5cf419edf5e71b17201b49bda339730cb3c33b8d07b042c4e7917c1d221d212e7ca640dc1f666acf8b4138a6e3f7d
     HEAD_REF main
+    PATCHES
+        001-fix-asio.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        networking      glaze_ENABLE_NETWORKING
+        ssl             glaze_ENABLE_SSL
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -Dglaze_DEVELOPER_MODE=OFF
         -Dglaze_BUILD_EXAMPLES=OFF
+        -Dglaze_EETF_FORMAT=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
+if("networking" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/glaze/ext/glaze_asio.hpp" "#if __has_include(<asio.hpp>) && !defined(GLZ_USE_BOOST_ASIO)" "#if 1")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

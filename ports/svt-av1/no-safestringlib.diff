@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57100575..d1dbd6f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -528,7 +528,7 @@ set_property(DIRECTORY .
+         $<$<BOOL:${HAVE_STRNCPY_S}>:HAVE_STRNCPY_S=1>
+         $<$<BOOL:${HAVE_STRCPY_S}>:HAVE_STRCPY_S=1>
+         $<$<BOOL:${WIN32}>:_WIN32_WINNT=0x0601>)
+-if(NOT HAVE_STRCPY_S OR NOT HAVE_STRNCPY_S OR NOT HAVE_STRNLEN_S)
++if(FALSE)
+     add_library(safestringlib OBJECT
+         third_party/safestringlib/safeclib_private.h
+         third_party/safestringlib/safe_lib.h

@@ -1,0 +1,9 @@
+sonivox provides CMake targets:
+
+find_package(sonivox CONFIG REQUIRED)
+target_link_libraries(main PRIVATE sonivox::sonivox)
+
+sonivox provides pkg-config modules:
+
+  # Sonivox EAS Software Synthesizer
+  sonivox

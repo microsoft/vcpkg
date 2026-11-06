@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 45c13c195d..7eb05f7277 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -226,6 +226,8 @@ if(NOT MSVC)
+ 	endif()
+ else()
+ 	find_package(PTHREADS4W CONFIG REQUIRED)
++	add_library(Threads::Shared ALIAS PThreads4W::PThreads4W)
++	add_library(Threads::Static ALIAS PThreads4W::PThreads4W)
+ endif()
+
+ #

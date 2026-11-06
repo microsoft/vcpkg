@@ -1,0 +1,12 @@
+diff --git a/cmake/ggml-config.cmake.in b/cmake/ggml-config.cmake.in
+index a28e49e..1939461 100644
+--- a/cmake/ggml-config.cmake.in
++++ b/cmake/ggml-config.cmake.in
+@@ -107,7 +107,6 @@ if (NOT GGML_SHARED_LIB)
+ endif()
+ 
+ set_and_check(GGML_INCLUDE_DIR "@PACKAGE_GGML_INCLUDE_INSTALL_DIR@")
+-set_and_check(GGML_LIB_DIR "@PACKAGE_GGML_LIB_INSTALL_DIR@")
+ #set_and_check(GGML_BIN_DIR "@PACKAGE_GGML_BIN_INSTALL_DIR@")
+ 
+ if (NOT GGML_SHARED_LIB AND GGML_CPU_KLEIDIAI)

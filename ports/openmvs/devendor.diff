@@ -1,0 +1,117 @@
+diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
+index 514f5a0..4906fc5 100644
+--- a/build/Templates/OpenMVSConfig.cmake.in
++++ b/build/Templates/OpenMVSConfig.cmake.in
+@@ -20,6 +20,7 @@ find_dependency(Boost COMPONENTS iostreams pool serialization throw_exception)
+ find_dependency(Eigen3 CONFIG)
+ find_dependency(OpenCV)
+ find_dependency(CGAL)
++find_dependency(tinyxml2 CONFIG)
+ if("@OpenMVS_USE_CERES@")
+     find_dependency(Ceres)
+ endif()
+diff --git a/libs/IO/CMakeLists.txt b/libs/IO/CMakeLists.txt
+index 0f05951..64c674f 100644
+--- a/libs/IO/CMakeLists.txt
++++ b/libs/IO/CMakeLists.txt
+@@ -27,6 +27,7 @@ endif()
+ # List sources files
+ FILE(GLOB LIBRARY_FILES_C "*.cpp")
+ FILE(GLOB LIBRARY_FILES_H "*.h" "*.inl")
++list(FILTER LIBRARY_FILES_C EXCLUDE REGEX "TinyXML2")
+ 
+ cxx_library_with_type(IO "Libs" "" "${cxx_default}"
+ 	${LIBRARY_FILES_C} ${LIBRARY_FILES_H}
+@@ -39,6 +40,12 @@ endif()
+ 
+ # Link its dependencies
+ TARGET_LINK_LIBRARIES(IO Common ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${TIFF_LIBRARIES} ${EXIV2_LIBS})
++find_package(nlohmann_json CONFIG REQUIRED)
++target_link_libraries(IO $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>)
++find_path(TINYGLTF_INCLUDE_DIR "tiny_gltf.h")
++target_include_directories(IO PRIVATE "${TINYGLTF_INCLUDE_DIR}")
++find_package(tinyxml2 CONFIG REQUIRED)
++target_link_libraries(IO tinyxml2::tinyxml2)
+ 
+ # Install
+ SET_TARGET_PROPERTIES(IO PROPERTIES
+diff --git a/libs/IO/TinyXML2.h b/libs/IO/TinyXML2.h
+index ae237ad..00162df 100644
+--- a/libs/IO/TinyXML2.h
++++ b/libs/IO/TinyXML2.h
+@@ -21,8 +21,10 @@ must not be misrepresented as being the original software.
+ distribution.
+ */
+ 
+-#ifndef TINYXML2_INCLUDED
+-#define TINYXML2_INCLUDED
++#ifndef TINYXML2_INCLUDED_OPENMVS
++#define TINYXML2_INCLUDED_OPENMVS
++#include <tinyxml2.h>
++#elif 0
+ 
+ #if defined(ANDROID_NDK) || defined(__BORLANDC__) || defined(__QNXNTO__)
+ #   include <ctype.h>
+diff --git a/libs/IO/json.hpp b/libs/IO/json.hpp
+index b6d30f8..c5380e8 100644
+--- a/libs/IO/json.hpp
++++ b/libs/IO/json.hpp
+@@ -27,8 +27,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+ 
+-#ifndef NLOHMANN_JSON_HPP
+-#define NLOHMANN_JSON_HPP
++#ifndef NLOHMANN_JSON_HPP_OPENMVS
++#define NLOHMANN_JSON_HPP_OPENMVS
++#include <nlohmann/json.hpp>
++#elif 0
+ 
+ #define NLOHMANN_JSON_VERSION_MAJOR 3
+ #define NLOHMANN_JSON_VERSION_MINOR 5
+diff --git a/libs/IO/tiny_gltf.h b/libs/IO/tiny_gltf.h
+index 4718b6c..4cd2e1a 100644
+--- a/libs/IO/tiny_gltf.h
++++ b/libs/IO/tiny_gltf.h
+@@ -50,8 +50,13 @@
+ //  - base64: base64 decode/encode library.
+ //  - stb_image: Image loading library.
+ //
+-#ifndef TINY_GLTF_H_
+-#define TINY_GLTF_H_
++#ifndef TINY_GLTF_H_OPENMVS
++#define TINY_GLTF_H_OPENMVS
++#include <tiny_gltf.h>
++#ifdef TINYGLTF_IMPLEMENTATION
++#undef TINYGLTF_IMPLEMENTATION
++#endif
++#elif 0
+ 
+ #include <array>
+ #include <cassert>
+diff --git a/libs/MVS/Mesh.cpp b/libs/MVS/Mesh.cpp
+index 589ad88..74a7e9e 100644
+--- a/libs/MVS/Mesh.cpp
++++ b/libs/MVS/Mesh.cpp
+@@ -1763,14 +1763,17 @@ bool Mesh::SaveGLTF(const String& fileName, bool bBinary) const
+ 	// setup GLTF
+ 	struct Tools {
+ 		static bool WriteImageData(const std::string *basepath, const std::string *filename,
+-			tinygltf::Image *image, bool embedImages, void *) {
++			// tinygltf 2.5...2.9: const image + out_uri, fs/uri callbacks.
++			const tinygltf::Image *image, bool embedImages,
++			const tinygltf::FsCallbacks *, const tinygltf::URICallbacks *,
++			std::string *out_uri, void *) {
+ 			ASSERT(!embedImages);
+-			image->uri = Util::isFullPath(filename->c_str()) ?
++			*out_uri = Util::isFullPath(filename->c_str()) ?
+ 				Util::getRelativePath(*basepath, *filename) : String(*filename);
+ 			String basePath(*basepath);
+ 			return cv::imwrite(
+-				Util::ensureFolderSlash(basePath) + image->uri,
+-				cv::Mat(image->height, image->width, CV_8UC3, image->image.data()));
++				Util::ensureFolderSlash(basePath) + *out_uri,
++				cv::Mat(image->height, image->width, CV_8UC3, const_cast<tinygltf::Image*>(image)->image.data()));
+ 		}
+ 	};
+ 	tinygltf::TinyGLTF gltf;

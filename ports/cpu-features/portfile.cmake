@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/cpu_features
     REF "v${VERSION}"
-    SHA512 4e732f46b3b9efe48f0b6d06cfa87b3b25ed00e51c42de84c74cbbd4d66bd0974ff1a757b91574c6a3064cba6e5c2460117dd23b79b4136e5d1cd7e78dda47b1
+    SHA512 6e3f484a6cd676d1c0b5571642397289dae3979085140d1324c10c5a971b34e9e46293217cbdf62f02a4b0632fb631fefeee876d579bafeeec1a0b75ba466809
     HEAD_REF master
+    PATCHES
+        0001-ndk-compat-export-include-dirs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

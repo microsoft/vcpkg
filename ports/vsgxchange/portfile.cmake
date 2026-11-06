@@ -2,35 +2,38 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vsg-dev/vsgXchange
     REF "v${VERSION}"
-    SHA512 a4c79092162c64f745556fa64b10fd06906526f5f7b7e22e61fc34f42d50116fe1816ff5cb0ca862f7da6a4a221818e99867e8520da4ffc2b9867ef15a01cd13
+    SHA512 f60bf602b17d5ea404e2d69d58958df136eeb2a73c3374d2820d7d66a11a5e62aaa4f45a7dada09678a69e74a3909744e1cddd206e1cc0f13a216fc9daa1ab01
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         assimp   vsgXchange_assimp
-        assimp   CMAKE_REQUIRE_FIND_PACKAGE_assimp
+        assimp   VCPKG_LOCK_FIND_PACKAGE_assimp
         curl     vsgXchange_curl
-        curl     CMAKE_REQUIRE_FIND_PACKAGE_CURL
+        curl     VCPKG_LOCK_FIND_PACKAGE_CURL
         freetype vsgXchange_freetype
-        freetype CMAKE_REQUIRE_FIND_PACKAGE_Freetype
+        freetype VCPKG_LOCK_FIND_PACKAGE_Freetype
         gdal     vsgXchange_GDAL
-        gdal     CMAKE_REQUIRE_FIND_PACKAGE_GDAL
+        gdal     VCPKG_LOCK_FIND_PACKAGE_GDAL
         openexr  vsgXchange_openexr
-        openexr  CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
+        openexr  VCPKG_LOCK_FIND_PACKAGE_OpenEXR
+        ktx      vsgXchange_ktx
+        ktx      VCPKG_LOCK_FIND_PACKAGE_Ktx
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
-        -DCMAKE_DISABLE_FIND_PACKAGE_osg2vsg=1
+        -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_osg2vsg=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_draco=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/vsgXchange")
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/vsgXchange")
 
 vcpkg_copy_tools(TOOL_NAMES vsgconv AUTO_CLEAN)
 vcpkg_clean_executables_in_bin(FILE_NAMES vsgconvd)

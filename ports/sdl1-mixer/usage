@@ -1,4 +1,0 @@
-The package sdl1-mixer is compatible with built-in CMake targets:
-
-    find_package(SDL_mixer REQUIRED)
-    target_link_libraries(main PRIVATE ${SDL_MIXER_LIBRARY})

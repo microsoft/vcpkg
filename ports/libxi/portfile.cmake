@@ -1,16 +1,22 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxi
-    REF f24d7f43ab4d97203e60677a3d42e11dbc80c8b4 # 1.8
-    SHA512 bc98d03f1c53f26d0c2063de5a0b58951c9db44dfcfb44519efca89f20c8f8f50599c264d11546357164430f3486dd263742657de426cc7fbb3a306be0bc8866
-    HEAD_REF master
-) 
+vcpkg_download_distfile(
+    LIBXCOMPOSITE_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libXi-${VERSION}.tar.xz"
+    FILENAME "libXi-${VERSION}.tar.xz"
+    SHA512 5fb8273424467c102d3bab01cb273169038ff6fae739f6873ca357be8890c4fd30ba2952bca2759249458796df53ad130e2c9c3674b385602afd13c718faf79a
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXCOMPOSITE_ARCHIVE}"
+    PATCHES
+        fix-configure.patch
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -18,18 +24,20 @@ if (VCPKG_CROSSCOMPILING)
     list(APPEND OPTIONS --enable-malloc0returnsnull)
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    OPTIONS ${OPTIONS}
+    AUTORECONF
+    OPTIONS
+        --with-asciidoc=no
+        --with-fop=no
+        --with-xmlto=no
+        --with-xsltproc=no
+        ${OPTIONS}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

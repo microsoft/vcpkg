@@ -1,9 +1,9 @@
 {
   "name": "openimageio",
-  "version": "3.0.1.0",
+  "version": "3.2.1.2",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
-  "homepage": "https://github.com/OpenImageIO/oiio",
-  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/AcademySoftwareFoundation/OpenImageIO",
+  "license": "Apache-2.0",
   "dependencies": [
     "fmt",
     "libjpeg-turbo",
@@ -82,7 +82,12 @@
       "dependencies": [
         {
           "name": "opencv",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "fs",
+            "intrinsics",
+            "thread"
+          ]
         }
       ]
     },
@@ -104,6 +109,7 @@
     },
     "viewer": {
       "description": "Build openimageio viewer",
+      "supports": "!android",
       "dependencies": [
         "opengl",
         {

@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO facebook/rocksdb
+  REPO meta/rocksdb
   REF "v${VERSION}"
-  SHA512 b9a53c13f69e723cc41f8431ffc2f0b0be7a85d7a598b2f7a41cf89c34cb3ec55ba8b7874d579914851da59f252e2fcbe8091e490e9a6eca68d7995e2f8b667e
+  SHA512 94658fea825a5cbe95ab9bf6ff6945a0f57353f3ce69ac77f045e737a53860c9ba380c25954af312cf9783275bd016fdb6ee7a56a10a2d634f50477029cc7f4d
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
@@ -21,8 +21,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "zstd" WITH_ZSTD
     "bzip2" WITH_BZ2
     "numa" WITH_NUMA
-    "tbb" WITH_TBB
 )
+
+if(WITH_LIBURING)
+  vcpkg_find_acquire_program(PKGCONFIG)
+  vcpkg_list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -31,6 +35,8 @@ vcpkg_cmake_configure(
     -DWITH_TESTS=OFF
     -DWITH_BENCHMARK_TOOLS=OFF
     -DWITH_TOOLS=OFF
+    -DWITH_CORE_TOOLS=OFF
+    -DWITH_TRACE_TOOLS=OFF
     -DUSE_RTTI=ON
     -DROCKSDB_INSTALL_ON_WINDOWS=ON
     -DFAIL_ON_WARNINGS=OFF

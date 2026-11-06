@@ -1,6 +1,6 @@
 {
   "name": "trompeloeil",
-  "version": "48",
+  "version": "49",
   "description": "A thread-safe header-only mocking framework for C++11/14 using the Boost Software License 1.0",
   "homepage": "https://github.com/rollbear/trompeloeil",
   "license": "BSL-1.0",

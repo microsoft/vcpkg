@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneDNN
     REF "v${VERSION}"
-    SHA512 251da59164c102a6dd3c97e92aef58a879930c0def6e9fe6e43e68e1316ed0c9844796e69eecebbde12085900bfcda6c1ab30db6df24ba9826883171c87a964d
+    SHA512 d3227e571a286435628e74b88ad64b0a5481e38d08a72247e605a0d2d00a506b2c64eb87d3bef3b9c1c358d36b2b260eab3c2af4b79bc126f563f552793b36c6
     HEAD_REF master
 )
 
@@ -12,10 +12,12 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${DNNL_OPTIONS}
+    OPTIONS
         -DDNNL_BUILD_DOC=OFF
         -DDNNL_BUILD_EXAMPLES=OFF
         -DDNNL_BUILD_TESTS=OFF
+        -DDNNL_EXPERIMENTAL_UKERNEL=ON  # required by PyTorch CPUBlas (dnnl::ukernel::brgemm/transform)
+        ${DNNL_OPTIONS}
 )
 vcpkg_cmake_install()
 

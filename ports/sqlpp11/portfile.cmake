@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
     REF ${VERSION}
-    SHA512 7b48f66e2e229ed046a5b5033acc1be36b0c2790773a81ce9c65fce4a85379d61e87dd0ff214eb4126ce87fe6cf2f314b7e6c54256b600d15d8352d74a8fac0d
+    SHA512 a25a9bddae41ab888aab032bf88dd345d395912728ad49990ddbcdea1738ace21ab494ff890a4babea3dd1685b12ced1eeb45e5568be6618924ed86f051f96ee
     HEAD_REF main
     PATCHES
         ddl2cpp_path.patch

@@ -159,7 +159,6 @@ set(cmakeParams ${platformCMakeParams} ${common_params} ${cmakeParams})
 # Finally invoke physx's CMake to configure the PhysX project
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
-    GENERATOR "${generator}"
     WINDOWS_USE_MSBUILD
     OPTIONS
         -DCMAKE_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}

@@ -1,0 +1,12 @@
+diff --git a/support/libmemcached-config.cmake.in b/support/libmemcached-config.cmake.in
+index d6fd629b..31e8c8be 100644
+--- a/support/libmemcached-config.cmake.in
++++ b/support/libmemcached-config.cmake.in
+@@ -3,6 +3,7 @@
+ include(CMakeFindDependencyMacro)
+ find_dependency(Threads)
+ 
++include(${CMAKE_CURRENT_LIST_DIR}/p9y-targets.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/libhashkit-targets.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/libmemcached-targets.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/libmemcachedprotocol-targets.cmake)

@@ -1,8 +1,8 @@
 set(IDN2_FILENAME "libidn2-${VERSION}.tar.gz")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
+    URLS "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
+         "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
     SHA512 eab5702bc0baed45492f8dde43a4d2ea3560ad80645e5f9e0cfa8d3b57bccd7fd782d04638e000ba07924a5d9f85e760095b55189188c4017b94705bef9b4a66
 )

@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 08002b335..fd9dc9cdb 100644
+--- a/meson.build
++++ b/meson.build
+@@ -703,7 +703,7 @@ subdir('po')
+ subdir('docs')
+ 
+ 
+-if host_machine.system() != 'emscripten'
++if false
+   nm = find_program('nm', required: false)
+ 
+   # Verify .def files for Windows linking (and for macOS too when -Wl,-exported_symbols_list is used).

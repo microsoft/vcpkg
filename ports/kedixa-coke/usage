@@ -1,0 +1,5 @@
+The package coke provides CMake targets:
+
+    find_package(coke CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE coke::coke)
+

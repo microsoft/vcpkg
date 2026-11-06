@@ -2,15 +2,15 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-if("openssl" IN_LIST FEATURES AND "schannel" IN_LIST FEATURES)
-    message(FATAL_ERROR "Only one SSL backend must be selected.")
+if(VCPKG_TARGET_IS_WINDOWS AND "openssl" IN_LIST FEATURES)
+    message(WARNING "Using OpenSSL instead of schannel.")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
-    REF v${VERSION}
-    SHA512 396ce2a36937d49ec96eb239312118c736f46383d2906b7142d9695e795f310af28255d8827cc98ad76ae4e6d5a22faf1188b7dd286791e3c85f22c96d0114b3
+    REF "v${VERSION}"
+    SHA512 47d6fa55a9d562c11fdf9783972d0f745236e8d671db90cf132fa6d9cf9c4761f6ac03b14cd7eefb97d339603b903e19409b5bce56a1b5463e4c2479fb3b096f
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
@@ -19,7 +19,6 @@ vcpkg_from_github(
         library-linkage.diff
         cmake-export.diff
         no-abs-path.diff
-        ushort-check.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindIconv.cmake"
@@ -41,17 +40,15 @@ endif()
 
 if("openssl" IN_LIST FEATURES)
     set(WITH_SSL OPENSSL)
-elseif("schannel" IN_LIST FEATURES)
-    set(WITH_SSL ON)
 else()
-    set(WITH_SSL OFF)
+    set(WITH_SSL SCHANNEL)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_POLICY_DEFAULT_CMP0153=OLD
+        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         -DINSTALL_INCLUDEDIR=include/mysql # legacy port decision
         -DINSTALL_LIBDIR=lib
         -DINSTALL_PLUGINDIR=plugins/${PORT}
@@ -68,11 +65,11 @@ vcpkg_cmake_configure(
         -DCLIENT_PLUGIN_MYSQL_CLEAR_PASSWORD=${plugin_type}
         -DCLIENT_PLUGIN_MYSQL_OLD_PASSWORD=OFF
         -DCLIENT_PLUGIN_SHA256_PASSWORD=${plugin_type}
-        # plugins/compress 
+        # plugins/compress
         -DCLIENT_PLUGIN_ZSTD=${zstd_plugin_type}
         # don't add system include dirs
         -DAUTH_GSSAPI_PLUGIN_TYPE=OFF
-        -DREMOTEIO_PLUGIN_TYPE=OFF 
+        -DREMOTEIO_PLUGIN_TYPE=OFF
     MAYBE_UNUSED_VARIABLES
         AUTH_GSSAPI_PLUGIN_TYPE
         CLIENT_PLUGIN_AUTH_GSSAPI_CLIENT
@@ -85,11 +82,10 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libmariadb)
 vcpkg_fixup_pkgconfig()
 
 set(link_lib " -lmariadb")
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(link_lib " -llibmariadb")
-endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(APPEND link_lib "client")
+    set(link_lib " -lmariadbclient")
+elseif(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(link_lib " -llibmariadb")
 endif()
 if(NOT link_lib STREQUAL " -lmariadb")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmariadb.pc" " -lmariadb" "${link_lib}")

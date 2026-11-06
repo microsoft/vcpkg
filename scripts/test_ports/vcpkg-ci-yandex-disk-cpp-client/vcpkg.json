@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-yandex-disk-cpp-client",
+  "version-string": "ci",
+  "description": "Validates yandex-disk-cpp-client",
+  "dependencies": [
+    "yandex-disk-cpp-client",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

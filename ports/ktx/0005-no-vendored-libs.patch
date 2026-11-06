@@ -1,16 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e99fb143..0f69adf7 100644
+index 6ff6a84..3b928ca 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1071,10 +1071,10 @@ endif()
+@@ -1308,6 +1308,8 @@ set_astc_dependencies(ktx_read)
+ # this CMakeLists is included in another project which is unlikely
+ # except for building the ktx library.
  if((KTX_FEATURE_TOOLS OR KTX_FEATURE_TESTS) AND NOT TARGET fmt::fmt)
-     set(FMT_INSTALL OFF)
-     set(FMT_SYSTEM_HEADERS ON)
--    add_subdirectory(other_projects/fmt)
 +    find_package(fmt CONFIG REQUIRED)
++elseif(0)
+     # Always build fmt static
+     set(BUILD_SHARED_LIBS OFF)
+     set(FMT_INSTALL OFF)
+@@ -1316,7 +1318,7 @@ if((KTX_FEATURE_TOOLS OR KTX_FEATURE_TESTS) AND NOT TARGET fmt::fmt)
+     set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_RESET})
  endif()
  if(KTX_FEATURE_TOOLS AND NOT TARGET cxxopts::cxxopts)
--    add_subdirectory(other_projects/cxxopts)
+-    add_subdirectory(external/cxxopts)
 +    find_package(cxxopts CONFIG REQUIRED)
  endif()
  

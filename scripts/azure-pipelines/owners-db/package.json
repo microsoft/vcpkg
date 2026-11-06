@@ -1,0 +1,20 @@
+{
+  "name": "owners-db",
+  "version": "1.0.0",
+  "description": "Utility to generate VCPKG file lists (TypeScript)",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "yauzl": "3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/yauzl": "3.4.0"
+  }
+}

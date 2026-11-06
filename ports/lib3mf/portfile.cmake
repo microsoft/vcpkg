@@ -1,20 +1,28 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 3MFConsortium/lib3mf
     REF "v${VERSION}"
-    SHA512 875529759aff6128b32291d0719b95a75a72a3b19f98711b12c9b1076727b231668b3b14604e69bb1fec79b4725fd098f030b7e965072e566bfb061f3086279c
+    SHA512 acfd0e4862248c475c674f7ee7855f809965a854e62ea0cd847008be7a9ca3c5a03ac87cac889f036555229762405094ca9811817dd45dbdaae941b5b41ae356
     PATCHES
-        lib3mf_vcpkg.patch
+        fix-lib3mf-config-root.patch
+        linkage.diff
+        pkgconfig.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/Libraries")  # vendored
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" _lib3mf_build_shared)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
+        -DLIB3MF_BUILD_SHARED=${_lib3mf_build_shared}
+        -DCMAKE_REQUIRE_FIND_PACKAGE_libzip=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         -DUSE_INCLUDED_ZLIB=OFF
         -DUSE_INCLUDED_LIBZIP=OFF
         -DUSE_INCLUDED_SSL=OFF
+        -DUSE_INCLUDED_CPPBASE64=OFF
+        -DUSE_INCLUDED_FASTFLOAT=OFF
         -DBUILD_FOR_CODECOVERAGE=OFF
         -DLIB3MF_TESTS=OFF
 )

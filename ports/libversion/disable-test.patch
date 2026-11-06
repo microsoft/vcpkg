@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8ca373..9c1fe8d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,9 +4,6 @@ cmake_minimum_required(VERSION 3.28.3 FATAL_ERROR)
+ project(libversion VERSION 3.0.5)
+ 
+ include(GNUInstallDirs)
+-enable_testing()
+ 
+ # subdirs
+ add_subdirectory(libversion)
+-add_subdirectory(tests)
+-add_subdirectory(utils)

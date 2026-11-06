@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index da12e2a..9881489 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,19 +16,6 @@ if(SSP_INCLUDE_WITHOUT_SYSTEM)
+     set(SSP_WARNING_GUARD "")
+ endif()
+ 
+-# ---- Dependencies ----
+-
+-include(FetchContent)
+-fetchcontent_declare(
+-    fast_float
+-    GIT_REPOSITORY https://github.com/red0124/fast_float.git
+-    GIT_TAG origin/meson
+-    GIT_SHALLOW TRUE
+-)
+-
+-fetchcontent_makeavailable(fast_float)
+-set(FAST_FLOAT_SOURCE_DIR "${FETCHCONTENT_BASE_DIR}/fast_float-src")
+-
+ # ---- Declare library ----
+ 
+ add_library(ssp INTERFACE)
+@@ -39,7 +26,6 @@ target_include_directories(
+     ${SSP_WARNING_GUARD}
+     INTERFACE
+         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/fast_float>"
+ )
+ 
+ target_compile_features(ssp INTERFACE cxx_std_17)
+@@ -62,7 +48,6 @@ set(SSP_INCLUDE_DIRECTORY "${CMAKE_INSTALL_INCLUDEDIR}")
+ install(
+     DIRECTORY
+         "${PROJECT_SOURCE_DIR}/include/"
+-        "${FAST_FLOAT_SOURCE_DIR}/include/"
+     DESTINATION "${SSP_INCLUDE_DIRECTORY}"
+     COMPONENT ssp_Development
+ )

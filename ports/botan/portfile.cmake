@@ -1,18 +1,20 @@
+vcpkg_download_distfile(REMOVE_CLI_SANDBOX_PATCH
+    URLS https://github.com/randombit/botan/commit/1a0c4477865809a181a5fd0f73132b2df2685d1a.patch?full_index=1
+    FILENAME botan-remove-cli-sandbox.patch
+    SHA512 f1585c9d070addd81158394889813147e84fdb3e8e32f48075db90c2c635bdd7b0d4ca2c7ad3c47fce043b99fb23eb1251f47d2e9af75ed63b66e3a84636e014
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 dcd9ac8e748422d55854c38e565704e4a239418b6855836bdea85bd4dc3ab45e218d320471b98b6a451fc63d8518895f3813a50c94dee90227c09d12d96ca1dc
+    SHA512 e6b36338ddf709641ff20c737927c5f2d1ac6881ebbda2279e5ff436c8756d6c62e9c5d97e3f8156f3b79bd10465485fdb77e7910fc512568d2b4f1b04dc3198
     HEAD_REF master
     PATCHES
-        embed-debug-info.patch
-        pkgconfig.patch
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
-        libcxx-winpthread-fixes.patch
-        fix-cmake-usage.patch
-        0009-fix-regression-f2bf049-85491b3.patch # extract from PR 4255
+        "${REMOVE_CLI_SANDBOX_PATCH}"
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -34,11 +36,14 @@ vcpkg_list(SET configure_arguments
     "--distribution-info=vcpkg ${TARGET_TRIPLET}"
     --disable-cc-tests
     --with-pkg-config
+    --with-cmake-config
     --link-method=copy
     --with-debug-info
+    --without-include-namespace
     --includedir=include
     --bindir=bin
     --libdir=lib
+    --cmakeconfigdir=share/${PORT}
     --without-documentation
     "--with-external-includedir=${CURRENT_INSTALLED_DIR}/include"
 )
@@ -79,19 +84,13 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND configure_arguments --os=windows)
 
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        vcpkg_list(APPEND configure_arguments --cc=msvc)
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER MATCHES "clang-cl(\.exe)?$")
+        vcpkg_list(APPEND configure_arguments "--cc=clangcl")
+    elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        vcpkg_list(APPEND configure_arguments "--cc=msvc")
     endif()
 
-    # When compiling with Clang, -mrdrand is required to enable the RDRAND intrinsics. Botan will
-    # check for RDRAND at runtime before trying to use it, so we should be safe to specify this
-    # without triggering illegal instruction faults on older CPUs.
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER MATCHES "clang-cl(\.exe)?$")
-        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS} -mrdrnd")
-    else()
-        # ...otherwise just forward the detected CXXFLAGS.
-        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
-    endif()
+    vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_list(APPEND configure_arguments --enable-shared-library --disable-static-library)
@@ -150,6 +149,13 @@ else()
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         vcpkg_list(APPEND configure_arguments --cc=clang)
     endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_list(APPEND configure_arguments --build-targets=shared,cli)
+    else()
+        vcpkg_list(APPEND configure_arguments --build-targets=static,cli)
+    endif()
+
     # botan's install.py doesn't handle DESTDIR on windows host,
     # so we must avoid the standard '--prefix' and 'DESTDIR' install.
     vcpkg_configure_make(
@@ -178,9 +184,7 @@ else()
     endif()
 endif()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Botan-${VERSION}")
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/botan-3/botan" "${CURRENT_PACKAGES_DIR}/include/botan")
+vcpkg_cmake_config_fixup()
 
 if(pkgconfig_requires)
     list(JOIN pkgconfig_requires ", " pkgconfig_requires)
@@ -194,12 +198,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/include/botan-3"
 )
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

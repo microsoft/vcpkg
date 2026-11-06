@@ -1,0 +1,13 @@
+diff --git a/src/hello_imgui/internal/hello_imgui_assets.cpp b/src/hello_imgui/internal/hello_imgui_assets.cpp
+index 028c8ef..d7ec663 100644
+--- a/src/hello_imgui/internal/hello_imgui_assets.cpp
++++ b/src/hello_imgui/internal/hello_imgui_assets.cpp
+@@ -249,7 +249,7 @@ std::string AssetFileFullPath(const std::string& assetFilename, bool assertIfNot
+ // Returns true if this asset file exists
+ bool AssetExists(const std::string& assetFilename)
+ {
+-#ifdef __ANDROID__
++#if defined(__ANDROID__) && defined(HELLOIMGUI_USE_SDL2)
+     size_t dataSize;
+     void *data = SDL_LoadFile(assetFilename.c_str(), &dataSize);
+     bool exists = (data != nullptr);

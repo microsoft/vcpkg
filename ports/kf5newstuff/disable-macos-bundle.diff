@@ -1,0 +1,12 @@
+diff --git a/src/tools/knewstuff-dialog/CMakeLists.txt b/src/tools/knewstuff-dialog/CMakeLists.txt
+index b987dcc..3f9349c 100644
+--- a/src/tools/knewstuff-dialog/CMakeLists.txt
++++ b/src/tools/knewstuff-dialog/CMakeLists.txt
+@@ -9,6 +9,7 @@ set(knewstuff-dialog_SRCS
+ qt_add_resources(RESOURCES resources.qrc)
+ 
+ add_executable(knewstuff-dialog ${knewstuff-dialog_SRCS} ${RESOURCES})
++set_target_properties(knewstuff-dialog PROPERTIES MACOSX_BUNDLE 0) # override KDECMakeSettings
+ 
+ target_link_libraries(knewstuff-dialog
+     Qt${QT_MAJOR_VERSION}::Core

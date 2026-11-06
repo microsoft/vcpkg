@@ -1,22 +1,16 @@
-vcpkg_download_distfile(ARM64_WINDOWS_UWP_PATCH
-    URLS "https://patch-diff.githubusercontent.com/raw/OpenMathLib/OpenBLAS/pull/4926.diff?full_index=1"
-    FILENAME "openblas-fix-arm64-windows-uwp.patch"
-    SHA512 808d375628499641f1134b4751c9861384b719dae14cf6bd4d9d4b09c9bfd9f8b13b2663e9fa9d09867b5b40817c26387ac659d2f6459d40a46455b2f540d018
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 358301c8a60bedf920c07a110c772feb639e52412bd783789741fd2fd0686aac97e6b17ebcdf01ce48a2a15841058f82df0fee551af952f6e70b58140c055133
+    SHA512 b40b5a3b5062ea196b3e48363db584ef91aef21c61becf4f4d6616ba5e413d770c22445c357d06dcf0992dd4666c18cced44cd5d09d8cb884c0d8f62e6940422
     HEAD_REF develop
     PATCHES
-        arm32-asm-function.diff
         disable-testing.diff
         getarch.diff
         system-check-msvc.diff
         win32-uwp.diff
-        ${ARM64_WINDOWS_UWP_PATCH}
+        android-exclude-sme.diff
+        arm64-generic-omatcopy.diff # https://github.com/OpenMathLib/OpenBLAS/pull/5977
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
@@ -26,7 +20,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         dynamic-arch   DYNAMIC_ARCH
 )
 
-# If not explicitly configured for a cross build, OpenBLAS wants to run 
+# If not explicitly configured for a cross build, OpenBLAS wants to run
 # getarch executables in order to optimize for the target.
 # Adapting this to vcpkg triplets:
 # - install-getarch.diff introduces and uses GETARCH_BINARY_DIR,
@@ -56,7 +50,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -DCMAKE_POLICY_DEFAULT_CMP0054=NEW
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DBUILD_TESTING=OFF
         -DBUILD_WITHOUT_LAPACK=ON
@@ -68,12 +61,24 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenBLAS)
+
+#fix for libm linking on non-windows platforms
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    foreach(PCFILE IN ITEMS
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/openblas.pc"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/openblas.pc")
+        if(EXISTS "${PCFILE}")
+            file(APPEND "${PCFILE}" "Libs.private: -lm\n")
+        endif()
+    endforeach()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 # Required from native builds, optional from cross builds.
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(
-        TOOL_NAMES getarch getarch_2nd 
+        TOOL_NAMES getarch getarch_2nd
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${SYSTEM_KEY}"
         AUTO_CLEAN
     )

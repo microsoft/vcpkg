@@ -1,0 +1,21 @@
+diff --git a/src/H5Tinit_float.c b/src/H5Tinit_float.c
+index 01d6e89..7955811 100644
+--- a/src/H5Tinit_float.c
++++ b/src/H5Tinit_float.c
+@@ -461,5 +461,9 @@ H5T__init_native_float_types(void)
+  *-------------------------------------------------------------------------
+  */
++#if defined(_MSC_VER) && (_MSC_VER == 1951) && defined(_M_ARM64)
++#pragma optimize("", off)
++#endif
++
+ herr_t H5_NO_UBSAN
+ H5T__init_native_float_types(void)
+ {
+@@ -629,2 +633,6 @@ H5T__init_native_float_types(void)
+     FUNC_LEAVE_NOAPI(ret_value)
+ } /* end H5T__init_native_float_types() */
++
++#if defined(_MSC_VER) && (_MSC_VER == 1951) && defined(_M_ARM64)
++#pragma optimize("", on)
++#endif

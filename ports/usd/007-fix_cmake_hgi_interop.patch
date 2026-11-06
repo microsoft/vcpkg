@@ -1,5 +1,5 @@
 diff --git a/pxr/imaging/hgiInterop/CMakeLists.txt b/pxr/imaging/hgiInterop/CMakeLists.txt
-index 64ebfcb9e..0087d89aa 100644
+index 6264cce71e..ebea6f1e59 100644
 --- a/pxr/imaging/hgiInterop/CMakeLists.txt
 +++ b/pxr/imaging/hgiInterop/CMakeLists.txt
 @@ -15,6 +15,7 @@ set(optionalPrivateHeaders "")
@@ -10,7 +10,7 @@ index 64ebfcb9e..0087d89aa 100644
      list(APPEND optionalCppFiles opengl.cpp)
      list(APPEND optionalPrivateHeaders opengl.h)
  endif()
-@@ -32,6 +33,10 @@ if (PXR_ENABLE_METAL_SUPPORT)
+@@ -37,6 +38,10 @@ if (PXR_ENABLE_METAL_SUPPORT AND NOT PXR_APPLE_EMBEDDED)
      list(APPEND optionalPrivateHeaders metal.h)
  endif()
  

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "godotengine/godot-cpp"
     REF "godot-${VERSION}-stable"
-    SHA512 "4012e2c8cbdbccf5362b139a6318785af6e2cfdc99848734d5e3825afba8b8a46cdd7fff63887e2503cf3195efe79c0bd39a900b535322ab0fb51c3452dc07f5"
+    SHA512 "3c97d6f0bbd952977d8085483d538b650d44ee0f9c6d84215128d9702d071b23a91bacab3a5259320f89d11884b3a5d5b638bc757c11d7447c000223fa976de8"
     HEAD_REF "master"
     PATCHES
         "packagable.patch"

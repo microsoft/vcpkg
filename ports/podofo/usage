@@ -1,4 +1,9 @@
 podofo provides CMake targets:
 
-    find_package(podofo CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:podofo_shared>,podofo_shared,podofo_static>)
+  find_package(podofo CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE podofo::podofo)
+
+podofo provides pkg-config modules:
+
+  # A C++ library to work with the PDF file format
+  libpodofo

@@ -1,22 +1,31 @@
-vcpkg_download_distfile(FIX_LIBRAW_BUILD_PATCH
-    URLS https://github.com/AcademySoftwareFoundation/OpenImageIO/commit/904df59ab74d0c89c1c9eea7d5ef0ecfe0620b2c.diff?full_index=1
-    FILENAME AcademySoftwareFoundation-OpenImageIO-libraw-build.patch
-    SHA512 0c3bb7bf76c8fd3e1e9408373cced3e8f1e189df268cef27c7ca7244ab6e15be8b96759505238aafd63061f683b0c552d7d710bf8ab49edb0de0d2aff8ceb8fc
+set(PATCHES
+    fix-dependencies.patch
+    fix-static-ffmpeg.patch
+    imath-version-guard.patch
+    fix-openimageio_include_dir.patch
 )
+
+if(VCPKG_TARGET_IS_OSX)
+    execute_process(COMMAND xcrun --show-sdk-version
+            OUTPUT_VARIABLE OSX_SDK_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+    # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+    #
+    # macOS 26.2 fails to query this with the following error, so we conservatively apply the patch in that case
+    # xcodebuild: error: SDK "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk" cannot be located.
+    # xcrun: error: unable to lookup item 'SDKVersion' in SDK '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+    if(NOT OSX_SDK_VERSION OR OSX_SDK_VERSION VERSION_GREATER_EQUAL 26)
+        list(APPEND PATCHES remove-agl-framework.patch)
+    endif()
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 8639b32ea3bd4d9188b346144721006cb93e09035ac6ec64636f1df97a26775b4dc53491b991aac943053824e2c2d52209a9a580a470d6450f2d55006554d87a
+    SHA512 49dfbc38350403cec072a6c976544d10e4402c2c416677acb1048537f67288f4cf5f458f2c3adeea26eb8c92f59e039a62f6c23ef75f61fc62534fdb439b40f6
     HEAD_REF master
-    PATCHES
-        fix-dependencies.patch
-        fix-static-ffmpeg.patch
-        imath-version-guard.patch
-        fix-openimageio_include_dir.patch
-        fix-openexr-target-missing.patch
-        ${FIX_LIBRAW_BUILD_PATCH}
+    PATCHES ${PATCHES}
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -51,6 +60,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         viewer      ENABLE_IV
 )
 
+if("pybind11" IN_LIST FEATURES)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
+    list(APPEND FEATURE_OPTIONS
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+        -DOIIO_PYTHON_BINDINGS_BACKEND=pybind11
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -64,7 +81,7 @@ vcpkg_cmake_configure(
         -DUSE_TBB=OFF
         -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
-        -DINTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
+        -DOIIO_INTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
         -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
@@ -80,11 +97,12 @@ vcpkg_cmake_configure(
         BUILD_MISSING_DEPS
         BUILD_MISSING_FMT
         BUILD_MISSING_ROBINMAP
-        INTERNALIZE_FMT
         REQUIRED_DEPS
 )
 
 vcpkg_cmake_install()
+
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 

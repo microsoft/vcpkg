@@ -1,7 +1,6 @@
 {
   "name": "tinynpy",
-  "version": "1.0.0",
-  "port-version": 6,
+  "version": "1.1",
   "description": "tiny C++ loader/exporter of python numpy array NPY/NPZ files",
   "dependencies": [
     {

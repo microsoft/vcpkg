@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 3351124..1fb3977 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -5,7 +5,6 @@ AC_INIT([libXi], [1.8.2],
+ 	[https://gitlab.freedesktop.org/xorg/lib/libXi/issues], [libXi])
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AC_CONFIG_HEADERS([src/config.h])
+-AC_CONFIG_MACRO_DIRS([m4])
+ 
+ # Initialize Automake
+ AM_INIT_AUTOMAKE([foreign dist-xz])

@@ -1,17 +1,14 @@
-# All components of BitSerializer is "header only" except CSV archive
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+# All BitSerializer components are "header only" except for CSV and MsgPack archives
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PavelKisliak/BitSerializer
-    REF v0.75
-    SHA512 ae31f17a0b4e488892f676eafe94e2d43a381153b9179891a9d3a6380c7b3f12d29bc20b7be270a71305bc7c27b08395f6aa8a8be26c52934e148e7140d34d21
+    REF v0.85
+    SHA512 a55d3948ad66cbd9328c2845fb954ac5587ae230be0276c15cdc5c2e23f7797149a955553a80ff001de79dc7db853f573360827f1a56d83dbd3f9ea249288932
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "cpprestjson-archive"  BUILD_CPPRESTJSON_ARCHIVE
         "rapidjson-archive"    BUILD_RAPIDJSON_ARCHIVE
         "pugixml-archive"      BUILD_PUGIXML_ARCHIVE
         "rapidyaml-archive"    BUILD_RAPIDYAML_ARCHIVE

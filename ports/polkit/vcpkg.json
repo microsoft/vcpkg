@@ -1,0 +1,32 @@
+{
+  "name": "polkit",
+  "version": "124",
+  "description": "PolicyKit authorization libraries",
+  "homepage": "https://gitlab.freedesktop.org/polkit/polkit",
+  "license": "LGPL-2.0-or-later",
+  "supports": "linux",
+  "dependencies": [
+    "expat",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    "libxcrypt",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

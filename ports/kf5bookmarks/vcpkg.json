@@ -1,8 +1,8 @@
 {
   "name": "kf5bookmarks",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Bookmarks management library",
-  "homepage": "https://api.kde.org/frameworks/kbookmarks/html/index.html",
+  "homepage": "https://api.kde.org/kbookmarks-index.html",
   "dependencies": [
     "ecm",
     {
@@ -18,7 +18,10 @@
     "kf5coreaddons",
     "kf5widgetsaddons",
     "kf5xmlgui",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",

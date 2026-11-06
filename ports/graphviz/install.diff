@@ -1,0 +1,59 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index e656b1228..41faad061 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -47,7 +47,10 @@ if(with_cxx_api)
+   add_subdirectory(gvc++)
+ endif()
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
++  set_target_properties(common PROPERTIES EXPORT_NAME private::common)
++  set_target_properties(util   PROPERTIES EXPORT_NAME private::util OUTPUT_NAME gvutil)
++  install(TARGETS common util EXPORT graphvizTargets)
+   install(
+     EXPORT graphvizTargets
+     FILE graphvizTargets.cmake
+diff --git a/lib/cgraph/libcgraph.pc.in b/lib/cgraph/libcgraph.pc.in
+index 168ce85f0..9340aa32e 100644
+--- a/lib/cgraph/libcgraph.pc.in
++++ b/lib/cgraph/libcgraph.pc.in
+@@ -6,6 +6,6 @@ includedir=@includedir@
+ Name: libcgraph
+ Description: Graph library (file i/o, dot language parsing, graph, subgraph, node, edge, attribute, data structure manipulation)
+ Version: @VERSION@
+-Libs.private: -lutil
++Libs.private: -lgvutil
+ Libs: -L${libdir} -lcgraph -lcdt
+ Cflags: -I${includedir} -I${includedir}/@PACKAGE@
+diff --git a/lib/gvc/libgvc.pc.in b/lib/gvc/libgvc.pc.in
+index 9b89519f8..22ee26e4c 100644
+--- a/lib/gvc/libgvc.pc.in
++++ b/lib/gvc/libgvc.pc.in
+@@ -8,7 +8,7 @@ Name: libgvc
+ Description: The GraphVizContext library 
+ Version: @VERSION@
+ Requires.private: @LIBGVC_PC_REQUIRES_PRIVATE@
+-Libs.private: @LIBGVC_PC_LIBS_PRIVATE@ -lutil
++Libs.private: @LIBGVC_PC_LIBS_PRIVATE@ -lgvutil
+ Libs: -L${libdir} -lgvc -lcgraph -lcdt
+ Cflags: -I${includedir} -I${includedir}/@PACKAGE@
+ 
+diff --git a/plugin/CMakeLists.txt b/plugin/CMakeLists.txt
+index 3eac7cd4d..9e41c2fd2 100644
+--- a/plugin/CMakeLists.txt
++++ b/plugin/CMakeLists.txt
+@@ -24,3 +24,13 @@ add_subdirectory(rsvg)
+ add_subdirectory(vt)
+ add_subdirectory(webp)
+ add_subdirectory(xlib)
++
++if(NOT BUILD_SHARED_LIBS)
++  get_directory_property(subdirs SUBDIRECTORIES)
++  foreach(dir IN LISTS subdirs)
++    get_directory_property(targets DIRECTORY "${dir}" BUILDSYSTEM_TARGETS)
++    if(targets)
++      install(TARGETS ${targets})
++    endif()
++  endforeach()
++endif()

@@ -1,0 +1,44 @@
+diff --git a/include/igl/opengl/glfw/imgui/ImGuiPlugin.cpp b/include/igl/opengl/glfw/imgui/ImGuiPlugin.cpp
+index ce5ac08..c240c57 100644
+--- a/include/igl/opengl/glfw/imgui/ImGuiPlugin.cpp
++++ b/include/igl/opengl/glfw/imgui/ImGuiPlugin.cpp
+@@ -10,8 +10,8 @@
+ #include "ImGuiPlugin.h"
+ #include "ImGuiHelpers.h"
+ #include "../../../project.h"
+-#include <backends/imgui_impl_glfw.h>
+-#include <backends/imgui_impl_opengl3.h>
++#include <imgui_impl_glfw.h>
++#include <imgui_impl_opengl3.h>
+ #include <imgui.h>
+ #include <imgui_fonts_droid_sans.h>
+ #include <GLFW/glfw3.h>
+diff --git a/include/igl/opengl/glfw/imgui/ImGuizmoWidget.cpp b/include/igl/opengl/glfw/imgui/ImGuizmoWidget.cpp
+index 61f15b1..ec082de 100644
+--- a/include/igl/opengl/glfw/imgui/ImGuizmoWidget.cpp
++++ b/include/igl/opengl/glfw/imgui/ImGuizmoWidget.cpp
+@@ -1,7 +1,7 @@
+ #include "ImGuizmoWidget.h"
+ #include <imgui.h>
+-#include <backends/imgui_impl_glfw.h>
+-#include <backends/imgui_impl_opengl3.h>
++#include <imgui_impl_glfw.h>
++#include <imgui_impl_opengl3.h>
+ #include <imgui_fonts_droid_sans.h>
+ #include <GLFW/glfw3.h>
+ 
+diff --git a/include/igl/opengl/glfw/imgui/SelectionWidget.cpp b/include/igl/opengl/glfw/imgui/SelectionWidget.cpp
+index ca1261c..6a363d9 100644
+--- a/include/igl/opengl/glfw/imgui/SelectionWidget.cpp
++++ b/include/igl/opengl/glfw/imgui/SelectionWidget.cpp
+@@ -8,8 +8,8 @@
+ #include "SelectionWidget.h"
+ 
+ #include <imgui.h>
+-#include <backends/imgui_impl_glfw.h>
+-#include <backends/imgui_impl_opengl3.h>
++#include <imgui_impl_glfw.h>
++#include <imgui_impl_opengl3.h>
+ #include <imgui_fonts_droid_sans.h>
+ #include <GLFW/glfw3.h>
+ #include "../../../PI.h"

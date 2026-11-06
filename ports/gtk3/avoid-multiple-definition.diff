@@ -1,0 +1,13 @@
+diff --git a/gtk/inspector/size-groups.c b/gtk/inspector/size-groups.c
+index eb185ed..f7c604d 100644
+--- a/gtk/inspector/size-groups.c
++++ b/gtk/inspector/size-groups.c
+@@ -44,7 +44,7 @@ enum {
+   LAST_PROPERTY
+ };
+ 
+-GParamSpec *properties[LAST_PROPERTY] = { NULL };
++static GParamSpec *properties[LAST_PROPERTY] = { NULL };
+ 
+ GType size_group_row_get_type (void);
+ 

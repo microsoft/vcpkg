@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d0acf8..d5ebe90 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -734,7 +734,7 @@ OPTION(OSG_USE_LOCAL_LUA_SOURCE "Enable to use local Lua source when building th
+ # you can use the following style of command line option when invoking Cmake (here illustrating ignoring PythonLibs) :
+ # cmake -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=1 .
+ #
+-IF(ANDROID)
++IF(0)
+     ANDROID_3RD_PARTY()
+ ELSE()
+ # Common to all platforms except android:
+@@ -815,7 +815,7 @@ ENDIF(BUILD_OSG_EXAMPLES AND NOT ANDROID)
+ 
+ # Image readers/writers depend on 3rd party libraries except for OS X which
+ # can use Quicktime.
+-IF(NOT ANDROID)
++IF(1)
+     IF(NOT APPLE)
+         FIND_PACKAGE(GIFLIB)
+         FIND_PACKAGE(JPEG)

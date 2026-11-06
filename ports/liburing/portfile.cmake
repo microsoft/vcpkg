@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO axboe/liburing
     REF "liburing-${VERSION}"
-    SHA512 d40d041b94bb0f004bd92890988c0e4b8a7bb9ae43659790ee4b19e5417f7dc5b9a554489834769ee71edfc6a44bcd87a5fca34845f61cc80e4e8e588c6950ec
+    SHA512 8f2de8b294b14ef2802fe1806ae62a0a4e1f8a52c423e1069a97600a742492eecb1078c435624b9a094a07ae5f706a68e333714c00c904f3d93ca8acf40f81ae
     HEAD_REF master
     PATCHES
         fix-configure.patch     # ignore unsupported options, handle ENABLE_SHARED
@@ -12,15 +12,30 @@ vcpkg_from_github(
 # https://github.com/axboe/liburing/blob/liburing-2.8/src/Makefile#L13
 set(ENV{CFLAGS} "$ENV{CFLAGS} -O3 -Wall -Wextra -fno-stack-protector")
 
+# without this calls to `realpath ${prefix}` inside the build system fail for the debug build if this is the first
+# library to be installed
+file(MAKE_DIRECTORY "${CURRENT_INSTALLED_DIR}/debug")
+
 # note: check ${SOURCE_PATH}/liburing.spec before updating configure options
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     COPY_SOURCE
-    DETERMINE_BUILD_TRIPLET
+    # liburing's configure script is not Autotools. Its recursive install exposes a path-handling
+    # difference observed on Ubuntu 26.04 "Resolute Raccoon":
+    # 1. vcpkg-make configures the debug includedir as "${prefix}/../include".
+    # 2. liburing's top-level Makefile prepends DESTDIR itself.
+    # 3. It forwards that already-staged absolute includedir to the src submake.
+    # 4. The src submake calls "install -D" without first creating the intermediate "debug" directory.
+    # Resolute's uutils coreutils install rejects a nonexistent "debug" component followed by "..",
+    # while GNU coreutils install accepts it. Release needs no replacement because liburing defaults
+    # includedir to "${prefix}/include" and vcpkg-make's release prefix is CURRENT_INSTALLED_DIR.
+    DEFAULT_OPTIONS_EXCLUDE "^--includedir="
     OPTIONS
         [[--libdevdir=\${prefix}/lib]] # must match libdir
+    OPTIONS_DEBUG
+        "--includedir=${CURRENT_INSTALLED_DIR}/include"
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 # note: {SOURCE_PATH}/src/Makefile makes liburing.so from liburing.a.
@@ -30,7 +45,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
                 "${CURRENT_PACKAGES_DIR}/lib/liburing.a"
     )
 endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man2")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man3")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7")

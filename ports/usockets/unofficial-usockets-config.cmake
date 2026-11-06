@@ -1,5 +1,5 @@
 include(CMakeFindDependencyMacro)
-if(WIN32)
+if(WIN32 OR ANDROID)
     find_dependency(libuv CONFIG)
 endif()
 if("@WITH_OPENSSL@")

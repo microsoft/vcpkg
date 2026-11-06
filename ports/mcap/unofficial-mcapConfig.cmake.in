@@ -1,0 +1,24 @@
+# Template for unofficial-mcapConfig.cmake
+
+include(CMakeFindDependencyMacro)
+foreach(_DEPENDENCY IN ITEMS @MCAP_FIND_DEPENDENCIES@)
+    find_dependency(${_DEPENDENCY})
+endforeach()
+
+# Protect against multiple inclusion
+if (TARGET @_LIB_TARGET@)
+    return ()
+endif ()
+
+# Compute the installation prefix relative to this file, which is located in ${_IMPORT_PREFIX}/share/@_LIB_NAME@
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+
+# Create imported mcap target
+add_library(@_LIB_TARGET@ INTERFACE IMPORTED)
+target_include_directories(@_LIB_TARGET@ INTERFACE "${_IMPORT_PREFIX}/include")
+if (NOT "@MCAP_LINK_LIBRARIES@" STREQUAL "")
+    target_link_libraries(@_LIB_TARGET@ INTERFACE @MCAP_LINK_LIBRARIES@)
+endif ()
+if (NOT "@MCAP_COMPILE_DEFINITIONS@" STREQUAL "")
+    target_compile_definitions(@_LIB_TARGET@ INTERFACE @MCAP_COMPILE_DEFINITIONS@)
+endif ()

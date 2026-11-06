@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stachenov/quazip
-    REF v1.4
-    SHA512 38ce3aa77df1fd92229454e56b7290c066d1e319afa36a9f8ec8477004ae94df682e8f454f13cdaf586a1d0b0e033fe698081033a19536ecd53dd1e4b0204af9
+    REF v1.5
+    SHA512 c88850f1672d20c375798c58d1cb77744ca63e93b379cf3035a528b57e83a52c1908023870152ce5fc49ad0ccf93d723dbc730b8c1d2abe18cf0b13fba3be1e1
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/QuaZip-Qt6-1.4 PACKAGE_NAME quazip-qt6)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/QuaZip-Qt6-1.5 PACKAGE_NAME quazip-qt6)
 vcpkg_copy_pdbs()
 # Qt6 pkg-config files not installed https://github.com/microsoft/vcpkg/issues/25988
 # vcpkg_fixup_pkgconfig()

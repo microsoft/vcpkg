@@ -1,0 +1,42 @@
+{
+  "name": "gegl",
+  "version": "0.4.72",
+  "description": "Generic Graphical Library.",
+  "homepage": "https://gegl.org",
+  "license": "LGPL-3.0-or-later AND GPL-3.0-or-later AND BSD-3-Clause AND MIT AND ISC AND Apache-2.0",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    "babl",
+    "json-glib",
+    "libjpeg-turbo",
+    "libpng",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "cairo": {
+      "description": "Add cairo support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false
+        }
+      ]
+    },
+    "introspection": {
+      "description": "Enable introspection",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "babl",
+          "features": [
+            "introspection"
+          ]
+        },
+        "gobject-introspection"
+      ]
+    }
+  }
+}

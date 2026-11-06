@@ -1,40 +1,32 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/atk
-    REF "${VERSION}"
-    HEAD_REF master
-    SHA512 f31951ecbdace6a18fb9f772616137cb8732163b37448fef4daf1af60ba8479c94d498dcdaf4880468c80012c77a446da585926a99704a9a940b80e546080cf3
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 dffd0a0814a9183027c38a985d86cb6544858e9e7d655843e153440467957d6bc1abd9c9479a57078aea018053410438a30a9befb7414dc79020b223cd2c774b
 )
 
-if("introspection" IN_LIST FEATURES)
-    list(APPEND OPTIONS_DEBUG -Dintrospection=false)
-    list(APPEND OPTIONS_RELEASE -Dintrospection=true)
-else()
-    list(APPEND OPTIONS -Dintrospection=false)
-endif()
+vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
+if("introspection" IN_LIST FEATURES)
+    list(APPEND OPTIONS_RELEASE -Dintrospection=true)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+    list(APPEND OPTIONS_RELEASE -Dintrospection=false)
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        ${OPTIONS}
-    OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -Dintrospection=false
     ADDITIONAL_BINARIES
         "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
         "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
-        "g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 

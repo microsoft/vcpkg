@@ -1,0 +1,42 @@
+{
+  "name": "vcpkg-ci-folly",
+  "version-string": "ci",
+  "description": "Port to force features of folly within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "folly",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all features",
+      "dependencies": [
+        {
+          "name": "folly",
+          "features": [
+            "bzip2",
+            {
+              "name": "libaio",
+              "platform": "linux"
+            },
+            "libsodium",
+            {
+              "name": "liburing",
+              "platform": "linux"
+            },
+            "lz4",
+            "lzma",
+            "snappy",
+            "zstd"
+          ]
+        }
+      ]
+    }
+  }
+}

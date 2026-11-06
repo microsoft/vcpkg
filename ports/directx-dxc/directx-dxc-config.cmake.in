@@ -6,7 +6,9 @@ mark_as_advanced(DIRECTX_DXC_TOOL)
 
 add_library(Microsoft::DirectXShaderCompiler SHARED IMPORTED)
 set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
-   IMPORTED_LOCATION                    "${_dxc_root}/@dll_dir@/@dll_name_dxc@"
+   IMPORTED_CONFIGURATIONS              "Debug;Release"
+   IMPORTED_LOCATION_DEBUG              "${_dxc_root}/@dll_debug_dir@/@dll_name_dxc@"
+   IMPORTED_LOCATION_RELEASE            "${_dxc_root}/@dll_dir@/@dll_name_dxc@"
    IMPORTED_IMPLIB                      "${_dxc_root}/lib/@lib_name@"
    IMPORTED_SONAME                      "@lib_name@"
    INTERFACE_INCLUDE_DIRECTORIES        "${_dxc_root}/include/directx-dxc"
@@ -15,7 +17,9 @@ set_target_properties(Microsoft::DirectXShaderCompiler PROPERTIES
 
 add_library(Microsoft::DXIL SHARED IMPORTED)
 set_target_properties(Microsoft::DXIL PROPERTIES
-   IMPORTED_LOCATION                    "${_dxc_root}/@dll_dir@/@dll_name_dxil@"
+   IMPORTED_CONFIGURATIONS              "Debug;Release"
+   IMPORTED_LOCATION_DEBUG              "${_dxc_root}/@dll_debug_dir@/@dll_name_dxil@"
+   IMPORTED_LOCATION_RELASE             "${_dxc_root}/@dll_dir@/@dll_name_dxil@"
    IMPORTED_IMPLIB                      "${_dxc_root}/lib/@lib_name@"
    IMPORTED_NO_SONAME                   TRUE
    INTERFACE_INCLUDE_DIRECTORIES        "${_dxc_root}/include/directx-dxc"

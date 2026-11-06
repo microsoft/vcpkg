@@ -1,0 +1,52 @@
+diff --git a/Common/Core/Testing/Cxx/TestFMT.cxx b/Common/Core/Testing/Cxx/TestFMT.cxx
+index f57188e938..e44e369093 100644
+--- a/Common/Core/Testing/Cxx/TestFMT.cxx
++++ b/Common/Core/Testing/Cxx/TestFMT.cxx
+@@ -8,7 +8,7 @@
+ #include <vector>
+ 
+ // clang-format off
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ #include VTK_FMT(fmt/ranges.h)
+ // clang-format on
+ 
+diff --git a/Filters/General/vtkGroupDataSetsFilter.cxx b/Filters/General/vtkGroupDataSetsFilter.cxx
+index 261bcf0976..03aff2cf5a 100644
+--- a/Filters/General/vtkGroupDataSetsFilter.cxx
++++ b/Filters/General/vtkGroupDataSetsFilter.cxx
+@@ -22,7 +22,7 @@
+ #include <vtk_fmt.h>
+ 
+ // clang-format off
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ // clang-format on
+ 
+ VTK_ABI_NAMESPACE_BEGIN
+diff --git a/IO/IOSS/vtkIOSSWriter.cxx b/IO/IOSS/vtkIOSSWriter.cxx
+index 914dea5fd3..83760011ab 100644
+--- a/IO/IOSS/vtkIOSSWriter.cxx
++++ b/IO/IOSS/vtkIOSSWriter.cxx
+@@ -44,7 +44,7 @@
+ 
+ // clang-format off
+ #include <vtk_fmt.h> // needed for `fmt`
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ // clang-format on
+ 
+ VTK_ABI_NAMESPACE_BEGIN
+diff --git a/Rendering/WebGPU/vtkWGPUContext.cxx b/Rendering/WebGPU/vtkWGPUContext.cxx
+index b280022873..5244738f4d 100644
+--- a/Rendering/WebGPU/vtkWGPUContext.cxx
++++ b/Rendering/WebGPU/vtkWGPUContext.cxx
+@@ -4,7 +4,7 @@
+ #include "vtkObject.h"
+ #include "vtk_fmt.h"
+ // clang-format off
+-#include VTK_FMT(fmt/core.h)
++#include VTK_FMT(fmt/format.h)
+ // clang-format on
+ 
+ #include <memory>

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osmcode/libosmium
     REF "v${VERSION}"
-    SHA512 72e881e221dc3e62d7459b5cd84bf65de4fc0149bed66fe0534107d0d4dc30e5d474df685b44af07e6065a690dd7b31b877b5b040b8e0b4b0b971738175c34a3
+    SHA512 cb53b631a1e58b8ae13cedf58d4b1552b679e67862c1c3d2df1adec31bec60e8ebc941f22f5c318f1224bfb274bdd534926148506a0c3f0f10041e4adfa84bb9
 )
 
 vcpkg_cmake_configure(

@@ -1,0 +1,4 @@
+ReactPhysics3D provides CMake targets:
+
+  find_package(ReactPhysics3D REQUIRED)
+  target_link_libraries(main PRIVATE ReactPhysics3D::ReactPhysics3D)

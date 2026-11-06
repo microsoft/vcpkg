@@ -1,11 +1,15 @@
 #!/usr/bin/bash
+
 # cl_cpp_wrapper
-# Wrapper around MS's cl.exe to make it act more like Unix cpp
+# Wrapper around MS's cl.exe to make it act more like Unix cpp,
+# in particular process stdin
 
 PATH="$PATH:/usr/bin"
 
-case $MACHTYPE in
-    *-msys)
+msys2_dll="$(test -f /usr/bin/msys-2.0.dll && echo yes)"
+
+case $msys2_dll,$MACHTYPE in
+    *-msys | yes,*-cygwin)
         slash="-"
         ;;
     *)
@@ -78,13 +82,13 @@ if test -n "$verbose" ; then
     echo -n " \"$opt\""
   done
   echo ""
-fi
+fi 1>&2 # diagnostic, redirect to stderr
 
 [ $# -ge 1 -a -f "$1" ] && input="$file" || input="-"
 
 input_file="${file:-/proc/self/fd/0}"
 if [ "$input_file" == "/proc/self/fd/0" ]; then
-    # CL does not support reading from STDIN so it is wrapped here. 
+    # CL does not support reading from STDIN so it is wrapped here.
     tmpout=cpp_wrapper_$RANDOM.h
     /usr/bin/cp $input_file $tmpout
     exec $prog ${cppopt[@]} $tmpout

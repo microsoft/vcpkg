@@ -1,11 +1,10 @@
 diff --git a/meson.build b/meson.build
+index 5677fa8..6407c64 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2134,10 +2135,10 @@ libz_dep = dependency('zlib')
- # proxy-libintl subproject.
- # FIXME: glib-gettext.m4 has much more checks to detect broken/uncompatible
+@@ -2307,8 +2307,9 @@ endif
  # implementations. This could be extended if issues are found in some platforms.
--libintl_deps = []
+ libintl_deps = []
  libintl_prefix = '#include <libintl.h>'
 -libintl = dependency('intl', required: false)
 -if libintl.found() and libintl.type_name() != 'internal'

@@ -1,0 +1,4 @@
+cppvrf provides CMake targets:
+
+  find_package(cppvrf CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE cppvrf::cppvrf)

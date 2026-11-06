@@ -1,8 +1,11 @@
+# FAudio uses calender versioning (e.g., 26.01), but vcpkg drops them in versions
+string(REGEX REPLACE "^([0-9]+)\\.([1-9])$" "\\1.0\\2" FAUDIO_REF "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FNA-XNA/faudio
-    REF "${VERSION}"
-    SHA512 f74282a7df749f50026bb07309ca20fb12b098cc24b003f8b93f4f6868a3d6f4343d4bd06b947b17d9ec6c1d08f88e477da259397d745f9cc41321f7c5722448
+    REF "${FAUDIO_REF}"
+    SHA512 1a4120b14ad245f1340a06278012964b78255e3eaf10773c5f11f875b97204291d1c00c911aee90a9792992ccf8ab28b3b5bbd9a1d70b5630124e66beb898452
     HEAD_REF master
 )
 
@@ -21,12 +24,22 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FAudio)
 
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
 vcpkg_install_copyright(
-    COMMENT "FAudio is licensed under the Zlib license."
+    COMMENT [[
+FAudio is licensed under the Zlib license.
+
+The installed FAudio library also compiles in vendored stb and qoa components
+from src/stb.h, src/stb_vorbis.h, and src/qoa_decoder.h. Those components are
+available under the MIT license; the stb components also offer a public-domain
+alternative.
+]]
     FILE_LIST
        "${SOURCE_PATH}/LICENSE"
 )

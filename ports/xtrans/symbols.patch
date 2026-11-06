@@ -1,8 +1,8 @@
 diff --git a/Xtransutil.c b/Xtransutil.c
-index 413a02376..2f8af0efc 100644
+index 2aa4686..57c6ce3 100644
 --- a/Xtransutil.c
 +++ b/Xtransutil.c
-@@ -64,6 +64,10 @@ from The Open Group.
+@@ -60,6 +60,10 @@ from The Open Group.
  #ifdef WIN32
  #include <X11/Xlibint.h>
  #include <X11/Xwinsock.h>
@@ -11,5 +11,5 @@ index 413a02376..2f8af0efc 100644
 +# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 +#endif
  #endif
- 
- #ifdef X11_t
+
+ #if defined(IPv6) && !defined(AF_INET6)

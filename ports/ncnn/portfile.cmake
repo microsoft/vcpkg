@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
     REF "${VERSION}"
-    SHA512 31bc3c2f461a00241fb8f69ca6ea8cc590af6618856b1b84a048bde924e4b474fd883ad5d54dbfbdd1e5b59015889e15ffc4fbafccb3e42e052a02071f2017b1
+    SHA512 f49f5990cf6269fb67ea5aa766949eb27c961d7403276fe1f0ddef108584ff1c8c25c54266737b0d1ed7793c79eb4a37b14add05ed6594ca814a23160d6989cc
     HEAD_REF master
-    PATCHES
-        fix_uwp.patch #https://github.com/Tencent/ncnn/pull/5328
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -16,6 +14,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vulkan NCNN_SYSTEM_GLSLANG
 )
 
+if(vulkan IN_LIST FEATURES AND VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS -DNCNN_SIMPLEVK=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -24,15 +26,22 @@ vcpkg_cmake_configure(
         -DNCNN_BUILD_EXAMPLES=OFF
         -DNCNN_BUILD_BENCHMARK=OFF
         -DNCNN_SHARED_LIB=${BUILD_SHARED}
+        -DNCNN_VERSION=${VERSION}
 )
 
 vcpkg_cmake_install()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ncnn.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ncnn.pc" "-lncnn" "-lncnnd")
+endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ncnn)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

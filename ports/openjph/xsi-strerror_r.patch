@@ -1,0 +1,15 @@
+diff --git a/src/apps/others/ojph_sockets.cpp b/src/apps/others/ojph_sockets.cpp
+index 43b2105..106d9de 100644
+--- a/src/apps/others/ojph_sockets.cpp
++++ b/src/apps/others/ojph_sockets.cpp
+@@ -165,8 +165,8 @@ namespace ojph
+                                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
+                                   buf, max_buf_size, NULL);
+       buf[max_buf_size - 1] = 0;
+-    #elif (defined __GLIBC__) && \
+-      ((defined _GNU_SOURCE) || (_POSIX_C_SOURCE < 200112L))
++    #elif (defined __ANDROID__) || ((defined __GLIBC__) && \
++      ((defined _GNU_SOURCE) || (_POSIX_C_SOURCE < 200112L)))
+       v = strerror_r(errnum, (char*)buf, max_buf_size);
+     #else
+       // it is not clear if the returned value is in buf or in v

@@ -1,0 +1,14 @@
+diff --git a/src/os/posix/inetsocket_p.h b/src/os/posix/inetsocket_p.h
+index 0fb1704..03923f9 100644
+--- a/src/os/posix/inetsocket_p.h
++++ b/src/os/posix/inetsocket_p.h
+@@ -43,6 +43,9 @@
+ #ifdef HAVE_ARPA_INET_H
+ # include <arpa/inet.h>
+ #endif
++#if defined (__ANDROID__)
++#include <sys/select.h>
++#endif
+ 
+ 
+ struct GWEN_SOCKET {

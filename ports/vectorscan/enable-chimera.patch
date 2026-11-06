@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 577f90e..e8e2f81 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -210,8 +210,9 @@ if (NOT CORRECT_PCRE_VERSION)
+ endif()
+ 
+ # we need static libs for Chimera - too much deep magic for shared libs
+-if (CORRECT_PCRE_VERSION AND PCRE_BUILD_SOURCE AND BUILD_STATIC_LIBS)
+-    set(BUILD_CHIMERA TRUE)
++option(BUILD_CHIMERA "Build Chimera" OFF)
++if (BUILD_CHIMERA AND NOT CORRECT_PCRE_VERSION)
++    message(FATAL_ERROR "Chimera requires PCRE 8.41+")
+ endif()
+ 
+ set(RAGEL_C_FLAGS "-Wno-unused -funsigned-char")
+diff --git a/chimera/CMakeLists.txt b/chimera/CMakeLists.txt
+index c3c50c3..8f1bd3c 100644
+--- a/chimera/CMakeLists.txt
++++ b/chimera/CMakeLists.txt
+@@ -28,8 +28,13 @@ SET(chimera_SRCS
+ )
+ 
+ add_library(chimera STATIC ${chimera_SRCS})
+-add_dependencies(chimera hs pcre)
+-target_link_libraries(chimera hs pcre)
++add_dependencies(chimera hs)
++if (PCRE_BUILD_SOURCE)
++    add_dependencies(chimera pcre)
++    target_link_libraries(chimera hs pcre)
++else()
++    target_link_libraries(chimera hs ${PCRE_LIBRARIES})
++endif()
+ 
+ install(TARGETS chimera DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+

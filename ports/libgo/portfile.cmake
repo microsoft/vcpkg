@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         cmake.patch
         Add-target-include-directory.patch
+        add-stdexcept.diff
 )
 
 vcpkg_from_github(

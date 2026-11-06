@@ -1,14 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF "v${VERSION}"
-    SHA512 2f8b1c52fae3cea6188d2ea10da90314167eb150b23005928b4d2186a81b33c4ba0d79967fc1637ed3f96f9fb3b365433cbd4a1ce01d4c319927538cd63852ec
+    REF "v36.2"
+    SHA512 659ec2da3fadf6d2e4ecf9af0494df1d5527f9fbbd7820061791babe6f8aa8a34371a10d799c33d5d5f7108916df83492ee276675709fc7ed7d6a36242670b47
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
         fix-install-dirs.patch
+        fix-constinit-with-clang-cl.patch
+        fix-upb.patch
+        fix-global-empty-string-abi.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -17,12 +20,12 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIM
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        zlib protobuf_WITH_ZLIB
+        libprotoc protobuf_BUILD_TARGET_LIBPROTOC
+        zlib      protobuf_WITH_ZLIB
 )
 
-if(VCPKG_TARGET_IS_UWP)
-    set(protobuf_BUILD_LIBPROTOC OFF)
-else()
+set(protobuf_BUILD_LIBPROTOC OFF)
+if(NOT VCPKG_TARGET_IS_UWP AND (protobuf_BUILD_PROTOC_BINARIES OR protobuf_BUILD_TARGET_LIBPROTOC))
     set(protobuf_BUILD_LIBPROTOC ON)
 endif()
 
@@ -43,19 +46,21 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/python"
     "${SOURCE_PATH}/ruby"
     "${SOURCE_PATH}/rust"
+    "${SOURCE_PATH}/go"
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_CXX_STANDARD=17
         -Dprotobuf_BUILD_SHARED_LIBS=${protobuf_BUILD_SHARED_LIBS}
         -Dprotobuf_MSVC_STATIC_RUNTIME=${protobuf_MSVC_STATIC_RUNTIME}
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
-        -Dprotobuf_ABSL_PROVIDER=package
-        -Dprotobuf_BUILD_LIBUPB=OFF
+        -Dprotobuf_LOCAL_DEPENDENCIES_ONLY=ON
+        -Dprotobuf_BUILD_LIBUPB=${protobuf_BUILD_LIBPROTOC}
         ${FEATURE_OPTIONS}
 )
 
@@ -76,7 +81,7 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
     "if(protobuf_MODULE_COMPATIBLE)"
-    "if(1)"
+    "if(protobuf_MODULE_COMPATIBLE OR CMAKE_FIND_PACKAGE_NAME STREQUAL \"Protobuf\")"
 )
 if(NOT protobuf_BUILD_LIBPROTOC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake"
@@ -109,10 +114,14 @@ function(replace_package_string package)
 
     if(EXISTS "${debug_file}")
         vcpkg_replace_string("${debug_file}" "absl_abseil_dll" "abseil_dll" IGNORE_UNCHANGED)
+        set(debug_library "${package}")
+        if(package STREQUAL "protobuf")
+            string(APPEND debug_library "d")
+        endif()
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            vcpkg_replace_string("${debug_file}" "-l${package}" "-llib${package}d" IGNORE_UNCHANGED)
+            vcpkg_replace_string("${debug_file}" "-l${debug_library}" "-llib${package}d" IGNORE_UNCHANGED)
         else()
-            vcpkg_replace_string("${debug_file}" "-l${package}" "-l${package}d" IGNORE_UNCHANGED)
+            vcpkg_replace_string("${debug_file}" "-l${debug_library}" "-l${package}d" IGNORE_UNCHANGED)
         endif()
     endif()
 endfunction()

@@ -1,10 +1,15 @@
 {
   "name": "tsl-ordered-map",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "C++ hash map and hash set which preserve the order of insertion",
+  "homepage": "https://github.com/Tessil/ordered-map",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

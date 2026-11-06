@@ -5,14 +5,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
     REF "release-${VERSION}"
-    SHA512 2dfeeed9fdc6db62a6620e7c846dbe0bf97dacce3077832e314a35bf16ba6a45803373188a7b3954eada5829385b9914241270b71f12aaf3e9e3df45eb2b1b95
+    SHA512 b18ff6322349af4416a37d28c4f42ebe355260786ed42bdd54dcc20dc92db1a38a8db74e6d637fdff8f320bdd51e2515c0fa939d30679c5f22ea99fb32c97204
     PATCHES
         dependencies.patch
         config-path.patch
         include.patch
         fix-system-link.patch
         math-h-polyfill.patch
-        fix-build-executable.patch #https://github.com/fltk/fltk/commit/63d7c71e1a926f487f22aa26042a2582624b3b17
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"
@@ -31,10 +30,7 @@ if(VCPKG_CROSSCOMPILING)
     set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
-set(runtime_dll "ON")
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(runtime_dll "OFF")
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FLTK_MSVC_RUNTIME_DLL)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -48,18 +44,15 @@ vcpkg_cmake_configure(
         -DOPTION_USE_SYSTEM_LIBJPEG=ON
         -DOPTION_BUILD_SHARED_LIBS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
-        "-DCocoa:STRING=-framework Cocoa" # avoid absolute path
         ${fluid_path_param}
-        -DFLTK_MSVC_RUNTIME_DLL=${runtime_dll}
+        -DFLTK_MSVC_RUNTIME_DLL=${FLTK_MSVC_RUNTIME_DLL}
     MAYBE_UNUSED_VARIABLES
-        Cocoa
+        FLTK_MSVC_RUNTIME_DLL
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup()
-
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fltk-config")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")

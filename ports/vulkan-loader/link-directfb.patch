@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a30752492..b429a5235 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,6 +144,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Linux|BSD|DragonFly|GNU")
+         target_compile_definitions(platform_wsi INTERFACE VK_USE_PLATFORM_DIRECTFB_EXT)
+         # vulkan_core.h includes <directfb.h> but the header is installed to directfb/directfb.h
+         target_include_directories(platform_wsi INTERFACE ${DIRECTFB_INCLUDE_DIRS} ${DIRECTFB_INCLUDE_DIRS}/directfb)
++        target_link_libraries(platform_wsi INTERFACE PkgConfig::DirectFB)
+     endif()
+ elseif(CMAKE_SYSTEM_NAME MATCHES "QNX")
+     message(FATAL_ERROR "See BUILD.md for QNX build")

@@ -1,8 +1,9 @@
 {
   "name": "lexbor",
-  "version": "2.3.0",
+  "version": "3.0.1",
   "description": "Lexbor is development of an open source HTML Renderer library.",
   "homepage": "https://github.com/lexbor/lexbor",
+  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -13,5 +14,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "perf": {
+      "description": "Enables support for rdtsc",
+      "supports": "!arm"
+    }
+  }
 }

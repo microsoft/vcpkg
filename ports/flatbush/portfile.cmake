@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chusitoo/flatbush
     REF "v${VERSION}"
-    SHA512 6640265e921998d7de1fca8ee628007687081ba6ab1fb0bd5a0951eac0e76e59b89c441a9baf6abd90ec32271b943974bc8becb1ccfb36fe74811025106620de
+    SHA512 2acbf3ee56cd265aff5988ed63e2db4320f65beeb5e50f45ad0e028d14f7d41962d25cd40ce56db35a693d9e110f47fc76c1cf45f60a6aeb4cd01719e8b31009
     HEAD_REF master
 )
 

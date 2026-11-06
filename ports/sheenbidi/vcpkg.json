@@ -1,0 +1,22 @@
+{
+  "name": "sheenbidi",
+  "version": "3.0.0",
+  "description": "SheenBidi is a lightweight, fast and stable implementation of the Unicode Bidirectional Algorithm.",
+  "homepage": "https://github.com/Tehreer/SheenBidi",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "text-api": {
+      "description": "Enable the experimental text editing and analysis API"
+    }
+  }
+}

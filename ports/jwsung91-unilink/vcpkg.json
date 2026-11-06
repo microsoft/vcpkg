@@ -1,0 +1,11 @@
+{
+  "name": "jwsung91-unilink",
+  "version": "0.9.0",
+  "description": "Deprecated alias for wirestead. unilink was renamed to Wirestead; this port installs nothing itself and only depends on wirestead to avoid conflicting with its installed files.",
+  "homepage": "https://github.com/wirestead/wirestead",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "wirestead"
+  ]
+}

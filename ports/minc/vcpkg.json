@@ -1,7 +1,6 @@
 {
   "name": "minc",
-  "version-string": "2.4.03",
-  "port-version": 3,
+  "version": "2.4.6",
   "description": "MINC - Medical Image NetCDF or MINC isn't netCDF",
   "homepage": "https://github.com/BIC-MNI/libminc",
   "license": null,

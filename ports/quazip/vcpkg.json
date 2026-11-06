@@ -1,7 +1,6 @@
 {
   "name": "quazip",
-  "version": "1.4",
-  "port-version": 1,
+  "version": "1.5",
   "description": "Qt/C++ wrapper over minizip",
   "homepage": "https://stachenov.github.io/quazip/",
   "license": "LGPL-2.1-or-later",

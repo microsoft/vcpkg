@@ -3,8 +3,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/wil
     REF "v${VERSION}"
-    SHA512 5701001b2c7174dafa5b7b6494b65b982245dfa31131b40542a00063b4f6d26c142c789e64b88367f5f1cdddf882780610fdf724f0bf6b3663d8ba9e3214b5b2
+    SHA512 0ee05a1beccf17478a34f5c9251a9291b98584e87f113dbeff8cb0466ca53dc60740a4dc961d67bbe3cf77181571cf76d3f204070fa46cd6f3a595305ffe7700
     HEAD_REF master
+    PATCHES
+        cpp14.patch
 )
 
 # WIL is header-only, so we don't need to build it in both modes

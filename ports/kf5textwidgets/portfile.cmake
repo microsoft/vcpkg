@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ktextwidgets
-    REF v5.98.0
-    SHA512 d25167cf173daa55075ee0586b8db5c478fcc567d2b9466a7c833ffe8cfae21db936df8cbcfc06a82314568b4574b5826bc50bc24087a02bab56fb43fcdcd461
+    REF "v${VERSION}"
+    SHA512 9107a070d7d12442c5aa0e0432b114d9c0b0d43e8a268b1254468e777de62f895afa1775adb79d75bd1116723f5518ea52f9a035c5cbd2930ce630805c537497
     HEAD_REF master
 )
 
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5TextWidgets CONFIG_PATH lib/cmake/KF5TextWidgets)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5TextWidgets)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -29,4 +29,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

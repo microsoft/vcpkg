@@ -7,7 +7,7 @@ index f71f3bf..116954f 100644
                    our $modulesdir_dev = $modulesprefix_dev;
                    our $modulesdir_dir =
 -                      catdir($modulesprefix_dir, "ossl-modules");
-+                      catdir($modulesprefix_dir, "../bin");
++                      catdir($modulesprefix_dir, "../bin"); # change lib/ossl-modules to bin
                    our $modulesdir = catpath($modulesdir_dev, $modulesdir_dir);
                    our $enginesdir_dev = $modulesprefix_dev;
                    our $enginesdir_dir =

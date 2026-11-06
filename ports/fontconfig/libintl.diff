@@ -1,0 +1,21 @@
+diff --git a/meson.build b/meson.build
+index e742ea6..1d795d1 100644
+--- a/meson.build
++++ b/meson.build
+@@ -200,10 +200,16 @@ gettext_args = [ '--msgid-bugs-address=@0@'.format(conf.get('PACKAGE_BUGREPORT')
+ 
+ # Check for libintl.h
+ opt_nls = get_option('nls')
++libintl_dep = dependency('', required: false)
++if opt_nls.allowed()
+ libintl_dep = dependency('intl', required: opt_nls, fallback: ['libintl', 'libintl_dep'])
++endif
+ if libintl_dep.found()
+   conf.set('ENABLE_NLS', opt_nls.allowed().to_int())
+   deps += [libintl_dep]
++  if host_machine.system() == 'darwin'
++    deps += [dependency('CoreFoundation', method: 'extraframework')]
++  endif
+ else
+   opt_nls = opt_nls.require(false)
+ endif

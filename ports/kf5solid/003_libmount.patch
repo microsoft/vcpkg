@@ -1,0 +1,13 @@
+diff --git a/src/solid/devices/backends/udisks2/udisksstorageaccess.cpp b/src/solid/devices/backends/udisks2/udisksstorageaccess.cpp
+index 1c513ab8..beb41140 100644
+--- a/src/solid/devices/backends/udisks2/udisksstorageaccess.cpp
++++ b/src/solid/devices/backends/udisks2/udisksstorageaccess.cpp
+@@ -18,7 +18,7 @@
+ 
+ #include <config-solid.h>
+ #if HAVE_LIBMOUNT
+-#include <libmount/libmount.h>
++#include <libmount.h>
+ #endif
+ 
+ using namespace Solid::Backends::UDisks2;

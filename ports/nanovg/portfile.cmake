@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO memononen/nanovg
-    REF 1f9c8864fc556a1be4d4bf1d6bfe20cde25734b4
-    SHA512 99a44f01114ee653a966d4695596886240752f5a06d540c408b5aeaebdcc5360fc2043276515695580d048649a20dc50409107f89c4ce506d2ccb83a0635d29f
+    REF ce3bf745eb2d2dbc14a50bf2446783f691ac4353
+    SHA512 1eae11ec484fb184a3497ba7a7b84e9d298c9bef5353c1d13691660e848f218b5e3e3d2259c83d8475196c791e7433aed302931799bc0f5f3c4666b3b07236d3
     HEAD_REF master
 )
 
@@ -19,9 +19,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/nanovg)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

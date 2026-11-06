@@ -1,6 +1,7 @@
 {
   "name": "egl-registry",
-  "version-date": "2024-01-25",
+  "version-date": "2025-05-27",
   "description": "EGL API and Extension Registry",
-  "homepage": "https://github.com/KhronosGroup/EGL-Registry"
+  "homepage": "https://github.com/KhronosGroup/EGL-Registry",
+  "license": "Apache-2.0"
 }

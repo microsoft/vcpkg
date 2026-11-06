@@ -1,0 +1,4 @@
+embree provides CMake targets:
+
+  find_package(embree CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE embree)

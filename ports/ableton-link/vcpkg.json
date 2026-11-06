@@ -1,6 +1,6 @@
 {
   "name": "ableton-link",
-  "version": "3.1.2",
+  "version": "3.1.5",
   "description": "Ableton Link, a technology that synchronizes musical beat, tempo, and phase across multiple applications running on one or more devices.",
   "homepage": "https://www.ableton.com/en/link/",
   "documentation": "http://ableton.github.io/link/",
@@ -33,10 +33,19 @@
     },
     "hut": {
       "description": "Build LinkHut command line tool",
+      "supports": "!android",
       "dependencies": [
+        {
+          "name": "alsa",
+          "platform": "linux | android | freebsd | openbsd"
+        },
         {
           "name": "asiosdk",
           "platform": "windows"
+        },
+        {
+          "name": "portaudio",
+          "platform": "linux | android | freebsd | openbsd"
         }
       ]
     },

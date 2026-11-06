@@ -1,4 +1,3 @@
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
@@ -7,15 +6,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
     REF "v${VERSION}"
-    SHA512 ef2461770def3b0752d23df0c9a0090b733943249404528d0b2ba985d08c9083aabe685e3fd00be08318ea7b90dc38e9735ab004124643619e6cf369d64f6321
+    SHA512 fc08c85f66bb10a361b775841fff45976d6c9e0232f6a2949f18963c317c13b66b9aae11bcabbd903dbfc8e02a3638007be1e0542b13ac0a6641b0762f762dff
     HEAD_REF master
     PATCHES
         devendor-palsigslot.patch
+        disable-werror.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        test        BUILD_TESTS
         tools       BUILD_TOOLS
         examples    BUILD_EXAMPLES
         pybind11    BUILD_PANGOLIN_PYTHON

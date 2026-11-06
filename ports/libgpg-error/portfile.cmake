@@ -4,7 +4,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
     FILENAME "libgpg-error-${VERSION}.tar.bz2"
-    SHA512 4489f615c6a0389577a7d1fd7d3917517bb2fe032abd9a6d87dfdbd165dabcf53f8780645934020bf27517b67a064297475888d5b368176cf06bc22f1e735e2b
+    SHA512 3e59eb52d061709fd8dfe56a4b36d2d5b49dd5e0c90c283899669d6a355286cb3a3f851631f8456c78c48b652bb31a4c1f8b081ccdf87e5db64b313d141a7670
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -34,16 +34,16 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_list(APPEND options "--disable-threads")
 endif()
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
     OPTIONS
         ${options}
         --disable-doc
         --disable-tests
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
@@ -62,4 +62,4 @@ if(NOT "nls" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LIB")

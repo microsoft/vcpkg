@@ -1,0 +1,23 @@
+diff --git a/kde-modules/KDEClangFormat.cmake b/kde-modules/KDEClangFormat.cmake
+index e278a63..3949bd2 100644
+--- a/kde-modules/KDEClangFormat.cmake
++++ b/kde-modules/KDEClangFormat.cmake
+@@ -53,7 +53,7 @@ Since 5.64
+ find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
+ 
+ # instantiate our clang-format file, must be in source directory for tooling if we have the tool
+-if(KDE_CLANG_FORMAT_EXECUTABLE)
++if(KDE_CLANG_FORMAT_EXECUTABLE AND NOT "$ENV{VCPKG_DISABLE_KDE_CLANG_FORMAT}")
+     set(CLANG_FORMAT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
+     if (EXISTS ${CLANG_FORMAT_FILE})
+         file(READ ${CLANG_FORMAT_FILE} CLANG_FORMAT_CONTENTS LIMIT 1000)
+@@ -77,6 +77,9 @@ function(KDE_CLANG_FORMAT)
+ 
+     # add target without specific commands first, we add the real calls file-per-file to avoid command line length issues and enable parallelization
+     add_custom_target(clang-format COMMENT "Formatting sources in ${CMAKE_CURRENT_SOURCE_DIR} with ${KDE_CLANG_FORMAT_EXECUTABLE}...")
++    if("$ENV{VCPKG_DISABLE_KDE_CLANG_FORMAT}")
++        return()
++    endif()
+ 
+     # run clang-format only if available, else signal the user what is missing
+     if(KDE_CLANG_FORMAT_EXECUTABLE)

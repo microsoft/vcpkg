@@ -1,0 +1,82 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 11b2662..ed5face 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1300,6 +1300,9 @@ if(ENABLE_OCC)
+   else()
+     set(OCC_SYS_NAME ${CMAKE_SYSTEM_NAME})
+   endif()
++  find_package(OpenCASCADE CONFIG REQUIRED)
++  set(OCC_VERSION "${OpenCASCADE_VERSION}")
++  if(0)
+   find_path(OCC_INC "Standard_Version.hxx" HINTS ENV CASROOT PATH_SUFFIXES
+             inc include include/oce opencascade include/opencascade
+             occt include/occt)
+@@ -1318,11 +1321,12 @@ if(ENABLE_OCC)
+       message(STATUS "Found OpenCASCADE version ${OCC_VERSION} in ${OCC_INC}")
+     endif()
+   endif()
++  endif()
+   if(OCC_VERSION AND OCC_VERSION VERSION_LESS ${OCC_MINIMAL_VERSION})
+     message(WARNING "Gmsh requires OpenCASCADE >= ${OCC_MINIMAL_VERSION}. "
+         "Use CMAKE_PREFIX_PATH or the CASROOT environment variable "
+         "to explicitly specify the installation path of OpenCASCADE")
+-  elseif(OCC_INC)
++  elseif(1)
+     if(OCC_VERSION AND OCC_VERSION VERSION_GREATER_EQUAL "7.8.0")
+       set(OCC_LIBS_REQUIRED
+           # subset of DataExchange
+@@ -1356,6 +1360,10 @@ if(ENABLE_OCC)
+     else()
+       set(OCC_LIBS)
+       foreach(OCC ${OCC_LIBS_REQUIRED})
++        if(NOT TARGET ${OCC})
++          message(SEND_ERROR "No such OCC target: ${OCC}")
++        endif()
++        set(OCC_LIB "${OCC}" CACHE INTERNAL "imported target")
+         find_library(OCC_LIB ${OCC} HINTS ENV CASROOT PATH_SUFFIXES
+                      lib ${OCC_SYS_NAME}/vc8/lib  ${OCC_SYS_NAME}/vc9/lib
+                          ${OCC_SYS_NAME}/vc10/lib ${OCC_SYS_NAME}/vc11/lib
+@@ -1375,7 +1383,9 @@ if(ENABLE_OCC)
+ 
+   # additional OCC libraries to handle reading of STEP/IGES attributes. Oh my...
+   if(ENABLE_OCC_CAF)
+-    find_package(Freetype)
++    set(FREETYPE_INCLUDE_DIRS "")
++    set(FREETYPE_LIBRARIES "")
++    set(FREETYPE FOUND "${OpenCASCADE_WITH_FREETYPE}")
+     if(FREETYPE_FOUND)
+       if(OCC_VERSION AND OCC_VERSION VERSION_GREATER_EQUAL "7.8.0")
+         set(OCC_CAF_LIBS_REQUIRED
+@@ -1387,6 +1397,10 @@ if(ENABLE_OCC)
+       list(LENGTH OCC_CAF_LIBS_REQUIRED NUM_OCC_CAF_LIBS_REQUIRED)
+       set(OCC_CAF_LIBS)
+       foreach(OCC ${OCC_CAF_LIBS_REQUIRED})
++        if(NOT TARGET ${OCC})
++          message(SEND_ERROR "No such OCC CAF target: ${OCC}")
++        endif()
++        set(OCC_CAF_LIB "${OCC}" CACHE INTERNAL "imported target")
+         find_library(OCC_CAF_LIB ${OCC} HINTS ENV CASROOT PATH_SUFFIXES
+                      lib ${OCC_SYS_NAME}/vc8/lib  ${OCC_SYS_NAME}/vc9/lib
+                          ${OCC_SYS_NAME}/vc10/lib ${OCC_SYS_NAME}/vc11/lib
+@@ -1423,7 +1437,6 @@ if(ENABLE_OCC)
+       add_definitions(-DOCC_CONVERT_SIGNALS)
+     endif()
+     if(WIN32 AND MSVC)
+-      add_definitions(-D "Standard_EXPORT=__declspec(dllimport)")
+     endif()
+   endif()
+ endif()
+diff --git a/utils/misc/gmsh-config.cmake.in b/utils/misc/gmsh-config.cmake.in
+index 1c211e2..073c3ab 100644
+--- a/utils/misc/gmsh-config.cmake.in
++++ b/utils/misc/gmsh-config.cmake.in
+@@ -1,3 +1,7 @@
+ @PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++if("@ENABLE_OCC@")
++    find_dependency(OpenCASCADE CONFIG)
++endif()
+ 
+ include ( "${CMAKE_CURRENT_LIST_DIR}/gmshTargets.cmake" )
+\ No newline at end of file

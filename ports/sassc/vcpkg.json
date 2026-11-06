@@ -1,7 +1,7 @@
 {
   "name": "sassc",
   "version": "3.6.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "SassC is a wrapper around libsass (http://github.com/sass/libsass) used to generate a useful command-line application that can be installed and packaged for several operating systems.",
   "homepage": "https://github.com/sass/sassc",
   "dependencies": [
@@ -9,6 +9,10 @@
       "name": "getopt",
       "platform": "windows & !mingw"
     },
-    "libsass"
+    "libsass",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ]
 }

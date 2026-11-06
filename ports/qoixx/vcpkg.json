@@ -1,6 +1,6 @@
 {
   "name": "qoixx",
-  "version-date": "2022-12-07",
+  "version": "0.1.7",
   "description": "Single Header Quite Fast QOI(Quite OK Image Format) Implementation written in C++20",
   "homepage": "https://github.com/wx257osn2/qoixx",
   "license": "MIT"

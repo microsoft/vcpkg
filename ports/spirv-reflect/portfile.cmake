@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Reflect
     REF "vulkan-sdk-${VERSION}"
-    SHA512 19eade2f661e3bd58665167265dc79e3c94690910d28089ac1d1acfb1771e010a75a23b85555dd494020d0e9584d68f2a97f33ab2f8271f90ea2295bcc484150
+    SHA512 93bbd834585c027bd9798fe24271cf1225b670f33eb6772f729c0b7abe0b0be8bf08b9d02604f88db7f033c138e62560a986354dd1c48b77451ff77f01a7fdaf
     HEAD_REF main
     PATCHES
         export-targets.patch
@@ -23,6 +23,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-spirv-reflect)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/spirv-reflect/spirv_reflect.h" "./include/spirv/unified1/spirv.h" "spirv.h")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/spirv_reflect.h" "./include/spirv/unified1/spirv.h" "spirv-reflect/spirv.h")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

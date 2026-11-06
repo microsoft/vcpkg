@@ -1,19 +1,17 @@
 {
   "name": "raylib",
-  "version": "5.5",
+  "version": "6.2",
   "description": "A simple and easy-to-use library to enjoy videogames programming",
   "homepage": "https://github.com/raysan5/raylib",
-  "license": "Zlib",
+  "license": "Zlib AND MIT AND Apache-2.0 AND (WTFPL OR CC0-1.0) AND LicenseRef-dirent",
   "supports": "!arm32 & !uwp",
   "dependencies": [
     "cgltf",
     "dirent",
-    "drlibs",
     {
       "name": "glfw3",
       "platform": "!(android | emscripten)"
     },
-    "miniaudio",
     "mmx",
     "nanosvg",
     "qoi",
@@ -28,11 +26,16 @@
     }
   ],
   "default-features": [
-    "use-audio"
+    "audio"
   ],
   "features": {
-    "use-audio": {
-      "description": "Build raylib with audio module"
+    "audio": {
+      "description": "Build audio module",
+      "license": "MIT AND WTFPL",
+      "dependencies": [
+        "drlibs",
+        "miniaudio"
+      ]
     }
   }
 }

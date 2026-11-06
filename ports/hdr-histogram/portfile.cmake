@@ -6,8 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HdrHistogram/HdrHistogram_c
     REF ${VERSION}
-    SHA512 2ede4b8412c4f0070d555515498e163397de5edebe7560eaea13adcb95a52b7fea99686aed06bbca0c6e8afdf65715483c3889d750f6b5b727bcf43c4fbe18d4
+    SHA512 f631876dd1871d5e90989523f198d93b8dc561c513e86724149fefd52603064c3687d57e60c77e5ccbdc5a54ab9e7397a8db7a34e23cc68948c6c1361de62031
     HEAD_REF main
+    PATCHES
+        001-fix-pkgconfig.patch
 )
 
 if("log" IN_LIST FEATURES)

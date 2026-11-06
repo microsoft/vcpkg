@@ -6,13 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/ls-qpack
     REF "v${VERSION}"
-    SHA512 951056564be6f2a2562001ad1a83731df41a1c8b8d91bf44e138c962befe2af1919daf0d94b57b05b49bb83656334c00ed2c642d81075f1e0cece1a46b31006b
+    SHA512 2f2596486bb505feb3899ec20a94c52c1ee4b2bcda28f506f6ba5302dd3997fd18150a78428a3fd1944a5ba5ab17cc9b0c73ede9e90d3cf9dddf7bc2ab708438
     HEAD_REF master
-    PATCHES
-        cmake-config.diff
-        pkgconfig.diff
-        mingw.diff
-        emscripten.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
 
@@ -34,4 +29,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/wincompat/sys/queue.h"
+)

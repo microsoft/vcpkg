@@ -1,6 +1,6 @@
 {
   "name": "bshoshany-thread-pool",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "maintainers": "Barak Shoshany <baraksh@gmail.com>",
   "description": "BS::thread_pool: a fast, lightweight, modern, and easy-to-use C++17 / C++20 / C++23 thread pool library",
   "homepage": "https://github.com/bshoshany/thread-pool",

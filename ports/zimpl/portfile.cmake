@@ -1,15 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-# The latest version of ZIMPL is included in the SCIP Optimization Suite.
-set(scipoptsuite_version 9.1.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://scipopt.org/download/release/scipoptsuite-${scipoptsuite_version}.tgz"
-    SHA512 03c1c49dd5e4dbc5bfd4f07305937079773f6912c87b0ba86166fc02996928e8d23332137a944f16f2488a88dc12a4a2c6ebde216eb4532135ed282a182bfdaf
-    FILENAME "scipoptsuite-${scipoptsuite_version}.tgz"
-)
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO scipopt/zimpl
+    REF "v${VERSION}"
+    SHA512 654235540deb61050cc04f9b0e0554bb7b505bb976e2aa66347b7b134b1b6c095475f5edb26eec8390256f321be9a484ef0906de9ff498ba99b3ae52303cdf9c
+    HEAD_REF master
     PATCHES
         libm.diff
         msvc.diff
@@ -19,7 +15,7 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(FLEX)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/zimpl"
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBREW=false
         "-DBISON_EXECUTABLE=${BISON}"
@@ -35,6 +31,9 @@ vcpkg_copy_tools(TOOL_NAMES zimpl AUTO_CLEAN)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/zimpl/zimpl-config.cmake" "../../../include" "../../include")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zimpl/mmlparse2.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/zimpl/" "")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/zimpl/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

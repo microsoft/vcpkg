@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO fallahn/tmxlite
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 0ffe0505329f00ef9872998673a7c220a9a5352f830688ef17952c0c4f001e0c2994a3a28f0e7de60cc82fff2701561cccbc2143fd51984bf4870e7d1fd0a2ba
+    SHA512 323b8ce20c4d2c7dd98c96ddb4d4d3ba6a3862dbda1e7880086cb493b22e79f1891dda6a4d3145de44b78dfa6258ded366e32f31781f08b1657a1da080013415
     PATCHES
         dependencies.patch
 )

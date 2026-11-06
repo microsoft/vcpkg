@@ -1,6 +1,6 @@
 {
   "name": "plog",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "Portable, simple and extensible C++ logging library.",
   "homepage": "https://github.com/SergiusTheBest/plog",
   "license": "MIT",

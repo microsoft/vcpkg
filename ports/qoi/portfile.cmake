@@ -1,10 +1,10 @@
-#header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO phoboslab/qoi
-    REF 19b3b4087b66963a3699ee45f05ec9ef205d7c0e # committed on 2023-08-10
-    SHA512 8131031ba4b3b3c50838eb83db44bed0bf2e3fc820f18a9e48202801aebef4179f9b465354487070d7bc1feea79461abe581eecde00d61a21e27fe2b8a52699f
+    REF ffb2d2cb74a1de60819b21b939f7209aa53e91c1 # committed on 2026-09-27
+    SHA512 afdac37acbf5cfc834047a7620eb8ba54c3a01be5c31af7a42528871d674607a8c333af0fc1211107616530412ec12a57bd11e5037a4f6592955cf014b6c3b83
     HEAD_REF master
 )
 

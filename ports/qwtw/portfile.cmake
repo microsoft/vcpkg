@@ -6,6 +6,7 @@ vcpkg_from_github(
    HEAD_REF master
    PATCHES
         add-include-chrono.patch
+        fix-asio-error.patch
 )
 
 vcpkg_cmake_configure(

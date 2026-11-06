@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e4c5ecc..0589fc1 100644
+index 90003a8..10632c8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -348,6 +348,12 @@ function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION)
+@@ -368,6 +368,12 @@ function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION)
  
    string(REGEX REPLACE "@PACKAGE_VERSION@" "${VERSION}" TEXT ${TEXT})
  

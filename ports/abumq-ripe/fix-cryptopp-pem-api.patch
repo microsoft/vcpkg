@@ -1,0 +1,13 @@
+diff --git a/lib/Ripe.cc b/lib/Ripe.cc
+index 1111111..2222222 100644
+--- a/lib/Ripe.cc
++++ b/lib/Ripe.cc
+@@ -242,7 +242,7 @@ Ripe::KeyPair Ripe::generateRSAKeyPair(unsigned int length, const std::string&
+         if (secret.empty()) {
+             PEM_Save(snk, privateKey);
+         } else {
+-            PEM_Save(snk, rng, privateKey, PRIVATE_RSA_ALGORITHM, secret.data(), secret.size());
++            PEM_Save(snk, privateKey, rng, PRIVATE_RSA_ALGORITHM, secret.data(), secret.size());
+         }
+         snk.MessageEnd();
+     }

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d608b39..57f59ff 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -833,7 +833,7 @@ endif ()
+ if (H5_HAVE_PARALLEL)
+   list (APPEND LINK_PUB_LIBS MPI::MPI_C)
+   if (MPI_C_LINK_FLAGS)
+-    set (CMAKE_EXE_LINKER_FLAGS "${MPI_C_LINK_FLAGS} ${CMAKE_EXE_LINKER_FLAGS}")
++    string(JOIN " " CMAKE_EXE_LINKER_FLAGS ${MPI_C_LINK_FLAGS} "${CMAKE_EXE_LINKER_FLAGS}")
+   endif ()
+ endif ()
+ 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(yara C)
 
 if(MSVC)
@@ -9,7 +9,6 @@ endif()
 
 
 find_package(OpenSSL REQUIRED)
-
 include_directories(
   .
   libyara
@@ -64,12 +63,12 @@ set(
   libyara/modules/pe/authenticode-parser/structs.c
   libyara/modules/tests/tests.c
   libyara/modules/time/time.c
-  libyara/modules/string/string.c  
+  libyara/modules/string/string.c
   libyara/notebook.c
   libyara/object.c
   libyara/parser.c
   libyara/proc.c
-  ${PROC_PLATFORM_SOURCE}  
+  ${PROC_PLATFORM_SOURCE}
   libyara/re.c
   libyara/re_grammar.c
   libyara/re_lexer.c
@@ -82,7 +81,7 @@ set(
   libyara/stream.c
   libyara/strutils.c
   libyara/threading.c
-  
+
   # Module elf request new library tlshc(https://github.com/avast/tlshc), the related upstream PR: https://github.com/VirusTotal/yara/pull/1624.
   # libyara/modules/elf/elf.c
   # libyara/tlshc/tlsh.c
@@ -106,9 +105,9 @@ set( yarac_sources
 find_package(Threads REQUIRED)
 
 set(
-  libyara_dependencies 
+  libyara_dependencies
   OpenSSL::SSL
-  OpenSSL::Crypto 
+  OpenSSL::Crypto
   Threads::Threads
 )
 
@@ -174,10 +173,14 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libyara-config.cmake DESTIN
 if(NOT DISABLE_INSTALL_TOOLS)
   install (
     TARGETS yarac yara
-    RUNTIME DESTINATION tools/yara
+    RUNTIME DESTINATION bin
   )
 endif()
 
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(DIRECTORY libyara/include/ DESTINATION include)
+  install(
+    DIRECTORY libyara/include/
+    DESTINATION include
+    PATTERN "tlshc" EXCLUDE
+  )
 endif()

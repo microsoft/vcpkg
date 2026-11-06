@@ -1,9 +1,10 @@
 {
   "name": "libspng",
   "version": "0.7.4",
+  "port-version": 1,
   "description": "Simple, modern libpng alternative",
   "homepage": "https://github.com/randy408/libspng",
-  "license": "BSD-2-Clause",
+  "license": "BSD-2-Clause AND libpng-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

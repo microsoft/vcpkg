@@ -1,0 +1,36 @@
+{
+  "name": "sz",
+  "version": "3.4.0",
+  "description": "SZ3: a modular error-bounded lossy compressor for scientific floating-point data. Header-only C++17 library, with an optional command-line tool and HDF5 filter.",
+  "homepage": "https://github.com/szcompressor/SZ3",
+  "license": "LicenseRef-SZ3-BSD",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zstd"
+  ],
+  "features": {
+    "hdf5": {
+      "description": "Build the H5Z-SZ3 HDF5 filter library (SZ3::hdf5sz3)",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false
+        }
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP parallel compression through the SZ3::SZ3 target",
+      "supports": "!osx"
+    },
+    "tools": {
+      "description": "Build the sz3 command-line tool and C API library (SZ3::SZ3c)"
+    }
+  }
+}

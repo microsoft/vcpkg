@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
     REF "v${VERSION}"
-    SHA512 c8338a118feefa104d73932890c732247c884ab9ce1d170c43a22ab5884517a0e2a7fd1febde7705b8290fbbbc29e64738610404816e4db2b56a70fc444ca049
+    SHA512 a7fa8fb19e54cdf0b9aac917087c86d45ea1b4a991a85ea8c5dd96af0289df63823901e44604d4c8df55883dcd19aee2efc48d7b5fde313dc0787b842a223a4a
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -10,10 +10,10 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        xmp     EXIV2_ENABLE_XMP
-        png     EXIV2_ENABLE_PNG
-        nls     EXIV2_ENABLE_NLS
         bmff    EXIV2_ENABLE_BMFF
+        nls     EXIV2_ENABLE_NLS
+        png     EXIV2_ENABLE_PNG
+        xmp     EXIV2_ENABLE_XMP
 )
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND FEATURE_OPTIONS -DEXIV2_ENABLE_FILESYSTEM_ACCESS=OFF)
@@ -45,9 +45,22 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/exiv2)
-vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/exiv2)
+
+if(VCPKG_TARGET_IS_OSX AND "nls" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/exiv2.pc" " -lintl" " -lintl -framework CoreFoundation")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/exiv2.pc" " -lintl" " -lintl -framework CoreFoundation")
+    endif()
+endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/exiv2.pc" "Libs.private: " "Libs.private: -lpsapi ")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/exiv2.pc" "Libs.private: " "Libs.private: -lpsapi ")
+    endif()
+endif()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

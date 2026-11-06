@@ -1,25 +1,34 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO erincatto/Box2D
-    REF 9ebbbcd960ad424e03e5de6e66a40764c16f51bc  #v2.4.1
-    SHA512 d9fa387ce893ed1fb73f80006491202f2624ef6d0fb37daf92fbd1a7f9071c84da45e4b418b333566435bbbdfd3d5f68a42dfca02416e9a3a2b4db039f1c6151
-    HEAD_REF master
+    REF v${VERSION}
+    SHA512 874bde300e7e33e950152f1d86cb4e2989cd7e30b2d89ac29d9596d9251b514972285eaba19b2d2941870f6d0e446265bf22e4d2a6df287f2c9807e0a82c8ed1
+    HEAD_REF main
+    PATCHES
+        libm.diff
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBOX2D_BUILD_UNIT_TESTS=OFF
-        -DBOX2D_BUILD_TESTBED=OFF
+        -DBOX2D_SAMPLES=OFF
+        -DBOX2D_BENCHMARKS=OFF
+        -DBOX2D_DOCS=OFF
+        -DBOX2D_PROFILE=OFF
+        -DBOX2D_VALIDATE=OFF
+        -DBOX2D_UNIT_TESTS=OFF
+        -DBOX2D_COMPILE_WARNING_AS_ERROR=OFF
 )
+
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/box2d)
+vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/box2d/base.h" "defined( BOX2D_DLL )" "1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/box2d)
-
-vcpkg_copy_pdbs()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

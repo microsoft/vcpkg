@@ -2,10 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ashvardanian/SimSIMD
     REF "v${VERSION}"
-    SHA512 ab78d4415ed0f2964470ccd36d3d737a2715b1a5a4222613d2f0f4be6a516da0e339329cbd421c6b7f6a1bc701da6ec2f3937cba5a8ea1f632beea8000d90c8f
+    SHA512 8707d435d7f525e0ce562b01a151d814e38396d60b208d4676235ce0f356c30b22c94187ff419ad51cd43f3eb84ab8f952afe1e6b5c63fdb3daf87c2ef402bb6
     HEAD_REF main
     PATCHES
         export-target.patch
+        force-c17-on-msvc.patch
+        support-msvc.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)

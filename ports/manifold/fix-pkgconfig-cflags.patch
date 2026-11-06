@@ -1,0 +1,10 @@
+diff --git a/cmake/manifold.pc.in b/cmake/manifold.pc.in
+index 6d0da0d..5a8fb37 100644
+--- a/cmake/manifold.pc.in
++++ b/cmake/manifold.pc.in
+@@ -9,4 +9,4 @@ Version: @MANIFOLD_VERSION@
+ URL: https://github.com/elalish/manifold
+ Requires-private: @TEMPLATE_OPTIONAL_TBB@ @TEMPLATE_OPTIONAL_CLIPPER@
+ Libs: -L${libdir} -lmanifold@PCFILE_LIB_SUFFIX@
+-Cflags: -I${includedir} -std=c++17
++Cflags: -I${includedir}

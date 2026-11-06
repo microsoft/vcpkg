@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers
     REF "n${VERSION}"
-    SHA512 dd2f1c7ff54890016ab17500449620cdf3690aa1d34dec78f1b27bdc0d51ec1335a66fda5942ddb43e1a1310de95874aef5232a1e676c21882fae08472d17808
+    SHA512 9ef86af73e39bffee3ca5df8954c03a793120fafa1742ff07a763ce4247c579e4eb4b5c53356faa436a3caa6d8317402e22651a5e89766256c74e8030d0f1111
     HEAD_REF master
 )
 
@@ -11,7 +11,7 @@ vcpkg_from_github(
 # ====================================================
 
 # Windows
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS)
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make pkg-config)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
@@ -39,14 +39,14 @@ else()
     IF (NOT MAKE)
         MESSAGE(FATAL_ERROR "MAKE not found")
     ENDIF ()
-    
+
     vcpkg_execute_required_process(
         COMMAND make PREFIX=$${CURRENT_PACKAGES_DIR}
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME make-${TARGET_TRIPLET}
     )
 
-    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
+    # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where
     # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
     if(NOT VCPKG_BUILD_TYPE)
@@ -58,4 +58,4 @@ vcpkg_fixup_pkgconfig()
 
 # Install the files to their default vcpkg locations
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
-vcpkg_install_copyright(FILE_LIST "${CURRENT_PORT_DIR}/copyright")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/include/ffnvcodec/dynlink_nvcuvid.h")

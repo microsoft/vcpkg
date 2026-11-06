@@ -1,6 +1,6 @@
 {
   "name": "zyre",
-  "version-date": "2024-04-10",
+  "version-date": "2025-06-25",
   "description": "An open-source framework for proximity-based peer-to-peer applications",
   "homepage": "https://github.com/zeromq/zyre",
   "dependencies": [

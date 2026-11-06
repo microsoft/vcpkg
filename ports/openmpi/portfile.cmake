@@ -5,43 +5,114 @@ string(REGEX REPLACE [[^([0-9]+[.][0-9]+).*$]] [[\1]] OpenMPI_SHORT_VERSION "${V
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.open-mpi.org/release/open-mpi/v${OpenMPI_SHORT_VERSION}/openmpi-${VERSION}.tar.gz"
     FILENAME "openmpi-${VERSION}.tar.gz"
-    SHA512 34d8db42b93d79f178fea043ff8b5565e646b4935be6fa57fff6674030e901b4c84012c800304a6ce639738beb04191fe78a9372eae626dd4a2f8c0839711e46
+    SHA512 014e09a0050f928cf87ed48741daa52eb2b8652785981818e7b9a89578a7cd315a049d6e3aef6914954d1fbfe967d61521028d7b4a3295ddf90f8f243bf318a0
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        keep_isystem.patch
+    ARCHIVE "${ARCHIVE}"
 )
 
 vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_PATH})
+cmake_path(GET PERL PARENT_PATH PERL_PATH)
+vcpkg_add_to_path("${PERL_PATH}")
 
 # Put wrapper data dir side-by-side to wrapper executables dir instead of loosing debug data.
-# VCPKG_CONFIGURE_MAKE_OPTIONS overwrites vcpkg_configure_make overwrites OPTIONS.
-vcpkg_list(PREPEND VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG [[--datadir=\${prefix}/../tools/openmpi/debug/share]])
-vcpkg_list(PREPEND VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE [[--datadir=\${prefix}/tools/openmpi/share]])
+# vcpkg-make appends these to the configuration-specific options.
+vcpkg_list(PREPEND VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG [[--datadir=\${prefix}/../tools/openmpi/debug/share]])
+vcpkg_list(PREPEND VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE [[--datadir=\${prefix}/tools/openmpi/share]])
+if(VCPKG_TARGET_IS_OSX)
+    # This ensures that vcpkg-fixup-macho-rpath succeeds
+    # CoreFoundation and IOKit are transitive dependencies of static hwloc,
+    # but hwloc.pc does not report them.
+    string(APPEND VCPKG_LINKER_FLAGS " -headerpad_max_install_names -framework CoreFoundation -framework IOKit")
+endif()
 
-vcpkg_configure_make(
-        COPY_SOURCE
-        SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
-            --with-hwloc=internal
-            --with-libevent=internal
-            --with-pmix=internal
-            --disable-mpi-fortran
-        OPTIONS_DEBUG
-            --enable-debug
+vcpkg_make_configure(
+    COPY_SOURCE
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        --disable-dependency-tracking
+        --disable-sphinx
+        "--with-hwloc=${CURRENT_INSTALLED_DIR}"
+        "--with-hwloc-libdir=${CURRENT_INSTALLED_DIR}/lib"
+        "--with-libevent=${CURRENT_INSTALLED_DIR}"
+        "--with-libevent-libdir=${CURRENT_INSTALLED_DIR}/lib"
+        --with-pmix=internal
+        --with-prrte=internal
+        # Prevent optional components from depending on libraries found on the
+        # build machine. Such integrations need declared vcpkg dependencies.
+        --without-argobots
+        --without-cray-xpmem
+        --without-cuda
+        --without-gpfs
+        --without-hcoll
+        --without-ime
+        --without-knem
+        --without-libltdl
+        --without-libnl
+        --without-lsf
+        --without-lustre
+        --without-memkind
+        --without-munge
+        --without-ofi
+        --without-pbs
+        --without-portals4
+        --without-psm2
+        --without-pvfs2
+        --without-qthreads
+        --without-rocm
+        --without-sge
+        --without-slurm
+        --without-tm
+        --without-ucc
+        --without-ucx
+        --without-ugni
+        --without-udreg
+        --without-usnic
+        --without-valgrind
+        --without-xpmem
+        --without-zlibng
+        --enable-mpi-fortran=no
+    OPTIONS_DEBUG
+        --enable-debug
 )
-
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
+
+# pmix_config.h records the configure command line. Redact its build-machine
+# paths without changing the generated C string syntax.
+foreach(dir IN ITEMS "" "debug/")
+    set(pmix_config "${CURRENT_PACKAGES_DIR}/${dir}include/pmix/src/include/pmix_config.h")
+    if(EXISTS "${pmix_config}")
+        foreach(abs_path IN ITEMS
+            "${CURRENT_PACKAGES_DIR}"
+            "${CURRENT_BUILDTREES_DIR}"
+            "${CURRENT_INSTALLED_DIR}"
+            "${DOWNLOADS}"
+        )
+            if(NOT abs_path STREQUAL "")
+                vcpkg_replace_string(
+                    "${pmix_config}"
+                    "${abs_path}"
+                    "VCPKG_REDACTED_PATH"
+                    IGNORE_UNCHANGED
+                )
+            endif()
+        endforeach()
+    endif()
+endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${CURRENT_PORT_DIR}/mpi-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CURRENT_PORT_DIR}/mpi-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/mpi-wrapper.cmake" @ONLY)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/docs/license/mpich.txt"
+    "${SOURCE_PATH}/3rd-party/openpmix/LICENSE"
+    "${SOURCE_PATH}/3rd-party/prrte/LICENSE"
+    "${SOURCE_PATH}/3rd-party/treematch/LICENSE"
+    "${SOURCE_PATH}/3rd-party/treematch/COPYING"
+)

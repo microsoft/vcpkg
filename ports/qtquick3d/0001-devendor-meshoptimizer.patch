@@ -11,7 +11,7 @@ index 78ad8af..bee1ca6 100644
  qt_internal_add_module(Quick3DUtils
      SOURCES
          qqsbcollection.cpp qqsbcollection_p.h
-@@ -26,49 +28,17 @@ qt_internal_add_module(Quick3DUtils
+@@ -26,53 +28,17 @@ qt_internal_add_module(Quick3DUtils
          qquick3dprofiler_p.h
          ../3rdparty/xatlas/xatlas.cpp ../3rdparty/xatlas/xatlas.h
          qssglightmapuvgenerator.cpp qssglightmapuvgenerator_p.h
@@ -31,6 +31,8 @@ index 78ad8af..bee1ca6 100644
 -        ../3rdparty/meshoptimizer/src/vertexfilter.cpp
 -        ../3rdparty/meshoptimizer/src/vfetchanalyzer.cpp
 -        ../3rdparty/meshoptimizer/src/vfetchoptimizer.cpp
+-        ../3rdparty/meshoptimizer/src/partition.cpp
+-        ../3rdparty/meshoptimizer/src/quantization.cpp
      NO_UNITY_BUILD_SOURCES
          ../3rdparty/xatlas/xatlas.cpp ../3rdparty/xatlas/xatlas.h
 -        ../3rdparty/meshoptimizer/src/allocator.cpp
@@ -49,6 +51,8 @@ index 78ad8af..bee1ca6 100644
 -        ../3rdparty/meshoptimizer/src/vertexfilter.cpp
 -        ../3rdparty/meshoptimizer/src/vfetchanalyzer.cpp
 -        ../3rdparty/meshoptimizer/src/vfetchoptimizer.cpp
+-        ../3rdparty/meshoptimizer/src/partition.cpp
+-        ../3rdparty/meshoptimizer/src/quantization.cpp
      DEFINES
          QT_BUILD_QUICK3DUTILS_LIB
      INCLUDE_DIRECTORIES

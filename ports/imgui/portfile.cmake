@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 9152489b1482a1f1cc52aae9de59e1c174b2309da78d7a5367059e2117dd8df97f3ea04aeca67ef90348dc2c241b55f0107dba3dd6500134bb143498802d8edf
+        SHA512 00ade7a3e2c2e34465f1bb9fafd78733d3e659617b0857cf1b3c7f04cfc1d8566d1fd6a8697946f0de7c808cce1c4d0a4b2195c7bc20144cfd8b1e9b1cfba621
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 f66c8ebef332d62f9aaaea59367c9118e86e2cefbc64c651a9a0a00435b8462246aae57a7fde3066db224000826bac9f0c3d46f033e1ebfc7735559ed677a4c4
+        SHA512 de41ef101f37d09685bf9e69bacefe06a0c010ecd0e6e7ed1e4efbff82fde27a9c3ae36ed436db5bcde4c61de10da984dfb74d6098586a3f78d8a716864460c2
         HEAD_REF master
     )
 endif()
@@ -22,7 +22,7 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in" DESTINATION "${SOURC
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES 
+    FEATURES
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
     android-binding             IMGUI_BUILD_ANDROID_BINDING
     dx9-binding                 IMGUI_BUILD_DX9_BINDING
@@ -35,12 +35,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
     opengl3-binding             IMGUI_BUILD_OPENGL3_BINDING
     osx-binding                 IMGUI_BUILD_OSX_BINDING
-    sdl2-binding                IMGUI_BUILD_SDL2_BINDING
-    sdl2-renderer-binding       IMGUI_BUILD_SDL2_RENDERER_BINDING
+    sdl3-binding                IMGUI_BUILD_SDL3_BINDING
+    sdlgpu3-binding             IMGUI_BUILD_SDLGPU3_BINDING
+    sdl3-renderer-binding       IMGUI_BUILD_SDL3_RENDERER_BINDING
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
+    webgpu-binding              IMGUI_BUILD_WEBGPU_BINDING
     freetype                    IMGUI_FREETYPE
-    freetype-lunasvg            IMGUI_FREETYPE_LUNASVG
+    freetype-svg                IMGUI_FREETYPE_SVG
     wchar32                     IMGUI_USE_WCHAR32
     test-engine                 IMGUI_TEST_ENGINE
 )
@@ -63,7 +65,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 4e496075417852a57fed73b34b27a7d4983be9d5a5e95dd854c6c1d3796f96fd43a48166cb07f74e8e50de0ce28c55a4fbf08d2cb4114f1225adc931f9fbae75
+        SHA512 c5bf34061ca4aaaedeaafd63138c4c6fbfafc2d10b3bcad626c6a54314f2343cbb9d1fc6b77cd6e3e646e265c65cd994235f894ccb4ffc8039a67ef8f05a2265
         HEAD_REF master
     )
 
@@ -88,8 +90,8 @@ vcpkg_cmake_install()
 if ("freetype" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE\n" "#define IMGUI_ENABLE_FREETYPE\n")
 endif()
-if ("freetype-lunasvg" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE_LUNASVG" "#define IMGUI_ENABLE_FREETYPE_LUNASVG")
+if ("freetype-svg" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE_PLUTOSVG" "#define IMGUI_ENABLE_FREETYPE_PLUTOSVG")
 endif()
 if ("wchar32" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")
@@ -98,8 +100,19 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
+vcpkg_download_distfile(PROGGY_CLEAN_LICENSE
+    URLS "https://raw.githubusercontent.com/bluescan/proggyfonts/139ec08a38096161291792313ef5803fc4f0e37b/LICENSE"
+    FILENAME "imgui-proggyclean-license-139ec08a38096161291792313ef5803fc4f0e37b.txt"
+    SHA512 b17bc797420ceb31de53a3d7e82838ae0b3abbe0f672b0bc3f13e131464843c38649cc911b25661f086b0eee03d5ff3d6e07a075aedcc76cc742a141d9591303
+)
+vcpkg_download_distfile(PROGGY_FOREVER_LICENSE
+    URLS "https://raw.githubusercontent.com/ocornut/proggyforever/f8868ba43bb42c4d88454d03ad81cbd139789f72/LICENSE.txt"
+    FILENAME "imgui-proggyforever-license-f8868ba43bb42c4d88454d03ad81cbd139789f72.txt"
+    SHA512 dda5f9f404f62dd2d3d3be12ba80db167fb3f9f5b177337fd1133b51d2adb8a58f98eb12adc6f1c7b247299513c7186859c61d4a7e2f4a69135d06b8fc2518d9
+)
+
 if ("test-engine" IN_LIST FEATURES)
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/test-engine/LICENSE.txt")
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${PROGGY_CLEAN_LICENSE}" "${PROGGY_FOREVER_LICENSE}" "${SOURCE_PATH}/test-engine/LICENSE.txt")
 else()
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${PROGGY_CLEAN_LICENSE}" "${PROGGY_FOREVER_LICENSE}")
 endif()

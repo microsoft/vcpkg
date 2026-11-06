@@ -1,6 +1,6 @@
 {
   "name": "zserge-webview",
-  "version-date": "2023-04-15",
+  "version": "0.12.0",
   "description": "Tiny cross-platform webview library for C/C++/Golang.",
   "homepage": "https://github.com/webview/webview",
   "license": "MIT"

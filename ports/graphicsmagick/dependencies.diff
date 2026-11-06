@@ -1,0 +1,81 @@
+diff --git a/configure.ac b/configure.ac
+index 4b4fb3f..2c5caea 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1710,15 +1710,17 @@ if test "$with_bzlib" != 'no' ; then
+   failed=0
+   passed=0
+   found_libbz=0
++  PKG_CHECK_MODULES([BZIP2], [bzip2], [passed=`expr $passed + 1`], [failed=`expr $failed + 1`])
++  pkg_config_to_flags 'bzip2' "${BZIP2_LIBS}" "${BZIP2_CFLAGS}"
+   AC_CHECK_HEADER([bzlib.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`])
+-  AC_CHECK_LIB([bz2],[BZ2_bzDecompress],[found_libbz=`expr $found_libbz + 1`],,)
++  AC_SEARCH_LIBS([BZ2_bzDecompress],[],[found_libbz=`expr $found_libbz + 1`],,)
+   if test "$native_win32_build" = 'yes' ; then
+     # Under MinGW, libbz2 obfuscates its functions by declaring them
+     # with DLL interfaces.  This would be all better if we could
+     # somehow include bzlib.h during the test but Autoconf does not
+     # make that possible.  We check for BZ2_decompress since that is
+     # one of the few functions exported from the DLL (very strange).
+-    AC_CHECK_LIB([bz2],[_imp__BZ2_decompress],[found_libbz=`expr $found_libbz + 1`],,)
++    :
+   fi
+   if test $found_libbz -gt 0 ; then
+     passed=`expr $passed + 1`
+@@ -1734,8 +1736,7 @@ if test "$with_bzlib" != 'no' ; then
+       AC_MSG_RESULT([no -- some components failed test])
+       have_bzlib='no (failed tests)'
+     else
+-      LIB_BZLIB='-lbz2'
+-      LIBS="$LIB_BZLIB $LIBS"
++      LIB_BZLIB=''
+       AC_DEFINE([HasBZLIB],[1],[Define if you have the bzip2 library])
+       AC_MSG_RESULT([yes])
+       have_bzlib='yes'
+@@ -2226,7 +2227,7 @@ if test "$have_zlib" = 'yes' -a "$with_png" = 'yes' ; then
+        for png_libs_arg in $PNG_LIBS ; do
+          printf "Testing png_libs_arg ${png_libs_arg}\n"
+          case $png_libs_arg in
+-           -lpng*)
++           -lpng*|-llibpng*)
+              pnglibs=$png_libs_arg
+              printf "Assigning pnglibs=${pnglibs}\n"
+              break 1
+@@ -2538,7 +2539,7 @@ dnl Now test for the headers
+             LDFLAGS=$OLD_LDFLAGS
+             LIBS=$OLD_LIBS
+         else
+-            pkg_config_to_flags 'freetype2' "${LIB_TTF}" ''
++            LIB_TTF=''
+             #LIBS="$LIB_TTF $LIBS"
+             AC_DEFINE([HasTTF],[1],[Define if you have FreeType (TrueType font) library])
+             if test "$ac_cv_header_ft2build_h" = 'yes' ; then
+@@ -2695,7 +2696,7 @@ if test "$with_webp" != 'no' ; then
+             LDFLAGS=$OLD_LDFLAGS
+             LIBS=$OLD_LIBS
+         else
+-            pkg_config_to_flags 'libwebp' "${LIB_WEBP}" ''
++            LIB_WEBP=''
+             # LIBS="$LIB_WEBP $LIBS"
+             AC_DEFINE([HasWEBP],[1],[Define if you have WEBP library])
+             AC_MSG_RESULT([yes])
+@@ -4258,7 +4259,7 @@ MAGICK_EXTRA_DEP_LIBS=`echo $MAGICK_EXTRA_DEP_LIBS | sed -e 's/  */ /g'`
+ 
+ MAGICK_API_CFLAGS=$CFLAGS
+ MAGICK_API_CPPFLAGS=`echo $MAGICK_API_CPPFLAGS | sed -e 's/  */ /g'`
+-MAGICK_API_LDFLAGS="-L$LIB_DIR $LDFLAGS"
++MAGICK_API_LDFLAGS="-L$LIB_DIR"
+ MAGICK_API_DEP_LIBS="$MAGICK_DEP_LIBS"
+ MAGICK_API_LIBS="-lGraphicsMagick $MAGICK_API_DEP_LIBS $MAGICK_EXTRA_DEP_LIBS"
+ 
+diff --git a/magick/GraphicsMagick.pc.in b/magick/GraphicsMagick.pc.in
+index e968715..6b7c404 100644
+--- a/magick/GraphicsMagick.pc.in
++++ b/magick/GraphicsMagick.pc.in
+@@ -9,5 +9,5 @@ Version: @PACKAGE_VERSION@
+ Description: GraphicsMagick image processing library
+ URL: http://www.graphicsmagick.org/
+ Libs: -L${libdir} -lGraphicsMagick
+-Libs.private: @LDFLAGS@ @MAGICK_API_DEP_LIBS@ @MAGICK_EXTRA_DEP_LIBS@
++Libs.private: @MAGICK_API_DEP_LIBS@ @MAGICK_EXTRA_DEP_LIBS@
+ Cflags: -I${includedir} @MAGICK_API_PC_CPPFLAGS@

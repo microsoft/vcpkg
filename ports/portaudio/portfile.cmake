@@ -5,16 +5,22 @@ vcpkg_from_github(
     SHA512 0f56e5f5b004f51915f29771b8fc1fe886f1fef5d65ab5ea1db43f43c49917476b9eec14b36aa54d3e9fb4d8bdf61e68c79624d00b7e548d4c493395a758233a
     PATCHES
         jack.diff
+        fix-guid-linker-errors.patch
+        use-vcpkg-asiosdk.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" PA_DLL_LINK_WITH_STATIC_RUNTIME)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PA_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PA_BUILD_STATIC)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        asio PA_USE_ASIO
+)
+
 vcpkg_list(SET options)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options
-        -DPA_USE_ASIOSDK=OFF
         -DPA_DLL_LINK_WITH_STATIC_RUNTIME=${PA_DLL_LINK_WITH_STATIC_RUNTIME}
         -DPA_LIBNAME_ADD_SUFFIX=OFF
     )
@@ -41,6 +47,7 @@ vcpkg_cmake_configure(
         ${options}
         -DPA_BUILD_SHARED=${PA_BUILD_SHARED}
         -DPA_BUILD_STATIC=${PA_BUILD_STATIC}
+        -DPA_USE_ASIO=${PA_USE_ASIO}
     OPTIONS_DEBUG
         -DPA_ENABLE_DEBUG_OUTPUT:BOOL=ON
 )

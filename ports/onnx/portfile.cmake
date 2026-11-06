@@ -4,14 +4,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 5a18e2b19ec9c18c8b115fb7e12ed98eddaa581c95f15c4dd420cd6c86e7caa04f9a393da589e76b89cf9b3544abd3749a8c77c2446782f37502eb74e9b1f661
+    SHA512 13fafff073a8e0bcf67fd06195da979c3c6273b3f5fdd25f5e5c39ad6af20eefe107f13dc73d52b6021e986d87401e46121e00bba8fbd09f098334e34f78462f
     PATCHES
         fix-cmakelists.patch
-        fix-dependency-protobuf.patch
-        fix-cxx_standard.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
+
+find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
 
 # ONNX_USE_PROTOBUF_SHARED_LIBS: find the library and check its file extension
 find_library(PROTOBUF_LIBPATH NAMES protobuf PATHS "${CURRENT_INSTALLED_DIR}/bin" "${CURRENT_INSTALLED_DIR}/lib" REQUIRED)
@@ -22,47 +22,28 @@ else()
     set(USE_PROTOBUF_SHARED OFF)
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        pybind11 BUILD_ONNX_PYTHON
-)
-
-# Like protoc, python is required for codegen.
 vcpkg_find_acquire_program(PYTHON3)
-
-# PATH for .bat scripts so it can find 'python'
-get_filename_component(PYTHON_DIR "${PYTHON3}" PATH)
-vcpkg_add_to_path(PREPEND "${PYTHON_DIR}")
-
-if("pybind11" IN_LIST FEATURES)
-    # When BUILD_ONNX_PYTHON, we need Development component. Give a hint for FindPython3
-    list(APPEND FEATURE_OPTIONS
-        "-DPython3_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
-    )
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPython3_EXECUTABLE=${PYTHON3}
+        "-DPython_EXECUTABLE:FILEPATH=${PYTHON3}"
+        "-DPython3_EXECUTABLE:FILEPATH=${PYTHON3}"
+        "-DProtobuf_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}"
         -DONNX_ML=ON
-        -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_PROTOBUF_SHARED_LIBS=${USE_PROTOBUF_SHARED}
         -DONNX_USE_LITE_PROTO=OFF
         -DONNX_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DONNX_BUILD_TESTS=OFF
-        -DONNX_BUILD_BENCHMARKS=OFF
+        -DONNX_BUILD_CUSTOM_PROTOBUF=OFF
     MAYBE_UNUSED_VARIABLES
         ONNX_USE_MSVC_STATIC_RUNTIME
+        Python_EXECUTABLE
+        Python3_EXECUTABLE
 )
-
-if("pybind11" IN_LIST FEATURES)
-    # This target is not in install/export
-    vcpkg_cmake_build(TARGET onnx_cpp2py_export)
-endif()
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ONNX PACKAGE_NAME ONNX)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
@@ -97,4 +78,14 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference/ops"
     "${CURRENT_PACKAGES_DIR}/include/onnx/reference"
+    # empty dirs new in onnx 1.22's generated-header install
+    "${CURRENT_PACKAGES_DIR}/include/onnx/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/common/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/preview"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/defs/tensor/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/inliner/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/shape_inference/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/include/onnx/version_converter/adapters/CMakeFiles"
 )

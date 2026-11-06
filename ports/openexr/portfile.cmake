@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openexr
     REF "v${VERSION}"
-    SHA512 0c43337fda2979b328202488a43711afb5d680781c933aa0d74970a3dcda1135fbd01228cb10e81e4628c0d19da2d3e5b781e147d609cdc8a796d2a51a90932f
+    SHA512 6f0a11437d1c33cfff06d6d7c4c32c2b6660c7665e056b6506d3c078f38d7bcc23594e1695caa32f1ce1c0c018c950a282d75d0bf131966adcf768dd0a3cc1f3
     HEAD_REF main
 )
 
@@ -17,7 +17,10 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DBUILD_WEBSITE=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Imath=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_libdeflate=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_openjph=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_zstd=ON
         -DOPENEXR_BUILD_EXAMPLES=OFF
         -DOPENEXR_INSTALL_PKG_CONFIG=ON
     OPTIONS_DEBUG
@@ -42,6 +45,7 @@ if(OPENEXR_INSTALL_TOOLS)
             exrmakepreview
             exrmaketiled
             exrmanifest
+            exrmetrics
             exrmultipart
             exrmultiview
             exrstdattr

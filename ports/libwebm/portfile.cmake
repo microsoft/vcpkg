@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libwebm
     REF libwebm-${VERSION}
-    SHA512 d80ecb37d21586aeff14d0282dfbcde7c71644b6952d3f32f538c6e5eb6cfe835c0eb777d5c633070d796526fbc645b70741c2278c106fb74ed0705123b9a200
+    SHA512 9da60f3e7243fb78e0c02e0b6bf8e628552c5b54631960e34bacdf0349ce690984ff9432b8ffa495051858ecc2f4e4a4c1e0b290666058298abf94c3ad99670f
     HEAD_REF master
     PATCHES
         Fix-cmake.patch

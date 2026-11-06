@@ -1,0 +1,18 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2a4821a..249275c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -202,11 +202,13 @@ if(MSVC AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")   # clang-cl does not ge
+         install(FILES "${xad_pdb_output_dir}/\${CMAKE_INSTALL_CONFIG_NAME}/$<$<CONFIG:Debug>:${xad_pdb_name_debug}>$<$<NOT:$<CONFIG:Debug>>:${xad_pdb_name}>.pdb"
+             DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+             CONFIGURATIONS Debug RelWithDebInfo
++            OPTIONAL
+         )
+     else()
+         install(FILES "${xad_pdb_output_dir}/$<$<CONFIG:Debug>:${xad_pdb_name_debug}>$<$<NOT:$<CONFIG:Debug>>:${xad_pdb_name}>.pdb"
+             DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+             CONFIGURATIONS Debug RelWithDebInfo
++            OPTIONAL
+         )
+     endif()
+ endif()

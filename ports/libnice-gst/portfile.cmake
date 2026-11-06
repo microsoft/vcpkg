@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libnice/libnice
-    REF 0.1.22
-    SHA512 545c759a827e039d0aed262a4ec31b17610f7e67d93389c939763ed3d99530a4a6c3d13864ff05a2011fb3c3847ce3380a988e554de0f92b1348ebb76f5e3da4
+    REF "${VERSION}"
+    SHA512 6044bcbda2a247bbaa6e5364b25cff82952ffc44d6fbc434825c0ad05935ebcb04eb08eedca9175431f01a4cff50c0c7a0aad7c287f42a9639724aba202c87a0
     HEAD_REF master
     PATCHES
        skip_libnice.patch

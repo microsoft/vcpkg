@@ -7,6 +7,7 @@ vcpkg_from_sourceforge(
     PATCHES
         fix-encoding.patch
         fix-osx-compilation.patch
+        fix-osx-compilation-2.diff
 )
 
 if(VCPKG_TARGET_IS_LINUX)

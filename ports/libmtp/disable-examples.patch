@@ -1,0 +1,10 @@
+diff --git a/Makefile.am b/Makefile.am
+index 5a0d464..b00bcea 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,4 +1,4 @@
+-SUBDIRS=src examples util doc
++SUBDIRS=src util doc
+ ACLOCAL_AMFLAGS=-I m4
+ 
+ pkgconfigdir=$(libdir)/pkgconfig

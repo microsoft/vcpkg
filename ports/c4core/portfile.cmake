@@ -5,18 +5,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
     REF "v${VERSION}"
-    SHA512 23e45d186d03a64701376fbb63b5e3608dfdac7188eefd869976e97149ee772c7547e460b305c938650a721eac0c0573b70b5a5a2cd7211192cf9c87f019548c
+    SHA512 c485fa36a27e97e597ab069322eb712780577c91b4d924cf12a9acc5f59f0ec925d5f9b09dfe74a756fb456c835eb6a226f9e63e9f412c5b1248d244380074a4
     HEAD_REF master
+    PATCHES
+        disable-cpack.patch
 )
 
-set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
+set(CM_COMMIT_HASH 2db93235c6c3e53aac09a99e106f0a26ba4ef007)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 7292f9856d9c41581f2731e73fdf08880e0f4353b757da38a13ec89b62c5c8cb52b9efc1a9ff77336efa0b6809727c17649e607d8ecacc965a9b2a7a49925237
+    SHA512 9e48f23391bbc08a40997d372aac9bffa32bebd9f8fd71fec59322881adc31ba7c5ac9856c7df2a368cd5c1b594d6d3ac88aa00a074ad81c18c8e9260f7c3c50
 )
 
 vcpkg_extract_source_archive(
@@ -28,17 +30,17 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
 file(RENAME "${SOURCE_PATH_CMAKE}" "${SOURCE_PATH}/cmake")
 
-set(DB_COMMIT_HASH 5dcbe41d2bd4712c8014aa7e843723ad7b40fd74)
+set(DB_COMMIT_HASH 328e4abca3384cbd0a69e70f263cc7b2794bff09)
 
 vcpkg_download_distfile(
     DEBUGBREAK_ARCHIVE
     URLS "https://github.com/biojppm/debugbreak/archive/${DB_COMMIT_HASH}.zip"
     FILENAME "debugbreak-${DB_COMMIT_HASH}.zip"
-    SHA512 a4735225058b48031e68c91853c71d3cc31c8f2bfc3592cfc7a9a16f406224a814535ecade81ab4ead76458eeab8752e7e7cd521d893db5791dd4aaac3ba20d9
+    SHA512 47208fd7578d7fa0ff2d9170955b073cd761b271bc512072eab3bfd8e7f06d4bd5503837957acd388cbb95fde7f67b4c024f8809a1214417400f3bed4dab3ece
 )
 
 vcpkg_extract_source_archive(
-    SOURCE_PATH_DEBUGBREAK  
+    SOURCE_PATH_DEBUGBREAK
     ARCHIVE ${DEBUGBREAK_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
@@ -46,17 +48,17 @@ vcpkg_extract_source_archive(
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/c4/ext/debugbreak")
 file(RENAME "${SOURCE_PATH_DEBUGBREAK}" "${SOURCE_PATH}/src/c4/ext/debugbreak")
 
-set(FF_COMMIT_HASH 052975dd5f8166d0f9e4a215fa75a349d5985b91)
+set(FF_COMMIT_HASH 34164f547b7df3f5d794ff67e9f885c36819ebfc)
 
 vcpkg_download_distfile(
     FAST_FLOAT_ARCHIVE
-    URLS "https://github.com/biojppm/fast_float/archive/${FF_COMMIT_HASH}.zip"
+    URLS "https://github.com/fastfloat/fast_float/archive/${FF_COMMIT_HASH}.zip"
     FILENAME "fast_float-${FF_COMMIT_HASH}.zip"
-    SHA512 af63cbf1d6620cda87a5f0ca06dcaf46ddfe63658ae5ba91232a2416e8179cba3b2b3d06ff53c1ab2ba3745ae39b0cb787e04be3a9dbe1287605704c2ed13019
+    SHA512 6d2d126035d565f7f8dd6893955fbed38e6345f67e596a7f8ca3b1e17f8dec5327d4ba6d76acf3b71a2c23397612d8a549afe9b2ce8aca11dd802961fc6a2718
 )
 
 vcpkg_extract_source_archive(
-    SOURCE_PATH_FAST_FLOAT 
+    SOURCE_PATH_FAST_FLOAT
     ARCHIVE ${FAST_FLOAT_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
@@ -85,4 +87,10 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/c4core/c4coreConfig.cmake" "${_content
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST 
+    "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/LICENSE-BOOST.txt"
+    "${SOURCE_PATH}/src/c4/ext/debugbreak/COPYING"
+    "${SOURCE_PATH}/src/c4/ext/fast_float/LICENSE-MIT"
+    "${SOURCE_PATH}/src/c4/ext/rng/rng.hpp"
+)

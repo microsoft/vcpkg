@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lfreist/hwinfo
-    REF 46690dd36727b868c5bb7a7316bb2ee52a898349
-    SHA512 31ac0f2c405a817893146f4f8899ea05d831393bd1776c12257675385be25990cb77251d644fefb8ea0d179940ff782ede9036ea42a3f3050c36a66d978f0da6
+    REF fff0ffb494aa8f8cb8537a35d0032235d6d5b5cc
+    SHA512 9100d6a5e39096d1aa36b462499e3937fd6c829887c7cab23ebb4ac8798f9abc844111df0bc781190780f164e8e2df93b1f0dbbc2d6ac824601910b03009ed3e
     HEAD_REF main
+	PATCHES fix-gcc-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" HWINFO_BUILD_SHARED)
@@ -14,6 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+		-DHWINFO_GPU_OPENCL=OFF
         -DHWINFO_SHARED=${HWINFO_BUILD_SHARED}
         -DHWINFO_STATIC=${HWINFO_BUILD_STATIC}
     )
@@ -24,7 +26,7 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH "lib/cmake/hwinfo"
 )
 vcpkg_copy_pdbs()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/include/hwinfo/utils/pci.ids.h")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

@@ -14,9 +14,9 @@ find_library(LIBSASS_RELEASE sass PATHS "${CURRENT_INSTALLED_DIR}/lib/" NO_DEFAU
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{LIBS} "$ENV{LIBS} -lgetopt")
 endif()
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         "--with-libsass-include='${CURRENT_INSTALLED_DIR}/include'"
     OPTIONS_DEBUG
@@ -24,7 +24,7 @@ vcpkg_configure_make(
     OPTIONS_RELEASE
         "--with-libsass-lib='${LIBSASS_RELEASE}'"
 )
-vcpkg_install_make(MAKEFILE GNUmakefile)
+vcpkg_make_install(MAKEFILE GNUmakefile)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

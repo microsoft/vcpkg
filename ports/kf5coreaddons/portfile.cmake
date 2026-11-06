@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcoreaddons
-    REF v5.98.0
-    SHA512 99c86e7931d62b7af6f631103b5d6ea75d70d2977842d4e3962dbc22bbdcfe398484d74d7c58a90bd9e86c738d632a3fd68da8ece42841559e7cc48ee1431ab6
-    PATCHES
-        0001-Add-support-for-static-builds.patch # https://invent.kde.org/frameworks/kcoreaddons/-/merge_requests/129
+    REF "v${VERSION}"
+    SHA512 6dcc51df771dae5de88583ceb2df03d4b9235d00047db7b05b0796c78ca16eb7fe7ecf31e6a0d3c9a08e9d76c3b90d60ee106135cf362793933ec781b465318f
+    HEAD_REF master
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -17,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5CoreAddons CONFIG_PATH lib/cmake/KF5CoreAddons)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5CoreAddons)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
@@ -38,4 +37,3 @@ endif()
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

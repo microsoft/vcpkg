@@ -1,28 +1,44 @@
-vcpkg_from_gitlab(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.dkrz.de
-    REPO k202009/libaec
-    REF v1.1.3
-    SHA512 6f317d08ad7d003bc6664da147321eb87c924978f32bd28780a8ebf015e251019046b0cb16b78e776cd1957a7701215667f64686efb8e5c6bae7c08528cede56
-    PATCHES
-        cmake-config.patch
-        static-shared.patch)
+    REPO Deutsches-Klimarechenzentrum/libaec
+    REF "v${VERSION}"
+    SHA512 55bd605590015e0f903a231268265051336c172c18935fdfecead5630454a99811f3f196117556ad1b62f3052d54894fd8e257a9ea9f45cc03f59c93cde00cda
+    HEAD_REF main
+)
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" AEC_BUILD_SHARED)
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" AEC_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DAEC_BUILD_SHARED=${AEC_BUILD_SHARED}
-        -DAEC_BUILD_STATIC=${AEC_BUILD_STATIC}
-        -DBUILD_TESTING=OFF)
-
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+        -Dlibaec_INSTALL_CMAKEDIR=share/${PORT}
+)
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libaec/libaec-config.cmake"
+    "if(libaec_USE_STATIC_LIBS)"
+    "if(\"${BUILD_STATIC}\") # forced by vcpkg"
+)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+# Compatibility with user's CMake < 3.18 (vcpkg claims support for >= 3.16):
+# Make imported targets global so that libaec-config.cmake can create ALIAS targets.
+set(_target_file "libaec_shared-targets")
+if(BUILD_STATIC)
+    set(_target_file "libaec_static-targets")
+endif()
+file(READ "${CURRENT_PACKAGES_DIR}/share/libaec/${_target_file}.cmake" libaec_targets)
+string(REGEX REPLACE " (SHARED|STATIC) IMPORTED" " \\1 IMPORTED \${libaec_maybe_global}" libaec_targets "${libaec_targets}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libaec/${_target_file}.cmake" "set(libaec_maybe_global \"\")
+if(CMAKE_VERSION VERSION_LESS 3.18)
+    set(libaec_maybe_global \"GLOBAL\")
+endif()
+${libaec_targets}
+"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "cmake")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

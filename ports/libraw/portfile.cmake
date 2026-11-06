@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LibRaw/LibRaw
     REF "${VERSION}"
-    SHA512 c88d02685ac8854ca4f718206ceb95b17abffceee6501390d8447f9e8c78864d1dd0aedbdcf97e600244f97e1a50cbfea21d15a2557710c7d175f61915f9fe37
+    SHA512 a9453f8cff55302926c11c47ba7c8d04d81023bbbcad145551d2c0cc601de7eea8218d00a073e6b9ece845d3420897a2272a34fabf55f5b821183eaa7f66b3ef
     HEAD_REF master
 )
 
@@ -45,6 +45,12 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake")
 vcpkg_fixup_pkgconfig()
+
+# Upstream sets CMAKE_DEBUG_POSTFIX "d" only for WIN32
+if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libraw.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libraw.pc" "-lraw" "-lrawd")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libraw_r.pc" "-lraw_r" "-lraw_rd")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libraw/libraw_types.h"

@@ -2,20 +2,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openstack/liberasurecode
     REF "${VERSION}"
-    SHA512 9815e159e6b9aa44e47fb0ec1eec04321c48e160ec617511720569e445d8085848124e7385ab2be54615e0c2f4a37a44ae5d2de460a7d6ea36782dfe08c2e53a
+    SHA512 22579fdb835e384d14ce305da78e940fda9827f99b1d29da449ec8887a8208eafbee58ffd569af6e639873bdc4e9a1f5a944ebea20cdb8e075f3f10ec7a70202
     HEAD_REF master
     PATCHES
         fix-build.patch
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         "--disable-werror"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")

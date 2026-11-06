@@ -14,7 +14,7 @@ set(ref "${program_version}")
 set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}-${meson_short_hash}")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 541a610a7b49bfcf63502403c9b987178234cddddc181fad588c99f773a68a9fd91cf0629ec6bb424b3c931afee90b96f979ce7e8d990d53f644ac457d342b7f)
+set(download_sha512 0cc8434dbdfb2e32dd98277ca37c221c1e720dfc2922d49c749e0c70ec0a5e23bf4e15378814e2f17b1dc65ec6ec93d23df5ec31b2f7ed995a4ae36f4522c24a)
 
 find_program(SCRIPT_MESON NAMES ${search_names} PATHS "${path_to_search}" NO_DEFAULT_PATH) # NO_DEFAULT_PATH due top patching
 
@@ -29,7 +29,7 @@ if(NOT SCRIPT_MESON)
     file(MAKE_DIRECTORY "${path_to_search}-tmp")
     file(ARCHIVE_EXTRACT INPUT "${archive_path}"
         DESTINATION "${path_to_search}-tmp"
-        #PATTERNS "**/mesonbuild/*" "**/*.py"
+        PATTERNS "meson-${ref}/mesonbuild" "meson-${ref}/meson.py"
         )
     z_vcpkg_apply_patches(
         SOURCE_PATH "${path_to_search}-tmp/meson-${ref}"
@@ -52,7 +52,7 @@ vcpkg_execute_in_download_mode(
 )
 string(REGEX MATCH [[[0-9]+\.[0-9]+\.[0-9]+]] python_ver "${version_contents}")
 
-set(min_required 3.7)
+set(min_required 3.10)
 if(python_ver VERSION_LESS "${min_required}")
     message(FATAL_ERROR "Found Python version '${python_ver} at ${PYTHON3}' is insufficient for meson. meson requires at least version '${min_required}'")
 else()

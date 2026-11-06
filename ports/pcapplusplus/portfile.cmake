@@ -9,16 +9,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO seladb/PcapPlusPlus
     REF "v${PCAPPLUSPLUS_VERSION}"
-    SHA512 ae68a61a41915b1272aa7f8d1b70889216ea50e966c594d408d79fbca2667ff5aa073fe21a72c7e0916f744a925ac1e85e1d1f02e458b3f289201b88c8101fa3
+    SHA512 06c1440a7f88cbef13e5cd2bfbd3c2c1be73f859fc778a25760e0af9ff988b2814a0888d6fadbb3771dfc155dacda5860aa865d8ec5f2cf348d1a1aa29d1cdf4
     HEAD_REF master
-    PATCHES
-        0001-warn-STL4043-for-v23.09.patch # just workaround, which has been fixed on mainline
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPCAPPP_BUILD_EXAMPLES=OFF
+        -DPCAPPP_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()

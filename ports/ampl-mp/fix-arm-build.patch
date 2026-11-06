@@ -1,45 +1,33 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 92089a3..d4c6762 100644
+index 05fc783..e367344 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -240,4 +240,4 @@
+@@ -313,7 +313,7 @@ add_mp_library(format OBJECT
  set(MP_EXPR_INFO_FILE ${MP_SOURCE_DIR}/src/expr-info.cc)
+ set(MP_NL_OPCODES_FILE
+   ${MP_SOURCE_DIR}/nl-writer2/include/mp/nl-opcodes.h)
 -add_executable(gen-expr-info EXCLUDE_FROM_ALL
 +add_executable(gen-expr-info
    src/gen-expr-info.cc $<TARGET_OBJECTS:format>)
  if (MINGW)
-@@ -257,9 +257,15 @@ if (CMAKE_CROSSCOMPILING)
-     COMMAND ${CMAKE_COMMAND} -E echo
-       "warning: cannot re-generate ${MP_EXPR_INFO_FILE}")
- else ()
-+  if (ARITHCHK_EXEC)
-+  add_custom_command(OUTPUT ${MP_EXPR_INFO_FILE}
-+    COMMAND ${WINE} ${ARITHCHK_EXEC} ${MP_EXPR_INFO_FILE}
-+    DEPENDS gen-expr-info)
-+  else()
-   add_custom_command(OUTPUT ${MP_EXPR_INFO_FILE}
-     COMMAND ${WINE} $<TARGET_FILE:gen-expr-info> ${MP_EXPR_INFO_FILE}
-     DEPENDS gen-expr-info)
-+  endif()
- endif ()
+   SET_TARGET_PROPERTIES(gen-expr-info PROPERTIES
+@@ -505,7 +505,7 @@ if (NOT SKIP_BUILD_MP)
+ 	install(DIRECTORY include/mp DESTINATION include)
+ 	install(TARGETS mp DESTINATION lib RUNTIME DESTINATION bin)
+ 	install(FILES LICENSE.rst DESTINATION share/mp)
+-
++  install(TARGETS gen-expr-info RUNTIME DESTINATION bin)
+ endif()   ## NOT SKIP_BUILD_MP
  
- add_prefix(MP_HEADERS include/mp/
-@@ -359,3 +365,4 @@ endif()
- install(DIRECTORY include/mp DESTINATION include)
- install(TARGETS mp DESTINATION lib RUNTIME DESTINATION bin)
- install(FILES LICENSE.rst DESTINATION share/mp)
-+install(TARGETS gen-expr-info RUNTIME DESTINATION bin)
-\ No newline at end of file
+ # If we want to generate the op file only, we are done here.
 diff --git a/src/amplsig/CMakeLists.txt b/src/amplsig/CMakeLists.txt
-index 81312e9..f44c847 100644
+index a9b75d0..0dcfe3e 100644
 --- a/src/amplsig/CMakeLists.txt
 +++ b/src/amplsig/CMakeLists.txt
-@@ -14,6 +14,6 @@ find_library(WS2_32_LIBRARY Ws2_32
+@@ -17,5 +17,5 @@ find_library(WS2_32_LIBRARY Ws2_32
  PATHS ${WIN_LIBRARY_DIR} NO_DEFAULT_PATH)
  if (WS2_32_LIBRARY)
    add_ampl_library(amplsig amplsig.cc)
--  message(WS2_32_LIBRARY ${WS2_32_LIBRARY})
 -  target_link_libraries(amplsig mp ${WS2_32_LIBRARY})
-+  message(WS2_32_LIBRARY ws2_32)
 +  target_link_libraries(amplsig mp ws2_32)
  endif ()

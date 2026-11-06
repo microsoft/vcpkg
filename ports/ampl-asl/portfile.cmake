@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ampl/asl
-    REF 2f5d9de248c53a3063bba23af2013cd3db768bf8
-    SHA512 a551420f60b2419285195063fc42b208e59f076d1d00e4b90847c15613997ba35d319d57275687df37e74a7486420fec2cde7da71a6126802ed19a12dcb8ffdc
+    REF "v${VERSION}"
+    SHA512 cd4092f6ff4852ecefbbc803bf0c23cc86529fddd8159084c7a45ebf3a542c24f497d8c0457e7fac8aa21b192b0ab3eca1ab9517e68832e028e052ed25a9ed22
     HEAD_REF master
     PATCHES
         workaround-msvc-optimizer-ice.patch

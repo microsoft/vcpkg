@@ -1,0 +1,7 @@
+if(WITH_X265 AND UNIX AND NOT BUILD_SHARED_LIBS AND CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|^arm64")
+    include(CheckLinkerFlag)
+    check_linker_flag(C "LINKER:-Bsymbolic" supports_bsymbolic)
+    if(supports_bsymbolic)
+        add_link_options("LINKER:-Bsymbolic")
+    endif()
+endif()

@@ -1,8 +1,9 @@
 {
   "name": "bext-wintls",
-  "version": "0.9.8",
+  "version": "1.0.0",
   "description": "Native Windows TLS stream wrapper for use with boost::asio",
   "homepage": "https://github.com/laudrup/boost-wintls",
+  "license": "BSL-1.0",
   "supports": "windows | mingw",
   "dependencies": [
     "boost-asio"

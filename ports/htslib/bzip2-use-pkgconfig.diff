@@ -1,0 +1,31 @@
+diff --git a/configure.ac b/configure.ac
+index 593a664..5fcca0d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -412,8 +412,11 @@ fi],
+ 
+ if test "$enable_bz2" != no; then
+   bz2_devel=ok
+-  AC_CHECK_HEADER([bzlib.h], [], [bz2_devel=missing], [;])
+-  AC_CHECK_LIB([bz2], [BZ2_bzBuffToBuffCompress], [], [bz2_devel=missing])
++  PKG_CHECK_MODULES([BZ2_PKG], [bzip2], [
++      AC_DEFINE([HAVE_LIBBZ2], 1, [Define if libbzip2 is available.])
++      LIBS="$LIBS $BZ2_PKG_LIBS"
++      CFLAGS="$CFLAGS $BZ2_PKG_CFLAGS"
++    ], [bz2_devel=missing])
+   if test $bz2_devel != ok; then
+     MSG_ERROR([libbzip2 development files not found
+ 
+@@ -430,12 +433,7 @@ produced elsewhere unreadable) or resolve this error to build HTSlib.])
+   fi
+ dnl Unfortunately the 'bzip2' package-cfg module is not standard.
+ dnl Redhat/Fedora has it; Debian/Ubuntu does not.
+-  if test -n "$PKG_CONFIG" && "$PKG_CONFIG" --exists bzip2; then
+      pc_requires="$pc_requires bzip2"
+-  else
+-     private_LIBS="$private_LIBS -lbz2"
+-  fi
+-  static_LIBS="$static_LIBS -lbz2"
+ fi
+ 
+ if test "$enable_lzma" != no; then

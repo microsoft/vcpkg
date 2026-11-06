@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO steinbergmedia/vst3sdk
     REF ${VERSION}
-    SHA512 0a0dc8d84a943ef06353cea748c8dd09e012f70f28ce56912c3e0038718dd2f353e142d4f39ea52979f3c08446a4ee0e8f0038c6d602207da8b0a22877e0c9f2
+    SHA512 f55c03aca2fb994e48e6e8ff0de5d58e512a0a67556cf6bd86c0f9ae429732fca3408e41692b9302a88f7db5be11d3864558762868d47e2def0175b87b9e0937
     HEAD_REF master
 )
 
@@ -11,7 +11,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH BASE_SOURCE_PATH
     REPO steinbergmedia/vst3_base
     REF ${VERSION}
-    SHA512 84f7ce79674756bde0829ea12220d15b1f82bd68dea8214ae0430324ab55cfa224550b7afc7962686359bb267b971860977d1993f4de76789d79d41b397ece9d
+    SHA512 12de902576171233e382e0544cdfc8a651d6f640038569eb760ae1d3fe0fd43360952d1dcac209dd4224a9d6a669ce2ff41f9ba5279c35b8cf9622acd74d0857
     HEAD_REF master
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/base")
@@ -21,7 +21,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH CMAKE_SOURCE_PATH
     REPO steinbergmedia/vst3_cmake
     REF ${VERSION}
-    SHA512 4beac9436786f2d6fc73f67a0eac5f96fdfb515f79c4ce1ef6fe7f39cdfdd6d026d903d177bd58438dc5576f0d3124843c7eabb97737f91425105e28efa6e636
+    SHA512 1e81e4a191220bd2750148338cdeedc119e8c20a221b56613ffa4d2491a1a27bd400fb6d0bb2a265ce3d280a1bf85dd18c56a5abacfebc7c268db70112edf8a3
     HEAD_REF master
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
@@ -31,7 +31,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH DOC_SOURCE_PATH
     REPO steinbergmedia/vst3_doc
     REF ${VERSION}
-    SHA512 b6a99ddfa749abd547ac0a1ff37e00985b7df537b32534d6e9255733257b104bbd0643d69675bc1d9c69d248aba45694e559996cc7eac97f977faef0daf84352
+    SHA512 7afdc9827bbe5a3f7c7d9ae4eb8663aa39aba2de2b60db076a78b977864f63858c6d3e8f5b66a1d90e8162509f7218cdac175778d3866e6b1102d5d85f1c7d54
     HEAD_REF master
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/doc")
@@ -41,7 +41,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH PLUGININTERFACES_SOURCE_PATH
     REPO steinbergmedia/vst3_pluginterfaces
     REF ${VERSION}
-    SHA512 f0007b3b5c917c0bc1f0fa4320d1800ee99a0cc445654e5d12b0e094f2ec20cffc9c9051d89fca917d59ac48313524f65fb7647ffe32eae95e50c3adc811a63f
+    SHA512 fd2218c3e949133dd51b4834c6680131a520587c4449fa50f9b86cb3de3c3091e34ff15e21ba0e995f078b43890e7aa239a1beeb753eba1ce6822f9b44875b3c
     HEAD_REF master
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/pluginterfaces")
@@ -51,7 +51,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH PUBLIC_SDK_SOURCE_PATH
     REPO steinbergmedia/vst3_public_sdk
     REF ${VERSION}
-    SHA512 695f2cf55bbabd57f466d0c6181c2b90314745f91f90c5b27db8617b3fe98c7a5f8675909bf5294371e3e90d10b9145ed8432e5ed16e09faa5b123740f73ba3f
+    SHA512 d902a7b3f0d925e95d343df2378f4b701309d6460c970dfa064f0c2f24b0b4ca700ea15b3a4b63b3fc5f38cc5d6b2d55e5a3946fd10dd45960a86f948c868552
     HEAD_REF master
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/public.sdk")
@@ -69,7 +69,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DSMTG_ENABLE_VSTGUI_SUPPORT=OFF
         -DSMTG_CREATE_PLUGIN_LINK=OFF
         ${FEATURE_OPTIONS}
@@ -113,7 +113,7 @@ endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 
-if (VCPKG_TARGET_IS_APPLE AND NOT "audiounit-wrapper" IN_LIST FEATURES)
+if (VCPKG_TARGET_IS_OSX AND NOT "audiounit-wrapper" IN_LIST FEATURES)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/aaxwrapper/resource"
         "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/auv3wrapper/AUv3WrappermacOS"

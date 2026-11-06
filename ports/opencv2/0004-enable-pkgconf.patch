@@ -1,0 +1,13 @@
+--- a/cmake/OpenCVUtils.cmake
++++ b/cmake/OpenCVUtils.cmake
+@@ -1,9 +1,7 @@
+ include(CheckFunctionExists)
+ include(CheckIncludeFile)
+ 
+-if(UNIX)
+-  find_package(PkgConfig)
++  find_package(PkgConfig REQUIRED)
+-endif()
+ 
+ # Search packages for the host system instead of packages for target system
+ # in case of cross compilation these macros should be defined by the toolchain file

@@ -1,0 +1,13 @@
+diff --git a/libraries/libldap/utf-8-conv.c b/libraries/libldap/utf-8-conv.c
+index 98ed58d..4bd5459 100644
+--- a/libraries/libldap/utf-8-conv.c
++++ b/libraries/libldap/utf-8-conv.c
+@@ -328,7 +328,7 @@ ldap_x_wcs_to_utf8s ( char *utf8str, const wchar_t *wcstr, size_t count )
+ 	return (p - utf8str);
+ }
+ 
+-#ifdef ANDROID
++#if 0
+ int wctomb(char *s, wchar_t wc) { return wcrtomb(s,wc,NULL); }
+ int mbtowc(wchar_t *pwc, const char *s, size_t n) { return mbrtowc(pwc, s, n, NULL); }
+ #endif

@@ -1,7 +1,7 @@
 {
   "name": "ms-gdkx",
   "version": "1.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Stub port that ensures the Microsoft GDK with Xbox Extensions is installed.",
   "homepage": "https://aka.ms/gdkx",
   "documentation": "https://aka.ms/gamedevdocs",

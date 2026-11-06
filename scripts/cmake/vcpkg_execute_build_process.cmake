@@ -53,7 +53,7 @@ function(vcpkg_execute_build_process)
         ERROR_FILE "${log_err}"
         RESULT_VARIABLE error_code
     )
-    if (NOT error_code MATCHES "^[0-9]+$")
+    if (NOT error_code MATCHES "^-?[0-9]+$")
         list(JOIN arg_COMMAND " " command)
         message(FATAL_ERROR "Failed to execute command \"${command}\" in working directory \"${arg_WORKING_DIRECTORY}\": ${error_code}")
     endif()

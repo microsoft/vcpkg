@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dobiasd/frugally-deep
     REF "v${VERSION}"
-    SHA512 d36063ecfe5cfc2a96e0b0db85270e81b714d5ad8103ce9eca3ee3c465c5911a398664e4f97184b3f5f5a5d55b27ba27f4aaa7facf544d66a57406c798227d05
+    SHA512 74ad9e26c4e5937afdd2603f9d1389b5303250c6bac34aeabf13cfeaf6fd64fa2bf275a02f58b31ca449c2bf31c1db728dd96d0b085d8d6cc7d93719b1778530
     HEAD_REF master
 )
 

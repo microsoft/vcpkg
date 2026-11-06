@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zint/zint
-    REF 2.12.0
-    SHA512 398502efc1f07718e7c86a1e91f6e94c88b7f7c5e3c59fd507f3a5966488f4b0bb230ae9696515583aa536e2357c9a6295be7de6b4bc83daf5b4eb3be5e69b24
+    REF ${VERSION}
+    SHA512 819d1f91186106acf7dacada85b69e409358e3d39ad9b714297d00168c76d363f92c12c57ca8b11bc08fbe2c078ed4ac5c0cfc0e3e6391048acafa59b662c098
     HEAD_REF master
-    PATCHES
-        0004-windows-static-build.patch
-        0005-export-include-directories.patch
 )
 
 vcpkg_check_features(
@@ -29,7 +26,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zint)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES zint AUTO_CLEAN)

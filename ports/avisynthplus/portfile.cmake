@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
     REF "v${VERSION}"
-    SHA512 0e0daa83e3ab729fdc35a52c60c23c9142f1229187af893d0dbbd36f88eced36f63a3e8c767a3dc825edaa5395a49a5aad726f6b61de8f6b291557eec20de426
+    SHA512 620ad17a8107996dd518a2bb0ece8468325d2c04fdd40a60ef5f2cb2f4b07f752b77c875ca5c2b18532d9533c36dd784e599541d15b2a48d570882f63bd031cf
     HEAD_REF master
-    PATCHES
-        add-include-chrono.patch # https://github.com/AviSynth/AviSynthPlus/pull/414
 )
 
 vcpkg_download_distfile(GHC_ARCHIVE

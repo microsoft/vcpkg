@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF v${VERSION}
-    SHA512 a6493a96e911e4b67dd017125eedf6f3d794a8c931d897e3fdd050a8e65c20dcb84e9dfad207d1fcec6d2f019ad406954d1711827a74c1665fe24cc32f3b019f
+    REF "v${VERSION}"
+    SHA512 2ef439feaa2bb413902cce4e92fdcf874edacfec1972408c4a3fb30c41aee398957a603e8be763b3627c3cee65e82526fa2f12b384b5c1b0a79f5da9031b8320
     HEAD_REF master
     PATCHES
-        android-librt.diff
-        clang-sanitizer.diff
+      android.patch
 )
 
 # disable docs
@@ -16,12 +15,9 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "
 # do not enable LTO by default
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
 
-vcpkg_replace_string("${SOURCE_PATH}/tools/cmake/open62541Config.cmake.in" "find_dependency(PythonInterp REQUIRED)" "")
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        amalgamation UA_ENABLE_AMALGAMATION
         diagnostics UA_ENABLE_DIAGNOSTICS
         discovery UA_ENABLE_DISCOVERY
         historizing UA_ENABLE_HISTORIZING
@@ -49,6 +45,10 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
+if(VCPKG_TARGET_IS_ANDROID)
+  list(APPEND FEATURE_OPTIONS "-DUA_ARCHITECTURE=posix")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -66,8 +66,21 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/open62541")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/open62541/tools")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/open62541/tools"
+)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    COMMENT [[
+PCG and base64 reference Apache-2.0 and BSD terms without including the full texts.
+libc_time only names musl's MIT license; parse_num includes MIT terms but no copyright holder.
+The OPC Foundation schema is installed and also generates the library's standard data types.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE-CC0"
+        "${SOURCE_PATH}/deps/README.md"
+        "${SOURCE_PATH}/tools/schema/Opc.Ua.Types.bsd"
+)

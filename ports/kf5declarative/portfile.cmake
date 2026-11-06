@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdeclarative
-    REF v5.98.0
-    SHA512 327eb517fc5fa47dcd5e1b70fff0a704528789e3cb6652db5269a8c41ba3ffeedc38b71f1e00403a5e0132029497a6dae90f4230d13ffdfeb0469b5ff91e2a71
+    REF "v${VERSION}"
+    SHA512 a78a59ceec2c89178b15a1892a54a2cb04ffc02df7c60ccf2da142492e4d37f6e4676b06d882c91532082c7647d05af10dd032792b6cc1e5f044eb8eba80c72f
     HEAD_REF master
 )
 
@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Declarative CONFIG_PATH lib/cmake/KF5Declarative)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Declarative)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES kpackagelauncherqml AUTO_CLEAN)
@@ -42,4 +42,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

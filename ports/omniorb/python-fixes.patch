@@ -2,14 +2,19 @@ diff --git a/mk/python.mk b/mk/python.mk
 index 1380018..fb321a5 100644
 --- a/mk/python.mk
 +++ b/mk/python.mk
-@@ -4,7 +4,7 @@
+@@ -3,10 +3,10 @@
+ #############################################################################
  
  PYVERSION := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(".".join(sys.version.split(".")[:2]))')
- PYPREFIX  := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(sys.exec_prefix.replace("\\","/"))')
+-PYPREFIX  := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(sys.exec_prefix.replace("\\","/"))')
 -PYINCDIR  := $(shell $(PYTHON) -c 'import sys, distutils.sysconfig; sys.stdout.write(distutils.sysconfig.get_python_inc().replace("\\","/"))')
++PYPREFIX  := $(shell $(PYTHON) -c 'import sys; sys.stdout.write(sys.exec_prefix.replace("\\","/").replace(" ","\\ "))')
 +PYINCDIR  := $(includedir)/python$(PYVERSION)
  
- PythonSHAREDLIB_SUFFIX = $(shell $(PYTHON) -c 'import sys, distutils.sysconfig; sys.stdout.write((distutils.sysconfig.get_config_var("SO") or ".so").lstrip("."))')
+-PythonSHAREDLIB_SUFFIX = $(shell $(PYTHON) -c 'import sys, distutils.sysconfig; sys.stdout.write((distutils.sysconfig.get_config_var("SO") or ".so").lstrip("."))')
++PythonSHAREDLIB_SUFFIX = $(shell $(PYTHON) -c 'import sys, sysconfig; sys.stdout.write((sysconfig.get_config_var("SO") or ".so").lstrip("."))')
+ 
+ PY_MODULE_SUFFIX := $(shell $(PYTHON) -c 'import sys; sys.stdout.write((sys.hexversion < 0x3000000 and not hasattr(sys, "pypy_version_info")) and "module" or "")')
  
 diff --git a/src/tool/omniidl/cxx/idlpython.cc b/src/tool/omniidl/cxx/idlpython.cc
 index 639515105..27ad3ee0e 100644
@@ -25,10 +30,10 @@ index 639515105..27ad3ee0e 100644
  
  #include <idlsysdep.h>
 diff --git a/src/tool/omniidl/cxx/dir.mk b/src/tool/omniidl/cxx/dir.mk
-index 84f10ac03..3b5a60b87 100644
+index 84f10ac..cd222d2 100644
 --- a/src/tool/omniidl/cxx/dir.mk
 +++ b/src/tool/omniidl/cxx/dir.mk
-@@ -190,13 +190,13 @@ ifdef Win32Platform
+@@ -190,14 +190,19 @@ ifdef Win32Platform
  
  DIR_CPPFLAGS += -DMSDOS -DOMNIIDL_EXECUTABLE
  
@@ -40,7 +45,13 @@ index 84f10ac03..3b5a60b87 100644
  CXXLINKOPTIONS += $(patsubst %,-L%,$(PYLIBDIR))
  else
 -PYLIB     := python$(subst .,,$(PYVERSION)).lib
-+PYLIB     = python$(subst .,,$(PYVERSION)).lib zlib.lib Advapi32.lib
++PYLIB     := python$(subst .,,$(PYVERSION)).lib advapi32.lib
  CXXLINKOPTIONS += $(patsubst %,-libpath:%,$(PYLIBDIR))
++ifdef BuildDebugBinary
++# Match the stack reserve of CPython's Windows Debug executable.
++# https://github.com/python/cpython/blob/823f0323ee6ec1402088b73bce1a38473cac36dc/PCbuild/python.vcxproj#L98-L100
++CXXLINKOPTIONS += -STACK:12000000
++endif
  endif
  
+ omniidl = $(patsubst %,$(BinPattern),omniidl)

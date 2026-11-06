@@ -1,0 +1,24 @@
+diff --git a/gz-msgs-extras.cmake.in b/gz-msgs-extras.cmake.in
+index 7c322b1..78cf807 100644
+--- a/gz-msgs-extras.cmake.in
++++ b/gz-msgs-extras.cmake.in
+@@ -33,7 +33,7 @@ set(FACTORY_SCRIPT_NAME "@PROJECT_NAME@_generate_factory.py")
+ set(@PROJECT_NAME@_PROTO_PATH ${@PROJECT_NAME@_INSTALL_PATH}/share/protos)
+ # Provide support to override generator executable used during cross-compilation
+ if(NOT DEFINED @PROJECT_NAME@_PROTO_GENERATOR_PLUGIN)
+-  set(@PROJECT_NAME@_PROTO_GENERATOR_PLUGIN ${@PROJECT_NAME@_INSTALL_PATH}/bin/${PROTOC_NAME})
++  set(@PROJECT_NAME@_PROTO_GENERATOR_PLUGIN ${VCPKG_IMPORT_PREFIX}/tools/@PROJECT_NAME@/${PROTOC_NAME})
+ endif()
+ if(NOT DEFINED @PROJECT_NAME@_PROTOC_EXECUTABLE)
+   set(@PROJECT_NAME@_PROTOC_EXECUTABLE protobuf::protoc)
+@@ -41,8 +41,8 @@ endif()
+ if(NOT DEFINED @PROJECT_NAME@_PYTHON_INTERPRETER)
+   set(@PROJECT_NAME@_PYTHON_INTERPRETER Python3::Interpreter)
+ endif()
+-set(@PROJECT_NAME@_PROTO_GENERATOR_SCRIPT ${@PROJECT_NAME@_INSTALL_PATH}/bin/${PROTO_SCRIPT_NAME})
+-set(@PROJECT_NAME@_FACTORY_GENERATOR_SCRIPT ${@PROJECT_NAME@_INSTALL_PATH}/bin/${FACTORY_SCRIPT_NAME})
++set(@PROJECT_NAME@_PROTO_GENERATOR_SCRIPT ${VCPKG_IMPORT_PREFIX}/tools/@PROJECT_NAME@/${PROTO_SCRIPT_NAME})
++set(@PROJECT_NAME@_FACTORY_GENERATOR_SCRIPT ${VCPKG_IMPORT_PREFIX}/tools/@PROJECT_NAME@/${FACTORY_SCRIPT_NAME})
+ 
+ ##################################################
+ # A function to generate a target message library from a group of protobuf files .

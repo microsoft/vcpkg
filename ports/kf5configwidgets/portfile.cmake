@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfigwidgets
-    REF v5.98.0
-    SHA512 fbc113d41b13c190a07915a14443d50b67182e52a52ce0258434af548ba9a2fd151ec480ea0aa1a400babf47e156f33ccc12009f3e78a3a1ca04191180ed77dd
+    REF "v${VERSION}"
+    SHA512 2fcaeb8bd1bdc6ca3cfd4a33825edb8aa9ee13fa9fab9c1ce4c010788cf974390bf5f3fa839929a7d4d64e31d43bf26445621874f7747e08fcf9e4559579c971
     HEAD_REF master
 )
 
@@ -26,7 +26,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5ConfigWidgets CONFIG_PATH lib/cmake/KF5ConfigWidgets)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5ConfigWidgets)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

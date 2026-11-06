@@ -1,7 +1,7 @@
 {
   "name": "libgo",
   "version": "3.1",
-  "port-version": 5,
+  "port-version": 6,
   "description": "The best stackful coroutine by c++11.",
   "homepage": "https://github.com/yyzybb537/libgo",
   "license": "MIT",

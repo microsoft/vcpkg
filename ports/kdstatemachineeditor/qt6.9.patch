@@ -1,0 +1,22 @@
+diff --git a/src/view/quick/qopengl2pexvertexarray_p.h b/src/view/quick/qopengl2pexvertexarray_p.h
+index f80975ed..65058333 100644
+--- a/src/view/quick/qopengl2pexvertexarray_p.h
++++ b/src/view/quick/qopengl2pexvertexarray_p.h
+@@ -80,6 +80,8 @@ class QOpenGLPoint
+     operator QPointF() const {return QPointF(x,y);}
+ };
+ 
++Q_DECLARE_TYPEINFO(QOpenGLPoint, Q_PRIMITIVE_TYPE);
++
+ struct QOpenGLRect
+ {
+     QOpenGLRect(const QRectF &r)
+@@ -96,6 +98,8 @@ struct QOpenGLRect
+     operator QRectF() const {return QRectF(left, top, right-left, bottom-top);}
+ };
+ 
++Q_DECLARE_TYPEINFO(QOpenGLRect, Q_PRIMITIVE_TYPE);
++
+ class QOpenGL2PEXVertexArray
+ {
+ public:

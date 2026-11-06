@@ -4,23 +4,56 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/fbgemm
-    REF 64833b5185893cbc71ea80c9b01443f762b5cba4
-    SHA512 f256177f22d3a4abd9c861bafd96e12df33e7604416c26ac06c9e480fd5f1e0b4149132b3216790704ebf73d47a7277235f058d58f0ecafa8de23360022f202d
+    REF "v${VERSION}"
+    SHA512 c10c6839bff2a37374646559310e39f0c68fb5a5e72211f85dbd1984de2aad7c38fb161b1f56bc7c549080fd2140bf682e5acbf7c9f78c7c073dd8e66d5f5a92
     PATCHES
         fix-cmakelists.patch
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(FBGEMM_LIB_TYPE STATIC)
+else()
+    set(FBGEMM_LIB_TYPE SHARED)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DUSE_SANITIZER=OFF
         -DFBGEMM_BUILD_TESTS=OFF
         -DFBGEMM_BUILD_BENCHMARKS=OFF
-        -DPYTHON_EXECUTABLE=${PYTHON3} # inject the path instead of find_package(Python)
+        -DFBGEMM_LIBRARY_TYPE=${FBGEMM_LIB_TYPE}
+        -DPython_EXECUTABLE=${PYTHON3}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary CONFIG_PATH share/cmake/${PORT})
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary CONFIG_PATH share/cmake/fbgemm)
+
+file(RENAME
+    "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryConfig.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryTargets.cmake")
+
+# OpenMP is not available with every compiler, only require it when the targets reference it.
+file(READ "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryTargets.cmake" FBGEMM_TARGETS)
+if(FBGEMM_TARGETS MATCHES "OpenMP::OpenMP_CXX")
+    set(FBGEMM_OPENMP_DEPENDENCY "find_dependency(OpenMP)\n")
+endif()
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/fbgemmLibrary/fbgemmLibraryConfig.cmake"
+    "include(CMakeFindDependencyMacro)\n"
+    "${FBGEMM_OPENMP_DEPENDENCY}"
+    "find_dependency(asmjit CONFIG)\n"
+    "find_dependency(cpuinfo CONFIG)\n"
+    "include(\"\${CMAKE_CURRENT_LIST_DIR}/fbgemmLibraryTargets.cmake\")\n")
+
+# static consumers must not see the dllimport declarations
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/fbgemm/FbgemmBuild.h"
+        "#pragma once"
+        "#pragma once\n\n#define FBGEMM_STATIC"
+    )
+endif()
 
 # this internal header is required by pytorch
 file(INSTALL     "${SOURCE_PATH}/src/RefImplementations.h"

@@ -1,0 +1,46 @@
+{
+  "name": "sqlgen",
+  "version": "0.6.0",
+  "port-version": 1,
+  "description": "sqlgen is an ORM and SQL query generator for C++-20, similar to Python's SQLAlchemy/SQLModel or Rust's Diesel.",
+  "homepage": "https://github.com/munich-data-engineering/sqlgen/",
+  "documentation": "https://munich-data-engineering.github.io/sqlgen/",
+  "license": "MIT",
+  "dependencies": [
+    "reflectcpp",
+    {
+      "name": "sqlite3",
+      "features": [
+        "math"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "duckdb": {
+      "description": "Enable DuckDB support",
+      "dependencies": [
+        "duckdb"
+      ]
+    },
+    "mariadb": {
+      "description": "Enable MySQL/MariaDB support",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "postgres": {
+      "description": "Enable PostgreSQL support",
+      "dependencies": [
+        "libpq"
+      ]
+    }
+  }
+}

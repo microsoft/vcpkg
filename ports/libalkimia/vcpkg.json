@@ -1,6 +1,7 @@
 {
   "name": "libalkimia",
   "version": "8.1.72",
+  "port-version": 1,
   "description": "Common functionality for finance applications.",
   "homepage": "https://community.kde.org/Alkimia/libalkimia",
   "license": "LGPL-2.1-or-later",
@@ -24,7 +25,14 @@
     "kf5newstuff",
     "kf5textwidgets",
     "kf5xmlgui",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    {
+      "name": "qt5-declarative",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",

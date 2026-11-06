@@ -1,10 +1,10 @@
 {
   "name": "opencv",
-  "version": "4.10.0",
-  "port-version": 1,
-  "description": "computer vision library",
-  "homepage": "https://github.com/opencv/opencv",
-  "license": "Apache-2.0",
+  "version": "4.14.0",
+  "description": "Open Source Computer Vision Library",
+  "homepage": "https://opencv.org/",
+  "documentation": "https://docs.opencv.org/4.14.0/",
+  "license": null,
   "dependencies": [
     {
       "name": "opencv4",
@@ -20,6 +20,18 @@
           "default-features": false,
           "features": [
             "ade"
+          ]
+        }
+      ]
+    },
+    "aravis": {
+      "description": "aravis",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "aravis"
           ]
         }
       ]
@@ -80,6 +92,18 @@
           "default-features": false,
           "features": [
             "dc1394"
+          ]
+        }
+      ]
+    },
+    "directml": {
+      "description": "Build with DirectML support",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "directml"
           ]
         }
       ]
@@ -228,6 +252,18 @@
         }
       ]
     },
+    "hdf": {
+      "description": "Enable Hierarchical Data Format (hdf) I/O",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "hdf"
+          ]
+        }
+      ]
+    },
     "highgui": {
       "description": "highgui module",
       "dependencies": [
@@ -264,18 +300,6 @@
         }
       ]
     },
-    "jasper": {
-      "description": "JPEG 2000 support for opencv (deprecated)",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "jasper"
-          ]
-        }
-      ]
-    },
     "jpeg": {
       "description": "JPEG support for opencv",
       "dependencies": [
@@ -288,14 +312,14 @@
         }
       ]
     },
-    "lapack": {
-      "description": "LAPACK support for opencv",
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
       "dependencies": [
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
-            "lapack"
+            "jpegxl"
           ]
         }
       ]
@@ -500,6 +524,18 @@
           "default-features": false,
           "features": [
             "tbb"
+          ]
+        }
+      ]
+    },
+    "text": {
+      "description": "Enable Scene Text Detection and Recognition",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "text"
           ]
         }
       ]

@@ -1,0 +1,20 @@
+kdgpu provides CMake targets:
+
+ find_package(KDGpu REQUIRED)
+ target_link_libraries(main PRIVATE KDGpu::KDGpu)
+
+ # KDGpuKDGui (optional, feature "kdgpukdgui")
+ find_package(KDGpuKDGui REQUIRED)
+ target_link_libraries(main PRIVATE KDGpu::KDGpuKDGui)
+
+ # KDGpuUtils (optional, feature "kdgpuutils")
+ find_package(KDGpuUtils REQUIRED)
+ target_link_libraries(main PRIVATE KDGpu::KDGpuUtils)
+
+ # KDXr (optional, feature "openxr")
+ find_package(KDXr REQUIRED)
+ target_link_libraries(main PRIVATE KDXr::KDXr)
+
+ # KDGpuExample (optional, feature "kdgpuexample")
+ find_package(KDGpuExample REQUIRED)
+ target_link_libraries(main PRIVATE KDGpu::KDGpuExample)

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
     REF "DCMTK-${VERSION}"
-    SHA512 fcb222182ea653304a1c49db31899a8b08d881916f90d3d35bfab2896aa11473232ac0c0f2195e4d478a6188d3b2c5f54d5172f29c42688c5d05f9bf738ca775
+    SHA512 6093132eb137f134fe3991c75a0a8c1a4716852e3080d9d5878cb2fc8d01a6a95a0d8af84fe4d47298da0e2a8cf595113b0e9aad95ee043c9a15698417035a91
     HEAD_REF master
     PATCHES
         dcmtk.patch
@@ -11,10 +11,13 @@ vcpkg_from_github(
         disable-test-setup.diff
         pkgconfig-lib-order.diff
         msvc.diff
+        emscripten-ofwhere.diff
 )
+
 file(REMOVE
     "${SOURCE_PATH}/CMake/FindICONV.cmake"
     "${SOURCE_PATH}/CMake/FindJPEG.cmake"
+    "${SOURCE_PATH}/CMake/FindOpenJPEG.cmake"
 )
 
 # Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
@@ -39,13 +42,14 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "iconv"   DCMTK_WITH_ICONV
-        "openssl" DCMTK_WITH_OPENSSL
-        "png"     DCMTK_WITH_PNG
-        "tiff"    DCMTK_WITH_TIFF
-        "xml2"    DCMTK_WITH_XML
-        "zlib"    DCMTK_WITH_ZLIB
-        "tools"   BUILD_APPS
+        "iconv"     DCMTK_WITH_ICONV
+        "openssl"   DCMTK_WITH_OPENSSL
+        "png"       DCMTK_WITH_PNG
+        "tiff"      DCMTK_WITH_TIFF
+        "xml2"      DCMTK_WITH_XML
+        "zlib"      DCMTK_WITH_ZLIB
+        "openjpeg"  DCMTK_WITH_OPENJPEG
+        "tools"     BUILD_APPS
 )
 
 if("external-dict" IN_LIST FEATURES)
@@ -72,7 +76,6 @@ vcpkg_cmake_configure(
         -DDCMTK_USE_FIND_PACKAGE=ON
         -DDCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS=ON
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
-        -DDCMTK_WITH_OPENJPEG=OFF
         -DDCMTK_WITH_DOXYGEN=OFF
         -DDCMTK_WITH_SNDFILE=OFF
         -DDCMTK_WITH_WRAP=OFF
@@ -87,8 +90,8 @@ vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
     set(_tools
-        dcm2cda
         cda2dcm
+        dcm2cda
         dcm2img
         dcm2json
         dcm2pdf
@@ -98,11 +101,13 @@ if ("tools" IN_LIST FEATURES)
         dcmcjpls
         dcmconv
         dcmcrle
+        dcmdecap
         dcmdjpeg
         dcmdjpls
         dcmdrle
         dcmdspfn
         dcmdump
+        dcmencap
         dcmftest
         dcmgpdir
         dcmicmp
@@ -128,6 +133,7 @@ if ("tools" IN_LIST FEATURES)
         dcmscale
         dcmsend
         dcmsign
+        dcmtk
         dcod2lum
         dconvlum
         drtdump
@@ -139,6 +145,7 @@ if ("tools" IN_LIST FEATURES)
         findscu
         getscu
         img2dcm
+        json2dcm
         mkcsmapper
         mkesdb
         movescu
@@ -156,6 +163,10 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
 
 # no absolute paths
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h"

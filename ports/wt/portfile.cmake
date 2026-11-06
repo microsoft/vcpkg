@@ -2,14 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
     REF "${VERSION}"
-    SHA512 e512c88616878b8fa3b992aa9d2f232d994ee6108607af4e5d511a2fecd7ae35cf33a63435a0ff356df715b386f2061731dcfb28c529bc43c901f17787686f34
+    SHA512 1200a6623cd37df2db46220b5b36e7a760f5675cb6a7e8c79fea7cad3a58f57bbfe761311bb8f67928107b477b4cd618ba917517013bf219d702302843d3cc09
     HEAD_REF master
     PATCHES
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
+        0007-fix-haru.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS
@@ -62,6 +66,7 @@ vcpkg_cmake_configure(
         -DENABLE_FIREBIRD=OFF
         -DENABLE_QT4=OFF
         -DENABLE_QT5=OFF
+        -DENABLE_QT6=OFF
         -DENABLE_LIBWTTEST=ON
         -DENABLE_OPENGL=ON
 
@@ -74,7 +79,7 @@ vcpkg_cmake_configure(
         # see https://redmine.webtoolkit.eu/issues/9646
         -DWTHTTP_CONFIGURATION=
         -DCONFIGURATION=
-        
+
         "-DUSERLIB_PREFIX=${CURRENT_INSTALLED_DIR}"
     MAYBE_UNUSED_VARIABLES
         USE_SYSTEM_SQLITE3
@@ -94,5 +99,10 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" W_CONFIG_H)
 string(REGEX REPLACE "([\r\n])#define RUNDIR[^\r\n]+" "\\1// RUNDIR intentionally unset by vcpkg" W_CONFIG_H "${W_CONFIG_H}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "${W_CONFIG_H}")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/src/thirdparty/qrcodegen/license.txt"
+        "${SOURCE_PATH}/src/thirdparty/rapidxml/license.txt"
+)
 vcpkg_copy_pdbs()

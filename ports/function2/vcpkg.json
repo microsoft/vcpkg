@@ -1,6 +1,6 @@
 {
   "name": "function2",
-  "version-semver": "4.2.4",
+  "version-semver": "4.2.5",
   "description": "Improved drop-in replacement to std::function",
   "homepage": "https://github.com/Naios/function2",
   "license": "BSL-1.0",

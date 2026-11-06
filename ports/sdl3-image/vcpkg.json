@@ -1,11 +1,10 @@
 {
   "name": "sdl3-image",
-  "version": "3.1.0",
-  "description": "SDL_image is an image file loading library. It loads images as SDL surfaces and textures, and supports the following formats: BMP, GIF, JPEG, LBM, PCX, PNG, PNM, TGA, TIFF, WEBP, XCF, XPM, XV",
+  "version": "3.4.8",
+  "description": "SDL_image is an image file loading library. It loads images as SDL surfaces and textures, and supports the following formats: AVIF, BMP, GIF, JPEG, JPEG XL, LBM, PCX, PNG, PNM, TGA, TIFF, WEBP, XCF, XPM, XV",
   "homepage": "https://github.com/libsdl-org/SDL_image",
-  "license": "Zlib",
+  "license": "Zlib AND MIT",
   "dependencies": [
-    "libpng",
     {
       "name": "sdl3",
       "default-features": false
@@ -20,16 +19,34 @@
     }
   ],
   "features": {
-    "libjpeg-turbo": {
+    "avif": {
+      "description": "Support for AVIF image format",
+      "dependencies": [
+        {
+          "name": "libavif",
+          "features": [
+            "aom",
+            "dav1d"
+          ]
+        }
+      ]
+    },
+    "jpeg": {
       "description": "Support for JPEG image format",
       "dependencies": [
         "libjpeg-turbo"
       ]
     },
-    "libwebp": {
-      "description": "Support for WEBP image format.",
+    "jxl": {
+      "description": "Support for JPEG XL image format",
       "dependencies": [
-        "libwebp"
+        "libjxl"
+      ]
+    },
+    "png": {
+      "description": "Support for PNG image format",
+      "dependencies": [
+        "libpng"
       ]
     },
     "tiff": {
@@ -39,6 +56,12 @@
           "name": "tiff",
           "default-features": false
         }
+      ]
+    },
+    "webp": {
+      "description": "Support for WEBP image format.",
+      "dependencies": [
+        "libwebp"
       ]
     }
   }

@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b79873b0..2e787bbb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -50,7 +50,7 @@ if(ENABLE_GNUTLS)
+   find_package(GnuTLS)
+ endif()
+ if(ENABLE_MBEDTLS)
+-  find_package(MbedTLS 1.0)
++  find_package(MbedTLS CONFIG)
+ endif()
+ if(ENABLE_OPENSSL)
+   find_package(OpenSSL)
+@@ -477,8 +477,6 @@ if(LIBZIP_DO_INSTALL)
+   # Install Find* modules, they are required by libzip-config.cmake to resolve dependencies
+   install(FILES
+     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindNettle.cmake
+-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Findzstd.cmake
+-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindMbedTLS.cmake
+     DESTINATION
+     ${CMAKE_INSTALL_LIBDIR}/cmake/libzip/modules
+   )
+diff --git a/libzip-config.cmake.in b/libzip-config.cmake.in
+index d3c73cc4..aa150916 100644
+--- a/libzip-config.cmake.in
++++ b/libzip-config.cmake.in
+@@ -31,7 +31,7 @@ if (NOT IS_SHARED)
+     find_dependency(GnuTLS)
+   endif()
+   if(ENABLE_MBEDTLS)
+-    find_dependency(MbedTLS 1.0)
++    find_dependency(MbedTLS CONFIG)
+   endif()
+   if(ENABLE_OPENSSL)
+     find_dependency(OpenSSL)

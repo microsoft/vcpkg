@@ -1,6 +1,6 @@
 {
   "name": "secp256k1",
-  "version-date": "2022-07-11",
+  "version": "0.7.1",
   "port-version": 1,
   "description": "Optimized C library for EC operations on curve",
   "homepage": "https://github.com/bitcoin-core/secp256k1",
@@ -16,11 +16,8 @@
     }
   ],
   "features": {
-    "examples": {
-      "description": "Build examples"
-    },
-    "tools": {
-      "description": "Build tools"
+    "recovery": {
+      "description": "Enable the ECDSA public key recovery module (secp256k1_ecdsa_sign_recoverable / secp256k1_ecdsa_recover)"
     }
   }
 }

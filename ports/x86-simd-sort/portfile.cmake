@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO intel/x86-simd-sort
+    REPO numpy/x86-simd-sort
     REF "v${VERSION}"
-    SHA512 8e7a1929b7234399d8ac30cd296b69efdfc0d9d03a91507f3b4e06f486b6b715199b35e0495f330c21b70165bcab48842cd7c0a887df4e6508b6151ad1dc9c2a
+    SHA512 de217d35a98da3b269454eaa8a2880b9aa36e4906670d0434799a45a8dcbe6d3fdf56cb16b683be510e34e0636b035e9de88a7b6e68b41e1eecceb5ecac4fe4a
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/src/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/src/" DESTINATION "${CURRENT_PACKAGES_DIR}/include" PATTERN "README.md" EXCLUDE)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

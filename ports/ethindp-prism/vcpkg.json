@@ -1,0 +1,49 @@
+{
+  "name": "ethindp-prism",
+  "version": "0.18.3",
+  "description": "The Platform-agnostic Reader Interface for Speech and Messages",
+  "license": "MPL-2.0 AND BSD-2-Clause AND Apache-2.0 AND Unlicense AND MIT AND Zlib",
+  "supports": "!uwp",
+  "dependencies": [
+    "concurrentqueue",
+    "fmt",
+    {
+      "name": "glibmm",
+      "platform": "linux | freebsd | openbsd"
+    },
+    {
+      "name": "highway",
+      "features": [
+        "contrib"
+      ]
+    },
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    "simdutf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "speech-dispatcher",
+      "platform": "linux | freebsd | openbsd"
+    }
+  ],
+  "features": {
+    "speech-dispatcher": {
+      "description": "Enable the speech-dispatcher backend (requires libspeechd to be installed)",
+      "supports": "(linux | freebsd | openbsd) & !android & !emscripten",
+      "dependencies": [
+        "libspeechd"
+      ]
+    }
+  }
+}

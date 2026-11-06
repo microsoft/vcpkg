@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v1.18.2
     SHA512 53accb4f92077ff1c52102bece270e77c497e599c392aa0bf4dbc173b6789e7e4f1012d8b5f257c438764197cb7bac8ba409a9d4e3a70e69bec5863b9495329e
     HEAD_REF develop
+    PATCHES
+        fix-windows-arm.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -84,12 +86,11 @@ else()
         COMMAND make -j${VCPKG_CONCURRENCY} -f ${MAKE_FILE} PREFIX=${CURRENT_PACKAGES_DIR} install
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
-    
 endif()
 
 #Copy license
 file(
-    INSTALL 
+    INSTALL
     ${SOURCE_PATH}/LICENSE
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright
 )

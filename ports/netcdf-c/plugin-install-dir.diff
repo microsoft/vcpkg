@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bbb647c..34927c0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -667,6 +667,9 @@ endif()
+ if (DEFINED NETCDF_WITH_PLUGIN_DIR) # Table row 3
+     set(DEFAULT_PLUGIN_INSTALL_DIR "${NETCDF_WITH_PLUGIN_DIR}")
+     set(DEFAULT_PLUGIN_SEARCH_PATH "${NETCDF_WITH_PLUGIN_DIR}${PLATFORMSEP}${PLATFORMDEFAULT}")
++elseif (DEFINED CMAKE_INSTALL_PREFIX) # vcpkg: install, don't change search path
++    set(DEFAULT_PLUGIN_INSTALL_DIR "plugins/netcdf-c")
++    set(DEFAULT_PLUGIN_SEARCH_PATH "${PLATFORMDEFAULT}")
+ elseif (DEFINED CMAKE_INSTALL_PREFIX) # Table row 2
+     set(DEFAULT_PLUGIN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/hdf5/lib/plugin")
+     set(DEFAULT_PLUGIN_SEARCH_PATH "${DEFAULT_PLUGIN_INSTALL_DIR}${PLATFORMSEP}${PLATFORMDEFAULT}")

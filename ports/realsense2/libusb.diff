@@ -1,0 +1,15 @@
+diff --git a/CMake/libusb_config.cmake b/CMake/libusb_config.cmake
+index ca221ca..b62369e 100644
+--- a/CMake/libusb_config.cmake
++++ b/CMake/libusb_config.cmake
+@@ -1,6 +1,8 @@
+ if (NOT TARGET usb)
+-    find_library(LIBUSB_LIB usb-1.0)
+-    find_path(LIBUSB_INC libusb.h HINTS PATH_SUFFIXES libusb-1.0)
++    find_package(PkgConfig)
++    pkg_check_modules(PC_LIBUSB libusb-1.0 REQUIRED)
++    set(LIBUSB_LIB "${PC_LIBUSB_LINK_LIBRARIES}")
++    set(LIBUSB_INC "${PC_LIBUSB_INCLUDE_DIRS}")
+     include(FindPackageHandleStandardArgs)
+     find_package_handle_standard_args(usb "libusb not found; using internal version" LIBUSB_LIB LIBUSB_INC)
+     if (USB_FOUND AND NOT USE_EXTERNAL_USB)

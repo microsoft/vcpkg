@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8581813..52b147f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,7 +37,7 @@ if (APPLE)
+ endif()
+ 
+ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O3 -Wall -Werror -Wno-return-stack-address")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O3 -Wall -Wno-return-stack-address")
+ endif()
+ 
+ # Check for cryptopp (static)

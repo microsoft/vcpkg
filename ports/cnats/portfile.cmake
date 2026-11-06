@@ -2,33 +2,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nats-io/nats.c
     REF "v${VERSION}"
-    SHA512 4d6ddb23733ca4dd7a4a54ea72d83f5bfce5e5634b3ea91a99610886e5e5ad99a119af8dba87665cb1d6cc1af25bfca41e533d9653e862ce281bd38ed588b94b
+    SHA512 8c482b6daed5e64dc6194b4de77ae5267ff1a02309f4f15d57ea56c937643a71de08dd6646243822f0a3c507b30adf7a1a03c0891c74c3090c9b06e5364d358b
     HEAD_REF main
     PATCHES
         fix-sodium-dep.patch
         fix_install_path.patch
-        fix_test_backtrace_warning.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        "sodium"     NATS_BUILD_USE_SODIUM
         "streaming"  NATS_BUILD_STREAMING
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     list(APPEND OPTIONS -DNATS_BUILD_LIB_SHARED=ON)
     list(APPEND OPTIONS -DNATS_BUILD_LIB_STATIC=OFF)
-    list(APPEND OPTIONS -DBUILD_TESTING=OFF)
-    list(APPEND OPTIONS -DNATS_BUILD_USE_SODIUM=ON)
 else()
     list(APPEND OPTIONS -DNATS_BUILD_LIB_SHARED=OFF)
     list(APPEND OPTIONS -DNATS_BUILD_LIB_STATIC=ON)
-    list(APPEND OPTIONS -DBUILD_TESTING=ON)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND OPTIONS -DNATS_BUILD_USE_SODIUM=OFF)
-    else()
-        list(APPEND OPTIONS -DNATS_BUILD_USE_SODIUM=ON)
-    endif()
 endif()
 
 vcpkg_cmake_configure(
@@ -36,7 +28,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${OPTIONS}
-        -DNATS_BUILD_TLS_USE_OPENSSL_1_1_API=ON
+        -DBUILD_TESTING=OFF
         -DNATS_BUILD_EXAMPLES=OFF
 )
 

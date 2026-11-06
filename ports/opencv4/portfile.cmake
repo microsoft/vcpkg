@@ -1,47 +1,55 @@
 set(USE_QT_VERSION "6")
 
-vcpkg_download_distfile(PATCH_ADD_INCLUDE_CHRONO
-    URLS https://github.com/opencv/opencv/commit/96d6395a6dccb9554bc2f83105f87ebd071d37fa.patch?full_index=1
-    SHA512 d385b5386a19e4a0b3e78d5423baac4d132d25581d9336f084db819b9f68a6bc1ac23968a901891ac5023ab2fe4fa4513d7c70e5170e72cb57710d51b50e67a1
-    FILENAME opencv4-4.11.0-include-chrono.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 b4f7248f89f1cd146dbbae7860a17131cd29bd3cb81db1e678abfcfbf2d8fa4a7633bfd0edbf50afae7b838c8700e8c0d0bb05828139d5cb5662df6bbf3eb92c
+    SHA512 4f1e606cd24f74b49227a32bd1558882d3b01dbbadca8b49a0e07dd9fc6291b4c584d7f2c3951409758c3128dc53d38d84c4c7642c7a6f6a054a5eb9d5c6f91e
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0004-fix-eigen.patch
-      0005-fix-policy-CMP0057.patch
-      0006-fix-uwp.patch
+      0004-opencl.diff
+      0005-vulkan.diff
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-remove-python2.patch
-      0012-fix-zlib.patch
-      0014-fix-cmake-in-list.patch
+      0012-miss-openexr.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0019-opencl-kernel.patch
-      0020-miss-openexr.patch
-      "${PATCH_ADD_INCLUDE_CHRONO}"
+      0021-fix-qt-gen-def.patch
+      0022-android-use-vcpkg-cpu-features.patch
+      0025-fix-cuda-host-std-flag-forwarding.patch
+      0026-cuda-msvc-preprocessor.patch
+      0028-ffmpeg9-support.patch
+      0029-dlpack-find-package.patch
+      0030-kleidicv-install-license.patch
 )
+
 # Disallow accidental build of vendored copies
-file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
-file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
+file(GLOB third_party "${SOURCE_PATH}/3rdparty/*")
+list(FILTER third_party EXCLUDE REGEX "/ippicv\$")
+file(REMOVE_RECURSE ${third_party})
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
+  if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # cf. https://github.com/opencv/opencv/issues/25052, https://github.com/opencv/opencv/pull/27897
+    list(APPEND ADDITIONAL_BUILD_FLAGS -DHAVE_CPU_NEON_FP16_SUPPORT=0 -DHAVE_CPU_NEON_DOTPROD_SUPPORT=0)
+  endif()
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(TARGET_IS_ARM 1)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   set(TARGET_IS_X86_64 1)
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # wasm32 is not x86: leaving every TARGET_IS_* unset keeps OpenCV off the x86 SSE baseline,
+  # whose runtime guard aborts on wasm. SIMD comes from the wasm HAL configured below.
+  set(TARGET_IS_WASM 1)
 else()
   set(TARGET_IS_X86 1)
 endif()
@@ -55,10 +63,16 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
 
+set(WITH_CPUFEATURES OFF)
+if (VCPKG_TARGET_IS_ANDROID)
+  set(WITH_CPUFEATURES ON)
+endif()
+
 # Cannot use vcpkg_check_features() for "qt" because it requires the QT version number passed, not just a boolean
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  FEATURES
  "ade"        WITH_ADE
+ "aravis"     WITH_ARAVIS
  "calib3d"    BUILD_opencv_calib3d
  "carotene"   WITH_CAROTENE
  "contrib"    WITH_CONTRIB
@@ -67,13 +81,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"       ENABLE_CUDA_FIRST_CLASS_LANGUAGE
  "cudnn"      WITH_CUDNN
  "dc1394"     WITH_1394
+ "directml"   WITH_DIRECTML
  "dnn"        BUILD_opencv_dnn
  "dnn"        PROTOBUF_UPDATE_FILES
  "dnn"        UPDATE_PROTO_FILES
+ "dnn"        WITH_FLATBUFFERS
  "dnn"        WITH_PROTOBUF
  "dnn-cuda"   OPENCV_DNN_CUDA
  "dshow"      WITH_DSHOW
  "eigen"      WITH_EIGEN
+ "eigen"      VCPKG_LOCK_FIND_PACKAGE_Eigen3
  "ffmpeg"     WITH_FFMPEG
  "freetype"   WITH_FREETYPE
  "gapi"       BUILD_opencv_gapi
@@ -81,19 +98,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gstreamer"  WITH_GSTREAMER
  "gtk"        WITH_GTK
  "halide"     WITH_HALIDE
- "ipp"        WITH_IPP
- "ipp"        BUILD_IPP_IW
+ "hdf"        BUILD_opencv_hdf
  "highgui"    BUILD_opencv_highgui
  "intrinsics" CV_ENABLE_INTRINSICS
- "jasper"     WITH_JASPER
+ "ipp"        WITH_IPP
+ "ipp"        BUILD_IPP_IW
  "openjpeg"   WITH_OPENJPEG
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
- "lapack"     WITH_LAPACK
- "lapack"     DOPENCV_LAPACK_FIND_PACKAGE_ONLY
+ "jpegxl"     WITH_JPEGXL
+ "kleidicv"   WITH_KLEIDICV
  "msmf"       WITH_MSMF
  "nonfree"    OPENCV_ENABLE_NONFREE
- "fs"         OPENCV_ENABLE_FILESYSTEM_SUPPORT
  "thread"     OPENCV_ENABLE_THREAD_SUPPORT
  "opencl"     WITH_OPENCL
  "openvino"   WITH_OPENVINO
@@ -109,28 +125,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "rgbd"       BUILD_opencv_rgbd
  "sfm"        BUILD_opencv_sfm
  "tbb"        WITH_TBB
+ "text"       BUILD_opencv_text
+ "text"       WITH_TESSERACT
  "tiff"       WITH_TIFF
+ "v4l"        WITH_V4L
  "vtk"        WITH_VTK
  "vulkan"     WITH_VULKAN
  "webp"       WITH_WEBP
  "win32ui"    WITH_WIN32UI
  "world"      BUILD_opencv_world
+ INVERTED_FEATURES
+ "fs"         OPENCV_DISABLE_FILESYSTEM_SUPPORT
 )
-
-if("dnn" IN_LIST FEATURES)
-  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-  vcpkg_execute_required_process(
-    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
-    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
-    LOGNAME flatc-${TARGET_TRIPLET}
-  )
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  set(OPENCV_LAPACK_SHARED_LIBS OFF)
-else()
-  set(OPENCV_LAPACK_SHARED_LIBS ON)
-endif()
 
 set(WITH_QT OFF)
 if("qt" IN_LIST FEATURES)
@@ -138,6 +144,9 @@ if("qt" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
+  if(EXISTS "${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}/cv2")
+    message(FATAL_ERROR "You cannot install opencv4[python] if opencv3[python] is already present.")
+  endif()
   x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
   set(ENV{PYTHON} "${PYTHON3}")
   file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
@@ -152,9 +161,6 @@ if("python" IN_LIST FEATURES)
     "-D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/cv2"
     "-DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}"
   )
-  if(EXISTS "${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}/cv2")
-    message(FATAL_ERROR "You cannot install opencv4[python] if opencv3[python] is already present.")
-  endif()
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -173,18 +179,27 @@ if("cuda" IN_LIST FEATURES)
   )
 endif()
 
+if("kleidicv" IN_LIST FEATURES)
+  vcpkg_download_distfile(OCV_DOWNLOAD
+    URLS "https://gitlab.arm.com/kleidi/kleidicv/-/archive/26.03/kleidicv-26.03.tar.gz"
+    FILENAME "opencv-cache/kleidicv/b85a745bfe0e87e67e30be9533eb6b24-kleidicv-26.03.tar.gz"
+    SHA512 f5963dd7a4eae810afc580581a2c5319a03e2ec4735cef0c928b767f77806f0d98c7617c0b2b18dc9e371b2328dd89f3754b02c9fd7e430da439dc5cca491b6d
+  )
+endif()
+
 if("contrib" IN_LIST FEATURES)
   vcpkg_from_github(
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF "${VERSION}"
-    SHA512 480df862250692a97ce6431cba00dbecb70332307a19c1c04aa9d7444e6e74ab4f8c798548dce76d2319a9877624b82e361fb22a71df14b996087ade448be501
+    SHA512 7fa7ecaacc2ef4e8634f0e4558dae94fed862cdf7c6a3ab1724598a9b9a33a39d73f587b0bcd377201c0f96ebaf6708c884dc33afbcaa2cd95d376b9d62eaead
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
       0013-contrib-fix-ogre.patch
       0016-contrib-fix-freetype.patch
       0018-contrib-fix-tesseract.patch
+      0019-contrib-cout.diff
   )
 
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
@@ -272,43 +287,84 @@ if("contrib" IN_LIST FEATURES)
 endif()
 
 if("ipp" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_OSX)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-      vcpkg_download_distfile(OCV_DOWNLOAD
+  # cf. <SOURCE_PATH>/3rdparty/ippicv/ippicv.cmake
+  set(key NOTFOUND)
+  if(VCPKG_TARGET_IS_WINDOWS)
+  elseif(VCPKG_TARGET_IS_OSX)
+    vcpkg_download_distfile(OCV_DOWNLOAD
         URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
         FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
         SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
     )
-    endif()
   elseif(VCPKG_TARGET_IS_LINUX)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(key "linux-${VCPKG_TARGET_ARCHITECTURE}")
+  endif()
+
+  # For convenient updates, use
+  # vcpkg install opencv4[core,ipp] --cmake-args=-DVCPKG_OPENCV4_UPDATE=1
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_OPENCV4_UPDATE)
+    if(VCPKG_TARGET_IS_APPLE OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
-        FILENAME "opencv-cache/ippicv/0f2745ff705ecae31176dad437608f6f-ippicv_2021.11.0_lnx_intel64_20240201_general.tgz"
-        SHA512 74cba99a1d2c40a125b23d42de555548fecd22c8fea5ed68ab7f887b1f208bd7f2906a64d40bac71ea82190e5389fb92d3c72b6d47c8c05a2e9b9b909a82ce47
-      )
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-      vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
-        FILENAME "opencv-cache/ippicv/63e381bf08076ca34fd5264203043a45-ippicv_2021.11.0_lnx_ia32_20240201_general.tgz"
-        SHA512 37484704754f9553b04c8da23864af3217919a11a9dbc92427e6326d6104bab7f1983c98c78ec52cda2d3eb93dc1fd98d0b780e3b7a98e703010c5ee1b421426
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+          FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
+          SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
       )
     endif()
-  elseif(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_intel64_20240201_general.zip"
-        FILENAME "opencv-cache/ippicv/59d154bf54a1e3eea20d7248f81a2a8e-ippicv_2021.11.0_win_intel64_20240201_general.zip"
-        SHA512 686ddbafa3f24c598d94589fca6937f90a4fb25e3dabea3b276709e55cbc2636aba8d73fadd336775f8514ff8e2e1b20e749264a7f11243190d54467f9a3f895
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8338862a733cb3980d8b51d8e14917fe0e695f71/ippicv/ippicv_2026.0.0_win_intel64_20260630_general.zip"
+          FILENAME "opencv-cache/ippicv/d81c8b7d40da2867df82f0077a40afa1-ippicv_2026.0.0_win_intel64_20260630_general.zip"
+          SHA512 db82b3489a8d755d758fafdcfdcd2e516ec0c25a2ecb3539b40cbfeaa1c4aef9c3c556a7e357d55eb79c8e307c6bad74f50a3a2505bdddecca1711a986862916
       )
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    endif()
+    if(NOT (VCPKG_TARGET_IS_APPLE OR VCPKG_TARGET_IS_WINDOWS) OR VCPKG_OPENCV4_UPDATE)
       vcpkg_download_distfile(OCV_DOWNLOAD
-        URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/fd27188235d85e552de31425e7ea0f53ba73ba53/ippicv/ippicv_2021.11.0_win_ia32_20240201_general.zip"
-        FILENAME "opencv-cache/ippicv/7a6d8ac5825c02fea6cbfc1201b521b5-ippicv_2021.11.0_win_ia32_20240201_general.zip"
-        SHA512 0e151e34cee01a3684d3be3c2c75b0fac5f303bfd8c08685981a3d4a25a19a9bb454da26d2965aab915adc209accca17b6a4b6d7726c004cd7841daf180bbd3a
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/8338862a733cb3980d8b51d8e14917fe0e695f71/ippicv/ippicv_2026.0.0_lnx_intel64_20260630_general.tgz"
+          FILENAME "opencv-cache/ippicv/a77e60db544e07a126ae98f5ffe83be1-ippicv_2026.0.0_lnx_intel64_20260630_general.tgz"
+          SHA512 2f5a844a1bd5d374ae4e1acc85da12c32dc513b61f7fbd7b9fe882b91a15681534bc86c47100de951cc70adf0cffe46a67ed403bce624b0743378115861848b2
       )
     endif()
   endif()
+  if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_OPENCV4_UPDATE)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_OPENCV4_UPDATE)
+      vcpkg_download_distfile(OCV_DOWNLOAD
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7f55c0c26be418d494615afca15218566775c725/ippicv/ippicv_2021.12.0_win_ia32_20240425_general.zip"
+          FILENAME "opencv-cache/ippicv/8b1d2a23957d57624d0de8f2a5cae5f1-ippicv_2021.12.0_win_ia32_20240425_general.zip"
+          SHA512 494f66af4eec3030fe6d2b58b89267d566fcb31f445d15cc69818d423c41fd950dc55d10694bdf91e3204ae6b13b68cc2375a2ad396b2008596c53aa0d39f4dd
+      )
+    endif()
+    if(VCPKG_TARGET_IS_ANDROID OR VCPKG_OPENCV4_UPDATE)
+      vcpkg_download_distfile(OCV_DOWNLOAD
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/c7c6d527dde5fee7cb914ee9e4e20f7436aab3a1/ippicv/ippicv_2021.10.1_lnx_ia32_20231206_general.tgz"
+          FILENAME "opencv-cache/ippicv/d9510f3ce08f6074aac472a5c19a3b53-ippicv_2021.10.1_lnx_ia32_20231206_general.tgz"
+          SHA512 2e709926dfb2f31bf7759ced2db83a5f966bc44b95faedabeb05623529249ccbd689746821870c0b300de834a688cf1767d1fb653aeb06ca0973c6217d2cf94d
+      )
+    endif()
+    if(NOT (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_APPLE OR VCPKG_TARGET_IS_WINDOWS) OR VCPKG_OPENCV4_UPDATE)
+      vcpkg_download_distfile(OCV_DOWNLOAD
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/7f55c0c26be418d494615afca15218566775c725/ippicv/ippicv_2021.12.0_lnx_ia32_20240425_general.tgz"
+          FILENAME "opencv-cache/ippicv/85ffa2b9ed7802b93c23fa27b0097d36-ippicv_2021.12.0_lnx_ia32_20240425_general.tgz"
+          SHA512 e3391ca0e8ed2235e32816cee55293ddd7c312a8c8ba42b1301cbb8752c6b7d47139ab3fe2aa8dd3e1670221e911cc96614bbc066e2bf9a653607413126b5ff1
+      )
+    endif()
+  endif()
+
+endif()
+
+if(VCPKG_OPENCV4_UPDATE)
+  message(STATUS "All downloads are up-to-date.")
+  message(FATAL_ERROR "Stopping due to VCPKG_OPENCV4_UPDATE being enabled.")
+endif()
+
+# ^^^ downloads ^^^ | vvv after downloads vvv
+
+if("dnn" IN_LIST FEATURES)
+  set(FLATC "${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+  vcpkg_execute_required_process(
+    COMMAND "${FLATC}" --cpp -o "${SOURCE_PATH}/modules/dnn/misc/tflite" "${SOURCE_PATH}/modules/dnn/src/tflite/schema.fbs"
+    WORKING_DIRECTORY "${SOURCE_PATH}/modules/dnn/misc/tflite"
+    LOGNAME flatc-${TARGET_TRIPLET}
+  )
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)
@@ -331,9 +387,17 @@ if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
 
-if("contrib" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_UWP)
-    list(APPEND ADDITIONAL_BUILD_FLAGS "-DWITH_TESSERACT=OFF")
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+  # OpenCV's CPU-optimization machinery assumes a native (x86/ARM) target. On wasm the baseline
+  # and dispatch lists must be empty, otherwise it bakes an x86 SSE baseline whose runtime guard
+  # aborts at startup. Mirrors OpenCV's own platforms/js/build_js.py.
+  list(APPEND ADDITIONAL_BUILD_FLAGS -DCPU_BASELINE= -DCPU_DISPATCH=)
+  if("intrinsics" IN_LIST FEATURES)
+    # SIMD via OpenCV's wasm HAL (intrin_wasm.hpp); -msimd128 makes its builtins available.
+    # CV_ENABLE_INTRINSICS itself is turned on by the "intrinsics" feature.
+    list(APPEND ADDITIONAL_BUILD_FLAGS
+      -DOPENCV_EXTRA_C_FLAGS=-msimd128
+      -DOPENCV_EXTRA_CXX_FLAGS=-msimd128)
   endif()
 endif()
 
@@ -350,27 +414,30 @@ vcpkg_cmake_configure(
         -DARM=${TARGET_IS_ARM}
         ###### use c++17 to enable features that fail with c++11 (halide, protobuf, etc.)
         -DCMAKE_CXX_STANDARD=17
-        ###### ocv_options
+        ###### ocv installation dir options
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
+        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv4
         -DOPENCV_INCLUDE_INSTALL_PATH=include/opencv4
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib/manual-link/opencv4_thirdparty
-        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv4
+        ###### ocv_options
+        -DCV_TRACE=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
+        -DOPENCV_DEBUG_POSTFIX=d
+        -DOPENCV_DLLVERSION=4
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DOPENCV_FFMPEG_SKIP_BUILD_CHECK=TRUE
-        -DCMAKE_DEBUG_POSTFIX=d
-        -DOPENCV_DLLVERSION=4
-        -DOPENCV_DEBUG_POSTFIX=d
-        -DOPENCV_GENERATE_SETUPVARS=OFF
+        -DOPENCV_FORCE_EIGEN_FIND_PACKAGE_CONFIG=ON
         -DOPENCV_GENERATE_PKGCONFIG=ON
-        # Do not build docs/examples
+        -DOPENCV_GENERATE_SETUPVARS=OFF
+        -DOPENCV_PYTHON2_SKIP_DETECTION=ON
+        # Do not build docs/examples/tests
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_TESTS=OFF
-        -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_IPP_IW=OFF
         -DBUILD_ITT=OFF
@@ -395,52 +462,48 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_DEBUG_INFO=ON
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
-        ###### PROTOBUF
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
-        # CMAKE
+        # CMAKE/VCPKG
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        # ENABLE
-        -DENABLE_CXX11=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Iconv=OFF # optional for contrib/wechat_qrcode
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv4
         ###### customized properties
-        ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DWITH_QT=${WITH_QT}
-        -DWITH_MATLAB=OFF
-        -DWITH_OPENJPEG=OFF
-        -DWITH_CPUFEATURES=OFF
-        -DWITH_SPNG=OFF
-        -DWITH_OPENCLAMDFFT=OFF
-        -DWITH_OPENCLAMDBLAS=OFF
-        -DWITH_OPENCL_D3D11_NV=OFF
+        -Dade_DIR=${ADE_DIR}
+        -DWITH_AVIF=OFF
+        -DWITH_CPUFEATURES=${WITH_CPUFEATURES}
         -DWITH_ITT=OFF
+        -DWITH_JASPER=OFF #Jasper is deprecated and will be removed in a future release, and is mutually exclusive with openjpeg that is preferred
+        -DWITH_LAPACK=OFF
+        -DWITH_MATLAB=OFF
         -DWITH_NVCUVID=OFF
         -DWITH_NVCUVENC=OFF
-        -DWITH_AVIF=OFF
+        -DWITH_OBSENSOR=OFF
+        -DWITH_OPENCL_D3D11_NV=OFF
+        -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_OPENCLAMDFFT=OFF
+        -DWITH_QT=${WITH_QT}
+        -DWITH_SPNG=OFF #spng is mutually exclusive with png, which has been chosen since it's more widely used
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
-        -DWITH_OBSENSOR=OFF
-        ###### modules which require special treatment
-        -DBUILD_opencv_quality=${BUILD_opencv_quality}
-        -DBUILD_opencv_rgbd=${BUILD_opencv_rgbd}
-        ###### Additional build flags
-        -DOPENCV_LAPACK_SHARED_LIBS=${OPENCV_LAPACK_SHARED_LIBS}
-        -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=${OPENCV_DISABLE_FILESYSTEM_SUPPORT}
-        -DCV_ENABLE_INTRINSICS=${CV_ENABLE_INTRINSICS}
+        -DWITH_ZLIB_NG=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
-        ###### Python install path
         ${PYTHON_EXTRA_DEFINES_RELEASE}
     OPTIONS_DEBUG
-        ###### Python install path
         ${PYTHON_EXTRA_DEFINES_DEBUG}
+    MAYBE_UNUSED_VARIABLES
+        OPENCV_FORCE_EIGEN_FIND_PACKAGE_CONFIG
+        OPENCV_PYTHON2_SKIP_DETECTION
+        VCPKG_LOCK_FIND_PACKAGE_Eigen3
+        VCPKG_LOCK_FIND_PACKAGE_Iconv
 )
 
 vcpkg_cmake_install()
@@ -474,40 +537,40 @@ if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target l
     )
   endif()
 endif()
-find_dependency(Threads)")
-if("tiff" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+find_dependency(Threads)
+if(ANDROID)
+  find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()")
+
+if("ade" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(ade)")
 endif()
-if("ffmpeg" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
-endif()
-if("contrib" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_IOS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
-  string(APPEND DEPS_STRING "
-# C language is required for try_compile tests in FindHDF5
-enable_language(C)
-find_dependency(HDF5)
-find_dependency(Tesseract)")
-endif()
-if("freetype" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz)")
-endif()
-if("tbb" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
-endif()
-if("vtk" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
-endif()
-if("sfm" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(gflags CONFIG)\nfind_dependency(Ceres CONFIG)")
+if("dnn" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(flatbuffers CONFIG)")
 endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
 endif()
-if("lapack" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
+if("ffmpeg" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(FFMPEG)")
 endif()
-if("openvino" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
+if("freetype" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(harfbuzz CONFIG)")
+endif()
+if("gdcm" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+endif()
+if("hdf" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\n
+# C language is required for try_compile tests in FindHDF5
+enable_language(C)
+find_dependency(HDF5)")
+endif()
+if("omp" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
+endif()
+if("opencl" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(OpenCL CONFIG)")
 endif()
 if("openexr" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
@@ -515,14 +578,11 @@ endif()
 if("openjpeg" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenJPEG)")
 endif()
-if("omp" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
+if("openvino" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(OpenVINO CONFIG)")
 endif()
 if("ovis" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OGRE)")
-endif()
-if("quirc" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
 endif()
 if("qt" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "
@@ -537,11 +597,26 @@ find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent 
 find_dependency(Qt${USE_QT_VERSION} COMPONENTS Core Gui Widgets Test Concurrent ${QT_CORE5COMPAT})")
   endif()
 endif()
-if("ade" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(ade)")
+if("quirc" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
 endif()
-if("gdcm" IN_LIST FEATURES)
-  string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+if("sfm" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(gflags CONFIG)\nfind_dependency(Ceres CONFIG)")
+endif()
+if("tbb" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
+endif()
+if("text" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(Tesseract)")
+endif()
+if("tiff" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+endif()
+if("vtk" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
+endif()
+if("vulkan" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(VulkanHeaders CONFIG)")
 endif()
 
 string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
@@ -626,6 +701,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
     "\${prefix}"
     IGNORE_UNCHANGED
@@ -656,6 +736,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
     "-lTesseract::libtesseract"
     "-ltesseract"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"

@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dea2f6c..d9bf0d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -151,9 +151,11 @@ endif()
+ 
+ ecbuild_add_option( FEATURE NETCDF
+     DESCRIPTION "Support for GRIB to NetCDF conversion"
+-    DEFAULT ON
+-    REQUIRED_PACKAGES NetCDF
+-    NO_TPL )
++    DEFAULT ON )
++	
++if( HAVE_NETCDF )
++    find_package( netCDF CONFIG REQUIRED )
++endif()
+ 
+ ecbuild_add_option( FEATURE USE_SHARED_LIB_AEC
+     DESCRIPTION "Link against shared libaec library (dynamic linking)"
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index d0eb320..bb06627 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -78,7 +78,7 @@ ecbuild_add_executable( TARGET     gts_count
+ ecbuild_add_executable( TARGET     grib_to_netcdf
+                         SOURCES    grib_to_netcdf.cc
+                         CONDITION  HAVE_NETCDF
+-                        LIBS       ecc_tools NetCDF::NetCDF_C )
++                        LIBS       ecc_tools netCDF::netcdf )
+ 
+ 
+ ecbuild_add_executable( TARGET     grib_list_keys

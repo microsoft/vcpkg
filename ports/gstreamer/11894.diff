@@ -1,0 +1,69 @@
+diff --git a/subprojects/gstreamer/docs/meson.build b/subprojects/gstreamer/docs/meson.build
+index 497f94d928d2fd02f622cb1d4f1386df8e59c867..e87abd9158607edb05255a582830b5b86c6ee00a 100644
+--- a/subprojects/gstreamer/docs/meson.build
++++ b/subprojects/gstreamer/docs/meson.build
+@@ -1,30 +1,4 @@
+ build_hotdoc = false
+-if meson.is_cross_build()
+-    if get_option('doc').enabled()
+-        error('Documentation enabled but building the doc while cross building is not supported yet.')
+-    endif
+-
+-    message('Documentation not built as building it while cross building is not supported yet.')
+-    subdir_done()
+-endif
+-
+-if static_build
+-    if get_option('doc').enabled()
+-        error('Documentation enabled but not supported when building statically.')
+-    endif
+-
+-    message('Building statically, can\'t build the documentation')
+-    subdir_done()
+-endif
+-
+-if get_option('check').disabled()
+-    if get_option('doc').enabled()
+-        error('Documentation enabled but not supported when gstcheck is disabled')
+-    endif
+-
+-    message('gstcheck is disabled, can\'t build the documentation')
+-    subdir_done()
+-endif
+ 
+ hotdoc_plugin_scanner = executable('gst-hotdoc-plugins-scanner',
+   'gst-hotdoc-plugins-scanner.c',
+@@ -53,6 +27,33 @@ gst_plugins_doc_dep = custom_target('build-doc-cache',
+     build_always_stale: true,
+ )
+ 
++if meson.is_cross_build()
++    if get_option('doc').enabled()
++        error('Documentation enabled but building the doc while cross building is not supported yet.')
++    endif
++
++    message('Documentation not built as building it while cross building is not supported yet.')
++    subdir_done()
++endif
++
++if static_build
++    if get_option('doc').enabled()
++        error('Documentation enabled but not supported when building statically.')
++    endif
++
++    message('Building statically, can\'t build the documentation')
++    subdir_done()
++endif
++
++if get_option('check').disabled()
++    if get_option('doc').enabled()
++        error('Documentation enabled but not supported when gstcheck is disabled')
++    endif
++
++    message('gstcheck is disabled, can\'t build the documentation')
++    subdir_done()
++endif
++
+ if static_build
+     if get_option('doc').enabled()
+         error('Documentation enabled but not supported when building statically.')

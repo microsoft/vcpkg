@@ -1,0 +1,30 @@
+{
+  "name": "trieste",
+  "version": "1.1.0",
+  "description": "A header-only C++20 term rewriting system for rapidly prototyping programming languages",
+  "homepage": "https://github.com/microsoft/Trieste",
+  "license": "MIT",
+  "supports": "!x86",
+  "dependencies": [
+    "cli11",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "parsers": {
+      "description": "Build the JSON and YAML parser libraries (trieste::json, trieste::yaml)"
+    },
+    "snmalloc": {
+      "description": "Override global new/delete with snmalloc",
+      "dependencies": [
+        "snmalloc"
+      ]
+    }
+  }
+}

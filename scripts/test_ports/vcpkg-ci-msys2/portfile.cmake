@@ -14,6 +14,8 @@ vcpkg_list(SET ignored_updates
 # (Packages to be removed from vcpkg scripts ASAP.)
 vcpkg_list(SET known_delisted
     libcrypt
+    mingw-w64-i686-gcc-fortran
+    mingw-w64-i686-gcc-libgfortran
 )
 
 # Ignore these dependencies (e.g. interactive or effectively optional)
@@ -26,6 +28,7 @@ vcpkg_list(SET ignored_dependencies
     less
     libiconv-devel
     libltdl
+    mingw-w64-i686-tzdata
     mingw-w64-x86_64-tzdata
 )
 
@@ -181,7 +184,9 @@ function(analyze_package_list list_var script)
         foreach(file IN LISTS files)
             # Find the package
             file(STRINGS "${file}" desc)
-            if(NOT desc MATCHES "%NAME%;${name};")
+            if(NOT desc MATCHES "%NAME%;([^;]+);")
+                continue()
+            elseif(NOT CMAKE_MATCH_1 STREQUAL name)
                 continue()
             elseif(NOT desc MATCHES "%FILENAME%;([^;]+)")
                 continue()

@@ -4,7 +4,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
     FILENAME "armadillo-${VERSION}.tar.xz"
-    SHA512 729229d28dbd199503dc15ba11a4f20d2b598993f7da448d40840255ff53ecc9f95bca3b472261d12dda15f2c4e2f8999ea39594c869a31a817be35b256efac5
+    SHA512 c7768a5f1a604fb58582ec6b6db34e8105f6b48e2e3be4819ce21c4ce00e8941a79dce4733942d84e21f03f5410d769836ef73bc68d8a012a102235870d7096f
     PATCHES
         cmake-config.patch
         dependencies.patch
@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DALLOW_FLEXIBLAS_LINUX=OFF
         "-DREQUIRES_PRIVATE=${REQUIRES_PRIVATE}"
+        -DBUILD_SMOKE_TEST=OFF
 )
 
 vcpkg_cmake_install()
@@ -52,4 +53,10 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/armadillo_bits/config.hpp"
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/NOTICE.txt"
+        "${SOURCE_PATH}/include/armadillo_bits/fft_engine_kissfft.hpp"
+        "${SOURCE_PATH}/include/armadillo_bits/include_superlu.hpp"
+)

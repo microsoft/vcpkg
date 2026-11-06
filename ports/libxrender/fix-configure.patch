@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 6bc1c90..28e1ac5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -34,7 +34,6 @@ AC_INIT(libXrender, [0.9.12],
+ 	[libXrender])
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AC_CONFIG_HEADERS([config.h])
+-AC_CONFIG_MACRO_DIRS([m4])
+ 
+ PACKAGE_BRIEF="Library for the Render Extension to the X11 protocol"
+ AC_SUBST(PACKAGE_BRIEF)

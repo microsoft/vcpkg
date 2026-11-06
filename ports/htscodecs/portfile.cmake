@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO samtools/htscodecs
     REF "v${VERSION}"
-    SHA512 5e3e1f916cb14fe7e1292f3a07e9d9704b11be38014db5884b334235c25dbe61dffecf3f12c448a7a13f65c6d19dbc7cc5c77ba0861b31a0375d71030dd02480
+    SHA512 f89ab2d70a27dc63c30c8dc89b4102b3e18a6a3341814448acc45e304dbf766915e532dba449342fc53c481414268fe662c9389898bd76a10db90725ac3d2f83
     HEAD_REF master
     PATCHES
         0001-no-tests.patch # https://github.com/samtools/htscodecs/pull/120
+        configure_bz2.patch
 )
 
 set(FEATURE_OPTIONS "")
@@ -20,14 +21,14 @@ endmacro()
 
 enable_feature("bzip2" "bz2")
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

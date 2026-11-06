@@ -11,6 +11,8 @@ file(GLOB_RECURSE LIBPLISTPP_SOURCE src/*.cpp)
 
 set(DEFINITIONS)
 
+list(APPEND DEFINITIONS -DPACKAGE_VERSION="${PACKAGE_VERSION}")
+
 if(BUILD_SHARED_LIBS)
     if(WIN32)
         list(APPEND DEFINITIONS -DLIBPLIST_EXPORT)
@@ -66,7 +68,6 @@ install(
 )
 
 set(PACKAGE_NAME libplist)
-set(PACKAGE_VERSION 2.0)
 set(prefix "")
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")

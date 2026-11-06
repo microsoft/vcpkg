@@ -1,0 +1,113 @@
+diff --git a/tools/qmlimportscanner/Qt5QmlImportScannerConfig.cmake.in b/tools/qmlimportscanner/Qt5QmlImportScannerConfig.cmake.in
+index f92b8d2..f4af783 100644
+--- a/tools/qmlimportscanner/Qt5QmlImportScannerConfig.cmake.in
++++ b/tools/qmlimportscanner/Qt5QmlImportScannerConfig.cmake.in
+@@ -32,8 +32,10 @@ but this file does not exist.  Possible reasons include:
+     # Find location of qml dir.
+ !!IF isEmpty(CMAKE_QML_DIR_IS_ABSOLUTE)
+     set(qml_path \"${_qt5Core_install_prefix}/$${CMAKE_QML_DIR}\")
++    set(qml_debug_path \"${_qt5Core_install_prefix}/debug/$${CMAKE_QML_DIR}\")
+ !!ELSE
+     set(qml_path \"$${CMAKE_QML_DIR}\")
++    set(qml_debug_path \"\")
+ !!ENDIF
+ 
+     # Small macro to avoid duplicating code in two different loops.
+@@ -45,6 +47,34 @@ but this file does not exist.  Possible reasons include:
+                               ${${entry_name}})
+     endmacro()
+ 
++    macro(_qt5_QmlImportScanner_find_plugin_file OutPrlFile OutPluginFile Configuration PluginSuffix)
++        set(_plugin_path \"${entry_PATH}\")
++        set(_plugin_suffix \"${PluginSuffix}\")
++
++        if(\"${Configuration}\" STREQUAL \"DEBUG\" AND qml_debug_path)
++            if(entry_RELATIVEPATH)
++                set(_plugin_path \"${qml_debug_path}${entry_RELATIVEPATH}\")
++            else()
++                set(_plugin_path \"${entry_PATH}\")
++                if(qml_path)
++                    string(REPLACE \"${qml_path}\" \"${qml_debug_path}\" _plugin_path \"${_plugin_path}\")
++                endif()
++            endif()
++
++            if(NOT EXISTS \"${_plugin_path}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}${_plugin_suffix}.prl\" AND
++               EXISTS \"${_plugin_path}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}.prl\")
++                set(_plugin_suffix \"\")
++            endif()
++        endif()
++
++        set(${OutPrlFile}
++            \"${_plugin_path}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}${_plugin_suffix}.prl\")
++        set(${OutPluginFile}
++            \"${_plugin_path}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}${_plugin_suffix}.$$QMAKE_EXTENSION_STATICLIB\")
++        unset(_plugin_path)
++        unset(_plugin_suffix)
++    endmacro()
++
+     # Macro used to populate the dependency link flags for a certain configuriation (debug vs
+     # release) of a plugin.
+     macro(_qt5_link_to_QmlImportScanner_library_dependencies Plugin Configuration PluginLocation
+@@ -124,30 +154,40 @@ but this file does not exist.  Possible reasons include:
+                 # Read static library dependencies from the plugin .prl file.
+                 # And then set the link flags to the library dependencies extracted from the .prl
+                 # file.
+-!!IF !isEmpty(CMAKE_RELEASE_TYPE)
+-                _qt5_Core_process_prl_file(
+-                    \"${entry_PATH}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}$${CMAKE_QML_PLUGIN_SUFFIX_RELEASE}.prl\" RELEASE
+-                    _Qt5${entry_PLUGIN}_STATIC_RELEASE_LIB_DEPENDENCIES
+-                    _Qt5${entry_PLUGIN}_STATIC_RELEASE_LINK_FLAGS
+-                )
+-                _qt5_link_to_QmlImportScanner_library_dependencies(
+-                    \"${imported_target}\"
++                _qt5_QmlImportScanner_find_plugin_file(
++                    _qt5_qml_import_scanner_prl_file
++                    _qt5_qml_import_scanner_plugin_file
+                     RELEASE
+-                    \"${entry_PATH}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}$${CMAKE_QML_PLUGIN_SUFFIX_RELEASE}.$$QMAKE_EXTENSION_STATICLIB\"
+-                     $${CMAKE_DEBUG_AND_RELEASE})
+-!!ENDIF
++                    \"$${CMAKE_QML_PLUGIN_SUFFIX_RELEASE}\")
++                if(EXISTS \"${_qt5_qml_import_scanner_prl_file}\")
++                    _qt5_Core_process_prl_file(
++                        \"${_qt5_qml_import_scanner_prl_file}\" RELEASE
++                        _Qt5${entry_PLUGIN}_STATIC_RELEASE_LIB_DEPENDENCIES
++                        _Qt5${entry_PLUGIN}_STATIC_RELEASE_LINK_FLAGS
++                    )
++                    _qt5_link_to_QmlImportScanner_library_dependencies(
++                        \"${imported_target}\"
++                        RELEASE
++                        \"${_qt5_qml_import_scanner_plugin_file}\"
++                         TRUE)
++                endif()
+ 
+-!!IF !isEmpty(CMAKE_DEBUG_TYPE)
+-                _qt5_Core_process_prl_file(
+-                    \"${entry_PATH}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}$${CMAKE_QML_PLUGIN_SUFFIX_DEBUG}.prl\" DEBUG
+-                    _Qt5${entry_PLUGIN}_STATIC_DEBUG_LIB_DEPENDENCIES
+-                    _Qt5${entry_PLUGIN}_STATIC_DEBUG_LINK_FLAGS
+-                )
+-                _qt5_link_to_QmlImportScanner_library_dependencies(
+-                    \"${imported_target}\"
++                _qt5_QmlImportScanner_find_plugin_file(
++                    _qt5_qml_import_scanner_prl_file
++                    _qt5_qml_import_scanner_plugin_file
+                     DEBUG
+-                    \"${entry_PATH}/$$QMAKE_PREFIX_STATICLIB${entry_PLUGIN}$${CMAKE_QML_PLUGIN_SUFFIX_DEBUG}.$$QMAKE_EXTENSION_STATICLIB\"
+-                     $${CMAKE_DEBUG_AND_RELEASE})
+-!!ENDIF
++                    \"$${CMAKE_QML_PLUGIN_SUFFIX_DEBUG}\")
++                if(EXISTS \"${_qt5_qml_import_scanner_prl_file}\")
++                    _qt5_Core_process_prl_file(
++                        \"${_qt5_qml_import_scanner_prl_file}\" DEBUG
++                        _Qt5${entry_PLUGIN}_STATIC_DEBUG_LIB_DEPENDENCIES
++                        _Qt5${entry_PLUGIN}_STATIC_DEBUG_LINK_FLAGS
++                    )
++                    _qt5_link_to_QmlImportScanner_library_dependencies(
++                        \"${imported_target}\"
++                        DEBUG
++                        \"${_qt5_qml_import_scanner_plugin_file}\"
++                         TRUE)
++                endif()
+             endif()
+         endforeach()

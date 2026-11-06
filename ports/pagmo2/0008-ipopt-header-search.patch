@@ -1,0 +1,15 @@
+diff --git a/include/pagmo/algorithms/ipopt.hpp b/include/pagmo/algorithms/ipopt.hpp
+index 5fea524..d275cb0 100644
+--- a/include/pagmo/algorithms/ipopt.hpp
++++ b/include/pagmo/algorithms/ipopt.hpp
+@@ -38,8 +38,8 @@ see https://www.gnu.org/licenses/. */
+ #include <tuple>
+ #include <vector>
+ 
+-#include <IpReturnCodes.hpp>
+-#include <IpTypes.hpp>
++#include <coin-or/IpReturnCodes.hpp>
++#include <coin-or/IpTypes.hpp>
+ 
+ #include <pagmo/algorithm.hpp>
+ #include <pagmo/algorithms/not_population_based.hpp>

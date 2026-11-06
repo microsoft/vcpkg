@@ -7,12 +7,12 @@ if ("apng" IN_LIST FEATURES)
         set(AWK_EXE_PATH "${MSYS_ROOT}/usr/bin")
         vcpkg_add_to_path("${AWK_EXE_PATH}")
     endif()
-    
+
     set(LIBPNG_APNG_PATCH_NAME "libpng-${VERSION}-apng.patch")
     vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
         URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${VERSION}/${LIBPNG_APNG_PATCH_NAME}.gz"
         FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-        SHA512 60a0b3072f4d1fddcce79eaa89f461d27c32e4c1a4cf3e6dc30ff1091aeceeb2fbfacf830bdb59bad98e39091fdd47458589411b59f94e2d4fc9c121b0545291
+        SHA512 a27ed2769b3c8d1703267b807663aa8e543b62355237e223d7731662034dd126951b88117c1038dc976750cf515d7e0e26e4a9278bf951f96ec4ed8f74105db7
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
@@ -29,12 +29,13 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pnggroup/libpng
-    REF v${VERSION}
-    SHA512 b999c241ce5d95dfae5bb2c71e8b686a1c4af69b67262bda309a58c83967b5f3eacd7987d6990f71ebc16aa89f4f7a59c846857d56c80bca7e9ec657caff62c7
+    REF "v${VERSION}"
+    SHA512 2d753e764846a0a75a10f2a00c6f4ae23d2ae37237c69d59d5e619da3f143d59f4ea9ce29c1fb39435df1cef77877c83b042a2275934c353a6603061da2d2dd9
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
         cmake.patch
+        genout-compiler-target.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PNG_SHARED)
@@ -54,9 +55,9 @@ if(VCPKG_TARGET_IS_IOS)
 endif()
 
 vcpkg_list(SET LD_VERSION_SCRIPT_OPTION)
-if(VCPKG_TARGET_IS_ANDROID)
+if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OHOS)
     vcpkg_list(APPEND LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    if(VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         vcpkg_cmake_get_vars(cmake_vars_file)
         include("${cmake_vars_file}")
         if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
@@ -68,7 +69,7 @@ if(VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OHOS))
   vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
 endif()
 

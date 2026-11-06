@@ -1,0 +1,13 @@
+diff --git a/CMake/AbseilDll.cmake b/CMake/AbseilDll.cmake
+index 38d09364..7d158be6 100644
+--- a/CMake/AbseilDll.cmake
++++ b/CMake/AbseilDll.cmake
+@@ -721,7 +721,7 @@ int main() { return 0; }
+ 
+ if(ABSL_INTERNAL_AT_LEAST_CXX20)
+   set(ABSL_INTERNAL_CXX_STD_FEATURE cxx_std_20)
+-elseif(ABSL_INTERNAL_AT_LEAST_CXX17)
++elseif(1)
+   set(ABSL_INTERNAL_CXX_STD_FEATURE cxx_std_17)
+ else()
+   message(FATAL_ERROR "The compiler defaults to or is configured for C++ < 17. C++ >= 17 is required and Abseil and all libraries that use Abseil must use the same C++ language standard")

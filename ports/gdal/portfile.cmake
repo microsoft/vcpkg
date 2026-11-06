@@ -2,14 +2,42 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 2094f9373b13bb600f6c7fbe7fa9da947be98ea06f427940dd0add0930c8fb65f2693148614efcec9c2a103666664aa215445c754b8a20490bfb0e9f2c89db72
+    SHA512 3b915c38cc7c9eb139df9335a90a2f6fd123c54e19ecb1f22670400eac76e317c5334f95dff5875c9c3fde8a0ef0f7aea86fa58ad42afaee823a46c6616e9c17
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
-        fix-gdal-target-interfaces.patch
+        iconv.diff
+        libarchive.diff
         libkml.patch
+        pkgconfig.diff
+        sqlite3.diff
         target-is-valid.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindZSTD.cmake")
+file(GLOB third_party
+    "${SOURCE_PATH}/frmts/zlib/*"
+    "${SOURCE_PATH}/frmts/zlib/contrib/*"
+    "${SOURCE_PATH}/third_party/*"
+)
+list(REMOVE_ITEM third_party
+    "${SOURCE_PATH}/third_party/libertiff" # not in vcpkg
+    "${SOURCE_PATH}/frmts/zlib/contrib"
+    "${SOURCE_PATH}/frmts/zlib/contrib/infback9" # modified deflate
+)
+file(REMOVE_RECURSE
+    ${third_party}
+    "${SOURCE_PATH}/frmts/gtiff/libgeotiff"
+    # libertiff relies on vendored libtiff sources
+    #"${SOURCE_PATH}/frmts/gtiff/libtiff"
+    # 12 bit JPEG support derived from vendored libjpeg sources
+    #"${SOURCE_PATH}/frmts/jpeg/libjpeg"
+    #"${SOURCE_PATH}/frmts/jpeg/libjpeg12"
+    "${SOURCE_PATH}/frmts/png/libpng"
+    "${SOURCE_PATH}/ogr/ogrsf_frmts/geojson/libjson"
+)
+file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/libdivide")
+file(WRITE "${SOURCE_PATH}/third_party/libdivide/libdivide.h" "#pragma once\n#include <libdivide.h>\n")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
@@ -22,6 +50,8 @@ vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base
 # "core" is used for a dependency which must be enabled to avoid vendored lib.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        arrow            GDAL_USE_ARROW
+        arrow-adbc       GDAL_USE_ADBCDRIVERMANAGER
         archive          GDAL_USE_ARCHIVE
         cfitsio          GDAL_USE_CFITSIO
         curl             GDAL_USE_CURL
@@ -36,14 +66,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         core             GDAL_USE_JSONC
         kea              GDAL_USE_KEA
         lerc             GDAL_USE_LERC
+        libaec           GDAL_USE_LIBAEC
         libkml           GDAL_USE_LIBKML
         lzma             GDAL_USE_LIBLZMA
         libxml2          GDAL_USE_LIBXML2
-        mysql-libmariadb GDAL_USE_MYSQL 
+        muparser         GDAL_USE_MUPARSER
+        mysql-libmariadb GDAL_USE_MYSQL
         netcdf           GDAL_USE_NETCDF
         odbc             GDAL_USE_ODBC
         openjpeg         GDAL_USE_OPENJPEG
         openssl          GDAL_USE_OPENSSL
+        parquet          GDAL_USE_PARQUET
         pcre2            GDAL_USE_PCRE2
         png              GDAL_USE_PNG
         poppler          GDAL_USE_POPPLER
@@ -80,16 +113,16 @@ vcpkg_cmake_configure(
         -DBUILD_DOCS=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_TESTING=OFF
+        -DBASH_COMPLETIONS_DIR:STRING=share/bash-completion/completions
         -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Arrow=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
         -DOGR_BUILD_OPTIONAL_DRIVERS=ON
-        -DFIND_PACKAGE2_KEA_ENABLED=OFF
+        -DGDAL_SPLIT_EXPORTED_LIBS=ON
         -DGDAL_CHECK_PACKAGE_MySQL_NAMES=unofficial-libmariadb
         -DGDAL_CHECK_PACKAGE_MySQL_TARGETS=unofficial::libmariadb
         -DMYSQL_LIBRARIES=unofficial::libmariadb
@@ -97,6 +130,7 @@ vcpkg_cmake_configure(
         -DGDAL_CHECK_PACKAGE_NetCDF_TARGETS=netCDF::netcdf
         -DGDAL_CHECK_PACKAGE_QHULL_NAMES=Qhull
         "-DGDAL_CHECK_PACKAGE_QHULL_TARGETS=${qhull_target}"
+        -DGDAL_USE_JPEG_INTERNAL=OFF
         "-DQHULL_LIBRARY=${qhull_target}"
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
     OPTIONS_DEBUG
@@ -107,6 +141,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gdald.lib")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc" " -lgdal" " -lgdald")
+endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/gdal)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/gdal/GDALConfig.cmake"
     "include(CMakeFindDependencyMacro)"
@@ -119,6 +156,7 @@ list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
+            gdal
             gdal_contour
             gdal_create
             gdal_footprint
@@ -156,7 +194,10 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/gdal-config" "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config")
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/bin/gdal-config"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/gdal-config"
+)
 
 file(GLOB bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
 if(NOT bin_files)
@@ -169,5 +210,4 @@ endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cpl_config.h" "#define GDAL_PREFIX \"${CURRENT_PACKAGES_DIR}\"" "")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")

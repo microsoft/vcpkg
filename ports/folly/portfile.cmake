@@ -1,25 +1,20 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-# Required to run build/generate_escape_tables.py et al.
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
     REF "v${VERSION}"
-    SHA512 36e513eab062e7e7c2ebd1691507bac801995b8334d263fd06d6d30a88446782dae5ad66c20f549608522f302748208e67762ce12cdb6577433e323142556f25
+    SHA512 8ee08591724fb1f6183cc0456c13cd00474e425d41824add2751fd3823e23b95ea69ec1b246bc85c95d30add854ee53dafd2bc1b824d0b555917dcbaf6943a6f
     HEAD_REF main
     PATCHES
-        fix-windows-minmax.patch
         fix-deps.patch
         disable-uninitialized-resize-on-new-stl.patch
         fix-unistd-include.patch
-        fix-libunwind.patch
-        fix-absolute-dir.patch
+        fix-perf_scoped-target.patch
+        fix-fmt-header.patch
 )
-
 file(REMOVE "${SOURCE_PATH}/CMake/FindFastFloat.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindFmt.cmake")
 file(REMOVE "${SOURCE_PATH}/CMake/FindLibsodium.cmake")
@@ -34,58 +29,52 @@ file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(MSVC_USE_STATIC_RUNTIME ON)
-else()
-    set(MSVC_USE_STATIC_RUNTIME OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "liburing"   WITH_liburing
-        "libaio"     WITH_libaio
-    INVERTED_FEATURES
-        "bzip2"      CMAKE_DISABLE_FIND_PACKAGE_BZip2
-        "lz4"        CMAKE_DISABLE_FIND_PACKAGE_LZ4
-        "zstd"       CMAKE_DISABLE_FIND_PACKAGE_Zstd
-        "snappy"     CMAKE_DISABLE_FIND_PACKAGE_Snappy
-        "libsodium"  CMAKE_DISABLE_FIND_PACKAGE_unofficial-sodium
+        "bzip2"      VCPKG_LOCK_FIND_PACKAGE_BZip2
+        "libaio"     VCPKG_LOCK_FIND_PACKAGE_LibAIO
+        "libsodium"  VCPKG_LOCK_FIND_PACKAGE_LIBSODIUM
+        "liburing"   VCPKG_LOCK_FIND_PACKAGE_LibUring
+        "lz4"        VCPKG_LOCK_FIND_PACKAGE_LZ4
+        "snappy"     VCPKG_LOCK_FIND_PACKAGE_SNAPPY
+        "zstd"       VCPKG_LOCK_FIND_PACKAGE_ZSTD
 )
 
+set(CROSSCOMP_OPTIONS "")
+if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_LINUX)
+    # Seed try_run results for cross-compiling; binaries cannot execute on the build host.
+    set(CROSSCOMP_OPTIONS
+        -DFOLLY_HAVE_UNALIGNED_ACCESS_EXITCODE=0
+        -DFOLLY_HAVE_WEAK_SYMBOLS_EXITCODE=0
+        -DFOLLY_HAVE_LINUX_VDSO_EXITCODE=0
+        -DFOLLY_HAVE_WCHAR_SUPPORT_EXITCODE=0
+        -DHAVE_VSNPRINTF_ERRORS_EXITCODE=0
+    )
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DMSVC_USE_STATIC_RUNTIME=${MSVC_USE_STATIC_RUNTIME}
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibDwarf=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Libiberty=ON
         -DCMAKE_INSTALL_DIR=share/folly
-        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
+        -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
+        -DVCPKG_LOCK_FIND_PACKAGE_fmt=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_LibDwarf=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Libiberty=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_LibUnwind=${VCPKG_TARGET_IS_LINUX}
+        -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
+        ${CROSSCOMP_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_RUNTIME
 )
 
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
-
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup()
-
-# Release folly-targets.cmake does not link to the right libraries in debug mode.
-# We substitute with generator expressions so that the right libraries are linked for debug and release.
-set(FOLLY_TARGETS_CMAKE "${CURRENT_PACKAGES_DIR}/share/folly/folly-targets.cmake")
-FILE(READ ${FOLLY_TARGETS_CMAKE} _contents)
-string(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/zlib.lib" "ZLIB::ZLIB" _contents "${_contents}")
-STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
-STRING(REPLACE "\${VCPKG_IMPORT_PREFIX}/debug/lib/" "\${VCPKG_IMPORT_PREFIX}/\$<\$<CONFIG:DEBUG>:debug/>lib/" _contents "${_contents}")
-string(REPLACE "-vc140-mt.lib" "-vc140-mt\$<\$<CONFIG:DEBUG>:-gd>.lib" _contents "${_contents}")
-FILE(WRITE ${FOLLY_TARGETS_CMAKE} "${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-vcpkg_fixup_pkgconfig()

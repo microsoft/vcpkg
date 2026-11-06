@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO agl-alexglopez/str_view
     REF "v${VERSION}"
-    SHA512 a92c4f5fcfb199e09461cc3e872787dfb79ef1aff237b4a863e016185f42d5902976235c65c29fa632e199ed9a77e2d56a5187c6242e382182e9b0c13ba85bb7
+    SHA512 65444a2be57469b89c115a68e4341390b35938bdacdc9d62a0e77492d8add6a531fdc7639105354145d9866da90108d280a7136a5073a1616a37028bc4c8a2a1
     HEAD_REF main
+    PATCHES
+        fix-debug-install-destinations.patch
 )
 
 vcpkg_cmake_configure(

@@ -1,8 +1,8 @@
 diff --git a/LASlib/src/CMakeLists.txt b/LASlib/src/CMakeLists.txt
-index 51dca48..97a25c4 100644
+index 671c38f..1d92a2d 100644
 --- a/LASlib/src/CMakeLists.txt
 +++ b/LASlib/src/CMakeLists.txt
-@@ -104,15 +104,13 @@ endif()
+@@ -106,15 +106,13 @@ endif()
  
  install(FILES ${LAS_INCLUDES} DESTINATION include/LASlib)
  

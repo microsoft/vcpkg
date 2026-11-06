@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 07c06cc..a3d78ea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,6 +10,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE include)
+ 
+ # install header files
+ install(FILES include/clipboardxx.hpp DESTINATION include)
++install(DIRECTORY include/detail DESTINATION include)
+ 
+ # dependencies
+ if(UNIX AND NOT APPLE)

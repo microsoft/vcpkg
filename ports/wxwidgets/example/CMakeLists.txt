@@ -5,6 +5,7 @@ project(wxwidgets-example)
 add_executable(main WIN32 popup.cpp)
 
 find_package(wxWidgets REQUIRED)
+target_compile_features(main PRIVATE cxx_std_11)
 target_compile_definitions(main PRIVATE ${wxWidgets_DEFINITIONS} "$<$<CONFIG:DEBUG>:${wxWidgets_DEFINITIONS_DEBUG}>")
 target_include_directories(main PRIVATE ${wxWidgets_INCLUDE_DIRS})
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
@@ -13,6 +14,7 @@ add_executable(main2 WIN32 popup.cpp)
 
 find_package(wxWidgets CONFIG REQUIRED)
 target_link_libraries(main2 PRIVATE wx::core wx::base)
+target_compile_features(main2 PRIVATE cxx_std_11)
 
 option(USE_WXRC "Use the wxrc resource compiler" ON)
 if(USE_WXRC)

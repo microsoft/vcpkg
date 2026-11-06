@@ -1,0 +1,99 @@
+commit d0b87157ab0e27e9e4cf2ea27967b5d619e81a76
+Author: Markus Heß <hess@3dvisionlabs.com>
+Date:   Sat Mar 2 13:28:02 2024 +0000
+
+    Link static cuda libs when ceres is build static
+    
+    Change-Id: I8821a2df5302cf164b6f80d6787ae795691d6b32
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4ea82bcd..9729ccc2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,7 +126,7 @@ if (APPLE)
+ endif()
+ # We can't have an option called 'CUDA' since that is a reserved word -- a
+ # language definition.
+-option(USE_CUDA "Enable use of CUDA linear algebra solvers." ON)
++set(USE_CUDA "default" CACHE STRING "Enable use of CUDA linear algebra solvers.")
+ option(LAPACK "Enable use of LAPACK directly within Ceres." ON)
+ # Template specializations for the Schur complement based solvers. If
+ # compile time, binary size or compiler performance is an issue, you
+@@ -204,6 +204,12 @@ if (Eigen3_FOUND)
+   endif (EIGENSPARSE)
+ endif (Eigen3_FOUND)
+ 
++if (CMAKE_VERSION VERSION_LESS 3.17)
++  set_property(CACHE USE_CUDA PROPERTY STRINGS OFF default)
++else (CMAKE_VERSION VERSION_LESS 3.17)
++  set_property(CACHE USE_CUDA PROPERTY STRINGS OFF default static)
++endif (CMAKE_VERSION VERSION_LESS 3.17)
++
+ if (USE_CUDA)
+   if (CMAKE_VERSION VERSION_LESS 3.17)
+     # On older versions of CMake (20.04 default is 3.16) FindCUDAToolkit was
+@@ -233,6 +239,7 @@ if (USE_CUDA)
+       declare_imported_cuda_target(cusparse)
+       declare_imported_cuda_target(cudart ${CUDA_LIBRARIES})
+ 
++      set(CERES_CUDA_TARGET_SUFFIX "")
+       set(CUDAToolkit_BIN_DIR ${CUDA_TOOLKIT_ROOT_DIR}/bin)
+ 
+     else (CUDA_FOUND)
+@@ -252,22 +259,31 @@ if (USE_CUDA)
+         set(CMAKE_CUDA_ARCHITECTURES "50;60;70;80")
+         message("-- Setting CUDA Architecture to ${CMAKE_CUDA_ARCHITECTURES}")
+       endif()
+-      list(APPEND CERES_CUDA_LIBRARIES
+-        CUDA::cublas
+-        CUDA::cudart
+-        CUDA::cusolver
+-        CUDA::cusparse)
+-      set(CMAKE_CUDA_RUNTIME_LIBRARY NONE)
++
++      if (USE_CUDA STREQUAL "static")
++        set(CERES_CUDA_TARGET_SUFFIX "_static")
++      else (USE_CUDA STREQUAL "static")
++        set(CERES_CUDA_TARGET_SUFFIX "")
++      endif (USE_CUDA STREQUAL "static")
+     else (CUDAToolkit_FOUND)
+       message("-- Did not find CUDA, disabling CUDA support.")
+       update_cache_variable(USE_CUDA OFF)
+     endif (CUDAToolkit_FOUND)
+   endif (CMAKE_VERSION VERSION_LESS 3.17)
+ endif (USE_CUDA)
+-if (NOT USE_CUDA)
++
++if (USE_CUDA)
++  list(APPEND CERES_CUDA_LIBRARIES
++    CUDA::cublas${CERES_CUDA_TARGET_SUFFIX}
++    CUDA::cudart${CERES_CUDA_TARGET_SUFFIX}
++    CUDA::cusolver${CERES_CUDA_TARGET_SUFFIX}
++    CUDA::cusparse${CERES_CUDA_TARGET_SUFFIX})
++  unset (CERES_CUDA_TARGET_SUFFIX)
++  set(CMAKE_CUDA_RUNTIME_LIBRARY NONE)
++else (USE_CUDA)
+   message("-- Building without CUDA.")
+   list(APPEND CERES_COMPILE_OPTIONS CERES_NO_CUDA)
+-endif (NOT USE_CUDA)
++endif (USE_CUDA)
+ 
+ if (LAPACK)
+   find_package(LAPACK QUIET)
+diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
+index eecef260..b7e31ee6 100644
+--- a/internal/ceres/CMakeLists.txt
++++ b/internal/ceres/CMakeLists.txt
+@@ -118,11 +118,7 @@ if (ACCELERATESPARSE AND AccelerateSparse_FOUND)
+ endif()
+ 
+ if (USE_CUDA)
+-  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES
+-    CUDA::cublas
+-    CUDA::cudart
+-    CUDA::cusolver
+-    CUDA::cusparse)
++  list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES ${CERES_CUDA_LIBRARIES})
+   set_source_files_properties(cuda_kernels_vector_ops.cu.cc PROPERTIES LANGUAGE CUDA)
+   set_source_files_properties(cuda_kernels_bsm_to_crs.cu.cc PROPERTIES LANGUAGE CUDA)
+   add_library(ceres_cuda_kernels STATIC cuda_kernels_vector_ops.cu.cc cuda_kernels_bsm_to_crs.cu.cc)

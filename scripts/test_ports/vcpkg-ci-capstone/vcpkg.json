@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-capstone",
+  "version-string": "ci",
+  "description": "Validates capstone",
+  "dependencies": [
+    "capstone",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lemire/fast_double_parser
     REF "v${VERSION}"
-    SHA512 41115f3c3b77ad430b0b4a1e622dd2a911ce3283bfd4190b5081f368cd1c371c68cf49789a12a2ed610a91e5b4693fe0b9b0d07876e82cfb0b106a6bc33dedd0
+    SHA512 143f5d920159c5fc6d516417d14f297f7ba79764bab794ed6337dff73add7adcf99f27c078cd0e83a2907c5ec1143a247d85fc229eedcaf74d7710bab0adbd76
     HEAD_REF master
 )
 

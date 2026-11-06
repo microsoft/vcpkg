@@ -1,6 +1,6 @@
 {
   "name": "libvault",
-  "version": "0.61.0",
+  "version": "0.63.0",
   "description": "A C++ library for Hashicorp Vault",
   "homepage": "https://github.com/abedra/libvault",
   "license": "MIT",

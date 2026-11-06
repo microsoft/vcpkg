@@ -2,7 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cisco/openh264
     REF v${VERSION}
-    SHA512 cb6d3ca8d5277325dd64dec399421c4c62bc1fd012fe1521d7195e95ce7f59527919cf698829044dca3d9b1d8288c49b49111d01c9d2896c819da806492af838
+    SHA512 caa52cbc73e9b6096c5ba4066d85d34ea63e81573c36d06ccd3f54ba34d95b133b5c507fc6e1ba81552673de01bed50c35de4b90428b4da9942ade442bd47a13
+    PATCHES
+        001-add-bsds-to-meson.patch
+        002-disable-console.patch # console programs not installed by vcpkg
 )
 
 set(cxx_link_libraries "")
@@ -12,7 +15,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_cmake_get_vars(cmake_vars_file)
         include("${cmake_vars_file}")
         list(REMOVE_ITEM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_LINK_LIBRARIES})
-        list(TRANSFORM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES PREPEND "-l")
+        list(TRANSFORM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES REPLACE "^([^/].*)" "-l\\1")
         string(JOIN " " cxx_link_libraries ${VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
     endblock()
 endif()

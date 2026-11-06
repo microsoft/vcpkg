@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor
     REF "${VERSION}"
-    SHA512 d8ff5bdb2af66db5ba84cceb2e5138728b7e689b81d5aab904c4f5dfbebdcde67b8ecf38e69750edb85e30a6f45ce70ff618ca3d1a76f38a2b4013a6a6320de6
+    SHA512 3f3fe2391df91518cfef4983ff66bf3b79940136582bb99c6270f87481bf9d2cc15605b13f9b70b6ee9a7a89b389037dd2b26362fcae0fdc49f5204872ee5291
     HEAD_REF master
     PATCHES
         fix-find-tbb-and-install-destination.patch

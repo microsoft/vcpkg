@@ -1,8 +1,8 @@
 {
   "name": "kf5notifications",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Desktop notifications",
-  "homepage": "https://api.kde.org/frameworks/knotifications/html/index.html",
+  "homepage": "https://api.kde.org/knotifications-index.html",
   "dependencies": [
     "ecm",
     "kf5config",
@@ -23,7 +23,10 @@
       "name": "qt5-androidextras",
       "platform": "android"
     },
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     {
       "name": "qt5-macextras",
       "platform": "osx"

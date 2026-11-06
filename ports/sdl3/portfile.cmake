@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
-    REF "release-3.2.0"
-    SHA512 ce91a1efb42dae97ad0c28573a9cc682b954a6e2df56f2c5ce2cda78bf589564f927620b55272cb67e0ae021f8385a105b59d1b27b4239c15439b7848f416bff
+    REF "release-${VERSION}"
+    SHA512 8b2c4596f51a2e49e0b54629f440b17952562ec0d403e7852b0148487c89a0f2a28cfe0e700a6bb3278b0191d3eff30b5e0cddc2498783180c16806d4b943173
     HEAD_REF main
+    PATCHES
+        fix-freebsd.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -13,11 +15,28 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         alsa     SDL_ALSA
+        dbus     SDL_DBUS
         ibus     SDL_IBUS
         vulkan   SDL_VULKAN
         wayland  SDL_WAYLAND
         x11      SDL_X11
+        libusb   SDL_HIDAPI_LIBUSB
 )
+
+if (VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS EMSCRIPTEN_FEATURE_OPTIONS
+        FEATURES
+            emscripten-pthreads     SDL_PTHREADS
+    )
+    vcpkg_list(APPEND FEATURE_OPTIONS "${EMSCRIPTEN_FEATURE_OPTIONS}")
+endif()
+
+if ("macos-keyboard-grab" IN_LIST FEATURES)
+    # SDL only disables the system shortcuts in SDL_SetWindowKeyboardGrab() on
+    # macOS if SDL_MAC_NO_SANDBOX is defined
+    string(APPEND VCPKG_C_FLAGS " -DSDL_MAC_NO_SANDBOX")
+    string(APPEND VCPKG_CXX_FLAGS " -DSDL_MAC_NO_SANDBOX")
+endif()
 
 if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
@@ -29,6 +48,20 @@ if ("ibus" IN_LIST FEATURES)
     message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
 endif()
 
+if ("libusb" IN_LIST FEATURES)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_list(APPEND FEATURE_OPTIONS "-DSDL_HIDAPI_LIBUSB_SHARED=ON")
+    else()
+        vcpkg_list(APPEND FEATURE_OPTIONS "-DSDL_HIDAPI_LIBUSB_SHARED=OFF")
+    endif()
+endif()
+
+# option for not need to show windows
+list(APPEND FEATURE_OPTIONS -DSDL_UNIX_CONSOLE_BUILD=ON)
+if (VCPKG_TARGET_IS_LINUX AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES)
+    message(WARNING "The selected features don't allow sdl3 to create windows, which is usually unintentional. You can get windowing support by installing the x11 and/or wayland features.")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -37,12 +70,33 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
+        # Prevent host-installed Unix libraries from silently changing SDL's capabilities.
+        -DSDL_FRIBIDI=OFF
+        -DSDL_JACK=OFF
+        -DSDL_KMSDRM=OFF
+        -DSDL_LIBTHAI=OFF
+        -DSDL_LIBUDEV=OFF
+        -DSDL_LIBURING=OFF
+        -DSDL_PIPEWIRE=OFF
+        -DSDL_PULSEAUDIO=OFF
+        -DSDL_ROCKCHIP=OFF
+        -DSDL_RPI=OFF
+        -DSDL_SNDIO=OFF
+        -DSDL_WAYLAND_LIBDECOR=OFF
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
+        -DSDL_X11_XCURSOR=OFF
+        -DSDL_X11_XDBE=OFF
+        -DSDL_X11_XFIXES=OFF
+        -DSDL_X11_XINPUT=OFF
+        -DSDL_X11_XRANDR=OFF
+        -DSDL_X11_XSHAPE=OFF
+        -DSDL_X11_XSCRNSAVER=OFF
+        -DSDL_X11_XSYNC=OFF
+        -DSDL_X11_XTEST=OFF
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         # Specifying the revision skips the need to use git to determine a version
         -DSDL_REVISION=vcpkg
-        -DCMAKE_DISABLE_FIND_PACKAGE_LibUSB=1
     MAYBE_UNUSED_VARIABLES
         SDL_FORCE_STATIC_VCRT
 )
@@ -59,6 +113,13 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt"
-    COMMENT "Some configurations may use code licensed under the MIT and Apache-2.0 licenses."
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/src/hidapi/LICENSE-bsd.txt"
+        "${SOURCE_PATH}/src/video/stb_image.h"
+        "${SOURCE_PATH}/src/video/yuv2rgb/LICENSE"
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2.h"
+        "${SOURCE_PATH}/include/SDL3/SDL_opengles2_gl2platform.h"
+    COMMENT "SDL_opengles2_gl2platform.h is licensed under Apache-2.0; see https://www.apache.org/licenses/LICENSE-2.0."
 )

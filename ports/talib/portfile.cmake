@@ -1,82 +1,32 @@
-vcpkg_from_sourceforge(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO "ta-lib/ta-lib"
-    REF "${VERSION}"
-    FILENAME "ta-lib-${VERSION}-msvc.zip"
-    SHA512 5f211327b6a1d4f00d0a2b9e276adadd118d7aa29fc87c6771d550fda124a863b4a20e3803f325f7c903c82ea12bfb23121a5f0566eeaa434e0f107a6eedb737
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/TA-Lib/ta-lib/releases/download/v${VERSION}/ta-lib-${VERSION}-src.tar.gz"
+    FILENAME "ta-lib-${VERSION}-src.tar.gz"
+    SHA512 71ee11166006f3a4a6a4fcb4ffc1165fbb70af2b6bf9d0b84d6a3c174279a934f215910a6ac3c46933f8489421c8b866d00c8f8d2c6f0365a3d362997b008182
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    set(LFLAG "d")
-else()
-    set(LFLAG "m")
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" TALIB_BUILD_STATIC)
 
-# Debug build
-if (NOT VCPKG_BUILD_TYPE)
-    vcpkg_execute_build_process(
-        COMMAND nmake -f Makefile
-        WORKING_DIRECTORY "${SOURCE_PATH}/c/make/c${LFLAG}d/win32/msvc"
-        LOGNAME build-${TARGET_TRIPLET}-dbg
-    )
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS
+        -DBUILD_DEV_TOOLS=OFF
+        -DBUILD_STATIC_LIBS=${TALIB_BUILD_STATIC}
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME ta-lib CONFIG_PATH lib/cmake/ta-lib)
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-    file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_abstract_c${LFLAG}d.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        RENAME ta_abstract.lib
-    )
-    file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_libc_c${LFLAG}d.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        RENAME ta_libc.lib
-    )
-    file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_func_c${LFLAG}d.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        RENAME ta_func.lib
-    )
-    file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_common_c${LFLAG}d.lib"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        RENAME ta_common.lib
-    )
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Release build
-vcpkg_execute_build_process(
-    COMMAND nmake -f Makefile
-    WORKING_DIRECTORY "${SOURCE_PATH}/c/make/c${LFLAG}r/win32/msvc"
-    LOGNAME build-${TARGET_TRIPLET}-rel
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage-accurate")
 
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_abstract_c${LFLAG}r.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    RENAME ta_abstract.lib
-)
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_libc_c${LFLAG}r.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    RENAME ta_libc.lib
-)
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_func_c${LFLAG}r.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    RENAME ta_func.lib
-)
-file(
-    INSTALL "${SOURCE_PATH}/c/lib/ta_common_c${LFLAG}r.lib"
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    RENAME ta_common.lib
-)
-
-# Include files
-file(
-    INSTALL "${SOURCE_PATH}/c/include"
-    DESTINATION ${CURRENT_PACKAGES_DIR}
-    PATTERN Makefile.* EXCLUDE
-)
-
-# License file
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

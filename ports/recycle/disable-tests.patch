@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df64f52..ac9a79d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.10)
+ project(recycle)
+ 
+ 
+-# Include common CMake settings
+-include("${STEINWURF_RESOLVE}/toolchains/common_settings.cmake")
+-
+ # Define library
+ add_library(recycle INTERFACE)
+ target_compile_features(recycle INTERFACE cxx_std_14)
+@@ -19,7 +16,7 @@ install(
+   PATTERN *.hpp)
+ 
+   # Is top level project?
+-if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
++if(0)
+ 
+   # Setup testing
+   enable_testing()

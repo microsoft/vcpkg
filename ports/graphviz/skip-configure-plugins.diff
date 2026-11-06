@@ -1,0 +1,10 @@
+diff --git a/cmake/configure_plugins.cmake.in b/cmake/configure_plugins.cmake.in
+index 66a02d198..2848b3378 100644
+--- a/cmake/configure_plugins.cmake.in
++++ b/cmake/configure_plugins.cmake.in
+@@ -1,3 +1,5 @@
++return() # skip: host-only, using paths from staging dir
++
+ # Run dot -c in the staging install directory to create the config8
+ # plugin before the final package is created.
+ #

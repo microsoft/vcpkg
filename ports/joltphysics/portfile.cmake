@@ -1,10 +1,8 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
     REF "v${VERSION}"
-    SHA512 4e19e395d1658dbff7ec00a9c4e9a637d29343f6073c9345b7bfef146c7ab63a7f3669eb04a019b7aa557184ee012d2e8e50417ca3c6ba40d172c01699869033
+    SHA512 bc6f2436bef91a6ffd09eee98186be645f6e9a9b3f65a7a645abf00432ac40ada03320c1fe946661817a94eda372cf8d88e4889991cdd25f1c16ecf9a4486677
     HEAD_REF master
 )
 
@@ -30,6 +28,9 @@ vcpkg_cmake_configure(
         -DUSE_STATIC_MSVC_RUNTIME_LIBRARY=${USE_STATIC_CRT}
         -DENABLE_ALL_WARNINGS=OFF
         -DOVERRIDE_CXX_FLAGS=OFF
+        -DJPH_USE_DX12=OFF
+        -DJPH_USE_VK=OFF
+        -DJPH_USE_MTL=OFF
         ${FEATURE_OPTIONS}
     OPTIONS_RELEASE
         -DGENERATE_DEBUG_SYMBOLS=OFF
@@ -41,5 +42,26 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_cmake_config_fixup(PACKAGE_NAME Jolt CONFIG_PATH "lib/cmake/Jolt")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/Jolt/Core/Core.h"
+        "#pragma once"
+        [=[#pragma once
+
+#ifndef JPH_SHARED_LIBRARY
+#define JPH_SHARED_LIBRARY
+#endif
+#ifndef JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
+#define JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
+#endif
+#ifndef JPH_USE_CPU_COMPUTE
+#define JPH_USE_CPU_COMPUTE
+#endif
+#ifndef JPH_OBJECT_STREAM
+#define JPH_OBJECT_STREAM
+#endif]=]
+    )
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

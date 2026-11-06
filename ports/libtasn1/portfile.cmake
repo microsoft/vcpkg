@@ -1,6 +1,6 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
+    URLS "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
     FILENAME "libtasn1-${VERSION}.tar.gz"
     SHA512 287f5eddfb5e21762d9f14d11997e56b953b980b2b03a97ed4cd6d37909bda1ed7d2cdff9da5d270a21d863ab7e54be6b85c05f1075ac5d8f0198997cf335ef4
 )
@@ -32,9 +32,9 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         --disable-doc
         --disable-gtk-doc
@@ -43,7 +43,7 @@ vcpkg_configure_make(
         "YACC=${BISON}"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE

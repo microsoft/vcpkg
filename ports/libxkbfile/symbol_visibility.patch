@@ -1,8 +1,8 @@
 diff --git a/include/X11/extensions/XKBfile.h b/include/X11/extensions/XKBfile.h
-index 1455463e6..5bcabdd14 100644
---- a/include/X11/extensions/XKBfile.h	
+index 1455463..d883bda 100644
+--- a/include/X11/extensions/XKBfile.h
 +++ b/include/X11/extensions/XKBfile.h
-@@ -83,10 +83,15 @@ typedef void	(*XkbFileAddOnFunc)(
+@@ -83,10 +83,19 @@ typedef void	(*XkbFileAddOnFunc)(
  #define	_XkbErrXReqFailure		25
  #define	_XkbErrBadImplementation	26
  
@@ -10,10 +10,14 @@ index 1455463e6..5bcabdd14 100644
 -extern unsigned		_XkbErrCode;
 -extern const char *	_XkbErrLocation;
 -extern unsigned		_XkbErrData;
-+#if defined(_MSC_VER) && !defined(XKBFILE_BUILD)
-+#define XKBFILE_EXTERN __declspec(dllimport) extern
++#ifdef _MSC_VER
++# ifdef XKBFILE_BUILD
++#  define XKBFILE_EXTERN __declspec(dllexport)
++# else
++#  define XKBFILE_EXTERN __declspec(dllimport)
++# endif
 +#else
-+#define XKBFILE_EXTERN extern
++# define XKBFILE_EXTERN extern
 +#endif
 +XKBFILE_EXTERN const char *	_XkbErrMessages[];
 +XKBFILE_EXTERN unsigned		_XkbErrCode;

@@ -1,0 +1,36 @@
+diff --git a/cmake/external/cuDNN.cmake b/cmake/external/cuDNN.cmake
+index c15e82b..94868a6 100644
+--- a/cmake/external/cuDNN.cmake
++++ b/cmake/external/cuDNN.cmake
+@@ -1,3 +1,5 @@
++find_package(CUDNN REQUIRED) # vcpkg port 'cudnn'
++get_filename_component(cudnn_LIBRARY "${CUDNN_LIBRARY}" ABSOLUTE)
+ add_library(CUDNN::cudnn_all INTERFACE IMPORTED)
+ 
+ find_path(
+diff --git a/cmake/external/cudnn_frontend.cmake b/cmake/external/cudnn_frontend.cmake
+index 71bca97..243e48b 100644
+--- a/cmake/external/cudnn_frontend.cmake
++++ b/cmake/external/cudnn_frontend.cmake
+@@ -1,4 +1,6 @@
+ 
++find_package(cudnn_frontend CONFIG REQUIRED) # cudnn-frontend 1.13.0+
++return()
+ # The cudnn_frontend shim only loads the CUDA runtime / driver libraries with
+ # their Linux names (libcudart.so.*, libcuda.so.1) when NV_CUDNN_FRONTEND_USE_DYNAMIC_LOADING
+ # is enabled. On Windows this always fails (dlopen is mapped to LoadLibrary), so patch the
+diff --git a/cmake/onnxruntime_providers_cuda.cmake b/cmake/onnxruntime_providers_cuda.cmake
+index c38138c..76b8659 100644
+--- a/cmake/onnxruntime_providers_cuda.cmake
++++ b/cmake/onnxruntime_providers_cuda.cmake
+@@ -403,8 +403,8 @@
+               ${ABSEIL_LIBS} ${ONNXRUNTIME_PROVIDERS_SHARED} Boost::mp11 safeint_interface)
+     endif()
+ 
+-    include(cutlass)
+-    target_include_directories(${target} PRIVATE ${cutlass_SOURCE_DIR}/include ${cutlass_SOURCE_DIR}/examples ${cutlass_SOURCE_DIR}/tools/util/include)
++    find_package(NvidiaCutlass REQUIRED)
++    target_link_libraries(${target} PRIVATE nvidia::cutlass::cutlass nvidia::cutlass::tools::util)
+     if(ORT_HAS_SM90_OR_LATER AND NOT WIN32 AND NOT onnxruntime_CUDA_MINIMAL AND NOT onnxruntime_DISABLE_CONTRIB_OPS)
+       include(deep_gemm)
+       target_include_directories(${target} PRIVATE ${deep_gemm_SOURCE_DIR}/deep_gemm/include)

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO projectM-visualizer/projectm-eval
     REF "v${VERSION}"
-    SHA512 "ff5abf4c5deb5a665ed116a1a7a56cfaa0acedc6c211b16ef0c118bc1316f256667681c999c31880dd3aa6aec5ab92ce0747c42ba1ab98ac5046b6ef015de935"
+    SHA512 "7d4d1c3bc980225ad070ab21f316d497cc617699b8ee2bc68284373651d62c667edeab234bdd2fa29a05664c90e9e6af04b747035a28ec463caa1bca36724284"
     HEAD_REF master
 )
 

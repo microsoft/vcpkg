@@ -2,23 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/nghttp3
     REF v${VERSION}
-    SHA512 558c8fc75a27030ec39888f75fc29c0087ab82dfc485be7b87edb1adedd89dbcec9e2800d7936a67f563fa1d84fc5f8f5728cbbb79de406f4f430dbc4b102af4
+    SHA512 92563853bda19988f64ba92a89f9fa4d71b0377c77da6cf490c606ab62d4d741ed0b6ff4479a230864f5f1741a8fee8d470b10dede6ba9144e75615cb6cd9b5d
     HEAD_REF main
     PATCHES
+        001-devendor-sfparse.patch
 )
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SFPARSE_SOURCE_PATH
-    REPO ngtcp2/sfparse
-    REF 930bdf8421f29cf0109f0f1baaafffa376973ed5
-    SHA512 67e1005d4ccf054a47dcb5f813429c7fc12e708cff19f5144447bf1d0863b107dec66e402e1cb223f1492762d38420b48b1e4c03849d69db1ebbb265e7b891ac
-    HEAD_REF main
-)
-
-file(REMOVE_RECURSE "${SOURCE_PATH}/lib/sfparse")
-file(MAKE_DIRECTORY "${SOURCE_PATH}/lib")
-file(RENAME "${SFPARSE_SOURCE_PATH}" "${SOURCE_PATH}/lib/sfparse")
-
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" ENABLE_STATIC_CRT)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
@@ -54,7 +42,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/nghttp3/version.h" [[
 ]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nghttp3/nghttp3.h"
+    "#ifdef NGHTTP3_STATICLIB"
+    "#if 1"
+    )
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

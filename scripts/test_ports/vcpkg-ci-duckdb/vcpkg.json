@@ -1,0 +1,18 @@
+{
+  "name": "vcpkg-ci-duckdb",
+  "version-string": "ci",
+  "description": "Test the icu feature",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "duckdb",
+      "features": [
+        "icu"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

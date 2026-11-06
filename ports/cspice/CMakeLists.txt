@@ -1,41 +1,35 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 project(cspice LANGUAGES C)
 
-set(SOVERSION 67)
+file(GLOB CSPICE_SOURCES "${PROJECT_SOURCE_DIR}/src/cspice/*.c")
+set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/include")
 
-# Include all *.c files from the library
-file(GLOB CSPICE_SOURCE ${PROJECT_SOURCE_DIR}/cspice/src/cspice/*.c)
-set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/cspice/include")
-
-if (_STATIC_BUILD)
-    add_library(cspice STATIC ${CSPICE_SOURCE})
-else()
-    add_library(cspice SHARED ${CSPICE_SOURCE})
-endif()
-target_include_directories(cspice PUBLIC "${INCLUDE_PATH}")
+add_library(cspice ${CSPICE_SOURCES})
+target_include_directories(cspice PUBLIC
+    $<BUILD_INTERFACE:${INCLUDE_PATH}>
+    $<INSTALL_INTERFACE:include>
+)
 
 if (WIN32)
-    target_compile_definitions(cspice PUBLIC "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO;_CRT_SECURE_NO_WARNINGS")
+    # cf. src/cspice/mkprodct.bat
+    target_compile_definitions(cspice PRIVATE "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO;_CRT_SECURE_NO_WARNINGS")
     set_target_properties(cspice PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-elseif (UNIX)
-    target_compile_definitions(cspice PUBLIC "NON_UNIX_STDIO")
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        target_compile_options(cspice PUBLIC -m64 -ansi -fPIC)
-    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        target_compile_options(cspice PUBLIC -m32 -ansi -fPIC) 
+    if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        target_compile_options(cspice PRIVATE /sdl-)
     endif()
+elseif (UNIX)
+    target_compile_definitions(cspice PRIVATE "NON_UNIX_STDIO")
+    set_target_properties(cspice PROPERTIES C_STANDARD 90)
     target_compile_options(cspice PRIVATE -Wno-error=implicit-function-declaration)
 endif ()
 
-if (NOT _SKIP_HEADERS)
-    file(GLOB SPICE_HEADERS ${INCLUDE_PATH}/*.h)
-    install(FILES ${SPICE_HEADERS} DESTINATION include/cspice)
-endif()
-
-set_target_properties(
-    cspice
-    PROPERTIES SOVERSION ${SOVERSION}
+set_target_properties(cspice PROPERTIES
+    VERSION "${VERSION}"
+    SOVERSION "${VERSION}"
 )
+
+file(GLOB SPICE_HEADERS ${INCLUDE_PATH}/*.h)
+install(FILES ${SPICE_HEADERS} DESTINATION include/cspice)
 
 install(
     TARGETS cspice
@@ -43,4 +37,11 @@ install(
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin
+)
+
+install(
+    EXPORT cspice
+    FILE unofficial-cspice-config.cmake
+    NAMESPACE unofficial::cspice::
+    DESTINATION share/unofficial-cspice
 )

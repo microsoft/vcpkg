@@ -1,16 +1,20 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO argtable/argtable3
-    REF "v${VERSION}"
-    SHA512 623197142fd1749b2fd5bc3e51758ae49c58ec8699b6afa5ecb2d0199d98f9c05366f92c5169c8039b5c417f4774fb4a09c879a7b04ddbed9d5e43585692ed7f
-    HEAD_REF master
-    PATCHES Fix-dependence-getopt.patch
+# We cannot use vcpkg_from_github to download the source archive because the
+# auto-generated GitHub archive does not include the `version.tag` file. This
+# file is required to generate argtable3.pc with the correct version info.
+# To resolve this, we prepare the source archive manually and use
+# vcpkg_download_distfile to download it.
+
+vcpkg_download_distfile(
+    ARCHIVE
+    URLS "https://github.com/argtable/argtable3/releases/download/v${VERSION}/argtable-v${VERSION}.zip"
+    FILENAME "argtable-v${VERSION}.zip"
+    SHA512 cdcb67f6d56ef4a02254cd210c035d2b037bd2844a3b14c261500eecd307ca9ab40c6cfa753aa32d4873773ddadc708966fb0772478e575d134399bd4743869f
 )
 
-set(ARGTABLE3_REPLACE_GETOPT ON)
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-   set(ARGTABLE3_REPLACE_GETOPT OFF)
-endif()
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -18,11 +22,10 @@ vcpkg_cmake_configure(
         -DARGTABLE3_ENABLE_CONAN=OFF
         -DARGTABLE3_ENABLE_TESTS=OFF
         -DARGTABLE3_ENABLE_EXAMPLES=OFF
-        -DARGTABLE3_REPLACE_GETOPT=${ARGTABLE3_REPLACE_GETOPT}
 )
 
 vcpkg_cmake_install()
-
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")

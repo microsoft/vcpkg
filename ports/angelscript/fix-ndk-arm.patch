@@ -1,0 +1,49 @@
+diff --git a/angelscript/source/as_callfunc_arm_gcc.S b/angelscript/source/as_callfunc_arm_gcc.S
+index 994fcb0..62a9602 100644
+--- a/angelscript/source/as_callfunc_arm_gcc.S
++++ b/angelscript/source/as_callfunc_arm_gcc.S
+@@ -53,6 +53,12 @@
+ .global armFuncObjLast
+ .global armFuncR0ObjLast
+ 
++.type armFunc, %function
++.type armFuncR0, %function
++.type armFuncR0R1, %function
++.type armFuncObjLast, %function
++.type armFuncR0ObjLast, %function
++
+ /* --------------------------------------------------------------------------------------------*/
+ armFunc:
+     stmdb   sp!, {r4-r8, lr}
+@@ -315,6 +321,7 @@ nomoreargsarmFuncR0R1:
+     .arm            /* Use ARM instructions instead of Thumb.*/
+ #endif
+     .globl armFunc  /* Make the function globally accessible.*/
++    .type armFunc, %function
+ armFunc:
+     push    {r4-r8, r10, r11, lr}   /* sp must be 8-byte alignment for ABI compliance, so the pushed registers must be even */
+ 
+@@ -474,6 +482,7 @@ nomoreargsarmFuncObjLast:
+     .arm            /* Use ARM instructions instead of Thumb.*/
+ #endif
+     .globl armFuncR0ObjLast     /* Make the function globally accessible.*/
++    .type armFuncR0ObjLast, %function
+ armFuncR0ObjLast:
+     push    {r4-r8, r10, r11, lr}
+ 
+@@ -568,6 +577,7 @@ nomoreargsarmFuncR0ObjLast:
+     .arm            /* Use ARM instructions instead of Thumb.*/
+ #endif
+     .globl armFuncR0        /* Make the function globally accessible.*/
++    .type armFuncR0, %function
+ armFuncR0:
+     push {r4-r8, r10, r11, lr}
+ 
+@@ -644,6 +654,7 @@ nomoreargsarmFuncR0:
+     .arm            /* Use ARM instructions instead of Thumb.*/
+ #endif
+     .globl armFuncR0R1      /* Make the function globally accessible.*/
++    .type armFuncR0R1, %function
+ armFuncR0R1:
+     push {r4-r8, r10, r11, lr}
+ 

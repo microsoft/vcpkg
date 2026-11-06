@@ -1,7 +1,19 @@
 diff --git a/src/MessageTypeStore.cpp b/src/MessageTypeStore.cpp
-index 382a138..5f09122 100644
+index 382a138..65c10e8 100644
 --- a/src/MessageTypeStore.cpp
 +++ b/src/MessageTypeStore.cpp
+@@ -34,9 +34,9 @@ using namespace Arcus;
+  * of std::hash differs between compilers, we need to make sure we use the same
+  * implementation everywhere.
+  */
+-uint32_t hash(const std::string& input)
++uint32_t hash(const absl::string_view& input)
+ {
+-    const char* data = input.c_str();
++    const char* data = input.data();
+     uint32_t length = input.size();
+     uint32_t result = static_cast<uint32_t>(2166136261UL);
+     for(; length; --length)
 @@ -52,7 +52,7 @@ class ErrorCollector : public google::protobuf::compiler::MultiFileErrorCollecto
  public:
      ErrorCollector() : _error_count(0) { }

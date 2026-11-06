@@ -1,0 +1,13 @@
+diff --git a/src/filter/camerashake/CMakeLists.txt b/src/filter/camerashake/CMakeLists.txt
+index e809f3b..7b80f16 100644
+--- a/src/filter/camerashake/CMakeLists.txt
++++ b/src/filter/camerashake/CMakeLists.txt
+@@ -6,7 +6,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ # Compile as shared library
+ set (TARGET camerashake)
+-add_library(${TARGET} MODULE camerashake.cpp)
++add_library(${TARGET} MODULE camerashake.cpp ${FREI0R_DEF})
+ 
+ # Remove the "lib" prefix so that Frei0r can read it correctly
+ set_target_properties(${TARGET} PROPERTIES PREFIX "")

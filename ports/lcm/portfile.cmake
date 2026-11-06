@@ -1,15 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lcm-proj/lcm
-    REF v1.4.0
-    SHA512 ca036aa2c31911e0bfaeab9665188c97726201267314693a1c333c4efe13ea598b39a55a19bc1d48e65462ac9d1716adfda5af86c645d59c3247192631247cc6
+    REF "v${VERSION}"
+    SHA512 a9629cf4810def4d29ee427c36c09cf19d3b7b824c3dba7e32efbd79e66771c11bb4e32b6adacc24bc6510e3039bf61e303a33fdcd6494b4329c8e0724939050
     HEAD_REF master
-    PATCHES 
+    PATCHES
         only-install-one-flavor.patch
-        fix-build-error.patch
         glib.link.patch
         disable-docs.patch
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
      SOURCE_PATH "${SOURCE_PATH}"
@@ -44,4 +46,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/WinSpecific/getopt/getopt.c"
+    "${SOURCE_PATH}/WinSpecific/getopt/getopt_long.c"
+)

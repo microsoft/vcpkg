@@ -47,6 +47,7 @@ mark_as_advanced(VCPKG_VERBOSE)
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
+option(VCPKG_USE_LEGACY_APPLOCAL "Use applocal.ps1 instead of vcpkg z-applocal." OFF)
 
 # requires CMake 3.14
 option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables. Requires CMake 3.14." OFF)
@@ -268,6 +269,10 @@ else()
         set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
     elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 17 2022")
         set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 18 2026" AND CMAKE_VS_PLATFORM_NAME_DEFAULT STREQUAL "ARM64")
+        set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
+    elseif(CMAKE_GENERATOR STREQUAL "Visual Studio 18 2026")
+        set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_OSX_ARCHITECTURES)
         list(LENGTH CMAKE_OSX_ARCHITECTURES Z_VCPKG_OSX_ARCH_COUNT)
         if(Z_VCPKG_OSX_ARCH_COUNT EQUAL "0")
@@ -352,6 +357,12 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_H
     set(Z_VCPKG_TARGET_TRIPLET_PLAT osx)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(Z_VCPKG_TARGET_TRIPLET_PLAT ios)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "watchOS")
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT watchos)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "tvOS")
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT tvos)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "visionOS")
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT visionos)
 elseif(MINGW)
     set(Z_VCPKG_TARGET_TRIPLET_PLAT mingw-dynamic)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows"))
@@ -366,8 +377,14 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_
     set(Z_VCPKG_TARGET_TRIPLET_PLAT freebsd)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT openbsd)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "NetBSD" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "NetBSD"))
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT netbsd)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "SunOS"))
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT solaris)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Android" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_HOST_SYSTEM_NAME STREQUAL "Android"))
     set(Z_VCPKG_TARGET_TRIPLET_PLAT android)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "OHOS")
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT ohos)
 endif()
 
 if(EMSCRIPTEN)
@@ -561,27 +578,45 @@ set(VCPKG_CAN_USE_HOST_TOOLS OFF)
 if(DEFINED VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL "")
     set(VCPKG_CAN_USE_HOST_TOOLS ON)
 endif()
-cmake_dependent_option(VCPKG_USE_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use host tools" ON "VCPKG_CAN_USE_HOST_TOOLS" OFF)
+cmake_dependent_option(VCPKG_USE_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use only host tools" OFF "VCPKG_CAN_USE_HOST_TOOLS" OFF)
+# Tools such as wxrc from wxwidgets are only installed for the target triplet,
+# so fall back to the target tools after the host tools.
+cmake_dependent_option(VCPKG_PREFER_HOST_TOOLS "Setup CMAKE_PROGRAM_PATH to use host tools, then target tools" ON "VCPKG_CAN_USE_HOST_TOOLS" OFF)
 unset(VCPKG_CAN_USE_HOST_TOOLS)
 
 if(VCPKG_SETUP_CMAKE_PROGRAM_PATH)
-    set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools")
     if(VCPKG_USE_HOST_TOOLS)
-        set(tools_base_path "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools")
+        set(Z_VCPKG_TOOLS_TRIPLETS "${VCPKG_HOST_TRIPLET}")
+    elseif(VCPKG_PREFER_HOST_TOOLS)
+        set(Z_VCPKG_TOOLS_TRIPLETS "${VCPKG_HOST_TRIPLET}" "${VCPKG_TARGET_TRIPLET}")
+        list(REMOVE_DUPLICATES Z_VCPKG_TOOLS_TRIPLETS)
+        # The target triplet's tree is in CMAKE_FIND_ROOT_PATH, and in the default BOTH
+        # mode find_program() searches inside it first, which would find the target
+        # copy of a tool installed for both triplets.
+        if(NOT VCPKG_HOST_TRIPLET STREQUAL VCPKG_TARGET_TRIPLET AND NOT DEFINED CMAKE_FIND_ROOT_PATH_MODE_PROGRAM)
+            set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+        endif()
+    else()
+        set(Z_VCPKG_TOOLS_TRIPLETS "${VCPKG_TARGET_TRIPLET}")
     endif()
-    list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
-    file(GLOB Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
-    file(GLOB Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
-    file(GLOB Z_VCPKG_TOOLS_DIRS_BIN LIST_DIRECTORIES true "${tools_base_path}/*/bin")
-    file(GLOB Z_VCPKG_TOOLS_FILES_BIN LIST_DIRECTORIES false "${tools_base_path}/*/bin")
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS_BIN ${Z_VCPKG_TOOLS_FILES_BIN} "")
-    string(REPLACE "/bin" "" Z_VCPKG_TOOLS_DIRS_TO_REMOVE "${Z_VCPKG_TOOLS_DIRS_BIN}")
-    list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_TO_REMOVE} "")
-    list(APPEND Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_BIN})
-    foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
-        list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
+    foreach(Z_VCPKG_TOOLS_TRIPLET IN LISTS Z_VCPKG_TOOLS_TRIPLETS)
+        set(tools_base_path "${VCPKG_INSTALLED_DIR}/${Z_VCPKG_TOOLS_TRIPLET}/tools")
+        list(APPEND CMAKE_PROGRAM_PATH "${tools_base_path}")
+        file(GLOB Z_VCPKG_TOOLS_DIRS LIST_DIRECTORIES true "${tools_base_path}/*")
+        file(GLOB Z_VCPKG_TOOLS_FILES LIST_DIRECTORIES false "${tools_base_path}/*")
+        file(GLOB Z_VCPKG_TOOLS_DIRS_BIN LIST_DIRECTORIES true "${tools_base_path}/*/bin")
+        file(GLOB Z_VCPKG_TOOLS_FILES_BIN LIST_DIRECTORIES false "${tools_base_path}/*/bin")
+        list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_FILES} "") # need at least one item for REMOVE_ITEM if CMake <= 3.19
+        list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS_BIN ${Z_VCPKG_TOOLS_FILES_BIN} "")
+        string(REPLACE "/bin" "" Z_VCPKG_TOOLS_DIRS_TO_REMOVE "${Z_VCPKG_TOOLS_DIRS_BIN}")
+        list(REMOVE_ITEM Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_TO_REMOVE} "")
+        list(APPEND Z_VCPKG_TOOLS_DIRS ${Z_VCPKG_TOOLS_DIRS_BIN})
+        foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
+            list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
+        endforeach()
     endforeach()
+    unset(Z_VCPKG_TOOLS_TRIPLET)
+    unset(Z_VCPKG_TOOLS_TRIPLETS)
     unset(Z_VCPKG_TOOLS_DIR)
     unset(Z_VCPKG_TOOLS_DIRS)
     unset(Z_VCPKG_TOOLS_FILES)
@@ -604,19 +639,29 @@ function(add_executable)
     if(IMPORTED_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         if(VCPKG_APPLOCAL_DEPS)
             if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox")
-                z_vcpkg_set_powershell_path()
                 set(EXTRA_OPTIONS "")
                 if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
                     set(EXTRA_OPTIONS USES_TERMINAL)
                 endif()
-                add_custom_command(TARGET "${target_name}" POST_BUILD
-                    COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
-                        -targetBinary "$<TARGET_FILE:${target_name}>"
-                        -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
-                        -OutVariable out
-                    VERBATIM
-                    ${EXTRA_OPTIONS}
-                )
+                if(VCPKG_USE_LEGACY_APPLOCAL)
+                    z_vcpkg_set_powershell_path()
+                    add_custom_command(TARGET "${target_name}" POST_BUILD
+                        COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
+                            -targetBinary "$<TARGET_FILE:${target_name}>"
+                            -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                            -OutVariable out
+                        VERBATIM
+                        ${EXTRA_OPTIONS}
+                    )
+                else()
+                    add_custom_command(TARGET "${target_name}" POST_BUILD
+                        COMMAND "${Z_VCPKG_EXECUTABLE}" z-applocal
+                            "--target-binary=$<TARGET_FILE:${target_name}>"
+                            "--installed-bin-dir=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                        VERBATIM
+                        ${EXTRA_OPTIONS}
+                    )
+                endif()
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if(NOT MACOSX_BUNDLE_IDX EQUAL "-1")
                     find_package(Python COMPONENTS Interpreter)
@@ -645,14 +690,23 @@ function(add_library)
     if(IMPORTED_IDX EQUAL "-1" AND INTERFACE_IDX EQUAL "-1" AND ALIAS_IDX EQUAL "-1")
         get_target_property(IS_LIBRARY_SHARED "${target_name}" TYPE)
         if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp|xbox" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
-            z_vcpkg_set_powershell_path()
-            add_custom_command(TARGET "${target_name}" POST_BUILD
-                COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
-                    -targetBinary "$<TARGET_FILE:${target_name}>"
-                    -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
-                    -OutVariable out
+            if(VCPKG_USE_LEGACY_APPLOCAL)
+                z_vcpkg_set_powershell_path()
+                add_custom_command(TARGET "${target_name}" POST_BUILD
+                    COMMAND "${Z_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
+                        -targetBinary "$<TARGET_FILE:${target_name}>"
+                        -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
+                        -OutVariable out
+                        VERBATIM
+                )
+            else()
+                add_custom_command(TARGET "${target_name}" POST_BUILD
+                    COMMAND "${Z_VCPKG_EXECUTABLE}" z-applocal
+                        "--target-binary=$<TARGET_FILE:${target_name}>"
+                        "--installed-bin-dir=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     VERBATIM
-            )
+                )
+            endif()
         endif()
         set_target_properties("${target_name}" PROPERTIES VS_USER_PROPS do_not_import_user.props)
         set_target_properties("${target_name}" PROPERTIES VS_GLOBAL_VcpkgEnabled false)
@@ -689,7 +743,6 @@ function(x_vcpkg_install_local_dependencies)
         # Install CODE|SCRIPT allow the use of generator expressions
         cmake_policy(SET CMP0087 NEW) # CMake 3.14
 
-        z_vcpkg_set_powershell_path()
         if(NOT IS_ABSOLUTE "${arg_DESTINATION}")
             set(arg_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${arg_DESTINATION}")
         endif()
@@ -699,16 +752,27 @@ function(x_vcpkg_install_local_dependencies)
             set(component_param COMPONENT "${arg_COMPONENT}")
         endif()
 
+        set(allowed_target_types MODULE_LIBRARY SHARED_LIBRARY EXECUTABLE)
         foreach(target IN LISTS arg_TARGETS)
             get_target_property(target_type "${target}" TYPE)
-            if(NOT target_type STREQUAL "INTERFACE_LIBRARY")
-                install(CODE "message(\"-- Installing app dependencies for ${target}...\")
-                    execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                        -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
-                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)"
-                    ${component_param}
-                )
+            if(target_type IN_LIST allowed_target_types)
+                if(VCPKG_USE_LEGACY_APPLOCAL)
+                    z_vcpkg_set_powershell_path()
+                    install(CODE "message(\"-- Installing app dependencies for ${target}...\")
+                        execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                            -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
+                            -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                            -OutVariable out)"
+                        ${component_param}
+                    )
+                else()
+                    install(CODE "message(\"-- Installing app dependencies for ${target}...\")
+                        execute_process(COMMAND \"${Z_VCPKG_EXECUTABLE}\" z-applocal
+                            \"--target-binary=${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
+                            \"--installed-bin-dir=${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\")"
+                        ${component_param}
+                    )
+                endif()
             endif()
         endforeach()
     endif()
@@ -784,11 +848,42 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "${ARGN}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "")
 
+    if(z_vcpkg_find_package_backup_id EQUAL "1")
+        # This is the top-level find_package call
+        if("${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+            # Avoid CMake warning when both REQUIRED and CMAKE_REQUIRE_FIND_PACKAGE_<Pkg> are used
+            if(NOT "REQUIRED" IN_LIST "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN")
+                list(APPEND "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars" "CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                if(DEFINED "CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                    set("z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" "${CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+                endif()
+                set("CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" 1)
+            endif()
+            if(VCPKG_TRACE_FIND_PACKAGE)
+                message(STATUS "  (required by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}=${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}})")
+            endif()
+        elseif(DEFINED "VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+            list(APPEND "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars" "CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+            if(DEFINED "CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                set("z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" "${CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+            endif()
+            # We don't need to worry about clearing this for transitive users because
+            # once this top level find_package is disabled, we immediately will return
+            # not found and not try to visit transitive dependencies in the first place.
+            set("CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" 1)
+            if(VCPKG_TRACE_FIND_PACKAGE)
+                message(STATUS "  (disabled by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}=${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}})")
+            endif()
+        elseif(VCPKG_TRACE_FIND_PACKAGE)
+            message(STATUS "  (could be controlled by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name})")
+        endif()
+    endif()
+
     # Workaround to set the ROOT_PATH until upstream CMake stops overriding
     # the ROOT_PATH at apple OS initialization phase.
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
     # Fixed in CMake 3.15
-    if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "watchOS" OR CMAKE_SYSTEM_NAME STREQUAL "tvOS" OR CMAKE_SYSTEM_NAME STREQUAL "visionOS")
         list(APPEND z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "CMAKE_FIND_ROOT_PATH")
         if(DEFINED CMAKE_FIND_ROOT_PATH)
             set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")
@@ -799,7 +894,10 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     string(TOLOWER "${z_vcpkg_find_package_package_name}" z_vcpkg_find_package_lowercase_package_name)
     set(z_vcpkg_find_package_vcpkg_cmake_wrapper_path
         "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
-    if(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
+    if(CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name})
+        # Skip wrappers, fail if REQUIRED.
+        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
+    elseif(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
         if(VCPKG_TRACE_FIND_PACKAGE)
             string(REPEAT "  " "${z_vcpkg_find_package_backup_id}" z_vcpkg_find_package_indent)
             message(STATUS "${z_vcpkg_find_package_indent}using share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 40a19e8..8b75d40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,6 +49,10 @@ else()
+ endif()
+ 
+ 
++set_target_properties(httpfs_loadable_extension PROPERTIES EXCLUDE_FROM_ALL 1)
++if(BUILD_SHARED_LIBS)
++  return()
++endif()
+ install(
+   TARGETS httpfs_extension
+   EXPORT "${DUCKDB_EXPORT_SET}"

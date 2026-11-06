@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/tinycbor
-    REF v0.6.0
-    SHA512 af1ed05c03d3aed56e35fdcaad3235992f96b5043b594c0246e600e4b1f085df78c5345beaac8758c2b5db2952ab83997019de5940857eecb81d84b6fb642093
+    REF "v${VERSION}"
+    SHA512 7c7fff9c1e9a2f04a3bb0247b79723526685b2821df720d0211c8e86b1a516c955926b3668fa6dcdaaf6cb811aff238db39a9add1bc12a4d32f8a51741f3f2ce
     HEAD_REF master
 )
 

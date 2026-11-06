@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f581e900a71f78fde3361d2bed2fe165952c2ca087168c5f4e4994586bd832267eea58e0662a74b6a7430bc361fe80b5307b2ee6bf631a3561a8cba86e1cd3f2
     HEAD_REF default
+    PATCHES
+        fix-size-t.patch # https://github.com/breakfastquay/rubberband/pull/131
 )
 
 
@@ -16,7 +18,7 @@ endif()
 # Select fastest available FFT library according https://github.com/breakfastquay/rubberband/blob/default/COMPILING.md#fft-libraries-supported
 if(
     (VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
-    OR (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    OR VCPKG_TARGET_IS_OSX
     OR VCPKG_TARGET_IS_IOS
     OR VCPKG_TARGET_IS_EMSCRIPTEN
 )

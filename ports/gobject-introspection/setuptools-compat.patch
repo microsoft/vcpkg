@@ -1,0 +1,14 @@
+diff --git a/giscanner/msvccompiler.py b/giscanner/msvccompiler.py
+index c9f14b5..1cd57df 100644
+--- a/giscanner/msvccompiler.py
++++ b/giscanner/msvccompiler.py
+@@ -40,7 +40,8 @@ class MSVCCompiler(DistutilsMSVCCompiler):
+ 
+     def __init__(self, verbose=0, dry_run=0, force=0):
+         super(DistutilsMSVCCompiler, self).__init__()
+-        CCompiler.__init__(self, verbose, dry_run, force)
++        # dry_run removed in setuptools 81; just ignore it
++        CCompiler.__init__(self, verbose=verbose, force=force)
+         self.__paths = []
+         self.__arch = None  # deprecated name
+         self.initialized = False

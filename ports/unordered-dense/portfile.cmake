@@ -2,8 +2,8 @@ vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO martinus/unordered_dense
 	REF "v${VERSION}"
-	SHA512 f9c819e28e1c1a387acfee09277d6af5e366597a0d39acf1c687acf0608a941ba966af8aaebdb8fba0126c7360269c4a51754ef4cab17c35c01a30215f953368
-	HEAD_REF master
+	SHA512 f805eda978ef37703dee49214ec39ed24e82df06e7101b6ef52bf9ee1d8db31a311a5abc00d703c2ba0886633eb39096a2b8a1e13cc1d70199785f9ec8f2343f
+	HEAD_REF main
 )
 
 vcpkg_cmake_configure(

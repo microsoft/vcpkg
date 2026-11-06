@@ -1,0 +1,74 @@
+diff --git a/sproto.h b/sproto.h
+index 1234567..8901234 100644
+--- a/sproto.h
++++ b/sproto.h
+@@ -6,6 +6,24 @@
+ struct sproto;
+ struct sproto_type;
+ 
++#if defined(_WIN32)
++  #if defined(SPROTO_BUILD_DLL)
++    #define SPROTO_API __declspec(dllexport)
++  #elif defined(SPROTO_STATIC)
++    #define SPROTO_API
++  #else
++    #define SPROTO_API __declspec(dllimport)
++  #endif
++#elif defined(__GNUC__) || defined(__clang__)
++  #if defined(SPROTO_BUILD_DLL)
++    #define SPROTO_API __attribute__((visibility("default")))
++  #else
++    #define SPROTO_API
++  #endif
++#else
++  #define SPROTO_API
++#endif
++
+ #define SPROTO_REQUEST 0
+ #define SPROTO_RESPONSE 1
+ 
+@@ -25,19 +43,19 @@
+ #define SPROTO_CB_NIL -2
+ #define SPROTO_CB_NOARRAY -3
+ 
+-struct sproto * sproto_create(const void * proto, size_t sz);
+-void sproto_release(struct sproto *);
++SPROTO_API struct sproto * sproto_create(const void * proto, size_t sz);
++SPROTO_API void sproto_release(struct sproto *);
+ 
+-int sproto_prototag(const struct sproto *, const char * name);
+-const char * sproto_protoname(const struct sproto *, int proto);
++SPROTO_API int sproto_prototag(const struct sproto *, const char * name);
++SPROTO_API const char * sproto_protoname(const struct sproto *, int proto);
+ // SPROTO_REQUEST(0) : request, SPROTO_RESPONSE(1): response
+-struct sproto_type * sproto_protoquery(const struct sproto *, int proto, int what);
+-int sproto_protoresponse(const struct sproto *, int proto);
++SPROTO_API struct sproto_type * sproto_protoquery(const struct sproto *, int proto, int what);
++SPROTO_API int sproto_protoresponse(const struct sproto *, int proto);
+ 
+-struct sproto_type * sproto_type(const struct sproto *, const char * type_name);
++SPROTO_API struct sproto_type * sproto_type(const struct sproto *, const char * type_name);
+ 
+-int sproto_pack(const void * src, int srcsz, void * buffer, int bufsz);
+-int sproto_unpack(const void * src, int srcsz, void * buffer, int bufsz);
++SPROTO_API int sproto_pack(const void * src, int srcsz, void * buffer, int bufsz);
++SPROTO_API int sproto_unpack(const void * src, int srcsz, void * buffer, int bufsz);
+ 
+ struct sproto_arg {
+ 	void *ud;
+@@ -58,11 +76,11 @@ struct sproto_arg {
+ 
+ typedef int (*sproto_callback)(const struct sproto_arg *args);
+ 
+-int sproto_decode(const struct sproto_type *, const void * data, int size, sproto_callback cb, void *ud);
+-int sproto_encode(const struct sproto_type *, void * buffer, int size, sproto_callback cb, void *ud);
++SPROTO_API int sproto_decode(const struct sproto_type *, const void * data, int size, sproto_callback cb, void *ud);
++SPROTO_API int sproto_encode(const struct sproto_type *, void * buffer, int size, sproto_callback cb, void *ud);
+ 
+ // for debug use
+-void sproto_dump(struct sproto *);
+-const char * sproto_name(struct sproto_type *);
++SPROTO_API void sproto_dump(struct sproto *);
++SPROTO_API const char * sproto_name(struct sproto_type *);
+ 
+ #endif
