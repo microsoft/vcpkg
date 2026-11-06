@@ -1,0 +1,8 @@
+The package kio provides CMake targets:
+
+    find_package(KF6KIO CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE KF6::KIOCore KF6::KIOGui KF6::KIOWidgets KF6::KIOFileWidgets)
+
+KIO runs some operations in the helper executables kioworker and kioexec, which
+it looks for next to the application and in PATH: applications using them must
+deploy them from tools/kio next to their executable, or add tools/kio to PATH.
