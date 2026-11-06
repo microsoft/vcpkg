@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osamu620/OpenHTJ2K
     REF "v${VERSION}"
-    SHA512 f353a5a5fd87fe783f98c2a2dafd41dc36569f09c403a36422feae8013525142f5341b6c8b7ccf1943809291983555f4063c366d93874423ba24b5738cda5542
+    SHA512 68927462c0603809acd5cf35e8efc647fc33cea410aec8079e74a7931a167a7752408a8a5dffb264d461c8020b11283e3a116a889f469044f0bcf2294a4666a4
     HEAD_REF main
 )
 
@@ -39,7 +39,7 @@ vcpkg_fixup_pkgconfig()
 # OHTJ2K_STATIC is defined; the CMake target and the .pc file define it for
 # the static library, but code that only includes the headers does not.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    foreach(header IN ITEMS decoder.hpp encoder.hpp)
+    foreach(header IN ITEMS decoder.hpp encoder.hpp openhtj2k_message.hpp)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/open_htj2k/interface/${header}"
             "#if defined(_MSC_VER) && !defined(OHTJ2K_STATIC)"
             "#if 0 // static library"
