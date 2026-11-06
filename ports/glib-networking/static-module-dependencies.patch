@@ -1,0 +1,52 @@
+diff --git a/proxy/environment/meson.build b/proxy/environment/meson.build
+index d62a677..bd1321d 100644
+--- a/proxy/environment/meson.build
++++ b/proxy/environment/meson.build
+@@ -35,7 +35,7 @@ if build_static
+     install: true,
+     install_dir: gio_module_dir
+   )
+-  pkg.generate(module)
++  pkg.generate(gioenvironmentproxy_lib)
+ 
+   gioenvironmentproxy_dep = declare_dependency(
+     link_with: gioenvironmentproxy_lib
+diff --git a/proxy/libproxy/meson.build b/proxy/libproxy/meson.build
+index 9b77129..2b5a92b 100644
+--- a/proxy/libproxy/meson.build
++++ b/proxy/libproxy/meson.build
+@@ -56,7 +56,7 @@ if build_static
+     install: true,
+     install_dir: gio_module_dir
+   )
+-  pkg.generate(module)
++  pkg.generate(giolibproxy_lib)
+ 
+   giolibproxy_dep = declare_dependency(link_with: giolibproxy_lib)
+   meson.override_dependency('giolibproxy', giolibproxy_dep)
+diff --git a/tls/gnutls/meson.build b/tls/gnutls/meson.build
+index 4676200..74e8112 100644
+--- a/tls/gnutls/meson.build
++++ b/tls/gnutls/meson.build
+@@ -41,7 +41,7 @@ if build_static
+     install: true,
+     install_dir: gio_module_dir,
+   )
+-  pkg.generate(module)
++  pkg.generate(giognutls_lib)
+ 
+   giognutls_dep = declare_dependency(link_with: giognutls_lib)
+   meson.override_dependency('giognutls', giognutls_dep)
+diff --git a/tls/openssl/meson.build b/tls/openssl/meson.build
+index 72a6eca..09b80ba 100644
+--- a/tls/openssl/meson.build
++++ b/tls/openssl/meson.build
+@@ -54,7 +54,7 @@ if build_static
+     install: true,
+     install_dir: gio_module_dir,
+   )
+-  pkg.generate(module)
++  pkg.generate(gioopenssl_lib)
+ 
+   gioopenssl_dep = declare_dependency(link_with: gioopenssl_lib)
+   meson.override_dependency('gioopenssl', gioopenssl_dep)

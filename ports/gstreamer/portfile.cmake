@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
         duplicate-unused.diff
         11894.diff  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/11894
         no-moltenvk-download.diff
+        relocate-plugin-scanner.patch
 )
 
 # subprojects that do their own downloads
@@ -368,6 +369,13 @@ endif()
 
 if(GST_LIBEXEC_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${GST_LIBEXEC_TOOLS} SEARCH_DIR "${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0" AUTO_CLEAN)
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_copy_tools(
+            TOOL_NAMES gst-plugin-scanner
+            SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/libexec/gstreamer-1.0"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
+        )
+    endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -419,7 +427,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     if(EXISTS "${_file}")
         file(READ "${_file}" _contents)
         string(REPLACE [[toolsdir=${exec_prefix}/bin]] "toolsdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
-        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/../tools/${PORT}" _contents "${_contents}")
+        string(REPLACE [[pluginscannerdir=${libexecdir}/gstreamer-1.0]] "pluginscannerdir=\${prefix}/tools/${PORT}" _contents "${_contents}")
         string(REPLACE [[pluginsdir=${libdir}/gstreamer-1.0]] "pluginsdir=\${prefix}/plugins/${PORT}" _contents "${_contents}")
         file(WRITE "${_file}" "${_contents}")
     endif()
