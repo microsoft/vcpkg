@@ -67,16 +67,23 @@ endif()
 
 if(NOT TARGET brazier::brazier)
     add_library(brazier::brazier INTERFACE IMPORTED)
-
-    if(TARGET brazier::logger)
-        set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES brazier::logger)
-    endif()
-    if(TARGET brazier::core)
-        set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES brazier::core)
-    endif()
-    if(TARGET brazier::orm)
-        set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES brazier::orm)
-    endif()
 endif()
+
+get_target_property(_brazier_dir brazier::brazier DIRECTORY)
+if(_brazier_dir STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    get_target_property(_brazier_links brazier::brazier INTERFACE_LINK_LIBRARIES)
+    if(NOT _brazier_links)
+        set(_brazier_links "")
+    endif()
+
+    foreach(_comp IN ITEMS brazier::logger brazier::core brazier::orm)
+        if(TARGET ${_comp} AND NOT _comp IN_LIST _brazier_links)
+            set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${_comp})
+        endif()
+    endforeach()
+endif()
+
+unset(_brazier_dir)
+unset(_brazier_links)
 
 check_required_components(brazier)
