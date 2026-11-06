@@ -1,0 +1,9 @@
+fastnoiselite is a header-only library. To use it, add the appropriate include directory to your target:
+
+For C++ projects (when installed with the `cpp` feature, enabled by default):
+  find_path(FASTNOISELITE_INCLUDE_DIRS "FastNoiseLite.h" PATH_SUFFIXES "fastnoiselite")
+  target_include_directories(main PRIVATE ${FASTNOISELITE_INCLUDE_DIRS})
+
+For C projects (when installed with the `c` feature):
+  find_path(FASTNOISELITE_C_INCLUDE_DIRS "FastNoiseLite.h" PATH_SUFFIXES "fastnoiselite-c")
+  target_include_directories(main PRIVATE ${FASTNOISELITE_C_INCLUDE_DIRS})

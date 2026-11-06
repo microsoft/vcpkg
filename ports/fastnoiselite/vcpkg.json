@@ -1,0 +1,18 @@
+{
+  "name": "fastnoiselite",
+  "version": "1.1.1",
+  "description": "Fast Portable Noise Library",
+  "homepage": "https://auburn.github.io/FastNoiseLite/",
+  "license": "MIT",
+  "default-features": [
+    "cpp"
+  ],
+  "features": {
+    "c": {
+      "description": "Install C implementation"
+    },
+    "cpp": {
+      "description": "Install C++ implementation"
+    }
+  }
+}
