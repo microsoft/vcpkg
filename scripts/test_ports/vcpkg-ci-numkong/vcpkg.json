@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-numkong",
+  "version-string": "ci",
+  "description": "Validates numkong",
+  "license": null,
+  "dependencies": [
+    "numkong",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
