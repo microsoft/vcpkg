@@ -26,22 +26,20 @@ index ae93578..026f571 100644
      FIND_PACKAGE(OpenGL)
  ENDIF()
  
-diff --git a/src/osgQOpenGL/CMakeLists.txt b/src/osgQOpenGL/CMakeLists.txt
-index 41c7594..6dfef7b 100644
---- a/src/osgQOpenGL/CMakeLists.txt
-+++ b/src/osgQOpenGL/CMakeLists.txt
-@@ -95,6 +95,11 @@ install(EXPORT ${LIB_NAME}-targets
+diff --git a/CMakeModules/OsgMacroUtils.cmake b/CMakeModules/OsgMacroUtils.cmake
+index 6be3359..293ae4e 100644
+--- a/CMakeModules/OsgMacroUtils.cmake
++++ b/CMakeModules/OsgMacroUtils.cmake
+@@ -41,7 +41,9 @@ ENDMACRO()
+ MACRO(LINK_CORELIB_DEFAULT CORELIB_NAME)
+     #SET(ALL_GL_LIBRARIES ${OPENGL_LIBRARIES})
+     SET(ALL_GL_LIBRARIES ${OPENGL_gl_LIBRARY})
++    set(_OSGQOPENGL_USE_EGL OFF)
+     IF (OSG_GLES1_AVAILABLE OR OSG_GLES2_AVAILABLE)
++        set(_OSGQOPENGL_USE_EGL ON)
+         SET(ALL_GL_LIBRARIES ${ALL_GL_LIBRARIES} ${OPENGL_egl_LIBRARY})
+     ENDIF()
  
- include(CMakePackageConfigHelpers)
- 
-+set(_OSGQOPENGL_USE_EGL OFF)
-+if(OSG_GLES1_AVAILABLE OR OSG_GLES2_AVAILABLE)
-+    set(_OSGQOPENGL_USE_EGL ON)
-+endif()
-+
- configure_package_config_file(
-     "osgQOpenGLConfig.cmake.in"
-     "${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}Config.cmake"
 diff --git a/src/osgQOpenGL/osgQOpenGLConfig.cmake.in b/src/osgQOpenGL/osgQOpenGLConfig.cmake.in
 index d1400c2..0e53675 100644
 --- a/src/osgQOpenGL/osgQOpenGLConfig.cmake.in
