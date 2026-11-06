@@ -7808,6 +7808,10 @@
       "baseline": "2.2.15",
       "port-version": 0
     },
+    "oxygen-icons": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "p-ranav-csv": {
       "baseline": "2019-07-11",
       "port-version": 3
