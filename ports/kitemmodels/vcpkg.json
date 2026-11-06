@@ -5,6 +5,7 @@
   "description": "Models for Qt Model/View system",
   "homepage": "https://invent.kde.org/frameworks/kitemmodels",
   "documentation": "https://api.kde.org/kitemmodels-index.html",
+  "license": "LGPL-2.0-or-later",
   "dependencies": [
     "ecm",
     {

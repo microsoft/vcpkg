@@ -5,7 +5,7 @@
   "description": "Widget addons for Qt Model/View",
   "homepage": "https://invent.kde.org/frameworks/kitemviews",
   "documentation": "https://api.kde.org/kitemviews-index.html",
-  "license": null,
+  "license": "LGPL-2.0-or-later",
   "dependencies": [
     "ecm",
     {

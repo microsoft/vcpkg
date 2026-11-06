@@ -5,6 +5,7 @@
   "description": "Configuration system",
   "homepage": "https://invent.kde.org/frameworks/kconfig",
   "documentation": "https://api.kde.org/kconfig-index.html",
+  "license": "LGPL-2.0-or-later AND LGPL-2.0-only AND (LGPL-2.0-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later",
   "dependencies": [
     "ecm",
     {
