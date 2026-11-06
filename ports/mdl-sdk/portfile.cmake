@@ -92,9 +92,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dds           MDL_BUILD_DDS_PLUGIN
         df-vulkan     MDL_BUILD_SDK_EXAMPLES
         df-vulkan     MDL_ENABLE_VULKAN_EXAMPLES
-        materialx     MDL_ENABLE_MATERIALX
         openimageio   MDL_BUILD_OPENIMAGEIO_PLUGIN
 )
+
+if("materialx" IN_LIST FEATURES AND "df-vulkan" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DMDL_ENABLE_MATERIALX=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DMDL_ENABLE_MATERIALX=OFF")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
