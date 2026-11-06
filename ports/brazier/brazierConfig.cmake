@@ -1,5 +1,7 @@
 include(CMakeFindDependencyMacro)
 
+set(CMAKE_FIND_PACKAGE_TARGETS_GLOBAL TRUE)
+
 if(NOT COMMAND check_required_components)
     macro(check_required_components _NAME)
         foreach(_comp IN LISTS ${_NAME}_FIND_COMPONENTS)
@@ -67,6 +69,7 @@ endif()
 
 if(NOT TARGET brazier::brazier)
     add_library(brazier::brazier INTERFACE IMPORTED)
+    set_target_properties(brazier::brazier PROPERTIES IMPORTED_GLOBAL TRUE)
 endif()
 
 if(TARGET brazier::logger)
@@ -78,6 +81,5 @@ endif()
 if(TARGET brazier::orm)
     set_property(TARGET brazier::brazier APPEND PROPERTY INTERFACE_LINK_LIBRARIES brazier::orm)
 endif()
-
 
 check_required_components(brazier)
