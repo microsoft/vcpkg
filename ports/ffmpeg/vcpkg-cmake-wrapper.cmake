@@ -31,8 +31,14 @@ if(NOT z_vcpkg_using_vcpkg_find_ffmpeg AND NOT "@BUILD_SHARED_LIBS@")
 
 include(SelectLibraryConfigurations)
 
-if(CMAKE_HOST_WIN32)
-  set(PKG_CONFIG_EXECUTABLE "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf/pkgconf.exe" CACHE STRING "" FORCE)
+# On Windows, default to the pkgconf vcpkg installs for the host. Leave a
+# PKG_CONFIG_EXECUTABLE or PKG_CONFIG the user set alone, and if pkgconf is not
+# where vcpkg installs it, let FindPkgConfig search as usual.
+if(CMAKE_HOST_WIN32 AND NOT PKG_CONFIG_EXECUTABLE AND "$ENV{PKG_CONFIG}" STREQUAL "")
+  find_program(PKG_CONFIG_EXECUTABLE NAMES pkgconf
+    PATHS "${CMAKE_CURRENT_LIST_DIR}/../../../@_HOST_TRIPLET@/tools/pkgconf"
+    NO_DEFAULT_PATH
+  )
 endif()
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH ON) # Required for CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 3.1 which otherwise ignores CMAKE_PREFIX_PATH
 find_package(PkgConfig)
