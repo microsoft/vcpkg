@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "Network extensions for GLib",
   "homepage": "https://gitlab.gnome.org/GNOME/glib-networking",
-  "license": "LGPL-2.1-only",
+  "license": "LGPL-2.1-or-later",
   "supports": "!uwp",
   "dependencies": [
     "glib",
