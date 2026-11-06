@@ -1,8 +1,13 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO open-mpi/hwloc
-    REF "hwloc-${VERSION}"
-    SHA512 6ca5c264d937ce92a5ef9bf93676932ed23fd2bc3a23584eedb19db4557088785644464924cff51403041bed147a9f7611d6a9d9b24a27156495cfdd96fe2586
+string(REGEX MATCH "^[0-9]+\\.[0-9]+" HWLOC_SHORT_VERSION "${VERSION}")
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://download.open-mpi.org/release/hwloc/v${HWLOC_SHORT_VERSION}/hwloc-${VERSION}.tar.bz2"
+    FILENAME "hwloc-${VERSION}.tar.bz2"
+    SHA512 547a9ed3c6af399de9617fe675bd6d16db300cc98213d6c71b2f1b41dd4a1706c7f2cf0dd1feb0d9f8a546b1976740c7a959dca0c23a4f52eac0b25cc403d087
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix_shared_win_build.patch
         stdout_fileno.patch
@@ -40,8 +45,29 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+if(VCPKG_TARGET_IS_ANDROID)
+    # Android provides pthread functions in libc, not a separate libpthread.
+    foreach(config IN ITEMS "" "debug/")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${config}lib/pkgconfig/hwloc.pc")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/${config}lib/pkgconfig/hwloc.pc" " -lpthread" "")
+        endif()
+    endforeach()
+endif()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+if(VCPKG_TARGET_IS_WINDOWS)
+    foreach(config IN ITEMS "" "debug/")
+        set(tool_dir "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${config}bin")
+        file(GLOB tool_paths "${tool_dir}/*.exe")
+        set(tool_names "")
+        foreach(tool_path IN LISTS tool_paths)
+            cmake_path(GET tool_path STEM tool_name)
+            list(APPEND tool_names "${tool_name}")
+        endforeach()
+        if(tool_names)
+            vcpkg_copy_tools(TOOL_NAMES ${tool_names} SEARCH_DIR "${tool_dir}" DESTINATION "${tool_dir}")
+        endif()
+    endforeach()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
