@@ -7,10 +7,10 @@ vcpkg_from_github(
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/brazier" 
-    OPTIONS 
+    SOURCE_PATH "${SOURCE_PATH}/brazier"
+    OPTIONS
     -DBUILD_TESTS=OFF
-    -DBUILD_APP=OFF 
+    -DBUILD_APP=OFF
 )
 
 vcpkg_cmake_install()
