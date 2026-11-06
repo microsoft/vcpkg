@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 ef24d926153eb81c95e6c79c335eed12c6e14523a2dd817faddc3f666909a244eab5f4be43cc01a6d8c8d62b5695d29fb535b3762128cdef50a7ee55302b2886
+    SHA512 339f6c87e13d988f21f6799be2ed10655f22a795112b1bf8c11a0f7513044c2f14df3255834fbe32a456387fa1268dcf18ba9e62db45420b7080e4091ec07e10
     HEAD_REF dev3
     PATCHES
         pkgconfig-cxx.diff
@@ -10,6 +10,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        profile     MI_PROFILE
         override    MI_OVERRIDE
         secure      MI_SECURE
 )
@@ -20,6 +21,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DMI_HAS_EXECINFOH=OFF
+        -DMI_HAS_ASM_HWPROBEH=OFF
+        -DMI_HAS_SYS_HWPROBEH=OFF
         -DMI_USE_CXX=ON
         -DMI_BUILD_OBJECT=OFF
         -DMI_BUILD_TESTS=OFF
@@ -30,6 +34,10 @@ vcpkg_cmake_configure(
         -DMI_DEBUG_FULL=ON
     OPTIONS_RELEASE
         -DMI_DEBUG_FULL=OFF
+    MAYBE_UNUSED_VARIABLES
+        MI_HAS_EXECINFOH
+        MI_HAS_ASM_HWPROBEH
+        MI_HAS_SYS_HWPROBEH
 )
 
 vcpkg_cmake_install()
