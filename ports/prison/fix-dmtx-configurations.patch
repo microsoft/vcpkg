@@ -1,8 +1,8 @@
 diff --git a/cmake/FindDmtx.cmake b/cmake/FindDmtx.cmake
-index 6175cd2..4e5343a 100644
+index 6175cd2..dd64c6c 100644
 --- a/cmake/FindDmtx.cmake
 +++ b/cmake/FindDmtx.cmake
-@@ -34,27 +34,40 @@
+@@ -34,23 +34,37 @@
  
  find_path(Dmtx_INCLUDE_DIRS dmtx.h)
  
@@ -44,7 +44,3 @@ index 6175cd2..4e5343a 100644
  
  include(FeatureSummary)
  set_package_properties(Dmtx PROPERTIES
-   URL "https://github.com/dmtx/libdmtx"
-   DESCRIPTION "The Datamatrix library"
- )
--
