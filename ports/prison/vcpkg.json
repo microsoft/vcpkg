@@ -4,7 +4,7 @@
   "description": "Barcode generation and scanning library",
   "homepage": "https://invent.kde.org/frameworks/prison",
   "documentation": "https://api.kde.org/prison-index.html",
-  "license": "MIT",
+  "license": "MIT AND BSD-3-Clause",
   "dependencies": [
     "ecm",
     "libqrencode",

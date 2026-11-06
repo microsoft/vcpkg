@@ -9,6 +9,7 @@ vcpkg_from_github(
         optional-scanner-qml.patch
         fix-scanner-config-dependencies.patch
         fix-qrencode-debug-library.patch
+        fix-dmtx-configurations.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
