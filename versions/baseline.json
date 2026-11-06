@@ -4632,6 +4632,10 @@
       "baseline": "2026-06-03",
       "port-version": 0
     },
+    "kirigami": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kissfft": {
       "baseline": "131.2.0",
       "port-version": 0
