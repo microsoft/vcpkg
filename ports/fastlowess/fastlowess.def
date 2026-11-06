@@ -1,0 +1,22 @@
+LIBRARY fastlowess-win32-x64.dll
+EXPORTS
+    cpp_gpu_enabled
+    cpp_last_error_message
+    cpp_lowess_fit
+    cpp_lowess_free
+    cpp_lowess_free_result
+    cpp_lowess_new
+    cpp_lowess_set_bootstrap
+    cpp_lowess_set_seed
+    cpp_online_add_point
+    cpp_online_free
+    cpp_online_free_output
+    cpp_online_new
+    cpp_predict
+    cpp_predict_free_result
+    cpp_predict_handle_free
+    cpp_streaming_finalize
+    cpp_streaming_free
+    cpp_streaming_new
+    cpp_streaming_process
+    cpp_version
