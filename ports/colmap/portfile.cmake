@@ -22,6 +22,7 @@ vcpkg_from_github(
         optional-opengl.diff
         cryptopp-config.diff
         caspar-msvc-force-include.diff
+        caspar-public-headers.diff
 )
 
 # FETCHCONTENT_FULLY_DISCONNECTED is set by vcpkg: PoseLib must be downloaded here.
@@ -48,12 +49,17 @@ else()
     list(GET COLMAP_REF 2 GIT_COMMIT_DATE)
 endif()
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        gui      GUI_ENABLED
+        cgal     CGAL_ENABLED
+        onnx     ONNX_ENABLED
+        download DOWNLOAD_ENABLED
+        caspar   CASPAR_ENABLED
+)
+
 set(CUDA_ENABLED OFF)
-set(GUI_ENABLED OFF)
-set(CGAL_ENABLED OFF)
-set(ONNX_ENABLED OFF)
-set(DOWNLOAD_ENABLED OFF)
-set(CASPAR_ENABLED OFF)
 set(OPENMP_ENABLED ON)
 
 if("cuda" IN_LIST FEATURES)
@@ -66,33 +72,9 @@ if("cuda-redist" IN_LIST FEATURES)
     set(CUDA_ARCHITECTURES "all-major")
 endif()
 
-if("gui" IN_LIST FEATURES)
-    set(GUI_ENABLED ON)
-endif()
-
-if("cgal" IN_LIST FEATURES)
-    set(CGAL_ENABLED ON)
-endif()
-
-if("download" IN_LIST FEATURES)
-    set(DOWNLOAD_ENABLED ON)
-endif()
-
-if("onnx" IN_LIST FEATURES)
-    set(ONNX_ENABLED ON)
-    # With CUDA, colmap selects the CUDA execution provider of onnxruntime.
-    if(CUDA_ENABLED AND NOT "onnx-cuda" IN_LIST FEATURES)
-        message(WARNING "Features cuda/cuda-redist and onnx without onnx-cuda: onnxruntime has no CUDA execution provider, run the ONNX-based tools with use_gpu=false.")
-    endif()
-endif()
-
-if("caspar" IN_LIST FEATURES)
-    if("cuda-redist" IN_LIST FEATURES)
-        # Feature cuda enables caspar, but caspar needs the native architectures (compute capability >= 7.0).
-        message(WARNING "Feature caspar is disabled with feature cuda-redist.")
-    else()
-        set(CASPAR_ENABLED ON)
-    endif()
+# With CUDA, colmap selects the CUDA execution provider of onnxruntime.
+if(ONNX_ENABLED AND CUDA_ENABLED AND NOT "onnx-cuda" IN_LIST FEATURES)
+    message(WARNING "Features cuda/cuda-redist and onnx without onnx-cuda: onnxruntime has no CUDA execution provider, run the ONNX-based tools with use_gpu=false.")
 endif()
 
 if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
@@ -106,6 +88,37 @@ endif()
 
 if(CUDA_ENABLED)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    if(CASPAR_ENABLED AND "cuda-redist" IN_LIST FEATURES)
+        vcpkg_execute_required_process(
+            COMMAND "${NVCC}" --list-gpu-code
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME cuda-architectures
+            OUTPUT_VARIABLE cuda_gpu_codes
+        )
+        string(REPLACE "\r" "" cuda_gpu_codes "${cuda_gpu_codes}")
+        string(REPLACE "\n" ";" cuda_gpu_codes "${cuda_gpu_codes}")
+        list(REMOVE_DUPLICATES cuda_gpu_codes)
+        list(SORT cuda_gpu_codes COMPARE NATURAL)
+        set(CUDA_ARCHITECTURES "")
+        set(cuda_architecture_majors "")
+        foreach(cuda_gpu_code IN LISTS cuda_gpu_codes)
+            if(NOT cuda_gpu_code MATCHES "^sm_([0-9]+)$")
+                continue()
+            endif()
+            set(cuda_architecture "${CMAKE_MATCH_1}")
+            math(EXPR cuda_architecture_major "${cuda_architecture} / 10")
+            if(cuda_architecture GREATER_EQUAL 75 AND NOT cuda_architecture_major IN_LIST cuda_architecture_majors)
+                list(APPEND CUDA_ARCHITECTURES "${cuda_architecture}-real")
+                list(APPEND cuda_architecture_majors "${cuda_architecture_major}")
+                set(cuda_ptx_architecture "${cuda_architecture}")
+            endif()
+        endforeach()
+        if(NOT CUDA_ARCHITECTURES)
+            message(FATAL_ERROR "Caspar requires a CUDA toolkit supporting SM75 or newer.")
+        endif()
+        # Retain all-major redistribution coverage above Caspar's SM75 minimum.
+        list(APPEND CUDA_ARCHITECTURES "${cuda_ptx_architecture}-virtual")
+    endif()
     list(APPEND CUDA_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
@@ -122,17 +135,14 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${CUDA_OPTIONS}
+        ${FEATURE_OPTIONS}
         -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
-        -DGUI_ENABLED=${GUI_ENABLED}
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${GIT_COMMIT_DATE}
         -DOPENMP_ENABLED=${OPENMP_ENABLED}
-        -DCGAL_ENABLED=${CGAL_ENABLED}
-        -DONNX_ENABLED=${ONNX_ENABLED}
-        -DDOWNLOAD_ENABLED=${DOWNLOAD_ENABLED}
-        -DCASPAR_ENABLED=${CASPAR_ENABLED}
+        -DLSD_ENABLED=ON
         -DCOLMAP_HASH_MAP_BACKEND=STD
         -DCCACHE_ENABLED=OFF
         -DUNINSTALL_ENABLED=OFF
@@ -190,7 +200,12 @@ file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_deps/poselib-buil
 
 vcpkg_copy_pdbs()
 
-set(COPYRIGHT_FILES "${SOURCE_PATH}/COPYING.txt" "${POSELIB_SOURCE_PATH}/LICENSE")
+set(COPYRIGHT_FILES
+    "${SOURCE_PATH}/COPYING.txt"
+    "${POSELIB_SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/src/thirdparty/LSD/LICENSE"
+    "${SOURCE_PATH}/src/thirdparty/LSD/lsd.h"
+)
 if(CASPAR_ENABLED)
     list(APPEND COPYRIGHT_FILES "${SOURCE_PATH}/src/thirdparty/Symforce-Caspar/LICENSE")
 endif()

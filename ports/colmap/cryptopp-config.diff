@@ -1,13 +1,51 @@
 diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
-index e26d5e9..0a9dc06 100644
+index e26d5e9..5fbe458 100644
 --- a/cmake/FindDependencies.cmake
 +++ b/cmake/FindDependencies.cmake
-@@ -229,7 +229,7 @@ if(DOWNLOAD_ENABLED)
-     if(IS_MSVC AND IS_ARM64)
+@@ -226,16 +226,19 @@ if(DOWNLOAD_ENABLED)
+     # and curl[openssl] otherwise.
+     find_package(CURL QUIET)
+     set(CRYPTO_FOUND FALSE)
+-    if(IS_MSVC AND IS_ARM64)
++    if(COLMAP_USE_CRYPTOPP OR
++       (NOT DEFINED COLMAP_USE_CRYPTOPP AND IS_MSVC AND IS_ARM64))
          # OpenSSL crashes for ARM64 under Windows. We therefore fall back to
          # CryptoPP as an alternative to OpenSSL for SHA256 computation.
 -        find_package(CryptoPP QUIET)
 +        find_package(CryptoPP CONFIG QUIET)
          if(CryptoPP_FOUND)
++            set(COLMAP_USE_CRYPTOPP ON)
              set(CRYPTO_FOUND TRUE)
          else()
+             message(STATUS "CryptoPP not found")
+         endif()
+     else()
++        set(COLMAP_USE_CRYPTOPP OFF)
+         find_package(OpenSSL QUIET COMPONENTS Crypto)
+         if(OpenSSL_FOUND)
+             set(CRYPTO_FOUND TRUE)
+diff --git a/cmake/colmap-config.cmake.in b/cmake/colmap-config.cmake.in
+index fe35090..8821e06 100644
+--- a/cmake/colmap-config.cmake.in
++++ b/cmake/colmap-config.cmake.in
+@@ -74,6 +74,7 @@ set(CUDA_MIN_VERSION @CUDA_MIN_VERSION@)
+ set(ONNX_ENABLED @ONNX_ENABLED@)
+ 
+ set(DOWNLOAD_ENABLED @DOWNLOAD_ENABLED@)
++set(COLMAP_USE_CRYPTOPP @COLMAP_USE_CRYPTOPP@)
+ 
+ set(GUI_ENABLED @GUI_ENABLED@)
+ 
+diff --git a/src/colmap/util/CMakeLists.txt b/src/colmap/util/CMakeLists.txt
+index ca4df3f..4588a8e 100644
+--- a/src/colmap/util/CMakeLists.txt
++++ b/src/colmap/util/CMakeLists.txt
+@@ -64,7 +64,7 @@ COLMAP_ADD_LIBRARY(
+ )
+ if(DOWNLOAD_ENABLED)
+     target_link_libraries(colmap_util PRIVATE CURL::libcurl)
+-    if(TARGET cryptopp::cryptopp)
++    if(COLMAP_USE_CRYPTOPP)
+         target_link_libraries(colmap_util PRIVATE cryptopp::cryptopp)
+         target_compile_definitions(colmap_util PRIVATE COLMAP_USE_CRYPTOPP)
+     else()

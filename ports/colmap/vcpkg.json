@@ -3,7 +3,7 @@
   "version": "4.2.1",
   "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface.",
   "homepage": "https://colmap.github.io/",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND AGPL-3.0-or-later",
   "supports": "(linux | windows | osx) & (x86 | x64 | arm64)",
   "dependencies": [
     "boost-algorithm",
@@ -46,8 +46,8 @@
   ],
   "features": {
     "caspar": {
-      "description": "Build the experimental Caspar GPU bundle adjustment backend (requires CUDA architecture >= 70).",
-      "license": "BSD-3-Clause AND Apache-2.0",
+      "description": "Build the experimental Caspar GPU bundle adjustment backend (requires SM75 or newer).",
+      "license": "BSD-3-Clause AND AGPL-3.0-or-later AND Apache-2.0",
       "dependencies": [
         {
           "name": "colmap",
