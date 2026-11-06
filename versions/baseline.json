@@ -3086,7 +3086,7 @@
     },
     "ffmpeg": {
       "baseline": "9.0.2",
-      "port-version": 6
+      "port-version": 7
     },
     "ffmpeg-bin2c": {
       "baseline": "9.0.2",
