@@ -27,6 +27,8 @@ if("tools" IN_LIST FEATURES)
         TOOL_NAMES lz4
         AUTO_CLEAN
     )
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
