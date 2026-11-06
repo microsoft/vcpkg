@@ -1,0 +1,50 @@
+{
+  "name": "kdnssd",
+  "version": "6.31.0",
+  "description": "Network service discovery using Zeroconf",
+  "homepage": "https://invent.kde.org/frameworks/kdnssd",
+  "documentation": "https://api.kde.org/kdnssd-index.html",
+  "license": "LGPL-2.0-or-later",
+  "supports": "!android",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "translations": {
+      "description": "Build and install translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}
