@@ -9108,6 +9108,10 @@
       "baseline": "11.12",
       "port-version": 0
     },
+    "rocm": {
+      "baseline": "2026-11-05",
+      "port-version": 0
+    },
     "rp-ntuples": {
       "baseline": "0.1.4",
       "port-version": 0
