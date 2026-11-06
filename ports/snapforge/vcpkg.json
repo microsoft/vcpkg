@@ -1,0 +1,19 @@
+{
+  "name": "snapforge",
+  "version-semver": "0.2.0",
+  "description": "Official C++17 client for the hosted SnapForge screenshot API",
+  "homepage": "https://snapforge.web-tasarimci.com",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": [
+    "curl",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
