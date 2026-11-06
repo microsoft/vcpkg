@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brazier-tech/brazier-orm
-    REF 388df77173a4d20d468af6a773767913f8fb647f
-    SHA512 c4b31f2c5e5b354b8a2c33a7c50f278279c48f9adcfcfb23ba3c8d6e5ed580eadac8624f66cb1cac427bd836a020958f7f86e92c20cf8748bad230a76096fe1f
+    REF "v${VERSION}"
+    SHA512 551423a68e30d2840f346e9e24367f0e6332070b4aa63a4925f1877ee1f26a7802ce386d110b3f24366900b7b71faf87e7f68ccd99a37ff33d6c27da8da8c4b2
     HEAD_REF master
 )
 
@@ -15,12 +15,21 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME brazier-orm CONFIG_PATH share/brazier-orm)
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE 
+    "${CURRENT_PACKAGES_DIR}/debug/include" 
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE 
+        "${CURRENT_PACKAGES_DIR}/bin" 
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST 
+    "${SOURCE_PATH}/LICENSE" 
+    "${SOURCE_PATH}/COPYING"
+)
