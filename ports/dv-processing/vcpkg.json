@@ -1,7 +1,7 @@
 {
   "name": "dv-processing",
-  "version": "2.0.3",
-  "description": "Generic algorithms for event cameras. (C++20 required.)",
+  "version": "2.0.4",
+  "description": "Generic algorithms for event cameras. (C++23 required.)",
   "homepage": "https://gitlab.com/inivation/dv/dv-processing",
   "license": "Apache-2.0",
   "dependencies": [
@@ -43,6 +43,12 @@
     "zstd"
   ],
   "features": {
+    "backtrace": {
+      "description": "Better stack traces on error",
+      "dependencies": [
+        "libbacktrace"
+      ]
+    },
     "tools": {
       "description": "Build CLI utilities"
     }
