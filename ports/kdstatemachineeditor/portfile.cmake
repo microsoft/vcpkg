@@ -1,34 +1,29 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDAB/KDStateMachineEditor
-    REF v${VERSION}
-    SHA512 dedd7166f434689cd5acf4ee3172169d3f77182269d3187f0a7a12966467dd5c7733e3ff64cd1fd03b0f3866c2aafa37cc3f2d7b8a3f4a5d8a7592da039de7af
+    REF "v${VERSION}"
+    SHA512 53ce4990ef1e2cddd35a2747564dea563f26946769a14a083990fc38448d62b33e47b755301a7f0076383817721bc9ca16b4afeee322b59cdef142d6feab920b
     HEAD_REF master
-    PATCHES
-      qt6.9.patch # This is already upstream
-      fix-missing-targets.diff
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" VCPKG_BUILD_SHARED_LIBS)
-
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DKDSME_QT6=ON
         -DKDSME_INTERNAL_GRAPHVIZ=OFF
         -DKDSME_DOCS=OFF
         -DKDSME_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        -DBUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME KDSME-qt6 CONFIG_PATH lib/cmake/KDSME-qt6)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(
     FILE_LIST
