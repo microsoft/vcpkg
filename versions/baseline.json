@@ -3209,8 +3209,8 @@
       "port-version": 3
     },
     "fmt": {
-      "baseline": "12.2.0",
-      "port-version": 1
+      "baseline": "12.2.1",
+      "port-version": 0
     },
     "folly": {
       "baseline": "2026.02.23.00",
