@@ -8220,6 +8220,10 @@
       "baseline": "2.3.0",
       "port-version": 0
     },
+    "prison": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "proj": {
       "baseline": "9.9.0",
       "port-version": 0

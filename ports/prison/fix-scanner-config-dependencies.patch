@@ -1,0 +1,30 @@
+diff --git a/KF6PrisonConfig.cmake.in b/KF6PrisonConfig.cmake.in
+index 69d892a..f600a2d 100644
+--- a/KF6PrisonConfig.cmake.in
++++ b/KF6PrisonConfig.cmake.in
+@@ -5,9 +5,7 @@ find_dependency(Qt6Gui @REQUIRED_QT_VERSION@)
+ 
+ # backward compat for KF6::PrisonScanner target provided by this config
+ if(@WITH_MULTIMEDIA@ AND KF6Prison_FIND_VERSION VERSION_LESS 6.31.0)
+-    set(_KF6PRISON_BACKWARDCOMPAT_FIND TRUE)
+     find_dependency(KF6PrisonScanner @PRISON_VERSION@)
+-    set(_KF6PRISON_BACKWARDCOMPAT_FIND)
+ endif()
+ 
+ if (NOT @BUILD_SHARED_LIBS@)
+diff --git a/KF6PrisonScannerConfig.cmake.in b/KF6PrisonScannerConfig.cmake.in
+index e4ae00d..5f7708c 100644
+--- a/KF6PrisonScannerConfig.cmake.in
++++ b/KF6PrisonScannerConfig.cmake.in
+@@ -1,11 +1,5 @@
+ @PACKAGE_INIT@
+ 
+-if (_KF6PRISON_BACKWARDCOMPAT_FIND)
+-    # provide only targets by legacy
+-    include("${CMAKE_CURRENT_LIST_DIR}/KF6PrisonScannerTargets.cmake")
+-    return()
+-endif()
+-
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt6Multimedia @REQUIRED_QT_VERSION@)
+ 
