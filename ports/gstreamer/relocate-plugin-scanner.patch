@@ -1,0 +1,44 @@
+diff --git a/subprojects/gstreamer/gst/gstpluginloader-win32.c b/subprojects/gstreamer/gst/gstpluginloader-win32.c
+index 092dc34..2410c29 100644
+--- a/subprojects/gstreamer/gst/gstpluginloader-win32.c
++++ b/subprojects/gstreamer/gst/gstpluginloader-win32.c
+@@ -502,7 +502,7 @@ find_helper_bin_location (void)
+       for (j = 0; j < plugin_subdir_depth; j++)
+         filenamev[i++] = "..";
+       filenamev[i++] = GST_PLUGIN_SCANNER_SUBDIR;
+-      filenamev[i++] = "gstreamer-" GST_API_VERSION;
++      filenamev[i++] = "gstreamer";
+       filenamev[i++] = "gst-plugin-scanner.exe";
+       filenamev[i++] = NULL;
+       g_assert (i <= MAX_PATH_DEPTH + 5);
+diff --git a/subprojects/gstreamer/gst/gstpluginloader.c b/subprojects/gstreamer/gst/gstpluginloader.c
+index 3324d76..58bd785 100644
+--- a/subprojects/gstreamer/gst/gstpluginloader.c
++++ b/subprojects/gstreamer/gst/gstpluginloader.c
+@@ -499,7 +499,7 @@ gst_plugin_loader_spawn (GstPluginLoader * loader)
+         for (j = 0; j < plugin_subdir_depth; j++)
+           filenamev[i++] = "..";
+         filenamev[i++] = GST_PLUGIN_SCANNER_SUBDIR;
+-        filenamev[i++] = "gstreamer-" GST_API_VERSION;
++        filenamev[i++] = "gstreamer";
+         filenamev[i++] = "gst-plugin-scanner";
+         filenamev[i++] = NULL;
+         g_assert (i <= MAX_PATH_DEPTH + 5);
+diff --git a/subprojects/gstreamer/meson.build b/subprojects/gstreamer/meson.build
+index bc1081c..ccf2948 100644
+--- a/subprojects/gstreamer/meson.build
++++ b/subprojects/gstreamer/meson.build
+@@ -147,11 +147,11 @@ cdata.set_quoted('PACKAGE_URL', '')
+ cdata.set_quoted('PACKAGE_VERSION', gst_version)
+ cdata.set_quoted('PLUGINDIR', join_paths(get_option('prefix'), get_option('libdir'), 'gstreamer-1.0'))
+ cdata.set_quoted('VERSION', gst_version)
+-cdata.set_quoted('GST_PLUGIN_SCANNER_INSTALLED', join_paths(prefix, helpers_install_dir, 'gst-plugin-scanner'))
++cdata.set_quoted('GST_PLUGIN_SCANNER_INSTALLED', join_paths(prefix, 'tools', 'gstreamer', 'gst-plugin-scanner'))
+ cdata.set_quoted('GST_PTP_HELPER_INSTALLED', join_paths(prefix, helpers_install_dir, 'gst-ptp-helper'))
+ cdata.set_quoted('GST_PLUGIN_SUBDIR', get_option('libdir'),
+   description: 'plugin directory path component, used to find plugins on relocatable builds')
+-cdata.set_quoted('GST_PLUGIN_SCANNER_SUBDIR', libexecdir,
++cdata.set_quoted('GST_PLUGIN_SCANNER_SUBDIR', 'tools',
+   description: 'libexecdir path component, used to find plugin-scanner on relocatable builds')
+ cdata.set_quoted('GST_PTP_HELPER_SUBDIR', libexecdir,
+   description: 'libexecdir path component, used to find ptp-helper on relocatable builds')
