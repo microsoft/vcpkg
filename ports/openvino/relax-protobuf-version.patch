@@ -9,5 +9,5 @@ index 5e1073d802..6e3faaa3e1 100644
 -        find_package(Protobuf 5.26.0 QUIET CONFIG)
 +        find_package(Protobuf QUIET CONFIG)
          if(NOT Protobuf_FOUND)
-             find_package(Protobuf 4.22.0 QUIET CONFIG)
+             find_package(Protobuf 5.26.0 QUIET CONFIG)
          endif()

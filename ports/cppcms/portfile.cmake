@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO artyom-beilis/cppcms
-    REF v${VERSION}
-    SHA512 b91da68b3e277cf3814f6772a2580db95d55a9022b165b44f9d2fde0bc13779e9198b45e1ebdbd10189cb192109a61777888ce0670644da1e64a0e1008a827a7
+    REF "v${VERSION}"
+    SHA512 3235aeb6e5fbb5686ad62af5573f20c1984673601366bd070584f244477d018c15e0e8a8b4771a3e0b378ee1568f18cba9541912e4670c73d6e7f8d75876943c
     PATCHES
         dependencies.diff
         dllexport.diff
@@ -37,4 +37,7 @@ vcpkg_copy_tools(TOOL_NAMES cppcms_scale cppcms_make_key cppcms_config_find_para
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/MIT.TXT" "${SOURCE_PATH}/THIRD_PARTY_SOFTWARE.TXT")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/MIT.TXT"
+    "${SOURCE_PATH}/THIRD_PARTY_SOFTWARE.TXT"
+)

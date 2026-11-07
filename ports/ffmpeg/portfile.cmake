@@ -41,7 +41,7 @@ if(VCPKG_TARGET_IS_MINGW)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
-    string(APPEND OPTIONS " --enable-d3d11va --enable-d3d12va --enable-dxva2 --enable-mediafoundation")
+    string(APPEND OPTIONS " --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_LINUX)
     string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 elseif(VCPKG_TARGET_IS_UWP)
@@ -71,6 +71,23 @@ endif()
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+
+if(VCPKG_TARGET_IS_MINGW)
+    # mingw-w64 provides d3d12video.h only from v12.0.0.
+    # FFmpeg configure fails if d3d12va is requested and the header is missing.
+    find_file(D3D12VIDEO_HEADER
+        NAMES d3d12video.h
+        PATHS ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES}
+        NO_DEFAULT_PATH
+        NO_CACHE
+    )
+    if(D3D12VIDEO_HEADER)
+        string(APPEND OPTIONS " --enable-d3d12va")
+    else()
+        message(STATUS "d3d12video.h not found in the MinGW toolchain. Building without d3d12va.")
+    endif()
+endif()
+
 if(VCPKG_DETECTED_MSVC)
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly

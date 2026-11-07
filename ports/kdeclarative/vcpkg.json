@@ -1,6 +1,7 @@
 {
   "name": "kdeclarative",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Provides integration of QML and KDE Frameworks",
   "homepage": "https://invent.kde.org/frameworks/kdeclarative",
   "documentation": "https://api.kde.org/kdeclarative-index.html",
@@ -24,7 +25,8 @@
       "name": "ki18n",
       "features": [
         "qml"
-      ]
+      ],
+      "version>=": "6.31.0#5"
     },
     {
       "name": "kwidgetsaddons",

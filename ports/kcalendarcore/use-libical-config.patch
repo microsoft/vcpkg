@@ -1,0 +1,286 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6e00929..1559ba9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,10 +18,7 @@ set_package_properties(
+ )
+ feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
+ 
+-set(CMAKE_MODULE_PATH
+-    ${ECM_MODULE_PATH}
+-    ${CMAKE_SOURCE_DIR}/cmake
+-)
++set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+ 
+ set(REQUIRED_QT_VERSION 6.10.0)
+ 
+@@ -72,11 +69,7 @@ if(USE_QML)
+ endif()
+ 
+ set(LibIcal_MIN_VERSION "3.0")
+-# TODO remove our FindLibIcal.cmake in favor of upstream LibIcalConfig.cmake once the following issues are resolved:
+-# https://github.com/libical/libical/pull/510
+-# https://bugs.launchpad.net/ubuntu/+source/libical3/+bug/1946963
+-# https://bugs.launchpad.net/ubuntu/+source/libical/+bug/1920587
+-find_package(LibIcal ${LibIcal_MIN_VERSION})
++find_package(LibIcal ${LibIcal_MIN_VERSION} CONFIG)
+ set_package_properties(
+     LibIcal
+     PROPERTIES
+@@ -144,7 +137,6 @@ install(
+     FILES
+         "${CMAKE_CURRENT_BINARY_DIR}/KF6CalendarCoreConfig.cmake"
+         "${CMAKE_CURRENT_BINARY_DIR}/KF6CalendarCoreConfigVersion.cmake"
+-        cmake/FindLibIcal.cmake
+     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+     COMPONENT Devel
+ )
+diff --git a/KF6CalendarCoreConfig.cmake.in b/KF6CalendarCoreConfig.cmake.in
+index 4c18ab3..a071c9f 100644
+--- a/KF6CalendarCoreConfig.cmake.in
++++ b/KF6CalendarCoreConfig.cmake.in
+@@ -10,14 +10,10 @@ find_dependency(
+     @REQUIRED_QT_VERSION@
+ )
+ if(NOT @BUILD_SHARED_LIBS@)
+-    list(
+-        INSERT CMAKE_MODULE_PATH
+-        0
+-        ${CMAKE_CURRENT_LIST_DIR}
+-    )
+     find_dependency(
+         LibIcal
+         @LibIcal_MIN_VERSION@
++        CONFIG
+     )
+ endif()
+ 
+diff --git a/autotests/CMakeLists.txt b/autotests/CMakeLists.txt
+index 5fe3276..90ed393 100644
+--- a/autotests/CMakeLists.txt
++++ b/autotests/CMakeLists.txt
+@@ -14,7 +14,9 @@ macro(macro_unit_tests)
+             ${_testname}
+             KF6CalendarCore
+             Qt6::Test
+-            LibIcal
++            ical
++            icalss
++            icalvcal
+         )
+     endforeach()
+ endmacro()
+diff --git a/cmake/FindLibIcal.cmake b/cmake/FindLibIcal.cmake
+deleted file mode 100644
+index cb515ba..0000000
+--- a/cmake/FindLibIcal.cmake
++++ /dev/null
+@@ -1,193 +0,0 @@
+-#.rst:
+-# FindLibIcal
+-# -----------
+-#
+-# Try to find the Ical libraries.
+-#
+-# This will define the following variables:
+-#
+-# ``LibIcal_FOUND``
+-#     True if a suitable LibIcal was found
+-#  ``LibIcal_INCLUDE_DIRS``
+-#     This should be passed to target_include_directories() if
+-#     the target is not used for linking
+-#  ``LibIcal_LIBRARIES``
+-#     The Ical libraries (ical + icalss)
+-#     This can be passed to target_link_libraries() instead of
+-#     the ``LibIcal`` target
+-#
+-# ``LibIcal_VERSION``
+-#     The LibIcal version defined in ical.h
+-# If ``LibIcal_FOUND`` is TRUE, the following imported target
+-# will be available:
+-#
+-# ``LibIcal``
+-#     The Ical libraries
+-#
+-# The following variables are set for compatibility reason and will be
+-# removed in the next major version
+-#  ``LibIcal_MAJOR_VERSION``
+-#     The LibIcal major version
+-#  ``LibIcal_MINOR_VERSION``
+-#     The LibIcal minor version
+-#
+-# SPDX-FileCopyrightText: 2008, 2010 Allen Winter <winter@kde.org>
+-#
+-# SPDX-License-Identifier: BSD-3-Clause
+-#=============================================================================
+-
+-if(NOT LibIcal_FIND_VERSION)
+-    set(LibIcal_FIND_VERSION "0.33")
+-endif()
+-
+-find_package(PkgConfig QUIET)
+-pkg_check_modules(PC_LibIcal QUIET libical)
+-
+-find_path(LibIcal_INCLUDE_DIRS NAMES libical/ical.h HINTS ${PC_LibIcal_INCLUDEDIR})
+-
+-find_library(
+-    LibIcal_LIBRARY
+-    NAMES
+-        ical
+-        libical
+-    HINTS
+-        ${PC_LibIcal_LIBDIR}
+-)
+-
+-find_library(
+-    LibIcalss_LIBRARY
+-    NAMES
+-        icalss
+-        libicalss
+-    HINTS
+-        ${PC_LibIcal_LIBDIR}
+-)
+-
+-find_library(LibIcalvcal_LIBRARY NAMES icalvcal HINTS ${PC_LibIcal_LIBDIR})
+-
+-# For backward compatibility
+-set(LibIcal_INCLUDE_DIRS
+-    "${LibIcal_INCLUDE_DIRS}"
+-    "${LibIcal_INCLUDE_DIRS}/libical"
+-)
+-
+-set(LibIcal_LIBRARIES
+-    ${LibIcal_LIBRARY}
+-    ${LibIcalss_LIBRARY}
+-    ${LibIcalvcal_LIBRARY}
+-)
+-
+-set(LibIcal_VERSION "${PC_LibIcal_VERSION}")
+-
+-if(NOT ICAL_H)
+-    find_file(ICAL_H ical.h HINTS ${LibIcal_INCLUDE_DIRS})
+-endif()
+-
+-if(NOT LibIcal_VERSION)
+-    if(EXISTS "${ICAL_H}")
+-        file(STRINGS "${ICAL_H}" _ICAL_H_VERSION REGEX "^#define[ ]+ICAL_VERSION[ ]+\"[0-9].[0-9]\"$")
+-        string(
+-            REGEX REPLACE "^#define[ ]+ICAL_VERSION[ ]+\"([0-9].[0-9])\"$"
+-            "\\1"
+-            LibIcal_VERSION
+-            "${_ICAL_H_VERSION}"
+-        )
+-        file(STRINGS "${ICAL_H}" _ICAL_H_PATCH_VERSION REGEX "^#define[ ]+ICAL_PATCH_VERSION[ ]+\\([0-9]+\\)$")
+-        string(
+-            REGEX REPLACE "^#define[ ]+ICAL_PATCH_VERSION[ ]+\\(([0-9]+)\\)$"
+-            "\\1"
+-            LibIcal_PATCH_VERSION
+-            "${_ICAL_H_PATCH_VERSION}"
+-        )
+-        unset(_ICAL_H_VERSION)
+-        unset(_ICAL_H_PATCH_VERSION)
+-        if(LibIcal_PATCH_VERSION)
+-            set(LibIcal_VERSION "${LibIcal_VERSION}.${LibIcal_PATCH_VERSION}")
+-        endif()
+-    endif()
+-endif()
+-
+-# For compatibility
+-string(
+-    REGEX REPLACE "^([0-9]).[0-9]$"
+-    "\\1"
+-    LibIcal_MAJOR_VERSION
+-    "${LibIcal_VERSION}"
+-)
+-string(
+-    REGEX REPLACE "^[0-9].([0-9])$"
+-    "\\1"
+-    LibIcal_MINOR_VERSION
+-    "${LibIcal_VERSION}"
+-)
+-
+-if(NOT LibIcal_VERSION VERSION_LESS 0.46)
+-    set(USE_ICAL_0_46 TRUE)
+-endif()
+-if(NOT LibIcal_VERSION VERSION_LESS 1.00)
+-    set(USE_ICAL_1_0 TRUE)
+-endif()
+-
+-include(FindPackageHandleStandardArgs)
+-
+-find_package_handle_standard_args(
+-    LibIcal
+-    FOUND_VAR LibIcal_FOUND
+-    REQUIRED_VARS
+-        LibIcal_LIBRARIES
+-        LibIcal_INCLUDE_DIRS
+-    VERSION_VAR LibIcal_VERSION
+-)
+-
+-# Internal
+-if(LibIcal_FOUND AND NOT TARGET LibIcalss)
+-    add_library(LibIcalss UNKNOWN IMPORTED)
+-    set_target_properties(
+-        LibIcalss
+-        PROPERTIES
+-            IMPORTED_LOCATION
+-                "${LibIcalss_LIBRARY}"
+-    )
+-endif()
+-if(LibIcal_FOUND AND NOT TARGET LibIcalvcal)
+-    add_library(LibIcalvcal UNKNOWN IMPORTED)
+-    set_target_properties(
+-        LibIcalvcal
+-        PROPERTIES
+-            IMPORTED_LOCATION
+-                "${LibIcalvcal_LIBRARY}"
+-    )
+-endif()
+-
+-# Public Target
+-if(LibIcal_FOUND AND NOT TARGET LibIcal)
+-    add_library(LibIcal UNKNOWN IMPORTED)
+-    set_target_properties(
+-        LibIcal
+-        PROPERTIES
+-            IMPORTED_LOCATION
+-                "${LibIcal_LIBRARY}"
+-            INTERFACE_INCLUDE_DIRECTORIES
+-                "${LibIcal_INCLUDE_DIRS}"
+-            INTERFACE_LINK_LIBRARIES
+-                "LibIcalss;LibIcalvcal"
+-    )
+-endif()
+-
+-mark_as_advanced(
+-    LibIcal_INCLUDE_DIRS
+-    LibIcal_LIBRARY
+-    LibIcalss_LIBRARY
+-    LibIcalvcal_LIBRARY
+-    LibIcal_LIBRARIES
+-)
+-
+-include(FeatureSummary)
+-set_package_properties(
+-    LibIcal
+-    PROPERTIES
+-        URL
+-            "https://github.com/libical/libical"
+-        DESCRIPTION
+-            "Implementation of iCalendar protocols and data formats"
+-)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 506b9c2..c1f05b4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -144,7 +144,9 @@ target_link_libraries(
+         Qt6::Core
+         Qt6::Gui
+     PRIVATE
+-        LibIcal
++        ical
++        icalss
++        icalvcal
+ )
+ 
+ install(TARGETS KF6CalendarCore EXPORT KF6CalendarCoreTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
