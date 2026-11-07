@@ -3921,8 +3921,8 @@
       "port-version": 0
     },
     "hpx": {
-      "baseline": "1.11.0",
-      "port-version": 1
+      "baseline": "2.0.0",
+      "port-version": 0
     },
     "htscodecs": {
       "baseline": "1.6.7",

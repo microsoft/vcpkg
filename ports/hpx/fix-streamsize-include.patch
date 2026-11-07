@@ -1,0 +1,346 @@
+diff --git a/components/iostreams/include/hpx/components/iostreams/server/data_buffer.hpp b/components/iostreams/include/hpx/components/iostreams/server/data_buffer.hpp
+index 63b406944f..72a281100a 100644
+--- a/components/iostreams/include/hpx/components/iostreams/server/data_buffer.hpp
++++ b/components/iostreams/include/hpx/components/iostreams/server/data_buffer.hpp
+@@ -13,7 +13,7 @@
+ #include <hpx/components/iostreams/export_definitions.hpp>
+ #include <hpx/components/iostreams/write_functions.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <mutex>
+ #include <utility>
+diff --git a/libs/core/iostream/include/hpx/iostream/chain.hpp b/libs/core/iostream/include/hpx/iostream/chain.hpp
+index 6eef7821aa..322b1ff6a7 100644
+--- a/libs/core/iostream/include/hpx/iostream/chain.hpp
++++ b/libs/core/iostream/include/hpx/iostream/chain.hpp
+@@ -26,6 +26,7 @@
+ 
+ #include <cstdint>
+ #include <exception>
++#include <ios>
+ #include <iterator>
+ #include <list>
+ #include <memory>
+diff --git a/libs/core/iostream/include/hpx/iostream/checked_operations.hpp b/libs/core/iostream/include/hpx/iostream/checked_operations.hpp
+index 45e2d72492..00ed620db7 100644
+--- a/libs/core/iostream/include/hpx/iostream/checked_operations.hpp
++++ b/libs/core/iostream/include/hpx/iostream/checked_operations.hpp
+@@ -23,6 +23,8 @@
+ #include <hpx/iostream/traits.hpp>
+ #include <hpx/iostream/write.hpp>
+ 
++#include <ios>
++
+ #include <hpx/config/warnings_prefix.hpp>
+ 
+ namespace hpx::iostream {
+diff --git a/libs/core/iostream/include/hpx/iostream/combine.hpp b/libs/core/iostream/include/hpx/iostream/combine.hpp
+index 9b7e23a3d0..68faadd4dc 100644
+--- a/libs/core/iostream/include/hpx/iostream/combine.hpp
++++ b/libs/core/iostream/include/hpx/iostream/combine.hpp
+@@ -18,7 +18,7 @@
+ #include <hpx/iostream/operations.hpp>
+ #include <hpx/iostream/traits.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ #include <locale>
+ #include <type_traits>
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/compose.hpp b/libs/core/iostream/include/hpx/iostream/compose.hpp
+index ab595971e8..4a57cc1c22 100644
+--- a/libs/core/iostream/include/hpx/iostream/compose.hpp
++++ b/libs/core/iostream/include/hpx/iostream/compose.hpp
+@@ -24,6 +24,7 @@
+ 
+ #include <algorithm>
+ #include <functional>
++#include <ios>
+ #include <type_traits>
+ #include <utility>
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/constants.hpp b/libs/core/iostream/include/hpx/iostream/constants.hpp
+index 4271c6c364..57ea74afbc 100644
+--- a/libs/core/iostream/include/hpx/iostream/constants.hpp
++++ b/libs/core/iostream/include/hpx/iostream/constants.hpp
+@@ -15,7 +15,7 @@
+ 
+ #include <hpx/config.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ 
+ namespace hpx::iostream {
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/copy.hpp b/libs/core/iostream/include/hpx/iostream/copy.hpp
+index 03c1649573..87af7f0591 100644
+--- a/libs/core/iostream/include/hpx/iostream/copy.hpp
++++ b/libs/core/iostream/include/hpx/iostream/copy.hpp
+@@ -32,7 +32,7 @@
+ 
+ #include <algorithm>
+ #include <cstddef>
+-#include <iosfwd>
++#include <ios>
+ #include <type_traits>
+ #include <utility>
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/detail/adapter/concept_adapter.hpp b/libs/core/iostream/include/hpx/iostream/detail/adapter/concept_adapter.hpp
+index 5206250ff5..bab1fd3f0c 100644
+--- a/libs/core/iostream/include/hpx/iostream/detail/adapter/concept_adapter.hpp
++++ b/libs/core/iostream/include/hpx/iostream/detail/adapter/concept_adapter.hpp
+@@ -21,6 +21,7 @@
+ #include <hpx/iostream/traits.hpp>
+ 
+ #include <functional>
++#include <ios>
+ #include <memory>
+ #include <string>
+ #include <type_traits>
+diff --git a/libs/core/iostream/include/hpx/iostream/detail/adapter/direct_adapter.hpp b/libs/core/iostream/include/hpx/iostream/detail/adapter/direct_adapter.hpp
+index 5ab538765e..17fa96c265 100644
+--- a/libs/core/iostream/include/hpx/iostream/detail/adapter/direct_adapter.hpp
++++ b/libs/core/iostream/include/hpx/iostream/detail/adapter/direct_adapter.hpp
+@@ -20,7 +20,7 @@
+ 
+ #include <algorithm>
+ #include <cstddef>
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <type_traits>
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/detail/adapter/filter_adapter.hpp b/libs/core/iostream/include/hpx/iostream/detail/adapter/filter_adapter.hpp
+index 766a1dc822..ed6376deb8 100644
+--- a/libs/core/iostream/include/hpx/iostream/detail/adapter/filter_adapter.hpp
++++ b/libs/core/iostream/include/hpx/iostream/detail/adapter/filter_adapter.hpp
+@@ -23,7 +23,7 @@
+ #include <hpx/iostream/traits.hpp>
+ 
+ #include <concepts>
+-#include <iosfwd>
++#include <ios>
+ #include <type_traits>
+ 
+ namespace hpx::iostream::detail {
+diff --git a/libs/core/iostream/include/hpx/iostream/detail/adapter/non_blocking_adapter.hpp b/libs/core/iostream/include/hpx/iostream/detail/adapter/non_blocking_adapter.hpp
+index 2f1cf1b5ce..56264a5efd 100644
+--- a/libs/core/iostream/include/hpx/iostream/detail/adapter/non_blocking_adapter.hpp
++++ b/libs/core/iostream/include/hpx/iostream/detail/adapter/non_blocking_adapter.hpp
+@@ -16,7 +16,7 @@
+ #include <hpx/iostream/traits.hpp>
+ #include <hpx/iostream/write.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ 
+ namespace hpx::iostream {
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/detail/adapter/output_iterator_adapter.hpp b/libs/core/iostream/include/hpx/iostream/detail/adapter/output_iterator_adapter.hpp
+index 96afda1acf..87f676ff4c 100644
+--- a/libs/core/iostream/include/hpx/iostream/detail/adapter/output_iterator_adapter.hpp
++++ b/libs/core/iostream/include/hpx/iostream/detail/adapter/output_iterator_adapter.hpp
+@@ -14,7 +14,7 @@
+ #include <hpx/iostream/categories.hpp>
+ 
+ #include <algorithm>
+-#include <iosfwd>
++#include <ios>
+ #include <type_traits>
+ 
+ namespace hpx::iostream::detail {
+diff --git a/libs/core/iostream/include/hpx/iostream/detail/adapter/range_adapter.hpp b/libs/core/iostream/include/hpx/iostream/detail/adapter/range_adapter.hpp
+index 8042688b0a..8078c67180 100644
+--- a/libs/core/iostream/include/hpx/iostream/detail/adapter/range_adapter.hpp
++++ b/libs/core/iostream/include/hpx/iostream/detail/adapter/range_adapter.hpp
+@@ -21,7 +21,7 @@
+ 
+ #include <algorithm>
+ #include <cstddef>
+-#include <iosfwd>
++#include <ios>
+ #include <iterator>
+ #include <ranges>
+ #include <type_traits>
+diff --git a/libs/core/iostream/include/hpx/iostream/detail/buffer.hpp b/libs/core/iostream/include/hpx/iostream/detail/buffer.hpp
+index aaa0f8e2af..e3eec97a7d 100644
+--- a/libs/core/iostream/include/hpx/iostream/detail/buffer.hpp
++++ b/libs/core/iostream/include/hpx/iostream/detail/buffer.hpp
+@@ -17,7 +17,7 @@
+ #include <hpx/iostream/read.hpp>
+ #include <hpx/iostream/traits.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <type_traits>
+ #include <utility>
+diff --git a/libs/core/iostream/include/hpx/iostream/device/back_inserter.hpp b/libs/core/iostream/include/hpx/iostream/device/back_inserter.hpp
+index 2bf5fe59e3..7cdef357be 100644
+--- a/libs/core/iostream/include/hpx/iostream/device/back_inserter.hpp
++++ b/libs/core/iostream/include/hpx/iostream/device/back_inserter.hpp
+@@ -14,7 +14,7 @@
+ #include <hpx/config.hpp>
+ #include <hpx/iostream/categories.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ 
+ namespace hpx::iostream {
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/device/file_descriptor.hpp b/libs/core/iostream/include/hpx/iostream/device/file_descriptor.hpp
+index 0dbaa6ceab..a6b52d69b1 100644
+--- a/libs/core/iostream/include/hpx/iostream/device/file_descriptor.hpp
++++ b/libs/core/iostream/include/hpx/iostream/device/file_descriptor.hpp
+@@ -21,7 +21,7 @@
+ 
+ #include <cstdint>
+ #include <filesystem>
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <string>
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/device/null.hpp b/libs/core/iostream/include/hpx/iostream/device/null.hpp
+index ccef40ff0c..16d0903257 100644
+--- a/libs/core/iostream/include/hpx/iostream/device/null.hpp
++++ b/libs/core/iostream/include/hpx/iostream/device/null.hpp
+@@ -18,7 +18,7 @@
+ #include <hpx/iostream/categories.hpp>
+ #include <hpx/iostream/positioning.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ 
+ namespace hpx::iostream {
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/filter/bzip2.hpp b/libs/core/iostream/include/hpx/iostream/filter/bzip2.hpp
+index a5275a2cca..8c5e72dbbf 100644
+--- a/libs/core/iostream/include/hpx/iostream/filter/bzip2.hpp
++++ b/libs/core/iostream/include/hpx/iostream/filter/bzip2.hpp
+@@ -15,7 +15,7 @@
+ #include <hpx/iostream/constants.hpp>
+ #include <hpx/iostream/filter/symmetric.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <new>
+ #include <type_traits>
+diff --git a/libs/core/iostream/include/hpx/iostream/filter/symmetric.hpp b/libs/core/iostream/include/hpx/iostream/filter/symmetric.hpp
+index 213e515f43..dfafd45f01 100644
+--- a/libs/core/iostream/include/hpx/iostream/filter/symmetric.hpp
++++ b/libs/core/iostream/include/hpx/iostream/filter/symmetric.hpp
+@@ -50,7 +50,7 @@
+ #include <hpx/iostream/traits.hpp>
+ 
+ #include <cstdint>
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <string>
+ #include <type_traits>
+diff --git a/libs/core/iostream/include/hpx/iostream/filter/zlib.hpp b/libs/core/iostream/include/hpx/iostream/filter/zlib.hpp
+index 61fc7b513e..f763d9ce41 100644
+--- a/libs/core/iostream/include/hpx/iostream/filter/zlib.hpp
++++ b/libs/core/iostream/include/hpx/iostream/filter/zlib.hpp
+@@ -16,7 +16,7 @@
+ #include <hpx/iostream/filter/symmetric.hpp>
+ 
+ #include <cstdint>
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <new>
+ #include <type_traits>
+diff --git a/libs/core/iostream/include/hpx/iostream/optimal_buffer_size.hpp b/libs/core/iostream/include/hpx/iostream/optimal_buffer_size.hpp
+index b3cc23925a..97ea8e43b8 100644
+--- a/libs/core/iostream/include/hpx/iostream/optimal_buffer_size.hpp
++++ b/libs/core/iostream/include/hpx/iostream/optimal_buffer_size.hpp
+@@ -19,6 +19,7 @@
+ 
+ #include <hpx/config/warnings_prefix.hpp>
+ 
++#include <ios>
+ #include <type_traits>
+ 
+ namespace hpx::iostream {
+diff --git a/libs/core/iostream/include/hpx/iostream/read.hpp b/libs/core/iostream/include/hpx/iostream/read.hpp
+index 56c2d0f321..40dd746b7f 100644
+--- a/libs/core/iostream/include/hpx/iostream/read.hpp
++++ b/libs/core/iostream/include/hpx/iostream/read.hpp
+@@ -18,7 +18,7 @@
+ #include <hpx/iostream/traits.hpp>
+ #include <hpx/modules/type_support.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ #include <string>
+ #include <type_traits>
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/stream_buffer.hpp b/libs/core/iostream/include/hpx/iostream/stream_buffer.hpp
+index 714594930d..42becde58c 100644
+--- a/libs/core/iostream/include/hpx/iostream/stream_buffer.hpp
++++ b/libs/core/iostream/include/hpx/iostream/stream_buffer.hpp
+@@ -19,7 +19,7 @@
+ 
+ #include <concepts>
+ #include <functional>
+-#include <iosfwd>
++#include <ios>
+ #include <memory>
+ #include <type_traits>
+ 
+diff --git a/libs/core/iostream/include/hpx/iostream/tee.hpp b/libs/core/iostream/include/hpx/iostream/tee.hpp
+index 38d5f270e7..c95186680b 100644
+--- a/libs/core/iostream/include/hpx/iostream/tee.hpp
++++ b/libs/core/iostream/include/hpx/iostream/tee.hpp
+@@ -21,6 +21,7 @@
+ #include <hpx/iostream/traits.hpp>
+ 
+ #include <concepts>
++#include <ios>
+ #include <type_traits>
+ 
+ namespace hpx::iostream {
+diff --git a/libs/core/iostream/include/hpx/iostream/write.hpp b/libs/core/iostream/include/hpx/iostream/write.hpp
+index 9e1154691b..07b53cefe1 100644
+--- a/libs/core/iostream/include/hpx/iostream/write.hpp
++++ b/libs/core/iostream/include/hpx/iostream/write.hpp
+@@ -18,7 +18,7 @@
+ #include <hpx/iostream/traits.hpp>
+ #include <hpx/modules/type_support.hpp>
+ 
+-#include <iosfwd>
++#include <ios>
+ #include <string>
+ #include <type_traits>
+ 
+diff --git a/libs/core/iostream/src/file_descriptor.cpp b/libs/core/iostream/src/file_descriptor.cpp
+index 712adaa918..434de742c1 100644
+--- a/libs/core/iostream/src/file_descriptor.cpp
++++ b/libs/core/iostream/src/file_descriptor.cpp
+@@ -19,7 +19,7 @@
+ #include <cstdint>
+ #include <cstdio>
+ #include <cstring>
+-#include <iosfwd>
++#include <ios>
+ #include <limits>
+ #include <memory>
+ #include <string>
+diff --git a/libs/full/checkpoint/src/checkpoint.cpp b/libs/full/checkpoint/src/checkpoint.cpp
+index 6d32b17554..2af78e7b75 100644
+--- a/libs/full/checkpoint/src/checkpoint.cpp
++++ b/libs/full/checkpoint/src/checkpoint.cpp
+@@ -12,7 +12,7 @@
+ 
+ #include <cstddef>
+ #include <cstdint>
+-#include <iosfwd>
++#include <ios>
+ 
+ namespace hpx::util {
+ 
