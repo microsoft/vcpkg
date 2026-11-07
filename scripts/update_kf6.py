@@ -50,6 +50,7 @@ PORT_LIST = [
     "kpackage",
     "kplotting",
     "kservice",
+    "ktextwidgets",
     "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
