@@ -1,0 +1,15 @@
+diff --git a/controls/CMakeLists.txt b/controls/CMakeLists.txt
+index be270b5..c5b6e47 100644
+--- a/controls/CMakeLists.txt
++++ b/controls/CMakeLists.txt
+@@ -40,8 +40,8 @@ target_link_libraries(QuickChartsControls PRIVATE
+     QuickCharts
+ )
+ 
+-ecm_finalize_qml_module(QuickChartsControls DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(QuickChartsControls DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6QuickChartsTargets)
+ 
+ ecm_generate_qdoc(QuickChartsControls kquickchartscontrols.qdocconf)
+ 
+-install(TARGETS QuickChartsControls ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
++install(TARGETS QuickChartsControls EXPORT KF6QuickChartsTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
