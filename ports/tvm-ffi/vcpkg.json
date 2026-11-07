@@ -1,0 +1,19 @@
+{
+  "name": "tvm-ffi",
+  "version": "0.1.15",
+  "description": "Open ABI and FFI for machine learning systems",
+  "homepage": "https://github.com/apache/tvm-ffi",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "dlpack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b89ab29..0b146ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,6 +19,16 @@ cmake_minimum_required(VERSION 3.26)
+ 
+ project(tvm_ffi LANGUAGES CXX C)
+ 
++if (BUILD_SHARED_LIBS)
++  set(TVM_FFI_LIBRARY_KIND shared)
++  set(TVM_FFI_STATIC_LIBRARY 0)
++else ()
++  set(TVM_FFI_LIBRARY_KIND static)
++  set(TVM_FFI_STATIC_LIBRARY 1)
++endif ()
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/include/tvm/ffi/vcpkg_config.h"
++     "#pragma once\n#define TVM_FFI_STATIC_LIBRARY ${TVM_FFI_STATIC_LIBRARY}\n")
++
+ option(TVM_FFI_USE_LIBBACKTRACE "Enable libbacktrace" ON)
+ option(TVM_FFI_USE_EXTRA_CXX_API "Enable extra CXX API in shared lib" ON)
+ option(TVM_FFI_USE_THREADS "Link against threads in shared lib" ON)
+@@ -50,13 +60,12 @@ else ()
+ endif ()
+ 
+ target_include_directories(
+-  tvm_ffi_header INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-                           $<INSTALL_INTERFACE:include>
+-)
+-target_include_directories(
+-  tvm_ffi_header INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/dlpack/include>
++  tvm_ffi_header INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
++                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                            $<INSTALL_INTERFACE:include>
+ )
++find_package(dlpack CONFIG REQUIRED)
++target_link_libraries(tvm_ffi_header INTERFACE dlpack::dlpack)
+ 
+ # ######### Target: `tvm_ffi_objs` ##########
+ 
+@@ -129,6 +138,8 @@ endif ()
+ 
+ tvm_ffi_add_msvc_flags(tvm_ffi_objs)
+ tvm_ffi_add_target_from_obj(tvm_ffi tvm_ffi_objs)
++set_target_properties(tvm_ffi_static tvm_ffi_shared tvm_ffi_testing PROPERTIES EXCLUDE_FROM_ALL ON)
++set_target_properties(tvm_ffi_${TVM_FFI_LIBRARY_KIND} PROPERTIES EXCLUDE_FROM_ALL OFF)
+ tvm_ffi_hide_static_linked_lib_symbols(tvm_ffi_shared)
+ 
+ if (TVM_FFI_USE_THREADS)
+@@ -365,10 +376,39 @@ endif ()
+ # ######### Install the related for normal cmake library ##########
+ 
+ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/tvm/ffi/ DESTINATION include/tvm/ffi/)
+-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/dlpack/include/ DESTINATION include/)
+-install(TARGETS tvm_ffi_shared DESTINATION lib)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/tvm/ffi/vcpkg_config.h"
++        DESTINATION include/tvm/ffi)
++set_target_properties(tvm_ffi_${TVM_FFI_LIBRARY_KIND} PROPERTIES EXPORT_NAME ${TVM_FFI_LIBRARY_KIND})
++if (NOT BUILD_SHARED_LIBS)
++  set_target_properties(tvm_ffi_static PROPERTIES EXPORT_NAME static_archive)
++  add_library(tvm_ffi_static_link INTERFACE)
++  set_target_properties(tvm_ffi_static_link PROPERTIES EXPORT_NAME static)
++  # Keep translation units whose only entry point is a registry initializer.
++  target_link_libraries(tvm_ffi_static_link INTERFACE
++    "$<BUILD_INTERFACE:$<LINK_LIBRARY:WHOLE_ARCHIVE,tvm_ffi_static>>"
++    "$<INSTALL_INTERFACE:$<LINK_LIBRARY:WHOLE_ARCHIVE,tvm_ffi::static_archive>>")
++  install(TARGETS tvm_ffi_static_link EXPORT tvm_ffi-targets)
++endif ()
++set_target_properties(tvm_ffi_header PROPERTIES EXPORT_NAME header)
++install(TARGETS tvm_ffi_${TVM_FFI_LIBRARY_KIND} tvm_ffi_header EXPORT tvm_ffi-targets
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
++install(EXPORT tvm_ffi-targets NAMESPACE tvm_ffi:: DESTINATION lib/cmake/tvm_ffi)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/tvm_ffi-config.cmake" [[
++include(CMakeFindDependencyMacro)
++find_dependency(dlpack CONFIG)
++find_dependency(Threads)
++include("${CMAKE_CURRENT_LIST_DIR}/tvm_ffi-targets.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/Utils/Library.cmake")
++include("${CMAKE_CURRENT_LIST_DIR}/Utils/EmbedCubin.cmake")
++]])
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tvm_ffi-config.cmake"
++        DESTINATION lib/cmake/tvm_ffi)
++install(FILES cmake/Utils/Library.cmake cmake/Utils/EmbedCubin.cmake
++              cmake/Utils/ObjectCopyUtil.cmake DESTINATION lib/cmake/tvm_ffi/Utils)
+ # if tvm_ffi_testing is built, we also install it
+-if (TARGET tvm_ffi_testing)
++if (TVM_FFI_BUILD_TESTS OR TVM_FFI_BUILD_PYTHON_MODULE)
+   install(
+     TARGETS tvm_ffi_testing
+     DESTINATION lib
+@@ -376,20 +416,11 @@ if (TARGET tvm_ffi_testing)
+   )
+ endif ()
+ # ship additional dSYM files for debugging symbols on if available
+-if (APPLE)
++if (APPLE AND BUILD_SHARED_LIBS)
+   install(
+-    DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib/
+-    DESTINATION lib
+-    FILES_MATCHING
+-    PATTERN "*.dSYM"
+-  )
+-endif ()
+-
+-if (NOT TVM_FFI_BUILD_PYTHON_MODULE)
+-  # when building wheel, we do not ship static as we already ships source and dll
+-  install(
+-    TARGETS tvm_ffi_static
++    DIRECTORY "$<TARGET_FILE:tvm_ffi_shared>.dSYM"
+     DESTINATION lib
+     OPTIONAL
+   )
+ endif ()
++
+diff --git a/include/tvm/ffi/c_api.h b/include/tvm/ffi/c_api.h
+index c67bd71..7f0c1bc 100644
+--- a/include/tvm/ffi/c_api.h
++++ b/include/tvm/ffi/c_api.h
+@@ -26,6 +26,7 @@
+ 
+ #include <dlpack/dlpack.h>
+ #include <stdint.h>
++#include <tvm/ffi/vcpkg_config.h>
+ 
+ // Macros to do weak linking
+ #ifdef _MSC_VER
+@@ -44,7 +45,9 @@
+ #define TVM_FFI_DLL_EXPORT EMSCRIPTEN_KEEPALIVE
+ #endif
+ #if !defined(TVM_FFI_DLL) && defined(_MSC_VER)
+-#ifdef TVM_FFI_EXPORTS
++#if TVM_FFI_STATIC_LIBRARY
++#define TVM_FFI_DLL
++#elif defined(TVM_FFI_EXPORTS)
+ #define TVM_FFI_DLL __declspec(dllexport)
+ #else
+ #define TVM_FFI_DLL __declspec(dllimport)
