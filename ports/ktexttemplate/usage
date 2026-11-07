@@ -1,0 +1,8 @@
+The package ktexttemplate provides CMake targets:
+
+    find_package(KF6TextTemplate CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE KF6::TextTemplate)
+
+The template plugins are installed in plugins/kf6/ktexttemplate, the plugins
+directory must be in the Qt library paths, or added with
+KTextTemplate::Engine::addPluginPath().
