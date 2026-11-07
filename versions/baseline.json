@@ -1508,18 +1508,6 @@
       "baseline": "0.2.1",
       "port-version": 0
     },
-    "brazier-core": {
-      "baseline": "0.2.1",
-      "port-version": 0
-    },
-    "brazier-logger": {
-      "baseline": "0.1.1",
-      "port-version": 0
-    },
-    "brazier-orm": {
-      "baseline": "0.1.1",
-      "port-version": 0
-    },
     "breakpad": {
       "baseline": "2024-02-16",
       "port-version": 1

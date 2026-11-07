@@ -6,16 +6,49 @@
   "license": "LGPL-3.0-or-later",
   "supports": "!bsd",
   "dependencies": [
-    "brazier-core",
-    "brazier-logger",
-    "brazier-orm",
-    {
-      "name": "vcpkg-cmake",
-      "host": true
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ],
+  "default-features": [
+    "main"
+  ],
+  "features": {
+    "logger": {
+      "description": "Logging library for brazier"
     },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
+    "main": {
+      "description": "Core library for brazier",
+      "dependencies": [
+        "boost-asio",
+        "boost-beast",
+        "boost-config",
+        "boost-filesystem",
+        "boost-system",
+        "boost-thread",
+        {
+          "name": "brazier",
+          "features": [
+            "logger"
+          ]
+        },
+        "fmt",
+        "hiredis",
+        "openssl",
+        "zlib"
+      ]
+    },
+    "orm": {
+      "description": "ORM module for brazier",
+      "dependencies": [
+        {
+          "name": "brazier",
+          "features": [
+            "logger"
+          ]
+        },
+        "libpq",
+        "nlohmann-json"
+      ]
     }
-  ]
+  }
 }
