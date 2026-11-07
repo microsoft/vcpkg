@@ -822,7 +822,7 @@
     },
     "bluez-qt": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boinc": {
       "baseline": "8.2.15",
@@ -4330,7 +4330,7 @@
     },
     "kauth": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kbookmarks": {
       "baseline": "6.31.0",
@@ -4338,7 +4338,7 @@
     },
     "kbreezeicons": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kcenon-common-system": {
       "baseline": "0.2.0",
@@ -4346,7 +4346,7 @@
     },
     "kcodecs": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kcolorscheme": {
       "baseline": "6.31.0",
@@ -4354,19 +4354,19 @@
     },
     "kcompletion": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kconfig": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kconfigwidgets": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kcoreaddons": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kcp": {
       "baseline": "2.1.1",
@@ -4374,7 +4374,7 @@
     },
     "kcrash": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kdalgorithms": {
       "baseline": "1.4",
@@ -4386,7 +4386,7 @@
     },
     "kdbusaddons": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kddockwidgets": {
       "baseline": "2.5.1",
@@ -4394,7 +4394,7 @@
     },
     "kdeclarative": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kdgpu": {
       "baseline": "0.10.0",
@@ -4594,7 +4594,7 @@
     },
     "kf6-solid": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kfr": {
       "baseline": "6.3.1",
@@ -4602,23 +4602,23 @@
     },
     "kglobalaccel": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kguiaddons": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kholidays": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ki18n": {
       "baseline": "6.31.0",
-      "port-version": 4
+      "port-version": 5
     },
     "kiconthemes": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kidletime": {
       "baseline": "6.31.0",
@@ -4638,7 +4638,7 @@
     },
     "kirigami": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kissfft": {
       "baseline": "131.2.0",
@@ -4650,11 +4650,11 @@
     },
     "kitemmodels": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kitemviews": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kjobwidgets": {
       "baseline": "6.31.0",
@@ -4690,7 +4690,7 @@
     },
     "knotifications": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "komihash": {
       "baseline": "5.34",
@@ -4702,7 +4702,7 @@
     },
     "kplotting": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "krabsetw": {
       "baseline": "4.3.2",
@@ -4754,11 +4754,11 @@
     },
     "kwidgetsaddons": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kwindowsystem": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kwsys": {
       "baseline": "2021-08-06",
@@ -9730,7 +9730,7 @@
     },
     "sonnet": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sophus": {
       "baseline": "1.24.6",
@@ -10162,7 +10162,7 @@
     },
     "syntax-highlighting": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "syscalls-cpp": {
       "baseline": "1.2.1",
@@ -10306,7 +10306,7 @@
     },
     "threadweaver": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "thrift": {
       "baseline": "0.25.0",

@@ -32,7 +32,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=ON
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         ${FEATURE_OPTIONS}
 )
 
@@ -43,14 +43,14 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME kf6kirigami CONFIG_PATH lib/cmake/KF6Kirig
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_BUILD_TYPE)
-    # The static QML module objects are installed in the QML directory, debug/qml for the debug build
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
     foreach(targets_debug IN ITEMS
         "${CURRENT_PACKAGES_DIR}/share/kf6kirigami/KF6KirigamiTargets-debug.cmake"
         "${CURRENT_PACKAGES_DIR}/share/kf6kirigamiplatform/KF6KirigamiPlatformTargets-debug.cmake"
     )
         vcpkg_replace_string("${targets_debug}"
-            "\${_IMPORT_PREFIX}/qml/"
-            "\${_IMPORT_PREFIX}/debug/qml/"
+            [[${_IMPORT_PREFIX}/Qt6/qml/]]
+            [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
         )
     endforeach()
 endif()
