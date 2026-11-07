@@ -1,0 +1,14 @@
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index f94f178..2f14191 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -150,6 +150,9 @@ ecm_generate_headers(KNewStuffCore_CamelCase_HEADERS
+ )
+ 
+ install(TARGETS KF6NewStuffCore EXPORT KF6NewStuffCoreTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
++if (NOT BUILD_SHARED_LIBS)
++    install(TARGETS knscore_jobs_static EXPORT KF6NewStuffCoreTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
++endif()
+ 
+ install(
+     FILES
