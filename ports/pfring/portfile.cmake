@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ntop/PF_RING
     REF "${VERSION}"
-    SHA512 fc540d31027fc3a674a874c22bcbecb2b5ed6c7c7af534e876e6a2a2679cffc391a031e30d307b4e8fe294170ba5f5691fe3630cb131190db035b06f50a03d60
+    SHA512 8b7c0d5532a6f69cee1153594903a115d3262f6a1988a46449bafb29da8ace3fc7437ff46bfc9f73804fa4c8c76bed0df3fd07b9ad1ced05b311bfaf5bf990ad
     HEAD_REF dev
+    PATCHES
+        use-external-libpcap.patch
 )
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/kernel")
@@ -18,6 +20,14 @@ vcpkg_configure_make(
     COPY_SOURCE
     OPTIONS
         --disable-archopt
+        --disable-redis
+        --disable-zmq
+        --disable-ndpi
+        --disable-xdp
+        ac_cv_header_hiredis_h=no
+        ac_cv_lib_nl_nl_handle_alloc=no
+        ac_cv_lib_nl_3_nl_socket_alloc=no
+        "BPF_INCLUDE=-I${CURRENT_INSTALLED_DIR}/include"
 )
 string(REPLACE "dynamic" "shared" install_target "install-${VCPKG_LIBRARY_LINKAGE}")
 vcpkg_install_make(
@@ -28,6 +38,8 @@ vcpkg_install_make(
         "YACC=${BISON}"
 )
 
+file(INSTALL "${CURRENT_BUILDTREES_DIR}/kernel/linux/pf_ring.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/linux")
+
 vcpkg_install_copyright(
     COMMENT [[
 The user-space PF_RING library source code is distributed under the LGPLv2.1.
@@ -37,4 +49,5 @@ which adds an NTOP END USER LICENSE AGREEMENT.
     FILE_LIST
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/userland/lib/libs/EULA.txt"
+        "${SOURCE_PATH}/userland/lib/third_party/uthash.h"
 )

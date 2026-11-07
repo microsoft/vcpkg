@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice/libplist
-    REF ${VERSION}
-    SHA512 0477202686fb2f88684af30a97d53fd023ada470dfc7c5d8b32c0d80e09a4641e679522a53c5ad32eae61b21a2d0f1f0c660acd8482ba7951d728b42e4cf5eab
+    REF "${VERSION}"
+    SHA512 19ec0a7877281486f5f4f3b81cba34e498f879f1e5c6db6baa9142936dc11c3fc592ebb62d82b148d8f5a85339ea4d30f705fe4a6036c9c79355a11d03b335b6
     HEAD_REF master
     PATCHES
         001_fix_static_build.patch
@@ -41,5 +41,10 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/COPYING.LESSER"
+    "${SOURCE_PATH}/src/jsmn.h"
+    "${SOURCE_PATH}/src/time64.c"
+)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

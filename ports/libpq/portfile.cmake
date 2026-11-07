@@ -16,6 +16,7 @@ vcpkg_extract_source_archive(
         windows/macro-def.patch
         windows/spin_delay.patch
         windows/getopt.patch
+        windows/pthread-symbols.patch
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
@@ -68,6 +69,21 @@ vcpkg_configure_meson(
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
+
+if(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpq.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpq.pc")
+    foreach(file IN LISTS pc_files)
+        vcpkg_replace_string("${file}" " -lm([ \n])" "\\1" REGEX IGNORE_UNCHANGED)
+        vcpkg_replace_string("${file}" "(Libs:[^\n]*)" "\\1 -lm" REGEX)
+    endforeach()
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpq.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpq.pc")
+    foreach(file IN LISTS pc_files)
+        vcpkg_replace_string("${file}" " -lsecur32" " -lsecur32 -ladvapi32 -lshell32")
+    endforeach()
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")

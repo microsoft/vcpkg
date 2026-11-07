@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 927ecf72f00a228e0899d5b8008575b44748c49b083b9425b5f2a6b4490a9900eae111afad23f2bf0a1c9c62cf1fea80c903eb3076d7e7ea901a5625f09df78e
+        SHA512 00ade7a3e2c2e34465f1bb9fafd78733d3e659617b0857cf1b3c7f04cfc1d8566d1fd6a8697946f0de7c808cce1c4d0a4b2195c7bc20144cfd8b1e9b1cfba621
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 60eb4f8478ae998ae68efa33b2e3c9f331f5e373a1272472f93befd9fd6cab4ed73935bb540e728b5abb154469fbc6c0fd69f7aaf54cd3187eefede6cb145a10
+        SHA512 de41ef101f37d09685bf9e69bacefe06a0c010ecd0e6e7ed1e4efbff82fde27a9c3ae36ed436db5bcde4c61de10da984dfb74d6098586a3f78d8a716864460c2
         HEAD_REF master
     )
 endif()
@@ -22,7 +22,7 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in" DESTINATION "${SOURC
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES 
+    FEATURES
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
     android-binding             IMGUI_BUILD_ANDROID_BINDING
     dx9-binding                 IMGUI_BUILD_DX9_BINDING
@@ -65,7 +65,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 3a31bd3e1f86679ee60fc765971e96f76e05e530b3c7920aea284818604fd8a3cdf1fc7189e7e825a52a75446217ed6f1b2d7470d317799d381fb9019f14333b
+        SHA512 c5bf34061ca4aaaedeaafd63138c4c6fbfafc2d10b3bcad626c6a54314f2343cbb9d1fc6b77cd6e3e646e265c65cd994235f894ccb4ffc8039a67ef8f05a2265
         HEAD_REF master
     )
 
@@ -100,8 +100,19 @@ endif()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
+vcpkg_download_distfile(PROGGY_CLEAN_LICENSE
+    URLS "https://raw.githubusercontent.com/bluescan/proggyfonts/139ec08a38096161291792313ef5803fc4f0e37b/LICENSE"
+    FILENAME "imgui-proggyclean-license-139ec08a38096161291792313ef5803fc4f0e37b.txt"
+    SHA512 b17bc797420ceb31de53a3d7e82838ae0b3abbe0f672b0bc3f13e131464843c38649cc911b25661f086b0eee03d5ff3d6e07a075aedcc76cc742a141d9591303
+)
+vcpkg_download_distfile(PROGGY_FOREVER_LICENSE
+    URLS "https://raw.githubusercontent.com/ocornut/proggyforever/f8868ba43bb42c4d88454d03ad81cbd139789f72/LICENSE.txt"
+    FILENAME "imgui-proggyforever-license-f8868ba43bb42c4d88454d03ad81cbd139789f72.txt"
+    SHA512 dda5f9f404f62dd2d3d3be12ba80db167fb3f9f5b177337fd1133b51d2adb8a58f98eb12adc6f1c7b247299513c7186859c61d4a7e2f4a69135d06b8fc2518d9
+)
+
 if ("test-engine" IN_LIST FEATURES)
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/test-engine/LICENSE.txt")
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${PROGGY_CLEAN_LICENSE}" "${PROGGY_FOREVER_LICENSE}" "${SOURCE_PATH}/test-engine/LICENSE.txt")
 else()
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${PROGGY_CLEAN_LICENSE}" "${PROGGY_FOREVER_LICENSE}")
 endif()

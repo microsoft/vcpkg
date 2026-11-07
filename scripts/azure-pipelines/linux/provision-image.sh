@@ -11,6 +11,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "24.04") and format to "2404"
 UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
+UBUNTU_CODENAME=$(. /etc/os-release && echo "$VERSION_CODENAME")
 NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
 DEBIAN_ARCHITECTURE=$(dpkg --print-architecture)
 
@@ -27,16 +28,27 @@ arm64)
   ;;
 esac
 
-POWERSHELL_VERSION=7.6.3
+POWERSHELL_VERSION=7.6.9
 
 # Apt dependencies; needed for add-apt-repository and curl downloads to work
 apt-get -y update
 apt-get --no-install-recommends -y install ca-certificates curl apt-transport-https lsb-release gnupg software-properties-common
 
 ## CUDA
-curl -L -o /etc/apt/preferences.d/cuda-repository-pin-600 "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-ubuntu${NVIDIA_REPO_VERSION}.pin"
-apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/3bf863cc.pub"
-add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/ /"
+curl -L -o cuda-keyring.deb "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${NVIDIA_REPO_VERSION}/${NVIDIA_REPO_ARCHITECTURE}/cuda-keyring_1.1-1_all.deb"
+dpkg -i cuda-keyring.deb
+rm -f cuda-keyring.deb
+
+## ROCm
+# AMD publishes ROCm packages for Ubuntu amd64 only; there is no arm64 repository.
+# Update the apt suite when the image moves to a newer Ubuntu release.
+if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://repo.radeon.com/rocm/rocm.gpg.key |
+      gpg --dearmor -o /etc/apt/keyrings/rocm.gpg
+  echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/rocm.gpg] https://repo.radeon.com/rocm/apt/latest ${UBUNTU_CODENAME} main" |
+      tee /etc/apt/sources.list.d/rocm.list
+fi
 
 ## PowerShell
 curl -L -o packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/${UBUNTU_VERSION_ID}/packages-microsoft-prod.deb
@@ -176,22 +188,30 @@ APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 # cudnn9-jit-cuda-13 : cudnn9-jit appears to conflict with cudnn9-dev packages:
 # root@c47a4cc2ea72:/# apt install cudnn9-jit-cuda-13
 # The following additional packages will be installed:
-#   cudnn9-jit-cuda-13-3 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+#   cudnn9-jit-cuda-13-4 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
 # The following packages will be REMOVED:
-#   cudnn9-cuda-13 cudnn9-cuda-13-3 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
+#   cudnn9-cuda-13 cudnn9-cuda-13-4 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
 # The following NEW packages will be installed:
-#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-3 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
-APT_PACKAGES="$APT_PACKAGES cccl-13-3 cuda-command-line-tools-13-3 cuda-compiler-13-3 cuda-crt-13-3 \
-  cuda-cudart-dev-13-3 cuda-cuobjdump-13-3 cuda-cupti-dev-13-3 cuda-cuxxfilt-13-3 \
-  cuda-driver-dev-13-3 cuda-libraries-dev-13-3 cuda-minimal-build-13-3 cuda-nvcc-13-3 \
-  cuda-nvml-dev-13-3 cuda-nvrtc-dev-13-3 cuda-nvtx-13-3 libnvvm-13-3 \
-  cuda-sanitizer-13-3 cuda-toolkit-13-3-config-common cudnn9-cuda-13 gds-tools-13-3 \
-  libcublas-13-3 libcudnn9-dev-cuda-13 libcufft-dev-13-3 libcurand-dev-13-3 libcusolver-dev-13-3 \
-  libcusparse-dev-13-3 libnccl-dev libnpp-dev-13-3 libnvfatbin-dev-13-3 libnvjitlink-dev-13-3 \
-  libnvjpeg-dev-13-3"
+#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-4 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+APT_PACKAGES="$APT_PACKAGES cccl-13-4 cuda-command-line-tools-13-4 cuda-compiler-13-4 cuda-crt-13-4 \
+  cuda-cudart-dev-13-4 cuda-cuobjdump-13-4 cuda-cupti-dev-13-4 cuda-cuxxfilt-13-4 \
+  cuda-driver-dev-13-4 cuda-libraries-dev-13-4 cuda-minimal-build-13-4 cuda-nvcc-13-4 \
+  cuda-nvml-dev-13-4 cuda-nvrtc-dev-13-4 cuda-nvtx-13-4 libnvvm-13-4 \
+  cuda-sanitizer-13-4 cuda-toolkit-13-4-config-common cudnn9-cuda-13 gds-tools-13-4 \
+  libcublas-13-4 libcudnn9-dev-cuda-13 libcufft-dev-13-4 libcurand-dev-13-4 libcusolver-dev-13-4 \
+  libcusparse-dev-13-4 libnccl-dev libnpp-dev-13-4 libnvfatbin-dev-13-4 libnvjitlink-dev-13-4 \
+  libnvjpeg-dev-13-4"
 
 if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
-  APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-3"
+  APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-4"
+fi
+
+## ROCm
+# rocm-core provides /opt/rocm/.info/version, which the rocm vcpkg port probes.
+# Ports that depend on ROCm may need more of the stack (for example rocm-hip-sdk)
+# installed here as well.
+if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
+  APT_PACKAGES="$APT_PACKAGES rocm-core"
 fi
 
 ## PowerShell + Azure

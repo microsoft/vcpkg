@@ -180,7 +180,7 @@
   -->
   <Import Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgAutoBootstrap)' == 'true' and $([MSBuild]::IsOSPlatform('Windows')) and Exists('$(_ZVcpkgRoot)bootstrap-vcpkg.bat')"
           Project="$(MSBuildThisFileDirectory)\support\Bootstrap.targets" />
-  <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task" 
+  <Import Project="$(MSBuildThisFileDirectory)support\GetVcpkgEnvVars.task"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
   />
   <Import Project="$(MSBuildThisFileDirectory)support\GetGlobalProperties.task"
@@ -202,11 +202,31 @@
     <PropertyGroup>
       <_ZVcpkgTLogFileLocation>$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).$(_ZVcpkgHostTripletSuffix)read.1u.tlog</_ZVcpkgTLogFileLocation>
     </PropertyGroup>
+    <!-- RemoveProperties takes precedence over Properties, so retain the properties explicitly passed below. -->
+    <ItemGroup>
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgMSBuildStampFile" Value="$(_ZVcpkgMSBuildStampFile)" />
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgRoot" Value="$(_ZVcpkgRoot)" />
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgHostTripletSuffix" Value="$(_ZVcpkgHostTripletSuffix)" />
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgInstalledDir" Value="$(_ZVcpkgInstalledDir)" />
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgExecutable" Value="$(_ZVcpkgExecutable)" />
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgHostTripletParameter" Value="$(_ZVcpkgHostTripletParameter)" />
+      <_ZVcpkgPassToInstallProperties Include="VcpkgTriplet" Value="$(VcpkgTriplet)" />
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgManifestRoot" Value="$(_ZVcpkgManifestRoot)" />
+      <_ZVcpkgPassToInstallProperties Include="VcpkgAdditionalInstallOptions" Value="$(VcpkgAdditionalInstallOptions)" />
+      <_ZVcpkgPassToInstallProperties Include="_ZVcpkgEnvVars" Value="$(_ZVcpkgEnvVars)" />
+
+      <_ZVcpkgPassToInstallProperties>
+        <EscapedValue>$([MSBuild]::Escape('%(_ZVcpkgPassToInstallProperties.Value)'))</EscapedValue>
+      </_ZVcpkgPassToInstallProperties>
+
+      <_ZVcpkgRemoveFromInstallProperties Include="$([MSBuild]::Unescape($(_ZVcpkgGlobalPropertyNames)))" />
+      <_ZVcpkgRemoveFromInstallProperties Remove="@(_ZVcpkgPassToInstallProperties)" />
+    </ItemGroup>
     <MSBuild BuildInParallel="true"
              Projects="$(MSBuildThisFileDirectory)\support\InstallImplementation.targets"
              Targets="VcpkgInstallImplementation"
-             RemoveProperties="$(_ZVcpkgGlobalPropertyNames)"
-             Properties="_ZVcpkgMSBuildStampFile=$(_ZVcpkgMSBuildStampFile);_ZVcpkgRoot=$(_ZVcpkgRoot);_ZVcpkgHostTripletSuffix=$(_ZVcpkgHostTripletSuffix);_ZVcpkgInstalledDir=$(_ZVcpkgInstalledDir);_ZVcpkgExecutable=$(_ZVcpkgExecutable);_ZVcpkgHostTripletParameter=$(_ZVcpkgHostTripletParameter);VcpkgTriplet=$(VcpkgTriplet);_ZVcpkgManifestRoot=$(_ZVcpkgManifestRoot);VcpkgAdditionalInstallOptions=$([MSBuild]::Escape($(VcpkgAdditionalInstallOptions)));_ZVcpkgEnvVars=$(_ZVcpkgEnvVars)"
+             RemoveProperties="@(_ZVcpkgRemoveFromInstallProperties)"
+             Properties="@(_ZVcpkgPassToInstallProperties -> '%(Identity)=%(EscapedValue)')"
     />
     <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
                       Lines="@(_ZVcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
@@ -219,7 +239,8 @@
   </Target>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput"
-          Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true' and '@(Link)' != ''">
+          Condition="'$(_ZVcpkgClassicOrManifest)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true' and '@(Link)' != ''
+                     and Exists('$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)bin')">
     <Message Text="[vcpkg] Starting VcpkgApplocalDeps" Importance="low" />
     <PropertyGroup>
       <_ZVcpkgApplocalInstalledBinDir>$(_ZVcpkgCurrentInstalledDir)$(_ZVcpkgConfigSubdir)bin</_ZVcpkgApplocalInstalledBinDir>

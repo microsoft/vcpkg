@@ -1,12 +1,11 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF 03087864cf4bea6abb0d28f95cf7843511413d8f
+    REF b141d9c45db236335351c8a4b2a14b3ade27c937
     FETCH_REF "v${VERSION}"
     HEAD_REF main
     PATCHES
         aom-rename-static.diff
-        aom-uninitialized-pointer.diff
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -30,9 +29,10 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" AND VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${aom_target_cpu}
+        -DENABLE_APPS=OFF
         -DENABLE_DOCS=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTDATA=OFF

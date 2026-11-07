@@ -1,3 +1,3 @@
-set(qtcoap_HASH "840cf73dd862cd07d4f30e79c3572178ab426e2c70a55086fd9d656969477e8908a88b7f6c22ff4da585a89952a64b34506e8729702c5d449e26b7a62522be88")
-set(qtcoap_URL "https://github.com/qt/qtcoap/archive/v6.11.1.tar.gz")
-set(qtcoap_FILENAME "qt-qtcoap-v6.11.1.tar.gz")
+set(qtcoap_HASH "22187880a32765228319582dfff1360e16b55dae09dd5115fb2823959812379fdb31d2d24a8f5beffcd12a75d4c37739304b2cd4a0ac10fe42a051c54d4cf2e4")
+set(qtcoap_URL "https://github.com/qt/qtcoap/archive/v6.11.3.tar.gz")
+set(qtcoap_FILENAME "qt-qtcoap-v6.11.3.tar.gz")

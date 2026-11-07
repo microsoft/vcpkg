@@ -1,10 +1,9 @@
 {
   "name": "opencv4",
-  "version": "4.12.0",
-  "port-version": 9,
+  "version": "4.14.0",
   "description": "Open Source Computer Vision Library",
   "homepage": "https://opencv.org/",
-  "documentation": "https://docs.opencv.org/4.12.0/",
+  "documentation": "https://docs.opencv.org/4.14.0/",
   "license": null,
   "dependencies": [
     {
@@ -293,6 +292,10 @@
         "libjxl"
       ]
     },
+    "kleidicv": {
+      "description": "Use the ARM KleidiCV acceleration library",
+      "supports": "arm64 & !windows"
+    },
     "msmf": {
       "description": "Microsoft Media Foundation support for opencv",
       "supports": "windows & !uwp & !mingw"
@@ -382,6 +385,7 @@
     "python": {
       "description": "Python wrapper support for opencv",
       "dependencies": [
+        "dlpack",
         {
           "name": "python3",
           "default-features": false,

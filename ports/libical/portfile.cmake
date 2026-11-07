@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO libical/libical
     REF "v${VERSION}"
     SHA512 2506320240ba0e4287b6ef1b90b653eacd51105d392b91f8c772f3b0745fecbf55eecfe81f89413cc56106b71ccca780754df31f5190ffce6c372126e27bf1da
+    PATCHES
+        generate-export-headers.patch
 )
 
 vcpkg_find_acquire_program(PERL)

@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/gmmlib
     REF "intel-gmmlib-${VERSION}"
-    SHA512 d5fc772b6ef91973f398edf5eb01c98eb318f9847e1ef1ba34aeee029abe69ed0884a1be90df81f034ac2faed4515364caecaa5dd6a4cb32414b89b27bfca8aa
+    SHA512 577bb4b8ebe8d6e6dcf17b51bade741c0d523b462dfc188384e06d97f74419a27d3480c21f11f605801cb8b14c2d0d20c9d88e71e7da9af48a95590022081da5
     HEAD_REF master
     PATCHES
         fix-installed-header-includes.patch

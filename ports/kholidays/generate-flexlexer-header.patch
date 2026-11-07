@@ -1,0 +1,26 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9f759e1..3652702 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -30,7 +30,7 @@ target_sources(
+         lunarphase.h
+         parsers/holidayparserdriver.cpp
+         parsers/holidayparserdriver_p.h
+-        parsers/plan2/FlexLexer.h
++        ${CMAKE_CURRENT_BINARY_DIR}/FlexLexer.h
+         parsers/plan2/holidayparserdriverplan.cpp
+         parsers/plan2/holidayparserdriverplan_p.h
+         parsers/plan2/holidayscannerplan_p.h
+@@ -50,6 +50,8 @@ bison_target(
+     parsers/plan2/holidayparserplan.ypp
+     ${CMAKE_CURRENT_BINARY_DIR}/holidayparserplan.cpp
+ )
++configure_file(parsers/plan2/FlexLexer.h.in "${CMAKE_CURRENT_BINARY_DIR}/FlexLexer.h" @ONLY)
++
+ flex_target(
+     KF6HolidaysLexer
+     parsers/plan2/holidayscannerplan.lpp
+diff --git a/src/parsers/plan2/FlexLexer.h b/src/parsers/plan2/FlexLexer.h.in
+similarity index 100%
+rename from src/parsers/plan2/FlexLexer.h
+rename to src/parsers/plan2/FlexLexer.h.in

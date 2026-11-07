@@ -8,6 +8,6 @@ spout2 provides CMake targets:
     # SpoutLibrary
     target_link_libraries(main PRIVATE Spout2::SpoutLibrary)
 
-    # SpoutDX
+    # SpoutDX (requires the "dx" feature: spout2[dx])
     target_link_libraries(main PRIVATE Spout2::SpoutDX)
     target_link_libraries(main PRIVATE Spout2::SpoutDX_static)

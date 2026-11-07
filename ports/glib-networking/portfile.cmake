@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR "${VERSION}")
@@ -6,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 0f1b3807635fcae143ad1a89731a8f7e1b6f4b8f6cc2dd1b7b5eea3d77c796ee5a55ea330901bfd22927d07795f39450d30f0f1029595761e659f96a8415c263
+    SHA512 9d5ef7bfaa9ee00b10c65959528def32a48212fc4abf835aab940f893c0bde2c023c916ae4b714c21e2038ec7bd27795b3c8ea62b8ef75cdef4b10571e1c74f6
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")

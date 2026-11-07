@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brofield/simpleini
     REF "v${VERSION}"
-    SHA512 a62c5748efe2473aae5bddab96ba9114d981a72f5b0d1a44d563daa085d5c231ed8c447794691d9bd67e1e0c6bfb44e4a8736be75fee59967d0c67ce3a59bb6e
+    SHA512 f2ba16c76f88d8e299429c401c6076417299c98b0976c25c4fc07ebe563828da93a533e1a2cc4b7078c090416fd02ee4b095313d43b1060dee398b1d31ac7517
     HEAD_REF master
     PATCHES
         disable-tests.patch

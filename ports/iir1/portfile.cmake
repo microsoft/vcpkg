@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO berndporr/iir1
     REF "${VERSION}"
-    SHA512 f50b925394f79662ae021c02e60667273a5d4615f2ef9f88d256c3c6dbb0f7d851207b65e2da56b69a97e576b3bb611653fde421df4ae0a952615d29be2f33a6
+    SHA512 190464b3158fa0f2e48b67f6fee5be749da4cc0abec50cab7090f0df7785aa8e8efd1c219b6ecf7e8f7cdbe8b5e26b7250b60ec37ec69fcc87a8b92f78fd12e9
     HEAD_REF master
     PATCHES
         fix-shared-lib.patch
@@ -21,7 +21,7 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME iir CONFIG_PATH lib/cmake/iir)
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/iir.pc" " -liir" "-liir_static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/iir.pc" " -liir" " -liir_static")
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/iir.pc" " -liir" " -liir_static")
     endif()

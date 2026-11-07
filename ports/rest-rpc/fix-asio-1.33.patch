@@ -1,0 +1,144 @@
+diff --git a/include/rest_rpc/connection.h b/include/rest_rpc/connection.h
+index f24189c..a8ab6f5 100644
+--- a/include/rest_rpc/connection.h
++++ b/include/rest_rpc/connection.h
+@@ -23,7 +23,7 @@ struct ssl_configure {
+ class connection : public std::enable_shared_from_this<connection>,
+                    private asio::noncopyable {
+ public:
+-  connection(asio::io_service &io_service, std::size_t timeout_seconds,
++  connection(asio::io_context &io_service, std::size_t timeout_seconds,
+              router &router)
+       : socket_(io_service), body_(INIT_BUF_SIZE), timer_(io_service),
+         timeout_seconds_(timeout_seconds), has_closed_(false), router_(router) {
+@@ -357,7 +357,7 @@ private:
+     }
+ 
+     auto self(this->shared_from_this());
+-    timer_.expires_from_now(std::chrono::seconds(timeout_seconds_));
++    timer_.expires_after(std::chrono::seconds(timeout_seconds_));
+     timer_.async_wait([this, self](const asio::error_code &ec) {
+       if (has_closed()) {
+         return;
+diff --git a/include/rest_rpc/io_service_pool.h b/include/rest_rpc/io_service_pool.h
+index 524c67d..7fecabe 100644
+--- a/include/rest_rpc/io_service_pool.h
++++ b/include/rest_rpc/io_service_pool.h
+@@ -15,7 +15,7 @@ public:
+ 
+     for (std::size_t i = 0; i < pool_size; ++i) {
+       io_service_ptr io_service(new asio::io_context);
+-      work_ptr work(new asio::io_context::work(*io_service));
++      work_ptr work(new asio::executor_work_guard<asio::io_context::executor_type>(io_service->get_executor()));
+       io_services_.push_back(io_service);
+       work_.push_back(work);
+     }
+@@ -48,7 +48,7 @@ public:
+ 
+ private:
+   typedef std::shared_ptr<asio::io_context> io_service_ptr;
+-  typedef std::shared_ptr<asio::io_context::work> work_ptr;
++  typedef std::shared_ptr<asio::executor_work_guard<asio::io_context::executor_type>> work_ptr;
+ 
+   /// The pool of io_services.
+   std::vector<io_service_ptr> io_services_;
+diff --git a/include/rest_rpc/rpc_client.hpp b/include/rest_rpc/rpc_client.hpp
+index d1b8eb4..44cbff3 100644
+--- a/include/rest_rpc/rpc_client.hpp
++++ b/include/rest_rpc/rpc_client.hpp
+@@ -67,7 +67,7 @@ const constexpr size_t DEFAULT_TIMEOUT = 5000; // milliseconds
+ class rpc_client : private asio::noncopyable {
+ public:
+   rpc_client()
+-      : socket_(ios_), work_(std::make_shared<asio::io_context::work>(ios_)),
++      : socket_(ios_), work_(std::make_shared<asio::executor_work_guard<asio::io_context::executor_type>>(ios_.get_executor())),
+         deadline_(ios_), body_(INIT_BUF_SIZE) {
+     thd_ = std::make_shared<std::thread>([this] { ios_.run(); });
+   }
+@@ -75,7 +75,7 @@ public:
+   rpc_client(client_language_t client_language,
+              std::function<void(long, const std::string &)>
+                  on_result_received_callback)
+-      : socket_(ios_), work_(std::make_shared<asio::io_context::work>(ios_)),
++      : socket_(ios_), work_(std::make_shared<asio::executor_work_guard<asio::io_context::executor_type>>(ios_.get_executor())),
+         deadline_(ios_), body_(INIT_BUF_SIZE),
+         client_language_(client_language),
+         on_result_received_callback_(std::move(on_result_received_callback)) {
+@@ -89,7 +89,7 @@ public:
+              std::function<void(long, const std::string &)>
+                  on_result_received_callback,
+              std::string host, unsigned short port)
+-      : socket_(ios_), work_(std::make_shared<asio::io_context::work>(ios_)),
++      : socket_(ios_), work_(std::make_shared<asio::executor_work_guard<asio::io_context::executor_type>>(ios_.get_executor())),
+         deadline_(ios_), host_(std::move(host)), port_(port),
+         body_(INIT_BUF_SIZE), client_language_(client_language),
+         on_result_received_callback_(std::move(on_result_received_callback)) {
+@@ -98,11 +98,10 @@ public:
+ 
+   ~rpc_client() {
+     std::promise<void> promise;
+-    ios_.post([this, &promise] {
++    asio::post(ios_, [this, &promise] {
+       close();
+       stop_client_ = true;
+-      std::error_code ec;
+-      deadline_.cancel(ec);
++      deadline_.cancel();
+       promise.set_value();
+     });
+     promise.get_future().wait();
+@@ -386,7 +385,7 @@ public:
+ private:
+   void async_connect() {
+     assert(port_ != 0);
+-    auto addr = asio::ip::address::from_string(host_);
++    auto addr = asio::ip::make_address(host_);
+     socket_.async_connect({addr, port_}, [this](const asio::error_code &ec) {
+       if (has_connected_ || stop_client_) {
+         return;
+@@ -433,7 +432,7 @@ private:
+       return;
+     }
+ 
+-    deadline_.expires_from_now(std::chrono::seconds(timeout));
++    deadline_.expires_after(std::chrono::seconds(timeout));
+     deadline_.async_wait([this, timeout](const asio::error_code &ec) {
+       if (!ec) {
+         if (has_connected_) {
+@@ -691,7 +690,7 @@ private:
+   class call_t : asio::noncopyable,
+                  public std::enable_shared_from_this<call_t> {
+   public:
+-    call_t(asio::io_service &ios,
++    call_t(asio::io_context &ios,
+            std::function<void(asio::error_code, string_view)> cb,
+            size_t timeout)
+         : timer_(ios), cb_(std::move(cb)), timeout_(timeout) {}
+@@ -701,7 +700,7 @@ private:
+         return;
+       }
+ 
+-      timer_.expires_from_now(std::chrono::milliseconds(timeout_));
++      timer_.expires_after(std::chrono::milliseconds(timeout_));
+       auto self = this->shared_from_this();
+       timer_.async_wait([this, self](asio::error_code ec) {
+         if (ec) {
+@@ -721,8 +720,7 @@ private:
+         return;
+       }
+ 
+-      asio::error_code ec;
+-      timer_.cancel(ec);
++      timer_.cancel();
+     }
+ 
+   private:
+@@ -835,7 +833,7 @@ private:
+   std::unique_ptr<asio::ssl::stream<asio::ip::tcp::socket &>> ssl_stream_;
+   std::function<void(asio::ssl::context &)> ssl_context_callback_;
+ #endif
+-  std::shared_ptr<asio::io_context::work> work_;
++  std::shared_ptr<asio::executor_work_guard<asio::io_context::executor_type>> work_;
+   std::shared_ptr<std::thread> thd_ = nullptr;
+ 
+   std::string host_;

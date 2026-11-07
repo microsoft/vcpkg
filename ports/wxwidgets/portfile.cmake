@@ -13,6 +13,7 @@ vcpkg_from_github(
         gtk3-link-libraries.patch
         sdl2.patch
         libsecret-link-dirs.patch
+        fix-wayland-build.patch # https://github.com/wxWidgets/wxWidgets/commit/c70a840f3a6dc288ff968ecd6f37df7251039483
 )
 
 # Submodule dependencies

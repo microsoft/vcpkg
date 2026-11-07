@@ -1,3 +1,3 @@
-set(qttools_HASH "826d21ed3e45feebe8c083b9fc9fc8e2a64aaec972d58388c94eabeaa3c2d8e4c86f1620a7caa6a1784f2f84641aec3df4b20006fe369eeaeb1968b838497b56")
-set(qttools_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qttools-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qttools-everywhere-src-6.11.1.tar.xz")
-set(qttools_FILENAME "qttools-everywhere-src-6.11.1.tar.xz")
+set(qttools_HASH "2e31bd56e9a7f208a68f915d06fe9dd10ed1cff49d1f2a19c1702d86413ede53c2e04a21b6c3f83544c536b851bf1882b87c8aec7ea8f31a4d437f8925888a93")
+set(qttools_URL "https://download.qt.io/archive/qt/6.11/6.11.3/submodules/qttools-everywhere-src-6.11.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.3/submodules/qttools-everywhere-src-6.11.3.tar.xz")
+set(qttools_FILENAME "qttools-everywhere-src-6.11.3.tar.xz")

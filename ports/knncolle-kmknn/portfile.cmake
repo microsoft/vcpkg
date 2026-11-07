@@ -17,8 +17,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME knncolle_kmknn
-    CONFIG_PATH lib/cmake/knncolle_kmknn
+    PACKAGE_NAME knncolle_knncolle_kmknn
+    CONFIG_PATH lib/cmake/knncolle_knncolle_kmknn
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")

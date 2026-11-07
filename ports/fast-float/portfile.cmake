@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fastfloat/fast_float
     REF "v${VERSION}"
-    SHA512 eec563358117b593e882a9069074a269d811e8989457a0d57e50c5d2f4d534b6820308082bb70c0a8a8388513e92b64f12c5213389eff726ad0483eacba961ff
+    SHA512 780e8e2b4542ebecf5fd801bbd7eb223db65577f4067d5ad02d3545e3caf679719c1b8e9408ad6ecf8b20662971087f53c7a87d7d0d92776ad1db649a7c18bb7
     HEAD_REF master
-    PATCHES
-        min-max-macro.diff
 )
 
 vcpkg_cmake_configure(

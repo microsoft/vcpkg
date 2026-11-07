@@ -1,0 +1,17 @@
+diff --git a/src/supplemental/tls/mbedtls/CMakeLists.txt b/src/supplemental/tls/mbedtls/CMakeLists.txt
+index 27cf892..52a2ae6 100644
+--- a/src/supplemental/tls/mbedtls/CMakeLists.txt
++++ b/src/supplemental/tls/mbedtls/CMakeLists.txt
+@@ -32,10 +32,10 @@ if (NNG_TLS_ENGINE STREQUAL "mbed")
+         # avoid confounding any other package consumers, and we honor overrides.
+         if (NOT (DEFINED CMAKE_FIND_PACKAGE_PREFER_CONFIG))
+             set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
+-            find_package(MbedTLS REQUIRED)
++            nng_find_package(MbedTLS)
+             unset(CMAKE_FIND_PACKAGE_PREFER_CONFIG)
+         else()
+-            find_package(MbedTLS REQUIRED)
++            nng_find_package(MbedTLS)
+         endif()
+         nng_link_libraries_public(MbedTLS::mbedtls MbedTLS::mbedcrypto MbedTLS::mbedx509)
+     endif()

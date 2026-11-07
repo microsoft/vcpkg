@@ -1,9 +1,9 @@
 {
   "name": "efsw",
-  "version": "1.6.3",
+  "version": "1.7.2",
   "description": "efsw is a C++ cross-platform file system watcher and notifier.",
   "homepage": "https://github.com/SpartanJ/efsw",
-  "license": "MIT",
+  "license": "MIT AND Zlib",
   "supports": "!uwp",
   "dependencies": [
     {

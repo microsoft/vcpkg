@@ -1,6 +1,6 @@
 {
   "name": "liquid-dsp",
-  "version": "1.8.0",
+  "version": "1.8.3",
   "description": "Digital signal processing library for software-defined radios.",
   "homepage": "https://liquidsdr.org/",
   "license": "MIT",

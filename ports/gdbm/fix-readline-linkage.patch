@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index d7458e6..18fae46 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -122,7 +122,7 @@ AC_CHECK_MEMBERS([struct stat.st_blksize, struct stat.st_mtim, struct stat.st_mt
+ AM_CONDITIONAL([COMPAT_OPT], [test "$want_compat" = yes])
+ 
+ # Check for Curses libs.
+-for lib in ncurses curses termcap
++for lib in ncursesw ncurses curses termcap
+ do
+   AC_CHECK_LIB($lib, tputs, [CURSES_LIBS="-l$lib"; break])
+ done

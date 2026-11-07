@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfig
     REF "v${VERSION}"
-    SHA512 c6ed15075e3e33d1bb4a9983e2f6abe25560574ac2eb8f7cf09b36bf302c9c2dbbab5072f1e908e34a02f898bf4ce791eeddd424a1ceee83421ff7874fb1ca28
+    SHA512 2dcee0c4125a31fbc5048ef5114ff4328541d81eabcbc5280f0411fa33914885abd4ca3d389bb98bc7f05de9b7703bd7d61d134fdcf566197c5143e72dd04f94
     HEAD_REF master
 )
 
@@ -21,7 +21,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DKDE_INSTALL_QMLDIR=qml
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         ${FEATURE_OPTIONS}
 )
 

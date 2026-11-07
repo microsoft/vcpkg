@@ -1,8 +1,9 @@
 {
   "name": "qtinterfaceframework",
-  "version": "6.11.1",
+  "version": "6.11.3",
+  "port-version": 1,
   "description": "The Qt Interface Framework module provides both the tools and the core APIs, for you to implement Middleware APIs, Middleware Back ends, and Middleware Services.",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "dependencies": [
     {

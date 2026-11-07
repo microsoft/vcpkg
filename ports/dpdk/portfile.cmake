@@ -19,9 +19,19 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
   endif()
 
   execute_process(
-    COMMAND sh -c "ldd --version | head -n1 | rev | cut -d' ' -f 1 | rev"
-    OUTPUT_VARIABLE GLIBC_VERSION
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    COMMAND ldd --version
+    OUTPUT_VARIABLE LDD_VERSION_OUTPUT
+    ERROR_VARIABLE LDD_VERSION_ERROR
+    RESULT_VARIABLE LDD_VERSION_RESULT)
+  if(NOT LDD_VERSION_RESULT EQUAL 0)
+    message(FATAL_ERROR "Failed to query glibc version: ${LDD_VERSION_ERROR}")
+  endif()
+
+  string(REGEX MATCH "^[^\r\n]*" LDD_VERSION_LINE "${LDD_VERSION_OUTPUT}")
+  string(REGEX MATCH "([0-9]+\\.[0-9]+(\\.[0-9]+)?)$" GLIBC_VERSION "${LDD_VERSION_LINE}")
+  if(NOT GLIBC_VERSION)
+    message(FATAL_ERROR "Failed to parse glibc version from: ${LDD_VERSION_LINE}")
+  endif()
 
   if(GLIBC_VERSION VERSION_LESS 2.7)
     message(

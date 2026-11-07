@@ -1,4 +1,4 @@
-<!-- 
+<!--
 This document is a copy of the README file on the Microsoft/vcpkg-docs repository.
 
 To make changes modify this file instead:
@@ -10,7 +10,7 @@ https://github.com/microsoft/vcpkg-docs/blob/main/vcpkg/readme/vcpkg-README.md
 # vcpkg overview
 
 vcpkg is a free and open-source C/C++ package manager maintained by Microsoft
-and the C++ community. 
+and the C++ community.
 
 Initially launched in 2016 as a tool for assisting developers in migrating their
 projects to newer versions of Visual Studio, vcpkg has evolved into a
@@ -68,7 +68,7 @@ vcpkg install fmt
 
 Then use one of our available integrations for
 [CMake](https://learn.microsoft.com/vcpkg/concepts/build-system-integration#cmake-integration),
-[MSBuild](https://learn.microsoft.com/vcpkg/concepts/build-system-integration#msbuild-integration) or 
+[MSBuild](https://learn.microsoft.com/vcpkg/concepts/build-system-integration#msbuild-integration) or
 [other build
 systems](https://learn.microsoft.com/vcpkg/concepts/build-system-integration#manual-integration).
 
@@ -101,12 +101,12 @@ Conduct][contributing:coc]. For more information see the [Code of Conduct
 FAQ][contributing:coc-faq] or email
 [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional
 questions or comments.
- 
+
 [contributing:submit-issue]: https://github.com/microsoft/vcpkg/issues/new/choose
 [contributing:submit-pr]: https://github.com/microsoft/vcpkg/pulls
 [contributing:coc]: https://opensource.microsoft.com/codeofconduct/
 [contributing:coc-faq]: https://opensource.microsoft.com/codeofconduct/
-  
+
 # Resources
 
 * Ports: [Microsoft/vcpkg](<https://github.com/microsoft/vcpkg>)

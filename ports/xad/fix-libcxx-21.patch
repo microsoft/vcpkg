@@ -1,0 +1,15 @@
+diff --git a/src/XAD/Literals.hpp b/src/XAD/Literals.hpp
+index 5a3ad4c..2ec68da 100644
+--- a/src/XAD/Literals.hpp
++++ b/src/XAD/Literals.hpp
+@@ -842,7 +842,9 @@ typedef ARealDirect<float, 1> AFD;
+ }  // namespace xad
+ 
+ 
+-#if __clang_major__ > 16 && defined(_LIBCPP_VERSION)
++// libc++ 21 replaced the __promote class template with the SFINAE-friendly
++// alias __promote_t, which no longer needs (or allows) these specializations
++#if __clang_major__ > 16 && defined(_LIBCPP_VERSION) && _LIBCPP_VERSION < 210000
+ 
+ namespace std {
+ 

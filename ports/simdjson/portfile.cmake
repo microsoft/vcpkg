@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO simdjson/simdjson
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 47c99bca59b8d6ae31cba57b42d6260d5b314131b6e7b1d5d8c1585ec3753094706737f1905cf4c1368fba08f88d492a54f9d72f52ce39704a81f73efee6e921
+    SHA512 e76fe4302be3e3646167d0ecffa2b5b8231cd38f4aadbe4ba958daa7e627f53ea36eac610e2d33d2a048ebd4ff08d13518bd281aa173bcb4983aabc76fb529a3
 )
 
 vcpkg_check_features(
@@ -16,22 +16,30 @@ vcpkg_check_features(
         utf8-validation SIMDJSON_SKIPUTF8VALIDATION
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DSIMDJSON_JUST_LIBRARY=ON
+        -DSIMDJSON_DEVELOPER_MODE=OFF
         -DSIMDJSON_SANITIZE_UNDEFINED=OFF
         -DSIMDJSON_SANITIZE=OFF
         -DSIMDJSON_SANITIZE_THREADS=OFF
-        -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
         -DSIMDJSON_DEVELOPMENT_CHECKS=OFF
         -DSIMDJSON_VERBOSE_LOGGING=OFF
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(SIMDJSON_HEADER "${CURRENT_PACKAGES_DIR}/include/simdjson.h")
+    file(READ "${SIMDJSON_HEADER}" SIMDJSON_HEADER_CONTENTS)
+    file(WRITE "${SIMDJSON_HEADER}"
+        "#ifndef SIMDJSON_USING_WINDOWS_DYNAMIC_LIBRARY\n"
+        "#define SIMDJSON_USING_WINDOWS_DYNAMIC_LIBRARY 1\n"
+        "#endif\n"
+        "${SIMDJSON_HEADER_CONTENTS}"
+    )
+endif()
 
 vcpkg_copy_pdbs()
 
@@ -41,4 +49,10 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/LICENSE-MIT")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE-MIT"
+        "${SOURCE_PATH}/include/simdjson/nonstd/string_view.hpp"
+        "${SOURCE_PATH}/include/simdjson/internal/instruction_set.h"
+)

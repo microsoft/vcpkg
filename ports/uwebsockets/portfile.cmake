@@ -1,10 +1,13 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uWebSockets
     REF "v${VERSION}"
-    SHA512 5a9e97a2f81c928516b899943641eedc4c3012547f7e92a15aaa1427c9973aafb894e2a124a46a3b4bf6b8af3b64ab26c47a54a70156edfce976e0166a8b4dd4
+    SHA512 d2714c668ca8286ddbbf35504f363f1dceb390395975fe7d525afd7988ae64863e7593c531da10ff250c234c785ff93058746ff7f87fdcdd2b28cd8c423a76bb
     HEAD_REF master
+    PATCHES
+        duplicate-symbol.patch
 )
 
 file(COPY "${SOURCE_PATH}/src"  DESTINATION "${CURRENT_PACKAGES_DIR}/include")

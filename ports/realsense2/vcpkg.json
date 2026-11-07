@@ -1,9 +1,9 @@
 {
   "name": "realsense2",
-  "version": "2.56.5",
+  "version": "2.58.4",
   "description": "Intel® RealSense™ SDK 2.0 is a cross-platform library for Intel® RealSense™ depth cameras (D400 series and the SR300).",
-  "homepage": "https://github.com/IntelRealSense/librealsense",
-  "license": "Apache-2.0",
+  "homepage": "https://github.com/realsenseai/librealsense",
+  "license": "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND (BSL-1.0 OR MIT)",
   "supports": "!uwp & !(windows & arm)",
   "dependencies": [
     {
@@ -47,7 +47,8 @@
     },
     "tools": {
       "description": "Build Intel® RealSense™ tools",
-      "supports": "!android"
+      "supports": "!android",
+      "license": "MIT"
     }
   }
 }

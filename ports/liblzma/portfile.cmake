@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tukaani-project/xz
     REF "v${VERSION}"
-    SHA512 8fb5e6a13397d259d8ff7484f9b63f8a6752ff1c63e1a4601170ad8175aadefb5126a1cae7f73370bfc6c2a0b4e1c0bad57a58fc5b781d3f7d45e5a483c091cc
+    SHA512 6a0e9c3b05f9c20255c5e35c06fdcd44b9e201f4ed566d1dec052b6cfda6cdfb42f73ffd258eaad2d8b7737c66b78ae353aebd44502e24a3d89d8765d698dcae
     HEAD_REF master
     PATCHES
         build-tools.patch
@@ -40,6 +40,8 @@ vcpkg_cmake_configure(
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
         ENABLE_NLS
+        # Only used with the tools feature.
+        XZ_SANDBOX
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -90,4 +92,5 @@ endif()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

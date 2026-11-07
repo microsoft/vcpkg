@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapbox/earcut.hpp
     REF "v${VERSION}"
-    SHA512 15f5ea72bddf63549bc7a178009ccc949bf078f45f527bd9d41d4e40b5972e09f5c61dd25375bf12dd7a623f9ad0df556733aa1492153c214715ad4319cb21ed
+    SHA512 6628d1bdc20c8c19b4ee50ddf1e7eb7c055e4f1925006cf691043b4fb74f5574c4c648e51d68034f606ad2432cd3bb67f5a956bb34ed472b7408d9839dab3e94
     HEAD_REF master
     PATCHES
         disable-tools.patch

@@ -1,8 +1,33 @@
+diff --git a/src/3rdparty/chromium/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py b/src/3rdparty/chromium/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
+index c4a2a65..ea6df74 100644
+--- a/src/3rdparty/chromium/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
++++ b/src/3rdparty/chromium/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
+@@ -59,7 +59,19 @@ def runTsc(tsconfig_location):
+                                universal_newlines=True)
+     stdout, stderr = process.communicate()
+     # TypeScript does not correctly write to stderr because of https://github.com/microsoft/TypeScript/issues/33849
+-    return process.returncode, stdout + stderr
++    output = stdout + stderr
++    if process.returncode != 0:
++        details = [
++            'Command \'%s\' failed with exit code %d' %
++                (' '.join(cmd), process.returncode),
++            'Working directory: %s' % os.getcwd(),
++            'stdout:',
++            stdout,
++            'stderr:',
++            stderr,
++        ]
++        output = '\n'.join(details)
++    return process.returncode, output
+ 
+ 
+ # To ensure that Ninja only rebuilds dependents when the actual content/public API of a TypeScript target changes,
 diff --git a/src/3rdparty/chromium/third_party/node/node.py b/src/3rdparty/chromium/third_party/node/node.py
-index 3af0f1d9ee..20516742f5 100644
+index 067a2c6..0e7815f 100644
 --- a/src/3rdparty/chromium/third_party/node/node.py
 +++ b/src/3rdparty/chromium/third_party/node/node.py
-@@ -32,9 +32,15 @@ def RunNode(cmd_parts, stdout=None):
+@@ -36,10 +36,16 @@ def RunNode(cmd_parts, stdout=None):
    stdout, stderr = process.communicate()
  
    if process.returncode != 0:
@@ -22,3 +47,4 @@ index 3af0f1d9ee..20516742f5 100644
 +    raise RuntimeError('\n'.join(details))
  
    return stdout
+ 

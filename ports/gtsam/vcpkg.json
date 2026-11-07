@@ -1,20 +1,10 @@
 {
   "name": "gtsam",
-  "version": "4.2.2",
+  "version": "4.3.0",
   "description": "GTSAM is a library of C++ classes that implement smoothing and mapping (SAM) in robotics and vision, using factor graphs and Bayes networks as the underlying computing paradigm rather than sparse matrices.",
   "homepage": "https://github.com/borglab/gtsam",
-  "license": "BSD-3-Clause",
+  "license": "BSD-3-Clause AND MIT AND MPL-2.0",
   "dependencies": [
-    "boost-assign",
-    "boost-chrono",
-    "boost-filesystem",
-    "boost-format",
-    "boost-graph",
-    "boost-math",
-    "boost-program-options",
-    "boost-ptr-container",
-    "boost-serialization",
-    "boost-timer",
     "eigen3",
     "metis",
     {
@@ -27,6 +17,17 @@
     }
   ],
   "features": {
+    "boost": {
+      "description": "Boost serialization and other remaining Boost-dependent features",
+      "dependencies": [
+        "boost-chrono",
+        "boost-graph",
+        "boost-program-options",
+        "boost-random",
+        "boost-serialization",
+        "boost-timer"
+      ]
+    },
     "tbb": {
       "description": "Use GTSAM parallelization",
       "dependencies": [

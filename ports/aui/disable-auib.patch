@@ -1,0 +1,21 @@
+diff --git a/aui.boot.cmake b/aui.boot.cmake
+index 6baab15..72a838b 100644
+--- a/aui.boot.cmake
++++ b/aui.boot.cmake
+@@ -204,13 +204,13 @@ endif()
+ 
+ 
+ # create all required dirs
+-if (NOT EXISTS ${AUIB_CACHE_DIR})
++if (0)
+     file(MAKE_DIRECTORY ${AUIB_CACHE_DIR})
+ endif()
+-if (NOT EXISTS ${AUIB_CACHE_DIR}/prefix)
++if (0)
+     file(MAKE_DIRECTORY ${AUIB_CACHE_DIR}/prefix)
+ endif()
+-if (NOT EXISTS ${AUIB_CACHE_DIR}/repo)
++if (0)
+     file(MAKE_DIRECTORY ${AUIB_CACHE_DIR}/repo)
+ endif()
+ 

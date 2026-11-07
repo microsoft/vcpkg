@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwindowsystem
     REF "v${VERSION}"
-    SHA512 391b657693b592ba72669b996a7076f8b0da847d6961dcb83aa51b56197406189fc76d1ff7e195e2851259f43a6b5ac00f8fbfa04196269cc12c46ee9db13520
+    SHA512 1ad5f49d3acca059486e5360c2ccd2c98a1ffd077714b5934e263780b876bac75b775d832f56786648aa07d49035e81d126cb3972ce1f6476edb3a34e858c2a5
     HEAD_REF master
     PATCHES
         001_guard_ecm_qml_module_include.patch
+        002_use_wayland_xml_from_qt.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -32,10 +33,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_QMLDIR=qml
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
+        -DKDE_INSTALL_QTPLUGINDIR=Qt6/plugins
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         -DKWINDOWSYSTEM_X11=${KWINDOWSYSTEM_X11}
         -DKWINDOWSYSTEM_WAYLAND=${KWINDOWSYSTEM_WAYLAND}
+        "-DVCPKG_QT_WAYLAND_DATADIR=${CURRENT_INSTALLED_DIR}/share/qt6/wayland/protocols/wayland"
         ${FEATURE_OPTIONS}
 )
 

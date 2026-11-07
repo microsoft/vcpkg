@@ -1,3 +1,3 @@
-set(qtinterfaceframework_HASH "f397c996cd682c57276266311d15a18aef2ab4c8759fd865a999d624048465a0b9ce7f382f2809b03fc9be45bd382a2b521c697e9b2249fa7f6cf11fcd9814fb")
-set(qtinterfaceframework_URL "https://github.com/qt/qtinterfaceframework/archive/v6.11.1.tar.gz")
-set(qtinterfaceframework_FILENAME "qt-qtinterfaceframework-v6.11.1.tar.gz")
+set(qtinterfaceframework_HASH "7cdca77734b0fcc35ca2f2484b6ba81366d5c01ebfe0d2af85f1bc3f443a4d16b6aa337230e01418fc1e9e0475bdfc1072be5c4c27f4037253f46c45139cc872")
+set(qtinterfaceframework_URL "https://github.com/qt/qtinterfaceframework/archive/v6.11.3.tar.gz")
+set(qtinterfaceframework_FILENAME "qt-qtinterfaceframework-v6.11.3.tar.gz")

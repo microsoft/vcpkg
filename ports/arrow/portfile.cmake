@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 e75d384b4fdbdee29eb8ad29800c731843e7c43d90a43995dcc77390008723537791e212333178625345c718bdab15e0f3d8c12aa86b336918598c7d3fefc6e5
+    SHA512 2ee7efc6ae5b1a2d2c4f2daa52110d16d2e64c02f27f341b462459341528bdcdc796c043c4834baa80dbcb4bac0219d1c705741485973e9207656124f83e74dd
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -129,6 +129,14 @@ if("parquet" IN_LIST FEATURES)
     )
 endif()
 
+if("s3" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrows3
+        CONFIG_PATH lib/cmake/ArrowS3
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 file(GLOB main_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/Arrow/*onfig.cmake")
 file(GLOB extra_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/*/*onfig.cmake")
 list(REMOVE_ITEM extra_configs ${main_configs})
@@ -141,7 +149,7 @@ endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Arrow)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-foreach(feature IN ITEMS parquet dataset acero compute flight flightsql)
+foreach(feature IN ITEMS parquet dataset acero compute flight flightsql s3)
     if(feature IN_LIST FEATURES)
         file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-${feature}" feature_usage)
         file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${feature_usage}")

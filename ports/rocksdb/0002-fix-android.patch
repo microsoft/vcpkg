@@ -1,8 +1,8 @@
 diff --git a/env/io_posix.h b/env/io_posix.h
-index bca0c5836..395797d7e 100644
+index 15502f53c..ef86b4122 100644
 --- a/env/io_posix.h
 +++ b/env/io_posix.h
-@@ -40,7 +40,7 @@
+@@ -57,7 +57,7 @@ class EventBaseManager;
  // For non linux platform, the following macros are used only as place
  // holder.
  #if !(defined OS_LINUX) && !(defined OS_FREEBSD) && !(defined CYGWIN) && \

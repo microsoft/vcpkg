@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-min-max-macro.patch
         fix-error-c3861.patch
         android.diff
+        sdl2-plugin.patch
 )
 
 file(REMOVE
@@ -67,8 +68,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         nvtt        CMAKE_REQUIRE_FIND_PACKAGE_NVTT
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
-        sdl1        BUILD_OSG_PLUGIN_SDL
-        sdl1        VCPKG_LOCK_FIND_PACKAGE_SDL
+        sdl         BUILD_OSG_PLUGIN_SDL
+        sdl         VCPKG_LOCK_FIND_PACKAGE_SDL2
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
@@ -123,6 +124,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_SDL=ON
         ${OPTIONS}
     OPTIONS_DEBUG
         -DBUILD_OSG_APPLICATIONS=OFF

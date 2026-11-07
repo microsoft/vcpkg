@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
     REF "v${VERSION}"
-    SHA512 1cf748d5da350f08f0de8b12d208cf4fd0dc9a4c3f688ac0dbbff61da48fd1d9f4d7ebc6259bc4283d53efa87cb9874640a82f9895a1ba96c29ad6a8a5f3aa8d
+    SHA512 94bf8881549f89d1eb846f0e2dcf2c64a89d037890c6bfd568a00c84e410ee78fffb6c2bd610d1dce373f22ad5ddb9818cd66c63f1e81da709eca33e7ae36dd9
     HEAD_REF master
     PATCHES
         zstd.diff
@@ -30,6 +30,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=1
         -DECM_PKGCONFIG_INSTALL_DIR:PATH="${CURRENT_PACKAGES_DIR}/discard_pkgconfig"
         ${FEATURE_OPTIONS}

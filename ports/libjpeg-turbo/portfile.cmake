@@ -8,12 +8,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
     REF "${VERSION}"
-    SHA512 1ce063e9e126d55019385da3a6ff4521a9a3958edeab15e2465ae3435026dac6e598277eea066173ada47da37159d0f7812b2227869c10dd141dcfe2ddeab720
+    SHA512 680b97652a51846e1965e70b5498f74ebf9e6eaa31c122546ba7b8eff9fa6b6eb85972802970e94cce4f539518ad421395eaffe121bce7ad7b8f23a9ab9731ef
     HEAD_REF master
     PATCHES
-        add-options-for-docs-headers.patch
         # workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
+        add-options-for-docs-headers.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
@@ -48,10 +48,13 @@ vcpkg_cmake_configure(
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
+        -DWITH_SYSTEM_SPNG=ON
+        -DWITH_SYSTEM_ZLIB=ON
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
     MAYBE_UNUSED_VARIABLES
         WITH_CRT_DLL
+        NEON_INTRINSICS
 )
 
 vcpkg_cmake_install()

@@ -1,0 +1,4 @@
+The package fcftest provides CMake targets:
+
+    find_package(fcfTest CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE fcf::fcfTest)

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinus/nanobench
     REF "v${VERSION}"
-    SHA512 88697cc87e99b8c17f004dbd39efee664145b86d9feec02f5dba0d84be88e9bd272e537f392e670445d849f0d3c852b9870aea650d84968ee6fbc23a56bcff64
+    SHA512 f5125a6510c43f5c874f03733ebafe92d28445c8084eff53de5d9547139c94a79f13524bfd36eadeed42a56534cdab9b60b57ff55ff08f1bfe06af76c698ec6b
     HEAD_REF master
 )
 
@@ -20,4 +20,3 @@ vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

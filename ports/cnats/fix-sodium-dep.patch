@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 305198f..0b559b8 100644
+index 9dafc09..023985d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -110,6 +110,11 @@ if(NATS_BUILD_STREAMING)
+@@ -120,6 +120,11 @@ if(NATS_BUILD_STREAMING)
  endif(NATS_BUILD_STREAMING)
  
  if(NATS_BUILD_USE_SODIUM)
@@ -15,10 +15,10 @@ index 305198f..0b559b8 100644
      SET(NATS_SODIUM_DIR "$ENV{NATS_SODIUM_DIR}")
    ENDIF()
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 971ddf0..65fee5a 100644
+index 397c470..cf648fe 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -65,7 +65,7 @@ if(NATS_BUILD_LIB_SHARED)
+@@ -66,7 +66,7 @@ if(NATS_BUILD_LIB_SHARED)
    install(TARGETS nats EXPORT cnats-targets DESTINATION ${NATS_LIBDIR})
    install(EXPORT cnats-targets
          NAMESPACE cnats::
@@ -27,7 +27,7 @@ index 971ddf0..65fee5a 100644
          DESTINATION ${NATS_LIBDIR}/cmake/cnats)
    install(FILES "${PROJECT_BINARY_DIR}/cnats-config-version.cmake"
          DESTINATION ${NATS_LIBDIR}/cmake/cnats)
-@@ -79,12 +79,16 @@ if(NATS_BUILD_LIB_STATIC)
+@@ -80,12 +80,16 @@ if(NATS_BUILD_LIB_STATIC)
    install(TARGETS nats_static EXPORT cnats-targets ARCHIVE DESTINATION ${NATS_LIBDIR})
    install(EXPORT cnats-targets
          NAMESPACE cnats::
@@ -47,13 +47,15 @@ index 971ddf0..65fee5a 100644
  install(FILES adapters/libevent.h adapters/libuv.h DESTINATION ${NATS_INCLUDE_DIR}/nats/adapters)
 diff --git a/src/Config.cmake.in b/src/Config.cmake.in
 new file mode 100644
-index 0000000..aa1d6bf
+index 0000000..e3c037b
 --- /dev/null
 +++ b/src/Config.cmake.in
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,10 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
++find_dependency(OpenSSL)
++find_dependency(Threads)
 +if("@NATS_BUILD_USE_SODIUM@")
 +  find_dependency(unofficial-sodium)
 +endif()

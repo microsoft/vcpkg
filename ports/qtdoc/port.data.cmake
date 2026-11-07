@@ -1,3 +1,3 @@
-set(qtdoc_HASH "9fb02a19b9f69f9bfd092f041bf3856fb09d19983222e3d74875482db40f732499f4472a509bdbb7549683136aa2e7ba96069b2a6339c8e6d6349fc934889507")
-set(qtdoc_URL "https://download.qt.io/archive/qt/6.11/6.11.1/submodules/qtdoc-everywhere-src-6.11.1.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.1/submodules/qtdoc-everywhere-src-6.11.1.tar.xz")
-set(qtdoc_FILENAME "qtdoc-everywhere-src-6.11.1.tar.xz")
+set(qtdoc_HASH "5f091030ab42012bdf63424f611e60ef18a6b21d4a02eda39e86383692351a730710d235006a09a3074d3322594bd9c854f393b6eb85b1647545b76420ad82d0")
+set(qtdoc_URL "https://download.qt.io/archive/qt/6.11/6.11.3/submodules/qtdoc-everywhere-src-6.11.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.3/submodules/qtdoc-everywhere-src-6.11.3.tar.xz")
+set(qtdoc_FILENAME "qtdoc-everywhere-src-6.11.3.tar.xz")
