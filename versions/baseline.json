@@ -4408,6 +4408,10 @@
       "baseline": "3.0.1",
       "port-version": 0
     },
+    "kdnssd": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kdreports": {
       "baseline": "2.3.0",
       "port-version": 0
