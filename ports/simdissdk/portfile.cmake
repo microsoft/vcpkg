@@ -1,3 +1,9 @@
+vcpkg_download_distfile(SIMQT_OPENGL_PATCH
+    URLS https://github.com/USNavalResearchLaboratory/simdissdk/commit/75b098690888abc4ae437723ae6d5bf5a9688cc8.patch?full_index=1
+    FILENAME simdissdk-75b098690888abc4ae437723ae6d5bf5a9688cc8-full-index.patch
+    SHA512 5a127cb6de73204cf14a938c57ccaef0bd1ef897d51ba4cab4cc1b323494c9323941926300cd0caf19027f3a5d7c999e490b1fe271c2cef36c07f757ebf765bb
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USNavalResearchLaboratory/simdissdk
@@ -6,8 +12,9 @@ vcpkg_from_github(
     SHA512 af2e03572afcbcc219fc9e98ba0d6e1a1d4e75bb450423d37680f344eaf5cb8b297926c460f3dacd81c8f1d00e326887abfb03fa3894f4dd5a2dd7ccc7395118
     PATCHES
         osgearth-find-private-dependencies.patch
-        simqt-link-opengl.patch
+        "${SIMQT_OPENGL_PATCH}"
         wbp-link-opengl.patch
+        windows-math-constants.patch # https://github.com/USNavalResearchLaboratory/simdissdk/pull/128
 )
 
 # The entt and osgqopengl features are realized by locking the corresponding

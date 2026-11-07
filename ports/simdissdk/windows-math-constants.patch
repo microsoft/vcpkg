@@ -1,0 +1,22 @@
+diff --git a/SDK/simCore/Calc/MathConstants.h b/SDK/simCore/Calc/MathConstants.h
+index de3adc2..effd36c 100644
+--- a/SDK/simCore/Calc/MathConstants.h
++++ b/SDK/simCore/Calc/MathConstants.h
+@@ -26,7 +26,7 @@
+ // use <math.h> and not <cmath> here to get the Microsoft #defines consistently.
+ #include <math.h>
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ #if !defined(_MATH_DEFINES_DEFINED)
+ 
+ /* Define useful mathematical constants, when they are not defined by Windows.
+@@ -75,7 +75,7 @@
+ #endif
+ 
+ #endif /* _MATH_DEFINES_DEFINED */
+-#endif /* WIN32 */
++#endif /* _WIN32 */
+ 
+ 
+ /* Support useful mathematical constants are not defined under windows

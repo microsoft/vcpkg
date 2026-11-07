@@ -4,6 +4,8 @@ vcpkg_from_github(
     HEAD_REF main
     REF "v4.1.2"
     SHA512 d3d6d1e879ed6c08ab83c2a88fff5ba1668dddff174518d4c46dae5355c2ab69caf1a0dd20a25c6d355f68c0f75022f7fad3dfb4013b099a51418cc37b63ded0
+    PATCHES
+        fix-exported-dependencies.patch
 )
 
 # Upstream defaults DYNAMIC_OPENSCENEGRAPH to ON and builds SHARED libraries
@@ -39,8 +41,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # post-build check does not flag the spurious directories.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # The port's top-level LICENSE.txt is the OpenSceneGraph Public License, but
 # the renderer sources (OSGRenderer.h / OSGRenderer.cpp) carry an explicit

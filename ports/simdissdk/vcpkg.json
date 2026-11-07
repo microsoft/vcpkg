@@ -40,6 +40,7 @@
       "description": "Build simQt library",
       "dependencies": [
         "opengl",
+        "osg",
         "qtbase"
       ]
     },
