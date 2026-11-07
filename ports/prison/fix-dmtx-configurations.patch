@@ -1,0 +1,46 @@
+diff --git a/cmake/FindDmtx.cmake b/cmake/FindDmtx.cmake
+index 6175cd2..dd64c6c 100644
+--- a/cmake/FindDmtx.cmake
++++ b/cmake/FindDmtx.cmake
+@@ -34,23 +34,37 @@
+ 
+ find_path(Dmtx_INCLUDE_DIRS dmtx.h)
+ 
+-find_library(Dmtx_LIBRARIES NAMES dmtx)
++# vcpkg uses the same library name in separate Release and Debug directories.
++find_library(Dmtx_LIBRARY_RELEASE NAMES dmtx
++    PATHS "${Dmtx_INCLUDE_DIRS}/../lib" NO_DEFAULT_PATH)
++find_library(Dmtx_LIBRARY_DEBUG NAMES dmtx
++    PATHS "${Dmtx_INCLUDE_DIRS}/../debug/lib" NO_DEFAULT_PATH)
++
++include(SelectLibraryConfigurations)
++select_library_configurations(Dmtx)
+ 
+ include(FindPackageHandleStandardArgs)
+ 
+ find_package_handle_standard_args(Dmtx
+     FOUND_VAR Dmtx_FOUND
+-    REQUIRED_VARS Dmtx_LIBRARIES Dmtx_INCLUDE_DIRS
++    REQUIRED_VARS Dmtx_LIBRARY Dmtx_INCLUDE_DIRS
+ )
+ 
+ if(Dmtx_FOUND AND NOT TARGET Dmtx::Dmtx)
+   add_library(Dmtx::Dmtx UNKNOWN IMPORTED)
+   set_target_properties(Dmtx::Dmtx PROPERTIES
+-  IMPORTED_LOCATION "${Dmtx_LIBRARIES}"
+   INTERFACE_INCLUDE_DIRECTORIES "${Dmtx_INCLUDE_DIRS}")
++  if(Dmtx_LIBRARY_RELEASE)
++    set_property(TARGET Dmtx::Dmtx APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
++    set_target_properties(Dmtx::Dmtx PROPERTIES IMPORTED_LOCATION_RELEASE "${Dmtx_LIBRARY_RELEASE}")
++  endif()
++  if(Dmtx_LIBRARY_DEBUG)
++    set_property(TARGET Dmtx::Dmtx APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
++    set_target_properties(Dmtx::Dmtx PROPERTIES IMPORTED_LOCATION_DEBUG "${Dmtx_LIBRARY_DEBUG}")
++  endif()
+ endif()
+ 
+-mark_as_advanced(Dmtx_INCLUDE_DIRS Dmtx_LIBRARIES)
++mark_as_advanced(Dmtx_INCLUDE_DIRS)
+ 
+ include(FeatureSummary)
+ set_package_properties(Dmtx PROPERTIES

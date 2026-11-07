@@ -1,10 +1,11 @@
 {
   "name": "kdbusaddons",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Convenience classes for D-Bus",
   "homepage": "https://invent.kde.org/frameworks/kdbusaddons",
   "documentation": "https://api.kde.org/kdbusaddons-index.html",
+  "license": "LGPL-2.0-or-later AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL)",
   "supports": "!android",
   "dependencies": [
     "ecm",

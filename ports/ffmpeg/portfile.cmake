@@ -456,15 +456,29 @@ endif()
 
 set(WITH_OPENSSL OFF)
 set(WITH_SCHANNEL OFF)
-if("openssl" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-openssl")
-    set(WITH_OPENSSL ON)
-else()
-    set(OPTIONS "${OPTIONS} --disable-openssl")
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
-        string(APPEND OPTIONS " --enable-schannel")
-        set(WITH_SCHANNEL ON)
+set(WITH_SECURETRANSPORT OFF)
+if("network" IN_LIST FEATURES)
+    if("openssl" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-openssl")
+        set(WITH_OPENSSL ON)
+    else()
+        set(OPTIONS "${OPTIONS} --disable-openssl")
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
+            string(APPEND OPTIONS " --enable-schannel")
+            set(WITH_SCHANNEL ON)
+        elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+            # SecureTransport is Apple's platform TLS backend, the counterpart of
+            # schannel. Autodetect is off, so it must be enabled explicitly.
+            string(APPEND OPTIONS " --enable-securetransport")
+            set(WITH_SECURETRANSPORT ON)
+        endif()
     endif()
+else()
+    # Without networking, configure drops every protocol that needs it and keeps the
+    # local ones (file, pipe, fd, ...). Also build none of the TLS backends, which
+    # exist only to secure network protocols.
+    string(APPEND OPTIONS " --disable-network")
+    string(APPEND OPTIONS " --disable-openssl --disable-schannel --disable-securetransport")
 endif()
 
 if("opus" IN_LIST FEATURES)
