@@ -32,12 +32,14 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC_LIB=${BUILD_STATIC_LIB}
         -DBUILD_SHARED_LIB=${BUILD_SHARED_LIB}
         -DMSVC_CRT_STATIC=${MSVC_CRT_STATIC}
+        -DProtobuf_USE_STATIC_LIBS=${BUILD_STATIC_LIB}
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TOOLS=OFF
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         MSVC_CRT_STATIC
+        Protobuf_USE_STATIC_LIBS
 )
 
 vcpkg_cmake_install()
