@@ -39,6 +39,13 @@
         },
         "gettext-libintl"
       ]
+    },
+    "stackprof": {
+      "description": "Build eu-stackprof (requires C++20 with <format> support).",
+      "supports": "x86 | x64 | arm | arm64",
+      "dependencies": [
+        "json-c"
+      ]
     }
   }
 }

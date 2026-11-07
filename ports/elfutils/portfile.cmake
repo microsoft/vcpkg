@@ -30,6 +30,12 @@ else()
     list(APPEND options "--enable-libdebuginfod=no")
 endif()
 
+if("stackprof" IN_LIST FEATURES)
+    list(APPEND options "--enable-stackprof=yes")
+else()
+    list(APPEND options "--enable-stackprof=no")
+endif()
+
 if("nls" IN_LIST FEATURES)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 else()
@@ -43,6 +49,8 @@ vcpkg_make_configure(
     OPTIONS
         ${options}
         --enable-debuginfod=no
+        ac_cv_header_perfmon_pfmlib_perf_event_h=no
+        ac_cv_lib_pfm_pfm_get_os_event_encoding=no
         --with-bzlib
         --with-lzma
         --with-zlib
