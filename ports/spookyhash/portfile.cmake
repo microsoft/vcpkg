@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 
 configure_file("${CURRENT_PORT_DIR}/CMakeLists.txt" "${SOURCE_PATH}/CMakeLists.txt" COPYONLY)
-configure_file("${CURRENT_PORT_DIR}/spookyhash-config.cmake.in" "${SOURCE_PATH}/spookyhash-config.cmake.in" COPYONLY)
+configure_file("${CURRENT_PORT_DIR}/unofficial-spookyhash-config.cmake.in" "${SOURCE_PATH}/unofficial-spookyhash-config.cmake.in" COPYONLY)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -18,9 +18,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/spookyhash)
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-spookyhash CONFIG_PATH lib/cmake/unofficial-spookyhash)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage-accurate")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage-accurate")
