@@ -1,3 +1,3 @@
-set(qtlottie_HASH "0a851dd20e3ff9d0b8bebcf21490b226f3a5dc322e90b5fd5c0ea824eb91884fd8ca1c3752192cd32276a3aeb9cf5a44d0e0142aa075f4e86eb5d987a6da2e6b")
-set(qtlottie_URL "https://download.qt.io/archive/qt/6.11/6.11.3/submodules/qtlottie-everywhere-src-6.11.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.3/submodules/qtlottie-everywhere-src-6.11.3.tar.xz")
-set(qtlottie_FILENAME "qtlottie-everywhere-src-6.11.3.tar.xz")
+set(qtlottie_HASH "99451bbdca339b0c274ef1648c1a42c43da218d3748f4293b0da0d608d1407c90e7cfebaf35a8b9ebf9464019bd721cc90ed1b488a051f2caf820ad2cebab041")
+set(qtlottie_URL "https://download.qt.io/archive/qt/6.12/6.12.0/submodules/qtlottie-everywhere-src-6.12.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.12/6.12.0/submodules/qtlottie-everywhere-src-6.12.0.tar.xz")
+set(qtlottie_FILENAME "qtlottie-everywhere-src-6.12.0.tar.xz")

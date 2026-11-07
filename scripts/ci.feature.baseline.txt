@@ -1197,7 +1197,6 @@ qtmultimedia[gstreamer]:x64-linux=no-separate-feature-test
 qtmultimedia[gstreamer]:x64-linux=options
 qtnetworkauth:arm64-linux=cascade
 qtopcua:arm64-linux=cascade
-qtopcua[open62541](android)=feature-fails
 qtpositioning:arm64-linux=cascade
 qtquick3d:arm64-linux=cascade
 qtquick3dphysics:arm64-linux=cascade
