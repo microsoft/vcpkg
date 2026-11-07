@@ -1,0 +1,15 @@
+diff --git a/Plugins/wbp/CMakeLists.txt b/Plugins/wbp/CMakeLists.txt
+index e99c0f5..a73ba2f 100644
+--- a/Plugins/wbp/CMakeLists.txt
++++ b/Plugins/wbp/CMakeLists.txt
+@@ -4,6 +4,10 @@ endif()
+ 
+ add_library(osgdb_wbp SHARED ReaderWriterWbp.cpp)
+ target_link_libraries(osgdb_wbp PRIVATE ${OPENSCENEGRAPH_LIBRARIES})
++# Static OSG libraries expect consumers to supply the system OpenGL import library.
++if(TARGET OpenGL::GL)
++    target_link_libraries(osgdb_wbp PRIVATE OpenGL::GL)
++endif()
+ target_include_directories(osgdb_wbp PRIVATE "${OPENSCENEGRAPH_INCLUDE_DIR}")
+ set_target_properties(osgdb_wbp PROPERTIES
+     PREFIX ""
