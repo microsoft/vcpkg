@@ -1,7 +1,6 @@
 {
   "name": "tracy",
-  "version": "0.14.1",
-  "port-version": 1,
+  "version": "0.15.0",
   "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
   "homepage": "https://github.com/wolfpld/tracy",
   "license": "BSD-3-Clause",
@@ -74,6 +73,10 @@
         },
         "freetype",
         "glfw3",
+        {
+          "name": "imgui",
+          "version>=": "1.93.0"
+        },
         "md4c",
         "nativefiledialog-extended",
         "nlohmann-json",
