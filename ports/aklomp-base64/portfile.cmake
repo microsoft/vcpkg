@@ -21,6 +21,12 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libbase64.h" "#if defined(BASE64_STATIC_DEFINE)" "#if 1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libbase64.h" "#if defined(BASE64_STATIC_DEFINE)" "#if 0")
+endif()
+
 vcpkg_cmake_config_fixup(
 	PACKAGE_NAME base64
 	CONFIG_PATH "lib/cmake/base64"
