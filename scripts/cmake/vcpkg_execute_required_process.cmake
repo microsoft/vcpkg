@@ -1,7 +1,7 @@
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ALLOW_IN_DOWNLOAD_MODE;OUTPUT_STRIP_TRAILING_WHITESPACE;ERROR_STRIP_TRAILING_WHITESPACE"
-        "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
+        "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE;FAILURE_HINT"
         "COMMAND;SAVE_LOG_FILES"
     )
 
@@ -110,6 +110,10 @@ Halting portfile execution.
         endif()
     endforeach()
     if(NOT error_code EQUAL 0)
+        set(failure_hint "")
+        if(DEFINED arg_FAILURE_HINT)
+            string(APPEND failure_hint "  ${arg_FAILURE_HINT}\n")
+        endif()
         set(stringified_logs "")
         foreach(log IN LISTS saved_logs ITEMS "${log_out}" "${log_err}")
             if(NOT EXISTS "${log}")
@@ -128,6 +132,7 @@ Halting portfile execution.
             "  Command failed: ${pretty_command}\n"
             "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
             "  Error code: ${error_code}\n"
+            "${failure_hint}"
             "  See logs for more information:\n"
             "${stringified_logs}"
         )
