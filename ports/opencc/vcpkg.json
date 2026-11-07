@@ -1,16 +1,18 @@
 {
   "name": "opencc",
-  "version": "1.4.1",
+  "version-date": "2026-10-29",
   "description": "A project for conversions between Traditional Chinese, Simplified Chinese and Japanese Kanji (Shinjitai)",
   "homepage": "https://github.com/BYVoid/OpenCC",
-  "license": "Apache-2.0",
-  "supports": "!(arm | uwp)",
+  "license": "Apache-2.0 AND BSD-2-Clause",
+  "supports": "!uwp",
   "dependencies": [
-    "darts-clone",
     "marisa-trie",
     {
-      "name": "pkgconf",
-      "host": true
+      "name": "opencc",
+      "host": true,
+      "features": [
+        "tools"
+      ]
     },
     "rapidjson",
     "tclap",
