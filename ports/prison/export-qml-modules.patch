@@ -1,0 +1,20 @@
+diff --git a/src/quick/CMakeLists.txt b/src/quick/CMakeLists.txt
+index b3eb778..f7d2154 100644
+--- a/src/quick/CMakeLists.txt
++++ b/src/quick/CMakeLists.txt
+@@ -6,4 +6,4 @@ target_sources(prisonquickplugin PRIVATE
+ )
+ target_link_libraries(prisonquickplugin PRIVATE Qt6::Quick KF6::Prison)
+ 
+-ecm_finalize_qml_module(prisonquickplugin)
++ecm_finalize_qml_module(prisonquickplugin EXPORT KF6PrisonTargets)
+diff --git a/src/scanner-quick/CMakeLists.txt b/src/scanner-quick/CMakeLists.txt
+index 3fc5b64..0ae9616 100644
+--- a/src/scanner-quick/CMakeLists.txt
++++ b/src/scanner-quick/CMakeLists.txt
+@@ -4,4 +4,4 @@
+ ecm_add_qml_module(prisonscannerquickplugin URI "org.kde.prison.scanner" VERSION 1.0 GENERATE_PLUGIN_SOURCE DEPENDENCIES QtMultimedia)
+ target_sources(prisonscannerquickplugin PRIVATE types.h)
+ target_link_libraries(prisonscannerquickplugin PRIVATE Qt6::Quick KF6::PrisonScanner)
+-ecm_finalize_qml_module(prisonscannerquickplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(prisonscannerquickplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6PrisonScannerTargets)

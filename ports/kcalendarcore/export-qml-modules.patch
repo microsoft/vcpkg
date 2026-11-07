@@ -1,0 +1,10 @@
+diff --git a/src/qml/CMakeLists.txt b/src/qml/CMakeLists.txt
+index 8613d1b..e3a80d8 100644
+--- a/src/qml/CMakeLists.txt
++++ b/src/qml/CMakeLists.txt
+@@ -17,4 +17,4 @@ target_link_libraries(
+         Qt6::Qml
+ )
+ 
+-ecm_finalize_qml_module(kcalendarcoreqml)
++ecm_finalize_qml_module(kcalendarcoreqml EXPORT KF6CalendarCoreTargets)

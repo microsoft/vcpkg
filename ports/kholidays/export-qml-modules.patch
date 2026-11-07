@@ -1,0 +1,16 @@
+diff --git a/src/declarative/CMakeLists.txt b/src/declarative/CMakeLists.txt
+index 0b8fcb9..8e53bf4 100644
+--- a/src/declarative/CMakeLists.txt
++++ b/src/declarative/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-ecm_add_qml_module(kholidaysdeclarativeplugin URI "org.kde.kholidays")
++ecm_add_qml_module(kholidaysdeclarativeplugin URI "org.kde.kholidays" CLASS_NAME KHolidaysDeclarativePlugin)
+ 
+ target_sources(
+     kholidaysdeclarativeplugin
+@@ -17,4 +17,4 @@ target_link_libraries(
+         KF6Holidays
+ )
+ 
+-ecm_finalize_qml_module(kholidaysdeclarativeplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(kholidaysdeclarativeplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6HolidaysTargets)

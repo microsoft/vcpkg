@@ -1,0 +1,55 @@
+diff --git a/src/qmlcontrols/draganddrop/CMakeLists.txt b/src/qmlcontrols/draganddrop/CMakeLists.txt
+index ecaa407..c57666c 100644
+--- a/src/qmlcontrols/draganddrop/CMakeLists.txt
++++ b/src/qmlcontrols/draganddrop/CMakeLists.txt
+@@ -22,4 +22,4 @@ target_link_libraries(draganddropplugin PRIVATE
+     Qt6::Gui
+ )
+ 
+-ecm_finalize_qml_module(draganddropplugin)
++ecm_finalize_qml_module(draganddropplugin EXPORT KF6DeclarativeTargets)
+diff --git a/src/qmlcontrols/graphicaleffects/CMakeLists.txt b/src/qmlcontrols/graphicaleffects/CMakeLists.txt
+index a846085..44206c1 100644
+--- a/src/qmlcontrols/graphicaleffects/CMakeLists.txt
++++ b/src/qmlcontrols/graphicaleffects/CMakeLists.txt
+@@ -22,4 +22,4 @@ qt_add_shaders(graphicaleffects "graphicaleffects_shaders"
+        "lanczos2sharp.frag"
+ )
+ 
+-ecm_finalize_qml_module(graphicaleffects)
++ecm_finalize_qml_module(graphicaleffects EXPORT KF6DeclarativeTargets)
+diff --git a/src/qmlcontrols/kquickcontrols/CMakeLists.txt b/src/qmlcontrols/kquickcontrols/CMakeLists.txt
+index 7152de7..b61b2a7 100644
+--- a/src/qmlcontrols/kquickcontrols/CMakeLists.txt
++++ b/src/qmlcontrols/kquickcontrols/CMakeLists.txt
+@@ -6,7 +6,7 @@ target_sources(kquickcontrols PRIVATE types.h)
+ 
+ ecm_target_qml_sources(kquickcontrols SOURCES ColorButton.qml KeySequenceItem.qml)
+ 
+-ecm_finalize_qml_module(kquickcontrols)
++ecm_finalize_qml_module(kquickcontrols EXPORT KF6DeclarativeTargets)
+ 
+ 
+ target_link_libraries(kquickcontrols PRIVATE kquickcontrolsprivate KF6::GuiAddons)
+diff --git a/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt b/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt
+index b354b3b..ea404b2 100644
+--- a/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt
++++ b/src/qmlcontrols/kquickcontrols/private/CMakeLists.txt
+@@ -40,6 +40,6 @@ if (NOT ANDROID)
+     target_link_libraries(kquickcontrolsprivate PRIVATE KF6::WidgetsAddons)
+ endif()
+ 
+-ecm_finalize_qml_module(kquickcontrolsprivate)
++ecm_finalize_qml_module(kquickcontrolsprivate EXPORT KF6DeclarativeTargets)
+ 
+ install(TARGETS kquickcontrolsprivate ${KF_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+diff --git a/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt b/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt
+index d04ccd4..5cb2eaf 100644
+--- a/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt
++++ b/src/qmlcontrols/kquickcontrolsaddons/CMakeLists.txt
+@@ -21,4 +21,4 @@ target_link_libraries(kquickcontrolsaddonsplugin PRIVATE
+     KF6::ConfigCore
+ )
+ 
+-ecm_finalize_qml_module(kquickcontrolsaddonsplugin)
++ecm_finalize_qml_module(kquickcontrolsaddonsplugin EXPORT KF6DeclarativeTargets)
