@@ -1,0 +1,7 @@
+{
+  "name": "jfalcou-copacabana",
+  "version": "7",
+  "description": "CMake package tools for building, testing, documenting and packaging C++ libraries",
+  "homepage": "https://github.com/jfalcou/copacabana",
+  "license": "BSL-1.0"
+}
