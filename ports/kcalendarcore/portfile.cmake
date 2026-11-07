@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-libical-config.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -36,6 +37,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6calendarcore CONFIG_PATH lib/cmake/KF6CalendarCore)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6calendarcore/KF6CalendarCoreTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE
