@@ -17,7 +17,7 @@ endif()
 
 if(DEFINED ENV{ANDROID_NDK_HOME})
     set(ANDROID_NDK_HOME $ENV{ANDROID_NDK_HOME})
-else()
+elseif(CMAKE_HOST_WIN32)
     set(ANDROID_NDK_HOME "$ENV{ProgramData}/Microsoft/AndroidNDK64/android-ndk-r13b/")
     if(NOT EXISTS "${ANDROID_NDK_HOME}")
         # Use Xamarin default installation folder
@@ -25,11 +25,11 @@ else()
     endif()
 endif()
 
-if(NOT EXISTS "${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
+if(ANDROID_NDK_HOME AND EXISTS "${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
+    include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
+elseif(NOT (CMAKE_HOST_SYSTEM_NAME STREQUAL "Android" AND CMAKE_SYSTEM_PROCESSOR STREQUAL CMAKE_HOST_SYSTEM_PROCESSOR))
     message(FATAL_ERROR "Could not find android ndk. Searched at ${ANDROID_NDK_HOME}")
 endif()
-
-include("${ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake")
 
 # find_library must ignore host libs
 if(ANDROID_TOOLCHAIN_ROOT AND EXISTS "${ANDROID_TOOLCHAIN_ROOT}/lib")
