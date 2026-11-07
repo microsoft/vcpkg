@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.diff
+        lz4.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party")
 file(REMOVE_RECURSE "${SOURCE_PATH}/workflow")

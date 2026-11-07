@@ -6469,7 +6469,7 @@
       "port-version": 0
     },
     "lz4": {
-      "baseline": "1.10.0",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "lzav": {
@@ -9922,7 +9922,7 @@
     },
     "srpc": {
       "baseline": "0.10.5",
-      "port-version": 0
+      "port-version": 1
     },
     "sse2neon": {
       "baseline": "1.9.1",
