@@ -60,5 +60,20 @@
         <TargetMachine Condition="'${VCPKG_TARGET_ARCHITECTURE}'=='arm'">MachineARM</TargetMachine>
     </Lib>
   </ItemDefinitionGroup>
+  <!-- Static libraries must hold object code, not LTCG IL, which only links
+       with the compiler version that wrote it. The /p:WholeProgramOptimization
+       global property only sets the default, and a project can still turn LTCG
+       on in its own item definitions, which these come after. -->
+  <ItemDefinitionGroup Condition="'${VCPKG_LIBRARY_LINKAGE}' == 'static'">
+    <ClCompile>
+        <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+        <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+    <Lib>
+        <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+    </Lib>
+  </ItemDefinitionGroup>
   @VCPKG_MSBUILD_ADDITIONAL_TARGETS_XML@
 </Project>
