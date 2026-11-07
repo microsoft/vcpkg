@@ -1,0 +1,6 @@
+sqlite-vec provides CMake targets:
+
+  find_package(unofficial-sqlite-vec CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::sqlite-vec::sqlite-vec)
+
+Register it with sqlite3_auto_extension((void (*)(void))sqlite3_vec_init) before opening a database.

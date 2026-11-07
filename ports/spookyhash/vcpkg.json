@@ -1,0 +1,17 @@
+{
+  "name": "spookyhash",
+  "version": "2.0.0",
+  "description": "Bob Jenkins' SpookyHash V2 non-cryptographic hash function.",
+  "homepage": "https://burtleburtle.net/bob/hash/spooky.html",
+  "license": "Unlicense",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

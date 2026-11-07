@@ -38,7 +38,6 @@
 # Add new items alphabetically
 aliyun-oss-cpp-sdk:arm64-linux=fail
 allegro5:arm64-linux=fail # No cross x11
-ampl-asl:arm64-linux=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:arm64-linux=fail
@@ -56,6 +55,9 @@ berkeleydb:x64-android=fail
 bgfx:arm64-linux=fail
 binlog:arm-neon-android=fail
 blitz:x64-android=fail
+blosc2:arm-neon-android=fail # Android API 30 required
+blosc2:arm64-android=fail # Android API 30 required
+blosc2:x64-android=fail # Android API 30 required
 bond:arm64-linux=fail
 boringssl:arm-neon-android=skip # Conflicts with openssl
 boringssl:arm64-android=skip
@@ -1058,6 +1060,7 @@ torch-th:arm64-windows-static-md=fail
 torch-th:arm64-windows=fail
 torch-th:x64-windows-static=fail
 usd:x64-windows-static=skip # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
+vcpkg-ci-blpapi-module:arm64-osx=fail # AppleClang lacks CMake C++ module scanning support
 vcpkg-ci-matio:arm64-linux=fail
 vcpkg-ci-podofo:arm64-linux=fail
 vcpkg-cpp-module-producer:arm64-linux=fail # GCC 13 lacks CMake C++ module scanning support

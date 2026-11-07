@@ -1,0 +1,8 @@
+{
+  "name": "rocm",
+  "version-date": "2026-11-05",
+  "description": "AMD ROCm platform",
+  "homepage": "https://rocm.docs.amd.com/",
+  "license": null,
+  "supports": "linux & x64"
+}

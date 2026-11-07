@@ -1,10 +1,11 @@
 {
   "name": "kbreezeicons",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Breeze icon theme for KDE Frameworks 6",
   "homepage": "https://invent.kde.org/frameworks/breeze-icons",
   "documentation": "https://api.kde.org/breeze-icons-index.html",
-  "license": "LGPL-2.1-or-later AND LGPL-3.0-or-later",
+  "license": "LGPL-3.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-or-later AND (LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND CC0-1.0 AND CC-BY-SA-4.0",
   "supports": "!windows & !android",
   "dependencies": [
     "ecm",

@@ -1,0 +1,218 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aad02e1..95ccc4d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -181,12 +181,10 @@ if(NOT STATIC_ONLY AND NOT SHARED_ONLY)
+   )
+ endif()
+ 
+ if(STATIC_ONLY)
+-  add_definitions(
+-    -DLIBICAL_ICAL_STATIC_DEFINE
+-    -DLIBICAL_ICALSS_STATIC_DEFINE
+-    -DLIBICAL_VCAL_STATIC_DEFINE
+-  )
++  set(LIBICAL_ICAL_STATIC_DEFINE TRUE)
++  set(LIBICAL_ICALSS_STATIC_DEFINE TRUE)
++  set(LIBICAL_VCAL_STATIC_DEFINE TRUE)
+ endif()
+ 
+ # must have Perl to create the derived stuff
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index b42c25c..27d0c37 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -5,6 +5,7 @@ include_directories(
+   ${PROJECT_SOURCE_DIR}/src/libical
+   ${PROJECT_BINARY_DIR}/src/libical
+   ${PROJECT_SOURCE_DIR}/src/libicalss
++  ${PROJECT_BINARY_DIR}/src/libicalss
+ )
+ 
+ ########### doesnothing target ###############
+diff --git a/src/libical/CMakeLists.txt b/src/libical/CMakeLists.txt
+index a78ace5..a582bf6 100644
+--- a/src/libical/CMakeLists.txt
++++ b/src/libical/CMakeLists.txt
+@@ -1,5 +1,10 @@
+ add_definitions(-Dlibical_ical_EXPORTS)
+ 
++configure_file(
++  ${CMAKE_CURRENT_SOURCE_DIR}/libical_ical_export.h.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_ical_export.h
++)
++
+ configure_file(
+   ${CMAKE_CURRENT_SOURCE_DIR}/icalversion.h.cmake
+   ${CMAKE_CURRENT_BINARY_DIR}/icalversion.h
+@@ -193,7 +198,7 @@ endif()
+ set(ical_LIB_SRCS
+   ${BUILT_SOURCES}
+   ${BUILT_HEADERS}
+-  libical_ical_export.h
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_ical_export.h
+   icalarray.c
+   icalarray.h
+   icalattach.h
+@@ -410,7 +415,7 @@ install(FILES
+   icaltimezone.h
+   icaltypes.h
+   icalvalue.h
+-  libical_ical_export.h
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_ical_export.h
+   pvl.h
+   sspm.h
+   DESTINATION
+diff --git a/src/libical/libical_ical_export.h b/src/libical/libical_ical_export.h.cmake
+similarity index 94%
+rename from src/libical/libical_ical_export.h
+rename to src/libical/libical_ical_export.h.cmake
+index bea861c..6237a1d 100644
+--- a/src/libical/libical_ical_export.h
++++ b/src/libical/libical_ical_export.h.cmake
+@@ -1,6 +1,8 @@
+ #ifndef LIBICAL_ICAL_EXPORT_H
+ #define LIBICAL_ICAL_EXPORT_H
+ 
++#cmakedefine LIBICAL_ICAL_STATIC_DEFINE 1
++
+ #if !defined(S_SPLINT_S)
+ 
+ #ifdef LIBICAL_ICAL_STATIC_DEFINE
+diff --git a/src/libicalss/CMakeLists.txt b/src/libicalss/CMakeLists.txt
+index bcd25b2..cde86be 100644
+--- a/src/libicalss/CMakeLists.txt
++++ b/src/libicalss/CMakeLists.txt
+@@ -1,11 +1,17 @@
+ add_definitions(-Dlibical_icalss_EXPORTS)
+ 
++configure_file(
++  ${CMAKE_CURRENT_SOURCE_DIR}/libical_icalss_export.h.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_icalss_export.h
++)
++
+ include_directories(
+   ${PROJECT_BINARY_DIR}
+   ${PROJECT_BINARY_DIR}/src
+   ${PROJECT_SOURCE_DIR}/src
+   ${PROJECT_BINARY_DIR}/src/libical
+   ${PROJECT_SOURCE_DIR}/src/libical
++  ${PROJECT_BINARY_DIR}/src/libicalss
+ )
+ if(BDB_FOUND)
+   include_directories(${BDB_INCLUDE_DIR})
+@@ -30,7 +36,7 @@ add_custom_target(
+ set(icalss_LIB_DEVSRCS icalsslexer.c icalssyacc.c)
+ 
+ set(icalss_LIB_SRCS
+-  libical_icalss_export.h
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_icalss_export.h
+   icalcalendar.c
+   icalcalendar.h
+   icalclassify.c
+@@ -200,7 +206,7 @@ install(FILES
+   icalset.h
+   icalspanlist.h
+   icalssyacc.h
+-  libical_icalss_export.h
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_icalss_export.h
+   DESTINATION
+   ${INCLUDE_INSTALL_DIR}/libical
+ )
+diff --git a/src/libicalss/libical_icalss_export.h b/src/libicalss/libical_icalss_export.h.cmake
+similarity index 94%
+rename from src/libicalss/libical_icalss_export.h
+rename to src/libicalss/libical_icalss_export.h.cmake
+index e3c63c8..d90e998 100644
+--- a/src/libicalss/libical_icalss_export.h
++++ b/src/libicalss/libical_icalss_export.h.cmake
+@@ -1,6 +1,8 @@
+ #ifndef LIBICAL_ICALSS_EXPORT_H
+ #define LIBICAL_ICALSS_EXPORT_H
+ 
++#cmakedefine LIBICAL_ICALSS_STATIC_DEFINE 1
++
+ #if !defined(S_SPLINT_S)
+ 
+ #ifdef LIBICAL_ICALSS_STATIC_DEFINE
+diff --git a/src/libicalvcal/CMakeLists.txt b/src/libicalvcal/CMakeLists.txt
+index 5cbf32b..a0f5daf 100644
+--- a/src/libicalvcal/CMakeLists.txt
++++ b/src/libicalvcal/CMakeLists.txt
+@@ -1,11 +1,17 @@
+ add_definitions(-Dlibical_vcal_EXPORTS)
+ 
++configure_file(
++  ${CMAKE_CURRENT_SOURCE_DIR}/libical_vcal_export.h.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_vcal_export.h
++)
++
+ include_directories(
+   ${PROJECT_BINARY_DIR}
+   ${PROJECT_BINARY_DIR}/src
+   ${PROJECT_SOURCE_DIR}/src
+   ${PROJECT_BINARY_DIR}/src/libical
+   ${PROJECT_SOURCE_DIR}/src/libical
++  ${PROJECT_BINARY_DIR}/src/libicalvcal
+ )
+ 
+ #these are generated sources, but we keep them in the repo
+@@ -14,7 +20,7 @@ set(icalvcal_LIB_DEVSRCS vcc.c)
+ ########### next target ###############
+ 
+ set(icalvcal_LIB_SRCS
+-  libical_vcal_export.h
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_vcal_export.h
+   icalvcal.h
+   icalvcal.c
+   vcc.h
+@@ -77,7 +83,7 @@ install(FILES
+   vcaltmp.h
+   vcc.h
+   vobject.h
+-  libical_vcal_export.h
++  ${CMAKE_CURRENT_BINARY_DIR}/libical_vcal_export.h
+   DESTINATION
+   ${INCLUDE_INSTALL_DIR}/libical
+ )
+diff --git a/src/libicalvcal/libical_vcal_export.h b/src/libicalvcal/libical_vcal_export.h.cmake
+similarity index 94%
+rename from src/libicalvcal/libical_vcal_export.h
+rename to src/libicalvcal/libical_vcal_export.h.cmake
+index 4760fd0..003dcbc 100644
+--- a/src/libicalvcal/libical_vcal_export.h
++++ b/src/libicalvcal/libical_vcal_export.h.cmake
+@@ -1,6 +1,8 @@
+ #ifndef LIBICAL_VCAL_EXPORT_H
+ #define LIBICAL_VCAL_EXPORT_H
+ 
++#cmakedefine LIBICAL_VCAL_STATIC_DEFINE 1
++
+ #if !defined(S_SPLINT_S)
+ 
+ #ifdef LIBICAL_VCAL_STATIC_DEFINE
+diff --git a/src/python/CMakeLists.txt b/src/python/CMakeLists.txt
+index bd14995..b03d095 100644
+--- a/src/python/CMakeLists.txt
++++ b/src/python/CMakeLists.txt
+@@ -2,6 +2,7 @@ include_directories(
+   ${PROJECT_SOURCE_DIR}/src
+   ${PROJECT_SOURCE_DIR}/src/libical
+   ${PROJECT_SOURCE_DIR}/src/libicalss
++  ${PROJECT_BINARY_DIR}/src/libicalss
+ )
+ 
+ ########### next target ###############
+diff --git a/src/test/CMakeLists.txt b/src/test/CMakeLists.txt
+index 4486899..b298ce7 100644
+--- a/src/test/CMakeLists.txt
++++ b/src/test/CMakeLists.txt
+@@ -5,6 +5,8 @@ include_directories(
+   ${PROJECT_SOURCE_DIR}/src/libical
+   ${PROJECT_BINARY_DIR}/src/libical
+   ${PROJECT_SOURCE_DIR}/src/libicalss
++  ${PROJECT_BINARY_DIR}/src/libicalss
++  ${PROJECT_BINARY_DIR}/src/libicalvcal
+ )
+ 
+ if(ICU_FOUND)
