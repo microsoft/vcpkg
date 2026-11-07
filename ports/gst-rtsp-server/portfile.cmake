@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 8b50a6be64df31dbdaecabad3efe8fa6b2de5be3acd5bc77813bc8ee92f42c1645ef297199ee1225768804498b1326fb83ae8060f54f54b93689b09f66714097
+    SHA512 4ad7d88cecebff26a43ecc7bb1f31a403b303722d23ea02b175e733eadad7f27a4d0af5c7fbbc1e5555db756fec3dbb67f4b57248bd3b96b0271fc1b8be21b13
     HEAD_REF main
 )
 
