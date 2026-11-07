@@ -1,0 +1,13 @@
+diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
+index e26d5e9..0a9dc06 100644
+--- a/cmake/FindDependencies.cmake
++++ b/cmake/FindDependencies.cmake
+@@ -229,7 +229,7 @@ if(DOWNLOAD_ENABLED)
+     if(IS_MSVC AND IS_ARM64)
+         # OpenSSL crashes for ARM64 under Windows. We therefore fall back to
+         # CryptoPP as an alternative to OpenSSL for SHA256 computation.
+-        find_package(CryptoPP QUIET)
++        find_package(CryptoPP CONFIG QUIET)
+         if(CryptoPP_FOUND)
+             set(CRYPTO_FOUND TRUE)
+         else()
