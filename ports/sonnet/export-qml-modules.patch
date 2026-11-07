@@ -1,0 +1,12 @@
+diff --git a/src/quick/CMakeLists.txt b/src/quick/CMakeLists.txt
+index 189ddab..50e263b 100644
+--- a/src/quick/CMakeLists.txt
++++ b/src/quick/CMakeLists.txt
+@@ -18,6 +18,6 @@ target_link_libraries(sonnetquickplugin
+     PRIVATE KF6SonnetCore
+ )
+ 
+-ecm_finalize_qml_module(sonnetquickplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(sonnetquickplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6SonnetTargets)
+ 
+ ecm_generate_qdoc(sonnetquickplugin sonnetquick.qdocconf)

@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-scanner-config-dependencies.patch
         fix-qrencode-debug-library.patch
         fix-dmtx-configurations.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -40,6 +41,23 @@ if("scanner" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME kf6prisonscanner CONFIG_PATH lib/cmake/KF6PrisonScanner DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6prison CONFIG_PATH lib/cmake/KF6Prison)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6prison/KF6PrisonTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "scanner-qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6prisonscanner/KF6PrisonScannerTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

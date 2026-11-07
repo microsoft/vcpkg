@@ -1,0 +1,12 @@
+diff --git a/src/quick/CMakeLists.txt b/src/quick/CMakeLists.txt
+index 7b74049..adda575 100644
+--- a/src/quick/CMakeLists.txt
++++ b/src/quick/CMakeLists.txt
+@@ -13,6 +13,6 @@ target_link_libraries(kquicksyntaxhighlightingplugin PRIVATE
+     Qt6::Quick
+ )
+ 
+-ecm_finalize_qml_module(kquicksyntaxhighlightingplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(kquicksyntaxhighlightingplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6SyntaxHighlightingTargets)
+ 
+ ecm_generate_qdoc(kquicksyntaxhighlightingplugin ksyntaxhighlightingqml.qdocconf)
