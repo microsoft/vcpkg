@@ -1,6 +1,7 @@
 {
   "name": "kirigami",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "QtQuick plugins to build user interfaces based on the KDE human interface guidelines",
   "homepage": "https://invent.kde.org/frameworks/kirigami",
   "documentation": "https://api.kde.org/kirigami-index.html",

@@ -21,13 +21,13 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         ${FEATURE_OPTIONS}
     # Used by ecm_find_qmlmodule(org.kde.ki18n)
     OPTIONS_RELEASE
-        "-DCMAKE_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/qml/org/kde/ki18n"
+        "-DCMAKE_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/Qt6/qml/org/kde/ki18n"
     OPTIONS_DEBUG
-        "-DCMAKE_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/debug/qml/org/kde/ki18n"
+        "-DCMAKE_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/debug/Qt6/qml/org/kde/ki18n"
 )
 
 vcpkg_cmake_install()

@@ -25,6 +25,7 @@ PORT_LIST = [
     "kauth",
     "kbookmarks",
     "kbreezeicons",
+    "kcalendarcore",
     "kcodecs",
     "kcolorscheme",
     "kcompletion",
@@ -40,6 +41,7 @@ PORT_LIST = [
     "kholidays",
     "ki18n",
     "kiconthemes",
+    "kidletime",
     "kirigami",
     "kitemmodels",
     "kitemviews",
@@ -51,6 +53,7 @@ PORT_LIST = [
     "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
+    "prison",
     "sonnet",
     "syntax-highlighting",
     "threadweaver"

@@ -8,6 +8,10 @@ vcpkg_from_github(
         fix-configure-ac.patch
         preprocessor.patch
 )
+
+# Use the release tag's commit in jemalloc's major.minor.bugfix-nrev-ggid format.
+file(WRITE "${SOURCE_PATH}/VERSION" "${VERSION}-0-g7a34f18502e7b222724097cdcd499b437d189acc")
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(opts "ac_cv_search_log=none required" "--without-private-namespace")
 endif()

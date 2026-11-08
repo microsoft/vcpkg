@@ -1,0 +1,18 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 5ab1ee2..d25eb06 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,11 +1,11 @@
+ add_subdirectory(lib)
+ add_subdirectory(tools)
+-if(TARGET Qt6::Quick)
++if(WITH_QUICK)
+     add_subdirectory(quick)
+ endif()
+ if(TARGET Qt6::Multimedia AND TARGET ZXing::ZXing)
+     add_subdirectory(scanner)
+-    if (TARGET Qt6::Quick)
++    if (WITH_QUICK)
+         add_subdirectory(scanner-quick)
+     endif()
+ endif()
