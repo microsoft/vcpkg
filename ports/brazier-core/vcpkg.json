@@ -1,0 +1,24 @@
+{
+  "name": "brazier-core",
+  "version": "0.2.2",
+  "description": "Core library for brazier",
+  "homepage": "https://github.com/brazier-tech/brazier",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!bsd",
+  "dependencies": [
+    "boost-asio",
+    "boost-beast",
+    "boost-config",
+    "boost-filesystem",
+    "boost-system",
+    "boost-thread",
+    "brazier-logger",
+    "fmt",
+    "hiredis",
+    "nlohmann-json",
+    "openssl",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config",
+    "zlib"
+  ]
+}

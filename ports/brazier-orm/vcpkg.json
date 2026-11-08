@@ -1,0 +1,14 @@
+{
+  "name": "brazier-orm",
+  "version": "0.1.1",
+  "description": "ORM module for the brazier C++ MVC framework",
+  "homepage": "https://github.com/brazier-tech/brazier-orm",
+  "license": "LGPL-3.0-or-later",
+  "dependencies": [
+    "brazier-logger",
+    "libpq",
+    "nlohmann-json",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
