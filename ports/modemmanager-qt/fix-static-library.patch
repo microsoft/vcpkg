@@ -1,0 +1,13 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 3c038b4..ac8f60d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -88,7 +88,7 @@ ecm_qt_export_logging_category(
+     EXPORT MODEMMANAGERQT
+ )
+ 
+-add_library(KF6ModemManagerQt SHARED ${ModemManagerQt_SRCS} ${DBUS_INTERFACES_FILES})
++add_library(KF6ModemManagerQt ${ModemManagerQt_SRCS} ${DBUS_INTERFACES_FILES})
+ add_library(KF6::ModemManagerQt ALIAS KF6ModemManagerQt)
+ 
+ ecm_generate_export_header(KF6ModemManagerQt
