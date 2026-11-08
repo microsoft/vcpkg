@@ -11105,8 +11105,8 @@
       "port-version": 1
     },
     "wayland-protocols": {
-      "baseline": "1.49",
-      "port-version": 1
+      "baseline": "1.50",
+      "port-version": 0
     },
     "wcslib": {
       "baseline": "8.10",
