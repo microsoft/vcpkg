@@ -2,9 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO munich-data-engineering/reflect-cpp
     REF "v${VERSION}"
-    SHA512 95698bdc8695d3c72cc22aa2572b09e36d132adc8c6eb9f95a507ff57bc18fa329c05ed6e5ec878181e44fb227877c63479b71f75c68a9d40f13a97f46e41590
+    SHA512 69a1f3f83bc4be2d1ae7e39e6d76775d6cdd667b6f231142e0ad67377f64b0e47b3c25dcb14b82612dc0e41f4ce6e4e4c49b93e568ceca6dabdad646a79b1374
     HEAD_REF main
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/rfl/thirdparty")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -16,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         bson                REFLECTCPP_BSON
         capnproto           REFLECTCPP_CAPNPROTO
         cbor                REFLECTCPP_CBOR
+        cereal              REFLECTCPP_CEREAL
         csv                 REFLECTCPP_CSV
         flexbuffers         REFLECTCPP_FLEXBUFFERS
         msgpack             REFLECTCPP_MSGPACK

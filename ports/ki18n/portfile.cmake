@@ -37,9 +37,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DPython3_EXECUTABLE=${PYTHON3}
         -DFALLBACK_KI18N_PYTHON_EXECUTABLE=${PYTHON3}
-        -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_QTPLUGINDIR=plugins
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QTPLUGINDIR=Qt6/plugins
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
 )
 
 vcpkg_cmake_install()
@@ -48,10 +47,10 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/KF6I18n
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
-    # The static QML module objects are installed in the QML directory, debug/qml for the debug build
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6i18n/KF6I18nTargets-debug.cmake"
-        "\${_IMPORT_PREFIX}/qml/"
-        "\${_IMPORT_PREFIX}/debug/qml/"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
     )
 endif()
 vcpkg_copy_pdbs()

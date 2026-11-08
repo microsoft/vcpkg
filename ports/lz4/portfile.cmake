@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lz4/lz4
-    REF v${VERSION}
-    SHA512 8c4ceb217e6dc8e7e0beba99adc736aca8963867bcf9f970d621978ba11ce92855912f8b66138037a1d2ae171e8e17beb7be99281fea840106aa60373c455b28
+    REF "v${VERSION}"
+    SHA512 5638a9ca76f333bea718b457588eadafd8dddbc4c8afcd8e21992805afff7af283283642558e52d1f1d4655dbe26f2aa85fa89dc365041ca621baf79c552f364
     HEAD_REF dev
-    PATCHES
-        target-lz4-lz4.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -29,6 +27,8 @@ if("tools" IN_LIST FEATURES)
         TOOL_NAMES lz4
         AUTO_CLEAN
     )
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -50,8 +50,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblz4.pc" " -llz4" " -llz4d")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 

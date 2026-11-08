@@ -1,6 +1,7 @@
 {
   "name": "sonnet",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Support for spellchecking",
   "homepage": "https://invent.kde.org/frameworks/sonnet",
   "documentation": "https://api.kde.org/sonnet-index.html",
