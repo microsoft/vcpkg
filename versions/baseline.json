@@ -1536,6 +1536,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "btoon": {
+      "baseline": "0.1.3",
+      "port-version": 0
+    },
     "buck-yeh-bux": {
       "baseline": "1.12.7",
       "port-version": 0
