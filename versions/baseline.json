@@ -7225,8 +7225,8 @@
       "port-version": 5
     },
     "netcdf-cxx4": {
-      "baseline": "4.3.1",
-      "port-version": 5
+      "baseline": "4.3.2",
+      "port-version": 0
     },
     "netcpp": {
       "baseline": "0.5.0",
