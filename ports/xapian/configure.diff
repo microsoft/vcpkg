@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index b0f9550..18826a8 100644
+index b0f9550..982a5bf 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -782,7 +782,9 @@ AC_CHECK_FUNCS([strerrordesc_np])
@@ -13,7 +13,7 @@ index b0f9550..18826a8 100644
    dnl ICU's UTF-8 word boundary code was broken before 54.1.
    m4_define([icu_min], [54.1])
    m4_define([icu_mod], [icu-uc])
-@@ -868,12 +870,13 @@ AC_CHECK_HEADERS([zlib.h], [], [
+@@ -868,12 +870,9 @@ AC_CHECK_HEADERS([zlib.h], [], [
    AC_MSG_ERROR([zlib.h not found - required for glass (you may need to install the zlib1g-dev or zlib-devel package)])
    ], [ ])
  
@@ -23,13 +23,9 @@ index b0f9550..18826a8 100644
 -  ])
 -
 -ZLIB_LIBS=$LIBS
-+dnl vcpkg: get the zlib link flags from pkg-config, because the vcpkg zlib
-+ dnl port renames the library per configuration on Windows (zs/zsd/zd).
-+if test -n "$PKG_CONFIG" && ZLIB_LIBS="$($PKG_CONFIG zlib --libs 2>/dev/null)"; then
-+  :
-+else
-+  AC_MSG_ERROR([zlib library not found via pkg-config - required for glass])
-+fi
++dnl vcpkg: use pkg-config so the correct per-configuration library name is
++dnl used (the vcpkg zlib port renames it to zs/zsd/zd on Windows).
++PKG_CHECK_MODULES([ZLIB], [zlib])
  AC_SUBST([ZLIB_LIBS])
  LIBS=$save_LIBS
  
