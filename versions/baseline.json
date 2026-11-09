@@ -6756,6 +6756,10 @@
       "baseline": "7.1.0",
       "port-version": 0
     },
+    "microsoft-gacl": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "microsoft-windows-devices-midi2": {
       "baseline": "1.0.17-rc.4.25",
       "port-version": 0
