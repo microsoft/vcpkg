@@ -11,6 +11,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_TESTING=OFF
         -DBUILD_STATIC_LIBS=${BUILD_STATIC}
         -Dlibaec_INSTALL_CMAKEDIR=share/${PORT}
 )
