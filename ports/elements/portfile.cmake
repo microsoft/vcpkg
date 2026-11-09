@@ -59,6 +59,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DELEMENTS_BUILD_EXAMPLES=OFF
+        -DELEMENTS_BUILD_TESTS=OFF
         -DELEMENTS_HOST_UI_LIBRARY=${ELEMENTS_HOST_UI_LIBRARY}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
@@ -69,7 +70,10 @@ vcpkg_cmake_build()
 
 file(INSTALL "${SOURCE_PATH}/lib/include/elements.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/lib/include/elements" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(INSTALL "${SOURCE_PATH}/lib/artist/lib/infra/include/infra" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/lib/artist/lib/infra/include/infra" DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+    PATTERN "catch.hpp" EXCLUDE
+    PATTERN "doctest.hpp" EXCLUDE
+)
 file(INSTALL "${SOURCE_PATH}/lib/artist/lib/include/artist" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 file(GLOB_RECURSE HPP_FILES "${CURRENT_PACKAGES_DIR}/include/artist/*.hpp")
