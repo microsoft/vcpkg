@@ -1,0 +1,19 @@
+{
+  "name": "oxygen-icons",
+  "version": "6.31.0",
+  "description": "Oxygen icon theme",
+  "homepage": "https://invent.kde.org/frameworks/oxygen-icons",
+  "license": "LGPL-3.0-or-later AND CC0-1.0",
+  "supports": "!android & !windows",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
