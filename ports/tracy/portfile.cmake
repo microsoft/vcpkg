@@ -52,6 +52,11 @@ if ("gui-tools" IN_LIST FEATURES)
 
    set(pandoc_version 3.12.1)
    if(VCPKG_HOST_IS_WINDOWS)
+       # pandoc only has x86_64 windows prebuilds available
+       # we can just run it on ARM64 through emulation but we won't be able to run it on 32bit systems
+       if(NOT CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64|ARM64|arm64)$")
+          message(FATAL_ERROR "tracy[gui-tools] requires pandoc ${pandoc_version}, which has no prebuilt binary for this host (${CMAKE_HOST_SYSTEM_PROCESSOR}).")
+       endif()
        set(pandoc_asset "pandoc-${pandoc_version}-windows-x86_64.zip")
        set(pandoc_sha512 7a81ebeada6df48010a40f572e9dd1e6feb7570588c44a4ddecc377738203aa4fe8fa673be97d3feeb61c143b7bb1f71dcfd23828404954c11342874851b029a)
        set(pandoc_exe "pandoc-${pandoc_version}/pandoc.exe")
