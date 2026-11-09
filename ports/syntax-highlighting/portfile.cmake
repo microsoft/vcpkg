@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Python=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Quick=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_XercesC=ON
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         ${FEATURE_OPTIONS}
 )
 

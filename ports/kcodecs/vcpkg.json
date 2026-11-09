@@ -1,10 +1,11 @@
 {
   "name": "kcodecs",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "String encoding library",
   "homepage": "https://invent.kde.org/frameworks/kcodecs",
   "documentation": "https://api.kde.org/kcodecs-index.html",
+  "license": "LGPL-2.0-or-later AND LGPL-2.0-only AND LGPL-2.1-or-later AND MIT AND (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later)",
   "dependencies": [
     "ecm",
     {
