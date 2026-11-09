@@ -242,14 +242,14 @@ function(vcpkg_cmake_configure)
     endif()
 
     vcpkg_list(SET rel_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
         -G "${generator}"
         ${architecture_options}
         "-DCMAKE_BUILD_TYPE=Release"
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
         ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
     vcpkg_list(SET dbg_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
         -G "${generator}"
         ${architecture_options}
         "-DCMAKE_BUILD_TYPE=Debug"
@@ -292,7 +292,7 @@ function(vcpkg_cmake_configure)
                 "../CMakeFiles/CMakeConfigureLog.yaml" ALIAS "rel-CMakeConfigureLog.yaml.log"
                 ${parallel_log_args}
         )
-        
+
         vcpkg_list(APPEND config_logs
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
@@ -329,7 +329,7 @@ function(vcpkg_cmake_configure)
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log")
         endif()
     endif()
-    
+
     set(all_unused_variables)
     foreach(config_log IN LISTS config_logs)
         if(NOT EXISTS "${config_log}")
