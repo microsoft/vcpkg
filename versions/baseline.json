@@ -505,7 +505,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -1549,7 +1549,7 @@
       "port-version": 3
     },
     "bungee": {
-      "baseline": "2.4.35",
+      "baseline": "2.4.39",
       "port-version": 0
     },
     "bustache": {
@@ -3209,8 +3209,8 @@
       "port-version": 3
     },
     "fmt": {
-      "baseline": "12.2.0",
-      "port-version": 1
+      "baseline": "12.2.1",
+      "port-version": 0
     },
     "folly": {
       "baseline": "2026.02.23.00",
@@ -6756,6 +6756,10 @@
       "baseline": "7.1.0",
       "port-version": 0
     },
+    "microsoft-gacl": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "microsoft-windows-devices-midi2": {
       "baseline": "1.0.17-rc.4.25",
       "port-version": 0
@@ -7814,6 +7818,10 @@
     },
     "outcome": {
       "baseline": "2.2.15",
+      "port-version": 0
+    },
+    "oxygen-icons": {
+      "baseline": "6.31.0",
       "port-version": 0
     },
     "p-ranav-csv": {
@@ -9617,7 +9625,7 @@
       "port-version": 0
     },
     "slick-queue": {
-      "baseline": "2.3.0",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "slick-shm": {
@@ -11389,7 +11397,7 @@
       "port-version": 1
     },
     "xorstr": {
-      "baseline": "2021-11-20",
+      "baseline": "2026-11-08",
       "port-version": 0
     },
     "xpack": {
