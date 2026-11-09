@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 b24ad8f4e6cbf6f75d53b1b45ac71d87160e37dddba0ff78a56cb601c27f485ce026f88abbd57b3ff3bf9ebdb5b0eb94fd1107de3d8526c77f124620f386448d
     HEAD_REF main
     PATCHES
-        dll-export.patch
+        disable-test-plugins.patch
         fix-dependecy-hdf5.patch
 )
 
