@@ -95,6 +95,8 @@ function(vcpkg_cmake_configure)
         endif()
     elseif(DEFINED arg_GENERATOR)
         set(generator "${arg_GENERATOR}")
+    elseif(DEFINED VCPKG_CMAKE_GENERATOR)
+        set(generator "${VCPKG_CMAKE_GENERATOR}")
     elseif(ninja_host)
         set(generator "Ninja")
     elseif(NOT VCPKG_HOST_IS_WINDOWS)
@@ -124,6 +126,17 @@ function(vcpkg_cmake_configure)
             "../../${TARGET_TRIPLET}-dbg/build.ninja" ALIAS "dbg-ninja.log"
         )
         set(log_args "build.ninja")
+    elseif(generator STREQUAL "FASTBuild")
+        vcpkg_find_acquire_program(FASTBUILD)
+        vcpkg_list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${FASTBUILD}")
+        # As with Ninja, it must be on PATH for CMake's ExternalProject.
+        get_filename_component(fastbuild_path "${FASTBUILD}" DIRECTORY)
+        vcpkg_add_to_path("${fastbuild_path}")
+        set(parallel_log_args
+            "../fbuild.bff" ALIAS "rel-fbuild.log"
+            "../../${TARGET_TRIPLET}-dbg/fbuild.bff" ALIAS "dbg-fbuild.log"
+        )
+        set(log_args "fbuild.bff")
     endif()
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
