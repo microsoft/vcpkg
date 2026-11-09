@@ -10,16 +10,30 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        gif         ENABLE_GIF
+        gif         CMAKE_REQUIRE_FIND_PACKAGE_GIF
+        openjpeg    ENABLE_OPENJPEG
+        openjpeg    CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG
+        webp        ENABLE_WEBP
+        webp        CMAKE_REQUIRE_FIND_PACKAGE_WebP
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DSW_BUILD=OFF
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        -DCMAKE_REQUIRE_FIND_PACKAGE_GIF=TRUE
         -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=TRUE
         -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=TRUE
         -DCMAKE_REQUIRE_FIND_PACKAGE_TIFF=TRUE
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=TRUE
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_GIF
+        CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG
+        CMAKE_REQUIRE_FIND_PACKAGE_WebP
 )
 
 vcpkg_cmake_install()
