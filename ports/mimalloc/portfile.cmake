@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF dev3
     PATCHES
         pkgconfig-cxx.diff
+        fix-backtrace-detection.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,20 +17,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MI_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)
 
-set(MIMALLOC_BACKTRACE_OPTIONS "")
-if(VCPKG_TARGET_IS_ANDROID)
-    # The NDK ships <execinfo.h> for every API level, but declares backtrace() only for
-    # API level 33 and later. Upstream probes the header only, so the execinfo backend is
-    # selected and then fails to compile with the API level 28 used by the CI triplets.
-    # Force the <unwind.h> fallback (_Unwind_Backtrace) instead.
-    list(APPEND MIMALLOC_BACKTRACE_OPTIONS -DMI_HAS_EXECINFOH=OFF)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        ${MIMALLOC_BACKTRACE_OPTIONS}
         -DMI_USE_CXX=ON
         -DMI_BUILD_OBJECT=OFF
         -DMI_BUILD_TESTS=OFF
