@@ -4834,7 +4834,7 @@
     },
     "leptonica": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lerc": {
       "baseline": "4.1.1",
