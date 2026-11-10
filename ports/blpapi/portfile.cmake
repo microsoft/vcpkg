@@ -5,19 +5,19 @@ if(VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://blpapi.bloomberg.com/download/releases/raw/files/blpapi_cpp_${VERSION}.1-linux.tar.gz"
         FILENAME "blpapi_cpp_${VERSION}.1-linux.tar.gz"
-        SHA512 33f19761c71a42528e090c5fc8831898b6616a530bc3dad071ffbca23f3b6a038022da41a0339275c3001b21688e9d9dc010aae3050ddd2df8823c92a16546c6
+        SHA512 c08fd319ad531a6c1bb39286349a8ad5ffb3e557559d370888baa5d73e347fb9ed64f0fa73cd77f26f2e87e69709b1abb840c3a61723da59c6b0640d9d0031f6
     )
 elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://blpapi.bloomberg.com/download/releases/raw/files/blpapi_cpp_${VERSION}.1-windows.zip"
         FILENAME "blpapi_cpp_${VERSION}.1-windows.zip"
-        SHA512 c65dd9aff3fe4f5b656d84cb8f5ad9c9d280c0aaffb15d28efef60a4b462d1cd62a9f80ec8f1029a47ba980c2b7a81a22a861379ce202ee8f9dae8f3688ad211
+        SHA512 1d9bc4f9fab0a279cd8bb70c451ed5788caf87c52e82b071f3a74f9469d25e342a82e9d92ba87275129df8c1a85d982590f93020cb76c7d05d7408c2b77f78e2
     )
 elseif(VCPKG_TARGET_IS_OSX)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://blpapi.bloomberg.com/download/releases/raw/files/blpapi_cpp_${VERSION}.1-macos-arm64.tar.gz"
         FILENAME "blpapi_cpp_${VERSION}.1-macos-arm64.zip"
-        SHA512 d1db099e1e2b0942c55f2a0583f5612695262434f62908b0c980ec66142880f75d69083f2932dc8b38afb4f9d08ad296216ea040fe33b11fe44a8cf300fb2c48
+        SHA512 58f70a166bef66b642548b4bb332170e56fcbedd89c7a2e2c85ff91b6b20565f4573e8d16cd94cf048d47b9b795ac29052cbbcb3c29335e6cc6bb45865ad90d0
     )
 endif()
 
