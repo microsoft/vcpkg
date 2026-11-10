@@ -553,7 +553,7 @@
       "port-version": 7
     },
     "azure-data-tables-cpp": {
-      "baseline": "1.0.0-beta.7",
+      "baseline": "1.0.0-beta.9",
       "port-version": 0
     },
     "azure-identity-cpp": {
