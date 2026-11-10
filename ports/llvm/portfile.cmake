@@ -212,6 +212,17 @@ if("libcxx" IN_LIST FEATURES)
         message(FATAL_ERROR "libcxx requiries MSVC 19.14 or newer.")
     endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        # The toolchain's CMAKE_MSVC_RUNTIME_LIBRARY is a generator expression, which LLVMConfig.cmake passes verbatim
+        # to the runtimes build. libcxx picks its CRT libraries by matching that string ("Debug", "DLL$"), so it would
+        # link the static debug CRT into c++.dll. Pass the plain value of each configuration instead.
+        set(msvc_runtime_dll "")
+        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+            set(msvc_runtime_dll "DLL")
+        endif()
+        list(APPEND LIBCXX_OPTIONS_DEBUG "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug${msvc_runtime_dll}")
+        list(APPEND LIBCXX_OPTIONS_RELEASE "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded${msvc_runtime_dll}")
+    endif()
 endif()
 if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "compiler-rt")
@@ -396,8 +407,10 @@ vcpkg_cmake_configure(
         ${COMPILER_RT_FEATURE_OPTIONS}
     OPTIONS_DEBUG
         ${MLIR_PYTHON_OPTIONS_DEBUG}
+        ${LIBCXX_OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${MLIR_PYTHON_OPTIONS_RELEASE}
+        ${LIBCXX_OPTIONS_RELEASE}
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
