@@ -2425,7 +2425,7 @@
       "port-version": 5
     },
     "d3d12-memory-allocator": {
-      "baseline": "3.2.1",
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "d3dx12": {
