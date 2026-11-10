@@ -1,0 +1,11 @@
+rocksdb provides CMake targets:
+
+  find_package(RocksDB CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:RocksDB::rocksdb-shared>,RocksDB::rocksdb-shared,RocksDB::rocksdb>)
+
+On Windows, the shared library exposes only the C API. Use a static triplet for the C++ API.
+
+rocksdb provides pkg-config modules:
+
+  # An embeddable persistent key-value store for fast storage
+  rocksdb
