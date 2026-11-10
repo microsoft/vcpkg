@@ -9229,7 +9229,7 @@
       "port-version": 2
     },
     "ruckig": {
-      "baseline": "0.17.3",
+      "baseline": "0.19.4",
       "port-version": 0
     },
     "rxcpp": {
