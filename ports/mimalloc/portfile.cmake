@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF dev3
     PATCHES
         pkgconfig-cxx.diff
+        # Backport of https://github.com/microsoft/mimalloc/commit/23fced334cb0c3fbe43a847c895e1c0ebf20c873
         fix-backtrace-detection.patch
 )
 
