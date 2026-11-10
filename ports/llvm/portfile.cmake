@@ -444,6 +444,16 @@ llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("llvm")
 
+if("libcxx" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # LLVMConfig.cmake sets CMAKE_MSVC_RUNTIME_LIBRARY for find_package(LLVM) users. The plain value passed for libcxx above
+    # holds for one configuration only, and the config fixup keeps Release's, so Debug users would compile with the
+    # release CRT. Restore the per-configuration value.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/llvm/LLVMConfig.cmake"
+        "set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded${msvc_runtime_dll})"
+        "set(CMAKE_MSVC_RUNTIME_LIBRARY \"MultiThreaded$<$<CONFIG:Debug>:Debug>${msvc_runtime_dll}\")"
+    )
+endif()
+
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/llvm/LICENSE.TXT"
     "${SOURCE_PATH}/llvm/include/llvm/Support/xxhash.h"
