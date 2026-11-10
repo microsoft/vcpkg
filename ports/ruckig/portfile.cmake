@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         third_party.patch
+        cmake-dependencies.patch
+        fix-constants.patch # See https://github.com/pantor/ruckig/pull/3 for the include-order limitation.
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
