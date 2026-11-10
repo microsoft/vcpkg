@@ -1,5 +1,5 @@
 # - Find JXR
-# Find the JXR library 
+# Find the JXR library
 # This module defines
 #  JXR_INCLUDE_DIRS, where to find jxrlib/JXRGlue.h
 #  JXR_LIBRARIES, the libraries needed to use JXR
