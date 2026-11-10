@@ -6,12 +6,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dyne/frei0r
     REF "v${VERSION}"
-    SHA512 f73723a165ac42029801b895d2324ee8dcf4d9b49165458e707b6891ad88294203848d2b1cd89ffe58769f13232f9175e17040fc30905b37df29d348c36f2e1c
+    SHA512 23b5caf50a041764d7c3f21cff31d1c424ef4bcec66108848500c74c8e556187501662092f12a223abe4641512e821db3a119689c5249cf97e6624c2dc09d24e
     HEAD_REF master
     PATCHES
         001-fix-defs.patch
         002-install-dlls-to-bin.patch
         m_pi.patch
+        optional-opengl.patch
+        use-system-stb.patch
 )
 
 vcpkg_check_features(
@@ -19,6 +21,7 @@ vcpkg_check_features(
     INVERTED_FEATURES
         cairo   WITHOUT_CAIRO
         opencv  WITHOUT_OPENCV
+        opengl  WITHOUT_OPENGL
 )
 
 vcpkg_cmake_configure(
@@ -39,4 +42,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/src/filter/3dperspective/3dperspective.c"
 )
