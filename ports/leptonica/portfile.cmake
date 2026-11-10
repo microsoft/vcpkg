@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-pc-and-config.patch
+        fix-cmake-target-includes.patch # https://github.com/DanBloomberg/leptonica/pull/851
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
