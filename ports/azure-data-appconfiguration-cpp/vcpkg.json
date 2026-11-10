@@ -1,0 +1,29 @@
+{
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
+  "name": "azure-data-appconfiguration-cpp",
+  "version-semver": "1.0.0-beta.1",
+  "description": [
+    "Microsoft Azure App Configuration SDK for C++",
+    "This library provides API access to the Azure App Configuration service."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/appconfiguration/azure-data-appconfiguration",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "azure-core-cpp",
+      "default-features": false,
+      "version>=": "1.14.1"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
