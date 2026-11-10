@@ -4729,8 +4729,8 @@
       "port-version": 0
     },
     "krb5": {
-      "baseline": "1.22.2",
-      "port-version": 2
+      "baseline": "1.22.3",
+      "port-version": 0
     },
     "krpc": {
       "baseline": "0.7.0",
