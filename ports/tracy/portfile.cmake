@@ -27,14 +27,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS TOOLS_OPTIONS
         gui-tools VCPKG_GUI_TOOLS
 )
 
-# TracyClient bundles third-party code whose license notices exist only in these headers
 set(extra_copyright
     "${SOURCE_PATH}/public/client/tracy_concurrentqueue.h"
     "${SOURCE_PATH}/public/client/tracy_SPSCQueue.h"
     "${SOURCE_PATH}/public/common/tracy_lz4.hpp"
 )
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    # libbacktrace is compiled into TracyClient for callstack support on non-Windows targets
     list(APPEND extra_copyright "${SOURCE_PATH}/public/libbacktrace/LICENSE")
 endif()
 
