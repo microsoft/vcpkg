@@ -120,6 +120,19 @@ index 61dee44..38c2482 100644
  
    if(ROCKSDB_BUILD_SHARED)
      install(
+diff --git a/cmake/RocksDBConfig.cmake.in b/cmake/RocksDBConfig.cmake.in
+index 4c28d53..c8fb811 100644
+--- a/cmake/RocksDBConfig.cmake.in
++++ b/cmake/RocksDBConfig.cmake.in
+@@ -52,4 +52,8 @@ endif()
+ find_dependency(Threads)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/RocksDBTargets.cmake")
++if(NOT WIN32 AND TARGET RocksDB::rocksdb-shared AND NOT TARGET RocksDB::rocksdb)
++  add_library(RocksDB::rocksdb INTERFACE IMPORTED)
++  set_target_properties(RocksDB::rocksdb PROPERTIES INTERFACE_LINK_LIBRARIES RocksDB::rocksdb-shared)
++endif()
+ check_required_components(RocksDB)
 diff --git a/rocksdb.pc.in b/rocksdb.pc.in
 index 5217a45..bfbf464 100644
 --- a/rocksdb.pc.in
