@@ -21,4 +21,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/gtl")
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
     "${SOURCE_PATH}/NOTICE"
+    "${SOURCE_PATH}/licenses/license_blackbird"
+    "${SOURCE_PATH}/licenses/license_boost"
+    "${SOURCE_PATH}/licenses/license_folly"
+    "${SOURCE_PATH}/licenses/license_lamerman"
+    "${SOURCE_PATH}/licenses/license_mark_liu"
 )
