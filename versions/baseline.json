@@ -5,7 +5,7 @@
       "port-version": 5
     },
     "7zip": {
-      "baseline": "26.5",
+      "baseline": "26.6",
       "port-version": 0
     },
     "abcmake": {
@@ -541,7 +541,7 @@
       "port-version": 0
     },
     "azure-core-amqp-cpp": {
-      "baseline": "1.0.0-beta.13",
+      "baseline": "1.0.0-beta.14",
       "port-version": 0
     },
     "azure-core-cpp": {
@@ -2337,7 +2337,7 @@
       "port-version": 17
     },
     "cudnn-frontend": {
-      "baseline": "1.32.1",
+      "baseline": "1.32.2",
       "port-version": 0
     },
     "cunit": {
@@ -2865,16 +2865,16 @@
       "port-version": 0
     },
     "elements": {
-      "baseline": "2025-11-18",
-      "port-version": 1
+      "baseline": "1.0.1",
+      "port-version": 0
     },
     "elfio": {
       "baseline": "3.12",
       "port-version": 1
     },
     "elfutils": {
-      "baseline": "0.195",
-      "port-version": 1
+      "baseline": "0.197",
+      "port-version": 0
     },
     "eljonny-testcpp": {
       "baseline": "0.3.0-beta.4",
@@ -3534,11 +3534,11 @@
     },
     "glib": {
       "baseline": "2.90.1",
-      "port-version": 0
+      "port-version": 1
     },
     "glib-networking": {
       "baseline": "2.90.1",
-      "port-version": 0
+      "port-version": 1
     },
     "glibmm": {
       "baseline": "2.90.0",
@@ -3677,11 +3677,11 @@
       "port-version": 0
     },
     "gst-rtsp-server": {
-      "baseline": "1.28.7",
+      "baseline": "1.28.9",
       "port-version": 0
     },
     "gstreamer": {
-      "baseline": "1.28.7",
+      "baseline": "1.28.9",
       "port-version": 0
     },
     "gtest": {
@@ -3701,7 +3701,7 @@
       "port-version": 0
     },
     "gtl": {
-      "baseline": "1.3.0",
+      "baseline": "1.3.1",
       "port-version": 0
     },
     "gts": {
@@ -4321,8 +4321,8 @@
       "port-version": 0
     },
     "jxrlib": {
-      "baseline": "2019.10.9",
-      "port-version": 7
+      "baseline": "2026.10.9",
+      "port-version": 0
     },
     "kaitai-struct-cpp-stl-runtime": {
       "baseline": "0.11",
@@ -4720,6 +4720,10 @@
       "baseline": "6.31.0",
       "port-version": 1
     },
+    "kquickcharts": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "krabsetw": {
       "baseline": "4.3.2",
       "port-version": 0
@@ -4798,7 +4802,7 @@
     },
     "laszip": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "launch-darkly-server": {
       "baseline": "2.9.3",
@@ -4881,8 +4885,8 @@
       "port-version": 0
     },
     "libaec": {
-      "baseline": "1.1.7",
-      "port-version": 1
+      "baseline": "1.1.8",
+      "port-version": 0
     },
     "libaes-siv": {
       "baseline": "2020-10-15",
@@ -5858,7 +5862,7 @@
     },
     "libsoup": {
       "baseline": "3.8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libspatialindex": {
       "baseline": "2.1.0",
@@ -6457,7 +6461,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.745",
+      "baseline": "0.746",
       "port-version": 0
     },
     "lunarg-vulkantools": {
@@ -7241,8 +7245,8 @@
       "port-version": 5
     },
     "netcdf-cxx4": {
-      "baseline": "4.3.1",
-      "port-version": 5
+      "baseline": "4.3.2",
+      "port-version": 0
     },
     "netcpp": {
       "baseline": "0.5.0",
@@ -8871,6 +8875,10 @@
     "range-v3": {
       "baseline": "0.12.0",
       "port-version": 5
+    },
+    "rapidai-rapidocronnx": {
+      "baseline": "2026-10-04",
+      "port-version": 0
     },
     "rapidcheck": {
       "baseline": "2023-12-14",
@@ -10561,7 +10569,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.27.1",
+      "baseline": "0.27.2",
       "port-version": 0
     },
     "tree-sitter-c": {
@@ -10898,7 +10906,7 @@
     },
     "vcpkg-tool-meson": {
       "baseline": "1.12.1",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-mozbuild": {
       "baseline": "4.0.2",
@@ -11125,8 +11133,8 @@
       "port-version": 1
     },
     "wayland-protocols": {
-      "baseline": "1.49",
-      "port-version": 1
+      "baseline": "1.50",
+      "port-version": 0
     },
     "wcslib": {
       "baseline": "8.10",
