@@ -6,19 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
     REF "${VERSION}"
-    SHA512 c0f802fd2b181587df1748a8db7163bbcd3951b943d1321afcff56fccb515dfe99061288bc691323d0854305a1d4205c99457954b10439adb122975429cbce72
+    SHA512 6bb9dadd6adaa8bcbd5e2ff7be031b07e9a046b8faa9daeecaa3b13e67a117e28121a4a8a707c45a361811c83f2bff9cfd9ba3c796164aab2926368c3d28daf8
     HEAD_REF master
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmupdf-config.cmake.in" DESTINATION "${SOURCE_PATH}")
-
-# 1.26.10 lacks bin2coff arm64 changes in host tool.
-vcpkg_download_distfile(BIN2COFF_C
-    URLS "https://github.com/ArtifexSoftware/mupdf/raw/9c1af80cea03987b147b0dffd944075f3b3cf4cb/scripts/bin2coff.c"
-    FILENAME "ArtifexSoftware-mupdf-bin2coff-9c1af80.c"
-    SHA512 9f0e70cc0ade3a39c46425d968ff6493d47f36b9bfef2efbb0ae62aef29f71952690ab9716084c0161c7184cd654abc57c2b2f6a4cc3f9e184863e7bb7b64f52
-)
-file(COPY_FILE "${BIN2COFF_C}" "${SOURCE_PATH}/scripts/bin2coff.c")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS OPTIONS

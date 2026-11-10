@@ -1,10 +1,10 @@
 {
   "name": "openscap",
-  "version": "1.4.2",
+  "version": "1.4.6",
   "description": "OpenSCAP represents both a library and a command line tool which can be used to parse and evaluate each component of the SCAP standard.",
   "homepage": "https://www.open-scap.org/tools/openscap-base/",
   "license": "LGPL-2.1-or-later",
-  "supports": "(linux | windows) & !(static & staticcrt)",
+  "supports": "linux",
   "dependencies": [
     {
       "name": "acl",
@@ -28,7 +28,6 @@
     "libzip",
     "openssl",
     "pcre",
-    "pthreads",
     {
       "name": "vcpkg-cmake",
       "host": true

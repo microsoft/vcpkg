@@ -1,6 +1,7 @@
 {
   "name": "kconfig",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Configuration system",
   "homepage": "https://invent.kde.org/frameworks/kconfig",
   "documentation": "https://api.kde.org/kconfig-index.html",

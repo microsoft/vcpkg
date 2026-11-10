@@ -6,17 +6,16 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        msvc-remove-libm.patch
+        fix-jxl-static.diff
+        fix-pkgconfig.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools JPEGXL_ENABLE_TOOLS
-    INVERTED_FEATURES
-        tools CMAKE_DISABLE_FIND_PACKAGE_GIF
-        tools CMAKE_DISABLE_FIND_PACKAGE_JPEG
-        tools CMAKE_DISABLE_FIND_PACKAGE_PNG
-        tools CMAKE_DISABLE_FIND_PACKAGE_ZLIB
+        tools VCPKG_LOCK_FIND_PACKAGE_GIF
+        tools VCPKG_LOCK_FIND_PACKAGE_JPEG
+        tools VCPKG_LOCK_FIND_PACKAGE_PNG
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -47,10 +46,8 @@ vcpkg_cmake_configure(
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
         -DJPEGXL_BUNDLE_LIBPNG=OFF
     MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_GIF
-        CMAKE_DISABLE_FIND_PACKAGE_JPEG
-        CMAKE_DISABLE_FIND_PACKAGE_PNG
-        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
+        VCPKG_LOCK_FIND_PACKAGE_GIF
+        VCPKG_LOCK_FIND_PACKAGE_JPEG
 )
 
 vcpkg_cmake_install()
@@ -63,6 +60,8 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_export.h" "ifdef JXL_STATIC_DEFINE" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_cms_export.h" "ifdef JXL_CMS_STATIC_DEFINE" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_threads_export.h" "ifdef JXL_THREADS_STATIC_DEFINE" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

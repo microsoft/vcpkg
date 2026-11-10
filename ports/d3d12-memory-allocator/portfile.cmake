@@ -1,14 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator 
-    REF v${VERSION}
-    SHA512 2dd282d1c297e02b21b46651588f2b3614b96aaad1f89b0616f55b405eaf9674d54827f09912716bcf06bfae363e444d05755a1c2b3bbe47820a721de4b5bebc
+    REPO GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
+    REF "v${VERSION}"
+    SHA512 d8b9b3a587c676cee216a92f49ca965edbbbf321d87bf6d88e44e4b268aad8d7278601500c56f976d14c8960b4934279545e3e7ba625d6f94c321fef24b98844
     HEAD_REF master
-    PATCHES "0001-build-options.patch"
+    PATCHES
+        0001-build-options.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DD3D12MA_USING_DIRECTX_HEADERS=ON
 )
 
 vcpkg_cmake_install()

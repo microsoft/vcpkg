@@ -41,6 +41,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         icd-loader-pkgconfig.diff
+        icd-loader-mingw-static-name.diff
 )
 if(NOT EXISTS "${SOURCE_PATH}/external/OpenCL-ICD-Loader/CMakeLists.txt")
     file(REMOVE_RECURSE "${SOURCE_PATH}/external/OpenCL-ICD-Loader")

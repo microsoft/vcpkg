@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jemalloc/jemalloc
     REF ${VERSION}
-    SHA512 603fd74ad66bbefc40764312b50a72646c317e678beed4201a52b8c2caeae4f08fc4f88310491c72acde9128122e442bd3089c54e29f4294622554703fc92349
+    SHA512 b94281ae172c5743bfddd459e3c8ba5cc1cf95d826cdcf9f54ae04181ff88a0c8a0f3937c41831713b452a1d1831d11e244e487211a14df8cdbcf70fd4c03d9c
     HEAD_REF master
     PATCHES
         fix-configure-ac.patch
