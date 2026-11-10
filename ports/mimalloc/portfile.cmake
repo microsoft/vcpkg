@@ -36,6 +36,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+file(INSTALL "${SOURCE_PATH}/include/mimalloc-profile.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
 vcpkg_copy_pdbs()
 
 file(COPY
