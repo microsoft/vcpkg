@@ -10929,7 +10929,7 @@
       "port-version": 0
     },
     "vectorscan": {
-      "baseline": "5.4.13",
+      "baseline": "5.4.14",
       "port-version": 0
     },
     "veigar": {
