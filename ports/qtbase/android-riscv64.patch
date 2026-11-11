@@ -1,0 +1,63 @@
+diff --git a/src/corelib/Qt6AndroidMacros.cmake b/src/corelib/Qt6AndroidMacros.cmake
+index 8702652..31adb82 100644
+--- a/src/corelib/Qt6AndroidMacros.cmake
++++ b/src/corelib/Qt6AndroidMacros.cmake
+@@ -265,6 +265,8 @@ function(qt6_android_generate_deployment_settings target)
+             set(arch_value "x86_64-linux-android")
+         elseif(abi STREQUAL "arm64-v8a")
+             set(arch_value "aarch64-linux-android")
++        elseif(abi STREQUAL "riscv64")
++            set(arch_value "riscv64-linux-android")
+         elseif(abi)
+             set(arch_value "arm-linux-androideabi")
+         endif()
+@@ -1271,6 +1273,8 @@ function(_qt_internal_get_android_abi_prefix_path out_path abi)
+             set(abi_directory_suffix "${abi}")
+         elseif (abi STREQUAL "arm64-v8a")
+             set(abi_directory_suffix "arm64_v8a")
++        elseif (abi STREQUAL "riscv64")
++            set(abi_directory_suffix "${abi}")
+         else()
+             set(abi_directory_suffix "armv7")
+         endif()
+@@ -1365,7 +1369,7 @@ endfunction()
+ # Note that QT_DEFAULT_ANDROID_ABIS is not intended to be set outside the function and will be
+ # rewritten.
+ function(_qt_internal_collect_default_android_abis)
+-    set(known_android_abis armeabi-v7a arm64-v8a x86 x86_64)
++    set(known_android_abis armeabi-v7a arm64-v8a x86 x86_64 riscv64)
+ 
+     set(default_abis)
+     foreach(abi IN LISTS known_android_abis)
+@@ -2036,6 +2040,8 @@ function(_qt_internal_android_find_asan_runtime_lib out_asan_lib_path)
+         set(asan_arch_suffix "i686")
+     elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "x86_64")
+         set(asan_arch_suffix "x86_64")
++    elseif(CMAKE_ANDROID_ARCH_ABI STREQUAL "riscv64")
++        set(asan_arch_suffix "riscv64")
+     else()
+         message(WARNING
+             "Address Sanitizer: unsupported CMAKE_ANDROID_ARCH_ABI=${CMAKE_ANDROID_ARCH_ABI} value")
+diff --git a/src/tools/androiddeployqt/main.cpp b/src/tools/androiddeployqt/main.cpp
+index aec9c02..432b9bc 100644
+--- a/src/tools/androiddeployqt/main.cpp
++++ b/src/tools/androiddeployqt/main.cpp
+@@ -263,7 +263,8 @@ static const QHash<QByteArray, QByteArray> elfArchitectures = {
+     {"aarch64", "arm64-v8a"},
+     {"arm", "armeabi-v7a"},
+     {"i386", "x86"},
+-    {"x86_64", "x86_64"}
++    {"x86_64", "x86_64"},
++    {"riscv64", "riscv64"}
+ };
+ 
+ bool goodToCopy(const Options *options, const QString &file, QStringList *unmetDependencies);
+@@ -274,7 +275,7 @@ bool readDependenciesFromElf(Options *options, const QString &fileName,
+ 
+ QString architectureFromName(const QString &name)
+ {
+-    QRegularExpression architecture(QStringLiteral("_(armeabi-v7a|arm64-v8a|x86|x86_64).so$"));
++    QRegularExpression architecture(QStringLiteral("_(armeabi-v7a|arm64-v8a|x86|x86_64|riscv64).so$"));
+     auto match = architecture.match(name);
+     if (!match.hasMatch())
+         return {};
