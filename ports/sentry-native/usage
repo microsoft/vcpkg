@@ -2,3 +2,22 @@ sentry-native provides CMake targets:
 
     find_package(sentry CONFIG REQUIRED)
     target_link_libraries(main PRIVATE sentry::sentry)
+
+The backend feature enables the Native crash backend by default. Without that
+feature, crash capture is disabled (SENTRY_BACKEND=none).
+
+To select another backend, add this to a custom triplet:
+
+    if(PORT STREQUAL "sentry-native")
+        set(SENTRY_BACKEND crashpad)
+    endif()
+
+The optional wer feature only enables WER integration for an explicitly selected
+Crashpad backend. Native builds and packages its own Windows WER module without
+requiring that feature.
+
+Crash helpers are installed in tools/sentry-native. Ship the selected helper
+(sentry-crash or crashpad_handler) and its runtime dependencies with the
+application, and configure sentry_options_set_handler_path accordingly.
+The Native helper's adjacent sentry-wer.dll is required on Windows for fast-fail
+crashes. Normal app-local DLL dependency scanning cannot deploy these helpers.

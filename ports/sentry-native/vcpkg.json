@@ -1,6 +1,7 @@
 {
   "name": "sentry-native",
   "version": "0.17.6",
+  "port-version": 1,
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT AND Apache-2.0 AND BSD-3-Clause AND ICU",
@@ -21,16 +22,12 @@
   ],
   "default-features": [
     "backend",
-    "transport",
-    {
-      "name": "wer",
-      "platform": "windows & !static"
-    }
+    "transport"
   ],
   "features": {
     "backend": {
       "description": [
-        "Enables the platform-specific backend.",
+        "Enables crash capture using the Native backend by default.",
         "This feature does nothing for some platforms.",
         "Cf. https://github.com/getsentry/sentry-native#compile-time-options"
       ],
@@ -75,7 +72,7 @@
     },
     "wer": {
       "description": [
-        "Enables the Windows Error Reporting backend.",
+        "Enables Windows Error Reporting integration for an explicitly selected Crashpad backend.",
         "Cf.https://github.com/getsentry/sentry-native#compile-time-options"
       ],
       "supports": "windows & !static",
