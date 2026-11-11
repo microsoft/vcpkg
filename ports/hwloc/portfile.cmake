@@ -11,7 +11,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix_shared_win_build.patch
         stdout_fileno.patch
-        fix-lstopo-android-cli.patch
+        rename_ANDROID_define.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
