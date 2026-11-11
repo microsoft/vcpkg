@@ -1,10 +1,10 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 152273d..b90ede6 100644
+index 81a9f63..e9fdec5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -113,6 +113,31 @@ if(${ZLIB_FOUND})
+@@ -133,6 +133,31 @@ if(HAVE_LIBATOMIC)
  else()
-     set(PC_REQUIRES_PRIVATE_ZLIB "")
+     set(PC_LIBS_PRIVATE_ATOMIC "")
  endif()
 +
 +if(HDR_HISTOGRAM_BUILD_STATIC)
@@ -35,7 +35,7 @@ index 152273d..b90ede6 100644
      ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.in
      ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc
 diff --git a/hdr_histogram.pc.in b/hdr_histogram.pc.in
-index 1151ab3..1249178 100644
+index 201744e..f8bb350 100644
 --- a/hdr_histogram.pc.in
 +++ b/hdr_histogram.pc.in
 @@ -8,5 +8,5 @@ URL: @CMAKE_PROJECT_HOMEPAGE_URL@
@@ -43,6 +43,6 @@ index 1151ab3..1249178 100644
  Requires.private: @PC_REQUIRES_PRIVATE_ZLIB@
  Cflags: -I${includedir}
 -Libs: -L${libdir} -l@PROJECT_NAME@
--Libs.private: -pthread -lm -lrt -L${libdir}
+-Libs.private: -pthread -lm -lrt @PC_LIBS_PRIVATE_ATOMIC@ -L${libdir}
 +Libs: -L${libdir} -l@PROJECT_LIB_FILE_NAME@
-+Libs.private: @PKGCONFIG_LIBS_PRIVATE@ -L${libdir}
++Libs.private: @PKGCONFIG_LIBS_PRIVATE@ @PC_LIBS_PRIVATE_ATOMIC@ -L${libdir}

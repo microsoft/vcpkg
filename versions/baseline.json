@@ -153,7 +153,7 @@
       "port-version": 0
     },
     "angelscript": {
-      "baseline": "2.38.0",
+      "baseline": "2.39.0",
       "port-version": 0
     },
     "angle": {
@@ -345,7 +345,7 @@
       "port-version": 0
     },
     "assimp": {
-      "baseline": "6.0.5",
+      "baseline": "6.0.6",
       "port-version": 0
     },
     "astr": {
@@ -553,7 +553,7 @@
       "port-version": 7
     },
     "azure-data-tables-cpp": {
-      "baseline": "1.0.0-beta.7",
+      "baseline": "1.0.0-beta.8",
       "port-version": 0
     },
     "azure-identity-cpp": {
@@ -689,7 +689,7 @@
       "port-version": 0
     },
     "behaviortree-cpp": {
-      "baseline": "4.10.0",
+      "baseline": "4.11.0",
       "port-version": 0
     },
     "benchmark": {
@@ -813,7 +813,7 @@
       "port-version": 0
     },
     "blpapi": {
-      "baseline": "3.26.9",
+      "baseline": "3.26.10",
       "port-version": 0
     },
     "bluescarni-tanuki": {
@@ -2425,7 +2425,7 @@
       "port-version": 5
     },
     "d3d12-memory-allocator": {
-      "baseline": "3.2.1",
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "d3dx12": {
@@ -2945,7 +2945,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.9.0",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "expected-lite": {
@@ -3185,7 +3185,7 @@
       "port-version": 0
     },
     "flecs": {
-      "baseline": "4.1.6",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "flint": {
@@ -3853,8 +3853,8 @@
       "port-version": 0
     },
     "hdr-histogram": {
-      "baseline": "0.11.10",
-      "port-version": 1
+      "baseline": "0.12.1",
+      "port-version": 0
     },
     "healpix": {
       "baseline": "3.83",
@@ -4729,8 +4729,8 @@
       "port-version": 0
     },
     "krb5": {
-      "baseline": "1.22.2",
-      "port-version": 2
+      "baseline": "1.22.3",
+      "port-version": 0
     },
     "krpc": {
       "baseline": "0.7.0",
@@ -4834,7 +4834,7 @@
     },
     "leptonica": {
       "baseline": "1.87.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lerc": {
       "baseline": "4.1.1",
@@ -5509,7 +5509,7 @@
       "port-version": 0
     },
     "libmt32emu": {
-      "baseline": "2.8.5",
+      "baseline": "2.8.6",
       "port-version": 0
     },
     "libmtp": {
@@ -6485,7 +6485,7 @@
       "port-version": 0
     },
     "lz4": {
-      "baseline": "1.11.0",
+      "baseline": "1.11.1",
       "port-version": 0
     },
     "lzav": {
@@ -6785,7 +6785,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "3.5.3",
+      "baseline": "3.6.1",
       "port-version": 0
     },
     "mimicpp": {
@@ -7645,7 +7645,7 @@
       "port-version": 0
     },
     "openhtj2k": {
-      "baseline": "0.25.0",
+      "baseline": "0.27.0",
       "port-version": 0
     },
     "openigtlink": {
@@ -9229,7 +9229,7 @@
       "port-version": 2
     },
     "ruckig": {
-      "baseline": "0.17.3",
+      "baseline": "0.19.4",
       "port-version": 0
     },
     "rxcpp": {
@@ -10277,7 +10277,7 @@
       "port-version": 0
     },
     "tdlib": {
-      "baseline": "1.8.69",
+      "baseline": "1.8.70",
       "port-version": 0
     },
     "tdscpp": {
@@ -10549,8 +10549,8 @@
       "port-version": 6
     },
     "tracy": {
-      "baseline": "0.14.1",
-      "port-version": 1
+      "baseline": "0.15.0",
+      "port-version": 0
     },
     "transwarp": {
       "baseline": "2.2.3",
@@ -10929,8 +10929,8 @@
       "port-version": 0
     },
     "vectorscan": {
-      "baseline": "5.4.12",
-      "port-version": 1
+      "baseline": "5.4.13",
+      "port-version": 0
     },
     "veigar": {
       "baseline": "1.4",

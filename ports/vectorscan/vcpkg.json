@@ -1,7 +1,6 @@
 {
   "name": "vectorscan",
-  "version": "5.4.12",
-  "port-version": 1,
+  "version": "5.4.13",
   "description": "A portable fork of the high-performance regular expression matching library",
   "homepage": "https://vectorcamp.gr/project/vectorscan/",
   "license": "BSD-3-Clause",
