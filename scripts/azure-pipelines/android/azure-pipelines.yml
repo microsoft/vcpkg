@@ -113,7 +113,7 @@ jobs:
     displayName: 'Ensure Node.js is available'
     condition: always()
     inputs:
-      version: '24.x'
+      version: '26.x'
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci --omit=dev || true
       if [ "$(Build.Reason)" = "PullRequest" ]; then

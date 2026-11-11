@@ -64,7 +64,7 @@ jobs:
   - task: UseNode@1
     displayName: 'Ensure Node.js is available'
     inputs:
-      version: '24.x'
+      version: '26.x'
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci --omit=dev || true
       # Construct the blob base url using the secret SAS token set earlier
