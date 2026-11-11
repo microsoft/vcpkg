@@ -19,7 +19,11 @@ vcpkg_from_github(
 
 # The entt and osgqopengl features are realized by locking the corresponding
 # find_package() calls: with the feature enabled the package is required,
-# with the feature disabled find_package() is skipped entirely.
+# with the feature disabled find_package() is skipped entirely. The simqt
+# feature depends on the osgqopengl feature (see vcpkg.json) because simQt's
+# osgQOpenGL integration is what brings OpenSceneGraph, and with it
+# OpenThreads, into the link interface; configuring simQt without it fails to
+# link sdk25-simQt.dll against osg's out-of-line OpenThreads::Atomic.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         entt        VCPKG_LOCK_FIND_PACKAGE_EnTT

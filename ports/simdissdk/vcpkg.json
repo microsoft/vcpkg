@@ -41,8 +41,14 @@
       "dependencies": [
         "opengl",
         "osg",
-        "osgqopengl",
-        "qtbase"
+        "qtbase",
+        {
+          "name": "simdissdk",
+          "default-features": false,
+          "features": [
+            "osgqopengl"
+          ]
+        }
       ]
     },
     "simutil": {
