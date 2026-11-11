@@ -1,0 +1,8 @@
+{
+  "name": "vcpkg-qt-android-gradle",
+  "version": "6.12.0",
+  "description": "Gradle distribution and Android Gradle Plugin artifacts required to build the Java parts of Qt for Android without network access.",
+  "homepage": "https://doc.qt.io/qt-6/android-building.html",
+  "license": null,
+  "supports": "native"
+}

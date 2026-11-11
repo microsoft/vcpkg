@@ -1,0 +1,18 @@
+// Installed by vcpkg-qt-android-gradle into $GRADLE_USER_HOME/init.d.
+// Resolves all Gradle plugins and dependencies from the offline Maven repository
+// provided by vcpkg instead of google(), mavenCentral() and gradlePluginPortal().
+
+def vcpkgRepository = new File('@QT_ANDROID_GRADLE_REPOSITORY_DIR@').toURI()
+
+settingsEvaluated { settings ->
+    settings.pluginManagement.repositories.clear()
+    settings.pluginManagement.repositories.maven {
+        name = 'vcpkg'
+        url = vcpkgRepository
+    }
+    settings.dependencyResolutionManagement.repositories.clear()
+    settings.dependencyResolutionManagement.repositories.maven {
+        name = 'vcpkg'
+        url = vcpkgRepository
+    }
+}

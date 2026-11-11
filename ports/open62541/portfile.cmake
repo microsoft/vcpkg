@@ -2,15 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF "v${VERSION}"
-    SHA512 2ef439feaa2bb413902cce4e92fdcf874edacfec1972408c4a3fb30c41aee398957a603e8be763b3627c3cee65e82526fa2f12b384b5c1b0a79f5da9031b8320
+    SHA512 174da8f13a8b13bcfd91dbd74427377d3b7d6d6d78822e451c65cba40f66f1f86ab687e687d8ab2dcde635007e26b44e9e132b9325065451ae6d32d8e3586180
     HEAD_REF master
-    PATCHES
-      android.patch
 )
 
 # disable docs
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
 
 # do not enable LTO by default
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
@@ -55,7 +52,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${OPEN62541_ENCRYPTION_OPTIONS}
         ${OPEN62541_MULTITHREADING_OPTIONS}
-        "-DOPEN62541_VERSION=v${VERSION}"
         -DUA_ENABLE_DEBUG_SANITIZER=OFF
         -DUA_MSVC_FORCE_STATIC_CRT=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
