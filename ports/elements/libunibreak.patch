@@ -1,0 +1,69 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index e05289c..14d9a12 100755
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -9,38 +9,7 @@ if (POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+ endif()
+ 
+-add_library(libunibreak
+-   external/libunibreak/src/emojidef.c
+-   external/libunibreak/src/graphemebreak.c
+-   external/libunibreak/src/linebreak.c
+-   external/libunibreak/src/linebreakdata.c
+-   external/libunibreak/src/linebreakdef.c
+-   external/libunibreak/src/unibreakbase.c
+-   external/libunibreak/src/unibreakdef.c
+-   external/libunibreak/src/wordbreak.c
+-)
+-
+-target_include_directories(
+-   libunibreak
+-   PUBLIC
+-      external/libunibreak/src
+-)
+-
+-if (WIN32)
+-   target_compile_definitions(libunibreak
+-      PUBLIC
+-         WIN32_LEAN_AND_MEAN
+-         NOMINMAX
+-         _UNICODE
+-   )
+-   # Follow the configuration being built. CMAKE_BUILD_TYPE is empty for
+-   # multi-config generators, and keying off the compiler picked the debug CRT
+-   # for clang-cl even in Release, which mismatched artist and elements on
+-   # _ITERATOR_DEBUG_LEVEL and failed the link.
+-   set_property(TARGET libunibreak PROPERTY
+-      MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+-   )
+-endif()
++find_package(libunibreak CONFIG REQUIRED)
+ 
+ if (ARTIST_SKIA)
+ 
+@@ -376,7 +345,6 @@ if (ARTIST_RECORDING)
+    target_compile_definitions(artist PUBLIC ARTIST_RECORDING)
+ endif()
+ 
+-add_dependencies(artist libunibreak)
+ 
+ 
+ target_sources(artist
+@@ -389,7 +357,6 @@ target_include_directories(
+    PUBLIC
+       include
+       infra/include
+-      external/libunibreak/include/
+ )
+ 
+ if (ARTIST_SKIA)
+@@ -538,7 +505,7 @@ target_compile_definitions(artist
+ 
+ target_link_libraries(artist
+    PRIVATE
+-   libunibreak
++   libunibreak::libunibreak
+ )
+ 
+ if (ARTIST_SKIA)

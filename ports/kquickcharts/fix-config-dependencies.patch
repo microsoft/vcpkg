@@ -1,0 +1,16 @@
+diff --git a/KF6QuickChartsConfig.cmake.in b/KF6QuickChartsConfig.cmake.in
+index c4f1b8d..43363ba 100644
+--- a/KF6QuickChartsConfig.cmake.in
++++ b/KF6QuickChartsConfig.cmake.in
+@@ -2,6 +2,11 @@
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt6Core @REQUIRED_QT_VERSION@)
++find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++find_dependency(Qt6Quick @REQUIRED_QT_VERSION@)
++if (NOT @BUILD_SHARED_LIBS@)
++    find_dependency(Qt6QuickControls2 @REQUIRED_QT_VERSION@)
++endif()
+ 
+ find_dependency(ECM @KF_DEP_VERSION@)
+ include(${ECM_MODULE_DIR}/ECMFindQmlModule.cmake)
