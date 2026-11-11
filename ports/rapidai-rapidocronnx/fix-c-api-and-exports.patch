@@ -1,0 +1,54 @@
+diff --git a/include/OcrLite.h b/include/OcrLite.h
+index 2d03a16..5155ea2 100644
+--- a/include/OcrLite.h
++++ b/include/OcrLite.h
+@@ -4,9 +4,19 @@
+ #include <string>
+ #include "OcrStruct.h"
+ 
++#if defined(_WIN32) && !defined(RAPIDOCR_STATIC)
++#ifdef __CLIB__
++#define RAPIDOCR_API __declspec(dllexport)
++#else
++#define RAPIDOCR_API __declspec(dllimport)
++#endif
++#else
++#define RAPIDOCR_API
++#endif
++
+ class OcrLiteImpl;
+ 
+-class OcrLite{
++class RAPIDOCR_API OcrLite{
+ public:
+     OcrLite();
+ 
+diff --git a/include/OcrLiteCApi.h b/include/OcrLiteCApi.h
+index e469630..e40e9b6 100644
+--- a/include/OcrLiteCApi.h
++++ b/include/OcrLiteCApi.h
+@@ -1,11 +1,12 @@
+-#ifdef __cplusplus
+ #ifndef __OCR_LITE_C_API_H__
+ #define __OCR_LITE_C_API_H__
+ #include "stdint.h"
++#ifdef __cplusplus
+ extern "C"
+ {
++#endif
+ 
+-#ifdef WIN32
++#if defined(_WIN32) && !defined(RAPIDOCR_STATIC)
+ #ifdef __CLIB__
+ #define _QM_OCR_API __declspec(dllexport)
+ #else
+@@ -87,6 +88,7 @@ _QM_OCR_API OCR_BOOL OcrGetResult(OCR_HANDLE handle, char *szBuf, int nLen);
+ 
+ _QM_OCR_API void OcrDestroy(OCR_HANDLE handle);
+ 
+-};
++#ifdef __cplusplus
++}
++#endif
+ #endif //__OCR_LITE_C_API_H__
+-#endif //__cplusplus
