@@ -41,6 +41,7 @@
       "dependencies": [
         "opengl",
         "osg",
+        "osgqopengl",
         "qtbase"
       ]
     },
