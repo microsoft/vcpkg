@@ -73,6 +73,21 @@ if(_PythonFinder_WantLibs)
             PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3"
             NO_DEFAULT_PATH
         )
+
+        # FindPython models a separate debug interpreter on Windows. The
+        # Python port packages it below debug/tools/python3 so
+        # Python::InterpreterMultiConfig can select it for Debug builds.
+        if(WIN32)
+            find_program(
+                _vcpkg_python_debug
+                NAMES "python_d"
+                PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/tools/python3"
+                NO_DEFAULT_PATH
+            )
+            if(_vcpkg_python_debug)
+                set(_${_PythonFinder_PREFIX}_EXECUTABLE_DEBUG "${_vcpkg_python_debug}")
+            endif()
+        endif()
     endif()
 
     # These are duplicated as normal variables to nullify FindPython's checksum verifications.
