@@ -6349,7 +6349,7 @@
       "port-version": 1
     },
     "llhttp": {
-      "baseline": "9.3.1",
+      "baseline": "9.4.3",
       "port-version": 0
     },
     "llnl-units": {
