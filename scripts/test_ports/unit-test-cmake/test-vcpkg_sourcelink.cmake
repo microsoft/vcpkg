@@ -62,6 +62,17 @@ unit_test_ensure_success([[
 ]])
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_CROSSCOMPILING)
+    unit_test_ensure_success([[
+        vcpkg_execute_required_process(
+            COMMAND "$ENV{SystemRoot}/System32/WindowsPowerShell/v1.0/powershell.exe"
+                -NoProfile -ExecutionPolicy Bypass
+                -File "${CMAKE_CURRENT_LIST_DIR}/sourcelink/process-installed.ps1"
+                -Script "${SCRIPTS}/buildsystems/msbuild/sourcelink_process_installed.ps1"
+                -TestRoot "${CURRENT_BUILDTREES_DIR}/sourcelink/msbuild"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+            LOGNAME "sourcelink-msbuild"
+        )
+    ]])
     foreach(mode IN ITEMS first updated empty)
         unit_test_ensure_success([[
             vcpkg_execute_required_process(

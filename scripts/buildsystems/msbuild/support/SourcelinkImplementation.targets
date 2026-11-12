@@ -1,0 +1,30 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="VcpkgSourcelinkImplementation">
+    <PropertyGroup>
+      <_ZVcpkgSourceLinkPowerShellArguments>-ExecutionPolicy Bypass -NoProfile -File "$(MSBuildThisFileDirectory)..\sourcelink_process_installed.ps1" -InstalledTripletPath "$(_ZVcpkgSourceLinkTripletDir)" -RelativeScan "share\sourcelink" -OutputFile "$(_ZVcpkgSourceLinkInstalledPath)"</_ZVcpkgSourceLinkPowerShellArguments>
+    </PropertyGroup>
+
+    <Message Text="Processing vcpkg sourcelink files for $(_ZVcpkgSourceLinkTripletDir)" />
+
+    <!-- Search %PATH% for pwsh.exe if it is available. -->
+    <Exec Command="pwsh.exe $(_ZVcpkgSourceLinkPowerShellArguments)"
+          IgnoreExitCode="true"
+          StandardErrorImportance="high"
+          IgnoreStandardErrorWarningFormat="true"
+          UseCommandProcessor="false">
+      <Output TaskParameter="ExitCode" PropertyName="_ZVcpkgSourceLinkExitCode" />
+    </Exec>
+    <!-- Otherwise use the system powershell. -->
+    <Exec Condition="'$(_ZVcpkgSourceLinkExitCode)' == '9009'"
+          Command="%22$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe%22 $(_ZVcpkgSourceLinkPowerShellArguments)"
+          IgnoreExitCode="true"
+          StandardErrorImportance="high"
+          IgnoreStandardErrorWarningFormat="true"
+          UseCommandProcessor="false">
+      <Output TaskParameter="ExitCode" PropertyName="_ZVcpkgSourceLinkExitCode" />
+    </Exec>
+
+    <Error Condition="'$(_ZVcpkgSourceLinkExitCode)' != '0'"
+           Text="Failed to generate vcpkg Source Link file &quot;$(_ZVcpkgSourceLinkInstalledPath)&quot; (PowerShell exit code $(_ZVcpkgSourceLinkExitCode))." />
+  </Target>
+</Project>

@@ -12,6 +12,8 @@ param (
     [string]$OutputFile
 )
 
+$ErrorActionPreference = 'Stop'
+
 # Fill ScanDirectory and OutFile from the relative options if they are not set
 if (-not $ScanDirectory) {
     if (-not $RelativeScan) {
@@ -28,21 +30,15 @@ if (-not $OutputFile) {
     $OutputFile = Join-Path $InstalledTripletPath $RelativeOutFile
 }
 
-if (-not (Test-Path $ScanDirectory)) {
-    Write-Host "No files found in $ScanDirectory"
-    exit 1
+# Get all JSON files in the input directory, sorted so that unchanged inputs produce identical output.
+# A missing directory means that no installed port provides sourcelink information.
+$files = @()
+if (Test-Path -LiteralPath $ScanDirectory) {
+    $files = @(Get-ChildItem -LiteralPath $ScanDirectory -Filter *.json | Sort-Object Name)
 }
 
-# Write to a temporary file, and only replace the output file if the content has changed.
-# This avoids unnecessary triggering of rebuilds via timestamp change.
-$TempOutputFile = $OutputFile + ".tmp"
-Clear-Content -Path $TempOutputFile -ErrorAction SilentlyContinue
-
-# Get all JSON files in the input directory
-$files = Get-ChildItem -Path $ScanDirectory -Filter *.json
-
-# Initialize a hashtable to hold the combined "documents" content
-$combinedDocuments = @{}
+# Initialize an ordered dictionary to hold the combined "documents" content
+$combinedDocuments = [ordered]@{}
 
 foreach ($file in $files) {
     # Read the content of the file
@@ -58,18 +54,36 @@ foreach ($file in $files) {
 }
 
 # Create the final JSON structure
-$finalJson = @{
-    documents = $combinedDocuments
-}
+$finalJson = @{ documents = $combinedDocuments } | ConvertTo-Json -Depth 4 -Compress
 
-# Write the combined content to the output file
-$finalJson | ConvertTo-Json -Depth 4 -Compress | Out-File -FilePath $TempOutputFile -Encoding ascii
-
-# Compare the temporary File with the output file, and only replace it if they are different
-if (-not (Test-Path $OutputFile) -or ((Get-Content $TempOutputFile -Raw) -ne (Get-Content $OutputFile -Raw))) {
-    $numFiles = $files.Count
-    Write-Host "Combined $numFiles sourcelink files from $ScanDirectory"
-    Move-Item -Path $TempOutputFile -Destination $OutputFile -Force
-} else {
-    Remove-Item -Path $TempOutputFile -Force
+# Concurrent builds may share the output file, so write to a process-specific temporary file
+# and swap it into place, ensuring readers never observe a partially written file.
+$TempOutputFile = "$OutputFile.$PID.tmp"
+try {
+    for ($attempt = 0; ; $attempt++) {
+        try {
+            # Preserve the timestamp when another writer has already published the same mapping.
+            if ((Test-Path -LiteralPath $OutputFile) -and ([System.IO.File]::ReadAllText($OutputFile) -ceq $finalJson)) {
+                break
+            }
+            [System.IO.File]::WriteAllText($TempOutputFile, $finalJson)
+            if (Test-Path -LiteralPath $OutputFile) {
+                [System.IO.File]::Replace($TempOutputFile, $OutputFile, [NullString]::Value)
+            } else {
+                [System.IO.File]::Move($TempOutputFile, $OutputFile)
+            }
+            Write-Host "Combined $($files.Count) sourcelink files from $ScanDirectory"
+            break
+        } catch [System.IO.IOException] {
+            # A reader or competing writer can briefly prevent an atomic replacement.
+            if ($attempt -ge 4) {
+                throw
+            }
+            Start-Sleep -Milliseconds 100
+        }
+    }
+} finally {
+    if (Test-Path -LiteralPath $TempOutputFile) {
+        Remove-Item -LiteralPath $TempOutputFile -Force
+    }
 }
