@@ -1,12 +1,12 @@
+set(VCPKG_BUILD_TYPE release) # headers only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tristanpenman/valijson
     REF "v${VERSION}"
-    SHA512 bca797e9198a230476788b008c759115ce36f7a5301d8d87afd7160f6207c9a2dbd769f60ad9baaf87983ee08f772a16d01fee1944e053a602b716907e7a7d7b
+    SHA512 fa58f4325bebd93c5fdaa9144fe5bc2ec91c5f4f6d6a42f61da8b06190a9c8b0a1c36ba198fd13a773cd93f7fff0c99386f235f3ddb559879e1f03f00435af2a
     HEAD_REF master
 )
-
-set(VCPKG_BUILD_TYPE release) # headers only
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
@@ -15,9 +15,11 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/valijson")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/lib"
+    "${CURRENT_PACKAGES_DIR}/debug/lib"
+)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

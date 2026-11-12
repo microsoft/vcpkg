@@ -690,7 +690,6 @@ llgl[vulkan]:arm64-osx=cascade # no vulkan sdk installed
 llgl[vulkan]:x64-linux=feature-fails
 llvm[core,flang]=options # exclude flang from all since it is not compatible with enable enable-eh
 llvm[enable-mlir-python-bindings]:arm64-osx=feature-fails # Could NOT find Python3 (missing: Development Development.Module Development.Embed) (found version "3.12"). Same as https://github.com/microsoft/vcpkg/issues/34779
-llvm[libcxxabi](windows)=feature-fails # see https://github.com/microsoft/vcpkg/issues/31038
 log4cxx:arm64-linux=cascade
 loguru:arm64-linux=fail
 lua[tools]:arm64-linux=feature-fails

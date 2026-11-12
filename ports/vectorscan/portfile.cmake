@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO VectorCamp/vectorscan
     REF "vectorscan/${VERSION}"
-    SHA512 bea79a2b0677f63fa5508089142c28d1536a8d4e618f36c37f36141c07d0fddd2b3ce96ee641cefdc474d185052e29045ef71ba6383526d15fa4b6dc4c940d14
+    SHA512 32938f0350c253ea786457747586d054e1a1f0eb45e57013903e69d4e43786ffa1eb04d69e4b98e9df43cfc182705d5f9b10cc123b8483d75aa75f10bcbe2b2b
     HEAD_REF develop
     PATCHES
         remove-Werror.patch
