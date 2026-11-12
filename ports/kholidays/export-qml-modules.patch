@@ -1,0 +1,29 @@
+diff --git a/KF6HolidaysConfig.cmake.in b/KF6HolidaysConfig.cmake.in
+index 8999fa5..0422d5f 100644
+--- a/KF6HolidaysConfig.cmake.in
++++ b/KF6HolidaysConfig.cmake.in
+@@ -5,5 +5,8 @@ find_dependency(
+     Qt6Core
+     @REQUIRED_QT_VERSION@
+ )
++if (NOT @BUILD_SHARED_LIBS@ AND "@Qt6Qml_FOUND@")
++    find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6HolidaysTargets.cmake")
+diff --git a/src/declarative/CMakeLists.txt b/src/declarative/CMakeLists.txt
+index 0b8fcb9..8e53bf4 100644
+--- a/src/declarative/CMakeLists.txt
++++ b/src/declarative/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-ecm_add_qml_module(kholidaysdeclarativeplugin URI "org.kde.kholidays")
++ecm_add_qml_module(kholidaysdeclarativeplugin URI "org.kde.kholidays" CLASS_NAME KHolidaysDeclarativePlugin)
+ 
+ target_sources(
+     kholidaysdeclarativeplugin
+@@ -17,4 +17,4 @@ target_link_libraries(
+         KF6Holidays
+ )
+ 
+-ecm_finalize_qml_module(kholidaysdeclarativeplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(kholidaysdeclarativeplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6HolidaysTargets)

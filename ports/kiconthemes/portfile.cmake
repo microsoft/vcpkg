@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 323555fca4696a12246fd42e1218c8e9445fcd4e4706433985687e4ad4337c7f01ef803f09bd3b2958effe7b69f7dd4f745828f513a12513f345a47ed372f31f
     HEAD_REF master
+    PATCHES
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -31,14 +33,22 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
-        -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_QTPLUGINDIR=plugins
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QTPLUGINDIR=Qt6/plugins
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6iconthemes CONFIG_PATH lib/cmake/KF6IconThemes)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6iconthemes/KF6IconThemesTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 
 if(NOT VCPKG_TARGET_IS_IOS)

@@ -1,0 +1,82 @@
+{
+  "name": "kxmlgui",
+  "version": "6.31.0",
+  "description": "Framework for managing menu and toolbar actions",
+  "homepage": "https://invent.kde.org/frameworks/kxmlgui",
+  "documentation": "https://api.kde.org/kxmlgui-index.html",
+  "license": "LGPL-2.0-only AND LGPL-2.0-or-later AND LGPL-2.1-or-later AND (LGPL-2.1-or-later OR BSD-2-Clause)",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kconfig",
+    "kconfigwidgets",
+    "kcoreaddons",
+    {
+      "name": "kglobalaccel",
+      "platform": "linux"
+    },
+    "kguiaddons",
+    "ki18n",
+    "kiconthemes",
+    "kitemviews",
+    "kwidgetsaddons",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network",
+        "widgets"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "designerplugin": {
+      "description": "Build Qt Designer plugin",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "default-features": false,
+          "features": [
+            "designer"
+          ]
+        }
+      ]
+    },
+    "translations": {
+      "description": "Build translations",
+      "dependencies": [
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "linguist"
+          ]
+        }
+      ]
+    }
+  }
+}

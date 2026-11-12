@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-given-parsetrigrams.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -49,9 +50,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_ASPELL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_HSPELL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_VOIKKO=ON
-        -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_QTPLUGINDIR=plugins
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QTPLUGINDIR=Qt6/plugins
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         SONNET_NO_BACKENDS
@@ -59,6 +59,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(${install_options})
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6sonnet CONFIG_PATH lib/cmake/KF6Sonnet)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6sonnet/KF6SonnetTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 
 if(NOT VCPKG_CROSSCOMPILING)
     vcpkg_copy_tools(TOOL_NAMES parsetrigrams6 AUTO_CLEAN)

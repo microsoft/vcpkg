@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tree-sitter/tree-sitter
     REF "v${VERSION}"
-    SHA512 e88861271bcd504f79636811c43c0de94483071f1c6f0f57cc590a2e10f921ca24b87ec631bee4d94d1f124a03a4b74f93c4e5fb8653f62bf484517753882cef
+    SHA512 6df0885813d9f3e7d1e71703dec2eb223c15eb4ec360e9d8eb1458dc12d0ba582db8d164fb39d1bcadbe6c8d38ce3bb26895208afe6affe6d697640831ace333
     HEAD_REF master
     PATCHES
         unofficial-cmake.diff
@@ -19,7 +19,7 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-tree-sitter")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"

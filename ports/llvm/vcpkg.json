@@ -1,6 +1,7 @@
 {
   "name": "llvm",
   "version": "23.1.5",
+  "port-version": 1,
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0 WITH LLVM-exception AND BSD-2-Clause AND (CC0-1.0 OR Apache-2.0)",
@@ -260,13 +261,17 @@
           "default-features": false,
           "features": [
             "clang",
-            "libcxxabi"
+            {
+              "name": "libcxxabi",
+              "platform": "!(windows & !mingw)"
+            }
           ]
         }
       ]
     },
     "libcxxabi": {
       "description": "Include libcxxabi library.",
+      "supports": "!(windows & !mingw)",
       "dependencies": [
         {
           "name": "llvm",
