@@ -2621,7 +2621,7 @@
       "port-version": 3
     },
     "dlpack": {
-      "baseline": "1.3",
+      "baseline": "1.4",
       "port-version": 0
     },
     "dmlc": {
@@ -10565,7 +10565,7 @@
       "port-version": 1
     },
     "tvm-ffi": {
-      "baseline": "0.1.15",
+      "baseline": "0.1.16",
       "port-version": 0
     },
     "tweeny": {
