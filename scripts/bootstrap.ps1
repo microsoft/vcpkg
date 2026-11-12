@@ -82,7 +82,7 @@ function Invoke-DownloadWithRetry
             {
                 $webClient.Dispose()
             }
-            Move-Item -Path $tempFile -Destination $OutFile -Force
+            Move-Item -Path $tempFile -Destination $OutFile -Force -ErrorAction Stop
             return $true
         }
         catch
