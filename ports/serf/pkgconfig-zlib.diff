@@ -1,0 +1,26 @@
+diff --git a/SConstruct b/SConstruct
+index 69c380e..dbf28e5 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -431,7 +431,7 @@ pkgconfig = env.Textfile('serf-%d.pc' % (MAJOR,),
+                            '@LIBDIR@': '$LIBDIR',
+                            '@INCLUDE_SUBDIR@': 'serf-%d' % (MAJOR,),
+                            '@VERSION@': '%d.%d.%d' % (MAJOR, MINOR, PATCH),
+-                           '@LIBS@': '%s %s %s -lz' % (apu_libs, apr_libs,
++                           '@LIBS@': '%s %s %s' % (apu_libs, apr_libs,
+                                                        env.get('GSSAPI_LIBS', '')),
+                            })
+ 
+diff --git a/build/serf.pc.in b/build/serf.pc.in
+index 17ab40e..390f638 100644
+--- a/build/serf.pc.in
++++ b/build/serf.pc.in
+@@ -7,7 +7,7 @@ includedir=${prefix}/include/@INCLUDE_SUBDIR@
+ Name: serf
+ Description: HTTP client library
+ Version: @VERSION@
+-Requires.private: libssl libcrypto
++Requires.private: libssl libcrypto zlib
+ Libs: -L${libdir} -lserf-${SERF_MAJOR_VERSION}
+ Libs.private: @LIBS@
+ Cflags: -I${includedir}

@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     PATCHES
         dependencies.diff
         hardcoded-msvc-versions.diff # ~= https://github.com/apache/serf/commit/57bb8775665a724d6db648ca30689de04103873b
+        pkgconfig-zlib.diff
 )
 
 # Note: custom architecture is not supported on Unix.
