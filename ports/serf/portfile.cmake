@@ -12,6 +12,16 @@ vcpkg_extract_source_archive(
         hardcoded-msvc-versions.diff # ~= https://github.com/apache/serf/commit/57bb8775665a724d6db648ca30689de04103873b
 )
 
+# Let pkg-config resolve the configuration-specific zlib library name.
+vcpkg_replace_string("${SOURCE_PATH}/build/serf.pc.in"
+    "Requires.private: libssl libcrypto"
+    "Requires.private: libssl libcrypto zlib"
+)
+vcpkg_replace_string("${SOURCE_PATH}/SConstruct"
+    "'@LIBS@': '%s %s %s -lz'"
+    "'@LIBS@': '%s %s %s'"
+)
+
 # Note: custom architecture is not supported on Unix.
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(SCONS_ARCH "TARGET_ARCH=x86_64")
