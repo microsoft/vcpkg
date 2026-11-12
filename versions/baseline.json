@@ -2669,8 +2669,8 @@
       "port-version": 1
     },
     "dpdk": {
-      "baseline": "26.3",
-      "port-version": 6
+      "baseline": "26.7",
+      "port-version": 0
     },
     "dpetkov-semver": {
       "baseline": "0.4.1",
