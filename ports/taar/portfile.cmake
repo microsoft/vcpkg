@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rjahanbakhshi/boost.taar
     REF "v${VERSION}"
-    SHA512 d15af5ac39a18ef8011018a9c63dd6f97adb3598be30714669f42fdab812daf06a40f8ef88e38a2ac93abb843de96e0f7256dd7090094392d33cb347cb98dd29
+    SHA512 b512e0f3c11e95ea6e0d9aa197ef2d380ba51fe2ea4a712bad18e0c5740c9470f6038a0bfcf695f137aa82e181c6479c30388056c8dfc740fee7f02542cfdd75
     HEAD_REF master
 )
 
