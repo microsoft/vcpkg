@@ -1,0 +1,24 @@
+diff --git a/KF6CalendarCoreConfig.cmake.in b/KF6CalendarCoreConfig.cmake.in
+index a071c9f..9ffb41e 100644
+--- a/KF6CalendarCoreConfig.cmake.in
++++ b/KF6CalendarCoreConfig.cmake.in
+@@ -15,6 +15,9 @@ if(NOT @BUILD_SHARED_LIBS@)
+         @LibIcal_MIN_VERSION@
+         CONFIG
+     )
++    if (@USE_QML@)
++        find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++    endif()
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6CalendarCoreTargets.cmake")
+diff --git a/src/qml/CMakeLists.txt b/src/qml/CMakeLists.txt
+index 8613d1b..e3a80d8 100644
+--- a/src/qml/CMakeLists.txt
++++ b/src/qml/CMakeLists.txt
+@@ -17,4 +17,4 @@ target_link_libraries(
+         Qt6::Qml
+ )
+ 
+-ecm_finalize_qml_module(kcalendarcoreqml)
++ecm_finalize_qml_module(kcalendarcoreqml EXPORT KF6CalendarCoreTargets)

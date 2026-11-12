@@ -1,6 +1,7 @@
 {
   "name": "kcalendarcore",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "The KDE calendar access library",
   "homepage": "https://invent.kde.org/frameworks/kcalendarcore",
   "documentation": "https://api.kde.org/kcalendarcore-index.html",

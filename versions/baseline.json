@@ -822,7 +822,7 @@
     },
     "bluez-qt": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boinc": {
       "baseline": "8.2.15",
@@ -4358,7 +4358,7 @@
     },
     "kcalendarcore": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kcenon-common-system": {
       "baseline": "0.2.0",
@@ -4414,7 +4414,7 @@
     },
     "kdeclarative": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kdgpu": {
       "baseline": "0.10.0",
@@ -4630,15 +4630,15 @@
     },
     "kholidays": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "ki18n": {
       "baseline": "6.31.0",
-      "port-version": 5
+      "port-version": 6
     },
     "kiconthemes": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kidletime": {
       "baseline": "6.31.0",
@@ -4710,7 +4710,7 @@
     },
     "knotifications": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "komihash": {
       "baseline": "5.34",
@@ -4782,7 +4782,7 @@
     },
     "kwindowsystem": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kwsys": {
       "baseline": "2021-08-06",
@@ -8254,7 +8254,7 @@
     },
     "prison": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "proj": {
       "baseline": "9.9.0",
@@ -9774,7 +9774,7 @@
     },
     "sonnet": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sophus": {
       "baseline": "1.24.6",
@@ -10210,7 +10210,7 @@
     },
     "syntax-highlighting": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "syscalls-cpp": {
       "baseline": "1.2.1",

@@ -1,0 +1,26 @@
+diff --git a/KF6NotificationsConfig.cmake.in b/KF6NotificationsConfig.cmake.in
+index e9002c4..645a1cd 100644
+--- a/KF6NotificationsConfig.cmake.in
++++ b/KF6NotificationsConfig.cmake.in
+@@ -8,6 +8,9 @@ endif()
+ 
+ if (NOT @BUILD_SHARED_LIBS@) 
+     find_dependency(KF6Config "@KF_DEP_VERSION@")
++    if ("@Qt6Qml_FOUND@")
++        find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++    endif()
+ 
+     if (@WITH_SNORETOAST@)
+         find_dependency(LibSnoreToast)
+diff --git a/src/qml/CMakeLists.txt b/src/qml/CMakeLists.txt
+index 5079368..42ddedf 100644
+--- a/src/qml/CMakeLists.txt
++++ b/src/qml/CMakeLists.txt
+@@ -12,6 +12,6 @@ target_link_libraries(knotificationqmlplugin PRIVATE
+     Qt6::Qml
+ )
+ 
+-ecm_finalize_qml_module(knotificationqmlplugin)
++ecm_finalize_qml_module(knotificationqmlplugin EXPORT KF6NotificationsTargets)
+ 
+ ecm_generate_qdoc(knotificationqmlplugin knotificationsqml.qdocconf)
