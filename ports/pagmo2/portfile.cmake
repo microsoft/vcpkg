@@ -10,6 +10,7 @@ vcpkg_from_github(
         0006-config-find-libipopt.patch
         0007-ipopt-transitive-deps.patch # coin-or-ipopt provides no cmake config
         0008-ipopt-header-search.patch
+        0009-ipopt-mumps-transitive.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

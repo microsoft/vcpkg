@@ -1,3 +1,9 @@
+The Microsoft GDK headers select their platform from preprocessor definitions.
+The CMake targets below define _GAMING_DESKTOP automatically. If you use the
+headers without these targets (for example, from MSBuild or a manual include
+path), define _GAMING_DESKTOP yourself. In either case, include <windows.h>
+before GDK runtime headers such as XGameRuntime.h, XCurl.h, and GameChat2.h.
+
 The Microsoft GDK package provides CMake targets:
 
   find_package(ms-gdk CONFIG REQUIRED)

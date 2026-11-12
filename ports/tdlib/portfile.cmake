@@ -1,11 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tdlib/td
-    REF a8f21f5230172634becc1739050ef23ecd6ea291
+    REF 23383aef218a3123f02b744bfa91bde21056a814
     HEAD_REF master
-    SHA512 8aaa918c9049d6af580b1ec7953204ccd816648e70169cd1b18f36d5f4d85e523acb30963a134fa5a056f61e9df46b8e36b1f336ea0de08548764becb3b9dd71
+    SHA512 3e1b73d9ead53868905d33fc3739a94885dd7a3c24df169a3d93f49a114642a0458db2e651894786b21b3566641c08a6574ad923709482549c1b7680b8d02902
     PATCHES
         fix-cross-compile.patch
+        # Exclude uninstalled benchmarks/CLI from default builds and disable ambient PHP documentation generation.
+        fix-packaging.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
@@ -122,6 +124,8 @@ vcpkg_cmake_configure(
         -DTD_ENABLE_MULTI_PROCESSOR_COMPILATION=${VCPKG_DETECTED_MSVC}
         -DTD_INSTALL_HOST_GENERATORS=${_tdlib_install_gen}
         -DBUILD_TESTING=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Crc32c=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
     MAYBE_UNUSED_VARIABLES
         TD_ENABLE_MULTI_PROCESSOR_COMPILATION
         TD_INSTALL_HOST_GENERATORS
@@ -148,4 +152,21 @@ if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
+set(copyright_files
+    "${SOURCE_PATH}/LICENSE_1_0.txt"
+    "${SOURCE_PATH}/sqlite/sqlite/LICENSE"
+)
+set(copyright_options "")
+if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
+    list(APPEND copyright_files
+        "${SOURCE_PATH}/td/generate/tl-parser/LICENSE"
+        "${SOURCE_PATH}/td/generate/tl-parser/tl-parser.h"
+    )
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND copyright_files
+            "${SOURCE_PATH}/td/generate/tl-parser/wgetopt.h"
+        )
+        set(copyright_options COMMENT "The LGPL 2.1 license text for the GNU getopt code in the Windows tl-parser tool is not included in the upstream repository. It can be obtained from https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt.")
+    endif()
+endif()
+vcpkg_install_copyright(FILE_LIST ${copyright_files} ${copyright_options})

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 1e4bac47c51577988ec83ce94e866effa7be88a394831f9efb8e9f2050276faa6bd4f586a32da18eb1f56ef89d2fc041674b3259ef5343c53a1eedb0bab59ebb
+    SHA512 10cb5d9d95d7e8808ee180c6775526b731c69fac5a71342c7a99c0a02013a8e0c823e0e0482624c1eb38d4dbc16732562a9afb4cab4f7707d97fac92f5c53557
     HEAD_REF main
     PATCHES
         0001-fix-install-package-dir.patch
@@ -146,8 +146,20 @@ if("lld" IN_LIST FEATURES)
 endif()
 if("lldb" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lldb")
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS LLDB_FEATURE_OPTIONS
+        FEATURES
+            enable-libxml2 LLDB_ENABLE_LIBXML2
+    )
     list(APPEND FEATURE_OPTIONS
+        ${LLDB_FEATURE_OPTIONS}
         -DLLDB_ENABLE_CURSES=OFF
+        -DLLDB_ENABLE_LIBEDIT=OFF
+        -DLLDB_ENABLE_LZMA=OFF
+        -DLLDB_ENABLE_LUA=OFF
+        -DLLDB_ENABLE_PYTHON=OFF
+        -DLLDB_ENABLE_SWIG=OFF
+        -DLLDB_ENABLE_TREESITTER=OFF
     )
 endif()
 if("mlir" IN_LIST FEATURES)
@@ -200,6 +212,17 @@ if("libcxx" IN_LIST FEATURES)
         message(FATAL_ERROR "libcxx requiries MSVC 19.14 or newer.")
     endif()
     list(APPEND LLVM_ENABLE_RUNTIMES "libcxx")
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        # The toolchain's CMAKE_MSVC_RUNTIME_LIBRARY is a generator expression, which LLVMConfig.cmake passes verbatim
+        # to the runtimes build. libcxx picks its CRT libraries by matching that string ("Debug", "DLL$"), so it would
+        # link the static debug CRT into c++.dll. Pass the plain value of each configuration instead.
+        set(msvc_runtime_dll "")
+        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+            set(msvc_runtime_dll "DLL")
+        endif()
+        list(APPEND LIBCXX_OPTIONS_DEBUG "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug${msvc_runtime_dll}")
+        list(APPEND LIBCXX_OPTIONS_RELEASE "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded${msvc_runtime_dll}")
+    endif()
 endif()
 if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "compiler-rt")
@@ -384,8 +407,10 @@ vcpkg_cmake_configure(
         ${COMPILER_RT_FEATURE_OPTIONS}
     OPTIONS_DEBUG
         ${MLIR_PYTHON_OPTIONS_DEBUG}
+        ${LIBCXX_OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${MLIR_PYTHON_OPTIONS_RELEASE}
+        ${LIBCXX_OPTIONS_RELEASE}
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -419,7 +444,42 @@ llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("llvm")
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+if("libcxx" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # LLVMConfig.cmake sets CMAKE_MSVC_RUNTIME_LIBRARY for find_package(LLVM) users. The plain value passed for libcxx above
+    # holds for one configuration only, and the config fixup keeps Release's, so Debug users would compile with the
+    # release CRT. Restore the per-configuration value.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/llvm/LLVMConfig.cmake"
+        "set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded${msvc_runtime_dll})"
+        "set(CMAKE_MSVC_RUNTIME_LIBRARY \"MultiThreaded$<$<CONFIG:Debug>:Debug>${msvc_runtime_dll}\")"
+    )
+endif()
+
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/llvm/LICENSE.TXT"
+    "${SOURCE_PATH}/llvm/include/llvm/Support/xxhash.h"
+    "${SOURCE_PATH}/llvm/lib/Support/BLAKE3/LICENSE"
+)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if("lldb" IN_LIST FEATURES)
+        # App-local dependency scanning does not discover LLDB's delay-loaded library.
+        file(COPY "${CURRENT_PACKAGES_DIR}/bin/liblldb.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
+    # Upstream already installs tools here; copy in place to deploy their DLL dependencies.
+    file(GLOB llvm_tools LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/tools/${PORT}/*.exe")
+    set(llvm_tool_names)
+    foreach(llvm_tool IN LISTS llvm_tools)
+        get_filename_component(llvm_tool_name "${llvm_tool}" NAME_WLE)
+        list(APPEND llvm_tool_names "${llvm_tool_name}")
+    endforeach()
+    if(llvm_tool_names)
+        vcpkg_copy_tools(
+            TOOL_NAMES ${llvm_tool_names}
+            SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+        )
+    endif()
+endif()
 
 # Move Clang's runtime libraries from bin/lib to tools/${PORT}/lib
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/lib")
@@ -471,9 +531,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(debug_llvm_config "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     if(EXISTS "${debug_llvm_config}")
         set(debug_llvm_config_staging "${CURRENT_PACKAGES_DIR}/debug/llvm-config-staging")
-        file(MAKE_DIRECTORY "${debug_llvm_config_staging}")
-        file(RENAME "${debug_llvm_config}" "${debug_llvm_config_staging}/llvm-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-        vcpkg_copy_tool_dependencies("${debug_llvm_config_staging}")
+        vcpkg_copy_tools(
+            TOOL_NAMES llvm-config
+            SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}"
+            DESTINATION "${debug_llvm_config_staging}"
+        )
     endif()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"

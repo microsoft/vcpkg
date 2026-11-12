@@ -1,8 +1,8 @@
 {
   "name": "qtactiveqt",
-  "version": "6.11.2",
+  "version": "6.11.3",
   "description": "ActiveQt",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "supports": "windows",
   "dependencies": [

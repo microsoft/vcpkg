@@ -1,9 +1,10 @@
 {
   "name": "paho-mqttpp3",
   "version": "1.6.0",
+  "port-version": 1,
   "description": "Paho project provides open-source C++ wrapper for Paho C library",
   "homepage": "https://github.com/eclipse/paho.mqtt.cpp",
-  "license": "EPL-1.0",
+  "license": "EPL-2.0 OR BSD-3-Clause",
   "dependencies": [
     "paho-mqtt",
     {

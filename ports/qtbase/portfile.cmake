@@ -30,7 +30,6 @@ set(${PORT}_PATCHES
         fix-libresolv-test.patch
         use_inotify_on_freebsd.patch
         silence-winrtbase-coroutine-warnings.diff
-        md4c.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -178,7 +177,7 @@ list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_pkg_config:BOOL=ON)
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
-    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolve
+    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolv
     )
 
 if("openssl" IN_LIST FEATURES)

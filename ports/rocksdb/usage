@@ -1,0 +1,12 @@
+rocksdb provides CMake targets:
+
+  find_package(RocksDB CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE RocksDB::rocksdb)
+
+On Windows, dynamic triplets provide only RocksDB::rocksdb-shared, which exposes only the C API.
+For the C++ API, use a static triplet (e.g. x64-windows-static).
+
+rocksdb provides pkg-config modules:
+
+  # An embeddable persistent key-value store for fast storage
+  rocksdb

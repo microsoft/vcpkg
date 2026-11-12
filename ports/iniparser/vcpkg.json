@@ -1,6 +1,6 @@
 {
   "name": "iniparser",
-  "version": "4.3.0",
+  "version": "4.3.2",
   "description": "C library for parsing INI-style files",
   "homepage": "https://github.com/ndevilla/iniparser",
   "license": "MIT",

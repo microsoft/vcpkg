@@ -7,7 +7,7 @@ vcpkg_download_distfile(
     URLS "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PORT}-${VERSION}.tar.gz"
          "https://github.com/libressl/portable/releases/download/v${VERSION}/${PORT}-${VERSION}.tar.gz"
     FILENAME "${PORT}-${VERSION}.tar.gz"
-    SHA512 988e580b137d9b847288c6a12fc09c4b24113905521aa4e938c964f7845080463e6f2ca3b58d800512ba5c790a06e4e41b31d187ef09c3018f2321b22ecab267
+    SHA512 0a77f737baedf6dc2735a6086b5f65250c1cf1f8937b09dd54c763655fcebf27682b25835f87eee51c5dec30ddb2c5977674dcfbf807efdc4c9194f96c4c3d49
 )
 
 vcpkg_extract_source_archive(
@@ -52,4 +52,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/COPYING"
+    COMMENT [[
+LibreSSL code: BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT AND OpenSSL.
+Upstream's files do not declare a license for the installed CA bundle, so the package license is null.
+Consumers supplying their own CA bundle can use the code expression above for LibreSSL
+and account for their bundle's license separately.
+]]
+)

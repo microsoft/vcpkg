@@ -1,38 +1,34 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index e84ca98..7a06ed2 100644
+index 6edfa0c2..c76d894d 100755
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -226,14 +226,7 @@ endif()
- ###############################################################################
- # Cycfi Infra
- 
--FetchContent_Declare(
--  cycfi_infra
--  GIT_REPOSITORY https://github.com/cycfi/infra.git
--  GIT_TAG master
--  GIT_SUBMODULES_RECURSE ON
--)
--
--FetchContent_MakeAvailable(cycfi_infra)
-+add_subdirectory(infra)
- target_link_libraries(elements PUBLIC cycfi::infra)
- 
- ###############################################################################
-@@ -272,15 +265,8 @@ endif()
+@@ -452,26 +452,13 @@ endif()
  ###############################################################################
  # Asio headers
  
 -FetchContent_Declare(
 -  asio
 -  GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
--  GIT_TAG asio-1-29-0
+-  GIT_TAG asio-1-36-0
 -  GIT_SHALLOW TRUE
 -)
 -FetchContent_MakeAvailable(asio)
 -
 -target_include_directories(elements PUBLIC ${asio_SOURCE_DIR}/asio/include)
 +find_package(asio CONFIG REQUIRED)
-+target_include_directories(elements PUBLIC ${ASIO_INCLUDE_DIR})
++target_include_directories(elements PUBLIC "${ASIO_INCLUDE_DIR}")
  
  ###############################################################################
- # Global options
+ # quill (logging) — no external deps; linked only by the elements target.
+ 
+-FetchContent_Declare(
+-  quill
+-  GIT_REPOSITORY https://github.com/odygrd/quill.git
+-  GIT_TAG v9.0.3
+-  GIT_SHALLOW TRUE
+-)
+-FetchContent_MakeAvailable(quill)
++find_package(quill CONFIG REQUIRED)
+ target_link_libraries(elements PUBLIC quill::quill)
+ 
+ ###############################################################################
