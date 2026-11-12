@@ -1,5 +1,3 @@
-# https://github.com/microsoft/onnxruntime/blob/v1.31.0/tools/python/util/vcpkg_helpers.py
-message(WARNING "The port requires 'onnx' port build with CMake option ONNX_DISABLE_STATIC_REGISTRATION=ON")
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("framework" IN_LIST FEATURES)
         # The Objective-C API requires onnxruntime_BUILD_SHARED_LIB
@@ -17,6 +15,7 @@ vcpkg_from_github(
         fix-cmake-cuda.patch
         fix-cmake-mlas.patch
         use-vcpkg-coremltools.patch # use the coremltools port instead of building its sources
+        fix-debug-schema-count.patch # https://github.com/microsoft/onnxruntime/pull/33456 (open, unreviewed)
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
