@@ -3102,7 +3102,7 @@
     },
     "ffmpeg": {
       "baseline": "9.0.2",
-      "port-version": 7
+      "port-version": 8
     },
     "ffmpeg-bin2c": {
       "baseline": "9.0.2",
@@ -6937,8 +6937,8 @@
       "port-version": 0
     },
     "mp3lame": {
-      "baseline": "3.100",
-      "port-version": 17
+      "baseline": "4.0",
+      "port-version": 0
     },
     "mpark-patterns": {
       "baseline": "2019-10-03",

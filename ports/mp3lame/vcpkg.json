@@ -1,11 +1,11 @@
 {
   "name": "mp3lame",
-  "version": "3.100",
-  "port-version": 17,
+  "version": "4.0",
   "description": "LAME is a high quality MPEG Audio Layer III (MP3) encoder licensed under the LGPL.",
   "homepage": "https://lame.sourceforge.io",
   "license": "LGPL-2.0-only",
   "dependencies": [
+    "mpg123",
     {
       "name": "vcpkg-make",
       "host": true,

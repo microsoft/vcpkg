@@ -1,0 +1,10 @@
+diff --git a/libmp3lame/lame.pc.in b/libmp3lame/lame.pc.in
+index 22ddd7a..6f1e5c3 100644
+--- a/libmp3lame/lame.pc.in
++++ b/libmp3lame/lame.pc.in
+@@ -7,4 +7,5 @@ Name: @PACKAGE_NAME@
+ Description: high quality MPEG Audio Layer III (MP3) encoder library
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -lmp3lame
++Requires.private: libmpg123
+ Cflags: -I${includedir}/lame

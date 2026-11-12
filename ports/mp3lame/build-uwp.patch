@@ -1,0 +1,128 @@
+diff --git a/vc_solution/vs2019_lame_lame.vcxproj b/vc_solution/vs2019_lame_lame.vcxproj
+index 0ebc520..429ed0a 100644
+--- a/vc_solution/vs2019_lame_lame.vcxproj
++++ b/vc_solution/vs2019_lame_lame.vcxproj
+@@ -244,6 +244,7 @@
+     </ResourceCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+@@ -259,6 +260,7 @@
+     </ResourceCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+@@ -274,6 +276,7 @@
+     </ResourceCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+@@ -289,6 +292,7 @@
+     </ResourceCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+@@ -325,6 +329,7 @@
+     </ResourceCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+@@ -343,6 +348,7 @@
+     </ResourceCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+@@ -361,6 +367,7 @@
+     </ResourceCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'">
+diff --git a/vc_solution/vs2019_libmp3lame_dll.vcxproj b/vc_solution/vs2019_libmp3lame_dll.vcxproj
+index 289e56f..ab37862 100644
+--- a/vc_solution/vs2019_libmp3lame_dll.vcxproj
++++ b/vc_solution/vs2019_libmp3lame_dll.vcxproj
+@@ -210,6 +210,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+@@ -228,6 +229,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+@@ -246,6 +248,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+@@ -264,6 +267,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseNASM|Win32'">
+@@ -315,6 +319,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+@@ -330,6 +335,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+@@ -345,6 +351,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+@@ -360,6 +367,7 @@
+     </ResourceCompile>
+     <Link>
+       <ModuleDefinitionFile>..\include\lame.def</ModuleDefinitionFile>
++      <AdditionalOptions>/APPCONTAINER %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseSSE2|Win32'">
