@@ -1497,7 +1497,7 @@
       "port-version": 0
     },
     "bqlog": {
-      "baseline": "2.7.3",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "braft": {
