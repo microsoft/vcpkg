@@ -16,8 +16,8 @@ endfunction()
 function(vcpkg_from_gitlab)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;RAW_INCLUDE_MAPPING;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
-        "PATCHES")
+        "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
+        "PATCHES;RAW_INCLUDE_MAPPING")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_from_gitlab was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -128,22 +128,11 @@ function(vcpkg_from_gitlab)
         SHA512 "${arg_SHA512}"
     )
 
-    # Forward any provided mapping after a quick sanity check.
-    # If nothing is passed into vcpkg_write_sourcelink_file, then it will 
-    # attempt to set a sensible default based upon the contents of the extracted repo.
-    if(DEFINED arg_RAW_INCLUDE_MAPPING)
-        list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
-        if (${num_mappings} LESS "2")
-            message(FATAL_ERROR "vcpkg_from_gitlab was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
-        endif()
-        set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
-    endif()
-
     vcpkg_write_sourcelink_file(
         SOURCE_PATH "${SOURCE_PATH}"
         SERVER_PATH "${gitlab_link}/-/raw/${ref_to_use}/*"
         RAW_SEARCH_REPO_NAME "${repo_name}"
-        RAW_INCLUDE_MAPPING "${raw_include_mapping}"
+        RAW_INCLUDE_MAPPING ${arg_RAW_INCLUDE_MAPPING}
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)

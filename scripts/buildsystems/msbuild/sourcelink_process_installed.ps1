@@ -2,7 +2,7 @@
 # During this processing, it replaces the "__VCPKG_INSTALLED_TRIPLET_DIR__" placeholder 
 # produced by vcpkg_write_sourcelink_file with the installed header path.
 #
-# The relative options are used to specifiy the scanning and output locations, relative to the InstalledTripletPath.
+# The relative options are used to specify the scanning and output locations, relative to the InstalledTripletPath.
 # The ScanDirectory and OutFile options may be used instead if non-relative paths are desired.
 param (
     [string]$InstalledTripletPath,

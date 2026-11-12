@@ -1,8 +1,8 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "USE_TARBALL_API"
-        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;GITHUB_HOST_RAW;RAW_INCLUDE_MAPPING;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
-        "PATCHES")
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;GITHUB_HOST_RAW;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
+        "PATCHES;RAW_INCLUDE_MAPPING")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_from_github was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -145,14 +145,8 @@ Error was: ${head_version_err}
         SHA512 "${arg_SHA512}"
     )
 
-    # Forward any provided mapping after a quick sanity check.
-    # If nothing is passed into vcpkg_write_sourcelink_file, then it will 
-    # attempt to set a sensible default based upon the contents of the extracted repo.
+    # Explicit mappings override automatic detection and the Boost special case.
     if(DEFINED arg_RAW_INCLUDE_MAPPING)
-        list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
-        if (${num_mappings} LESS "2")
-            message(FATAL_ERROR "vcpkg_from_github was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
-        endif()
         set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
     else()
         # Special-case checks
@@ -168,7 +162,7 @@ Error was: ${head_version_err}
         SOURCE_PATH "${SOURCE_PATH}"
         SERVER_PATH "${github_raw_url}/${org_name}/${repo_name}/${ref_to_use}/*"
         RAW_SEARCH_REPO_NAME "${repo_name}"
-        RAW_INCLUDE_MAPPING "${raw_include_mapping}"
+        RAW_INCLUDE_MAPPING ${raw_include_mapping}
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)

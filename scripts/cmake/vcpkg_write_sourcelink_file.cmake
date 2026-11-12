@@ -33,6 +33,9 @@ Each mapping consists of a pair of strings, which are then embedded into the fil
 - First string is *from*, which represents the path below the `include` folder after installation
 - Second string is *to*, which represents the path below the source repo.
 
+Pass the pairs as separate arguments or as a quoted semicolon-separated list.
+The number of entries must be even; an incomplete pair is an error.
+
 As per the SourceLink spec, each location may include 0 or 1 wildcard character, and they must be a matched set (both or neither contain it).
 
 Note that this is only used after the headers are installed into the target location for downstream consumption,
@@ -80,15 +83,15 @@ Below is a sample output from the `fmt` project that illustrates several things:
 
 
 function(vcpkg_write_sourcelink_file)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;SERVER_PATH;RAW_SEARCH_REPO_NAME;RAW_INCLUDE_MAPPING" "")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;SERVER_PATH;RAW_SEARCH_REPO_NAME" "RAW_INCLUDE_MAPPING")
 
     if(NOT DEFINED arg_SOURCE_PATH OR NOT DEFINED arg_SERVER_PATH)
         message(FATAL_ERROR "SOURCE_PATH and SERVER_PATH must be specified.")
     endif()
 
     if(DEFINED arg_RAW_INCLUDE_MAPPING AND NOT "${arg_RAW_INCLUDE_MAPPING}" STREQUAL "")
-        # If the port provides these string pairs, then use them directly without further validation.
-        set(raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+        # Also accept the quoted semicolon-separated lists used by existing callers.
+        set(raw_include_mapping ${arg_RAW_INCLUDE_MAPPING})
     else()
         # Establish a sensible default if none was provided by searching the extracted source.
         # Because this is represented as JSON key/value pairs, there can be only one entry per key.
@@ -112,7 +115,7 @@ function(vcpkg_write_sourcelink_file)
             set(check_repo_name True)
         endif()
 
-        # The order is relevant here, so the most deply-nested items or most interesting are found first
+        # The order is relevant here, so the most deeply-nested items or most interesting are found first
         if(check_repo_name AND IS_DIRECTORY "${arg_SOURCE_PATH}/include/${arg_RAW_SEARCH_REPO_NAME}")
             list(APPEND raw_include_mapping "${PORT}/*" "include/${arg_RAW_SEARCH_REPO_NAME}/*")
         elseif(IS_DIRECTORY  "${arg_SOURCE_PATH}/include")
@@ -134,6 +137,12 @@ function(vcpkg_write_sourcelink_file)
 
     endif()
 
+    list(LENGTH raw_include_mapping num_mappings)
+    math(EXPR unmatched_mapping "${num_mappings} % 2")
+    if(unmatched_mapping)
+        message(FATAL_ERROR "RAW_INCLUDE_MAPPING must contain pairs of installed and source paths: ${raw_include_mapping}")
+    endif()
+
     # Normalize and escape (for JSON) the source path.
     # - Adding the '*' wildcard explicitly here because we are passed the plain SOURCE_PATH
     # - Both here and below, the path formatting handles either native path format
@@ -150,22 +159,17 @@ function(vcpkg_write_sourcelink_file)
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" "{\"documents\":{ \"${sourcelink_source_path}\": \"${arg_SERVER_PATH}\"")
 
     # If specified, add the mappings
-    if (DEFINED raw_include_mapping)
-        list(LENGTH raw_include_mapping num_mappings)
-        foreach(i RANGE 0 ${num_mappings} 2)
-            if (${i}+1 LESS ${num_mappings})
-                list(POP_FRONT raw_include_mapping item_from item_to)
+    while(raw_include_mapping)
+        list(POP_FRONT raw_include_mapping item_from item_to)
 
-                file(TO_NATIVE_PATH "__VCPKG_INSTALLED_TRIPLET_DIR__/include/${item_from}" adjusted_item_from)
-                string(REGEX REPLACE "\\\\" "\\\\\\\\" adjusted_item_from "${adjusted_item_from}")
+        file(TO_NATIVE_PATH "__VCPKG_INSTALLED_TRIPLET_DIR__/include/${item_from}" adjusted_item_from)
+        string(REGEX REPLACE "\\\\" "\\\\\\\\" adjusted_item_from "${adjusted_item_from}")
 
-                # SourceLink strings are allowed to have either 0 or 1 wildcards, so a simple replace is suitable.
-                string(REPLACE "*" "${item_to}" adjusted_item_to "${arg_SERVER_PATH}")
+        # SourceLink strings are allowed to have either 0 or 1 wildcards, so a simple replace is suitable.
+        string(REPLACE "*" "${item_to}" adjusted_item_to "${arg_SERVER_PATH}")
 
-                file(APPEND "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" ", \"${adjusted_item_from}\": \"${adjusted_item_to}\"")
-            endif()
-        endforeach()
-    endif()
+        file(APPEND "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" ", \"${adjusted_item_from}\": \"${adjusted_item_to}\"")
+    endwhile()
 
     # Append the closing braces the the file
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" "}}")

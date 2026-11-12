@@ -17,6 +17,7 @@
     "merge-libs",
     "minimum-required",
     "setup-pkgconfig-path",
+    "sourcelink",
     "spdx"
   ],
   "features": {
@@ -56,6 +57,9 @@
     },
     "setup-pkgconfig-path": {
       "description": "Test the z_vcpkg_setup/restore_pkgconfig_path functions"
+    },
+    "sourcelink": {
+      "description": "Test SourceLink mapping generation and CMake integration"
     },
     "spdx": {
       "description": "Test SPDX resource generation"

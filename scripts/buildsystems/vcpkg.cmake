@@ -580,9 +580,16 @@ function(vcpkg_add_sourcelink_link_options target)
         CMAKE_VERSION VERSION_GREATER_EQUAL 3.19.0)
         # Sourcelink support added in Visual Studio 2017 Version 15.8.
 
+        # Reparse per target: SourceLink inputs and discovery paths can change during configure.
+        # The content comparison below avoids rewriting unchanged output. Caching would require
+        # invalidation for changes to the input set, contents, and path substitutions.
+        set(Z_VCPKG_SOURCELINK_LINK_OPTS "")
+
         # Discover the sourcelink information for all dependencies (but not the current target)
         # - Search all of the installed sourcelink files from each port (already installed into the target)
-        #   - Note that this is called for each referenced target and when each of the ports are built.
+        #   - Note that this runs for every target created by add_executable/add_library (including
+        #     IMPORTED/INTERFACE targets created by find_package), both in consuming projects and
+        #     when building each port.
         # - This will collect more files than strictly necessary when building the dependent ports
         #   because it scans the entire directory populated for the target (not specific to each port).
         #   There is insufficient information at this point in the build to directly reduce to the minimum set
@@ -627,9 +634,9 @@ function(vcpkg_add_sourcelink_link_options target)
             # Tracked separately so --trace-expand doesn't dump sourcelink_fragments (which grows exponentially during the vcpkg ci build)
             set(sourcelink_separator " ")
 
-            foreach(sourcelink_file ${sourcelink_files})
-                file(READ ${sourcelink_file} sourcelink_contents)
-                string(JSON content_type TYPE ${sourcelink_contents})
+            foreach(sourcelink_file IN LISTS sourcelink_files)
+                file(READ "${sourcelink_file}" sourcelink_contents)
+                string(JSON content_type TYPE "${sourcelink_contents}")
 
                 if(content_type STREQUAL "OBJECT")
                     string(JSON documents GET "${sourcelink_contents}" "documents")
@@ -639,7 +646,7 @@ function(vcpkg_add_sourcelink_link_options target)
                 endif()
 
                 string(JSON imax LENGTH "${documents}")
-                if ("${i}" LESS "1")
+                if ("${imax}" LESS "1")
                     message(WARNING "Invalid sourcelink file: ${sourcelink_file}")
                     continue()
                 endif()
@@ -687,7 +694,6 @@ function(vcpkg_add_sourcelink_link_options target)
 
                 set(Z_VCPKG_SOURCELINK_LINK_OPTS "/sourcelink:${Z_VCPKG_SOURCELINK_JSON}")
             endif()
-            set(Z_VCPKG_SOURCELINK_LINK_OPTS "${Z_VCPKG_SOURCELINK_LINK_OPTS}" CACHE INTERNAL "Link options to enable sourcelink from vcpkg")
         endif()
 
         if(Z_VCPKG_SOURCELINK_LINK_OPTS)

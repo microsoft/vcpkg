@@ -1,8 +1,8 @@
 function(vcpkg_from_git)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
-        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS;RAW_ACCESS_URL;RAW_INCLUDE_MAPPING"
-        "PATCHES"
+        "OUT_SOURCE_PATH;URL;REF;FETCH_REF;HEAD_REF;TAG;LFS;RAW_ACCESS_URL"
+        "PATCHES;RAW_INCLUDE_MAPPING"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -206,27 +206,16 @@ SHA is in the history. For example, you may be able to fix this error by changin
     #   - self-hosted bitbucket: "${baseUrl}/projects/${project_name}/repos/${repo_name}/raw/*?at=${arg_REF}"
     # 
     if(DEFINED arg_RAW_ACCESS_URL)
-        string(FIND ${arg_RAW_ACCESS_URL} "*" found_wildcard)
+        string(FIND "${arg_RAW_ACCESS_URL}" "*" found_wildcard)
         if (${found_wildcard} EQUAL "-1")
             message(FATAL_ERROR "RAW_ACCESS_URL was provided, but does not contain required '*' character: ${arg_RAW_ACCESS_URL}")
-        endif()
-
-        # Forward any provided mapping after a quick sanity check.
-        # If nothing is passed into vcpkg_write_sourcelink_file, then it will 
-        # attempt to set a sensible default based upon the contents of the extracted repo.
-        if(DEFINED arg_RAW_INCLUDE_MAPPING)
-            list(LENGTH arg_RAW_INCLUDE_MAPPING num_mappings)
-            if (${num_mappings} LESS "2")
-                message(FATAL_ERROR "vcpkg_from_git was passed invalid RAW_INCLUDE_MAPPING: ${arg_RAW_INCLUDE_MAPPING}")
-            endif()
-            set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
         endif()
 
         vcpkg_write_sourcelink_file(
             SOURCE_PATH "${SOURCE_PATH}"
             SERVER_PATH "${arg_RAW_ACCESS_URL}"
             RAW_SEARCH_REPO_NAME "${PORT}"
-            RAW_INCLUDE_MAPPING "${raw_include_mapping}"
+            RAW_INCLUDE_MAPPING ${arg_RAW_INCLUDE_MAPPING}
         )
     endif()
 
