@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         001-windows-gles-dispatch.patch
+        001-workaround-we4189.patch # https://gitlab.freedesktop.org/mesa/mesa/-/work_items/16530
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako pyyaml)

@@ -1,0 +1,36 @@
+diff --git a/meson.build b/meson.build
+index 24c3dc52821..0f1d85358b2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1407,7 +1407,6 @@ if cc.get_argument_syntax() == 'msvc'
+     '/wd5105',  # macro expansion producing 'defined' has undefined behavior (winbase.h, need Windows SDK upgrade)
+     '/we4020',  # Error when passing the wrong number of parameters
+     '/we4024',  # Error when passing different type of parameter
+-    '/we4189',  # 'identifier' : local variable is initialized but not referenced
+     '/Zc:__cplusplus', #Set __cplusplus macro to match the /std:c++<version> on the command line
+     '/Zc:enumTypes', # Enables C++ conforming enum underlying type and enumerator type deduction
+     '/Zc:preprocessor', # Use the standards-conforming preprocessor
+diff --git a/src/gallium/drivers/d3d12/meson.build b/src/gallium/drivers/d3d12/meson.build
+index d0ad7b3a75c..d58e2a88e03 100644
+--- a/src/gallium/drivers/d3d12/meson.build
++++ b/src/gallium/drivers/d3d12/meson.build
+@@ -23,7 +23,6 @@ libd3d12_compiler_args += cc.get_supported_arguments([
+     '/we5105',
+     '/we4020',
+     '/we4024',
+-    '/we4189',
+   ])
+ 
+ _with_gallium_d3d12_graphics = get_option('gallium-d3d12-graphics')
+diff --git a/src/gallium/frontends/mediafoundation/meson.build b/src/gallium/frontends/mediafoundation/meson.build
+index fa10388aa33..e3bfb3af2d5 100644
+--- a/src/gallium/frontends/mediafoundation/meson.build
++++ b/src/gallium/frontends/mediafoundation/meson.build
+@@ -41,7 +41,6 @@ mf_cpp_args = cc.get_supported_arguments([
+     '/we5105',
+     '/we4020',
+     '/we4024',
+-    '/we4189',
+ ])
+ if get_option('mediafoundation-store-dll')
+   mf_cpp_args += '-DBUILD_FOR_MSDK' # Can use #if BUILD_FOR_MSDK in .cpp code
