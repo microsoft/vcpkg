@@ -1,0 +1,56 @@
+diff --git a/src/anari_viewer/CMakeLists.txt b/src/anari_viewer/CMakeLists.txt
+index 8ebd3dc..cf49670 100644
+--- a/src/anari_viewer/CMakeLists.txt
++++ b/src/anari_viewer/CMakeLists.txt
+@@ -49,11 +49,16 @@ INTERFACE
+   ${CMAKE_CURRENT_LIST_DIR}/ui_anari.cpp
+   ${CMAKE_CURRENT_LIST_DIR}/ui_anari.h
+ )
+-project_include_directories(INTERFACE ${CMAKE_CURRENT_LIST_DIR}/..)
++find_package(Stb REQUIRED)
++project_include_directories(INTERFACE ${CMAKE_CURRENT_LIST_DIR}/.. ${Stb_INCLUDE_DIR})
+ project_link_libraries(INTERFACE
+   anari::anari
++  anari::helium
+   anari_viewer_imgui_sdl
+-  anari_viewer_stb_image
+ )
++if(NOT WIN32)
++  find_package(tinyexr CONFIG REQUIRED)
++  project_link_libraries(INTERFACE unofficial::tinyexr::tinyexr)
++endif()
+ 
+ add_library(anari::anari_viewer ALIAS ${PROJECT_NAME})
+diff --git a/src/anari_viewer/HDRImage.cpp b/src/anari_viewer/HDRImage.cpp
+index 3b1e33d..df2106f 100644
+--- a/src/anari_viewer/HDRImage.cpp
++++ b/src/anari_viewer/HDRImage.cpp
+@@ -5,11 +5,11 @@
+ #include <cstring>
+ 
+ #define STB_IMAGE_IMPLEMENTATION 1
+-#define TINYEXR_IMPLEMENTATION 1
+-#include "external/stb_image/stb_image.h"
+-#include "external/stb_image/stb_image_write.h"
++#define STB_IMAGE_WRITE_IMPLEMENTATION
++#include <stb_image.h>
++#include <stb_image_write.h>
+ #ifndef _WIN32
+-#include "external/tinyexr/tinyexr.h"
++#include <tinyexr.h>
+ #endif
+ 
+ #include "HDRImage.h"
+diff --git a/src/anari_viewer/external/CMakeLists.txt b/src/anari_viewer/external/CMakeLists.txt
+index 92fb731..fbd21f5 100644
+--- a/src/anari_viewer/external/CMakeLists.txt
++++ b/src/anari_viewer/external/CMakeLists.txt
+@@ -1,5 +1,6 @@
+ ## Copyright 2023-2026 The Khronos Group
+ ## SPDX-License-Identifier: Apache-2.0
+ 
+-add_subdirectory(imgui)
+-add_subdirectory(stb_image)
++find_package(imgui CONFIG REQUIRED)
++add_library(anari_viewer_imgui_sdl INTERFACE)
++target_link_libraries(anari_viewer_imgui_sdl INTERFACE imgui::imgui)
