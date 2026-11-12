@@ -1,0 +1,9 @@
+waservix provides CMake targets:
+
+  find_package(waservix CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE waservix::waservix)
+
+waservix provides pkg-config modules:
+
+  # WAservix WhatsApp API Gateway client for C and C++: send WhatsApp messages from your own number
+  waservix
