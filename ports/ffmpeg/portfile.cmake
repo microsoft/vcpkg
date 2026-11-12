@@ -41,6 +41,7 @@ if(VCPKG_TARGET_IS_MINGW)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         string(APPEND OPTIONS " --target-os=mingw64")
     endif()
+    string(APPEND OPTIONS " --enable-d3d11va --enable-dxva2 --enable-mediafoundation")
 elseif(VCPKG_TARGET_IS_LINUX)
     string(APPEND OPTIONS " --target-os=linux --enable-pthreads")
 elseif(VCPKG_TARGET_IS_UWP)
@@ -70,6 +71,23 @@ endif()
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+
+if(VCPKG_TARGET_IS_MINGW)
+    # mingw-w64 provides d3d12video.h only from v12.0.0.
+    # FFmpeg configure fails if d3d12va is requested and the header is missing.
+    find_file(D3D12VIDEO_HEADER
+        NAMES d3d12video.h
+        PATHS ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES}
+        NO_DEFAULT_PATH
+        NO_CACHE
+    )
+    if(D3D12VIDEO_HEADER)
+        string(APPEND OPTIONS " --enable-d3d12va")
+    else()
+        message(STATUS "d3d12video.h not found in the MinGW toolchain. Building without d3d12va.")
+    endif()
+endif()
+
 if(VCPKG_DETECTED_MSVC)
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
@@ -455,15 +473,29 @@ endif()
 
 set(WITH_OPENSSL OFF)
 set(WITH_SCHANNEL OFF)
-if("openssl" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-openssl")
-    set(WITH_OPENSSL ON)
-else()
-    set(OPTIONS "${OPTIONS} --disable-openssl")
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
-        string(APPEND OPTIONS " --enable-schannel")
-        set(WITH_SCHANNEL ON)
+set(WITH_SECURETRANSPORT OFF)
+if("network" IN_LIST FEATURES)
+    if("openssl" IN_LIST FEATURES)
+        set(OPTIONS "${OPTIONS} --enable-openssl")
+        set(WITH_OPENSSL ON)
+    else()
+        set(OPTIONS "${OPTIONS} --disable-openssl")
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
+            string(APPEND OPTIONS " --enable-schannel")
+            set(WITH_SCHANNEL ON)
+        elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+            # SecureTransport is Apple's platform TLS backend, the counterpart of
+            # schannel. Autodetect is off, so it must be enabled explicitly.
+            string(APPEND OPTIONS " --enable-securetransport")
+            set(WITH_SECURETRANSPORT ON)
+        endif()
     endif()
+else()
+    # Without networking, configure drops every protocol that needs it and keeps the
+    # local ones (file, pipe, fd, ...). Also build none of the TLS backends, which
+    # exist only to secure network protocols.
+    string(APPEND OPTIONS " --disable-network")
+    string(APPEND OPTIONS " --disable-openssl --disable-schannel --disable-securetransport")
 endif()
 
 if("opus" IN_LIST FEATURES)
@@ -745,9 +777,9 @@ if(VCPKG_DETECTED_MSVC)
         set(FFMPEG_CRT_PREFIX "-MD")
     endif()
     # Append Release flags
-    string(APPEND OPTIONS_RELEASE " --extra-cflags=${FFMPEG_CRT_PREFIX} --extra-cxxflags=${FFMPEG_CRT_PREFIX}")
+    string(APPEND OPTIONS_RELEASE " --extra-cflags=${FFMPEG_CRT_PREFIX}")
     # Append Debug flags (adding the 'd' suffix for the debug runtime)
-    string(APPEND OPTIONS_DEBUG " --extra-cflags=${FFMPEG_CRT_PREFIX}d --extra-cxxflags=${FFMPEG_CRT_PREFIX}d")
+    string(APPEND OPTIONS_DEBUG " --extra-cflags=${FFMPEG_CRT_PREFIX}d")
 endif()
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
@@ -797,10 +829,14 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_C_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
     file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_RELEASE_SANITIZED}")
+    set(cxxrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cxxflags.rsp")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_CXX_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_CXX_FLAGS_RELEASE}")
+    file(WRITE "${cxxrsp}" "${VCPKG_COMBINED_CXX_FLAGS_RELEASE_SANITIZED}")
     set(ldrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ldflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE}")
     file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_RELEASE_SANITIZED}")
     set(ENV{CFLAGS} "@${crsp}")
+    set(ENV{CXXFLAGS} "@${cxxrsp}")
     # All tools except the msvc arm{,64} assembler accept @... as response file syntax.
     # For that assembler, there is no known way to pass in flags. We must hope that not passing flags will work acceptably.
     if(NOT VCPKG_DETECTED_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
@@ -840,10 +876,14 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_C_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_C_FLAGS_DEBUG}")
     file(WRITE "${crsp}" "${VCPKG_COMBINED_C_FLAGS_DEBUG_SANITIZED}")
+    set(cxxrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/cxxflags.rsp")
+    string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_CXX_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_CXX_FLAGS_DEBUG}")
+    file(WRITE "${cxxrsp}" "${VCPKG_COMBINED_CXX_FLAGS_DEBUG_SANITIZED}")
     set(ldrsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/ldflags.rsp")
     string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG_SANITIZED "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}")
     file(WRITE "${ldrsp}" "${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG_SANITIZED}")
     set(ENV{CFLAGS} "@${crsp}")
+    set(ENV{CXXFLAGS} "@${cxxrsp}")
     if(NOT VCPKG_DETECTED_MSVC OR NOT VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
         set(ENV{ASFLAGS} "@${crsp}")
     endif()

@@ -1,0 +1,21 @@
+diff --git a/src/localedata-qml/CMakeLists.txt b/src/localedata-qml/CMakeLists.txt
+index 1714daa..f311e29 100644
+--- a/src/localedata-qml/CMakeLists.txt
++++ b/src/localedata-qml/CMakeLists.txt
+@@ -2,7 +2,7 @@
+ # SPDX-FileCopyrightText: 2022 Julius Künzel <jk.kdedev@smartlab.uber.space>
+ # SPDX-License-Identifier: BSD-3-Clause
+ 
+-ecm_add_qml_module(ki18nlocaledataqmlplugin URI "org.kde.i18n.localeData" VERSION 1.0)
++ecm_add_qml_module(ki18nlocaledataqmlplugin URI "org.kde.i18n.localeData" CLASS_NAME KI18nLocaleDataQmlPlugin VERSION 1.0)
+ 
+ target_sources(ki18nlocaledataqmlplugin PRIVATE
+     ki18nlocaledataqmlplugin.cpp
+@@ -12,6 +12,6 @@ target_link_libraries(ki18nlocaledataqmlplugin PRIVATE
+     KF6::I18nLocaleData
+ )
+ 
+-ecm_finalize_qml_module(ki18nlocaledataqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(ki18nlocaledataqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6I18nTargets)
+ 
+ ecm_generate_qdoc(ki18nlocaledataqmlplugin ki18nlocaledataqml.qdocconf)

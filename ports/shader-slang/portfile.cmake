@@ -18,13 +18,13 @@ if(key STREQUAL "windows-x64")
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64.zip"
-		SHA512 6ecd98b7c3c7a057a443e062bf9acb8ff758dd75ebe78a8fd06408a224f0283c2e41e92e5df63dd7d3d8cf37af5e588d88c16ce4e85ac28a315b0f229617c8b8
+		SHA512 cac45e9f659ae31cd9a4dbdd3be5c062bf97c1e354fb99212742c3e77866bc519326e63b392a067d74829d3faaabc28271efe615129e5acf8386edd863ba363e
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64-debug-info.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64-debug-info.zip"
-		SHA512 0c02541fee92946fc5b9898d136577c7cc222042d4a6f4a4f11dff1ae2f57ecc72b078c6bfdb741cece9d49d63d6438b38c1aea58c3a5686fa49da0c314dfdd4
+		SHA512 e2640e315768cb50762f11684658fcab6b82d3c71e8631c2388d7d07c99b6d24c77c5e9545bc0b02badd2c13a535c4f57e092468f86c6aea51fec52f69746d21
 	)
 endif()
 if(key STREQUAL "windows-arm64")
@@ -32,13 +32,13 @@ if(key STREQUAL "windows-arm64")
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64.zip"
-		SHA512 8ec8fdd9f56ad278aaeb259bb214b0e747a052fbdc454c13a8c5072556c7dcc5dc76a4c13005524c0d711de9d18d692b8c0144ff2e866e841275b1a4298936a6
+		SHA512 99aaf3ca23b3c2e4c5deddbbbea17ff377147c338b59cdb029436a2534183dc897aaba7ae2261436d14e324c5532bf6ce9baf557aae896b91318569b0cf7fc9e
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64-debug-info.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64-debug-info.zip"
-		SHA512 56ce03f060a655d4e9350c89aef29ba86e890741ec9e24996e08986934848f553a578b1b44b43dff1b27adb723cffd396e6c66c2695a3a4cb002513f37876153
+		SHA512 8548a71d00b1a30d2d893974bb581100fd47b263a3efebb9ac8d87b4bd3885acb8640128b8f27922896e57c13e6e14aabf4cfd1e6e52823c0f017ef25a8b7865
 	)
 endif()
 if(key STREQUAL "macosx-x64")
@@ -46,13 +46,13 @@ if(key STREQUAL "macosx-x64")
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
-		SHA512 bf8842fb6284615f01c5b8314124fca226410083d190ea5fc75826906ed4f8efe8c9925d131c740f07bc72f374c41325c04b01f22d1afc893234ea335655fd02
+		SHA512 2013e688cde4f0fc0da47fae915a499316b0d12db0970f4d675abd5d137a86e9a01dfb6af334007abaf42b1db270be15c9a827506e50606ce5e949ec03da3e50
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64-debug-info.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64-debug-info.zip"
-		SHA512 44463596fd173b8feb0e5aad639e25de249906dadc0cc7785a43b434b78ffc2087fb46d93fe907aa827a4ce8527ed9ef53cdff4815dfe0551c33290f763ac7e0
+		SHA512 bef8f5face290258305426eab7812fd563062ca13feb42151db182e591dc4f525ee88293a624b4afb2fb6e3e152125c58f723d1db710a468970db31e10b01757
 	)
 endif()
 if(key STREQUAL "macosx-arm64")
@@ -60,13 +60,13 @@ if(key STREQUAL "macosx-arm64")
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
-		SHA512 0768024cac0156b7355fb65a2fc96ca3ab1303f94c0152be883bf57a8cbe521ca895b0e412cbc10ed9960adf35c23eee7a798448f40e37c9c2838c076950e85f
+		SHA512 fdffcdb5070b676d25c23c118791ede6fa6db046e8eb5a299c3e91a595e3716b75026f21993199120f771a9ac4034c80d8cd6d221b75b1cd5c896d3d4cd874f0
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64-debug-info.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64-debug-info.zip"
-		SHA512 baa6dfa0d086fc09e78d3028a6ae8a447867d4708522ea7cbdf51a05486e2f745dc2908e14bc9a72b01b760257389dc6121e6466d5dcd7e23e9f4d942354d328
+		SHA512 9d5ced8e7b43d307e9552b1966ac9ab7d2d2750ba16bedbab900b45814552027203ec07c29d8a03d151c13ce007e94a74af438da18146a134fafcf00c4602f8d
 	)
 endif()
 if(key STREQUAL "linux-x64")
@@ -74,13 +74,13 @@ if(key STREQUAL "linux-x64")
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64.zip"
-		SHA512 dad030a8075b3c7f05d6af5aa5054d315fc6e751c74ff50a9d4d8cfdd2e4cc3b16e54cbe6be79ef8a1c9908175ed2a5bebba5bfb22d10861cf2da16c1eeb3eeb
+		SHA512 6277a36cb7e377767031cfef9239b545adddffb52c33a68aa549e7d62aeacc2d7a07cef98390767ba527afeebf74f15645440189ea31fbf7573a941b9e70e54a
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64-debug-info.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64-debug-info.zip"
-		SHA512 1acc4d8ccf1ab4ceceffd4221464a6294e6a49ae210ba9556ebad0c80026cf38db6dabcd08839066f790a4c3216ea4db570b2218e44ca6700e8b9c699bbb1a4a
+		SHA512 8f76ab7b1f5ac9f24a4966d881e0a6e53e4267fb3f4a063ab65ecb8346de4c2b25db46cc2d31650d3b9d949ee9a4a44128ca7587a75ee62a69efb1be5c7ff352
 	)
 endif()
 if(key STREQUAL "linux-arm64")
@@ -88,13 +88,13 @@ if(key STREQUAL "linux-arm64")
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64.zip"
-		SHA512 1c910db6b15f14f0b3c7a9915c23c190f3acc14b58377a51b0f0162a64a715198e13783ec440ef4fbfe522bc977cb02e9c3a10258fa2e86e93fa8a603677593a
+		SHA512 4fd4b69fa2d2afa5d4226f4631a62a9319614601a3cb554426aa4ee2aaa9db6b78dab013ba9564fd7e3ac632b0f7cebaa6d1bdb0d4da4a500ae108dc5df6e961
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64-debug-info.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64-debug-info.zip"
-		SHA512 8918589fdfcc1d847c0ea549f6d47815813bd85e065da79de2eaf23f6876746135fbcd99ea3b811f3c5d0a47549a7d0cfeee540e7437a1365c313f04b1693054
+		SHA512 ccfa3934d87ccb1f34fcf53ab7b5db912d35d6917f5539a848b500f1378af3bbfff36c35f2e245703c3583cd1559241d99502b985d6e2f424506026d5d568d3b
 	)
 endif()
 if(NOT ARCHIVE)

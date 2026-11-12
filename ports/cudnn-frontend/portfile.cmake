@@ -1,15 +1,16 @@
+set(VCPKG_BUILD_TYPE release) # header only, INTERFACE library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cudnn-frontend
     REF "v${VERSION}"
-    SHA512 20c369bcf31c3aa11909d2509d31bc147c9752f630855394d76524cc8be9dc95865e722015784af404aa22534fbac1362cad427e94f28611730817dfe211936e
+    SHA512 a2ea1873aafa7a61a334a560d67d816056c151ad9b83789f412c61f15541da4652413d4e0d91930dadd00ef509f97c8ab473ed89da24ef6c2cde737e282303a6
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+        version.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/cudnn_frontend/thirdparty")
-
-set(VCPKG_BUILD_TYPE release) # header only, INTERFACE library
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
 

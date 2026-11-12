@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-crt-cpp
     REF "v${VERSION}"
-    SHA512 5b86d52939c89774c283cbab06c09787bd9900e5529453dd1cff26f467105e41bfa3a406d22079ce9cf077de020d6d0747d3f2b145afebb8bd486cf30c62371f
+    SHA512 3e436c6bb95c2ac94d8d0021fbd4d7e329bde6b29830f2d34dde8d7808e3ebb12584262ec54a75fe34a2f569cbc60ed3819f7cf1a75f1efaea85a08181ef7662
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DSTATIC_CRT=${STATIC_CRT}"
         -DBUILD_DEPS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
         -DBUILD_TESTING=FALSE
         -DAWS_WARNINGS_ARE_ERRORS=OFF

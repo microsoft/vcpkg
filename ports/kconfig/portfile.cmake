@@ -21,7 +21,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DKDE_INSTALL_QMLDIR=qml
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         ${FEATURE_OPTIONS}
 )
 

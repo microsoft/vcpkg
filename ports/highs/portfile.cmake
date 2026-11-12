@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ERGO-Code/HiGHS
     REF v${VERSION}
-    SHA512 0ea407784bc6c8e31c72fbcdcab201e8a7cc7debbca57504e74177658208151e90637e5fb1e0cdf1b1ae6b677e7865e77771ec025b17f8223f74d00fc6420546
+    SHA512 4780fd4338e144b5639f00bffed4075ee7260479d904270c704c8220a6e2f0379a7ff167ba6a64587f897b86b99e24d5dea7b6817decfd8534fc832e2c925fa4
     HEAD_REF master
     PATCHES
         respect-user-selected-compiler.patch
-        fix-pkgconfig.patch
         fix-extras-metadata.patch
 )
 

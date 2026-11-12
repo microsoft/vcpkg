@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 893a4d8..ab94312 100644
+index a81b15e0..9924638d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -19,7 +19,7 @@ endif()
@@ -11,12 +11,14 @@ index 893a4d8..ab94312 100644
  
  if(MSVC)
    target_compile_options(tree-sitter PRIVATE
-@@ -92,4 +92,12 @@ install(FILES lib/include/tree_sitter/api.h
+@@ -101,6 +101,14 @@ install(FILES lib/include/tree_sitter/api.h
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tree-sitter.pc"
          DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
  install(TARGETS tree-sitter
 +        EXPORT unofficial-tree-sitter-config
-         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 +
 +target_include_directories(tree-sitter PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 +install(

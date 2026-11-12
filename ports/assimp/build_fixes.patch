@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1242bba..eba5242 100644
+index df64adeb0..a29964354 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -354,7 +354,6 @@ ELSEIF(MSVC)
+@@ -364,7 +364,6 @@ ELSEIF(MSVC)
    ENDIF()
    # supress warning for double to float conversion if Double precision is activated
    ADD_COMPILE_OPTIONS(/wd4244)
@@ -10,7 +10,7 @@ index 1242bba..eba5242 100644
    # Allow user to disable PDBs
    if(ASSIMP_INSTALL_PDB)
      SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
-@@ -362,7 +361,7 @@ ELSEIF(MSVC)
+@@ -372,7 +371,7 @@ ELSEIF(MSVC)
    elseif((GENERATOR_IS_MULTI_CONFIG) OR (CMAKE_BUILD_TYPE MATCHES Release))
      message("-- MSVC PDB generation disabled. Release binary will not be debuggable.")
    endif()
@@ -19,7 +19,7 @@ index 1242bba..eba5242 100644
      # Source code is encoded in UTF-8
      ADD_COMPILE_OPTIONS(/source-charset:utf-8)
    endif()
-@@ -493,7 +492,7 @@ ENDIF()
+@@ -503,7 +502,7 @@ ENDIF()
  
  set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
  
@@ -28,7 +28,7 @@ index 1242bba..eba5242 100644
    SET(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
    SET(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-hunter-config.cmake.in")
    SET(NAMESPACE "${PROJECT_NAME}::")
-@@ -501,7 +500,7 @@ IF(ASSIMP_HUNTER_ENABLED)
+@@ -511,7 +510,7 @@ IF(ASSIMP_HUNTER_ENABLED)
    SET(VERSION_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
    SET(PROJECT_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}Config.cmake")
  ELSE()
@@ -37,7 +37,7 @@ index 1242bba..eba5242 100644
    SET(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-plain-config.cmake.in")
    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
    SET(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
-@@ -516,7 +515,7 @@ set(INCLUDE_INSTALL_DIR "include")
+@@ -526,7 +525,7 @@ set(INCLUDE_INSTALL_DIR "include")
  include(CMakePackageConfigHelpers)
  
  # Note: PROJECT_VERSION is used as a VERSION
@@ -46,7 +46,7 @@ index 1242bba..eba5242 100644
  
  configure_package_config_file(
      ${CMAKE_CONFIG_TEMPLATE_FILE}
-@@ -545,14 +544,13 @@ ENDIF()
+@@ -555,14 +554,13 @@ ENDIF()
  
  # Search for external dependencies, and build them from source if not found
  # Search for zlib
@@ -65,7 +65,7 @@ index 1242bba..eba5242 100644
  ELSE()
    # If the zlib is already found outside, add an export in case assimpTargets can't find it.
    IF( ZLIB_FOUND AND ASSIMP_INSTALL)
-@@ -596,13 +594,13 @@ ELSE()
+@@ -606,13 +604,13 @@ ELSE()
    INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
  ENDIF()
  
@@ -81,22 +81,18 @@ index 1242bba..eba5242 100644
        USE_PKGCONFIG(UNZIP minizip)
      ENDIF()
    ENDIF ()
-@@ -717,9 +715,8 @@ ELSE()
+@@ -726,8 +724,7 @@ ELSE()
+     SET(DRACO_UNITY_PLUGIN OFF CACHE BOOL "" FORCE)
      SET(DRACO_TESTS OFF CACHE BOOL "" FORCE)
  
 -    IF(ASSIMP_HUNTER_ENABLED)
 -      hunter_add_package(draco)
--      find_package(draco CONFIG REQUIRED)
--      SET(draco_LIBRARIES draco::draco)
--    ELSE()
 +    IF(1)
-+      find_package(draco CONFIG REQUIRED)
-+      SET(draco_LIBRARIES draco::draco)
-+    ELSE()
-       # Draco 1.4.1 has many warnings and will not build with /WX or -Werror
-       # See https://github.com/google/draco/issues/672
+       find_package(draco CONFIG REQUIRED)
+       SET(draco_LIBRARIES draco::draco)
+     ELSE()
 diff --git a/cmake-modules/assimp-plain-config.cmake.in b/cmake-modules/assimp-plain-config.cmake.in
-index 6551dcb..dd65b0b 100644
+index 6551dcb68..1e6d6d7d2 100644
 --- a/cmake-modules/assimp-plain-config.cmake.in
 +++ b/cmake-modules/assimp-plain-config.cmake.in
 @@ -1,5 +1,20 @@
@@ -121,7 +117,7 @@ index 6551dcb..dd65b0b 100644
  
  set(ASSIMP_ROOT_DIR ${PACKAGE_PREFIX_DIR})
 diff --git a/code/AssetLib/3MF/D3MFExporter.cpp b/code/AssetLib/3MF/D3MFExporter.cpp
-index 71e3535..b8e5de3 100644
+index bb8a7203c..171bc1844 100644
 --- a/code/AssetLib/3MF/D3MFExporter.cpp
 +++ b/code/AssetLib/3MF/D3MFExporter.cpp
 @@ -56,7 +56,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -134,7 +130,7 @@ index 71e3535..b8e5de3 100644
  
  namespace Assimp {
 diff --git a/code/AssetLib/Blender/BlenderTessellator.h b/code/AssetLib/Blender/BlenderTessellator.h
-index d6487cb..b56e271 100644
+index 5dd2f8ac1..079b210b8 100644
 --- a/code/AssetLib/Blender/BlenderTessellator.h
 +++ b/code/AssetLib/Blender/BlenderTessellator.h
 @@ -143,7 +143,7 @@ namespace Assimp
@@ -147,7 +143,7 @@ index d6487cb..b56e271 100644
  namespace Assimp
  {
 diff --git a/code/AssetLib/IFC/IFCGeometry.cpp b/code/AssetLib/IFC/IFCGeometry.cpp
-index d3666d5..795f366 100644
+index 796416de4..0ab5558c6 100644
 --- a/code/AssetLib/IFC/IFCGeometry.cpp
 +++ b/code/AssetLib/IFC/IFCGeometry.cpp
 @@ -45,8 +45,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -162,7 +158,7 @@ index d3666d5..795f366 100644
  #include <iterator>
  #include <memory>
 diff --git a/code/AssetLib/IFC/IFCLoader.cpp b/code/AssetLib/IFC/IFCLoader.cpp
-index 8c1e658..e8155a9 100644
+index c3854c5cb..e296723dd 100644
 --- a/code/AssetLib/IFC/IFCLoader.cpp
 +++ b/code/AssetLib/IFC/IFCLoader.cpp
 @@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -175,7 +171,7 @@ index 8c1e658..e8155a9 100644
  #endif
  
 diff --git a/code/AssetLib/IFC/IFCOpenings.cpp b/code/AssetLib/IFC/IFCOpenings.cpp
-index 068ef40..be116f8 100644
+index 893ba9931..73bea500c 100644
 --- a/code/AssetLib/IFC/IFCOpenings.cpp
 +++ b/code/AssetLib/IFC/IFCOpenings.cpp
 @@ -47,8 +47,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -190,20 +186,20 @@ index 068ef40..be116f8 100644
  #include <deque>
  #include <forward_list>
 diff --git a/code/AssetLib/MMD/MMDPmxParser.cpp b/code/AssetLib/MMD/MMDPmxParser.cpp
-index 73d6b6c..69529ba 100644
+index e590bd0a5..38a7f144b 100644
 --- a/code/AssetLib/MMD/MMDPmxParser.cpp
 +++ b/code/AssetLib/MMD/MMDPmxParser.cpp
-@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- #include <utility>
+@@ -43,7 +43,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <climits>
  #include "MMDPmxParser.h"
  #include <assimp/StringUtils.h>
 -#include "utf8.h"
-+#include "utf8cpp/utf8.h"
++#include <utf8cpp/utf8.h>
  #include <assimp/Exceptional.h>
  
  namespace pmx
 diff --git a/code/AssetLib/SIB/SIBImporter.cpp b/code/AssetLib/SIB/SIBImporter.cpp
-index 8e05846..9860c5f 100644
+index 8e590c7fe..f3312bd12 100644
 --- a/code/AssetLib/SIB/SIBImporter.cpp
 +++ b/code/AssetLib/SIB/SIBImporter.cpp
 @@ -56,7 +56,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -216,7 +212,7 @@ index 8e05846..9860c5f 100644
  #include <assimp/scene.h>
  #include <assimp/DefaultLogger.hpp>
 diff --git a/code/AssetLib/STEPParser/STEPFileEncoding.cpp b/code/AssetLib/STEPParser/STEPFileEncoding.cpp
-index 7508e90..281c387 100644
+index 500fe73ae..2ce4d0144 100644
 --- a/code/AssetLib/STEPParser/STEPFileEncoding.cpp
 +++ b/code/AssetLib/STEPParser/STEPFileEncoding.cpp
 @@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -229,7 +225,7 @@ index 7508e90..281c387 100644
  #include <memory>
  
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index de2f650..e605bf8 100644
+index 985d872b9..800d8f9a8 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
 @@ -1113,8 +1113,7 @@ ELSE() # IF (ASSIMP_BUILD_USD_IMPORTER)
@@ -382,7 +378,7 @@ index de2f650..e605bf8 100644
    INCLUDE_DIRECTORIES(
        ${IRRXML_INCLUDE_DIR}
        ../contrib/openddlparser/include
-@@ -1476,21 +1470,24 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1479,21 +1473,24 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
    $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
@@ -416,7 +412,7 @@ index de2f650..e605bf8 100644
    endif()
  
    if (ASSIMP_BUILD_DRACO)
-@@ -1513,9 +1510,9 @@ if(ASSIMP_ANDROID_JNIIOSYSTEM)
+@@ -1516,9 +1513,9 @@ if(ASSIMP_ANDROID_JNIIOSYSTEM)
  endif()
  
  IF (ASSIMP_BUILD_NONFREE_C4D_IMPORTER)
@@ -429,7 +425,7 @@ index de2f650..e605bf8 100644
  ENDIF ()
  
  if( MSVC )
-@@ -1556,13 +1553,13 @@ if (MINGW)
+@@ -1559,13 +1556,13 @@ if (MINGW)
      ARCHIVE_OUTPUT_NAME assimp
    )
    if (NOT BUILD_SHARED_LIBS)
@@ -445,7 +441,7 @@ index de2f650..e605bf8 100644
  endif()
  
  SET_TARGET_PROPERTIES( assimp PROPERTIES
-@@ -1592,14 +1589,14 @@ ENDIF()
+@@ -1595,14 +1592,14 @@ ENDIF()
  
  # Build against external unzip, or add ../contrib/unzip so
  # assimp can #include "unzip.h"
@@ -463,7 +459,7 @@ index de2f650..e605bf8 100644
      endif()
    else ()
      INCLUDE_DIRECTORIES("../")
-@@ -1608,7 +1605,7 @@ ENDIF()
+@@ -1611,7 +1608,7 @@ ENDIF()
  
  # Add RT-extension library for glTF importer with Open3DGC-compression.
  IF (RT_FOUND AND ASSIMP_IMPORTER_GLTF_USE_OPEN3DGC)
@@ -473,10 +469,10 @@ index de2f650..e605bf8 100644
  
  IF(ASSIMP_INSTALL)
 diff --git a/code/Common/BaseImporter.cpp b/code/Common/BaseImporter.cpp
-index 1894ad8..e010080 100644
+index 3d12da478..49b73d069 100644
 --- a/code/Common/BaseImporter.cpp
 +++ b/code/Common/BaseImporter.cpp
-@@ -354,7 +354,7 @@ std::string BaseImporter::GetExtension(const std::string &pFile) {
+@@ -349,7 +349,7 @@ std::string BaseImporter::GetExtension(const std::string &pFile) {
      return false;
  }
  
@@ -486,7 +482,7 @@ index 1894ad8..e010080 100644
  // ------------------------------------------------------------------------------------------------
  // Convert to UTF8 data
 diff --git a/code/Common/StbCommon.h b/code/Common/StbCommon.h
-index 6cec216..8c129f4 100644
+index d7b8940c6..5da08cd5a 100644
 --- a/code/Common/StbCommon.h
 +++ b/code/Common/StbCommon.h
 @@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -508,7 +504,7 @@ index 6cec216..8c129f4 100644
  #if _MSC_VER
  #pragma warning(pop)
 diff --git a/code/Common/ZipArchiveIOSystem.cpp b/code/Common/ZipArchiveIOSystem.cpp
-index e2234e2..6258717 100644
+index 11cd362a1..3fb4dc974 100644
 --- a/code/Common/ZipArchiveIOSystem.cpp
 +++ b/code/Common/ZipArchiveIOSystem.cpp
 @@ -54,7 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

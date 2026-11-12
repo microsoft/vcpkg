@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         001_guard_ecm_qml_module_include.patch
         002_use_wayland_xml_from_qt.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -33,8 +34,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_QMLDIR=qml
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
+        -DKDE_INSTALL_QTPLUGINDIR=Qt6/plugins
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         -DKWINDOWSYSTEM_X11=${KWINDOWSYSTEM_X11}
         -DKWINDOWSYSTEM_WAYLAND=${KWINDOWSYSTEM_WAYLAND}
         "-DVCPKG_QT_WAYLAND_DATADIR=${CURRENT_INSTALLED_DIR}/share/qt6/wayland/protocols/wayland"
@@ -46,6 +49,15 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME kf6windowsystem
     CONFIG_PATH lib/cmake/KF6WindowSystem
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6windowsystem/KF6WindowSystemTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig(SKIP_CHECK)
 

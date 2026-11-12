@@ -1,14 +1,13 @@
-#header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO greg7mdp/gtl
     REF "v${VERSION}"
-    SHA512 068d37b7028979538884db5956a76e1de301202eb6b015104c6d8b246e894f9166b1d2b97aff47b2641b6948e7dd1cd20a74396f1a6d276e2ade74469d27c3c2
+    SHA512 565cbb88009c926e309d111051edeeba1972e0cb43ee421d285965cdd5a1f2fe1b9283e5d555a10175323ec9782f59bbbcac134370e829eb845289f13083efb9
     HEAD_REF main
 )
 
-# Use greg7mdp/gtl's own build process, skipping examples and tests
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -17,9 +16,14 @@ vcpkg_cmake_configure(
         -DGTL_BUILD_BENCHMARKS=OFF
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/gtl")
 
-# Delete redundant directories
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/share/doc")
-
-# Put the licence file where vcpkg expects it
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/NOTICE"
+    "${SOURCE_PATH}/licenses/license_blackbird"
+    "${SOURCE_PATH}/licenses/license_boost"
+    "${SOURCE_PATH}/licenses/license_folly"
+    "${SOURCE_PATH}/licenses/license_lamerman"
+    "${SOURCE_PATH}/licenses/license_mark_liu"
+)

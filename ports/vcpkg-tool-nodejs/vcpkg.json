@@ -1,5 +1,5 @@
 {
   "name": "vcpkg-tool-nodejs",
-  "version-semver": "24.21.0",
+  "version-semver": "24.22.1",
   "supports": "native"
 }

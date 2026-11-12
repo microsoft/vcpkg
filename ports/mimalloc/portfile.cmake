@@ -2,10 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 ef24d926153eb81c95e6c79c335eed12c6e14523a2dd817faddc3f666909a244eab5f4be43cc01a6d8c8d62b5695d29fb535b3762128cdef50a7ee55302b2886
+    SHA512 03090fbcfe16aff6b640ef64f8d26551f0347c9e49fbca4efc48d6874ec87c109227fa05157e21e2031d58fe9374a8af9a5e34cf67a2255806f32e39ce4ca3ed
     HEAD_REF dev3
     PATCHES
         pkgconfig-cxx.diff
+        # Backport of https://github.com/microsoft/mimalloc/commit/23fced334cb0c3fbe43a847c895e1c0ebf20c873
+        fix-backtrace-detection.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,12 +29,14 @@ vcpkg_cmake_configure(
         -DMI_BUILD_SHARED=${MI_BUILD_SHARED}
         -DMI_INSTALL_TOPLEVEL=ON
     OPTIONS_DEBUG
-        -DMI_DEBUG_FULL=ON
+        -DMI_DEBUG=FULL
     OPTIONS_RELEASE
-        -DMI_DEBUG_FULL=OFF
+        -DMI_DEBUG=OFF
 )
 
 vcpkg_cmake_install()
+
+file(INSTALL "${SOURCE_PATH}/include/mimalloc-profile.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_copy_pdbs()
 
