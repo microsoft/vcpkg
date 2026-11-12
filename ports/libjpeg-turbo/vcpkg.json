@@ -15,9 +15,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "turbojpeg"
-  ],
   "features": {
     "jpeg7": {
       "description": "Emulate libjpeg v7 API/ABI (this makes libjpeg-turbo backward-incompatible with libjpeg v6b!)"
