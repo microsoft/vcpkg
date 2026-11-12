@@ -1,0 +1,18 @@
+diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
+index e26d5e9..495608f 100644
+--- a/cmake/FindDependencies.cmake
++++ b/cmake/FindDependencies.cmake
+@@ -84,10 +84,13 @@ if(NOT TARGET SQLite3::SQLite3 AND TARGET SQLite::SQLite3)
+     add_library(SQLite3::SQLite3 ALIAS SQLite::SQLite3)
+ endif()
+ 
++# OpenGL and GLEW are only used by the GUI and the CUDA SIFT GPU backend.
++if(GUI_ENABLED OR CUDA_ENABLED)
+ set(OpenGL_GL_PREFERENCE GLVND)
+ find_package(OpenGL ${COLMAP_FIND_TYPE})
+ 
+ find_package(Glew ${COLMAP_FIND_TYPE})
++endif()
+ 
+ find_package(Git)
+ 
