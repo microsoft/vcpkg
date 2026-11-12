@@ -6,6 +6,7 @@
   "license": "MIT",
   "dependencies": [
     "simdjson",
+    "simdutf",
     {
       "name": "vcpkg-cmake",
       "host": true
