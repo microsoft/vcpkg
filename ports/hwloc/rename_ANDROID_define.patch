@@ -12,36 +12,11 @@ outside of the APK, also look for ANDROID.
 Signed-off-by: Brice Goglin <Brice.Goglin@inria.fr>
 (cherry picked from commit 218eeea807c5694f2c2ed338e2f7814f4cc936d3)
 ---
- contrib/android/include/hwloc/autogen/config.h   | 2 --
- contrib/android/include/private/autogen/config.h | 2 +-
  hwloc/topology-linux.c                           | 2 +-
  include/private/debug.h                          | 6 +++---
  utils/lstopo/lstopo.c                            | 4 ++--
- 5 files changed, 7 insertions(+), 9 deletions(-)
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/contrib/android/include/hwloc/autogen/config.h b/contrib/android/include/hwloc/autogen/config.h
-index ab376bc8cf..6359a9386d 100644
---- a/contrib/android/include/hwloc/autogen/config.h
-+++ b/contrib/android/include/hwloc/autogen/config.h
-@@ -229,5 +229,3 @@ typedef uint64_t hwloc_uint64_t;
- #define HWLOC_SYM_PREFIX_CAPS HWLOC_
- 
- #endif /* HWLOC_CONFIG_H */
--
--#define ANDROID 1
-diff --git a/contrib/android/include/private/autogen/config.h b/contrib/android/include/private/autogen/config.h
-index b70f112ac2..ce7f91a67c 100644
---- a/contrib/android/include/private/autogen/config.h
-+++ b/contrib/android/include/private/autogen/config.h
-@@ -720,7 +720,7 @@
- /* Define this to the thread ID type */
- #define hwloc_thread_t pthread_t
- 
--#define ANDROID 1
-+#define HWLOC_ANDROID_APK 1
- 
- #define RUNSTATEDIR ""
- 
 diff --git a/hwloc/topology-linux.c b/hwloc/topology-linux.c
 index f70791d6d8..871c8354a0 100644
 --- a/hwloc/topology-linux.c
