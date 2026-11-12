@@ -1,0 +1,18 @@
+{
+  "name": "smsgora",
+  "version": "1.0.0",
+  "description": "SMS Gora SMS Gateway client for C and C++: send and receive SMS through your own Android phones",
+  "homepage": "https://github.com/TekservixHQ/smsgora-c",
+  "license": "MIT",
+  "dependencies": [
+    "curl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

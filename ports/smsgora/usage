@@ -1,0 +1,9 @@
+smsgora provides CMake targets:
+
+  find_package(smsgora CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE smsgora::smsgora)
+
+smsgora provides pkg-config modules:
+
+  # SMS Gora SMS Gateway client for C and C++: send and receive SMS through your own Android phones
+  smsgora
