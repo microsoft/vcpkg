@@ -9145,7 +9145,7 @@
       "port-version": 0
     },
     "rocksdb": {
-      "baseline": "11.12",
+      "baseline": "11.13.2",
       "port-version": 0
     },
     "rocm": {

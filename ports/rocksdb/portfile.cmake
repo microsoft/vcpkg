@@ -2,11 +2,12 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO meta/rocksdb
   REF "v${VERSION}"
-  SHA512 94658fea825a5cbe95ab9bf6ff6945a0f57353f3ce69ac77f045e737a53860c9ba380c25954af312cf9783275bd016fdb6ee7a56a10a2d634f50477029cc7f4d
+  SHA512 5293a41d9d3a05b58306899c1c2cf36d4c7562d956fb12b4357c2559d944ecda052cd7eb22f8da5b100130198d3febcd4b62c035928b90cc1c35ae84ef348e12
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
     0002-fix-android.patch
+    fix-packaging.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
@@ -63,6 +64,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_fixup_pkgconfig()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(COMMENT [[
 RocksDB is dual-licensed under both the GPLv2 (found in COPYING)
 and Apache 2.0 License (found in LICENSE.Apache). You may select,
@@ -72,4 +75,6 @@ at your option, one of the above-listed licenses.
     "${SOURCE_PATH}/LICENSE.leveldb"
     "${SOURCE_PATH}/LICENSE.Apache"
     "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/util/xxhash.h"
+    "${SOURCE_PATH}/util/xxph3.h"
 )
