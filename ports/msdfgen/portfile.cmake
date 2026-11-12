@@ -41,6 +41,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/msdfgen)
 # move exe to tools
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES msdfgen AUTO_CLEAN)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/msdfgen/msdfgenConfig.cmake"
+        "\${VCPKG_IMPORT_PREFIX}/bin/msdfgen"
+        "\${VCPKG_IMPORT_PREFIX}/tools/${PORT}/msdfgen")
 endif()
 
 # cleanup
