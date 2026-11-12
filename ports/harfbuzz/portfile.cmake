@@ -8,6 +8,7 @@ vcpkg_from_github(
         ${ANDROID_LOCALECONV_L_PATCH}
         no-threads-on-emscripten.patch
         fix-meson-cxx-link.patch
+        fix-clangcl-cxx14.patch
 )
 
 if("icu" IN_LIST FEATURES)
