@@ -1548,6 +1548,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "btoon": {
+      "baseline": "0.1.3",
+      "port-version": 0
+    },
     "buck-yeh-bux": {
       "baseline": "1.12.7",
       "port-version": 0
@@ -2665,8 +2669,8 @@
       "port-version": 1
     },
     "dpdk": {
-      "baseline": "26.3",
-      "port-version": 6
+      "baseline": "26.7",
+      "port-version": 0
     },
     "dpetkov-semver": {
       "baseline": "0.4.1",
@@ -4783,6 +4787,10 @@
     "kwsys": {
       "baseline": "2021-08-06",
       "port-version": 1
+    },
+    "kxmlgui": {
+      "baseline": "6.31.0",
+      "port-version": 0
     },
     "lager": {
       "baseline": "0.1.3",
@@ -8685,12 +8693,12 @@
       "port-version": 1
     },
     "qtkeychain": {
-      "baseline": "0.17.0",
-      "port-version": 1
+      "baseline": "0.18.0",
+      "port-version": 0
     },
     "qtkeychain-qt6": {
-      "baseline": "0.17.0",
-      "port-version": 1
+      "baseline": "0.18.0",
+      "port-version": 0
     },
     "qtlanguageserver": {
       "baseline": "6.11.3",

@@ -54,6 +54,7 @@ PORT_LIST = [
     "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
+    "kxmlgui",
     "oxygen-icons",
     "prison",
     "sonnet",
