@@ -60,6 +60,8 @@ Param(
     [switch]$ForceAllowUnexpectedPassing = $false
 )
 
+try { Write-Host "az session valid until $(az account get-access-token --resource 5a4254d9-3fcb-4cd1-b988-94c3b81429db --query expiresOn -o tsv 2>&1)" } catch { }
+
 function Add-ToolchainToTestCMake {
     # The vcpkg.cmake toolchain file is not part of ABI hashing,
     # but changes must trigger at least some testing.
