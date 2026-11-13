@@ -1,0 +1,81 @@
+From 8a25f055dd38d8b3b28a684c787d37b121ee4f7b Mon Sep 17 00:00:00 2001
+From: Brice Goglin <Brice.Goglin@inria.fr>
+Date: Tue, 10 Nov 2026 09:28:51 +0100
+Subject: [PATCH] android: rename the ANDROID define into HWLOC_ANDROID_APK
+
+This macro is meant for building Android APK.
+By the way, no need to define it in both private and public config.h
+
+When disabling core features that may ever be used on Android
+outside of the APK, also look for ANDROID.
+
+Signed-off-by: Brice Goglin <Brice.Goglin@inria.fr>
+(cherry picked from commit 218eeea807c5694f2c2ed338e2f7814f4cc936d3)
+---
+ hwloc/topology-linux.c                           | 2 +-
+ include/private/debug.h                          | 6 +++---
+ utils/lstopo/lstopo.c                            | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/hwloc/topology-linux.c b/hwloc/topology-linux.c
+index f70791d6d8..871c8354a0 100644
+--- a/hwloc/topology-linux.c
++++ b/hwloc/topology-linux.c
+@@ -2349,7 +2349,7 @@ hwloc_set_linuxfs_hooks(struct hwloc_binding_hooks *hooks,
+   hooks->get_thisthread_last_cpu_location = hwloc_linux_get_thisthread_last_cpu_location;
+   hooks->get_thisproc_last_cpu_location = hwloc_linux_get_thisproc_last_cpu_location;
+   hooks->get_proc_last_cpu_location = hwloc_linux_get_proc_last_cpu_location;
+-#ifndef ANDROID /* get_mempolicy crashes on some Android */
++#if !(defined HWLOC_ANDROID_APK) && !(defined ANDROID) /* get_mempolicy crashes on some Android */
+   hooks->set_thisthread_membind = hwloc_linux_set_thisthread_membind;
+   hooks->get_thisthread_membind = hwloc_linux_get_thisthread_membind;
+   hooks->get_area_membind = hwloc_linux_get_area_membind;
+diff --git a/include/private/debug.h b/include/private/debug.h
+index ff3093ab33..3c3e6fb5d7 100644
+--- a/include/private/debug.h
++++ b/include/private/debug.h
+@@ -20,7 +20,7 @@
+ #include <stdio.h>
+ #endif
+ 
+-#ifdef ANDROID
++#ifdef HWLOC_ANDROID_APK
+ extern void JNIDebug(char *text);
+ #endif
+ 
+@@ -49,12 +49,12 @@ static __hwloc_inline void hwloc_debug(const char *s __hwloc_attribute_unused, .
+ {
+ #ifdef HWLOC_DEBUG
+   if (hwloc_debug_enabled()) {
+-#ifdef ANDROID
++#ifdef HWLOC_ANDROID_APK
+     char buffer[256];
+ #endif
+     va_list ap;
+     va_start(ap, s);
+-#ifdef ANDROID
++#ifdef HWLOC_ANDROID_APK
+     vsprintf(buffer, s, ap);
+     JNIDebug(buffer);
+ #else
+diff --git a/utils/lstopo/lstopo.c b/utils/lstopo/lstopo.c
+index 1f434c513c..e1ab6cdaa4 100644
+--- a/utils/lstopo/lstopo.c
++++ b/utils/lstopo/lstopo.c
+@@ -60,6 +60,6 @@
+ #endif
+ 
+-#ifdef ANDROID
++#ifdef HWLOC_ANDROID_APK
+ extern void setJNIEnv();
+ #endif
+ 
+@@ -1663,7 +1663,7 @@ main (int argc, char *argv[])
+       output_format = LSTOPO_OUTPUT_CONSOLE;
+     }
+ #endif
+-#ifdef ANDROID
++#ifdef HWLOC_ANDROID_APK
+     setJNIEnv();
+     output_func = output_android;
+     output_format = LSTOPO_OUTPUT_WINDOW;
