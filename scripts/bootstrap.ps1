@@ -243,10 +243,19 @@ function Invoke-DownloadWithRetry
         [Parameter(Mandatory=$true)][string]$OutFile
     )
 
-    # Use the numeric TLS 1.2 value so older .NET Framework versions that do not
-    # expose the Tls12 enum member can still enable it when the platform supports it.
+    # Prefer the named enum member when this .NET runtime provides it. Older
+    # .NET Framework versions can still accept TLS 1.2 through its numeric value.
+    if ([System.Enum]::IsDefined([System.Net.SecurityProtocolType], 'Tls12'))
+    {
+        $tls12Protocol = [System.Net.SecurityProtocolType]::Tls12
+    }
+    else
+    {
+        $tls12Protocol = [System.Net.SecurityProtocolType]3072
+    }
+
     $currentSecurityProtocols = [int][System.Net.ServicePointManager]::SecurityProtocol
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]($currentSecurityProtocols -bor 3072)
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]($currentSecurityProtocols -bor [int]$tls12Protocol)
 
     $tempFile = "$OutFile.part"
     Remove-Item -Path $tempFile -ErrorAction SilentlyContinue
