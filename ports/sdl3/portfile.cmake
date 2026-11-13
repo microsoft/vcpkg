@@ -51,6 +51,7 @@ vcpkg_from_github(
         fix-freebsd.patch
         libusb-pkgconfig.patch
         require-dependencies.patch
+        runtime-loaded-dependencies.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -120,17 +121,10 @@ vcpkg_cmake_configure(
         -DSDL_SHARED=${SDL_SHARED}
         -DSDL_FORCE_STATIC_VCRT=${FORCE_STATIC_VCRT}
         -DSDL_LIBC=ON
-        -DSDL_ALSA_SHARED=OFF # Link the dependency supplied by the alsa port.
-        -DSDL_FRIBIDI_SHARED=OFF # Link the dependency supplied by the fribidi port.
-        -DSDL_HIDAPI_LIBUSB_SHARED=OFF # The libusb port controls libusb's linkage.
-        -DSDL_JACK_SHARED=OFF # The jack2 port supplies a shim that loads the system JACK implementation.
-        -DSDL_PIPEWIRE_SHARED=OFF # The pipewire port controls PipeWire's linkage.
-        -DSDL_PULSEAUDIO_SHARED=OFF # The pulseaudio port controls PulseAudio's linkage.
         -DSDL_ROCKCHIP=OFF # Requires a device-specific vendor Mali graphics stack.
         -DSDL_RPI=OFF # Requires the legacy Broadcom bcm_host/brcmegl graphics stack.
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
-        -DSDL_WAYLAND_SHARED=OFF # Link Wayland dependencies with the linkage supplied by their providers.
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         -DSDL_REVISION=vcpkg # Skip invoking git to determine the revision.
     MAYBE_UNUSED_VARIABLES
