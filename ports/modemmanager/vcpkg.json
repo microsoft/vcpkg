@@ -1,0 +1,21 @@
+{
+  "name": "modemmanager",
+  "version": "1.24.2",
+  "description": [
+    "Headers of the ModemManager D-Bus API (enums, errors, interface names and version), to talk to the system ModemManager daemon.",
+    "Headers only: the daemon and libmm-glib are not built."
+  ],
+  "homepage": "https://modemmanager.org",
+  "license": "LGPL-2.0-or-later",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "libxslt",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    }
+  ]
+}
