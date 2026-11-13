@@ -1,0 +1,17 @@
+{
+  "name": "libmeshb",
+  "version": "8.2",
+  "description": "Library to handle the *.meshb file format.",
+  "homepage": "https://github.com/LoicMarechal/libMeshb",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
