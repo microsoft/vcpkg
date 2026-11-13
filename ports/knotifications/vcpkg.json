@@ -38,7 +38,7 @@
       "features": [
         "dbus"
       ],
-      "platform": "!(windows | uwp | osx | ios | android)"
+      "platform": "linux | bsd"
     },
     {
       "name": "vcpkg-cmake",

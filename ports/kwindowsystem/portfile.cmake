@@ -16,8 +16,10 @@ file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: fa
 set(KWINDOWSYSTEM_X11 OFF)
 set(KWINDOWSYSTEM_WAYLAND OFF)
 
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
     set(KWINDOWSYSTEM_X11 ON)
+endif()
+if(VCPKG_TARGET_IS_LINUX)
     set(KWINDOWSYSTEM_WAYLAND ON)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev\n    libwayland-dev libxkbcommon-dev libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxcb1-dev libxcb-keysyms1-dev libxcb-res0-dev libxcb-icccm4-dev libwayland-dev libxkbcommon-dev libxkbcommon-x11-dev")
 endif()
