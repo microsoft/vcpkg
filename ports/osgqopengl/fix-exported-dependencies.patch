@@ -1,0 +1,72 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ae93578..026f571 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -234,6 +234,7 @@ IF(APPLE)
+         ENDIF()
+ 
+         # Apple iOS: Find OpenGLES
++        set(_OSGQOPENGL_USE_DESKTOP_OPENGL OFF)
+         FIND_LIBRARY(OPENGLES_LIBRARY OpenGLES)
+     ELSE ()
+         FIND_LIBRARY(CARBON_LIBRARY Carbon)
+@@ -265,6 +266,7 @@ IF(APPLE)
+           FIND_LIBRARY(AGL_LIBRARY AGL)
+         ENDIF()
+ 
++        set(_OSGQOPENGL_USE_DESKTOP_OPENGL ON)
+         FIND_PACKAGE(OpenGL)
+         add_definitions(-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED)
+     ENDIF ()
+@@ -273,6 +275,7 @@ IF(APPLE)
+     SET(OSG_COMPILE_FRAMEWORKS_INSTALL_NAME_DIR "@executable_path/../Frameworks" CACHE STRING "install name dir for compiled frameworks")
+ ELSE()
+     # Non-Apple: Find OpenGL
++    set(_OSGQOPENGL_USE_DESKTOP_OPENGL ON)
+     FIND_PACKAGE(OpenGL)
+ ENDIF()
+ 
+diff --git a/CMakeModules/OsgMacroUtils.cmake b/CMakeModules/OsgMacroUtils.cmake
+index 6be3359..293ae4e 100644
+--- a/CMakeModules/OsgMacroUtils.cmake
++++ b/CMakeModules/OsgMacroUtils.cmake
+@@ -41,7 +41,9 @@ ENDMACRO()
+ MACRO(LINK_CORELIB_DEFAULT CORELIB_NAME)
+     #SET(ALL_GL_LIBRARIES ${OPENGL_LIBRARIES})
+     SET(ALL_GL_LIBRARIES ${OPENGL_gl_LIBRARY})
++    set(_OSGQOPENGL_USE_EGL OFF)
+     IF (OSG_GLES1_AVAILABLE OR OSG_GLES2_AVAILABLE)
++        set(_OSGQOPENGL_USE_EGL ON)
+         SET(ALL_GL_LIBRARIES ${ALL_GL_LIBRARIES} ${OPENGL_egl_LIBRARY})
+     ENDIF()
+ 
+diff --git a/src/osgQOpenGL/osgQOpenGLConfig.cmake.in b/src/osgQOpenGL/osgQOpenGLConfig.cmake.in
+index d1400c2..0e53675 100644
+--- a/src/osgQOpenGL/osgQOpenGLConfig.cmake.in
++++ b/src/osgQOpenGL/osgQOpenGLConfig.cmake.in
+@@ -5,9 +5,9 @@ endif()
+ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(Qt@QT_VERSION_MAJOR@ COMPONENTS @_QT_COMPONENTS@)
+-# Instead of checking OPENSCENEGRAPH_LIBRARIES, check osgViewer and osgUtil specifically
+-if(NOT DEFINED OSGUTIL_LIBRARIES OR NOT DEFINED OSGVIEWER_LIBRARIES OR NOT DEFINED OPENSCENEGRAPH_INCLUDE_DIRS)
+-    find_dependency(OpenSceneGraph COMPONENTS osgUtil osgViewer)
++find_dependency(OpenSceneGraph COMPONENTS osgUtil osgViewer osgGA osgDB)
++if(@_OSGQOPENGL_USE_DESKTOP_OPENGL@)
++    find_dependency(OpenGL)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/@LIB_NAME@Targets.cmake")
+@@ -18,6 +18,12 @@ if(NOT _OSGQOPENGL_ALREADY_DEFINED)
+     # to other machines unless they have OSG in the exact same location.
+     set_target_properties(osgQt::@LIB_NAME@ PROPERTIES INTERFACE_LINK_LIBRARIES "@_TARGET_LIBRARIES@")
+     target_link_libraries(osgQt::@LIB_NAME@ INTERFACE ${OPENSCENEGRAPH_LIBRARIES})
++    if(NOT @DYNAMIC_OPENSCENEGRAPH@ AND @_OSGQOPENGL_USE_DESKTOP_OPENGL@)
++        target_link_libraries(osgQt::@LIB_NAME@ INTERFACE OpenGL::GL)
++        if(@_OSGQOPENGL_USE_EGL@)
++            target_link_libraries(osgQt::@LIB_NAME@ INTERFACE "${OPENGL_egl_LIBRARY}")
++        endif()
++    endif()
+     target_include_directories(osgQt::@LIB_NAME@ INTERFACE ${OPENSCENEGRAPH_INCLUDE_DIRS})
+ endif()
+ 
