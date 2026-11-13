@@ -3,21 +3,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HPX_WITH_STATIC_LINKING)
 
-vcpkg_download_distfile(ASIO_1_34_PATCH
-    URLS https://github.com/STEllAR-GROUP/hpx/commit/f073c54f9c69108707dc477c890592049fcd95db.patch?full_index=1
-    FILENAME STEllAR-GROUP-hpx-f073c54f9c69108707dc477c890592049fcd95db.patch
-    SHA512 f7c0020d13e1a9fc67ca70488c0bd4b06449a9013be972d6c2d0d2fdb42b6a646176440acbb13c04441461c2a5251da75384112102fe4308a40f11313c02e4b7
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO STEllAR-GROUP/hpx
+    REPO TheHPXProject/hpx
     REF "v${VERSION}"
-    SHA512 bf22add7a97087f68bd49fe0ae5b2bfbd7ba01d4018872c3934ebd81a632e2559e6144c5aa06779db971c642d5a41b16c8c48108af2c4069be6d9f9b72985182
+    SHA512 28fdd63afbc6bf5f66af3860f415b6204ade31bb8c075a37e9303db47816f53b72f86db2ef1404b92a77b71da0559f044589ead4dcd366a016a2e07a7922b93a
     HEAD_REF master
     PATCHES
-        "${ASIO_1_34_PATCH}"
-        fix-asio-resolver.patch # https://github.com/TheHPXProject/hpx/pull/7816
+        fix-streamsize-include.patch # https://github.com/TheHPXProject/hpx/pull/7958
+        remove-stdexec-tag-invoke.patch # current stdexec no longer provides tag_invoke
 )
 
 vcpkg_check_features(
@@ -26,7 +20,6 @@ vcpkg_check_features(
     "zlib"              HPX_WITH_COMPRESSION_ZLIB
     "snappy"            HPX_WITH_COMPRESSION_SNAPPY
     "bzip2"             HPX_WITH_COMPRESSION_BZIP2
-    "cuda"              HPX_WITH_CUDA
     "mpi"               HPX_WITH_PARCELPORT_MPI
     "mpi"               HPX_WITH_PARCELPORT_MPI_MULTITHREADED
 )
@@ -53,6 +46,8 @@ vcpkg_cmake_configure(
         -DHPX_WITH_THREAD_TARGET_ADDRESS=ON
         -DHPX_WITH_CHECK_MODULE_DEPENDENCIES=ON
         -DHPX_WITH_THREAD_IDLE_RATES=ON
+        -DHPX_WITH_CUDA=OFF
+        -DHPX_WITH_FETCH_STDEXEC=OFF
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
 )
 vcpkg_cmake_install()
@@ -84,9 +79,7 @@ vcpkg_replace_string(
     "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH}"
     "list(APPEND CMAKE_MODULE_PATH")
 
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE_1_0.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
