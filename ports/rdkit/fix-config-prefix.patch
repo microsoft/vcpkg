@@ -1,0 +1,18 @@
+--- a/rdkit-config.cmake.in
++++ b/rdkit-config.cmake.in
+@@ -1,5 +1,5 @@
+ # Compute installation prefix relative to this file
+-get_filename_component(_prefix "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
++get_filename_component(_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+ 
+ # Report other info
+ set(RDKit_INCLUDE_DIRS "${_prefix}/@RDKit_HdrDir@")
+@@ -39,7 +39,7 @@ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(Threads REQUIRED)
+ 
+-find_dependency(Boost @Boost_VERSION_STRING@ COMPONENTS ${RDKit_USE_BOOST_COMPONENTS})
++find_dependency(Boost @Boost_VERSION_STRING@ CONFIG COMPONENTS ${RDKit_USE_BOOST_COMPONENTS})
+ 
+ if(RDKit_HAS_DESCRIPTORS3D)
+     find_dependency(Eigen3 REQUIRED NO_MODULE)
