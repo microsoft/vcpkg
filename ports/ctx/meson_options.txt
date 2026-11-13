@@ -1,0 +1,34 @@
+option(
+  'babl',
+  type : 'feature',
+  value : 'disabled',
+  description : 'Enable babl color-management support.',
+)
+
+option(
+  'harfbuzz',
+  type : 'feature',
+  value : 'disabled',
+  description : 'Enable HarfBuzz font shaping support.',
+)
+
+option(
+  'libcurl',
+  type : 'feature',
+  value : 'disabled',
+  description : 'Enable libcurl-based helpers.',
+)
+
+option(
+  'sdl',
+  type : 'feature',
+  value : 'disabled',
+  description : 'Enable the SDL backend.',
+)
+
+option(
+  'cli',
+  type : 'feature',
+  value : 'auto',
+  description : 'Build the bundled ctx command-line program.',
+)
