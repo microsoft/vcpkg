@@ -16,6 +16,14 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # Record DLL linkage in the installed header for consumers not using CMake targets.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Imath/ImathConfig.h"
+        "#define INCLUDED_IMATH_CONFIG_H 1"
+        "#define INCLUDED_IMATH_CONFIG_H 1\n\n#ifndef IMATH_DLL\n#define IMATH_DLL\n#endif"
+    )
+endif()
+
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Imath)
 vcpkg_fixup_pkgconfig()
