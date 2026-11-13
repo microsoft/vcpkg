@@ -7593,7 +7593,7 @@
       "port-version": 0
     },
     "opencc": {
-      "baseline": "1.4.1",
+      "baseline": "2026-10-29",
       "port-version": 0
     },
     "opencensus-cpp": {
