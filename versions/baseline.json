@@ -4342,7 +4342,7 @@
     },
     "kauth": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "kbookmarks": {
       "baseline": "6.31.0",
@@ -4374,7 +4374,7 @@
     },
     "kconfig": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kconfigwidgets": {
       "baseline": "6.31.0",
@@ -4382,7 +4382,7 @@
     },
     "kcoreaddons": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "kcp": {
       "baseline": "2.1.1",
@@ -4390,7 +4390,7 @@
     },
     "kcrash": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kdalgorithms": {
       "baseline": "1.4",
@@ -4402,7 +4402,7 @@
     },
     "kdbusaddons": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kddockwidgets": {
       "baseline": "2.5.1",
@@ -4610,7 +4610,7 @@
     },
     "kf6-solid": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kfr": {
       "baseline": "6.3.1",
@@ -4618,11 +4618,11 @@
     },
     "kglobalaccel": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kguiaddons": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kholidays": {
       "baseline": "6.31.0",
@@ -4706,7 +4706,7 @@
     },
     "knotifications": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "komihash": {
       "baseline": "5.34",

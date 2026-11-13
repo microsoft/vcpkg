@@ -20,6 +20,12 @@ vcpkg_check_features(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND FEATURE_OPTIONS -DUSE_DBUS=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DUSE_DBUS=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
