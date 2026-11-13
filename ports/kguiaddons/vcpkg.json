@@ -27,7 +27,7 @@
         "dbus",
         "xcb"
       ],
-      "platform": "linux"
+      "platform": "linux | bsd"
     },
     {
       "name": "qtwayland",
