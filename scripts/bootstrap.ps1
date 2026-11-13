@@ -49,9 +49,17 @@ Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 $Config = ConvertFrom-StringData (Get-Content "$PSScriptRoot\vcpkg-tool-metadata.txt" -Raw)
 $versionDate = $Config.VCPKG_TOOL_RELEASE_TAG
 
-function ConvertTo-WebProxyBypassList
+# Only used by the Windows PowerShell/.NET Framework fallback. PowerShell 6+
+# returns before calling this helper and lets modern .NET handle NO_PROXY.
+function ConvertTo-LegacyWebProxyBypassList
 {
     param([string]$NoProxy)
+
+    # Modern .NET handles NO_PROXY directly and does not need regex conversion.
+    if ($PSVersionTable.PSVersion.Major -ge 6)
+    {
+        return @()
+    }
 
     # .NET Framework's WebProxy.BypassList expects regular expressions instead
     # of the host patterns used by NO_PROXY.
@@ -189,7 +197,7 @@ function New-BootstrapWebClient
 
         if (-Not [string]::IsNullOrEmpty($env:NO_PROXY))
         {
-            $bypassList = @(ConvertTo-WebProxyBypassList -NoProxy $env:NO_PROXY)
+            $bypassList = @(ConvertTo-LegacyWebProxyBypassList -NoProxy $env:NO_PROXY)
             if ($bypassList.Count -gt 0)
             {
                 $proxy.BypassList = [string[]]$bypassList
