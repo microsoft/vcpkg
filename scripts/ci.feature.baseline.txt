@@ -332,6 +332,7 @@ freerdp[x11]:arm64-linux=feature-fails
 freerdp[x11]:arm64-osx=skip # No x11 on osx
 freetype-gl:arm64-linux=fail
 freetype-gl[glew]:arm64-linux=cascade
+frei0r[opengl]:arm64-linux=feature-fails # OpenGL libs missing on the CI
 ftgl:arm64-linux=fail
 ftgl(android)=fail
 g2o:arm64-linux=cascade

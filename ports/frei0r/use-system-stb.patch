@@ -1,0 +1,32 @@
+diff --git a/src/filter/shadert0y/CMakeLists.txt b/src/filter/shadert0y/CMakeLists.txt
+index 335ba57..cc730d5 100644
+--- a/src/filter/shadert0y/CMakeLists.txt
++++ b/src/filter/shadert0y/CMakeLists.txt
+@@ -2,6 +2,7 @@ find_package(OpenGL REQUIRED)
+ 
+ include(FindPkgConfig)
+ pkg_check_modules(EGL REQUIRED egl)
++find_package(stb REQUIRED)
+ 
+ set (SOURCES shadert0y.cpp)
+ set (TARGET shadert0y)
+@@ -13,5 +14,6 @@ add_library (${TARGET} MODULE ${SOURCES})
+ set_target_properties (${TARGET} PROPERTIES PREFIX "")
+ 
+ target_link_libraries(${TARGET} ${OPENGL_LIBRARIES} ${EGL_LIBRARIES})
++target_include_directories(${TARGET} PRIVATE ${Stb_INCLUDE_DIR})
+ 
+ install (TARGETS ${TARGET} LIBRARY DESTINATION ${LIBDIR})
+diff --git a/src/filter/shadert0y/shadert0y.cpp b/src/filter/shadert0y/shadert0y.cpp
+index 82f0416..10d1e79 100644
+--- a/src/filter/shadert0y/shadert0y.cpp
++++ b/src/filter/shadert0y/shadert0y.cpp
+@@ -18,7 +18,7 @@
+ #include <ctime>
+ 
+ #define STB_IMAGE_IMPLEMENTATION
+-#include "stb_image.h"
++#include <stb_image.h>
+ 
+ extern "C" {
+ #include <frei0r.h>
