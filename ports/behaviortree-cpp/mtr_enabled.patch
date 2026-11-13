@@ -1,0 +1,14 @@
+diff --git a/src/loggers/bt_minitrace_logger.cpp b/src/loggers/bt_minitrace_logger.cpp
+index 8f1fa25c..c78fc7a1 100644
+--- a/src/loggers/bt_minitrace_logger.cpp
++++ b/src/loggers/bt_minitrace_logger.cpp
+@@ -1,7 +1,9 @@
+ 
+ #include "behaviortree_cpp/loggers/bt_minitrace_logger.h"
+ 
++#ifndef MTR_ENABLED
+ #define MTR_ENABLED true
++#endif
+ #include "minitrace.h"
+ 
+ namespace BT
