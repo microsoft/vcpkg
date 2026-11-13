@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-from-git-deterministic-archive",
+  "version-string": "ci",
+  "description": "Test if vcpkg can build a deterministic archive from a git repository.",
+  "license": null
+}
