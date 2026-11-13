@@ -1,0 +1,24 @@
+diff --git a/src/datasource_cache_static.cpp b/src/datasource_cache_static.cpp
+index fb00db2fd..03ffd7e20 100644
+--- a/src/datasource_cache_static.cpp
++++ b/src/datasource_cache_static.cpp
+@@ -83,6 +83,9 @@
+ #if defined(MAPNIK_STATIC_PLUGIN_TOPOJSON)
+ #include "input/topojson/topojson_datasource.hpp"
+ #endif
++#if defined(MAPNIK_STATIC_PLUGIN_TILES)
++#include "input/tiles/tiles_datasource.hpp"
++#endif
+ #endif
+ 
+ #define REGISTER_STATIC_DATASOURCE_PLUGIN(classname)                                                                   \
+@@ -150,6 +153,9 @@ void init_datasource_cache_static()
+ #if defined(MAPNIK_STATIC_PLUGIN_TOPOJSON)
+     REGISTER_STATIC_DATASOURCE_PLUGIN(topojson_datasource_plugin);
+ #endif
++#if defined(MAPNIK_STATIC_PLUGIN_TILES)
++    REGISTER_STATIC_DATASOURCE_PLUGIN(tiles_datasource_plugin);
++#endif
+ };
+ 
+ datasource_ptr create_static_datasource(parameters const& params)
