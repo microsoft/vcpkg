@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Chlumsky/msdfgen
     REF "v${VERSION}"
-    SHA512 5a136996de6ae013d223cd246548613d2928adcd6c3357333447086817351816c1b49e3eb119f3fe299745a50684d312db9410adf7671120b9e38fee8b96ff29
+    SHA512 610e74675f5997a10e32eeed70cefa34f25649b56fed556e9c3ef4de9526633d0cda6dc156bfcd8f7b420b153f1e8cd1bf1633ac1f9c3afc9586bc63964a4089
     HEAD_REF master
 )
 
@@ -41,6 +41,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/msdfgen)
 # move exe to tools
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES msdfgen AUTO_CLEAN)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/msdfgen/msdfgenConfig.cmake"
+        "\${VCPKG_IMPORT_PREFIX}/bin/msdfgen"
+        "\${VCPKG_IMPORT_PREFIX}/tools/${PORT}/msdfgen")
 endif()
 
 # cleanup

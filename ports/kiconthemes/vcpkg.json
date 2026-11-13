@@ -1,7 +1,7 @@
 {
   "name": "kiconthemes",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Icon GUI utilities",
   "homepage": "https://invent.kde.org/frameworks/kiconthemes",
   "documentation": "https://api.kde.org/kiconthemes-index.html",

@@ -1,6 +1,6 @@
 {
   "name": "taar",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Boost.Taar: a C++20 header-only library for HTTP services on Boost.Asio, Boost.Beast, Boost.JSON and Boost.URL (REST, JSON-RPC, MCP, OpenAPI)",
   "homepage": "https://github.com/rjahanbakhshi/boost.taar",
   "documentation": "https://rjahanbakhshi.github.io/boost.taar/",

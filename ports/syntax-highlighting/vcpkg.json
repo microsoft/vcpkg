@@ -1,7 +1,7 @@
 {
   "name": "syntax-highlighting",
   "version": "6.31.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Syntax highlighting engine for Kate syntax definitions",
   "homepage": "https://invent.kde.org/frameworks/syntax-highlighting",
   "documentation": "https://api.kde.org/ksyntaxhighlighting-index.html",
@@ -30,6 +30,15 @@
     }
   ],
   "features": {
+    "qml": {
+      "description": "Build the QML module",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
     "translations": {
       "description": "Build and install translation files",
       "dependencies": [
