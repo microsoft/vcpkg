@@ -1,0 +1,28 @@
+diff --git a/include/k4ainternal/logging.h b/include/k4ainternal/logging.h
+index 4df7329..b39a127 100644
+--- a/include/k4ainternal/logging.h
++++ b/include/k4ainternal/logging.h
+@@ -205,17 +205,17 @@ FORCEINLINE void TraceInvalidHandle(int result,
+ 
+ // Logs a message
+ #define LOG_TRACE(message, ...)                                                                                        \
+-    logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, __VA_ARGS__)
++    logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_INFO(message, ...)                                                                                         \
+-    logger_log(K4A_LOG_LEVEL_INFO, __FILE__, __LINE__, "%s(). " message, __func__, __VA_ARGS__)
++    logger_log(K4A_LOG_LEVEL_INFO, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_WARNING(message, ...)                                                                                      \
+-    logger_log(K4A_LOG_LEVEL_WARNING, __FILE__, __LINE__, "%s(). " message, __func__, __VA_ARGS__)
++    logger_log(K4A_LOG_LEVEL_WARNING, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_ERROR(message, ...)                                                                                        \
+-    logger_log(K4A_LOG_LEVEL_ERROR, __FILE__, __LINE__, "%s(). " message, __func__, __VA_ARGS__)
++    logger_log(K4A_LOG_LEVEL_ERROR, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_CRITICAL(message, ...)                                                                                     \
+-    logger_log(K4A_LOG_LEVEL_CRITICAL, __FILE__, __LINE__, "%s(). " message, __func__, __VA_ARGS__)
++    logger_log(K4A_LOG_LEVEL_CRITICAL, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_HANDLE(message, ...)                                                                                       \
+-    logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, __VA_ARGS__)
++    logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ 
+ #ifdef __cplusplus
+ }

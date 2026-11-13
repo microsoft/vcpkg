@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b8fe311f..bf074881 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -50,6 +50,12 @@ if (use_installed_dependencies AND NOT TARGET macro_utils_c)
+     find_package(macro_utils_c CONFIG REQUIRED)
+ endif()
+ 
++if (use_installed_dependencies AND NOT TARGET c_logging_v2)
++    find_package(unofficial-c-logging CONFIG REQUIRED)
++    add_library(c_logging_v2 ALIAS unofficial::c-logging::c_logging_v2)
++    add_library(c_logging_v2_core ALIAS unofficial::c-logging::c_logging_v2_core)
++endif()
++
+ if ((NOT TARGET macro_utils_c) AND (EXISTS ${CMAKE_CURRENT_LIST_DIR}/deps/macro-utils-c/CMakeLists.txt))
+     add_subdirectory(deps/macro-utils-c)
+ endif()
+@@ -812,7 +818,7 @@ endif(${build_as_dynamic})
+ # Re-export c_logging_v2 (and c_logging_v2_core) via aziotsharedutilTargets so
+ # downstream installed-deps consumers can resolve the c_logging_v2 imported
+ # target referenced by aziotsharedutil's INTERFACE_LINK_LIBRARIES.
+-if(TARGET c_logging_v2 AND TARGET c_logging_v2_core)
++if(TARGET c_logging_v2 AND TARGET c_logging_v2_core AND NOT use_installed_dependencies)
+     list(APPEND targets c_logging_v2 c_logging_v2_core)
+ endif()
+ 
+@@ -823,7 +829,7 @@ endif()
+ # The legacy azureiot root is kept for the sibling SDK components that install there,
+ # and is now created unconditionally so it is never a non-existent exported path.
+ set(exported_include_dirs ${CMAKE_INSTALL_INCLUDEDIR})
+-if(TARGET c_logging_v2 AND TARGET c_logging_v2_core)
++if(TARGET c_logging_v2 AND TARGET c_logging_v2_core AND NOT use_installed_dependencies)
+     list(APPEND exported_include_dirs ${CMAKE_INSTALL_INCLUDEDIR}/c_logging/v2)
+ endif()
+ list(APPEND exported_include_dirs ${CMAKE_INSTALL_INCLUDEDIR}/azureiot)
+diff --git a/configs/azure_c_shared_utilityConfig.cmake b/configs/azure_c_shared_utilityConfig.cmake
+index 13708e8c..7ab9b40e 100644
+--- a/configs/azure_c_shared_utilityConfig.cmake
++++ b/configs/azure_c_shared_utilityConfig.cmake
+@@ -6,6 +6,7 @@ include(CMakeFindDependencyMacro)
+ # aziotsharedutil's exported targets reference macro_utils_c via INTERFACE_LINK_LIBRARIES,
+ # so consumers must be able to resolve it before the targets file is included.
+ find_dependency(macro_utils_c)
++find_dependency(unofficial-c-logging)
+ 
+ if("@use_openssl@")
+     find_dependency(OpenSSL)
