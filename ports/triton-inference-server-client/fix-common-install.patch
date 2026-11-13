@@ -1,0 +1,139 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 128da4bf4a..ee067fee40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -197,6 +197,7 @@ if(${TRITON_COMMON_ENABLE_GRPC} OR ${TRITON_COMMON_ENABLE_PROTOBUF})
+   install(
+     TARGETS
+       proto-library
++      proto-library-static
+       triton-common-model-config
+ #      proto-py-library
+     EXPORT
+@@ -210,7 +211,9 @@ if(${TRITON_COMMON_ENABLE_GRPC})
+   install(
+     TARGETS
+       grpc-health-library
++      grpc-health-library-static
+       grpc-service-library
++      grpc-service-library-static
+ #      grpc-service-py-library
+     EXPORT
+       triton-common-targets
+diff --git a/cmake/TritonCommonConfig.cmake.in b/cmake/TritonCommonConfig.cmake.in
+index 7f4d28a6d9..5f86997f53 100644
+--- a/cmake/TritonCommonConfig.cmake.in
++++ b/cmake/TritonCommonConfig.cmake.in
+@@ -32,6 +32,12 @@ list(APPEND CMAKE_MODULE_PATH ${TRITONCOMMON_CMAKE_DIR})
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(Threads)
++if(@TRITON_COMMON_ENABLE_PROTOBUF@)
++  find_dependency(Protobuf CONFIG)
++endif()
++if(@TRITON_COMMON_ENABLE_GRPC@)
++  find_dependency(gRPC CONFIG)
++endif()
+ 
+ if(NOT TARGET TritonCommon::triton-common-json)
+   include("${TRITONCOMMON_CMAKE_DIR}/TritonCommonTargets.cmake")
+diff --git a/protobuf/CMakeLists.txt b/protobuf/CMakeLists.txt
+index 3b701130af..c30d60e7aa 100644
+--- a/protobuf/CMakeLists.txt
++++ b/protobuf/CMakeLists.txt
+@@ -49,7 +49,11 @@ if(${TRITON_COMMON_ENABLE_PROTOBUF})
+ 
+   set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
+   if(${TRITON_COMMON_ENABLE_GRPC})
+-    set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
++    if(TRITON_GRPC_CPP_PLUGIN_EXECUTABLE)
++      set(_GRPC_CPP_PLUGIN_EXECUTABLE "${TRITON_GRPC_CPP_PLUGIN_EXECUTABLE}")
++    else()
++      set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
++    endif()
+   endif()
+ 
+   add_library(
+@@ -75,6 +79,23 @@ if(${TRITON_COMMON_ENABLE_PROTOBUF})
+       POSITION_INDEPENDENT_CODE ON
+   )
+ 
++  add_library(
++    proto-library-static STATIC
++    $<TARGET_OBJECTS:proto-library>
++  )
++
++  target_include_directories(
++    proto-library-static
++    PUBLIC
++      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
++      $<INSTALL_INTERFACE:include>
++  )
++
++  target_link_libraries(
++    proto-library-static
++    PUBLIC protobuf::libprotobuf
++  )
++
+   if(TRITON_COMMON_ENABLE_PROTOBUF_PYTHON)
+     add_custom_target(proto-py-library DEPENDS ${PROTO_PY})
+   endif()
+@@ -147,6 +168,23 @@ if(${TRITON_COMMON_ENABLE_GRPC})
+       POSITION_INDEPENDENT_CODE ON
+   )
+ 
++  add_library(
++    grpc-service-library-static STATIC
++    $<TARGET_OBJECTS:grpc-service-library>
++  )
++
++  target_include_directories(
++    grpc-service-library-static
++    PUBLIC
++      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
++      $<INSTALL_INTERFACE:include>
++  )
++
++  target_link_libraries(
++    grpc-service-library-static
++    PUBLIC gRPC::grpc++ protobuf::libprotobuf
++  )
++
+   if(TRITON_COMMON_ENABLE_PROTOBUF_PYTHON)
+     add_custom_target(grpc-service-py-library DEPENDS ${GRPC_PY})
+   endif()
+@@ -203,6 +241,23 @@ if(${TRITON_COMMON_ENABLE_GRPC})
+       POSITION_INDEPENDENT_CODE ON
+   )
+ 
++  add_library(
++    grpc-health-library-static STATIC
++    $<TARGET_OBJECTS:grpc-health-library>
++  )
++
++  target_include_directories(
++    grpc-health-library-static
++    PUBLIC
++      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
++      $<INSTALL_INTERFACE:include>
++  )
++
++  target_link_libraries(
++    grpc-health-library-static
++    PUBLIC gRPC::grpc++ protobuf::libprotobuf
++  )
++
+   install(
+     FILES
+       ${CMAKE_CURRENT_BINARY_DIR}/health.grpc.pb.h
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4c98094095..ec9c76a1c3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -200,5 +200,3 @@ set_target_properties(
+   PROPERTIES
+     OUTPUT_NAME tritontableprinter
+ )
+-
+-add_subdirectory(test)
+
