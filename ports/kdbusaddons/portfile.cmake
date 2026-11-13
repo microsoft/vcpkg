@@ -15,6 +15,12 @@ vcpkg_check_features(
         translations KF_SKIP_PO_PROCESSING
 )
 
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND FEATURE_OPTIONS -DWITH_X11=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DWITH_X11=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

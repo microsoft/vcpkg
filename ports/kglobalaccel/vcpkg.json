@@ -1,7 +1,7 @@
 {
   "name": "kglobalaccel",
   "version": "6.31.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Global desktop keyboard shortcuts",
   "homepage": "https://invent.kde.org/frameworks/kglobalaccel",
   "documentation": "https://api.kde.org/kglobalaccel-index.html",
@@ -11,7 +11,20 @@
     "ecm",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "dbus",
+        "gui",
+        "widgets"
+      ]
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "xcb"
+      ],
+      "platform": "linux"
     },
     {
       "name": "vcpkg-cmake",

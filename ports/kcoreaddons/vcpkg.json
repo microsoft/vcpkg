@@ -1,7 +1,7 @@
 {
   "name": "kcoreaddons",
   "version": "6.31.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Addons to QtCore",
   "homepage": "https://invent.kde.org/frameworks/kcoreaddons",
   "documentation": "https://api.kde.org/kcoreaddons-index.html",
@@ -11,6 +11,14 @@
     {
       "name": "qtbase",
       "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "linux"
     },
     {
       "name": "vcpkg-cmake",
