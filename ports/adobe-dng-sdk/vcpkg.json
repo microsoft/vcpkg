@@ -1,0 +1,47 @@
+{
+  "name": "adobe-dng-sdk",
+  "version": "1.7.1",
+  "description": "Adobe DNG SDK",
+  "homepage": "https://www.adobe.com/devnet/xmp.html",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    {
+      "name": "expat",
+      "host": true
+    },
+    {
+      "name": "libjxl",
+      "host": true
+    },
+    {
+      "name": "libjpeg-turbo",
+      "host": true
+    },
+    {
+      "name": "zlib",
+      "host": true
+    },
+    {
+      "name": "boost-uuid",
+      "host": true,
+      "platform": "linux"
+    }
+  ],
+  "features": {
+    "dng-validate": {
+      "description": "Build the dng_validate exacutable",
+      "dependencies": []
+    }
+  }
+}
