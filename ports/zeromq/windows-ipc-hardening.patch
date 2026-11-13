@@ -1,0 +1,89 @@
+diff --git a/src/ip.cpp b/src/ip.cpp
+index 721acb1d..aa638876 100644
+--- a/src/ip.cpp
++++ b/src/ip.cpp
+@@ -23,10 +23,11 @@
+ #include "tcp.hpp"
+ #ifdef ZMQ_HAVE_IPC
+ #include "ipc_address.hpp"
++#include <atomic>
+ // Don't try ipc if it fails once
+ namespace zmq
+ {
+-static bool try_ipc_first = true;
++static std::atomic<bool> try_ipc_first (true);
+ }
+ #endif
+ 
+@@ -564,7 +565,7 @@ int zmq::make_fdpair (fd_t *r_, fd_t *w_)
+     // At least: open_socket can fail or later in bind or even in connect after bind
+     bool ipc_fallback_on_tcpip = true;
+ 
+-    if (!zmq::try_ipc_first) {
++    if (!zmq::try_ipc_first.load (std::memory_order_relaxed)) {
+         // a past ipc attempt failed, skip straight to try_tcpip in the future;
+         goto try_tcpip;
+     }
+@@ -623,13 +624,19 @@ int zmq::make_fdpair (fd_t *r_, fd_t *w_)
+         errno = wsa_error_to_errno (WSAGetLastError ());
+         goto error_closeclient;
+     }
+-    // if we got here, ipc should be working,
++    //  Accept the connection. This can still fail even though connect
++    //  succeeded (for example when running out of socket handles), so
++    //  fall back to TCP/IP instead of aborting in that case.
++    *r_ = accept (listener, NULL, NULL);
++    if (*r_ == retired_fd) {
++        errno = wsa_error_to_errno (WSAGetLastError ());
++        goto error_closeclient;
++    }
++
++    // if we got here, ipc is fully working,
+     // so raise any remaining errors
+     ipc_fallback_on_tcpip = false;
+ 
+-    *r_ = accept (listener, NULL, NULL);
+-    wsa_assert (*r_ != retired_fd);
+-
+     //  Close the listener socket, we don't need it anymore.
+     rc = closesocket (listener);
+     wsa_assert (rc == 0);
+@@ -679,9 +686,9 @@ error_closelistener:
+ try_tcpip:
+     // try to fallback to TCP/IP
+     rc = make_fdpair_tcpip (r_, w_);
+-    if (rc == 0 && zmq::try_ipc_first) {
++    if (rc == 0 && zmq::try_ipc_first.load (std::memory_order_relaxed)) {
+         // ipc didn't work but tcp/ip did; skip ipc in the future
+-        zmq::try_ipc_first = false;
++        zmq::try_ipc_first.store (false, std::memory_order_relaxed);
+     }
+     return rc;
+ #endif // ZMQ_HAVE_IPC
+@@ -903,7 +910,13 @@ int zmq::create_ipc_wildcard_address (std::string &path_, std::string &file_)
+ 
+     {
+         const errno_t rc = _wtmpnam_s (buffer);
+-        errno_assert (rc == 0);
++        if (rc != 0) {
++            //  Do not abort here: this can fail when the temporary
++            //  directory is misconfigured. Callers either fall back to
++            //  TCP or report an error to the user.
++            errno = rc;
++            return -1;
++        }
+     }
+ 
+     // TODO or use CreateDirectoryA and specify permissions?
+@@ -914,6 +927,11 @@ int zmq::create_ipc_wildcard_address (std::string &path_, std::string &file_)
+ 
+     char *tmp = widechar_to_utf8 (buffer);
+     if (tmp == 0) {
++        //  Remove the directory we just created, so that a failed
++        //  conversion does not leak it.
++        const int saved_errno = errno;
++        _wrmdir (buffer);
++        errno = saved_errno;
+         return -1;
+     }
+ 

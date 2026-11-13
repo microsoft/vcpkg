@@ -1,0 +1,39 @@
+diff --git a/src/ipc_address.hpp b/src/ipc_address.hpp
+index 422c2711..87f1245b 100644
+--- a/src/ipc_address.hpp
++++ b/src/ipc_address.hpp
+@@ -7,7 +7,7 @@
+ 
+ #include <string>
+ 
+-#if defined _MSC_VER
++#if defined ZMQ_HAVE_WINDOWS
+ #include <afunix.h>
+ #else
+ #include <sys/socket.h>
+diff --git a/src/ipc_connecter.cpp b/src/ipc_connecter.cpp
+index 3f988745..ed2a0645 100644
+--- a/src/ipc_connecter.cpp
++++ b/src/ipc_connecter.cpp
+@@ -16,7 +16,7 @@
+ #include "ipc_address.hpp"
+ #include "session_base.hpp"
+ 
+-#ifdef _MSC_VER
++#if defined ZMQ_HAVE_WINDOWS
+ #include <afunix.h>
+ #else
+ #include <unistd.h>
+diff --git a/src/ipc_listener.cpp b/src/ipc_listener.cpp
+index 586bd764..92293da7 100644
+--- a/src/ipc_listener.cpp
++++ b/src/ipc_listener.cpp
+@@ -17,7 +17,7 @@
+ #include "socket_base.hpp"
+ #include "address.hpp"
+ 
+-#ifdef _MSC_VER
++#ifdef ZMQ_HAVE_WINDOWS
+ #ifdef ZMQ_IOTHREAD_POLLER_USE_SELECT
+ #error On Windows, IPC does not work with POLLER=select, use POLLER=epoll instead, or disable IPC transport
+ #endif
