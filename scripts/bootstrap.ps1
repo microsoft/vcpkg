@@ -49,6 +49,185 @@ Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 $Config = ConvertFrom-StringData (Get-Content "$PSScriptRoot\vcpkg-tool-metadata.txt" -Raw)
 $versionDate = $Config.VCPKG_TOOL_RELEASE_TAG
 
+function ConvertTo-WebProxyBypassList
+{
+    param([string]$NoProxy)
+
+    # .NET Framework's WebProxy.BypassList expects regular expressions instead
+    # of the host patterns used by NO_PROXY.
+    $bypassPatterns = @()
+    foreach ($entry in ($NoProxy -split '[,;]'))
+    {
+        $entry = $entry.Trim()
+        if ([string]::IsNullOrEmpty($entry))
+        {
+            continue
+        }
+
+        if ($entry -eq '*')
+        {
+            $bypassPatterns += '.*'
+            continue
+        }
+
+        if ($entry -ieq '<local>')
+        {
+            $bypassPatterns += '(?i)^https?://[^./:]+(?::\d+)?(/|$)'
+            continue
+        }
+
+        $entry = $entry -replace '^https?://', ''
+        $proxyPort = ''
+        if ($entry -match '^\[([^\]]+)\](?::(\d+))?$')
+        {
+            $hostName = '[' + $matches[1] + ']'
+            $proxyPort = $matches[2]
+            $hostPrefix = ''
+        }
+        else
+        {
+            if ($entry -match '^([^:]+):(\d+)$')
+            {
+                $hostName = $matches[1]
+                $proxyPort = $matches[2]
+            }
+            else
+            {
+                $hostName = $entry
+            }
+
+            if ($hostName.StartsWith('*.'))
+            {
+                $hostName = $hostName.Substring(2)
+                $hostPrefix = '(?:[^/]+\.)+'
+            }
+            else
+            {
+                if ($hostName.StartsWith('.'))
+                {
+                    $hostName = $hostName.Substring(1)
+                }
+                $hostPrefix = '(?:[^/]+\.)?'
+            }
+        }
+
+        $hostPattern = [regex]::Escape($hostName).Replace('\*', '[^/]*')
+        if ($proxyPort -eq '443')
+        {
+            # Uri normalizes an explicit HTTPS default port away.
+            $bypassPatterns += '(?i)^https://' + $hostPrefix + $hostPattern + '(?::443)?(/|$)'
+            $bypassPatterns += '(?i)^http://' + $hostPrefix + $hostPattern + ':443(/|$)'
+        }
+        elseif ($proxyPort -eq '80')
+        {
+            # Uri normalizes an explicit HTTP default port away.
+            $bypassPatterns += '(?i)^http://' + $hostPrefix + $hostPattern + '(?::80)?(/|$)'
+            $bypassPatterns += '(?i)^https://' + $hostPrefix + $hostPattern + ':80(/|$)'
+        }
+        elseif ([string]::IsNullOrEmpty($proxyPort))
+        {
+            $portPattern = '(?::\d+)?'
+            $bypassPatterns += '(?i)^https?://' + $hostPrefix + $hostPattern + $portPattern + '(/|$)'
+        }
+        else
+        {
+            $portPattern = ':' + [regex]::Escape($proxyPort)
+            $bypassPatterns += '(?i)^https?://' + $hostPrefix + $hostPattern + $portPattern + '(/|$)'
+        }
+    }
+
+    return $bypassPatterns
+}
+
+function New-BootstrapWebClient
+{
+    $webClient = New-Object System.Net.WebClient
+
+    # Modern .NET reads HTTPS_PROXY and NO_PROXY through its default proxy.
+    # Windows PowerShell/.NET Framework does not, so keep the explicit bridge
+    # below for the bootstrap's legacy PowerShell entry point.
+    if ($PSVersionTable.PSVersion.Major -ge 6)
+    {
+        return $webClient
+    }
+
+    $systemProxy = [System.Net.WebRequest]::DefaultWebProxy
+    if ($null -ne $systemProxy)
+    {
+        $webClient.Proxy = $systemProxy
+        if ($systemProxy -is [System.Net.WebProxy])
+        {
+            $systemProxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+        }
+    }
+
+    if ([string]::IsNullOrEmpty($env:HTTPS_PROXY))
+    {
+        return $webClient
+    }
+
+    try
+    {
+        $proxyAddress = $env:HTTPS_PROXY.Trim()
+        $proxyUri = $null
+        $proxyUriIsValid = [System.Uri]::TryCreate($proxyAddress, [System.UriKind]::Absolute, [ref]$proxyUri)
+        if (-Not $proxyUriIsValid -or $null -eq $proxyUri -or [string]::IsNullOrEmpty($proxyUri.Host))
+        {
+            $proxyUri = $null
+            $proxyUriIsValid = [System.Uri]::TryCreate("http://$proxyAddress", [System.UriKind]::Absolute, [ref]$proxyUri)
+        }
+        if (-Not $proxyUriIsValid -or $null -eq $proxyUri -or [string]::IsNullOrEmpty($proxyUri.Host))
+        {
+            throw "The HTTPS_PROXY value is not a valid proxy URI."
+        }
+
+        $proxyUserInfo = $proxyUri.UserInfo
+        $proxyUriBuilder = New-Object -TypeName System.UriBuilder -ArgumentList $proxyUri
+        $proxyUriBuilder.UserName = ""
+        $proxyUriBuilder.Password = ""
+        $proxy = New-Object -TypeName System.Net.WebProxy -ArgumentList $proxyUriBuilder.Uri
+
+        if (-Not [string]::IsNullOrEmpty($env:NO_PROXY))
+        {
+            $bypassList = @(ConvertTo-WebProxyBypassList -NoProxy $env:NO_PROXY)
+            if ($bypassList.Count -gt 0)
+            {
+                $proxy.BypassList = [string[]]$bypassList
+            }
+        }
+
+        if ([string]::IsNullOrEmpty($proxyUserInfo))
+        {
+            $proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+        }
+        else
+        {
+            $proxyCredentials = [System.Uri]::UnescapeDataString($proxyUserInfo)
+            $separator = $proxyCredentials.IndexOf(':')
+            if ($separator -lt 0)
+            {
+                $proxyUserName = $proxyCredentials
+                $proxyPassword = ""
+            }
+            else
+            {
+                $proxyUserName = $proxyCredentials.Substring(0, $separator)
+                $proxyPassword = $proxyCredentials.Substring($separator + 1)
+            }
+            $proxy.Credentials = New-Object -TypeName System.Net.NetworkCredential -ArgumentList @($proxyUserName, $proxyPassword)
+        }
+
+        $webClient.Proxy = $proxy
+    }
+    catch
+    {
+        # WebClient retains the Windows proxy configuration unless the environment proxy is usable.
+        Write-Warning "Could not configure HTTPS_PROXY; falling back to Windows proxy settings."
+    }
+
+    return $webClient
+}
+
 function Invoke-DownloadWithRetry
 {
     param(
@@ -56,14 +235,10 @@ function Invoke-DownloadWithRetry
         [Parameter(Mandatory=$true)][string]$OutFile
     )
 
-    # Some older Windows / .NET Framework configurations default
-    # ServicePointManager.SecurityProtocol to TLS 1.0/1.1, which GitHub's
-    # servers reject; force TLS 1.2 (in addition to whatever is already
-    # enabled) before issuing the request. This used to require a small
-    # prebuilt helper binary (tls12-download.exe); PowerShell can do the
-    # same thing on its own.
-    [System.Net.ServicePointManager]::SecurityProtocol = `
-        [System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
+    # Use the numeric TLS 1.2 value so older .NET Framework versions that do not
+    # expose the Tls12 enum member can still enable it when the platform supports it.
+    $currentSecurityProtocols = [int][System.Net.ServicePointManager]::SecurityProtocol
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]($currentSecurityProtocols -bor 3072)
 
     $tempFile = "$OutFile.part"
     Remove-Item -Path $tempFile -ErrorAction SilentlyContinue
@@ -73,7 +248,7 @@ function Invoke-DownloadWithRetry
     {
         try
         {
-            $webClient = New-Object System.Net.WebClient
+            $webClient = New-BootstrapWebClient
             try
             {
                 $webClient.DownloadFile($Url, $tempFile)
@@ -82,6 +257,15 @@ function Invoke-DownloadWithRetry
             {
                 $webClient.Dispose()
             }
+
+            # Match tls12-download.exe: only promote a download with a valid
+            # Authenticode signature.
+            $signature = Get-AuthenticodeSignature -FilePath $tempFile -ErrorAction Stop
+            if ($signature.Status -ne 'Valid')
+            {
+                throw "Downloaded vcpkg.exe has an invalid Authenticode signature (status: $($signature.Status))."
+            }
+
             Move-Item -Path $tempFile -Destination $OutFile -Force -ErrorAction Stop
             return $true
         }
