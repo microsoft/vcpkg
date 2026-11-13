@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO elalish/manifold
     REF "v${VERSION}"
-    SHA512 8a6e192a9ca26d7b90b0b960a770dcb4ca1f651526f6beea9ad490aaf05e63d9e64ab591cdbeced34a5117dd676328e5ceab5f783acb609b76f3a18a7586775d
+    SHA512 89db482659dd08e3a5541a78ee19f066670141107f828cf89cafeadabd47c5d34bb7894f67ea3584e8273e21c21c17a4139e6537a85f67a7e835fa0f7ac1eb29
     PATCHES
         fix-pkgconfig-cflags.patch # https://github.com/elalish/manifold/pull/1824
         fix-pkgconfig-requires-private.patch # https://github.com/elalish/manifold/pull/1854
