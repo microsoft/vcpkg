@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dmlc/dlpack
     REF "v${VERSION}"
-    SHA512 e1945d863bf22f162b915f18482bddabec7665a3c9ca7b2554a32622d6dff15908eb15761b21838ecac7db75cfd9cd835cead1c2d4b005dca2a40e71e2889d3a
+    SHA512 6b292a2448e2df8870f4df22bdc5f9432ebce79fbb6cb8dd7ad43493730f47318aac411ecfa28449a16b95fb577427c410a74d8a44fef7d65bbdaedbd013055f
     HEAD_REF main
 )
 
