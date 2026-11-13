@@ -46,7 +46,7 @@ function(z_vcpkg_msbuild_create_props)
         endforeach()
         list(TRANSFORM MSBUILD_INCLUDE_DIRS_RELEASE REPLACE "^/I" "")
         list(TRANSFORM MSBUILD_INCLUDE_DIRS_DEBUG REPLACE "^/I" "")
-        
+
         separate_arguments(MSBUILD_LIBRARIES_DIRS_RELEASE WINDOWS_COMMAND "${MSBUILD_LIBRARIES_DIRS_RELEASE}")
         separate_arguments(MSBUILD_LIBRARIES_DIRS_DEBUG WINDOWS_COMMAND "${MSBUILD_LIBRARIES_DIRS_DEBUG}")
 
