@@ -4360,6 +4360,10 @@
       "baseline": "0.2.0",
       "port-version": 0
     },
+    "kcmutils": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kcodecs": {
       "baseline": "6.31.0",
       "port-version": 2
@@ -4652,6 +4656,10 @@
       "baseline": "2026-06-03",
       "port-version": 0
     },
+    "kio": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kirigami": {
       "baseline": "6.31.0",
       "port-version": 1
@@ -4687,6 +4695,10 @@
     "knet": {
       "baseline": "1.1.0",
       "port-version": 1
+    },
+    "knewstuff": {
+      "baseline": "6.31.0",
+      "port-version": 0
     },
     "knncolle": {
       "baseline": "3.1.1",

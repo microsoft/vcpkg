@@ -1,0 +1,28 @@
+diff --git a/KF6NewStuffConfig.cmake.in b/KF6NewStuffConfig.cmake.in
+index 3152768..78ae4b0 100644
+--- a/KF6NewStuffConfig.cmake.in
++++ b/KF6NewStuffConfig.cmake.in
+@@ -11,8 +11,10 @@ find_dependency(Qt6Widgets @REQUIRED_QT_VERSION@)
+ if (NOT @BUILD_SHARED_LIBS@)
+     find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
+     find_dependency(Qt6Quick @REQUIRED_QT_VERSION@)
++    find_dependency(Qt6QuickWidgets @REQUIRED_QT_VERSION@)
+ 
+     find_dependency(KF6I18n "@KF_DEP_VERSION@")
++    find_dependency(KF6WidgetsAddons "@KF_DEP_VERSION@")
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6NewStuffTargets.cmake")
+diff --git a/KF6NewStuffCoreConfig.cmake.in b/KF6NewStuffCoreConfig.cmake.in
+index 42cb237..08f284e 100644
+--- a/KF6NewStuffCoreConfig.cmake.in
++++ b/KF6NewStuffCoreConfig.cmake.in
+@@ -14,6 +14,8 @@ if (NOT @BUILD_SHARED_LIBS@)
+     find_dependency(KF6Archive "@KF_DEP_VERSION@")
+     find_dependency(KF6Package "@KF_DEP_VERSION@")
+     find_dependency(KF6Config "@KF_DEP_VERSION@")
++    find_dependency(Qt6Network @REQUIRED_QT_VERSION@)
++    find_dependency(Qt6Xml @REQUIRED_QT_VERSION@)
+ 
+     if(@KF6Syndication_FOUND@)
+             find_dependency(KF6Syndication "@KF_VERSION@")
