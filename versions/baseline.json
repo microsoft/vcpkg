@@ -3809,7 +3809,7 @@
       "port-version": 1
     },
     "halide": {
-      "baseline": "21.0.0",
+      "baseline": "22.1.0",
       "port-version": 0
     },
     "hamlib": {
