@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -251,8 +251,10 @@ if(MSVC_TOOLSET_VERSION GREATER 143)
+ endif()
+ 
+ if(MSVC_TOOLSET_VERSION GREATER_EQUAL 142)
+   set(UCXXRT_ENABLED OFF)
+ else()
+-  set(UCXXRT_ENABLED ON)
++  message(FATAL_ERROR
++    "The vcpkg crtsys port requires MSVC toolset v142 or later."
++  )
+ endif()
+ 
+ include(cmake/CPM.cmake)
