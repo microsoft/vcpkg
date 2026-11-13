@@ -1,0 +1,17 @@
+{
+  "name": "abscom",
+  "version": "0.2.6",
+  "description": "A C11 library of reusable data structures and a Python-inspired dynamic runtime",
+  "homepage": "https://github.com/rkriad585/Abscom",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
