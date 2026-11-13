@@ -4360,6 +4360,10 @@
       "baseline": "0.2.0",
       "port-version": 0
     },
+    "kcmutils": {
+      "baseline": "6.31.0",
+      "port-version": 0
+    },
     "kcodecs": {
       "baseline": "6.31.0",
       "port-version": 2
@@ -4650,6 +4654,10 @@
     },
     "kineto": {
       "baseline": "2026-06-03",
+      "port-version": 0
+    },
+    "kio": {
+      "baseline": "6.31.0",
       "port-version": 0
     },
     "kirigami": {
