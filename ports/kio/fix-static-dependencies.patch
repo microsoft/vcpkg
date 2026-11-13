@@ -1,0 +1,19 @@
+diff --git a/KF6KIOConfig.cmake.in b/KF6KIOConfig.cmake.in
+index 5233a0d..20af760 100644
+--- a/KF6KIOConfig.cmake.in
++++ b/KF6KIOConfig.cmake.in
+@@ -14,7 +14,14 @@ if (NOT @BUILD_SHARED_LIBS@)
+     endif()
+ 
+     if (@LibMount_FOUND@)
++        # FindLibMount only provided by ECM, so temporarily add its find modules
++        set(_popped_CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH})
++        find_dependency(ECM @ECM_VERSION@)
++        list(APPEND CMAKE_MODULE_PATH ${ECM_FIND_MODULE_DIR})
++
+         find_dependency(LibMount)
++
++        set(CMAKE_MODULE_PATH ${_popped_CMAKE_MODULE_PATH})
+     endif()
+ 
+     find_dependency(Qt6Concurrent "@REQUIRED_QT_VERSION@")
