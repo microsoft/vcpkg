@@ -17,7 +17,7 @@ function(vcpkg_from_gitlab)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
         "OUT_SOURCE_PATH;GITLAB_URL;REPO;REF;SHA512;HEAD_REF;FILE_DISAMBIGUATOR;AUTHORIZATION_TOKEN"
-        "PATCHES")
+        "PATCHES;RAW_INCLUDE_MAPPING")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_from_gitlab was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -127,5 +127,13 @@ function(vcpkg_from_gitlab)
         DOWNLOAD_LOCATION "git+${arg_GITLAB_URL}/${arg_REPO}@${ref_to_use}"
         SHA512 "${arg_SHA512}"
     )
+
+    vcpkg_write_sourcelink_file(
+        SOURCE_PATH "${SOURCE_PATH}"
+        SERVER_PATH "${gitlab_link}/-/raw/${ref_to_use}/*"
+        RAW_SEARCH_REPO_NAME "${repo_name}"
+        RAW_INCLUDE_MAPPING ${arg_RAW_INCLUDE_MAPPING}
+    )
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

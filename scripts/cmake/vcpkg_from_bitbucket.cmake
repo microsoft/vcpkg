@@ -2,7 +2,7 @@ function(vcpkg_from_bitbucket)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         ""
         "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF"
-        "PATCHES")
+        "PATCHES;RAW_INCLUDE_MAPPING")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_from_bitbucket was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -94,5 +94,13 @@ ${version_contents}
         DOWNLOAD_LOCATION "git+https://bitbucket.com/${arg_REPO}@${ref_to_use}"
         SHA512 "${arg_SHA512}"
     )
+
+    vcpkg_write_sourcelink_file(
+        SOURCE_PATH "${SOURCE_PATH}"
+        SERVER_PATH "https://bitbucket.com/${org_name}/${repo_name}/raw/${ref_to_use}/*"
+        RAW_SEARCH_REPO_NAME "${repo_name}"
+        RAW_INCLUDE_MAPPING ${arg_RAW_INCLUDE_MAPPING}
+    )
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
