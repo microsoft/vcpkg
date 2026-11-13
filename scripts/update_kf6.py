@@ -26,6 +26,7 @@ PORT_LIST = [
     "kbookmarks",
     "kbreezeicons",
     "kcalendarcore",
+    "kcmutils",
     "kcodecs",
     "kcolorscheme",
     "kcompletion",
