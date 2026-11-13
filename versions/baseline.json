@@ -7005,7 +7005,7 @@
       "port-version": 0
     },
     "msdfgen": {
-      "baseline": "1.13+new-skia-api",
+      "baseline": "1.13.1",
       "port-version": 0
     },
     "msgpack": {
