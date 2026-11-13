@@ -1,0 +1,11 @@
+The package kcmutils provides CMake targets:
+
+    find_package(KF6KCMUtils CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE KF6::KCMUtils KF6::KCMUtilsCore KF6::KCMUtilsQuick)
+
+kcmutils_generate_desktop_file() runs kcmdesktopfilegenerator at build time.
+When cross-compiling, add kcmutils as a host dependency and use the generator
+built for the host triplet:
+
+    set(KF6_HOST_TOOLING "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/share")
+    find_package(KF6KCMUtils CONFIG REQUIRED)

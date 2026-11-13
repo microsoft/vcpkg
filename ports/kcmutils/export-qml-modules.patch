@@ -1,0 +1,17 @@
+diff --git a/src/qml/CMakeLists.txt b/src/qml/CMakeLists.txt
+index ea1935e..947b680 100644
+--- a/src/qml/CMakeLists.txt
++++ b/src/qml/CMakeLists.txt
+@@ -40,10 +40,10 @@ ecm_target_qml_sources(kcmutilsqmlplugin PATH private SOURCES
+     components/private/GridDelegateMenu.qml
+     components/private/GridViewInternal.qml
+ )
+-ecm_finalize_qml_module(kcmutilsqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(kcmutilsqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6KCMUtilsTargets)
+ 
+ ecm_add_qml_module(kcmutilsprivateqmlplugin URI "org.kde.kcmutils.private" DEPENDENCIES QtCore QtQuick GENERATE_PLUGIN_SOURCE)
+ target_sources(kcmutilsprivateqmlplugin PRIVATE private_types.h settinghighlighterprivate.cpp)
+ target_link_libraries(kcmutilsprivateqmlplugin PRIVATE Qt6::Quick kcmutils_proxy_model)
+-ecm_finalize_qml_module(kcmutilsprivateqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(kcmutilsprivateqmlplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6KCMUtilsTargets)
+ 
