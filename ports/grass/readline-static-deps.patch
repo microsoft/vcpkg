@@ -1,0 +1,34 @@
+diff --git a/cmake/find_scripts/FindReadline.cmake b/cmake/find_scripts/FindReadline.cmake
+index 4297e26073..b3a1302ee0 100644
+--- a/cmake/find_scripts/FindReadline.cmake
++++ b/cmake/find_scripts/FindReadline.cmake
+@@ -165,6 +165,29 @@ if(Readline_FOUND AND NOT TARGET Readline::Readline)
+                INTERFACE_INCLUDE_DIRECTORIES "${Readline_INCLUDE_DIR}")
+ endif()
+ 
++# A static readline does not carry its own dependencies (ncurses/termcap)
++# take them from Requires.private / Libs.private of readline.pc.
++if(TARGET Readline::Readline
++   AND PC_Readline_FOUND
++   AND PC_Readline_STATIC_LIBRARIES)
++  set(_Readline_deps ${PC_Readline_STATIC_LIBRARIES})
++  list(REMOVE_ITEM _Readline_deps readline)
++  foreach(_dep IN LISTS _Readline_deps)
++    find_library(
++      Readline_${_dep}_LIBRARY
++      NAMES ${_dep}
++      HINTS ${PC_Readline_STATIC_LIBRARY_DIRS})
++    mark_as_advanced(Readline_${_dep}_LIBRARY)
++    if(Readline_${_dep}_LIBRARY)
++      set_property(
++        TARGET Readline::Readline
++        APPEND
++        PROPERTY INTERFACE_LINK_LIBRARIES "${Readline_${_dep}_LIBRARY}")
++    endif()
++  endforeach()
++  unset(_Readline_deps)
++endif()
++
+ mark_as_advanced(History_INCLUDE_DIR History_LIBRARY)
+ 
+ if(Readline_USE_HISTORY

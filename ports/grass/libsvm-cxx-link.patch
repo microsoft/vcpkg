@@ -1,0 +1,22 @@
+diff --git a/cmake/find_scripts/FindLibSVM.cmake b/cmake/find_scripts/FindLibSVM.cmake
+index 1f426883b0..c020e9c3c8 100644
+--- a/cmake/find_scripts/FindLibSVM.cmake
++++ b/cmake/find_scripts/FindLibSVM.cmake
+@@ -145,9 +145,15 @@ mark_as_advanced (
+ 
+ # create imported target LibSVM::LibSVM
+ if(LIBSVM_FOUND AND NOT TARGET LibSVM::LibSVM)
+-  add_library(LibSVM::LibSVM INTERFACE IMPORTED)
++  if(NOT MSVC AND LIBSVM_LIBRARY MATCHES "${CMAKE_STATIC_LIBRARY_SUFFIX}$")
++    add_library(LibSVM::LibSVM STATIC IMPORTED)
++    set_target_properties(LibSVM::LibSVM
++                          PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
++  else()
++    add_library(LibSVM::LibSVM UNKNOWN IMPORTED)
++  endif()
+   set_target_properties(
+     LibSVM::LibSVM
+-    PROPERTIES INTERFACE_LINK_LIBRARIES "${LIBSVM_LIBRARY}"
++    PROPERTIES IMPORTED_LOCATION "${LIBSVM_LIBRARY}"
+                INTERFACE_INCLUDE_DIRECTORIES "${LIBSVM_INCLUDE_DIR}")
+ endif()
