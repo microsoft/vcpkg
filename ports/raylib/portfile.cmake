@@ -21,6 +21,7 @@ vcpkg_from_github(
         # Once the next version of cgltf is released, this patch will no longer be necessary.
         fix-cgltf.patch
         fix-static-dependencies.patch
+        static-link-deps.patch # export OpenGL relocatably for static consumers
 )
 file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     "${SOURCE_PATH}/src/external/cgltf.h"
