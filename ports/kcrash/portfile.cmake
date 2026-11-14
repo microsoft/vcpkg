@@ -9,12 +9,21 @@ vcpkg_from_github(
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
 file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
+    list(APPEND FEATURE_OPTIONS -DWITH_X11=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DWITH_X11=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        WITH_X11
 )
 
 vcpkg_cmake_install()

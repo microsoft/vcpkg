@@ -1,7 +1,7 @@
 {
   "name": "knotifications",
   "version": "6.31.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Desktop notifications",
   "homepage": "https://invent.kde.org/frameworks/knotifications",
   "documentation": "https://api.kde.org/knotifications-index.html",
@@ -28,17 +28,17 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "dbus"
+        "network"
       ],
-      "platform": "linux"
+      "platform": "windows"
     },
     {
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "network"
+        "dbus"
       ],
-      "platform": "windows"
+      "platform": "linux | bsd"
     },
     {
       "name": "vcpkg-cmake",

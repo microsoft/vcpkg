@@ -1,6 +1,7 @@
 {
   "name": "kpackage",
   "version": "6.31.0",
+  "port-version": 1,
   "description": "Library to load and install packages of non binary files as they were a plugin",
   "homepage": "https://invent.kde.org/frameworks/kpackage",
   "documentation": "https://api.kde.org/kpackage-index.html",
@@ -27,7 +28,7 @@
       "features": [
         "dbus"
       ],
-      "platform": "linux"
+      "platform": "linux | bsd"
     },
     {
       "name": "vcpkg-cmake",

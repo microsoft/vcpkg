@@ -4322,7 +4322,7 @@
     },
     "kauth": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "kbookmarks": {
       "baseline": "6.31.0",
@@ -4354,15 +4354,15 @@
     },
     "kconfig": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kconfigwidgets": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kcoreaddons": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "kcp": {
       "baseline": "2.1.1",
@@ -4370,7 +4370,7 @@
     },
     "kcrash": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kdalgorithms": {
       "baseline": "1.4",
@@ -4382,7 +4382,7 @@
     },
     "kdbusaddons": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kddockwidgets": {
       "baseline": "2.5.1",
@@ -4590,7 +4590,7 @@
     },
     "kf6-solid": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kfr": {
       "baseline": "6.3.1",
@@ -4598,11 +4598,11 @@
     },
     "kglobalaccel": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kguiaddons": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kholidays": {
       "baseline": "6.31.0",
@@ -4614,7 +4614,7 @@
     },
     "kiconthemes": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kidletime": {
       "baseline": "6.31.0",
@@ -4634,7 +4634,7 @@
     },
     "kirigami": {
       "baseline": "6.31.0",
-      "port-version": 1
+      "port-version": 2
     },
     "kissfft": {
       "baseline": "131.2.0",
@@ -4654,7 +4654,7 @@
     },
     "kjobwidgets": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kleidiai": {
       "baseline": "1.25.0",
@@ -4686,7 +4686,7 @@
     },
     "knotifications": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "komihash": {
       "baseline": "5.34",
@@ -4694,7 +4694,7 @@
     },
     "kpackage": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kplotting": {
       "baseline": "6.31.0",
@@ -4766,7 +4766,7 @@
     },
     "kwindowsystem": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "kwsys": {
       "baseline": "2021-08-06",
@@ -4774,7 +4774,7 @@
     },
     "kxmlgui": {
       "baseline": "6.31.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lager": {
       "baseline": "0.1.3",

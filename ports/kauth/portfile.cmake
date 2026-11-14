@@ -17,6 +17,8 @@ vcpkg_check_features(
 
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND FEATURE_OPTIONS -DKAUTH_BACKEND_NAME=PolkitQt6-1)
+elseif(NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
+    list(APPEND FEATURE_OPTIONS -DKAUTH_BACKEND_NAME=Fake)
 endif()
 
 vcpkg_cmake_configure(

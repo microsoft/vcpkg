@@ -1,7 +1,7 @@
 {
   "name": "kguiaddons",
   "version": "6.31.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Addons to QtGui",
   "homepage": "https://invent.kde.org/frameworks/kguiaddons",
   "documentation": "https://api.kde.org/kguiaddons-index.html",
@@ -21,6 +21,15 @@
       ]
     },
     {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus",
+        "xcb"
+      ],
+      "platform": "linux | bsd"
+    },
+    {
       "name": "qtwayland",
       "default-features": false,
       "platform": "linux"
@@ -32,6 +41,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "wayland-protocols",
+      "platform": "linux"
     }
   ],
   "features": {
