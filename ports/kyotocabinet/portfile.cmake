@@ -9,20 +9,16 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     COPY_SOURCE
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-opt
         --disable-lzo
         --disable-lzma
-    OPTIONS_DEBUG
-        --disable-static
-    OPTIONS_RELEASE
-        --disable-static
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
