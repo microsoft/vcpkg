@@ -7,11 +7,19 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+# https://openssl-library.org/roadmap/
+# 4.x still breaks downstream ports.
+# 3.6 is EOL and no longer receives security updates.
+# 3.5 is LTS and supported until 08 Apr 2030.
+# As a mitigation for the port being at 3.6 already,
+# dress 3.5.x as "3.6.6 prereleases" in the manifest.
+string(REPLACE "3.6.6-really.3.5." "3.5." VERSION "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 40f0b346a9a5cf4cb37f1ecebdc74750c39a95783710061bfac58964883b0831543ecee0aee9f747ea093781b13c58a543b0b935d222519e3cb19648d77a0276
+    SHA512 ab29a6ed40dd8c74420b9bd19c5ac119b0f191aee72d555ba5a0601456155d39c809c77300d98c7e0bce607f32c1f7a83fc7f69f86b9909fe557bba3aa2e468f
     PATCHES
         cmake-config.patch
         command-line-length.patch
