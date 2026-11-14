@@ -1,7 +1,6 @@
 {
   "name": "onnxruntime",
-  "version-semver": "1.31.1",
-  "port-version": 2,
+  "version-semver": "1.32.0",
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",

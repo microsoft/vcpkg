@@ -9,7 +9,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/onnxruntime
     REF "v${VERSION}"
-    SHA512 7fa5cb459c4d7d3146974db2ddae084f8c689e6b22dca3aad031aaf33b013dfa7b1ad1b116ec7a675a8c42ad6dd73873759d2129dab1301a5d885b1e34bf9568
+    SHA512 214a3316d2850bbd565447c6d4e939ca7b32981865aa11b7b0b12dabeb600718a677bf3e09ae1e4faf9c51c6dd9112f7ca4fb6faa7408f2b39625b0b0c951f99
     PATCHES
         fix-cmake.patch # .framework install dir, wasm re2 workaround
         fix-cmake-cuda.patch
