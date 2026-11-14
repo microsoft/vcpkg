@@ -6533,7 +6533,7 @@
       "port-version": 13
     },
     "mailio": {
-      "baseline": "0.26.0",
+      "baseline": "0.26.2",
       "port-version": 0
     },
     "makeid": {

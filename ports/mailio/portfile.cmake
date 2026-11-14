@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO karastojko/mailio
     REF "${VERSION}"
-    SHA512 5a63eb87fdb2a583aaa1de5f8a02facceacaf4174cdb96faafed992899396921eb3b232359ca49bf40ce2cdb414113cb88bf8a71c69bbc2e74f56dab9e8ee06c
+    SHA512 ecbc1e654f2aa4b8e6d61c825f1358bdcaf322389efdcb5bacfff90629a2489e6b3c97867ed9095a8acb77b7d834a68e31b4b68297f218cafa3081d1846fb980
     HEAD_REF master
 )
 
