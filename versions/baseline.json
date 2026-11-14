@@ -1626,7 +1626,7 @@
     },
     "cadons-ctus": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "caf": {
       "baseline": "1.1.0",
@@ -2470,7 +2470,7 @@
     },
     "dav1d": {
       "baseline": "1.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "daw-header-libraries": {
       "baseline": "2.136.0",
@@ -4962,7 +4962,7 @@
     },
     "libbson": {
       "baseline": "2.5.8",
-      "port-version": 0
+      "port-version": 1
     },
     "libcaer": {
       "baseline": "3.3.17",
@@ -5754,7 +5754,7 @@
     },
     "libremidi": {
       "baseline": "5.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "4.4.1",
@@ -6978,7 +6978,7 @@
     },
     "mpss": {
       "baseline": "2.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mqtt-cpp": {
       "baseline": "13.2.3",
@@ -7578,7 +7578,7 @@
     },
     "openal-soft": {
       "baseline": "1.25.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openblas": {
       "baseline": "0.3.34",
@@ -10610,7 +10610,7 @@
     },
     "triton": {
       "baseline": "2025-02-15",
-      "port-version": 0
+      "port-version": 1
     },
     "trompeloeil": {
       "baseline": "49",
