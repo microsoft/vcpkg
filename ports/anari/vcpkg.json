@@ -1,12 +1,25 @@
 {
   "name": "anari",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Cross-Platform 3D Rendering Engine API.",
   "homepage": "https://www.khronos.org/anari",
   "license": "Apache-2.0",
   "dependencies": [
     "glm",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental",
+        "sdl3-binding",
+        "sdl3-renderer-binding"
+      ]
+    },
     "python3",
+    "stb",
+    {
+      "name": "tinyexr",
+      "platform": "!windows"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
