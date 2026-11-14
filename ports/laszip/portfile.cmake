@@ -1,3 +1,9 @@
+vcpkg_download_distfile(FIX_BUILD_PATCH
+    URLS https://github.com/LASzip/LASzip/commit/7b4c757aacf07d915a2c5fb5b05526c153977aaa.patch?full_index=1
+    FILENAME laszip-7b4c757aacf07d915a2c5fb5b05526c153977aaa.patch
+    SHA512 0653a63daf1963df2c0e468b48cb7ace9613ea275bc06aad75206f9c8917a48f20eca0af0ab0e61e8d111f27e38fe89e4c876ca8b30f44e1e07532bd23e7a06a
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LASzip/LASzip
@@ -7,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         compiler-options.diff
         include-cstdint.patch
+        "${FIX_BUILD_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LASZIP_BUILD_STATIC)

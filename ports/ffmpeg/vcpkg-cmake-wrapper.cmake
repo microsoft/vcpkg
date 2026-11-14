@@ -346,6 +346,13 @@ elseif(@WITH_SCHANNEL@)
   if(vcpkg_no_avformat_target AND TARGET FFmpeg::avformat)
     target_link_libraries(FFmpeg::avformat INTERFACE secur32 ncrypt crypt32)
   endif()
+elseif(@WITH_SECURETRANSPORT@)
+  # The APPLE branch above only forwards frameworks from libavcodec's
+  # pkg-config, and SecureTransport is linked into libavformat.
+  list(APPEND FFMPEG_LIBRARIES "-framework Security" "-framework CoreFoundation")
+  if(vcpkg_no_avformat_target AND TARGET FFmpeg::avformat)
+    target_link_libraries(FFmpeg::avformat INTERFACE "-framework Security" "-framework CoreFoundation")
+  endif()
 endif()
 
 endif()

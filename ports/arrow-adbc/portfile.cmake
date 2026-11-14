@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF apache-arrow-adbc-${VERSION}
     SHA512 48f3e5663ae59d3910f0e545f0bad68778151017e7a67804143832a5812126ff5796db18e9584be75dcedae751f294f13457600964bb84c1038f65eb285c2d05
     HEAD_REF main
+    PATCHES
+        fmt-format.patch # https://github.com/apache/arrow-adbc/pull/4626
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor/fmt")
 file(REMOVE_RECURSE "${SOURCE_PATH}/c/vendor/nanoarrow")

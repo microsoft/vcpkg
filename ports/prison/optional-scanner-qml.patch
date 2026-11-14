@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4a60bd3..4670300 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,6 +34,7 @@ option(WITH_DMTX "Build with DataMatrix generation support" ON)
+ option(WITH_ZXING "Build with barcode scanning and PDF417 generation support" ON)
+ option(WITH_QUICK "Build QtQuick components" ON)
+ option(WITH_MULTIMEDIA "Build scanner support" ON)
++option(WITH_SCANNER_QUICK "Build the QtQuick components of the scanner" ON)
+ 
+ find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui)
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d25eb06..caed43c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -5,7 +5,7 @@ if(WITH_QUICK)
+ endif()
+ if(TARGET Qt6::Multimedia AND TARGET ZXing::ZXing)
+     add_subdirectory(scanner)
+-    if (WITH_QUICK)
++    if (WITH_QUICK AND WITH_SCANNER_QUICK)
+         add_subdirectory(scanner-quick)
+     endif()
+ endif()

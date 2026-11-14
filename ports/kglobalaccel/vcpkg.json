@@ -1,10 +1,11 @@
 {
   "name": "kglobalaccel",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Global desktop keyboard shortcuts",
   "homepage": "https://invent.kde.org/frameworks/kglobalaccel",
   "documentation": "https://api.kde.org/kglobalaccel-index.html",
+  "license": "LGPL-2.0-or-later",
   "supports": "!windows & !android & !osx",
   "dependencies": [
     "ecm",

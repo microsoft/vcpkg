@@ -1,0 +1,17 @@
+diff --git a/cmake/ruckig-config.cmake.in b/cmake/ruckig-config.cmake.in
+index ce0bcf8..3b98887 100644
+--- a/cmake/ruckig-config.cmake.in
++++ b/cmake/ruckig-config.cmake.in
+@@ -2,4 +2,12 @@
+ 
+ @PACKAGE_INIT@
+ 
++if(@BUILD_CLOUD_CLIENT@)
++  include(CMakeFindDependencyMacro)
++  find_dependency(nlohmann_json CONFIG)
++  if(NOT @BUILD_SHARED_LIBS@)
++    find_dependency(httplib CONFIG)
++  endif()
++endif()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")

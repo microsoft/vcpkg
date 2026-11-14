@@ -1,0 +1,84 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6386e5d..5533ab3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -101,6 +101,8 @@ option(MI_TRACK_ETW           "Deprecated: Compile with Windows event tracing (E
+ 
+ include(CheckLinkerFlag)    # requires cmake 3.18
+ include(CheckIncludeFiles)
++include(CheckSymbolExists)
++include(CMakePushCheckState)
+ include(GNUInstallDirs)
+ include("cmake/mimalloc-config-version.cmake")
+ 
+@@ -170,6 +172,14 @@ function(STRIEQUAL str1 str2 is_equal)
+     endif()
+ endfunction()
+ 
++# check if `symbol` is declared in `headers` and links when also linking with `libs`
++function(check_symbol_exists_with_libs symbol headers libs outvar)
++  cmake_push_check_state()
++  list(APPEND CMAKE_REQUIRED_LIBRARIES ${libs})
++  check_symbol_exists(${symbol} "${headers}" ${outvar})
++  cmake_pop_check_state()
++endfunction()
++
+ # -----------------------------------------------------------------------------
+ # Convenience: set default build type and compiler depending on the build directory
+ # -----------------------------------------------------------------------------
+@@ -914,20 +924,25 @@ if(NOT WIN32 AND MI_PROFILE)
+   if(MI_HAS_UNISTDH)
+     list(APPEND mi_defines MI_HAS_UNISTDH=1)
+   endif()
+-  CHECK_INCLUDE_FILES("execinfo.h" MI_HAS_EXECINFOH)
+-  if(MI_HAS_EXECINFOH)
+-    list(APPEND mi_defines MI_HAS_EXECINFOH=1)
++  # Check that `backtrace` is declared and linkable, not just that `execinfo.h` exists (e.g. on Android `backtrace` is only available from API level 33).
++  check_symbol_exists(backtrace "execinfo.h" MI_HAS_BACKTRACE)
++  if(NOT MI_HAS_BACKTRACE AND CMAKE_SYSTEM_NAME MATCHES "BSD|DragonFly")
+     # On FreeBSD (and some other BSDs) `backtrace`/`backtrace_symbols` are not part of
+     # libc but live in a separate `libexecinfo` that must be linked explicitly.
+-    if(CMAKE_SYSTEM_NAME MATCHES "BSD|DragonFly")
+-      find_link_library("execinfo" MI_LIB_EXECINFO)
+-      if(MI_LIB_EXECINFO)
++    find_link_library("execinfo" MI_LIB_EXECINFO)
++    if(MI_LIB_EXECINFO)
++      check_symbol_exists_with_libs(backtrace "execinfo.h" "${MI_LIB_EXECINFO}" MI_HAS_BACKTRACE_WITH_EXECINFO)
++      if(MI_HAS_BACKTRACE_WITH_EXECINFO)
++        set(MI_HAS_BACKTRACE ON)
+         list(APPEND mi_libraries "${MI_LIB_EXECINFO}")
+       endif()
+     endif()
++  endif()
++  if(MI_HAS_BACKTRACE)
++    list(APPEND mi_defines MI_HAS_EXECINFOH=1)
+   else()
+-    # No `execinfo.h` available (e.g. musl-based Linux distributions such as Alpine
+-    # do not implement `backtrace`); fall back to `_Unwind_Backtrace` from `unwind.h`
++    # No usable `backtrace` available (e.g. Android before API level 33, or musl-based Linux
++    # distributions such as Alpine); fall back to `_Unwind_Backtrace` from `unwind.h`
+     # which is provided by the compiler's unwinder (libgcc_s or LLVM libunwind).
+     include(CheckCSourceCompiles)
+     set(mi_unwind_test_source "
+@@ -941,9 +956,10 @@ if(NOT WIN32 AND MI_PROFILE)
+     check_c_source_compiles("${mi_unwind_test_source}" MI_HAS_UNWINDH)
+     if(NOT MI_HAS_UNWINDH)
+       foreach(mi_unwind_lib IN ITEMS gcc_s unwind)
+-        set(CMAKE_REQUIRED_LIBRARIES ${mi_unwind_lib})
++        cmake_push_check_state()
++        list(APPEND CMAKE_REQUIRED_LIBRARIES ${mi_unwind_lib})
+         check_c_source_compiles("${mi_unwind_test_source}" MI_HAS_UNWINDH_${mi_unwind_lib})
+-        unset(CMAKE_REQUIRED_LIBRARIES)
++        cmake_pop_check_state()
+         if(MI_HAS_UNWINDH_${mi_unwind_lib})
+           set(MI_HAS_UNWINDH ON)
+           list(APPEND mi_libraries ${mi_unwind_lib})
+@@ -954,7 +970,7 @@ if(NOT WIN32 AND MI_PROFILE)
+     if(MI_HAS_UNWINDH)
+       list(APPEND mi_defines MI_HAS_UNWINDH=1)
+     else()
+-      message(WARNING "No backtrace support available: neither execinfo.h nor unwind.h (_Unwind_Backtrace) found.")
++      message(WARNING "No backtrace support available: neither backtrace (execinfo.h) nor _Unwind_Backtrace (unwind.h) usable.")
+     endif()
+   endif()
+   # FreeBSD (and DragonFly) need `kinfo_getvmmap` (in `libutil`) to collect the

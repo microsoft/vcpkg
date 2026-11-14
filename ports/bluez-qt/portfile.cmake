@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-static-dependencies.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -27,7 +28,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Test=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6QuickTest=ON
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         "-DECM_PKGCONFIG_INSTALL_DIR:PATH=${CURRENT_PACKAGES_DIR}/discard_pkgconfig"
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
@@ -36,6 +37,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6bluezqt CONFIG_PATH lib/cmake/KF6BluezQt)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6bluezqt/KF6BluezQtTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

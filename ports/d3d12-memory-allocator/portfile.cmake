@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
     REF "v${VERSION}"
-    SHA512 d8b9b3a587c676cee216a92f49ca965edbbbf321d87bf6d88e44e4b268aad8d7278601500c56f976d14c8960b4934279545e3e7ba625d6f94c321fef24b98844
+    SHA512 7c6afbb3e5c96f4a3ce624a3dc0ca12ab051e7d77aa512baa1d00e760efdcbde2118ffef36c6f1cc3b0ca297f4e9578d4e7710f630b37de0482a28559a06c6da
     HEAD_REF master
     PATCHES
         0001-build-options.patch

@@ -1,10 +1,11 @@
 {
   "name": "threadweaver",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "KDE Threading library",
   "homepage": "https://invent.kde.org/frameworks/threadweaver",
   "documentation": "https://api.kde.org/threadweaver-index.html",
+  "license": "LGPL-2.0-or-later",
   "dependencies": [
     "ecm",
     {

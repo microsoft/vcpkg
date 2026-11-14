@@ -3,13 +3,13 @@ similarity index 100%
 rename from common/include/guiddef.h
 rename to common/include/jxrguiddef.h
 diff --git a/jxrgluelib/JXRGlue.h b/jxrgluelib/JXRGlue.h
-index d0b219c..c3e5d2b 100644
+index 9026bff..6cc8343 100644
 --- a/jxrgluelib/JXRGlue.h
 +++ b/jxrgluelib/JXRGlue.h
-@@ -32,7 +32,11 @@ extern "C" {
- #endif
+@@ -33,7 +33,11 @@ extern "C" {
  
  #include <JXRMeta.h>
+ #include <JXRVersion.h>
 +#ifdef _WIN32
  #include <guiddef.h>
 +#else

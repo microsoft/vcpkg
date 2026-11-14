@@ -18,6 +18,7 @@ int main() {
     status = db->Get(rocksdb::ReadOptions(), "hello", &value);
     assert(status.ok());
     assert(value == "rocksdb");
+    db.reset();
     std::filesystem::remove_all(tmp);
     return 0;
 }

@@ -1,8 +1,10 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # upstream always builds a static library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tomwillow/tomsolver
     REF "${VERSION}"
-    SHA512 00e1b961b1e6730bf74209622a44f932b5221c15995c53bcea9de5b84ba7d75549c095658bcb5729d4a38bf60104b5c5a8fa97015f13977341fcdd62643f35c2
+    SHA512 18a58288c313f2abb8f356ef3868fa7d1eb9e06df4096108ca08aae06ebebfd618b6b6b5e3e629432082d9267224f772af38641a26960154503554317e6e818e
     HEAD_REF master
 )
 

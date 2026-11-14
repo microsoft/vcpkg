@@ -1,0 +1,82 @@
+diff --git a/cmake/manual.cmake b/cmake/manual.cmake
+index abc562b..75cd7f2 100644
+--- a/cmake/manual.cmake
++++ b/cmake/manual.cmake
+@@ -15,74 +15,7 @@ if(TRACY_PANDOC)
+         set(TRACY_PANDOC "")
+     endif()
+ endif()
+-if(TRACY_PANDOC)
+-    message(STATUS "Using system pandoc ${PANDOC_VERSION}: ${TRACY_PANDOC}")
+-else()
+-    if(WIN32)
+-        if(NOT CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
+-            message(FATAL_ERROR "No pinned pandoc ${PANDOC_VERSION} binary for ${CMAKE_HOST_SYSTEM_PROCESSOR}; install pandoc ${PANDOC_VERSION}")
+-        endif()
+-        set(_pandoc_asset pandoc-${PANDOC_VERSION}-windows-x86_64.zip)
+-        set(_pandoc_hash 6ef431cb20b2c24a0371fc19200dc49d452be54b1b5c9239f3462841ef53e587)
+-        set(_pandoc_exe pandoc-${PANDOC_VERSION}/pandoc.exe)
+-    elseif(APPLE)
+-        if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(arm64|aarch64)$")
+-            set(_pandoc_asset pandoc-${PANDOC_VERSION}-arm64-macOS.zip)
+-            set(_pandoc_hash c2146cf33a583f3ac93eccddf1bb662371d5cfcce1aad1c87ad860cca1435d46)
+-            set(_pandoc_exe pandoc-${PANDOC_VERSION}-arm64/bin/pandoc)
+-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
+-            set(_pandoc_asset pandoc-${PANDOC_VERSION}-x86_64-macOS.zip)
+-            set(_pandoc_hash 81ed3e2cfecf096df15d407152f89a684fd65221082b919963f738e977fad3bc)
+-            set(_pandoc_exe pandoc-${PANDOC_VERSION}-x86_64/bin/pandoc)
+-        else()
+-            message(FATAL_ERROR "No pinned pandoc ${PANDOC_VERSION} binary for ${CMAKE_HOST_SYSTEM_PROCESSOR}; install pandoc ${PANDOC_VERSION}")
+-        endif()
+-    else()
+-        if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)$")
+-            set(_pandoc_asset pandoc-${PANDOC_VERSION}-linux-arm64.tar.gz)
+-            set(_pandoc_hash 445d96fd08801fe636cab1158b4f017ee320ac3b7446328b4fe2f902117b19b9)
+-            set(_pandoc_exe pandoc-${PANDOC_VERSION}/bin/pandoc)
+-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
+-            set(_pandoc_asset pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz)
+-            set(_pandoc_hash d0c90410e90204c9ca83b8539fac5c7aed01fd537207e4585849f8abc5df20b8)
+-        set(_pandoc_exe pandoc-${PANDOC_VERSION}/bin/pandoc)
+-        else()
+-            message(FATAL_ERROR "No pinned pandoc ${PANDOC_VERSION} binary for ${CMAKE_HOST_SYSTEM_PROCESSOR}; install pandoc ${PANDOC_VERSION}")
+-        endif()
+-    endif()
+-
+-    # Shared cache: $PANDOC_CACHE_DIR, else the platform user cache directory.
+-    if(DEFINED ENV{PANDOC_CACHE_DIR})
+-        set(_pandoc_cache $ENV{PANDOC_CACHE_DIR})
+-    elseif(WIN32)
+-        set(_pandoc_cache $ENV{LOCALAPPDATA}/tracy/pandoc)
+-    elseif(APPLE)
+-        set(_pandoc_cache $ENV{HOME}/Library/Caches/tracy/pandoc)
+-    elseif(DEFINED ENV{XDG_CACHE_HOME})
+-        set(_pandoc_cache $ENV{XDG_CACHE_HOME}/tracy/pandoc)
+-    else()
+-        set(_pandoc_cache $ENV{HOME}/.cache/tracy/pandoc)
+-    endif()
+-
+-    set(TRACY_PANDOC ${_pandoc_cache}/${_pandoc_exe})
+-    if(NOT EXISTS ${TRACY_PANDOC})
+-        # Concurrent configures on a cold cache can collide; worst case the
+-        # hash check fails and a rerun succeeds.
+-        message(STATUS "Downloading pandoc ${PANDOC_VERSION} (${_pandoc_asset})")
+-        file(MAKE_DIRECTORY ${_pandoc_cache})
+-        file(DOWNLOAD
+-            https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/${_pandoc_asset}
+-            ${_pandoc_cache}/pandoc.archive
+-            EXPECTED_HASH SHA256=${_pandoc_hash}
+-            STATUS _pandoc_download)
+-        list(GET _pandoc_download 0 _pandoc_download_rc)
+-        if(NOT _pandoc_download_rc STREQUAL "0")
+-            file(REMOVE ${_pandoc_cache}/pandoc.archive)
+-            message(FATAL_ERROR "Failed to download pandoc ${PANDOC_VERSION}: ${_pandoc_download}")
+-        endif()
+-        file(ARCHIVE_EXTRACT
+-            INPUT ${_pandoc_cache}/pandoc.archive
+-            DESTINATION ${_pandoc_cache})
+-        file(REMOVE ${_pandoc_cache}/pandoc.archive)
+-    endif()
++if(NOT TRACY_PANDOC)
++    message(FATAL_ERROR "pandoc ${PANDOC_VERSION} is required; set TRACY_PANDOC to its path")
+ endif()
++message(STATUS "Using pandoc ${PANDOC_VERSION}: ${TRACY_PANDOC}")

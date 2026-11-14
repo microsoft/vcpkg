@@ -64,8 +64,8 @@ elseif(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
     vcpkg_list(APPEND OPTIONS "ABI=32")
     string(APPEND asmflags " -m32")
-elseif(VCPKG_TARGET_IS_ANDROID)
-    # Let vcpkg-make set CCAS/AS so Android --target/--sysroot flags are preserved.
+elseif(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
+    # Let vcpkg-make set CCAS/AS so Android --target/--sysroot and macOS -arch flags are preserved.
     set(ccas "")
 else()
     set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")

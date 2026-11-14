@@ -1,0 +1,99 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d5d8d00..c1ffb48 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,40 +22,18 @@ if (NOT DEFINED OCR_ONNX)
+ endif ()
+ #set(OCR_OUTPUT "GPU")
+ 
+-#set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD 17)
+ add_definitions(-DUNICODE -D_UNICODE)
+-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+-    add_definitions("-Wall -g -O0")
+-else ()
+-    add_definitions("-Wall")
+-endif ()
+ 
+ # OnnxRuntime
+-if (OCR_ONNX STREQUAL "CPU")
+-    include(${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-static/OnnxRuntimeWrapper.cmake)
+-elseif (OCR_ONNX STREQUAL "CUDA") # CUDA
+-    include(${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-gpu/OnnxRuntimeWrapper.cmake)
+-elseif (OCR_ONNX STREQUAL "DIRECTML") # DIRECTML
+-    include(${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-DirectML/OnnxRuntimeWrapper.cmake)
+-endif ()
+-find_package(OnnxRuntime REQUIRED)
+-if (OnnxRuntime_FOUND)
+-    message(STATUS "OnnxRuntime_LIBS: ${OnnxRuntime_LIBS}")
+-    message(STATUS "OnnxRuntime_INCLUDE_DIRS: ${OnnxRuntime_INCLUDE_DIRS}")
+-else ()
+-    message(FATAL_ERROR "onnxruntime Not Found!")
+-endif (OnnxRuntime_FOUND)
++find_package(onnxruntime CONFIG REQUIRED)
++set(OnnxRuntime_LIBS onnxruntime::onnxruntime)
+ 
+ # OpenCV
+-set(BUILD_SHARED_LIBS false)
+-include(${CMAKE_CURRENT_SOURCE_DIR}/opencv-static/OpenCVWrapperConfig.cmake)
+-find_package(OpenCV REQUIRED)
+-if (OpenCV_FOUND)
+-    message(STATUS "OpenCV_LIBS: ${OpenCV_LIBS}")
+-    message(STATUS "OpenCV_INCLUDE_DIRS: ${OpenCV_INCLUDE_DIRS}")
+-else ()
+-    message(FATAL_ERROR "opencv Not Found!")
+-endif (OpenCV_FOUND)
++find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
++
++# Clipper
++find_package(polyclipping CONFIG REQUIRED)
+ 
+ # project include
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+@@ -82,19 +60,41 @@ if (OCR_OUTPUT STREQUAL "JNI") # JNI
+     target_compile_definitions(RapidOcrOnnx PRIVATE __JNI__)
+     target_link_libraries(RapidOcrOnnx ${OnnxRuntime_LIBS} ${OpenCV_LIBS} ${JNI_LIBS})
+ elseif (OCR_OUTPUT STREQUAL "CLIB") # CLIB
+-    add_library(RapidOcrOnnx SHARED ${OCR_COMPILE_CODE})
++    list(FILTER OCR_COMPILE_CODE EXCLUDE REGEX "(main|getopt|OcrLiteJni)\\.cpp$")
++    add_library(RapidOcrOnnx ${OCR_COMPILE_CODE})
+     target_compile_definitions(RapidOcrOnnx PRIVATE __CLIB__)
+-    target_link_libraries(RapidOcrOnnx ${OnnxRuntime_LIBS} ${OpenCV_LIBS})
++    if (NOT BUILD_SHARED_LIBS)
++        target_compile_definitions(RapidOcrOnnx PRIVATE RAPIDOCR_STATIC)
++    endif ()
++    if (MSVC)
++        target_compile_options(RapidOcrOnnx PRIVATE /utf-8)
++        target_compile_definitions(RapidOcrOnnx PRIVATE NOMINMAX)
++    endif ()
++    set_target_properties(RapidOcrOnnx PROPERTIES EXPORT_NAME rapidocronnx)
++    target_link_libraries(RapidOcrOnnx ${OnnxRuntime_LIBS} ${OpenCV_LIBS} polyclipping::polyclipping)
+ elseif (OCR_OUTPUT STREQUAL "BIN") # BIN
+     add_executable(RapidOcrOnnx ${OCR_COMPILE_CODE})
+     target_compile_definitions(RapidOcrOnnx PRIVATE __EXEC__)
+     target_link_libraries(RapidOcrOnnx ${OnnxRuntime_LIBS} ${OpenCV_LIBS})
+ endif ()
+ 
+-install(TARGETS RapidOcrOnnx EXPORT RapidOcrOnnx)
++install(TARGETS RapidOcrOnnx EXPORT unofficial-rapidocronnx-targets
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib
++        INCLUDES DESTINATION include)
+ if (OCR_OUTPUT STREQUAL "CLIB") # CLIB
+-    file(GLOB OCR_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+-    install(FILES ${OCR_INCLUDE} DESTINATION include)
++    install(FILES include/OcrLite.h include/OcrLiteCApi.h include/OcrStruct.h
++            DESTINATION include/rapidocronnx)
++    include(CMakePackageConfigHelpers)
++    configure_package_config_file(unofficial-rapidocronnx-config.cmake.in
++            "${CMAKE_CURRENT_BINARY_DIR}/unofficial-rapidocronnx-config.cmake"
++            INSTALL_DESTINATION share/unofficial-rapidocronnx)
++    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-rapidocronnx-config.cmake"
++            DESTINATION share/unofficial-rapidocronnx)
++    install(EXPORT unofficial-rapidocronnx-targets
++            NAMESPACE unofficial::rapidocronnx::
++            DESTINATION share/unofficial-rapidocronnx)
+ endif ()
+ 
+ if (OCR_ONNX STREQUAL "CUDA")

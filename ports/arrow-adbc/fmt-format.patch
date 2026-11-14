@@ -1,0 +1,24 @@
+diff --git a/c/driver/framework/status.h b/c/driver/framework/status.h
+index 69893ae..d42535e 100644
+--- a/c/driver/framework/status.h
++++ b/c/driver/framework/status.h
+@@ -28,6 +28,7 @@
+ 
+ #if defined(ADBC_FRAMEWORK_USE_FMT)
+ #include <fmt/core.h>
++#include <fmt/format.h>
+ #endif
+ 
+ #include <arrow-adbc/adbc.h>
+diff --git a/c/driver/postgresql/error.h b/c/driver/postgresql/error.h
+index bf8a4b2..7bb43fe 100644
+--- a/c/driver/postgresql/error.h
++++ b/c/driver/postgresql/error.h
+@@ -26,6 +26,7 @@
+ #include <libpq-fe.h>
+ 
+ #include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "driver/framework/status.h"
+ 

@@ -1,8 +1,8 @@
 diff --git a/cmake/server.cmake b/cmake/server.cmake
-index ca5e9f3..f327252 100644
+index ef65cdc..82ca46d 100644
 --- a/cmake/server.cmake
 +++ b/cmake/server.cmake
-@@ -31,7 +31,7 @@ list(TRANSFORM TRACY_SERVER_SOURCES PREPEND "${TRACY_SERVER_DIR}/")
+@@ -32,7 +32,7 @@ list(TRANSFORM TRACY_SERVER_SOURCES PREPEND "${TRACY_SERVER_DIR}/")
  
  add_library(TracyServer STATIC EXCLUDE_FROM_ALL ${TRACY_COMMON_SOURCES} ${TRACY_SERVER_SOURCES})
  target_include_directories(TracyServer PUBLIC ${TRACY_COMMON_DIR} ${TRACY_SERVER_DIR})
@@ -12,7 +12,7 @@ index ca5e9f3..f327252 100644
      target_compile_definitions(TracyServer PUBLIC TRACY_NO_STATISTICS)
  endif()
 diff --git a/cmake/vendor.cmake b/cmake/vendor.cmake
-index 0cbdcce..9576068 100644
+index 4ce5dc1..9576068 100644
 --- a/cmake/vendor.cmake
 +++ b/cmake/vendor.cmake
 @@ -4,81 +4,19 @@ include_guard(GLOBAL)
@@ -54,7 +54,7 @@ index 0cbdcce..9576068 100644
 -    CPMAddPackage(
 -        NAME capstone
 -        GITHUB_REPOSITORY capstone-engine/capstone
--        GIT_TAG 6.0.0-Alpha10
+-        GIT_TAG 6.0.0-Alpha11
 -        OPTIONS
 -            "CAPSTONE_X86_ATT_DISABLE ON"
 -            "CAPSTONE_ALPHA_SUPPORT OFF"
@@ -141,7 +141,7 @@ index 0cbdcce..9576068 100644
 -            CPMAddPackage(
 -                NAME glfw
 -                GITHUB_REPOSITORY glfw/glfw
--                GIT_TAG 3.4
+-                GIT_TAG 3.5.1
 -                OPTIONS
 -                    "GLFW_BUILD_EXAMPLES OFF"
 -                    "GLFW_BUILD_TESTS OFF"
@@ -166,7 +166,7 @@ index 0cbdcce..9576068 100644
 -        CPMAddPackage(
 -            NAME freetype
 -            GITHUB_REPOSITORY freetype/freetype
--            GIT_TAG VER-2-14-3
+-            GIT_TAG VER-2-15-0
 -            OPTIONS
 -                "FT_DISABLE_HARFBUZZ ON"
 -                "FT_WITH_HARFBUZZ OFF"
@@ -186,7 +186,7 @@ index 0cbdcce..9576068 100644
 -    CPMAddPackage(
 -        NAME ImGui
 -        GITHUB_REPOSITORY ocornut/imgui
--        GIT_TAG v1.92.9b-docking
+-        GIT_TAG v1.93.0-docking
 -        DOWNLOAD_ONLY TRUE
 -        PATCHES
 -            "${CMAKE_CURRENT_LIST_DIR}/imgui-emscripten.patch"
@@ -223,7 +223,7 @@ index 0cbdcce..9576068 100644
 -        CPMAddPackage(
 -            NAME nfd
 -            GITHUB_REPOSITORY btzy/nativefiledialog-extended
--            GIT_TAG 3cd252a8f7ca32419b1ca235c2990ba6a0ecba7c
+-            GIT_TAG v1.4.1
 -            EXCLUDE_FROM_ALL TRUE
 -            PATCHES
 -                "${CMAKE_CURRENT_LIST_DIR}/nfd-xdg-foreign-v2.patch"
@@ -239,7 +239,7 @@ index 0cbdcce..9576068 100644
 -    CPMAddPackage(
 -        NAME md4c
 -        GITHUB_REPOSITORY mity/md4c
--        GIT_TAG 65c6c9d72cebd9a731aaa5597414ce04d9ea5de3
+-        GIT_TAG 60e8065cfccd5d7ac561115f9a9bfbdf811f5cc9
 -        OPTIONS
 -            "BUILD_SHARED_LIBS OFF"
 -        EXCLUDE_FROM_ALL TRUE
@@ -281,7 +281,7 @@ index 0cbdcce..9576068 100644
 -        CPMAddPackage(
 -            NAME usearch
 -            GITHUB_REPOSITORY unum-cloud/usearch
--            GIT_TAG v2.26.0
+-            GIT_TAG v2.26.4
 -            EXCLUDE_FROM_ALL TRUE
 -        )
 +        find_package(usearch CONFIG)
@@ -316,7 +316,7 @@ index 0cbdcce..9576068 100644
 -            CPMAddPackage(
 -                NAME libcurl
 -                GITHUB_REPOSITORY curl/curl
--                GIT_TAG curl-8_21_0
+-                GIT_TAG curl-8_23_0
 -                OPTIONS
 -                    "BUILD_STATIC_LIBS ON"
 -                    "BUILD_SHARED_LIBS OFF"
@@ -338,10 +338,10 @@ index 0cbdcce..9576068 100644
      endif()
  
 diff --git a/profiler/CMakeLists.txt b/profiler/CMakeLists.txt
-index 5747b13..48d3d69 100644
+index 8423bf5..cada624 100644
 --- a/profiler/CMakeLists.txt
 +++ b/profiler/CMakeLists.txt
-@@ -301,22 +301,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
+@@ -361,22 +361,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
      TracyImGui
      Threads::Threads
      nlohmann_json::nlohmann_json
@@ -370,7 +370,7 @@ index 5747b13..48d3d69 100644
      )
  endif()
  
-@@ -329,7 +323,7 @@ if(NOT EMSCRIPTEN)
+@@ -389,7 +383,7 @@ if(NOT EMSCRIPTEN)
          target_compile_definitions(${PROJECT_NAME} PRIVATE TRACY_NO_FILESELECTOR)
      endif()
      if(NOT USE_WAYLAND)
