@@ -176,22 +176,58 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ADDITIONAL_LIBS_DEBUG ${add_libs_dbg}
     )
 
-    if(NOT VCPKG_CROSSCOMPILING)
-        file(GLOB_RECURSE freeze_module "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/**/_freeze_module.exe")
-        file(COPY "${freeze_module}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    file(GLOB_RECURSE PYTHON_RELEASE_INTERPRETERS
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/**/python.exe"
+    )
+    list(LENGTH PYTHON_RELEASE_INTERPRETERS PYTHON_RELEASE_INTERPRETER_COUNT)
+    if(PYTHON_RELEASE_INTERPRETER_COUNT EQUAL 0)
+        message(FATAL_ERROR "Could not find the Release Python interpreter in the build tree")
+    endif()
+    list(GET PYTHON_RELEASE_INTERPRETERS 0 PYTHON_RELEASE_INTERPRETER)
+    get_filename_component(PYTHON_RELEASE_BUILD_DIR "${PYTHON_RELEASE_INTERPRETER}" DIRECTORY)
+    set(PYTHON_RELEASE_TOOLS python)
+    if(EXISTS "${PYTHON_RELEASE_BUILD_DIR}/pythonw.exe")
+        list(APPEND PYTHON_RELEASE_TOOLS pythonw)
     endif()
 
-    # The extension modules must be placed in the DLLs directory, so we can't use vcpkg_copy_tools()
+    if(NOT VCPKG_CROSSCOMPILING)
+        file(GLOB_RECURSE PYTHON_FREEZE_MODULES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/**/_freeze_module.exe")
+        foreach(PYTHON_FREEZE_MODULE IN LISTS PYTHON_FREEZE_MODULES)
+            get_filename_component(PYTHON_FREEZE_MODULE_DIR "${PYTHON_FREEZE_MODULE}" DIRECTORY)
+            vcpkg_copy_tools(
+                TOOL_NAMES _freeze_module
+                SEARCH_DIR "${PYTHON_FREEZE_MODULE_DIR}"
+                DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
+            )
+        endforeach()
+    endif()
+
     if(PYTHON_HAS_EXTENSIONS)
         file(GLOB_RECURSE PYTHON_EXTENSIONS_RELEASE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.pyd")
         file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll")
+        # Stage extensions beside the interpreter so vcpkg_copy_tools() can
+        # discover their runtime dependencies before they are moved to DLLs.
+        file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
         file(GLOB_RECURSE PYTHON_EXTENSIONS_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.pyd")
         file(COPY ${PYTHON_EXTENSIONS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
+
+    vcpkg_copy_tools(
+        TOOL_NAMES ${PYTHON_RELEASE_TOOLS}
+        SEARCH_DIR "${PYTHON_RELEASE_BUILD_DIR}"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+    )
+
+    if(PYTHON_EXTENSIONS_RELEASE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
+        foreach(PYTHON_EXTENSION IN LISTS PYTHON_EXTENSIONS_RELEASE)
+            get_filename_component(PYTHON_EXTENSION_NAME "${PYTHON_EXTENSION}" NAME)
+            file(RENAME
+                "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${PYTHON_EXTENSION_NAME}"
+                "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs/${PYTHON_EXTENSION_NAME}"
+            )
+        endforeach()
     endif()
 
     file(COPY "${SOURCE_PATH}/Include/" "${SOURCE_PATH}/PC/pyconfig.h"
@@ -204,6 +240,94 @@ if(VCPKG_TARGET_IS_WINDOWS)
             "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/venv/scripts/nt/${launcher}.exe")
     endforeach()
 
+    # FindPython's Python::InterpreterMultiConfig target can select a debug
+    # interpreter for Debug configurations. The upstream install step only
+    # packages the release interpreter, so provide a self-contained debug
+    # runtime under vcpkg's standard debug tools prefix.
+    #
+    # VCPKG_CROSSCOMPILING compares complete target and host triplet names.
+    # Consequently, same-architecture Windows pairs such as
+    # x64-windows-static-md and x64-windows are classified as cross builds,
+    # even though the target interpreter can run on the host. Do not package
+    # a target debug interpreter for a genuine platform or architecture
+    # cross-build, but keep it for same-architecture Windows host/target
+    # pairs.
+    set(PYTHON_DEBUG_RUNTIME_USABLE OFF)
+    if(NOT VCPKG_CROSSCOMPILING)
+        set(PYTHON_DEBUG_RUNTIME_USABLE ON)
+    elseif(VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS)
+        # The target architecture comes from the resolved triplet contents.
+        # CMake script mode does not populate CMAKE_HOST_SYSTEM_PROCESSOR, so
+        # use Windows' host architecture environment variables instead.
+        string(TOLOWER "${VCPKG_TARGET_ARCHITECTURE}" PYTHON_TARGET_ARCHITECTURE)
+        set(PYTHON_HOST_PROCESSOR "$ENV{PROCESSOR_ARCHITEW6432}")
+        if(PYTHON_HOST_PROCESSOR STREQUAL "")
+            set(PYTHON_HOST_PROCESSOR "$ENV{PROCESSOR_ARCHITECTURE}")
+        endif()
+        string(TOLOWER "${PYTHON_HOST_PROCESSOR}" PYTHON_HOST_ARCHITECTURE)
+        if(PYTHON_HOST_ARCHITECTURE MATCHES "^(amd64|x86_64)$")
+            set(PYTHON_HOST_ARCHITECTURE x64)
+        elseif(PYTHON_HOST_ARCHITECTURE MATCHES "^(i[3-6]86)$")
+            set(PYTHON_HOST_ARCHITECTURE x86)
+        elseif(PYTHON_HOST_ARCHITECTURE MATCHES "^(aarch64|arm64)$")
+            set(PYTHON_HOST_ARCHITECTURE arm64)
+        elseif(PYTHON_HOST_ARCHITECTURE STREQUAL "arm")
+            set(PYTHON_HOST_ARCHITECTURE arm)
+        endif()
+        if(PYTHON_TARGET_ARCHITECTURE STREQUAL PYTHON_HOST_ARCHITECTURE)
+            set(PYTHON_DEBUG_RUNTIME_USABLE ON)
+        endif()
+    endif()
+
+    if(PYTHON_DEBUG_RUNTIME_USABLE)
+        file(GLOB_RECURSE PYTHON_DEBUG_INTERPRETERS
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/PCbuild/**/python_d.exe"
+        )
+        list(LENGTH PYTHON_DEBUG_INTERPRETERS PYTHON_DEBUG_INTERPRETER_COUNT)
+        if(PYTHON_DEBUG_INTERPRETER_COUNT GREATER 0)
+            list(GET PYTHON_DEBUG_INTERPRETERS 0 PYTHON_DEBUG_INTERPRETER)
+            get_filename_component(PYTHON_DEBUG_BUILD_DIR
+                "${PYTHON_DEBUG_INTERPRETER}" DIRECTORY)
+            set(PYTHON_DEBUG_PREFIX "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+            file(MAKE_DIRECTORY "${PYTHON_DEBUG_PREFIX}/DLLs")
+
+            file(GLOB PYTHON_DEBUG_EXTENSIONS
+                "${CURRENT_PACKAGES_DIR}/debug/bin/*.pyd")
+            if(PYTHON_DEBUG_EXTENSIONS)
+                # Stage extensions beside the interpreter so vcpkg_copy_tools()
+                # can discover their runtime dependencies before they move to DLLs.
+                file(COPY ${PYTHON_DEBUG_EXTENSIONS} DESTINATION "${PYTHON_DEBUG_PREFIX}")
+            endif()
+
+            set(PYTHON_DEBUG_TOOLS python_d)
+            if(EXISTS "${PYTHON_DEBUG_BUILD_DIR}/pythonw_d.exe")
+                list(APPEND PYTHON_DEBUG_TOOLS pythonw_d)
+            endif()
+            vcpkg_copy_tools(
+                TOOL_NAMES ${PYTHON_DEBUG_TOOLS}
+                SEARCH_DIR "${PYTHON_DEBUG_BUILD_DIR}"
+                DESTINATION "${PYTHON_DEBUG_PREFIX}"
+            )
+            file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib"
+                DESTINATION "${PYTHON_DEBUG_PREFIX}")
+
+            file(GLOB PYTHON_DEBUG_DLLS
+                "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll")
+            if(PYTHON_DEBUG_DLLS)
+                file(COPY ${PYTHON_DEBUG_DLLS} DESTINATION "${PYTHON_DEBUG_PREFIX}")
+            endif()
+
+            if(PYTHON_DEBUG_EXTENSIONS)
+                foreach(PYTHON_DEBUG_EXTENSION IN LISTS PYTHON_DEBUG_EXTENSIONS)
+                    get_filename_component(PYTHON_DEBUG_EXTENSION_NAME "${PYTHON_DEBUG_EXTENSION}" NAME)
+                    file(RENAME
+                        "${PYTHON_DEBUG_PREFIX}/${PYTHON_DEBUG_EXTENSION_NAME}"
+                        "${PYTHON_DEBUG_PREFIX}/DLLs/${PYTHON_DEBUG_EXTENSION_NAME}"
+                    )
+                endforeach()
+            endif()
+        endif()
+    endif()
 
     # Remove any extension libraries and other unversioned binaries that could conflict with the python2 port.
     # You don't need to link against these anyway.
