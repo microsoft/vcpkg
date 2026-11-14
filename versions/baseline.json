@@ -6453,7 +6453,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.746",
+      "baseline": "0.747",
       "port-version": 0
     },
     "lunarg-vulkantools": {
