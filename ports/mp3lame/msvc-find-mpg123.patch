@@ -1,0 +1,41 @@
+diff --git a/vc_solution/vs2019_libmpg123_config.props b/vc_solution/vs2019_libmpg123_config.props
+index c8bf2d3..c0c3503 100644
+--- a/vc_solution/vs2019_libmpg123_config.props
++++ b/vc_solution/vs2019_libmpg123_config.props
+@@ -2,33 +2,19 @@
+ <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup Label="UserMacros">
+     <!-- mpg123 configuration; set to true and adjust path, ending with a backslash -->
+-    <HaveMpg123>false</HaveMpg123>
+-    <Mpg123Path>.\mpg123\$(Platform)\</Mpg123Path>
++    <HaveMpg123>true</HaveMpg123>
+   </PropertyGroup>
+   <ItemGroup>
+     <BuildMacro Include="HaveMpg123">
+       <Value>$(HaveMpg123)</Value>
+     </BuildMacro>
+-    <BuildMacro Include="Mpg123Path">
+-      <Value>$(Mpg123Path)</Value>
+-    </BuildMacro>
+   </ItemGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+       <PreprocessorDefinitions Condition="'$(HaveMpg123)' == 'true'">HAVE_MPG123;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <AdditionalIncludeDirectories Condition="'$(HaveMpg123)' == 'true'">$(Mpg123Path);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ClCompile>
+     <Link>
+-      <AdditionalLibraryDirectories Condition="'$(HaveMpg123)' == 'true'">$(Mpg123Path);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies Condition="'$(HaveMpg123)' == 'true'">libmpg123-0.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies Condition="'$(HaveMpg123)' == 'true'">mpg123.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+-    <PreLinkEvent>
+-      <!-- This step generates the import .lib file for libmpg123-0.dll, since the distribution only contains a .def file -->
+-      <Command Condition="!Exists('$(Mpg123Path)libmpg123-0.lib') And '$(Platform)' == 'Win32'">lib.exe /def:"$(Mpg123Path)libmpg123-0.def" /MACHINE:X86 /out:"$(Mpg123Path)libmpg123-0.lib"</Command>
+-      <Command Condition="!Exists('$(Mpg123Path)libmpg123-0.lib') And '$(Platform)' == 'x64'">lib.exe /def:"$(Mpg123Path)libmpg123-0.def" /MACHINE:X64 /out:"$(Mpg123Path)libmpg123-0.lib"</Command>
+-    </PreLinkEvent>
+-    <PostBuildEvent>
+-      <Command Condition="'$(HaveMpg123)' == 'true'">copy "$(Mpg123Path)libmpg123-0.dll" "$(OutputPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+ </Project>
+\ No newline at end of file

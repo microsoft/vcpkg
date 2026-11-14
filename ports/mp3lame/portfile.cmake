@@ -1,69 +1,49 @@
+set(EXTRA_PATCHES "")
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND EXTRA_PATCHES build-uwp.patch)
+endif()
+
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lame/lame
     REF ${VERSION}
     FILENAME "lame-${VERSION}.tar.gz"
-    SHA512 0844b9eadb4aacf8000444621451277de365041cc1d97b7f7a589da0b7a23899310afd4e4d81114b9912aa97832621d20588034715573d417b2923948c08634b
+    SHA512 70fa51fe84dd499d171ebf6c05ec82399eb8b0148fb4c08470a61efe9cf826474132ee98166dc63ee5c3646b2c8e955680e4306dd26f590b7810732ab486dd8b
     PATCHES
-        00001-msvc-upgrade-solution-up-to-vc11.patch
-        remove_lame_init_old_from_symbol_list.patch # deprecated https://github.com/zlargon/lame/blob/master/include/lame.h#L169
         add-macos-universal-config.patch
-        fix-mingw-w64-compatibility.patch
+        add-msvc-arm.patch
+        fix-pkgconfig.patch
+        msvc-find-mpg123.patch
+        ${EXTRA_PATCHES}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vs2019_arch_arm.props"
+              "${CMAKE_CURRENT_LIST_DIR}/vs2019_arch_arm64.props"
+         DESTINATION "${SOURCE_PATH}/vc_solution")
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(platform "ARM64")
-        set(machine "ARM64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         set(platform "ARM")
-        set(machine "ARM")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(platform "x64")
-        set(machine "x64")
     else()
         set(platform "Win32")
-        set(machine "x86")
     endif()
-
-    file(READ "${SOURCE_PATH}/vc_solution/vc11_lame.sln" sln_con)
-    string(REPLACE "|Win32" "|${platform}" sln_con "${sln_con}")
-    string(REPLACE "\"vc11_" "\"${machine}_vc11_" sln_con "${sln_con}")
-    file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_vc11_lame.sln" "${sln_con}")
-
-    
-    file(GLOB vcxprojs RELATIVE "${SOURCE_PATH}/vc_solution" "${SOURCE_PATH}/vc_solution/vc11_*.vcxproj")
-    foreach(vcxproj ${vcxprojs})
-        file(READ "${SOURCE_PATH}/vc_solution/${vcxproj}" vcxproj_con)
-        
-        if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-            string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_con "${vcxproj_con}")
-        endif()
-
-        string(REPLACE "/machine:x86" "/machine:${machine}" vcxproj_con "${vcxproj_con}")
-        string(REPLACE "<Platform>Win32</Platform>" "<Platform>${platform}</Platform>" vcxproj_con "${vcxproj_con}")
-        string(REPLACE "|Win32" "|${platform}" vcxproj_con "${vcxproj_con}")
-        string(REPLACE "Include=\"vc11_" "Include=\"${machine}_vc11_" vcxproj_con "${vcxproj_con}")
- 
-        if(NOT VCPKG_TARGET_IS_UWP)
-            string(REPLACE "/APPCONTAINER" "" vcxproj_con "${vcxproj_con}")
-        endif()
-        
-        file(WRITE "${SOURCE_PATH}/vc_solution/${machine}_${vcxproj}" "${vcxproj_con}")
-    endforeach()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
+            PROJECT_SUBPATH "vc_solution/vs2019_lame.sln"
             TARGET "libmp3lame-static"
             PLATFORM "${platform}"
         )
     else()
         vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
+            PROJECT_SUBPATH "vc_solution/vs2019_lame.sln"
             TARGET "libmp3lame"
             PLATFORM "${platform}"
         )
@@ -71,7 +51,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if("frontend" IN_LIST FEATURES)
         vcpkg_msbuild_install(
             SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "vc_solution/${machine}_vc11_lame.sln"
+            PROJECT_SUBPATH "vc_solution/vs2019_lame.sln"
             TARGET "lame"
             PLATFORM "${platform}"
         )
@@ -121,6 +101,8 @@ else()
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/man1"
     )
+
+    vcpkg_fixup_pkgconfig()
 
 endif()
 
