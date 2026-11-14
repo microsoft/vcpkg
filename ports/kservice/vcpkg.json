@@ -1,6 +1,6 @@
 {
   "name": "kservice",
-  "version": "6.31.0",
+  "version": "6.32.0",
   "description": "Plugin framework for desktop services",
   "homepage": "https://invent.kde.org/frameworks/kservice",
   "documentation": "https://api.kde.org/kservice-index.html",

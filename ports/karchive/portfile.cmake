@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
     REF "v${VERSION}"
-    SHA512 94bf8881549f89d1eb846f0e2dcf2c64a89d037890c6bfd568a00c84e410ee78fffb6c2bd610d1dce373f22ad5ddb9818cd66c63f1e81da709eca33e7ae36dd9
+    SHA512 8b1e5b33b03bd1548f6c966cdd524ddd7b2e0b735389b834ca0940183a3e31174739e762b1e91c91bdc66838cfbc658e9f8b9f99f664bd51be74d09f0a4e372e
     HEAD_REF master
     PATCHES
         zstd.diff

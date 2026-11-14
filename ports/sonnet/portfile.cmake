@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/sonnet
     REF "v${VERSION}"
-    SHA512 2d06bc82d692741ef8438303309616fb9c9fbd5a86ed453d52b1e04ec7c73f43edae76c679002c0af05bd46266be68b0fd81c7acdef24dd5eb720c548d1a8ca6
+    SHA512 926fa9c80ade0f7892af2afd0d8ed5456abf8828bd7ad2b4f34b81ed1593b424c73d768ee62056c4e42bf66a43c1fb19b91b885830bb7c6a2cef3d1111f650da
     HEAD_REF master
     PATCHES
         use-given-parsetrigrams.patch
