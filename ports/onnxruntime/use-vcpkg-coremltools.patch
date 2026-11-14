@@ -1,8 +1,22 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 8ce83cc5ae..ab9463b632 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -2037,6 +2037,9 @@ else()
+         target_include_directories(safeint_interface INTERFACE ${safeint_SOURCE_DIR})\n\
+         ")
+     include("${CMAKE_CURRENT_LIST_DIR}/onnxruntime_telemetry_config.cmake")
++    if(onnxruntime_USE_COREML)
++      string(APPEND PROJECT_CONFIG_CONTENT "find_dependency(unofficial-coremltools CONFIG)\n")
++    endif()
+   endif()
+ 
+   string(APPEND PROJECT_CONFIG_CONTENT
 diff --git a/cmake/external/onnxruntime_external_deps.cmake b/cmake/external/onnxruntime_external_deps.cmake
-index b7bc9af..07ec0dd 100644
+index 04c7a55777..375b22d695 100644
 --- a/cmake/external/onnxruntime_external_deps.cmake
 +++ b/cmake/external/onnxruntime_external_deps.cmake
-@@ -1007,26 +1007,8 @@ if (onnxruntime_USE_WEBGPU)
+@@ -1008,26 +1008,8 @@ if (onnxruntime_USE_WEBGPU)
  endif()
  
  if(onnxruntime_USE_COREML)
@@ -31,8 +45,21 @@ index b7bc9af..07ec0dd 100644
  
  endif()
  
+diff --git a/cmake/onnxruntime_providers.cmake b/cmake/onnxruntime_providers.cmake
+index 7c8aa5178c..9133312c43 100644
+--- a/cmake/onnxruntime_providers.cmake
++++ b/cmake/onnxruntime_providers.cmake
+@@ -66,7 +66,7 @@ if(onnxruntime_USE_CUDA AND NOT onnxruntime_BUILD_CUDA_EP_AS_PLUGIN)
+   set(PROVIDERS_CUDA onnxruntime_providers_cuda)
+ endif()
+ if(onnxruntime_USE_COREML)
+-  set(PROVIDERS_COREML onnxruntime_providers_coreml coreml_proto)
++  set(PROVIDERS_COREML onnxruntime_providers_coreml)
+ endif()
+ if(onnxruntime_USE_NNAPI_BUILTIN)
+   set(PROVIDERS_NNAPI onnxruntime_providers_nnapi)
 diff --git a/cmake/onnxruntime_providers_coreml.cmake b/cmake/onnxruntime_providers_coreml.cmake
-index f3425b9..32887b0 100644
+index f3425b9272..32887b06a9 100644
 --- a/cmake/onnxruntime_providers_coreml.cmake
 +++ b/cmake/onnxruntime_providers_coreml.cmake
 @@ -19,48 +19,6 @@ if(LINUX)
@@ -151,8 +178,32 @@ index f3425b9..32887b0 100644
  if (LINUX)
    target_include_directories(onnxruntime_providers_coreml PRIVATE ${LibUUID_INCLUDE_DIR})
    target_link_libraries(onnxruntime_providers_coreml PRIVATE ${LibUUID_LIBRARY})
+diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
+index 513ae86ce0..e05ebf0a25 100644
+--- a/cmake/onnxruntime_unittests.cmake
++++ b/cmake/onnxruntime_unittests.cmake
+@@ -717,7 +717,7 @@ if(onnxruntime_USE_MIGRAPHX)
+ endif()
+ 
+ if(onnxruntime_USE_COREML)
+-  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml coreml_proto)
++  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml)
+ endif()
+ 
+ set(ONNXRUNTIME_TEST_STATIC_PROVIDER_LIBS
+@@ -829,8 +829,8 @@ if(onnxruntime_USE_COREML)
+   if(APPLE)
+     list(APPEND onnxruntime_test_framework_src_patterns ${TEST_SRC_DIR}/providers/coreml/*.mm)
+   endif()
+-  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml coreml_proto)
+-  list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_coreml coreml_proto)
++  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml)
++  list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_coreml)
+ endif()
+ 
+ if(onnxruntime_USE_XNNPACK)
 diff --git a/onnxruntime/core/providers/coreml/builders/coreml_spec.h b/onnxruntime/core/providers/coreml/builders/coreml_spec.h
-index 9448f11..f428dfb 100644
+index 9448f11679..f428dfbad7 100644
 --- a/onnxruntime/core/providers/coreml/builders/coreml_spec.h
 +++ b/onnxruntime/core/providers/coreml/builders/coreml_spec.h
 @@ -24,7 +24,7 @@
@@ -165,7 +216,7 @@ index 9448f11..f428dfb 100644
  #if defined(__GNUC__)
  #pragma GCC diagnostic pop
 diff --git a/onnxruntime/core/providers/coreml/builders/model_builder.cc b/onnxruntime/core/providers/coreml/builders/model_builder.cc
-index 87dca12..49abe6a 100644
+index 3dcaa55342..2626762fd2 100644
 --- a/onnxruntime/core/providers/coreml/builders/model_builder.cc
 +++ b/onnxruntime/core/providers/coreml/builders/model_builder.cc
 @@ -19,8 +19,8 @@
@@ -179,54 +230,3 @@ index 87dca12..49abe6a 100644
  using MILBlob::Blob::StorageWriter;
  using namespace CoreML::Specification;
  
-diff --git a/cmake/onnxruntime_providers.cmake b/cmake/onnxruntime_providers.cmake
-index 0270be7..5f2f018 100644
---- a/cmake/onnxruntime_providers.cmake
-+++ b/cmake/onnxruntime_providers.cmake
-@@ -66,7 +66,7 @@ if(onnxruntime_USE_CUDA AND NOT onnxruntime_BUILD_CUDA_EP_AS_PLUGIN)
-   set(PROVIDERS_CUDA onnxruntime_providers_cuda)
- endif()
- if(onnxruntime_USE_COREML)
--  set(PROVIDERS_COREML onnxruntime_providers_coreml coreml_proto)
-+  set(PROVIDERS_COREML onnxruntime_providers_coreml)
- endif()
- if(onnxruntime_USE_NNAPI_BUILTIN)
-   set(PROVIDERS_NNAPI onnxruntime_providers_nnapi)
-diff --git a/cmake/onnxruntime_unittests.cmake b/cmake/onnxruntime_unittests.cmake
-index 92ce44f..8dd5c68 100644
---- a/cmake/onnxruntime_unittests.cmake
-+++ b/cmake/onnxruntime_unittests.cmake
-@@ -718,7 +718,7 @@ if(onnxruntime_USE_MIGRAPHX)
- endif()
- 
- if(onnxruntime_USE_COREML)
--  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml coreml_proto)
-+  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml)
- endif()
- 
- if(onnxruntime_USE_ACL)
-@@ -854,8 +854,8 @@ if(onnxruntime_USE_COREML)
-   if(APPLE)
-     list(APPEND onnxruntime_test_framework_src_patterns ${TEST_SRC_DIR}/providers/coreml/*.mm)
-   endif()
--  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml coreml_proto)
--  list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_coreml coreml_proto)
-+  list(APPEND onnxruntime_test_providers_dependencies onnxruntime_providers_coreml)
-+  list(APPEND onnxruntime_test_providers_libs onnxruntime_providers_coreml)
- endif()
- 
- if(onnxruntime_USE_XNNPACK)
-diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 3a3bda1..8259589 100644
---- a/cmake/CMakeLists.txt
-+++ b/cmake/CMakeLists.txt
-@@ -2054,6 +2054,9 @@ else()
-         target_include_directories(safeint_interface INTERFACE ${safeint_SOURCE_DIR})\n\
-         ")
-     include("${CMAKE_CURRENT_LIST_DIR}/onnxruntime_telemetry_config.cmake")
-+    if(onnxruntime_USE_COREML)
-+      string(APPEND PROJECT_CONFIG_CONTENT "find_dependency(unofficial-coremltools CONFIG)\n")
-+    endif()
-   endif()
- 
-   string(APPEND PROJECT_CONFIG_CONTENT

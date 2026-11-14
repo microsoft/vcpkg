@@ -1,5 +1,5 @@
 diff --git a/cmake/external/cuDNN.cmake b/cmake/external/cuDNN.cmake
-index c15e82b..94868a6 100644
+index c15e82ba2e..94868a696a 100644
 --- a/cmake/external/cuDNN.cmake
 +++ b/cmake/external/cuDNN.cmake
 @@ -1,3 +1,5 @@
@@ -9,7 +9,7 @@ index c15e82b..94868a6 100644
  
  find_path(
 diff --git a/cmake/external/cudnn_frontend.cmake b/cmake/external/cudnn_frontend.cmake
-index 71bca97..243e48b 100644
+index 71bca97000..243e48bee0 100644
 --- a/cmake/external/cudnn_frontend.cmake
 +++ b/cmake/external/cudnn_frontend.cmake
 @@ -1,4 +1,6 @@
@@ -20,17 +20,17 @@ index 71bca97..243e48b 100644
  # their Linux names (libcudart.so.*, libcuda.so.1) when NV_CUDNN_FRONTEND_USE_DYNAMIC_LOADING
  # is enabled. On Windows this always fails (dlopen is mapped to LoadLibrary), so patch the
 diff --git a/cmake/onnxruntime_providers_cuda.cmake b/cmake/onnxruntime_providers_cuda.cmake
-index c38138c..76b8659 100644
+index 8a3ba344f7..6b3f876efa 100644
 --- a/cmake/onnxruntime_providers_cuda.cmake
 +++ b/cmake/onnxruntime_providers_cuda.cmake
-@@ -403,8 +403,8 @@
-               ${ABSEIL_LIBS} ${ONNXRUNTIME_PROVIDERS_SHARED} Boost::mp11 safeint_interface)
+@@ -429,8 +429,8 @@
+               ${ABSEIL_LIBS} ${ONNXRUNTIME_PROVIDERS_SHARED} onnxruntime_mlas Boost::mp11 safeint_interface)
      endif()
  
 -    include(cutlass)
 -    target_include_directories(${target} PRIVATE ${cutlass_SOURCE_DIR}/include ${cutlass_SOURCE_DIR}/examples ${cutlass_SOURCE_DIR}/tools/util/include)
 +    find_package(NvidiaCutlass REQUIRED)
 +    target_link_libraries(${target} PRIVATE nvidia::cutlass::cutlass nvidia::cutlass::tools::util)
-     if(ORT_HAS_SM90_OR_LATER AND NOT WIN32 AND NOT onnxruntime_CUDA_MINIMAL AND NOT onnxruntime_DISABLE_CONTRIB_OPS)
+     if(ORT_HAS_SM90 AND NOT WIN32 AND NOT onnxruntime_CUDA_MINIMAL AND NOT onnxruntime_DISABLE_CONTRIB_OPS)
        include(deep_gemm)
        target_include_directories(${target} PRIVATE ${deep_gemm_SOURCE_DIR}/deep_gemm/include)
