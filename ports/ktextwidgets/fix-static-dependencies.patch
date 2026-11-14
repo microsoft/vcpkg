@@ -1,0 +1,15 @@
+diff --git a/KF6TextWidgetsConfig.cmake.in b/KF6TextWidgetsConfig.cmake.in
+index 9135b32..a063c69 100644
+--- a/KF6TextWidgetsConfig.cmake.in
++++ b/KF6TextWidgetsConfig.cmake.in
+@@ -9,6 +9,10 @@ if (NOT @BUILD_SHARED_LIBS@)
+     find_dependency(KF6Completion @KF_DEP_VERSION@)
+     find_dependency(KF6Config @KF_DEP_VERSION@)
+     find_dependency(KF6WidgetsAddons @KF_DEP_VERSION@)
++
++    if (@WITH_TEXT_TO_SPEECH@)
++        find_dependency(Qt6TextToSpeech @REQUIRED_QT_VERSION@)
++    endif()
+ endif()
+ 
+ 

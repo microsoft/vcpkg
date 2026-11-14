@@ -1,6 +1,7 @@
 {
   "name": "ogre",
   "version": "14.5.2",
+  "port-version": 1,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "license": "MIT",
@@ -28,7 +29,6 @@
   ],
   "default-features": [
     "assimp",
-    "freeimage",
     "overlay",
     "zip"
   ],
@@ -52,15 +52,6 @@
     "d3d9": {
       "description": "Build Direct3D9 RenderSystem",
       "supports": "windows"
-    },
-    "freeimage": {
-      "description": "Build with FreeImage support (no effect for Emscripten)",
-      "dependencies": [
-        {
-          "name": "freeimage",
-          "platform": "!emscripten"
-        }
-      ]
     },
     "java": {
       "description": "Build Java (JNI) bindings",

@@ -52,6 +52,9 @@ endif()
 
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
+    # Qt searches for pkg-config before the FFmpeg wrapper can select a host tool.
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='no'")

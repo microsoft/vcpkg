@@ -1,6 +1,6 @@
 {
   "name": "btoon",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "BTOON reference implementation: compact binary serialization, MessagePack plus columnar tables, canonical and hardened against hostile input.",
   "homepage": "https://btoon.net",
   "license": "MIT",

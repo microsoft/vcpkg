@@ -52,6 +52,7 @@ PORT_LIST = [
     "kquickcharts",
     "kservice",
     "ktexttemplate",
+    "ktextwidgets",
     "kwallet",
     "kwidgetsaddons",
     "kwindowsystem",
