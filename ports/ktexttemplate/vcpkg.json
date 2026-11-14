@@ -1,6 +1,6 @@
 {
   "name": "ktexttemplate",
-  "version": "6.31.0",
+  "version": "6.32.0",
   "description": "Libraries for text templating with Qt",
   "homepage": "https://invent.kde.org/frameworks/ktexttemplate",
   "documentation": "https://api.kde.org/ktexttemplate-index.html",

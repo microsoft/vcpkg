@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcolorscheme
     REF "v${VERSION}"
-    SHA512 49e641ff19922556ee8e3a0518ad29144d8dcbfe986bf948673c86e4c322dcc94d49d12646deebdd54a86165fad6bd5b52ca37735a62a8546de79fe37aa39fe8
+    SHA512 e8fd89d38562695257215f216c9b6438ff33e0ceb009fb79b1ccf224b83c80dd8e166d83716b77f8343f56c5215be89c7acd28ac454964cf5138e85416915b56
     HEAD_REF master
     PATCHES
         fix-static-dependencies.patch

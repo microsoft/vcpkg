@@ -1,6 +1,6 @@
 {
   "name": "attica",
-  "version": "6.31.0",
+  "version": "6.32.0",
   "description": "Qt library that implements the Open Collaboration Services API",
   "homepage": "https://invent.kde.org/frameworks/attica",
   "documentation": "https://api.kde.org/attica-index.html",

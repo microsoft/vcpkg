@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6e00929..1559ba9 100644
+index 8bdf7b16a..aaca6d0ab 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -18,10 +18,7 @@ set_package_properties(
@@ -36,10 +36,10 @@ index 6e00929..1559ba9 100644
      COMPONENT Devel
  )
 diff --git a/KF6CalendarCoreConfig.cmake.in b/KF6CalendarCoreConfig.cmake.in
-index 4c18ab3..a071c9f 100644
+index 4c18ab34b..9ffb41e9e 100644
 --- a/KF6CalendarCoreConfig.cmake.in
 +++ b/KF6CalendarCoreConfig.cmake.in
-@@ -10,14 +10,10 @@ find_dependency(
+@@ -10,15 +10,14 @@ find_dependency(
      @REQUIRED_QT_VERSION@
  )
  if(NOT @BUILD_SHARED_LIBS@)
@@ -53,10 +53,14 @@ index 4c18ab3..a071c9f 100644
          @LibIcal_MIN_VERSION@
 +        CONFIG
      )
++    if (@USE_QML@)
++        find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++    endif()
  endif()
  
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6CalendarCoreTargets.cmake")
 diff --git a/autotests/CMakeLists.txt b/autotests/CMakeLists.txt
-index 5fe3276..90ed393 100644
+index 5fe3276e4..90ed393be 100644
 --- a/autotests/CMakeLists.txt
 +++ b/autotests/CMakeLists.txt
 @@ -14,7 +14,9 @@ macro(macro_unit_tests)
@@ -72,10 +76,10 @@ index 5fe3276..90ed393 100644
  endmacro()
 diff --git a/cmake/FindLibIcal.cmake b/cmake/FindLibIcal.cmake
 deleted file mode 100644
-index cb515ba..0000000
+index 61e8458f1..000000000
 --- a/cmake/FindLibIcal.cmake
 +++ /dev/null
-@@ -1,193 +0,0 @@
+@@ -1,192 +0,0 @@
 -#.rst:
 -# FindLibIcal
 -# -----------
@@ -210,7 +214,6 @@ index cb515ba..0000000
 -
 -find_package_handle_standard_args(
 -    LibIcal
--    FOUND_VAR LibIcal_FOUND
 -    REQUIRED_VARS
 -        LibIcal_LIBRARIES
 -        LibIcal_INCLUDE_DIRS
@@ -270,7 +273,7 @@ index cb515ba..0000000
 -            "Implementation of iCalendar protocols and data formats"
 -)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 506b9c2..c1f05b4 100644
+index 506b9c285..c1f05b405 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -144,7 +144,9 @@ target_link_libraries(

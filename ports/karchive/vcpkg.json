@@ -1,7 +1,6 @@
 {
   "name": "karchive",
-  "version": "6.31.0",
-  "port-version": 1,
+  "version": "6.32.0",
   "description": "File compression",
   "homepage": "https://invent.kde.org/frameworks/karchive",
   "documentation": "https://api.kde.org/karchive-index.html",

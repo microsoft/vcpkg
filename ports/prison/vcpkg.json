@@ -1,7 +1,6 @@
 {
   "name": "prison",
-  "version": "6.31.0",
-  "port-version": 1,
+  "version": "6.32.0",
   "description": "Barcode generation and scanning library",
   "homepage": "https://invent.kde.org/frameworks/prison",
   "documentation": "https://api.kde.org/prison-index.html",

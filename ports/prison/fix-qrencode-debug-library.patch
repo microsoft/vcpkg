@@ -1,8 +1,8 @@
 diff --git a/cmake/FindQRencode.cmake b/cmake/FindQRencode.cmake
-index 5fe9d50..426b8de 100644
+index 6886b8f..50ff030 100644
 --- a/cmake/FindQRencode.cmake
 +++ b/cmake/FindQRencode.cmake
-@@ -32,7 +32,11 @@
+@@ -32,24 +32,35 @@
  # SPDX-License-Identifier: BSD-3-Clause
  #=============================================================================
  
@@ -15,10 +15,9 @@ index 5fe9d50..426b8de 100644
  
  find_path(QRencode_INCLUDE_DIRS qrencode.h)
  
-@@ -40,17 +44,24 @@ include(FindPackageHandleStandardArgs)
+ include(FindPackageHandleStandardArgs)
  
  find_package_handle_standard_args(QRencode
-     FOUND_VAR QRencode_FOUND
 -    REQUIRED_VARS QRencode_LIBRARIES QRencode_INCLUDE_DIRS
 +    REQUIRED_VARS QRencode_LIBRARY QRencode_INCLUDE_DIRS
  )

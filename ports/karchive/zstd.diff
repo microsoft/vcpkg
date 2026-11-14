@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 10961f8..357a13d 100644
+index b186cb4..e655fe4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -88,10 +88,9 @@ set_package_properties(OpenSSL PROPERTIES
+@@ -89,10 +89,9 @@ set_package_properties(OpenSSL PROPERTIES
  )
  
  
@@ -15,7 +15,7 @@ index 10961f8..357a13d 100644
                  "Support for zstd compressed files and data streams"
  )
 diff --git a/KF6ArchiveConfig.cmake.in b/KF6ArchiveConfig.cmake.in
-index 0b8d98c..cd4bd78 100644
+index 72d3b18..cd4bd78 100644
 --- a/KF6ArchiveConfig.cmake.in
 +++ b/KF6ArchiveConfig.cmake.in
 @@ -28,8 +28,7 @@ if (NOT @BUILD_SHARED_LIBS@)
@@ -23,13 +23,13 @@ index 0b8d98c..cd4bd78 100644
  
      if (@LibZstd_FOUND@)
 -        find_package(PkgConfig)
--        pkg_check_modules(LibZstd IMPORTED_TARGET "libzstd")
+-        pkg_check_modules(LibZstd REQUIRED IMPORTED_TARGET "libzstd")
 +        find_dependency(zstd CONFIG)
      endif()
  endif()
  
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 30ba462..46d4128 100644
+index 46938bf..7d4de82 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -36,7 +36,7 @@ endif()

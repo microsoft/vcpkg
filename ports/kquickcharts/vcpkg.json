@@ -1,6 +1,6 @@
 {
   "name": "kquickcharts",
-  "version": "6.31.0",
+  "version": "6.32.0",
   "description": "A QtQuick module providing high-performance charts",
   "homepage": "https://invent.kde.org/frameworks/kquickcharts",
   "documentation": "https://api.kde.org/kquickcharts-index.html",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ktextwidgets
     REF "v${VERSION}"
-    SHA512 97d43b1ec348d77293f3a6a62c07fa5bdc5955fd1a5f98373cbc63906df5112127eac4ca0107029823d5c824e41f7e4029f2638e329d124dde7eafdd05dd3844
+    SHA512 fe3c55033d29c4dbf11e12e0ed108c16a28f32972dee8d20dce2a6d2e662b540683a05120dc642897fd749af4b92f6c641824b9396b58c2f644c94d21d9e2c4a
     HEAD_REF master
     PATCHES
         fix-static-dependencies.patch

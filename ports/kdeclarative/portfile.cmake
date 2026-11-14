@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdeclarative
     REF "v${VERSION}"
-    SHA512 39af75d08636d99053ba832e8e2d4b576777ea93330adb713523e1202abf2869a24d5c055b80477a5cb5cb4d46fcb1f4d18ac6288789fc4fea70ab4a76ccdcd2
+    SHA512 913ad7da802becf5c71ce45deae9d07a6168b51497f4e16e4b93a915124611b528c0b1d395c854111ba2c76494007fdf2e941c18ad739bd92a9a607e4db7b896
     HEAD_REF master
     PATCHES
         export-qml-modules.patch

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/oxygen-icons
     REF "v${VERSION}"
-    SHA512 0db56dced7cb47c6f983bd5d97a3610ca54f78679f661f241e9128e3fe159fad8d71d69b4799040a91838ad702541d590ff77ade1e8635d6c81dba576ad2243c
+    SHA512 830c5272c5d2747e2366d1f5e61742fa7eedfb66ec294e10903251b5bf55c860067cea844774675e75f1f7ced4cfa439f0b23c4aec4b03e9c53adca91110af37
     HEAD_REF master
     PATCHES
         optional-autotests.patch

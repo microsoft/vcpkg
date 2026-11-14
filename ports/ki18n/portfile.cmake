@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
     REF "v${VERSION}"
-    SHA512 76a6dbe451f5d33f983eb3e76dde0607060519d01946d71f164cf776b7643408013ca37226cd6cfe43b831a51676c918eab8b5b84244ab8c34793078b9b0c174
+    SHA512 13fde8892500f14eccddad49cc3fd3e6974fa80eed4ee886712e8cf6be6bcd3bc2307df37f73c3098d3130adc38f014e65ea54888c880b50bf8e2352c31de56f
     HEAD_REF master
     PATCHES
         use-cmake-intl.patch
         fix-qml-dependencies.patch
-        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure

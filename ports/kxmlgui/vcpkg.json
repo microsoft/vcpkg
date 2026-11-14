@@ -1,6 +1,6 @@
 {
   "name": "kxmlgui",
-  "version": "6.31.0",
+  "version": "6.32.0",
   "description": "Framework for managing menu and toolbar actions",
   "homepage": "https://invent.kde.org/frameworks/kxmlgui",
   "documentation": "https://api.kde.org/kxmlgui-index.html",
