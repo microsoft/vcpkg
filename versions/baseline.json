@@ -8554,7 +8554,7 @@
     },
     "qt5-script": {
       "baseline": "5.15.19",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-scxml": {
       "baseline": "5.15.19",
