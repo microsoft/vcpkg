@@ -1,6 +1,7 @@
 {
   "name": "swaggercpp",
   "version": "0.4.0",
+  "port-version": 1,
   "description": "Professional C++23 library for Swagger/OpenAPI parsing, validation, traversal, and serialization.",
   "homepage": "https://github.com/stescobedo92/swagger-cpp",
   "license": "MIT",

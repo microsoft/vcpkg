@@ -1,0 +1,60 @@
+diff --git a/include/libremidi/system_error2.hpp b/include/libremidi/system_error2.hpp
+index cee4fe2..fe3f270 100644
+--- a/include/libremidi/system_error2.hpp
++++ b/include/libremidi/system_error2.hpp
+@@ -2553,22 +2553,24 @@ namespace detail {
+ struct default_error_constructors
+ {
+   template <class T>
+-  static error_value<> copy_constructor(const error& e) noexcept(
+-      std::is_nothrow_copy_constructible<T>::value
+-      && std::is_nothrow_move_constructible<T>::value
+-      )
++  struct constructors
+   {
+-    T value = error_cast<T>(e);
+-    return error_value<>{std::move(value)};
+-  }
++    static error_value<> copy_constructor(const error& e) noexcept(
++        std::is_nothrow_copy_constructible<T>::value
++        && std::is_nothrow_move_constructible<T>::value
++        )
++    {
++      T value = error_cast<T>(e);
++      return error_value<>{std::move(value)};
++    }
+ 
+-  template <class T>
+-  static error_value<> move_constructor(error&& e) noexcept(
+-      std::is_nothrow_move_constructible<T>::value
+-      )
+-  {
+-    return error_value<>{error_cast<T>(std::move(e))};
+-  }
++    static error_value<> move_constructor(error&& e) noexcept(
++        std::is_nothrow_move_constructible<T>::value
++        )
++    {
++      return error_value<>{error_cast<T>(std::move(e))};
++    }
++  };
+ 
+   template <class T>
+   static void destructor(error& e) noexcept
+@@ -2581,14 +2583,14 @@ struct default_error_constructors
+   constexpr static error_resource_management::copy_constructor copy() noexcept
+   {
+     return is_trivially_copy_constructible<T>::value ?
+-               nullptr : &copy_constructor<T>;
++               nullptr : &constructors<T>::copy_constructor;
+   }
+ 
+   template <class T>
+   constexpr static error_resource_management::move_constructor move() noexcept
+   {
+     return is_trivially_move_constructible<T>::value ?
+-               nullptr : &move_constructor<T>;
++               nullptr : &constructors<T>::move_constructor;
+   }
+ 
+   template <class T>

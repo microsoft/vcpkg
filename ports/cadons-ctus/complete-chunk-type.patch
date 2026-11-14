@@ -1,0 +1,20 @@
+diff --git a/lib/ctus/include/ctus/chunk/FileChunker.h b/lib/ctus/include/ctus/chunk/FileChunker.h
+index b8d377f..58c16d3 100644
+--- a/lib/ctus/include/ctus/chunk/FileChunker.h
++++ b/lib/ctus/include/ctus/chunk/FileChunker.h
+@@ -10,6 +10,7 @@
+ #include <filesystem>
+ 
+ #include "IFileChunker.h"
++#include "TUSChunk.h"
+ #include "verifiers/IFileVerifier.h"
+ 
+ #include "ctus.h"
+@@ -20,7 +21,6 @@ using std::filesystem::path;
+ 
+ 
+ namespace TUS::Chunk {
+-    class TUSChunk;
+     /**
+      * @brief This class is responsible for chunking a file into multiple chunks.
+      * The chunks are stored in a temporary directory and can be loaded from there.

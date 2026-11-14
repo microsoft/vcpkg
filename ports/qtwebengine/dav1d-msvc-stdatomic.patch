@@ -1,0 +1,15 @@
+diff --git a/src/3rdparty/chromium/third_party/dav1d/libdav1d/include/compat/msvc/stdatomic.h b/src/3rdparty/chromium/third_party/dav1d/libdav1d/include/compat/msvc/stdatomic.h
+index 618f0ee..d637daa 100644
+--- a/src/3rdparty/chromium/third_party/dav1d/libdav1d/include/compat/msvc/stdatomic.h
++++ b/src/3rdparty/chromium/third_party/dav1d/libdav1d/include/compat/msvc/stdatomic.h
+@@ -32,6 +32,10 @@
+ #pragma warning(push)
+ #pragma warning(disable:4067)    /* newline for __has_include_next */
+ 
++#ifndef __has_include_next
++#define __has_include_next(x) 0
++#endif
++
+ #if defined(__clang__) && __has_include_next(<stdatomic.h>)
+    /* use the clang stdatomic.h with clang-cl*/
+ #  include_next <stdatomic.h>

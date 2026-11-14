@@ -1,0 +1,22 @@
+diff --git a/src/common/src/mlib/test.h b/src/common/src/mlib/test.h
+index c0f937f..50320cc 100644
+--- a/src/common/src/mlib/test.h
++++ b/src/common/src/mlib/test.h
+@@ -129,7 +129,7 @@ typedef struct mlib_source_location {
+ #define mlib_check(...) MLIB_ARGC_PICK(_mlib_check, #__VA_ARGS__, __VA_ARGS__)
+ // One arg:
+ #define _mlib_check_argc_2(ArgString, Condition) \
+-   _mlibCheckConditionSimple(Condition, ArgString, NULL, mlib_this_source_location())
++   _mlibCheckConditionSimple(!!(Condition), ArgString, NULL, mlib_this_source_location())
+ // Three args:
+ #define _mlib_check_argc_4(ArgString, A, Operator, B) \
+    MLIB_NOTHING(#A, #B) MLIB_PASTE(_mlibCheckCondition_, Operator)(A, B, NULL)
+@@ -209,7 +209,7 @@ typedef struct mlib_source_location {
+ 
+ // Simple assertion with an explanatory string
+ #define _mlibCheckCondition_because(Cond, Reason, _null) \
+-   _mlibCheckConditionSimple(Cond, #Cond, Reason, mlib_this_source_location())
++   _mlibCheckConditionSimple(!!(Cond), #Cond, Reason, mlib_this_source_location())
+ 
+ /// Check evaluator when given a single boolean
+ static inline void

@@ -1,0 +1,104 @@
+diff --git a/src/iceberg/avro/avro_reader.cc b/src/iceberg/avro/avro_reader.cc
+index f333a38..580a289 100644
+--- a/src/iceberg/avro/avro_reader.cc
++++ b/src/iceberg/avro/avro_reader.cc
+@@ -486,6 +486,8 @@ class AvroReader::Impl {
+   std::unique_ptr<ReadContext> context_;
+ };
+ 
++AvroReader::AvroReader() noexcept = default;
++
+ AvroReader::~AvroReader() = default;
+ 
+ Result<std::optional<ArrowArray>> AvroReader::Next() { return impl_->Next(); }
+diff --git a/src/iceberg/avro/avro_reader.h b/src/iceberg/avro/avro_reader.h
+index c193d00..4b6a5b7 100644
+--- a/src/iceberg/avro/avro_reader.h
++++ b/src/iceberg/avro/avro_reader.h
+@@ -30,7 +30,7 @@ namespace iceberg::avro {
+ /// \brief A reader that reads ArrowArray from Avro files.
+ class ICEBERG_BUNDLE_EXPORT AvroReader : public Reader {
+  public:
+-  AvroReader() = default;
++  AvroReader() noexcept;
+ 
+   ~AvroReader() override;
+ 
+diff --git a/src/iceberg/avro/avro_writer.cc b/src/iceberg/avro/avro_writer.cc
+index 6f9272b..ce95d97 100644
+--- a/src/iceberg/avro/avro_writer.cc
++++ b/src/iceberg/avro/avro_writer.cc
+@@ -298,6 +298,8 @@ class AvroWriter::Impl {
+   std::unique_ptr<AvroWriteBackend> backend_;
+ };
+ 
++AvroWriter::AvroWriter() noexcept = default;
++
+ AvroWriter::~AvroWriter() = default;
+ 
+ Status AvroWriter::Write(ArrowArray* data) { return impl_->Write(data); }
+diff --git a/src/iceberg/avro/avro_writer.h b/src/iceberg/avro/avro_writer.h
+index af68fac..4d2d09f 100644
+--- a/src/iceberg/avro/avro_writer.h
++++ b/src/iceberg/avro/avro_writer.h
+@@ -30,7 +30,7 @@ namespace iceberg::avro {
+ /// \brief A writer for serializing ArrowArray to Avro files.
+ class ICEBERG_BUNDLE_EXPORT AvroWriter : public Writer {
+  public:
+-  AvroWriter() = default;
++  AvroWriter() noexcept;
+ 
+   ~AvroWriter() override;
+ 
+diff --git a/src/iceberg/parquet/parquet_reader.cc b/src/iceberg/parquet/parquet_reader.cc
+index 1f81461..4ba01ee 100644
+--- a/src/iceberg/parquet/parquet_reader.cc
++++ b/src/iceberg/parquet/parquet_reader.cc
+@@ -466,6 +466,8 @@ class ParquetReader::Impl {
+   std::unique_ptr<ReadContext> context_;
+ };
+ 
++ParquetReader::ParquetReader() noexcept = default;
++
+ ParquetReader::~ParquetReader() = default;
+ 
+ Result<std::optional<ArrowArray>> ParquetReader::Next() { return impl_->Next(); }
+diff --git a/src/iceberg/parquet/parquet_reader.h b/src/iceberg/parquet/parquet_reader.h
+index 3a8e57c..cf3fbd9 100644
+--- a/src/iceberg/parquet/parquet_reader.h
++++ b/src/iceberg/parquet/parquet_reader.h
+@@ -30,7 +30,7 @@ namespace iceberg::parquet {
+ /// \brief A reader that reads ArrowArray from Parquet files.
+ class ICEBERG_BUNDLE_EXPORT ParquetReader : public Reader {
+  public:
+-  ParquetReader() = default;
++  ParquetReader() noexcept;
+ 
+   ~ParquetReader() override;
+ 
+diff --git a/src/iceberg/parquet/parquet_writer.cc b/src/iceberg/parquet/parquet_writer.cc
+index 08c3941..356b7bb 100644
+--- a/src/iceberg/parquet/parquet_writer.cc
++++ b/src/iceberg/parquet/parquet_writer.cc
+@@ -362,6 +362,8 @@ class ParquetWriter::Impl {
+   std::unordered_map<int32_t, FieldMetrics> field_metrics_;
+ };
+ 
++ParquetWriter::ParquetWriter() noexcept = default;
++
+ ParquetWriter::~ParquetWriter() = default;
+ 
+ Status ParquetWriter::Open(const WriterOptions& options) {
+diff --git a/src/iceberg/parquet/parquet_writer.h b/src/iceberg/parquet/parquet_writer.h
+index 562ffb8..30879db 100644
+--- a/src/iceberg/parquet/parquet_writer.h
++++ b/src/iceberg/parquet/parquet_writer.h
+@@ -30,7 +30,7 @@ namespace iceberg::parquet {
+ /// \brief A writer that writes ArrowArray to Parquet files.
+ class ICEBERG_BUNDLE_EXPORT ParquetWriter : public Writer {
+  public:
+-  ParquetWriter() = default;
++  ParquetWriter() noexcept;
+ 
+   ~ParquetWriter() override;
+ 

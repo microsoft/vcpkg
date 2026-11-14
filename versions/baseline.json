@@ -1626,7 +1626,7 @@
     },
     "cadons-ctus": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "caf": {
       "baseline": "1.1.0",
@@ -2470,7 +2470,7 @@
     },
     "dav1d": {
       "baseline": "1.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "daw-header-libraries": {
       "baseline": "2.136.0",
@@ -3962,7 +3962,7 @@
     },
     "iceberg-cpp": {
       "baseline": "0.4.0",
-      "port-version": 2
+      "port-version": 3
     },
     "icecream-cpp": {
       "baseline": "1.0.0",
@@ -4946,7 +4946,7 @@
     },
     "libbson": {
       "baseline": "2.5.8",
-      "port-version": 0
+      "port-version": 1
     },
     "libcaer": {
       "baseline": "3.3.17",
@@ -5738,7 +5738,7 @@
     },
     "libremidi": {
       "baseline": "5.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libressl": {
       "baseline": "4.4.1",
@@ -6710,7 +6710,7 @@
     },
     "mesa": {
       "baseline": "26.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "meschach": {
       "baseline": "1.2b",
@@ -6962,7 +6962,7 @@
     },
     "mpss": {
       "baseline": "2.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mqtt-cpp": {
       "baseline": "13.2.3",
@@ -7562,7 +7562,7 @@
     },
     "openal-soft": {
       "baseline": "1.25.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openblas": {
       "baseline": "0.3.34",
@@ -8170,7 +8170,7 @@
     },
     "poppler": {
       "baseline": "26.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "poppler-data": {
       "baseline": "0.4.12",
@@ -8538,7 +8538,7 @@
     },
     "qt5-script": {
       "baseline": "5.15.19",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-scxml": {
       "baseline": "5.15.19",
@@ -8702,7 +8702,7 @@
     },
     "qtmultimedia": {
       "baseline": "6.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtnetworkauth": {
       "baseline": "6.11.3",
@@ -8786,7 +8786,7 @@
     },
     "qtwebengine": {
       "baseline": "6.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebsockets": {
       "baseline": "6.11.3",
@@ -10182,7 +10182,7 @@
     },
     "swaggercpp": {
       "baseline": "0.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "swenson-sort": {
       "baseline": "2021-05-22",
@@ -10594,7 +10594,7 @@
     },
     "triton": {
       "baseline": "2025-02-15",
-      "port-version": 0
+      "port-version": 1
     },
     "trompeloeil": {
       "baseline": "49",
@@ -11058,7 +11058,7 @@
     },
     "vulkan-loader": {
       "baseline": "1.4.363.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan-memory-allocator": {
       "baseline": "3.5.0",

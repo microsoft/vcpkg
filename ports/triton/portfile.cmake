@@ -6,6 +6,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     fix_bin_path.patch
+    portable-preprocessor.patch # https://github.com/JonathanSalwan/Triton/pull/1500
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DYNAMICLIB)

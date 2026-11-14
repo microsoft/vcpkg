@@ -1,0 +1,45 @@
+diff --git a/loader/CMakeLists.txt b/loader/CMakeLists.txt
+index f29ee7a..9906c0b 100644
+--- a/loader/CMakeLists.txt
++++ b/loader/CMakeLists.txt
+@@ -238,7 +238,7 @@ end
+             add_custom_command(OUTPUT gen_defines.asm DEPENDS asm_offset COMMAND asm_offset ${LOADER_ASM_DIALECT})
+         else()
+             # Forces compiler to write the intermediate asm file, needed so that we can get sizeof/offset of info out of it.
+-            target_compile_options(asm_offset PRIVATE "/Fa$<TARGET_FILE_DIR:asm_offset>/asm_offset.asm" /FA)
++            target_compile_options(asm_offset PRIVATE "/Fa$<SHELL_PATH:$<TARGET_FILE_DIR:asm_offset>/asm_offset.asm>" /FA)
+             # Force off optimization so that the output assembly includes all the necessary info - optimizer would get rid of it otherwise.
+             target_compile_options(asm_offset PRIVATE /Od)
+ 
+diff --git a/loader/asm_offset.c b/loader/asm_offset.c
+index 4a4fe19..17f91c2 100644
+--- a/loader/asm_offset.c
++++ b/loader/asm_offset.c
+@@ -50,16 +50,17 @@ void produce_asm_define() {
+ #elif defined(_WIN32)
+ // MSVC will print the name of the value and the value in hex
+ // Must disable optimization for this translation unit, otherwise the compiler strips out the variables
+-static const uint32_t PTR_SIZE = sizeof(void *);
+-static const uint32_t CHAR_PTR_SIZE = sizeof(char *);
+-static const uint32_t FUNCTION_OFFSET_INSTANCE = offsetof(struct loader_instance, phys_dev_ext_disp_functions);
+-static const uint32_t PHYS_DEV_OFFSET_INST_DISPATCH = offsetof(struct loader_instance_dispatch_table, phys_dev_ext);
+-static const uint32_t PHYS_DEV_OFFSET_PHYS_DEV_TRAMP = offsetof(struct loader_physical_device_tramp, phys_dev);
+-static const uint32_t ICD_TERM_OFFSET_PHYS_DEV_TERM = offsetof(struct loader_physical_device_term, this_icd_term);
+-static const uint32_t PHYS_DEV_OFFSET_PHYS_DEV_TERM = offsetof(struct loader_physical_device_term, phys_dev);
+-static const uint32_t INSTANCE_OFFSET_ICD_TERM = offsetof(struct loader_icd_term, this_instance);
+-static const uint32_t DISPATCH_OFFSET_ICD_TERM = offsetof(struct loader_icd_term, phys_dev_ext);
+-static const uint32_t EXT_OFFSET_DEVICE_DISPATCH = offsetof(struct loader_dev_dispatch_table, ext_dispatch);
++// External linkage keeps MSVC from discarding these otherwise unused definitions.
++const uint32_t PTR_SIZE = sizeof(void *);
++const uint32_t CHAR_PTR_SIZE = sizeof(char *);
++const uint32_t FUNCTION_OFFSET_INSTANCE = offsetof(struct loader_instance, phys_dev_ext_disp_functions);
++const uint32_t PHYS_DEV_OFFSET_INST_DISPATCH = offsetof(struct loader_instance_dispatch_table, phys_dev_ext);
++const uint32_t PHYS_DEV_OFFSET_PHYS_DEV_TRAMP = offsetof(struct loader_physical_device_tramp, phys_dev);
++const uint32_t ICD_TERM_OFFSET_PHYS_DEV_TERM = offsetof(struct loader_physical_device_term, this_icd_term);
++const uint32_t PHYS_DEV_OFFSET_PHYS_DEV_TERM = offsetof(struct loader_physical_device_term, phys_dev);
++const uint32_t INSTANCE_OFFSET_ICD_TERM = offsetof(struct loader_icd_term, this_instance);
++const uint32_t DISPATCH_OFFSET_ICD_TERM = offsetof(struct loader_icd_term, phys_dev_ext);
++const uint32_t EXT_OFFSET_DEVICE_DISPATCH = offsetof(struct loader_dev_dispatch_table, ext_dispatch);
+ #else
+ #warning asm_offset.c variable declarations need to be defined for this platform
+ #endif

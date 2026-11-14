@@ -1,0 +1,26 @@
+diff --git a/poppler/Object.cc b/poppler/Object.cc
+index 53a08dc..249c374 100644
+--- a/poppler/Object.cc
++++ b/poppler/Object.cc
+@@ -40,6 +40,8 @@
+ 
+ static const char *objTypeNames[numObjTypes] = { "boolean", "integer", "real", "string", "name", "null", "array", "dictionary", "stream", "ref", "cmd", "error", "eof", "none", "integer64", "hexString", "dead" };
+ 
++Object::Object(std::unique_ptr<Array> arrayA) : type { objArray }, data { std::shared_ptr<Array>(std::move(arrayA)) } { }
++
+ Object Object::copy() const
+ {
+     CHECK_NOT_DEAD;
+diff --git a/poppler/Object.h b/poppler/Object.h
+index 33e3557..5a402d9 100644
+--- a/poppler/Object.h
++++ b/poppler/Object.h
+@@ -233,7 +233,7 @@ public:
+ 
+     explicit Object(long long int64gA) : type { objInt64 }, data { int64gA } { }
+ 
+-    explicit Object(std::unique_ptr<Array> arrayA) : type { objArray }, data { std::shared_ptr<Array>(std::move(arrayA)) } { }
++    explicit Object(std::unique_ptr<Array> arrayA);
+ 
+     explicit Object(std::unique_ptr<Dict> &&dictA) : type { objDict }, data { std::shared_ptr<Dict>(std::move(dictA)) } { }
+ 

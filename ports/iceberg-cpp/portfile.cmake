@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-avro-dependency.patch
         int128-namespace.patch # https://github.com/apache/iceberg-cpp/pull/972
         msvc-14.42-compat.patch # https://github.com/apache/iceberg-cpp/pull/986
+        fix-incomplete-types.patch # Define PImpl constructors after their implementation types.
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ICEBERG_BUILD_STATIC)

@@ -28,7 +28,7 @@ arm64)
   ;;
 esac
 
-POWERSHELL_VERSION=7.6.9
+POWERSHELL_VERSION=7.6.10
 
 # Apt dependencies; needed for add-apt-repository and curl downloads to work
 apt-get -y update
@@ -188,22 +188,22 @@ APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 # cudnn9-jit-cuda-13 : cudnn9-jit appears to conflict with cudnn9-dev packages:
 # root@c47a4cc2ea72:/# apt install cudnn9-jit-cuda-13
 # The following additional packages will be installed:
-#   cudnn9-jit-cuda-13-4 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+#   cudnn9-jit-cuda-13-5 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
 # The following packages will be REMOVED:
-#   cudnn9-cuda-13 cudnn9-cuda-13-4 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
+#   cudnn9-cuda-13 cudnn9-cuda-13-5 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
 # The following NEW packages will be installed:
-#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-4 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
-APT_PACKAGES="$APT_PACKAGES cccl-13-4 cuda-command-line-tools-13-4 cuda-compiler-13-4 cuda-crt-13-4 \
-  cuda-cudart-dev-13-4 cuda-cuobjdump-13-4 cuda-cupti-dev-13-4 cuda-cuxxfilt-13-4 \
-  cuda-driver-dev-13-4 cuda-libraries-dev-13-4 cuda-minimal-build-13-4 cuda-nvcc-13-4 \
-  cuda-nvml-dev-13-4 cuda-nvrtc-dev-13-4 cuda-nvtx-13-4 libnvvm-13-4 \
-  cuda-sanitizer-13-4 cuda-toolkit-13-4-config-common cudnn9-cuda-13 gds-tools-13-4 \
-  libcublas-13-4 libcudnn9-dev-cuda-13 libcufft-dev-13-4 libcurand-dev-13-4 libcusolver-dev-13-4 \
-  libcusparse-dev-13-4 libnccl-dev libnpp-dev-13-4 libnvfatbin-dev-13-4 libnvjitlink-dev-13-4 \
-  libnvjpeg-dev-13-4"
+#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-5 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+APT_PACKAGES="$APT_PACKAGES cccl-13-5 cuda-command-line-tools-13-5 cuda-compiler-13-5 cuda-crt-13-5 \
+  cuda-cudart-dev-13-5 cuda-cuobjdump-13-5 cuda-cupti-dev-13-5 cuda-cuxxfilt-13-5 \
+  cuda-driver-dev-13-5 cuda-libraries-dev-13-5 cuda-minimal-build-13-5 cuda-nvcc-13-5 \
+  cuda-nvml-dev-13-5 cuda-nvrtc-dev-13-5 cuda-nvtx-13-5 libnvvm-13-5 \
+  cuda-sanitizer-13-5 cuda-toolkit-13-5-config-common cudnn9-cuda-13 gds-tools-13-5 \
+  libcublas-13-5 libcudnn9-dev-cuda-13 libcufft-dev-13-5 libcurand-dev-13-5 libcusolver-dev-13-5 \
+  libcusparse-dev-13-5 libnccl-dev libnpp-dev-13-5 libnvfatbin-dev-13-5 libnvjitlink-dev-13-5 \
+  libnvjpeg-dev-13-5"
 
 if [[ "$DEBIAN_ARCHITECTURE" == "amd64" ]]; then
-  APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-4"
+  APT_PACKAGES="$APT_PACKAGES cuda-opencl-dev-13-5"
 fi
 
 ## ROCm
