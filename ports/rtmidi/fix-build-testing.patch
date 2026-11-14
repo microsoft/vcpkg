@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4ca101..7ce2454 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -362,14 +362,15 @@ if(RTMIDI_BUILD_MODULES)
+   endif()
+ endif()
+ 
++option(RTMIDI_BUILD_TESTING "Build test programs" ON)
++
+ # Compile and run hotplug regression tests whenever the ALSA library is built.
+-if("alsa" IN_LIST API_LIST)
++if(RTMIDI_BUILD_TESTING AND "alsa" IN_LIST API_LIST)
+   include(tests/AlsaHotplug.cmake)
+   rtmidi_add_hotplug_test(rtmidi "${CMAKE_CURRENT_SOURCE_DIR}")
+ endif()
+ 
+ # Add tests if requested.
+-option(RTMIDI_BUILD_TESTING "Build test programs" ON)
+ if (NOT DEFINED RTMIDI_BUILD_TESTING OR RTMIDI_BUILD_TESTING STREQUAL "")
+   set(RTMIDI_BUILD_TESTING ${BUILD_TESTING})
+ endif()
