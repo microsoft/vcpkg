@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         link-directfb.patch
         fix-marmasm-conditional-assembly.patch
+        fix-msvc-arm64-offset-generation.patch # MSVC ARM64 needs native /Fa paths and externally linked offset constants.
 )
 
 vcpkg_find_acquire_program(PYTHON3)

@@ -1,6 +1,7 @@
 {
   "name": "vulkan-loader",
   "version": "1.4.363.0",
+  "port-version": 1,
   "description": "Vulkan Development Tools",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Loader",
   "license": "Apache-2.0 AND MIT AND HPND-Kevlin-Henney",
