@@ -1,6 +1,7 @@
 {
   "name": "azure-kinect-sensor-sdk",
   "version": "1.4.2",
+  "port-version": 1,
   "description": "Azure Kinect SDK is a cross platform (Linux and Windows) user mode SDK to read data from your Azure Kinect device.",
   "homepage": "https://github.com/microsoft/Azure-Kinect-Sensor-SDK",
   "license": "MIT",
@@ -10,7 +11,12 @@
     "azure-kinect-depth-engine",
     "cjson",
     "ebml",
-    "libjpeg-turbo",
+    {
+      "name": "libjpeg-turbo",
+      "features": [
+        "turbojpeg"
+      ]
+    },
     "libsoundio",
     "libusb",
     {
