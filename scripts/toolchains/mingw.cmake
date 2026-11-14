@@ -14,11 +14,12 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
         cmake_policy(SET CMP0137 NEW)
     endif()
     list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
-        VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE 
+        VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE
         VCPKG_C_FLAGS VCPKG_CXX_FLAGS
         VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
         VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
         VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
+        _VCPKG_MINGW_PREVIOUS_PROJECT_INCLUDE
     )
 
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
@@ -63,6 +64,18 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
             RESULT_VARIABLE _compiler_result
         )
         if(NOT _compiler_result EQUAL 0 OR NOT _compiler_target MATCHES "${target_regex}")
+            if(language STREQUAL "C")
+                unset(CMAKE_C_COMPILER CACHE)
+                unset(CMAKE_C_COMPILER PARENT_SCOPE)
+                unset(_VCPKG_MINGW_C_FALLBACK_COMPILER CACHE)
+                unset(_VCPKG_MINGW_C_FALLBACK_COMPILER PARENT_SCOPE)
+            elseif(language STREQUAL "C++")
+                unset(CMAKE_CXX_COMPILER CACHE)
+                unset(CMAKE_CXX_COMPILER PARENT_SCOPE)
+                unset(_VCPKG_MINGW_CXX_FALLBACK_COMPILER CACHE)
+                unset(_VCPKG_MINGW_CXX_FALLBACK_COMPILER PARENT_SCOPE)
+            endif()
+
             message(FATAL_ERROR
                 "The fallback MinGW ${language} compiler '${compiler}' is incompatible with "
                 "the requested ${VCPKG_TARGET_ARCHITECTURE} target. "
@@ -77,7 +90,7 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
     if(NOT CMAKE_C_COMPILER)
         find_program(CMAKE_C_COMPILER NAMES gcc)
         if(CMAKE_C_COMPILER)
-            _vcpkg_validate_mingw_compiler("${CMAKE_C_COMPILER}" "C" "${_VCPKG_MINGW_TARGET_REGEX}")
+            set(_VCPKG_MINGW_C_FALLBACK_COMPILER "${CMAKE_C_COMPILER}" CACHE INTERNAL "")
         endif()
     endif()
 
@@ -85,9 +98,17 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
     if(NOT CMAKE_CXX_COMPILER)
         find_program(CMAKE_CXX_COMPILER NAMES g++)
         if(CMAKE_CXX_COMPILER)
-            _vcpkg_validate_mingw_compiler("${CMAKE_CXX_COMPILER}" "C++" "${_VCPKG_MINGW_TARGET_REGEX}")
+            set(_VCPKG_MINGW_CXX_FALLBACK_COMPILER "${CMAKE_CXX_COMPILER}" CACHE INTERNAL "")
         endif()
     endif()
+
+    # CMAKE_PROJECT_INCLUDE runs after project() enables its requested languages.
+    # Chain any existing hook rather than replacing user-provided project setup.
+    set(_VCPKG_MINGW_VALIDATION_HOOK "${CMAKE_CURRENT_LIST_DIR}/mingw-validate.cmake")
+    if(NOT CMAKE_PROJECT_INCLUDE STREQUAL _VCPKG_MINGW_VALIDATION_HOOK)
+        set(_VCPKG_MINGW_PREVIOUS_PROJECT_INCLUDE "${CMAKE_PROJECT_INCLUDE}")
+    endif()
+    set(CMAKE_PROJECT_INCLUDE "${_VCPKG_MINGW_VALIDATION_HOOK}")
 
     find_program(CMAKE_RC_COMPILER NAMES "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-windres" windres)
 
@@ -113,4 +134,3 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
     string(APPEND CMAKE_SHARED_LINKER_FLAGS_RELEASE_INIT " ${VCPKG_LINKER_FLAGS_RELEASE} ")
     string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE_INIT " ${VCPKG_LINKER_FLAGS_RELEASE} ")
 endif()
-
