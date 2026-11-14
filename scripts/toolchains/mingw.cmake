@@ -106,8 +106,14 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
 
     # Prefer target-prefixed MinGW tools, but also support toolchains whose
     # executables are named simply gcc, g++, and windres.
-    find_program(CMAKE_C_COMPILER NAMES "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-gcc" gcc)
-    find_program(CMAKE_CXX_COMPILER NAMES "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-g++" g++)
+    find_program(CMAKE_C_COMPILER NAMES "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-gcc")
+    if(NOT CMAKE_C_COMPILER AND "$ENV{CC}" STREQUAL "")
+        find_program(CMAKE_C_COMPILER NAMES gcc)
+    endif()
+    find_program(CMAKE_CXX_COMPILER NAMES "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-g++")
+    if(NOT CMAKE_CXX_COMPILER AND "$ENV{CXX}" STREQUAL "")
+        find_program(CMAKE_CXX_COMPILER NAMES g++)
+    endif()
     find_program(CMAKE_RC_COMPILER NAMES "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-windres" windres)
 
     # The language-specific rules hook runs for both project() and later
