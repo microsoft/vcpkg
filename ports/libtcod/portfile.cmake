@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
     REF "${VERSION}"
-    SHA512 b79095a4663e3e90001636346f05e7ca68434ff4eada4a2cda3991b18867efae453abe2750960722ef558edca56e66c08fefddb7bd717648a472cadb57b11da6
+    SHA512 7fd6643f09467d9f4f446982c37352520f2edf7593a00f39e8ee35b6e2bc2daed4caa295f083c62a740cf8553e7fb338b479dbdab7632f2365e184291f24c7b1
     HEAD_REF main
-    PATCHES
-        pkgconfig.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
