@@ -3982,7 +3982,7 @@
     },
     "iceberg-cpp": {
       "baseline": "0.4.0",
-      "port-version": 2
+      "port-version": 3
     },
     "icecream-cpp": {
       "baseline": "1.0.0",
@@ -8186,7 +8186,7 @@
     },
     "poppler": {
       "baseline": "26.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "poppler-data": {
       "baseline": "0.4.12",
@@ -10198,7 +10198,7 @@
     },
     "swaggercpp": {
       "baseline": "0.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "swenson-sort": {
       "baseline": "2021-05-22",
