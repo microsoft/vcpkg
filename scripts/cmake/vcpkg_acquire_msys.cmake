@@ -642,9 +642,9 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         DEPS mingw-w64-x86_64-cc-libs mingw-w64-x86_64-termcap
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-sqlite3-3.53.4-1-any.pkg.tar.zst"
-        SHA512 0e14dff6800baff1560e3cd037ee0febdae869edfa8ba9cc246700057eef2f28a32e0b04f70974929a1c11a80dce8518c64b10e90287702162faf32db9414b99
-        PROVIDES mingw-w64-x86_64-sqlite mingw-w64-x86_64-sqlite-analyzer
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-sqlite-3.54.1-2-any.pkg.tar.zst"
+        SHA512 e3643265b2caa86639be5a7d63660ef6bdcc52b7bf36415d3679e93ac8ec6659593e406784e4a98cc9d1f56714928d08fa3c364231ecb7dc687123088e556060
+        PROVIDES mingw-w64-x86_64-sqlite3
         DEPS mingw-w64-x86_64-tcl mingw-w64-x86_64-zlib
     )
     z_vcpkg_acquire_msys_declare_package(
