@@ -67,6 +67,7 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
                 "The fallback MinGW ${language} compiler '${compiler}' is incompatible with "
                 "the requested ${VCPKG_TARGET_ARCHITECTURE} target. "
                 "Its -dumpmachine output was '${_compiler_target}'. "
+                "Compiler error output: '${_compiler_error}'. "
                 "Select a matching MinGW compiler or install the target-prefixed compiler."
             )
         endif()
@@ -89,7 +90,6 @@ if(NOT _VCPKG_MINGW_TOOLCHAIN)
     endif()
 
     find_program(CMAKE_RC_COMPILER NAMES "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-windres" windres)
-
 
     string(APPEND CMAKE_C_FLAGS_INIT " ${VCPKG_C_FLAGS} ")
     string(APPEND CMAKE_CXX_FLAGS_INIT " ${VCPKG_CXX_FLAGS} ")
