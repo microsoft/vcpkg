@@ -3604,6 +3604,10 @@
       "baseline": "2.37.0",
       "port-version": 1
     },
+    "goome": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
     "gperf": {
       "baseline": "3.3",
       "port-version": 1
