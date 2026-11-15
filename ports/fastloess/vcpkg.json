@@ -1,6 +1,6 @@
 {
   "name": "fastloess",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Prebuilt Rust-backed C++17 LOESS smoothing with batch, streaming, and online adapters (glibc on Linux)",
   "homepage": "https://thisisamirv.github.io/loess-project/cpp/",
   "license": "MIT OR Apache-2.0",

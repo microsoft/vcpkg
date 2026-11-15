@@ -36,9 +36,18 @@ install(
     DESTINATION share/fastloess
 )
 
+set(FASTLOESS_IMPORT_LIBRARY_NAME fastloess.lib)
+set(FASTLOESS_DEBUG_IMPORT_LIBRARY_NAME fastloess.lib)
+
 if(WIN32)
     if(NOT MSVC)
         message(FATAL_ERROR "Prebuilt Windows packages require the MSVC ABI.")
+    endif()
+    if(NOT FASTLOESS_DEBUG_PACKAGE_DIR OR NOT FASTLOESS_DEBUG_BINARY_NAME)
+        message(
+            FATAL_ERROR
+            "Windows packages require FASTLOESS_DEBUG_PACKAGE_DIR and FASTLOESS_DEBUG_BINARY_NAME."
+        )
     endif()
     if(FASTLOESS_ARCH STREQUAL "x64")
         set(import_machine x64)
@@ -50,43 +59,80 @@ if(WIN32)
             "Unsupported Windows architecture: ${FASTLOESS_ARCH}"
         )
     endif()
-    set(FASTLOESS_IMPORT_LIBRARY_NAME fastloess.lib)
-    set(import_library
+
+    function(fastloess_generate_import_library output_lib def_stem dll_name)
+        set(def_path "${CMAKE_CURRENT_BINARY_DIR}/${def_stem}.def")
+        file(READ "${CMAKE_CURRENT_SOURCE_DIR}/fastloess.def" import_definition)
+        string(
+            REPLACE "fastloess-win32-x64.dll"
+            "${dll_name}"
+            import_definition
+            "${import_definition}"
+        )
+        file(WRITE "${def_path}" "${import_definition}")
+        add_custom_command(
+            OUTPUT "${output_lib}"
+            COMMAND
+                "${CMAKE_AR}" /nologo "/machine:${import_machine}"
+                "/def:${def_path}"
+                "/out:${output_lib}"
+            DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/fastloess.def"
+            VERBATIM
+        )
+    endfunction()
+
+    set(release_import_library
         "${CMAKE_CURRENT_BINARY_DIR}/${FASTLOESS_IMPORT_LIBRARY_NAME}"
     )
-    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/fastloess.def" import_definition)
-    string(
-        REPLACE "fastloess-win32-x64.dll"
+    set(debug_import_library
+        "${CMAKE_CURRENT_BINARY_DIR}/debug-${FASTLOESS_DEBUG_IMPORT_LIBRARY_NAME}"
+    )
+    # Both import libraries must name the final installed DLL
+    # (debug/bin uses the same filename as bin after RENAME).
+    fastloess_generate_import_library(
+        "${release_import_library}"
+        fastloess-release
         "${FASTLOESS_BINARY_NAME}"
-        import_definition
-        "${import_definition}"
     )
-    file(
-        WRITE "${CMAKE_CURRENT_BINARY_DIR}/fastloess.def"
-        "${import_definition}"
+    fastloess_generate_import_library(
+        "${debug_import_library}"
+        fastloess-debug
+        "${FASTLOESS_BINARY_NAME}"
     )
-    add_custom_command(
-        OUTPUT "${import_library}"
-        COMMAND
-            "${CMAKE_AR}" /nologo "/machine:${import_machine}"
-            "/def:${CMAKE_CURRENT_BINARY_DIR}/fastloess.def"
-            "/out:${import_library}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/fastloess.def"
-        VERBATIM
+    add_custom_target(
+        fastloess-import-libraries ALL
+        DEPENDS "${release_import_library}" "${debug_import_library}"
     )
-    add_custom_target(fastloess-import-library ALL DEPENDS "${import_library}")
+
     install(
         FILES "${FASTLOESS_PACKAGE_DIR}/${FASTLOESS_BINARY_NAME}"
         DESTINATION bin
     )
-    install(FILES "${import_library}" DESTINATION lib)
+    install(
+        FILES "${FASTLOESS_DEBUG_PACKAGE_DIR}/${FASTLOESS_DEBUG_BINARY_NAME}"
+        DESTINATION debug/bin
+        RENAME "${FASTLOESS_BINARY_NAME}"
+    )
+    install(FILES "${release_import_library}" DESTINATION lib)
+    install(
+        FILES "${debug_import_library}"
+        DESTINATION debug/lib
+        RENAME "${FASTLOESS_DEBUG_IMPORT_LIBRARY_NAME}"
+    )
     set(FASTLOESS_LIBRARY_DIR bin)
+    set(FASTLOESS_HAS_SEPARATE_DEBUG TRUE)
 else()
     install(
         FILES "${FASTLOESS_PACKAGE_DIR}/${FASTLOESS_BINARY_NAME}"
         DESTINATION lib
     )
+    install(
+        FILES "${FASTLOESS_PACKAGE_DIR}/${FASTLOESS_BINARY_NAME}"
+        DESTINATION debug/lib
+    )
     set(FASTLOESS_LIBRARY_DIR lib)
+    set(FASTLOESS_HAS_SEPARATE_DEBUG TRUE)
+    set(FASTLOESS_DEBUG_BINARY_NAME "${FASTLOESS_BINARY_NAME}")
 endif()
 
 set(FASTLOESS_MACOS_RPATH_PREFIX "@rpath/")
