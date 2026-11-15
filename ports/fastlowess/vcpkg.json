@@ -1,6 +1,6 @@
 {
   "name": "fastlowess",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Prebuilt Rust-backed C++17 LOWESS smoothing with batch, streaming, and online adapters (glibc on Linux)",
   "homepage": "https://thisisamirv.github.io/lowess-project/cpp/",
   "license": "MIT OR Apache-2.0",
