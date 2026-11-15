@@ -3565,7 +3565,7 @@
       "port-version": 5
     },
     "glslang": {
-      "baseline": "16.4.0",
+      "baseline": "16.6.0",
       "port-version": 0
     },
     "glui": {
