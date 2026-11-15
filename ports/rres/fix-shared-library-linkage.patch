@@ -1,0 +1,28 @@
+diff --git a/src/rres.h b/src/rres.h
+index eac16c4..8aad5cb 100644
+--- a/src/rres.h
++++ b/src/rres.h
+@@ -136,13 +136,18 @@
+ #ifndef RRES_H
+ #define RRES_H
+ 
+-// Function specifiers in case library is build/used as a shared library (Windows)
++// Function specifiers in case library is build/used as a shared library
+ // NOTE: Microsoft specifiers to tell compiler that symbols are imported/exported from a .dll
++// NOTE: visibility("default") attribute makes symbols "visible" when compiled with -fvisibility=hidden
+ #if defined(_WIN32)
+-    #if defined(BUILD_LIBTYPE_SHARED)
+-        #define RRESAPI __declspec(dllexport)     // We are building the library as a Win32 shared library (.dll)
+-    #elif defined(USE_LIBTYPE_SHARED)
+-        #define RRESAPI __declspec(dllimport)     // We are using the library as a Win32 shared library (.dll)
++    #if defined(RRES_BUILD_LIBTYPE_SHARED)
++        #define RRESAPI __declspec(dllexport)     // Building the library as a Win32 shared library (.dll)
++    #elif defined(RRES_USE_LIBTYPE_SHARED)
++        #define RRESAPI __declspec(dllimport)     // Using the library as a Win32 shared library (.dll)
++    #endif
++#else
++    #if defined(RRES_BUILD_LIBTYPE_SHARED)
++        #define RRESAPI __attribute__((visibility("default"))) // Building as a Unix shared library (.so/.dylib)
+     #endif
+ #endif
+ 

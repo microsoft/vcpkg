@@ -9160,6 +9160,10 @@
       "baseline": "1.1.4",
       "port-version": 4
     },
+    "rres": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "rsasynccpp": {
       "baseline": "0.0.7",
       "port-version": 3

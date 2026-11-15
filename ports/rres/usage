@@ -1,0 +1,9 @@
+rres is a header-only library.
+
+Include <rres.h> to use the core resource format API.
+
+The raylib integration is available through <rres-raylib.h>. Define
+RRES_RAYLIB_IMPLEMENTATION in exactly one source file before including it.
+Optional compression/encryption support can be enabled with
+RRES_SUPPORT_COMPRESSION_LZ4, RRES_SUPPORT_ENCRYPTION_AES, and
+RRES_SUPPORT_ENCRYPTION_XCHACHA20.
