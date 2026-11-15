@@ -9893,8 +9893,8 @@
       "port-version": 3
     },
     "sqlgen": {
-      "baseline": "0.6.0",
-      "port-version": 1
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "sqlite-flux": {
       "baseline": "1.1.1",
