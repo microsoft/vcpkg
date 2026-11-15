@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9f116a4..f215765 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -682,7 +682,6 @@ IF(NC_HAS_DEF_VAR_FILTER)
+   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cxx4/findplugin.in ${CMAKE_CURRENT_BINARY_DIR}/cxx4/findplugin.sh @ONLY NEWLINE_STYLE LF)
+   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/examples/findplugin.in ${CMAKE_CURRENT_BINARY_DIR}/examples/findplugin.sh @ONLY NEWLINE_STYLE LF)
+ 
+-  ADD_SUBDIRECTORY(plugins)
+ ENDIF(NC_HAS_DEF_VAR_FILTER)
+ 
+ ##

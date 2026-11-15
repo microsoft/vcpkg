@@ -1,0 +1,25 @@
+{
+  "name": "microsoft-gacl",
+  "version-semver": "1.2.0",
+  "description": "Game Asset Conditioning Library - improves Zstandard compression of game assets such as BCn textures using shuffle transforms and rate-distortion optimization",
+  "homepage": "https://github.com/microsoft/Game-Asset-Conditioning-Library",
+  "license": "MIT",
+  "supports": "windows & x64 & !mingw & !uwp & !xbox",
+  "dependencies": [
+    "directx-headers",
+    "directxmath",
+    {
+      "name": "directxtex",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zstd"
+  ]
+}

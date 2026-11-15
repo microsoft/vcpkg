@@ -4,18 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO auto-differentiation/xad
     REF "v${VERSION}"
-    SHA512 e2e3a847d975dc9fcbd7be8277e93fb417d263aec566f2e46a809135460860caba966980823afb66d764bb0b2eb4d8d24765a8aadadb730aeb743a36b399fbde
+    SHA512 c1da2a795f7eb9b690b2b3bda072b7231b8672b8eec489a31324c42796d36cae791cb34a8119d1ca9d3b42cef6036b7c198538c9b3a80232f6eca1356abf1ce5
     HEAD_REF main
     PATCHES
         fix-install-pdb.patch # no .pdb is produced with /Z7
-        fix-msvc-stl-145.patch # Visual Studio 2026 removed stdext::checked_array_iterator
-        fix-libcxx-21.patch # upstream 5d8a3b9
 )
-
-# The VERSION file in the v2.1.0 tag still carries the "-dev" suffix
-file(WRITE "${SOURCE_PATH}/VERSION" "${VERSION}\n")
-# Version.hpp.in refers to XAD_VERSION_* while the project defines xad_VERSION_*, which leaves the numeric macros empty
-vcpkg_replace_string("${SOURCE_PATH}/src/XAD/Version.hpp.in" "@XAD_VERSION_" "@xad_VERSION_")
 
 # Build the compiled part of the library for the baseline instruction set of the target.
 # The headers are compiled with the consumer's own flags.
@@ -36,6 +29,8 @@ vcpkg_cmake_configure(
         -DXAD_WARNINGS_PARANOID=OFF
         -DXAD_SIMD_OPTION=${XAD_SIMD_OPTION}
         -DXAD_STATIC_MSVC_RUNTIME=${XAD_STATIC_MSVC_RUNTIME}
+        # Debug would default it to ON, which changes the tape layout; only the release headers are installed
+        -DXAD_TAPE_CHECKS=OFF
 )
 
 vcpkg_cmake_install()

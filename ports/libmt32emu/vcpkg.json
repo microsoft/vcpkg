@@ -1,6 +1,6 @@
 {
   "name": "libmt32emu",
-  "version": "2.8.5",
+  "version": "2.8.6",
   "description": "A MT-32 emulator",
   "homepage": "https://github.com/munt/munt",
   "license": "LGPL-2.1-or-later AND BSD-3-Clause",

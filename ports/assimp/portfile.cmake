@@ -1,18 +1,11 @@
-vcpkg_download_distfile(FIX_CPP17_HEADERS
-    URLS https://github.com/assimp/assimp/commit/9a486a72e43f92222969bfac7054554f97dd253f.patch?full_index=1
-    SHA512 209d79e2366567cc8090e06684ef2da795a317c81d17694590e95051a62123219ab9b700bd0640e5ae0dd0d8bb9d8c9377dadc9168f08968d3b970244dbdc353
-    FILENAME assimp_pr_6627.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
     REF "v${VERSION}"
-    SHA512 57326194bf3a8e2ae793c739878231067fdd6d031531e910d4d20fc8a673eacf48f75e11bd21ca2e6421682f78585d445bffb647bdcb52e01b2cd4d3ff0e2c62
+    SHA512 58c34e74721feb4cd2951c317ec08653e574d1d9fd9551c2752f0733482b602e51b27da379d3ff3a596eba77a6366efb02e6d98cc3f244faa946b7634acaff60
     HEAD_REF master
     PATCHES
         build_fixes.patch
-        "${FIX_CPP17_HEADERS}"
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake-modules/FindZLIB.cmake")

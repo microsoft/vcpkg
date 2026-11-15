@@ -1,0 +1,7 @@
+microsoft-gacl provides CMake targets:
+
+    find_package(GACL CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE GACL::gacl_lib)
+
+Headers are included as <gacl/gacl.h> and <gacl/shuffle.h>.
+The gacl command-line tool is installed to tools/microsoft-gacl/.

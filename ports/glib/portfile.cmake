@@ -106,7 +106,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
 elseif(VCPKG_TARGET_IS_OSX)
     list(REMOVE_ITEM GLIB_TOOLS gapplication)
 endif()
-vcpkg_copy_tools(TOOL_NAMES ${GLIB_TOOLS} AUTO_CLEAN)
+
+vcpkg_copy_tools(TOOL_NAMES ${GLIB_TOOLS})
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_copy_tools(TOOL_NAMES gio-querymodules
+                     SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
+                     DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+endif()
+vcpkg_clean_executables_in_bin(FILE_NAMES ${GLIB_TOOLS})
 
 vcpkg_fixup_pkgconfig()
 

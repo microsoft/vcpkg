@@ -1,5 +1,5 @@
 diff --git a/config/libdw.pc.in b/config/libdw.pc.in
-index 2e83a43..bdfc808 100644
+index 2e83a432..bdfc8087 100644
 --- a/config/libdw.pc.in
 +++ b/config/libdw.pc.in
 @@ -18,5 +18,4 @@ Requires: libelf = @VERSION@
@@ -10,10 +10,10 @@ index 2e83a43..bdfc808 100644
 -Libs.private: @BZ2_LIB@
 +Requires.private: zlib @LIBLZMA@ @LIBZSTD@ bzip2
 diff --git a/configure.ac b/configure.ac
-index f191488..fe617ac 100644
+index d3c02922..00f071c2 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -429,6 +429,8 @@ AM_CONDITIONAL(TESTS_RPATH, test "$tests_use_rpath" = yes)
+@@ -475,6 +475,8 @@ AM_CONDITIONAL(TESTS_RPATH, test "$tests_use_rpath" = yes)
  dnl zlib is mandatory.
  save_LIBS="$LIBS"
  LIBS=
@@ -22,7 +22,7 @@ index f191488..fe617ac 100644
  eu_ZIPLIB(zlib,ZLIB,z,gzdirect,gzip)
  AS_IF([test "x$with_zlib" = xno], [AC_MSG_ERROR([zlib not found but is required])])
  LIBS="$save_LIBS"
-@@ -437,18 +439,21 @@ dnl Test for bzlib and xz/lzma/zstd, gives BZLIB/LZMALIB/ZSTD .am
+@@ -483,18 +485,21 @@ dnl Test for bzlib and xz/lzma/zstd, gives BZLIB/LZMALIB/ZSTD .am
  dnl conditional and config.h USE_BZLIB/USE_LZMALIB/USE_ZSTD #define.
  save_LIBS="$LIBS"
  LIBS=
@@ -45,7 +45,7 @@ index f191488..fe617ac 100644
  AS_IF([test "x$with_zstd" = xyes], [LIBZSTD="libzstd"], [LIBLZSTD=""])
  AC_SUBST([LIBZSTD])
 diff --git a/debuginfod/Makefile.am b/debuginfod/Makefile.am
-index 0a129fa..b90ed23 100644
+index a184f23b..5b07cc16 100644
 --- a/debuginfod/Makefile.am
 +++ b/debuginfod/Makefile.am
 @@ -42,8 +42,8 @@ program_transform_name = s,x,x,
@@ -60,10 +60,10 @@ index 0a129fa..b90ed23 100644
  libdebuginfod = ./libdebuginfod.a
  else
 diff --git a/libdw/Makefile.am b/libdw/Makefile.am
-index 5363c02..045cde5 100644
+index 8ca5aba4..544d311e 100644
 --- a/libdw/Makefile.am
 +++ b/libdw/Makefile.am
-@@ -110,7 +110,7 @@ libdw_so_LIBS = ../libebl/libebl_pic.a ../backends/libebl_backends_pic.a \
+@@ -109,7 +109,7 @@ libdw_so_LIBS = ../libebl/libebl_pic.a ../backends/libebl_backends_pic.a \
  		../libcpu/libcpu_pic.a libdw_pic.a ../libdwelf/libdwelf_pic.a \
  		../libdwfl/libdwfl_pic.a ../libdwfl_stacktrace/libdwfl_stacktrace_pic.a
  libdw_so_DEPS = ../lib/libeu.a ../libelf/libelf.so
@@ -73,11 +73,11 @@ index 5363c02..045cde5 100644
  	$(AM_V_CCLD)$(LINK) $(dso_LDFLAGS) -o $@ \
  		-Wl,--soname,$@.$(VERSION),--enable-new-dtags \
 diff --git a/libelf/Makefile.am b/libelf/Makefile.am
-index 3402863..30a331e 100644
+index af37c940..a67876dd 100644
 --- a/libelf/Makefile.am
 +++ b/libelf/Makefile.am
-@@ -106,7 +106,7 @@ libelf_pic_a_SOURCES =
- am_libelf_pic_a_OBJECTS = $(libelf_a_SOURCES:.c=.os)
+@@ -107,7 +107,7 @@ libelf_pic_a_SOURCES =
+ am_libelf_pic_a_OBJECTS = $(libelf_a_SOURCES:.c=_.os)
  
  libelf_so_DEPS = ../lib/libeu.a
 -libelf_so_LDLIBS = $(libelf_so_DEPS) -lz $(zstd_LIBS)
@@ -86,10 +86,10 @@ index 3402863..30a331e 100644
  libelf_so_LDLIBS += -lpthread
  endif
 diff --git a/src/Makefile.am b/src/Makefile.am
-index 6bdf2df..2fd5b42 100644
+index 155e5a97..e61596d0 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -54,8 +54,8 @@ CLEANFILES = $(bin_SCRIPTS) $(EXTRA_libar_a_DEPENDENCIES)
+@@ -67,8 +67,8 @@ endif
  
  if BUILD_STATIC
  libasm = ../libasm/libasm.a

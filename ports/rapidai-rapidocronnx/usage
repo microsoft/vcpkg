@@ -1,0 +1,7 @@
+rapidai-rapidocronnx provides CMake targets:
+
+    find_package(unofficial-rapidocronnx CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::rapidocronnx::rapidocronnx)
+
+The C API (<rapidocronnx/OcrLiteCApi.h>) needs no OpenCV include path.
+The dictionary is in share/rapidai-rapidocronnx/models; the ONNX models are not included.

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f79fd5c..deb894c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,7 +21,9 @@ set(REQUIRED_QT_VERSION 6.5.0)
+ 
+ set( oxygen_icon_dirs  8x8 16x16 22x22 32x32 48x48 64x64 128x128 256x256 )
+ 
+-add_subdirectory(autotests)
++if(BUILD_TESTING)
++    add_subdirectory(autotests)
++endif()
+ 
+ ########### install files ###############
+ 
