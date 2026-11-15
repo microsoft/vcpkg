@@ -1,0 +1,10 @@
+goome is header only. In exactly one .c file:
+
+    #define GOOME_IMPLEMENTATION
+    #include <goome.h>
+
+    find_path(GOOME_INCLUDE_DIRS "goome.h")
+    target_include_directories(main PRIVATE ${GOOME_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${CMAKE_DL_LIBS})
+
+The backends (goome_glfw.h, goome_gl3.h, goome_dx11.h and the rest) are in the same folder.

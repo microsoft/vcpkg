@@ -1,0 +1,9 @@
+{
+  "name": "goome",
+  "version": "0.4.0",
+  "description": "Single header C library for see-through always on top overlays, app windows and offscreen ui, with drawing, fonts, screen grabs, hotkeys and an immediate mode ui kit.",
+  "homepage": "https://github.com/goome-ui/c-goome",
+  "documentation": "https://goome-ui.github.io/docs/",
+  "license": "GPL-3.0-only",
+  "supports": "(windows | linux | osx) & !uwp"
+}
