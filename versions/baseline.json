@@ -9249,7 +9249,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.7.6",
+      "baseline": "1.7.14",
       "port-version": 0
     },
     "safeint": {
