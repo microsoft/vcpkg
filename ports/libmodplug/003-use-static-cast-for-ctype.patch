@@ -1,11 +1,11 @@
 diff --git a/src/load_abc.cpp b/src/load_abc.cpp
-index ee79f39..874ab8f 100644
+index e70af80..3fe25b7 100644
 --- a/src/load_abc.cpp
 +++ b/src/load_abc.cpp
-@@ -268,7 +268,8 @@ static void setenv(const char *name, const char *value, int overwrite)
- #endif
+@@ -268,7 +268,8 @@ static int abc_patno(ABCHANDLE *h, uint32_t tracktime);
  
- static int abc_isvalidchar(char c) {
+ 
+ static int abc_isvalidchar(unsigned char c) {
 -	return(isalpha(c) || isdigit(c) || isspace(c) || c == '%' || c == ':');
 +	unsigned char u = static_cast<unsigned char>(c);
 +	return(isalpha(u) || isdigit(u) || isspace(u) || c == '%' || c == ':');
