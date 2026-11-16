@@ -4,25 +4,24 @@
 #   - dynamic CRT: intel_thread, static CRT: sequential
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-
-# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/307bccae-8631-4712-8999-02a8abf51994/intel-onemkl-2025.2.0.630_offline.exe # windows
-# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/47c7d946-fca1-441a-b0df-b094e3f045ea/intel-onemkl-2025.2.0.629_offline.sh # linux
+# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/e1efd9db-a5ef-4fb7-a66d-19fd33d2a263/intel-onemkl-2026.2.0.886_offline.exe # windows
+# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/97415287-271a-4d14-967f-72e2d9ceeb1e/intel-onemkl-2026.2.0.890_offline.sh # linux
 set(sha "")
-set(mkl_version 2025.2.0)
-set(mkl_short_version 2025.2)
+set(mkl_version 2026.2.0)
+set(mkl_short_version 2026.2)
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   # nop
 elseif(VCPKG_TARGET_IS_WINDOWS)
-  set(filename intel-onemkl-2025.2.0.630_offline.exe)
-  set(magic_number 307bccae-8631-4712-8999-02a8abf51994)
-  set(sha 13d6c1ab943d2a3a16ee29be995215ef14eb469215c24633d9fdff1f0e1b3e78225ed92780b9a20d90812160da5a4969e16f0e9df36df45389c4fab4b5ecac3d)
+  set(filename intel-onemkl-2026.2.0.886_offline.exe)
+  set(magic_number e1efd9db-a5ef-4fb7-a66d-19fd33d2a263)
+  set(sha eb94cc1923ea1b400cce4e476f1fa763dc2f4eb3192138f76f4eceb09307f9367b423d90bc787ecf280bb85d7a7b200b1f9e5929b4216f968065a97e9823d8b1)
   set(package_infix "win")
   set(package_libdir "lib")
   set(runtime_dir "bin")
 elseif(VCPKG_TARGET_IS_LINUX)
-  set(filename intel-onemkl-2025.2.0.629_offline.sh)
-  set(magic_number 47c7d946-fca1-441a-b0df-b094e3f045ea)
-  set(sha 60e0b86b2e63da1becb527db0d912d19e2a664671e1e6cf54ac6fad35ced3bb791e490d4b7d1a555231a0b553a32652d1c6c41869222c88f30e17fee5c436cd3)
+  set(filename intel-onemkl-2026.2.0.890_offline.sh)
+  set(magic_number 97415287-271a-4d14-967f-72e2d9ceeb1e)
+  set(sha 6e2e239ca8c2a9c62d4a5a7def4906ab719a6a04777e4b777e27f57ac0559d1229a1a372a981ac19d5020931cc7551b601152cd1f32815dac47c31ec4b20b88a)
   set(package_infix "lin")
   set(package_libdir "lib")
   set(runtime_dir "lib")
@@ -66,12 +65,12 @@ file(MAKE_DIRECTORY "${extract_1_dir}")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 
-message(STATUS "Warning: This port is still a work on progress. 
+message(STATUS "Warning: This port is still a work on progress.
   E.g. it is not correctly filtering the libraries in accordance with
   VCPKG_LIBRARY_LINKAGE. It is using the default threading (Intel OpenMP)
   which is known to segfault when used together with GNU OpenMP.
 ")
-  
+
 message(STATUS "Extracting offline installer")
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -182,7 +181,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "set(LIB_EXT \".so\")" "set(LIB_EXT \".a\")")
 endif()
 #TODO: Hardcode settings from portfile in config.cmake
-#TODO: Give lapack/blas information about the correct BLA_VENDOR depending on settings. 
+#TODO: Give lapack/blas information about the correct BLA_VENDOR depending on settings.
 
 file(INSTALL "${mkl_dir}/licensing" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.product,v=${mkl_version}+*")
