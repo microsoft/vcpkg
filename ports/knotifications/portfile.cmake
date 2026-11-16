@@ -4,11 +4,16 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f5529180d1a6bc06a4f68ab1318667d4af637576f39ee3a83d2a6dc71f59e4f6c2e559bf9fad7f7c94912a92f64e7b45272412a93b4f168ffe941c40557da801
     HEAD_REF master
+    PATCHES
+        export-qml-modules.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        qml          CMAKE_REQUIRE_FIND_PACKAGE_Qt6Qml
     INVERTED_FEATURES
+        qml          CMAKE_DISABLE_FIND_PACKAGE_Qt6Qml
         translations KF_SKIP_PO_PROCESSING
 )
 
@@ -28,6 +33,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6notifications CONFIG_PATH lib/cmake/KF6Notifications)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6notifications/KF6NotificationsTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

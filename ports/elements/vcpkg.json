@@ -1,6 +1,6 @@
 {
   "name": "elements",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Elements is a lightweight, fine-grained, resolution independent, modular GUI library.",
   "homepage": "https://cycfi.github.io/elements",
   "license": "MIT",

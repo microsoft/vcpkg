@@ -1,0 +1,35 @@
+{
+  "name": "ktexttemplate",
+  "version": "6.31.0",
+  "description": "Libraries for text templating with Qt",
+  "homepage": "https://invent.kde.org/frameworks/ktexttemplate",
+  "documentation": "https://api.kde.org/ktexttemplate-index.html",
+  "license": "LGPL-2.1-or-later AND LGPL-2.0-or-later",
+  "supports": "!staticcrt & !xbox",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "qml": {
+      "description": "Build the scriptable tags plugin, to write tags and filters in JavaScript",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}

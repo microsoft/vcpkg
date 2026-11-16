@@ -1,0 +1,24 @@
+diff --git a/KF6BluezQtConfig.cmake.in b/KF6BluezQtConfig.cmake.in
+index 19b99f7..00578e7 100644
+--- a/KF6BluezQtConfig.cmake.in
++++ b/KF6BluezQtConfig.cmake.in
+@@ -6,6 +6,9 @@ find_dependency(Qt6DBus @REQUIRED_QT_VERSION@)
+ 
+ if (NOT @BUILD_SHARED_LIBS@)
+     find_dependency(Qt6Network @REQUIRED_QT_VERSION@)
++    if ("@Qt6Qml_FOUND@")
++        find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++    endif()
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6BluezQtTargets.cmake")
+diff --git a/src/imports/CMakeLists.txt b/src/imports/CMakeLists.txt
+index b542c81..602e081 100644
+--- a/src/imports/CMakeLists.txt
++++ b/src/imports/CMakeLists.txt
+@@ -20,4 +20,4 @@ target_link_libraries(bluezqtextensionplugin PRIVATE
+     KF6::BluezQt
+ )
+ 
+-ecm_finalize_qml_module(bluezqtextensionplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(bluezqtextensionplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6BluezQtTargets)

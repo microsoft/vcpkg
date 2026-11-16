@@ -1,0 +1,26 @@
+diff --git a/KF6SonnetConfig.cmake.in b/KF6SonnetConfig.cmake.in
+index cda8e23..a2e9bfb 100644
+--- a/KF6SonnetConfig.cmake.in
++++ b/KF6SonnetConfig.cmake.in
+@@ -6,5 +6,9 @@ find_dependency(Qt6Core @REQUIRED_QT_VERSION@)
+ if(@SONNET_USE_WIDGETS@)
+     find_dependency(Qt6Widgets @REQUIRED_QT_VERSION@)
+ endif()
++if(NOT @BUILD_SHARED_LIBS@ AND @SONNET_USE_QML@)
++    find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++    find_dependency(Qt6Quick @REQUIRED_QT_VERSION@)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/KF6SonnetTargets.cmake")
+diff --git a/src/quick/CMakeLists.txt b/src/quick/CMakeLists.txt
+index 189ddab..50e263b 100644
+--- a/src/quick/CMakeLists.txt
++++ b/src/quick/CMakeLists.txt
+@@ -18,6 +18,6 @@ target_link_libraries(sonnetquickplugin
+     PRIVATE KF6SonnetCore
+ )
+ 
+-ecm_finalize_qml_module(sonnetquickplugin DESTINATION ${KDE_INSTALL_QMLDIR})
++ecm_finalize_qml_module(sonnetquickplugin DESTINATION ${KDE_INSTALL_QMLDIR} EXPORT KF6SonnetTargets)
+ 
+ ecm_generate_qdoc(sonnetquickplugin sonnetquick.qdocconf)

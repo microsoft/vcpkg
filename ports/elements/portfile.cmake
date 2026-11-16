@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cycfi/elements
     REF "v${VERSION}"
-    SHA512 96db07185bed504890ff4b4d5e7de8be70b1179239e0f493784e184264da77892c337adeb488276f3c842ac7baaee84ee5086f082f30163c3a86de6c96536b56
+    SHA512 ce47e36a07870bd0851ed1896a5fdf897b2eadcc8d215a4d7042c78062defa58f73c3985b86bfbeb1e76219ccd1cf1bedc0cd5fd2204cb2b74d01cf8b78426a6
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -13,8 +13,8 @@ vcpkg_from_github(
 vcpkg_from_github(
     OUT_SOURCE_PATH INFRA_SOURCE_PATH
     REPO cycfi/artist
-    REF 528ad5fd7500a7f4206669674d9211250acbebd5
-    SHA512 f99f0c038cbffdf7314311be6d23880271a1b62207f046f58c911ba32dde608f8609e0350f8b532d64b548fa0241c85d8c5d8a2ab50e3836d69e7610a05dbf4b
+    REF d64fe8479ba2804cf20f578184bf5bd7550b0f8b
+    SHA512 d316883b1ba1b02af789d36292a22db7d1c344b805c437bf98d2650018fd31cb54cf8e2dc697157d9d77c06d77cbdc8d9a5afbaa8957ba453b0561aff1961aec
     HEAD_REF master
     PATCHES
         libunibreak.patch

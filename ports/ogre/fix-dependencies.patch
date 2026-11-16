@@ -1,16 +1,13 @@
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
-index 21590f4..4b46a29 100644
+index 77c0bab..8e15949 100644
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
-@@ -210,11 +210,14 @@ endif()
+@@ -213,11 +213,11 @@ endif()
  #######################################################################
  
  # Find FreeImage
 -find_package(FreeImage)
 +find_package(FreeImage NAMES freeimage)
-+set(FreeImage_LIBRARIES freeimage::FreeImage)
-+set(FreeImage_LIBRARY_DBG "-lFreeImaged")
-+set(FreeImage_LIBRARY_REL "-lFreeImage")
  macro_log_feature(FreeImage_FOUND "freeimage" "Support for commonly used graphics image formats" "http://freeimage.sourceforge.net")
  
  # Find FreeType
@@ -19,7 +16,7 @@ index 21590f4..4b46a29 100644
  macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org")
  
  # Find X11
-@@ -281,13 +284,17 @@ endif ()
+@@ -284,13 +284,17 @@ endif ()
  macro_log_feature(ENV{VULKAN_SDK} "Vulkan SDK" "Vulkan RenderSystem, glslang Plugin. Alternatively use system packages" "https://vulkan.lunarg.com/")
  
  # OpenEXR
@@ -40,7 +37,7 @@ index 21590f4..4b46a29 100644
  macro_log_feature(PYTHONLIBS_FOUND "Python" "Language bindings to use OGRE from Python" "http://www.python.org/")
  
  # SWIG
-@@ -295,7 +302,7 @@ find_package(SWIG 3.0.8 QUIET)
+@@ -298,7 +302,7 @@ find_package(SWIG 3.0.8 QUIET)
  macro_log_feature(SWIG_FOUND "SWIG" "Language bindings (Python, Java, C#) for OGRE" "http://www.swig.org/")
  
  # pugixml
@@ -49,7 +46,7 @@ index 21590f4..4b46a29 100644
  macro_log_feature(pugixml_FOUND "pugixml" "Needed for XMLConverter and DotScene Plugin" "https://pugixml.org/")
  
  # Find zlib
-@@ -303,7 +310,7 @@ find_package(ZLIB)
+@@ -306,7 +310,7 @@ find_package(ZLIB)
  macro_log_feature(ZLIB_FOUND "zlib" "Simple data compression library" "http://www.zlib.net")
  
  # Assimp
@@ -58,7 +55,7 @@ index 21590f4..4b46a29 100644
  macro_log_feature(assimp_FOUND "Assimp" "Needed for the AssimpLoader Plugin" "https://www.assimp.org/")
  
  # Bullet
-@@ -311,6 +318,8 @@ find_package(Bullet QUIET)
+@@ -314,6 +318,8 @@ find_package(Bullet QUIET)
  macro_log_feature(BULLET_FOUND "Bullet" "Bullet physics" "https://pybullet.org")
  
  if(assimp_FOUND)
@@ -67,7 +64,7 @@ index 21590f4..4b46a29 100644
    # workaround horribly broken assimp cmake, fixed with assimp 5.1
    add_library(fix::assimp INTERFACE IMPORTED)
    set_target_properties(fix::assimp PROPERTIES
-@@ -329,7 +338,7 @@ endif()
+@@ -332,7 +338,7 @@ endif()
  # Find sdl2
  if(NOT ANDROID AND NOT EMSCRIPTEN)
    # find script does not work in cross compilation environment
@@ -137,7 +134,7 @@ index 3cb2379..5629bb5 100644
  }
  
 diff --git a/Components/Overlay/CMakeLists.txt b/Components/Overlay/CMakeLists.txt
-index 41bd634..87f1406 100644
+index e12e53a..fc41612 100644
 --- a/Components/Overlay/CMakeLists.txt
 +++ b/Components/Overlay/CMakeLists.txt
 @@ -19,6 +19,8 @@ list(APPEND HEADER_FILES
@@ -188,7 +185,7 @@ index 10283f5..e7edfd3 100644
  
  if(CMAKE_COMPILER_IS_GNUCXX)
 diff --git a/PlugIns/STBICodec/src/OgreSTBICodec.cpp b/PlugIns/STBICodec/src/OgreSTBICodec.cpp
-index c5a4d4b..df648d7 100644
+index 746ebf3..dfca7b7 100644
 --- a/PlugIns/STBICodec/src/OgreSTBICodec.cpp
 +++ b/PlugIns/STBICodec/src/OgreSTBICodec.cpp
 @@ -40,7 +40,7 @@ THE SOFTWARE.

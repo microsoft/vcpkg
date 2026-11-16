@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         use-cmake-intl.patch
         fix-qml-dependencies.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
