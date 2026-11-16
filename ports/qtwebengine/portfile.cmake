@@ -15,6 +15,7 @@ set(${PORT}_PATCHES
       "include-dir-order.diff"
       "node-wrapper-diagnostics.diff"
       "dav1d-msvc-stdatomic.patch" # https://github.com/videolan/dav1d/commit/a34e0685b9111b9eb1d7835ea7bea5b425dced73
+      "cookie-store-projection.patch" # Call unique_ptr::operator* instead of taking its address (MSVC 19.52).
 )
 
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")

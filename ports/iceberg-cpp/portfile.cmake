@@ -10,6 +10,7 @@ vcpkg_from_github(
         int128-namespace.patch # https://github.com/apache/iceberg-cpp/pull/972
         msvc-14.42-compat.patch # https://github.com/apache/iceberg-cpp/pull/986
         fix-incomplete-types.patch # Define PImpl constructors after their implementation types.
+        arrow-s3-library.patch # Arrow 26 moved S3 support into a separate library.
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ICEBERG_BUILD_STATIC)
