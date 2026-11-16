@@ -1,16 +1,27 @@
 diff --git a/config/zlib.mpb b/config/zlib.mpb
-index 8edc952..912e59b 100644
+index 8edc952..3908378 100644
 --- a/config/zlib.mpb
 +++ b/config/zlib.mpb
-@@ -14,8 +14,9 @@ feature(zlib) {
+@@ -8,14 +8,20 @@ feature(zlib) {
+     $ZLIB_LIBDIR
+     $(ZLIB_ROOT)/lib
+   }
++  expand(ZLIB_LIBNAME) {
++    $ZLIB_LIBNAME
++    libz
++  }
+ 
+   includes += "$(ZLIB_INCDIR)"
+   libpaths += "$(ZLIB_LIBDIR)"
    macros   += ZLIB
  
    specific(prop:windows) {
 -    Debug::lit_libs += zd
 -    Release::lit_libs += z
 +    // zlib 1.4 names its MSVC libraries libz, libzd, libzs and libzsd,
-+    // which matches libz with the lib_modifier MPC adds
-+    libs += libz
++    // which matches libz with the lib_modifier MPC adds. Set ZLIB_LIBNAME
++    // to z for older zlib versions that use z, zd, zs and zsd.
++    libs += $(ZLIB_LIBNAME)
    } else {
      lit_libs += z
    }
