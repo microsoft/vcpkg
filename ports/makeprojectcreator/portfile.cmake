@@ -1,4 +1,3 @@
-# MPC has no releases of its own, it is tagged together with each ACE/TAO release
 string(REPLACE "." "_" VERSION_TAG "${VERSION}")
 
 vcpkg_from_github(
