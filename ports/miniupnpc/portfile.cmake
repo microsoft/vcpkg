@@ -25,12 +25,18 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "/lib/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
 
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/bin/external-ip.sh"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/external-ip.sh"
+)
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/miniupnpc/miniupnpc_declspec.h"
+        "!defined(MINIUPNP_STATICLIB)" "0")
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/bin"
         "${CURRENT_PACKAGES_DIR}/debug/bin"
