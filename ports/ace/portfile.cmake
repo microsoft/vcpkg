@@ -111,11 +111,23 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
+  # TAO is not below ACE_ROOT, so MPC leaves $(ACE_ROOT) in the generated
+  # projects. Point ACE_ROOT and TAO_ROOT at the copy of the source tree that
+  # is built for each configuration, otherwise all configurations build
+  # into the shared source tree
+  foreach(config IN ITEMS rel dbg)
+    set(MSBUILD_ROOT_OPTIONS_${config}
+      "/p:ACE_ROOT=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${config}/ACE"
+      "/p:TAO_ROOT=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${config}/TAO")
+  endforeach()
+
   file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
   vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH "${PROJECT_SUBPATH}"
     OPTIONS "/p:UseMultiToolTask=false" # tao_idl uses static temp file buffers; parallel custom builds cause mkstemp name collisions on Windows
+    OPTIONS_RELEASE ${MSBUILD_ROOT_OPTIONS_rel}
+    OPTIONS_DEBUG ${MSBUILD_ROOT_OPTIONS_dbg}
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -256,6 +268,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_msbuild_install(
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH "${PROJECT_SUBPATH_XML}"
+      OPTIONS_RELEASE ${MSBUILD_ROOT_OPTIONS_rel}
+      OPTIONS_DEBUG ${MSBUILD_ROOT_OPTIONS_dbg}
     )
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
