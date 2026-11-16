@@ -2,11 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BehaviorTree/BehaviorTree.CPP
     REF "${VERSION}"
-    SHA512 8a81d7bc9150bd91c802a3ff6759e20ab7f6c284e689516c254813bdbc29ede2be4f552f7061e3ec7c4bbe2094c18b3a7b848efc76df712089cfe9221fde9f26
+    SHA512 3a3b32a1d2a6e1fb898a60612c54ddce8f877c0ac4288e7aa8e2c9827c87bffff69f68e36cb50f4db49bd47cca322306c99c841aefc3e453c2ef474455446d5c
     HEAD_REF master
     PATCHES
         remove-source-charset.diff # because vcpkg's default toolchain uses /utf-8 which is incompatible with /source-charset
         fix-dependencies.patch
+        mtr_enabled.patch # https://github.com/BehaviorTree/BehaviorTree.CPP/pull/1291
+		warning_as_error.patch # Maintainer rejected an option for this: https://github.com/BehaviorTree/BehaviorTree.CPP/pull/1293
 )
 
 # Set BTCPP_SHARED_LIBS based on VCPKG_LIBRARY_LINKAGE

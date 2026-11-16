@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-given-parsetrigrams.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -58,6 +59,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(${install_options})
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6sonnet CONFIG_PATH lib/cmake/KF6Sonnet)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6sonnet/KF6SonnetTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 
 if(NOT VCPKG_CROSSCOMPILING)
     vcpkg_copy_tools(TOOL_NAMES parsetrigrams6 AUTO_CLEAN)
