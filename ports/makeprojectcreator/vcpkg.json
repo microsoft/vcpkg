@@ -1,0 +1,8 @@
+{
+  "name": "makeprojectcreator",
+  "version": "8.0.8",
+  "maintainers": "Johnny Willemsen <jwillemsen@remedy.nl>",
+  "description": "MPC, the Makefile, Project, and Workspace Creator. Perl based tool used to generate build files for ACE, TAO, TAOX11 and related projects",
+  "homepage": "https://github.com/DOCGroup/MPC",
+  "license": null
+}
