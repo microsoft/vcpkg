@@ -11,12 +11,6 @@ vcpkg_from_github(
         zlib.patch
 )
 
-file(REMOVE_RECURSE
-    "${SOURCE_PATH}/.github"
-    "${SOURCE_PATH}/.gitignore"
-    "${SOURCE_PATH}/_typos.toml"
-)
-
 file(INSTALL "${SOURCE_PATH}/"
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
     USE_SOURCE_PERMISSIONS
