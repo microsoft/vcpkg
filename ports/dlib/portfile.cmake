@@ -42,6 +42,7 @@ vcpkg_cmake_configure(
         -DDLIB_USE_LAPACK=ON
         -DDLIB_GIF_SUPPORT=OFF
         -DDLIB_WEBP_SUPPORT=OFF
+        -DDLIB_JXL_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DDLIB_USE_FFMPEG=OFF
         -DDLIB_NO_GUI_SUPPORT=ON
