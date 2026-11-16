@@ -2541,7 +2541,7 @@
       "port-version": 0
     },
     "detours": {
-      "baseline": "2025-06-20",
+      "baseline": "2026-09-29",
       "port-version": 0
     },
     "devicenameresolver": {
