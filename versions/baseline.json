@@ -10396,10 +10396,6 @@
       "baseline": "0.8.0",
       "port-version": 0
     },
-    "tinycthread": {
-      "baseline": "2019-08-06",
-      "port-version": 3
-    },
     "tinydir": {
       "baseline": "1.2.6",
       "port-version": 0
