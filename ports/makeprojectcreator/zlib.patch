@@ -1,19 +1,16 @@
 diff --git a/config/zlib.mpb b/config/zlib.mpb
-index 8edc952..af8ee02 100644
+index 8edc952..912e59b 100644
 --- a/config/zlib.mpb
 +++ b/config/zlib.mpb
-@@ -17,6 +17,13 @@ feature(zlib) {
-     Debug::lit_libs += zd
-     Release::lit_libs += z
+@@ -14,8 +14,9 @@ feature(zlib) {
+   macros   += ZLIB
+ 
+   specific(prop:windows) {
+-    Debug::lit_libs += zd
+-    Release::lit_libs += z
++    // zlib 1.4 names its MSVC libraries libz, libzd, libzs and libzsd,
++    // which matches libz with the lib_modifier MPC adds
++    libs += libz
    } else {
--    lit_libs += z
-+    Debug::lit_libs += zd
-+    Release::lit_libs += z
-+  }
-+  specific(prop:static) {
-+    Debug::lit_libs += zsd
-+    Debug::lit_libs -= zd
-+    Release::lit_libs += zs
-+    Release::lit_libs -= z
+     lit_libs += z
    }
- }
