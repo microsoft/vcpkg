@@ -4965,7 +4965,7 @@
       "port-version": 0
     },
     "libcbor": {
-      "baseline": "0.14.0",
+      "baseline": "0.14.1",
       "port-version": 0
     },
     "libcds": {
