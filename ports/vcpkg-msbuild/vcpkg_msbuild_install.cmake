@@ -71,7 +71,7 @@ function(vcpkg_msbuild_install)
         "/p:EnforceProcessCountAcrossBuilds=true"
         "/m:${VCPKG_CONCURRENCY}"
         "-maxCpuCount:${VCPKG_CONCURRENCY}"
-        # other Properties 
+        # other Properties
         "/p:Platform=${arg_PLATFORM}"
         "/p:PlatformTarget=${TRIPLET_SYSTEM_ARCH}"
         "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"

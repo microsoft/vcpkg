@@ -116,4 +116,17 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG_INIT " /nologo ")
     string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG_INIT " /nologo ${VCPKG_LINKER_FLAGS} ${VCPKG_LINKER_FLAGS_DEBUG} ")
+
+    # Static libraries must hold object code, not link-time code generation IL.
+    set(z_vcpkg_static_no_ipo "${CMAKE_CURRENT_LIST_DIR}/z_vcpkg_static_no_ipo.cmake")
+    if(DEFINED BUILD_SHARED_LIBS AND NOT BUILD_SHARED_LIBS
+       AND NOT CMAKE_USER_MAKE_RULES_OVERRIDE STREQUAL z_vcpkg_static_no_ipo)
+        if(CMAKE_USER_MAKE_RULES_OVERRIDE)
+            set(Z_VCPKG_CHAINLOAD_USER_MAKE_RULES_OVERRIDE "${CMAKE_USER_MAKE_RULES_OVERRIDE}")
+            # CMake passes CMAKE_USER_MAKE_RULES_OVERRIDE to try_compile projects.
+            list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES Z_VCPKG_CHAINLOAD_USER_MAKE_RULES_OVERRIDE)
+        endif()
+        set(CMAKE_USER_MAKE_RULES_OVERRIDE "${z_vcpkg_static_no_ipo}")
+    endif()
+    unset(z_vcpkg_static_no_ipo)
 endif()

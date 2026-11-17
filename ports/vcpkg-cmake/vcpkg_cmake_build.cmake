@@ -22,6 +22,12 @@ function(vcpkg_cmake_build)
             "/p:VCPkgLocalAppDataDisabled=true"
             "/p:UseIntelMKL=No"
         )
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            # The generator writes INTERPROCEDURAL_OPTIMIZATION as this project
+            # property, and LTCG IL in a static library only links with the
+            # compiler version that wrote it.
+            vcpkg_list(APPEND build_param "/p:WholeProgramOptimization=false")
+        endif()
         vcpkg_list(SET parallel_param "/m")
     elseif("${Z_VCPKG_CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
         # No options are currently added for nmake builds
