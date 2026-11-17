@@ -8,6 +8,8 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        aeveon-decoder-include-root.patch
 )
 
 vcpkg_check_features(
@@ -27,11 +29,15 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 set(VCPKG_BUILD_TYPE release) # no lib binaries
 
+# Bundled Aeveon projects derive versions from git describe; keep it out of enclosing checkouts.
+set(ENV{GIT_CEILING_DIRECTORIES} "${CURRENT_BUILDTREES_DIR}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # writes to include/dv-processing/version.hpp
     OPTIONS
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DAEVEON_CONTROL_CODEGEN_PYTHON=${PYTHON3}"
         ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_lz4=ON
@@ -44,6 +50,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME aeveon_decoder CONFIG_PATH lib/cmake/aeveon_decoder DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME aeveon-control CONFIG_PATH lib/cmake/aeveon-control)
 
 if(DVP_ENABLE_UTILITIES)
     vcpkg_copy_tools(TOOL_NAMES dv-filestat dv-imu-bias-estimation dv-list-devices dv-tcpstat AUTO_CLEAN)
@@ -52,4 +60,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib") # pkgconfig only, but incomplete
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/external/glarus-control/LICENSE")
