@@ -4,8 +4,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ethindp/prism
-  REF v0.18.3
-  SHA512 a6cec5e04cf332dbe4ad75e8353559931fff6885b16f41304f73489f6dd236a8c014dc6b32f7d8c8838e4e39f2969c095403c5c8a5b8fd2218197f9eb35225fd
+  REF v0.18.4
+  SHA512 4ec5a02dc16b96e165b0d2c13b5c
   HEAD_REF master
 )
 vcpkg_check_features(
@@ -44,4 +44,5 @@ vcpkg_install_copyright(FILE_LIST
   "${SOURCE_PATH}/LICENSES/djinni/LICENSE"
   "${SOURCE_PATH}/LICENSES/dr_wav/LICENSE"
   "${SOURCE_PATH}/LICENSES/moderncom/LICENSE"
+  "${SOURCE_PATH}/LICENSES/wayland-protocols/LICENSE"
 )
