@@ -1,6 +1,7 @@
 {
   "name": "ixwebsocket",
   "version-semver": "12.1.0",
+  "port-version": 1,
   "description": "Lightweight WebSocket Client and Server + HTTP Client and Server",
   "homepage": "https://github.com/machinezone/IXWebSocket",
   "license": "BSD-3-Clause",
@@ -12,11 +13,11 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zlib"
+    }
   ],
   "default-features": [
-    "ssl"
+    "ssl",
+    "zlib"
   ],
   "features": {
     "mbedtls": {
@@ -67,6 +68,12 @@
           ],
           "platform": "!uwp & !windows & !osx & !ios"
         }
+      ]
+    },
+    "zlib": {
+      "description": "WebSocket per-message deflate and HTTP gzip compression",
+      "dependencies": [
+        "zlib"
       ]
     }
   }

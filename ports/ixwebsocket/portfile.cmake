@@ -9,11 +9,14 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        zlib      USE_ZLIB
         openssl   USE_OPEN_SSL
         mbedtls   USE_MBED_TLS
         sectransp USE_SECURE_TRANSPORT
 )
 
+# Compression does not select a TLS backend.
+list(REMOVE_ITEM FEATURES "zlib")
 string(COMPARE NOTEQUAL "${FEATURES}" "core" USE_TLS)
 
 list(REMOVE_ITEM FEATURES "ssl")
