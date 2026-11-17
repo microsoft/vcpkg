@@ -17,6 +17,24 @@ if(VCPKG_TARGET_IS_ANDROID)
         endif()
         set(ANDROID_SDK_ROOT "$ENV{ANDROID_HOME}")
     endif()
+
+    # The SDK platform for compiling Java code. Like Qt: its default if installed, else the newest one.
+    # It is passed explicitly so that Qt and the Gradle setup of vcpkg-qt-android-gradle agree on it.
+    if(NOT QT_ANDROID_API_USED_FOR_JAVA)
+        set(QT_ANDROID_API_USED_FOR_JAVA "android-37.0")
+        if(NOT EXISTS "${ANDROID_SDK_ROOT}/platforms/${QT_ANDROID_API_USED_FOR_JAVA}/android.jar")
+            file(GLOB android_platforms LIST_DIRECTORIES true RELATIVE "${ANDROID_SDK_ROOT}/platforms"
+                "${ANDROID_SDK_ROOT}/platforms/android-*")
+            list(FILTER android_platforms INCLUDE REGEX "^android-[0-9]+(\\.[0-9]+)?$")
+            list(SORT android_platforms COMPARE NATURAL ORDER DESCENDING)
+            foreach(android_platform IN LISTS android_platforms)
+                if(EXISTS "${ANDROID_SDK_ROOT}/platforms/${android_platform}/android.jar")
+                    set(QT_ANDROID_API_USED_FOR_JAVA "${android_platform}")
+                    break()
+                endif()
+            endforeach()
+        endif()
+    endif()
 endif()
 
 function(qt_download_submodule_impl)
@@ -177,7 +195,11 @@ function(qt_cmake_configure)
     list(APPEND _qarg_OPTIONS "-DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON")
 
     if(VCPKG_TARGET_IS_ANDROID)
-        list(APPEND _qarg_OPTIONS "-DANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}")
+        list(APPEND _qarg_OPTIONS
+            "-DANDROID_SDK_ROOT=${ANDROID_SDK_ROOT}"
+            "-DQT_ANDROID_API_USED_FOR_JAVA=${QT_ANDROID_API_USED_FOR_JAVA}"
+        )
+        list(APPEND _qarg_OPTIONS_MAYBE_UNUSED QT_ANDROID_API_USED_FOR_JAVA)
     endif()
 
     if(NOT PORT MATCHES "qtbase")
@@ -400,7 +422,7 @@ function(qt_install_submodule)
 
         # Qt builds its Java parts with Gradle, which must not download anything.
         if(COMMAND vcpkg_qt_android_gradle_setup)
-            vcpkg_qt_android_gradle_setup(SOURCE_PATH "${SOURCE_PATH}")
+            vcpkg_qt_android_gradle_setup(SOURCE_PATH "${SOURCE_PATH}" COMPILE_SDK "${QT_ANDROID_API_USED_FOR_JAVA}")
         else()
             file(GLOB_RECURSE gradle_files LIST_DIRECTORIES false "${SOURCE_PATH}/src/*.gradle")
             foreach(gradle_file IN LISTS gradle_files)

@@ -4,7 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg-qt-android-gradle-inputs.cmake")
 
 set(Z_VCPKG_QT_ANDROID_GRADLE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
-# vcpkg_qt_android_gradle_setup(SOURCE_PATH <dir>)
+# vcpkg_qt_android_gradle_setup(SOURCE_PATH <dir> [COMPILE_SDK <android-N[.M]>])
 #
 # Points GRADLE_USER_HOME to a fresh directory in the buildtree which contains
 # - the Gradle distribution expected by Qt's Gradle wrapper, so the wrapper doesn't download it,
@@ -14,8 +14,11 @@ set(Z_VCPKG_QT_ANDROID_GRADLE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 # SOURCE_PATH are the sources of the Qt module being built. For qtbase they must match the
 # sources the artifacts were generated from; other modules are checked for JAR projects with
 # different dependencies.
+# COMPILE_SDK is the SDK platform Qt compiles the Java code against. Qt's JAR projects only
+# take the major API level, so for a minor platform (e.g. android-37.2) an init script adds the
+# minor API level to their compileSdk.
 function(vcpkg_qt_android_gradle_setup)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;COMPILE_SDK" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
@@ -72,6 +75,16 @@ function(vcpkg_qt_android_gradle_setup)
         "${gradle_home}/init.d/vcpkg-offline-repository.gradle" @ONLY
     )
     file(COPY "${Z_VCPKG_QT_ANDROID_GRADLE_DIR}/gradle.properties" DESTINATION "${gradle_home}")
+    file(COPY "${Z_VCPKG_QT_ANDROID_GRADLE_DIR}/vcpkg-compile-sdk.gradle" DESTINATION "${gradle_home}/init.d")
+    if(arg_COMPILE_SDK MATCHES "^android-([0-9]+)\\.([1-9][0-9]*)$")
+        file(APPEND "${gradle_home}/gradle.properties"
+            "vcpkg.compileSdkMinor=${CMAKE_MATCH_2}\n"
+            # Newer than the maximum API level of the Android Gradle Plugin used by Qt.
+            "android.suppressUnsupportedCompileSdk=${CMAKE_MATCH_1}.${CMAKE_MATCH_2}\n"
+        )
+    elseif(arg_COMPILE_SDK AND NOT arg_COMPILE_SDK MATCHES "^android-[0-9]+(\\.0)?$")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: unexpected COMPILE_SDK '${arg_COMPILE_SDK}'.")
+    endif()
 
     # The Android Gradle Plugin falls back to ~/.android, which doesn't exist
     # when building as a user without home directory (e.g. in CI containers).
