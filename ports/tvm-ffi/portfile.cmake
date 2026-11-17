@@ -28,6 +28,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 vcpkg_copy_pdbs()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # Upstream's tvm_ffi_static target propagates TVM_FFI_EXPORTS to consumers.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/tvm/ffi/c_api.h" "#ifdef TVM_FFI_EXPORTS" "#if 1")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/NOTICE")
