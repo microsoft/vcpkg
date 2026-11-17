@@ -29,8 +29,11 @@ endif()
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # Upstream's tvm_ffi_static target propagates TVM_FFI_EXPORTS to consumers.
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/tvm/ffi/c_api.h" "#ifdef TVM_FFI_EXPORTS" "#if 1")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/include/tvm/ffi/c_api.h"
+        "#define TVM_FFI_DLL __declspec(dllimport)"
+        "#define TVM_FFI_DLL"
+    )
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
