@@ -33,7 +33,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/icey)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(icey_pc_requires "libuv-static libllhttp minizip openssl")
+    set(icey_pc_requires "libllhttp minizip openssl")
+    if(NOT VCPKG_TARGET_IS_APPLE)
+        string(PREPEND icey_pc_requires "libuv-static ")
+    endif()
     if("ffmpeg" IN_LIST FEATURES)
         string(APPEND icey_pc_requires " libavcodec libavformat libavutil libswscale libswresample libavdevice libavfilter")
     endif()
@@ -46,6 +49,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         )
     elseif(VCPKG_TARGET_IS_APPLE)
         set(icey_pc_libs
+            # libuv-static.pc uses GNU -l: syntax, which the Apple linker does not support.
+            -luv -lpthread -lm
             -framework CoreAudio -framework CoreFoundation -framework Foundation
             -framework AVFoundation -framework CoreMedia
         )
