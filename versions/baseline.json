@@ -5785,7 +5785,7 @@
       "port-version": 0
     },
     "libsecret": {
-      "baseline": "0.21.7",
+      "baseline": "0.21.8.2",
       "port-version": 0
     },
     "libsercomm": {
