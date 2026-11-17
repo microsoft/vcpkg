@@ -18,6 +18,23 @@ if("tao" IN_LIST FEATURES)
   set(TAO_ROOT "${SOURCE_PATH}/TAO")
   set(ENV{TAO_ROOT} "${TAO_ROOT}")
   set(WORKSPACE "${TAO_ROOT}/TAO_ACE")
+  if(VCPKG_TARGET_IS_WINDOWS)
+    # TAO_ACE.mwc refers to the ACE projects through $(ACE_ROOT), which results
+    # in absolute paths into the source tree in the generated solution. Generate
+    # the same workspace at the top of the source tree with relative paths
+    file(STRINGS "${WORKSPACE}.mwc" tao_ace_mwc_lines)
+    set(tao_ace_mwc "")
+    foreach(line IN LISTS tao_ace_mwc_lines)
+      if(line MATCHES "^([ \t]*)\\$\\(ACE_ROOT\\)/(.*)$")
+        set(line "${CMAKE_MATCH_1}ACE/${CMAKE_MATCH_2}")
+      elseif(NOT line MATCHES "^[ \t]*(//.*|.*{|})?[ \t]*$" AND line MATCHES "^([ \t]*)(.*)$")
+        set(line "${CMAKE_MATCH_1}TAO/${CMAKE_MATCH_2}")
+      endif()
+      string(APPEND tao_ace_mwc "${line}\n")
+    endforeach()
+    set(WORKSPACE "${SOURCE_PATH}/TAO_ACE")
+    file(WRITE "${WORKSPACE}.mwc" "${tao_ace_mwc}")
+  endif()
 else()
   set(WORKSPACE "${ACE_ROOT}/ace/ace")
 endif()
@@ -111,7 +128,7 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  # TAO is not below ACE_ROOT, so MPC leaves $(ACE_ROOT) in the generated
+  # TAO is not below ACE_ROOT, so MPC leaves $(ACE_ROOT) in the generated TAO
   # projects. Point ACE_ROOT and TAO_ROOT at the copy of the source tree that
   # is built for each configuration, otherwise all configurations build
   # into the shared source tree
