@@ -217,7 +217,7 @@
       "port-version": 0
     },
     "apsi": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "aravis": {
@@ -721,7 +721,7 @@
       "port-version": 0
     },
     "bext-sml2": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "bext-text": {
@@ -3289,7 +3289,7 @@
       "port-version": 0
     },
     "freexl": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 2
     },
     "frei0r": {
@@ -3613,11 +3613,11 @@
       "port-version": 0
     },
     "gpgme": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "gpgmepp": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "gpgmm": {
@@ -4025,7 +4025,7 @@
       "port-version": 0
     },
     "imageinfo": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "imath": {
@@ -4413,7 +4413,7 @@
       "port-version": 1
     },
     "kdstatemachineeditor": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 2
     },
     "kdutils": {
@@ -7333,7 +7333,7 @@
       "port-version": 4
     },
     "nonstd-bit-lite": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "nonstd-scope-lite": {
@@ -9173,7 +9173,7 @@
       "port-version": 1
     },
     "rsm-mmio": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "rsocket": {
@@ -9685,7 +9685,7 @@
       "port-version": 0
     },
     "smpeg2": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 11
     },
     "snap7": {
@@ -9789,7 +9789,7 @@
       "port-version": 0
     },
     "sparrow-ipc": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "sparsehash": {
@@ -9865,7 +9865,7 @@
       "port-version": 0
     },
     "spookyhash": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "spout2": {
@@ -9881,7 +9881,7 @@
       "port-version": 2
     },
     "spscqueue": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "spz": {
@@ -10357,7 +10357,7 @@
       "port-version": 0
     },
     "time-shield-cpp": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "tinkerforge": {
@@ -10689,7 +10689,7 @@
       "port-version": 0
     },
     "unittest-cpp": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 6
     },
     "unixodbc": {
@@ -11281,7 +11281,7 @@
       "port-version": 0
     },
     "wxchartdir": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 2
     },
     "wxcharts": {

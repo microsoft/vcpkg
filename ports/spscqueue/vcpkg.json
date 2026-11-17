@@ -1,6 +1,6 @@
 {
   "name": "spscqueue",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A bounded single-producer single-consumer wait-free and lock-free queue written in C++20",
   "homepage": "https://github.com/rigtorp/SPSCQueue",
   "dependencies": [
