@@ -1,0 +1,35 @@
+diff --git a/external/glarus-decoder/CMakeLists.txt b/external/glarus-decoder/CMakeLists.txt
+index 4cdd4a6..2a8c1a6 100644
+--- a/external/glarus-decoder/CMakeLists.txt
++++ b/external/glarus-decoder/CMakeLists.txt
+@@ -67,7 +67,7 @@ set_target_properties(aeveon_decoder_core PROPERTIES EXPORT_NAME core)
+ 
+ target_include_directories(
+ 	aeveon_decoder_core INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/core>
+-								  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/aeveon_decoder_core>)
++								  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ 
+ target_compile_features(aeveon_decoder_core INTERFACE cxx_std_20)
+ 
+@@ -78,7 +78,7 @@ if(AEVEON_DECODER_BUILD_SINKS)
+ 	set_target_properties(aeveon_decoder_sinks PROPERTIES EXPORT_NAME sinks)
+ 	target_include_directories(
+ 		aeveon_decoder_sinks INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/sinks>
+-									   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/aeveon_decoder_sinks>)
++									   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ 	# Linking core brings the core include root, so a sinks consumer can include both namespaces; a core-only consumer
+ 	# gets neither sinks libs nor headers.
+ 	target_link_libraries(aeveon_decoder_sinks INTERFACE aeveon_decoder_core opencv_core opencv_imgproc)
+@@ -109,10 +109,10 @@ if(AEVEON_DECODER_INSTALL)
+ 
+ 	# Mirror the split include roots in the install tree so the same isolation holds for find_package() consumers.
+ 	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/core/aeveon_decoder
+-			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aeveon_decoder_core)
++			DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 	if(AEVEON_DECODER_BUILD_SINKS)
+ 		install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/sinks/aeveon_decoder
+-				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/aeveon_decoder_sinks)
++				DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 	endif()
+ 
+ 	set(AEVEON_DECODER_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/aeveon_decoder)
