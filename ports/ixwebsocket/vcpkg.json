@@ -42,6 +42,7 @@
       "dependencies": [
         {
           "name": "ixwebsocket",
+          "default-features": false,
           "features": [
             "mbedtls"
           ],
@@ -49,6 +50,7 @@
         },
         {
           "name": "ixwebsocket",
+          "default-features": false,
           "features": [
             "sectransp"
           ],
@@ -56,6 +58,7 @@
         },
         {
           "name": "ixwebsocket",
+          "default-features": false,
           "features": [
             "mbedtls"
           ],
@@ -63,6 +66,7 @@
         },
         {
           "name": "ixwebsocket",
+          "default-features": false,
           "features": [
             "openssl"
           ],
