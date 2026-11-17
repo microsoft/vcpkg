@@ -3,12 +3,12 @@
 #
 # C++ releases are tagged cpp-v<version> (like npm-v*/python-v*): a bare
 # v<version> is the tag release.yml cuts for the Rust crates, which version
-# independently.
+# independently. REF is the commit of that tag, so the source cannot move.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cityjson/flatcitybuf
-    REF "cpp-v${VERSION}"
-    SHA512 6991f3d82b4e0f331eea87d3234e87a1439c1c403d4e3d8489b8612451b098fbbc51f3d27282eeeb3a319623c10eda110893807ed38dbfc97b893279cbbd0986
+    REF fb651f9e4800675972e0c22e8c73897507fe2ced # cpp-v0.10.0
+    SHA512 6e5b3d6b4dee5ad2b0ea0c8eb189edc649fc4ab29b78bdc92e4c8c1e25d2f4134cf1567266844ff3341710fed25f27406bba143bb49caf00c0dcef204778667f
     HEAD_REF main
     PATCHES
         relax-flatbuffers-version-check.patch
