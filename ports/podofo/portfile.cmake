@@ -2,7 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO podofo/podofo
     REF "${VERSION}"
-    SHA512 429cce822d9b2a4158540d01c61ce7dd2e543413cd5b2d188a9b33d7aa063c138382568383b3bccda0d787495992d1cac10a6321b92a639661f60e241ac7c484
+    SHA512 e02b0b69ec720c0b89035c733ffb99f200f4624d61b79c1e6605166eec5c51cef6448987f0116c5feb34bd87850fedf248b6f98374661cb832faff72e4b8eefe
+    PATCHES
+        skip-pkg_config-check.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/3rdparty/date"
@@ -16,8 +18,15 @@ file(REMOVE_RECURSE
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fontconfig  PODOFO_WITH_FONTMANAGER
+        fontmanager PODOFO_WITH_FONTMANAGER
 )
+
+if(VCPKG_TARGET_IS_WINDOWS AND "fontmanager" IN_LIST FEATURES AND NOT "fontconfig" IN_LIST FEATURES)
+    # Use Win32 GDI when fontmanager is requested without Fontconfig.
+    list(APPEND FEATURE_OPTIONS
+        -DPODOFO_WITH_WIN32GDI_FONT_SEARCH=ON
+    )
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PODOFO_BUILD_STATIC)
 
@@ -25,7 +34,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPKG_CONFIG_FOUND=true # enable pc file for shared linkage
         -DPODOFO_BUILD_LIB_ONLY=1
         -DPODOFO_BUILD_STATIC=${PODOFO_BUILD_STATIC}
         -DPODOFO_DEVENDOR_DATE=1
@@ -48,4 +56,9 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LGPL" "${SOURCE_PATH}/COPYING.MPL")
+
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING.LGPL"
+    "${SOURCE_PATH}/COPYING.MPL"
+    "${SOURCE_PATH}/NOTICE"
+)
