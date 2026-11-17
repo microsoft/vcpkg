@@ -8793,7 +8793,7 @@
       "port-version": 0
     },
     "qtwebengine": {
-      "baseline": "6.140.0-rc",
+      "baseline": "6.140.0",
       "port-version": 0
     },
     "qtwebsockets": {
