@@ -11,6 +11,10 @@
       "platform": "windows"
     },
     {
+      "name": "libunwind",
+      "platform": "linux"
+    },
+    {
       "name": "llvm",
       "default-features": false,
       "features": [

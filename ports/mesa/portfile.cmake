@@ -51,6 +51,12 @@ list(APPEND MESA_OPTIONS -Ddisplay-info=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
 
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_APPLE)
+    list(APPEND MESA_OPTIONS -Dlibunwind=enabled)
+else()
+    list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
+endif()
+
 if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURES)
     list(APPEND MESA_ADDITIONAL_BINARIES
         "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
@@ -148,6 +154,20 @@ vcpkg_configure_meson(
         ${MESA_ADDITIONAL_PROPERTIES}
 )
 vcpkg_install_meson()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    foreach(component IN ITEMS "egl;EGL" "glesv1_cm;GLESv1_CM_mesa" "glesv2;GLESv2_mesa")
+        list(GET component 0 pc_name)
+        list(GET component 1 library_name)
+        foreach(config IN ITEMS "" "/debug")
+            set(pc_file "${CURRENT_PACKAGES_DIR}${config}/lib/pkgconfig/${pc_name}.pc")
+            if(EXISTS "${pc_file}")
+                vcpkg_replace_string("${pc_file}" "-l${library_name}" "-llib${library_name}")
+            endif()
+        endforeach()
+    endforeach()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
