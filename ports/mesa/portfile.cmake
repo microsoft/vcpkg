@@ -48,14 +48,9 @@ endif()
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Ddisplay-info=disabled)
+list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
-
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_APPLE)
-    list(APPEND MESA_OPTIONS -Dlibunwind=enabled)
-else()
-    list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
-endif()
 
 if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURES)
     list(APPEND MESA_ADDITIONAL_BINARIES
