@@ -67,12 +67,36 @@ if(_PythonFinder_WantLibs)
     )
 
     if(_PythonFinder_WantInterp)
+        # Python's libraries and headers above come from the target triplet,
+        # but the interpreter must run on the build host. During a cross build,
+        # use the host triplet's interpreter package.
+        set(_vcpkg_python_interpreter_triplet "${VCPKG_TARGET_TRIPLET}")
+        if(NOT "${VCPKG_HOST_TRIPLET}" STREQUAL ""
+            AND NOT "${VCPKG_HOST_TRIPLET}" STREQUAL "${VCPKG_TARGET_TRIPLET}")
+            set(_vcpkg_python_interpreter_triplet "${VCPKG_HOST_TRIPLET}")
+        endif()
+
         find_program(
             ${_PythonFinder_PREFIX}_EXECUTABLE
             NAMES "python" "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
-            PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3"
+            PATHS "${_VCPKG_INSTALLED_DIR}/${_vcpkg_python_interpreter_triplet}/tools/python3"
             NO_DEFAULT_PATH
         )
+
+        # FindPython models a separate debug interpreter on Windows. Use the
+        # same triplet's Debug executable so it can run on the build host.
+        if(WIN32)
+            find_program(
+                _vcpkg_python_debug
+                NAMES "python_d"
+                PATHS "${_VCPKG_INSTALLED_DIR}/${_vcpkg_python_interpreter_triplet}/debug/tools/python3"
+                NO_DEFAULT_PATH
+            )
+            if(_vcpkg_python_debug)
+                set(_${_PythonFinder_PREFIX}_EXECUTABLE_DEBUG "${_vcpkg_python_debug}")
+            endif()
+        endif()
+        unset(_vcpkg_python_interpreter_triplet)
     endif()
 
     # These are duplicated as normal variables to nullify FindPython's checksum verifications.

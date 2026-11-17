@@ -1,0 +1,26 @@
+diff --git a/Python/generated_cases.c.h b/Python/generated_cases.c.h
+index 6269016..9505573 100644
+--- a/Python/generated_cases.c.h
++++ b/Python/generated_cases.c.h
+@@ -7659,7 +7659,9 @@
+                 assert(INLINE_CACHE_ENTRIES_SEND == INLINE_CACHE_ENTRIES_FOR_ITER);
+                 #if TIER_ONE && defined(Py_DEBUG)
+                 if (!PyStackRef_IsNone(frame->f_executable)) {
+-                    int i = frame->instr_ptr - _PyFrame_GetBytecode(frame);
++                    int i = Py_SAFE_DOWNCAST(
++                        frame->instr_ptr - _PyFrame_GetBytecode(frame), Py_ssize_t, int
++                    );
+                     int opcode = _Py_GetBaseCodeUnit(_PyFrame_GetCode(frame), i).op.code;
+                     assert(opcode == SEND || opcode == FOR_ITER);
+                 }
+@@ -12356,7 +12358,9 @@
+             assert(INLINE_CACHE_ENTRIES_SEND == INLINE_CACHE_ENTRIES_FOR_ITER);
+             #if TIER_ONE && defined(Py_DEBUG)
+             if (!PyStackRef_IsNone(frame->f_executable)) {
+-                int i = frame->instr_ptr - _PyFrame_GetBytecode(frame);
++                int i = Py_SAFE_DOWNCAST(
++                    frame->instr_ptr - _PyFrame_GetBytecode(frame), Py_ssize_t, int
++                );
+                 int opcode = _Py_GetBaseCodeUnit(_PyFrame_GetCode(frame), i).op.code;
+                 assert(opcode == SEND || opcode == FOR_ITER);
+             }

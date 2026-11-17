@@ -107,5 +107,28 @@ add_executable(main-python3-libraries main.c)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 check_find_python_results(EXPECTED Python3 UNEXPECTED Python3_MEOW)
 
+if(DEFINED EXPECTED_PYTHON3_EXECUTABLE AND NOT "${Python3_EXECUTABLE}" STREQUAL "${EXPECTED_PYTHON3_EXECUTABLE}")
+    message(SEND_ERROR
+        "Python3_EXECUTABLE resolved to '${Python3_EXECUTABLE}', expected the host-triplet interpreter '${EXPECTED_PYTHON3_EXECUTABLE}'")
+endif()
+
+if(WIN32 AND CMAKE_VERSION VERSION_GREATER_EQUAL 3.30)
+    if(NOT DEFINED Python3_EXECUTABLE_DEBUG)
+        message(SEND_ERROR "FindPython3 did not discover the Windows Debug interpreter")
+    elseif(NOT "${Python3_EXECUTABLE_DEBUG}" STREQUAL "${EXPECTED_PYTHON3_EXECUTABLE_DEBUG}")
+        message(SEND_ERROR
+            "Python3_EXECUTABLE_DEBUG resolved to '${Python3_EXECUTABLE_DEBUG}', expected '${EXPECTED_PYTHON3_EXECUTABLE_DEBUG}'")
+    endif()
+
+    if(NOT TARGET Python3::InterpreterMultiConfig)
+        message(SEND_ERROR "FindPython3 did not define Python3::InterpreterMultiConfig")
+    else()
+        add_custom_target(vcpkg-ci-python3-check-multiconfig-interpreter
+            COMMAND "$<TARGET_FILE:Python3::InterpreterMultiConfig>" --version
+            VERBATIM
+        )
+    endif()
+endif()
+
 target_include_directories(main-python3-libraries PRIVATE ${Python3_INCLUDE_DIRS})
 target_link_libraries(main-python3-libraries PRIVATE ${Python3_LIBRARIES})

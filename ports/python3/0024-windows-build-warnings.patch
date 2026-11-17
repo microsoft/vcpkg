@@ -1,0 +1,125 @@
+diff --git a/Modules/pyexpat.c b/Modules/pyexpat.c
+index 61f3d10..370fb40 100644
+--- a/Modules/pyexpat.c
++++ b/Modules/pyexpat.c
+@@ -11,8 +11,20 @@
+ #include <stdbool.h>
+ #include <stddef.h>               // offsetof()
+ 
++/* Python's pyconfig.h and Expat's configuration header both define these
++   feature macros, but with different replacement text. Keep Expat's settings
++   local to its headers and restore Python's definitions afterwards. */
++#pragma push_macro("HAVE_FCNTL_H")
++#pragma push_macro("HAVE_SYS_STAT_H")
++#pragma push_macro("HAVE_SYS_TYPES_H")
++#undef HAVE_FCNTL_H
++#undef HAVE_SYS_STAT_H
++#undef HAVE_SYS_TYPES_H
+ #include "expat_config.h"
+ #include "expat.h"
++#pragma pop_macro("HAVE_SYS_TYPES_H")
++#pragma pop_macro("HAVE_SYS_STAT_H")
++#pragma pop_macro("HAVE_FCNTL_H")
+ #include "pyexpat.h"
+ 
+ /* Do not emit Clinic output to a file as that wreaks havoc with conditionally
+diff --git a/Modules/unicodedata.c b/Modules/unicodedata.c
+index 014990a..4b6207a 100644
+--- a/Modules/unicodedata.c
++++ b/Modules/unicodedata.c
+@@ -1499,7 +1499,7 @@ _check_alias_and_seq(Py_UCS4* code, int with_named_seq)
+ }
+ 
+ static Py_UCS4
+-parse_hex_code(const char *name, int namelen)
++parse_hex_code(const char *name, Py_ssize_t namelen)
+ {
+     if (namelen < 4 || namelen > 6) {
+         return (Py_UCS4)-1;
+diff --git a/PC/validate_ucrtbase.py b/PC/validate_ucrtbase.py
+index 0ba54ab..626e39c 100644
+--- a/PC/validate_ucrtbase.py
++++ b/PC/validate_ucrtbase.py
+@@ -3,8 +3,15 @@ This script gets the version number from ucrtbased.dll and checks
+ whether it is a version with a known issue.
+ '''
+ 
++import os
+ import sys
+ 
++vcpkg_dll_directory = os.environ.get("VCPKG_PYTHON_DLL_DIRECTORY")
++if vcpkg_dll_directory and os.path.isdir(vcpkg_dll_directory):
++    # Python 3.8 and later do not search PATH for dependent DLLs of extension
++    # modules. vcpkg places external dependency DLLs in the triplet's bin dir.
++    _vcpkg_dll_directory_handle = os.add_dll_directory(vcpkg_dll_directory)
++
+ from ctypes import (c_buffer, POINTER, byref, create_unicode_buffer,
+                     Structure, WinDLL)
+ from ctypes.wintypes import DWORD, HANDLE
+diff --git a/PCbuild/python.vcxproj b/PCbuild/python.vcxproj
+index 70dabaa..defefbe 100644
+--- a/PCbuild/python.vcxproj
++++ b/PCbuild/python.vcxproj
+@@ -133,6 +133,7 @@
+     </PropertyGroup>
+     <Exec Command='setlocal
+ set PYTHONPATH=$(PySourcePath)Lib
++set VCPKG_PYTHON_DLL_DIRECTORY=$(VcpkgPythonDllDirectory)
+ "$(OutDir)$(PyExeName)$(PyDebugExt).exe" "$(PySourcePath)PC\validate_ucrtbase.py" $(UcrtName)' ContinueOnError="true" />
+   </Target>
+   <Target Name="GeneratePythonBat" AfterTargets="AfterBuild">
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index 114cc44..0450a63 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -695,7 +695,7 @@
+   </ImportGroup>
+   <Target Name="_TriggerRegen" BeforeTargets="PrepareForBuild" DependsOnTargets="Regen" />
+ 
+-  <Target Name="_GetBuildInfo" BeforeTargets="PrepareForBuild">
++  <Target Name="_GetBuildInfo" BeforeTargets="PrepareForBuild" Condition="Exists('$(PySourcePath).git')">
+     <PropertyGroup>
+       <GIT Condition="$(GIT) == ''">git</GIT>
+       <_GIT>$(GIT)</_GIT>
+diff --git a/PCbuild/regen.targets b/PCbuild/regen.targets
+index 742597f..0643075 100644
+--- a/PCbuild/regen.targets
++++ b/PCbuild/regen.targets
+@@ -153,13 +153,15 @@
+                                  $(PySourcePath)Programs\test_frozenmain.py;
+                                  @(_OpcodeOutputs)" />
+     <_TestFrozenOutputs Include="$(PySourcePath)Programs\test_frozenmain.h" />
+-    <_LicenseSources Include="$(PySourcePath)LICENSE;
+-                              $(PySourcePath)PC\crtlicense.txt;
+-                              $(bz2Dir)LICENSE;
+-                              $(libffiDir)LICENSE;
+-                              $(zstdDir)\LICENSE;" />
+-    <_LicenseSources Include="$(opensslOutDir)LICENSE.txt" Condition="Exists('$(opensslOutDir)LICENSE.txt')" />
+-    <_LicenseSources Include="$(opensslOutDir)LICENSE" Condition="!Exists('$(opensslOutDir)LICENSE.txt')" />
++    <_LicenseSources Include="$(PySourcePath)LICENSE;$(PySourcePath)PC\crtlicense.txt" />
++    <_LicenseSources Include="$(bz2Dir)LICENSE;$(libffiDir)LICENSE;$(zstdDir)\LICENSE"
++                     Condition="'$(VcpkgPythonBuild)' != 'true'" />
++    <_LicenseSources Include="$(opensslOutDir)LICENSE.txt"
++                     Condition="'$(VcpkgPythonBuild)' != 'true' and Exists('$(opensslOutDir)LICENSE.txt')" />
++    <_LicenseSources Include="$(opensslOutDir)LICENSE"
++                     Condition="'$(VcpkgPythonBuild)' != 'true' and !Exists('$(opensslOutDir)LICENSE.txt')" />
++    <_LicenseSources Include="$(VcpkgPythonBzip2License);$(VcpkgPythonLibffiLicense);$(VcpkgPythonZstdLicense);$(VcpkgPythonOpenSslLicense)"
++                     Condition="'$(VcpkgPythonBuild)' == 'true'" />
+     <_LicenseSources Include="$(tcltkDir)tcllicense.terms;
+                               $(tcltkDir)tklicense.terms" Condition="$(IncludeTkinter)" />
+   </ItemGroup>
+diff --git a/Python/bytecodes.c b/Python/bytecodes.c
+index e17c778..63dd2f4 100644
+--- a/Python/bytecodes.c
++++ b/Python/bytecodes.c
+@@ -1398,7 +1398,9 @@ dummy_func(
+             assert(INLINE_CACHE_ENTRIES_SEND == INLINE_CACHE_ENTRIES_FOR_ITER);
+             #if TIER_ONE && defined(Py_DEBUG)
+             if (!PyStackRef_IsNone(frame->f_executable)) {
+-                int i = frame->instr_ptr - _PyFrame_GetBytecode(frame);
++                int i = Py_SAFE_DOWNCAST(
++                    frame->instr_ptr - _PyFrame_GetBytecode(frame), Py_ssize_t, int
++                );
+                 int opcode = _Py_GetBaseCodeUnit(_PyFrame_GetCode(frame), i).op.code;
+                 assert(opcode == SEND || opcode == FOR_ITER);
+             }
