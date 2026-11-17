@@ -7049,8 +7049,8 @@
       "port-version": 0
     },
     "mumps-solver": {
-      "baseline": "5.9.1",
-      "port-version": 2
+      "baseline": "5.9.2",
+      "port-version": 0
     },
     "munit": {
       "baseline": "2019-04-06",
