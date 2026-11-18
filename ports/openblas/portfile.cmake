@@ -18,6 +18,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         threads        USE_THREAD
         simplethread   USE_SIMPLE_THREADED_LEVEL3
         dynamic-arch   DYNAMIC_ARCH
+    INVERTED_FEATURES
+        lapack         BUILD_WITHOUT_LAPACK
 )
 
 # If not explicitly configured for a cross build, OpenBLAS wants to run
@@ -52,7 +54,6 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DBUILD_TESTING=OFF
-        -DBUILD_WITHOUT_LAPACK=ON
         -DNOFORTRAN=ON
     MAYBE_UNUSED_VARIABLES
         GETARCH_BINARY_DIR
