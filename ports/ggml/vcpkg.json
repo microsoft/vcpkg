@@ -1,6 +1,6 @@
 {
   "name": "ggml",
-  "version": "0.26.0",
+  "version": "1.0.0",
   "description": "Tensor library for machine learning",
   "homepage": "https://github.com/ggml-org/ggml",
   "license": "MIT",

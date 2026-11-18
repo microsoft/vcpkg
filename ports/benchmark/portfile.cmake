@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
     REF "v${VERSION}"
-    SHA512 f207a63868e0c52f31a66ff9fd0ee75183ce3aaaa0946b00a49b77836507363bac8574feef8d9da82810a3167847303d6edf939e74802ad17e5a615bbf61e372
+    SHA512 a75672db9ae72a54bb5436c3c16b2eb186eec45ef6b8b5bd0ffbc62a150bd7b8aaeeb937239d166492306b3f3c36a244be5a73253d697d24cc50961def500e0f
     HEAD_REF main
 )
 
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
         -DBENCHMARK_ENABLE_TESTING=OFF
         -DBENCHMARK_INSTALL_DOCS=OFF
         -DBENCHMARK_ENABLE_WERROR=OFF
-        ${FEATURES}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -37,7 +37,9 @@ if(BENCHMARK_INSTALL_TOOLS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/googlebenchmark")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

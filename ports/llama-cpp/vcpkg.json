@@ -1,6 +1,6 @@
 {
   "name": "llama-cpp",
-  "version-semver": "0.6.0",
+  "version-semver": "1.0.0",
   "description": "LLM inference in C/C++",
   "homepage": "https://github.com/ggml-org/llama.cpp",
   "license": "MIT AND Unlicense",
@@ -9,7 +9,10 @@
       "name": "cpp-httplib",
       "default-features": false
     },
-    "ggml",
+    {
+      "name": "ggml",
+      "version>=": "1.0.0"
+    },
     "nlohmann-json",
     {
       "name": "vcpkg-cmake",

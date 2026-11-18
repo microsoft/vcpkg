@@ -42,6 +42,7 @@ PORT_LIST = [
     "ki18n",
     "kiconthemes",
     "kidletime",
+    "kio",
     "kirigami",
     "kitemmodels",
     "kitemviews",
