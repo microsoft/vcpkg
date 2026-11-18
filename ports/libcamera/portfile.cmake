@@ -1,8 +1,9 @@
-vcpkg_from_git(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://git.libcamera.org/libcamera/libcamera.git
-    REF 058f589ae36170935e537910f2c303b1c3ea03b3
-    FETCH_REF "v${VERSION}"
+    REPO camera/libcamera
+    REF "v${VERSION}"
+    SHA512 21ada092a1944c3476e0a254fe82d2775d2eb833d931dd051bd551a9f12ae596b3cd57f3792335d4ad86479e2247d23056d30e2631aa620897d067002c88e060
     HEAD_REF master
     PATCHES
         fix-absolute-paths.patch
@@ -33,8 +34,11 @@ vcpkg_configure_meson(
         -Ddocumentation=disabled
         -Dgstreamer=enabled
         -Dlc-compliance=disabled # Test appplication
+        -Dpipelines=simple,uvcvideo
         -Dpycamera=disabled # experimental feature, going to leave for later
         -Dqcam=disabled # Test application
+        -Drpi-awb-nn=disabled
+        -Dsoftisp-gpu=disabled
         -Dtest=false # Unit tests
         -Dv4l2=enabled
         -Dudev=enabled
@@ -43,7 +47,9 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.rst")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.rst")
