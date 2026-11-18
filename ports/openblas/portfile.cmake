@@ -87,4 +87,12 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(LICENSE_FILES "${SOURCE_PATH}/LICENSE")
+if("lapack" IN_LIST FEATURES)
+    list(APPEND LICENSE_FILES
+        "${SOURCE_PATH}/lapack-netlib/LICENSE"
+        "${SOURCE_PATH}/lapack-netlib/LAPACKE/LICENSE"
+    )
+endif()
+
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
