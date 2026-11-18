@@ -70,7 +70,7 @@ index 8c018a3..f444f55 100644
      # Generator Expressions that rely on the target
 -    set(DEBUG_FEATURES "$<NOT:$<STREQUAL:${GODOTCPP_TARGET},template_release>>")
 +    # Consumers must use the same debug features as the selected prebuilt configuration.
-+    set(DEBUG_FEATURES "$<CONFIG:Debug>")
++    set(DEBUG_FEATURES "$<BUILD_INTERFACE:$<NOT:$<STREQUAL:${GODOTCPP_TARGET},template_release>>>$<INSTALL_INTERFACE:$<STREQUAL:$<TARGET_FILE:unofficial::godot::cpp>,$<TARGET_PROPERTY:unofficial::godot::cpp,IMPORTED_LOCATION_DEBUG>>>")
  
      # Suffix Generator Expression
      string(
