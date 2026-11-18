@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nats-io/nats.c
     REF "v${VERSION}"
-    SHA512 8c482b6daed5e64dc6194b4de77ae5267ff1a02309f4f15d57ea56c937643a71de08dd6646243822f0a3c507b30adf7a1a03c0891c74c3090c9b06e5364d358b
+    SHA512 8f2574a67119fa93c49990519a4b445eeea451417113ee6fc8de4792b2d400f06447001239090443f047e528a8446f9fe294d6544464622020de1e32aeb7fd7f
     HEAD_REF main
     PATCHES
         fix-sodium-dep.patch
@@ -52,11 +52,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 if(VCPKG_TARGET_IS_WINDOWS)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/cnats/cnats-config-debug.cmake")
-            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cnats/cnats-config-debug.cmake" 
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cnats/cnats-config-debug.cmake"
                 "\${_IMPORT_PREFIX}/debug/lib/natsd.dll" "\${_IMPORT_PREFIX}/debug/bin/natsd.dll")
         endif()
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/cnats/cnats-config-release.cmake")
-            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cnats/cnats-config-release.cmake" 
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/cnats/cnats-config-release.cmake"
                 "\${_IMPORT_PREFIX}/lib/nats.dll" "\${_IMPORT_PREFIX}/bin/nats.dll")
         endif()
     endif()
