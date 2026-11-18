@@ -4354,7 +4354,7 @@
     },
     "kconfig": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kconfigwidgets": {
       "baseline": "6.31.0",
@@ -4602,7 +4602,7 @@
     },
     "kguiaddons": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kholidays": {
       "baseline": "6.31.0",
@@ -4650,7 +4650,7 @@
     },
     "kitemmodels": {
       "baseline": "6.31.0",
-      "port-version": 2
+      "port-version": 3
     },
     "kitemviews": {
       "baseline": "6.31.0",
@@ -4690,7 +4690,7 @@
     },
     "knotifications": {
       "baseline": "6.31.0",
-      "port-version": 3
+      "port-version": 4
     },
     "komihash": {
       "baseline": "5.34",
