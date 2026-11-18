@@ -1,29 +1,8 @@
 diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
-index 2ec9b67..5cea7b3 100644
+index b701a36..d6dee65 100644
 --- a/cmake/config.cmake.in
 +++ b/cmake/config.cmake.in
-@@ -15,16 +15,16 @@ set(MUMPS_LAPACK_VENDOR @LAPACK_VENDOR@)
- set(MUMPS_SCALAPACK_VENDOR @SCALAPACK_VENDOR@)
- set(MUMPS_scalapack @MUMPS_scalapack@)
- 
--set(MUMPS_s_FOUND @BUILD_SINGLE@)
-+set(unofficial-mumps-solver_s_FOUND @BUILD_SINGLE@)
- set(MUMPS_SINGLE @BUILD_SINGLE@)
- 
--set(MUMPS_d_FOUND @BUILD_DOUBLE@)
-+set(unofficial-mumps-solver_d_FOUND @BUILD_DOUBLE@)
- set(MUMPS_DOUBLE @BUILD_DOUBLE@)
- 
--set(MUMPS_c_FOUND @BUILD_COMPLEX@)
-+set(unofficial-mumps-solver_c_FOUND @BUILD_COMPLEX@)
- set(MUMPS_COMPLEX @BUILD_COMPLEX@)
- 
--set(MUMPS_z_FOUND @BUILD_COMPLEX16@)
-+set(unofficial-mumps-solver_z_FOUND @BUILD_COMPLEX16@)
- set(MUMPS_COMPLEX16 @BUILD_COMPLEX16@)
- 
- if(MUMPS_parallel)
-@@ -46,13 +46,9 @@ else()
+@@ -39,13 +39,9 @@ else()
    find_dependency(LAPACK COMPONENTS ${MUMPS_LAPACK_VENDOR})
    find_dependency(BLAS)
  
@@ -40,7 +19,7 @@ index 2ec9b67..5cea7b3 100644
  endif()
  
  set(MUMPS_scotch @MUMPS_scotch@)
-@@ -140,6 +136,6 @@ if(MUMPS_openmp)
+@@ -157,6 +153,6 @@ if(MUMPS_openmp)
  endif()
  
  # all dependencies must be determined before this project's targets
