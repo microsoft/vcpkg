@@ -19,5 +19,5 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+# COPYING only refers to LICENSE
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
