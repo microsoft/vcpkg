@@ -5070,7 +5070,7 @@
     },
     "libdisasm": {
       "baseline": "0.23",
-      "port-version": 12
+      "port-version": 13
     },
     "libdivide": {
       "baseline": "5.4.0",
