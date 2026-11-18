@@ -1,0 +1,14 @@
+diff --git a/src/3rdparty/javascriptcore/JavaScriptCore/wtf/MathExtras.h b/src/3rdparty/javascriptcore/JavaScriptCore/wtf/MathExtras.h
+index bea5896..48879cb 100644
+--- a/src/3rdparty/javascriptcore/JavaScriptCore/wtf/MathExtras.h
++++ b/src/3rdparty/javascriptcore/JavaScriptCore/wtf/MathExtras.h
+@@ -151,7 +151,9 @@ inline bool signbit(double num) { return _copysign(1.0, num) < 0; }
+ inline double nextafter(double x, double y) { return _nextafter(x, y); }
+ inline float nextafterf(float x, float y) { return x > y ? x - FLT_EPSILON : x + FLT_EPSILON; }
+ 
++#if _MSC_VER < 1800
+ inline double copysign(double x, double y) { return _copysign(x, y); }
++#endif
+ 
+ // Work around a bug in Win, where atan2(+-infinity, +-infinity) yields NaN instead of specific values.
+ inline double wtf_atan2(double x, double y)
