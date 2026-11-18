@@ -307,6 +307,35 @@
       "archive": "ninja-mac-1.13.2.zip"
     },
     {
+      "name": "fastbuild",
+      "os": "windows",
+      "arch": "x64",
+      "version": "1.20",
+      "executable": "FBuild.exe",
+      "url": "https://fastbuild.org/downloads/v1.20/FASTBuild-Windows-x64-v1.20.zip",
+      "sha512": "903635f4869e8d49ac3260e114ac915ad86b77397aee44167e3d85a9d57485c634281215ff68071fd839a1152b5e3eee622b23aab327a8908816df2a78fff36f",
+      "archive": "FASTBuild-Windows-x64-v1.20.zip"
+    },
+    {
+      "name": "fastbuild",
+      "os": "linux",
+      "arch": "x64",
+      "version": "1.20",
+      "executable": "fbuild",
+      "url": "https://fastbuild.org/downloads/v1.20/FASTBuild-Linux-x64-v1.20.zip",
+      "sha512": "5d40a7835fe357a0f8e1cca5cedf96ee49de2f34c3e6d9f02974e7c03de11c5f80246aae06e1675f15a64eee2c6ece0a0e3c29bdbf80322ef3bc829140213696",
+      "archive": "FASTBuild-Linux-x64-v1.20.zip"
+    },
+    {
+      "name": "fastbuild",
+      "os": "osx",
+      "version": "1.20",
+      "executable": "FBuild",
+      "url": "https://fastbuild.org/downloads/v1.20/FASTBuild-OSX-x64+ARM-v1.20.zip",
+      "sha512": "aedb1184778f40e0bc7e8f918742f5f15b37c4adf7898361fe8cd8446d823eff1583309c586d9f54e0a0893aaf013dd0cbe4a72fece031e781500a71a03d623e",
+      "archive": "FASTBuild-OSX-x64+ARM-v1.20.zip"
+    },
+    {
       "name": "powershell-core",
       "os": "windows",
       "arch": "x64",
