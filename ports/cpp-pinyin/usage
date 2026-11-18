@@ -1,12 +1,17 @@
 cpp-pinyin provides CMake targets:
 
-  find_package(cpp-pinyin CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE cpp-pinyin::cpp-pinyin)
+  find_package(cpp-pinyin2 CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE cpp-pinyin2::cpp-pinyin2)
 
 To use the library, you need to copy the dictionary files to the binary directory.
 
   add_custom_command(TARGET main POST_BUILD
       COMMAND "${CMAKE_COMMAND}" -E copy_directory
-        "${cpp-pinyin_DIR}/dict"
+        "${CPP_PINYIN2_DICT_DIR}"
         "$<TARGET_FILE_DIR:main>/dict"
   )
+
+cpp-pinyin provides pkg-config modules:
+
+  # A lightweight Chinese/Cantonese to Pinyin library.
+  cpp-pinyin2

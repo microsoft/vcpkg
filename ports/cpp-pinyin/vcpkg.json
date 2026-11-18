@@ -1,6 +1,6 @@
 {
   "name": "cpp-pinyin",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "A lightweight Chinese/Cantonese to Pinyin library.",
   "homepage": "https://github.com/wolfgitpr/cpp-pinyin",
   "license": "Apache-2.0",
