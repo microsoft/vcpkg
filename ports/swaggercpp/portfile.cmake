@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-pkgconfig-dependencies.patch
+        fix-incomplete-types.patch # Define the PImpl constructor after its implementation type.
 )
 
 vcpkg_check_features(

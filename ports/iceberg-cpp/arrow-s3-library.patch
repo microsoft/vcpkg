@@ -1,0 +1,39 @@
+diff --git a/cmake_modules/IcebergThirdpartyToolchain.cmake b/cmake_modules/IcebergThirdpartyToolchain.cmake
+index 7631f0e..dae609b 100644
+--- a/cmake_modules/IcebergThirdpartyToolchain.cmake
++++ b/cmake_modules/IcebergThirdpartyToolchain.cmake
+@@ -266,6 +266,10 @@ function(resolve_arrow_dependency)
+     find_package(Arrow CONFIG REQUIRED)
+     find_package(Parquet CONFIG REQUIRED)
+     list(APPEND ICEBERG_SYSTEM_DEPENDENCIES Arrow Parquet)
++    if(ICEBERG_S3 AND ARROW_VERSION VERSION_GREATER_EQUAL "26.0.0")
++      find_package(ArrowS3 CONFIG REQUIRED)
++      list(APPEND ICEBERG_SYSTEM_DEPENDENCIES ArrowS3)
++    endif()
+   endif()
+ 
+   set(ICEBERG_SYSTEM_DEPENDENCIES
+diff --git a/src/iceberg/CMakeLists.txt b/src/iceberg/CMakeLists.txt
+index 8a98274..c396660 100644
+--- a/src/iceberg/CMakeLists.txt
++++ b/src/iceberg/CMakeLists.txt
+@@ -355,6 +355,19 @@ if(ICEBERG_BUILD_BUNDLE)
+        "$<IF:$<BOOL:${AVRO_VENDORED}>,iceberg::avrocpp_s,$<IF:$<TARGET_EXISTS:avro-cpp::avrocpp_shared>,avro-cpp::avrocpp_shared,avro-cpp::avrocpp_static>>"
+   )
+ 
++  if(ICEBERG_S3 AND (TARGET ArrowS3::arrow_s3_static OR TARGET ArrowS3::arrow_s3_shared))
++    set(ICEBERG_ARROW_S3_STATIC_LIB
++        "$<IF:$<TARGET_EXISTS:ArrowS3::arrow_s3_static>,ArrowS3::arrow_s3_static,ArrowS3::arrow_s3_shared>"
++    )
++    set(ICEBERG_ARROW_S3_SHARED_LIB
++        "$<IF:$<TARGET_EXISTS:ArrowS3::arrow_s3_shared>,ArrowS3::arrow_s3_shared,ArrowS3::arrow_s3_static>"
++    )
++    list(APPEND ICEBERG_BUNDLE_STATIC_BUILD_INTERFACE_LIBS ${ICEBERG_ARROW_S3_STATIC_LIB})
++    list(APPEND ICEBERG_BUNDLE_STATIC_INSTALL_INTERFACE_LIBS ${ICEBERG_ARROW_S3_STATIC_LIB})
++    list(APPEND ICEBERG_BUNDLE_SHARED_BUILD_INTERFACE_LIBS ${ICEBERG_ARROW_S3_SHARED_LIB})
++    list(APPEND ICEBERG_BUNDLE_SHARED_INSTALL_INTERFACE_LIBS ${ICEBERG_ARROW_S3_SHARED_LIB})
++  endif()
++
+   add_iceberg_lib(iceberg_bundle
+                   SOURCES
+                   ${ICEBERG_BUNDLE_SOURCES}

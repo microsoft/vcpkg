@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
     PATCHES
         export-unofficial-poppler.patch
         private-namespace.patch
+        fix-incomplete-types.patch # Define the Array-owning constructor where Array is complete.
 )
 
 set(POPPLER_PC_REQUIRES "freetype2 libjpeg libopenjp2 libpng libtiff-4 poppler-vcpkg-iconv")
