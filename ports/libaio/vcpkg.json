@@ -3,8 +3,8 @@
   "version": "0.3.113",
   "port-version": 2,
   "description": "The Linux-native asynchronous I/O facility",
-  "homepage": "https://pagure.io/libaio",
-  "license": "LGPL-2.1",
+  "homepage": "https://codeberg.org/jmoyer/libaio",
+  "license": "LGPL-2.0-or-later",
   "supports": "linux",
   "dependencies": [
     {
