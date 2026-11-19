@@ -1,0 +1,14 @@
+diff --git a/src/linux/CMakeLists.txt b/src/linux/CMakeLists.txt
+index 10dcc40..01a5df2 100644
+--- a/src/linux/CMakeLists.txt
++++ b/src/linux/CMakeLists.txt
+@@ -20,7 +20,8 @@ if(USE_EXTERNAL_USB)
+     add_dependencies(${LRS_TARGET} libusb)
+ endif()
+ 
+-include(${CMAKE_CURRENT_LIST_DIR}/find_udev.cmake)
++# Use the polling watcher consistently, regardless of host-installed udev.
++set(UDEV_FOUND FALSE)
+ if(UDEV_FOUND)
+     target_sources(${LRS_TARGET}
+         PRIVATE

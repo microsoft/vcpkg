@@ -1,0 +1,26 @@
+diff --git a/include/swaggercpp/ui.hpp b/include/swaggercpp/ui.hpp
+index 4779417..1e88a4e 100644
+--- a/include/swaggercpp/ui.hpp
++++ b/include/swaggercpp/ui.hpp
+@@ -30,7 +30,7 @@ struct SwaggerUiOptions {
+ 
+ class SWAGGERCPP_EXPORT SwaggerUiSession {
+ public:
+-    SwaggerUiSession() = default;
++    SwaggerUiSession() noexcept;
+     SwaggerUiSession(const SwaggerUiSession&) = delete;
+     SwaggerUiSession& operator=(const SwaggerUiSession&) = delete;
+     SwaggerUiSession(SwaggerUiSession&&) noexcept;
+diff --git a/src/ui.cpp b/src/ui.cpp
+index b466f54..660bd4d 100644
+--- a/src/ui.cpp
++++ b/src/ui.cpp
+@@ -154,6 +154,8 @@ struct SwaggerUiSession::Impl {
+     std::mutex wait_mutex;
+ };
+ 
++SwaggerUiSession::SwaggerUiSession() noexcept = default;
++
+ SwaggerUiSession::SwaggerUiSession(std::unique_ptr<Impl> impl)
+     : impl_(std::move(impl)) {}
+ 

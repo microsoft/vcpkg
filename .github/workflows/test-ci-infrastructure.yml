@@ -1,0 +1,132 @@
+name: Test CI Infrastructure
+
+# Smoke test for the GitHub Actions CI infrastructure intended to replace Azure Pipelines. Does not affect any
+# existing CI. Run manually from master.
+#
+# * 'ci-credentials' and 'container-publishing' are GitHub environments restricted to master, each with variables
+#   AZURE_CLIENT_ID, AZURE_TENANT_ID, and AZURE_SUBSCRIPTION_ID for a managed identity with a federated credential for
+#   that environment's subject.
+# * The Windows and Linux jobs run on 1ES GitHub runner pools.
+
+on:
+  workflow_dispatch:
+    inputs:
+      windows-pool:
+        description: 1ES Windows runner pool
+        default: vcpkg-pr-windows
+        type: string
+      linux-pool:
+        description: 1ES Linux runner pool
+        default: vcpkg-pr-linux
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  ci-credentials:
+    if: github.repository == 'microsoft/vcpkg'
+    runs-on: ubuntu-latest
+    environment: ci-credentials
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Azure login
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Mint and use credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(date -u -d "-30 minutes" '+%Y-%m-%dT%H:%MZ')
+          expiry=$(date -u -d "1 hour" '+%Y-%m-%dT%H:%MZ')
+          assetSas=$(az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --start "$start" --expiry "$expiry" -o tsv)
+          echo "::add-mask::$assetSas"
+          binarySas=$(az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --start "$start" --expiry "$expiry" -o tsv)
+          echo "::add-mask::$binarySas"
+          curl --fail --silent --show-error --output /dev/null "https://vcpkgassetcachewus.blob.core.windows.net/cache?restype=container&comp=list&maxresults=1&$assetSas"
+          echo "Asset cache SAS can list the cache container"
+          curl --fail --silent --show-error --output /dev/null "https://vcpkgbinarycachewus.blob.core.windows.net/cache?restype=container&comp=list&maxresults=1&$binarySas"
+          echo "Binary cache SAS can list the cache container"
+          acrToken=$(az acr login --name vcpkgandroidwus --expose-token --query accessToken --output tsv 2>/dev/null)
+          echo "::add-mask::$acrToken"
+          test -n "$acrToken"
+          echo "Minted a container registry token"
+
+  container-publishing:
+    if: github.repository == 'microsoft/vcpkg'
+    runs-on: ubuntu-latest
+    environment: container-publishing
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Azure login
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Container registry login
+        shell: bash
+        run: |
+          set -euo pipefail
+          acrToken=$(az acr login --name vcpkgandroidwus --expose-token --query accessToken --output tsv 2>/dev/null)
+          echo "::add-mask::$acrToken"
+          test -n "$acrToken"
+          echo "Minted a container registry token"
+
+  windows-runner:
+    if: github.repository == 'microsoft/vcpkg'
+    runs-on:
+      - self-hosted
+      - 1ES.Pool=${{ inputs.windows-pool }}
+      - JobId=vcpkg-test-windows-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+    timeout-minutes: 60
+    steps:
+      - name: Describe runner
+        shell: pwsh
+        run: |
+          $PSVersionTable
+          [System.Environment]::OSVersion
+          "Processors: $([System.Environment]::ProcessorCount)"
+          Get-PSDrive -PSProvider FileSystem
+          git --version
+          $probe = 'D:\vcpkg-runner-probe.txt'
+          Set-Content -LiteralPath $probe -Value 'ok'
+          Remove-Item -LiteralPath $probe
+          'D:\ is writable'
+
+  linux-runner:
+    if: github.repository == 'microsoft/vcpkg'
+    runs-on:
+      - self-hosted
+      - 1ES.Pool=${{ inputs.linux-pool }}
+      - JobId=vcpkg-test-linux-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+    timeout-minutes: 60
+    steps:
+      - name: Describe runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          uname -a
+          cat /etc/os-release
+          echo "Processors: $(nproc)"
+          free -h
+          df -h
+          git --version
+          sudo -n true
+          echo "Passwordless sudo works"
+          docker version
+          docker buildx version
+          sudo -n touch /mnt/vcpkg-runner-probe
+          sudo -n rm /mnt/vcpkg-runner-probe
+          echo "/mnt is writable"
