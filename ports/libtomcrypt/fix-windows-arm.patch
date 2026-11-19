@@ -1,0 +1,43 @@
+diff --git a/src/headers/tomcrypt_cfg.h b/src/headers/tomcrypt_cfg.h
+index af2a095..53200e1 100644
+--- a/src/headers/tomcrypt_cfg.h
++++ b/src/headers/tomcrypt_cfg.h
+@@ -75,15 +75,15 @@ LTC_EXPORT int   LTC_CALL XSTRCMP(const char *s1, const char *s2);
+  * The x86 platforms allow this but some others [ARM for instance] do not.  On those platforms you **MUST**
+  * use the portable [slower] macros.
+  */
+-/* detect x86/i386 32bit */
+-#if defined(__i386__) || defined(__i386) || defined(_M_IX86)
++/* detect x86/i386/ARM 32bit */
++#if defined(__i386__) || defined(__i386) || defined(_M_IX86) || defined(_M_ARM)
+    #define ENDIAN_LITTLE
+    #define ENDIAN_32BITWORD
+    #define LTC_FAST
+ #endif
+ 
+-/* detect amd64/x64 */
+-#if defined(__x86_64__) || defined(_M_X64) || defined(_M_AMD64)
++/* detect amd64/x64/arm64 */
++#if defined(__x86_64__) || defined(_M_X64) || defined(_M_AMD64) || defined(_M_ARM64)
+    #define ENDIAN_LITTLE
+    #define ENDIAN_64BITWORD
+    #define LTC_FAST
+@@ -185,7 +185,8 @@ LTC_EXPORT int   LTC_CALL XSTRCMP(const char *s1, const char *s2);
+       defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__ || \
+       defined(__LITTLE_ENDIAN__) || \
+       defined(__ARMEL__) || defined(__THUMBEL__) || defined(__AARCH64EL__) || \
+-      defined(_MIPSEL) || defined(__MIPSEL) || defined(__MIPSEL__)
++      defined(_MIPSEL) || defined(__MIPSEL) || defined(__MIPSEL__) || \
++      defined(_M_ARM) || defined(_M_ARM64)
+     #define ENDIAN_LITTLE
+   #else
+     #error Cannot detect endianness
+@@ -207,7 +208,7 @@ LTC_EXPORT int   LTC_CALL XSTRCMP(const char *s1, const char *s2);
+     defined(__s390x__) || defined(__arch64__) || defined(__aarch64__) || \
+     defined(__sparcv9) || defined(__sparc_v9__) || defined(__sparc64__) || \
+     defined(__ia64) || defined(__ia64__) || defined(__itanium__) || defined(_M_IA64) || \
+-    defined(__LP64__) || defined(_LP64) || defined(__64BIT__)
++    defined(__LP64__) || defined(_LP64) || defined(__64BIT__) || defined(_M_ARM64)
+    typedef unsigned ulong32;
+    #if !defined(ENDIAN_64BITWORD) && !defined(ENDIAN_32BITWORD)
+      #define ENDIAN_64BITWORD

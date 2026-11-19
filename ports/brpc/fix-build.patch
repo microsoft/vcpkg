@@ -1,18 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b10991f..a507685 100644
+index b07a426..7815d3e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -77,7 +77,8 @@ endif()
+@@ -93,7 +93,8 @@ endif()
  
  if(WITH_THRIFT)
-     set(THRIFT_CPP_FLAG "-DENABLE_THRIFT_FRAMED_PROTOCOL")
+     list(APPEND BRPC_COMMON_DEFINITIONS ENABLE_THRIFT_FRAMED_PROTOCOL)
 -    find_library(THRIFT_LIB NAMES thrift)
 +    find_package(Thrift CONFIG REQUIRED)
 +    set(THRIFT_LIB "thrift::thrift")
      if (NOT THRIFT_LIB)
          message(FATAL_ERROR "Fail to find Thrift")
      endif()
-@@ -115,7 +116,10 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/src/butil
+@@ -136,7 +137,10 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_SOURCE_DIR}/src/butil
  
  list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
  
@@ -22,18 +22,19 @@ index b10991f..a507685 100644
 +set(GFLAGS_INCLUDE_PATH "")
 +set(GFLAGS_LIBRARY gflags::gflags)
  
- include_directories(
-     ${PROJECT_SOURCE_DIR}/src
-@@ -180,12 +184,17 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+ execute_process(
+     COMMAND bash -c "${PROJECT_SOURCE_DIR}/tools/get_brpc_revision.sh ${PROJECT_SOURCE_DIR} | tr -d '\n'"
+@@ -226,6 +230,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
  endif()
  
  find_package(Protobuf REQUIRED)
 +get_target_property(PROTOBUF_INCLUDE_DIR protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
 +set(PROTOBUF_INCLUDE_DIRS "")
 +set(PROTOBUF_LIBRARIES protobuf::libprotobuf)
- if(Protobuf_VERSION GREATER 4.21)
+ find_package(ZLIB REQUIRED)
+ if(Protobuf_VERSION VERSION_GREATER 4.21)
      # required by absl
-     set(CMAKE_CXX_STANDARD 17)
+@@ -233,6 +240,8 @@ if(Protobuf_VERSION VERSION_GREATER 4.21)
  
      find_package(absl REQUIRED CONFIG)
      set(protobuf_ABSL_USED_TARGETS
@@ -42,12 +43,9 @@ index b10991f..a507685 100644
          absl::absl_check
          absl::absl_log
          absl::algorithm
-@@ -225,29 +234,21 @@ else()
-     use_cxx11()
+@@ -273,28 +282,18 @@ if(Protobuf_VERSION VERSION_GREATER 4.21)
  endif()
  find_package(Threads REQUIRED)
-+find_package(ZLIB REQUIRED)
-+add_library(z ALIAS ZLIB::ZLIB)
  
 -find_path(LEVELDB_INCLUDE_PATH NAMES leveldb/db.h)
 -find_library(LEVELDB_LIB NAMES leveldb)
@@ -64,7 +62,7 @@ index b10991f..a507685 100644
 -    if ((NOT SNAPPY_INCLUDE_PATH) OR (NOT SNAPPY_LIB))
 -        message(FATAL_ERROR "Fail to find snappy")
 -    endif()
--    include_directories(${SNAPPY_INCLUDE_PATH})
+-    list(APPEND BRPC_COMMON_INCLUDE_DIRS ${SNAPPY_INCLUDE_PATH})
 +    find_package(Snappy CONFIG REQUIRED)
 +    set(SNAPPY_LIB Snappy::snappy)
  endif()
@@ -75,14 +73,14 @@ index b10991f..a507685 100644
 -    if((NOT GLOG_INCLUDE_PATH) OR (NOT GLOG_LIB))
 -        message(FATAL_ERROR "Fail to find glog")
 -    endif()
--    include_directories(${GLOG_INCLUDE_PATH})
+-    list(APPEND BRPC_COMMON_INCLUDE_DIRS ${GLOG_INCLUDE_PATH})
 +    find_package(glog CONFIG REQUIRED)
 +    set(GLOG_LIB glog::glog)
  endif()
  
  if(WITH_MESALINK)
-@@ -270,7 +271,7 @@ if(WITH_RDMA)
-     endif()
+@@ -318,7 +317,7 @@ if(WITH_RDMA)
+     list(APPEND BRPC_COMMON_INCLUDE_DIRS ${RDMA_INCLUDE_PATH})
  endif()
  
 -find_library(PROTOC_LIB NAMES protoc)
@@ -90,8 +88,8 @@ index b10991f..a507685 100644
  if(NOT PROTOC_LIB)
      message(FATAL_ERROR "Fail to find protoc lib")
  endif()
-@@ -280,9 +281,6 @@ if(WITH_BORINGSSL)
-     include_directories(${BORINGSSL_INCLUDE_DIR})
+@@ -328,9 +327,6 @@ if(WITH_BORINGSSL)
+     list(APPEND BRPC_COMMON_INCLUDE_DIRS ${BORINGSSL_INCLUDE_DIR})
  else()
      if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT OPENSSL_ROOT_DIR)
 -        set(OPENSSL_ROOT_DIR
@@ -99,8 +97,8 @@ index b10991f..a507685 100644
 -        )
      endif()
  
-     find_package(OpenSSL)
-@@ -308,6 +306,8 @@ set(DYNAMIC_LIB
+     find_package(OpenSSL REQUIRED)
+@@ -356,6 +352,8 @@ set(DYNAMIC_LIB
  if(WITH_BORINGSSL)
      list(APPEND DYNAMIC_LIB ${BORINGSSL_SSL_LIBRARY})
      list(APPEND DYNAMIC_LIB ${BORINGSSL_CRYPTO_LIBRARY})
@@ -109,8 +107,8 @@ index b10991f..a507685 100644
  else()
      if(WITH_MESALINK)
          list(APPEND DYNAMIC_LIB ${OPENSSL_CRYPTO_LIBRARY})
-@@ -322,7 +322,8 @@ if(WITH_RDMA)
-     list(APPEND DYNAMIC_LIB ${RDMA_LIB})
+@@ -375,16 +373,17 @@ if(WITH_UBRING)
+     list(APPEND DYNAMIC_LIB ${UB_LIB})
  endif()
  
 -set(BRPC_PRIVATE_LIBS "-lgflags -lprotobuf -lleveldb -lprotoc -lssl -lcrypto -ldl -lz")
@@ -119,19 +117,21 @@ index b10991f..a507685 100644
  
  if(WITH_GLOG)
      set(DYNAMIC_LIB ${GLOG_LIB} ${DYNAMIC_LIB})
-@@ -331,7 +332,7 @@ endif()
+-    set(BRPC_PRIVATE_LIBS "-lglog ${BRPC_PRIVATE_LIBS}")
++    set(BRPC_PRIVATE_REQUIRES "${BRPC_PRIVATE_REQUIRES} libglog")
+ endif()
  
  if(WITH_SNAPPY)
      set(DYNAMIC_LIB ${DYNAMIC_LIB} ${SNAPPY_LIB})
 -    set(BRPC_PRIVATE_LIBS "${BRPC_PRIVATE_LIBS} -lsnappy")
-+    set(BRPC_PRIVATE_REQUIRES "${BRPC_PRIVATE_LIBS} snappy")
++    set(BRPC_PRIVATE_REQUIRES "${BRPC_PRIVATE_REQUIRES} snappy")
  endif()
  
  if (WITH_BTHREAD_TRACER)
-@@ -556,6 +557,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
-                                     ${PROJECT_SOURCE_DIR}/src
+@@ -628,6 +627,7 @@ compile_proto(PROTO_HDRS PROTO_SRCS ${PROJECT_BINARY_DIR}
                                      "${PROTO_FILES}")
  add_library(PROTO_LIB OBJECT ${PROTO_SRCS} ${PROTO_HDRS})
+ target_link_libraries(PROTO_LIB PRIVATE brpc_common_config)
 +target_link_libraries(PROTO_LIB PUBLIC ${DYNAMIC_LIB})
  
  set(SOURCES
@@ -146,13 +146,13 @@ index 723dab4..36277cd 100644
  Libs.private: @BRPC_PRIVATE_LIBS@
 +Requires.private: @BRPC_PRIVATE_REQUIRES@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1b4b233..f14d024 100644
+index 17fe215..0d9f60a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -26,6 +26,10 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
- add_library(BUTIL_LIB OBJECT ${BUTIL_SOURCES})
- add_library(SOURCES_LIB OBJECT ${SOURCES})
+@@ -20,6 +20,10 @@ add_library(SOURCES_LIB OBJECT ${SOURCES})
  add_dependencies(SOURCES_LIB PROTO_LIB)
+ target_link_libraries(BUTIL_LIB PRIVATE brpc_common_config)
+ target_link_libraries(SOURCES_LIB PRIVATE brpc_common_config)
 +if(WITH_GLOG)
 +    target_link_libraries(BUTIL_LIB PRIVATE glog::glog)
 +    target_link_libraries(SOURCES_LIB PRIVATE glog::glog)
@@ -160,41 +160,51 @@ index 1b4b233..f14d024 100644
  
  # shared library needs POSITION_INDEPENDENT_CODE
  set_property(TARGET ${SOURCES_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
-@@ -59,9 +63,9 @@ function(check_thrift_version target_arg)
+@@ -28,7 +32,7 @@ set_property(TARGET ${BUTIL_LIB} PROPERTY POSITION_INDEPENDENT_CODE 1)
+ add_library(brpc-static STATIC $<TARGET_OBJECTS:BUTIL_LIB>
+                                $<TARGET_OBJECTS:SOURCES_LIB>
+                                $<TARGET_OBJECTS:PROTO_LIB>)
+-target_link_libraries(brpc-static PUBLIC brpc_common_config)
++target_link_libraries(brpc-static PUBLIC $<BUILD_INTERFACE:brpc_common_config> ${DYNAMIC_LIB})
+ 
+ function(check_thrift_version target_arg)
+     #use thrift command to get version
+@@ -54,10 +58,6 @@ function(check_thrift_version target_arg)
  endfunction()
  
  
-+target_link_libraries(brpc-static PUBLIC ${DYNAMIC_LIB})
-+
- if(WITH_THRIFT)
--   target_link_libraries(brpc-static ${THRIFT_LIB})
+-if(WITH_THRIFT)
+-   target_link_libraries(brpc-static PRIVATE ${THRIFT_LIB})
 -   check_thrift_version(brpc-static)
- endif()
+-endif()
  
  SET_TARGET_PROPERTIES(brpc-static PROPERTIES OUTPUT_NAME brpc CLEAN_DIRECT_OUTPUT 1)
-@@ -74,24 +78,25 @@ set(protoc_gen_mcpack_SOURCES
+ 
+@@ -69,26 +69,22 @@ set(protoc_gen_mcpack_SOURCES
   )
      
  add_executable(protoc-gen-mcpack ${protoc_gen_mcpack_SOURCES})
 +set_target_properties(protoc-gen-mcpack PROPERTIES EXCLUDE_FROM_ALL 1)
+ target_link_libraries(protoc-gen-mcpack PRIVATE brpc_common_config)
  
  if(BUILD_SHARED_LIBS)
 +    set_target_properties(brpc-static PROPERTIES EXCLUDE_FROM_ALL 1)
      add_library(brpc-shared SHARED $<TARGET_OBJECTS:BUTIL_LIB> 
                                     $<TARGET_OBJECTS:SOURCES_LIB>
                                     $<TARGET_OBJECTS:PROTO_LIB>)
--    target_link_libraries(brpc-shared ${DYNAMIC_LIB})
-+    target_link_libraries(brpc-shared PUBLIC ${DYNAMIC_LIB})
-     if(WITH_GLOG)
--        target_link_libraries(brpc-shared ${GLOG_LIB})
-     endif()
-     if(WITH_THRIFT)
--        target_link_libraries(brpc-shared ${THRIFT_LIB})
+-    target_link_libraries(brpc-shared PUBLIC brpc_common_config)
+-    target_link_libraries(brpc-shared PRIVATE ${DYNAMIC_LIB})
+-    if(WITH_GLOG)
+-        target_link_libraries(brpc-shared PRIVATE ${GLOG_LIB})
+-    endif()
+-    if(WITH_THRIFT)
+-        target_link_libraries(brpc-shared PRIVATE ${THRIFT_LIB})
 -        check_thrift_version(brpc-shared)
-     endif()
+-    endif()
++    target_link_libraries(brpc-shared PUBLIC $<BUILD_INTERFACE:brpc_common_config> ${DYNAMIC_LIB})
      SET_TARGET_PROPERTIES(brpc-shared PROPERTIES OUTPUT_NAME brpc CLEAN_DIRECT_OUTPUT 1)
  
-     target_link_libraries(protoc-gen-mcpack brpc-shared ${DYNAMIC_LIB} pthread)
+     target_link_libraries(protoc-gen-mcpack PRIVATE brpc-shared ${DYNAMIC_LIB})
  
 +    target_include_directories(brpc-shared PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
      install(TARGETS brpc-shared
@@ -202,7 +212,7 @@ index 1b4b233..f14d024 100644
              RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
              LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
              ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -102,8 +107,38 @@ endif()
+@@ -99,8 +95,38 @@ endif()
  
  
  

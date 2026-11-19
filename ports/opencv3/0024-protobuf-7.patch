@@ -1,0 +1,13 @@
+diff --git a/modules/dnn/src/caffe/caffe_importer.cpp b/modules/dnn/src/caffe/caffe_importer.cpp
+index ffd35ec..7eb89d6 100644
+--- a/modules/dnn/src/caffe/caffe_importer.cpp
++++ b/modules/dnn/src/caffe/caffe_importer.cpp
+@@ -217,7 +217,7 @@ public:
+ 
+             const google::protobuf::UnknownFieldSet& unknownFields = msgRefl->GetUnknownFields(msg);
+             bool hasData =  fd->is_required() ||
+-                            (fd->is_optional() && msgRefl->HasField(msg, fd)) ||
++                            (!fd->is_repeated() && !fd->is_required() && msgRefl->HasField(msg, fd)) ||
+                             (fd->is_repeated() && msgRefl->FieldSize(msg, fd) > 0) ||
+                             !unknownFields.empty();
+             if (!hasData)

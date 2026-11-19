@@ -1,5 +1,5 @@
 diff --git a/src/python/CMakeLists.txt b/src/python/CMakeLists.txt
-index 94b2a3e..0c7ab40 100644
+index 6033899..d817a22 100644
 --- a/src/python/CMakeLists.txt
 +++ b/src/python/CMakeLists.txt
 @@ -2,6 +2,14 @@
@@ -16,4 +16,4 @@ index 94b2a3e..0c7ab40 100644
 +
  add_subdirectory (stubs)
  
- file (GLOB python_srcs *.cpp)
+ set (python_dual_backend_srcs

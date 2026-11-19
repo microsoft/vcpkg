@@ -1,7 +1,6 @@
 {
   "name": "curl",
-  "version": "8.22.0",
-  "port-version": 1,
+  "version": "8.23.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -17,7 +16,6 @@
     "zlib"
   ],
   "default-features": [
-    "non-http",
     "ssl"
   ],
   "features": {
@@ -120,13 +118,6 @@
       "supports": "!uwp",
       "dependencies": [
         {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "non-http"
-          ]
-        },
-        {
           "name": "openldap",
           "platform": "!windows"
         }
@@ -137,9 +128,6 @@
       "dependencies": [
         "mbedtls"
       ]
-    },
-    "non-http": {
-      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2/HTTP3"
     },
     "openssl": {
       "description": "TLS support (OpenSSL)",
@@ -156,13 +144,6 @@
     "ssh": {
       "description": "SSH support via libssh2",
       "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "non-http"
-          ]
-        },
         {
           "name": "curl",
           "default-features": false,
@@ -217,16 +198,7 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "non-http"
-          ]
-        }
-      ]
+      "description": "WebSocket support"
     },
     "winidn": {
       "description": "WinIDN support",

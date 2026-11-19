@@ -8,7 +8,7 @@ guest VM, not from a developer workstation to the host.
 Before publishing the VM update changes, update the Azure Agent URI in
 `scripts/azure-pipelines/osx/guest-prepare.sh` to the current version. You can find this by going to the
 agent pool, selecting "New agent", picking macOS, and copying the link. For example:
-https://download.agent.dev.azure.com/agent/5.277.0/vsts-agent-osx-arm64-5.277.0.tar.gz
+https://download.agent.dev.azure.com/agent/5.280.0/vsts-agent-osx-arm64-5.280.0.tar.gz
 
 Install and enable Homebrew on each host before cloning vcpkg:
 
@@ -37,7 +37,7 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
 
 ### Prerequisites
 
-- [ ] The matching macOS IPSW, Xcode 26.6 `.xip`, and Xcode 26.6 Command Line Tools `.dmg`
+- [ ] The matching macOS 27.0.1 IPSW, Xcode 27.1 `.xip`, and Command Line Tools 27 `.dmg`
     uploaded to the `assets` container in the `vcpkgimageminting` storage account.
 - [ ] PowerShell 7.x, Azure CLI, and `az login` with your Microsoft corp credentials on a workstation
     that can mint SAS tokens for the storage account.
@@ -66,9 +66,9 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
         return "azcopy copy `"https://vcpkgimageminting.blob.core.windows.net/assets/$($FileName)?$($sas)`" `"$FileName`""
     }
 
-    Get-AssetDownloadCommand -FileName UniversalMac_26.6.1_25G76_Restore.ipsw
-    Get-AssetDownloadCommand -FileName Xcode_26.6_Apple_silicon.xip
-    Get-AssetDownloadCommand -FileName Command_Line_Tools_26.6_Apple_silicon.dmg
+    Get-AssetDownloadCommand -FileName UniversalMac_27.0.1_26A434_Restore.ipsw
+    Get-AssetDownloadCommand -FileName Xcode_27.1.xip
+    Get-AssetDownloadCommand -FileName Command_Line_Tools_27.dmg
     ```
     This creates a user-delegation SAS for each blob. Each credential is read-only, HTTPS-only, and
     valid for one hour. A SAS is not single-use and can be reused until it expires, so do not retain
@@ -82,12 +82,12 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
     cd ~
     # Paste and run the three azcopy commands generated on the workstation.
     ```
-- [ ] Determine the VM directory name using the form "vcpkg-osx-YYYY-MM-DD-arm64", for example "vcpkg-osx-2026-08-07-arm64".
-- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-YYYY-MM-DD-arm64 and UniversalMac_26.6.1_25G76_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
+- [ ] Determine the VM directory name using the form "vcpkg-osx-YYYY-MM-DD-arm64", for example "vcpkg-osx-2026-10-19-arm64".
+- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-YYYY-MM-DD-arm64 and UniversalMac_27.0.1_26A434_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
     ```
     mkdir -p ~/vcpkg-osx-YYYY-MM-DD-arm64
     cd ~/vcpkg-osx-YYYY-MM-DD-arm64
-    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 10 -r 18g --restore ~/UniversalMac_26.6.1_25G76_Restore.ipsw ./vm.json
+    ~/macosvm --disk disk.img,size=500g,sync=none,cache=cached --aux aux.img -c 10 -r 18g --restore ~/UniversalMac_27.0.1_26A434_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
 - [ ] Follow prompts as you would on real hardware.
@@ -109,7 +109,7 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
     cd ~/vcpkg/scripts/azure-pipelines/osx
     ./host-install-xcode.sh
     ```
-- [ ] Open Xcode from Applications in the guest GUI. Uncheck the "code completion model" and accept the EULA.
+- [ ] Open Xcode from Applications in the guest GUI. Uncheck "ios", external agent access "Always"
 - [ ] After completing the Xcode GUI step, run the guest preparation script. It installs the Command
     Line Tools, build dependencies, and the Azure Pipelines agent:
     ```sh
@@ -119,9 +119,9 @@ have already been merged into `microsoft/vcpkg`. If the working branch is update
 - [ ] Shut down the VM cleanly.
 - [ ] Delete the temporary installation assets from the host:
     ```sh
-    rm ~/UniversalMac_26.6.1_25G76_Restore.ipsw \
-        ~/Xcode_26.6_Apple_silicon.xip \
-        ~/Command_Line_Tools_26.6_Apple_silicon.dmg
+    rm ~/UniversalMac_27.0.1_26A434_Restore.ipsw \
+        ~/Xcode_27.1.xip \
+        ~/Command_Line_Tools_27.dmg
     ```
 - [ ] In the host's KVM terminal, package the VM into an archive:
     ```sh

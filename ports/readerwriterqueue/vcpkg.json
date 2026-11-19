@@ -1,8 +1,10 @@
 {
   "name": "readerwriterqueue",
   "version-semver": "1.0.7",
+  "port-version": 1,
   "description": "A single-producer, single-consumer lock-free queue",
   "homepage": "https://github.com/cameron314/readerwriterqueue",
+  "license": "BSD-2-Clause AND Zlib",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

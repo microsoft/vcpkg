@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tdlib/td
-    REF bc9c263e2bfee06aaab41e82db51a103376030bc
+    REF 23383aef218a3123f02b744bfa91bde21056a814
     HEAD_REF master
-    SHA512 5781ee182b009c82e7764f0ad84e3e74069724763483a4726ae7388911920323fc42be64ae2d122daa7d89ada14c899e71f6fa7a3fc62669924dcedf3c06c28e
+    SHA512 3e1b73d9ead53868905d33fc3739a94885dd7a3c24df169a3d93f49a114642a0458db2e651894786b21b3566641c08a6574ad923709482549c1b7680b8d02902
     PATCHES
         fix-cross-compile.patch
         # Exclude uninstalled benchmarks/CLI from default builds and disable ambient PHP documentation generation.

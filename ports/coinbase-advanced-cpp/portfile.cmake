@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/coinbase-advanced-cpp
     REF "v${VERSION}"
-    SHA512 9a2de3e90944028d38cdfad9e1290a875b11942261b94b9eebd76f95606303ff33bcd946d3b7c45b786af8c87b9b34b5c217cef6f1f3ec7ff80ba97a1cbf9b88
+    SHA512 8094c2e7d443fb71c47b1e2e4d161668d6e699b3e5769771bd15146454c44489d19f2ca77d7cb19878171f0b125f60e1dd2578be97a67ba9e3fda3c9d824b568
     HEAD_REF main
     PATCHES
         disable-config-fetchcontent-fallback.patch # also https://github.com/SlickQuant/coinbase-advanced-cpp/pull/1

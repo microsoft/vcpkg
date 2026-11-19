@@ -108,10 +108,13 @@ target_compile_definitions(libmupdf
     $<$<BOOL:${BUILD_SHARED_LIBS}>:FZ_DLL_CLIENT>
   PRIVATE
     $<$<BOOL:${BUILD_SHARED_LIBS}>:FZ_DLL>
+    FZ_ENABLE_BARCODE=0     # needs zxing-cpp
     FZ_ENABLE_BROTLI=0        # needs brotli
     FZ_ENABLE_DOCX_OUTPUT=0   # needs https://github.com/ArtifexSoftware/extract
+    FZ_ENABLE_HYPHEN=0      # needs hyphenation resources
     FZ_ENABLE_ICC=0           # needs lcsm2
     FZ_ENABLE_JS=0            # needs mujs
+    FZ_ENABLE_MD=0          # needs cmark-gfm
     FZ_ENABLE_ODT_OUTPUT=0    # needs FZ_ENABLE_DOCX_OUTPUT
     MEMENTO_MUPDF_HACKS
     SHARE_JPEG

@@ -1,5 +1,3 @@
-# https://github.com/microsoft/onnxruntime/blob/v1.22.1/tools/python/util/vcpkg_helpers.py
-message(WARNING "The port requires 'onnx' port build with CMake option ONNX_DISABLE_STATIC_REGISTRATION=ON")
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("framework" IN_LIST FEATURES)
         # The Objective-C API requires onnxruntime_BUILD_SHARED_LIB
@@ -11,12 +9,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/onnxruntime
     REF "v${VERSION}"
-    SHA512 373c51575ada457b8aead5d195a5f3eba62fb747b6370a2a9889fff875c40ea30af8fd49104d58cc86f79247410e829086b0979f37ca8635c6dd34960e9cc424
+    SHA512 214a3316d2850bbd565447c6d4e939ca7b32981865aa11b7b0b12dabeb600718a677bf3e09ae1e4faf9c51c6dd9112f7ca4fb6faa7408f2b39625b0b0c951f99
     PATCHES
-        fix-cmake.patch # .framework install, external library workarounds(abseil-cpp, eigen3)
+        fix-cmake.patch # .framework install dir, wasm re2 workaround
         fix-cmake-cuda.patch
-        fix-missing-cstdint.patch
         fix-cmake-mlas.patch
+        use-vcpkg-coremltools.patch # use the coremltools port instead of building its sources
+        fix-debug-schema-count.patch # https://github.com/microsoft/onnxruntime/pull/33456 (open, unreviewed)
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
@@ -93,7 +92,14 @@ if("tensorrt" IN_LIST FEATURES)
     endif()
 endif()
 
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+
+# onnxruntime only consumes vcpkg cpuinfo on non-Apple; forcing it on Apple breaks the disconnected fetch
+set(ENABLE_CPUINFO ON)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(ENABLE_CPUINFO OFF)
+endif()
 
 # see tools/ci_build/build.py
 vcpkg_cmake_configure(
@@ -109,7 +115,7 @@ vcpkg_cmake_configure(
         -Donnxruntime_USE_EXTENSIONS=OFF
         -Donnxruntime_USE_NNAPI_BUILTIN=${VCPKG_TARGET_IS_ANDROID}
         -Donnxruntime_USE_VCPKG=ON
-        -Donnxruntime_ENABLE_CPUINFO=ON
+        -Donnxruntime_ENABLE_CPUINFO=${ENABLE_CPUINFO}
         -Donnxruntime_ENABLE_MICROSOFT_INTERNAL=OFF
         -Donnxruntime_ENABLE_BITCODE=OFF
         -Donnxruntime_ENABLE_PYTHON=OFF
@@ -118,6 +124,8 @@ vcpkg_cmake_configure(
         -Donnxruntime_ENABLE_LAZY_TENSOR=OFF
         -Donnxruntime_DISABLE_RTTI=OFF
         -Donnxruntime_DISABLE_ABSEIL=OFF
+        # onnx from vcpkg links the full protobuf runtime, so match it (1.31 checks this)
+        -Donnxruntime_USE_FULL_PROTOBUF=ON
         # some other customizations ...
         --compile-no-warning-as-error
     OPTIONS_DEBUG

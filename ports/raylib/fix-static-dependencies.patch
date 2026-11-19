@@ -1,0 +1,28 @@
+diff --git a/cmake/InstallConfigurations.cmake b/cmake/InstallConfigurations.cmake
+index 84caea2..5f0d9c1 100644
+--- a/cmake/InstallConfigurations.cmake
++++ b/cmake/InstallConfigurations.cmake
+@@ -10,6 +10,9 @@ install(
+ if (NOT BUILD_SHARED_LIBS)
+     include(LibraryPathToLinkerFlags)
+     set(PKG_CONFIG_LIBS_PRIVATE ${GLFW_PKG_LIBS})
++    if (WIN32 AND PLATFORM STREQUAL "Desktop")
++        list(APPEND PKG_CONFIG_LIBS_PRIVATE -lopengl32 -lwinmm)
++    endif ()
+     string(REPLACE ";" " " PKG_CONFIG_LIBS_PRIVATE "${PKG_CONFIG_LIBS_PRIVATE}")
+ elseif (BUILD_SHARED_LIBS)
+     set(PKG_CONFIG_LIBS_EXTRA "")
+diff --git a/cmake/LibraryConfigurations.cmake b/cmake/LibraryConfigurations.cmake
+index 262150b..ada3ad9 100644
+--- a/cmake/LibraryConfigurations.cmake
++++ b/cmake/LibraryConfigurations.cmake
+@@ -32,6 +32,9 @@ int main(void)
+ endfunction()
+ 
+ set(RAYLIB_DEPENDENCIES "include(CMakeFindDependencyMacro)")
++if (glfw3_FOUND AND NOT BUILD_SHARED_LIBS)
++    string(APPEND RAYLIB_DEPENDENCIES "\nfind_dependency(glfw3 CONFIG)")
++endif ()
+ 
+ if (${PLATFORM} STREQUAL "Desktop")
+     set(PLATFORM_CPP "PLATFORM_DESKTOP")

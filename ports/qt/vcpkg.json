@@ -1,8 +1,8 @@
 {
   "name": "qt",
-  "version": "6.11.2",
+  "version": "6.11.3",
   "description": "A cross-platform application and UI framework.",
-  "homepage": "https://www.qt.io/",
+  "homepage": "https://www.qt.io",
   "license": null,
   "dependencies": [
     {

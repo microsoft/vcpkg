@@ -4,11 +4,12 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 b95fbccdddcad2a4ad68fe5fe5358a67f668bdd2cd4bef68f8fc74f9d11690c317156ba28942c4c9db446c796a0d760387c8154209f6039d92a880d7e64e3847
     HEAD_REF master
-    PATCHES 
+    PATCHES
         UWP_index_set.patch
         fix-zlib.patch
         cstdlib.diff
         fix-s2-is-pod.patch # Based on https://github.com/realm/realm-core/commit/d8f21f9b98cae76e8dc235558c2f71ea27997f10
+        fix-s2-comparison.patch # https://github.com/realm/realm-core/commit/f8752e180b7f288feadffafdef818068755efe0a
 )
 
 vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)

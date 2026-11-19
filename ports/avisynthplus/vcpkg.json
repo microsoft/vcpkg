@@ -1,8 +1,8 @@
 {
   "name": "avisynthplus",
-  "version": "3.7.5",
+  "version": "3.7.6",
   "description": "An improved version of the AviSynth frameserver, with improved features and developer friendliness",
-  "homepage": "https://avs-plus.net/",
+  "homepage": "https://avs-plus.net",
   "license": "GPL-2.0",
   "supports": "!arm & !uwp & !xbox",
   "dependencies": [

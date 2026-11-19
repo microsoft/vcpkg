@@ -1,9 +1,10 @@
 diff --git a/common/http.h b/common/http.h
-index 878ad1c..87d5456 100644
+index d8cfde2..06a58f7 100644
 --- a/common/http.h
 +++ b/common/http.h
-@@ -1,6 +1,6 @@
- #pragma once
+@@ -2,7 +2,7 @@
+ 
+ #include "log.h"
  
 -#include <cpp-httplib/httplib.h>
 +#include <httplib.h>
@@ -11,10 +12,10 @@ index 878ad1c..87d5456 100644
  #ifdef _WIN32
  #include <winsock2.h>
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index c8ad1db..90544d5 100644
+index 6a6592c..788f0e6 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
-@@ -38,7 +38,7 @@ else()
+@@ -41,7 +41,7 @@ else()
          add_subdirectory(export-lora)
      endif()
      add_subdirectory(fit-params)
@@ -24,10 +25,10 @@ index c8ad1db..90544d5 100644
      endif()
      add_subdirectory(results)
 diff --git a/tools/mtmd/mtmd-helper.cpp b/tools/mtmd/mtmd-helper.cpp
-index bdf8bf6..aca400d 100644
+index aefe504..860c964 100644
 --- a/tools/mtmd/mtmd-helper.cpp
 +++ b/tools/mtmd/mtmd-helper.cpp
-@@ -30,10 +30,10 @@
+@@ -32,10 +32,10 @@
  #define MA_NO_ENGINE
  #define MA_NO_GENERATION
  #define MA_API static
@@ -40,8 +41,21 @@ index bdf8bf6..aca400d 100644
  
  #ifdef MTMD_INTERNAL_HEADER
  #error "mtmd-helper is a public library outside of mtmd. it must not include internal headers"
+diff --git a/tools/server/server-common.cpp b/tools/server/server-common.cpp
+index 0013c09..96c401b 100644
+--- a/tools/server/server-common.cpp
++++ b/tools/server/server-common.cpp
+@@ -9,7 +9,7 @@
+ 
+ #include "server-common.h"
+ 
+-#include <cpp-httplib/httplib.h>
++#include <httplib.h>
+ 
+ #include <algorithm>
+ #include <cmath>
 diff --git a/tools/server/server-http.cpp b/tools/server/server-http.cpp
-index 2ec137a..5af43e4 100644
+index 5bdece5..1da0801 100644
 --- a/tools/server/server-http.cpp
 +++ b/tools/server/server-http.cpp
 @@ -4,7 +4,7 @@
@@ -51,13 +65,13 @@ index 2ec137a..5af43e4 100644
 -#include <cpp-httplib/httplib.h>
 +#include <httplib.h>
  
- #include <functional>
- #include <future>
+ #include <algorithm>
+ #include <cctype>
 diff --git a/tools/server/server-models.cpp b/tools/server/server-models.cpp
-index 3d134ac..eb99203 100644
+index 5b7d345..f57283a 100644
 --- a/tools/server/server-models.cpp
 +++ b/tools/server/server-models.cpp
-@@ -10,7 +10,7 @@
+@@ -12,7 +12,7 @@
  #include "http.h"
  #include "subproc.h"
  

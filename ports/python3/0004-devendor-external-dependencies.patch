@@ -21,7 +21,7 @@ index e0dc6ec187a..6f0570ddfbe 100644
      <ClInclude Include="$(bz2Dir)\bzlib_private.h" />
    </ItemGroup>
 diff --git a/PCbuild/_elementtree.vcxproj b/PCbuild/_elementtree.vcxproj
-index c102da85e9c..8df02e3b64a 100644
+index cd8c1ff1731..b6af3f2132d 100644
 --- a/PCbuild/_elementtree.vcxproj
 +++ b/PCbuild/_elementtree.vcxproj
 @@ -92,12 +92,12 @@
@@ -39,15 +39,15 @@ index c102da85e9c..8df02e3b64a 100644
      <ClInclude Include="..\Modules\expat\ascii.h" />
      <ClInclude Include="..\Modules\expat\asciitab.h" />
      <ClInclude Include="..\Modules\expat\expat.h" />
-@@ -118,6 +118,8 @@
+@@ -119,6 +119,8 @@
    </ItemGroup>
    <ItemGroup>
      <ClCompile Include="..\Modules\_elementtree.c" />
 +  </ItemGroup>
 +  <ItemGroup Condition="false">
+     <ClCompile Include="..\Modules\expat\xcs.c" />
      <ClCompile Include="..\Modules\expat\xmlparse.c" />
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
-     <ClCompile Include="..\Modules\expat\xmltok.c" />
 diff --git a/PCbuild/_lzma.vcxproj b/PCbuild/_lzma.vcxproj
 index 40107d4b76c..222fcae33c2 100644
 --- a/PCbuild/_lzma.vcxproj
@@ -87,7 +87,7 @@ index 9ae0a0fc3a0..564d7424f25 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/pyexpat.vcxproj b/PCbuild/pyexpat.vcxproj
-index 92ecac2f7a2..ca2c2a3a254 100644
+index 57d565fa289..010fe544698 100644
 --- a/PCbuild/pyexpat.vcxproj
 +++ b/PCbuild/pyexpat.vcxproj
 @@ -89,12 +89,12 @@
@@ -105,12 +105,12 @@ index 92ecac2f7a2..ca2c2a3a254 100644
      <ClInclude Include="..\Modules\expat\fallthrough.h" />
      <ClInclude Include="..\Modules\expat\hash_table.h" />
      <ClInclude Include="..\Modules\expat\memory_sanitizer.h" />
-@@ -103,6 +103,8 @@
+@@ -104,6 +104,8 @@
    </ItemGroup>
    <ItemGroup>
      <ClCompile Include="..\Modules\pyexpat.c" />
 +  </ItemGroup>
 +  <ItemGroup Condition="false">
+     <ClCompile Include="..\Modules\expat\xcs.c" />
      <ClCompile Include="..\Modules\expat\xmlparse.c" />
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
-     <ClCompile Include="..\Modules\expat\xmltok.c" />

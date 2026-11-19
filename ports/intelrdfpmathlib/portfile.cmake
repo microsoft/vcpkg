@@ -1,9 +1,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.netlib.org/misc/intel/IntelRDFPMathLib20U2.tar.gz"
-    FILENAME "IntelRDFPMathLib20U2.tar.gz"
-    SHA512 4d445855f41b066b784f0c6b4e52f854df4129fa9d43569b1e1518f002b860f69796459c78de46a8ea24fb6e7aefe7f8bc1f253e78971a5ef202dab2a7b1b75a
+    URLS "https://www.netlib.org/misc/intel/IntelRDFPMathLib20U5.tar.gz"
+    FILENAME "IntelRDFPMathLib20U5.tar.gz"
+    SHA512 7c9f8cfb0eb9a83aa8806b1eb85c48a3b849ab52e75dda9703bc876b27753e09d39c7104149dccdd415746327782a989ec29c918e4f5cccb31219d72190ca4e0
 )
 
 vcpkg_extract_source_archive(

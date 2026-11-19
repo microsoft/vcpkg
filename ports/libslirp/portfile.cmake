@@ -1,9 +1,9 @@
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO slirp/libslirp
     REF "v${VERSION}"
-    SHA512 cdb66f6280a9982de3c32269aee352bdf225db918590255abaed9bcd0aee4e996d2d8c2c3f62473f57485603ec29fd35723b0649d3ec3c41cc28b22ce913f63b
+    SHA512 e7ab5bae9696a5b3f9bc0a846757a5d7a9dd24407c04f1c3483730baa0b0269fb9574c5f26569f1718a4b51023a62a5c4b8826a82e5c44b8d14a1ede5fb7e566
     HEAD_REF master
 )
 

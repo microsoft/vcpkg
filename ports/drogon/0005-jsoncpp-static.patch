@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a03b8d7..27b0951 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -200,7 +200,7 @@ endif()
+ find_package(jsoncpp QUIET CONFIG)
+ if (jsoncpp_FOUND)
+   message(STATUS "jsoncpp found by config")
+-  if (USE_STATIC_LIBS_ONLY)
++  if (USE_STATIC_LIBS_ONLY OR (NOT TARGET jsoncpp_lib AND TARGET jsoncpp_static))
+     target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp_static)
+   else()
+     target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp_lib)

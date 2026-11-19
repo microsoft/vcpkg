@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -136,8 +136,8 @@ find_package(
+     CONFIG
+     REQUIRED
+         Core
+-        Qml
+ )
++find_package(Qt6Qml ${REQUIRED_QT_VERSION} CONFIG)
+ 
+ remove_definitions(
+     -DQT_NO_CAST_FROM_ASCII
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -126,7 +126,9 @@ install(
+     COMPONENT Devel
+ )
+ 
+-add_subdirectory(declarative)
++if(TARGET Qt6::Qml)
++    add_subdirectory(declarative)
++endif()
+ 
+ ecm_generate_qdoc(KF6Holidays kholidays.qdocconf)
+ 

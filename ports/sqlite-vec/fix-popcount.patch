@@ -1,0 +1,45 @@
+diff --git a/sqlite-vec.c b/sqlite-vec.c
+index de3176f..5d5483c 100644
+--- a/sqlite-vec.c
++++ b/sqlite-vec.c
+@@ -519,28 +519,28 @@ static f32 distance_hamming_u8(u8 *a, u8 *b, size_t n) {
+   return (f32)same;
+ }
+ 
+-#ifdef _MSC_VER
+-#if !defined(__clang__) && (defined(_M_ARM) || defined(_M_ARM64))
+-// From
+-// https://github.com/ngtcp2/ngtcp2/blob/b64f1e77b5e0d880b93d31f474147fae4a1d17cc/lib/ngtcp2_ringbuf.c,
+-// line 34-43
+-static unsigned int __builtin_popcountl(unsigned int x) {
++#if defined(_MSC_VER) && !defined(__clang__) && defined(_M_X64)
++#include <intrin.h>
++#endif
++
++static unsigned int vec_popcount64(u64 x) {
++#if defined(__GNUC__) || defined(__clang__)
++  return (unsigned int)__builtin_popcountll(x);
++#elif defined(_MSC_VER) && defined(_M_X64)
++  return (unsigned int)__popcnt64(x);
++#else
+   unsigned int c = 0;
+   for (; x; ++c) {
+     x &= x - 1;
+   }
+   return c;
+-}
+-#else
+-#include <intrin.h>
+-#define __builtin_popcountl __popcnt64
+-#endif
+ #endif
++}
+ 
+ static f32 distance_hamming_u64(u64 *a, u64 *b, size_t n) {
+   int same = 0;
+   for (unsigned long i = 0; i < n; i++) {
+-    same += __builtin_popcountl(a[i] ^ b[i]);
++    same += vec_popcount64(a[i] ^ b[i]);
+   }
+   return (f32)same;
+ }

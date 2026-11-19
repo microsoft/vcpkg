@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nevergiveupcpp/obfuscxx
     REF v${VERSION}
-    SHA512 5dee6c7d257a3bf4fb24e64f9459b4c9dd33f14d9c0c57847bd232d0d896d0c5b886eaaff2af15a9a98b96ae8f40f9c416af9b31a1207513427a42b9e925e892
+    SHA512 9a59bcfd8eec47cb3c02d6e063221b3f7896bf49b8f64ff10ccb727286722d658b82dafc32be25e1b6fe1167a13e91381023c6f0712e7d0b2be8d9439f427790
 )
 
 vcpkg_cmake_configure(

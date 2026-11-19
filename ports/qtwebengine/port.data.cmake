@@ -1,3 +1,3 @@
-set(qtwebengine_HASH "1bb67ca80ed8daf4fab2ac4afe8261903175b9685e499a73dfb1432f5dda39c15c299ca2e0f9681dbac9b92a0cc185b14890036301bebabe8134074350c164ea")
-set(qtwebengine_URL "https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtwebengine-everywhere-src-6.11.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.2/submodules/qtwebengine-everywhere-src-6.11.2.tar.xz")
-set(qtwebengine_FILENAME "qtwebengine-everywhere-src-6.11.2.tar.xz")
+set(qtwebengine_HASH "c24f14c9b0b2c15614af89f74f7ea126bbb98e98e80c824cefbeb7be650f0cc226bb8e3bb60edf5fa2ef007c58fd6e19e45592d4fec72131a3c5dd657009e23d")
+set(qtwebengine_URL "https://download.qt.io/archive/qt/6.11/6.11.3/submodules/qtwebengine-everywhere-src-6.11.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.11/6.11.3/submodules/qtwebengine-everywhere-src-6.11.3.tar.xz")
+set(qtwebengine_FILENAME "qtwebengine-everywhere-src-6.11.3.tar.xz")

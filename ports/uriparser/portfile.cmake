@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
     REF "uriparser-${VERSION}"
-    SHA512 1e4c397418e71e705b5712de2dc3ea6e95163c9d95bfbaa5f7d2fd2344d34eaf167d7d9389ab9671cfb314af026621b56e632ea34b681c2f4d7951a1b32a98b4
+    SHA512 b1af31f87f32a88152b66eb50c3bac21dc23eff2252b0112dc7387836d0a6af654d6cf779cf49e6999799b777407f413c9be63aea7ccaf8283f658d51cd0e8b0
     HEAD_REF master
 )
 

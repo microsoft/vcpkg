@@ -17,8 +17,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME knncolle_hnsw
-    CONFIG_PATH lib/cmake/knncolle_hnsw
+    PACKAGE_NAME knncolle_knncolle_hnsw
+    CONFIG_PATH lib/cmake/knncolle_knncolle_hnsw
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")

@@ -1,0 +1,9 @@
+taar provides CMake targets:
+
+  find_package(boost-taar CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE boost-taar::boost-taar)
+
+Programs that use TLS also need OpenSSL:
+
+  find_package(OpenSSL REQUIRED)
+  target_link_libraries(main PRIVATE OpenSSL::SSL)

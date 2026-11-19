@@ -1,0 +1,13 @@
+diff --git a/src/kpackage/CMakeLists.txt b/src/kpackage/CMakeLists.txt
+--- a/src/kpackage/CMakeLists.txt
++++ b/src/kpackage/CMakeLists.txt
+@@ -87,9 +87,6 @@ install(FILES
+         DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/KPackage/KPackage COMPONENT Devel)
+ 
+ install(TARGETS KF6Package EXPORT KF6PackageTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+-if (NOT BUILD_SHARED_LIBS)
+-    install(TARGETS kpackage_common_STATIC EXPORT KF6PackageTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
+-endif()
+ 
+ ecm_add_installed_library_check(KF6Package
+     PACKAGE_NAME "KF6Package"

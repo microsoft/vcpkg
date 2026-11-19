@@ -1,28 +1,28 @@
 diff --git a/cmake/DrogonUtilities.cmake b/cmake/DrogonUtilities.cmake
-index 7cb9799..5462572 100644
+index 7a61c4f..8e9fa64 100644
 --- a/cmake/DrogonUtilities.cmake
 +++ b/cmake/DrogonUtilities.cmake
-@@ -3,6 +3,7 @@
- # [TRUE to use_path_as_namespace] [prefixed namespace])
- # ##############################################################################
+@@ -12,6 +12,7 @@ if(NOT DEFINED DEFAULT_HEADER_EXTENSION)
+ endif()
+ 
  function(drogon_create_views arg)
 +  find_program(DROGON_CTL_COMMAND drogon_ctl REQUIRED)
    if(ARGC LESS 3)
      message(STATUS "arguments error when calling drogon_create_views")
      return()
-@@ -39,7 +40,7 @@ function(drogon_create_views arg)
+@@ -48,7 +49,7 @@ function(drogon_create_views arg)
          set(ns "")
        endif()
-       add_custom_command(OUTPUT ${ARGV2}/${outputFile}.h ${ARGV2}/${outputFile}.cc
+       add_custom_command(OUTPUT ${ARGV2}/${outputFile}.${DEFAULT_HEADER_EXTENSION} ${ARGV2}/${outputFile}.${DEFAULT_SOURCE_EXTENSION}
 -                         COMMAND drogon_ctl
 +                         COMMAND ${DROGON_CTL_COMMAND}
                                   ARGS
                                   create
                                   view
-@@ -55,7 +56,7 @@ function(drogon_create_views arg)
+@@ -64,7 +65,7 @@ function(drogon_create_views arg)
      else()
        get_filename_component(classname ${cspFile} NAME_WE)
-       add_custom_command(OUTPUT ${ARGV2}/${classname}.h ${ARGV2}/${classname}.cc
+       add_custom_command(OUTPUT ${ARGV2}/${classname}.${DEFAULT_HEADER_EXTENSION} ${ARGV2}/${classname}.${DEFAULT_SOURCE_EXTENSION}
 -                         COMMAND drogon_ctl
 +                         COMMAND ${DROGON_CTL_COMMAND}
                                   ARGS

@@ -14,6 +14,7 @@ description: >
   When requested analysis lacks local evidence, run fetch-vcpkg-ci-logs as the acquisition stage first.
 
   **ANALYSIS SKILL** USES: locally collected CI logs, vcpkg baselines, Azure DevOps metadata.
+disable-model-invocation: true
 ---
 
 # vcpkg CI Failures Analyzer

@@ -1,0 +1,13 @@
+diff --git a/magick/studio.h b/magick/studio.h
+index 5114789..8b2acbf 100644
+--- a/magick/studio.h
++++ b/magick/studio.h
+@@ -474,7 +474,7 @@ extern size_t strlcpy(char *dst, const char *src, size_t dstsize);
+ #if defined(HasLTDL)
+ #  define SupportMagickModules
+ #elif !defined(__MINGW32__) && !defined(__MINGW64__)
+-#  if defined(MSWINDOWS) && defined(_DLL)
++#  if defined(MSWINDOWS) && defined(_DLL) && defined(_VISUALC_)
+ #    define SupportMagickModules
+ #  endif
+ #endif

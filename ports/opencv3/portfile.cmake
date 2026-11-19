@@ -25,6 +25,7 @@ vcpkg_from_github(
       0021-protobuf-6.patch # 1db93911aeb65599f22db47d5d39f75bc94a821d
       0022-include-thread.patch
       0023-cout.diff
+      0024-protobuf-7.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)

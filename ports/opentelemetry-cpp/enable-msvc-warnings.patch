@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 00d3a9a..f6c081b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -565,6 +565,8 @@ if(OTELCPP_MAINTAINER_MODE)
+   elseif()
+     message(FATAL_ERROR "Building with unknown compiler in maintainer mode.")
+   endif()
++elseif(MSVC)
++  add_compile_options(/W3)
+ endif(OTELCPP_MAINTAINER_MODE)
+ 
+ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")

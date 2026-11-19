@@ -1,0 +1,16 @@
+diff --git a/src/compress/rpc_compress_lz4.h b/src/compress/rpc_compress_lz4.h
+index 07b0412..b035d76 100644
+--- a/src/compress/rpc_compress_lz4.h
++++ b/src/compress/rpc_compress_lz4.h
+@@ -39,7 +39,11 @@ static constexpr LZ4F_preferences_t kPrefs = {
+ 	0,   /* compression level; 0 == default */
+ 	0,   /* autoflush */
+ 	0,   /* favor decompression speed */
++#if defined(LZ4_VERSION_NUMBER) && (LZ4_VERSION_NUMBER >= 11100)
++	0, 0, 0,  /* nbWorkers and reserved fields */
++#else
+ 	{ 0, 0, 0 },  /* reserved, must be set to 0 */
++#endif
+ };
+ 
+ /*

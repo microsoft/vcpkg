@@ -1,0 +1,11 @@
+diff --git a/GLTFSDK.Samples/CMakeLists.txt b/GLTFSDK.Samples/CMakeLists.txt
+index a66ed93..4f1fa13 100644
+--- a/GLTFSDK.Samples/CMakeLists.txt
++++ b/GLTFSDK.Samples/CMakeLists.txt
+@@ -1,4 +1,6 @@
+ cmake_minimum_required(VERSION 3.5)
+ 
++set(CMAKE_CXX_STANDARD 17)
++
+ add_subdirectory(Deserialize)
+ add_subdirectory(Serialize)

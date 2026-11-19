@@ -30,5 +30,15 @@ vcpkg_qmake_install()
 
 vcpkg_copy_pdbs()
 
+# Upstream does not provide a CMake config
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-qcustomplot-config.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/unofficial-qcustomplot/unofficial-qcustomplot-config.cmake" @ONLY)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("${CURRENT_PACKAGES_DIR}/share/unofficial-qcustomplot/unofficial-qcustomplot-config-version.cmake"
+    VERSION "${VERSION}"
+    COMPATIBILITY SameMajorVersion
+)
+
 # Handle copyright
-configure_file(${SOURCE_PATH}/GPL.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/GPL.txt")

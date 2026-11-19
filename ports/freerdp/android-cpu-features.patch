@@ -1,0 +1,57 @@
+diff --git a/winpr/CMakeLists.txt b/winpr/CMakeLists.txt
+index a636795..56b5e29 100644
+--- a/winpr/CMakeLists.txt
++++ b/winpr/CMakeLists.txt
+@@ -481,6 +481,10 @@ else()
+   pkg_config_add_threads(WINPR_PC_LIBRARY_PRIVATE ${CMAKE_DL_LIBS} rt m)
+ endif()
+ 
++if(ANDROID)
++  string(APPEND WINPR_PC_LIBRARY_PRIVATE " -lndk_compat")
++endif()
++
+ # Do not set Requires.Private if not a static build
+ if(BUILD_SHARED_LIBS)
+   set(WINPR_PC_REQUIRES_PRIVATE "")
+diff --git a/winpr/WinPRConfig.cmake.in b/winpr/WinPRConfig.cmake.in
+index 05d7732..c319f84 100644
+--- a/winpr/WinPRConfig.cmake.in
++++ b/winpr/WinPRConfig.cmake.in
+@@ -1,6 +1,10 @@
+ include(CMakeFindDependencyMacro)
+ 
+ if(NOT "@BUILD_SHARED_LIBS@")
++	if("@ANDROID@")
++		find_dependency(CpuFeaturesNdkCompat CONFIG)
++	endif()
++
+ 	if(NOT "@WITH_JSON_DISABLED@")
+ 	    if("@JSONC_FOUND@" AND NOT "@WITH_CJSON_REQUIRED@")
+ 	        find_dependency(JSONC)
+diff --git a/winpr/libwinpr/sysinfo/CMakeLists.txt b/winpr/libwinpr/sysinfo/CMakeLists.txt
+index 7a226df..07edc2a 100644
+--- a/winpr/libwinpr/sysinfo/CMakeLists.txt
++++ b/winpr/libwinpr/sysinfo/CMakeLists.txt
+@@ -16,7 +16,8 @@
+ # limitations under the License.
+ 
+ if(ANDROID)
+-  add_subdirectory(cpufeatures)
++  find_package(CpuFeaturesNdkCompat CONFIG REQUIRED GLOBAL)
++  winpr_library_add_private(CpuFeatures::ndk_compat)
+ endif()
+ 
+ winpr_module_add(sysinfo.c)
+diff --git a/winpr/libwinpr/sysinfo/sysinfo.c b/winpr/libwinpr/sysinfo/sysinfo.c
+index ad71ad1..04994aa 100644
+--- a/winpr/libwinpr/sysinfo/sysinfo.c
++++ b/winpr/libwinpr/sysinfo/sysinfo.c
+@@ -25,7 +25,7 @@
+ #include <winpr/platform.h>
+ 
+ #if defined(ANDROID)
+-#include "cpufeatures/cpu-features.h"
++#include <cpu-features.h>
+ #endif
+ 
+ #if defined(__linux__)

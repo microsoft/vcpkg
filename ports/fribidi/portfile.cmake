@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fribidi/fribidi
     REF "v${VERSION}"
-    SHA512 7cb021b2e2e25f5a9867e0c05cc5c0d2b9668172fb9409dda5b5ec330af57448c83afe82ff287e9f23488175aba65a9b7b628c221a8724959ffb42752361c5a1
+    SHA512 639b806d28416b9c6fd053ebe112cfc0bbcd6e19bb947a7ec2746ff7006e8f5f3815f04a231621c170a7316a88eb10b3a65e1e221a1ce1adf9ce71fda216645f
     HEAD_REF master
     PATCHES meson-crosscompile.patch
 )

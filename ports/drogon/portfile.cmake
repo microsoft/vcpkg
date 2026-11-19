@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO drogonframework/drogon
     REF "v${VERSION}"
-    SHA512 b76455116d453711052fae418b7a95934fa0822b1db9a85c567a9cf5d1fdf8c59df852bef0a481515d9eb4ce8267d1882e080c1bd003e4102234f4a7b51f77b5
+    SHA512 19108dc00cfe0ca46eb45e1c47808ba742f41626407ced322202c417a1ce159e787fbe54c435c6543790df6ee97447875555d4a81cfcfd55bb82a2778e57cf4b
     HEAD_REF master
     PATCHES
          0001-vcpkg.patch
          0002-drogon-config.patch
          0003-deps-redis.patch
          0004-drogon-ctl.patch
-         0005-fix-1.9.13-chunked-encoding-close-connection.patch
+         0005-jsoncpp-static.patch
 )
 
 vcpkg_check_features(
@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DUSE_SUBMODULE=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         ${FEATURE_OPTIONS}
 )
 

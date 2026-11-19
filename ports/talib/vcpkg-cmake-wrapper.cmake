@@ -1,76 +1,22 @@
-get_filename_component(_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+message(WARNING "find_package(talib) and talib::talib are deprecated. Use:\n"
+    "  find_package(ta-lib CONFIG REQUIRED)\n"
+    "  target_link_libraries(main PRIVATE ta-lib::ta-lib)")
 
-find_path(talib_INCLUDE_DIR
-  NAMES ta_libc.h
-  PATHS "${_prefix}/include/ta-lib" "${_prefix}/include"
-  NO_DEFAULT_PATH
-)
-
-# Unix-style single lib
-find_library(talib_LIBRARY_RELEASE
-  NAMES ta-lib
-  PATHS "${_prefix}/lib"
-  NO_DEFAULT_PATH
-)
-find_library(talib_LIBRARY_DEBUG
-  NAMES ta-lib
-  PATHS "${_prefix}/debug/lib"
-  NO_DEFAULT_PATH
-)
-
-set(talib_LIBRARIES_RELEASE "")
-set(talib_LIBRARIES_DEBUG "")
-
-if(talib_LIBRARY_RELEASE OR talib_LIBRARY_DEBUG)
-  if(talib_LIBRARY_RELEASE)
-    list(APPEND talib_LIBRARIES_RELEASE "${talib_LIBRARY_RELEASE}")
-  endif()
-  if(talib_LIBRARY_DEBUG)
-    list(APPEND talib_LIBRARIES_DEBUG "${talib_LIBRARY_DEBUG}")
-  endif()
-else()
-  foreach(component ta_common ta_func ta_abstract ta_libc)
-    find_library(talib_${component}_LIBRARY_RELEASE
-      NAMES ${component}
-      PATHS "${_prefix}/lib"
-      NO_DEFAULT_PATH
-    )
-    find_library(talib_${component}_LIBRARY_DEBUG
-      NAMES ${component}
-      PATHS "${_prefix}/debug/lib"
-      NO_DEFAULT_PATH
-    )
-
-    if(talib_${component}_LIBRARY_RELEASE)
-      list(APPEND talib_LIBRARIES_RELEASE "${talib_${component}_LIBRARY_RELEASE}")
+set(z_vcpkg_talib_args "")
+foreach(z_vcpkg_talib_arg IN ITEMS REQUIRED QUIET)
+    list(FIND ARGS "${z_vcpkg_talib_arg}" z_vcpkg_talib_index)
+    if(NOT z_vcpkg_talib_index EQUAL -1)
+        list(APPEND z_vcpkg_talib_args ${z_vcpkg_talib_arg})
     endif()
-    if(talib_${component}_LIBRARY_DEBUG)
-      list(APPEND talib_LIBRARIES_DEBUG "${talib_${component}_LIBRARY_DEBUG}")
-    endif()
-  endforeach()
+endforeach()
+find_package(ta-lib CONFIG ${z_vcpkg_talib_args})
+unset(z_vcpkg_talib_arg)
+unset(z_vcpkg_talib_index)
+unset(z_vcpkg_talib_args)
+
+if(ta-lib_FOUND AND NOT TARGET talib::talib)
+    add_library(talib::talib INTERFACE IMPORTED)
+    set_target_properties(talib::talib PROPERTIES INTERFACE_LINK_LIBRARIES ta-lib::ta-lib)
 endif()
-
-include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(talib
-  REQUIRED_VARS talib_INCLUDE_DIR talib_LIBRARIES_RELEASE
-)
-
-if(talib_FOUND AND NOT TARGET talib::talib)
-  add_library(talib::talib INTERFACE IMPORTED)
-  # Both <ta_libc.h> (upstream's documented form) and <ta-lib/ta_libc.h> compile.
-  set_property(TARGET talib::talib PROPERTY
-    INTERFACE_INCLUDE_DIRECTORIES "${talib_INCLUDE_DIR}" "${_prefix}/include"
-  )
-
-  if(NOT talib_LIBRARIES_DEBUG)
-    set(talib_LIBRARIES_DEBUG "${talib_LIBRARIES_RELEASE}")
-  endif()
-
-  target_link_libraries(talib::talib INTERFACE
-    $<$<CONFIG:Debug>:${talib_LIBRARIES_DEBUG}>
-    $<$<NOT:$<CONFIG:Debug>>:${talib_LIBRARIES_RELEASE}>
-  )
-  if(UNIX AND NOT APPLE)
-    target_link_libraries(talib::talib INTERFACE m)
-  endif()
-endif()
+set(talib_FOUND "${ta-lib_FOUND}")
+set(TALIB_FOUND "${ta-lib_FOUND}")

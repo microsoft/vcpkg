@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-ci-libraw",
+  "version-string": "ci",
+  "description": "Port to validate libraw within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "libraw",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

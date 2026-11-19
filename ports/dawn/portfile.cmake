@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 bd89894435f502d904955ad0207a4245c192dda183857eb87c6487cdb5a799ae3bbd19ab1f4c90e32b8f808dfcabf58a190e5c480de198dd7aa5728506bef6c1
+        SHA512 9fe091b89f2375cb4bddf075385e34b58d263f359536d4b7cf13dd2b16eca1a1525faaf4adf73d6df91ab8da5c02e1f018898a06473087d9d91a8a1d507bb9e9
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -36,7 +36,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 3c1c2f71508547adbe564dc0da8215e6d54c64176e611ba7e597db2f38d93cba2e735dc6f672585da8ed7ae0ad0c0784f02adcdda85026fe6def3b87fc4349d5
+    SHA512 919ee5c3c24def5d524a202cc069fd0f3d47c58bd6d1ddc9f79d474240289d5c81893b27d33e848694b41eba002ef553f9bbf0610ea71284280e0090bb0be82a
     HEAD_REF master
     PATCHES
         # DAWN_BUILD_MONOLITHIC_LIBRARY SHARED/STATIC requires BUILD_SHARED_LIBS=OFF
@@ -97,7 +97,7 @@ endfunction()
 z_vcpkg_from_git_to_path(
     OUT_SOURCE_PATH "${SOURCE_PATH}/third_party/jinja2"
     URL "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
-    REF c3027d884967773057bf74b957e3fea87e5df4d7
+    REF fde3c16799bd5937e4f15aedc9037c89f96236b9
 )
 
 z_vcpkg_from_git_to_path(
@@ -109,16 +109,16 @@ z_vcpkg_from_git_to_path(
 z_vcpkg_from_github_to_path(
     OUT_SOURCE_PATH "${SOURCE_PATH}/third_party/spirv-headers/src"
     REPO KhronosGroup/SPIRV-Headers
-    REF 04fd3caa1e8267e4d95c806cad901181728e1006
-    SHA512 90a60f8538b704b9c4e799d044c2e14673d6a42742d17315cd65e2ef7870fb094eb74450bf12a768a539c920d2cb9962fc83e328594ef72507f6b882915eb5ab
+    REF 6efe5ae6b7c6ad29da3f2cc3f164b9c3d72b78b1
+    SHA512 c029b5b634efd59563b5e270290e2a0ce6f9f443ae80d6a46783a22dd89ef65bc76749899af4c607beea832b96542e88536b7bab39e634d8641d18920b11dd8a
     HEAD_REF main
 )
 
 z_vcpkg_from_github_to_path(
     OUT_SOURCE_PATH "${SOURCE_PATH}/third_party/spirv-tools/src"
     REPO KhronosGroup/SPIRV-Tools
-    REF e265f557e3db20843c6d135d2b9eeb51ecc79d73
-    SHA512 2c06b7fc6fdf51fdb27ee5c80cc632521f53da14571f5511d34646277580c184a0b52033169437848791e28737f08e612d350f88ba230ff7eb5fc73ef439446b
+    REF 251c437ef506157c139f77f5525c02223bc78868
+    SHA512 08e3abf180d427fa115d8c2a80df9ed5fc066a5d92b91f9a1efa5ac3ec398e52fab250826975b82eed54fb762e9c96a2270d3410ec6f55fc47d96c7fb587ce90
     HEAD_REF main
     PATCHES
         # Dawn sets SPIRV_WERROR to OFF when building SPIRV-Tools, but https://github.com/KhronosGroup/SPIRV-Tools/commit/337fdb6a284fe7f7e374a14271f8e20e579f3263 ignores that CMake variable and forces /WX
@@ -128,8 +128,8 @@ z_vcpkg_from_github_to_path(
 z_vcpkg_from_github_to_path(
     OUT_SOURCE_PATH "${SOURCE_PATH}/third_party/webgpu-headers/src"
     REPO webgpu-native/webgpu-headers
-    REF b5ff182caa90e53293f47939716281342c0812ba
-    SHA512 ec5a9d1afff0c55b2892e6cf4372d8065220222e5e7b7e639faf5def43d8d5e68f4d5203555449d347009c17bac20ab4975766bc12ddd3ca5c25525815086463
+    REF a1dc77409bb2b8bd80540cbf4b8db219e123e909
+    SHA512 9d0f934bf194da118912a2158c75d05a29499755acdeeb2796e21ed98eead32eba4e5beed9de8b97eed9a0eb1f28563dfdd1ca18a1d54263dcd19e32fa25bae4
     HEAD_REF main
 )
 

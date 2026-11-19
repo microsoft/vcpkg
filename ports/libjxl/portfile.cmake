@@ -2,21 +2,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
     REF "v${VERSION}"
-    SHA512 71d45123e47588c8028c0e01a7820c7a18d98df05c29b5318ab6858eaff5f249879763907201ba19a93f817c6ef75c393c1974d2a0cc8e461c4e2709ca6fa45f
+    SHA512 f5a6cc4c875c9cdd217001096d34e5912afffdf3a58bae816c1c28c7e241eb0909ea37af0bef6d4b2fb8fae20ae94e29b2ef30fb65f778d4a7d62e07e20e3f85
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
-        msvc-remove-libm.patch
+        fix-jxl-static.diff
+        fix-pkgconfig.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools JPEGXL_ENABLE_TOOLS
-    INVERTED_FEATURES
-        tools CMAKE_DISABLE_FIND_PACKAGE_GIF
-        tools CMAKE_DISABLE_FIND_PACKAGE_JPEG
-        tools CMAKE_DISABLE_FIND_PACKAGE_PNG
-        tools CMAKE_DISABLE_FIND_PACKAGE_ZLIB
+        tools VCPKG_LOCK_FIND_PACKAGE_GIF
+        tools VCPKG_LOCK_FIND_PACKAGE_JPEG
+        tools VCPKG_LOCK_FIND_PACKAGE_PNG
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -47,10 +46,8 @@ vcpkg_cmake_configure(
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
         -DJPEGXL_BUNDLE_LIBPNG=OFF
     MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_GIF
-        CMAKE_DISABLE_FIND_PACKAGE_JPEG
-        CMAKE_DISABLE_FIND_PACKAGE_PNG
-        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
+        VCPKG_LOCK_FIND_PACKAGE_GIF
+        VCPKG_LOCK_FIND_PACKAGE_JPEG
 )
 
 vcpkg_cmake_install()
@@ -63,6 +60,8 @@ endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_export.h" "ifdef JXL_STATIC_DEFINE" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_cms_export.h" "ifdef JXL_CMS_STATIC_DEFINE" "if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/jxl/jxl_threads_export.h" "ifdef JXL_THREADS_STATIC_DEFINE" "if 1")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

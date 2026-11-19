@@ -1,26 +1,26 @@
 diff --git a/app/app_pb/CMakeLists.txt b/app/app_pb/CMakeLists.txt
-index edd036188..1aae43a81 100644
+index aba4a91..86c4db1 100644
 --- a/app/app_pb/CMakeLists.txt
 +++ b/app/app_pb/CMakeLists.txt
-@@ -68,7 +68,7 @@ target_compile_options(${PROJECT_NAME}
- 
- set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
- 
--target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
-+target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
- target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14) 
- 
- ecal_install_library(${PROJECT_NAME})
+@@ -51,7 +51,7 @@ set(ProtoFiles
+ # don't do that is, that the default Ubuntu libprotobuf.a doesn't contain 
+ # position independent code and can therefore not be statically compiled into a 
+ # shared object library.
+-if(WIN32)
++if(WIN32 OR NOT BUILD_SHARED_LIBS)
+   ecal_add_static_library(${PROJECT_NAME} src/app_pb.cpp)
+ else()
+   ecal_add_shared_library(${PROJECT_NAME} src/app_pb.cpp)
 diff --git a/ecal/core_pb/CMakeLists.txt b/ecal/core_pb/CMakeLists.txt
-index e8f0704c7..502a92c11 100644
+index 7052400..e77fd31 100644
 --- a/ecal/core_pb/CMakeLists.txt
 +++ b/ecal/core_pb/CMakeLists.txt
-@@ -63,7 +63,7 @@ target_compile_options(${PROJECT_NAME}
- 
- set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
- 
--target_link_libraries(${PROJECT_NAME} protobuf::libprotobuf)
-+target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)
- target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
- 
- ecal_install_library(${PROJECT_NAME})
+@@ -160,7 +160,7 @@ target_sources(core_protos
+ # don't do that is, that the default Ubuntu libprotobuf.a doesn't contain 
+ # position independent code and can therefore not be statically compiled into a 
+ # shared object library.
+-if (WIN32)
++if(WIN32 OR NOT BUILD_SHARED_LIBS)
+   ecal_add_static_library(${PROJECT_NAME} src/core_pb.cpp)
+ else()
+   ecal_add_shared_library(${PROJECT_NAME} src/core_pb.cpp)

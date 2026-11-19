@@ -3,7 +3,7 @@ string(REGEX MATCH "^([0-9]+\\.[0-9]+)" VERSION_SHORT "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v${VERSION_SHORT}/util-linux-${VERSION}.tar.xz"
     FILENAME "util-linux-${VERSION}.tar.xz"
-    SHA512 3d299f0e05a4c982a04dbcbaaeff1222152feedf51c56c5dbdeb75999c68269d652a994f5cdf4c1ee42bb7b28475dd0792192c299fd9bc3b45198c5b153dad00
+    SHA512 3aea9ebd835b353e0c73356f0e4543ba4c3ad448e4f50a386c35cfaac81cbf45425b1a6c7552ed5673580acf2b58f8af2792f5b3019ffe478edd77c7ebf444dc
 )
 
 vcpkg_extract_source_archive(
@@ -36,7 +36,9 @@ vcpkg_make_configure(
         --disable-all-programs
         --disable-dependency-tracking
         --enable-libmount
+        --disable-libmount-udev-support
         --enable-libblkid
+        --without-econf
         "--mandir=${CURRENT_PACKAGES_DIR}/share/man"
 )
 
@@ -54,4 +56,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/tools"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.licensing" "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/README.licensing"
+    "${SOURCE_PATH}/COPYING"
+)

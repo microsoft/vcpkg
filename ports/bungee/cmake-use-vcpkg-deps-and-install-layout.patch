@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2a0af39..12afb7f 100644
+index 13115d4..66748d2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -10,9 +10,12 @@ endif()
@@ -15,16 +15,16 @@ index 2a0af39..12afb7f 100644
  
  if (WIN32)
    set(BUNGEE_EXPORT "__declspec(dllexport)")
-@@ -28,7 +31,7 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
- else()
+@@ -29,8 +32,6 @@ else()
    add_library(bungee_library STATIC ${BUNGEE_LIBRARY_HEADERS} ${BUNGEE_SOURCE_FILES})
  endif()  
--target_include_directories(bungee_library PRIVATE  submodules/eigen submodules .)
-+target_include_directories(bungee_library PRIVATE .)
+ target_include_directories(bungee_library PRIVATE  
+-  submodules/eigen 
+-  submodules/pffft
+   .
+ )
  target_compile_definitions(bungee_library PRIVATE
-   BUNGEE_VISIBILITY=${BUNGEE_EXPORT}
-   BUNGEE_SELF_TEST=${BUNGEE_SELF_TEST}
-@@ -38,30 +41,15 @@ target_compile_definitions(bungee_library PRIVATE
+@@ -42,30 +43,15 @@ target_compile_definitions(bungee_library PRIVATE
  )
  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp PROPERTIES COMPILE_DEFINITIONS BUNGEE_VERSION=\"${BUNGEE_VERSION}\")
  target_compile_options(bungee_library PRIVATE $<$<CXX_COMPILER_ID:GNU,Clang>:-fwrapv>)
@@ -57,7 +57,7 @@ index 2a0af39..12afb7f 100644
    if (BUNGEE_INSTALL_FRAMEWORK)
      set_target_properties(bungee_library PROPERTIES
        FRAMEWORK TRUE
-@@ -78,32 +66,21 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
+@@ -82,32 +68,21 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
    endif()
    install(FILES 
      ${BUNGEE_LIBRARY_HEADERS}

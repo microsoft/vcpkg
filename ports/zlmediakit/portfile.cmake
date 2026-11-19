@@ -1,12 +1,19 @@
+vcpkg_download_distfile(OPENSSL_COMPAT_PATCH
+    URLS https://github.com/ZLMediaKit/ZLMediaKit/commit/bb83e697a60ad9dde679afcd7b85feeafdf7514b.patch?full_index=1
+    FILENAME zlmediakit-openssl-compat.patch
+    SHA512 191cd0eca2928bfe3e19e138aa29fe2dff89354103ab796677c9f26498c97df772c71c0c955d7f184c9b10b26ca4ecc8e91a2fbe2e8d4fa7acc1004d2b40dd6c
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ZLMediaKit/ZLMediaKit
     REF 6b2fcf79435656be7797d396203adcc6c11ecc52
     SHA512 a2efe81f7fe6267418cc1e98f74283a10481b995815131324b7587c82f451d4bd35aa0190ef59efe46a057369208d4bf0658eaba44ae1a8532c6162cfb6e34f5
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix-dependency.patch
         fix-android.patch
+        "${OPENSSL_COMPAT_PATCH}"
 )
 
 vcpkg_from_github(
@@ -84,7 +91,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES MediaServer AUTO_CLEAN)
-    
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 

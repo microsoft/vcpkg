@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 377a7f2..d896c52 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -756,6 +756,7 @@ if(SENTRY_BACKEND_CRASHPAD)
+ 	add_subdirectory(external/crashpad crashpad_build)
+ 
+ 	if(WIN32 AND SENTRY_TRANSPORT_CRASHPAD_USE_WER)
++		target_compile_definitions(sentry PRIVATE SENTRY_TRANSPORT_CRASHPAD_USE_WER)
+ 		add_dependencies(sentry crashpad::wer)
+ 	endif()
+ 

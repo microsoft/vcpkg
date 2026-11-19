@@ -1,0 +1,10 @@
+diff --git a/pkgconfig/hexl.pc.in b/pkgconfig/hexl.pc.in
+index 6988e3c..2b442e1 100644
+--- a/pkgconfig/hexl.pc.in
++++ b/pkgconfig/hexl.pc.in
+@@ -10,4 +10,5 @@ Version: @HEXL_VERSION@
+ Description: Intel® HEXL is an open-source library which provides efficient implementations of integer arithmetic on Galois fields.
+ 
+ Libs: -L${libdir} @HEXL_ASAN_LINK@ -l@HEXL_TARGET_NAME@
++Libs.private: -lcpu_features
+ Cflags: -I${includedir} @HEXL_ASAN_LINK@

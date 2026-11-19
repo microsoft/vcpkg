@@ -1,0 +1,56 @@
+diff --git a/src/3rdparty/chromium/components/autofill/content/browser/content_autofill_driver.cc b/src/3rdparty/chromium/components/autofill/content/browser/content_autofill_driver.cc
+index e746969..c15d7af 100644
+--- a/src/3rdparty/chromium/components/autofill/content/browser/content_autofill_driver.cc
++++ b/src/3rdparty/chromium/components/autofill/content/browser/content_autofill_driver.cc
+@@ -233,7 +233,8 @@ R RouteToAgent(AutofillDriverRouter& router,
+                void (mojom::AutofillAgent::*agent_fun)(AgentArgs...),
+                ActualArgs&&... args) {
+   return (router.*router_fun)(
+-      [&agent_fun](autofill::AutofillDriver& target, AgentArgs... args) {
++      [&agent_fun](autofill::AutofillDriver& target,
++                   AgentArgs... agent_args) {
+         if (!target.IsActive()) {
+           // We early-return rather than crashing or killing the renderer
+           // because Autofill might want to communicate with a frame that just
+@@ -243,7 +244,7 @@ R RouteToAgent(AutofillDriverRouter& router,
+         }
+         mojom::AutofillAgent& agent =
+             *static_cast<ContentAutofillDriver&>(target).GetAutofillAgent();
+-        (agent.*agent_fun)(std::forward<AgentArgs>(args)...);
++        (agent.*agent_fun)(std::forward<AgentArgs>(agent_args)...);
+       },
+       std::forward<ActualArgs>(args)...);
+ }
+@@ -271,10 +272,11 @@ void RouteToManager(ContentAutofillDriver& source,
+     return;
+   }
+   return (router.*router_fun)(
+-      [&manager_fun](autofill::AutofillDriver& target, ManagerArgs... args) {
++      [&manager_fun](autofill::AutofillDriver& target,
++                     ManagerArgs... manager_args) {
+         AutofillManager& manager = target.GetAutofillManager();
+-        (manager.*
+-         manager_fun)(WithNewVersion(std::forward<ManagerArgs>(args))...);
++        (manager.*manager_fun)(
++            WithNewVersion(std::forward<ManagerArgs>(manager_args))...);
+       },
+       source, Lift(source, std::forward<ActualArgs>(args))...);
+ }
+diff --git a/src/3rdparty/chromium/content/browser/file_system_access/file_system_access_manager_impl.h b/src/3rdparty/chromium/content/browser/file_system_access/file_system_access_manager_impl.h
+index d5dcc3f..acaff74 100644
+--- a/src/3rdparty/chromium/content/browser/file_system_access/file_system_access_manager_impl.h
++++ b/src/3rdparty/chromium/content/browser/file_system_access/file_system_access_manager_impl.h
+@@ -451,10 +451,11 @@ class CONTENT_EXPORT FileSystemAccessManagerImpl
+     auto wrapped_callback = base::BindRepeating(
+         [](scoped_refptr<base::SequencedTaskRunner> runner,
+            const base::RepeatingCallback<void(CallbackArgs...)>& callback,
+-           CallbackArgs... args) {
++           CallbackArgs... callback_args) {
+           runner->PostTask(
+               FROM_HERE,
+-              base::BindOnce(callback, std::forward<CallbackArgs>(args)...));
++              base::BindOnce(callback,
++                             std::forward<CallbackArgs>(callback_args)...));
+         },
+         base::SequencedTaskRunner::GetCurrentDefault(), std::move(callback));
+ 

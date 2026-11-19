@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bungee-audio-stretch/bungee
     REF "v${VERSION}"
-    SHA512 ec5bf082385716d6246dbd31b7ef34620654cf4290dd1b9ff3279275bfdc1deb5f5636785ecf97e72ef637afdfe9c7761d13eeda736831da76ab273b87f5e789
+    SHA512 b4ee26c4b410792a003f5a8c5612752c2f9d8a425f09542edd2e857dcd4e21fe6804dfc605e557b428ebde103ad97fcbd7225033efb337a5ab93cbdf7f1ce842
     HEAD_REF main
     PATCHES
         cmake-use-vcpkg-deps-and-install-layout.patch

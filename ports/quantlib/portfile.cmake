@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
     REF "v${VERSION}"
-    SHA512 5e2c0c14d3f180ad92188484a64fa534e488574112af1d8651ac4b6043b4aab270b0103422c60b57ea816bd02fa64736dbb1f8db1221b8f1da39d66b59bec5e4
+    SHA512 42a504d0bdce89709a8f3ebcf9b79433ca1629a0281c75e7c948808ede012166b89fbfa0a50345c330e106a2239e5e4cc5dfcf9912ace8a90aeb8be3ed6bcfff
     HEAD_REF master
 )
 
@@ -21,6 +21,17 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME QuantLib CONFIG_PATH lib/cmake/QuantLib)
 vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    foreach(config IN ITEMS "" "/debug")
+        set(pkgconfig_file "${CURRENT_PACKAGES_DIR}${config}/lib/pkgconfig/quantlib.pc")
+        if(EXISTS "${pkgconfig_file}")
+            file(GLOB quantlib_libraries "${CURRENT_PACKAGES_DIR}${config}/lib/QuantLib*.lib")
+            list(GET quantlib_libraries 0 quantlib_library)
+            get_filename_component(quantlib_library_name "${quantlib_library}" NAME_WE)
+            vcpkg_replace_string("${pkgconfig_file}" "-lQuantLib" "-l${quantlib_library_name}")
+        endif()
+    endforeach()
+endif()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

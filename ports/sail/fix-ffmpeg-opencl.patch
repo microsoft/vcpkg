@@ -1,0 +1,21 @@
+diff --git a/src/sail-codecs/video/CMakeLists.txt b/src/sail-codecs/video/CMakeLists.txt
+index bfb40c2..7ba7f5a 100644
+--- a/src/sail-codecs/video/CMakeLists.txt
++++ b/src/sail-codecs/video/CMakeLists.txt
+@@ -44,6 +44,16 @@ elseif (ANDROID)
+     set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "link_libraries,${VIDEO_SYSTEM_LIBRARIES_JOINED}")
+ endif()
+ 
++# FFmpeg may be built with OpenCL support. pkg-config reports it as a plain -lOpenCL
++# that FindPkgConfig can leave unresolved, so export OpenCL as a regular dependency.
++#
++if ("-lOpenCL" IN_LIST FFMPEG_LDFLAGS OR "-lOpenCL" IN_LIST FFMPEG_STATIC_LDFLAGS)
++    find_package(OpenCL REQUIRED)
++
++    set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} "find_dependency,OpenCL,OpenCL::OpenCL")
++    list(APPEND VIDEO_SYSTEM_LIBRARIES OpenCL::OpenCL)
++endif()
++
+ set(SAIL_CODECS_FIND_DEPENDENCIES ${SAIL_CODECS_FIND_DEPENDENCIES} PARENT_SCOPE)
+ 
+ # Common codec configuration

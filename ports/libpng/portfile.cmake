@@ -35,6 +35,7 @@ vcpkg_from_github(
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
         cmake.patch
+        genout-compiler-target.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PNG_SHARED)
@@ -54,9 +55,9 @@ if(VCPKG_TARGET_IS_IOS)
 endif()
 
 vcpkg_list(SET LD_VERSION_SCRIPT_OPTION)
-if(VCPKG_TARGET_IS_ANDROID)
+if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OHOS)
     vcpkg_list(APPEND LD_VERSION_SCRIPT_OPTION "-Dld-version-script=OFF")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    if(VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
         vcpkg_cmake_get_vars(cmake_vars_file)
         include("${cmake_vars_file}")
         if(VCPKG_DETECTED_CMAKE_ANDROID_ARM_NEON)
@@ -68,7 +69,7 @@ if(VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OHOS))
   vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
 endif()
 

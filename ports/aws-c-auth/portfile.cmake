@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-auth
     REF "v${VERSION}"
-    SHA512 6ff5e408a3c9d88eb4f0b6b711eb98acdba94f8677f15297e44636de1a2a3d352aaa8cd264693cf1d757a3b58d6bf05e5182cb7b80956c8531c53be34d9f8f73
+    SHA512 677254506c8f39b141184ab1554064c88fa55f8f6a0a3a0fe2af8bab1f384b9ff019f7e82485e3c6bb24874d6c9f33fb84887c60112a043b66a738b750738589
     HEAD_REF main
 )
 
@@ -14,6 +14,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/aws/auth/exports.h"
+        "#    ifdef AWS_AUTH_USE_IMPORT_EXPORT" "#    if 1")
+endif()
 
 string(REPLACE "dynamic" "shared" subdir "${VCPKG_LIBRARY_LINKAGE}")
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)

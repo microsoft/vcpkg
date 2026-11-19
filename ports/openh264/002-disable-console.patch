@@ -1,0 +1,13 @@
+diff --git a/codec/meson.build b/codec/meson.build
+index 7a427f4..97473de 100644
+--- a/codec/meson.build
++++ b/codec/meson.build
+@@ -2,8 +2,4 @@ subdir('common')
+ subdir('decoder')
+ subdir('encoder')
+ subdir('processing')
+-if not ['android', 'ios'].contains(system)
+-  # also disabled in the Makefile for these platforms
+-  subdir('console')
+-endif
+ subdir('api')

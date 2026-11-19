@@ -19,5 +19,9 @@ jobs:
       - name: Bootstrap vcpkg
         run: ./bootstrap-vcpkg.sh
 
-      - name: Run vcpkg x-check-tools-sha
-        run: vcpkg z-check-tools-sha scripts/vcpkg-tools.json || echo "Run 'vcpkg z-check-tools-sha scripts/vcpkg-tools.json --fix' to update the SHA values"
+      - name: Run vcpkg z-check-tools-sha
+        run: |
+          ./vcpkg z-check-tools-sha scripts/vcpkg-tools.json || {
+            echo "Run './vcpkg z-check-tools-sha scripts/vcpkg-tools.json --fix' to update the SHA values"
+            exit 1
+          }

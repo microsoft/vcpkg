@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fcf-framework/fcfTest
-    REF "v1.2.7"
-    SHA512 afccefa455b0fb637b80aca064a2bf808b608c37cc06b615bc12acf67e16a455af6c57842f699dc44d75771475e8e8fa9c928197cbb9a4d2b3a7a65835c4047d
+    REF "v1.2.13"
+    SHA512 60aa7eabd4a04103d275336dc9ce506f254435d945723eab22a2f049eccda0d69829e43e340235473091b201125ebd186ed9ddf12c0bf5c689fd44f90c1b4e80
 )
 
 # PATCH: Remove the legacy local include path and inject vcpkg package discovery

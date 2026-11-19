@@ -10,7 +10,7 @@ index c864f02..2358264 100644
 +        target_include_directories(${ARG_NAME} BEFORE PRIVATE $<TARGET_PROPERTY:onednn_gpu_tgt,INTERFACE_INCLUDE_DIRECTORIES>)
          add_dependencies(openvino_intel_gpu_${IMPL_TYPE}_obj onednn_gpu_tgt)
      endif()
- endmacro()
+ 
 @@ -146,6 +146,11 @@ ov_add_target(
  
  ov_build_target_faster(${TARGET_NAME} PCH)

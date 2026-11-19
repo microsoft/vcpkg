@@ -4,7 +4,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
     FILENAME "armadillo-${VERSION}.tar.xz"
-    SHA512 c9825e47d729d6f89d6d46f7a699110c93de4fa87f219a98fbf71bf8b6e9cfd379931ecd0c9a326927210883c055cc6cdf8ca9e44037f3911aa2c306a4409b87
+    SHA512 c7768a5f1a604fb58582ec6b6db34e8105f6b48e2e3be4819ce21c4ce00e8941a79dce4733942d84e21f03f5410d769836ef73bc68d8a012a102235870d7096f
     PATCHES
         cmake-config.patch
         dependencies.patch
@@ -57,4 +57,6 @@ vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/LICENSE.txt"
         "${SOURCE_PATH}/NOTICE.txt"
+        "${SOURCE_PATH}/include/armadillo_bits/fft_engine_kissfft.hpp"
+        "${SOURCE_PATH}/include/armadillo_bits/include_superlu.hpp"
 )

@@ -1,0 +1,12 @@
+diff --git a/packaging/id3tag.pc.in b/packaging/id3tag.pc.in
+index 23b8be1..ce555c7 100644
+--- a/packaging/id3tag.pc.in
++++ b/packaging/id3tag.pc.in
+@@ -6,5 +6,6 @@ Name: libid3tag
+ Description: ID3 tag manipulation library for MP3 files
+ Version: @PROJECT_VERSION@
+ URL: https://codeberg.org/tenacityteam/libid3tag
+-Libs: -L${libdir} -lid3tag -lz
++Requires: zlib
++Libs: -L${libdir} -lid3tag
+ Cflags: -I${includedir}

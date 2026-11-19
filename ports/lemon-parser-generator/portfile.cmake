@@ -4,13 +4,13 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 vcpkg_download_distfile(LEMON_C
     URLS "https://github.com/sqlite/sqlite/raw/version-${VERSION}/tool/lemon.c"
     FILENAME "lemon-${VERSION}.c"
-    SHA512 "baa6c01b9398f332fce35187cfcda5ba8fed8f20e49bdd53955b4e6d77a2d47eb382cf32696004e3b24b73e504de959e272a23a6983638330e760467f1b56957"
+    SHA512 ee4d939f024d56b6568383b921aecd65c9d6e148f4590dda767ff3024aafc99287543cdca68ba4e49700665ea0df2039e6d473110f92bee893b4477f5067bd91
 )
 
 vcpkg_download_distfile(LEMPAR_C
     URLS "https://github.com/sqlite/sqlite/raw/version-${VERSION}/tool/lempar.c"
     FILENAME "lempar-${VERSION}.c"
-    SHA512 "05fc35c854da1b597d5ebb781d81694d53af586a698bd4271b257b65ab2b8d97423823334d404eb051dd1a9fca04b0ae12a0bb47d09956934ae8993d7fc307c2"
+    SHA512 be59f09200f7918148d0701ffc9661601c6c7c40298948f07c64556af25af0708cf9eb4346d7a0d5af91fe4a9fd0c9337023823b89bc6a8449e70baaf17b00ca
 )
 
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${VERSION}")

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankosterfeld/qtkeychain
     REF "${VERSION}"
-    SHA512 d1d87553db94bf54da1373016a847476e6cd608db6d427ed72532658e2272501daf45d7c9976efdde2f26ab3810ba9dbfec2518d46dee5a76ecaa369bfee2e4a
+    SHA512 a6372738e857d5f352b2dfca7737789c129b2e5be9dd5636cd913f1a0bee998cdadd6df319697ac0d307182fa17fe0415825e522babb7ef17b141bf047a3c57c
     HEAD_REF master
     PATCHES
         dbus-emscripten.patch
@@ -20,6 +20,7 @@ if(VCPKG_CROSSCOMPILING)
 endif()
 
 list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TEST_APPLICATION:BOOL=OFF)
+list(APPEND QTKEYCHAIN_OPTIONS -DBUILD_TESTING:BOOL=OFF)
 
 # FIXME: Why does build translations fail on arm64-windows?
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
@@ -32,7 +33,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DBUILD_WITH_QT6=ON
+        -DBUILD_WITH_QT5=OFF
          ${QTKEYCHAIN_OPTIONS}
 )
 vcpkg_cmake_install()
@@ -46,5 +47,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
