@@ -1,0 +1,13 @@
+diff --git a/libsecret/meson.build b/libsecret/meson.build
+index a194438..de5fa76 100644
+--- a/libsecret/meson.build
++++ b/libsecret/meson.build
+@@ -101,7 +101,7 @@ libsecret = library('secret-@0@'.format(api_version_major),
+ )
+ 
+ # Also create a static library used for our tests which doesn't hide symbols
+-libsecret_static = static_library('secret-@0@'.format(api_version_major),
++libsecret_static = static_library('secret-@0@-static'.format(api_version_major),
+   [ libsecret_sources, _dbus_generated, _enums_generated ],
+   dependencies: libsecret_dependencies,
+   link_with: libegg,

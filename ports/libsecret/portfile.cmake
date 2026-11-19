@@ -7,7 +7,11 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 0a2ae5d86dc635df0a126f1483d917c8fd41cc0c534869ae0612291394b76fb1b2ab6ba27d2f020e123de979338a970d6653fa574d000826b4792be4c1075150
 )
 
-vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        static-test-library-name.diff
+)
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
