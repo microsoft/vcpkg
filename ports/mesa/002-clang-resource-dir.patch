@@ -1,0 +1,18 @@
+diff --git a/src/compiler/clc/meson.build b/src/compiler/clc/meson.build
+index 249fd31..f934467 100644
+--- a/src/compiler/clc/meson.build
++++ b/src/compiler/clc/meson.build
+@@ -21,6 +21,13 @@ if not _shared_llvm or \
+     clang_version_dir = dep_llvm.version().split('.')[0]
+   endif
+   clang_resource_dir = join_paths(llvm_libdir, 'clang', clang_version_dir, 'include')
++  foreach _libdir : [llvm_libdir / '..' / 'tools' / 'llvm' / 'lib', llvm_libdir / '..' / '..' / 'tools' / 'llvm' / 'lib']
++    _dir = join_paths(_libdir, 'clang', clang_version_dir, 'include')
++    if import('fs').exists(_dir / 'opencl-c.h')
++      clang_resource_dir = _dir
++      break
++    endif
++  endforeach
+ 
+   opencl_c_base_h = custom_target(
+     'opencl-c-base.h',

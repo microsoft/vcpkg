@@ -3,6 +3,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
 endif()
 
+set(MESA_HAS_OUTPUT OFF)
+foreach(feature IN ITEMS opengl gles1 gles2 egl lavapipe kosmickrisp dozen radv anv turnip honeykrisp panvk v3dv)
+    if(feature IN_LIST FEATURES)
+        set(MESA_HAS_OUTPUT ON)
+        break()
+    endif()
+endforeach()
+if(NOT MESA_HAS_OUTPUT)
+    message(STATUS "No client API or Vulkan driver feature selected, nothing to build.")
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    return()
+endif()
+
+if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) AND "opengl" IN_LIST FEATURES AND NOT "x11" IN_LIST FEATURES AND NOT "egl" IN_LIST FEATURES)
+    message(FATAL_ERROR "Feature 'opengl' requires feature 'x11' or 'egl'.")
+endif()
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,6 +31,8 @@ vcpkg_from_gitlab(
     PATCHES
         001-windows-gles-dispatch.patch
         001-warnings-not-errors.patch
+        002-clang-resource-dir.patch
+        003-spirv-llvm-translator-cmake.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" OUT_PYTHON_VAR "PYTHON3" PACKAGES setuptools mako pyyaml)
@@ -50,24 +69,145 @@ list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
 list(APPEND MESA_OPTIONS -Ddisplay-info=disabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=disabled)
 list(APPEND MESA_OPTIONS -Dcpp_rtti=true)
-
-if((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID) AND "llvm" IN_LIST FEATURES)
-    list(APPEND MESA_ADDITIONAL_BINARIES
-        "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
-    )
+# Pin options that would otherwise be auto-detected from the system.
+list(APPEND MESA_OPTIONS -Dgallium-va=disabled)
+list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
+list(APPEND MESA_OPTIONS -Dlmsensors=disabled)
+list(APPEND MESA_OPTIONS -Dglvnd=disabled)
+list(APPEND MESA_OPTIONS -Damd-use-llvm=false)
+list(APPEND MESA_OPTIONS -Dpanfrost-rust=false)
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND MESA_OPTIONS -Dexpat=enabled -Dxmlconfig=enabled)
+else()
+    list(APPEND MESA_OPTIONS -Dexpat=disabled -Dxmlconfig=disabled)
 endif()
 
-if("lavapipe" IN_LIST FEATURES)
-    list(APPEND MESA_ADDITIONAL_BINARIES
-        "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
-    )
-    list(APPEND MESA_OPTIONS
-        -Dvulkan-drivers=['swrast']
-        -Dvulkan-manifest-per-architecture=false
-    )
+function(mesa_meson_array out_var)
+    set(quoted "")
+    foreach(item IN LISTS ARGN)
+        list(APPEND quoted "'${item}'")
+    endforeach()
+    list(JOIN quoted "," joined)
+    set(${out_var} "[${joined}]" PARENT_SCOPE)
+endfunction()
+
+macro(mesa_feature_option feature option)
+    if("${feature}" IN_LIST FEATURES)
+        list(APPEND MESA_OPTIONS "-D${option}=enabled")
+    else()
+        list(APPEND MESA_OPTIONS "-D${option}=disabled")
+    endif()
+endmacro()
+
+# Client APIs
+mesa_feature_option(gles1 gles1)
+mesa_feature_option(gles2 gles2)
+mesa_feature_option(egl egl)
+mesa_feature_option(gbm gbm)
+if("opengl" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dopengl=true)
+else()
+    list(APPEND MESA_OPTIONS -Dopengl=false)
+endif()
+if("opengl" IN_LIST FEATURES AND "x11" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dglx=dri)
+else()
+    list(APPEND MESA_OPTIONS -Dglx=disabled)
 endif()
 
-if("llvm" IN_LIST FEATURES OR "lavapipe" IN_LIST FEATURES OR VCPKG_TARGET_IS_WINDOWS)
+# Gallium drivers (same feature name as the driver name)
+set(MESA_GALLIUM_DRIVERS "")
+foreach(driver IN ITEMS llvmpipe softpipe zink d3d12 radeonsi iris nouveau virgl svga freedreno asahi panfrost v3d)
+    if(driver IN_LIST FEATURES)
+        list(APPEND MESA_GALLIUM_DRIVERS "${driver}")
+    endif()
+endforeach()
+if(NOT MESA_GALLIUM_DRIVERS)
+    foreach(api IN ITEMS opengl gles1 gles2 egl)
+        if(api IN_LIST FEATURES)
+            message(FATAL_ERROR "Feature '${api}' requires at least one Gallium driver feature (e.g. llvmpipe or softpipe).")
+        endif()
+    endforeach()
+endif()
+mesa_meson_array(MESA_GALLIUM_DRIVERS ${MESA_GALLIUM_DRIVERS})
+list(APPEND MESA_OPTIONS "-Dgallium-drivers=${MESA_GALLIUM_DRIVERS}")
+
+# Vulkan drivers (feature name to driver name)
+set(MESA_VULKAN_DRIVERS "")
+foreach(entry IN ITEMS
+    lavapipe:swrast
+    kosmickrisp:kosmickrisp
+    dozen:microsoft-experimental
+    radv:amd
+    anv:intel
+    turnip:freedreno
+    honeykrisp:asahi
+    panvk:panfrost
+    v3dv:broadcom
+)
+    string(REPLACE ":" ";" entry "${entry}")
+    list(GET entry 0 feature)
+    list(GET entry 1 driver)
+    if(feature IN_LIST FEATURES)
+        list(APPEND MESA_VULKAN_DRIVERS "${driver}")
+    endif()
+endforeach()
+if(MESA_VULKAN_DRIVERS)
+    # Install a single ICD manifest per driver (e.g. lvp_icd.json) instead of one per architecture
+    # (e.g. lvp_icd.x86_64.json), since a vcpkg installed tree only contains one architecture.
+    list(APPEND MESA_OPTIONS -Dvulkan-manifest-per-architecture=false)
+endif()
+mesa_meson_array(MESA_VULKAN_DRIVERS ${MESA_VULKAN_DRIVERS})
+list(APPEND MESA_OPTIONS "-Dvulkan-drivers=${MESA_VULKAN_DRIVERS}")
+
+# These Vulkan drivers compile BVH shaders with glslang.
+foreach(feature IN ITEMS lavapipe radv anv turnip)
+    if(feature IN_LIST FEATURES)
+        list(APPEND MESA_NATIVE_BINARIES
+            "glslangValidator=['${CURRENT_HOST_INSTALLED_DIR}/tools/glslang/glslangValidator${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
+        )
+        break()
+    endif()
+endforeach()
+
+# Platforms
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(MESA_PLATFORMS windows)
+elseif(VCPKG_TARGET_IS_OSX)
+    set(MESA_PLATFORMS macos)
+    if("x11" IN_LIST FEATURES)
+        list(APPEND MESA_PLATFORMS x11)
+    endif()
+elseif(VCPKG_TARGET_IS_ANDROID)
+    set(MESA_PLATFORMS android)
+else()
+    set(MESA_PLATFORMS "")
+    if("x11" IN_LIST FEATURES)
+        list(APPEND MESA_PLATFORMS x11)
+    endif()
+    if("wayland" IN_LIST FEATURES)
+        list(APPEND MESA_PLATFORMS wayland)
+        if(X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES)
+            list(APPEND MESA_NATIVE_BINARIES
+                "wayland-scanner=['${CURRENT_HOST_INSTALLED_DIR}/tools/wayland/wayland-scanner${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
+            )
+        endif()
+    endif()
+endif()
+mesa_meson_array(MESA_PLATFORMS ${MESA_PLATFORMS})
+list(APPEND MESA_OPTIONS "-Dplatforms=${MESA_PLATFORMS}")
+mesa_feature_option(x11 xlib-lease)
+
+# Build tools are looked up with find_program(native : true), which only uses native files.
+if(MESA_NATIVE_BINARIES)
+    list(JOIN MESA_NATIVE_BINARIES "\n" MESA_NATIVE_BINARIES)
+    set(MESA_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/mesa-native-tools.ini")
+    file(WRITE "${MESA_NATIVE_FILE}" "[binaries]\n${MESA_NATIVE_BINARIES}\n")
+    list(APPEND MESA_OPTIONS --native "${MESA_NATIVE_FILE}")
+endif()
+
+# LLVM and CLC
+if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
     set(LLVM_CONFIG_DEBUG_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-debug.ini")
     set(LLVM_CONFIG_RELEASE_NATIVE_FILE "${CURRENT_BUILDTREES_DIR}/llvm-config-release.ini")
@@ -81,30 +221,21 @@ if("llvm" IN_LIST FEATURES OR "lavapipe" IN_LIST FEATURES OR VCPKG_TARGET_IS_WIN
     list(APPEND MESA_OPTIONS_RELEASE --native "${LLVM_CONFIG_RELEASE_NATIVE_FILE}")
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
-    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
-        list(APPEND MESA_OPTIONS "-Dvulkan-drivers=[]")
+endif()
+mesa_feature_option(clc spirv-tools)
+
+# Libraries which must be provided by the system
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "You will need to install libdrm dependencies to use this port:\nsudo apt install libdrm-dev\n")
+    if("x11" IN_LIST FEATURES)
+        message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libxshmfence-dev\n")
+    endif()
+    if("wayland" IN_LIST FEATURES AND "egl" IN_LIST FEATURES AND NOT X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES)
+        message(WARNING "You will need to install Wayland EGL dependencies to use features wayland and egl together:\nsudo apt install libwayland-egl-backend-dev\n")
     endif()
 endif()
 
-if("gles1" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dgles1=enabled)
-else()
-    list(APPEND MESA_OPTIONS -Dgles1=disabled)
-endif()
-if("gles2" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dgles2=enabled)
-else()
-    list(APPEND MESA_OPTIONS -Dgles2=disabled)
-endif()
-
-if("egl" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Degl=enabled)
-else()
-    list(APPEND MESA_OPTIONS -Degl=disabled)
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
     list(APPEND MESA_OPTIONS -Dmicrosoft-clc=disabled)
     if(NOT VCPKG_TARGET_IS_MINGW)
         set(VCPKG_CXX_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_CXX_FLAGS}")
@@ -118,16 +249,7 @@ elseif(VCPKG_TARGET_IS_ANDROID)
     list(APPEND MESA_ADDITIONAL_PROPERTIES
         "pkg_config_libdir = ['${MESA_EMPTY_PKG_CONFIG_DIR}']"
     )
-    if("llvm" IN_LIST FEATURES)
-        set(MESA_ANDROID_GALLIUM_DRIVER llvmpipe)
-    else()
-        set(MESA_ANDROID_GALLIUM_DRIVER softpipe)
-    endif()
-    list(APPEND MESA_OPTIONS
-        -Dplatforms=['android']
-        -Dandroid-stub=true
-        "-Dgallium-drivers=['${MESA_ANDROID_GALLIUM_DRIVER}']"
-    )
+    list(APPEND MESA_OPTIONS -Dandroid-stub=true)
 endif()
 
 vcpkg_configure_meson(
@@ -148,6 +270,9 @@ vcpkg_configure_meson(
         ${MESA_ADDITIONAL_PROPERTIES}
 )
 vcpkg_install_meson()
+if("dozen" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES spirv2dxil AUTO_CLEAN)
+endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
@@ -189,10 +314,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if("lavapipe" IN_LIST FEATURES)
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/lavapipe-usage"
-         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-         RENAME usage)
+set(MESA_USAGE "")
+foreach(driver IN ITEMS lavapipe kosmickrisp)
+    if(driver IN_LIST FEATURES)
+        file(READ "${CMAKE_CURRENT_LIST_DIR}/${driver}-usage" driver_usage)
+        string(APPEND MESA_USAGE "${driver_usage}")
+    endif()
+endforeach()
+if(MESA_USAGE)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${MESA_USAGE}")
 endif()
 
 vcpkg_install_copyright(

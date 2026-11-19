@@ -1,0 +1,18 @@
+diff --git a/meson.build b/meson.build
+index 40567ce..4f67b1b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2081,7 +2081,12 @@ if with_clc
+     '< @0@.@1@'.format(chosen_llvm_version_major, chosen_llvm_version_minor + 1) ]
+ 
+   # LLVMSPIRVLib is available at https://github.com/KhronosGroup/SPIRV-LLVM-Translator
+-  dep_llvmspirvlib = dependency('LLVMSPIRVLib', required : true, version : _llvmspirvlib_version)
++  dep_llvmspirvlib = dependency('unofficial-spirv-llvm-translator',
++    method : 'cmake',
++    modules : ['unofficial::spirv-llvm-translator::LLVMSPIRVLib'],
++    required : true,
++    version : _llvmspirvlib_version,
++  )
+ else
+   dep_llvmspirvlib = null_dep
+ endif
