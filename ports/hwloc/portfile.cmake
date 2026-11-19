@@ -2,7 +2,7 @@ string(REGEX MATCH "^[0-9]+\\.[0-9]+" HWLOC_SHORT_VERSION "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.open-mpi.org/release/hwloc/v${HWLOC_SHORT_VERSION}/hwloc-${VERSION}.tar.bz2"
     FILENAME "hwloc-${VERSION}.tar.bz2"
-    SHA512 547a9ed3c6af399de9617fe675bd6d16db300cc98213d6c71b2f1b41dd4a1706c7f2cf0dd1feb0d9f8a546b1976740c7a959dca0c23a4f52eac0b25cc403d087
+    SHA512 3eca90872686c5887c6430b9d0b1e7ad50942f2afe77d599a79677c55072183809ca3cef2a68f727e8fa12183b4d2da0a5dea06aee4a9ea416059d3df3e18126
 )
 
 vcpkg_extract_source_archive(
