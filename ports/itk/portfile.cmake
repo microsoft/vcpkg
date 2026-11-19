@@ -92,11 +92,32 @@ if("rtk" IN_LIST FEATURES)
     file(COPY_FILE "${SOURCE_PATH}/Modules/Remote/RTK/COPYRIGHT.TXT" "${SOURCE_PATH}/RTK COPYRIGHT.TXT")
 endif()
 
+set(montage_ref f310be543baf7b233d231c6040a2d509d62bacba)
+set(montage_sha ab376f3cc611bcbac4e6c1f22b971933e909f3473eb03e140653a6fbd2ef209fe28b4fc6eae5dcfe8c30b32ed4c1974d7643dff4fb8ec1e4ce4af7bcefd6b0c2)
+file(STRINGS "${SOURCE_PATH}/Modules/Remote/Montage.remote.cmake" montage_git_tag REGEX "GIT_TAG")
+if(NOT montage_git_tag MATCHES "${montage_ref}")
+    message(FATAL_ERROR "montage_ref/sha must be updated, new ${montage_git_tag}")
+endif()
+
+if("montage" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH MONTAGE_SOURCE_PATH
+        REPO InsightSoftwareConsortium/ITKMontage
+        REF "${montage_ref}"
+        SHA512 "${montage_sha}"
+        HEAD_REF master
+    )
+    file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/Montage")
+    file(RENAME "${MONTAGE_SOURCE_PATH}" "${SOURCE_PATH}/Modules/Remote/Montage")
+endif()
+
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "vtk"          Module_ITKVtkGlue
         "cuda"         Module_CudaCommon # Requires RTK?
         "cuda"         RTK_USE_CUDA
+        "montage"      Module_Montage
         #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
         "cufftw"       ITK_USE_CUFFTW
         "opencl"       ITK_USE_GPU
@@ -198,6 +219,13 @@ if("opencv" IN_LIST FEATURES)
     message(STATUS "${PORT} includes the ITKVideoBridgeOpenCV")
     list(APPEND ADDITIONAL_OPTIONS
         -DModule_ITKVideoBridgeOpenCV:BOOL=ON
+        )
+endif()
+
+if("montage" IN_LIST FEATURES)
+    message(STATUS "${PORT} includes the Montage")
+    list(APPEND ADDITIONAL_OPTIONS
+        -DModule_Montage:BOOL=ON
         )
 endif()
 
