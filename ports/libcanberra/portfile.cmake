@@ -21,6 +21,9 @@ vcpkg_extract_source_archive(SOURCE_PATH
         lc-messages.patch
 )
 
+vcpkg_libltdl_get_vars(LIBLTDL)
+set(ENV{LIBTOOLIZE} "${LIBLTDL_LIBTOOLIZE}")
+
 foreach(backend in oss pulse)
     if("${backend}" IN_LIST FEATURES)
         message(STATUS "Backend '${backend}' requires system libraries")
@@ -37,14 +40,7 @@ foreach(feature IN ITEMS alsa gstreamer gtk3 null oss pulse)
 endforeach()
 
 if(VCPKG_TARGET_IS_OSX)
-    execute_process(
-         COMMAND brew --prefix libtool
-         OUTPUT_VARIABLE BREW_LIBTOOL_PATH
-         OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
     vcpkg_list(APPEND OPTIONS
-        "CPPFLAGS=-I${BREW_LIBTOOL_PATH}/include"
-        "LTDL_LDFLAGS=-L${BREW_LIBTOOL_PATH}/lib"
         cc_cv_LDFLAGS__Wl___as_needed=no
         cc_cv_LDFLAGS__Wl___gc_sections=no
     )
@@ -62,6 +58,10 @@ vcpkg_configure_make(
         --disable-tdb
         --disable-udev
         ${OPTIONS}
+    OPTIONS_RELEASE
+        ${LIBLTDL_OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        ${LIBLTDL_OPTIONS_DEBUG}
 )
 
 vcpkg_install_make()
