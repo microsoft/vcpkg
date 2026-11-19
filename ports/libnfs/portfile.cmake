@@ -1,8 +1,8 @@
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL "https://github.com/sahlberg/libnfs.git"
-    REF 5b1bc60260b5ddac34900c5315010b88b73e7edd
-    FETCH_REF "refs/tags/libnfs-${VERSION}"
+    REPO sahlberg/libnfs
+    REF "libnfs-${VERSION}"
+    SHA512 6ce4450f28e163bc04b32954ef2094bfa464733e08520026821ce366946de501dae22aff073e729145d6450213317eda84f0078b47d3356b1d98d7dfee23e922
     HEAD_REF master
     PATCHES
         fix-cmake-target-interface.patch
