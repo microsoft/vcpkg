@@ -62,6 +62,30 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(pc_requires openssl)
+    if("sodium" IN_LIST FEATURES)
+        list(APPEND pc_requires libsodium)
+    endif()
+    if("streaming" IN_LIST FEATURES)
+        list(APPEND pc_requires libprotobuf-c)
+    endif()
+    list(JOIN pc_requires " " pc_requires)
+
+    set(pc_library nats)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        string(APPEND pc_library "_static")
+    endif()
+    set(pc_libs "-lnats\nLibs.private: -L\"\${libdir}\" -lnats")
+    set(pc_private "Libs.private: -pthread\nRequires.private: ${pc_requires}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libnats.pc"
+        "${pc_libs}" "-l${pc_library}\n${pc_private}")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libnats.pc"
+            "${pc_libs}" "-l${pc_library}d\n${pc_private}")
+    endif()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
