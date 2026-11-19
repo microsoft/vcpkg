@@ -1,0 +1,4 @@
+spirv-llvm-translator provides pkg-config modules:
+
+    # LLVM/SPIR-V bi-directional translator
+    LLVMSPIRVLib
