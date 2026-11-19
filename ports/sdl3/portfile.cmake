@@ -52,6 +52,7 @@ vcpkg_from_github(
         libusb-pkgconfig.patch
         require-dependencies.patch
         runtime-loaded-dependencies.patch
+        liburing-static.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
