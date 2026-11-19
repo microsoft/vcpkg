@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 7eac753eedb7cb420881182516b8d9af710dde3d70c9decf0650dbd5d08a0b1c798b79454aa1d18db07fb6761d6d05d91312e546c57d67cfb815dce731709aab
     HEAD_REF master
+    PATCHES
+        dependent-noexcept.patch # https://developercommunity.visualstudio.com/t/MSVC-rejects-templated-callback-pointers/11182586
 )
 
 vcpkg_list(SET options)

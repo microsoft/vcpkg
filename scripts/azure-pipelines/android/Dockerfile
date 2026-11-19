@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:noble-20260930.1
+FROM ubuntu:noble-20261024.1
 
 ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
-ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1+1/OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
+ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.21+9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz
 ADD https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip /commandlinetools-linux-16111833_latest.zip
 ADD https://dl.google.com/android/repository/build-tools_r37_linux.zip /build-tools_r37_linux.zip
-ADD https://dl.google.com/android/repository/platform-36_r02.zip /platform-36_r02.zip
+ADD https://dl.google.com/android/repository/platform-37.2_r02.zip /platform-37.2_r02.zip
 ADD https://dl.google.com/android/repository/platform-tools_r37.0.1-linux.zip /platform-tools_r37.0.1-linux.zip
 ADD https://dl.google.com/android/repository/android-ndk-r30-linux.zip /android-ndk-r30-linux.zip
 
@@ -70,8 +70,8 @@ apt-get -y dist-upgrade
 apt-get -y --no-install-recommends install $APT_PACKAGES
 
 # OpenJDK
-tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
-rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.20.1_1.tar.gz
+tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz
+rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.21_9.tar.gz
 
 # Android SDK
 unzip -q commandlinetools-linux-16111833_latest.zip -d android-sdk
@@ -81,8 +81,8 @@ unzip -q build-tools_r37_linux.zip -d android-sdk/build-tools
 mv android-sdk/build-tools/android-37.0 android-sdk/build-tools/37.0.0
 rm build-tools_r37_linux.zip
 
-unzip -q platform-36_r02.zip -d android-sdk/platforms
-rm platform-36_r02.zip
+unzip -q platform-37.2_r02.zip -d android-sdk/platforms
+rm platform-37.2_r02.zip
 find android-sdk/platforms -type d -exec chmod o+rx '{}' ';'
 find android-sdk/platforms -type f -exec chmod o+r '{}' ';'
 
@@ -90,7 +90,7 @@ unzip -q platform-tools_r37.0.1-linux.zip -d android-sdk
 rm platform-tools_r37.0.1-linux.zip
 
 # JRE for sdk setup
-export JAVA_HOME=/jdk-17.0.20.1+1
+export JAVA_HOME=/jdk-17.0.21+9
 yes | /android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/android-sdk --licenses
 
 # Android NDK
@@ -99,7 +99,7 @@ rm -f android-ndk-r30-linux.zip
 
 END_OF_SCRIPT
 
-ENV JAVA_HOME="/jdk-17.0.20.1+1"
+ENV JAVA_HOME="/jdk-17.0.21+9"
 
 ENV ANDROID_HOME="/android-sdk"
 

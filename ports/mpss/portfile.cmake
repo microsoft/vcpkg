@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 71bea61ca1be310d2de9d2d2a98477cd54d12f83eb5746b3291ee7a9aeadf355d72e3bd619c9a72588a3ca81ee6dc3d1fad519845ccb36ab215a42bbd7ad0675
     HEAD_REF main
+    PATCHES
+        discover-android-sdk.patch # https://github.com/microsoft/mpss/pull/17
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

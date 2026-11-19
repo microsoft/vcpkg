@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realsenseai/librealsense
     REF "v${VERSION}"
-    SHA512 2c627d62c21ab4e5c81bd3a1c44c60a3f5e2233c99cc1461a63609ef92f7ada128737cabe8a56bb6f3c761a569747820e4b05e7b8f0f4ec75e3b617154a971fa
+    SHA512 33d809e5736ebed4fe3ed045d817a247e43a3d79b67914ef8d9ca69efa8235dac2414ac46384c51b1e1b3014dee83998ab649b773db6f0c2efc9c9be20661382
     HEAD_REF master
     PATCHES
         android-config.diff
@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix_openni2.patch
         libusb.diff
         disable-network-check.diff
+        disable-udev.diff
         # This pkg-config fix targets vcpkg's external dependencies and disabled DDS/rosbag2.
         # Upstreaming requires handling bundled dependencies and enabled DDS/rosbag2,
         # preserving CMake 3.10 compatibility, and supporting multi-config generators.
@@ -52,7 +53,10 @@ vcpkg_cmake_configure(
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
+        -DCHECK_FOR_UPDATES=OFF
+        -DENABLE_AI_ASSISTANT=OFF
         -DENABLE_CCACHE=OFF
+        -DENABLE_STATS=OFF
         -DENFORCE_METADATA=ON
         "-DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2"
         -DUSE_EXTERNAL_LZ4=ON
@@ -68,8 +72,10 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/realsense2)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 if(BUILD_TOOLS)
     set(TOOL_NAMES rs-convert rs-embed rs-enumerate-devices rs-fw-logger rs-fw-update rs-record rs-terminal)
