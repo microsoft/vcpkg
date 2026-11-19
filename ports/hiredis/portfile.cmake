@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redis/hiredis
     REF "v${VERSION}"
-    SHA512 d0b902eaeee681202ce96126180facca7534160d556d2713a272c933ec9c20a51f551aec157b1c53a4cec0dd63c226ddb67f718d98e8dc9e7d1d08bbc446db86
+    SHA512 3322b676c7edcfa8c0cef4389b380f86a8870824bb13ccc068ef887fceb9b9f33c767ce5e1b957862126a12ea93c652d4c12e9170ca3e59d25740a5f428c753f
     HEAD_REF master
     PATCHES
         fix-timeval.patch
