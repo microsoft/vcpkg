@@ -202,4 +202,6 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/licenses/BSL-1.0"
         "${SOURCE_PATH}/licenses/MIT"
         "${SOURCE_PATH}/licenses/SGI-B-2.0"
+        "${SOURCE_PATH}/src/util/softfloat.h"
+        "${SOURCE_PATH}/src/util/xxhash.h"
 )
