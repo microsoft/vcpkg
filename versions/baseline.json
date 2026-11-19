@@ -9581,7 +9581,7 @@
       "port-version": 1
     },
     "simpleini": {
-      "baseline": "4.27",
+      "baseline": "4.28",
       "port-version": 0
     },
     "simsimd": {
