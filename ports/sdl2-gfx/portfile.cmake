@@ -1,31 +1,35 @@
-set(VERSION 1.0.4)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.ferzkopp.net/Software/SDL2_gfx/SDL2_gfx-${VERSION}.zip"
-    FILENAME "SDL2_gfx-${VERSION}.zip"
-    SHA512 213b481469ba2161bd8558a7a5427b129420193b1c3895923d515f69f87991ed2c99bbc44349c60b4bcbb7d7d2255c1f15ee8a3523c26502070cfaacccaa5242
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ferzkopp/SDL2_gfx
+    REF "v${VERSION}"
+    SHA512 a7244eb4b4c497df041dfd153af6bbd47704fd7381ce0045b752158f39901c32d9b662a1af4d03d7fc6e443d3781ce1e61af73df449395bb9418159e2ae0c5f1
+    HEAD_REF master
 )
 
-vcpkg_extract_source_archive(
-    SOURCE_PATH 
-    ARCHIVE ${ARCHIVE}
-    SOURCE_BASE "${VERSION}"
-    PATCHES
-        001-lrint-arm64.patch
-        002-use-the-lrintf-intrinsic.patch
-)
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG -DSDL_GFX_SKIP_HEADERS=1
+    OPTIONS
+        -DSDL2GFX_SHARED=${BUILD_SHARED}
+        -DSDL2GFX_STATIC=${BUILD_STATIC}
+        -DSDL2GFX_INSTALL=ON
+        -DSDL2GFX_DEMOS=OFF
+        -DSDL2GFX_TESTS=OFF
+        -DSDL2GFX_BENCH=OFF
+        -DSDL2GFX_DOCS=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SDL2_gfx PACKAGE_NAME SDL2_gfx)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
