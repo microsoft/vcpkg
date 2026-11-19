@@ -1,0 +1,4 @@
+azure-c-logging provides CMake targets:
+
+  find_package(unofficial-c-logging CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::c-logging::c_logging_v2)

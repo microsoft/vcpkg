@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-uamqp-c
-    REF 6bb9accbbc036ed5ef1df7467760762c99a7094b
-    SHA512 99ed5fef76a0e0b2482862f46715431f98381923670be42edc8d4f7e066c0dcb9f397be73f96eccbbd697ae98f2604cb7b6f603f7c1d358ada50dc68349331ef
+    REF 49b6cf5d51b5fccd8d3961d1d4a1c5cfcf39e9a5
+    SHA512 99168b597b5b16566450c1e61b325d85528dae9b485dbfaa51446de89d7a78437ac0ae14f7185ad83ddff66927346a6cb7a4bc377806ae4b0fcf81d10897e5ef
     HEAD_REF master
 )
 
@@ -22,7 +22,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME uamqp CONFIG_PATH "cmake")
+vcpkg_cmake_config_fixup(PACKAGE_NAME uamqp CONFIG_PATH lib/cmake/uamqp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 

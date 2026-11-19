@@ -1,0 +1,253 @@
+diff --git a/include/k4ainternal/logging.h b/include/k4ainternal/logging.h
+index b39a127..14b2ab4 100644
+--- a/include/k4ainternal/logging.h
++++ b/include/k4ainternal/logging.h
+@@ -4,8 +4,8 @@
+  * Kinect For Azure SDK.
+  */
+ 
+-#ifndef LOGGER_H
+-#define LOGGER_H
++#ifndef K4A_LOGGER_H
++#define K4A_LOGGER_H
+ 
+ #include <k4a/k4atypes.h>
+ #include <k4ainternal/handle.h>
+@@ -57,14 +57,14 @@ k4a_result_t logger_register_message_callback(k4a_logging_message_cb_t *message_
+                                               void *message_cb_context,
+                                               k4a_log_level_t min_message_level);
+ 
+-void logger_log(k4a_log_level_t level, const char *file, const int line, const char *format, ...);
++void k4a_logger_log(k4a_log_level_t level, const char *file, const int line, const char *format, ...);
+ 
+ FORCEINLINE k4a_result_t
+ TraceError(k4a_result_t result, const char *szCall, const char *szFile, int line, const char *szFunction)
+ {
+     if (K4A_FAILED(result))
+     {
+-        logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s returned failure in %s()", szCall, szFunction);
++        k4a_logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s returned failure in %s()", szCall, szFunction);
+     }
+     return result;
+ }
+@@ -73,7 +73,7 @@ TraceBufferError(k4a_buffer_result_t result, const char *szCall, const char *szF
+ {
+     if (result == K4A_BUFFER_RESULT_FAILED)
+     {
+-        logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s returned failure in %s()", szCall, szFunction);
++        k4a_logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s returned failure in %s()", szCall, szFunction);
+     }
+     return result;
+ }
+@@ -82,7 +82,7 @@ TraceWaitError(k4a_wait_result_t result, const char *szCall, const char *szFile,
+ {
+     if (result == K4A_WAIT_RESULT_FAILED)
+     {
+-        logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s returned failure in %s()", szCall, szFunction);
++        k4a_logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s returned failure in %s()", szCall, szFunction);
+     }
+     return result;
+ }
+@@ -91,11 +91,11 @@ FORCEINLINE k4a_result_t TraceReturn(k4a_result_t result, const char *szFile, in
+ {
+     if (K4A_FAILED(result))
+     {
+-        logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s() returned failure.", szFunction);
++        k4a_logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "%s() returned failure.", szFunction);
+     }
+     else
+     {
+-        logger_log(K4A_LOG_LEVEL_TRACE, szFile, line, "%s() returned success.", szFunction);
++        k4a_logger_log(K4A_LOG_LEVEL_TRACE, szFile, line, "%s() returned success.", szFunction);
+     }
+     return result;
+ }
+@@ -104,7 +104,7 @@ FORCEINLINE void TraceArg(int result, const char *szFile, int line, const char *
+ {
+     if (!result)
+     {
+-        logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "Invalid argument to %s(). %s", szFunction, szExpression);
++        k4a_logger_log(K4A_LOG_LEVEL_ERROR, szFile, line, "Invalid argument to %s(). %s", szFunction, szExpression);
+     }
+ }
+ 
+@@ -118,7 +118,7 @@ FORCEINLINE void TraceInvalidHandle(int result,
+ {
+     if (!result)
+     {
+-        logger_log(K4A_LOG_LEVEL_ERROR,
++        k4a_logger_log(K4A_LOG_LEVEL_ERROR,
+                    szFile,
+                    line,
+                    "Invalid argument to %s(). %s (%p) is not a valid handle of type %s",
+@@ -205,20 +205,20 @@ FORCEINLINE void TraceInvalidHandle(int result,
+ 
+ // Logs a message
+ #define LOG_TRACE(message, ...)                                                                                        \
+-    logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
++    k4a_logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_INFO(message, ...)                                                                                         \
+-    logger_log(K4A_LOG_LEVEL_INFO, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
++    k4a_logger_log(K4A_LOG_LEVEL_INFO, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_WARNING(message, ...)                                                                                      \
+-    logger_log(K4A_LOG_LEVEL_WARNING, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
++    k4a_logger_log(K4A_LOG_LEVEL_WARNING, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_ERROR(message, ...)                                                                                        \
+-    logger_log(K4A_LOG_LEVEL_ERROR, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
++    k4a_logger_log(K4A_LOG_LEVEL_ERROR, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_CRITICAL(message, ...)                                                                                     \
+-    logger_log(K4A_LOG_LEVEL_CRITICAL, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
++    k4a_logger_log(K4A_LOG_LEVEL_CRITICAL, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ #define LOG_HANDLE(message, ...)                                                                                       \
+-    logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
++    k4a_logger_log(K4A_LOG_LEVEL_TRACE, __FILE__, __LINE__, "%s(). " message, __func__, ##__VA_ARGS__)
+ 
+ #ifdef __cplusplus
+ }
+ #endif
+ 
+-#endif /* LOGGER_H */
++#endif /* K4A_LOGGER_H */
+diff --git a/src/allocator/allocator.c b/src/allocator/allocator.c
+index 7747057..1866dc2 100644
+--- a/src/allocator/allocator.c
++++ b/src/allocator/allocator.c
+@@ -267,7 +267,7 @@ long allocator_test_for_leaks(void)
+     if (g_allocated_image_count_user || g_allocated_image_count_depth || g_allocated_image_count_color ||
+         g_allocated_image_count_imu || g_allocated_image_count_usb_depth || g_allocated_image_count_usb_imu)
+     {
+-        logger_log(K4A_LOG_LEVEL_CRITICAL,
++        k4a_logger_log(K4A_LOG_LEVEL_CRITICAL,
+                    __FILE__,
+                    __LINE__,
+                    "Leaked usr:%d, color:%d, depth:%d, imu:%d, usb depth:%d, usb imu%d",
+diff --git a/src/depth/depth.c b/src/depth/depth.c
+index 8f5e483..5c97773 100644
+--- a/src/depth/depth.c
++++ b/src/depth/depth.c
+@@ -222,33 +222,33 @@ static void log_device_info(depth_context_t *depth)
+         level = K4A_LOG_LEVEL_INFO;
+     }
+ 
+-    logger_log(level, __FILE__, __LINE__, "******************** Device Info ********************");
+-    logger_log(level, __FILE__, __LINE__, "K4A SDK version:     %s", K4A_VERSION_STR);
++    k4a_logger_log(level, __FILE__, __LINE__, "******************** Device Info ********************");
++    k4a_logger_log(level, __FILE__, __LINE__, "K4A SDK version:     %s", K4A_VERSION_STR);
+ 
+     char serial_number[128];
+     size_t size = sizeof(serial_number);
+     if (depthmcu_get_serialnum(depth->depthmcu, serial_number, &size) == K4A_BUFFER_RESULT_SUCCEEDED)
+     {
+-        logger_log(level, __FILE__, __LINE__, "Serial Number:       %s", serial_number);
++        k4a_logger_log(level, __FILE__, __LINE__, "Serial Number:       %s", serial_number);
+     }
+ 
+     k4a_version_t *ver = &depth->version.rgb;
+-    logger_log(level, __FILE__, __LINE__, "RGB Sensor Version:  %d.%d.%d", ver->major, ver->minor, ver->iteration);
++    k4a_logger_log(level, __FILE__, __LINE__, "RGB Sensor Version:  %d.%d.%d", ver->major, ver->minor, ver->iteration);
+ 
+     ver = &depth->version.depth;
+-    logger_log(level, __FILE__, __LINE__, "Depth Sensor Version:%d.%d.%d", ver->major, ver->minor, ver->iteration);
++    k4a_logger_log(level, __FILE__, __LINE__, "Depth Sensor Version:%d.%d.%d", ver->major, ver->minor, ver->iteration);
+ 
+     ver = &depth->version.audio;
+-    logger_log(level, __FILE__, __LINE__, "Mic Array Version:   %d.%d.%d", ver->major, ver->minor, ver->iteration);
++    k4a_logger_log(level, __FILE__, __LINE__, "Mic Array Version:   %d.%d.%d", ver->major, ver->minor, ver->iteration);
+ 
+     ver = &depth->version.depth_sensor;
+-    logger_log(level, __FILE__, __LINE__, "Sensor Config:       %d.%d", ver->major, ver->minor);
+-    logger_log(level,
++    k4a_logger_log(level, __FILE__, __LINE__, "Sensor Config:       %d.%d", ver->major, ver->minor);
++    k4a_logger_log(level,
+                __FILE__,
+                __LINE__,
+                "Build type:          %s",
+                depth->version.firmware_build == 0 ? "Release" : "Debug");
+-    logger_log(level,
++    k4a_logger_log(level,
+                __FILE__,
+                __LINE__,
+                "Signature type:      %s",
+@@ -256,7 +256,7 @@ static void log_device_info(depth_context_t *depth)
+                    "MSFT" :
+                    (depth->version.firmware_signature == K4A_FIRMWARE_SIGNATURE_TEST ? "Test" : "Unsigned"));
+ 
+-    logger_log(level, __FILE__, __LINE__, "****************************************************");
++    k4a_logger_log(level, __FILE__, __LINE__, "****************************************************");
+ }
+ 
+ /** see documentation for depthmcu_stream_cb_t
+diff --git a/src/logging/logging.cpp b/src/logging/logging.cpp
+index d6d1114..5d3ab7f 100644
+--- a/src/logging/logging.cpp
++++ b/src/logging/logging.cpp
+@@ -10,6 +10,7 @@
+ #include <azure_c_shared_utility/envvariable.h>
+ #include <azure_c_shared_utility/refcount.h>
+ #include <azure_c_shared_utility/threadapi.h>
++#include <c_logging/logger.h>
+ 
+ // System dependencies
+ #include <stdlib.h>
+@@ -32,6 +33,25 @@
+ #pragma warning(default : 4702)
+ #endif
+ 
++// azure-c-shared-utility logs through c-logging, which aborts on any log call before logger_init().
++// Declared before the other globals so it is destroyed after them.
++class c_logging_lifetime
++{
++public:
++    c_logging_lifetime() : initialized(logger_init() == 0) {}
++    ~c_logging_lifetime()
++    {
++        if (initialized)
++        {
++            logger_deinit();
++        }
++    }
++
++private:
++    bool initialized;
++};
++static c_logging_lifetime g_c_logging_lifetime;
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -70,7 +90,7 @@ typedef struct
+ } logger_global_context_t;
+ 
+ static void logger_init_once(logger_global_context_t *global);
+-static void logger_deinit();
++static void k4a_logger_deinit();
+ 
+ // Creates a function called logger_global_context_t_get() which returns the initialized
+ // singleton global
+@@ -84,7 +104,7 @@ public:
+     logger_global_destroy() {}
+     ~logger_global_destroy()
+     {
+-        logger_deinit();
++        k4a_logger_deinit();
+     }
+ };
+ static logger_global_destroy destroy_loggger_on_binary_unload;
+@@ -255,7 +275,7 @@ static void logger_init_once(logger_global_context_t *global)
+     }
+ }
+ 
+-void logger_deinit(void)
++void k4a_logger_deinit(void)
+ {
+     logger_global_context_t *g_context = logger_global_context_t_get();
+ 
+@@ -270,7 +290,7 @@ void logger_deinit(void)
+ // Enable printf type checking in clang and gcc
+ __attribute__((__format__ (__printf__, 2, 0)))
+ #endif
+-void logger_log(k4a_log_level_t level, const char * file, const int line, const char *format, ...)
++void k4a_logger_log(k4a_log_level_t level, const char * file, const int line, const char *format, ...)
+ {
+     logger_global_context_t *g_context = logger_global_context_t_get();
+ 
