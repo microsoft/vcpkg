@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c0b4e69..efae306 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,9 +232,10 @@ set(sources_src ${sources})
+ list(FILTER sources_src INCLUDE REGEX "^src/")
+ set(sources_inc ${sources})
+ list(FILTER sources_inc EXCLUDE REGEX "^src/")
++list(REMOVE_ITEM sources_inc "${CMAKE_CURRENT_SOURCE_DIR}/include/boost/locale.hpp")
++source_group("headers" FILES "include/boost/locale.hpp")
+ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" PREFIX "sources" FILES ${sources_src})
+ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/boost/locale" PREFIX "headers" FILES ${sources_inc})
+-source_group("headers" FILES "include/boost/locale.hpp")
+ 
+ message(STATUS "Boost.Locale: "
+   "iconv ${BOOST_LOCALE_ENABLE_ICONV}, "

@@ -1,9 +1,16 @@
+vcpkg_download_distfile(msvc_patch
+    URLS "https://github.com/videolan/dav1d/commit/a34e0685b9111b9eb1d7835ea7bea5b425dced73.patch?full_index=1"
+    FILENAME "dav1d-a34e0685b9111b9eb1d7835ea7bea5b425dced73.patch"
+    SHA512 70d5b564c94a25380fae1b3b15ceb9992a8370db6bf477fe0c775a88ebf404e2224d35c46704ab5375d9026c99b32f0ccb317fe2ee670ad0b437d19fa9255677
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
     REF "${VERSION}"
     SHA512 7ee5906640495919462b2242c44a8c3cc577fdda52fc25257792f6df919429d54e4a48c315a7a11759385f044f68d3d6573fd720853f447e2d8520a13693827f
     HEAD_REF master
+    PATCHES "${msvc_patch}"
 )
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")

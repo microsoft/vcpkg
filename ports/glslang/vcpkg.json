@@ -1,6 +1,6 @@
 {
   "name": "glslang",
-  "version": "16.4.0",
+  "version": "16.6.0",
   "description": "Khronos-reference front end for GLSL/ESSL, partial front end for HLSL, and a SPIR-V generator.",
   "homepage": "https://github.com/KhronosGroup/glslang",
   "license": null,

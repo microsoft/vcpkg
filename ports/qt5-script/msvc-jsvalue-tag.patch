@@ -1,0 +1,13 @@
+diff --git a/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h b/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h
+index ae0e9c0..2fcde53 100644
+--- a/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h
++++ b/src/3rdparty/javascriptcore/JavaScriptCore/runtime/JSImmediate.h
+@@ -211,7 +211,7 @@ namespace JSC {
+         static ALWAYS_INLINE bool isIntegerNumber(JSValue v)
+         {
+ #if USE(JSVALUE64)
+-            return (rawValue(v) & TagTypeNumber) == TagTypeNumber;
++            return static_cast<uintptr_t>(rawValue(v)) >= static_cast<uintptr_t>(TagTypeNumber);
+ #else
+             return isNumber(v);
+ #endif

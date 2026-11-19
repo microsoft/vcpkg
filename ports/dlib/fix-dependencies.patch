@@ -1,8 +1,24 @@
 diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
-index 0c7f43b..2c69a29 100644
+index cc88b47..abca5ae 100644
 --- a/dlib/CMakeLists.txt
 +++ b/dlib/CMakeLists.txt
-@@ -603,6 +603,7 @@ if (NOT TARGET dlib)
+@@ -439,6 +439,7 @@ if (NOT TARGET dlib)
+          if (PNG_FOUND)
+             list (APPEND dlib_needed_private_includes ${PNG_INCLUDE_DIR})
+             list (APPEND dlib_needed_private_libraries ${PNG_LIBRARIES})
++            string(APPEND pkg_config_dlib_requires_private " libpng")
+          else()
+             # If we can't find libpng then statically compile it in.
+             include_directories(external/libpng external/zlib)
+@@ -501,6 +502,7 @@ if (NOT TARGET dlib)
+          if (JPEG_FOUND)
+             list (APPEND dlib_needed_private_includes ${JPEG_INCLUDE_DIR})
+             list (APPEND dlib_needed_private_libraries ${JPEG_LIBRARY})
++            string(APPEND pkg_config_dlib_requires_private " libjpeg")
+          else()
+             # If we can't find libjpeg then statically compile it in.
+             add_definitions(-DDLIB_JPEG_STATIC)
+@@ -603,6 +605,7 @@ if (NOT TARGET dlib)
           if (DLIB_USE_BLAS)
              if (blas_found)
                 list (APPEND dlib_needed_public_libraries ${blas_libraries})
@@ -10,7 +26,7 @@ index 0c7f43b..2c69a29 100644
              else()
                 set(DLIB_USE_BLAS OFF CACHE STRING ${DLIB_USE_BLAS_STR} FORCE )
                 toggle_preprocessor_switch(DLIB_USE_BLAS)
-@@ -612,6 +613,7 @@ if (NOT TARGET dlib)
+@@ -612,6 +615,7 @@ if (NOT TARGET dlib)
           if (DLIB_USE_LAPACK)
              if (lapack_found)
                 list (APPEND dlib_needed_public_libraries ${lapack_libraries})
@@ -18,7 +34,7 @@ index 0c7f43b..2c69a29 100644
                 if (lapack_with_underscore)
                    set(LAPACK_FORCE_UNDERSCORE 1)
                    enable_preprocessor_switch(LAPACK_FORCE_UNDERSCORE)
-@@ -719,6 +721,10 @@ if (NOT TARGET dlib)
+@@ -723,6 +727,10 @@ if (NOT TARGET dlib)
  
  
        if (DLIB_LINK_WITH_SQLITE3)
@@ -29,7 +45,7 @@ index 0c7f43b..2c69a29 100644
           find_library(sqlite sqlite3)
           # make sure sqlite3.h is in the include path
           find_path(sqlite_path sqlite3.h)
-@@ -734,6 +740,10 @@ if (NOT TARGET dlib)
+@@ -738,6 +746,10 @@ if (NOT TARGET dlib)
  
  
        if (DLIB_USE_FFTW)
@@ -40,7 +56,7 @@ index 0c7f43b..2c69a29 100644
           find_library(fftw fftw3)
           # make sure fftw3.h is in the include path
           find_path(fftw_path fftw3.h)
-@@ -877,6 +887,8 @@ if (NOT TARGET dlib)
+@@ -883,6 +895,8 @@ if (NOT TARGET dlib)
  
        ## dlib-1.pc generation and installation
  
@@ -49,7 +65,7 @@ index 0c7f43b..2c69a29 100644
        configure_file("cmake_utils/dlib.pc.in" "dlib-1.pc" @ONLY)
        install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dlib-1.pc"
           DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-@@ -890,7 +902,7 @@ if (NOT TARGET dlib)
+@@ -896,7 +910,7 @@ if (NOT TARGET dlib)
  
  endif()
  
@@ -68,7 +84,7 @@ index 9060110..8820f33 100644
  Cflags: -I${includedir} @pkg_config_dlib_needed_includes@
 +Requires.private: @pkg_config_dlib_requires_private@
 diff --git a/dlib/cmake_utils/dlibConfig.cmake.in b/dlib/cmake_utils/dlibConfig.cmake.in
-index 4f7ea1e..24755ce 100644
+index 4389b81..bcf5fe4 100644
 --- a/dlib/cmake_utils/dlibConfig.cmake.in
 +++ b/dlib/cmake_utils/dlibConfig.cmake.in
 @@ -12,6 +12,18 @@
@@ -90,7 +106,7 @@ index 4f7ea1e..24755ce 100644
  
   
  # Our library dependencies (contains definitions for IMPORTED targets)
-@@ -35,10 +47,6 @@ set(dlib_LIBRARIES dlib::dlib)
+@@ -102,10 +114,6 @@ set(dlib_LIBRARIES dlib::dlib)
  set(dlib_LIBS      dlib::dlib)
  set(dlib_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@" "@dlib_needed_includes@")
  

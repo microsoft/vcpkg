@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-include-directory.patch
         fix-mingw.patch
         remove_abs_patch.cmake
+        msvc-warnings-not-errors.patch # Keep diagnostics for valid C pointer-to-bool conversions nonfatal.
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 file(TOUCH "${SOURCE_PATH}/src/utf8proc-editable")

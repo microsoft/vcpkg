@@ -2,13 +2,13 @@
 # scivision/mumps is the CMake build system referenced by upstream; it downloads
 # the MUMPS sources itself, so vcpkg pre-downloads them and points FetchContent
 # at the extracted tree to keep the build offline and hash-verified.
-set(MUMPS_CMAKE_REF "v5.9.1.1")
+set(MUMPS_CMAKE_REF "v${VERSION}.0")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO scivision/mumps
     REF "${MUMPS_CMAKE_REF}"
-    SHA512 eb23ba6fec795a02de40353556a93a5be41d1774517f1d12e9a12c8b543a13b93360eb97728550df4d2d3e41dd51a9b0278ae88ffc50cf378155a4842bd18403
+    SHA512 a6e2733972caeb06b46cafd46d36a6aad708cf978852a20dc1decb3b757f7b57662c2043e27c3a668919eaea0ac1d6ceb1889ee00a6ca4792388da1b9f4fc51f
     HEAD_REF main
     PATCHES
         install-mpiseq-headers-in-subdir.patch
@@ -27,7 +27,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindLAPACK.cmake")
 vcpkg_download_distfile(MUMPS_ARCHIVE
     URLS "https://mumps-solver.org/MUMPS_${VERSION}.tar.gz"
     FILENAME "MUMPS_${VERSION}.tar.gz"
-    SHA512 1984b1d4b9b7ba4d48f90975c3ae864c1afc487ef1864e972ea7f4fdcba0ee174611f31384d2472bc9dbe5a6ccbdc3995800a13800e1e9bb1ba2426d1f93aad5
+    SHA512 0e3268062f73ce6763d08f50ef6140a0e05db85c67a39565909f2281e52a2fb0a064343898e7a05bb8c30af175625fc3fd2bc75f522e626cc9ccbe27fff37fde
 )
 
 vcpkg_extract_source_archive(MUMPS_UPSTREAM_SOURCE_PATH
