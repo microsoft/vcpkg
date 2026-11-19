@@ -7,7 +7,7 @@ vcpkg_from_github(
     REPO nanodbc/nanodbc
     REF "v${VERSION}"
     SHA512 c3728c30c79baaf39553b0ddc46b645ecc598baab3ea40b9544465e8d1d81aaeae27415e8be4637154ea0020f8254b76cea8394e123f51f339ef9b35f1c4e2d3
-    HEAD_REF master
+    HEAD_REF main
 	PATCHES
 		use-vcpkg-unixodbc.patch
 )
