@@ -421,13 +421,9 @@ function(vcpkg_configure_meson)
         set(MESON_DEFAULT_LIBRARY static)
     endif()
 
-    set(PREPAND_PATH "")
-    if(CMAKE_HOST_WIN32 AND IS_CROSS)
-	set(PREPAND_PATH "//?/")
-    endif()
     vcpkg_list(APPEND arg_OPTIONS --libdir lib) # else meson install into an architecture describing folder
-    vcpkg_list(APPEND arg_OPTIONS_DEBUG -Ddebug=true --prefix "${PREPAND_PATH}${CURRENT_PACKAGES_DIR}/debug" --includedir ../include)
-    vcpkg_list(APPEND arg_OPTIONS_RELEASE -Ddebug=false --prefix "${PREPAND_PATH}${CURRENT_PACKAGES_DIR}")
+    vcpkg_list(APPEND arg_OPTIONS_DEBUG -Ddebug=true --prefix "${CURRENT_PACKAGES_DIR}/debug" --includedir ../include)
+    vcpkg_list(APPEND arg_OPTIONS_RELEASE -Ddebug=false --prefix "${CURRENT_PACKAGES_DIR}")
 
     # select meson cmd-line options
     if(VCPKG_TARGET_IS_WINDOWS)
