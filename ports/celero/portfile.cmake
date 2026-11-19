@@ -28,4 +28,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/celero/Export.h" "#ifdef CELERO_STATIC" "#define CELERO_STATIC\n#ifdef CELERO_STATIC")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/license.txt"
+    "${SOURCE_PATH}/include/celero/CommandLine.h"
+)
