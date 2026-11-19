@@ -10,7 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        build-tests-option.diff
+        disable-tests.diff
 )
 
 vcpkg_configure_meson(
@@ -19,7 +19,6 @@ vcpkg_configure_meson(
         -Dintrospection=false
         -Dgtk_doc=false
         -Dmanpage=false
-        -Dtests=false
         -Dvapi=false
     ADDITIONAL_BINARIES
          gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen${VCPKG_HOST_EXECUTABLE_SUFFIX}'
