@@ -1,21 +1,26 @@
 diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
-index c5c1fb8..b1f41bf 100644
+index b1f41bf..188226d 100644
 --- a/build/cmake/CMakeLists.txt
 +++ b/build/cmake/CMakeLists.txt
-@@ -246,7 +246,7 @@
- set (requireslib glu)
- 
- #  Mac OSX has no glu.pc unless optional X11/GLX is installed
+@@ -217,10 +217,9 @@ set (includedir ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+ set (version ${GLEW_VERSION})
+ set (libname ${GLEW_LIB_NAME})
+ set (cflags)
+-set (requireslib glu)
+-
+-#  Mac OSX has no glu.pc unless optional X11/GLX is installed
 -if (APPLE)
-+if (1)
++if (WIN32)
++  set (requireslib opengl)
++else ()
    set (requireslib)
  endif ()
  
 diff --git a/include/GL/glew.h b/include/GL/glew.h
-index c5c1fb8..b1f41bf 100644
+index 90c285e..c98c58d 100644
 --- a/include/GL/glew.h
 +++ b/include/GL/glew.h
-@@ -1199,7 +1199,7 @@
+@@ -1199,7 +1199,7 @@ GLAPI void GLAPIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei heigh
  
  /* ---------------------------------- GLU ---------------------------------- */
  
@@ -24,7 +29,7 @@ index c5c1fb8..b1f41bf 100644
  #  ifdef __APPLE__
  #    include <Availability.h>
  #    if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-@@ -1208,7 +1208,7 @@
+@@ -1208,7 +1208,7 @@ GLAPI void GLAPIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei heigh
  #  endif
  #endif
  
