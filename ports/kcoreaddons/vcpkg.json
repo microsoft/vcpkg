@@ -1,7 +1,6 @@
 {
   "name": "kcoreaddons",
-  "version": "6.31.0",
-  "port-version": 3,
+  "version": "6.32.0",
   "description": "Addons to QtCore",
   "homepage": "https://invent.kde.org/frameworks/kcoreaddons",
   "documentation": "https://api.kde.org/kcoreaddons-index.html",

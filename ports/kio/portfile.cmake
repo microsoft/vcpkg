@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
     REF "v${VERSION}"
-    SHA512 686ac09d2ddaf3ce13df617a55e76fcac335e47a6c729d7482d4096d6eca199fe163155d51a4d7619c055ca74b0a048f9f1d173dacdd848689753d4a5599de76
+    SHA512 84a1c63de4868d710459cddab0157b8a6f6b6431141da5e619a777bbc80dba9ec370bd369b5533980b11699a1ef027b642808cb44fe2d9abccdfb0622dc2323c
     HEAD_REF master
     PATCHES
         fix-static-dependencies.patch
