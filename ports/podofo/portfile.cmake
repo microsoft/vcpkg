@@ -25,6 +25,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND "fontmanager" IN_LIST FEATURES AND NOT "fontconfi
     # Use Win32 GDI when fontmanager is requested without Fontconfig.
     list(APPEND FEATURE_OPTIONS
         -DPODOFO_WITH_WIN32GDI_FONT_SEARCH=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Fontconfig=ON
     )
 endif()
 
