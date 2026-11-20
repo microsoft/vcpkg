@@ -29,6 +29,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6config CONFIG_PATH lib/cmake/KF6Config)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6config/KF6ConfigTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(

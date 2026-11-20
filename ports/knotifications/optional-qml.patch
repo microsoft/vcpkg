@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0d00c95..7747b40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -62,7 +62,10 @@ if(USE_DBUS)
+     add_definitions(-DHAVE_DBUS)
+ endif()
+ 
+-find_package(Qt6 ${REQUIRED_QT_VERSION} QUIET OPTIONAL_COMPONENTS Qml)
++option(KNOTIFICATIONS_USE_QML "Build the QML module, if Qt6Qml is found" ON)
++if (KNOTIFICATIONS_USE_QML)
++    find_package(Qt6 ${REQUIRED_QT_VERSION} QUIET OPTIONAL_COMPONENTS Qml)
++endif()
+ 
+ if (WIN32)
+     find_package(LibSnoreToast)
+diff --git a/KF6NotificationsConfig.cmake.in b/KF6NotificationsConfig.cmake.in
+index 645a1cd..b694794 100644
+--- a/KF6NotificationsConfig.cmake.in
++++ b/KF6NotificationsConfig.cmake.in
+@@ -8,7 +8,7 @@ endif()
+ 
+ if (NOT @BUILD_SHARED_LIBS@) 
+     find_dependency(KF6Config "@KF_DEP_VERSION@")
+-    if ("@Qt6Qml_FOUND@")
++    if (@KNOTIFICATIONS_USE_QML@ AND "@Qt6Qml_FOUND@")
+         find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
+     endif()
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index afa298e..23ad6a1 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -151,6 +151,6 @@ ecm_installed_library_check_version_preprocessor_macros(KF6Notifications
+     PREFIX KNOTIFICATIONS
+ )
+ 
+-if (TARGET Qt6::Qml)
++if (KNOTIFICATIONS_USE_QML AND TARGET Qt6::Qml)
+     add_subdirectory(qml)
+ endif()
