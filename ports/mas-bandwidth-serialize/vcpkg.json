@@ -1,6 +1,6 @@
 {
   "name": "mas-bandwidth-serialize",
-  "version": "1.15.0",
+  "version": "2.1.5",
   "description": "A simple bitpacking serializer for C++.",
   "homepage": "https://github.com/mas-bandwidth/serialize",
   "license": "BSD-3-Clause",

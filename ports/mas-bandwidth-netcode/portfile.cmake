@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mas-bandwidth/netcode
     REF "v${VERSION}"
-    SHA512 df66e0ce9196e6a357e674427517efc159614e5ec8b0fa6cad466726ae2aa2d235f642dce048035b4987f1ad83f5fb6eccfb93315de561d8d561b41dfa0eb640
+    SHA512 a8127d3696057409bcc7c397a3edf2f28bfb37aad34ba48b873fe6e5bc93d0d933e3e723da3e8a785b1eb1e4e4357a9eac031f0dda5665709a77bbeac1189006
     HEAD_REF main
 )
 
@@ -18,8 +18,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME netcode CONFIG_PATH lib/cmake/netcode)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENCE")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
