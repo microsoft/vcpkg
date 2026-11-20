@@ -17,9 +17,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_install_copyright(
-    COMMENT "plugins/matlab.h does not specify an LGPL version; the manifest represents this notice as LicenseRef-LGPL."
+    COMMENT "Upstream does not bundle the CeCILL 2.1 agreement; plugins/inpaint.h contains the same dual-license notice as CImg.h. plugins/matlab.h does not specify an LGPL version; the manifest represents this notice as LicenseRef-LGPL."
     FILE_LIST
         "${SOURCE_PATH}/Licence_CeCILL-C_V1-en.txt"
         "${SOURCE_PATH}/Licence_CeCILL_V2-en.txt"
+        "${SOURCE_PATH}/plugins/inpaint.h"
         "${SOURCE_PATH}/plugins/matlab.h"
 )
