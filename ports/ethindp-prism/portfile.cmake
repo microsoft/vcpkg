@@ -16,6 +16,12 @@ vcpkg_check_features(
     speech-dispatcher PRISM_ENABLE_SPEECH_DISPATCHER_BACKEND
     gdk-speech PRISM_ENABLE_GDK_SPEECH_BACKEND
 )
+if("gdk-speech" IN_LIST FEATURES)
+  list(APPEND FEATURE_OPTIONS
+    "-DPRISM_GDK_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include"
+    "-DPRISM_GDK_THUNKS_DLL=${CURRENT_INSTALLED_DIR}/bin/xgameruntime.thunks.dll"
+  )
+endif()
 if(VCPKG_TARGET_IS_XBOX)
   # GDK speech is the only speech backend on Xbox, so it is always required there.
   list(APPEND FEATURE_OPTIONS -DPRISM_ENABLE_GDK_SPEECH_BACKEND=ON)

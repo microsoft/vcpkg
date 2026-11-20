@@ -47,8 +47,11 @@
   ],
   "features": {
     "gdk-speech": {
-      "description": "Enable the Microsoft GDK XSpeechSynthesizer backend on desktop Windows (requires an installed Microsoft GDK; always enabled on Xbox)",
-      "supports": "windows & !uwp & !xbox"
+      "description": "Enable the Microsoft GDK XSpeechSynthesizer backend on desktop Windows (always enabled on Xbox)",
+      "supports": "windows & (x64 | arm64) & !uwp & !xbox & !staticcrt",
+      "dependencies": [
+        "ms-gdk"
+      ]
     },
     "speech-dispatcher": {
       "description": "Enable the speech-dispatcher backend (requires libspeechd to be installed)",
