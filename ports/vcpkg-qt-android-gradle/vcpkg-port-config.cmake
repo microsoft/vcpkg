@@ -1,10 +1,11 @@
 include_guard(GLOBAL)
 
 include("${CMAKE_CURRENT_LIST_DIR}/vcpkg-qt-android-gradle-inputs.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/vcpkg-android-sdk.cmake")
 
 set(Z_VCPKG_QT_ANDROID_GRADLE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
-# vcpkg_qt_android_gradle_setup(SOURCE_PATH <dir> [COMPILE_SDK <android-N[.M]>])
+# vcpkg_qt_android_gradle_setup(SOURCE_PATH <dir> SDK_ROOT <dir> [COMPILE_SDK <android-N[.M]>])
 #
 # Points GRADLE_USER_HOME to a fresh directory in the buildtree which contains
 # - the Gradle distribution expected by Qt's Gradle wrapper, so the wrapper doesn't download it,
@@ -16,14 +17,18 @@ set(Z_VCPKG_QT_ANDROID_GRADLE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 # different dependencies.
 # COMPILE_SDK is the SDK platform Qt compiles the Java code against. Qt's JAR projects only
 # take the major API level, so for a minor platform (e.g. android-37.2) an init script adds the
-# minor API level to their compileSdk.
+# minor API level to their compileSdk. If the unpacked platform has no package.xml, create a
+# private SDK for Gradle with metadata reconstructed from source.properties.
 function(vcpkg_qt_android_gradle_setup)
-    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;COMPILE_SDK" "")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH;SDK_ROOT;COMPILE_SDK" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     if(NOT arg_SOURCE_PATH)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires SOURCE_PATH.")
+    endif()
+    if(NOT arg_SDK_ROOT)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires SDK_ROOT.")
     endif()
 
     include("${Z_VCPKG_QT_ANDROID_GRADLE_DIR}/gradle-artifacts.cmake")
@@ -64,6 +69,7 @@ function(vcpkg_qt_android_gradle_setup)
 
     set(gradle_home "${CURRENT_BUILDTREES_DIR}/gradle-home-${TARGET_TRIPLET}")
     file(REMOVE_RECURSE "${gradle_home}")
+    z_vcpkg_qt_android_gradle_prepare_sdk(gradle_sdk "${arg_SDK_ROOT}" "${arg_COMPILE_SDK}" "${gradle_home}/android-sdk")
 
     # Same layout as the Gradle wrapper: wrapper/dists/<name>/<base36 md5 of the URL>/<name>.zip
     file(COPY "${Z_VCPKG_QT_ANDROID_GRADLE_DIR}/${QT_ANDROID_GRADLE_DISTRIBUTION_NAME}.zip"
@@ -92,4 +98,11 @@ function(vcpkg_qt_android_gradle_setup)
 
     set(ENV{GRADLE_USER_HOME} "${gradle_home}")
     set(ENV{ANDROID_USER_HOME} "${gradle_home}/android-user-home")
+    if(NOT gradle_sdk STREQUAL arg_SDK_ROOT)
+        set(ENV{VCPKG_QT_ANDROID_GRADLE_SDK_ROOT} "${gradle_sdk}")
+        set(ENV{ANDROID_HOME} "${gradle_sdk}")
+        set(ENV{ANDROID_SDK_ROOT} "${gradle_sdk}")
+    else()
+        set(ENV{VCPKG_QT_ANDROID_GRADLE_SDK_ROOT} "")
+    endif()
 endfunction()

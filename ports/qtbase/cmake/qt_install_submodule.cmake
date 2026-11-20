@@ -422,7 +422,8 @@ function(qt_install_submodule)
 
         # Qt builds its Java parts with Gradle, which must not download anything.
         if(COMMAND vcpkg_qt_android_gradle_setup)
-            vcpkg_qt_android_gradle_setup(SOURCE_PATH "${SOURCE_PATH}" COMPILE_SDK "${QT_ANDROID_API_USED_FOR_JAVA}")
+            vcpkg_qt_android_gradle_setup(SOURCE_PATH "${SOURCE_PATH}" SDK_ROOT "${ANDROID_SDK_ROOT}"
+                COMPILE_SDK "${QT_ANDROID_API_USED_FOR_JAVA}")
         else()
             file(GLOB_RECURSE gradle_files LIST_DIRECTORIES false "${SOURCE_PATH}/src/*.gradle")
             foreach(gradle_file IN LISTS gradle_files)

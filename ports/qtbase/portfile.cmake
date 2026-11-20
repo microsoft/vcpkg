@@ -36,6 +36,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND ${PORT}_PATCHES gradle-sdk-root.patch)
+endif()
+
 if("shared-mime-info" IN_LIST FEATURES)
     list(APPEND ${PORT}_PATCHES use-shared-mime-info.patch)
 endif()

@@ -53,6 +53,7 @@ file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/gradle-artifacts.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/gradle.properties"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-compile-sdk.gradle"
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-android-sdk.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-offline-repository.gradle.in"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-qt-android-gradle-inputs.cmake"
