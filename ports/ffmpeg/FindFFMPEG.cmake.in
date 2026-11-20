@@ -56,7 +56,7 @@ function(append_dependencies out)
     set(pass_through
         ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES}
         advapi32 bcrypt crypt32 gdi32 mfuuid ncrypt ole32 oleaut32 psapi secur32 shlwapi strmiids user32 uuid vfw32 ws2_32 usp10 cfgmgr32 rpcrt4
-        -pthread -pthreads pthread atomic m rt
+        -pthread -pthreads pthread atomic m rt dl
     )
     cmake_policy(SET CMP0057 NEW)
     foreach(lib_name IN LISTS arg_NAMES)
