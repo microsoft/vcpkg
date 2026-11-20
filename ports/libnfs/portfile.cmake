@@ -42,6 +42,15 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/libnfs
 )
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    if(NOT VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libnfs.pc" "-lnfs" "-llibnfs")
+    endif()
+    if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libnfs.pc" "-lnfs" "-llibnfs")
+    endif()
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
