@@ -1,0 +1,12 @@
+{
+  "name": "praxo-core",
+  "version": "0.13.0",
+  "description": "Embeddable C agent runtime with policy, tools, streaming, and plugin hosts",
+  "homepage": "https://github.com/axisvela/praxo-core",
+  "license": "MIT",
+  "supports": "!android & !uwp",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
