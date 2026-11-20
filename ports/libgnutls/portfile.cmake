@@ -5,7 +5,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${VERSION}.tar.xz"
     FILENAME "gnutls-${VERSION}.tar.xz"
-    SHA512 71bf189a836fd18d58b9e995d4bfcecdb0aae6129dfd44247b98422b2f127dd868f9905d28fad2ca05afd919a0e6b3c8eebb6b95804067d3a8dab31ebdc72453
+    SHA512 d28911cb6176ada9d90e5611f065d8a56744cc63771ca73a0544f4cf07eb4e33c6c07debd3ef471ffe8fa0fbf327ff8393a998c95c64ddae788514adc5d8f266
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${tarball}"
@@ -13,6 +13,17 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         ccasflags.patch
         use-gmp-pkgconfig.patch
+        isolate-inih.patch
+)
+
+# The release tarball marks the autoreconf input files read-only. Make all m4
+# inputs writable so aclocal/autoreconf can replace them during configuration.
+file(GLOB_RECURSE m4_files LIST_DIRECTORIES false "${SOURCE_PATH}/m4/*")
+file(CHMOD_RECURSE ${m4_files}
+    PERMISSIONS
+        OWNER_READ OWNER_WRITE
+        GROUP_READ
+        WORLD_READ
 )
 
 vcpkg_list(SET options)
