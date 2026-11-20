@@ -6973,7 +6973,7 @@
       "port-version": 1
     },
     "mqtt-cpp": {
-      "baseline": "13.2.3",
+      "baseline": "13.2.4",
       "port-version": 0
     },
     "ms-gdk": {
