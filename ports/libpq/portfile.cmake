@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(
         windows/spin_delay.patch
         windows/getopt.patch
         windows/pthread-symbols.patch
+        windows/postgresql-14.0-use-mingw-setjmp-on-ucrt.patch
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
