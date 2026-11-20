@@ -4,15 +4,28 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ethindp/prism
-  REF v0.18.3
-  SHA512 a6cec5e04cf332dbe4ad75e8353559931fff6885b16f41304f73489f6dd236a8c014dc6b32f7d8c8838e4e39f2969c095403c5c8a5b8fd2218197f9eb35225fd
+  REF v0.18.4
+  SHA512 50346fe97d69f0086774b3ca18a0aef06cbbe40f7ea11f9dddbf7dc1c1de78735c34add684be921722c1456020ffff20500d4ec5a02dc16b96e165b0d2c13b5c
   HEAD_REF master
+  PATCHES
+    xbox-games-partition.patch
 )
 vcpkg_check_features(
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     speech-dispatcher PRISM_ENABLE_SPEECH_DISPATCHER_BACKEND
+    gdk-speech PRISM_ENABLE_GDK_SPEECH_BACKEND
 )
+if("gdk-speech" IN_LIST FEATURES)
+  list(APPEND FEATURE_OPTIONS
+    "-DPRISM_GDK_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include"
+    "-DPRISM_GDK_THUNKS_DLL=${CURRENT_INSTALLED_DIR}/bin/xgameruntime.thunks.dll"
+  )
+endif()
+if(VCPKG_TARGET_IS_XBOX)
+  # GDK speech is the only speech backend on Xbox, so it is always required there.
+  list(APPEND FEATURE_OPTIONS -DPRISM_ENABLE_GDK_SPEECH_BACKEND=ON)
+endif()
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
@@ -44,4 +57,5 @@ vcpkg_install_copyright(FILE_LIST
   "${SOURCE_PATH}/LICENSES/djinni/LICENSE"
   "${SOURCE_PATH}/LICENSES/dr_wav/LICENSE"
   "${SOURCE_PATH}/LICENSES/moderncom/LICENSE"
+  "${SOURCE_PATH}/LICENSES/wayland-protocols/LICENSE"
 )

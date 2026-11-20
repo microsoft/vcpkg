@@ -1,21 +1,25 @@
 {
   "name": "ethindp-prism",
-  "version": "0.18.3",
+  "version": "0.18.4",
   "description": "The Platform-agnostic Reader Interface for Speech and Messages",
-  "license": "MPL-2.0 AND BSD-2-Clause AND Apache-2.0 AND Unlicense AND MIT AND Zlib",
+  "license": "MPL-2.0 AND BSD-2-Clause AND Apache-2.0 AND Unlicense AND MIT AND Zlib AND HPND-sell-variant",
   "supports": "!uwp",
   "dependencies": [
     "concurrentqueue",
-    "fmt",
     {
-      "name": "glibmm",
+      "name": "dbus",
       "platform": "linux | freebsd | openbsd"
     },
+    "fmt",
     {
       "name": "highway",
       "features": [
         "contrib"
       ]
+    },
+    {
+      "name": "libxcb",
+      "platform": "linux | freebsd | openbsd"
     },
     {
       "name": "pkgconf",
@@ -29,6 +33,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "wayland",
+      "platform": "linux | freebsd | openbsd"
     }
   ],
   "default-features": [
@@ -38,6 +46,13 @@
     }
   ],
   "features": {
+    "gdk-speech": {
+      "description": "Enable the Microsoft GDK XSpeechSynthesizer backend on desktop Windows (always enabled on Xbox)",
+      "supports": "windows & (x64 | arm64) & !uwp & !xbox & !staticcrt",
+      "dependencies": [
+        "ms-gdk"
+      ]
+    },
     "speech-dispatcher": {
       "description": "Enable the speech-dispatcher backend (requires libspeechd to be installed)",
       "supports": "(linux | freebsd | openbsd) & !android & !emscripten",
