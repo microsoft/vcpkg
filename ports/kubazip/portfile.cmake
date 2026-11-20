@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kuba--/zip
     REF "v${VERSION}"
-    SHA512 817da7dd6f477adeb4986d542c20b6f28bed24895b09d3a69cfddf28cc78a7259db3a5e8f879ac263b6bda11c7bb70d00d1d8b626e33b4280366c769bb30bf50
+    SHA512 f445120d03c9d21b91784a12fd2ae33357a7d116270158ff8e5a88eade586a534d69c50de059d4a9399610720b2076a39117721ca6cd16bade60c676197f2e9c
     HEAD_REF master
     PATCHES
         fix-name-conflict.diff
