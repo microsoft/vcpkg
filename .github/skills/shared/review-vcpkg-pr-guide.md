@@ -8,8 +8,6 @@ Be technical, precise, concise, and autonomous. Prove or refute claims with evid
 
 Create a thorough maintainer-facing `report.md` in the absolute `{{REPORT_DIR}}` supplied by the invoking skill.
 
-Only for `review-depth = examples-and-patches`, prepare individual validated `git format-patch` files for found issues.
-
 # Success criteria
 
 Verify consistent application of the [maintainer guide](https://raw.githubusercontent.com/MicrosoftDocs/vcpkg-docs/refs/heads/main/vcpkg/contributing/maintainer-guide.md) and that each port's installed contents work for end users.
@@ -25,9 +23,9 @@ Use verdict `approve`, `approve-with-notes`, `request-changes`, or `unknown`.
 
 ### Fix handoff
 
-Record the following at every review depth; link to sections of this report rather than duplicating evidence:
+Record the following in every report; link to sections of this report rather than duplicating evidence:
 
-- **Revision:** PR URL, contributor repository and branch, reviewed head SHA, target branch and comparison SHA, affected ports, and `review-depth`.
+- **Revision:** PR URL, contributor repository and branch, reviewed head SHA, target branch and comparison SHA, and affected ports.
 - **Workspace:** Absolute worktree and investigation paths, actual checked-out SHA, and any review-created commits or uncommitted changes. Identify retained sources, builds, installs, examples, and patches; distinguish the original PR from experimental fixes.
 - **Findings:** Give each issue a stable identifier such as `F1`. Record blocking/non-blocking status, introduced/pre-existing/unknown classification, evidence, required outcome, and any agreed scope exclusions. Distinguish confirmed causes from hypotheses and optional implementation suggestions.
 - **Validation:** Record exact commands and working directories, triplets, features, configurations, relevant toolchain versions and non-secret settings, expected versus observed results, and what was not tested. Include decisive error excerpts or CI permalinks, not just local log paths. For custom reproducers, include the minimal source/build recipe or exact reconstruction instructions so missing local artifacts do not require rediscovering the issue.
@@ -74,7 +72,7 @@ The report considers the following in particular:
 
 Read the PR description and conversation. Treat them as explanations, motivation, and questions to answer.
 
-For `review-depth = examples` or `examples-and-patches`, validate an example application in Release and Debug through every applicable integration:
+Validate an example application in Release and Debug through every applicable integration:
 1. `find_package` -- when provided upstream or by a vcpkg-specific patch
 2. pkg-config -- when provided upstream or by a vcpkg-specific patch
 3. Direct include/link -- always: use only the installed `<triplet>/include/` as a package include path, without extra build-system macro definitions. On Windows, link every `.lib` in `<triplet>/lib/` for Release or `<triplet>/debug/lib/` for Debug. Elsewhere use the equivalent native libraries and configuration-specific directories. Allow system libraries such as `opengl.lib` or `Ws2_32.lib`.
@@ -120,8 +118,7 @@ For Azure CI logs, prefer `.github/skills/shared/Get-VcpkgAzureFailureLogs.ps1`;
 # Output
 
 Write all and ONLY final deliverables in the supplied absolute `{{REPORT_DIR}}`, regardless of the current workspace:
-1. `report.md`: a thorough human-readable review with `## Fix handoff`, including patch validation and reasons for any unpatched issues when `review-depth = examples-and-patches`.
-2. `patches/*.patch`: focused, validated `git format-patch` files, only for `examples-and-patches`. Omit when no patches were produced.
+1. `report.md`: a thorough human-readable review with `## Fix handoff`.
 
 Use exactly one of these verdict values: approve, approve-with-notes, request-changes, or unknown.
 
