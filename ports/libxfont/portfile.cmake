@@ -8,7 +8,7 @@ vcpkg_download_distfile(
     LIBXFONT2_ARCHIVE
     URLS "https://www.x.org/archive/individual/lib/libXfont2-${VERSION}.tar.xz"
     FILENAME "libXfont2-${VERSION}.tar.xz"
-    SHA512 ccd6d6abf6aa814a940d137813dba638f8259c3672abf00808d82df033c1026ae29d40c9068da4f112637338ad0d0fc15818a4afa9369a626c8f17e466b4fa72
+    SHA512 46ee0d4859cafd691b69936ad416d83e3867ea93aee05419fec15cbdabab42f3c9eccef12eb150cfcd8ced78a65f3dcd81532fae755d16e8b43ea82266f8a058
 )
 
 vcpkg_extract_source_archive(
