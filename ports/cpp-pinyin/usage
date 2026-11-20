@@ -3,13 +3,15 @@ cpp-pinyin provides CMake targets:
   find_package(cpp-pinyin2 CONFIG REQUIRED)
   target_link_libraries(main PRIVATE cpp-pinyin2::cpp-pinyin2)
 
-To use the library, you need to copy the dictionary files to the binary directory.
+The dictionaries are in CPP_PINYIN2_DICT_DIR. To deploy them beside your application:
 
   add_custom_command(TARGET main POST_BUILD
       COMMAND "${CMAKE_COMMAND}" -E copy_directory
         "${CPP_PINYIN2_DICT_DIR}"
         "$<TARGET_FILE_DIR:main>/dict"
   )
+
+Pass the deployed dictionary directory to Engine::open.
 
 cpp-pinyin provides pkg-config modules:
 
