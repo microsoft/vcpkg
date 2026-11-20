@@ -15,6 +15,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         rtti                CPP_RTTI_ENABLED
 )
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Build"
     OPTIONS
@@ -31,6 +34,9 @@ vcpkg_cmake_configure(
         -DJPH_USE_DX12=OFF
         -DJPH_USE_VK=OFF
         -DJPH_USE_MTL=OFF
+        -DJPH_USE_CPU_COMPUTE=ON
+        -DENABLE_OBJECT_STREAM=ON
+        -DFLOATING_POINT_EXCEPTIONS_ENABLED=ON
         ${FEATURE_OPTIONS}
     OPTIONS_RELEASE
         -DGENERATE_DEBUG_SYMBOLS=OFF
@@ -43,25 +49,26 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_cmake_config_fixup(PACKAGE_NAME Jolt CONFIG_PATH "lib/cmake/Jolt")
 
+set(direct_definitions JPH_USE_CPU_COMPUTE JPH_OBJECT_STREAM)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/include/Jolt/Core/Core.h"
-        "#pragma once"
-        [=[#pragma once
-
-#ifndef JPH_SHARED_LIBRARY
-#define JPH_SHARED_LIBRARY
-#endif
-#ifndef JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
-#define JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
-#endif
-#ifndef JPH_USE_CPU_COMPUTE
-#define JPH_USE_CPU_COMPUTE
-#endif
-#ifndef JPH_OBJECT_STREAM
-#define JPH_OBJECT_STREAM
-#endif]=]
-    )
+    list(APPEND direct_definitions JPH_SHARED_LIBRARY)
+endif()
+# Match the library compiler check in https://github.com/jrouwe/JoltPhysics/blob/cf16769bb0ede9c45d57d06068ff0689e9702f5c/Jolt/Jolt.cmake#L848-L851
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    list(APPEND direct_definitions JPH_FLOATING_POINT_EXCEPTIONS_ENABLED)
+endif()
+if("debugrenderer" IN_LIST FEATURES)
+    list(APPEND direct_definitions JPH_DEBUG_RENDERER)
+endif()
+if("profiler" IN_LIST FEATURES)
+    list(APPEND direct_definitions JPH_PROFILE_ENABLED)
 endif()
 
+set(core_preamble "#pragma once\n")
+foreach(definition IN LISTS direct_definitions)
+    string(APPEND core_preamble "\n#ifndef ${definition}\n#define ${definition}\n#endif")
+endforeach()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Jolt/Core/Core.h" "#pragma once" "${core_preamble}")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
