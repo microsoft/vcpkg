@@ -1,0 +1,40 @@
+diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
+index b1f41bf..188226d 100644
+--- a/build/cmake/CMakeLists.txt
++++ b/build/cmake/CMakeLists.txt
+@@ -217,10 +217,9 @@ set (includedir ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+ set (version ${GLEW_VERSION})
+ set (libname ${GLEW_LIB_NAME})
+ set (cflags)
+-set (requireslib glu)
+-
+-#  Mac OSX has no glu.pc unless optional X11/GLX is installed
+-if (APPLE)
++if (WIN32)
++  set (requireslib opengl)
++else ()
+   set (requireslib)
+ endif ()
+ 
+diff --git a/include/GL/glew.h b/include/GL/glew.h
+index 90c285e..c98c58d 100644
+--- a/include/GL/glew.h
++++ b/include/GL/glew.h
+@@ -1199,7 +1199,7 @@ GLAPI void GLAPIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei heigh
+ 
+ /* ---------------------------------- GLU ---------------------------------- */
+ 
+-#ifndef GLEW_NO_GLU
++#if 0
+ #  ifdef __APPLE__
+ #    include <Availability.h>
+ #    if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+@@ -1208,7 +1208,7 @@ GLAPI void GLAPIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei heigh
+ #  endif
+ #endif
+ 
+-#ifndef GLEW_NO_GLU
++#if 0
+ /* this is where we can safely include GLU */
+ #  if defined(__APPLE__) && defined(__MACH__)
+ #    include <OpenGL/glu.h>
