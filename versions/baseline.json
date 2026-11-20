@@ -4173,8 +4173,8 @@
       "port-version": 0
     },
     "ixwebsocket": {
-      "baseline": "12.1.0",
-      "port-version": 1
+      "baseline": "13.0.0",
+      "port-version": 0
     },
     "jack2": {
       "baseline": "1.9.22",
