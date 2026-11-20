@@ -177,7 +177,7 @@ list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_pkg_config:BOOL=ON)
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
-    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolve
+    "dnslookup"           CMAKE_DISABLE_FIND_PACKAGE_WrapResolv
     )
 
 if("openssl" IN_LIST FEATURES)

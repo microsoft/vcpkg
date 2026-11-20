@@ -8,6 +8,7 @@ vcpkg_from_github(
         optional-qml.patch
         generate-flexlexer-header.patch
         detect-flex-types.patch
+        export-qml-modules.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -31,7 +32,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
-        -DKDE_INSTALL_QMLDIR=qml
+        -DKDE_INSTALL_QMLDIR=Qt6/qml
         "-DFLEX_EXECUTABLE=${FLEX}"
         "-DBISON_EXECUTABLE=${BISON}"
         ${FEATURE_OPTIONS}
@@ -39,6 +40,15 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME kf6holidays CONFIG_PATH lib/cmake/KF6Holidays)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND "qml" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    # The static QML module objects are installed in the QML directory, debug/Qt6/qml for the debug build
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/kf6holidays/KF6HolidaysTargets-debug.cmake"
+        [[${_IMPORT_PREFIX}/Qt6/qml/]]
+        [[${_IMPORT_PREFIX}/debug/Qt6/qml/]]
+    )
+endif()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE

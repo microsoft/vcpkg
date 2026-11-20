@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca3bc58..74e35ba 100644
+index c5607b4..61dee44 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -111,7 +111,7 @@ endif()
@@ -72,7 +72,7 @@ index ca3bc58..74e35ba 100644
  endif()
  
  # Stall notifications eat some performance from inserts
-@@ -1398,7 +1392,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
+@@ -1407,7 +1401,6 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
      endforeach()
    endforeach()
  

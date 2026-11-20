@@ -24,8 +24,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6Tools=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6ToolsTools=ON
         -DBUILD_PYTHON_BINDINGS=OFF
-        -DKDE_INSTALL_PLUGINDIR=plugins
-        -DKDE_INSTALL_QTPLUGINDIR=plugins
+        -DKDE_INSTALL_QTPLUGINDIR=Qt6/plugins
         ${FEATURE_OPTIONS}
 )
 

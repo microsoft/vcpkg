@@ -1,6 +1,6 @@
 {
   "name": "minizip",
-  "version": "1.3.2",
+  "version": "1.4",
   "description": "Minizip zip file manipulation library",
   "homepage": "https://github.com/madler/zlib",
   "license": "Zlib",
@@ -17,7 +17,10 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true
     },
-    "zlib"
+    {
+      "name": "zlib",
+      "version>=": "1.4"
+    }
   ],
   "features": {
     "bzip2": {
@@ -29,13 +32,6 @@
     "tools": {
       "description": "Install tools",
       "supports": "!ios"
-    },
-    "unofficial-iowin32": {
-      "description": [
-        "Include iowin32 API in minizip library.",
-        "Deprecated. This feature only exists to support devendoring minizip in vcpkg ports."
-      ],
-      "supports": "windows"
     }
   }
 }

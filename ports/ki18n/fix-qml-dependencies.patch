@@ -1,0 +1,17 @@
+diff --git a/KF6I18nConfig.cmake.in b/KF6I18nConfig.cmake.in
+--- a/KF6I18nConfig.cmake.in
++++ b/KF6I18nConfig.cmake.in
+@@ -2,8 +2,11 @@
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(Qt6Core @REQUIRED_QT_VERSION@)
+-if (@BUILD_WITH_QML@ AND NOT @BUILD_SHARED_LIBS@)
+-    find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++if (@BUILD_WITH_QML@)
++    find_dependency(Qt6QmlIntegration @REQUIRED_QT_VERSION@)
++    if (NOT @BUILD_SHARED_LIBS@)
++        find_dependency(Qt6Qml @REQUIRED_QT_VERSION@)
++    endif()
+ endif()
+ if (NOT @BUILD_SHARED_LIBS@)
+     find_dependency(Intl)

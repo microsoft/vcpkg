@@ -1,10 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# Upstream release 1.4.4 (2026-10-09). The port version keeps the date scheme of the old 4creators snapshot.
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO 4creators/jxrlib
-    REF f7521879862b9085318e814c6157490dd9dbbdb4
-    SHA512 f5617cbe73b6b905cc6bba181e6a3efedd59584f7a8c90e0f34db580cfdad4239a2ab753df4e221f26a5c0db51475b021052e3b9e3ab3673573573b1d57f3fdb
+    REPO mircomir/jxrlib
+    REF 1.4.4
+    SHA512 3b77a2cbcf000b6decf006097f415d86156ab6dc70d3fa3069ddee31f04e610e2d644dec0fae96bf73ee4e5d1ca0390129fc650356da3e7446d6211b22d7df99
     HEAD_REF master
     PATCHES
         guiddef.patch

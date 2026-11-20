@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-http
     REF "v${VERSION}"
-    SHA512 66f9a744baaad4ecbfa6901969dd1df72b055088049db2bda379973400a6da4faacb39e0a9661edce4cefd11348186163caee5824b68f938b4a5695fea4728ca
+    SHA512 72e14a1b6f01a648315a91f0b792defec1a293c1ec45884fdb1029092207c33fa799b2f9186fd353c75d58d4cdfc2a9a53022e3ec01be0d042cc2d41a536bebf
     HEAD_REF main
 )
 
@@ -14,6 +14,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/aws/http/exports.h"
+        "#    ifdef AWS_HTTP_USE_IMPORT_EXPORT" "#    if 1")
+endif()
 
 string(REPLACE "dynamic" "shared" subdir "${VCPKG_LIBRARY_LINKAGE}")
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)

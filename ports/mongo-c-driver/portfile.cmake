@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 6398585c449bd3116a04f6e1b0f6692a3c7f7eac3af7e2c8e739db01c108d1e9c4bb07c65d4e93e2c52892f661082e4a8f1c7ac7df728992a7b9e778eb142836
+    SHA512 57942f42b6d543cc2b6b91655b531cc234982e265d1e34f98f33b3e5d62a76102dd9d99728dcef9eb3153a6ba70826d8128cca43db72323c412108a6ac479aba
     HEAD_REF master
     PATCHES
         disable-dynamic-when-static.patch
@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-include-directory.patch
         fix-mingw.patch
         remove_abs_patch.cmake
+        msvc-warnings-not-errors.patch # Keep diagnostics for valid C pointer-to-bool conversions nonfatal.
 )
 file(WRITE "${SOURCE_PATH}/VERSION_CURRENT" "${VERSION}")
 file(TOUCH "${SOURCE_PATH}/src/utf8proc-editable")

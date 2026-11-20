@@ -1,10 +1,11 @@
 {
   "name": "kguiaddons",
   "version": "6.31.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Addons to QtGui",
   "homepage": "https://invent.kde.org/frameworks/kguiaddons",
   "documentation": "https://api.kde.org/kguiaddons-index.html",
+  "license": "LGPL-2.0-or-later AND (LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND (LGPL-2.0-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL) AND LGPL-3.0-only AND (LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only) AND CC0-1.0 AND MIT AND HPND-sell-variant",
   "supports": "!android",
   "dependencies": [
     "ecm",

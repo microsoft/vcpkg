@@ -17,7 +17,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3"
                             REQUIREMENTS_FILE "${CURRENT_PORT_DIR}/requirements_minimal.txt"
-                            PACKAGES qface==2.0.5
+                            PACKAGES qface==2.0.14
                             OUT_PYTHON_VAR "PYTHON3")
 
 if(VCPKG_CROSSCOMPILING)

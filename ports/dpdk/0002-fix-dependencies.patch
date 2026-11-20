@@ -27,10 +27,10 @@ index b36add17e3..a0a265ad92 100644
              dpdk_drivers + dpdk_static_libraries +
              ['-Wl,--no-whole-archive'] + platform_flags
 diff --git a/config/meson.build b/config/meson.build
-index bbdad71ffc..0ef6422cd3 100644
+index d7f5e55c18..9d75803e32 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -238,12 +238,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
+@@ -236,12 +236,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
      find_libnuma = false
  endif
  if find_libnuma
@@ -45,7 +45,7 @@ index bbdad71ffc..0ef6422cd3 100644
      endif
  endif
  
-@@ -269,18 +267,18 @@ if libarchive.found()
+@@ -267,18 +265,18 @@ if libarchive.found()
  endif
  
  # check for libbsd
@@ -101,18 +101,18 @@ index f454788a9f..56715526e9 100644
      build = false
      reason = 'missing dependency, "mlx5devx"'
 diff --git a/drivers/common/qat/meson.build b/drivers/common/qat/meson.build
-index 31e06f4376..f67e9c5ef5 100644
+index b946354a42..372392d3f7 100644
 --- a/drivers/common/qat/meson.build
 +++ b/drivers/common/qat/meson.build
-@@ -27,7 +27,7 @@ if disable_drivers.contains(qat_compress_path)
-             'Explicitly disabled via build config')
- endif
- 
--libcrypto = dependency('libcrypto', required: false, method: 'pkg-config')
-+libcrypto = dependency('libcrypto', required: true, method: 'pkg-config')
- 
- if arch_subdir == 'arm'
+@@ -76,7 +76,7 @@ endif
+ # Check for OpenSSL (optional, for DOCSIS BPI cipher fallback)
+ openssl_required_ver = '3.0.0'
+ if qat_crypto
+-    libcrypto = dependency('libcrypto', required: false, method: 'pkg-config', version: '>= ' + openssl_required_ver)
++    libcrypto = dependency('libcrypto', required: true, method: 'pkg-config', version: '>= ' + openssl_required_ver)
      if libcrypto.found()
+         ext_deps += libcrypto
+         dpdk_conf.set('RTE_QAT_OPENSSL', true)
 diff --git a/drivers/compress/isal/meson.build b/drivers/compress/isal/meson.build
 index 4b3eaa2274..e6a139f308 100644
 --- a/drivers/compress/isal/meson.build
@@ -153,18 +153,18 @@ index a19c77a8d1..c3ccf59794 100644
      build = false
      reason = 'missing dependency, "libcrypto"'
 diff --git a/drivers/crypto/openssl/meson.build b/drivers/crypto/openssl/meson.build
-index af469a9827..de45a4a694 100644
+index 0d82c42764..c3f0c526b4 100644
 --- a/drivers/crypto/openssl/meson.build
 +++ b/drivers/crypto/openssl/meson.build
 @@ -7,7 +7,7 @@ if is_windows
      subdir_done()
  endif
  
--dep = dependency('libcrypto', required: false, method: 'pkg-config')
-+dep = dependency('libcrypto', required: true, method: 'pkg-config')
+-dep = dependency('libcrypto', required: false, method: 'pkg-config', version: '>= 3.0.0')
++dep = dependency('libcrypto', required: true, method: 'pkg-config', version: '>= 3.0.0')
  if not dep.found()
      build = false
-     reason = 'missing dependency, "libcrypto"'
+     reason = 'missing dependency, "libcrypto >= 3.0.0"'
 diff --git a/drivers/gpu/cuda/meson.build b/drivers/gpu/cuda/meson.build
 index d54473f148..1b5a01ce1f 100644
 --- a/drivers/gpu/cuda/meson.build

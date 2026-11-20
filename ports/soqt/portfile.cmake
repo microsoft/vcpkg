@@ -2,35 +2,34 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Coin3D/soqt
-    REF SoQt-1.6.0
-    SHA512 204d49769dda1a9833093ff78bdb788df0c514e800ae0bc35d4ef832ece304c7c26fc7d893ee83db95c34d9457e27e04c74301bcd2029aa3a0f96ec2ecbb3984
+    REF v1.6.4
+    SHA512 015888f48b0246fd2fffb54d1d7c96ce0cbdf360fc0130257be9fcdbc320bd2af5289c31febdf873bcb68df6d9e823e98115af79f4b081394c080f1ef7c15710
     HEAD_REF master
-    PATCHES
-        disable-cpackd.patch
-        disable-test-code.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOANYDATA_SOURCE_PATH
     REPO coin3d/soanydata
-    REF 3ff6e9203fbb0cc08a2bdf209212b7ef4d78a1f2
-    SHA512 9e176feda43a12ccdf8756f7329517936357499771a7d0a58357d343bdea125c34f8734ff1cd16cda3eeee58090dc1680999849c50132c30940a23d3f81a5c66
+    REF 7ee364a6ec2b496b28e5a13a88800ad11fcbe84e
+    SHA512 3ad76b7652004bc7f0dd76b9a5ee45d4c442d18ac44b82df4f49bbf375e181594a03037b3bd5d177c66af7379870af831117d57e93f0fcf6d58c72ecb1c98c42
     HEAD_REF master
 )
 
-if(NOT EXISTS "${SOURCE_PATH}/data")
+if(NOT EXISTS "${SOURCE_PATH}/data/CMakeLists.txt")
+    file(REMOVE_RECURSE "${SOURCE_PATH}/data")
     file(RENAME "${SOANYDATA_SOURCE_PATH}" "${SOURCE_PATH}/data")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOGUI_SOURCE_PATH
     REPO coin3d/sogui
-    REF fb79af47cff89f0f3657501601a7ea5c11968b17
-    SHA512 bcf4d2e04c3b6ac87a6425d90c6077ec655732bcc0f99bf181ff2dfce8d356509f52d71b884660fafddc135551ee8fbb139e02b6706d2a01be006193918d232b
+    REF 426cd49f3e4598ff96da50e521867b9fe550fd99
+    SHA512 defdeb37c22aaea33a2d0178050a9f0ed0807302bee7abb2ae1a1b122a49fe588f9c16c94d75bb94d767b64ad3cf1bd552985c609ff28f60f0d74c51880e553b
     HEAD_REF master
 )
 
-if(NOT EXISTS "${SOURCE_PATH}/src/Inventor/Qt/common")
+if(NOT EXISTS "${SOURCE_PATH}/src/Inventor/Qt/common/CMakeLists.txt")
+    file(REMOVE_RECURSE "${SOURCE_PATH}/src/Inventor/Qt/common")
     file(RENAME "${SOGUI_SOURCE_PATH}" "${SOURCE_PATH}/src/Inventor/Qt/common")
 endif()
 
@@ -41,14 +40,21 @@ vcpkg_cmake_configure(
     OPTIONS
         -DSOQT_BUILD_DOCUMENTATION=OFF
         -DSOQT_BUILD_SHARED_LIBS=${SOQT_BUILD_SHARED_LIBS}
+        -DSOQT_USE_QT6=ON
+        -DSOQT_USE_CPACK=OFF
+        -DSOQT_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SoQt-1.6.0)
-vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SoQt-1.6.4)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+else()
+    vcpkg_fixup_pkgconfig()
+endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")

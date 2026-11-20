@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b6629be..5f87579 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,6 +39,7 @@ find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Gui)
+ 
+ option(WITH_X11 "Build X11 support" ON)
+ option(WITH_WAYLAND "BUILD Wayland support" ON)
++option(WITH_XSCREENSAVER "Build the XScreensaver based poller" ON)
+ 
+ if(APPLE OR WIN32 OR HAIKU)
+     set(WITH_X11 OFF)
+@@ -68,7 +69,11 @@ if(WITH_X11)
+     add_feature_info("libxcb-sync" XCB_SYNC_FOUND "required for X-Sync based poller")
+     add_feature_info("X-Sync based poller" HAVE_XSYNC "efficient operation of KIdleTime. STRONGLY RECOMMENDED (requires libXext, libX11-xcb, libxcb and libxcb-sync)")
+ 
+-    set(HAVE_XSCREENSAVER ${X11_Xscreensaver_FOUND})
++    if(WITH_XSCREENSAVER)
++        set(HAVE_XSCREENSAVER ${X11_Xscreensaver_FOUND})
++    else()
++        set(HAVE_XSCREENSAVER FALSE)
++    endif()
+     add_feature_info("X-Screensaver based poller" HAVE_XSCREENSAVER "KIdleTime fallback mode (libXss)")
+ 
+     if(HAVE_XSCREENSAVER)

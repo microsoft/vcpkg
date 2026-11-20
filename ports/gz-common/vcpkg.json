@@ -1,11 +1,11 @@
 {
   "name": "gz-common",
   "version": "6.3.0",
+  "port-version": 1,
   "description": "Common libraries for robotics applications",
   "homepage": "https://gazebosim.org/libs/common/",
   "license": "Apache-2.0",
   "dependencies": [
-    "assimp",
     {
       "name": "dlfcn-win32",
       "platform": "windows | uwp"
@@ -20,11 +20,6 @@
         "swscale"
       ]
     },
-    "freeimage",
-    {
-      "name": "gdal",
-      "default-features": false
-    },
     "gz-cmake",
     "gz-math",
     "gz-utils",
@@ -35,7 +30,6 @@
     {
       "name": "libuuid",
       "platform": "!windows & !osx"
-    },
-    "tinyxml2"
+    }
   ]
 }

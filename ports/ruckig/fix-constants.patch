@@ -1,0 +1,15 @@
+diff --git a/include/ruckig/roots.hpp b/include/ruckig/roots.hpp
+index 71895ca..f85fa41 100644
+--- a/include/ruckig/roots.hpp
++++ b/include/ruckig/roots.hpp
+@@ -1,5 +1,10 @@
+ #pragma once
+ 
++#ifndef _USE_MATH_DEFINES
++#define _USE_MATH_DEFINES
++#endif
++
++#include <math.h>
+ #include <array>
+ #include <algorithm>
+ #include <cfloat>

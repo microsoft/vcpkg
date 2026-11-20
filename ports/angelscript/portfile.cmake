@@ -1,9 +1,3 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_${VERSION}.zip"
-    FILENAME "angelscript_${VERSION}.zip"
-    SHA512 87c94042932f15d07fe6ede4c3671b1f73ac757b68ab360187591497eeabc56a4ddb7901e4567108e44886a2011a29c2884d4b7389557826f36a6c384f4a9c69
-)
-
 set(PATCHES
     "mark-threads-private.patch"
     "fix-dependency.patch"
@@ -17,16 +11,17 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND PATCHES "fix-win-arm64.patch")
 endif()
 
-if (VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    list(APPEND PATCHES "fix-ndk-arm.patch")
-endif()
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO anjo76/angelscript
+    REF "v${VERSION}"
+    SHA512 50797b0626377a403fcbb3bffbc349e06c95081d4f3cba5a465e31990fdaeea051fefecfb7ead1a4fcf77419eb54b9c22a4632f968f62d36349890971e4f5796
+    HEAD_REF master
     PATCHES
         ${PATCHES}
 )
+
+string(APPEND SOURCE_PATH "/sdk")
 
 if (VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     vcpkg_replace_string("${SOURCE_PATH}/angelscript/source/as_callfunc_arm_gcc.S"
@@ -50,4 +45,6 @@ if("addons" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/add_on/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/angelscript" FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/manual/doc_license.html")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/../LICENSE.md"
+)

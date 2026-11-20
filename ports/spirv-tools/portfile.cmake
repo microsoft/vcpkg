@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 e853b7a08d1d1001a45e8d8f7179be7b02d803959d598bd9d097f096b33fd2a380bcecc8c9c1c446941b9df41018271b45d7995f79f8d360e15feb0c32d43f39
+    SHA512 8237e02f950736ef8cff7a2cfaa4800f8beaf10e171624da02f0e73193da302afbba107e6d1840dbacebe81d1aeb0f22a69a20d504cd01371cc7302f83395ec0
     PATCHES
         cmake-config-dir.diff
         spirv-tools-shared.diff
@@ -32,11 +32,16 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+file(INSTALL "${SOURCE_PATH}/include/spirv-tools/linter.hpp"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/spirv-tools")
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools PACKAGE_NAME spirv-tools DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-link PACKAGE_NAME spirv-tools-link DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-lint PACKAGE_NAME spirv-tools-lint DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-opt PACKAGE_NAME spirv-tools-opt DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SPIRV-Tools-reduce PACKAGE_NAME spirv-tools-reduce) # now delete
+# Fixed upstream by KhronosGroup/SPIRV-Tools#6810; remove after the next SDK update.
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/spirv-tools-reduce/SPIRV-Tools-reduceConfig.cmake"
+    "SPIRV-Tools-reduceTargets.cmake" "SPIRV-Tools-reduceTarget.cmake")
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
@@ -47,7 +52,7 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )

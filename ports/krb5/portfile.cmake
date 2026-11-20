@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO krb5/krb5
     REF "krb5-${VERSION}-final"
-    SHA512 ca1e22a0aced71c004a51716a3237c83d683f81ead2456752079a50cd3406c665822f69bbdfd4999d2ff73ffda0922e4e8330c6c02bdb48ca2745f0ff33a88f1
+    SHA512 15f7fadf9a466ff747e821fa036c9dfa043d221e882d36d25d1782d4832169c2f4bd8ade49b5d398a2a8635105429fcf3b18ee6213e2ee003170f025820d44a9
     HEAD_REF master
     PATCHES
         static-deps.diff
@@ -63,7 +63,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endforeach()
     file(REMOVE ${debug_tools_to_remove})
 
-    set(WINDOWS_PC_FILES 
+    set(WINDOWS_PC_FILES
         krb5-gssapi
         krb5
         mit-krb5-gssapi
@@ -77,7 +77,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if(NOT DEFINED VCPKG_BUILD_TYPE)
         foreach (PC_FILE ${WINDOWS_PC_FILES})
             configure_file("${CURRENT_PORT_DIR}/windows_pc_files/${PC_FILE}.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/${PC_FILE}.pc" @ONLY)
-        endforeach()    
+        endforeach()
     endif()
 else()
     vcpkg_make_configure(

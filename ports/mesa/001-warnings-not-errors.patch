@@ -1,0 +1,119 @@
+diff --git a/meson.build b/meson.build
+index 59d30c8..40567ce 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1378,9 +1378,9 @@ if cc.get_argument_syntax() == 'msvc'
+     '/wd4309',  # 'initializing': truncation of constant value
+     '/wd4838',  # conversion from 'int' to 'const char' requires a narrowing conversion
+     '/wd5105',  # macro expansion producing 'defined' has undefined behavior (winbase.h, need Windows SDK upgrade)
+-    '/we4020',  # Error when passing the wrong number of parameters
+-    '/we4024',  # Error when passing different type of parameter
+-    '/we4189',  # 'identifier' : local variable is initialized but not referenced
++    '/w34020',  # Warn when passing the wrong number of parameters
++    '/w34024',  # Warn when passing different type of parameter
++    '/w34189',  # 'identifier' : local variable is initialized but not referenced
+     '/Zc:__cplusplus', #Set __cplusplus macro to match the /std:c++<version> on the command line
+     '/Zc:enumTypes', # Enables C++ conforming enum underlying type and enumerator type deduction
+     '/Zc:preprocessor', # Use the standards-conforming preprocessor
+diff --git a/src/gallium/drivers/d3d12/meson.build b/src/gallium/drivers/d3d12/meson.build
+index d0ad7b3..509560c 100644
+--- a/src/gallium/drivers/d3d12/meson.build
++++ b/src/gallium/drivers/d3d12/meson.build
+@@ -4,26 +4,26 @@
+ libd3d12_compiler_args = []
+ 
+ libd3d12_compiler_args += cc.get_supported_arguments([
+-    '/we4267',
+-    '/we4996',
+-    '/we4146',
+-    '/we4244',
+-    '/we4389',
+-    '/we4838',
+-    '/we4302',
+-    '/we4018',
+-    '/we4056',
+-    '/we4305',
+-    '/we4351',
+-    '/we4756',
+-    '/we4800',
+-    '/we4291',
+-    '/we4624',
+-    '/we4309',
+-    '/we5105',
+-    '/we4020',
+-    '/we4024',
+-    '/we4189',
++    '/w34267',
++    '/w34996',
++    '/w34146',
++    '/w34244',
++    '/w34389',
++    '/w34838',
++    '/w34302',
++    '/w34018',
++    '/w34056',
++    '/w34305',
++    '/w34351',
++    '/w34756',
++    '/w34800',
++    '/w34291',
++    '/w34624',
++    '/w34309',
++    '/w35105',
++    '/w34020',
++    '/w34024',
++    '/w34189',
+   ])
+ 
+ _with_gallium_d3d12_graphics = get_option('gallium-d3d12-graphics')
+diff --git a/src/gallium/frontends/mediafoundation/meson.build b/src/gallium/frontends/mediafoundation/meson.build
+index fa10388..d36e17c 100644
+--- a/src/gallium/frontends/mediafoundation/meson.build
++++ b/src/gallium/frontends/mediafoundation/meson.build
+@@ -22,26 +22,26 @@
+ fs = import('fs')
+ 
+ mf_cpp_args = cc.get_supported_arguments([
+-    '/we4267',
+-    '/we4996',
+-    '/we4146',
+-    '/we4244',
+-    '/we4389',
+-    '/we4838',
+-    '/we4302',
+-    '/we4018',
+-    '/we4056',
+-    '/we4305',
+-    '/we4351',
+-    '/we4756',
+-    '/we4800',
+-    '/we4291',
+-    '/we4624',
+-    '/we4309',
+-    '/we5105',
+-    '/we4020',
+-    '/we4024',
+-    '/we4189',
++    '/w34267',
++    '/w34996',
++    '/w34146',
++    '/w34244',
++    '/w34389',
++    '/w34838',
++    '/w34302',
++    '/w34018',
++    '/w34056',
++    '/w34305',
++    '/w34351',
++    '/w34756',
++    '/w34800',
++    '/w34291',
++    '/w34624',
++    '/w34309',
++    '/w35105',
++    '/w34020',
++    '/w34024',
++    '/w34189',
+ ])
+ if get_option('mediafoundation-store-dll')
+   mf_cpp_args += '-DBUILD_FOR_MSDK' # Can use #if BUILD_FOR_MSDK in .cpp code

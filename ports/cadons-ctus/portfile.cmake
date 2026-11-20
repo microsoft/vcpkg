@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 077c9070db249a2211bf725b81fb4d53f41bb25b4d4935167020313289993c3b981df3de30bcbc9bd4c811bd6af11f947adb0bbfb6507c99e86c65c9a7dbe17d
     HEAD_REF main
+    PATCHES
+        complete-chunk-type.patch # https://github.com/Cadons/ctus/pull/63
 )
 
 vcpkg_cmake_configure(

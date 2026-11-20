@@ -1,10 +1,10 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor
     REF "${VERSION}"
-    SHA512 3f3fe2391df91518cfef4983ff66bf3b79940136582bb99c6270f87481bf9d2cc15605b13f9b70b6ee9a7a89b389037dd2b26362fcae0fdc49f5204872ee5291
+    SHA512 8671859e831c4eab9aff91273fb71deca1380f4e4cb64ce69aa8937464166906f259d3cd27aa5ddd969d7ced136f3306b6ce7daf8d09486bf0d45f299e8a7061
     HEAD_REF master
     PATCHES
         fix-find-tbb-and-install-destination.patch
@@ -35,6 +35,9 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/lib"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

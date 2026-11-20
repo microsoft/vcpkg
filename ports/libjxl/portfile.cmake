@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjxl/libjxl
     REF "v${VERSION}"
-    SHA512 71d45123e47588c8028c0e01a7820c7a18d98df05c29b5318ab6858eaff5f249879763907201ba19a93f817c6ef75c393c1974d2a0cc8e461c4e2709ca6fa45f
+    SHA512 f5a6cc4c875c9cdd217001096d34e5912afffdf3a58bae816c1c28c7e241eb0909ea37af0bef6d4b2fb8fae20ae94e29b2ef30fb65f778d4a7d62e07e20e3f85
     HEAD_REF main
     PATCHES
         fix-dependencies.patch

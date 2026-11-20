@@ -30,4 +30,3 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/collada_dom-2.5)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/licenses/license_e.txt")
-

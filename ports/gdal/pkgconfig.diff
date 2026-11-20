@@ -1,0 +1,15 @@
+diff --git a/cmake/helpers/GdalGenerateConfig.cmake b/cmake/helpers/GdalGenerateConfig.cmake
+index debddd7..9208449 100644
+--- a/cmake/helpers/GdalGenerateConfig.cmake
++++ b/cmake/helpers/GdalGenerateConfig.cmake
+@@ -280,6 +280,10 @@ endfunction()
+ 
+ # Generate gdal-config utility command and pkg-config module gdal.pc
+ function(gdal_generate_config)
++    # For the pc file, force traditional flags even for MSVC.
++    set(CMAKE_LIBRARY_PATH_FLAG -L)
++    set(CMAKE_LINK_LIBRARY_FLAG -l)
++
+     set(one_value_keywords "TARGET;GLOBAL_PROPERTY;GDAL_CONFIG;PKG_CONFIG")
+     cmake_parse_arguments(PARSE_ARGV 0 arg "" "${one_value_keywords}" "")
+ 

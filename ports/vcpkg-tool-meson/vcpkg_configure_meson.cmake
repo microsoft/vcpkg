@@ -1,4 +1,5 @@
 function(z_vcpkg_meson_set_proglist_variables config_type)
+    z_vcpkg_meson_is_gnu_driver_for_msvc(gnu_driver_for_msvc)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(proglist MT AR)
     else()
@@ -45,7 +46,8 @@ function(z_vcpkg_meson_set_proglist_variables config_type)
                 set("${var_to_set}" "${meson_${prog}} = ${${prog}flags}" PARENT_SCOPE)
                 if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID
                     AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$"
-                    AND VCPKG_DETECTED_CMAKE_LINKER)
+                    AND VCPKG_DETECTED_CMAKE_LINKER
+                    AND NOT gnu_driver_for_msvc)
                     string(TOUPPER "MESON_${prog}_LD" var_to_set)
                     set(${var_to_set} "${meson_${prog}}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
                 endif()
@@ -61,7 +63,8 @@ function(z_vcpkg_meson_set_proglist_variables config_type)
                 set("${var_to_set}" "${proglower} = ${${prog}flags}" PARENT_SCOPE)
                 if (DEFINED VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID
                     AND NOT VCPKG_DETECTED_CMAKE_${prog}_COMPILER_ID MATCHES "^(GNU|Intel)$"
-                    AND VCPKG_DETECTED_CMAKE_LINKER)
+                    AND VCPKG_DETECTED_CMAKE_LINKER
+                    AND NOT gnu_driver_for_msvc)
                     string(TOUPPER "MESON_${prog}_LD" var_to_set)
                     set(${var_to_set} "${proglower}_ld = ['${VCPKG_DETECTED_CMAKE_LINKER}']" PARENT_SCOPE)
                 endif()
@@ -83,9 +86,21 @@ function(z_vcpkg_meson_convert_list_to_python_array out_var)
     set("${out_var}" "['${flag_list}']" PARENT_SCOPE)
 endfunction()
 
+# clang's GNU driver targeting MSVC links through the driver: it rejects /LIBPATH:,
+# and meson's *_ld becomes -fuse-ld=, which fails on a full path, so let meson find the linker.
+function(z_vcpkg_meson_is_gnu_driver_for_msvc out_var)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW
+       AND VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT STREQUAL "GNU")
+        set("${out_var}" TRUE PARENT_SCOPE)
+    else()
+        set("${out_var}" FALSE PARENT_SCOPE)
+    endif()
+endfunction()
+
 # Generates the required compiler properties for meson
 function(z_vcpkg_meson_set_flags_variables config_type)
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    z_vcpkg_meson_is_gnu_driver_for_msvc(gnu_driver_for_msvc)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT gnu_driver_for_msvc)
         set(libpath_flag /LIBPATH:)
     else()
         set(libpath_flag -L)
@@ -457,7 +472,7 @@ function(vcpkg_configure_meson)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "NO_PKG_CONFIG"
         "SOURCE_PATH"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;LANGUAGES;ADDITIONAL_BINARIES;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES;ADDITIONAL_PROPERTIES"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;LANGUAGES;ADDITIONAL_BINARIES;ADDITIONAL_BINARIES_DEBUG;ADDITIONAL_BINARIES_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES;ADDITIONAL_PROPERTIES"
     )
 
     if(DEFINED arg_ADDITIONAL_NATIVE_BINARIES OR DEFINED arg_ADDITIONAL_CROSS_BINARIES)
@@ -492,6 +507,7 @@ function(vcpkg_configure_meson)
         vcpkg_list(APPEND buildtypes "${buildname}")
         set(path_suffix_${buildname} "debug/")
         set(suffix_${buildname} "dbg")
+        vcpkg_list(SET additional_binaries_${buildname} ${arg_ADDITIONAL_BINARIES} ${arg_ADDITIONAL_BINARIES_DEBUG})
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         set(buildname "RELEASE")
@@ -499,6 +515,7 @@ function(vcpkg_configure_meson)
         vcpkg_list(APPEND buildtypes "${buildname}")
         set(path_suffix_${buildname} "")
         set(suffix_${buildname} "rel")
+        vcpkg_list(SET additional_binaries_${buildname} ${arg_ADDITIONAL_BINARIES} ${arg_ADDITIONAL_BINARIES_RELEASE})
     endif()
 
     # configure build
@@ -511,7 +528,7 @@ function(vcpkg_configure_meson)
           CONFIG ${buildtype}
           LANGUAGES ${arg_LANGUAGES}
           OPTIONS ${arg_OPTIONS} ${arg_OPTIONS_${buildtype}}
-          ADDITIONAL_BINARIES ${arg_ADDITIONAL_BINARIES}
+          ADDITIONAL_BINARIES ${additional_binaries_${buildtype}}
           ADDITIONAL_PROPERTIES ${arg_ADDITIONAL_PROPERTIES}
         )
 

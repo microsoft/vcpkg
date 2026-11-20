@@ -4,11 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO epezent/implot
     REF v${VERSION}
-    SHA512 cfa6cbf21fe33bbcb41c7808d7cf8dc0be6ab6a951235c661bc37688893be2eca9f9c2b3c699d7a0093b05876f98274cefee2410c7e52d0a9305cdac07ca2e13
+    SHA512 9da33a6c094fd2149c97706671b8be7c5cc389b2662fcee0dece01c94ccec29ea2cc7f3cc477ab84402c2c0ce3a4804c9743501251c19b213c95be1869872242
     HEAD_REF master
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/implot-config.cmake"
+    DESTINATION "${SOURCE_PATH}"
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

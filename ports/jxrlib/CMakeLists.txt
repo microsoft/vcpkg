@@ -64,7 +64,7 @@ include_directories(
 
 
 # JPEG-XR
-set(SRC_SYS adapthuff.c image.c strcodec.c strPredQuant.c strTransform.c perfTimerANSI.c)
+set(SRC_SYS adapthuff.c image.c strcodec.c strPredQuant.c strTransform.c perfTimerANSI.c memory_lim.c)
 JXR_MAKE_OBJ(SYS)
 set(SRC_DEC decode.c postprocess.c segdec.c strdec.c strInvTransform.c strPredQuantDec.c JXRTranscode.c)
 JXR_MAKE_OBJ(DEC)
@@ -104,7 +104,7 @@ install(TARGETS jxrglue
 target_link_libraries(jxrglue jpegxr)
 
 # install rules
-install(FILES jxrgluelib/JXRGlue.h jxrgluelib/JXRMeta.h jxrtestlib/JXRTest.h
+install(FILES jxrgluelib/JXRGlue.h jxrgluelib/JXRMeta.h jxrgluelib/JXRVersion.h jxrtestlib/JXRTest.h
   image/sys/windowsmediaphoto.h
   DESTINATION ${JXRLIB_INSTALL_INCLUDE_DIR} COMPONENT Headers
 )

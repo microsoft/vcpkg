@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.aquamaniac.de/rdm/attachments/download/630/gwenhywfar-5.14.1.tar.gz"
+    URLS "https://www.aquamaniac.de/rdm/attachments/download/662/gwenhywfar-${VERSION}.tar.gz"
     FILENAME "gwenhywfar-${VERSION}.tar.gz"
-    SHA512 770a9f3aba84440526229375000b02cb938d2ccd4c75c25503e322ee717f3b738d2bdf17a1dff7f0486b37a60b0038406d336a3167c932a6336abc14d1bea6f0
+    SHA512 60275e0255629454f2e2c1021e62116848ee42c2a8bcbf8a8446e4acee36a0f63a9173eebeb82d86542dd365dd14972c3dd5c4814ce1e0730b42a801dbf2e89d
 )
 
 vcpkg_extract_source_archive(

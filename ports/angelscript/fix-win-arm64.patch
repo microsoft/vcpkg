@@ -1,7 +1,7 @@
-diff --git a/angelscript/projects/cmake/CMakeLists.txt b/angelscript/projects/cmake/CMakeLists.txt
-index 6f9d540..6eae090 100644
---- a/angelscript/projects/cmake/CMakeLists.txt
-+++ b/angelscript/projects/cmake/CMakeLists.txt
+diff --git a/sdk/angelscript/projects/cmake/CMakeLists.txt b/sdk/angelscript/projects/cmake/CMakeLists.txt
+index 4a9474ad..aa8b48bb 100644
+--- a/sdk/angelscript/projects/cmake/CMakeLists.txt
++++ b/sdk/angelscript/projects/cmake/CMakeLists.txt
 @@ -77,7 +77,7 @@ set(ANGELSCRIPT_SOURCE
      ../../source/as_callfunc_mips.cpp
      ../../source/as_callfunc_x86.cpp
@@ -23,11 +23,11 @@ index 6f9d540..6eae090 100644
      else()
          message(FATAL ERROR "MSVC x86_64 target requires a working assembler")
      endif()
-diff --git a/angelscript/source/as_config.h b/angelscript/source/as_config.h
-index 9a99faf..293cc2e 100644
---- a/angelscript/source/as_config.h
-+++ b/angelscript/source/as_config.h
-@@ -532,7 +532,7 @@
+diff --git a/sdk/angelscript/source/as_config.h b/sdk/angelscript/source/as_config.h
+index 7aa722f5..da7f6bb5 100644
+--- a/sdk/angelscript/source/as_config.h
++++ b/sdk/angelscript/source/as_config.h
+@@ -543,7 +543,7 @@
  		#endif
  	#endif
  
