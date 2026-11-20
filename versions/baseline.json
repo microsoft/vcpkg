@@ -11209,7 +11209,7 @@
       "port-version": 0
     },
     "winreg": {
-      "baseline": "14.0.0",
+      "baseline": "14.1.1",
       "port-version": 0
     },
     "winsock2": {
