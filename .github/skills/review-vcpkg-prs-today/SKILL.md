@@ -9,13 +9,10 @@ disable-model-invocation: true
 | Input | Required | Meaning |
 |---|---|---|
 | `investigation-root` | No | Directory for workspaces and intermediate artifacts: sources, builds, installs, logs, and examples. If omitted, infer a short same-drive path when clear; otherwise ask. Never use the Copilot session directory or an arbitrary long temp path. |
-| `review-depth` | No | One of `no-examples`, `examples`, or `examples-and-patches`. Default to `no-examples`. |
 
 ### Example invocations
 
 - `/review-vcpkg-prs-today investigation-root D:/vcpkg-prs`
-- `/review-vcpkg-prs-today review-depth examples`
-- `/review-vcpkg-prs-today investigation-root D:/vcpkg-prs and review-depth examples`
 
 ## Procedure
 
@@ -24,7 +21,6 @@ disable-model-invocation: true
 3. Fetch each candidate's changed files; identify ports from `ports/<portname>/`.
 4. Prepare isolated workspaces as below. Review every candidate independently with a `general-purpose` worker using its default high-capability model; do not override it with a fast or lightweight model. Require it to read the entire guide and follow every instruction. Group competition only in the final index. Pass each worker:
    - PR number (`{{PR_NUMBER}}`).
-   - Selected `review-depth`.
    - Absolute workspace and worker-local `investigation-root`.
    - Absolute `{{REPORT_DIR}}` (`pr-{{PR_NUMBER}}` under `reviews-root`).
    - Absolute guide path.
@@ -53,6 +49,5 @@ Write only final deliverables under the fixed `reviews-root`, not under `investi
 
 1. `index.md` at `reviews-root`.
 2. `report.md` in each worker's `{{REPORT_DIR}}`, including the guide's self-contained `## Fix handoff` for use without this session's chat history.
-3. `patches/*.patch` in each worker's `{{REPORT_DIR}}` -- only for `examples-and-patches`; omit if no patches were produced and explain any unpatched issues in the report.
 
 Do not stop until the index and every reviewed PR's report exist at these absolute destinations and are complete.
