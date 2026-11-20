@@ -4117,7 +4117,7 @@
       "port-version": 0
     },
     "intrusive-shared-ptr": {
-      "baseline": "1.13",
+      "baseline": "1.14",
       "port-version": 0
     },
     "intx": {
