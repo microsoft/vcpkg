@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realsenseai/librealsense
     REF "v${VERSION}"
-    SHA512 33d809e5736ebed4fe3ed045d817a247e43a3d79b67914ef8d9ca69efa8235dac2414ac46384c51b1e1b3014dee83998ab649b773db6f0c2efc9c9be20661382
+    SHA512 adedd675861e542c4701ab12af8000ab7cd2b675a88d59c3463292a94ed840c8e8dead200b24de3e1926634a2b2736e0f5b304c2639d769762fe74bfc38b4c40
     HEAD_REF master
     PATCHES
         android-config.diff
@@ -106,7 +106,6 @@ if(VCPKG_TARGET_IS_OSX)
     # Upstream's aggregate notice contains the BSD license selected for HIDAPI.
     list(APPEND copyright_files
         "${SOURCE_PATH}/NOTICE.md"
-        "${SOURCE_PATH}/third-party/hidapi/hidapi.h"
     )
 endif()
 if(BUILD_TOOLS)

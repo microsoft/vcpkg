@@ -8973,7 +8973,7 @@
       "port-version": 2
     },
     "realsense2": {
-      "baseline": "2.59.1",
+      "baseline": "2.59.2",
       "port-version": 0
     },
     "recastnavigation": {
