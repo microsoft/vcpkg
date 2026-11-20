@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sahlberg/libnfs
     REF "libnfs-${VERSION}"
-    SHA512 6ce4450f28e163bc04b32954ef2094bfa464733e08520026821ce366946de501dae22aff073e729145d6450213317eda84f0078b47d3356b1d98d7dfee23e922
+    SHA512 29a07c5fbba638738eb9b5443f4d1be0c424b8a5bf6982c40fb791123cbefdd930fff0b04d5debb21151991168f3ebaebab6e7f03bc1c64013e62040bb6a55f4
     HEAD_REF master
     PATCHES
         fix-cmake-target-interface.patch
