@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix_export.patch
         mingw.diff
+        clang-gnu-driver.patch
 )
 
 vcpkg_cmake_configure(

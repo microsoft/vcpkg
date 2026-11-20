@@ -10750,7 +10750,7 @@
     },
     "usrsctp": {
       "baseline": "0.9.5.0",
-      "port-version": 4
+      "port-version": 5
     },
     "utf8-range": {
       "baseline": "7.36.2",
