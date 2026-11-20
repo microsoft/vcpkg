@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/krpc/krpc/releases/download/v${VERSION}/krpc-cpp-${VERSION}.zip"
     FILENAME "krpc-cpp-${VERSION}.zip"
-    SHA512 6cd7a50b52f09aee507ecbf028d92b0d265b2544f636b419cc0a358b060acc4f15826d4cfc8f676d646e91f15178ecfe7fbd46c21b00059023287952f3c1c1a4
+    SHA512 81083097d80340a12ae0df0a84d4e868b81bdacd9916d43e3e1c3f230e5883bb3b975ebfbff36ae5f426cae0d68a74bc196c8be9365d68e4f8953c8d56964f07
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -28,6 +28,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE"
-    "${SOURCE_PATH}/COPYING"
-    "${SOURCE_PATH}/COPYING.LESSER"
 )
