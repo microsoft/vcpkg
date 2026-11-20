@@ -1,7 +1,7 @@
 {
   "name": "libunwind",
   "version": "1.8.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Unix libray for portable stack unwinding",
   "homepage": "https://www.nongnu.org/libunwind",
   "license": "MIT",
@@ -12,5 +12,13 @@
       "name": "vcpkg-make",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "coredump": {
+      "description": "Build libunwind-coredump, for unwinding the threads of a core file"
+    },
+    "ptrace": {
+      "description": "Build libunwind-ptrace, for unwinding another live process via ptrace"
+    }
+  }
 }

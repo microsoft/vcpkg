@@ -6006,7 +6006,7 @@
     },
     "libunwind": {
       "baseline": "1.8.3",
-      "port-version": 2
+      "port-version": 3
     },
     "libupnp": {
       "baseline": "1.18.5",

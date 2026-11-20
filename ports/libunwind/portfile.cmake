@@ -10,10 +10,20 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PKGCONFIG)
 
+set(options "")
+foreach(feature IN ITEMS coredump ptrace)
+    if(feature IN_LIST FEATURES)
+        list(APPEND options "--enable-${feature}")
+    else()
+        list(APPEND options "--disable-${feature}")
+    endif()
+endforeach()
+
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
     OPTIONS
+        ${options}
         --disable-documentation
         --disable-tests
         --disable-zlibdebuginfo
