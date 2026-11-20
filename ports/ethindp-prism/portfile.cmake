@@ -7,12 +7,19 @@ vcpkg_from_github(
   REF v0.18.4
   SHA512 50346fe97d69f0086774b3ca18a0aef06cbbe40f7ea11f9dddbf7dc1c1de78735c34add684be921722c1456020ffff20500d4ec5a02dc16b96e165b0d2c13b5c
   HEAD_REF master
+  PATCHES
+    xbox-games-partition.patch
 )
 vcpkg_check_features(
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     speech-dispatcher PRISM_ENABLE_SPEECH_DISPATCHER_BACKEND
+    gdk-speech PRISM_ENABLE_GDK_SPEECH_BACKEND
 )
+if(VCPKG_TARGET_IS_XBOX)
+  # GDK speech is the only speech backend on Xbox, so it is always required there.
+  list(APPEND FEATURE_OPTIONS -DPRISM_ENABLE_GDK_SPEECH_BACKEND=ON)
+endif()
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
