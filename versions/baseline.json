@@ -6009,7 +6009,7 @@
       "port-version": 3
     },
     "libupnp": {
-      "baseline": "1.18.5",
+      "baseline": "22.2.4",
       "port-version": 0
     },
     "liburcu": {
