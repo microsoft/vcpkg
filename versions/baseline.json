@@ -6829,7 +6829,7 @@
       "port-version": 0
     },
     "miniupnpc": {
-      "baseline": "2.3.2",
+      "baseline": "2.3.4",
       "port-version": 0
     },
     "miniz": {
