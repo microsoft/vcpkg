@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc2
     REF "v${VERSION}"
-    SHA512 e7f36ceaacd2ce630fb4dee6338b811a5970daf96a821fb763c17512af9c3dff8f6f6d48e29effa8514395bb2ac3dbf8f6dc407f9c289589caf9b8f87d305edd
+    SHA512 ba291847ee56818b6ba07864ee54f5b848f7a373ab8b72ed203d44f5bc6928581778e0cc51c16a21804a0bfd9df02ef02f70d4e8683a6a2c59eb7bd5cd95ebb0
     HEAD_REF main
     PATCHES
         pkgconfig-dependencies.patch
