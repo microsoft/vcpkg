@@ -2,7 +2,7 @@ string(REGEX MATCH "^[0-9]+\\.[0-9]+" HWLOC_SHORT_VERSION "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.open-mpi.org/release/hwloc/v${HWLOC_SHORT_VERSION}/hwloc-${VERSION}.tar.bz2"
     FILENAME "hwloc-${VERSION}.tar.bz2"
-    SHA512 3eca90872686c5887c6430b9d0b1e7ad50942f2afe77d599a79677c55072183809ca3cef2a68f727e8fa12183b4d2da0a5dea06aee4a9ea416059d3df3e18126
+    SHA512 05b1df51d792c6136744cba24119fe7f403b25825c4f5d1882cebb26da29f6b323905d5ed350cb91bec372ebd4b9d04b8858867419f0955fdda530c1626a67ed
 )
 
 vcpkg_extract_source_archive(
@@ -11,7 +11,6 @@ vcpkg_extract_source_archive(
     PATCHES
         fix_shared_win_build.patch
         stdout_fileno.patch
-        rename_ANDROID_define.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
