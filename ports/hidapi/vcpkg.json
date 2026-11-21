@@ -1,12 +1,15 @@
 {
   "name": "hidapi",
-  "version-semver": "0.15.0",
-  "port-version": 1,
+  "version-semver": "0.16.0",
   "description": "A Simple library for communicating with USB and Bluetooth HID devices on Linux, Mac and Windows.",
   "homepage": "https://github.com/libusb/hidapi",
-  "license": "BSD-3-Clause-Clear",
+  "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "libiconv",
+      "platform": "openbsd"
+    },
     {
       "name": "libusb",
       "platform": "!(windows | osx)"

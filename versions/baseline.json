@@ -3873,8 +3873,8 @@
       "port-version": 0
     },
     "hidapi": {
-      "baseline": "0.15.0",
-      "port-version": 1
+      "baseline": "0.16.0",
+      "port-version": 0
     },
     "highfive": {
       "baseline": "3.3.0",
