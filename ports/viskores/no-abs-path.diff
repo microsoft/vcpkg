@@ -1,0 +1,18 @@
+diff --git a/CMake/ViskoresConfig.cmake.in b/CMake/ViskoresConfig.cmake.in
+index 3bee8e4..c9eefa9 100644
+--- a/CMake/ViskoresConfig.cmake.in
++++ b/CMake/ViskoresConfig.cmake.in
+@@ -88,13 +88,8 @@ set(Viskores_ENABLE_MPI "@Viskores_ENABLE_MPI@")
+ set(Viskores_ENABLE_TESTING_LIBRARY "@Viskores_ENABLE_TESTING_LIBRARY@")
+ set(Viskores_USE_DEFAULT_TYPES_FOR_ASCENT "@Viskores_USE_DEFAULT_TYPES_FOR_ASCENT@")
+ 
+-# This is true when the package is still in the build directory (not installed)
+-if(CMAKE_CURRENT_LIST_DIR STREQUAL "@Viskores_BUILD_CMAKE_BASE_DIR@/@Viskores_INSTALL_CONFIG_DIR@")
+-  set(Viskores_PACKAGE_IN_BUILD TRUE)
+-endif()
+ 
+ if(Viskores_PACKAGE_IN_BUILD)
+-  set_and_check(Viskores_CMAKE_MODULE_PATH "@Viskores_SOURCE_DIR@/CMake")
+ else()
+   set_and_check(Viskores_CMAKE_MODULE_PATH "@PACKAGE_Viskores_INSTALL_CMAKE_MODULE_DIR@")
+ endif()
