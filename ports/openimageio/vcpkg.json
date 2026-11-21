@@ -30,7 +30,15 @@
     "ffmpeg": {
       "description": "Enable ffmpeg support for openimageio",
       "dependencies": [
-        "ffmpeg"
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swscale"
+          ]
+        }
       ]
     },
     "freetype": {
