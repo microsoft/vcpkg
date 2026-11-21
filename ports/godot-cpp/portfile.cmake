@@ -12,11 +12,18 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(PYTHON3)
 
+set(platform_options "")
+if(VCPKG_TARGET_IS_LINUX)
+    # Let the consumer toolchain select the C++ runtime linkage.
+    list(APPEND platform_options "-DGODOTCPP_USE_STATIC_CPP=OFF")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DPython3_EXECUTABLE=${PYTHON3}"
         "-DGODOTCPP_API_VERSION=4.4"
+        ${platform_options}
     OPTIONS_RELEASE
         "-DGODOTCPP_TARGET=template_release"
     OPTIONS_DEBUG
