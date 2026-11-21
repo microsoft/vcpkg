@@ -1,0 +1,33 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KhronosGroup/SPIRV-LLVM-Translator
+    REF "v${VERSION}"
+    SHA512 fff2224f63926819e29d5f2daa54015b486497f131ecf4b563cfde75a594812a5c395b67971022be13de42d7429db1fc747c725c15978894baa3a62013d98777
+    HEAD_REF main
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DLLVM_SPIRV_BUILD_EXTERNAL=ON
+        -DLLVM_SPIRV_INCLUDE_TESTS=OFF
+        -DLLVM_SPIRV_ENABLE_LIBSPIRV_DIS=OFF
+        -DLLVM_SPIRV_ENABLE_LIBSPIRV_VAL=OFF
+        "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=${CURRENT_INSTALLED_DIR}"
+        -DCCACHE_ALLOWED=OFF
+)
+vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_tools(TOOL_NAMES llvm-spirv AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE.TXT"
+    "${CMAKE_CURRENT_LIST_DIR}/LICENSE-Apache-2.0.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/LICENSE-LLVM-exception.txt"
+)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
