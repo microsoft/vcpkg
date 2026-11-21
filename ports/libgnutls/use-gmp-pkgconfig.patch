@@ -1,12 +1,12 @@
 diff --git a/m4/hooks.m4 b/m4/hooks.m4
-index e026dd1..cf6064c 100644
+index 432342455..99bcc6cd5 100644
 --- a/m4/hooks.m4
 +++ b/m4/hooks.m4
-@@ -91,6 +91,7 @@ AC_MSG_ERROR([[
-       mini_nettle=$withval,
-       mini_nettle=no)
+@@ -86,6 +86,7 @@ AC_MSG_ERROR([[
+ 
+   GNUTLS_REQUIRES_PRIVATE="Requires.private: nettle, hogweed"
  
 +  PKG_CHECK_MODULES(GMP, [gmp], [], [AC_MSG_ERROR([[gmp is required]])])
    AC_ARG_VAR(GMP_CFLAGS, [C compiler flags for gmp])
    AC_ARG_VAR(GMP_LIBS, [linker flags for gmp])
-   if test "$mini_nettle" != no;then
+   if test "x$GMP_LIBS" = "x"; then
