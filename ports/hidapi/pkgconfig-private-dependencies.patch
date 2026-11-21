@@ -1,0 +1,167 @@
+diff --git a/configure.ac b/configure.ac
+index 554d685..f122337 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -299,6 +299,7 @@ m4_undefine([HIDAPI_CONFIGURE_BACKEND_PC])
+ 
+ AC_SUBST([HIDAPI_LIB_NAME])
+ AC_SUBST([HIDAPI_GENERIC_REQUIRES_PRIVATE])
++AC_SUBST([HIDAPI_PC_LIBS_PRIVATE_FIELD], [])
+ AC_CONFIG_FILES([pc/hidapi.pc])
+ 
+ AC_SUBST(LTLDFLAGS)
+diff --git a/freebsd/CMakeLists.txt b/freebsd/CMakeLists.txt
+index ec99405..c552243 100644
+--- a/freebsd/CMakeLists.txt
++++ b/freebsd/CMakeLists.txt
+@@ -42,6 +42,8 @@ endif()
+ hidapi_configure_pc("${PROJECT_ROOT}/pc/hidapi-backend-specific.pc.in"
+     OUTPUT_NAME "hidapi-hidraw"
+     LIBRARY_NAME "hidapi-hidraw"
++    BACKEND_TARGET hidapi_hidraw
++    LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
+     DESCRIPTION "C Library for USB/Bluetooth HID device access from Linux, Mac OS X, FreeBSD, and Windows. This is the hidraw implementation."
+     REQUIRES_PRIVATE "libusb-1.0 >= 1.0.9"
+ )
+diff --git a/libusb/CMakeLists.txt b/libusb/CMakeLists.txt
+index d2d9b49..a4bdddd 100644
+--- a/libusb/CMakeLists.txt
++++ b/libusb/CMakeLists.txt
+@@ -11,12 +11,14 @@ if(HIDAPI_BUILD_AS_CXX)
+ endif()
+ target_link_libraries(hidapi_libusb PUBLIC hidapi_include)
+ 
++set(HIDAPI_LIBUSB_PC_REQUIRES_PRIVATE "")
+ if(TARGET usb-1.0)
+     target_link_libraries(hidapi_libusb PRIVATE usb-1.0)
+ else()
+     include(FindPkgConfig)
+     pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0>=1.0.9)
+     target_link_libraries(hidapi_libusb PRIVATE PkgConfig::libusb)
++    set(HIDAPI_LIBUSB_PC_REQUIRES_PRIVATE "libusb-1.0 >= 1.0.9")
+ endif()
+ 
+ find_package(Threads REQUIRED)
+@@ -110,6 +112,9 @@ endif()
+ hidapi_configure_pc("${PROJECT_ROOT}/pc/hidapi-backend-specific.pc.in"
+     OUTPUT_NAME "hidapi-libusb"
+     LIBRARY_NAME "hidapi-libusb"
++    BACKEND_TARGET hidapi_libusb
++    REQUIRES_PRIVATE "${HIDAPI_LIBUSB_PC_REQUIRES_PRIVATE}"
++    LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
+     DESCRIPTION "C Library for USB HID device access from Linux, Mac OS X, FreeBSD, and Windows. This is the libusb implementation."
+ )
+ 
+diff --git a/linux/CMakeLists.txt b/linux/CMakeLists.txt
+index b6d496b..5ac415b 100644
+--- a/linux/CMakeLists.txt
++++ b/linux/CMakeLists.txt
+@@ -40,5 +40,8 @@ endif()
+ hidapi_configure_pc("${PROJECT_ROOT}/pc/hidapi-backend-specific.pc.in"
+     OUTPUT_NAME "hidapi-hidraw"
+     LIBRARY_NAME "hidapi-hidraw"
++    BACKEND_TARGET hidapi_hidraw
++    REQUIRES_PRIVATE "libudev"
++    LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
+     DESCRIPTION "C Library for USB/Bluetooth HID device access from Linux, Mac OS X, FreeBSD, and Windows. This is the hidraw implementation."
+ )
+diff --git a/mac/CMakeLists.txt b/mac/CMakeLists.txt
+index f840897..ca569ef 100644
+--- a/mac/CMakeLists.txt
++++ b/mac/CMakeLists.txt
+@@ -66,5 +66,7 @@ endif()
+ hidapi_configure_pc("${PROJECT_ROOT}/pc/hidapi-backend-specific.pc.in"
+     OUTPUT_NAME "hidapi-darwin"
+     LIBRARY_NAME "hidapi"
++    BACKEND_TARGET hidapi_darwin
++    LIBS_PRIVATE "-framework IOKit -framework CoreFoundation ${CMAKE_THREAD_LIBS_INIT}"
+     DESCRIPTION "C Library for USB/Bluetooth HID device access from Linux, Mac OS X, FreeBSD, and Windows. This is the Darwin implementation."
+ )
+diff --git a/netbsd/CMakeLists.txt b/netbsd/CMakeLists.txt
+index b4db6b4..efe2b5a 100644
+--- a/netbsd/CMakeLists.txt
++++ b/netbsd/CMakeLists.txt
+@@ -47,5 +47,7 @@ endif()
+ hidapi_configure_pc("${PROJECT_ROOT}/pc/hidapi-backend-specific.pc.in"
+     OUTPUT_NAME "hidapi-netbsd"
+     LIBRARY_NAME "hidapi-netbsd"
++    BACKEND_TARGET hidapi_netbsd
++    LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
+     DESCRIPTION "C Library for USB/Bluetooth HID device access from Linux, Mac OS X, FreeBSD, and Windows. This is the netbsd implementation."
+ )
+diff --git a/pc/hidapi-backend-specific.pc.in b/pc/hidapi-backend-specific.pc.in
+index ff7a6b3..9dd0280 100644
+--- a/pc/hidapi-backend-specific.pc.in
++++ b/pc/hidapi-backend-specific.pc.in
+@@ -9,4 +9,5 @@ URL: https://github.com/libusb/hidapi
+ Version: @VERSION@
+ Libs: -L${libdir} -l@HIDAPI_BACKEND_LIBRARY_NAME@
+ @HIDAPI_BACKEND_REQUIRES_PRIVATE@
++@HIDAPI_PC_LIBS_PRIVATE_FIELD@
+ Cflags: -I${includedir}/hidapi
+diff --git a/pc/hidapi.pc.in b/pc/hidapi.pc.in
+index dcbae59..de39c08 100644
+--- a/pc/hidapi.pc.in
++++ b/pc/hidapi.pc.in
+@@ -9,4 +9,5 @@ URL: https://github.com/libusb/hidapi
+ Version: @VERSION@
+ Libs: -L${libdir} -l@HIDAPI_LIB_NAME@
+ @HIDAPI_GENERIC_REQUIRES_PRIVATE@
++@HIDAPI_PC_LIBS_PRIVATE_FIELD@
+ Cflags: -I${includedir}/hidapi
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index eeea1fc..42e2a70 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -56,7 +56,7 @@ endif()
+ # Helper(s)
+ 
+ function(hidapi_configure_pc PC_IN_FILE)
+-    set(oneValueArgs OUTPUT_NAME LIBRARY_NAME DESCRIPTION REQUIRES_PRIVATE)
++    set(oneValueArgs OUTPUT_NAME LIBRARY_NAME DESCRIPTION BACKEND_TARGET REQUIRES_PRIVATE LIBS_PRIVATE)
+     cmake_parse_arguments(HIDAPI_PC "" "${oneValueArgs}" "" ${ARGN})
+     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pc")
+ 
+@@ -87,12 +87,25 @@ function(hidapi_configure_pc PC_IN_FILE)
+     set(HIDAPI_BACKEND_NAME "${PC_IN_FILENAME}")
+     set(HIDAPI_BACKEND_DESCRIPTION "${HIDAPI_PC_DESCRIPTION}")
+     set(HIDAPI_BACKEND_LIBRARY_NAME "${HIDAPI_LIB_NAME}")
++    if(HIDAPI_PC_BACKEND_TARGET)
++        foreach(field IN ITEMS REQUIRES_PRIVATE LIBS_PRIVATE)
++            if(DEFINED HIDAPI_PC_${field})
++                set_property(TARGET "${HIDAPI_PC_BACKEND_TARGET}" PROPERTY "HIDAPI_PC_${field}" "${HIDAPI_PC_${field}}")
++            else()
++                get_property(HIDAPI_PC_${field} TARGET "${HIDAPI_PC_BACKEND_TARGET}" PROPERTY "HIDAPI_PC_${field}")
++            endif()
++        endforeach()
++    endif()
++    set(HIDAPI_BACKEND_REQUIRES_PRIVATE "")
+     if(HIDAPI_PC_REQUIRES_PRIVATE)
+         set(HIDAPI_BACKEND_REQUIRES_PRIVATE "Requires.private: ${HIDAPI_PC_REQUIRES_PRIVATE}")
+-    else()
+-        set(HIDAPI_BACKEND_REQUIRES_PRIVATE "")
+     endif()
+     set(HIDAPI_GENERIC_REQUIRES_PRIVATE "${HIDAPI_BACKEND_REQUIRES_PRIVATE}")
++    set(HIDAPI_PC_LIBS_PRIVATE_FIELD "")
++    string(STRIP "${HIDAPI_PC_LIBS_PRIVATE}" HIDAPI_PC_LIBS_PRIVATE)
++    if(HIDAPI_PC_LIBS_PRIVATE)
++        set(HIDAPI_PC_LIBS_PRIVATE_FIELD "Libs.private: ${HIDAPI_PC_LIBS_PRIVATE}")
++    endif()
+     set(PC_FILE "${CMAKE_CURRENT_BINARY_DIR}/pc/${PC_IN_FILENAME}.pc")
+     configure_file("${PC_IN_FILE}" "${PC_FILE}" @ONLY)
+     if(HIDAPI_INSTALL_TARGETS)
+@@ -227,13 +240,9 @@ endif()
+ add_library(hidapi::hidapi ALIAS hidapi_${EXPORT_ALIAS})
+ 
+ get_target_property(HIDAPI_LIB_NAME hidapi_${EXPORT_ALIAS} OUTPUT_NAME)
+-set(HIDAPI_REQUIRES_PRIVATE "")
+-if(CMAKE_SYSTEM_NAME MATCHES "FreeBSD" AND EXPORT_ALIAS STREQUAL "hidraw")
+-    set(HIDAPI_REQUIRES_PRIVATE "libusb-1.0 >= 1.0.9")
+-endif()
+ hidapi_configure_pc("${PROJECT_ROOT}/pc/hidapi.pc.in"
+     LIBRARY_NAME "${HIDAPI_LIB_NAME}"
+-    REQUIRES_PRIVATE "${HIDAPI_REQUIRES_PRIVATE}"
++    BACKEND_TARGET "hidapi_${EXPORT_ALIAS}"
+ )
+ 
+ if(HIDAPI_INSTALL_TARGETS)
