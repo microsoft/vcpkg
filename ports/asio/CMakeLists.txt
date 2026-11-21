@@ -34,6 +34,7 @@ install(FILES
 )
 
 set(exec_prefix [[${prefix}]])
-set(package_name [[asio]])
+set(includedir [[${prefix}/include]])
+set(PACKAGE_NAME "Asio")
 configure_file(asio.pc.in "${PROJECT_BINARY_DIR}/asio.pc" @ONLY)
 install(FILES "${PROJECT_BINARY_DIR}/asio.pc" DESTINATION share/pkgconfig)
