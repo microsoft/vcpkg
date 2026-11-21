@@ -21,9 +21,8 @@ vcpkg_configure_meson(
         -Dmanpage=false
         -Dvapi=false
     ADDITIONAL_BINARIES
-         gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+         gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
+         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
