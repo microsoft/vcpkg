@@ -49,6 +49,7 @@ PORT_LIST = [
     "kjobwidgets",
     "knotifications",
     "kpackage",
+    "kparts",
     "kplotting",
     "kquickcharts",
     "kservice",
