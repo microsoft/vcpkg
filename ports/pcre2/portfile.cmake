@@ -20,6 +20,13 @@ if("jit" IN_LIST FEATURES)
         set(sljit_gitlink_hash SHA512 719fa1d8d8e1e749ce6f7370db32818268f84b1376ed9367fd5290ab440d8bea7a6a25a68e55045a45da68b0ce7a55daa0d7acd2f1b11774319b50268c02441c)
     endif()
 
+    # Unauthenticated requests to api.github.com can hit rate limits in GitHub Actions.
+    # Use GITHUB_TOKEN when available to authenticate the SLJIT gitlink request.
+    set(sljit_gitlink_headers "")
+    if(DEFINED ENV{GITHUB_TOKEN} AND NOT "$ENV{GITHUB_TOKEN}" STREQUAL "")
+        set(sljit_gitlink_headers HEADERS "Authorization: Bearer $ENV{GITHUB_TOKEN}")
+    endif()
+
     # The key here is that our portfile is hardcoding SHA validation hashes, but not hardcoding the sljit commit
     # to fetch. The 'pcre2-${VERSION}' tag chooses the sljit commit that ought to be fetched.
     # This ensures that a vcpkg maintainer only has to update the SHA hashes until everything passes, when bumping
@@ -28,6 +35,7 @@ if("jit" IN_LIST FEATURES)
         URLS "https://api.github.com/repos/PCRE2Project/pcre2/contents/deps/sljit?ref=${pcre2_ref}"
         FILENAME "pcre2-${pcre2_ref}-sljit-gitlink.json"
         ${sljit_gitlink_hash}
+        ${sljit_gitlink_headers}
     )
     file(READ "${sljit_gitlink}" sljit_gitlink_contents)
     string(JSON sljit_ref GET "${sljit_gitlink_contents}" sha)
