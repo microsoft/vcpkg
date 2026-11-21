@@ -1,0 +1,36 @@
+diff --git a/configure.ac b/configure.ac
+index b0d8a35..c414210 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -251,13 +251,25 @@ AC_CHECK_LIB(pthread, pthread_create,,[
+   AC_CHECK_LIB(pthreadGC2, pthread_create,,[
+     AC_CHECK_LIB(pthreadVC3, pthread_create,,[
+       AC_CHECK_LIB(pthreadVC3d, pthread_create,,[
+-        AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[pthread_create();]])],[],[
+-          # same as previous, but use '-pthread' instead of '-lpthread'
+-          LDFLAGS="$LDFLAGS -pthread"
+-          AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[pthread_create();]])],[],[
+-	    AC_MSG_ERROR([Unable to link pthread functions])
++        AC_LINK_IFELSE(
++          [AC_LANG_PROGRAM(
++            [[#include <pthread.h>]],
++            [[pthread_t t; pthread_create(&t, 0, 0, 0);]]
++          )],
++          [],
++          [
++            # same as previous, but use '-pthread' instead of '-lpthread'
++            LDFLAGS="$LDFLAGS -pthread"
++            AC_LINK_IFELSE(
++              [AC_LANG_PROGRAM(
++                [[#include <pthread.h>]],
++                [[pthread_t t; pthread_create(&t, 0, 0, 0);]]
++              )],
++              [],
++              [
++	            AC_MSG_ERROR([Unable to link pthread functions])
++              ])
+           ])
+-        ])
+       ])
+     ])
+   ])
