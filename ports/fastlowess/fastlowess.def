@@ -1,0 +1,22 @@
+LIBRARY fastlowess-win32-x64.dll
+EXPORTS
+    fastlowess_gpu_enabled
+    fastlowess_last_error_message
+    fastlowess_lowess_fit
+    fastlowess_lowess_free
+    fastlowess_lowess_free_result
+    fastlowess_lowess_new
+    fastlowess_lowess_set_bootstrap
+    fastlowess_lowess_set_seed
+    fastlowess_online_add_point
+    fastlowess_online_free
+    fastlowess_online_free_output
+    fastlowess_online_new
+    fastlowess_predict
+    fastlowess_predict_free_result
+    fastlowess_predict_handle_free
+    fastlowess_streaming_finalize
+    fastlowess_streaming_free
+    fastlowess_streaming_new
+    fastlowess_streaming_process
+    fastlowess_version
