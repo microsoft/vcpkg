@@ -1,0 +1,19 @@
+{
+  "name": "net-snmp",
+  "version": "5.9.5.2",
+  "description": "A SNMP application library, tools and daemon",
+  "homepage": "https://www.net-snmp.org/",
+  "license": null,
+  "supports": "windows & !mingw & !uwp & !arm32",
+  "features": {
+    "ssl": {
+      "description": "Build net-snmp with SSL support and activates SNMPv3",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "tools": {
+      "description": "Build net-snmp command line tools"
+    }
+  }
+}
