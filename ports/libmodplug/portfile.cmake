@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 182270922d79c66c113b0bcd6acc45114606f5fc7421887ea23fd03c832bbf2a35f535ac7b8799782012a31ae230e3b99f53672353fe2b7553e4c197e042744e
     PATCHES
         002-detect_sinf.patch
-        003-use-static-cast-for-ctype.patch
         004-export-pkgconfig.patch
 )
 
