@@ -1,21 +1,23 @@
+# When updating this port, also update rtabmap-res-tool to avoid downloading the archive twice
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
     REF ${VERSION}
-    SHA512 92c7709b189886e8de772bcf68b0e04ad79a411f0886c2bf8319d001a6015f197b6fb04ae1b3e9e90a2fbc83f5ecf4e607a631644dfa9453073315344c23ee73
+    SHA512 b630896016a5cbec700d5199c7c4cb1ef4ded33af081bedfe4cdbfdff0bc560053052afd8f4a1b27f6e2f28df9ce6d7bc06fcefc3c724c667f512b281c41224c
     HEAD_REF master
     PATCHES
         0001-cmakelists-fixes.patch
         0002-fix-link.patch
         0003-multi-definition.patch
         0004-remove-apple-sys-path.patch
-        0005-fix-report-without-qt.patch
+        0005-use-vcpkg-nanoflann.patch
 )
 # Will use vcpkg to find these packages
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
     "${SOURCE_PATH}/cmake_modules/FindRealSense2.cmake"
-    "${SOURCE_PATH}/src/sqlite3"
+    "${SOURCE_PATH}/corelib/src/sqlite3"
+    "${SOURCE_PATH}/corelib/src/nanoflann/nanoflann.h"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -49,6 +51,7 @@ vcpkg_cmake_configure(
         -DRTABMAP_QT_VERSION=6
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
+		-DBUILD_TESTING=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_SQLite3=ON
         ## always on feats
         -DWITH_G2O=ON  -DVCPKG_LOCK_FIND_PACKAGE_g2o=ON
@@ -117,7 +120,7 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.23)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.24)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
