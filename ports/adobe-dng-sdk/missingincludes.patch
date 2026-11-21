@@ -1,0 +1,20 @@
+diff --git i/xmp/toolkit/source/XMPStream_IO.cpp w/xmp/toolkit/source/XMPStream_IO.cpp
+index 34dd205..825f174 100644
+--- i/xmp/toolkit/source/XMPStream_IO.cpp
++++ w/xmp/toolkit/source/XMPStream_IO.cpp
+@@ -29,6 +29,8 @@
+ #include "source/XIO.hpp"
+ #include "source/XMP_LibUtils.hpp"
+ 
++#include <cstring>
++
+ #define TwoGB (XMP_Uns32)(2*1024*1024*1024UL)
+ 
+ #define XMP_STREAMIO_START try { /* int a;*/
+@@ -325,4 +327,4 @@ void XMPStream_IO::GetCurrentStream(char *outputBuffer, int outputLength)
+ int XMPStream_IO::GetCurrentStreamLength()
+ {
+ 	return this->length;
+-}
+\ No newline at end of file
++}
