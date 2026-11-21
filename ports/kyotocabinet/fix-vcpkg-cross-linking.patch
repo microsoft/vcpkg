@@ -1,0 +1,52 @@
+--- a/configure.in
++++ b/configure.in
+@@ -203,15 +203,6 @@
+ AC_C_BIGENDIAN(MYCPPFLAGS="$MYCPPFLAGS -D_MYBIGEND")
+ 
+ # System-depending optimization
+-printf 'checking for 64-bit availability... '
+-if printf 'int main(void) {return 0;}' | $CC -xc -m64 -o config.tmp - >config.tmp 2>&1
+-then
+-  MYCFLAGS="-m64 $MYCFLAGS"
+-  MYCXXFLAGS="-m64 $MYCXXFLAGS"
+-  printf 'yes\n'
+-else
+-  printf 'no\n'
+-fi
+ if test "$enable_opt" != "no"
+ then
+   printf 'checking for CPU optimization availability... '
+@@ -295,7 +286,6 @@
+ # Static linking
+ if test "$is_static" = "yes"
+ then
+-  MYCMDLDFLAGS="$MYCMDLDFLAGS -static"
+   MYCMDLIBS="$MYCMDLIBS $LIBS"
+ fi
+ 
+--- a/configure
++++ b/configure
+@@ -4006,15 +4006,6 @@
+ 
+ 
+ # System-depending optimization
+-printf 'checking for 64-bit availability... '
+-if printf 'int main(void) {return 0;}' | $CC -xc -m64 -o config.tmp - >config.tmp 2>&1
+-then
+-  MYCFLAGS="-m64 $MYCFLAGS"
+-  MYCXXFLAGS="-m64 $MYCXXFLAGS"
+-  printf 'yes\n'
+-else
+-  printf 'no\n'
+-fi
+ if test "$enable_opt" != "no"
+ then
+   printf 'checking for CPU optimization availability... '
+@@ -4560,7 +4551,6 @@
+ # Static linking
+ if test "$is_static" = "yes"
+ then
+-  MYCMDLDFLAGS="$MYCMDLDFLAGS -static"
+   MYCMDLIBS="$MYCMDLIBS $LIBS"
+ fi
+ 

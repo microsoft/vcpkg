@@ -4780,6 +4780,10 @@
       "baseline": "6.31.0",
       "port-version": 0
     },
+    "kyotocabinet": {
+      "baseline": "1.2.80",
+      "port-version": 0
+    },
     "lager": {
       "baseline": "0.1.3",
       "port-version": 0
