@@ -1,0 +1,102 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3e7f86f..487c056 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -208,7 +208,7 @@ else(RDK_INSTALL_INTREE)
+   set(RDKit_BinDir "bin")
+   set(RDKit_LibDir "lib${LIB_SUFFIX}")
+   set(RDKit_HdrDir "include/rdkit")
+-  set(RDKit_ShareDir "share/RDKit")
++  set(RDKit_ShareDir "share/rdkit")
+ endif(RDK_INSTALL_INTREE)
+ 
+ if(RDK_BUILD_RPATH_SUPPORT)
+@@ -547,17 +547,8 @@ if(NOT RDK_INSTALL_INTREE)
+       COMPONENT data
+       PATTERN ".svn" EXCLUDE
++      PATTERN "Amadeus.ttf" EXCLUDE
++      PATTERN "amadeus_font_license.txt" EXCLUDE
+       )
+-  install(DIRECTORY Docs DESTINATION
+-      ${RDKit_ShareDir}
+-      COMPONENT docs
+-      PATTERN ".svn" EXCLUDE
+-      PATTERN "_build" EXCLUDE
+-      )
+-  install(DIRECTORY Contrib DESTINATION
+-      ${RDKit_ShareDir}
+-      COMPONENT extras
+-      PATTERN ".svn" EXCLUDE
+-      )
+   if(RDK_BUILD_PYTHON_WRAPPERS)
+     install(DIRECTORY Projects DESTINATION
+         ${RDKit_ShareDir}
+diff --git a/Code/cmake/Modules/RDKitUtils.cmake b/Code/cmake/Modules/RDKitUtils.cmake
+index c08fca7..5cede90 100644
+--- a/Code/cmake/Modules/RDKitUtils.cmake
++++ b/Code/cmake/Modules/RDKitUtils.cmake
+@@ -78,8 +78,9 @@ macro(rdkit_library)
+     target_link_libraries(${RDKLIB_NAME} PUBLIC rdkit_base)
+     if(RDK_INSTALL_DEV_COMPONENT)
+       INSTALL(TARGETS ${RDKLIB_NAME} EXPORT ${exportName}
+-              DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST}
+-              COMPONENT ${staticLibComponent})
++              RUNTIME DESTINATION ${RDKit_BinDir} COMPONENT ${staticLibComponent}
++              LIBRARY DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST} COMPONENT ${staticLibComponent}
++              ARCHIVE DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST} COMPONENT ${staticLibComponent})
+     endif(RDK_INSTALL_DEV_COMPONENT)
+   else()
+     # we're going to always build in shared mode since we
+@@ -89,8 +90,9 @@ macro(rdkit_library)
+     add_library(${RDKLIB_NAME} SHARED ${RDKLIB_SOURCES})
+     target_link_libraries(${RDKLIB_NAME} PUBLIC rdkit_base)
+     INSTALL(TARGETS ${RDKLIB_NAME} EXPORT ${exportName}
+-            DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST}
+-            COMPONENT ${sharedLibComponent})
++            RUNTIME DESTINATION ${RDKit_BinDir} COMPONENT ${sharedLibComponent}
++            LIBRARY DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST} COMPONENT ${sharedLibComponent}
++            ARCHIVE DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST} COMPONENT ${sharedLibComponent})
+     if(RDK_INSTALL_STATIC_LIBS)
+       add_library(${RDKLIB_NAME}_static ${RDKLIB_SOURCES})
+ 
+@@ -142,7 +144,7 @@ macro(rdkit_library)
+       target_link_libraries(${RDKLIB_NAME}_static PUBLIC rdkit_base)
+       if(RDK_INSTALL_DEV_COMPONENT)
+         INSTALL(TARGETS ${RDKLIB_NAME}_static EXPORT ${exportName}
+-                DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST}
++                ARCHIVE DESTINATION ${RDKit_LibDir}/${RDKLIB_DEST}
+                 COMPONENT ${staticLibComponent})
+       endif(RDK_INSTALL_DEV_COMPONENT)
+       set_target_properties(${RDKLIB_NAME}_static PROPERTIES
+diff --git a/External/CoordGen/CMakeLists.txt b/External/CoordGen/CMakeLists.txt
+index 39a9f11..ebcedaf 100644
+--- a/External/CoordGen/CMakeLists.txt
++++ b/External/CoordGen/CMakeLists.txt
+@@ -39,7 +39,6 @@ if(RDK_BUILD_MAEPARSER_SUPPORT OR RDK_BUILD_COORDGEN_SUPPORT)
+         target_compile_options(maeparser_static PRIVATE -Wno-deprecated-copy)
+       endif()
+     endif()
+-    install(TARGETS maeparser DESTINATION ${RDKit_LibDir})
+     set(maeparser_LIBRARIES maeparser)
+ 
+ 
+@@ -93,7 +92,6 @@ if(RDK_BUILD_COORDGEN_SUPPORT)
+         target_compile_options(coordgen_static PUBLIC -Wno-unused-but-set-variable)
+       endif()
+     endif()
+-    install(TARGETS coordgen DESTINATION ${RDKit_LibDir})
+     set(RDK_COORDGEN_LIBS coordgen CACHE STRING "the external libraries" FORCE)
+ 
+   elseif(coordgen_FOUND)
+diff --git a/External/RingFamilies/CMakeLists.txt b/External/RingFamilies/CMakeLists.txt
+index 08dd1fe..bef7e57 100644
+--- a/External/RingFamilies/CMakeLists.txt
++++ b/External/RingFamilies/CMakeLists.txt
+@@ -39,7 +39,6 @@ rdkit_library(RingDecomposerLib ${URFSOURCES} SHARED)
+ if((MSVC AND RDK_INSTALL_DLLS_MSVC) OR ((NOT MSVC) AND WIN32 AND (NOT RDK_INSTALL_STATIC_LIBS)))
+     target_compile_definitions(RingDecomposerLib PRIVATE RDKIT_URFLIB_BUILD)
+ endif()
+-install(TARGETS RingDecomposerLib DESTINATION ${RDKit_LibDir})
+ rdkit_headers(${URFLIB_DIR}/RingDecomposerLib.h DEST "")
+ 
+ 

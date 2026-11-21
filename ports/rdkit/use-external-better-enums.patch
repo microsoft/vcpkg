@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 36d85c8..f565d85 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -192,15 +192,6 @@ if(NOT Catch2_FOUND)
+ endif()
+ endif()
+ 
+-# make sure we have better_enums
+-Include(FetchContent)
+-
+-FetchContent_Declare(
+-  better_enums
+-  GIT_REPOSITORY https://github.com/aantron/better-enums.git
+-  GIT_TAG        c35576bed0295689540b39873126129adfa0b4c8 # 0.11.3
+-)
+-
+ if(RDK_INSTALL_INTREE)
+   set(RDKit_BinDir "${CMAKE_SOURCE_DIR}/bin")
+   set(RDKit_LibDir "${CMAKE_SOURCE_DIR}/lib")
+diff --git a/Code/RDGeneral/BetterEnums.h b/Code/RDGeneral/BetterEnums.h
+index 9d98579..bc8bb4a 100644
+--- a/Code/RDGeneral/BetterEnums.h
++++ b/Code/RDGeneral/BetterEnums.h
+@@ -11,7 +11,7 @@
+ #pragma once
+ 
+ #ifdef USE_BETTER_ENUMS
+-#include "enum.h"
++#include <better-enums/enum.h>
+ #define BETTER_ENUM_CLASS BETTER_ENUM
+ #else
+ #define BETTER_ENUM(Enum, Underlying, ...) enum Enum : Underlying { __VA_ARGS__ }
+diff --git a/Code/RDGeneral/CMakeLists.txt b/Code/RDGeneral/CMakeLists.txt
+index 4f302df..afe8cf3 100644
+--- a/Code/RDGeneral/CMakeLists.txt
++++ b/Code/RDGeneral/CMakeLists.txt
+@@ -5,15 +5,13 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/versions.h.cmake
+ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/RDConfig.h.cmake
+         ${CMAKE_CURRENT_SOURCE_DIR}/RDConfig.h)
+ 
+-FetchContent_MakeAvailable(better_enums)
+-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/enum.h)
+-    file(COPY ${better_enums_SOURCE_DIR}/enum.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
+-endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/enum.h)
++find_path(BETTER_ENUMS_INCLUDE_DIR NAMES better-enums/enum.h REQUIRED)
+ 
+ rdkit_library(RDGeneral
+         Invariant.cpp types.cpp utils.cpp RDGeneralExceptions.cpp RDLog.cpp
+         LocaleSwitcher.cpp versions.cpp SHARED)
+ target_compile_definitions(RDGeneral PRIVATE RDKIT_RDGENERAL_BUILD)
++target_include_directories(RDGeneral PUBLIC "${BETTER_ENUMS_INCLUDE_DIR}")
+ 
+ if (RDK_USE_BOOST_STACKTRACE AND UNIX AND NOT APPLE)
+     target_compile_definitions(RDGeneral PRIVATE RDK_USE_BOOST_STACKTRACE)
+@@ -51,7 +49,6 @@ rdkit_headers(Exceptions.h
+         test.h
+         ConcurrentQueue.h
+         BetterEnums.h
+-        enum.h
+         DEST RDGeneral)
+ 
+ if (NOT RDK_INSTALL_INTREE)
