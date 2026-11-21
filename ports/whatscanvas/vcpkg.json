@@ -1,0 +1,58 @@
+{
+  "name": "whatscanvas",
+  "version-semver": "0.1.20",
+  "description": "Lightweight Canvas-style 2D rendering library for native C++ applications",
+  "homepage": "https://github.com/ClarkWain/WhatsCanvas",
+  "documentation": "https://clarkwain.github.io/WhatsCanvas/",
+  "license": "MIT",
+  "supports": "!android & !ios & !uwp",
+  "dependencies": [
+    "glm",
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "opengl": {
+      "description": "Build the desktop OpenGL renderer",
+      "supports": "!android & !ios & !uwp & !(arm64 & linux)",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "gl-api-33"
+          ]
+        },
+        "opengl"
+      ]
+    },
+    "text": {
+      "description": "Enable FreeType rasterization and HarfBuzz shaping for the OpenGL renderer",
+      "supports": "!android & !ios & !uwp & !(arm64 & linux)",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        },
+        {
+          "name": "whatscanvas",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    }
+  }
+}
