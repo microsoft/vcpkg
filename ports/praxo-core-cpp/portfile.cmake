@@ -4,6 +4,7 @@ vcpkg_from_git(
     URL https://github.com/axisvela/praxo-core.git
     REF da4cae049176c5f9d4d6912cdef3f69e1a10db41
     OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES export-cxx-standard.patch
 )
 
 vcpkg_cmake_configure(

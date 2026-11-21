@@ -4,7 +4,7 @@
   "description": "C++20 agent runtime with policy, tools, streaming, and plugin hosts",
   "homepage": "https://github.com/axisvela/praxo-core",
   "license": "MIT",
-  "supports": "!android & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
