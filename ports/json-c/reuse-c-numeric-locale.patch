@@ -1,0 +1,99 @@
+diff --git a/json_tokener.c b/json_tokener.c
+index 516142a..c1ca2cd 100644
+--- a/json_tokener.c
++++ b/json_tokener.c
+@@ -314,6 +314,15 @@ struct json_object *json_tokener_parse_verbose(const char *str, enum json_tokene
+ 
+ /* End optimization macro defs */
+ 
++#ifdef HAVE_USELOCALE
++/* One-time C-numeric locale, created on first call and reused forever.
++ * Avoids per-call duplocale() overhead and the memory leak seen on AIX
++ * where freelocale() does not release all locale category memory.
++ * Freed on library unload by json_tokener_locale_fini().
++ */
++static locale_t c_numeric_locale = (locale_t)0;
++#endif /* HAVE_USELOCALE */
++
+ struct json_object *json_tokener_parse_ex(struct json_tokener *tok, const char *str, int len)
+ {
+ 	struct json_object *obj = NULL;
+@@ -323,7 +332,6 @@ struct json_object *json_tokener_parse_ex(struct json_tokener *tok, const char *
+ 
+ #ifdef HAVE_USELOCALE
+ 	locale_t oldlocale = uselocale(NULL);
+-	locale_t newloc;
+ #elif defined(HAVE_SETLOCALE)
+ 	char *oldlocale = NULL;
+ #endif
+@@ -345,33 +353,16 @@ struct json_object *json_tokener_parse_ex(struct json_tokener *tok, const char *
+ 
+ #ifdef HAVE_USELOCALE
+ 	{
+-#ifdef HAVE_DUPLOCALE
+-		locale_t duploc = duplocale(oldlocale);
+-		if (duploc == NULL && errno == ENOMEM)
+-		{
+-			tok->err = json_tokener_error_memory;
+-			return NULL;
+-		}
+-		newloc = newlocale(LC_NUMERIC_MASK, "C", duploc);
+-#else
+-		newloc = newlocale(LC_NUMERIC_MASK, "C", oldlocale);
+-#endif
+-		if (newloc == NULL)
++		if (c_numeric_locale == (locale_t)0)
+ 		{
+-			tok->err = json_tokener_error_memory;
+-#ifdef HAVE_DUPLOCALE
+-			freelocale(duploc);
+-#endif
+-			return NULL;
++			c_numeric_locale = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
++			if (c_numeric_locale == (locale_t)0)
++			{
++				tok->err = json_tokener_error_memory;
++				return NULL;
++			}
+ 		}
+-#ifdef NEWLOCALE_NEEDS_FREELOCALE
+-#ifdef HAVE_DUPLOCALE
+-		// Older versions of FreeBSD (<12.4) don't free the locale
+-		// passed to newlocale(), so do it here
+-		freelocale(duploc);
+-#endif
+-#endif
+-		uselocale(newloc);
++		uselocale(c_numeric_locale);
+ 	}
+ #elif defined(HAVE_SETLOCALE)
+ 	{
+@@ -1409,7 +1400,6 @@ out:
+ 
+ #ifdef HAVE_USELOCALE
+ 	uselocale(oldlocale);
+-	freelocale(newloc);
+ #elif defined(HAVE_SETLOCALE)
+ 	setlocale(LC_NUMERIC, oldlocale);
+ 	free(oldlocale);
+@@ -1476,3 +1466,20 @@ static int json_tokener_parse_double(const char *buf, int len, double *retval)
+ 		return 0; // It worked
+ 	return 1;
+ }
++
++#ifdef HAVE_USELOCALE
++/* Release the static C-numeric locale when the library is unloaded.
++ * This keeps Valgrind clean.
++ */
++#if defined(__GNUC__) || defined(__clang__)
++__attribute__((destructor))
++static void json_tokener_locale_fini(void)
++{
++	if (c_numeric_locale != (locale_t)0)
++	{
++		freelocale(c_numeric_locale);
++		c_numeric_locale = (locale_t)0;
++	}
++}
++#endif /* __GNUC__ || __clang__ */
++#endif /* HAVE_USELOCALE */
