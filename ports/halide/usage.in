@@ -23,5 +23,8 @@ The package halide provides CMake targets:
         GENERATOR my_second_generator
         PARAMS parallel=false output.type=float64)
 
+The generator entry-point library is in lib/manual-link (debug/lib/manual-link
+for Debug). Link it explicitly when not using Halide::Generator.
+
 For more information see:
     https://github.com/halide/Halide/blob/v@VERSION@/doc/HalideCMakePackage.md
