@@ -1,0 +1,50 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO cristi1990an/unicode_ranges
+    REF "v${VERSION}"
+    SHA512 D66CBD386E053C5B9960272D9F6D708729E522099004CD05A97B4337B7C57C9CF3B78C9B4F2A7D32B14D16897AF94199E61D66D655B8E90F8AFDB3EE6342A5AF
+    HEAD_REF main
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        icu UTF8_RANGES_ENABLE_ICU
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DUTF8_RANGES_BUILD_TESTS=OFF
+        -DUTF8_RANGES_BUILD_BENCHMARKS=OFF
+        -DUTF8_RANGES_FETCH_SIMDUTF=OFF
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME unicode_ranges
+    CONFIG_PATH lib/cmake/unicode_ranges
+)
+vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE-MIT"
+        "${SOURCE_PATH}/LICENSE-APACHE"
+        "${SOURCE_PATH}/LICENSE-UNICODE"
+        "${SOURCE_PATH}/THIRD_PARTY_NOTICES.md"
+)
