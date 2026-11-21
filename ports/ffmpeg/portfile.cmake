@@ -19,6 +19,7 @@ vcpkg_from_github(
         0050-fix-test-ld-absolute-lib-paths.patch
         0051-fix-msvc-undef-flags.patch
         0052-fix-disable-unstable-swscale-link.patch
+        0053-fix-resource-directory-race.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
