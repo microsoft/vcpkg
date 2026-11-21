@@ -1,38 +1,40 @@
-# Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
-# when invoking `prj_install.pl`.
-# So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-string(REPLACE "." "_" VERSION_DIRECTORY "${VERSION}")
+string(REPLACE "." "_" VERSION_TAG "${VERSION}")
 
-if("tao" IN_LIST FEATURES)
-    # Don't change to vcpkg_from_github! This points to a release and not an archive
-    vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
-        FILENAME "ACE-TAO-src-${VERSION}.tar.gz"
-        SHA512 5a6d3ad22264c25ab7aebe2027eeb9aced8eb7067b8afc8b304b1073979c41f6dc054b034eb5775e2e261d7d61fc746980ac5d41805ad1d3cd545200c681a6ab
-    )
-else()
-    # Don't change to vcpkg_from_github! This points to a release and not an archive
-    vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
-        FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 c7a10d76e137ef812a099899176eef5caee5787a569904f703e0e29faede168c60acd5094e39412cde7d977913bf8cf50e11b7b870ace6f314280240110caee7
-    )
-endif()
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-    PATCHES
-        zlib.patch
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO DOCGroup/ACE_TAO
+    REF "ACE+TAO-${VERSION_TAG}"
+    SHA512 4132450b9fcca8fa25890222d1a65b3f1343cf427c1b2e3f51515b39ede4b00832472a5d03bb165e9900457e750276cdc29295800de7426b9e7e931d7c865cf1
+    HEAD_REF master
 )
 
-set(ACE_ROOT "${SOURCE_PATH}")
+# MPC is provided by the makeprojectcreator host port, see its vcpkg-port-config.cmake
+set(ENV{MPC_ROOT} "${MPC_ROOT}")
+
+set(ACE_ROOT "${SOURCE_PATH}/ACE")
 set(ENV{ACE_ROOT} "${ACE_ROOT}")
 set(ACE_SOURCE_PATH "${ACE_ROOT}/ace")
 if("tao" IN_LIST FEATURES)
   set(TAO_ROOT "${SOURCE_PATH}/TAO")
   set(ENV{TAO_ROOT} "${TAO_ROOT}")
   set(WORKSPACE "${TAO_ROOT}/TAO_ACE")
+  if(VCPKG_TARGET_IS_WINDOWS)
+    # TAO_ACE.mwc refers to the ACE projects through $(ACE_ROOT), which results
+    # in absolute paths into the source tree in the generated solution. Generate
+    # the same workspace at the top of the source tree with relative paths
+    file(STRINGS "${WORKSPACE}.mwc" tao_ace_mwc_lines)
+    set(tao_ace_mwc "")
+    foreach(line IN LISTS tao_ace_mwc_lines)
+      if(line MATCHES "^([ \t]*)\\$\\(ACE_ROOT\\)/(.*)$")
+        set(line "${CMAKE_MATCH_1}ACE/${CMAKE_MATCH_2}")
+      elseif(NOT line MATCHES "^[ \t]*(//.*|.*{|})?[ \t]*$" AND line MATCHES "^([ \t]*)(.*)$")
+        set(line "${CMAKE_MATCH_1}TAO/${CMAKE_MATCH_2}")
+      endif()
+      string(APPEND tao_ace_mwc "${line}\n")
+    endforeach()
+    set(WORKSPACE "${SOURCE_PATH}/TAO_ACE")
+    file(WRITE "${WORKSPACE}.mwc" "${tao_ace_mwc}")
+  endif()
 else()
   set(WORKSPACE "${ACE_ROOT}/ace/ace")
 endif()
@@ -126,11 +128,23 @@ if("xml" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
+  # TAO is not below ACE_ROOT, so MPC leaves $(ACE_ROOT) in the generated TAO
+  # projects. Point ACE_ROOT and TAO_ROOT at the copy of the source tree that
+  # is built for each configuration, otherwise all configurations build
+  # into the shared source tree
+  foreach(config IN ITEMS rel dbg)
+    set(MSBUILD_ROOT_OPTIONS_${config}
+      "/p:ACE_ROOT=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${config}/ACE"
+      "/p:TAO_ROOT=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${config}/TAO")
+  endforeach()
+
   file(RELATIVE_PATH PROJECT_SUBPATH "${SOURCE_PATH}" "${WORKSPACE}.sln")
   vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH "${PROJECT_SUBPATH}"
     OPTIONS "/p:UseMultiToolTask=false" # tao_idl uses static temp file buffers; parallel custom builds cause mkstemp name collisions on Windows
+    OPTIONS_RELEASE ${MSBUILD_ROOT_OPTIONS_rel}
+    OPTIONS_DEBUG ${MSBUILD_ROOT_OPTIONS_dbg}
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -153,6 +167,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   endfunction()
 
   set(SOURCE_COPY_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+  set(ACE_COPY_PATH "${SOURCE_COPY_PATH}/ACE")
 
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS
@@ -167,22 +182,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "ace/os_include/net"
       "ace/os_include/netinet"
       "ace/os_include/sys")
-  install_includes("${SOURCE_COPY_PATH}" "${ACE_INCLUDE_FOLDERS}")
+  install_includes("${ACE_COPY_PATH}" "${ACE_INCLUDE_FOLDERS}")
 
   if("ssl" IN_LIST FEATURES)
-    install_includes("${SOURCE_COPY_PATH}" "ace/SSL")
+    install_includes("${ACE_COPY_PATH}" "ace/SSL")
   endif()
 
   if("tao" IN_LIST FEATURES)
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/apps/svcconf" "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes("${SOURCE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
+    install_includes("${ACE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
 
     set(ACE_PROTOCOLS_INCLUDE_FOLDERS "ace/HTBP" "ace/INet" "ace/RMCast"
                                       "ace/TMCast")
-    install_includes("${SOURCE_COPY_PATH}/protocols" "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
+    install_includes("${ACE_COPY_PATH}/protocols" "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
 
-    install_includes("${SOURCE_COPY_PATH}" "Kokyu")
+    install_includes("${ACE_COPY_PATH}" "Kokyu")
 
     set(TAO_ORBSVCS_INCLUDE_FOLDERS
         "orbsvcs"
@@ -270,11 +285,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_msbuild_install(
       SOURCE_PATH "${SOURCE_PATH}"
       PROJECT_SUBPATH "${PROJECT_SUBPATH_XML}"
+      OPTIONS_RELEASE ${MSBUILD_ROOT_OPTIONS_rel}
+      OPTIONS_DEBUG ${MSBUILD_ROOT_OPTIONS_dbg}
     )
 
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes("${SOURCE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
+    install_includes("${ACE_COPY_PATH}" "${ACEXML_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
@@ -317,7 +334,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "debug=1" "optimize=0" "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+      WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -331,7 +348,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+      WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -354,7 +371,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} realclean
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+      WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME realclean-xml-${TARGET_TRIPLET}-dbg
     )
   endif()
@@ -370,7 +387,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} "-j${VCPKG_CONCURRENCY}"
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+      WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME make-xml-${TARGET_TRIPLET}-rel
     )
   endif()
@@ -384,7 +401,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   if("xml" IN_LIST FEATURES)
     vcpkg_execute_build_process(
       COMMAND make ${_ace_makefile_macros} install
-      WORKING_DIRECTORY "${WORKING_DIR}/../ACEXML"
+      WORKING_DIRECTORY "${ACE_ROOT}/ACEXML"
       LOGNAME install-xml-${TARGET_TRIPLET}-rel
     )
   endif()
@@ -403,6 +420,6 @@ endif()
   file(REMOVE "${CURRENT_PACKAGES_DIR}/share/tao/tao-devel.sh")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${ACE_ROOT}/COPYING")
 
 vcpkg_fixup_pkgconfig()

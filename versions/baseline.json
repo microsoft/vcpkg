@@ -30,7 +30,7 @@
     },
     "ace": {
       "baseline": "8.0.8",
-      "port-version": 0
+      "port-version": 1
     },
     "acl": {
       "baseline": "2.3.2",
@@ -6542,6 +6542,10 @@
     },
     "makeid": {
       "baseline": "1.0.3",
+      "port-version": 0
+    },
+    "makeprojectcreator": {
+      "baseline": "8.0.8",
       "port-version": 0
     },
     "manif": {
