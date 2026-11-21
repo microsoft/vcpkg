@@ -1,0 +1,14 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0a3c556..61bda15 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -11,6 +11,9 @@ ecm_qt_declare_logging_category(kcmutils_logging_STATIC
+     DESCRIPTION "KCMUtils"
+     EXPORT KCMUTILS
+ )
++if(NOT BUILD_SHARED_LIBS)
++    install(TARGETS kcmutils_logging_STATIC EXPORT KF6KCMUtilsTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
++endif()
+ 
+ 
+ add_subdirectory(core)
