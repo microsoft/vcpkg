@@ -1,0 +1,25 @@
+{
+  "name": "rres",
+  "version": "1.2.0",
+  "description": "A simple and easy-to-use file-format to package resources",
+  "homepage": "https://github.com/raysan5/rres",
+  "license": "MIT AND BSD-2-Clause AND Unlicense AND (BSD-2-Clause OR CC0-1.0)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "raylib": {
+      "description": "Install rres-raylib integration header",
+      "dependencies": [
+        "raylib"
+      ]
+    }
+  }
+}
