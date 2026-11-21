@@ -3,7 +3,7 @@
   "version": "3.2.2.0",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/AcademySoftwareFoundation/OpenImageIO",
-  "license": "Apache-2.0",
+  "license": "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT AND NCSA AND Unlicense AND Zlib",
   "dependencies": [
     "fmt",
     "libjpeg-turbo",
