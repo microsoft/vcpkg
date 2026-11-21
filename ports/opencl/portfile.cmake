@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 3280bfe35fd5c155eab2d47b844c35873e71ceb17fdf00c9dccbdb0d6e308bdb8e2ff3776c5f3c7aa63182e248027c46d697e8d8cd79c91cbb43e57c96d37ac9
     HEAD_REF main
+    PATCHES
+        use-whereami-port.patch
 )
 
 vcpkg_from_github(
@@ -44,18 +46,9 @@ if(NOT EXISTS "${SOURCE_PATH}/external/OpenCL-ICD-Loader/CMakeLists.txt")
     file(RENAME "${OPENCL_ICD_LOADER}" "${SOURCE_PATH}/external/OpenCL-ICD-Loader")
 endif()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH WHEREAMI
-    REPO gpakosz/whereami
-    REF dcb52a058dc14530ba9ae05e4339bd3ddfae0e0e # 2024-08-26
-    SHA512 afd5999316c398218d8a401b6dc6a9885c9e474bde6804f464d55eca42fdee126329856da5b337bdfad5582e6ed1364fc86a47c92b49b6d57f1bea4e3d5120e0
-    HEAD_REF master
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DFETCHCONTENT_SOURCE_DIR_WHEREAMI-EXTERNAL=${WHEREAMI}"
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
@@ -81,9 +74,4 @@ file(REMOVE_RECURSE
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${WHEREAMI}/LICENSE.MIT"
-    COMMENT [[
-The OpenCL SDK is licensed under the terms of the Apache-2.0 license.
-The OpenCL Utility Library uses code from https://github.com/gpakosz/whereami
-which is dual licensed under both the WTFPLv2 and MIT licenses.
-]])
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
