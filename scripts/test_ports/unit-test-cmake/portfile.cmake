@@ -40,5 +40,8 @@ endif()
 if("execute-required-process" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_execute_required_process.cmake")
 endif()
+if("sourcelink" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_sourcelink.cmake")
+endif()
 
 unit_test_report_result()

@@ -1,8 +1,8 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "USE_TARBALL_API"
-        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
-        "PATCHES")
+        "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;GITHUB_HOST_RAW;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
+        "PATCHES;RAW_INCLUDE_MAPPING")
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "vcpkg_from_github was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -25,9 +25,16 @@ function(vcpkg_from_github)
     if(NOT DEFINED arg_GITHUB_HOST)
         set(github_host "https://github.com")
         set(github_api_url "https://api.github.com")
+        set(github_raw_url "https://raw.githubusercontent.com")
     else()
         set(github_host "${arg_GITHUB_HOST}")
         set(github_api_url "${arg_GITHUB_HOST}/api/v3")
+        if(NOT DEFINED arg_GITHUB_HOST_RAW)
+            message(STATUS "vcpkg_from_github using default RAW URL because GITHUB_HOST_RAW is not specified: ${arg_GITHUB_HOST}/raw")
+            set(github_raw_url "${arg_GITHUB_HOST}/raw")
+        else()
+            set(github_raw_url "${arg_GITHUB_HOST_RAW}")
+        endif()
     endif()
 
     set(headers_param "")
@@ -137,5 +144,26 @@ Error was: ${head_version_err}
         DOWNLOAD_LOCATION "git+${github_host}/${arg_REPO}@${ref_to_use}"
         SHA512 "${arg_SHA512}"
     )
+
+    # Explicit mappings override automatic detection and the Boost special case.
+    if(DEFINED arg_RAW_INCLUDE_MAPPING)
+        set (raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
+    else()
+        # Special-case checks
+        if("${org_name}" STREQUAL "boostorg" AND IS_DIRECTORY "${SOURCE_PATH}/include/boost/${repo_name}")
+            # Special case for boost instead of adding overrides to the huge number of repos under that umbrella
+            # - Note that this intentionally omits the top-level convenience headers because they
+            #   are of lower importance while debugging and add unnecessary complexity
+            list(APPEND raw_include_mapping "boost/${repo_name}/*" "include/boost/${repo_name}/*")
+        endif()
+    endif()
+
+    vcpkg_write_sourcelink_file(
+        SOURCE_PATH "${SOURCE_PATH}"
+        SERVER_PATH "${github_raw_url}/${org_name}/${repo_name}/${ref_to_use}/*"
+        RAW_SEARCH_REPO_NAME "${repo_name}"
+        RAW_INCLUDE_MAPPING ${raw_include_mapping}
+    )
+
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
