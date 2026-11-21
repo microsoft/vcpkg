@@ -52,7 +52,7 @@ index bc5d6a0..20efb24 100644
  #[[ Generate Trimmed API
  
 diff --git a/cmake/godotcpp.cmake b/cmake/godotcpp.cmake
-index 8c018a3..f444f55 100644
+index 8c018a3..2d0820d 100644
 --- a/cmake/godotcpp.cmake
 +++ b/cmake/godotcpp.cmake
 @@ -135,7 +135,7 @@ function(godotcpp_options)
@@ -113,3 +113,19 @@ index 7478a5a..697be85 100644
  endfunction()
  
  #[===========================[ Target Generation ]===========================]
+diff --git a/include/godot_cpp/templates/mutex.hpp b/include/godot_cpp/templates/mutex.hpp
+index 4bf6585..e584ae9 100644
+--- a/include/godot_cpp/templates/mutex.hpp
++++ b/include/godot_cpp/templates/mutex.hpp
+@@ -30,6 +30,11 @@
+ 
+ #pragma once
+ 
++// The vcpkg package is built with threading enabled.
++#ifndef THREADS_ENABLED
++#define THREADS_ENABLED
++#endif
++
+ #include <godot_cpp/core/defs.hpp>
+ 
+ #ifdef MINGW_ENABLED
