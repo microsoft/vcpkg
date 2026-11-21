@@ -1,0 +1,30 @@
+diff --git a/cmake/FindDNSSD.cmake b/cmake/FindDNSSD.cmake
+index 9d189d2..ba65cca 100644
+--- a/cmake/FindDNSSD.cmake
++++ b/cmake/FindDNSSD.cmake
+@@ -20,11 +20,9 @@ FIND_PATH(DNSSD_INCLUDE_DIR dns_sd.h
+ )
+ 
+ if (DNSSD_INCLUDE_DIR)
+-  if (APPLE)
+-    set(DNSSD_LIBRARIES "/usr/lib/libSystem.dylib")
+-  else (APPLE)
++  if (NOT APPLE)
+     FIND_LIBRARY(DNSSD_LIBRARIES NAMES dns_sd dnssd)
+-  endif (APPLE)
++  endif (NOT APPLE)
+ 
+   cmake_push_check_state()
+   set(CMAKE_REQUIRED_INCLUDES ${DNSSD_INCLUDE_DIR})
+@@ -32,9 +31,9 @@ if (DNSSD_INCLUDE_DIR)
+   CHECK_FUNCTION_EXISTS(DNSServiceRefDeallocate DNSSD_FUNCTION_FOUND)
+   cmake_pop_check_state()
+ 
+-  if (DNSSD_INCLUDE_DIR AND DNSSD_LIBRARIES AND DNSSD_FUNCTION_FOUND)
++  if (DNSSD_INCLUDE_DIR AND (APPLE OR DNSSD_LIBRARIES) AND DNSSD_FUNCTION_FOUND)
+      set(DNSSD_FOUND TRUE)
+-  endif (DNSSD_INCLUDE_DIR AND DNSSD_LIBRARIES AND DNSSD_FUNCTION_FOUND)
++  endif ()
+ endif (DNSSD_INCLUDE_DIR)
+ 
+ if (DNSSD_FOUND)

@@ -174,6 +174,9 @@ APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 ## required by libmysql
 APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 
+## required by kdnssd
+APT_PACKAGES="$APT_PACKAGES libavahi-common-dev"
+
 ## CUDA
 # The intent is to install the CUDA toolkit except drivers, GUI tools, and documentation.
 # On version updates, inspect the Package and Depends fields in both of these repository manifests:
