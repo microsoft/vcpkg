@@ -1,6 +1,6 @@
 {
   "name": "kjobwidgets",
-  "version": "6.31.0",
+  "version": "6.32.0",
   "description": "Widgets for showing progress of asynchronous jobs",
   "homepage": "https://invent.kde.org/frameworks/kjobwidgets",
   "documentation": "https://api.kde.org/kjobwidgets-index.html",

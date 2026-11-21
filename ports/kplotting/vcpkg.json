@@ -1,7 +1,6 @@
 {
   "name": "kplotting",
-  "version": "6.31.0",
-  "port-version": 1,
+  "version": "6.32.0",
   "description": "Lightweight plotting framework",
   "homepage": "https://invent.kde.org/frameworks/kplotting",
   "documentation": "https://api.kde.org/kplotting-index.html",
