@@ -1,0 +1,21 @@
+Microsoft runtime implementation notice
+=======================================
+
+The crtsys static archives contain object code compiled from Microsoft
+Universal C Runtime (UCRT), Visual C++ Runtime (VCRuntime), and Standard
+Library implementation source files supplied with a separately licensed
+Microsoft Windows SDK and Microsoft Visual Studio installation.
+
+Those Microsoft-originated portions are not covered by the MIT, BSD-2-Clause,
+or BSD-3-Clause licenses that apply to the upstream and third-party source
+components listed elsewhere in this copyright file. Use and redistribution of
+the Microsoft-originated portions are subject to the license terms that
+accompany the exact Windows SDK and Visual Studio versions used for the build.
+
+Windows SDK license terms and redistribution list:
+https://learn.microsoft.com/legal/windows-sdk/
+https://learn.microsoft.com/legal/windows-sdk/redist
+
+Visual Studio license terms and redistribution information:
+https://visualstudio.microsoft.com/license-terms/
+https://learn.microsoft.com/visualstudio/releases/2022/redistribution
