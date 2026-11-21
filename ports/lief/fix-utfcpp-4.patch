@@ -1,13 +1,13 @@
 diff --git a/src/utils.cpp b/src/utils.cpp
-index 356d4ad..b5c2ecf 100644
+index 18f6fc10..4eac5df7 100644
 --- a/src/utils.cpp
 +++ b/src/utils.cpp
-@@ -37,7 +37,7 @@ template <typename octet_iterator>
- result<uint32_t> next(octet_iterator& it, octet_iterator end) {
+@@ -38,7 +38,7 @@ result<uint32_t> next(octet_iterator& it, octet_iterator end) {
    using namespace utf8;
+   using namespace utf8::internal;
    utfchar32_t cp = 0;
--  internal::utf_error err_code = internal::validate_next(it, end, cp);
-+  internal::utf_error err_code = internal::decode_next(it, end, cp);
+-  internal::utf_error err_code = validate_next(it, end, cp);
++  internal::utf_error err_code = decode_next(it, end, cp);
    switch (err_code) {
-     case internal::UTF8_OK :
-       break;
+     case UTF8_OK: break;
+     case NOT_ENOUGH_ROOM: return make_error_code(lief_errors::data_too_large);
