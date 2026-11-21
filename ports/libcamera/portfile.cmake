@@ -26,6 +26,11 @@ else()
     list(APPEND options "-Dtracing=disabled")
 endif()
 
+set(pipelines "simple,uvcvideo")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(pipelines "ipu3,${pipelines}")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -34,7 +39,7 @@ vcpkg_configure_meson(
         -Ddocumentation=disabled
         -Dgstreamer=enabled
         -Dlc-compliance=disabled # Test appplication
-        -Dpipelines=simple,uvcvideo
+        -Dpipelines=${pipelines}
         -Dpycamera=disabled # experimental feature, going to leave for later
         -Dqcam=disabled # Test application
         -Drpi-awb-nn=disabled
@@ -52,4 +57,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.rst")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING.rst"
+    "${SOURCE_PATH}/LICENSES/LGPL-2.1-or-later.txt"
+    "${SOURCE_PATH}/LICENSES/GPL-2.0-or-later.txt"
+    "${SOURCE_PATH}/LICENSES/BSD-2-Clause.txt"
+    "${SOURCE_PATH}/src/ipa/libipa/colours.h"
+    "${SOURCE_PATH}/src/ipa/libipa/histogram.h"
+    "${SOURCE_PATH}/LICENSES/CC0-1.0.txt"
+)
