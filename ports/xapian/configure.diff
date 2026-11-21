@@ -1,23 +1,41 @@
+diff --git a/Makefile.am b/Makefile.am
+index 7053646..45ab3bd 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,3 +1,5 @@
++ACLOCAL_AMFLAGS = -I m4
++
+ ## Process this file with automake to produce Makefile.in
+ 
+ AUTOMAKE_OPTIONS = subdir-objects
 diff --git a/configure.ac b/configure.ac
-index ca5b7b2..b059402 100644
+index b0f9550..982a5bf 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -870,6 +870,7 @@ case $enable_backend_chert$enable_backend_glass in
-   dnl
-   dnl Similarly for uuid support.
+@@ -782,7 +782,9 @@ AC_CHECK_FUNCS([strerrordesc_np])
+ dnl Check for ICU, which we can optionally use to find word breaks.
+ AC_ARG_VAR([PKG_CONFIG], [Location of pkg-config])
+ AC_PATH_TOOL([PKG_CONFIG], [pkg-config])
+-if test -n "$PKG_CONFIG" ; then
++dnl vcpkg: disable ICU autodetection so the build does not depend on whether
++dnl ICU happens to be installed for the triplet; no icu dependency is declared.
++if test -n "$PKG_CONFIG" && false ; then
+   dnl ICU's UTF-8 word boundary code was broken before 54.1.
+   m4_define([icu_min], [54.1])
+   m4_define([icu_mod], [icu-uc])
+@@ -868,12 +870,9 @@ AC_CHECK_HEADERS([zlib.h], [], [
+   AC_MSG_ERROR([zlib.h not found - required for glass (you may need to install the zlib1g-dev or zlib-devel package)])
+   ], [ ])
  
-+  if false; then
-   dnl Check for zlib.h.
-   AC_CHECK_HEADERS([zlib.h], [], [
-     AC_MSG_ERROR([zlib.h not found - required for chert and glass (you may need to install the zlib1g-dev or zlib-devel package)])
-@@ -879,6 +880,10 @@ case $enable_backend_chert$enable_backend_glass in
-   AC_SEARCH_LIBS([zlibVersion], [z zlib zdll], [], [
-     AC_MSG_ERROR([zlibVersion() not found in -lz, -lzlib, or -lzdll - required for chert and glass (you may need to install the zlib1g-dev or zlib-devel package)])
-     ])
-+  fi
-+  PKG_CHECK_MODULES([ZLIB], [zlib], [],[AC_MSG_ERROR([zlib library not found])])
-+  CFLAGS="$LIBS $ZLIB_CFLAGS"
-+  LIBS="$ZLIB_LIBS $LIBS"
- 
-   dnl Find a way to generate UUIDs.
+-dnl Check for zlibVersion - normally it's in -lz but the mingw build needs -lzlib or -lzdll.
+-AC_SEARCH_LIBS([zlibVersion], [z zlib zdll], [], [
+-  AC_MSG_ERROR([zlibVersion() not found in -lz, -lzlib, or -lzdll - required for glass (you may need to install the zlib1g-dev or zlib-devel package)])
+-  ])
+-
+-ZLIB_LIBS=$LIBS
++dnl vcpkg: use pkg-config so the correct per-configuration library name is
++dnl used (the vcpkg zlib port renames it to zs/zsd/zd on Windows).
++PKG_CHECK_MODULES([ZLIB], [zlib])
+ AC_SUBST([ZLIB_LIBS])
+ LIBS=$save_LIBS
  
