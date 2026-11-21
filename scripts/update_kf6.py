@@ -58,6 +58,7 @@ PORT_LIST = [
     "kwidgetsaddons",
     "kwindowsystem",
     "kxmlgui",
+    "modemmanager-qt",
     "oxygen-icons",
     "prison",
     "sonnet",
