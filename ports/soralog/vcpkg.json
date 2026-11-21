@@ -1,6 +1,6 @@
 {
   "name": "soralog",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Fast and flexible C++ logger with low-overhead logging calls",
   "homepage": "https://github.com/xDimon/soralog",
   "license": "Apache-2.0",

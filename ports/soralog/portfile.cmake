@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xDimon/soralog
     REF "v${VERSION}"
-    SHA512 651d72ffd70111eef608f5fae5199965e34c7ddccce6accb6a51ebae002c57b3053bee713c804750be73c94de22b0ed9502300d179229db33e495d562dbf336f
+    SHA512 61136972b97678aae24c983ed1223f5ec6dce31c8b0ad2a17eb84892c7e52ad1ffbbdc8e457d1a1e3abc9dbcbb89712b760b4ef2062d59ccf377e1e9c20c21ff
     HEAD_REF master
 )
 
