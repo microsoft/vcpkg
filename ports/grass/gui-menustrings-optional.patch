@@ -1,0 +1,35 @@
+diff --git a/gui/images/CMakeLists.txt b/gui/images/CMakeLists.txt
+index 49f2640..06324cb 100644
+--- a/gui/images/CMakeLists.txt
++++ b/gui/images/CMakeLists.txt
+@@ -18,7 +18,7 @@ else()
+ endif()
+ 
+ add_custom_target(
+-  gui_images
++  gui_images ALL
+   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/symbols
+           ${OUTDIR}/${GRASS_INSTALL_GUIDIR}/images/symbols
+   COMMAND ${CMAKE_COMMAND} -E ${RM}
+diff --git a/gui/wxpython/CMakeLists.txt b/gui/wxpython/CMakeLists.txt
+index d0a8e91..c9fadaf 100644
+--- a/gui/wxpython/CMakeLists.txt
++++ b/gui/wxpython/CMakeLists.txt
+@@ -115,7 +115,7 @@ add_custom_target(
+ set_target_properties(build_xml_menudata PROPERTIES FOLDER GUI)
+ 
+ add_custom_target(
+-  build_module_tree_menudata
++  build_module_tree_menudata ALL
+   COMMAND
+     ${grass_env_command} ${PYTHON_EXECUTABLE}
+     ${CMAKE_CURRENT_SOURCE_DIR}/core/toolboxes.py "module_tree" >
+@@ -133,7 +133,7 @@ add_custom_target(
+ set_target_properties(build_module_tree_menudata PROPERTIES FOLDER GUI)
+ 
+ add_custom_target(
+-  build_menustrings ALL
++  build_menustrings
+   COMMAND
+     ${grass_env_command} ${PYTHON_EXECUTABLE}
+     ${CMAKE_CURRENT_SOURCE_DIR}/core/menutree.py "manager" >>

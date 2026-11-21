@@ -1,0 +1,117 @@
+diff --git a/lib/external/parson/parson.h b/lib/external/parson/parson.h
+index 5799e03..e78a8b2 100644
+--- a/lib/external/parson/parson.h
++++ b/lib/external/parson/parson.h
+@@ -26,6 +26,112 @@
+ #ifndef parson_parson_h
+ #define parson_parson_h
+ 
++/* GRASS: prefix all parson symbols so that they do not clash with other
++ * JSON libraries (e.g. json-c linked statically through GDAL). */
++#define json_array grass_json_array
++#define json_array_append_boolean grass_json_array_append_boolean
++#define json_array_append_null grass_json_array_append_null
++#define json_array_append_number grass_json_array_append_number
++#define json_array_append_string grass_json_array_append_string
++#define json_array_append_string_with_len grass_json_array_append_string_with_len
++#define json_array_append_value grass_json_array_append_value
++#define json_array_clear grass_json_array_clear
++#define json_array_get_array grass_json_array_get_array
++#define json_array_get_boolean grass_json_array_get_boolean
++#define json_array_get_count grass_json_array_get_count
++#define json_array_get_number grass_json_array_get_number
++#define json_array_get_object grass_json_array_get_object
++#define json_array_get_string grass_json_array_get_string
++#define json_array_get_string_len grass_json_array_get_string_len
++#define json_array_get_value grass_json_array_get_value
++#define json_array_get_wrapping_value grass_json_array_get_wrapping_value
++#define json_array_remove grass_json_array_remove
++#define json_array_replace_boolean grass_json_array_replace_boolean
++#define json_array_replace_null grass_json_array_replace_null
++#define json_array_replace_number grass_json_array_replace_number
++#define json_array_replace_string grass_json_array_replace_string
++#define json_array_replace_string_with_len grass_json_array_replace_string_with_len
++#define json_array_replace_value grass_json_array_replace_value
++#define json_boolean grass_json_boolean
++#define json_free_serialized_string grass_json_free_serialized_string
++#define json_number grass_json_number
++#define json_object grass_json_object
++#define json_object_clear grass_json_object_clear
++#define json_object_dotget_array grass_json_object_dotget_array
++#define json_object_dotget_boolean grass_json_object_dotget_boolean
++#define json_object_dotget_number grass_json_object_dotget_number
++#define json_object_dotget_object grass_json_object_dotget_object
++#define json_object_dotget_string grass_json_object_dotget_string
++#define json_object_dotget_string_len grass_json_object_dotget_string_len
++#define json_object_dotget_value grass_json_object_dotget_value
++#define json_object_dothas_value grass_json_object_dothas_value
++#define json_object_dothas_value_of_type grass_json_object_dothas_value_of_type
++#define json_object_dotremove grass_json_object_dotremove
++#define json_object_dotset_boolean grass_json_object_dotset_boolean
++#define json_object_dotset_null grass_json_object_dotset_null
++#define json_object_dotset_number grass_json_object_dotset_number
++#define json_object_dotset_string grass_json_object_dotset_string
++#define json_object_dotset_string_with_len grass_json_object_dotset_string_with_len
++#define json_object_dotset_value grass_json_object_dotset_value
++#define json_object_get_array grass_json_object_get_array
++#define json_object_get_boolean grass_json_object_get_boolean
++#define json_object_get_count grass_json_object_get_count
++#define json_object_get_name grass_json_object_get_name
++#define json_object_get_number grass_json_object_get_number
++#define json_object_get_object grass_json_object_get_object
++#define json_object_get_string grass_json_object_get_string
++#define json_object_get_string_len grass_json_object_get_string_len
++#define json_object_get_value grass_json_object_get_value
++#define json_object_get_value_at grass_json_object_get_value_at
++#define json_object_get_wrapping_value grass_json_object_get_wrapping_value
++#define json_object_has_value grass_json_object_has_value
++#define json_object_has_value_of_type grass_json_object_has_value_of_type
++#define json_object_remove grass_json_object_remove
++#define json_object_set_boolean grass_json_object_set_boolean
++#define json_object_set_null grass_json_object_set_null
++#define json_object_set_number grass_json_object_set_number
++#define json_object_set_string grass_json_object_set_string
++#define json_object_set_string_with_len grass_json_object_set_string_with_len
++#define json_object_set_value grass_json_object_set_value
++#define json_parse_file grass_json_parse_file
++#define json_parse_file_with_comments grass_json_parse_file_with_comments
++#define json_parse_string grass_json_parse_string
++#define json_parse_string_with_comments grass_json_parse_string_with_comments
++#define json_serialization_size grass_json_serialization_size
++#define json_serialization_size_pretty grass_json_serialization_size_pretty
++#define json_serialize_to_buffer grass_json_serialize_to_buffer
++#define json_serialize_to_buffer_pretty grass_json_serialize_to_buffer_pretty
++#define json_serialize_to_file grass_json_serialize_to_file
++#define json_serialize_to_file_pretty grass_json_serialize_to_file_pretty
++#define json_serialize_to_string grass_json_serialize_to_string
++#define json_serialize_to_string_pretty grass_json_serialize_to_string_pretty
++#define json_set_allocation_functions grass_json_set_allocation_functions
++#define json_set_escape_slashes grass_json_set_escape_slashes
++#define json_set_float_serialization_format grass_json_set_float_serialization_format
++#define json_set_number_serialization_function grass_json_set_number_serialization_function
++#define json_string grass_json_string
++#define json_string_len grass_json_string_len
++#define json_type grass_json_type
++#define json_validate grass_json_validate
++#define json_value_deep_copy grass_json_value_deep_copy
++#define json_value_equals grass_json_value_equals
++#define json_value_free grass_json_value_free
++#define json_value_get_array grass_json_value_get_array
++#define json_value_get_boolean grass_json_value_get_boolean
++#define json_value_get_number grass_json_value_get_number
++#define json_value_get_object grass_json_value_get_object
++#define json_value_get_parent grass_json_value_get_parent
++#define json_value_get_string grass_json_value_get_string
++#define json_value_get_string_len grass_json_value_get_string_len
++#define json_value_get_type grass_json_value_get_type
++#define json_value_init_array grass_json_value_init_array
++#define json_value_init_boolean grass_json_value_init_boolean
++#define json_value_init_null grass_json_value_init_null
++#define json_value_init_number grass_json_value_init_number
++#define json_value_init_object grass_json_value_init_object
++#define json_value_init_string grass_json_value_init_string
++#define json_value_init_string_with_len grass_json_value_init_string_with_len
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
