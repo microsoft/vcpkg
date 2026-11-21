@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mas-bandwidth/yojimbo
     REF "v${VERSION}"
-    SHA512 206dc0fd20ca93a406744057a2a9b276e785770b5e9b27f9875ea6d17c52e36d706b27b2da6d446eecd032d380f636b8c44959190310e8c1251cac5208b565bc
+    SHA512 9e6d52d843e91a24e648264ca69e0b5accc3a3e2a20007a06b3284cac507d92c507395d029c5866ab444691f786f29288923d7b3a825f8ec26ac459b2e48521e
     HEAD_REF main
 )
 
@@ -15,11 +15,17 @@ vcpkg_cmake_configure(
         -DYOJIMBO_SYSTEM_TLSF=ON
         -DYOJIMBO_BUILD_TESTS=OFF
         -DYOJIMBO_INSTALL=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup(PACKAGE_NAME Yojimbo CONFIG_PATH lib/cmake/Yojimbo)
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENCE")
 
