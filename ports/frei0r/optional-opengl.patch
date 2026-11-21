@@ -1,0 +1,13 @@
+diff --git a/src/filter/CMakeLists.txt b/src/filter/CMakeLists.txt
+index f6ccd13..71f4041 100644
+--- a/src/filter/CMakeLists.txt
++++ b/src/filter/CMakeLists.txt
+@@ -91,7 +91,7 @@ add_subdirectory (saturat0r)
+ add_subdirectory (scanline0r)
+ add_subdirectory (select0r)
+ add_subdirectory (sharpness)
+-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
++if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT WITHOUT_OPENGL)
+   add_subdirectory (shadert0y)
+ endif ()
+ add_subdirectory (sigmoidaltransfer)
