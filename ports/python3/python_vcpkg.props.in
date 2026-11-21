@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <VcpkgPythonBuild>true</VcpkgPythonBuild>
+    <VcpkgPythonDllDirectory Condition="'$(Configuration)'=='Release'">${CURRENT_INSTALLED_DIR}/bin</VcpkgPythonDllDirectory>
+    <VcpkgPythonDllDirectory Condition="'$(Configuration)'=='Debug'">${CURRENT_INSTALLED_DIR}/debug/bin</VcpkgPythonDllDirectory>
+    <VcpkgPythonBzip2License>${CURRENT_INSTALLED_DIR}/share/bzip2/copyright</VcpkgPythonBzip2License>
+    <VcpkgPythonLibffiLicense>${CURRENT_INSTALLED_DIR}/share/libffi/copyright</VcpkgPythonLibffiLicense>
+    <VcpkgPythonZstdLicense>${CURRENT_INSTALLED_DIR}/share/zstd/copyright</VcpkgPythonZstdLicense>
+    <VcpkgPythonOpenSslLicense>${CURRENT_INSTALLED_DIR}/share/openssl/copyright</VcpkgPythonOpenSslLicense>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <CLCompile>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <!-- Match the release triplet's /O2 flag for CPython's freeze helper. -->
+      <Optimization Condition="'$(MSBuildProjectName)'=='_freeze_module' and '$(Configuration)'=='Release'">MaxSpeed</Optimization>
+      <InlineFunctionExpansion Condition="'$(Configuration)'=='Debug'">Disabled</InlineFunctionExpansion>
       <!-- Use vcpkg ports instead of vendored externals -->
       <PreprocessorDefinitions>_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="${VCPKG_LIBRARY_LINKAGE} == 'static'">XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>

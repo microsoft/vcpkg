@@ -1,0 +1,29 @@
+diff --git a/PCbuild/python.vcxproj b/PCbuild/python.vcxproj
+index d3ef0c1..5c9c6e1 100644
+--- a/PCbuild/python.vcxproj
++++ b/PCbuild/python.vcxproj
+@@ -126,7 +126,7 @@
+     <Message Text="Generating $(OutDir)pybuilddir.txt" />
+     <WriteLinesToFile File="$(OutDir)pybuilddir.txt" Lines="%0D%0A" Overwrite="true" />
+   </Target>
+-  <Target Name="ValidateUcrtbase" AfterTargets="AfterBuild" Condition="$(Configuration) != 'PGInstrument' and $(Platform) != 'ARM' and $(Platform) != 'ARM64'">
++  <Target Name="ValidateUcrtbase" AfterTargets="AfterBuild" Condition="$(Configuration) != 'PGInstrument' and $(Platform) != 'ARM' and $(Platform) != 'ARM64' and '$(IncludeExtensions)' != 'false'">
+     <PropertyGroup>
+       <UcrtName>ucrtbase</UcrtName>
+       <UcrtName Condition="'$(Configuration)' == 'Debug'">ucrtbased</UcrtName>
+diff --git a/PCbuild/regen.targets b/PCbuild/regen.targets
+index 0643075..797a393 100644
+--- a/PCbuild/regen.targets
++++ b/PCbuild/regen.targets
+@@ -161,9 +161,9 @@
+     <_LicenseSources Include="$(opensslOutDir)LICENSE"
+                      Condition="'$(VcpkgPythonBuild)' != 'true' and !Exists('$(opensslOutDir)LICENSE.txt')" />
+     <_LicenseSources Include="$(VcpkgPythonBzip2License);$(VcpkgPythonLibffiLicense);$(VcpkgPythonZstdLicense);$(VcpkgPythonOpenSslLicense)"
+-                     Condition="'$(VcpkgPythonBuild)' == 'true'" />
++                     Condition="'$(VcpkgPythonBuild)' == 'true' and '$(IncludeExtensions)' != 'false'" />
+     <_LicenseSources Include="$(tcltkDir)tcllicense.terms;
+-                              $(tcltkDir)tklicense.terms" Condition="$(IncludeTkinter)" />
++                              $(tcltkDir)tklicense.terms" Condition="$(IncludeTkinter) and '$(IncludeExtensions)' != 'false'" />
+   </ItemGroup>
+ 
+   <Target Name="_RegenTestFrozenmain" Inputs="@(_TestFrozenSources)" Outputs="@(_TestFrozenOutputs)"

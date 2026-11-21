@@ -8358,7 +8358,7 @@
     },
     "python3": {
       "baseline": "3.14.10",
-      "port-version": 0
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.10",
@@ -10878,7 +10878,7 @@
     },
     "vcpkg-msbuild": {
       "baseline": "2023-08-08",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2024-04-03",
