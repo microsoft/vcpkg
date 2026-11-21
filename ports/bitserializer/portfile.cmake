@@ -1,10 +1,14 @@
-# All BitSerializer components are "header only" except for CSV and MsgPack archives
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO PavelKisliak/BitSerializer
-    REF v0.85
-    SHA512 a55d3948ad66cbd9328c2845fb954ac5587ae230be0276c15cdc5c2e23f7797149a955553a80ff001de79dc7db853f573360827f1a56d83dbd3f9ea249288932
-    HEAD_REF master
+# All BitSerializer components are "header only" except for JSON, CSV and MsgPack archives.
+# Don't use vcpkg_from_github: the release asset is the immutable source archive.
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://github.com/PavelKisliak/BitSerializer/releases/download/v${VERSION}/bitserializer_v${VERSION}_src.tar.gz"
+    FILENAME "bitserializer-${VERSION}-src.tar.gz"
+    SHA512 e25ad5c5b391bafb30df7bc2adea4f7e67bc0b97caaf8fc0f9cda9047991100b97a08a6b0265eed13660ed8df8adb0a2a061fb9c6f2b5b84f0f1f8105e73c4ed
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -14,7 +18,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "rapidyaml-archive"    BUILD_RAPIDYAML_ARCHIVE
         "csv-archive"          BUILD_CSV_ARCHIVE
         "msgpack-archive"      BUILD_MSGPACK_ARCHIVE
+        "json-archive"         BUILD_JSON_ARCHIVE
 )
+
+if(NOT "fast-float" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_FastFloat=ON")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -29,10 +38,10 @@ vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if (NOT (${BUILD_CSV_ARCHIVE} OR ${BUILD_MSGPACK_ARCHIVE}))
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if(NOT (BUILD_JSON_ARCHIVE OR BUILD_CSV_ARCHIVE OR BUILD_MSGPACK_ARCHIVE))
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

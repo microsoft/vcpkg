@@ -1,8 +1,12 @@
 BitSerializer provides CMake targets:
 
-    find_package(bitserializer CONFIG REQUIRED)
-    # Link only archives which you are specified in the features list when install
+    # Request only the components enabled by the selected vcpkg features.
+    find_package(bitserializer CONFIG REQUIRED COMPONENTS
+        json rapidjson pugixml rapidyaml csv msgpack)
+    # Link the matching targets and remove the archives you did not enable.
     target_link_libraries(main PRIVATE
+        BitSerializer::core
+        BitSerializer::json-archive
         BitSerializer::rapidjson-archive
         BitSerializer::pugixml-archive
         BitSerializer::rapidyaml-archive
