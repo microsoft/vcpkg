@@ -1,0 +1,198 @@
+diff --git a/src/ip.cpp b/src/ip.cpp
+index 98804e8c..721acb1d 100644
+--- a/src/ip.cpp
++++ b/src/ip.cpp
+@@ -23,12 +23,17 @@
+ #include "tcp.hpp"
+ #ifdef ZMQ_HAVE_IPC
+ #include "ipc_address.hpp"
++// Don't try ipc if it fails once
++namespace zmq
++{
++static bool try_ipc_first = true;
++}
+ #endif
+ 
+ #include <direct.h>
+ 
+-#define rmdir _rmdir
+-#define unlink _unlink
++#define rmdir rmdir_utf8
++#define unlink unlink_utf8
+ #endif
+ 
+ #if defined ZMQ_HAVE_OPENVMS || defined ZMQ_HAVE_VXWORKS
+@@ -552,20 +557,30 @@ int zmq::make_fdpair (fd_t *r_, fd_t *w_)
+     socklen_t lcladdr_len = sizeof lcladdr;
+     int rc = 0;
+     int saved_errno = 0;
++    SOCKET listener = INVALID_SOCKET;
+ 
+     // It appears that a lack of runtime AF_UNIX support
+     // can fail in more than one way.
+-    // At least: open_socket can fail or later in bind
++    // At least: open_socket can fail or later in bind or even in connect after bind
+     bool ipc_fallback_on_tcpip = true;
+ 
++    if (!zmq::try_ipc_first) {
++        // a past ipc attempt failed, skip straight to try_tcpip in the future;
++        goto try_tcpip;
++    }
++
+     //  Create a listening socket.
+-    const SOCKET listener = open_socket (AF_UNIX, SOCK_STREAM, 0);
++    listener = open_socket (AF_UNIX, SOCK_STREAM, 0);
+     if (listener == retired_fd) {
+         //  This may happen if the library was built on a system supporting AF_UNIX, but the system running doesn't support it.
+         goto try_tcpip;
+     }
+ 
+-    create_ipc_wildcard_address (dirname, filename);
++    rc = create_ipc_wildcard_address (dirname, filename);
++    if (rc != 0) {
++        // This may happen if tmpfile creation fails
++        goto error_closelistener;
++    }
+ 
+     //  Initialise the address structure.
+     rc = address.resolve (filename.c_str ());
+@@ -581,8 +596,7 @@ int zmq::make_fdpair (fd_t *r_, fd_t *w_)
+         goto error_closelistener;
+     }
+     // if we got here, ipc should be working,
+-    // so raise any remaining errors
+-    ipc_fallback_on_tcpip = false;
++    // but there are at least some cases where connect can still fail
+ 
+     //  Listen for incoming connections.
+     rc = listen (listener, 1);
+@@ -593,11 +607,11 @@ int zmq::make_fdpair (fd_t *r_, fd_t *w_)
+ 
+     rc = getsockname (listener, reinterpret_cast<struct sockaddr *> (&lcladdr),
+                       &lcladdr_len);
+-    wsa_assert (rc != -1);
++    wsa_assert (rc == 0);
+ 
+     //  Create the client socket.
+     *w_ = open_socket (AF_UNIX, SOCK_STREAM, 0);
+-    if (*w_ == -1) {
++    if (*w_ == retired_fd) {
+         errno = wsa_error_to_errno (WSAGetLastError ());
+         goto error_closelistener;
+     }
+@@ -605,12 +619,16 @@ int zmq::make_fdpair (fd_t *r_, fd_t *w_)
+     //  Connect to the remote peer.
+     rc = ::connect (*w_, reinterpret_cast<const struct sockaddr *> (&lcladdr),
+                     lcladdr_len);
+-    if (rc == -1) {
++    if (rc != 0) {
++        errno = wsa_error_to_errno (WSAGetLastError ());
+         goto error_closeclient;
+     }
++    // if we got here, ipc should be working,
++    // so raise any remaining errors
++    ipc_fallback_on_tcpip = false;
+ 
+     *r_ = accept (listener, NULL, NULL);
+-    errno_assert (*r_ != -1);
++    wsa_assert (*r_ != retired_fd);
+ 
+     //  Close the listener socket, we don't need it anymore.
+     rc = closesocket (listener);
+@@ -632,6 +650,7 @@ error_closeclient:
+     saved_errno = errno;
+     rc = closesocket (*w_);
+     wsa_assert (rc == 0);
++    *w_ = retired_fd;
+     errno = saved_errno;
+ 
+ error_closelistener:
+@@ -659,9 +678,13 @@ error_closelistener:
+ 
+ try_tcpip:
+     // try to fallback to TCP/IP
+-    // TODO: maybe remember this decision permanently?
+-#endif
+-
++    rc = make_fdpair_tcpip (r_, w_);
++    if (rc == 0 && zmq::try_ipc_first) {
++        // ipc didn't work but tcp/ip did; skip ipc in the future
++        zmq::try_ipc_first = false;
++    }
++    return rc;
++#endif // ZMQ_HAVE_IPC
+     return make_fdpair_tcpip (r_, w_);
+ #elif defined ZMQ_HAVE_OPENVMS
+ 
+diff --git a/src/ipc_listener.cpp b/src/ipc_listener.cpp
+index 50126040..586bd764 100644
+--- a/src/ipc_listener.cpp
++++ b/src/ipc_listener.cpp
+@@ -25,8 +25,8 @@
+ #include <afunix.h>
+ #include <direct.h>
+ 
+-#define rmdir _rmdir
+-#define unlink _unlink
++#define rmdir rmdir_utf8
++#define unlink unlink_utf8
+ 
+ #else
+ #include <unistd.h>
+diff --git a/src/windows.hpp b/src/windows.hpp
+index 9a4e96d5..3ecec4c6 100644
+--- a/src/windows.hpp
++++ b/src/windows.hpp
+@@ -28,6 +28,8 @@
+ #include <windows.h>
+ #include <mswsock.h>
+ #include <iphlpapi.h>
++#include <string>
++#include <vector>
+ 
+ #if !defined __MINGW32__
+ #include <mstcpip.h>
+@@ -64,6 +66,43 @@ static inline int poll (struct pollfd *pfd, unsigned long nfds, int timeout)
+ #define AI_NUMERICSERV 0x0400
+ #endif
+ 
++//  Need unlink() and rmdir() functions that take utf-8 encoded file path.
++static inline std::wstring utf8_to_utf16 (const char *utf8_string)
++{
++    std::wstring retVal;
++
++    if (utf8_string && *utf8_string) {
++        const int utf16_length = ::MultiByteToWideChar (
++          CP_UTF8, MB_ERR_INVALID_CHARS, utf8_string,
++          -1, // assume the input string is null-terminated
++          NULL, 0);
++
++        if (utf16_length > 0) {
++            retVal.resize (utf16_length);
++
++            const int conversion_result = ::MultiByteToWideChar (
++              CP_UTF8, MB_ERR_INVALID_CHARS, utf8_string,
++              -1, // assume the input string is null-terminated
++              &retVal[0], static_cast<int> (retVal.size ()));
++
++            if (conversion_result == 0)
++                retVal.clear ();
++        }
++    }
++
++    return retVal;
++}
++
++static inline int unlink_utf8 (const char *filename)
++{
++    return _wunlink (utf8_to_utf16 (filename).c_str ());
++}
++
++static inline int rmdir_utf8 (const char *filename)
++{
++    return _wrmdir (utf8_to_utf16 (filename).c_str ());
++}
++
+ //  In MSVC prior to v14, snprintf is not available
+ //  The closest implementation is the _snprintf_s function
+ #if defined(_MSC_VER) && _MSC_VER < 1900
