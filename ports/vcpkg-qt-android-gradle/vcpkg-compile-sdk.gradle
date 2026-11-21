@@ -1,0 +1,29 @@
+// Installed by vcpkg-qt-android-gradle into $GRADLE_USER_HOME/init.d.
+// Qt's JAR projects set `compileSdk` to the major API level only. When Qt compiles its Java code
+// against a minor SDK platform (e.g. android-37.2), vcpkg_qt_android_gradle_setup() sets
+// `vcpkg.compileSdkMinor` and this script adds the minor API level, so that the Android Gradle
+// Plugin uses the installed platform instead of looking for android-<major>.0.
+
+allprojects { project ->
+    ['com.android.library', 'com.android.application'].each { pluginId ->
+        project.pluginManager.withPlugin(pluginId) {
+            def minor = project.findProperty('vcpkg.compileSdkMinor')
+            if (!minor) {
+                return
+            }
+            def minorApiLevel = minor.toString() as int
+            project.extensions.getByName('androidComponents').finalizeDsl { android ->
+                def major = android.compileSdk
+                if (major == null) {
+                    throw new GradleException("vcpkg: ${project.path} sets no compileSdk to add minor API level ${minorApiLevel} to.")
+                }
+                android.compileSdk { spec ->
+                    spec.version = spec.release(major) {
+                        it.minorApiLevel = minorApiLevel
+                    }
+                }
+                project.logger.lifecycle("vcpkg: ${project.path} compiles against API level ${major}.${minorApiLevel}")
+            }
+        }
+    }
+}
