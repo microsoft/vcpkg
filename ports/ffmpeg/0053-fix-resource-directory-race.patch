@@ -1,0 +1,11 @@
+diff --git a/fftools/resources/Makefile b/fftools/resources/Makefile
+index 3c93648..54154af 100644
+--- a/fftools/resources/Makefile
++++ b/fftools/resources/Makefile
+@@ -16,4 +16,6 @@ RESOBJS +=                         \
+ $(RESOBJS): CCDEP       =
+ $(RESOBJS): CC_DEPFLAGS =
+ 
++$(RESOBJS:.o=.c) $(RESOBJS:%.css.o=%.css.min) $(RESOBJS:%.css.o=%.css.min.gz) $(RESOBJS:%.html.o=%.html.gz): | fftools/resources
++
+ .SECONDARY: $(RESOBJS:.o=.gz) $(RESOBJS:.o=.c) $(RESOBJS:%.css.o=%.css.min) $(RESOBJS:%.css.o=%.css.min.gz) $(RESOBJS:%.html.o=%.html.gz) $(RESOBJS:.o=)
