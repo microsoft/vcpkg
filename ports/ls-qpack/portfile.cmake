@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/ls-qpack
     REF "v${VERSION}"
-    SHA512 2f2596486bb505feb3899ec20a94c52c1ee4b2bcda28f506f6ba5302dd3997fd18150a78428a3fd1944a5ba5ab17cc9b0c73ede9e90d3cf9dddf7bc2ab708438
+    SHA512 b3b02079434b87f4a72b1dfb772be67827d9a7d234e2aaa4cafccd187e3ce706862f7f4ab9e4d89cfe7eaf9a29c1f62215e5c80ecda6265f6b93ac8b609a2c4c
     HEAD_REF master
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
@@ -24,7 +24,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ls-qpack)
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
