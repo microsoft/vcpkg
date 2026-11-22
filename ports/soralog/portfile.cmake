@@ -1,3 +1,6 @@
+# soralog.dll has no code of its own: it only links the other soralog libraries
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xDimon/soralog
